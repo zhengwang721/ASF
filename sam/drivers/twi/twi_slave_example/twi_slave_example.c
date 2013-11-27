@@ -3,7 +3,7 @@
  *
  * \brief TWI SLAVE Example for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -58,7 +58,7 @@
  * -# Connect TWD0 (SDA) for the 2 boards.
  * -# Connect TWCK0 (SCL) for the 2 boards.
  * -# Connect GND for the 2 boards.
- * -# Add a pull up of 2,2KOhms on TWD and TWCK
+ * -# Make sure there is a pull up resistor on TWD and TWCK.
  *
  * \section files Main files:
  *  - twi.c SAM Two-Wire Interface driver implementation.
@@ -77,7 +77,7 @@
  * Reading is done in the same fashion, except that after receiving the memory
  * address, the device will start outputting data until a STOP condition is
  * sent by the master.
- * The default address for the TWI slave is fixed to 0x51. If the board has a TWI
+ * The default address for the TWI slave is fixed to 0x40. If the board has a TWI
  * component with this address, you can change the define AT24C_ADDRESS in
  * twi_eeprom_example.c of twi_eeprom_example project, and the define SLAVE_ADDRESS
  * in twi_slave_example.c of twi_slave_exmaple project.
@@ -103,8 +103,6 @@ extern "C" {
 #endif
 /**INDENT-ON**/
 /// @endcond
-
-#define CONSOLE_BAUD_RATE   115200
 
 /** Device address of slave */
 #define SLAVE_ADDRESS       0x40
@@ -227,9 +225,10 @@ int main(void)
 	/* Initialize the SAM system */
 	sysclk_init();
 
-#if SAM4S
-	/* Select PB4 and PB5 function */
-	MATRIX->CCFG_SYSIO = CCFG_SYSIO_SYSIO4 | CCFG_SYSIO_SYSIO5;
+#if (SAM4S || SAM4E)
+	/* Select PB4 and PB5 function, this will cause JTAG discconnect */
+	REG_CCFG_SYSIO |= CCFG_SYSIO_SYSIO4;
+	REG_CCFG_SYSIO |= CCFG_SYSIO_SYSIO5;
 #endif
 
 	/* Initialize the board */

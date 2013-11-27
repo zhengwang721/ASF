@@ -3,7 +3,7 @@
 		<module type="application" id="sam.drivers.usart.usart_serial_example#0" caption="USART Serial Example">
 			<info type="description" value="summary">
 			This example uses USART driver to demonstrates the serial mode.
-			</info>	
+			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Communication"/>
 			</info>
@@ -11,19 +11,20 @@
 			<build type="include-path" value="."/>
 			<device-support value="sam3"/>
 			<device-support value="sam4s"/>
+			<device-support value="sam4e"/>
+			<device-support value="sam4c"/>
 			<require idref="sam.drivers.pmc"/>
-			<require idref="sam.drivers.pio"/>
 			<require idref="sam.drivers.usart"/>
 			<require idref="sam.drivers.tc"/>
 			<require idref="sam.drivers.pdc"/>
-			<require idref="common.services.basic.gpio"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
-			<module type="application" id="sam.drivers.usart.usart_serial_example#1" caption="USART Serial Example">
+		<module type="application" id="sam.drivers.usart.usart_serial_example#1" caption="USART Serial Example">
 			<info type="description" value="summary">
 			This example uses USART driver to demonstrates the serial mode.
-			</info>	
+			</info>
 			<info type="keyword" value="technology">
 				<keyword value="Communication"/>
 			</info>
@@ -36,6 +37,7 @@
 			<require idref="common.services.ioport"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

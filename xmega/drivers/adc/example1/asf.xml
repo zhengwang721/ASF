@@ -13,6 +13,7 @@
 		<device-support value="xmegad"/>
 		<device-support value="xmegae"/>
 		<require idref="xmega.drivers.adc"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 	<module type="application" id="xmega.drivers.adc.example1_gfx" caption="ADC Internal temperature sensor example - Graphics">
 		<info type="description" value="summary">
@@ -28,5 +29,6 @@
 		<require idref="xmega.drivers.adc"/>
 		<require idref="common.services.gfx_mono"/>
 		<require idref="common.services.gfx_mono.font"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -3,7 +3,7 @@
  *
  * \brief User Interface
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -86,10 +86,10 @@ static void ui_wakeup_handler(uint32_t id, uint32_t mask)
 			ui_disable_asynchronous_interrupt();
 
 			/* Wakeup the devices connected */
-			uhc_resume();
+			pmc_wait_wakeup_clocks_restore(uhc_resume);
 		} else {
 			/* In device mode, wakeup the USB host. */
-			udc_remotewakeup();
+			pmc_wait_wakeup_clocks_restore(udc_remotewakeup);
 		}
 	}
 }
@@ -100,10 +100,10 @@ static void ui_wakeup_handler(uint32_t id, uint32_t mask)
 static void ui_enable_asynchronous_interrupt(void)
 {
 	/* Enable interrupt for button pin */
-	pio_get_interrupt_status(PIOB);
-	pio_enable_pin_interrupt(GPIO_PUSH_BUTTON_2);
+	pio_get_interrupt_status(RESUME_PIO);
+	pio_enable_pin_interrupt(RESUME_PIN);
 	/* Enable fast wakeup for button pin */
-	pmc_set_fast_startup_input(PMC_FSMR_FSTT14);
+	pmc_set_fast_startup_input(RESUME_PMC_FSTT);
 }
 
 /**
@@ -112,10 +112,10 @@ static void ui_enable_asynchronous_interrupt(void)
 static void ui_disable_asynchronous_interrupt(void)
 {
 	/* Disable interrupt for button pin */
-	pio_disable_pin_interrupt(GPIO_PUSH_BUTTON_2);
-	pio_get_interrupt_status(PIOB);
+	pio_disable_pin_interrupt(RESUME_PIN);
+	pio_get_interrupt_status(RESUME_PIO);
 	/* Enable fast wakeup for button pin */
-	pmc_clr_fast_startup_input(PMC_FSMR_FSTT14);
+	pmc_clr_fast_startup_input(RESUME_PMC_FSTT);
 }
 
 /*! @} */
@@ -127,19 +127,14 @@ static void ui_disable_asynchronous_interrupt(void)
 void ui_init(void)
 {
 	/* Enable PIO clock for button inputs */
-	pmc_enable_periph_clk(ID_PIOB);
+	pmc_enable_periph_clk(RESUME_PIO_ID);
 	pmc_enable_periph_clk(ID_PIOE);
 	/* Set handler for wakeup */
 	pio_handler_set(RESUME_PIO, RESUME_PIO_ID, RESUME_PIO_MASK,
 			RESUME_PIO_ATTR, ui_wakeup_handler);
 	/* Enable IRQ for button (PIOB) */
 	NVIC_EnableIRQ((IRQn_Type)RESUME_PIO_ID);
-	/* Enable interrupt for button pin */
-	pio_get_interrupt_status(RESUME_PIO);
 	pio_configure_pin(RESUME_PIN, RESUME_PIO_ATTR);
-	pio_enable_pin_interrupt(RESUME_PIN);
-	/* Enable fast wakeup for button pin */
-	pmc_set_fast_startup_input(RESUME_PMC_FSTT);
 
 	/* Initialize LEDs */
 	LED_Off(LED0_GPIO);
@@ -173,9 +168,7 @@ static int8_t ui_host_x, ui_host_y, ui_host_scroll;
 
 void ui_host_vbus_change(bool b_vbus_present)
 {
-	if (b_vbus_present) {
-	} else {
-	}
+	UNUSED(b_vbus_present);
 }
 
 void ui_host_vbus_error(void)

@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for WDT driver.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -79,6 +79,8 @@
  * - sam3x8h_sam3x_ek
  * - sam4s16c_sam4s_ek
  * - sam4sd32c_sam4s_ek2
+ * - sam4n16c_sam4n_xplained_pro
+ * - sam4c16c_sam4c_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -145,6 +147,9 @@ static void delay_ms(uint32_t ul_dly_ticks)
  */
 static void run_wdt_test(const struct test_case *test)
 {
+	/* Clear watchdog if already enabled */
+	wdt_restart(WDT);
+
 	/* Enable WDT interrupt line from the core */
 	NVIC_DisableIRQ(WDT_IRQn);
 	NVIC_ClearPendingIRQ(WDT_IRQn);
@@ -153,6 +158,7 @@ static void run_wdt_test(const struct test_case *test)
 
 	/* Test1: Initialize WDT to trigger a reset after 100ms */
 	wdt_init(WDT, WDT_MR_WDFIEN, 26, 26);
+
 	delay_ms(50);
 	test_assert_true(test, gs_wdt_triggered == 0, "Test1: unexpected watchdog interrupt!");
 

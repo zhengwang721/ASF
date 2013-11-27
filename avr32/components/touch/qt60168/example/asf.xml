@@ -4,7 +4,7 @@
 		Use the QT10168 component to detect key touch and light LEDs.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Touch" />
+			<keyword value="Touch"/>
 		</info>
 		<build type="distribute" subtype="file" value="CRC(5).exe"/>
 		<build type="header-file" value="conf/conf_ebi.h"/>
@@ -22,5 +22,6 @@
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.spi"/>
 		<require idref="avr32.utils.print_funcs"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

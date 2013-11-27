@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -146,12 +146,12 @@ extern "C" {
 
 //! \name System clock source
 //@{
-#define SYSCLK_SRC_RCSYS        0     //!< System RC oscillator
-#define SYSCLK_SRC_OSC0         1     //!< Oscillator 0
-#define SYSCLK_SRC_DFLL         2     //!< Digital Frequency Locked Loop
-#define SYSCLK_SRC_RC120M       3     //!< 120 MHz RC oscillator
+#define SYSCLK_SRC_RCSYS        AVR32_PM_MCSEL_SLOW     //!< System RC oscillator
+#define SYSCLK_SRC_OSC0         AVR32_PM_MCSEL_OSC0     //!< Oscillator 0
+#define SYSCLK_SRC_DFLL         AVR32_PM_MCSEL_DFLL0    //!< Digital Frequency Locked Loop
+#define SYSCLK_SRC_RC120M       AVR32_PM_MCSEL_RC120M   //!< 120 MHz RC oscillator
 #if (UC3L0128 || UC3L0256 || UC3L3_L4)
-#define SYSCLK_SRC_PLL0         5       //!< Phase Locked Loop 0
+#define SYSCLK_SRC_PLL0         AVR32_PM_MCSEL_PLL0     //!< Phase Locked Loop 0
 #endif
 
 #if UC3L3_L4

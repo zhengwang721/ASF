@@ -3,7 +3,7 @@
  *
  * \brief Ethernet management for the standalone lwIP example.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,9 +43,12 @@
 
 #include <string.h>
 #include "board.h"
-#include "gpio.h"
 #include "ethernet_sam.h"
+#if SAM3XA
 #include "emac.h"
+#else
+#include "gmac.h"
+#endif
 #include "ethernet_phy.h"
 #include "timer_mgt_sam.h"
 #include "sysclk.h"
@@ -96,7 +99,7 @@ static timers_info_t gs_timers_table[] = {
 	{0, ARP_TMR_INTERVAL, etharp_tmr},
 	/* LWIP_DHCP */
 #if LWIP_DHCP
-	{0, DHCP_COARSE_TIMER_SECS, dhcp_coarse_tmr},
+	{0, DHCP_COARSE_TIMER_MSECS, dhcp_coarse_tmr},
 	{0, DHCP_FINE_TIMER_MSECS, dhcp_fine_tmr},
 #endif
 };

@@ -3,7 +3,7 @@
  *
  * \brief EMAC example for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -72,16 +72,7 @@
  *
  *  \section Usage
  *
- *  -# Build the program and download it into the evaluation board. Please
- *     refer to the
- *     <a href="http://www.atmel.com/dyn/resources/prod_documents/6421B.pdf">
- *     SAM-BA User Guide</a>, the
- *     <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6310.pdf">
- *     GNU-Based Software Development</a>
- *     application note or the
- *     <a href="ftp://ftp.iar.se/WWWfiles/arm/Guides/EWARM_UserGuide.ENU.pdf">
- *     IAR EWARM User Guide</a>,
- *     depending on the solutions that users choose.
+ *  -# Build the program and download it into the evaluation board.
  *  -# On the computer, open and configure a terminal application
  *     (e.g., HyperTerminal on Microsoft Windows) with these settings:
  *    - 115200 bauds
@@ -286,7 +277,8 @@ static void emac_process_ip_packet(uint8_t *p_uc_data, uint32_t ul_size)
 	uint32_t ul_icmp_len;
 	int32_t ul_rc = EMAC_OK;
 
-	ul_size = ul_size;	/* stop warning */
+	/* avoid Cppcheck Warning */
+	UNUSED(ul_size);
 
 	p_ethernet_header_t p_eth = (p_ethernet_header_t) p_uc_data;
 	p_ip_header_t p_ip_header = (p_ip_header_t) (p_uc_data + ETH_HEADER_SIZE);
@@ -440,6 +432,7 @@ int main(void)
 	rstc_reset_extern(RSTC);
 	while (rstc_get_status(RSTC) & RSTC_SR_NRSTL) {
 	};
+	rstc_set_external_reset(RSTC, 0);  /* restore default */
 
 	/* Wait for PHY to be ready (CAT811: Max400ms) */
 	ul_delay = sysclk_get_cpu_hz() / 1000 / 3 * 400;

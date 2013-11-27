@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for XCL driver
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -170,27 +170,37 @@ static void run_xcl_glue_logic_2inputs_xor_test(
 	xcl_lut_type(LUT_2LUT2IN);
 	xcl_lut_in0(LUT_IN_PINL);
 	xcl_lut_in1(LUT_IN_PINL);
+	asm("nop");
+	asm("nop"); /* give two cycles propagation delay to read the port pin */
 	xcl_lut0_output(LUT0_OUT_PIN4);
 	xcl_lut_config_delay(DLY11, LUT_DLY_DISABLE, LUT_DLY_DISABLE);
 	xcl_lut0_truth(XOR);
 
 	gpio_set_pin_low(in0);
 	gpio_set_pin_low(in1);
+	asm("nop");
+	asm("nop"); /* give two cycles propagation delay to read the port pin */
 	out = ioport_get_pin_level(out0);
 	test_assert_true(test, out == false, "XOR2 failure");
 
 	gpio_set_pin_high(in0);
 	gpio_set_pin_low(in1);
 	out = ioport_get_pin_level(out0);
+	asm("nop");
+	asm("nop"); /* give two cycles propagation delay to read the port pin */
 	test_assert_true(test, out == true, "XOR2 failure");
 
 	gpio_set_pin_low(in0);
 	gpio_set_pin_high(in1);
+	asm("nop");
+	asm("nop"); /* give two cycles propagation delay to read the port pin */
 	out = ioport_get_pin_level(out0);
 	test_assert_true(test, out == true, "XOR2 failure");
 
 	gpio_set_pin_high(in0);
 	gpio_set_pin_high(in1);
+	asm("nop");
+	asm("nop"); /* give two cycles propagation delay to read the port pin */
 	out = ioport_get_pin_level(out0);
 	test_assert_true(test, out == false, "XOR2 failure");
 }
@@ -248,36 +258,48 @@ static void run_xcl_glue_logic_3inputs_xor_test(
 	gpio_set_pin_low(in0);
 	gpio_set_pin_low(in2);
 	gpio_set_pin_low(in3);
+	asm("nop");
+	asm("nop"); /* give two cycles propagation delay to read the port pin */
 	out = ioport_get_pin_level(out0);
 	test_assert_true(test, out == false, " XCL XOR failure");
 
 	gpio_set_pin_high(in0);
 	gpio_set_pin_low(in2);
 	gpio_set_pin_low(in3);
+	asm("nop");
+	asm("nop"); /* give two cycles propagation delay to read the port pin */
 	out = ioport_get_pin_level(out0);
 	test_assert_true(test, out == true, " XCL XOR failure");
 
 	gpio_set_pin_low(in0);
 	gpio_set_pin_high(in2);
 	gpio_set_pin_low(in3);
+	asm("nop");
+	asm("nop"); /* give two cycles propagation delay to read the port pin */
 	out = ioport_get_pin_level(out0);
 	test_assert_true(test, out == true, " XCL XOR failure");
 
 	gpio_set_pin_low(in0);
 	gpio_set_pin_low(in2);
 	gpio_set_pin_high(in3);
+	asm("nop");
+	asm("nop"); /* give two cycles propagation delay to read the port pin */
 	out = ioport_get_pin_level(out0);
 	test_assert_true(test, out == true, " XCL XOR failure");
 
 	gpio_set_pin_low(in0);
 	gpio_set_pin_high(in2);
 	gpio_set_pin_high(in3);
+	asm("nop");
+	asm("nop"); /* give two cycles propagation delay to read the port pin */
 	out = ioport_get_pin_level(out0);
 	test_assert_true(test, out == false, " XCL XOR failure");
 
 	gpio_set_pin_high(in0);
 	gpio_set_pin_high(in2);
 	gpio_set_pin_high(in3);
+	asm("nop");
+	asm("nop"); /* give two cycles propagation delay to read the port pin */
 	out = ioport_get_pin_level(out0);
 	test_assert_true(test, out == true, " XCL XOR failure");
 }

@@ -3,7 +3,7 @@
  *
  * \brief Main functions for MSC example with FreeRTOS
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,7 +46,7 @@
 #include "conf_board.h"
 #include "ui.h"
 
-static bool main_b_msc_enable = false;
+static volatile bool main_b_msc_enable = false;
 
 static void main_memories_trans_task(void *pvParameters);
 

@@ -3,7 +3,7 @@
  *
  * \brief Implementation of low level disk I/O module skeleton for FatFS.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -56,7 +56,7 @@ extern "C" {
 #include <stdio.h>
 #include <assert.h>
 
-#if (SAM3 || SAM4S)
+#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4N)
 # include <rtc.h>
 #endif
 
@@ -74,7 +74,7 @@ extern "C" {
 
 /** Supported sector size. These values are based on the LUN function:
  * mem_sector_size(). */
-#define SECTOR_SIZE_512   1
+#define SECTOR_SIZE_512  1
 #define SECTOR_SIZE_1024 2
 #define SECTOR_SIZE_2048 4
 #define SECTOR_SIZE_4096 8
@@ -92,7 +92,7 @@ DSTATUS disk_initialize(BYTE drv)
 	int i;
 	Ctrl_status mem_status;
 
-#if (SAM3 || SAM4S)
+#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S)
 	/* Default RTC configuration, 24-hour mode */
 	rtc_set_hour_mode(RTC, 0);
 #endif
@@ -178,11 +178,8 @@ DRESULT disk_read(BYTE drv, BYTE *buff, DWORD sector, BYTE count)
 
 	/* Read the data */
 	for (i = 0; i < count; i++) {
-		if (memory_2_ram(drv, sector + uc_sector_size *
-				SECTOR_SIZE_DEFAULT * i,
-				buff +
-				uc_sector_size *
-				SECTOR_SIZE_DEFAULT * i) !=
+		if (memory_2_ram(drv, sector + uc_sector_size * i,
+				buff + uc_sector_size * SECTOR_SIZE_DEFAULT * i) !=
 				CTRL_GOOD) {
 			return RES_ERROR;
 		}
@@ -229,13 +226,10 @@ DRESULT disk_write(BYTE drv, BYTE const *buff, DWORD sector, BYTE count)
 		return RES_PARERR;
 	}
 
-	/* Read the data */
+	/* Write the data */
 	for (i = 0; i < count; i++) {
-		if (ram_2_memory(drv, sector + uc_sector_size *
-				SECTOR_SIZE_DEFAULT * i,
-				buff +
-				uc_sector_size *
-				SECTOR_SIZE_DEFAULT * i) !=
+		if (ram_2_memory(drv, sector + uc_sector_size * i,
+				buff + uc_sector_size * SECTOR_SIZE_DEFAULT * i) !=
 				CTRL_GOOD) {
 			return RES_ERROR;
 		}

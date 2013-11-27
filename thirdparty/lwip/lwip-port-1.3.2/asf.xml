@@ -68,11 +68,13 @@
 			<device-support value="uc3"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3b"/>
 		</module>
-		<module type="service" id="avr32.services.network.tcpip.lwip-port#freertos_sam" caption="lwIP v132 port to FreeRTOS on SAM hardware module.">
+		<module type="service" id="avr32.services.network.tcpip.lwip-port#freertos_sam3x" caption="lwIP v132 port to FreeRTOS on SAM hardware module.">
 			<info type="description" value="summary">
 			This lwIP port uses FreeRTOS and is dedicated to the SAM hardware module.
 			</info>
 			<info type="gui-flag" value="hidden"/>
+			<build type="module-config" subtype="required-header-file" value="conf_lwip_threads.h"/>
+			<build type="module-config" subtype="path" value="sam/module_config"/>
 			<build type="header-file" subtype="api" value="sam/include/arch/cc.h"/>
 			<build type="header-file" subtype="api" value="sam/include/arch/perf.h"/>
 			<build type="header-file" subtype="api" value="sam/include/netif/ethernetif.h"/>
@@ -88,7 +90,28 @@
 			<require idref="sam.components.ethernet_phy.dm9161a"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3x"/>
 		</module>
-		<module type="service" id="avr32.services.network.tcpip.lwip-port#standalone_sam" caption="Stand-alone port(no OS) of the lwIP stack on SAM hardware module">
+		<module type="service" id="avr32.services.network.tcpip.lwip-port#freertos_sam4e" caption="lwIP port to FreeRTOS on SAM hardware module.">
+			<info type="description" value="summary">
+			This lwIP port uses FreeRTOS and is dedicated to the SAM hardware module.
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<build type="module-config" subtype="required-header-file" value="conf_lwip_threads.h"/>
+			<build type="module-config" subtype="path" value="sam/module_config"/>
+			<build type="header-file" subtype="api" value="sam/include/arch/cc.h"/>
+			<build type="header-file" subtype="api" value="sam/include/arch/perf.h"/>
+			<build type="header-file" subtype="api" value="sam/include/netif/ethernetif.h"/>
+			<build type="header-file" subtype="api" value="sam/include/arch/sys_arch.h"/>
+			<build type="include-path" value="sam/include"/>
+			<build type="c-source" value="sam/netif/ethernetif_sam4.c"/>
+			<build type="c-source" value="sam/sys_arch.c"/>
+			<device-support value="sam4e"/>
+			<require idref="sam.drivers.gmac"/>
+			<require idref="sam.drivers.tc"/>
+			<require idref="sam.drivers.pmc"/>
+			<require idref="sam.components.ethernet_phy.ksz8051mnl"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam4e"/>
+		</module>
+		<module type="service" id="avr32.services.network.tcpip.lwip-port#standalone_sam3x" caption="Stand-alone port(no OS) of the lwIP stack on SAM hardware module">
 			<info type="description" value="summary">
 			This lwIP port does not use any OS and is dedicated to the SAM hardware module.
 			</info>
@@ -107,5 +130,23 @@
 			<require idref="sam.components.ethernet_phy.dm9161a"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3x"/>
 		</module>		
+		<module type="service" id="avr32.services.network.tcpip.lwip-port#standalone_sam4e" caption="Stand-alone port(no OS) of the lwIP stack on SAM hardware module">
+			<info type="description" value="summary">
+			This lwIP port does not use any OS and is dedicated to the SAM hardware module.
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<build type="header-file" subtype="api" value="sam/include/arch/cc.h"/>
+			<build type="header-file" subtype="api" value="sam/include/arch/perf.h"/>
+			<build type="header-file" subtype="api" value="sam/include/netif/ethernetif.h"/>
+			<build type="include-path" value="sam/include"/>
+			<build type="include-path" value="sam/include/netif"/>
+			<build type="c-source" value="sam/netif/ethernetif_sam4.c"/>
+			<device-support value="sam4e"/>
+			<require idref="sam.drivers.gmac"/>
+			<require idref="sam.drivers.tc"/>
+			<require idref="sam.drivers.pmc"/>
+			<require idref="sam.components.ethernet_phy.ksz8051mnl"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam4e"/>
+		</module>
 	</select-by-config>
 </asf>

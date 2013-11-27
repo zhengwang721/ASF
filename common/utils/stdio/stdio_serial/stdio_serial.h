@@ -7,7 +7,7 @@
  * This file defines a useful set of functions for the Stdio Serial interface on AVR
  * and SAM devices.
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -61,10 +61,12 @@
 
 #include <stdio.h>
 #include "compiler.h"
-#include "sysclk.h"
+#ifndef SAMD20
+# include "sysclk.h"
+#endif
 #include "serial.h"
 
-#if XMEGA && defined(__GNUC__)
+#if (XMEGA || MEGA_RF) && defined(__GNUC__)
 	extern int _write (char c, int *f);
 	extern int _read (int *f);
 #endif
@@ -74,6 +76,7 @@
 extern volatile void *volatile stdio_base;
 //! Pointer to the external low level write function.
 extern int (*ptr_put)(void volatile*, char);
+
 //! Pointer to the external low level read function.
 extern void (*ptr_get)(void volatile*, char*);
 
@@ -88,22 +91,22 @@ static inline void stdio_serial_init(volatile void *usart, const usart_serial_op
 	stdio_base = (void *)usart;
 	ptr_put = (int (*)(void volatile*,char))&usart_serial_putchar;
 	ptr_get = (void (*)(void volatile*,char*))&usart_serial_getchar;
-#if XMEGA
+# if (XMEGA || MEGA_RF)
 	usart_serial_init((USART_t *)usart,opt);
-#elif UC3
+# elif UC3
 	usart_serial_init(usart,(usart_serial_options_t *)opt);
-#elif SAM
+# elif SAM
 	usart_serial_init((Usart *)usart,(usart_serial_options_t *)opt);
-#else
-# error Unsupported chip type
-#endif
+# else
+#  error Unsupported chip type
+# endif
 
-#if defined(__GNUC__)
-# if XMEGA
+# if defined(__GNUC__)
+#  if (XMEGA || MEGA_RF)
 	// For AVR GCC libc print redirection uses fdevopen.
 	fdevopen((int (*)(char, FILE*))(_write),(int (*)(FILE*))(_read));
-# endif
-# if UC3 || SAM
+#  endif
+#  if UC3 || SAM
 	// For AVR32 and SAM GCC
 	// Specify that stdout and stdin should not be buffered.
 	setbuf(stdout, NULL);
@@ -112,8 +115,8 @@ static inline void stdio_serial_init(volatile void *usart, const usart_serial_op
 	// and AVR GCC library:
 	// - printf() emits one character at a time.
 	// - getchar() requests only 1 byte to exit.
+#  endif
 # endif
-#endif
 }
 
 /**

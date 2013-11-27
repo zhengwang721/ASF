@@ -3,7 +3,7 @@
  *
  * \brief Non Volatile Memory controller driver
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -458,16 +458,19 @@ void nvm_eeprom_erase_all(void);
 // 8K devices
 #  if AVR8_PART_IS_DEFINED(ATxmega8E5)
 #    define FLASH_SIZE      (8*1024L)
-#    define FLASH_PAGE_SIZE (256)
+#    define FLASH_PAGE_SIZE (128)
 
 // 16K devices
 #  elif AVR8_PART_IS_DEFINED(ATxmega16A4)            | \
 		AVR8_PART_IS_DEFINED(ATxmega16A4U) | \
 		AVR8_PART_IS_DEFINED(ATxmega16D4)  | \
-		AVR8_PART_IS_DEFINED(ATxmega16C4)  | \
-		AVR8_PART_IS_DEFINED(ATxmega16E5)
+		AVR8_PART_IS_DEFINED(ATxmega16C4)
 #    define FLASH_SIZE      (16*1024L)
 #    define FLASH_PAGE_SIZE (256)
+
+#  elif AVR8_PART_IS_DEFINED(ATxmega16E5)
+#    define FLASH_SIZE      (16*1024L)
+#    define FLASH_PAGE_SIZE (128)
 
 // 32K devices
 #  elif AVR8_PART_IS_DEFINED(ATxmega32A4)          | \
@@ -514,6 +517,7 @@ void nvm_eeprom_erase_all(void);
 
 // 192K devices
 #  elif AVR8_PART_IS_DEFINED(ATxmega192A3U) | \
+		AVR8_PART_IS_DEFINED(ATxmega192C3)  | \
 		AVR8_PART_IS_DEFINED(ATxmega192D3)
 #    define FLASH_SIZE      (192*1024L)
 #    define FLASH_PAGE_SIZE (512)

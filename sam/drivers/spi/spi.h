@@ -3,7 +3,7 @@
  *
  * \brief Serial Peripheral Interface (SPI) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -78,6 +78,14 @@ typedef enum spi_cs_behavior {
 	/** CS is de-asserted systematically during a time DLYBCS. */
 	SPI_CS_RISE_FORCED = SPI_CSR_CSNAAT
 } spi_cs_behavior_t;
+
+/**
+ * \brief Generate Peripheral Chip Select Value from Chip Select ID
+ * \note When chip select n is working, PCS bit n is set to low level.
+ *
+ * \param chip_sel_id The chip select number used
+ */
+#define spi_get_pcs(chip_sel_id) ((~(1u<<(chip_sel_id)))&0xF)
 
 /**
  * \brief Reset SPI and set it to Slave mode.
@@ -497,7 +505,7 @@ void spi_set_baudrate_div(Spi *p_spi, uint32_t ul_pcs_ch,
 void spi_set_transfer_delay(Spi *p_spi, uint32_t ul_pcs_ch, uint8_t uc_dlybs,
 		uint8_t uc_dlybct);
 
-#if (SAM3S || SAM3N || SAM4S)
+#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C)
 /**
  * \brief Get PDC registers base address.
  *
@@ -507,9 +515,7 @@ void spi_set_transfer_delay(Spi *p_spi, uint32_t ul_pcs_ch, uint8_t uc_dlybs,
  */
 static inline Pdc *spi_get_pdc_base(Spi *p_spi)
 {
-	p_spi = p_spi;	/* Stop warning */
-
-	return PDC_SPI;
+	return (Pdc *)&(p_spi->SPI_RPR);
 }
 #endif
 
@@ -580,7 +586,8 @@ uint32_t spi_get_writeprotect_status(Spi *p_spi);
  *       spi_set_master_mode(p_spi);
  *       spi_disable_mode_fault_detect(p_spi);
  *       spi_disable_loopback(p_spi);
- *       spi_set_peripheral_chip_select_value(p_spi, DEFAULT_CHIP_ID);
+ *       spi_set_peripheral_chip_select_value(p_spi,
+ *                                            spi_get_pcs(DEFAULT_CHIP_ID));
  *       spi_set_fixed_peripheral_select(p_spi);
  *       spi_disable_peripheral_select_decode(p_spi);
  *       spi_set_delay_between_chip_select(p_spi, CONFIG_SPI_MASTER_DELAY_BCS);

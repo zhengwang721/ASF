@@ -7,7 +7,7 @@
  ****************************************************************************/
 
 /**
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -68,11 +68,16 @@
  * \section exampledescription Description of the example
  *   - Send "Manufacturer ID Read" command to the dataflash.
  *   - Read back the Manufacturer ID of the dataflash.
- *   - If Manufacturer ID match Atmel ID "0x1F", both
- *      \ref SPI_EXAMPLE_LED_PIN_EXAMPLE_1 and
- *      \ref SPI_EXAMPLE_LED_PIN_EXAMPLE_2 are 'on'. Otherwise
- *      \ref SPI_EXAMPLE_LED_PIN_EXAMPLE_1 is 'on' and
- *      \ref SPI_EXAMPLE_LED_PIN_EXAMPLE_2 is 'off'.
+ *   - If Manufacturer ID match Atmel ID "0x1F" and there are at least 2 LEDs
+ *     on the board, both
+ *      \ref USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_1 and
+ *      \ref USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_2 are 'on'. Otherwise
+ *      \ref USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_1 is 'on' and
+ *      \ref USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_2 is 'off'.
+ *     If there is only one LED on the board, 
+ *      \ref USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_1 is 'on'. Otherwise
+ *      \ref USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_1 is 'off'.
+ *     
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR.
@@ -153,11 +158,22 @@ int main(void)
 
 	/* Show the test result by LED. */
 	if (usart_spi_at45dbx_mem_check() == false) {
-		gpio_set_pin_low(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_1);
-		gpio_set_pin_high(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_2);
+#ifndef USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_2
+		ioport_set_pin_level(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_1,
+				IOPORT_PIN_LEVEL_HIGH);
+#else
+		ioport_set_pin_level(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_1,
+				IOPORT_PIN_LEVEL_LOW);
+		ioport_set_pin_level(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_2,
+				IOPORT_PIN_LEVEL_HIGH);
+#endif
 	} else {
-		gpio_set_pin_low(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_1);
-		gpio_set_pin_low(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_2);
+		ioport_set_pin_level(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_1,
+				IOPORT_PIN_LEVEL_LOW);
+#ifdef USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_2
+		ioport_set_pin_level(USART_SPI_EXAMPLE_LED_PIN_EXAMPLE_2,
+				IOPORT_PIN_LEVEL_LOW);
+#endif
 	}
 
 	while (1) {

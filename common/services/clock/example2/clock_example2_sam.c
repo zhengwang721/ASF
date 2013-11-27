@@ -3,7 +3,7 @@
  *
  * \brief Clock system example 2.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,6 +47,7 @@
  * \section intro Introduction
  * This example shows how to initialize the clock system and output the
  * CPU clock on pin PCK0 (please refer to datasheet for PIN number).
+ * \note For SAM4C_EK, PCK2 is used.
  *
  * \section files Main files:
  * - clock_example2_sam.c: clock system example application
@@ -90,6 +91,11 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+/** Programmable Clock ID for the example by default */
+#ifndef GCLK_ID
+#define GCLK_ID         GENCLK_PCK_0
+#endif
+
 /**
  * \brief Initialize the clock system and output the CPU clock on pin
  * PCK0 (please refer to datasheet for PIN number).
@@ -104,18 +110,14 @@ int main(void)
 	board_init();
 
 	/* Configure specific CLKOUT pin */
-#if SAM4E
-	ioport_set_port_mode(PIN_PCK0_PORT, PIN_PCK0_MASK, PIN_PCK0_FLAGS);
-	ioport_disable_port(PIN_PCK0_PORT, PIN_PCK0_MASK);
-#else
-	gpio_configure_pin(GCLK_PIN, GCLK_PIN_FLAGS);
-#endif
+	ioport_set_pin_mode(GCLK_PIN, GCLK_PIN_MUX);
+	ioport_disable_pin(GCLK_PIN);
 
 	/* Configure the output clock */
-	genclk_config_defaults(&gcfg, GENCLK_PCK_0);
+	genclk_config_defaults(&gcfg, GCLK_ID);
 	genclk_config_set_source(&gcfg, GCLK_SOURCE);
 	genclk_config_set_divider(&gcfg, GCLK_DIV);
-	genclk_enable(&gcfg, GENCLK_PCK_0);
+	genclk_enable(&gcfg, GCLK_ID);
 
 	while (1) {
 		/* Do nothing */

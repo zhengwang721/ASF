@@ -5,7 +5,7 @@
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Analog Conversion"/>
-		</info>	
+		</info>
 		<build type="c-source" value="adcifa_example.c"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_clock.h"/>
@@ -18,5 +18,6 @@
 		<require idref="avr32.drivers.adcifa"/>
 		<require idref="common.services.delay"/>
 		<require idref="common.services.basic.clock"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

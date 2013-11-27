@@ -5,7 +5,7 @@
  *
  * This file contains definitions and functions for ECC NAND Flash operation.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -101,8 +101,9 @@ uint32_t nand_flash_ecc_read_page(const struct nand_flash_ecc *ecc,
 	/* if no buffer provided, use a temp one */
 	if (!spare) {
 		spare = spare_buffer;
-		memset(spare, 0xFF, NAND_COMMON_MAX_PAGE_SPARE_SIZE);
 	}
+
+	memset(spare, 0xFF, NAND_COMMON_MAX_PAGE_SPARE_SIZE);
 
 	/* Start by reading the spare and the data */
 	nand_flash_raw_read_page(RAW(ecc), block, page, data, spare);
@@ -157,8 +158,9 @@ uint32_t nand_flash_ecc_write_page(const struct nand_flash_ecc *ecc,
 	/* if no buffer provided, use a temp one */
 	if (!spare) {
 		spare = spare_buffer;
-		memset(spare, 0xFF, NAND_COMMON_MAX_PAGE_SPARE_SIZE);
 	}
+
+	memset(spare, 0xFF, NAND_COMMON_MAX_PAGE_SPARE_SIZE);
 
 	nand_flash_spare_scheme_write_ecc(nand_flash_model_get_scheme(MODEL(ecc)),
 			spare, hamming_code);

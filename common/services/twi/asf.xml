@@ -115,6 +115,9 @@
 			<require idref="sam.utils"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4s"/>
+			<device-support value="sam4e"/>
+			<device-support value="sam4n"/>
+			<device-support value="sam4c"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
 		<module type="service" id="common.services.basic.twi#4" caption="TWI - Two-Wire Interface - SAM4L implementation">
@@ -135,5 +138,25 @@
 			<device-support value="sam4l"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam4l"/>
 		</module>
+		<module type="service" id="common.services.basic.twi#5" caption="TWI - Two-Wire Interface - megaRF implementation">
+			<info type="keyword" value="technology">
+				<keyword value="Communication"/>
+			</info>
+			<info type="description" value="summary">
+			TWI Two-Wire Interface service. Common API.
+			</info>
+			<build type="include-path" value="."/>
+			<build type="header-file" subtype="api" value="twi_master.h"/>
+			<build type="header-file" subtype="api" value="megarf_twi/twi_master.h"/>
+			<build type="header-file" subtype="api" value="twi_slave.h"/>
+			<build type="header-file" subtype="api" value="megarf_twi/twi_slave.h"/>			
+			<build type="doxygen-entry-point" value="twi_group"/>
+			<build type="doxygen-quick-start" value="twi_quickstart"/>	
+			<require idref="common.services.basic.clock"/>
+			<require idref="mega.drivers.twi"/>
+			<require idref="mega.utils"/>
+			<device-support value="megarf"/>
+			<generator value="doxygen-module" default-mcu="unspecified-mega"/>
+		</module>			
 	</select-by-device>
 </asf>

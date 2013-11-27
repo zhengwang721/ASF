@@ -7,9 +7,11 @@
 			<keyword value="Analog Conversion"/>
 		</info>
 		<build type="c-source" value="sinewave_example.c"/>
+		<build type="module-config" subtype="required-header-file" value="conf_dacc_sinewave_example.h"/>
 		<device-support value="sam"/>
 		<require idref="sam.drivers.dacc"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

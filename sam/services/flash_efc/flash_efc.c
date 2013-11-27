@@ -62,7 +62,7 @@ extern "C" {
  * @{
  */
 
-#if SAM4E
+#if SAM4E || SAM4N || SAM4S || SAM4C
 /* User signature size */
 # define FLASH_USER_SIG_SIZE   (512)
 #endif
@@ -70,17 +70,20 @@ extern "C" {
 #if SAM4S
 /* Internal Flash Controller 0. */
 # define EFC     EFC0
-/* User signature size */
-# define FLASH_USER_SIG_SIZE   (512)
+#if (SAM4SD16 || SAM4SD32)
+/* The max GPNVM number. */
+# define GPNVM_NUM_MAX        3
+#else
+/* The max GPNVM number. */
+# define GPNVM_NUM_MAX        2
+#endif
 /* Internal Flash 0 base address. */
 # define IFLASH_ADDR     IFLASH0_ADDR
 /* Internal flash page size. */
 # define IFLASH_PAGE_SIZE     IFLASH0_PAGE_SIZE
 /* Internal flash lock region size. */
 # define IFLASH_LOCK_REGION_SIZE     IFLASH0_LOCK_REGION_SIZE
-#endif
-
-#if (SAM3XA || SAM3U4 || SAM4SD16 || SAM4SD32)
+#elif (SAM3XA || SAM3U4)
 /* Internal Flash Controller 0. */
 # define EFC     EFC0
 /* The max GPNVM number. */
@@ -116,6 +119,9 @@ extern "C" {
 # define GPNVM_NUM_MAX        2
 #endif
 
+#if SAM4C
+#define IFLASH_ADDR  IFLASH_CNC_ADDR
+#endif
 
 /* Flash page buffer for alignment */
 static uint32_t gs_ul_page_buffer[IFLASH_PAGE_SIZE / sizeof(uint32_t)];
@@ -137,13 +143,33 @@ static void translate_address(Efc **pp_efc, uint32_t ul_addr,
 	uint16_t us_page;
 	uint16_t us_offset;
 
-#if (SAM3XA || SAM3U4 || SAM4SD16 || SAM4SD32)
+#if (SAM3XA || SAM3U4)
 	if (ul_addr >= IFLASH1_ADDR) {
 		p_efc = EFC1;
 		us_page = (ul_addr - IFLASH1_ADDR) / IFLASH1_PAGE_SIZE;
 		us_offset = (ul_addr - IFLASH1_ADDR) % IFLASH1_PAGE_SIZE;
 	} else {
 		p_efc = EFC0;
+		us_page = (ul_addr - IFLASH0_ADDR) / IFLASH0_PAGE_SIZE;
+		us_offset = (ul_addr - IFLASH0_ADDR) % IFLASH0_PAGE_SIZE;
+	}
+#elif (SAM4SD16 || SAM4SD32)
+	uint32_t uc_gpnvm2;
+	uc_gpnvm2 = flash_is_gpnvm_set(2);
+	if (ul_addr >= IFLASH1_ADDR) {
+		if(uc_gpnvm2 == FLASH_RC_YES) {
+			p_efc = EFC0;
+		} else {
+			p_efc = EFC1;
+		}
+		us_page = (ul_addr - IFLASH1_ADDR) / IFLASH1_PAGE_SIZE;
+		us_offset = (ul_addr - IFLASH1_ADDR) % IFLASH1_PAGE_SIZE;
+	} else {
+		if(uc_gpnvm2 == FLASH_RC_YES) {
+			p_efc = EFC1;
+		} else {
+			p_efc = EFC0;
+		}
 		us_page = (ul_addr - IFLASH0_ADDR) / IFLASH0_PAGE_SIZE;
 		us_offset = (ul_addr - IFLASH0_ADDR) % IFLASH0_PAGE_SIZE;
 	}
@@ -190,14 +216,31 @@ static void compute_address(Efc *p_efc, uint16_t us_page, uint16_t us_offset,
 /* Dual bank flash */
 #ifdef EFC1
 	/* Compute address */
+#if (SAM4SD16 || SAM4SD32)
+	uint32_t uc_gpnvm2;
+	uc_gpnvm2 = flash_is_gpnvm_set(2);
+	if (p_efc == EFC0) {
+		if(uc_gpnvm2 == FLASH_RC_YES) {
+			ul_addr = IFLASH1_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
+		} else {
+			ul_addr = IFLASH0_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
+		}
+	} else {
+		if(uc_gpnvm2 == FLASH_RC_YES) {
+			ul_addr = IFLASH0_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
+		} else {
+			ul_addr = IFLASH1_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
+		}
+	}
+#else
 	ul_addr = (p_efc == EFC0) ?
 			IFLASH0_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset :
 			IFLASH1_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
-
+#endif
 /* One bank flash */
 #else
-	/* Stop warning */
-	p_efc = p_efc;
+	/* avoid Cppcheck Warning */
+	UNUSED(p_efc);
 	/* Compute address */
 	ul_addr = IFLASH_ADDR + us_page * IFLASH_PAGE_SIZE + us_offset;
 #endif
@@ -299,7 +342,7 @@ uint32_t flash_set_wait_state_adaptively(uint32_t ul_address)
 	} else {
 		efc_set_wait_state(p_efc, 4);
 	}
-#elif (SAM4S || SAM4E)
+#elif (SAM4S || SAM4E || SAM4N || SAM4C)
 	} else if (clock < CHIP_FREQ_FWS_3) {
 		efc_set_wait_state(p_efc, 3);
 	} else if (clock < CHIP_FREQ_FWS_4) {
@@ -462,7 +505,7 @@ uint32_t flash_erase_plane(uint32_t ul_address)
 }
 #endif
 
-#if (SAM4S || SAM4E)
+#if (SAM4S || SAM4E || SAM4N || SAM4C)
 /**
  * \brief Erase the specified pages of flash.
  *
@@ -836,6 +879,7 @@ uint32_t flash_clear_gpnvm(uint32_t ul_gpnvm)
  *
  * \retval 1 If the given GPNVM bit is currently set.
  * \retval 0 If the given GPNVM bit is currently cleared.
+ * otherwise returns an error code.
  */
 uint32_t flash_is_gpnvm_set(uint32_t ul_gpnvm)
 {
@@ -872,6 +916,7 @@ uint32_t flash_enable_security_bit(void)
  *
  * \retval 1 If the security bit is currently set.
  * \retval 0 If the security bit is currently cleared.
+ * otherwise returns an error code.
  */
 uint32_t flash_is_security_bit_enabled(void)
 {
@@ -908,7 +953,7 @@ uint32_t flash_read_unique_id(uint32_t *pul_data, uint32_t ul_size)
 	return FLASH_RC_OK;
 }
 
-#if (SAM4S || SAM4E)
+#if (SAM4S || SAM4E || SAM4N || SAM4C)
 /**
  * \brief Read the flash user signature.
  *

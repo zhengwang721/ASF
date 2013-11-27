@@ -99,8 +99,6 @@
 		<select-by-device id="config.common.services.qtouch.qdebug.qt600.generic#yes" caption="QT600 QDebug enabled">
 			<module type="meta" id="config.common.services.qtouch.qdebug.qt600.generic#yes#0" caption="QT600 QDebug enabled">
 				<info type="gui-flag" value="hidden"/>
-				<build type="module-config" subtype="required-header-file" value="QDebugSettings.h"/>
-				<build type="module-config" subtype="path" value="../uc3/qtouch/common"/>
 				<build type="header-file" value="QDebug.h"/>
 				<build type="c-source" value="QDebug.c"/>
 				<build type="header-file" value="../generic/uc3/qtouch/common/BitBangSPI_Master.h"/>
@@ -117,8 +115,6 @@
 
 			<module type="meta" id="config.common.services.qtouch.qdebug.qt600.generic#yes#sam" caption="QT600 QDebug enabled">
 				<info type="gui-flag" value="hidden"/>
-				<build type="module-config" subtype="required-header-file" value="QDebugSettings.h"/>
-				<build type="module-config" subtype="path" value="../sam/qtouch/common"/>
 				<build type="header-file" subtype="api" value="QDebug.h"/>
 				<build type="c-source" value="QDebug.c"/>
 				<build type="header-file" subtype="api" value="../generic/sam/qtouch/common/BitBangSPI_Master.h"/>

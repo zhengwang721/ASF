@@ -3,7 +3,7 @@
  *
  * \brief Main functions for MSC example
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,7 +45,7 @@
 #include "conf_usb.h"
 #include "ui.h"
 
-static bool main_b_msc_enable = false;
+static volatile bool main_b_msc_enable = false;
 
 /*! \brief Main function. Execution starts here.
  */

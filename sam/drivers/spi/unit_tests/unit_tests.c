@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for SPI driver.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -80,6 +80,12 @@
  * - sam3x8h_sam3x_ek
  * - sam4s16c_sam4s_ek
  * - sam4sd32c_sam4s_ek2
+ * - sam4e16e_sam4e_ek
+ * - sam4lc4c_sam4l_ek
+ * - sam4lc4c_sam4l_xplained_pro
+ * - sam4lc8c_sam4l8_xplained_pro
+ * - sam4n16c_sam4n_xplained_pro
+ * - sam4c16c_sam4c_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -245,11 +251,11 @@ static void run_spi_ctrl_test(const struct test_case *test)
 		CONF_TEST_SPI->SPI_CSR[1] == 0 &&
 		CONF_TEST_SPI->SPI_CSR[2] == 0 &&
 		CONF_TEST_SPI->SPI_CSR[3] == 0 &&
-	#if SAM4L
+#if SAM4L
 		CONF_TEST_SPI->SPI_WPCR == 0,
-	#else
+#else
 		CONF_TEST_SPI->SPI_WPMR == 0,
-	#endif
+#endif
 		"Test SPI reset: should have read 0");
 }
 
@@ -328,7 +334,7 @@ static void run_spi_trans_test(const struct test_case *test)
 
 
 #ifdef CONF_TEST_DF
-//! SPI command to send
+/** SPI command to send */
 typedef struct spi_command {
 	uint8_t* data;
 	uint8_t* cmd;
@@ -338,12 +344,12 @@ typedef struct spi_command {
 	uint8_t  dummy_size;
 } spi_cmd_t;
 
-//! AT25 command struct
+/** AT25 command struct */
 typedef struct at25_command {
-	uint32_t op_code:8,	//!< Opcode
-		 address_h:8,	//!< Address high byte
-		 address_m:8,	//!< Address medium byte
-		 address_l;  	//!< Address low byte
+	uint32_t op_code:8,  /** Opcode */
+		address_h:8,     /** Address high byte */
+		address_m:8,     /** Address medium byte */
+		address_l;       /** Address low byte */
 } at25_cmd_t;
 
 /** Device ready/busy status bit. */

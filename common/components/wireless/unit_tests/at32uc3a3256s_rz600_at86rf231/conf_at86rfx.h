@@ -3,7 +3,7 @@
  *
  * \brief AT86RFX configuration
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,27 +48,6 @@
 #include "cycle_counter.h"
 #include "sysclk.h"
 
-#if defined(DOXYGEN)
-/**
- * Attribute to apply to an enum declaration to force it into the smallest
- * type size required to represent all values.
- */
-#define SHORTENUM
-/**
- * Null operation: just waste one CPU cycle.
- */
-#define nop()
-#endif /* defined(DOXYGEN) */
-
-#if defined(__ICCAVR32__)
-#define SHORTENUM /**/
-#define nop() __no_operation()
-#endif /* defined(__ICCAVR32__) */
-#if defined(__GNUC__)
-#define SHORTENUM           __attribute__((packed))
-#define nop() do { __asm__ __volatile__ ("nop"); } while (0)
-#endif /* defined(__GNUC__) */
-
 /*! \name Macros for IRQ and AT86RFX accessing GPIO
  */
 //! @{
@@ -81,15 +60,6 @@
  //! Sleep Transceiver pin
 #define SLP_TR                          (AVR32_PIN_PA19)
 //! @}
-
-/**
- * This macro saves the trx interrupt status and disables the trx interrupt.
- */
-#define ENTER_TRX_REGION()           	DISABLE_TRX_IRQ()
-/**
- *  This macro restores the transceiver interrupt status
- */
-#define LEAVE_TRX_REGION()           	ENABLE_TRX_IRQ()
 
 #if (UC3)
 /* This macro saves the global interrupt status */

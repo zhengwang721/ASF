@@ -62,7 +62,7 @@
 		<require idref="common.services.basic.spi_master"/>
 		<require idref="config.common.wireless.at86rf"/>
 		<require idref="avr32.drivers.gpio"/>
-		<device-support value="uc3a3_a4"/>
+		<device-support value="uc3a3s_a4s"/>
 		<generator value="doxygen-module" default-mcu="at32uc3a3256s"/>
 	</module>
 </asf>

@@ -3,7 +3,7 @@
  *
  * \brief TWIM Master Example for SAM.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -62,7 +62,7 @@
  *
  * \par Usage
  *
- *  -# Build the program and download it into the two evaluation boards.
+ *  -# Build the program and download it into the evaluation board.
  *  -# Connect a serial cable to the UART port for each evaluation kit.
  *  -# On the computer, open and configure a terminal application (e.g.,
  *     HyperTerminal on Microsoft Windows) with these settings:
@@ -127,7 +127,7 @@ static void configure_console(void)
 static status_code_t init_test(void)
 {
 	/* Set TWIM options */
-	cpu_speed = sysclk_get_cpu_hz();
+	cpu_speed = sysclk_get_peripheral_bus_hz(EXAMPLE_TWIM);
 	struct twim_config opts = {
 		.twim_clk = cpu_speed,
 		.speed = TWIM_MASTER_SPEED,
@@ -135,6 +135,15 @@ static status_code_t init_test(void)
 		.data_setup_cycles = 0,
 		.hsmode_data_setup_cycles = 0,
 		.smbus = false,
+		.clock_slew_limit = 0,
+		.clock_drive_strength_low = 0,
+		.data_slew_limit = 0,
+		.data_drive_strength_low = 0,
+		.hs_clock_slew_limit = 0,
+		.hs_clock_drive_strength_high = 0,
+		.hs_clock_drive_strength_low = 0,
+		.hs_data_slew_limit = 0,
+		.hs_data_drive_strength_low = 0,
 	};
 	/* Initialize the TWIM Module */
 	twim_set_callback(EXAMPLE_TWIM, 0, twim_default_callback, 1);

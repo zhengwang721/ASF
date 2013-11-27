@@ -23,9 +23,9 @@
 			<keyword value="Communication"/>
 			<keyword value="Touch"/>
 		</info>
-		<device-support value="xmegaau"/>
-		<device-support value="uc3a3_a4"/>
-		<device-support value="sam4s"/>
+		<device-support value="xmega"/>
+		<device-support value="uc3"/>
+		<device-support value="sam"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
-

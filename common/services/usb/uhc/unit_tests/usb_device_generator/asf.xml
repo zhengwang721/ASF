@@ -3,7 +3,7 @@
 		<module type="application" id="common.services.usb.host.tests.generator#usbb" caption="USB Device Generator for the USB Host Core Unit Tests">
 			<info type="description" value="summary">
 			This test application implements several USB error sequences to test the robustness of a USB host core.
-			</info>	
+			</info>
 			<build type="c-source" value="unit_tests.c"/>
 			<build type="header-file" value="unit_tests.h"/>
 			<build type="include-path" value="."/>
@@ -16,15 +16,16 @@
 				<keyword value="USB"/>
 				<keyword value="Communication"/>
 			</info>
-			<device-support value="uc3a" /> 
-			<device-support value="uc3a3_a4" /> 
-			<device-support value="uc3b0" /> 
-			<device-support value="uc3c" /> 
+			<device-support value="uc3a"/>
+			<device-support value="uc3a3_a4"/>
+			<device-support value="uc3b0"/>
+			<device-support value="uc3c"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.services.usb.host.tests.generator#uotghs" caption="USB Device Generator for the USB Host Core Unit Tests">
 			<info type="description" value="summary">
 			This test application implements several USB error sequences to test the robustness of a USB host core.
-			</info>	
+			</info>
 			<build type="c-source" value="unit_tests.c"/>
 			<build type="header-file" value="unit_tests.h"/>
 			<build type="include-path" value="."/>
@@ -37,8 +38,9 @@
 				<keyword value="USB"/>
 				<keyword value="Communication"/>
 			</info>
-			<device-support value="sam3x" /> 
-			<device-support value="sam3a" /> 
+			<device-support value="sam3x"/>
+			<device-support value="sam3a"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

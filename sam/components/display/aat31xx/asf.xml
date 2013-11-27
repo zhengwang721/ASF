@@ -8,7 +8,8 @@
 		<build type="include-path" value="."/>
 		<device-support value="sam3"/>
 		<device-support value="sam4s"/>
-		<require idref="common.services.basic.gpio"/>
+		<device-support value="sam4e"/>
+		<require idref="common.services.ioport"/>
 		<build type="module-config" subtype="required-header-file" value="conf_aat31xx.h"/>
 		<build type="module-config" subtype="path" value="module_config"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>

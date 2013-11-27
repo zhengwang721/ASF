@@ -13,9 +13,8 @@
 		<build type="library" subtype="user" value="lib/iar/libuc3l-qtouch-iar.r82" toolchain="iarew32"/>
 		<build type="module-config" subtype="required-header-file" value="touch_config_at32uc3l.h"/>
 		<build type="doxygen-entry-point" value="group_avr32_services_qtouch_devspecific_uc3_uc3l0"/>
-		<device-support value="uc3l0" />
+		<device-support value="uc3l0"/>
 		<build type="distribute" subtype="license" value="../../../license.txt"/>
-
 		<info type="keyword" value="technology">
 			<keyword value="Touch"/>
 		</info>

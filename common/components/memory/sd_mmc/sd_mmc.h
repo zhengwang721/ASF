@@ -3,7 +3,7 @@
  *
  * \brief Common SD/MMC stack header file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -53,7 +53,7 @@ extern "C" {
 
 /**
  * \ingroup common_memory
- * \defgroup sd_mmc_stack SD/MMC/SDIO common stack
+ * \defgroup sd_mmc_stack_group SD/MMC/SDIO common stack
  *
  * SD/MMC/SDIO basic APIs used by SD/MMC/SDIO memory
  * APIs (\ref sd_mmc_stack_mem_group).

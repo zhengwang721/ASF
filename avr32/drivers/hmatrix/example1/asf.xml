@@ -2,10 +2,10 @@
 	<module type="application" id="avr32.drivers.hmatrix.example" caption="HMATRIX Example">
 		<info type="description" value="summary">
 		Use the HMATRIX in various mode, count the number of cycles for a short algorithm in each mode.
-		</info>	
+		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Communication" />
-		</info>	
+			<keyword value="Communication"/>
+		</info>
 		<build type="c-source" value="hmatrix_example.c"/>
 		<device-support value="uc3a"/>
 		<device-support value="uc3a3_a4"/>
@@ -16,5 +16,6 @@
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.utils.print_funcs"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

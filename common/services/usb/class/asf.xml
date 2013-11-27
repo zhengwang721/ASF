@@ -2,8 +2,8 @@
 	<select-by-config id="common.services.usb.class.device" name="config.common.services.usb.class.device" caption="USB Device" default="cdc">
 		<info type="description" value="summary">
 		USB Device. Common API.
-
 		A selector is provided to select a single class or a composite device.
+		The provided classes are: CDC, MSC, HID mouse, HID Keyboard, HID Generic, DFU Atmel, PHDC, Vendor Atmel.
 		</info>
 		<module type="service" id="common.services.usb.class.device#cdc" caption="USB Device CDC">
 			<info type="keyword" value="technology">
@@ -33,6 +33,7 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
+			<device-support value="sam4e"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#cdc_stdio" caption="USB Device CDC Standard I/O (stdio)">
@@ -63,6 +64,7 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
+			<device-support value="sam4e"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#composite" caption="USB Composite Device">
@@ -99,6 +101,7 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
+			<device-support value="sam4e"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#dfu_atmel" caption="USB Device DFU Atmel">
@@ -152,6 +155,7 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
+			<device-support value="sam4e"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#hid_keyboard" caption="USB Device HID keyboard">
@@ -182,6 +186,7 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
+			<device-support value="sam4e"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#hid_mouse" caption="USB Device HID mouse">
@@ -212,6 +217,7 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
+			<device-support value="sam4e"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#mass_storage" caption="USB Device Mass Storage Class">
@@ -242,6 +248,7 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
+			<device-support value="sam4e"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#phdc" caption="USB Device PHDC">
@@ -271,6 +278,7 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
+			<device-support value="sam4e"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#vendor_class" caption="USB Device Vendor Class">
@@ -279,7 +287,7 @@
 				<keyword value="Communication" />
 			</info>
 			<require idref="common.services.usb.class.vendor.device.single"/>
-			<build type="doxygen-entry-point" value="udi_vendor_group"/>
+			<build type="doxygen-entry-point" value="udi_vendor_group_desc"/>
 			<build type="doxygen-quick-start" value="udi_vendor_quickstart"/>
 			<device-support value="uc3a"/>
 			<device-support value="uc3a3_a4"/>
@@ -301,14 +309,15 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
+			<device-support value="sam4e"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 	</select-by-config>
 	<select-by-config id="common.services.usb.class.host" name="config.common.services.usb.class.host" caption="USB Host" default="android">
 		<info type="description" value="summary">
 		USB Host. Common API.
-
 		A selector is provided to select a single class support or a multiple classes support.
+		The provided classes are: Android, CDC, MSC, HID mouse, Vendor Atmel.
 		</info>
 		<module type="service" id="common.services.usb.class.host#android" caption="USB Host Android Accessory Class">
 			<info type="keyword" value="technology">
@@ -336,6 +345,7 @@
 			<device-support value="uc3c"/>
 			<device-support value="sam3x"/>
 			<device-support value="sam3a"/>
+			<device-support value="sam4l"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.host#mass_storage" caption="USB Host Mass Storage Class">
@@ -352,6 +362,7 @@
 			<device-support value="uc3c"/>
 			<device-support value="sam3x"/>
 			<device-support value="sam3a"/>
+			<device-support value="sam4l"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.host#multiple_classes" caption="USB Host Multiple classes">
@@ -370,6 +381,7 @@
 			<device-support value="uc3c"/>
 			<device-support value="sam3x"/>
 			<device-support value="sam3a"/>
+			<device-support value="sam4l"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.host#hid_mouse" caption="USB Host HID mouse">
@@ -386,6 +398,7 @@
 			<device-support value="uc3c"/>
 			<device-support value="sam3x"/>
 			<device-support value="sam3a"/>
+			<device-support value="sam4l"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.host#vendor" caption="USB Host Vendor">
@@ -402,6 +415,7 @@
 			<device-support value="uc3c"/>
 			<device-support value="sam3x"/>
 			<device-support value="sam3a"/>
+			<device-support value="sam4l"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 	</select-by-config>

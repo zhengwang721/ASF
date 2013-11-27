@@ -3,7 +3,7 @@
  *
  * \brief AT32UC3A3 RZ600 board header file.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,6 +45,10 @@
 #define _RZ600_H_
 
 #include "compiler.h"
+#include "gpio.h"
+
+#define MCU_SOC_NAME        "AT32UC3A3256S"
+#define BOARD_NAME          "RZ600"
 
 #ifdef __AVR32_ABI_COMPILER__ // Automatically defined when compiling for AVR32, not when assembling.
 #  include "led.h"
@@ -129,7 +133,42 @@
 #define AT86RFX_SPI_MOSI_FUNCTION    AVR32_SPI0_MOSI_0_0_FUNCTION
 #define AT86RFX_SPI_NPCS_PIN         AVR32_SPI0_NPCS_0_0_PIN
 #define AT86RFX_SPI_NPCS_FUNCTION    AVR32_SPI0_NPCS_0_0_FUNCTION
-#define AT86RFX_SPI_BAUDRATE         (48000)
+
+#define AT86RFX_RST_PIN              (AVR32_PIN_PA17)
+#define AT86RFX_MISC_PIN             
+#define AT86RFX_IRQ_PIN              (AVR32_PIN_PA20)
+#define AT86RFX_SLP_PIN              (AVR32_PIN_PA19)
+
+#define AT86RFX_SPI_CS               AT86RFX_SPI_NPCS
+
+#define AT86RFX_IRQ_PIN_GROUP        2
+#define AT86RFX_IRQ_PIN_PRIORITY     1
+
+#define AT86RFX_ISR()                ISR(ext_int_isr, AT86RFX_IRQ_PIN_GROUP, \
+									 AT86RFX_IRQ_PIN_PRIORITY)
+
+#define AT86RFX_INTC_INIT()          irq_register_handler(ext_int_isr, AVR32_GPIO_IRQ_2, 1)
+
+/* Enables the transceiver interrupts */
+#define ENABLE_TRX_IRQ()             gpio_enable_pin_interrupt(AT86RFX_IRQ_PIN, GPIO_RISING_EDGE)
+
+/* Disable the transceiver interrupts */
+#define DISABLE_TRX_IRQ()            gpio_disable_pin_interrupt(AT86RFX_IRQ_PIN)
+
+/* Clear the transceiver interrupts */
+#define CLEAR_TRX_IRQ()              gpio_clear_pin_interrupt_flag(AT86RFX_IRQ_PIN)
+
+/*
+ * This macro saves the trx interrupt status and disables the trx interrupt.
+ */
+#define ENTER_TRX_REGION()           DISABLE_TRX_IRQ()
+
+/*
+ *  This macro restores the transceiver interrupt status
+ */
+#define LEAVE_TRX_REGION()           ENABLE_TRX_IRQ()
+
+
 //! @}
 
 /*! \name SDRAM Definitions

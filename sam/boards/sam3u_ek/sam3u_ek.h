@@ -67,7 +67,7 @@
 /** Master clock frequency */
 #define BOARD_MCK                   CHIP_FREQ_CPU_MAX
 
-/** board main clock xtal statup time */
+/** board main clock xtal startup time */
 #define BOARD_OSC_STARTUP_US   15625
 
 /*----------------------------------------------------------------------------*/
@@ -197,23 +197,6 @@
 /** Backlight pin definition. */
 #define BOARD_AAT31XX_SET_GPIO        PIO_PC19_IDX
 #define BOARD_AAT31XX_SET_FLAGS       PIO_OUTPUT_0 | PIO_DEFAULT
-
-/** Definition of MMA7341L x,y,z axis channel number */
-#define MMA7341L_ADC_CHANNEL_X  2
-#define MMA7341L_ADC_CHANNEL_Y  6
-#define MMA7341L_ADC_CHANNEL_Z  7
-
-/** MMA7341L mode set pin definition. */
-#define PIN_MMA7341L_MODE                PIO_PC13_IDX
-#define PIN_MMA7341L_MODE_FLAG       PIO_OUTPUT_1 | PIO_DEFAULT
-
-/** MMA7341L X,Y,Z axis pin definition. */
-#define PIN_MMA7341L_X_AXIS                PIO_PB3_IDX
-#define PIN_MMA7341L_X_AXIS_FLAG       PIO_INPUT | PIO_DEFAULT
-#define PIN_MMA7341L_Y_AXIS                PIO_PC17_IDX
-#define PIN_MMA7341L_Y_AXIS_FLAG       PIO_INPUT | PIO_DEFAULT
-#define PIN_MMA7341L_Z_AXIS                PIO_PC18_IDX
-#define PIN_MMA7341L_Z_AXIS_FLAG       PIO_INPUT | PIO_DEFAULT
 
 /** Define HX8347A base address. */
 #define BOARD_HX8347A_ADDR            0x62000000
@@ -347,25 +330,28 @@
 #define JOYSTICK_RIGHT   1
 
 #define PIN_TC0_TIOA0       (PIO_PA1_IDX)
+#define PIN_TC0_TIOA0_MUX   (IOPORT_MODE_MUX_A)
 #define PIN_TC0_TIOA0_FLAGS (PIO_PERIPH_A | PIO_DEFAULT)
 
 #define PIN_TC0_TIOA1       (PIO_PB5_IDX)
+#define PIN_TC0_TIOA1_MUX   (IOPORT_MODE_MUX_A)
 #define PIN_TC0_TIOA1_FLAGS (PIO_PERIPH_A | PIO_DEFAULT)
 
-#define PIN_TC0_TIOA1_PIO     PIOB
+#define PIN_TC0_TIOA1_PIO   PIOB
 #define PIN_TC0_TIOA1_MASK  PIO_PB5
-#define PIN_TC0_TIOA1_ID      ID_PIOB
-#define PIN_TC0_TIOA1_TYPE   PIO_PERIPH_A
-#define PIN_TC0_TIOA1_ATTR   PIO_DEFAULT
+#define PIN_TC0_TIOA1_ID    ID_PIOB
+#define PIN_TC0_TIOA1_TYPE  PIO_PERIPH_A
+#define PIN_TC0_TIOA1_ATTR  PIO_DEFAULT
 
 #define PIN_TC0_TIOA2       (PIO_PA30_IDX)
+#define PIN_TC0_TIOA2_MUX   (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA2_FLAGS (PIO_INPUT | PIO_DEFAULT)
 
-#define PIN_TC0_TIOA2_PIO     PIOA
+#define PIN_TC0_TIOA2_PIO   PIOA
 #define PIN_TC0_TIOA2_MASK  PIO_PA30
-#define PIN_TC0_TIOA2_ID      ID_PIOA
-#define PIN_TC0_TIOA2_TYPE   PIO_INPUT
-#define PIN_TC0_TIOA2_ATTR   PIO_DEFAULT
+#define PIN_TC0_TIOA2_ID    ID_PIOA
+#define PIN_TC0_TIOA2_TYPE  PIO_INPUT
+#define PIN_TC0_TIOA2_ATTR  PIO_DEFAULT
 
 //! PWMC PWM0 pin definition.
 #define PIN_PWMC_PWMH0  {1 << 0, PIOB, ID_PIOB, PIO_PERIPH_A, PIO_DEFAULT}
@@ -443,7 +429,7 @@
 /** Identifier of SPI peripheral connected to the touchscreen controller. */
 #define BOARD_ADS7843_SPI_ID        ID_SPI
 /** Chip select connected to the touchscreen controller. */
-#define BOARD_ADS7843_SPI_NPCS      0
+#define BOARD_ADS7843_SPI_NPCS      2
 
 //! SSC pins definition.
 /** SSC pin Transmitter Data (TD) */
@@ -467,6 +453,7 @@
 
 //! PCK0
 #define PIN_PCK0        (PIO_PA21_IDX)
+#define PIN_PCK0_MUX    (IOPORT_MODE_MUX_B)
 #define PIN_PCK0_FLAGS  (PIO_PERIPH_B | PIO_DEFAULT)
 
 #define PIN_PCK_0_MASK PIO_PA21

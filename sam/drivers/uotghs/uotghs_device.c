@@ -3,7 +3,7 @@
  *
  * \brief USB Device Driver for UOTGHS. Compliant with common UDD driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -277,11 +277,13 @@
 #ifndef UDD_NO_SLEEP_MGR
 
 //! Definition of sleep levels
-#define UOTGHS_SLEEP_MODE_USB_SUSPEND  SLEEPMGR_SLEEP_WFE
+#define UOTGHS_SLEEP_MODE_USB_SUSPEND  SLEEPMGR_WAIT_FAST
 #define UOTGHS_SLEEP_MODE_USB_IDLE     SLEEPMGR_SLEEP_WFI
 
 //! State of USB line
 static bool udd_b_idle;
+//! State of sleep manager
+static bool udd_b_sleep_initialized = false;
 
 
 /*! \brief Authorize or not the CPU powerdown mode
@@ -520,6 +522,16 @@ void udd_interrupt(void)
 ISR(UDD_USB_INT_FUN)
 #endif
 {
+	/* For fast wakeup clocks restore
+	 * In WAIT mode, clocks are switched to FASTRC.
+	 * After wakeup clocks should be restored, before that ISR should not
+	 * be served.
+	 */
+	if (!pmc_is_wakeup_clocks_restored() && !Is_udd_suspend()) {
+		cpu_irq_disable();
+		return;
+	}
+
 	if (Is_udd_sof()) {
 		udd_ack_sof();
 		if (Is_udd_full_speed_mode()) {
@@ -670,14 +682,6 @@ void udd_enable(void)
 	// Enable USB hardware
 	otg_enable_pad();
 	otg_enable();
-	otg_unfreeze_clock();
-	// Check USB clock
-	while (!Is_otg_clock_usable());
-
-	// Reset internal variables
-#if (0!=USB_DEVICE_MAX_EP)
-	udd_ep_job_table_reset();
-#endif
 
 	// Set the USB speed requested by configuration file
 #ifdef USB_DEVICE_LOW_SPEED
@@ -690,6 +694,16 @@ void udd_enable(void)
 	udd_high_speed_disable();
 # endif
 #endif // USB_DEVICE_LOW_SPEED
+
+	// Check USB clock
+	otg_unfreeze_clock();
+	while (!Is_otg_clock_usable());
+
+	// Reset internal variables
+#if (0!=USB_DEVICE_MAX_EP)
+	udd_ep_job_table_reset();
+#endif
+
 	otg_ack_vbus_transition();
 	// Force Vbus interrupt in case of Vbus always with a high level
 	// This is possible with a short timing between a Host mode stop/start.
@@ -700,9 +714,14 @@ void udd_enable(void)
 	otg_freeze_clock();
 
 #ifndef UDD_NO_SLEEP_MGR
-	// Initialize the sleep mode authorized for the USB suspend mode
-	udd_b_idle = false;
-	sleepmgr_lock_mode(UOTGHS_SLEEP_MODE_USB_SUSPEND);
+	if (!udd_b_sleep_initialized) {
+		udd_b_sleep_initialized = true;
+		// Initialize the sleep mode authorized for the USB suspend mode
+		udd_b_idle = false;
+		sleepmgr_lock_mode(UOTGHS_SLEEP_MODE_USB_SUSPEND);
+	} else {
+		udd_sleep_mode(false); // Enter idle mode
+	}
 #endif
 
 	cpu_irq_restore(flags);
@@ -716,6 +735,10 @@ void udd_disable(void)
 #ifdef UHD_ENABLE
 # ifdef USB_ID_GPIO
 	if (Is_otg_id_host()) {
+		// Freeze clock to switch mode
+		otg_freeze_clock();
+		udd_detach();
+		otg_disable();
 		return; // Host mode running, ignore UDD disable
 	}
 # else
@@ -729,7 +752,10 @@ void udd_disable(void)
 	otg_unfreeze_clock();
 	udd_detach();
 #ifndef UDD_NO_SLEEP_MGR
-	sleepmgr_unlock_mode(UOTGHS_SLEEP_MODE_USB_SUSPEND);
+	if (udd_b_sleep_initialized) {
+		udd_b_sleep_initialized = false;
+		sleepmgr_unlock_mode(UOTGHS_SLEEP_MODE_USB_SUSPEND);
+	}
 #endif
 
 #ifndef UHD_ENABLE
@@ -955,7 +981,8 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes,
 #  else
 				ptr_job->buf_cnt -= ptr_job->buf_load;
 #  endif
-				b_restart = udd_ep_run(i,
+				b_restart = udd_ep_run(Is_udd_endpoint_in(i) ?
+							(i | USB_EP_DIR_IN) : i,
 						ptr_job->b_shortpacket,
 						&ptr_job->buf[ptr_job->buf_cnt],
 						ptr_job->buf_size
@@ -1741,7 +1768,7 @@ static void udd_ep_finish_job(udd_ep_job_t * ptr_job, bool b_abort, uint8_t ep_n
 	}
 	if (Is_udd_endpoint_in(ep_num)) {
 		ep_num |= USB_EP_DIR_IN;
-	}	
+	}
 	ptr_job->call_trans((b_abort) ? UDD_EP_TRANSFER_ABORT :
 			UDD_EP_TRANSFER_OK, ptr_job->buf_size, ep_num);
 }

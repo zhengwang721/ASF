@@ -6,6 +6,7 @@
 		<device-support value="uc3"/>
 		<device-support value="sam3x"/>
 		<device-support value="sam3a"/>
+		<device-support value="sam4l"/>
 		<build type="header-file" value="conf_usb_host.h"/>
 		<build type="header-file" value="ui.h"/>
 		<build type="header-file" value="main.h"/>
@@ -18,5 +19,6 @@
 			<keyword value="USB"/>
 			<keyword value="Communication"/>
 		</info>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

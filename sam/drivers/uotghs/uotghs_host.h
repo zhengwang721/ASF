@@ -3,7 +3,7 @@
  *
  * \brief USB Host Driver header file for UOTGHS.
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -89,9 +89,9 @@ extern "C" {
 #define uhd_set_vbof_active_high()            (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBUSPO))
 #define uhd_set_vbof_active_low()             (Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBUSPO))
 //! Requests VBus activation
-#define uhd_enable_vbus()                     (Set_bits(UOTGHS->UOTGHS_SFR, UOTGHS_SR_VBUSRQ))
+#define uhd_enable_vbus()                     (UOTGHS->UOTGHS_SFR = UOTGHS_SR_VBUSRQ)
 //! Requests VBus deactivation
-#define uhd_disable_vbus()                    (Set_bits(UOTGHS->UOTGHS_SCR, UOTGHS_SR_VBUSRQ))
+#define uhd_disable_vbus()                    (UOTGHS->UOTGHS_SCR = UOTGHS_SR_VBUSRQ)
 //! Tests if VBus activation has been requested
 #define Is_uhd_vbus_enabled()                 (Tst_bits(UOTGHS->UOTGHS_SR, UOTGHS_SR_VBUSRQ))
 //! @}
@@ -104,12 +104,14 @@ extern "C" {
 #define uhd_enable_vbus_error_interrupt()     (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBERRE))
 #define uhd_disable_vbus_error_interrupt()    (Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBERRE))
 #define Is_uhd_vbus_error_interrupt_enabled() (Tst_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBERRE))
-#define uhd_ack_vbus_error_interrupt()        (Set_bits(UOTGHS->UOTGHS_SCR, UOTGHS_SCR_VBERRIC))
+#define uhd_ack_vbus_error_interrupt()        (UOTGHS->UOTGHS_SCR = UOTGHS_SCR_VBERRIC)
 #define Is_uhd_vbus_error_interrupt()         (Tst_bits(UOTGHS->UOTGHS_SR, UOTGHS_SR_VBERRI))
 //! @}
 
+#define uhd_enable_errors_interrupt()         (Set_bits(UOTGHS->UOTGHS_CTRL, (UOTGHS_SCR_VBERRIC|UOTGHS_SCR_BCERRIC|UOTGHS_SCR_HNPERRIC|UOTGHS_SCR_STOIC)))
 #define uhd_ack_errors_interrupt()            (UOTGHS->UOTGHS_SCR = (UOTGHS_SCR_VBERRIC|UOTGHS_SCR_BCERRIC|UOTGHS_SCR_HNPERRIC|UOTGHS_SCR_STOIC))
-#define Is_uhd_errors_interrupt()             (Tst_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBERRE|UOTGHS_CTRL_BCERRE|UOTGHS_CTRL_HNPERRE|UOTGHS_CTRL_STOE))
+#define Is_uhd_errors_interrupt_enabled()     (Tst_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBERRE|UOTGHS_CTRL_BCERRE|UOTGHS_CTRL_HNPERRE|UOTGHS_CTRL_STOE))
+#define Is_uhd_errors_interrupt()             (Tst_bits(UOTGHS->UOTGHS_SR, UOTGHS_SR_VBERRI|UOTGHS_SR_BCERRI|UOTGHS_SR_HNPERRI|UOTGHS_SR_STOI))
 
 //! @name USB device connection/disconnection monitoring
 //! @{
@@ -118,12 +120,14 @@ extern "C" {
 #define Is_uhd_connection_int_enabled()       (Tst_bits(UOTGHS->UOTGHS_HSTIMR, UOTGHS_HSTIMR_DCONNIE))
 #define uhd_ack_connection()                  (UOTGHS->UOTGHS_HSTICR = UOTGHS_HSTICR_DCONNIC)
 #define Is_uhd_connection()                   (Tst_bits(UOTGHS->UOTGHS_HSTISR, UOTGHS_HSTISR_DCONNI))
+#define uhd_raise_connection()                (UOTGHS->UOTGHS_HSTIFR = UOTGHS_HSTIFR_DCONNIS)
 
 #define uhd_enable_disconnection_int()        (UOTGHS->UOTGHS_HSTIER = UOTGHS_HSTIER_DDISCIES)
 #define uhd_disable_disconnection_int()       (UOTGHS->UOTGHS_HSTIDR = UOTGHS_HSTIDR_DDISCIEC)
 #define Is_uhd_disconnection_int_enabled()    (Tst_bits(UOTGHS->UOTGHS_HSTIMR, UOTGHS_HSTIMR_DDISCIE))
 #define uhd_ack_disconnection()               (UOTGHS->UOTGHS_HSTICR = UOTGHS_HSTICR_DDISCIC)
 #define Is_uhd_disconnection()                (Tst_bits(UOTGHS->UOTGHS_HSTISR, UOTGHS_HSTISR_DDISCI))
+#define uhd_raise_disconnection()             (UOTGHS->UOTGHS_HSTIFR = UOTGHS_HSTIFR_DDISCIS)
 //! @}
 
 //! @name USB device speed control

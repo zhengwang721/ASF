@@ -3,7 +3,7 @@
  *
  * \brief Commonly used includes, types and macros.
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1031,6 +1031,153 @@ typedef U8                  Byte;       //!< 8-bit unsigned integer.
 #include "preprocessor.h"
 #include "progmem.h"
 #include "interrupt.h"
+
+
+#if (defined __GNUC__)
+  #define SHORTENUM                           __attribute__ ((packed))
+#elif (defined __ICCAVR__)
+  #define SHORTENUM                           /**/
+#endif
+
+#if (defined __GNUC__)
+  #define FUNC_PTR                            void *
+#elif (defined __ICCAVR__)
+#if (FLASHEND > 0x1FFFF)    // Required for program code larger than 128K
+  #define FUNC_PTR                            void __farflash *
+#else
+  #define FUNC_PTR                            void *
+#endif  /* ENABLE_FAR_FLASH */
+#endif
+
+
+#if (defined __GNUC__)
+  #define FLASH_DECLARE(x)                  const x __attribute__((__progmem__))
+#elif (defined __ICCAVR__)
+  #define FLASH_DECLARE(x)                  const __flash x
+#endif
+
+#if (defined __GNUC__)
+  #define FLASH_EXTERN(x) extern const x
+#elif (defined __ICCAVR__)
+  #define FLASH_EXTERN(x) extern const __flash x
+#endif
+
+
+/*Defines the Flash Storage for the request and response of MAC*/
+#define CMD_ID_OCTET    (0)
+
+/* Converting of values from CPU endian to little endian. */
+#define CPU_ENDIAN_TO_LE16(x)   (x)
+#define CPU_ENDIAN_TO_LE32(x)   (x)
+#define CPU_ENDIAN_TO_LE64(x)   (x)
+
+/* Converting of values from little endian to CPU endian. */
+#define LE16_TO_CPU_ENDIAN(x)   (x)
+#define LE32_TO_CPU_ENDIAN(x)   (x)
+#define LE64_TO_CPU_ENDIAN(x)   (x)
+
+/* Converting of constants from little endian to CPU endian. */
+#define CLE16_TO_CPU_ENDIAN(x)  (x)
+#define CLE32_TO_CPU_ENDIAN(x)  (x)
+#define CLE64_TO_CPU_ENDIAN(x)  (x)
+
+/* Converting of constants from CPU endian to little endian. */
+#define CCPU_ENDIAN_TO_LE16(x)  (x)
+#define CCPU_ENDIAN_TO_LE32(x)  (x)
+#define CCPU_ENDIAN_TO_LE64(x)  (x)
+
+#if (defined __GNUC__)
+  #define ADDR_COPY_DST_SRC_16(dst, src)  memcpy((&(dst)), (&(src)), sizeof(uint16_t))
+  #define ADDR_COPY_DST_SRC_64(dst, src)  memcpy((&(dst)), (&(src)), sizeof(uint64_t))
+
+/* Converts a 2 Byte array into a 16-Bit value */
+#define convert_byte_array_to_16_bit(data) \
+    (*(uint16_t *)(data))
+
+/* Converts a 4 Byte array into a 32-Bit value */
+#define convert_byte_array_to_32_bit(data) \
+    (*(uint32_t *)(data))
+
+/* Converts a 8 Byte array into a 64-Bit value */
+#define convert_byte_array_to_64_bit(data) \
+    (*(uint64_t *)(data))
+
+/* Converts a 16-Bit value into a 2 Byte array */
+#define convert_16_bit_to_byte_array(value, data) \
+    ((*(uint16_t *)(data)) = (uint16_t)(value))
+
+/* Converts spec 16-Bit value into a 2 Byte array */
+#define convert_spec_16_bit_to_byte_array(value, data) \
+    ((*(uint16_t *)(data)) = (uint16_t)(value))
+
+/* Converts spec 16-Bit value into a 2 Byte array */
+#define convert_16_bit_to_byte_address(value, data) \
+    ((*(uint16_t *)(data)) = (uint16_t)(value))
+
+/* Converts a 32-Bit value into a 4 Byte array */
+#define convert_32_bit_to_byte_array(value, data) \
+    ((*(uint32_t *)(data)) = (uint32_t)(value))
+
+/* Converts a 64-Bit value into  a 8 Byte array */
+/* Here memcpy requires much less footprint */
+#define convert_64_bit_to_byte_array(value, data) \
+    memcpy((data), (&(value)), sizeof(uint64_t))
+
+#elif (defined __ICCAVR__)
+  #define ADDR_COPY_DST_SRC_16(dst, src)  ((dst) = (src))
+  #define ADDR_COPY_DST_SRC_64(dst, src)  ((dst) = (src))
+
+/* Converts a 2 Byte array into a 16-Bit value */
+#define convert_byte_array_to_16_bit(data) \
+    (*(uint16_t *)(data))
+
+/* Converts a 4 Byte array into a 32-Bit value */
+#define convert_byte_array_to_32_bit(data) \
+    (*(uint32_t *)(data))
+
+/* Converts a 8 Byte array into a 64-Bit value */
+#define convert_byte_array_to_64_bit(data) \
+    (*(uint64_t *)(data))
+
+/* Converts a 16-Bit value into a 2 Byte array */
+#define convert_16_bit_to_byte_array(value, data) \
+    ((*(uint16_t *)(data)) = (uint16_t)(value))
+
+/* Converts spec 16-Bit value into a 2 Byte array */
+#define convert_spec_16_bit_to_byte_array(value, data) \
+    ((*(uint16_t *)(data)) = (uint16_t)(value))
+
+/* Converts spec 16-Bit value into a 2 Byte array */
+#define convert_16_bit_to_byte_address(value, data) \
+    ((*(uint16_t *)(data)) = (uint16_t)(value))
+
+/* Converts a 32-Bit value into a 4 Byte array */
+#define convert_32_bit_to_byte_array(value, data) \
+    ((*(uint32_t *)(data)) = (uint32_t)(value))
+
+/* Converts a 64-Bit value into  a 8 Byte array */
+#define convert_64_bit_to_byte_array(value, data) \
+    ((*(uint64_t *)(data)) = (uint64_t)(value))
+#endif
+
+#define MEMCPY_ENDIAN memcpy
+#define PGM_READ_BLOCK(dst, src, len) memcpy_P((dst), (src), (len))
+
+#if (defined __GNUC__)
+  #define PGM_READ_BYTE(x) pgm_read_byte(x)
+  #define PGM_READ_WORD(x) pgm_read_word(x)
+#elif (defined __ICCAVR__)
+  #define PGM_READ_BYTE(x) *(x)
+  #define PGM_READ_WORD(x) *(x)
+#endif
+
+
+#if (defined __GNUC__)
+  #define nop() do { __asm__ __volatile__ ("nop"); } while (0)
+#elif (defined __ICCAVR__)
+  #define nop() __no_operation()
+#endif
+
 
 /**
  * \}

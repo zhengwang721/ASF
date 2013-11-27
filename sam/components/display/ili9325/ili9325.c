@@ -3,7 +3,7 @@
  *
  * \brief API driver for ILI9325 TFT display component.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -74,9 +74,9 @@ static volatile ili9325_coord_t limit_end_x, limit_end_y;
 /* Global variable describing the font size used by the driver */
 const struct ili9325_font gfont = {10, 14};
 /**
- * Character set table for font 10x14 
- * Coding format: 
- * Char height is 14 bits, which is coded using 2 bytes per column (2 unused bits). 
+ * Character set table for font 10x14
+ * Coding format:
+ * Char height is 14 bits, which is coded using 2 bytes per column (2 unused bits).
  * Char width is 10 bits.
  */
 const uint8_t p_uc_charset10x14[] = {
@@ -513,7 +513,7 @@ uint32_t ili9325_init(struct ili9325_opt_t *p_opt)
 	/* Set VCOM amplitude */
 	ili9325_write_register(ILI9325_POWER_CTRL4, 0x0000);
 	ili9325_delay(200);
-	
+
 	/* Enable power supply and source driver */
 	/* Adjusts the constant current and Sets the factor used in the step-up circuits.*/
 	ili9325_write_register(ILI9325_POWER_CTRL1, ILI9325_POWER_CTRL1_SAP |
@@ -727,12 +727,12 @@ void ili9325_set_display_direction(enum ili9325_display_direction e_dd, enum ili
 		enum ili9325_scan_direction e_scd)
 {
 	if (e_dd == LANDSCAPE) {
-		ili9325_write_register(ILI9325_ENTRY_MODE, 
+		ili9325_write_register(ILI9325_ENTRY_MODE,
 				ILI9325_ENTRY_MODE_AM | ILI9325_ENTRY_MODE_DFM |
-				ILI9325_ENTRY_MODE_TRI | ILI9325_ENTRY_MODE_HWM | 
+				ILI9325_ENTRY_MODE_TRI | ILI9325_ENTRY_MODE_HWM |
 				ILI9325_ENTRY_MODE_ORG);
 	} else {
-		ili9325_write_register(ILI9325_ENTRY_MODE, 
+		ili9325_write_register(ILI9325_ENTRY_MODE,
 				ILI9325_ENTRY_MODE_HWM | ILI9325_ENTRY_MODE_TRI |
 				ILI9325_ENTRY_MODE_DFM | ILI9325_ENTRY_MODE_ID(0x03));
 	}
@@ -1021,6 +1021,27 @@ uint32_t ili9325_draw_filled_circle(uint32_t ul_x, uint32_t ul_y, uint32_t ul_r)
 }
 
 /**
+ * \brief Prepare LCD to draw.
+ *
+ * \param ul_x Horizontal address start position
+ * \param ul_y Vertical address start position
+ * \param ul_width The width of the window.
+ * \param ul_height The height of the window.
+ */
+void ili9325_draw_prepare(uint32_t ul_x, uint32_t ul_y, uint32_t ul_width,
+		uint32_t ul_height)
+{
+	/* Determine the refresh window area */
+	ili9325_set_window(ul_x, ul_y, ul_width, ul_height);
+
+	/* Set cursor */
+	ili9325_set_cursor_position(ul_x, ul_y);
+
+	/* Prepare to write in GRAM */
+	ili9325_write_ram_prepare();
+}
+
+/**
  * \brief Draw an ASCII character on LCD.
  *
  * \param ul_x X coordinate of character upper-left corner.
@@ -1136,21 +1157,21 @@ static inline void ili9325_send_draw_limits(const bool send_end_limits)
 
 	if (send_end_limits) {
 		/* Set Horizontal Address End Position */
-		ili9325_write_register(ILI9325_HORIZONTAL_ADDR_END, 
+		ili9325_write_register(ILI9325_HORIZONTAL_ADDR_END,
 			(uint16_t)(limit_end_x));
 	}
-	
+
 	/* Set Vertical Address Start Position */
 	ili9325_write_register(ILI9325_VERTICAL_ADDR_START, (uint16_t)limit_start_y);
 	if (send_end_limits) {
 		/* Set Vertical Address End Position */
-		ili9325_write_register(ILI9325_VERTICAL_ADDR_END, 
-			(uint16_t)(limit_end_y));	
+		ili9325_write_register(ILI9325_VERTICAL_ADDR_END,
+			(uint16_t)(limit_end_y));
 	}
 
 	/* GRAM Horizontal/Vertical Address Set (R20h, R21h) */
 	ili9325_write_register(ILI9325_HORIZONTAL_GRAM_ADDR_SET, limit_start_x); /* column */
-	ili9325_write_register(ILI9325_VERTICAL_GRAM_ADDR_SET, limit_start_y); /* row */	
+	ili9325_write_register(ILI9325_VERTICAL_GRAM_ADDR_SET, limit_start_y); /* row */
 }
 
 /**
@@ -1295,7 +1316,7 @@ void ili9325_copy_pixels_to_screen(const ili9325_color_t *pixels, uint32_t count
 
 	while (count--) {
 		LCD_WD((*pixels >> 16) & 0xFF);
-		LCD_WD((*pixels >> 8) & 0xFF);		
+		LCD_WD((*pixels >> 8) & 0xFF);
 		LCD_WD(*pixels & 0xFF);
 
 		pixels++;
@@ -1330,7 +1351,7 @@ void ili9325_copy_raw_pixel_24bits_to_screen(const uint8_t *raw_pixels, uint32_t
 	while (count--) {
 		pixels = (*raw_pixels)  | (*(raw_pixels+1)) << 8 | *(raw_pixels+2)<<16;
 		LCD_WD((pixels >> 16) & 0xFF);
-		LCD_WD((pixels >> 8) & 0xFF);		
+		LCD_WD((pixels >> 8) & 0xFF);
 		LCD_WD(pixels & 0xFF);
 
 		raw_pixels +=3;

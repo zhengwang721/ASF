@@ -3,7 +3,7 @@
  *
  * \brief Clock system example 1
  *
- * Copyright (c) 2010 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -74,6 +74,7 @@
  * This example has been tested with the following setup:
  *  - STK600 evaluation Kit (Tested with STK600-ATMEGA128RFA1)
  *    need to connect a 10 Pin cable from PORTB to Led header
+ *  - ATmega256RFR2 Xplained Pro kit
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for AVR.

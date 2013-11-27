@@ -3,7 +3,7 @@
  *
  * \brief AT25DFx SerialFlash Component Example.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,7 @@
  *
  * \section Requirements
  *
- * This package can be used with SAM3N and SAM4L evaluation kits.
+ * This package can be used with SAM3N, SAM4L, SAM4E and SAM4C evaluation kits.
  *
  * \section Description
  *

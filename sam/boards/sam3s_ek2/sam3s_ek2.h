@@ -72,7 +72,7 @@
 /** Master clock frequency */
 #define BOARD_MCK                   CHIP_FREQ_CPU_MAX
 
-/** board main clock xtal statup time */
+/** board main clock xtal startup time */
 #define BOARD_OSC_STARTUP_US   15625
 
 /*----------------------------------------------------------------------------*/
@@ -336,25 +336,28 @@
 #define PINS_PUSHBUTTONS    PIN_PUSHBUTTON_1, PIN_PUSHBUTTON_2
 
 #define PIN_TC0_TIOA0       (PIO_PA0_IDX)
+#define PIN_TC0_TIOA0_MUX   (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA0_FLAGS (PIO_PERIPH_B | PIO_DEFAULT)
 
 #define PIN_TC0_TIOA1       (PIO_PA15_IDX)
+#define PIN_TC0_TIOA1_MUX   (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA1_FLAGS (PIO_PERIPH_B | PIO_DEFAULT)
 
-#define PIN_TC0_TIOA1_PIO     PIOA
+#define PIN_TC0_TIOA1_PIO   PIOA
 #define PIN_TC0_TIOA1_MASK  PIO_PA15
-#define PIN_TC0_TIOA1_ID      ID_PIOA
-#define PIN_TC0_TIOA1_TYPE   PIO_PERIPH_B
-#define PIN_TC0_TIOA1_ATTR   PIO_DEFAULT
+#define PIN_TC0_TIOA1_ID    ID_PIOA
+#define PIN_TC0_TIOA1_TYPE  PIO_PERIPH_B
+#define PIN_TC0_TIOA1_ATTR  PIO_DEFAULT
 
 #define PIN_TC0_TIOA2       (PIO_PA26_IDX)
+#define PIN_TC0_TIOA2_MUX   (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA2_FLAGS (PIO_INPUT | PIO_DEFAULT)
 
-#define PIN_TC0_TIOA2_PIO     PIOA
+#define PIN_TC0_TIOA2_PIO   PIOA
 #define PIN_TC0_TIOA2_MASK  PIO_PA26
-#define PIN_TC0_TIOA2_ID      ID_PIOA
-#define PIN_TC0_TIOA2_TYPE   PIO_INPUT
-#define PIN_TC0_TIOA2_ATTR   PIO_DEFAULT
+#define PIN_TC0_TIOA2_ID    ID_PIOA
+#define PIN_TC0_TIOA2_TYPE  PIO_INPUT
+#define PIN_TC0_TIOA2_ATTR  PIO_DEFAULT
 
 /** PWMC PWM0 pin definition: Output High. */
 #define PIN_PWMC_PWMH0  {PIO_PC18B_PWMH0, PIOC, ID_PIOC, PIO_PERIPH_B, PIO_DEFAULT}
@@ -444,6 +447,7 @@
 
 /** PCK0 */
 #define PIN_PCK0        (PIO_PA6_IDX)
+#define PIN_PCK0_MUX    (IOPORT_MODE_MUX_B)
 #define PIN_PCK0_FLAGS  (PIO_PERIPH_B | PIO_DEFAULT)
 
 #define PIN_PCK_0_MASK PIO_PA6
@@ -490,9 +494,9 @@
 #define PIN_USART0_RTS_IDX        (PIO_PA7_IDX)
 #define PIN_USART0_RTS_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
 /** USART0 pin SCK */
-#define PIN_USART0_SCK    {PIO_PA2B_SCK0, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
+#define PIN_USART0_SCK    {PIO_PA2B_SCK0, PIOA, ID_PIOA, PIO_PERIPH_B, PIO_DEFAULT}
 #define PIN_USART0_SCK_IDX        (PIO_PA2_IDX)
-#define PIN_USART0_SCK_FLAGS      (PIO_PERIPH_A | PIO_DEFAULT)
+#define PIN_USART0_SCK_FLAGS      (PIO_PERIPH_B | PIO_DEFAULT)
 
 /** USART1 pin RX */
 #define PIN_USART1_RXD    {PIO_PA21A_RXD1, PIOA, ID_PIOA, PIO_PERIPH_A, PIO_DEFAULT}
@@ -644,23 +648,6 @@
 #define BOARD_ILI9325_ADDR          0x61000000
 /** Define ILI9325 register select signal. */
 #define BOARD_ILI9325_RS            (1 << 1)
-
-/** Definition of MMA7341L x,y,z axis channel number */
-#define MMA7341L_ADC_CHANNEL_X  2
-#define MMA7341L_ADC_CHANNEL_Y  6
-#define MMA7341L_ADC_CHANNEL_Z  7
-
-/** MMA7341L mode set pin definition. */
-#define PIN_MMA7341L_MODE                PIO_PC13_IDX
-#define PIN_MMA7341L_MODE_FLAG       PIO_OUTPUT_1 | PIO_DEFAULT
-
-/** MMA7341L X,Y,Z axis pin definition. */
-#define PIN_MMA7341L_X_AXIS                PIO_PB3_IDX
-#define PIN_MMA7341L_X_AXIS_FLAG       PIO_INPUT | PIO_DEFAULT
-#define PIN_MMA7341L_Y_AXIS                PIO_PC17_IDX
-#define PIN_MMA7341L_Y_AXIS_FLAG       PIO_INPUT | PIO_DEFAULT
-#define PIN_MMA7341L_Z_AXIS                PIO_PC18_IDX
-#define PIN_MMA7341L_Z_AXIS_FLAG       PIO_INPUT | PIO_DEFAULT
 
 /** Touchscreen controller IRQ & Busy pin definition. */
 #ifdef BOARD_REV_A

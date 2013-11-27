@@ -4,12 +4,13 @@
 		Example application. It demonstrates how to manipulate 16-bit fixed-point vectors using the function set provided in the DSP library.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Digital signal processing" />
+			<keyword value="Digital Signal Processing"/>
 		</info>
 		<build type="c-source" value="vectors_example.c"/>
 		<device-support value="uc3"/>
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.drivers.cpu.cycle_counter"/>
 		<require idref="avr32.services.dsplib.vectors"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

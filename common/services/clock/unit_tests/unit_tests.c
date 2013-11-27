@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for common clock service
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -68,7 +68,7 @@
  * - \ref conf_usart_serial.h
  *
  * \section device_info Device Info
- * All AVR devices can be used.
+ * All AVR and SAM4L devices can be used.
  * This example has been tested with the following setup:
  * - EVK1100
  * - EVK1101
@@ -78,6 +78,8 @@
  * - UC3L_EK
  * - STK600+RCUC3D
  * - SAM4L-EK
+ * - SAM4L Xplained Pro Board.
+ * - SAM4L8 Xplained Pro Board.
  *
  * \section description Description of the unit tests
  * See the documentation for the individual unit test functions \ref unit_tests.c
@@ -142,6 +144,10 @@ static void run_osc_test(const struct test_case *test)
 {
 	volatile uint32_t wait;
 	bool status;
+	/* avoid Cppcheck Warning */
+	UNUSED(wait);
+	UNUSED(status);
+	
 #ifdef BOARD_OSC0_HZ
 	osc_enable(OSC_ID_OSC0);
 	for (wait  =0; wait < OSC0_STARTUP_TIMEOUT; wait++) {
@@ -285,6 +291,10 @@ static void run_pll_dfll_test(const struct test_case *test)
 {
 	uint32_t wait;
 	bool status;
+	/* avoid Cppcheck Warning */
+	UNUSED(wait);
+	UNUSED(status);
+
 #if (defined CONFIG_PLL0_SOURCE) || (defined CONFIG_PLL1_SOURCE)
 	struct pll_config pllcfg;
 #endif
@@ -371,6 +381,8 @@ static void cleanup_pll_dfll_test(const struct test_case *test)
 static void run_sync_clock_test(const struct test_case *test)
 {
 	bool status;
+	/* avoid Cppcheck Warning */
+	UNUSED(status);
 
 	sysclk_init();
 	//PBA clock set, usart can be used

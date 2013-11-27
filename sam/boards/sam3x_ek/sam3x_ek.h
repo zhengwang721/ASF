@@ -3,7 +3,7 @@
  *
  * \brief SAM3X-EK Board Definition.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,7 +71,7 @@
 /*! Master clock frequency */
 #define BOARD_MCK                       CHIP_FREQ_CPU_MAX
 
-/** board main clock xtal statup time */
+/** board main clock xtal startup time */
 #define BOARD_OSC_STARTUP_US   15625
 
 /* ------------------------------------------------------------------------ */
@@ -242,6 +242,8 @@
 #define PIN_LED_0_TYPE  PIO_OUTPUT_1
 #define PIN_LED_0_ATTR  PIO_DEFAULT
 
+#define LED0_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
+
 /*! LED #1 pin definition (GREEN). */
 #define LED_1_NAME      "green LED D4"
 #define LED1_GPIO       (PIO_PB13_IDX)
@@ -255,6 +257,8 @@
 #define PIN_LED_1_TYPE  PIO_OUTPUT_1
 #define PIN_LED_1_ATTR  PIO_DEFAULT
 
+#define LED1_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
+
 /*! LED #2 pin detection (AMBER). */
 #define LED2_GPIO       (PIO_PB12_IDX)
 #define LED2_FLAGS      (PIO_TYPE_PIO_OUTPUT_1 | PIO_DEFAULT)
@@ -266,6 +270,8 @@
 #define PIN_LED_2_TYPE   PIO_OUTPUT_1
 #define PIN_LED_2_ATTR   PIO_DEFAULT
 
+#define LED2_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
+
 /*! LED #3 pin detection (power) */
 #define LED3_GPIO       (PIO_PA13_IDX)
 #define LED3_FLAGS      (PIO_TYPE_PIO_OUTPUT_0 | PIO_DEFAULT)
@@ -276,6 +282,8 @@
 #define PIN_LED_3_ID     ID_PIOA
 #define PIN_LED_3_TYPE   PIO_OUTPUT_1
 #define PIN_LED_3_ATTR   PIO_DEFAULT
+
+#define LED3_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
 
 #define BOARD_NUM_OF_LED 4
 
@@ -313,9 +321,11 @@
 #define PIN_PUSHBUTTON_2_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE)
 
 #define PIN_TC0_TIOA0           (PIO_PB25_IDX)
+#define PIN_TC0_TIOA0_MUX       (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA0_FLAGS     (PIO_PERIPH_B | PIO_DEFAULT)
 
 #define PIN_TC0_TIOA1           (PIO_PA2_IDX)
+#define PIN_TC0_TIOA1_MUX       (IOPORT_MODE_MUX_A)
 #define PIN_TC0_TIOA1_FLAGS     (PIO_PERIPH_A | PIO_DEFAULT)
 
 #define PIN_TC0_TIOA1_PIO     PIOA
@@ -325,6 +335,7 @@
 #define PIN_TC0_TIOA1_ATTR    PIO_DEFAULT
 
 #define PIN_TC0_TIOA2         (PIO_PA5_IDX)
+#define PIN_TC0_TIOA2_MUX     (IOPORT_MODE_MUX_A)
 #define PIN_TC0_TIOA2_FLAGS   (PIO_INPUT | PIO_DEFAULT)
 
 #define PIN_TC0_TIOA2_PIO     PIOA
@@ -512,6 +523,7 @@
 /* ------------------------------------------------------------------------ */
 /*! PCK0 */
 #define PIN_PCK0        (PIO_PB22_IDX)
+#define PIN_PCK0_MUX    (IOPORT_MODE_MUX_B)
 #define PIN_PCK0_FLAGS  (PIO_PERIPH_B | PIO_DEFAULT)
 
 #define PIN_PCK_0_MASK  PIO_PB22
@@ -602,6 +614,10 @@
 #define PINS_UART_ID   ID_PIOA
 #define PINS_UART_TYPE PIO_PERIPH_A
 #define PINS_UART_ATTR PIO_DEFAULT
+
+#define PINS_UART0        PINS_UART
+#define PINS_UART0_PORT   IOPORT_PIOA
+#define PINS_UART0_MASK   PINS_UART_MASK
 
 /**
  * \file
@@ -917,23 +933,6 @@
 /*! Backlight pin definition. */
 #define BOARD_AAT31XX_SET_GPIO        PIO_PB27_IDX
 #define BOARD_AAT31XX_SET_FLAGS       PIO_OUTPUT_0 | PIO_DEFAULT
-
-/** Definition of MMA7341L x,y,z axis channel number */
-#define MMA7341L_ADC_CHANNEL_X  2
-#define MMA7341L_ADC_CHANNEL_Y  6
-#define MMA7341L_ADC_CHANNEL_Z  7
-
-/** MMA7341L mode set pin definition. */
-#define PIN_MMA7341L_MODE                PIO_PC13_IDX
-#define PIN_MMA7341L_MODE_FLAG       PIO_OUTPUT_1 | PIO_DEFAULT
-
-/** MMA7341L X,Y,Z axis pin definition. */
-#define PIN_MMA7341L_X_AXIS                PIO_PB3_IDX
-#define PIN_MMA7341L_X_AXIS_FLAG       PIO_INPUT | PIO_DEFAULT
-#define PIN_MMA7341L_Y_AXIS                PIO_PC17_IDX
-#define PIN_MMA7341L_Y_AXIS_FLAG       PIO_INPUT | PIO_DEFAULT
-#define PIN_MMA7341L_Z_AXIS                PIO_PC18_IDX
-#define PIN_MMA7341L_Z_AXIS_FLAG       PIO_INPUT | PIO_DEFAULT
 
 /**
  * \file
@@ -1252,6 +1251,12 @@
 #define BOARD_ID_TWI_EEPROM         ID_TWI0
 /*! TWI Base for TWI EEPROM application to use */
 #define BOARD_BASE_TWI_EEPROM       TWI0
+/*! TWI Data pin for EEPROM */
+#define BOARD_DATA_TWI_EEPROM       TWI0_DATA_GPIO
+#define BOARD_DATA_TWI_MUX_EEPROM   IOPORT_MODE_MUX_A
+/*! TWI Clock pin for EEPROM */
+#define BOARD_CLK_TWI_EEPROM        TWI0_CLK_GPIO
+#define BOARD_CLK_TWI_MUX_EEPROM    IOPORT_MODE_MUX_A
 
 /* ------------------------------------------------------------------------ */
 #define CONSOLE_UART               UART

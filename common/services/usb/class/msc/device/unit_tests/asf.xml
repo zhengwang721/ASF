@@ -19,6 +19,7 @@
 				<keyword value="Communication"/>
 			</info>
 			<device-support value="uc3"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.services.usb.class.msc.device.unit_tests#1" caption="Unit Tests for the USB Device Mass Storage Class">
 			<info type="description" value="summary">
@@ -44,6 +45,7 @@
 			<device-support value="xmegaa4u"/>
 			<device-support value="xmegab"/>
 			<device-support value="xmegac"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.services.usb.class.msc.device.unit_tests#2" caption="Unit Tests for the USB Device Mass Storage Class">
 			<info type="description" value="summary">
@@ -70,6 +72,8 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
+			<device-support value="sam4e"/>
+			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
 </asf>

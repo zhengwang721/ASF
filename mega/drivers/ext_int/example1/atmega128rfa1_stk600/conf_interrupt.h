@@ -79,13 +79,4 @@
 /* External PC Interrupt PCINT8 */
 #define CONFIG_PC_INT8      PC_INT8_PIN
 
-/* External Interrupt Input Source */
-#define CONFIG_INTERRUPT_SOURCE     CONFIG_EXT_INT0
-
-/* External Interrupt Input Source */
-#define CONFIG_INTERRUPT_MODE       IOPORT_SENSE_FALLING
-
-/* External PC Interrupt Input Source */
-#define CONFIG_PC_INT_SOURCE        CONFIG_PC_INT0
-
 #endif

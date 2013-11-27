@@ -3,7 +3,7 @@
  *
  * \brief Two-Wire Interface (TWI) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -79,6 +79,12 @@ extern "C" {
 #define TWI_CLK_CALC_ARGU    4
 #define TWI_CLK_DIV_MAX      0xFF
 #define TWI_CLK_DIV_MIN      7
+
+#if SAM4E
+#define TWI_WP_KEY_VALUE TWI_WPROT_MODE_SECURITY_CODE((uint32_t)0x545749)
+#elif SAM4C
+#define TWI_WP_KEY_VALUE TWI_WPMR_WPKEY_PASSWD
+#endif
 
 /**
  * \brief Enable TWI master mode.
@@ -339,14 +345,23 @@ uint32_t twi_master_write(Twi *p_twi, twi_packet_t *p_packet)
 		p_twi->TWI_THR = *buffer++;
 
 		cnt--;
-	};
+	}
+
+	while (1) {
+		status = p_twi->TWI_SR;
+		if (status & TWI_SR_NACK) {
+			return TWI_RECEIVE_NACK;
+		}
+
+		if (status & TWI_SR_TXRDY) {
+			break;
+		}
+	}
 
 	p_twi->TWI_CR = TWI_CR_STOP;
 
 	while (!(p_twi->TWI_SR & TWI_SR_TXCOMP)) {
 	}
-
-	p_twi->TWI_SR;
 
 	return TWI_SUCCESS;
 }
@@ -573,10 +588,15 @@ Pdc *twi_get_pdc_base(Twi *p_twi)
 	if (p_twi == TWI0) {
 		p_pdc_base = PDC_TWI0;
 	}
-#if (SAM3XA || SAM3U || SAM3S || SAM4S)
+#ifdef PDC_TWI1
 	else if (p_twi == TWI1) {
 		p_pdc_base = PDC_TWI1;
 	}
+#endif
+#ifdef PDC_TWI2
+		else if (p_twi == TWI2) {
+			p_pdc_base = PDC_TWI2;
+		}
 #endif
 	else
 	{
@@ -585,6 +605,39 @@ Pdc *twi_get_pdc_base(Twi *p_twi)
 
 	return p_pdc_base;
 }
+
+#if (SAM4E || SAM4C)
+/**
+ * \brief Enables/Disables write protection mode.
+ *
+ * \param p_twi Pointer to a TWI instance.
+ * \param flag ture for enable, false for disable.
+ */
+void twi_set_write_protection(Twi *p_twi, bool flag)
+{
+#if SAM4E
+	p_twi->TWI_WPROT_MODE = TWI_WP_KEY_VALUE |
+		(flag ? TWI_WPROT_MODE_WPROT : 0);
+#else
+	p_twi->TWI_WPMR = (flag ? TWI_WPMR_WPEN : 0) | TWI_WP_KEY_VALUE;
+#endif
+}
+
+/**
+ * \brief Read the write protection status.
+ *
+ * \param p_twi Pointer to a TWI instance.
+ * \param p_status Pointer to save the status.
+ */
+void twi_read_write_protection_status(Twi *p_twi, uint32_t *p_status)
+{
+#if SAM4E
+	*p_status = p_twi->TWI_WPROT_STATUS;
+#else
+	*p_status = p_twi->TWI_WPSR;
+#endif
+}
+#endif
 
 //@}
 

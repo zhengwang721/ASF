@@ -3,6 +3,7 @@
 		<require idref="sam.utils.cmsis.cm3_bit_banding_example"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
 		<require idref="board.sam3s_ek"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>

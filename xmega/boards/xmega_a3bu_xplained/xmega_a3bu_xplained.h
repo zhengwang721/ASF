@@ -8,7 +8,7 @@
  *
  * To use this board define BOARD=XMEGA_A3BU_XPLAINED.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -50,6 +50,8 @@
 
 #include <compiler.h>
 
+#define MCU_SOC_NAME        "ATxmega256A3BU"
+#define BOARD_NAME          "XMEGA-A3BU-XPLAINED"
 /**
  * \defgroup xmega_a3bu_xplained_group XMEGA-A3BU Xplained board
  * @{
@@ -201,6 +203,49 @@
 #define SPIC_MISO                       IOPORT_CREATE_PIN(PORTC, 6)
 #define SPIC_SCK                        IOPORT_CREATE_PIN(PORTC, 7)
 //@}
+
+
+/*! \name Connections of the AT86RFX transceiver
+ */
+//! @{
+#define AT86RFX_SPI                  &SPIC
+#define AT86RFX_RST_PIN              IOPORT_CREATE_PIN(PORTC, 0)
+#define AT86RFX_MISC_PIN             IOPORT_CREATE_PIN(PORTC, 1)
+#define AT86RFX_IRQ_PIN              IOPORT_CREATE_PIN(PORTC, 2)
+#define AT86RFX_SLP_PIN              IOPORT_CREATE_PIN(PORTC, 3)
+#define AT86RFX_SPI_CS               IOPORT_CREATE_PIN(PORTC, 4)
+#define AT86RFX_SPI_MOSI             IOPORT_CREATE_PIN(PORTC, 5)
+#define AT86RFX_SPI_MISO             IOPORT_CREATE_PIN(PORTC, 6)
+#define AT86RFX_SPI_SCK              IOPORT_CREATE_PIN(PORTC, 7)
+
+#define AT86RFX_INTC_INIT()          ioport_configure_pin(AT86RFX_IRQ_PIN, IOPORT_DIR_INPUT); \
+									 PORTC.PIN2CTRL = PORT_ISC0_bm; \
+									 PORTC.INT0MASK = PIN2_bm; \
+									 PORTC.INTFLAGS = PORT_INT0IF_bm;
+
+#define AT86RFX_ISR()                ISR(PORTC_INT0_vect)
+
+/** Enables the transceiver main interrupt. */
+#define ENABLE_TRX_IRQ()                (PORTC.INTCTRL |= PORT_INT0LVL_gm)
+
+/** Disables the transceiver main interrupt. */
+#define DISABLE_TRX_IRQ()               (PORTC.INTCTRL &= ~PORT_INT0LVL_gm)
+
+/** Clears the transceiver main interrupt. */
+#define CLEAR_TRX_IRQ()                 (PORTC.INTFLAGS = PORT_INT0IF_bm)
+
+/*
+ * This macro saves the trx interrupt status and disables the trx interrupt.
+ */
+#define ENTER_TRX_REGION()   { uint8_t irq_mask = PORTC.INTCTRL; PORTC.INTCTRL &= ~PORT_INT0LVL_gm
+
+/*
+ *  This macro restores the transceiver interrupt status
+ */
+#define LEAVE_TRX_REGION()   PORTC.INTCTRL = irq_mask; }
+
+//! @}
+
 
 /**
  * \name Pin connections on header J1

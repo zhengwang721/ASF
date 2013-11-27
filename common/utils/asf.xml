@@ -47,18 +47,32 @@
 			<require idref="mega.utils"/>
 			<build type="doxygen-entry-point" value="group_mega_utils"/>
 		</module>
-		<module type="driver" id="common.utils#sam" caption="Compiler abstraction and code utilities - SAM implementation">
+		<module type="driver" id="common.utils#sam" caption="Compiler abstraction and code utilities - SAM3/SAM4 implementation">
 			<info type="gui-flag" value="hidden"/>
 			<info type="description" value="summary">
-			Compiler abstraction layer and code utilities for SAM products.
+			Compiler abstraction layer and code utilities for SAM3/SAM4 products.
 			This module provides various abstraction layers
 			and utilities to make code compatible between different
 			compilers. It also contains utilities typically used
 			while pre-processing code.
 			</info>
-			<device-support value="sam"/>
+			<device-support value="sam3"/>
+			<device-support value="sam4"/>
 			<require idref="sam.utils"/>
 			<build type="doxygen-entry-point" value="group_sam_utils"/>
+		</module>
+		<module type="driver" id="common.utils#sam0" caption="Compiler abstraction and code utilities - SAM0+ implementation">
+			<info type="gui-flag" value="hidden"/>
+			<info type="description" value="summary">
+			Compiler abstraction layer and code utilities for SAM0+ products.
+			This module provides various abstraction layers
+			and utilities to make code compatible between different
+			compilers. It also contains utilities typically used
+			while pre-processing code.
+			</info>
+			<device-support value="sam0"/>
+			<require idref="sam0.utils"/>
+			<build type="doxygen-entry-point" value="group_sam0_utils"/>
 		</module>
 	</select-by-device>
 
@@ -112,8 +126,8 @@
 			<info type="description" value="summary">
 			Driver for global enabling and disabling of interrupts.
 			</info>
-			<device-support value="sam3" />
-			<device-support value="sam4" />
+			<device-support value="sam" />
+			<device-support value="sam0" />
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="interrupt.h" />
 			<build type="header-file" value="interrupt/interrupt_sam_nvic.h" />
@@ -144,6 +158,15 @@
 			<require idref="xmega.utils"/>
 			<build type="doxygen-entry-point" value="test_suite_group"/>
 		</module>
+		<module type="driver" id="common.utils.unit_test#mega" caption="Unit test framework - MEGA implementation">
+			<info type="description" value="summary">
+			Core functions for the unit test framework.
+			</info>
+			<device-support value="mega"/>
+			<require idref="common.utils.unit_test.generic"/>
+			<require idref="mega.utils"/>
+			<build type="doxygen-entry-point" value="test_suite_group"/>
+		</module>
 		<module type="driver" id="common.utils.unit_test#sam" caption="Unit test framework - SAM implementation">
 			<info type="description" value="summary">
 			Core functions for the unit test framework.
@@ -152,6 +175,21 @@
 			<require idref="common.utils.unit_test.generic"/>
 			<require idref="sam.utils"/>
 			<build type="doxygen-entry-point" value="test_suite_group"/>
+		</module>
+		<module type="driver" id="common.utils.unit_test#sam0" caption="Unit test framework - SAM0 implementation">
+			<info type="description" value="summary">
+			Core functions for the unit test framework.
+			</info>
+			<device-support value="sam0"/>
+			<build type="doxygen-entry-point" value="test_suite_group"/>
+			<build type="include-path" value="."/>
+			<build type="header-file" subtype="api" value="unit_test/suite.h"/>
+			<build type="c-source" value="unit_test/suite.c"/>
+			<build type="define" name="_ASSERT_ENABLE_" value=""/>
+			<build type="define" name="TEST_SUITE_DEFINE_ASSERT_MACRO" value=""/>
+			<require idref="sam0.utils"/>
+			<require idref="sam0.utils.stdio"/>
+			<require idref="sam0.utils.stdio.stdio_serial"/>
 		</module>
 	</select-by-device>
 	<module type="meta" id="common.utils.unit_test.generic" caption="Generic components of unit test framework">
@@ -229,6 +267,7 @@
 		<device-support value="xmega"/>
 		<device-support value="uc3"/>
 		<device-support value="sam"/>
+		<device-support value="sam0"/>
 	</module>
 
 
@@ -266,6 +305,10 @@
 			<toolchain-config name="avrgcc.linker.miscellaneous.LinkerFlags" value="-Wl,--relax" toolchain="avrgcc"/>
 			<!-- Define symbols are added to this config, per workaround for AVRSV-1972 and AVRSV-2180 -->
 			<toolchain-config name="avrgcc.assembler.general.AssemblerFlags" value="-mrelax" toolchain="avrgcc"/>
+			<!-- Standard library settings for linker -->
+			<toolchain-config name="avrgcc.linker.general.NoStartupOrDefaultLibs" value="False" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.linker.general.DoNotUseDefaultLibraries" value="False" toolchain="avrgcc"/>
+			<toolchain-config name="avrgcc.linker.general.DoNotUseStandardStartFiles" value="False" toolchain="avrgcc"/>
 		</module>
 
 		<module type="build-specific" id="common.utils.toolchain_config#uc3" caption="Toolchain configuration defaults for 32-bit AVR">
@@ -287,6 +330,10 @@
 			<toolchain-config name="avr32gcc.preprocessingassembler.general.AssemblerFlags" value="-mrelax" toolchain="avr32gcc"/>
 			<!-- Linker flags, trampoline/startup label and stack/heap size settings are added to this config -->
 			<toolchain-config name="avr32gcc.linker.miscellaneous.LinkerFlags" value="-Wl,--relax" toolchain="avr32gcc"/>
+			<!-- Standard library settings for linker: ASF has its own startup-files for UC3 -->
+			<toolchain-config name="avr32gcc.linker.general.NoStartupOrDefaultLibs" value="False" toolchain="avr32gcc"/>
+			<toolchain-config name="avr32gcc.linker.general.DoNotUseDefaultLibraries" value="False" toolchain="avr32gcc"/>
+			<toolchain-config name="avr32gcc.linker.general.DoNotUseStandardStartFiles" value="True" toolchain="avr32gcc"/>
 		</module>
 
 		<module type="build-specific" id="common.utils.toolchain_config#sam" caption="Toolchain configuration defaults for SAM">
@@ -295,6 +342,7 @@
 			Default toolchain settings for SAM.
 			</info>
 			<device-support value="sam"/>
+			<device-support value="sam0"/>
 
 			<!-- ARMGCC -->
 			<toolchain-config name="armgcc.compiler.optimization.OtherFlags" value="-fdata-sections" toolchain="armgcc"/>
@@ -302,11 +350,15 @@
 			<toolchain-config name="armgcc.compiler.warnings.AllWarnings" value="True" toolchain="armgcc"/>
 			<toolchain-config name="armgcc.linker.optimization.GarbageCollectUnusedSections" value="True" toolchain="armgcc"/>
 			<!-- Compiler flags are added to this config -->
-			<toolchain-config name="armgcc.compiler.miscellaneous.OtherFlags" value="-pipe -fno-strict-aliasing -Wall -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef -Wshadow -Wbad-function-cast -Wwrite-strings -Wsign-compare -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs -Winline -Wlong-long -Wunreachable-code -Wcast-align --param max-inline-insns-single=500 -Dprintf=iprintf" toolchain="armgcc"/>
+			<toolchain-config name="armgcc.compiler.miscellaneous.OtherFlags" value="-pipe -fno-strict-aliasing -Wall -Wstrict-prototypes -Wmissing-prototypes -Werror-implicit-function-declaration -Wpointer-arith -std=gnu99 -ffunction-sections -fdata-sections -Wchar-subscripts -Wcomment -Wformat=2 -Wimplicit-int -Wmain -Wparentheses -Wsequence-point -Wreturn-type -Wswitch -Wtrigraphs -Wunused -Wuninitialized -Wunknown-pragmas -Wfloat-equal -Wundef -Wshadow -Wbad-function-cast -Wwrite-strings -Wsign-compare -Waggregate-return  -Wmissing-declarations -Wformat -Wmissing-format-attribute -Wno-deprecated-declarations -Wpacked -Wredundant-decls -Wnested-externs -Wlong-long -Wunreachable-code -Wcast-align --param max-inline-insns-single=500" toolchain="armgcc"/>
 			<!-- Linker flags, startup label and stack/heap size settings are added to this config -->
 			<toolchain-config name="armgcc.linker.miscellaneous.LinkerFlags" value="-Wl,--entry=Reset_Handler -Wl,--cref -mthumb" toolchain="armgcc"/>
 			<!-- Define symbols are added to this config, per workaround for AVRSV-1972 and AVRSV-2180 -->
-			<toolchain-config name="armgcc.preprocessingassembler.general.AssemblerFlags" value="" toolchain="avr32gcc"/>
+			<toolchain-config name="armgcc.preprocessingassembler.general.AssemblerFlags" value="" toolchain="armgcc"/>
+			<!-- Standard library settings for linker -->
+			<toolchain-config name="armgcc.linker.general.NoStartupOrDefaultLibs" value="False" toolchain="armgcc"/>
+			<toolchain-config name="armgcc.linker.general.DoNotUseDefaultLibraries" value="False" toolchain="armgcc"/>
+			<toolchain-config name="armgcc.linker.general.DoNotUseStandardStartFiles" value="False" toolchain="armgcc"/>
 		</module>
 	</select-by-device>
 </asf>

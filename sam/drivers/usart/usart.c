@@ -4,7 +4,7 @@
  * \brief Universal Synchronous Asynchronous Receiver Transmitter (USART) driver
  * for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,7 +71,13 @@ extern "C" {
  */
 
 /* The write protect key value. */
-#define US_WPKEY_VALUE                0x555341
+#ifndef US_WPMR_WPKEY_PASSWD
+#define US_WPMR_WPKEY_PASSWD    US_WPMR_WPKEY(0x555341U)
+#endif
+
+#ifndef US_WPMR_WPKEY_PASSWD
+#  define US_WPMR_WPKEY_PASSWD US_WPMR_WPKEY(US_WPKEY_VALUE)
+#endif
 
 /* The CD value scope programmed in MR register. */
 #define MIN_CD_VALUE                  0x01
@@ -291,7 +297,7 @@ void usart_reset(Usart *p_usart)
 	usart_reset_status(p_usart);
 	/* Turn off RTS and DTR if exist. */
 	usart_drive_RTS_pin_high(p_usart);
-#if (SAM3S || SAM4S || SAM3U || SAM4L)
+#if (SAM3S || SAM4S || SAM3U || SAM4L || SAM4E)
 	usart_drive_DTR_pin_high(p_usart);
 #endif
 }
@@ -362,7 +368,7 @@ uint32_t usart_init_hw_handshaking(Usart *p_usart,
 	return 0;
 }
 
-#if (SAM3S || SAM4S || SAM3U || SAM4L)
+#if (SAM3S || SAM4S || SAM3U || SAM4L || SAM4E)
 
 /**
  * \brief Configure USART to work in modem mode.
@@ -380,13 +386,15 @@ uint32_t usart_init_modem(Usart *p_usart,
 		const sam_usart_opt_t *p_usart_opt, uint32_t ul_mck)
 {
 	/*
-	 * SAM3S and SAM4S series support MODEM mode only on USART1,
+	 * SAM3S, SAM4S and SAM4E series support MODEM mode only on USART1,
 	 * SAM3U and SAM4L series support MODEM mode only on USART0.
 	 */
-#if (SAM3S || SAM4S)
+#if (SAM3S || SAM4S || SAM4E)
+#ifdef USART1
 	if (p_usart != USART1) {
 		return 1;
 	}
+#endif
 #elif (SAM3U || SAM4L)
 	if (p_usart != USART0) {
 		return 1;
@@ -1245,7 +1253,7 @@ void usart_restart_rx_timeout(Usart *p_usart)
 	p_usart->US_CR = US_CR_RETTO;
 }
 
-#if (SAM3S || SAM4S || SAM3U || SAM4L)
+#if (SAM3S || SAM4S || SAM3U || SAM4L || SAM4E)
 
 /**
  * \brief Drive the pin DTR to 0.
@@ -1549,19 +1557,19 @@ Pdc *usart_get_pdc_base(Usart *p_usart)
 		p_pdc_base = PDC_USART0;
 		return p_pdc_base;
 	}
-#if (SAM3S || SAM4S || SAM3XA || SAM3U)
+#ifdef PDC_USART1
 	else if (p_usart == USART1) {
 		p_pdc_base = PDC_USART1;
 		return p_pdc_base;
 	}
 #endif
-#if (SAM3SD8 || SAM3XA || SAM3U)
+#ifdef PDC_USART2
 	else if (p_usart == USART2) {
 		p_pdc_base = PDC_USART2;
 		return p_pdc_base;
 	}
 #endif
-#if (SAM3XA || SAM3U)
+#ifdef PDC_USART3
 	else if (p_usart == USART3) {
 		p_pdc_base = PDC_USART3;
 		return p_pdc_base;
@@ -1579,7 +1587,7 @@ Pdc *usart_get_pdc_base(Usart *p_usart)
  */
 void usart_enable_writeprotect(Usart *p_usart)
 {
-	p_usart->US_WPMR = US_WPMR_WPEN | US_WPMR_WPKEY(US_WPKEY_VALUE);
+	p_usart->US_WPMR = US_WPMR_WPEN | US_WPMR_WPKEY_PASSWD;
 }
 
 /**
@@ -1589,7 +1597,7 @@ void usart_enable_writeprotect(Usart *p_usart)
  */
 void usart_disable_writeprotect(Usart *p_usart)
 {
-	p_usart->US_WPMR = US_WPMR_WPKEY(US_WPKEY_VALUE);
+	p_usart->US_WPMR = US_WPMR_WPKEY_PASSWD;
 }
 
 /**
@@ -1624,7 +1632,7 @@ uint8_t usart_get_error_number(Usart *p_usart)
 	return (p_usart->US_NER & US_NER_NB_ERRORS_Msk);
 }
 
-#if (SAM3S || SAM4S || SAM3U || SAM3XA || SAM4L)
+#if (SAM3S || SAM4S || SAM3U || SAM3XA || SAM4L || SAM4E || SAM4C)
 
 /**
  * \brief Configure the transmitter preamble length when the Manchester

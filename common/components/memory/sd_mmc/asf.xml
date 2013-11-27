@@ -11,10 +11,9 @@
 		<require idref="common.components.memory.sd_mmc"/>
 		<build type="define" name="SD_MMC_ENABLE" value=""/>
 		<device-support value="avr"/>
-		<device-support value="sam3"/>
-		<device-support value="sam4s"/>
+		<device-support value="sam"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
-
 	<select-by-config id="common.components.memory.sd_mmc" name="config.common.components.memory.sd_mmc" caption="SD/MMC stack" default="spi">
 		<module type="component" id="common.components.memory.sd_mmc#spi" caption="SD/MMC stack on SPI interface">
 			<info type="description" value="summary">
@@ -35,12 +34,11 @@
 			<build type="doxygen-entry-point" value="sd_mmc_stack_group"/>
 			<require idref="common.components.memory.sd_mmc.protocol"/>
 			<require idref="common.services.basic.spi_master"/>
-			<require idref="common.services.ioport" />
+			<require idref="common.services.ioport"/>
 			<require idref="common.services.delay"/>
 			<device-support value="xmega"/>
 			<device-support value="uc3"/>
-			<device-support value="sam3"/>
-			<device-support value="sam4s"/>
+			<device-support value="sam"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
 		<module type="component" id="common.components.memory.sd_mmc#mci" caption="SD/MMC stack on Multimedia Card interface">
@@ -60,7 +58,7 @@
 			<build type="doxygen-entry-point" value="sd_mmc_stack_group"/>
 			<require idref="common.components.memory.sd_mmc.protocol"/>
 			<require idref="common.components.memory.sd_mmc.mci"/>
-			<require idref="common.services.ioport" />
+			<require idref="common.services.ioport"/>
 			<require idref="common.services.delay"/>
 			<device-support value="uc3a3_a4"/>
 			<device-support value="sam3sd"/>
@@ -68,10 +66,10 @@
 			<device-support value="sam4s"/>
 			<device-support value="sam3u"/>
 			<device-support value="sam3x"/>
+			<device-support value="sam4e"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
 	</select-by-config>
-
 	<select-by-device id="common.components.memory.sd_mmc.mci" caption="Multimedia Card Interface">
 		<module type="meta" id="common.components.memory.sd_mmc.mci#0" caption="Multimedia Card Interface - UC3 implementation">
 			<info type="gui-flag" value="hidden"/>
@@ -87,14 +85,13 @@
 			<device-support value="sam4s"/>
 			<device-support value="sam3u"/>
 			<device-support value="sam3x"/>
+			<device-support value="sam4e"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
 	</select-by-device>
-
 	<module type="meta" id="common.components.memory.sd_mmc.protocol" caption="SD/MMC/SDIO protocol definitions">
 		<info type="gui-flag" value="hidden"/>
 		<build type="header-file" value="sd_mmc_protocol.h"/>
 		<build type="include-path" value="."/>
 	</module>
-
 </asf>

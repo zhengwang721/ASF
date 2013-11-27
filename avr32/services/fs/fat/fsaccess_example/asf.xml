@@ -21,5 +21,6 @@
 		<require idref="avr32.utils.print_funcs"/>
 		<require idref="common.components.memory.data_flash.at45dbx._asf_v1"/>
 		<require idref="common.services.storage.ctrl_access"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

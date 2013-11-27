@@ -3,7 +3,7 @@
  *
  * \brief CTRL_ACCESS interface for the AT45DBX data flash driver
  *
- * Copyright (c) 2010 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -94,6 +94,13 @@ extern bool at45dbx_wr_protect(void);
  * \return \c true if the memory is removable, else \c false.
  */
 extern bool at45dbx_removal(void);
+
+/*! \brief Unload/load the memory.
+ *
+ * \param unload \c true to unload, \c false to load.
+ * \return \c true if the operation is success, else \c false.
+ */
+extern bool at45dbx_unload(bool unload);
 
 //! @}
 

@@ -8,7 +8,7 @@
  *
  * To use this board define BOARD=SAM4L_EK.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -135,6 +135,8 @@
 #define GPIO_PUSH_BUTTON_0_MASK         GPIO_PC03
 #define PUSH_BUTTON_0_DOWN_LEVEL        IOPORT_PIN_LEVEL_LOW
 #define PUSH_BUTTON_0_UP_LEVEL          IOPORT_PIN_LEVEL_HIGH
+#define BUTTON_0_NAME                   "PB0"
+#define PUSH_BUTTON_0_NAME              BUTTON_0_NAME
 //! @}
 
 /*! \name Push Button Connection on External Interrupt line
@@ -144,8 +146,9 @@
 #define GPIO_PUSH_BUTTON_EIC_PIN_MASK   GPIO_PC03B_EIC_EXTINT5
 #define GPIO_PUSH_BUTTON_EIC_PIN_MUX    MUX_PC03B_EIC_EXTINT5
 #define GPIO_PUSH_BUTTON_EIC_LINE       5
+#define GPIO_PUSH_BUTTON_EIC_IRQ        EIC_5_IRQn
 
-#define GPIO_UNIT_TEST_EIC_PIN              PIN_PA06C_EIC_EXTINT1
+#define GPIO_UNIT_TEST_EIC_PIN        PIN_PA06C_EIC_EXTINT1
 #define GPIO_UNIT_TEST_EIC_PIN_MASK   GPIO_PA06C_EIC_EXTINT1
 #define GPIO_UNIT_TEST_EIC_PIN_MUX    MUX_PA06C_EIC_EXTINT1
 #define GPIO_UNIT_TEST_EIC_LINE       1
@@ -187,20 +190,42 @@
  */
 //! @{
 #if defined(SAM4L_EK_REV1)
-#define GPIO_VBUS_INPUT                 PIN_PC14
-#define GPIO_VBUS_INPUT_MASK            GPIO_PC14
-#else
-#define GPIO_VBUS_INPUT                 PIN_PA06
-#define GPIO_VBUS_INPUT_MASK            GPIO_PA06
+#define USB_VBUS_FLAGS           IOPORT_MODE_GLITCH_FILTER
+#define USB_VBUS_PIN             PIN_PC14  /* As IO pin input */
+/* No EIC for VBus pin */
+#elif 0 // The Vbus monitoring can not be used on SAM4L_EK Rev. 2
+#define USB_VBUS_FLAGS           IOPORT_MODE_GLITCH_FILTER
+#define USB_VBUS_EIC             PIN_PA06C_EIC_EXTINT1 /* As EIC input */
+#define USB_VBUS_EIC_MUX         IOPORT_MODE_MUX_C
+#define USB_VBUS_EIC_LINE        1
+#define USB_VBUS_EIC_IRQn        EIC_1_IRQn
 #endif
 //! @}
 
 /*! \name GPIO Connections of SAM4L4C VBUS Power Control
  */
 //! @{
-#define VBOF_GPIO                       PIN_PC08
-#define VBOF_GPIO_MASK                  GPIO_PC08
+#define USB_VBOF_PIN            PIN_PC08 /* As IO pin output */
+#define USB_VBOF_ACTIVE_LEVEL   0
+#define USB_VBOF_INACTIVE_LEVEL 1
 //! @}
+
+/*! \name GPIO Connections of SAM4L4C VBUS error detecting
+ */
+//! @{
+#define USB_VBERR_FLAGS          IOPORT_MODE_PULLUP | IOPORT_MODE_GLITCH_FILTER
+#define USB_VBERR_PIN            PIN_PC07 /* As IO pin input */
+/* No EIC for VBErr pin */
+//! @}
+
+/*! \name GPIO Connections of SAM4L4C ID detecting
+ */
+//! @{
+#define USB_ID_FLAGS             IOPORT_MODE_PULLUP | IOPORT_MODE_GLITCH_FILTER
+#define USB_ID_PIN               PIN_PB05 /* As IO pin input */
+/* No EIC for ID pin */
+//! @}
+
 
 //! \name USART connections to GPIO for Virtual Com Port
 // @{

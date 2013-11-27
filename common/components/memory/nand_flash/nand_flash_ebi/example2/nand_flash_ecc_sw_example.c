@@ -3,7 +3,7 @@
  *
  * \brief NAND Flash Operation With Software ECC Example
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -190,7 +190,7 @@ int main(void)
 	/* Prepare a page size buffer in SRAM. */
 	printf("-I- Preparing a buffer in SRAM ...\n\r");
 	for (i = 0; i < page_size; i++) {
-		write_buffer[i] = i & 0xFF;
+		write_buffer[i] = (i & 0xFF);
 	}
 
 	/* Reset read buffer. */

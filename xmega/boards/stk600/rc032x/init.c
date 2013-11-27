@@ -5,7 +5,7 @@
  *
  * To use this board, define BOARD=STK600_RC032X.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -87,7 +87,7 @@ void board_init(void)
 	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 3), IOPORT_DIR_OUTPUT
 			| IOPORT_INIT_HIGH);
 	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 2), IOPORT_DIR_INPUT
-			 | IOPORT_FORCE_ENABLE);
+			| IOPORT_FORCE_ENABLE);
 #endif
 
 #ifdef CONF_BOARD_ENABLE_USARTD0
@@ -210,7 +210,7 @@ void board_init(void)
 			IOPORT_DIR_INPUT | IOPORT_FORCE_ENABLE);
 #endif
 #ifdef CONF_BOARD_XCL_IN1_PD0_INV
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 0), IOPORT_DIR_INPUT 
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 0), IOPORT_DIR_INPUT
 			| IOPORT_FORCE_ENABLE | IOPORT_INV_ENABLED);
 #endif
 #ifdef CONF_BOARD_XCL_IN1_PD4
@@ -218,7 +218,7 @@ void board_init(void)
 			| IOPORT_FORCE_ENABLE);
 #endif
 #ifdef CONF_BOARD_XCL_IN1_PD4_INV
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 4),IOPORT_DIR_INPUT
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 4), IOPORT_DIR_INPUT
 			| IOPORT_FORCE_ENABLE | IOPORT_INV_ENABLED);
 #endif
 #ifdef CONF_BOARD_XCL_IN1_PC0
@@ -234,7 +234,7 @@ void board_init(void)
 			| IOPORT_FORCE_ENABLE);
 #endif
 #ifdef CONF_BOARD_XCL_IN1_PC4_INV
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 4), IOPORT_DIR_INPUT 
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 4), IOPORT_DIR_INPUT
 			| IOPORT_FORCE_ENABLE | IOPORT_INV_ENABLED);
 #endif
 
@@ -252,7 +252,7 @@ void board_init(void)
 			| IOPORT_FORCE_ENABLE);
 #endif
 #ifdef CONF_BOARD_XCL_IN2_PD5_INV
-	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD,5), IOPORT_DIR_INPUT
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 5), IOPORT_DIR_INPUT
 			| IOPORT_FORCE_ENABLE | IOPORT_INV_ENABLED);
 #endif
 #ifdef CONF_BOARD_XCL_IN2_PC1
@@ -275,7 +275,7 @@ void board_init(void)
 	/* XCL IN3 Configurations */
 #ifdef CONF_BOARD_XCL_IN3_PD3
 	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 3), IOPORT_DIR_INPUT
-			|IOPORT_FORCE_ENABLE);
+			| IOPORT_FORCE_ENABLE);
 #endif
 #ifdef CONF_BOARD_XCL_IN3_PD3_INV
 	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 3), IOPORT_DIR_INPUT
@@ -304,5 +304,34 @@ void board_init(void)
 #ifdef CONF_BOARD_XCL_IN3_PC7_INV
 	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 7), IOPORT_DIR_INPUT
 			| IOPORT_FORCE_ENABLE | IOPORT_INV_ENABLED);
+#endif
+
+	/* TC45 Output Configurations */
+#ifdef CONF_BOARD_TC45_OUT0_PC0
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 0), IOPORT_DIR_OUTPUT);
+#endif
+#ifdef CONF_BOARD_TC45_OUT0_PC1
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 1), IOPORT_DIR_OUTPUT);
+#endif
+#ifdef CONF_BOARD_TC45_OUT0_PC2
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 2), IOPORT_DIR_OUTPUT);
+#endif
+#ifdef CONF_BOARD_TC45_OUT0_PC3
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 3), IOPORT_DIR_OUTPUT);
+#endif
+#ifdef CONF_BOARD_TC45_OUT0_PC4
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 4), IOPORT_DIR_OUTPUT);
+#endif
+#ifdef CONF_BOARD_TC45_OUT0_PC5
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 5), IOPORT_DIR_OUTPUT);
+#endif
+#ifdef CONF_BOARD_TC45_OUT0_PC6
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 6), IOPORT_DIR_OUTPUT);
+#endif
+#ifdef CONF_BOARD_TC45_OUT0_PC7
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTC, 7), IOPORT_DIR_OUTPUT);
+#endif
+#ifdef CONF_BOARD_TC45_OUT0_PD4
+	ioport_configure_pin(IOPORT_CREATE_PIN(PORTD, 4), IOPORT_DIR_OUTPUT);
 #endif
 }

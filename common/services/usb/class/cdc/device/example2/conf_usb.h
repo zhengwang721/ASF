@@ -3,7 +3,7 @@
  *
  * \brief USB configuration file for CDC application
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -76,9 +76,16 @@
  */
 //! To authorize the High speed
 #if (UC3A3||UC3A4)
-#define  USB_DEVICE_HS_SUPPORT
-#elif (SAM3XA)
-#define  USB_DEVICE_HS_SUPPORT
+#  define  USB_DEVICE_HS_SUPPORT
+#elif (SAM3XA||SAM3U)
+#  define  USB_DEVICE_HS_SUPPORT
+   // In HS mode, size of bulk endpoints are 512 by default.
+   // If CDC endpoints all uses 2 banks, DPRAM is not enough: 4 bulk
+   // endpoints requires 4K bytes. So reduce the number of banks of CDC bulk
+   // endpoints to use less DPRAM.
+#  if defined(USB_DEVICE_HS_SUPPORT)
+#    define  UDD_BULK_NB_BANK(ep) (1)
+#  endif
 #endif
 //@}
 
@@ -136,6 +143,7 @@
 #define  UDI_CDC_ENABLE_EXT(port)         main_cdc_enable(port)
 #define  UDI_CDC_DISABLE_EXT(port)        main_cdc_disable(port)
 #define  UDI_CDC_RX_NOTIFY(port)          uart_rx_notify(port)
+#define  UDI_CDC_TX_EMPTY_NOTIFY(port)
 #define  UDI_CDC_SET_CODING_EXT(port,cfg) uart_config(port,cfg)
 #define  UDI_CDC_SET_DTR_EXT(port,set)    main_cdc_set_dtr(port,set)
 #define  UDI_CDC_SET_RTS_EXT(port,set)

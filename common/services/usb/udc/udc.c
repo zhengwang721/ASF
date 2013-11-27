@@ -3,7 +3,7 @@
  *
  * \brief USB Device Controller (UDC)
  *
- * Copyright (c) 2009 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1040,6 +1040,37 @@ static bool udc_req_iface(void)
 }
 
 /**
+ * \brief Send the SETUP interface request to UDI
+ *
+ * \return true if the request is supported
+ */
+static bool udc_req_ep(void)
+{
+	uint8_t iface_num;
+	udi_api_t UDC_DESC_STORAGE *udi_api;
+
+	if (0 == udc_num_configuration) {
+		return false; // The device is not is configured state yet
+	}
+	// Send this request on all enabled interfaces
+	iface_num = udd_g_ctrlreq.req.wIndex & 0xFF;
+	for (iface_num = 0; iface_num < udc_ptr_conf->desc->bNumInterfaces;
+			iface_num++) {
+		// Select the interface with the current alternate setting
+		udi_api = udc_ptr_conf->udi_apis[iface_num];
+		if (!udc_update_iface_desc(iface_num, udi_api->getsetting())) {
+			return false;
+		}
+
+		// Send the SETUP request to the UDI
+		if (udi_api->setup()) {
+			return true;
+		}
+	}
+	return false;
+}
+
+/**
  * \brief Main routine to manage the USB SETUP request.
  *
  * This function parses a USB SETUP request and submits an appropriate
@@ -1075,6 +1106,13 @@ bool udc_process_setup(void)
 	// If interface request then try to decode it in UDI
 	if (Udd_setup_recipient() == USB_REQ_RECIP_INTERFACE) {
 		if (udc_req_iface()) {
+			return true;
+		}
+	}
+
+	// If endpoint request then try to decode it in UDI
+	if (Udd_setup_recipient() == USB_REQ_RECIP_ENDPOINT) {
+		if (udc_req_ep()) {
 			return true;
 		}
 	}

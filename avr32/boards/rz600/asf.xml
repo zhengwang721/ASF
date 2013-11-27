@@ -22,7 +22,7 @@
 		</module>
 	</select-by-config>
 
-	<board id="board.rz600s" vendor="Atmel" caption="RZ600S">
+	<board id="board.rz600" vendor="Atmel" caption="RZ600">
 		<build type="define" name="BOARD" value="RZ600"/>
 		<build type="header-file" value="rz600.h"/>
 		<build type="header-file" subtype="api" value="led.h"/>

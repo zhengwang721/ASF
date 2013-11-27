@@ -3,7 +3,7 @@
  *
  * \brief Serial Peripheral Interface (SPI) example for SAM.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,8 +46,8 @@
  *
  * \par Purpose
  *
- * This example uses Serial Peripheral Interface (SPI) of one EK board in slave mode to
- * communicate with another EK board's SPI in master mode.
+ * This example uses Serial Peripheral Interface (SPI) of one EK board in
+ * slave mode to communicate with another EK board's SPI in master mode.
  *
  * \par Requirements
  *
@@ -67,7 +67,8 @@
  * <ol>
  * <li>Configure SPI as master, and set up SPI clock.
  * <li>Send 4-byte CMD_TEST to indicate the start of test.
- * <li>Send several 64-byte blocks, and after transmitting the next block, the content of the last block is returned and checked.
+ * <li>Send several 64-byte blocks, and after transmitting the next block, the
+ * content of the last block is returned and checked.
  * <li>Send CMD_STATUS command and wait for the status reports from slave.
  * <li>Send CMD_END command to indicate the end of test.
  * </ol>
@@ -80,21 +81,16 @@
  * -# Connect the UART port of the evaluation board to the computer and open
  * it in a terminal.
  *    - Settings: 115200 bauds, 8 bits, 1 stop bit, no parity, no flow control.
- * -# Download the program into the evaluation board and run it. Please refer to
- *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6224.pdf">
- *    SAM-BA User Guide</a>, the
- *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6310.pdf">
- *    GNU-Based Software Development</a> application note or the
- *    <a href="ftp://ftp.iar.se/WWWfiles/arm/Guides/EWARM_UserGuide.ENU.pdf">
- *    IAR EWARM User Guide</a>, depending on the solutions that users choose.
- * -# Upon startup, the application will output the following line on the terminal:
+ * -# Download the program into the evaluation board and run it.
+ * -# Upon startup, the application will output the following line on the
+ *    terminal:
  *    \code
  *     -- Spi Example  --
  *     -- xxxxxx-xx
  *     -- Compiled: xxx xx xxxx xx:xx:xx --
  *    \endcode
- * -# The following traces detail operations on the SPI example, displaying success
- *    or error messages depending on the results of the commands.
+ * -# The following traces detail operations on the SPI example, displaying
+ *    success or error messages depending on the results of the commands.
  *
  */
 
@@ -114,6 +110,7 @@ extern "C" {
 
 /* Chip select. */
 #define SPI_CHIP_SEL 0
+#define SPI_CHIP_PCS spi_get_pcs(SPI_CHIP_SEL)
 
 /* Clock polarity. */
 #define SPI_CLK_POLARITY 0
@@ -253,7 +250,8 @@ static void spi_slave_transfer(void *p_buf, uint32_t size)
 	gs_puc_transfer_buffer = p_buf;
 	gs_ul_transfer_length = size;
 	gs_ul_transfer_index = 0;
-	spi_write(SPI_SLAVE_BASE, gs_puc_transfer_buffer[gs_ul_transfer_index], 0, 0);
+	spi_write(SPI_SLAVE_BASE, gs_puc_transfer_buffer[gs_ul_transfer_index], 0,
+			0);
 }
 
 /**
@@ -285,7 +283,8 @@ static void spi_slave_command_process(void)
 		case SLAVE_STATE_DATA:
 			gs_spi_status.ul_total_block_number++;
 
-			if (gs_spi_status.ul_total_block_number == gs_ul_test_block_number) {
+			if (gs_spi_status.ul_total_block_number == 
+					gs_ul_test_block_number) {
 				gs_ul_spi_state = SLAVE_STATE_STATUS_ENTRY;
 			}
 			break;
@@ -363,8 +362,8 @@ void SPI_Handler(void)
 
 		if (new_cmd) {
 			if (gs_ul_spi_cmd != CMD_END) {
-				gs_spi_status.ul_cmd_list[gs_spi_status.ul_total_command_number] =
-						gs_ul_spi_cmd;
+				gs_spi_status.ul_cmd_list[gs_spi_status.ul_total_command_number]
+						= gs_ul_spi_cmd;
 				gs_spi_status.ul_total_command_number++;
 			}
 			spi_slave_new_command();
@@ -395,7 +394,7 @@ static void spi_slave_initialize(void)
 	spi_reset(SPI_SLAVE_BASE);
 	spi_set_slave_mode(SPI_SLAVE_BASE);
 	spi_disable_mode_fault_detect(SPI_SLAVE_BASE);
-	spi_set_peripheral_chip_select_value(SPI_SLAVE_BASE, SPI_CHIP_SEL);
+	spi_set_peripheral_chip_select_value(SPI_SLAVE_BASE, SPI_CHIP_PCS);
 	spi_set_clock_polarity(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CLK_POLARITY);
 	spi_set_clock_phase(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CLK_PHASE);
 	spi_set_bits_per_transfer(SPI_SLAVE_BASE, SPI_CHIP_SEL, SPI_CSR_BITS_8_BIT);
@@ -420,12 +419,15 @@ static void spi_master_initialize(void)
 	spi_set_lastxfer(SPI_MASTER_BASE);
 	spi_set_master_mode(SPI_MASTER_BASE);
 	spi_disable_mode_fault_detect(SPI_MASTER_BASE);
-	spi_set_peripheral_chip_select_value(SPI_MASTER_BASE, SPI_CHIP_SEL);
+	spi_set_peripheral_chip_select_value(SPI_MASTER_BASE, SPI_CHIP_PCS);
 	spi_set_clock_polarity(SPI_MASTER_BASE, SPI_CHIP_SEL, SPI_CLK_POLARITY);
 	spi_set_clock_phase(SPI_MASTER_BASE, SPI_CHIP_SEL, SPI_CLK_PHASE);
-	spi_set_bits_per_transfer(SPI_MASTER_BASE, SPI_CHIP_SEL, SPI_CSR_BITS_8_BIT);
-	spi_set_baudrate_div(SPI_MASTER_BASE, SPI_CHIP_SEL, (sysclk_get_cpu_hz() / gs_ul_spi_clock));
-	spi_set_transfer_delay(SPI_MASTER_BASE, SPI_CHIP_SEL, SPI_DLYBS, SPI_DLYBCT);
+	spi_set_bits_per_transfer(SPI_MASTER_BASE, SPI_CHIP_SEL,
+			SPI_CSR_BITS_8_BIT);
+	spi_set_baudrate_div(SPI_MASTER_BASE, SPI_CHIP_SEL,
+			(sysclk_get_cpu_hz() / gs_ul_spi_clock));
+	spi_set_transfer_delay(SPI_MASTER_BASE, SPI_CHIP_SEL, SPI_DLYBS,
+			SPI_DLYBCT);
 	spi_enable(SPI_MASTER_BASE);
 }
 
@@ -478,7 +480,10 @@ static void spi_master_go(void)
 	/* Configure SPI as master, set up SPI clock. */
 	spi_master_initialize();
 
-	/* Send CMD_TEST to indicate the start of test, and device shall return RC_RDY. */
+	/*
+	 * Send CMD_TEST to indicate the start of test, and device shall return
+	 * RC_RDY.
+	 */
 	while (1) {
 		cmd = CMD_TEST;
 		puts("-> Master sending CMD_TEST... \r");

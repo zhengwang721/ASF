@@ -3,7 +3,7 @@
  *
  * \brief Power Management Controller (PMC) driver for SAM.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -53,6 +53,10 @@
 # define MAX_PERIPH_ID    34
 #elif (SAM4E)
 # define MAX_PERIPH_ID    47
+#elif (SAM4N)
+# define MAX_PERIPH_ID    31
+#elif (SAM4C)
+# define MAX_PERIPH_ID    43
 #endif
 
 /// @cond 0
@@ -196,7 +200,7 @@ uint32_t pmc_switch_mck_to_pllack(uint32_t ul_pres)
 	return 0;
 }
 
-#if (SAM3S || SAM4S)
+#if (SAM3S || SAM4S || SAM4C)
 /**
  * \brief Switch master clock source selection to PLLB clock.
  *
@@ -269,8 +273,8 @@ uint32_t pmc_switch_mck_to_upllck(uint32_t ul_pres)
  *
  * \note This function disables the PLLs.
  *
- * \note Switching SCLK back to 32krc is only possible by shutting down the VDDIO
- * power supply.
+ * \note Switching SCLK back to 32krc is only possible by shutting down the
+ *       VDDIO power supply.
  *
  * \param ul_bypass 0 for Xtal, 1 for bypass.
  */
@@ -278,10 +282,11 @@ void pmc_switch_sclk_to_32kxtal(uint32_t ul_bypass)
 {
 	/* Set Bypass mode if required */
 	if (ul_bypass == 1) {
-		SUPC->SUPC_MR |= SUPC_MR_KEY(SUPC_KEY_VALUE) | SUPC_MR_OSCBYPASS;
+		SUPC->SUPC_MR |= SUPC_MR_KEY_PASSWD |
+			SUPC_MR_OSCBYPASS;
 	}
 
-	SUPC->SUPC_CR |= SUPC_CR_KEY(SUPC_KEY_VALUE) | SUPC_CR_XTALSEL;
+	SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL;
 }
 
 /**
@@ -312,12 +317,12 @@ void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
 	/* Enable Fast RC oscillator but DO NOT switch to RC now */
 	if (PMC->CKGR_MOR & CKGR_MOR_MOSCXTEN) {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
-				PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCRCEN |
+				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN |
 				ul_moscrcf;
 	} else {
 		ul_needXTEN = 1;
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
-				PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCRCEN |
+				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN |
 				CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCXTST_Msk |
 				ul_moscrcf;
 	}
@@ -327,12 +332,12 @@ void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
 
 	/* Switch to Fast RC */
 	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCSEL) |
-			PMC_CKGR_MOR_KEY_VALUE;
+			CKGR_MOR_KEY_PASSWD;
 
 	/* Disable xtal oscillator */
 	if (ul_needXTEN) {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
-				PMC_CKGR_MOR_KEY_VALUE;
+				CKGR_MOR_KEY_PASSWD;
 	}
 }
 
@@ -343,8 +348,9 @@ void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
  */
 void pmc_osc_enable_fastrc(uint32_t ul_rc)
 {
-	/* Enable Fast RC oscillator but DO NOT switch to RC now. Keep MOSCSEL to 1 */
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCSEL |
+	/* Enable Fast RC oscillator but DO NOT switch to RC now.
+	 * Keep MOSCSEL to 1 */
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL |
 			CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCRCEN | ul_rc;
 	/* Wait the Fast RC to stabilize */
 	while (!(PMC->PMC_SR & PMC_SR_MOSCRCS));
@@ -356,15 +362,87 @@ void pmc_osc_enable_fastrc(uint32_t ul_rc)
 void pmc_osc_disable_fastrc(void)
 {
 	/* Disable Fast RC oscillator */
-	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCEN & ~CKGR_MOR_MOSCRCF_Msk)
-					| PMC_CKGR_MOR_KEY_VALUE;
+	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCEN &
+					~CKGR_MOR_MOSCRCF_Msk)
+				| CKGR_MOR_KEY_PASSWD;
+}
+
+/**
+ * \brief Check if the main fastrc is ready.
+ *
+ * \retval 0 Xtal is not ready, otherwise ready.
+ */
+uint32_t pmc_osc_is_ready_fastrc(void)
+{
+	return (PMC->PMC_SR & PMC_SR_MOSCRCS);
+}
+
+/**
+ * \brief Enable main XTAL oscillator.
+ *
+ * \param ul_xtal_startup_time Xtal start-up time, in number of slow clocks.
+ */
+void pmc_osc_enable_main_xtal(uint32_t ul_xtal_startup_time)
+{
+	uint32_t mor = PMC->CKGR_MOR;
+	mor &= ~(CKGR_MOR_MOSCXTBY|CKGR_MOR_MOSCXTEN);
+	mor |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTEN |
+			CKGR_MOR_MOSCXTST(ul_xtal_startup_time);
+	PMC->CKGR_MOR = mor;
+	/* Wait the main Xtal to stabilize */
+	while (!(PMC->PMC_SR & PMC_SR_MOSCXTS));
+}
+
+/**
+ * \brief Bypass main XTAL.
+ */
+void pmc_osc_bypass_main_xtal(void)
+{
+	uint32_t mor = PMC->CKGR_MOR;
+	mor &= ~(CKGR_MOR_MOSCXTBY|CKGR_MOR_MOSCXTEN);
+	mor |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTBY;
+	/* Enable Crystal oscillator but DO NOT switch now. Keep MOSCSEL to 0 */
+	PMC->CKGR_MOR = mor;
+	/* The MOSCXTS in PMC_SR is automatically set */
+}
+
+/**
+ * \brief Disable the main Xtal.
+ */
+void pmc_osc_disable_main_xtal(void)
+{
+	uint32_t mor = PMC->CKGR_MOR;
+	mor &= ~(CKGR_MOR_MOSCXTBY|CKGR_MOR_MOSCXTEN);
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | mor;
+}
+
+/**
+ * \brief Check if the main crystal is bypassed.
+ *
+ * \retval 0 Xtal is bypassed, otherwise not.
+ */
+uint32_t pmc_osc_is_bypassed_main_xtal(void)
+{
+	return (PMC->CKGR_MOR & CKGR_MOR_MOSCXTBY);
+}
+
+/**
+ * \brief Check if the main crystal is ready.
+ *
+ * \note If main crystal is bypassed, it's always ready.
+ *
+ * \retval 0 main crystal is not ready, otherwise ready.
+ */
+uint32_t pmc_osc_is_ready_main_xtal(void)
+{
+	return (PMC->PMC_SR & PMC_SR_MOSCXTS);
 }
 
 /**
  * \brief Switch main clock source selection to external Xtal/Bypass.
  *
- * \note The function may switch MCK to SCLK if MCK source is MAINCK to avoid any
- * system crash.
+ * \note The function may switch MCK to SCLK if MCK source is MAINCK to avoid
+ *       any system crash.
  *
  * \note If used in Xtal mode, the Xtal is automatically enabled.
  *
@@ -379,16 +457,16 @@ void pmc_switch_mainck_to_xtal(uint32_t ul_bypass,
 	/* Enable Main Xtal oscillator */
 	if (ul_bypass) {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
-				PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTBY |
+				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTBY |
 				CKGR_MOR_MOSCSEL;
 	} else {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTBY) |
-				PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCXTEN |
+				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCXTEN |
 				CKGR_MOR_MOSCXTST(ul_xtal_startup_time);
 		/* Wait the Xtal to stabilize */
 		while (!(PMC->PMC_SR & PMC_SR_MOSCXTS));
 
-		PMC->CKGR_MOR |= PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_MOSCSEL;
+		PMC->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL;
 	}
 }
 
@@ -402,10 +480,10 @@ void pmc_osc_disable_xtal(uint32_t ul_bypass)
 	/* Disable xtal oscillator */
 	if (ul_bypass) {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTBY) |
-				PMC_CKGR_MOR_KEY_VALUE;
+				CKGR_MOR_KEY_PASSWD;
 	} else {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
-				PMC_CKGR_MOR_KEY_VALUE;
+				CKGR_MOR_KEY_PASSWD;
 	}
 }
 
@@ -422,6 +500,24 @@ uint32_t pmc_osc_is_ready_mainck(void)
 }
 
 /**
+ * \brief Select Main Crystal or internal RC as main clock source.
+ *
+ * \note This function will not enable/disable RC or Main Crystal.
+ *
+ * \param ul_xtal_rc 0 internal RC is selected, otherwise Main Crystal.
+ */
+void pmc_mainck_osc_select(uint32_t ul_xtal_rc)
+{
+	uint32_t mor = PMC->CKGR_MOR;
+	if (ul_xtal_rc) {
+		mor |=  CKGR_MOR_MOSCSEL;
+	} else {
+		mor &= ~CKGR_MOR_MOSCSEL;
+	}
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | mor;
+}
+
+/**
  * \brief Enable PLLA clock.
  *
  * \param mula PLLA multiplier.
@@ -433,8 +529,13 @@ void pmc_enable_pllack(uint32_t mula, uint32_t pllacount, uint32_t diva)
 	/* first disable the PLL to unlock the lock */
 	pmc_disable_pllack();
 
-	PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | CKGR_PLLAR_DIVA(diva) |
+#if (SAM4C)
+	PMC->CKGR_PLLAR = diva |
 			CKGR_PLLAR_PLLACOUNT(pllacount) | CKGR_PLLAR_MULA(mula);
+#else
+	PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | CKGR_PLLAR_DIVA(diva) |
+		CKGR_PLLAR_PLLACOUNT(pllacount) | CKGR_PLLAR_MULA(mula);
+#endif
 	while ((PMC->PMC_SR & PMC_SR_LOCKA) == 0);
 }
 
@@ -443,7 +544,11 @@ void pmc_enable_pllack(uint32_t mula, uint32_t pllacount, uint32_t diva)
  */
 void pmc_disable_pllack(void)
 {
+#if (SAM4C)
+	PMC->CKGR_PLLAR = CKGR_PLLAR_MULA(0);
+#else
 	PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | CKGR_PLLAR_MULA(0);
+#endif
 }
 
 /**
@@ -457,7 +562,7 @@ uint32_t pmc_is_locked_pllack(void)
 	return (PMC->PMC_SR & PMC_SR_LOCKA);
 }
 
-#if (SAM3S || SAM4S)
+#if (SAM3S || SAM4S || SAM4C)
 /**
  * \brief Enable PLLB clock.
  *
@@ -548,7 +653,7 @@ uint32_t pmc_enable_periph_clk(uint32_t ul_id)
 		if ((PMC->PMC_PCSR0 & (1u << ul_id)) != (1u << ul_id)) {
 			PMC->PMC_PCER0 = 1 << ul_id;
 		}
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
 	} else {
 		ul_id -= 32;
 		if ((PMC->PMC_PCSR1 & (1u << ul_id)) != (1u << ul_id)) {
@@ -580,7 +685,7 @@ uint32_t pmc_disable_periph_clk(uint32_t ul_id)
 		if ((PMC->PMC_PCSR0 & (1u << ul_id)) == (1u << ul_id)) {
 			PMC->PMC_PCDR0 = 1 << ul_id;
 		}
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
 	} else {
 		ul_id -= 32;
 		if ((PMC->PMC_PCSR1 & (1u << ul_id)) == (1u << ul_id)) {
@@ -599,7 +704,7 @@ void pmc_enable_all_periph_clk(void)
 	PMC->PMC_PCER0 = PMC_MASK_STATUS0;
 	while ((PMC->PMC_PCSR0 & PMC_MASK_STATUS0) != PMC_MASK_STATUS0);
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
 	PMC->PMC_PCER1 = PMC_MASK_STATUS1;
 	while ((PMC->PMC_PCSR1 & PMC_MASK_STATUS1) != PMC_MASK_STATUS1);
 #endif
@@ -613,7 +718,7 @@ void pmc_disable_all_periph_clk(void)
 	PMC->PMC_PCDR0 = PMC_MASK_STATUS0;
 	while ((PMC->PMC_PCSR0 & PMC_MASK_STATUS0) != 0);
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
 	PMC->PMC_PCDR1 = PMC_MASK_STATUS1;
 	while ((PMC->PMC_PCSR1 & PMC_MASK_STATUS1) != 0);
 #endif
@@ -635,7 +740,7 @@ uint32_t pmc_is_periph_clk_enabled(uint32_t ul_id)
 		return 0;
 	}
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
 	if (ul_id < 32) {
 #endif
 		if ((PMC->PMC_PCSR0 & (1u << ul_id))) {
@@ -643,7 +748,7 @@ uint32_t pmc_is_periph_clk_enabled(uint32_t ul_id)
 		} else {
 			return 0;
 		}
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
 	} else {
 		ul_id -= 32;
 		if ((PMC->PMC_PCSR1 & (1u << ul_id))) {
@@ -697,8 +802,8 @@ uint32_t pmc_switch_pck_to_sclk(uint32_t ul_id, uint32_t ul_pres)
 	uint32_t ul_timeout;
 
 	PMC->PMC_PCK[ul_id] = PMC_PCK_CSS_SLOW_CLK | ul_pres;
-	for (ul_timeout = PMC_TIMEOUT; !(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id));
-			--ul_timeout) {
+	for (ul_timeout = PMC_TIMEOUT;
+	!(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id)); --ul_timeout) {
 		if (ul_timeout == 0) {
 			return 1;
 		}
@@ -721,8 +826,8 @@ uint32_t pmc_switch_pck_to_mainck(uint32_t ul_id, uint32_t ul_pres)
 	uint32_t ul_timeout;
 
 	PMC->PMC_PCK[ul_id] = PMC_PCK_CSS_MAIN_CLK | ul_pres;
-	for (ul_timeout = PMC_TIMEOUT; !(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id));
-			--ul_timeout) {
+	for (ul_timeout = PMC_TIMEOUT;
+	!(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id)); --ul_timeout) {
 		if (ul_timeout == 0) {
 			return 1;
 		}
@@ -745,8 +850,8 @@ uint32_t pmc_switch_pck_to_pllack(uint32_t ul_id, uint32_t ul_pres)
 	uint32_t ul_timeout;
 
 	PMC->PMC_PCK[ul_id] = PMC_PCK_CSS_PLLA_CLK | ul_pres;
-	for (ul_timeout = PMC_TIMEOUT; !(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id));
-			--ul_timeout) {
+	for (ul_timeout = PMC_TIMEOUT;
+	!(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id)); --ul_timeout) {
 		if (ul_timeout == 0) {
 			return 1;
 		}
@@ -755,7 +860,7 @@ uint32_t pmc_switch_pck_to_pllack(uint32_t ul_id, uint32_t ul_pres)
 	return 0;
 }
 
-#if (SAM3S || SAM4S)
+#if (SAM3S || SAM4S || SAM4C)
 /**
  * \brief Switch programmable clock source selection to PLLB clock.
  *
@@ -862,6 +967,92 @@ uint32_t pmc_is_pck_enabled(uint32_t ul_id)
 	return (PMC->PMC_SCSR & (PMC_SCSR_PCK0 << ul_id));
 }
 
+#if SAM4C
+/**
+ * \brief Enable Coprocessor Clocks.
+ */
+void pmc_enable_cpck(void)
+{
+	PMC->PMC_SCER = PMC_SCER_CPCK | PMC_SCER_CPKEY_PASSWD;
+}
+
+/**
+ * \brief Disable Coprocessor Clocks.
+ */
+void pmc_disable_cpck(void)
+{
+	PMC->PMC_SCDR = PMC_SCDR_CPCK | PMC_SCDR_CPKEY_PASSWD;
+}
+
+/**
+ * \brief Check if the Coprocessor Clocks is enabled.
+ *
+ * \retval 0 Coprocessor Clocks is disabled.
+ * \retval 1 Coprocessor Clocks is enabled.
+ */
+bool pmc_is_cpck_enabled(void)
+{
+	if(PMC->PMC_SCSR & PMC_SCSR_CPCK) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+/**
+ * \brief Enable Coprocessor Bus Master Clocks.
+ */
+void pmc_enable_cpbmck(void)
+{
+	PMC->PMC_SCER = PMC_SCER_CPCK | PMC_SCER_CPKEY_PASSWD;
+}
+
+/**
+ * \brief Disable Coprocessor Bus Master Clocks.
+ */
+void pmc_disable_cpbmck(void)
+{
+	PMC->PMC_SCDR = PMC_SCDR_CPCK | PMC_SCDR_CPKEY_PASSWD;
+}
+
+/**
+ * \brief Check if the Coprocessor Bus Master Clocks is enabled.
+ *
+ * \retval 0 Coprocessor Bus Master Clocks is disabled.
+ * \retval 1 Coprocessor Bus Master Clocks is enabled.
+ */
+bool pmc_is_cpbmck_enabled(void)
+{
+	if(PMC->PMC_SCSR & PMC_SCSR_CPBMCK) {
+		return 1;
+	} else {
+		return 0;
+	}
+}
+
+/**
+ * \brief Set the prescaler for the Coprocessor Master Clock.
+ *
+ * \param ul_pres Prescaler value.
+ */
+void pmc_cpck_set_prescaler(uint32_t ul_pres)
+{
+	PMC->PMC_MCKR =
+			(PMC->PMC_MCKR & (~PMC_MCKR_CPPRES_Msk)) | PMC_MCKR_CPPRES(ul_pres);
+}
+
+/**
+ * \brief Set the source for the Coprocessor Master Clock.
+ *
+ * \param ul_source Source selection value.
+ */
+void pmc_cpck_set_source(uint32_t ul_source)
+{
+	PMC->PMC_MCKR =
+			(PMC->PMC_MCKR & (~PMC_MCKR_CPCSS_Msk)) | ul_source;
+}
+#endif
+
 #if (SAM3S || SAM3XA || SAM4S || SAM4E)
 /**
  * \brief Switch UDP (USB) clock source selection to PLLA clock.
@@ -890,7 +1081,7 @@ void pmc_switch_udpck_to_pllbck(uint32_t ul_usbdiv)
 /**
  * \brief Switch UDP (USB) clock source selection to UPLL clock.
  *
- * \param dw_usbdiv Clock divisor.
+ * \param ul_usbdiv Clock divisor.
  */
 void pmc_switch_udpck_to_upllck(uint32_t ul_usbdiv)
 {
@@ -965,7 +1156,8 @@ uint32_t pmc_get_status(void)
 }
 
 /**
- * \brief Set the wake-up inputs for fast startup mode registers (event generation).
+ * \brief Set the wake-up inputs for fast startup mode registers
+ *        (event generation).
  *
  * \param ul_inputs Wake up inputs to enable.
  */
@@ -976,7 +1168,8 @@ void pmc_set_fast_startup_input(uint32_t ul_inputs)
 }
 
 /**
- * \brief Clear the wake-up inputs for fast startup mode registers (remove event generation).
+ * \brief Clear the wake-up inputs for fast startup mode registers
+ *        (remove event generation).
  *
  * \param ul_inputs Wake up inputs to disable.
  */
@@ -986,22 +1179,48 @@ void pmc_clr_fast_startup_input(uint32_t ul_inputs)
 	PMC->PMC_FSMR &= ~ul_inputs;
 }
 
+#if SAM4C
+/**
+ * \brief Set the wake-up inputs of coprocessor for fast startup mode registers
+ *        (event generation).
+ *
+ * \param ul_inputs Wake up inputs to enable.
+ */
+void pmc_cp_set_fast_startup_input(uint32_t ul_inputs)
+{
+	ul_inputs &= PMC_FAST_STARTUP_Msk;
+	PMC->PMC_CPFSMR |= ul_inputs;
+}
+
+/**
+ * \brief Clear the wake-up inputs of coprocessor for fast startup mode registers
+ *        (remove event generation).
+ *
+ * \param ul_inputs Wake up inputs to disable.
+ */
+void pmc_cp_clr_fast_startup_input(uint32_t ul_inputs)
+{
+	ul_inputs &= PMC_FAST_STARTUP_Msk;
+	PMC->PMC_CPFSMR &= ~ul_inputs;
+}
+#endif
+
 /**
  * \brief Enable Sleep Mode.
  * Enter condition: (WFE or WFI) + (SLEEPDEEP bit = 0) + (LPM bit = 0)
  *
  * \param uc_type 0 for wait for interrupt, 1 for wait for event.
- * \note For SAM4S and SAM4E series, since only WFI is effective, uc_type = 1
- * will be treated as uc_type = 0.
+ * \note For SAM4S, SAM4C and SAM4E series, since only WFI is effective,
+ * uc_type = 1 will be treated as uc_type = 0.
  */
 void pmc_enable_sleepmode(uint8_t uc_type)
 {
-#if !defined(SAM4S) || !defined(SAM4E)
+#if !(SAM4S || SAM4E || SAM4N || SAM4C)
 	PMC->PMC_FSMR &= (uint32_t) ~ PMC_FSMR_LPM; // Enter Sleep mode
 #endif
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk; // Deep sleep
 
-#if (SAM4S || SAM4E)
+#if (SAM4S || SAM4E || SAM4N || SAM4C)
 	UNUSED(uc_type);
 	__WFI();
 #else
@@ -1013,7 +1232,7 @@ void pmc_enable_sleepmode(uint8_t uc_type)
 #endif
 }
 
-#if (SAM4S || SAM4E)
+#if (SAM4S || SAM4E || SAM4N || SAM4C)
 static uint32_t ul_flash_in_wait_mode = PMC_WAIT_MODE_FLASH_DEEP_POWERDOWN;
 /**
  * \brief Set the embedded flash state in wait mode
@@ -1034,7 +1253,7 @@ void pmc_enable_waitmode(void)
 {
 	uint32_t i;
 
-	/* Flash in Deep Power Down mode */
+	/* Flash in wait mode */
 	i = PMC->PMC_FSMR;
 	i &= ~PMC_FSMR_FLPM_Msk;
 	i |= ul_flash_in_wait_mode;
@@ -1043,25 +1262,8 @@ void pmc_enable_waitmode(void)
 	/* Clear SLEEPDEEP bit */
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk;
 
-	/* Backup FWS setting and set Flash Wait State at 0 */
-#if defined(ID_EFC)
-	uint32_t fmr_backup;
-	fmr_backup = EFC->EEFC_FMR;
-	EFC->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
-#endif
-#if defined(ID_EFC0)
-	uint32_t fmr0_backup;
-	fmr0_backup = EFC0->EEFC_FMR;
-	EFC0->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
-#endif
-#if defined(ID_EFC1)
-	uint32_t fmr1_backup;
-	fmr1_backup = EFC1->EEFC_FMR;
-	EFC1->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
-#endif
-
 	/* Set the WAITMODE bit = 1 */
-	PMC->CKGR_MOR |= CKGR_MOR_KEY(0x37u) | CKGR_MOR_WAITMODE;
+	PMC->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_WAITMODE;
 
 	/* Waiting for Master Clock Ready MCKRDY = 1 */
 	while (!(PMC->PMC_SR & PMC_SR_MCKRDY));
@@ -1074,16 +1276,11 @@ void pmc_enable_waitmode(void)
 	}
 	while (!(PMC->CKGR_MOR & CKGR_MOR_MOSCRCEN));
 
-	/* Restore EFC FMR setting */
-#if defined(ID_EFC)
-	EFC->EEFC_FMR = fmr_backup;
-#endif
-#if defined(ID_EFC0)
-	EFC0->EEFC_FMR = fmr0_backup;
-#endif
-#if defined(ID_EFC1)
-	EFC1->EEFC_FMR = fmr1_backup;
-#endif
+	/* Restore Flash in idle mode */
+	i = PMC->PMC_FSMR;
+	i &= ~PMC_FSMR_FLPM_Msk;
+	i |= PMC_WAIT_MODE_FLASH_IDLE;
+	PMC->PMC_FSMR = i;
 }
 #else
 /**
@@ -1096,6 +1293,7 @@ void pmc_enable_waitmode(void)
 
 	PMC->PMC_FSMR |= PMC_FSMR_LPM; /* Enter Wait mode */
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk; /* Deep sleep */
+
 	__WFE();
 
 	/* Waiting for MOSCRCEN bit cleared is strongly recommended
@@ -1105,6 +1303,7 @@ void pmc_enable_waitmode(void)
 		__NOP();
 	}
 	while (!(PMC->CKGR_MOR & CKGR_MOR_MOSCRCEN));
+
 }
 #endif
 
@@ -1114,9 +1313,14 @@ void pmc_enable_waitmode(void)
  */
 void pmc_enable_backupmode(void)
 {
+#if SAM4C
+	uint32_t tmp = SUPC->SUPC_MR & ~(SUPC_MR_BUPPOREN | SUPC_MR_KEY_Msk);
+	SUPC->SUPC_MR = tmp | SUPC_MR_KEY_PASSWD;
+	while (SUPC->SUPC_SR & SUPC_SR_BUPPORS);
+#endif
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-#if (SAM4S || SAM4E)
-	SUPC->SUPC_CR = SUPC_CR_KEY(0xA5u) | SUPC_CR_VROFF_STOP_VREG;
+#if (SAM4S || SAM4E || SAM4N || SAM4C)
+	SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF_STOP_VREG;
 #else
 	__WFE();
 #endif
@@ -1129,7 +1333,7 @@ void pmc_enable_clock_failure_detector(void)
 {
 	uint32_t ul_reg = PMC->CKGR_MOR;
 
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | CKGR_MOR_CFDEN | ul_reg;
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | CKGR_MOR_CFDEN | ul_reg;
 }
 
 /**
@@ -1139,8 +1343,30 @@ void pmc_disable_clock_failure_detector(void)
 {
 	uint32_t ul_reg = PMC->CKGR_MOR & (~CKGR_MOR_CFDEN);
 
-	PMC->CKGR_MOR = PMC_CKGR_MOR_KEY_VALUE | ul_reg;
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | ul_reg;
 }
+
+#if SAM4N || SAM4C
+/**
+ * \brief Enable Slow Crystal Oscillator Frequency Monitoring.
+ */
+void pmc_enable_sclk_osc_freq_monitor(void)
+{
+	uint32_t ul_reg = PMC->CKGR_MOR;
+
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | CKGR_MOR_XT32KFME | ul_reg;
+}
+
+/**
+ * \brief Disable Slow Crystal Oscillator Frequency Monitoring.
+ */
+void pmc_disable_sclk_osc_freq_monitor(void)
+{
+	uint32_t ul_reg = PMC->CKGR_MOR & (~CKGR_MOR_XT32KFME);
+
+	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | ul_reg;
+}
+#endif
 
 /**
  * \brief Enable or disable write protect of PMC registers.
@@ -1150,9 +1376,9 @@ void pmc_disable_clock_failure_detector(void)
 void pmc_set_writeprotect(uint32_t ul_enable)
 {
 	if (ul_enable) {
-		PMC->PMC_WPMR = PMC_WPMR_WPKEY_VALUE | PMC_WPMR_WPEN;
+		PMC->PMC_WPMR = PMC_WPMR_WPKEY_PASSWD | PMC_WPMR_WPEN;
 	} else {
-		PMC->PMC_WPMR = PMC_WPMR_WPKEY_VALUE;
+		PMC->PMC_WPMR = PMC_WPMR_WPKEY_PASSWD;
 	}
 }
 

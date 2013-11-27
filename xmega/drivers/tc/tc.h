@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA Timer Counter (TC) driver
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -184,6 +184,10 @@ void tc_disable(volatile void *tc);
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
  *
+ * \note Once a callback function is set, the interrupt priority must be set
+ *       via \ref tc_set_overflow_interrupt_level() for interrupts to be
+ *       generated each time the timer overflows.
+ *
  * \param tc Pointer to the Timer Counter (TC) base address
  * \param callback Reference to a callback function
  */
@@ -197,6 +201,10 @@ void tc_set_overflow_interrupt_callback(volatile void *tc,
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
  *
+ * \note Once a callback function is set, the interrupt priority must be set
+ *       via \ref tc_set_error_interrupt_level() for interrupts to be
+ *       generated each time a timer error occurs.
+ *
  * \param tc Pointer to the Timer Counter (TC) base address
  * \param callback Reference to a callback function
  */
@@ -208,6 +216,10 @@ void tc_set_error_interrupt_callback(volatile void *tc, tc_callback_t callback);
  * This function allows the caller to set and change the interrupt callback
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
+ *
+ * \note Once a callback function is set, the interrupt priority must be set
+ *       via \ref tc_set_cca_interrupt_level() for interrupts to be generated
+ *       each time the timer channel A compare matches the current timer count.
  *
  * \param tc Pointer to the Timer Counter (TC) base address
  * \param callback Reference to a callback function
@@ -221,6 +233,10 @@ void tc_set_cca_interrupt_callback(volatile void *tc, tc_callback_t callback);
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
  *
+ * \note Once a callback function is set, the interrupt priority must be set
+ *       via \ref tc_set_ccb_interrupt_level() for interrupts to be generated
+ *       each time the timer channel B compare matches the current timer count.
+ *
  * \param tc Pointer to the Timer Counter (TC) base address
  * \param callback Reference to a callback function
  */
@@ -232,6 +248,10 @@ void tc_set_ccb_interrupt_callback(volatile void *tc, tc_callback_t callback);
  * This function allows the caller to set and change the interrupt callback
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
+ *
+ * \note Once a callback function is set, the interrupt priority must be set
+ *       via \ref tc_set_ccc_interrupt_level() for interrupts to be generated
+ *       each time the timer channel C compare matches the current timer count.
  *
  * \param tc Pointer to the Timer Counter (TC) base address
  * \param callback Reference to a callback function
@@ -245,10 +265,15 @@ void tc_set_ccc_interrupt_callback(volatile void *tc, tc_callback_t callback);
  * function. Without setting a callback function the interrupt handler in the
  * driver will only clear the interrupt flags.
  *
+ * \note Once a callback function is set, the interrupt priority must be set
+ *       via \ref tc_set_ccd_interrupt_level() for interrupts to be generated
+ *       each time the timer channel D compare matches the current timer count.
+ *
  * \param tc Pointer to the Timer Counter (TC) base address
  * \param callback Reference to a callback function
  */
 void tc_set_ccd_interrupt_callback(volatile void *tc, tc_callback_t callback);
+
 /**
  * \brief Configures TC overflow Interrupt level
  *
@@ -380,7 +405,7 @@ static inline TC_CLKSEL_t tc_read_clock_source(volatile void *tc)
  * \param tc   ID of TC to get clock selection for.
  * \param resolution Desired resolution for the TC in Hz.
  */
-static inline void tc_set_resolution(void *tc, uint32_t resolution)
+static inline void tc_set_resolution(volatile void *tc, uint32_t resolution)
 {
 	uint32_t tc_clk_rate = sysclk_get_per_hz();
 
@@ -414,7 +439,7 @@ static inline void tc_set_resolution(void *tc, uint32_t resolution)
  *
  * \return The resolution of \a tc.
  */
-static inline uint32_t tc_get_resolution(void *tc)
+static inline uint32_t tc_get_resolution(volatile void *tc)
 {
 	uint32_t tc_clk_rate = sysclk_get_per_hz();
 	switch (tc_read_clock_source(tc)) {
@@ -1340,8 +1365,8 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
 /**
  * \page xmega_tc_quickstart Quick Start Guide for the XMEGA TC Driver
  *
- * This is the quick start guide for the \ref tc_group , with step-by-step 
- * instructions on how to configure and use the driver for a specific use case. 
+ * This is the quick start guide for the \ref tc_group , with step-by-step
+ * instructions on how to configure and use the driver for a specific use case.
  * The code examples can be copied into e.g the main application loop or any
  * other function that will need to control the timer/counters.
  *
@@ -1414,11 +1439,11 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  *    \note In this case, we use normal mode where the timer increments it
             count value until the TOP value is reached. The timer then reset
             its count value to 0.
- * -# Set the period 
+ * -# Set the period
  *  - \code tc_write_period(&TCC0, 1000); \endcode
  *    \note This will specify the TOP value of the counter. The timer will
  *          overflow and reset when this value is reached.
- * -# Set the overflow interrupt level 
+ * -# Set the overflow interrupt level
  *   - \code tc_set_overflow_interrupt_level(&TCC0, TC_INT_LVL_LO); \endcode
  * -# Enable interrupts:
  *  - \code cpu_irq_enable(); \endcode
@@ -1428,8 +1453,8 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  *
  * \section xmega_tc_qs_ovf_usage Usage steps
  *
- * - None. The timer will run in the background, and the code written in the 
- *   call back function will execute each time the timer overflows. 
+ * - None. The timer will run in the background, and the code written in the
+ *   call back function will execute each time the timer overflows.
  *
  *
  * \section xmega_tc_qs_cc Timer/counter compare match (interrupt based)
@@ -1460,7 +1485,7 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  *
  * \subsection xmega_tc_qs_cc_setup_code Example code
  *
- * Add two callback functions that will be executed when compare match A and 
+ * Add two callback functions that will be executed when compare match A and
  * compare match B occurs
  * \code
  * static void my_cca_callback(void)
@@ -1512,7 +1537,7 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  *    \note In this case, we use normal mode where the timer increments it
             count value until the TOP value is reached. The timer then reset
             its count value to 0.
- * -# Set the period 
+ * -# Set the period
  *  - \code tc_write_period(&TCC0, 10000); \endcode
  *    \note This will specify the TOP value of the counter. The timer will
  *          overflow and reset when this value is reached.
@@ -1532,19 +1557,19 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  *
  * \section xmega_tc_qs_cc_usage Usage steps
  *
- * - None. The timer will run in the background, and the code written in the 
+ * - None. The timer will run in the background, and the code written in the
  *   call back functions will execute each time a compare match occur.
  *
  *
  * \section xmega_tc_qs_pwm Timer/counter PWM
- * 
- * This use case will setup a timer in PWM mode. For more details you can 
+ *
+ * This use case will setup a timer in PWM mode. For more details you can
  * also look at the XMEGA PWM service.
  *
  * We will setup the timer in this mode:
  * - Normal WGM mode - incrementing timer
  * - Use the 2MHz oscillator as clock source (default)
- * - 1Hz PWM frequency (2MHz clock, 1024x prescale, TOP value 1950) 
+ * - 1Hz PWM frequency (2MHz clock, 1024x prescale, TOP value 1950)
  * - 10% duty cycle (1:10 ratio between PER and CC register)
  * - Output the PWM signal to a I/O port
  *
@@ -1585,7 +1610,7 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  *    \note In this case, we use normal mode where the timer increments it
  *          count value until the TOP value is reached. The timer then reset
   *         its count value to 0.
- * -# Set the period 
+ * -# Set the period
  *  - \code tc_write_period(&TCE0, 1950); \endcode
  *    \note This will specify the TOP value of the counter. The timer will
  *          overflow and reset when this value is reached.
@@ -1596,7 +1621,7 @@ static inline void tc_hires_set_mode(HIRES_t * hires, HIRES_HREN_t hi_res_mode)
  *           tc_write_cc() to change duty cycle run time (e.g to dim a LED).
  *           When CCA = 0, the duty cycle will be 0%. When CCA = PER (top value)
  *           the duty cycle will be 100%.
- * -# Enable compare channel A 
+ * -# Enable compare channel A
  *  -\code tc_enable_cc_channels(&TCE0,TC_CCAEN); \endcode
  * -# Set the clock source
  *  - \code tc_write_clock_source(&TCE0, TC_CLKSEL_DIV1024_gc); \endcode

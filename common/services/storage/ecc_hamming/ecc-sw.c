@@ -5,7 +5,7 @@
  *
  * This file contains a software Hamming ECC implementation.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -239,18 +239,18 @@ static uint32_t verify256(uint8_t *puc_data, const uint8_t *puc_original_code)
 		uint8_t bit;
 
 		byte = correction_code[0] & 0x80;
-		byte |= (correction_code[0] << 1) & 0x40;
-		byte |= (correction_code[0] << 2) & 0x20;
-		byte |= (correction_code[0] << 3) & 0x10;
+		byte |= ((correction_code[0] << 1) & 0x40);
+		byte |= ((correction_code[0] << 2) & 0x20);
+		byte |= ((correction_code[0] << 3) & 0x10);
 
-		byte |= (correction_code[1] >> 4) & 0x08;
-		byte |= (correction_code[1] >> 3) & 0x04;
-		byte |= (correction_code[1] >> 2) & 0x02;
-		byte |= (correction_code[1] >> 1) & 0x01;
+		byte |= ((correction_code[1] >> 4) & 0x08);
+		byte |= ((correction_code[1] >> 3) & 0x04);
+		byte |= ((correction_code[1] >> 2) & 0x02);
+		byte |= ((correction_code[1] >> 1) & 0x01);
 
 		bit = (correction_code[2] >> 5) & 0x04;
-		bit |= (correction_code[2] >> 4) & 0x02;
-		bit |= (correction_code[2] >> 3) & 0x01;
+		bit |= ((correction_code[2] >> 4) & 0x02);
+		bit |= ((correction_code[2] >> 3) & 0x01);
 
 		/* Correct bit */
 		puc_data[byte] ^= (1 << bit);

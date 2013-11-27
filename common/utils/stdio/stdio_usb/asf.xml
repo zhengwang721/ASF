@@ -5,7 +5,7 @@
 			Standard I/O (stdio) management component that implements a stdio USB CDC interface to run on USB composite device.
 			</info>
 			<info type="gui-flag" value="hidden"/>
-			<require idref="common.services.usb.class.cdc.device.composite#enable"/>
+			<require idref="common.services.usb.class.cdc.device.composite.common"/>
 			<require idref="common.utils.stdio.stdio_usb.common"/>
 			<device-support value="uc3a"/>
 			<device-support value="uc3a3_a4"/>
@@ -27,6 +27,7 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
+			<device-support value="sam4e"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.utils.stdio.stdio_usb.composite#disable" caption="USB Device CDC Standard I/O (stdio) disabled">
@@ -64,6 +65,7 @@
 		<device-support value="sam3a"/>
 		<device-support value="sam4s"/>
 		<device-support value="sam4l"/>
+		<device-support value="sam4e"/>
 	</module>
 
 	<select-by-device id="common.utils.stdio.stdio_usb.common" caption="USB Device CDC Standard I/O (stdio)">
@@ -120,6 +122,7 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
+			<device-support value="sam4e"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 	</select-by-device>

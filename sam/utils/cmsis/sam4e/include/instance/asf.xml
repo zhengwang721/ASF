@@ -30,6 +30,7 @@
 		<build type="header-file" value="pmc.h"/>
 		<build type="header-file" value="pwm.h"/>
 		<build type="header-file" value="rstc.h"/>
+		<build type="header-file" value="rswdt.h"/>
 		<build type="header-file" value="rtc.h"/>
 		<build type="header-file" value="rtt.h"/>
 		<build type="header-file" value="smc.h"/>

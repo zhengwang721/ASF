@@ -8,6 +8,7 @@
 		<build type="c-source" value="twi_unit_tests.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_test.h"/>
 		<device-support value="sam"/>
+		<require idref="common.components.memory.eeprom.at24cxx"/>
 		<require idref="sam.drivers.pmc"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
 		<require idref="common.services.basic.gpio"/>
@@ -16,5 +17,6 @@
 		<require idref="common.services.layer.freertos.pdc"/>
 		<require idref="common.services.layer.freertos.twi"/>
 		<require idref="common.utils.unit_test"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

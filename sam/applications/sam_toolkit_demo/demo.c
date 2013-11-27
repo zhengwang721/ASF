@@ -3,7 +3,7 @@
  *
  * \brief SAM toolkit demo application.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,7 @@
  *
  * \section Requirements
  *
- * This package can be used with SAM4S evaluation kits.
+ * This package can be used with SAM4S-EK/SAM4S-EK2.
  *
  * \section Description
  *
@@ -62,16 +62,16 @@
  *
  * \section Usage
  *
- * -# Build the program and download it inside the evaluation board. Please
- *    refer to the
- *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6224.pdf">
- *    SAM-BA User Guide</a>, the
- *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6310.pdf">
- *    GNU-Based Software Development</a>
- *    application note or to the
- *    <a href="ftp://ftp.iar.se/WWWfiles/arm/Guides/EWARM_UserGuide.ENU.pdf">
- *    IAR EWARM User Guide</a>,
- *    depending on your chosen solution.
+ * -# Build the program and download it inside the evaluation board.
+ * -# Unzip the resource files in the resource directory, which is located at
+ * ./sam/applications/sam_toolkit_demo/resources/disk.
+ * -# Erase the nand flash through SAM-BA.
+ * -# Power OFF and ON the board with the USB cable always connected.
+ * -# A new Removable Disk should appear in the computer explorer.
+ * -# Copy the resource files to the root directory of this removable disk.
+ * -# When the copy operation is achieved, disconnect the USB cable, and
+ * Power OFF and ON the board. The root directory in the removable disk should
+ * be "/demo".
  * -# On the computer, open and configure a terminal application
  *    (e.g. HyperTerminal on Microsoft Windows) with these settings:
  *   - 115200 bauds
@@ -79,12 +79,9 @@
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Format a SD card with a FAT32 filesystem and extract out the contents
- *    of the sam_toolkit_demo_sdcard_resources.zip archive directly to the root
- *    folder of the card. Insert the SD Card into the SAM4S-EK board.
  * -# Start the application.
- * -# Two LEDs should start blinking on the board. In the terminal window, the
- *    following text should appear (values depend on the board and chip used):
+ * -# In the terminal window, the following text should appear (values depend
+ * on the board and chip used):
  *    \code
  *     -- SAM Toolkit Demo Example xxx --
  *     -- xxxxxx-xx
@@ -128,6 +125,26 @@
 	#warning The potentiometer channel does not exist in the board definition file. Using default settings.
 
 	#define ADC_CHANNEL_POTENTIOMETER  ADC_CHANNEL_5
+#endif
+
+#if SAM3S || SAM4S || SAM3XA || SAM3N
+/* Tracking Time*/
+#define  TRACKING_TIME            1
+/* Transfer Period */
+#define  TRANSFER_PERIOD       1 
+#endif
+
+#if SAM3U
+#ifdef ADC_12B
+/* Start Up Time */
+#define   STARTUP_TIME                           7
+/* Off Mode Startup Time */
+#define   OFF_MODE_STARTUP_TIME      7
+#else
+#define   STARTUP_TIME                           3
+#endif
+/* Sample & Hold Time */
+#define   SAMPLE_HOLD_TIME   6
 #endif
 
 /* A message is posted each time the values goes outside the [-5,+5] interval
@@ -481,16 +498,26 @@ static void demo_config_adc( void )
 	/* Enable peripheral clock. */
 	pmc_enable_periph_clk(ID_ADC);
 	/* Initialize ADC. */
-
-	/* startup = 10:    640 periods of ADCClock
-	 * for prescale = 4
-	 *     prescale: ADCClock = MCK / ( (PRESCAL+1) * 2 ) => 64MHz /
-	 * ((4+1)*2) = 6.4MHz
-	 *     ADC clock = 6.4 MHz
+	/*
+	 * Formula: ADCClock = MCK / ( (PRESCAL+1) * 2 )
+	 * For example, MCK = 64MHZ, PRESCAL = 4, then:
+	 * ADCClock = 64 / ((4+1) * 2) = 6.4MHz;
 	 */
-	adc_init(ADC, sysclk_get_cpu_hz(), 6400000, 10);
-
-	adc_configure_timing(ADC, 0, ADC_SETTLING_TIME_3, 1);
+	/* Formula:
+	 *     Startup  Time = startup value / ADCClock
+	 *     Startup time = 64 / 6.4MHz = 10 us
+	 */
+	adc_init(ADC, sysclk_get_cpu_hz(), 6400000, ADC_STARTUP_TIME_4);
+	/* Formula:
+	 *     Transfer Time = (TRANSFER * 2 + 3) / ADCClock
+	 *     Tracking Time = (TRACKTIM + 1) / ADCClock
+	 *     Settling Time = settling value / ADCClock
+	 *
+	 *     Transfer Time = (1 * 2 + 3) / 6.4MHz = 781 ns
+	 *     Tracking Time = (1 + 1) / 6.4MHz = 312 ns
+	 *     Settling Time = 3 / 6.4MHz = 469 ns
+	 */
+	adc_configure_timing(ADC, TRACKING_TIME, ADC_SETTLING_TIME_3, TRANSFER_PERIOD);
 	adc_check(ADC, sysclk_get_cpu_hz());
 
 	/* Hardware trigger TIOA0. */

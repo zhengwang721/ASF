@@ -4,7 +4,7 @@
 		Provide an application example of Non volatile memories access. Basic write, read back and verify example
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="NVM"/>
+			<keyword value="Memory"/>
 		</info>
 		<build type="c-source" value="nvm_example.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_nvm_example.h"/>
@@ -13,5 +13,6 @@
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.services.ioport"/>
 		<require idref="common.drivers.nvm"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

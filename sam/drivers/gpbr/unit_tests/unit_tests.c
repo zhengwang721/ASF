@@ -80,6 +80,8 @@
  * - sam3x8h_sam3x_ek
  * - sam4s16c_sam4s_ek
  * - sam4sd32c_sam4s_ek2
+ * - sam4n16c_sam4n_xplained_pro
+ * - sam4c16c_sam4c_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -181,7 +183,7 @@ static void run_gpbr_test(const struct test_case *test)
 		/* Read the data from GPBR0 */
 		ul_read_value = gpbr_read(GPBR0);
 
-#if SAM4S
+#if (SAM4S || SAM4E || SAM4N || SAM4C)
 		/* Erase flag page */
 		flash_erase_page(ul_last_page_addr, IFLASH_ERASE_PAGES_8);
 
@@ -220,7 +222,7 @@ static void run_gpbr_test(const struct test_case *test)
 	/* Wait for RTT alarm event */
 	rtt_write_alarm_time(RTT, RTT_WAIT_TIME);
 
-#if SAM4S
+#if (SAM4S || SAM4E || SAM4N || SAM4C)
 	/* Erase flag page */
 	if(flash_erase_page(ul_last_page_addr, IFLASH_ERASE_PAGES_8) != FLASH_RC_OK)
 		printf("erase page failed!\r\n");
@@ -242,7 +244,7 @@ static void run_gpbr_test(const struct test_case *test)
 
 	/* Enter backup mode */
 	pmc_enable_backupmode();
-#if !defined(SAM4S)
+#if (!(SAM4S) && !(SAM4E) && !(SAM4N) && !(SAM4C))
 	supc_enable_backup_mode(SUPC);
 #endif
 

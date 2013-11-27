@@ -3,7 +3,7 @@
  *
  * \brief SAM3/SAM4 Sleep manager implementation.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -69,6 +69,10 @@ enum sleepmgr_mode {
 	/*! WFI sleep mode.
 	 * Potential Wake Up sources: fast startup events and interrupt. */
 	SLEEPMGR_SLEEP_WFI,
+	/*! Wait mode, wakeup fast (in 3ms).
+	 *  XTAL is not disabled when sleep.
+	 *  Potential Wake Up sources: fast startup events */
+	SLEEPMGR_WAIT_FAST,
 	/*! Wait mode.
 	 *  Potential Wake Up sources: fast startup events */
 	SLEEPMGR_WAIT,
@@ -99,6 +103,7 @@ static inline void sleepmgr_sleep(const enum sleepmgr_mode sleep_mode)
 	// Atomically enable the global interrupts and enter the sleep mode.
 	pmc_sleep(sleep_mode);
 #else
+	UNUSED(sleep_mode);
 	cpu_irq_enable();
 #endif /* CONFIG_SLEEPMGR_ENABLE */
 

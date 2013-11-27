@@ -3,7 +3,7 @@
  *
  * \brief FlashCALW driver for SAM4L.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -139,7 +139,6 @@ uint32_t flashcalw_get_region_first_page_number(uint32_t region)
 	return region * flashcalw_get_page_count_per_region();
 }
 
-
 //! @}
 
 /*! \name FLASHC Control
@@ -183,6 +182,21 @@ void flashcalw_set_wait_state(uint32_t wait_state)
 void flashcalw_set_flash_waitstate_and_readmode(uint32_t cpu_f_hz,
 		uint32_t ps_value, bool is_fwu_enabled)
 {
+#ifdef CONFIG_FLASH_READ_MODE_HIGH_SPEED_ENABLE
+	UNUSED(ps_value);
+	UNUSED(is_fwu_enabled);
+
+	if (cpu_f_hz > FLASH_FREQ_PS2_FWS_0_MAX_FREQ) { /* > 24MHz */
+		/* Set a wait-state. */
+		flashcalw_set_wait_state(1);
+	} else {
+		/* No wait-state. */
+		flashcalw_set_wait_state(0);
+	}
+
+	/* Enable the high-speed read mode. */
+	flashcalw_issue_command(FLASHCALW_FCMD_CMD_HSEN, -1);
+#else
 	if (ps_value == 0) {
 		if (cpu_f_hz > FLASH_FREQ_PS0_FWS_0_MAX_FREQ) {
 			// > 18MHz
@@ -220,7 +234,7 @@ void flashcalw_set_flash_waitstate_and_readmode(uint32_t cpu_f_hz,
 			}
 		}
 	} else { /* ps_value == 1 */
-		if (cpu_f_hz > FLASH_FREQ_PS0_FWS_0_MAX_FREQ) { /* > 8MHz */
+		if (cpu_f_hz > FLASH_FREQ_PS1_FWS_0_MAX_FREQ) { /* > 8MHz */
 			/* Set a wait-state. */
 			flashcalw_set_wait_state(1);
 		} else {
@@ -231,6 +245,7 @@ void flashcalw_set_flash_waitstate_and_readmode(uint32_t cpu_f_hz,
 		/* Disable the high-speed read mode. */
 		flashcalw_issue_command(FLASHCALW_FCMD_CMD_HSDIS, -1);
 	}
+#endif
 }
 
 /*! \brief Tells whether the Flash Ready interrupt is enabled.
@@ -294,7 +309,6 @@ void flashcalw_enable_prog_error_int(bool enable)
 	HFLASHC->FLASHCALW_FCR &= ((enable &
 			FLASHCALW_FCR_PROGE) | (~FLASHCALW_FCR_PROGE));
 }
-
 
 //! @}
 
@@ -406,7 +420,6 @@ uint32_t flashcalw_get_page_number(void)
 			>> FLASHCALW_FCMD_PAGEN_Pos);
 }
 
-
 /*! \brief Issues a FLASHCALW command.
  *
  * \param command The command: \c FLASHCALW_FCMD_CMD_x.
@@ -446,7 +459,6 @@ void flashcalw_issue_command(uint32_t command, int page_number)
 	flashcalw_wait_until_ready();
 }
 
-
 //! @}
 
 /*! \name FLASHCALW Global Commands
@@ -483,7 +495,6 @@ void flashcalw_erase_all(void)
 {
 	flashcalw_issue_command(FLASHCALW_FCMD_CMD_EA, -1);
 }
-
 
 //! @}
 
@@ -588,13 +599,11 @@ void flashcalw_lock_all_regions(bool lock)
 	flashcalw_error_status = error_status;
 }
 
-
 //! @}
 
 /*! \name Access to General-Purpose Fuses
  */
 //! @{
-
 
 /*! \brief Reads a general-purpose fuse bit.
  *
@@ -608,7 +617,7 @@ void flashcalw_lock_all_regions(bool lock)
  */
 bool flashcalw_read_gp_fuse_bit(uint32_t gp_fuse_bit)
 {
-	return ((flashcalw_read_all_gp_fuses() & 1ULL << (gp_fuse_bit & 0x3F))
+	return ((flashcalw_read_all_gp_fuses() & (uint64_t)1 << (gp_fuse_bit & 0x3F))
 		!= 0);
 }
 
@@ -628,7 +637,7 @@ bool flashcalw_read_gp_fuse_bit(uint32_t gp_fuse_bit)
 uint64_t flashcalw_read_gp_fuse_bitfield(uint32_t pos, uint32_t width)
 {
 	return flashcalw_read_all_gp_fuses() >> (pos & 0x3F)
-		& ((1ULL << Min(width, 64)) - 1);
+		& (((uint64_t)1 << Min(width, 64)) - 1);
 }
 
 /*! \brief Reads a general-purpose fuse byte.
@@ -656,8 +665,8 @@ uint8_t flashcalw_read_gp_fuse_byte(uint32_t gp_fuse_byte)
  */
 uint64_t flashcalw_read_all_gp_fuses(void)
 {
-	return HFLASHC->FLASHCALW_FGPFRLO |
-		(uint64_t)HFLASHC->FLASHCALW_FGPFRHI << 32;
+	uint32_t fuselo = HFLASHC->FLASHCALW_FGPFRLO;
+	return fuselo |	(uint64_t)HFLASHC->FLASHCALW_FGPFRHI << 32;
 }
 
 /*! \brief Erases a general-purpose fuse bit.
@@ -723,7 +732,7 @@ bool flashcalw_erase_gp_fuse_bitfield(uint32_t pos, uint32_t width, bool check)
 	}
 	flashcalw_error_status = error_status;
 	return (check) ? (flashcalw_read_gp_fuse_bitfield(pos, width)
-		== (1ULL << width) - 1) : true;
+		== ((uint64_t)1 << width) - 1) : true;
 }
 
 /*! \brief Erases a general-purpose fuse byte.
@@ -787,8 +796,12 @@ bool flashcalw_erase_gp_fuse_byte(uint32_t gp_fuse_byte, bool check)
 bool flashcalw_erase_all_gp_fuses(bool check)
 {
 	flashcalw_issue_command(FLASHCALW_FCMD_CMD_EAGPF, -1);
+	/**
+	 * use (uint64_t)-1 instead of 0xFFFFFFFFFFFFFFFFULL to avoid
+	 * compilation warning
+	 */
 	return (check) ? (flashcalw_read_all_gp_fuses() ==
-		0xFFFFFFFFFFFFFFFFULL) : true;
+		(uint64_t)-1) : true;
 }
 
 /*! \brief Writes a general-purpose fuse bit.
@@ -1023,12 +1036,16 @@ void flashcalw_set_all_gp_fuses(uint64_t value)
 	uint32_t error_status;
 
 	switch (value) {
-	case 0xFFFFFFFFFFFFFFFFULL:
+	/**
+	 * use (uint64_t)-1 instead of 0xFFFFFFFFFFFFFFFFULL to avoid
+	 * compilation warning
+	 */
+	case (uint64_t)-1:
 		flashcalw_erase_all_gp_fuses(false);
 		break;
 
-	case 0x0000000000000000ULL:
-		flashcalw_write_all_gp_fuses(0x0000000000000000ULL);
+	case (uint64_t)0:
+		flashcalw_write_all_gp_fuses((uint64_t)0);
 		break;
 
 	default:
@@ -1040,13 +1057,11 @@ void flashcalw_set_all_gp_fuses(uint64_t value)
 	}
 }
 
-
 //! @}
 
 /*! \name Access to Flash Pages
  */
 //! @{
-
 
 /*! \brief Clears the page buffer.
  *
@@ -1457,17 +1472,18 @@ volatile void *flashcalw_memset64(volatile void *dst, uint64_t src,
 
 				/* Align the destination pointer with its 64-bit
 				 * boundary. */
-				dest.u64ptr = (uint64_t *)Align_down(
-						(uint32_t)dest.u8ptr,
+				dest.u64ptr = (uint64_t *)Align_down((uint32_t)dest.u8ptr,
 						sizeof(uint64_t));
 
 				/* If the current destination double-word is not
 				 * the last one... */
 				if (dest.u64ptr < dest_end.u64ptr) {
+					/* Workaround for corrupted data after page write
+					 * operations */
+					*(volatile uint64_t*)((uint32_t)dest.u64ptr) = (uint64_t)-1;
 					/* Write the flash double-word buffer to
 					the page buffer and reinitialize it. */
-					*dest.u32ptr++ = flash_dword.u32[0];
-					*dest.u32ptr++ = flash_dword.u32[1];
+					*dest.u64ptr++ = flash_dword.u64;
 					flash_dword.u64 = source.u64;
 				}
 			}
@@ -1476,8 +1492,10 @@ volatile void *flashcalw_memset64(volatile void *dst, uint64_t src,
 		/* Write the source data to the page buffer with 64-bit
 		 * alignment. */
 		for (i = flash_page_source_end.u64ptr - dest.u64ptr; i; i--) {
-			*dest.u32ptr++ = source.u32[0];
-			*dest.u32ptr++ = source.u32[1];
+			/* Workaround for corrupted data after page write operations */
+			*(volatile uint64_t*)((uint32_t)dest.u64ptr)
+					= (uint64_t)-1;
+			*dest.u64ptr++ = source.u64;
 		}
 
 		/* If the current destination page has an incomplete end... */
@@ -1503,10 +1521,11 @@ volatile void *flashcalw_memset64(volatile void *dst, uint64_t src,
 						flash_dword.u8[i] = *tmp.u8ptr++;
 					}
 
+					/* Workaround for corrupted data after page write operations */
+					*(volatile uint64_t*)((uint32_t)dest.u64ptr) = (uint64_t)-1;
 					/* Write the flash double-word buffer to
 					 * the page buffer. */
-					*dest.u32ptr++ = flash_dword.u32[0];
-					*dest.u32ptr++ = flash_dword.u32[1];
+					*dest.u64ptr++ = flash_dword.u64;
 				}
 
 				/* Fill the end of the page buffer with the
@@ -1625,7 +1644,7 @@ volatile void *flashcalw_memcpy(volatile void *dst, const void *src,
 		for (page_pos = 0; page_pos < FLASH_PAGE_SIZE;
 				page_pos += sizeof(uint64_t)) {
 			/* Read the flash double-word buffer */
-			flash_dword.u64 = *(volatile uint64_t *)flash_add;
+			flash_dword.u64 = *(volatile uint64_t *)((uint32_t)flash_add);
 
 			/* Update double-word if necessary */
 			for (i = 0; i < sizeof(uint64_t); i++) {
@@ -1639,9 +1658,13 @@ volatile void *flashcalw_memcpy(volatile void *dst, const void *src,
 				flash_add++;
 			}
 
+			/* Workaround for corrupted data after page write operations */
+			*(volatile uint64_t*)((uint32_t)flash_add - sizeof(uint64_t))
+					= (uint64_t)-1;
+			
 			/* Write the flash double-word buffer to the page buffer */
-			*(volatile uint64_t *)((uint32_t)flash_add
-			- sizeof(uint64_t)) = flash_dword.u64;
+			*(volatile uint64_t *)((uint32_t)flash_add - sizeof(uint64_t))
+					= flash_dword.u64;
 		}
 
 		/* Erase the current page if requested and write it from the
@@ -1666,7 +1689,6 @@ volatile void *flashcalw_memcpy(volatile void *dst, const void *src,
 }
 
 /** @} */
-
 
 /*! \name PicoCache interfaces
  */

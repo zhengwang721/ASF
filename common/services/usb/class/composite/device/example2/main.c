@@ -3,7 +3,7 @@
  *
  * \brief Main functions for USB composite example
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,7 +48,7 @@
 
 static bool main_b_keyboard_enable = false;
 static bool main_b_mouse_enable = false;
-static bool main_b_msc_enable = false;
+static volatile bool main_b_msc_enable = false;
 static bool main_b_cdc_enable = false;
 
 /*! \brief Main function. Execution starts here.

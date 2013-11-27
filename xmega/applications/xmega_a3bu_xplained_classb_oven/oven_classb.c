@@ -3,7 +3,7 @@
  *
  * \brief Class B Error insertion
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -300,7 +300,7 @@ static void adc_foul_callback(ADC_t *adc, uint8_t ch_mask, adc_result_t res)
 {
 	struct adc_channel_config adcch_conf;
 
-	adc->REFCTRL = ADC_REFSEL_VCC_gc;
+	adc->REFCTRL = ADC_REFSEL_INTVCC_gc;
 
 	adcch_read_configuration(adc, ch_mask, &adcch_conf);
 	adcch_disable_interrupt(&adcch_conf);

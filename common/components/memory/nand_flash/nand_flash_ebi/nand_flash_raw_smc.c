@@ -5,7 +5,7 @@
  *
  * This file contains definitions and functions for raw NAND Flash operation.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -70,7 +70,7 @@
 #define CONF_NF_CYCLE_TIMING 0
 #endif
 
-#if SAM4S /* For compatible */
+#if SAM4S || SAM4E /* For compatible */
 #define SMC_MODE_DBW_8_BIT  0
 #endif
 
@@ -120,9 +120,9 @@ static void write_column_address(const struct nand_flash_raw *raw,
 	 */
 	while (page_data_size > 2) {
 		if (nand_flash_model_get_data_bus_width(MODEL(raw)) == 16) {
-			WRITE_ADDRESS16(raw, column_address & 0xFF);
+			WRITE_ADDRESS16(raw, (column_address & 0xFF));
 		} else {
-			WRITE_ADDRESS(raw, column_address & 0xFF);
+			WRITE_ADDRESS(raw, (column_address & 0xFF));
 		}
 
 		page_data_size >>= 8;
@@ -144,9 +144,9 @@ static void write_row_address(const struct nand_flash_raw *raw,
 
 	while (num_page > 0) {
 		if (nand_flash_model_get_data_bus_width(MODEL(raw)) == 16) {
-			WRITE_ADDRESS16(raw, row_address & 0xFF);
+			WRITE_ADDRESS16(raw, (row_address & 0xFF));
 		} else {
-			WRITE_ADDRESS(raw, row_address & 0xFF);
+			WRITE_ADDRESS(raw, (row_address & 0xFF));
 		}
 
 		num_page >>= 8;
@@ -202,9 +202,9 @@ static void write_data(const struct nand_flash_raw *raw,
 		if (((uint32_t)buffer & 0x1u) || (size & 0x1u)) {
 			uint16_t tmp16;
 			for (i = 0; i < size;) {
-				tmp16 = buffer[i ++];
+				tmp16 = buffer[i++];
 				if (i < size) {
-					tmp16 += buffer[i ++] << 8;
+					tmp16 += buffer[i++] << 8;
 				} else {
 					tmp16 += 0xFF00; // Write FF if no data
 				}
@@ -243,9 +243,9 @@ static void read_data(const struct nand_flash_raw *raw,
 			uint16_t tmp16;
 			for (i = 0; i < size;) {
 				tmp16 = READ_DATA16(raw);
-				buffer[i ++] = tmp16 & 0xFF;
+				buffer[i++] = tmp16 & 0xFF;
 				if (i < size) {
-					buffer[i ++] = (tmp16 >> 8) & 0xFF;
+					buffer[i++] = (tmp16 >> 8) & 0xFF;
 				} else {
 					/* No fill on size limit */
 				}
@@ -365,7 +365,7 @@ static uint32_t write_page(const struct nand_flash_raw *raw,
 	}
 
 	/* Write spare area alone if needed */
-	if (spare && !data) {
+	if (spare && (!data)) {
 		WRITE_COMMAND(raw, NAND_COMMAND_WRITE_1);
 		write_column_address(raw, page_data_size);
 		write_row_address(raw, row_address);
@@ -493,7 +493,7 @@ uint32_t nand_flash_raw_initialize(struct nand_flash_raw *raw,
 	};
 
 	gpio_enable_module(SMC_NF_EBI_GPIO_MAP,
-			sizeof(SMC_NF_EBI_GPIO_MAP) / sizeof(SMC_NF_EBI_GPIO_MAP[0]));
+			(sizeof(SMC_NF_EBI_GPIO_MAP) / sizeof(SMC_NF_EBI_GPIO_MAP[0])));
 	smc_init(sysclk_get_cpu_hz());
 
 	/* Enable NAND Flash Chip Select */
@@ -566,9 +566,9 @@ uint32_t nand_flash_raw_read_id(const struct nand_flash_raw *raw)
 	delay_us(1);
 
 	chip_id = READ_DATA8(raw);
-	chip_id |= READ_DATA8(raw) << 8;
-	chip_id |= READ_DATA8(raw) << 16;
-	chip_id |= READ_DATA8(raw) << 24;
+	chip_id |= (READ_DATA8(raw) << 8);
+	chip_id |= (READ_DATA8(raw) << 16);
+	chip_id |= (READ_DATA8(raw) << 24);
 	DISABLE_CE(raw);
 
 	return chip_id;

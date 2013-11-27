@@ -151,15 +151,6 @@
 #   endif
 #endif
 
-
-/*! \brief Enable async wakeup by USB
- */
-__always_inline static void usbc_async_wake_up_enable(unsigned long awen_mask)
-{
-	PM->PM_AWEN |= awen_mask;
-}
-
-
 /**
  * \name Power management routine.
  */
@@ -168,7 +159,11 @@ __always_inline static void usbc_async_wake_up_enable(unsigned long awen_mask)
 #ifndef UDD_NO_SLEEP_MGR
 
 //! Definition of sleep levels
+#if OTG_ID_IO || OTG_VBUS_IO
+#   define USBC_SLEEP_MODE_USB_SUSPEND  SLEEPMGR_SLEEP_1
+#else
 #   define USBC_SLEEP_MODE_USB_SUSPEND  SLEEPMGR_RET
+#endif
 #   define USBC_SLEEP_MODE_USB_IDLE     SLEEPMGR_ACTIVE
 
 //! State of USB line
@@ -191,10 +186,39 @@ static void udd_sleep_mode(bool b_idle)
 }
 #else
 
-static void udd_sleep_mode(bool b_idle) {
+static void udd_sleep_mode(bool b_idle)
+{
 	UNUSED(b_idle);
 }
 #endif  // UDD_NO_SLEEP_MGR
+
+//@}
+
+/**
+ * \name USB IO PADs handlers
+ */
+//@{
+
+#if (OTG_VBUS_IO || OTG_VBUS_EIC)
+/**
+ * USB VBus pin change handler
+ */
+static void uhd_vbus_handler(void)
+{
+	pad_ack_vbus_interrupt();
+	dbg_print("VBUS ");
+# ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
+	if (Is_pad_vbus_high()) {
+		udd_attach();
+	} else {
+		udd_detach();
+	}
+# endif
+# ifdef UDC_VBUS_EVENT
+	UDC_VBUS_EVENT(Is_pad_vbus_high());
+# endif
+}
+#endif
 
 //@}
 
@@ -444,6 +468,7 @@ ISR(UDD_USB_INT_FUN)
 #endif
 		// Reset USB Device Stack Core
 		udc_reset();
+		udd_disable_endpoints();
 		// Reset endpoint control
 		udd_reset_ep_ctrl();
 		// Reset endpoint control management
@@ -492,24 +517,6 @@ ISR(UDD_USB_INT_FUN)
 		goto udd_interrupt_end;
 	}
 
-	if (Is_otg_vbus_transition()) {
-		dbg_print("VBUS ");
-		// Ack Vbus transition and send status to high level
-		otg_unfreeze_clock();
-		otg_ack_vbus_transition();
-		otg_freeze_clock();
-#ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
-		if (Is_otg_vbus_high()) {
-			udd_attach();
-		} else {
-			udd_detach();
-		}
-#endif
-#ifdef UDC_VBUS_EVENT
-		UDC_VBUS_EVENT(Is_otg_vbus_high());
-#endif
-		goto udd_interrupt_end;
-	}
 udd_interrupt_end:
 	dbg_print("\n\r");
 udd_interrupt_sof_end:
@@ -520,10 +527,10 @@ udd_interrupt_sof_end:
 
 bool udd_include_vbus_monitoring(void)
 {
-#ifndef USBC_USBSTA_VBUSTI
-	return false;
-#else
+#if (OTG_VBUS_IO || OTG_VBUS_EIC)
 	return true;
+#else
+	return false;
 #endif
 }
 
@@ -555,24 +562,22 @@ void udd_enable(void)
 	/* Always authorize asynchronous USB interrupts to exit of sleep mode
 	 * For SAM USB wake up device except BACKUP mode
 	 */
-	usbc_async_wake_up_enable(1 << PM_AWEN_USBC);
+	usbc_async_wake_up_enable();
 	bpm_enable_fast_wakeup(BPM);
 #endif
 
-#if (defined USB_ID) && (defined UHD_ENABLE)
+#if (OTG_ID_EIC || OTG_ID_IO) && (defined UHD_ENABLE)
 	// Check that the device mode is selected by ID pin
-	if (!Is_otg_id_device()) {
+	if (!Is_pad_id_device()) {
 		cpu_irq_restore(flags);
 		return; // Device is not the current mode
 	}
 #else
-	// ID pin not used then force device mode
-	otg_disable_id_pin();
-	otg_force_device_mode();
+	// ID pin not used then enable device mode
+	otg_enable_device_mode();
 #endif
 
 	// Enable USB hardware
-	otg_enable_pad();
 	otg_enable();
 	otg_unfreeze_clock();
 	(void)Is_otg_clock_frozen();
@@ -601,13 +606,6 @@ void udd_enable(void)
 	udd_high_speed_disable();
 #  endif
 #endif
-	otg_ack_vbus_transition();
-	// Force Vbus interrupt in case of Vbus always with a high level
-	// This is possible with a short timing between a Host mode stop/start.
-	if (Is_otg_vbus_high()) {
-		otg_raise_vbus_transition();
-	}
-	otg_enable_vbus_interrupt();
 	otg_freeze_clock();
 
 #ifndef UDD_NO_SLEEP_MGR
@@ -616,11 +614,22 @@ void udd_enable(void)
 	sleepmgr_lock_mode(USBC_SLEEP_MODE_USB_SUSPEND);
 #endif
 
-#ifndef USBC_USBSTA_VBUSTI
-#  ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
+	/* Enable VBus monitoring */
+#if OTG_VBUS_EIC || OTG_VBUS_IO
+	pad_vbus_init(UDD_USB_INT_LEVEL);
+	/* Force Vbus interrupt when Vbus is always high
+	 * This is possible due to a short timing between a Host mode stop/start.
+	 */
+	if (Is_pad_vbus_high()) {
+		uhd_vbus_handler();
+	}
+#else
+	// No VBus detect, assume always high
+# ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
 	udd_attach();
-#  endif	
-#endif	
+# endif
+#endif
+
 	cpu_irq_restore(flags);
 }
 
@@ -630,15 +639,16 @@ void udd_disable(void)
 	irqflags_t flags;
 
 #ifdef UHD_ENABLE
-# ifdef USB_ID
-	if (Is_otg_id_host())
+#  if OTG_ID_IO || OTG_ID_EIC
+	if (!Is_pad_id_device()) {
 		return; // Host mode running, ignore UDD disable
+	}
 # else
-	if (Is_otg_host_mode_forced())
+	if (Is_otg_host_mode_enabled()) {
 		return; // Host mode running, ignore UDD disable
+	}
 # endif
 #endif
-
 	flags = cpu_irq_save();
 	otg_unfreeze_clock();
 	udd_detach();
@@ -648,13 +658,11 @@ void udd_disable(void)
 
 #ifndef UHD_ENABLE
 	otg_disable();
-	otg_disable_pad();
 	sysclk_disable_usb();
 	// Else the USB clock disable is done by UHC which manage USB dual role
 #endif
 	cpu_irq_restore(flags);
 }
-
 
 void udd_attach(void)
 {

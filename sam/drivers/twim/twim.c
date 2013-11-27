@@ -5,7 +5,7 @@
  *
  * This file defines a useful set of functions for the TWIM on SAM4L devices.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -399,7 +399,7 @@ status_code_t twim_probe(Twim *twim, uint32_t chip_addr)
  * \brief Read multiple bytes from a TWI compatible slave device
  *
  * \param twim            Base address of the TWIM
- * \param package         Package information and data (see \ref twim_package_t)
+ * \param package         Package information and data
  *
  * \retval STATUS_OK      If all bytes were read successfully
  * \retval ERR_IO_ERROR   NACK received or Bus Arbitration lost
@@ -578,7 +578,7 @@ status_code_t twi_master_read(Twim *twim, struct twim_package *package)
  * \brief Write multiple bytes to a TWI compatible slave device
  *
  * \param twim            Base address of the TWIM
- * \param *package        Package information and data (see \ref twim_package_t)
+ * \param *package        Package information and data
  *
  * \retval STATUS_OK      If all bytes were send successfully
  * \retval ERR_IO_ERROR   NACK received or Bus Arbitration lost
@@ -682,9 +682,8 @@ void twim_clear_status(Twim *twim, uint32_t clear_status)
  * \brief Set callback for TWIM
  *
  * \param twim       Base address of the TWIM
- * \param source     TWIM interrupt source
+ * \param interrupt_source     TWIM interrupt source
  * \param callback   Callback function pointer
- * \param irq_line   Interrupt line
  * \param irq_level  Interrupt level
  */
 void twim_set_callback(Twim *twim, uint32_t interrupt_source,
@@ -747,3 +746,26 @@ void TWIM3_Handler(void)
 	twim_callback_pointer[3](TWIM3);
 }
 #endif
+
+/**
+ * \brief Set TWIM for PDCA transfer
+ *
+ * \param twim      Base address of the TWIM
+ * \param package   Package information and data (see \ref twim_package_t)
+ * \param read      True if it's a read trasnfer
+ */
+void twim_pdca_transfer_prepare(Twim *twim, twi_package_t *package,
+		bool read)
+{
+	twim->TWIM_CR = TWIM_CR_MDIS;
+	twim->TWIM_CMDR = (package->high_speed ? (TWIM_CMDR_HS |
+			TWIM_CMDR_HSMCODE(package->high_speed_code)) : 0)
+			| TWIM_CMDR_SADR(package->chip)
+			| TWIM_CMDR_NBYTES((read ? 0 : package->addr_length)
+					+ package->length)
+			| TWIM_CMDR_VALID
+			| TWIM_CMDR_START
+			| TWIM_CMDR_STOP
+			| (read ? TWIM_CMDR_READ : 0);
+	twim->TWIM_CR = TWIM_CR_MEN;
+}

@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for RSTC driver.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -78,8 +78,11 @@
  * - sam3sd8c_sam3s_ek2
  * - sam3u4e_sam3u_ek
  * - sam3x8h_sam3x_ek
+ * - sam4e16e_sam4e_ek
  * - sam4s16c_sam4s_ek
  * - sam4sd32c_sam4s_ek2
+ * - sam4n16c_sam4n_xplained_pro
+ * - sam4c16c_sam4c_ek
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -139,7 +142,7 @@ static void run_rstc_test(const struct test_case *test)
 	/* Read current step. */
 	switch (gpbr_read(RSTC_GPBR_STEP)) {
 	case RSTC_UT_STEP1:
-	  	/* Step 1: Software reset test. */
+		/* Step 1: Software reset test. */
 		wdt_disable(WDT);
 		gpbr_write(RSTC_GPBR_STEP, RSTC_UT_STEP2);
 		rstc_start_software_reset(RSTC);
@@ -147,18 +150,18 @@ static void run_rstc_test(const struct test_case *test)
 		}
 
 	case RSTC_UT_STEP2:
-	  	/* Save reset type in RES1 */
+		/* Save reset type in RES1 */
 		gpbr_write(RSTC_GPBR_RES1, dw_reset_type);
 		test_assert_true(test, gpbr_read(RSTC_GPBR_RES1) == SOFTWARE_RESET,
 			"Test: unexpected reset type, expected SOFTWARE_RESET!");
-	  	/* Step 2: Watchdog reset test. */
+		/* Step 2: Watchdog reset test. */
 		gpbr_write(RSTC_GPBR_STEP, RSTC_UT_STEP3);
-		wdt_init(WDT, WDT_MR_WDRSTEN, 0, 0);
+		wdt_init(WDT, WDT_MR_WDRSTEN | WDT_MR_WDRPROC, 0, 0);
 		while (1) {
 		}
-		
+
 	case RSTC_UT_STEP3:
-	  	/* Save reset type in RES2 */
+		/* Save reset type in RES2 */
 		gpbr_write(RSTC_GPBR_RES2, dw_reset_type);
 		test_assert_true(test, gpbr_read(RSTC_GPBR_RES2) == WDT_RESET,
 			"Test: unexpected reset type, expected WDT_RESET!");
@@ -166,7 +169,7 @@ static void run_rstc_test(const struct test_case *test)
 		break;
 
 	default:
-	  	wdt_disable(WDT);
+		wdt_disable(WDT);
 		puts("\r\nrun_rstc_test: corrupted data, unknown step!\r\n");
 		while (1) {
 		}
@@ -206,10 +209,10 @@ int main(void)
 
 	/* Clear test flag. */
 	gpbr_write(RSTC_GPBR_FLAG, 0);
-	
+
 	/* Disable watchdog */
 	wdt_disable(WDT);
-	
+
 	while (1) {
 		/* Busy-wait forever. */
 	}

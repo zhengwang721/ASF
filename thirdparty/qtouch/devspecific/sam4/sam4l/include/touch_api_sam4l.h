@@ -9,7 +9,7 @@
  * - Userguide:          QTouch Library User Guide - doc8207.pdf.
  * - Support email:      touch@atmel.com
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,6 +49,21 @@
 
 #ifndef TOUCH_API_SAM4L_H
 #define TOUCH_API_SAM4L_H
+
+/**
+ * \defgroup group_thirdparty_qtouch_devspecific_sam4_sam4l QTouch Library for SAM4L
+ * 
+ * This is the QTouch Library for SAM4L devices that consists in
+ * one api header file(touch_api_sam4l.h) and one pre-compiled
+ * library(libsam4l-qt-gnu.a).
+ *
+ * All projects using this library must also provide the required header
+ * file(touch_config_sam4l.h) used to configure the library.
+ *
+ * For more information on the Qtouch Library, check www.atmel.com/qtouchlib.
+ *
+ * \{
+ */
 
 #ifdef __cplusplus
 extern "C"
@@ -935,4 +950,7 @@ extern void touch_qt_rs_table_init (void);
 }
 #endif
 
-#endif				/* TOUCH_API_SAM4L_H */
+/**
+ * \}
+ */
+#endif    /* TOUCH_API_SAM4L_H */

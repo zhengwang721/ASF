@@ -7,7 +7,7 @@
  * \section file File(s)
  * - \ref mfcc_example.c
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -464,6 +464,8 @@ void mfcc_init()
 int main(void)
 {
   int i;
+  /* avoid Cppcheck Warning */
+  UNUSED(i);
   scif_gclk_opt_t gc_dfllif_ref_opt = { SCIF_GCCTRL_SLOWCLOCK, 0, false };
   pcl_freq_param_t pcl_dfll_freq_param = {
     .main_clk_src = PCL_MC_DFLL0,

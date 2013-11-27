@@ -3,7 +3,7 @@
  *
  * \brief SSD1306 display controller driver.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,6 +41,7 @@
  *
  */
 #include "ssd1306.h"
+#include "font.h"
 
 /**
  * \internal
@@ -52,7 +53,7 @@
 static void ssd1306_interface_init(void)
 {
 #ifdef SSD1306_SERIAL_INTERFACE
-	spi_flags_t spi_flags = SPI_MODE_3;
+	spi_flags_t spi_flags = SPI_MODE_0;
 	board_spi_select_id_t spi_select_id = 0;
 #endif
 
@@ -70,6 +71,9 @@ static void ssd1306_interface_init(void)
 	spi_master_init(SSD1306_SPI);
 	spi_master_setup_device(SSD1306_SPI, &device, spi_flags,
 			SSD1306_CLOCK_SPEED, spi_select_id);
+#ifdef SAM
+	spi_enable(SSD1306_SPI);
+#endif
 #endif
 }
 
@@ -88,9 +92,6 @@ void ssd1306_init(void)
 	// Initialize the interface
 	ssd1306_interface_init();
 
-	// Set the A0 pin to the default state (command)
-	ioport_set_pin_low(SSD1306_DC_PIN);
-
 	// 1/32 Duty (0x0F~0x3F)
 	ssd1306_write_command(SSD1306_CMD_SET_MULTIPLEX_RATIO);
 	ssd1306_write_command(0x1F);
@@ -100,7 +101,7 @@ void ssd1306_init(void)
 	ssd1306_write_command(0x00);
 
 	// Set Mapping RAM Display Start Line (0x00~0x3F)
-	ssd1306_write_command(SSD1306_CMD_SET_DISPLAY_START_LINE(0x00));
+	ssd1306_write_command(SSD1306_CMD_SET_START_LINE(0x00));
 
 	// Set Column Address 0 Mapped to SEG0
 	ssd1306_write_command(SSD1306_CMD_SET_SEGMENT_RE_MAP_COL127_SEG0);
@@ -126,7 +127,7 @@ void ssd1306_init(void)
 	// Enable charge pump regulator
 	ssd1306_write_command(SSD1306_CMD_SET_CHARGE_PUMP_SETTING);
 	ssd1306_write_command(0x14);
-	
+
 	// Set VCOMH Deselect Level
 	ssd1306_write_command(SSD1306_CMD_SET_VCOMH_DESELECT_LEVEL);
 	ssd1306_write_command(0x40); // Default => 0x20 (0.77*VCC)
@@ -137,3 +138,25 @@ void ssd1306_init(void)
 
 	ssd1306_display_on();
 }
+
+/**
+ * \brief Display text on OLED screen.
+ * \param string String to display.
+ */
+void ssd1306_write_text(const char *string)
+{
+	uint8_t *char_ptr;
+	uint8_t i;
+
+	while (*string != 0) {
+		if (*string < 0x7F) {
+			char_ptr = font_table[*string - 32];
+			for (i = 1; i <= char_ptr[0]; i++) {
+				ssd1306_write_data(char_ptr[i]);
+			}
+			ssd1306_write_data(0x00);
+		}
+			string++;
+	}
+}
+

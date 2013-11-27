@@ -3,7 +3,7 @@
  *
  * \brief Example of usage of the Software Framework SAU driver in AVR UC3
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -600,10 +600,8 @@ bool sau_usart_tx_ready()
  */
 void main(void)
 {
-	volatile uint32_t data;
-	
 	Enable_global_exception();
-	Enable_global_interrupt();	
+	Enable_global_interrupt();
 	// Clear the LEDs.
 	gpio_set_gpio_pin(LED0_GPIO); gpio_set_gpio_pin(LED1_GPIO);
 	gpio_set_gpio_pin(LED2_GPIO); gpio_set_gpio_pin(LED3_GPIO);

@@ -3,7 +3,7 @@
  *
  * \brief AT86RFX configuration
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,27 +48,6 @@
 #include "cycle_counter.h"
 #include "sysclk.h"
 
-#if defined(DOXYGEN)
-/**
- * Attribute to apply to an enum declaration to force it into the smallest
- * type size required to represent all values.
- */
-#define SHORTENUM
-/**
- * Null operation: just waste one CPU cycle.
- */
-#define nop()
-#endif /* defined(DOXYGEN) */
-
-#if defined(__ICCAVR32__)
-#define SHORTENUM /**/
-#define nop() __no_operation()
-#endif /* defined(__ICCAVR32__) */
-#if defined(__GNUC__)
-#define SHORTENUM           __attribute__((packed))
-#define nop() do { __asm__ __volatile__ ("nop"); } while (0)
-#endif /* defined(__GNUC__) */
-
 /*! \name Macros for IRQ and AT86RFX accessing GPIO
  */
 //! @{
@@ -81,15 +60,6 @@
  //! Sleep Transceiver pin
 #define SLP_TR                          (AVR32_PIN_PA19)
 //! @}
-
-/**
- * This macro saves the trx interrupt status and disables the trx interrupt.
- */
-#define ENTER_TRX_REGION()           	DISABLE_TRX_IRQ()
-/**
- *  This macro restores the transceiver interrupt status
- */
-#define LEAVE_TRX_REGION()           	ENABLE_TRX_IRQ()
 
 #if (UC3)
 /* This macro saves the global interrupt status */
@@ -119,21 +89,5 @@
 #define AT86RFX_RX_NOTIFY(frame)
 #define AT86RFX_TX_STATUS_NOTIFY(status)  	at86rfx_tal_tx_status_cb(status)
 //@}
-
-/*! \name SPI Connections of the AT86RFX transceiver
- */
-//! @{
-#define AT86RFX_SPI                  (&AVR32_SPI0)
-#define AT86RFX_SPI_NPCS             0
-#define AT86RFX_SPI_SCK_PIN          AVR32_SPI0_SCK_0_0_PIN
-#define AT86RFX_SPI_SCK_FUNCTION     AVR32_SPI0_SCK_0_0_FUNCTION
-#define AT86RFX_SPI_MISO_PIN         AVR32_SPI0_MISO_0_0_PIN
-#define AT86RFX_SPI_MISO_FUNCTION    AVR32_SPI0_MISO_0_0_FUNCTION
-#define AT86RFX_SPI_MOSI_PIN         AVR32_SPI0_MOSI_0_0_PIN
-#define AT86RFX_SPI_MOSI_FUNCTION    AVR32_SPI0_MOSI_0_0_FUNCTION
-#define AT86RFX_SPI_NPCS_PIN         AVR32_SPI0_NPCS_0_0_PIN
-#define AT86RFX_SPI_NPCS_FUNCTION    AVR32_SPI0_NPCS_0_0_FUNCTION
-#define AT86RFX_SPI_BAUDRATE         (48000)
-//! @}
 
 #endif /* CONF_AT86RFX_H */

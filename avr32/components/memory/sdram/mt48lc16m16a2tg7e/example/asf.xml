@@ -4,7 +4,7 @@
 		Read and write data to an external SDRAM connected to the EBI SDRAMC.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Memory" />
+			<keyword value="Memory"/>
 		</info>
 		<build type="c-source" value="sdramc_example.c"/>
 		<device-support value="uc3a"/>
@@ -16,5 +16,6 @@
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.drivers.pm"/>
 		<require idref="avr32.utils.print_funcs"/>
+		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

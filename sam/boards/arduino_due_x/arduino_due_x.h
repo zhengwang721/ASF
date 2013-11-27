@@ -3,7 +3,7 @@
  *
  * \brief Arduino Due/X Board Definition.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -69,7 +69,7 @@
 #define BOARD_MCK                       CHIP_FREQ_CPU_MAX
 #define BOARD_NO_32K_XTAL
 
-/** board main clock xtal statup time */
+/** board main clock xtal startup time */
 #define BOARD_OSC_STARTUP_US   15625
 
 /* ------------------------------------------------------------------------ */
@@ -283,8 +283,8 @@
 #define PIN_PUSHBUTTON_2_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE)
 
 
-
 #define PIN_TC0_TIOA1           (PIO_PA2_IDX)
+#define PIN_TC0_TIOA1_MUX       (IOPORT_MODE_MUX_A)
 #define PIN_TC0_TIOA1_FLAGS     (PIO_PERIPH_A | PIO_DEFAULT)
 
 #define PIN_TC0_TIOA1_PIO     PIOA
@@ -295,6 +295,7 @@
 
 
 #define PIN_TC0_TIOA0         (PIO_PB25_IDX)
+#define PIN_TC0_TIOA0_MUX     (IOPORT_MODE_MUX_B)
 #define PIN_TC0_TIOA0_FLAGS   (PIO_INPUT | PIO_DEFAULT)
 
 #define PIN_TC0_TIOA0_PIO     PIOB
@@ -468,6 +469,7 @@
 /* ------------------------------------------------------------------------ */
 /*! PCK0 */
 #define PIN_PCK0        (PIO_PA1_IDX)
+#define PIN_PCK0_MUX    (IOPORT_MODE_MUX_B)
 #define PIN_PCK0_FLAGS  (PIO_PERIPH_B | PIO_DEFAULT)
 
 #define PIN_PCK_0_MASK  PIO_PA1
@@ -610,22 +612,6 @@
  */
 
 
-/** Definition of MMA7341L x,y,z axis channel number */
-#define MMA7341L_ADC_CHANNEL_X  2
-#define MMA7341L_ADC_CHANNEL_Y  6
-#define MMA7341L_ADC_CHANNEL_Z  7
-
-/** MMA7341L mode set pin definition. */
-#define PIN_MMA7341L_MODE                PIO_PC13_IDX
-#define PIN_MMA7341L_MODE_FLAG       PIO_OUTPUT_1 | PIO_DEFAULT
-
-/** MMA7341L X,Y,Z axis pin definition. */
-#define PIN_MMA7341L_X_AXIS                PIO_PB3_IDX
-#define PIN_MMA7341L_X_AXIS_FLAG       PIO_INPUT | PIO_DEFAULT
-#define PIN_MMA7341L_Y_AXIS                PIO_PC17_IDX
-#define PIN_MMA7341L_Y_AXIS_FLAG       PIO_INPUT | PIO_DEFAULT
-#define PIN_MMA7341L_Z_AXIS                PIO_PC18_IDX
-#define PIN_MMA7341L_Z_AXIS_FLAG       PIO_INPUT | PIO_DEFAULT
 /* ------------------------------------------------------------------------ */
 /**
  * \file

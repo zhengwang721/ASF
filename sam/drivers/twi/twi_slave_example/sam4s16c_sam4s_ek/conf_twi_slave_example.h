@@ -3,7 +3,7 @@
  *
  * \brief TWI Slave Example configuration.
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,20 +54,5 @@
 #define BOARD_ID_TWI_SLAVE          ID_TWI1
 /** TWI Base for TWI SLAVE application to use */
 #define BOARD_BASE_TWI_SLAVE        TWI1
-/** TWI pins for TWI SLAVE application to use */
-#define BOARD_PINS_TWI_SLAVE        PINS_TWI0
-
-/** TWI Base for TWI MASTER application to use */
-#define BOARD_BASE_TWI_MASTER        TWI0
-
-#define BOARD_ID_USART             ID_USART1
-
-#define BOARD_USART                USART1
-
-#define BOARD_USART_BAUDRATE       115200
-
-#define USART_Handler              USART1_Handler
-
-#define USART_IRQn                 USART1_IRQn
 
 #endif /* CONF_TWI_SLAVE_EXAMPLE_H_INCLUDED */

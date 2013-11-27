@@ -270,6 +270,8 @@
 
 //! @name USBC Device endpoint configuration
 //! @{
+#define  udd_disable_endpoints() \
+		(Clr_bits(USBC->USBC_UERST, (1 << USBC_EPT_NBR) - 1))
 #define  udd_enable_endpoint(ep) \
 		(Set_bits(USBC->USBC_UERST, USBC_UERST_EPEN0 << (ep)))
 #define  udd_disable_endpoint(ep) \

@@ -52,7 +52,7 @@
 #  include "sleepmgr.h"
 #endif
 
-#if !(SAM3S || SAM4S)
+#if !(SAM3S || SAM4S || SAM4E)
 #  error The current UDP Device Driver supports only SAM3S and SAM4S devices.
 #endif
 
@@ -137,7 +137,7 @@
 #ifndef UDD_NO_SLEEP_MGR
 
 //! Definition of sleep levels
-#define UDP_SLEEP_MODE_USB_SUSPEND  SLEEPMGR_WAIT
+#define UDP_SLEEP_MODE_USB_SUSPEND  SLEEPMGR_WAIT_FAST
 #define UDP_SLEEP_MODE_USB_IDLE     SLEEPMGR_SLEEP_WFI
 
 //! State of USB line
@@ -434,6 +434,16 @@ static bool udd_ep_interrupt(void);
  */
 ISR(UDD_USB_INT_FUN)
 {
+	/* For fast wakeup clocks restore
+	 * In WAIT mode, clocks are switched to FASTRC.
+	 * After wakeup clocks should be restored, before that ISR should not
+	 * be served.
+	 */
+	if (!pmc_is_wakeup_clocks_restored() && !Is_udd_suspend()) {
+		cpu_irq_disable();
+		return;
+	}
+
 	/* The UDP peripheral clock in the Power Management Controller (PMC)
 	   must be enabled before any read/write operations to the UDP registers
 	   including the UDP_TXVC register. */
@@ -462,18 +472,15 @@ ISR(UDD_USB_INT_FUN)
 		(Is_udd_resume_interrupt_enabled() && Is_udd_resume()) ||
 		(Is_udd_ext_resume_interrupt_enabled() && Is_udd_ext_resume())) {
 		// Ack wakeup interrupt and enable suspend interrupt
-		udd_ack_wake_up();
-		udd_ack_resume();
-		udd_ack_ext_resume();
+		udd_ack_wakeups();
 		// Do resume operations
-		udd_disable_wake_up_interrupt();
-		udd_disable_resume_interrupt();
-		udd_disable_ext_resume_interrupt();
+		udd_disable_wakeups();
 
 		udd_sleep_mode(true); // Enter in IDLE mode
 #ifdef UDC_RESUME_EVENT
 		UDC_RESUME_EVENT();
 #endif
+		udd_ack_suspend();
 		udd_enable_suspend_interrupt();
 		udd_enable_sof_interrupt();
 		goto udd_interrupt_end;
@@ -1323,7 +1330,7 @@ static void udd_ep_finish_job(udd_ep_job_t * ptr_job, int status,
 	if (NULL == ptr_job->call_trans) {
 		return; // No callback linked to job
 	}
-	if (Is_udd_endpoint_in(ep_num)) {
+	if (Is_udd_endpoint_type_in(ep_num)) {
 		ep_num |= USB_EP_DIR_IN;
 	}	
 	ptr_job->call_trans((status == UDD_EP_TRANSFER_ABORT) ?
