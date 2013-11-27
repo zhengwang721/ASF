@@ -95,6 +95,45 @@ static enum status_code _usart_check_config(
 			return STATUS_ERR_DENIED;
 		}
 	}
+	enum sercom_asynchronous_operation_mode mode = SERCOM_ASYNCHRONOUS_ARITHMETIC;
+	enum sercom_asynchronous_sample_num sample_num = SERCOM_ASYNCHRONOUS_16X;
+
+#ifdef FEATURE_USART_IRDA	
+	if(config->encoding_format_enable) {
+		config->sample_rate = USART_SAMPLE_RATE_16X_ARITHMETIC;
+	}
+#endif
+
+#ifdef FEATURE_USART_LIN_SLAVE	
+	if(config->lin_slave_enable) {
+		config->sample_rate = USART_SAMPLE_RATE_16X_FRACTIONAL;
+	}
+#endif
+
+#ifdef FEATURE_USART_OVER_SAMPLE	
+	switch (config->sample_rate) {
+		case USART_SAMPLE_RATE_16X_ARITHMETIC:
+			mode = SERCOM_ASYNCHRONOUS_ARITHMETIC;
+			sample_num = SERCOM_ASYNCHRONOUS_16X;
+			break;
+		case USART_SAMPLE_RATE_8X_ARITHMETIC:
+			mode = SERCOM_ASYNCHRONOUS_ARITHMETIC;
+			sample_num = SERCOM_ASYNCHRONOUS_8X;
+			break;
+		case USART_SAMPLE_RATE_3X_ARITHMETIC:
+			mode = SERCOM_ASYNCHRONOUS_ARITHMETIC;
+			sample_num = SERCOM_ASYNCHRONOUS_3X;
+			break;
+		case USART_SAMPLE_RATE_16X_FRACTIONAL:
+			mode = SERCOM_ASYNCHRONOUS_FRACTIONAL;
+			sample_num = SERCOM_ASYNCHRONOUS_16X;
+			break;
+		case USART_SAMPLE_RATE_8X_FRACTIONAL:
+			mode = SERCOM_ASYNCHRONOUS_FRACTIONAL;
+			sample_num = SERCOM_ASYNCHRONOUS_8X;
+			break;
+	}
+#endif
 
 	/* Find baud value and compare it */
 	uint16_t baud  = 0;
@@ -112,13 +151,12 @@ static enum status_code _usart_check_config(
 
 	case USART_TRANSFER_ASYNCHRONOUSLY:
 		if (config->use_external_clock) {
-			status_code =
-					_sercom_get_async_baud_val(config->baudrate,
-						config->ext_clock_freq, &baud);
+			status_code = _sercom_get_async_baud_val(config->baudrate,
+						config->ext_clock_freq, &baud, mode, sample_num);
 		} else {
-			status_code =
-					_sercom_get_async_baud_val(config->baudrate,
-						system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
+			status_code = _sercom_get_async_baud_val(config->baudrate,
+						system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud,
+						mode, sample_num);
 		}
 
 		break;
@@ -141,6 +179,13 @@ static enum status_code _usart_check_config(
 		(uint32_t)config->mux_setting |
 		(uint32_t)config->transfer_mode |
 		SERCOM_USART_CTRLA_MODE(0) |
+	#ifdef FEATURE_USART_OVER_SAMPLE
+		config->sample_adjustment |
+		config->sample_rate |
+	#endif
+	#ifdef FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
+		(config->immediate_buffer_overflow_notification << SERCOM_USART_CTRLA_IBON_Pos) |
+	#endif	
 		(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
 
 	/* set enable bit */
@@ -152,18 +197,39 @@ static enum status_code _usart_check_config(
 	else {
 		ctrla |= SERCOM_USART_CTRLA_MODE_USART_EXT_CLK;
 	}
-
+	
 	/* Check stopbits and character size */
 	ctrlb = (uint32_t)config->stopbits | (uint32_t)config->character_size |
 			(config->receiver_enable << SERCOM_USART_CTRLB_RXEN_Pos) |
+		#ifdef FEATURE_USART_IRDA	
+			(config->encoding_format_enable << SERCOM_USART_CTRLB_ENC_Pos) |
+		#endif
+		#ifdef FEATURE_USART_START_FRAME_DECTION
+			(config->start_frame_detection_enable << SERCOM_USART_CTRLB_SFDE_Pos) |
+		#endif
+		#ifdef FEATURE_USART_COLLISION_DECTION
+			(config->collision_detection_enable << SERCOM_USART_CTRLB_COLDEN_Pos) |
+		#endif	
 			(config->transmitter_enable << SERCOM_USART_CTRLB_TXEN_Pos);
 
 	/* Check parity mode bits */
 	if (config->parity != USART_PARITY_NONE) {
+	#ifdef FEATURE_USART_LIN_SLAVE	
+		if(config->lin_slave_enable) {
+			ctrla |= SERCOM_USART_CTRLA_FORM(0x5);
+		}
+	#else	
 		ctrla |= SERCOM_USART_CTRLA_FORM(1);
+	#endif
 		ctrlb |= config->parity;
 	} else {
+	#ifdef FEATURE_USART_LIN_SLAVE	
+		if(config->lin_slave_enable) {
+			ctrla |= SERCOM_USART_CTRLA_FORM(0x4);
+		}
+	#else
 		ctrla |= SERCOM_USART_CTRLA_FORM(0);
+	#endif
 	}
 
 	if (usart_hw->CTRLA.reg == ctrla && usart_hw->CTRLB.reg == ctrlb) {

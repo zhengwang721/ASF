@@ -214,6 +214,20 @@
 extern "C" {
 #endif
 
+/**
+ * Define USART features set according to different device family
+ * @{
+ */
+#if (SAMD21)
+#  define FEATURE_USART_OVER_SAMPLE
+#  define FEATURE_USART_IRDA
+#  define FEATURE_USART_LIN_SLAVE
+#  define FEATURE_USART_COLLISION_DECTION
+#  define FEATURE_USART_START_FRAME_DECTION
+#  define FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
+#endif
+/*@}*/
+
 #ifndef PINMUX_DEFAULT
 #  define PINMUX_DEFAULT 0
 #endif
@@ -376,7 +390,7 @@ enum usart_character_size {
 	USART_CHARACTER_SIZE_9BIT = SERCOM_USART_CTRLB_CHSIZE(1),
 };
 
-#if SAMD21
+#ifdef FEATURE_USART_OVER_SAMPLE
 /**
  * \brief USART Sample Rate
  *
@@ -442,17 +456,29 @@ struct usart_config {
 	enum usart_character_size character_size;
 	/** USART pin out */
 	enum usart_signal_mux_settings mux_setting;
-#if SAMD21	
+#ifdef FEATURE_USART_OVER_SAMPLE	
 	/** USART sample rate */
 	enum usart_sample_rate sample_rate;
 	/** USART sample adjustment */
 	enum usart_sample_adjustment sample_adjustment;
+#endif
+#ifdef FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
 	/** Controls when the buffer overflow status bit is asserted when a buffer overflow occurs.*/
 	bool immediate_buffer_overflow_notification;
+#endif
+#ifdef FEATURE_USART_IRDA
 	/** Enable IrDA encoding format */
 	bool encoding_format_enable;
+#endif
+#ifdef FEATURE_USART_LIN_SLAVE
+	/** Enable LIN Slave Support */
+	bool lin_slave_enable;
+#endif
+#ifdef FEATURE_USART_START_FRAME_DECTION
 	/** Enable start of frame dection */
 	bool start_frame_detection_enable;
+#endif
+#ifdef FEATURE_USART_COLLISION_DECTION
 	/** Enable collision dection */
 	bool collision_detection_enable;
 #endif
