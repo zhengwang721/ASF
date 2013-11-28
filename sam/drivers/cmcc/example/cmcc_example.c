@@ -63,10 +63,11 @@
  * All SAM devices with an CMCC module can be used. This example has been
  * tested with the following setup:<BR>
  * - SAM4E evaluation kit.
+ * - SAM4C evaluation kit.
  *
  * \section setupinfo Setup Information
  * <BR>CPU speed: <i> 120 MHz </i>
- * - Connect the SAM4E DBGU port com to a PC
+ * - Please connect the DBGU port com to a PC
  * - PC terminal settings:
  *     - 115200 bps,
  *     - 8 data bits,
@@ -142,15 +143,22 @@ int main(void)
 
 	/* Enable the CMCC module. */
 	cmcc_get_config_defaults(&g_cmcc_cfg);
+#if !SAM4C
 	cmcc_init(CMCC, &g_cmcc_cfg);
 	cmcc_enable(CMCC);
+#else
+	cmcc_init(CMCC0, &g_cmcc_cfg);
+	cmcc_enable(CMCC0);
+#endif
 
 	/* Do the Fibonacci calculation. */
 	recfibo(FIBONACCI_NUM);
-
 	printf("Fibonacci calculation completed \r\n");
+#if !SAM4C
 	printf("Cache Data hit: %ul \r\n", cmcc_get_monitor_cnt(CMCC));
-
+#else
+	printf("Cache Data hit: %ul \r\n", cmcc_get_monitor_cnt(CMCC0));
+#endif
 	while (true) {
 	}
 }
