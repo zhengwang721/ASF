@@ -255,6 +255,18 @@ enum usart_callback {
 	USART_CALLBACK_BUFFER_RECEIVED,
 	/** Callback for error */
 	USART_CALLBACK_ERROR,
+#ifdef FEATURE_USART_LIN_SLAVE
+	/** Callback for break character is received. */
+	USART_CALLBACK_BREAK_RECEIVED,
+#endif
+#ifdef FEATURE_USART_HARDWARE_FLOW_CONTROL
+	/** Callback for a change is detected on the CTS pin. */
+	USART_CALLBACK_CTS_INPUT_CHANGE,	
+#endif
+#ifdef FEATURE_USART_START_FRAME_DECTION
+	/** Callback for a start condition is detected on the RxD line. */
+	USART_CALLBACK_START_RECEIVED,		
+#endif
 #  if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
 	USART_CALLBACK_N,

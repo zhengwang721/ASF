@@ -512,7 +512,21 @@ void _usart_interrupt_handler(
 					/* Store the error code and clear flag by writing 1 to it */
 					module->rx_status = STATUS_ERR_BAD_DATA;
 					usart_hw->STATUS.reg |= SERCOM_USART_STATUS_PERR;
-				}
+				} 
+			#ifdef FEATURE_USART_LIN_SLAVE
+				else if (error_code & SERCOM_USART_STATUS_ISF) {
+					/* Store the error code and clear flag by writing 1 to it */
+					module->rx_status = STATUS_ERR_PROTOCOL;
+					usart_hw->STATUS.reg |= SERCOM_USART_STATUS_ISF;
+				} 
+			#endif
+			#ifdef FEATURE_USART_COLLISION_DECTION
+				else if (error_code & SERCOM_USART_STATUS_COLL) {
+					/* Store the error code and clear flag by writing 1 to it */
+					module->rx_status = STATUS_ERR_PACKET_COLLISION;
+					usart_hw->STATUS.reg |= SERCOM_USART_STATUS_COLL;
+				} 
+			#endif
 
 				/* Run callback if registered and enabled */
 				if (callback_status
@@ -557,4 +571,37 @@ void _usart_interrupt_handler(
 			usart_hw->INTENCLR.reg = SERCOM_USART_INTFLAG_RXC;
 		}
 	}
+
+#ifdef FEATURE_USART_HARDWARE_FLOW_CONTROL
+	if (interrupt_status & SERCOM_USART_INTFLAG_CTSIC) {
+		usart_hw->INTENCLR.reg = SERCOM_USART_INTENCLR_CTSIC;
+	
+		/* Run callback if registered and enabled */
+		if (callback_status & (1 << USART_CALLBACK_CTS_INPUT_CHANGE)) {
+			(*(module->callback[USART_CALLBACK_CTS_INPUT_CHANGE]))(module);
+		}		
+	}
+#endif
+
+#ifdef FEATURE_USART_LIN_SLAVE
+	if (interrupt_status & SERCOM_USART_INTFLAG_RXBRK) {
+		usart_hw->INTENCLR.reg = SERCOM_USART_INTENCLR_RXBRK;
+	
+		/* Run callback if registered and enabled */
+		if (callback_status & (1 << USART_CALLBACK_BREAK_RECEIVED)) {
+			(*(module->callback[USART_CALLBACK_BREAK_RECEIVED]))(module);
+		}		
+	}
+#endif
+
+#ifdef FEATURE_USART_START_FRAME_DECTION
+	if (interrupt_status & SERCOM_USART_INTFLAG_RXS) {
+		usart_hw->INTENCLR.reg = SERCOM_USART_INTENCLR_RXS;
+	
+		/* Run callback if registered and enabled */
+		if (callback_status & (1 << USART_CALLBACK_START_RECEIVED)) {
+			(*(module->callback[USART_CALLBACK_START_RECEIVED]))(module);
+		}		
+	}
+#endif
 }
