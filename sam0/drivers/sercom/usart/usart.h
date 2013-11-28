@@ -219,7 +219,9 @@ extern "C" {
  * @{
  */
 #if (SAMD21)
+#  define FEATURE_USART_SYNC_SCHEME_V2
 #  define FEATURE_USART_OVER_SAMPLE
+#  define FEATURE_USART_HARDWARE_FLOW_CONTROL
 #  define FEATURE_USART_IRDA
 #  define FEATURE_USART_LIN_SLAVE
 #  define FEATURE_USART_COLLISION_DECTION
@@ -315,24 +317,7 @@ enum usart_parity {
  * various MUX setting options.
  */
 enum usart_signal_mux_settings {
-#if SAMD20
-	/** MUX setting RX_0_TX_0_XCK_1 */
-	USART_RX_0_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(0)),
-	/** MUX setting RX_0_TX_2_XCK_3 */
-	USART_RX_0_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(0) | SERCOM_USART_CTRLA_TXPO),
-	/** MUX setting RX_1_TX_0_XCK_1 */
-	USART_RX_1_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(1)),
-	/** MUX setting RX_1_TX_2_XCK_3 */
-	USART_RX_1_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(1) | SERCOM_USART_CTRLA_TXPO),
-	/** MUX setting RX_2_TX_0_XCK_1 */
-	USART_RX_2_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(2)),
-	/** MUX setting RX_2_TX_2_XCK_3 */
-	USART_RX_2_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(2) | SERCOM_USART_CTRLA_TXPO),
-	/** MUX setting RX_3_TX_0_XCK_1 */
-	USART_RX_3_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(3)),
-	/** MUX setting RX_3_TX_2_XCK_3 */
-	USART_RX_3_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO),
-#elif SAMD21
+#ifdef FEATURE_USART_HARDWARE_FLOW_CONTROL
 	/** MUX setting RX_0_TX_0_XCK_1 */
 	USART_RX_0_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(0) | SERCOM_USART_CTRLA_TXPO(0)),
 	/** MUX setting RX_0_TX_2_XCK_3 */
@@ -357,6 +342,23 @@ enum usart_signal_mux_settings {
 	USART_RX_3_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO(1)),
 	/** MUX setting USART_RX_3_TX_0_RTS_2_CTS_3 */
 	USART_RX_3_TX_0_RTS_2_CTS_3 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO(2)),	
+#else
+	/** MUX setting RX_0_TX_0_XCK_1 */
+	USART_RX_0_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(0)),
+	/** MUX setting RX_0_TX_2_XCK_3 */
+	USART_RX_0_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(0) | SERCOM_USART_CTRLA_TXPO),
+	/** MUX setting RX_1_TX_0_XCK_1 */
+	USART_RX_1_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(1)),
+	/** MUX setting RX_1_TX_2_XCK_3 */
+	USART_RX_1_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(1) | SERCOM_USART_CTRLA_TXPO),
+	/** MUX setting RX_2_TX_0_XCK_1 */
+	USART_RX_2_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(2)),
+	/** MUX setting RX_2_TX_2_XCK_3 */
+	USART_RX_2_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(2) | SERCOM_USART_CTRLA_TXPO),
+	/** MUX setting RX_3_TX_0_XCK_1 */
+	USART_RX_3_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(3)),
+	/** MUX setting RX_3_TX_2_XCK_3 */
+	USART_RX_3_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO),
 #endif
 };
 
@@ -469,6 +471,8 @@ struct usart_config {
 #ifdef FEATURE_USART_IRDA
 	/** Enable IrDA encoding format */
 	bool encoding_format_enable;
+	/** The minimum pulse length that is required for a pulse to be accepted by the IrDA receiver */
+	uint8_t receive_pulse_length;
 #endif
 #ifdef FEATURE_USART_LIN_SLAVE
 	/** Enable LIN Slave Support */
@@ -641,9 +645,15 @@ static inline void _usart_wait_for_sync(
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
+#ifdef FEATURE_USART_SYNC_SCHEME_V2
+	while (usart_hw->SYNCBUSY.reg) {
+		/* Wait until the synchronization is complete */
+	}
+#else
 	while (usart_hw->STATUS.reg & SERCOM_USART_STATUS_SYNCBUSY) {
 		/* Wait until the synchronization is complete */
 	}
+#endif
 }
 #endif
 
@@ -672,11 +682,19 @@ static inline bool usart_is_syncing(
 
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
+#ifdef FEATURE_USART_SYNC_SCHEME_V2
+	if(usart_hw->SYNCBUSY.reg) {
+		return true;
+	} else {
+		return false;
+	}
+#else
 	if(usart_hw->STATUS.reg & SERCOM_USART_STATUS_SYNCBUSY) {
 		return true;
 	} else {
 		return false;
 	}
+#endif
 }
 
 /**
@@ -722,12 +740,24 @@ static inline void usart_get_config_defaults(
 	config->pinmux_pad1      = PINMUX_DEFAULT;
 	config->pinmux_pad2      = PINMUX_DEFAULT;
 	config->pinmux_pad3      = PINMUX_DEFAULT;
-#if SAMD21
+#ifdef FEATURE_USART_OVER_SAMPLE
 	config->sample_adjustment  =  USART_SAMPLE_ADJUSTMENT_7_8_9;
         config->sample_rate             =  USART_SAMPLE_RATE_16X_ARITHMETIC;
+#endif
+#ifdef FEATURE_USART_LIN_SLAVE
+	config->lin_slave_enable = false;
+#endif
+#ifdef FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
 	config->immediate_buffer_overflow_notification      = false;
+#endif
+#ifdef FEATURE_USART_START_FRAME_DECTION
 	config->start_frame_detection_enable                    = false;
+#endif
+#ifdef FEATURE_USART_IRDA
 	config->encoding_format_enable                            = false;
+	config->receive_pulse_length                                  = 19;
+#endif
+#ifdef FEATURE_USART_COLLISION_DECTION
 	config->collision_detection_enable                          = false; 
 #endif
 }

@@ -265,9 +265,54 @@ static enum status_code _usart_set_config(
 	uint32_t ctrlb = 0;
 	uint16_t baud  = 0;
 
+#ifdef FEATURE_USART_IRDA	
+	if(config->encoding_format_enable) {
+		config->sample_rate = USART_SAMPLE_RATE_16X_ARITHMETIC;
+		usart_hw->RXPL.reg = config->receive_pulse_length;
+	}
+#endif
+
+#ifdef FEATURE_USART_LIN_SLAVE	
+	if(config->lin_slave_enable) {
+		config->sample_rate = USART_SAMPLE_RATE_16X_FRACTIONAL;
+	}
+#endif
+
+#ifdef FEATURE_USART_OVER_SAMPLE	
+	switch (config->sample_rate) {
+		case USART_SAMPLE_RATE_16X_ARITHMETIC:
+			mode = SERCOM_ASYNCHRONOUS_ARITHMETIC;
+			sample_num = SERCOM_ASYNCHRONOUS_16X;
+			break;
+		case USART_SAMPLE_RATE_8X_ARITHMETIC:
+			mode = SERCOM_ASYNCHRONOUS_ARITHMETIC;
+			sample_num = SERCOM_ASYNCHRONOUS_8X;
+			break;
+		case USART_SAMPLE_RATE_3X_ARITHMETIC:
+			mode = SERCOM_ASYNCHRONOUS_ARITHMETIC;
+			sample_num = SERCOM_ASYNCHRONOUS_3X;
+			break;
+		case USART_SAMPLE_RATE_16X_FRACTIONAL:
+			mode = SERCOM_ASYNCHRONOUS_FRACTIONAL;
+			sample_num = SERCOM_ASYNCHRONOUS_16X;
+			break;
+		case USART_SAMPLE_RATE_8X_FRACTIONAL:
+			mode = SERCOM_ASYNCHRONOUS_FRACTIONAL;
+			sample_num = SERCOM_ASYNCHRONOUS_8X;
+			break;
+	}
+#endif
+
 	/* Set data order, internal muxing, and clock polarity */
 	ctrla = (uint32_t)config->data_order |
 		(uint32_t)config->mux_setting |
+	#ifdef FEATURE_USART_OVER_SAMPLE
+		config->sample_adjustment |
+		config->sample_rate |
+	#endif
+	#ifdef FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
+		(config->immediate_buffer_overflow_notification << SERCOM_USART_CTRLA_IBON_Pos) |
+	#endif		
 		(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
 
 	enum status_code status_code = STATUS_OK;
@@ -321,15 +366,36 @@ static enum status_code _usart_set_config(
 
 	/* Set stopbits, character size and enable transceivers */
 	ctrlb = (uint32_t)config->stopbits | (uint32_t)config->character_size |
+		#ifdef FEATURE_USART_IRDA	
+			(config->encoding_format_enable << SERCOM_USART_CTRLB_ENC_Pos) |
+		#endif
+		#ifdef FEATURE_USART_START_FRAME_DECTION
+			(config->start_frame_detection_enable << SERCOM_USART_CTRLB_SFDE_Pos) |
+		#endif
+		#ifdef FEATURE_USART_COLLISION_DECTION
+			(config->collision_detection_enable << SERCOM_USART_CTRLB_COLDEN_Pos) |
+		#endif	
 			(config->receiver_enable << SERCOM_USART_CTRLB_RXEN_Pos) |
 			(config->transmitter_enable << SERCOM_USART_CTRLB_TXEN_Pos);
 
-	/* Set parity mode */
+	/* Check parity mode bits */
 	if (config->parity != USART_PARITY_NONE) {
+	#ifdef FEATURE_USART_LIN_SLAVE	
+		if(config->lin_slave_enable) {
+			ctrla |= SERCOM_USART_CTRLA_FORM(0x5);
+		}
+	#else	
 		ctrla |= SERCOM_USART_CTRLA_FORM(1);
+	#endif
 		ctrlb |= config->parity;
 	} else {
+	#ifdef FEATURE_USART_LIN_SLAVE	
+		if(config->lin_slave_enable) {
+			ctrla |= SERCOM_USART_CTRLA_FORM(0x4);
+		}
+	#else
 		ctrla |= SERCOM_USART_CTRLA_FORM(0);
+	#endif
 	}
 
 	/* Set run mode during device sleep */
