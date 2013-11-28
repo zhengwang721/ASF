@@ -204,7 +204,7 @@ struct dma_resource {
 	/** Allocated Channel ID*/
 	uint8_t channel_id;
 	/** Callback function for DMA transfer job */
-	dma_callback_t callback[DMA_CALLBACK_MAX];
+	dma_callback_t callback[DMA_CALLBACK_N];
 	/** Bit mask for enabled callbacks */
 	uint8_t callback_enable;
 	/** Status of the last job */

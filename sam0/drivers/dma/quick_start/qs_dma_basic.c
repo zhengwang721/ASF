@@ -87,12 +87,12 @@ static void configure_dma_resource(struct dma_resource *resource)
 static void setup_transfer_descriptor( struct dma_transfer_descriptor *descriptor )
 {
 	//! [setup_dma_descriptor]
-	descriptor.block_transfer_control = DMAC_BTCTRL_VALID |
+	descriptor->block_transfer_control = DMAC_BTCTRL_VALID |
 			DMAC_BTCTRL_BEATSIZE_BYTE;
-	descriptor.block_transfer_count = sizeof(source_memory);
-	descriptor.source_address = (uint32_t)source_memory;
-	descriptor.destination_address = (uint32_t)destination_memory;
-	descriptor.next_descriptor_address = 0;
+	descriptor->block_transfer_count = sizeof(source_memory);
+	descriptor->source_address = (uint32_t)source_memory;
+	descriptor->destination_address = (uint32_t)destination_memory;
+	descriptor->next_descriptor_address = 0;
 	//! [setup_dma_descriptor]
 }
 // [setup_dma_transfer_descriptor]
@@ -111,7 +111,7 @@ int main(void)
 	//! [setup_dma_resource]
 
 	//! [setup_transfer_descriptor]
-	setup_transfer_descriptor();
+	setup_transfer_descriptor(&example_descriptor);
 	//! [setup_transfer_descriptor]
 
 	//! [setup_callback_register]
