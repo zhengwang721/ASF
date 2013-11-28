@@ -139,20 +139,20 @@ static enum status_code _spi_set_config(
 	module->mode             = config->mode;
 	module->character_size   = config->character_size;
 	module->receiver_enabled = config->receiver_enable;
-#ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
+#  ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
 	module->master_slave_select_enable = config->master_slave_select_enable;
-#endif
+#  endif
 
-#if CONF_SPI_MASTER_ENABLE == true
+#  if CONF_SPI_MASTER_ENABLE == true
 	/* Value to write to BAUD register */
 	uint16_t baud = 0;
-#endif
+#  endif
 	/* Value to write to CTRLA register */
 	uint32_t ctrla = 0;
 	/* Value to write to CTRLB register */
 	uint32_t ctrlb = 0;
 
-#if CONF_SPI_MASTER_ENABLE == true
+# if CONF_SPI_MASTER_ENABLE == true
 	/* Find baud value and write it */
 	if (config->mode == SPI_MODE_MASTER) {
 		/* Find frequency of the internal SERCOMi_GCLK_ID_CORE */
@@ -172,8 +172,8 @@ static enum status_code _spi_set_config(
 
 		spi_module->BAUD.reg = (uint8_t)baud;
 	}
-#endif
-#if CONF_SPI_SLAVE_ENABLE == true
+# endif
+# if CONF_SPI_SLAVE_ENABLE == true
 	if (config->mode == SPI_MODE_SLAVE) {
 		/* Set frame format */
 		ctrla = config->mode_specific.slave.frame_format;
@@ -191,7 +191,7 @@ static enum status_code _spi_set_config(
 			ctrlb |= SERCOM_SPI_CTRLB_PLOADEN;
 		}
 	}
-#endif
+# endif
 	/* Set data order */
 	ctrla |= config->data_order;
 
@@ -213,18 +213,18 @@ static enum status_code _spi_set_config(
 		/* Enable receiver */
 		ctrlb |= SERCOM_SPI_CTRLB_RXEN;
 	}
-#ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
+#  ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 	if (config->select_slave_low_detect_enable) {
 		/* Enable Slave Select Low Detect */
 		ctrlb |= SERCOM_SPI_CTRLB_SSDE;
 	}
-#endif
-#ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
+#  endif
+#  ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
 	if (config->master_slave_select_enable) {
 		/* Enable Master Slave Select */
 		ctrlb |= SERCOM_SPI_CTRLB_MSSEN;
 	}
-#endif
+#  endif
 	/* Write CTRLA register */
 	spi_module->CTRLA.reg |= ctrla;
 
@@ -286,19 +286,19 @@ static enum status_code _spi_check_config(
 		}
 	}
 
-#if CONF_SPI_MASTER_ENABLE == true
+#  if CONF_SPI_MASTER_ENABLE == true
 	/* Value to read BAUD register */
 	uint16_t baud;
 	uint32_t external_clock = system_gclk_chan_get_hz(SERCOM_GCLK_ID);
-#endif
+#  endif
 	/* Value to read CTRLA, CTRLB and ADDR register */
 	uint32_t ctrla = 0;
 	uint32_t ctrlb = 0;
-#if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true
 	uint32_t addr = 0;
-#endif
+#  endif
 
-#if CONF_SPI_MASTER_ENABLE == true
+#  if CONF_SPI_MASTER_ENABLE == true
 	/* Find baud value and compare it */
 	if (config->mode == SPI_MODE_MASTER) {
 		enum status_code error_code = _sercom_get_sync_baud_val(
@@ -316,9 +316,9 @@ static enum status_code _spi_check_config(
 
 		ctrla |= SERCOM_SPI_CTRLA_MODE_SPI_MASTER;
 	}
-#endif
+#  endif
 
-#if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true
 	if (config->mode == SPI_MODE_SLAVE) {
 
 		/* Set frame format */
@@ -340,7 +340,7 @@ static enum status_code _spi_check_config(
 		}
 		ctrla |= SERCOM_SPI_CTRLA_MODE_SPI_SLAVE;
 	}
-#endif
+#  endif
 	/* Set data order */
 	ctrla |= config->data_order;
 
@@ -363,18 +363,18 @@ static enum status_code _spi_check_config(
 		ctrlb |= SERCOM_SPI_CTRLB_RXEN;
 	}
 
-#ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
+#  ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 	if (config->select_slave_low_detect_enable) {
 		/* Enable Slave Select Low Detect */
 		ctrlb |= SERCOM_SPI_CTRLB_SSDE;
 	}
-#endif	
-#ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
+#  endif
+#  ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
 	if (config->master_slave_select_enable) {
 		/* Enable Master Slave Select */
 		ctrlb |= SERCOM_SPI_CTRLB_MSSEN;
 	}
-#endif
+#  endif
 
 	ctrla |= SERCOM_SPI_CTRLA_ENABLE;
 
@@ -455,19 +455,19 @@ enum status_code spi_init(
 	system_gclk_chan_enable(gclk_index);
 	sercom_set_gclk_generator(config->generator_source, false);
 
-#if CONF_SPI_MASTER_ENABLE == true
+#  if CONF_SPI_MASTER_ENABLE == true
 	if (config->mode == SPI_MODE_MASTER) {
 		/* Set the SERCOM in SPI master mode */
 		spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE_SPI_MASTER;
 	}
-#endif
+#  endif
 
-#if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true
 	if (config->mode == SPI_MODE_SLAVE) {
 		/* Set the SERCOM in SPI slave mode */
 		spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE_SPI_SLAVE;
 	}
-#endif
+#  endif
 
 #if SPI_CALLBACK_MODE == true
 	/* Temporary variables */
@@ -549,16 +549,16 @@ enum status_code spi_read_buffer_wait(
 	if (!(module->receiver_enabled)) {
 		return STATUS_ERR_DENIED;
 	}
-#if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true
 	if ((module->mode == SPI_MODE_SLAVE) && (spi_is_write_complete(module))) {
 		/* Clear TX complete flag */
 		_spi_clear_tx_complete_flag(module);
 	}
-#endif
+#  endif
 	uint16_t rx_pos = 0;
 
 	while (length--) {
-	#if CONF_SPI_MASTER_ENABLE == true
+#  if CONF_SPI_MASTER_ENABLE == true
 		if (module->mode == SPI_MODE_MASTER) {
 			/* Wait until the module is ready to write a character */
 			while (!spi_is_ready_to_write(module)) {
@@ -567,9 +567,9 @@ enum status_code spi_read_buffer_wait(
 			/* Send dummy SPI character to read in master mode */
 			spi_write(module, dummy);
 		}
-	#endif
+#  endif
 
-	#if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true
 		/* Start timeout period for slave */
 		if (module->mode == SPI_MODE_SLAVE) {
 			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
@@ -588,7 +588,7 @@ enum status_code spi_read_buffer_wait(
 				return STATUS_ERR_TIMEOUT;
 			}
 		}
-	#endif
+#  endif
 
 		/* Wait until the module is ready to read a character */
 		while (!spi_is_ready_to_read(module)) {
@@ -663,12 +663,12 @@ enum status_code spi_transceive_wait(
 	}
 #  endif
 
-#if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true
 	uint16_t j;
-#endif
+#  endif
 	enum status_code retval = STATUS_OK;
 
-#if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true
 	/* Start timeout period for slave */
 	if (module->mode == SPI_MODE_SLAVE) {
 		for (j = 0; j <= SPI_TIMEOUT; j++) {
@@ -680,7 +680,7 @@ enum status_code spi_transceive_wait(
 			}
 		}
 	}
-#endif
+#  endif
 	/* Wait until the module is ready to write the character */
 	while (!spi_is_ready_to_write(module)) {
 	}
@@ -688,7 +688,7 @@ enum status_code spi_transceive_wait(
 	/* Write data */
 	spi_write(module, tx_data);
 
-#if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true
 	/* Start timeout period for slave */
 	if (module->mode == SPI_MODE_SLAVE) {
 		for (j = 0; j <= SPI_TIMEOUT; j++) {
@@ -700,7 +700,7 @@ enum status_code spi_transceive_wait(
 			}
 		}
 	}
-#endif
+#  endif
 
 	/* Wait until the module is ready to read the character */
 	while (!spi_is_ready_to_read(module)) {
@@ -746,9 +746,10 @@ enum status_code spi_select_slave(
 	if (module->mode != SPI_MODE_MASTER) {
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
-#ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
-	if(!(module->master_slave_select_enable)) {
-#endif		
+#  ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
+	if(!(module->master_slave_select_enable))
+#  endif
+	{
 		if (select) {
 			/* Check if address recognition is enabled */
 			if (slave->address_enabled) {
@@ -780,9 +781,7 @@ enum status_code spi_select_slave(
 			/* Drive Slave Select high */
 			port_pin_set_output_level(slave->ss_pin, true);
 		}
-#ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT		
 	}
-#endif	
 	return STATUS_OK;
 }
 
@@ -827,19 +826,19 @@ enum status_code spi_write_buffer_wait(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-#if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true
 	if ((module->mode == SPI_MODE_SLAVE) && (spi_is_write_complete(module))) {
 		/* Clear TX complete flag */
 		_spi_clear_tx_complete_flag(module);
 	}
-#endif
+#  endif
 
 	uint16_t tx_pos = 0;
 	uint16_t flush_length = length;
 
 	/* Write block */
 	while (length--) {
-	#if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true
 		/* Start timeout period for slave */
 		if (module->mode == SPI_MODE_SLAVE) {
 			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
@@ -858,7 +857,7 @@ enum status_code spi_write_buffer_wait(
 				return STATUS_ERR_TIMEOUT;
 			}
 		}
-	#endif
+#  endif
 
 		/* Wait until the module is ready to write a character */
 		while (!spi_is_ready_to_write(module)) {
@@ -876,7 +875,7 @@ enum status_code spi_write_buffer_wait(
 		spi_write(module, data_to_send);
 
 		if (module->receiver_enabled) {
-		#if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true
 			/* Start timeout period for slave */
 			if (module->mode == SPI_MODE_SLAVE) {
 				for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
@@ -907,7 +906,7 @@ enum status_code spi_write_buffer_wait(
 					return STATUS_ERR_TIMEOUT;
 				}
 			}
-		#endif
+#  endif
 
 			while (!spi_is_ready_to_read(module)) {
 			}
@@ -919,15 +918,15 @@ enum status_code spi_write_buffer_wait(
 		}
 	}
 
-#if CONF_SPI_MASTER_ENABLE == true
+#  if CONF_SPI_MASTER_ENABLE == true
 	if (module->mode == SPI_MODE_MASTER) {
 		/* Wait for last byte to be transferred */
 		while (!spi_is_write_complete(module)) {
 		}
 	}
-#endif
+#  endif
 
-#if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true
 	if (module->mode == SPI_MODE_SLAVE) {
 		if (module->receiver_enabled) {
 			while (flush_length) {
@@ -948,7 +947,7 @@ enum status_code spi_write_buffer_wait(
 			}
 		}
 	}
-#endif
+#  endif
 	return STATUS_OK;
 }
 
@@ -1003,12 +1002,12 @@ enum status_code spi_transceive_buffer_wait(
 		return STATUS_ERR_DENIED;
 	}
 
-#if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true
 	if ((module->mode == SPI_MODE_SLAVE) && (spi_is_write_complete(module))) {
 		/* Clear TX complete flag */
 		_spi_clear_tx_complete_flag(module);
 	}
-#endif
+#  endif
 
 	uint16_t tx_pos = 0;
 	uint16_t rx_pos = 0;
@@ -1016,7 +1015,7 @@ enum status_code spi_transceive_buffer_wait(
 
 	/* Send and receive buffer */
 	while (length--) {
-	#if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true
 		/* Start timeout period for slave */
 		if (module->mode == SPI_MODE_SLAVE) {
 			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
@@ -1035,7 +1034,7 @@ enum status_code spi_transceive_buffer_wait(
 				return STATUS_ERR_TIMEOUT;
 			}
 		}
-	#endif
+#  endif
 
 		/* Wait until the module is ready to write a character */
 		while (!spi_is_ready_to_write(module)) {
@@ -1052,7 +1051,7 @@ enum status_code spi_transceive_buffer_wait(
 		/* Write the data to send */
 		spi_write(module, data_to_send);
 
-	#if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true
 		/* Start timeout period for slave */
 		if (module->mode == SPI_MODE_SLAVE) {
 			for (uint32_t i = 0; i <= SPI_TIMEOUT; i++) {
@@ -1082,7 +1081,7 @@ enum status_code spi_transceive_buffer_wait(
 				return STATUS_ERR_TIMEOUT;
 			}
 		}
-	#endif
+#  endif
 
 		/* Wait until the module is ready to read a character */
 		while (!spi_is_ready_to_read(module)) {
@@ -1108,15 +1107,15 @@ enum status_code spi_transceive_buffer_wait(
 		}
 	}
 
-#if CONF_SPI_MASTER_ENABLE == true
+#  if CONF_SPI_MASTER_ENABLE == true
 	if (module->mode == SPI_MODE_MASTER) {
 		/* Wait for last byte to be transferred */
 		while (!spi_is_write_complete(module)) {
 		}
 	}
-#endif
+#  endif
 
-#if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true
 	if (module->mode == SPI_MODE_SLAVE) {
 		while (rx_length) {
 			/* Start timeout period for slave */
@@ -1148,6 +1147,6 @@ enum status_code spi_transceive_buffer_wait(
 			}
 		}
 	}
-#endif
+#  endif
 	return STATUS_OK;
 }

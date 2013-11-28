@@ -332,9 +332,9 @@
 #include <string.h>
 #include <conf_spi.h>
 
-#if SPI_CALLBACK_MODE == true
+#  if SPI_CALLBACK_MODE == true
 #  include <sercom_interrupt.h>
-#endif
+#  endif
 
 #ifdef __cplusplus
 extern "C" {
@@ -349,27 +349,27 @@ Make sure that either/both CONF_SPI_MASTER_ENABLE/CONF_SPI_SLAVE_ENABLE is set t
  * Define SPI features set according to different device family
  * @{
  */
-#if (SAMD21)
+#  if (SAMD21)
 #  define FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 #  define FEATURE_SPI_HARDWARE_SLAVE_SELECT
 #  define FEATURE_SPI_ERROR_INTERRUPT
-#  define FEATURE_SPI_SYNC_SCHEME_VERSION_2 
-#endif
+#  define FEATURE_SPI_SYNC_SCHEME_VERSION_2
+#  endif
 /*@}*/
 
-#ifndef PINMUX_DEFAULT
+#  ifndef PINMUX_DEFAULT
 #  define PINMUX_DEFAULT 0
-#endif
+#  endif
 
-#ifndef PINMUX_UNUSED
+#  ifndef PINMUX_UNUSED
 #  define PINMUX_UNUSED 0xFFFFFFFF
-#endif
+#  endif
 
-#ifndef SPI_TIMEOUT
+#  ifndef SPI_TIMEOUT
 #  define SPI_TIMEOUT 10000
-#endif
+#  endif
 
-#if SPI_CALLBACK_MODE == true
+#  if SPI_CALLBACK_MODE == true
 /**
  * \brief SPI Callback enum
  *
@@ -393,20 +393,20 @@ enum spi_callback {
 	* read or written from slave
 	*/
 	SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE,
-#ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
+#  ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 	/** Callback for  slave select low */
 	SPI_CALLBACK_SLAVE_SELECT_LOW,
-#endif
-#ifdef FEATURE_SPI_ERROR_INTERRUPT
+#  endif
+#  ifdef FEATURE_SPI_ERROR_INTERRUPT
 	/** Callback for combined error happen */
 	SPI_CALLBACK_COMBINED_ERROR,
-#endif
+#  endif
 #  if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
 	SPI_CALLBACK_N,
 #  endif
 };
-#endif
+#  endif
 
 #if SPI_CALLBACK_MODE == true
 #  if !defined(__DOXYGEN__)
@@ -441,14 +441,14 @@ enum spi_interrupt_flag {
 	SPI_INTERRUPT_FLAG_TX_COMPLETE         = SERCOM_SPI_INTFLAG_TXC,
 	/** This flag is set when data has been shifted into the data register */
 	SPI_INTERRUPT_FLAG_RX_COMPLETE         = SERCOM_SPI_INTFLAG_RXC,
-#ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
+#  ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 	/** This flag is set when slave select low  */
 	SPI_INTERRUPT_FLAG_SLAVE_SELECT_LOW         = SERCOM_SPI_INTFLAG_SSL,
-#endif
-#ifdef FEATURE_SPI_ERROR_INTERRUPT
- 	/** This flag is set when combined error happen */
+#  endif
+#  ifdef FEATURE_SPI_ERROR_INTERRUPT
+	/** This flag is set when combined error happen */
 	SPI_INTERRUPT_FLAG_COMBINED_ERROR         = SERCOM_SPI_INTFLAG_ERROR,
-#endif
+#  endif
 };
 
 /**
@@ -609,7 +609,7 @@ enum spi_character_size {
 	SPI_CHARACTER_SIZE_9BIT = SERCOM_SPI_CTRLB_CHSIZE(1),
 };
 
-#if SPI_CALLBACK_MODE == true
+#  if SPI_CALLBACK_MODE == true
 /** Prototype for the device instance */
 struct spi_module;
 
@@ -620,7 +620,7 @@ typedef void (*spi_callback_t)(const struct spi_module *const module);
 /** Prototype for the interrupt handler */
 extern void _spi_interrupt_handler(uint8_t instance);
 #  endif
-#endif
+#  endif
 
 /**
  * \brief SERCOM SPI driver software device instance structure.
@@ -632,7 +632,7 @@ extern void _spi_interrupt_handler(uint8_t instance);
  *       application; they are reserved for module-internal use only.
  */
 struct spi_module {
-#if !defined(__DOXYGEN__)
+#  if !defined(__DOXYGEN__)
 	/** SERCOM hardware module */
 	Sercom *hw;
 	/** Module lock */
@@ -643,8 +643,10 @@ struct spi_module {
 	enum spi_character_size character_size;
 	/** Receiver enabled */
 	bool receiver_enabled;
-	/** Enable Slave Select Low Detect */
+#  ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
+	/** Enable Hardware Slave Select */
 	bool master_slave_select_enable;
+#  endif
 #  if SPI_CALLBACK_MODE == true
 	/** Direction of transaction */
 	volatile enum _spi_direction dir;
@@ -668,7 +670,7 @@ struct spi_module {
 	/** Holds the status of the ongoing or last operation */
 	volatile enum status_code status;
 #  endif
-#endif
+#  endif
 };
 
 /**
@@ -751,14 +753,14 @@ struct spi_config {
 	bool run_in_standby;
 	/** Enable receiver */
 	bool receiver_enable;
-#ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
+#  ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 	/** Enable Slave Select Low Detect */
 	bool select_slave_low_detect_enable;
-#endif
-#ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
+#  endif
+#  ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
 	/** Enable Master Slave Select */
 	bool master_slave_select_enable;
-#endif
+#  endif
 	/** Union for slave or master specific configuration */
 	union {
 		/** Slave specific configuration */
@@ -802,17 +804,17 @@ static inline bool spi_is_syncing(
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
-#ifdef FEATURE_SPI_SYNC_SCHEME_VERSION_2
+#  ifdef FEATURE_SPI_SYNC_SCHEME_VERSION_2
 	/* Return synchronization status */
 	if(spi_module->SYNCBUSY.reg == 0) {
 		return false;
 	} else {
 		return true;
 	}
-#else
+#  else
 	/* Return synchronization status */
 	return (spi_module->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY);
-#endif
+#  endif
 }
 
 /**
@@ -856,12 +858,12 @@ static inline void spi_get_config_defaults(
 	config->character_size   = SPI_CHARACTER_SIZE_8BIT;
 	config->run_in_standby   = false;
 	config->receiver_enable  = true;
-#ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
+#  ifdef FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 	config->select_slave_low_detect_enable= true;
-#endif
-#ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
+#  endif
+#  ifdef FEATURE_SPI_HARDWARE_SLAVE_SELECT
 	config->master_slave_select_enable= false;
-#endif
+#  endif
 	config->generator_source = GCLK_GENERATOR_0;
 
 	/* Clear mode specific config */
@@ -964,9 +966,9 @@ static inline void spi_enable(
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
-#if SPI_CALLBACK_MODE == true
+#  if SPI_CALLBACK_MODE == true
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->hw));
-#endif
+#  endif
 
 	while (spi_is_syncing(module)) {
 		/* Wait until the synchronization is complete */
@@ -992,9 +994,9 @@ static inline void spi_disable(
 
 	SercomSpi *const spi_module = &(module->hw->SPI);
 
-#if SPI_CALLBACK_MODE == true
+#  if SPI_CALLBACK_MODE == true
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
-#endif
+#  endif
 
 	while (spi_is_syncing(module)) {
 		/* Wait until the synchronization is complete */
