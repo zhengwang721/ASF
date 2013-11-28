@@ -128,6 +128,11 @@
  */
 #define PBUF_POOL_SIZE                  10
 
+/**
+ * PBUF_POOL_BUFSIZE: the size of each pbuf in the pbuf pool.
+ */
+#define PBUF_POOL_BUFSIZE               GMAC_FRAME_LENTGH_MAX
+
 /*
    ----------------------------------
    ---------- DHCP options ----------
@@ -172,7 +177,7 @@
  * when opening a connection. For the transmit size, this MSS sets
  * an upper limit on the MSS advertised by the remote host.
  */
-#define TCP_MSS                 1500
+#define TCP_MSS                 1460
 
 /**
  * TCP_WND: The size of a TCP window.  This must be at least
@@ -243,7 +248,7 @@
 
 //#define LWIP_DEBUG
 #define LWIP_DBG_MIN_LEVEL              LWIP_DBG_LEVEL_ALL
-#define LWIP_DBG_TYPES_ON               LWIP_DBG_OFF
+#define LWIP_DBG_TYPES_ON               LWIP_DBG_ON
 
 #define ETHARP_DEBUG                    LWIP_DBG_OFF
 #define NETIF_DEBUG                     LWIP_DBG_OFF

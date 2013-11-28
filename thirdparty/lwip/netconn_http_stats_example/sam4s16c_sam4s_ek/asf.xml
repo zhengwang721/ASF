@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project id="thirdparty.lwip.netconn_http_stats_example.sam4s_ek" caption="lwIP TCP/IP Stack HTTP stats example using Netconn API for SAM4S-EK">
 		<info type="description" value="summary">
-			HTTP web server using the lwIP TCP/IP stack Netconn API (i.e. with RTOS support). The home page provides RTOS and lwIP stats information.
+			HTTP web server using the lwIP TCP/IP stack Netconn API (i.e. with RTOS support). The home page provides RTOS and lwIP stats information. This example requires the Micrel KSZ8851SNL PHY to be connected on the board, see conf_eth.h for pin settings.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>

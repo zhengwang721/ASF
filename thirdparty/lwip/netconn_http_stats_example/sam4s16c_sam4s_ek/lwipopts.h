@@ -181,7 +181,7 @@
  * when opening a connection. For the transmit size, this MSS sets
  * an upper limit on the MSS advertised by the remote host.
  */
-#define TCP_MSS                 1500
+#define TCP_MSS                 1460
 
 /**
  * TCP_WND: The size of a TCP window.  This must be at least
@@ -225,24 +225,38 @@
    ----------------------------------------
 */
 
-#define LWIP_STATS 1
-#define LWIP_STATS_DISPLAY 1
-#define LWIP_STATS_LARGE 1
+/**
+ * LWIP_STATS==1: Enable statistics collection in lwip_stats.
+ */
+#define LWIP_STATS                        1
+
+/**
+ * LWIP_STATS_DISPLAY==1: Compile in the statistics output functions.
+ */
+#define LWIP_STATS_DISPLAY                1
+
+/**
+ * LWIP_STATS_LARGE==1: Use 32 bits counter instead of 16.
+ */
+#define LWIP_STATS_LARGE                  1
 
 #if LWIP_STATS
-#define LINK_STATS 1
-#define IP_STATS   1
-#define IPFRAG_STATS 0
-#define ICMP_STATS 0
-#define IGMP_STATS 0
-#define UDP_STATS  0
-#define TCP_STATS  1
-#define MEM_STATS  1
-#define MEMP_STATS 1
-#define SYS_STATS  1
+#define LINK_STATS                        1
+#define IP_STATS                          1
+#define IPFRAG_STATS                      0
+#define ICMP_STATS                        0
+#define IGMP_STATS                        0
+#define UDP_STATS                         0
+#define TCP_STATS                         1
+#define MEM_STATS                         1
+#define MEMP_STATS                        1
+#define SYS_STATS                         1
 #endif
+/* Left outside to avoid warning. */
+#define ETHARP_STATS                      0
 
 /*
+
    ---------------------------------------
    ---------- Debugging options ----------
    ---------------------------------------
@@ -252,7 +266,7 @@
 
 //#define LWIP_DEBUG
 #define LWIP_DBG_MIN_LEVEL              LWIP_DBG_LEVEL_ALL
-#define LWIP_DBG_TYPES_ON               LWIP_DBG_OFF
+#define LWIP_DBG_TYPES_ON               LWIP_DBG_ON
 
 #define ETHARP_DEBUG                    LWIP_DBG_OFF
 #define NETIF_DEBUG                     LWIP_DBG_OFF
