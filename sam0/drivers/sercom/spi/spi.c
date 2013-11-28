@@ -70,6 +70,7 @@ void spi_reset(
 	spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_SWRST;
 }
 
+#  if CONF_SPI_SLAVE_ENABLE == true
 /**
  * \internal Clears the Transmit Complete interrupt flag.
  *
@@ -87,6 +88,7 @@ static void _spi_clear_tx_complete_flag(
 	/* Clear interrupt flag */
 	spi_module->INTFLAG.reg = SPI_INTERRUPT_FLAG_TX_COMPLETE;
 }
+#  endif
 
 /**
  * \internal Writes an SPI SERCOM configuration to the hardware module.

@@ -414,6 +414,7 @@ void spi_abort_job(
 	module->dir = SPI_DIRECTION_IDLE;
 }
 
+#  if CONF_SPI_SLAVE_ENABLE == true
 /**
  * \internal
  * Writes a character from the TX buffer to the Data register.
@@ -443,7 +444,9 @@ static void _spi_write(
 	/* Decrement remaining buffer length */
 	(module->remaining_tx_buffer_length)--;
 }
+#  endif
 
+#  if CONF_SPI_MASTER_ENABLE == true
 /**
  * \internal
  * Writes a dummy character to the Data register.
@@ -462,6 +465,7 @@ static void _spi_write_dummy(
 	/* Decrement remaining dummy buffer length */
 	module->remaining_dummy_buffer_length--;
 }
+#  endif
 
 /**
  * \internal
