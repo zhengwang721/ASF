@@ -51,7 +51,8 @@
 #define TEST_PAGE_SIZE  256
 
 
-static struct spi_module at25dfx_spi;
+static at25dfx_spi_module_t at25dfx_spi;
+
 static struct at25dfx_chip_module at25dfx_chip;
 static struct at25dfx_chip_module at25dfx_dummy;
 static struct usart_module cdc_uart_module;
@@ -85,18 +86,30 @@ static void cdc_uart_init(void)
 static void test_at25dfx_init(void)
 {
 	struct at25dfx_chip_config at25dfx_chip_config;
-	struct spi_config at25dfx_spi_config;
 
+#ifdef CONF_TEST_VECTORED_MASTER
+	struct spi_master_vec_config at25dfx_spi_config;
+	at25dfx_spi_master_vec_get_config_defaults(&at25dfx_spi_config);
+	at25dfx_spi_config.baudrate = 1000000;
+#else
+	struct spi_config at25dfx_spi_config;
 	at25dfx_spi_get_config_defaults(&at25dfx_spi_config);
 	at25dfx_spi_config.mode_specific.master.baudrate = 1000000;
+#endif
+
 	at25dfx_spi_config.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING;
 	at25dfx_spi_config.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0;
 	at25dfx_spi_config.pinmux_pad1 = PINMUX_UNUSED; // EXT1_SPI_SERCOM_PINMUX_PAD1;
 	at25dfx_spi_config.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2;
 	at25dfx_spi_config.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
 
+#ifdef CONF_TEST_VECTORED_MASTER
+	spi_master_vec_init(&at25dfx_spi, EXT1_SPI_MODULE, &at25dfx_spi_config);
+	spi_master_vec_enable(&at25dfx_spi);
+#else
 	spi_init(&at25dfx_spi, EXT1_SPI_MODULE, &at25dfx_spi_config);
 	spi_enable(&at25dfx_spi);
+#endif
 
 	// Initialize real and dummy chip
 	at25dfx_chip_config.type = AT25DFX_081A;
