@@ -20,6 +20,12 @@
 		<build type="header-file" value="hal/spi_polled/at25dfx_priv_hal.h"/>
 	</module>
 
+	<module type="meta" id="common2.components.memory.serial_flash.at25dfx.hal.vectored_master_spi" caption="Vectored master SPI HAL for AT25DFx SerialFlash driver">
+		<build type="include-path" value="hal/spi_master_vec/"/>
+		<build type="header-file" value="hal/spi_master_vec/at25dfx_hal.h"/>
+		<build type="header-file" value="hal/spi_master_vec/at25dfx_priv_hal.h"/>
+	</module>
+
 	<select-by-config id="common2.components.memory.serial_flash.at25dfx" caption="AT25DFx SerialFlash driver" name="config.at25dfx.hal" default="polled_spi">
 			<info type="description" value="summary">
 			AT25DFx SerialFlash driver, supplying basic functions for reading,
@@ -68,5 +74,37 @@
 
 		</select-by-device>
 
+		<select-by-device id="common2.components.memory.serial_flash.at25dfx#vectored_master_spi" caption="AT25DFx SerialFlash driver with vector master SPI">
+				<info type="description" value="summary">
+				Vectored master SPI variant of the AT25DFx SerialFlash driver.
+				</info>
+
+				<module type="component" id="common2.components.memory.serial_flash.at25dfx#vectored_master_spi#samd20" caption="SAM D20 implementation of AT25DFx SerialFlash driver with vectored master SPI">
+					<info type="description" value="summary">
+					SAM D20 implementation of AT25DFx SerialFlash driver with vectored
+					master SPI.
+					</info>
+
+					<info type="description" value="pdf">
+					This document describes how to use the AT25DFx SerialFlash driver
+					with vectored master SPI on the SAM D20.
+					</info>
+
+					<info type="keyword" value="technology">
+						<keyword value="Memory"/>
+					</info>
+
+					<build type="doxygen-entry-point" value="asfdoc_common2_at25dfx_group"/>
+					<build type="doxygen-quick-start" value="asfdoc_common2_at25dfx_exqsg"/>
+					<require idref="common2.components.memory.serial_flash.at25dfx.common"/>
+					<require idref="common2.components.memory.serial_flash.at25dfx.hal.vectored_master_spi"/>
+					<require idref="sam0.drivers.sercom.spi_master_vec"/>
+					<require idref="sam0.drivers.port"/>
+					<require idref="sam0.utils"/>
+					<device-support value="samd20"/>
+					<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+				</module>
+
+		</select-by-device>
 	</select-by-config>
 </asf>
