@@ -207,6 +207,7 @@ struct spi_master_vec_bufdesc {
 /** Driver instance. */
 struct spi_master_vec_module {
 	Sercom *volatile sercom;
+	volatile bool locked;
 	volatile enum _spi_direction direction;
 	volatile enum status_code status;
 	volatile spi_master_vec_buflen_t rx_length;
@@ -263,6 +264,64 @@ enum status_code spi_master_vec_init(struct spi_master_vec_module *const module,
 void spi_master_vec_enable(const struct spi_master_vec_module *const module);
 void spi_master_vec_disable(struct spi_master_vec_module *const module);
 void spi_master_vec_reset(struct spi_master_vec_module *const module);
+
+/** @} */
+
+/**
+ * \name Lock/Unlock
+ * @{
+ */
+
+/**
+ * \brief Attempt to get lock on driver instance
+ *
+ * This function checks the instance's lock, which indicates whether or not it
+ * is currently in use, and sets the lock if it was not already set.
+ *
+ * The purpose of this is to enable exclusive access to driver instances, so
+ * that, e.g., transactions by different services will not interfere with each
+ * other.
+ *
+ * \param[in,out] module Pointer to the driver instance to lock.
+ *
+ * \retval STATUS_OK if the module was locked.
+ * \retval STATUS_BUSY if the module was already locked.
+ */
+static inline enum status_code spi_master_vec_lock(
+		struct spi_master_vec_module *const module)
+{
+	enum status_code status;
+
+	system_interrupt_enter_critical_section();
+
+	if (module->locked) {
+		status = STATUS_BUSY;
+	} else {
+		module->locked = true;
+		status = STATUS_OK;
+	}
+
+	system_interrupt_leave_critical_section();
+
+	return status;
+}
+
+/**
+ * \brief Unlock driver instance
+ *
+ * This function clears the instance lock, indicating that it is available for
+ * use.
+ *
+ * \param[in,out] module Pointer to the driver instance to lock.
+ *
+ * \retval STATUS_OK if the module was locked.
+ * \retval STATUS_BUSY if the module was already locked.
+ */
+static inline void spi_master_vec_unlock(
+		struct spi_master_vec_module *const module)
+{
+	module->locked = false;
+}
 
 /** @} */
 
