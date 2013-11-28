@@ -46,6 +46,8 @@
 
 #include <spi.h>
 
+typedef struct spi_module at25dfx_spi_module_t;
+
 /**
  * \brief Initialize SPI configuration
  *

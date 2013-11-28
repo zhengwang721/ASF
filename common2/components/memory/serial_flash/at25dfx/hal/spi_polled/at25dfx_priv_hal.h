@@ -47,6 +47,11 @@
 //! \name Private SPI helpers
 //@{
 
+//! Alias for SPI lock function
+#define _at25dfx_spi_lock    spi_lock
+//! Alias for SPI unlock function
+#define _at25dfx_spi_unlock  spi_unlock
+
 /**
  * \brief Issue a read command
  *

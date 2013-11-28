@@ -189,7 +189,7 @@ typedef uint16_t at25dfx_datalen_t;
 //! SerialFlash chip driver instance.
 struct at25dfx_chip_module {
 	//! SPI module to use.
-	struct spi_module *spi;
+	at25dfx_spi_module_t *spi;
 	//! Type of SerialFlash
 	enum at25dfx_type type;
 	//! Chip Select (CS) pin.
@@ -219,7 +219,7 @@ struct at25dfx_chip_config {
  */
 static inline enum status_code at25dfx_chip_init(
 		struct at25dfx_chip_module *const module,
-		struct spi_module *const spi_module,
+		at25dfx_spi_module_t *const spi_module,
 		const struct at25dfx_chip_config *const config)
 {
 	struct port_config port_config;
