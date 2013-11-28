@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 External Interrupt Driver
+ * \brief SAM D2x External Interrupt Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -51,7 +51,7 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_samd20_extint_group
+ * \addtogroup asfdoc_sam0_extint_group
  *
  * @{
  */

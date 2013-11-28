@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 External Interrupt Driver Configuration Header
+ * \brief SAM D2x External Interrupt Driver Configuration Header
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,6 +42,8 @@
  */
 #ifndef CONF_EXTINT_H_INCLUDED
 #define CONF_EXTINT_H_INCLUDED
+
+#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
 
 #  define EXTINT_CALLBACKS_MAX     10
 

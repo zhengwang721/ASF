@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 External Interrupt Driver Quick Start
+ * \brief SAM D2x External Interrupt Driver Quick Start
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -95,7 +95,6 @@ int main(void)
 	system_init();
 
 	//! [setup_init]
-	extint_enable();
 	configure_extint_channel();
 	configure_extint_callbacks();
 

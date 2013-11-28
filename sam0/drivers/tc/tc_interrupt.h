@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 TC - Timer Counter Callback Driver
+ * \brief SAM D2x TC - Timer Counter Callback Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -64,7 +64,7 @@ static enum system_interrupt_vector _tc_interrupt_get_interrupt_vector(
 {
 	static uint8_t tc_interrupt_vectors[TC_INST_NUM] =
 		{
-			MREPEAT(TC_INST_NUM, _TC_INTERRUPT_VECT_NUM, ~)
+			MRECURSION(TC_INST_NUM, _TC_INTERRUPT_VECT_NUM, TC_INST_MAX_ID)
 		};
 
 	return (enum system_interrupt_vector)tc_interrupt_vectors[inst_num];

@@ -192,13 +192,13 @@ void system_board_init(void);
  */
 #define EXT1_PWM_MODULE           TC6
 #define EXT1_PWM_0_CHANNEL        0
-#define EXT1_PWM_0_PIN            PIN_PB02F_TC6_WO0
-#define EXT1_PWM_0_MUX            MUX_PB02F_TC6_WO0
-#define EXT1_PWM_0_PINMUX         PINMUX_PB02F_TC6_WO0
+#define EXT1_PWM_0_PIN            PIN_PB02E_TC6_WO0
+#define EXT1_PWM_0_MUX            MUX_PB02E_TC6_WO0
+#define EXT1_PWM_0_PINMUX         PINMUX_PB02E_TC6_WO0
 #define EXT1_PWM_1_CHANNEL        1
-#define EXT1_PWM_1_PIN            PIN_PB03F_TC6_WO1
-#define EXT1_PWM_1_MUX            MUX_PB03F_TC6_WO1
-#define EXT1_PWM_1_PINMUX         PINMUX_PB03F_TC6_WO1
+#define EXT1_PWM_1_PIN            PIN_PB03E_TC6_WO1
+#define EXT1_PWM_1_MUX            MUX_PB03E_TC6_WO1
+#define EXT1_PWM_1_PINMUX         PINMUX_PB03E_TC6_WO1
 /** @} */
 
 /** \name Extension header #1 IRQ/External interrupt definitions
