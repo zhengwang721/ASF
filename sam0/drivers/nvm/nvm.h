@@ -531,14 +531,14 @@ struct nvm_fusebits {
 	bool                              bod33_enable;
 	/** BOD33 Action at power on */
 	enum nvm_bod33_action             bod33_action;
-#if SAMD20
+
 	/** BOD12 Threshold level at power on */
 	uint8_t                           bod12_level;
 	/** BOD12 Enable at power on */
 	bool                              bod12_enable;
 	/** BOD12 Action at power on */
 	enum nvm_bod12_action             bod12_action;
-#endif
+
 	/** WDT Enable at power on */
 	bool                              wdt_enable;
 	/** WDT Always-on at power on */

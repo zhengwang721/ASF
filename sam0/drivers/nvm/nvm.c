@@ -45,6 +45,22 @@
 #include <system_interrupt.h>
 #include <string.h>
 
+/** Add here for compile ok for SAMD21, will be removed after the header file update. */
+#if SAMD21
+#define SYSCTRL_FUSES_BOD12USERLEVEL_ADDR NVMCTRL_USER
+#define SYSCTRL_FUSES_BOD12USERLEVEL_Pos 17           /**< \brief (NVMCTRL_USER) BOD12 User Level */
+#define SYSCTRL_FUSES_BOD12USERLEVEL_Msk (0x1Fu << SYSCTRL_FUSES_BOD12USERLEVEL_Pos)
+#define SYSCTRL_FUSES_BOD12USERLEVEL(value) ((SYSCTRL_FUSES_BOD12USERLEVEL_Msk & ((value) << SYSCTRL_FUSES_BOD12USERLEVEL_Pos)))
+
+#define SYSCTRL_FUSES_BOD12_ACTION_ADDR NVMCTRL_USER
+#define SYSCTRL_FUSES_BOD12_ACTION_Pos 23           /**< \brief (NVMCTRL_USER) BOD12 Action */
+#define SYSCTRL_FUSES_BOD12_ACTION_Msk (0x3u << SYSCTRL_FUSES_BOD12_ACTION_Pos)
+#define SYSCTRL_FUSES_BOD12_ACTION(value) ((SYSCTRL_FUSES_BOD12_ACTION_Msk & ((value) << SYSCTRL_FUSES_BOD12_ACTION_Pos)))
+
+#define SYSCTRL_FUSES_BOD12_EN_ADDR NVMCTRL_USER
+#define SYSCTRL_FUSES_BOD12_EN_Pos  22           /**< \brief (NVMCTRL_USER) BOD12 Enable */
+#define SYSCTRL_FUSES_BOD12_EN_Msk  (0x1u << SYSCTRL_FUSES_BOD12_EN_Pos)
+#endif
 
 /**
  * \internal Internal device instance struct
@@ -681,7 +697,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod33_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_ACTION_Msk)
 			>> SYSCTRL_FUSES_BOD33_ACTION_Pos);
-#if SAMD20
+
 	fusebits->bod12_level = (uint8_t)
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD12USERLEVEL_Msk)
 			>> SYSCTRL_FUSES_BOD12USERLEVEL_Pos);
@@ -692,7 +708,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod12_action = (enum nvm_bod12_action)
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD12_ACTION_Msk)
 			>> SYSCTRL_FUSES_BOD12_ACTION_Pos);
-#endif
+
 	fusebits->wdt_enable = (bool)
 			((raw_user_row[0] & WDT_FUSES_ENABLE_Msk) >> WDT_FUSES_ENABLE_Pos);
 
@@ -728,17 +744,10 @@ static void _nvm_translate_raw_fusebits_to_struct (
  *
  * @{
  */
-#if SAMD20
 #define _NVM_FUSEBITS_0_RESERVED_BITS ~(NVMCTRL_FUSES_BOOTPROT_Msk | NVMCTRL_FUSES_EEPROM_SIZE_Msk | \
 	SYSCTRL_FUSES_BOD33USERLEVEL_Msk | SYSCTRL_FUSES_BOD33_EN_Msk | SYSCTRL_FUSES_BOD33_ACTION_Msk | \
 	SYSCTRL_FUSES_BOD12USERLEVEL_Msk | SYSCTRL_FUSES_BOD12_EN_Msk | SYSCTRL_FUSES_BOD12_ACTION_Msk | \
 	WDT_FUSES_ENABLE_Msk | WDT_FUSES_ALWAYSON_Msk | WDT_FUSES_PER_Msk | WDT_FUSES_WINDOW_0_Msk)
-#endif
-#if SAMD21
-#define _NVM_FUSEBITS_0_RESERVED_BITS ~(NVMCTRL_FUSES_BOOTPROT_Msk | NVMCTRL_FUSES_EEPROM_SIZE_Msk | \
-	SYSCTRL_FUSES_BOD33USERLEVEL_Msk | SYSCTRL_FUSES_BOD33_EN_Msk | SYSCTRL_FUSES_BOD33_ACTION_Msk | \
-	WDT_FUSES_ENABLE_Msk | WDT_FUSES_ALWAYSON_Msk | WDT_FUSES_PER_Msk | WDT_FUSES_WINDOW_0_Msk)
-#endif
 
 #define _NVM_FUSEBITS_1_RESERVED_BITS ~(WDT_FUSES_WINDOW_1_Msk | WDT_FUSES_EWOFFSET_Msk | \
 	WDT_FUSES_WEN_Msk | NVMCTRL_FUSES_REGION_LOCKS_Msk)
@@ -768,12 +777,12 @@ static void _nvm_translate_struct_to_raw_fusebits (
 			    SYSCTRL_FUSES_BOD33USERLEVEL(fusebits->bod33_level)                 |
 			    ((uint32_t)(fusebits->bod33_enable)) << SYSCTRL_FUSES_BOD33_EN_Pos  |
 			    SYSCTRL_FUSES_BOD33_ACTION((uint8_t)(fusebits->bod33_action))       |
-#if SAMD20
+
 			/* Setting BOD12 fuses */
 			    SYSCTRL_FUSES_BOD12USERLEVEL(fusebits->bod12_level)                 |
 			    ((uint32_t)(fusebits->bod12_enable)) << SYSCTRL_FUSES_BOD12_EN_Pos  |
 			    SYSCTRL_FUSES_BOD12_ACTION((uint8_t)(fusebits->bod12_action))       |
-#endif
+
 			/* Setting WDT fuses */
 			    ((uint32_t)(fusebits->wdt_enable)) << WDT_FUSES_ENABLE_Pos          |
 			    ((uint32_t)(fusebits->wdt_always_on)) << WDT_FUSES_ALWAYSON_Pos     |
