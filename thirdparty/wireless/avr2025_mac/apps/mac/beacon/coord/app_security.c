@@ -156,42 +156,47 @@ static const uint8_t default_key[4][16] = {
 }
 };
 
+/* Recently associated device number */
 extern uint16_t recent_assoc_dev_no;
 
+/* Default key source for MAC Security */
 uint8_t default_key_source[8] = {0xFF, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
 
-
-
+/* Parameter to check the which mlme set confirm callback will currently using */
+static uint8_t mlme_set_conf_run_time;
 /* === PROTOTYPES ========================================================== */
 
-/** Initialize the security PIB and setting the Security PIB for use by mac security */
+/* Initialize the security PIB and setting the Security PIB for use by mac security */
 static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex);
+
+/* mlme set confirm callback will be used after starting the network */ 
 static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttributeIndex);
 /* === IMPLEMENTATION ====================================================== */
 
 
-/*
- * @brief Callback function usr_mlme_set_conf
+/** @brief Callback function usr_mlme_set_conf
  *
- * @param status        Result of requested PIB attribute set operation
- * @param PIBAttribute  Updated PIB attribute
+ *  @param status        Result of requested PIB attribute set operation
+ *  @param PIBAttribute  Updated PIB attribute
+ *  
  */
-static uint8_t mlme_set_conf_run_time;
 void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 {
     if (status != MAC_SUCCESS)
     {
-        // something went wrong; restart
+        /* something went wrong with mlme set request; restart */
         wpan_mlme_reset_req(true);
     }
     else
     {
 		if (mlme_set_conf_run_time)
 		{
+			/* post initialization security pib callback */
 			usr_mlme_set_conf_run_time(status, PIBAttribute, PIBAttributeIndex);
 		}
 		else
 		{
+			/* Initialize the mac security PIB before starting the network */
 			init_secuity_pib(PIBAttribute, PIBAttributeIndex);
 		}
     }
@@ -203,13 +208,19 @@ void usr_mlme_set_conf(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttribut
 
 
 
-/** Initialize the security PIB and set the security parameters */
+/** @brief Initialize the security PIB and set the security parameters
+ *  
+ *  @param PIBAttribute MAC PIB Attribute type
+ *  @param PIBAttributeIndex MAC PIB Attribute Index
+ *  
+ */
 static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 {
 	switch (PIBAttribute)
 	{		
 		case macDefaultKeySource:		
 		{
+			/* Set the no.of security level table  entries */
             uint8_t mac_sec_level_table_entries = 2;
 
             wpan_mlme_set_req(macSecurityLevelTableEntries,
@@ -221,7 +232,8 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		
 		case macSecurityLevelTableEntries:
 		{
-            uint8_t mac_sec_level_table[4] = {	FRAME_TYPE_BEACON,      // FrameType: Beacon
+			/* set type of frames will be encrypted and decrypted */
+            uint8_t mac_sec_level_table[4] = {	FRAME_TYPE_BEACON,    // FrameType: Beacon
                                                 CMD_FRAME_ID_NA,      // CommandFrameIdentifier: N/A
 												SECURITY_05_LEVEL,
                                                 DEV_OVERRIDE_SEC_MIN  // DeviceOverrideSecurityMinimum: True
@@ -239,6 +251,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
          {
 			if(INDEX_1 == PIBAttributeIndex)
 			{
+				/* set type of frames will be encrypted and decrypted */
 				uint8_t mac_sec_level_table[4] =
 				{	FRAME_TYPE_DATA,      // FrameType: Beacon
 					CMD_FRAME_ID_NA,      // CommandFrameIdentifier: N/A
@@ -251,6 +264,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 			}
 			else if(INDEX_0 == PIBAttributeIndex)
 			{
+				/* set the maximum no.of mac key table entries */
 				uint8_t mac_key_table_entries = 4;
 
 				wpan_mlme_set_req(macKeyTableEntries,
@@ -262,6 +276,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		
 		case macKeyTableEntries:
 		{
+		  /* set the maximum no.of device table entries */
 		  uint16_t coord_key_index = 4;
 		  wpan_mlme_set_req(macDeviceTableEntries,
                           NO_PIB_INDEX,
@@ -271,6 +286,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		
 		case macDeviceTableEntries:
         {
+			/* set the default mac key table values */
             uint8_t mac_key_table[43] =
             {
 	            default_key_source[0], // LookupData[0]
@@ -328,6 +344,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		
 		case macKeyTable:
 		{
+			/* set the default mac key table values */
 					switch(PIBAttributeIndex)
 					{
 					case INDEX_3:
@@ -504,6 +521,10 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 				
 				case INDEX_2:
 				{
+					/** set the coordinator IEEE Address and default PAN ID
+					 *  into the MAC Device table
+					 */
+					
 					uint8_t coord_dev_index = 3;
 					uint8_t mac_dev_table[17];
 			
@@ -539,6 +560,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		
 		case macDeviceTable:
 		{
+			/* Set the PAN Coordinator Extended Address */
 			uint8_t pan_coord_add[8];
 			pan_coord_add[0] = COORD_IEEE_ADDRESS[7];
 			pan_coord_add[1] = COORD_IEEE_ADDRESS[6];
@@ -557,6 +579,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		
 		case macPANCoordExtendedAddress:
 		{
+			/* Set the PAN Coordinator IEEE Address */
 			uint8_t pan_coord_add[8];
 			pan_coord_add[0] = COORD_IEEE_ADDRESS[7];
 			pan_coord_add[1] = COORD_IEEE_ADDRESS[6];
@@ -575,6 +598,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		
 		case macIeeeAddress:
 		{
+			/* Set the PAN Coordinator Short Address */
 			uint16_t short_add = COORD_SHORT_ADDR;
 			wpan_mlme_set_req(macPANCoordShortAddress,
 										NO_PIB_INDEX,    // Index
@@ -584,6 +608,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		
 		case macPANCoordShortAddress:		
 		{
+			/* Set the PAN Coordinator Short Address */
 			uint8_t short_addr[2];
 
 			short_addr[0] = (uint8_t)COORD_SHORT_ADDR;  /* low byte */
@@ -603,16 +628,17 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 }
 
 /*
- * @brief Callback function usr_mlme_set_conf
+ * @brief Callback function usr_mlme_set_conf will be used after starting the network
  *
  * @param status        Result of requested PIB attribute set operation
  * @param PIBAttribute  Updated PIB attribute
+ *
  */
 static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 {
     if (status != MAC_SUCCESS)
     {
-        // something went wrong; restart
+        /* something went wrong at mlme set request; restart */
         wpan_mlme_reset_req(true);
     }
     else
@@ -621,6 +647,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
         {
             case macShortAddress:
                 {
+					/* set the mac association permission */
                     uint8_t association_permit = true;
 
                     wpan_mlme_set_req(macAssociationPermit, NO_PIB_INDEX, &association_permit);
@@ -629,6 +656,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 
             case macAssociationPermit:
                 {
+					/* Set the MAC Rx on when Idle */
                     bool rx_on_when_idle = true;
 
                     wpan_mlme_set_req(macRxOnWhenIdle, NO_PIB_INDEX, &rx_on_when_idle);
@@ -685,6 +713,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 				
 			case macDefaultKeySource:
                 {
+					/* set the maximum no.of mac security level table entries */
                     uint8_t mac_sec_level_table_entries = 2;
 
                     wpan_mlme_set_req(macSecurityLevelTableEntries,
@@ -695,6 +724,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 
             case macSecurityLevelTableEntries:
                 {
+					/* set the mac security level table for the MAC Data Security */
                     uint8_t mac_sec_level_table[4] = {FRAME_TYPE_DATA,      // FrameType: Data
                                                       CMD_FRAME_ID_NA,      // CommandFrameIdentifier: N/A
                                                      // ZIP_SEC_MIN,          // SecurityMinimum: 5
@@ -710,6 +740,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 
             case macSecurityLevelTable:
                 {
+					/* set the maximum no.of key table entries */
                     uint8_t mac_key_table_entries = 4;
 
                     wpan_mlme_set_req(macKeyTableEntries,
@@ -720,6 +751,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 
             case macKeyTableEntries:
                 {
+					/* MAC Beacon Frame type default mac key table values */
 					uint8_t mac_key_table[43] =
 					{
 						default_key_source[0], // LookupData[0]
@@ -784,9 +816,11 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 
             case macDeviceTableEntries:
                 {
+					/* MAC Device Table entries for the recently associated device */
 	                    static uint8_t Temp = 0;
 	                    uint8_t mac_dev_table[17];
-	                    for (uint16_t i = Temp; i < no_of_assoc_devices; i++) // Temp is used to not update the already device table again
+						/* Temp is used to not update the already device table again */
+	                    for (uint16_t i = Temp; i < no_of_assoc_devices; i++) 
 	                    {
 		                    mac_dev_table[0] = (uint8_t)(DEFAULT_PAN_ID & 0x00FF);
 		                    mac_dev_table[1] = (uint8_t)(DEFAULT_PAN_ID >> 8);
@@ -800,7 +834,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 		                    mac_dev_table[9] = (uint8_t)(device_list[i].ieee_addr >> 40);
 		                    mac_dev_table[10] = (uint8_t)(device_list[i].ieee_addr >> 48);
 		                    mac_dev_table[11] = (uint8_t)(device_list[i].ieee_addr >> 56);
-		                    mac_dev_table[12] = 0;  // Frame counter
+		                    mac_dev_table[12] = 0;  // Initial Frame counter value
 		                    mac_dev_table[13] = 0;
 		                    mac_dev_table[14] = 0;
 		                    mac_dev_table[15] = 0;
@@ -840,7 +874,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
                 break;
 
             default:
-                // undesired PIB attribute; restart
+                /* undesired PIB attribute set request; restart */
                 wpan_mlme_reset_req(true);
                 break;
 		}
