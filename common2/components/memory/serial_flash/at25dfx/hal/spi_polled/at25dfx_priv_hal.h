@@ -44,8 +44,6 @@
 #ifndef AT25DFX_PRIV_HAL_H
 #define AT25DFX_PRIV_HAL_H
 
-#include <port.h>
-
 //! \name Private SPI helpers
 //@{
 
