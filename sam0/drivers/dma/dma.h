@@ -58,6 +58,36 @@ enum dma_priority_level {
 	DMA_PRIORITY_LEVEL_2,
 	/** Priority level 3 */
 	DMA_PRIORITY_LEVEL_3,
+	/** Priority level max */
+	DMA_PRIORITY_LEVEL_N = DMA_PRIORITY_LEVEL_3,
+};
+
+/** CRC Polynomial Type */
+enum crc_polynomial_type {
+	/** CRC16 (CRC-CCITT) */
+	CRC_TYPE_16,
+	/** CRC32 (IEEE 802.3) */
+	CRC_TYPE_32,
+	/** Invalid CRC polynomial type */
+	CRC_TYPE_INVALID,
+};
+
+/** CRC Beat Type */
+enum crc_beat_size {
+	/** Byte bus access */
+	CRC_BEAT_SIZE_BYTE,
+	/** Half-word bus access */
+	CRC_BEAT_SIZE_HWORD,
+	/** Word bus access */
+	CRC_BEAT_SIZE_WORD,
+};
+
+/** Configurations for CRC calculation */
+struct dma_crc_config {
+	/** CRC polynomial type */
+	enum crc_polynomial_type crc_type;
+	/** CRC beat size */
+	enum crc_beat_size crc_size;
 };
 
 /** DMA input actions */
@@ -118,8 +148,8 @@ enum dma_callback_type {
 	DMA_CALLBACK_TRANSFER_ERROR,
 	/** Callback for channel suspend */
 	DMA_CALLBACK_CHANNEL_SUSPEND,
-	/** Max callback num */
-	DMA_CALLBACK_MAX,
+	/** Max callback number */
+	DMA_CALLBACK_N,
 };
 
 /** Configurations for DMA events */
@@ -154,6 +184,8 @@ struct dma_transfer_config {
 	enum dma_priority_level priority;
 	/** CRC enable flag */
 	bool crc;
+	/** CRC calculation configurations */
+	struct dma_crc_config crc_config;
 	/** DMA transfer trigger selection */
 	enum dma_transfer_trigger transfer_trigger;
 	/**DMA peripheral trigger index*/
@@ -162,7 +194,7 @@ struct dma_transfer_config {
 	struct dma_events_config event_config;
 };
 
-/** Forward definition of the dma resource */
+/** Forward definition of the DMA resource */
 struct dma_resource;
 /** Type of the callback function for DMA resource*/
 typedef void (*dma_callback_t)(const struct dma_resource *const resource);
@@ -179,7 +211,7 @@ struct dma_resource {
 	volatile enum status_code job_status;
 	/** Calculated CRC checksum value */
 	uint32_t crc_checksum;
-	/** Transfered data size */
+	/** Transferred data size */
 	uint32_t transfered_size;
 };
 
@@ -256,6 +288,7 @@ static inline void dma_register_callback(struct dma_resource *resource,
 		dma_callback_t callback, enum dma_callback_type type)
 {
 	Assert(resource);
+	Assert(resource->callback);
 
 	resource->callback[type] = callback;
 }
@@ -271,6 +304,7 @@ static inline void dma_unregister_callback(struct dma_resource *resource,
 		enum dma_callback_type type)
 {
 	Assert(resource);
+	Assert(resource->callback);
 
 	resource->callback[type] = NULL;
 }

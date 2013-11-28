@@ -562,7 +562,7 @@ void dma_resume_job(struct dma_resource *resource)
 	Assert(resource->channel_id != DMA_INVALID_CHANNEL);
 
 	/* Get bitmap of the allocated DMA channel */
-	bitmap_channel = 1 << resource->channel_id;
+	bitmap_channel = (1 << resource->channel_id);
 
 	/* Check if channel was suspended */
 	if (resource->job_status != STATUS_SUSPEND) {
@@ -587,5 +587,4 @@ void dma_resume_job(struct dma_resource *resource)
 		/* Job resume timeout */
 		resource->job_status = STATUS_ERR_TIMEOUT;
 	}
-
 }

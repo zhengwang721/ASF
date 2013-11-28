@@ -43,24 +43,17 @@
 #include <asf.h>
 
 //! [setup]
-/** Destination file */
+// [transfer_length]
+#define DATA_LENGTH (1024)
+// [transfer_length]
 
-/** 4 linked transfer descriptor s*/
-#define EXAMPLE_RESOURCE1_LIST_NUM 4
+// [source_memory]
+static uint8_t source_memory[DATA_LENGTH];
+// [source_memory]
 
-#define SOURCE_FILE_SIZE (1024)
-#define DEST_FILE_SIZE (SOURCE_FILE_SIZE * 4)
-
-const uint8_t wave_file[DEST_FILE_SIZE] = { 0 };
-
-/** Source file */
-const uint8_t wave_file1[SOURCE_FILE_SIZE] = {0x5a};
-const uint8_t wave_file2[SOURCE_FILE_SIZE] = {0xa5};
-const uint8_t wave_file3[SOURCE_FILE_SIZE] = {0xaa};
-const uint8_t wave_file4[SOURCE_FILE_SIZE] = {0x55};
-
-
-struct dma_transfer_descriptor transfer_desc[EXAMPLE_RESOURCE1_LIST_NUM];
+// [destination_memory]
+static uint8_t destination_memory[DATA_LENGTH];
+// [destination_memory]
 
 // [transfer_done]
 static volatile bool transfer_is_done = false;
@@ -73,6 +66,7 @@ static void transfer_done( const struct dma_resource* const resource )
 }
 // [_transfer_done]
 
+// [config_dma_resource]
 static void configure_dma_resource(struct dma_resource *resource)
 {
 //! [setup_1]
@@ -87,71 +81,64 @@ static void configure_dma_resource(struct dma_resource *resource)
 	dma_allocate(resource, &config);
 //! [setup_3]
 }
+// [config_dma_resource]
 
-static void setup_transfer_descriptor( void )
+// [setup_dma_transfer_descriptor]
+static void setup_transfer_descriptor( struct dma_transfer_descriptor *descriptor )
 {
-	/* ! [setup_dma_descriptor] */
-	transfer_desc[3].block_transfer_control = DMAC_BTCTRL_VALID |
+	//! [setup_dma_descriptor]
+	descriptor.block_transfer_control = DMAC_BTCTRL_VALID |
 			DMAC_BTCTRL_BEATSIZE_BYTE;
-	transfer_desc[3].block_transfer_count = sizeof(wave_file4);
-	transfer_desc[3].source_address = (uint32_t)wave_file4;
-	transfer_desc[3].destination_address
-		= (uint32_t)(&wave_file[SOURCE_FILE_SIZE * 3]);
-	transfer_desc[3].next_descriptor_address = 0;
-
-	transfer_desc[2].block_transfer_control = DMAC_BTCTRL_VALID |
-			DMAC_BTCTRL_BEATSIZE_BYTE;
-	transfer_desc[2].block_transfer_count = sizeof(wave_file3);
-	transfer_desc[2].source_address = (uint32_t)wave_file3;
-	transfer_desc[2].destination_address
-		= (uint32_t)(&wave_file[SOURCE_FILE_SIZE * 2]);
-	transfer_desc[2].next_descriptor_address = (uint32_t)&transfer_desc[3];
-
-	transfer_desc[1].block_transfer_control = DMAC_BTCTRL_VALID |
-			DMAC_BTCTRL_BEATSIZE_BYTE;
-	transfer_desc[1].block_transfer_count = sizeof(wave_file2);
-	transfer_desc[1].source_address = (uint32_t)wave_file2;
-	transfer_desc[1].destination_address
-		= (uint32_t)(&wave_file[SOURCE_FILE_SIZE]);
-	transfer_desc[1].next_descriptor_address = (uint32_t)&transfer_desc[2];
-
-	transfer_desc[0].block_transfer_control = DMAC_BTCTRL_VALID |
-			DMAC_BTCTRL_BEATSIZE_BYTE;
-	transfer_desc[0].block_transfer_count = sizeof(wave_file1);
-	transfer_desc[0].source_address = (uint32_t)wave_file1;
-	transfer_desc[0].destination_address = (uint32_t)wave_file;
-	transfer_desc[0].next_descriptor_address = (uint32_t)&transfer_desc[1];
-//! [setup_dma_descriptor]
+	descriptor.block_transfer_count = sizeof(source_memory);
+	descriptor.source_address = (uint32_t)source_memory;
+	descriptor.destination_address = (uint32_t)destination_memory;
+	descriptor.next_descriptor_address = 0;
+	//! [setup_dma_descriptor]
 }
+// [setup_dma_transfer_descriptor]
 
 //! [setup]
 
 int main(void)
 {
 	struct dma_resource example_resource;
+	struct dma_transfer_descriptor example_descriptor;
 
 	system_init();
 
-	//! [setup_init]
+	//! [setup_dma_resource]
 	configure_dma_resource(&example_resource);
+	//! [setup_dma_resource]
 
+	//! [setup_transfer_descriptor]
 	setup_transfer_descriptor();
-	//! [setup_init]
+	//! [setup_transfer_descriptor]
 
-	//! [main_callback_register]
+	//! [setup_callback_register]
 	dma_register_callback(&example_resource, transfer_done,
 			DMA_CALLBACK_TRANSFER_DONE);
-	dma_enable_callback(&example_resource, DMA_CALLBACK_TRANSFER_DONE);
-	//! [main_callback_register]
+	//! [setup_callback_register]
 
-	//! [main]
-	dma_transfer_job(&example_resource, transfer_desc);
+	//! [setup_enable_callback]
+	dma_enable_callback(&example_resource, DMA_CALLBACK_TRANSFER_DONE);
+	//! [setup_enable_callback]
+
+	//! [setup_source_memory_content]
+	for (uint32_t i = 0; i < DATA_LENGTH; i++) {
+		source_memory[i] = i;
+	}
+	//! [setup_source_memory_content]
 	
+	//! [main]
 	//! [main_1]
+	dma_transfer_job(&example_resource, &example_descriptor);
+	//! [main_1]
+	
+	//! [main_2]
 	while (!transfer_is_done) {
 		/* Wait for transfer done */
 	}
-	/* ! [main_1] */
+	/* ! [main_2] */
 
 	while (true) {
 		/* Nothing to do */
