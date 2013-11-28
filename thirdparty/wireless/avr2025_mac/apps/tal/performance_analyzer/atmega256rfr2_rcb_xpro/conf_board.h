@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief Example specific board configuration file
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,19 +40,11 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
+#define ZIGBIT_EXT
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#define IC_TYPE             (0x01)
 
-#include "system_sam3n.h"
 
-#define LED0_PIO		PIOA
-#define LED0_MASK		(0x01 << 23)
-
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
-
-/** Usart Hw ID used by the console (UART0). */
-#define CONSOLE_UART_ID          ID_UART0
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_BOARD_H */
