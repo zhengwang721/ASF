@@ -395,6 +395,7 @@
 //@}
 
 #define CONSOLE_UART              UART1
+#define CONSOLE_UART_ID           ID_UART1
 
 /** UART1 pins (UTXD1 and URXD1) definitions, PB2,PB3. */
 #define PINS_UART1                (PIO_PB2A_URXD1 | PIO_PB3A_UTXD1)

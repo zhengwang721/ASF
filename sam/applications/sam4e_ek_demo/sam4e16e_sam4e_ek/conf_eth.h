@@ -47,10 +47,10 @@
 #include "gmac.h"
 
 /** Number of buffer for RX */
-#define GMAC_RX_BUFFERS  16
+#define GMAC_RX_BUFFERS  4
 
 /** Number of buffer for TX */
-#define GMAC_TX_BUFFERS  16
+#define GMAC_TX_BUFFERS  6
 
 /** MAC PHY operation max retry count */
 #define MAC_PHY_RETRY_MAX 1000000
@@ -84,5 +84,5 @@
 #define ETHERNET_CONF_NET_MASK3                       0
 
 /** Ethernet MII/RMII mode */
-#define ETH_PHY_MODE  GMAC_PHY_MII
+#define ETH_PHY_MODE                                  GMAC_PHY_MII
 #endif /* CONF_EMAC_H_INCLUDED */
