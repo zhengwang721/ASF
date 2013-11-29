@@ -95,7 +95,9 @@ enum status_code _sercom_get_sync_baud_val(
 enum status_code _sercom_get_async_baud_val(
 		const uint32_t baudrate,
 		const uint32_t peripheral_clock,
-		uint16_t *const baudval);
+		uint16_t *const baudval
+		enum sercom_asynchronous_operation_mode mode,
+		enum sercom_asynchronous_sample_num sample_num);
 
 uint32_t _sercom_get_default_pad(
 		Sercom *const sercom_module,
