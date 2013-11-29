@@ -20,7 +20,8 @@
 				</info>
 
 				<info type="description" value="pdf">
-					This document describes how to use the Pin Multiplexer on the SAM D20, both the ASF driver and the peripheral itself.
+					This document describes how to use the Pin Multiplexer on the
+					SAM D20, both the ASF driver and the peripheral itself.
 				</info>
 
 				<build type="include-path" value="."/>
@@ -30,6 +31,7 @@
 
 				<build type="doxygen-entry-point" value="asfdoc_sam0_system_pinmux_group"/>
 				<build type="doxygen-example-path" value="quick_start"/>
+				<build type="doxygen-quick-start" value="asfdoc_sam0_system_pinmux_exqsg"/>
 
 				<build type="header-file" value="quick_start/qs_pinmux_basic.h"/>
 
@@ -59,7 +61,8 @@
 				</info>
 
 				<info type="description" value="pdf">
-					This document describes how to use the Pin Multiplexer on the SAM D21, both the ASF driver and the peripheral itself.
+					This document describes how to use the Pin Multiplexer on the
+					SAM D21, both the ASF driver and the peripheral itself.
 				</info>
 
 				<build type="include-path" value="."/>
@@ -69,6 +72,7 @@
 
 				<build type="doxygen-entry-point" value="asfdoc_sam0_system_pinmux_group"/>
 				<build type="doxygen-example-path" value="quick_start"/>
+				<build type="doxygen-quick-start" value="asfdoc_sam0_system_pinmux_exqsg"/>
 
 				<build type="header-file" value="quick_start/qs_pinmux_basic.h"/>
 
