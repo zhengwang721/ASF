@@ -139,6 +139,7 @@
 #define SERCOM1_DMAC_ID_RX          3
 #define SERCOM1_DMAC_ID_TX          4
 #define SERCOM1_GCLK_ID_CORE        21
+#define SERCOM1_GCLK_ID_SLOW        19
 #define SERCOM1_INT_MSB             6
 
 #endif /* _SAMD21_SERCOM1_INSTANCE_ */
