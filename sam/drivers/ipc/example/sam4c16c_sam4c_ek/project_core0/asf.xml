@@ -12,8 +12,8 @@
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<generator value="doxygen"/>
-		<config name="config.compiler.iarewarm.input_image_file" value="$PROJ_DIR$\..\..\project_core1\iar\SRAM1_BIN.bin"/>
-		<config name="config.compiler.iarewarm.input_image_symbol" value="SRAM1_BIN"/>
+		<config name="config.compiler.iarewarm.input_image_file" value="$PROJ_DIR$\..\..\project_core1\iar\core1_image.bin"/>
+		<config name="config.compiler.iarewarm.input_image_symbol" value="core1_image"/>
 		<device-support value="atsam4c16c_0"/>
 	</project>
 </asf>

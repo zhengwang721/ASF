@@ -89,21 +89,13 @@
 #include <stdio.h>
 #include <string.h>
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
-
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- Interprocessor Communication Example (Core 0) --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
-static bool is_core1_signal = false;
-static SHARED_MEMORY_TYPE *cnt = SHARED_MEMORY_ADDR;
+volatile static bool is_core1_signal = false;
+volatile static SHARED_MEMORY_TYPE *cnt = SHARED_MEMORY_ADDR;
 
 /**
  *  \brief Handler for IPC interrupt request.
@@ -112,14 +104,28 @@ static void ipc_core1_signal_handler(Ipc *p, enum ipc_interrupt_source mask)
 {
 	is_core1_signal = true;
 	LED_Off(LED0);
-	printf("Got IRQ signal from core1 %x\r\n", *cnt);
+	printf("Got IRQ signal from core1 %d\r\n", (int)*cnt);
 	ipc_clear_command(p, mask);
 }
 
-static void fill_sram1_memory(void)
+/* Extern symbols to locate the binary address of core1 image  */
+#if (defined __GNUC__)
+extern uint8_t core1_image_start;
+extern uint8_t core1_image_end;
+#elif defined ( __ICCARM__ )
+extern uint8_t core1_image;
+#endif
+
+static void copy_core1_image_into_sram1(void)
 {
-	extern char SRAM1_BIN;
-	memcpy((char*)IRAM1_ADDR, (char*)&SRAM1_BIN,IRAM1_SIZE);
+#if (defined __GNUC__)
+	memcpy((char *)IRAM1_ADDR,(char *)&core1_image_start,
+			(int)&core1_image_end - (int)&core1_image_start);
+#elif defined ( __ICCARM__ )
+	memcpy((char *)IRAM1_ADDR,(char *)&core1_image, IRAM1_SIZE);
+#else
+#error This compiler is not supported for now.
+#endif
 }
 
 /**
@@ -157,7 +163,7 @@ static void configure_ipc(void)
  */
 int main(void)
 {
-	/* Initilize the system */
+	/* Initialize the system */
 	sysclk_init();
 	board_init();
 
@@ -167,7 +173,7 @@ int main(void)
 	/* Output example information. */
 	puts(STRING_HEADER);
 
-	fill_sram1_memory();
+	copy_core1_image_into_sram1();
 	rstc_deassert_reset_of_coprocessor(RSTC, RSTC_CPMR_CPROCEN);
 
 	while (1) {
@@ -178,11 +184,3 @@ int main(void)
 		}
 	}
 }
-
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond

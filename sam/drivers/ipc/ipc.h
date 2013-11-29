@@ -263,10 +263,9 @@ void ipc_disable(Ipc *p_ipc);
  *   NVIC_EnableIRQ(IPC0_IRQn);
  *
  *   // Load the coprocessor program
- *   extern char SRAM1_BIN;
- *   memcpy((char*)IRAM1_ADDR, (char*)&SRAM1_BIN,IRAM1_SIZE);
+ *   copy_core1_image_into_sram1();
  *   // Deasserts Coprocessor reset
- *   REG_RSTC_CPMR |= (RSTC_CPMR_CPROCEN | RSTC_CPMR_CPKEY(0x5AU));
+ *   rstc_deassert_reset_of_coprocessor(RSTC, RSTC_CPMR_CPROCEN);
  *
  *   while (1);
  * \endcode

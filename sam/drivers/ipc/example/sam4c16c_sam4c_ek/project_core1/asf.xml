@@ -16,7 +16,7 @@
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
 		<config name="config.compiler.iarewarm.debugger_use_flash_loader" value="no"/>
-		<config name="config.compiler.iarewarm.specified_bin_file_name" value="./../../SRAM1_BIN.bin"/>
+		<config name="config.compiler.iarewarm.specified_bin_file_name" value="./../../core1_image.bin"/>
 		<build type="distribute" subtype="file" value="SAM4C.JLinkScript"/>
 		<device-support value="atsam4c16c_1"/>
 	</project>

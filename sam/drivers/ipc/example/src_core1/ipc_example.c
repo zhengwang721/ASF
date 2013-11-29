@@ -88,21 +88,13 @@
 #include <led.h>
 #include <conf_uart_serial.h>
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
-
 #define STRING_EOL    "\r\n\0"
 #define STRING_HEADER "-- Interprocessor Communication Example (Core 1) --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
-static bool is_core0_signal = false;
-static SHARED_MEMORY_TYPE *cnt = SHARED_MEMORY_ADDR;
+volatile static bool is_core0_signal = false;
+volatile static SHARED_MEMORY_TYPE *cnt = SHARED_MEMORY_ADDR;
 
 /**
  *  \brief Handler for IPC interrupt request.
@@ -177,11 +169,3 @@ int main(void)
 		}
 	}
 }
-
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
