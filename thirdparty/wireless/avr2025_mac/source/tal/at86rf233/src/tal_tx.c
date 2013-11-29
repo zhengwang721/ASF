@@ -79,6 +79,9 @@
 
 /* === GLOBALS ============================================================= */
 
+static uint8_t tal_sw_retry_count;
+static bool tal_sw_retry_no_csma_ca;
+
 static trx_trac_status_t trx_trac_status;
 
 /* === PROTOTYPES ========================================================== */
@@ -321,6 +324,11 @@ void send_frame(csma_mode_t csma_mode, bool tx_retries)
 	if ((csma_mode == NO_CSMA_NO_IFS) || (csma_mode == NO_CSMA_WITH_IFS)) {
 		pal_trx_bit_write(SR_MAX_CSMA_RETRIES, 7); /* immediate
 		                                            * transmission */
+		if(tx_retries)
+		{
+			tal_sw_retry_count = tal_pib.MaxFrameRetries;
+			tal_sw_retry_no_csma_ca = true;
+		}
 	} else {
 		pal_trx_bit_write(SR_MAX_CSMA_RETRIES, tal_pib.MaxCSMABackoffs);
 	}
@@ -466,8 +474,26 @@ void handle_tx_end_irq(bool underrun_occured)
 #endif  /* BEACON_SUPPORT */
 		/* Trx has handled the entire transmission incl. CSMA */
 		{
-			tal_state = TAL_TX_DONE; /* Further handling is done by
-			                          * tx_done_handling() */
+			if(tal_sw_retry_no_csma_ca && tal_sw_retry_count && TRAC_NO_ACK == trx_trac_status)
+			{
+				tal_trx_status_t trx_status;
+				do {
+					trx_status = set_trx_state(CMD_TX_ARET_ON);
+				} while (trx_status != TX_ARET_ON);
+				/* Toggle the SLP_TR pin triggering transmission. */
+				PAL_SLP_TR_HIGH();
+				PAL_WAIT_65_NS();
+				PAL_SLP_TR_LOW();
+				if(--tal_sw_retry_count == 0)
+				{
+					tal_sw_retry_no_csma_ca = false;
+				}
+			}
+			else
+			{
+				tal_state = TAL_TX_DONE; /* Further handling is done by
+			                        * tx_done_handling() */
+			}
 		}
 	}
 
