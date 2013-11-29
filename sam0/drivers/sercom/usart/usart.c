@@ -98,18 +98,6 @@ static enum status_code _usart_check_config(
 	enum sercom_asynchronous_operation_mode mode = SERCOM_ASYNCHRONOUS_ARITHMETIC;
 	enum sercom_asynchronous_sample_num sample_num = SERCOM_ASYNCHRONOUS_16X;
 
-#ifdef FEATURE_USART_IRDA
-	if(config->encoding_format_enable) {
-		config->sample_rate = USART_SAMPLE_RATE_16X_ARITHMETIC;
-	}
-#endif
-
-#ifdef FEATURE_USART_LIN_SLAVE
-	if(config->lin_slave_enable) {
-		config->sample_rate = USART_SAMPLE_RATE_16X_FRACTIONAL;
-	}
-#endif
-
 #ifdef FEATURE_USART_OVER_SAMPLE
 	switch (config->sample_rate) {
 		case USART_SAMPLE_RATE_16X_ARITHMETIC:
@@ -179,13 +167,13 @@ static enum status_code _usart_check_config(
 		(uint32_t)config->mux_setting |
 		(uint32_t)config->transfer_mode |
 		SERCOM_USART_CTRLA_MODE(0) |
-	#ifdef FEATURE_USART_OVER_SAMPLE
+#ifdef FEATURE_USART_OVER_SAMPLE
 		config->sample_adjustment |
 		config->sample_rate |
-	#endif
-	#ifdef FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
+#endif
+#ifdef FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
 		(config->immediate_buffer_overflow_notification << SERCOM_USART_CTRLA_IBON_Pos) |
-	#endif
+#endif
 		(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
 
 	/* set enable bit */
@@ -214,22 +202,22 @@ static enum status_code _usart_check_config(
 
 	/* Check parity mode bits */
 	if (config->parity != USART_PARITY_NONE) {
-	#ifdef FEATURE_USART_LIN_SLAVE
+#ifdef FEATURE_USART_LIN_SLAVE
 		if(config->lin_slave_enable) {
 			ctrla |= SERCOM_USART_CTRLA_FORM(0x5);
 		}
-	#else
+#else
 		ctrla |= SERCOM_USART_CTRLA_FORM(1);
-	#endif
+#endif
 		ctrlb |= config->parity;
 	} else {
-	#ifdef FEATURE_USART_LIN_SLAVE
+#ifdef FEATURE_USART_LIN_SLAVE
 		if(config->lin_slave_enable) {
 			ctrla |= SERCOM_USART_CTRLA_FORM(0x4);
 		}
-	#else
+#else
 		ctrla |= SERCOM_USART_CTRLA_FORM(0);
-	#endif
+#endif
 	}
 
 	if (usart_hw->CTRLA.reg == ctrla && usart_hw->CTRLB.reg == ctrlb) {
@@ -265,18 +253,8 @@ static enum status_code _usart_set_config(
 	uint32_t ctrlb = 0;
 	uint16_t baud  = 0;
 
-#ifdef FEATURE_USART_IRDA
-	if(config->encoding_format_enable) {
-		config->sample_rate = USART_SAMPLE_RATE_16X_ARITHMETIC;
-		usart_hw->RXPL.reg = config->receive_pulse_length;
-	}
-#endif
-
-#ifdef FEATURE_USART_LIN_SLAVE
-	if(config->lin_slave_enable) {
-		config->sample_rate = USART_SAMPLE_RATE_16X_FRACTIONAL;
-	}
-#endif
+	enum sercom_asynchronous_operation_mode mode = SERCOM_ASYNCHRONOUS_ARITHMETIC;
+	enum sercom_asynchronous_sample_num sample_num = SERCOM_ASYNCHRONOUS_16X;
 
 #ifdef FEATURE_USART_OVER_SAMPLE
 	switch (config->sample_rate) {
@@ -332,11 +310,11 @@ static enum status_code _usart_set_config(
 			if (config->use_external_clock) {
 				status_code =
 						_sercom_get_async_baud_val(config->baudrate,
-							config->ext_clock_freq, &baud);
+							config->ext_clock_freq, &baud, mode, sample_num);
 			} else {
 				status_code =
 						_sercom_get_async_baud_val(config->baudrate,
-							system_gclk_chan_get_hz(gclk_index), &baud);
+							system_gclk_chan_get_hz(gclk_index), &baud, mode, sample_num);
 			}
 
 			break;
@@ -347,6 +325,12 @@ static enum status_code _usart_set_config(
 		/* Abort */
 		return status_code;
 	}
+
+#ifdef FEATURE_USART_IRDA
+	if(config->encoding_format_enable) {
+		usart_hw->RXPL.reg = config->receive_pulse_length;
+	}
+#endif
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
@@ -380,22 +364,22 @@ static enum status_code _usart_set_config(
 
 	/* Check parity mode bits */
 	if (config->parity != USART_PARITY_NONE) {
-	#ifdef FEATURE_USART_LIN_SLAVE
+#ifdef FEATURE_USART_LIN_SLAVE
 		if(config->lin_slave_enable) {
 			ctrla |= SERCOM_USART_CTRLA_FORM(0x5);
 		}
-	#else
+#else
 		ctrla |= SERCOM_USART_CTRLA_FORM(1);
-	#endif
+#endif
 		ctrlb |= config->parity;
 	} else {
-	#ifdef FEATURE_USART_LIN_SLAVE
+#ifdef FEATURE_USART_LIN_SLAVE
 		if(config->lin_slave_enable) {
 			ctrla |= SERCOM_USART_CTRLA_FORM(0x4);
 		}
-	#else
+#else
 		ctrla |= SERCOM_USART_CTRLA_FORM(0);
-	#endif
+#endif
 	}
 
 	/* Set run mode during device sleep */
@@ -690,6 +674,24 @@ enum status_code usart_read_wait(
 
 			return STATUS_ERR_BAD_DATA;
 		}
+#ifdef FEATURE_USART_LIN_SLAVE
+		else if (error_code & SERCOM_USART_STATUS_ISF) {
+			/* Clear flag by writing 1 to it  and
+			 *  return with an error code */
+			usart_hw->STATUS.reg |= SERCOM_USART_STATUS_ISF;
+
+			return STATUS_ERR_PROTOCOL;
+		}
+#endif
+#ifdef FEATURE_USART_COLLISION_DECTION
+		else if (error_code & SERCOM_USART_STATUS_COLL) {
+			/* Clear flag by writing 1 to it
+			 *  return with an error code */
+			usart_hw->STATUS.reg |= SERCOM_USART_STATUS_COLL;
+
+			return STATUS_ERR_PACKET_COLLISION;
+		}
+#endif
 	}
 
 	/* Read data from USART module */

@@ -69,8 +69,8 @@ extern "C" {
  */
 enum sercom_asynchronous_operation_mode {
 	SERCOM_ASYNCHRONOUS_ARITHMETIC = 0,
-	SERCOM_ASYNCHRONOUS_FRACTIONAL,	
-}
+	SERCOM_ASYNCHRONOUS_FRACTIONAL,
+};
 
 /**
  * \brief sercom asynchronous samples per bit
@@ -81,7 +81,7 @@ enum sercom_asynchronous_sample_num {
 	SERCOM_ASYNCHRONOUS_3X = 3,
 	SERCOM_ASYNCHRONOUS_8X = 8,
 	SERCOM_ASYNCHRONOUS_16X = 16,
-}
+};
 
 enum status_code sercom_set_gclk_generator(
 		const enum gclk_generator generator_source,
@@ -95,7 +95,7 @@ enum status_code _sercom_get_sync_baud_val(
 enum status_code _sercom_get_async_baud_val(
 		const uint32_t baudrate,
 		const uint32_t peripheral_clock,
-		uint16_t *const baudval
+		uint16_t *const baudval,
 		enum sercom_asynchronous_operation_mode mode,
 		enum sercom_asynchronous_sample_num sample_num);
 

@@ -118,8 +118,8 @@ enum status_code _sercom_get_async_baud_val(
 		baud_calculated = (65536 * scale) >> SHIFT;
 	} else if(mode == SERCOM_ASYNCHRONOUS_FRACTIONAL) {
 		for(baud_fp = 0; baud_fp < 8; baud_fp++) {
-			baud_int = 8 *(uint64_t)peripheral_clock / ((uint64_t)baudrate * sample_num)  - baud_fp);
-			baud_int = baud_int / 8
+			baud_int = 8 * (uint64_t)peripheral_clock / ((uint64_t)baudrate * sample_num)  - baud_fp;
+			baud_int = baud_int >> 3;
 			if(baud_int < 8192) {
 				break;
 			}
@@ -130,6 +130,7 @@ enum status_code _sercom_get_async_baud_val(
 	*baudval = baud_calculated;
 	return STATUS_OK;
 }
+#endif
 
 /**
  * \brief Set GCLK channel to generator.
