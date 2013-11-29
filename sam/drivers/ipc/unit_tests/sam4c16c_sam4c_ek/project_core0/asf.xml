@@ -1,0 +1,17 @@
+<asf xmlversion="1.0">
+	<project caption="SAM4C Unit Tests - Core 0" id="sam.drivers.ipc.unit_tests_core0.sam4c_ek" type="unit-test">
+		<build type="include-path" value="."/>
+		<require idref="sam.drivers.ipc.unit_tests.sam4c_ek.conf_src_common"/>
+		<require idref="sam.drivers.ipc.unit_tests.sam4c_ek.conf_src_core0"/>
+		<require idref="sam.drivers.ipc.unit_tests_core0"/>
+		<require idref="board.sam4c_ek"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<generator value="doxygen"/>
+		<config name="config.compiler.iarewarm.dlib" value="full"/>
+		<config name="config.compiler.iarewarm.input_image_file" value="$PROJ_DIR$\..\..\project_core1\iar\SRAM1_BIN.bin"/>
+		<config name="config.compiler.iarewarm.input_image_symbol" value="SRAM1_BIN"/>
+		<device-support value="atsam4c16c_0"/>
+	</project>
+</asf>
