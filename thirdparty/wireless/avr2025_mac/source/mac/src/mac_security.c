@@ -72,18 +72,36 @@
 /* Security Control Field: Key Identifier Field position */
 #define SEC_CTRL_KEY_ID_FIELD_POS       (3)
 
+/* Security Control : Security Enabled Mask */
 #define SEC_CTRL_SEC_EN_MASK            (0x08)
 
+/* Frame Control Field: Frame Type Identifier mask */
 #define FCF_FRAME_TYPE_MASK             (0x03)
 
+/* Frame Counter MAX Value used to identify the 
+ * frame counter overflow 
+ */
 #define FRAME_COUNTER_MAX_VAL           (0xFFFFFFFF)
 
+/* Security Control Filed : Length */
 #define SEC_CTRL_FLD_LEN                (0x01)
+
+/* Frame Counter Size or length */
 #define FRAME_COUNTER_LEN               (0x04)
+
+/* IEEE Address Len */
 #define IEEE_ADDR_LEN                   (0x08)
+
+/* CRC Calculation Output Length */
 #define CRC_LEN                         (0x02)
+
+/* GTS Super Frame specification Length */
 #define SUPER_FRAME_SPEC_LEN			(0x02)
+
+/* GTS Frame Address Specification Length */
 #define GTS_ADDR_SPEC_LEN				(0x01)
+
+/* Indirect Data Pending Address Specification Length */
 #define PENDING_ADDR_SPEC_LEN			(0x01)
 
 /* key id mode and key identifier macros */
@@ -97,10 +115,14 @@
 #define KEY_ID_LEN_MODE_2               (0x05)
 #define KEY_ID_LEN_MODE_3               (0x09)
 
+/* MAC Security : Look Up Data Size and macros */
 #define FIVE_OCTET_LOOK_UP              (0x00)
 #define NINE_OCTET_LOOK_UP              (0x01)
 
+/* 16-bit Short Address Maximum usage Value */
 #define SHORT_ADDR_MAX                  (0xFFFD)
+
+/* 16-bit Short Address minimum Value */
 #define SHORT_ADDR_MIN                  (0x0000)
 #define NO_SHORT_ADDR                   (0xFFFE)
 
@@ -110,6 +132,7 @@
 #define LOOK_UP_SIZE_5                    (0x05)
 #define LOOK_UP_SIZE_9                    (0x09)
 
+/* FCF Position in the MAC Header */
 #define FCF_POS                          (0x01)
 
 /* === Globals ============================================================= */
@@ -154,14 +177,14 @@ static retval_t incoming_key_usage_policy(mac_key_table_t *key_desc,
 /* === Implementation ====================================================== */
 
 /* --- Helper Functions ---------------------------------------------------- */
-/*
- * @brief Gets the length of the Key Identifier field
+/** @brief Gets the length of the Key Identifier field
  *
- * This function returns the length of the Auxiliary Security Header
+ *  This function returns the length of the Auxiliary Security Header
  *
- * @param tx_frame Frame information structure of current frame
+ *  @param pmdr Frame information structure of current frame
  *
- * @return Length of Auxiliary Security Header
+ *  @return Length of Auxiliary Security Header
+ *  
  */
 
 static inline uint8_t sec_additional_len(mcps_data_req_t *pmdr)
@@ -179,17 +202,16 @@ static inline uint8_t sec_additional_len(mcps_data_req_t *pmdr)
 	return len;
 }
 
-/*
- * @brief Gets the length of the Key Identifier field
+/** @brief Gets the length of the Key Identifier field
  *
- * This function returns the length of the Key Identifier field
- * within the Auxiliary Security Header of a secured frame based
- * on the Key Identifier Mode.
+ *  This function returns the length of the Key Identifier field
+ *  within the Auxiliary Security Header of a secured frame based
+ *  on the Key Identifier Mode.
  *
- * @param key_id_mode Key Identifier Mode
+ *  @param key_id_mode Key Identifier Mode
  *
- * @return Length of Key Identifier field in octets.
- * @ToDo Check if lookup table implementation needs less footprint
+ *  @return Length of Key Identifier field in octets. 
+ *  
  */
 uint8_t get_key_id_field_len(uint8_t key_id_mode)
 {
@@ -213,16 +235,15 @@ uint8_t get_key_id_field_len(uint8_t key_id_mode)
     return (len_field);
 }
 
-/**
- * @brief Calculates the length of the MIC
+/** @brief Calculates the length of the MIC
  *
- * This function returns the length of the MIC depending on the given security
- *level
+ *  This function returns the length of the MIC depending on the given security
+ *  level
  *
- * @param security_level Security Level of current frame
+ *  @param security_level Security Level of current frame
  *
- * @return Length of MIC in octets.
- * @ToDo Check if lookup table implementation needs less footprint
+ *  @return Length of MIC in octets.
+ *  
  */
 static uint8_t get_mic_length(uint8_t security_level)
 {
@@ -252,12 +273,25 @@ static uint8_t get_mic_length(uint8_t security_level)
     return mic_len;
 }
 
+/** @brief Create the nonce
+ *  
+ *  This function is used to create the nonce using 
+ *  frame counter for replay protection 
+ *  with unique IEEE address and security 
+ *  levels
+ *  
+ *  @param ieee_addr IEEE Address of the destination
+ *  @param frame_cnt Frame Counter
+ *  @param security_level Security Level
+ *  @param nonce pointer to store the nonce
+ *   
+ */
 static void create_nonce(uint8_t *ieee_addr, uint8_t *frame_cnt,
 		uint8_t security_level, uint8_t *nonce)
 {
 	/*
 	 * Create Nonce - Attentation: byte order is inverse in comparison to
-	 *RF4CE
+	 * RF4CE
 	 * RF4CE: Little endian
 	 */
 	uint8_t *ptr;
@@ -279,20 +313,18 @@ static void create_nonce(uint8_t *ieee_addr, uint8_t *frame_cnt,
 
 /* --- Outgoing Security --------------------------------------------------- */
 
-/*
- * @brief Generates Auxiliary Security Header fields
+/** @brief Generates Auxiliary Security Header fields
  *
- * This function generates the required fields of the
- * Auxiliary Security Header of a secured frame based
- * on the actual security parameter.
+ *  This function generates MAC Frame 
+ *  Auxiliary Security Header of a secured frame based
+ *  on the given security parameter.
  *
- * @param tx_frame Frame information structure of current frame
- * @param security_level Security Level of current frame
- * @param key_id_mode Key Identifier Mode of current frame
- * @param key_source Key Source of current frame
- * @param key_index Key Index of current frame
+ * @param frame_ptr Frame information structure of outgoing mac frame
+ * @param pmdr mcps_data_req_t struct pointer of mcps data frame
+ * @param frame_len frame length of current frame after appending the aux header
  *
- * @return Status of extraction of Auxiliary Security Header fields
+ * @return MAC_COUNTER_ERROR, MAC_SUCCESS
+ *
  */
 retval_t mac_build_aux_sec_header(uint8_t **frame_ptr, mcps_data_req_t *pmdr,
 		uint8_t *frame_len)
@@ -343,19 +375,6 @@ retval_t mac_build_aux_sec_header(uint8_t **frame_ptr, mcps_data_req_t *pmdr,
     }
     return MAC_SUCCESS;
 }
-
-
-/*
- * @brief Secures MAC frame
- *
- * This function secures the given MAC frame.
- *
- * @param tx_frame Frame information structure of current frame
- * @param security_level Security Level of current frame
- * @param key_id_mode Key Identifier Mode
- *
- * @return retval_t MAC_SUCCESS or MAC_UNSUPPORTED_SECURITY
- */
 
 
 /** Test vectors for Testing the MAC Security as per IEEE 802.15.4 2011 Spec */
@@ -413,10 +432,22 @@ retval_t mac_build_aux_sec_header(uint8_t **frame_ptr, mcps_data_req_t *pmdr,
 #endif	
 #endif
 
-
+/** @brief Secures Outgoing MAC frames
+ *
+ *  This function secures the given MAC frame.
+ *
+ *  @param frame Outgoing MAC Frame information
+ *  @param mac_payload_ptr mac payload pointer
+ *  @param pmdr mcps data request structure
+ *
+ *  @return retval_t MAC_SUCCESS or MAC_UNSUPPORTED_SECURITY
+ *  
+ */
 retval_t mac_secure(frame_info_t *frame, uint8_t *mac_payload_ptr,
 		mcps_data_req_t *pmdr)
 {
+
+/* Test Vector for testing the security module */
 #ifdef MAC_SECURITY_TEST_VECTOR
 {
 	create_nonce((uint8_t *)&IeeeAddress, (uint8_t *)&FrameCounter, SecurityLevel, nonce_test);
@@ -541,15 +572,15 @@ retval_t mac_secure(frame_info_t *frame, uint8_t *mac_payload_ptr,
 	return MAC_SUCCESS;
 }
 
-/*
- * @brief This function retrieves the  key descriptor for the outgoing procedure
+/** @brief This function retrieves the  key descriptor for the outgoing procedure
+ *  IEEE Spec Section 7.5.8.2.2
+ *  
+ *  @param tx_frame Frame information structure of received frame
+ *  @param Pointer to the key descriptor
  *
- * @param tx_frame Frame information structure of current frame
- * @param Pointer to the key descriptor
+ *  @return retval_t MAC_SUCCESS or MAC_UNSUPPORTED_SECURITY or MAC_UNAVAILABLE_KEY
  *
- * @return retval_t MAC_SUCCESS or MAC_UNSUPPORTED_SECURITY or MAC_UNAVAILABLE_KEY
  */
-// 7.5.8.2.2
 static inline retval_t outgoing_key_retrieval(mcps_data_req_t *pmdr, mac_key_table_t **key_desc)
 {
 	uint8_t key_lookup_data_size;
@@ -675,21 +706,19 @@ static inline retval_t outgoing_key_retrieval(mcps_data_req_t *pmdr, mac_key_tab
 
 
 /**
- * @brief Handles unsecuring of MAC frame
+ * @brief Handles Decrypt the received secure MAC frame
  *
- * This function handles the complete unsecuring of a MAC frame.
+ * This function handles the complete Decryption procedure of a received frame.
  * This includes the extraction of the Auxiliary Security Header and
  * the actual frame decryption.
  *
- * @param[in] tx_frame Frame information structure of current frame
- * @param[in] security_level Security Level of current frame
- * @param[in] key_id_mode Key Identifier Mode of current frame
- * @param[in] key_source Key Source of current frame
- * @param[in] key_index Key Index of current frame
- * @param[out] cur_data_frame_len Current length of frame before applying
- *security
+ * @param mac_parse_data_buf Frame information structure of current frame
+ * @param mpdu Pointer to the MAC Header
+ * @param mac_payload Pointer to the MAC payload
+ * @param payload_index Key payload index pointer
  *
- * @return Status of extraction of Auxiliary Security Header fields
+ * @return Status of extraction of MAC Secure frame to Unsecured frame
+ 
  */
 retval_t mac_unsecure(parse_t *mac_parse_data_buf, uint8_t *mpdu,
 		uint8_t *mac_payload, uint8_t *payload_index)
@@ -725,19 +754,16 @@ retval_t mac_unsecure(parse_t *mac_parse_data_buf, uint8_t *mpdu,
 }
 
 
-/*
- * @brief Generates Auxiliary Security Header fields
+/** @brief Parse the Auxiliary Security Header info fields
  *
- * This function extracts the actual security parameters
- * from the Auxiliary Security Header of a received secured frame.
+ *  This function extracts the actual security parameters
+ *  from the received MAC secured frame.
  *
- * @param[in] mac_parse_data Parsed information of the received frame
- * @param[out] security_level Extracted Security Level of received frame
- * @param[out] key_id_mode Extracted Key Identifier Mode of received frame
- * @param[out] key_source Extracted Key Source of received frame
- * @param[out] key_index Extracted Key Index of received frame
+ *  @param mac_parse_data Parsed information of the received frame
+ *  @param mac_payload incoming frame mac payload pointer
  *
- * @return Status of generation of Auxiliary Security Header fields
+ *  @return MAC_UNSUPPORTED_LEGACY, MAC_UNSUPPORTED_SECURITY, MAC_SUCCESS
+ *  
  */
 static inline retval_t parse_aux_sec_header(parse_t *mac_parse_data_instance,
 		uint8_t *mac_payload)
@@ -780,7 +806,7 @@ static inline retval_t parse_aux_sec_header(parse_t *mac_parse_data_instance,
  *
  * This function unsecures the given MAC frame.
  *
- * @param mac_parse_data Frame information structure of current frame
+ * @param mac_parse_data Frame information structure of current secured frame
  * @param security_level Security Level of current frame
  *
  * @return retval_t MAC_SUCCESS, MAC_UNSUPPORTED_SECURITY or MAC_SECURITY_ERROR
@@ -943,6 +969,19 @@ static inline retval_t unsecure_frame(parse_t *mac_parse_data_buf, uint8_t *mpdu
     return MAC_SUCCESS;
 }
 
+/** @brief Incoming Security material retrieval
+ *  
+ *  This function frames the lookup data, lookup data size in order 
+ *  to get the key. Framed lookup data will be used to check the 
+ *  incoming key usage policy and blacklisted device.
+ *  
+ *  @param mac_parse_data_buf Structure to hold the mac Auxiliary header & data
+ *  @param device_desc Structure to hold the device key, device usage list, key usage list
+ *  @param key_device_desc structure to hold the KeyDeviceDescriptor
+ *  
+ * @return MAC_UNSUPPORTED_SECURITY or FAILURE, MAC_SUCCESS, MAC_UNAVAILABLE_KEY
+ *  
+ */
 
 static inline retval_t incoming_sec_material_retrieval(parse_t *mac_parse_data_buf, mac_key_table_t **key_desc,
                                                        mac_device_desc_t **device_desc,
@@ -1112,6 +1151,20 @@ static inline retval_t incoming_sec_material_retrieval(parse_t *mac_parse_data_b
     return MAC_SUCCESS;
 }
 
+/** @brief Compare the received key descriptor and available key descriptor from keytable
+ *  
+ *  This function will checks the received key descriptor against with
+ *  with the available key descriptor based  on the lookup data size.
+ *  If device lookup data match found then based on the match corresponding key will used. 
+ *  
+ *  @param lookup_data device lookup data
+ *  @param lookup_data_size Incoming frame lookup data size 
+ *         maximum lookup data size is 9
+ *  @param key_desc as per IEEE specification mac key table definitions.
+ *  
+ *  @return MAC_UNSUPPORTED_SECURITY, MAC_SUCCESS, MAC_UNAVAILABLE_KEY
+ *  
+ */
 static retval_t key_descriptor_lookup(uint8_t *lookup_data, uint8_t lookup_data_size, mac_key_table_t **key_desc)
 {
     // Get key from KeyDescriptor as 7.5.8.2.5
@@ -1149,6 +1202,22 @@ static retval_t key_descriptor_lookup(uint8_t *lookup_data, uint8_t lookup_data_
     return MAC_UNAVAILABLE_KEY;
 
 }
+
+/** @brief  This function checks the particular device is blacklisted or not
+ *  
+ *  If the FrameCounter element is equal to 0xffffffff,
+ *  the procedure shall set the Blacklisted element of the 
+ *  KeyDeviceDescriptor. If the Blacklisted element of the KeyDeviceDescriptor 
+ *  is set to FALSE, or the procedure shall return with a failed status
+ *  
+ *  @param device_lookup_data Incoming frame device lookup data
+ *  @param device_lookup_data_size Incoming frame lookup data size
+ *  @param mac_device_desc_t Incoming mac frame device descriptor
+ *  @param key_device_desc key device descriptor
+ *  
+ *  @return MAC_SUCCESS, FAILURE
+ *  
+ */
 
 static retval_t blacklist_checking_procedure(uint8_t *device_lookup_data, uint8_t device_lookup_data_size,
                                              mac_key_table_t *key_desc,
@@ -1188,6 +1257,18 @@ static retval_t blacklist_checking_procedure(uint8_t *device_lookup_data, uint8_
     return FAILURE;
 }
 
+/** @brief device descriptor look up procedure for checking the incoming frame info
+ *  
+ *  This function validates the incoming frame info of PANID and Short Address or Extended 
+ *  IEEE Address against with associated device info.
+ *  
+ *  @param device_desc device descriptor of associated device
+ *  @param device_lookup_data incoming frame device lookup data
+ *  @param device_lookup_data_size device lookup data size
+ *  
+ *  @return MAC_SUCCESS, FAILURE
+ *  
+ */
 static retval_t device_descriptor_lookup(mac_device_desc_t device_desc, uint8_t *device_lookup_data, uint8_t device_lookup_data_size)
 {
     uint8_t lookup_data[8];
@@ -1219,8 +1300,16 @@ static retval_t device_descriptor_lookup(mac_device_desc_t device_desc, uint8_t 
     return FAILURE;
 }
 
-/** Build the Security MCPS Data Request frame from the mpdu data
-  */
+/** @brief Build the Security MCPS Data Request frame from the mpdu data
+ *    
+ *  This function will extract the MAC Frame into individual mac parameters
+ *  
+ *  @param mpdr mac payload pointer used to identify the payload location
+ *  @param mframe tal frame info used to get the mac frame info
+ *  
+ *  @return MAC_SUCCESS
+ *  
+ */
 bool build_sec_mcps_data_frame(mcps_data_req_t *mpdr, frame_info_t *mframe)
 {
 	uint16_t fcf;
@@ -1383,10 +1472,19 @@ bool build_sec_mcps_data_frame(mcps_data_req_t *mpdr, frame_info_t *mframe)
   return MAC_SUCCESS;						
 }
 
-/** The inputs to this procedure are the KeyDescriptor, 
-  * the frame type, and the command frame identifier. The
-  * output from this procedure is a passed or failed status
-  */
+/** @brief Incoming key usage policy for the frame particular frame type
+ *  
+ *  Inputs to this procedure are KeyDescriptor, 
+ *  frame type, and command frame identifier. output from 
+ *  this procedure is a passed or failed status.
+ *  
+ *  @param key_desc KeyDescriptor of mac key table
+ *  @param frame_type incoming frame type
+ *  @param mac_cmd Incoming mac_cmd field identifier
+ *  
+ *  @return MAC_SUCCESS, MAC_IMPROPER_KEY_TYPE
+ *  
+ */  
 static retval_t incoming_key_usage_policy(mac_key_table_t *key_desc,
 										  uint8_t frame_type, 
 										  uint8_t mac_cmd)

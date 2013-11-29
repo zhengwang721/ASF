@@ -296,6 +296,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	transmit_frame->buffer_header = beacon_buffer_header;
 #endif  /* BEACON_SUPPORT / No BEACON_SUPPORT */
 
+	/* MAC transmit frame type */
 	transmit_frame->msg_type = BEACON_MESSAGE;
 
 	/* Update the payload length. */
@@ -408,7 +409,9 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	convert_spec_16_bit_to_byte_array(superframe_spec, frame_ptr);
 
 #if ((defined MAC_SECURITY_BEACON)  || (defined MAC_SECURITY_2006_BEACON)) 
-	frame_ptr_mhr_gts = frame_ptr;    
+	frame_ptr_mhr_gts = frame_ptr; 
+
+	/* Copy the security info into the beacon security structure buffer */
 	beacon_sec_buf.SecurityLevel = msr_params.BeaconSecurityLevel;
 	beacon_sec_buf.KeyIdMode = msr_params.BeaconKeyIdMode;
 	beacon_sec_buf.KeySource = msr_params.BeaconKeySource;
@@ -488,7 +491,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 
 		/*
 		 * This changes the PAN-ID of subsequent beacon frames to
-		 *simulate
+		 * simulate
 		 * virtual PANs for testing purposes.
 		 */
 		temp += vpan_no;

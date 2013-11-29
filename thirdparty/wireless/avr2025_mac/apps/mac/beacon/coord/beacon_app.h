@@ -94,29 +94,54 @@ typedef enum coord_state_tag {
 #define SCAN_DURATION_COORDINATOR       (5)
 
 #ifdef MAC_SECURITY_ZIP
+
 /* MAC security macros */
 #define KEY_INDEX_0                     (0)
 #define KEY_INDEX_1                     (1)
 #define KEY_INDEX_2                     (2)
 #define KEY_INDEX_3                     (3)
 #define KEY_INDEX_4                     (4)
-#define LOOKUP_DATA_SIZE_1              (1) // Size is 9 octets
+
+/*Look up Data Size is 9 octets */
+#define LOOKUP_DATA_SIZE_1              (1) 
+
+/* Type of frame */
 #define FRAME_TYPE_BEACON               (0)
 #define FRAME_TYPE_DATA                 (1)
-#define CMD_FRAME_ID_NA                 (0) // CommandFrameIdentifier is n/a
-#define ZIP_SEC_MIN                     (0x05) // SecurityMinimum for ZIP is 5  
-#define DEV_OVERRIDE_SEC_MIN            (1) // DeviceOverrideSecurityMinimum: True
-#define ZIP_KEY_ID_MODE                 (1) // ZIP uses KeyIdMode 1
 
+/* CommandFrameIdentifier is n/a */
+#define CMD_FRAME_ID_NA                 (0) 
+
+/* Default Minimum Security Level for ZIP */
+#define ZIP_SEC_MIN                     (0x05)  
+
+/* Override the  minimum security level */
+#define DEV_OVERRIDE_SEC_MIN            (1)
+
+/* ZIP uses KeyIdMode 1 */
+#define ZIP_KEY_ID_MODE                 (1)
+
+/* mac key table index entry macros */
 #define INDEX_0                         (0)
 #define INDEX_1                         (1)
 #define INDEX_2                         (2)
 #define INDEX_3                         (3)
+
+/* Device Descriptor Handle Index 0 */
 #define DEV_DESC_HANDLE_IDX_0			(0x00)
-#define EMPTY_DEV_HANDLE                (0xFF) // key device desc is invalid
+
+/* key device desc is invalid */
+#define EMPTY_DEV_HANDLE                (0xFF)
+
+/* Key Info frame type macro */
 #define KEY_INFO_FRAME                  (0xDE)
+
+/* Security Not used */
 #define NO_SECURITY                     (0)
+
+/* Security PIB Initialize Macro */
 #define SEC_PIB_INIT					(1)
+
 #endif
 
 /* === Externals ============================================================ */
