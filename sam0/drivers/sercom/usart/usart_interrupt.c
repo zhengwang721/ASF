@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 SERCOM USART Asynchronous Driver
+ * \brief SAM D2x SERCOM USART Asynchronous Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -261,7 +261,7 @@ enum status_code usart_write_buffer_job(
 	if (module->remaining_tx_buffer_length > 0) {
 		return STATUS_BUSY;
 	}
-	
+
 	/* Check that the receiver is enabled */
 	if (!(module->transmitter_enabled)) {
 		return STATUS_ERR_DENIED;
@@ -303,7 +303,7 @@ enum status_code usart_read_buffer_job(
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
-	
+
 	/* Check that the receiver is enabled */
 	if (!(module->receiver_enabled)) {
 		return STATUS_ERR_DENIED;
@@ -512,20 +512,20 @@ void _usart_interrupt_handler(
 					/* Store the error code and clear flag by writing 1 to it */
 					module->rx_status = STATUS_ERR_BAD_DATA;
 					usart_hw->STATUS.reg |= SERCOM_USART_STATUS_PERR;
-				} 
+				}
 			#ifdef FEATURE_USART_LIN_SLAVE
 				else if (error_code & SERCOM_USART_STATUS_ISF) {
 					/* Store the error code and clear flag by writing 1 to it */
 					module->rx_status = STATUS_ERR_PROTOCOL;
 					usart_hw->STATUS.reg |= SERCOM_USART_STATUS_ISF;
-				} 
+				}
 			#endif
 			#ifdef FEATURE_USART_COLLISION_DECTION
 				else if (error_code & SERCOM_USART_STATUS_COLL) {
 					/* Store the error code and clear flag by writing 1 to it */
 					module->rx_status = STATUS_ERR_PACKET_COLLISION;
 					usart_hw->STATUS.reg |= SERCOM_USART_STATUS_COLL;
-				} 
+				}
 			#endif
 
 				/* Run callback if registered and enabled */
@@ -575,33 +575,33 @@ void _usart_interrupt_handler(
 #ifdef FEATURE_USART_HARDWARE_FLOW_CONTROL
 	if (interrupt_status & SERCOM_USART_INTFLAG_CTSIC) {
 		usart_hw->INTENCLR.reg = SERCOM_USART_INTENCLR_CTSIC;
-	
+
 		/* Run callback if registered and enabled */
 		if (callback_status & (1 << USART_CALLBACK_CTS_INPUT_CHANGE)) {
 			(*(module->callback[USART_CALLBACK_CTS_INPUT_CHANGE]))(module);
-		}		
+		}
 	}
 #endif
 
 #ifdef FEATURE_USART_LIN_SLAVE
 	if (interrupt_status & SERCOM_USART_INTFLAG_RXBRK) {
 		usart_hw->INTENCLR.reg = SERCOM_USART_INTENCLR_RXBRK;
-	
+
 		/* Run callback if registered and enabled */
 		if (callback_status & (1 << USART_CALLBACK_BREAK_RECEIVED)) {
 			(*(module->callback[USART_CALLBACK_BREAK_RECEIVED]))(module);
-		}		
+		}
 	}
 #endif
 
 #ifdef FEATURE_USART_START_FRAME_DECTION
 	if (interrupt_status & SERCOM_USART_INTFLAG_RXS) {
 		usart_hw->INTENCLR.reg = SERCOM_USART_INTENCLR_RXS;
-	
+
 		/* Run callback if registered and enabled */
 		if (callback_status & (1 << USART_CALLBACK_START_RECEIVED)) {
 			(*(module->callback[USART_CALLBACK_START_RECEIVED]))(module);
-		}		
+		}
 	}
 #endif
 }
