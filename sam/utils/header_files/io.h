@@ -97,4 +97,9 @@
 #  include "sam4c.h"
 #endif
 
+/* SAMG series */
+#if (SAMG)
+#  include "samg.h"
+#endif
+
 #endif /* _SAM_IO_ */
