@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Startup file for SAM4S.
+ * \brief Startup file for SAMG53.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

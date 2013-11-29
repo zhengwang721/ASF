@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,8 +39,8 @@
  *
  */
 
-#ifndef _SAMG53G19_PIO_
-#define _SAMG53G19_PIO_
+#ifndef _SAMG53N19_PIO_
+#define _SAMG53N19_PIO_
 
 #define PIO_PA0           (1u << 0)  /**< \brief Pin Controlled by PA0 */
 #define PIO_PA1           (1u << 1)  /**< \brief Pin Controlled by PA1 */
@@ -196,4 +196,4 @@
 #define PIO_PB11_IDX      43
 #define PIO_PB12_IDX      44
 
-#endif /* _SAMG53G19_PIO_ */
+#endif /* _SAMG53N19_PIO_ */
