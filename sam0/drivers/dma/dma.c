@@ -72,8 +72,10 @@ struct _dma_module _dma_inst = {
 #define DMA_CHANNEL_MASK   (0x1f)
 
 /** Initial description section */
+COMPILER_ALIGNED(16)
 static struct dma_transfer_descriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
 /** Initial write back memory section */
+COMPILER_ALIGNED(16)
 static struct dma_transfer_descriptor write_back_section[CONF_MAX_USED_CHANNEL_NUM];
 
 /** Internal DMA resource pool */
@@ -325,16 +327,17 @@ enum status_code dma_allocate(struct dma_resource *resource,
 
 		/* Perform a software reset before enable DMA controller */
 		DMAC->CTRL.reg = DMAC_CTRL_SWRST;
-		/* Enable all priority level at the same time */
-		DMAC->CTRL.reg = DMAC_CTRL_DMAENABLE | DMAC_CTRL_LVLEN(0xf);
-
-		/* Enable CRC */
-		DMAC->CTRL.reg |= DMAC_CTRL_CRCENABLE;
 
 		/* Setup descriptor base address and write back section base
 		 * address */
 		DMAC->BASEADDR.reg = (uint32_t)descriptor_section;
 		DMAC->WRBADDR.reg = (uint32_t)write_back_section;
+
+		/* Enable all priority level at the same time */
+		DMAC->CTRL.reg = DMAC_CTRL_DMAENABLE | DMAC_CTRL_LVLEN(0xf);
+
+		/* Enable CRC */
+		DMAC->CTRL.reg |= DMAC_CTRL_CRCENABLE;
 
 		/* Set all channels in the resource pool as not used */
 		for (count = 0; count < CONF_MAX_USED_CHANNEL_NUM; count++) {
@@ -456,9 +459,15 @@ enum status_code dma_transfer_job(struct dma_resource *resource,
 	}
 
 	/* Check if transfer size is valid */
-	if (descriptor_section[resource->channel_id].block_transfer_count == 0) {
+	if (transfer_descriptor->block_transfer_count == 0) {
 		return STATUS_ERR_INVALID_ARG;
 	}
+
+	/* Set channel x descriptor 0 to the descriptor base address */
+	descriptor_section[resource->channel_id] = *transfer_descriptor;
+
+	/* Log the DMA resouce into the internal DMA resource pool */
+	dma_active_resource[resource->channel_id] = *resource;
 
 	/* Enable the transfer channel */
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
@@ -473,12 +482,6 @@ enum status_code dma_transfer_job(struct dma_resource *resource,
 
 	/* Set job status */
 	resource->job_status = STATUS_BUSY;
-
-	/* Set channel x descriptor 0 to the descriptor base address */
-	descriptor_section[resource->channel_id] = *transfer_descriptor;
-
-	/* Log the DMA resouce into the internal DMA resource pool */
-	dma_active_resource[resource->channel_id] = *resource;
 
 	system_interrupt_leave_critical_section();
 
