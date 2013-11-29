@@ -791,33 +791,33 @@ static inline adc_interrupt_source_t adc_get_interrupt_mask(struct adc_dev_inst 
  *   }
  *
  *  struct adc_config adc_cfg = {
- *    /* System clock division factor is 16 */
+ *    // System clock division factor is 16
  *    .prescal = ADC_PRESCAL_DIV16,
- *    /* The APB clock is used */
+ *    // The APB clock is used
  *    .clksel = ADC_CLKSEL_APBCLK,
- *    /* Max speed is 150K */
+ *    // Max speed is 150K
  *    .speed = ADC_SPEED_150K,
- *    /* ADC Reference voltage is 0.625*VCC */
+ *    // ADC Reference voltage is 0.625*VCC
  *    .refsel = ADC_REFSEL_1,
- *    /* Enables the Startup time */
+ *    // Enables the Startup time
  *    .start_up = CONFIG_ADC_STARTUP
  *  };
  *  struct adc_seq_config adc_seq_cfg = {
- *    /* Select Vref for shift cycle */
+ *    // Select Vref for shift cycle
  *    .zoomrange = ADC_ZOOMRANGE_0,
- *    /* Pad Ground */
+ *    // Pad Ground
  *    .muxneg = ADC_MUXNEG_1,
- *    /* DAC internal */
+ *    // DAC internal
  *    .muxpos = ADC_MUXPOS_3,
- *    /* Enables the internal voltage sources */
+ *    // Enables the internal voltage sources
  *    .internal = ADC_INTERNAL_3,
- *    /* Disables the ADC gain error reduction */
+ *    // Disables the ADC gain error reduction
  *    .gcomp = ADC_GCOMP_DIS,
- *    /* Disables the HWLA mode */
+ *    // Disables the HWLA mode
  *    .hwla = ADC_HWLA_DIS,
- *    /* 12-bits resolution */
+ *    // 12-bits resolution
  *    .res = ADC_RES_12_BIT,
- *    /* Enables the single-ended mode */
+ *    // Enables the single-ended mode
  *    .bipolar = ADC_BIPOLAR_SINGLEENDED
  *  };
  *   void adc_setup(void)
