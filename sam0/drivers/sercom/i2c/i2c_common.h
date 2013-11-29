@@ -43,6 +43,7 @@
 #ifndef I2C_COMMON_H_INCLUDED
 #define I2C_COMMON_H_INCLUDED
 
+#include <compiler.h>
 #include <sercom.h>
 
 #ifdef __cplusplus
@@ -419,6 +420,11 @@ struct i2c_packet {
  *  <caption>Module History</caption>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Fixed incorrect logical mask for determining if a bus error has
+ *          occurred in I2C Slave mode.
+ *      </td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>

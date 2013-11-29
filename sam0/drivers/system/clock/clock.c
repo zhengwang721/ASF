@@ -42,6 +42,7 @@
  */
 #include <clock.h>
 #include <conf_clocks.h>
+#include <system.h>
 
 /**
  * \internal
@@ -302,6 +303,52 @@ void system_clock_source_xosc32k_set_config(
 
 	SYSCTRL->XOSC32K = temp;
 }
+///@cond INTERNAL
+
+/**
+ * \internal
+ * \name Header file macro copies for runtime support of different revisions
+ *
+ * These macroes are copied from the header file to be able to support both new and old register layout runtime.
+ *
+ * @{
+ */
+#define _SYSTEM_OLD_DFLLVAL_FINE_Pos    0
+#define _SYSTEM_OLD_DFLLVAL_FINE_Msk    (0xFFu << _SYSTEM_OLD_DFLLVAL_FINE_Pos)
+#define _SYSTEM_OLD_DFLLVAL_FINE(value) ((_SYSTEM_OLD_DFLLVAL_FINE_Msk & ((value) << _SYSTEM_OLD_DFLLVAL_FINE_Pos)))
+
+#define _SYSTEM_OLD_DFLLVAL_COARSE_Pos  8
+#define _SYSTEM_OLD_DFLLVAL_COARSE_Msk  (0x1Fu << _SYSTEM_OLD_DFLLVAL_COARSE_Pos)
+#define _SYSTEM_OLD_DFLLVAL_COARSE(value) ((_SYSTEM_OLD_DFLLVAL_COARSE_Msk & ((value) << _SYSTEM_OLD_DFLLVAL_COARSE_Pos)))
+
+#define _SYSTEM_NEW_DFLLVAL_FINE_Pos    0
+#define _SYSTEM_NEW_DFLLVAL_FINE_Msk    (0x3FFu << _SYSTEM_NEW_DFLLVAL_FINE_Pos)
+#define _SYSTEM_NEW_DFLLVAL_FINE(value) ((_SYSTEM_NEW_DFLLVAL_FINE_Msk & ((value) << _SYSTEM_NEW_DFLLVAL_FINE_Pos)))
+
+#define _SYSTEM_NEW_DFLLVAL_COARSE_Pos  10
+#define _SYSTEM_NEW_DFLLVAL_COARSE_Msk  (0x3Fu << _SYSTEM_NEW_DFLLVAL_COARSE_Pos)
+#define _SYSTEM_NEW_DFLLVAL_COARSE(value) ((_SYSTEM_NEW_DFLLVAL_COARSE_Msk & ((value) << _SYSTEM_NEW_DFLLVAL_COARSE_Pos)))
+
+#define _SYSTEM_OLD_DFLLMUL_FSTEP_Pos   16
+#define _SYSTEM_OLD_DFLLMUL_FSTEP_Msk   (0xFFu << _SYSTEM_OLD_DFLLMUL_FSTEP_Pos)
+#define _SYSTEM_OLD_DFLLMUL_FSTEP(value) ((_SYSTEM_OLD_DFLLMUL_FSTEP_Msk & ((value) << _SYSTEM_OLD_DFLLMUL_FSTEP_Pos)))
+
+#define _SYSTEM_OLD_DFLLMUL_CSTEP_Pos   24
+#define _SYSTEM_OLD_DFLLMUL_CSTEP_Msk   (0x1Fu << _SYSTEM_OLD_DFLLMUL_CSTEP_Pos)
+#define _SYSTEM_OLD_DFLLMUL_CSTEP(value) ((_SYSTEM_OLD_DFLLMUL_CSTEP_Msk & ((value) << _SYSTEM_OLD_DFLLMUL_CSTEP_Pos)))
+
+#define _SYSTEM_NEW_DFLLMUL_FSTEP_Pos   16
+#define _SYSTEM_NEW_DFLLMUL_FSTEP_Msk   (0x3FFu << _SYSTEM_NEW_DFLLMUL_FSTEP_Pos)
+#define _SYSTEM_NEW_DFLLMUL_FSTEP(value) ((_SYSTEM_NEW_DFLLMUL_FSTEP_Msk & ((value) << _SYSTEM_NEW_DFLLMUL_FSTEP_Pos)))
+
+#define _SYSTEM_NEW_DFLLMUL_CSTEP_Pos   26
+#define _SYSTEM_NEW_DFLLMUL_CSTEP_Msk   (0x3Fu << _SYSTEM_NEW_DFLLMUL_CSTEP_Pos)
+#define _SYSTEM_NEW_DFLLMUL_CSTEP(value) ((_SYSTEM_NEW_DFLLMUL_CSTEP_Msk & ((value) << _SYSTEM_NEW_DFLLMUL_CSTEP_Pos)))
+
+#define _SYSTEM_MCU_REVISION_D 3
+
+///@endcond
+
 
 /**
  * \brief Configure the DFLL clock source
@@ -317,9 +364,22 @@ void system_clock_source_xosc32k_set_config(
 void system_clock_source_dfll_set_config(
 		struct system_clock_source_dfll_config *const config)
 {
-	_system_clock_inst.dfll.val =
-			SYSCTRL_DFLLVAL_COARSE(config->coarse_value) |
-			SYSCTRL_DFLLVAL_FINE(config->fine_value);
+
+	/* Get MCU revision */
+	uint32_t rev = system_get_device_id();
+
+	rev &= DSU_DID_REVISION_Msk;
+	rev = rev >> DSU_DID_REVISION_Pos;
+
+	if (rev < _SYSTEM_MCU_REVISION_D) {
+		_system_clock_inst.dfll.val =
+				_SYSTEM_OLD_DFLLVAL_COARSE(config->coarse_value) |
+				_SYSTEM_OLD_DFLLVAL_FINE(config->fine_value);
+	} else {
+		_system_clock_inst.dfll.val =
+				_SYSTEM_NEW_DFLLVAL_COARSE(config->coarse_value) |
+				_SYSTEM_NEW_DFLLVAL_FINE(config->fine_value);
+	}
 
 	_system_clock_inst.dfll.control =
 			(uint32_t)config->wakeup_lock     |
@@ -330,10 +390,18 @@ void system_clock_source_dfll_set_config(
 			(uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos;
 
 	if (config->loop_mode == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
-		_system_clock_inst.dfll.mul =
-				SYSCTRL_DFLLMUL_CSTEP(config->coarse_max_step) |
-				SYSCTRL_DFLLMUL_FSTEP(config->fine_max_step)   |
-				SYSCTRL_DFLLMUL_MUL(config->multiply_factor);
+
+		if(rev < _SYSTEM_MCU_REVISION_D) {
+			_system_clock_inst.dfll.mul =
+					_SYSTEM_OLD_DFLLMUL_CSTEP(config->coarse_max_step) |
+					_SYSTEM_OLD_DFLLMUL_FSTEP(config->fine_max_step)   |
+					SYSCTRL_DFLLMUL_MUL(config->multiply_factor);
+		} else {
+			_system_clock_inst.dfll.mul =
+					_SYSTEM_NEW_DFLLMUL_CSTEP(config->coarse_max_step) |
+					_SYSTEM_NEW_DFLLMUL_FSTEP(config->fine_max_step)   |
+					SYSCTRL_DFLLMUL_MUL(config->multiply_factor);
+		}
 
 		/* Enable the closed loop mode */
 		_system_clock_inst.dfll.control |= config->loop_mode;
@@ -591,10 +659,11 @@ bool system_clock_source_is_ready(
  */
 void system_clock_init(void)
 {
-        /* Workaround for errata 10558 */
-        SYSCTRL->INTFLAG.reg = SYSCTRL_INTFLAG_BOD12RDY | SYSCTRL_INTFLAG_BOD33RDY |
-                        SYSCTRL_INTFLAG_BOD12DET | SYSCTRL_INTFLAG_BOD33DET |
-                        SYSCTRL_INTFLAG_DFLLRDY;
+	/* Various bits in the INTFLAG register can be set to one at startup.
+	   This will ensure that these bits are cleared */
+	SYSCTRL->INTFLAG.reg = SYSCTRL_INTFLAG_BOD12RDY | SYSCTRL_INTFLAG_BOD33RDY |
+			SYSCTRL_INTFLAG_BOD12DET | SYSCTRL_INTFLAG_BOD33DET |
+			SYSCTRL_INTFLAG_DFLLRDY;
 
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
 
@@ -653,7 +722,7 @@ void system_clock_init(void)
 #endif
 
 
-	/* DFLL (Open and Closed Loop) */
+	/* DFLL Config (Open and Closed Loop) */
 #if CONF_CLOCK_DFLL_ENABLE == true
 	struct system_clock_source_dfll_config dfll_conf;
 	system_clock_source_dfll_get_config_defaults(&dfll_conf);
@@ -699,7 +768,6 @@ void system_clock_init(void)
 	dfll_conf.fine_max_step   = CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE;
 
 	system_clock_source_dfll_set_config(&dfll_conf);
-	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
 #endif
 
 
@@ -723,7 +791,7 @@ void system_clock_init(void)
 	 * is configured later after all other clock systems are set up */
 	MREPEAT(GCLK_GEN_NUM_MSB, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
 
-#  if (CONF_CLOCK_DFLL_ENABLE)
+#  if CONF_CLOCK_DFLL_ENABLE == true
 	/* Enable DFLL reference clock if in closed loop mode */
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
 		struct system_gclk_chan_config dfll_gclk_chan_conf;
@@ -734,7 +802,17 @@ void system_clock_init(void)
 		system_gclk_chan_enable(SYSCTRL_GCLK_ID_DFLL48);
 	}
 #  endif
+#endif
 
+
+	/* DFLL Enable (Open and Closed Loop) */
+#if CONF_CLOCK_DFLL_ENABLE == true
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
+#endif
+
+
+	/* GCLK 0 */
+#if CONF_CLOCK_CONFIGURE_GCLK == true
 	/* Configure the main GCLK last as it might depend on other generators */
 	_CONF_CLOCK_GCLK_CONFIG(0, ~);
 #endif

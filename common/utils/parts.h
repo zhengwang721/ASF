@@ -490,9 +490,12 @@
 
 /** ATmegaxxRFR2 group */
 #define MEGA_RFR2 ( \
-		AVR8_PART_IS_DEFINED(ATmega64RFR2)  || \
-		AVR8_PART_IS_DEFINED(ATmega128RFR2) || \
-		AVR8_PART_IS_DEFINED(ATmega256RFR2) \
+		AVR8_PART_IS_DEFINED(ATmega64RFR2)   || \
+		AVR8_PART_IS_DEFINED(ATmega128RFR2)  || \
+		AVR8_PART_IS_DEFINED(ATmega256RFR2)  || \
+		AVR8_PART_IS_DEFINED(ATmega644RFR2)  || \
+		AVR8_PART_IS_DEFINED(ATmega1284RFR2) || \
+		AVR8_PART_IS_DEFINED(ATmega2564RFR2) \
 		)
 
 
@@ -561,7 +564,6 @@
 		AVR8_PART_IS_DEFINED(ATmega16M1)     || \
 		AVR8_PART_IS_DEFINED(ATmega16U2)     || \
 		AVR8_PART_IS_DEFINED(ATmega16U4)     || \
-		AVR8_PART_IS_DEFINED(ATmega2564RFR2) || \
 		AVR8_PART_IS_DEFINED(ATmega256RFA2)  || \
 		AVR8_PART_IS_DEFINED(ATmega324P)     || \
 		AVR8_PART_IS_DEFINED(ATmega325)      || \
@@ -738,6 +740,17 @@
  * \name SAM3N series
  * @{
  */
+#define SAM3N00 ( \
+		SAM_PART_IS_DEFINED(SAM3N00A) ||	\
+		SAM_PART_IS_DEFINED(SAM3N00B) \
+		)
+
+#define SAM3N0 ( \
+		SAM_PART_IS_DEFINED(SAM3N0A) ||	\
+		SAM_PART_IS_DEFINED(SAM3N0B) ||	\
+		SAM_PART_IS_DEFINED(SAM3N0C) \
+		)
+
 #define SAM3N1 ( \
 		SAM_PART_IS_DEFINED(SAM3N1A) ||	\
 		SAM_PART_IS_DEFINED(SAM3N1B) ||	\
@@ -790,6 +803,18 @@
  * \name SAM4S series
  * @{
  */
+#define SAM4S2 ( \
+		SAM_PART_IS_DEFINED(SAM4S2A) || \
+ 		SAM_PART_IS_DEFINED(SAM4S2B) || \
+ 		SAM_PART_IS_DEFINED(SAM4S2C) \
+ 		)
+
+#define SAM4S4 ( \
+		SAM_PART_IS_DEFINED(SAM4S4A) || \
+ 		SAM_PART_IS_DEFINED(SAM4S4B) || \
+ 		SAM_PART_IS_DEFINED(SAM4S4C) \
+ 		)
+
 #define SAM4S8 ( \
 		SAM_PART_IS_DEFINED(SAM4S8B) ||	\
 		SAM_PART_IS_DEFINED(SAM4S8C) \
@@ -870,7 +895,7 @@
 		SAM_PART_IS_DEFINED(SAMD20E15) || \
 		SAM_PART_IS_DEFINED(SAMD20E16) || \
 		SAM_PART_IS_DEFINED(SAMD20E17) || \
-		SAM_PART_IS_DEFINED(SAMD20E18) \
+		SAM_PART_IS_DEFINED(SAMD20E1F) \
 	)
 /** @} */
 
@@ -904,6 +929,31 @@
 /** @} */
 
 /**
+ * \name SAM4C series
+ * @{
+ */
+#define SAM4C8_0 ( \
+		SAM_PART_IS_DEFINED(SAM4C8C_0) \
+		)
+
+#define SAM4C8_1 ( \
+		SAM_PART_IS_DEFINED(SAM4C8C_1) \
+		)
+
+#define SAM4C8 (SAM4C8_0 || SAM4C8_1)
+
+#define SAM4C16_0 ( \
+		SAM_PART_IS_DEFINED(SAM4C16C_0) \
+		)
+
+#define SAM4C16_1 ( \
+		SAM_PART_IS_DEFINED(SAM4C16C_1) \
+		)
+
+#define SAM4C16 (SAM4C16_0 || SAM4C16_1)
+/** @} */
+
+/**
  * \name SAM families
  * @{
  */
@@ -914,20 +964,19 @@
 #define SAM3U (SAM3U1 || SAM3U2 || SAM3U4)
 
 /** SAM3N Family */
-#define SAM3N (SAM3N1 || SAM3N2 || SAM3N4)
+#define SAM3N (SAM3N00 || SAM3N0 || SAM3N1 || SAM3N2 || SAM3N4)
 
 /** SAM3XA Family */
 #define SAM3XA (SAM3X4 || SAM3X8 || SAM3A4 || SAM3A8)
 
 /** SAM4S Family */
-#define SAM4S (SAM4S8 || SAM4S16 || SAM4SA16 || SAM4SD16 || SAM4SD32)
+#define SAM4S (SAM4S2 || SAM4S4 || SAM4S8 || SAM4S16 || SAM4SA16 || SAM4SD16 || SAM4SD32)
 
 /** SAM4L Family */
 #define SAM4L (SAM4LS || SAM4LC)
 
 /** SAMD20 Family */
 #define SAMD20 (SAMD20J || SAMD20G || SAMD20E)
-/** @} */
 
 /** SAM4E Family */
 #define SAM4E (SAM4E8 || SAM4E16)
@@ -935,10 +984,16 @@
 /** SAM4N Family */
 #define SAM4N (SAM4N8 || SAM4N16)
 
+/** SAM4C Family */
+#define SAM4C_0 (SAM4C8_0 || SAM4C16_0)
+#define SAM4C_1 (SAM4C8_1 || SAM4C16_1)
+#define SAM4C   (SAM4C8 || SAM4C16)
+
 /** @} */
 
 /** SAM product line */
-#define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || SAMD20 || SAM4N)
+#define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || \
+		SAMD20 || SAM4N || SAM4C)
 
 /** @} */
 

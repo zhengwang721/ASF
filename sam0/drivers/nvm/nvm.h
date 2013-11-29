@@ -332,11 +332,33 @@ enum nvm_command {
  */
 enum nvm_sleep_power_mode {
 	/** NVM controller exits low power mode on first access after sleep. */
-	NVM_SLEEP_POWER_MODE_WAKEONACCESS  = NVMCTRL_CTRLB_SLEEPPRM_WAKEONACCESS,
+	NVM_SLEEP_POWER_MODE_WAKEONACCESS  = NVMCTRL_CTRLB_SLEEPPRM_WAKEONACCESS_Val,
 	/** NVM controller exits low power mode when the device exits sleep mode. */
-	NVM_SLEEP_POWER_MODE_WAKEUPINSTANT = NVMCTRL_CTRLB_SLEEPPRM_WAKEUPINSTANT,
+	NVM_SLEEP_POWER_MODE_WAKEUPINSTANT = NVMCTRL_CTRLB_SLEEPPRM_WAKEUPINSTANT_Val,
 	/** Power reduction mode in the NVM controller disabled. */
-	NVM_SLEEP_POWER_MODE_ALWAYS_AWAKE  = NVMCTRL_CTRLB_SLEEPPRM_DISABLED,
+	NVM_SLEEP_POWER_MODE_ALWAYS_AWAKE  = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val,
+};
+
+/**
+ * \brief NVM controller cache readmode configuration
+ *
+ * Control how the NVM cache prefetch data from flash
+ *
+ */
+enum nvm_cache_readmode {
+	/** The NVM Controller (cache system) does not insert wait states on
+	 *  a cache miss. Gives the best system performance.
+	 */
+	NVM_CACHE_READMODE_NO_MISS_PENALTY,
+	/** Reduces power consumption of the cache system, but inserts a
+	 *  wait state each time there is a cache miss
+	 */
+	NVM_CACHE_READMODE_LOW_POWER,
+	/** The cache system ensures that a cache hit or miss takes the same
+	 *  amount of time, determined by the number of programmed flash
+	 *  wait states.
+	 */
+	NVM_CACHE_READMODE_DETERMINISTIC,
 };
 
 /**
@@ -360,6 +382,17 @@ struct nvm_config {
 	 *  invalid data from being read at high clock frequencies.
 	 */
 	uint8_t wait_states;
+
+	/**
+	 * Setting this to true will disable the pre-fetch cache in front of the
+	 * nvm controller.
+	 */
+	bool disable_cache;
+
+	/**
+	 * Select the mode for  how the cache will pre-fetch data from the flash.
+	 */
+	enum nvm_cache_readmode cache_readmode;
 };
 
 /**
@@ -551,6 +584,8 @@ static inline void nvm_get_config_defaults(
 	config->sleep_power_mode  = NVM_SLEEP_POWER_MODE_WAKEONACCESS;
 	config->manual_page_write = false;
 	config->wait_states       = NVMCTRL->CTRLB.bit.RWS;
+	config->disable_cache     = false;
+	config->cache_readmode    = NVM_CACHE_READMODE_NO_MISS_PENALTY;
 }
 
 enum status_code nvm_set_config(
@@ -704,6 +739,9 @@ static inline enum nvm_error nvm_get_error(void)
  *	</tr>
  *	<tr>
  *		<td>Added functions to read/write fuse settings</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for nvm cache configuration</td>
  *	</tr>
  *	<tr>
  *		<td>Updated initialization function to also enable the digital interface
