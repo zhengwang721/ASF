@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Serial Peripheral Interface Driver
+ * \brief SAM D2x SPI configuration
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,47 +41,13 @@
  *
  */
 
-#ifndef SERCOM_H_INCLUDED
-#define SERCOM_H_INCLUDED
 
-#include <compiler.h>
-#include <system.h>
-#include <clock.h>
-#include "sercom_interrupt.h"
-#include "sercom_pinout.h"
+#ifndef CONF_SPI_H_INCLUDED
+#  define CONF_SPI_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#  define CONF_SPI_MASTER_ENABLE     true
+#  define CONF_SPI_SLAVE_ENABLE      false
+#  define CONF_SPI_TIMEOUT           10000
 
-#if (SERCOM0_GCLK_ID_SLOW == SERCOM1_GCLK_ID_SLOW && \
-     SERCOM0_GCLK_ID_SLOW == SERCOM2_GCLK_ID_SLOW && \
-     SERCOM0_GCLK_ID_SLOW == SERCOM3_GCLK_ID_SLOW)
-#  define SERCOM_GCLK_ID SERCOM0_GCLK_ID_SLOW
-#else
-#  error "SERCOM modules must share the same slow GCLK channel ID."
-#endif
+#endif /* CONF_SPI_H_INCLUDED */
 
-enum status_code sercom_set_gclk_generator(
-		const enum gclk_generator generator_source,
-		const bool force_change);
-
-enum status_code _sercom_get_sync_baud_val(
-		const uint32_t baudrate,
-		const uint32_t external_clock,
-		uint16_t *const baudval);
-
-enum status_code _sercom_get_async_baud_val(
-		const uint32_t baudrate,
-		const uint32_t peripheral_clock,
-		uint16_t *const baudval);
-
-uint32_t _sercom_get_default_pad(
-		Sercom *const sercom_module,
-		const uint8_t pad);
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif //__SERCOM_H_INCLUDED
