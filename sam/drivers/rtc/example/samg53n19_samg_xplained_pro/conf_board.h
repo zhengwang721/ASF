@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Real-time Timer (RTT) driver for SAM.
+ * \brief Board configuration.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,37 +41,10 @@
  *
  */
 
-#ifndef RTT_H_INCLUDED
-#define RTT_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include "compiler.h"
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-uint32_t rtt_init(Rtt *p_rtt, uint16_t us_prescaler);
-#if (SAM4N || SAM4S || SAM4E || SAM4C || SAMG)
-void rtt_sel_source(Rtt *p_rtt, bool is_rtc_sel);
-void rtt_enable(Rtt *p_rtt);
-void rtt_disable(Rtt *p_rtt);
-#endif
-void rtt_enable_interrupt(Rtt *p_rtt, uint32_t ul_sources);
-void rtt_disable_interrupt(Rtt *p_rtt, uint32_t ul_sources);
-uint32_t rtt_read_timer_value(Rtt *p_rtt);
-uint32_t rtt_get_status(Rtt *p_rtt);
-uint32_t rtt_write_alarm_time(Rtt *p_rtt, uint32_t ul_alarm_time);
-
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-#endif /* RTT_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
