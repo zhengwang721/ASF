@@ -27,5 +27,10 @@
 		<require idref="common.services.ioport"/>
 		<require idref="sam.utils.cmsis.samg53.source.template"/>
 		<require idref="common.boards"/>
+		<!-- Debug drivers -->
+		<config name="config.compiler.iarewarm.debugger.driver" value="cmsisdap"/>
+		<config name="config.compiler.iarewarm.debugger.use_macro_file" value="no"/>
+		<!-- Compile option -->
+		<config name="config.compiler.iarewarm.low_level_lib" value="semihosted"/>
 	</board>
 </asf>
