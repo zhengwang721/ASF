@@ -158,6 +158,19 @@ void system_board_init(void);
 /** Number of on-board buttons */
 #define BUTTON_COUNT 1
 
+#define CONSOLE_UART               UART0
+#define CONSOLE_UART_ID            ID_UART0
+/** UART0 pins (UTXD0 and URXD0) definitions, PA9,10. */
+#define PINS_UART0        (PIO_PA9A_URXD0 | PIO_PA10A_UTXD0)
+#define PINS_UART0_FLAGS  (IOPORT_MODE_MUX_A)
+
+#define PINS_UART0_PORT   IOPORT_PIOA
+#define PINS_UART0_MASK   (PIO_PA9A_URXD0 | PIO_PA10A_UTXD0)
+#define PINS_UART0_PIO    PIOA
+#define PINS_UART0_ID     ID_PIOA
+#define PINS_UART0_TYPE   PIO_PERIPH_A
+#define PINS_UART0_ATTR   PIO_DEFAULT
+
 /** \name Extension header #1 pin definitions
  *  @{
  */

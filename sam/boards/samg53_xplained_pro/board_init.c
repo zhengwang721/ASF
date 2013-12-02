@@ -46,6 +46,36 @@
 #include <conf_board.h>
 #include <ioport.h>
 
+/**
+ * \addtogroup samg53_xplained_pro_group
+ * @{
+ */
+
+/**
+ * \brief Set peripheral mode for IOPORT pins.
+ * It will configure port mode and disable pin mode (but enable peripheral).
+ * \param port IOPORT port to configure
+ * \param masks IOPORT pin masks to configure
+ * \param mode Mode masks to configure for the specified pin (\ref ioport_modes)
+ */
+#define ioport_set_port_peripheral_mode(port, masks, mode) \
+	do {\
+		ioport_set_port_mode(port, masks, mode);\
+		ioport_disable_port(port, masks);\
+	} while (0)
+
+/**
+ * \brief Set peripheral mode for one single IOPORT pin.
+ * It will configure port mode and disable pin mode (but enable peripheral).
+ * \param pin IOPORT pin to configure
+ * \param mode Mode masks to configure for the specified pin (\ref ioport_modes)
+ */
+#define ioport_set_pin_peripheral_mode(pin, mode) \
+	do {\
+		ioport_set_pin_mode(pin, mode);\
+		ioport_disable_pin(pin);\
+	} while (0)
+
 #if defined(__GNUC__)
 void board_init(void) WEAK __attribute__((alias("system_board_init")));
 #elif defined(__ICCARM__)
@@ -69,4 +99,11 @@ void system_board_init(void)
 	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
 
+#if defined (CONF_BOARD_UART_CONSOLE)
+	/* Configure UART pins */
+	ioport_set_port_peripheral_mode(PINS_UART0_PORT, PINS_UART0,
+			PINS_UART0_MASK);
+#endif
 }
+
+/** @} */
