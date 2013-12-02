@@ -286,20 +286,20 @@ void system_board_init(void);
 /** \name Extension header #3 pin definitions by function
  *  @{
  */
-#define EXT3_PIN_ADC_0            EXT2_PIN_3
-#define EXT3_PIN_ADC_1            EXT2_PIN_4
-#define EXT3_PIN_GPIO_0           EXT2_PIN_5
-#define EXT3_PIN_PWM_0            EXT2_PIN_7
-#define EXT3_PIN_IRQ              EXT2_PIN_9
-#define EXT3_PIN_I2C_SDA          EXT2_PIN_11
-#define EXT3_PIN_I2C_SCL          EXT2_PIN_12
-#define EXT3_PIN_UART_RX          EXT2_PIN_13
-#define EXT3_PIN_UART_TX          EXT2_PIN_14
-#define EXT3_PIN_SPI_SS_1         EXT2_PIN_10
-#define EXT3_PIN_SPI_SS_0         EXT2_PIN_15
-#define EXT3_PIN_SPI_MOSI         EXT2_PIN_16
-#define EXT3_PIN_SPI_MISO         EXT2_PIN_17
-#define EXT3_PIN_SPI_SCK          EXT2_PIN_18
+#define EXT3_PIN_ADC_0            EXT3_PIN_3
+#define EXT3_PIN_ADC_1            EXT3_PIN_4
+#define EXT3_PIN_GPIO_0           EXT3_PIN_5
+#define EXT3_PIN_PWM_0            EXT3_PIN_7
+#define EXT3_PIN_IRQ              EXT3_PIN_9
+#define EXT3_PIN_I2C_SDA          EXT3_PIN_11
+#define EXT3_PIN_I2C_SCL          EXT3_PIN_12
+#define EXT3_PIN_UART_RX          EXT3_PIN_13
+#define EXT3_PIN_UART_TX          EXT3_PIN_14
+#define EXT3_PIN_SPI_SS_1         EXT3_PIN_10
+#define EXT3_PIN_SPI_SS_0         EXT3_PIN_15
+#define EXT3_PIN_SPI_MOSI         EXT3_PIN_16
+#define EXT3_PIN_SPI_MISO         EXT3_PIN_17
+#define EXT3_PIN_SPI_SCK          EXT3_PIN_18
 /** @} */
 
 /** \name Extension header #3 ADC definitions
