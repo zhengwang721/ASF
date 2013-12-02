@@ -94,8 +94,8 @@
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
-volatile static bool is_core1_signal = false;
-volatile static SHARED_MEMORY_TYPE *cnt = SHARED_MEMORY_ADDR;
+static volatile bool is_core1_signal = false;
+static volatile SHARED_MEMORY_TYPE *cnt = SHARED_MEMORY_ADDR;
 
 /**
  *  \brief Handler for IPC interrupt request.
@@ -184,3 +184,4 @@ int main(void)
 		}
 	}
 }
+
