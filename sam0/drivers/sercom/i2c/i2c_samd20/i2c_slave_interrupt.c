@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 I2C Slave Interrupt Driver
+ * \brief SAM D2x I2C Slave Interrupt Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -360,7 +360,7 @@ void _i2c_slave_interrupt_handler(
 
 		/* Disable interrupts */
 		i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_PREC | SERCOM_I2CS_INTFLAG_DRDY;
-		
+
 		if (!((module->enabled_callback & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST))
 				|| (module->enabled_callback == (1 << I2C_SLAVE_CALLBACK_WRITE_REQUEST)))) {
 			/* Disable address match if read/write request is not enabled */

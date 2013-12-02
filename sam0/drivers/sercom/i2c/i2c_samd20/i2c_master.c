@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 I2C Master Driver
+ * \brief SAM D2x I2C Master Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
