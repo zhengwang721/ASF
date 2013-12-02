@@ -565,11 +565,11 @@ struct usart_module {
 	/** Transmitter enabled */
 	bool transmitter_enabled;
 #ifdef FEATURE_USART_LIN_SLAVE
-	/** Enable LIN Slave Support */
+	/** LIN Slave Support enabled */
 	bool lin_slave_enabled;
 #endif
 #ifdef FEATURE_USART_START_FRAME_DECTION
-	/** Enable start of frame dection */
+	/** Start of frame dection enabled */
 	bool start_frame_detection_enabled;
 #endif
 #  if USART_CALLBACK_MODE == true
