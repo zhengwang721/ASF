@@ -564,6 +564,14 @@ struct usart_module {
 	bool receiver_enabled;
 	/** Transmitter enabled */
 	bool transmitter_enabled;
+#ifdef FEATURE_USART_LIN_SLAVE
+	/** Enable LIN Slave Support */
+	bool lin_slave_enabled;
+#endif
+#ifdef FEATURE_USART_START_FRAME_DECTION
+	/** Enable start of frame dection */
+	bool start_frame_detection_enabled;
+#endif
 #  if USART_CALLBACK_MODE == true
 	/** Array to store callback function pointers in */
 	usart_callback_t callback[USART_CALLBACK_N];

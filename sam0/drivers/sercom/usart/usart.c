@@ -480,6 +480,12 @@ enum status_code usart_init(
 	module->receiver_enabled = config->receiver_enable;
 	module->transmitter_enabled = config->transmitter_enable;
 
+#ifdef FEATURE_USART_LIN_SLAVE
+	module->lin_slave_enabled = config->lin_slave_enable;
+#endif
+#ifdef FEATURE_USART_START_FRAME_DECTION
+	module->start_frame_detection_enabled = config->start_frame_detection_enable;
+#endif
 	/* Set configuration according to the config struct */
 	status_code = _usart_set_config(module, config);
 	if(status_code != STATUS_OK) {

@@ -102,6 +102,20 @@ void _usart_read_buffer(
 
 	/* Enable the RX Complete Interrupt */
 	usart_hw->INTENSET.reg = SERCOM_USART_INTFLAG_RXC;
+
+#ifdef FEATURE_USART_LIN_SLAVE
+	/* Enable the break character is received Interrupt */
+	if(module->lin_slave_enabled) {
+		usart_hw->INTENSET.reg = SERCOM_USART_INTFLAG_RXBRK;
+	}
+#endif
+
+#ifdef FEATURE_USART_START_FRAME_DECTION
+	/* Enable a start condition is detected Interrupt */
+	if(module->start_frame_detection_enabled) {
+		usart_hw->INTENSET.reg = SERCOM_USART_INTFLAG_RXS;
+	}
+#endif
 }
 
 /**
