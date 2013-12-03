@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 RTC Driver (Calendar Interrupt Mode)
+ * \brief SAM D2x RTC Driver (Calendar Interrupt Mode)
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *

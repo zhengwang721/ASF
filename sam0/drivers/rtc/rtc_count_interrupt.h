@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 RTC Driver (Count Interrupt Mode)
+ * \brief SAM D2x RTC Driver (Count Interrupt Mode)
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -51,7 +51,7 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_samd20_rtc_count_group
+ * \addtogroup asfdoc_sam0_rtc_count_group
  * @{
  */
 

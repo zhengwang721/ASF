@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 RTC Driver (Calendar Mode)
+ * \brief SAM D2x RTC Driver (Calendar Mode)
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define RTC_CALENDAR_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_rtc_calendar_group SAM D20 RTC Calendar Driver (RTC CAL)
+ * \defgroup asfdoc_sam0_rtc_calendar_group SAM D2x RTC Calendar Driver (RTC CAL)
  *
- * This driver for SAM D20 devices provides an interface for the configuration
+ * This driver for SAM D2x devices provides an interface for the configuration
  * and management of the device's Real Time Clock functionality in Calendar
  * operating mode, for the configuration and retrieval of the current time and
  * date as maintained by the RTC module. The following driver API modes are
@@ -62,22 +62,22 @@
  *  - RTC (Real Time Clock)
  *
  * The outline of this documentation is as follows:
- *  - \ref asfdoc_samd20_rtc_calendar_prerequisites
- *  - \ref asfdoc_samd20_rtc_calendar_module_overview
- *  - \ref asfdoc_samd20_rtc_calendar_special_considerations
- *  - \ref asfdoc_samd20_rtc_calendar_extra_info
- *  - \ref asfdoc_samd20_rtc_calendar_examples
- *  - \ref asfdoc_samd20_rtc_calendar_api_overview
+ *  - \ref asfdoc_sam0_rtc_calendar_prerequisites
+ *  - \ref asfdoc_sam0_rtc_calendar_module_overview
+ *  - \ref asfdoc_sam0_rtc_calendar_special_considerations
+ *  - \ref asfdoc_sam0_rtc_calendar_extra_info
+ *  - \ref asfdoc_sam0_rtc_calendar_examples
+ *  - \ref asfdoc_sam0_rtc_calendar_api_overview
  *
  *
- * \section asfdoc_samd20_rtc_calendar_prerequisites Prerequisites
+ * \section asfdoc_sam0_rtc_calendar_prerequisites Prerequisites
  *
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_samd20_rtc_calendar_module_overview Module Overview
+ * \section asfdoc_sam0_rtc_calendar_module_overview Module Overview
  *
- * The RTC module in the SAM D20 devices is a 32-bit counter, with a 10-bit
+ * The RTC module in the SAM D2x devices is a 32-bit counter, with a 10-bit
  * programmable prescaler. Typically, the RTC clock is run continuously,
  * including in the device's low-power sleep modes, to track the current time
  * and date information. The RTC can be used as a source to wake up the system
@@ -93,7 +93,7 @@
  *  - Date tracking in day, month and year
  *   - Automatic leap year correction
  *
- * \subsection asfdoc_samd20_rtc_calendar_module_overview_alarms Alarms and Overflow
+ * \subsection asfdoc_sam0_rtc_calendar_module_overview_alarms Alarms and Overflow
  * The RTC has 4 independent hardware alarms that can be configured by the user
  * application. These alarms will be will triggered on match with the current
  * clock value, and can be set up to trigger an interrupt, event, or both. The
@@ -109,7 +109,7 @@
  * When the RTC is operated with the calendar enabled and run using a nominal
  * 1 Hz input clock frequency, a register overflow will occur after 64 years.
  *
- * \subsection asfdoc_samd20_rtc_calendar_module_overview_periodic Periodic Events
+ * \subsection asfdoc_sam0_rtc_calendar_module_overview_periodic Periodic Events
  * The RTC can generate events at periodic intervals, allowing for direct
  * peripheral actions without CPU intervention. The periodic events can be
  * generated on the upper 8 bits of the RTC prescaler, and will be generated on
@@ -124,9 +124,9 @@
  * divide by 1024. The \b n parameter is the event source generator index of the
  * RTC module. If the asynchronous clock is operated at the recommended 1KHz,
  * the formula results in the values shown in
- * \ref asfdoc_samd20_rtc_calendar_module_rtc_hz "the table below".
+ * \ref asfdoc_sam0_rtc_calendar_module_rtc_hz "the table below".
  *
- * \anchor asfdoc_samd20_rtc_calendar_module_rtc_hz
+ * \anchor asfdoc_sam0_rtc_calendar_module_rtc_hz
  * <table>
  *   <caption>RTC event frequencies for each prescaler bit using a 1KHz clock</caption>
  *   <tr>
@@ -159,12 +159,12 @@
  * </table>
  *
  * \note The connection of events between modules requires the use of the
- *       \ref asfdoc_samd20_events_group "SAM D20 Event System Driver (EVENTS)"
+ *       \ref asfdoc_sam0_events_group "SAM D2x Event System Driver (EVENTS)"
  *       to route output event of one module to the the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
  *
- * \subsection asfdoc_samd20_rtc_calendar_module_overview_correction Digital Frequency Correction
+ * \subsection asfdoc_sam0_rtc_calendar_module_overview_correction Digital Frequency Correction
  * The RTC module contains Digital Frequency Correction logic to compensate for
  * inaccurate source clock frequencies which would otherwise result in skewed
  * time measurements. The correction scheme requires that at least two bits
@@ -183,16 +183,16 @@
  * and slower when given a negative correction value.
  *
  *
- * \section asfdoc_samd20_rtc_calendar_special_considerations Special Considerations
+ * \section asfdoc_sam0_rtc_calendar_special_considerations Special Considerations
  *
- * \subsection asfdoc_samd20_rtc_calendar_special_considerations_year Year limit
+ * \subsection asfdoc_sam0_rtc_calendar_special_considerations_year Year limit
  * The RTC module has a year range of 63 years from the starting year configured
  * when the module is initialized. Dates outside the start to end year range
  * described below will need software adjustment:
  *
  * \f[ [YEAR_{START}, YEAR_{START}+64) \f]
  *
- * \subsection asfdoc_samd20_rtc_calendar_special_considerations_clock Clock Setup
+ * \subsection asfdoc_sam0_rtc_calendar_special_considerations_clock Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32 kHz RC-oscillator with a prescaler of 32, giving a
@@ -201,11 +201,11 @@
  * time keeping operations.
  *
  * The implementer also has the option to set other end-frequencies.
- * \ref asfdoc_samd20_rtc_calendar_rtc_out_freq "The table below" lists the
+ * \ref asfdoc_sam0_rtc_calendar_rtc_out_freq "The table below" lists the
  * available RTC frequencies for each possible GCLK and RTC input prescaler
  * options.
  *
- * \anchor asfdoc_samd20_rtc_calendar_rtc_out_freq
+ * \anchor asfdoc_sam0_rtc_calendar_rtc_out_freq
  * <table>
  *   <caption>RTC output frequencies from allowable input clocks</caption>
  *   <tr>
@@ -231,9 +231,9 @@
  * </table>
  *
  * The overall RTC module clocking scheme is shown in
- * \ref asfdoc_samd20_rtc_calendar_rtc_clock_fig "the figure below".
+ * \ref asfdoc_sam0_rtc_calendar_rtc_clock_fig "the figure below".
  *
- * \anchor asfdoc_samd20_rtc_calendar_rtc_clock_fig
+ * \anchor asfdoc_sam0_rtc_calendar_rtc_clock_fig
  * \dot
  * digraph clocking_scheme {
  *     rankdir=LR;
@@ -251,22 +251,22 @@
  *       should be used.
  *
  *
- * \section asfdoc_samd20_rtc_calendar_extra_info Extra Information
+ * \section asfdoc_sam0_rtc_calendar_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_samd20_rtc_calendar_extra. This includes:
- *  - \ref asfdoc_samd20_rtc_calendar_extra_acronyms
- *  - \ref asfdoc_samd20_rtc_calendar_extra_dependencies
- *  - \ref asfdoc_samd20_rtc_calendar_extra_errata
- *  - \ref asfdoc_samd20_rtc_calendar_extra_history
+ * For extra information see \ref asfdoc_sam0_rtc_calendar_extra. This includes:
+ *  - \ref asfdoc_sam0_rtc_calendar_extra_acronyms
+ *  - \ref asfdoc_sam0_rtc_calendar_extra_dependencies
+ *  - \ref asfdoc_sam0_rtc_calendar_extra_errata
+ *  - \ref asfdoc_sam0_rtc_calendar_extra_history
  *
  *
- * \section asfdoc_samd20_rtc_calendar_examples Examples
+ * \section asfdoc_sam0_rtc_calendar_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_samd20_rtc_calendar_exqsg.
+ * \ref asfdoc_sam0_rtc_calendar_exqsg.
  *
  *
- * \section asfdoc_samd20_rtc_calendar_api_overview API Overview
+ * \section asfdoc_sam0_rtc_calendar_api_overview API Overview
  * @{
  */
 
@@ -279,6 +279,12 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/* Tempory work around definition */
+#define RTC_NUM_OF_COMP16           2
+#define RTC_NUM_OF_COMP32           1
+#define RTC_MODE2_CLOCK_HOUR_PM_Val     0x10u   /**< \brief (RTC_MODE2_CLOCK)  */
+#define RTC_MODE2_CLOCK_HOUR_PM     (RTC_MODE2_CLOCK_HOUR_PM_Val   << RTC_MODE2_CLOCK_HOUR_Pos)
 
 /**
  * \brief Available alarm channels.
@@ -428,7 +434,7 @@ struct rtc_calendar_events {
 	bool generate_event_on_alarm[RTC_NUM_OF_COMP16];
 	/** Generate an output event periodically at a binary division of the RTC
 	 *  counter frequency (see
-	 *  \ref asfdoc_samd20_rtc_calendar_module_overview_periodic).
+	 *  \ref asfdoc_sam0_rtc_calendar_module_overview_periodic).
 	 */
 	bool generate_event_on_periodic[8];
 };
@@ -865,9 +871,9 @@ static inline void rtc_calendar_disable_events(
 
 
 /**
- * \page asfdoc_samd20_rtc_calendar_extra Extra Information for RTC (CAL) Driver
+ * \page asfdoc_sam0_rtc_calendar_extra Extra Information for RTC (CAL) Driver
  *
- * \section asfdoc_samd20_rtc_calendar_extra_acronyms Acronyms
+ * \section asfdoc_sam0_rtc_calendar_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -891,17 +897,17 @@ static inline void rtc_calendar_disable_events(
  * </table>
  *
  *
- * \section asfdoc_samd20_rtc_calendar_extra_dependencies Dependencies
+ * \section asfdoc_sam0_rtc_calendar_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
  *  - None
  *
  *
- * \section asfdoc_samd20_rtc_calendar_extra_errata Errata
+ * \section asfdoc_sam0_rtc_calendar_extra_errata Errata
  * There are no errata related to this driver.
  *
  *
- * \section asfdoc_samd20_rtc_calendar_extra_history Module History
+ * \section asfdoc_sam0_rtc_calendar_extra_history Module History
  * An overview of the module history is presented in the table below, with
  * details on the enhancements and fixes made to the module since its first
  * release. The current version of this corresponds to the newest version in
@@ -922,20 +928,20 @@ static inline void rtc_calendar_disable_events(
  */
 
 /**
- * \page asfdoc_samd20_rtc_calendar_exqsg Examples for RTC CAL Driver
+ * \page asfdoc_sam0_rtc_calendar_exqsg Examples for RTC CAL Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_samd20_rtc_calendar_group. QSGs are simple
+ * applications for \ref asfdoc_sam0_rtc_calendar_group. QSGs are simple
  * examples with step-by-step instructions to configure and use this driver in a
  * selection of use cases. Note that QSGs can be compiled as a standalone
  * application or be added to the user application.
  *
- *  - \subpage asfdoc_samd20_rtc_calendar_basic_use_case
+ *  - \subpage asfdoc_sam0_rtc_calendar_basic_use_case
  * \if RTC_CALENDAR_CALLBACK_MODE
- *  - \subpage asfdoc_samd20_rtc_calendar_callback_use_case
+ *  - \subpage asfdoc_sam0_rtc_calendar_callback_use_case
  * \endif
  *
- * \page asfdoc_samd20_rtc_calendar_document_revision_history Document Revision History
+ * \page asfdoc_sam0_rtc_calendar_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

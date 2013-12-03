@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 RTC Driver (Count Mode)
+ * \brief SAM D2x RTC Driver (Count Mode)
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *

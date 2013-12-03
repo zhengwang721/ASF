@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x RTC Driver (Calendar Interrupt Mode)
+ * \brief SAM D21 Xplained PRO board configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,42 +41,7 @@
  *
  */
 
-#ifndef RTC_CALENDAR_INTERRUPT_H_INCLUDED
-#define RTC_CALENDAR_INTERRUPT_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include "rtc_calendar.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * \addtogroup asfdoc_sam0_rtc_calendar_group
- * @{
- */
-
- /**
- * \name Callbacks
- * @{
- */
-enum status_code rtc_calendar_register_callback(
-		rtc_calendar_callback_t callback,
-		enum rtc_calendar_callback callback_type);
-
-enum status_code rtc_calendar_unregister_callback(
-		enum rtc_calendar_callback callback_type);
-
-void rtc_calendar_enable_callback(
-		enum rtc_calendar_callback callback_type);
-
-void rtc_calendar_disable_callback(
-	enum rtc_calendar_callback callback_type);
-
-/** @} */
-/** @} */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* RTC_CALENDAR_INTERRUPT_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
