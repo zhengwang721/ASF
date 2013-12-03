@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="ADC Enhanced Resolution Example on SAM4N-XPlained-Pro" id="sam.drivers.adc.example2.sam4n_xplained_pro">
+	<project caption="ADC Temperature Sensor Example on SAM4N-XPlained-Pro" id="sam.drivers.adc.adc_temp_sensor_example.sam4n_xplained_pro">
 		<info type="description" value="summary">
-		Enhanced resolution example of ADC on SAM4N-XPlained-Pro.
+		This example demonstrates how to configure the temperature sensor feature inside the microcontroller.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
@@ -9,7 +9,7 @@
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="include-path" value="."/>
-		<require idref="sam.drivers.adc.sam4n.example2"/>
+		<require idref="sam.drivers.adc.adc_temp_sensor_example"/>
 		<require idref="board.sam4n_xplained_pro"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>

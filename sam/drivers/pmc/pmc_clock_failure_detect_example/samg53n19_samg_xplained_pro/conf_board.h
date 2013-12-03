@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Serial USART service configuration.
+ * \brief Board configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,9 +41,10 @@
  *
  */
 
-#ifndef CONF_USART_SERIAL_H_INCLUDED
-#define CONF_USART_SERIAL_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/* Intentionally empty */
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-#endif/* CONF_USART_SERIAL_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

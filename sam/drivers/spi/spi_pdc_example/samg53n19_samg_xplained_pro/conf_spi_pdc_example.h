@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Serial USART service configuration.
+ * \brief SPI PDC example configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,9 +41,37 @@
  *
  */
 
-#ifndef CONF_USART_SERIAL_H_INCLUDED
-#define CONF_USART_SERIAL_H_INCLUDED
+/**
+ * \defgroup spi_example_pin_defs
+ *  - <b> STK600 SAMG53 -- STK600 SAMG53 </b>
+ *  - VCC -- VCC
+ *  - NPCS0(PA11) -- NPCS0(PA11)
+ *  - MISO(PA12) -- MISO(PA12)
+ *  - MOSI(PA13) -- MOSI(PA13)
+ *  - SPCK(PA14) -- SPCK(PA14)
+ *  - GND -- GND
+ */
 
-/* Intentionally empty */
+#ifndef CONF_SPI_PDC_EXAMPLE_H_INCLUDED
+#define CONF_SPI_PDC_EXAMPLE_H_INCLUDED
 
-#endif/* CONF_USART_SERIAL_H_INCLUDED */
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+extern "C" {
+#endif
+/**INDENT-ON**/
+/// @endcond
+
+#define SPI_Handler     SPI_Handler
+#define SPI_IRQn        SPI_IRQn
+
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+}
+#endif
+/**INDENT-ON**/
+/// @endcond
+
+#endif /* CONF_SPI_PDC_EXAMPLE_H_INCLUDED */

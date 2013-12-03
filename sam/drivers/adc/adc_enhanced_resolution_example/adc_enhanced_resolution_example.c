@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ADC Enhanced Resolution example for SAM4N.
+ * \brief ADC Enhanced Resolution example.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,26 +42,28 @@
  */
 
 /**
- * \mainpage ADC SAM4N Enhanced Resolution Example
+ * \mainpage ADC Enhanced Resolution Example
  *
  * \section Purpose
  *
- * This example demonstrates how to use the enhanced resolution feature of SAM4N.
+ * This example demonstrates how to use the enhanced resolution feature.
  *
  * \section Requirements
  *
- * This example can be used on SAM4N-Xplained-Pro boards.
+ * This example can be used on boards:
+ * - sam4n16c_sam4n_xplained_pro
+ * - samg51_stk600_samg51
  *
  * \section Description
  *
- * The ADC on SAM4N normally operates in 8-bit or 10-bit resolution mode. But
+ * The ADC on normally operates in 8-bit or 10-bit resolution mode. But
  * obtained by interpolating multiple samples, the 11-bit and 12-bit resolution
  * mode can be achieved, which is so called enhanced resolution mode.
- * For 11-bit mode, 4 samples are used, which gives an effective sample rate of
- * 1/4 of the actual sample frequency.
- * For 12-bit mode, 16 samples are used, giving an effective sample rate of 1/16
- * of the actual sample frequency. This arrangement allows conversion speed to
- * be traded for better accuracy.
+ * For 11-bit mode, 4 samples are used, which gives an effective sample rate
+ * of 1/4 of the actual sample frequency.
+ * For 12-bit mode, 16 samples are used, giving an effective sample rate of
+ * 1/16 of the actual sample frequency. This arrangement allows conversion
+ * speed to be traded for better accuracy.
  *
  * \section Usage
  *
@@ -90,7 +92,12 @@
 #include "asf.h"
 
 /** Reference voltage for ADC,in mv. */
+#if (SAM4N)
 #define VOLT_REF        (3300)
+#endif
+#if (SAMG)
+#define VOLT_REF        (2000)
+#endif
 
 /** The maximal digital value */
 #define MAX_DIGITAL_8_Bit  (255UL)
@@ -103,12 +110,6 @@
 #define STRING_HEADER "\n-- ADC Enhanced Resolution Example --\r\n" \
 	"-- "BOARD_NAME " --\r\n" \
 	"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
-
-#define MENU_HEADER "\n\r-- press a key to change the resolution mode--\n\r" \
-	"-- a: Normal Resolution Mode, 8-bit --\n\r" \
-	"-- b: Normal Resolution Mode, 10-bit --\n\r" \
-	"-- c: Enhanced Resolution Mode, 11-bit --\n\r"	\
-	"-- d: Enhanced Resolution Mode, 12-bit --\n\r"	\
 
 /** The conversion data is done flag */
 volatile bool is_conversion_done = false;
@@ -166,7 +167,13 @@ static void configure_tc_trigger(void)
  */
 static void display_menu(void)
 {
-	puts(MENU_HEADER);
+	printf("\n\r-- press a key to select the resolution mode--\n\r"
+#if (SAM4N)
+	"-- a: Normal Resolution Mode, 8-bit --\n\r"
+#endif
+	"-- b: Normal Resolution Mode, 10-bit --\n\r"
+	"-- c: Enhanced Resolution Mode, 11-bit --\n\r"
+	"-- d: Enhanced Resolution Mode, 12-bit --\n\r");
 }
 
 /**
@@ -184,6 +191,7 @@ static void set_adc_resolution(void)
 		}
 
 		switch (uc_key) {
+#if (SAM4N)
 		case 'a':
 			g_max_digital = MAX_DIGITAL_8_Bit;
 			adc_set_resolution(ADC, ADC_8_BITS);
@@ -191,7 +199,7 @@ static void set_adc_resolution(void)
 			uc_done = 1;
 			puts(" Quit Configuration \n\r");
 			break;
-
+#endif
 		case 'b':
 			g_max_digital = MAX_DIGITAL_10_BIT;
 			adc_set_resolution(ADC, ADC_10_BITS);
@@ -229,7 +237,7 @@ static void set_adc_resolution(void)
  */
 static void adc_end_conversion(void)
 {
-	g_ul_value = adc_channel_get_value(ADC, ADC_CHANNEL_11);
+	g_ul_value = adc_channel_get_value(ADC, ADC_CHANNEL_1);
 	is_conversion_done = true;
 }
 
@@ -258,11 +266,11 @@ int main(void)
 	adc_get_config_defaults(&adc_cfg);
 
 	adc_init(ADC, &adc_cfg);
-	adc_channel_enable(ADC, ADC_CHANNEL_11);
+	adc_channel_enable(ADC, ADC_CHANNEL_1);
 
 	adc_set_trigger(ADC, ADC_TRIG_TIO_CH_0);
 
-	adc_set_callback(ADC, ADC_INTERRUPT_EOC_11,
+	adc_set_callback(ADC, ADC_INTERRUPT_EOC_1,
 			adc_end_conversion, 1);
 
 	set_adc_resolution();

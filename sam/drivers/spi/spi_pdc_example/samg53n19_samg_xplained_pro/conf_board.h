@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Serial USART service configuration.
+ * \brief Board configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,9 +41,24 @@
  *
  */
 
-#ifndef CONF_USART_SERIAL_H_INCLUDED
-#define CONF_USART_SERIAL_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/* Intentionally empty */
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-#endif/* CONF_USART_SERIAL_H_INCLUDED */
+/** SPI MACRO definition */
+#define CONF_BOARD_SPI
+
+/** SPI slave select MACRO definition */
+#define CONF_BOARD_SPI_NPCS0
+
+/** Spi Hw ID . */
+#define SPI_ID          ID_SPI
+
+/** SPI base address for SPI master mode*/
+#define SPI_MASTER_BASE      SPI
+/** SPI base address for SPI slave mode, (on different board) */
+#define SPI_SLAVE_BASE       SPI
+
+#endif /* CONF_BOARD_H_INCLUDED */
