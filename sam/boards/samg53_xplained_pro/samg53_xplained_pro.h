@@ -113,8 +113,8 @@ void system_board_init(void);
 #define LED0_FLAGS    (PIO_OUTPUT_1 | PIO_DEFAULT)
 
 #define LED0_PIN                  IOPORT_CREATE_PIN(PIOA, 16)
-#define LED0_ACTIVE               false
-#define LED0_INACTIVE             !LED0_ACTIVE
+#define LED0_ACTIVE_LEVEL         false
+#define LED0_INACTIVE_LEVEL       !LED0_ACTIVE_LEVEL
 /** @} */
 
 /** \name SW0 definitions
@@ -154,6 +154,14 @@ void system_board_init(void);
 #define BUTTON_0_INACTIVE         SW0_INACTIVE
 #define BUTTON_0_SUPC_INPUT       SW0_SUPC_INPUT
 /** @} */
+
+//! \name IO1 button definitions */
+//@{
+/** Push button #1 definition. Attributes = pull-up + debounce + interrupt on rising edge. */
+#define PUSHBUTTON_1_NAME    "SW0"
+#define GPIO_PUSH_BUTTON_1   SW0_PIN
+#define GPIO_PUSH_BUTTON_1_FLAGS    (PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+//@}
 
 /** Number of on-board buttons */
 #define BUTTON_COUNT 1

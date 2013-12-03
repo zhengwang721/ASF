@@ -1,5 +1,22 @@
 <asf xmlversion="1.0">
+	<select-by-config id="config.board.samg53_xplained_pro.led" name="config.board.samg53_xplained_pro.led" caption="SAMG53 Xplained Pro LED support" default="yes">
+		<module type="meta" id="config.board.samg53_xplained_pro.led#no" caption="SAMG53 Xplained Pro LED support disabled">
+		</module>
+		<module type="meta" id="config.board.samg53_xplained_pro.led#yes" caption="SAMG53 Xplained Pro LED support enabled">
+			<build type="header-file" subtype="api" value="led.h"/>
+			<build type="include-path" value="."/>
+			<require idref="common.services.ioport"/>
+		</module>
+	</select-by-config>
 
+	<select-by-config id="config.board.samg53_xplained_pro.init" name="config.board.samg53_xplained_pro.init" caption="SAMG53 Xplained Pro initialization support" default="yes">
+		<module type="meta" id="config.board.samg53_xplained_pro.init#no" caption="SAMG53 Xplained Pro initialization support disabled">
+		</module>
+		<module type="meta" id="config.board.samg53_xplained_pro.init#yes" caption="SAMG53 Xplained Pro initialization support enabled">
+			<build type="c-source" value="board_init.c"/>
+			<require idref="common.services.ioport"/>
+		</module>
+	</select-by-config>
 	
 	<board id="board.samg53_xplained_pro" vendor="Atmel" caption="SAMG53 Xplained Pro">
 		<!-- Board name -->
@@ -10,10 +27,9 @@
 		<device-support value="atsamg53n19"/>
 		
 		<!-- Source code -->
-		<build type="c-source" value="board_init.c"/>
-		<build type="header-file" value="samg53_Xplained_pro.h"/>
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>
+		<build type="header-file" value="samg53_Xplained_pro.h"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
 
@@ -24,9 +40,11 @@
 		<build type="macro-config" subtype="aux-script" value="debug_scripts/iar/samg53_xplained_pro_sram.mac" toolchain="iarewarm"/>
 		
 		<!-- Required modules -->
-		<require idref="common.services.ioport"/>
 		<require idref="sam.utils.cmsis.samg53.source.template"/>
 		<require idref="common.boards"/>
+		<require idref="config.board.samg53_xplained_pro.init"/>
+		<require idref="config.board.samg53_xplained_pro.led"/>
+		
 		<!-- Debug drivers -->
 		<config name="config.compiler.iarewarm.debugger.driver" value="cmsisdap"/>
 		<config name="config.compiler.iarewarm.debugger.use_macro_file" value="no"/>
