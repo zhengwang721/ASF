@@ -113,8 +113,8 @@ void system_board_init(void);
 #define LED0_FLAGS    (PIO_OUTPUT_1 | PIO_DEFAULT)
 
 #define LED0_PIN                  IOPORT_CREATE_PIN(PIOA, 16)
-#define LED0_ACTIVE               false
-#define LED0_INACTIVE             !LED0_ACTIVE
+#define LED0_ACTIVE_LEVEL         false
+#define LED0_INACTIVE_LEVEL       !LED0_ACTIVE_LEVEL
 /** @} */
 
 /** \name SW0 definitions
