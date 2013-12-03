@@ -155,6 +155,14 @@ void system_board_init(void);
 #define BUTTON_0_SUPC_INPUT       SW0_SUPC_INPUT
 /** @} */
 
+//! \name IO1 button definitions */
+//@{
+/** Push button #1 definition. Attributes = pull-up + debounce + interrupt on rising edge. */
+#define PUSHBUTTON_1_NAME    "SW0"
+#define GPIO_PUSH_BUTTON_1   SW0_PIN
+#define GPIO_PUSH_BUTTON_1_FLAGS    (PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+//@}
+
 /** Number of on-board buttons */
 #define BUTTON_COUNT 1
 
