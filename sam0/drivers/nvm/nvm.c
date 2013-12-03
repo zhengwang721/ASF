@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Non Volatile Memory driver
+ * \brief SAM D2x Non Volatile Memory driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -45,6 +45,22 @@
 #include <system_interrupt.h>
 #include <string.h>
 
+/** Add here for compile ok for SAMD21, will be removed after the header file update. */
+#if SAMD21
+#define SYSCTRL_FUSES_BOD12USERLEVEL_ADDR NVMCTRL_USER
+#define SYSCTRL_FUSES_BOD12USERLEVEL_Pos 17           /**< \brief (NVMCTRL_USER) BOD12 User Level */
+#define SYSCTRL_FUSES_BOD12USERLEVEL_Msk (0x1Fu << SYSCTRL_FUSES_BOD12USERLEVEL_Pos)
+#define SYSCTRL_FUSES_BOD12USERLEVEL(value) ((SYSCTRL_FUSES_BOD12USERLEVEL_Msk & ((value) << SYSCTRL_FUSES_BOD12USERLEVEL_Pos)))
+
+#define SYSCTRL_FUSES_BOD12_ACTION_ADDR NVMCTRL_USER
+#define SYSCTRL_FUSES_BOD12_ACTION_Pos 23           /**< \brief (NVMCTRL_USER) BOD12 Action */
+#define SYSCTRL_FUSES_BOD12_ACTION_Msk (0x3u << SYSCTRL_FUSES_BOD12_ACTION_Pos)
+#define SYSCTRL_FUSES_BOD12_ACTION(value) ((SYSCTRL_FUSES_BOD12_ACTION_Msk & ((value) << SYSCTRL_FUSES_BOD12_ACTION_Pos)))
+
+#define SYSCTRL_FUSES_BOD12_EN_ADDR NVMCTRL_USER
+#define SYSCTRL_FUSES_BOD12_EN_Pos  22           /**< \brief (NVMCTRL_USER) BOD12 Enable */
+#define SYSCTRL_FUSES_BOD12_EN_Msk  (0x1u << SYSCTRL_FUSES_BOD12_EN_Pos)
+#endif
 
 /**
  * \internal Internal device instance struct
@@ -764,7 +780,7 @@ static void _nvm_translate_struct_to_raw_fusebits (
 
 			/* Setting BOD12 fuses */
 			    SYSCTRL_FUSES_BOD12USERLEVEL(fusebits->bod12_level)                 |
-			    ((uint32_t)(fusebits->bod33_enable)) << SYSCTRL_FUSES_BOD12_EN_Pos  |
+			    ((uint32_t)(fusebits->bod12_enable)) << SYSCTRL_FUSES_BOD12_EN_Pos  |
 			    SYSCTRL_FUSES_BOD12_ACTION((uint8_t)(fusebits->bod12_action))       |
 
 			/* Setting WDT fuses */
