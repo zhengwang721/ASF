@@ -67,7 +67,7 @@
 
 // ===== PLL0 (A) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
 // Use mul and div effective values here.
-#define CONFIG_PLL0_SOURCE          PLL_SRC_SLCK_XTAL
+#define CONFIG_PLL0_SOURCE          PLL_SRC_SLCK_RC
 #define CONFIG_PLL0_MUL             1500
 #define CONFIG_PLL0_DIV             1
 
