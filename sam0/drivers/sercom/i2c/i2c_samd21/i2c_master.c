@@ -125,12 +125,18 @@ static enum status_code _i2c_master_check_config(
 	}
 
 	/* Find and set baudrate. */
-	tmp_baud = (int32_t)((system_gclk_chan_get_hz(SERCOM0_GCLK_ID_CORE +
-			sercom_index) / (2000*(config->baud_rate))) - 5);
+	if (config->baud_rate <= I2C_MASTER_BAUD_RATE_1000KHZ) {
+		tmp_baud = (int32_t)((system_gclk_chan_get_hz(SERCOM0_GCLK_ID_CORE +
+						sercom_index) / (2000*(config->baud_rate))) - 5);
 
-	/* Check that baud rate is supported at current speed. */
-	if (tmp_baud != i2c_module->BAUD.reg) {
+		/* Check that baud rate is supported at current speed. */
+		if ((uint32_t)tmp_baud != (i2c_module->BAUD.reg & SERCOM_I2CM_BAUD_BAUD_Msk)) {
+			tmp_status_code = STATUS_ERR_DENIED;
+		}
+	} else {
+		/* The higher baudrate is not support by the software for now */
 		tmp_status_code = STATUS_ERR_DENIED;
+		Assert(false);
 	}
 
 	if (tmp_status_code == STATUS_OK) {
@@ -219,6 +225,17 @@ static enum status_code _i2c_master_set_config(
 		tmp_ctrla |= config->start_hold_time;
 	}
 
+	/* Check transfer speed mode */
+	if (config->baud_rate > I2C_MASTER_BAUD_RATE_400KHZ) {
+		if (config->baud_rate < I2C_MASTER_BAUD_RATE_1000KHZ) {
+			/* Fast-mode Plus up to 1MHz */
+			tmp_ctrla |= SERCOM_I2CM_CTRLA_SPEED(1);
+		} else if (config->baud_rate < I2C_MASTER_BAUD_RATE_3400KHZ) {
+			/* High-speed mode up to 3.4MHz */
+			tmp_ctrla |= SERCOM_I2CM_CTRLA_SPEED(2);
+		}
+	}
+
 	/* Write config to register CTRLA. */
 	i2c_module->CTRLA.reg |= tmp_ctrla;
 
@@ -226,16 +243,22 @@ static enum status_code _i2c_master_set_config(
 	i2c_module->CTRLB.reg = SERCOM_I2CM_CTRLB_SMEN;
 
 	/* Find and set baudrate. */
-	tmp_baud = (int32_t)((system_gclk_chan_get_hz(SERCOM0_GCLK_ID_CORE +
-			sercom_index) / (2000*(config->baud_rate))) - 5);
+	if (config->baud_rate <= I2C_MASTER_BAUD_RATE_1000KHZ) {
+		tmp_baud = (int32_t)((system_gclk_chan_get_hz(SERCOM0_GCLK_ID_CORE +
+						sercom_index) / (2000*(config->baud_rate))) - 5);
 
-	/* Check that baud rate is supported at current speed. */
-	if (tmp_baud > 255 || tmp_baud < 0) {
-		/* Baud rate not supported. */
-		tmp_status_code = STATUS_ERR_BAUDRATE_UNAVAILABLE;
+		/* Check that baud rate is supported at current speed. */
+		if (tmp_baud > 255 || tmp_baud < 0) {
+			/* Baud rate not supported. */
+			tmp_status_code = STATUS_ERR_BAUDRATE_UNAVAILABLE;
+		} else {
+			/* Baud rate acceptable. */
+			i2c_module->BAUD.reg = SERCOM_I2CM_BAUD_BAUD(tmp_baud);
+		}
 	} else {
-		/* Baud rate acceptable. */
-		i2c_module->BAUD.reg = (uint8_t)tmp_baud;
+		/* The higher baudrate is not support by the software for now */
+		tmp_status_code = STATUS_ERR_BAUDRATE_UNAVAILABLE;
+		Assert(false);
 	}
 
 	return tmp_status_code;

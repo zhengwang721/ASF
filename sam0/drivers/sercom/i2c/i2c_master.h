@@ -118,10 +118,16 @@ enum i2c_master_start_hold_time {
  *       given by GCLK-frequency divided by 510.
  */
 enum i2c_master_baud_rate {
-	/** Baud rate at 100kHz */
+	/** Baud rate at 100kHz (Standard-mode) */
 	I2C_MASTER_BAUD_RATE_100KHZ = 100,
-	/** Baud rate at 400kHz */
+	/** Baud rate at 400kHz (Fast-mode) */
 	I2C_MASTER_BAUD_RATE_400KHZ = 400,
+#ifdef FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
+	/** Baud rate at 1MHz (Fast-mode Plus) */
+	I2C_MASTER_BAUD_RATE_1000KHZ = 1000,
+	/** Baud rate at 3.4MHz (High-speed mode) */
+	I2C_MASTER_BAUD_RATE_3400KHZ = 3400,
+#endif
 };
 
 #if I2C_MASTER_CALLBACK_MODE == true

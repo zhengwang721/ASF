@@ -202,6 +202,22 @@ enum i2c_slave_direction {
 	I2C_SLAVE_DIRECTION_NONE,
 };
 
+#ifdef FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
+/**
+ * \brief Enum for the transfer speed mode
+ *
+ * Enum for the transfer speed mode.
+ */
+enum i2c_slave_transfer_speed_mode {
+	/** Standard-mode (Sm) up to 100 kHz and Fast-mode (Fm) up to 400 kHz */
+	I2C_SLAVE_SPEED_STANDARD_AND_FAST_MODE = SERCOM_I2CS_CTRLA_SPEED(0),
+	/** Fast-mode Plus (Fm+) up to 1 MHz */
+	I2C_SLAVE_SPEED_FAST_MODE_PLUS = SERCOM_I2CS_CTRLA_SPEED(1),
+	/** High-speed mode (Hs-mode) up to 3.4 MHz */
+	I2C_SLAVE_SPEED_HIGH_SPEED_MODE = SERCOM_I2CS_CTRLA_SPEED(2),
+};
+#endif
+
 /**
  * \brief SERCOM I<SUP>2</SUP>C Slave driver software device instance structure.
  *
@@ -271,6 +287,12 @@ struct i2c_slave_config {
 	 * is defined as 0000000 with direction bit 0)
 	 */
 	bool enable_general_call_address;
+
+#  ifdef FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
+	/** Transfer speed mode */
+	enum i2c_slave_transfer_speed_mode transfer_speed_mode;
+#  endif
+
 #  if I2C_SLAVE_CALLBACK_MODE == true
 	/**
 	 * Enable NACK on address match (this can be changed after initialization
@@ -440,6 +462,9 @@ static inline void i2c_slave_get_config_defaults(
 	config->address = 0;
 	config->address_mask = 0;
 	config->enable_general_call_address = false;
+#ifdef FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
+	config->transfer_speed_mode = I2C_SLAVE_SPEED_STANDARD_AND_FAST_MODE;
+#endif
 #if I2C_SLAVE_CALLBACK_MODE == true
 	config->enable_nack_on_address = false;
 #endif

@@ -357,12 +357,15 @@ extern "C" {
 
 /**
  * Define I2C features set according to different device family
+ *
+ * Note: The high speed mode and 10-bit address feature are not
+ *       supported by the software for now.
  * @{
  */
 #if (SAMD21)
 #  define FEATURE_I2C_SYNC_SCHEME_VERSION_2
-#  define FEATURE_I2C_HIGH_SPEED_MODE_SUPPORT
-#  define FEATURE_I2C_10_BIT_ADDRESS_SUPPORT
+#  define FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
+#  define FEATURE_I2C_10_BIT_ADDRESS
 #endif
 /*@}*/
 

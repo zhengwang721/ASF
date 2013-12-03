@@ -183,6 +183,7 @@ static enum status_code _i2c_slave_set_config(
 
 	/* Write config to register CTRLA */
 	i2c_hw->CTRLA.reg |= config->sda_hold_time |
+			config->transfer_speed_mode |
 			(config->run_in_standby << SERCOM_I2CS_CTRLA_RUNSTDBY_Pos);
 
 	/* Set CTRLB configuration */
