@@ -74,7 +74,7 @@ enum status_code rtc_count_register_callback(
 		switch (_rtc_dev.mode) {
 		case RTC_COUNT_MODE_32BIT:
 			/* Check sanity for 32-bit mode. */
-			if (callback_type > RTC_NUM_OF_ALARMS) {
+			if (callback_type > RTC_NUM_OF_COMP32) {
 				status = STATUS_ERR_INVALID_ARG;
 			}
 
@@ -125,7 +125,7 @@ enum status_code rtc_count_unregister_callback(
 		switch (_rtc_dev.mode) {
 		case RTC_COUNT_MODE_32BIT:
 			/* Check sanity for 32-bit mode. */
-			if (callback_type > RTC_NUM_OF_ALARMS) {
+			if (callback_type > RTC_NUM_OF_COMP32) {
 				status = STATUS_ERR_INVALID_ARG;
 			}
 			break;

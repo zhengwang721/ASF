@@ -277,8 +277,6 @@ extern "C" {
 /* Tempory work around definition */
 #define RTC_NUM_OF_COMP16           2
 #define RTC_NUM_OF_COMP32           1
-#define RTC_MODE2_CLOCK_HOUR_PM_Val     0x10u   /**< \brief (RTC_MODE2_CLOCK)  */
-#define RTC_MODE2_CLOCK_HOUR_PM     (RTC_MODE2_CLOCK_HOUR_PM_Val   << RTC_MODE2_CLOCK_HOUR_Pos)
 
 /**
  * \brief Available operation modes for the RTC.

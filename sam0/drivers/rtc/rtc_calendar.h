@@ -281,8 +281,6 @@ extern "C" {
 #endif
 
 /* Tempory work around definition */
-#define RTC_NUM_OF_COMP16           2
-#define RTC_NUM_OF_COMP32           1
 #define RTC_MODE2_CLOCK_HOUR_PM_Val     0x10u   /**< \brief (RTC_MODE2_CLOCK)  */
 #define RTC_MODE2_CLOCK_HOUR_PM     (RTC_MODE2_CLOCK_HOUR_PM_Val   << RTC_MODE2_CLOCK_HOUR_Pos)
 
@@ -296,15 +294,15 @@ extern "C" {
 enum rtc_calendar_alarm {
 	/** Alarm channel 0. */
 	RTC_CALENDAR_ALARM_0 = 0,
-#if (RTC_NUM_OF_COMP16 > 1) || defined(__DOXYGEN__)
+#if (RTC_NUM_OF_ALARMS > 1) || defined(__DOXYGEN__)
 	/** Alarm channel 1. */
 	RTC_CALENDAR_ALARM_1 = 1,
 #endif
-#if (RTC_NUM_OF_COMP16 > 2) || defined(__DOXYGEN__)
+#if (RTC_NUM_OF_ALARMS > 2) || defined(__DOXYGEN__)
 	/** Alarm channel 2. */
 	RTC_CALENDAR_ALARM_2 = 2,
 #endif
-#if (RTC_NUM_OF_COMP16 > 3) || defined(__DOXYGEN__)
+#if (RTC_NUM_OF_ALARMS > 3) || defined(__DOXYGEN__)
 	/** Alarm channel 3. */
 	RTC_CALENDAR_ALARM_3 = 3,
 #endif
@@ -431,7 +429,7 @@ struct rtc_calendar_events {
 	bool generate_event_on_overflow;
 	/** Generate an output event on a alarm channel match against the RTC
 	 *  count. */
-	bool generate_event_on_alarm[RTC_NUM_OF_COMP16];
+	bool generate_event_on_alarm[RTC_NUM_OF_ALARMS];
 	/** Generate an output event periodically at a binary division of the RTC
 	 *  counter frequency (see
 	 *  \ref asfdoc_sam0_rtc_calendar_module_overview_periodic).
@@ -803,7 +801,7 @@ static inline void rtc_calendar_enable_events(
 	}
 
 	/* Check if the user has requested any alarm events. */
-	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
+	for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
 		if (events->generate_event_on_alarm[i]) {
 			event_mask |= RTC_MODE2_EVCTRL_ALARMEO(1 << i);
 		}
@@ -844,7 +842,7 @@ static inline void rtc_calendar_disable_events(
 	}
 
 	/* Check if the user has requested any alarm events. */
-	for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
+	for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
 		if (events->generate_event_on_alarm[i]) {
 			event_mask |= RTC_MODE2_EVCTRL_ALARMEO(1 << i);
 		}

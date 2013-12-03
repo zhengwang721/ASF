@@ -104,7 +104,7 @@ static enum status_code _rtc_count_set_config(
 				rtc_module->MODE0.CTRL.reg |= RTC_MODE0_CTRL_MATCHCLR;
 			}
 			/* Set compare values. */
-			for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
+			for (uint8_t i = 0; i < RTC_NUM_OF_COMP32; i++) {
 				while (rtc_count_is_syncing()) {
 					/* Wait for synchronization */
 				}
@@ -315,7 +315,7 @@ enum status_code rtc_count_set_compare(
 	switch (_rtc_dev.mode) {
 		case RTC_COUNT_MODE_32BIT:
 			/* Check sanity of comp_index. */
-			if ((uint32_t)comp_index > RTC_NUM_OF_ALARMS) {
+			if ((uint32_t)comp_index > RTC_NUM_OF_COMP32) {
 				return STATUS_ERR_INVALID_ARG;
 			}
 
@@ -376,7 +376,7 @@ enum status_code rtc_count_get_compare(
 	switch (_rtc_dev.mode) {
 		case RTC_COUNT_MODE_32BIT:
 			/* Check sanity of comp_index. */
-			if ((uint32_t)comp_index > RTC_NUM_OF_ALARMS) {
+			if ((uint32_t)comp_index > RTC_NUM_OF_COMP32) {
 				return STATUS_ERR_INVALID_ARG;
 			}
 
@@ -488,7 +488,7 @@ bool rtc_count_is_compare_match(
 	switch (_rtc_dev.mode) {
 		case RTC_COUNT_MODE_32BIT:
 			/* Check sanity for 32 bit mode. */
-			if (comp_index > RTC_NUM_OF_ALARMS) {
+			if (comp_index > RTC_NUM_OF_COMP32) {
 				return false;
 			}
 
@@ -536,7 +536,7 @@ enum status_code rtc_count_clear_compare_match(
 	switch (_rtc_dev.mode){
 		case RTC_COUNT_MODE_32BIT:
 			/* Check sanity for 32 bit mode. */
-			if (comp_index > RTC_NUM_OF_ALARMS) {
+			if (comp_index > RTC_NUM_OF_COMP32) {
 				return STATUS_ERR_INVALID_ARG;
 			}
 
