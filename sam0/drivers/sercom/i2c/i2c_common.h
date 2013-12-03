@@ -356,6 +356,17 @@ extern "C" {
  */
 
 /**
+ * Define I2C features set according to different device family
+ * @{
+ */
+#if (SAMD21)
+#  define FEATURE_I2C_SYNC_SCHEME_VERSION_2
+#  define FEATURE_I2C_HIGH_SPEED_MODE_SUPPORT
+#  define FEATURE_I2C_10_BIT_ADDRESS_SUPPORT
+#endif
+/*@}*/
+
+/**
  * \brief I<SUP>2</SUP>C packet for read/write
  *
  * Structure to be used when transferring I<SUP>2</SUP>C packets. Used both for

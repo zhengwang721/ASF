@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x I2C Slave Driver
+ * \brief SAM D21 I2C Slave Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *

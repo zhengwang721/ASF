@@ -302,9 +302,15 @@ static void _i2c_master_wait_for_sync(
 
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
+#ifdef FEATURE_I2C_SYNC_SCHEME_VERSION_2
+	while (i2c_module->SYNCBUSY.reg & SERCOM_I2CM_SYNCBUSY_MASK) {
+		/* Wait for I2C module to sync. */
+	}
+#else
 	while (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_SYNCBUSY) {
 		/* Wait for I2C module to sync. */
 	}
+#endif
 }
 #endif
 
@@ -326,9 +332,13 @@ static inline bool i2c_master_is_syncing (
 	Assert(module);
 	Assert(module->hw);
 
-	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
+	SercomI2cm *const i2c_hw = &(module->hw->I2CM);
 
-	return (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_SYNCBUSY);
+#ifdef FEATURE_I2C_SYNC_SCHEME_VERSION_2
+	return (i2c_hw->SYNCBUSY.reg & SERCOM_I2CM_SYNCBUSY_MASK);
+#else
+	return (i2c_hw->STATUS.reg & SERCOM_I2CM_STATUS_SYNCBUSY);
+#endif
 }
 
 /**
