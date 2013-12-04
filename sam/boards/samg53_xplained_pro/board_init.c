@@ -104,6 +104,40 @@ void system_board_init(void)
 	ioport_set_port_peripheral_mode(PINS_UART0_PORT, PINS_UART0,
 			PINS_UART0_MASK);
 #endif
+
+#ifdef CONF_BOARD_USART_RXD
+	/* Configure USART RXD pin */
+	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_RX,
+			IOPORT_MODE_MUX_A);
+#endif
+
+#ifdef CONF_BOARD_USART_TXD
+	/* Configure USART TXD pin */
+	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_TX,
+			IOPORT_MODE_MUX_A);
+#endif
+
+#ifdef CONF_BOARD_USART_SCK
+	/* Configure USART synchronous communication SCK pin */
+	ioport_set_pin_peripheral_mode(EXT3_PIN_10,
+			IOPORT_MODE_MUX_B);
+#endif
+
+#ifdef CONF_BOARD_TWI0
+	ioport_set_pin_peripheral_mode(TWI0_DATA_GPIO, TWI0_DATA_FLAGS);
+	ioport_set_pin_peripheral_mode(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_TWI1
+	ioport_set_pin_peripheral_mode(TWI1_DATA_GPIO, TWI1_DATA_FLAGS);
+	ioport_set_pin_peripheral_mode(TWI1_CLK_GPIO, TWI1_CLK_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_TWI2
+	ioport_set_pin_peripheral_mode(TWI2_DATA_GPIO, TWI2_DATA_FLAGS);
+	ioport_set_pin_peripheral_mode(TWI2_CLK_GPIO, TWI2_CLK_FLAGS);
+#endif
+
 }
 
 /** @} */

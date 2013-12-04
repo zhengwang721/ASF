@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWI SLAVE Example for SAM.
+ * \brief TWIHS Slave Example for SAM.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,45 +42,44 @@
  */
 
 /**
- * \mainpage TWI SLAVE Example
+ * \mainpage TWIHS Slave Example
  *
  * \section intro Introduction
  *
- * The application demonstrates how to use use the SAM TWI peripheral in slave mode.
+ * The application demonstrates how to use use the TWIHS in high speed slave mode.
  *
  * \section Requirements
  *
- * This package can be used with SAM evaluation kits.
+ * This package can be used with STK600-SAMG51.
  *
- * In addition, another device will be needed to act as the TWI master. The
- * twi_eeprom_example can be used for that, in which case a second kit
- * supported by that project is needed (on SAM4S evaluation kits, TWI1 is used).
+ * In addition, another device will be needed to act as the TWIHS master.
  * -# Connect TWD0 (SDA) for the 2 boards.
  * -# Connect TWCK0 (SCL) for the 2 boards.
  * -# Connect GND for the 2 boards.
  * -# Make sure there is a pull up resistor on TWD and TWCK.
  *
  * \section files Main files:
- *  - twi.c SAM Two-Wire Interface driver implementation.
- *  - twi.h SAM Two-Wire Interface driver definitions.
- *  - twi_slave_example.c Example application.
+ *  - twihs.c SAM Two-Wire Interface High Speed driver implementation.
+ *  - twihs.h SAM Two-Wire Interface High Speed driver definitions.
+ *  - twihs_slave_example.c Example application.
  *
  * \section exampledescription Description of the Example
  * After launching the program, the device will act as a simple TWI-enabled
  * serial memory containing 512 bytes. This enables this project to be used
- * with the twi_eeprom_example project as the master.
+ * with a twi master example. The twim_example on SAM4L can be used for the
+ * high speed TWI transmission with this example.
  *
- * To write in the memory, the TWI master must address the device first, then
+ * To write in the memory, the TWIHS master must address the device first, then
  * send two bytes containing the memory address to access. Additional bytes are
  * treated as the data to write.
  *
  * Reading is done in the same fashion, except that after receiving the memory
  * address, the device will start outputting data until a STOP condition is
  * sent by the master.
- * The default address for the TWI slave is fixed to 0x40. If the board has a TWI
+ * The default address for the TWIHS slave is fixed to 0x40. If the board has a TWIHS
  * component with this address, you can change the define AT24C_ADDRESS in
  * twi_eeprom_example.c of twi_eeprom_example project, and the define
- * SLAVE_ADDRESS in twi_slave_example.c of twi_slave_exmaple project.
+ * SLAVE_ADDRESS in twihs_slave_example.c of twihs_slave_exmaple project.
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR EWARM.
@@ -94,7 +93,7 @@
  */
 
 #include "asf.h"
-#include "conf_twi_slave_example.h"
+#include "conf_twihs_slave_example.h"
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -104,13 +103,15 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+#define CONSOLE_BAUD_RATE   115200
+
 /** Device address of slave */
 #define SLAVE_ADDRESS       0x40
 /** Memory size in bytes */
 #define MEMORY_SIZE         512
 
 #define STRING_EOL    "\r"
-#define STRING_HEADER "--TWI SLAVE Example --\r\n" \
+#define STRING_HEADER "--TWIHS SLAVE Example --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
@@ -128,69 +129,71 @@ typedef struct _slave_device_t {
 
 slave_device_t emulate_driver;
 
-void BOARD_TWI_Handler(void)
+void BOARD_TWIHS_Handler(void)
 {
 	uint32_t status;
 
-	status = twi_get_interrupt_status(BOARD_BASE_TWI_SLAVE);
+	status = twihs_get_interrupt_status(BOARD_BASE_TWIHS_SLAVE);
 
-	if (((status & TWI_SR_SVACC) == TWI_SR_SVACC)
+	if (((status & TWIHS_SR_SVACC) == TWIHS_SR_SVACC)
 			&& (emulate_driver.uc_acquire_address == 0)) {
-		twi_disable_interrupt(BOARD_BASE_TWI_SLAVE, TWI_IDR_SVACC);
-		twi_enable_interrupt(BOARD_BASE_TWI_SLAVE, TWI_IER_RXRDY | TWI_IER_GACC
-				| TWI_IER_NACK | TWI_IER_EOSACC | TWI_IER_SCL_WS);
+		twihs_disable_interrupt(BOARD_BASE_TWIHS_SLAVE, TWIHS_IDR_SVACC);
+		twihs_enable_interrupt(BOARD_BASE_TWIHS_SLAVE,
+				TWIHS_IER_RXRDY | TWIHS_IER_GACC |
+				TWIHS_IER_NACK | TWIHS_IER_EOSACC | TWIHS_IER_SCL_WS);
 		emulate_driver.uc_acquire_address++;
 		emulate_driver.us_page_address = 0;
 		emulate_driver.us_offset_memory = 0;
 	}
 
-	if ((status & TWI_SR_GACC) == TWI_SR_GACC) {
+	if ((status & TWIHS_SR_GACC) == TWIHS_SR_GACC) {
 		puts("General Call Treatment\n\r");
 		puts("not treated");
 	}
 
-	if (((status & TWI_SR_SVACC) == TWI_SR_SVACC) && ((status & TWI_SR_GACC) == 0)
-			&& ((status & TWI_SR_RXRDY) == TWI_SR_RXRDY)) {
+	if (((status & TWIHS_SR_SVACC) == TWIHS_SR_SVACC) &&
+			((status & TWIHS_SR_GACC) == 0) &&
+			((status & TWIHS_SR_RXRDY) == TWIHS_SR_RXRDY)) {
 
 		if (emulate_driver.uc_acquire_address == 1) {
 			/* Acquire MSB address */
 			emulate_driver.us_page_address =
-					(twi_read_byte(BOARD_BASE_TWI_SLAVE) & 0xFF) << 8;
+					(twihs_read_byte(BOARD_BASE_TWIHS_SLAVE) & 0xFF) << 8;
 			emulate_driver.uc_acquire_address++;
 		} else {
 			if (emulate_driver.uc_acquire_address == 2) {
 				/* Acquire LSB address */
 				emulate_driver.us_page_address |=
-						(twi_read_byte(BOARD_BASE_TWI_SLAVE) & 0xFF);
+						(twihs_read_byte(BOARD_BASE_TWIHS_SLAVE) & 0xFF);
 				emulate_driver.uc_acquire_address++;
 			} else {
 				/* Read one byte of data from master to slave device */
 				emulate_driver.uc_memory[emulate_driver.us_page_address +
 						emulate_driver.us_offset_memory] =
-						(twi_read_byte(BOARD_BASE_TWI_SLAVE) & 0xFF);
+						(twihs_read_byte(BOARD_BASE_TWIHS_SLAVE) & 0xFF);
 				emulate_driver.us_offset_memory++;
 			}
 		}
 	} else {
-		if (((status & TWI_SR_TXRDY) == TWI_SR_TXRDY)
-				&& ((status & TWI_SR_TXCOMP) == TWI_SR_TXCOMP)
-				&& ((status & TWI_SR_EOSACC) == TWI_SR_EOSACC)) {
+		if (((status & TWIHS_SR_TXRDY) == TWIHS_SR_TXRDY)
+				&& ((status & TWIHS_SR_TXCOMP) == TWIHS_SR_TXCOMP)
+				&& ((status & TWIHS_SR_EOSACC) == TWIHS_SR_EOSACC)) {
 			/* End of transfer, end of slave access */
 			emulate_driver.us_offset_memory = 0;
 			emulate_driver.uc_acquire_address = 0;
 			emulate_driver.us_page_address = 0;
-			twi_enable_interrupt(BOARD_BASE_TWI_SLAVE, TWI_SR_SVACC);
-			twi_disable_interrupt(BOARD_BASE_TWI_SLAVE,
-					TWI_IDR_RXRDY | TWI_IDR_GACC |
-					TWI_IDR_NACK | TWI_IDR_EOSACC | TWI_IDR_SCL_WS);
+			twihs_enable_interrupt(BOARD_BASE_TWIHS_SLAVE, TWIHS_SR_SVACC);
+			twihs_disable_interrupt(BOARD_BASE_TWIHS_SLAVE,
+					TWIHS_IDR_RXRDY | TWIHS_IDR_GACC |
+					TWIHS_IDR_NACK | TWIHS_IDR_EOSACC | TWIHS_IDR_SCL_WS);
 		} else {
-			if (((status & TWI_SR_SVACC) == TWI_SR_SVACC)
-					&& ((status & TWI_SR_GACC) == 0)
+			if (((status & TWIHS_SR_SVACC) == TWIHS_SR_SVACC)
+					&& ((status & TWIHS_SR_GACC) == 0)
 					&& (emulate_driver.uc_acquire_address == 3)
-					&& ((status & TWI_SR_SVREAD) == TWI_SR_SVREAD)
-					&& ((status & TWI_SR_NACK) == 0)) {
+					&& ((status & TWIHS_SR_SVREAD) == TWIHS_SR_SVREAD)
+					&& ((status & TWIHS_SR_NACK) == 0)) {
 				/* Write one byte of data from slave to master device */
-				twi_write_byte(BOARD_BASE_TWI_SLAVE,
+				twihs_write_byte(BOARD_BASE_TWIHS_SLAVE,
 						emulate_driver.uc_memory[emulate_driver.us_page_address
 						+ emulate_driver.us_offset_memory]);
 				emulate_driver.us_offset_memory++;
@@ -215,7 +218,7 @@ static void configure_console(void)
 }
 
 /**
- * \brief Application entry point for TWI Slave example.
+ * \brief Application entry point for TWIHS Slave example.
  *
  * \return Unused (ANSI-C compatibility).
  */
@@ -226,12 +229,6 @@ int main(void)
 	/* Initialize the SAM system */
 	sysclk_init();
 
-#if (SAM4S || SAM4E)
-	/* Select PB4 and PB5 function, this will cause JTAG discconnect */
-	REG_CCFG_SYSIO |= CCFG_SYSIO_SYSIO4;
-	REG_CCFG_SYSIO |= CCFG_SYSIO_SYSIO5;
-#endif
-
 	/* Initialize the board */
 	board_init();
 
@@ -241,8 +238,8 @@ int main(void)
 	/* Output example information */
 	puts(STRING_HEADER);
 
-	/* Enable the peripheral clock for TWI */
-	pmc_enable_periph_clk(BOARD_ID_TWI_SLAVE);
+	/* Enable the peripheral clock for TWIHS */
+	pmc_enable_periph_clk(BOARD_ID_TWIHS_SLAVE);
 
 	for (i = 0; i < MEMORY_SIZE; i++) {
 		emulate_driver.uc_memory[i] = 0;
@@ -251,19 +248,19 @@ int main(void)
 	emulate_driver.uc_acquire_address = 0;
 	emulate_driver.us_page_address = 0;
 
-	/* Configure TWI as slave */
-	puts("-I- Configuring the TWI in slave mode\n\r");
-	twi_slave_init(BOARD_BASE_TWI_SLAVE, SLAVE_ADDRESS);
+	/* Configure TWIHS as slave */
+	puts("-I- Configuring the TWIHS in slave mode\n\r");
+	twihs_slave_init(BOARD_BASE_TWIHS_SLAVE, SLAVE_ADDRESS);
 
 	/* Clear receipt buffer */
-	twi_read_byte(BOARD_BASE_TWI_SLAVE);
+	twihs_read_byte(BOARD_BASE_TWIHS_SLAVE);
 
-	/* Configure TWI interrupts */
-	NVIC_DisableIRQ(BOARD_TWI_IRQn);
-	NVIC_ClearPendingIRQ(BOARD_TWI_IRQn);
-	NVIC_SetPriority(BOARD_TWI_IRQn, 0);
-	NVIC_EnableIRQ(BOARD_TWI_IRQn);
-	twi_enable_interrupt(BOARD_BASE_TWI_SLAVE, TWI_SR_SVACC);
+	/* Configure TWIHS interrupts */
+	NVIC_DisableIRQ(BOARD_TWIHS_IRQn);
+	NVIC_ClearPendingIRQ(BOARD_TWIHS_IRQn);
+	NVIC_SetPriority(BOARD_TWIHS_IRQn, 0);
+	NVIC_EnableIRQ(BOARD_TWIHS_IRQn);
+	twihs_enable_interrupt(BOARD_BASE_TWIHS_SLAVE, TWIHS_SR_SVACC);
 
 	while (1) {
 	}
