@@ -19,6 +19,7 @@
 
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="dma.h"/>
+		<build type=="header-file" subtype="api" value="dma_crc.h"/>
 		<build type="c-source" value="dma.c"/>
 
 		<build type="module-config" subtype="required-header-file" value="conf_dma.h"/>

@@ -51,49 +51,19 @@
 /** DMA priority level */
 enum dma_priority_level {
 	/** Priority level 0 */
-	DMA_PRIORITY_LEVEL_0 = 0,
+	DMA_PRIORITY_LEVEL_0,
 	/** Priority level 1 */
 	DMA_PRIORITY_LEVEL_1,
 	/** Priority level 2 */
 	DMA_PRIORITY_LEVEL_2,
 	/** Priority level 3 */
 	DMA_PRIORITY_LEVEL_3,
-	/** Priority level max */
-	DMA_PRIORITY_LEVEL_N = DMA_PRIORITY_LEVEL_3,
-};
-
-/** CRC Polynomial Type */
-enum crc_polynomial_type {
-	/** CRC16 (CRC-CCITT) */
-	CRC_TYPE_16,
-	/** CRC32 (IEEE 802.3) */
-	CRC_TYPE_32,
-	/** Invalid CRC polynomial type */
-	CRC_TYPE_INVALID,
-};
-
-/** CRC Beat Type */
-enum crc_beat_size {
-	/** Byte bus access */
-	CRC_BEAT_SIZE_BYTE,
-	/** Half-word bus access */
-	CRC_BEAT_SIZE_HWORD,
-	/** Word bus access */
-	CRC_BEAT_SIZE_WORD,
-};
-
-/** Configurations for CRC calculation */
-struct dma_crc_config {
-	/** CRC polynomial type */
-	enum crc_polynomial_type crc_type;
-	/** CRC beat size */
-	enum crc_beat_size crc_size;
 };
 
 /** DMA input actions */
 enum dma_event_input_action {
 	/** No action */
-	DMA_EVENT_INPUT_NOACT = 0,
+	DMA_EVENT_INPUT_NOACT,
 	/** Transfer and periodic transfer trigger */
 	DMA_EVENT_INPUT_TRIG,
 	/** Conditional transfer trigger*/
@@ -111,7 +81,7 @@ enum dma_event_input_action {
 /** DMA AHB access size, it apply to both read and write */
 enum dma_beat_size {
 	/** 8-bit access */
-	DMA_BEAT_SIZE_BYTE = 0,
+	DMA_BEAT_SIZE_BYTE,
 	/** 16-bit access */
 	DMA_BEAT_SIZE_HWORD,
 	/** 32-bit access */
@@ -154,6 +124,8 @@ enum dma_callback_type {
 
 /** Configurations for DMA events */
 struct dma_events_config {
+	/** Enable DMA event input */
+	bool event_input_enable;
 	/** Event input actions */
 	enum dma_event_input_action input_action;
 	/** Enable DMA event output */
@@ -166,7 +138,6 @@ struct dma_events_config {
 struct dma_transfer_descriptor {
 	/** Block transfer control */
 	uint16_t block_transfer_control;
-
 	/** Transfer transfer count. Count value is
 	 * decremented by one after each beat data transfer */
 	uint16_t block_transfer_count;
@@ -182,10 +153,6 @@ struct dma_transfer_descriptor {
 struct dma_transfer_config {
 	/** DMA transfer priority */
 	enum dma_priority_level priority;
-	/** CRC enable flag */
-	bool crc;
-	/** CRC calculation configurations */
-	struct dma_crc_config crc_config;
 	/** DMA transfer trigger selection */
 	enum dma_transfer_trigger transfer_trigger;
 	/**DMA peripheral trigger index*/
@@ -209,8 +176,6 @@ struct dma_resource {
 	uint8_t callback_enable;
 	/** Status of the last job */
 	volatile enum status_code job_status;
-	/** Calculated CRC checksum value */
-	uint32_t crc_checksum;
 	/** Transferred data size */
 	uint32_t transfered_size;
 };
@@ -288,7 +253,6 @@ static inline void dma_register_callback(struct dma_resource *resource,
 		dma_callback_t callback, enum dma_callback_type type)
 {
 	Assert(resource);
-	Assert(resource->callback);
 
 	resource->callback[type] = callback;
 }
@@ -304,7 +268,6 @@ static inline void dma_unregister_callback(struct dma_resource *resource,
 		enum dma_callback_type type)
 {
 	Assert(resource);
-	Assert(resource->callback);
 
 	resource->callback[type] = NULL;
 }

@@ -62,12 +62,6 @@ struct _dma_module _dma_inst = {
 /** Maximum retry counter for resuming a job transfer */
 #define MAX_JOB_RESUME_COUNT    10000
 
-/** CRC reset value */
-#define CRC_RESET_VALUE    (0x0)
-
-/** CRC base channel */
-#define CRC_BASE_CHANNEL    (0x20)
-
 /** DMA channel mask*/
 #define DMA_CHANNEL_MASK   (0x1f)
 
@@ -159,7 +153,7 @@ static void _dma_set_config(struct dma_resource *resource,
 	DMAC->SWTRIGCTRL.reg &= (uint32_t)(~(1 << resource->channel_id));
 
 	/* Transaction is used as the fixed trigger action type */
-	DMAC->CHCTRLB.reg |=  DMAC_CHCTRLB_TRIGACT_TRANSACTION;
+	DMAC->CHCTRLB.reg =  DMAC_CHCTRLB_TRIGACT_TRANSACTION;
 
 	/* Select transfer trigger */
 	switch (transfer_config->transfer_trigger) {
@@ -211,12 +205,6 @@ void DMAC_Handler( void )
 
 	/* Select the active channel */
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
-
-	/* Get CRC value  if CRC enabled for the channel */
-	if ((((DMAC->CRCCTRL.reg & DMAC_CRCCTRL_CRCSRC_Msk) >>
-		DMAC_CRCCTRL_CRCSRC_Pos) - CRC_BASE_CHANNEL) == active_channel) {
-		resource->crc_checksum =  DMAC->CRCCHKSUM.reg;
-	}
 
 	/* Calculate block transfer size of the DMA transfer */
 	resource->transfered_size
@@ -276,7 +264,6 @@ void DMAC_Handler( void )
  * The default configuration is as follows:
  *  \li software trigger is used as the transfer trigger
  *  \li priority level 0
- *  \li No CRC
  * \param[out] config Pointer to the configuration
  *
  */
@@ -286,7 +273,6 @@ void dma_get_config_defaults(struct dma_transfer_config *config)
 
 	config->transfer_trigger = DMA_TRIGGER_SOFTWARE;
 	config->priority = DMA_PRIORITY_LEVEL_0;
-	config->crc = false;
 }
 
 /**
@@ -300,8 +286,6 @@ void dma_get_config_defaults(struct dma_transfer_config *config)
  * \return Status of the allocation procedure.
  *
  * \retval STATUS_OK The DMA resource was allocated successfully
- * \retval STATUS_BUSY The CRC module is busy, a request of DMA resource
- *         with CRC enabled was not available at the moment.
  * \retval STATUS_ERR_NOT_FOUND DMA resource allocation failed
  */
 enum status_code dma_allocate(struct dma_resource *resource,
@@ -324,12 +308,10 @@ enum status_code dma_allocate(struct dma_resource *resource,
 				PM_APBBMASK_DMAC);
 
 		/* Perform a software reset before enable DMA controller */
+		DMAC->CTRL.reg &= ~DMAC_CTRL_DMAENABLE;
 		DMAC->CTRL.reg = DMAC_CTRL_SWRST;
 		/* Enable all priority level at the same time */
 		DMAC->CTRL.reg = DMAC_CTRL_DMAENABLE | DMAC_CTRL_LVLEN(0xf);
-
-		/* Enable CRC */
-		DMAC->CTRL.reg |= DMAC_CTRL_CRCENABLE;
 
 		/* Setup descriptor base address and write back section base
 		 * address */
@@ -344,36 +326,22 @@ enum status_code dma_allocate(struct dma_resource *resource,
 		_dma_inst._dma_init = true;
 	}
 
-	/* If CRC module enabled and busy */
-	if ((config->crc)  && (DMAC->CRCSTATUS.reg & DMAC_CRCSTATUS_CRCBUSY)) {
-		/* If busy, the channel will not be allocated */
-		return STATUS_BUSY;
-	}
-
 	/* Find the proper channel */
 	new_channel = _dma_find_first_free_channel_and_allocate(config->priority);
 
 	/* If no channel available, return not found */
 	if (new_channel == DMA_INVALID_CHANNEL) {
+		system_interrupt_leave_critical_section();
+		
 		return STATUS_ERR_NOT_FOUND;
 	}
 
 	/* Set the channel */
 	resource->channel_id = new_channel;
 
-	/* Set the CRC source */
-	if (config->crc) {
-		/* Reset CRC module */
-		DMAC->CTRL.reg &= ~DMAC_CTRL_CRCENABLE;
-		DMAC->CRCCHKSUM.reg = CRC_RESET_VALUE;
-		DMAC->CTRL.reg |= DMAC_CTRL_CRCENABLE;
-
-		/* Select CRC input source */
-		DMAC->CRCCTRL.reg |= DMAC_CRCCTRL_CRCSRC(resource->channel_id);
-	}
-
 	/** Perform a reset for the allocated channel */
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
+	DMAC->CHCTRLA.reg &= ~DMAC_CHCTRLA_ENABLE;
 	DMAC->CHCTRLA.reg = DMAC_CHCTRLA_SWRST;
 
 	/** Config the DMA control,channel registers and descriptors here */
@@ -406,11 +374,13 @@ enum status_code dma_free(struct dma_resource *resource)
 
 	/* Check if channel is busy */
 	if (dma_is_busy(resource)) {
+		system_interrupt_leave_critical_section();
 		return STATUS_BUSY;
 	}
 
 	/* Check if DMA resource was not allocated */
 	if (!(_dma_inst.allocated_channels & (1 << resource->channel_id))) {
+		system_interrupt_leave_critical_section();
 		return STATUS_ERR_NOT_INITIALIZED;
 	}
 
@@ -452,11 +422,13 @@ enum status_code dma_transfer_job(struct dma_resource *resource,
 
 	/* Check if resource was busy */
 	if (resource->job_status == STATUS_BUSY) {
+		system_interrupt_leave_critical_section();
 		return STATUS_BUSY;
 	}
 
 	/* Check if transfer size is valid */
 	if (descriptor_section[resource->channel_id].block_transfer_count == 0) {
+		system_interrupt_leave_critical_section();
 		return STATUS_ERR_INVALID_ARG;
 	}
 
@@ -475,10 +447,12 @@ enum status_code dma_transfer_job(struct dma_resource *resource,
 	resource->job_status = STATUS_BUSY;
 
 	/* Set channel x descriptor 0 to the descriptor base address */
-	descriptor_section[resource->channel_id] = *transfer_descriptor;
+	memcpy(&descriptor_section[resource->channel_id], transfer_descriptor,
+		sizeof(struct dma_transfer_descriptor));
 
 	/* Log the DMA resouce into the internal DMA resource pool */
-	dma_active_resource[resource->channel_id] = *resource;
+	memcpy(&dma_active_resource[resource->channel_id], resource,
+		sizeof(struct dma_resource));
 
 	system_interrupt_leave_critical_section();
 
@@ -490,8 +464,6 @@ enum status_code dma_transfer_job(struct dma_resource *resource,
  *
  * This function will abort a DMA transfer. The channel used for the DMA
  * resource will be disabled.
- * If CRC calculation was enabled for the channel, the CRC checksum for the
- * transfered data will be calcluated and output in the DMA resource structure.
  * The block transfer count will be also calculated and output in the DMA
  * resource structure.
  *
@@ -507,12 +479,6 @@ void dma_abort_job(struct dma_resource *resource)
 
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
 	DMAC->CHCTRLA.reg = 0;
-
-	/* Set the checksum of the tranfered data */
-	if ((((DMAC->CRCCTRL.reg & DMAC_CRCCTRL_CRCSRC_Msk) >>
-		DMAC_CRCCTRL_CRCSRC_Pos) - CRC_BASE_CHANNEL) == resource->channel_id) {
-		resource->crc_checksum =  DMAC->CRCCHKSUM.reg;
-	}
 
 	/* Get transfered size */
 	resource->transfered_size
