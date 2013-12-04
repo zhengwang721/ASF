@@ -54,7 +54,7 @@
  * This package can be used with the following setup:
  * - sam3x8h_sam3x_ek
  * - sam4n16c_sam4n_xplained_pro
- * - samg51_stk600_samg51
+ * - samg53n19_samg_xplained_pro
  *
  * \section files Main files:
  *  - twi.c SAM Two-Wire Interface driver implementation.
