@@ -66,15 +66,14 @@ extern "C" {
  * @{
  */
 
-#if !defined(__DOXYGEN__)
-/**
- * \internal Setting direction bit in address
+/** \brief Transfer direction
+ *
+ * Transfer direction or setting direction bit in address.
  */
-enum _i2c_transfer_direction {
-	_I2C_TRANSFER_WRITE = 0,
-	_I2C_TRANSFER_READ = 1,
+enum i2c_transfer_direction {
+	I2C_TRANSFER_WRITE = 0,
+	I2C_TRANSFER_READ  = 1,
 };
-#endif
 
 /** \brief Interrupt flags
  *
@@ -196,7 +195,7 @@ struct i2c_master_module {
 	/** Data buffer for packet write and read */
 	volatile uint8_t *buffer;
 	/** Save direction of async request. 1 = read, 0 = write */
-	volatile uint8_t transfer_direction;
+	volatile enum i2c_transfer_direction transfer_direction;
 	/** Status for status read back in error callback */
 	volatile enum status_code status;
 #  endif
@@ -292,34 +291,6 @@ static inline void i2c_master_unlock(struct i2c_master_module *const module)
  * @{
  */
 
-#if !defined(__DOXYGEN__)
-/**
- * \internal
- * Wait for hardware module to sync
- *
- * \param[in]  module  Pointer to software module structure
- */
-static void _i2c_master_wait_for_sync(
-		const struct i2c_master_module *const module)
-{
-	/* Sanity check. */
-	Assert(module);
-	Assert(module->hw);
-
-	SercomI2cm *const i2c_module = &(module->hw->I2CM);
-
-#ifdef FEATURE_I2C_SYNC_SCHEME_VERSION_2
-	while (i2c_module->SYNCBUSY.reg & SERCOM_I2CM_SYNCBUSY_MASK) {
-		/* Wait for I2C module to sync. */
-	}
-#else
-	while (i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_SYNCBUSY) {
-		/* Wait for I2C module to sync. */
-	}
-#endif
-}
-#endif
-
 /**
  * \brief Returns the synchronization status of the module
  *
@@ -346,6 +317,25 @@ static inline bool i2c_master_is_syncing (
 	return (i2c_hw->STATUS.reg & SERCOM_I2CM_STATUS_SYNCBUSY);
 #endif
 }
+
+#if !defined(__DOXYGEN__)
+/**
+ * \internal
+ * Wait for hardware module to sync
+ *
+ * \param[in]  module  Pointer to software module structure
+ */
+static void _i2c_master_wait_for_sync(
+		const struct i2c_master_module *const module)
+{
+	/* Sanity check. */
+	Assert(module);
+
+	while (i2c_master_is_syncing(module)) {
+		/* Wait for I2C module to sync. */
+	}
+}
+#endif
 
 /**
  * \brief Gets the I<SUP>2</SUP>C master default configurations

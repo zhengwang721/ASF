@@ -49,105 +49,6 @@
 
 #if !defined(__DOXYGEN__)
 
-#if I2C_MASTER_CALLBACK_MODE == false
-/**
- * \internal Check the current configuration for the module
- *
- * This function is not used in callback mode.
- *
- * \param[out] module  Pointer to software module structure.
- * \param[in]  config  Configuration structure with configurations to set.
- *
- * \return Status of setting configuration.
- * \retval STATUS_OK                        If module was configured correctly
- * \retval STATUS_ERR_ALREADY_INITIALIZED   If setting other GCLK generator than
- *                                          previously set
- * \retval STATUS_ERR_BAUDRATE_UNAVAILABLE  If given baud rate is not compatible
- *                                          with set GCLK frequency
- */
-static enum status_code _i2c_master_check_config(
-		struct i2c_master_module *const module,
-		const struct i2c_master_config *const config)
-{
-	/* Sanity check arguments. */
-	Assert(module);
-	Assert(module->hw);
-	Assert(config);
-
-	/* Temporary variables. */
-	uint32_t tmp_ctrla = 0;
-	int32_t tmp_baud;
-	enum status_code tmp_status_code = STATUS_OK;
-
-	SercomI2cm *const i2c_module = &(module->hw->I2CM);
-	Sercom *const sercom_hw = module->hw;
-
-	uint8_t sercom_index = _sercom_get_sercom_inst_index(sercom_hw);
-
-	/* Pin configuration */
-	struct system_pinmux_config pin_conf;
-	system_pinmux_get_config_defaults(&pin_conf);
-
-	uint32_t pad0 = config->pinmux_pad0;
-	uint32_t pad1 = config->pinmux_pad1;
-
-	/* SERCOM PAD0 - SDA */
-	if (pad0 == PINMUX_DEFAULT) {
-		pad0 = _sercom_get_default_pad(sercom_hw, 0);
-	}
-	if ((pad0 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad0 >> 16)) {
-		return STATUS_ERR_DENIED;
-	}
-
-	/* SERCOM PAD1 - SCL */
-	if (pad1 == PINMUX_DEFAULT) {
-		pad1 = _sercom_get_default_pad(sercom_hw, 1);
-	}
-	if ((pad1 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad1 >> 16)) {
-		return STATUS_ERR_DENIED;
-	}
-
-	/* Check and set if module should run in standby. */
-	if (config->run_in_standby) {
-		tmp_ctrla |= SERCOM_I2CM_CTRLA_RUNSTDBY;
-	}
-
-	/* Check and set start data hold timeout. */
-	if (config->start_hold_time != I2C_MASTER_START_HOLD_TIME_DISABLED) {
-		tmp_ctrla |= config->start_hold_time;
-	}
-
-	tmp_ctrla |= SERCOM_I2CM_CTRLA_ENABLE | SERCOM_I2CM_CTRLA_MODE_I2C_MASTER;
-
-	/* Write config to register CTRLA. */
-	if (tmp_ctrla != i2c_module->CTRLA.reg) {
-		tmp_status_code = STATUS_ERR_DENIED;
-	}
-
-	/* Find and set baudrate. */
-	tmp_baud = (int32_t)((system_gclk_chan_get_hz(SERCOM0_GCLK_ID_CORE +
-			sercom_index) / (2000*(config->baud_rate))) - 5);
-
-	/* Check that baud rate is supported at current speed. */
-	if (tmp_baud != i2c_module->BAUD.reg) {
-		tmp_status_code = STATUS_ERR_DENIED;
-	}
-
-	if (tmp_status_code == STATUS_OK) {
-		/* Save timeout on unknown bus state in software module. */
-		module->unknown_bus_state_timeout = config->unknown_bus_state_timeout;
-
-		/* Save timeout on buffer write. */
-		module->buffer_timeout = config->buffer_timeout;
-	} else {
-		module->hw = NULL;
-	}
-
-
-	return tmp_status_code;
-}
-#endif
-
 /**
  * \internal Sets configurations to module
  *
@@ -295,11 +196,7 @@ enum status_code i2c_master_init(
 
 	/* Check if module is enabled. */
 	if (i2c_module->CTRLA.reg & SERCOM_I2CM_CTRLA_ENABLE) {
-#  if I2C_MASTER_CALLBACK_MODE == false
-		return _i2c_master_check_config(module, config);
-#  else
 		return STATUS_ERR_DENIED;
-#  endif
 	}
 
 	/* Check if reset is in progress. */
@@ -482,7 +379,7 @@ static enum status_code _i2c_master_read(
 	uint16_t counter = 0;
 
 	/* Set address and direction bit. Will send start command on bus. */
-	i2c_module->ADDR.reg = (packet->address << 1) | _I2C_TRANSFER_READ;
+	i2c_module->ADDR.reg = (packet->address << 1) | I2C_TRANSFER_READ;
 
 	/* Wait for response on bus. */
 	tmp_status = _i2c_master_wait_for_bus(module);
@@ -653,7 +550,7 @@ static enum status_code _i2c_master_write_packet(
 	_i2c_master_wait_for_sync(module);
 
 	/* Set address and direction bit. Will send start command on bus. */
-	i2c_module->ADDR.reg = (packet->address << 1) | _I2C_TRANSFER_WRITE;
+	i2c_module->ADDR.reg = (packet->address << 1) | I2C_TRANSFER_WRITE;
 
 	/* Wait for response on bus. */
 	tmp_status = _i2c_master_wait_for_bus(module);

@@ -204,17 +204,17 @@ enum i2c_slave_direction {
 
 #ifdef FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
 /**
- * \brief Enum for the transfer speed mode
+ * \brief Enum for the transfer speed
  *
- * Enum for the transfer speed mode.
+ * Enum for the transfer speed.
  */
-enum i2c_slave_transfer_speed_mode {
+enum i2c_slave_transfer_speed {
 	/** Standard-mode (Sm) up to 100 kHz and Fast-mode (Fm) up to 400 kHz */
-	I2C_SLAVE_SPEED_STANDARD_AND_FAST_MODE = SERCOM_I2CS_CTRLA_SPEED(0),
+	I2C_SLAVE_SPEED_STANDARD_AND_FAST = SERCOM_I2CS_CTRLA_SPEED(0),
 	/** Fast-mode Plus (Fm+) up to 1 MHz */
 	I2C_SLAVE_SPEED_FAST_MODE_PLUS = SERCOM_I2CS_CTRLA_SPEED(1),
 	/** High-speed mode (Hs-mode) up to 3.4 MHz */
-	I2C_SLAVE_SPEED_HIGH_SPEED_MODE = SERCOM_I2CS_CTRLA_SPEED(2),
+	I2C_SLAVE_SPEED_HIGH_SPEED = SERCOM_I2CS_CTRLA_SPEED(2),
 };
 #endif
 
@@ -290,7 +290,7 @@ struct i2c_slave_config {
 
 #  ifdef FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
 	/** Transfer speed mode */
-	enum i2c_slave_transfer_speed_mode transfer_speed_mode;
+	enum i2c_slave_transfer_speed transfer_speed;
 #  endif
 
 #  if I2C_SLAVE_CALLBACK_MODE == true
@@ -374,34 +374,6 @@ static inline void i2c_slave_unlock(struct i2c_slave_module *const module)
  * @{
  */
 
-#if !defined(__DOXYGEN__)
-/**
- * \internal Wait for hardware module to sync
- *
- * \param[in]  module  Pointer to software module structure
- */
-static void _i2c_slave_wait_for_sync(
-		const struct i2c_slave_module *const module)
-{
-	/* Sanity check. */
-	Assert(module);
-	Assert(module->hw);
-
-	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
-
-#ifdef FEATURE_I2C_SYNC_SCHEME_VERSION_2
-	while (i2c_hw->SYNCBUSY.reg & SERCOM_I2CS_SYNCBUSY_MASK) {
-		/* Wait for I2C module to sync */
-	}
-#else
-	while (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_SYNCBUSY) {
-		/* Wait for I2C module to sync */
-	}
-#endif
-}
-#endif
-
-
 /**
  * \brief Returns the synchronization status of the module
  *
@@ -429,6 +401,24 @@ static inline bool i2c_slave_is_syncing(
 	return (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_SYNCBUSY);
 #endif
 }
+
+#if !defined(__DOXYGEN__)
+/**
+ * \internal Wait for hardware module to sync
+ *
+ * \param[in]  module  Pointer to software module structure
+ */
+static void _i2c_slave_wait_for_sync(
+		const struct i2c_slave_module *const module)
+{
+	/* Sanity check. */
+	Assert(module);
+
+	while (i2c_slave_is_syncing(module)) {
+		/* Wait for I2C module to sync */
+	}
+}
+#endif
 
 /**
  * \brief Gets the I2C slave default configurations
@@ -463,7 +453,7 @@ static inline void i2c_slave_get_config_defaults(
 	config->address_mask = 0;
 	config->enable_general_call_address = false;
 #ifdef FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
-	config->transfer_speed_mode = I2C_SLAVE_SPEED_STANDARD_AND_FAST_MODE;
+	config->transfer_speed = I2C_SLAVE_SPEED_STANDARD_AND_FAST;
 #endif
 #if I2C_SLAVE_CALLBACK_MODE == true
 	config->enable_nack_on_address = false;
