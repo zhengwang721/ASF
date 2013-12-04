@@ -98,7 +98,6 @@ static inline void pll_config_init(struct pll_config *p_cfg,
 
 	/* Calculate internal VCO frequency */
 	vco_hz = osc_get_rate(e_src) / ul_div;
-	Assert(vco_hz == PLL_INPUT_HZ);
 
 	vco_hz *= ul_mul;
 	Assert(vco_hz >= PLL_OUTPUT_MIN_HZ);
@@ -175,6 +174,10 @@ static inline void pll_enable_source(enum pll_source e_src)
 		osc_wait_ready(e_src);
 		break;
 
+	case PLL_SRC_SLCK_XTAL:
+		SUPC->SUPC_CR |= SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL;
+		break;
+                
 	default:
 		Assert(false);
 		break;

@@ -179,6 +179,37 @@ void system_board_init(void);
 #define PINS_UART0_TYPE   PIO_PERIPH_A
 #define PINS_UART0_ATTR   PIO_DEFAULT
 
+/** PCK0 pin definition (PA6) */
+#define PIN_PCK0         (PIO_PA6_IDX)
+#define PIN_PCK0_MUX     (IOPORT_MODE_MUX_B)
+#define PIN_PCK0_FLAGS   (IOPORT_MODE_MUX_B)
+#define PIN_PCK0_PORT    IOPORT_PIOA
+#define PIN_PCK0_MASK    PIO_PA6B_PCK0
+#define PIN_PCK0_PIO     PIOA
+#define PIN_PCK0_ID      ID_PIOA
+#define PIN_PCK0_TYPE    PIO_PERIPH_B
+#define PIN_PCK0_ATTR    PIO_DEFAULT
+
+//! \name SPI
+//@{
+/** SPI MISO pin definition. */
+#define SPI_MISO_GPIO         (PIO_PA12_IDX)
+#define SPI_MISO_FLAGS       (IOPORT_MODE_MUX_A)
+/** SPI MOSI pin definition. */
+#define SPI_MOSI_GPIO         (PIO_PA13_IDX)
+#define SPI_MOSI_FLAGS       (IOPORT_MODE_MUX_A)
+/** SPI SPCK pin definition. */
+#define SPI_SPCK_GPIO         (PIO_PA14_IDX)
+#define SPI_SPCK_FLAGS       (IOPORT_MODE_MUX_A)
+
+/** SPI chip select 0 pin definition. */
+#define SPI_NPCS0_GPIO        (PIO_PA11_IDX)
+#define SPI_NPCS0_FLAGS      (IOPORT_MODE_MUX_A)
+/** SPI chip select 1 pin definition. */
+#define SPI_NPCS1_GPIO        (PIO_PB2_IDX)
+#define SPI_NPCS1_FLAGS      (IOPORT_MODE_MUX_B)
+//@}
+
 /** \name Extension header #1 pin definitions
  *  @{
  */
