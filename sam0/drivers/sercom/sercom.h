@@ -54,13 +54,15 @@
 extern "C" {
 #endif
 
-/* Tempory work around definitions */
+#if SAMD21
+/* Tempory work around definitions.If header file is updated, this will be removed */
 #define SERCOM0_GCLK_ID_SLOW        19
 #define SERCOM1_GCLK_ID_SLOW        19
 #define SERCOM2_GCLK_ID_SLOW        19
 #define SERCOM3_GCLK_ID_SLOW        19
 #define SERCOM4_GCLK_ID_SLOW        19
 #define SERCOM5_GCLK_ID_SLOW        19
+#endif
 
 #if (SERCOM0_GCLK_ID_SLOW == SERCOM1_GCLK_ID_SLOW && \
      SERCOM0_GCLK_ID_SLOW == SERCOM2_GCLK_ID_SLOW && \
