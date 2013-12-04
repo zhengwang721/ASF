@@ -46,94 +46,6 @@
 #  include "i2c_slave_interrupt.h"
 #endif
 
-#if I2C_SLAVE_CALLBACK_MODE == false
-/**
- * \internal Check the current configuration for the module
- *
- * This function is not used in callback mode.
- *
- * \param[out] module  Pointer to software module structure
- * \param[in]  config  Configuration structure with configurations to set
- *
- * \return Status of setting configuration.
- * \retval STATUS_OK                       Module was configured correctly
- * \retval STATUS_ERR_ALREADY_INITIALIZED  If setting other GCLK generator than
- *                                         previously set
- */
-static enum status_code _i2c_slave_check_config(
-		struct i2c_slave_module *const module,
-		const struct i2c_slave_config *const config)
-{
-	/* Sanity check arguments. */
-	Assert(module);
-	Assert(module->hw);
-	Assert(config);
-
-	SercomI2cs *const i2c_hw = &(module->hw->I2CS);
-	Sercom *const sercom_hw = module->hw;
-
-	struct system_pinmux_config pin_conf;
-	system_pinmux_get_config_defaults(&pin_conf);
-
-	uint32_t tmp_ctrla = 0;
-	uint32_t tmp_ctrlb = 0;
-	uint32_t tmp_addr = 0;
-
-	uint32_t pad0 = config->pinmux_pad0;
-	uint32_t pad1 = config->pinmux_pad1;
-
-	enum status_code tmp_status = STATUS_OK;
-
-	/* SERCOM PAD0 - SDA */
-	if (pad0 == PINMUX_DEFAULT) {
-		pad0 = _sercom_get_default_pad(sercom_hw, 0);
-	}
-	if ((pad0 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad0 >> 16)) {
-		return STATUS_ERR_DENIED;
-	}
-
-	/* SERCOM PAD1 - SCL */
-	if (pad1 == PINMUX_DEFAULT) {
-		pad1 = _sercom_get_default_pad(sercom_hw, 1);
-	}
-	if ((pad1 & 0xFFFF) != system_pinmux_pin_get_mux_position(pad1 >> 16)) {
-		return STATUS_ERR_DENIED;
-	}
-
-	/* Write config to register CTRLA */
-	tmp_ctrla |= config->sda_hold_time |
-			(config->run_in_standby << SERCOM_I2CS_CTRLA_RUNSTDBY_Pos) |
-			SERCOM_I2CS_CTRLA_MODE_I2C_SLAVE |
-			SERCOM_I2CS_CTRLA_ENABLE;
-
-	/* Set CTRLB configuration */
-	tmp_ctrlb = SERCOM_I2CS_CTRLB_SMEN | config->address_mode;
-
-	tmp_addr = config->address << SERCOM_I2CS_ADDR_ADDR_Pos |
-			config->address_mask << SERCOM_I2CS_ADDR_ADDRMASK_Pos |
-			config->enable_general_call_address << SERCOM_I2CS_ADDR_GENCEN_Pos;
-
-	if (tmp_ctrla != i2c_hw->CTRLA.reg) {
-		tmp_status = STATUS_ERR_DENIED;
-	} else if (tmp_ctrlb != (i2c_hw->CTRLB.reg & 0xffff)) {
-		tmp_status = STATUS_ERR_DENIED;
-	} else if (tmp_addr != i2c_hw->ADDR.reg) {
-		tmp_status = STATUS_ERR_DENIED;
-	}
-
-	/* Return based on config. */
-	if (tmp_status != STATUS_OK)
-	{
-		module->hw = NULL;
-		return tmp_status;
-	}
-
-	/* Same config, init module pointer and return */
-	module->buffer_timeout = config->buffer_timeout;
-	return STATUS_OK;
-}
-#endif
-
 /**
  * \internal Sets configuration to module
  *
@@ -231,11 +143,7 @@ enum status_code i2c_slave_init(
 
 	/* Check if module is enabled. */
 	if (i2c_hw->CTRLA.reg & SERCOM_I2CS_CTRLA_ENABLE) {
-#if I2C_SLAVE_CALLBACK_MODE == false
-		return _i2c_slave_check_config(module, config);
-#else
 		return STATUS_ERR_DENIED;
-#endif
 	}
 
 	/* Check if reset is in progress. */
