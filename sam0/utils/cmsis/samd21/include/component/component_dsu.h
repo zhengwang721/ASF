@@ -225,8 +225,9 @@ typedef union {
     uint32_t DEVSEL:8;         /*!< bit:  0.. 7  Device Select                      */
     uint32_t REVISION:4;       /*!< bit:  8..11  Revision                           */
     uint32_t DIE:4;            /*!< bit: 12..15  Die Identification                 */
-    uint32_t SERIES:8;         /*!< bit: 16..23  Product Series                     */
-    uint32_t FAMILY:4;         /*!< bit: 24..27  Product Family                     */
+    uint32_t SERIES:6;         /*!< bit: 16..21  Product Series                     */
+    uint32_t :1;               /*!< bit:     22  Reserved                           */
+    uint32_t FAMILY:5;         /*!< bit: 23..27  Product Family                     */
     uint32_t PROCESSOR:4;      /*!< bit: 28..31  Processor                          */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
@@ -245,15 +246,15 @@ typedef union {
 #define DSU_DID_DIE_Msk             (0xFu << DSU_DID_DIE_Pos)
 #define DSU_DID_DIE(value)          ((DSU_DID_DIE_Msk & ((value) << DSU_DID_DIE_Pos)))
 #define DSU_DID_SERIES_Pos          16           /**< \brief (DSU_DID) Product Series */
-#define DSU_DID_SERIES_Msk          (0xFFu << DSU_DID_SERIES_Pos)
+#define DSU_DID_SERIES_Msk          (0x3Fu << DSU_DID_SERIES_Pos)
 #define DSU_DID_SERIES(value)       ((DSU_DID_SERIES_Msk & ((value) << DSU_DID_SERIES_Pos)))
-#define DSU_DID_FAMILY_Pos          24           /**< \brief (DSU_DID) Product Family */
-#define DSU_DID_FAMILY_Msk          (0xFu << DSU_DID_FAMILY_Pos)
+#define DSU_DID_FAMILY_Pos          23           /**< \brief (DSU_DID) Product Family */
+#define DSU_DID_FAMILY_Msk          (0x1Fu << DSU_DID_FAMILY_Pos)
 #define DSU_DID_FAMILY(value)       ((DSU_DID_FAMILY_Msk & ((value) << DSU_DID_FAMILY_Pos)))
 #define DSU_DID_PROCESSOR_Pos       28           /**< \brief (DSU_DID) Processor */
 #define DSU_DID_PROCESSOR_Msk       (0xFu << DSU_DID_PROCESSOR_Pos)
 #define DSU_DID_PROCESSOR(value)    ((DSU_DID_PROCESSOR_Msk & ((value) << DSU_DID_PROCESSOR_Pos)))
-#define DSU_DID_MASK                0xFFFFFFFFu  /**< \brief (DSU_DID) MASK Register */
+#define DSU_DID_MASK                0xFFBFFFFFu  /**< \brief (DSU_DID) MASK Register */
 
 /* -------- DSU_ENTRY : (DSU Offset: 0x1000) (R/  32) Coresight ROM Table Entry n -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
