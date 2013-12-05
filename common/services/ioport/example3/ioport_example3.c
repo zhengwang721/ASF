@@ -72,6 +72,7 @@
  *  - STK600 evaluation Kit (Tested with STK600-ATMEGA128RFA1)
  *  - ATmega256RFR2 Xplained Pro kit
  *  - SAM4C evaluation kit
+ *  - samg53n19_samg_xplained_pro
  *
  * \section example_description Description of the example
  * This example reads input from a button and outputs it on a LED.

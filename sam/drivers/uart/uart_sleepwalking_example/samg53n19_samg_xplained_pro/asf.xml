@@ -1,14 +1,15 @@
 <asf xmlversion="1.0">
-	<project caption="Common API for Clocks Control / Example 2 for SAMG53 Xplained PRO" id="common.services.basic.clock.example2.samg53_xplained_pro">
+	<project caption="UART Sleepwalking Example on SAMG53" id="sam.drivers.uart.uart_sleepwalking_example.samg53_xplained_pro">
 		<info type="description" value="summary">
-		Initialize the clock system and output the CPU clock on a dedicated pin.
+			This example shows the sleepwalking function of UART.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
-		<build type="header-file" value="conf_example2.h"/>
-		<build type="include-path" value="."/>
-		<require idref="common.services.basic.clock.example2"/>
+		<build type="header-file" value="conf_example.h"/>
+		<build type="header-file" value="conf_uart_serial.h"/>
+		<build type="header-file" value="conf_sleepmgr.h"/>
+		<require idref="sam.drivers.uart.uart_sleepwalking_example"/>
 		<require idref="board.samg53_xplained_pro"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>

@@ -52,7 +52,7 @@
  *
  * This example can be used on boards:
  * - sam4n16c_sam4n_xplained_pro
- * - samg51_stk600_samg51
+ * - samg53n19_samg_xplained_pro
  *
  * \section Description
  *
@@ -92,12 +92,7 @@
 #include "asf.h"
 
 /** Reference voltage for ADC,in mv. */
-#if (SAM4N)
 #define VOLT_REF        (3300)
-#endif
-#if (SAMG)
-#define VOLT_REF        (2000)
-#endif
 
 /** The maximal digital value */
 #define MAX_DIGITAL_8_Bit  (255UL)
