@@ -45,22 +45,19 @@
 #define CONF_USART_SERIAL_H
 
 /** UART Interface */
-#define CONF_UART            EDBG_CDC_UART_MODULE
-#define CONSOLE_UART         EDBG_CDC_UART_MODULE
-#define CONSOLE_UART_ID      ID_UART0
-
+#define CONF_UART            CONSOLE_UART
 /** Baudrate setting */
 #define CONF_UART_BAUDRATE   (115200UL)
 /** Parity setting */
 #define CONF_UART_PARITY     UART_MR_PAR_NO
 
 /* Configure UART pins PIO */
-#define CONF_UART_PIO PIOA
+#define CONF_UART_PIO PINS_UART0_PIO
 
 /* Configure UART pins */
-#define CONF_PINS_UART (EDBG_CDC_UART_RX_PIN | EDBG_CDC_UART_TX_PIN)
+#define CONF_PINS_UART PINS_UART0
 
 /* Configure UART pins flags */
-#define CONF_PINS_UART_FLAGS (EDBG_CDC_UART_RX_MUX | PIO_DEFAULT)
+#define CONF_PINS_UART_FLAGS (PIO_PERIPH_A | PIO_DEFAULT)
 
-#endif /* CONF_USART_SERIAL_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

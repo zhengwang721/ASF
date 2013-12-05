@@ -89,6 +89,10 @@
 extern uint32_t g_fastrc_clock_list[][3];
 extern uint32_t g_pll_clock_list[][4];
 
+#define PLL_DEFAULT_MUL  732
+#define PLL_DEFAULT_DIV  1
+#define MCK_DEFAULT_DIV  PMC_MCKR_PRES_CLK_1
+
 void init_specific_board(void);
 
 #endif /* LOW_POWER_BOARD_H_INCLUDED */

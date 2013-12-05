@@ -123,6 +123,20 @@ void system_board_init(void)
 			IOPORT_MODE_MUX_B);
 #endif
 
+#if defined(CONF_BOARD_SPI)
+	ioport_set_pin_peripheral_mode(SPI_MISO_GPIO, SPI_MISO_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
+	ioport_set_pin_peripheral_mode(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
+
+#ifdef CONF_BOARD_SPI_NPCS0
+	ioport_set_pin_peripheral_mode(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_SPI_NPCS1
+	ioport_set_pin_peripheral_mode(SPI_NPCS1_GPIO, SPI_NPCS1_FLAGS);
+#endif
+#endif
+
 #ifdef CONF_BOARD_TWI0
 	ioport_set_pin_peripheral_mode(TWI0_DATA_GPIO, TWI0_DATA_FLAGS);
 	ioport_set_pin_peripheral_mode(TWI0_CLK_GPIO, TWI0_CLK_FLAGS);
@@ -138,6 +152,21 @@ void system_board_init(void)
 	ioport_set_pin_peripheral_mode(TWI2_CLK_GPIO, TWI2_CLK_FLAGS);
 #endif
 
+#ifdef CONF_BOARD_I2S0
+	ioport_set_pin_peripheral_mode(I2S0_SCK_GPIO, I2S0_SCK_FLAGS);
+	ioport_set_pin_peripheral_mode(I2S0_MCK_GPIO, I2S0_MCK_FLAGS);
+	ioport_set_pin_peripheral_mode(I2S0_SDI_GPIO, I2S0_SDI_FLAGS);
+	ioport_set_pin_peripheral_mode(I2S0_SDO_GPIO, I2S0_SDO_FLAGS);
+	ioport_set_pin_peripheral_mode(I2S0_WS_GPIO, I2S0_WS_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_I2S1
+	ioport_set_pin_peripheral_mode(I2S1_SCK_GPIO, I2S1_SCK_FLAGS);
+	ioport_set_pin_peripheral_mode(I2S1_MCK_GPIO, I2S1_MCK_FLAGS);
+	ioport_set_pin_peripheral_mode(I2S1_SDI_GPIO, I2S1_SDI_FLAGS);
+	ioport_set_pin_peripheral_mode(I2S1_SDO_GPIO, I2S1_SDO_FLAGS);
+	ioport_set_pin_peripheral_mode(I2S1_WS_GPIO, I2S1_WS_FLAGS);
+#endif
 }
 
 /** @} */

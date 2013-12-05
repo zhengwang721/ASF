@@ -136,6 +136,13 @@ void system_board_init(void);
 #define LED_0_PIN                 LED0_PIN
 #define LED_0_ACTIVE              LED0_ACTIVE
 #define LED_0_INACTIVE            LED0_INACTIVE
+
+#define PIN_LED_0      {PIO_PA16, PIOA, ID_PIOA, PIO_OUTPUT_1, PIO_DEFAULT}
+#define PIN_LED_0_MASK PIO_PA16
+#define PIN_LED_0_PIO  PIOA
+#define PIN_LED_0_ID   ID_PIOA
+#define PIN_LED_0_TYPE PIO_OUTPUT_1
+#define PIN_LED_0_ATTR PIO_DEFAULT
 /** @} */
 
 /** Number of on-board LEDs */
@@ -198,6 +205,13 @@ void system_board_init(void);
 #define PIN_PCK0_TYPE    PIO_PERIPH_B
 #define PIN_PCK0_ATTR    PIO_DEFAULT
 
+#define PIN_TC0_TIOA0         (PIO_PA0_IDX)
+#define PIN_TC0_TIOA0_MUX     (IOPORT_MODE_MUX_B)
+#define PIN_TC0_TIOA0_FLAGS   (PIO_PERIPH_B | PIO_DEFAULT)
+
+#define PIN_TC0_TIOA1         (PIO_PA23_IDX)
+#define PIN_TC0_TIOA1_MUX     (IOPORT_MODE_MUX_B)
+#define PIN_TC0_TIOA1_FLAGS   (PIO_PERIPH_B | PIO_DEFAULT)
 //! \name SPI
 //@{
 /** SPI MISO pin definition. */
@@ -488,6 +502,43 @@ void system_board_init(void);
 #define TWI2_CLK_FLAGS   IOPORT_MODE_MUX_B
 /** @} */
 
+//! \name I2S0
+//@{
+/** I2S0 SCK pin definition. */
+#define I2S0_SCK_GPIO        (PIO_PA0_IDX)
+#define I2S0_SCK_FLAGS       (IOPORT_MODE_MUX_A)
+/** I2S0 MCK pin definition. */
+#define I2S0_MCK_GPIO        (PIO_PA4_IDX)
+#define I2S0_MCK_FLAGS       (IOPORT_MODE_MUX_B)
+/** I2S0 SDI pin definition. */
+#define I2S0_SDI_GPIO        (PIO_PA2_IDX)
+#define I2S0_SDI_FLAGS       (IOPORT_MODE_MUX_B)
+/** I2S0 SDO pin definition. */
+#define I2S0_SDO_GPIO        (PIO_PA3_IDX)
+#define I2S0_SDO_FLAGS       (IOPORT_MODE_MUX_B)
+/** I2S0 WS pin definition. */
+#define I2S0_WS_GPIO         (PIO_PA1_IDX)
+#define I2S0_WS_FLAGS        (IOPORT_MODE_MUX_A)
+//@}
+
+//! \name I2S1
+//@{
+/** I2S1 SCK pin definition. */
+#define I2S1_SCK_GPIO        (PIO_PA19_IDX)
+#define I2S1_SCK_FLAGS       (IOPORT_MODE_MUX_B)
+/** I2S1 MCK pin definition. */
+#define I2S1_MCK_GPIO        (PIO_PA24_IDX)
+#define I2S1_MCK_FLAGS       (IOPORT_MODE_MUX_A)
+/** I2S1 SDI pin definition. */
+#define I2S1_SDI_GPIO        (PIO_PA22_IDX)
+#define I2S1_SDI_FLAGS       (IOPORT_MODE_MUX_B)
+/** I2S1 SDO pin definition. */
+#define I2S1_SDO_GPIO        (PIO_PA23_IDX)
+#define I2S1_SDO_FLAGS       (IOPORT_MODE_MUX_A)
+/** I2S1 WS pin definition. */
+#define I2S1_WS_GPIO         (PIO_PA20_IDX)
+#define I2S1_WS_FLAGS        (IOPORT_MODE_MUX_B)
+//@}
 /** @} */
 
 /** @} */
