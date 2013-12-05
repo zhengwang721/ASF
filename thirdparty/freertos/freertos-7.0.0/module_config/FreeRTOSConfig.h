@@ -46,7 +46,11 @@
 #ifndef FREERTOS_CONFIG_H
 #define FREERTOS_CONFIG_H
 
+#if defined (__GNUC__) || defined (__ICCARM__)
+/* Important: put #includes here unless they are also meant for the assembler.
+ */
 #include "board.h"
+#endif
 
 
 /*-----------------------------------------------------------
