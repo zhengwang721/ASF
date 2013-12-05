@@ -379,8 +379,6 @@ enum rtc_calendar_prescaler {
 struct rtc_module {
 	/** RTC hardware module */
 	Rtc *hw;
-	/** Module lock */
-	volatile bool locked;
 	/** If clock mode 24h. */
 	bool clock_24h;
 	/** If continuously update clock register. */

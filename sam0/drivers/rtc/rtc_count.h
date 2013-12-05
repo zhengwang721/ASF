@@ -419,8 +419,6 @@ struct rtc_count_events {
 struct rtc_module {
 	/** RTC hardware module */
 	Rtc *hw;
-	/** Module lock */
-	volatile bool locked;
 	/** Operation mode of count. */
 	enum rtc_count_mode mode;
 	/** Set if counter value should be continuously updated. */
