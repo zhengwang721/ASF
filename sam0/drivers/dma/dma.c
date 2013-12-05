@@ -264,6 +264,8 @@ void DMAC_Handler( void )
  * The default configuration is as follows:
  *  \li software trigger is used as the transfer trigger
  *  \li priority level 0
+ *  \li Only software/event trigger
+ *  \li No event input /output
  * \param[out] config Pointer to the configuration
  *
  */
@@ -271,8 +273,16 @@ void dma_get_config_defaults(struct dma_transfer_config *config)
 {
 	Assert(config);
 
+	/* Using software trigger */
 	config->transfer_trigger = DMA_TRIGGER_SOFTWARE;
+	/* Set as priority 0 */
 	config->priority = DMA_PRIORITY_LEVEL_0;
+	/* Only software/event trigger */
+	config->peripheral_trigger = 0;
+
+	/* Event configurations, no event input/output */
+	config->event_config.input_action = DMA_EVENT_INPUT_NOACT;
+	config->event_config.event_output_enable = false;
 }
 
 /**

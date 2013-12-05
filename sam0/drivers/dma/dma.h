@@ -124,14 +124,10 @@ enum dma_callback_type {
 
 /** Configurations for DMA events */
 struct dma_events_config {
-	/** Enable DMA event input */
-	bool event_input_enable;
 	/** Event input actions */
 	enum dma_event_input_action input_action;
 	/** Enable DMA event output */
 	bool event_output_enable;
-	/** Event output actions */
-	enum dma_event_output_selection output_action;
 };
 
 /** DMA transfer descriptor */
