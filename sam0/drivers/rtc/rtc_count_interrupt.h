@@ -60,16 +60,20 @@ extern "C" {
  * @{
  */
 enum status_code rtc_count_register_callback(
+		struct rtc_module *const module,
 		rtc_count_callback_t callback,
 		enum rtc_count_callback callback_type);
 
 enum status_code rtc_count_unregister_callback(
+		struct rtc_module *const module,
 		enum rtc_count_callback callback_type);
 
 void rtc_count_enable_callback(
+		struct rtc_module *const module,
 		enum rtc_count_callback callback_type);
 
 void rtc_count_disable_callback(
+		struct rtc_module *const module,
 		enum rtc_count_callback callback_type);
 
 /** @} */

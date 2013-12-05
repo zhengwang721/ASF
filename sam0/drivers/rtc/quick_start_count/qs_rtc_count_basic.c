@@ -44,6 +44,8 @@
 
 void configure_rtc_count(void);
 
+struct rtc_module rtc_instance;
+
 //! [initiate]
 void configure_rtc_count(void)
 {
@@ -62,11 +64,11 @@ void configure_rtc_count(void)
 	config_rtc_count.compare_values[0]   = 1000;
 //! [set_config]
 //! [init_rtc]
-	rtc_count_init(&config_rtc_count);
+	rtc_count_init(&rtc_instance, RTC, &config_rtc_count);
 //! [init_rtc]
 
 //! [enable]
-	rtc_count_enable();
+	rtc_count_enable(&rtc_instance);
 //! [enable]
 }
 //! [initiate]
@@ -84,14 +86,14 @@ int main(void)
 
 //! [implementation_code]
 //! [period]
-	rtc_count_set_period(2000);
+	rtc_count_set_period(&rtc_instance, 2000);
 //! [period]
 
 //! [main_loop]
 	while (true) {
 //! [main_loop]
 //! [check_match]
-		if (rtc_count_is_compare_match(RTC_COUNT_COMPARE_0)) {
+		if (rtc_count_is_compare_match(&rtc_instance, RTC_COUNT_COMPARE_0)) {
 //! [check_match]
 //! [compare_match_action]
 			/* Do something on RTC count match here */
@@ -99,7 +101,7 @@ int main(void)
 //! [compare_match_action]
 
 //! [clear_compare_match]
-			rtc_count_clear_compare_match(RTC_COUNT_COMPARE_0);
+			rtc_count_clear_compare_match(&rtc_instance, RTC_COUNT_COMPARE_0);
 //! [clear_compare_match]
 		}
 	}

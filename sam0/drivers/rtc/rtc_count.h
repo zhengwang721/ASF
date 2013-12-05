@@ -416,7 +416,11 @@ struct rtc_count_events {
 /**
  * \internal Internal device structure.
  */
-struct _rtc_device {
+struct rtc_module {
+	/** RTC hardware module */
+	Rtc *hw;
+	/** Module lock */
+	volatile bool locked;
 	/** Operation mode of count. */
 	enum rtc_count_mode mode;
 	/** Set if counter value should be continuously updated. */
@@ -430,8 +434,6 @@ struct _rtc_device {
 	volatile uint8_t enabled_callback;
 #  endif
 };
-
-extern volatile struct _rtc_device _rtc_dev;
 #endif
 
 /**
@@ -472,14 +474,20 @@ struct rtc_count_config {
  * that it is ready, to prevent blocking delays for synchronization in the
  * user application.
  *
+ * \param[in]  module  RTC hardware module
+ *
  * \return Synchronization status of the underlying hardware module(s).
  *
  * \retval true  if the module has completed synchronization
  * \retval false if the module synchronization is ongoing
  */
-static inline bool rtc_count_is_syncing(void)
+static inline bool rtc_count_is_syncing(struct rtc_module *const module)
 {
-        Rtc *const rtc_module = RTC;
+ 	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
 
         if (rtc_module->MODE0.STATUS.reg & RTC_STATUS_SYNCBUSY) {
                 return true;
@@ -521,24 +529,29 @@ static inline void rtc_count_get_config_defaults(
 	}
 }
 
-void rtc_count_reset(void);
+void rtc_count_reset(struct rtc_module *const module);
 
 /**
  * \brief Enables the RTC module.
  *
  * Enables the RTC module once it has been configured, ready for use. Most
  * module configuration parameters cannot be altered while the module is enabled.
+ *
+ * \param[in,out]  module  RTC hardware module
  */
-static inline void rtc_count_enable(void)
+static inline void rtc_count_enable(struct rtc_module *const module)
 {
-	/* Initialize module pointer. */
-	Rtc *const rtc_module = RTC;
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
 
 #if RTC_COUNT_ASYNC == true
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_RTC);
 #endif
 
-	while (rtc_count_is_syncing()) {
+	while (rtc_count_is_syncing(module)) {
 		/* Wait for synchronization */
 	}
 
@@ -550,17 +563,22 @@ static inline void rtc_count_enable(void)
  * \brief Disables the RTC module.
  *
  * Disables the RTC module.
+ *
+ * \param[in,out]  module  RTC hardware module
  */
-static inline void rtc_count_disable(void)
+static inline void rtc_count_disable(struct rtc_module *const module)
 {
-	/* Initialize module pointer. */
-	Rtc *const rtc_module = RTC;
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
 
 #if RTC_COUNT_ASYNC == true
 	system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_RTC);
 #endif
 
-	while (rtc_count_is_syncing()) {
+	while (rtc_count_is_syncing(module)) {
 		/* Wait for synchronization */
 	}
 
@@ -568,10 +586,40 @@ static inline void rtc_count_disable(void)
 	rtc_module->MODE0.CTRL.reg &= ~RTC_MODE0_CTRL_ENABLE;
 }
 
+#if (RTC_INST_NUM > 1) && !defined(__DOXYGEN__)
+/**
+ * \internal Find the index of given RTC module instance.
+ *
+ * \param[in] RTC module instance pointer.
+ *
+ * \return Index of the given AC module instance.
+ */
+uint8_t _rtc_get_inst_index(
+		Rtc *const hw)
+{
+	/* List of available RTC modules. */
+	static Rtc *const rtc_modules[RTC_INST_NUM] = RTC_INSTS;
+
+	/* Find index for RTC instance. */
+	for (uint32_t i = 0; i < RTC_INST_NUM; i++) {
+		if (hw == rtc_modules[i]) {
+			return i;
+		}
+	}
+
+	/* Invalid data given. */
+	Assert(false);
+	return 0;
+}
+#endif /* (RTC_INST_NUM > 1) && !defined(__DOXYGEN__) */
+
 enum status_code rtc_count_init(
+		struct rtc_module *const module,
+		Rtc *const hw,
 		const struct rtc_count_config *const config);
 
 enum status_code rtc_count_frequency_correction(
+		struct rtc_module *const module,
 		const int8_t value);
 
 /** @} */
@@ -580,22 +628,27 @@ enum status_code rtc_count_frequency_correction(
  * @{
  */
 enum status_code rtc_count_set_count(
+		struct rtc_module *const module,
 		const uint32_t count_value);
 
-uint32_t rtc_count_get_count(void);
+uint32_t rtc_count_get_count(struct rtc_module *const module);
 
 enum status_code rtc_count_set_compare(
+		struct rtc_module *const module,
 		const uint32_t comp_value,
 		const enum rtc_count_compare comp_index);
 
 enum status_code rtc_count_get_compare(
+		struct rtc_module *const module,
 		uint32_t *const comp_value,
 		const enum rtc_count_compare comp_index);
 
 enum status_code rtc_count_set_period(
+		struct rtc_module *const module,
 		uint16_t period_value);
 
 enum status_code rtc_count_get_period(
+		struct rtc_module *const module,
 		uint16_t *const period_value);
 
 /** @} */
@@ -611,16 +664,21 @@ enum status_code rtc_count_get_period(
  * Checks the overflow flag in the RTC. The flag is set when there
  * is an overflow in the clock.
  *
+ * \param[in,out]  module  RTC hardware module
+ *
  * \return Overflow state of the RTC module.
  *
  * \retval true   If the RTC count value has overflowed
  * \retval false  If the RTC count value has not overflowed
  */
 
-static inline bool rtc_count_is_overflow(void)
+static inline bool rtc_count_is_overflow(struct rtc_module *const module)
 {
-	/* Initialize module pointer. */
-	Rtc *const rtc_module = RTC;
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
 
 	/* Return status of flag */
 	return (rtc_module->MODE0.INTFLAG.reg & RTC_MODE0_INTFLAG_OVF);
@@ -631,20 +689,27 @@ static inline bool rtc_count_is_overflow(void)
  *
  * Clears the RTC module counter overflow flag, so that new overflow conditions
  * can be detected.
+ *
+ * \param[in,out]  module  RTC hardware module
  */
-static inline void rtc_count_clear_overflow(void)
+static inline void rtc_count_clear_overflow(struct rtc_module *const module)
 {
-	/* Initialize module pointer. */
-	Rtc *const rtc_module = RTC;
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
 
 	/* Clear OVF flag */
 	rtc_module->MODE0.INTFLAG.reg = RTC_MODE0_INTFLAG_OVF;
 }
 
 bool rtc_count_is_compare_match(
+		struct rtc_module *const module,
 		const enum rtc_count_compare comp_index);
 
 enum status_code rtc_count_clear_compare_match(
+		struct rtc_module *const module,
 		const enum rtc_count_compare comp_index);
 
 /** @} */
@@ -663,13 +728,18 @@ enum status_code rtc_count_clear_compare_match(
  *
  *  \note Events cannot be altered while the module is enabled.
  *
+ *  \param[in,out]  module  RTC hardware module
  *  \param[in] events    Struct containing flags of events to enable
  */
 static inline void rtc_count_enable_events(
+		struct rtc_module *const module,
 		struct rtc_count_events *const events)
 {
-	/* Initialize module pointer. */
-	Rtc *const rtc_module = RTC;
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
 
 	uint32_t event_mask = 0;
 
@@ -704,13 +774,18 @@ static inline void rtc_count_enable_events(
  *
  *  \note Events cannot be altered while the module is enabled.
  *
+ *  \param[in,out]  module  RTC hardware module
  *  \param[in] events    Struct containing flags of events to disable
  */
 static inline void rtc_count_disable_events(
+		struct rtc_module *const module,
 		struct rtc_count_events *const events)
 {
-	/* Initialize module pointer. */
-	Rtc *const rtc_module = RTC;
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
 
 	uint32_t event_mask = 0;
 

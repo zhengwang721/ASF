@@ -46,6 +46,8 @@ void rtc_match_callback(void);
 void configure_rtc_callbacks(void);
 void configure_rtc_calendar(void);
 
+struct rtc_module rtc_instance;
+
 //! [callback]
 void rtc_match_callback(void)
 {
@@ -55,7 +57,7 @@ void rtc_match_callback(void)
 	/* Set new alarm in 5 seconds */
 	//! [alarm_struct]
 	struct rtc_calendar_alarm_time alarm;
-	rtc_calendar_get_time(&alarm.time);
+	rtc_calendar_get_time(&rtc_instance, &alarm.time);
 	//! [alarm_struct]
 
 	//! [alarm_mask]
@@ -66,7 +68,7 @@ void rtc_match_callback(void)
 	alarm.time.second += 5;
 	alarm.time.second = alarm.time.second % 60;
 
-	rtc_calendar_set_alarm(&alarm, RTC_CALENDAR_ALARM_0);
+	rtc_calendar_set_alarm(&rtc_instance, &alarm, RTC_CALENDAR_ALARM_0);
 	//! [set_alarm]
 }
 //! [callback]
@@ -76,10 +78,10 @@ void configure_rtc_callbacks(void)
 {
 	//! [reg_callback]
 	rtc_calendar_register_callback(
-			rtc_match_callback, RTC_CALENDAR_CALLBACK_ALARM_0);
+			&rtc_instance, rtc_match_callback, RTC_CALENDAR_CALLBACK_ALARM_0);
 	//! [reg_callback]
 	//! [en_callback]
-	rtc_calendar_enable_callback(RTC_CALENDAR_CALLBACK_ALARM_0);
+	rtc_calendar_enable_callback(&rtc_instance, RTC_CALENDAR_CALLBACK_ALARM_0);
 	//! [en_callback]
 }
 //! [setup_callback]
@@ -111,11 +113,11 @@ void configure_rtc_calendar(void)
 //! [set_config]
 
 //! [init_rtc]
-	rtc_calendar_init(&config_rtc_calendar);
+	rtc_calendar_init(&rtc_instance, RTC, &config_rtc_calendar);
 //! [init_rtc]
 
 //! [enable]
-	rtc_calendar_enable();
+	rtc_calendar_enable(&rtc_instance);
 //! [enable]
 }
 //! [initialize_rtc]
@@ -150,7 +152,7 @@ int main(void)
 
 	/* Set current time. */
 //! [set_time]
-	rtc_calendar_set_time(&time);
+	rtc_calendar_set_time(&rtc_instance, &time);
 //! [set_time]
 //! [run_initialize_rtc]
 

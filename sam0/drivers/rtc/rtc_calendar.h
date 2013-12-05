@@ -376,7 +376,11 @@ enum rtc_calendar_prescaler {
 /**
  * \internal Device structure
  */
-struct _rtc_device {
+struct rtc_module {
+	/** RTC hardware module */
+	Rtc *hw;
+	/** Module lock */
+	volatile bool locked;
 	/** If clock mode 24h. */
 	bool clock_24h;
 	/** If continuously update clock register. */
@@ -392,8 +396,6 @@ struct _rtc_device {
 	volatile uint8_t enabled_callback;
 #  endif
 };
-
-extern volatile struct _rtc_device _rtc_dev;
 #endif
 
 /**
@@ -514,16 +516,22 @@ struct rtc_calendar_config {
  * that it is ready, to prevent blocking delays for synchronization in the
  * user application.
  *
+ * \param[in]  module  RTC hardware module
+ *
  * \return Synchronization status of the underlying hardware module(s).
  *
  * \retval true  if the module has completed synchronization
  * \retval false if the module synchronization is ongoing
  */
-static inline bool rtc_calendar_is_syncing(void)
+static inline bool rtc_calendar_is_syncing(struct rtc_module *const module)
 {
-        Rtc *const rtc_module = RTC;
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
 
-        if (rtc_module->MODE0.STATUS.reg & RTC_STATUS_SYNCBUSY) {
+	Rtc *const rtc_module = module->hw;
+
+        if (rtc_module->MODE2.STATUS.reg & RTC_STATUS_SYNCBUSY) {
                 return true;
         }
 
@@ -591,24 +599,29 @@ static inline void rtc_calendar_get_config_defaults(
 	}
 }
 
-void rtc_calendar_reset(void);
+void rtc_calendar_reset(struct rtc_module *const module);
 
 /**
  * \brief Enables the RTC module.
  *
  * Enables the RTC module once it has been configured, ready for use. Most
  * module configuration parameters cannot be altered while the module is enabled.
+ *
+ * \param[in,out] module  Pointer to the software instance struct
  */
-static inline void rtc_calendar_enable(void)
+static inline void rtc_calendar_enable(struct rtc_module *const module)
 {
-	/* Initialize module pointer. */
-	Rtc *const rtc_module = RTC;
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
 
 #if RTC_CALENDAR_ASYNC == true
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_RTC);
 #endif
 
-	while (rtc_calendar_is_syncing()) {
+	while (rtc_calendar_is_syncing(module)) {
 		/* Wait for synchronization */
 	}
 
@@ -620,17 +633,22 @@ static inline void rtc_calendar_enable(void)
  * \brief Disables the RTC module.
  *
  * Disables the RTC module.
+ *
+ * \param[in,out] module  Pointer to the software instance struct
  */
-static inline void rtc_calendar_disable(void)
+static inline void rtc_calendar_disable(struct rtc_module *const module)
 {
-	/* Initialize module pointer. */
-	Rtc *const rtc_module = RTC;
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
 
 #if RTC_CALENDAR_ASYNC == true
 	system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_RTC);
 #endif
 
-	while (rtc_calendar_is_syncing()) {
+	while (rtc_calendar_is_syncing(module)) {
 		/* Wait for synchronization */
 	}
 
@@ -638,12 +656,42 @@ static inline void rtc_calendar_disable(void)
 	rtc_module->MODE2.CTRL.reg &= ~RTC_MODE2_CTRL_ENABLE;
 }
 
+#if (RTC_INST_NUM > 1) && !defined(__DOXYGEN__)
+/**
+ * \internal Find the index of given RTC module instance.
+ *
+ * \param[in] RTC module instance pointer.
+ *
+ * \return Index of the given AC module instance.
+ */
+uint8_t _rtc_get_inst_index(
+		Rtc *const hw)
+{
+	/* List of available RTC modules. */
+	static Rtc *const rtc_modules[RTC_INST_NUM] = RTC_INSTS;
+
+	/* Find index for RTC instance. */
+	for (uint32_t i = 0; i < RTC_INST_NUM; i++) {
+		if (hw == rtc_modules[i]) {
+			return i;
+		}
+	}
+
+	/* Invalid data given. */
+	Assert(false);
+	return 0;
+}
+#endif /* (RTC_INST_NUM > 1) && !defined(__DOXYGEN__) */
+
 void rtc_calendar_init(
+		struct rtc_module *const module,
+		Rtc *const hw,
 		const struct rtc_calendar_config *const config);
 
-void rtc_calendar_swap_time_mode(void);
+void rtc_calendar_swap_time_mode(struct rtc_module *const module);
 
 enum status_code rtc_calendar_frequency_correction(
+		struct rtc_module *const module,
 		const int8_t value);
 
 /** @} */
@@ -654,16 +702,20 @@ enum status_code rtc_calendar_frequency_correction(
  */
 
 void rtc_calendar_set_time(
+		struct rtc_module *const module,
 		const struct rtc_calendar_time *const time);
 
 void rtc_calendar_get_time(
+		struct rtc_module *const module,
 		struct rtc_calendar_time *const time);
 
 enum status_code rtc_calendar_set_alarm(
+		struct rtc_module *const module,
 		const struct rtc_calendar_alarm_time *const alarm,
 		const enum rtc_calendar_alarm alarm_index);
 
 enum status_code rtc_calendar_get_alarm(
+		struct rtc_module *const module,
 		struct rtc_calendar_alarm_time *const alarm,
 		const enum rtc_calendar_alarm alarm_index);
 
@@ -680,15 +732,20 @@ enum status_code rtc_calendar_get_alarm(
  * Checks the overflow flag in the RTC. The flag is set when there
  * is an overflow in the clock.
  *
+ * \param[in,out] module  Pointer to the software instance struct
+ *
  * \return Overflow state of the RTC module.
  *
  * \retval true   If the RTC count value has overflowed
  * \retval false  If the RTC count value has not overflowed
  */
-static inline bool rtc_calendar_is_overflow(void)
+static inline bool rtc_calendar_is_overflow(struct rtc_module *const module)
 {
-	/* Initialize module pointer. */
-	Rtc *const rtc_module = RTC;
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
 
 	/* Return status of flag. */
 	return (rtc_module->MODE2.INTFLAG.reg & RTC_MODE2_INTFLAG_OVF);
@@ -697,13 +754,18 @@ static inline bool rtc_calendar_is_overflow(void)
 /**
  * \brief Clears the RTC overflow flag.
  *
+ * \param[in,out] module  Pointer to the software instance struct
+ *
  * Clears the RTC module counter overflow flag, so that new overflow conditions
  * can be detected.
  */
-static inline void rtc_calendar_clear_overflow(void)
+static inline void rtc_calendar_clear_overflow(struct rtc_module *const module)
 {
-	/* Initialize module pointer. */
-	Rtc *const rtc_module = RTC;
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
 
 	/* Clear flag. */
 	rtc_module->MODE2.INTFLAG.reg = RTC_MODE2_INTFLAG_OVF;
@@ -715,6 +777,7 @@ static inline void rtc_calendar_clear_overflow(void)
  * Check if the specified alarm flag is set. The flag is set when there
  * is an compare match between the alarm value and the clock.
  *
+ * \param[in,out] module  Pointer to the software instance struct
  * \param[in] alarm_index  Index of the alarm to check.
  *
  * \returns Match status of the specified alarm.
@@ -723,10 +786,14 @@ static inline void rtc_calendar_clear_overflow(void)
  * \retval false  If the specified alarm has not matched the current time
  */
 static inline bool rtc_calendar_is_alarm_match(
+		struct rtc_module *const module,
 		const enum rtc_calendar_alarm alarm_index)
 {
-	/* Initialize module pointer. */
-	Rtc *const rtc_module = RTC;
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
 
 	/* Sanity check. */
 	if ((uint32_t)alarm_index > RTC_NUM_OF_ALARMS) {
@@ -744,6 +811,7 @@ static inline bool rtc_calendar_is_alarm_match(
  * Clear the requested alarm match flag, so that future alarm matches can be
  * determined.
  *
+ * \param[in,out] module  Pointer to the software instance struct
  * \param[in] alarm_index  The index of the alarm match to clear.
  *
  * \return Status of the alarm match clear operation.
@@ -752,10 +820,14 @@ static inline bool rtc_calendar_is_alarm_match(
  * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
  */
 static inline enum status_code rtc_calendar_clear_alarm_match(
+		struct rtc_module *const module,
 		const enum rtc_calendar_alarm alarm_index)
 {
-	/* Initialize module pointer. */
-	Rtc *const rtc_module = RTC;
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
 
 	/* Sanity check. */
 	if ((uint32_t)alarm_index > RTC_NUM_OF_ALARMS) {
@@ -785,13 +857,18 @@ static inline enum status_code rtc_calendar_clear_alarm_match(
  *
  *  \note Events cannot be altered while the module is enabled.
  *
+ *  \param[in,out] module  Pointer to the software instance struct
  *  \param[in] events    Struct containing flags of events to enable
  */
 static inline void rtc_calendar_enable_events(
+		struct rtc_module *const module,
 		struct rtc_calendar_events *const events)
 {
-	/* Initialize module pointer. */
-	Rtc *const rtc_module = RTC;
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
 
 	uint32_t event_mask = 0;
 
@@ -826,13 +903,18 @@ static inline void rtc_calendar_enable_events(
  *
  *  \note Events cannot be altered while the module is enabled.
  *
+ *  \param[in,out] module  Pointer to the software instance struct
  *  \param[in] events    Struct containing flags of events to disable
  */
 static inline void rtc_calendar_disable_events(
+		struct rtc_module *const module,
 		struct rtc_calendar_events *const events)
 {
-	/* Initialize module pointer. */
-	Rtc *const rtc_module = RTC;
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
 
 	uint32_t event_mask = 0;
 
