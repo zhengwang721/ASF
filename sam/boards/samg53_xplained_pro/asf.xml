@@ -29,7 +29,7 @@
 		<!-- Source code -->
 		<build type="include-path" value="."/>
 		<build type="include-path" value=".."/>
-		<build type="header-file" value="samg53_Xplained_pro.h"/>
+		<build type="header-file" value="samg53_xplained_pro.h"/>
 		<build type="module-config" subtype="required-header-file" value="conf_board.h"/>
 		<build type="module-config" subtype="path" value="board_config"/>
 
