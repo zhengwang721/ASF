@@ -55,11 +55,14 @@ static uint8_t source_memory[DATA_LENGTH];
 static uint8_t destination_memory[DATA_LENGTH];
 // [destination_memory]
 
-// [transfer_done]
+// [transfer_done_flag]
 static volatile bool transfer_is_done = false;
+// [transfer_done_flag]
 
+// [transfer_descriptor]
 COMPILER_ALIGNED(16)
 struct dma_transfer_descriptor example_descriptor;
+// [transfer_descriptor]
 
 // [_transfer_done]
 static void transfer_done( const struct dma_resource* const resource )
