@@ -46,7 +46,7 @@
 
 #include <yfuns.h>
 #include <avr32/io.h>
-#include "usart.h"
+#include <usart.h>
 
 
 _STD_BEGIN

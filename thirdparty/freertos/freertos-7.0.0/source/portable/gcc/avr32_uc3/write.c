@@ -45,7 +45,7 @@
 
 
 #include <avr32/io.h>
-#include "usart.h"
+#include <usart.h>
 
 //! Pointer to the base of the USART module instance to use for stdio.
 volatile avr32_usart_t *volatile stdio_usart_base;
