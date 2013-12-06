@@ -108,6 +108,13 @@ enum dma_transfer_trigger {
 	DMA_TRIGGER_EVENT,
 };
 
+/** DMA trigger action type */
+enum dma_transfer_trigger_action{
+	DMA_TRIGGER_ACTON_BLOCK = DMAC_CHCTRLB_TRIGACT_BLOCK_Val,
+	DMA_TRIGGER_ACTON_BEAT = DMAC_CHCTRLB_TRIGACT_BEAT_Val,
+	DMA_TRIGGER_ACTON_TRANSACTION = DMAC_CHCTRLB_TRIGACT_TRANSACTION_Val,
+};
+
 /**
  * Callback types for DMA callback driver
  */
@@ -153,6 +160,8 @@ struct dma_transfer_config {
 	enum dma_transfer_trigger transfer_trigger;
 	/**DMA peripheral trigger index*/
 	uint8_t peripheral_trigger;
+	/** DMA trigger action */
+	enum dma_transfer_trigger_action trigger_action;
 	/** DMA events configurations */
 	struct dma_events_config event_config;
 };
@@ -269,7 +278,7 @@ static inline void dma_unregister_callback(struct dma_resource *resource,
 }
 
 void dma_get_config_defaults(struct dma_transfer_config *config);
-enum status_code dma_allocate(struct dma_resource *resource,
+enum status_code dma_allocate(struct dma_resource **resource,
 		struct dma_transfer_config *config);
 enum status_code dma_free(struct dma_resource *resource);
 enum status_code dma_transfer_job(struct dma_resource *resource,
