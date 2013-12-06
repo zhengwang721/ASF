@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="MATRIX Example for SAMG53-Xplained-Pro" id="sam.drivers.matrix.example.samg53_xplained_pro">
+	<project caption="MATRIX Example for SAMG53 Xplained Pro" id="sam.drivers.matrix.example.samg53_xplained_pro">
 		<info type="description" value="summary">
 		Basic example of MATRIX on SAMG53_XPLAINED_PRO.
 		</info>

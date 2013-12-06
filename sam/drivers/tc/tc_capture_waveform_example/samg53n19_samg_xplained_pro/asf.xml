@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="TC Capture Waveform Example on SAMG53-Xplained-Pro" id="sam.drivers.tc.tc_capture_waveform_example.samg53_xplained_pro">
+	<project caption="TC Capture Waveform Example on SAMG53 Xplained Pro" id="sam.drivers.tc.tc_capture_waveform_example.samg53_xplained_pro">
 		<info type="description" value="summary">
 		This example shows how to configure TC in waveform and capture mode and use this function to calculate the input pulse frequency.
 		</info>

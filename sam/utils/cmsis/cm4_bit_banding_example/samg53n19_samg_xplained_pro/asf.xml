@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="RTT example for SAMG53-Xplained-Pro" id="sam.utils.cmsis.cm4_bit_banding_example.samg53_xplained_pro">
+	<project caption="RTT example for SAMG53 Xplained Pro" id="sam.utils.cmsis.cm4_bit_banding_example.samg53_xplained_pro">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>

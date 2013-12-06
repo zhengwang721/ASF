@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="TWI SLAVE Example for SAMG53-Xplained-Pro" id="sam.drivers.twi.twi_slave_example.samg53_xplained_pro">
+	<project caption="TWI SLAVE Example for SAMG53 Xplained Pro" id="sam.drivers.twi.twi_slave_example.samg53_xplained_pro">
 		<info type="description" value="summary">
 		The application demonstrates how to use use the SAM TWI peripheral in slave mode.
 		</info>

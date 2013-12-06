@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="RTT example for SAMG53-Xplained-Pro" id="sam.drivers.rtt.example.samg53_xplained_pro">
+	<project caption="RTT example for SAMG53 Xplained Pro" id="sam.drivers.rtt.example.samg53_xplained_pro">
 		<info type="description" value="summary">
 		Basic example of RTT on SAMG53 Xplained Pro.
 		</info>

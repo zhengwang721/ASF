@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Getting Started for SAMG53-Xplained-Pro" id="sam.applications.getting-started.samg53_xplained_pro">
+	<project caption="Getting Started for SAMG53 Xplained Pro" id="sam.applications.getting-started.samg53_xplained_pro">
 		<info type="description" value="summary">
 		The demonstration program makes the on-board LED blink at a fixed rate.
 		</info>

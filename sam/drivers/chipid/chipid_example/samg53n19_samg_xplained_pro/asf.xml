@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Chipid example for SAMG53" id="sam.drivers.chipid.example.samg53_xplained_pro">
+	<project caption="Chipid example for SAMG53 Xplained Pro" id="sam.drivers.chipid.example.samg53_xplained_pro">
 		<info type="description" value="summary">
 		Read chipid and dump it to debug output.
 		</info>
