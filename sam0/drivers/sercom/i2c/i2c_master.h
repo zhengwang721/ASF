@@ -66,15 +66,6 @@ extern "C" {
  * @{
  */
 
-/** \brief Transfer direction
- *
- * Transfer direction or setting direction bit in address.
- */
-enum i2c_transfer_direction {
-	I2C_TRANSFER_WRITE = 0,
-	I2C_TRANSFER_READ  = 1,
-};
-
 /** \brief Interrupt flags
  *
  * Flags used when reading or setting interrupt flags.

@@ -369,6 +369,16 @@ extern "C" {
 #endif
 /*@}*/
 
+/** \brief Transfer direction
+ *
+ * For master: transfer direction or setting direction bit in address.
+ * For slave: direction of request from master.
+ */
+enum i2c_transfer_direction {
+	I2C_TRANSFER_WRITE = 0,
+	I2C_TRANSFER_READ  = 1,
+};
+
 /**
  * \brief I<SUP>2</SUP>C packet for read/write
  *

@@ -254,7 +254,7 @@ struct i2c_slave_module {
 	/** Data buffer for packet write and read */
 	volatile uint8_t *buffer;
 	/** Save direction of request from master. 1 = read, 0 = write */
-	volatile uint8_t transfer_direction;
+	volatile enum i2c_transfer_direction transfer_direction;
 	/** Status for status read back in error callback */
 	volatile enum status_code status;
 #  endif
