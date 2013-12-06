@@ -53,7 +53,7 @@ MEMORY
 }
 
 /* The stack size used by the application. NOTE: you need to adjust according to your application. */
-__stack_size__ = DEFINED(__stack_size__) ? __stack_size__ : 0x1000;
+STACK_SIZE = DEFINED(STACK_SIZE) ? STACK_SIZE : DEFINED(__stack_size__) ? __stack_size__ : 0x1000;
 
 /* Section Definitions */
 SECTIONS
@@ -138,7 +138,7 @@ SECTIONS
     {
         . = ALIGN(8);
         _sstack = .;
-        . = . + __stack_size__;
+        . = . + STACK_SIZE;
         . = ALIGN(8);
         _estack = .;
     } > ram
