@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 External Interrupt Driver Configuration Header
+ * \brief SAM D2x SPI configuration
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,11 +40,14 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXTINT_H_INCLUDED
-#define CONF_EXTINT_H_INCLUDED
 
-#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
 
-#  define EXTINT_CALLBACKS_MAX     10
+#ifndef CONF_SPI_H_INCLUDED
+#  define CONF_SPI_H_INCLUDED
 
-#endif
+#  define CONF_SPI_MASTER_ENABLE     true
+#  define CONF_SPI_SLAVE_ENABLE      false
+#  define CONF_SPI_TIMEOUT           10000
+
+#endif /* CONF_SPI_H_INCLUDED */
+
