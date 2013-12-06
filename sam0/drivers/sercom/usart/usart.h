@@ -694,8 +694,8 @@ static inline bool usart_is_syncing(
 static inline void _usart_wait_for_sync(
 		const struct usart_module *const module)
 {
-	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_hw = &(module->hw->USART);
+	/* Sanity check. */
+	Assert(module);
 
 	while (usart_is_syncing(module)) {
 		/* Wait until the synchronization is complete */
