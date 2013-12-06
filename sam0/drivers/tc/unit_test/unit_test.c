@@ -422,7 +422,6 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	extint_chan_config.filter_input_signal = false;
 	extint_chan_config.detection_criteria  = EXTINT_DETECT_HIGH;
 	extint_chan_set_config(0, &extint_chan_config);
-	extint_enable();
 
 	/* Configure external interrupt module to be event generator */
 	struct extint_events extint_event_conf;
