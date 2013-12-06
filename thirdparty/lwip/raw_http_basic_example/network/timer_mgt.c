@@ -42,15 +42,46 @@
  */
 
 #include "board.h"
-#include "timer_mgt.h"
 #include "tc.h"
-#include "pmc.h"
-#include "sysclk.h"
+#include "timer_mgt.h"
 #include "lwip/init.h"
 #include "lwip/sys.h"
-
+#include "port.h"
 /* Clock tick count. */
 static volatile uint32_t gs_ul_clk_tick;
+
+#if SAMD20
+#include "tc_interrupt.h"
+struct tc_module tc_instance;
+
+static void tc_callback(struct tc_module *const module_inst)
+{
+	/* Increase tick. */
+	gs_ul_clk_tick++;
+}
+
+void sys_init_timing(void)
+{
+	struct tc_config config_tc;
+	tc_get_config_defaults(&config_tc);
+
+	config_tc.counter_size    = TC_COUNTER_SIZE_16BIT;
+	config_tc.wave_generation = TC_WAVE_GENERATION_MATCH_FREQ;
+	config_tc.size_specific.size_16_bit.compare_capture_channel[0] = 0x5DC0;
+	config_tc.clock_source = GCLK_GENERATOR_0;
+	config_tc.clock_prescaler = TC_CLOCK_PRESCALER_DIV2;
+
+	tc_init(&tc_instance, TC0, &config_tc);
+	tc_enable(&tc_instance);
+	tc_register_callback(&tc_instance, tc_callback, TC_CALLBACK_CC_CHANNEL0);
+	tc_enable_callback(&tc_instance, TC_CALLBACK_CC_CHANNEL0);
+
+	/* Enable system interrupts. */
+	system_interrupt_enable_global();
+}
+#else
+#include "pmc.h"
+#include "sysclk.h"
 
 /**
  * TC0 Interrupt handler.
@@ -95,6 +126,7 @@ void sys_init_timing(void)
 	/* Start timer. */
 	tc_start(TC0, 0);
 }
+#endif
 
 /**
  * \brief Return the number of timer ticks (ms).

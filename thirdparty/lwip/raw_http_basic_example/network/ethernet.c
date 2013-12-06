@@ -56,11 +56,14 @@
 # include "ksz8851snl.h"
 # include "ksz8851snl_reg.h"
 # include "netif/sam_spi_ksz8851snl.h"
+#elif SAMD20
+# include "ksz8851snl.h"
+# include "ksz8851snl_reg.h"
+# include "netif/samd20_spi_ksz8851snl.h"
 #else
 # error Unsupported chip type
 #endif
 #include "timer_mgt.h"
-#include "sysclk.h"
 /* lwIP includes */
 #include "lwip/sys.h"
 #include "lwip/api.h"

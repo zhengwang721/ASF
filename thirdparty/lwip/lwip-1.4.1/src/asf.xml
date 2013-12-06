@@ -5,7 +5,7 @@
 		</info>
 		<info type="description" value="summary">
 		lwIP is a light-weight implementation of the TCP/IP protocol suite.
-		lwIP has been ported to AVR UC3 and FreeRTOS and can be run either with or without FreeRTOS.
+		lwIP has been ported to AVR UC3 and SAM device family. The network stack can be run either with or without FreeRTOS.
 		For more information on lwIP, check lwip.wikia.com/wiki/LwIP_Wiki.
 		</info>
 		<info type="gui-flag" value="hidden"/>
@@ -103,6 +103,7 @@
 		<device-support value="uc3"/>
 		<device-support value="sam3"/>
 		<device-support value="sam4"/>
+		<device-support value="samd20"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3b"/>
 	</module>
 	<select-by-config id="config.thirdparty.lwip.141.ipv" name="config.thirdparty.lwip.141.ipv" caption="IPv4 versus IPv6 configuration of lwIP v141" default="4">
@@ -130,6 +131,7 @@
 			<device-support value="uc3"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4"/>
+			<device-support value="samd20"/>
 		</module>
 		<module type="meta" id="config.thirdparty.lwip.141.ipv#6" caption="IPv6 support in lwIP v141">
 			<info type="description" value="summary">
@@ -147,6 +149,7 @@
 			<device-support value="uc3"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4"/>
+			<device-support value="samd20"/>
 		</module>
 	</select-by-config>
 	<select-by-config id="config.thirdparty.lwip.141.snmp" name="config.thirdparty.lwip.141.snmp" caption="lwIP v141 configuration to use SNMP or not" default="no">
@@ -157,6 +160,7 @@
 			<device-support value="uc3"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4"/>
+			<device-support value="samd20"/>
 		</module>
 		<module type="meta" id="config.thirdparty.lwip.141.snmp#yes" caption="lwIP v141 configuration with SNMP enabled">
 			<info type="description" value="summary">
@@ -172,6 +176,7 @@
 			<device-support value="uc3"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4"/>
+			<device-support value="samd20"/>
 		</module>
 	</select-by-config>
 	<select-by-config id="config.thirdparty.lwip.141.netif.ppp" name="config.thirdparty.lwip.141.netif.ppp" caption="lwIP v141 configuration to use PPP or not" default="no">
@@ -182,6 +187,7 @@
 			<device-support value="uc3"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4"/>
+			<device-support value="samd20"/>
 		</module>
 		<module type="meta" id="config.thirdparty.lwip.141.netif.ppp#yes" caption="lwIP v141 configuration with PPP enabled">
 			<info type="description" value="summary">
@@ -216,6 +222,7 @@
 			<device-support value="uc3"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4"/>
+			<device-support value="samd20"/>
 		</module>
 	</select-by-config>
 	<select-by-config id="config.thirdparty.lwip.141.netif.etharp" name="config.thirdparty.lwip.141.netif.etharp" caption="lwIP v141 configuration to use ARP over Ethernet or not" default="yes">
@@ -226,6 +233,7 @@
 			<device-support value="uc3"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4"/>
+			<device-support value="samd20"/>
 		</module>
 		<module type="meta" id="config.thirdparty.lwip.141.netif.etharp#yes" caption="lwIP v141 configuration with ARP enabled">
 			<info type="description" value="summary">
@@ -235,6 +243,7 @@
 			<device-support value="uc3"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4"/>
+			<device-support value="samd20"/>
 		</module>
 	</select-by-config>
 	<select-by-config id="config.thirdparty.lwip.141.netif.slipif" name="config.thirdparty.lwip.141.netif.slipif" caption="lwIP v141 configuration to include support for the SLIP (Serial Line IP) protocol or not" default="no">
@@ -245,6 +254,7 @@
 			<device-support value="uc3"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4"/>
+			<device-support value="samd20"/>
 		</module>
 		<module type="meta" id="config.thirdparty.lwip.141.netif.slipif#yes" caption="lwIP v141 configuration with SLIP enabled">
 			<info type="description" value="summary">
@@ -256,6 +266,7 @@
 			<device-support value="uc3"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4"/>
+			<device-support value="samd20"/>
 		</module>
 	</select-by-config>
 </asf>
