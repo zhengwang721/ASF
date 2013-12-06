@@ -96,7 +96,11 @@
 #define  FREQ_BAND_08     (4)
 #define  FREQ_BAND_09     (5)
 #endif
-
+#ifdef EXT_RF_FRONT_END_CTRL
+#define CHANNEL_26                          (0x1A)
+#define MAX_TX_PWR_REG_VAL                  (0x09)
+#define MAX_TX_PWR_REG_VAL_CH26             (0x0d)
+#endif
 #define LED_TOGGLE_COUNT_FOR_PER            (50)
 #define MIN_TX_PWR_REG_VAL                  (0x0f)
 
@@ -105,15 +109,18 @@
 #define MIN_ISM_FREQUENCY_MHZ               (2322)
 #define MAX_ISM_FREQUENCY_MHZ               (2527)
 #define MID_ISM_FREQUENCY_MHZ               (2434)
-
-#define ENABLE_ALL_RPC_MODES                (0xff)
-#define DISABLE_ALL_RPC_MODES               (0xC1)
 #define CC_BAND_0                           (0x00)
 #define CC_BAND_8                           (0x08)
 #define CC_BAND_9                           (0x09)
 #define CC_NUMBER_0                         (0x00)
 #endif
 
+#if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2))
+#define ENABLE_ALL_RPC_MODES                     (0xff)
+#define DISABLE_ALL_RPC_MODES                    (0xC1)
+#define ENABLE_RX_SAFE_MODE                      (0xA0)
+#define DISABLE_RX_SAFE_MODE                     (0x60)
+#endif
 /**
  * \addtogroup group_per_mode
  * \{
@@ -143,6 +150,14 @@
 #define DISCONNECT_NODE                     (0x0E)
 #define SET_DEFAULT_REQ                     (0x0F)
 #define PER_TEST_START_PKT                  (0x10)
+#define RANGE_TEST_START_PKT                (0x11)
+#define RANGE_TEST_PKT                      (0x12)
+#define RANGE_TEST_RSP                      (0x13)
+#define RANGE_TEST_STOP_PKT                 (0x14)
+#define RANGE_TEST_MARKER_CMD                (0x15)
+#define RANGE_TEST_MARKER_RSP                (0x16)
+#define RANGE_TEST_PKT_LENGTH                (19)
+#define LED_BLINK_RATE_IN_MICRO_SEC           (50000)
 /* \} */
 
 /* === Types ================================================================ */
@@ -163,7 +178,7 @@ typedef struct {
 	bool crc_settings_on_peer;
 #endif
 
-#if (TAL_TYPE == AT86RF233)
+#if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2))
 	bool rpc_enable;
 #endif
 
@@ -302,6 +317,35 @@ void per_mode_receptor_rx_cb(frame_info_t *frame);
  *
  */
 void app_reset(void);
+
+/**
+ * \brief Timer Callback function  if marker response command is transmitted on
+ *air
+ *  This is used to blink the LED and thus identify that the transmission is
+ *done
+ * \param parameter pass parameters to timer handler
+ */
+void marker_tx_timer_handler_cb(void *parameter);
+
+/**
+ * \brief Timer Callback function  if marker command is received on air
+ * This is used to blink the LED and thus identify that the marker frame is
+ *received
+ * \param parameter pass parameters to timer handler
+ */
+void marker_rsp_timer_handler_cb(void *parameter);
+
+#ifdef EXT_RF_FRONT_END_CTRL
+
+/**
+ * \brief handle the tx power settings in case of External PA enabled,
+ * and the channel changes from or to 26.This is to meet the FCC compliance
+ *
+ * \param Curr_chnl Current Channel
+ * \param prev_chnl Previous Channel
+ */
+void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl);
+#endif
 
 /* ! \} */
 #ifdef __cplusplus

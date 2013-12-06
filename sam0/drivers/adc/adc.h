@@ -98,6 +98,9 @@
  * incoming event from another peripheral in the device, and both internal and
  * external reference voltages can be selected.
  *
+ * \note Internal references will be enabled by the driver, but not disabled.
+ *       Any reference not used by the application should be disabled by the application.
+ *
  * A simplified block diagram of the ADC can be seen in
  * \ref asfdoc_samd20_adc_module_block_diagram "the figure below".
  *
@@ -355,6 +358,12 @@
  * If the result ready event is enabled, an event will be generated when a
  * conversion is completed.
  *
+ * \note The connection of events between modules requires the use of the
+ *       \ref asfdoc_samd20_events_group "SAM D20 Event System Driver (EVENTS)"
+ *       to route output event of one module to the the input event of another.
+ *       For more information on event routing, refer to the event driver
+ *       documentation.
+ *
  *
  * \section asfdoc_samd20_adc_special_considerations Special Considerations
  *
@@ -364,7 +373,7 @@
  * to be manually enabled by the user application before they can be measured.
  *
  *
- * \section asfdoc_samd20_adc_extra_info Extra Information for ADC
+ * \section asfdoc_samd20_adc_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_adc_extra. This includes:
  *  - \ref asfdoc_samd20_adc_extra_acronyms
@@ -942,6 +951,8 @@ struct adc_module {
 #if !defined(__DOXYGEN__)
 	/** Pointer to ADC hardware module */
 	Adc *hw;
+	/** Keep reference configuration so we know when enable is called */
+	enum adc_reference reference;
 #  if ADC_CALLBACK_MODE == true
 	/** Array to store callback functions */
 	adc_callback_t callback[ADC_CALLBACK_N];
@@ -1170,7 +1181,8 @@ static inline bool adc_is_syncing(
 /**
  * \brief Enables the ADC module
  *
- * Enables an ADC module that has previously been configured.
+ * Enables an ADC module that has previously been configured. If any internal reference
+ * is selected it will be enabled.
  *
  * \param[in] module_inst  Pointer to the ADC software instance struct
  */
@@ -1184,6 +1196,11 @@ static inline enum status_code adc_enable(
 
 	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
+	}
+
+	/* Make sure bandgap is enabled if requested by the config */
+	if (module_inst == ADC_REFERENCE_INT1V) {
+		system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_BANDGAP);
 	}
 
 #if ADC_CALLBACK_MODE == true
@@ -1291,7 +1308,7 @@ static inline void adc_enable_events(
 /**
  * \brief Disables an ADC event input or output.
  *
- *  DIsables one or more input or output events to or from the ADC module. See
+ *  Disables one or more input or output events to or from the ADC module. See
  *  \ref adc_events "here" for a list of events this module supports.
  *
  *  \note Events cannot be altered while the module is enabled.
@@ -1735,6 +1752,10 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added ADC calibration constant loading from the device signature
+ *          row when the module is initialized.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
@@ -1761,6 +1782,12 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Added additional documentation on the event system. Corrected
+ *          documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

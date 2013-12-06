@@ -62,7 +62,7 @@ static uint8_t write_buffer[DATA_LENGTH] = {
 static uint8_t read_buffer [DATA_LENGTH];
 //! [packet_data]
 
-/* Adress of the slave */
+/* Address of the slave */
 //! [address]
 #define SLAVE_ADDRESS 0x12
 //! [address]
@@ -151,11 +151,9 @@ void configure_i2c_slave_callbacks(void)
 
 int main(void)
 {
-	//! [run_initialize_i2c]
-	//! [system_init]
 	system_init();
-	//! [system_init]
 
+	//! [run_initialize_i2c]
 	/* Configure device and enable. */
 	//! [config]
 	configure_i2c_slave();

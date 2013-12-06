@@ -54,24 +54,63 @@
 */
 static inline void _adc_configure_ain_pin(uint32_t pin)
 {
-	struct system_pinmux_config config;
-	system_pinmux_get_config_defaults(&config);
-
-	config.input_pull = SYSTEM_PINMUX_PIN_PULL_NONE;
+#define PIN_INVALID_ADC_AIN    0xFFFFUL
 
 	/* Pinmapping table for AINxx -> GPIO pin number */
-	const uint32_t pinmapping [ADC_INPUTCTRL_MUXPOS_PIN20] = {
-			PIN_PA02, PIN_PA03, PIN_PB08, PIN_PB09,
-			PIN_PA04, PIN_PA05, PIN_PA06, PIN_PA07,
-			PIN_PB00, PIN_PB01, PIN_PB02, PIN_PB03,
-			PIN_PB04, PIN_PB05, PIN_PB06, PIN_PB07,
-			PIN_PA08, PIN_PA09, PIN_PA10, PIN_PA11,};
+	const uint32_t pinmapping[] = {
+#if (SAMD20E)
+			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_PA04B_ADC_AIN4,  PIN_PA05B_ADC_AIN5,
+			PIN_PA06B_ADC_AIN6,  PIN_PA07B_ADC_AIN7,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_PA08B_ADC_AIN16, PIN_PA09B_ADC_AIN17,
+			PIN_PA10B_ADC_AIN18, PIN_PA11B_ADC_AIN19,
+#elif (SAMD20G)
+			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
+			PIN_PB08B_ADC_AIN2,  PIN_PB09B_ADC_AIN3,
+			PIN_PA04B_ADC_AIN4,  PIN_PA05B_ADC_AIN5,
+			PIN_PA06B_ADC_AIN6,  PIN_PA07B_ADC_AIN7,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_PB02B_ADC_AIN10, PIN_PB03B_ADC_AIN11,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_PA08B_ADC_AIN16, PIN_PA09B_ADC_AIN17,
+			PIN_PA10B_ADC_AIN18, PIN_PA11B_ADC_AIN19,
+#elif (SAMD20J)
+			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
+			PIN_PB08B_ADC_AIN2,  PIN_PB09B_ADC_AIN3,
+			PIN_PA04B_ADC_AIN4,  PIN_PA05B_ADC_AIN5,
+			PIN_PA06B_ADC_AIN6,  PIN_PA07B_ADC_AIN7,
+			PIN_PB00B_ADC_AIN8,  PIN_PB01B_ADC_AIN9,
+			PIN_PB02B_ADC_AIN10, PIN_PB03B_ADC_AIN11,
+			PIN_PB04B_ADC_AIN12, PIN_PB05B_ADC_AIN13,
+			PIN_PB06B_ADC_AIN14, PIN_PB07B_ADC_AIN15,
+			PIN_PA08B_ADC_AIN16, PIN_PA09B_ADC_AIN17,
+			PIN_PA10B_ADC_AIN18, PIN_PA11B_ADC_AIN19,
+#else
+#  error ADC pin mappings are not defined for this device.
+#endif
+		};
 
-	/* Analog functions are at mux setting B */
-	config.mux_position = 1;
+	uint32_t pin_map_result = PIN_INVALID_ADC_AIN;
 
-	if (pin <= ADC_INPUTCTRL_MUXPOS_PIN20) {
-		system_pinmux_pin_set_config(pinmapping[pin], &config);
+	if (pin <= ADC_EXTCHANNEL_MSB) {
+		pin_map_result = pinmapping[pin >> ADC_INPUTCTRL_MUXPOS_Pos];
+
+		Assert(pin_map_result != PIN_INVALID_ADC_AIN);
+
+		struct system_pinmux_config config;
+		system_pinmux_get_config_defaults(&config);
+
+		/* Analog functions are all on MUX setting B */
+		config.input_pull   = SYSTEM_PINMUX_PIN_PULL_NONE;
+		config.mux_position = 1;
+
+		system_pinmux_pin_set_config(pin_map_result, &config);
 	}
 }
 
@@ -105,14 +144,17 @@ static enum status_code _adc_set_config(
 	system_gclk_chan_set_config(ADC_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(ADC_GCLK_ID);
 
-
 	/* Setup pinmuxing for analog inputs */
 	if (config->pin_scan.inputs_to_scan != 0) {
-		uint8_t start_pin = config->pin_scan.offset_start_scan +
+		uint8_t start_pin =
+				config->pin_scan.offset_start_scan +
 				(uint8_t)config->positive_input;
-		uint8_t end_pin = start_pin + config->pin_scan.inputs_to_scan;
-		for (; start_pin < end_pin; start_pin++) {
+		uint8_t end_pin =
+				start_pin + config->pin_scan.inputs_to_scan;
+
+		while (start_pin < end_pin) {
 			_adc_configure_ain_pin(start_pin);
+			start_pin++;
 		}
 		_adc_configure_ain_pin(config->negative_input);
 	} else {
@@ -284,8 +326,8 @@ static enum status_code _adc_set_config(
 	}
 
 	/* Configure lower threshold */
-	adc_module->WINLT.reg = config->window.window_lower_value <<
-			ADC_WINLT_WINLT_Pos;
+	adc_module->WINLT.reg =
+			config->window.window_lower_value << ADC_WINLT_WINLT_Pos;
 
 	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
@@ -352,6 +394,15 @@ static enum status_code _adc_set_config(
 		}
 	}
 
+	/* Load in the fixed device ADC calibration constants */
+	adc_module->CALIB.reg =
+			ADC_CALIB_BIAS_CAL(
+				(*(uint32_t *)ADC_FUSES_BIASCAL_ADDR >> ADC_FUSES_BIASCAL_Pos)
+			) |
+			ADC_CALIB_LINEARITY_CAL(
+				(*(uint64_t *)ADC_FUSES_LINEARITY_0_ADDR >> ADC_FUSES_LINEARITY_0_Pos)
+			);
+
 	return STATUS_OK;
 }
 
@@ -362,7 +413,7 @@ static enum status_code _adc_set_config(
  * given configuration struct values.
  *
  * \param[out] module_inst Pointer to the ADC software instance struct
- * \param[in]  module      Pointer to the ADC module instance
+ * \param[in]  hw          Pointer to the ADC module instance
  * \param[in]  config      Pointer to the configuration struct
  *
  * \return Status of the initialization procedure
@@ -373,21 +424,33 @@ static enum status_code _adc_set_config(
  */
 enum status_code adc_init(
 		struct adc_module *const module_inst,
-		Adc *module,
+		Adc *hw,
 		struct adc_config *config)
 {
-	/* Associate the software module instance with the hardware module */
-	module_inst->hw = module;
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(hw);
+	Assert(config);
 
-	if (module->CTRLA.reg & ADC_CTRLA_SWRST) {
+	/* Associate the software module instance with the hardware module */
+	module_inst->hw = hw;
+
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_ADC);
+
+	if (hw->CTRLA.reg & ADC_CTRLA_SWRST) {
 		/* We are in the middle of a reset. Abort. */
 		return STATUS_BUSY;
 	}
 
-	if (module->CTRLA.reg & ADC_CTRLA_ENABLE) {
+	if (hw->CTRLA.reg & ADC_CTRLA_ENABLE) {
 		/* Module must be disabled before initialization. Abort. */
 		return STATUS_ERR_DENIED;
 	}
+
+	/* Store the selected reference for later use */
+	module_inst->reference = config->reference;
+
 #if ADC_CALLBACK_MODE == true
 	for (uint8_t i = 0; i < ADC_CALLBACK_N; i++) {
 		module_inst->callback[i] = NULL;
@@ -400,7 +463,7 @@ enum status_code adc_init(
 
 	_adc_instances[0] = module_inst;
 
-	if(config->event_action == ADC_EVENT_ACTION_DISABLED &&
+	if (config->event_action == ADC_EVENT_ACTION_DISABLED &&
 			!config->freerunning) {
 		module_inst->software_trigger = true;
 	} else {
@@ -409,5 +472,5 @@ enum status_code adc_init(
 #endif
 
 	/* Write configuration to module */
-	return _adc_set_config(module_inst, config);;
+	return _adc_set_config(module_inst, config);
 }

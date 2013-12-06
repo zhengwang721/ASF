@@ -72,45 +72,28 @@ static enum status_code _usart_check_config(
 	SercomUsart *const usart_hw = &(module->hw->USART);
 	Sercom *const hw = (module->hw);
 
-	uint32_t pad0 = config->pinmux_pad0;
-	uint32_t pad1 = config->pinmux_pad1;
-	uint32_t pad2 = config->pinmux_pad2;
-	uint32_t pad3 = config->pinmux_pad3;
+	uint32_t pad_pinmuxes[] = {
+		config->pinmux_pad0, config->pinmux_pad1,
+		config->pinmux_pad2, config->pinmux_pad3
+	};
 
-	/* SERCOM PAD0 */
-	if (pad0 == PINMUX_DEFAULT) {
-		pad0 = _sercom_get_default_pad(hw, 0);
-	}
-	if ((pad0 != PINMUX_UNUSED) && ((pad0 & 0xFFFF)!=
-			system_pinmux_pin_get_mux_position(pad0 >> 16))) {
-		return STATUS_ERR_DENIED;
-	}
+	/* Compare the current SERCOM pins against the user configuration */
+	for (uint8_t pad = 0; pad < 4; pad++) {
+		uint32_t current_pinmux = pad_pinmuxes[pad];
 
-	/* SERCOM PAD1 */
-	if (pad1 == PINMUX_DEFAULT) {
-		pad1 = _sercom_get_default_pad(hw, 1);
-	}
-	if ((pad1 != PINMUX_UNUSED) && ((pad1 & 0xFFFF) !=
-			system_pinmux_pin_get_mux_position(pad1 >> 16))) {
-		return STATUS_ERR_DENIED;
-	}
+		if (current_pinmux == PINMUX_DEFAULT) {
+			current_pinmux = _sercom_get_default_pad(hw, pad);
+		}
 
-	/* SERCOM PAD2 */
-	if (pad2 == PINMUX_DEFAULT) {
-		pad2 = _sercom_get_default_pad(hw, 2);
-	}
-	if ((pad2 != PINMUX_UNUSED) && ((pad2 & 0xFFFF) !=
-			system_pinmux_pin_get_mux_position(pad2 >> 16))) {
-		return STATUS_ERR_DENIED;
-	}
+		if (current_pinmux == PINMUX_UNUSED) {
+			continue;
+		}
 
-	/* SERCOM PAD3 */
-	if (pad3 == PINMUX_DEFAULT) {
-		pad3 = _sercom_get_default_pad(hw, 3);
-	}
-	if ((pad3 != PINMUX_UNUSED) && ((pad3 & 0xFFFF) !=
-			system_pinmux_pin_get_mux_position(pad3 >> 16))) {
-		return STATUS_ERR_DENIED;
+		if ((current_pinmux & 0xFFFF) !=
+				system_pinmux_pin_get_mux_position(current_pinmux >> 16)) {
+			module->hw = NULL;
+			return STATUS_ERR_DENIED;
+		}
 	}
 
 	/* Find baud value and compare it */
@@ -171,7 +154,9 @@ static enum status_code _usart_check_config(
 	}
 
 	/* Check stopbits and character size */
-	ctrlb = (uint32_t)config->stopbits | (uint32_t)config->character_size;
+	ctrlb = (uint32_t)config->stopbits | (uint32_t)config->character_size |
+			(config->receiver_enable << SERCOM_USART_CTRLB_RXEN_Pos) |
+			(config->transmitter_enable << SERCOM_USART_CTRLB_TXEN_Pos);
 
 	/* Check parity mode bits */
 	if (config->parity != USART_PARITY_NONE) {
@@ -268,8 +253,10 @@ static enum status_code _usart_set_config(
 		ctrla |= SERCOM_USART_CTRLA_MODE_USART_EXT_CLK;
 	}
 
-	/* Set stopbits and character size */
-	ctrlb = (uint32_t)config->stopbits | (uint32_t)config->character_size;
+	/* Set stopbits, character size and enable transceivers */
+	ctrlb = (uint32_t)config->stopbits | (uint32_t)config->character_size |
+			(config->receiver_enable << SERCOM_USART_CTRLB_RXEN_Pos) |
+			(config->transmitter_enable << SERCOM_USART_CTRLB_TXEN_Pos);
 
 	/* Set parity mode */
 	if (config->parity != USART_PARITY_NONE) {
@@ -370,54 +357,42 @@ enum status_code usart_init(
 	system_gclk_chan_enable(gclk_index);
 	sercom_set_gclk_generator(config->generator_source, false);
 
-	/* set character size */
+	/* Set character size */
 	module->character_size = config->character_size;
 
-	/* Configure Pins */
+	/* Set transmitter and receiver status */
+	module->receiver_enabled = config->receiver_enable;
+	module->transmitter_enabled = config->transmitter_enable;
+
+	/* Set configuration according to the config struct */
+	status_code = _usart_set_config(module, config);
+	if(status_code != STATUS_OK) {
+		return status_code;
+	}
+
 	struct system_pinmux_config pin_conf;
 	system_pinmux_get_config_defaults(&pin_conf);
 	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
 
-	uint32_t pad0 = config->pinmux_pad0;
-	uint32_t pad1 = config->pinmux_pad1;
-	uint32_t pad2 = config->pinmux_pad2;
-	uint32_t pad3 = config->pinmux_pad3;
+	uint32_t pad_pinmuxes[] = {
+			config->pinmux_pad0, config->pinmux_pad1,
+			config->pinmux_pad2, config->pinmux_pad3
+		};
 
-	/* SERCOM PAD0 */
-	if (pad0 == PINMUX_DEFAULT) {
-		pad0 = _sercom_get_default_pad(hw, 0);
-	}
-	if (pad0 != PINMUX_UNUSED) {
-		pin_conf.mux_position = pad0 & 0xFFFF;
-		system_pinmux_pin_set_config(pad0 >> 16, &pin_conf);
-	}
+	/* Configure the SERCOM pins according to the user configuration */
+	for (uint8_t pad = 0; pad < 4; pad++) {
+		uint32_t current_pinmux = pad_pinmuxes[pad];
 
-	/* SERCOM PAD1 */
-	if (pad1 == PINMUX_DEFAULT) {
-		pad1 = _sercom_get_default_pad(hw, 1);
-	}
-	if (pad1 != PINMUX_UNUSED) {
-		pin_conf.mux_position = pad1 & 0xFFFF;
-		system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
+		if (current_pinmux == PINMUX_DEFAULT) {
+			current_pinmux = _sercom_get_default_pad(hw, pad);
+		}
+
+		if (current_pinmux != PINMUX_UNUSED) {
+			pin_conf.mux_position = current_pinmux & 0xFFFF;
+			system_pinmux_pin_set_config(current_pinmux >> 16, &pin_conf);
+		}
 	}
 
-	/* SERCOM PAD2 */
-	if (pad2 == PINMUX_DEFAULT) {
-		pad2 = _sercom_get_default_pad(hw, 2);
-	}
-	if (pad2 != PINMUX_UNUSED) {
-		pin_conf.mux_position = pad2 & 0xFFFF;
-		system_pinmux_pin_set_config(pad2 >> 16, &pin_conf);
-	}
-
-	/* SERCOM PAD3 */
-	if (pad3 == PINMUX_DEFAULT) {
-		pad3 = _sercom_get_default_pad(hw, 3);
-	}
-	if (pad3 != PINMUX_UNUSED) {
-		pin_conf.mux_position = pad3 & 0xFFFF;
-		system_pinmux_pin_set_config(pad3 >> 16, &pin_conf);
-	}
 #if USART_CALLBACK_MODE == true
 	/* Initialize parameters */
 	for (uint32_t i = 0; i < USART_CALLBACK_N; i++) {
@@ -440,9 +415,6 @@ enum status_code usart_init(
 	_sercom_instances[instance_index] = module;
 #endif
 
-	/* Set configuration according to the config struct */
-	status_code = _usart_set_config(module, config);
-
 	return status_code;
 }
 
@@ -456,9 +428,10 @@ enum status_code usart_init(
  * \param[in]  tx_data  Data to transfer
  *
  * \return Status of the operation
- * \retval STATUS_OK    If the operation was completed
- * \retval STATUS_BUSY  If the operation was not completed, due to the USART
- *                      module being busy.
+ * \retval STATUS_OK         If the operation was completed
+ * \retval STATUS_BUSY       If the operation was not completed, due to the USART
+ *                           module being busy.
+ * \retval STATUS_ERR_DENIED If the transmitter is not enabled
  */
 enum status_code usart_write_wait(
 		struct usart_module *const module,
@@ -470,6 +443,11 @@ enum status_code usart_write_wait(
 
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
+
+	/* Check that the transmitter is enabled */
+	if (!(module->transmitter_enabled)) {
+		return STATUS_ERR_DENIED;
+	}
 
 #if USART_CALLBACK_MODE == true
 	/* Check if the USART is busy doing asynchronous operation. */
@@ -518,6 +496,7 @@ enum status_code usart_write_wait(
  *                                  system frequency being too high
  * \retval STATUS_ERR_BAD_DATA      If the operation was not completed, due to
  *                                  data being corrupted
+ * \retval STATUS_ERR_DENIED        If the receiver is not enabled
  */
 enum status_code usart_read_wait(
 		struct usart_module *const module,
@@ -533,19 +512,23 @@ enum status_code usart_read_wait(
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
+	/* Check that the receiver is enabled */
+	if (!(module->receiver_enabled)) {
+		return STATUS_ERR_DENIED;
+	}
+
 #if USART_CALLBACK_MODE == true
 	/* Check if the USART is busy doing asynchronous operation. */
 	if (module->remaining_rx_buffer_length > 0) {
 		return STATUS_BUSY;
 	}
+#endif
 
-#else
 	/* Check if USART has new data */
 	if (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_RXC)) {
 		/* Return error code */
 		return STATUS_BUSY;
 	}
-#endif
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
@@ -603,6 +586,7 @@ enum status_code usart_read_wait(
  *                                arguments
  * \retval STATUS_ERR_TIMEOUT     If operation was not completed, due to USART
  *                                module timing out
+ * \retval STATUS_ERR_DENIED      If the transmitter is not enabled
  */
 enum status_code usart_write_buffer_wait(
 		struct usart_module *const module,
@@ -618,6 +602,11 @@ enum status_code usart_write_buffer_wait(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
+	/* Check that the transmitter is enabled */
+	if (!(module->transmitter_enabled)) {
+		return STATUS_ERR_DENIED;
+	}
+
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
@@ -630,7 +619,7 @@ enum status_code usart_write_buffer_wait(
 	while (length--) {
 		/* Wait for the USART to be ready for new data and abort
 		* operation if it doesn't get ready within the timeout*/
-		for (uint32_t i = 0; i < USART_TIMEOUT; i++) {
+		for (uint32_t i = 0; i <= USART_TIMEOUT; i++) {
 			if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_DRE) {
 				break;
 			} else if (i == USART_TIMEOUT) {
@@ -651,7 +640,7 @@ enum status_code usart_write_buffer_wait(
 	}
 
 	/* Wait until Transmit is complete or timeout */
-	for (uint32_t i = 0; i < USART_TIMEOUT; i++) {
+	for (uint32_t i = 0; i <= USART_TIMEOUT; i++) {
 		if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_TXC) {
 			break;
 		} else if (i == USART_TIMEOUT) {
@@ -690,6 +679,7 @@ enum status_code usart_write_buffer_wait(
  *                                  system frequency being too high
  * \retval STATUS_ERR_BAD_DATA      If the operation was not completed, due
  *                                  to data being corrupted
+ * \retval STATUS_ERR_DENIED        If the receiver is not enabled
  */
 enum status_code usart_read_buffer_wait(
 		struct usart_module *const module,
@@ -705,6 +695,11 @@ enum status_code usart_read_buffer_wait(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
+	/* Check that the receiver is enabled */
+	if (!(module->receiver_enabled)) {
+		return STATUS_ERR_DENIED;
+	}
+
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
@@ -714,8 +709,8 @@ enum status_code usart_read_buffer_wait(
 	while (length--) {
 		/* Wait for the USART to have new data and abort operation if it
 		 * doesn't get ready within the timeout*/
-		for (uint32_t i = 0; i < USART_TIMEOUT; i++) {
-			if (!(usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_RXC)) {
+		for (uint32_t i = 0; i <= USART_TIMEOUT; i++) {
+			if (usart_hw->INTFLAG.reg & SERCOM_USART_INTFLAG_RXC) {
 				break;
 			} else if (i == USART_TIMEOUT) {
 				return STATUS_ERR_TIMEOUT;

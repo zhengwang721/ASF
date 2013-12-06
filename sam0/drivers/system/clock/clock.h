@@ -44,7 +44,7 @@
 #define SYSTEM_CLOCK_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_system_clock_group SAM D20 Clock Management Driver (CLOCK)
+ * \defgroup asfdoc_samd20_system_clock_group SAM D20 System Clock Management Driver (SYSTEM CLOCK)
  *
  * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
@@ -218,7 +218,7 @@
  * There are no special considerations for this module.
  *
  *
- * \section asfdoc_samd20_system_clock_extra_info Extra Information for System Clock
+ * \section asfdoc_samd20_system_clock_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_samd20_system_clock_extra. This includes:
  *  - \ref asfdoc_samd20_system_clock_extra_acronyms
@@ -586,11 +586,11 @@ struct system_clock_source_dfll_config {
 	/** Coarse calibration value (Open loop mode) */
 	uint8_t coarse_value;
 	/** Fine calibration value (Open loop mode) */
-	uint8_t fine_value;
+	uint16_t fine_value;
 	/** Coarse adjustment max step size (Closed loop mode) */
 	uint8_t coarse_max_step;
 	/** Fine adjustment max step size (Closed loop mode) */
-	uint8_t fine_max_step;
+	uint16_t fine_max_step;
 	/** DFLL multiply factor (Closed loop mode */
 	uint16_t multiply_factor;
 };
@@ -614,15 +614,17 @@ struct system_clock_source_dfll_config {
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_clock_source_xosc_get_default_config(
+static inline void system_clock_source_xosc_get_config_defaults(
 		struct system_clock_source_xosc_config *const config)
 {
-	config->external_clock      = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
-	config->startup_time        = SYSTEM_XOSC_STARTUP_16384;
-	config->auto_gain_control   = true;
-	config->frequency           = 12000000UL;
-	config->run_in_standby      = false;
-	config->on_demand           = true;
+	Assert(config);
+
+	config->external_clock    = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
+	config->startup_time      = SYSTEM_XOSC_STARTUP_16384;
+	config->auto_gain_control = true;
+	config->frequency         = 12000000UL;
+	config->run_in_standby    = false;
+	config->on_demand         = true;
 }
 
 void system_clock_source_xosc_set_config(
@@ -645,7 +647,7 @@ void system_clock_source_xosc_set_config(
  * external 32KHz oscillator module:
  *   - External Crystal
  *   - Start-up time of 16384 external clock cycles
- *   - Automatic crystal gain control mode enabled
+ *   - Automatic crystal gain control mode disabled
  *   - Frequency of 32.768KHz
  *   - 1KHz clock output disabled
  *   - 32KHz clock output enabled
@@ -654,12 +656,14 @@ void system_clock_source_xosc_set_config(
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_clock_source_xosc32k_get_default_config(
+static inline void system_clock_source_xosc32k_get_config_defaults(
 		struct system_clock_source_xosc32k_config *const config)
 {
+	Assert(config);
+
 	config->external_clock      = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
 	config->startup_time        = SYSTEM_XOSC32K_STARTUP_16384;
-	config->auto_gain_control   = true;
+	config->auto_gain_control   = false;
 	config->frequency           = 32768UL;
 	config->enable_1khz_output  = false;
 	config->enable_32khz_output = true;
@@ -691,9 +695,11 @@ void system_clock_source_xosc32k_set_config(
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_clock_source_osc32k_get_default_config(
+static inline void system_clock_source_osc32k_get_config_defaults(
 		struct system_clock_source_osc32k_config *const config)
 {
+	Assert(config);
+
 	config->enable_1khz_output  = true;
 	config->enable_32khz_output = true;
 	config->run_in_standby      = false;
@@ -724,12 +730,14 @@ void system_clock_source_osc32k_set_config(
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_clock_source_osc8m_get_default_config(
+static inline void system_clock_source_osc8m_get_config_defaults(
 		struct system_clock_source_osc8m_config *const config)
 {
-	config->prescaler = SYSTEM_OSC8M_DIV_8;
-	config->run_in_standby      = false;
-	config->on_demand           = true;
+	Assert(config);
+
+	config->prescaler      = SYSTEM_OSC8M_DIV_8;
+	config->run_in_standby = false;
+	config->on_demand      = true;
 }
 
 void system_clock_source_osc8m_set_config(
@@ -762,9 +770,11 @@ void system_clock_source_osc8m_set_config(
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_clock_source_dfll_get_default_config(
+static inline void system_clock_source_dfll_get_config_defaults(
 		struct system_clock_source_dfll_config *const config)
 {
+	Assert(config);
+
 	config->loop_mode       = SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN;
 	config->quick_lock      = SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE;
 	config->chill_cycle     = SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE;
@@ -780,7 +790,7 @@ static inline void system_clock_source_dfll_get_default_config(
 	/* Closed loop mode */
 	config->coarse_max_step = 1;
 	config->fine_max_step   = 1;
-	config->multiply_factor = 6; /* Multiply 8MHZ by 6 to get 48MHz */
+	config->multiply_factor = 6; /* Multiply 8MHz by 6 to get 48MHz */
 }
 
 void system_clock_source_dfll_set_config(
@@ -861,6 +871,7 @@ static inline void system_main_clock_set_failure_detect(
 static inline void system_cpu_clock_set_divider(
 		const enum system_main_clock_div divider)
 {
+	Assert(((uint32_t)divider & PM_CPUSEL_CPUDIV_Msk) == divider);
 	PM->CPUSEL.reg = (uint32_t)divider;
 }
 
@@ -906,6 +917,7 @@ static inline enum status_code system_apb_clock_set_divider(
 			PM->APBCSEL.reg = (uint32_t)divider;
 			break;
 		default:
+			Assert(false);
 			return STATUS_ERR_INVALID_ARG;
 	}
 
@@ -927,7 +939,7 @@ static inline uint32_t system_apb_clock_get_hz(
 
 	switch (bus) {
 		case SYSTEM_CLOCK_APB_APBA:
-			 bus_divider = PM->APBASEL.reg;
+			bus_divider = PM->APBASEL.reg;
 			break;
 		case SYSTEM_CLOCK_APB_APBB:
 			bus_divider = PM->APBBSEL.reg;
@@ -936,7 +948,7 @@ static inline uint32_t system_apb_clock_get_hz(
 			bus_divider = PM->APBCSEL.reg;
 			break;
 		default:
-			Assert(0);
+			Assert(false);
 			return 0;
 	}
 
@@ -1018,6 +1030,7 @@ static inline enum status_code system_apb_clock_set_mask(
 			break;
 
 		default:
+			Assert(false);
 			return STATUS_ERR_INVALID_ARG;
 
 	}
@@ -1059,6 +1072,7 @@ static inline enum status_code system_apb_clock_clear_mask(
 			break;
 
 		default:
+			Assert(false);
 			return STATUS_ERR_INVALID_ARG;
 	}
 
@@ -1097,6 +1111,9 @@ void system_clock_init(void);
  */
 static inline void system_flash_set_waitstates(uint8_t wait_states)
 {
+	Assert(NVMCTRL_CTRLB_RWS((uint32_t)wait_states) ==
+			((uint32_t)wait_states << NVMCTRL_CTRLB_RWS_Pos));
+
 	NVMCTRL->CTRLB.bit.RWS = wait_states;
 }
 /**
@@ -1169,7 +1186,23 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *
  *
  * \section asfdoc_samd20_system_clock_extra_errata Errata
- * There are no errata related to this driver.
+ *	<tr>
+ *	<td>
+ *	 \li This driver implements workaround for errata 10558
+ *	     "Several reset values of SYSCTRL.INTFLAG are wrong (BOD and DFLL)"<br>
+ *	     When system_init is called it will reset these interrupts flags before they are used.
+ *	</td>
+ *	</tr>
+ *
+ *	<tr>
+ *	<td>
+ *	 \li This driver implements experimental workaround for errata 9905<br>
+ *	     "The DFLL clock must be requested before being configured otherwise a
+ *	     write access to a DFLL register can freeze the device."<br>
+ *	     This driver will enable and configure the DFLL before the ONDEMAND bit is set.
+ *	</td>
+ *	</tr>
+ *
  *
  *
  * \section asfdoc_samd20_system_clock_extra_history Module History
@@ -1181,6 +1214,39 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *  <tr>
+ *		<td>Fixed \c system_gclk_chan_disable() deadlocking if a channel is enabled
+ *		    and configured to a failed/not running clock generator.</td>
+ *  </tr>
+ *	<tr>
+ *		<td>
+ *			\li Changed default value for CONF_CLOCK_DFLL_ON_DEMAND from \c true to \c false.
+ *			\li Fixed system_flash_set_waitstates() failing with an assertion
+ *			    if an odd number of wait states provided.
+ *		</td>
+ *	</tr>
+ *	<tr>
+ *		<td>
+ *			\li Updated dfll configuration function to implement workaround for
+ *			    errata 9905 in the DFLL module.
+ *			\li Updated \c system_clock_init() to reset interrupt flags before
+ *			    they are used, errata 10558.
+ *			\li Fixed \c system_clock_source_get_hz() to return correcy DFLL
+ *			    frequency number.
+ *		</td>
+ *	</tr>
+ *	<tr>
+ *		<td>\li Fixed \c system_clock_source_is_ready not returning the correct
+ *              state for \c SYSTEM_CLOCK_SOURCE_OSC8M.
+ *          \li Renamed the various \c system_clock_source_*_get_default_config()
+ *              functions to \c system_clock_source_*_get_config_defaults() to
+ *              match the remainder of ASF.
+ *          \li Added OSC8M calibration constant loading from the device signature
+ *              row when the oscillator is initialized.
+ *          \li Updated default configuration of the XOSC32 to disable Automatic
+ *              Gain Control due to silicon errata.
+ *      </td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
@@ -1207,6 +1273,12 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Corrected documentation typos. Fixed missing steps in the Basic
+ *          Use Case Quick Start Guide.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

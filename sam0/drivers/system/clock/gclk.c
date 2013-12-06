@@ -53,6 +53,9 @@
  */
 void system_gclk_init(void)
 {
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, PM_APBAMASK_GCLK);
+
 	/* Software reset the module to ensure it is re-initialized correctly */
 	GCLK->CTRL.reg = GCLK_CTRL_SWRST;
 	while (GCLK->CTRL.reg & GCLK_CTRL_SWRST) {
@@ -352,11 +355,18 @@ void system_gclk_chan_disable(
 	/* Select the requested generator channel */
 	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
 
+	/* Switch to known-working source so that the channel can be disabled */
+	uint32_t prev_gen_id = GCLK->CLKCTRL.bit.GEN;
+	GCLK->CLKCTRL.bit.GEN = 0;
+
 	/* Disable the generic clock */
 	GCLK->CLKCTRL.reg &= ~GCLK_CLKCTRL_CLKEN;
 	while (GCLK->CLKCTRL.reg & GCLK_CLKCTRL_CLKEN) {
 		/* Wait for clock to become disabled */
 	}
+
+	/* Restore previous configured clock generator */
+	GCLK->CLKCTRL.bit.GEN = prev_gen_id;
 
 	system_interrupt_leave_critical_section();
 }

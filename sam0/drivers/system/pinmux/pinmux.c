@@ -94,9 +94,6 @@ static void _system_pinmux_config(
 		 * if requested the input buffer can only sample the current
 		 * output state */
 		pin_cfg &= ~PORT_WRCONFIG_PULLEN;
-
-		/* Set the port DIR bits to enable the output buffer */
-		port->DIRSET.reg = pin_mask;
 	}
 
 	/* The Write Configuration register (WRCONFIG) requires the
@@ -128,6 +125,13 @@ static void _system_pinmux_config(
 		} else {
 			port->OUTCLR.reg = pin_mask;
 		}
+	}
+
+	/* Check if the user has requested that the output buffer be enabled */
+	if ((config->direction == SYSTEM_PINMUX_PIN_DIR_OUTPUT) ||
+			(config->direction == SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK)) {
+		/* Set the port DIR bits to enable the output buffer */
+		port->DIRSET.reg = pin_mask;
 	}
 }
 
@@ -171,6 +175,8 @@ void system_pinmux_group_set_config(
 		const uint32_t mask,
 		const struct system_pinmux_config *const config)
 {
+	Assert(port);
+
 	for (int i = 0; i < 32; i++) {
 		if (mask & (1UL << i)) {
 			_system_pinmux_config(port, (1UL << i), config);
@@ -194,17 +200,12 @@ void system_pinmux_group_set_input_sample_mode(
 		const uint32_t mask,
 		const enum system_pinmux_pin_sample mode)
 {
-	for (int i = 0; i < 32; i++) {
-		if (mask & (1UL << i)) {
-			uint32_t sample_quad_mask = (1UL << (i / 4));
+	Assert(port);
 
-			if (mode == SYSTEM_PINMUX_PIN_SAMPLE_ONDEMAND) {
-				port->CTRL.reg |=  sample_quad_mask;
-			}
-			else {
-				port->CTRL.reg &= ~sample_quad_mask;
-			}
-		}
+	if (mode == SYSTEM_PINMUX_PIN_SAMPLE_ONDEMAND) {
+		port->CTRL.reg |= mask;
+	} else {
+		port->CTRL.reg &= ~mask;
 	}
 }
 
@@ -223,6 +224,8 @@ void system_pinmux_group_set_output_strength(
 		const uint32_t mask,
 		const enum system_pinmux_pin_strength mode)
 {
+	Assert(port);
+
 	for (int i = 0; i < 32; i++) {
 		if (mask & (1UL << i)) {
 			if (mode == SYSTEM_PINMUX_PIN_STRENGTH_HIGH) {
@@ -251,6 +254,8 @@ void system_pinmux_group_set_output_slew_rate(
 		const uint32_t mask,
 		const enum system_pinmux_pin_slew_rate mode)
 {
+	Assert(port);
+
 	for (int i = 0; i < 32; i++) {
 		if (mask & (1UL << i)) {
 			if (mode == SYSTEM_PINMUX_PIN_SLEW_RATE_LIMITED) {
@@ -278,6 +283,8 @@ void system_pinmux_group_set_output_drive(
 		const uint32_t mask,
 		const enum system_pinmux_pin_drive mode)
 {
+	Assert(port);
+
 	for (int i = 0; i < 32; i++) {
 		if (mask & (1UL << i)) {
 			if (mode == SYSTEM_PINMUX_PIN_DRIVE_OPEN_DRAIN) {

@@ -41,15 +41,74 @@
  *
  */
 
-/*
- * This unit test requires pin PA16 and PB31 to be connected. On the
- * Xplained Pro this corresponds to pin EXT3_PIN_17 on the EXT3 header and
- * the pin EXT3_PIN_8 on the EXT3 header.
+/**
+ * \mainpage SAM D20 TC Unit Test
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails appdoc_preface
+ *
+ *
+ * \page appdoc_preface Overview
+ * This unit test carries out tests for TC driver.
+ * It consists of test cases for the following functionalities:
+ *      - Test for driver initialization.
+ *      - Test for TC start/stop
+ *      - Test for TC callback generation
+ *      - Test for 32-bit (chained) TC operation
+ *      - Test for compare and capture TC operation
+ */
+
+/**
+ * \page appdoc_main SAM D20 TC Unit Test
+ *
+ * Overview:
+ * - \ref appdoc_samd20_tc_unit_test_intro
+ * - \ref appdoc_samd20_tc_unit_test_setup
+ * - \ref appdoc_samd20_tc_unit_test_usage
+ * - \ref appdoc_samd20_tc_unit_test_compinfo
+ * - \ref appdoc_samd20_tc_unit_test_contactinfo
+ *
+ * \section appdoc_samd20_tc_unit_test_intro Introduction
+ * \copydetails appdoc_preface
+ *
+ * The following kit is required for carrying out the test:
+ *      - SAM D20 Xplained Pro board
+ *
+ * \section appdoc_samd20_tc_unit_test_setup Setup
+ * The following connections has to be made using wires:
+ *  - \b EXTINT 0 (PA16, EXT2 pin 17) <-----> TC0 WO1 (PA05, EXT1 pin 15)
+ *
+ * To run the test:
+ *  - Connect the SAM D20 Xplained Pro board to the computer using a
+ *    micro USB cable.
+ *  - Open the virtual COM port in a terminal application.
+ *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
+ *          will enumerate as debugger, virtual COM port and EDBG data
+ *          gateway.
+ *  - Build the project, program the target and run the application.
+ *    The terminal shows the results of the unit test.
+ *
+ * \section appdoc_samd20_tc_unit_test_usage Usage
+ *  - The unit tests are carried out using the several TC modules internally
+ *    for internal checks.
+ *  - The EXTINT module is connected to a TC module so that it can detect the
+ *    correct TC waveform output.
+ *
+ * \section appdoc_samd20_tc_unit_test_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
+ *
+ * \section appdoc_samd20_tc_unit_test_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
 
 #include <asf.h>
 #include <stdio_serial.h>
+#include <string.h>
+#include "conf_test.h"
 
+/* Structure for UART module connected to EDBG (used for unit test output) */
+struct usart_module cdc_uart_module;
 
 /* TC modules used in tests */
 struct tc_module tc0_module;
@@ -321,8 +380,8 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	tc0_config.size_specific.size_16_bit.compare_capture_channel[1]  =
 			0x01FF;
 	tc0_config.channel_pwm_out_enabled[TC_COMPARE_CAPTURE_CHANNEL_1] = true;
-	tc0_config.channel_pwm_out_pin[1]                                = PIN_PB31F_TC0_WO1;
-	tc0_config.channel_pwm_out_mux[1]                                = MUX_PB31F_TC0_WO1;
+	tc0_config.channel_pwm_out_pin[1]                                = PIN_PA05F_TC0_WO1;
+	tc0_config.channel_pwm_out_mux[1]                                = MUX_PA05F_TC0_WO1;
 
 	tc_init(&tc0_module, TC0, &tc0_config);
 
@@ -351,6 +410,7 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	extint_chan_config.detection_criteria  = EXTINT_DETECT_HIGH;
 	extint_chan_set_config(0, &extint_chan_config);
 	extint_enable();
+
 	/* Configure external interrupt module to be event generator */
 	struct extint_events extint_event_conf;
 	extint_event_conf.generate_event_on_detect[0] = true;
@@ -358,11 +418,13 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 
 	/* Configure event system */
 	events_init();
+
 	/* Configure user */
 	struct events_user_config event_user_conf;
 	events_user_get_config_defaults(&event_user_conf);
 	event_user_conf.event_channel_id = EVENT_CHANNEL_0;
 	events_user_set_config(EVSYS_ID_USER_TC1_EVU, &event_user_conf);
+
 	/* Configure channel */
 	struct events_chan_config events_chan_conf;
 	events_chan_get_config_defaults(&events_chan_conf);
@@ -393,38 +455,26 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 }
 
 /**
- * \brief Initialize USARTs for unit tests
+ * \brief Initialize the USART for unit test
  *
- * Initializes the USART used by the unit test for outputting the results (using
- * the embedded debugger).
- *
- * Communication setting:
- *  - Baud rate     38400
- *  - Data bits     8
- *  - Stop bits     1
- *  - Parity        None
- *  - Flow control  XON/XOFF
+ * Initializes the SERCOM USART used for sending the unit test status to the
+ * computer via the EDBG CDC gateway.
  */
-static void test_usart_comunication_init(void)
+static void cdc_uart_init(void)
 {
 	struct usart_config usart_conf;
-	struct usart_module unit_test_output;
 
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&usart_conf);
-	usart_conf.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
-	usart_conf.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
-	usart_conf.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	usart_conf.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	usart_conf.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
-	usart_conf.baudrate    = 38400;
+	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
+	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
+	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
 
-	stdio_serial_init(&unit_test_output, EDBG_CDC_MODULE, &usart_conf);
-	usart_enable(&unit_test_output);
-
-	/* Enable transceivers */
-	usart_enable_transceiver(&unit_test_output, USART_TRANSCEIVER_TX);
-	usart_enable_transceiver(&unit_test_output, USART_TRANSCEIVER_RX);
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
+	usart_enable(&cdc_uart_module);
 }
 
 /**
@@ -436,9 +486,7 @@ static void test_usart_comunication_init(void)
 int main(void)
 {
 	system_init();
-	test_usart_comunication_init();
-
-		system_clock_source_write_calibration(SYSTEM_CLOCK_SOURCE_OSC8M, 18, 2);
+	cdc_uart_init();
 
 	/* Define Test Cases */
 	DEFINE_TEST_CASE(init_test, NULL,

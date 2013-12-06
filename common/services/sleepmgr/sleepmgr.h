@@ -46,7 +46,7 @@
 #include <compiler.h>
 #include <parts.h>
 
-#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E || SAM4N || SAM4C)
 # include "sam/sleepmgr.h"
 #elif XMEGA
 # include "xmega/sleepmgr.h"
@@ -54,6 +54,8 @@
 # include "uc3/sleepmgr.h"
 #elif SAM4L
 # include "sam4l/sleepmgr.h"
+#elif MEGA
+# include "mega/sleepmgr.h"
 #else
 # error Unsupported device.
 #endif
@@ -192,7 +194,7 @@ static inline enum sleepmgr_mode sleepmgr_get_sleep_mode(void)
 	// Find first non-zero lock count, starting with the shallowest modes.
 	while (!(*lock_ptr)) {
 		lock_ptr++;
-		sleep_mode++;
+		sleep_mode = (enum sleepmgr_mode)(sleep_mode + 1);
 	}
 
 	// Catch the case where one too many sleepmgr_unlock_mode() call has been

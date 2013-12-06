@@ -417,8 +417,8 @@ enum status_code i2c_slave_write_packet_wait(
 	}
 
 	/* Check if there was an error in last transfer */
-	if (i2c_hw->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR ||
-			SERCOM_I2CS_STATUS_COLL || SERCOM_I2CS_STATUS_LOWTOUT)) {
+	if (i2c_hw->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR |
+			SERCOM_I2CS_STATUS_COLL | SERCOM_I2CS_STATUS_LOWTOUT)) {
 		return STATUS_ERR_IO;
 	}
 
@@ -536,8 +536,8 @@ enum status_code i2c_slave_read_packet_wait(
 	}
 
 	/* Check if there was an error in the last transfer */
-	if (i2c_hw->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR ||
-			SERCOM_I2CS_STATUS_COLL || SERCOM_I2CS_STATUS_LOWTOUT)) {
+	if (i2c_hw->STATUS.reg & (SERCOM_I2CS_STATUS_BUSERR |
+			SERCOM_I2CS_STATUS_COLL | SERCOM_I2CS_STATUS_LOWTOUT)) {
 		return STATUS_ERR_IO;
 	}
 	/* Check direction */
@@ -657,7 +657,7 @@ enum i2c_slave_direction i2c_slave_get_direction_wait(
  *                                          transaction being processed
  * \retval I2C_SLAVE_STATUS_CLOCK_HOLD      The slave is holding the SCL line
  *                                          low
- * \retval I2C_SLAVE_STATUS_SCL_LOW_TIMEOUT An SCL low time-out has occured
+ * \retval I2C_SLAVE_STATUS_SCL_LOW_TIMEOUT An SCL low time-out has occurred
  * \retval I2C_SLAVE_STATUS_REPEATED_START  Indicates a repeated start, only
  *                                          valid if \ref
  *                                          I2C_SLAVE_STATUS_ADDRESS_MATCH is

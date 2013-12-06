@@ -43,6 +43,7 @@
 #ifndef I2C_COMMON_H_INCLUDED
 #define I2C_COMMON_H_INCLUDED
 
+#include <compiler.h>
 #include <sercom.h>
 
 #ifdef __cplusplus
@@ -50,7 +51,13 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_samd20_sercom_i2c_group SAM D20 I2C Bus Driver (SERCOM I2C)
+ * \if (I2C_MASTER_MODE && I2C_SLAVE_MODE)
+ *   \defgroup asfdoc_samd20_sercom_i2c_group SAM D20 I2C Driver (SERCOM I2C)
+ * \elseif I2C_MASTER_MODE
+ *   \defgroup asfdoc_samd20_sercom_i2c_group SAM D20 I2C Master Mode Driver (SERCOM I2C)
+ * \elseif I2C_SLAVE_MODE
+ *   \defgroup asfdoc_samd20_sercom_i2c_group SAM D20 I2C Slave Mode Driver (SERCOM I2C)
+ * \endif
  *
  * This driver for SAM D20 devices provides an interface for the configuration
  * and management of the device's SERCOM I<SUP>2</SUP>C module, for the transfer
@@ -155,7 +162,7 @@ extern "C" {
  *
  * \subsubsection asfdoc_samd20_sercom_i2c_data_packets Data Packets
  * Data packets are nine bits long, consisting of one 8-bit data byte, and an
- * acknowledgment bit. Data packets follow either an address packet or another
+ * acknowledgement bit. Data packets follow either an address packet or another
  * data packet on the bus.
  *
  * \subsubsection asfdoc_samd20_sercom_i2c_trans_examples Transaction Examples
@@ -298,12 +305,12 @@ extern "C" {
  *      <th>Master</th>
  *   </tr>
  *   <tr>
- *      <th>false</th>
+ *      <td>false</td>
  *      <td>Disabled, all reception is dropped</td>
  *      <td>GCLK disabled when master is idle</td>
  *   </tr>
  *   <tr>
- *      <th>true</th>
+ *      <td>true</td>
  *      <td>Wake on address match when enabled</td>
  *      <td>GCLK enabled while in sleep modes</td>
  *   </tr>
@@ -333,6 +340,11 @@ extern "C" {
  *
  * \section asfdoc_samd20_sercom_i2c_extra Extra Information
  * For extra information see \ref asfdoc_samd20_sercom_i2c_extra_info_page.
+ * This includes:
+ *  - \ref asfdoc_samd20_sercom_i2c_acronyms
+ *  - \ref asfdoc_samd20_sercom_i2c_extra_dependencies
+ *  - \ref asfdoc_samd20_sercom_i2c_extra_errata
+ *  - \ref asfdoc_samd20_sercom_i2c_extra_history
  *
  * \section asfdoc_samd20_sercom_i2c_examples Examples
  *
@@ -410,6 +422,11 @@ struct i2c_packet {
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Fixed incorrect logical mask for determining if a bus error has
+ *          occurred in I2C Slave mode.
+ *      </td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
@@ -444,6 +461,11 @@ struct i2c_packet {
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>B</td>
+ *		<td>06/2013</td>
+ *		<td>Corrected documentation typos. Updated I2C Bus State Diagram.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

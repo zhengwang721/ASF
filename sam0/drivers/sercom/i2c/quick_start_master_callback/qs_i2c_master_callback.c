@@ -87,7 +87,7 @@ void i2c_write_complete_callback(
 
 	/* Initiate new packet write */
 	//! [write_next]
-	i2c_master_read_packet_job(module, &packet);
+	i2c_master_write_packet_job(module, &packet);
 	//! [write_next]
 }
 //! [callback_func]
@@ -134,11 +134,9 @@ void configure_i2c_callbacks(void)
 
 int main(void)
 {
-	//! [run_initialize_i2c]
-	//! [system_init]
 	system_init();
-	//! [system_init]
 
+	//! [run_initialize_i2c]
 	/* Configure device and enable. */
 	//! [config]
 	configure_i2c();
