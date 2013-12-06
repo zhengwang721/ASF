@@ -45,7 +45,7 @@
 #define USART_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd2x_sercom_usart_group SAM D2x Serial USART Driver (SERCOM USART)
+ * \defgroup asfdoc_sam0_sercom_usart_group SAM D2x Serial USART Driver (SERCOM USART)
  *
  * This driver for SAM D2x devices provides an interface for the configuration
  * and management of the SERCOM module in its USART mode to transfer or receive
@@ -62,36 +62,36 @@
  * - SERCOM (Serial Communication Interface)
  *
  * The outline of this documentation is as follows:
- * - \ref asfdoc_samd2x_sercom_usart_prerequisites
- * - \ref asfdoc_samd2x_sercom_usart_overview
- * - \ref asfdoc_samd2x_sercom_usart_special_considerations
- * - \ref asfdoc_samd2x_sercom_usart_extra_info
- * - \ref asfdoc_samd2x_sercom_usart_examples
- * - \ref asfdoc_samd2x_sercom_usart_api_overview
+ * - \ref asfdoc_sam0_sercom_usart_prerequisites
+ * - \ref asfdoc_sam0_sercom_usart_overview
+ * - \ref asfdoc_sam0_sercom_usart_special_considerations
+ * - \ref asfdoc_sam0_sercom_usart_extra_info
+ * - \ref asfdoc_sam0_sercom_usart_examples
+ * - \ref asfdoc_sam0_sercom_usart_api_overview
  *
- * \section asfdoc_samd2x_sercom_usart_prerequisites Prerequisites
+ * \section asfdoc_sam0_sercom_usart_prerequisites Prerequisites
  *
  * To use the USART you need to have a GCLK generator enabled and running
  * that can be used as the SERCOM clock source. This can either be configured
  * in conf_clocks.h or by using the system clock driver.
  *
- * \section asfdoc_samd2x_sercom_usart_overview Module Overview
+ * \section asfdoc_sam0_sercom_usart_overview Module Overview
  *
  * This driver will use one (or more) SERCOM interfaces on the system
  * and configure it to run as a USART interface in either synchronous
  * or asynchronous mode.
  *
- * \subsection asfdoc_samd2x_sercom_usart_overview_frame_format Frame Format
+ * \subsection asfdoc_sam0_sercom_usart_overview_frame_format Frame Format
  *
  * Communication is based on frames, where the frame format can be customized
  * to accommodate a wide range of standards. A frame consists of a start bit,
  * a number of data bits, an optional parity bit for error detection as well
  * as a configurable length stop bit(s) - see
- * \ref asfdoc_samd2x_sercom_usart_frame_diagram "the figure below".
- * \ref asfdoc_samd2x_sercom_usart_frame_params "The table below" shows the
+ * \ref asfdoc_sam0_sercom_usart_frame_diagram "the figure below".
+ * \ref asfdoc_sam0_sercom_usart_frame_params "The table below" shows the
  * available parameters you can change in a frame.
  *
- * \anchor asfdoc_samd2x_sercom_usart_frame_params
+ * \anchor asfdoc_sam0_sercom_usart_frame_params
  * <table>
  *  <caption>USART Frame Parameters</caption>
  *  <tr>
@@ -116,10 +116,10 @@
  *  </tr>
  * </table>
  *
- * \anchor asfdoc_samd2x_sercom_usart_frame_diagram
+ * \anchor asfdoc_sam0_sercom_usart_frame_diagram
  * \image html usart_frame.svg "USART Frame overview" width=100%
  *
- * \subsection asfdoc_samd2x_sercom_usart_overview_sync Synchronous mode
+ * \subsection asfdoc_sam0_sercom_usart_overview_sync Synchronous mode
  *
  * In synchronous mode a dedicated clock line is provided; either by the USART
  * itself if in master mode, or by an external master if in slave mode.
@@ -131,12 +131,12 @@
  * - RX (Receive pin)
  * - XCK (Clock pin)
  *
- * \subsubsection asfdoc_samd2x_sercom_usart_overview_sync_sampling Data sampling
+ * \subsubsection asfdoc_sam0_sercom_usart_overview_sync_sampling Data sampling
  * In synchronous mode the data is sampled on either the rising or falling edge
  * of the clock signal. This is configured by setting the clock polarity in the
  * configuration struct.
  *
- * \subsection asfdoc_samd2x_sercom_usart_overview_async Asynchronous mode
+ * \subsection asfdoc_sam0_sercom_usart_overview_async Asynchronous mode
  *
  * In asynchronous mode no dedicated clock line is used, and the communication
  * is based on matching the clock speed on the transmitter and receiver. The
@@ -147,7 +147,7 @@
  * - TX (Transmit pin)
  * - RX (Receive pin)
  *
- * \subsubsection asfdoc_samd2x_sercom_usart_overview_async_clock_matching Transmitter/receiver clock matching
+ * \subsubsection asfdoc_sam0_sercom_usart_overview_async_clock_matching Transmitter/receiver clock matching
  *
  * For successful transmit and receive using the asynchronous mode the receiver
  * and transmitter clocks needs to be closely matched. When receiving a frame
@@ -155,7 +155,7 @@
  * be unable to synchronize the frame(s), and garbage transmissions will
  * result.
  *
- * \subsection asfdoc_samd2x_sercom_usart_parity Parity
+ * \subsection asfdoc_sam0_sercom_usart_parity Parity
  * Parity can be enabled to detect if a transmission was in error. This is done
  * by counting the number of "1" bits in the frame. When using Even parity the
  * parity bit will be set if the total number of "1"s in the frame are an even
@@ -165,14 +165,14 @@
  * When receiving a character the receiver will count the number of "1"s in the
  * frame and give an error if the received frame and parity bit disagree.
  *
- * \subsection asfdoc_samd2x_sercom_usart_overview_pin_configuration GPIO configuration
+ * \subsection asfdoc_sam0_sercom_usart_overview_pin_configuration GPIO configuration
  *
  * The SERCOM module has four internal pads; the RX pin can be placed freely on
  * any one of the four pads, and the TX and XCK pins have two predefined
  * positions that can be selected as a pair. The pads can then be routed to an
  * external GPIO pin using the normal pin multiplexing scheme on the SAM D2x.
  *
- * \section asfdoc_samd2x_sercom_usart_special_considerations Special Considerations
+ * \section asfdoc_sam0_sercom_usart_special_considerations Special Considerations
  *
  * \if USART_CALLBACK_MODE
  * Never execute large portions of code in the callbacks. These
@@ -185,20 +185,20 @@
  * No special considerations.
  * \endif
  *
- * \section asfdoc_samd2x_sercom_usart_extra_info Extra Information
+ * \section asfdoc_sam0_sercom_usart_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_samd2x_sercom_usart_extra. This includes:
- * - \ref asfdoc_samd2x_sercom_usart_extra_acronyms
- * - \ref asfdoc_samd2x_sercom_usart_extra_dependencies
- * - \ref asfdoc_samd2x_sercom_usart_extra_errata
- * - \ref asfdoc_samd2x_sercom_usart_extra_history
+ * For extra information see \ref asfdoc_sam0_sercom_usart_extra. This includes:
+ * - \ref asfdoc_sam0_sercom_usart_extra_acronyms
+ * - \ref asfdoc_sam0_sercom_usart_extra_dependencies
+ * - \ref asfdoc_sam0_sercom_usart_extra_errata
+ * - \ref asfdoc_sam0_sercom_usart_extra_history
  *
- * \section asfdoc_samd2x_sercom_usart_examples Examples
+ * \section asfdoc_sam0_sercom_usart_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_samd2x_sercom_usart_exqsg.
+ * \ref asfdoc_sam0_sercom_usart_exqsg.
  *
- * \section asfdoc_samd2x_sercom_usart_api_overview API Overview
+ * \section asfdoc_sam0_sercom_usart_api_overview API Overview
  * @{
  */
 
@@ -325,7 +325,7 @@ enum usart_parity {
  *
  * Set the functionality of the SERCOM pins.
  *
- * See \ref asfdoc_samd2x_sercom_usart_mux_settings for a description of the
+ * See \ref asfdoc_sam0_sercom_usart_mux_settings for a description of the
  * various MUX setting options.
  */
 enum usart_signal_mux_settings {
@@ -654,29 +654,6 @@ static inline void usart_unlock(struct usart_module *const module)
 
 /** @} */
 
-#if !defined (__DOXYGEN__)
-/**
- * \internal
- * Waits until synchronization is complete
- */
-static inline void _usart_wait_for_sync(
-		const struct usart_module *const module)
-{
-	/* Get a pointer to the hardware module instance */
-	SercomUsart *const usart_hw = &(module->hw->USART);
-
-#ifdef FEATURE_USART_SYNC_SCHEME_V2
-	while (usart_hw->SYNCBUSY.reg) {
-		/* Wait until the synchronization is complete */
-	}
-#else
-	while (usart_hw->STATUS.reg & SERCOM_USART_STATUS_SYNCBUSY) {
-		/* Wait until the synchronization is complete */
-	}
-#endif
-}
-#endif
-
 /**
  * \brief Check if peripheral is busy syncing registers across clock domains
  *
@@ -703,19 +680,28 @@ static inline bool usart_is_syncing(
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
 #ifdef FEATURE_USART_SYNC_SCHEME_V2
-	if(usart_hw->SYNCBUSY.reg) {
-		return true;
-	} else {
-		return false;
-	}
+	return (usart_hw->SYNCBUSY.reg);
 #else
-	if(usart_hw->STATUS.reg & SERCOM_USART_STATUS_SYNCBUSY) {
-		return true;
-	} else {
-		return false;
-	}
+	return (usart_hw->STATUS.reg & SERCOM_USART_STATUS_SYNCBUSY);
 #endif
 }
+
+#if !defined (__DOXYGEN__)
+/**
+ * \internal
+ * Waits until synchronization is complete
+ */
+static inline void _usart_wait_for_sync(
+		const struct usart_module *const module)
+{
+	/* Get a pointer to the hardware module instance */
+	SercomUsart *const usart_hw = &(module->hw->USART);
+
+	while (usart_is_syncing(module)) {
+		/* Wait until the synchronization is complete */
+	}
+}
+#endif
 
 /**
  * \brief Initializes the device to predefined defaults
@@ -980,9 +966,9 @@ static inline void usart_disable_transceiver(
 /** @} */
 
 /**
-* \page asfdoc_samd2x_sercom_usart_extra Extra Information for SERCOM USART Driver
+* \page asfdoc_sam0_sercom_usart_extra Extra Information for SERCOM USART Driver
 *
-* \section asfdoc_samd2x_sercom_usart_extra_acronyms Acronyms
+* \section asfdoc_sam0_sercom_usart_extra_acronyms Acronyms
 *
 * Below is a table listing the acronyms used in this module, along with their
 * intended meanings.
@@ -1011,18 +997,18 @@ static inline void usart_disable_transceiver(
 * </table>
 *
 *
-* \section asfdoc_samd2x_sercom_usart_extra_dependencies Dependencies
+* \section asfdoc_sam0_sercom_usart_extra_dependencies Dependencies
 * This driver has the following dependencies:
 *
-* - \ref asfdoc_samd2x_system_pinmux_group "System Pin Multiplexer Driver"
-* - \ref asfdoc_samd2x_system_clock_group "System clock configuration"
+* - \ref asfdoc_sam0_system_pinmux_group "System Pin Multiplexer Driver"
+* - \ref asfdoc_sam0_system_clock_group "System clock configuration"
 *
 *
-* \section asfdoc_samd2x_sercom_usart_extra_errata Errata
+* \section asfdoc_sam0_sercom_usart_extra_errata Errata
 * There are no errata related to this driver.
 *
 *
-* \section asfdoc_samd2x_sercom_usart_extra_history Module History
+* \section asfdoc_sam0_sercom_usart_extra_history Module History
 * An overview of the module history is presented in the table below, with
 * details on the enhancements and fixes made to the module since its first
 * release. The current version of this corresponds to the newest version in
@@ -1047,22 +1033,22 @@ static inline void usart_disable_transceiver(
 */
 
 /**
- * \page asfdoc_samd2x_sercom_usart_exqsg Examples for SERCOM USART Driver
+ * \page asfdoc_sam0_sercom_usart_exqsg Examples for SERCOM USART Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_samd2x_sercom_usart_group. QSGs are simple examples with
+ * applications for \ref asfdoc_sam0_sercom_usart_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
- * - \subpage asfdoc_samd2x_sercom_usart_basic_use_case
+ * - \subpage asfdoc_sam0_sercom_usart_basic_use_case
  * \if USART_CALLBACK_MODE
- * - \subpage asfdoc_samd2x_sercom_usart_callback_use_case
+ * - \subpage asfdoc_sam0_sercom_usart_callback_use_case
  * \endif
  */
 
 /**
- * \page asfdoc_samd2x_sercom_usart_mux_settings SERCOM USART MUX Settings
+ * \page asfdoc_sam0_sercom_usart_mux_settings SERCOM USART MUX Settings
  *
  * The following lists the possible internal SERCOM module pad function
  * assignments, for the four SERCOM pads when in USART mode. Note that this is
@@ -1142,7 +1128,7 @@ static inline void usart_disable_transceiver(
  *		</tr>
  * </table>
  *
- * \page asfdoc_samd2x_sercom_usart_document_revision_history Document Revision History
+ * \page asfdoc_sam0_sercom_usart_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>

@@ -61,7 +61,7 @@ void _usart_interrupt_handler(
 #endif
 
 /**
- * \addtogroup asfdoc_samd2x_sercom_usart_group
+ * \addtogroup asfdoc_sam0_sercom_usart_group
  *
  * @{
  */
