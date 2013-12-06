@@ -206,6 +206,7 @@ int main(void)
 		genclk_enable(&gcfg, GCLK_ID);
 		wait_for_switches();
 
+#if BOARD_FREQ_MAINCK_XTAL
 		/*
 		 * Switch to external crystal (8MHz or 12MHz, depend on the board).
 		 */
@@ -216,6 +217,7 @@ int main(void)
 		genclk_enable(&gcfg, GCLK_ID);
 		osc_disable(OSC_MAINCK_8M_RC);
 		wait_for_switches();
+#endif
 
 		/*
 		 * Go back to the initial state and start over.
