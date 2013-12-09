@@ -552,7 +552,7 @@
 			<build type="doxygen-quick-start" value="sysclk_quickstart"/>
 			<device-support value="samg"/>
 			<require idref="sam.drivers.pmc"/>
-			<generator value="doxygen-module" default-mcu="unspecified-samg"/>
+			<generator value="doxygen-module" default-mcu="unspecified-samg53"/>
 		</module>
 	</select-by-device>
 </asf>
