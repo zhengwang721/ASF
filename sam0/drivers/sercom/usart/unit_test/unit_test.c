@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 USART Unit test
+ * \brief SAM D2x USART Unit test
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage SAM D20 USART Unit Test
+ * \mainpage SAM D2x USART Unit Test
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
@@ -59,27 +59,28 @@
  */
 
 /**
- * \page appdoc_main SAM D20 USART Unit Test
+ * \page appdoc_main SAM D2x USART Unit Test
  *
  * Overview:
- * - \ref appdoc_samd20_usart_unit_test_intro
- * - \ref appdoc_samd20_usart_unit_test_setup
- * - \ref appdoc_samd20_usart_unit_test_usage
- * - \ref appdoc_samd20_usart_unit_test_compinfo
- * - \ref appdoc_samd20_usart_unit_test_contactinfo
+ * - \ref appdoc_sam0_usart_unit_test_intro
+ * - \ref appdoc_sam0_usart_unit_test_setup
+ * - \ref appdoc_sam0_usart_unit_test_usage
+ * - \ref appdoc_sam0_usart_unit_test_compinfo
+ * - \ref appdoc_sam0_usart_unit_test_contactinfo
  *
- * \section appdoc_samd20_usart_unit_test_intro Introduction
+ * \section appdoc_sam0_usart_unit_test_intro Introduction
  * \copydetails appdoc_preface
  *
  * The following kit is required for carrying out the test:
  *      - SAM D20 Xplained Pro board
+ *      - SAM D21 Xplained Pro board
  *
- * \section appdoc_samd20_usart_unit_test_setup Setup
+ * \section appdoc_sam0_usart_unit_test_setup Setup
  * The following connections has to be made using wires:
  *  - \b TX/RX: EXT1 PIN17 (PA04) <--> EXT1 PIN13 (PB09)
  *
  * To run the test:
- *  - Connect the SAM D20 Xplained Pro board to the computer using a
+ *  - Connect the SAM D2x Xplained Pro board to the computer using a
  *    micro USB cable.
  *  - Open the virtual COM port in a terminal application.
  *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
@@ -88,17 +89,17 @@
  *  - Build the project, program the target and run the application.
  *    The terminal shows the results of the unit test.
  *
- * \section appdoc_samd20_usart_unit_test_usage Usage
+ * \section appdoc_sam0_usart_unit_test_usage Usage
  *  - The unit tests are carried out with SERCOM0 on EXT1 as the USART
  *    transmitter and SERCOM4 on EXT1 as the SERCOM USART receiver.
  *  - Data is transmitted from transmitter to receiver in lengths of a single
  *    byte as well as multiple bytes.
  *
- * \section appdoc_samd20_usart_unit_test_compinfo Compilation Info
+ * \section appdoc_sam0_usart_unit_test_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for ARM.
  * Other compilers may or may not work.
  *
- * \section appdoc_samd20_usart_unit_test_contactinfo Contact Information
+ * \section appdoc_sam0_usart_unit_test_contactinfo Contact Information
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
@@ -119,7 +120,7 @@
 /* TX USART to test
  *
  * There is only one SERCOM for USART on the EXT headers of the rev. 2
- * SAM D20 Xplained Pro. The settings below are a hack to get a second
+ * SAM D2x Xplained Pro. The settings below are a hack to get a second
  * USART via a SERCOM that is not mapped to a RX/TX pin on a header.
  *
  * More specifically, it is the SPI SERCOM on EXT1, with RX mapped to PA05
@@ -321,8 +322,7 @@ static void run_buffer_write_blocking_read_interrupt_test(const struct test_case
  * \brief Test initializing a module multiple times
  *
  * This test initializes a USART module many times to check that
- * it fails when the config is different and returns STATUS_OK
- * when it is the same
+ * it fails when the module is enabled.
  *
  * \param test Current test case.
  */
@@ -351,8 +351,8 @@ static void run_multiple_init_while_enabled_test(const struct test_case *test)
 	}
 	enum status_code test_code = usart_init(&usart_rx_module,
 			RX_USART, &usart_rx_config);
-	test_assert_true(test, (test_code == STATUS_OK),
-			"Writing an unchanged configuration failed");
+	test_assert_false(test, (test_code == STATUS_OK),
+			"Writing an unchanged configuration did not fail as it should");
 
 	/* Test changing the baud rate*/
 	usart_rx_config.baudrate = 38400;
@@ -437,7 +437,7 @@ static void run_buffer_read_write_interrupt_test(const struct test_case *test)
  * the actual unit tests (one for RX and one for TX).
  *
  * The RX USART used is the one connected to EXT1 on rev. 2 of the
- * SAM D20 Xplained Pro, while the TX USART used is the one reserved
+ * SAM D2x Xplained Pro, while the TX USART used is the one reserved
  * for SPI on EXT1.
  *
  * The two SERCOMs have RX on pin 13 (RX) and 15 (SS_0), and TX on pin
@@ -520,7 +520,7 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(usart_suite, usart_tests,
-			"SAM D20 USART driver test suite");
+			"SAM D2x USART driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&usart_suite);
