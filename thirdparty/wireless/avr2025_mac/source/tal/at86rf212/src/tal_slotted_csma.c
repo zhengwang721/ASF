@@ -265,6 +265,7 @@ static void calculate_transaction_duration(void)
 
 /**
  * \brief Calculates the entire transaction duration
+ * \param phy_frame Address to the frame 
  */
 #ifdef BEACON_SUPPORT
 uint16_t calc_frame_transmit_duration(uint8_t *phy_frame)
