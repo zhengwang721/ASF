@@ -482,7 +482,7 @@ void WKUP15_Handler     ( void );
 /** \addtogroup SAMG53N19_pio Peripheral Pio Definitions */
 /*@{*/
 
-#include "pio/pio_samg53N19.h"
+#include "pio/pio_samg53n19.h"
 /*@}*/
 
 /* ************************************************************************** */
