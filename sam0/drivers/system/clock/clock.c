@@ -659,10 +659,11 @@ bool system_clock_source_is_ready(
  */
 void system_clock_init(void)
 {
-        /* Workaround for errata 10558 */
-        SYSCTRL->INTFLAG.reg = SYSCTRL_INTFLAG_BOD12RDY | SYSCTRL_INTFLAG_BOD33RDY |
-                        SYSCTRL_INTFLAG_BOD12DET | SYSCTRL_INTFLAG_BOD33DET |
-                        SYSCTRL_INTFLAG_DFLLRDY;
+	/* Various bits in the INTFLAG register can be set to one at startup.
+	   This will ensure that these bits are cleared */
+	SYSCTRL->INTFLAG.reg = SYSCTRL_INTFLAG_BOD12RDY | SYSCTRL_INTFLAG_BOD33RDY |
+			SYSCTRL_INTFLAG_BOD12DET | SYSCTRL_INTFLAG_BOD33DET |
+			SYSCTRL_INTFLAG_DFLLRDY;
 
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
 
@@ -809,17 +810,15 @@ void system_clock_init(void)
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
 #endif
 
+	/* CPU and BUS clocks */
+	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
+	system_main_clock_set_failure_detect(CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT);
+	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
+	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);
 
 	/* GCLK 0 */
 #if CONF_CLOCK_CONFIGURE_GCLK == true
 	/* Configure the main GCLK last as it might depend on other generators */
 	_CONF_CLOCK_GCLK_CONFIG(0, ~);
 #endif
-
-
-	/* CPU and BUS clocks */
-	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
-	system_main_clock_set_failure_detect(CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT);
-	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
-	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);
 }
