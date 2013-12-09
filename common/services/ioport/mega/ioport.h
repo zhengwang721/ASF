@@ -302,10 +302,11 @@ __always_inline static void arch_ioport_set_port_level(ioport_port_t port,
 {
 	PORT_t *base = arch_ioport_port_to_base(port);
 
-	if(level)
-	base->PORTDATA |= mask;
-	else
-	base->PORTDATA &= ~mask;
+	if (level) {
+		base->PORTDATA |= mask;
+	} else {
+		base->PORTDATA &= ~mask;
+	}
 }
 
 /**

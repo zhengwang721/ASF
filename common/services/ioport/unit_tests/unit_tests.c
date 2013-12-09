@@ -84,8 +84,10 @@
 /**
  * \brief Test IOPORT pin level is getting changed.
  *
- * This function set the direction of CONF_OUT_PIN to output mode with pull-up enabled
- * and read the status of pin using CONF_IN_PIN which is configured in input mode.
+ * This function set the direction of CONF_OUT_PIN to output mode with pull-up
+ * enabled and read the status of pin using CONF_IN_PIN which is configured in
+ * input mode.
+ *
  * The pin CONF_OUT_PIN and CONF_IN_PIN are shorted using a jumper.
  *
  * \param test Current test case.
@@ -126,9 +128,11 @@ static void run_ioport_pin_test(const struct test_case *test)
 /**
  * \brief Test IOPORT port level is getting changed.
  *
- * This function set the direction of CONF_PORT_OUT_PIN_MASK to output mode with pull-up enabled
- * and read the status of pin using CONF_PORT_IN_PIN_MASK which is configured in input mode.
- * The pin CONF_PORT_OUT_PIN_MASK and CONF_PORT_IN_PIN_MASK are shorted using a jumper.
+ * This function set the direction of CONF_PORT_OUT_PIN_MASK to output mode with
+ * pull-up enabled and read the status of pin using CONF_PORT_IN_PIN_MASK which
+ * is configured in input mode.
+ * The pin CONF_PORT_OUT_PIN_MASK and CONF_PORT_IN_PIN_MASK are shorted using a
+ * jumper.
  *
  * \param test Current test case.
  */
@@ -138,28 +142,35 @@ static void run_ioport_port_test(const struct test_case *test)
 
 	/* Set direction and pull-up on the given IOPORT */
 	ioport_set_port_dir(CONF_PORT, CONF_PORT_IN_PIN_MASK, IOPORT_DIR_INPUT);
-	ioport_set_port_mode(CONF_PORT, CONF_PORT_IN_PIN_MASK, IOPORT_MODE_PULLUP);
+	ioport_set_port_mode(CONF_PORT, CONF_PORT_IN_PIN_MASK,
+			IOPORT_MODE_PULLUP);
 
 	/* Set output direction on the given IOPORT */
-	ioport_set_port_dir(CONF_PORT, CONF_PORT_OUT_PIN_MASK, IOPORT_DIR_OUTPUT);
+	ioport_set_port_dir(CONF_PORT, CONF_PORT_OUT_PIN_MASK,
+			IOPORT_DIR_OUTPUT);
 
 	/* Set  IOPORT as high */
-	ioport_set_port_level(CONF_PORT, CONF_PORT_OUT_PIN_MASK, IOPORT_PIN_LEVEL_HIGH);
+	ioport_set_port_level(CONF_PORT, CONF_PORT_OUT_PIN_MASK,
+			IOPORT_PIN_LEVEL_HIGH);
 	delay_ms(10);
 	port_val = ioport_get_port_level(CONF_PORT, CONF_PORT_IN_PIN_MASK);
-	test_assert_true(test, port_val == CONF_PORT_IN_PIN_MASK, "IOPORT Set port level high test failed.");
-	
+	test_assert_true(test, port_val == CONF_PORT_IN_PIN_MASK,
+			"IOPORT Set port level high test failed.");
+
 	/* Set  IOPORT as low */
-	ioport_set_port_level(CONF_PORT, CONF_PORT_OUT_PIN_MASK, IOPORT_PIN_LEVEL_LOW);
+	ioport_set_port_level(CONF_PORT, CONF_PORT_OUT_PIN_MASK,
+			IOPORT_PIN_LEVEL_LOW);
 	delay_ms(10);
 	port_val = ioport_get_port_level(CONF_PORT, CONF_PORT_IN_PIN_MASK);
-	test_assert_true(test, port_val == 0, "IOPORT Set port level low test failed.");
+	test_assert_true(test, port_val == 0,
+			"IOPORT Set port level low test failed.");
 
 	/* Toggle  IOPORT */
 	ioport_toggle_port_level(CONF_PORT, CONF_PORT_OUT_PIN_MASK);
 	delay_ms(10);
 	port_val = ioport_get_port_level(CONF_PORT, CONF_PORT_IN_PIN_MASK);
-	test_assert_true(test, port_val == CONF_PORT_IN_PIN_MASK, "IOPORT Set port level toggle test failed.");
+	test_assert_true(test, port_val == CONF_PORT_IN_PIN_MASK,
+			"IOPORT Set port level toggle test failed.");
 }
 
 /**

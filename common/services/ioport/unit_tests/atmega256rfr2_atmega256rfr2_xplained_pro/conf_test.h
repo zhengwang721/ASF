@@ -45,9 +45,9 @@
 #define CONF_TEST_H
 
 /* IO pin configured as input pin */
-#define CONF_IN_PIN    IOPORT_CREATE_PIN(PORTE,0)
+#define CONF_IN_PIN    IOPORT_CREATE_PIN(PORTE, 0)
 /* IO pin configured as output pin */
-#define CONF_OUT_PIN   IOPORT_CREATE_PIN(PORTE,1)
+#define CONF_OUT_PIN   IOPORT_CREATE_PIN(PORTE, 1)
 
 #define CONF_TEST_USART      &USARTA1
 //! \note 38400 baud
@@ -62,8 +62,8 @@
 /* IOPORT that needs to be configured */
 #define CONF_PORT   IOPORT_PORTE
 /* IOPORT configured as input pin */
-#define CONF_PORT_IN_PIN_MASK  (1<<0)
+#define CONF_PORT_IN_PIN_MASK  (1 << 0)
 /* IOPORT configured as output pin */
-#define CONF_PORT_OUT_PIN_MASK  (1<<1)
+#define CONF_PORT_OUT_PIN_MASK  (1 << 1)
 
 #endif
