@@ -83,6 +83,8 @@
 
 /* === Globals ============================================================== */
 #define MAC_GUARD_TIME_US 1000
+#define READY_TO_SLEEP    1
+
 /**
  * Current state of the MAC state machine
  */
@@ -287,7 +289,7 @@ bool mac_task(void)
 }
 
 /**
- * @brief Checks if the mac stack is idle
+ * @brief Checks if the mac stack is ready to sleep
  *
  * Checks if the mac stack is in inactive state for beacon support 
  *
@@ -295,26 +297,22 @@ bool mac_task(void)
  *
  * @return  32bit time duration in microseconds for which the mac is ready to sleep
  *
- * For No beacon support true if stack is idle,false if it is busy
+ * For No beacon support 1 if stack is idle,0 if it is busy
  */
-#ifdef BEACON_SUPPORT
+
 uint32_t mac_ready_to_sleep(void)
-#else
-bool mac_ready_to_sleep(void)
-#endif /* BEACON_SUPPORT */
 {
 	uint32_t sleep_time =0;
 #ifdef BEACON_SUPPORT
     uint32_t rem_time =0;
     if(MAC_INACTIVE == mac_superframe_state)
 	{
-		
+		#ifdef FFD
 		if((MAC_PAN_COORD_STARTED == mac_state) ||
 		(MAC_COORDINATOR == mac_state)) 
 		{   
-			#ifdef FFD
+			
 			rem_time=sw_timer_get_residual_time(T_Beacon_Preparation);
-			#endif
 			if(rem_time >= MAC_GUARD_TIME_US)
 			{   
 				
@@ -322,6 +320,7 @@ bool mac_ready_to_sleep(void)
 				return sleep_time;
 			}
 		}
+		#endif
 		if(MAC_ASSOCIATED == mac_state)
 		{
 			rem_time=sw_timer_get_residual_time(T_Beacon_Tracking_Period);
@@ -349,9 +348,9 @@ if (mac_busy ||
 			|| (tal_trx_status != TRX_SLEEP)
 #endif
 			) {
-		sleep_time = false;
+		sleep_time = 0;
 	} else {
-		sleep_time = true;
+		sleep_time = READY_TO_SLEEP;
 	}
 #endif
 	return sleep_time;
