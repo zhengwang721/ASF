@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 RTC Basic Usage Example
+ * \brief SAM D2x RTC Basic Usage Example
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -115,6 +115,7 @@ int main(void)
 //! [alarm_match_action]
 			/* Do something on RTC alarm match here */
 			port_pin_toggle_output_level(LED_0_PIN);
+			//port_pin_set_output_level(LED_0_PIN, false);
 //! [alarm_match_action]
 
 //! [clear_alarm_match]
