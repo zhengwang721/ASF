@@ -70,30 +70,30 @@ static enum status_code _usart_set_config(
 	uint32_t ctrlb = 0;
 	uint16_t baud  = 0;
 
-	enum sercom_asynchronous_operation_mode mode = SERCOM_ASYNCHRONOUS_ARITHMETIC;
-	enum sercom_asynchronous_sample_num sample_num = SERCOM_ASYNCHRONOUS_16X;
+	enum sercom_asynchronous_operation_mode mode = SERCOM_ASYNC_OPERATION_MODE_ARITHMETIC;
+	enum sercom_asynchronous_sample_num sample_num = SERCOM_ASYNC_SAMPLE_NUM_16;
 
 #ifdef FEATURE_USART_OVER_SAMPLE
 	switch (config->sample_rate) {
 		case USART_SAMPLE_RATE_16X_ARITHMETIC:
-			mode = SERCOM_ASYNCHRONOUS_ARITHMETIC;
-			sample_num = SERCOM_ASYNCHRONOUS_16X;
+			mode = SERCOM_ASYNC_OPERATION_MODE_ARITHMETIC;
+			sample_num = SERCOM_ASYNC_SAMPLE_NUM_16;
 			break;
 		case USART_SAMPLE_RATE_8X_ARITHMETIC:
-			mode = SERCOM_ASYNCHRONOUS_ARITHMETIC;
-			sample_num = SERCOM_ASYNCHRONOUS_8X;
+			mode = SERCOM_ASYNC_OPERATION_MODE_ARITHMETIC;
+			sample_num = SERCOM_ASYNC_SAMPLE_NUM_8;
 			break;
 		case USART_SAMPLE_RATE_3X_ARITHMETIC:
-			mode = SERCOM_ASYNCHRONOUS_ARITHMETIC;
-			sample_num = SERCOM_ASYNCHRONOUS_3X;
+			mode = SERCOM_ASYNC_OPERATION_MODE_ARITHMETIC;
+			sample_num = SERCOM_ASYNC_SAMPLE_NUM_3;
 			break;
 		case USART_SAMPLE_RATE_16X_FRACTIONAL:
-			mode = SERCOM_ASYNCHRONOUS_FRACTIONAL;
-			sample_num = SERCOM_ASYNCHRONOUS_16X;
+			mode = SERCOM_ASYNC_OPERATION_MODE_FRACTIONAL;
+			sample_num = SERCOM_ASYNC_SAMPLE_NUM_16;
 			break;
 		case USART_SAMPLE_RATE_8X_FRACTIONAL:
-			mode = SERCOM_ASYNCHRONOUS_FRACTIONAL;
-			sample_num = SERCOM_ASYNCHRONOUS_8X;
+			mode = SERCOM_ASYNC_OPERATION_MODE_FRACTIONAL;
+			sample_num = SERCOM_ASYNC_SAMPLE_NUM_8;
 			break;
 	}
 #endif

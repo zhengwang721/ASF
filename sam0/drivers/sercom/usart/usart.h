@@ -747,24 +747,24 @@ static inline void usart_get_config_defaults(
 	config->pinmux_pad2      = PINMUX_DEFAULT;
 	config->pinmux_pad3      = PINMUX_DEFAULT;
 #ifdef FEATURE_USART_OVER_SAMPLE
-	config->sample_adjustment  =  USART_SAMPLE_ADJUSTMENT_7_8_9;
-        config->sample_rate             =  USART_SAMPLE_RATE_16X_ARITHMETIC;
+	config->sample_adjustment     = USART_SAMPLE_ADJUSTMENT_7_8_9;
+	config->sample_rate           = USART_SAMPLE_RATE_16X_ARITHMETIC;
 #endif
 #ifdef FEATURE_USART_LIN_SLAVE
-	config->lin_slave_enable = false;
+	config->lin_slave_enable      = false;
 #endif
 #ifdef FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
 	config->immediate_buffer_overflow_notification      = false;
 #endif
 #ifdef FEATURE_USART_START_FRAME_DECTION
-	config->start_frame_detection_enable                    = false;
+	config->start_frame_detection_enable                = false;
 #endif
 #ifdef FEATURE_USART_IRDA
-	config->encoding_format_enable                            = false;
-	config->receive_pulse_length                                  = 19;
+	config->encoding_format_enable                      = false;
+	config->receive_pulse_length                        = 19;
 #endif
 #ifdef FEATURE_USART_COLLISION_DECTION
-	config->collision_detection_enable                          = false;
+	config->collision_detection_enable                  = false;
 #endif
 }
 

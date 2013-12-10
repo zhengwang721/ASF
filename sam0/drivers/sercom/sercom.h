@@ -78,8 +78,8 @@ extern "C" {
  * Select sercom asynchronous operation mode
  */
 enum sercom_asynchronous_operation_mode {
-	SERCOM_ASYNCHRONOUS_ARITHMETIC = 0,
-	SERCOM_ASYNCHRONOUS_FRACTIONAL,
+	SERCOM_ASYNC_OPERATION_MODE_ARITHMETIC = 0,
+	SERCOM_ASYNC_OPERATION_MODE_FRACTIONAL,
 };
 
 /**
@@ -88,9 +88,9 @@ enum sercom_asynchronous_operation_mode {
  * Select number of samples per bit
  */
 enum sercom_asynchronous_sample_num {
-	SERCOM_ASYNCHRONOUS_3X = 3,
-	SERCOM_ASYNCHRONOUS_8X = 8,
-	SERCOM_ASYNCHRONOUS_16X = 16,
+	SERCOM_ASYNC_SAMPLE_NUM_3 = 3,
+	SERCOM_ASYNC_SAMPLE_NUM_8 = 8,
+	SERCOM_ASYNC_SAMPLE_NUM_16 = 16,
 };
 
 enum status_code sercom_set_gclk_generator(
