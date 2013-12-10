@@ -55,7 +55,6 @@
  *      - Test for single 9-bit write and read by polling.
  *      - Test for multiple 8-bit write by polling and read by interrupts.
  *      - Test for multiple 8-bit write and read by interrupts.
- *      - Test for multiple re-intialization.
  */
 
 /**
@@ -316,68 +315,6 @@ static void run_buffer_write_blocking_read_interrupt_test(const struct test_case
 			"Failed receiving string. TX='%s', RX='%s'", tx_string, rx_string);
 }
 
-
-/**
- * \internal
- * \brief Test initializing a module multiple times
- *
- * This test initializes a USART module many times to check that
- * it fails when the module is enabled.
- *
- * \param test Current test case.
- */
-static void run_multiple_init_while_enabled_test(const struct test_case *test)
-{
-	usart_disable(&usart_rx_module);
-	/* Configure RX USART */
-	usart_get_config_defaults(&usart_rx_config);
-	usart_rx_config.mux_setting = RX_USART_SERCOM_MUX;
-	usart_rx_config.pinmux_pad0 = RX_USART_PINMUX_PAD0;
-	usart_rx_config.pinmux_pad1 = RX_USART_PINMUX_PAD1;
-	usart_rx_config.pinmux_pad2 = RX_USART_PINMUX_PAD2;
-	usart_rx_config.pinmux_pad3 = RX_USART_PINMUX_PAD3;
-	usart_rx_config.baudrate    = TEST_USART_SPEED;
-	/* Apply configuration */
-	while(usart_is_syncing(&usart_rx_module)) {
-		/* wait for it */
-	}
-	usart_init(&usart_rx_module,
-			RX_USART, &usart_rx_config);
-
-	usart_enable(&usart_rx_module);
-	/* Apply same configuration when enabled */
-	while(usart_is_syncing(&usart_rx_module)) {
-		/* wait for it */
-	}
-	enum status_code test_code = usart_init(&usart_rx_module,
-			RX_USART, &usart_rx_config);
-	test_assert_false(test, (test_code == STATUS_OK),
-			"Writing an unchanged configuration did not fail as it should");
-
-	/* Test changing the baud rate*/
-	usart_rx_config.baudrate = 38400;
-	/* Apply new configuration */
-	test_code = usart_init(&usart_rx_module,
-			RX_USART, &usart_rx_config);
-	test_assert_false(test, (test_code == STATUS_OK),
-			"Changing the baudrate did not fail as it should");
-	/* revert to old configuration */
-	usart_rx_config.baudrate = TEST_USART_SPEED;
-
-	/* Test changing the pad*/
-	usart_rx_config.pinmux_pad1 = 0x0003;
-	/* Apply new configuration */
-	test_code = usart_init(&usart_rx_module,
-			RX_USART, &usart_rx_config);
-	test_assert_false(test, (test_code == STATUS_OK),
-			"Changing the pad did not fail as it should");
-	/* revert to old configuration */
-	usart_rx_config.pinmux_pad1 = RX_USART_PINMUX_PAD1;
-	usart_init(&usart_rx_module,
-			RX_USART, &usart_rx_config);
-}
-
-
 /**
  * \internal
  * \brief Test sending and receiving a string using interrupts.
@@ -505,17 +442,12 @@ int main(void)
 			run_buffer_read_write_interrupt_test, NULL,
 			"Buffer interrupt read and write");
 
-	DEFINE_TEST_CASE(multiple_init_while_enabled_test, NULL,
-			run_multiple_init_while_enabled_test, NULL,
-			"Multiple inits while module is enabled");
-
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(usart_tests) = {
 			&transfer_single_8bit_char_test,
 			&transfer_single_9bit_char_test,
 			&transfer_buffer_test,
 			&receive_buffer_test,
-			&multiple_init_while_enabled_test,
 			};
 
 	/* Define the test suite */
