@@ -52,12 +52,12 @@
 typedef struct {
   __O  uint32_t ADC_CR;        /**< \brief (Adc Offset: 0x00) Control Register */
   __IO uint32_t ADC_MR;        /**< \brief (Adc Offset: 0x04) Mode Register */
-  __IO uint32_t ADC_SEQR1;     /**< \brief (Adc Offset: 0x08) Channel Sequence Register 1 */
-  __IO uint32_t ADC_SEQR2;     /**< \brief (Adc Offset: 0x0C) Channel Sequence Register 2 */
+  __IO uint32_t ADC_SEQR1;     /**< \brief (Adc Offset: 0x08) Channel Sequence 1 Register */
+  __I  uint32_t Reserved1[1];
   __O  uint32_t ADC_CHER;      /**< \brief (Adc Offset: 0x10) Channel Enable Register */
   __O  uint32_t ADC_CHDR;      /**< \brief (Adc Offset: 0x14) Channel Disable Register */
   __I  uint32_t ADC_CHSR;      /**< \brief (Adc Offset: 0x18) Channel Status Register */
-  __I  uint32_t Reserved1[1];
+  __I  uint32_t Reserved2[1];
   __I  uint32_t ADC_LCDR;      /**< \brief (Adc Offset: 0x20) Last Converted Data Register */
   __O  uint32_t ADC_IER;       /**< \brief (Adc Offset: 0x24) Interrupt Enable Register */
   __O  uint32_t ADC_IDR;       /**< \brief (Adc Offset: 0x28) Interrupt Disable Register */
@@ -68,20 +68,20 @@ typedef struct {
   __I  uint32_t ADC_OVER;      /**< \brief (Adc Offset: 0x3C) Overrun Status Register */
   __IO uint32_t ADC_EMR;       /**< \brief (Adc Offset: 0x40) Extended Mode Register */
   __IO uint32_t ADC_CWR;       /**< \brief (Adc Offset: 0x44) Compare Window Register */
-  __I  uint32_t Reserved2[2];
+  __I  uint32_t Reserved3[2];
   __I  uint32_t ADC_CDR[8];    /**< \brief (Adc Offset: 0x50) Channel Data Register */
-  __I  uint32_t Reserved3[9];
+  __I  uint32_t Reserved4[9];
   __IO uint32_t ADC_ACR;       /**< \brief (Adc Offset: 0x94) Analog Control Register */
-  __I  uint32_t Reserved4[19];
-  __IO uint32_t ADC_WPMR;      /**< \brief (Adc Offset: 0xE4) Write Protect Mode Register */
-  __I  uint32_t ADC_WPSR;      /**< \brief (Adc Offset: 0xE8) Write Protect Status Register */
-  __I  uint32_t Reserved5[5];
+  __I  uint32_t Reserved5[19];
+  __IO uint32_t ADC_WPMR;      /**< \brief (Adc Offset: 0xE4) Write Protection Mode Register */
+  __I  uint32_t ADC_WPSR;      /**< \brief (Adc Offset: 0xE8) Write Protection Status Register */
+  __I  uint32_t Reserved6[5];
   __IO uint32_t ADC_RPR;       /**< \brief (Adc Offset: 0x100) Receive Pointer Register */
   __IO uint32_t ADC_RCR;       /**< \brief (Adc Offset: 0x104) Receive Counter Register */
-  __I  uint32_t Reserved6[2];
+  __I  uint32_t Reserved7[2];
   __IO uint32_t ADC_RNPR;      /**< \brief (Adc Offset: 0x110) Receive Next Pointer Register */
   __IO uint32_t ADC_RNCR;      /**< \brief (Adc Offset: 0x114) Receive Next Counter Register */
-  __I  uint32_t Reserved7[2];
+  __I  uint32_t Reserved8[2];
   __O  uint32_t ADC_PTCR;      /**< \brief (Adc Offset: 0x120) Transfer Control Register */
   __I  uint32_t ADC_PTSR;      /**< \brief (Adc Offset: 0x124) Transfer Status Register */
 } Adc;
@@ -132,7 +132,6 @@ typedef struct {
 #define   ADC_MR_STARTUP_SUT832 (0xDu << 16) /**< \brief (ADC_MR) 832 periods of ADCClock */
 #define   ADC_MR_STARTUP_SUT896 (0xEu << 16) /**< \brief (ADC_MR) 896 periods of ADCClock */
 #define   ADC_MR_STARTUP_SUT960 (0xFu << 16) /**< \brief (ADC_MR) 960 periods of ADCClock */
-#define ADC_MR_DIV1 (0x1u << 22) /**< \brief (ADC_MR)  */
 #define ADC_MR_TRACKTIM_Pos 24
 #define ADC_MR_TRACKTIM_Msk (0xfu << ADC_MR_TRACKTIM_Pos) /**< \brief (ADC_MR) Tracking Time */
 #define ADC_MR_TRACKTIM(value) ((ADC_MR_TRACKTIM_Msk & ((value) << ADC_MR_TRACKTIM_Pos)))
@@ -161,6 +160,9 @@ typedef struct {
 #define ADC_SEQR1_USCH7_Pos 24
 #define ADC_SEQR1_USCH7_Msk (0xfu << ADC_SEQR1_USCH7_Pos) /**< \brief (ADC_SEQR1) User Sequence Number 7 */
 #define ADC_SEQR1_USCH7(value) ((ADC_SEQR1_USCH7_Msk & ((value) << ADC_SEQR1_USCH7_Pos)))
+#define ADC_SEQR1_USCH8_Pos 28
+#define ADC_SEQR1_USCH8_Msk (0xfu << ADC_SEQR1_USCH8_Pos) /**< \brief (ADC_SEQR1) User Sequence Number 8 */
+#define ADC_SEQR1_USCH8(value) ((ADC_SEQR1_USCH8_Msk & ((value) << ADC_SEQR1_USCH8_Pos)))
 /* -------- ADC_CHER : (ADC Offset: 0x10) Channel Enable Register -------- */
 #define ADC_CHER_CH0 (0x1u << 0) /**< \brief (ADC_CHER) Channel 0 Enable */
 #define ADC_CHER_CH1 (0x1u << 1) /**< \brief (ADC_CHER) Channel 1 Enable */

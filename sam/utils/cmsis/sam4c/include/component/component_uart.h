@@ -121,11 +121,11 @@ typedef struct {
 #define   UART_MR_OPT_DUTY_DUTY_6P25 (0x7u << 24) /**< \brief (UART_MR) Modulation Clock Duty Cycle Is 6.25%. */
 #define UART_MR_OPT_CMPTH_Pos 28
 #define UART_MR_OPT_CMPTH_Msk (0x7u << UART_MR_OPT_CMPTH_Pos) /**< \brief (UART_MR) Receive Path Comparator Threshold */
-#define   UART_MR_OPT_CMPTH_VDDIO_DIV10 (0x0u << 28) /**< \brief (UART_MR) Comparator Threshold is VDDIO/10 Volts. */
-#define   UART_MR_OPT_CMPTH_VDDIO_DIV5 (0x1u << 28) /**< \brief (UART_MR) Comparator Threshold is VDDIO/5 Volts. */
-#define   UART_MR_OPT_CMPTH_VDDIO_DIV3P3 (0x2u << 28) /**< \brief (UART_MR) Comparator Threshold is VDDIO/3.3 Volts. */
-#define   UART_MR_OPT_CMPTH_VDDIO_DIV2P5 (0x3u << 28) /**< \brief (UART_MR) Comparator Threshold is VDDIO/2.5 Volts. */
-#define   UART_MR_OPT_CMPTH_VDDIO_DIV2 (0x4u << 28) /**< \brief (UART_MR) Comparator Threshold is VDDIO/2 Volts. */
+#define   UART_MR_OPT_CMPTH_VDDIO_DIV2 (0x0u << 28) /**< \brief (UART_MR) Comparator threshold is VDDIO/2 Volts. */
+#define   UART_MR_OPT_CMPTH_VDDIO_DIV2P5 (0x1u << 28) /**< \brief (UART_MR) Comparator threshold is VDDIO/2.5 Volts. */
+#define   UART_MR_OPT_CMPTH_VDDIO_DIV3P3 (0x2u << 28) /**< \brief (UART_MR) Comparator threshold is VDDIO/3.3 Volts. */
+#define   UART_MR_OPT_CMPTH_VDDIO_DIV5 (0x3u << 28) /**< \brief (UART_MR) Comparator threshold is VDDIO/5 Volts. */
+#define   UART_MR_OPT_CMPTH_VDDIO_DIV10 (0x4u << 28) /**< \brief (UART_MR) Comparator threshold is VDDIO/10 Volts. */
 /* -------- UART_IER : (UART Offset: 0x0008) Interrupt Enable Register -------- */
 #define UART_IER_RXRDY (0x1u << 0) /**< \brief (UART_IER) Enable RXRDY Interrupt */
 #define UART_IER_TXRDY (0x1u << 1) /**< \brief (UART_IER) Enable TXRDY Interrupt */
