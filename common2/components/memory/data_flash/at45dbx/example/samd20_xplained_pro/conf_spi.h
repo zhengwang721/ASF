@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Digital-to-Analog Interrupt Driver
+ * \brief SAM D2x SPI configuration
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,78 +40,14 @@
  * \asf_license_stop
  *
  */
-#ifndef DAC_CALLBACK_H_INCLUDED
-#define DAC_CALLBACK_H_INCLUDED
 
-#include <compiler.h>
-#include "dac.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef CONF_SPI_H_INCLUDED
+#  define CONF_SPI_H_INCLUDED
 
-/**
- * \addtogroup asfdoc_sam0_dac_group
- *
- * @{
- */
+#  define CONF_SPI_MASTER_ENABLE     true
+#  define CONF_SPI_SLAVE_ENABLE      false
+#  define CONF_SPI_TIMEOUT           10000
 
-#if !defined(__DOXYGEN__)
-extern struct dac_module *_dac_instances[DAC_INST_NUM];
-#endif
+#endif /* CONF_SPI_H_INCLUDED */
 
-/** \name Callback configuration and initialization
- * @{
- */
-
-/** Type definition for a DAC module callback function. */
-typedef void (*dac_callback_t)(uint8_t channel);
-
-/** Enum for the possible callback types for the DAC module. */
-enum dac_callback
-{
-	/** Callback type for when a DAC channel data empty condition occurs
-	 *  (requires event triggered mode). */
-	DAC_CALLBACK_DATA_EMPTY,
-	/** Callback type for when a DAC channel data under-run condition occurs
-	 *  (requires event triggered mode). */
-	DAC_CALLBACK_DATA_UNDERRUN,
-#if !defined(__DOXYGEN__)
-	DAC_CALLBACK_N,
-#endif
-};
-
-enum status_code dac_register_callback(
-		struct dac_module *const module,
-		const dac_callback_t callback,
-		const enum dac_callback type);
-
-enum status_code dac_unregister_callback(
-		struct dac_module *const module,
-		const enum dac_callback type);
-
-/** @} */
-
-/** \name Callback enabling and disabling (Channel)
- * @{
- */
-
-enum status_code dac_chan_enable_callback(
-		struct dac_module *const module,
-		const uint32_t channel,
-		const enum dac_callback type);
-
-enum status_code dac_chan_disable_callback(
-		struct dac_module *const module,
-		const uint32_t channel,
-		const enum dac_callback type);
-
-/** @} */
-
-/** @} */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif

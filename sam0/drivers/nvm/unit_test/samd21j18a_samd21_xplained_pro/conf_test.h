@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x DAC Quick Start
+ * \brief SAM D21 Xplained PRO test configuration.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,79 +40,16 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-void configure_dac(void);
-void configure_dac_channel(void);
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-//! [module_inst]
-struct dac_module dac_instance;
-//! [module_inst]
+#define CONF_STDIO_USART          EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE       38400
 
-//! [setup]
-void configure_dac(void)
-{
-//! [setup_config]
-	struct dac_config config_dac;
-//! [setup_config]
-//! [setup_config_defaults]
-	dac_get_config_defaults(&config_dac);
-//! [setup_config_defaults]
-
-//! [setup_set_config]
-	dac_init(&dac_instance, DAC, &config_dac);
-//! [setup_set_config]
-
-//! [setup_enable]
-	dac_enable(&dac_instance);
-//! [setup_enable]
-}
-
-void configure_dac_channel(void)
-{
-//! [setup_ch_config]
-	struct dac_chan_config config_dac_chan;
-//! [setup_ch_config]
-//! [setup_ch_config_defaults]
-	dac_chan_get_config_defaults(&config_dac_chan);
-//! [setup_ch_config_defaults]
-
-//! [setup_ch_set_config]
-	dac_chan_set_config(&dac_instance, DAC_CHANNEL_0, &config_dac_chan);
-//! [setup_ch_set_config]
-
-//! [setup_ch_enable]
-	dac_chan_enable(&dac_instance, DAC_CHANNEL_0);
-//! [setup_ch_enable]
-}
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-//! [setup_init]
-	configure_dac();
-	configure_dac_channel();
-//! [setup_init]
-
-//! [main]
-//! [main_output_var]
-	uint16_t i = 0;
-//! [main_output_var]
-
-//! [main_loop]
-	while (1) {
-//! [main_loop]
-//! [main_write]
-		dac_chan_write(&dac_instance, DAC_CHANNEL_0, i);
-//! [main_write]
-
-//! [main_inc_val]
-		if (++i == 0x3FF) {
-			i = 0;
-		}
-//! [main_inc_val]
-	}
-//! [main]
-}
+#endif /* CONF_TEST_H_INCLUDED */
