@@ -318,8 +318,17 @@ uint32_t matrix_get_master_remap(void)
 void matrix_set_system_io(uint32_t ul_io)
 {
 	Matrix *p_matrix = MATRIX;
-
+	
+	#if (SAM4C)
+	
+	p_matrix->MATRIX_SYSIO = ul_io;
+	
+	#else
+	
 	p_matrix->CCFG_SYSIO = ul_io;
+	
+	#endif
+	
 }
 
 /**
@@ -330,8 +339,16 @@ void matrix_set_system_io(uint32_t ul_io)
 uint32_t matrix_get_system_io(void)
 {
 	Matrix *p_matrix = MATRIX;
+	
+	#if (SAM4C)
 
+	return (p_matrix->MATRIX_SYSIO);
+	
+	#else
+	
 	return (p_matrix->CCFG_SYSIO);
+	
+	#endif
 }
 
 #endif /* (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4C) */
@@ -348,7 +365,16 @@ void matrix_set_nandflash_cs(uint32_t ul_cs)
 {
 	Matrix *p_matrix = MATRIX;
 
+	
+	#if (SAM4C)
+
+	p_matrix->MATRIX_SMCNFCS = ul_cs;
+	
+	#else
+	
 	p_matrix->CCFG_SMCNFCS = ul_cs;
+	
+	#endif
 }
 
 /**
@@ -359,8 +385,16 @@ void matrix_set_nandflash_cs(uint32_t ul_cs)
 uint32_t matrix_get_nandflash_cs(void)
 {
 	Matrix *p_matrix = MATRIX;
+	
+	#if (SAM4C)
 
+	return (p_matrix->MATRIX_SMCNFCS);
+	
+	#else
+	
 	return (p_matrix->CCFG_SMCNFCS);
+	
+	#endif
 }
 
 #endif /* (SAM3S || SAM4S || SAM4E || SAM4C) */

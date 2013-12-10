@@ -71,11 +71,11 @@ typedef struct {
   __IO uint32_t MATRIX_PRAS7;    /**< \brief (Matrix Offset: 0x00B8) Priority Register A for Slave 7 */
   __I  uint32_t Reserved10[1];
   __I  uint32_t Reserved11[21];
-  __IO uint32_t CCFG_SYSIO;      /**< \brief (Matrix Offset: 0x0114) System I/O Configuration Register */
+  __IO uint32_t MATRIX_SYSIO;      /**< \brief (Matrix Offset: 0x0114) System I/O Configuration Register */
   __I  uint32_t Reserved12[1];
-  __IO uint32_t CCFG_SMCNFCS;    /**< \brief (Matrix Offset: 0x011C) SMC Nand Flash Chip Select Configuration Register */
+  __IO uint32_t MATRIX_SMCNFCS;    /**< \brief (Matrix Offset: 0x011C) SMC Nand Flash Chip Select Configuration Register */
   __I  uint32_t Reserved13[2];
-  __IO uint32_t CCFG_CORE_DEBUG; /**< \brief (Matrix Offset: 0x0128) Core Debug Configuration Register */
+  __IO uint32_t MATRIX_CORE_DEBUG; /**< \brief (Matrix Offset: 0x0128) Core Debug Configuration Register */
   __I  uint32_t Reserved14[46];
   __IO uint32_t MATRIX_WPMR;     /**< \brief (Matrix Offset: 0x01E4) Write Protect Mode Register */
   __I  uint32_t MATRIX_WPSR;     /**< \brief (Matrix Offset: 0x01E8) Write Protect Status Register */
@@ -295,22 +295,22 @@ typedef struct {
 #define MATRIX_PRAS7_M7PR_Pos 28
 #define MATRIX_PRAS7_M7PR_Msk (0x3u << MATRIX_PRAS7_M7PR_Pos) /**< \brief (MATRIX_PRAS7) Master 7 Priority */
 #define MATRIX_PRAS7_M7PR(value) ((MATRIX_PRAS7_M7PR_Msk & ((value) << MATRIX_PRAS7_M7PR_Pos)))
-/* -------- CCFG_SYSIO : (MATRIX Offset: 0x0114) System I/O Configuration Register -------- */
-#define CCFG_SYSIO_SYSIO0 (0x1u << 0) /**< \brief (CCFG_SYSIO) PB0 or TDI Assignment */
-#define CCFG_SYSIO_SYSIO1 (0x1u << 1) /**< \brief (CCFG_SYSIO) PB1 or TDO/TRACESWO Assignment */
-#define CCFG_SYSIO_SYSIO2 (0x1u << 2) /**< \brief (CCFG_SYSIO) PB2 or TMS/SWDIO Assignment */
-#define CCFG_SYSIO_SYSIO3 (0x1u << 3) /**< \brief (CCFG_SYSIO) PB3 or TCK/SWCLK Assignment */
-#define CCFG_SYSIO_SYSIO9 (0x1u << 9) /**< \brief (CCFG_SYSIO) PC9 or ERASE Assignment */
-/* -------- CCFG_SMCNFCS : (MATRIX Offset: 0x011C) SMC Nand Flash Chip Select Configuration Register -------- */
-#define CCFG_SMCNFCS_SMC_NFCS0 (0x1u << 0) /**< \brief (CCFG_SMCNFCS) SMC NAND Flash Chip Select 0 Assignment */
-#define CCFG_SMCNFCS_SMC_NFCS1 (0x1u << 1) /**< \brief (CCFG_SMCNFCS) SMC NAND Flash Chip Select 1 Assignment */
-#define CCFG_SMCNFCS_SMC_NFCS2 (0x1u << 2) /**< \brief (CCFG_SMCNFCS) SMC NAND Flash Chip Select 2 Assignment */
-#define CCFG_SMCNFCS_SMC_NFCS3 (0x1u << 3) /**< \brief (CCFG_SMCNFCS) SMC NAND Flash Chip Select 3 Assignment */
-#define CCFG_SMCNFCS_SMC_SEL (0x1u << 31) /**< \brief (CCFG_SMCNFCS) SMC Selection for EBI pins */
-/* -------- CCFG_CORE_DEBUG : (MATRIX Offset: 0x0128) Core Debug Configuration Register -------- */
-#define CCFG_CORE_DEBUG_CROSS_TRG1 (0x1u << 1) /**< \brief (CCFG_CORE_DEBUG)  */
-#define CCFG_CORE_DEBUG_CROSS_TRG0 (0x1u << 2) /**< \brief (CCFG_CORE_DEBUG)  */
-/* -------- MATRIX_WPMR : (MATRIX Offset: 0x01E4) Write Protect Mode Register -------- */
+/* -------- MATRIX_SYSIO : (MATRIX Offset: 0x0114) System I/O Configuration Register -------- */
+#define MATRIX_SYSIO_SYSIO0 (0x1u << 0) /**< \brief (MATRIX_SYSIO) PB0 or TDI Assignment */
+#define MATRIX_SYSIO_SYSIO1 (0x1u << 1) /**< \brief (MATRIX_SYSIO) PB1 or TDO/TRACESWO Assignment */
+#define MATRIX_SYSIO_SYSIO2 (0x1u << 2) /**< \brief (MATRIX_SYSIO) PB2 or TMS/SWDIO Assignment */
+#define MATRIX_SYSIO_SYSIO3 (0x1u << 3) /**< \brief (MATRIX_SYSIO) PB3 or TCK/SWCLK Assignment */
+#define MATRIX_SYSIO_SYSIO9 (0x1u << 9) /**< \brief (MATRIX_SYSIO) PC9 or ERASE Assignment */
+/* -------- MATRIX_SMCNFCS : (MATRIX Offset: 0x011C) SMC Nand Flash Chip Select Configuration Register -------- */
+#define MATRIX_SMCNFCS_SMC_NFCS0 (0x1u << 0) /**< \brief (MATRIX_SMCNFCS) SMC NAND Flash Chip Select 0 Assignment */
+#define MATRIX_SMCNFCS_SMC_NFCS1 (0x1u << 1) /**< \brief (MATRIX_SMCNFCS) SMC NAND Flash Chip Select 1 Assignment */
+#define MATRIX_SMCNFCS_SMC_NFCS2 (0x1u << 2) /**< \brief (MATRIX_SMCNFCS) SMC NAND Flash Chip Select 2 Assignment */
+#define MATRIX_SMCNFCS_SMC_NFCS3 (0x1u << 3) /**< \brief (MATRIX_SMCNFCS) SMC NAND Flash Chip Select 3 Assignment */
+#define MATRIX_SMCNFCS_SMC_SEL (0x1u << 31) /**< \brief (MATRIX_SMCNFCS) SMC Selection for EBI pins */
+/* -------- MATRIX_CORE_DEBUG : (MATRIX Offset: 0x0128) Core Debug Configuration Register -------- */
+#define MATRIX_CORE_DEBUG_CROSS_TRG1 (0x1u << 1) /**< \brief (MATRIX_CORE_DEBUG)  */
+#define MATRIX_CORE_DEBUG_CROSS_TRG0 (0x1u << 2) /**< \brief (MATRIX_CORE_DEBUG)  */
+/* -------- MATRIX_WPMR : (MATRIX Offset: 0x01E4) Write Protection Mode Register -------- */
 #define MATRIX_WPMR_WPEN (0x1u << 0) /**< \brief (MATRIX_WPMR) Write Protect Enable */
 #define MATRIX_WPMR_WPKEY_Pos 8
 #define MATRIX_WPMR_WPKEY_Msk (0xffffffu << MATRIX_WPMR_WPKEY_Pos) /**< \brief (MATRIX_WPMR) Write Protect KEY (Write-only) */
