@@ -74,7 +74,6 @@ static uint32_t _dac_write_buffer_size,_dac_transferred_size;
  */
 enum status_code dac_chan_write_buffer_job(
 		struct dac_module *const module_inst,
-		enum dac_channel channel,
 		uint16_t* buffer,
 		uint32_t buffer_size)
 {
@@ -82,9 +81,6 @@ enum status_code dac_chan_write_buffer_job(
 	Assert(module_inst);
 	Assert(module_inst->hw);
 	Assert(buffer);
-
-	/* No channel support yet */
-	UNUSED(channel);
 
 	Dac *const dac_module = module_inst->hw;
 
