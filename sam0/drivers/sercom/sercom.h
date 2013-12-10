@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Serial Peripheral Interface Driver
+ * \brief SAM D2x Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -52,6 +52,16 @@
 
 #ifdef __cplusplus
 extern "C" {
+#endif
+
+#if SAMD21
+/* Tempory work around definitions.If header file is updated, this will be removed */
+#define SERCOM0_GCLK_ID_SLOW        19
+#define SERCOM1_GCLK_ID_SLOW        19
+#define SERCOM2_GCLK_ID_SLOW        19
+#define SERCOM3_GCLK_ID_SLOW        19
+#define SERCOM4_GCLK_ID_SLOW        19
+#define SERCOM5_GCLK_ID_SLOW        19
 #endif
 
 #if (SERCOM0_GCLK_ID_SLOW == SERCOM1_GCLK_ID_SLOW && \

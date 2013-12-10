@@ -55,9 +55,14 @@ static uint8_t source_memory[DATA_LENGTH];
 static uint8_t destination_memory[DATA_LENGTH];
 // [destination_memory]
 
-// [transfer_done]
+// [transfer_done_flag]
 static volatile bool transfer_is_done = false;
-// [transfer_done]
+// [transfer_done_flag]
+
+// [transfer_descriptor]
+COMPILER_ALIGNED(16)
+struct dma_transfer_descriptor example_descriptor;
+// [transfer_descriptor]
 
 // [_transfer_done]
 static void transfer_done( const struct dma_resource* const resource )
@@ -67,7 +72,7 @@ static void transfer_done( const struct dma_resource* const resource )
 // [_transfer_done]
 
 // [config_dma_resource]
-static void configure_dma_resource(struct dma_resource *resource)
+static void configure_dma_resource(struct dma_resource **resource)
 {
 //! [setup_1]
 	struct dma_transfer_config config;
@@ -87,11 +92,11 @@ static void configure_dma_resource(struct dma_resource *resource)
 static void setup_transfer_descriptor( struct dma_transfer_descriptor *descriptor )
 {
 	//! [setup_dma_descriptor]
-	descriptor->block_transfer_control = DMAC_BTCTRL_VALID |
-			DMAC_BTCTRL_BEATSIZE_BYTE;
+	descriptor->block_transfer_control = DMAC_BTCTRL_VALID |DMAC_BTCTRL_BEATSIZE_BYTE
+			 |DMAC_BTCTRL_DSTINC | DMAC_BTCTRL_SRCINC;
 	descriptor->block_transfer_count = sizeof(source_memory);
-	descriptor->source_address = (uint32_t)source_memory;
-	descriptor->destination_address = (uint32_t)destination_memory;
+	descriptor->source_address = (uint32_t)source_memory + sizeof(source_memory);
+	descriptor->destination_address = (uint32_t)destination_memory + sizeof(source_memory);
 	descriptor->next_descriptor_address = 0;
 	//! [setup_dma_descriptor]
 }
@@ -101,9 +106,7 @@ static void setup_transfer_descriptor( struct dma_transfer_descriptor *descripto
 
 int main(void)
 {
-	struct dma_resource example_resource;
-	struct dma_transfer_descriptor example_descriptor;
-
+	struct dma_resource *example_resource;
 	system_init();
 
 	//! [setup_dma_resource]
@@ -115,12 +118,12 @@ int main(void)
 	//! [setup_transfer_descriptor]
 
 	//! [setup_callback_register]
-	dma_register_callback(&example_resource, transfer_done,
+	dma_register_callback(example_resource, transfer_done,
 			DMA_CALLBACK_TRANSFER_DONE);
 	//! [setup_callback_register]
 
 	//! [setup_enable_callback]
-	dma_enable_callback(&example_resource, DMA_CALLBACK_TRANSFER_DONE);
+	dma_enable_callback(example_resource, DMA_CALLBACK_TRANSFER_DONE);
 	//! [setup_enable_callback]
 
 	//! [setup_source_memory_content]
@@ -131,7 +134,7 @@ int main(void)
 	
 	//! [main]
 	//! [main_1]
-	dma_transfer_job(&example_resource, &example_descriptor);
+	dma_transfer_job(example_resource, &example_descriptor);
 	//! [main_1]
 	
 	//! [main_2]

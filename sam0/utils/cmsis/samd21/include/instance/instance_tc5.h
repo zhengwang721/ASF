@@ -58,24 +58,15 @@
 #define REG_TC5_INTFLAG            (0x4200340EU) /**< \brief (TC5) Interrupt Flag Status and Clear */
 #define REG_TC5_STATUS             (0x4200340FU) /**< \brief (TC5) Status */
 #define REG_TC5_COUNT16_COUNT      (0x42003410U) /**< \brief (TC5) COUNT16 Counter Value */
-#define REG_TC5_COUNT16_PER        (0x42003414U) /**< \brief (TC5) COUNT16 Period */
 #define REG_TC5_COUNT16_CC0        (0x42003418U) /**< \brief (TC5) COUNT16 Compare/Capture 0 */
 #define REG_TC5_COUNT16_CC1        (0x4200341AU) /**< \brief (TC5) COUNT16 Compare/Capture 1 */
-#define REG_TC5_COUNT16_PERB       (0x4200342CU) /**< \brief (TC5) COUNT16 Period Buffer */
-#define REG_TC5_COUNT16_CCB0       (0x42003430U) /**< \brief (TC5) COUNT16 Compare and Capture Buffer 0 */
-#define REG_TC5_COUNT16_CCB1       (0x42003432U) /**< \brief (TC5) COUNT16 Compare and Capture Buffer 1 */
 #define REG_TC5_COUNT32_COUNT      (0x42003410U) /**< \brief (TC5) COUNT32 Counter Value */
-#define REG_TC5_COUNT32_PER        (0x42003414U) /**< \brief (TC5) COUNT32 Period */
 #define REG_TC5_COUNT32_CC0        (0x42003418U) /**< \brief (TC5) COUNT32 Compare/Capture 0 */
 #define REG_TC5_COUNT32_CC1        (0x4200341CU) /**< \brief (TC5) COUNT32 Compare/Capture 1 */
-#define REG_TC5_COUNT32_PERB       (0x4200342CU) /**< \brief (TC5) COUNT32 Period Buffer */
-#define REG_TC5_COUNT32_CCB0       (0x42003430U) /**< \brief (TC5) COUNT32 Compare and Capture Buffer 0 */
-#define REG_TC5_COUNT32_CCB1       (0x42003434U) /**< \brief (TC5) COUNT32 Compare and Capture Buffer 1 */
 #define REG_TC5_COUNT8_COUNT       (0x42003410U) /**< \brief (TC5) COUNT8 Counter Value */
 #define REG_TC5_COUNT8_PER         (0x42003414U) /**< \brief (TC5) COUNT8 Period Value */
 #define REG_TC5_COUNT8_CC0         (0x42003418U) /**< \brief (TC5) COUNT8 Compare/Capture 0 */
 #define REG_TC5_COUNT8_CC1         (0x42003419U) /**< \brief (TC5) COUNT8 Compare/Capture 1 */
-#define REG_TC5_COUNT8_PERB        (0x4200342CU) /**< \brief (TC5) COUNT8 Period Buffer */
 #else
 #define REG_TC5_CTRLA              (*(RwReg16*)0x42003400U) /**< \brief (TC5) Control A */
 #define REG_TC5_READREQ            (*(RwReg16*)0x42003402U) /**< \brief (TC5) Read Request */
@@ -89,24 +80,15 @@
 #define REG_TC5_INTFLAG            (*(RwReg8 *)0x4200340EU) /**< \brief (TC5) Interrupt Flag Status and Clear */
 #define REG_TC5_STATUS             (*(RoReg8 *)0x4200340FU) /**< \brief (TC5) Status */
 #define REG_TC5_COUNT16_COUNT      (*(RwReg16*)0x42003410U) /**< \brief (TC5) COUNT16 Counter Value */
-#define REG_TC5_COUNT16_PER        (*(RwReg16*)0x42003414U) /**< \brief (TC5) COUNT16 Period */
 #define REG_TC5_COUNT16_CC0        (*(RwReg16*)0x42003418U) /**< \brief (TC5) COUNT16 Compare/Capture 0 */
 #define REG_TC5_COUNT16_CC1        (*(RwReg16*)0x4200341AU) /**< \brief (TC5) COUNT16 Compare/Capture 1 */
-#define REG_TC5_COUNT16_PERB       (*(RwReg16*)0x4200342CU) /**< \brief (TC5) COUNT16 Period Buffer */
-#define REG_TC5_COUNT16_CCB0       (*(RwReg16*)0x42003430U) /**< \brief (TC5) COUNT16 Compare and Capture Buffer 0 */
-#define REG_TC5_COUNT16_CCB1       (*(RwReg16*)0x42003432U) /**< \brief (TC5) COUNT16 Compare and Capture Buffer 1 */
 #define REG_TC5_COUNT32_COUNT      (*(RwReg  *)0x42003410U) /**< \brief (TC5) COUNT32 Counter Value */
-#define REG_TC5_COUNT32_PER        (*(RwReg  *)0x42003414U) /**< \brief (TC5) COUNT32 Period */
 #define REG_TC5_COUNT32_CC0        (*(RwReg  *)0x42003418U) /**< \brief (TC5) COUNT32 Compare/Capture 0 */
 #define REG_TC5_COUNT32_CC1        (*(RwReg  *)0x4200341CU) /**< \brief (TC5) COUNT32 Compare/Capture 1 */
-#define REG_TC5_COUNT32_PERB       (*(RwReg  *)0x4200342CU) /**< \brief (TC5) COUNT32 Period Buffer */
-#define REG_TC5_COUNT32_CCB0       (*(RwReg  *)0x42003430U) /**< \brief (TC5) COUNT32 Compare and Capture Buffer 0 */
-#define REG_TC5_COUNT32_CCB1       (*(RwReg  *)0x42003434U) /**< \brief (TC5) COUNT32 Compare and Capture Buffer 1 */
 #define REG_TC5_COUNT8_COUNT       (*(RwReg8 *)0x42003410U) /**< \brief (TC5) COUNT8 Counter Value */
 #define REG_TC5_COUNT8_PER         (*(RwReg8 *)0x42003414U) /**< \brief (TC5) COUNT8 Period Value */
 #define REG_TC5_COUNT8_CC0         (*(RwReg8 *)0x42003418U) /**< \brief (TC5) COUNT8 Compare/Capture 0 */
 #define REG_TC5_COUNT8_CC1         (*(RwReg8 *)0x42003419U) /**< \brief (TC5) COUNT8 Compare/Capture 1 */
-#define REG_TC5_COUNT8_PERB        (*(RwReg8 *)0x4200342CU) /**< \brief (TC5) COUNT8 Period Buffer */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for TC5 peripheral ========== */
