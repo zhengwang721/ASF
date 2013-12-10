@@ -120,6 +120,16 @@ static enum status_code _i2c_master_set_config(
 		tmp_ctrla |= config->start_hold_time;
 	}
 
+	/* Check and set SCL low timeout. */
+	if (config->scl_low_timeout) {
+		tmp_ctrla |= SERCOM_I2CM_CTRLA_LOWTOUT;
+	}
+
+	/* Check and set inactive bus timeout. */
+	if (config->inactive_timeout != I2C_MASTER_INACTIVE_TIMEOUT_DISABLED) {
+		tmp_ctrla |= config->inactive_timeout;
+	}
+
 	/* Write config to register CTRLA. */
 	i2c_module->CTRLA.reg |= tmp_ctrla;
 

@@ -131,6 +131,31 @@ static enum status_code _i2c_master_set_config(
 		}
 	}
 
+	/* Check and set SCL low timeout. */
+	if (config->scl_low_timeout) {
+		tmp_ctrla |= SERCOM_I2CM_CTRLA_LOWTOUTEN;
+	}
+
+	/* Check and set inactive bus timeout. */
+	if (config->inactive_timeout != I2C_MASTER_INACTIVE_TIMEOUT_DISABLED) {
+		tmp_ctrla |= config->inactive_timeout;
+	}
+
+	/* Check and set SCL clock stretch mode. */
+	if (config->scl_stretch_only_after_ack_bit) {
+		tmp_ctrla |= SERCOM_I2CM_CTRLA_SCLSM;
+	}
+
+	/* Check and set slave SCL low extend timeout. */
+	if (config->slave_scl_low_extend_timeout) {
+		tmp_ctrla |= SERCOM_I2CM_CTRLA_SEXTTOEN;
+	}
+
+	/* Check and set master SCL low extend timeout. */
+	if (config->master_scl_low_extend_timeout) {
+		tmp_ctrla |= SERCOM_I2CM_CTRLA_MEXTTOEN;
+	}
+
 	/* Write config to register CTRLA. */
 	i2c_module->CTRLA.reg |= tmp_ctrla;
 

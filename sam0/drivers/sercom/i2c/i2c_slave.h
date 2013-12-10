@@ -288,19 +288,19 @@ struct i2c_slave_config {
 	 */
 	bool enable_general_call_address;
 
-#  ifdef FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
+#ifdef FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
 	/** Transfer speed mode */
 	enum i2c_slave_transfer_speed transfer_speed;
-#  endif
+#endif
 
-#  if I2C_SLAVE_CALLBACK_MODE == true
+#if I2C_SLAVE_CALLBACK_MODE == true
 	/**
 	 * Enable NACK on address match (this can be changed after initialization
 	 * via the \ref i2c_slave_enable_nack_on_address and
 	 * \ref i2c_slave_disable_nack_on_address functions)
 	 */
 	bool enable_nack_on_address;
-#  endif
+#endif
 	/** GCLK generator to use as clock source */
 	enum gclk_generator generator_source;
 	/** Set to keep module active in sleep modes */
@@ -309,6 +309,14 @@ struct i2c_slave_config {
 	uint32_t pinmux_pad0;
 	/** PAD1 (SCL) pinmux */
 	uint32_t pinmux_pad1;
+	/** Set to enable SCL low time-out */
+	bool scl_low_timeout;
+#ifdef FEATURE_I2C_SCL_TIMEOUT_AND_STRETCH
+	/** Set to enable SCL stretch only after ACK bit */
+	bool scl_stretch_only_after_ack_bit;
+	/** Set to enable slave SCL low extend time-out */
+	bool slave_scl_low_extend_timeout;
+#endif
 };
 
 
@@ -462,6 +470,11 @@ static inline void i2c_slave_get_config_defaults(
 	config->run_in_standby = false;
 	config->pinmux_pad0 = PINMUX_DEFAULT;
 	config->pinmux_pad1 = PINMUX_DEFAULT;
+	config->scl_low_timeout  = false;
+#ifdef FEATURE_I2C_SCL_TIMEOUT_AND_STRETCH
+	config->scl_stretch_only_after_ack_bit = false;
+	config->slave_scl_low_extend_timeout   = false;
+#endif
 }
 
 enum status_code i2c_slave_init(struct i2c_slave_module *const module,

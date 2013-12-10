@@ -95,6 +95,23 @@ enum i2c_master_start_hold_time {
 };
 
 /**
+ * \ brief Values for inactive bus time-out.
+ *
+ * If the inactive bus time-out is enabled and the bus is inactive for
+ * longer than the time-out setting, the bus state logic will be set to idle.
+ */
+enum i2c_master_inactive_timeout {
+	/** Inactive bus time-out disabled */
+	I2C_MASTER_INACTIVE_TIMEOUT_DISABLED = SERCOM_I2CM_CTRLA_INACTOUT(0),
+	/** Inactive bus time-out 5-6 SCL cycle time-out (50-60us) */
+	I2C_MASTER_INACTIVE_TIMEOUT_55US = SERCOM_I2CM_CTRLA_INACTOUT(1),
+	/** Inactive bus time-out 10-11 SCL cycle time-out (100-110us) */
+	I2C_MASTER_INACTIVE_TIMEOUT_105US = SERCOM_I2CM_CTRLA_INACTOUT(2),
+	/** Inactive bus time-out 20-21 SCL cycle time-out (200-210us) */
+	I2C_MASTER_INACTIVE_TIMEOUT_205US = SERCOM_I2CM_CTRLA_INACTOUT(3),
+};
+
+/**
  * \brief I<SUP>2</SUP>C frequencies
  *
  * Values for standard I<SUP>2</SUP>C speeds supported by the module. The driver
@@ -218,6 +235,18 @@ struct i2c_master_config {
 	uint32_t pinmux_pad0;
 	/** PAD1 (SCL) pinmux */
 	uint32_t pinmux_pad1;
+	/** Set to enable SCL low time-out */
+	bool scl_low_timeout;
+	/** Inactive bus time out */
+	enum i2c_master_inactive_timeout inactive_timeout;
+#ifdef FEATURE_I2C_SCL_TIMEOUT_AND_STRETCH
+	/** Set to enable SCL stretch only after ACK bit */
+	bool scl_stretch_only_after_ack_bit;
+	/** Set to enable slave SCL low extend time-out */
+	bool slave_scl_low_extend_timeout;
+	/** Set to enable maser SCL low extend time-out */
+	bool master_scl_low_extend_timeout;
+#endif
 };
 
 /**
@@ -358,6 +387,13 @@ static inline void i2c_master_get_config_defaults(
 	config->unknown_bus_state_timeout = 65535;
 	config->pinmux_pad0      = PINMUX_DEFAULT;
 	config->pinmux_pad1      = PINMUX_DEFAULT;
+	config->scl_low_timeout  = false;
+	config->inactive_timeout = I2C_MASTER_INACTIVE_TIMEOUT_DISABLED;
+#ifdef FEATURE_I2C_SCL_TIMEOUT_AND_STRETCH
+	config->scl_stretch_only_after_ack_bit = false;
+	config->slave_scl_low_extend_timeout   = false;
+	config->master_scl_low_extend_timeout  = false;
+#endif
 }
 
 enum status_code i2c_master_init(
