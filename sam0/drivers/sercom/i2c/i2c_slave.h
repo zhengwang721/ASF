@@ -311,9 +311,11 @@ struct i2c_slave_config {
 	uint32_t pinmux_pad1;
 	/** Set to enable SCL low time-out */
 	bool scl_low_timeout;
-#ifdef FEATURE_I2C_SCL_TIMEOUT_AND_STRETCH
+#ifdef FEATURE_I2C_SCL_STRETCH_MODE
 	/** Set to enable SCL stretch only after ACK bit */
 	bool scl_stretch_only_after_ack_bit;
+#endif
+#ifdef FEATURE_I2C_SCL_EXTEND_TIMEOUT
 	/** Set to enable slave SCL low extend time-out */
 	bool slave_scl_low_extend_timeout;
 #endif
@@ -471,8 +473,10 @@ static inline void i2c_slave_get_config_defaults(
 	config->pinmux_pad0 = PINMUX_DEFAULT;
 	config->pinmux_pad1 = PINMUX_DEFAULT;
 	config->scl_low_timeout  = false;
-#ifdef FEATURE_I2C_SCL_TIMEOUT_AND_STRETCH
+#ifdef FEATURE_I2C_SCL_STRETCH_MODE
 	config->scl_stretch_only_after_ack_bit = false;
+#endif
+#ifdef FEATURE_I2C_SCL_EXTEND_TIMEOUT
 	config->slave_scl_low_extend_timeout   = false;
 #endif
 }

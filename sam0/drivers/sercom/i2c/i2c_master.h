@@ -239,9 +239,11 @@ struct i2c_master_config {
 	bool scl_low_timeout;
 	/** Inactive bus time out */
 	enum i2c_master_inactive_timeout inactive_timeout;
-#ifdef FEATURE_I2C_SCL_TIMEOUT_AND_STRETCH
+#ifdef FEATURE_I2C_SCL_STRETCH_MODE
 	/** Set to enable SCL stretch only after ACK bit */
 	bool scl_stretch_only_after_ack_bit;
+#endif
+#ifdef FEATURE_I2C_SCL_EXTEND_TIMEOUT
 	/** Set to enable slave SCL low extend time-out */
 	bool slave_scl_low_extend_timeout;
 	/** Set to enable maser SCL low extend time-out */
@@ -389,8 +391,10 @@ static inline void i2c_master_get_config_defaults(
 	config->pinmux_pad1      = PINMUX_DEFAULT;
 	config->scl_low_timeout  = false;
 	config->inactive_timeout = I2C_MASTER_INACTIVE_TIMEOUT_DISABLED;
-#ifdef FEATURE_I2C_SCL_TIMEOUT_AND_STRETCH
+#ifdef FEATURE_I2C_SCL_STRETCH_MODE
 	config->scl_stretch_only_after_ack_bit = false;
+#endif
+#ifdef FEATURE_I2C_SCL_EXTEND_TIMEOUT
 	config->slave_scl_low_extend_timeout   = false;
 	config->master_scl_low_extend_timeout  = false;
 #endif
