@@ -79,7 +79,7 @@ void system_board_init(void);
 
 /** \name LED0 definitions
  *  @{ */
-#define LED0_PIN                  PIN_PA14
+#define LED0_PIN                  PIN_PB30
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
 /** @} */
@@ -543,4 +543,4 @@ void system_board_init(void);
 
 /** @} */
 
-#endif  /* SAMD20_XPLAINED_PRO_H_INCLUDED */
+#endif  /* SAMD21_XPLAINED_PRO_H_INCLUDED */

@@ -45,7 +45,7 @@
 #define SPI_INTERRUPT_H_INCLUDED
 
 /**
- * \addtogroup asfdoc_samd2x_sercom_spi_group
+ * \addtogroup asfdoc_sam0_sercom_spi_group
  *
  * @{
  */
