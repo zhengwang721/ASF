@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 SERCOM USART Asynchronous Driver
+ * \brief SAM D2x SERCOM USART Asynchronous Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -61,7 +61,7 @@ void _usart_interrupt_handler(
 #endif
 
 /**
- * \addtogroup asfdoc_samd20_sercom_usart_group
+ * \addtogroup asfdoc_sam0_sercom_usart_group
  *
  * @{
  */

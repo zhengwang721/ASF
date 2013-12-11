@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Serial Peripheral Interface Driver
+ * \brief SAM D21 Xplained PRO test configuration.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,25 +40,16 @@
  * \asf_license_stop
  *
  */
-#ifndef SERCOM_INTERRUPT_H_INCLUDED
-#define SERCOM_INTERRUPT_H_INCLUDED
 
-#include "sercom.h"
-#include <system_interrupt.h>
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-/* Look-up table for device instances. */
-extern void *_sercom_instances[SERCOM_INST_NUM];
+#define CONF_STDIO_USART          EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE       38400
 
-typedef void (*sercom_handler_t)(uint8_t instance);
-
-uint8_t _sercom_get_sercom_inst_index(
-		Sercom *const sercom_instance);
-
-enum system_interrupt_vector _sercom_get_interrupt_vector(
-		Sercom *const sercom_instance);
-
-void _sercom_set_handler(
-		const uint8_t instance,
-		const sercom_handler_t interrupt_handler);
-
-#endif /* SERCOM_INTERRUPT_H_INCLUDED */
+#endif /* CONF_TEST_H_INCLUDED */
