@@ -140,8 +140,8 @@ int main (void)
      board_init();
    
      sw_timer_init();
+	 /* Initializing udc stack as HID composite device*/
      udc_start();
-    //udc_start();
     if (nwk_init()!= NWK_SUCCESS)
     {
         app_alert();
@@ -350,10 +350,10 @@ void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef)
 //  StdbyEnable=StdbyEnable;
 //  
 //}
-//void zid_standby_leave_indication(void)
-//{
-//  LED_Off(LED0);
-//}
+void zid_standby_leave_indication(void)
+{
+  LED_Off(LED0);
+}
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -396,7 +396,7 @@ void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
          {
              if(zid_report_data_record_ptr->report_type == INPUT)
              {
-                 //printf("Keyboard input desc.:\r\n");
+                 
                  keyboard_input_desc_t *keyboard_input_desc;
                  keyboard_input_desc = (keyboard_input_desc_t *)zid_report_data_record_ptr->report_data;
                     uint8_t k_value;

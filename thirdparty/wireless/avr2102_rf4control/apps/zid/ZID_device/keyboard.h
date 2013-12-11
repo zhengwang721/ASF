@@ -48,7 +48,10 @@
 
 typedef enum key_id_tag
 {
-  BUTTON_0
+  BUTTON_0,
+  BUTTON_1,
+  BUTTON_2,
+  NO_BUTTON
 }SHORTENUM key_id_t;
 
 

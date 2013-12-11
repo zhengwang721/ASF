@@ -132,6 +132,7 @@
 #define  USB_PID_ATMEL_ASF_XPLAIN_BC_TOUCH         0x2432
 #define  USB_PID_ATMEL_ASF_AUDIO_SPEAKER           0x2433
 #define  USB_PID_ATMEL_ASF_XMEGA_B1_XPLAINED       0x2434
+#define  USB_PID_ATMEL_ASF_HIDKEYBOARD_MOUSE       0x2435
 //! @}
 
 //! \name The range 2F00h to 2FFFh is reserved to official PIDs for AVR bootloaders

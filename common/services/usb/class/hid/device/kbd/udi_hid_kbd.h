@@ -80,7 +80,7 @@ typedef struct {
 
 //! Report descriptor for HID keyboard
 typedef struct {
-	uint8_t array[59];
+	uint8_t array[119];
 } udi_hid_kbd_report_desc_t;
 
 
@@ -137,7 +137,7 @@ typedef struct {
  *
  * \return \c 1 if function was successfully done, otherwise \c 0.
  */
-bool udi_hid_kbd_modifier_up(uint8_t modifier_id);
+bool udi_hid_mkbd_modifier_up(uint16_t modifier_id);
 
 /**
  * \brief Send events key modifier pressed
@@ -146,6 +146,8 @@ bool udi_hid_kbd_modifier_up(uint8_t modifier_id);
  *
  * \return \c 1 if function was successfully done, otherwise \c 0.
  */
+bool udi_hid_mkbd_modifier_down(uint16_t modifier_id);
+bool udi_hid_kbd_modifier_up(uint8_t modifier_id);
 bool udi_hid_kbd_modifier_down(uint8_t modifier_id);
 
 

@@ -27,7 +27,7 @@
 
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zid.terminal_aptr"/>
 		<require idref="board.xmega_rf233_zigbit"/>
-		<generator value="iarew"/>
+		<generator value="iarew
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
 		<generator value="doxygen"/>

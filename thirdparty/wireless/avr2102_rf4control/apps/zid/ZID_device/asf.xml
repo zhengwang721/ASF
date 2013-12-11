@@ -20,7 +20,6 @@
 		<build type="define" name="RF4CE_TARGET" value =""/>
 		<build type="define" name="VENDOR_DATA" value =""/>
 		<build type="define" name="PBP_ORG" value =""/>
-		<build type="define" name="FLASH_SUPPORT" value =""/>
 		<build type="define" name="SIO_HUB" value =""/>
 		<build type="define" name="RF4CE_CALLBACK_PARAM" value =""/>
 		<build type="define" name="STB_ON_SAL" value =""/>
