@@ -50,7 +50,7 @@
 // Note:
 // This interrupt is enable when the USB host enable remotewakeup feature
 // This interrupt wakeup the CPU if this one is in idle mode
-ISR(ui_wakeup_isr, AVR32_GPIO0_IRQ_GROUP, 0)
+ISR(ui_wakeup_isr, AVR32_GPIO_IRQ_GROUP, 0)
 {
 	// Clear GPIO interrupt.
 	gpio_clear_pin_interrupt_flag(GPIO_JOYSTICK_PUSH);
