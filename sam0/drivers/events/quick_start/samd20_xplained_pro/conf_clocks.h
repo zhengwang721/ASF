@@ -57,7 +57,6 @@
 #  define CONF_CLOCK_OSC8M_PRESCALER              SYSTEM_OSC8M_DIV_1
 #  define CONF_CLOCK_OSC8M_ON_DEMAND              true
 #  define CONF_CLOCK_OSC8M_RUN_IN_STANDBY         false
-#  define CONF_CLOCK_OSC8M_FREQUENCY_RANGE        SYSTEM_OSC8M_FREQUENCY_RANGE_8_TO_11
 
 /* SYSTEM_CLOCK_SOURCE_XOSC configuration - External clock/oscillator */
 #  define CONF_CLOCK_XOSC_ENABLE                  false
@@ -72,7 +71,7 @@
 #  define CONF_CLOCK_XOSC32K_ENABLE               false
 #  define CONF_CLOCK_XOSC32K_EXTERNAL_CRYSTAL     SYSTEM_CLOCK_EXTERNAL_CRYSTAL
 #  define CONF_CLOCK_XOSC32K_STARTUP_TIME         SYSTEM_XOSC32K_STARTUP_65536
-#  define CONF_CLOCK_XOSC32K_AUTO_AMPLITUDE_CONTROL  false
+#  define CONF_CLOCK_XOSC32K_AUTO_AMPLITUDE_CONTROL  true
 #  define CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT    false
 #  define CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT  true
 #  define CONF_CLOCK_XOSC32K_ON_DEMAND            true
@@ -90,7 +89,6 @@
 #  define CONF_CLOCK_DFLL_ENABLE                  false
 #  define CONF_CLOCK_DFLL_LOOP_MODE               SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN
 #  define CONF_CLOCK_DFLL_ON_DEMAND               false
-#  define CONF_CLOCK_DFLL_RUN_IN_STANDBY          false
 
 /* DFLL open loop mode configuration */
 #  define CONF_CLOCK_DFLL_COARSE_VALUE            (0x1f / 4)

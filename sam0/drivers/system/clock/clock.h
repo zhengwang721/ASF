@@ -573,8 +573,6 @@ struct system_clock_source_osc8m_config {
 	/** Run On Demand. If this is set the OSC8M won't run
 	 * until requested by a peripheral */
 	bool on_demand;
-	/** Frequency range for the internal 8 Mhz RC oscialltor */
-	enum system_osc8m_frequency_range frequency_range;
 };
 
 /**
@@ -607,8 +605,6 @@ struct system_clock_source_osc32k_config {
 struct system_clock_source_dfll_config {
 	/** Loop mode */
 	enum system_clock_dfll_loop_mode loop_mode;
-	/** Keep the DFLL enabled in standby sleep mode */
-	bool run_in_standby;
 	/** Run On Demand. If this is set the DFLL won't run
 	 * until requested by a peripheral */
 	bool on_demand;
@@ -770,7 +766,6 @@ void system_clock_source_osc32k_set_config(
  *   - Clock output frequency divided by a factor of 8
  *   - Don't run in STANDBY sleep mode
  *   - Run only when requested by peripheral (on demand)
- *   - Frequency range 8 Mhz to 11 Mhz
  *
  * \param[out] config  Configuration structure to fill with default values
  */
@@ -782,7 +777,6 @@ static inline void system_clock_source_osc8m_get_config_defaults(
 	config->prescaler       = SYSTEM_OSC8M_DIV_8;
 	config->run_in_standby  = false;
 	config->on_demand       = true;
-	config->frequency_range = SYSTEM_OSC8M_FREQUENCY_RANGE_8_TO_11;
 }
 
 void system_clock_source_osc8m_set_config(
@@ -825,7 +819,6 @@ static inline void system_clock_source_dfll_get_config_defaults(
 	config->chill_cycle     = SYSTEM_CLOCK_DFLL_CHILL_CYCLE_ENABLE;
 	config->wakeup_lock     = SYSTEM_CLOCK_DFLL_WAKEUP_LOCK_KEEP;
 	config->stable_tracking = SYSTEM_CLOCK_DFLL_STABLE_TRACKING_TRACK_AFTER_LOCK;
-	config->run_in_standby  = false;
 	config->on_demand       = true;
 
 	/* Open loop mode calibration value */

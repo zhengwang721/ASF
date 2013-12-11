@@ -505,42 +505,6 @@ typedef union {
 #define TC_COUNT8_COUNT_COUNT(value) ((TC_COUNT8_COUNT_COUNT_Msk & ((value) << TC_COUNT8_COUNT_COUNT_Pos)))
 #define TC_COUNT8_COUNT_MASK        0xFFu        /**< \brief (TC_COUNT8_COUNT) MASK Register */
 
-/* -------- TC_COUNT16_PER : (TC Offset: 0x14) (R/W 16) COUNT16 COUNT16 Period -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint16_t PER:16;           /*!< bit:  0..15  Period Value                       */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint16_t reg;                /*!< Type      used for register access              */
-} TC_COUNT16_PER_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define TC_COUNT16_PER_OFFSET       0x14         /**< \brief (TC_COUNT16_PER offset) COUNT16 Period */
-#define TC_COUNT16_PER_RESETVALUE   0xFFFF       /**< \brief (TC_COUNT16_PER reset_value) COUNT16 Period */
-
-#define TC_COUNT16_PER_PER_Pos      0            /**< \brief (TC_COUNT16_PER) Period Value */
-#define TC_COUNT16_PER_PER_Msk      (0xFFFFu << TC_COUNT16_PER_PER_Pos)
-#define TC_COUNT16_PER_PER(value)   ((TC_COUNT16_PER_PER_Msk & ((value) << TC_COUNT16_PER_PER_Pos)))
-#define TC_COUNT16_PER_MASK         0xFFFFu      /**< \brief (TC_COUNT16_PER) MASK Register */
-
-/* -------- TC_COUNT32_PER : (TC Offset: 0x14) (R/W 32) COUNT32 COUNT32 Period -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint32_t PER:32;           /*!< bit:  0..31  Period Value                       */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint32_t reg;                /*!< Type      used for register access              */
-} TC_COUNT32_PER_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define TC_COUNT32_PER_OFFSET       0x14         /**< \brief (TC_COUNT32_PER offset) COUNT32 Period */
-#define TC_COUNT32_PER_RESETVALUE   0xFFFFFFFF   /**< \brief (TC_COUNT32_PER reset_value) COUNT32 Period */
-
-#define TC_COUNT32_PER_PER_Pos      0            /**< \brief (TC_COUNT32_PER) Period Value */
-#define TC_COUNT32_PER_PER_Msk      (0xFFFFFFFFu << TC_COUNT32_PER_PER_Pos)
-#define TC_COUNT32_PER_PER(value)   ((TC_COUNT32_PER_PER_Msk & ((value) << TC_COUNT32_PER_PER_Pos)))
-#define TC_COUNT32_PER_MASK         0xFFFFFFFFu  /**< \brief (TC_COUNT32_PER) MASK Register */
-
 /* -------- TC_COUNT8_PER : (TC Offset: 0x14) (R/W  8) COUNT8 COUNT8 Period Value -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
@@ -613,96 +577,6 @@ typedef union {
 #define TC_COUNT8_CC_CC(value)      ((TC_COUNT8_CC_CC_Msk & ((value) << TC_COUNT8_CC_CC_Pos)))
 #define TC_COUNT8_CC_MASK           0xFFu        /**< \brief (TC_COUNT8_CC) MASK Register */
 
-/* -------- TC_COUNT16_PERB : (TC Offset: 0x2C) (R/W 16) COUNT16 COUNT16 Period Buffer -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint16_t PERB:16;          /*!< bit:  0..15  Period Buffer Value                */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint16_t reg;                /*!< Type      used for register access              */
-} TC_COUNT16_PERB_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define TC_COUNT16_PERB_OFFSET      0x2C         /**< \brief (TC_COUNT16_PERB offset) COUNT16 Period Buffer */
-#define TC_COUNT16_PERB_RESETVALUE  0xFFFF       /**< \brief (TC_COUNT16_PERB reset_value) COUNT16 Period Buffer */
-
-#define TC_COUNT16_PERB_PERB_Pos    0            /**< \brief (TC_COUNT16_PERB) Period Buffer Value */
-#define TC_COUNT16_PERB_PERB_Msk    (0xFFFFu << TC_COUNT16_PERB_PERB_Pos)
-#define TC_COUNT16_PERB_PERB(value) ((TC_COUNT16_PERB_PERB_Msk & ((value) << TC_COUNT16_PERB_PERB_Pos)))
-#define TC_COUNT16_PERB_MASK        0xFFFFu      /**< \brief (TC_COUNT16_PERB) MASK Register */
-
-/* -------- TC_COUNT32_PERB : (TC Offset: 0x2C) (R/W 32) COUNT32 COUNT32 Period Buffer -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint32_t PERB:32;          /*!< bit:  0..31  Period Buffer Value                */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint32_t reg;                /*!< Type      used for register access              */
-} TC_COUNT32_PERB_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define TC_COUNT32_PERB_OFFSET      0x2C         /**< \brief (TC_COUNT32_PERB offset) COUNT32 Period Buffer */
-#define TC_COUNT32_PERB_RESETVALUE  0xFFFFFFFF   /**< \brief (TC_COUNT32_PERB reset_value) COUNT32 Period Buffer */
-
-#define TC_COUNT32_PERB_PERB_Pos    0            /**< \brief (TC_COUNT32_PERB) Period Buffer Value */
-#define TC_COUNT32_PERB_PERB_Msk    (0xFFFFFFFFu << TC_COUNT32_PERB_PERB_Pos)
-#define TC_COUNT32_PERB_PERB(value) ((TC_COUNT32_PERB_PERB_Msk & ((value) << TC_COUNT32_PERB_PERB_Pos)))
-#define TC_COUNT32_PERB_MASK        0xFFFFFFFFu  /**< \brief (TC_COUNT32_PERB) MASK Register */
-
-/* -------- TC_COUNT8_PERB : (TC Offset: 0x2C) (R/W  8) COUNT8 COUNT8 Period Buffer -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint8_t  PERB:8;           /*!< bit:  0.. 7  Period Buffer Value                */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint8_t reg;                 /*!< Type      used for register access              */
-} TC_COUNT8_PERB_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define TC_COUNT8_PERB_OFFSET       0x2C         /**< \brief (TC_COUNT8_PERB offset) COUNT8 Period Buffer */
-#define TC_COUNT8_PERB_RESETVALUE   0xFF         /**< \brief (TC_COUNT8_PERB reset_value) COUNT8 Period Buffer */
-
-#define TC_COUNT8_PERB_PERB_Pos     0            /**< \brief (TC_COUNT8_PERB) Period Buffer Value */
-#define TC_COUNT8_PERB_PERB_Msk     (0xFFu << TC_COUNT8_PERB_PERB_Pos)
-#define TC_COUNT8_PERB_PERB(value)  ((TC_COUNT8_PERB_PERB_Msk & ((value) << TC_COUNT8_PERB_PERB_Pos)))
-#define TC_COUNT8_PERB_MASK         0xFFu        /**< \brief (TC_COUNT8_PERB) MASK Register */
-
-/* -------- TC_COUNT16_CCB : (TC Offset: 0x30) (R/W 16) COUNT16 COUNT16 Compare and Capture Buffer -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint16_t CCB:16;           /*!< bit:  0..15  Compare/Capture Buffer Value       */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint16_t reg;                /*!< Type      used for register access              */
-} TC_COUNT16_CCB_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define TC_COUNT16_CCB_OFFSET       0x30         /**< \brief (TC_COUNT16_CCB offset) COUNT16 Compare and Capture Buffer */
-#define TC_COUNT16_CCB_RESETVALUE   0x0000       /**< \brief (TC_COUNT16_CCB reset_value) COUNT16 Compare and Capture Buffer */
-
-#define TC_COUNT16_CCB_CCB_Pos      0            /**< \brief (TC_COUNT16_CCB) Compare/Capture Buffer Value */
-#define TC_COUNT16_CCB_CCB_Msk      (0xFFFFu << TC_COUNT16_CCB_CCB_Pos)
-#define TC_COUNT16_CCB_CCB(value)   ((TC_COUNT16_CCB_CCB_Msk & ((value) << TC_COUNT16_CCB_CCB_Pos)))
-#define TC_COUNT16_CCB_MASK         0xFFFFu      /**< \brief (TC_COUNT16_CCB) MASK Register */
-
-/* -------- TC_COUNT32_CCB : (TC Offset: 0x30) (R/W 32) COUNT32 COUNT32 Compare and Capture Buffer -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint32_t CCB:32;           /*!< bit:  0..31  Compare/Capture Buffer Value       */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint32_t reg;                /*!< Type      used for register access              */
-} TC_COUNT32_CCB_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define TC_COUNT32_CCB_OFFSET       0x30         /**< \brief (TC_COUNT32_CCB offset) COUNT32 Compare and Capture Buffer */
-#define TC_COUNT32_CCB_RESETVALUE   0x00000000   /**< \brief (TC_COUNT32_CCB reset_value) COUNT32 Compare and Capture Buffer */
-
-#define TC_COUNT32_CCB_CCB_Pos      0            /**< \brief (TC_COUNT32_CCB) Compare/Capture Buffer Value */
-#define TC_COUNT32_CCB_CCB_Msk      (0xFFFFFFFFu << TC_COUNT32_CCB_CCB_Pos)
-#define TC_COUNT32_CCB_CCB(value)   ((TC_COUNT32_CCB_CCB_Msk & ((value) << TC_COUNT32_CCB_CCB_Pos)))
-#define TC_COUNT32_CCB_MASK         0xFFFFFFFFu  /**< \brief (TC_COUNT32_CCB) MASK Register */
-
 /** \brief TC_COUNT8 hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef struct { /* 8-bit Counter Mode */
@@ -724,9 +598,6 @@ typedef struct { /* 8-bit Counter Mode */
   __IO TC_COUNT8_PER_Type        PER;         /**< \brief Offset: 0x14 (R/W  8) COUNT8 Period Value */
        RoReg8                    Reserved4[0x3];
   __IO TC_COUNT8_CC_Type         CC[2];       /**< \brief Offset: 0x18 (R/W  8) COUNT8 Compare/Capture [CC8_NUM] */
-       RoReg8                    Reserved5[0x12];
-  __IO TC_COUNT8_PERB_Type       PERB;        /**< \brief Offset: 0x2C (R/W  8) COUNT8 Period Buffer */
-       RoReg8                    Reserved6[0x3];
 } TcCount8;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
@@ -747,14 +618,8 @@ typedef struct { /* 16-bit Counter Mode */
   __IO TC_INTFLAG_Type           INTFLAG;     /**< \brief Offset: 0x0E (R/W  8) Interrupt Flag Status and Clear */
   __I  TC_STATUS_Type            STATUS;      /**< \brief Offset: 0x0F (R/   8) Status */
   __IO TC_COUNT16_COUNT_Type     COUNT;       /**< \brief Offset: 0x10 (R/W 16) COUNT16 Counter Value */
-       RoReg8                    Reserved3[0x2];
-  __IO TC_COUNT16_PER_Type       PER;         /**< \brief Offset: 0x14 (R/W 16) COUNT16 Period */
-       RoReg8                    Reserved4[0x2];
+       RoReg8                    Reserved3[0x6];
   __IO TC_COUNT16_CC_Type        CC[2];       /**< \brief Offset: 0x18 (R/W 16) COUNT16 Compare/Capture [CC16_NUM] */
-       RoReg8                    Reserved5[0x10];
-  __IO TC_COUNT16_PERB_Type      PERB;        /**< \brief Offset: 0x2C (R/W 16) COUNT16 Period Buffer */
-       RoReg8                    Reserved6[0x2];
-  __IO TC_COUNT16_CCB_Type       CCB[2];      /**< \brief Offset: 0x30 (R/W 16) COUNT16 Compare and Capture Buffer [CC16_NUM] */
 } TcCount16;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
@@ -775,11 +640,8 @@ typedef struct { /* 32-bit Counter Mode */
   __IO TC_INTFLAG_Type           INTFLAG;     /**< \brief Offset: 0x0E (R/W  8) Interrupt Flag Status and Clear */
   __I  TC_STATUS_Type            STATUS;      /**< \brief Offset: 0x0F (R/   8) Status */
   __IO TC_COUNT32_COUNT_Type     COUNT;       /**< \brief Offset: 0x10 (R/W 32) COUNT32 Counter Value */
-  __IO TC_COUNT32_PER_Type       PER;         /**< \brief Offset: 0x14 (R/W 32) COUNT32 Period */
+       RoReg8                    Reserved3[0x4];
   __IO TC_COUNT32_CC_Type        CC[2];       /**< \brief Offset: 0x18 (R/W 32) COUNT32 Compare/Capture [CC32_NUM] */
-       RoReg8                    Reserved3[0xC];
-  __IO TC_COUNT32_PERB_Type      PERB;        /**< \brief Offset: 0x2C (R/W 32) COUNT32 Period Buffer */
-  __IO TC_COUNT32_CCB_Type       CCB[2];      /**< \brief Offset: 0x30 (R/W 32) COUNT32 Compare and Capture Buffer [CC32_NUM] */
 } TcCount32;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 

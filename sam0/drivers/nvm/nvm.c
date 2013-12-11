@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Non Volatile Memory driver
+ * \brief SAM D2x Non Volatile Memory driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -45,6 +45,22 @@
 #include <system_interrupt.h>
 #include <string.h>
 
+/** Add here for compile ok for SAMD21, will be removed after the header file update. */
+#if SAMD21
+#define SYSCTRL_FUSES_BOD12USERLEVEL_ADDR NVMCTRL_USER
+#define SYSCTRL_FUSES_BOD12USERLEVEL_Pos 17           /**< \brief (NVMCTRL_USER) BOD12 User Level */
+#define SYSCTRL_FUSES_BOD12USERLEVEL_Msk (0x1Fu << SYSCTRL_FUSES_BOD12USERLEVEL_Pos)
+#define SYSCTRL_FUSES_BOD12USERLEVEL(value) ((SYSCTRL_FUSES_BOD12USERLEVEL_Msk & ((value) << SYSCTRL_FUSES_BOD12USERLEVEL_Pos)))
+
+#define SYSCTRL_FUSES_BOD12_ACTION_ADDR NVMCTRL_USER
+#define SYSCTRL_FUSES_BOD12_ACTION_Pos 23           /**< \brief (NVMCTRL_USER) BOD12 Action */
+#define SYSCTRL_FUSES_BOD12_ACTION_Msk (0x3u << SYSCTRL_FUSES_BOD12_ACTION_Pos)
+#define SYSCTRL_FUSES_BOD12_ACTION(value) ((SYSCTRL_FUSES_BOD12_ACTION_Msk & ((value) << SYSCTRL_FUSES_BOD12_ACTION_Pos)))
+
+#define SYSCTRL_FUSES_BOD12_EN_ADDR NVMCTRL_USER
+#define SYSCTRL_FUSES_BOD12_EN_Pos  22           /**< \brief (NVMCTRL_USER) BOD12 Enable */
+#define SYSCTRL_FUSES_BOD12_EN_Msk  (0x1u << SYSCTRL_FUSES_BOD12_EN_Pos)
+#endif
 
 /**
  * \internal Internal device instance struct
@@ -120,11 +136,11 @@ enum status_code nvm_set_config(
 
 	/* Writing configuration to the CTRLB register */
 	nvm_module->CTRLB.reg =
-			((config->sleep_power_mode & NVMCTRL_CTRLB_SLEEPPRM_Msk) << NVMCTRL_CTRLB_SLEEPPRM_Pos) |
-			((config->manual_page_write & 0x01) << NVMCTRL_CTRLB_MANW_Pos)     |
-			((config->wait_states & NVMCTRL_CTRLB_RWS_Msk) << NVMCTRL_CTRLB_RWS_Pos)             |
+			NVMCTRL_CTRLB_SLEEPPRM(config->sleep_power_mode) |
+			((config->manual_page_write & 0x01) << NVMCTRL_CTRLB_MANW_Pos) |
+			NVMCTRL_CTRLB_RWS(config->wait_states) |
 			((config->disable_cache & 0x01) << NVMCTRL_CTRLB_CACHEDIS_Pos) |
-			((config->cache_readmode & NVMCTRL_CTRLB_READMODE_Msk) << NVMCTRL_CTRLB_READMODE_Pos);
+			NVMCTRL_CTRLB_READMODE(config->cache_readmode);
 
 
 	/* Initialize the internal device struct */
@@ -173,6 +189,8 @@ enum status_code nvm_execute_command(
 		const uint32_t address,
 		const uint32_t parameter)
 {
+	uint32_t temp;
+
 	/* Check that the address given is valid  */
 	if (address > ((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)){
 		return STATUS_ERR_BAD_ADDRESS;
@@ -180,6 +198,10 @@ enum status_code nvm_execute_command(
 
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
+
+	/* turn off cache before issuing flash commands */
+	temp = nvm_module->CTRLB.reg;
+	nvm_module->CTRLB.reg = temp | NVMCTRL_CTRLB_CACHEDIS;
 
 	/* Clear error flags */
 	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
@@ -227,6 +249,13 @@ enum status_code nvm_execute_command(
 
 	/* Set command */
 	nvm_module->CTRLA.reg = command | NVMCTRL_CTRLA_CMDEX_KEY;
+
+	/* Wait for the nvm controller to become ready */
+	while (!nvm_is_ready()) {
+	}
+
+	/* restore the setting */
+	nvm_module->CTRLB.reg = temp;
 
 	return STATUS_OK;
 }
@@ -751,7 +780,7 @@ static void _nvm_translate_struct_to_raw_fusebits (
 
 			/* Setting BOD12 fuses */
 			    SYSCTRL_FUSES_BOD12USERLEVEL(fusebits->bod12_level)                 |
-			    ((uint32_t)(fusebits->bod33_enable)) << SYSCTRL_FUSES_BOD12_EN_Pos  |
+			    ((uint32_t)(fusebits->bod12_enable)) << SYSCTRL_FUSES_BOD12_EN_Pos  |
 			    SYSCTRL_FUSES_BOD12_ACTION((uint8_t)(fusebits->bod12_action))       |
 
 			/* Setting WDT fuses */
@@ -849,6 +878,11 @@ enum status_code nvm_set_fuses(
 	uint8_t state = _NVM_SET_FUSES_STATE_ERASE_ROW;
 	uint32_t raw_fusebits[2];
 	enum status_code err = STATUS_OK;
+	uint32_t temp;
+
+	/* turn off cache before issuing flash commands */
+	temp = nvm_module->CTRLB.reg;
+	nvm_module->CTRLB.reg = temp | NVMCTRL_CTRLB_CACHEDIS;
 
 	/* If the security bit is set, the auxiliary space cannot be written */
 	if (nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
@@ -912,6 +946,9 @@ enum status_code nvm_set_fuses(
 	} while (state != _NVM_SET_FUSES_STATE_END);
 
 	system_interrupt_leave_critical_section();
+
+	/* restore the setting */
+	nvm_module->CTRLB.reg = temp;
 
 	return err;
 }

@@ -814,7 +814,6 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DMAC_BTCTRL_OFFSET          0x00         /**< \brief (DMAC_BTCTRL offset) Block Transfer Control */
-#define DMAC_BTCTRL_RESETVALUE      0x0000       /**< \brief (DMAC_BTCTRL reset_value) Block Transfer Control */
 
 #define DMAC_BTCTRL_VALID_Pos       0            /**< \brief (DMAC_BTCTRL) Descriptor Valid */
 #define DMAC_BTCTRL_VALID           (0x1u << DMAC_BTCTRL_VALID_Pos)
@@ -889,7 +888,6 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DMAC_BTCNT_OFFSET           0x02         /**< \brief (DMAC_BTCNT offset) Block Transfer Count */
-#define DMAC_BTCNT_RESETVALUE       0x0000       /**< \brief (DMAC_BTCNT reset_value) Block Transfer Count */
 
 #define DMAC_BTCNT_BTCNT_Pos        0            /**< \brief (DMAC_BTCNT) Block Transfer Count */
 #define DMAC_BTCNT_BTCNT_Msk        (0xFFFFu << DMAC_BTCNT_BTCNT_Pos)
@@ -907,7 +905,6 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DMAC_SRCADDR_OFFSET         0x04         /**< \brief (DMAC_SRCADDR offset) Transfer Source Address */
-#define DMAC_SRCADDR_RESETVALUE     0x00000000   /**< \brief (DMAC_SRCADDR reset_value) Transfer Source Address */
 
 #define DMAC_SRCADDR_SRCADDR_Pos    0            /**< \brief (DMAC_SRCADDR) Transfer Source Address */
 #define DMAC_SRCADDR_SRCADDR_Msk    (0xFFFFFFFFu << DMAC_SRCADDR_SRCADDR_Pos)
@@ -925,7 +922,6 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DMAC_DSTADDR_OFFSET         0x08         /**< \brief (DMAC_DSTADDR offset) Transfer Destination Address */
-#define DMAC_DSTADDR_RESETVALUE     0x00000000   /**< \brief (DMAC_DSTADDR reset_value) Transfer Destination Address */
 
 #define DMAC_DSTADDR_DSTADDR_Pos    0            /**< \brief (DMAC_DSTADDR) Transfer Destination Address */
 #define DMAC_DSTADDR_DSTADDR_Msk    (0xFFFFFFFFu << DMAC_DSTADDR_DSTADDR_Pos)
@@ -943,7 +939,6 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DMAC_DESCADDR_OFFSET        0x0C         /**< \brief (DMAC_DESCADDR offset) Next Descriptor Address */
-#define DMAC_DESCADDR_RESETVALUE    0x00000000   /**< \brief (DMAC_DESCADDR reset_value) Next Descriptor Address */
 
 #define DMAC_DESCADDR_DESCADDR_Pos  0            /**< \brief (DMAC_DESCADDR) Next Descriptor Address */
 #define DMAC_DESCADDR_DESCADDR_Msk  (0xFFFFFFFFu << DMAC_DESCADDR_DESCADDR_Pos)

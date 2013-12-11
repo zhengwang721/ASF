@@ -47,5 +47,6 @@
 #include "tpaste.h"
 #include "stringz.h"
 #include "mrepeat.h"
+#include "mrecursion.h"
 
 #endif  // _PREPROCESSOR_H_

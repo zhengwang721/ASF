@@ -76,10 +76,6 @@
 #  error CONF_CLOCK_OSC8M_RUN_IN_STANDBY not defined in conf_clock.h
 #endif
 
-#if !defined(CONF_CLOCK_OSC8M_FREQUENCY_RANGE)
-#  error CONF_CLOCK_OSC8M_FREQUENCY_RANGE not defined in conf_clock.h
-#endif
-
 #if !defined(CONF_CLOCK_XOSC_ENABLE)
 #  error CONF_CLOCK_XOSC_ENABLE not defined in conf_clock.h
 #endif
