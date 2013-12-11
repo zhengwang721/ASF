@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 I2C Slave Interrupt Driver
+ * \brief SAM D21 I2C Slave Interrupt Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -280,7 +280,7 @@ void _i2c_slave_interrupt_handler(
 	/* Address match */
 		/* Check if last transfer is done - repeated start */
 		if (module->buffer_length != module->buffer_remaining &&
-				module->transfer_direction == 0) {
+				module->transfer_direction == I2C_TRANSFER_WRITE) {
 
 			module->status = STATUS_OK;
 			module->buffer_length = 0;
@@ -290,7 +290,7 @@ void _i2c_slave_interrupt_handler(
 				module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
 			}
 		} else if (module->buffer_length != module->buffer_remaining &&
-				module->transfer_direction == 1) {
+				module->transfer_direction == I2C_TRANSFER_READ) {
 			module->status = STATUS_OK;
 			module->buffer_length = 0;
 			module->buffer_remaining = 0;
@@ -314,7 +314,7 @@ void _i2c_slave_interrupt_handler(
 			i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
 		} else if (i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_DIR) {
 			/* Set transfer direction in module instance */
-			module->transfer_direction = 1;
+			module->transfer_direction = I2C_TRANSFER_READ;
 
 			/* Read request from master */
 			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST)) {
@@ -330,7 +330,7 @@ void _i2c_slave_interrupt_handler(
 			}
 		} else {
 			/* Set transfer direction in dev inst */
-			module->transfer_direction = 0;
+			module->transfer_direction = I2C_TRANSFER_WRITE;
 
 			/* Write request from master */
 			if (callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_REQUEST)) {
@@ -360,7 +360,7 @@ void _i2c_slave_interrupt_handler(
 
 		/* Disable interrupts */
 		i2c_hw->INTENCLR.reg = SERCOM_I2CS_INTFLAG_PREC | SERCOM_I2CS_INTFLAG_DRDY;
-		
+
 		if (!((module->enabled_callback & (1 << I2C_SLAVE_CALLBACK_READ_REQUEST))
 				|| (module->enabled_callback == (1 << I2C_SLAVE_CALLBACK_WRITE_REQUEST)))) {
 			/* Disable address match if read/write request is not enabled */
@@ -374,11 +374,11 @@ void _i2c_slave_interrupt_handler(
 
 			/* Call appropriate callback if enabled and registered */
 			if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_READ_COMPLETE))
-					&& (module->transfer_direction == 0)) {
+					&& (module->transfer_direction == I2C_TRANSFER_WRITE)) {
 				/* Read from master complete */
 				module->callbacks[I2C_SLAVE_CALLBACK_READ_COMPLETE](module);
 			} else if ((callback_mask & (1 << I2C_SLAVE_CALLBACK_WRITE_COMPLETE))
-					&& (module->transfer_direction == 1)) {
+					&& (module->transfer_direction == I2C_TRANSFER_READ)) {
 				/* Write to master complete */
 				module->callbacks[I2C_SLAVE_CALLBACK_WRITE_COMPLETE](module);
 			}
@@ -386,14 +386,14 @@ void _i2c_slave_interrupt_handler(
 	} else if (i2c_hw->INTFLAG.reg & SERCOM_I2CS_INTFLAG_DRDY) {
 		/* Check if buffer is full, or NACK from master */
 		if (module->buffer_remaining <= 0 ||
-				(module->transfer_direction == 1 &&
+				(module->transfer_direction == I2C_TRANSFER_READ &&
 				(module->buffer_length > module->buffer_remaining) &&
 				(i2c_hw->STATUS.reg & SERCOM_I2CS_STATUS_RXNACK))) {
 
 			module->buffer_remaining = 0;
 			module->buffer_length = 0;
 
-			if (module->transfer_direction == 0) {
+			if (module->transfer_direction == I2C_TRANSFER_WRITE) {
 				/* Buffer is full, send NACK */
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_ACKACT;
 				i2c_hw->CTRLB.reg |= SERCOM_I2CS_CTRLB_CMD(0x2);
@@ -421,7 +421,7 @@ void _i2c_slave_interrupt_handler(
 		/* Continue buffer write/read */
 		} else if (module->buffer_length > 0 && module->buffer_remaining > 0) {
 			/* Call function based on transfer direction */
-			if (module->transfer_direction == 0) {
+			if (module->transfer_direction == I2C_TRANSFER_WRITE) {
 				_i2c_slave_read(module);
 			} else {
 				_i2c_slave_write(module);

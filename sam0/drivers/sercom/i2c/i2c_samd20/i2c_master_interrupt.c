@@ -160,7 +160,7 @@ static void _i2c_master_async_address_response(
 	/* Check for status OK. */
 	if (module->status == STATUS_BUSY) {
 		/* Call function based on transfer direction. */
-		if (module->transfer_direction == 0) {
+		if (module->transfer_direction == I2C_TRANSFER_WRITE) {
 			_i2c_master_write(module);
 		} else {
 			_i2c_master_read(module);
@@ -217,7 +217,7 @@ void i2c_master_unregister_callback(
 	Assert(module->hw);
 
 	/* Register callback */
-	module->callbacks[callback_type] = 0;
+	module->callbacks[callback_type] = NULL;
 
 	/* Clear corresponding bit to set callback as unregistered */
 	module->registered_callback &= ~(1 << callback_type);
@@ -247,7 +247,7 @@ static enum status_code _i2c_master_read_packet(
 	/* Save packet to software module */
 	module->buffer             = packet->data;
 	module->buffer_remaining   = packet->data_length;
-	module->transfer_direction = 1;
+	module->transfer_direction = I2C_TRANSFER_READ;
 	module->status             = STATUS_BUSY;
 
 	/* Enable interrupts */
@@ -255,7 +255,7 @@ static enum status_code _i2c_master_read_packet(
 			SERCOM_I2CM_INTENSET_MB | SERCOM_I2CM_INTENSET_SB;
 
 	/* Set address and direction bit. Will send start command on bus */
-	i2c_module->ADDR.reg = (packet->address << 1) | _I2C_TRANSFER_READ;
+	i2c_module->ADDR.reg = (packet->address << 1) | I2C_TRANSFER_READ;
 
 	return STATUS_OK;
 }
@@ -356,7 +356,7 @@ static enum status_code _i2c_master_write_packet(
 	/* Save packet to software module */
 	module->buffer             = packet->data;
 	module->buffer_remaining   = packet->data_length;
-	module->transfer_direction = 0;
+	module->transfer_direction = I2C_TRANSFER_WRITE;
 	module->status             = STATUS_BUSY;
 
 	/* Enable interrupts */
@@ -364,7 +364,7 @@ static enum status_code _i2c_master_write_packet(
 			SERCOM_I2CM_INTENSET_MB | SERCOM_I2CM_INTENSET_SB;
 
 	/* Set address and direction bit, will send start command on bus */
-	i2c_module->ADDR.reg = (packet->address << 1) | _I2C_TRANSFER_WRITE;
+	i2c_module->ADDR.reg = (packet->address << 1) | I2C_TRANSFER_WRITE;
 
 	return STATUS_OK;
 }
@@ -470,7 +470,8 @@ void _i2c_master_interrupt_handler(
 
 	/* Check if buffer write is done */
 	} else if (module->buffer_length > 0 && module->buffer_remaining <= 0 &&
-			module->status == STATUS_BUSY && module->transfer_direction == 0) {
+			module->status == STATUS_BUSY &&
+			module->transfer_direction == I2C_TRANSFER_WRITE) {
 		/* Stop packet operation */
 		i2c_module->INTENCLR.reg =
 				SERCOM_I2CM_INTENCLR_MB | SERCOM_I2CM_INTENCLR_SB;
@@ -492,7 +493,7 @@ void _i2c_master_interrupt_handler(
 		/* Check that bus ownership is not lost */
 		if (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSSTATE(2))) {
 			module->status = STATUS_ERR_PACKET_COLLISION;
-		} else if (module->transfer_direction <= 0) {
+		} else if (module->transfer_direction == I2C_TRANSFER_WRITE) {
 			_i2c_master_write(module);
 		} else {
 			_i2c_master_read(module);
@@ -501,7 +502,8 @@ void _i2c_master_interrupt_handler(
 
 	/* Check if read buffer transfer is complete */
 	if (module->buffer_length > 0 && module->buffer_remaining <= 0 &&
-			module->status == STATUS_BUSY && module->transfer_direction == 1) {
+			module->status == STATUS_BUSY &&
+			module->transfer_direction == I2C_TRANSFER_READ) {
 
 		/* Stop packet operation */
 		i2c_module->INTENCLR.reg =
@@ -511,10 +513,10 @@ void _i2c_master_interrupt_handler(
 
 		/* Call appropriate callback if enabled and registered */
 		if ((callback_mask & (1 << I2C_MASTER_CALLBACK_READ_COMPLETE))
-				&& (module->transfer_direction == 1)) {
+				&& (module->transfer_direction == I2C_TRANSFER_READ)) {
 			module->callbacks[I2C_MASTER_CALLBACK_READ_COMPLETE](module);
 		} else if ((callback_mask & (1 << I2C_MASTER_CALLBACK_WRITE_COMPLETE))
-				&& (module->transfer_direction == 0)) {
+				&& (module->transfer_direction == I2C_TRANSFER_WRITE)) {
 			module->callbacks[I2C_MASTER_CALLBACK_WRITE_COMPLETE](module);
 		}
 	}
