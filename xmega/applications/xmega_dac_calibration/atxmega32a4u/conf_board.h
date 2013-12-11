@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief USB Android Open Accessory protocol definitions.
+ * \brief Board initialization configuration
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,48 +40,27 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-#ifndef _USB_PROTOCOL_AOA_H_
-#define _USB_PROTOCOL_AOA_H_
+// External oscillator settings.
+// Uncomment and set correct values if external oscillator is used.
 
-/**
- * \ingroup usb_protocol_group
- * \defgroup usb_aoa_protocol USB Android Open Accessory
- *
- * @{
- */
+// External oscillator frequency
+//#define BOARD_XOSC_HZ          8000000
 
-/**
- * \brief Android Open Accessory USB requests (bRequest)
- */
-/** Get AOA Protocol version */
-#define USB_REQ_AOA_GET_PROTOCOL      0x33
-/** Sending identifying str info */
-#define USB_REQ_AOA_SEND_IDENT_STRING 0x34
-/** Start the Android Device in acc mode */
-#define USB_REQ_AOA_STARTUP           0x35
+// External oscillator type.
+//!< External clock signal
+//#define BOARD_XOSC_TYPE        XOSC_TYPE_EXTERNAL
+//!< 32.768 kHz resonator on TOSC
+//#define BOARD_XOSC_TYPE        XOSC_TYPE_32KHZ
+//!< 0.4 to 16 MHz resonator on XTALS
+//#define BOARD_XOSC_TYPE        XOSC_TYPE_XTAL
 
-/** Google Vendor ID */
-#define GOOGLE_VID              0x18D1
-/** Google Product ID which indicates it supports Android Accessory Device */
-#define AOA_PID                 0x2D00
-/** Google Product ID which indicates it supports
- * Android Accessory Device which supports ADB */
-#define AOA_ADB_PID             0x2D01
+// External oscillator startup time
+//#define BOARD_XOSC_STARTUP_US  500000
 
-/** Index of manufacturer */
-#define AOA_STRING_INDEX_MANUFACTURER  0
-/** Index of model */
-#define AOA_STRING_INDEX_MODEL         1
-/** Index of description */
-#define AOA_STRING_INDEX_DESCRIPTION   2
-/** Index of version */
-#define AOA_STRING_INDEX_VERSION       3
-/** Index of URL */
-#define AOA_STRING_INDEX_URL           4
-/** Index of serialnumber */
-#define AOA_STRING_INDEX_SERIAL        5
+#define DAC_OUTPUT_PIN_CH0 IOPORT_CREATE_PIN(PORTB, 2)
+#define DAC_OUTPUT_PIN_CH1 IOPORT_CREATE_PIN(PORTB, 3)
 
-/** @} */
-
-#endif /* _USB_PROTOCOL_AOA_H_ */
+#endif // CONF_BOARD_H

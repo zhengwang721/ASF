@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief USB Android Open Accessory protocol definitions.
+ * \brief Sleep manager configuration
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,48 +40,10 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-#ifndef _USB_PROTOCOL_AOA_H_
-#define _USB_PROTOCOL_AOA_H_
+// Sleep manager options
+#define CONFIG_SLEEPMGR_ENABLE
 
-/**
- * \ingroup usb_protocol_group
- * \defgroup usb_aoa_protocol USB Android Open Accessory
- *
- * @{
- */
-
-/**
- * \brief Android Open Accessory USB requests (bRequest)
- */
-/** Get AOA Protocol version */
-#define USB_REQ_AOA_GET_PROTOCOL      0x33
-/** Sending identifying str info */
-#define USB_REQ_AOA_SEND_IDENT_STRING 0x34
-/** Start the Android Device in acc mode */
-#define USB_REQ_AOA_STARTUP           0x35
-
-/** Google Vendor ID */
-#define GOOGLE_VID              0x18D1
-/** Google Product ID which indicates it supports Android Accessory Device */
-#define AOA_PID                 0x2D00
-/** Google Product ID which indicates it supports
- * Android Accessory Device which supports ADB */
-#define AOA_ADB_PID             0x2D01
-
-/** Index of manufacturer */
-#define AOA_STRING_INDEX_MANUFACTURER  0
-/** Index of model */
-#define AOA_STRING_INDEX_MODEL         1
-/** Index of description */
-#define AOA_STRING_INDEX_DESCRIPTION   2
-/** Index of version */
-#define AOA_STRING_INDEX_VERSION       3
-/** Index of URL */
-#define AOA_STRING_INDEX_URL           4
-/** Index of serialnumber */
-#define AOA_STRING_INDEX_SERIAL        5
-
-/** @} */
-
-#endif /* _USB_PROTOCOL_AOA_H_ */
+#endif /* CONF_SLEEPMGR_H */
