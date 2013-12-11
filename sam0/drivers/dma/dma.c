@@ -216,7 +216,7 @@ void DMAC_Handler( void )
 	/* DMA channel interrupt handler */
 	if (isr & DMAC_CHINTENCLR_TERR) {
 		/* Clear transfer error flag */
-		DMAC->CHINTFLAG.reg |= DMAC_CHINTENCLR_TERR;
+		DMAC->CHINTFLAG.reg = DMAC_CHINTENCLR_TERR;
 
 		/* Set IO ERROR status */
 		resource->job_status = STATUS_ERR_IO;
@@ -228,7 +228,7 @@ void DMAC_Handler( void )
 		}
 	} else if (isr & DMAC_CHINTENCLR_TCMPL) {
 		/* Clear the transfer complete flag */
-		DMAC->CHINTFLAG.reg |= DMAC_CHINTENCLR_TCMPL;
+		DMAC->CHINTFLAG.reg = DMAC_CHINTENCLR_TCMPL;
 
 		/* Set job status */
 		resource->job_status = STATUS_OK;
@@ -240,7 +240,7 @@ void DMAC_Handler( void )
 		}
 	} else if (isr & DMAC_CHINTENCLR_SUSP) {
 		/* Clear channel suspend flag */
-		DMAC->CHINTFLAG.reg |= DMAC_CHINTENCLR_SUSP;
+		DMAC->CHINTFLAG.reg = DMAC_CHINTENCLR_SUSP;
 
 		/* Set job status */
 		resource->job_status = STATUS_SUSPEND;
