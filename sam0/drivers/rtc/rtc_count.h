@@ -414,7 +414,7 @@ struct rtc_count_events {
 
 #if !defined(__DOXYGEN__)
 /**
- * \internal Internal device structure.
+ * \brief Device structure.
  */
 struct rtc_module {
 	/** RTC hardware module */

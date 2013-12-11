@@ -374,7 +374,7 @@ enum rtc_calendar_prescaler {
 
 #if !defined(__DOXYGEN__)
 /**
- * \internal Device structure
+ * \brief Device structure
  */
 struct rtc_module {
 	/** RTC hardware module */

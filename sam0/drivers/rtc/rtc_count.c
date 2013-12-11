@@ -48,7 +48,7 @@ struct rtc_module *_rtc_instance[RTC_INST_NUM];
 #endif
 
 /**
- * \brief Resets the RTC module->
+ * \brief Resets the RTC module.
  * Resets the RTC to hardware defaults.
  *
  * \param[in,out]  module  Pointer to the software instance struct
@@ -288,9 +288,9 @@ uint32_t rtc_count_get_count(struct rtc_module *const module)
 
 	/* Change of read method based on value of continuously_update value in
 	 * the configuration structure. */
-	if(!(module->continuously_update)){
+	if(!(module->continuously_update)) {
 		/* Request read on count register. */
-		rtc_module->MODE0.READREQ.reg = RTC_READREQ_RCONT;
+		rtc_module->MODE0.READREQ.reg = RTC_READREQ_RREQ;
 
 		while (rtc_count_is_syncing(module)) {
 			/* Wait for synchronization */
