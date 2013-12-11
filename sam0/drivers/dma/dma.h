@@ -137,7 +137,10 @@ struct dma_events_config {
 	bool event_output_enable;
 };
 
-/** DMA transfer descriptor */
+/** DMA transfer descriptor. When the source address increment is enabled
+ * (BTCTRL.SRCINC = 1), the address value that must be programmed
+ * corresponds to the end of the transfer.
+ */
 struct dma_transfer_descriptor {
 	/** Block transfer control */
 	uint16_t block_transfer_control;

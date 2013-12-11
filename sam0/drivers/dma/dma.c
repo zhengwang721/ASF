@@ -118,6 +118,7 @@ static uint8_t _dma_find_first_free_channel_and_allocate(uint8_t priority)
 	} else {
 		/* Set priority level for the allocated channel */
 		DMAC->CHID.reg = DMAC_CHID_ID(count);
+		DMAC->CHCTRLB.reg &= ~DMAC_CHCTRLB_LVL_Msk;
 		DMAC->CHCTRLB.reg |=  DMAC_CHCTRLB_LVL(priority);
 		return count;
 	}
@@ -153,9 +154,6 @@ static void _dma_set_config(struct dma_resource *resource,
 	/** Select the DMA channel and clear software trigger */
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
 	DMAC->SWTRIGCTRL.reg &= (uint32_t)(~(1 << resource->channel_id));
-
-	/* Transaction is used as the fixed trigger action type */
-	DMAC->CHCTRLB.reg |=  DMAC_CHCTRLB_TRIGACT_TRANSACTION;
 
 	/* Select transfer trigger */
 	switch (transfer_config->transfer_trigger) {
@@ -242,7 +240,7 @@ void DMAC_Handler( void )
 		}
 	} else if (isr & DMAC_CHINTENCLR_SUSP) {
 		/* Clear channel suspend flag */
-		DMAC->CHINTFLAG.reg |= DMAC_CHINTENCLR_TCMPL;
+		DMAC->CHINTFLAG.reg |= DMAC_CHINTENCLR_SUSP;
 
 		/* Set job status */
 		resource->job_status = STATUS_SUSPEND;
@@ -454,7 +452,7 @@ enum status_code dma_transfer_job(struct dma_resource *resource,
 
 	/* Set the interrupt flag */
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
-	DMAC->CHINTENSET.reg |= DMAC_CHINTENSET_TERR | DMAC_CHINTENSET_TCMPL |
+	DMAC->CHINTENSET.reg = DMAC_CHINTENSET_TERR | DMAC_CHINTENSET_TCMPL |
 			DMAC_CHINTENSET_SUSP;
 
 	/* Set job status */
@@ -490,8 +488,12 @@ void dma_abort_job(struct dma_resource *resource)
 	Assert(resource);
 	Assert(resource->channel_id != DMA_INVALID_CHANNEL);
 
+	system_interrupt_enter_critical_section();
+
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
 	DMAC->CHCTRLA.reg = 0;
+
+	system_interrupt_leave_critical_section();
 
 	/* Get transfered size */
 	resource->transfered_size
@@ -517,11 +519,15 @@ void dma_suspend_job(struct dma_resource *resource)
 	Assert(resource);
 	Assert(resource->channel_id != DMA_INVALID_CHANNEL);
 
+	system_interrupt_enter_critical_section();
+
 	/* Select the channel */
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
 
 	/* Send the suspend request */
 	DMAC->CHCTRLB.reg |= DMAC_CHCTRLB_CMD_SUSPEND;
+
+	system_interrupt_leave_critical_section();
 }
 
 /**
@@ -548,9 +554,13 @@ void dma_resume_job(struct dma_resource *resource)
 		return;
 	}
 
+	system_interrupt_enter_critical_section();
+
 	/* Send resume request */
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
 	DMAC->CHCTRLB.reg |= DMAC_CHCTRLB_CMD_RESUME;
+
+	system_interrupt_leave_critical_section();
 
 	/* Check if transfer job resumed */
 	for (count = 0; count < MAX_JOB_RESUME_COUNT; count++) {
