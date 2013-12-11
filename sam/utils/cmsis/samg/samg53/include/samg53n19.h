@@ -536,6 +536,9 @@ void WKUP15_Handler     ( void );
 #define EFC0 EFC
 #define USART0 USART
 #define PDC_USART0 PDC_USART
+#define ID_USART0 ID_USART
+#define USART0_IRQn USART_IRQn
+#define USART0_Handler USART_Handler
 
 #ifdef __cplusplus
 }

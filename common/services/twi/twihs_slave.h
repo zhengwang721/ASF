@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWI Slave Mode management
+ * \brief TWIHS Slave Mode management
  *
- * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,31 +40,23 @@
  * \asf_license_stop
  *
  */
-#ifndef TWI_SLAVE_H_INCLUDED
-#define TWI_SLAVE_H_INCLUDED
+#ifndef TWIHS_SLAVE_H_INCLUDED
+#define TWIHS_SLAVE_H_INCLUDED
 
 #include <parts.h>
 #include <compiler.h>
 
-#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E || SAM4N || SAM4C || SAMG)
-# include "sam_twi/twi_slave.h"
-#elif XMEGA
-# include "xmega_twi/twi_slave.h"
-#elif MEGA_RF
-# include "megarf_twi/twi_slave.h"
-#elif (defined(__GNUC__) && defined(__AVR32__)) || (defined(__ICCAVR32__) || defined(__AAVR32__))
-#if (defined AVR32_TWI)
-#error Not supported.
-#endif
+#if (SAMG)
+# include "sam_twihs/twihs_slave.h"
 #else
 # error Unsupported chip type
 #endif
 
 /**
  *
- * \defgroup twi_group Two Wire-interface(TWI)
+ * \defgroup twi_group Two Wire-interface High Speed(TWIHS)
  *
- * This is the common API for TWIs. Additional features are available
+ * This is the common API for TWIHs. Additional features are available
  * in the documentation of the specific modules.
  *
  * \section twi_group_platform Platform Dependencies
@@ -79,22 +71,21 @@
  * behaviour. These functions are typically called by platform-specific
  * parts of drivers, and applications that aren't intended to be
  * portable:
- *   - twi_slave_setup()
- *   - twi_slave_enable()
- *   - twi_slave_disable()
- *   - twi_slave_read()
- *   - twi_slave_write()
+ *   - twihs_slave_setup()
+ *   - twihs_slave_enable()
+ *   - twihs_slave_disable()
+ *   - twihs_slave_read()
+ *   - twihs_slave_write()
  *
  * @{
  */
 
 /**
- * \typedef twi_slave_t
- * This type can be used independently to refer to TWI slave module for the
- * architecture used. It refers to the correct type definition for the
- * architecture, ie. TWI_t* for XMEGA or avr32_twi_t* for UC3
+ * \typedef twihs_slave_t
+ * This type can be used independently to refer to TWIHS slave module for the
+ * architecture used.
  */
 
 //! @}
 
-#endif /* TWI_SLAVE_H_INCLUDED */
+#endif /* TWIHS_SLAVE_H_INCLUDED */

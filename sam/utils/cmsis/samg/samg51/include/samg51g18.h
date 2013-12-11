@@ -487,6 +487,7 @@ void WKUP15_Handler     ( void );
 #define CHIP_FREQ_FWS_1                 (30000000UL)  /**< \brief Maximum operating frequency when FWS is 1 */
 #define CHIP_FREQ_FWS_2                 (45000000UL)  /**< \brief Maximum operating frequency when FWS is 2 */
 #define CHIP_FREQ_FWS_3                 (60000000UL)  /**< \brief Maximum operating frequency when FWS is 3 */
+
 #define EFC0 EFC
 #define USART0 USART
 #define PDC_USART0 PDC_USART
