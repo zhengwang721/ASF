@@ -59,8 +59,8 @@ bool pal_calibrate_rc_osc(void)
 retval_t pal_init(void)
 {
 #if (PAL_USE_SPI_TRX == 1)
-    pal_spi_init();
-#endif //#if (PAL_USE_SPI_TRX = 1)
+	pal_spi_init();
+#endif /* #if (PAL_USE_SPI_TRX = 1) */
 	return MAC_SUCCESS;
 }
 
@@ -101,14 +101,14 @@ retval_t pal_timer_stop(uint8_t timer_id)
 
 void pal_timer_source_select(source_type_t source)
 {
-//    if (TMR_CLK_SRC_DURING_TRX_SLEEP == source)
-//    {
-//        TIMER_SRC_DURING_TRX_SLEEP();
-//    }
-//    else
-//    {
-//        TIMER_SRC_DURING_TRX_AWAKE();
-//    }
+	/*    if (TMR_CLK_SRC_DURING_TRX_SLEEP == source) */
+	/*    { */
+	/*        TIMER_SRC_DURING_TRX_SLEEP(); */
+	/*    } */
+	/*    else */
+	/*    { */
+	/*        TIMER_SRC_DURING_TRX_AWAKE(); */
+	/*    } */
 }
 
 retval_t pal_timer_get_id(uint8_t* timer_id)
