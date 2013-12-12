@@ -306,7 +306,6 @@ enum status_code dma_allocate(struct dma_resource *resource,
 		struct dma_resource_config *config)
 {
 	uint8_t new_channel;
-	uint8_t count;
 
 	Assert(resource);
 
