@@ -24,6 +24,7 @@
 			<build type="doxygen-entry-point" value="asfdoc_samd20_sercom_i2c_group"/>
 			<build type="doxygen-example-path" value="quick_start_master"/>
 			<build type="doxygen-image-path" value="docimg"/>
+			<build type="doxygen-quick-start" value="asfdoc_samd20_sercom_i2c_exqsg"/>
 
 			<device-support value="samd20"/>
 
@@ -75,6 +76,7 @@
 			<build type="doxygen-example-path" value="quick_start_master"/>
 			<build type="doxygen-example-path" value="quick_start_master_callback"/>
 			<build type="doxygen-image-path" value="docimg"/>
+			<build type="doxygen-quick-start" value="asfdoc_samd20_sercom_i2c_exqsg"/>
 
 			<device-support value="samd20"/>
 
@@ -111,6 +113,7 @@
 			<build type="doxygen-entry-point" value="asfdoc_samd20_sercom_i2c_group"/>
 			<build type="doxygen-example-path" value="quick_start_slave"/>
 			<build type="doxygen-image-path" value="docimg"/>
+			<build type="doxygen-quick-start" value="asfdoc_samd20_sercom_i2c_exqsg"/>
 
 			<device-support value="samd20"/>
 
@@ -162,6 +165,7 @@
 			<build type="doxygen-example-path" value="quick_start_slave"/>
 			<build type="doxygen-example-path" value="quick_start_slave_callback"/>
 			<build type="doxygen-image-path" value="docimg"/>
+			<build type="doxygen-quick-start" value="asfdoc_samd20_sercom_i2c_exqsg"/>
 
 			<device-support value="samd20"/>
 
