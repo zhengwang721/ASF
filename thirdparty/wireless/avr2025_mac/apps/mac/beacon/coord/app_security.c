@@ -1,7 +1,7 @@
 /**
- * @file app_security.c
+ * @file
  *
- * @brief MAC Example Beacon Security Application - Coordinator
+ * @brief This module configures the MAC Beacon Security
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,59 +38,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
 
-/**
- * \mainpage
- * \section preface Preface
- * This is the reference manual for the IEEE 802.15.4 MAC Beacon Security Application -
- *Coordinator
- * \section main_files Application Files
- *      - app_security.c                Application security file.
- * \section intro Application Introduction
- * The basic MAC Example Beacon Application deploys a beacon-enabled network
- *with star topology.
- * The coordinator starts a PAN at channel DEFAULT_CHANNEL with the PAN ID
- *DEFAULT_PAN_ID.
+/*
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *
- * The coordinator starts a beaconing network and transmits user data within
- *beacon payload of transmitted beacon frames.
- * The device scans for this network,sync up with the coordinator and associates
- *to the coordinator.The devices receive
- * these beacon frames, extract the received user data from the coordinator
- *,print the received data on the hyper
- * terminal and also sends the extracted beacon payload back to the coordinator.
- * The coordinator also transmits broadcast data frames periodically.The devices
- *receive these broadcast data frames
- * and increase a counter.
- * The coordinator also puts the data in the indirect queue periodically and
- *transmits data frames based on the
- * periodic poll request from the device.
- * The results of the proper data transmission/reception are printed to a
- *terminal program via Serial I/O (UART or USB).
- * For demonstration purposes the coordinator's configuration is limited to
- *associate maximum of 100 devices.
- * \note For Two Processor Approach the Application needs to be flashed in the
- *Host board(eg.SAM4L-Xplained Pro) and the Serial-if application(Beacon FFD)
- *(MAC Stack)
- * needs to be flashed in the NCP(Network CoProcessor) board.
- * \section api_modules Application Dependent Modules
- * - \subpage api
- * \section compinfo Compilation Info
- * This software was written for the GNU GCC and IAR .
- * Other compilers may or may not work.
- *
- * \section references References
- * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
- *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
- *Area
- *     Networks (WPANs).\n\n
- * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
- *
- * \section contactinfo Contact Information
- * For further information,visit
- * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+
 
 /* === INCLUDES ============================================================ */
 #ifdef MAC_SECURITY_ZIP
@@ -221,7 +177,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		case macDefaultKeySource:		
 		{
 			/* Set the no.of security level table  entries */
-            uint8_t mac_sec_level_table_entries = 2;
+            uint8_t mac_sec_level_table_entries = DEFAULT_MAC_SEC_LVL_TABLE_ENTRIES;
 
             wpan_mlme_set_req(macSecurityLevelTableEntries,
                                 NO_PIB_INDEX,
@@ -265,7 +221,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 			else if(INDEX_0 == PIBAttributeIndex)
 			{
 				/* set the maximum no.of mac key table entries */
-				uint8_t mac_key_table_entries = 4;
+				uint8_t mac_key_table_entries = DEFAULT_MAC_KEY_TABLE_ENTRIES;
 
 				wpan_mlme_set_req(macKeyTableEntries,
 								NO_PIB_INDEX,
@@ -277,7 +233,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		case macKeyTableEntries:
 		{
 		  /* set the maximum no.of device table entries */
-		  uint16_t coord_key_index = 4;
+		  uint16_t coord_key_index = DEFAULT_MAC_DEV_TABLE_ENTRIES;
 		  wpan_mlme_set_req(macDeviceTableEntries,
                           NO_PIB_INDEX,
                           &coord_key_index);	
@@ -714,7 +670,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 			case macDefaultKeySource:
                 {
 					/* set the maximum no.of mac security level table entries */
-                    uint8_t mac_sec_level_table_entries = 2;
+                    uint8_t mac_sec_level_table_entries = DEFAULT_MAC_SEC_LVL_TABLE_ENTRIES;
 
                     wpan_mlme_set_req(macSecurityLevelTableEntries,
                                       NO_PIB_INDEX,
@@ -741,7 +697,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
             case macSecurityLevelTable:
                 {
 					/* set the maximum no.of key table entries */
-                    uint8_t mac_key_table_entries = 4;
+                    uint8_t mac_key_table_entries = DEFAULT_MAC_KEY_TABLE_ENTRIES;
 
                     wpan_mlme_set_req(macKeyTableEntries,
                                       NO_PIB_INDEX,

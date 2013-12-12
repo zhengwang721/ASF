@@ -1,5 +1,5 @@
 /**
- * @file beacon_app.h
+ * @file
  *
  * @brief These are application-specific resources which are used
  *        in the example application of the coordinator in addition to the
@@ -142,6 +142,15 @@ typedef enum coord_state_tag {
 /* Security PIB Initialize Macro */
 #define SEC_PIB_INIT					(1)
 
+/* Security Default Device Table Entries */
+#define DEFAULT_MAC_DEV_TABLE_ENTRIES (0x04)
+
+/* Security Default Key Table Entries */
+#define DEFAULT_MAC_KEY_TABLE_ENTRIES (0x04)
+
+/* Security Default Security Level Table Entries */
+#define DEFAULT_MAC_SEC_LVL_TABLE_ENTRIES (0x02)
+
 #endif
 
 /* === Externals ============================================================ */
@@ -157,5 +166,5 @@ extern "C" {
 } /* extern "C" */
 #endif
 
-#endif /* APP_CONFIG_H */
+#endif /* BEACON_APP_H */
 /* EOF */
