@@ -204,6 +204,12 @@ static void ksz8851snl_update(struct netif *netif)
 	/* Fetch next packet marked as owned by Micrel. */
 	if (ps_ksz8851snl_dev->tx_desc[ps_ksz8851snl_dev->us_tx_tail]
 			&& (pending_frame == 0)) {
+
+#if ETH_PAD_SIZE
+		/* Drop the padding word */
+		pbuf_header(ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail],
+				-ETH_PAD_SIZE);
+#endif
 		len = ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail]->tot_len;
 
 		/* TX step1: check if TXQ memory size is available for transmit. */
@@ -212,6 +218,10 @@ static void ksz8851snl_update(struct netif *netif)
 			LWIP_DEBUGF(NETIF_DEBUG,
 					("ksz8851snl_update: TX not enough memory in queue: %d required %d\n",
 					txmir, len + 8));
+#if ETH_PAD_SIZE
+			/* Reclaim the padding word */
+			pbuf_header(ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail], ETH_PAD_SIZE);
+#endif
 			return;
 		}
 
@@ -242,6 +252,11 @@ static void ksz8851snl_update(struct netif *netif)
 
 		/* RX step13: enable INT_RX flag. */
 		ksz8851_reg_write(REG_INT_MASK, INT_RX);
+
+#if ETH_PAD_SIZE
+			/* Reclaim the padding word */
+			pbuf_header(ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail], ETH_PAD_SIZE);
+#endif
 
 		/* Buffer sent, free the corresponding buffer and mark descriptor as owned by software. */
 		pbuf_free(ps_ksz8851snl_dev->tx_pbuf[ps_ksz8851snl_dev->us_tx_tail]);

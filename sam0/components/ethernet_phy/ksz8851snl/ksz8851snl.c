@@ -390,7 +390,7 @@ uint32_t ksz8851snl_init(void)
 			RX_CTRL_BURST_LEN_FRAME);
 
 	/* Init step11: configure QMU receive queue: trigger INT and auto-dequeue frame. */
-	ksz8851_reg_write(REG_RXQ_CMD, RXQ_CMD_CNTL);
+	ksz8851_reg_write(REG_RXQ_CMD, RXQ_CMD_CNTL | RXQ_TWOBYTE_OFFSET);
 
 	/* Init step12: adjust SPI data output delay. */
 	ksz8851_reg_write(REG_BUS_CLOCK_CTRL, BUS_CLOCK_166 | BUS_CLOCK_DIVIDEDBY_1);
