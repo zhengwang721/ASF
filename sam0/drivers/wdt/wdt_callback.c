@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Watchdog Driver
+ * \brief SAM D2x Watchdog Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
