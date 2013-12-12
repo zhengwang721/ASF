@@ -239,7 +239,7 @@ stb_ccm_t stb_ccm_secure(uint8_t *buffer,
 
 	if (mic_len > 0) 
 	{
-		nonce[0] |= (uint8_t)(((mic_len - 2)/2) << 3);
+		nonce[0] |= (uint8_t)(((mic_len - 2) >> 1) << 3);
 	}
 
 	if (hdr_len) 
@@ -248,7 +248,7 @@ stb_ccm_t stb_ccm_secure(uint8_t *buffer,
 	}
 
 	nonce_0 = nonce[0];
-	nonce[AES_BLOCKSIZE -  2] = 0;
+	nonce[AES_BLOCKSIZE - 2] = 0;
 
 	if (aes_dir == AES_DIR_ENCRYPT) 
 	{

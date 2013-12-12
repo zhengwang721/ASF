@@ -567,6 +567,8 @@ bool wpan_task(void);
      *                      - @ref WPAN_TXOPT_ACK,
      *                      - @ref WPAN_TXOPT_INDIRECT,
      *                      - @ref WPAN_TXOPT_INDIRECT_ACK.
+     *                      - @ref WPAN_TXOPT_GTS.
+     *                      - @ref WPAN_TXOPT_GTS_ACK.
      * @param msdu          Pointer to the data to be transmitted.
      * @param msduLength    Length of the data to be transmitted.
      *
@@ -1333,15 +1335,11 @@ void usr_mlme_gts_ind(uint16_t DeviceAddr, gts_char_t GtsChar);
 
 uint8_t mac_get_pib_attribute_size(uint8_t pib_attribute_id);
 
-#ifdef BEACON_SUPPORT
 /**
- * @brief Checks if the mac stack is idle
+ * @brief Checks if the mac stack is ready to sleep
  * \ingroup group_mac_gen_int
  */
 uint32_t mac_ready_to_sleep(void);
-#else
-bool mac_ready_to_sleep(void);
-#endif /* BEACON_SUPPORT */
 /*@}*//* group_mac_cb */
 
 #ifdef __cplusplus

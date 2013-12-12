@@ -1165,7 +1165,7 @@ static void handle_exp_persistence_timer(buffer_t *buf_ptr)
  */
 static bool mac_buffer_purge(uint8_t msdu_handle)
 {
-	uint32_t *buf_ptr;
+	uint8_t *buf_ptr;
 	search_t find_buf;
 	uint8_t handle = msdu_handle;
 

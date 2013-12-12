@@ -77,7 +77,8 @@
  * Time in (advance) symbols before beacon interval when beacon is prepared
  */
 #define ADVNC_BCN_PREP_TIME                 (50)
-
+/* Minimum Wakeup time for beacon synchronization when handling Wakeup from application sleep*/
+#define MAC_MIN_WAKEUP_US                   (100)
 /*
  * (Minimal) Beacon payload length
  * 2 octets Superframe Spec
@@ -354,7 +355,8 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	frame_ptr--;
 	*frame_ptr = 0;
 #endif
-
+    /* frame_ptr now points to the GTS Specification .
+	 **/
 #ifdef GTS_SUPPORT
 	mac_gts_table_update();
 	uint8_t gts_octets = mac_add_gts_info(frame_ptr);
@@ -368,8 +370,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 		frame_ptr--;
 	}
 #else
-	/* frame_ptr now points to the Pending Address Specification (Octet 1).
-	 **/
+	
 	frame_ptr--;
 	*frame_ptr = 0;
 #endif /* GTS_SUPPORT */
@@ -1150,28 +1151,50 @@ void mac_tx_pending_bc_data(void)
  */
  void mac_wakeup(uint32_t res_time)
  {
-  
-  sw_timer_stop(T_Beacon_Tracking_Period);
-  if (pal_is_timer_running(T_Missed_Beacon))
+  #ifdef FFD
+  if((MAC_PAN_COORD_STARTED == mac_state) ||
+  (MAC_COORDINATOR == mac_state))
   {
-	  sw_timer_stop(T_Missed_Beacon);
-  }
-  if(res_time >= 500)
-  {
-  res_time = res_time - 400;
-  pal_timer_start(
-  T_Beacon_Tracking_Period,
-  res_time,
-  TIMEOUT_RELATIVE,
-  (
-  FUNC_PTR)mac_t_tracking_beacons_cb,
-  NULL);
-  }
-  else
-  { 
-	  mac_t_tracking_beacons_cb(NULL);
+	  sw_timer_stop(T_Beacon_Preparation);
+	  if(res_time >= MAC_MIN_WAKEUP_US)
+	  {
+		  pal_timer_start(
+		  T_Beacon_Preparation,
+		  res_time,
+		  TIMEOUT_RELATIVE,
+		  (
+		  FUNC_PTR)mac_t_prepare_beacon_cb,
+		  NULL);
+	  }
+	  else
+	  {
+		  mac_t_prepare_beacon_cb(NULL);
 
+	  }
   }
+  #endif
+ if(MAC_ASSOCIATED == mac_state)
+  {
+	sw_timer_stop(T_Beacon_Tracking_Period);
+	if (pal_is_timer_running(T_Missed_Beacon))
+	{
+	  sw_timer_stop(T_Missed_Beacon);
+	}
+	if(res_time >= MAC_MIN_WAKEUP_US)
+	{
+		pal_timer_start(T_Beacon_Tracking_Period,
+                        res_time,
+                        TIMEOUT_RELATIVE,
+                        (FUNC_PTR)mac_t_tracking_beacons_cb,
+                        NULL);
+	}
+	else
+    { 
+		mac_t_tracking_beacons_cb(NULL);
+
+	}
+  }	
+  
   
 }
 #endif

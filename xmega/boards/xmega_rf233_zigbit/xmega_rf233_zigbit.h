@@ -98,7 +98,7 @@
 
 #define BOARD_NAME          "ATZB-X-233-XPRO"
 #define LED0_GPIO                       IOPORT_CREATE_PIN(PORTA, 6)
-#define LED1_GPIO                       IOPORT_CREATE_PIN(PORTA, 4)
+#define LED1_GPIO                       IOPORT_CREATE_PIN(PORTA, 7)
 #define LED2_GPIO                       IOPORT_CREATE_PIN(PORTA, 5)
 
 #define LED0                            LED0_GPIO
@@ -198,8 +198,8 @@
  * \def CONF_BOARD_ENABLE_USARTD0
  * \brief Initialize IO pins for USART 0 on port D
  */
-#  if !defined(CONF_BOARD_ENABLE_USARTE0)
-#    define CONF_BOARD_ENABLE_USARTE0
+#  if !defined(CONF_BOARD_ENABLE_USARTD0)
+#    define CONF_BOARD_ENABLE_USARTD0
 #  endif
 
 

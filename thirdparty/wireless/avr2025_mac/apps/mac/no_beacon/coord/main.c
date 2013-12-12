@@ -120,6 +120,7 @@ typedef struct associated_device_tag {
 #define MAX_NUMBER_OF_DEVICES           (6)
 
 #define CHANNEL_OFFSET                  (0)
+#define APP_CHANNEL_PAGE                (17)
 
 #define SCAN_CHANNEL                    (1ul << current_channel)
 
@@ -608,8 +609,8 @@ void usr_mlme_get_conf(uint8_t status,
 		void *PIBAttributeValue)
 {
 	if ((status == MAC_SUCCESS) && (PIBAttribute == phyCurrentPage)) {
-		#ifdef HIGH_DATS_RATE_SUPPORT
-		current_channel_page = 17;
+		#ifdef HIGH_DATA_RATE_SUPPORT
+		current_channel_page = APP_CHANNEL_PAGE;
 		#else
 		current_channel_page = *(uint8_t *)PIBAttributeValue;
 		#endif

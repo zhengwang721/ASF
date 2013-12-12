@@ -357,13 +357,13 @@ extern "C" {
 #ifdef MAC_SECURITY_ZIP
 /**
  * The maximum number of entries supported in the macKeyTable.
- * This value is mplementation specific.
+ * This value is implementation specific.
  */
 #define MAC_ZIP_MAX_KEY_TABLE_ENTRIES           (4)
 
 /**
  * The maximum number of entries supported in the macDeviceTable.
- * This value is mplementation specific.
+ * This value is implementation specific.
  */
 #if (MAC_START_REQUEST_CONFIRM == 1)    /* FFD like device */
 #define MAC_ZIP_MAX_DEV_TABLE_ENTRIES           (10)
@@ -372,7 +372,7 @@ extern "C" {
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
 /**
  * The maximum number of entries supported in the macSecurityLevelTable.
- * This value is mplementation specific.
+ * This value is implementation specific.
  */
 #define MAC_ZIP_MAX_SEC_LVL_TABLE_ENTRIES       (2)
 

@@ -125,6 +125,7 @@
  */
 #define TIMER_SYNC_BEFORE_ASSOC_MS      (3000)
 #define APP_GUARD_TIME_US               (10000)
+#define MCU_WAKEUP_TIME                 (150)
 #define PAYLOAD_LEN                     (104)
 
 #ifdef GTS_SUPPORT
@@ -1226,27 +1227,32 @@ static void enter_sleep(uint32_t timeout)
     sys_sleep = true;
 	#ifdef ENABLE_SLEEP
 	ENTER_CRITICAL_REGION();
+	/* Stop the Software timer running at CPU clock and initialize the software timer to run at 4MHz clock*/
 	common_tc_stop();
 	common_tc_init();
 	set_common_tc_overflow_callback(hw_overflow_cb);
 	set_common_tc_expiry_callback(hw_expiry_cb);
-	timeout = timeout-150;
+	timeout = timeout-MCU_WAKEUP_TIME;
+	/*Start Wakeup timer*/
 	sw_timer_start(APP_TIMER_SLEEP,timeout,
 	SW_TIMEOUT_RELATIVE,
 	(FUNC_PTR)wakeup_cb,
 	NULL);
     LEAVE_CRITICAL_REGION();
+	/* put the MCU in idle mode with timer as wakeup source*/
 	system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_2);
 	system_sleep();
     #endif
     #ifdef RTC_SLEEP
+	/*Configure the rtc module and callback*/
 	configure_rtc_count();
 /* Configure and enable callback */
    configure_rtc_callbacks();
-   /* Set period */
+   /* Set timeout period for rtc*/
 	res = timeout % 1000;
 	timeout = timeout/1000;	
 	rtc_count_set_period(timeout);
+	/*put the MCU in standby mode with RTC as wakeup source*/
 	system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
 	system_sleep();
 	#endif
@@ -1254,18 +1260,21 @@ static void enter_sleep(uint32_t timeout)
 }
 #ifdef RTC_SLEEP
 void configure_rtc_count(void)
-{
+{   /* Configuring rtc clock prescaler and mode*/
 	struct rtc_count_config config_rtc_count;
 	rtc_count_get_config_defaults(&config_rtc_count);
 	config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
 	config_rtc_count.mode                = RTC_COUNT_MODE_16BIT;
+	/** Continuously update the counter value so no synchronization is
+	 *  needed for reading. */
 	config_rtc_count.continuously_update = true;
 	rtc_count_init(&config_rtc_count);	
     rtc_count_enable();	
 }
 
 void configure_rtc_callbacks(void)
-{
+{   
+	/*Register rtc callback*/
 	rtc_count_register_callback(
 	rtc_overflow_callback, RTC_COUNT_CALLBACK_OVERFLOW);
 	rtc_count_enable_callback(RTC_COUNT_CALLBACK_OVERFLOW);
@@ -1274,6 +1283,7 @@ void rtc_overflow_callback(void)
 {
 	/* Do something on RTC overflow here */
 	rtc_count_disable();
+	/* Wakeup callback to switch the timer to default cpu clock*/
 	wakeup_cb(NULL);		
 }
 #endif
@@ -1282,6 +1292,7 @@ void wakeup_cb(void *parameter)
 	sys_sleep = false;
     #ifdef ENABLE_SLEEP
 	ENTER_CRITICAL_REGION();
+	/* Stop the Software timer running at 4MHz clock and initialize the software timer to default cpu clock*/
 	common_tc_stop();
 	common_tc_init();
 	set_common_tc_overflow_callback(hw_overflow_cb);
