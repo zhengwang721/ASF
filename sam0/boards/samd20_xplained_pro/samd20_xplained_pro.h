@@ -520,33 +520,33 @@ void system_board_init(void);
 
 
 
-#define AT86RFX_SPI                  EXT2_SPI_MODULE
-#define AT86RFX_RST_PIN              EXT2_PIN_7
-#define AT86RFX_MISC_PIN             EXT2_PIN_12
-#define AT86RFX_IRQ_PIN              EXT2_PIN_9
-#define AT86RFX_SLP_PIN              EXT2_PIN_10
-#define AT86RFX_SPI_CS               EXT2_PIN_15
-#define AT86RFX_SPI_MOSI             EXT2_PIN_16
-#define AT86RFX_SPI_MISO             EXT2_PIN_17
-#define AT86RFX_SPI_SCK              EXT2_PIN_18
-#define AT86RFX_CSD     		     EXT2_PIN_5
-#define AT86RFX_CPS 	             EXT2_PIN_8
+#define AT86RFX_SPI                  EXT1_SPI_MODULE
+#define AT86RFX_RST_PIN              EXT1_PIN_7
+#define AT86RFX_MISC_PIN             EXT1_PIN_12
+#define AT86RFX_IRQ_PIN              EXT1_PIN_9
+#define AT86RFX_SLP_PIN              EXT1_PIN_10
+#define AT86RFX_SPI_CS               EXT1_PIN_15
+#define AT86RFX_SPI_MOSI             EXT1_PIN_16
+#define AT86RFX_SPI_MISO             EXT1_PIN_17
+#define AT86RFX_SPI_SCK              EXT1_PIN_18
+#define AT86RFX_CSD     		     EXT1_PIN_5
+#define AT86RFX_CPS 	             EXT1_PIN_8
 #define LED0 LED0_PIN
 
 #define AT86RFX_SPI_CONFIG(config) \
-        config.mux_setting = EXT2_SPI_SERCOM_MUX_SETTING; \
+        config.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING; \
         config.mode_specific.master.baudrate = AT86RFX_SPI_BAUDRATE; \
-        config.pinmux_pad0 = PINMUX_PA16C_SERCOM1_PAD0; \
+        config.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0; \
         config.pinmux_pad1 = PINMUX_UNUSED; \
-        config.pinmux_pad2 = PINMUX_PA18C_SERCOM1_PAD2; \
-        config.pinmux_pad3 = PINMUX_PA19C_SERCOM1_PAD3;
+        config.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2; \
+        config.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
 
-#define AT86RFX_IRQ_CHAN             EXT2_IRQ_INPUT
+#define AT86RFX_IRQ_CHAN             EXT1_IRQ_INPUT
 #define AT86RFX_INTC_INIT()          extint_enable(); \
                                                 struct extint_chan_conf eint_chan_conf; \
                                                 extint_chan_get_config_defaults(&eint_chan_conf); \
                                                 eint_chan_conf.gpio_pin = AT86RFX_IRQ_PIN; \
-                                                eint_chan_conf.gpio_pin_mux = EXT2_IRQ_PINMUX; \
+                                                eint_chan_conf.gpio_pin_mux = EXT1_IRQ_PINMUX; \
 												eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_NONE; \
                                                 eint_chan_conf.wake_if_sleeping    = true; \
                                                 eint_chan_conf.filter_input_signal = false; \

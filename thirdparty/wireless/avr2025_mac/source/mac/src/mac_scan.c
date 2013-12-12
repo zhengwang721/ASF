@@ -138,7 +138,7 @@ static bool send_scan_cmd(bool beacon_req);
  * @param scanning_type The type of the scan operation to proceed with.
  * @param buf Buffer to send mlme scan confirm to NHLE.
  */
-static void scan_proceed(uint8_t scanning_type, buffer_t *buf) //doubt
+static void scan_proceed(uint8_t scanning_type, buffer_t *buf) 
 {
 	retval_t set_status;
 	mlme_scan_conf_t *msc = (mlme_scan_conf_t *)BMM_BUFFER_POINTER(buf);
