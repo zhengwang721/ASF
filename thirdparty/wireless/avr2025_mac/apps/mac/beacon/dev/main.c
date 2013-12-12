@@ -1260,7 +1260,8 @@ void configure_rtc_count(void)
 	config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
 	config_rtc_count.mode                = RTC_COUNT_MODE_16BIT;
 	config_rtc_count.continuously_update = true;
-	rtc_count_init(&config_rtc_count);	rtc_count_enable();	
+	rtc_count_init(&config_rtc_count);	
+    rtc_count_enable();	
 }
 
 void configure_rtc_callbacks(void)
