@@ -211,6 +211,14 @@ extern "C" {
 #define CPCLK_SRC_MCK            4   //!< Use PLLBCK as coprocessor master source clock
 //@}
 
+/**
+ * \name External Crystal Oscillator
+ *
+ * it depends on the actual XTAL used on the board. 
+ * On SAM4C-EK, it is 8M oscilator in used.it depends on 
+ */
+#define CHIP_FREQ_XTAL_8M               (8000000UL)
+
 //! \name Coprocessor Master Clock Prescalers (CPMCK)
 //@{
 #define CPCLK_PRES_MIN          1     //!< Minimal value for coprocessor master clock prescaler
@@ -312,7 +320,7 @@ static inline uint32_t sysclk_get_main_hz_core1(void)
 		}
 	} else if (CONFIG_CPCLK_SOURCE == CPCLK_SRC_MAINCK) {
 		if (PMC->CKGR_MOR & CKGR_MOR_MOSCSEL) {
-			return 8000000UL;
+			return CHIP_FREQ_XTAL_8M;
 		} else {
 			uint32_t mor_moscrcf = PMC->CKGR_MOR & CKGR_MOR_MOSCRCF_Msk;
 			if (mor_moscrcf == CKGR_MOR_MOSCRCF_4_MHz) {
