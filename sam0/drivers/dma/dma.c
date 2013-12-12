@@ -140,14 +140,14 @@ static void _dma_release_channel(uint8_t channel)
  * \brief Configure the DMA resource.
  *
  * \param[in]  dma_resource Pointer to a DMA resource instance
- * \param[out] transfer_config Configurations of the DMA transfer
+ * \param[out] resource_config Configurations of the DMA resource
  *
  */
 static void _dma_set_config(struct dma_resource *resource,
-		struct dma_resource_config *transfer_config)
+		struct dma_resource_config *resource_config)
 {
 	Assert(resource);
-	Assert(transfer_config);
+	Assert(resource_config);
 
 	system_interrupt_enter_critical_section();
 
@@ -156,30 +156,30 @@ static void _dma_set_config(struct dma_resource *resource,
 	DMAC->SWTRIGCTRL.reg &= (uint32_t)(~(1 << resource->channel_id));
 
 	/* Select transfer trigger */
-	switch (transfer_config->transfer_trigger) {
+	switch (resource_config->transfer_trigger) {
 	case DMA_TRIGGER_SOFTWARE:
 		DMAC->SWTRIGCTRL.reg |= (1 << resource->channel_id);
 		break;
 
 	case DMA_TRIGGER_PERIPHERAL:
 		DMAC->CHCTRLB.reg |= DMAC_CHCTRLB_TRIGSRC(
-				transfer_config->peripheral_trigger);
+				resource_config->peripheral_trigger);
 		break;
 
 	case DMA_TRIGGER_EVENT:
 		DMAC->CHCTRLB.reg |= DMAC_CHCTRLB_EVIE | DMAC_CHCTRLB_EVACT(
-				transfer_config->event_config.input_action);
+				resource_config->event_config.input_action);
 		break;
 
 	default:
 		break;
 	}
 	/* Configure Trigger action */
-	DMAC->CHCTRLB.bit.TRIGACT = transfer_config->trigger_action;
+	DMAC->CHCTRLB.bit.TRIGACT = resource_config->trigger_action;
 
 	/** Enable event output, the event output selection is configured in
 	 * each transfer descriptor  */
-	if (transfer_config->event_config.event_output_enable) {
+	if (resource_config->event_config.event_output_enable) {
 		DMAC->CHCTRLB.reg |= DMAC_CHCTRLB_EVOE;
 	}
 
@@ -294,7 +294,7 @@ void dma_get_config_defaults(struct dma_resource_config *config)
  *
  * This function will allocate a proper channel for a DMA transfer request.
  *
- * \param[in,out]  dma_resource Pointer to a DMA resource instance pointer
+ * \param[in,out]  dma_resource Pointer to a DMA resource instance
  * \param[in] transfer_config Configurations of the DMA transfer
  *
  * \return Status of the allocation procedure.
@@ -490,7 +490,7 @@ void dma_abort_job(struct dma_resource *resource)
 
 	system_interrupt_leave_critical_section();
 
-	/* Get transfered size */
+	/* Get transferred size */
 	resource->transfered_size
 		= descriptor_section[resource->channel_id].block_transfer_count
 			- write_back_section[resource->channel_id].block_transfer_count;
@@ -504,7 +504,7 @@ void dma_abort_job(struct dma_resource *resource)
  * This function will request to suspend the transfer of the DMA resource.
  *
  * \note This function will send the request only. A channel suspend interrupt
- * will be triggered and then the transfer is truely suspended.
+ * will be triggered and then the transfer is truly suspended.
  *
  * \param[in] resource Pointer to the DMA resource
  *
