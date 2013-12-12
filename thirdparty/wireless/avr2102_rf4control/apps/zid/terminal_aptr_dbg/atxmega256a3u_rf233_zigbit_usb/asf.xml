@@ -8,7 +8,6 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_spi_master.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
-		<build type="header-file" value="conf_sio2host.h"/>
 		<build type="header-file" value="conf_usb.h"/>
         <build type="header-file" value="conf_nvm.h"/>
 		<build type="header-file" value="conf_hw_timer.h"/>
