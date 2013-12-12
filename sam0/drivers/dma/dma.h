@@ -156,7 +156,7 @@ struct dma_transfer_descriptor {
 };
 
 /** DMA configurations for transfer */
-struct dma_transfer_config {
+struct dma_resource_config {
 	/** DMA transfer priority */
 	enum dma_priority_level priority;
 	/** DMA transfer trigger selection */
@@ -280,9 +280,9 @@ static inline void dma_unregister_callback(struct dma_resource *resource,
 	resource->callback[type] = NULL;
 }
 
-void dma_get_config_defaults(struct dma_transfer_config *config);
-enum status_code dma_allocate(struct dma_resource **resource,
-		struct dma_transfer_config *config);
+void dma_get_config_defaults(struct dma_resource_config *config);
+enum status_code dma_allocate(struct dma_resource *resource,
+		struct dma_resource_config *config);
 enum status_code dma_free(struct dma_resource *resource);
 enum status_code dma_transfer_job(struct dma_resource *resource,
 		struct dma_transfer_descriptor *descriptor);

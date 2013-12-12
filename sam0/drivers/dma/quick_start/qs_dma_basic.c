@@ -72,10 +72,10 @@ static void transfer_done( const struct dma_resource* const resource )
 // [_transfer_done]
 
 // [config_dma_resource]
-static void configure_dma_resource(struct dma_resource **resource)
+static void configure_dma_resource(struct dma_resource *resource)
 {
 //! [setup_1]
-	struct dma_transfer_config config;
+	struct dma_resource_config config;
 //! [setup_1]
 
 //! [setup_2]
@@ -106,7 +106,7 @@ static void setup_transfer_descriptor( struct dma_transfer_descriptor *descripto
 
 int main(void)
 {
-	struct dma_resource *example_resource;
+	struct dma_resource example_resource;
 	system_init();
 
 	//! [setup_dma_resource]
@@ -118,12 +118,12 @@ int main(void)
 	//! [setup_transfer_descriptor]
 
 	//! [setup_callback_register]
-	dma_register_callback(example_resource, transfer_done,
+	dma_register_callback(&example_resource, transfer_done,
 			DMA_CALLBACK_TRANSFER_DONE);
 	//! [setup_callback_register]
 
 	//! [setup_enable_callback]
-	dma_enable_callback(example_resource, DMA_CALLBACK_TRANSFER_DONE);
+	dma_enable_callback(&example_resource, DMA_CALLBACK_TRANSFER_DONE);
 	//! [setup_enable_callback]
 
 	//! [setup_source_memory_content]
@@ -134,7 +134,7 @@ int main(void)
 	
 	//! [main]
 	//! [main_1]
-	dma_transfer_job(example_resource, &example_descriptor);
+	dma_transfer_job(&example_resource, &example_descriptor);
 	//! [main_1]
 	
 	//! [main_2]

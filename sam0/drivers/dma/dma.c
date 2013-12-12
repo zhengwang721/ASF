@@ -73,7 +73,7 @@ COMPILER_ALIGNED(16)
 static struct dma_transfer_descriptor write_back_section[CONF_MAX_USED_CHANNEL_NUM];
 
 /** Internal DMA resource pool */
-static struct dma_resource dma_active_resource[CONF_MAX_USED_CHANNEL_NUM];
+static struct dma_resource* dma_active_resource[CONF_MAX_USED_CHANNEL_NUM];
 
 /**
  * \brief Find a free channel for a DMA resource.
@@ -144,7 +144,7 @@ static void _dma_release_channel(uint8_t channel)
  *
  */
 static void _dma_set_config(struct dma_resource *resource,
-		struct dma_transfer_config *transfer_config)
+		struct dma_resource_config *transfer_config)
 {
 	Assert(resource);
 	Assert(transfer_config);
@@ -201,8 +201,10 @@ void DMAC_Handler( void )
 	/* Get Pending channel */
 	active_channel =  DMAC->INTPEND.reg & DMAC_INTPEND_ID_Msk;
 
+	Assert(dma_active_resource[active_channel]);
+
 	/* Get active DMA resource based on channel */
-	resource = &dma_active_resource[active_channel];
+	resource = dma_active_resource[active_channel];
 
 	/* Select the active channel */
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
@@ -271,7 +273,7 @@ void DMAC_Handler( void )
  * \param[out] config Pointer to the configuration
  *
  */
-void dma_get_config_defaults(struct dma_transfer_config *config)
+void dma_get_config_defaults(struct dma_resource_config *config)
 {
 	Assert(config);
 
@@ -300,8 +302,8 @@ void dma_get_config_defaults(struct dma_transfer_config *config)
  * \retval STATUS_OK The DMA resource was allocated successfully
  * \retval STATUS_ERR_NOT_FOUND DMA resource allocation failed
  */
-enum status_code dma_allocate(struct dma_resource **resource,
-		struct dma_transfer_config *config)
+enum status_code dma_allocate(struct dma_resource *resource,
+		struct dma_resource_config *config)
 {
 	uint8_t new_channel;
 	uint8_t count;
@@ -328,11 +330,6 @@ enum status_code dma_allocate(struct dma_resource **resource,
 		/* Enable all priority level at the same time */
 		DMAC->CTRL.reg = DMAC_CTRL_DMAENABLE | DMAC_CTRL_LVLEN(0xf);
 
-		/* Set all channels in the resource pool as not used */
-		for (count = 0; count < CONF_MAX_USED_CHANNEL_NUM; count++) {
-			dma_active_resource[count].channel_id = DMA_INVALID_CHANNEL;
-		}
-
 		_dma_inst._dma_init = true;
 	}
 
@@ -346,21 +343,19 @@ enum status_code dma_allocate(struct dma_resource **resource,
 		return STATUS_ERR_NOT_FOUND;
 	}
 
-	*resource = &dma_active_resource[new_channel];
-
 	/* Set the channel */
-	(*resource)->channel_id = new_channel;
+	resource->channel_id = new_channel;
 
 	/** Perform a reset for the allocated channel */
-	DMAC->CHID.reg = DMAC_CHID_ID((*resource)->channel_id);
+	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
 	DMAC->CHCTRLA.reg &= ~DMAC_CHCTRLA_ENABLE;
 	DMAC->CHCTRLA.reg = DMAC_CHCTRLA_SWRST;
 
 	/** Config the DMA control,channel registers and descriptors here */
-	_dma_set_config(*resource, config);
+	_dma_set_config(resource, config);
 
 	/* Log the DMA resouce into the internal DMA resource pool */
-	dma_active_resource[(*resource)->channel_id] = **resource;
+	dma_active_resource[resource->channel_id] = resource;
 
 	system_interrupt_leave_critical_section();
 
@@ -403,10 +398,7 @@ enum status_code dma_free(struct dma_resource *resource)
 	_dma_release_channel(resource->channel_id);
 
 	/* Reset the item in the DMA resource pool */
-	memset(&dma_active_resource[resource->channel_id], 0x0,
-			sizeof(struct dma_resource));
-	dma_active_resource[resource->channel_id].channel_id
-		= DMA_INVALID_CHANNEL;
+	dma_active_resource[resource->channel_id] = NULL;
 
 	system_interrupt_leave_critical_section();
 
@@ -454,6 +446,10 @@ enum status_code dma_transfer_job(struct dma_resource *resource,
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
 	DMAC->CHINTENSET.reg = DMAC_CHINTENSET_TERR | DMAC_CHINTENSET_TCMPL |
 			DMAC_CHINTENSET_SUSP;
+
+	if (!(DMAC->CHCTRLB.reg & (DMAC_CHCTRLB_TRIGSRC_Msk || DMAC_CHCTRLB_EVACT_TRIG_Val))) {
+		DMAC->SWTRIGCTRL.reg |= (1 << resource->channel_id);
+	}
 
 	/* Set job status */
 	resource->job_status = STATUS_BUSY;
