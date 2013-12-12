@@ -399,19 +399,6 @@ extern "C" {
 #include <compiler.h>
 #include <system.h>
 
-/* TODO: temporary header file patch for SAMD21 */
-#define ADC_WINCTRL_WINMODE_DISABLE    ADC_WINCTRL_WINMODE_0
-#define ADC_WINCTRL_WINMODE_MODE1      ADC_WINCTRL_WINMODE_1
-#define ADC_WINCTRL_WINMODE_MODE2      ADC_WINCTRL_WINMODE_2
-#define ADC_WINCTRL_WINMODE_MODE3      ADC_WINCTRL_WINMODE_3
-#define ADC_WINCTRL_WINMODE_MODE4      ADC_WINCTRL_WINMODE_4
-
-// Rename of ADC_AVGCTRL_SAMPLENUM_xxx!!!
-
-#define ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC	ADC_INPUTCTRL_MUXPOS_SALEDCOREVCC
-
-
-
 #if ADC_CALLBACK_MODE == true
 #  include <system_interrupt.h>
 
@@ -640,16 +627,6 @@ enum adc_positive_input {
 	ADC_POSITIVE_INPUT_PIN18         = ADC_INPUTCTRL_MUXPOS_PIN18,
 	/** ADC19 pin */
 	ADC_POSITIVE_INPUT_PIN19         = ADC_INPUTCTRL_MUXPOS_PIN19,
-#if 0 //TODO: remove
-	/** ADC20 pin */
-	ADC_POSITIVE_INPUT_PIN20         = ADC_INPUTCTRL_MUXPOS_PIN20,
-	/** ADC21 pin */
-	ADC_POSITIVE_INPUT_PIN21         = ADC_INPUTCTRL_MUXPOS_PIN21,
-	/** ADC22 pin */
-	ADC_POSITIVE_INPUT_PIN22         = ADC_INPUTCTRL_MUXPOS_PIN22,
-	/** ADC23 pin */
-	ADC_POSITIVE_INPUT_PIN23         = ADC_INPUTCTRL_MUXPOS_PIN23,
-#endif
 	/** Temperature reference */
 	ADC_POSITIVE_INPUT_TEMP          = ADC_INPUTCTRL_MUXPOS_TEMP,
 	/** Bandgap voltage */
@@ -685,40 +662,6 @@ enum adc_negative_input {
 	ADC_NEGATIVE_INPUT_PIN6          = ADC_INPUTCTRL_MUXNEG_PIN6,
 	/** ADC7 pin */
 	ADC_NEGATIVE_INPUT_PIN7          = ADC_INPUTCTRL_MUXNEG_PIN7,
-#if 0 // TODO: remove
-	/** ADC8 pin */
-	ADC_NEGATIVE_INPUT_PIN8          = ADC_INPUTCTRL_MUXNEG_PIN8,
-	/** ADC9 pin */
-	ADC_NEGATIVE_INPUT_PIN9          = ADC_INPUTCTRL_MUXNEG_PIN9,
-	/** ADC10 pin */
-	ADC_NEGATIVE_INPUT_PIN10         = ADC_INPUTCTRL_MUXNEG_PIN10,
-	/** ADC11 pin */
-	ADC_NEGATIVE_INPUT_PIN11         = ADC_INPUTCTRL_MUXNEG_PIN11,
-	/** ADC12 pin */
-	ADC_NEGATIVE_INPUT_PIN12         = ADC_INPUTCTRL_MUXNEG_PIN12,
-	/** ADC13 pin */
-	ADC_NEGATIVE_INPUT_PIN13         = ADC_INPUTCTRL_MUXNEG_PIN13,
-	/** ADC14 pin */
-	ADC_NEGATIVE_INPUT_PIN14         = ADC_INPUTCTRL_MUXNEG_PIN14,
-	/** ADC15 pin */
-	ADC_NEGATIVE_INPUT_PIN15         = ADC_INPUTCTRL_MUXNEG_PIN15,
-	/** ADC16 pin */
-	ADC_NEGATIVE_INPUT_PIN16         = ADC_INPUTCTRL_MUXNEG_PIN16,
-	/** ADC17 pin */
-	ADC_NEGATIVE_INPUT_PIN17         = ADC_INPUTCTRL_MUXNEG_PIN17,
-	/** ADC18 pin */
-	ADC_NEGATIVE_INPUT_PIN18         = ADC_INPUTCTRL_MUXNEG_PIN18,
-	/** ADC19 pin */
-	ADC_NEGATIVE_INPUT_PIN19         = ADC_INPUTCTRL_MUXNEG_PIN19,
-	/** ADC20 pin */
-	ADC_NEGATIVE_INPUT_PIN20         = ADC_INPUTCTRL_MUXNEG_PIN20,
-	/** ADC21 pin */
-	ADC_NEGATIVE_INPUT_PIN21         = ADC_INPUTCTRL_MUXNEG_PIN21,
-	/** ADC22 pin */
-	ADC_NEGATIVE_INPUT_PIN22         = ADC_INPUTCTRL_MUXNEG_PIN22,
-	/** ADC23 pin */
-	ADC_NEGATIVE_INPUT_PIN23         = ADC_INPUTCTRL_MUXNEG_PIN23,
-#endif
 	/** Internal ground */
 	ADC_NEGATIVE_INPUT_GND           = ADC_INPUTCTRL_MUXNEG_GND,
 	/** I/O ground */
@@ -1022,7 +965,7 @@ enum status_code adc_init(
  *  \li All events (input and generation) disabled
  *  \li Sleep operation disabled
  *  \li No reference compensation
- *  \li Factory gain/offset correction
+ *  \li No gain/offset correction
  *  \li No added sampling time
  *  \li Pin scan mode disabled
  *
@@ -1050,21 +993,12 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 	config->event_action                  = ADC_EVENT_ACTION_DISABLED;
 	config->run_in_standby                = false;
 	config->reference_compensation_enable = false;
-	config->correction.correction_enable  = true;
-	config->correction.gain_correction    =
-			(*(uint32_t *)ADC_FUSES_GAINCORR_ADDR &
-			ADC_FUSES_GAINCORR_Msk) >> ADC_FUSES_GAINCORR_Pos;
-	config->correction.offset_correction  =
-			(*(uint32_t *)ADC_FUSES_OFFSETCORR_ADDR &
-			ADC_FUSES_OFFSETCORR_Msk) >> ADC_FUSES_OFFSETCORR_Pos;
+	config->correction.correction_enable  = false;
+	config->correction.gain_correction    = ADC_GAINCORR_RESETVALUE;
+	config->correction.offset_correction  = ADC_OFFSETCORR_RESETVALUE;
 	config->sample_length                 = 0;
 	config->pin_scan.offset_start_scan    = 0;
 	config->pin_scan.inputs_to_scan       = 0;
-
-	if (config->correction.gain_correction == 0xFFF ||
-			config->correction.offset_correction == 0xFFF) {
-		config->correction.correction_enable = false;
-	}
 }
 
 /** @} */
