@@ -567,6 +567,8 @@ bool wpan_task(void);
      *                      - @ref WPAN_TXOPT_ACK,
      *                      - @ref WPAN_TXOPT_INDIRECT,
      *                      - @ref WPAN_TXOPT_INDIRECT_ACK.
+     *                      - @ref WPAN_TXOPT_GTS.
+     *                      - @ref WPAN_TXOPT_GTS_ACK.
      * @param msdu          Pointer to the data to be transmitted.
      * @param msduLength    Length of the data to be transmitted.
      *

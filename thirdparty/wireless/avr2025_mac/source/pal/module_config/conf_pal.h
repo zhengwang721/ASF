@@ -185,7 +185,7 @@
 
 #define AT86RFX_SPI_BAUDRATE         (3000000)
 
-#endif /* SAM */
+#endif /* SAM4L */
 
 #if (SAMD20)
 
