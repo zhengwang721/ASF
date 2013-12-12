@@ -28,6 +28,7 @@
 		<device-support value="sam4s"/>
 		<device-support value="sam4l"/>
 		<device-support value="sam4e"/>
+		<device-support value="samd21"/>
 	</module>
 
 	<select-by-device id="common.drivers.usb.device" caption="USB Device">
@@ -113,6 +114,17 @@
 			<require idref="sam.drivers.usbc.device"/>
 			<device-support value="sam4l"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam4l"/>
+		</module>
+		<module type="driver" id="common.drivers.usb.device#7" caption="USB Device - SAM0 USB Device implementation">
+			<info type="gui-flag" value="hidden"/>
+			<info type="description" value="summary">
+			USB Device driver. Provides functions for configuring and using the USB Device functionality. SAM0 USB Device implementation of common API.
+			</info>
+			<build type="define" name="UDD_ENABLE" value=""/>
+			<require idref="sam0.drivers.usb"/>
+			<require idref="sam0.drivers.usb.udd"/>
+			<device-support value="samd21"/>
+			<generator value="doxygen-module" default-mcu="unspecified-samd21"/>
 		</module>
 	</select-by-device>
 

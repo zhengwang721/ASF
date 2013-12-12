@@ -38,4 +38,21 @@
 		</info>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
+	<module type="application" id="common.services.usb.class.hid.device.mouse.example.lite" caption="USB Device HID Mouse Example Lite">
+		<info type="description" value="summary">
+		Provide a lite application example of USB Device HID Mouse implementation.
+		</info>
+		<build type="header-file" value="conf_usb.h"/>
+		<build type="header-file" value="ui.h"/>
+		<build type="header-file" value="main.h"/>
+		<build type="c-source" value="main.c"/>
+		<build type="include-path" value="."/>
+		<device-support value="samd21"/>
+		<require idref="common.services.usb.class.device"/>
+		<info type="keyword" value="technology">
+			<keyword value="USB"/>
+			<keyword value="Communication"/>
+		</info>
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
 </asf>
