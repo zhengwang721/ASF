@@ -355,7 +355,8 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	frame_ptr--;
 	*frame_ptr = 0;
 #endif
-
+    /* frame_ptr now points to the GTS Specification .
+	 **/
 #ifdef GTS_SUPPORT
 	mac_gts_table_update();
 	uint8_t gts_octets = mac_add_gts_info(frame_ptr);
@@ -369,8 +370,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 		frame_ptr--;
 	}
 #else
-	/* frame_ptr now points to the Pending Address Specification (Octet 1).
-	 **/
+	
 	frame_ptr--;
 	*frame_ptr = 0;
 #endif /* GTS_SUPPORT */

@@ -141,7 +141,7 @@
 /** Defines the default Beacon KeyIndex */
 #define DEFAULT_BEACON_KEY_INDEX		(0x00)
 
-#define GTS_PAYLOAD_LEN                 (22 + 1 + 1 +1)
+
 /**
  * Defines the time in ms to initiate an update of the beacon payload.
  */
@@ -199,9 +199,10 @@ uint16_t no_of_assoc_devices;
 
 
 /** This array stores the current beacon payload. */
-uint8_t beacon_payload[BEACON_PAYLOAD_LEN] = {"Atmel beacon demo 0"};
+uint8_t beacon_payload[] = {"Atmel beacon demo 0"};
+uint8_t broadcast_payload[] ={"Broadcast Data"};
 #ifdef GTS_SUPPORT
-static uint8_t gts_payload[GTS_PAYLOAD_LEN] = {"GTS Data from coordinator"};
+static uint8_t gts_payload[] = {"GTS Data from coordinator"};
 #endif /* GTS_SUPPORT */
 /** This variable stores the current state of the node. */
 coord_state_t coord_state = COORD_STARTING;
@@ -357,8 +358,8 @@ int main(void)
 			if (!ioport_get_pin_level(GPIO_PUSH_BUTTON_0)) {
 				dst_addr.Addr.short_address = BROADCAST;
 				wpan_mcps_data_req(FCF_SHORT_ADDR, &dst_addr,
-						14,
-						(uint8_t *)"Broadcast Data", 1,
+						strlen(broadcast_payload),
+						&broadcast_payload, 1,
 						WPAN_TXOPT_OFF);
 			}
 		}
@@ -1238,7 +1239,7 @@ static void bc_data_cb(void *parameter)
 	/* The transmission is direct, but without acknowledgment. */
 	if (wpan_mcps_data_req(src_addr_mode,
 			&dst_addr,
-			1,     /* One octet */
+			strlen(payload),     /* One octet */
 			&payload,
 			curr_msdu_handle_temp,
 			WPAN_TXOPT_OFF
@@ -1374,7 +1375,7 @@ static void gts_data_cb(void *parameter)
 #endif
 		if (!wpan_mcps_data_req(src_addr_mode,
 				&dst_addr,
-				GTS_PAYLOAD_LEN,  /* One octet */
+				strlen(gts_payload),  /* One octet */
 				gts_payload,
 				gts_msdu_handle,
 				WPAN_TXOPT_GTS_ACK
