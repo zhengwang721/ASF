@@ -658,9 +658,9 @@ static inline void rtc_calendar_disable(struct rtc_module *const module)
 /**
  * \internal Find the index of given RTC module instance.
  *
- * \param[in] RTC module instance pointer.
+ * \param[in] hw  RTC module instance pointer.
  *
- * \return Index of the given AC module instance.
+ * \return Index of the given RTC module instance.
  */
 uint8_t _rtc_get_inst_index(
 		Rtc *const hw)
