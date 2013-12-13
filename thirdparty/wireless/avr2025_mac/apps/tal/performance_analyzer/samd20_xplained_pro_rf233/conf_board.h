@@ -64,12 +64,13 @@
 #endif
 
 #ifdef CUSTOM_DEFAULT_TX_PWR /*For External PA for 233FEM*/
+#define MAX_PWR_DBM  0X15
 /*
  * Default value of transmit power of transceiver: Preset
- *    - definition acct. IEEE802.15.4 PHY PIB attribute phyTransmitPower
+ *    - definition according to IEEE802.15.4 PHY PIB attribute phyTransmitPower
  *    - TX Pout init value based on validation
  */
-#define TAL_TRANSMIT_POWER_DEFAULT      (TX_PWR_TOLERANCE | 0x14)
+#define TAL_TRANSMIT_POWER_DEFAULT      (TX_PWR_TOLERANCE | MAX_PWR_DBM)
 #endif
 //4MHz Baudrate will be used to reduce the no.of Invalid Frames
 //# include "conf_usb.h"
