@@ -46,7 +46,7 @@
 #include "timer_mgt.h"
 #include "lwip/init.h"
 #include "lwip/sys.h"
-#include "port.h"
+
 /* Clock tick count. */
 static volatile uint32_t gs_ul_clk_tick;
 
