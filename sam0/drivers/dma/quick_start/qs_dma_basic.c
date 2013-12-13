@@ -147,7 +147,7 @@ int main(void)
 	
 	//! [main]
 	//! [main_1]
-	dma_transfer_job(&example_resource);
+	dma_start_transfer_job(&example_resource);
 	//! [main_1]
 	
 	//! [main_2]

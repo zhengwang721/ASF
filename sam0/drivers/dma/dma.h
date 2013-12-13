@@ -399,7 +399,7 @@ void dma_get_config_defaults(struct dma_resource_config *config);
 enum status_code dma_allocate(struct dma_resource *resource,
 		struct dma_resource_config *config);
 enum status_code dma_free(struct dma_resource *resource);
-enum status_code dma_transfer_job(struct dma_resource *resource);
+enum status_code dma_start_transfer_job(struct dma_resource *resource);
 void dma_abort_job(struct dma_resource *resource);
 void dma_suspend_job(struct dma_resource *resource);
 void dma_resume_job(struct dma_resource *resource);

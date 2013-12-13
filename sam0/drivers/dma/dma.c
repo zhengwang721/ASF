@@ -67,13 +67,13 @@ struct _dma_module _dma_inst = {
 
 /** Initial description section */
 COMPILER_ALIGNED(16)
-static DmacDescriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
+static DmacDescriptor _descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
 /** Initial write back memory section */
 COMPILER_ALIGNED(16)
-static DmacDescriptor write_back_section[CONF_MAX_USED_CHANNEL_NUM];
+static DmacDescriptor _write_back_section[CONF_MAX_USED_CHANNEL_NUM];
 
 /** Internal DMA resource pool */
-static struct dma_resource* dma_active_resource[CONF_MAX_USED_CHANNEL_NUM];
+static struct dma_resource* _dma_active_resource[CONF_MAX_USED_CHANNEL_NUM];
 
 /**
  * \brief Find a free channel for a DMA resource.
@@ -201,10 +201,10 @@ void DMAC_Handler( void )
 	/* Get Pending channel */
 	active_channel =  DMAC->INTPEND.reg & DMAC_INTPEND_ID_Msk;
 
-	Assert(dma_active_resource[active_channel]);
+	Assert(_dma_active_resource[active_channel]);
 
 	/* Get active DMA resource based on channel */
-	resource = dma_active_resource[active_channel];
+	resource = _dma_active_resource[active_channel];
 
 	/* Select the active channel */
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
@@ -212,8 +212,8 @@ void DMAC_Handler( void )
 
 	/* Calculate block transfer size of the DMA transfer */
 	resource->transfered_size
-		= descriptor_section[resource->channel_id].BTCNT.reg
-			- write_back_section[resource->channel_id].BTCNT.reg;
+		= _descriptor_section[resource->channel_id].BTCNT.reg
+			- _write_back_section[resource->channel_id].BTCNT.reg;
 
 	/* DMA channel interrupt handler */
 	if (isr & DMAC_CHINTENCLR_TERR) {
@@ -269,6 +269,7 @@ void DMAC_Handler( void )
  *  \li software trigger is used as the transfer trigger
  *  \li priority level 0
  *  \li Only software/event trigger
+ *  \li Trigger for transaction 
  *  \li No event input /output
  * \param[out] config Pointer to the configuration
  *
@@ -283,6 +284,8 @@ void dma_get_config_defaults(struct dma_resource_config *config)
 	config->priority = DMA_PRIORITY_LEVEL_0;
 	/* Only software/event trigger */
 	config->peripheral_trigger = 0;
+	/* Transation trigger */
+	config->trigger_action = DMA_TRIGGER_ACTON_TRANSACTION;
 
 	/* Event configurations, no event input/output */
 	config->event_config.input_action = DMA_EVENT_INPUT_NOACT;
@@ -323,8 +326,8 @@ enum status_code dma_allocate(struct dma_resource *resource,
 
 		/* Setup descriptor base address and write back section base
 		 * address */
-		DMAC->BASEADDR.reg = (uint32_t)descriptor_section;
-		DMAC->WRBADDR.reg = (uint32_t)write_back_section;
+		DMAC->BASEADDR.reg = (uint32_t)_descriptor_section;
+		DMAC->WRBADDR.reg = (uint32_t)_write_back_section;
 
 		/* Enable all priority level at the same time */
 		DMAC->CTRL.reg = DMAC_CTRL_DMAENABLE | DMAC_CTRL_LVLEN(0xf);
@@ -356,7 +359,7 @@ enum status_code dma_allocate(struct dma_resource *resource,
 	resource->descriptor = NULL;
 
 	/* Log the DMA resouce into the internal DMA resource pool */
-	dma_active_resource[resource->channel_id] = resource;
+	_dma_active_resource[resource->channel_id] = resource;
 
 	system_interrupt_leave_critical_section();
 
@@ -399,7 +402,7 @@ enum status_code dma_free(struct dma_resource *resource)
 	_dma_release_channel(resource->channel_id);
 
 	/* Reset the item in the DMA resource pool */
-	dma_active_resource[resource->channel_id] = NULL;
+	_dma_active_resource[resource->channel_id] = NULL;
 
 	system_interrupt_leave_critical_section();
 
@@ -420,7 +423,7 @@ enum status_code dma_free(struct dma_resource *resource)
  * \retval STATUS_BUSY The DMA resource was busy and the transfer was not started
  * \retval STATUS_ERR_INVALID_ARG Transfer size is 0 and transfer was not started
  */
-enum status_code dma_transfer_job(struct dma_resource *resource)
+enum status_code dma_start_transfer_job(struct dma_resource *resource)
 {
 	Assert(resource);
 	Assert(resource->channel_id != DMA_INVALID_CHANNEL);
@@ -456,7 +459,7 @@ enum status_code dma_transfer_job(struct dma_resource *resource)
 	resource->job_status = STATUS_BUSY;
 
 	/* Set channel x descriptor 0 to the descriptor base address */
-	memcpy(&descriptor_section[resource->channel_id], resource->descriptor,
+	memcpy(&_descriptor_section[resource->channel_id], resource->descriptor,
 						sizeof(DmacDescriptor));
 
 	/* Enable the transfer channel */
@@ -494,8 +497,8 @@ void dma_abort_job(struct dma_resource *resource)
 
 	/* Get transferred size */
 	resource->transfered_size
-		= descriptor_section[resource->channel_id].BTCNT.reg
-			- write_back_section[resource->channel_id].BTCNT.reg;
+		= _descriptor_section[resource->channel_id].BTCNT.reg
+			- _write_back_section[resource->channel_id].BTCNT.reg;
 
 	resource->job_status = STATUS_ABORTED;
 }
@@ -623,14 +626,23 @@ void dma_descriptor_create(DmacDescriptor* descriptor,
 enum status_code dma_add_descriptor(struct dma_resource *resource,
 		DmacDescriptor* descriptor)
 {
+	DmacDescriptor* desc = resource->descriptor;
+
 	if (resource->job_status == STATUS_BUSY) {
 		return STATUS_BUSY;
 	}
 
-	if (resource->descriptor == NULL) {
+	/* Look up for an empty space for the descriptor */
+	if (desc == NULL) {
 		resource->descriptor = descriptor;
 	} else {
-		resource->descriptor->DESCADDR.reg = (uint32_t)descriptor;
+		/* Looking for end of descriptor link */
+		while(desc->DESCADDR.reg != 0) {
+			desc = (DmacDescriptor*)(desc->DESCADDR.reg);
+		}
+
+		/* Set to the end of descriptor list */
+		desc->DESCADDR.reg = (uint32_t)descriptor;
 	}
 
 	return STATUS_OK;
