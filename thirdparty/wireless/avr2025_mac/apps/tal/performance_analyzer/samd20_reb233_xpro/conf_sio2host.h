@@ -1,5 +1,5 @@
 /**
- * \file *********************************************************************
+ * \file conf_sio2host.h
  *
  * \brief Serial Input & Output configuration
  *
