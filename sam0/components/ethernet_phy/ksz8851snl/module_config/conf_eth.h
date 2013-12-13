@@ -1,9 +1,9 @@
-/**
+ /**
  * \file
  *
- * \brief SSD1306 display controller driver configuration file.
+ * \brief KSZ8851SNL driver configuration.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,28 +40,80 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_SSD1306_H_INCLUDED
-#define CONF_SSD1306_H_INCLUDED
+
+#ifndef CONF_ETH_H_INCLUDED
+#define CONF_ETH_H_INCLUDED
 
 #include <board.h>
 
+/** Disable lwIP checksum (performed by hardware). */
+#define CHECKSUM_GEN_IP                               0
+#define CHECKSUM_GEN_UDP                              0
+#define CHECKSUM_GEN_TCP                              0
+#define CHECKSUM_GEN_ICMP                             0
+#define CHECKSUM_CHECK_IP                             0
+#define CHECKSUM_CHECK_UDP                            0
+#define CHECKSUM_CHECK_TCP                            0
+
+/** Number of buffer for RX */
+#define NETIF_RX_BUFFERS                              2
+
+/** Number of buffer for TX */
+#define NETIF_TX_BUFFERS                              2
+
+/** MAC address definition.  The MAC address must be unique on the network. */
+#define ETHERNET_CONF_ETHADDR0                        0x00
+#define ETHERNET_CONF_ETHADDR1                        0x04
+#define ETHERNET_CONF_ETHADDR2                        0x25
+#define ETHERNET_CONF_ETHADDR3                        0x1C
+#define ETHERNET_CONF_ETHADDR4                        0xA0
+#define ETHERNET_CONF_ETHADDR5                        0x02
+
+/** WAN Address: 192.168.0.2 */
+/* The IP address being used. */
+#define ETHERNET_CONF_IPADDR0                         192
+#define ETHERNET_CONF_IPADDR1                         168
+#define ETHERNET_CONF_IPADDR2                         0
+#define ETHERNET_CONF_IPADDR3                         100
+
+/** WAN gateway: 192.168.0.1 */
+/** The gateway address being used. */
+#define ETHERNET_CONF_GATEWAY_ADDR0                   192
+#define ETHERNET_CONF_GATEWAY_ADDR1                   168
+#define ETHERNET_CONF_GATEWAY_ADDR2                   0
+#define ETHERNET_CONF_GATEWAY_ADDR3                   250
+
+/** The network mask being used. */
+#define ETHERNET_CONF_NET_MASK0                       255
+#define ETHERNET_CONF_NET_MASK1                       255
+#define ETHERNET_CONF_NET_MASK2                       255
+#define ETHERNET_CONF_NET_MASK3                       0
+
 // Interface configuration for SAM D20 Xplained Pro
-#  define SSD1306_SPI                 EXT3_SPI_MODULE
-#  define CONFIG_SSD1306_FRAMEBUFFER
+#define KSZ8851SNL_SPI                                EXT1_SPI_MODULE
+#define KSZ8851SNL_SPI_IRQn                           SERCOM0_IRQn
 
-#  define SSD1306_DC_PIN              EXT3_PIN_5
-#  define SSD1306_RES_PIN             EXT3_PIN_10
-#  define SSD1306_CS_PIN              EXT3_PIN_15
+/** Pins configuration. */
+#define KSZ8851SNL_RSTN_PIN                           EXT1_PIN_6
+#define KSZ8851SNL_CS_PIN                             EXT1_PIN_15
+#define KSZ8851SNL_INTN_EIC_CHANNEL                   EXT1_IRQ_INPUT
+#define KSZ8851SNL_INTN_EIC_PIN                       EXT1_IRQ_PIN
+#define KSZ8851SNL_INTN_EIC_PIN_MUX                   EXT1_IRQ_PINMUX
 
-#  define SSD1306_SPI_PINMUX_SETTING  EXT3_SPI_SERCOM_MUX_SETTING
-#  define SSD1306_SPI_PINMUX_PAD0     EXT3_SPI_SERCOM_PINMUX_PAD0
-#  define SSD1306_SPI_PINMUX_PAD1     PINMUX_UNUSED
-#  define SSD1306_SPI_PINMUX_PAD2     EXT3_SPI_SERCOM_PINMUX_PAD2
-#  define SSD1306_SPI_PINMUX_PAD3     EXT3_SPI_SERCOM_PINMUX_PAD3
-
+/** SPI settings. */
+#define KSZ8851SNL_SPI_PINMUX_SETTING                 EXT1_SPI_SERCOM_MUX_SETTING
+#define KSZ8851SNL_SPI_PINMUX_PAD0                    EXT1_SPI_SERCOM_PINMUX_PAD0
+#define KSZ8851SNL_SPI_PINMUX_PAD1                    PINMUX_UNUSED
+#define KSZ8851SNL_SPI_PINMUX_PAD2                    EXT1_SPI_SERCOM_PINMUX_PAD2
+#define KSZ8851SNL_SPI_PINMUX_PAD3                    EXT1_SPI_SERCOM_PINMUX_PAD3
 // Minimum clock period is 50ns@3.3V -> max frequency is 20MHz
-#define SSD1306_CLOCK_SPEED           1000000UL
-#define SSD1306_DISPLAY_CONTRAST_MAX  40
-#define SSD1306_DISPLAY_CONTRAST_MIN  30
+// Warning SAMD20 revision D (and below) has a limitation on pad speed -> max frequency is 10MHz
+#define KSZ8851SNL_CLOCK_SPEED                        10000000UL
 
-#endif /* CONF_SSD1306_H_INCLUDED */
+/* Interrupt priorities. (lowest value = highest priority) */
+/* ISRs using FreeRTOS *FromISR APIs must have priorities below or equal to */
+/* configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY. */
+#define INT_PRIORITY_SPI                              12
+#define INT_PRIORITY_PIO                              12
+
+#endif /* CONF_ETH_H_INCLUDED */
