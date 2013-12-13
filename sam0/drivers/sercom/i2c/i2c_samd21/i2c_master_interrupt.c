@@ -464,14 +464,14 @@ void _i2c_master_interrupt_handler(
 			module->registered_callback;
 
 	/* Check if the module should respond to address ack */
-	if (module->buffer_length <= 0 && module->buffer_remaining > 0) {
+	if ((module->buffer_length <= 0) && (module->buffer_remaining > 0)) {
 		/* Call function for address response */
 		_i2c_master_async_address_response(module);
 
 	/* Check if buffer write is done */
-	} else if (module->buffer_length > 0 && module->buffer_remaining <= 0 &&
-			module->status == STATUS_BUSY &&
-			module->transfer_direction == I2C_TRANSFER_WRITE) {
+	} else if ((module->buffer_length > 0) && (module->buffer_remaining <= 0) &&
+			(module->status == STATUS_BUSY) &&
+			(module->transfer_direction == I2C_TRANSFER_WRITE)) {
 		/* Stop packet operation */
 		i2c_module->INTENCLR.reg =
 				SERCOM_I2CM_INTENCLR_MB | SERCOM_I2CM_INTENCLR_SB;
@@ -489,7 +489,7 @@ void _i2c_master_interrupt_handler(
 		}
 
 	/* Continue buffer write/read */
-	} else if (module->buffer_length > 0 && module->buffer_remaining > 0){
+	} else if ((module->buffer_length > 0) && (module->buffer_remaining > 0)){
 		/* Check that bus ownership is not lost */
 		if (!(i2c_module->STATUS.reg & SERCOM_I2CM_STATUS_BUSSTATE(2))) {
 			module->status = STATUS_ERR_PACKET_COLLISION;
@@ -501,9 +501,9 @@ void _i2c_master_interrupt_handler(
 	}
 
 	/* Check if read buffer transfer is complete */
-	if (module->buffer_length > 0 && module->buffer_remaining <= 0 &&
-			module->status == STATUS_BUSY &&
-			module->transfer_direction == I2C_TRANSFER_READ) {
+	if ((module->buffer_length > 0) && (module->buffer_remaining <= 0) &&
+			(module->status == STATUS_BUSY) &&
+			(module->transfer_direction == I2C_TRANSFER_READ)) {
 
 		/* Stop packet operation */
 		i2c_module->INTENCLR.reg =
@@ -522,7 +522,7 @@ void _i2c_master_interrupt_handler(
 	}
 
 	/* Check for error */
-	if (module->status != STATUS_BUSY && module->status != STATUS_OK) {
+	if ((module->status != STATUS_BUSY) && (module->status != STATUS_OK)) {
 		/* Stop packet operation */
 		i2c_module->INTENCLR.reg = SERCOM_I2CM_INTENCLR_MB |
 				SERCOM_I2CM_INTENCLR_SB;
@@ -531,7 +531,7 @@ void _i2c_master_interrupt_handler(
 		module->buffer_remaining = 0;
 
 		/* Send nack and stop command unless arbitration is lost */
-		if (module->status != STATUS_ERR_PACKET_COLLISION &&
+		if ((module->status != STATUS_ERR_PACKET_COLLISION) &&
 				module->send_stop) {
 			_i2c_master_wait_for_sync(module);
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT |
