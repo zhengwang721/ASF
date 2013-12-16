@@ -46,7 +46,7 @@
 
 			<info type="description" value="pdf">
 				This document describes how to use the Digital-to-Analog
-				Converter on the SAM D2x, both the ASF driver and the
+				Converter on the SAM D20, both the ASF driver and the
 				peripheral itself.
 			</info>
 
@@ -56,7 +56,7 @@
 			<build type="header-file" subtype="api" value="dac_callback.h"/>
 			<build type="c-source" value="dac_callback.c"/>
 
-			<build type="header-file" value="quick_start_callback/qs_dac_callback.h"/>
+			<build type="header-file" value="quick_start/qs_dac_basic.h"/>
 
 			<build type="define" name="DAC_CALLBACK_MODE" value="true"/>
 			<build type="doxygen-enable-section" value="DAC_CALLBACK_MODE"/>

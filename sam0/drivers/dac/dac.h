@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Peripheral Digital-to-Analog Converter Driver
+ * \brief SAM D2x Peripheral Digital-to-Analog Converter Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define DAC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_dac_group SAM D20 Digital-to-Analog Driver (DAC)
+ * \defgroup asfdoc_sam0_dac_group SAM D2x Digital-to-Analog Driver (DAC)
  *
- * This driver for SAM D20 devices provides an interface for the conversion of
+ * This driver for SAM D2x devices provides an interface for the conversion of
  * digital values to analog voltage. The following driver API modes are covered
  * by this manual:
  *
@@ -60,23 +60,23 @@
  *  - DAC (Digital to Analog Converter)
  *
  * The outline of this documentation is as follows:
- *  - \ref asfdoc_samd20_dac_prerequisites
- *  - \ref asfdoc_samd20_dac_module_overview
- *  - \ref asfdoc_samd20_dac_special_considerations
- *  - \ref asfdoc_samd20_dac_extra_info
- *  - \ref asfdoc_samd20_dac_examples
- *  - \ref asfdoc_samd20_dac_api_overview
+ *  - \ref asfdoc_sam0_dac_prerequisites
+ *  - \ref asfdoc_sam0_dac_module_overview
+ *  - \ref asfdoc_sam0_dac_special_considerations
+ *  - \ref asfdoc_sam0_dac_extra_info
+ *  - \ref asfdoc_sam0_dac_examples
+ *  - \ref asfdoc_sam0_dac_api_overview
  *
  *
- * \section asfdoc_samd20_dac_prerequisites Prerequisites
+ * \section asfdoc_sam0_dac_prerequisites Prerequisites
  *
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_samd20_dac_module_overview Module Overview
+ * \section asfdoc_sam0_dac_module_overview Module Overview
  *
  * The Digital-to-Analog converter converts a digital value to analog voltage.
- * The SAM D20 DAC module has one channel with 10-bit resolution, and is capable
+ * The SAM D2x DAC module has one channel with 10-bit resolution, and is capable
  * of converting up to 350k samples per second (ksps).
  *
  * A common use of DAC is to generate audio signals by connecting the DAC
@@ -92,12 +92,12 @@
  * to trigger the conversion from the event system.
  *
  * A simplified block diagram of the DAC can be seen in
- * \ref asfdoc_samd20_dac_module_block_diagram "the figure below".
+ * \ref asfdoc_sam0_dac_module_block_diagram "the figure below".
  *
- * \anchor asfdoc_samd20_dac_module_block_diagram
+ * \anchor asfdoc_sam0_dac_module_block_diagram
  * \image html dac_block_diagram.gif "DAC Block Diagram"
  *
- * \subsection asfdoc_samd20_dac_conversion_range Conversion Range
+ * \subsection asfdoc_sam0_dac_conversion_range Conversion Range
  * The conversion range is between GND and the selected voltage reference.
  * Available voltage references are:
  * \li AVCC voltage reference
@@ -112,7 +112,7 @@
  *    V_{OUT} = \frac{DATA}{0x3FF} \times VREF
  * \f]
  *
- * \subsection asfdoc_samd20_dac_conversion Conversion
+ * \subsection asfdoc_sam0_dac_conversion Conversion
  * The digital value written to the conversion data register (DATA) will be
  * converted to an analog value.
  * Writing the DATA register will start a new conversion.
@@ -120,21 +120,21 @@
  * the writing of the DATA register can then be triggered from the event
  * system, which will load the value from DATABUF to DATA.
  *
- * \subsection asfdoc_samd20_dac_analog_output Analog Output
+ * \subsection asfdoc_sam0_dac_analog_output Analog Output
  * The analog output value can be output to either the VOUT pin or internally,
  * but not both at the same time.
  *
- * \subsubsection asfdoc_samd20_dac_analog_output_external External Output
+ * \subsubsection asfdoc_sam0_dac_analog_output_external External Output
  * The output buffer must be enabled in order to drive the DAC output to the
  * VOUT pin. Due to the output buffer, the DAC has high drive strength, and is
  * capable of driving both resistive and capacitive loads, as well as loads
  * which combine both.
  *
- * \subsubsection asfdoc_samd20_dac_analog_output_internal Internal Output
+ * \subsubsection asfdoc_sam0_dac_analog_output_internal Internal Output
  * The analog value can be internally available for use as input to the
  * AC or ADC modules.
  *
- * \subsection asfdoc_samd20_dac_events Events
+ * \subsection asfdoc_sam0_dac_events Events
  * Events generation and event actions are configurable in the DAC.
  * The DAC has one event line input and one event output: <i>Start Conversion</i>
  * and <i>Data Buffer Empty</i>.
@@ -150,19 +150,19 @@
  * new data can be loaded to the buffer.
  *
  * \note The connection of events between modules requires the use of the
- *       \ref asfdoc_samd20_events_group "SAM D20 Event System Driver (EVENTS)"
+ *       \ref asfdoc_sam0_events_group "SAM D2x Event System Driver (EVENTS)"
  *       to route output event of one module to the the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
  *
- * \subsection asfdoc_samd20_dac_data_adjust Left and Right Adjusted Values
+ * \subsection asfdoc_sam0_dac_data_adjust Left and Right Adjusted Values
  * The 10-bit input value to the DAC is contained in a 16-bit register. This
  * can be configured to be either left or right adjusted. In
- * \ref asfdoc_samd20_dac_module_adj_modes "the figure below" both options are
+ * \ref asfdoc_sam0_dac_module_adj_modes "the figure below" both options are
  * shown, and the position of the most (MSB) and the least (LSB) significant bits
  * are indicated. The unused bits should always be written to zero.
  *
- * \anchor asfdoc_samd20_dac_module_adj_modes
+ * \anchor asfdoc_sam0_dac_module_adj_modes
  * \dot
  * digraph {
  *   subgraph cluster_right {
@@ -250,7 +250,7 @@
  * }
  * \enddot
  *
- * \subsection asfdoc_samd20_dac_clk_sources Clock Sources
+ * \subsection asfdoc_sam0_dac_clk_sources Clock Sources
  * The clock for the DAC interface (CLK_DAC) is generated by the Power Manager.
  * This clock is turned on by default, and can be enabled and disabled in the
  * Power Manager.
@@ -265,37 +265,37 @@
  * The oscillator source for the GCLK_DAC clock is selected in the System
  * Control Interface (SCIF).
  *
- * \section asfdoc_samd20_dac_special_considerations Special Considerations
+ * \section asfdoc_sam0_dac_special_considerations Special Considerations
  *
- * \subsection asfdoc_samd20_dac_special_considerations_output_buffer Output Driver
+ * \subsection asfdoc_sam0_dac_special_considerations_output_buffer Output Driver
  * The DAC can only do conversions in Active or Idle modes. However, if the
  * output buffer is enabled it will draw current even if the system is in
  * sleep mode. Therefore, always make sure that the output buffer is not
  * enabled when it is not needed, to ensure minimum power consumption.
  *
- * \subsection asfdoc_samd20_dac_special_considerations_conversion_time Conversion Time
+ * \subsection asfdoc_sam0_dac_special_considerations_conversion_time Conversion Time
  * DAC conversion time is approximately 2.85us. The user must ensure that new
  * data is not written to the DAC before the last conversion is complete.
  * Conversions should be triggered by a periodic event from a Timer/Counter or
  * another peripheral.
  *
  *
- * \section asfdoc_samd20_dac_extra_info Extra Information
+ * \section asfdoc_sam0_dac_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_samd20_dac_extra. This includes:
- *  - \ref asfdoc_samd20_dac_extra_acronyms
- *  - \ref asfdoc_samd20_dac_extra_dependencies
- *  - \ref asfdoc_samd20_dac_extra_errata
- *  - \ref asfdoc_samd20_dac_extra_history
+ * For extra information see \ref asfdoc_sam0_dac_extra. This includes:
+ *  - \ref asfdoc_sam0_dac_extra_acronyms
+ *  - \ref asfdoc_sam0_dac_extra_dependencies
+ *  - \ref asfdoc_sam0_dac_extra_errata
+ *  - \ref asfdoc_sam0_dac_extra_history
  *
  *
- * \section asfdoc_samd20_dac_examples Examples
+ * \section asfdoc_sam0_dac_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_samd20_dac_exqsg.
+ * \ref asfdoc_sam0_dac_exqsg.
  *
  *
- * \section asfdoc_samd20_dac_api_overview API Overview
+ * \section asfdoc_sam0_dac_api_overview API Overview
  * @{
  */
 
@@ -716,9 +716,9 @@ void dac_clear_status(
 /** @} */
 
 /**
- * \page asfdoc_samd20_dac_extra Extra Information for DAC Driver
+ * \page asfdoc_sam0_dac_extra Extra Information for DAC Driver
  *
- * \section asfdoc_samd20_dac_extra_acronyms Acronyms
+ * \section asfdoc_sam0_dac_extra_acronyms Acronyms
  * The table below presents the acronyms used in this module:
  *
  * <table>
@@ -749,17 +749,17 @@ void dac_clear_status(
  * </table>
  *
  *
- * \section asfdoc_samd20_dac_extra_dependencies Dependencies
+ * \section asfdoc_sam0_dac_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
- *  - \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
+ *  - \ref asfdoc_sam0_system_pinmux_group "System Pin Multiplexer Driver"
  *
  *
- * \section asfdoc_samd20_dac_extra_errata Errata
+ * \section asfdoc_sam0_dac_extra_errata Errata
  * There are no errata related to this driver.
  *
  *
- * \section asfdoc_samd20_dac_extra_history Module History
+ * \section asfdoc_sam0_dac_extra_history Module History
  * An overview of the module history is presented in the table below, with
  * details on the enhancements and fixes made to the module since its first
  * release. The current version of this corresponds to the newest version in
@@ -776,17 +776,17 @@ void dac_clear_status(
  */
 
 /**
- * \page asfdoc_samd20_dac_exqsg Examples for DAC Driver
+ * \page asfdoc_sam0_dac_exqsg Examples for DAC Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_samd20_dac_group. QSGs are simple examples with
+ * applications for \ref asfdoc_sam0_dac_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
- *  - \subpage asfdoc_samd20_dac_basic_use_case
+ *  - \subpage asfdoc_sam0_dac_basic_use_case
  *
- * \page asfdoc_samd20_dac_document_revision_history Document Revision History
+ * \page asfdoc_sam0_dac_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>
