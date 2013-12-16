@@ -42,20 +42,6 @@
  */
 #include "wdt.h"
 #include <system.h>
-#include <system_interrupt.h>
-
-/**
- * \internal
- *
- * Internal Watchdog device state, used to track instance specific information
- * for the Watchdog peripheral within the device.
- */
-struct _wdt_module _wdt_instance = {
-	false,
-#if WDT_CALLBACK_MODE == true
-	NULL,
-#endif
-};
 
 /**
  * \brief Sets up the WDT hardware module based on the configuration.
@@ -105,9 +91,6 @@ enum status_code wdt_set_config(
 	if(config->enable == false) {
 		return STATUS_OK;
 	}
-
-	/* Save the requested Watchdog lock state for when the WDT is enabled */
-	_wdt_instance.always_on = config->always_on;
 
 	/* Configure GCLK channel and enable clock */
 	struct system_gclk_chan_config gclk_chan_conf;
@@ -162,7 +145,7 @@ enum status_code wdt_set_config(
 
 	/* Either enable or lock-enable the Watchdog timer depending on the user
 	 * settings */
-	if (_wdt_instance.always_on) {
+	if (config->always_on) {
 		WDT_module->CTRL.reg |= WDT_CTRL_ALWAYSON;
 	} else {
 		WDT_module->CTRL.reg |= WDT_CTRL_ENABLE;

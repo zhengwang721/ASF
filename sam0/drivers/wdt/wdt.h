@@ -251,21 +251,6 @@ struct wdt_conf {
 	enum wdt_period early_warning_period;
 };
 
-#if !defined(__DOXYGEN__)
-struct _wdt_module {
-	/** If \c true, the Watchdog should be locked on when enabled. */
-	bool always_on;
-#  if WDT_CALLBACK_MODE == true
-	wdt_callback_t early_warning_callback;
-#  endif
-};
-
-#  if WDT_CALLBACK_MODE == true
-extern struct _wdt_module _wdt_instance;
-#  endif
-#endif
-
-
 /** \name Configuration and initialization
  * @{
  */
