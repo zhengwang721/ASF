@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 RTC Count Quick Start
+ * \brief SAM D2x RTC Count Quick Start
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *

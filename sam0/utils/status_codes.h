@@ -87,6 +87,7 @@ enum status_code {
 	STATUS_NO_CHANGE                  = STATUS_CATEGORY_OK     | 0x02,
 	STATUS_ABORTED                    = STATUS_CATEGORY_OK     | 0x04,
 	STATUS_BUSY                       = STATUS_CATEGORY_OK     | 0x05,
+	STATUS_SUSPEND                    = STATUS_CATEGORY_OK     | 0x06,
 
 	STATUS_ERR_IO                     = STATUS_CATEGORY_COMMON | 0x00,
 	STATUS_ERR_REQ_FLUSHED            = STATUS_CATEGORY_COMMON | 0x01,

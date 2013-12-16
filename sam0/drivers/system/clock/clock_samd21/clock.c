@@ -358,7 +358,6 @@ void system_clock_source_dfll_set_config(
 			(uint32_t)config->stable_tracking |
 			(uint32_t)config->quick_lock      |
 			(uint32_t)config->chill_cycle     |
-			((uint32_t)config->run_in_standby << SYSCTRL_DFLLCTRL_RUNSTDBY_Pos) |
 			((uint32_t)config->on_demand << SYSCTRL_DFLLCTRL_ONDEMAND_Pos);
 
 	if (config->loop_mode == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
@@ -426,7 +425,7 @@ void system_clock_source_dpll_set_config(
 	 * Fck = Fckrx * (LDR + 1 + LDRFRAC / 16)
 	 */
 	_system_clock_inst.dpll.frequency =
-			(config->reference_frequency * 
+			(config->reference_frequency *
 			 (((tmpldr + 1) << 4) + tmpldrfrac)
 			) >> 4;
 }
@@ -452,9 +451,9 @@ void system_clock_source_dpll_set_config(
  * \param[in] calibration_value  Calibration value to write
  * \param[in] freq_range         Frequency range (8MHz oscillator only)
  *
- * \retval STATUS_OK               The calibration value was written 
+ * \retval STATUS_OK               The calibration value was written
  *                                 successfully.
- * \retval STATUS_ERR_INVALID_ARG  The setting is not valid for selected clock 
+ * \retval STATUS_ERR_INVALID_ARG  The setting is not valid for selected clock
  *                                 source.
  */
 enum status_code system_clock_source_write_calibration(
@@ -771,7 +770,6 @@ void system_clock_init(void)
 
 	dfll_conf.loop_mode      = CONF_CLOCK_DFLL_LOOP_MODE;
 	dfll_conf.on_demand      = CONF_CLOCK_DFLL_ON_DEMAND;
-	dfll_conf.run_in_standby = CONF_CLOCK_DFLL_RUN_IN_STANDBY;
 
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN) {
 		dfll_conf.coarse_value = CONF_CLOCK_DFLL_COARSE_VALUE;
@@ -852,13 +850,6 @@ void system_clock_init(void)
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
 #endif
 
-
-	/* GCLK 0 */
-#if CONF_CLOCK_CONFIGURE_GCLK == true
-	/* Configure the main GCLK last as it might depend on other generators */
-	_CONF_CLOCK_GCLK_CONFIG(0, ~);
-#endif
-
 	/* DPLL */
 #ifdef FEATURE_SYSTEM_CLOCK_DPLL
 #  if (CONF_CLOCK_DPLL_ENABLE == true)
@@ -890,4 +881,10 @@ void system_clock_init(void)
 	system_main_clock_set_failure_detect(CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT);
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);
+
+	/* GCLK 0 */
+#if CONF_CLOCK_CONFIGURE_GCLK == true
+	/* Configure the main GCLK last as it might depend on other generators */
+	_CONF_CLOCK_GCLK_CONFIG(0, ~);
+#endif
 }

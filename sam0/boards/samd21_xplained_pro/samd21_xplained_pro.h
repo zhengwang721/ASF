@@ -79,7 +79,7 @@ void system_board_init(void);
 
 /** \name LED0 definitions
  *  @{ */
-#define LED0_PIN                  PIN_PA14
+#define LED0_PIN                  PIN_PB30
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
 /** @} */
@@ -192,13 +192,13 @@ void system_board_init(void);
  */
 #define EXT1_PWM_MODULE           TC6
 #define EXT1_PWM_0_CHANNEL        0
-#define EXT1_PWM_0_PIN            PIN_PB02F_TC6_WO0
-#define EXT1_PWM_0_MUX            MUX_PB02F_TC6_WO0
-#define EXT1_PWM_0_PINMUX         PINMUX_PB02F_TC6_WO0
+#define EXT1_PWM_0_PIN            PIN_PB02E_TC6_WO0
+#define EXT1_PWM_0_MUX            MUX_PB02E_TC6_WO0
+#define EXT1_PWM_0_PINMUX         PINMUX_PB02E_TC6_WO0
 #define EXT1_PWM_1_CHANNEL        1
-#define EXT1_PWM_1_PIN            PIN_PB03F_TC6_WO1
-#define EXT1_PWM_1_MUX            MUX_PB03F_TC6_WO1
-#define EXT1_PWM_1_PINMUX         PINMUX_PB03F_TC6_WO1
+#define EXT1_PWM_1_PIN            PIN_PB03E_TC6_WO1
+#define EXT1_PWM_1_MUX            MUX_PB03E_TC6_WO1
+#define EXT1_PWM_1_PINMUX         PINMUX_PB03E_TC6_WO1
 /** @} */
 
 /** \name Extension header #1 IRQ/External interrupt definitions
@@ -532,15 +532,15 @@ void system_board_init(void);
  * @{
  */
 #define EDBG_CDC_MODULE              SERCOM3
-#define EDBG_CDC_SERCOM_MUX_SETTING  USART_RX_3_TX_2_XCK_3
-#define EDBG_CDC_SERCOM_PINMUX_PAD0  PINMUX_UNUSED
-#define EDBG_CDC_SERCOM_PINMUX_PAD1  PINMUX_UNUSED
-#define EDBG_CDC_SERCOM_PINMUX_PAD2  PINMUX_PA22C_SERCOM3_PAD2
-#define EDBG_CDC_SERCOM_PINMUX_PAD3  PINMUX_PA23C_SERCOM3_PAD3
+#define EDBG_CDC_SERCOM_MUX_SETTING  USART_RX_1_TX_0_XCK_1
+#define EDBG_CDC_SERCOM_PINMUX_PAD0  PINMUX_PA22C_SERCOM3_PAD0
+#define EDBG_CDC_SERCOM_PINMUX_PAD1  PINMUX_PA23C_SERCOM3_PAD1
+#define EDBG_CDC_SERCOM_PINMUX_PAD2  PINMUX_UNUSED
+#define EDBG_CDC_SERCOM_PINMUX_PAD3  PINMUX_UNUSED
 /** @} */
 
 /** @} */
 
 /** @} */
 
-#endif  /* SAMD20_XPLAINED_PRO_H_INCLUDED */
+#endif  /* SAMD21_XPLAINED_PRO_H_INCLUDED */

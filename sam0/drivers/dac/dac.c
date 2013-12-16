@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Peripheral Digital-to-Analog Converter Driver
+ * \brief SAM D20 Peripheral Digital-to-Analog Converter Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *

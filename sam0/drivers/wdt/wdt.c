@@ -151,9 +151,11 @@ enum status_code wdt_init(
 	/* Configure GCLK channel and enable clock */
 	struct system_gclk_chan_config gclk_chan_conf;
 	gclk_chan_conf.source_generator = config->clock_source;
-	gclk_chan_conf.write_lock       = config->always_on;
 	system_gclk_chan_set_config(WDT_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(WDT_GCLK_ID);
+	if (config->always_on) {
+		system_gclk_chan_lock(WDT_GCLK_ID);
+	}
 
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, PM_APBAMASK_WDT);

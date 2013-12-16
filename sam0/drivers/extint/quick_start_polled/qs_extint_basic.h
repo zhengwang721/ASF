@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 External Interrupt Driver Quick Start
+ * \brief SAM D2x External Interrupt Driver Quick Start
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_extint_basic_use_case Quick Start Guide for EXTINT - Basic
+ * \page asfdoc_sam0_extint_basic_use_case Quick Start Guide for EXTINT - Basic
  *
  * In this use case, the EXTINT module is configured for:
  *  - External interrupt channel connected to the board LED is used
@@ -56,19 +56,19 @@
  * button is released, the LED will turn off.
  *
  *
- * \section asfdoc_samd20_extint_basic_use_case_setup Setup
+ * \section asfdoc_sam0_extint_basic_use_case_setup Setup
  *
- * \subsection asfdoc_samd20_extint_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_sam0_extint_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd20_extint_basic_use_case_setup_code Code
+ * \subsection asfdoc_sam0_extint_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_extint_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_extint_basic.c setup_init
  *
- * \subsection asfdoc_samd20_extint_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_sam0_extint_basic_use_case_setup_flow Workflow
  * -# Create an EXTINT module channel configuration struct, which can be filled
  *    out to adjust the configuration of a single external interrupt channel.
  *  \snippet qs_extint_basic.c setup_1
@@ -87,13 +87,13 @@
  *  \snippet qs_extint_basic.c setup_4
  *
  *
- * \section asfdoc_samd20_extint_basic_use_case_main Use Case
+ * \section asfdoc_sam0_extint_basic_use_case_main Use Case
  *
- * \subsection asfdoc_samd20_extint_basic_use_case_main_code Code
+ * \subsection asfdoc_sam0_extint_basic_use_case_main_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_extint_basic.c main
  *
- * \subsection asfdoc_samd20_extint_basic_use_case_main_flow Workflow
+ * \subsection asfdoc_sam0_extint_basic_use_case_main_flow Workflow
  * -# Read in the current external interrupt channel state to see if an edge
  *    has been detected.
  *  \snippet qs_extint_basic.c main_1

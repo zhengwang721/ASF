@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Digital-to-Analog Interrupt Driver
+ * \brief SAM D20 Digital-to-Analog Interrupt Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -51,7 +51,7 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_sam0_dac_group
+ * \addtogroup asfdoc_samd20_dac_group
  *
  * @{
  */

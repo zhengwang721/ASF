@@ -58,6 +58,7 @@
 #  define CONF_CLOCK_OSC8M_ON_DEMAND              false
 #  define CONF_CLOCK_OSC8M_RUN_IN_STANDBY         false
 
+
 /* SYSTEM_CLOCK_SOURCE_XOSC configuration - External clock/oscillator */
 #  define CONF_CLOCK_XOSC_ENABLE                  false
 #  define CONF_CLOCK_XOSC_EXTERNAL_CRYSTAL        SYSTEM_CLOCK_EXTERNAL_CLOCK
@@ -89,7 +90,6 @@
 #  define CONF_CLOCK_DFLL_ENABLE                  false
 #  define CONF_CLOCK_DFLL_LOOP_MODE               SYSTEM_CLOCK_DFLL_OPEN_LOOP
 #  define CONF_CLOCK_DFLL_ON_DEMAND               false
-#  define CONF_CLOCK_DFLL_RUN_IN_STANDBY          false
 
 /* DFLL open loop mode configuration */
 #  define CONF_CLOCK_DFLL_COARSE_VALUE            (0x1f / 4)
