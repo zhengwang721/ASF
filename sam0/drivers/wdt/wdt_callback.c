@@ -127,6 +127,8 @@ enum status_code wdt_enable_callback(
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}
+
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_WDT);
 }
 
 /**

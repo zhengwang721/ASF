@@ -50,7 +50,12 @@
  * Internal Watchdog device state, used to track instance specific information
  * for the Watchdog peripheral within the device.
  */
-struct _wdt_module _wdt_instance;
+struct _wdt_module _wdt_instance = {
+	false,
+#if WDT_CALLBACK_MODE == true
+	NULL,
+#endif
+};
 
 /**
  * \brief Sets up the WDT hardware module based on the configuration.
@@ -77,13 +82,6 @@ enum status_code wdt_set_config(
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, PM_APBAMASK_WDT);
 
-	/* Save the requested Watchdog lock state for when the WDT is enabled */
-	_wdt_instance.always_on = config->always_on;
-
-#if WDT_CALLBACK_MODE == true
-	_wdt_instance.early_warning_callback = NULL;
-#endif
-
 	/* Check of the Watchdog has been locked to be always on, if so, abort */
 	if (wdt_is_locked()) {
 		return STATUS_ERR_IO;
@@ -107,6 +105,9 @@ enum status_code wdt_set_config(
 	if(config->enable == false) {
 		return STATUS_OK;
 	}
+
+	/* Save the requested Watchdog lock state for when the WDT is enabled */
+	_wdt_instance.always_on = config->always_on;
 
 	/* Configure GCLK channel and enable clock */
 	struct system_gclk_chan_config gclk_chan_conf;
@@ -166,10 +167,6 @@ enum status_code wdt_set_config(
 	} else {
 		WDT_module->CTRL.reg |= WDT_CTRL_ENABLE;
 	}
-
-#if WDT_CALLBACK_MODE == true
-	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_WDT);
-#endif
 
 	return STATUS_OK;
 }
