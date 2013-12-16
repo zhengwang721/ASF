@@ -2409,7 +2409,7 @@ void perf_set_req(uint8_t set_param_type, param_value_t *param_value)
 		                       *request */
 	{
 		uint32_t no_of_test_frames = 0;
-		CCPU_ENDIAN_TO_LE32((param_value->param_value_32bit));
+		param_value->param_value_32bit = CCPU_ENDIAN_TO_LE32((param_value->param_value_32bit));
 		memcpy(&(no_of_test_frames),
 		&(param_value->param_value_32bit), 4);
 
