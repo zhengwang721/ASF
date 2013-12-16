@@ -758,7 +758,7 @@ void uhd_suspend(void)
 
 bool uhd_is_suspend(void)
 {
-	return usb_host_is_sof_enabled(&dev);
+	return !usb_host_is_sof_enabled(&dev);
 }
 
 void uhd_resume(void)

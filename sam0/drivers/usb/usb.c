@@ -583,16 +583,32 @@ static void _usb_host_interrupt_handler(void)
 		}
 
 		// host wakeup interrupts
-		if ((flags & USB_HOST_INTFLAG_WAKEUP) || (flags & USB_HOST_INTFLAG_DNRSM) ||
-				(flags & USB_HOST_INTFLAG_UPRSM)) {
+		if (flags & USB_HOST_INTFLAG_WAKEUP) {
 			// clear the flags
-			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_WAKEUP |
-					USB_HOST_INTFLAG_DNRSM| USB_HOST_INTFLAG_UPRSM;
+			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_WAKEUP;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_WAKEUP)) {
 				(_usb_instances->host_callback[USB_HOST_CALLBACK_WAKEUP])(_usb_instances, NULL);
 			}		
 		}
-		
+
+		// host downstream resume interrupts
+		if (flags & USB_HOST_INTFLAG_DNRSM) {
+			// clear the flags
+			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_DNRSM;
+			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_DNRSM)) {
+				(_usb_instances->host_callback[USB_HOST_CALLBACK_DNRSM])(_usb_instances, NULL);
+			}		
+		}
+
+		// host upstream resume interrupts
+		if (flags & USB_HOST_INTFLAG_UPRSM) {
+			// clear the flags
+			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_UPRSM;
+			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_UPRSM)) {
+				(_usb_instances->host_callback[USB_HOST_CALLBACK_UPRSM])(_usb_instances, NULL);
+			}		
+		}
+
 		// host ram access interrupt 	
 		if (flags & USB_HOST_INTFLAG_RAMACER) {
 			// clear the flag
