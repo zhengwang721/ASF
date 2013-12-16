@@ -2434,7 +2434,7 @@ static void set_phy_frame_length(trx_id_t trx, uint16_t frame_len)
     {
         curr_trx_config_params[trx].phy_frame_length = aMaxPHYPacketSize;
     }
-	else if (frame_len < (FRAME_OVERHEAD + 1)) /* 1=> cmdID*/
+	else if (frame_len < (FRAME_OVERHEAD + 1 +tal_pib[trx].FCSLen)) /* 1=> cmdID*/ //FCS Len
 	{
 		curr_trx_config_params[trx].phy_frame_length = (FRAME_OVERHEAD + 1);
 	}
@@ -2449,7 +2449,7 @@ static void set_phy_frame_length(trx_id_t trx, uint16_t frame_len)
     {
 	    curr_trx_config_params[trx].phy_frame_length = aMaxPHYPacketSize_4g;
     }	
-   else if (frame_len < (FRAME_OVERHEAD + 1)) /* 1=> cmdID*/
+   else if (frame_len < (FRAME_OVERHEAD +tal_pib[trx].FCSLen)) /* 1=> cmdID*/ //frame overhead is without fcs ,hence add 4 bytes for fcs
     {
 	    curr_trx_config_params[trx].phy_frame_length = (FRAME_OVERHEAD + 1);
     }

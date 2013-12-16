@@ -142,6 +142,7 @@ void init_state_init(trx_id_t trx, void *arg)
 
 void init_after_disconnect(trx_id_t trx)
 {
+	node_info[trx].peer_found = false; //sriram
     /* Reset trx */
     if (trx_reset(trx) != MAC_SUCCESS)
     {
