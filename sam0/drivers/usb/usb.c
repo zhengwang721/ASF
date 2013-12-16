@@ -40,6 +40,7 @@
  * \asf_license_stop
  *
  */
+#include <string.h>
 #include "usb.h"
 
 /**
@@ -227,10 +228,17 @@ enum status_code usb_host_pipe_set_config(struct usb_module *module_inst, uint8_
 	} else if (ep_config->endpoint_address & USB_EP_DIR_IN) {
 		module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTOKEN =
 				USB_HOST_PCFG_PTOKEN(USB_HOST_PIPE_TOKEN_IN);
+		module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSSET.reg =
+				USB_HOST_PSTATUSSET_BK0RDY;
 	} else {
 		module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTOKEN
 				= USB_HOST_PCFG_PTOKEN(USB_HOST_PIPE_TOKEN_OUT);
+		module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSCLR.reg =
+				USB_HOST_PSTATUSCLR_BK0RDY;
 	}
+
+	memset((uint8_t *)&usb_descriptor_table.usb_pipe_table[pipe_num], 0,
+			sizeof(usb_descriptor_table.usb_pipe_table[0]));
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].CTRL_PIPE.bit.PDADDR =
 			ep_config->device_address;
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].CTRL_PIPE.bit.PEPNUM =
@@ -261,7 +269,7 @@ enum status_code usb_host_pipe_get_config(struct usb_module *module_inst, uint8_
 
 	if (module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTOKEN ==
 				USB_HOST_PCFG_PTOKEN(USB_HOST_PIPE_TOKEN_IN)) {
-		ep_config->endpoint_address = USB_EP_DIR_IN;
+		ep_config->endpoint_address |= USB_EP_DIR_IN;
 	}
 
 //	ep_config->bank = module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.BK;
@@ -698,6 +706,9 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 	hw->HOST.CTRLA.bit.MODE = module_config->mode;
 	hw->HOST.CTRLA.bit.RUNSTDBY = module_config->run_in_standby;
 	hw->HOST.DESCADD.reg = (uint32_t)(&usb_descriptor_table.usb_endpoint_table[0]);
+
+	memset((uint8_t *)(&usb_descriptor_table.usb_endpoint_table[0]), 0,
+			sizeof(usb_descriptor_table.usb_endpoint_table));
 
 	// callback related init
 	for (i = 0; i < USB_PIPE_NUM; i++) {

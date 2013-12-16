@@ -105,6 +105,9 @@ enum usb_host_pipe_token {
 	USB_HOST_PIPE_TOKEN_OUT,
 };
 
+#ifdef Roeder
+/******************************/
+//Roeder add here
 //! @name USBC Device related contents
 //! @{
 
@@ -172,6 +175,7 @@ enum usb_device_endpoint_status {
 	USB_EP_BK0RDY_STATUS = 6,
 	USB_EP_BK1RDY_STATUS = 7,
 };
+#endif
 
 struct usb_module;
 
@@ -185,8 +189,6 @@ struct usb_config {
 	bool mode;
 	/** When \c true the module is enabled during standby. */
 	bool run_in_standby;
-	/** Descriptor Address */
-//	uint32_t *descriptor_address;
 };
 
 /**

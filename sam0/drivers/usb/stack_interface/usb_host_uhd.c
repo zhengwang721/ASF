@@ -69,7 +69,7 @@ static void _uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
 
 
 // for debug text
-//#define USBC_DEBUG
+//#define USB_DEBUG
 #ifdef USB_DEBUG
 #   define dbg_print printf
 #else
@@ -526,6 +526,10 @@ static void _uhd_sof_interrupt(struct usb_module *module_inst, void *null)
 	UHC_SOF_EVENT();
 }
 
+/**
+ * \internal
+ * \brief Manages connection interrupt
+ */
 static void _uhd_connect(struct usb_module *module_inst, void *null)
 {
 	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_CONNECT);
@@ -539,6 +543,10 @@ static void _uhd_connect(struct usb_module *module_inst, void *null)
 	uhc_notify_connection(true);
 }
 
+/**
+ * \internal
+ * \brief Manages disconnection interrupt
+ */
 static void _uhd_disconnect(struct usb_module *module_inst, void *null)
 {
 	// This should be the normal way to handle this event.
@@ -559,6 +567,10 @@ static void _uhd_disconnect(struct usb_module *module_inst, void *null)
 	uhc_notify_connection(false);
 }
 
+/**
+ * \internal
+ * \brief Manages wakeup interrupt
+ */
 static void _uhd_wakeup(struct usb_module *module_inst, void *null)
 {
 	/* Here the wakeup interrupt has been used to detect:
@@ -570,6 +582,10 @@ static void _uhd_wakeup(struct usb_module *module_inst, void *null)
 	dbg_print("WAKEUP\n");
 }
 
+/**
+ * \internal
+ * \brief Manages downstream resume interrupt
+ */
 static void _uhd_downstream_resume(struct usb_module *module_inst, void *null)
 {
 	dbg_print("DOWN RES\n");
@@ -587,6 +603,10 @@ static void _uhd_downstream_resume(struct usb_module *module_inst, void *null)
 	uhd_sleep_mode(UHD_STATE_IDLE);
 }
 
+/**
+ * \internal
+ * \brief Manages upstream resume interrupt
+ */
 static void _uhd_upstream_resume(struct usb_module *module_inst, void *null)
 {
 	dbg_print("UP RES\n");
@@ -606,6 +626,10 @@ static void _uhd_upstream_resume(struct usb_module *module_inst, void *null)
 	uhd_sleep_mode(UHD_STATE_IDLE);
 }
 
+/**
+ * \internal
+ * \brief Manages bus reset interrupt
+ */
 static void _uhd_reset(struct usb_module *module_inst, void *null)
 {
 	if (uhd_reset_callback != NULL) {
@@ -613,7 +637,11 @@ static void _uhd_reset(struct usb_module *module_inst, void *null)
 	}
 }
 
-static void _uhd_error(struct usb_module *module_inst, void *null)
+/**
+ * \internal
+ * \brief Manages ram access error interrupt
+ */
+static void _uhd_ram_error(struct usb_module *module_inst, void *null)
 {
 #ifdef UHC_RAM_ACCESS_ERR_EVENT
 		UHC_RAM_ACCESS_ERR_EVENT();
@@ -662,7 +690,7 @@ void uhd_enable(void)
 	usb_host_register_callback(&dev, USB_HOST_CALLBACK_WAKEUP, _uhd_wakeup);
 	usb_host_register_callback(&dev, USB_HOST_CALLBACK_DNRSM, _uhd_downstream_resume);
 	usb_host_register_callback(&dev, USB_HOST_CALLBACK_UPRSM, _uhd_upstream_resume);
-	usb_host_register_callback(&dev, USB_HOST_CALLBACK_RAMACER, _uhd_error);
+	usb_host_register_callback(&dev, USB_HOST_CALLBACK_RAMACER, _uhd_ram_error);
 	usb_host_register_callback(&dev, USB_HOST_CALLBACK_CONNECT, _uhd_connect);
 	usb_host_register_callback(&dev, USB_HOST_CALLBACK_DISCONNECT, _uhd_disconnect);
 
@@ -799,6 +827,11 @@ bool uhd_setup_request(
 	}
 	return true;
 }
+
+/**
+ * \internal
+ * \brief Manages endpoint 0 transfer complete interrupt
+ */
 static void _uhd_ep0_transfer_complete(struct usb_module *module_inst, void *pointer)
 {
 	struct usb_pipe_callback_parameter *p_callback_para;
@@ -845,6 +878,10 @@ static void _uhd_ep0_transfer_complete(struct usb_module *module_inst, void *poi
 	}
 }
 
+/**
+ * \internal
+ * \brief Manages endpoint 0 error interrupt
+ */
 static void _uhd_ep0_error(struct usb_module *module_inst, void *pointer)
 {
 	dbg_print("CTRL Error\n");
@@ -870,6 +907,11 @@ static void _uhd_ep0_error(struct usb_module *module_inst, void *pointer)
 	// Get and ack error
 	_uhd_ctrl_request_end(uhd_error);
 }
+
+/**
+ * \internal
+ * \brief Manages endpoint 0 setup interrupt
+ */
 static void _uhd_ep0_setup(struct usb_module *module_inst, void *null)
 {
 	// SETUP packet sent
@@ -891,6 +933,11 @@ static void _uhd_ep0_setup(struct usb_module *module_inst, void *null)
 	}
 	return;
 }
+
+/**
+ * \internal
+ * \brief Manages endpoint 0 stall interrupt
+ */
 static void _uhd_ep0_stall(struct usb_module *module_inst, void *null)
 {
 	dbg_print("CTRL Stall\n");
@@ -898,6 +945,16 @@ static void _uhd_ep0_stall(struct usb_module *module_inst, void *null)
 	_uhd_ctrl_request_end(UHD_TRANS_STALL);
 }
 
+
+/**
+ * \internal
+ * \brief Returns the pipe number matching a USB endpoint
+ *
+ * \param add   USB address
+ * \param endp  Endpoint number
+ *
+ * \return Pipe number
+ */
 static uint8_t _uhd_get_pipe(usb_add_t add, usb_ep_t endp)
 {
 	struct usb_host_pipe_config cfg;
@@ -1011,7 +1068,7 @@ static void _uhd_pipe_trans_complete(struct usb_module *module_inst, void *point
 
 			// In case of USB low speed and high CPU frequency,
 			// be sure to wait end of ACK on IN pipe.
-			//while (!Is_uhd_pipe_frozen(pipe));
+//			while(!usb_host_pipe_is_freezed(&dev, p_callback_para->pipe_num));
 
 			if (next_trans < pipe_size) {
 				// Use the cache buffer for Bulk or Interrupt size endpoint
@@ -1086,6 +1143,10 @@ static void _uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status)
 			status, ptr_job->nb_trans);
 }
 
+/**
+ * \internal
+ * \brief Manages endpoint  error interrupt
+ */
 static void _uhd_ep_error(struct usb_module *module_inst, void *pointer)
 {
 	uhd_trans_status_t uhd_error;
@@ -1097,10 +1158,13 @@ static void _uhd_ep_error(struct usb_module *module_inst, void *pointer)
 	switch(p_callback_para->error_type) {
 	case USB_STATUS_PIPE_DTGLER:
 		uhd_error = UHD_TRANS_DT_MISMATCH;
+		break;
 	case USB_STATUS_PIPE_TOUTER:
 		uhd_error = UHD_TRANS_NOTRESPONDING;
+		break;
 	case USB_STATUS_PIPE_CRC16ER:
 		uhd_error = UHD_TRANS_CRC;
+		break;
 	case USB_STATUS_PIPE_DAPIDER:
 	case USB_STATUS_PIPE_PIDER:
 	default:
@@ -1109,6 +1173,11 @@ static void _uhd_ep_error(struct usb_module *module_inst, void *pointer)
 
 	_uhd_ep_abort_pipe(p_callback_para->pipe_num, uhd_error);
 }
+
+/**
+ * \internal
+ * \brief Manages endpoint stall interrupt
+ */
 static void _uhd_ep_stall(struct usb_module *module_inst, void *pointer)
 {
 	struct usb_pipe_callback_parameter *p_callback_para;
