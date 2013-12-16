@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x RTC Driver (Count Interrupt Mode)
+ * \brief SAM D21 Xplained PRO board configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,47 +41,7 @@
  *
  */
 
-#ifndef RTC_COUNT_INTERRUPT_H_INCLUDED
-#define RTC_COUNT_INTERRUPT_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include "rtc_count.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * \addtogroup asfdoc_sam0_rtc_count_group
- * @{
- */
-
- /**
- * \name Callbacks
- * @{
- */
-enum status_code rtc_count_register_callback(
-		struct rtc_module *const module,
-		rtc_count_callback_t callback,
-		enum rtc_count_callback callback_type);
-
-enum status_code rtc_count_unregister_callback(
-		struct rtc_module *const module,
-		enum rtc_count_callback callback_type);
-
-void rtc_count_enable_callback(
-		struct rtc_module *const module,
-		enum rtc_count_callback callback_type);
-
-void rtc_count_disable_callback(
-		struct rtc_module *const module,
-		enum rtc_count_callback callback_type);
-
-/** @} */
-
-/** @} */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* RTC_COUNT_INTERRUPT_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

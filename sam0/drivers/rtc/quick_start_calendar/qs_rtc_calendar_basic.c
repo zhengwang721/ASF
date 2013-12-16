@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 RTC Basic Usage Example
+ * \brief SAM D2x RTC Basic Usage Example
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,6 +44,8 @@
 
 void configure_rtc_calendar(void);
 
+struct rtc_module rtc_instance;
+
 //! [initiate]
 void configure_rtc_calendar(void)
 {
@@ -73,11 +75,11 @@ void configure_rtc_calendar(void)
 //! [set_config]
 
 //! [init_rtc]
-	rtc_calendar_init(&config_rtc_calendar);
+	rtc_calendar_init(&rtc_instance, RTC, &config_rtc_calendar);
 //! [init_rtc]
 
 //! [enable]
-	rtc_calendar_enable();
+	rtc_calendar_enable(&rtc_instance);
 //! [enable]
 }
 //! [initiate]
@@ -98,9 +100,9 @@ int main(void)
 	configure_rtc_calendar();
 
 	/* Set current time. */
-	rtc_calendar_set_time(&time);
+	rtc_calendar_set_time(&rtc_instance, &time);
 
-	rtc_calendar_swap_time_mode();
+	rtc_calendar_swap_time_mode(&rtc_instance);
 //! [add_main]
 
 //! [main_imp]
@@ -108,15 +110,16 @@ int main(void)
 	while (true) {
 //! [main_loop]
 //! [check_alarm_match]
-		if (rtc_calendar_is_alarm_match(RTC_CALENDAR_ALARM_0)) {
+		if (rtc_calendar_is_alarm_match(&rtc_instance, RTC_CALENDAR_ALARM_0)) {
 //! [check_alarm_match]
 //! [alarm_match_action]
 			/* Do something on RTC alarm match here */
 			port_pin_toggle_output_level(LED_0_PIN);
+			//port_pin_set_output_level(LED_0_PIN, false);
 //! [alarm_match_action]
 
 //! [clear_alarm_match]
-			rtc_calendar_clear_alarm_match(RTC_CALENDAR_ALARM_0);
+			rtc_calendar_clear_alarm_match(&rtc_instance, RTC_CALENDAR_ALARM_0);
 //! [clear_alarm_match]
 		}
 	}
