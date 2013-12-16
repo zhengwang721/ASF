@@ -80,7 +80,7 @@
  * -# Adjust the configuration struct to set the timeout period and lock mode
  *    of the Watchdog.
  *  \snippet qs_wdt_basic.c setup_3
- * -# Sets up the WDT hardware module with the requested settings.
+ * -# Setups the WDT hardware module with the requested settings.
  *  \snippet qs_wdt_basic.c setup_4
  *
  * \section asfdoc_sam0_wdt_basic_use_case Use Case

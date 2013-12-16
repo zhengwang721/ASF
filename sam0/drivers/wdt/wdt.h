@@ -305,6 +305,7 @@ static inline bool wdt_is_syncing(void)
  *
  *  The default configuration is as follows:
  *   \li Not locked, to allow for further (re-)configuration
+ *   \li Enable WDT
  *   \li Watchdog timer sourced from Generic Clock Channel 4
  *   \li A timeout period of 16384 clocks of the Watchdog module clock
  *   \li No window period, so that the Watchdog count can be reset at any time
@@ -320,7 +321,7 @@ static inline void wdt_get_config_defaults(
 
 	/* Default configuration values */
 	config->always_on            = false;
-	config->enable                  = true;
+	config->enable               = true;
 	config->clock_source         = GCLK_GENERATOR_4;
 	config->timeout_period       = WDT_PERIOD_16384CLK;
 	config->window_period        = WDT_PERIOD_NONE;

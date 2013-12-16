@@ -74,18 +74,6 @@ enum status_code wdt_set_config(
 
 	Wdt *const WDT_module = WDT;
 
-	/* Sanity check arguments */
-	Assert(config);
-
-	/* Configure GCLK channel and enable clock */
-	struct system_gclk_chan_config gclk_chan_conf;
-	gclk_chan_conf.source_generator = config->clock_source;
-	system_gclk_chan_set_config(WDT_GCLK_ID, &gclk_chan_conf);
-	system_gclk_chan_enable(WDT_GCLK_ID);
-	if (config->always_on) {
-		system_gclk_chan_lock(WDT_GCLK_ID);
-	}
-
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, PM_APBAMASK_WDT);
 
@@ -111,6 +99,22 @@ enum status_code wdt_set_config(
 	if ((config->timeout_period < config->window_period) ||
 			(config->timeout_period < config->early_warning_period)) {
 		return STATUS_ERR_INVALID_ARG;
+	}
+
+	/* Disable the Watchdog module */
+	WDT_module->CTRL.reg &= ~WDT_CTRL_ENABLE;
+
+	if(config->enable == false) {
+		return STATUS_OK;
+	}
+
+	/* Configure GCLK channel and enable clock */
+	struct system_gclk_chan_config gclk_chan_conf;
+	gclk_chan_conf.source_generator = config->clock_source;
+	system_gclk_chan_set_config(WDT_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(WDT_GCLK_ID);
+	if (config->always_on) {
+		system_gclk_chan_lock(WDT_GCLK_ID);
 	}
 
 	while (wdt_is_syncing()) {
@@ -155,22 +159,18 @@ enum status_code wdt_set_config(
 		/* Wait for all hardware modules to complete synchronization */
 	}
 
-	if(config->enable) {
-		/* Either enable or lock-enable the Watchdog timer depending on the user
-		 * settings */
-		if (_wdt_instance.always_on) {
-			WDT_module->CTRL.reg |= WDT_CTRL_ALWAYSON;
-		} else {
-			WDT_module->CTRL.reg |= WDT_CTRL_ENABLE;
-		}
+	/* Either enable or lock-enable the Watchdog timer depending on the user
+	 * settings */
+	if (_wdt_instance.always_on) {
+		WDT_module->CTRL.reg |= WDT_CTRL_ALWAYSON;
+	} else {
+		WDT_module->CTRL.reg |= WDT_CTRL_ENABLE;
+	}
 
 #if WDT_CALLBACK_MODE == true
-		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_WDT);
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_WDT);
 #endif
-	} else {
-		/* Disable the Watchdog module */
-		WDT_module->CTRL.reg &= ~WDT_CTRL_ENABLE;
-	}
+
 	return STATUS_OK;
 }
 
