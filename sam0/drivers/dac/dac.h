@@ -104,8 +104,8 @@
  * \li Internal 1V reference (INT1V)
  * \li External voltage reference (AREF)
  *
- * \note Internal references will be enabled by the driver, but not disabled. Any reference not used by 
- *       the application should be disabled by the application.
+ * \note Internal references will be enabled by the driver, but not disabled.
+ * Any reference not used by the application should be disabled by the application.
  *
  * The output voltage from a DAC channel is given as:
  * \f[
@@ -321,14 +321,15 @@ extern struct dac_module *_dac_instances[DAC_INST_NUM];
 typedef void (*dac_callback_t)(uint8_t channel);
 
 /** Enum for the possible callback types for the DAC module. */
-enum dac_callback
-{
+enum dac_callback {
 	/** Callback type for when a DAC channel data empty condition occurs
 	 *  (requires event triggered mode). */
 	DAC_CALLBACK_DATA_EMPTY,
+
 	/** Callback type for when a DAC channel data under-run condition occurs
 	 *  (requires event triggered mode). */
 	DAC_CALLBACK_DATA_UNDERRUN,
+
 	/** Callback type for when a DAC channel write buffer job complete.
 	 *  (requires event triggered mode). */
 	DAC_CALLBACK_TRANSFER_COMPLETE,
@@ -417,12 +418,18 @@ struct dac_module {
 	/** DAC event selection */
 	bool start_on_event;
 #  if DAC_CALLBACK_MODE == true
-	/** DAC write buffer selection */
-	bool write_buffer_enable;
+	/** Pointer to buffer used for ADC results */
+	volatile uint16_t *job_buffer;
+	/** Remaining number of conversions in current job */
+	volatile uint16_t remaining_conversions;
+	/** Transferred number of conversions in current job */
+	volatile uint16_t transferred_conversions;
 	/** DAC callback enable */
-	bool callback_enable;
+	bool callback_enable[DAC_CALLBACK_N];
 	/** DAC registered callback functions */
 	dac_callback_t callback[DAC_CALLBACK_N];
+	/** Holds the status of the ongoing or last conversion job */
+	volatile enum status_code job_status;
 #  endif
 #endif
 };
@@ -443,6 +450,7 @@ struct dac_config {
 	bool left_adjust;
 	/** GCLK generator used to clock the peripheral */
 	enum gclk_generator clock_source;
+
 	/**
 	 * The DAC behaves as in normal mode when the chip enters STANDBY sleep
 	 * mode
@@ -499,7 +507,7 @@ struct dac_chan_config {
  * \retval false if the module synchronization is ongoing
  */
 static inline bool dac_is_syncing(
-	struct dac_module *const dev_inst)
+		struct dac_module *const dev_inst)
 {
 	/* Sanity check arguments */
 	Assert(dev_inst);
@@ -543,7 +551,7 @@ static inline void dac_get_config_defaults(
 	config->left_adjust    = false;
 	config->clock_source   = GCLK_GENERATOR_0;
 	config->run_in_standby = false;
-};
+}
 
 enum status_code dac_init(
 		struct dac_module *const dev_inst,
@@ -661,7 +669,7 @@ static inline void dac_chan_get_config_defaults(
 {
 	/* Sanity check arguments */
 	Assert(config);
-};
+}
 
 void dac_chan_set_config(
 		struct dac_module *const dev_inst,
@@ -707,6 +715,7 @@ uint32_t dac_get_status(
 void dac_clear_status(
 		struct dac_module *const module_inst,
 		uint32_t status_flags);
+
 /** @} */
 
 #ifdef __cplusplus

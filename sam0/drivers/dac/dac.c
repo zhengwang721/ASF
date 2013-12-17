@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Peripheral Digital-to-Analog Converter Driver
+ * \brief SAM D2x Peripheral Digital-to-Analog Converter Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -200,7 +200,8 @@ void dac_reset(
 /**
  * \brief Enable the DAC module.
  *
- * Enables the DAC interface and the selected output. If any internal reference is selected it will be enabled.
+ * Enables the DAC interface and the selected output. If any internal reference
+ * is selected it will be enabled.
  *
  * \param[in] module_inst  Pointer to the DAC software instance struct
  *
@@ -228,10 +229,6 @@ void dac_enable(
 	if (module_inst->reference == DAC_REFERENCE_INT1V) {
 		system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_BANDGAP);
 	}
-
-#if DAC_CALLBACK_MODE == true
-	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_DAC);
-#endif
 }
 
 /**
@@ -252,7 +249,8 @@ void dac_disable(
 	Dac *const dac_module = module_inst->hw;
 
 	/* Wait until the synchronization is complete */
-	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY);
+	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY) {
+	};
 
 	/* Disable DAC */
 	dac_module->CTRLA.reg &= ~DAC_CTRLA_ENABLE;
@@ -404,7 +402,8 @@ enum status_code dac_chan_write(
 	Dac *const dac_module = module_inst->hw;
 
 	/* Wait until the synchronization is complete */
-	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY);
+	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY) {
+	};
 
 	if (module_inst->start_on_event) {
 		/* Write the new value to the buffered DAC data register */
