@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Watchdog Driver Callback Quick Start
+ * \brief SAM D2x Watchdog Driver Callback Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_wdt_callback_use_case Quick Start Guide for WDT - Callback
+ * \page asfdoc_sam0_wdt_callback_use_case Quick Start Guide for WDT - Callback
  *
  * In this use case, the Watchdog module is configured for:
  *  \li System reset after 4096 clocks of the Watchdog generic clock
@@ -56,19 +56,19 @@
  * the board LED is turned off, giving a periodic flashing pattern.
  *
  *
- * \section asfdoc_samd20_wdt_callback_use_case_setup Setup
+ * \section asfdoc_sam0_wdt_callback_use_case_setup Setup
  *
- * \subsection asfdoc_samd20_wdt_callback_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_sam0_wdt_callback_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd20_wdt_callback_use_case_setup_code Code
+ * \subsection asfdoc_sam0_wdt_callback_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_wdt_callback.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_wdt_callback.c setup_init
  *
- * \subsection asfdoc_samd20_wdt_callback_use_case_setup_flow Workflow
+ * \subsection asfdoc_sam0_wdt_callback_use_case_setup_flow Workflow
  * -# Configure and enable the Watchdog driver
  *  -# Create a Watchdog module configuration struct, which can be filled out to
  *     adjust the configuration of the Watchdog.
@@ -83,25 +83,22 @@
  *  -# Adjust the configuration struct to set the timeout and early warning
  *     periods of the Watchdog.
  *   \snippet qs_wdt_callback.c setup_3
- *  -# Initialize the Watchdog to configure the module with the requested
- *     settings.
+ *  -# Sets up the WDT hardware module with the requested settings.
  *   \snippet qs_wdt_callback.c setup_4
- *  -# Enable the Watchdog to start the module.
- *   \snippet qs_wdt_callback.c setup_5
  * -# Register and enable the Early Warning callback handler
  *  -# Register the user-provided Early Warning callback function with the
  *     driver, so that it will be run when an Early Warning condition occurs.
- *   \snippet qs_wdt_callback.c setup_6
+ *   \snippet qs_wdt_callback.c setup_5
  *  -# Enable the Early Warning callback so that it will generate callbacks.
- *   \snippet qs_wdt_callback.c setup_7
+ *   \snippet qs_wdt_callback.c setup_6
  *
- * \section asfdoc_samd20_wdt_callback_use_case Use Case
+ * \section asfdoc_sam0_wdt_callback_use_case Use Case
  *
- * \subsection asfdoc_samd20_wdt_callback_use_case_code Code
+ * \subsection asfdoc_sam0_wdt_callback_use_case_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_wdt_callback.c main
  *
- * \subsection asfdoc_samd20_wdt_callback_use_case_main Workflow
+ * \subsection asfdoc_sam0_wdt_callback_use_case_main Workflow
  * -# Turn off the board LED when the application starts.
  *  \snippet qs_wdt_callback.c main_1
  * -# Enable global interrupts so that callbacks can be generated.

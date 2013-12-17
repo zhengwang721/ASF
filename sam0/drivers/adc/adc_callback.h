@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Peripheral Analog-to-Digital Converter Driver
+ * \brief SAM D2x Peripheral Analog-to-Digital Converter Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -45,7 +45,7 @@
 #define ADC_CALLBACK_H_INCLUDED
 
 /**
- * \addtogroup asfdoc_samd20_adc_group
+ * \addtogroup asfdoc_sam0_adc_group
  *
  * @{
  */
