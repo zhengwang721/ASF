@@ -1,23 +1,18 @@
 <asf xmlversion="1.0">
-	<module type="application" id="avr32.drivers.cpu.cc.example" caption="CPU Cycle Counter Example">
+	<module type="application" id="avr32.drivers.cpu.cc.simulator_example" caption="Cycle Counter Simulator Example">
 		<info type="description" value="summary">
-		Example Application to use CPU cycle counter COUNT and COMPARE registers.
+		The example illustrates the use of CPU cycle counter - COUNT and COMPARE registers.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="CPU"/>
 		</info>
 		<build type="c-source" value="cycle_counter_example.c"/>
 		<device-support value="uc3a"/>
-		<device-support value="uc3a3_a4"/>
-		<device-support value="uc3b"/>
-		<device-support value="uc3c"/>
-		<device-support value="uc3d"/>
 		<device-support value="uc3l"/>
-		<require idref="common.services.basic.clock"/>
 		<require idref="avr32.drivers.cpu.cycle_counter"/>
 		<require idref="avr32.drivers.gpio"/>
 		<require idref="avr32.utils"/>
-		<require idref="avr32.utils.print_funcs"/>
+		<require idref="common.services.basic.clock"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>
