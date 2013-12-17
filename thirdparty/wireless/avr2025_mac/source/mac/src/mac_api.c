@@ -656,8 +656,7 @@ bool wpan_mlme_set_req(uint8_t PIBAttribute,
 			(macBeaconTxTime == PIBAttribute)
 #if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 			||
-			(macFrameCounter == PIBAttribute)               ||
-			(macDefaultKey == PIBAttribute)
+			(macFrameCounter == PIBAttribute)			
 #endif
 			) {
 		memcpy_be((void *)&(mlme_set_req->PIBAttributeValue),

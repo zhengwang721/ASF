@@ -96,6 +96,10 @@ uint8_t key_source_8[8] = {0};
 uint8_t key_source_4[4] = {0};
 #endif	
 
+#if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)
+//extern uint32_t tal_rx_timestamp;
+#endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
+
 /*
  * \brief This function does the initialization of the Serial handler state
  *Machine.
@@ -618,8 +622,7 @@ void *PIBAttributeValue)
 			(macTransactionPersistenceTime == PIBAttribute) ||
 			(macBeaconTxTime == PIBAttribute)
 #ifdef MAC_SECURITY_ZIP
-			|| (macFrameCounter == PIBAttribute) ||
-			(macDefaultKey == PIBAttribute)
+			|| (macFrameCounter == PIBAttribute)
 #endif
 			) {
 		memcpy_be(msg_buf, PIBAttributeValue, pib_attribute_octet_no);
@@ -757,10 +760,10 @@ static inline void handle_fake_frame_irq(uint8_t *fake_frame)
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)
     /*
      * Store the timestamp.
-     * The timestamping is only required for beaconing networks
-     * or if timestamping is explicitly enabled.
+     * The time stamping is only required for beaconing networks
+     * or if time stamping is explicitly enabled.
      */
-    receive_frame->time_stamp = tal_timestamp;
+    //receive_frame->time_stamp = tal_rx_timestamp;
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
 
     /* Append received frame to incoming_frame_queue and get new rx buffer. */
