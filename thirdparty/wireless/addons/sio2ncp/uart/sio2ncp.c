@@ -89,43 +89,7 @@ static uint8_t serial_rx_count;
 void sio2ncp_init(void)
 {
 #if SAMD20
-	struct usart_config uart_config;
-    /* Configure USART for unit test output */
-    usart_get_config_defaults(&uart_config);
-	if(USART_NCP == EXT1_UART_MODULE)
-	{
-    uart_config.mux_setting     =  EXT1_UART_SERCOM_MUX_SETTING; 
-    uart_config.pinmux_pad3      = EXT1_UART_SERCOM_PINMUX_PAD3; 
-    uart_config.pinmux_pad2      = EXT1_UART_SERCOM_PINMUX_PAD2; 
-	uart_config.pinmux_pad1      = EXT1_UART_SERCOM_PINMUX_PAD1; 
-	uart_config.pinmux_pad0      = EXT1_UART_SERCOM_PINMUX_PAD0; 
-	}
-	else if(USART_NCP == EXT2_UART_MODULE)
-	{
-	uart_config.mux_setting     =  EXT2_UART_SERCOM_MUX_SETTING;
-	uart_config.pinmux_pad3      = EXT2_UART_SERCOM_PINMUX_PAD3;
-	uart_config.pinmux_pad2      = EXT2_UART_SERCOM_PINMUX_PAD2;
-	uart_config.pinmux_pad1      = EXT2_UART_SERCOM_PINMUX_PAD1;
-	uart_config.pinmux_pad0      = EXT2_UART_SERCOM_PINMUX_PAD0;
-	}	
-	else if(USART_NCP == EXT3_UART_MODULE)
-	{
-	uart_config.mux_setting     =  EXT3_UART_SERCOM_MUX_SETTING;
-	uart_config.pinmux_pad3      = EXT3_UART_SERCOM_PINMUX_PAD3;
-	uart_config.pinmux_pad2      = EXT3_UART_SERCOM_PINMUX_PAD2;
-	uart_config.pinmux_pad1      = EXT3_UART_SERCOM_PINMUX_PAD1;
-	uart_config.pinmux_pad0      = EXT3_UART_SERCOM_PINMUX_PAD0;
-	}	
-	else if(USART_NCP == EDBG_CDC_MODULE)
-	{
-	uart_config.mux_setting     =  EDBG_CDC_SERCOM_MUX_SETTING;
-	uart_config.pinmux_pad3      = EDBG_CDC_SERCOM_PINMUX_PAD3;
-	uart_config.pinmux_pad2      = EDBG_CDC_SERCOM_PINMUX_PAD2;
-	uart_config.pinmux_pad1      = EDBG_CDC_SERCOM_PINMUX_PAD1;
-	uart_config.pinmux_pad0      = EDBG_CDC_SERCOM_PINMUX_PAD0;
-
-	}
-	uart_config.baudrate         = USART_NCP_BAUDRATE;
+	SIO2NCP_USART_INIT();
 	stdio_serial_init(&uart_module, USART_NCP,&uart_config);	
     usart_enable(&uart_module);
     /* Enable transceivers */
@@ -155,7 +119,7 @@ uint8_t sio2ncp_tx(uint8_t *data, uint8_t length)
 #if SAMD20
 status = usart_serial_write_packet(&uart_module,(const uint8_t *)data,length);
 #else 
-status = usart_serial_write_packet(USART_ncp,(const uint8_t *)data,length);
+status = usart_serial_write_packet(USART_NCP,(const uint8_t *)data,length);
 #endif
 	} while (status != STATUS_OK);
 	return length;
