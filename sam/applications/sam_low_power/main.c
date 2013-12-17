@@ -61,8 +61,7 @@
  * power consumption.
  *
  * For Eks, an amperemeter has to be plugged on the board instead of the
- * VDDx jumper. For SAMG51 rounter card, unmount the R5 and  plug an
- * amperemeter to measure the current.
+ * VDDx jumper.
  *
  * Note that for better consumption measurement:
  * - Run program out of flash without ICE connected.

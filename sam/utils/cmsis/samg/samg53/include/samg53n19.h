@@ -528,8 +528,8 @@ void WKUP15_Handler     ( void );
 #define CHIP_FLASH_WRITE_WAIT_STATE     (6U)
 
 /* Embedded Flash Read Wait State (VDDIO set at 1.62V, Max value) */
-#define CHIP_FREQ_FWS_0                 (12000000UL)  /**< \brief Maximum operating frequency when FWS is 0 */
-#define CHIP_FREQ_FWS_1                 (24000000UL)  /**< \brief Maximum operating frequency when FWS is 1 */
+#define CHIP_FREQ_FWS_0                 (12500000UL)  /**< \brief Maximum operating frequency when FWS is 0 */
+#define CHIP_FREQ_FWS_1                 (25000000UL)  /**< \brief Maximum operating frequency when FWS is 1 */
 #define CHIP_FREQ_FWS_2                 (38000000UL)  /**< \brief Maximum operating frequency when FWS is 2 */
 #define CHIP_FREQ_FWS_3                 (48000000UL)  /**< \brief Maximum operating frequency when FWS is 3 */
 

@@ -182,8 +182,8 @@ int main(void)
 	}
 
 #if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG)
-	/* The EWP command is not supported for non-8KByte sectors in some SAM4
-	 * series, so an erase command is requried before the write operation.
+	/* The EWP command is not supported for non-8KByte sectors in all devices
+	 *  SAM4 series, so an erase command is requried before the write operation.
 	 */
 	ul_rc = flash_erase_sector(ul_last_page_addr);
 	if (ul_rc != FLASH_RC_OK) {

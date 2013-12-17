@@ -50,7 +50,7 @@
  *
  * \section Requirements
  *
- * This package can be used with STK600-SAMG51.
+ * This package can be used with SAMG53 Xplained Pro.
  *
  * In addition, another device will be needed to act as the TWIHS master.
  * -# Connect TWD0 (SDA) for the 2 boards.

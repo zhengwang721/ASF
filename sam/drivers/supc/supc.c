@@ -60,8 +60,6 @@ extern "C" {
  * @{
  */
 
-#define SUPC_KEY   0xA5u
-
 #if (!SAMG)
 /**
  * \brief Switch off the voltage regulator to put the device in backup mode.
