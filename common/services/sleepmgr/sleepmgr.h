@@ -56,6 +56,8 @@
 # include "sam4l/sleepmgr.h"
 #elif MEGA
 # include "mega/sleepmgr.h"
+#elif (SAMD20 || SAMD21)
+# include "samd/sleepmgr.h"
 #else
 # error Unsupported device.
 #endif
