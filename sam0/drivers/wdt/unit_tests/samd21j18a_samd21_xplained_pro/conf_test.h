@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Watchdog Driver
+ * \brief SAM D21 Xplained PRO test configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,63 +40,22 @@
  * \asf_license_stop
  *
  */
-#ifndef WDT_CALLBACK_H_INCLUDED
-#define WDT_CALLBACK_H_INCLUDED
 
-#include <compiler.h>
-#include "wdt.h"
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#define CONF_STDIO_USART               EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING         EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0         EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1         EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2         EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3         EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE            38400
 
-/**
- * \addtogroup asfdoc_sam0_wdt_group
- *
- * @{
- */
+#define CONF_WDT_GCLK_GEN              GCLK_GENERATOR_1
+#define CONF_WDT_TIMEOUT_PERIOD        WDT_PERIOD_2048CLK
+#define CONF_WDT_EARLY_WARNING_PERIOD  WDT_PERIOD_1024CLK
+#define CONF_WDT_EARLY_WARNING_WAIT_MS 33
+#define CONF_WDT_RESET_WAIT_MS         50
 
-/** \name Callback configuration and initialization
- * @{
- */
-
-/** Type definition for a WDT module callback function. */
-typedef void (*wdt_callback_t)(void);
-
-/** Enum for the possible callback types for the WDT module. */
-enum wdt_callback
-{
-	/** Callback type for when an early warning callback from the WDT module
-	 *  is issued.
-	 */
-	WDT_CALLBACK_EARLY_WARNING,
-};
-
-enum status_code wdt_register_callback(
-		const wdt_callback_t callback,
-		const enum wdt_callback type);
-
-enum status_code wdt_unregister_callback(
-		const enum wdt_callback type);
-
-/** @} */
-
-/** \name Callback enabling and disabling
- * @{
- */
-
-enum status_code wdt_enable_callback(
-		const enum wdt_callback type);
-
-enum status_code wdt_disable_callback(
-		const enum wdt_callback type);
-
-/** @} */
-
-/** @} */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+#endif /* CONF_TEST_H_INCLUDED */
