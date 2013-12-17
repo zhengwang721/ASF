@@ -21,12 +21,14 @@
 			Controller on the SAM D21, both the ASF driver and the peripheral
 			itself.
 		</info>
-
+		
+		<build type="doxygen-entry-point" value="asfdoc_sam0_usb_group"/>
 		<build type="include-path" value="."/>
+		<build type="include-path" value="stack_interface/"/>
+		
 		<build type="header-file" subtype="api" value="usb.h"/>
 		<build type="c-source" value="usb.c"/>
-
-		<build type="doxygen-entry-point" value="asfdoc_sam0_usb_group"/>
+		<build type="c-source" value="stack_interface/usb_device_udd.c"/>
 
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system"/>
