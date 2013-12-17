@@ -61,7 +61,7 @@ static volatile bool transfer_is_done = false;
 
 // [transfer_descriptor]
 COMPILER_ALIGNED(16)
-struct dma_transfer_descriptor example_descriptor;
+DmacDescriptor example_descriptor;
 // [transfer_descriptor]
 
 // [_transfer_done]
@@ -72,10 +72,10 @@ static void transfer_done( const struct dma_resource* const resource )
 // [_transfer_done]
 
 // [config_dma_resource]
-static void configure_dma_resource(struct dma_resource **resource)
+static void configure_dma_resource(struct dma_resource *resource)
 {
 //! [setup_1]
-	struct dma_transfer_config config;
+	struct dma_resource_config config;
 //! [setup_1]
 
 //! [setup_2]
@@ -89,16 +89,25 @@ static void configure_dma_resource(struct dma_resource **resource)
 // [config_dma_resource]
 
 // [setup_dma_transfer_descriptor]
-static void setup_transfer_descriptor( struct dma_transfer_descriptor *descriptor )
+static void setup_transfer_descriptor(DmacDescriptor *descriptor )
 {
-	//! [setup_dma_descriptor]
-	descriptor->block_transfer_control = DMAC_BTCTRL_VALID |DMAC_BTCTRL_BEATSIZE_BYTE
-			 |DMAC_BTCTRL_DSTINC | DMAC_BTCTRL_SRCINC;
-	descriptor->block_transfer_count = sizeof(source_memory);
-	descriptor->source_address = (uint32_t)source_memory + sizeof(source_memory);
-	descriptor->destination_address = (uint32_t)destination_memory + sizeof(source_memory);
-	descriptor->next_descriptor_address = 0;
-	//! [setup_dma_descriptor]
+	//! [setup_4]
+	struct dma_descriptor_config descriptor_config;
+	//! [setup_4]
+
+	//! [setup_5]
+	dma_descriptor_get_config_defaults(&descriptor_config);
+	//! [setup_5]
+
+	//! [setup_6]
+	descriptor_config.block_transfer_count = sizeof(source_memory);
+	descriptor_config.source_address = (uint32_t)source_memory + sizeof(source_memory);
+	descriptor_config.destination_address = (uint32_t)destination_memory + sizeof(source_memory);
+	//! [setup_6]
+
+	//! [setup_7]
+	dma_descriptor_create(descriptor, &descriptor_config);
+	//! [setup_7]
 }
 // [setup_dma_transfer_descriptor]
 
@@ -106,7 +115,7 @@ static void setup_transfer_descriptor( struct dma_transfer_descriptor *descripto
 
 int main(void)
 {
-	struct dma_resource *example_resource;
+	struct dma_resource example_resource;
 	system_init();
 
 	//! [setup_dma_resource]
@@ -117,13 +126,17 @@ int main(void)
 	setup_transfer_descriptor(&example_descriptor);
 	//! [setup_transfer_descriptor]
 
+	//! [Add descriptor to DMA resource]
+	dma_add_descriptor(&example_resource, &example_descriptor);
+	//! [Add descriptor to DMA resource]
+
 	//! [setup_callback_register]
-	dma_register_callback(example_resource, transfer_done,
+	dma_register_callback(&example_resource, transfer_done,
 			DMA_CALLBACK_TRANSFER_DONE);
 	//! [setup_callback_register]
 
 	//! [setup_enable_callback]
-	dma_enable_callback(example_resource, DMA_CALLBACK_TRANSFER_DONE);
+	dma_enable_callback(&example_resource, DMA_CALLBACK_TRANSFER_DONE);
 	//! [setup_enable_callback]
 
 	//! [setup_source_memory_content]
@@ -134,7 +147,7 @@ int main(void)
 	
 	//! [main]
 	//! [main_1]
-	dma_transfer_job(example_resource, &example_descriptor);
+	dma_start_transfer_job(&example_resource);
 	//! [main_1]
 	
 	//! [main_2]
