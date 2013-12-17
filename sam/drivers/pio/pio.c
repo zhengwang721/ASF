@@ -747,7 +747,7 @@ void pio_set_pin_high(uint32_t ul_pin)
 	}
 #else
 	p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
-#endif	
+#endif
 	/* Value to be driven on the I/O line: 1. */
 	p_pio->PIO_SODR = 1 << (ul_pin & 0x1F);
 }
@@ -770,7 +770,7 @@ void pio_set_pin_low(uint32_t ul_pin)
 	}
 #else
 	p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
-#endif	
+#endif
 	/* Value to be driven on the I/O line: 0. */
 	p_pio->PIO_CODR = 1 << (ul_pin & 0x1F);
 }
@@ -793,7 +793,7 @@ void pio_toggle_pin(uint32_t ul_pin)
 	}
 #else
 	p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
-#endif	
+#endif
 	if (p_pio->PIO_ODSR & (1 << (ul_pin & 0x1F))) {
 		/* Value to be driven on the I/O line: 0. */
 		p_pio->PIO_CODR = 1 << (ul_pin & 0x1F);
@@ -823,7 +823,7 @@ uint32_t pio_configure_pin(uint32_t ul_pin, const uint32_t ul_flags)
 	}
 #else
 	p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
-#endif	
+#endif
 
 	/* Configure pins */
 	switch (ul_flags & PIO_TYPE_Msk) {
@@ -983,7 +983,7 @@ void pio_enable_pin_interrupt(uint32_t ul_pin)
 	}
 #else
 	p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
-#endif	
+#endif
 	p_pio->PIO_IER = 1 << (ul_pin & 0x1F);
 }
 
@@ -1006,7 +1006,7 @@ void pio_disable_pin_interrupt(uint32_t ul_pin)
 	}
 #else
 	p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
-#endif	
+#endif
 	p_pio->PIO_IDR = 1 << (ul_pin & 0x1F);
 }
 
@@ -1029,7 +1029,7 @@ Pio *pio_get_pin_group(uint32_t ul_pin)
 	}
 #else
 	p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
-#endif	
+#endif
 	return p_pio;
 }
 

@@ -71,7 +71,7 @@
 
 // ===== PLL1 (B) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
 // Use mul and div effective values here.
-#define CONFIG_PLL1_SOURCE          PLLB_SRC_MAINCK_BYPASS  
+#define CONFIG_PLL1_SOURCE          PLLB_SRC_MAINCK_BYPASS
 #define CONFIG_PLL1_MUL             (240000000UL / BOARD_FREQ_MAINCK_BYPASS)
 #define CONFIG_PLL1_DIV             2
 

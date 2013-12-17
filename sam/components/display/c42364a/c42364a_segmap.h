@@ -217,7 +217,7 @@
 #define C42364A_A0A_SEG_NUM           35
 /* The LCD segment map number */
 #define C42364A_SEGMAP_NUM_0     0x9F73FFF8
-#define C42364A_SEGMAP_NUM_1     0x0FDFC   
+#define C42364A_SEGMAP_NUM_1     0x0FDFC
 /* @} */
 
 /**

@@ -263,7 +263,7 @@ static void run_switch_mainck_as_mck_test(const struct test_case *test)
 	/* Switch mainck to bypass mode */
 	pmc_switch_mainck_to_xtal(1, pmc_us_to_moscxtst(BOARD_OSC_STARTUP_US,
 			OSC_SLCK_32K_RC_HZ));
-#else	 
+#else
 	/* Switch mainck to external xtal */
 	pmc_switch_mainck_to_xtal(0, pmc_us_to_moscxtst(BOARD_OSC_STARTUP_US,
 			OSC_SLCK_32K_RC_HZ));
@@ -288,12 +288,12 @@ static void run_switch_mainck_as_mck_test(const struct test_case *test)
 			"Failed to switch PCK to Main Clock with BYPASS");
 	test_assert_true(test, rc3 == 0,
 			"Failed to switch PCK to Main Clock with BYPASS");
-#else			
+#else
 	test_assert_true(test, rc2 == 0,
 			"Failed to switch PCK to Main Clock with XTAL");
 	test_assert_true(test, rc3 == 0,
 			"Failed to switch PCK to Main Clock with XTAL");
-#endif			
+#endif
 }
 
 /**
@@ -360,7 +360,7 @@ static void run_switch_pllbck_as_mck_test(const struct test_case *test)
 	/* Enable the PLLB clock, the mainck equals (10Mhz * (9+1) / 1) = 100Mhz
 	 * with the initialize counter be 0x3f
 	 */
-	 pmc_enable_pllbck(9, 0x3f, 1);	 
+	 pmc_enable_pllbck(9, 0x3f, 1);
 #else
 	/* Enable the PLLB clock, the mainck equals (12Mhz * (7+1) / 1) = 96Mhz
 	 * with the initialize counter be 0x3f

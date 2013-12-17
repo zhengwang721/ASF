@@ -768,16 +768,16 @@ uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end)
 	uint32_t ul_num_locked_regions = 0;
 	uint32_t ul_count = 0;
 	uint32_t ul_bit = 0;
-        
+
 	Assert(ul_end >= ul_start);
 
 #ifdef EFC1
-	Assert(((ul_start >= IFLASH0_ADDR) 
+	Assert(((ul_start >= IFLASH0_ADDR)
 				&& (ul_end <= IFLASH0_ADDR + IFLASH0_SIZE))
 				|| ((ul_start >= IFLASH1_ADDR)
 					&& (ul_end <= IFLASH1_ADDR + IFLASH1_SIZE)));
 #else
-	Assert((ul_start >= IFLASH_ADDR) 
+	Assert((ul_start >= IFLASH_ADDR)
 				&& (ul_end <= IFLASH_ADDR + IFLASH_SIZE));
 #endif
 
@@ -794,7 +794,7 @@ uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end)
 	ul_error = efc_perform_command(p_efc, EFC_FCMD_GLB, 0);
 	Assert(!ul_error);
     UNUSED(ul_error);
-        
+
 	/* Skip unrequested regions (if necessary) */
 	ul_status = efc_get_result(p_efc);
 	while (!(ul_count <= uc_start_region &&

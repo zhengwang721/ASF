@@ -364,11 +364,11 @@ void matrix_set_nandflash_cs(uint32_t ul_cs)
 {
 	Matrix *p_matrix = MATRIX;
 
-#if (!SAM4CP)        
+#if (!SAM4CP)
 	p_matrix->CCFG_SMCNFCS = ul_cs;
-#else        
+#else
         p_matrix->MATRIX_SMCNFCS = ul_cs;
-#endif      
+#endif
 }
 
 /**
@@ -379,12 +379,12 @@ void matrix_set_nandflash_cs(uint32_t ul_cs)
 uint32_t matrix_get_nandflash_cs(void)
 {
 	Matrix *p_matrix = MATRIX;
-        
-#if (!SAM4CP)   
+
+#if (!SAM4CP)
 	return (p_matrix->CCFG_SMCNFCS);
 #else
         return (p_matrix->MATRIX_SMCNFCS);
-#endif        
+#endif
 }
 
 #endif /* (SAM3S || SAM4S || SAM4E || SAM4C || SAM4CP) */

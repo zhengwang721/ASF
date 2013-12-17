@@ -210,7 +210,7 @@ static void c42364a_slcdc_efface_symbol(Slcdc *p_slcdc,
  * This function will write the input string to the alphanumeric field of the
  * lcd glass.
  *
- * \param data Pointer to the input string(max length is 6 for SAM4CP 
+ * \param data Pointer to the input string(max length is 6 for SAM4CP
  * and 5 for SAM4C)
  */
 static void c42364a_slcdc_display_alphanum_string(const uint8_t *data)
@@ -228,7 +228,7 @@ static void c42364a_slcdc_display_alphanum_string(const uint8_t *data)
 			c42364a_slcdc_display_symbol(SLCDC, symbol_a[i], SYMBOL_A_LEN,
 								plot_letter[data[i] - ASCII_LITTLE_A]);
 		}
-	} 
+	}
 }
 
 /**
@@ -248,7 +248,7 @@ static void c42364a_slcdc_display_num_string(const uint8_t *data)
 			c42364a_slcdc_display_symbol(SLCDC, symbol_d[i], SYMBOL_D_LEN,
 								  plot_number[data[i] - ASCII_0]);
 		}
-	} 
+	}
 }
 
 status_code_t c42364a_init(void)

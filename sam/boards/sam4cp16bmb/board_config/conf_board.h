@@ -51,7 +51,7 @@
 //#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
 
 /* Configure Slow Clock as External Crystal */
-//#define CONF_BOARD_32K_XTAL 
+//#define CONF_BOARD_32K_XTAL
 
 /* Configure UART0 pins */
 //#define CONF_BOARD_UART0

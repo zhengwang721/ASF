@@ -115,7 +115,7 @@ void Dummy_Handler(void);
 #pragma location = ".intvec"
 const DeviceVectors __vector_table = {
         (void*) __sfe("CSTACK"),
-        
+
         .pfnReset_Handler      = (void*) Reset_Handler,
         .pfnNMI_Handler        = (void*) NMI_Handler,
         .pfnHardFault_Handler  = (void*) HardFault_Handler,
@@ -163,7 +163,7 @@ const DeviceVectors __vector_table = {
         .pfnTC4_Handler    = (void*) TC4_Handler,    /* 27 Timer/Counter 4 */
         .pfnTC5_Handler    = (void*) TC5_Handler,    /* 28 Timer/Counter 5 */
         .pfnADC_Handler    = (void*) ADC_Handler,    /* 29 Analog To Digital Converter */
-        .pfnARM1_Handler   = (void*) ARM1_Handler,   /* 30 FPU signals: FPIXC, FPOFC, FPUFC, FPIOC, 
+        .pfnARM1_Handler   = (void*) ARM1_Handler,   /* 30 FPU signals: FPIXC, FPOFC, FPUFC, FPIOC,
 				FPDZC, FPIDC, FPIXC */
         .pfnIPC0_Handler   = (void*) IPC0_Handler,   /* 31 Interprocessor communication 0 */
         .pfnSLCDC_Handler  = (void*) SLCDC_Handler,  /* 32 Segment LCD Controller */

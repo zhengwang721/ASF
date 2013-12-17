@@ -69,8 +69,8 @@
  *        w - Generate Waveform
  *     \endcode
  *
- * "w" is an additional option for SAM3S8, SAM3SD8, SAM4S, SAM4C and SAM4CP. 
- * An RTC output can be programmed to generate several waveforms, including a 
+ * "w" is an additional option for SAM3S8, SAM3SD8, SAM4S, SAM4C and SAM4CP.
+ * An RTC output can be programmed to generate several waveforms, including a
  * prescaled clock derived from slow clock.
  *
  * Setting the time, date and time alarm is done by using Menu option, and

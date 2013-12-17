@@ -77,7 +77,7 @@ enum c42364a_symbol_pixel{
 	A2H = 4 * C42364A_A2H_SEG_NUM, A2I, A2K, A2N,        // 28 ==> 31
 	B3  = 4 * C42364A_B3_SEG_NUM, A2F, A2E, A2D,         // 29 ==> 30
 	A2A = 4 * C42364A_A2A_SEG_NUM, A2B, A2C, B1,         // 30 ==> 29
-	A2G = 4 * C42364A_A2G_SEG_NUM, A2J, A2L, A2M,        // 31 ==> 28	
+	A2G = 4 * C42364A_A2G_SEG_NUM, A2J, A2L, A2M,        // 31 ==> 28
 	A1H = 4 * C42364A_A1H_SEG_NUM, A1I, A1K, A1N,        // 28 ==> 31
 	B2  = 4 * C42364A_B2_SEG_NUM, A1F, A1E, A1D,         // 29 ==> 30
 	A1A = 4 * C42364A_A1A_SEG_NUM, A1B, A1C, B8,         // 30 ==> 29

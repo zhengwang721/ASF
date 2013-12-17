@@ -51,7 +51,7 @@
  *
  * \section Requirements
  *
- * This example can be used on any SAM3/4 boards without user buttons. 
+ * This example can be used on any SAM3/4 boards without user buttons.
  *
  * \section Descriptions
  *
@@ -187,7 +187,7 @@ int main(void)
 
 	/* Output example information. */
 	puts(STRING_HEADER);
-	
+
 	/* Initialize reset counter */
 	ul_rst_counter = RST_MS_COUNTER;
 

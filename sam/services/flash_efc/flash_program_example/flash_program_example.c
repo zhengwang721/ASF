@@ -183,7 +183,7 @@ int main(void)
 
 #if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
 	/* The EWP command is not supported for non-8KByte sectors in SAM4S,
-	 * SAM4E, SAM4C, SAM4CP and SAM4N, so an erase command is requried 
+	 * SAM4E, SAM4C, SAM4CP and SAM4N, so an erase command is requried
 	 * before the write operation.
 	 */
 	ul_rc = flash_erase_sector(ul_last_page_addr);
@@ -216,7 +216,7 @@ int main(void)
 
 #if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
 	/* The EWP command is not supported for non-8KByte sectors in SAM4S,
-	 * SAM4E, SAM4C, SAM4CP and SAM4N, so an erase command is requried 
+	 * SAM4E, SAM4C, SAM4CP and SAM4N, so an erase command is requried
 	 * before the write operation.
 	 */
 	ul_rc = flash_erase_sector(ul_last_page_addr);
