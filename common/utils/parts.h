@@ -904,10 +904,12 @@
  * @{
  */
 #define SAM4E8 ( \
+		SAM_PART_IS_DEFINED(SAM4E8C) || \
 		SAM_PART_IS_DEFINED(SAM4E8E) \
 		)
 
 #define SAM4E16 ( \
+		SAM_PART_IS_DEFINED(SAM4E16C) || \
 		SAM_PART_IS_DEFINED(SAM4E16E) \
 		)
 /** @} */
