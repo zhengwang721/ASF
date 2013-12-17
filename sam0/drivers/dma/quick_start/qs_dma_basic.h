@@ -79,12 +79,33 @@
  * -# Allocate a DMA resource with the configurations.
  *  \snippet qs_dma_basic.c setup_3
  *  \br
+
+ * -# Create a DMA transfer descriptor configuration structure, which can be
+ * filled out to adjust the configuration of a single DMA transfer.
+ *  \snippet qs_dma_basic.c setup_4
+ *  \br
  *
- * -# Setup transfer descriptor. The transfer descriptor defines the transfer
- *    properties including transfer control settings, transfer count, source
- *    address, destination address and next descriptor address.
+ * -# Initialize the DMA transfer descriptor configuration struct with the module's
+ *    default values.
+ *    \note This should always be performed before using the configuration
+ *          struct to ensure that all values are initialized to known default
+ *          settings.
  *
- *  \snippet qs_dma_basic.c setup_dma_descriptor
+ *  \snippet qs_dma_basic.c setup_5
+ *  \br
+ *
+ * -# Set the specific parameters for a DMA transfer with transfer size, source
+ *    address, destination address.
+ *  \snippet qs_dma_basic.c setup_6
+ *  \br
+ *
+ * -# Create the DMA transfer descriptor.
+ *  \snippet qs_dma_basic.c setup_7
+ *  \br
+ *
+ * -# Add the DMA transfer descriptor to the allocated DMA resource.
+ *
+ *  \snippet qs_dma_basic.c add_descriptor_to_resource
  *  \br
  *
  * -# Register a callback to indicate transfer status.

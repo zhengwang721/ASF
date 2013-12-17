@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Watchdog Driver
+ * \brief SAM D2x Watchdog Driver
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,6 +42,9 @@
  */
 #include "wdt.h"
 #include <system.h>
+#include <system_interrupt.h>
+
+wdt_callback_t wdt_early_warning_callback;
 
 /**
  * \brief Registers an asynchronous callback function with the driver.
@@ -67,7 +70,7 @@ enum status_code wdt_register_callback(
 	switch (type)
 	{
 	case WDT_CALLBACK_EARLY_WARNING:
-		_wdt_instance.early_warning_callback = callback;
+		wdt_early_warning_callback = callback;
 		return STATUS_OK;
 	default:
 		Assert(false);
@@ -93,7 +96,7 @@ enum status_code wdt_unregister_callback(
 	switch (type)
 	{
 	case WDT_CALLBACK_EARLY_WARNING:
-		_wdt_instance.early_warning_callback = NULL;
+		wdt_early_warning_callback = NULL;
 		return STATUS_OK;
 	default:
 		Assert(false);
@@ -127,6 +130,8 @@ enum status_code wdt_enable_callback(
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}
+
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_WDT);
 }
 
 /**
@@ -161,7 +166,7 @@ void WDT_Handler(void)
 {
 	wdt_clear_early_warning();
 
-	if (_wdt_instance.early_warning_callback) {
-		_wdt_instance.early_warning_callback();
+	if (wdt_early_warning_callback) {
+		wdt_early_warning_callback();
 	}
 }

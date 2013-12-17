@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Watchdog Driver
+ * \brief SAM D21 Xplained PRO board configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,63 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef WDT_CALLBACK_H_INCLUDED
-#define WDT_CALLBACK_H_INCLUDED
 
-#include <compiler.h>
-#include "wdt.h"
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * \addtogroup asfdoc_sam0_wdt_group
- *
- * @{
- */
-
-/** \name Callback configuration and initialization
- * @{
- */
-
-/** Type definition for a WDT module callback function. */
-typedef void (*wdt_callback_t)(void);
-
-/** Enum for the possible callback types for the WDT module. */
-enum wdt_callback
-{
-	/** Callback type for when an early warning callback from the WDT module
-	 *  is issued.
-	 */
-	WDT_CALLBACK_EARLY_WARNING,
-};
-
-enum status_code wdt_register_callback(
-		const wdt_callback_t callback,
-		const enum wdt_callback type);
-
-enum status_code wdt_unregister_callback(
-		const enum wdt_callback type);
-
-/** @} */
-
-/** \name Callback enabling and disabling
- * @{
- */
-
-enum status_code wdt_enable_callback(
-		const enum wdt_callback type);
-
-enum status_code wdt_disable_callback(
-		const enum wdt_callback type);
-
-/** @} */
-
-/** @} */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+#endif /* CONF_BOARD_H_INCLUDED */
