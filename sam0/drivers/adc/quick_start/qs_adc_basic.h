@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 ADC Quick Start
+ * \brief SAM D2x ADC Quick Start
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_adc_basic_use_case Quick Start Guide for ADC - Basic
+ * \page asfdoc_sam0_adc_basic_use_case Quick Start Guide for ADC - Basic
  *
  * In this use case, the ADC will be configured with the following settings:
  * - 1V from internal bandgap reference
@@ -64,12 +64,12 @@
  * - No added sampling time
  * - Pin scan mode disabled
  *
- * \section asfdoc_samd20_adc_basic_use_case_setup Setup
+ * \section asfdoc_sam0_adc_basic_use_case_setup Setup
  *
- * \subsection asfdoc_samd20_adc_basic_use_case_prereq Prerequisites
+ * \subsection asfdoc_sam0_adc_basic_use_case_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd20_adc_basic_use_case_code Code
+ * \subsection asfdoc_sam0_adc_basic_use_case_code Code
  * Add to the main application source file, outside of any functions:
  * \snippet qs_adc_basic.c module_inst
  *
@@ -79,7 +79,7 @@
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_adc_basic.c setup_init
  *
- * \subsection asfdoc_samd20_adc_basic_use_case_workflow Workflow
+ * \subsection asfdoc_sam0_adc_basic_use_case_workflow Workflow
  * -# Create a module software instance structure for the ADC module to store
  *    the ADC driver state while it is in use.
  *    \note This should never go out of scope as long as the module is in use.
@@ -99,13 +99,13 @@
  *  -# Enable the ADC module so that conversions can be made.
  *     \snippet qs_adc_basic.c setup_enable
  *
- * \section asfdoc_samd20_adc_basic_use_case_use Use Case
+ * \section asfdoc_sam0_adc_basic_use_case_use Use Case
  *
- * \subsection asfdoc_samd20_adc_basic_use_case_use_code Code
+ * \subsection asfdoc_sam0_adc_basic_use_case_use_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_adc_basic.c main
  *
- * \subsection asfdoc_samd20_adc_basic_use_case_use_workflow Workflow
+ * \subsection asfdoc_sam0_adc_basic_use_case_use_workflow Workflow
  *  -# Start conversion.
  *  \snippet qs_adc_basic.c start_conv
  *  -# Wait until conversion is done and read result.
