@@ -155,7 +155,7 @@ uint8_t sio2ncp_tx(uint8_t *data, uint8_t length)
 #if SAMD20
 status = usart_serial_write_packet(&uart_module,(const uint8_t *)data,length);
 #else 
-status = usart_serial_write_packet(USART_ncp,(const uint8_t *)data,length);
+status = usart_serial_write_packet(USART_NCP,(const uint8_t *)data,length);
 #endif
 	} while (status != STATUS_OK);
 	return length;
