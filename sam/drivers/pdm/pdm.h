@@ -301,6 +301,22 @@ enum pdm_callback_type {
 };
 
 /**
+ * Converted data size
+ */
+enum pdmic_converted_data_size {
+	PDMIC_CONVERTED_DATA_SIZE_16 = 0,
+	PDMIC_CONVERTED_DATA_SIZE_32
+};
+
+/**
+ * Oversampling ratio
+ */
+enum pdmic_oversampling_ratio {
+	PDMIC_OVERSAMPLING_RATIO_128 = 0,
+	PDMIC_OVERSAMPLING_RATIO_64
+};
+
+/**
  * \name PDM Module status flags
  *
  * PDM status flags, returned by \ref pdmic_get_status().
@@ -346,14 +362,14 @@ struct pdm_module {
 struct pdm_config {
 	/** prescal determines the frequency of PDMCLK.*/
 	uint8_t prescal;
-	/** High-pass filter enabled flag */
+	/** 0 to enable high-pass fileter, 1 to bypass filter */
 	bool high_pass_filter_bypass;
-	/** Droop compensation filter enabled flag */
-	bool droop_compensation_filter_bypass;
+	/** 0 to enable droop compensation, 1 to bypass filter */
+	bool sincc_filter_bypass;
 	/** Converted data size */
 	uint8_t conver_data_size;
 	/** Oversampling Ratio */
-	uint8_t oversampling_radio;
+	uint8_t oversampling_ratio;
 	/** Shifts the multiplication operation result by SCALE bits to the right */
 	uint8_t data_scale;
 	/** Shifts the scaled result by SHIFT bits to the right */
@@ -396,6 +412,14 @@ __always_inline static void pdm_get_config_default(struct pdm_config *const cfg)
 {
 	Assert(cfg);
 	cfg->prescal = PDM_DEFAULT_PRESCAL;
+	cfg->high_pass_filter_bypass = false;
+	cfg->sincc_filter_bypass = false;
+	cfg->conver_data_size = PDMIC_CONVERTED_DATA_SIZE_16;
+	cfg->oversampling_ratio = PDMIC_OVERSAMPLING_RATIO_128;
+	cfg->data_scale = 0;
+	cfg->data_shift = 0;
+	cfg->gain = 0;
+	cfg->offset = 0;
 }
 
 /** @} */
@@ -527,7 +551,7 @@ __always_inline static void pdm_disable_callback(struct pdm_module *const pdm,
  * @{
  */
 
-enum status_code pdm_conversion_job(void);
+enum status_code pdm_start_conversion_job(void);
 
 enum status_code pdm_get_job_status(struct pdm_module *const pdm);
 
@@ -674,7 +698,7 @@ void pdm_abort_job(struct pdm_module *const pdm);
  *   pdm_enable_callback(&pdm, PDM_CALLBACK_TRANSFER_END);
  * \endcode
  * -# Enable pdm module conversion job:
- *   - \code pdm_conversion_job(); \endcode
+ *   - \code pdm_start_conversion_job(); \endcode
  */
 
 #endif /* PDM_H_INCLUDED */

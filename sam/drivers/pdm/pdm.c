@@ -183,7 +183,7 @@ enum status_code pdm_init(struct pdm_module *const pdm, Pdmic *hw,
 	}
 
 	/* Oversampling only support 0 and 1 */
-	if (cfg->oversampling_radio > 1) {
+	if (cfg->oversampling_ratio > 1) {
 		return ERR_INVALID_ARG;
 	}
 
@@ -194,13 +194,13 @@ enum status_code pdm_init(struct pdm_module *const pdm, Pdmic *hw,
 	if (cfg->high_pass_filter_bypass) {
 		dsp_cfg |= PDMIC_DSPR0_HPFBYP;
 	}
-	if (cfg->droop_compensation_filter_bypass) {
+	if (cfg->sincc_filter_bypass) {
 		dsp_cfg |= PDMIC_DSPR0_SINBYP;
 	}
 	if (cfg->conver_data_size) {
 		dsp_cfg |= PDMIC_DSPR0_SIZE;
 	}
-	if (cfg->oversampling_radio) {
+	if (cfg->oversampling_ratio) {
 		dsp_cfg |= PDMIC_DSPR0_OSR_64;
 	} else {
 		dsp_cfg |= PDMIC_DSPR0_OSR_128;
@@ -230,7 +230,7 @@ enum status_code pdm_init(struct pdm_module *const pdm, Pdmic *hw,
 }
 
 /**
- * \brief Blocking PDM conversion
+ * \brief Blocking PDM conversion. After conversion, the PDMIC will reset.
  *
  * \return Status of the transfer.
  * \retval STATUS_OK Data transfered all right
@@ -281,7 +281,7 @@ enum status_code pdm_conversion_wait(void)
  * \return Status of the job start.
  * \retval STATUS_OK Job started or queued successful
  */
-enum status_code pdm_conversion_job(void)
+enum status_code pdm_start_conversion_job(void)
 {
 	if (_pdm_instances[1] != NULL) {
 		PDMIC1->PDMIC_IER = PDMIC_IER_ENDRX | PDMIC_IER_RXBUFF | PDMIC_IER_OVRE;
@@ -326,7 +326,7 @@ enum status_code pdm_get_job_status(struct pdm_module *const pdm)
 }
 
 /**
- * \brief Aborts all ongoing jobs
+ * \brief Aborts all ongoing jobs. The PDMIC will reset after aborting a job.
  *
  * Aborts all ongoing jobs.
  *
