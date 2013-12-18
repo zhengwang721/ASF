@@ -73,7 +73,7 @@ uint32_t tstamp;
 
 /* === Macros =============================================================== */
 /* Version of the software */
-#define FIRMWARE_VERSION    2.2f
+#define FIRMWARE_VERSION    3.0f
 
 
 

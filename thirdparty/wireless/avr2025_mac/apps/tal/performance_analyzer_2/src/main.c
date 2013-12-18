@@ -52,6 +52,7 @@
 #include "tal_helper.h"
 #include "ieee_const.h"
 #include "app_init.h"
+#include "perf_api.h"
 #include "app_peer_search.h"
 #include "app_per_mode.h"
 #include "app_range_mode.h"
@@ -345,7 +346,6 @@ volatile node_ib_t node_info[NO_TRX];
 
 //! \}
 /* === IMPLEMENTATION ====================================================== */
-
 /**
  * \brief Main function of the Performance Analyzer application
  * \ingroup group_app_init
@@ -376,7 +376,7 @@ int main(void)
     /* INIT was a success - so change to WAIT_FOR_EVENT state */
     set_main_state(RF09,WAIT_FOR_EVENT, NULL);
 	set_main_state(RF24,WAIT_FOR_EVENT, NULL);
-
+	
 	  
     /* Endless while loop */
     while (1)
@@ -386,6 +386,7 @@ int main(void)
         tal_task(); /* Handle transceiver specific tasks */
         app_task(); /* Application task */
         serial_data_handler();
+
     }
 }
 

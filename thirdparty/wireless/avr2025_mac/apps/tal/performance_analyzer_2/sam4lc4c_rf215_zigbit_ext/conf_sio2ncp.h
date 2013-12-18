@@ -47,7 +47,7 @@
 /** USART Interface */
 #define USART_NCP                 USART1
 /** Baudrate setting */
-#define USART_NCP_BAUDRATE        115200
+#define USART_NCP_BAUDRATE        9600
 /** Character length setting */
 #define USART_NCP_CHAR_LENGTH     US_MR_CHRL_8_BIT
 /** Parity setting */

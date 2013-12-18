@@ -48,10 +48,12 @@
 #include "spi_master.h"
 #include "pal_ext_trx.h"
 #include "pal.h"
+# include "usart.h"
+# include "sio2ncp.h"
+# include "conf_sio2ncp.h"
 #include "delay.h"
 #include "interrupt.h"
 #include "conf_pal.h"
-
 static irq_handler_t irq_hdl_trx = NULL;
 struct spi_device SPI_AT86RFX_DEVICE = {
 	/* ! Board specific select id */
@@ -78,14 +80,21 @@ void pal_spi_init(void)
 	spi_enable(AT86RFX_SPI);
 	AT86RFX_INTC_INIT();
 }
-
+#define TAL_DEFAULT_BB_IRQ_MASK     (BB_IRQ_TXFE | BB_IRQ_RXFE)
+#define TAL_DEFAULT_RF_IRQ_MASK     RF_IRQ_ALL_IRQ
 void pal_trx_read(uint16_t addr,uint8_t *data, uint16_t length)
 {
 	uint8_t register_value = 0;
 
 	/*Saving the current interrupt status & disabling the global interrupt
 	 **/
-	ENTER_CRITICAL_REGION();
+	//ENTER_CRITICAL_REGION();
+	
+      pal_trx_reg_write( RG_BBC0_IRQM, 0);
+      pal_trx_reg_write(BB_BASE_ADDR_OFFSET + RG_BBC0_IRQM, 0);
+
+      pal_trx_reg_write( RG_RF09_IRQM, 0);
+      pal_trx_reg_write(RF_BASE_ADDR_OFFSET + RG_RF09_IRQM, 0);	
 
 	/* Prepare the command byte */
 	addr |= 0X00; //Read Command
@@ -114,15 +123,29 @@ void pal_trx_read(uint16_t addr,uint8_t *data, uint16_t length)
 
 	/*Restoring the interrupt status which was stored & enabling the global
 	 *interrupt */
-	LEAVE_CRITICAL_REGION();
+	//LEAVE_CRITICAL_REGION();
+	/*Restoring the interrupt status which was stored & enabling the global
+	 *interrupt */
+      pal_trx_reg_write( RG_BBC0_IRQM, TAL_DEFAULT_BB_IRQ_MASK);
+	  pal_trx_reg_write(BB_BASE_ADDR_OFFSET + RG_BBC0_IRQM, TAL_DEFAULT_BB_IRQ_MASK);
+
+    pal_trx_reg_write ( RG_RF09_IRQM, TAL_DEFAULT_RF_IRQ_MASK);	
+	 pal_trx_reg_write(RF_BASE_ADDR_OFFSET + RG_RF09_IRQM, TAL_DEFAULT_RF_IRQ_MASK);	
 
 }
 
 void pal_trx_write(uint16_t addr, uint8_t *data,uint16_t length)
 {
+	uint32_t dw_status;
 	/*Saving the current interrupt status & disabling the global interrupt
 	 **/
-	ENTER_CRITICAL_REGION();
+	//ENTER_TRX_REGION();
+
+      pal_trx_reg_write( RG_BBC0_IRQM, 0);
+	  pal_trx_reg_write(BB_BASE_ADDR_OFFSET + RG_BBC0_IRQM, 0);
+
+    pal_trx_reg_write( RG_RF09_IRQM, 0);	
+	 pal_trx_reg_write(RF_BASE_ADDR_OFFSET + RG_RF09_IRQM, 0);
 
 	/* Prepare the command byte */
 	addr |= 0X8000; //Write Command
@@ -143,17 +166,26 @@ void pal_trx_write(uint16_t addr, uint8_t *data,uint16_t length)
 	/* Send the Read command byte */
 	spi_write_packet(AT86RFX_SPI, &reg_addr, 1);
 
+	uint32_t i = 0;
+	uint8_t val;
 
-	/* Write the byte in the transceiver data register */
-	spi_write_packet(AT86RFX_SPI, data, length);
-
-
+	while (length) {
+		val = data[i];
+		while (!spi_is_tx_ready(AT86RFX_SPI));
+		spi_write_single(AT86RFX_SPI, val);
+		i++;
+		length--;
+	}
 	/* Stop the SPI transaction by setting SEL high */
 	spi_deselect_device(AT86RFX_SPI, &SPI_AT86RFX_DEVICE);
 
 	/*Restoring the interrupt status which was stored & enabling the global
-	 *interrupt */
-	LEAVE_CRITICAL_REGION();
+	 *interrupt */ //sriram
+      pal_trx_reg_write( RG_BBC0_IRQM, TAL_DEFAULT_BB_IRQ_MASK);
+	  pal_trx_reg_write(BB_BASE_ADDR_OFFSET + RG_BBC0_IRQM, TAL_DEFAULT_BB_IRQ_MASK);
+      pal_trx_reg_write ( RG_RF09_IRQM, TAL_DEFAULT_RF_IRQ_MASK);	
+	  pal_trx_reg_write(RF_BASE_ADDR_OFFSET + RG_RF09_IRQM, TAL_DEFAULT_RF_IRQ_MASK);	
+	//LEAVE_TRX_REGION();
 }
 
 uint8_t pal_trx_reg_read(uint16_t addr)
