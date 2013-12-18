@@ -1,20 +1,18 @@
 <asf xmlversion="1.0">
-	<select-by-device id="config.thirdparty.wireless.avr2025_mac.source.sal" caption="SAL Configuration" default="-">
+	<select-by-device id="config.thirdparty.wireless.avr2025_mac.source.sal" caption="SAL Configuration">
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.sal#atxmega_sal"     caption="xmega sal support enabled">
 			<info type="description" value="summary">
 			The AES Engine of  XMEGA is used for performing SAL operations
 			</info>
 			<info type="gui-flag" value="hidden"/>
-      <build type="define" name="SAL_TYPE" value="ATXMEGA_SAL"
-			<require idref="thirdparty.wireless.avr2025_mac.source.sal.atxmega_sal"/>
+      <require idref="thirdparty.wireless.avr2025_mac.source.sal.atxmega_sal"/>
 			<device-support value="xmega"/>		
 		</module>
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.sal#at86rf2xx"     caption="at86rf2xx sal support enabled">
 			<info type="description" value="summary">
 			The AES engine available in the AT86RFXX transceiver is used to perform Security functions
 			</info>
-			<info type="gui-flag" value="hidden"/>
-      <build type="define" name="SAL_TYPE" value="AT86RF2xx"
+			<info type="gui-flag" value="hidden"/>      
 			<require idref="thirdparty.wireless.avr2025_mac.source.sal.at86rf2xx"/>
 			<device-support value="uc3"/>
 			<device-support value="sam4l"/>
@@ -24,8 +22,7 @@
 			<info type="description" value="summary">
 			The AES engine available in the ATmegarf transceiver is used to perform Security functions
 			</info>
-			<info type="gui-flag" value="hidden"/>
-      <build type="define" name="SAL_TYPE" value="ATMEGARF_SAL"
+			<info type="gui-flag" value="hidden"/>      
 			<require idref="thirdparty.wireless.avr2025_mac.source.sal.atmegarf_sal"/>
 			<device-support value="megarf"/>
 		</module>
@@ -41,8 +38,8 @@
 		<require idref="thirdparty.wireless.avr2025_mac.source.sal.inc"/>
 		<require idref="config.thirdparty.wireless.avr2025_mac.source.sal"/>
 		<device-support value="xmega"/>
-        <device-support value="uc3"/>
-        <device-support value="megarf"/>
+    <device-support value="uc3"/>
+    <device-support value="megarf"/>
 		<device-support value="sam4l"/>
 		<device-support value="samd20"/>
 	</module>
