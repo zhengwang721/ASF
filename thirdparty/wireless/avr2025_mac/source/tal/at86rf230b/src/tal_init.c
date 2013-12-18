@@ -214,8 +214,10 @@ retval_t tal_init(void)
 	 */
 
 #ifndef DISABLE_IEEE_ADDR_CHECK
+	uint64_t invalid_ieee_address;
+	memset((uint8_t *)&invalid_ieee_address, 0xFF, sizeof(invalid_ieee_address));
 	if ((tal_pib.IeeeAddress == 0x0000000000000000) ||
-			(tal_pib.IeeeAddress == 0xFFFFFFFFFFFFFFFF)
+	(tal_pib.IeeeAddress == invalid_ieee_address)){
 			) {
 		/*
 		 * Generate a seed for the random number generator in function
@@ -263,8 +265,7 @@ retval_t tal_init(void)
 		}
 		/* Check if a valid IEEE address is available. */
 		while ((tal_pib.IeeeAddress == 0x0000000000000000) ||
-				(tal_pib.IeeeAddress == 0xFFFFFFFFFFFFFFFF)
-				);
+				(tal_pib.IeeeAddress == invalid_ieee_address));
 	} else {
 		/* Valid IEEE address, so no need to generate a new random seed.
 		 **/

@@ -53,6 +53,7 @@
 #include "delay.h"
 #include "interrupt.h"
 #include "conf_pal.h"
+#include "conf_board.h"
 
 static irq_handler_t irq_hdl_trx = NULL;
 

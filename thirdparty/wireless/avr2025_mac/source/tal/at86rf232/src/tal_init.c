@@ -207,9 +207,10 @@ retval_t tal_init(void)
      * rare case that such an address is randomly
      * generated again, we must repeat this.
      */
-    while ((tal_pib.IeeeAddress == 0x0000000000000000) ||
-           (tal_pib.IeeeAddress == 0xFFFFFFFFFFFFFFFF))
-    {
+	uint64_t invalid_ieee_address;
+	memset((uint8_t *)&invalid_ieee_address, 0xFF, sizeof(invalid_ieee_address));
+	while ((tal_pib.IeeeAddress == 0x0000000000000000) ||
+	(tal_pib.IeeeAddress == invalid_ieee_address)){
         /*
          * In case no valid IEEE address is available, a random
          * IEEE address will be generated to be able to run the

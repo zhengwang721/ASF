@@ -57,7 +57,7 @@
 #if (MAC_START_REQUEST_CONFIRM == 1)    /* FFD like device */
 #define MAC_ZIP_MAX_DEV_TABLE_ENTRIES           (10)
 #else
-#define MAC_ZIP_MAX_DEV_TABLE_ENTRIES           (3)
+#define MAC_ZIP_MAX_DEV_TABLE_ENTRIES           (4)
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
 /**
  * The maximum number of entries supported in the macSecurityLevelTable.

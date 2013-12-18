@@ -43,9 +43,6 @@
 #ifndef CONF_MAC_H_INCLUDED
 #define CONF_MAC_H_INCLUDED
 
-#warning \
-	"Using default values. Edit this conf_mac.h file to configure MAC Security."
-
 #ifdef MAC_SECURITY_ZIP
 /**
  * The maximum number of entries supported in the macKeyTable.
@@ -60,7 +57,7 @@
 #if (MAC_START_REQUEST_CONFIRM == 1)    /* FFD like device */
 #define MAC_ZIP_MAX_DEV_TABLE_ENTRIES           (10)
 #else
-#define MAC_ZIP_MAX_DEV_TABLE_ENTRIES           (3)
+#define MAC_ZIP_MAX_DEV_TABLE_ENTRIES           (4)
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
 /**
  * The maximum number of entries supported in the macSecurityLevelTable.

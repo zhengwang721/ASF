@@ -48,7 +48,7 @@
  * The maximum number of entries supported in the macKeyTable.
  * This value is implementation specific.
  */
-#define MAC_ZIP_MAX_KEY_TABLE_ENTRIES           (4)
+#define MAC_ZIP_MAX_KEY_TABLE_ENTRIES           (3)
 
 /**
  * The maximum number of entries supported in the macDeviceTable.
@@ -73,7 +73,7 @@
 /**
  * The maximum number of entries supported in the KeyDeviceList
  */
-#define MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES        (4)
+#define MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES        (1)
 
 /**
  * The maximum number of entries supported in the KeyUsageList
