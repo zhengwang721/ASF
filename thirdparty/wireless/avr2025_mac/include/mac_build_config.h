@@ -57,7 +57,7 @@
 #ifdef MAC_USER_BUILD_CONFIG
 #include "mac_user_build_config.h"
 #else
-
+#include "conf_mac.h"
 /* === Macros =============================================================== */
 
 /**
@@ -353,45 +353,6 @@ extern "C" {
 #if (defined GTS_SUPPORT) && (!defined BEACON_SUPPORT)
 #error "GTS can be used along with Beacon mode only. Add BEACON_SUPPORT symbol..."
 #endif /* (defined GTS_SUPPORT) && (!defined BEACON_SUPPORT) */
-
-#ifdef MAC_SECURITY_ZIP
-/**
- * The maximum number of entries supported in the macKeyTable.
- * This value is implementation specific.
- */
-#define MAC_ZIP_MAX_KEY_TABLE_ENTRIES           (3)
-
-/**
- * The maximum number of entries supported in the macDeviceTable.
- * This value is implementation specific.
- */
-#if (MAC_START_REQUEST_CONFIRM == 1)    /* FFD like device */
-#define MAC_ZIP_MAX_DEV_TABLE_ENTRIES           (10)
-#else
-#define MAC_ZIP_MAX_DEV_TABLE_ENTRIES           (3)
-#endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
-/**
- * The maximum number of entries supported in the macSecurityLevelTable.
- * This value is implementation specific.
- */
-#define MAC_ZIP_MAX_SEC_LVL_TABLE_ENTRIES       (2)
-
-/**
- * The maximum number of entries supported in the KeyIdLookupList
- */
-#define MAC_ZIP_MAX_KEY_ID_LOOKUP_LIST_ENTRIES  (1)
-
-/**
- * The maximum number of entries supported in the KeyDeviceList
- */
-#define MAC_ZIP_MAX_KEY_DEV_LIST_ENTRIES        (1)
-
-/**
- * The maximum number of entries supported in the KeyUsageList
- */
-#define MAC_ZIP_MAX_KEY_USAGE_LIST_ENTRIES      (1)
-#endif /* MAC_SECURITY_ZIP */
-
 
 #endif  /* BUILD_CONFIG_H */
 /* EOF */

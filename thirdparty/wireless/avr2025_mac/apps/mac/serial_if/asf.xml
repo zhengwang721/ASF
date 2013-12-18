@@ -5,6 +5,7 @@
 		</info>
 		<build type="c-source" value="main.c"/>
 		<build type="header-file" value="conf_common_sw_timer.h"/>
+		<build type="header-file" value="conf_mac.h"/>
 		<build type="include-path" value="."/>
 
 		<require idref="thirdparty.wireless.avr2025_mac.addons.serial_if"/>

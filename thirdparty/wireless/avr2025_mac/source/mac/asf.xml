@@ -82,17 +82,20 @@
     	<build type="header-file"   value="inc/mac_data_structures.h"/>
 		<build type="header-file"   value="inc/mac_internal.h"/>
 		<build type="header-file"   value="inc/mac_config.h"/>
-
 		<build type="header-file"   value="inc/mac_security.h"/>
 		<build type="include-path"  value="inc/"/>
+
+		<build type="module-config" subtype="required-header-file" value="conf_mac.h"/>
+		<build type="module-config" subtype="path" value="module_config"/>
+
 		<build type="doxygen-entry-point" value="group_mac"/>
 		<require idref="config.thirdparty.wireless.avr2025_mac.source.mac.api"/>
 		<require idref="thirdparty.wireless.avr2025_mac.includes"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.tal"/>
-    <require idref="thirdparty.wireless.avr2025_mac.source.sal"/>
-    <require idref="thirdparty.wireless.avr2025_mac.source.stb"/>
+		<require idref="thirdparty.wireless.avr2025_mac.source.sal"/>
+		<require idref="thirdparty.wireless.avr2025_mac.source.stb"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.mac.inc"/>
-    <device-support-alias value="avr2025_mac_pal_support"/>
+		<device-support-alias value="avr2025_mac_pal_support"/>
 	</module>
 	
 	<module type="meta" id="thirdparty.wireless.avr2025_mac.source.mac.inc" caption="MAC Includes">

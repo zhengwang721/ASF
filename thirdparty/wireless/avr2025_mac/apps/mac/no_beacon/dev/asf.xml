@@ -4,6 +4,8 @@
 		The basic MAC Example Nobeacon Application deploys a nonbeacon-enabled network.
 		</info>
 		<build type="c-source" value="main.c"/>
+		<build type="header-file" value="conf_mac.h"/>
+		<build type="include-path" value="."/>
 		<build type="define" name="HIGHEST_STACK_LAYER" value="MAC"/>
 		<build type="define" name="ENABLE_TSTAMP" value=""/>
 		<build type="define" name="SIO_HUB" value=""/>

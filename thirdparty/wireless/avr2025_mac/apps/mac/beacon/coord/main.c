@@ -1468,6 +1468,3 @@ static void print_stack_app_build_features(void)
 	printf("\r\n MAC GTS Support : Disabled");
 #endif
 }
-
-
-
