@@ -144,7 +144,7 @@ bool mac_build_and_tx_data_req(bool expl_poll,
 		return false;
 	}
 
-	frame_info_t *transmit_frame = (frame_info_t *)buf_ptr->body; 
+	frame_info_t *transmit_frame = (frame_info_t *)BMM_BUFFER_POINTER(buf_ptr);
 
 	/*
 	 * If this data request cmd frame was initiated by a device due to

@@ -200,7 +200,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 	{		
 		case macDefaultKeySource:		
 		{
-            uint8_t mac_sec_level_table_entries = 2;
+            uint8_t mac_sec_level_table_entries = DEFAULT_MAC_SEC_LVL_TABLE_ENTRIES;
 
             wpan_mlme_set_req(macSecurityLevelTableEntries,
                                 NO_PIB_INDEX,
@@ -241,7 +241,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 			}
 			else if(INDEX_0 == PIBAttributeIndex)
 			{
-				uint8_t mac_key_table_entries = 4;
+				uint8_t mac_key_table_entries = DEFAULT_MAC_KEY_TABLE_ENTRIES;
 
 				wpan_mlme_set_req(macKeyTableEntries,
 								NO_PIB_INDEX,
@@ -252,7 +252,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		
 		case macKeyTableEntries:
 		{
-		  uint16_t coord_key_index = 4;
+		  uint16_t coord_key_index = DEFAULT_MAC_DEV_TABLE_ENTRIES;
 		  wpan_mlme_set_req(macDeviceTableEntries,
                           NO_PIB_INDEX,
                           &coord_key_index);	
@@ -556,7 +556,7 @@ static void init_secuity_pib(uint8_t PIBAttribute, uint8_t PIBAttributeIndex)
 		
 		case macPANCoordShortAddress:		
 		{
-            uint8_t mac_sec_level_table_entries = 2;
+            uint8_t mac_sec_level_table_entries = DEFAULT_MAC_SEC_LVL_TABLE_ENTRIES;
 
             wpan_mlme_set_req(macSecurityLevelTableEntries,
                                 NO_PIB_INDEX,
@@ -593,7 +593,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 				/*
 				 * Set the Coordinator Short Address of the scanned network.
 				 * This is required in order to perform a proper sync
-				 * before assocation.
+				 * before association.
 				 */
 				wpan_mlme_set_req(macCoordShortAddress,			
 				NO_PIB_INDEX, 
@@ -612,7 +612,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 
             case macDefaultKeySource:
                  {
-					uint8_t mac_sec_level_table_entries = 2;
+					uint8_t mac_sec_level_table_entries = DEFAULT_MAC_SEC_LVL_TABLE_ENTRIES;
 
                     wpan_mlme_set_req(macSecurityLevelTableEntries,
                                       NO_PIB_INDEX,
@@ -637,7 +637,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 
              case macSecurityLevelTable:
                  {
-                    uint8_t mac_key_table_entries = 4;
+                    uint8_t mac_key_table_entries = DEFAULT_MAC_KEY_TABLE_ENTRIES;
 
                     wpan_mlme_set_req(macKeyTableEntries,
                                       NO_PIB_INDEX,
@@ -755,7 +755,7 @@ static void usr_mlme_set_conf_run_time(uint8_t status, uint8_t PIBAttribute, uin
 	                 };
 
 	                 wpan_mlme_set_req(macDeviceTable,
-	                 0,    // Index: 0
+	                 INDEX_0,    // Index: 0
 	                 &mac_dev_table);
                  }
                  break;

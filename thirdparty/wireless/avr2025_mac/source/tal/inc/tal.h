@@ -540,17 +540,6 @@ extern "C" {
 #endif
 
 /**
- * \brief TAL task handling
- *
- * This function
- * - Checks and allocates the receive buffer.
- * - Processes the TAL incoming frame queue.
- * - Implements the TAL state machine.
- * \ingroup group_tal_state_machine
- */
-//void tal_task(void);
-
-/**
  * \brief Initializes the TAL
  *
  * This function is called to initialize the TAL. The transceiver is
@@ -744,23 +733,6 @@ retval_t tal_trx_sleep(sleep_mode_t mode);
  * \ingroup group_tal_pm
  */
 retval_t tal_trx_wakeup(void);
-
-/**
- * \brief Generates a 16-bit random number used as initial seed for srand()
- *
- * This function generates a 16-bit random number by means of using the
- * Random Number Generator from the transceiver.
- * The Random Number Generator generates 2-bit random values. These 2-bit
- * random values are concatenated to the required 16-bit random seed.
- * The generated random 16-bit number is feed into function srand()
- * as initial seed.
- * The transceiver state is initally set to RX_ON.
- * After the completion of the random seed generation, the
- * trancseiver is set to TRX_OFF.
- *
- * \ingroup group_tal_init
- */
-//void tal_generate_rand_seed(void);
 
 /**
  * \brief Adds two time values

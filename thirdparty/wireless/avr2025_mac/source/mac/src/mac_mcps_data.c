@@ -1165,7 +1165,7 @@ static void handle_exp_persistence_timer(buffer_t *buf_ptr)
  */
 static bool mac_buffer_purge(uint8_t msdu_handle)
 {
-	uint32_t *buf_ptr;
+	buffer_t *buf_ptr;
 	search_t find_buf;
 	uint8_t handle = msdu_handle;
 
@@ -1179,7 +1179,7 @@ static bool mac_buffer_purge(uint8_t msdu_handle)
 	find_buf.handle = &handle;
 
 	/* Remove from indirect queue if the short address matches */
-	buf_ptr = (uint32_t *)qmm_queue_remove(&indirect_data_q, &find_buf);
+	buf_ptr = qmm_queue_remove(&indirect_data_q, &find_buf);
 
 	if (NULL != buf_ptr) {
 		/* Free the buffer allocated, after purging */

@@ -79,7 +79,7 @@ typedef struct
 	uint8_t (*criteria_func)(void *buf, void *handle);
 	/** Handle to callbck parameter */
 	void *handle;
-} search_t ;
+} search_t;
 
 /**
  * @brief Queue structure
@@ -113,7 +113,7 @@ typedef struct
 	 * Number of buffers present in the current queue
 	 */
 	uint8_t size;
-} queue_t; 
+} queue_t;
 __PACK__RST_DATA__
 /* === Externals =========================================================== */
 

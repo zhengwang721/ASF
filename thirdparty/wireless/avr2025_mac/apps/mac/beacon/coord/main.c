@@ -141,7 +141,7 @@
 /** Defines the default Beacon KeyIndex */
 #define DEFAULT_BEACON_KEY_INDEX		(0x00)
 
-#define GTS_PAYLOAD_LEN                 (22 + 1 + 1 +1)
+
 /**
  * Defines the time in ms to initiate an update of the beacon payload.
  */
@@ -175,20 +175,6 @@
 #define LED_DATA                        (LED0)
 #endif
 
-/* SAL types for security: */
-/** Dummy SAL type */
-#define NO_SAL                          (0x00)
-
-/** SAL with transceiver based AES via SPI,
- * such as AT86RF231, AT86RF212, etc.
- */
-#define AT86RF2xx                       (0x01)
-/** SAL with single chip transceiver based AES */
-#define ATMEGARF_SAL                    (0x02)
-/** AES software implementation */
-#define SW_AES_SAL                      (0x03)
-/** SAL with ATxmega family based AES */
-#define ATXMEGA_SAL                     (0x04)
 
 /* === GLOBALS ============================================================= */
 extern uint8_t default_key_source[8];
@@ -199,9 +185,10 @@ uint16_t no_of_assoc_devices;
 
 
 /** This array stores the current beacon payload. */
-uint8_t beacon_payload[BEACON_PAYLOAD_LEN] = {"Atmel beacon demo 0"};
+uint8_t beacon_payload[] = {"Atmel beacon demo 0"};
+uint8_t broadcast_payload[] ={"Broadcast Data"};
 #ifdef GTS_SUPPORT
-static uint8_t gts_payload[GTS_PAYLOAD_LEN] = {"GTS Data from coordinator"};
+static uint8_t gts_payload[] = {"GTS Data from coordinator"};
 #endif /* GTS_SUPPORT */
 /** This variable stores the current state of the node. */
 coord_state_t coord_state = COORD_STARTING;
@@ -357,8 +344,8 @@ int main(void)
 			if (!ioport_get_pin_level(GPIO_PUSH_BUTTON_0)) {
 				dst_addr.Addr.short_address = BROADCAST;
 				wpan_mcps_data_req(FCF_SHORT_ADDR, &dst_addr,
-						14,
-						(uint8_t *)"Broadcast Data", 1,
+						strlen(broadcast_payload),
+						&broadcast_payload, 1,
 						WPAN_TXOPT_OFF);
 			}
 		}
@@ -776,7 +763,7 @@ void usr_mlme_get_conf(uint8_t status,
 		short_addr[1] = (uint8_t)(COORD_SHORT_ADDR >> 8); /* high byte */
 
 		wpan_mlme_set_req(macShortAddress, short_addr);
-#endif
+#endif /* (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006) */
 
 	}
 #ifdef MAC_SECURITY_ZIP
@@ -794,7 +781,7 @@ void usr_mlme_get_conf(uint8_t status,
 		}
 		wpan_mlme_set_req(macKeyTable, PIBAttributeIndex, (uint8_t *)PIBAttributeValue);
 	}
-#endif
+#endif /* (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006) */
 }
 
 #endif  /* (MAC_GET_SUPPORT == 1) */
@@ -1238,7 +1225,7 @@ static void bc_data_cb(void *parameter)
 	/* The transmission is direct, but without acknowledgment. */
 	if (wpan_mcps_data_req(src_addr_mode,
 			&dst_addr,
-			1,     /* One octet */
+			strlen(payload),     /* One octet */
 			&payload,
 			curr_msdu_handle_temp,
 			WPAN_TXOPT_OFF
@@ -1374,7 +1361,7 @@ static void gts_data_cb(void *parameter)
 #endif
 		if (!wpan_mcps_data_req(src_addr_mode,
 				&dst_addr,
-				GTS_PAYLOAD_LEN,  /* One octet */
+				strlen(gts_payload),  /* One octet */
 				gts_payload,
 				gts_msdu_handle,
 				WPAN_TXOPT_GTS_ACK
@@ -1451,138 +1438,10 @@ static void bcn_payload_update_cb(void *parameter)
  */
 static void print_stack_app_build_features(void)
 {
-#if ANTENNA_DIVERSITY   
-    printf("\r\n Antenna Diversity : Enabled %d", ANTENNA_DIVERSITY);
-#else
-    printf("\r\n Antenna Diversity : Disabled %d", ANTENNA_DIVERSITY);	
-#endif	          
-			
-#if ARM_MATH_CM0
-    printf("\r\n ARM Cortex-M0 Math Library Support : Enabled");
-#else
-    printf("\r\n ARM Cortex-M0 Math Library Support : Disabled");
-#endif
-
-#ifdef BEACON_SUPPORT 
-    printf("\r\n Beacon Support : Enabled");
-#else
-    printf("\r\n Beacon Support : Disabled");
-#endif
-  
-#ifdef BOARD
-    printf("\r\n Board Support : %d",  BOARD);
-#else
-    printf("\r\n Board Support : Not Defined");
-#endif  
-  
-#ifdef CUSTOM_DEFAULT_TX_PWR
-    printf("\r\n Custom default Tx Power : Defined ");
-#else
-   printf("\r\n Custom default Tx Power : Not used");
-#endif
-
-#if DISABLE_TSTAMP_IRQ
-	printf("\r\n TRX Time Stamp IRQ : Enabled - %d", DISABLE_TSTAMP_IRQ);
-#else
-	printf("\r\n TRX Time Stamp IRQ : Disabled");
-#endif  
-
-#ifdef DEBUG
-    printf("\r\n Debug : Enabled");
-#else
-    printf("\r\n Debug : Disabled");
-#endif
-
-#if TAL_TYPE
-	printf("\r\n TRX Type : %d", TAL_TYPE);
-#else
-	printf("\r\n TRX Type : Not Specified");
-#endif
-
 #ifdef STB_ON_SAL
 	printf("\r\n Security Tool Box On SAL : Enabled");
 #else
 	printf("\r\n Security Tool Box On SAL : Disabled");
-#endif
-
-#ifdef CUSTOM_PWR_TABLE
-	printf("\r\n Power Table : Custom");
-#else
-	printf("\r\n Custom power table not used");
-#endif
-
-#if SAL_TYPE
-	printf("\r\n SAL Type : %d", SAL_TYPE);
-#else
-	printf("\r\n SAL Type not defined");
-#endif
-
-#ifdef EXT_RF_FRONT_END_CTRL
-	printf("\r\n External RF Front End Control for External PA : Enabled");
-#else
-	printf("\r\n External RF Front End Control for External PA : Disabled");
-#endif
-
-#if EXTERN_EEPROM_AVAILABLE
-	printf("\r\n External EEPROM Available");
-#else
-	printf("\r\n External EEPROM Not Available");
-#endif
-
-#if _DEBUG_
-	printf("\r\n MAC Debug Support : Enabled");
-#else
-	printf("\r\n MAC Debug Support : Disabled");
-#endif
-
-#if TC_ASYNC
-	printf("\r\n Timer Counter Asynchronous Module : Enabled");
-#else
-	printf("\r\n Timer Counter Asynchronous Module : Disabled");
-#endif
-
-#if PAL_USE_SPI_TRX
-	printf("\r\n TRX Communication via SPI : Yes");
-#else
-	printf("\r\n TRX Communication via SPI : No");
-#endif
-
-#if SPI_CALLBACK_MODE
-	printf("\r\n SPI Callback Mode : Enabled");
-#else
-	printf("\r\n SPI Callback Mode : Disabled");
-#endif
-
-#ifdef SIO_HUB
-	printf("\r\n SIO Hub : Enabled");
-#else
-	printf("\r\n SIO Hub : Disabled");
-#endif
-
-#if (HIGHEST_STACK_LAYER == MAC)
-	printf("\r\n Highest Stack Layer : MAC");
-#elif (HIGHEST_STACK_LAYER == TAL)
-    printf("\r\n Highest Stack Layer : TAL");
-#elif (HIGHEST_STACK_LAYER == RF4CE)
-	printf("\r\n Highest Stack Layer : RF4CE");	
-#elif (HIGHEST_STACK_LAYER == PAL)
-	printf("\r\n Highest Stack Layer : PAL");
-#elif (HIGHEST_STACK_LAYER == RTB)
-	printf("\r\n Highest Stack Layer : RTB");
-#else
-	printf("\r\n Highest Stack Layer : Not Specified");	
-#endif
-
-#if USART_CALLBACK_MODE
-	printf("\r\n USART Callback Mode : Enabled");
-#else
-	printf("\r\n USART Callback Mode : Disabled");
-#endif
-
-#if EXTINT_CALLBACK_MODE
-	printf("\r\n External Interrupt Callback Mode : Enabled");
-#else
-	printf("\r\n External Interrupt Callback Mode : Disabled");
 #endif
 
 #ifdef MAC_SECURITY_ZIP 
@@ -1595,6 +1454,12 @@ static void print_stack_app_build_features(void)
 	printf("\r\n MAC Beacon Security : Enabled");
 #else
 	printf("\r\n MAC Beacon Security : Disabled");
+#endif
+
+#ifdef HIGH_DATA_RATE_SUPPORT
+	printf("\r\n High Data Rate Support : Enabled");
+#else
+	printf("\r\n High Data Rate Support : Disabled");
 #endif
 
 #ifdef GTS_SUPPORT 

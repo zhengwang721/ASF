@@ -1,7 +1,7 @@
 /**
- * \file
+ * \file conf_sio2ncp.h
  *
- * \brief Board configuration
+ * \brief Serial Input & Output configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,40 +38,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_SIO2NCP_H_INCLUDED
+#define CONF_SIO2NCP_H_INCLUDED
 
-/** Enable Com Port. */
-#define CONF_BOARD_COM_PORT
-#define CONF_BOARD_AT86RFX
-#define IC_TYPE             (0x00)
+#define USART_NCP                 EXT1_UART_MODULE
 
-#define MCU_SOC_NAME        "ATSAMD20J18"
+#define SIO2NCP_USART_INIT()		struct usart_config uart_config; \
+									/* Configure USART for unit test output */ \
+									usart_get_config_defaults(&uart_config);\
+									uart_config.mux_setting     =  EXT1_UART_SERCOM_MUX_SETTING;\
+									uart_config.pinmux_pad3      = EXT1_UART_SERCOM_PINMUX_PAD3;\
+									uart_config.pinmux_pad2      = EXT1_UART_SERCOM_PINMUX_PAD2;\
+									uart_config.pinmux_pad1      = EXT1_UART_SERCOM_PINMUX_PAD1;\
+									uart_config.pinmux_pad0      = EXT1_UART_SERCOM_PINMUX_PAD0;\
+									uart_config.baudrate         = USART_NCP_BAUDRATE;
+									
+/** Baudrate setting */
+#define USART_NCP_BAUDRATE        9600
+ 
 
-#define AT86RFX_SPI_BAUDRATE		 4000000UL 
-#ifdef EXT_RF_FRONT_END_CTRL /*For External PA for 233FEM*/
-
-#define EXT_PA_SE2431L
-/*
- * Value of an external LNA gain.
- * If no external LNA is available, the value is 0.
- */
-#define EXT_LNA_HIGH_GAIN    (14)
-
-#endif
-
-#ifdef CUSTOM_DEFAULT_TX_PWR /*For External PA for 233FEM*/
-#define MAX_PWR_DBM  0X15
-/*
- * Default value of transmit power of transceiver: Preset
- *    - definition according to IEEE802.15.4 PHY PIB attribute phyTransmitPower
- *    - TX Pout init value based on validation
- */
-#define TAL_TRANSMIT_POWER_DEFAULT      (TX_PWR_TOLERANCE | MAX_PWR_DBM)
-#endif
-//4MHz Baudrate will be used to reduce the no.of Invalid Frames
-//# include "conf_usb.h"
-#endif /* CONF_BOARD_H_INCLUDED */
+#define USART_NCP_RX_ISR_ENABLE()  _sercom_set_handler(4, USART_NCP_ISR_VECT);\
+                                    USART_NCP->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC;\
+                                    system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM4);
+#endif /* CONF_SIO2NCP_H_INCLUDED */

@@ -108,6 +108,15 @@ app_state_t;
 #define KEY_INFO_FRAME                  (0xDE)
 #define NO_SECURITY                     (0)
 #define SEC_PIB_INIT					(1)
+
+/* Security Default Device Table Entries */
+#define DEFAULT_MAC_DEV_TABLE_ENTRIES (0x04)
+
+/* Security Default Key Table Entries */
+#define DEFAULT_MAC_KEY_TABLE_ENTRIES (0x04)
+
+/* Security Default Security Level Table Entries */
+#define DEFAULT_MAC_SEC_LVL_TABLE_ENTRIES (0x02)
 #endif
 
 /* === Externals ============================================================ */

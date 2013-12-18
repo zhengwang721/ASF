@@ -355,7 +355,8 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	frame_ptr--;
 	*frame_ptr = 0;
 #endif
-
+    /* frame_ptr now points to the GTS Specification .
+	 **/
 #ifdef GTS_SUPPORT
 	mac_gts_table_update();
 	uint8_t gts_octets = mac_add_gts_info(frame_ptr);
@@ -369,8 +370,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 		frame_ptr--;
 	}
 #else
-	/* frame_ptr now points to the Pending Address Specification (Octet 1).
-	 **/
+	
 	frame_ptr--;
 	*frame_ptr = 0;
 #endif /* GTS_SUPPORT */
@@ -424,9 +424,12 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 	 *       if security needs to be applied.
 	 */
 	if (beacon_sec_buf.SecurityLevel > 0) 
-	{
-		retval_t build_sec = mac_build_aux_sec_header(&frame_ptr, &beacon_sec_buf,
-				&frame_len);
+	{ 
+		if (MAC_SUCCESS != mac_build_aux_sec_header(&frame_ptr, &beacon_sec_buf,&frame_len)) 
+		{
+			/* Todo MAC Security Issue */
+			return;
+		}
 		/* place the GTS  and Super frame specification fields into the before the MIC - Data */		
 		if ((beacon_sec_buf.SecurityLevel == 1) || (beacon_sec_buf.SecurityLevel == 5))
 		{			
@@ -444,11 +447,7 @@ void mac_build_and_tx_beacon(bool beacon_enabled,
 									(mac_payload_ptr - frame_ptr_mhr_gts));											
 		}
 				
-		if (MAC_SUCCESS != build_sec) 
-		{
-			/* Todo MAC Security Issue */
-			return;
-		}
+
 	}
 
 #endif  /* (MAC_SECURITY_BEACON || MAC_SECURITY_2006_BEACON) */		
