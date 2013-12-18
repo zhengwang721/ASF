@@ -407,6 +407,9 @@ static void test_sleep_mode(void)
 	/* Select clock for sleep mode */
 	user_change_clock(STRING_SLEEP);
 
+	/* Disable UART */
+	pmc_disable_periph_clk(CONSOLE_UART_ID);
+
 	/* Enter into sleep Mode */
 	pmc_enable_sleepmode(0);
 
