@@ -568,11 +568,11 @@ void WDT_Handler        ( void );
 /* Embedded Flash Write Wait State */
 #define CHIP_FLASH_WRITE_WAIT_STATE     (6U)
 
-/* Embedded Flash Read Wait State (VDDCORE set at 1.20V, VDDIO set at 2.7V to 3.6V) */
-#define CHIP_FREQ_FWS_0                 (21000000UL) /**< \brief Maximum operating frequency when FWS is 0 */
-#define CHIP_FREQ_FWS_1                 (42000000UL) /**< \brief Maximum operating frequency when FWS is 1 */
-#define CHIP_FREQ_FWS_2                 (63000000UL) /**< \brief Maximum operating frequency when FWS is 2 */
-#define CHIP_FREQ_FWS_3                 (85000000UL) /**< \brief Maximum operating frequency when FWS is 3 */
+/* Embedded Flash Read Wait State (VDDCORE set at 1.20V / VDDIO set between 2.7V to 3.6V / @ 85°C) */
+#define CHIP_FREQ_FWS_0                 (21000000UL)  /**< \brief Maximum operating frequency when FWS is 0 */
+#define CHIP_FREQ_FWS_1                 (42000000UL)  /**< \brief Maximum operating frequency when FWS is 1 */
+#define CHIP_FREQ_FWS_2                 (63000000UL)  /**< \brief Maximum operating frequency when FWS is 2 */
+#define CHIP_FREQ_FWS_3                 (85000000UL)  /**< \brief Maximum operating frequency when FWS is 3 */
 #define CHIP_FREQ_FWS_4                 (106000000UL) /**< \brief Maximum operating frequency when FWS is 4 */
 #define CHIP_FREQ_FWS_5                 (121000000UL) /**< \brief Maximum operating frequency when FWS is 5 */
 

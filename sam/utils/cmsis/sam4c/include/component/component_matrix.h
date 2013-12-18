@@ -50,25 +50,25 @@
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief Matrix hardware registers */
 typedef struct {
-  __IO uint32_t MATRIX_MCFG[7];  /**< \brief (Matrix Offset: 0x0000) Master Configuration Register */
+  __IO uint32_t MATRIX_MCFG[7];    /**< \brief (Matrix Offset: 0x0000) Master Configuration Register */
   __I  uint32_t Reserved1[9];
-  __IO uint32_t MATRIX_SCFG[8];  /**< \brief (Matrix Offset: 0x0040) Slave Configuration Register */
+  __IO uint32_t MATRIX_SCFG[8];    /**< \brief (Matrix Offset: 0x0040) Slave Configuration Register */
   __I  uint32_t Reserved2[8];
-  __IO uint32_t MATRIX_PRAS0;    /**< \brief (Matrix Offset: 0x0080) Priority Register A for Slave 0 */
+  __IO uint32_t MATRIX_PRAS0;      /**< \brief (Matrix Offset: 0x0080) Priority Register A for Slave 0 */
   __I  uint32_t Reserved3[1];
-  __IO uint32_t MATRIX_PRAS1;    /**< \brief (Matrix Offset: 0x0088) Priority Register A for Slave 1 */
+  __IO uint32_t MATRIX_PRAS1;      /**< \brief (Matrix Offset: 0x0088) Priority Register A for Slave 1 */
   __I  uint32_t Reserved4[1];
-  __IO uint32_t MATRIX_PRAS2;    /**< \brief (Matrix Offset: 0x0090) Priority Register A for Slave 2 */
+  __IO uint32_t MATRIX_PRAS2;      /**< \brief (Matrix Offset: 0x0090) Priority Register A for Slave 2 */
   __I  uint32_t Reserved5[1];
-  __IO uint32_t MATRIX_PRAS3;    /**< \brief (Matrix Offset: 0x0098) Priority Register A for Slave 3 */
+  __IO uint32_t MATRIX_PRAS3;      /**< \brief (Matrix Offset: 0x0098) Priority Register A for Slave 3 */
   __I  uint32_t Reserved6[1];
-  __IO uint32_t MATRIX_PRAS4;    /**< \brief (Matrix Offset: 0x00A0) Priority Register A for Slave 4 */
+  __IO uint32_t MATRIX_PRAS4;      /**< \brief (Matrix Offset: 0x00A0) Priority Register A for Slave 4 */
   __I  uint32_t Reserved7[1];
-  __IO uint32_t MATRIX_PRAS5;    /**< \brief (Matrix Offset: 0x00A8) Priority Register A for Slave 5 */
+  __IO uint32_t MATRIX_PRAS5;      /**< \brief (Matrix Offset: 0x00A8) Priority Register A for Slave 5 */
   __I  uint32_t Reserved8[1];
-  __IO uint32_t MATRIX_PRAS6;    /**< \brief (Matrix Offset: 0x00B0) Priority Register A for Slave 6 */
+  __IO uint32_t MATRIX_PRAS6;      /**< \brief (Matrix Offset: 0x00B0) Priority Register A for Slave 6 */
   __I  uint32_t Reserved9[1];
-  __IO uint32_t MATRIX_PRAS7;    /**< \brief (Matrix Offset: 0x00B8) Priority Register A for Slave 7 */
+  __IO uint32_t MATRIX_PRAS7;      /**< \brief (Matrix Offset: 0x00B8) Priority Register A for Slave 7 */
   __I  uint32_t Reserved10[1];
   __I  uint32_t Reserved11[21];
   __IO uint32_t MATRIX_SYSIO;      /**< \brief (Matrix Offset: 0x0114) System I/O Configuration Register */
@@ -77,8 +77,8 @@ typedef struct {
   __I  uint32_t Reserved13[2];
   __IO uint32_t MATRIX_CORE_DEBUG; /**< \brief (Matrix Offset: 0x0128) Core Debug Configuration Register */
   __I  uint32_t Reserved14[46];
-  __IO uint32_t MATRIX_WPMR;     /**< \brief (Matrix Offset: 0x01E4) Write Protect Mode Register */
-  __I  uint32_t MATRIX_WPSR;     /**< \brief (Matrix Offset: 0x01E8) Write Protect Status Register */
+  __IO uint32_t MATRIX_WPMR;       /**< \brief (Matrix Offset: 0x01E4) Write Protection Mode Register */
+  __I  uint32_t MATRIX_WPSR;       /**< \brief (Matrix Offset: 0x01E8) Write Protection Status Register */
 } Matrix;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- MATRIX_MCFG[7] : (MATRIX Offset: 0x0000) Master Configuration Register -------- */
@@ -313,12 +313,12 @@ typedef struct {
 /* -------- MATRIX_WPMR : (MATRIX Offset: 0x01E4) Write Protection Mode Register -------- */
 #define MATRIX_WPMR_WPEN (0x1u << 0) /**< \brief (MATRIX_WPMR) Write Protect Enable */
 #define MATRIX_WPMR_WPKEY_Pos 8
-#define MATRIX_WPMR_WPKEY_Msk (0xffffffu << MATRIX_WPMR_WPKEY_Pos) /**< \brief (MATRIX_WPMR) Write Protect KEY (Write-only) */
+#define MATRIX_WPMR_WPKEY_Msk (0xffffffu << MATRIX_WPMR_WPKEY_Pos) /**< \brief (MATRIX_WPMR) Write Protect Key */
 #define   MATRIX_WPMR_WPKEY_PASSWD (0x4D4154u << 8) /**< \brief (MATRIX_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0. */
-/* -------- MATRIX_WPSR : (MATRIX Offset: 0x01E8) Write Protect Status Register -------- */
-#define MATRIX_WPSR_WPVS (0x1u << 0) /**< \brief (MATRIX_WPSR) Write Protect Violation Status */
+/* -------- MATRIX_WPSR : (MATRIX Offset: 0x01E8) Write Protection Status Register -------- */
+#define MATRIX_WPSR_WPVS (0x1u << 0) /**< \brief (MATRIX_WPSR) Write Protection Violation Status */
 #define MATRIX_WPSR_WPVSRC_Pos 8
-#define MATRIX_WPSR_WPVSRC_Msk (0xffffu << MATRIX_WPSR_WPVSRC_Pos) /**< \brief (MATRIX_WPSR) Write Protect Violation Source */
+#define MATRIX_WPSR_WPVSRC_Msk (0xffffu << MATRIX_WPSR_WPVSRC_Pos) /**< \brief (MATRIX_WPSR) Write Protection Violation Source */
 
 /*@}*/
 

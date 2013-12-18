@@ -214,8 +214,8 @@ extern "C" {
 /**
  * \name External Crystal Oscillator
  *
- * it depends on the actual XTAL used on the board. 
- * On SAM4C-EK, it is 8M oscilator in used.it depends on 
+ * It depends on the actual XTAL used on the board. 
+ * On SAM4C-EK, it is 8M oscilator in used. 
  */
 #define CHIP_FREQ_XTAL_8M               (8000000UL)
 

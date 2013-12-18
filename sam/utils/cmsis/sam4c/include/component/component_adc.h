@@ -103,11 +103,11 @@ typedef struct {
 #define   ADC_MR_TRGSEL_ADC_TRIG5 (0x5u << 1) /**< \brief (ADC_MR) Timer Counter Channel  4 Output */
 #define   ADC_MR_TRGSEL_ADC_TRIG6 (0x6u << 1) /**< \brief (ADC_MR) Timer Counter Channel  5 Output */
 #define ADC_MR_LOWRES (0x1u << 4) /**< \brief (ADC_MR) Resolution */
-#define   ADC_MR_LOWRES_BITS_10 (0x0u << 4) /**< \brief (ADC_MR) 10-bit resolution. For higher resolution by interpolation, please refer to "ADC Extended Mode Register" on page 81 */
+#define   ADC_MR_LOWRES_BITS_10 (0x0u << 4) /**< \brief (ADC_MR) 10-bit resolution. For higher resolution by averaging, please refer to Section 8.15 "ADC Extended Mode Register" */
 #define   ADC_MR_LOWRES_BITS_8 (0x1u << 4) /**< \brief (ADC_MR) 8-bit resolution */
 #define ADC_MR_SLEEP (0x1u << 5) /**< \brief (ADC_MR) Sleep Mode */
-#define   ADC_MR_SLEEP_NORMAL (0x0u << 5) /**< \brief (ADC_MR) Normal Mode: The ADC Core and reference voltage circuitry are kept ON between conversions */
-#define   ADC_MR_SLEEP_SLEEP (0x1u << 5) /**< \brief (ADC_MR) Sleep Mode: The ADC Core and reference voltage circuitry are OFF between conversions */
+#define   ADC_MR_SLEEP_NORMAL (0x0u << 5) /**< \brief (ADC_MR) Normal Mode: The ADC core and reference voltage circuitry are kept ON between conversions */
+#define   ADC_MR_SLEEP_SLEEP (0x1u << 5) /**< \brief (ADC_MR) Sleep Mode: The ADC core and reference voltage circuitry are OFF between conversions */
 #define ADC_MR_FREERUN (0x1u << 7) /**< \brief (ADC_MR) Free Run Mode */
 #define   ADC_MR_FREERUN_OFF (0x0u << 7) /**< \brief (ADC_MR) Normal Mode */
 #define   ADC_MR_FREERUN_ON (0x1u << 7) /**< \brief (ADC_MR) Free Run Mode: Never wait for any trigger. */
@@ -135,10 +135,10 @@ typedef struct {
 #define ADC_MR_TRACKTIM_Pos 24
 #define ADC_MR_TRACKTIM_Msk (0xfu << ADC_MR_TRACKTIM_Pos) /**< \brief (ADC_MR) Tracking Time */
 #define ADC_MR_TRACKTIM(value) ((ADC_MR_TRACKTIM_Msk & ((value) << ADC_MR_TRACKTIM_Pos)))
-#define ADC_MR_USEQ (0x1u << 31) /**< \brief (ADC_MR) Use Sequence Enable */
+#define ADC_MR_USEQ (0x1u << 31) /**< \brief (ADC_MR) User Sequence Enable */
 #define   ADC_MR_USEQ_NUM_ORDER (0x0u << 31) /**< \brief (ADC_MR) Normal Mode: The controller converts channels in a simple numeric order depending only on the channel index. */
-#define   ADC_MR_USEQ_REG_ORDER (0x1u << 31) /**< \brief (ADC_MR) User Sequence Mode: The sequence respects what is defined in ADC_SEQR1 and ADC_SEQR2 registers and can be used to convert several times the same channel. */
-/* -------- ADC_SEQR1 : (ADC Offset: 0x08) Channel Sequence Register 1 -------- */
+#define   ADC_MR_USEQ_REG_ORDER (0x1u << 31) /**< \brief (ADC_MR) User Sequence Mode: The sequence respects what is defined in ADC_SEQR1 and can be used to convert the same channel several times. */
+/* -------- ADC_SEQR1 : (ADC Offset: 0x08) Channel Sequence 1 Register -------- */
 #define ADC_SEQR1_USCH1_Pos 0
 #define ADC_SEQR1_USCH1_Msk (0xfu << ADC_SEQR1_USCH1_Pos) /**< \brief (ADC_SEQR1) User Sequence Number 1 */
 #define ADC_SEQR1_USCH1(value) ((ADC_SEQR1_USCH1_Msk & ((value) << ADC_SEQR1_USCH1_Pos)))
@@ -295,9 +295,9 @@ typedef struct {
 #define ADC_EMR_CMPFILTER(value) ((ADC_EMR_CMPFILTER_Msk & ((value) << ADC_EMR_CMPFILTER_Pos)))
 #define ADC_EMR_OSR_Pos 16
 #define ADC_EMR_OSR_Msk (0x3u << ADC_EMR_OSR_Pos) /**< \brief (ADC_EMR) Over Sampling Rate */
-#define   ADC_EMR_OSR_NO_AVERAGE (0x0u << 16) /**< \brief (ADC_EMR) no averaging. ADC sample rate is maximum. */
-#define   ADC_EMR_OSR_OSR4 (0x1u << 16) /**< \brief (ADC_EMR) 1-bit enhanced resolution by interpolation. ADC sample rate divided by 4. */
-#define   ADC_EMR_OSR_OSR16 (0x2u << 16) /**< \brief (ADC_EMR) 2-bit enhanced resolution by interpolation. ADC sample rate divided by 16. */
+#define   ADC_EMR_OSR_NO_AVERAGE (0x0u << 16) /**< \brief (ADC_EMR) No averaging. ADC sample rate is maximum. */
+#define   ADC_EMR_OSR_OSR4 (0x1u << 16) /**< \brief (ADC_EMR) 1-bit enhanced resolution by averaging. ADC sample rate divided by 4. */
+#define   ADC_EMR_OSR_OSR16 (0x2u << 16) /**< \brief (ADC_EMR) 2-bit enhanced resolution by averaging. ADC sample rate divided by 16. */
 #define ADC_EMR_ASTE (0x1u << 20) /**< \brief (ADC_EMR) Averaging on Single Trigger Event */
 #define   ADC_EMR_ASTE_MULTI_TRIG_AVERAGE (0x0u << 20) /**< \brief (ADC_EMR) The average requests several trigger events. */
 #define   ADC_EMR_ASTE_SINGLE_TRIG_AVERAGE (0x1u << 20) /**< \brief (ADC_EMR) The average requests only one trigger event. */
@@ -314,22 +314,22 @@ typedef struct {
 #define ADC_CDR_DATA_Msk (0xfffu << ADC_CDR_DATA_Pos) /**< \brief (ADC_CDR[8]) Converted Data */
 /* -------- ADC_ACR : (ADC Offset: 0x94) Analog Control Register -------- */
 #define ADC_ACR_IRVCE (0x1u << 2) /**< \brief (ADC_ACR) Internal Reference Voltage Change Enable */
-#define   ADC_ACR_IRVCE_STUCK_AT_DEFAULT (0x0u << 2) /**< \brief (ADC_ACR) The internal reference voltage is stuck at the default value (see the product electrical charac-teristics for further details). */
+#define   ADC_ACR_IRVCE_STUCK_AT_DEFAULT (0x0u << 2) /**< \brief (ADC_ACR) The internal reference voltage is stuck at the default value (see the Electrical Characteristics for further details). */
 #define   ADC_ACR_IRVCE_SELECTION (0x1u << 2) /**< \brief (ADC_ACR) The internal reference voltage is defined by field IRVS. */
 #define ADC_ACR_IRVS_Pos 3
 #define ADC_ACR_IRVS_Msk (0xfu << ADC_ACR_IRVS_Pos) /**< \brief (ADC_ACR) Internal Reference Voltage Selection */
 #define ADC_ACR_IRVS(value) ((ADC_ACR_IRVS_Msk & ((value) << ADC_ACR_IRVS_Pos)))
 #define ADC_ACR_FORCEREF (0x1u << 19) /**< \brief (ADC_ACR) Force Internal Reference Voltage */
 #define ADC_ACR_ONREF (0x1u << 20) /**< \brief (ADC_ACR) Internal Voltage Reference ON */
-/* -------- ADC_WPMR : (ADC Offset: 0xE4) Write Protect Mode Register -------- */
+/* -------- ADC_WPMR : (ADC Offset: 0xE4) Write Protection Mode Register -------- */
 #define ADC_WPMR_WPEN (0x1u << 0) /**< \brief (ADC_WPMR) Write Protect Enable */
 #define ADC_WPMR_WPKEY_Pos 8
-#define ADC_WPMR_WPKEY_Msk (0xffffffu << ADC_WPMR_WPKEY_Pos) /**< \brief (ADC_WPMR) Write Protect KEY */
+#define ADC_WPMR_WPKEY_Msk (0xffffffu << ADC_WPMR_WPKEY_Pos) /**< \brief (ADC_WPMR) Write Protect Key */
 #define   ADC_WPMR_WPKEY_PASSWD (0x414443u << 8) /**< \brief (ADC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0 */
-/* -------- ADC_WPSR : (ADC Offset: 0xE8) Write Protect Status Register -------- */
-#define ADC_WPSR_WPVS (0x1u << 0) /**< \brief (ADC_WPSR) Write Protect Violation Status */
+/* -------- ADC_WPSR : (ADC Offset: 0xE8) Write Protection Status Register -------- */
+#define ADC_WPSR_WPVS (0x1u << 0) /**< \brief (ADC_WPSR) Write Protection Violation Status */
 #define ADC_WPSR_WPVSRC_Pos 8
-#define ADC_WPSR_WPVSRC_Msk (0xffffu << ADC_WPSR_WPVSRC_Pos) /**< \brief (ADC_WPSR) Write Protect Violation Source */
+#define ADC_WPSR_WPVSRC_Msk (0xffffu << ADC_WPSR_WPVSRC_Pos) /**< \brief (ADC_WPSR) Write Protection Violation Source */
 /* -------- ADC_RPR : (ADC Offset: 0x100) Receive Pointer Register -------- */
 #define ADC_RPR_RXPTR_Pos 0
 #define ADC_RPR_RXPTR_Msk (0xffffffffu << ADC_RPR_RXPTR_Pos) /**< \brief (ADC_RPR) Receive Pointer Register */
