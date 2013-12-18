@@ -12,7 +12,6 @@
 		<build type="header-file" value="conf_usb.h"/>
         <build type="header-file" value="conf_nvm.h"/>
 		<build type="header-file" value="conf_hw_timer.h"/>
-		<build type="define" name="EXTERN_EEPROM_AVAILABLE" value ="0"/>
 		<build type="define" name="TFA_BAT_MON" value =""/>
 
 		<config name="config.compiler.iarew.data_stack_size" value="0x200"/>

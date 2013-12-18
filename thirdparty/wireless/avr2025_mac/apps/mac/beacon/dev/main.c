@@ -287,6 +287,8 @@ int main(void)
 	LED_On(LED_START);     /* indicating application is started */
 	LED_Off(LED_NWK_SETUP); /* indicating network is started */
 	LED_Off(LED_DATA);     /* indicating data transmission */
+	printf("\nBeacon_Application\r\n\n");
+	printf("\nDevice\r\n\n");
 	cpu_irq_enable();
 #ifdef SIO_HUB
 	/* Initialize the serial interface used for communication with terminal
