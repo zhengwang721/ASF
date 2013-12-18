@@ -311,7 +311,8 @@
 		AVR8_PART_IS_DEFINED(ATxmega256C3)  || \
 		AVR8_PART_IS_DEFINED(ATxmega192C3)  || \
 		AVR8_PART_IS_DEFINED(ATxmega128C3)  || \
-		AVR8_PART_IS_DEFINED(ATxmega64C3) \
+		AVR8_PART_IS_DEFINED(ATxmega64C3)   || \
+		AVR8_PART_IS_DEFINED(ATxmega32C3) \
 		)
 
 #define XMEGA_C4 ( \
@@ -325,6 +326,7 @@
  * @{
  */
 #define XMEGA_D3 ( \
+		AVR8_PART_IS_DEFINED(ATxmega32D3)  || \
 		AVR8_PART_IS_DEFINED(ATxmega64D3)  || \
 		AVR8_PART_IS_DEFINED(ATxmega128D3) || \
 		AVR8_PART_IS_DEFINED(ATxmega192D3) || \
@@ -928,10 +930,12 @@
  * @{
  */
 #define SAM4E8 ( \
+		SAM_PART_IS_DEFINED(SAM4E8C) || \
 		SAM_PART_IS_DEFINED(SAM4E8E) \
 		)
 
 #define SAM4E16 ( \
+		SAM_PART_IS_DEFINED(SAM4E16C) || \
 		SAM_PART_IS_DEFINED(SAM4E16E) \
 		)
 /** @} */
