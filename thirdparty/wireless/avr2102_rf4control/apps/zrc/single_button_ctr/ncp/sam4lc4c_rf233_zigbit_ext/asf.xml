@@ -18,7 +18,7 @@
 		
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf233"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="at86rf233"/>
-		<config name="config.thirdparty.wireless.avr2025_mac.source.sal" value="at86rf2xx"/>
+		
 		<config name="config.thirdparty.wireless.avr2025_mac.source.mac.api" value="no" />
 		<config name="config.thirdparty.wireless.addons.sio2host" value="uart"/>
 		<config name="config.common.drivers.nvm.mem_type" value="no_extmem"/>
