@@ -258,11 +258,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
 		uint16_t dest_addr;
 		memcpy(&dest_addr, &mac_frame_info->mpdu[PL_POS_DST_ADDR_START],
 				SHORT_ADDR_LEN);
-#if SAMD20 || SAM4L
-		tal_pib_get(macShortAddress, &my_addr_temp);
-#else
 		tal_pib_get(macShortAddress, (uint8_t *)&my_addr_temp);
-#endif
         
 		my_addr = (uint16_t)my_addr_temp;
 		/* Check the destination address of the packet is my address  */

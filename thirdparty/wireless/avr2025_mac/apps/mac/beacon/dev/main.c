@@ -101,7 +101,6 @@
 #include "common_sw_timer.h"
 #include "sio2host.h"
 #include "common_hw_timer.h"
-#include "mac_internal.h"
 #include "beacon_app.h"
 #include <asf.h>
 

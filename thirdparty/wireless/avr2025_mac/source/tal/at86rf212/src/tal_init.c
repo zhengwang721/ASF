@@ -52,6 +52,7 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 #include "pal.h"
 #include "return_val.h"
 #include "tal.h"

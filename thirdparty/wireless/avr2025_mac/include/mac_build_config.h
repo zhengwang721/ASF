@@ -57,7 +57,7 @@
 #ifdef MAC_USER_BUILD_CONFIG
 #include "mac_user_build_config.h"
 #else
-#include "conf_mac.h"
+
 /* === Macros =============================================================== */
 
 /**

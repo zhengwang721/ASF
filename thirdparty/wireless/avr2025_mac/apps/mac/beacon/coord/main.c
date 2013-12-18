@@ -186,7 +186,7 @@ uint16_t no_of_assoc_devices;
 
 /** This array stores the current beacon payload. */
 uint8_t beacon_payload[] = {"Atmel beacon demo 0"};
-uint8_t broadcast_payload[] ={"Broadcast Data"};
+static uint8_t broadcast_payload[] ={"Broadcast Data"};
 #ifdef GTS_SUPPORT
 static uint8_t gts_payload[] = {"GTS Data from coordinator"};
 #endif /* GTS_SUPPORT */
@@ -344,8 +344,8 @@ int main(void)
 			if (!ioport_get_pin_level(GPIO_PUSH_BUTTON_0)) {
 				dst_addr.Addr.short_address = BROADCAST;
 				wpan_mcps_data_req(FCF_SHORT_ADDR, &dst_addr,
-						strlen(broadcast_payload),
-						&broadcast_payload, 1,
+						sizeof(broadcast_payload),
+						(uint8_t *)&broadcast_payload, 1,
 						WPAN_TXOPT_OFF);
 			}
 		}
@@ -1361,7 +1361,7 @@ static void gts_data_cb(void *parameter)
 #endif
 		if (!wpan_mcps_data_req(src_addr_mode,
 				&dst_addr,
-				strlen(gts_payload),  /* One octet */
+				sizeof(gts_payload),  /* One octet */
 				gts_payload,
 				gts_msdu_handle,
 				WPAN_TXOPT_GTS_ACK

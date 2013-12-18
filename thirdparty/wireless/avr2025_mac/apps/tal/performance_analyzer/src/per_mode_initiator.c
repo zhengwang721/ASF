@@ -979,11 +979,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 		/* update the data base with this value */
 		curr_trx_config_params.channel = set_param_cb.param_value;
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
-#if SAMD20 || SAM4L
-		tal_pib_get(phyTransmitPower, (uint32_t *)&tx_pwr);
-#else
 		tal_pib_get(phyTransmitPower, &tx_pwr);
-#endif
 		dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
 		curr_trx_config_params.tx_power_dbm = dbm_val;
 #endif
@@ -1073,18 +1069,10 @@ static void set_parameter_on_transmitter_node(retval_t status)
 		/* update the data base with this value */
 		curr_trx_config_params.channel_page = set_param_cb.param_value;
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
-#if SAMD20 || SAM4L
-		tal_pib_get(phyCurrentChannel, (uint32_t *)&channel);
-#else
 		tal_pib_get(phyCurrentChannel, &channel);
-#endif
 		curr_trx_config_params.channel = channel;
 
-#if SAMD20 || SAM4L
-		tal_pib_get(phyTransmitPower, (uint32_t *)&tx_pwr);
-#else
 		tal_pib_get(phyTransmitPower, &tx_pwr);
-#endif
 		dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
 		curr_trx_config_params.tx_power_dbm = dbm_val;
 #endif
@@ -2268,11 +2256,7 @@ void per_mode_initiator_ed_end_cb(uint8_t energy_level)
 		}
 
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
-#if SAMD20 || SAM4L
-		tal_pib_get(phyCurrentPage, (uint32_t *)&page);
-#else
 		tal_pib_get(phyCurrentPage, &page);
-#endif
 		if (5 == page) {
 			if (4 == ch_cnt) {
 				channel = INVALID_VALUE;
@@ -2732,11 +2716,7 @@ static void set_channel(uint8_t channel)
 			/* Update the database */
 			curr_trx_config_params.channel = channel;
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
-#if SAMD20 || SAM4L
-			tal_pib_get(phyTransmitPower, (uint32_t *)&tx_pwr);
-#else
 			tal_pib_get(phyTransmitPower, &tx_pwr);
-#endif
 			dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
 			curr_trx_config_params.tx_power_dbm = dbm_val;
 #endif
@@ -2811,17 +2791,9 @@ if (channel_page != 0) {
 				curr_trx_config_params.channel_page
 					= channel_page;
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
-#if SAMD20 || SAM4L
-				tal_pib_get(phyCurrentChannel, (uint32_t *)&channel);
-#else
 				tal_pib_get(phyCurrentChannel, &channel);
-#endif
 				curr_trx_config_params.channel = channel;
-#if SAMD20 || SAM4L
-				tal_pib_get(phyTransmitPower, (uint32_t *)&tx_pwr);
-#else
 				tal_pib_get(phyTransmitPower, &tx_pwr);
-#endif
 				dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
 				curr_trx_config_params.tx_power_dbm = dbm_val;
 #endif
@@ -3068,11 +3040,7 @@ void start_ed_scan(uint8_t ed_scan_duration, uint32_t channel_sel_mask)
 
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 	/* saving the current transmit power to restore after scan*/
-#if SAMD20 || SAM4L
-	tal_pib_get(phyTransmitPower, (uint32_t *)&phy_tx_power);
-#else
 	tal_pib_get(phyTransmitPower, &phy_tx_power);
-#endif
 #endif
 	/* Check the range for the scan duration */
 	if (scan_duration > MAX_SCAN_DURATION) {
