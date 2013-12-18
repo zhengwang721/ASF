@@ -35,38 +35,38 @@
 		<build type="c-source" value="core/tcp_out.c"/>
 		<build type="c-source" value="core/lwip_timers_141.c"/>
 		<build type="c-source" value="core/udp.c"/>
-		<build type="header-file" subtype="api" value="include/lwip/api.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/api_msg.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/arch.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/debug.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/def.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/dhcp.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/dns.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/err.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/init.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/mem.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/memp.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/memp_std.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/netbuf.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/netdb.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/netif.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/netifapi.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/opt.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/pbuf.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/raw.h"/>
+		<build type="header-file" value="include/lwip/api.h"/>
+		<build type="header-file" value="include/lwip/api_msg.h"/>
+		<build type="header-file" value="include/lwip/arch.h"/>
+		<build type="header-file" value="include/lwip/debug.h"/>
+		<build type="header-file" value="include/lwip/def.h"/>
+		<build type="header-file" value="include/lwip/dhcp.h"/>
+		<build type="header-file" value="include/lwip/dns.h"/>
+		<build type="header-file" value="include/lwip/err.h"/>
+		<build type="header-file" value="include/lwip/init.h"/>
+		<build type="header-file" value="include/lwip/mem.h"/>
+		<build type="header-file" value="include/lwip/memp.h"/>
+		<build type="header-file" value="include/lwip/memp_std.h"/>
+		<build type="header-file" value="include/lwip/netbuf.h"/>
+		<build type="header-file" value="include/lwip/netdb.h"/>
+		<build type="header-file" value="include/lwip/netif.h"/>
+		<build type="header-file" value="include/lwip/netifapi.h"/>
+		<build type="header-file" value="include/lwip/opt.h"/>
+		<build type="header-file" value="include/lwip/pbuf.h"/>
+		<build type="header-file" value="include/lwip/raw.h"/>
 		<build type="header-file" subtype="api" value="include/lwip/sio.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/snmp.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/snmp_asn1.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/snmp_msg.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/snmp_structs.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/sockets.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/stats.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/sys.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/tcp.h"/>
+		<build type="header-file" value="include/lwip/snmp.h"/>
+		<build type="header-file" value="include/lwip/snmp_asn1.h"/>
+		<build type="header-file" value="include/lwip/snmp_msg.h"/>
+		<build type="header-file" value="include/lwip/snmp_structs.h"/>
+		<build type="header-file" value="include/lwip/sockets.h"/>
+		<build type="header-file" value="include/lwip/stats.h"/>
+		<build type="header-file" value="include/lwip/sys.h"/>
+		<build type="header-file" value="include/lwip/tcp.h"/>
 		<build type="header-file" subtype="api" value="include/lwip/tcpip.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/tcp_impl.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/timers.h"/>
-		<build type="header-file" subtype="api" value="include/lwip/udp.h"/>
+		<build type="header-file" value="include/lwip/tcp_impl.h"/>
+		<build type="header-file" value="include/lwip/timers.h"/>
+		<build type="header-file" value="include/lwip/udp.h"/>
 		<build type="include-path" value="include"/>
 		<build type="include-path" value="include/lwip"/>
 		<build type="header-file" value="include/netif/ppp_oe.h"/>
@@ -194,31 +194,31 @@
 			lwIP configuration with PPP support.
 			</info>
 			<build type="c-source" value="netif/ppp/auth.c"/>
-			<build type="header-file" subtype="api" value="netif/ppp/auth.h"/>
+			<build type="header-file" value="netif/ppp/auth.h"/>
 			<build type="c-source" value="netif/ppp/chap.c"/>
-			<build type="header-file" subtype="api" value="netif/ppp/chap.h"/>
+			<build type="header-file" value="netif/ppp/chap.h"/>
 			<build type="c-source" value="netif/ppp/chpms.c"/>
-			<build type="header-file" subtype="api" value="netif/ppp/chpms.h"/>
+			<build type="header-file" value="netif/ppp/chpms.h"/>
 			<build type="c-source" value="netif/ppp/fsm.c"/>
-			<build type="header-file" subtype="api" value="netif/ppp/fsm.h"/>
+			<build type="header-file" value="netif/ppp/fsm.h"/>
 			<build type="c-source" value="netif/ppp/ipcp.c"/>
-			<build type="header-file" subtype="api" value="netif/ppp/ipcp.h"/>
+			<build type="header-file" value="netif/ppp/ipcp.h"/>
 			<build type="c-source" value="netif/ppp/lcp.c"/>
-			<build type="header-file" subtype="api" value="netif/ppp/lcp.h"/>
+			<build type="header-file" value="netif/ppp/lcp.h"/>
 			<build type="c-source" value="netif/ppp/magic.c"/>
-			<build type="header-file" subtype="api" value="netif/ppp/magic.h"/>
+			<build type="header-file" value="netif/ppp/magic.h"/>
 			<build type="c-source" value="netif/ppp/md5.c"/>
-			<build type="header-file" subtype="api" value="netif/ppp/md5.h"/>
+			<build type="header-file" value="netif/ppp/md5.h"/>
 			<build type="c-source" value="netif/ppp/pap.c"/>
-			<build type="header-file" subtype="api" value="netif/ppp/pap.h"/>
+			<build type="header-file" value="netif/ppp/pap.h"/>
 			<build type="c-source" value="netif/ppp/ppp.c"/>
 			<build type="header-file" subtype="api" value="netif/ppp/ppp.h"/>
-			<build type="header-file" subtype="api" value="netif/ppp/pppdebug.h"/>
+			<build type="header-file" value="netif/ppp/pppdebug.h"/>
 			<build type="c-source" value="netif/ppp/ppp_oe.c"/>
 			<build type="c-source" value="netif/ppp/randm.c"/>
-			<build type="header-file" subtype="api" value="netif/ppp/randm.h"/>
+			<build type="header-file" value="netif/ppp/randm.h"/>
 			<build type="c-source" value="netif/ppp/vj.c"/>
-			<build type="header-file" subtype="api" value="netif/ppp/vj.h"/>
+			<build type="header-file" value="netif/ppp/vj.h"/>
 			<device-support value="uc3"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4"/>
