@@ -42,82 +42,162 @@
  */
 
 /**
- * \page asfdoc_sam0_tc_basic_use_case Quick Start Guide for TC - Basic
+ * \page asfdoc_sam0_tc_dma_use_case Quick Start Guide for TC with DMA
  *
  * In this use case, the TC will be used to generate a PWM signal. Here
- * the pulse width is set to one quarter of the period. The TC module will be
- * set up as follows:
+ * the pulse width is set to one quarter of the period. Once the counter value matches
+ * the values in the Compare/Capture Value register, a event will be tiggered for a
+ * DMA memory transfer. The TC module will be set up as follows:
  *
- * - GCLK generator 0 (GCLK main) clock source
- * - 16 bit resolution on the counter
- * - No prescaler
- * - Normal PWM wave generation
- * - GCLK reload action
- * - Don't run in standby
- * - No inversion of waveform output
- * - No capture enabled
- * - Count upward
- * - Don't perform one-shot operations
- * - No event input enabled
- * - No event action
- * - No event generation enabled
- * - Counter starts on 0
- * - Capture compare channel 0 set to 0xFFFF/4
+ * \li GCLK generator 0 (GCLK main) clock source
+ * \li 16 bit resolution on the counter
+ * \li No prescaler
+ * \li Normal PWM wave generation
+ * \li GCLK reload action
+ * \li Don't run in standby
+ * \li No inversion of waveform output
+ * \li No capture enabled
+ * \li Count upward
+ * \li Don't perform one-shot operations
+ * \li No event input enabled
+ * \li No event action
+ * \li No event generation enabled
+ * \li Counter starts on 0
+ * \li Capture compare channel 0 set to 0xFFFF/4
  *
- * \section asfdoc_sam0_tc_basic_use_case_setup Quick Start
+ * The DMA module is configured for:
+ *  \li Move data from memory to memory
+ *  \li Using peripheral trigger of TC6 Match/Compare 0
+ *  \li Using DMA priority level 0
+ * \section asfdoc_sam0_tc_dma_use_case_setup Quick Start
  *
- * \subsection asfdoc_sam0_tc_basic_use_case_prereq Prerequisites
+ * \subsection asfdoc_sam0_tc_dma_use_case_prereq Prerequisites
  * There are no prerequisites for this use case.
  *
- * \subsection asfdoc_sam0_tc_basic_use_case_setup_code Code
+ * \subsection asfdoc_sam0_tc_dma_use_case_setup_code Code
  * Add to the main application source file, before any functions:
  * \snippet conf_quick_start.h definition_pwm
+ * \snippet conf_quick_start.h definition_peripheral_trigger
  *
  * Add to the main application source file, outside of any functions:
- * \snippet qs_tc_basic.c module_inst
+ * \snippet qs_tc_dma.c module_inst
+ * \snippet qs_tc_dma.c dma_resource
+ * \snippet qs_tc_dma.c transfer_length
+ * \snippet qs_tc_dma.c transfer_counter
+ * \snippet qs_tc_dma.c source_memory
+ * \snippet qs_tc_dma.c destination_memory
+ * \snippet qs_tc_dma.c transfer_done_flag
+ * \snippet qs_tc_dma.c example_descriptor
  *
  * Copy-paste the following setup code to your user application:
- * \snippet qs_tc_basic.c setup
+ * \snippet qs_tc_dma.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
- * \snippet qs_tc_basic.c setup_init
+ * \snippet qs_tc_dma.c setup_init
  *
- * \subsection asfdoc_sam0_tc_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_sam0_tc_dma_use_case_setup_flow Workflow
  * -# Create a module software instance structure for the TC module to store
  *    the TC driver state while it is in use.
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- *    \snippet qs_tc_basic.c module_inst
+ *    \snippet qs_tc_dma.c module_inst
+ * -# Create a module software instance structure for DMA resource to store
+ *    the DMA resource state while it is in use.
+ *    \note This should never go out of scope as long as the module is in use.
+ *          In most cases, this should be global.
+ *
+ *    \snippet qs_tc_dma.c dma_resource
  * -# Configure the TC module.
  *  -# Create a TC module configuration struct, which can be filled out to
  *     adjust the configuration of a physical TC peripheral.
- *     \snippet qs_tc_basic.c setup_config
+ *     \snippet qs_tc_dma.c setup_config
  *  -# Initialize the TC configuration struct with the module's default values.
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *     \snippet qs_tc_basic.c setup_config_defaults
+ *     \snippet qs_tc_dma.c setup_config_defaults
  *  -# Alter the TC settings to configure the counter width, wave generation
  *     mode and the compare channel 0 value.
- *     \snippet qs_tc_basic.c setup_change_config
+ *     \snippet qs_tc_dma.c setup_change_config
  *  -# Alter the TC settings to configure the PWM output on a physical device
  *     pin.
- *     \snippet qs_tc_basic.c setup_change_config_pwm
+ *     \snippet qs_tc_dma.c setup_change_config_pwm
  *  -# Configure the TC module with the desired settings.
- *     \snippet qs_tc_basic.c setup_set_config
+ *     \snippet qs_tc_dma.c setup_set_config
  *  -# Enable the TC module to start the timer and begin PWM signal generation.
- *     \snippet qs_tc_basic.c setup_enable
+ *     \snippet qs_tc_dma.c setup_enable
  *
+ * -# Create a DMA resource configuration structure, which can be filled out to
+ *    adjust the configuration of a single DMA transfer.
+ *  \snippet qs_dma_basic.c dma_setup_1
  *
- * \section asfdoc_sam0_tc_basic_use_case_main Use Case
+ * -# Initialize the DMA resource configuration struct with the module's
+ *    default values.
+ *    \note This should always be performed before using the configuration
+ *          struct to ensure that all values are initialized to known default
+ *          settings.
  *
- * \subsection asfdoc_sam0_tc_basic_use_case_main_code Code
+ *  \snippet qs_dma_basic.c dma_setup_2
+ *
+ * -# Allocate a DMA resource with the configurations.
+ *  \snippet qs_dma_basic.c dma_setup_3
+ *
+ * -# Create a DMA transfer descriptor configuration structure, which can be
+ * filled out to adjust the configuration of a single DMA transfer.
+ *  \snippet qs_dma_basic.c dma_setup_4
+ *
+ * -# Initialize the DMA transfer descriptor configuration struct with the module's
+ *    default values.
+ *    \note This should always be performed before using the configuration
+ *          struct to ensure that all values are initialized to known default
+ *          settings.
+ *
+ *  \snippet qs_dma_basic.c dma_setup_5
+ *
+ * -# Set the specific parameters for a DMA transfer with transfer size, source
+ *    address, destination address.
+ *  \snippet qs_dma_basic.c dma_setup_6
+ *
+ * -# Create the DMA transfer descriptor.
+ *  \snippet qs_dma_basic.c dma_setup_7
+ *
+ * -# Add the DMA transfer descriptor to the allocated DMA resource.
+ *
+ *  \snippet qs_dma_basic.c add_descriptor_to_resource
+ *
+ * -# Register a callback to indicate transfer status.
+ *  \snippet qs_dma_basic.c setup_callback_register
+ *
+ * -# The transfer done flag is set in the registered callback function.
+ *  \snippet qs_dma_basic.c _transfer_done
+ *
+ * -# Setup memory content for validate transfer.
+ *  \snippet qs_dma_basic.c setup_source_memory_content
+ *
+ * \section asfdoc_sam0_tc_dma_use_case_main Use Case
+ *
+ * \subsection asfdoc_sam0_tc_dma_use_case_main_code Code
  * Copy-paste the following code to your user application:
- * \snippet qs_tc_basic.c main
+ * \snippet qs_tc_dma.c main
  *
- * \subsection asfdoc_sam0_tc_basic_use_case_main_flow Workflow
- * -# Enter an infinite loop while the PWM wave is generated via the TC module.
- *  \snippet qs_tc_basic.c main_loop
+ * \subsection asfdoc_sam0_tc_dma_use_case_main_flow Workflow
+ * -# Start the loop for transfer.
+ *  \snippet qs_tc_dma.c main_transfer_loop
+ *
+ * -# Set the transfer done flag as false.
+ *  \snippet qs_tc_dma.c main_1
+ *
+ * -# Start the transfer job.
+ *  \snippet qs_tc_dma.c main_2
+ *
+ * -# Wait for transfer done.
+ *  \snippet qs_tc_dma.c main_3
+ *
+ * -# Update the source and destination address for next transfer
+ *  \snippet qs_tc_dma.c main_4
+ *
+ * -# enter endless loop
+ *  \snippet qs_tc_dma.c endless_loop
  */

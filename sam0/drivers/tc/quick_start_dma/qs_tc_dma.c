@@ -80,7 +80,7 @@ COMPILER_ALIGNED(16)
 DmacDescriptor example_descriptor;
 // [transfer_descriptor]
 
-//! [setup]
+//! [config_tc]
 void configure_tc(void)
 {
 	//! [setup_config]
@@ -110,7 +110,7 @@ void configure_tc(void)
 	tc_enable(&tc_instance);
 	//! [setup_enable]
 }
-//! [setup]
+//! [config_tc]
 
 // [_transfer_done]
 void transfer_done( const struct dma_resource* const resource )
@@ -131,7 +131,7 @@ void configure_dma_resource(struct dma_resource *resource)
 //! [dma_setup_2]
 	dma_get_config_defaults(&config);
 	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
-	config.peripheral_trigger = 0x22;
+	config.peripheral_trigger = EXAMPLE_PERIPHERAL_TRIGGER;
 //! [dma_setup_2]
 
 //! [dma_setup_3]
@@ -183,9 +183,9 @@ int main(void)
 	setup_dma_descriptor(&example_descriptor);
 	//! [setup_dma_descriptor]
 
-	//! [Add descriptor to DMA resource]
+	//! [add_descriptor_to_resource]
 	dma_add_descriptor(&example_resource, &example_descriptor);
-	//! [Add descriptor to DMA resource]
+	//! [add_descriptor_to_resource]
 
 	//! [setup_callback_register]
 	dma_register_callback(&example_resource, transfer_done,
@@ -201,8 +201,9 @@ int main(void)
 		source_memory[i] = i;
 	}
 	//! [setup_source_memory_content]
-	
+
 	//! [main]
+	//! [main_transfer_loop]
 	for(i=0;i<TRANSFER_COUNTER;i++) {
 		//! [main_1]
 		transfer_is_done = false;
@@ -211,7 +212,7 @@ int main(void)
 		//! [main_2]
 		dma_start_transfer_job(&example_resource);
 		//! [main_2]
-	
+
 		//! [main_3]
 		while (!transfer_is_done) {
 			/* Wait for transfer done */
@@ -223,7 +224,10 @@ int main(void)
 		example_descriptor.DSTADDR.reg += TRANSFER_SIZE;
 		//! [main_4]
 	}
+	//! [main_transfer_loop]
 
+	//! [endless_loop]
 	while(1);
+	//! [endless_loop]
 	//! [main]
 }
