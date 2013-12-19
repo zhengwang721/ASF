@@ -236,10 +236,22 @@
 	</board>	
 	
 
+	<board id="board.user_board.sam4e8c" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsam4e8c"/>
+	</board>
+
 	<board id="board.user_board.sam4e8e" caption="User Board template">
 		<require idref="common.boards.user_board.common"/>
 		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4e8e"/>
+	</board>
+
+	<board id="board.user_board.sam4e16c" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsam4e16c"/>
 	</board>
 
 	<board id="board.user_board.sam4e16e" caption="User Board template">
