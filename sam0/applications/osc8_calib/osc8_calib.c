@@ -167,24 +167,21 @@ static void setup_tc_events(void)
  *  that events generated from the reference timer are linked to the measurement
  *  timer.
  */
-static void setup_events(void)
+static void setup_events(struct events_resource *event)
 {
-	struct events_chan_config evch_conf;
-	events_chan_get_config_defaults(&evch_conf);
+	struct events_config config;
 
-	/* Event channel 0 detects rising edges of the reference timer output
+	events_get_config_defaults(&config);
+
+	/* The event channel detects rising edges of the reference timer output
 	 * event */
-	evch_conf.edge_detection = EVENT_EDGE_RISING;
-	evch_conf.path           = EVENT_PATH_SYNCHRONOUS;
-	evch_conf.generator_id   = EVSYS_ID_GEN_TC2_MCX_0;
-	events_chan_set_config(EVENT_CHANNEL_0, &evch_conf);
+	config.edge_detect    = EVENTS_EDGE_DETECT_RISING;
+	config.path           = EVENTS_PATH_SYNCHRONOUS;
+	config.generator      = EVSYS_ID_GEN_TC2_MCX_0;
 
-	struct events_user_config evus_conf;
-	events_user_get_config_defaults(&evus_conf);
+	events_allocate(event, &config);
+	events_attach_user(event, EVSYS_ID_USER_TC0_EVU);
 
-	/* Measurement timer event user channel linked to Event channel 0 */
-	evus_conf.event_channel_id = EVENT_CHANNEL_0;
-	events_user_set_config(EVSYS_ID_USER_TC0_EVU, &evus_conf);
 }
 
 /** Set up the USART for transmit-only communication at a fixed baud rate. */
@@ -244,15 +241,16 @@ static uint32_t get_osc_frequency(void)
 
 int main(void)
 {
+	struct events_resource event;
+
 	/* System initialization */
 	system_init();
-	events_init();
 	delay_init();
 
 	/* Module initialization */
 	setup_tc_channels();
 	setup_tc_events();
-	setup_events();
+	setup_events(&event);
 	setup_clock_out_pin();
 
 	/* Variables to track the previous and best calibration settings */

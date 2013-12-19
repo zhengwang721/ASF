@@ -1,4 +1,4 @@
-/**
+/*
  * \file
  *
  * \brief SAM D20 ADC Sleepwalking Example
@@ -153,24 +153,19 @@ static void rtc_setup(void)
 }
 
 /* Setup the event system to route RTC events to the ADC */
-static void event_setup(void)
+static void event_setup(struct events_resource *event)
 {
-	struct events_chan_config chan_config;
-	struct events_user_config user_config;
+	struct events_config config;
 
-	events_chan_get_config_defaults(&chan_config);
-	events_user_get_config_defaults(&user_config);
+	events_get_config_defaults(&config);
 
-	events_init();
+	/* Setup a event channel with RTC compare 0 as input */
+	config.generator    = EVSYS_ID_GEN_RTC_CMP_0;
+	config.path         = EVENTS_PATH_ASYNCHRONOUS;
+	events_allocate(event, &config);
 
-	/* Setup event channel 0 with RTC compare 0 as input */
-	chan_config.generator_id = EVSYS_ID_GEN_RTC_CMP_0;
-	chan_config.path         = EVENT_PATH_ASYNCHRONOUS;
-	events_chan_set_config(EVENT_CHANNEL_0, &chan_config);
-
-	/* Setup ADC to listen to event channel 0 */
-	user_config.event_channel_id = EVENT_CHANNEL_0;
-	events_user_set_config(EVSYS_ID_USER_ADC_START, &user_config);
+	/* Setup ADC to listen to the event channel */
+	events_attach_user(event, EVSYS_ID_USER_ADC_START);
 }
 
 /* Setup the ADC to sample the internal scaled VCC */
@@ -218,6 +213,8 @@ static void adc_setup(void)
 
 int main(void)
 {
+	struct events_resource event;
+
 	/* Initialize clock system */
 	system_init();
 
@@ -225,7 +222,7 @@ int main(void)
 	delay_init();
 
 	rtc_setup();
-	event_setup();
+	event_setup(&event);
 	adc_setup();
 
 	system_interrupt_enable_global();
