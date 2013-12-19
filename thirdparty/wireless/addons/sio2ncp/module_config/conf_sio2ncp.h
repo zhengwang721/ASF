@@ -107,7 +107,7 @@
 #endif /* (SAM && !SAMD20) */
 /* ! @} */
 #if SAMD20
-#define USART_NCP                 SERCOM0
+#define USART_NCP                 SERCOM4
 
 /** Baudrate setting */
 #define USART_NCP_BAUDRATE        9600
@@ -115,11 +115,11 @@
 #define SIO2NCP_USART_INIT()		struct usart_config uart_config; \
 									/* Configure USART for unit test output */ \
 									usart_get_config_defaults(&uart_config);\
-									uart_config.mux_setting     =  SPI_SIGNAL_MUX_SETTING_A;\
-									uart_config.pinmux_pad3      = PINMUX_PA04D_SERCOM0_PAD0;\
-									uart_config.pinmux_pad2      = PINMUX_PA05D_SERCOM0_PAD1;\
-									uart_config.pinmux_pad1      = PINMUX_PA06D_SERCOM0_PAD2;\
-									uart_config.pinmux_pad0      = PINMUX_PA07D_SERCOM0_PAD3;\
+									uart_config.mux_setting     =  USART_RX_1_TX_0_XCK_1;\
+									uart_config.pinmux_pad3      = PINMUX_PB08D_SERCOM4_PAD0;\
+									uart_config.pinmux_pad2      = PINMUX_PB09D_SERCOM4_PAD1;\
+									uart_config.pinmux_pad1      = PINMUX_UNUSED;\
+									uart_config.pinmux_pad0      = PINMUX_UNUSED;\
 									uart_config.baudrate         = USART_NCP_BAUDRATE;
 									
 #define USART_NCP_RX_ISR_ENABLE()  _sercom_set_handler(4, USART_NCP_ISR_VECT);\
