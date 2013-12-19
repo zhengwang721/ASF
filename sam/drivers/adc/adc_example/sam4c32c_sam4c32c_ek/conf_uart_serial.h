@@ -1,7 +1,9 @@
 /**
  * \file
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * \brief Serial USART service configuration.
+ *
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,27 +40,15 @@
  * \asf_license_stop
  *
  */
-#ifndef _SAM4C_
-#define _SAM4C_
 
-#if defined (__SAM4C8C_0__)
-#include "sam4c8c_0.h"
-#elif defined (__SAM4C8C_1__)
-#include "sam4c8c_1.h"
-#elif defined (__SAM4C16C_0__)
-#include "sam4c16c_0.h"
-#elif defined (__SAM4C16C_1__)
-#include "sam4c16c_1.h"
-#elif defined (__SAM4C32C_0__)
-#include "sam4c32c_0.h"
-#elif defined (__SAM4C32C_1__)
-#include "sam4c32c_1.h"
-#elif defined (__SAM4C32E_0__)
-#include "sam4c32e_0.h"
-#elif defined (__SAM4C32E_1__)
-#include "sam4c32e_1.h"
-#else
-  #error Library does not support the specified device.
-#endif
+#ifndef CONF_USART_SERIAL_H_INCLUDED
+#define CONF_USART_SERIAL_H_INCLUDED
 
-#endif /* _SAM4C_ */
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   115200UL
+/** Parity setting */
+#define CONF_UART_PARITY     UART_MR_PAR_NO
+
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

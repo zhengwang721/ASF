@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief ADC example configuration.
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -38,15 +40,14 @@
  * \asf_license_stop
  *
  */
-#ifndef _SAM4C_1_
-#define _SAM4C_1_
 
-#if defined __SAM4C8C_1__
-  #include "sam4c8c_1.h"
-#elif defined __SAM4C16C_1__
-  #include "sam4c16c_1.h"
-#else
-  #error Library does not support the specified device.
-#endif
+/**
+ * \defgroup adc_example_pin_defs
+ *   - <b> BUTTON  --  TRIGGER</b>
+ *   - BP5(PA20)  --  ADTRG(PB23)
+ */
 
-#endif /* _SAM4C_1_ */
+#ifndef CONF_EXAMPLE_H_INCLUDED
+#define CONF_EXAMPLE_H_INCLUDED
+
+#endif /* CONF_EXAMPLE_H_INCLUDED */

@@ -1,6 +1,8 @@
 /**
  * \file
  *
+ * \brief Board configuration.
+ *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -38,15 +40,14 @@
  * \asf_license_stop
  *
  */
-#ifndef _SAM4C_0_
-#define _SAM4C_0_
 
-#if defined __SAM4C8C_0__
-  #include "sam4c8c_0.h"
-#elif defined __SAM4C16C_0__
-  #include "sam4c16c_0.h"
-#else
-  #error Library does not support the specified device.
-#endif
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#endif /* _SAM4C_0_ */
+/** ADC example definition for pin */
+#define CONF_BOARD_ADC
+
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
+
+#endif /* CONF_BOARD_H_INCLUDED */
