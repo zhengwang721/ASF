@@ -1,14 +1,9 @@
 /**
  * \file
  *
- * \mainpage
+ * \brief SAM D21 Xplained PRO board configuration.
  *
- * \section title Delay service example
- *
- * \section file File(s)
- * - \ref delay_example.c
- *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,34 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-int main(void)
-{
-	system_init();
-	delay_init();
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-	struct port_config pin;
-	port_get_config_defaults(&pin);
-	pin.direction = PORT_PIN_DIR_OUTPUT;
-
-	port_pin_set_config(LED0_PIN, &pin);
-	port_pin_set_output_level(LED0_PIN, LED0_INACTIVE);
-
-	while (true) {
-		for (int i = 0; i < 5; i++) {
-			port_pin_toggle_output_level(LED0_PIN);
-			delay_s(1);
-		}
-
-		for (int i = 0; i < 50; i++) {
-			port_pin_toggle_output_level(LED0_PIN);
-			delay_ms(100);
-		}
-
-		for (int i = 0; i < 5000; i++) {
-			port_pin_toggle_output_level(LED0_PIN);
-			delay_cycles(100);
-		}
-	}
-}
+#endif /* CONF_BOARD_H_INCLUDED */
