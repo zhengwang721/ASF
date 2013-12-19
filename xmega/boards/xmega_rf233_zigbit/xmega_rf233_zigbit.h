@@ -51,12 +51,12 @@
 #include <compiler.h>
 
 /**
- * \defgroup xmega_a3bu_xplained_group XMEGA-A3BU Xplained board
+ * \defgroup xmega_rf233_zigbit_group XMEGA-A3BU Xplained board
  * @{
  */
 
 /**
- * \defgroup xmega_a3bu_xplained_feature_group Feature definitions
+ * \defgroup xmega_rf233_zigbit_feature_group Feature definitions
  * @{
  */
 
@@ -180,7 +180,7 @@
  */
 
 /**
- * \defgroup xmega_a3bu_xplained_config_group Configuration options
+ * \defgroup xmega_rf233_zigbit_config_group Configuration options
  * @{
  */
 
