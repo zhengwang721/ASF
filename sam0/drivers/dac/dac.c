@@ -68,23 +68,30 @@ static void _dac_set_config(
 	module_inst->output = config->output;
 	module_inst->start_on_event = false;
 
-	uint32_t new_config = 0;
-
-	/* Set reference voltage */
-	new_config |= config->reference;
-
-	/* Left adjust data if configured */
-	if (config->left_adjust) {
-		new_config |= DAC_CTRLB_LEFTADJ;
-	}
+	uint32_t new_ctrla = 0;
+	uint32_t new_ctrlb = 0;
 
 	/* Enable DAC in standby sleep mode if configured */
 	if (config->run_in_standby) {
-		new_config |= DAC_CTRLA_RUNSTDBY;
+		new_ctrla |= DAC_CTRLA_RUNSTDBY;
+	}
+
+	/* Set reference voltage */
+	new_ctrlb |= config->reference;
+
+	/* Left adjust data if configured */
+	if (config->left_adjust) {
+		new_ctrlb |= DAC_CTRLB_LEFTADJ;
 	}
 
 	/* Apply the new configuration to the hardware module */
-	dac_module->CTRLA.reg = new_config;
+	dac_module->CTRLA.reg = new_ctrla;
+
+	while (dac_is_syncing(module_inst)) {
+		/* Wait until the synchronization is complete */
+	}
+
+	dac_module->CTRLB.reg = new_ctrlb;
 }
 
 /**
@@ -151,6 +158,9 @@ enum status_code dac_init(
 	/* Write configuration to module */
 	_dac_set_config(module_inst, config);
 
+	/* Store reference selection for later use */
+	module_inst->reference = config->reference;
+
 #if DAC_CALLBACK_MODE == true
 	for (uint8_t i = 0; i < DAC_CALLBACK_N; i++) {
 		module_inst->callback[i] = NULL;
@@ -190,7 +200,7 @@ void dac_reset(
 /**
  * \brief Enable the DAC module.
  *
- * Enables the DAC interface and the selected output.
+ * Enables the DAC interface and the selected output. If any internal reference is selected it will be enabled.
  *
  * \param[in] module_inst  Pointer to the DAC software instance struct
  *
@@ -213,6 +223,11 @@ void dac_enable(
 
 	/* Enable selected output */
 	dac_module->CTRLB.reg |= module_inst->output;
+
+	/* Enable internal bandgap reference if selected in the configuration */
+	if (module_inst->reference == DAC_REFERENCE_INT1V) {
+		system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_BANDGAP);
+	}
 
 #if DAC_CALLBACK_MODE == true
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_DAC);
