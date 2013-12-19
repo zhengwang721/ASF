@@ -90,7 +90,7 @@
 
 /* ! \name Configuration for SAM4L */
 /* ! @{ */
-#if (SAM)
+#if (SAM && !SAMD20)
 #define NCP_RESET_GPIO            PIN_PC00
 
 #define USART_NCP                 USART1
@@ -104,9 +104,29 @@
 #define USART_NCP_RX_ISR_ENABLE() usart_enable_interrupt(USART_NCP, \
 		US_IER_RXRDY); \
 	NVIC_EnableIRQ(USART_NCP_IRQn);
-#endif /* SAM */
+#endif /* (SAM && !SAMD20) */
 /* ! @} */
+#if SAMD20
+#define USART_NCP                 EXT1_UART_MODULE
 
+#define SIO2NCP_USART_INIT()		struct usart_config uart_config; \
+									/* Configure USART for unit test output */ \
+									usart_get_config_defaults(&uart_config);\
+									uart_config.mux_setting     =  EXT1_UART_SERCOM_MUX_SETTING;\
+									uart_config.pinmux_pad3      = EXT1_UART_SERCOM_PINMUX_PAD3;\
+									uart_config.pinmux_pad2      = EXT1_UART_SERCOM_PINMUX_PAD2;\
+									uart_config.pinmux_pad1      = EXT1_UART_SERCOM_PINMUX_PAD1;\
+									uart_config.pinmux_pad0      = EXT1_UART_SERCOM_PINMUX_PAD0;\
+									uart_config.baudrate         = USART_NCP_BAUDRATE;
+									
+/** Baudrate setting */
+#define USART_NCP_BAUDRATE        9600
+ 
+
+#define USART_NCP_RX_ISR_ENABLE()  _sercom_set_handler(4, USART_NCP_ISR_VECT);\
+                                    USART_NCP->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC;\
+                                    system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM4);
+#endif 
 #include "serial.h"
 
 #endif /* CONF_SIO2NCP_H_INCLUDED */
