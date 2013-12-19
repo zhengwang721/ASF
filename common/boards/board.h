@@ -127,7 +127,7 @@ extern "C" {
 #define ATMEGARFX_RCB              63  //!< RFR2 & RFA1 RCB
 #define SAM4C_EK                   64  //!< SAM4C-EK board.
 #define RCB256RFR2_XPRO            65  //!< RFR2 RCB Xplained Pro board.
-#define SAM4E_XPLAINED_PRO         65  //!< SAM4E Xplained Pro board.
+#define SAM4E_XPLAINED_PRO         66  //!< SAM4E Xplained Pro board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< Simulator for the AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).

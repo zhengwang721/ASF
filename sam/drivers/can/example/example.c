@@ -132,7 +132,7 @@ static void decode_can_msg(can_mb_conf_t *p_mailbox)
 	if (p_mailbox->ul_datal != CAN_MSG_DUMMY_DATA) {
 		puts("Wrong message header\r");
 	} else {
-		printf("%d\r\n", p_mailbox->ul_datah);
+		printf("%d\r\n", (int)p_mailbox->ul_datah);
 	}
 }
 
@@ -178,7 +178,7 @@ static void configure_console(void)
  */
 int main(void)
 {
-	uint32_t ul_sysclk, cnt;
+	uint32_t ul_sysclk, cnt = 0;
 	uint8_t uc_key;
 
 	/* Initialize the SAM system. */
