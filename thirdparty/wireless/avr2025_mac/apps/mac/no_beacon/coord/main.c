@@ -354,7 +354,7 @@ printf("\nNO Beacon_Application\r\n\n");
 				dst_addr.Addr.short_address = BROADCAST;
 				wpan_mcps_data_req(FCF_SHORT_ADDR, &dst_addr,
 						strlen(broadcast_payload),
-						&broadcast_payload, 1,
+						(uint8_t *)&broadcast_payload, 1,
 						WPAN_TXOPT_OFF);
 			}
 		}
@@ -1244,7 +1244,7 @@ static void bc_data_cb(void *parameter)
 	/* The transmission is direct, but without acknowledgment. */
 	if (wpan_mcps_data_req(src_addr_mode,
 			&dst_addr,
-			strlen(payload),     /* One octet */
+			1,     /* One octet */
 			&payload,
 			curr_msdu_handle_temp,
 			WPAN_TXOPT_OFF
