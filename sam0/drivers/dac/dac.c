@@ -84,10 +84,12 @@ static void _dac_set_config(
 		new_ctrlb |= DAC_CTRLB_LEFTADJ;
 	}
 
+#ifdef FEATURE_DAC_DATABUF_WRITE_PROTECTION
 	/* Bypass DATABUF write protection if configured */
 	if (config->databuf_protection_bypass) {
 		new_ctrlb |= DAC_CTRLB_BDWP;
 	}
+#endif
 
 	/* Voltage pump disable if configured */
 	if (config->voltage_pump_disable) {
@@ -421,6 +423,84 @@ enum status_code dac_chan_write(
 	} else {
 		/* Write the new value to the DAC data register */
 		dac_module->DATA.reg = data;
+	}
+
+	return STATUS_OK;
+}
+
+/**
+ * \brief Write to the DAC.
+ *
+ * This function converts a specific number of digital data.
+ * The conversion should be event-triggered, the data will be written to DATABUF
+ * and transferred to the DATA register and converted when a Start Conversion
+ * Event is issued.
+ * Conversion data must be right or left adjusted according to configuration
+ * settings.
+ * \note To be event triggered, the enable_start_on_event must be
+ * enabled in the configuration.
+ *
+ * \param[in] module_inst      Pointer to the DAC software device struct
+ * \param[in] channel          DAC channel to write to
+ * \param[in] buffer             Pointer to the digital data write buffer to be converted
+ * \param[in] length             Length of the write buffer
+ *
+ * \return Status of the operation
+ * \retval STATUS_OK           If the data was written or no data conversion required
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  The DAC is not configured as using 
+ *                                         event trigger.
+ * \retval STATUS_BUSY      The DAC is busy to convert.
+ */
+enum status_code dac_chan_write_buffer_wait(
+		struct dac_module *const module_inst,
+		enum dac_channel channel,
+		uint16_t *buffer,
+		uint32_t length)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	/* No channel support yet */
+	UNUSED(channel);
+
+	Dac *const dac_module = module_inst->hw;
+
+	/* Wait until the synchronization is complete */
+	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY) {
+	};
+
+	/* Zero length request */
+	if (length == 0) {
+		/* No data to be converted */
+		return STATUS_OK;
+	}
+
+#if DAC_CALLBACK_MODE == true
+	/* Check if busy */
+	if (module_inst->job_status == STATUS_BUSY) {
+		return STATUS_BUSY;
+	}
+#endif
+
+	/* Only support event triggered conversion */
+	if (module_inst->start_on_event == false) {
+		return STATUS_ERR_UNSUPPORTED_DEV;
+	}
+
+	/* Blocks while buffer is being transferred */
+	while (length--) {
+		/* Convert one data */
+		dac_chan_write(module_inst, channel, buffer[length]);
+		
+		/* Wait until Transmit is complete or timeout */
+		for (uint32_t i = 0; i <= DAC_TIMEOUT; i++) {
+			if (dac_module->INTFLAG.reg & DAC_INTFLAG_EMPTY) {
+				break;
+			} else if (i == DAC_TIMEOUT) {
+				return STATUS_ERR_TIMEOUT;
+			}
+		}
 	}
 
 	return STATUS_OK;

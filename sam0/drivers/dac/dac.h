@@ -307,6 +307,19 @@ extern "C" {
 #include <clock.h>
 #include <gclk.h>
 
+/**
+ * Define DAC features set according to different device family
+ * @{
+ */
+#if (SAMD21)
+#  define FEATURE_DAC_DATABUF_WRITE_PROTECTION
+#endif
+/*@}*/
+
+#ifndef DAC_TIMEOUT
+#  define DAC_TIMEOUT 0xFFFF
+#endif
+
 #if DAC_CALLBACK_MODE == true
 #  include <system_interrupt.h>
 
@@ -450,8 +463,10 @@ struct dac_config {
 	bool left_adjust;
 	/** GCLK generator used to clock the peripheral */
 	enum gclk_generator clock_source;
+#ifdef FEATURE_DAC_DATABUF_WRITE_PROTECTION
 	/** Bypass DATABUF write protection */
 	bool databuf_protection_bypass;
+#endif
 	/** Voltage pump disable */
 	bool voltage_pump_disable;
 	/**
@@ -708,6 +723,12 @@ enum status_code dac_chan_write(
 		struct dac_module *const dev_inst,
 		enum dac_channel channel,
 		const uint16_t data);
+
+enum status_code dac_chan_write_buffer_wait(
+		struct dac_module *const module_inst,
+		enum dac_channel channel,
+		uint16_t *buffer,
+		uint32_t length);
 
 /** @} */
 

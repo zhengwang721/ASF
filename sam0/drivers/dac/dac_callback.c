@@ -46,10 +46,10 @@
 struct dac_module *_dac_instances[DAC_INST_NUM];
 
 /**
- * \brief Write to the DAC.
+ * \brief Convert a specific number digital data to analog through DAC.
  *
- * This function will perform a conversion of specfic number of digital data.
- * The conversion is event-triggered, the data will be written to DATABUF
+ * This function will perform a conversion of specific number of digital data.
+ * The conversion should be event-triggered, the data will be written to DATABUF
  * and transferred to the DATA register and converted when a Start Conversion
  * Event is issued.
  * Conversion data must be right or left adjusted according to configuration
@@ -60,7 +60,7 @@ struct dac_module *_dac_instances[DAC_INST_NUM];
  * \param[in] module_inst      Pointer to the DAC software device struct
  * \param[in] channel          DAC channel to write to
  * \param[in] buffer             Pointer to the digital data write buffer to be converted
- * \param[in] buffer_size             Size of the write buffer
+ * \param[in] length             Size of the write buffer
  *
  * \return Status of the operation
  * \retval STATUS_OK           If the data was written
@@ -73,7 +73,7 @@ enum status_code dac_chan_write_buffer_job(
 		struct dac_module *const module_inst,
 		const uint32_t channel,
 		uint16_t *buffer,
-		uint32_t buffer_size)
+		uint32_t length)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -101,7 +101,7 @@ enum status_code dac_chan_write_buffer_job(
 
 	module_inst->job_status = STATUS_BUSY;
 
-	module_inst->remaining_conversions = buffer_size;
+	module_inst->remaining_conversions = length;
 	module_inst->job_buffer = buffer;
 	module_inst->transferred_conversions = 0;
 
@@ -109,6 +109,56 @@ enum status_code dac_chan_write_buffer_job(
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_DAC);
 	dac_module->INTFLAG.reg = DAC_INTFLAG_UNDERRUN | DAC_INTFLAG_EMPTY;
 	dac_module->INTENSET.reg = DAC_INTENSET_UNDERRUN | DAC_INTENSET_EMPTY;
+
+	return STATUS_OK;
+}
+
+/**
+ * \brief Convert one digital data job.
+ *
+ * This function will perform a conversion of specfic number of digital data.
+ * The conversion is event-triggered, the data will be written to DATABUF
+ * and transferred to the DATA register and converted when a Start Conversion
+ * Event is issued.
+ * Conversion data must be right or left adjusted according to configuration
+ * settings.
+ * \note To be event triggered, the enable_start_on_event must be
+ * enabled in the configuration.
+ *
+ * \param[in] module_inst      Pointer to the DAC software device struct
+ * \param[in] channel          DAC channel to write to
+ * \param[in] data             Digital data to be converted
+ *
+ * \return Status of the operation
+ * \retval STATUS_OK           If the data was written
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
+ *                                     mode was specified with a DAC instance
+ *                                     configured in non-event mode.
+ * \retval STATUS_BUSY      The DAC is busy to accept new job.
+ */
+enum status_code dac_chan_write_job(
+		struct dac_module *const module_inst,
+		const uint32_t channel,
+		uint16_t data)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	UNUSED(channel);
+
+	/* DAC interrupts require it to be driven by events to work, fail if in
+	 * unbuffered (polled) mode */
+	if (module_inst->start_on_event == false) {
+		return STATUS_ERR_UNSUPPORTED_DEV;
+	}
+
+	if(module_inst->remaining_conversions != 0 ||
+			module_inst->job_status == STATUS_BUSY){
+		return STATUS_BUSY;
+	}
+
+	dac_chan_write_buffer_job(module_inst, channel, &data, 1);
 
 	return STATUS_OK;
 }

@@ -65,6 +65,11 @@ enum status_code dac_chan_write_buffer_job(
 		uint16_t *buffer,
 		uint32_t buffer_size);
 
+enum status_code dac_chan_write_job(
+		struct dac_module *const module_inst,
+		const uint32_t channel,
+		uint16_t data);
+
 enum status_code dac_register_callback(
 		struct dac_module *const module,
 		const uint32_t channel,
