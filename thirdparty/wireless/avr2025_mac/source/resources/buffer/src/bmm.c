@@ -55,7 +55,6 @@
 #include "pal.h"
 #include "bmm.h"
 #include "qmm.h"
-#include "tal.h"
 #include "ieee_const.h"
 #include "app_config.h"
 
