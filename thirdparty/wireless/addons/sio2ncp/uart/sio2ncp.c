@@ -46,7 +46,7 @@
 #include "asf.h"
 #include "sio2ncp.h"
 #include "conf_sio2ncp.h"
-#ifdef SAMD20
+#if SAMD20
 #include "stdio_serial.h"
 #endif
 /* === TYPES =============================================================== */
