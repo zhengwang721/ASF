@@ -67,7 +67,7 @@ struct dac_module *_dac_instances[DAC_INST_NUM];
  * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
  *                                     mode was specified with a DAC instance
  *                                     configured in non-event mode.
- * \retval STATUS_ERR_INVALID_ARG      If 0 length data to be converted.
+ * \retval STATUS_BUSY      The DAC is busy to accept new job.
  */
 enum status_code dac_chan_write_buffer_job(
 		struct dac_module *const module_inst,
@@ -101,7 +101,7 @@ enum status_code dac_chan_write_buffer_job(
 
 	module_inst->job_status = STATUS_BUSY;
 
-	module_inst->remaining_conversions  = buffer_size;
+	module_inst->remaining_conversions = buffer_size;
 	module_inst->job_buffer = buffer;
 	module_inst->transferred_conversions = 0;
 
@@ -297,28 +297,28 @@ static void _dac_interrupt_handler(const uint8_t instance)
 		if (module->remaining_conversions) {
 			
 			/* Fill the data buffer with next data in write buffer */
-			dac_hw->DATABUF.reg = 
+			dac_hw->DATABUF.reg =
 				module->job_buffer[module->transferred_conversions++];
 
 			/* Write buffer size decrement */
 			module->remaining_conversions --;
 
-				/* If in a write buffer job and all the data are converted */
-				if (module->remaining_conversions == 0) {
-					module->job_status = STATUS_OK;
+			/* If in a write buffer job and all the data are converted */
+			if (module->remaining_conversions == 0) {
+				module->job_status = STATUS_OK;
 
-					/* Disable interrupt */
-					dac_hw->INTENCLR.reg = DAC_INTENCLR_EMPTY;
-					dac_hw->INTFLAG.reg = DAC_INTFLAG_EMPTY;
-					system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_DAC);
+				/* Disable interrupt */
+				dac_hw->INTENCLR.reg = DAC_INTENCLR_EMPTY;
+				dac_hw->INTFLAG.reg = DAC_INTFLAG_EMPTY;
+				system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_DAC);
 
-					if ((module->callback) &&
-						 (module->callback_enable[DAC_CALLBACK_TRANSFER_COMPLETE])) {
-						module->callback[DAC_CALLBACK_TRANSFER_COMPLETE](0);
-					}
+				if ((module->callback) &&
+					 (module->callback_enable[DAC_CALLBACK_TRANSFER_COMPLETE])) {
+					module->callback[DAC_CALLBACK_TRANSFER_COMPLETE](0);
 				}
+			}
 		}
-		
+
 		if ((module->callback) &&
 			 (module->callback_enable[DAC_CALLBACK_DATA_EMPTY])) {
 			module->callback[DAC_CALLBACK_DATA_EMPTY](0);

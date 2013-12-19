@@ -450,7 +450,10 @@ struct dac_config {
 	bool left_adjust;
 	/** GCLK generator used to clock the peripheral */
 	enum gclk_generator clock_source;
-
+	/** Bypass DATABUF write protection */
+	bool databuf_protection_bypass;
+	/** Voltage pump disable */
+	bool voltage_pump_disable;
 	/**
 	 * The DAC behaves as in normal mode when the chip enters STANDBY sleep
 	 * mode
@@ -549,6 +552,8 @@ static inline void dac_get_config_defaults(
 	config->reference      = DAC_REFERENCE_INT1V;
 	config->output         = DAC_OUTPUT_EXTERNAL;
 	config->left_adjust    = false;
+	config->databuf_protection_bypass = false;
+	config->voltage_pump_disable = false;
 	config->clock_source   = GCLK_GENERATOR_0;
 	config->run_in_standby = false;
 }

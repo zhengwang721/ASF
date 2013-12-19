@@ -128,13 +128,6 @@ enum status_code dac_init(
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_DAC);
 
-	/* Configure GCLK channel and enable clock */
-	struct system_gclk_chan_config gclk_chan_conf;
-	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	gclk_chan_conf.source_generator = config->clock_source;
-	system_gclk_chan_set_config(DAC_GCLK_ID, &gclk_chan_conf);
-	system_gclk_chan_enable(DAC_GCLK_ID);
-
 	/* Check if module is enabled. */
 	if (module->CTRLA.reg & DAC_CTRLA_ENABLE) {
 		return STATUS_ERR_DENIED;
@@ -144,6 +137,13 @@ enum status_code dac_init(
 	if (module->CTRLA.reg & DAC_CTRLA_SWRST) {
 		return STATUS_BUSY;
 	}
+
+	/* Configure GCLK channel and enable clock */
+	struct system_gclk_chan_config gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
+	gclk_chan_conf.source_generator = config->clock_source;
+	system_gclk_chan_set_config(DAC_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_enable(DAC_GCLK_ID);
 
 	/* MUX the DAC VOUT pin */
 	struct system_pinmux_config pin_conf;

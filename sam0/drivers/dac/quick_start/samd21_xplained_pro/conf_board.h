@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Xplained PRO board configuration.
+ * \brief SAM D21 Xplained PRO board configuration.
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
