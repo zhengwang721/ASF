@@ -63,11 +63,13 @@ static void ui_disable_asynchronous_interrupt(void);
  */
 static void UI_WAKEUP_HANDLER(uint32_t channel)
 {
-	if (uhc_is_suspend()) {
-		ui_disable_asynchronous_interrupt();
+	if (channel == BUTTON_0_EIC_LINE) {
+		if (uhc_is_suspend()) {
+			ui_disable_asynchronous_interrupt();
 
-		/* Wakeup host and device */
-		uhc_resume();
+			/* Wakeup host and device */
+			uhc_resume();
+		}
 	}
 }
 

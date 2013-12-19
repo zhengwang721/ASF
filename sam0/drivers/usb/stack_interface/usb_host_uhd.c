@@ -48,7 +48,7 @@
 #include "conf_usb_host.h"
 #include "uhd.h"
 #include "usb.h"
-//#include "usb_dual.h"
+#include "usb_dual.h"
 
 // Declare
 static void _uhd_ctrl_phase_setup(void);
@@ -62,11 +62,6 @@ static uint8_t _uhd_get_pipe(usb_add_t add, usb_ep_t endp);
 static void _uhd_pipe_trans_complete(struct usb_module *module_inst, void *);
 static void _uhd_ep_abort_pipe(uint8_t pipe, uhd_trans_status_t status);
 static void _uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
-
-//temp contents
-#define uhd_sleep_mode(arg)
-
-
 
 // for debug text
 //#define USB_DEBUG
@@ -99,6 +94,65 @@ static bool uhd_lpm_suspend = false;
 
 //! Store the callback to be call at the end of reset signal
 static uhd_callback_reset_t uhd_reset_callback = NULL;
+
+/**
+ * \name Power management
+ */
+//@{
+#ifndef UHD_NO_SLEEP_MGR
+
+#include "sleepmgr.h"
+//! States of USB interface
+enum uhd_usb_state_enum {
+	UHD_STATE_OFF = 0,
+	UHD_STATE_WAIT_ID_HOST = 1,
+	UHD_STATE_NO_VBUS = 2,
+	UHD_STATE_DISCONNECT = 3,
+	UHD_STATE_SUSPEND = 4,
+	UHD_STATE_SUSPEND_LPM = 5,
+	UHD_STATE_IDLE = 6,
+};
+
+/*! \brief Manages the sleep mode following the USB state
+ *
+ * \param new_state  New USB state
+ */
+static void uhd_sleep_mode(enum uhd_usb_state_enum new_state)
+{
+	enum sleepmgr_mode sleep_mode[] = {
+		SLEEPMGR_STANDBY,  // UHD_STATE_OFF (not used)
+		SLEEPMGR_IDLE_1, // UHD_STATE_WAIT_ID_HOST
+		SLEEPMGR_IDLE_1, // UHD_STATE_NO_VBUS
+		SLEEPMGR_IDLE_1, // UHD_STATE_DISCONNECT
+		/* In suspend state, the SLEEPMGR_RET level is authorized
+		 * even if ID Pin, Vbus... pins are managed through IO.
+		 * When a ID disconnection or Vbus low event occurs,
+		 * the asynchrone USB wakeup occurs.
+		 */
+		SLEEPMGR_IDLE_1,     // UHD_STATE_SUSPEND
+		SLEEPMGR_IDLE_1,     // UHD_STATE_SUSPEND_LPM
+		SLEEPMGR_IDLE_0, // UHD_STATE_IDLE
+	};
+	static enum uhd_usb_state_enum uhd_state = UHD_STATE_OFF;
+
+	if (uhd_state == new_state) {
+		return; // No change
+	}
+	if (new_state != UHD_STATE_OFF) {
+		// Lock new limit
+		sleepmgr_lock_mode(sleep_mode[new_state]);
+	}
+	if (uhd_state != UHD_STATE_OFF) {
+		// Unlock old limit
+		sleepmgr_unlock_mode(sleep_mode[uhd_state]);
+	}
+	uhd_state = new_state;
+}
+
+#else
+#  define uhd_sleep_mode(arg)
+#endif // UHD_NO_SLEEP_MGR
+//@}
 
 /**
  * \name Control endpoint low level management routine.
@@ -649,9 +703,49 @@ static void _uhd_ram_error(struct usb_module *module_inst, void *null)
 		dbg_print("!!!! RAM ERR !!!!\n");
 }
 
+#if USB_VBUS_EIC
+/**
+ * USB VBus pin change handler
+ */
+static void _uhd_vbus_handler(uint32_t channel)
+{
+	if (channel == USB_VBUS_EIC_LINE) {
+		dbg_print("VBUS low, there is some power issue on board!!! \n");
+		uhd_sleep_mode(UHD_STATE_NO_VBUS);
+		UHC_VBUS_CHANGE(false);
+	}
+}
+
+/**
+ * \name USB VBUS PADs management
+ */
+//@{
+static void _usb_vbus_config(void)
+{
+	/* Initialize EIC for vbus checking */
+	struct extint_chan_conf eint_chan_conf;
+	extint_chan_get_config_defaults(&eint_chan_conf);
+
+	eint_chan_conf.gpio_pin           = USB_VBUS_PIN;
+	eint_chan_conf.gpio_pin_mux       = USB_VBUS_EIC_MUX;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_LOW;
+
+	extint_chan_disable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_set_config(USB_VBUS_EIC_LINE, &eint_chan_conf);
+	extint_register_callback(_uhd_vbus_handler,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_enable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+}
+//@}
+
+# define is_usb_vbus_high()           port_pin_get_input_level(USB_VBUS_PIN)
+#endif
+
 void uhd_enable(void)
 {
-#ifdef USBDUAL
+#if USB_ID_EIC
 	irqflags_t flags;
 
 	// To avoid USB interrupt before end of initialization
@@ -662,14 +756,6 @@ void uhd_enable(void)
 		cpu_irq_restore(flags);
 		return;
 	}
-
-#if USB_ID_EIC
-	// Check that the host mode is selected by ID pin
-	if (Is_pad_id_device()) {
-		cpu_irq_restore(flags);
-		return; // Host is not the current mode
-	}
-#endif
 #endif
 	uhd_ctrl_request_first = NULL;
 	uhd_ctrl_request_last = NULL;
@@ -684,7 +770,17 @@ void uhd_enable(void)
 	usb_init(&dev,USB, &cfg);
 	usb_enable(&dev);
 
+#if USB_VBUS_EIC
+	_usb_vbus_config();
+	if (is_usb_vbus_high()) {
+		usb_host_enable(&dev);
+	} else {
+		dbg_print("VBUS low, there is some power issue on board!!! \n");
+	}
+#else
 	usb_host_enable(&dev);
+#endif
+
 	usb_host_register_callback(&dev, USB_HOST_CALLBACK_SOF, _uhd_sof_interrupt);
 	usb_host_register_callback(&dev, USB_HOST_CALLBACK_RESET, _uhd_reset);
 	usb_host_register_callback(&dev, USB_HOST_CALLBACK_WAKEUP, _uhd_wakeup);

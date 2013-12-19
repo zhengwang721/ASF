@@ -50,9 +50,9 @@
 /* Enable USB interface (USB) */
 #define CONF_BOARD_USB_PORT
 /* Enable USB VBUS detect */
-#define CONF_BOARD_USB_VBUS_DETECT
+//#define CONF_BOARD_USB_VBUS_DETECT
 /* ID detect enabled */
-#define CONF_BOARD_USB_ID_DETECT
+//#define CONF_BOARD_USB_ID_DETECT
 /* Host VBUS control enabled */
 #define CONF_BOARD_USB_VBUS_CONTROL
 
