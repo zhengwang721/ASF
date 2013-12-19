@@ -84,6 +84,16 @@ static void _dac_set_config(
 		new_ctrlb |= DAC_CTRLB_LEFTADJ;
 	}
 
+	/* Bypass DATABUF write protection if configured */
+	if (config->databuf_protection_bypass) {
+		new_ctrlb |= DAC_CTRLB_BDWP;
+	}
+
+	/* Voltage pump disable if configured */
+	if (config->voltage_pump_disable) {
+		new_ctrlb |= DAC_CTRLB_VPD;
+	}
+
 	/* Apply the new configuration to the hardware module */
 	dac_module->CTRLA.reg = new_ctrla;
 
