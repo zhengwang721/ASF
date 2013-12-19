@@ -120,18 +120,18 @@ enum uhd_usb_state_enum {
 static void uhd_sleep_mode(enum uhd_usb_state_enum new_state)
 {
 	enum sleepmgr_mode sleep_mode[] = {
-		SLEEPMGR_STANDBY,  // UHD_STATE_OFF (not used)
-		SLEEPMGR_IDLE_1, // UHD_STATE_WAIT_ID_HOST
-		SLEEPMGR_IDLE_1, // UHD_STATE_NO_VBUS
-		SLEEPMGR_IDLE_1, // UHD_STATE_DISCONNECT
+		SLEEPMGR_ACTIVE,  // UHD_STATE_OFF (not used)
+		SLEEPMGR_ACTIVE, // UHD_STATE_WAIT_ID_HOST
+		SLEEPMGR_ACTIVE, // UHD_STATE_NO_VBUS
+		SLEEPMGR_ACTIVE, // UHD_STATE_DISCONNECT
 		/* In suspend state, the SLEEPMGR_RET level is authorized
 		 * even if ID Pin, Vbus... pins are managed through IO.
 		 * When a ID disconnection or Vbus low event occurs,
 		 * the asynchrone USB wakeup occurs.
 		 */
-		SLEEPMGR_IDLE_1,     // UHD_STATE_SUSPEND
-		SLEEPMGR_IDLE_1,     // UHD_STATE_SUSPEND_LPM
-		SLEEPMGR_IDLE_0, // UHD_STATE_IDLE
+		SLEEPMGR_ACTIVE,     // UHD_STATE_SUSPEND
+		SLEEPMGR_ACTIVE,     // UHD_STATE_SUSPEND_LPM
+		SLEEPMGR_ACTIVE, // UHD_STATE_IDLE
 	};
 	static enum uhd_usb_state_enum uhd_state = UHD_STATE_OFF;
 
@@ -1366,23 +1366,39 @@ void uhd_ep_free(usb_add_t add, usb_ep_t endp)
 	uint8_t usb_pipe = 0;
 	struct usb_host_pipe_config cfg;
 
-	if (0 == endp) {
-		usb_host_pipe_get_config(&dev, 0, &cfg);
-		if (cfg.device_address == add) {
-			usb_host_pipe_freeze(&dev, 0);
-//			uhd_disable_pipe(0);
-			if (uhd_ctrl_request_timeout) {
-				_uhd_ctrl_request_end(UHD_TRANS_DISCONNECT);
+	// Search endpoint(s) in all pipes
+	for (usb_pipe = 0; usb_pipe < USB_PIPE_NUM; usb_pipe++) {
+		usb_host_pipe_get_config(&dev, usb_pipe, &cfg);
+		if (add != cfg.device_address) {
+			continue;
+		}
+		if (endp != 0xFF) {
+			// Disable specific endpoint number
+			if (!((endp == 0) && (0 == cfg.endpoint_address))) {
+				// It is not the control endpoint
+				if (endp != cfg.endpoint_address) {
+					continue; // Mismatch
+				}
 			}
-			return;
 		}
-	} else {
-		usb_pipe = _uhd_get_pipe(add,endp);
-		if (usb_pipe) {
-			usb_host_pipe_freeze(&dev, usb_pipe);
-//			uhd_disable_pipe(usb_pipe);
-			_uhd_pipe_finish_job(usb_pipe, UHD_TRANS_DISCONNECT);
+
+		if (usb_pipe == 0) {
+			// Disable and stop transfer on control endpoint
+			if (cfg.device_address == add) {
+				usb_host_pipe_freeze(&dev, 0);
+	//			uhd_disable_pipe(0);
+				if (uhd_ctrl_request_timeout) {
+					_uhd_ctrl_request_end(UHD_TRANS_DISCONNECT);
+				}
+				continue;
+			}
 		}
+
+		// Endpoint interrupt, bulk or isochronous
+		// Disable and stop transfer on this pipe
+		usb_host_pipe_freeze(&dev, usb_pipe);
+//		uhd_disable_pipe(usb_pipe);
+		_uhd_pipe_finish_job(usb_pipe, UHD_TRANS_DISCONNECT);
 	}
 }
 
