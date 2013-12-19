@@ -57,7 +57,7 @@
 /* === Macros =============================================================== */
 
 /** Defines the number of timers used by the application. */
-#define NUMBER_OF_APP_TIMERS        (2)
+#define NUMBER_OF_APP_TIMERS        (1)
 
 /** Defines the total number of timers used by the application and the layers
  *below. */

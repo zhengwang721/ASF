@@ -43,9 +43,4 @@
 #ifndef CONF_SIO2HOST_H_INCLUDED
 #define CONF_SIO2HOST_H_INCLUDED
 
-/*! \name Configuration
- */
-/* ! @{ */
-
-
 #endif /* CONF_SIO2HOST_H_INCLUDED */
