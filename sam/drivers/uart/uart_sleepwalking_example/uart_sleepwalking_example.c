@@ -52,8 +52,8 @@
  *
  * This example can be used on SAMG53 device.
  *
- * \note Since the SAMG53 clock is not accurate, the example use a loose
- * match condition to wake up the system from wait mode.
+ * \note The example use a loose match condition to wake up the system
+ * from wait mode.
  *
  * \section Description
  *
