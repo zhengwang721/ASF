@@ -183,6 +183,14 @@ typedef union {
     uint32_t CHBUSY11:1;       /*!< bit:     27  Channel 11 Busy                    */
     uint32_t :4;               /*!< bit: 28..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t USRRDY:8;         /*!< bit:  0.. 7  Channel x User Ready               */
+    uint32_t CHBUSY:8;         /*!< bit:  8..15  Channel x Busy                     */
+    uint32_t USRRDYp8:4;       /*!< bit: 16..19  Channel x+8 User Ready             */
+    uint32_t :4;               /*!< bit: 20..23  Reserved                           */
+    uint32_t CHBUSYp8:4;       /*!< bit: 24..27  Channel x+8 Busy                   */
+    uint32_t :4;               /*!< bit: 28..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } EVSYS_CHSTATUS_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -283,6 +291,14 @@ typedef union {
     uint32_t EVD11:1;          /*!< bit:     27  Channel 11 Event Detection Interrupt Enable */
     uint32_t :4;               /*!< bit: 28..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t OVR:8;            /*!< bit:  0.. 7  Channel x Overrun Interrupt Enable */
+    uint32_t EVD:8;            /*!< bit:  8..15  Channel x Event Detection Interrupt Enable */
+    uint32_t OVRp8:4;          /*!< bit: 16..19  Channel x+8 Overrun Interrupt Enable */
+    uint32_t :4;               /*!< bit: 20..23  Reserved                           */
+    uint32_t EVDp8:4;          /*!< bit: 24..27  Channel x+8 Event Detection Interrupt Enable */
+    uint32_t :4;               /*!< bit: 28..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } EVSYS_INTENCLR_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -383,6 +399,14 @@ typedef union {
     uint32_t EVD11:1;          /*!< bit:     27  Channel 11 Event Detection Interrupt Enable */
     uint32_t :4;               /*!< bit: 28..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t OVR:8;            /*!< bit:  0.. 7  Channel x Overrun Interrupt Enable */
+    uint32_t EVD:8;            /*!< bit:  8..15  Channel x Event Detection Interrupt Enable */
+    uint32_t OVRp8:4;          /*!< bit: 16..19  Channel x+8 Overrun Interrupt Enable */
+    uint32_t :4;               /*!< bit: 20..23  Reserved                           */
+    uint32_t EVDp8:4;          /*!< bit: 24..27  Channel x+8 Event Detection Interrupt Enable */
+    uint32_t :4;               /*!< bit: 28..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } EVSYS_INTENSET_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -483,6 +507,14 @@ typedef union {
     uint32_t EVD11:1;          /*!< bit:     27  Channel 11 Event Detection         */
     uint32_t :4;               /*!< bit: 28..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t OVR:8;            /*!< bit:  0.. 7  Channel x Overrun                  */
+    uint32_t EVD:8;            /*!< bit:  8..15  Channel x Event Detection          */
+    uint32_t OVRp8:4;          /*!< bit: 16..19  Channel x+8 Overrun                */
+    uint32_t :4;               /*!< bit: 20..23  Reserved                           */
+    uint32_t EVDp8:4;          /*!< bit: 24..27  Channel x+8 Event Detection        */
+    uint32_t :4;               /*!< bit: 28..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } EVSYS_INTFLAG_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
