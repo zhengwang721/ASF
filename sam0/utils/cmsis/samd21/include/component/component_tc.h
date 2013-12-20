@@ -231,6 +231,12 @@ typedef union {
     uint8_t  CPTEN1:1;         /*!< bit:      5  Capture Channel 1 Enable           */
     uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint8_t  INVEN:2;          /*!< bit:  0.. 1  Output Waveform x Invert Enable    */
+    uint8_t  :2;               /*!< bit:  2.. 3  Reserved                           */
+    uint8_t  CPTEN:2;          /*!< bit:  4.. 5  Capture Channel x Enable           */
+    uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } TC_CTRLC_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -287,6 +293,11 @@ typedef union {
     uint16_t MCEO1:1;          /*!< bit:     13  Match or Capture Channel 1 Event Output Enable */
     uint16_t :2;               /*!< bit: 14..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint16_t :12;              /*!< bit:  0..11  Reserved                           */
+    uint16_t MCEO:2;           /*!< bit: 12..13  Match or Capture Channel x Event Output Enable */
+    uint16_t :2;               /*!< bit: 14..15  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } TC_EVCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -336,6 +347,11 @@ typedef union {
     uint8_t  MC1:1;            /*!< bit:      5  Match or Capture Channel 1 Interrupt Enable */
     uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint8_t  :4;               /*!< bit:  0.. 3  Reserved                           */
+    uint8_t  MC:2;             /*!< bit:  4.. 5  Match or Capture Channel x Interrupt Enable */
+    uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } TC_INTENCLR_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -370,6 +386,11 @@ typedef union {
     uint8_t  MC1:1;            /*!< bit:      5  Match or Capture Channel 1 Interrupt Enable */
     uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint8_t  :4;               /*!< bit:  0.. 3  Reserved                           */
+    uint8_t  MC:2;             /*!< bit:  4.. 5  Match or Capture Channel x Interrupt Enable */
+    uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } TC_INTENSET_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -404,6 +425,11 @@ typedef union {
     uint8_t  MC1:1;            /*!< bit:      5  Match or Capture Channel 1         */
     uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint8_t  :4;               /*!< bit:  0.. 3  Reserved                           */
+    uint8_t  MC:2;             /*!< bit:  4.. 5  Match or Capture Channel x         */
+    uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } TC_INTFLAG_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
