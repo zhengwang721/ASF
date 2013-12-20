@@ -40,7 +40,7 @@
  */
 
 /*------------------------------------------------------------------------------
- *      Linker script for running in internal FLASH on the ATSAM4C32C
+ *      Linker script for running in internal FLASH on the ATSAM4C32E
  *----------------------------------------------------------------------------*/
 
 OUTPUT_FORMAT("elf32-littlearm", "elf32-littlearm", "elf32-littlearm")
@@ -50,8 +50,8 @@ SEARCH_DIR(.)
 /* Memory Spaces Definitions */
 MEMORY
 {
-  rom (rx)  : ORIGIN = 0x01000000, LENGTH = 0x00100000
-  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00020000
+  rom (rx)  : ORIGIN = 0x01000000, LENGTH = 0x00200000
+  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00040000
 }
 
 /* The stack size used by the application. NOTE: you need to adjust according to your application. */

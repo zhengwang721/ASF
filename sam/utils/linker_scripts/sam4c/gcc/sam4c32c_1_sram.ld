@@ -50,16 +50,14 @@ SEARCH_DIR(.)
 /* Memory Spaces Definitions */
 MEMORY
 {
-  rom (rx)  : ORIGIN = 0x01000000, LENGTH = 0x00100000
-  ram (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00020000
+  ram1 (rx)  : ORIGIN = 0x20080000, LENGTH = 0x00008000
+  ram2 (rwx) : ORIGIN = 0x20100000, LENGTH = 0x00004000
 }
 
 /* The stack size used by the application. NOTE: you need to adjust according to your application. */
-__stack_size__ = DEFINED(__stack_size__) ? __stack_size__ : 0x3000;
+__stack_size__ = DEFINED(__stack_size__) ? __stack_size__ : 0x800;
 __ram_end__ = ORIGIN(ram) + LENGTH(ram) - 4;
 
-/* The heapsize used by the application. NOTE: you need to adjust according to your application. */
-HEAP_SIZE = DEFINED(HEAP_SIZE) ? HEAP_SIZE : 0x200;
 /* Section Definitions */
 SECTIONS
 {
@@ -110,20 +108,28 @@ SECTIONS
 
         . = ALIGN(4);
         _efixed = .;            /* End of text section */
-    } > ram
+    } > ram1
 
-    . = ALIGN(8);
+    /* .ARM.exidx is sorted, so has to go in its own output section.  */
+    PROVIDE_HIDDEN (__exidx_start = .);
+    .ARM.exidx :
+    {
+      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+    } > ram1
+    PROVIDE_HIDDEN (__exidx_end = .);
+
+    . = ALIGN(4);
     _etext = .;
 
     .relocate : AT (_etext)
     {
-        . = ALIGN(8);
+        . = ALIGN(4);
         _srelocate = .;
         *(.ramfunc .ramfunc.*);
         *(.data .data.*);
         . = ALIGN(4);
         _erelocate = .;
-    } > ram
+    } > ram2
 
     /* .bss section which is used for uninitialized data */
     .bss (NOLOAD) :
@@ -136,7 +142,7 @@ SECTIONS
         . = ALIGN(4);
         _ebss = . ;
         _ezero = .;
-    } > ram
+    } > ram2
 
     /* stack section */
     .stack (NOLOAD):
@@ -146,24 +152,7 @@ SECTIONS
         . = . + __stack_size__;
         . = ALIGN(8);
         _estack = .;
-    } > ram
-
-    /* heap section */
-    .heap (NOLOAD):
-    {
-        . = ALIGN(8);
-         _sheap = .;
-        . = . + HEAP_SIZE;
-        . = ALIGN(8);
-        _eheap = .;
-    } > ram
-    /* .ARM.exidx is sorted, so has to go in its own output section.  */
-    PROVIDE_HIDDEN (__exidx_start = .);
-    .ARM.exidx :
-    {
-      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-    } > ram
-    PROVIDE_HIDDEN (__exidx_end = .);
+    } > ram2
 
     . = ALIGN(4);
     _end = . ;
