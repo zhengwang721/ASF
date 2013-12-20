@@ -106,8 +106,6 @@
 		<build type="header-file"   value="inc/mac_msg_const.h"/>
 		<build type="header-file"	value="inc/mac_msg_type_data_ind.h"/>
 		<build type="include-path"  value="inc/"/>
-		<build type="module-config" subtype="required-header-file" value="conf_mac.h"/>
-		<build type="module-config" subtype="path" value="module_config"/>
 		<build type="doxygen-entry-point" value="group_mac"/>
         <device-support-alias value="avr2025_mac_pal_support"/>
 	</module>

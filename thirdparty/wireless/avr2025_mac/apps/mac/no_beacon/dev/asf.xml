@@ -6,7 +6,6 @@
 		<build type="c-source" value="main.c"/>
 		<build type="c-source" value="app_security.c"/>
 		<build type="header-file" value="beacon_app.h"/>
-		<build type="header-file" value="conf_mac.h"/>
 		<build type="include-path" value="."/>
 		<build type="define" name="HIGHEST_STACK_LAYER" value="MAC"/>
 		<build type="define" name="ENABLE_TSTAMP" value=""/>
