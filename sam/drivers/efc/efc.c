@@ -66,8 +66,13 @@ extern "C" {
 # define READ_BUFF_ADDR1    IFLASH1_ADDR
 #elif (SAM3S || SAM3N || SAM4E || SAM4N)
 # define READ_BUFF_ADDR     IFLASH_ADDR
-#elif SAM4C
+#elif (SAM4C)
+#if SAM4C32
+# define READ_BUFF_ADDR0    IFLASH0_CNC_ADDR
+# define READ_BUFF_ADDR1    IFLASH1_CNC_ADDR
+#else
 # define READ_BUFF_ADDR     IFLASH_CNC_ADDR
+#endif
 #elif (SAM3U || SAM4S)
 # define READ_BUFF_ADDR     IFLASH0_ADDR
 #else
@@ -258,7 +263,7 @@ uint32_t efc_perform_read_sequence(Efc *p_efc,
 	volatile uint32_t ul_status;
 	uint32_t ul_cnt;
 
-#if (SAM3U4 || SAM3XA || SAM4SD16 || SAM4SD32)
+#if (SAM3U4 || SAM3XA || SAM4SD16 || SAM4SD32 || SAM4C32)
 	uint32_t *p_ul_data =
 			(uint32_t *) ((p_efc == EFC0) ?
 			READ_BUFF_ADDR0 : READ_BUFF_ADDR1);
