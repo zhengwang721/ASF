@@ -126,7 +126,9 @@ extern "C" {
 #if SAM4C32
 # define EFC     EFC0
 /* Internal Flash 0 base address. */
-# define IFLASH_ADDR     IFLASH0_CNC_ADDR
+# define IFLASH0_ADDR    IFLASH0_CNC_ADDR
+# define IFLASH1_ADDR    IFLASH1_CNC_ADDR
+# define IFLASH_ADDR     IFLASH0_ADDR
 /* Internal flash page size. */
 # define IFLASH_PAGE_SIZE     IFLASH0_PAGE_SIZE
 /* Internal flash lock region size. */
