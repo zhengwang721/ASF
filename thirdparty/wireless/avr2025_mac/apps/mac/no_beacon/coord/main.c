@@ -1031,7 +1031,7 @@ void usr_mlme_start_conf(uint8_t status)
 	printf("\r\nStarted beacon-enabled network in Channel - %d\r\n",
 						current_channel);
 #else
-	printf("\r\nStarted No beacon-enabled network in Channel - %d\r\n",
+	printf("\r\nStarted No beacon network in Channel - %d\r\n",
 						current_channel);
 #endif
 
