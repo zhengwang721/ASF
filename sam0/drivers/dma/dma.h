@@ -180,7 +180,9 @@ enum dma_callback_type {
 };
 
 /**
- * DMA tansfer descriptor configuration
+ * DMA tansfer descriptor configuration. When the source or destination address
+ * increment is enable, the address value that must be programmed corresponds
+ * to the end of the transfer.
  */
 struct dma_descriptor_config {
 	/** The descriptor valid */
