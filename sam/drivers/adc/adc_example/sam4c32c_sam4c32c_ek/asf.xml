@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="ADC example for SAM4C_EK" id="sam.drivers.adc.adc_example.sam4c32c_ek">
 		<info type="description" value="summary">
-		This example is just a test for studio,pls removed after verified 
+		This example will demonstrates how to configure ADC peripheral with several modes.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
