@@ -521,7 +521,7 @@ void usr_mlme_associate_conf(uint16_t AssocShortAddress,
 {
 	if (status == MAC_SUCCESS) {
 #ifdef SIO_HUB
-		printf("Connected to beacon-enabled network\r\n");
+		printf("Connected to no beacon network\r\n");
 #endif
 		/* Set proper state of application. */
 		app_state = APP_DEVICE_RUNNING;
