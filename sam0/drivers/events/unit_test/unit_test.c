@@ -119,14 +119,18 @@
 #include "conf_test.h"
 
 /* Event user being TC0 */
-#define TEST_EVENT_USER   EVSYS_ID_USER_TC0_EVU
+#define TEST_EVENT_USER   EVSYS_ID_USER_TC3_EVU
 /* Event generator being RTC overflow */
 #define TEST_EVENT_GEN    EVSYS_ID_GEN_RTC_OVF
 
 /* Structure for UART module connected to EDBG (used for unit test output) */
 struct usart_module cdc_uart_module;
+
 /* Structure for TC module */
-struct tc_module tc_inst;
+struct tc_module  tc_inst;
+
+/* Structure for RTC module */
+struct rtc_module rtc_inst;
 
 /* Flag to check successful initialization */
 volatile bool init_success;
@@ -172,12 +176,11 @@ static void test_event_gen_user_init(void)
 	struct tc_config config_tc;
 
 	tc_get_config_defaults(&config_tc);
-	config_tc.event_action = TC_EVENT_ACTION_START;
-	config_tc.size_specific.size_16_bit.compare_capture_channel[0]
+	config_tc.counter_16_bit.compare_capture_channel[0]
 		= (0xFFFF / 4);
 
-	/* Initialize the TC0 */
-	status = tc_init(&tc_inst, TC0, &config_tc);
+	/* Initialize the TC3 */
+	status = tc_init(&tc_inst, TC3, &config_tc);
 	if (status != STATUS_OK) {
 		init_success = false;
 	}
@@ -185,9 +188,11 @@ static void test_event_gen_user_init(void)
 	struct tc_events events_tc;
 
 	events_tc.on_event_perform_action = true;
+	events_tc.event_action = TC_EVENT_ACTION_START;
+
 	tc_enable_events(&tc_inst, &events_tc);
 
-	/* Enable the TC0 */
+	/* Enable the TC3 */
 	tc_enable(&tc_inst);
 
 	/* RTC configuration (Event Generator) */
@@ -201,7 +206,7 @@ static void test_event_gen_user_init(void)
 	config_rtc_count.mode                = RTC_COUNT_MODE_16BIT;
 	config_rtc_count.continuously_update = true;
 	config_rtc_count.compare_values[0]   = 50;
-	status = rtc_count_init(&config_rtc_count);
+	status = rtc_count_init(&rtc_inst, RTC, &config_rtc_count);
 
 	if (status != STATUS_OK) {
 		init_success = false;
@@ -209,7 +214,7 @@ static void test_event_gen_user_init(void)
 
 	/* Enable RTC events */
 	config_rtc_event.generate_event_on_overflow = true;
-	rtc_count_enable_events(&config_rtc_event);
+	rtc_count_enable_events(&rtc_inst, &config_rtc_event);
 }
 
 /**
@@ -285,8 +290,8 @@ static void run_synchronous_event_test(const struct test_case *test)
 			"Timeout error: Event channel not ready");
 
 	/* Event action test */
-	rtc_count_enable();
-	rtc_count_set_period(100);
+	rtc_count_enable(&rtc_inst);
+	rtc_count_set_period(&rtc_inst, 100);
 	timeout_cycles = 10000;
 
 	do {
@@ -313,8 +318,8 @@ static void run_synchronous_event_test(const struct test_case *test)
  */
 static void cleanup_synchronous_event_test(const struct test_case *test)
 {
-	rtc_count_disable();
-	rtc_count_set_count(0);
+	rtc_count_disable(&rtc_inst);
+	rtc_count_set_count(&rtc_inst, 0);
 	tc_stop_counter(&tc_inst);
 	events_release(&events);
 }
@@ -390,8 +395,8 @@ static void run_resynchronous_event_test(const struct test_case *test)
 			"Timeout error: Event channel not ready");
 
 	/* Event action test */
-	rtc_count_enable();
-	rtc_count_set_period(100);
+	rtc_count_enable(&rtc_inst);
+	rtc_count_set_period(&rtc_inst, 100);
 	timeout_cycles = 10000;
 
 	do {
@@ -416,8 +421,8 @@ static void run_resynchronous_event_test(const struct test_case *test)
  */
 static void cleanup_resynchronous_event_test(const struct test_case *test)
 {
-	rtc_count_disable();
-	rtc_count_set_count(0);
+	rtc_count_disable(&rtc_inst);
+	rtc_count_set_count(&rtc_inst, 0);
 	tc_stop_counter(&tc_inst);
 	events_release(&events);
 }
@@ -495,8 +500,8 @@ static void run_asynchronous_event_test(const struct test_case *test)
 			"Timeout error: Event channel not ready");
 
 	/* Event action test */
-	rtc_count_enable();
-	rtc_count_set_period(100);
+	rtc_count_enable(&rtc_inst);
+	rtc_count_set_period(&rtc_inst, 100);
 	timeout_cycles = 10000;
 
 	do {
@@ -523,8 +528,8 @@ static void run_asynchronous_event_test(const struct test_case *test)
  */
 static void cleanup_asynchronous_event_test(const struct test_case *test)
 {
-	rtc_count_disable();
-	rtc_count_set_count(0);
+	rtc_count_disable(&rtc_inst);
+	rtc_count_set_count(&rtc_inst, 0);
 	tc_stop_counter(&tc_inst);
 	events_release(&events);
 }
