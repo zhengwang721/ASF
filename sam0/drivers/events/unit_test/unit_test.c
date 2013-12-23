@@ -71,7 +71,7 @@
  * This unit test carries out test for three modes of event propagation:
  * Synchronous, Resynchronized & Asynchronous.
  *  - A RTC module with internal 32kHz RC oscillator is configured as
- *    an event generator and a Timer Counter (TC0) module is configured as event
+ *    an event generator and a Timer Counter (TC3) module is configured as event
  *    user.
  *  - RTC overflow signal is sent as an event to the timer. The timer will
  *    start counting on receiving this event.
@@ -99,7 +99,7 @@
  *  - The unit test carries out test for three modes of event propagation:
  *    Synchronous, Resynchronized & Asynchronous.
  *  - RTC module with internal 32kHz RC oscillator is configured as
- *    event generator and Timer (TC0) module is configured as event user.
+ *    event generator and Timer (TC3) module is configured as event user.
  *  - RTC overflow signal is sent as an event to the timer. The timer will
  *    start counting on receiving this event.
  *  - Timer's count register is read to detect successful event action.
@@ -118,7 +118,7 @@
 #include <string.h>
 #include "conf_test.h"
 
-/* Event user being TC0 */
+/* Event user being TC3 */
 #define TEST_EVENT_USER   EVSYS_ID_USER_TC3_EVU
 /* Event generator being RTC overflow */
 #define TEST_EVENT_GEN    EVSYS_ID_GEN_RTC_OVF
@@ -162,9 +162,9 @@ static void cdc_uart_init(void)
 }
 
 /**
- * \brief Initialize the TC0 & RTC for unit test
+ * \brief Initialize the TC3 & RTC for unit test
  *
- * Initializes the RTC module and TC0 module which are used as
+ * Initializes the RTC module and TC3 module which are used as
  * event generator and event user respectively.
  */
 static void test_event_gen_user_init(void)
@@ -312,7 +312,7 @@ static void run_synchronous_event_test(const struct test_case *test)
  * \brief Cleanup Function: Synchronous event propagation.
  *
  * This function disables the RTC, clears the RTC COUNT register and
- * stops the timer (TC0).
+ * stops the timer (TC3).
  *
  * \param test Current test case.
  */
@@ -415,7 +415,7 @@ static void run_resynchronous_event_test(const struct test_case *test)
  * \brief Cleanup Function: Resynchronized event propagation.
  *
  * This function disables the RTC, clears the RTC COUNT register and
- * stops the timer (TC0).
+ * stops the timer (TC3).
  *
  * \param test Current test case.
  */
@@ -522,7 +522,7 @@ static void run_asynchronous_event_test(const struct test_case *test)
  * \brief Cleanup Function: Asynchronous event propagation.
  *
  * This function disables the RTC, clears the RTC COUNT register and
- * stops the timer (TC0).
+ * stops the timer (TC3).
  *
  * \param test Current test case.
  */
