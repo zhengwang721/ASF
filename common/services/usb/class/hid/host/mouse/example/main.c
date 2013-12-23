@@ -3,7 +3,7 @@
  *
  * \brief Main functions for USB host mouse example
  *
- * Copyright (C) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

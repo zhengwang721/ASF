@@ -27,12 +27,6 @@
 
 		<build type="header-file" subtype="api" value="usb.h"/>
 
-		<build type="header-file" value="quick_start_basic/qs_usb_basic.h"/>
-
-		<build type="doxygen-entry-point" value="asfdoc_sam0_usb_group"/>
-		<build type="doxygen-example-path" value="quick_start_basic"/>
-		<build type="doxygen-quick-start" value="asfdoc_sam0_usb_exqsg"/>
-
 		<device-support value="samd21"/>
 
 		<require idref="sam0.utils"/>

@@ -99,7 +99,7 @@ static uhd_callback_reset_t uhd_reset_callback = NULL;
  * \name Power management
  */
 //@{
-#ifndef UHD_NO_SLEEP_MGR
+#ifdef UHD_SLEEP_MGR
 
 #include "sleepmgr.h"
 //! States of USB interface
@@ -1327,11 +1327,6 @@ bool uhd_ep_alloc(usb_add_t add, usb_ep_desc_t *ep_desc)
 		}
 		usb_host_pipe_get_config_defaults(&cfg);
 		// Enable pipe
-//	done in usb_host_pipe_set_config();
-//		ep_addr = ep_desc->bEndpointAddress & USB_EP_ADDR_MASK;
-//		ep_dir = (ep_desc->bEndpointAddress & USB_EP_DIR_IN)?
-//				USB_HOST_PCFG_PTOKEN_IN:
-//				USB_HOST_PCFG_PTOKEN_OUT;
 		ep_type = (ep_desc->bmAttributes & USB_EP_TYPE_MASK) + 1;
 		if (ep_type == USB_EP_TYPE_BULK) {
 			ep_interval = 0; // Ignore bInterval for bulk endpoint

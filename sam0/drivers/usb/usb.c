@@ -3,7 +3,7 @@
  *
  * \brief SAM D21 USB Driver.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -80,18 +80,6 @@ union {
 struct usb_module *_usb_instances;
 
 struct usb_pipe_callback_parameter callback_para;
-
-/******************************************************************/
-/*************Second part: USB device start*****************************/
-
-//Roeder will finish this part 
-
-
-/********************Second part: USB device end***********************/
-/******************************************************************/
-
-/******************************************************************/
-/********************Third part: USB Host start*********************/
 
 enum status_code usb_host_register_callback(struct usb_module *module_inst,
 		enum usb_host_callback callback_type,
@@ -203,7 +191,6 @@ void usb_host_pipe_get_config_defaults(struct usb_host_pipe_config *ep_config)
 	/* Write default config to config struct */
 	ep_config->device_address = 0;
 	ep_config->endpoint_address = 0;
-//	ep_config->bank = 0;
 	ep_config->pipe_type = USB_HOST_PIPE_TYPE_CONTROL;
 	ep_config->binterval = 0xFF;
 	ep_config->size = 8;
@@ -272,7 +259,6 @@ enum status_code usb_host_pipe_get_config(struct usb_module *module_inst, uint8_
 		ep_config->endpoint_address |= USB_EP_DIR_IN;
 	}
 
-//	ep_config->bank = module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.BK;
 	ep_config->pipe_type = module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTYPE;
 	ep_config->binterval =
 			module_inst->hw->HOST.HostPipe[pipe_num].BINTERVAL.reg;
@@ -644,9 +630,6 @@ void usb_host_pipe_set_zlp(struct usb_module *module_inst, uint8_t pipe_num, boo
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].PCKSIZE.bit.AUTO_ZLP = value;
 }
 
-/********************Third part: USB host end***********************/
-/******************************************************************/
-
 void usb_enable(struct usb_module *module_inst)
 {
 	module_inst->hw->HOST.CTRLA.reg |= USB_CTRLA_ENABLE;
@@ -676,7 +659,6 @@ void usb_get_config_defaults(struct usb_config *module_config)
 	/* Write default config to config struct */
 	module_config->mode = 0;
 	module_config->run_in_standby = 1;
-//	module_config->descriptor_address = usb_descriptor_table.usb_endpoint_table;
 }
 enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 		struct usb_config *module_config)
@@ -739,8 +721,6 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 		module_inst->host_pipe_registered_callback_mask[i] = 0;
 		module_inst->host_pipe_enabled_callback_mask[i] = 0;
 	}
-
-//roeder add device callback related
 
 	/* Enable interrupts for this USB module */
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_USB);

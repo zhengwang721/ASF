@@ -3,7 +3,7 @@
  *
  * \brief SAM D21 Xplained PRO board configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,16 +44,9 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/* Enable EIC for SW0 */
-#define CONF_BOARD_EIC
-
-/* Enable USB interface (USB) */
-#define CONF_BOARD_USB_PORT
 /* Enable USB VBUS detect */
 //#define CONF_BOARD_USB_VBUS_DETECT
 /* ID detect enabled */
 //#define CONF_BOARD_USB_ID_DETECT
-/* Host VBUS control enabled */
-#define CONF_BOARD_USB_VBUS_CONTROL
 
 #endif /* CONF_BOARD_H_INCLUDED */
