@@ -57,6 +57,11 @@
 #include "return_val.h"
 #include "mac_build_config.h"
 
+#ifdef MAC_SECURITY_ZIP
+#include "app_config.h"
+#endif
+
+
 
 /* === Macros =============================================================== */
 
