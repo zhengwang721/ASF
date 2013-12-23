@@ -691,6 +691,10 @@ typedef union {
     uint16_t EPINT7:1;         /*!< bit:      7  End Point 7 Interrupt              */
     uint16_t :8;               /*!< bit:  8..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint16_t EPINT:8;          /*!< bit:  0.. 7  End Point x Interrupt              */
+    uint16_t :8;               /*!< bit:  8..15  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } USB_DEVICE_EPINTSMRY_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -733,6 +737,10 @@ typedef union {
     uint16_t EPINT7:1;         /*!< bit:      7  Pipe 7 Interrupt                   */
     uint16_t :8;               /*!< bit:  8..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint16_t EPINT:8;          /*!< bit:  0.. 7  Pipe x Interrupt                   */
+    uint16_t :8;               /*!< bit:  8..15  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } USB_HOST_PINTSMRY_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -1240,6 +1248,10 @@ typedef union {
     uint8_t  STALL:1;          /*!< bit:      5  Stall Interrupt Enable             */
     uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint8_t  TRCPT:2;          /*!< bit:  0.. 1  Transfer Complete x Interrupt Enable */
+    uint8_t  :6;               /*!< bit:  2.. 7  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } USB_HOST_PINTENSET_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */

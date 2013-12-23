@@ -67,6 +67,11 @@ typedef union {
     uint16_t LVLEN3:1;         /*!< bit:     11  Priority Level 3 Enable            */
     uint16_t :4;               /*!< bit: 12..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint16_t :8;               /*!< bit:  0.. 7  Reserved                           */
+    uint16_t LVLEN:4;          /*!< bit:  8..11  Priority Level x Enable            */
+    uint16_t :4;               /*!< bit: 12..15  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } DMAC_CTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -228,6 +233,10 @@ typedef union {
     uint32_t SWTRIG11:1;       /*!< bit:     11  Channel 11 Software Trigger        */
     uint32_t :20;              /*!< bit: 12..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t SWTRIG:12;        /*!< bit:  0..11  Channel x Software Trigger         */
+    uint32_t :20;              /*!< bit: 12..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DMAC_SWTRIGCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -366,6 +375,10 @@ typedef union {
     uint32_t CHINT11:1;        /*!< bit:     11  Channel 11 Pending Interrupt       */
     uint32_t :20;              /*!< bit: 12..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t CHINT:12;         /*!< bit:  0..11  Channel x Pending Interrupt        */
+    uint32_t :20;              /*!< bit: 12..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DMAC_INTSTATUS_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -420,6 +433,10 @@ typedef union {
     uint32_t BUSYCH11:1;       /*!< bit:     11  Busy Channel 11                    */
     uint32_t :20;              /*!< bit: 12..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t BUSYCH:12;        /*!< bit:  0..11  Busy Channel x                     */
+    uint32_t :20;              /*!< bit: 12..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DMAC_BUSYCH_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -474,6 +491,10 @@ typedef union {
     uint32_t PENDCH11:1;       /*!< bit:     11  Pending Channel 11                 */
     uint32_t :20;              /*!< bit: 12..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t PENDCH:12;        /*!< bit:  0..11  Pending Channel x                  */
+    uint32_t :20;              /*!< bit: 12..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DMAC_PENDCH_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -524,6 +545,10 @@ typedef union {
     uint32_t ABUSY:1;          /*!< bit:     15  Active Channel Busy                */
     uint32_t BTCNT:16;         /*!< bit: 16..31  Active Channel Block Transfer Count */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t LVLEX:4;          /*!< bit:  0.. 3  Level x Channel Trigger Request Executing */
+    uint32_t :28;              /*!< bit:  4..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } DMAC_ACTIVE_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */

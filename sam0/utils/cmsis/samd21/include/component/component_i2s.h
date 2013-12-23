@@ -65,6 +65,12 @@ typedef union {
     uint8_t  SEREN1:1;         /*!< bit:      5  Serializer 1 Enable                */
     uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint8_t  :2;               /*!< bit:  0.. 1  Reserved                           */
+    uint8_t  CKEN:2;           /*!< bit:  2.. 3  Clock Unit x Enable                */
+    uint8_t  SEREN:2;          /*!< bit:  4.. 5  Serializer x Enable                */
+    uint8_t  :2;               /*!< bit:  6.. 7  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } I2S_CTRLA_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -205,6 +211,16 @@ typedef union {
     uint16_t TXUR1:1;          /*!< bit:     13  Transmit Underrun 1 Interrupt Enable */
     uint16_t :2;               /*!< bit: 14..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint16_t RXRDY:2;          /*!< bit:  0.. 1  Receive Ready x Interrupt Enable   */
+    uint16_t :2;               /*!< bit:  2.. 3  Reserved                           */
+    uint16_t RXOR:2;           /*!< bit:  4.. 5  Receive Overrun x Interrupt Enable */
+    uint16_t :2;               /*!< bit:  6.. 7  Reserved                           */
+    uint16_t TXRDY:2;          /*!< bit:  8.. 9  Transmit Ready x Interrupt Enable  */
+    uint16_t :2;               /*!< bit: 10..11  Reserved                           */
+    uint16_t TXUR:2;           /*!< bit: 12..13  Transmit Underrun x Interrupt Enable */
+    uint16_t :2;               /*!< bit: 14..15  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } I2S_INTENCLR_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -259,6 +275,16 @@ typedef union {
     uint16_t TXUR1:1;          /*!< bit:     13  Transmit Underrun 1 Interrupt Enable */
     uint16_t :2;               /*!< bit: 14..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint16_t RXRDY:2;          /*!< bit:  0.. 1  Receive Ready x Interrupt Enable   */
+    uint16_t :2;               /*!< bit:  2.. 3  Reserved                           */
+    uint16_t RXOR:2;           /*!< bit:  4.. 5  Receive Overrun x Interrupt Enable */
+    uint16_t :2;               /*!< bit:  6.. 7  Reserved                           */
+    uint16_t TXRDY:2;          /*!< bit:  8.. 9  Transmit Ready x Interrupt Enable  */
+    uint16_t :2;               /*!< bit: 10..11  Reserved                           */
+    uint16_t TXUR:2;           /*!< bit: 12..13  Transmit Underrun x Interrupt Enable */
+    uint16_t :2;               /*!< bit: 14..15  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } I2S_INTENSET_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -313,6 +339,16 @@ typedef union {
     uint16_t TXUR1:1;          /*!< bit:     13  Transmit Underrun 1                */
     uint16_t :2;               /*!< bit: 14..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint16_t RXRDY:2;          /*!< bit:  0.. 1  Receive Ready x                    */
+    uint16_t :2;               /*!< bit:  2.. 3  Reserved                           */
+    uint16_t RXOR:2;           /*!< bit:  4.. 5  Receive Overrun x                  */
+    uint16_t :2;               /*!< bit:  6.. 7  Reserved                           */
+    uint16_t TXRDY:2;          /*!< bit:  8.. 9  Transmit Ready x                   */
+    uint16_t :2;               /*!< bit: 10..11  Reserved                           */
+    uint16_t TXUR:2;           /*!< bit: 12..13  Transmit Underrun x                */
+    uint16_t :2;               /*!< bit: 14..15  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } I2S_INTFLAG_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -365,6 +401,14 @@ typedef union {
     uint16_t DATA1:1;          /*!< bit:      9  Data 1 Synchronization Status      */
     uint16_t :6;               /*!< bit: 10..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint16_t :2;               /*!< bit:  0.. 1  Reserved                           */
+    uint16_t CKEN:2;           /*!< bit:  2.. 3  Clock Unit x Enable Synchronization Status */
+    uint16_t SEREN:2;          /*!< bit:  4.. 5  Serializer x Enable Synchronization Status */
+    uint16_t :2;               /*!< bit:  6.. 7  Reserved                           */
+    uint16_t DATA:2;           /*!< bit:  8.. 9  Data x Synchronization Status      */
+    uint16_t :6;               /*!< bit: 10..15  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } I2S_SYNCBUSY_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -427,6 +471,11 @@ typedef union {
     uint32_t RXLOOP:1;         /*!< bit:     26  Loop-back Test Mode                */
     uint32_t :5;               /*!< bit: 27..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t :16;              /*!< bit:  0..15  Reserved                           */
+    uint32_t SLOTDIS:8;        /*!< bit: 16..23  Slot x Disabled for this Serializer */
+    uint32_t :8;               /*!< bit: 24..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } I2S_SERCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
