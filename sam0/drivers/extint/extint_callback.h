@@ -56,7 +56,9 @@ extern "C" {
  * @{
  */
 
-#define EXTINT_CHANNEL_NUM 16
+#ifndef EIC_NUMBER_OF_INTERRUPTS
+#  define EIC_NUMBER_OF_INTERRUPTS 16
+#endif
 
 /** \name Callback configuration and initialization
  * @{

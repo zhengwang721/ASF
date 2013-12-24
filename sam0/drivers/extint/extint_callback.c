@@ -62,7 +62,7 @@ extern struct _extint_module _extint_dev;
  *       \ref extint_nmi_clear_detected().
  *
  * \param[in] callback  Pointer to the callback function to register
- * \param[in] channel  Logical channel to register callback for
+ * \param[in] channel   Logical channel to register callback for
  * \param[in] type      Type of callback function to register
  *
  * \return Status of the registration operation.
@@ -100,7 +100,7 @@ enum status_code extint_register_callback(
  * from the internal callback registration table.
  *
  * \param[in] callback  Pointer to the callback function to unregister
- * \param[in] channel  Logical channel to unregister callback for
+ * \param[in] channel   Logical channel to unregister callback for
  * \param[in] type      Type of callback function to unregister
  *
  * \return Status of the de-registration operation.
@@ -195,7 +195,7 @@ enum status_code extint_chan_disable_callback(
 void EIC_Handler(void)
 {
 	/* Find any triggered channels, run associated callback handlers */
-	for (uint8_t i = 0; i < EXTINT_CHANNEL_NUM ; i++) {
+	for (uint8_t i = 0; i < EIC_NUMBER_OF_INTERRUPTS ; i++) {
 		if (extint_chan_is_detected(i)) {
 			/* Clear flag */
 			extint_chan_clear_detected(i);
