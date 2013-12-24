@@ -9,7 +9,6 @@
 		<require idref="common.components.memory.sd_mmc.unit_tests"/>
 		<config name="config.common.components.memory.sd_mmc" value="mci"/>
 		<require idref="board.sam4e_xplained_pro"/>
-		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<generator value="doxygen"/>
