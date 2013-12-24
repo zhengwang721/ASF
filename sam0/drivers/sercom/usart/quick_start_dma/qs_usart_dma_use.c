@@ -114,7 +114,7 @@ void setup_transfer_descriptor(DmacDescriptor *descriptor)
 //! [setup_7]
 	descriptor_config.beat_size = DMA_BEAT_SIZE_HWORD;
 	descriptor_config.dst_increment_enable = false;
-	descriptor_config.block_transfer_count = sizeof(string);
+	descriptor_config.block_transfer_count = sizeof(string)/sizeof(uint16_t);
 	descriptor_config.source_address = (uint32_t)string + sizeof(string);
 	descriptor_config.destination_address = (uint32_t)(&usart_instance.hw->USART.DATA.reg);
 //! [setup_7]
