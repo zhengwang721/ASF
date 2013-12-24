@@ -138,10 +138,8 @@ static void update_led_state(void)
 #  if USE_EIC == true
 /** Callback function for the EXTINT driver, called when an external interrupt
  *  detection occurs.
- *
- *  \param[in] channel  External Interrupt channel that has changed state
  */
-static void extint_callback(uint32_t channel)
+static void extint_callback(void)
 {
 	update_led_state();
 }
@@ -152,6 +150,7 @@ static void extint_callback(uint32_t channel)
 static void configure_eic_callback(void)
 {
 	extint_register_callback(extint_callback,
+			BUTTON_0_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
 	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
