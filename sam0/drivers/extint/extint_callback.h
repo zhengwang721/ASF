@@ -56,22 +56,14 @@ extern "C" {
  * @{
  */
 
-#if !defined(EXTINT_CALLBACKS_MAX) || defined(__DOXYGEN__)
-#  warning  EXTINT_CALLBACKS_MAX is not defined, assuming a default value.
-
-/** Configuration option, setting the maximum number of callbacks which can be
- *  registered with the driver. This option may be overridden in the module
- *  configuration header file \c conf_extint.h.
- */
-#  define EXTINT_CALLBACKS_MAX 10
-#endif
+#define EXTINT_CHANNEL_NUM 16
 
 /** \name Callback configuration and initialization
  * @{
  */
 
 /** Type definition for an EXTINT module callback function. */
-typedef void (*extint_callback_t)(uint32_t channel);
+typedef void (*extint_callback_t)(void);
 
 /** Enum for the possible callback types for the EXTINT module. */
 enum extint_callback_type
@@ -84,10 +76,12 @@ enum extint_callback_type
 
 enum status_code extint_register_callback(
 	const extint_callback_t callback,
+	const uint8_t channel,
 	const enum extint_callback_type type);
 
 enum status_code extint_unregister_callback(
 	const extint_callback_t callback,
+	const uint8_t channel,
 	const enum extint_callback_type type);
 
 /** @} */
@@ -97,11 +91,11 @@ enum status_code extint_unregister_callback(
  */
 
 enum status_code extint_chan_enable_callback(
-	const uint32_t channel,
+	const uint8_t channel,
 	const enum extint_callback_type type);
 
 enum status_code extint_chan_disable_callback(
-	const uint32_t channel,
+	const uint8_t channel,
 	const enum extint_callback_type type);
 
 /** @} */
