@@ -63,12 +63,9 @@
 			<device-support value="sam4e"/>
 			<device-support value="atsam4c8c_1"/>
 			<device-support value="atsam4c16c_1"/>
-<<<<<<< HEAD
 			<device-support value="atsam4c32c_1"/>
 			<device-support value="atsam4c32e_1"/>
-=======
 			<device-support value="samg"/>
->>>>>>> 4aa70ab80129db0c51588e432a2be25e04629734
 		</module>
 	</select-by-device>
 
