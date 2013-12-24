@@ -53,7 +53,10 @@
   #define REG_MATRIX0_PRAS5                       (0x400E02A8U) /**< \brief (MATRIX0) Priority Register A for Slave 5 */
   #define REG_MATRIX0_PRAS6                       (0x400E02B0U) /**< \brief (MATRIX0) Priority Register A for Slave 6 */
   #define REG_MATRIX0_PRAS7                       (0x400E02B8U) /**< \brief (MATRIX0) Priority Register A for Slave 7 */
+<<<<<<< HEAD
   #define REG_MATRIX0_PRAS8                       (0x400E02BCU) /**< \brief (MATRIX0) Priority Register A for Slave 8 */
+=======
+>>>>>>> 4aa70ab80129db0c51588e432a2be25e04629734
   #define REG_MATRIX0_SYSIO                       (0x400E0314U) /**< \brief (MATRIX0) System I/O Configuration Register */
   #define REG_MATRIX0_SMCNFCS                     (0x400E031CU) /**< \brief (MATRIX0) SMC Nand Flash Chip Select Configuration Register */
   #define REG_MATRIX0_CORE_DEBUG                  (0x400E0328U) /**< \brief (MATRIX0) Core Debug Configuration Register */
@@ -70,7 +73,10 @@
   #define REG_MATRIX0_PRAS5      (*(__IO uint32_t*)0x400E02A8U) /**< \brief (MATRIX0) Priority Register A for Slave 5 */
   #define REG_MATRIX0_PRAS6      (*(__IO uint32_t*)0x400E02B0U) /**< \brief (MATRIX0) Priority Register A for Slave 6 */
   #define REG_MATRIX0_PRAS7      (*(__IO uint32_t*)0x400E02B8U) /**< \brief (MATRIX0) Priority Register A for Slave 7 */
+<<<<<<< HEAD
   #define REG_MATRIX0_PRAS8      (*(__IO uint32_t*)0x400E02BCU) /**< \brief (MATRIX0) Priority Register A for Slave 8 */
+=======
+>>>>>>> 4aa70ab80129db0c51588e432a2be25e04629734
   #define REG_MATRIX0_SYSIO      (*(__IO uint32_t*)0x400E0314U) /**< \brief (MATRIX0) System I/O Configuration Register */
   #define REG_MATRIX0_SMCNFCS    (*(__IO uint32_t*)0x400E031CU) /**< \brief (MATRIX0) SMC Nand Flash Chip Select Configuration Register */
   #define REG_MATRIX0_CORE_DEBUG (*(__IO uint32_t*)0x400E0328U) /**< \brief (MATRIX0) Core Debug Configuration Register */

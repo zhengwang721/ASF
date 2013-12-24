@@ -50,10 +50,17 @@
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief Matrix hardware registers */
 typedef struct {
+<<<<<<< HEAD
   __IO uint32_t MATRIX_MCFG[8];    /**< \brief (Matrix Offset: 0x0000) Master Configuration Register */
   __I  uint32_t Reserved1[8];
   __IO uint32_t MATRIX_SCFG[9];    /**< \brief (Matrix Offset: 0x0040) Slave Configuration Register */
   __I  uint32_t Reserved2[7];
+=======
+  __IO uint32_t MATRIX_MCFG[7];    /**< \brief (Matrix Offset: 0x0000) Master Configuration Register */
+  __I  uint32_t Reserved1[9];
+  __IO uint32_t MATRIX_SCFG[8];    /**< \brief (Matrix Offset: 0x0040) Slave Configuration Register */
+  __I  uint32_t Reserved2[8];
+>>>>>>> 4aa70ab80129db0c51588e432a2be25e04629734
   __IO uint32_t MATRIX_PRAS0;      /**< \brief (Matrix Offset: 0x0080) Priority Register A for Slave 0 */
   __I  uint32_t Reserved3[1];
   __IO uint32_t MATRIX_PRAS1;      /**< \brief (Matrix Offset: 0x0088) Priority Register A for Slave 1 */
@@ -69,6 +76,7 @@ typedef struct {
   __IO uint32_t MATRIX_PRAS6;      /**< \brief (Matrix Offset: 0x00B0) Priority Register A for Slave 6 */
   __I  uint32_t Reserved9[1];
   __IO uint32_t MATRIX_PRAS7;      /**< \brief (Matrix Offset: 0x00B8) Priority Register A for Slave 7 */
+<<<<<<< HEAD
   __IO uint32_t MATRIX_PRAS8;      /**< \brief (Matrix Offset: 0x00BC) Priority Register A for Slave 8 */
   __I  uint32_t Reserved10[21];
   __IO uint32_t MATRIX_SYSIO;      /**< \brief (Matrix Offset: 0x0114) System I/O Configuration Register */
@@ -77,6 +85,16 @@ typedef struct {
   __I  uint32_t Reserved12[2];
   __IO uint32_t MATRIX_CORE_DEBUG; /**< \brief (Matrix Offset: 0x0128) Core Debug Configuration Register */
   __I  uint32_t Reserved13[46];
+=======
+  __I  uint32_t Reserved10[1];
+  __I  uint32_t Reserved11[21];
+  __IO uint32_t MATRIX_SYSIO;      /**< \brief (Matrix Offset: 0x0114) System I/O Configuration Register */
+  __I  uint32_t Reserved12[1];
+  __IO uint32_t MATRIX_SMCNFCS;    /**< \brief (Matrix Offset: 0x011C) SMC Nand Flash Chip Select Configuration Register */
+  __I  uint32_t Reserved13[2];
+  __IO uint32_t MATRIX_CORE_DEBUG; /**< \brief (Matrix Offset: 0x0128) Core Debug Configuration Register */
+  __I  uint32_t Reserved14[46];
+>>>>>>> 4aa70ab80129db0c51588e432a2be25e04629734
   __IO uint32_t MATRIX_WPMR;       /**< \brief (Matrix Offset: 0x01E4) Write Protection Mode Register */
   __I  uint32_t MATRIX_WPSR;       /**< \brief (Matrix Offset: 0x01E8) Write Protection Status Register */
 } Matrix;
@@ -295,6 +313,7 @@ typedef struct {
 #define MATRIX_PRAS7_M7PR_Pos 28
 #define MATRIX_PRAS7_M7PR_Msk (0x3u << MATRIX_PRAS7_M7PR_Pos) /**< \brief (MATRIX_PRAS7) Master 7 Priority */
 #define MATRIX_PRAS7_M7PR(value) ((MATRIX_PRAS7_M7PR_Msk & ((value) << MATRIX_PRAS7_M7PR_Pos)))
+<<<<<<< HEAD
 /* -------- MATRIX_PRAS8 : (MATRIX Offset: 0x00BC) Priority Register A for Slave 8 -------- */
 #define MATRIX_PRAS8_M0PR_Pos 0
 #define MATRIX_PRAS8_M0PR_Msk (0x3u << MATRIX_PRAS8_M0PR_Pos) /**< \brief (MATRIX_PRAS8) Master 0 Priority */
@@ -320,14 +339,19 @@ typedef struct {
 #define MATRIX_PRAS8_M7PR_Pos 28
 #define MATRIX_PRAS8_M7PR_Msk (0x3u << MATRIX_PRAS8_M7PR_Pos) /**< \brief (MATRIX_PRAS8) Master 7 Priority */
 #define MATRIX_PRAS8_M7PR(value) ((MATRIX_PRAS8_M7PR_Msk & ((value) << MATRIX_PRAS8_M7PR_Pos)))
+=======
+>>>>>>> 4aa70ab80129db0c51588e432a2be25e04629734
 /* -------- MATRIX_SYSIO : (MATRIX Offset: 0x0114) System I/O Configuration Register -------- */
 #define MATRIX_SYSIO_SYSIO0 (0x1u << 0) /**< \brief (MATRIX_SYSIO) PB0 or TDI Assignment */
 #define MATRIX_SYSIO_SYSIO1 (0x1u << 1) /**< \brief (MATRIX_SYSIO) PB1 or TDO/TRACESWO Assignment */
 #define MATRIX_SYSIO_SYSIO2 (0x1u << 2) /**< \brief (MATRIX_SYSIO) PB2 or TMS/SWDIO Assignment */
 #define MATRIX_SYSIO_SYSIO3 (0x1u << 3) /**< \brief (MATRIX_SYSIO) PB3 or TCK/SWCLK Assignment */
 #define MATRIX_SYSIO_SYSIO9 (0x1u << 9) /**< \brief (MATRIX_SYSIO) PC9 or ERASE Assignment */
+<<<<<<< HEAD
 #define MATRIX_SYSIO_SYSIO10 (0x1u << 10) /**< \brief (MATRIX_SYSIO) PD0 or DDM Assignment */
 #define MATRIX_SYSIO_SYSIO11 (0x1u << 11) /**< \brief (MATRIX_SYSIO) PD1 or DDP Assignment */
+=======
+>>>>>>> 4aa70ab80129db0c51588e432a2be25e04629734
 /* -------- MATRIX_SMCNFCS : (MATRIX Offset: 0x011C) SMC Nand Flash Chip Select Configuration Register -------- */
 #define MATRIX_SMCNFCS_SMC_NFCS0 (0x1u << 0) /**< \brief (MATRIX_SMCNFCS) SMC NAND Flash Chip Select 0 Assignment */
 #define MATRIX_SMCNFCS_SMC_NFCS1 (0x1u << 1) /**< \brief (MATRIX_SMCNFCS) SMC NAND Flash Chip Select 1 Assignment */

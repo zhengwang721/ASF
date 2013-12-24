@@ -62,7 +62,7 @@ extern "C" {
  * @{
  */
 
-#if SAM4E || SAM4N || SAM4S || SAM4C
+#if SAM4E || SAM4N || SAM4S || SAM4C || SAMG
 /* User signature size */
 # define FLASH_USER_SIG_SIZE   (512)
 #endif
@@ -520,7 +520,7 @@ uint32_t flash_erase_plane(uint32_t ul_address)
 }
 #endif
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG)
 /**
  * \brief Erase the specified pages of flash.
  *
@@ -807,7 +807,9 @@ uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end)
 
 	/* Retrieve lock status */
 	ul_error = efc_perform_command(p_efc, EFC_FCMD_GLB, 0);
-	Assert(!ul_error);
+	if (ul_error) {
+		return ul_error;
+	}
 
 	/* Skip unrequested regions (if necessary) */
 	ul_status = efc_get_result(p_efc);
@@ -968,7 +970,7 @@ uint32_t flash_read_unique_id(uint32_t *pul_data, uint32_t ul_size)
 	return FLASH_RC_OK;
 }
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG)
 /**
  * \brief Read the flash user signature.
  *

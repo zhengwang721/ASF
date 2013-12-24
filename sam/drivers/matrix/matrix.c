@@ -308,7 +308,7 @@ uint32_t matrix_get_master_remap(void)
 
 #endif /* (SAM3XA || SAM3U || SAM4E) */
 
-#if (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C)
+#if (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG)
 
 /**
  * \brief Set system IO.
@@ -351,7 +351,7 @@ uint32_t matrix_get_system_io(void)
 #endif
 }
 
-#endif /* (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4C) */
+#endif
 
 #if (SAM3S || SAM4S || SAM4E || SAM4C)
 
@@ -398,7 +398,7 @@ uint32_t matrix_get_nandflash_cs(void)
 }
 
 #endif /* (SAM3S || SAM4S || SAM4E || SAM4C) */
-
+#if (!SAMG)
 /**
  * \brief Enable or disable write protect of MATRIX registers.
  *
@@ -426,6 +426,7 @@ uint32_t matrix_get_writeprotect_status(void)
 
 	return (p_matrix->MATRIX_WPSR);
 }
+#endif
 
 /* @} */
 
