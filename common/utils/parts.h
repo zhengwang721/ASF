@@ -311,7 +311,8 @@
 		AVR8_PART_IS_DEFINED(ATxmega256C3)  || \
 		AVR8_PART_IS_DEFINED(ATxmega192C3)  || \
 		AVR8_PART_IS_DEFINED(ATxmega128C3)  || \
-		AVR8_PART_IS_DEFINED(ATxmega64C3) \
+		AVR8_PART_IS_DEFINED(ATxmega64C3)   || \
+		AVR8_PART_IS_DEFINED(ATxmega32C3) \
 		)
 
 #define XMEGA_C4 ( \
@@ -325,6 +326,7 @@
  * @{
  */
 #define XMEGA_D3 ( \
+		AVR8_PART_IS_DEFINED(ATxmega32D3)  || \
 		AVR8_PART_IS_DEFINED(ATxmega64D3)  || \
 		AVR8_PART_IS_DEFINED(ATxmega128D3) || \
 		AVR8_PART_IS_DEFINED(ATxmega192D3) || \
@@ -904,10 +906,12 @@
  * @{
  */
 #define SAM4E8 ( \
+		SAM_PART_IS_DEFINED(SAM4E8C) || \
 		SAM_PART_IS_DEFINED(SAM4E8E) \
 		)
 
 #define SAM4E16 ( \
+		SAM_PART_IS_DEFINED(SAM4E16C) || \
 		SAM_PART_IS_DEFINED(SAM4E16E) \
 		)
 /** @} */
@@ -954,6 +958,19 @@
 /** @} */
 
 /**
+ * \name SAMG series
+ * @{
+ */
+#define SAMG51 ( \
+		SAM_PART_IS_DEFINED(SAMG51G18) \
+		)
+
+#define SAMG53 ( \
+		SAM_PART_IS_DEFINED(SAMG53G19) ||\
+		SAM_PART_IS_DEFINED(SAMG53N19) \
+		)
+/** @} */
+/**
  * \name SAM families
  * @{
  */
@@ -989,11 +1006,14 @@
 #define SAM4C_1 (SAM4C8_1 || SAM4C16_1)
 #define SAM4C   (SAM4C8 || SAM4C16)
 
+/** SAMG Family */
+#define SAMG (SAMG51 || SAMG53)
+
 /** @} */
 
 /** SAM product line */
 #define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || \
-		SAMD20 || SAM4N || SAM4C)
+		SAMD20 || SAM4N || SAM4C || SAMG)
 
 /** @} */
 
