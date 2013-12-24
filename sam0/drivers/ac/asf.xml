@@ -29,7 +29,7 @@
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
 
-			<generator default-mcu="unspecified-sam0" value="doxygen-module-v2" />
+			<generator default-mcu="unspecified-samd20" value="doxygen-module-v2" />
 		</module>
 
 		<module caption="AC - Analog Comparator (Callback APIs)" id="sam0.drivers.ac#callback" type="driver">
@@ -70,7 +70,7 @@
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
 
-			<generator default-mcu="unspecified-sam0" value="doxygen-module-v2" />
+			<generator default-mcu="unspecified-samd20" value="doxygen-module-v2" />
 		</module>
 	</select-by-config>
 </asf>
