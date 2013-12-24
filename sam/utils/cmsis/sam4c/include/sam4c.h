@@ -49,7 +49,6 @@
 #include "sam4c16c_0.h"
 #elif defined (__SAM4C16C_1__)
 #include "sam4c16c_1.h"
-<<<<<<< HEAD
 #elif defined (__SAM4C32C_0__)
 #include "sam4c32c_0.h"
 #elif defined (__SAM4C32C_1__)
@@ -58,8 +57,6 @@
 #include "sam4c32e_0.h"
 #elif defined (__SAM4C32E_1__)
 #include "sam4c32e_1.h"
-=======
->>>>>>> 4aa70ab80129db0c51588e432a2be25e04629734
 #else
   #error Library does not support the specified device.
 #endif
