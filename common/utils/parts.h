@@ -958,6 +958,19 @@
 /** @} */
 
 /**
+ * \name SAMG series
+ * @{
+ */
+#define SAMG51 ( \
+		SAM_PART_IS_DEFINED(SAMG51G18) \
+		)
+
+#define SAMG53 ( \
+		SAM_PART_IS_DEFINED(SAMG53G19) ||\
+		SAM_PART_IS_DEFINED(SAMG53N19) \
+		)
+/** @} */
+/**
  * \name SAM families
  * @{
  */
@@ -993,11 +1006,14 @@
 #define SAM4C_1 (SAM4C8_1 || SAM4C16_1)
 #define SAM4C   (SAM4C8 || SAM4C16)
 
+/** SAMG Family */
+#define SAMG (SAMG51 || SAMG53)
+
 /** @} */
 
 /** SAM product line */
 #define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || \
-		SAMD20 || SAM4N || SAM4C)
+		SAMD20 || SAM4N || SAM4C || SAMG)
 
 /** @} */
 
