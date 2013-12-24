@@ -180,7 +180,9 @@ enum dma_callback_type {
 };
 
 /**
- * DMA tansfer descriptor configuration
+ * DMA tansfer descriptor configuration. When the source or destination address
+ * increment is enable, the address value that must be programmed corresponds
+ * to the end of the transfer.
  */
 struct dma_descriptor_config {
 	/** The descriptor valid */
@@ -394,6 +396,32 @@ static inline void dma_descriptor_get_config_defaults(struct dma_descriptor_conf
 	config->destination_address = (uint32_t)NULL;
 }
 
+/**
+ * \brief Update DMA descriptor
+ *
+ * This function can update the descriptor of an allocated DMA resource.
+ *
+ */
+static inline void dma_update_descriptor(struct dma_resource *resource,
+		DmacDescriptor* descriptor)
+{
+	Assert(resource);
+
+	resource->descriptor = descriptor;
+}
+
+/**
+ * \brief Reset DMA descriptor
+ *
+ * This function will reset the descriptor of an allocated DMA resource.
+ *
+ */
+static inline void dma_reset_descriptor(struct dma_resource *resource)
+{
+	Assert(resource);
+
+	resource->descriptor = NULL;
+}
 
 void dma_get_config_defaults(struct dma_resource_config *config);
 enum status_code dma_allocate(struct dma_resource *resource,

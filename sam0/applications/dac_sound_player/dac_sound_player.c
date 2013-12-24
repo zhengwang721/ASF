@@ -177,26 +177,17 @@ static void configure_tc(struct tc_module *tc_module)
  * rate timing to the DAC, so that a new conversion is triggered each time the
  * DAC receives an event from the timer.
  */
-static void configure_events(void)
+static void configure_events(struct events_resource *event)
 {
-	events_init();
+	struct events_config config;
 
+	events_get_config_defaults(&config);
 
-	struct events_user_config events_user_config;
-	events_user_get_config_defaults(&events_user_config);
+	config.generator    = EVSYS_ID_GEN_TC0_OVF;
+	config.path         = EVENTS_PATH_ASYNCHRONOUS;
 
-	events_user_config.event_channel_id = EVENT_CHANNEL_0;
-
-	events_user_set_config(EVSYS_ID_USER_DAC_START, &events_user_config);
-
-
-	struct events_chan_config events_chan_config;
-	events_chan_get_config_defaults(&events_chan_config);
-
-	events_chan_config.generator_id = EVSYS_ID_GEN_TC0_OVF;
-	events_chan_config.path         = EVENT_PATH_ASYNCHRONOUS;
-
-	events_chan_set_config(EVENT_CHANNEL_0, &events_chan_config);
+	events_allocate(event, &config);
+	events_attach_user(event, EVSYS_ID_USER_DAC_START);
 }
 
 /**
@@ -206,6 +197,7 @@ int main(void)
 {
 	struct dac_module dac_module;
 	struct tc_module tc_module;
+	struct events_resource event;
 
 	/* Initialize all the system clocks, pm, gclk... */
 	system_init();
@@ -216,7 +208,7 @@ int main(void)
 	/* Module configuration */
 	configure_tc(&tc_module);
 	configure_dac(&dac_module);
-	configure_events();
+	configure_events(&event);
 
 	/* Start the sample trigger timer */
 	tc_start_counter(&tc_module);

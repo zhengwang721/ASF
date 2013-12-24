@@ -74,6 +74,11 @@ typedef union {
     uint32_t CPTEN3:1;         /*!< bit:     27  Capture Channel 3 Enable           */
     uint32_t :4;               /*!< bit: 28..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t :24;              /*!< bit:  0..23  Reserved                           */
+    uint32_t CPTEN:4;          /*!< bit: 24..27  Capture Channel x Enable           */
+    uint32_t :4;               /*!< bit: 28..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } TCC_CTRLA_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -274,6 +279,13 @@ typedef union {
     uint32_t CCB7:1;           /*!< bit:     26  Compare Channel Buffer 7 Busy      */
     uint32_t :5;               /*!< bit: 27..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t :8;               /*!< bit:  0.. 7  Reserved                           */
+    uint32_t CC:8;             /*!< bit:  8..15  Compare Channel Buffer x Busy      */
+    uint32_t :3;               /*!< bit: 16..18  Reserved                           */
+    uint32_t CCB:8;            /*!< bit: 19..26  Compare Channel Buffer x Busy      */
+    uint32_t :5;               /*!< bit: 27..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } TCC_SYNCBUSY_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -557,6 +569,11 @@ typedef union {
     uint32_t DTLS:8;           /*!< bit: 16..23  Dead-time Low Side Outputs Value   */
     uint32_t DTHS:8;           /*!< bit: 24..31  Dead-time High Side Outputs Value  */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t :8;               /*!< bit:  0.. 7  Reserved                           */
+    uint32_t DTIEN:4;          /*!< bit:  8..11  Dead-time Insertion Generator x Enable */
+    uint32_t :20;              /*!< bit: 12..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } TCC_WEXCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -617,6 +634,12 @@ typedef union {
     uint32_t FILTERVAL0:4;     /*!< bit: 24..27  Non-Recoverable Fault Input 0 Filter Value */
     uint32_t FILTERVAL1:4;     /*!< bit: 28..31  Non-Recoverable Fault Input 1 Filter Value */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t NRE:8;            /*!< bit:  0.. 7  Non-Recoverable State x Output Enable */
+    uint32_t NRV:8;            /*!< bit:  8..15  Non-Recoverable State x Output Value */
+    uint32_t INVEN:8;          /*!< bit: 16..23  Output Waveform x Inversion        */
+    uint32_t :8;               /*!< bit: 24..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } TCC_DRVCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -737,6 +760,15 @@ typedef union {
     uint32_t MCEO3:1;          /*!< bit:     27  Match or Capture Channel 3 Event Output Enable */
     uint32_t :4;               /*!< bit: 28..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t :12;              /*!< bit:  0..11  Reserved                           */
+    uint32_t TCINV:2;          /*!< bit: 12..13  Inverted Event x Input Enable      */
+    uint32_t TCEI:2;           /*!< bit: 14..15  Timer/counter Event x Input Enable */
+    uint32_t MCEI:4;           /*!< bit: 16..19  Match or Capture Channel x Event Input Enable */
+    uint32_t :4;               /*!< bit: 20..23  Reserved                           */
+    uint32_t MCEO:4;           /*!< bit: 24..27  Match or Capture Channel x Event Output Enable */
+    uint32_t :4;               /*!< bit: 28..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } TCC_EVCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -856,6 +888,11 @@ typedef union {
     uint32_t MC3:1;            /*!< bit:     19  Match or Capture Channel 3 Interrupt Enable */
     uint32_t :12;              /*!< bit: 20..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t :16;              /*!< bit:  0..15  Reserved                           */
+    uint32_t MC:4;             /*!< bit: 16..19  Match or Capture Channel x Interrupt Enable */
+    uint32_t :12;              /*!< bit: 20..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } TCC_INTENCLR_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -917,6 +954,11 @@ typedef union {
     uint32_t MC3:1;            /*!< bit:     19  Match or Capture Channel 3 Interrupt Enable */
     uint32_t :12;              /*!< bit: 20..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t :16;              /*!< bit:  0..15  Reserved                           */
+    uint32_t MC:4;             /*!< bit: 16..19  Match or Capture Channel x Interrupt Enable */
+    uint32_t :12;              /*!< bit: 20..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } TCC_INTENSET_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -978,6 +1020,11 @@ typedef union {
     uint32_t MC3:1;            /*!< bit:     19  Match or Capture 3                 */
     uint32_t :12;              /*!< bit: 20..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t :16;              /*!< bit:  0..15  Reserved                           */
+    uint32_t MC:4;             /*!< bit: 16..19  Match or Capture x                 */
+    uint32_t :12;              /*!< bit: 20..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } TCC_INTFLAG_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -1049,6 +1096,13 @@ typedef union {
     uint32_t CMP3:1;           /*!< bit:     27  Compare Channel 3 Value            */
     uint32_t :4;               /*!< bit: 28..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t :16;              /*!< bit:  0..15  Reserved                           */
+    uint32_t CCBV:4;           /*!< bit: 16..19  Compare Channel x Buffer Valid     */
+    uint32_t :4;               /*!< bit: 20..23  Reserved                           */
+    uint32_t CMP:4;            /*!< bit: 24..27  Compare Channel x Value            */
+    uint32_t :4;               /*!< bit: 28..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } TCC_STATUS_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -1150,6 +1204,10 @@ typedef union {
     uint16_t PGV6:1;           /*!< bit:     14  Pattern Generator 6 Output Value   */
     uint16_t PGV7:1;           /*!< bit:     15  Pattern Generator 7 Output Value   */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint16_t PGE:8;            /*!< bit:  0.. 7  Pattern Generator x Output Enable  */
+    uint16_t PGV:8;            /*!< bit:  8..15  Pattern Generator x Output Value   */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } TCC_PATT_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -1222,6 +1280,15 @@ typedef union {
     uint32_t SWAP3:1;          /*!< bit:     27  Swap DTI Output Pair 3             */
     uint32_t :4;               /*!< bit: 28..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t :8;               /*!< bit:  0.. 7  Reserved                           */
+    uint32_t CICCEN:4;         /*!< bit:  8..11  Circular Channel x Enable          */
+    uint32_t :4;               /*!< bit: 12..15  Reserved                           */
+    uint32_t POL:4;            /*!< bit: 16..19  Channel x Polarity                 */
+    uint32_t :4;               /*!< bit: 20..23  Reserved                           */
+    uint32_t SWAP:4;           /*!< bit: 24..27  Swap DTI Output Pair x             */
+    uint32_t :4;               /*!< bit: 28..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } TCC_WAVE_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -1335,6 +1402,10 @@ typedef union {
     uint16_t PGVB6:1;          /*!< bit:     14  Pattern Generator 6 Output Enable  */
     uint16_t PGVB7:1;          /*!< bit:     15  Pattern Generator 7 Output Enable  */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint16_t PGEB:8;           /*!< bit:  0.. 7  Pattern Generator x Output Enable Buffer */
+    uint16_t PGVB:8;           /*!< bit:  8..15  Pattern Generator x Output Enable  */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } TCC_PATTB_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -1407,6 +1478,15 @@ typedef union {
     uint32_t SWAPB3:1;         /*!< bit:     27  Swap DTI Output Pair 3 Buffer      */
     uint32_t :4;               /*!< bit: 28..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t :8;               /*!< bit:  0.. 7  Reserved                           */
+    uint32_t CICCENB:4;        /*!< bit:  8..11  Circular Channel x Enable Buffer   */
+    uint32_t :4;               /*!< bit: 12..15  Reserved                           */
+    uint32_t POLB:4;           /*!< bit: 16..19  Channel x Polarity Buffer          */
+    uint32_t :4;               /*!< bit: 20..23  Reserved                           */
+    uint32_t SWAPB:4;          /*!< bit: 24..27  Swap DTI Output Pair x Buffer      */
+    uint32_t :4;               /*!< bit: 28..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } TCC_WAVEB_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */

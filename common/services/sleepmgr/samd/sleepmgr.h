@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Digital-to-Analog Interrupt Driver
+ * \brief Chip-specific sleep manager configuration
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,67 +40,80 @@
  * \asf_license_stop
  *
  */
-#ifndef DAC_CALLBACK_H_INCLUDED
-#define DAC_CALLBACK_H_INCLUDED
 
-#include <compiler.h>
-#include "dac.h"
+#ifndef SAM_SLEEPMGR_INCLUDED
+#define SAM_SLEEPMGR_INCLUDED
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+#include <compiler.h>
+#include <conf_sleepmgr.h>
+#include <interrupt.h>
+#include "system.h"
+
 /**
- * \addtogroup asfdoc_sam0_dac_group
- *
+ * \weakgroup sleepmgr_group
  * @{
  */
 
-/** \name Callback configuration and initialization
+enum sleepmgr_mode {
+	/** Active mode. */
+	SLEEPMGR_ACTIVE = 0,
+
+	/**
+	 *  Idle 0 mode.
+	 *  Potential Wake Up sources: Synchronous(APB, AHB), asynchronous.
+	 */
+	SLEEPMGR_IDLE_0,
+
+	/**
+	 *  Idle 1 mode.
+	 *  Potential Wake Up sources: Synchronous (APB), asynchronous
+	 */
+	SLEEPMGR_IDLE_1,
+
+	/**
+	 *  Idle 2 mode.
+	 *  Potential Wake Up sources: Asynchronous
+	 */
+	SLEEPMGR_IDLE_2,
+
+	/**
+	 * Standby mode.
+	 * Potential Wake Up sources: Asynchronous
+	 */
+	SLEEPMGR_STANDBY,
+
+	SLEEPMGR_NR_OF_MODES,
+};
+
+/**
+ * \internal
+ * \name Internal arrays
  * @{
  */
-enum status_code dac_chan_write_buffer_job(
-		struct dac_module *const module_inst,
-		const uint32_t channel,
-		uint16_t *buffer,
-		uint32_t buffer_size);
-
-enum status_code dac_chan_write_job(
-		struct dac_module *const module_inst,
-		const uint32_t channel,
-		uint16_t data);
-
-enum status_code dac_register_callback(
-		struct dac_module *const module,
-		const uint32_t channel,
-		const dac_callback_t callback,
-		const enum dac_callback type);
-
-enum status_code dac_unregister_callback(
-		struct dac_module *const module,
-		const uint32_t channel,
-		const enum dac_callback type);
-
+#if defined(CONFIG_SLEEPMGR_ENABLE) || defined(__DOXYGEN__)
+/** Sleep mode lock counters */
+extern uint8_t sleepmgr_locks[];
+#endif /* CONFIG_SLEEPMGR_ENABLE */
 /** @} */
 
-/** \name Callback enabling and disabling (Channel)
- * @{
- */
+static inline void sleepmgr_sleep(const enum sleepmgr_mode sleep_mode)
+{
+	Assert(sleep_mode != SLEEPMGR_ACTIVE);
+#ifdef CONFIG_SLEEPMGR_ENABLE
+	cpu_irq_disable();
 
-enum status_code dac_chan_enable_callback(
-		struct dac_module *const module,
-		const uint32_t channel,
-		const enum dac_callback type);
-
-enum status_code dac_chan_disable_callback(
-		struct dac_module *const module,
-		const uint32_t channel,
-		const enum dac_callback type);
-
-enum status_code dac_get_job_status(struct dac_module *module_inst);
-void dac_abort_job(struct dac_module *module_inst);
-
-/** @} */
+	/* Enter the sleep mode. */
+	system_set_sleepmode((enum system_sleepmode)(sleep_mode - 1));
+	system_sleep();
+#else
+	UNUSED(sleep_mode);
+	cpu_irq_enable();
+#endif /* CONFIG_SLEEPMGR_ENABLE */
+}
 
 /** @} */
 
@@ -108,4 +121,4 @@ void dac_abort_job(struct dac_module *module_inst);
 }
 #endif
 
-#endif
+#endif /* SAM_SLEEPMGR_INCLUDED */

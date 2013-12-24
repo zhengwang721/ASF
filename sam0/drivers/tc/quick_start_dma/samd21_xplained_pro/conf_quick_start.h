@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Digital-to-Analog Interrupt Driver
+ * \brief TC Quick Start configuration for SAM D21 Xplained Pro
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,72 +40,22 @@
  * \asf_license_stop
  *
  */
-#ifndef DAC_CALLBACK_H_INCLUDED
-#define DAC_CALLBACK_H_INCLUDED
 
-#include <compiler.h>
-#include "dac.h"
+#ifndef CONF_QUICK_START_H_INCLUDED
+#define CONF_QUICK_START_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+//[definition_pwm]
+/** PWM module to use */
+#define PWM_MODULE      EXT1_PWM_MODULE
+/** PWM output pin */
+#define PWM_OUT_PIN     EXT1_PWM_0_PIN
+/** PWM output pin mux */
+#define PWM_OUT_MUX     EXT1_PWM_0_MUX
+//[definition_pwm]
 
-/**
- * \addtogroup asfdoc_sam0_dac_group
- *
- * @{
- */
+//[definition_peripheral_trigger]
+/** TC6 Match/Compare 0 Trigger is used in the example */
+#define EXAMPLE_PERIPHERAL_TRIGGER   0x22
+//[definition_peripheral_trigger]
 
-/** \name Callback configuration and initialization
- * @{
- */
-enum status_code dac_chan_write_buffer_job(
-		struct dac_module *const module_inst,
-		const uint32_t channel,
-		uint16_t *buffer,
-		uint32_t buffer_size);
-
-enum status_code dac_chan_write_job(
-		struct dac_module *const module_inst,
-		const uint32_t channel,
-		uint16_t data);
-
-enum status_code dac_register_callback(
-		struct dac_module *const module,
-		const uint32_t channel,
-		const dac_callback_t callback,
-		const enum dac_callback type);
-
-enum status_code dac_unregister_callback(
-		struct dac_module *const module,
-		const uint32_t channel,
-		const enum dac_callback type);
-
-/** @} */
-
-/** \name Callback enabling and disabling (Channel)
- * @{
- */
-
-enum status_code dac_chan_enable_callback(
-		struct dac_module *const module,
-		const uint32_t channel,
-		const enum dac_callback type);
-
-enum status_code dac_chan_disable_callback(
-		struct dac_module *const module,
-		const uint32_t channel,
-		const enum dac_callback type);
-
-enum status_code dac_get_job_status(struct dac_module *module_inst);
-void dac_abort_job(struct dac_module *module_inst);
-
-/** @} */
-
-/** @} */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif
+#endif /* CONF_QUICK_START_H_INCLUDED */
