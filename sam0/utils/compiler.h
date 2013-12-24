@@ -930,6 +930,7 @@ typedef struct
 
 #endif
 
+#define FUNC_PTR                            void *
 /**
  * \def unused
  * \brief Marking \a v as a unused parameter or value.
@@ -1039,6 +1040,9 @@ typedef double                  F64;  //!< 64-bit floating-point number.
 #define MEMCPY_ENDIAN memcpy
 #define PGM_READ_BLOCK(dst, src, len) memcpy((dst), (src), (len))
 
+/*Defines the Flash Storage for the request and response of MAC*/
+#define CMD_ID_OCTET    (0)
+
 /* Converting of values from CPU endian to little endian. */
 #define CPU_ENDIAN_TO_LE16(x)   (x)
 #define CPU_ENDIAN_TO_LE32(x)   (x)
@@ -1118,6 +1122,22 @@ static inline void convert_16_bit_to_byte_address(uint16_t value, uint8_t *data)
 static inline uint16_t convert_byte_array_to_16_bit(uint8_t *data)
 {
     return (data[0] | ((uint16_t)data[1] << 8));
+}
+
+/* Converts a 4 Byte array into a 32-Bit value */
+static inline uint32_t convert_byte_array_to_32_bit(uint8_t *data)
+{
+	union
+	{
+		uint32_t u32;
+		uint8_t u8[4];
+	}long_addr;
+	uint8_t index;
+	for (index = 0; index < 4; index++)
+	{
+		long_addr.u8[index] = *data++;
+	}
+	return long_addr.u32;
 }
 
 /**
