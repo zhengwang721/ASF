@@ -316,7 +316,7 @@ uint32_t matrix_get_master_remap(void)
 
 #endif /* (SAM3XA || SAM3U || SAM4E) */
 
-#if (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
+#if (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
 
 /**
  * \brief Set system IO.
@@ -326,12 +326,17 @@ uint32_t matrix_get_master_remap(void)
 void matrix_set_system_io(uint32_t ul_io)
 {
 	Matrix *p_matrix = MATRIX;
-
-#if (!SAM4CP)
-	p_matrix->CCFG_SYSIO = ul_io;
+	
+#if (SAM4C || SAM4CP)
+	
+	p_matrix->MATRIX_SYSIO = ul_io;
+	
 #else
-        p_matrix->MATRIX_SYSIO = ul_io;
+	
+	p_matrix->CCFG_SYSIO = ul_io;
+	
 #endif
+	
 }
 
 /**
@@ -342,15 +347,19 @@ void matrix_set_system_io(uint32_t ul_io)
 uint32_t matrix_get_system_io(void)
 {
 	Matrix *p_matrix = MATRIX;
+	
+#if (SAM4C || SAM4CP)
 
-#if (!SAM4CP)
-	return (p_matrix->CCFG_SYSIO);
+	return (p_matrix->MATRIX_SYSIO);
+	
 #else
-        return (p_matrix->MATRIX_SYSIO);
+	
+	return (p_matrix->CCFG_SYSIO);
+	
 #endif
 }
 
-#endif /* (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4C || SAM4CP) */
+#endif
 
 #if (SAM3S || SAM4S || SAM4E || SAM4C || SAM4CP)
 
@@ -364,10 +373,15 @@ void matrix_set_nandflash_cs(uint32_t ul_cs)
 {
 	Matrix *p_matrix = MATRIX;
 
-#if (!SAM4CP)
-	p_matrix->CCFG_SMCNFCS = ul_cs;
+	
+#if (SAM4C || SAM4CP)
+
+	p_matrix->MATRIX_SMCNFCS = ul_cs;
+	
 #else
-        p_matrix->MATRIX_SMCNFCS = ul_cs;
+	
+	p_matrix->CCFG_SMCNFCS = ul_cs;
+	
 #endif
 }
 
@@ -379,16 +393,20 @@ void matrix_set_nandflash_cs(uint32_t ul_cs)
 uint32_t matrix_get_nandflash_cs(void)
 {
 	Matrix *p_matrix = MATRIX;
+	
+#if (SAM4C || SAM4CP)
 
-#if (!SAM4CP)
-	return (p_matrix->CCFG_SMCNFCS);
+	return (p_matrix->MATRIX_SMCNFCS);
+	
 #else
-        return (p_matrix->MATRIX_SMCNFCS);
+	
+	return (p_matrix->CCFG_SMCNFCS);
+	
 #endif
 }
 
 #endif /* (SAM3S || SAM4S || SAM4E || SAM4C || SAM4CP) */
-
+#if (!SAMG)
 /**
  * \brief Enable or disable write protect of MATRIX registers.
  *
@@ -416,6 +434,7 @@ uint32_t matrix_get_writeprotect_status(void)
 
 	return (p_matrix->MATRIX_WPSR);
 }
+#endif
 
 /* @} */
 

@@ -45,13 +45,13 @@
 #include "sleep.h"
 
 /* SAM3 and SAM4 series */
-#if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
+#if (SAM3S || SAM3N || SAM3XA || SAM3U || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
 # include "pmc.h"
 # include "board.h"
 
-/* Checking board configuration of main clock xtal startup time */
+/* Checking board configuration of main clock xtal statup time */
 #if !defined(BOARD_OSC_STARTUP_US)
-# warning The board main clock xtal startup time has not been defined. Using default settings.
+# warning The board main clock xtal statup time has not been defined. Using default settings.
 # define BOARD_OSC_STARTUP_US    (15625UL)
 #endif
 
@@ -198,7 +198,7 @@ __always_inline static void pmc_restore_clock_setting(
 	}
 
 	if (pll0_setting & CKGR_PLLAR_MULA_Msk) {
-#if (SAM4C || SAM4CP)
+#if (SAM4C || SAMG || SAM4CP)
 		PMC->CKGR_PLLAR = pll0_setting;
 #else
 		PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | pll0_setting;
@@ -264,6 +264,7 @@ static pmc_callback_wakeup_clocks_restored_t callback_clocks_restored = NULL;
 void pmc_sleep(int sleep_mode)
 {
 	switch (sleep_mode) {
+#if (!SAMG)
 	case SAM_PM_SMODE_SLEEP_WFI:
 	case SAM_PM_SMODE_SLEEP_WFE:
 #if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
@@ -281,6 +282,8 @@ void pmc_sleep(int sleep_mode)
 			__WFE();
 		break;
 #endif
+#endif
+
 	case SAM_PM_SMODE_WAIT_FAST:
 	case SAM_PM_SMODE_WAIT: {
 		uint32_t mor, pllr0, pllr1, mckr;
@@ -333,7 +336,7 @@ void pmc_sleep(int sleep_mode)
 
 		break;
 	}
-
+#if (!SAMG)
 	case SAM_PM_SMODE_BACKUP:
 		SCB->SCR |= SCR_SLEEPDEEP;
 #if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
@@ -345,6 +348,7 @@ void pmc_sleep(int sleep_mode)
 		__WFE() ;
 #endif
 		break;
+#endif
 	}
 }
 
