@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x TC Unit test
+ * \brief SAM D2x TCC Unit test
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -108,21 +108,20 @@
 #include "conf_test.h"
 
 /* Structure for UART module connected to EDBG (used for unit test output) */
-struct usart_module cdc_uart_module;
+static struct usart_module cdc_uart_module;
 
 /* TCC modules used in tests */
-struct tcc_module tcc_test0_module;
-struct tcc_module tcc_test1_module;
-
+static struct tcc_module tcc_test0_module;
+static struct tcc_module tcc_test1_module;
 
 /* Config structs used in tests */
-struct tcc_config tcc_test0_config;
-struct tcc_config tcc_test1_config;
+static struct tcc_config tcc_test0_config;
+static struct tcc_config tcc_test1_config;
 
-bool tcc_init_success = 0;
+static bool tcc_init_success = 0;
 
-volatile uint32_t callback_function_entered = 0;
-bool basic_functionality_test_passed = false;
+static volatile uint32_t callback_function_entered = 0;
+static volatile bool basic_functionality_test_passed = false;
 
 /**
  * \internal
@@ -176,7 +175,7 @@ static void run_reset_test(const struct test_case *test)
 {
 	test_assert_true(test,
 			tcc_init_success == true,
-			"TC initialization failed, skipping test");
+			"TCC initialization failed, skipping test");
 
 	/* Configure TCC module and run test*/
 	tcc_reset(&tcc_test0_module);
@@ -287,7 +286,7 @@ static void run_callback_test(const struct test_case *test)
 	tcc_reset(&tcc_test0_module);
 	tcc_get_config_defaults(&tcc_test0_config, CONF_TEST_TCC0);
 
-	tcc_test0_config.counter.period = 8000;
+	tcc_test0_config.counter.period = 4000;
 	tcc_test0_config.compare.wave_generation = TCC_WAVE_GENERATION_NORMAL_FREQ;
 	tcc_test0_config.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0] = 400;
 
@@ -302,7 +301,7 @@ static void run_callback_test(const struct test_case *test)
 
 	while ((tcc_get_status(&tcc_test0_module) &
 			TCC_STATUS_COUNT_OVERFLOW) == 0) {
-		/* Wait for overflow of TCC1*/
+		/* Wait for overflow of TCC1 */
 	}
 
 	tcc_disable(&tcc_test0_module);
@@ -344,13 +343,13 @@ static void run_capture_and_compare_test(const struct test_case *test)
 {
 	test_assert_true(test,
 			tcc_init_success == true,
-			"TC initialization failed, skipping test");
+			"TCC initialization failed, skipping test");
 
 	test_assert_true(test,
 			callback_function_entered == 1,
 			"The callback test has failed, skipping test");
 
-	/* Configure TC module for PWM generation */
+	/* Configure TCC module for PWM generation */
 	tcc_reset(&tcc_test0_module);
 	tcc_get_config_defaults(&tcc_test0_config, CONF_TEST_TCC0);
 	tcc_test0_config.counter.period = 0x03FF;
@@ -374,7 +373,7 @@ static void run_capture_and_compare_test(const struct test_case *test)
 	tcc_register_callback(&tcc_test0_module, tcc_callback_function, TCC_CALLBACK_CHANNEL_0);
 	tcc_enable_callback(&tcc_test0_module, TCC_CALLBACK_CHANNEL_0);
 
-	/* Configure TC module for capture */
+	/* Configure TCC module for capture */
 	tcc_reset(&tcc_test1_module);
 	tcc_get_config_defaults(&tcc_test1_config, CONF_TEST_TCC1);
 	tcc_test1_config.counter.period          = 0xFFFF;
@@ -423,7 +422,7 @@ static void run_capture_and_compare_test(const struct test_case *test)
 	/* Configure user */
 	events_attach_user(&event_res, CONF_EVENT_USED_ID);
 
-	/* Enable TC modules */
+	/* Enable TCC modules */
 	tcc_enable(&tcc_test1_module);
 	tcc_enable(&tcc_test0_module);
 
@@ -482,9 +481,9 @@ static void cdc_uart_init(void)
 }
 
 /**
- * \brief Run TC unit tests
+ * \brief Run TCC unit tests
  *
- * Initializes the system and serial output, then sets up the TC unit test
+ * Initializes the system and serial output, then sets up the TCC unit test
  * suite and runs it.
  */
 int main(void)
@@ -524,7 +523,7 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(tcc_suite, tcc_tests,
-			"SAM D2x TC driver test suite");
+			"SAM D2x TCC driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&tcc_suite);

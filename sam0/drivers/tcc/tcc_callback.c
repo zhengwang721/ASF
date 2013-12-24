@@ -75,7 +75,7 @@ static enum system_interrupt_vector _tcc_interrupt_get_interrupt_vector(
 		uint32_t inst_num)
 {
 	static uint8_t tcc_interrupt_vectors[TCC_INST_NUM] = {
-		MRECURSION(TCC_INST_NUM, _TCC_INTERRUPT_VECT_NUM, 2)
+		MREPEAT(TCC_INST_NUM, _TCC_INTERRUPT_VECT_NUM, 0)
 	};
 
 	return (enum system_interrupt_vector)tcc_interrupt_vectors[inst_num];
@@ -205,7 +205,7 @@ void tcc_disable_callback(
 			_tcc_interrupt_handler(m); \
 		}
 
-MRECURSION(TCC_INST_NUM, _TCC_INTERRUPT_HANDLER, 2)
+MREPEAT(TCC_INST_NUM, _TCC_INTERRUPT_HANDLER, 0)
 
 /**
  * \internal Interrupt Handler for TCC module

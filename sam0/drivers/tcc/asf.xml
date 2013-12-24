@@ -22,7 +22,6 @@
 
 			<build type="doxygen-example-path" value="quick_start"/>
 			<build type="doxygen-example-path" value="quick_start/samd21_xplained_pro"/>
-			<build type="doxygen-image-path" value="docimg" />
 
 			<build type="doxygen-entry-point" value="asfdoc_sam0_tcc_group" />
 			<build type="doxygen-quick-start" value="asfdoc_sam0_tcc_exqsg"/>
@@ -72,7 +71,6 @@
 			<build type="doxygen-example-path" value="quick_start/samd21_xplained_pro"/>
 			<build type="doxygen-example-path" value="quick_start_callback"/>
 			<build type="doxygen-example-path" value="quick_start_callback/samd21_xplained_pro"/>
-			<build type="doxygen-image-path" value="docimg" />
 			<build type="doxygen-entry-point" value="asfdoc_sam0_tcc_group" />
 			<build type="doxygen-quick-start" value="asfdoc_sam0_tcc_exqsg"/>
 

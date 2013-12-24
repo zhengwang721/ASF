@@ -67,12 +67,6 @@
 #define _TCC_SWAP_B       4u
 #define _TCC_DTI_B        2u
 #define _TCC_OTMX_B       1u
-/* Configuration of supported extensions */
-#define _CONF_TCC_EXT (CONF_DITHERING_SUPPORT*_TCC_DITHERING_B + \
-		CONF_OUT_MATRIX_SUPPORT*_TCC_OTMX_B + \
-		CONF_DEADTIME_SUPPORT*_TCC_DTI_B + \
-		CONF_SWAP_SUPPORT*_TCC_SWAP_B + \
-		CONF_PATTERN_SUPPORT*_TCC_PG_B)
 
 #if !defined(__DOXYGEN__)
 
@@ -81,7 +75,7 @@
 
 #  define _TCC_SIZE(n,unused)              TPASTE3(TCC,n,_SIZE),
 #  define _TCC_MAX(n,unused)               _SIZE_MAX(TPASTE3(TCC,n,_SIZE)),
-#  define _TCC_EXT(n,unused)               TPASTE3(TCC,n,_EXT) & _CONF_TCC_EXT,
+#  define _TCC_EXT(n,unused)               TPASTE3(TCC,n,_EXT),
 #  define _TCC_CC_NUM(n,unused)            min(TPASTE3(TCC,n,_CC_NUM),TCC_NUM_CHANNELS),
 #  define _TCC_OW_NUM(n,unused)            min(TPASTE3(TCC,n,_OW_NUM),TCC_NUM_WAVE_OUTPUTS),
 
@@ -172,7 +166,7 @@ uint8_t _tcc_get_inst_index(
  *  \li No PWM pin output enabled
  *  \li Pin and Mux configuration not set
  *
- * \param[out]  config  Pointer to a TC module configuration structure to set
+ * \param[out]  config  Pointer to a TCC module configuration structure to set
  * \param[in]   hw      Pointer to the TCC hardware module
  *
  */
@@ -180,7 +174,7 @@ void tcc_get_config_defaults(
 		struct tcc_config *const config,
 		Tcc *const hw)
 {
-	/* TC instance index */
+	/* TCC instance index */
 	uint8_t module_index = _tcc_get_inst_index(hw);
 
 	/* Base counter defaults */
@@ -411,7 +405,7 @@ enum status_code tcc_init(
 	Assert(module_inst);
 	Assert(config);
 
-	/* TC instance index */
+	/* TCC instance index */
 	uint8_t module_index = _tcc_get_inst_index(hw);
 
 	/* Enable the user interface clock in the PM */
@@ -1160,7 +1154,7 @@ uint32_t tcc_get_status(
 	if (status_flags & TCC_STATUS_STOP) {
 		status |= TCC_STATUS_STOPPED;
 	}
-	return status_flags;
+	return status;
 }
 
 /**

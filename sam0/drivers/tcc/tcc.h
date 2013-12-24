@@ -53,8 +53,6 @@
 #include <gclk.h>
 #include <pinmux.h>
 
-#include "conf_tcc.h"
-
 /** Max number of channels supported by the driver
  *  (Channel index from 0 to \c TCC_NUM_CHANNELS - 1).
  */
