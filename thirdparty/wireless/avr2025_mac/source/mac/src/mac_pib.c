@@ -143,7 +143,7 @@ static FLASH_DECLARE(uint8_t mac_sec_pib_size[]) =
     sizeof(uint8_t),                // 0x72: macKeyTableEntries
     /* Since the structure is not packed, we need to use the hardcode value */
     17,                             // 0x73: macDeviceTable
-    sizeof(uint8_t),                // 0x74: macDeviceTableEntries
+    sizeof(uint16_t),                // 0x74: macDeviceTableEntries
     sizeof(mac_sec_lvl_table_t),    // 0x75: macSecurityLevelTable
     sizeof(uint8_t),                // 0x76: macSecurityLevelTableEntries
     sizeof(uint32_t),               // 0x77: macFrameCounter
@@ -567,13 +567,13 @@ retval_t mlme_set(uint8_t attribute, pib_value_t *attribute_value,
             break;
 
         case macDeviceTableEntries:
-            if (attribute_value->pib_value_8bit > MAC_ZIP_MAX_DEV_TABLE_ENTRIES)
+            if (attribute_value->pib_value_16bit > MAC_ZIP_MAX_DEV_TABLE_ENTRIES)
             {
                 status = MAC_INVALID_PARAMETER;
             }
             else
             {
-            mac_sec_pib.DeviceTableEntries = attribute_value->pib_value_8bit;
+            mac_sec_pib.DeviceTableEntries = attribute_value->pib_value_16bit;
             }
             break;
 
@@ -921,8 +921,7 @@ retval_t mlme_get(uint8_t attribute, pib_value_t *attribute_value)
 		break;
 
 	case macDeviceTableEntries:
-		attribute_value->pib_value_8bit
-			= mac_sec_pib.DeviceTableEntries;
+	  MEMCPY_ENDIAN(&attribute_value->pib_value_16bit, &mac_sec_pib.DeviceTableEntries, 2);
 		break;
 
 	case macSecurityLevelTable:
