@@ -87,7 +87,7 @@ static void PDMIC_Handler(uint8_t pdm_num)
 		/* Change job status */
 		dev_inst->job_status = STATUS_OK;
 		/* Callback */
-		if ((dev_inst->enabled_callbacks[PDM_CALLBACK_TRANSFER_END] &
+		if ((dev_inst->enabled_callbacks &
 				(1 << PDM_CALLBACK_TRANSFER_END)) &&
 				dev_inst->callbacks[PDM_CALLBACK_TRANSFER_END]) {
 			dev_inst->callbacks[PDM_CALLBACK_TRANSFER_END](dev_inst);
@@ -100,7 +100,7 @@ static void PDMIC_Handler(uint8_t pdm_num)
 		/* Disable Interrupt */
 		dev_inst->hw->PDMIC_IDR = PDMIC_IDR_ENDRX;
 		/* Callback */
-		if ((dev_inst->enabled_callbacks[PDM_CALLBACK_BUFFER_END] &
+		if ((dev_inst->enabled_callbacks &
 				(1 << PDM_CALLBACK_BUFFER_END)) &&
 				dev_inst->callbacks[PDM_CALLBACK_BUFFER_END]) {
 			dev_inst->callbacks[PDM_CALLBACK_BUFFER_END](dev_inst);
@@ -112,7 +112,7 @@ static void PDMIC_Handler(uint8_t pdm_num)
 	/* Over Run */
 	else if (isr & PDMIC_ISR_OVRE) {
 		/* Callback */
-		if ((dev_inst->enabled_callbacks[PDM_CALLBACK_OVERRUN] &
+		if ((dev_inst->enabled_callbacks &
 				(1 << PDM_CALLBACK_OVERRUN)) &&
 				dev_inst->callbacks[PDM_CALLBACK_OVERRUN]) {
 			dev_inst->callbacks[PDM_CALLBACK_OVERRUN](dev_inst);
@@ -209,6 +209,8 @@ enum status_code pdm_init(struct pdm_instance *const dev_inst, Pdmic *hw,
 	for (uint32_t i = 0; i < PDM_CALLBACK_N; i++) {
 		dev_inst->callbacks[i] = NULL;
 	}
+
+	dev_inst->enabled_callbacks = 0;
 
 	dev_inst->job_status = STATUS_OK;
 

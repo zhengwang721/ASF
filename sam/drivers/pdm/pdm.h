@@ -345,7 +345,7 @@ struct pdm_instance {
 	/** Callback functions */
 	pdm_callback_t callbacks[PDM_CALLBACK_N];
 	/** Bit mask for enabled callbacks */
-	bool enabled_callbacks[PDM_CALLBACK_N];
+	uint32_t enabled_callbacks;
 	/** Status of the last job */
 	volatile enum status_code job_status;
 };
@@ -543,7 +543,7 @@ __always_inline static void pdm_enable_callback(
 	Assert(dev_inst->hw);
 
 	if (type < PDM_CALLBACK_N) {
-		dev_inst->enabled_callbacks[type] |= (1 << type);
+		dev_inst->enabled_callbacks |= (1 << type);
 	}
 }
 
@@ -564,7 +564,7 @@ __always_inline static void pdm_disable_callback(
 	Assert(dev_inst->hw);
 
 	if (type < PDM_CALLBACK_N) {
-		dev_inst->enabled_callbacks[type] &= ~(1 << type);
+		dev_inst->enabled_callbacks &= ~(1 << type);
 	}
 }
 
