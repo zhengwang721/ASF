@@ -101,21 +101,32 @@
 #define PINS_UART0_TYPE   PIO_PERIPH_A
 #define PINS_UART0_ATTR   PIO_DEFAULT
 
-/** LED #0 pin definition (Yellow). */
-#define LED_0_NAME      "Yellow LED0"
-#define PIN_LED_0       {PIO_PB4, PIOB, ID_PIOB, PIO_OUTPUT_1, PIO_DEFAULT}
-#define PIN_LED_0_MASK  PIO_PB4
-#define PIN_LED_0_PIO   PIOB
-#define PIN_LED_0_ID    ID_PIOB
-#define PIN_LED_0_TYPE  PIO_OUTPUT_1
-#define PIN_LED_0_ATTR  PIO_DEFAULT
-
+//! \name LED0 definitions
+//@{
 #define LED0_GPIO            (PIO_PB4_IDX)
 #define LED0_FLAGS           (0)
 #define LED0_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_LOW
 #define LED0_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
+//@}
 
-#define BOARD_NUM_OF_LED 1
+//! \name SW0 definitions
+//@{
+#define SW0_PIN                   IOPORT_CREATE_PIN(PIOE, 1)
+#define SW0_ACTIVE                false
+#define SW0_INACTIVE              !SW0_ACTIVE
+#define SW0_SUPC_INPUT            2
+
+/**
+ * Wrapper macros for SW0, to ensure common naming across all Xplained Pro
+ * boards.
+ */
+#define PIN_SW0      {PIO_PE1, PIOE, ID_PIOE, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define PIN_SW0_MASK PIO_PE1
+#define PIN_SW0_PIO  PIOE
+#define PIN_SW0_ID   ID_PIOE
+#define PIN_SW0_TYPE PIO_INPUT
+#define PIN_SW0_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
+//@}
 
 /** HSMCI pins definition. */
 /*! Number of slot connected on HSMCI interface */
@@ -142,9 +153,38 @@
 #define PIN_HSMCI_MCDA3_FLAGS           (IOPORT_MODE_MUX_C)
 
 /**
+ * \name LED #0 definitions
+ *
+ * Wrapper macros for LED0, to ensure common naming across all Xplained Pro
+ * boards.
+ */
+//@{
+#define LED_0_NAME                "LED0 (yellow)"
+#define LED_0_PIN                 LED0_GPIO
+#define LED_0_ACTIVE              LED0_ACTIVE_LEVEL
+#define LED_0_INACTIVE            LED0_INACTIVE_LEVEL
+
+#define PIN_LED_0       {PIO_PB4, PIOB, ID_PIOB, PIO_OUTPUT_1, PIO_DEFAULT}
+#define PIN_LED_0_MASK  PIO_PB4
+#define PIN_LED_0_PIO   PIOB
+#define PIN_LED_0_ID    ID_PIOB
+#define PIN_LED_0_TYPE  PIO_OUTPUT_1
+#define PIN_LED_0_ATTR  PIO_DEFAULT
+//@}
+
+//! Number of on-board LEDs
+#define BOARD_NUM_OF_LED 1
+
+/**
  * Push button #0 definition. Attributes = pull-up + debounce + interrupt on
  * rising edge.
  */
+#define BUTTON_0_NAME             "SW0"
+#define BUTTON_0_PIN              SW0_PIN
+#define BUTTON_0_ACTIVE           SW0_ACTIVE
+#define BUTTON_0_INACTIVE         SW0_INACTIVE
+#define BUTTON_0_SUPC_INPUT       SW0_SUPC_INPUT
+
 #define PUSHBUTTON_1_NAME        "SW0"
 //#define PUSHBUTTON_1_WKUP_LINE   (9)
 //#define PUSHBUTTON_1_WKUP_FSTT   (PMC_FSMR_FSTT9)
