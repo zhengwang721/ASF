@@ -559,14 +559,14 @@ void usb_nak_send_in(uint8_t ep_num)
 bool usb_device_endpoint_in_is_enabled(struct usb_module *module_inst,uint8_t ep_num)
 {
 	uint8_t flag;
-	flag = module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.bit.EPTYPE1;
+	flag = (uint8_t)(module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.bit.EPTYPE1);
 	return ((enum usb_device_endpoint_type)(flag) != USB_DEVICE_ENDPOINT_TYPE_DISABLE);
 }
 
 bool usb_device_endpoint_out_is_enabled(struct usb_module *module_inst,uint8_t ep_num)
 {
 	uint8_t flag;
-	flag = module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.bit.EPTYPE0;
+	flag = (uint8_t)(module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.bit.EPTYPE0);
 	return ((enum usb_device_endpoint_type)(flag) != USB_DEVICE_ENDPOINT_TYPE_DISABLE);
 }
 
@@ -588,6 +588,11 @@ uint16_t usb_device_endpoint_get_sent_bytes(uint8_t ep_num)
 void usb_device_endpoint_clear_received_bytes(uint8_t ep_num)
 {
 	usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[0].PCKSIZE.bit.BYTE_COUNT = 0;
+}
+
+void usb_device_endpoint_clear_sent_bytes(uint8_t ep_num)
+{
+	usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].PCKSIZE.bit.BYTE_COUNT = 0;
 }
 
 uint16_t usb_device_endpoint_get_out_size(uint8_t ep_num)

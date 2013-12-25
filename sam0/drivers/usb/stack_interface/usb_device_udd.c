@@ -260,6 +260,23 @@ static void udd_ep_trans_out_next(udd_ep_id_t ep)
 }
 #endif
 
+static void udd_ep_transfer_failure(struct usb_module *module_inst, uint8_t ep_num)
+{
+	if(usb_device_out_is_fail(module_inst,ep_num)) {
+		// clear the flag
+		usb_ack_trfail_out(module_inst,ep_num);
+		if(usb_nak_is_out(ep_num)){
+			usb_nak_send_out(ep_num);
+		}
+		} else {
+		// clear the flag
+		usb_ack_trfail_in(module_inst,ep_num);
+		if(usb_nak_is_in(ep_num)){
+			usb_nak_send_in(ep_num);
+		}
+	}
+}
+
 static void udd_ep_transfer_process(struct usb_module *module_inst, uint8_t ep_num)
 {
 	if(usb_device_out_is_received(module_inst,ep_num)) {
@@ -337,26 +354,25 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes, uint16_t MaxEndpointSize
 	
 	config_ep.ep_address = ep;
 	
-	if(MaxEndpointSize < 8|| MaxEndpointSize > 1024) {
-		return false;
-	} else if(MaxEndpointSize >=8 && MaxEndpointSize < 16) {
+	if(MaxEndpointSize <= 8) {
 		config_ep.ep_size = USB_ENDPOINT_8_BYTE;
-	} else if(MaxEndpointSize >=16 && MaxEndpointSize < 32) {
+	} else if(MaxEndpointSize <= 16) {
 		config_ep.ep_size = USB_ENDPOINT_16_BYTE;
-	} else if(MaxEndpointSize >=32 && MaxEndpointSize < 64) {
+	} else if(MaxEndpointSize <= 32) {
 		config_ep.ep_size = USB_ENDPOINT_32_BYTE;
-	} else if(MaxEndpointSize >=64 && MaxEndpointSize < 128) {
+	} else if(MaxEndpointSize <= 64) {
 		config_ep.ep_size = USB_ENDPOINT_64_BYTE;
-	} else if(MaxEndpointSize >=128 && MaxEndpointSize < 256) {
+	} else if(MaxEndpointSize <= 128) {
 		config_ep.ep_size = USB_ENDPOINT_128_BYTE;
-	} else if(MaxEndpointSize >=256 && MaxEndpointSize < 512) {
+	} else if(MaxEndpointSize <= 256) {
 		config_ep.ep_size = USB_ENDPOINT_256_BYTE;
-	} else if(MaxEndpointSize >=512 && MaxEndpointSize < 1023) {
+	} else if(MaxEndpointSize <= 512) {
 		config_ep.ep_size = USB_ENDPOINT_512_BYTE;
-	} else {
+	} else if(MaxEndpointSize <= 1023) {
 		config_ep.ep_size = USB_ENDPOINT_1023_BYTE;
+	} else {
+		return false;
 	}
-	
 	
 	bmAttributes = bmAttributes & USB_EP_TYPE_MASK;
 	
@@ -372,27 +388,37 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes, uint16_t MaxEndpointSize
 	}
 	
 	uint8_t ep_num = ep & USB_EP_ADDR_MASK;
-	usb_device_endpoint_set_config(&usb_device, &config_ep);
-	usb_device_endpoint_register_callback(&usb_device,ep_num,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT,udd_ep_transfer_process);
-	usb_device_endpoint_enable_callback(&usb_device,ep,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT);
 	
 	if (ep & USB_EP_DIR_IN) {
 		if (usb_device_endpoint_in_is_enabled(&usb_device,ep_num)) {
 			return false;
+		} else {
+			usb_device_endpoint_set_config(&usb_device, &config_ep);
+			usb_device_endpoint_register_callback(&usb_device,ep_num,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT,udd_ep_transfer_process);
+			usb_device_endpoint_enable_callback(&usb_device,ep,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT);
+			usb_device_endpoint_register_callback(&usb_device,ep_num,USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL,udd_ep_transfer_failure);
+			usb_device_endpoint_enable_callback(&usb_device,ep,USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL);
+			usb_set_bank_in_empty(&usb_device,ep_num);
+			return true;
 		}
-		usb_set_bank_in_empty(&usb_device,ep_num);
 	} else {
 		if (usb_device_endpoint_out_is_enabled(&usb_device,ep_num)) {
 			return false;
+		} else {
+			usb_device_endpoint_set_config(&usb_device, &config_ep);
+			usb_device_endpoint_register_callback(&usb_device,ep_num,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT,udd_ep_transfer_process);
+			usb_device_endpoint_enable_callback(&usb_device,ep,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT);
+			usb_device_endpoint_register_callback(&usb_device,ep_num,USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL,udd_ep_transfer_failure);
+			usb_device_endpoint_enable_callback(&usb_device,ep,USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL);
+			usb_set_bank_out_full(&usb_device,ep_num);
+			return true;
 		}
-		usb_set_bank_out_full(&usb_device,ep_num);
 		//#if (defined USB_DISABLE_NYET_FOR_OUT_ENDPOINT)
-		//// Disable the NYET feature for OUT endpoint. Using OUT multipacket, each
-		//// OUT packet are always NYET.
+		///*Disable the NYET feature for OUT endpoint. Using OUT multipacket, each
+		//OUT packet are always NYET.*/
 		//udd_disable_nyet(ep_num);
 		//#endif
 	}
-	return true;
 }
 
 
@@ -531,9 +557,11 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t b
 	//irqflags_t flags;
 
 	ep_num = ep & USB_EP_ADDR_MASK;
+	
 	if (USB_DEVICE_MAX_EP < ep_num) {
 		return false;
 	}
+	
 	if (ep & USB_EP_DIR_IN) {
 		if ((!usb_device_endpoint_in_is_enabled(&usb_device,ep_num)) 
 			|| usb_device_is_in_stall_requested(&usb_device,ep_num)) {
@@ -576,13 +604,11 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t b
 
 	// Initialize value to simulate a empty transfer
 	if (ep & USB_EP_DIR_IN) {
-		//udd_udesc_rst_buf_ctn_in(ep_num);
-		//udd_udesc_rst_buf_size_in(ep_num);
+		usb_device_endpoint_clear_sent_bytes(ep_num);
 		// Request next transfer
 		udd_ep_trans_in_next(ep);
 	} else {
-		//udd_udesc_rst_buf_ctn_out(ep_num);
-		//udd_udesc_rst_buf_size_out(ep_num);
+		usb_device_endpoint_clear_received_bytes(ep_num);
 		// Request next transfer
 		udd_ep_trans_out_next(ep);
 	}

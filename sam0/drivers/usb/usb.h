@@ -534,6 +534,8 @@ uint16_t usb_device_endpoint_get_sent_bytes(uint8_t ep_num);
 
 void usb_device_endpoint_clear_received_bytes(uint8_t ep_num);
 
+void usb_device_endpoint_clear_sent_bytes(uint8_t ep_num);
+
 uint16_t usb_device_endpoint_get_out_size(uint8_t ep_num);
 
 uint16_t usb_device_endpoint_get_in_size(uint8_t ep_num);
