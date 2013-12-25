@@ -112,9 +112,39 @@ extern uint32_t efc_perform_fcr(Efc *p_efc, uint32_t ul_fcr);
  */
 uint32_t efc_init(Efc *p_efc, uint32_t ul_access_mode, uint32_t ul_fws)
 {
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG)
+	efc_write_fmr(p_efc, ul_access_mode | EEFC_FMR_FWS(ul_fws) | EEFC_FMR_CLOE);
+#else
 	efc_write_fmr(p_efc, ul_access_mode | EEFC_FMR_FWS(ul_fws));
+#endif	
 	return EFC_RC_OK;
 }
+
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG)
+/**
+ * \brief Enable code loop optimization.
+ *
+ * \param p_efc Pointer to an EFC instance.
+ */
+void efc_enable_cloe(Efc *p_efc)
+{
+	uint32_t ul_fmr = p_efc->EEFC_FMR;
+	efc_write_fmr(p_efc, ul_fmr | EEFC_FMR_CLOE);
+}
+
+/**
+ * \brief Disable code loop optimization.
+ *
+ * \param p_efc Pointer to an EFC instance.
+ */
+void efc_disable_cloe(Efc *p_efc)
+{
+	uint32_t ul_fmr = p_efc->EEFC_FMR;
+	efc_write_fmr(p_efc, ul_fmr & (~EEFC_FMR_CLOE));
+}
+#endif
+
+
 
 /**
  * \brief Enable the flash ready interrupt.
