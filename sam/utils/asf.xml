@@ -47,6 +47,8 @@
 			<device-support value="sam4n"/>
 			<device-support value="atsam4c8c_0"/>
 			<device-support value="atsam4c16c_0"/>
+			<device-support value="atsam4c32c_0"/>
+			<device-support value="atsam4c32e_0"/>
 			<device-support value="atsam4cp16b_0"/>
 			<device-support value="unspecified-sam4c"/>    <!-- A workaround for Jenkin doxygen-module check -->
 			<device-support value="unspecified-sam4cp"/>    <!-- A workaround for Jenkin doxygen-module check -->
@@ -63,6 +65,8 @@
 			<device-support value="sam4e"/>
 			<device-support value="atsam4c8c_1"/>
 			<device-support value="atsam4c16c_1"/>
+			<device-support value="atsam4c32c_1"/>
+			<device-support value="atsam4c32e_1"/>
 			<device-support value="atsam4cp16b_1"/>
 			<device-support value="samg"/>
 		</module>

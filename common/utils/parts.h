@@ -955,6 +955,22 @@
 		)
 
 #define SAM4C16 (SAM4C16_0 || SAM4C16_1)
+
+
+
+#define SAM4C32_0 ( \
+		SAM_PART_IS_DEFINED(SAM4C32C_0) ||\
+		SAM_PART_IS_DEFINED(SAM4C32E_0) \
+		)
+
+#define SAM4C32_1 ( \
+		SAM_PART_IS_DEFINED(SAM4C32C_1) ||\
+		SAM_PART_IS_DEFINED(SAM4C32E_1) \
+		)
+
+
+#define SAM4C32 (SAM4C32_0 || SAM4C32_1) 
+
 /** @} */
 
 /**
@@ -1017,9 +1033,9 @@
 #define SAM4N (SAM4N8 || SAM4N16)
 
 /** SAM4C Family */
-#define SAM4C_0 (SAM4C8_0 || SAM4C16_0)
-#define SAM4C_1 (SAM4C8_1 || SAM4C16_1)
-#define SAM4C   (SAM4C8 || SAM4C16)
+#define SAM4C_0 (SAM4C8_0 || SAM4C16_0 || SAM4C32_0)
+#define SAM4C_1 (SAM4C8_1 || SAM4C16_1 || SAM4C32_1)
+#define SAM4C   (SAM4C8 || SAM4C16 || SAM4C32)
 
 /** SAM4CP Family */
 #define SAM4CP_0 (SAM4CP16_0)
