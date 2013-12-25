@@ -43,7 +43,7 @@
 #include <asf.h>
 
 //! [callback_3]
-bool callback_status = false;
+bool volatile callback_status = false;
 //! [callback_3]
 
 void configure_ac(void);
@@ -186,10 +186,10 @@ int main(void)
 					(last_comparison & AC_CHAN_STATUS_NEG_ABOVE_POS));
 			//! [main_6]
 			//! [main_7]
-			ac_chan_trigger_single_shot(&ac_instance, AC_COMPARATOR_CHANNEL);
+			callback_status = false;
 			//! [main_7]
 			//! [main_8]
-			callback_status = false;
+			ac_chan_trigger_single_shot(&ac_instance, AC_COMPARATOR_CHANNEL);
 			//! [main_8]
 		}
 	}
