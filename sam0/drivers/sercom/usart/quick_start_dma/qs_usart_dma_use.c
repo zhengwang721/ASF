@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Usart driver example with DMA
+ * \brief SAM D2x Sercom Usart driver with DMA quick start
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *

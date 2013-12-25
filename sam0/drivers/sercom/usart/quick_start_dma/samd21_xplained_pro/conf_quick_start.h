@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USART DMA Quick Start configuration for SAM D21 Xplained Pro
+ * \brief SERCOM USART with DMA configurations for SAM D21 Xplained Pro
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -41,11 +41,11 @@
  *
  */
 
-#ifndef CONF_QUICK_START_H_INCLUDED
-#define CONF_QUICK_START_H_INCLUDED
+#ifndef CONF_QUICK_START_DMA_H_INCLUDED
+#define CONF_QUICK_START_DMA_H_INCLUDED
 
 //[definition_peripheral_trigger]
 #define PERIPHERAL_TRIGGER_SERCOM3_TX   0x8
 //[definition_peripheral_trigger]
 
-#endif /* CONF_QUICK_START_H_INCLUDED */
+#endif /* CONF_QUICK_START_DMA_H_INCLUDED */

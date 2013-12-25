@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Usart driver example with DMA
+ * \brief SAM D2x Quick Start Guide for Using Usart driver with DMA
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,8 @@
  */
 
 /**
- * \page asfdoc_sam0_sercom_usart_dma_use_case Quick Start Guide for SERCOM USART - DMA
+ * \page asfdoc_sam0_sercom_usart_dma_use_case Quick Start Guide for Using DMA with
+ * SERCOM USART
  *
  * This quick start will transmit a string to the terminal through DMA. In this
  * use case the USART will be configured with the following settings:
