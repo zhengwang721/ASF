@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x External Interrupt Driver Quick Start
+ * \brief SAM D21 Xplained PRO test configuration.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,69 +40,34 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-void configure_extint_channel(void);
-void configure_extint_callbacks(void);
-void extint_detection_callback(void);
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-//! [setup]
-void configure_extint_channel(void)
-{
-//! [setup_1]
-	struct extint_chan_conf config_extint_chan;
-//! [setup_1]
-//! [setup_2]
-	extint_chan_get_config_defaults(&config_extint_chan);
-//! [setup_2]
+#define CONF_STDIO_USART          EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE       38400
 
-//! [setup_3]
-	config_extint_chan.gpio_pin           = BUTTON_0_EIC_PIN;
-	config_extint_chan.gpio_pin_mux       = BUTTON_0_EIC_MUX;
-	config_extint_chan.gpio_pin_pull      = EXTINT_PULL_UP;
-	config_extint_chan.detection_criteria = EXTINT_DETECT_BOTH;
-//! [setup_3]
-//! [setup_4]
-	extint_chan_set_config(BUTTON_0_EIC_LINE, &config_extint_chan);
-//! [setup_4]
-}
+#define CONF_TEST_TCC0            TCC0
+#define CONF_TEST_TCC1            TCC1
 
-void configure_extint_callbacks(void)
-{
-//! [setup_5]
-	extint_register_callback(extint_detection_callback,
-			BUTTON_0_EIC_LINE,
-			EXTINT_CALLBACK_TYPE_DETECT);
-//! [setup_5]
-//! [setup_6]
-	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
-			EXTINT_CALLBACK_TYPE_DETECT);
-//! [setup_6]
-}
+#define CONF_EIC_CHAN             4
+#define CONF_EIC_PIN              PIN_PB04A_EIC_EXTINT4
+#define CONF_EIC_MUX              MUX_PB04A_EIC_EXTINT4
 
-//! [setup_7]
-void extint_detection_callback(void)
-{
-	bool pin_state = port_pin_get_input_level(BUTTON_0_PIN);
-	port_pin_set_output_level(LED_0_PIN, pin_state);
-}
-//! [setup_7]
-//! [setup]
+#define CONF_TEST_PIN_OUT         PIN_PA08E_TCC0_WO0
+#define CONF_TEST_PIN_MUX         MUX_PA08E_TCC0_WO0
 
-int main(void)
-{
-	system_init();
+#define CONF_EVENT_GENERATOR_ID   EVSYS_ID_GEN_EIC_EXTINT_4
+#define CONF_EVENT_USED_ID        EVSYS_ID_USER_TCC1_EV_1
 
-	//! [setup_init]
-	configure_extint_channel();
-	configure_extint_callbacks();
+#define CONF_CAPTURE_CHAN_0       0
+#define CONF_CAPTURE_CHAN_1       1
 
-	system_interrupt_enable_global();
-	//! [setup_init]
+#define CONF_TEST_TOLERANCE       10
 
-	//! [main]
-	while (true) {
-		/* Do nothing - EXTINT will fire callback asynchronously */
-	}
-	//! [main]
-}
+#endif /* CONF_TEST_H_INCLUDED */

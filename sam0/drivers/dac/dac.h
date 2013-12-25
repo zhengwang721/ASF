@@ -567,7 +567,9 @@ static inline void dac_get_config_defaults(
 	config->reference      = DAC_REFERENCE_INT1V;
 	config->output         = DAC_OUTPUT_EXTERNAL;
 	config->left_adjust    = false;
+#ifdef FEATURE_DAC_DATABUF_WRITE_PROTECTION
 	config->databuf_protection_bypass = false;
+#endif
 	config->voltage_pump_disable = false;
 	config->clock_source   = GCLK_GENERATOR_0;
 	config->run_in_standby = false;

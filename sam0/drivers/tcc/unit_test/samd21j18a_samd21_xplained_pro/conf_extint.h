@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x External Interrupt Driver Quick Start
+ * \brief SAM D21 External Interrupt Driver Configuration Header
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -40,69 +40,11 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
-void configure_extint_channel(void);
-void configure_extint_callbacks(void);
-void extint_detection_callback(void);
+#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
 
-//! [setup]
-void configure_extint_channel(void)
-{
-//! [setup_1]
-	struct extint_chan_conf config_extint_chan;
-//! [setup_1]
-//! [setup_2]
-	extint_chan_get_config_defaults(&config_extint_chan);
-//! [setup_2]
+#  define EXTINT_CALLBACKS_MAX     10
 
-//! [setup_3]
-	config_extint_chan.gpio_pin           = BUTTON_0_EIC_PIN;
-	config_extint_chan.gpio_pin_mux       = BUTTON_0_EIC_MUX;
-	config_extint_chan.gpio_pin_pull      = EXTINT_PULL_UP;
-	config_extint_chan.detection_criteria = EXTINT_DETECT_BOTH;
-//! [setup_3]
-//! [setup_4]
-	extint_chan_set_config(BUTTON_0_EIC_LINE, &config_extint_chan);
-//! [setup_4]
-}
-
-void configure_extint_callbacks(void)
-{
-//! [setup_5]
-	extint_register_callback(extint_detection_callback,
-			BUTTON_0_EIC_LINE,
-			EXTINT_CALLBACK_TYPE_DETECT);
-//! [setup_5]
-//! [setup_6]
-	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
-			EXTINT_CALLBACK_TYPE_DETECT);
-//! [setup_6]
-}
-
-//! [setup_7]
-void extint_detection_callback(void)
-{
-	bool pin_state = port_pin_get_input_level(BUTTON_0_PIN);
-	port_pin_set_output_level(LED_0_PIN, pin_state);
-}
-//! [setup_7]
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-	//! [setup_init]
-	configure_extint_channel();
-	configure_extint_callbacks();
-
-	system_interrupt_enable_global();
-	//! [setup_init]
-
-	//! [main]
-	while (true) {
-		/* Do nothing - EXTINT will fire callback asynchronously */
-	}
-	//! [main]
-}
+#endif
