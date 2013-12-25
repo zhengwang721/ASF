@@ -75,7 +75,8 @@
  *
  * \section appdoc_sam0_tc_unit_test_setup Setup
  * The following connections has to be made using wires:
- *  - \b EXTINT 0 (PA16, EXT2 pin 17) <-----> TC0 WO1 (PA05, EXT1 pin 15)
+ *  - \b SAMD20 Xplained Pro:EXTINT 0 (PA16, EXT2 pin 17) <-----> TC0 WO1 (PA05, EXT1 pin 15)
+ *  - \b SAMD21 Xplained Pro:EXTINT 0 (PA16, EXT2 pin 17) <-----> TC3 WO1 (PA19, EXT2 pin 18)
  *
  * To run the test:
  *  - Connect the SAM D2x Xplained Pro board to the computer using a
