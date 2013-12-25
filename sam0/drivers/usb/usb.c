@@ -113,8 +113,7 @@ void usb_get_config_defaults(struct usb_config *module_config)
 	Assert(module_config);
 	/* Write default config to config struct */
 	module_config->mode = 0;
-	module_config->run_in_standby = 1;
-	//module_config->descriptor_address = usb_descriptor_table.usb_endpoint_table.DeviceDescBank[0].;
+	module_config->run_in_standby = 0;
 }
 
 enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
@@ -133,10 +132,7 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 
 	/* Associate the software module instance with the hardware module */
 	module_inst->hw = hw;
-
-	/* Turn on the digital interface clock */
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, PM_APBBMASK_USB);
-
+	
 	/* Set up the USB DP/DN pins */
 	system_pinmux_get_config_defaults(&pin_config);
 	pin_config.mux_position = MUX_PA24G_USB_DM;
@@ -149,18 +145,19 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 	gclk_chan_config.source_generator = GCLK_GENERATOR_0;
 	system_gclk_chan_set_config(USB_GCLK_ID, &gclk_chan_config);
 	system_gclk_chan_enable(USB_GCLK_ID);
-	//pin_config.mux_position = MUX_PB14H_GCLK_IO0;
-	//pin_config.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-	//system_pinmux_pin_set_config(PIN_PB14H_GCLK_IO0, &pin_config);
+	
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, PM_APBBMASK_USB);
+	system_ahb_clock_set_mask(PM_AHBMASK_USB);
 	
 	/* Reset */
 	hw->HOST.CTRLA.bit.SWRST = 1;
 	while (hw->HOST.SYNCBUSY.bit.SWRST);
-
-	/* Set the configuration */
+	
+	/* Set the configuration */	
+	hw->DEVICE.DESCADD.reg = (uint32_t)(&usb_descriptor_table.usb_endpoint_table[0]);
 	hw->DEVICE.CTRLA.bit.MODE = module_config->mode;
 	hw->DEVICE.CTRLA.bit.RUNSTDBY = module_config->run_in_standby;
-	hw->DEVICE.DESCADD.reg = (uint32_t)(&usb_descriptor_table.usb_endpoint_table[0]);
 
 	// device callback related
 	for (i = 0; i < USB_DEVICE_CALLBACK_N; i++) {
@@ -176,6 +173,19 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 		module_inst->device_endpoint_enabled_callback_mask[j] = 0;
 	}
 	
+	// device mode
+	if(0 == module_config->mode) {
+		struct usb_device_config config_device;
+		usb_device_get_config_defaults(&config_device);
+		
+		if (USB_SPEED_FULL == config_device.device_speed) {
+			module_inst->hw->DEVICE.CTRLB.bit.SPDCONF = USB_DEVICE_CTRLB_SPDCONF_0_Val;
+		} else if(USB_SPEED_LOW == config_device.device_speed) {
+			module_inst->hw->DEVICE.CTRLB.bit.SPDCONF = USB_DEVICE_CTRLB_SPDCONF_1_Val;
+		}
+		module_inst->hw->DEVICE.CTRLB.bit.LPMHDSK = config_device.lpm_mode;
+	}
+	
 	/* Enable interrupts for this USB module */
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_USB);
 
@@ -187,16 +197,7 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 
 /******************************************************************/
 /*************Second part: USB device start*****************************/
-void usb_device_attach(struct usb_module *module_inst)
-{
-	module_inst->hw->DEVICE.CTRLB.reg &= ~USB_DEVICE_CTRLB_DETACH;
-}
 
-void usb_device_detach(struct usb_module *module_inst)
-{
-	module_inst->hw->DEVICE.CTRLB.reg |= USB_DEVICE_CTRLB_DETACH;
-}
-	
 enum status_code usb_device_register_callback(struct usb_module *module_inst,
 		enum usb_device_callback callback_type,
 		usb_device_callback_t callback_func)
@@ -316,13 +317,6 @@ void usb_device_get_config_defaults(struct usb_device_config *dev_config)
 	dev_config->lpm_mode = USB_LPM_NOT_SUPPORT;
 }
 
-enum status_code usb_device_set_config(struct usb_module *module_inst, struct usb_device_config *dev_config)
-{
-	module_inst->hw->DEVICE.CTRLB.bit.SPDCONF = dev_config->device_speed;
-	module_inst->hw->DEVICE.CTRLB.bit.LPMHDSK = dev_config->lpm_mode;
-	return STATUS_OK;
-}
-
 enum status_code usb_device_get_config(struct usb_module *module_inst,
 		struct usb_device_config *dev_config)
 {
@@ -370,55 +364,94 @@ enum status_code usb_device_endpoint_unregister_callback(
 }
 
 enum status_code usb_device_endpoint_enable_callback(
-		struct usb_module *module_inst, uint8_t ep_num,
+		struct usb_module *module_inst, uint8_t ep,
 		enum usb_device_endpoint_callback callback_type)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
+	
+	uint8_t ep_num = ep & USB_EP_ADDR_MASK;
 
 	/* Enable callback */
 	module_inst->device_endpoint_enabled_callback_mask[ep_num] |= (1 << callback_type);
 
 	if (callback_type == USB_DEVICE_ENDPOINT_CALLBACK_TRCPT) {
-		//module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENCLR.reg = USB_DEVICE_EPINTENCLR_TRCPT_Msk;
-		module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENSET.reg |= USB_DEVICE_EPINTENSET_TRCPT_Msk;
+		if (ep_num == 0) { // control endpoint
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENSET.reg = USB_DEVICE_EPINTENSET_TRCPT0 | USB_DEVICE_EPINTENSET_TRCPT1;
+		} else if (ep & USB_EP_DIR_IN) {
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENSET.reg = USB_DEVICE_EPINTENSET_TRCPT1;
+		} else {
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENSET.reg = USB_DEVICE_EPINTENSET_TRCPT0;
+		}
 	}
+	
 	if (callback_type == USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL) {
-		//module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENCLR.reg = USB_DEVICE_EPINTENCLR_TRFAIL_Msk;
-		module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENSET.reg |= USB_DEVICE_EPINTENSET_TRFAIL_Msk;
+		if (ep_num == 0) { // control endpoint
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENSET.reg = USB_DEVICE_EPINTENSET_TRFAIL0 | USB_DEVICE_EPINTENSET_TRFAIL1;
+		} else if (ep & USB_EP_DIR_IN) {
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENSET.reg = USB_DEVICE_EPINTENSET_TRFAIL1;
+		} else {
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENSET.reg = USB_DEVICE_EPINTENSET_TRFAIL0;
+		}
 	}
+	
 	if (callback_type == USB_DEVICE_ENDPOINT_CALLBACK_RXSTP) {
-		//module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENCLR.reg = USB_DEVICE_EPINTENCLR_RXSTP;
-		module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENSET.reg |= USB_DEVICE_EPINTENSET_RXSTP;
+		module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENSET.reg = USB_DEVICE_EPINTENSET_RXSTP;
 	}
+	
 	if (callback_type == USB_DEVICE_ENDPOINT_CALLBACK_STALL) {
-		module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENSET.reg |= USB_DEVICE_EPINTENSET_STALL_Msk;
+		if (ep & USB_EP_DIR_IN) {
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENSET.reg = USB_DEVICE_EPINTENSET_STALL1;
+		} else {
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENSET.reg = USB_DEVICE_EPINTENSET_STALL0;
+		}
 	}
 	
 	return STATUS_OK;
 }
 
 enum status_code usb_device_endpoint_disable_callback(
-		struct usb_module *module_inst, uint8_t ep_num,
+		struct usb_module *module_inst, uint8_t ep,
 		enum usb_device_endpoint_callback callback_type)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
+	
+	uint8_t ep_num = ep & USB_EP_ADDR_MASK;
 
 	/* Enable callback */
 	module_inst->device_endpoint_enabled_callback_mask[ep_num] &= ~(1 << callback_type);
 
 	if (callback_type == USB_DEVICE_ENDPOINT_CALLBACK_TRCPT) {
-		module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENCLR.reg = USB_DEVICE_EPINTENSET_TRCPT_Msk;
+		if (ep_num == 0) { // control endpoint
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENCLR.reg =  USB_DEVICE_EPINTENCLR_TRCPT0 | USB_DEVICE_EPINTENCLR_TRCPT1;
+		} else if (ep & USB_EP_DIR_IN) {
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENCLR.reg =  USB_DEVICE_EPINTENCLR_TRCPT1;
+		} else {
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENCLR.reg =  USB_DEVICE_EPINTENCLR_TRCPT0;
+		}
 	}
+	
 	if (callback_type == USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL) {
-		module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENCLR.reg = USB_DEVICE_EPINTENSET_TRFAIL_Msk;
+		if (ep_num == 0) { // control endpoint
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENCLR.reg = USB_DEVICE_EPINTENCLR_TRFAIL0 | USB_DEVICE_EPINTENCLR_TRFAIL1;
+		} else if (ep & USB_EP_DIR_IN) {
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENCLR.reg = USB_DEVICE_EPINTENCLR_TRFAIL1;
+		} else {
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENCLR.reg = USB_DEVICE_EPINTENCLR_TRFAIL0;
+		}
 	}
+	
 	if (callback_type == USB_DEVICE_ENDPOINT_CALLBACK_RXSTP) {
-		module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENCLR.reg = USB_DEVICE_EPINTENSET_RXSTP;
+		module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENCLR.reg = USB_DEVICE_EPINTENCLR_RXSTP;
 	}
+	
 	if (callback_type == USB_DEVICE_ENDPOINT_CALLBACK_STALL) {
-		module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENCLR.reg = USB_DEVICE_EPINTENSET_STALL_Msk;
+		if (ep & USB_EP_DIR_IN) {
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENCLR.reg = USB_DEVICE_EPINTENCLR_STALL1;
+		} else {
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTENCLR.reg = USB_DEVICE_EPINTENCLR_STALL0;
+		}
 	}
 	
 	return STATUS_OK;
@@ -431,7 +464,7 @@ void usb_device_endpoint_get_config_defaults(struct usb_device_endpoint_config *
 	
 	/* Write default config to config struct */
 	ep_config->ep_address = 0;
-	ep_config->ep_size = USB_ENDPOINT_64_BYTE;
+	ep_config->ep_size = USB_ENDPOINT_8_BYTE;
 	ep_config->auto_zlp = false;
 	ep_config->ep_type = USB_DEVICE_ENDPOINT_TYPE_CONTROL;
 }
@@ -452,14 +485,13 @@ enum status_code usb_device_endpoint_set_config(struct usb_module *module_inst,
 			return STATUS_OK;
 			
 		case USB_DEVICE_ENDPOINT_TYPE_CONTROL:
-			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg =
-				 USB_DEVICE_EPCFG_EPTYPE0(1) | USB_DEVICE_EPCFG_EPTYPE1(1);
+			module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg = USB_DEVICE_EPCFG_EPTYPE0(1) | USB_DEVICE_EPCFG_EPTYPE1(1);
 			if (true == ep_config->auto_zlp) { 
-				usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[0].PCKSIZE.bit.AUTO_ZLP = 1;
-				usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].PCKSIZE.bit.AUTO_ZLP = 1;
+				usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[0].PCKSIZE.reg |= USB_DEVICE_PCKSIZE_AUTO_ZLP;
+				usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].PCKSIZE.reg |= USB_DEVICE_PCKSIZE_AUTO_ZLP;
 			} else {
-				usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[0].PCKSIZE.bit.AUTO_ZLP = 0;
-				usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].PCKSIZE.bit.AUTO_ZLP = 0;
+				usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[0].PCKSIZE.reg &= ~USB_DEVICE_PCKSIZE_AUTO_ZLP;
+				usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].PCKSIZE.reg &= ~USB_DEVICE_PCKSIZE_AUTO_ZLP;
 			}
 			usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[0].PCKSIZE.bit.SIZE = ep_config->ep_size;
 			usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].PCKSIZE.bit.SIZE = ep_config->ep_size;
@@ -496,12 +528,76 @@ enum status_code usb_device_endpoint_set_config(struct usb_module *module_inst,
 	usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[ep_bank].PCKSIZE.bit.SIZE = ep_config->ep_size;
 
 	if (true == ep_config->auto_zlp) {
-		usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[ep_bank].PCKSIZE.bit.AUTO_ZLP = 1;
+		usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[ep_bank].PCKSIZE.reg |= USB_DEVICE_PCKSIZE_AUTO_ZLP;
 		} else {
-		usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[ep_bank].PCKSIZE.bit.AUTO_ZLP = 0;
+		usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[ep_bank].PCKSIZE.reg &= ~USB_DEVICE_PCKSIZE_AUTO_ZLP;
 	}
 
 	return STATUS_OK;
+}
+
+bool usb_nak_is_out(uint8_t ep_num)
+{
+	return(usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[0].STATUS_BK.reg & USB_DEVICE_STATUS_BK_ERRORFLOW);
+}
+
+void usb_nak_send_out(uint8_t ep_num)
+{
+	usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[0].STATUS_BK.reg &= ~USB_DEVICE_STATUS_BK_ERRORFLOW;
+}
+
+bool usb_nak_is_in(uint8_t ep_num)
+{
+	return(usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].STATUS_BK.reg & USB_DEVICE_STATUS_BK_ERRORFLOW);
+}
+
+void usb_nak_send_in(uint8_t ep_num)
+{
+	usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].STATUS_BK.reg &= ~USB_DEVICE_STATUS_BK_ERRORFLOW;
+}
+
+bool usb_device_endpoint_in_is_enabled(struct usb_module *module_inst,uint8_t ep_num)
+{
+	uint8_t flag;
+	flag = module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.bit.EPTYPE1;
+	return ((enum usb_device_endpoint_type)(flag) != USB_DEVICE_ENDPOINT_TYPE_DISABLE);
+}
+
+bool usb_device_endpoint_out_is_enabled(struct usb_module *module_inst,uint8_t ep_num)
+{
+	uint8_t flag;
+	flag = module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.bit.EPTYPE0;
+	return ((enum usb_device_endpoint_type)(flag) != USB_DEVICE_ENDPOINT_TYPE_DISABLE);
+}
+
+uint16_t usb_device_endpoint_get_out_buf_size(uint8_t ep_num)
+{
+	return (uint16_t)(usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE);
+}
+
+uint16_t usb_device_endpoint_get_received_bytes(uint8_t ep_num)
+{
+	return (uint16_t)(usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[0].PCKSIZE.bit.BYTE_COUNT);
+}
+
+uint16_t usb_device_endpoint_get_sent_bytes(uint8_t ep_num)
+{
+	return (uint16_t)(usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].PCKSIZE.bit.BYTE_COUNT);
+}
+
+void usb_device_endpoint_clear_received_bytes(uint8_t ep_num)
+{
+	usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[0].PCKSIZE.bit.BYTE_COUNT = 0;
+}
+
+uint16_t usb_device_endpoint_get_out_size(uint8_t ep_num)
+{
+	return (8 << (usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[0].PCKSIZE.bit.SIZE));
+}
+
+uint16_t usb_device_endpoint_get_in_size(uint8_t ep_num)
+{
+	return (8 << (usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].PCKSIZE.bit.SIZE));
 }
 
 enum status_code usb_device_endpoint_write_buffer_job(struct usb_module *module_inst,uint8_t ep_num,
@@ -512,7 +608,8 @@ enum status_code usb_device_endpoint_write_buffer_job(struct usb_module *module_
 
 	/* get pipe config from setting register */
 	usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].ADDR.reg = (uint32_t)pbuf;
-	usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].PCKSIZE.bit.MULTI_PACKET_SIZE = buf_size;
+	usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].PCKSIZE.bit.MULTI_PACKET_SIZE = 0;
+	usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].PCKSIZE.bit.BYTE_COUNT = buf_size;
 
 	return STATUS_OK;
 }
@@ -540,21 +637,6 @@ enum status_code usb_device_endpoint_setup_buffer_job(struct usb_module *module_
 	usb_descriptor_table.usb_endpoint_table[0].DeviceDescBank[0].ADDR.reg = (uint32_t)pbuf;
 	usb_descriptor_table.usb_endpoint_table[0].DeviceDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE = buf_size;
 
-	usb_descriptor_table.usb_endpoint_table[0].DeviceDescBank[1].ADDR.reg = (uint32_t)pbuf;
-	usb_descriptor_table.usb_endpoint_table[0].DeviceDescBank[1].PCKSIZE.bit.MULTI_PACKET_SIZE = buf_size;
-	
-	return STATUS_OK;
-}
-
-enum status_code usb_device_endpoint_abort_job(struct usb_module *module_inst,uint8_t ep_num)
-{
-	struct usb_device_endpoint_config config_ep;
-	
-	usb_device_endpoint_get_config_defaults(&config_ep);
-	config_ep.ep_address  = (config_ep.ep_address & USB_EP_ADDR_MASK) | ep_num;
-	config_ep.ep_type = USB_DEVICE_ENDPOINT_TYPE_DISABLE;
-	
-	usb_device_endpoint_set_config(module_inst,&config_ep);
 	return STATUS_OK;
 }
 
@@ -569,23 +651,7 @@ static void _usb_device_interrupt_handler(void)
 	if ( 0 == ep_inst) {
 	/* get interrupt flags */
 		flags = _usb_instances->hw->DEVICE.INTFLAG.reg;
-
-		// device suspend interrupt
-		if (flags & USB_DEVICE_INTFLAG_SUSPEND) {
-			// clear the flag
-			_usb_instances->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_SUSPEND;
-			if(_usb_instances->device_enabled_callback_mask & (1 << USB_DEVICE_CALLBACK_SUSPEND)) {
-				(_usb_instances->device_callback[USB_DEVICE_CALLBACK_SUSPEND])(_usb_instances);
-			}		
-		}
-		// device sof interrupt
-		if (flags & USB_DEVICE_INTFLAG_SOF) {
-			// clear the flag
-			_usb_instances->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_SOF;
-			if(_usb_instances->device_enabled_callback_mask & (1 << USB_DEVICE_CALLBACK_SOF)) {
-				(_usb_instances->device_callback[USB_DEVICE_CALLBACK_SOF])(_usb_instances);
-			}		
-		}
+		
 		// device end of reset interrupt
 		if (flags & USB_DEVICE_INTFLAG_EORST) {
 			// clear the flag
@@ -593,96 +659,133 @@ static void _usb_device_interrupt_handler(void)
 			if(_usb_instances->device_enabled_callback_mask & (1 << USB_DEVICE_CALLBACK_RESET)) {
 				(_usb_instances->device_callback[USB_DEVICE_CALLBACK_RESET])(_usb_instances);
 			}
+			return;
 		}
+		
+		// device suspend interrupt
+		if (flags & USB_DEVICE_INTFLAG_SUSPEND) {
+			// clear the flag
+			_usb_instances->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_SUSPEND;
+			if(_usb_instances->device_enabled_callback_mask & (1 << USB_DEVICE_CALLBACK_SUSPEND)) {
+				(_usb_instances->device_callback[USB_DEVICE_CALLBACK_SUSPEND])(_usb_instances);
+			}		
+			return;
+		}
+		
 		// device wakeup interrupt
 		if (flags & USB_DEVICE_INTFLAG_WAKEUP) {
 			// clear the flag
 			_usb_instances->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_WAKEUP;
 			if(_usb_instances->device_enabled_callback_mask & (1 << USB_DEVICE_CALLBACK_WAKEUP)) {
 				(_usb_instances->device_callback[USB_DEVICE_CALLBACK_WAKEUP])(_usb_instances);
-			}		
+			}
+			return;
 		}
-		// device end of resume interrupt
-		if (flags & USB_DEVICE_INTFLAG_EORSM) {
+		
+		// device sof interrupt
+		if (flags & USB_DEVICE_INTFLAG_SOF) {
 			// clear the flag
-			_usb_instances->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_EORSM;
-			if(_usb_instances->device_enabled_callback_mask & (1 << USB_DEVICE_CALLBACK_EORSM)) {
-				(_usb_instances->device_callback[USB_DEVICE_CALLBACK_EORSM])(_usb_instances);
-			}		
+			_usb_instances->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_SOF;
+			if(_usb_instances->device_enabled_callback_mask & (1 << USB_DEVICE_CALLBACK_SOF)) {
+				(_usb_instances->device_callback[USB_DEVICE_CALLBACK_SOF])(_usb_instances);
+			}
+			return;
 		}
-		// device upstream resume interrupt
-		if (flags & USB_DEVICE_INTFLAG_UPRSM) {
-			// clear the flag
-			_usb_instances->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_UPRSM;
-			if(_usb_instances->device_enabled_callback_mask & (1 << USB_DEVICE_CALLBACK_UPRSM)) {
-				(_usb_instances->device_callback[USB_DEVICE_CALLBACK_UPRSM])(_usb_instances);
-			}		
-		}
+		
 		// device ram access interrupt
 		if (flags & USB_DEVICE_INTFLAG_RAMACER) {
 			// clear the flag
 			_usb_instances->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_RAMACER;
 			if(_usb_instances->device_enabled_callback_mask & (1 << USB_DEVICE_CALLBACK_RAMACER)) {
 				(_usb_instances->device_callback[USB_DEVICE_CALLBACK_RAMACER])(_usb_instances);
-			}		
+			}
+			return;
 		}
-		// device lpm not yet interrupt
-		if (flags & USB_DEVICE_INTFLAG_LPMNYET) {
+		
+		// device upstream resume interrupt
+		if (flags & USB_DEVICE_INTFLAG_UPRSM) {
 			// clear the flag
-			_usb_instances->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_LPMNYET;
-			if(_usb_instances->device_enabled_callback_mask & (1 << USB_DEIVCE_CALLBACK_LPMNYET)) {
-				(_usb_instances->device_callback[USB_DEIVCE_CALLBACK_LPMNYET])(_usb_instances);
-			}		
+			_usb_instances->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_UPRSM;
+			if(_usb_instances->device_enabled_callback_mask & (1 << USB_DEVICE_CALLBACK_UPRSM)) {
+				(_usb_instances->device_callback[USB_DEVICE_CALLBACK_UPRSM])(_usb_instances);
+			}
+			return;
 		}
+		
+		// device end of resume interrupt
+		if (flags & USB_DEVICE_INTFLAG_EORSM) {
+			// clear the flag
+			_usb_instances->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_EORSM;
+			if(_usb_instances->device_enabled_callback_mask & (1 << USB_DEVICE_CALLBACK_EORSM)) {
+				(_usb_instances->device_callback[USB_DEVICE_CALLBACK_EORSM])(_usb_instances);
+			}
+			return;
+		}
+		
 		// device lpm suspend interrupt
 		if (flags & USB_DEVICE_INTFLAG_LPMSUSP) {
 			// clear the flag
 			_usb_instances->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_LPMSUSP;
 			if(_usb_instances->device_enabled_callback_mask & (1 << USB_DEIVCE_CALLBACK_LPMSUSP)) {
 				(_usb_instances->device_callback[USB_DEIVCE_CALLBACK_LPMSUSP])(_usb_instances);
-			}		
+			}
+			return;
 		}
+		
+		// device lpm not yet interrupt
+		if (flags & USB_DEVICE_INTFLAG_LPMNYET) {
+			// clear the flag
+			_usb_instances->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_LPMNYET;
+			if(_usb_instances->device_enabled_callback_mask & (1 << USB_DEIVCE_CALLBACK_LPMNYET)) {
+				(_usb_instances->device_callback[USB_DEIVCE_CALLBACK_LPMNYET])(_usb_instances);
+			}
+			return;
+		}
+		
 	} else {
 	/* endpoint interrupt */
 		for (uint8_t i = 0; i < USB_EPT_NUM; i++) {
 			if (ep_inst & (1 << i)) {
 				flags = _usb_instances->hw->DEVICE.DeviceEndpoint[i].EPINTFLAG.reg;
 
-				// endpoint transfer complete interrupt
-				if (flags & USB_DEVICE_EPINTFLAG_TRCPT_Msk) {
-					// clear the flag
-					_usb_instances->hw->DEVICE.DeviceEndpoint[i].EPINTFLAG.reg = USB_DEVICE_EPINTFLAG_TRCPT_Msk;
-					if(_usb_instances->device_endpoint_enabled_callback_mask[i] & \
-							(1 << USB_DEVICE_ENDPOINT_CALLBACK_TRCPT)) {
-						(_usb_instances->device_endpoint_callback[i][USB_DEVICE_ENDPOINT_CALLBACK_TRCPT])(_usb_instances);
-					}
-				}
-				// endpoint transfer fail interrupt
-				if (flags & USB_DEVICE_EPINTFLAG_TRFAIL_Msk) {
-					// clear the flag
-					_usb_instances->hw->DEVICE.DeviceEndpoint[i].EPINTFLAG.reg = USB_DEVICE_EPINTFLAG_TRFAIL_Msk;
-					if(_usb_instances->device_endpoint_enabled_callback_mask[i] & \
-							(1 << USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL)) {
-						(_usb_instances->device_endpoint_callback[i][USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL])(_usb_instances);
-					}
-				}
-				// endpoint received setup interrupt
-				if (flags & USB_DEVICE_EPINTFLAG_RXSTP) {
-					// clear the flag
-					_usb_instances->hw->DEVICE.DeviceEndpoint[i].EPINTFLAG.reg = USB_DEVICE_EPINTFLAG_RXSTP;
-					if(_usb_instances->device_endpoint_enabled_callback_mask[i] & \
-							(1 << USB_DEVICE_ENDPOINT_CALLBACK_RXSTP)) {
-						(_usb_instances->device_endpoint_callback[i][USB_DEVICE_ENDPOINT_CALLBACK_RXSTP])(_usb_instances);
-					}
-				}
 				// endpoint transfer stall interrupt
 				if (flags & USB_DEVICE_EPINTFLAG_STALL_Msk) {
 					// clear the flag
 					_usb_instances->hw->DEVICE.DeviceEndpoint[i].EPINTFLAG.reg = USB_DEVICE_EPINTFLAG_STALL_Msk;
 					if(_usb_instances->device_endpoint_enabled_callback_mask[i] & \
-							(1 << USB_DEVICE_ENDPOINT_CALLBACK_STALL)) {
-						(_usb_instances->device_endpoint_callback[i][USB_DEVICE_ENDPOINT_CALLBACK_STALL])(_usb_instances);
+					(1 << USB_DEVICE_ENDPOINT_CALLBACK_STALL)) {
+						(_usb_instances->device_endpoint_callback[i][USB_DEVICE_ENDPOINT_CALLBACK_STALL])(_usb_instances,i);
 					}
+					return;
+				}
+				
+				// endpoint received setup interrupt
+				if (flags & USB_DEVICE_EPINTFLAG_RXSTP) {
+					// clear the flag
+					_usb_instances->hw->DEVICE.DeviceEndpoint[i].EPINTFLAG.reg = USB_DEVICE_EPINTFLAG_RXSTP;
+					if(_usb_instances->device_endpoint_enabled_callback_mask[i] & \
+					(1 << USB_DEVICE_ENDPOINT_CALLBACK_RXSTP)) {
+						(_usb_instances->device_endpoint_callback[i][USB_DEVICE_ENDPOINT_CALLBACK_RXSTP])(_usb_instances,i);
+					}
+					return;
+				}
+				
+				// endpoint transfer fail interrupt
+				if (flags & USB_DEVICE_EPINTFLAG_TRFAIL_Msk) {
+					if(_usb_instances->device_endpoint_enabled_callback_mask[i] & \
+					(1 << USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL)) {
+						(_usb_instances->device_endpoint_callback[i][USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL])(_usb_instances,i);
+					}
+					return;
+				}
+				
+				// endpoint transfer complete interrupt
+				if (flags & USB_DEVICE_EPINTFLAG_TRCPT_Msk) {
+					if(_usb_instances->device_endpoint_enabled_callback_mask[i] & \
+							(1 << USB_DEVICE_ENDPOINT_CALLBACK_TRCPT)) {
+						(_usb_instances->device_endpoint_callback[i][USB_DEVICE_ENDPOINT_CALLBACK_TRCPT])(_usb_instances,i);
+					}
+					return;
 				}
 			}
 		}

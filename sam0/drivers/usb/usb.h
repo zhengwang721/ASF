@@ -66,12 +66,12 @@ struct usb_module;
 
 /** device interrupt functions*/
 typedef void (*usb_device_callback_t)(struct usb_module *module_inst);
-typedef void (*usb_device_endpoint_callback_t)(struct usb_module *module_inst);
+typedef void (*usb_device_endpoint_callback_t)(struct usb_module *module_inst,uint8_t ep);
 
 /** Enumeration for the speed status for the USB host module */
 enum usb_speed {
-	USB_SPEED_LOW,
 	USB_SPEED_FULL,
+	USB_SPEED_LOW,
 	//USB_SPEED_HIGH,
 };
 
@@ -208,14 +208,42 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 
 /******************************************************************/
 /*************Second part: USB device start*****************************/
+#define USB_DEVICE_EPINTENCLR_TRCPT0		USB_DEVICE_EPINTENCLR_TRCPT(1)
+#define USB_DEVICE_EPINTENCLR_TRCPT1		USB_DEVICE_EPINTENCLR_TRCPT(2)
+#define USB_DEVICE_EPINTENCLR_TRFAIL0		USB_DEVICE_EPINTENCLR_TRFAIL(1)
+#define USB_DEVICE_EPINTENCLR_TRFAIL1		USB_DEVICE_EPINTENCLR_TRFAIL(2)
+#define USB_DEVICE_EPINTENCLR_STALL0		USB_DEVICE_EPINTENCLR_STALL(1)
+#define USB_DEVICE_EPINTENCLR_STALL1		USB_DEVICE_EPINTENCLR_STALL(2)
+
+#define USB_DEVICE_EPINTENSET_TRCPT0		USB_DEVICE_EPINTENSET_TRCPT(1)
+#define USB_DEVICE_EPINTENSET_TRCPT1		USB_DEVICE_EPINTENSET_TRCPT(2)
+#define USB_DEVICE_EPINTENSET_TRFAIL0		USB_DEVICE_EPINTENSET_TRFAIL(1)
+#define USB_DEVICE_EPINTENSET_TRFAIL1		USB_DEVICE_EPINTENSET_TRFAIL(2)
+#define USB_DEVICE_EPINTENSET_STALL0		USB_DEVICE_EPINTENSET_STALL(1)
+#define USB_DEVICE_EPINTENSET_STALL1		USB_DEVICE_EPINTENSET_STALL(2)
+
+#define USB_DEVICE_EPINTFLAG_TRCPT0			USB_DEVICE_EPINTFLAG_TRCPT(1)
+#define USB_DEVICE_EPINTFLAG_TRCPT1			USB_DEVICE_EPINTFLAG_TRCPT(2)
+#define USB_DEVICE_EPINTFLAG_TRFAIL0		USB_DEVICE_EPINTFLAG_TRFAIL(1)
+#define USB_DEVICE_EPINTFLAG_TRFAIL1		USB_DEVICE_EPINTFLAG_TRFAIL(2)
+#define USB_DEVICE_EPINTFLAG_STALL0			USB_DEVICE_EPINTFLAG_STALL(1)
+#define USB_DEVICE_EPINTFLAG_STALL1			USB_DEVICE_EPINTFLAG_STALL(2)
+
+
+#define USB_DEVICE_EPSTATUSSET_STALLRQ0		USB_DEVICE_EPSTATUSSET_STALLRQ(1)
+#define USB_DEVICE_EPSTATUSSET_STALLRQ1		USB_DEVICE_EPSTATUSSET_STALLRQ(2)
+#define USB_DEVICE_EPSTATUSCLR_STALLRQ0		USB_DEVICE_EPSTATUSCLR_STALLRQ(1)
+#define USB_DEVICE_EPSTATUSCLR_STALLRQ1		USB_DEVICE_EPSTATUSCLR_STALLRQ(2)
+
+
 
 //! @name USBC Device related contents
 //! @{
 	
 /** device initial functions */
 void usb_device_get_config_defaults(struct usb_device_config *dev_config);
-enum status_code usb_device_set_config(struct usb_module *module_inst, 
-		struct usb_device_config *dev_config);
+//enum status_code usb_device_set_config(struct usb_module *module_inst, 
+		//struct usb_device_config *dev_config);
 enum status_code usb_device_get_config(struct usb_module *module_inst,
 		struct usb_device_config *dev_config);
 
@@ -241,14 +269,17 @@ enum status_code usb_device_endpoint_register_callback(
 		struct usb_module *module_inst, uint8_t ep_num,
 		enum usb_device_endpoint_callback callback_type,
 		usb_device_endpoint_callback_t callback_func);
+		
 enum status_code usb_device_endpoint_unregister_callback(
 		struct usb_module *module_inst, uint8_t ep_num,
 		enum usb_device_endpoint_callback callback_type);
+		
 enum status_code usb_device_endpoint_enable_callback(
-		struct usb_module *module_inst, uint8_t ep_num,
+		struct usb_module *module_inst, uint8_t ep,
 		enum usb_device_endpoint_callback callback_type);
+		
 enum status_code usb_device_endpoint_disable_callback(
-		struct usb_module *module_inst, uint8_t ep_num,
+		struct usb_module *module_inst, uint8_t ep,
 		enum usb_device_endpoint_callback callback_type);
 
 /**
@@ -256,14 +287,20 @@ enum status_code usb_device_endpoint_disable_callback(
  *
  * \param module_inst pointer to USB device module instance
  */
-void usb_device_attach(struct usb_module *module_inst);
+static inline void usb_device_attach(struct usb_module *module_inst)
+{
+	module_inst->hw->DEVICE.CTRLB.reg &= ~USB_DEVICE_CTRLB_DETACH;
+}
 
 /**
  * \brief USB device detach from the bus
  *
  * \param module_inst pointer to USB device module instance
  */
-void usb_device_detach(struct usb_module *module_inst);
+static inline void usb_device_detach(struct usb_module *module_inst)
+{
+	module_inst->hw->DEVICE.CTRLB.reg |= USB_DEVICE_CTRLB_DETACH;
+}
 
 /**
  * \brief Get the speed mode of USB device
@@ -273,10 +310,10 @@ void usb_device_detach(struct usb_module *module_inst);
  */
 static inline enum usb_speed usb_device_get_speed(struct usb_module *module_inst)
 {
-	if (module_inst->hw->DEVICE.STATUS.bit.SPEED == 0) {
-		return USB_SPEED_LOW;
+	if (!(module_inst->hw->DEVICE.STATUS.reg & USB_DEVICE_STATUS_SPEED_Msk)) {
+		return USB_SPEED_FULL; 
 	} else {
-		return USB_SPEED_FULL;
+		return USB_SPEED_LOW;
 	}
 }
 
@@ -288,7 +325,7 @@ static inline enum usb_speed usb_device_get_speed(struct usb_module *module_inst
  */
 static inline uint8_t usb_device_get_address(struct usb_module *module_inst)
 {
-	return (uint8_t)(module_inst->hw->DEVICE.DADD.bit.DADD);
+	return ((uint8_t)(module_inst->hw->DEVICE.DADD.bit.DADD));
 }
 
 /**
@@ -310,7 +347,7 @@ static inline void usb_device_set_address(struct usb_module *module_inst, uint8_
  */
 static inline uint16_t usb_device_get_frame_number(struct usb_module *module_inst)
 {
-	return (uint16_t)(module_inst->hw->DEVICE.FNUM.bit.FNUM);
+	return ((uint16_t)(module_inst->hw->DEVICE.FNUM.bit.FNUM));
 }
 /**
  * \brief Get the micro-frame number of USB device
@@ -320,50 +357,194 @@ static inline uint16_t usb_device_get_frame_number(struct usb_module *module_ins
  */
 static inline uint16_t usb_device_get_micro_frame_number(struct usb_module *module_inst)
 {
-	return (uint16_t)(module_inst->hw->DEVICE.FNUM.bit.MFNUM);
+	return ((uint16_t)(module_inst->hw->DEVICE.FNUM.bit.MFNUM));
 }
 
-/**
- * \brief whether endpoint number n is halted
- *
- * \param module_inst pointer to USB device module instance
- * \param ep_num number of endpoint
- *
- * \return true or false
- */
-static inline bool usb_device_endpoint_is_halted(struct usb_module *module_inst,uint8_t ep_num)
+static inline void usb_send_remote_wake_up(struct usb_module *module_inst)
 {
-	if(0 != module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUS.bit.STALLRQ) {
-		return true;
+	module_inst->hw->DEVICE.CTRLB.reg |= USB_DEVICE_CTRLB_UPRSM;
+}
+
+static inline enum usb_device_endpoint_type usb_device_get_endpoint_out_type(struct usb_module *module_inst,uint8_t ep_num)
+{
+	if (1 == module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.bit.EPTYPE0) {
+		return USB_DEVICE_ENDPOINT_TYPE_CONTROL;
+	} else if (2 == module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.bit.EPTYPE0) {
+		return USB_DEVICE_ENDPOINT_TYPE_ISOCHRONOUS;
+	} else if (3 == module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.bit.EPTYPE0) {
+		return USB_DEVICE_ENDPOINT_TYPE_BULK;
+	} else if (4 == module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.bit.EPTYPE0) {
+		return USB_DEVICE_ENDPOINT_TYPE_INTERRUPT;
 	} else {
-		return false;
+		return USB_DEVICE_ENDPOINT_TYPE_DISABLE;
 	}
 }
 
-/**
- * \brief Set endpoint number n halted
- *
- * \param module_inst pointer to USB device module instance
- * \param ep_num number of endpoint
- *
- */
-static inline void usb_device_endpoint_set_halt(struct usb_module *module_inst,uint8_t ep_num)
+static inline void usb_device_clear_reset_int_flag(struct usb_module *module_inst)
 {
-	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSSET.reg = USB_DEVICE_EPSTATUSSET_STALLRQ_Msk;
+	module_inst->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_EORST;
 }
 
-/**
- * \brief Free endpoint number n from halted
- *
- * \param module_inst pointer to USB device module instance
- * \param ep_num number of endpoint
- *
- */
-static inline void usb_device_endpoint_clear_halt(struct usb_module *module_inst,uint8_t ep_num)
+static inline void usb_device_clear_sof_int_flag(struct usb_module *module_inst)
 {
-	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSCLR.reg = USB_DEVICE_EPSTATUSCLR_STALLRQ_Msk;
+	module_inst->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_SOF;
 }
 
+static inline void usb_device_clear_wakeup_int_flag(struct usb_module *module_inst)
+{
+	module_inst->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_WAKEUP;
+}
+
+static inline void usb_device_clear_suspend_int_flag(struct usb_module *module_inst)
+{
+	module_inst->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_SUSPEND;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////
+static inline void usb_set_bank_out_full(struct usb_module *module_inst, uint8_t ep_num)
+{
+	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSSET.reg = USB_DEVICE_EPSTATUSSET_BK0RDY;
+}
+
+static inline void usb_set_bank_out_empty(struct usb_module *module_inst, uint8_t ep_num)
+{
+	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSCLR.reg = USB_DEVICE_EPSTATUSCLR_BK0RDY;
+}
+
+static inline void usb_set_bank_in_full(struct usb_module *module_inst, uint8_t ep_num)
+{
+	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSSET.reg = USB_DEVICE_EPSTATUSSET_BK1RDY;
+}
+
+static inline void usb_set_bank_in_empty(struct usb_module *module_inst, uint8_t ep_num)
+{
+	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSCLR.reg = USB_DEVICE_EPSTATUSCLR_BK1RDY;
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+static inline bool usb_device_in_is_sent(struct usb_module *module_inst, uint8_t ep_num)
+{
+	return (module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTFLAG.reg & USB_DEVICE_EPINTFLAG_TRCPT1); 
+}
+
+static inline void usb_ack_in_sent(struct usb_module *module_inst, uint8_t ep_num)
+{
+	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTFLAG.reg = USB_DEVICE_EPINTFLAG_TRCPT1;
+}
+
+static inline bool usb_device_out_is_received(struct usb_module *module_inst, uint8_t ep_num)
+{
+	return (module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTFLAG.reg & USB_DEVICE_EPINTFLAG_TRCPT0); 
+}
+
+static inline void usb_ack_out_received(struct usb_module *module_inst, uint8_t ep_num)
+{
+	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTFLAG.reg = USB_DEVICE_EPINTFLAG_TRCPT0;
+}
+
+static inline bool usb_device_out_is_fail(struct usb_module *module_inst, uint8_t ep_num)
+{
+	return (module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTFLAG.reg & USB_DEVICE_EPINTFLAG_TRFAIL0);
+}
+
+static inline bool usb_device_in_is_fail(struct usb_module *module_inst, uint8_t ep_num)
+{
+	return (module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTFLAG.reg & USB_DEVICE_EPINTFLAG_TRFAIL1);
+}
+
+static inline void usb_ack_trfail_out(struct usb_module *module_inst, uint8_t ep_num)
+{
+	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTFLAG.reg = USB_DEVICE_EPINTFLAG_TRFAIL0;
+}
+
+static inline void usb_ack_trfail_in(struct usb_module *module_inst, uint8_t ep_num)
+{
+	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTFLAG.reg = USB_DEVICE_EPINTFLAG_TRFAIL1;
+}
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////
+static inline bool usb_device_is_stall_in(struct usb_module *module_inst, uint8_t ep_num)
+{
+	return (module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTFLAG.reg & USB_DEVICE_EPINTFLAG_STALL1);
+}
+
+static inline bool usb_device_is_stall_out(struct usb_module *module_inst, uint8_t ep_num)
+{
+	return (module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTFLAG.reg & USB_DEVICE_EPINTFLAG_STALL0);
+}
+
+static inline void usb_ack_stall_in(struct usb_module *module_inst, uint8_t ep_num)
+{
+	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTFLAG.reg = USB_DEVICE_EPINTFLAG_STALL1;
+}
+
+static inline void usb_ack_stall_out(struct usb_module *module_inst, uint8_t ep_num)
+{
+	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPINTFLAG.reg = USB_DEVICE_EPINTFLAG_STALL0;
+}
+
+static inline bool usb_device_is_out_stall_requested(struct usb_module *module_inst, uint8_t ep_num)
+{
+	return (module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUS.reg & USB_DEVICE_EPSTATUSSET_STALLRQ0);
+}
+
+static inline bool usb_device_is_in_stall_requested(struct usb_module *module_inst, uint8_t ep_num)
+{
+	return (module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUS.reg & USB_DEVICE_EPSTATUSSET_STALLRQ1);
+}
+
+static inline void usb_device_enable_stall_handshake_out(struct usb_module *module_inst, uint8_t ep_num)
+{
+	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSSET.reg = USB_DEVICE_EPSTATUSSET_STALLRQ0;
+}
+
+static inline void usb_device_enable_stall_handshake_in(struct usb_module *module_inst, uint8_t ep_num)
+{
+	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSSET.reg = USB_DEVICE_EPSTATUSSET_STALLRQ1;
+}
+
+static inline void usb_device_disable_stall_handshake_out(struct usb_module *module_inst, uint8_t ep_num)
+{
+	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSCLR.reg = USB_DEVICE_EPSTATUSCLR_STALLRQ0;
+}
+
+static inline void usb_device_disable_stall_handshake_in(struct usb_module *module_inst, uint8_t ep_num)
+{
+	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSCLR.reg = USB_DEVICE_EPSTATUSCLR_STALLRQ1;
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+static inline void usb_clear_data_toggle_in(struct usb_module *module_inst, uint8_t ep_num)
+{
+	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSCLR.reg = USB_DEVICE_EPSTATUSSET_DTGLIN;
+}
+
+static inline void usb_clear_data_toggle_out(struct usb_module *module_inst, uint8_t ep_num)
+{
+	module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSCLR.reg = USB_DEVICE_EPSTATUSSET_DTGLOUT;
+}
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+bool usb_device_endpoint_in_is_enabled(struct usb_module *module_inst,uint8_t ep_num);
+
+bool usb_device_endpoint_out_is_enabled(struct usb_module *module_inst,uint8_t ep_num);
+
+uint16_t usb_device_endpoint_get_out_buf_size(uint8_t ep_num);
+
+uint16_t usb_device_endpoint_get_received_bytes(uint8_t ep_num);
+
+uint16_t usb_device_endpoint_get_sent_bytes(uint8_t ep_num);
+
+void usb_device_endpoint_clear_received_bytes(uint8_t ep_num);
+
+uint16_t usb_device_endpoint_get_out_size(uint8_t ep_num);
+
+uint16_t usb_device_endpoint_get_in_size(uint8_t ep_num);
+
+bool usb_nak_is_out(uint8_t ep_num);
+
+void usb_nak_send_out(uint8_t ep_num);
+
+bool usb_nak_is_in(uint8_t ep_num);
+
+void usb_nak_send_in(uint8_t ep_num);
 
 /**
  * \brief endpoint number n write job
@@ -385,13 +566,8 @@ enum status_code usb_device_endpoint_write_buffer_job(struct usb_module *module_
  */
 enum status_code usb_device_endpoint_read_buffer_job(struct usb_module *module_inst,uint8_t ep_num,
 		uint8_t* pbuf, uint32_t buf_size);
-/**
- * \brief endpoint number n abort job
- *
- * \param module_inst pointer to USB device module instance
- * \param ep_num number of endpoint
- */
-enum status_code usb_device_endpoint_abort_job(struct usb_module *module_inst,uint8_t ep_num);
+
+
 /**
  * \brief endpoint number n setup job
  *
@@ -402,6 +578,7 @@ enum status_code usb_device_endpoint_abort_job(struct usb_module *module_inst,ui
  */
 enum status_code usb_device_endpoint_setup_buffer_job(struct usb_module *module_inst,
 		uint8_t* pbuf, uint32_t buf_size);
+
 
 /********************Second part: USB device end***********************/
 /******************************************************************/
