@@ -47,30 +47,33 @@
 
 static volatile bool main_b_mouse_enable = false;
 
-
 /*! \brief Main function. Execution starts here.
  */
 int main(void)
 {
+	#if !SAMD21
 	sysclk_init();
 	irq_initialize_vectors();
 	cpu_irq_enable();
-
 	// Initialize the sleep manager
 	sleepmgr_init();
-
 	board_init();
+	
+	#else 
+	system_init();
+	
+	#endif
+	
 	ui_init();
 	ui_powerdown();
-
-
+	
 	// Start USB stack to authorize VBus monitoring
 	udc_start();
 
 	// The main loop manages only the power mode
 	// because the USB management is done by interrupt
 	while (true) {
-#ifdef   USB_DEVICE_LOW_SPEED
+	#ifdef   USB_DEVICE_LOW_SPEED
 		// No USB "Keep a live" interrupt available in low speed
 		// to scan mouse interface then use main loop
 		if (main_b_mouse_enable) {
@@ -83,10 +86,11 @@ int main(void)
 				ui_process(virtual_sof++);
 			}
 		}
-#else
+	#else
+		#if !SAMD21
 		sleepmgr_enter_sleep();
-#endif
-
+		#endif
+	#endif
 	}
 }
 

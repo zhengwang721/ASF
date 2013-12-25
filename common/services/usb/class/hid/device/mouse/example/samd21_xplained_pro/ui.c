@@ -44,16 +44,19 @@
 #include <asf.h>
 #include "ui.h"
 
-#define  MOUSE_MOVE_RANGE  3
+#define	 LED_On()	       port_pin_set_output_level(LED_0_PIN, 1)
+#define  LED_OFF()		   port_pin_set_output_level(LED_0_PIN, 0)
+
+#define  MOUSE_MOVE_RANGE  1
 
 /* Wakeup pin is push button 2 (BP3, fast wakeup 10) */
-#define  WAKEUP_PMC_FSTT (PUSHBUTTON_2_WKUP_FSTT)
-#define  WAKEUP_PIN      (GPIO_PUSH_BUTTON_2)
-#define  WAKEUP_PIO      (PIN_PUSHBUTTON_2_PIO)
-#define  WAKEUP_PIO_ID   (PIN_PUSHBUTTON_2_ID)
-#define  WAKEUP_PIO_MASK (PIN_PUSHBUTTON_2_MASK)
-#define  WAKEUP_PIO_ATTR \
-	(PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_LOW_LEVEL)
+//#define  WAKEUP_PMC_FSTT (PUSHBUTTON_2_WKUP_FSTT)
+//#define  WAKEUP_PIN      (GPIO_PUSH_BUTTON_2)
+//#define  WAKEUP_PIO      (PIN_PUSHBUTTON_2_PIO)
+//#define  WAKEUP_PIO_ID   (PIN_PUSHBUTTON_2_ID)
+//#define  WAKEUP_PIO_MASK (PIN_PUSHBUTTON_2_MASK)
+//#define  WAKEUP_PIO_ATTR 
+	//(PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_LOW_LEVEL)
 
 /* Interrupt on "pin change" from push button to do wakeup on USB
  * Note:
@@ -62,66 +65,70 @@
  */
 static void ui_wakeup_handler(uint32_t id, uint32_t mask)
 {
-	if (WAKEUP_PIO_ID == id && WAKEUP_PIO_MASK == mask) {
+	//if (WAKEUP_PIO_ID == id && WAKEUP_PIO_MASK == mask) {
 		/* It is a wakeup then send wakeup USB */
 		udc_remotewakeup();
-		LED_On(LED0);
-	}
+		LED_On();
+	//}
 }
 
 void ui_init(void)
 {
-	/* Set handler for push button */
-	pio_handler_set(WAKEUP_PIO, WAKEUP_PIO_ID, WAKEUP_PIO_MASK,
-		WAKEUP_PIO_ATTR, ui_wakeup_handler);
-	/* Enable IRQ for button (PIOA) */
-	NVIC_EnableIRQ((IRQn_Type) WAKEUP_PIO_ID);
+	//struct extint_chan_conf config_extint_chan;
+	//
+	//extint_chan_get_config_defaults(&config_extint_chan);
+	//
+	//config_extint_chan.gpio_pin           = BUTTON_0_EIC_PIN;
+	//config_extint_chan.gpio_pin_mux       = BUTTON_0_EIC_MUX;
+	//config_extint_chan.gpio_pin_pull      = EXTINT_PULL_UP;
+	//config_extint_chan.detection_criteria = EXTINT_DETECT_BOTH;
+	//
+	//extint_chan_set_config(BUTTON_0_EIC_LINE, &config_extint_chan);
+	
 	/* Initialize LEDs */
-	LED_Off(LED0);
-	LED_Off(LED1);
+	LED_OFF();
 }
 
 void ui_powerdown(void)
 {
-	LED_Off(LED0);
-	LED_Off(LED1);
+	LED_OFF();
 }
 
 
 void ui_wakeup_enable(void)
 {
 	/* Configure BP3 as PIO input */
-	pio_configure_pin(WAKEUP_PIN, WAKEUP_PIO_ATTR);
+	//pio_configure_pin(WAKEUP_PIN, WAKEUP_PIO_ATTR);
 	/* Enable interrupt for BP3 */
-	pio_enable_pin_interrupt(WAKEUP_PIN);
+	//pio_enable_pin_interrupt(WAKEUP_PIN);
 	/* Enable fast wakeup for button pin (WKUP10 for PA20) */
-	pmc_set_fast_startup_input(WAKEUP_PMC_FSTT);
+	//pmc_set_fast_startup_input(WAKEUP_PMC_FSTT);
 }
 
 void ui_wakeup_disable(void)
 {
 	/* Disable interrupt for button pin */
-	pio_disable_pin_interrupt(WAKEUP_PIN);
+	//pio_disable_pin_interrupt(WAKEUP_PIN);
 	/* Disable fast wakeup for button pin (WKUP10 for BP3) */
-	pmc_clr_fast_startup_input(WAKEUP_PMC_FSTT);
+	//pmc_clr_fast_startup_input(WAKEUP_PMC_FSTT);
 }
 
 void ui_wakeup(void)
 {
-	LED_On(LED0);
+	LED_On();
 }
 
 void ui_process(uint16_t framenumber)
 {
 	static uint8_t cpt_sof = 0;
-	static bool btn_left = false, btn_right = false;
-	bool btn_pressed;
+	//static bool btn_left = false, btn_right = false;
+	//bool btn_pressed;
 
 	if ((framenumber % 1000) == 0) {
-		LED_On(LED1);
+		LED_On();
 	}
 	if ((framenumber % 1000) == 500) {
-		LED_Off(LED1);
+		LED_OFF();
 	}
 	/* Scan process running each 2ms */
 	cpt_sof++;
@@ -131,36 +138,18 @@ void ui_process(uint16_t framenumber)
 	cpt_sof = 0;
 
 	/* Uses buttons to move mouse */
-	if (!ioport_get_pin_level(GPIO_PUSH_BUTTON_3)) {
+	if (!port_pin_get_input_level(BUTTON_0_PIN)) {
 		udi_hid_mouse_moveY(-MOUSE_MOVE_RANGE);
-	}
-	if (!ioport_get_pin_level(GPIO_PUSH_BUTTON_4)) {
-		udi_hid_mouse_moveY( MOUSE_MOVE_RANGE);
-	}
-	/* Check button click */
-	btn_pressed = !ioport_get_pin_level(GPIO_PUSH_BUTTON_2);
-	if (btn_pressed != btn_left) {
-		btn_left = btn_pressed;
-		udi_hid_mouse_btnleft(btn_left);
-	}
-	btn_pressed = !ioport_get_pin_level(GPIO_PUSH_BUTTON_1);
-	if (btn_pressed != btn_right) {
-		btn_right = btn_pressed;
-		udi_hid_mouse_btnright(btn_right);
 	}
 }
 
 /**
  * \defgroup UI User Interface
  *
- * Human interface on SAM4E-EK:
+ * Human interface on SAMD21-XPlain:
  * - Led 0 (D2) is on when USB is wakeup
- * - Led 1 (D3) blinks when USB host has checked and enabled HID Mouse interface
- * - Push button 2 (BP3) and push button 1 (BP2) are linked to mouse button
- *   left and right
- * - Push button 3 (BP4) and push button 4 (BP5) are used to move mouse up
- *   and down
- * - Only a low level on push button 2 (BP3) will generate a wakeup to USB Host
+ * - Push button 0 (BP3) are linked to mouse button left and right
+ * - Only a low level on push button 0 will generate a wakeup to USB Host
  *   in remote wakeup mode.
  *
  */
