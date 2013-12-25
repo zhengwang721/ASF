@@ -38,27 +38,20 @@
  * \asf_license_stop
  *
  */
-#ifndef _SAM4C_
-#define _SAM4C_
+#ifndef _SAM4C_EFC1_INSTANCE_
+#define _SAM4C_EFC1_INSTANCE_
 
-#if defined (__SAM4C8C_0__)
-#include "sam4c8c_0.h"
-#elif defined (__SAM4C8C_1__)
-#include "sam4c8c_1.h"
-#elif defined (__SAM4C16C_0__)
-#include "sam4c16c_0.h"
-#elif defined (__SAM4C16C_1__)
-#include "sam4c16c_1.h"
-#elif defined (__SAM4C32C_0__)
-#include "sam4c32c_0.h"
-#elif defined (__SAM4C32C_1__)
-#include "sam4c32c_1.h"
-#elif defined (__SAM4C32E_0__)
-#include "sam4c32e_0.h"
-#elif defined (__SAM4C32E_1__)
-#include "sam4c32e_1.h"
+/* ========== Register definition for EFC1 peripheral ========== */
+#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+  #define REG_EFC1_FMR                  (0x400E0C00U) /**< \brief (EFC1) EEFC Flash Mode Register */
+  #define REG_EFC1_FCR                  (0x400E0C04U) /**< \brief (EFC1) EEFC Flash Command Register */
+  #define REG_EFC1_FSR                  (0x400E0C08U) /**< \brief (EFC1) EEFC Flash Status Register */
+  #define REG_EFC1_FRR                  (0x400E0C0CU) /**< \brief (EFC1) EEFC Flash Result Register */
 #else
-  #error Library does not support the specified device.
-#endif
+  #define REG_EFC1_FMR (*(__IO uint32_t*)0x400E0C00U) /**< \brief (EFC1) EEFC Flash Mode Register */
+  #define REG_EFC1_FCR (*(__O  uint32_t*)0x400E0C04U) /**< \brief (EFC1) EEFC Flash Command Register */
+  #define REG_EFC1_FSR (*(__I  uint32_t*)0x400E0C08U) /**< \brief (EFC1) EEFC Flash Status Register */
+  #define REG_EFC1_FRR (*(__I  uint32_t*)0x400E0C0CU) /**< \brief (EFC1) EEFC Flash Result Register */
+#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#endif /* _SAM4C_ */
+#endif /* _SAM4C_EFC1_INSTANCE_ */
