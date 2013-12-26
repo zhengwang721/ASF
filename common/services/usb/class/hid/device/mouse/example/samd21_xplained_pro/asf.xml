@@ -3,12 +3,13 @@
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
+		<build type="header-file" value="conf_extint.h"/>
 		<build type="c-source" value="ui.c"/>
 		<build type="include-path" value="."/>
 		<config name="config.common.services.usb.class.device" value="hid_mouse"/>
 		<require idref="common.services.usb.class.hid.device.mouse.example.lite"/>
+		<require idref="sam0.drivers.extint"/>
 		<require idref="board.samd21_xplained_pro"/>
-		<!--config name="config.board.sam4e_ek.led" value="yes"/-->
 		<!--generator value="iarewarm"/-->
 		<generator value="armgcc"/>
 		<!--generator value="doxygen"/-->

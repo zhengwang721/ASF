@@ -44,46 +44,38 @@
 #include <asf.h>
 #include "ui.h"
 
-#define	 LED_On()	       port_pin_set_output_level(LED_0_PIN, 1)
-#define  LED_OFF()		   port_pin_set_output_level(LED_0_PIN, 0)
+#define	 LED_On()	       port_pin_set_output_level(LED_0_PIN, 0)
+#define  LED_OFF()		   port_pin_set_output_level(LED_0_PIN, 1)
 
 #define  MOUSE_MOVE_RANGE  1
 
-/* Wakeup pin is push button 2 (BP3, fast wakeup 10) */
-//#define  WAKEUP_PMC_FSTT (PUSHBUTTON_2_WKUP_FSTT)
-//#define  WAKEUP_PIN      (GPIO_PUSH_BUTTON_2)
-//#define  WAKEUP_PIO      (PIN_PUSHBUTTON_2_PIO)
-//#define  WAKEUP_PIO_ID   (PIN_PUSHBUTTON_2_ID)
-//#define  WAKEUP_PIO_MASK (PIN_PUSHBUTTON_2_MASK)
-//#define  WAKEUP_PIO_ATTR 
-	//(PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_LOW_LEVEL)
 
 /* Interrupt on "pin change" from push button to do wakeup on USB
  * Note:
- * This interrupt is enable when the USB host enable remotewakeup feature
+ * This interrupt is enable when the USB host enable remote wakeup feature
  * This interrupt wakeup the CPU if this one is in idle mode
  */
-static void ui_wakeup_handler(uint32_t id, uint32_t mask)
+static void ui_wakeup_handler(uint32_t channel)
 {
-	//if (WAKEUP_PIO_ID == id && WAKEUP_PIO_MASK == mask) {
 		/* It is a wakeup then send wakeup USB */
 		udc_remotewakeup();
 		LED_On();
-	//}
 }
+
 
 void ui_init(void)
 {
-	//struct extint_chan_conf config_extint_chan;
-	//
-	//extint_chan_get_config_defaults(&config_extint_chan);
-	//
-	//config_extint_chan.gpio_pin           = BUTTON_0_EIC_PIN;
-	//config_extint_chan.gpio_pin_mux       = BUTTON_0_EIC_MUX;
-	//config_extint_chan.gpio_pin_pull      = EXTINT_PULL_UP;
-	//config_extint_chan.detection_criteria = EXTINT_DETECT_BOTH;
-	//
-	//extint_chan_set_config(BUTTON_0_EIC_LINE, &config_extint_chan);
+	struct extint_chan_conf config_extint_chan;
+	
+	extint_chan_get_config_defaults(&config_extint_chan);
+	
+	config_extint_chan.gpio_pin           = BUTTON_0_EIC_PIN;
+	config_extint_chan.gpio_pin_mux       = BUTTON_0_EIC_MUX;
+	config_extint_chan.gpio_pin_pull      = EXTINT_PULL_UP;
+	config_extint_chan.detection_criteria = EXTINT_DETECT_BOTH;
+	extint_chan_set_config(BUTTON_0_EIC_LINE, &config_extint_chan);
+	extint_register_callback(ui_wakeup_handler, EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_enable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
 	
 	/* Initialize LEDs */
 	LED_OFF();
@@ -97,20 +89,12 @@ void ui_powerdown(void)
 
 void ui_wakeup_enable(void)
 {
-	/* Configure BP3 as PIO input */
-	//pio_configure_pin(WAKEUP_PIN, WAKEUP_PIO_ATTR);
-	/* Enable interrupt for BP3 */
-	//pio_enable_pin_interrupt(WAKEUP_PIN);
-	/* Enable fast wakeup for button pin (WKUP10 for PA20) */
-	//pmc_set_fast_startup_input(WAKEUP_PMC_FSTT);
+	extint_chan_enable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
 }
 
 void ui_wakeup_disable(void)
 {
-	/* Disable interrupt for button pin */
-	//pio_disable_pin_interrupt(WAKEUP_PIN);
-	/* Disable fast wakeup for button pin (WKUP10 for BP3) */
-	//pmc_clr_fast_startup_input(WAKEUP_PMC_FSTT);
+	extint_chan_disable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
 }
 
 void ui_wakeup(void)
@@ -121,8 +105,6 @@ void ui_wakeup(void)
 void ui_process(uint16_t framenumber)
 {
 	static uint8_t cpt_sof = 0;
-	//static bool btn_left = false, btn_right = false;
-	//bool btn_pressed;
 
 	if ((framenumber % 1000) == 0) {
 		LED_On();
