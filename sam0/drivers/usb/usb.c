@@ -542,6 +542,8 @@ static void _usb_host_interrupt_handler(void)
 
 		/* host pipe transfer fail interrupt */
 		if (flags & USB_HOST_PINTFLAG_TRFAIL) {
+			/* Clear busy status */
+			host_pipe_job_busy_status &= ~(1 << pipe_int);
 			/* clear the flag */
 			_usb_instances->hw->HOST.HostPipe[pipe_int].PINTFLAG.reg =
 					USB_HOST_PINTFLAG_TRFAIL;
@@ -549,6 +551,8 @@ static void _usb_host_interrupt_handler(void)
 
 		/* host pipe error interrupt */
 		if (flags & USB_HOST_PINTFLAG_PERR) {
+			/* Clear busy status */
+			host_pipe_job_busy_status &= ~(1 << pipe_int);
 			/* clear the flag */
 			_usb_instances->hw->HOST.HostPipe[pipe_int].PINTFLAG.reg =
 					USB_HOST_PINTFLAG_PERR;
@@ -576,6 +580,8 @@ static void _usb_host_interrupt_handler(void)
 
 		/* host pipe stall interrupt */
 		if (flags & USB_HOST_PINTFLAG_STALL) {
+			/* Clear busy status */
+			host_pipe_job_busy_status &= ~(1 << pipe_int);
 			/* clear the flag */
 			_usb_instances->hw->HOST.HostPipe[pipe_int].PINTFLAG.reg =
 					USB_HOST_PINTFLAG_STALL;
@@ -604,6 +610,8 @@ static void _usb_host_interrupt_handler(void)
 
 		/* host reset interrupt */
 		if (flags & USB_HOST_INTFLAG_RST) {
+			/* Clear busy status */
+			host_pipe_job_busy_status = 0;
 			/* clear the flag */
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_RST;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_RESET)) {
@@ -640,6 +648,8 @@ static void _usb_host_interrupt_handler(void)
 
 		/* host ram access interrupt  */	
 		if (flags & USB_HOST_INTFLAG_RAMACER) {
+			/* Clear busy status */
+			host_pipe_job_busy_status = 0;
 			/* clear the flag */
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_RAMACER;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_RAMACER)) {
@@ -649,6 +659,8 @@ static void _usb_host_interrupt_handler(void)
 
 		/* host connect interrupt */
 		if (flags & USB_HOST_INTFLAG_DCONN) {
+			/* Clear busy status */
+			host_pipe_job_busy_status = 0;
 			/* clear the flag */
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_DCONN;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_CONNECT)) {
@@ -658,6 +670,8 @@ static void _usb_host_interrupt_handler(void)
 		
 		/* host disconnect interrupt 	*/
 		if (flags & USB_HOST_INTFLAG_DDISC) {
+			/* Clear busy status */
+			host_pipe_job_busy_status = 0;
 			/* clear the flag */
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_DDISC;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_DISCONNECT)) {
