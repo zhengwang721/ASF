@@ -50,7 +50,7 @@
 #include "usb.h"
 #include "usb_dual.h"
 
-// Declare
+/* Function declare */
 static void _uhd_ctrl_phase_setup(void);
 static void _uhd_ctrl_phase_data_in_start(void);
 static void _uhd_ctrl_phase_data_in(uint16_t nb_byte_received);
@@ -63,15 +63,14 @@ static void _uhd_pipe_trans_complete(struct usb_module *module_inst, void *);
 static void _uhd_ep_abort_pipe(uint8_t pipe, uhd_trans_status_t status);
 static void _uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
 
-// for debug text
-//#define USB_DEBUG
+/* for debug text */
 #ifdef USB_DEBUG
 #   define dbg_print printf
 #else
 #   define dbg_print(...)
 #endif
 
-// Maximum size of a transfer in multipacket mode
+/* Maximum size of a transfer in multipacket mode */
 #define UHD_ENDPOINT_MAX_TRANS ((8*1024)-1)
 
 #define USB_STATUS_PIPE_DTGLER    (1<<0)
@@ -80,7 +79,7 @@ static void _uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
 #define USB_STATUS_PIPE_TOUTER    (1<<3)
 #define USB_STATUS_PIPE_CRC16ER   (1<<4)
 
-// Check USB host configuration
+/* Check USB host configuration */
 #ifdef USB_HOST_HS_SUPPORT
 #  error The High speed mode is not supported on this part, please remove USB_HOST_HS_SUPPORT in conf_usb_host.h
 #endif
@@ -89,20 +88,21 @@ static void _uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
 # error The current USB Host Driver supports only SAMD21
 #endif
 
-//! Notify that USB Host is enter in suspemd LPM state
+/** Notify that USB Host is enter in suspemd LPM state */
 static bool uhd_lpm_suspend = false;
 
-//! Store the callback to be call at the end of reset signal
+/** Store the callback to be call at the end of reset signal */
 static uhd_callback_reset_t uhd_reset_callback = NULL;
 
 /**
  * \name Power management
+ *
+ * @{
  */
-//@{
-#ifdef UHD_SLEEP_MGR
+#ifndef UHD_NO_SLEEP_MGR
 
 #include "sleepmgr.h"
-//! States of USB interface
+/** States of USB interface */
 enum uhd_usb_state_enum {
 	UHD_STATE_OFF = 0,
 	UHD_STATE_WAIT_ID_HOST = 1,
@@ -113,7 +113,7 @@ enum uhd_usb_state_enum {
 	UHD_STATE_IDLE = 6,
 };
 
-/*! \brief Manages the sleep mode following the USB state
+/** \brief Manages the sleep mode following the USB state
  *
  * \param new_state  New USB state
  */
@@ -139,11 +139,11 @@ static void uhd_sleep_mode(enum uhd_usb_state_enum new_state)
 		return; // No change
 	}
 	if (new_state != UHD_STATE_OFF) {
-		// Lock new limit
+		/* Lock new limit */
 		sleepmgr_lock_mode(sleep_mode[new_state]);
 	}
 	if (uhd_state != UHD_STATE_OFF) {
-		// Unlock old limit
+		/* Unlock old limit */
 		sleepmgr_unlock_mode(sleep_mode[uhd_state]);
 	}
 	uhd_state = new_state;
@@ -151,16 +151,17 @@ static void uhd_sleep_mode(enum uhd_usb_state_enum new_state)
 
 #else
 #  define uhd_sleep_mode(arg)
-#endif // UHD_NO_SLEEP_MGR
-//@}
+#endif
+/** @} */
 
 /**
  * \name Control endpoint low level management routine.
  *
  * This function performs control endpoint management.
  * It handles the SETUP/DATA/HANDSHAKE phases of a control transaction.
+ *
+ * @{
  */
-//@{
 
 /**
  * \brief Buffer to store the sent/received data on control endpoint
@@ -177,53 +178,52 @@ uint8_t uhd_ctrl_buffer[64];
  */
 
 struct uhd_ctrl_request_t{
-
-	//! Buffer to store the setup DATA phase
+	/** Buffer to store the setup DATA phase */
 	uint8_t *payload;
-	//! Callback called when buffer is empty or full
+	/** Callback called when buffer is empty or full */
 	uhd_callback_setup_run_t callback_run;
-	//! Callback called when request is completed
+	/** Callback called when request is completed */
 	uhd_callback_setup_end_t callback_end;
-	//! Next setup request to process
+	/** Next setup request to process */
 	struct uhd_ctrl_request_t *next_request;
-	//! Setup request definition
+	/** Setup request definition */
 	usb_setup_req_t req;
-	//! Size of buffer used in DATA phase
+	/** Size of buffer used in DATA phase */
 	uint16_t payload_size;
-	//! USB address of control endpoint
+	/** USB address of control endpoint */
 	usb_add_t add;
 };
 
-//! Entry points of setup request list
+/** Entry points of setup request list */
 struct uhd_ctrl_request_t *uhd_ctrl_request_first;
 struct uhd_ctrl_request_t *uhd_ctrl_request_last;
 
-//! Remaining time for on-going setup request (No request on-going if equal 0)
+/** Remaining time for on-going setup request (No request on-going if equal 0) */
 volatile uint16_t uhd_ctrl_request_timeout;
 
-//! Number of transfered byte on DATA phase of current setup request
+/** Number of transfered byte on DATA phase of current setup request */
 uint16_t uhd_ctrl_nb_trans;
 
-//! Flag to delay a suspend request after all on-going setup request
+/** Flag to delay a suspend request after all on-going setup request */
 static bool uhd_b_suspend_requested;
 
-//! Bit definitions to store setup request state machine
+/** Bit definitions to store setup request state machine */
 typedef enum {
-
-	//! Wait a SETUP packet
+	/** Wait a SETUP packet */
 	UHD_CTRL_REQ_PHASE_SETUP = 0,
-	//! Wait a OUT data packet
+	/** Wait a OUT data packet */
 	UHD_CTRL_REQ_PHASE_DATA_OUT = 1,
-	//! Wait a IN data packet
+	/** Wait a IN data packet */
 	UHD_CTRL_REQ_PHASE_DATA_IN = 2,
-	//! Wait a IN ZLP packet
+	/** Wait a IN ZLP packet */
 	UHD_CTRL_REQ_PHASE_ZLP_IN = 3,
-	//! Wait a OUT ZLP packet
+	/** Wait a OUT ZLP packet */
 	UHD_CTRL_REQ_PHASE_ZLP_OUT = 4,
 } uhd_ctrl_request_phase_t;
 uhd_ctrl_request_phase_t uhd_ctrl_request_phase;
 
-//@}
+/** @} */
+
 
 
 /**
@@ -234,41 +234,42 @@ uhd_ctrl_request_phase_t uhd_ctrl_request_phase;
  * - Send a ZLP packet if requested
  * - Call registered callback to signal end of transfer
  * The transfer abort and stall feature are supported.
+ *
+ * @{
  */
-//@{
 
-//! Structure definition to store registered jobs on a pipe
+/** Structure definition to store registered jobs on a pipe */
 typedef struct {
-
-	//! Buffer located in internal RAM to send or fill during job
+	/** Buffer located in internal RAM to send or fill during job */
 	uint8_t *buf;
-	//! Internal buffer allocated in internal RAM to receive data in case of small user buffer
+	/** Internal buffer allocated in internal RAM to receive data in case of small user buffer */
 	uint8_t *buf_internal;
-	//! Size of buffer to send or fill
+	/** Size of buffer to send or fill */
 	iram_size_t buf_size;
-	//! Total number of transfered data on endpoint
+	/** Total number of transfered data on endpoint */
 	iram_size_t nb_trans;
-	//! Callback to call at the end of transfer
+	/** Callback to call at the end of transfer */
 	uhd_callback_trans_t call_end;
 
-	//! timeout on this request (ms)
+	/** timeout on this request (ms) */
 	uint16_t timeout;
 
-	//! A job is registered on this pipe
+	/** A job is registered on this pipe */
 	uint8_t busy:1;
-	//! A short packet is requested for this job on endpoint IN
+	/** A short packet is requested for this job on endpoint IN */
 	uint8_t b_shortpacket:1;
 } uhd_pipe_job_t;
 
-//! Array to register a job on bulk/interrupt/isochronous endpoint
+/** Array to register a job on bulk/interrupt/isochronous endpoint */
 static uhd_pipe_job_t uhd_pipe_job[USB_PIPE_NUM- 1];
 
-//! Variables to manage the suspend/resume sequence
+/** Variables to manage the suspend/resume sequence */
 static uint8_t uhd_suspend_start;
 static uint8_t uhd_resume_start;
 static uint8_t uhd_pipes_unfreeze;
 
-//@}
+/** @} */
+
 
 struct usb_module dev;
 
@@ -284,20 +285,20 @@ static void _uhd_ctrl_phase_setup(void)
 
 	uhd_ctrl_request_phase = UHD_CTRL_REQ_PHASE_SETUP;
 	memcpy( &setup_req, &uhd_ctrl_request_first->req, sizeof(usb_setup_req_t));
-	// Manage LSB/MSB to fit with CPU usage
+	/* Manage LSB/MSB to fit with CPU usage */
 	setup_req.wValue = cpu_to_le16(setup_req.wValue);
 	setup_req.wIndex = cpu_to_le16(setup_req.wIndex);
 	setup_req.wLength = cpu_to_le16(setup_req.wLength);
 	uhd_ctrl_nb_trans = 0;
 
-  	// Check pipe
+  	/* Check pipe */
 #ifdef USB_HOST_HUB_SUPPORT
 	if (cfg.pipe_type == USB_HOST_PIPE_TYPE_DISABLE) {
 		_uhd_ctrl_request_end(UHD_TRANS_DISCONNECT);
 		return; // Endpoint not valid
 	}
 #error TODO check address in list
-	// Reconfigure USB address of pipe 0 used for all control endpoints
+	/* Reconfigure USB address of pipe 0 used for all control endpoints */
 	uhd_udesc_set_uhaddr(0, uhd_ctrl_request_first->add);
 #else
 	if ((cfg.pipe_type == USB_HOST_PIPE_TYPE_DISABLE) ||
@@ -307,12 +308,13 @@ static void _uhd_ctrl_phase_setup(void)
 	}
 #endif
 
-	// Fill pipe
+	/* Fill pipe */
 	memcpy(uhd_ctrl_buffer, &setup_req, sizeof(setup_req));
 	uhd_ctrl_request_timeout = 5000;
 
-	// Start transfer
-	usb_host_pipe_setup_job(&dev, 0, uhd_ctrl_buffer, sizeof(setup_req));
+	/* Start transfer */
+	usb_host_pipe_setup_job(&dev, 0, uhd_ctrl_buffer);
+	usb_host_pipe_enable_callback(&dev, 0, USB_HOST_PIPE_CALLBACK_SETUP);
 }
 
 /**
@@ -341,13 +343,13 @@ static void _uhd_ctrl_phase_data_in(uint16_t nb_byte_received)
 	struct usb_host_pipe_config cfg;
 	usb_host_pipe_get_config(&dev, 0, &cfg);
 
-	//! In HUB mode, the control pipe is always configured to 64B
-	//! thus the short packet flag must be computed
+	/** In HUB mode, the control pipe is always configured to 64B */
+	/** thus the short packet flag must be computed */
 	b_short_packet = (nb_byte_received != cfg.size);
 
 	ptr_ep_data = uhd_ctrl_buffer;
 uhd_ctrl_receiv_in_read_data:
-	// Copy data from pipe to payload buffer
+	/* Copy data from pipe to payload buffer */
 	while (uhd_ctrl_request_first->payload_size && nb_byte_received) {
 		*uhd_ctrl_request_first->payload++ = *ptr_ep_data++;
 		uhd_ctrl_nb_trans++;
@@ -356,24 +358,26 @@ uhd_ctrl_receiv_in_read_data:
 	}
 
 	if (!uhd_ctrl_request_first->payload_size && nb_byte_received) {
-		// payload buffer is full to store data remaining
+		/* payload buffer is full to store data remaining */
 		if (uhd_ctrl_request_first->callback_run == NULL
 				|| !uhd_ctrl_request_first->callback_run(
 				cfg.device_address,
 				&uhd_ctrl_request_first->payload,
 				&uhd_ctrl_request_first->payload_size)) {
-			// DATA phase aborted by host
+			/* DATA phase aborted by host */
 			goto uhd_ctrl_phase_data_in_end;
 		}
-		// The payload buffer has been updated by the callback
-		// thus the data load can restart.
+		/*
+		 * The payload buffer has been updated by the callback
+		 *  thus the data load can restart.
+		 */
 		goto uhd_ctrl_receiv_in_read_data;
 	}
 
-	// Test short packet
+	/* Test short packet */
 	if ((uhd_ctrl_nb_trans == uhd_ctrl_request_first->req.wLength)
 			|| b_short_packet) {
-		// End of DATA phase or DATA phase abort from device
+		/* End of DATA phase or DATA phase abort from device */
 uhd_ctrl_phase_data_in_end:
 		_uhd_ctrl_phase_zlp_out();
 		return;
@@ -408,19 +412,19 @@ static void _uhd_ctrl_phase_data_out(void)
 	uint16_t nb_trans;
 
 	if (uhd_ctrl_nb_trans == uhd_ctrl_request_first->req.wLength) {
-		// End of DATA phase
+		/* End of DATA phase */
 		_uhd_ctrl_phase_zlp_in();
 		return;
 	}
 
 	if (!uhd_ctrl_request_first->payload_size) {
-		// Buffer empty, then request a new buffer
+		/* Buffer empty, then request a new buffer */
 		if (uhd_ctrl_request_first->callback_run==NULL
 				|| !uhd_ctrl_request_first->callback_run(
 				cfg.device_address,
 				&uhd_ctrl_request_first->payload,
 				&uhd_ctrl_request_first->payload_size)) {
-			// DATA phase aborted by host
+			/* DATA phase aborted by host */
 			_uhd_ctrl_phase_zlp_in();
 			return;
 		}
@@ -431,15 +435,15 @@ static void _uhd_ctrl_phase_data_out(void)
 		nb_trans = cfg.size;
 	}
 
-	// Link the user buffer directly on USB hardware DMA
+	/* Link the user buffer directly on USB hardware DMA */
 	memcpy(uhd_ctrl_buffer, uhd_ctrl_request_first->payload, nb_trans);
 
-	// Update counters
+	/* Update counters */
 	uhd_ctrl_request_first->payload += nb_trans;
 	uhd_ctrl_nb_trans += nb_trans;
 	uhd_ctrl_request_first->payload_size -= nb_trans;
 
-	// Start transfer
+	/* Start transfer */
 	usb_host_pipe_write_job(&dev, 0, uhd_ctrl_buffer, nb_trans);
 }
 
@@ -453,8 +457,8 @@ static void _uhd_ctrl_phase_zlp_out(void)
 
 	usb_host_pipe_set_toggle(&dev, 0);
 
-	// No need to link a user buffer directly on USB hardware DMA
-	// Start transfer
+	/* No need to link a user buffer directly on USB hardware DMA */
+	/* Start transfer */
 	usb_host_pipe_write_job(&dev, 0, uhd_ctrl_buffer, 0);
 }
 
@@ -477,7 +481,7 @@ static void _uhd_ctrl_request_end(uhd_trans_status_t status)
 
 	uhd_ctrl_request_timeout = 0;
 
-	// Remove request from the control request list
+	/* Remove request from the control request list */
 	callback_end = uhd_ctrl_request_first->callback_end;
 	request_to_free = uhd_ctrl_request_first;
 	flags = cpu_irq_save();
@@ -486,17 +490,17 @@ static void _uhd_ctrl_request_end(uhd_trans_status_t status)
 	cpu_irq_restore(flags);
 	free(request_to_free);
 
-	// Call callback
+	/* Call callback */
 	if (callback_end != NULL) {
 		callback_end(cfg.device_address, status, uhd_ctrl_nb_trans);
 	}
 
-	// If a setup request is pending and no started by previous callback
+	/* If a setup request is pending and no started by previous callback */
 	if (b_new_request) {
 		_uhd_ctrl_phase_setup();
 	}
 	if (uhd_b_suspend_requested) {
-		// A suspend request has been delay after all setup request
+		/* A suspend request has been delay after all setup request */
 		uhd_b_suspend_requested = false;
 		uhd_suspend();
 	}
@@ -513,33 +517,35 @@ static void _uhd_ctrl_request_end(uhd_trans_status_t status)
  * - UHC user notification
  * - SOF user notification
  */
-static void _uhd_sof_interrupt(struct usb_module *module_inst, void *null)
+static void _uhd_sof_interrupt(struct usb_module *module_inst)
 {
-	// Manage a delay to enter in suspend
+	/* Manage a delay to enter in suspend */
 	if (uhd_suspend_start) {
 		if (--uhd_suspend_start == 0) {
-			// In case of high CPU frequency,
-			// the current Keep-Alive/SOF can be always on-going
-			// then wait end of SOF generation
-			// to be sure that disable SOF has been accepted
+			/* In case of high CPU frequency,
+			 *  the current Keep-Alive/SOF can be always on-going
+			 *  then wait end of SOF generation
+			 *  to be sure that disable SOF has been accepted
+			 */
 			dbg_print("SUSP\n");
 			usb_host_disable_sof(&dev);
-			// Enable wakeup/resumes interrupts
+			/* Enable wakeup/resumes interrupts */
 			usb_host_enable_callback(&dev, USB_HOST_CALLBACK_WAKEUP);
 			usb_host_enable_callback(&dev, USB_HOST_CALLBACK_DNRSM);
 			usb_host_enable_callback(&dev, USB_HOST_CALLBACK_UPRSM);
 
-			// Check that the hardware state machine has left the IDLE/Active mode
-			// before freeze USB clock
-//			while (2==otg_get_fsm_drd_state());
+			/* Check that the hardware state machine has left the IDLE/Active mode
+			 * before freeze USB clock
+			 */
+			while (2==usb_get_state_machine_status(&dev));
 			uhd_sleep_mode(UHD_STATE_SUSPEND);
 		}
 		return; // Abort SOF events
 	}
-	// Manage a delay to exit of suspend
+	/* Manage a delay to exit of suspend */
 	if (uhd_resume_start) {
 		if (--uhd_resume_start == 0) {
-			// Restore pipes unfreezed
+			/* Restore pipes unfreezed */
 			for (uint8_t pipe = 1; pipe < USB_PIPE_NUM; pipe++) {
 				if ((uhd_pipes_unfreeze >> pipe) & 0x01) {
 					usb_host_pipe_unfreeze(&dev, pipe);
@@ -549,42 +555,122 @@ static void _uhd_sof_interrupt(struct usb_module *module_inst, void *null)
 		}
 		return; // Abort SOF events
 	}
-	// Manage the timeout on endpoint control transfer
+	/* Manage the timeout on endpoint control transfer */
 	if (uhd_ctrl_request_timeout) {
-		// Setup request on-going
+		/* Setup request on-going */
 		if (--uhd_ctrl_request_timeout == 0) {
-			// Stop request
+			/* Stop request */
 			usb_host_pipe_freeze(&dev, 0);
 			_uhd_ctrl_request_end(UHD_TRANS_TIMEOUT);
 		}
 	}
-	// Manage the timeouts on endpoint transfer
+	/* Manage the timeouts on endpoint transfer */
 	uhd_pipe_job_t *ptr_job;
 	for (uint8_t pipe = 1; pipe < USB_PIPE_NUM; pipe++) {
 		ptr_job = &uhd_pipe_job[pipe - 1];
 		if (ptr_job->busy == true) {
 			if (ptr_job->timeout) {
-				// Timeout enabled on this job
+				/* Timeout enabled on this job */
 				if (--ptr_job->timeout == 0) {
-					// Abort job
+					/* Abort job */
 					_uhd_ep_abort_pipe(pipe,UHD_TRANS_TIMEOUT);
 				}
 			}
 		}
 	}
 
-	// Notify the UHC
+	/* Notify the UHC */
 	uhc_notify_sof(false);
 
-	// Notify the user application
+	/* Notify the user application */
 	UHC_SOF_EVENT();
+}
+
+/**
+ * \internal
+ * \brief Manages bus reset interrupt
+ */
+static void _uhd_reset(struct usb_module *module_inst)
+{
+	if (uhd_reset_callback != NULL) {
+		uhd_reset_callback();
+	}
+}
+
+/**
+ * \internal
+ * \brief Manages wakeup interrupt
+ */
+static void _uhd_wakeup(struct usb_module *module_inst)
+{
+	/* Here the wakeup interrupt has been used to detect:
+	 * - connection with an asynchrone interrupt
+	 * - down/upstream resume with an asynchrone interrupt
+	 */
+	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_WAKEUP);
+	uhd_sleep_mode(UHD_STATE_IDLE);
+	dbg_print("WAKEUP\n");
+}
+
+/**
+ * \internal
+ * \brief Manages downstream resume interrupt
+ */
+static void _uhd_downstream_resume(struct usb_module *module_inst)
+{
+	dbg_print("DOWN RES\n");
+	/* Disable wakeup/resumes interrupts */
+	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_WAKEUP);
+	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_DNRSM);
+	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_UPRSM);
+	if (uhd_lpm_suspend) {
+		uhd_lpm_suspend = false;
+	} else {
+		/* Wait 50ms before restarting transfer */
+		uhd_resume_start = 50;
+	}
+	uhd_sleep_mode(UHD_STATE_IDLE);
+}
+
+/**
+ * \internal
+ * \brief Manages upstream resume interrupt
+ */
+static void _uhd_upstream_resume(struct usb_module *module_inst)
+{
+	dbg_print("UP RES\n");
+	if (uhd_lpm_suspend) {
+		usb_host_send_l1_resume(&dev);
+		uhd_lpm_suspend = false;
+	} else {
+		usb_host_send_resume(&dev);
+		/* Wait 50ms before restarting transfer */
+		uhd_resume_start = 50;
+	}
+	/* Disable wakeup/resumes interrupts */
+	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_WAKEUP);
+	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_DNRSM);
+	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_UPRSM);
+	uhd_sleep_mode(UHD_STATE_IDLE);
+}
+
+/**
+ * \internal
+ * \brief Manages ram access error interrupt
+ */
+static void _uhd_ram_error(struct usb_module *module_inst)
+{
+#ifdef UHC_RAM_ACCESS_ERR_EVENT
+	UHC_RAM_ACCESS_ERR_EVENT();
+#endif	
+	dbg_print("!!!! RAM ERR !!!!\n");
 }
 
 /**
  * \internal
  * \brief Manages connection interrupt
  */
-static void _uhd_connect(struct usb_module *module_inst, void *null)
+static void _uhd_connect(struct usb_module *module_inst)
 {
 	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_CONNECT);
 	dbg_print("CONN\n");
@@ -601,9 +687,9 @@ static void _uhd_connect(struct usb_module *module_inst, void *null)
  * \internal
  * \brief Manages disconnection interrupt
  */
-static void _uhd_disconnect(struct usb_module *module_inst, void *null)
+static void _uhd_disconnect(struct usb_module *module_inst)
 {
-	// This should be the normal way to handle this event.
+	/* This should be the normal way to handle this event. */
 	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_DISCONNECT);
 	dbg_print("DISC\n");
 	/* Disable wakeup/resumes interrupts,
@@ -621,107 +707,45 @@ static void _uhd_disconnect(struct usb_module *module_inst, void *null)
 	uhc_notify_connection(false);
 }
 
-/**
- * \internal
- * \brief Manages wakeup interrupt
- */
-static void _uhd_wakeup(struct usb_module *module_inst, void *null)
-{
-	/* Here the wakeup interrupt has been used to detect:
-	 * - connection with an asynchrone interrupt
-	 * - down/upstream resume with an asynchrone interrupt
-	 */
-	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_WAKEUP);
-	uhd_sleep_mode(UHD_STATE_IDLE);
-	dbg_print("WAKEUP\n");
-}
-
-/**
- * \internal
- * \brief Manages downstream resume interrupt
- */
-static void _uhd_downstream_resume(struct usb_module *module_inst, void *null)
-{
-	dbg_print("DOWN RES\n");
-	// Disable wakeup/resumes interrupts
-	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_WAKEUP);
-	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_DNRSM);
-	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_UPRSM);
-	if (uhd_lpm_suspend) {
-		uhd_lpm_suspend = false;
-//		uhc_notify_resume_lpm();
-	} else {
-		// Wait 50ms before restarting transfer
-		uhd_resume_start = 50;
-	}
-	uhd_sleep_mode(UHD_STATE_IDLE);
-}
-
-/**
- * \internal
- * \brief Manages upstream resume interrupt
- */
-static void _uhd_upstream_resume(struct usb_module *module_inst, void *null)
-{
-	dbg_print("UP RES\n");
-	if (uhd_lpm_suspend) {
-		usb_host_send_l1_resume(&dev);
-		uhd_lpm_suspend = false;
-//		uhc_notify_resume_lpm();
-	} else {
-		usb_host_send_resume(&dev);
-		// Wait 50ms before restarting transfer
-		uhd_resume_start = 50;
-	}
-	// Disable wakeup/resumes interrupts
-	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_WAKEUP);
-	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_DNRSM);
-	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_UPRSM);
-	uhd_sleep_mode(UHD_STATE_IDLE);
-}
-
-/**
- * \internal
- * \brief Manages bus reset interrupt
- */
-static void _uhd_reset(struct usb_module *module_inst, void *null)
-{
-	if (uhd_reset_callback != NULL) {
-		uhd_reset_callback();
-	}
-}
-
-/**
- * \internal
- * \brief Manages ram access error interrupt
- */
-static void _uhd_ram_error(struct usb_module *module_inst, void *null)
-{
-#ifdef UHC_RAM_ACCESS_ERR_EVENT
-		UHC_RAM_ACCESS_ERR_EVENT();
-#endif	
-		dbg_print("!!!! RAM ERR !!!!\n");
-}
-
 #if USB_VBUS_EIC
 /**
- * USB VBus pin change handler
+ * \name USB VBUS PAD management
+ *
+ * @{
  */
-static void _uhd_vbus_handler(uint32_t channel)
+
+# define is_usb_vbus_high()           port_pin_get_input_level(USB_VBUS_PIN)
+
+/**
+ * USB VBUS pin change handler
+ */
+static void _uhd_vbus_handler(void)
 {
-	if (channel == USB_VBUS_EIC_LINE) {
-		dbg_print("VBUS low, there is some power issue on board!!! \n");
+	extint_chan_disable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	if (is_usb_vbus_high()) {
+		UHC_VBUS_CHANGE(true);
+	} else {
 		uhd_sleep_mode(UHD_STATE_NO_VBUS);
 		UHC_VBUS_CHANGE(false);
 	}
+	extint_chan_enable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
 }
 
 /**
- * \name USB VBUS PADs management
+ * USB VBUS pin config
  */
-//@{
 static void _usb_vbus_config(void)
 {
+	struct port_config pin_conf;
+	port_get_config_defaults(&pin_conf);
+
+	/* Set USB VBUS Pin as inputs */
+	pin_conf.direction  = PORT_PIN_DIR_INPUT;
+	pin_conf.input_pull = PORT_PIN_PULL_UP;
+	port_pin_set_config(USB_VBUS_PIN, &pin_conf);
+
 	/* Initialize EIC for vbus checking */
 	struct extint_chan_conf eint_chan_conf;
 	extint_chan_get_config_defaults(&eint_chan_conf);
@@ -734,25 +758,26 @@ static void _usb_vbus_config(void)
 			EXTINT_CALLBACK_TYPE_DETECT);
 	extint_chan_set_config(USB_VBUS_EIC_LINE, &eint_chan_conf);
 	extint_register_callback(_uhd_vbus_handler,
+			USB_VBUS_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
 	extint_chan_enable_callback(USB_VBUS_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
 }
-//@}
-
-# define is_usb_vbus_high()           port_pin_get_input_level(USB_VBUS_PIN)
+/** @} */
 #endif
 
 void uhd_enable(void)
 {
-#if USB_ID_EIC
 	irqflags_t flags;
 
-	// To avoid USB interrupt before end of initialization
+	/* To avoid USB interrupt before end of initialization */
 	flags = cpu_irq_save();
 
+	sleepmgr_lock_mode(SLEEPMGR_ACTIVE);
+
+#if USB_ID_EIC
 	if (usb_dual_enable()) {
-		// The current mode has been started by otg_dual_enable()
+		/* The current mode has been started by otg_dual_enable() */
 		cpu_irq_restore(flags);
 		return;
 	}
@@ -790,19 +815,47 @@ void uhd_enable(void)
 	usb_host_register_callback(&dev, USB_HOST_CALLBACK_CONNECT, _uhd_connect);
 	usb_host_register_callback(&dev, USB_HOST_CALLBACK_DISCONNECT, _uhd_disconnect);
 
-	// Enable main control interrupt
-	// Connection, SOF and reset
+	/* Enable main control interrupt */
+	/* Connection, SOF and reset */
 	usb_host_enable_callback(&dev, USB_HOST_CALLBACK_SOF);
 	usb_host_enable_callback(&dev, USB_HOST_CALLBACK_RESET);
 	usb_host_enable_callback(&dev, USB_HOST_CALLBACK_RAMACER);
 	usb_host_enable_callback(&dev, USB_HOST_CALLBACK_CONNECT);
 	usb_host_enable_callback(&dev, USB_HOST_CALLBACK_DISCONNECT);
+
+	cpu_irq_restore(flags);
 }
 
 void uhd_disable(bool b_id_stop)
 {
-	usb_disable(&dev);
+	irqflags_t flags;
+	UNUSED(b_id_stop);
+
+	/* Disable Vbus change interrupts */
+#if USB_VBUS_EIC
+	extint_chan_disable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+#endif
+
+ 	/* Disable main control interrupts */
+	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_SOF);
+	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_RESET);
+	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_RAMACER);
+	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_CONNECT);
+	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_DISCONNECT);
+	usb_host_disable_sof(&dev);
 	uhc_notify_connection(false);
+
+#if USB_ID_EIC
+	uhd_sleep_mode(UHD_STATE_WAIT_ID_HOST);
+	if (!b_id_stop) {
+		return; // No need to disable host, it is done automatically by hardware
+	}
+#endif
+
+	flags = cpu_irq_save();
+	usb_dual_disable();
+	cpu_irq_restore(flags);
 }
 
 uhd_speed_t uhd_get_speed(void)
@@ -825,7 +878,7 @@ uint16_t uhd_get_frame_number(void)
 
 uint16_t uhd_get_microframe_number(void)
 {
-	// nothing to do
+	/* nothing to do */
 	return 0;
 }
 
@@ -838,17 +891,17 @@ void uhd_send_reset(uhd_callback_reset_t callback)
 void uhd_suspend(void)
 {
 	if (uhd_ctrl_request_timeout) {
-		// Delay suspend after setup requests
+		/* Delay suspend after setup requests */
 		uhd_b_suspend_requested = true;
 		return;
 	}
-	// Save pipe freeze states and freeze pipes
+	/* Save pipe freeze states and freeze pipes */
 	uhd_pipes_unfreeze = 0;
 	for (uint8_t pipe = 1; pipe < USB_PIPE_NUM; pipe++) {
-		uhd_pipes_unfreeze |= (!usb_host_pipe_is_freezed(&dev, pipe)) << pipe;
+		uhd_pipes_unfreeze |= (!usb_host_pipe_is_frozen(&dev, pipe)) << pipe;
 		usb_host_pipe_freeze(&dev, pipe);
 	}
-	// Wait three SOFs before entering in suspend state
+	/* Wait three SOFs before entering in suspend state */
 	uhd_suspend_start = 3;
 }
 
@@ -860,10 +913,11 @@ bool uhd_is_suspend(void)
 void uhd_resume(void)
 {
 	if (usb_host_is_sof_enabled(&dev)) {
-		// Currently in IDLE mode (!=Suspend)
+		/* Currently in IDLE mode (!=Suspend) */
 		if (uhd_suspend_start) {
-			// Suspend mode on going
-			// then stop it and start resume event
+			/* Suspend mode on going
+			 * then stop it and start resume event
+			 */
 			uhd_suspend_start = 0;
 			uhd_resume_start = 1;
 		}
@@ -897,7 +951,7 @@ bool uhd_setup_request(
 		return false;
 	}
 
-	// Fill structure
+	/* Fill structure */
 	request->add = (uint8_t) add;
 	memcpy(&request->req, req, sizeof(usb_setup_req_t));
 	request->payload = payload;
@@ -906,7 +960,7 @@ bool uhd_setup_request(
 	request->callback_end = callback_end;
 	request->next_request = NULL;
 
-	// Add this request in the queue
+	/* Add this request in the queue */
 	flags = cpu_irq_save();
 	if (uhd_ctrl_request_first == NULL) {
 		uhd_ctrl_request_first = request;
@@ -918,7 +972,7 @@ bool uhd_setup_request(
 	cpu_irq_restore(flags);
 
 	if (b_start_request) {
-		// Start immediately request
+		/* Start immediately request */
 		_uhd_ctrl_phase_setup();
 	}
 	return true;
@@ -937,40 +991,22 @@ static void _uhd_ep0_transfer_complete(struct usb_module *module_inst, void *poi
 	usb_host_pipe_get_config(&dev, 0, &cfg);
 
 	usb_host_pipe_freeze(&dev, 0);
-	if (cfg.pipe_token == USB_HOST_PIPE_TOKEN_IN) {
-		dbg_print("CTRL IN\n");
-		// In case of low USB speed and with a high CPU frequency,
-		// a ACK from host can be always running on USB line
-		// then wait end of ACK on IN pipe.
-		//while (!Is_uhd_pipe_frozen(0));
-		// IN packet received
-		switch(uhd_ctrl_request_phase) {
-		case UHD_CTRL_REQ_PHASE_DATA_IN:
-			_uhd_ctrl_phase_data_in(p_callback_para->transfer_size);
-			break;
-		case UHD_CTRL_REQ_PHASE_ZLP_IN:
-			_uhd_ctrl_request_end(UHD_TRANS_NOERROR);
-			break;
-		default:
-			Assert(false);
-			break;
-		}
-		return;
-	} else {
-		// OUT packet sent
-		dbg_print("CTRL OUT\n");
-		switch(uhd_ctrl_request_phase) {
-		case UHD_CTRL_REQ_PHASE_DATA_OUT:
-			_uhd_ctrl_phase_data_out();
-			break;
-		case UHD_CTRL_REQ_PHASE_ZLP_OUT:
-			_uhd_ctrl_request_end(UHD_TRANS_NOERROR);
-			break;
-		default:
-			Assert(false);
-			break;
-		}
-		return;
+	switch(uhd_ctrl_request_phase) {
+	case UHD_CTRL_REQ_PHASE_DATA_IN:
+		_uhd_ctrl_phase_data_in(p_callback_para->transfered_size);
+		break;
+	case UHD_CTRL_REQ_PHASE_ZLP_IN:
+		_uhd_ctrl_request_end(UHD_TRANS_NOERROR);
+		break;
+	case UHD_CTRL_REQ_PHASE_DATA_OUT:
+		_uhd_ctrl_phase_data_out();
+		break;
+	case UHD_CTRL_REQ_PHASE_ZLP_OUT:
+		_uhd_ctrl_request_end(UHD_TRANS_NOERROR);
+		break;
+	default:
+		Assert(false);
+		break;
 	}
 }
 
@@ -986,21 +1022,25 @@ static void _uhd_ep0_error(struct usb_module *module_inst, void *pointer)
 
 	uhd_trans_status_t uhd_error;
 
-	// Get and ack error
+	/* Get and ack error */
 	switch(p_callback_para->error_type) {
 	case USB_STATUS_PIPE_DTGLER:
 		uhd_error = UHD_TRANS_DT_MISMATCH;
+		break;
 	case USB_STATUS_PIPE_TOUTER:
 		uhd_error = UHD_TRANS_NOTRESPONDING;
+		break;
 	case USB_STATUS_PIPE_CRC16ER:
 		uhd_error = UHD_TRANS_CRC;
+		break;
 	case USB_STATUS_PIPE_DAPIDER:
 	case USB_STATUS_PIPE_PIDER:
 	default:
 		uhd_error = UHD_TRANS_PIDFAILURE;
+		break;
 	}
 
-	// Get and ack error
+	/* Get and ack error */
 	_uhd_ctrl_request_end(uhd_error);
 }
 
@@ -1010,12 +1050,12 @@ static void _uhd_ep0_error(struct usb_module *module_inst, void *pointer)
  */
 static void _uhd_ep0_setup(struct usb_module *module_inst, void *null)
 {
-	// SETUP packet sent
+	/* SETUP packet sent */
 	usb_host_pipe_freeze(&dev, 0);
 	dbg_print("CTRL Setup\n");
 	Assert(uhd_ctrl_request_phase == UHD_CTRL_REQ_PHASE_SETUP);
 
-	// Start DATA phase
+	/* Start DATA phase */
 	if ((uhd_ctrl_request_first->req.bmRequestType & USB_REQ_DIR_MASK)
 			== USB_REQ_DIR_IN ) {
 		_uhd_ctrl_phase_data_in_start();
@@ -1023,11 +1063,10 @@ static void _uhd_ep0_setup(struct usb_module *module_inst, void *null)
 		if (uhd_ctrl_request_first->req.wLength) {
 			_uhd_ctrl_phase_data_out();
 		} else {
-			// No DATA phase
+			/* No DATA phase */
 			_uhd_ctrl_phase_zlp_in();
 		}
 	}
-	return;
 }
 
 /**
@@ -1037,7 +1076,7 @@ static void _uhd_ep0_setup(struct usb_module *module_inst, void *null)
 static void _uhd_ep0_stall(struct usb_module *module_inst, void *null)
 {
 	dbg_print("CTRL Stall\n");
-	// Stall Handshake received
+	/* Stall Handshake received */
 	_uhd_ctrl_request_end(UHD_TRANS_STALL);
 }
 
@@ -1083,11 +1122,10 @@ static void _uhd_pipe_trans_complete(struct usb_module *module_inst, void *point
 	uint16_t max_trans;
 	iram_size_t next_trans;
 	irqflags_t flags;
-//	bool b_is_iso = (cfg.pipe_type == USB_HOST_PIPE_TYPE_ISO);
 
 	pipe_size = cfg.size;
 
-	// Get job corresponding at endpoint
+	/* Get job corresponding at endpoint */
 	ptr_job = &uhd_pipe_job[p_callback_para->pipe_num - 1];
 
 	if (!ptr_job->busy) {
@@ -1096,41 +1134,42 @@ static void _uhd_pipe_trans_complete(struct usb_module *module_inst, void *point
 
 	if (!(cfg.endpoint_address & USB_EP_DIR_IN)) {
 		usb_host_pipe_freeze(&dev, p_callback_para->pipe_num);
-		// Transfer complete on OUT
-		nb_trans = p_callback_para->transfer_size;
+		/* Transfer complete on OUT */
+		nb_trans = p_callback_para->transfered_size;
 
-		// Update number of transfered data
+		/* Update number of transfered data */
 		ptr_job->nb_trans += nb_trans;
 
-		// Need to send other data
+		/* Need to send other data */
 		if ((ptr_job->nb_trans != ptr_job->buf_size)
 				|| ptr_job->b_shortpacket) {
 			next_trans = ptr_job->buf_size - ptr_job->nb_trans;
 			if (UHD_ENDPOINT_MAX_TRANS < next_trans) {
-				// The USB hardware supports a maximum
-				// transfer size of UHD_ENDPOINT_MAX_TRANS Bytes
+				/**
+				 * The USB hardware supports a maximum
+				 * transfer size of UHD_ENDPOINT_MAX_TRANS Bytes
+				 */
 				next_trans = UHD_ENDPOINT_MAX_TRANS -
 					(UHD_ENDPOINT_MAX_TRANS % pipe_size);
-				usb_host_pipe_set_zlp(&dev, p_callback_para->pipe_num, false);
+				usb_host_pipe_set_auto_zlp(&dev, p_callback_para->pipe_num, false);
 			} else {
-				// Need ZLP, if requested and last packet is not a short packet
-				usb_host_pipe_set_zlp(&dev, p_callback_para->pipe_num, ptr_job->b_shortpacket);
+				/* Need ZLP, if requested and last packet is not a short packet */
+				usb_host_pipe_set_auto_zlp(&dev, p_callback_para->pipe_num, ptr_job->b_shortpacket);
 				ptr_job->b_shortpacket = false; // No need to request another ZLP
 			}
 			usb_host_pipe_write_job(&dev, p_callback_para->pipe_num, &ptr_job->buf[ptr_job->nb_trans], next_trans);
 
-			// Enable interrupt
+			/* Enable interrupt */
 			flags = cpu_irq_save();
 			usb_host_pipe_enable_callback(&dev,p_callback_para->pipe_num,USB_HOST_PIPE_CALLBACK_TRANSFER_COMPLETE);
 			cpu_irq_restore(flags);
 			return;
 		}
 	} else {
-		// Transfer complete on IN
-		nb_trans = p_callback_para->transfer_size;
-//		uhd_udesc_rst_buf0_ctn(pipe);
+		/* Transfer complete on IN */
+		nb_trans = p_callback_para->transfered_size;
 
-		// May be required to copy received data from cache buffer to user buffer
+		/* May be required to copy received data from cache buffer to user buffer */
 		if (ptr_job->buf_internal != NULL) {
 			memcpy(&ptr_job->buf[ptr_job->nb_trans],
 					ptr_job->buf_internal,
@@ -1139,7 +1178,7 @@ static void _uhd_pipe_trans_complete(struct usb_module *module_inst, void *point
 			ptr_job->buf_internal = NULL;
 		}
 
-		// Update number of transfered data
+		/* Update number of transfered data */
 		ptr_job->nb_trans += nb_trans;
 		if (ptr_job->nb_trans > ptr_job->buf_size) {
 			ptr_job->nb_trans = ptr_job->buf_size;
@@ -1147,27 +1186,23 @@ static void _uhd_pipe_trans_complete(struct usb_module *module_inst, void *point
 
 		// If all previous requested data have been received and user buffer not full
 		// then need to receive other data
-//		if ((nb_trans == uhd_udesc_get_buf0_size(pipe))			//seems no need
-//			&& (ptr_job->nb_trans != ptr_job->buf_size)) {
-		if (ptr_job->nb_trans != ptr_job->buf_size) {
+		if ((nb_trans == p_callback_para->setting_size_in)
+			&& (ptr_job->nb_trans != ptr_job->buf_size)) {
 			next_trans = ptr_job->buf_size - ptr_job->nb_trans;
 			max_trans = UHD_ENDPOINT_MAX_TRANS;
-			// 256 is the maximum of IN requests via UPINRQ
+			/* 256 is the maximum of IN requests via UPINRQ */
 			if ((256L * pipe_size) < UHD_ENDPOINT_MAX_TRANS) {
 				max_trans = 256L * pipe_size;
 			}
 			if (max_trans < next_trans) {
-				// The USB hardware support a maximum transfer size
-				// of UHD_ENDPOINT_MAX_TRANS Bytes
+				/* The USB hardware support a maximum transfer size
+				  * of UHD_ENDPOINT_MAX_TRANS Bytes
+				  */
 				next_trans = max_trans;
 			}
 
-			// In case of USB low speed and high CPU frequency,
-			// be sure to wait end of ACK on IN pipe.
-//			while(!usb_host_pipe_is_freezed(&dev, p_callback_para->pipe_num));
-
 			if (next_trans < pipe_size) {
-				// Use the cache buffer for Bulk or Interrupt size endpoint
+				/* Use the cache buffer for Bulk or Interrupt size endpoint */
 				ptr_job->buf_internal = malloc(pipe_size);
 				if (ptr_job->buf_internal == NULL) {
 					Assert(ptr_job->buf_internal != NULL);
@@ -1176,10 +1211,10 @@ static void _uhd_pipe_trans_complete(struct usb_module *module_inst, void *point
 				usb_host_pipe_read_job(&dev, p_callback_para->pipe_num, ptr_job->buf_internal, pipe_size);
 			} else {
 				next_trans -= next_trans % pipe_size;
-				// Link the user buffer directly on USB hardware DMA
+				/* Link the user buffer directly on USB hardware DMA */
 				usb_host_pipe_read_job(&dev, p_callback_para->pipe_num, &ptr_job->buf[ptr_job->nb_trans], next_trans);
 			}
-			// Enable interrupt
+			/* Enable interrupt */
 			flags = cpu_irq_save();
 			usb_host_pipe_enable_callback(&dev,p_callback_para->pipe_num,USB_HOST_PIPE_CALLBACK_TRANSFER_COMPLETE);
 			cpu_irq_restore(flags);
@@ -1188,7 +1223,7 @@ static void _uhd_pipe_trans_complete(struct usb_module *module_inst, void *point
 	}
 
 uhd_pipe_trans_complet_end:
-	// Call callback to signal end of transfer
+	/* Call callback to signal end of transfer */
 	_uhd_pipe_finish_job(p_callback_para->pipe_num, UHD_TRANS_NOERROR);
 	return;
 }
@@ -1202,7 +1237,7 @@ uhd_pipe_trans_complet_end:
  */
 static void _uhd_ep_abort_pipe(uint8_t pipe, uhd_trans_status_t status)
 {
-	usb_host_pipe_freeze(&dev, pipe); // Abort transfer
+	usb_host_pipe_freeze(&dev, pipe);
 	_uhd_pipe_finish_job(pipe, status);
 }
 
@@ -1220,12 +1255,12 @@ static void _uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status)
 	struct usb_host_pipe_config cfg;
 	usb_host_pipe_get_config(&dev, pipe, &cfg);
 
-	// Get job corresponding at endpoint
+	/* Get job corresponding at endpoint */
 	ptr_job = &uhd_pipe_job[pipe - 1];
 	if (ptr_job->busy == false) {
 		return; // No job running
 	}
-	// In case of abort, free the internal buffer
+	/* In case of abort, free the internal buffer */
 	if (ptr_job->buf_internal != NULL) {
 		free(ptr_job->buf_internal);
 		ptr_job->buf_internal = NULL;
@@ -1250,7 +1285,7 @@ static void _uhd_ep_error(struct usb_module *module_inst, void *pointer)
 	p_callback_para = (struct usb_pipe_callback_parameter *)pointer;
 
 	dbg_print("Tr Error %x\n", p_callback_para->pipe_num);
-	// Get and ack error
+	/* Get and ack error */
 	switch(p_callback_para->error_type) {
 	case USB_STATUS_PIPE_DTGLER:
 		uhd_error = UHD_TRANS_DT_MISMATCH;
@@ -1305,7 +1340,7 @@ bool uhd_ep0_alloc(usb_add_t add, uint8_t ep_size)
 			USB_HOST_PIPE_CALLBACK_SETUP, _uhd_ep0_setup);
 	usb_host_pipe_register_callback(&dev, 0,
 			USB_HOST_PIPE_CALLBACK_STALL, _uhd_ep0_stall);
-	// Always enable stall and error interrupts of control endpoint
+	/* Always enable stall and error interrupts of control endpoint */
 	usb_host_pipe_enable_callback(&dev,0,USB_HOST_PIPE_CALLBACK_TRANSFER_COMPLETE);
 	usb_host_pipe_enable_callback(&dev,0,USB_HOST_PIPE_CALLBACK_ERROR);
 	usb_host_pipe_enable_callback(&dev,0,USB_HOST_PIPE_CALLBACK_SETUP);
@@ -1326,7 +1361,7 @@ bool uhd_ep_alloc(usb_add_t add, usb_ep_desc_t *ep_desc)
 			continue;
 		}
 		usb_host_pipe_get_config_defaults(&cfg);
-		// Enable pipe
+		/* Enable pipe */
 		ep_type = (ep_desc->bmAttributes & USB_EP_TYPE_MASK) + 1;
 		if (ep_type == USB_EP_TYPE_BULK) {
 			ep_interval = 0; // Ignore bInterval for bulk endpoint
@@ -1346,7 +1381,7 @@ bool uhd_ep_alloc(usb_add_t add, usb_ep_desc_t *ep_desc)
 				USB_HOST_PIPE_CALLBACK_ERROR, _uhd_ep_error);
 		usb_host_pipe_register_callback(&dev,pipe,
 				USB_HOST_PIPE_CALLBACK_STALL, _uhd_ep_stall);
-		// Enable endpoint interrupts
+		/* Enable endpoint interrupts */
 		usb_host_pipe_enable_callback(&dev,pipe,USB_HOST_PIPE_CALLBACK_TRANSFER_COMPLETE);
 		usb_host_pipe_enable_callback(&dev,pipe,USB_HOST_PIPE_CALLBACK_ERROR);
 		usb_host_pipe_enable_callback(&dev,pipe,USB_HOST_PIPE_CALLBACK_STALL);
@@ -1361,16 +1396,16 @@ void uhd_ep_free(usb_add_t add, usb_ep_t endp)
 	uint8_t usb_pipe = 0;
 	struct usb_host_pipe_config cfg;
 
-	// Search endpoint(s) in all pipes
+	/* Search endpoint(s) in all pipes */
 	for (usb_pipe = 0; usb_pipe < USB_PIPE_NUM; usb_pipe++) {
 		usb_host_pipe_get_config(&dev, usb_pipe, &cfg);
 		if (add != cfg.device_address) {
 			continue;
 		}
 		if (endp != 0xFF) {
-			// Disable specific endpoint number
+			/* Disable specific endpoint number */
 			if (!((endp == 0) && (0 == cfg.endpoint_address))) {
-				// It is not the control endpoint
+				/* It is not the control endpoint */
 				if (endp != cfg.endpoint_address) {
 					continue; // Mismatch
 				}
@@ -1378,10 +1413,9 @@ void uhd_ep_free(usb_add_t add, usb_ep_t endp)
 		}
 
 		if (usb_pipe == 0) {
-			// Disable and stop transfer on control endpoint
+			/* Disable and stop transfer on control endpoint */
 			if (cfg.device_address == add) {
 				usb_host_pipe_freeze(&dev, 0);
-	//			uhd_disable_pipe(0);
 				if (uhd_ctrl_request_timeout) {
 					_uhd_ctrl_request_end(UHD_TRANS_DISCONNECT);
 				}
@@ -1389,10 +1423,9 @@ void uhd_ep_free(usb_add_t add, usb_ep_t endp)
 			}
 		}
 
-		// Endpoint interrupt, bulk or isochronous
-		// Disable and stop transfer on this pipe
+		/* Endpoint interrupt, bulk or isochronous */
+		/* Disable and stop transfer on this pipe */
 		usb_host_pipe_freeze(&dev, usb_pipe);
-//		uhd_disable_pipe(usb_pipe);
 		_uhd_pipe_finish_job(usb_pipe, UHD_TRANS_DISCONNECT);
 	}
 }
@@ -1416,7 +1449,7 @@ bool uhd_ep_run(
 	if (!pipe) {
 		return false;
 	}
-	// Get job about pipe
+	/* Get job about pipe */
 	ptr_job = &uhd_pipe_job[pipe - 1];
 	flags = cpu_irq_save();
 	if (ptr_job->busy == true) {
@@ -1425,21 +1458,19 @@ bool uhd_ep_run(
 	}
 	ptr_job->busy = true;
 
-	// No job running. Let's setup a new one.
+	/* No job running. Let's setup a new one. */
 	ptr_job->buf = buf;
 	ptr_job->buf_size = buf_size;
 	ptr_job->nb_trans = 0;
 	ptr_job->timeout = timeout;
 	ptr_job->b_shortpacket = b_shortpacket;
 	ptr_job->call_end = callback;
-// done in somewhere
-//	uhd_udesc_rst_buf0_ctn(pipe);
-//	uhd_udesc_rst_buf0_size(pipe);
 	cpu_irq_restore(flags);
 
-	// Request first transfer
+	/* Request first transfer */
 	callback_para.pipe_num = pipe;
-	callback_para.transfer_size = 0;
+	callback_para.transfered_size = 0;
+	callback_para.setting_size_in = 0;
 	_uhd_pipe_trans_complete(&dev, &callback_para);
 	return true;
 }

@@ -61,15 +61,13 @@ static void ui_disable_asynchronous_interrupt(void);
 /**
  * \brief Interrupt handler for interrupt pin change
  */
-static void UI_WAKEUP_HANDLER(uint32_t channel)
+static void UI_WAKEUP_HANDLER(void)
 {
-	if (channel == BUTTON_0_EIC_LINE) {
-		if (uhc_is_suspend()) {
-			ui_disable_asynchronous_interrupt();
+	if (uhc_is_suspend()) {
+		ui_disable_asynchronous_interrupt();
 
-			/* Wakeup host and device */
-			uhc_resume();
-		}
+		/* Wakeup host and device */
+		uhc_resume();
 	}
 }
 
@@ -87,6 +85,7 @@ static void ui_enable_asynchronous_interrupt(void)
 	eint_chan_conf.detection_criteria = EXTINT_DETECT_FALLING;
 	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
 	extint_register_callback(UI_WAKEUP_HANDLER,
+			BUTTON_0_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
 	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
@@ -143,7 +142,7 @@ void ui_usb_vbus_change(bool b_vbus_present)
 
 void ui_usb_vbus_error(void)
 {
-	/* Not used for 4L */
+	/* Not used for SAMD21 */
 }
 
 void ui_usb_connection_event(uhc_device_t *dev, bool b_present)

@@ -58,11 +58,8 @@ int main(void)
 	irq_initialize_vectors();
 	cpu_irq_enable();
 
-//Remove when add sleepmgr for SAMD21
-#if !SAMD21
 	// Initialize the sleep manager
 	sleepmgr_init();
-#endif
 
 	ui_init();
 
@@ -72,10 +69,7 @@ int main(void)
 	// The USB management is entirely managed by interrupts.
 	// As a consequence, the user application does only have to play with the power modes.
 	while (true) {
-//Remove when add sleepmgr for SAMD21
-#if !SAMD21
 		sleepmgr_enter_sleep();
-#endif
 	}
 }
 

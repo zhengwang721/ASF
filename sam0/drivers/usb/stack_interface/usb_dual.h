@@ -53,11 +53,13 @@
 #include "extint.h"
 #include "port.h"
 
-//! \ingroup usb_group
-//! \defgroup usb_dual_group USB dual driver
-//! USB low-level driver for dual features
-//!
-//! @{
+/**
+ * \ingroup usb_group
+ * \defgroup usb_dual_group USB dual driver
+ * USB low-level driver for dual features
+ *
+ * @{
+ */
 
 /**
  * \brief Initialize the dual role
@@ -73,34 +75,37 @@ bool usb_dual_enable(void);
  */
 void usb_dual_disable(void);
 
-//! @name USB ID pin management
-//! The ID pin come from the USB connector (A and B receptable) and
-//! allows to select the USB mode host or device.
-//! The ID pin can be managed through EIC pin.
-//! This feature is optional, and it is enabled if USB_ID_PIN
-//! is defined in board.h and CONF_BOARD_USB_ID_DETECT defined in
-//! conf_board.h.
-//!
-//! @{
+/**
+ * @name USB ID pin management
+ *
+ * The ID pin come from the USB connector (A and B receptable) and
+ * allows to select the USB mode host or device.
+ * The ID pin can be managed through EIC pin.
+ * This feature is optional, and it is enabled if USB_ID_PIN
+ * is defined in board.h and CONF_BOARD_USB_ID_DETECT defined in
+ * conf_board.h.
+*
+* @{
+*/
 #define USB_ID_DETECT       (defined(CONF_BOARD_USB_ID_DETECT))
 #define USB_ID_EIC           (defined(USB_ID_PIN) && USB_ID_DETECT)
-//! @}
+/** @} */
 
-//! @name USB Vbus management
-//!
-//! The VBus line can be monitored through a EIC pin and
-//! a basic resitor voltage divider.
-//! This feature is optional, and it is enabled if USB_VBUS_PIN
-//! is defined in board.h and CONF_BOARD_USB_VBUS_DETECT defined in
-//! conf_board.h.
-//! @{
+/**
+ * @name USB Vbus management
+ *
+ * The VBus line can be monitored through a EIC pin and
+ * a basic resitor voltage divider.
+ * This feature is optional, and it is enabled if USB_VBUS_PIN
+ * is defined in board.h and CONF_BOARD_USB_VBUS_DETECT defined in
+ * conf_board.h.
+ *
+ * @{
+ */
 #define USB_VBUS_DETECT     (defined(CONF_BOARD_USB_VBUS_DETECT))
 #define USB_VBUS_EIC         (defined(USB_VBUS_PIN) && USB_VBUS_DETECT)
-//! @}
+/** @} */
 
 
-
-
-//! @}
-
+/** @} */
 #endif // _USB_DUAL_H_

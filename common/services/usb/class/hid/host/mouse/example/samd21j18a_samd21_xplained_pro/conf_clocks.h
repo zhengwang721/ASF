@@ -55,7 +55,7 @@
 /* SYSTEM_CLOCK_SOURCE_OSC8M configuration - Internal 8MHz oscillator */
 #  define CONF_CLOCK_OSC8M_PRESCALER              SYSTEM_OSC8M_DIV_1
 #  define CONF_CLOCK_OSC8M_ON_DEMAND              true
-#  define CONF_CLOCK_OSC8M_RUN_IN_STANDBY         false
+#  define CONF_CLOCK_OSC8M_RUN_IN_STANDBY         true
 
 /* SYSTEM_CLOCK_SOURCE_XOSC configuration - External clock/oscillator */
 #  define CONF_CLOCK_XOSC_ENABLE                  false
@@ -79,7 +79,7 @@
 /* SYSTEM_CLOCK_SOURCE_OSC32K configuration - Internal 32KHz oscillator */
 #  define CONF_CLOCK_OSC32K_ENABLE                false
 #  define CONF_CLOCK_OSC32K_STARTUP_TIME          SYSTEM_OSC32K_STARTUP_130
-#  define CONF_CLOCK_OSC32K_ENABLE_1KHZ_OUTPUT    true
+#  define CONF_CLOCK_OSC32K_ENABLE_1KHZ_OUTPUT    false
 #  define CONF_CLOCK_OSC32K_ENABLE_32KHZ_OUTPUT   true
 #  define CONF_CLOCK_OSC32K_ON_DEMAND             true
 #  define CONF_CLOCK_OSC32K_RUN_IN_STANDBY        false
@@ -105,7 +105,7 @@
 
 /* SYSTEM_CLOCK_SOURCE_DPLL configuration - Digital Phase-Locked Loop */
 #  define CONF_CLOCK_DPLL_ENABLE                  true
-#  define CONF_CLOCK_DPLL_ON_DEMAND               true
+#  define CONF_CLOCK_DPLL_ON_DEMAND               false
 #  define CONF_CLOCK_DPLL_RUN_IN_STANDBY          true
 #  define CONF_CLOCK_DPLL_LOCK_BYPASS             false
 #  define CONF_CLOCK_DPLL_WAKE_UP_FAST            false
@@ -175,7 +175,7 @@
 /* Configure GCLK generator 7 */
 #  define CONF_CLOCK_GCLK_7_ENABLE                false
 #  define CONF_CLOCK_GCLK_7_RUN_IN_STANDBY        false
-#  define CONF_CLOCK_GCLK_7_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_DPLL
+#  define CONF_CLOCK_GCLK_7_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_OSC8M
 #  define CONF_CLOCK_GCLK_7_PRESCALER             1
 #  define CONF_CLOCK_GCLK_7_OUTPUT_ENABLE         false
 

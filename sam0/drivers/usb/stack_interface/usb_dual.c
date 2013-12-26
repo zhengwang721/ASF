@@ -54,77 +54,80 @@
 # define uhc_stop(bool b_id_stop)
 #endif
 
-//! State of USBC dual initialization
-static bool usb_initialized = false;
+/* State of USBC dual initialization */
+static bool usb_dual_initialized = false;
 
-#define Is_usb_id_device()         port_pin_get_input_level(USB_ID_PIN)
+#define is_usb_id_device()         port_pin_get_input_level(USB_ID_PIN)
 
 #if USB_ID_EIC
 static void usb_id_handler(void);
 
 /**
- * \name USB IO PADs management
+ * \name USB ID PAD management
+ *
+ * @{
  */
-//@{
-static void usb_id_config(bool b_high)
+static void usb_id_config(void)
 {
-	/* Initialize EIC for button wakeup */
 	struct extint_chan_conf eint_chan_conf;
 	extint_chan_get_config_defaults(&eint_chan_conf);
 
 	eint_chan_conf.gpio_pin           = USB_ID_PIN;
 	eint_chan_conf.gpio_pin_mux       = USB_ID_EIC_MUX;
-	eint_chan_conf.detection_criteria = b_high ?
-			EXTINT_DETECT_HIGH: EXTINT_DETECT_LOW;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
 
 	extint_chan_disable_callback(USB_ID_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
 	extint_chan_set_config(USB_ID_EIC_LINE, &eint_chan_conf);
 	extint_register_callback(usb_id_handler,
+			USB_ID_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
 	extint_chan_enable_callback(USB_ID_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
 }
-//@}
-
-/**
- * \name USB IO PADs handlers
- */
-//@{
 
 /**
  * USB ID pin change handler
  */
-static void usb_id_handler(uint32_t channel)
+static void usb_id_handler(void)
 {
-	if (channel == USB_VBUS_EIC_LINE) {
-		usb_id_config(!port_pin_get_input_level(USB_ID_PIN));
-		if (Is_usb_id_device()) {
-			uhc_stop(false);
-			UHC_MODE_CHANGE(false);
-			udc_start();
-		} else {
-			udc_stop();
-			UHC_MODE_CHANGE(true);
-			uhc_start();
-		}
+	extint_chan_disable_callback(USB_ID_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	if (is_usb_id_device()) {
+		uhc_stop(false);
+		UHC_MODE_CHANGE(false);
+		udc_start();
+	} else {
+		udc_stop();
+		UHC_MODE_CHANGE(true);
+		uhc_start();
 	}
+	extint_chan_enable_callback(USB_ID_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
 }
 #endif
+/** @} */
 
-
-//@}
 
 bool usb_dual_enable(void)
 {
-	if (usb_initialized) {
+	if (usb_dual_initialized) {
 		return false; // Dual role already initialized
 	}
-	usb_initialized = true;
 
 #if USB_ID_EIC
-	usb_id_config(!port_pin_get_input_level(USB_ID_PIN));
-	if (Is_usb_id_device()) {
+	usb_dual_initialized = true;
+
+	struct port_config pin_conf;
+	port_get_config_defaults(&pin_conf);
+
+	/* Set USB ID Pin as inputs */
+	pin_conf.direction  = PORT_PIN_DIR_INPUT;
+	pin_conf.input_pull = PORT_PIN_PULL_UP;
+	port_pin_set_config(USB_ID_PIN, &pin_conf);
+
+	usb_id_config();
+	if (is_usb_id_device()) {
 		UHC_MODE_CHANGE(false);
 		udc_start();
 	} else {
@@ -132,8 +135,10 @@ bool usb_dual_enable(void)
 		uhc_start();
 	}
 
-	// End of host or device startup,
-	// the current mode selected is already started now
+	/**
+	 * End of host or device startup,
+	 * the current mode selected is already started now
+	 */
 	return true; // ID pin management has been enabled
 #else
 	return false; // ID pin management has not been enabled
@@ -143,10 +148,10 @@ bool usb_dual_enable(void)
 
 void usb_dual_disable(void)
 {
-	if (!usb_initialized) {
+	if (!usb_dual_initialized) {
 		return; // Dual role not initialized
 	}
-	usb_initialized = false;
+	usb_dual_initialized = false;
 
 #if USB_ID_EIC
 	extint_chan_disable_callback(USB_ID_EIC_LINE,

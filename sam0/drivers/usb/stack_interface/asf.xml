@@ -18,7 +18,7 @@
 	</module>
 	<module type="driver" id="sam0.drivers.usb.udd" caption="SAMD21 USB UDD interface">
 		<build type="include-path" value="."/>
-		<build type="c-source" value="usb_host_udd.c"/>
+		<build type="c-source" value="usb_device_udd.c"/>
 		<device-support value="samd21"/>
 		<require idref="sam0.drivers.usb.dual"/>
 	</module>

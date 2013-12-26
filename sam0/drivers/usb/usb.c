@@ -69,17 +69,21 @@
  *
  * @{
  */
-//COMPILER_PACK_SET(1)
-//COMPILER_WORD_ALIGNED
+
+static struct usb_module *_usb_instances;
+
+static struct usb_pipe_callback_parameter callback_para;
+
+/** Bit mask for pipe job busy status */
+uint32_t host_pipe_job_busy_status = 0;
+
+COMPILER_PACK_SET(1)
+COMPILER_WORD_ALIGNED
 union {
 	UsbDeviceDescriptor usb_endpoint_table[USB_EPT_NUM];
 	UsbHostDescriptor usb_pipe_table[USB_PIPE_NUM];
 } usb_descriptor_table;
-//COMPILER_PACK_RESET()
-
-struct usb_module *_usb_instances;
-
-struct usb_pipe_callback_parameter callback_para;
+COMPILER_PACK_RESET()
 
 enum status_code usb_host_register_callback(struct usb_module *module_inst,
 		enum usb_host_callback callback_type,
@@ -116,6 +120,7 @@ enum status_code usb_host_enable_callback(struct usb_module *module_inst,
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
+	Assert(module_inst->hw);
 
 	/* Enable callback */
 	module_inst->host_enabled_callback_mask |= (1 << callback_type);
@@ -152,6 +157,7 @@ enum status_code usb_host_disable_callback(struct usb_module *module_inst,
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
+	Assert(module_inst->hw);
 
 	/* Disable callback */
 	module_inst->host_enabled_callback_mask &= ~(1 << callback_type);
@@ -192,9 +198,8 @@ void usb_host_pipe_get_config_defaults(struct usb_host_pipe_config *ep_config)
 	ep_config->device_address = 0;
 	ep_config->endpoint_address = 0;
 	ep_config->pipe_type = USB_HOST_PIPE_TYPE_CONTROL;
-	ep_config->binterval = 0xFF;
+	ep_config->binterval = 0;
 	ep_config->size = 8;
-	ep_config->pipe_token = USB_HOST_PIPE_TOKEN_SETUP;
 }
 
 enum status_code usb_host_pipe_set_config(struct usb_module *module_inst, uint8_t pipe_num,
@@ -202,8 +207,10 @@ enum status_code usb_host_pipe_set_config(struct usb_module *module_inst, uint8_
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(pipe_num);
+	Assert(module_inst->hw);
+	Assert(pipe_num < USB_PIPE_NUM);
 	Assert(ep_config);
+
 	/* set pipe config */
 	module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.BK = 0;
 	module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTYPE = ep_config->pipe_type;
@@ -211,15 +218,15 @@ enum status_code usb_host_pipe_set_config(struct usb_module *module_inst, uint8_
 			ep_config->binterval;
 	if (ep_config->endpoint_address == 0) {
 		module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTOKEN =
-				USB_HOST_PCFG_PTOKEN(USB_HOST_PIPE_TOKEN_SETUP);
+				USB_HOST_PIPE_TOKEN_SETUP;
 	} else if (ep_config->endpoint_address & USB_EP_DIR_IN) {
 		module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTOKEN =
-				USB_HOST_PCFG_PTOKEN(USB_HOST_PIPE_TOKEN_IN);
+				USB_HOST_PIPE_TOKEN_IN;
 		module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSSET.reg =
 				USB_HOST_PSTATUSSET_BK0RDY;
 	} else {
-		module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTOKEN
-				= USB_HOST_PCFG_PTOKEN(USB_HOST_PIPE_TOKEN_OUT);
+		module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTOKEN =
+				USB_HOST_PIPE_TOKEN_OUT;
 		module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSCLR.reg =
 				USB_HOST_PSTATUSCLR_BK0RDY;
 	}
@@ -246,7 +253,8 @@ enum status_code usb_host_pipe_get_config(struct usb_module *module_inst, uint8_
 
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(pipe_num);
+	Assert(module_inst->hw);
+	Assert(pipe_num < USB_PIPE_NUM);
 	Assert(ep_config);
 	/* get pipe config from setting register */
 	ep_config->device_address =
@@ -255,7 +263,7 @@ enum status_code usb_host_pipe_get_config(struct usb_module *module_inst, uint8_
 			usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].CTRL_PIPE.bit.PEPNUM;
 
 	if (module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTOKEN ==
-				USB_HOST_PCFG_PTOKEN(USB_HOST_PIPE_TOKEN_IN)) {
+				USB_HOST_PIPE_TOKEN_IN) {
 		ep_config->endpoint_address |= USB_EP_DIR_IN;
 	}
 
@@ -268,7 +276,6 @@ enum status_code usb_host_pipe_get_config(struct usb_module *module_inst, uint8_
 	} else {
 		ep_config->size = (8 << size);
 	}
-	ep_config->pipe_token = module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTOKEN;
 
 	return STATUS_OK;
 }
@@ -280,7 +287,7 @@ enum status_code usb_host_pipe_register_callback(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(pipe_num);
+	Assert(pipe_num < USB_PIPE_NUM);
 	Assert(callback_func);
 
 	/* Register callback function */
@@ -297,7 +304,7 @@ enum status_code usb_host_pipe_unregister_callback(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(pipe_num);
+	Assert(pipe_num < USB_PIPE_NUM);
 
 	/* Unregister callback function */
 	module_inst->host_pipe_callback[pipe_num][callback_type] = NULL;
@@ -313,7 +320,8 @@ enum status_code usb_host_pipe_enable_callback(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(pipe_num);
+	Assert(module_inst->hw);
+	Assert(pipe_num < USB_PIPE_NUM);
 
 	/* Enable callback */
 	module_inst->host_pipe_enabled_callback_mask[pipe_num] |= (1 << callback_type);
@@ -321,11 +329,9 @@ enum status_code usb_host_pipe_enable_callback(
 	if (callback_type == USB_HOST_PIPE_CALLBACK_TRANSFER_COMPLETE) {
 		module_inst->hw->HOST.HostPipe[pipe_num].PINTENSET.reg = USB_HOST_PINTENSET_TRCPT_Msk;
 	}
-	if (callback_type == USB_HOST_PIPE_CALLBACK_FAIL) {
-		module_inst->hw->HOST.HostPipe[pipe_num].PINTENSET.reg = USB_HOST_PINTENSET_TRFAIL;
-	}
 	if (callback_type == USB_HOST_PIPE_CALLBACK_ERROR) {
-		module_inst->hw->HOST.HostPipe[pipe_num].PINTENSET.reg = USB_HOST_PINTENSET_PERR;
+		module_inst->hw->HOST.HostPipe[pipe_num].PINTENSET.reg =
+				USB_HOST_PINTENSET_TRFAIL | USB_HOST_PINTENSET_PERR;
 	}
 	if (callback_type == USB_HOST_PIPE_CALLBACK_SETUP) {
 		module_inst->hw->HOST.HostPipe[pipe_num].PINTENSET.reg = USB_HOST_PINTENSET_TXSTP;
@@ -342,7 +348,8 @@ enum status_code usb_host_pipe_disable_callback(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(pipe_num);
+	Assert(module_inst->hw);
+	Assert(pipe_num < USB_PIPE_NUM);
 
 	/* Enable callback */
 	module_inst->host_pipe_enabled_callback_mask[pipe_num] &= ~(1 << callback_type);
@@ -350,11 +357,9 @@ enum status_code usb_host_pipe_disable_callback(
 	if (callback_type == USB_HOST_PIPE_CALLBACK_TRANSFER_COMPLETE) {
 		module_inst->hw->HOST.HostPipe[pipe_num].PINTENCLR.reg = USB_HOST_PINTENCLR_TRCPT_Msk;
 	}
-	if (callback_type == USB_HOST_PIPE_CALLBACK_FAIL) {
-		module_inst->hw->HOST.HostPipe[pipe_num].PINTENCLR.reg = USB_HOST_PINTENCLR_TRFAIL;
-	}
 	if (callback_type == USB_HOST_PIPE_CALLBACK_ERROR) {
-		module_inst->hw->HOST.HostPipe[pipe_num].PINTENCLR.reg = USB_HOST_PINTENCLR_PERR;
+		module_inst->hw->HOST.HostPipe[pipe_num].PINTENCLR.reg =
+				USB_HOST_PINTENCLR_TRFAIL| USB_HOST_PINTENCLR_PERR;
 	}
 	if (callback_type == USB_HOST_PIPE_CALLBACK_SETUP) {
 		module_inst->hw->HOST.HostPipe[pipe_num].PINTENCLR.reg = USB_HOST_PINTENCLR_TXSTP;
@@ -366,24 +371,29 @@ enum status_code usb_host_pipe_disable_callback(
 	return STATUS_OK;
 }
 enum status_code usb_host_pipe_setup_job(struct usb_module *module_inst,
-		uint8_t pipe_num, uint8_t *buf, uint32_t buf_size)
+		uint8_t pipe_num, uint8_t *buf)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(pipe_num);
+	Assert(module_inst->hw);
+	Assert(pipe_num < USB_PIPE_NUM);
+
+	if (module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTYPE ==
+			USB_HOST_PIPE_TYPE_DISABLE) {
+		return STATUS_ERR_NOT_INITIALIZED;
+	}
 
 	/* get pipe config from setting register */
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].ADDR.reg = (uint32_t)buf;
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].PCKSIZE.bit.BYTE_COUNT =
-			buf_size;
+			8;
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE =
 			0;
 	module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTOKEN =
-			USB_HOST_PCFG_PTOKEN(USB_HOST_PIPE_TOKEN_SETUP);
+			USB_HOST_PIPE_TOKEN_SETUP;
 
 	module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSSET.reg = USB_HOST_PSTATUSSET_BK0RDY;
 	usb_host_pipe_unfreeze(module_inst, pipe_num);
-	usb_host_pipe_enable_callback(module_inst, 0, USB_HOST_PIPE_CALLBACK_SETUP);
 
 	return STATUS_OK;
 }
@@ -392,7 +402,20 @@ enum status_code usb_host_pipe_read_job(struct usb_module *module_inst,
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(pipe_num);
+	Assert(module_inst->hw);
+	Assert(pipe_num < USB_PIPE_NUM);
+
+	if (host_pipe_job_busy_status & (1 << pipe_num)) {
+		return STATUS_BUSY;
+	}
+
+	/* Set busy status */
+	host_pipe_job_busy_status |= 1 << pipe_num;
+
+	if (module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTYPE ==
+			USB_HOST_PIPE_TYPE_DISABLE) {
+		return STATUS_ERR_NOT_INITIALIZED;
+	}
 
 	/* get pipe config from setting register */
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].ADDR.reg = (uint32_t)buf;
@@ -401,9 +424,9 @@ enum status_code usb_host_pipe_read_job(struct usb_module *module_inst,
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE =
 			buf_size;
 	module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTOKEN =
-			USB_HOST_PCFG_PTOKEN(USB_HOST_PIPE_TOKEN_IN);
+			USB_HOST_PIPE_TOKEN_IN;
 
-	// Start transfer
+	/* Start transfer */
 	module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSCLR.reg = USB_HOST_PSTATUSCLR_BK0RDY;
 	usb_host_pipe_unfreeze(module_inst, pipe_num);
 
@@ -414,7 +437,20 @@ enum status_code usb_host_pipe_write_job(struct usb_module *module_inst,
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
-	Assert(pipe_num);
+	Assert(module_inst->hw);
+	Assert(pipe_num < USB_PIPE_NUM);
+
+	if (host_pipe_job_busy_status & (1 << pipe_num)) {
+		return STATUS_BUSY;
+	}
+
+	/* Set busy status */
+	host_pipe_job_busy_status |= 1 << pipe_num;
+
+	if (module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTYPE ==
+			USB_HOST_PIPE_TYPE_DISABLE) {
+		return STATUS_ERR_NOT_INITIALIZED;
+	}
 
 	/* get pipe config from setting register */
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].ADDR.reg = (uint32_t)buf;
@@ -423,9 +459,9 @@ enum status_code usb_host_pipe_write_job(struct usb_module *module_inst,
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE =
 			0;
 	module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTOKEN =
-			USB_HOST_PCFG_PTOKEN(USB_HOST_PIPE_TOKEN_OUT);
+			USB_HOST_PIPE_TOKEN_OUT;
 
-	// Start transfer
+	/* Start transfer */
 	module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSSET.reg = USB_HOST_PSTATUSSET_BK0RDY;
 	usb_host_pipe_unfreeze(module_inst, pipe_num);
 
@@ -433,11 +469,20 @@ enum status_code usb_host_pipe_write_job(struct usb_module *module_inst,
 }
 enum status_code usb_host_pipe_abort_job(struct usb_module *module_inst, uint8_t pipe_num)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(pipe_num < USB_PIPE_NUM);
+
+	/* Clear busy status */
+	host_pipe_job_busy_status &= ~(1 << pipe_num);
+
+	if (module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTYPE ==
+			USB_HOST_PIPE_TYPE_DISABLE) {
+		return STATUS_ERR_NOT_INITIALIZED;
+	}
+
 	module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSSET.reg = USB_HOST_PSTATUSSET_PFREEZE;
-	return STATUS_OK;
-}
-enum status_code usb_host_pipe_get_job_status(struct usb_module *module_inst, uint8_t pipe_num)
-{
 	return STATUS_OK;
 }
 
@@ -458,55 +503,53 @@ static void _usb_host_interrupt_handler(void)
 	uint32_t pipe_int;
 	uint32_t flags;
 
-	// Manage pipe interrupts
+	/* Manage pipe interrupts */
 	pipe_int = ctz(_usb_instances->hw->HOST.PINTSMRY.reg);
 	if (pipe_int < 32) {
-		// pipe interrupts
+		/* pipe interrupts */
 
 		/* get interrupt flags */
 		flags = _usb_instances->hw->HOST.HostPipe[pipe_int].PINTFLAG.reg;
 
-		// host pipe transfer complete interrupt
+		/* host pipe transfer complete interrupt */
 		if (flags & USB_HOST_PINTFLAG_TRCPT_Msk) {
-			// clear the flag
+			/* Clear busy status */
+			host_pipe_job_busy_status &= ~(1 << pipe_int);
+			/* clear the flag */
 			_usb_instances->hw->HOST.HostPipe[pipe_int].PINTFLAG.reg =
 					USB_HOST_PINTFLAG_TRCPT_Msk;
 			if(_usb_instances->host_pipe_enabled_callback_mask[pipe_int] &
 					(1 << USB_HOST_PIPE_CALLBACK_TRANSFER_COMPLETE)) {
 				callback_para.pipe_num = pipe_int;
 				if (_usb_instances->hw->HOST.HostPipe[pipe_int].PCFG.bit.PTOKEN ==
-							USB_HOST_PCFG_PTOKEN(USB_HOST_PIPE_TOKEN_IN)) {
-					// in 
-					callback_para.transfer_size = usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.BYTE_COUNT;
+							USB_HOST_PIPE_TOKEN_IN) {
+					/* in  */
+					callback_para.transfered_size = usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.BYTE_COUNT;
+					callback_para.setting_size_in = usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE;
 					usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.BYTE_COUNT = 0;
 				} else {
-					// out
-					callback_para.transfer_size = usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE;
+					/* out */
+					callback_para.transfered_size = usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE;
 					usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE = 0;
-					if (0 == callback_para.transfer_size) {
-						callback_para.transfer_size = usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.BYTE_COUNT;
+					if (0 == callback_para.transfered_size) {
+						callback_para.transfered_size = usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.BYTE_COUNT;
 					}
 				}
 				(_usb_instances->host_pipe_callback[pipe_int]
 						[USB_HOST_PIPE_CALLBACK_TRANSFER_COMPLETE])(_usb_instances, &callback_para);
-			}		
+			}
 		}
 
-		// host pipe transfer fail interrupt
+		/* host pipe transfer fail interrupt */
 		if (flags & USB_HOST_PINTFLAG_TRFAIL) {
-			// clear the flag
+			/* clear the flag */
 			_usb_instances->hw->HOST.HostPipe[pipe_int].PINTFLAG.reg =
 					USB_HOST_PINTFLAG_TRFAIL;
-			if(_usb_instances->host_pipe_enabled_callback_mask[pipe_int] &
-					(1 << USB_HOST_PIPE_CALLBACK_FAIL)) {
-				(_usb_instances->host_pipe_callback[pipe_int]
-						[USB_HOST_PIPE_CALLBACK_FAIL])(_usb_instances, NULL);
-			}		
 		}
 
-		// host pipe error interrupt
+		/* host pipe error interrupt */
 		if (flags & USB_HOST_PINTFLAG_PERR) {
-			// clear the flag
+			/* clear the flag */
 			_usb_instances->hw->HOST.HostPipe[pipe_int].PINTFLAG.reg =
 					USB_HOST_PINTFLAG_PERR;
 			if(_usb_instances->host_pipe_enabled_callback_mask[pipe_int] &
@@ -516,12 +559,12 @@ static void _usb_host_interrupt_handler(void)
 						usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].STATUS_PIPE.reg & 0x1F;
 				(_usb_instances->host_pipe_callback[pipe_int]
 						[USB_HOST_PIPE_CALLBACK_ERROR])(_usb_instances, &callback_para);
-			}		
+			}
 		}
 
-		// host pipe transmitted setup interrupt
+		/* host pipe transmitted setup interrupt */
 		if (flags & USB_HOST_PINTFLAG_TXSTP) {
-			// clear the flag
+			/* clear the flag */
 			_usb_instances->hw->HOST.HostPipe[pipe_int].PINTFLAG.reg =
 					USB_HOST_PINTFLAG_TXSTP;
 			if(_usb_instances->host_pipe_enabled_callback_mask[pipe_int] &
@@ -531,9 +574,9 @@ static void _usb_host_interrupt_handler(void)
 			}		
 		}
 
-		// host pipe stall interrupt
+		/* host pipe stall interrupt */
 		if (flags & USB_HOST_PINTFLAG_STALL) {
-			// clear the flag
+			/* clear the flag */
 			_usb_instances->hw->HOST.HostPipe[pipe_int].PINTFLAG.reg =
 					USB_HOST_PINTFLAG_STALL;
 			if(_usb_instances->host_pipe_enabled_callback_mask[pipe_int] &
@@ -545,98 +588,106 @@ static void _usb_host_interrupt_handler(void)
 		}
 
 	} else {
-		// host interrupts
+		/* host interrupts */
 
 		/* get interrupt flags */
 		flags = _usb_instances->hw->HOST.INTFLAG.reg;
 
-		// host SOF interrupt
+		/* host SOF interrupt */
 		if (flags & USB_HOST_INTFLAG_HSOF) {
-			// clear the flag
+			/* clear the flag */
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_HSOF;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_SOF)) {
-				(_usb_instances->host_callback[USB_HOST_CALLBACK_SOF])(_usb_instances, NULL);
+				(_usb_instances->host_callback[USB_HOST_CALLBACK_SOF])(_usb_instances);
 			}		
 		}
 
-		// host reset interrupt		
+		/* host reset interrupt */
 		if (flags & USB_HOST_INTFLAG_RST) {
-			// clear the flag
+			/* clear the flag */
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_RST;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_RESET)) {
-				(_usb_instances->host_callback[USB_HOST_CALLBACK_RESET])(_usb_instances, NULL);
+				(_usb_instances->host_callback[USB_HOST_CALLBACK_RESET])(_usb_instances);
 			}		
 		}
 
-		// host wakeup interrupts
+		/* host wakeup interrupts */
 		if (flags & USB_HOST_INTFLAG_WAKEUP) {
-			// clear the flags
+			/* clear the flags */
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_WAKEUP;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_WAKEUP)) {
-				(_usb_instances->host_callback[USB_HOST_CALLBACK_WAKEUP])(_usb_instances, NULL);
+				(_usb_instances->host_callback[USB_HOST_CALLBACK_WAKEUP])(_usb_instances);
 			}		
 		}
 
-		// host downstream resume interrupts
+		/* host downstream resume interrupts */
 		if (flags & USB_HOST_INTFLAG_DNRSM) {
-			// clear the flags
+			/* clear the flags */
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_DNRSM;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_DNRSM)) {
-				(_usb_instances->host_callback[USB_HOST_CALLBACK_DNRSM])(_usb_instances, NULL);
+				(_usb_instances->host_callback[USB_HOST_CALLBACK_DNRSM])(_usb_instances);
 			}		
 		}
 
-		// host upstream resume interrupts
+		/* host upstream resume interrupts */
 		if (flags & USB_HOST_INTFLAG_UPRSM) {
-			// clear the flags
+			/* clear the flags */
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_UPRSM;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_UPRSM)) {
-				(_usb_instances->host_callback[USB_HOST_CALLBACK_UPRSM])(_usb_instances, NULL);
+				(_usb_instances->host_callback[USB_HOST_CALLBACK_UPRSM])(_usb_instances);
 			}		
 		}
 
-		// host ram access interrupt 	
+		/* host ram access interrupt  */	
 		if (flags & USB_HOST_INTFLAG_RAMACER) {
-			// clear the flag
+			/* clear the flag */
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_RAMACER;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_RAMACER)) {
-				(_usb_instances->host_callback[USB_HOST_CALLBACK_RAMACER])(_usb_instances, NULL);
+				(_usb_instances->host_callback[USB_HOST_CALLBACK_RAMACER])(_usb_instances);
 			}		
 		}
 
-		// host connect interrupt
+		/* host connect interrupt */
 		if (flags & USB_HOST_INTFLAG_DCONN) {
-			// clear the flag
+			/* clear the flag */
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_DCONN;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_CONNECT)) {
-				(_usb_instances->host_callback[USB_HOST_CALLBACK_CONNECT])(_usb_instances, NULL);
+				(_usb_instances->host_callback[USB_HOST_CALLBACK_CONNECT])(_usb_instances);
 			}		
 		}
 		
-		// host disconnect interrupt 	
+		/* host disconnect interrupt 	*/
 		if (flags & USB_HOST_INTFLAG_DDISC) {
-			// clear the flag
+			/* clear the flag */
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_DDISC;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_DISCONNECT)) {
-				(_usb_instances->host_callback[USB_HOST_CALLBACK_DISCONNECT])(_usb_instances, NULL);
+				(_usb_instances->host_callback[USB_HOST_CALLBACK_DISCONNECT])(_usb_instances);
 			}		
 		}
 
 	}
 }
 
-void usb_host_pipe_set_zlp(struct usb_module *module_inst, uint8_t pipe_num, bool value)
+void usb_host_pipe_set_auto_zlp(struct usb_module *module_inst, uint8_t pipe_num, bool value)
 {
+	Assert(module_inst);
+
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].PCKSIZE.bit.AUTO_ZLP = value;
 }
 
 void usb_enable(struct usb_module *module_inst)
 {
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
 	module_inst->hw->HOST.CTRLA.reg |= USB_CTRLA_ENABLE;
 	while (module_inst->hw->HOST.SYNCBUSY.reg == USB_SYNCBUSY_ENABLE);
 }
 void usb_disable(struct usb_module *module_inst)
 {
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
 	module_inst->hw->HOST.CTRLA.reg &= ~USB_CTRLA_ENABLE;
 	while (module_inst->hw->HOST.SYNCBUSY.reg == USB_SYNCBUSY_ENABLE);
 }
@@ -645,21 +696,31 @@ void usb_disable(struct usb_module *module_inst)
 void USB_Handler(void)
 {
 	if (_usb_instances->hw->HOST.CTRLA.bit.MODE) {
-		//host mode ISR
+		/*host mode ISR */
 		_usb_host_interrupt_handler();
 	} else {
-		//device mode ISR
+		/*device mode ISR */
 	}
 }
 
 void usb_get_config_defaults(struct usb_config *module_config)
 {
+	Assert(module_config);
+
 	/* Sanity check arguments */
 	Assert(module_config);
 	/* Write default config to config struct */
 	module_config->mode = 0;
 	module_config->run_in_standby = 1;
 }
+
+#define NVM_USB_PAD_TRANSN_POS  45
+#define NVM_USB_PAD_TRANSN_SIZE 5
+#define NVM_USB_PAD_TRANSP_POS  50
+#define NVM_USB_PAD_TRANSP_SIZE 5
+#define NVM_USB_PAD_TRIM_POS  55
+#define NVM_USB_PAD_TRIM_SIZE 3
+
 enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 		struct usb_config *module_config)
 {
@@ -669,8 +730,11 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 	Assert(module_config);
 
 	uint32_t i,j;
+	uint32_t pad_transn, pad_transp, pad_trim;
 	struct system_pinmux_config pin_config;
 	struct system_gclk_chan_config gclk_chan_config;
+
+	host_pipe_job_busy_status = 0;
 
 	_usb_instances = module_inst;
 
@@ -679,6 +743,40 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, PM_APBBMASK_USB);
+
+	/* Load Pad Calibration */
+	pad_transn =( *((uint32_t *)(NVMCTRL_OTP4)
+			+ (NVM_USB_PAD_TRANSN_POS / 32))
+		>> (NVM_USB_PAD_TRANSN_POS % 32))
+		& ((1 << NVM_USB_PAD_TRANSN_SIZE) - 1);
+
+	if (pad_transn == 0x1F) {
+		pad_transn = 5;
+	}
+
+	hw->HOST.PADCAL.bit.TRANSN = pad_transn;
+
+	pad_transp =( *((uint32_t *)(NVMCTRL_OTP4)
+			+ (NVM_USB_PAD_TRANSP_POS / 32))
+			>> (NVM_USB_PAD_TRANSP_POS % 32))
+			& ((1 << NVM_USB_PAD_TRANSP_SIZE) - 1);
+
+	if (pad_transp == 0x1F) {
+		pad_transp = 29;
+	}
+
+	hw->HOST.PADCAL.bit.TRANSP = pad_transp;
+
+	pad_trim =( *((uint32_t *)(NVMCTRL_OTP4)
+			+ (NVM_USB_PAD_TRIM_POS / 32))
+			>> (NVM_USB_PAD_TRIM_POS % 32))
+			& ((1 << NVM_USB_PAD_TRIM_SIZE) - 1);
+
+	if (pad_trim == 0x7) {
+		pad_trim = 3;
+	}
+
+	hw->HOST.PADCAL.bit.TRIM = pad_trim;
 
 	/* Set up the USB DP/DN pins */
 	system_pinmux_get_config_defaults(&pin_config);
@@ -708,7 +806,7 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 	memset((uint8_t *)(&usb_descriptor_table.usb_endpoint_table[0]), 0,
 			sizeof(usb_descriptor_table.usb_endpoint_table));
 
-	// callback related init
+	/* callback related init */
 	for (i = 0; i < USB_PIPE_NUM; i++) {
 		module_inst->host_callback[i] = NULL;
 		for (j = 0; j < USB_HOST_CALLBACK_N; j++) {
@@ -724,6 +822,7 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 
 	/* Enable interrupts for this USB module */
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_USB);
+
 
 	return STATUS_OK;
 }

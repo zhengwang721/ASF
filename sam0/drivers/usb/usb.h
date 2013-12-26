@@ -74,7 +74,6 @@ enum usb_host_callback {
 /** Enum for the possible callback types for the USB pipe in host module */
 enum usb_host_pipe_callback {
 	USB_HOST_PIPE_CALLBACK_TRANSFER_COMPLETE,
-	USB_HOST_PIPE_CALLBACK_FAIL,
 	USB_HOST_PIPE_CALLBACK_ERROR,
 	USB_HOST_PIPE_CALLBACK_SETUP,
 	USB_HOST_PIPE_CALLBACK_STALL,
@@ -110,7 +109,7 @@ struct usb_module;
 /**
  * \brief Host callback functions types.
  */
-typedef void (*usb_host_callback_t)(struct usb_module *module_inst, void *);
+typedef void (*usb_host_callback_t)(struct usb_module *module_inst);
 typedef void (*usb_host_pipe_callback_t)(struct usb_module *module_inst, void *);
 
 
@@ -158,20 +157,23 @@ struct usb_host_pipe_config {
 	uint8_t binterval;
 	/** pipe size */
 	uint16_t size;
-	/** pipe token */
-	enum usb_host_pipe_token pipe_token;
 };
 
 /** USB host piple callback parameter structure */
 struct usb_pipe_callback_parameter {
 	uint8_t pipe_num;
 	uint8_t error_type;
-	uint16_t transfer_size;
+	uint16_t transfered_size;
+	uint16_t setting_size_in;
 };
 
 /** USB simple operation functions */
 void usb_enable(struct usb_module *module_inst);
 void usb_disable(struct usb_module *module_inst);
+static inline uint8_t usb_get_state_machine_status(struct usb_module *module_inst)
+{
+	return module_inst->hw->HOST.FSMSTATUS.reg;
+}
 /** USB init functions */
 void usb_get_config_defaults(struct usb_config *module_config);
 enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
@@ -180,34 +182,66 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 /** host simple operation functions*/
 static inline void usb_host_enable(struct usb_module *module_inst)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
 	module_inst->hw->HOST.CTRLB.bit.VBUSOK = 1;
 }
 static inline void usb_host_send_reset(struct usb_module *module_inst)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
 	module_inst->hw->HOST.CTRLB.bit.BUSRESET = 1;
 }
 static inline void usb_host_enable_sof(struct usb_module *module_inst)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
 	module_inst->hw->HOST.CTRLB.bit.SOFE = 1;
 }
 static inline void usb_host_disable_sof(struct usb_module *module_inst)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
 	module_inst->hw->HOST.CTRLB.bit.SOFE = 0;
 }
 static inline bool usb_host_is_sof_enabled(struct usb_module *module_inst)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
 	return module_inst->hw->HOST.CTRLB.bit.SOFE;
 }
 static inline void usb_host_send_resume(struct usb_module *module_inst)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
 	module_inst->hw->HOST.CTRLB.bit.RESUME= 1;
 }
 static inline void usb_host_send_l1_resume(struct usb_module *module_inst)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
 	module_inst->hw->HOST.CTRLB.bit.L1RESUME = 1;
 }
 static inline enum usb_speed usb_host_get_speed(struct usb_module *module_inst)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
 	if (module_inst->hw->HOST.STATUS.bit.SPEED == 0) {
 		return USB_SPEED_FULL;
 	} else {
@@ -216,7 +250,11 @@ static inline enum usb_speed usb_host_get_speed(struct usb_module *module_inst)
 }
 static inline uint16_t usb_host_get_frame_number(struct usb_module *module_inst)
 {
-	return (uint16_t)((module_inst->hw->HOST.FLENHIGH.reg << 11) + (module_inst->hw->HOST.FNUM.bit.FNUM));
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	return (uint16_t)(module_inst->hw->HOST.FNUM.bit.FNUM);
 }
 /** host interrupt functions*/
 enum status_code usb_host_register_callback(struct usb_module *module_inst,
@@ -253,34 +291,53 @@ enum status_code usb_host_pipe_disable_callback(
 
 /** Pipe high level job functions */
 enum status_code usb_host_pipe_setup_job(struct usb_module *module_inst,
-		uint8_t pipe_num, uint8_t *buf, uint32_t buf_size);
+		uint8_t pipe_num, uint8_t *buf);
 enum status_code usb_host_pipe_read_job(struct usb_module *module_inst,
 		uint8_t pipe_num, uint8_t *buf, uint32_t buf_size);
 enum status_code usb_host_pipe_write_job(struct usb_module *module_inst,
 		uint8_t pipe_num, uint8_t *buf, uint32_t buf_size);
 enum status_code usb_host_pipe_abort_job(struct usb_module *module_inst, uint8_t pipe_num);
-enum status_code usb_host_pipe_get_job_status(struct usb_module *module_inst, uint8_t pipe_num);
 /** Pipe simple operation functions*/
 static inline void usb_host_pipe_freeze(struct usb_module *module_inst, uint8_t pipe_num)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
 	module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSSET.reg = USB_HOST_PSTATUSSET_PFREEZE;
 }
 static inline void usb_host_pipe_unfreeze(struct usb_module *module_inst, uint8_t pipe_num)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
 	module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSCLR.reg = USB_HOST_PSTATUSCLR_PFREEZE;
 }
-static inline bool usb_host_pipe_is_freezed(struct usb_module *module_inst, uint8_t pipe_num)
+static inline bool usb_host_pipe_is_frozen(struct usb_module *module_inst, uint8_t pipe_num)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
 	return (module_inst->hw->HOST.HostPipe[pipe_num].PSTATUS.bit.PFREEZE == 1);
 }
 static inline void usb_host_pipe_set_toggle(struct usb_module *module_inst, uint8_t pipe_num)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
 	module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSSET.reg = USB_HOST_PSTATUSSET_DTGL;
 }
 static inline void usb_host_pipe_clear_toggle(struct usb_module *module_inst, uint8_t pipe_num)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
 	module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSCLR.reg = USB_HOST_PSTATUSCLR_DTGL;
 }
-void usb_host_pipe_set_zlp(struct usb_module *module_inst, uint8_t pipe_num, bool value);
+void usb_host_pipe_set_auto_zlp(struct usb_module *module_inst, uint8_t pipe_num, bool value);
 
 #endif /* USB_H_INCLUDED */

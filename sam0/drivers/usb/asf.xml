@@ -10,18 +10,6 @@
 			<keyword value="Communication" />
 		</info>
 
-		<info type="appnote" value="AT03247"/>
-		<info type="keyword" value="pdf">
-			<keyword value="USB"/>
-			<keyword value="Universal Serial Bus Controller"/>
-		</info>
-
-		<info type="description" value="pdf">
-			This document describes how to use the Universal Serial Bus
-			Controller on the SAM D21, both the ASF driver and the peripheral
-			itself.
-		</info>
-
 		<build type="include-path" value="."/>
 		<build type="c-source" value="usb.c"/>
 
