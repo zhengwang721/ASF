@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Analog Comparator Driver Quick Start
+ * \brief SAM D2x Analog Comparator Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_ac_basic_use_case Quick Start Guide for AC - Basic
+ * \page asfdoc_sam0_ac_basic_use_case Quick Start Guide for AC - Basic
  *
  * In this use case, the Analog Comparator module is configured for:
  *  \li Comparator peripheral in manually triggered (i.e. "Single Shot" mode)
@@ -55,19 +55,19 @@
  * single-shot mode, and the result stored into a local variable which is then
  * output to the board LED to visually show the comparison state.
  *
- * \section asfdoc_samd20_ac_basic_use_case_setup Setup
+ * \section asfdoc_sam0_ac_basic_use_case_setup Setup
  *
- * \subsection asfdoc_samd20_ac_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_sam0_ac_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd20_ac_basic_use_case_setup_code Code
+ * \subsection asfdoc_sam0_ac_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_ac_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_ac_basic.c setup_init
  *
- * \subsection asfdoc_samd20_ac_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_sam0_ac_basic_use_case_setup_flow Workflow
  * -# Create an AC device instance struct, which will be associated with an
  *    Analog Comparator peripheral hardware instance.
  *    \note Device instance structures should \b never go out of scope when in
@@ -117,13 +117,13 @@
  * -# Enable the now initialized Analog Comparator peripheral.
  *  \snippet qs_ac_basic.c setup_14
  *
- * \section asfdoc_samd20_ac_basic_use_case_imp Implementation
+ * \section asfdoc_sam0_ac_basic_use_case_imp Implementation
  *
- * \subsection asfdoc_samd20_ac_basic_use_case_imp_code Code
+ * \subsection asfdoc_sam0_ac_basic_use_case_imp_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_ac_basic.c main
  *
- * \subsection asfdoc_samd20_ac_basic_use_case_imp_flow Workflow
+ * \subsection asfdoc_sam0_ac_basic_use_case_imp_flow Workflow
  * -# Trigger the first comparison on the comparator channel.
  *  \snippet qs_ac_basic.c main_1
  * -# Create a local variable to maintain the current comparator state. Since no
