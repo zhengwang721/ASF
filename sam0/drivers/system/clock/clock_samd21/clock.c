@@ -649,7 +649,9 @@ bool system_clock_source_is_ready(
 
 #ifdef FEATURE_SYSTEM_CLOCK_DPLL
 	case SYSTEM_CLOCK_SOURCE_DPLL:
-		return ((SYSCTRL->DPLLSTATUS.reg & SYSCTRL_DPLLSTATUS_CLKRDY) != 0);
+		return ((SYSCTRL->DPLLSTATUS.reg &
+				(SYSCTRL_DPLLSTATUS_CLKRDY | SYSCTRL_DPLLSTATUS_LOCK)) ==
+				(SYSCTRL_DPLLSTATUS_CLKRDY | SYSCTRL_DPLLSTATUS_LOCK));
 #endif
 
 	case SYSTEM_CLOCK_SOURCE_ULP32K:
@@ -854,10 +856,16 @@ void system_clock_init(void)
 #ifdef FEATURE_SYSTEM_CLOCK_DPLL
 #  if (CONF_CLOCK_DPLL_ENABLE == true)
 
+	/* Enable DPLL reference clock */
+	if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0) {
+		/* XOSC32K should have been enabled for DPLL_REF0 */
+		Assert(CONF_CLOCK_XOSC32K_ENABLE);
+	}
+
 	struct system_clock_source_dpll_config dpll_config;
 	system_clock_source_dpll_get_config_defaults(&dpll_config);
 
-	dpll_config.on_demand        = CONF_CLOCK_DPLL_ON_DEMAND;
+	dpll_config.on_demand        = false;
 	dpll_config.run_in_standby   = CONF_CLOCK_DPLL_RUN_IN_STANDBY;
 	dpll_config.lock_bypass      = CONF_CLOCK_DPLL_LOCK_BYPASS;
 	dpll_config.wake_up_fast     = CONF_CLOCK_DPLL_WAKE_UP_FAST;
@@ -872,6 +880,10 @@ void system_clock_init(void)
 
 	system_clock_source_dpll_set_config(&dpll_config);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DPLL);
+	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_DPLL));
+	if (CONF_CLOCK_DPLL_ON_DEMAND) {
+		SYSCTRL->DPLLCTRLA.bit.ONDEMAND = 1;
+	}
 
 #  endif
 #endif
