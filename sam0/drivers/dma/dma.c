@@ -195,6 +195,8 @@ void DMAC_Handler( void )
 	uint8_t active_channel;
 	struct dma_resource *resource;
 	uint8_t isr;
+	uint32_t write_size;
+	uint32_t total_size;
 
 	system_interrupt_enter_critical_section();
 
@@ -211,9 +213,9 @@ void DMAC_Handler( void )
 	isr = DMAC->CHINTFLAG.reg;
 
 	/* Calculate block transfer size of the DMA transfer */
-	resource->transfered_size
-		= _descriptor_section[resource->channel_id].BTCNT.reg
-			- _write_back_section[resource->channel_id].BTCNT.reg;
+	total_size = _descriptor_section[resource->channel_id].BTCNT.reg;
+	write_size = _write_back_section[resource->channel_id].BTCNT.reg;
+	resource->transfered_size = total_size - write_size;
 
 	/* DMA channel interrupt handler */
 	if (isr & DMAC_CHINTENCLR_TERR) {
@@ -485,6 +487,9 @@ enum status_code dma_start_transfer_job(struct dma_resource *resource)
  */
 void dma_abort_job(struct dma_resource *resource)
 {
+	uint32_t write_size;
+	uint32_t total_size;
+
 	Assert(resource);
 	Assert(resource->channel_id != DMA_INVALID_CHANNEL);
 
@@ -496,9 +501,9 @@ void dma_abort_job(struct dma_resource *resource)
 	system_interrupt_leave_critical_section();
 
 	/* Get transferred size */
-	resource->transfered_size
-		= _descriptor_section[resource->channel_id].BTCNT.reg
-			- _write_back_section[resource->channel_id].BTCNT.reg;
+	total_size = _descriptor_section[resource->channel_id].BTCNT.reg;
+	write_size = _write_back_section[resource->channel_id].BTCNT.reg;
+	resource->transfered_size = total_size - write_size;
 
 	resource->job_status = STATUS_ABORTED;
 }
@@ -607,7 +612,7 @@ void dma_descriptor_create(DmacDescriptor* descriptor,
 	descriptor->DSTADDR.reg = config->destination_address;
 
 	/* Set default next transfer descriptor to 0 */
-	descriptor->DESCADDR.reg = 0;
+	descriptor->DESCADDR.reg = config->next_descriptor_address;
 }
 
 /**
