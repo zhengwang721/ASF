@@ -41,7 +41,6 @@
  *
  */
 #include <asf.h>
-#include "conf_quick_start.h"
 
 void configure_usart(void);
 void transfer_done( const struct dma_resource* const resource );
@@ -90,7 +89,7 @@ void configure_dma_resource(struct dma_resource *resource)
 
 //! [setup_3]
 	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
-	config.peripheral_trigger = PERIPHERAL_TRIGGER_SERCOM3_TX;
+	config.peripheral_trigger = SERCOM3_DMAC_ID_TX;
 	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 //! [setup_3]
 
