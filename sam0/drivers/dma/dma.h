@@ -208,6 +208,8 @@ struct dma_descriptor_config {
 	uint32_t source_address;
 	/** Transfer destination address */
 	uint32_t destination_address;
+	/** Next descriptor address */
+	uint32_t next_descriptor_address;
 };
 
 /** Configurations for DMA events */
@@ -365,6 +367,7 @@ static inline void dma_unregister_callback(struct dma_resource *resource,
  *  \li Default transfer size is set to 0
  *  \li Default source address is set to NULL
  *  \li Default destination address is set to NULL
+ *  \li Default next descriptor not available
  * \param[out] config Pointer to the configuration
  *
  */
@@ -394,6 +397,8 @@ static inline void dma_descriptor_get_config_defaults(struct dma_descriptor_conf
 	config->source_address = (uint32_t)NULL;
 	/* Default destination address is set to NULL */
 	config->destination_address = (uint32_t)NULL;
+	/** Next descriptor address set to 0 */
+	config->next_descriptor_address = 0;
 }
 
 /**
