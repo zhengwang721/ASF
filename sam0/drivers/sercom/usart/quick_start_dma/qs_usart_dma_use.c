@@ -43,16 +43,20 @@
 #include <asf.h>
 
 void configure_usart(void);
-void transfer_done( const struct dma_resource* const resource );
-void configure_dma_resource(struct dma_resource *resource);
-void setup_transfer_descriptor(DmacDescriptor *descriptor);
+void transfer_done_rx( const struct dma_resource* const resource );
+void configure_dma_resource_rx(struct dma_resource *resource);
+void setup_transfer_descriptor_rx(DmacDescriptor *descriptor);
+void configure_dma_resource_tx(struct dma_resource *resource);
+void setup_transfer_descriptor_tx(DmacDescriptor *descriptor);
+void transfer_done_tx( const struct dma_resource* const resource );
 
 //! [module_inst]
 struct usart_module usart_instance;
 //! [module_inst]
 
 //! [dma_resource]
-struct dma_resource example_resource;
+struct dma_resource usart_dma_resource_rx;
+struct dma_resource usart_dma_resource_tx;
 //! [dma_resource]
 
 // [transfer_done_flag]
@@ -60,24 +64,83 @@ static volatile bool transfer_is_done = false;
 // [transfer_done_flag]
 
 // [usart_string]
-static uint16_t string[] = {'h','e','l','l','o'};
+static uint16_t string[8];
 // [usart_string]
 
 // [transfer_descriptor]
 COMPILER_ALIGNED(16)
-DmacDescriptor example_descriptor;
+DmacDescriptor example_descriptor_rx;
+DmacDescriptor example_descriptor_tx;
 // [transfer_descriptor]
 
 //! [setup]
 // [_transfer_done]
-void transfer_done( const struct dma_resource* const resource )
+void transfer_done_rx( const struct dma_resource* const resource )
 {
-	transfer_is_done = true;
+//	transfer_is_done = true;
+	dma_start_transfer_job(&usart_dma_resource_tx);
+}
+// [_transfer_done]
+
+// [_transfer_done]
+void transfer_done_tx( const struct dma_resource* const resource )
+{
+//	transfer_is_done = true;
+	dma_start_transfer_job(&usart_dma_resource_rx);
 }
 // [_transfer_done]
 
 // [config_dma_resource]
-void configure_dma_resource(struct dma_resource *resource)
+void configure_dma_resource_rx(struct dma_resource *resource)
+{
+//! [setup_1]
+	struct dma_resource_config config;
+//! [setup_1]
+
+//! [setup_2]
+	dma_get_config_defaults(&config);
+//! [setup_2]
+
+//! [setup_3]
+	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
+	config.peripheral_trigger = SERCOM3_DMAC_ID_RX;
+	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
+//! [setup_3]
+
+//! [setup_4]
+	dma_allocate(resource, &config);
+//! [setup_4]
+}
+// [config_dma_resource]
+
+// [setup_dma_transfer_descriptor]
+void setup_transfer_descriptor_rx(DmacDescriptor *descriptor)
+{
+//! [setup_5]
+	struct dma_descriptor_config descriptor_config;
+//! [setup_5]
+
+//! [setup_6]
+	dma_descriptor_get_config_defaults(&descriptor_config);
+//! [setup_6]
+
+//! [setup_7]
+	descriptor_config.beat_size = DMA_BEAT_SIZE_HWORD;
+	descriptor_config.src_increment_enable = false;
+	descriptor_config.block_transfer_count = 8;
+	descriptor_config.destination_address = (uint32_t)string + sizeof(string);
+        descriptor_config.source_address = (uint32_t)(&usart_instance.hw->USART.DATA.reg);
+//	descriptor_config.destination_address = (uint32_t)(&usart_instance.hw->USART.DATA.reg);
+//! [setup_7]
+
+//! [setup_8]
+	dma_descriptor_create(descriptor, &descriptor_config);
+//! [setup_8]
+}
+// [setup_dma_transfer_descriptor]
+
+// [config_dma_resource]
+void configure_dma_resource_tx(struct dma_resource *resource)
 {
 //! [setup_1]
 	struct dma_resource_config config;
@@ -100,7 +163,7 @@ void configure_dma_resource(struct dma_resource *resource)
 // [config_dma_resource]
 
 // [setup_dma_transfer_descriptor]
-void setup_transfer_descriptor(DmacDescriptor *descriptor)
+void setup_transfer_descriptor_tx(DmacDescriptor *descriptor)
 {
 //! [setup_5]
 	struct dma_descriptor_config descriptor_config;
@@ -113,8 +176,9 @@ void setup_transfer_descriptor(DmacDescriptor *descriptor)
 //! [setup_7]
 	descriptor_config.beat_size = DMA_BEAT_SIZE_HWORD;
 	descriptor_config.dst_increment_enable = false;
-	descriptor_config.block_transfer_count = sizeof(string)/sizeof(uint16_t);
-	descriptor_config.source_address = (uint32_t)string + sizeof(string);
+	descriptor_config.block_transfer_count = 8;
+//	descriptor_config.destination_address = (uint32_t)string + sizeof(string);
+        descriptor_config.source_address = (uint32_t)string + sizeof(string);
 	descriptor_config.destination_address = (uint32_t)(&usart_instance.hw->USART.DATA.reg);
 //! [setup_7]
 
@@ -164,37 +228,37 @@ int main(void)
 //! [setup_usart]
 
 //! [setup_dma_resource]
-	configure_dma_resource(&example_resource);
+	configure_dma_resource_rx(&usart_dma_resource_rx);
+	configure_dma_resource_tx(&usart_dma_resource_tx);
 //! [setup_dma_resource]
 
 //! [setup_transfer_descriptor]
-	setup_transfer_descriptor(&example_descriptor);
+	setup_transfer_descriptor_rx(&example_descriptor_rx);
+	setup_transfer_descriptor_tx(&example_descriptor_tx);
 //! [setup_transfer_descriptor]
 
 //! [Add descriptor to DMA resource]
-	dma_add_descriptor(&example_resource, &example_descriptor);
+	dma_add_descriptor(&usart_dma_resource_rx, &example_descriptor_rx);
+	dma_add_descriptor(&usart_dma_resource_tx, &example_descriptor_tx);
 //! [Add descriptor to DMA resource]
 
 //! [setup_callback_register]
-	dma_register_callback(&example_resource, transfer_done,
+	dma_register_callback(&usart_dma_resource_rx, transfer_done_rx,
+			DMA_CALLBACK_TRANSFER_DONE);
+	dma_register_callback(&usart_dma_resource_tx, transfer_done_tx,
 			DMA_CALLBACK_TRANSFER_DONE);
 //! [setup_callback_register]
 
 //! [setup_enable_callback]
-	dma_enable_callback(&example_resource, DMA_CALLBACK_TRANSFER_DONE);
+	dma_enable_callback(&usart_dma_resource_rx, DMA_CALLBACK_TRANSFER_DONE);
+	dma_enable_callback(&usart_dma_resource_tx, DMA_CALLBACK_TRANSFER_DONE);
 //! [setup_enable_callback]
 //! [setup_init]
 
 //! [main]
 //! [main_1]
-	dma_start_transfer_job(&example_resource);
+	dma_start_transfer_job(&usart_dma_resource_rx);
 //! [main_1]
-
-//! [main_2]
-	while (!transfer_is_done) {
-		/* Wait for transfer done */
-	}
-//! [main_2]
 
 //! [endless_loop]
 	while (true) {
