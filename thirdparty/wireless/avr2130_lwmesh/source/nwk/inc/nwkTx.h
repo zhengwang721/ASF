@@ -1,18 +1,11 @@
 /**
- * \file
+ * \file nwkTx.h
  *
- * \brief ATmega256RFR2 Xplained Pro board header file.
+ * \brief Transmit routines interface
  *
- * This file contains definitions and services related to the features of the
- * ATmega256RFR2 Xplained Pro board.
- *
- * To use this board, define BOARD= ATMEGA256RFR2_XPLAINED_PRO.
- *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013, Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,27 +37,34 @@
  *
  * \asf_license_stop
  *
+ * $Id: nwkTx.h 7863 2013-05-13 20:14:34Z ataradov $
+ *
  */
-#ifndef _ATMEGA256RFR2_XPLAINED_PRO_
-#define _ATMEGA256RFR2_XPLAINED_PRO_
-#include "compiler.h"
 
-# include "led.h"
+#ifndef _NWK_TX_H_
+#define _NWK_TX_H_
 
-#define MCU_SOC_NAME        "ATMEGA256RFR2"
-#define BOARD_NAME          "ATMEGA256RFR2-XPRO"
+/*- Includes ---------------------------------------------------------------*/
+#include <stdint.h>
+#include "sysTypes.h"
+#include "nwkRx.h"
+#include "nwkFrame.h"
 
- /*! \name GPIO Connections of LED
- * LED0 is connected to PORTB pin 4
- */
- #define LED_ON_BOARD         IOPORT_CREATE_PIN(PORTB, 4)
- #define LED0_GPIO			  LED_ON_BOARD		  
- #define LED0                 LED0_GPIO
- #define LED_COUNT            1
- /*!  \name GPIO Connections of Switch
- * Push button is connected to PORTE pin 4. 
- */
- #define GPIO_PUSH_BUTTON_ON_BOARD    IOPORT_CREATE_PIN(PORTE, 4)
- #define GPIO_PUSH_BUTTON_0			  GPIO_PUSH_BUTTON_ON_BOARD 
+/*- Types ------------------------------------------------------------------*/
+enum
+{
+  NWK_TX_CONTROL_BROADCAST_PAN_ID = 1 << 0,
+  NWK_TX_CONTROL_ROUTING          = 1 << 1,
+  NWK_TX_CONTROL_DIRECT_LINK      = 1 << 2,
+};
 
-#endif  /* _ATMEGA256RFR2_XPLAINED_PRO_ */
+/*- Prototypes -------------------------------------------------------------*/
+void nwkTxInit(void);
+void nwkTxFrame(NwkFrame_t *frame);
+void nwkTxBroadcastFrame(NwkFrame_t *frame);
+void nwkTxAckReceived(NWK_DataInd_t *ind);
+void nwkTxConfirm(NwkFrame_t *frame, uint8_t status);
+void nwkTxEncryptConf(NwkFrame_t *frame);
+void nwkTxTaskHandler(void);
+
+#endif // _NWK_TX_H_

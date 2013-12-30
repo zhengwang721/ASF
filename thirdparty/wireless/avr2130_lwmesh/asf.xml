@@ -1,0 +1,23 @@
+<asf xmlversion="1.0">
+
+        <module type="component" id="thirdparty.wireless.avr2130_lwmesh" caption="AVR2130 - LW MESH">
+			<info type="description" value="summary">
+		     Light Weight Mesh Stack
+			</info>
+			<require idref="thirdparty.wireless.avr2130_lwmesh.source.nwk"/>
+			<require idref="thirdparty.wireless.avr2130_lwmesh.source.hal"/>
+			<require idref="thirdparty.wireless.avr2130_lwmesh.source.phy"/>
+			<require idref="thirdparty.wireless.avr2130_lwmesh.source.sys"/>
+			<require idref="thirdparty.wireless.avr2130_lwmesh.source.service"/>
+			<build type="module-config" subtype="required-header-file" value="config.h"/>
+            <build type="module-config" subtype="path" value="module_config"/>
+            <device-support value="atmega256rfr2" />
+			<build type="doxygen-entry-point" value="group_lwmesh"/>
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+            <build type="distribute" subtype="license" value="../EULA.txt"/>
+        </module>
+       
+</asf>

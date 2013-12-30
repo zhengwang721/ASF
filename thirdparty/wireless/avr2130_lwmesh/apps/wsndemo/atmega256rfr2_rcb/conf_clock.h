@@ -1,12 +1,7 @@
 /**
  * \file
  *
- * \brief ATmega256RFR2 Xplained Pro board header file.
- *
- * This file contains definitions and services related to the features of the
- * ATmega256RFR2 Xplained Pro board.
- *
- * To use this board, define BOARD= ATMEGA256RFR2_XPLAINED_PRO.
+ * \brief Chip-specific system clock manager configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -45,26 +40,24 @@
  * \asf_license_stop
  *
  */
-#ifndef _ATMEGA256RFR2_XPLAINED_PRO_
-#define _ATMEGA256RFR2_XPLAINED_PRO_
-#include "compiler.h"
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
 
-# include "led.h"
+/* ===== System Clock Source Options */
+#define SYSCLK_SRC_RC16MHZ    0
+#define SYSCLK_SRC_RC128KHZ   1
+#define SYSCLK_SRC_TRS16MHZ   2
+#define SYSCLK_SRC_RC32KHZ    3
+#define SYSCLK_SRC_XOC16MHZ   4
+#define SYSCLK_SRC_EXTERNAL   5
 
-#define MCU_SOC_NAME        "ATMEGA256RFR2"
-#define BOARD_NAME          "ATMEGA256RFR2-XPRO"
+#define  SYSCLK_SOURCE         SYSCLK_SRC_RC16MHZ
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_RC128KHZ */
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_TRS16MHZ */
+/* #define SYSCLK_SOURCE        SYSCLK_SRC_XOC16MHZ */
 
- /*! \name GPIO Connections of LED
- * LED0 is connected to PORTB pin 4
- */
- #define LED_ON_BOARD         IOPORT_CREATE_PIN(PORTB, 4)
- #define LED0_GPIO			  LED_ON_BOARD		  
- #define LED0                 LED0_GPIO
- #define LED_COUNT            1
- /*!  \name GPIO Connections of Switch
- * Push button is connected to PORTE pin 4. 
- */
- #define GPIO_PUSH_BUTTON_ON_BOARD    IOPORT_CREATE_PIN(PORTE, 4)
- #define GPIO_PUSH_BUTTON_0			  GPIO_PUSH_BUTTON_ON_BOARD 
+/* ===== System Clock Bus Division Options */
 
-#endif  /* _ATMEGA256RFR2_XPLAINED_PRO_ */
+#define CONFIG_SYSCLK_PSDIV         SYSCLK_PSDIV_1
+
+#endif /* CONF_CLOCK_H_INCLUDED */

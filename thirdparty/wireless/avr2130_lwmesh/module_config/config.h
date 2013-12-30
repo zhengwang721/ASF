@@ -1,18 +1,11 @@
 /**
- * \file
+ * \file config.h
  *
- * \brief ATmega256RFR2 Xplained Pro board header file.
+ * \brief WSNDemo application and stack configuration
  *
- * This file contains definitions and services related to the features of the
- * ATmega256RFR2 Xplained Pro board.
- *
- * To use this board, define BOARD= ATMEGA256RFR2_XPLAINED_PRO.
- *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,27 +37,35 @@
  *
  * \asf_license_stop
  *
+ *
  */
-#ifndef _ATMEGA256RFR2_XPLAINED_PRO_
-#define _ATMEGA256RFR2_XPLAINED_PRO_
-#include "compiler.h"
 
-# include "led.h"
+#ifndef _APP_CONFIG_H_
+#define _APP_CONFIG_H_
 
-#define MCU_SOC_NAME        "ATMEGA256RFR2"
-#define BOARD_NAME          "ATMEGA256RFR2-XPRO"
+/*****************************************************************************
+*****************************************************************************/
+#define APP_ADDR                0x0000
+#define APP_CHANNEL             0x0f
+#define APP_PANID               0x1234
+#define APP_SENDING_INTERVAL    2000
+#define APP_ENDPOINT            1
+#define APP_OTA_ENDPOINT        2
+#define APP_SECURITY_KEY        "TestSecurityKey0"
 
- /*! \name GPIO Connections of LED
- * LED0 is connected to PORTB pin 4
- */
- #define LED_ON_BOARD         IOPORT_CREATE_PIN(PORTB, 4)
- #define LED0_GPIO			  LED_ON_BOARD		  
- #define LED0                 LED0_GPIO
- #define LED_COUNT            1
- /*!  \name GPIO Connections of Switch
- * Push button is connected to PORTE pin 4. 
- */
- #define GPIO_PUSH_BUTTON_ON_BOARD    IOPORT_CREATE_PIN(PORTE, 4)
- #define GPIO_PUSH_BUTTON_0			  GPIO_PUSH_BUTTON_ON_BOARD 
 
-#endif  /* _ATMEGA256RFR2_XPLAINED_PRO_ */
+//#define PHY_ENABLE_RANDOM_NUMBER_GENERATOR
+
+#define SYS_SECURITY_MODE                   0
+
+#define NWK_BUFFERS_AMOUNT                  3
+#define NWK_MAX_ENDPOINTS_AMOUNT            3
+#define NWK_DUPLICATE_REJECTION_TABLE_SIZE  10
+#define NWK_DUPLICATE_REJECTION_TTL         3000 // ms
+#define NWK_ROUTE_TABLE_SIZE                100
+#define NWK_ROUTE_DEFAULT_SCORE             3
+#define NWK_ACK_WAIT_TIME                   1000 // ms
+#define APP_RX_BUF_SIZE                     5
+#define NWK_ENABLE_ROUTING
+//#define NWK_ENABLE_SECURITY
+#endif // _APP_CONFIG_H_

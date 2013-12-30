@@ -1,18 +1,11 @@
 /**
- * \file
+ * \file hal.c
  *
- * \brief ATmega256RFR2 Xplained Pro board header file.
+ * \brief ATmega256rfr2 HAL implementation
  *
- * This file contains definitions and services related to the features of the
- * ATmega256RFR2 Xplained Pro board.
- *
- * To use this board, define BOARD= ATMEGA256RFR2_XPLAINED_PRO.
- *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,27 +37,55 @@
  *
  * \asf_license_stop
  *
+ *
  */
-#ifndef _ATMEGA256RFR2_XPLAINED_PRO_
-#define _ATMEGA256RFR2_XPLAINED_PRO_
-#include "compiler.h"
 
-# include "led.h"
+#include "sysTypes.h"
+#include "hal.h"
+#include "delay.h"
 
-#define MCU_SOC_NAME        "ATMEGA256RFR2"
-#define BOARD_NAME          "ATMEGA256RFR2-XPRO"
 
- /*! \name GPIO Connections of LED
- * LED0 is connected to PORTB pin 4
- */
- #define LED_ON_BOARD         IOPORT_CREATE_PIN(PORTB, 4)
- #define LED0_GPIO			  LED_ON_BOARD		  
- #define LED0                 LED0_GPIO
- #define LED_COUNT            1
- /*!  \name GPIO Connections of Switch
- * Push button is connected to PORTE pin 4. 
- */
- #define GPIO_PUSH_BUTTON_ON_BOARD    IOPORT_CREATE_PIN(PORTE, 4)
- #define GPIO_PUSH_BUTTON_0			  GPIO_PUSH_BUTTON_ON_BOARD 
+/*****************************************************************************
+*****************************************************************************/
+volatile uint8_t halTimerIrqCount;
 
-#endif  /* _ATMEGA256RFR2_XPLAINED_PRO_ */
+static void HAL_TimerInit(void);
+
+/*****************************************************************************
+*****************************************************************************/
+void HAL_Init(void)
+{
+HAL_TimerInit();
+}
+
+/*****************************************************************************
+*****************************************************************************/
+void HAL_Delay(uint8_t us)
+{
+  delay_us(us);
+}
+
+void HAL_Sleep(uint32_t interval)
+{
+//
+}
+
+
+void HAL_TimerInit(void)
+{
+  halTimerIrqCount = 0;
+  set_common_tc_expiry_callback(hw_expiry_cb);
+  common_tc_init();
+  common_tc_delay(HAL_TIMER_INTERVAL*MS);
+}
+
+
+/*****************************************************************************
+*****************************************************************************/
+void hw_expiry_cb(void)
+{
+  halTimerIrqCount++;
+  common_tc_delay(HAL_TIMER_INTERVAL*MS);
+}
+
+

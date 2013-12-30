@@ -1,12 +1,7 @@
 /**
- * \file
+ * \file *********************************************************************
  *
- * \brief ATmega256RFR2 Xplained Pro board header file.
- *
- * This file contains definitions and services related to the features of the
- * ATmega256RFR2 Xplained Pro board.
- *
- * To use this board, define BOARD= ATMEGA256RFR2_XPLAINED_PRO.
+ * \brief USART Serial configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -43,28 +38,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#ifndef _ATMEGA256RFR2_XPLAINED_PRO_
-#define _ATMEGA256RFR2_XPLAINED_PRO_
-#include "compiler.h"
 
-# include "led.h"
+#ifndef CONF_HW_TIMER_H_INCLUDED
+#define CONF_HW_TIMER_H_INCLUDED
 
-#define MCU_SOC_NAME        "ATMEGA256RFR2"
-#define BOARD_NAME          "ATMEGA256RFR2-XPRO"
 
- /*! \name GPIO Connections of LED
- * LED0 is connected to PORTB pin 4
+
+/*! \name Configuration
  */
- #define LED_ON_BOARD         IOPORT_CREATE_PIN(PORTB, 4)
- #define LED0_GPIO			  LED_ON_BOARD		  
- #define LED0                 LED0_GPIO
- #define LED_COUNT            1
- /*!  \name GPIO Connections of Switch
- * Push button is connected to PORTE pin 4. 
- */
- #define GPIO_PUSH_BUTTON_ON_BOARD    IOPORT_CREATE_PIN(PORTE, 4)
- #define GPIO_PUSH_BUTTON_0			  GPIO_PUSH_BUTTON_ON_BOARD 
+//! @{
+#define TIMER     (&TCCR1A)
+//! @}
 
-#endif  /* _ATMEGA256RFR2_XPLAINED_PRO_ */
+
+#endif /* CONF_HW_TIMER_H_INCLUDED */

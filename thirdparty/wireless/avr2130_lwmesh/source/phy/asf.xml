@@ -1,0 +1,38 @@
+<asf xmlversion="1.0">
+	<select-by-device id="config.thirdparty.wireless.avr2130_lwmesh.source.phy" caption="PHY Config_select by device">
+
+		<module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy#1"     caption="atmegarfr2 tal support enabled">
+            <info type="description" value="summary">
+            ATMegaRFR2 Transceiver Abstraction Layer
+            </info>
+			<info type="gui-flag" value="hidden"/>
+            <require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfr2"/>
+            <device-support value="atmega256rfr2"/>
+            <build type="doxygen-entry-point" value="group_phy_rfr2"/>
+		</module>
+	</select-by-device>
+
+  
+    <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfr2"     caption="atmegarfr2 tal support enabled">
+        <info type="description" value="summary">
+        ATMegaRFR2 PHY Layer
+        </info>
+		<info type="gui-flag" value="hidden"/>
+        <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfr2"/>
+       <build type="doxygen-entry-point" value="group_phy_rfr2"/>
+        <device-support value="atmega256rfr2"/>
+    </module>
+
+	<module type="component" id="thirdparty.wireless.avr2130_lwmesh.source.phy" caption="AVR2130 - PHY">
+		<info type="description" value="summary">
+       
+        </info>
+		<info type="gui-flag" value="hidden"/>
+		<require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy"/>
+		<build type="doxygen-entry-point" value="group_phy"/>
+        <device-support value="atmega256rfr2"/>
+	</module>
+
+
+
+</asf>

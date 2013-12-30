@@ -1,18 +1,11 @@
 /**
- * \file
+ * \file sysEncrypt.h
  *
- * \brief ATmega256RFR2 Xplained Pro board header file.
+ * \brief System encryption routines interface
  *
- * This file contains definitions and services related to the features of the
- * ATmega256RFR2 Xplained Pro board.
- *
- * To use this board, define BOARD= ATMEGA256RFR2_XPLAINED_PRO.
- *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013, Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,27 +37,19 @@
  *
  * \asf_license_stop
  *
+ * $Id: sysEncrypt.h 7863 2013-05-13 20:14:34Z ataradov $
+ *
  */
-#ifndef _ATMEGA256RFR2_XPLAINED_PRO_
-#define _ATMEGA256RFR2_XPLAINED_PRO_
-#include "compiler.h"
 
-# include "led.h"
+#ifndef _SYS_ENCRYPT_H_
+#define _SYS_ENCRYPT_H_
 
-#define MCU_SOC_NAME        "ATMEGA256RFR2"
-#define BOARD_NAME          "ATMEGA256RFR2-XPRO"
+/*- Includes ---------------------------------------------------------------*/
+#include <stdint.h>
+#include <stdbool.h>
 
- /*! \name GPIO Connections of LED
- * LED0 is connected to PORTB pin 4
- */
- #define LED_ON_BOARD         IOPORT_CREATE_PIN(PORTB, 4)
- #define LED0_GPIO			  LED_ON_BOARD		  
- #define LED0                 LED0_GPIO
- #define LED_COUNT            1
- /*!  \name GPIO Connections of Switch
- * Push button is connected to PORTE pin 4. 
- */
- #define GPIO_PUSH_BUTTON_ON_BOARD    IOPORT_CREATE_PIN(PORTE, 4)
- #define GPIO_PUSH_BUTTON_0			  GPIO_PUSH_BUTTON_ON_BOARD 
+/*- Prototypes -------------------------------------------------------------*/
+void SYS_EncryptReq(uint8_t *text, uint8_t *key);
+void SYS_EncryptConf(void);
 
-#endif  /* _ATMEGA256RFR2_XPLAINED_PRO_ */
+#endif // _SYS_ENCRYPT_H_

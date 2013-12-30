@@ -1,18 +1,11 @@
 /**
- * \file
+ * \file nwkDataReq.h
  *
- * \brief ATmega256RFR2 Xplained Pro board header file.
+ * \brief NWK_DataReq() interface
  *
- * This file contains definitions and services related to the features of the
- * ATmega256RFR2 Xplained Pro board.
- *
- * To use this board, define BOARD= ATMEGA256RFR2_XPLAINED_PRO.
- *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013, Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,27 +37,58 @@
  *
  * \asf_license_stop
  *
+ * $Id: nwkDataReq.h 7863 2013-05-13 20:14:34Z ataradov $
+ *
  */
-#ifndef _ATMEGA256RFR2_XPLAINED_PRO_
-#define _ATMEGA256RFR2_XPLAINED_PRO_
-#include "compiler.h"
 
-# include "led.h"
+#ifndef _NWK_DATA_REQ_H_
+#define _NWK_DATA_REQ_H_
 
-#define MCU_SOC_NAME        "ATMEGA256RFR2"
-#define BOARD_NAME          "ATMEGA256RFR2-XPRO"
+/*- Includes ---------------------------------------------------------------*/
+#include <stdint.h>
+#include <stdbool.h>
+#include "sysConfig.h"
+#include "sysTypes.h"
 
- /*! \name GPIO Connections of LED
- * LED0 is connected to PORTB pin 4
- */
- #define LED_ON_BOARD         IOPORT_CREATE_PIN(PORTB, 4)
- #define LED0_GPIO			  LED_ON_BOARD		  
- #define LED0                 LED0_GPIO
- #define LED_COUNT            1
- /*!  \name GPIO Connections of Switch
- * Push button is connected to PORTE pin 4. 
- */
- #define GPIO_PUSH_BUTTON_ON_BOARD    IOPORT_CREATE_PIN(PORTE, 4)
- #define GPIO_PUSH_BUTTON_0			  GPIO_PUSH_BUTTON_ON_BOARD 
+/*- Types ------------------------------------------------------------------*/
+enum
+{
+  NWK_OPT_ACK_REQUEST          = 1 << 0,
+  NWK_OPT_ENABLE_SECURITY      = 1 << 1,
+  NWK_OPT_BROADCAST_PAN_ID     = 1 << 2,
+  NWK_OPT_LINK_LOCAL           = 1 << 3,
+  NWK_OPT_MULTICAST            = 1 << 4,
+};
 
-#endif  /* _ATMEGA256RFR2_XPLAINED_PRO_ */
+typedef struct NWK_DataReq_t
+{
+  // service fields
+  void         *next;
+  void         *frame;
+  uint8_t      state;
+
+  // request parameters
+  uint16_t     dstAddr;
+  uint8_t      dstEndpoint;
+  uint8_t      srcEndpoint;
+  uint8_t      options;
+#ifdef NWK_ENABLE_MULTICAST
+  uint8_t      memberRadius;
+  uint8_t      nonMemberRadius;
+#endif
+  uint8_t      *data;
+  uint8_t      size;
+  void         (*confirm)(struct NWK_DataReq_t *req);
+
+  // confirmation parameters
+  uint8_t      status;
+  uint8_t      control;
+} NWK_DataReq_t;
+
+/*- Prototypes -------------------------------------------------------------*/
+void NWK_DataReq(NWK_DataReq_t *req);
+
+void nwkDataReqInit(void);
+void nwkDataReqTaskHandler(void);
+
+#endif // _NWK_DATA_REQ_H_

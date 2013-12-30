@@ -1,0 +1,26 @@
+<asf xmlversion="1.0">
+	<!-- +++++++++++++++++++++++++++++++++++++++++++++++MODULE+++++++++++++++++++++++++++++++++++++++++++++++. -->
+	<!-- **************************************************************************************************** -->
+	<module type="application" id="thirdparty.wireless.avr2130_lwmesh.apps.wsndemo" caption="WSN Demo">
+		<info type="description" value="summary">
+
+		</info>
+		<!-- +++++++++++++++++++++++++++++++++++++++++++++++BUILD+++++++++++++++++++++++++++++++++++++++++++++++. -->
+		<build type="c-source" value="wsndemo.c"/>
+		<build type="c-source" value="otaInterface.c"/>
+		<build type="header-file"   value="config.h"/>
+		<require idref="thirdparty.wireless.addons.sio2host"/>
+		<build type="include-path"  value="./"/>
+		<build type="doxygen-entry-point" value="group_wsndemo"/>
+		<device-support value="atmega256rfr2"/>
+		<!-- ++++++++++++++++++++++++++++++++++++++++++++++REQUIRE++++++++++++++++++++++++++++++++++++++++++++++. -->
+		<require idref="thirdparty.wireless.avr2130_lwmesh"/>
+		<!-- .................................................................................................... -->
+		<info type="keyword" value="technology">
+			<keyword value="Wireless"/>
+			<keyword value="Communication"/>
+		</info>
+		<!-- **************************************************************************************************** -->
+		<info type="gui-flag" value="move-to-root"/>
+	</module>
+</asf>

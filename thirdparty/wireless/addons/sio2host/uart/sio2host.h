@@ -92,6 +92,13 @@ uint8_t sio2host_rx(uint8_t *data, uint8_t max_length);
 uint8_t sio2host_getchar(void);
 
 /**
+ * \brief This function prints the character to the host
+ * \return void
+ */
+
+void sio2host_putchar(uint8_t);
+
+/**
  * \brief This function performs a non-blocking character receive functionality
  * \return '-1' if no data is recieved or returns the data if a character is
  *received

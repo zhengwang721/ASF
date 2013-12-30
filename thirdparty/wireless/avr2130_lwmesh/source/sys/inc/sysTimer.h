@@ -1,18 +1,11 @@
 /**
- * \file
+ * \file sysTimer.h
  *
- * \brief ATmega256RFR2 Xplained Pro board header file.
+ * \brief System timer interface
  *
- * This file contains definitions and services related to the features of the
- * ATmega256RFR2 Xplained Pro board.
- *
- * To use this board, define BOARD= ATMEGA256RFR2_XPLAINED_PRO.
- *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013, Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,27 +37,41 @@
  *
  * \asf_license_stop
  *
+ * $Id: sysTimer.h 7863 2013-05-13 20:14:34Z ataradov $
+ *
  */
-#ifndef _ATMEGA256RFR2_XPLAINED_PRO_
-#define _ATMEGA256RFR2_XPLAINED_PRO_
-#include "compiler.h"
 
-# include "led.h"
+#ifndef _SYS_TIMER_H_
+#define _SYS_TIMER_H_
 
-#define MCU_SOC_NAME        "ATMEGA256RFR2"
-#define BOARD_NAME          "ATMEGA256RFR2-XPRO"
+/*- Includes ---------------------------------------------------------------*/
+#include <stdint.h>
+#include <stdbool.h>
 
- /*! \name GPIO Connections of LED
- * LED0 is connected to PORTB pin 4
- */
- #define LED_ON_BOARD         IOPORT_CREATE_PIN(PORTB, 4)
- #define LED0_GPIO			  LED_ON_BOARD		  
- #define LED0                 LED0_GPIO
- #define LED_COUNT            1
- /*!  \name GPIO Connections of Switch
- * Push button is connected to PORTE pin 4. 
- */
- #define GPIO_PUSH_BUTTON_ON_BOARD    IOPORT_CREATE_PIN(PORTE, 4)
- #define GPIO_PUSH_BUTTON_0			  GPIO_PUSH_BUTTON_ON_BOARD 
+/*- Types ------------------------------------------------------------------*/
+typedef enum SYS_TimerMode_t
+{
+  SYS_TIMER_INTERVAL_MODE,
+  SYS_TIMER_PERIODIC_MODE,
+} SYS_TimerMode_t;
 
-#endif  /* _ATMEGA256RFR2_XPLAINED_PRO_ */
+typedef struct SYS_Timer_t
+{
+  // Internal data
+  struct SYS_Timer_t   *next;
+  uint32_t             timeout;
+
+  // Timer parameters
+  uint32_t             interval;
+  SYS_TimerMode_t      mode;
+  void                 (*handler)(struct SYS_Timer_t *timer);
+} SYS_Timer_t;
+
+/*- Prototypes -------------------------------------------------------------*/
+void SYS_TimerInit(void);
+void SYS_TimerStart(SYS_Timer_t *timer);
+void SYS_TimerStop(SYS_Timer_t *timer);
+bool SYS_TimerStarted(SYS_Timer_t *timer);
+void SYS_TimerTaskHandler(void);
+
+#endif // _SYS_TIMER_H_

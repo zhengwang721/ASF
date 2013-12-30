@@ -1,18 +1,11 @@
 /**
- * \file
+ * \file sys.c
  *
- * \brief ATmega256RFR2 Xplained Pro board header file.
+ * \brief Main system routines implementation
  *
- * This file contains definitions and services related to the features of the
- * ATmega256RFR2 Xplained Pro board.
- *
- * To use this board, define BOARD= ATMEGA256RFR2_XPLAINED_PRO.
- *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013, Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -44,27 +37,35 @@
  *
  * \asf_license_stop
  *
+ * $Id: sys.c 8410 2013-08-08 16:59:55Z ataradov $
+ *
  */
-#ifndef _ATMEGA256RFR2_XPLAINED_PRO_
-#define _ATMEGA256RFR2_XPLAINED_PRO_
-#include "compiler.h"
 
-# include "led.h"
+/*- Includes ---------------------------------------------------------------*/
+#include "sysConfig.h"
+#include "phy.h"
+#include "nwk.h"
+#include "hal.h"
+#include "sys.h"
+#include "sysTimer.h"
 
-#define MCU_SOC_NAME        "ATMEGA256RFR2"
-#define BOARD_NAME          "ATMEGA256RFR2-XPRO"
+/*- Implementations --------------------------------------------------------*/
 
- /*! \name GPIO Connections of LED
- * LED0 is connected to PORTB pin 4
- */
- #define LED_ON_BOARD         IOPORT_CREATE_PIN(PORTB, 4)
- #define LED0_GPIO			  LED_ON_BOARD		  
- #define LED0                 LED0_GPIO
- #define LED_COUNT            1
- /*!  \name GPIO Connections of Switch
- * Push button is connected to PORTE pin 4. 
- */
- #define GPIO_PUSH_BUTTON_ON_BOARD    IOPORT_CREATE_PIN(PORTE, 4)
- #define GPIO_PUSH_BUTTON_0			  GPIO_PUSH_BUTTON_ON_BOARD 
+/*************************************************************************//**
+*****************************************************************************/
+void SYS_Init(void)
+{
+  HAL_Init();
+  SYS_TimerInit();
+  PHY_Init();
+  NWK_Init();
+}
 
-#endif  /* _ATMEGA256RFR2_XPLAINED_PRO_ */
+/*************************************************************************//**
+*****************************************************************************/
+void SYS_TaskHandler(void)
+{
+  PHY_TaskHandler();
+  NWK_TaskHandler();
+  SYS_TimerTaskHandler();
+}

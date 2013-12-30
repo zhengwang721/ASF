@@ -1,0 +1,18 @@
+<asf xmlversion="1.0">
+	<module type="meta" id="thirdparty.wireless.avr2130_lwmesh.source.nwk" caption="NWK ">
+		<info type="description" value="summary">
+		
+		</info>
+        <info type="gui-flag" value="hidden"/>
+		<build type="c-source"      value="src/nwk.c"/>
+		<build type="c-source"      value="src/nwkRx.c"/>
+		<build type="c-source"      value="src/nwkTx.c"/>
+		<build type="c-source"      value="src/nwkRoute.c"/>
+		<build type="c-source"      value="src/nwkFrame.c"/>
+		<build type="c-source"      value="src/nwkSecurity.c"/>
+		<build type="c-source"      value="src/nwkDataReq.c"/>
+		<build type="header-file"   value="inc/nwk.h"/>
+		<build type="header-file"   value="inc/nwkPrivate.h"/>
+		<build type="include-path"  value="inc/"/>
+	</module>
+</asf>
