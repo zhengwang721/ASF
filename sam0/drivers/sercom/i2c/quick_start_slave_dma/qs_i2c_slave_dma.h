@@ -48,7 +48,6 @@
  *  - Slave mode
  *  - 100kHz operation speed
  *  - Not operational in standby
- *  - 10000 packet timeout value
  *  - 65535 unknown bus state timeout value
  *
  *

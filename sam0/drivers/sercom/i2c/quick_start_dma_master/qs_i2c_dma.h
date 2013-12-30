@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x I2C Master Quick Start Guide
+ * \brief SAM D2x SERCOM I2C Master Driver with DMA Quick Start Guide
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

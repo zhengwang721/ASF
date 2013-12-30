@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x I2C Master Quick Start Guide
+ * \brief SAM D2x I2C Master with DMA Quick Start Guide
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -114,44 +114,48 @@ void transfer_done( const struct dma_resource* const resource )
 // [config_dma_resource]
 void configure_dma_resource(struct dma_resource *resource)
 {
-//! [dma_setup_1]
+	//! [dma_setup_1]
 	struct dma_resource_config config;
-//! [dma_setup_1]
+	//! [dma_setup_1]
 
-//! [dma_setup_2]
+	//! [dma_setup_2]
 	dma_get_config_defaults(&config);
+	//! [dma_setup_2]
+
+	//! [dma_setup_3]
 	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
 	config.peripheral_trigger = SERCOM2_DMAC_ID_TX;
-//! [dma_setup_2]
+	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
+	//! [dma_setup_3]
 
-//! [dma_setup_3]
+	//! [dma_setup_4]
 	dma_allocate(resource, &config);
-//! [dma_setup_3]
+	//! [dma_setup_4]
 }
 // [config_dma_resource]
 
 // [setup_dma_transfer_descriptor]
 void setup_dma_descriptor(DmacDescriptor *descriptor)
 {
-	//! [dma_setup_4]
-	struct dma_descriptor_config descriptor_config;
-	//! [dma_setup_4]
-
 	//! [dma_setup_5]
-	dma_descriptor_get_config_defaults(&descriptor_config);
+	struct dma_descriptor_config descriptor_config;
 	//! [dma_setup_5]
 
 	//! [dma_setup_6]
+	dma_descriptor_get_config_defaults(&descriptor_config);
+	//! [dma_setup_6]
+
+	//! [dma_setup_7]
 	descriptor_config.beat_size = DMA_BEAT_SIZE_BYTE;
 	descriptor_config.dst_increment_enable = false;
 	descriptor_config.block_transfer_count = DATA_LENGTH;
-        descriptor_config.source_address = (uint32_t)buffer + sizeof(buffer);
+	descriptor_config.source_address = (uint32_t)buffer + DATA_LENGTH;
 	descriptor_config.destination_address = (uint32_t)(&i2c_master_instance.hw->I2CM.DATA.reg);
-	//! [dma_setup_6]
+	//! [dma_setup_7]
 
-	//! [dma_setup_7]
+	//! [dma_setup_8]
 	dma_descriptor_create(descriptor, &descriptor_config);
-	//! [dma_setup_7]
+	//! [dma_setup_8]
 }
 // [setup_dma_transfer_descriptor]
 
@@ -160,7 +164,6 @@ int main(void)
 	system_init();
 
 	//! [init]
-	/* Configure device and enable. */
 	//! [config]
 	configure_i2c_master();
 	//! [config]
@@ -171,12 +174,13 @@ int main(void)
 	dma_register_callback(&example_resource, transfer_done,
 			DMA_CALLBACK_TRANSFER_DONE);
 	dma_enable_callback(&example_resource, DMA_CALLBACK_TRANSFER_DONE);
+	//! [init]
 
-
+	//! [main]
 	i2c_master_instance.hw->I2CM.ADDR.reg = 
-          SERCOM_I2CM_ADDR_ADDR(SLAVE_ADDRESS) | SERCOM_I2CM_ADDR_LENEN |
-           SERCOM_I2CM_ADDR_LEN(DATA_LENGTH);
-	
+		SERCOM_I2CM_ADDR_ADDR(SLAVE_ADDRESS) | SERCOM_I2CM_ADDR_LENEN |
+		SERCOM_I2CM_ADDR_LEN(DATA_LENGTH);
+
 	dma_start_transfer_job(&example_resource);
 
 	while (!transfer_is_done) {
@@ -184,36 +188,5 @@ int main(void)
 	}
 
 	while(1);
-	/* Timeout counter. */
-	//! [timeout_counter]
-	uint16_t timeout = 0;
-	//! [timeout_counter]
-
-	/* Init i2c packet. */
-	//! [packet]
-	struct i2c_packet packet = {
-		.address     = SLAVE_ADDRESS,
-		.data_length = DATA_LENGTH,
-		.data        = buffer,
-	};
-	//! [packet]
-	//! [init]
-
 	//! [main]
-	/* Write buffer to slave until success. */
-	//! [write_packet]
-	while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) !=
-			STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			break;
-		}
-	}
-	//! [write_packet]
-	//! [main]
-
-	while (true) {
-		/* Infinite loop */
-	}
-
 }
