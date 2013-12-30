@@ -450,8 +450,8 @@ enum status_code dma_start_transfer_job(struct dma_resource *resource)
 	DMAC->CHINTENSET.reg = DMAC_CHINTENSET_TERR |
 			 DMAC_CHINTENSET_TCMPL | DMAC_CHINTENSET_SUSP;
 
-	if (!(DMAC->CHCTRLB.reg & (DMAC_CHCTRLB_TRIGSRC_Msk ||
-								DMAC_CHCTRLB_EVACT_TRIG_Val))) {
+	if (!(DMAC->CHCTRLB.reg & (DMAC_CHCTRLB_TRIGSRC_Msk) ||
+								DMAC_CHCTRLB_EVACT_TRIG_Val)) {
 		DMAC->SWTRIGCTRL.reg |= (1 << resource->channel_id);
 	}
 
