@@ -69,7 +69,9 @@
 #include "compiler.h"
 #include "conf_access.h"
 
+#ifndef SECTOR_SIZE
 #define SECTOR_SIZE  512
+#endif
 
 //! Status returned by CTRL_ACCESS interfaces.
 typedef enum

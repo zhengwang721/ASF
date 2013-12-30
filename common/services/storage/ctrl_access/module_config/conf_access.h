@@ -266,5 +266,10 @@
 #define GLOBAL_WR_PROTECT    false //!< Management of a global write protection.
 //! @}
 
+/*! \name Sector size option for different storage media.
+ */
+//! @{
+#define SECTOR_SIZE  512
+//! @}
 
 #endif  // _CONF_ACCESS_H_
