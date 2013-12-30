@@ -61,40 +61,40 @@
  * The following must be added to the user application:
  *
  * - A sample buffer to send, number of entries to send and address of slave:
- * \snippet qs_i2c_slave_dma_use.c packet_data
+ * \snippet qs_i2c_slave_dma.c packet_data
  *
  * - Globally accessible module structure:
- * \snippet qs_i2c_slave_dma_use.c dev_inst
+ * \snippet qs_i2c_slave_dma.c dev_inst
  *
  * - Function for setting up the module:
- * \snippet qs_i2c_slave_dma_use.c initialize_i2c
+ * \snippet qs_i2c_slave_dma.c initialize_i2c
  *
  * - Globally accessible DMA module structure:
- * \snippet qs_i2c_slave_dma_use.c dma_resource
+ * \snippet qs_i2c_slave_dma.c dma_resource
  *
  * - Globally accessible DMA transfer descriptor:
- * \snippet qs_i2c_slave_dma_use.c transfer_descriptor
+ * \snippet qs_i2c_slave_dma.c transfer_descriptor
  *
  * - Function for setting up the DMA resource:
- * \snippet qs_i2c_slave_dma_use.c config_dma_resource
+ * \snippet qs_i2c_slave_dma.c config_dma_resource
  *
  * - Function for setting up the DMA transfer descriptor:
- * \snippet qs_i2c_slave_dma_use.c setup_dma_transfer_descriptor
+ * \snippet qs_i2c_slave_dma.c setup_dma_transfer_descriptor
  *
  * - Add to user application \c main():
- * \snippet qs_i2c_slave_dma_use.c init
+ * \snippet qs_i2c_slave_dma.c init
  *
  * \subsection asfdoc_sam0_sercom_i2c_slave_dma_use_setup_workflow Workflow
  * -# Configure and enable module:
- *  \snippet qs_i2c_slave_dma_use.c initialize_i2c
+ *  \snippet qs_i2c_slave_dma.c initialize_i2c
  *   -# Create and initialize configuration structure.
- *    \snippet qs_i2c_slave_dma_use.c init_conf
+ *    \snippet qs_i2c_slave_dma.c init_conf
  *   -# Change settings in the configuration.
- *    \snippet qs_i2c_slave_dma_use.c conf_change
+ *    \snippet qs_i2c_slave_dma.c conf_change
  *   -# Initialize the module with the set configurations.
- *    \snippet qs_i2c_slave_dma_use.c init_module
+ *    \snippet qs_i2c_slave_dma.c init_module
  *   -# Enable the module.
- *    \snippet qs_i2c_slave_dma_use.c enable_module
+ *    \snippet qs_i2c_slave_dma.c enable_module
 
  * -# Create a DMA resource configuration structure, which can be filled out to
  *    adjust the configuration of a single DMA transfer.
@@ -138,13 +138,13 @@
  * \section asfdoc_sam0_sercom_i2c_slave_dma_use_implemenation Implementation
  * \subsection asfdoc_sam0_sercom_i2c_slave_dma_use_implemenation_code Code
  * Add to user application \c main():
- * \snippet qs_i2c_slave_dma_use.c main
+ * \snippet qs_i2c_slave_dma.c main
  *
  * \subsection asfdoc_sam0_sercom_i2c_slave_dma_use_implemenation_workflow Workflow
  * -# Start to wait a packet from master.
- *  \snippet qs_i2c_slave_dma_use.c wait_packet
+ *  \snippet qs_i2c_slave_dma.c wait_packet
  *
  * -# Once data ready, clear the address match status.
- *  \snippet qs_i2c_slave_dma_use.c clear_status
+ *  \snippet qs_i2c_slave_dma.c clear_status
  *
  */
