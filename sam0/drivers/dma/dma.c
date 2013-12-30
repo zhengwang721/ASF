@@ -611,7 +611,7 @@ void dma_descriptor_create(DmacDescriptor* descriptor,
 	descriptor->SRCADDR.reg = config->source_address;
 	descriptor->DSTADDR.reg = config->destination_address;
 
-	/* Set default next transfer descriptor to 0 */
+	/* Set next transfer descriptor address */
 	descriptor->DESCADDR.reg = config->next_descriptor_address;
 }
 

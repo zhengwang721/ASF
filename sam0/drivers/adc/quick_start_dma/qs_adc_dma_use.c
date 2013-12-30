@@ -228,7 +228,7 @@ int main(void)
 
 //! [main]
 //! [start_adc_conversion]
-        adc_start_conversion(&adc_instance);
+	adc_start_conversion(&adc_instance);
 //! [start_adc_conversion]
 
 //! [start_transfer]
