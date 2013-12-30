@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x I2C Master Quick Start Guide
+ * \brief SAM D2x I2C Slave with DMA Quick Start Guide
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,6 +44,8 @@
 #include <asf.h>
 
 void configure_i2c_slave(void);
+void setup_dma_descriptor(DmacDescriptor *descriptor);
+void configure_dma_resource(struct dma_resource *resource);
 
 //! [address]
 #define SLAVE_ADDRESS 0x12
@@ -51,10 +53,6 @@ void configure_i2c_slave(void);
 
 //! [packet_data]
 #define DATA_LENGTH 10
-
-uint8_t write_buffer[DATA_LENGTH] = {
-	0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09
-};
 uint8_t read_buffer[DATA_LENGTH];
 //! [packet_data]
 
@@ -90,68 +88,59 @@ void configure_i2c_slave(void)
 //! [initialize_i2c]
 
 //! [dma_resource]
-struct dma_resource example_resource;
+struct dma_resource i2c_dma_resource;
 //! [dma_resource]
-
-// [transfer_done_flag]
-static volatile bool transfer_is_done = false;
-// [transfer_done_flag]
 
 // [transfer_descriptor]
 COMPILER_ALIGNED(16)
-DmacDescriptor example_descriptor;
+DmacDescriptor i2c_dma_descriptor;
 // [transfer_descriptor]
-
-// [_transfer_done]
-void transfer_done( const struct dma_resource* const resource )
-{
-	UNUSED(resource);
-
-	transfer_is_done = true;
-}
-// [_transfer_done]
 
 // [config_dma_resource]
 void configure_dma_resource(struct dma_resource *resource)
 {
-//! [dma_setup_1]
+	//! [dma_setup_1]
 	struct dma_resource_config config;
-//! [dma_setup_1]
+	//! [dma_setup_1]
 
-//! [dma_setup_2]
+	//! [dma_setup_2]
 	dma_get_config_defaults(&config);
-	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
-	config.peripheral_trigger = SERCOM2_DMAC_ID_TX;
-//! [dma_setup_2]
+	//! [dma_setup_2]
 
-//! [dma_setup_3]
+	//! [dma_setup_3]
+	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
+	config.peripheral_trigger = SERCOM2_DMAC_ID_RX;
+	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
+	//! [dma_setup_3]
+
+	//! [dma_setup_4]
 	dma_allocate(resource, &config);
-//! [dma_setup_3]
+	//! [dma_setup_4]
 }
 // [config_dma_resource]
 
 // [setup_dma_transfer_descriptor]
 void setup_dma_descriptor(DmacDescriptor *descriptor)
 {
-	//! [dma_setup_4]
+	//! [dma_setup_5]
 	struct dma_descriptor_config descriptor_config;
-	//! [dma_setup_4]
-
 	//! [dma_setup_5]
+
+	//! [dma_setup_6]
 	dma_descriptor_get_config_defaults(&descriptor_config);
-	//! [dma_setup_5]
-
 	//! [dma_setup_6]
+
+	//! [dma_setup_7]
 	descriptor_config.beat_size = DMA_BEAT_SIZE_BYTE;
-	descriptor_config.dst_increment_enable = false;
+	descriptor_config.src_increment_enable = false;
 	descriptor_config.block_transfer_count = DATA_LENGTH;
-        descriptor_config.source_address = (uint32_t)read_buffer + sizeof(read_buffer);
-	descriptor_config.destination_address = (uint32_t)(&i2c_slave_instance.hw->I2CM.DATA.reg);
-	//! [dma_setup_6]
+	descriptor_config.destination_address = (uint32_t)read_buffer + DATA_LENGTH;
+	descriptor_config.source_address = (uint32_t)(&i2c_slave_instance.hw->I2CS.DATA.reg);
+	//! [dma_setup_7]
 
-	//! [dma_setup_7]
+	//! [dma_setup_8]
 	dma_descriptor_create(descriptor, &descriptor_config);
-	//! [dma_setup_7]
+	//! [dma_setup_8]
 }
 // [setup_dma_transfer_descriptor]
 
@@ -160,32 +149,28 @@ int main(void)
 	system_init();
 
 	//! [init]
-	/* Configure device and enable. */
-	//! [config]
+	//! [config_i2c]
 	configure_i2c_slave();
-	//! [config]
+	//! [config_i2c]
 
-	configure_dma_resource(&example_resource);
-	setup_dma_descriptor(&example_descriptor);
-	dma_add_descriptor(&example_resource, &example_descriptor);
-	dma_register_callback(&example_resource, transfer_done,
-			DMA_CALLBACK_TRANSFER_DONE);
-	dma_enable_callback(&example_resource, DMA_CALLBACK_TRANSFER_DONE);
+	//! [config_dma]
+	configure_dma_resource(&i2c_dma_resource);
+	setup_dma_descriptor(&i2c_dma_descriptor);
+	dma_add_descriptor(&i2c_dma_resource, &i2c_dma_descriptor);
+	//! [config_dma]
+	//! [init]
 
+	//! [main]
+	//! [wait_packet]
+	dma_start_transfer_job(&i2c_dma_resource);
+	//! [wait_packet]
 
-//	i2c_slave_instance.hw->I2CS.ADDR.reg = 
-//          SERCOM_I2CS_ADDR_ADDR(SLAVE_ADDRESS) | SERCOM_I2CS_ADDR_GENCEN;
-	dma_start_transfer_job(&example_resource);
-
-	while (1) {
-
+	//! [clear_status]
+	while (true) { 
 		if (i2c_slave_instance.hw->I2CS.INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH) {
 			i2c_slave_instance.hw->I2CS.INTFLAG.reg = SERCOM_I2CS_INTFLAG_AMATCH;
-
-			while (!transfer_is_done) {
-			/* Wait for transfer done */
-			}
 		}
 	}
-
+	//! [clear_status]
+	//! [main]
 }
