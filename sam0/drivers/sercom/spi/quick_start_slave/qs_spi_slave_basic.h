@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 SPI Quick Start
+ * \brief SAM D2x SPI Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_sercom_spi_slave_basic_use Quick Start Guide for SERCOM SPI Slave - Polled
+ * \page asfdoc_sam0_sercom_spi_slave_basic_use Quick Start Guide for SERCOM SPI Slave - Polled
  *
  * In this use case, the SPI on extension header 1 of the Xplained Pro board
  * will configured with the following settings:
@@ -50,7 +50,7 @@
  * - Preloading of shift register enabled
  * - MSB of the data is transmitted first
  * - Transfer mode 0
- * - SPI MUX Setting E (see \ref asfdoc_samd20_sercom_spi_mux_settings_slave)
+ * - SPI MUX Setting E (see \ref asfdoc_sam0_sercom_spi_mux_settings_slave)
  *   - MISO on pad 2, extension header 1, pin 16
  *   - MOSI on pad 0, extension header 1, pin 17
  *   - SCK on pad 3, extension header 1, pin 18
@@ -60,12 +60,12 @@
  * - GLCK generator 0
  *
  *
- * \section asfdoc_samd20_sercom_spi_slave_basic_use_setup Setup
+ * \section asfdoc_sam0_sercom_spi_slave_basic_use_setup Setup
  *
- * \subsection asfdoc_samd20_sercom_spi_slave_basic_use_prereq Prerequisites
+ * \subsection asfdoc_sam0_sercom_spi_slave_basic_use_prereq Prerequisites
  * The device must be connected to a SPI master which must read from the device.
  *
- * \subsection asfdoc_samd20_sercom_spi_slave_basic_use_setup_code Code
+ * \subsection asfdoc_sam0_sercom_spi_slave_basic_use_setup_code Code
  * The following must be added to the user application source file, outside
  * any functions:
  *
@@ -82,7 +82,7 @@
  * Add to user application %main():
  * \snippet qs_spi_slave_basic.c main_start
  *
- * \subsection asfdoc_samd20_sercom_spi_slave_basic_use_workflow Workflow
+ * \subsection asfdoc_sam0_sercom_spi_slave_basic_use_workflow Workflow
  * -# Initialize system.
  *  \snippet qs_spi_slave_basic.c system_init
  * -# Setup the SPI:
@@ -112,11 +112,11 @@
  *   -# Enable SPI module.
  *     \snippet qs_spi_slave_basic.c enable
  *
- * \section asfdoc_samd20_sercom_spi_slave_basic_use_case Use Case
- * \subsection asfdoc_samd20_sercom_spi_slave_basic_use_case_code Code
+ * \section asfdoc_sam0_sercom_spi_slave_basic_use_case Use Case
+ * \subsection asfdoc_sam0_sercom_spi_slave_basic_use_case_code Code
  * Add the following to your user application \c main():
  * \snippet qs_spi_slave_basic.c main_use_case
- * \subsection asfdoc_samd20_sercom_spi_slave_basic_use_case_workflow Workflow
+ * \subsection asfdoc_sam0_sercom_spi_slave_basic_use_case_workflow Workflow
  * -# Write buffer to SPI master. Placed in a loop to retry in case of a
  * timeout before a master initiates a transaction.
  *  \snippet qs_spi_slave_basic.c write
