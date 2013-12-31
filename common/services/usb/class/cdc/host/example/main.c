@@ -48,10 +48,17 @@
  */
 int main(void)
 {
+#if SAMD21
+	system_init();
+#else
 	/* Initialize the synchronous clock system to the default configuration
 	   set in conf_clock.h.
 	   \note All non-essential peripheral clocks are initially disabled. */
 	sysclk_init();
+	/* Initialize the resources used by this example to the default
+	   configuration set in conf_board.h */
+	board_init();
+#endif
 
 	/* Initialize interrupts */
 	irq_initialize_vectors();
@@ -59,10 +66,6 @@ int main(void)
 
 	/* Initialize the sleep manager, lock initial mode. */
 	sleepmgr_init();
-
-	/* Initialize the resources used by this example to the default
-	   configuration set in conf_board.h */
-	board_init();
 
 	/* Initialize the user interface */
 	ui_init();
