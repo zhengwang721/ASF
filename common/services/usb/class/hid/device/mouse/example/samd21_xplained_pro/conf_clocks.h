@@ -106,7 +106,7 @@
 
 /* SYSTEM_CLOCK_SOURCE_DPLL configuration - Digital Phase-Locked Loop */
 #  define CONF_CLOCK_DPLL_ENABLE                  true
-#  define CONF_CLOCK_DPLL_ON_DEMAND               true
+#  define CONF_CLOCK_DPLL_ON_DEMAND               false
 #  define CONF_CLOCK_DPLL_RUN_IN_STANDBY          true
 #  define CONF_CLOCK_DPLL_LOCK_BYPASS             false
 #  define CONF_CLOCK_DPLL_WAKE_UP_FAST            false
@@ -174,8 +174,8 @@
 #  define CONF_CLOCK_GCLK_6_OUTPUT_ENABLE         false
 
 /* Configure GCLK generator 7 */
-#  define CONF_CLOCK_GCLK_7_ENABLE                true
-#  define CONF_CLOCK_GCLK_7_RUN_IN_STANDBY        true
+#  define CONF_CLOCK_GCLK_7_ENABLE                false
+#  define CONF_CLOCK_GCLK_7_RUN_IN_STANDBY        false
 #  define CONF_CLOCK_GCLK_7_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_DPLL
 #  define CONF_CLOCK_GCLK_7_PRESCALER             1
 #  define CONF_CLOCK_GCLK_7_OUTPUT_ENABLE         false

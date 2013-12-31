@@ -129,9 +129,8 @@ void ui_process(uint16_t framenumber)
  * \defgroup UI User Interface
  *
  * Human interface on SAMD21-XPlain:
- * - Led 0 (D2) is on when USB is wakeup
- * - Push button 0 (BP3) are linked to mouse button left and right
- * - Only a low level on push button 0 will generate a wakeup to USB Host
- *   in remote wakeup mode.
+ * - Led 0 is on when USB is wakeup
+ * - Push button 0 are linked to mouse button up
+ * - Only a low level on push button 0 will generate a wakeup to USB Host in remote wakeup mode.
  *
  */
