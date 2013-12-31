@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief USB host wrapper layer for compliance with common driver UHD
+ * \brief USB peripheral host wrapper for ASF Stack USB Host Driver (UHD)
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,13 +71,13 @@ static void _uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
 #endif
 
 /* Maximum size of a transfer in multipacket mode */
-#define UHD_ENDPOINT_MAX_TRANS ((8*1024)-1)
+#define UHD_ENDPOINT_MAX_TRANS ((8 *1024 ) - 1)
 
-#define USB_STATUS_PIPE_DTGLER    (1<<0)
-#define USB_STATUS_PIPE_DAPIDER   (1<<1)
-#define USB_STATUS_PIPE_PIDER     (1<<2)
-#define USB_STATUS_PIPE_TOUTER    (1<<3)
-#define USB_STATUS_PIPE_CRC16ER   (1<<4)
+#define USB_STATUS_PIPE_DTGLER    (1 << 0)
+#define USB_STATUS_PIPE_DAPIDER   (1 << 1)
+#define USB_STATUS_PIPE_PIDER     (1 << 2)
+#define USB_STATUS_PIPE_TOUTER    (1 << 3)
+#define USB_STATUS_PIPE_CRC16ER   (1 << 4)
 
 /* Check USB host configuration */
 #ifdef USB_HOST_HS_SUPPORT
@@ -91,7 +91,7 @@ static void _uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
 /** Notify that USB Host is enter in suspemd LPM state */
 static bool uhd_lpm_suspend = false;
 
-/** Store the callback to be call at the end of reset signal */
+/** Store the callback to be called at the end of reset signal */
 static uhd_callback_reset_t uhd_reset_callback = NULL;
 
 /**
@@ -124,7 +124,7 @@ static void uhd_sleep_mode(enum uhd_usb_state_enum new_state)
 		SLEEPMGR_ACTIVE, // UHD_STATE_WAIT_ID_HOST
 		SLEEPMGR_ACTIVE, // UHD_STATE_NO_VBUS
 		SLEEPMGR_ACTIVE, // UHD_STATE_DISCONNECT
-		/* In suspend state, the SLEEPMGR_RET level is authorized
+		/* In suspend state, the SLEEPMGR_STANDBY level is authorized
 		 * even if ID Pin, Vbus... pins are managed through IO.
 		 * When a ID disconnection or Vbus low event occurs,
 		 * the asynchrone USB wakeup occurs.
@@ -753,6 +753,7 @@ static void _usb_vbus_config(void)
 	eint_chan_conf.gpio_pin           = USB_VBUS_PIN;
 	eint_chan_conf.gpio_pin_mux       = USB_VBUS_EIC_MUX;
 	eint_chan_conf.detection_criteria = EXTINT_DETECT_LOW;
+	eint_chan_conf.filter_input_signal = true;
 
 	extint_chan_disable_callback(USB_VBUS_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
@@ -791,7 +792,7 @@ void uhd_enable(void)
 
 	struct usb_config cfg;
 	usb_get_config_defaults(&cfg);
-	cfg.mode = 1;
+	cfg.select_host_mode = 1;
 	usb_init(&dev,USB, &cfg);
 	usb_enable(&dev);
 
@@ -1023,7 +1024,7 @@ static void _uhd_ep0_error(struct usb_module *module_inst, void *pointer)
 	uhd_trans_status_t uhd_error;
 
 	/* Get and ack error */
-	switch(p_callback_para->error_type) {
+	switch(p_callback_para->pipe_error_status) {
 	case USB_STATUS_PIPE_DTGLER:
 		uhd_error = UHD_TRANS_DT_MISMATCH;
 		break;
@@ -1186,7 +1187,7 @@ static void _uhd_pipe_trans_complete(struct usb_module *module_inst, void *point
 
 		// If all previous requested data have been received and user buffer not full
 		// then need to receive other data
-		if ((nb_trans == p_callback_para->setting_size_in)
+		if ((nb_trans == p_callback_para->required_size)
 			&& (ptr_job->nb_trans != ptr_job->buf_size)) {
 			next_trans = ptr_job->buf_size - ptr_job->nb_trans;
 			max_trans = UHD_ENDPOINT_MAX_TRANS;
@@ -1286,7 +1287,7 @@ static void _uhd_ep_error(struct usb_module *module_inst, void *pointer)
 
 	dbg_print("Tr Error %x\n", p_callback_para->pipe_num);
 	/* Get and ack error */
-	switch(p_callback_para->error_type) {
+	switch(p_callback_para->pipe_error_status) {
 	case USB_STATUS_PIPE_DTGLER:
 		uhd_error = UHD_TRANS_DT_MISMATCH;
 		break;
@@ -1399,9 +1400,15 @@ void uhd_ep_free(usb_add_t add, usb_ep_t endp)
 	/* Search endpoint(s) in all pipes */
 	for (usb_pipe = 0; usb_pipe < USB_PIPE_NUM; usb_pipe++) {
 		usb_host_pipe_get_config(&dev, usb_pipe, &cfg);
+
+		if (cfg.pipe_type == USB_HOST_PIPE_TYPE_DISABLE) {
+			continue;
+		}
+
 		if (add != cfg.device_address) {
 			continue;
 		}
+
 		if (endp != 0xFF) {
 			/* Disable specific endpoint number */
 			if (!((endp == 0) && (0 == cfg.endpoint_address))) {
@@ -1470,7 +1477,7 @@ bool uhd_ep_run(
 	/* Request first transfer */
 	callback_para.pipe_num = pipe;
 	callback_para.transfered_size = 0;
-	callback_para.setting_size_in = 0;
+	callback_para.required_size = 0;
 	_uhd_pipe_trans_complete(&dev, &callback_para);
 	return true;
 }

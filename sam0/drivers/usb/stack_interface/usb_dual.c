@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM Dxx USB dual driver file.
+ * \brief SAM D21 USB dual driver file.
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -75,6 +75,7 @@ static void usb_id_config(void)
 	eint_chan_conf.gpio_pin           = USB_ID_PIN;
 	eint_chan_conf.gpio_pin_mux       = USB_ID_EIC_MUX;
 	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
+	eint_chan_conf.filter_input_signal = true;
 
 	extint_chan_disable_callback(USB_ID_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);

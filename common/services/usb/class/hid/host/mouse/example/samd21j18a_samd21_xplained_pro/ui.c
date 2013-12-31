@@ -80,9 +80,10 @@ static void ui_enable_asynchronous_interrupt(void)
 	struct extint_chan_conf eint_chan_conf;
 	extint_chan_get_config_defaults(&eint_chan_conf);
 
-	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
-	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_MUX;
-	eint_chan_conf.detection_criteria = EXTINT_DETECT_FALLING;
+	eint_chan_conf.gpio_pin            = BUTTON_0_EIC_PIN;
+	eint_chan_conf.gpio_pin_mux        = BUTTON_0_EIC_MUX;
+	eint_chan_conf.detection_criteria  = EXTINT_DETECT_FALLING;
+	eint_chan_conf.filter_input_signal = true;
 	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
 	extint_register_callback(UI_WAKEUP_HANDLER,
 			BUTTON_0_EIC_LINE,
@@ -134,6 +135,8 @@ static uhc_enum_status_t ui_enum_status = UHC_ENUM_DISCONNECT;
 static uint16_t ui_device_speed_blink;
 /*! Manages device mouse button down */
 static uint8_t ui_nb_down = 0;
+/*! Manages device mouse move */
+static bool ui_move = false;
 
 void ui_usb_vbus_change(bool b_vbus_present)
 {
@@ -211,6 +214,11 @@ void ui_usb_sof_event(void)
 		if (ui_nb_down) {
 			LED_On();
 		}
+		/* Power on a LED when the mouse moves */
+		if (ui_move) {
+			ui_move = false;
+			LED_On();
+		}
 	}
 }
 
@@ -243,6 +251,7 @@ void ui_uhi_hid_mouse_move(int8_t x, int8_t y, int8_t scroll)
 	UNUSED(x);
 	UNUSED(y);
 	UNUSED(scroll);
+	ui_move = true;
 }
 
 /*! @} */

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 USB Driver.
+ * \brief SAMD21 USB Driver.
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -85,6 +85,22 @@ union {
 } usb_descriptor_table;
 COMPILER_PACK_RESET()
 
+/**
+ * \brief Registers a USB host callback
+ *
+ * Registers a callback function which is implemented by the user.
+ *
+ * \note The callback must be enabled by \ref usb_host_enable_callback,
+ * in order for the interrupt handler to call it when the conditions for the
+ * callback type is met.
+ *
+ * \param[in]     module_inst   Pointer to USB software instance struct
+ * \param[in]     callback_type Callback type given by an enum
+ * \param[in]     callback_func Pointer to callback function
+ *
+ * \return Status of the registration operation.
+ * \retval STATUS_OK    The callback was registered successfully.
+ */
 enum status_code usb_host_register_callback(struct usb_module *module_inst,
 		enum usb_host_callback callback_type,
 		usb_host_callback_t callback_func)
@@ -101,6 +117,19 @@ enum status_code usb_host_register_callback(struct usb_module *module_inst,
 
 	return STATUS_OK;
 }
+
+/**
+ * \brief Unregisters a USB host callback
+ *
+ * Unregisters an asynchronous callback implemented by the user. Removing it
+ * from the internal callback registration table.
+ *
+ * \param[in]     module_inst   Pointer to USB software instance struct
+ * \param[in]     callback_type Callback type given by an enum
+ *
+ * \return Status of the de-registration operation.
+ * \retval STATUS_OK    The callback was unregistered successfully.
+ */
 enum status_code usb_host_unregister_callback(struct usb_module *module_inst,
 		enum usb_host_callback callback_type)
 {
@@ -115,6 +144,19 @@ enum status_code usb_host_unregister_callback(struct usb_module *module_inst,
 
 	return STATUS_OK;
 }
+
+/**
+ * \brief Enables USB host callback generation for a given type.
+ *
+ * Enables asynchronous callbacks for a given logical type.
+ * This must be called before usb host generate callback events.
+ *
+ * \param[in]     module_inst   Pointer to USB software instance struct
+ * \param[in]     callback_type Callback type given by an enum
+ *
+ * \return Status of the callback enable operation.
+ * \retval STATUS_OK    The callback was enabled successfully.
+ */
 enum status_code usb_host_enable_callback(struct usb_module *module_inst,
 		enum usb_host_callback callback_type)
 {
@@ -152,6 +194,18 @@ enum status_code usb_host_enable_callback(struct usb_module *module_inst,
 
 	return STATUS_OK;
 }
+
+/**
+ * \brief Disables USB host callback generation for a given type.
+ *
+ * Disables asynchronous callbacks for a given logical type.
+ *
+ * \param[in]     module_inst   Pointer to USB software instance struct
+ * \param[in]     callback_type Callback type given by an enum
+ *
+ * \return Status of the callback disable operation.
+ * \retval STATUS_OK    The callback was disabled successfully.
+ */
 enum status_code usb_host_disable_callback(struct usb_module *module_inst,
 		enum usb_host_callback callback_type)
 {
@@ -190,6 +244,23 @@ enum status_code usb_host_disable_callback(struct usb_module *module_inst,
 	return STATUS_OK;
 }
 
+/**
+ * \brief Initializes an USB host pipe configuration structure to defaults.
+ *
+ * Initializes a given USB host pipe configuration structure to a
+ * set of known default values. This function should be called on all new
+ * instances of these configuration structures before being modified by the
+ * user application.
+ *
+ * The default configuration is as follows:
+ * \li device address is 0
+ * \li endpoint address is 0
+ * \li pipe type is control
+ * \li interval is 0
+ * \li pipe size is 8
+ *
+ * \param[out] ep_config  Configuration structure to initialize to default values
+ */
 void usb_host_pipe_get_config_defaults(struct usb_host_pipe_config *ep_config)
 {
 	/* Sanity check arguments */
@@ -202,6 +273,20 @@ void usb_host_pipe_get_config_defaults(struct usb_host_pipe_config *ep_config)
 	ep_config->size = 8;
 }
 
+/**
+ * \brief Writes an USB host pipe configuration to the hardware module.
+ *
+ * Writes out a given configuration of an USB host pipe
+ * configuration to the hardware module. If the pipe is already configured,
+ * the new configuration will replace the existing one.
+ *
+ * \param[in] module_inst    Pointer to USB software instance struct
+ * \param[in] pipe_num       Pipe to configure
+ * \param[in] ep_config      Configuration settings for the pipe
+ *
+ * \return Status of the host pipe configuration operation.
+ * \retval STATUS_OK    The host pipe was configurated successfully.
+ */
 enum status_code usb_host_pipe_set_config(struct usb_module *module_inst, uint8_t pipe_num,
 		struct usb_host_pipe_config *ep_config)
 {
@@ -240,12 +325,28 @@ enum status_code usb_host_pipe_set_config(struct usb_module *module_inst, uint8_
 	if (ep_config->size == 1023) {
 		usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].PCKSIZE.bit.SIZE = 0x07;
 	} else {
-		usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].PCKSIZE.bit.SIZE = 
+		usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].PCKSIZE.bit.SIZE =
 				(32 - clz(((uint32_t)min(max(ep_config->size, 8), 1024) << 1) - 1) - 1 - 3);
 	}
 
+	/* Clear busy status */
+	host_pipe_job_busy_status &= ~(1 << pipe_num);
+
 	return STATUS_OK;
 }
+
+/**
+ * \brief Gets an USB host pipe configuration.
+ *
+ * Gets out the configuration of an USB host pipe from the hardware module.
+ *
+ * \param[in] module_inst    Pointer to USB software instance struct
+ * \param[in] pipe_num       Pipe to configure
+ * \param[out] ep_config     Configuration settings for the pipe
+ *
+ * \return Status of the get host pipe configuration operation.
+ * \retval STATUS_OK    The host pipe configuration was read successfully.
+ */
 enum status_code usb_host_pipe_get_config(struct usb_module *module_inst, uint8_t pipe_num,
 		struct usb_host_pipe_config *ep_config)
 {
@@ -280,6 +381,23 @@ enum status_code usb_host_pipe_get_config(struct usb_module *module_inst, uint8_
 	return STATUS_OK;
 }
 
+/**
+ * \brief Registers a USB host pipe callback
+ *
+ * Registers a callback function which is implemented by the user.
+ *
+ * \note The callback must be enabled by \ref usb_host_pipe_enable_callback,
+ * in order for the interrupt handler to call it when the conditions for the
+ * callback type is met.
+ *
+ * \param[in]     module_inst   Pointer to USB software instance struct
+ * \param[in]     pipe_num      Pipe to configure
+ * \param[in]     callback_type Callback type given by an enum
+ * \param[in]     callback_func Pointer to callback function
+ *
+ * \return Status of the registration operation.
+ * \retval STATUS_OK    The callback was registered successfully.
+ */
 enum status_code usb_host_pipe_register_callback(
 		struct usb_module *module_inst, uint8_t pipe_num,
 		enum usb_host_pipe_callback callback_type,
@@ -298,6 +416,20 @@ enum status_code usb_host_pipe_register_callback(
 
 	return STATUS_OK;
 }
+
+/**
+ * \brief Unregisters a USB host pipe callback
+ *
+ * Unregisters an asynchronous callback implemented by the user. Removing it
+ * from the internal callback registration table.
+ *
+ * \param[in]     module_inst   Pointer to USB software instance struct
+ * \param[in]     pipe_num      Pipe to configure
+ * \param[in]     callback_type Callback type given by an enum
+ *
+ * \return Status of the de-registration operation.
+ * \retval STATUS_OK    The callback was unregistered successfully.
+ */
 enum status_code usb_host_pipe_unregister_callback(
 		struct usb_module *module_inst, uint8_t pipe_num,
 		enum usb_host_pipe_callback callback_type)
@@ -314,6 +446,20 @@ enum status_code usb_host_pipe_unregister_callback(
 
 	return STATUS_OK;
 }
+
+/**
+ * \brief Enables USB host pipe callback generation for a given type.
+ *
+ * Enables asynchronous callbacks for a given logical type.
+ * This must be called before usb host pipe generate callback events.
+ *
+ * \param[in]     module_inst   Pointer to USB software instance struct
+ * \param[in]     pipe_num      Pipe to configure
+ * \param[in]     callback_type Callback type given by an enum
+ *
+ * \return Status of the callback enable operation.
+ * \retval STATUS_OK    The callback was enabled successfully.
+ */
 enum status_code usb_host_pipe_enable_callback(
 		struct usb_module *module_inst, uint8_t pipe_num,
 		enum usb_host_pipe_callback callback_type)
@@ -342,6 +488,19 @@ enum status_code usb_host_pipe_enable_callback(
 
 	return STATUS_OK;
 }
+
+/**
+ * \brief Disables USB host callback generation for a given type.
+ *
+ * Disables asynchronous callbacks for a given logical type.
+ *
+ * \param[in]     module_inst   Pointer to USB software instance struct
+ * \param[in]     pipe_num      Pipe to configure
+ * \param[in]     callback_type Callback type given by an enum
+ *
+ * \return Status of the callback disable operation.
+ * \retval STATUS_OK    The callback was disabled successfully.
+ */
 enum status_code usb_host_pipe_disable_callback(
 		struct usb_module *module_inst, uint8_t pipe_num,
 		enum usb_host_pipe_callback callback_type)
@@ -370,6 +529,19 @@ enum status_code usb_host_pipe_disable_callback(
 
 	return STATUS_OK;
 }
+
+/**
+ * \brief Sends the setup package.
+ *
+ * Sends the setup package.
+ *
+ * \param[in]     module_inst   Pointer to USB software instance struct
+ * \param[in]     pipe_num      Pipe to configure
+ *
+ * \return Status of the setup operation.
+ * \retval STATUS_OK    The setup job was set successfully.
+ * \retval STATUS_ERR_NOT_INITIALIZED    The pipe has not been configurated.
+ */
 enum status_code usb_host_pipe_setup_job(struct usb_module *module_inst,
 		uint8_t pipe_num, uint8_t *buf)
 {
@@ -377,6 +549,13 @@ enum status_code usb_host_pipe_setup_job(struct usb_module *module_inst,
 	Assert(module_inst);
 	Assert(module_inst->hw);
 	Assert(pipe_num < USB_PIPE_NUM);
+
+	if (host_pipe_job_busy_status & (1 << pipe_num)) {
+		return STATUS_BUSY;
+	}
+
+	/* Set busy status */
+	host_pipe_job_busy_status |= 1 << pipe_num;
 
 	if (module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTYPE ==
 			USB_HOST_PIPE_TYPE_DISABLE) {
@@ -474,15 +653,16 @@ enum status_code usb_host_pipe_abort_job(struct usb_module *module_inst, uint8_t
 	Assert(module_inst->hw);
 	Assert(pipe_num < USB_PIPE_NUM);
 
-	/* Clear busy status */
-	host_pipe_job_busy_status &= ~(1 << pipe_num);
-
 	if (module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTYPE ==
 			USB_HOST_PIPE_TYPE_DISABLE) {
 		return STATUS_ERR_NOT_INITIALIZED;
 	}
 
 	module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSSET.reg = USB_HOST_PSTATUSSET_PFREEZE;
+
+	/* Clear busy status */
+	host_pipe_job_busy_status &= ~(1 << pipe_num);
+
 	return STATUS_OK;
 }
 
@@ -525,11 +705,12 @@ static void _usb_host_interrupt_handler(void)
 							USB_HOST_PIPE_TOKEN_IN) {
 					/* in  */
 					callback_para.transfered_size = usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.BYTE_COUNT;
-					callback_para.setting_size_in = usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE;
+					callback_para.required_size = usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE;
 					usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.BYTE_COUNT = 0;
 				} else {
 					/* out */
 					callback_para.transfered_size = usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE;
+					callback_para.required_size = usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.BYTE_COUNT;
 					usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE = 0;
 					if (0 == callback_para.transfered_size) {
 						callback_para.transfered_size = usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.BYTE_COUNT;
@@ -559,7 +740,7 @@ static void _usb_host_interrupt_handler(void)
 			if(_usb_instances->host_pipe_enabled_callback_mask[pipe_int] &
 					(1 << USB_HOST_PIPE_CALLBACK_ERROR)) {
 				callback_para.pipe_num = pipe_int;
-				callback_para.error_type = 
+				callback_para.pipe_error_status =
 						usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].STATUS_PIPE.reg & 0x1F;
 				(_usb_instances->host_pipe_callback[pipe_int]
 						[USB_HOST_PIPE_CALLBACK_ERROR])(_usb_instances, &callback_para);
@@ -568,14 +749,18 @@ static void _usb_host_interrupt_handler(void)
 
 		/* host pipe transmitted setup interrupt */
 		if (flags & USB_HOST_PINTFLAG_TXSTP) {
+			/* Clear busy status */
+			host_pipe_job_busy_status &= ~(1 << pipe_int);
 			/* clear the flag */
 			_usb_instances->hw->HOST.HostPipe[pipe_int].PINTFLAG.reg =
 					USB_HOST_PINTFLAG_TXSTP;
 			if(_usb_instances->host_pipe_enabled_callback_mask[pipe_int] &
 					(1 << USB_HOST_PIPE_CALLBACK_SETUP)) {
+				callback_para.pipe_num = pipe_int;
+				callback_para.transfered_size = usb_descriptor_table.usb_pipe_table[pipe_int].HostDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE;
 				(_usb_instances->host_pipe_callback[pipe_int]
 						[USB_HOST_PIPE_CALLBACK_SETUP])(_usb_instances, NULL);
-			}		
+			}
 		}
 
 		/* host pipe stall interrupt */
@@ -590,7 +775,7 @@ static void _usb_host_interrupt_handler(void)
 				callback_para.pipe_num = pipe_int;
 				(_usb_instances->host_pipe_callback[pipe_int]
 						[USB_HOST_PIPE_CALLBACK_STALL])(_usb_instances, &callback_para);
-			}		
+			}
 		}
 
 	} else {
@@ -605,7 +790,7 @@ static void _usb_host_interrupt_handler(void)
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_HSOF;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_SOF)) {
 				(_usb_instances->host_callback[USB_HOST_CALLBACK_SOF])(_usb_instances);
-			}		
+			}
 		}
 
 		/* host reset interrupt */
@@ -616,7 +801,7 @@ static void _usb_host_interrupt_handler(void)
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_RST;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_RESET)) {
 				(_usb_instances->host_callback[USB_HOST_CALLBACK_RESET])(_usb_instances);
-			}		
+			}
 		}
 
 		/* host wakeup interrupts */
@@ -625,7 +810,7 @@ static void _usb_host_interrupt_handler(void)
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_WAKEUP;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_WAKEUP)) {
 				(_usb_instances->host_callback[USB_HOST_CALLBACK_WAKEUP])(_usb_instances);
-			}		
+			}
 		}
 
 		/* host downstream resume interrupts */
@@ -634,7 +819,7 @@ static void _usb_host_interrupt_handler(void)
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_DNRSM;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_DNRSM)) {
 				(_usb_instances->host_callback[USB_HOST_CALLBACK_DNRSM])(_usb_instances);
-			}		
+			}
 		}
 
 		/* host upstream resume interrupts */
@@ -643,10 +828,10 @@ static void _usb_host_interrupt_handler(void)
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_UPRSM;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_UPRSM)) {
 				(_usb_instances->host_callback[USB_HOST_CALLBACK_UPRSM])(_usb_instances);
-			}		
+			}
 		}
 
-		/* host ram access interrupt  */	
+		/* host ram access interrupt  */
 		if (flags & USB_HOST_INTFLAG_RAMACER) {
 			/* Clear busy status */
 			host_pipe_job_busy_status = 0;
@@ -654,7 +839,7 @@ static void _usb_host_interrupt_handler(void)
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_RAMACER;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_RAMACER)) {
 				(_usb_instances->host_callback[USB_HOST_CALLBACK_RAMACER])(_usb_instances);
-			}		
+			}
 		}
 
 		/* host connect interrupt */
@@ -665,9 +850,9 @@ static void _usb_host_interrupt_handler(void)
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_DCONN;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_CONNECT)) {
 				(_usb_instances->host_callback[USB_HOST_CALLBACK_CONNECT])(_usb_instances);
-			}		
+			}
 		}
-		
+
 		/* host disconnect interrupt 	*/
 		if (flags & USB_HOST_INTFLAG_DDISC) {
 			/* Clear busy status */
@@ -676,7 +861,7 @@ static void _usb_host_interrupt_handler(void)
 			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_DDISC;
 			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_DISCONNECT)) {
 				(_usb_instances->host_callback[USB_HOST_CALLBACK_DISCONNECT])(_usb_instances);
-			}		
+			}
 		}
 
 	}
@@ -724,8 +909,9 @@ void usb_get_config_defaults(struct usb_config *module_config)
 	/* Sanity check arguments */
 	Assert(module_config);
 	/* Write default config to config struct */
-	module_config->mode = 0;
+	module_config->select_host_mode = 0;
 	module_config->run_in_standby = 1;
+	module_config->source_generator = GCLK_GENERATOR_0;
 }
 
 #define NVM_USB_PAD_TRANSN_POS  45
@@ -801,7 +987,7 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 
 	/* Setup clock for module */
 	system_gclk_chan_get_config_defaults(&gclk_chan_config);
-	gclk_chan_config.source_generator = GCLK_GENERATOR_0;
+	gclk_chan_config.source_generator = module_config->source_generator;
 	system_gclk_chan_set_config(USB_GCLK_ID, &gclk_chan_config);
 	system_gclk_chan_enable(USB_GCLK_ID);
 	pin_config.mux_position = MUX_PB14H_GCLK_IO0;
@@ -813,7 +999,7 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 	while (hw->HOST.SYNCBUSY.bit.SWRST);
 
 	/* Set the configuration */
-	hw->HOST.CTRLA.bit.MODE = module_config->mode;
+	hw->HOST.CTRLA.bit.MODE = module_config->select_host_mode;
 	hw->HOST.CTRLA.bit.RUNSTDBY = module_config->run_in_standby;
 	hw->HOST.DESCADD.reg = (uint32_t)(&usb_descriptor_table.usb_endpoint_table[0]);
 
@@ -821,9 +1007,11 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 			sizeof(usb_descriptor_table.usb_endpoint_table));
 
 	/* callback related init */
-	for (i = 0; i < USB_PIPE_NUM; i++) {
+	for (i = 0; i < USB_HOST_CALLBACK_N; i++) {
 		module_inst->host_callback[i] = NULL;
-		for (j = 0; j < USB_HOST_CALLBACK_N; j++) {
+	};
+	for (i = 0; i < USB_PIPE_NUM; i++) {
+		for (j = 0; j < USB_HOST_PIPE_CALLBACK_N; j++) {
 			module_inst->host_pipe_callback[i][j] = NULL;
 		}
 	};

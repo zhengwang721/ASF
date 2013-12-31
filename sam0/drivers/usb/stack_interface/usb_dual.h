@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM Dxx USB dual driver header file.
+ * \brief SAM D21 USB dual driver header file.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -70,7 +70,7 @@
 bool usb_dual_enable(void);
 
 /**
- * \brief Uninitialize the dual role
+ * \brief Deinitialize the dual role
  * This function is implemented in usb_dual.c file.
  */
 void usb_dual_disable(void);
@@ -79,7 +79,7 @@ void usb_dual_disable(void);
  * @name USB ID pin management
  *
  * The ID pin come from the USB connector (A and B receptable) and
- * allows to select the USB mode host or device.
+ * allows to select the USB mode between host or device.
  * The ID pin can be managed through EIC pin.
  * This feature is optional, and it is enabled if USB_ID_PIN
  * is defined in board.h and CONF_BOARD_USB_ID_DETECT defined in
@@ -95,7 +95,7 @@ void usb_dual_disable(void);
  * @name USB Vbus management
  *
  * The VBus line can be monitored through a EIC pin and
- * a basic resitor voltage divider.
+ * a basic resistor voltage divider.
  * This feature is optional, and it is enabled if USB_VBUS_PIN
  * is defined in board.h and CONF_BOARD_USB_VBUS_DETECT defined in
  * conf_board.h.

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 USB Driver
+ * \brief SAMD21 USB Driver
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -116,9 +116,11 @@ typedef void (*usb_host_pipe_callback_t)(struct usb_module *module_inst, void *)
 /** USB configurations */
 struct usb_config {
 	/** 1 for host, 0 for device. */
-	bool mode;
+	bool select_host_mode;
 	/** When \c true the module is enabled during standby. */
 	bool run_in_standby;
+	/** Generic Clock Generator source channel. */
+	enum gclk_generator source_generator;
 };
 
 /**
@@ -153,7 +155,7 @@ struct usb_host_pipe_config {
 	uint8_t endpoint_address;
 	/** Pipe type */
 	enum usb_host_pipe_type pipe_type;
-	/** interval add more comments , change name */
+	/** interval */
 	uint8_t binterval;
 	/** pipe size */
 	uint16_t size;
@@ -161,10 +163,14 @@ struct usb_host_pipe_config {
 
 /** USB host piple callback parameter structure */
 struct usb_pipe_callback_parameter {
+	/** current pipe number */
 	uint8_t pipe_num;
-	uint8_t error_type;
+	/** pipe error status */
+	uint8_t pipe_error_status;
+	/** actual transfered data size */
 	uint16_t transfered_size;
-	uint16_t setting_size_in;
+	/** required data size */
+	uint16_t required_size;
 };
 
 /** USB simple operation functions */
@@ -172,6 +178,10 @@ void usb_enable(struct usb_module *module_inst);
 void usb_disable(struct usb_module *module_inst);
 static inline uint8_t usb_get_state_machine_status(struct usb_module *module_inst)
 {
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
 	return module_inst->hw->HOST.FSMSTATUS.reg;
 }
 /** USB init functions */
@@ -179,7 +189,7 @@ void usb_get_config_defaults(struct usb_config *module_config);
 enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 		struct usb_config *module_config);
 
-/** host simple operation functions*/
+/** Host simple operation functions*/
 static inline void usb_host_enable(struct usb_module *module_inst)
 {
 	/* Sanity check arguments */
@@ -256,7 +266,7 @@ static inline uint16_t usb_host_get_frame_number(struct usb_module *module_inst)
 
 	return (uint16_t)(module_inst->hw->HOST.FNUM.bit.FNUM);
 }
-/** host interrupt functions*/
+/** Host interrupt functions*/
 enum status_code usb_host_register_callback(struct usb_module *module_inst,
 		enum usb_host_callback callback_type,
 		usb_host_callback_t callback_func);
