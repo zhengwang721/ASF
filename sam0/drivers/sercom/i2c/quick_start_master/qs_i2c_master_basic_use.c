@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x I2C Slave with DMA Quick Start Guide
+ * \brief SAM D2x I2C Master Quick Start Guide
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,131 +43,92 @@
 
 #include <asf.h>
 
-void configure_i2c_slave(void);
-void setup_dma_descriptor(DmacDescriptor *descriptor);
-void configure_dma_resource(struct dma_resource *resource);
-
-//! [address]
-#define SLAVE_ADDRESS 0x12
-//! [address]
-
 //! [packet_data]
 #define DATA_LENGTH 10
-uint8_t read_buffer[DATA_LENGTH];
+static uint8_t buffer[DATA_LENGTH] = {
+		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
+};
+
+#define SLAVE_ADDRESS 0x12
 //! [packet_data]
 
-//! [module]
-struct i2c_slave_module i2c_slave_instance;
-//! [module]
+/* Number of times to try to send packet if failed. */
+//! [timeout]
+#define TIMEOUT 1000
+//! [timeout]
+
+/* Init software module. */
+//! [dev_inst]
+struct i2c_master_module i2c_master_instance;
+//! [dev_inst]
+
+void configure_i2c_master(void);
 
 //! [initialize_i2c]
-void configure_i2c_slave(void)
+void configure_i2c_master(void)
 {
-	/* Create and initialize config_i2c_slave structure */
+	/* Initialize config structure and software module. */
 	//! [init_conf]
-	struct i2c_slave_config config_i2c_slave;
-	i2c_slave_get_config_defaults(&config_i2c_slave);
+	struct i2c_master_config config_i2c_master;
+	i2c_master_get_config_defaults(&config_i2c_master);
 	//! [init_conf]
 
-	/* Change address and address_mode */
-	//! [conf_changes]
-	config_i2c_slave.address        = SLAVE_ADDRESS;
-	config_i2c_slave.address_mode   = I2C_SLAVE_ADDRESS_MODE_MASK;
-	config_i2c_slave.buffer_timeout = 1000;
-	//! [conf_changes]
+	/* Change buffer timeout to something longer. */
+	//! [conf_change]
+	config_i2c_master.buffer_timeout = 10000;
+	//! [conf_change]
 
-	/* Initialize and enable device with config_i2c_slave */
+	/* Initialize and enable device with config. */
 	//! [init_module]
-	i2c_slave_init(&i2c_slave_instance, SERCOM2, &config_i2c_slave);
+	i2c_master_init(&i2c_master_instance, SERCOM2, &config_i2c_master);
 	//! [init_module]
 
 	//! [enable_module]
-	i2c_slave_enable(&i2c_slave_instance);
+	i2c_master_enable(&i2c_master_instance);
 	//! [enable_module]
 }
 //! [initialize_i2c]
-
-//! [dma_resource]
-struct dma_resource i2c_dma_resource;
-//! [dma_resource]
-
-// [transfer_descriptor]
-COMPILER_ALIGNED(16)
-DmacDescriptor i2c_dma_descriptor;
-// [transfer_descriptor]
-
-// [config_dma_resource]
-void configure_dma_resource(struct dma_resource *resource)
-{
-	//! [dma_setup_1]
-	struct dma_resource_config config;
-	//! [dma_setup_1]
-
-	//! [dma_setup_2]
-	dma_get_config_defaults(&config);
-	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
-	config.peripheral_trigger = SERCOM2_DMAC_ID_RX;
-	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
-	//! [dma_setup_2]
-
-	//! [dma_setup_3]
-	dma_allocate(resource, &config);
-	//! [dma_setup_3]
-}
-// [config_dma_resource]
-
-// [setup_dma_transfer_descriptor]
-void setup_dma_descriptor(DmacDescriptor *descriptor)
-{
-	//! [dma_setup_4]
-	struct dma_descriptor_config descriptor_config;
-	//! [dma_setup_4]
-
-	//! [dma_setup_5]
-	dma_descriptor_get_config_defaults(&descriptor_config);
-	//! [dma_setup_5]
-
-	//! [dma_setup_6]
-	descriptor_config.beat_size = DMA_BEAT_SIZE_BYTE;
-	descriptor_config.src_increment_enable = false;
-	descriptor_config.block_transfer_count = DATA_LENGTH;
-	descriptor_config.destination_address = (uint32_t)read_buffer + DATA_LENGTH;
-	descriptor_config.source_address = (uint32_t)(&i2c_slave_instance.hw->I2CS.DATA.reg);
-	//! [dma_setup_6]
-
-	//! [dma_setup_7]
-	dma_descriptor_create(descriptor, &descriptor_config);
-	//! [dma_setup_7]
-}
-// [setup_dma_transfer_descriptor]
 
 int main(void)
 {
 	system_init();
 
 	//! [init]
-	//! [config_i2c]
-	configure_i2c_slave();
-	//! [config_i2c]
+	/* Configure device and enable. */
+	//! [config]
+	configure_i2c_master();
+	//! [config]
 
-	//! [config_dma]
-	configure_dma_resource(&i2c_dma_resource);
-	setup_dma_descriptor(&i2c_dma_descriptor);
-	dma_add_descriptor(&i2c_dma_resource, &i2c_dma_descriptor);
-	//! [config_dma]
+	/* Timeout counter. */
+	//! [timeout_counter]
+	uint16_t timeout = 0;
+	//! [timeout_counter]
+
+	/* Init i2c packet. */
+	//! [packet]
+	struct i2c_packet packet = {
+		.address     = SLAVE_ADDRESS,
+		.data_length = DATA_LENGTH,
+		.data        = buffer,
+	};
+	//! [packet]
 	//! [init]
 
 	//! [main]
-	//! [wait_packet]
-	dma_start_transfer_job(&i2c_dma_resource);
-	//! [wait_packet]
-
-	//! [clear_status]
-	while (true) { 
-		if (i2c_slave_instance.hw->I2CS.INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH) {
-			i2c_slave_instance.hw->I2CS.INTFLAG.reg = SERCOM_I2CS_INTFLAG_AMATCH;
+	/* Write buffer to slave until success. */
+	//! [write_packet]
+	while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) !=
+			STATUS_OK) {
+		/* Increment timeout counter and check if timed out. */
+		if (timeout++ == TIMEOUT) {
+			break;
 		}
 	}
-	//! [clear_status]
+	//! [write_packet]
 	//! [main]
+
+	while (true) {
+		/* Infinite loop */
+	}
+
 }
