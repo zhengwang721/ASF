@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-device id="config.thirdparty.wireless.avr2130_lwmesh.source.phy" caption="PHY Config_select by device">
 
-		<module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy#1"     caption="atmegarfr2 tal support enabled">
+		<module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy#1"     caption="atmegarfr2 phy support enabled">
             <info type="description" value="summary">
             ATMegaRFR2 Transceiver Abstraction Layer
             </info>
@@ -10,10 +10,40 @@
             <device-support value="atmega256rfr2"/>
             <build type="doxygen-entry-point" value="group_phy_rfr2"/>
 		</module>
+		<module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy#2" caption="External Transceivers">
+			<info type="description" value="summary">
+			Transceiver Selection for Externally Plugged Transceivers
+			</info>
+            <info type="gui-flag" value="hidden"/>
+            <require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy.ext"/>
+            <device-support value="atxmega256a3bu"/>
+		</module>		
 	</select-by-device>
 
-  
-    <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfr2"     caption="atmegarfr2 tal support enabled">
+
+   <select-by-config id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.ext" name="config.thirdparty.wireless.avr2130_lwmesh.source.phy.ext" caption="PHY Configuration" default="at86rf231">
+        <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.ext#at86rf231"     caption="at86rf231 phy support enabled">
+            <info type="description" value="summary">
+            AT86RF212 Transceiver Abstraction Layer
+            </info>
+            <info type="gui-flag" value="hidden"/>
+            <require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf231"/>
+            <device-support value="atxmega256a3bu"/>
+        </module>
+	</select-by-config>	
+	
+
+    <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf231"     caption="at86rf231 phy support enabled">
+        <info type="description" value="summary">
+        AT86RF231 Transceiver Abstraction Layer
+        </info>
+        <info type="gui-flag" value="hidden"/>
+        <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf231"/>
+       <build type="doxygen-entry-point" value="group_phy_231"/>
+        <device-support value="atxmega256a3bu"/>
+    </module>
+	
+    <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfr2"     caption="atmegarfr2 phy support enabled">
         <info type="description" value="summary">
         ATMegaRFR2 PHY Layer
         </info>
@@ -31,6 +61,7 @@
 		<require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy"/>
 		<build type="doxygen-entry-point" value="group_phy"/>
         <device-support value="atmega256rfr2"/>
+        <device-support value="atxmega256a3bu"/>
 	</module>
 
 

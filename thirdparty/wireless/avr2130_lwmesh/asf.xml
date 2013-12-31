@@ -12,6 +12,7 @@
 			<build type="module-config" subtype="required-header-file" value="config.h"/>
             <build type="module-config" subtype="path" value="module_config"/>
             <device-support value="atmega256rfr2" />
+			<device-support value="atxmega256a3bu"/>
 			<build type="doxygen-entry-point" value="group_lwmesh"/>
             <info type="keyword" value="technology">
                 <keyword value="Wireless"/>

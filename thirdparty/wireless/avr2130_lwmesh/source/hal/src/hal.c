@@ -42,6 +42,7 @@
 
 #include "sysTypes.h"
 #include "hal.h"
+#include "hal_ext_trx.h"
 #include "delay.h"
 
 
@@ -55,12 +56,15 @@ static void HAL_TimerInit(void);
 *****************************************************************************/
 void HAL_Init(void)
 {
+
+pal_spi_init();
 HAL_TimerInit();
+
 }
 
 /*****************************************************************************
 *****************************************************************************/
-void HAL_Delay(uint8_t us)
+void HAL_Delay(uint32_t us)
 {
   delay_us(us);
 }

@@ -19,6 +19,7 @@
 			<build type="include-path"  value="inc/"/>
 			<build type="define"   name="APP_ENABLE_OTA"                   value=""/>
 			<device-support value="atmega256rfr2"/>
+			<device-support value="atxmega256a3bu"/>
 			<build type="doxygen-entry-point" value="group_lwmesh_service"/>
 		</module>
 		
@@ -32,6 +33,7 @@
 			<build type="include-path"  value="inc/"/>		
 			<build type="define"   name="APP_ENABLE_OTA"                   value=""/>
 			<device-support value="atmega256rfr2"/>
+			<device-support value="atxmega256a3bu"/>
 			<build type="doxygen-entry-point" value="group_lwmesh_service"/>			
 		</module>
 	</select-by-config>
@@ -44,6 +46,7 @@
 		<require idref="config.thirdparty.wireless.avr2130_lwmesh.source.service"/>
 		<build type="doxygen-entry-point" value="group_lwmesh_service"/>
         <device-support value="atmega256rfr2"/>
+        <device-support value="atxmega256a3bu"/>
 	</module>
 	
 		

@@ -78,7 +78,7 @@
     WDTCSR = 0x00; \
   } while (0)
 
-  #define ISR(vec) PRAGMA(vector=vec) __interrupt void handler_##vec(void)
+//  #define ISR(vec) PRAGMA(vector=vec) __interrupt void handler_##vec(void)
 
   #define ATOMIC_SECTION_ENTER   { uint8_t __atomic = SREG; __disable_interrupt();
   #define ATOMIC_SECTION_LEAVE   SREG = __atomic; }

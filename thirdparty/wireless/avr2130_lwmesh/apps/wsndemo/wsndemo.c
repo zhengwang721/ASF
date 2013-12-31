@@ -37,9 +37,16 @@
  *
  * \asf_license_stop
  *
- * $Id: WSNDemo.c 8379 2013-07-26 21:29:17Z ataradov $
  *
  */
+/**
+* \mainpage
+* \section preface Preface
+* This is the reference manual for the Performance Analyzer Application
+* \section toc Table of Contents
+* \To Be Done
+*/
+
 
 #include <stdlib.h>
 #include <stdio.h>

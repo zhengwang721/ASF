@@ -1,11 +1,13 @@
 /**
- * \file hal.h
+ * \file
  *
- * \brief ATmega256rfr2 HAL interface
+ * \brief Spi Master configuration
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,45 +39,27 @@
  *
  * \asf_license_stop
  *
- *
  */
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
-#ifndef _HAL_H_
-#define _HAL_H_
+/* Possibility to change low-level configurations here */
 
+#define AT86RFX_SPI_BAUDRATE 3000000
 
-#include "sysTypes.h"
-#include "common_hw_timer.h"
-#include "sysclk.h"
+/* ! Default Config Spi Master Delay BCS */
+/* #define CONFIG_SPI_MASTER_DELAY_BCS            0 */
 
+/* ! Default Config Spi Master Bits per Transfer Definition */
+/* #define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8 */
 
+/* ! Default Config Spi Master Delay BCT */
+/* #define CONFIG_SPI_MASTER_DELAY_BCT            0 */
 
+/* ! Default Config Spi Master Delay BS */
+/* #define CONFIG_SPI_MASTER_DELAY_BS             0 */
 
+/* ! Default Config Spi Master Dummy Field */
+/* #define CONFIG_SPI_MASTER_DUMMY                0xFF */
 
-/*****************************************************************************
-*****************************************************************************/
-#define HAL_TIMER_INTERVAL      10ul // ms
-#define MS 1000
-
-/*****************************************************************************
-*****************************************************************************/
-void HAL_Init(void);
-void HAL_Delay(uint32_t us);
-void HAL_Sleep(uint32_t interval);
-void hw_expiry_cb(void);
-
-
-/* Enables the global interrupt */
-#define ENABLE_GLOBAL_IRQ()                  Enable_global_interrupt()
-
-/* Disables the global interrupt */
-#define DISABLE_GLOBAL_IRQ()                 Disable_global_interrupt()
-
-/* This macro saves the global interrupt status */
-#define ENTER_CRITICAL_REGION()              {uint8_t flags = cpu_irq_save();
-
-/* This macro restores the global interrupt status */
-#define LEAVE_CRITICAL_REGION()              cpu_irq_restore(flags);}
-
-#endif // _HAL_H_
-
+#endif /* CONF_SPI_MASTER_H_INCLUDED */

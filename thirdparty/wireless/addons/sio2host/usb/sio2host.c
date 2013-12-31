@@ -160,6 +160,10 @@ uint8_t sio2host_getchar(void)
 	}
 	return c;
 }
+void sio2host_putchar(uint8_t ch)
+{
+    sio2host_tx(&ch,1);
+}
 
 int sio2host_getchar_nowait(void)
 {

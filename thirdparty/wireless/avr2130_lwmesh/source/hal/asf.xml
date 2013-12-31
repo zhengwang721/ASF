@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-device id="config.thirdparty.wireless.avr2130_lwmesh.source.hal" caption="HAL Config_select by device">
 
-		<module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.hal#1"     caption="Hal wrapper for SOC's">
+		<module type="meta" id="config.thirdparty.wireless.avr2130_lwmesh.source.hal#1"     caption="Hal wrapper for SOC's">
             <info type="description" value="summary">
 				HAL wrapper for SOC's
             </info>
@@ -12,6 +12,27 @@
 		    <build type="doxygen-entry-point" value="group_hal"/>
 			<device-support value="atmega256rfr2"/>
 		</module>
+
+        <module type="meta" id="config.thirdparty.wireless.avr2130_lwmesh.source.hal#2"     caption="Hal wrapper for external transceivers">
+            <info type="description" value="summary">
+            The HAL Layer forms the wrapper layer that forms the interface between the Stack and the Low level drivers.This module includes PAL(Platform Abstraction Layer) wrapper files for boards with External Transceivers
+            </info>
+			<info type="gui-flag" value="hidden"/>
+			<build type="c-source"      value="src/hal.c"/>
+			<build type="c-source"      value="src/hal_ext_trx.c"/>
+			<build type="header-file"   value="inc/hal.h"/>
+			<build type="header-file"   value="inc/hal_ext_trx.h"/>
+			<build type="include-path"  value="inc/"/>
+		    <build type="doxygen-entry-point" value="group_hal"/>
+			<!-- <build type="module-config" subtype="required-header-file" value="conf_pal.h"/> -->
+			<!-- <build type="module-config" subtype="path" value="module_config"/> -->
+
+            <!-- <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/> -->
+            <!-- <require idref="thirdparty.wireless.avr2025_mac.source.pal.inc"/> -->
+            <require idref="common.services.basic.spi_master"/>
+            <device-support-alias value="avr2025_mac_hal_spi_common_support"/>
+		</module>
+		
 	</select-by-device>
 
 
@@ -27,8 +48,12 @@
         <require idref="common.utils"/>
 		<build type="doxygen-entry-point" value="group_hal"/>
         <device-support value="atmega256rfr2"/>
+        <device-support value="atxmega256a3bu"/>
 	</module>
 
+	    <device-alias-map name="avr2025_mac_hal_spi_common_support">
+        <device-support value="atxmega256a3bu"/>
+    </device-alias-map>
 
 
 </asf>

@@ -100,6 +100,7 @@ void dtr_cb(bool);
 
 int sio2host_getchar_nowait(void);
 
+void sio2host_putchar(uint8_t );
 /**
  * \brief This function performs a blocking character receive functionality
  * \return returns the data which is received
