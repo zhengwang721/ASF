@@ -45,8 +45,9 @@
  * \page asfdoc_sam0_sercom_usart_dma_use_case Quick Start Guide for Using DMA with
  * SERCOM USART
  *
- * This quick start will transmit a string to the terminal through DMA. In this
- * use case the USART will be configured with the following settings:
+ * This quick start will receiving 8 bytes of data from PC terminal and transmit back the string 
+ * to the terminal through DMA. In this use case the USART will be configured with the following
+ * settings:
  * - Asynchronous mode
  * - 9600 Baudrate
  * - 8-bits, No Parity and 1 Stop Bit
@@ -60,8 +61,8 @@
  * \subsection asfdoc_sam0_usart_dma_use_case_setup_code Code
  * Add to the main application source file, outside of any functions:
  * \snippet qs_usart_dma_use.c module_inst
- * \snippet qs_usart_dma_use.c transfer_done_flag
- * \snippet qs_usart_dma_use.c usart_string
+ * \snippet qs_usart_dma_use.c dma_resource
+ * \snippet qs_usart_dma_use.c usart_buffer
  * \snippet qs_usart_dma_use.c transfer_descriptor
  *
  * Copy-paste the following setup code to your user application:
@@ -84,10 +85,10 @@
  *          In most cases, this should be global.
  *
  *    \snippet qs_tc_dma.c dma_resource
- * -# Create a transfer done flag to indication DMA transfer done
- *    \snippet qs_tc_dma.c transfer_done_flag
- * -# Create an array to store the data to be transferred
- *    \snippet qs_tc_dma.c string
+ * -# Create a buffer to store the data to be transferred /received
+ *    \snippet qs_tc_dma.c usart_buffer
+ * -# Create DMA transfer descriptors for RX/TX
+ *    \snippet qs_tc_dma.c transfer_descriptor
  *  -# Create a USART module configuration struct, which can be filled out to
  *     adjust the configuration of a physical USART peripheral.
  *     \snippet qs_usart_dma_use.c setup_config
@@ -106,9 +107,15 @@
  *  -# Enable the USART module.
  *     \snippet qs_usart_dma_use.c setup_enable
  *
+ *  -# Create a callback function of receiver done
+ *     \snippet qs_usart_dma_use.c transfer_done_rx
+ *
+ *  -# Create a callback function of transmission done
+ *     \snippet qs_usart_dma_use.c transfer_done_tx
+ *
  * -# Create a DMA resource configuration structure, which can be filled out to
  *    adjust the configuration of a single DMA transfer.
- *  \snippet qs_dma_basic.c dma_setup_1
+ *  \snippet qs_dma_basic.c setup_rx_1
  *
  * -# Initialize the DMA resource configuration struct with the module's
  *    default values.
@@ -116,18 +123,18 @@
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_dma_basic.c dma_setup_2
+ *  \snippet qs_dma_basic.c setup_rx_2
  *
  * -# Set extra configurations for the DMA resource. It is using peripheral trigger,
  * SERCOM Tx empty trigger and trigger causes a beat transfer in this example.
- *  \snippet qs_dma_basic.c dma_setup_3
+ *  \snippet qs_dma_basic.c setup_rx_3
  *
  * -# Allocate a DMA resource with the configurations.
- *  \snippet qs_dma_basic.c dma_setup_4
+ *  \snippet qs_dma_basic.c setup_rx_4
  *
  * -# Create a DMA transfer descriptor configuration structure, which can be
  * filled out to adjust the configuration of a single DMA transfer.
- *  \snippet qs_dma_basic.c dma_setup_5
+ *  \snippet qs_dma_basic.c setup_rx_5
  *
  * -# Initialize the DMA transfer descriptor configuration struct with the module's
  *    default values.
@@ -135,14 +142,52 @@
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_dma_basic.c dma_setup_6
+ *  \snippet qs_dma_basic.c setup_rx_6
  *
  * -# Set the specific parameters for a DMA transfer with transfer size, source
  *    address, destination address.
- *  \snippet qs_dma_basic.c dma_setup_7
+ *  \snippet qs_dma_basic.c setup_rx_7
  *
  * -# Create the DMA transfer descriptor.
- *  \snippet qs_dma_basic.c dma_setup_8
+ *  \snippet qs_dma_basic.c setup_rx_8
+ *
+ * -# Create a DMA resource configuration structure for tx, which can be filled
+ *    out to adjust the configuration of a single DMA transfer.
+ *  \snippet qs_dma_basic.c setup_tx_1
+ *
+ * -# Initialize the DMA resource configuration struct with the module's
+ *    default values.
+ *    \note This should always be performed before using the configuration
+ *          struct to ensure that all values are initialized to known default
+ *          settings.
+ *
+ *  \snippet qs_dma_basic.c setup_tx_2
+ *
+ * -# Set extra configurations for the DMA resource. It is using peripheral trigger,
+ * SERCOM Rx Ready trigger and trigger causes a beat transfer in this example.
+ *  \snippet qs_dma_basic.c setup_tx_3
+ *
+ * -# Allocate a DMA resource with the configurations.
+ *  \snippet qs_dma_basic.c setup_tx_4
+ *
+ * -# Create a DMA transfer descriptor configuration structure, which can be
+ * filled out to adjust the configuration of a single DMA transfer.
+ *  \snippet qs_dma_basic.c setup_tx_5
+ *
+ * -# Initialize the DMA transfer descriptor configuration struct with the module's
+ *    default values.
+ *    \note This should always be performed before using the configuration
+ *          struct to ensure that all values are initialized to known default
+ *          settings.
+ *
+ *  \snippet qs_dma_basic.c setup_tx_6
+ *
+ * -# Set the specific parameters for a DMA transfer with transfer size, source
+ *    address, destination address.
+ *  \snippet qs_dma_basic.c setup_tx_7
+ *
+ * -# Create the DMA transfer descriptor.
+ *  \snippet qs_dma_basic.c setup_tx_8
  *
  * \section asfdoc_sam0_usart_dma_use_case_main Use Case
  *
@@ -151,11 +196,8 @@
  * \snippet qs_usart_dma_use.c main
  *
  * \subsection asfdoc_sam0_usart_dma_use_case_main_flow Workflow
- * -# Start the transfer job.
+ * -# Wait for receiving data.
  *  \snippet qs_tc_dma.c main_1
- *
- * -# Wait for transfer done.
- *  \snippet qs_tc_dma.c main_2
  *
  * -# enter endless loop
  *  \snippet qs_tc_dma.c endless_loop
