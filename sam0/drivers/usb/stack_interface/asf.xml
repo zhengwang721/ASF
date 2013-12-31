@@ -15,6 +15,7 @@
 		<device-support value="samd21"/>
 		<require idref="sam0.drivers.usb"/>
 		<require idref="sam0.drivers.usb.dual"/>
+		<require idref="common.services.basic.sleepmgr"/>
 	</module>
 	<module type="driver" id="sam0.drivers.usb.udd" caption="SAMD21 USB UDD interface">
 		<build type="include-path" value="."/>
