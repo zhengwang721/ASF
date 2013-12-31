@@ -108,7 +108,7 @@
  *  \snippet qs_dma_basic.c dma_setup_2
  *
  * -# Set extra configurations for the DMA resource. It is using peripheral trigger,
- * SERCOM Tx empty trigger and trigger causes a beat transfer in this example.
+ * SERCOM RX trigger and trigger causes a beat transfer in this example.
  *  \snippet qs_dma_basic.c dma_setup_3
  *
  * -# Allocate a DMA resource with the configurations.
@@ -132,7 +132,6 @@
  *
  * -# Create the DMA transfer descriptor.
  *  \snippet qs_dma_basic.c dma_setup_8
- 
  *
  * \section asfdoc_sam0_sercom_i2c_slave_dma_use_implemenation Implementation
  * \subsection asfdoc_sam0_sercom_i2c_slave_dma_use_implemenation_code Code

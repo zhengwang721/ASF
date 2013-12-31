@@ -58,9 +58,9 @@ static uint8_t buffer[DATA_LENGTH] = {
 //! [timeout]
 
 /* Init software module. */
-//! [dev_inst]
+//! [dev_i2c_inst]
 struct i2c_master_module i2c_master_instance;
-//! [dev_inst]
+//! [dev_i2c_inst]
 
 void configure_i2c_master(void);
 void setup_dma_descriptor(DmacDescriptor *descriptor);
@@ -82,6 +82,12 @@ void configure_i2c_master(void)
 	//! [init_module]
 	i2c_master_init(&i2c_master_instance, SERCOM2, &config_i2c_master);
 	//! [init_module]
+
+	//! [set_addr]
+	i2c_master_instance.hw->I2CM.ADDR.reg =
+		SERCOM_I2CM_ADDR_ADDR(SLAVE_ADDRESS) | SERCOM_I2CM_ADDR_LENEN |
+		SERCOM_I2CM_ADDR_LEN(DATA_LENGTH);
+	//! [set_addr]
 
 	//! [enable_module]
 	i2c_master_enable(&i2c_master_instance);
@@ -125,7 +131,7 @@ void configure_dma_resource(struct dma_resource *resource)
 	//! [dma_setup_3]
 	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
 	config.peripheral_trigger = SERCOM2_DMAC_ID_TX;
-	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
+	config.trigger_action = DMA_TRIGGER_ACTON_TRANSACTION;
 	//! [dma_setup_3]
 
 	//! [dma_setup_4]
@@ -164,29 +170,30 @@ int main(void)
 	system_init();
 
 	//! [init]
-	//! [config]
+	//! [config_i2c]
 	configure_i2c_master();
-	//! [config]
+	//! [config_i2c]
 
+	//! [config_dma]
 	configure_dma_resource(&example_resource);
 	setup_dma_descriptor(&example_descriptor);
 	dma_add_descriptor(&example_resource, &example_descriptor);
 	dma_register_callback(&example_resource, transfer_done,
 			DMA_CALLBACK_TRANSFER_DONE);
 	dma_enable_callback(&example_resource, DMA_CALLBACK_TRANSFER_DONE);
+	//! [config_dma]
 	//! [init]
 
 	//! [main]
-	i2c_master_instance.hw->I2CM.ADDR.reg = 
-		SERCOM_I2CM_ADDR_ADDR(SLAVE_ADDRESS) | SERCOM_I2CM_ADDR_LENEN |
-		SERCOM_I2CM_ADDR_LEN(DATA_LENGTH);
-
+	//! [start_transfer_job]
 	dma_start_transfer_job(&example_resource);
+	//! [start_transfer_job]
 
+	//! [waiting_for_complete]
 	while (!transfer_is_done) {
 		/* Wait for transfer done */
 	}
-
+	//! [waiting_for_complete]
 	while(1);
 	//! [main]
 }
