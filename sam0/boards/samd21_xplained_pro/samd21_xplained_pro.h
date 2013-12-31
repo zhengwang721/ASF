@@ -3,7 +3,7 @@
  *
  * \brief SAM D21 Xplained Pro board definition
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -482,8 +482,14 @@ void system_board_init(void);
 #define USB_TARGET_DM_PIN            PIN_PA24G_USB_DM
 #define USB_TARGET_DM_MUX            MUX_PA24G_USB_DM
 #define USB_TARGET_DM_PINMUX         PINMUX_PA24G_USB_DM
-#define USB_VBUS                     PIN_PA14
-#define USB_TARGET_ID                PIN_PA03
+#define USB_VBUS_PIN                 PIN_PA14
+#define USB_VBUS_EIC_LINE            14
+#define USB_VBUS_EIC_MUX             MUX_PA14A_EIC_EXTINT14
+#define USB_VBUS_EIC_PINMUX          PINMUX_PA14A_EIC_EXTINT14
+#define USB_ID_PIN                   PIN_PA03
+#define USB_ID_EIC_LINE              3
+#define USB_ID_EIC_MUX               MUX_PA03A_EIC_EXTINT3
+#define USB_ID_EIC_PINMUX            PINMUX_PA03A_EIC_EXTINT3
 /** @} */
 
 /** \name Embedded debugger GPIO interface definitions
