@@ -43,7 +43,7 @@
 		<info type="gui-flag" value="hidden"/>
 		<require idref="config.thirdparty.wireless.avr2130_lwmesh.source.hal"/>
 		<require idref="common.services.delay"/>
-		<require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer"/>
+		<require idref="thirdparty.wireless.common_services.common_hw_timer"/>
 		<require idref="common.services.ioport"/>
         <require idref="common.utils"/>
 		<build type="doxygen-entry-point" value="group_hal"/>
