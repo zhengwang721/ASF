@@ -64,7 +64,7 @@ extern "C" {
 # include <rtc_calendar.h>
 struct rtc_module rtc_instance;
 
-void configure_rtc_calendar(void)
+static void configure_rtc_calendar(void)
 {
 	/* Initialize RTC in calendar mode. */
 	struct rtc_calendar_config config_rtc_calendar;
