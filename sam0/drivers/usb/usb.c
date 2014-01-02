@@ -1700,6 +1700,7 @@ void USB_Handler(void)
 		_usb_host_interrupt_handler();
 	} else {
 		/*device mode ISR */
+		_usb_device_interrupt_handler();
 	}
 }
 
