@@ -1,11 +1,13 @@
 /**
- * \file hal.h
+ * \file
  *
- * \brief ATmega256rfr2 HAL interface
+ * \brief Board configuration
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,45 +39,39 @@
  *
  * \asf_license_stop
  *
- *
  */
 
-#ifndef _HAL_H_
-#define _HAL_H_
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
+/** Enable Com Port. */
+#define CONF_BOARD_COM_PORT
+#define CONF_BOARD_AT86RFX
+#define IC_TYPE             (0x00)
 
-#include "sysTypes.h"
-#include "common_hw_timer.h"
-//#include "sysclk.h"
+#define MCU_SOC_NAME        "ATSAMD20J18"
 
+#define AT86RFX_SPI_BAUDRATE		 4000000UL 
+#ifdef EXT_RF_FRONT_END_CTRL /*For External PA for 233FEM*/
 
+#define EXT_PA_SE2431L
+/*
+ * Value of an external LNA gain.
+ * If no external LNA is available, the value is 0.
+ */
+#define EXT_LNA_HIGH_GAIN    (14)
 
+#endif
 
-
-/*****************************************************************************
-*****************************************************************************/
-#define HAL_TIMER_INTERVAL      10ul // ms
-#define MS 1000
-
-/*****************************************************************************
-*****************************************************************************/
-void HAL_Init(void);
-void HAL_Delay(uint32_t us);
-void HAL_Sleep(uint32_t interval);
-void hw_expiry_cb(void);
-
-
-/* Enables the global interrupt */
-#define ENABLE_GLOBAL_IRQ()                  Enable_global_interrupt()
-
-/* Disables the global interrupt */
-#define DISABLE_GLOBAL_IRQ()                 Disable_global_interrupt()
-
-/* This macro saves the global interrupt status */
-#define ENTER_CRITICAL_REGION()              {uint8_t flags = cpu_irq_save();
-
-/* This macro restores the global interrupt status */
-#define LEAVE_CRITICAL_REGION()              cpu_irq_restore(flags);}
-
-#endif // _HAL_H_
-
+#ifdef CUSTOM_DEFAULT_TX_PWR /*For External PA for 233FEM*/
+#define MAX_PWR_DBM  0X15
+/*
+ * Default value of transmit power of transceiver: Preset
+ *    - definition according to IEEE802.15.4 PHY PIB attribute phyTransmitPower
+ *    - TX Pout init value based on validation
+ */
+#define TAL_TRANSMIT_POWER_DEFAULT      (TX_PWR_TOLERANCE | MAX_PWR_DBM)
+#endif
+//4MHz Baudrate will be used to reduce the no.of Invalid Frames
+//# include "conf_usb.h"
+#endif /* CONF_BOARD_H_INCLUDED */

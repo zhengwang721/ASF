@@ -9,7 +9,10 @@
 			<build type="c-source"      value="src/hal.c"/>
 			<build type="header-file"   value="inc/hal.h"/>
 			<build type="include-path"  value="inc/"/>
-		    <build type="doxygen-entry-point" value="group_hal"/>
+			<require idref="common.services.delay"/>
+			<require idref="common.services.ioport"/>
+			<require idref="common.utils"/>				
+		    <build type="doxygen-entry-point" value="group_hal"/>			
 			<device-support value="atmega256rfr2"/>
 		</module>
 
@@ -23,15 +26,34 @@
 			<build type="header-file"   value="inc/hal.h"/>
 			<build type="header-file"   value="inc/hal_ext_trx.h"/>
 			<build type="include-path"  value="inc/"/>
+			<require idref="common.services.delay"/>
+			<require idref="common.services.ioport"/>
+			<require idref="common.utils"/>				
 		    <build type="doxygen-entry-point" value="group_hal"/>
-			<!-- <build type="module-config" subtype="required-header-file" value="conf_pal.h"/> -->
-			<!-- <build type="module-config" subtype="path" value="module_config"/> -->
-
-            <!-- <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/> -->
-            <!-- <require idref="thirdparty.wireless.avr2025_mac.source.pal.inc"/> -->
             <require idref="common.services.basic.spi_master"/>
             <device-support-alias value="avr2025_mac_hal_spi_common_support"/>
 		</module>
+		
+		<module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.hal#3"     caption="HAL SPI access (SAMD) for external transceivers">
+            <info type="description" value="summary">
+            This module includes PAL wrapper files for boards with External Transceivers
+            </info>
+			<info type="gui-flag" value="hidden"/>
+			<build type="c-source"      value="src/hal.c"/>
+			<build type="c-source"      value="src/hal_ext_trx.c"/>
+			<build type="header-file"   value="inc/hal.h"/>
+			<build type="header-file"   value="inc/hal_ext_trx.h"/>
+			<build type="include-path"  value="inc/"/>
+		    <build type="doxygen-entry-point" value="group_hal"/>
+			
+            <require idref="common2.services.delay"/>
+            <require idref="sam0.drivers.sercom.spi"/>
+			<require idref="sam0.drivers.extint"/>
+			<require idref="sam0.drivers.tc"/>
+            <require idref="sam0.drivers.port"/>
+            <require idref="sam0.utils"/>
+            <device-support-alias value="avr2025_mac_hal_spi_sam0_support"/>
+		</module>		
 		
 	</select-by-device>
 
@@ -42,20 +64,25 @@
         </info>
 		<info type="gui-flag" value="hidden"/>
 		<require idref="config.thirdparty.wireless.avr2130_lwmesh.source.hal"/>
-		<require idref="common.services.delay"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.pal.common_hw_timer"/>
-		<require idref="common.services.ioport"/>
-        <require idref="common.utils"/>
 		<build type="doxygen-entry-point" value="group_hal"/>
-        <device-support value="atmega256rfr2"/>
-        <device-support value="atxmega256a3bu"/>
-        <device-support value="atxmega256a3u"/>
+		<device-support-alias value="avr2025_mac_hal_support"/>
 	</module>
 
-	    <device-alias-map name="avr2025_mac_hal_spi_common_support">
+	<device-alias-map name="avr2025_mac_hal_spi_common_support">
         <device-support value="atxmega256a3bu"/>
         <device-support value="atxmega256a3u"/>
     </device-alias-map>
+	
+	<device-alias-map name="avr2025_mac_hal_spi_sam0_support">
+        <device-support value="samd20"/>
+    </device-alias-map>
+    <device-alias-map name="avr2025_mac_hal_support">
+        <device-support value="atxmega256a3u"/>
+        <device-support value="atmega256rfr2"/>
+        <device-support value="atxmega256a3bu"/>
+        <device-support value="samd20"/>
+    </device-alias-map>	
 
 
 </asf>

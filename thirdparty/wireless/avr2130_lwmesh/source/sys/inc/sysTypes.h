@@ -45,6 +45,7 @@
 #define _SYS_TYPES_H_
 
 #include <stdint.h>
+# include "asf.h"
 
 #define SYS_LW_MESH_ENV
 
@@ -90,9 +91,7 @@
   #error Unsupported compiler
 */
 #else
-  #if defined(HAL_ATSAMD20J18)
-    #include "atsamd20.h"
-
+  #if SAMD20
     #define PRAGMA(x)
 
     #define PACK __attribute__ ((packed))

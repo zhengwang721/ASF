@@ -21,6 +21,7 @@
 			<device-support value="atmega256rfr2"/>
 			<device-support value="atxmega256a3bu"/>
 			<device-support value="atxmega256a3u"/>
+			<device-support value="samd20"/>
 			<build type="doxygen-entry-point" value="group_lwmesh_service"/>
 		</module>
 		
@@ -36,6 +37,7 @@
 			<device-support value="atmega256rfr2"/>
 			<device-support value="atxmega256a3bu"/>
 			<device-support value="atxmega256a3u"/>
+			<device-support value="samd20"/>
 			<build type="doxygen-entry-point" value="group_lwmesh_service"/>			
 		</module>
 	</select-by-config>
@@ -49,6 +51,7 @@
 		<build type="doxygen-entry-point" value="group_lwmesh_service"/>
         <device-support value="atmega256rfr2"/>
         <device-support value="atxmega256a3bu"/>
+        <device-support value="samd20"/>
         <device-support value="atxmega256a3u"/>
 	</module>
 	

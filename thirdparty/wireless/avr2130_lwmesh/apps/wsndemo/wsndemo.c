@@ -54,8 +54,12 @@
 #include "config.h"
 #include "hal.h"
 #include "sys.h"
+#if SAMD20
+#include "system.h"
+#else
 #include "led.h"
 #include "sysclk.h"
+#endif
 #include "phy.h"
 #include "sys.h"
 #include "nwk.h"
@@ -432,8 +436,18 @@ static void APP_TaskHandler(void)
 int main(void)
 {
     irq_initialize_vectors();
-    sysclk_init();        
-    board_init();   
+#if SAMD20
+	system_init();
+	delay_init();
+#else
+	sysclk_init();
+
+	/* Initialize the board.
+	 * The board-specific conf_board.h file contains the configuration of
+	 * the board initialization.
+	 */
+	board_init();    
+#endif  
     SYS_Init();
     cpu_irq_enable();
     sio2host_init();

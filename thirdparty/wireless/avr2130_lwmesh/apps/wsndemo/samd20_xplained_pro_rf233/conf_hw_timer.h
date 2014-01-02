@@ -1,11 +1,13 @@
 /**
- * \file hal.h
+ * \file *********************************************************************
  *
- * \brief ATmega256rfr2 HAL interface
+ * \brief USART Serial configuration
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,46 +38,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
- *
  */
 
-#ifndef _HAL_H_
-#define _HAL_H_
+#ifndef CONF_HW_TIMER_H_INCLUDED
+#define CONF_HW_TIMER_H_INCLUDED
 
+/*! \name Configuration
+ */
+/* ! @{ */
+#define TIMER                (TC0)
+#define TIMER_CHANNEL_ID     0
+/* ! @} */
 
-#include "sysTypes.h"
-#include "common_hw_timer.h"
-//#include "sysclk.h"
-
-
-
-
-
-/*****************************************************************************
-*****************************************************************************/
-#define HAL_TIMER_INTERVAL      10ul // ms
-#define MS 1000
-
-/*****************************************************************************
-*****************************************************************************/
-void HAL_Init(void);
-void HAL_Delay(uint32_t us);
-void HAL_Sleep(uint32_t interval);
-void hw_expiry_cb(void);
-
-
-/* Enables the global interrupt */
-#define ENABLE_GLOBAL_IRQ()                  Enable_global_interrupt()
-
-/* Disables the global interrupt */
-#define DISABLE_GLOBAL_IRQ()                 Disable_global_interrupt()
-
-/* This macro saves the global interrupt status */
-#define ENTER_CRITICAL_REGION()              {uint8_t flags = cpu_irq_save();
-
-/* This macro restores the global interrupt status */
-#define LEAVE_CRITICAL_REGION()              cpu_irq_restore(flags);}
-
-#endif // _HAL_H_
-
+#endif /* CONF_HW_TIMER_H_INCLUDED */

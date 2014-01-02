@@ -15,6 +15,7 @@
 		<device-support value="atmega256rfr2"/>
 		<device-support value="atxmega256a3bu"/>
 		<device-support value="atxmega256a3u"/>
+		<device-support value="samd20"/>
 		<!-- ++++++++++++++++++++++++++++++++++++++++++++++REQUIRE++++++++++++++++++++++++++++++++++++++++++++++. -->
 		<require idref="thirdparty.wireless.avr2130_lwmesh"/>
 		<!-- .................................................................................................... -->

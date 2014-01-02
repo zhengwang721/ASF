@@ -1,11 +1,13 @@
 /**
- * \file hal.h
+ * \file conf_sio2host.h
  *
- * \brief ATmega256rfr2 HAL interface
+ * \brief Serial Input & Output configuration
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,46 +38,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
- *
  */
 
-#ifndef _HAL_H_
-#define _HAL_H_
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
 
+#define USART_HOST                 EDBG_CDC_MODULE
 
-#include "sysTypes.h"
-#include "common_hw_timer.h"
-//#include "sysclk.h"
+/** Baudrate setting */
+#define USART_HOST_BAUDRATE        9600
+ 
 
-
-
-
-
-/*****************************************************************************
-*****************************************************************************/
-#define HAL_TIMER_INTERVAL      10ul // ms
-#define MS 1000
-
-/*****************************************************************************
-*****************************************************************************/
-void HAL_Init(void);
-void HAL_Delay(uint32_t us);
-void HAL_Sleep(uint32_t interval);
-void hw_expiry_cb(void);
-
-
-/* Enables the global interrupt */
-#define ENABLE_GLOBAL_IRQ()                  Enable_global_interrupt()
-
-/* Disables the global interrupt */
-#define DISABLE_GLOBAL_IRQ()                 Disable_global_interrupt()
-
-/* This macro saves the global interrupt status */
-#define ENTER_CRITICAL_REGION()              {uint8_t flags = cpu_irq_save();
-
-/* This macro restores the global interrupt status */
-#define LEAVE_CRITICAL_REGION()              cpu_irq_restore(flags);}
-
-#endif // _HAL_H_
-
+#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(3, USART_HOST_ISR_VECT);\
+                                    USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC;\
+                                    system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM3);
+#endif /* CONF_SIO2HOST_H_INCLUDED */
