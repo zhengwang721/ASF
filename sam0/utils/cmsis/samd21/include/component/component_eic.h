@@ -166,6 +166,10 @@ typedef union {
     uint32_t EXTINTEO15:1;     /*!< bit:     15  External Interrupt 15 Event Output Enable */
     uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t EXTINTEO:16;      /*!< bit:  0..15  External Interrupt x Event Output Enable */
+    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } EIC_EVCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -232,6 +236,10 @@ typedef union {
     uint32_t EXTINT15:1;       /*!< bit:     15  External Interrupt 15 Enable       */
     uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t EXTINT:16;        /*!< bit:  0..15  External Interrupt x Enable        */
+    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } EIC_INTENCLR_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -298,6 +306,10 @@ typedef union {
     uint32_t EXTINT15:1;       /*!< bit:     15  External Interrupt 15 Enable       */
     uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t EXTINT:16;        /*!< bit:  0..15  External Interrupt x Enable        */
+    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } EIC_INTENSET_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -364,6 +376,10 @@ typedef union {
     uint32_t EXTINT15:1;       /*!< bit:     15  External Interrupt 15              */
     uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t EXTINT:16;        /*!< bit:  0..15  External Interrupt x               */
+    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } EIC_INTFLAG_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -430,6 +446,10 @@ typedef union {
     uint32_t WAKEUPEN15:1;     /*!< bit:     15  External Interrupt 15 Wake-up Enable */
     uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint32_t WAKEUPEN:16;      /*!< bit:  0..15  External Interrupt x Wake-up Enable */
+    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } EIC_WAKEUP_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */

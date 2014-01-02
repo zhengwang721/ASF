@@ -3,7 +3,7 @@
  *
  * \brief Sleep manager
  *
- * Copyright (c) 2010 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,7 +46,7 @@
 #include <compiler.h>
 #include <parts.h>
 
-#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E || SAM4N || SAM4C)
+#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E || SAM4N || SAM4C || SAMG)
 # include "sam/sleepmgr.h"
 #elif XMEGA
 # include "xmega/sleepmgr.h"
@@ -56,6 +56,8 @@
 # include "sam4l/sleepmgr.h"
 #elif MEGA
 # include "mega/sleepmgr.h"
+#elif (SAMD20 || SAMD21)
+# include "samd/sleepmgr.h"
 #else
 # error Unsupported device.
 #endif

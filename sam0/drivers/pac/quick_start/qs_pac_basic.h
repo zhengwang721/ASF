@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 PAC Quick Start
+ * \brief SAM D2x PAC Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_pac_basic_use_case Quick Start Guide for PAC - Basic
+ * \page asfdoc_sam0_pac_basic_use_case Quick Start Guide for PAC - Basic
  *
  * In this use case, the peripheral-lock will be used to lock and unlock the
  * PORT peripheral access, and show how to implement the PAC module when the
@@ -50,25 +50,25 @@
  * - One pin in input mode, with pull-up and falling edge-detect.
  * - One pin in output mode.
  *
- * \section asfdoc_samd20_pac_basic_use_case_setup Setup
+ * \section asfdoc_sam0_pac_basic_use_case_setup Setup
  *
- * \subsection asfdoc_samd20_pac_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_sam0_pac_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd20_pac_basic_use_case_setup_code Code
+ * \subsection asfdoc_sam0_pac_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_pac_basic.c pin_setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_pac_basic.c init
  *
- * \section asfdoc_samd20_pac_basic_use_case_use_main Use Case
+ * \section asfdoc_sam0_pac_basic_use_case_use_main Use Case
  *
- * \subsection asfdoc_samd20_pac_basic_use_case_code Code
+ * \subsection asfdoc_sam0_pac_basic_use_case_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_pac_basic.c main
  *
- * \subsection asfdoc_samd20_pac_basic_use_case_flow Workflow
+ * \subsection asfdoc_sam0_pac_basic_use_case_flow Workflow
  * -# Configure some GPIO port pins for input and output.
  *  \snippet qs_pac_basic.c init
  * -# Lock peripheral access for the PORT module; attempting to update the

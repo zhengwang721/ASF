@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Analog Comparator Driver Quick Start
+ * \brief SAM D2x Analog Comparator Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *

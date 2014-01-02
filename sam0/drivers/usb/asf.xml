@@ -1,4 +1,4 @@
-﻿<asf xmlversion="1.0">
+<asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.usb" caption="USB - Universal Serial Bus">
 		<info type="description" value="summary">
 			Driver for the SAM D21 Universal Serial Bus module. Provides a
@@ -10,30 +10,15 @@
 			<keyword value="Communication" />
 		</info>
 
-		<info type="appnote" value="AT03247"/>
-		<info type="keyword" value="pdf">
-			<keyword value="USB"/>
-			<keyword value="Universal Serial Bus Controller"/>
-		</info>
-
-		<info type="description" value="pdf">
-			This document describes how to use the Universal Serial Bus
-			Controller on the SAM D21, both the ASF driver and the peripheral
-			itself.
-		</info>
-		
-		<build type="doxygen-entry-point" value="asfdoc_sam0_usb_group"/>
 		<build type="include-path" value="."/>
-		<build type="include-path" value="stack_interface/"/>
-		
-		<build type="header-file" subtype="api" value="usb.h"/>
 		<build type="c-source" value="usb.c"/>
-		<build type="c-source" value="stack_interface/usb_device_udd.c"/>
+
+		<build type="header-file" subtype="api" value="usb.h"/>
+
+		<device-support value="samd21"/>
 
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system"/>
-
-		<device-support value="samd21"/>
 
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd21"/>
 	</module>

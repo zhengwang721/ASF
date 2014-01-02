@@ -15,7 +15,7 @@
  *   - specific features;
  *   - etc.
  *
- * Copyright (c) 2009 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -69,7 +69,9 @@
 #include "compiler.h"
 #include "conf_access.h"
 
+#ifndef SECTOR_SIZE
 #define SECTOR_SIZE  512
+#endif
 
 //! Status returned by CTRL_ACCESS interfaces.
 typedef enum

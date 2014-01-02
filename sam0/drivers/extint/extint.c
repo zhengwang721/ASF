@@ -113,7 +113,7 @@ void _system_extint_init(void)
 	/* Reset the software module */
 #if EXTINT_CALLBACK_MODE == true
 	/* Clear callback registration table */
-	for (uint8_t j = 0; j < EXTINT_CALLBACKS_MAX; j++) {
+	for (uint8_t j = 0; j < EIC_NUMBER_OF_INTERRUPTS; j++) {
 		_extint_dev.callbacks[j] = NULL;
 	}
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_EIC);

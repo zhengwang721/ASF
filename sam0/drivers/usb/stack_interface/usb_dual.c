@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM Dxx USB dual driver file.
+ * \brief SAM D21 USB dual driver file.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,166 +42,106 @@
  */
 #include <compiler.h>
 #include "usb_dual.h"
+#include "conf_usb_host.h"
 
-//! State of USBC dual initialization
-static bool usb_initialized = false;
-
-/**
- * \name Power management
- */
-//@{
-#ifndef UHD_NO_SLEEP_MGR
-
-#include "sleepmgr.h"
-//! States of USBC interface
-enum uhd_usb_state_enum {
-	UHD_STATE_OFF = 0,
-	UHD_STATE_WAIT_ID_HOST = 1,
-	UHD_STATE_NO_VBUS = 2,
-	UHD_STATE_DISCONNECT = 3,
-	UHD_STATE_SUSPEND = 4,
-	UHD_STATE_SUSPEND_LPM = 5,
-	UHD_STATE_IDLE = 6,
-};
-
-/*! \brief Manages the sleep mode following the USB state
- *
- * \param new_state  New USB state
- */
-static void uhd_sleep_mode(enum uhd_usb_state_enum new_state)
-{
-	enum sleepmgr_mode sleep_mode[] = {
-		SLEEPMGR_BACKUP,  // UHD_STATE_OFF (not used)
-#if USB_ID_IO || USB_VBUS_IO || UHD_VBERR_IO
-		SLEEPMGR_SLEEP_1, // UHD_STATE_WAIT_ID_HOST
-		SLEEPMGR_SLEEP_1, // UHD_STATE_NO_VBUS
-		SLEEPMGR_SLEEP_1, // UHD_STATE_DISCONNECT
-#else
-		SLEEPMGR_RET,     // UHD_STATE_WAIT_ID_HOST
-		SLEEPMGR_RET,     // UHD_STATE_NO_VBUS
-		SLEEPMGR_RET,     // UHD_STATE_DISCONNECT
+#ifndef UDD_ENABLE
+# define udc_start()
+# define udc_stop()
 #endif
-		/* In suspend state, the SLEEPMGR_RET level is authorized
-		 * even if ID Pin, Vbus... pins are managed through IO.
-		 * When a ID disconnection or Vbus low event occurs,
-		 * the asynchrone USB wakeup occurs.
-		 */
-		SLEEPMGR_RET,     // UHD_STATE_SUSPEND
-		SLEEPMGR_RET,     // UHD_STATE_SUSPEND_LPM
-		SLEEPMGR_SLEEP_0, // UHD_STATE_IDLE
-	};
-	static enum uhd_usb_state_enum uhd_state = UHD_STATE_OFF;
 
-	if (uhd_state == new_state) {
-		return; // No change
-	}
-	if (new_state != UHD_STATE_OFF) {
-		// Lock new limit
-		sleepmgr_lock_mode(sleep_mode[new_state]);
-	}
-	if (uhd_state != UHD_STATE_OFF) {
-		// Unlock old limit
-		sleepmgr_unlock_mode(sleep_mode[uhd_state]);
-	}
-	uhd_state = new_state;
-}
+#ifndef UHD_ENABLE
+# define uhc_start(void)
+# define uhc_stop(bool b_id_stop)
+#endif
 
-#else
-#  define uhd_sleep_mode(arg)
-#endif // UHD_NO_SLEEP_MGR
-//@}
+/* State of USBC dual initialization */
+static bool usb_dual_initialized = false;
 
-/**
- * \name USB IO PADs handlers
- */
-//@{
+#define is_usb_id_device()         port_pin_get_input_level(USB_ID_PIN)
 
 #if USB_ID_EIC
+static void usb_id_handler(void);
+
+/**
+ * \name USB ID PAD management
+ *
+ * @{
+ */
+static void usb_id_config(void)
+{
+	struct extint_chan_conf eint_chan_conf;
+	extint_chan_get_config_defaults(&eint_chan_conf);
+
+	eint_chan_conf.gpio_pin           = USB_ID_PIN;
+	eint_chan_conf.gpio_pin_mux       = USB_ID_EIC_MUX;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
+	eint_chan_conf.filter_input_signal = true;
+
+	extint_chan_disable_callback(USB_ID_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_set_config(USB_ID_EIC_LINE, &eint_chan_conf);
+	extint_register_callback(usb_id_handler,
+			USB_ID_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_enable_callback(USB_ID_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+}
+
 /**
  * USB ID pin change handler
  */
 static void usb_id_handler(void)
 {
-	pad_ack_id_interrupt();
-	if (Is_pad_id_device()) {
+	extint_chan_disable_callback(USB_ID_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	if (is_usb_id_device()) {
 		uhc_stop(false);
 		UHC_MODE_CHANGE(false);
-//		usb_enable_device_mode();  //it will be done in udd_enanable
 		udc_start();
 	} else {
 		udc_stop();
 		UHC_MODE_CHANGE(true);
-//		usb_enable_host_mode();  //it will be done in uhd_enanable
 		uhc_start();
 	}
+	extint_chan_enable_callback(USB_ID_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
 }
 #endif
+/** @} */
 
-#if USB_VBUS_EIC
-/**
- * USB VBus pin change handler
- */
-static void uhd_vbus_handler(void)
-{
-	pad_ack_vbus_interrupt();
-	if (Is_pad_vbus_high()) {
-		uhd_vbus_is_on();
-		/* Freeze USB clock to use wakeup interrupt
-		 * to detect connection.
-		 * After detection of wakeup interrupt,
-		 * the clock is unfreeze to have the true
-		 * connection interrupt.
-		 */
-		uhd_enable_wakeup_interrupt();
-		uhd_sleep_mode(UHD_STATE_DISCONNECT);
-		UHC_VBUS_CHANGE(true);
-	} else {
-		uhd_vbus_is_off();
-		uhd_sleep_mode(UHD_STATE_NO_VBUS);
-		UHC_VBUS_CHANGE(false);
-	}
-}
-#endif
-
-//@}
 
 bool usb_dual_enable(void)
 {
-	if (usb_initialized) {
+	if (usb_dual_initialized) {
 		return false; // Dual role already initialized
 	}
-	usb_initialized = true;
-
-	//* Enable USB hardware clock
-	//sysclk_enable_usb();
-
-	//* Link USB interrupt on dual interrupt in dual role
-	NVIC_ClearPendingIRQ(USB_IRQn);
-	NVIC_SetPriority(USB_IRQn, UHD_USB_INT_LEVEL);
-	NVIC_EnableIRQ(USB_IRQn);
-
-#if USB_ID_EIC || USB_VBUS_EIC
-	eic_enable(EIC);
-#endif
 
 #if USB_ID_EIC
-	pad_id_init();
-	if (Is_pad_id_device()) {
-		usb_enable_device_mode();
-		uhd_sleep_mode(UHD_STATE_WAIT_ID_HOST);
+	usb_dual_initialized = true;
+
+	struct port_config pin_conf;
+	port_get_config_defaults(&pin_conf);
+
+	/* Set USB ID Pin as inputs */
+	pin_conf.direction  = PORT_PIN_DIR_INPUT;
+	pin_conf.input_pull = PORT_PIN_PULL_UP;
+	port_pin_set_config(USB_ID_PIN, &pin_conf);
+
+	usb_id_config();
+	if (is_usb_id_device()) {
 		UHC_MODE_CHANGE(false);
 		udc_start();
 	} else {
-		usb_enable_host_mode();
 		UHC_MODE_CHANGE(true);
 		uhc_start();
 	}
 
-	// End of host or device startup,
-	// the current mode selected is already started now
+	/**
+	 * End of host or device startup,
+	 * the current mode selected is already started now
+	 */
 	return true; // ID pin management has been enabled
 #else
-	uhd_sleep_mode(UHD_STATE_OFF);
 	return false; // ID pin management has not been enabled
 #endif
 }
@@ -209,21 +149,14 @@ bool usb_dual_enable(void)
 
 void usb_dual_disable(void)
 {
-	if (!usb_initialized) {
+	if (!usb_dual_initialized) {
 		return; // Dual role not initialized
 	}
-	usb_initialized = false;
+	usb_dual_initialized = false;
 
 #if USB_ID_EIC
-	pad_id_interrupt_disable();
+	extint_chan_disable_callback(USB_ID_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
 #endif
-#if USB_ID_EIC || USB_VBUS_EIC
-	eic_disable(EIC);
-#endif
-	usb_disable();
-	//sysclk_disable_usb();
-	uhd_sleep_mode(UHD_STATE_OFF);
 }
 
-
-#endif /* USB_H_INCLUDED */
