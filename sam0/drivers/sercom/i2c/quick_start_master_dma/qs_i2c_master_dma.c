@@ -63,7 +63,9 @@ struct i2c_master_module i2c_master_instance;
 //! [dev_i2c_inst]
 
 void configure_i2c_master(void);
+void configure_dma_resource(struct dma_resource *resource);
 void setup_dma_descriptor(DmacDescriptor *descriptor);
+void transfer_done( const struct dma_resource* const resource);
 //! [initialize_i2c]
 void configure_i2c_master(void)
 {
