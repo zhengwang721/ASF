@@ -49,7 +49,7 @@
 #define _XMEGA_ZIGBIT_RF233_H_
 
 #include <compiler.h>
-
+# include "conf_board.h"
 /**
  * \defgroup xmega_rf233_zigbit_group XMEGA-A3BU Xplained board
  * @{

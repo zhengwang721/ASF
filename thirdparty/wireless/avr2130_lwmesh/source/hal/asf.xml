@@ -49,10 +49,12 @@
 		<build type="doxygen-entry-point" value="group_hal"/>
         <device-support value="atmega256rfr2"/>
         <device-support value="atxmega256a3bu"/>
+        <device-support value="atxmega256a3u"/>
 	</module>
 
 	    <device-alias-map name="avr2025_mac_hal_spi_common_support">
         <device-support value="atxmega256a3bu"/>
+        <device-support value="atxmega256a3u"/>
     </device-alias-map>
 
 

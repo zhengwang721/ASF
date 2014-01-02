@@ -16,5 +16,6 @@
 		<build type="doxygen-entry-point" value="group_lwmesh_sys"/>
         <device-support value="atmega256rfr2"/>
         <device-support value="atxmega256a3bu"/>
+        <device-support value="atxmega256a3u"/>
 	</module>
 </asf>

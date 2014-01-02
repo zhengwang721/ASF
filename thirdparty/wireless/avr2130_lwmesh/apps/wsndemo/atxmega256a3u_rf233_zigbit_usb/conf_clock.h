@@ -1,11 +1,13 @@
 /**
- * \file config.h
+ * \file
  *
- * \brief WSNDemo application and stack configuration
+ * \brief Chip-specific system clock manager configuration
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,45 +39,39 @@
  *
  * \asf_license_stop
  *
+ */
+#ifndef CONF_CLOCK_H_INCLUDED
+#define CONF_CLOCK_H_INCLUDED
+
+/* ! Configuration using On-Chip RC oscillator at 48MHz */
+/* ! The RC oscillator is calibrated via USB Start Of Frame */
+/* ! Clk USB     = 48MHz (used by USB) */
+/* ! Clk sys     = 48MHz */
+/* ! Clk cpu/per = 24MHz */
+#define CONFIG_USBCLK_SOURCE     USBCLK_SRC_RCOSC
+#define CONFIG_OSC_RC32_CAL      48000000UL
+
+#define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC  OSC_ID_USBSOF
+
+#define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_RC32MHZ
+#define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_1
+#define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_1
+
+/*
+ * //! Use external board OSC (8MHz)
+ * //! Clk pll     = 48MHz (used by USB)
+ * //! Clk sys     = 48MHz
+ * //! Clk cpu/per = 12MHz
  *
+ * #define CONFIG_PLL0_SOURCE       PLL_SRC_XOSC
+ * #define CONFIG_PLL0_MUL          6
+ * #define CONFIG_PLL0_DIV          1
+ *
+ * #define CONFIG_USBCLK_SOURCE     USBCLK_SRC_PLL
+ *
+ * #define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_PLL
+ * #define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_2
+ * #define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_2
  */
 
-#ifndef _CONFIG_H_
-#define _CONFIG_H_
-
-/*****************************************************************************
-*****************************************************************************/
-#define APP_ADDR                0x8001
-#define APP_PANID               0x1234
-#define APP_SENDING_INTERVAL    2000
-#define APP_ENDPOINT            1
-#define APP_OTA_ENDPOINT        2
-#define APP_SECURITY_KEY        "TestSecurityKey0"
-
-#ifdef PHY_AT86RF212
-  #define APP_CHANNEL           0x01
-  #define APP_BAND              0x00
-  #define APP_MODULATION        0x24
-#else
-  #define APP_CHANNEL           0x0f
-#endif
-
-//#define PHY_ENABLE_RANDOM_NUMBER_GENERATOR
-
-#define SYS_SECURITY_MODE                   0
-
-#define NWK_BUFFERS_AMOUNT                  10
-#define NWK_DUPLICATE_REJECTION_TABLE_SIZE  50
-#define NWK_DUPLICATE_REJECTION_TTL         2000 // ms
-#define NWK_ROUTE_TABLE_SIZE                100
-#define NWK_ROUTE_DEFAULT_SCORE             3
-#define NWK_ACK_WAIT_TIME                   1000 // ms
-#define NWK_GROUPS_AMOUNT                   3
-#define NWK_ROUTE_DISCOVERY_TABLE_SIZE      5
-#define NWK_ROUTE_DISCOVERY_TIMEOUT         1000 // ms
-#define APP_RX_BUF_SIZE                     5
-#define NWK_ENABLE_ROUTING
-//#define NWK_ENABLE_SECURITY
-//#define NWK_ENABLE_ROUTE_DISCOVERY
-
-#endif // _CONFIG_H_
+#endif /* CONF_CLOCK_H_INCLUDED */

@@ -242,7 +242,7 @@ static void appDataConf(NWK_DataReq_t *req)
   }
   else
   {
-    msg.sensors.light++;
+   // msg.sensors.light++;
 
     if (appNetworkStatus)
     {

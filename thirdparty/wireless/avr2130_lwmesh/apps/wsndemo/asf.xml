@@ -14,6 +14,7 @@
 		<build type="doxygen-entry-point" value="group_wsndemo"/>
 		<device-support value="atmega256rfr2"/>
 		<device-support value="atxmega256a3bu"/>
+		<device-support value="atxmega256a3u"/>
 		<!-- ++++++++++++++++++++++++++++++++++++++++++++++REQUIRE++++++++++++++++++++++++++++++++++++++++++++++. -->
 		<require idref="thirdparty.wireless.avr2130_lwmesh"/>
 		<!-- .................................................................................................... -->
