@@ -3,7 +3,7 @@
  *
  * \brief User Interface
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -129,8 +129,8 @@ void ui_process(uint16_t framenumber)
  * \defgroup UI User Interface
  *
  * Human interface on SAMD21-XPlain:
- * - Led 0 is on when USB is wakeup
- * - Push button 0 are linked to mouse button up
+ * - Led 0 is blinks when USB is wakeup
+ * - Push button 0 is used to make mouse up
  * - Only a low level on push button 0 will generate a wakeup to USB Host in remote wakeup mode.
  *
  */
