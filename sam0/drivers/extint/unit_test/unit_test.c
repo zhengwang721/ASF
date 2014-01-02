@@ -131,9 +131,8 @@ volatile bool interrupt_flag = false;
  *
  * Called by external interrupt driver on interrupt detection.
  *
- * \param channel Channel number of the interrupt (not used)
  */
-static void extint_user_callback(uint32_t channel)
+static void extint_user_callback(void)
 {
 	interrupt_flag = true;
 }
@@ -205,7 +204,7 @@ static void cleanup_extint_polled_mode_test(const struct test_case *test)
  * \internal
  * \brief Test for external interrupt detection by polling.
  *
- * This test changes the logic level of PB07 from high to low
+ * This test changes the logic level of PB05 from high to low
  * so that the external interrupt channel detects the edge.
  *
  * Detection is tested for both rising and falling edges.
@@ -265,6 +264,7 @@ static void setup_extint_callback_mode_test(const struct test_case *test)
 	extint_chan_set_config(EIC_TEST_CHANNEL, &eic_conf);
 	/* Register and enable the callback function */
 	extint_register_callback(extint_user_callback,
+			EIC_TEST_CHANNEL,
 			EXTINT_CALLBACK_TYPE_DETECT);
 	extint_chan_enable_callback(EIC_TEST_CHANNEL,
 			EXTINT_CALLBACK_TYPE_DETECT);
@@ -284,6 +284,7 @@ static void cleanup_extint_callback_mode_test(const struct test_case *test)
 	extint_chan_set_config(EIC_TEST_CHANNEL, &eic_conf);
 	/* Unregister and disable the callback function */
 	extint_unregister_callback(extint_user_callback,
+			EIC_TEST_CHANNEL,
 			EXTINT_CALLBACK_TYPE_DETECT);
 	extint_chan_disable_callback(EIC_TEST_CHANNEL,
 			EXTINT_CALLBACK_TYPE_DETECT);
@@ -293,7 +294,7 @@ static void cleanup_extint_callback_mode_test(const struct test_case *test)
  * \internal
  * \brief Test for external interrupt detection using callback.
  *
- * This test changes the logic level of PB07 from high to low
+ * This test changes the logic level of PB05 from high to low
  * so that the external interrupt channel detects the edge
  * and calls the callback function.
  *

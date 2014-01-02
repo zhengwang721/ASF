@@ -238,7 +238,8 @@ static void xosc32k_fail_callback(
  */
 static void init_xosc32k_fail_detector(
 		const tc_callback_t ok_callback,
-		const tc_callback_t fail_callback)
+		const tc_callback_t fail_callback,
+		struct events_resource *event)
 {
 	/* TC pairs share the same clock, ensure reference and crystal timers use
 	 * different clocks */
@@ -289,17 +290,14 @@ static void init_xosc32k_fail_detector(
 	tc_init(&tc_reference, TC_REFERENCE, &tc_ref_conf);
 
 	/* Configure event channel and link it to the crystal counter */
-	struct events_chan_config event_chan_xtal_conf;
-	events_chan_get_config_defaults(&event_chan_xtal_conf);
-	event_chan_xtal_conf.generator_id = EVSYS_XTAL_TC_GEN;
-	event_chan_xtal_conf.path = EVENT_PATH_ASYNCHRONOUS;
-	events_chan_set_config(EVSYS_XTAL_CHAN, &event_chan_xtal_conf);
+	struct events_config config;
+	events_get_config_defaults(&config);
+	config.generator    = EVSYS_XTAL_TC_GEN;
+	config.path         = EVENTS_PATH_ASYNCHRONOUS;
+	events_allocate(event, &config);
 
 	/* Configure event user and link it to the reference counter */
-	struct events_user_config event_user_xtal_conf;
-	events_user_get_config_defaults(&event_user_xtal_conf);
-	event_user_xtal_conf.event_channel_id = EVSYS_XTAL_CHAN;
-	events_user_set_config(EVSYS_XTAL_TC_USR, &event_user_xtal_conf);
+	events_attach_user(event, EVSYS_XTAL_TC_USR);
 
 	/* Enable event generation for crystal counter */
 	struct tc_events tc_crystal_events = { .generate_event_on_overflow = true };
@@ -324,21 +322,22 @@ static void init_xosc32k_fail_detector(
 	tc_enable(&tc_reference);
 
 	/* Software trigger reference timer restart event to begin detector */
-	events_chan_software_trigger(EVSYS_XTAL_CHAN);
+	events_trigger(event);
 }
 
 /** Main application entry point. */
 int main(void)
 {
+	struct events_resource event;
+
 	system_init();
-	events_init();
 
 	system_flash_set_waitstates(2);
 
 	init_osc32k();
 	init_xosc32k();
 	init_xosc32k_fail_detector(
-			xosc32k_ok_callback, xosc32k_fail_callback);
+			xosc32k_ok_callback, xosc32k_fail_callback, &event);
 
 #if ENABLE_CPU_CLOCK_OUT == true
 	/* Configure a GPIO pin as the CPU clock output */

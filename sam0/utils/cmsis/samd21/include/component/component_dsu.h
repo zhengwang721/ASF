@@ -122,6 +122,11 @@ typedef union {
     uint8_t  HPE:1;            /*!< bit:      4  Hot-Plugging Enable                */
     uint8_t  :3;               /*!< bit:  5.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint8_t  :2;               /*!< bit:  0.. 1  Reserved                           */
+    uint8_t  DCCD:2;           /*!< bit:  2.. 3  Debug Communication Channel x Dirty */
+    uint8_t  :4;               /*!< bit:  4.. 7  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } DSU_STATUSB_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */

@@ -277,6 +277,11 @@ typedef union {
     uint16_t :6;               /*!< bit:  9..14  Reserved                           */
     uint16_t OVFEO:1;          /*!< bit:     15  Overflow Event Output Enable       */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint16_t PEREO:8;          /*!< bit:  0.. 7  Periodic Interval x Event Output Enable */
+    uint16_t CMPEO:1;          /*!< bit:      8  Compare x Event Output Enable      */
+    uint16_t :7;               /*!< bit:  9..15  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RTC_MODE0_EVCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -329,6 +334,11 @@ typedef union {
     uint16_t :5;               /*!< bit: 10..14  Reserved                           */
     uint16_t OVFEO:1;          /*!< bit:     15  Overflow Event Output Enable       */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint16_t PEREO:8;          /*!< bit:  0.. 7  Periodic Interval x Event Output Enable */
+    uint16_t CMPEO:2;          /*!< bit:  8.. 9  Compare x Event Output Enable      */
+    uint16_t :6;               /*!< bit: 10..15  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RTC_MODE1_EVCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -382,6 +392,11 @@ typedef union {
     uint16_t :6;               /*!< bit:  9..14  Reserved                           */
     uint16_t OVFEO:1;          /*!< bit:     15  Overflow Event Output Enable       */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint16_t PEREO:8;          /*!< bit:  0.. 7  Periodic Interval x Event Output Enable */
+    uint16_t ALARMEO:1;        /*!< bit:      8  Alarm x Event Output Enable        */
+    uint16_t :7;               /*!< bit:  9..15  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RTC_MODE2_EVCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -426,6 +441,10 @@ typedef union {
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Enable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Enable          */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint8_t  CMP:1;            /*!< bit:      0  Compare x Interrupt Enable         */
+    uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } RTC_MODE0_INTENCLR_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -454,6 +473,10 @@ typedef union {
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Enable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Enable          */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint8_t  CMP:2;            /*!< bit:  0.. 1  Compare x Interrupt Enable         */
+    uint8_t  :6;               /*!< bit:  2.. 7  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } RTC_MODE1_INTENCLR_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -483,6 +506,10 @@ typedef union {
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Enable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Enable          */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint8_t  ALARM:1;          /*!< bit:      0  Alarm x Interrupt Enable           */
+    uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } RTC_MODE2_INTENCLR_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -510,6 +537,10 @@ typedef union {
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Enable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Enable          */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint8_t  CMP:1;            /*!< bit:      0  Compare x Interrupt Enable         */
+    uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } RTC_MODE0_INTENSET_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -538,6 +569,10 @@ typedef union {
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Enable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Enable          */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint8_t  CMP:2;            /*!< bit:  0.. 1  Compare x Interrupt Enable         */
+    uint8_t  :6;               /*!< bit:  2.. 7  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } RTC_MODE1_INTENSET_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -567,6 +602,10 @@ typedef union {
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready Interrupt Enable */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow Interrupt Enable          */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint8_t  ALARM:1;          /*!< bit:      0  Alarm x Interrupt Enable           */
+    uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } RTC_MODE2_INTENSET_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -594,6 +633,10 @@ typedef union {
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready              */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint8_t  CMP:1;            /*!< bit:      0  Compare x                          */
+    uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } RTC_MODE0_INTFLAG_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -622,6 +665,10 @@ typedef union {
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready              */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint8_t  CMP:2;            /*!< bit:  0.. 1  Compare x                          */
+    uint8_t  :6;               /*!< bit:  2.. 7  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } RTC_MODE1_INTFLAG_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -651,6 +698,10 @@ typedef union {
     uint8_t  SYNCRDY:1;        /*!< bit:      6  Synchronization Ready              */
     uint8_t  OVF:1;            /*!< bit:      7  Overflow                           */
   } bit;                       /*!< Structure used for bit  access                  */
+  struct {
+    uint8_t  ALARM:1;          /*!< bit:      0  Alarm x                            */
+    uint8_t  :7;               /*!< bit:  1.. 7  Reserved                           */
+  } vec;                       /*!< Structure used for vec  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } RTC_MODE2_INTFLAG_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -789,6 +840,8 @@ typedef union {
 #define RTC_MODE2_CLOCK_HOUR_Pos    12           /**< \brief (RTC_MODE2_CLOCK) Hour */
 #define RTC_MODE2_CLOCK_HOUR_Msk    (0x1Fu << RTC_MODE2_CLOCK_HOUR_Pos)
 #define RTC_MODE2_CLOCK_HOUR(value) ((RTC_MODE2_CLOCK_HOUR_Msk & ((value) << RTC_MODE2_CLOCK_HOUR_Pos)))
+#define   RTC_MODE2_CLOCK_HOUR_PM_Val     0x10u   /**< \brief (RTC_MODE2_CLOCK) Afternoon Hour */
+#define RTC_MODE2_CLOCK_HOUR_PM     (RTC_MODE2_CLOCK_HOUR_PM_Val   << RTC_MODE2_CLOCK_HOUR_Pos)
 #define RTC_MODE2_CLOCK_DAY_Pos     17           /**< \brief (RTC_MODE2_CLOCK) Day */
 #define RTC_MODE2_CLOCK_DAY_Msk     (0x1Fu << RTC_MODE2_CLOCK_DAY_Pos)
 #define RTC_MODE2_CLOCK_DAY(value)  ((RTC_MODE2_CLOCK_DAY_Msk & ((value) << RTC_MODE2_CLOCK_DAY_Pos)))

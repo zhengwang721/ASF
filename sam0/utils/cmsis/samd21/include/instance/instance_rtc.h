@@ -111,5 +111,7 @@
 #define RTC_COMP32_NUM              RTC_ALARM_NUM
 #define RTC_GCLK_ID                 4
 #define RTC_NUM_OF_ALARMS           RTC_ALARM_NUM
+#define RTC_NUM_OF_COMP16           RTC_COMP16_NUM
+#define RTC_NUM_OF_COMP32           RTC_COMP32_NUM
 
 #endif /* _SAMD21_RTC_INSTANCE_ */

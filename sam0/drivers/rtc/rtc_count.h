@@ -274,10 +274,6 @@
 extern "C" {
 #endif
 
-/* Tempory work around definition */
-#define RTC_NUM_OF_COMP16           2
-#define RTC_NUM_OF_COMP32           1
-
 /**
  * \brief Available operation modes for the RTC.
  *
