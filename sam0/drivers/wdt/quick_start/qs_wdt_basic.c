@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Watchdog Driver Quick Start
+ * \brief SAM D2x Watchdog Driver Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -65,11 +65,8 @@ void configure_wdt(void)
 
 	/* Initialize and enable the Watchdog with the user settings */
 	//! [setup_4]
-	wdt_init(&config_wdt);
+	wdt_set_config(&config_wdt);
 	//! [setup_4]
-	//! [setup_5]
-	wdt_enable();
-	//! [setup_5]
 }
 //! [setup]
 

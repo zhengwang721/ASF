@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.adc" name="config.sam0.drivers.adc" caption="ADC - Analog-to-Digital Converter" default="callback">
 		<info type="description" value="summary">
-			Driver for the SAM D20 Analog to Digital Converter. Provides a unified
+			Driver for the SAM D2x Analog to Digital Converter. Provides a unified
 			interface for the configuration and management of the ADC module,
 			including the channel input selections, windowd detections, channel
 			conversions and event generation.
@@ -19,12 +19,12 @@
 			<build type="header-file" value="quick_start/qs_adc_basic.h"/>
 
 			<build type="doxygen-example-path" value ="quick_start"/>
-			<build type="doxygen-entry-point" value="asfdoc_samd20_adc_group"/>
-			<build type="doxygen-quick-start" value="asfdoc_samd20_adc_exqsg"/>
+			<build type="doxygen-entry-point" value="asfdoc_sam0_adc_group"/>
+			<build type="doxygen-quick-start" value="asfdoc_sam0_adc_exqsg"/>
 
 			<build type="define" name="ADC_CALLBACK_MODE" value="false"/>
 
-			<device-support value="samd20"/>
+			<device-support value="sam0"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
@@ -63,13 +63,13 @@
 
 			<build type="doxygen-example-path" value="quick_start_callback"/>
 			<build type="doxygen-example-path" value="quick_start"/>
-			<build type="doxygen-entry-point" value="asfdoc_samd20_adc_group"/>
-			<build type="doxygen-quick-start" value="asfdoc_samd20_adc_exqsg"/>
+			<build type="doxygen-entry-point" value="asfdoc_sam0_adc_group"/>
+			<build type="doxygen-quick-start" value="asfdoc_sam0_adc_exqsg"/>
 
 			<build type="define" name="ADC_CALLBACK_MODE" value="true"/>
 			<build type="doxygen-enable-section" value="ADC_CALLBACK_MODE"/>
 
-			<device-support value="samd20"/>
+			<device-support value="sam0"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
