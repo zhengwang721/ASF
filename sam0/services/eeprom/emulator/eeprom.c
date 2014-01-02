@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 EEPROM Emulator
+ * \brief SAM D2x EEPROM Emulator
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
