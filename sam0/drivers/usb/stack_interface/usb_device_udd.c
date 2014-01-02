@@ -3,7 +3,7 @@
  *
  * \brief USB Device wrapper layer for compliance with common driver UHD
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -261,10 +261,10 @@ static void udd_ep_trans_out_next(void* pointer)
 #endif
 
 
-static void udd_ep_transfer_failure(struct usb_module *module_inst, void* pointer)
-{
-		;
-}
+// static void udd_ep_transfer_failure(struct usb_module *module_inst, void* pointer)
+// {
+		// ;
+// }
 
 
 static void udd_ep_transfer_process(struct usb_module *module_inst, void* pointer)
@@ -284,7 +284,7 @@ void udd_ep_abort(udd_ep_id_t ep)
 {
 	udd_ep_job_t *ptr_job;
 	
-    usb_ep_abort(ep);
+    usb_device_endpoint_abort_job(ep);
 
 	// Job complete then call callback
 	ptr_job = udd_ep_get_job(ep);
@@ -377,7 +377,7 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes, uint16_t MaxEndpointSize
 	}
 	usb_device_endpoint_register_callback(&usb_device,ep_num,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT,udd_ep_transfer_process);
 	usb_device_endpoint_enable_callback(&usb_device,ep,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT);
-	usb_device_endpoint_register_callback(&usb_device,ep_num,USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL,udd_ep_transfer_failure);
+	//usb_device_endpoint_register_callback(&usb_device,ep_num,USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL,udd_ep_transfer_failure);
 	usb_device_endpoint_enable_callback(&usb_device,ep,USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL);
 	
 	return true;
@@ -386,7 +386,7 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes, uint16_t MaxEndpointSize
 
 bool udd_ep_is_halted(udd_ep_id_t ep)
 {
-	return usb_ep_is_halted(ep,NULL);
+	return usb_device_endpoint_is_halted(ep,NULL);
 }
 
 
@@ -398,7 +398,7 @@ bool udd_ep_set_halt(udd_ep_id_t ep)
 		return false;
 	}
 
-	usb_ep_set_halt(ep);
+	usb_device_endpoint_set_halt(ep);
 	
 	udd_ep_abort(ep);
 	return true;
@@ -415,7 +415,7 @@ bool udd_ep_clear_halt(udd_ep_id_t ep)
 	}
 	ptr_job = udd_ep_get_job(ep);
 
-	usb_ep_clear_halt(ep);
+	usb_device_endpoint_clear_halt(ep);
 	
 	// If a job is register on clear halt action then execute callback
 	if (ptr_job->busy == true) {
@@ -443,7 +443,7 @@ bool udd_ep_wait_stall_clear(udd_ep_id_t ep, udd_callback_halt_cleared_t callbac
 	}
 
 	// Wait clear halt endpoint
-	if (usb_ep_is_halted(ep, &ep_enable)) {
+	if (usb_device_endpoint_is_halted(ep, &ep_enable)) {
 		// Endpoint halted then registers the callback
 		ptr_job->busy = true;
 		ptr_job->call_nohalt = callback;
@@ -460,8 +460,8 @@ static void udd_ctrl_stall_data(void)
 {
 	udd_ep_control_state = UDD_EPCTRL_STALL_REQ;
 	
-	usb_ep_set_halt(USB_EP_DIR_IN);
-	usb_ep_clear_halt(USB_EP_DIR_OUT);
+	usb_device_endpoint_set_halt(USB_EP_DIR_IN);
+	usb_device_endpoint_clear_halt(USB_EP_DIR_OUT);
 }
 
 bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t buf_size, udd_callback_trans_t callback)
@@ -719,7 +719,7 @@ static void udd_ctrl_underflow(void* pointer)
 	} else if (UDD_EPCTRL_HANDSHAKE_WAIT_OUT_ZLP == udd_ep_control_state) {
 		// A OUT handshake is waiting by device,
 		// but host want extra IN data then stall extra IN data
-		usb_ep_set_halt(ep_callback_para->endpoint_address);
+		usb_device_endpoint_set_halt(ep_callback_para->endpoint_address);
 	}
 }
 
@@ -735,7 +735,7 @@ static void udd_ctrl_overflow(void* pointer)
 	} else if (UDD_EPCTRL_HANDSHAKE_WAIT_IN_ZLP == udd_ep_control_state) {
 		// A IN handshake is waiting by device,
 		// but host want extra OUT data then stall extra OUT data and following status stage
-		usb_ep_set_halt(ep_callback_para->endpoint_address);
+		usb_device_endpoint_set_halt(ep_callback_para->endpoint_address);
 	}
 }
 

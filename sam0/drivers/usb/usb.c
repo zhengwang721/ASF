@@ -1342,7 +1342,7 @@ enum status_code usb_device_endpoint_set_config(struct usb_module *module_inst,
  * \param endpoint address (direction & number)
  * \return null
  */
-void usb_ep_abort(uint8_t ep)
+void usb_device_endpoint_abort_job(uint8_t ep)
 {
 	uint8_t ep_num;
 	ep_num = ep & USB_EP_ADDR_MASK;
@@ -1366,7 +1366,7 @@ void usb_ep_abort(uint8_t ep)
  * \param endpoint enable flag
  * \return true or false
  */
-bool usb_ep_is_halted(uint8_t ep, bool* ep_enable)
+bool usb_device_endpoint_is_halted(uint8_t ep, bool* ep_enable)
 {
 	uint8_t ep_num = ep & USB_EP_ADDR_MASK;
 	uint8_t flag;
@@ -1392,7 +1392,7 @@ bool usb_ep_is_halted(uint8_t ep, bool* ep_enable)
  * \param endpoint address (direction & number)
  * \return null
  */
-void usb_ep_set_halt(uint8_t ep)
+void usb_device_endpoint_set_halt(uint8_t ep)
 {
 	uint8_t ep_num = ep & USB_EP_ADDR_MASK;
 
@@ -1410,7 +1410,7 @@ void usb_ep_set_halt(uint8_t ep)
  * \param endpoint address (direction & number)
  * \return null
  */
-void usb_ep_clear_halt(uint8_t ep)
+void usb_device_endpoint_clear_halt(uint8_t ep)
 {
 	uint8_t ep_num = ep & USB_EP_ADDR_MASK;
 	

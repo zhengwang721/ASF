@@ -633,7 +633,7 @@ void usb_host_pipe_set_auto_zlp(struct usb_module *module_inst, uint8_t pipe_num
  * \param endpoint address (direction & number)
  * \return null
  */
-void usb_ep_abort(uint8_t ep);
+void usb_device_endpoint_abort_job(uint8_t ep);
 
 /**
  * \brief Is endpoint halted
@@ -642,7 +642,7 @@ void usb_ep_abort(uint8_t ep);
  * \param endpoint enable flag
  * \return true or false
  */
-bool usb_ep_is_halted(uint8_t ep, bool* ep_enable);
+bool usb_device_endpoint_is_halted(uint8_t ep, bool* ep_enable);
 
 /**
  * \brief set endpoint halt
@@ -650,7 +650,7 @@ bool usb_ep_is_halted(uint8_t ep, bool* ep_enable);
  * \param endpoint address (direction & number)
  * \return null
  */
-void usb_ep_set_halt(uint8_t ep);
+void usb_device_endpoint_set_halt(uint8_t ep);
 
 /**
  * \brief clear endpoint from halted
@@ -658,6 +658,6 @@ void usb_ep_set_halt(uint8_t ep);
  * \param endpoint address (direction & number)
  * \return null
  */
-void usb_ep_clear_halt(uint8_t ep);
+void usb_device_endpoint_clear_halt(uint8_t ep);
 
 #endif /* USB_H_INCLUDED */
