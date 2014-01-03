@@ -21,6 +21,6 @@
 		<build type="include-path" value="."/>
 		<build type="c-source" value="usb_device_udd.c"/>
 		<device-support value="samd21"/>
-		<require idref="sam0.drivers.usb.dual"/>
+		<require idref="sam0.drivers.usb"/>
 	</module>
 </asf>

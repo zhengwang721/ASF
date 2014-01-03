@@ -3,7 +3,7 @@
  *
  * \brief Main functions for Mouse example
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,23 +47,26 @@
 
 static volatile bool main_b_mouse_enable = false;
 
-
 /*! \brief Main function. Execution starts here.
  */
 int main(void)
 {
+#if !SAMD21
 	sysclk_init();
 	irq_initialize_vectors();
 	cpu_irq_enable();
-
 	// Initialize the sleep manager
 	sleepmgr_init();
-
 	board_init();
+	
+#else 
+	system_init();
+	
+#endif
+	
 	ui_init();
 	ui_powerdown();
-
-
+	
 	// Start USB stack to authorize VBus monitoring
 	udc_start();
 
@@ -84,9 +87,10 @@ int main(void)
 			}
 		}
 #else
-		sleepmgr_enter_sleep();
+#if !SAMD21
+	sleepmgr_enter_sleep();
 #endif
-
+#endif
 	}
 }
 
