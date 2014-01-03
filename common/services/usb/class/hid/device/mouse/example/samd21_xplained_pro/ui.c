@@ -72,18 +72,19 @@ void ui_init(void)
 	config_extint_chan.gpio_pin           = BUTTON_0_EIC_PIN;
 	config_extint_chan.gpio_pin_mux       = BUTTON_0_EIC_MUX;
 	config_extint_chan.gpio_pin_pull      = EXTINT_PULL_UP;
+	config_extint_chan.filter_input_signal = true;
 	config_extint_chan.detection_criteria = EXTINT_DETECT_FALLING;
 	extint_chan_set_config(BUTTON_0_EIC_LINE, &config_extint_chan);
 	extint_register_callback(ui_wakeup_handler,BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
 	extint_chan_enable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
 	
 	/* Initialize LEDs */
-	LED_OFF();
+	LED_Off();
 }
 
 void ui_powerdown(void)
 {
-	LED_OFF();
+	LED_Off();
 }
 
 
@@ -110,7 +111,7 @@ void ui_process(uint16_t framenumber)
 		LED_On();
 	}
 	if ((framenumber % 1000) == 500) {
-		LED_OFF();
+		LED_Off();
 	}
 	/* Scan process running each 2ms */
 	cpt_sof++;

@@ -1005,8 +1005,10 @@ enum status_code usb_device_enable_callback(struct usb_module *module_inst,
 	module_inst->hw->DEVICE.INTFLAG.reg = _usb_device_irq_bits[callback_type];
 	
 	/* Enable callback */
-	module_inst->device_enabled_callback_mask |= _usb_device_irq_bits[callback_type];
-
+	if(module_inst->device_registered_callback_mask & _usb_device_irq_bits[callback_type]) {
+		module_inst->device_enabled_callback_mask |= _usb_device_irq_bits[callback_type];
+	}
+	
 	module_inst->hw->DEVICE.INTENSET.reg = _usb_device_irq_bits[callback_type];
 	
 	return STATUS_OK;
@@ -1127,9 +1129,12 @@ enum status_code usb_device_endpoint_enable_callback(
 	Assert(ep_num < USB_EPT_NUM);
 	
 	uint8_t ep_num = ep & USB_EP_ADDR_MASK;
-
+	
 	/* Enable callback */
-	module_inst->device_endpoint_enabled_callback_mask[ep_num] |= _usb_endpoint_irq_bits[callback_type];
+	if(module_inst->deivce_endpoint_registered_callback_mask[ep_num] & _usb_endpoint_irq_bits[callback_type]) {
+		module_inst->device_endpoint_enabled_callback_mask[ep_num] |= _usb_endpoint_irq_bits[callback_type];
+	}
+	
 
 	if (callback_type == USB_DEVICE_ENDPOINT_CALLBACK_TRCPT) {
 		if (ep_num == 0) { // control endpoint
@@ -1609,8 +1614,8 @@ static void _usb_device_interrupt_handler(void)
 		// device resume interrupt
 		if ((flags & USB_DEVICE_INTFLAG_WAKEUP) || (flags & USB_DEVICE_INTFLAG_UPRSM) ||  (flags & USB_DEVICE_INTFLAG_EORSM)) {
 			_usb_instances->hw->DEVICE.INTFLAG.reg = USB_DEVICE_INTFLAG_WAKEUP | USB_DEVICE_INTFLAG_UPRSM | USB_DEVICE_INTFLAG_EORSM;
-			if(_usb_instances->device_enabled_callback_mask & (_usb_device_irq_bits[USB_DEVICE_CALLBACK_RESUME])) {
-				(_usb_instances->device_callback[USB_DEVICE_CALLBACK_RESUME])(_usb_instances);
+			if(_usb_instances->device_enabled_callback_mask & (_usb_device_irq_bits[USB_DEVICE_CALLBACK_WAKEUP])) {
+				(_usb_instances->device_callback[USB_DEVICE_CALLBACK_WAKEUP])(_usb_instances);
 			}
 			return;
 		}

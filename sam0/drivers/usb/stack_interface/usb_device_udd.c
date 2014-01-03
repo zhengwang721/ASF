@@ -422,7 +422,6 @@ bool udd_ep_wait_stall_clear(udd_ep_id_t ep, udd_callback_halt_cleared_t callbac
 {
 	udd_ep_id_t ep_num;
 	udd_ep_job_t *ptr_job;
-	bool ep_enable;
 
 	ep_num = ep & USB_EP_ADDR_MASK;
 	if (USB_DEVICE_MAX_EP < ep_num) {
