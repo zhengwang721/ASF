@@ -44,8 +44,8 @@
 #include <asf.h>
 #include "ui.h"
 
-#define	 LED_On()	       port_pin_set_output_level(LED_0_PIN, 0)
-#define  LED_OFF()		   port_pin_set_output_level(LED_0_PIN, 1)
+#define  LED_On()          port_pin_set_output_level(LED_0_PIN, 0)
+#define  LED_Off()         port_pin_set_output_level(LED_0_PIN, 1)
 
 #define  MOUSE_MOVE_RANGE  1
 
@@ -57,9 +57,9 @@
  */
 static void ui_wakeup_handler(void)
 {
-		/* It is a wakeup then send wakeup USB */
-		udc_remotewakeup();
-		LED_On();
+	/* It is a wakeup then send wakeup USB */
+	udc_remotewakeup();
+	LED_On();
 }
 
 

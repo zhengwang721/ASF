@@ -105,14 +105,13 @@ enum usb_host_pipe_token {
  * \brief Enumeration for the possible callback types for the USB in device module 
  */
 enum usb_device_callback {
-	USB_DEVICE_CALLBACK_SUSPEND = 0,
-	/* Reserved */
-	USB_DEVICE_CALLBACK_SOF = 2,
-	USB_DEVICE_CALLBACK_RESET = 3,
-	USB_DEVICE_CALLBACK_RESUME = 4,
-	USB_DEVICE_CALLBACK_RAMACER = 5,
-	USB_DEIVCE_CALLBACK_LPMNYET = 6,
-	USB_DEIVCE_CALLBACK_LPMSUSP = 7,
+	USB_DEVICE_CALLBACK_SOF,
+	USB_DEVICE_CALLBACK_RESET,
+	USB_DEVICE_CALLBACK_WAKEUP,
+	USB_DEVICE_CALLBACK_RAMACER,
+	USB_DEVICE_CALLBACK_SUSPEND,
+	USB_DEIVCE_CALLBACK_LPMNYET,
+	USB_DEIVCE_CALLBACK_LPMSUSP,
 	USB_DEVICE_CALLBACK_N,
 };
 
@@ -272,33 +271,6 @@ struct usb_endpoint_callback_parameter {
 	uint16_t out_buffer_size;
 	uint8_t endpoint_address;
 };
-
-/** define macros for device that is not realized in header file */
-#define USB_DEVICE_EPINTENCLR_TRCPT0		USB_DEVICE_EPINTENCLR_TRCPT(1)
-#define USB_DEVICE_EPINTENCLR_TRCPT1		USB_DEVICE_EPINTENCLR_TRCPT(2)
-#define USB_DEVICE_EPINTENCLR_TRFAIL0		USB_DEVICE_EPINTENCLR_TRFAIL(1)
-#define USB_DEVICE_EPINTENCLR_TRFAIL1		USB_DEVICE_EPINTENCLR_TRFAIL(2)
-#define USB_DEVICE_EPINTENCLR_STALL0		USB_DEVICE_EPINTENCLR_STALL(1)
-#define USB_DEVICE_EPINTENCLR_STALL1		USB_DEVICE_EPINTENCLR_STALL(2)
-
-#define USB_DEVICE_EPINTENSET_TRCPT0		USB_DEVICE_EPINTENSET_TRCPT(1)
-#define USB_DEVICE_EPINTENSET_TRCPT1		USB_DEVICE_EPINTENSET_TRCPT(2)
-#define USB_DEVICE_EPINTENSET_TRFAIL0		USB_DEVICE_EPINTENSET_TRFAIL(1)
-#define USB_DEVICE_EPINTENSET_TRFAIL1		USB_DEVICE_EPINTENSET_TRFAIL(2)
-#define USB_DEVICE_EPINTENSET_STALL0		USB_DEVICE_EPINTENSET_STALL(1)
-#define USB_DEVICE_EPINTENSET_STALL1		USB_DEVICE_EPINTENSET_STALL(2)
-
-#define USB_DEVICE_EPINTFLAG_TRCPT0			USB_DEVICE_EPINTFLAG_TRCPT(1)
-#define USB_DEVICE_EPINTFLAG_TRCPT1			USB_DEVICE_EPINTFLAG_TRCPT(2)
-#define USB_DEVICE_EPINTFLAG_TRFAIL0		USB_DEVICE_EPINTFLAG_TRFAIL(1)
-#define USB_DEVICE_EPINTFLAG_TRFAIL1		USB_DEVICE_EPINTFLAG_TRFAIL(2)
-#define USB_DEVICE_EPINTFLAG_STALL0			USB_DEVICE_EPINTFLAG_STALL(1)
-#define USB_DEVICE_EPINTFLAG_STALL1			USB_DEVICE_EPINTFLAG_STALL(2)
-
-#define USB_DEVICE_EPSTATUSSET_STALLRQ0		USB_DEVICE_EPSTATUSSET_STALLRQ(1)
-#define USB_DEVICE_EPSTATUSSET_STALLRQ1		USB_DEVICE_EPSTATUSSET_STALLRQ(2)
-#define USB_DEVICE_EPSTATUSCLR_STALLRQ0		USB_DEVICE_EPSTATUSCLR_STALLRQ(1)
-#define USB_DEVICE_EPSTATUSCLR_STALLRQ1		USB_DEVICE_EPSTATUSCLR_STALLRQ(2)
 
 /** USB simple operation functions */
 void usb_enable(struct usb_module *module_inst);
@@ -628,21 +600,28 @@ static inline void usb_host_pipe_clear_toggle(struct usb_module *module_inst, ui
 void usb_host_pipe_set_auto_zlp(struct usb_module *module_inst, uint8_t pipe_num, bool value);
 
 /**
+ * \brief current endpoint is configured
+ * \param module_inst   Pointer to USB software instance struct
+ * \param endpoint address (direction & number)
+ * \return true if endpoint is configured, otherwise, false
+ */
+bool usb_device_endpoint_is_configured(struct usb_module *module_inst, uint8_t ep);
+
+/**
  * \brief current endpoint abort
  *
  * \param endpoint address (direction & number)
  * \return null
  */
-void usb_device_endpoint_abort_job(uint8_t ep);
+void usb_device_endpoint_abort_job(struct usb_module *module_inst, uint8_t ep);
 
 /**
  * \brief Is endpoint halted
  *
  * \param endpoint address (direction & number)
- * \param endpoint enable flag
  * \return true or false
  */
-bool usb_device_endpoint_is_halted(uint8_t ep, bool* ep_enable);
+bool usb_device_endpoint_is_halted(struct usb_module *module_inst, uint8_t ep);
 
 /**
  * \brief set endpoint halt
@@ -650,7 +629,7 @@ bool usb_device_endpoint_is_halted(uint8_t ep, bool* ep_enable);
  * \param endpoint address (direction & number)
  * \return null
  */
-void usb_device_endpoint_set_halt(uint8_t ep);
+void usb_device_endpoint_set_halt(struct usb_module *module_inst, uint8_t ep);
 
 /**
  * \brief clear endpoint from halted
@@ -658,6 +637,6 @@ void usb_device_endpoint_set_halt(uint8_t ep);
  * \param endpoint address (direction & number)
  * \return null
  */
-void usb_device_endpoint_clear_halt(uint8_t ep);
+void usb_device_endpoint_clear_halt(struct usb_module *module_inst, uint8_t ep);
 
 #endif /* USB_H_INCLUDED */

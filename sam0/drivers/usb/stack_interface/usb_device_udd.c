@@ -261,12 +261,6 @@ static void udd_ep_trans_out_next(void* pointer)
 #endif
 
 
-// static void udd_ep_transfer_failure(struct usb_module *module_inst, void* pointer)
-// {
-		// ;
-// }
-
-
 static void udd_ep_transfer_process(struct usb_module *module_inst, void* pointer)
 {
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
@@ -284,7 +278,7 @@ void udd_ep_abort(udd_ep_id_t ep)
 {
 	udd_ep_job_t *ptr_job;
 	
-    usb_device_endpoint_abort_job(ep);
+    usb_device_endpoint_abort_job(&usb_device, ep);
 
 	// Job complete then call callback
 	ptr_job = udd_ep_get_job(ep);
@@ -325,7 +319,6 @@ void udd_ep_free(udd_ep_id_t ep)
 	usb_device_endpoint_unregister_callback(&usb_device,ep_num,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT);
 	usb_device_endpoint_disable_callback(&usb_device,ep,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT);
 }
-
 
 
 bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes, uint16_t MaxEndpointSize)
@@ -377,7 +370,6 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes, uint16_t MaxEndpointSize
 	}
 	usb_device_endpoint_register_callback(&usb_device,ep_num,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT,udd_ep_transfer_process);
 	usb_device_endpoint_enable_callback(&usb_device,ep,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT);
-	//usb_device_endpoint_register_callback(&usb_device,ep_num,USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL,udd_ep_transfer_failure);
 	usb_device_endpoint_enable_callback(&usb_device,ep,USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL);
 	
 	return true;
@@ -386,7 +378,7 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes, uint16_t MaxEndpointSize
 
 bool udd_ep_is_halted(udd_ep_id_t ep)
 {
-	return usb_device_endpoint_is_halted(ep,NULL);
+	return usb_device_endpoint_is_halted(&usb_device, ep);
 }
 
 
@@ -398,7 +390,7 @@ bool udd_ep_set_halt(udd_ep_id_t ep)
 		return false;
 	}
 
-	usb_device_endpoint_set_halt(ep);
+	usb_device_endpoint_set_halt(&usb_device, ep);
 	
 	udd_ep_abort(ep);
 	return true;
@@ -415,7 +407,7 @@ bool udd_ep_clear_halt(udd_ep_id_t ep)
 	}
 	ptr_job = udd_ep_get_job(ep);
 
-	usb_device_endpoint_clear_halt(ep);
+	usb_device_endpoint_clear_halt(&usb_device, ep);
 	
 	// If a job is register on clear halt action then execute callback
 	if (ptr_job->busy == true) {
@@ -443,12 +435,12 @@ bool udd_ep_wait_stall_clear(udd_ep_id_t ep, udd_callback_halt_cleared_t callbac
 	}
 
 	// Wait clear halt endpoint
-	if (usb_device_endpoint_is_halted(ep, &ep_enable)) {
+	if (usb_device_endpoint_is_halted(&usb_device, ep)) {
 		// Endpoint halted then registers the callback
 		ptr_job->busy = true;
 		ptr_job->call_nohalt = callback;
 		return true;
-	} else if (ep_enable) {
+	} else if (usb_device_endpoint_is_configured(&usb_device, ep)) {
 		callback(); // Endpoint not halted then call directly callback
 		return true;
 	} else {  
@@ -460,15 +452,15 @@ static void udd_ctrl_stall_data(void)
 {
 	udd_ep_control_state = UDD_EPCTRL_STALL_REQ;
 	
-	usb_device_endpoint_set_halt(USB_EP_DIR_IN);
-	usb_device_endpoint_clear_halt(USB_EP_DIR_OUT);
+	usb_device_endpoint_set_halt(&usb_device, USB_EP_DIR_IN);
+	usb_device_endpoint_clear_halt(&usb_device, USB_EP_DIR_OUT);
 }
 
 bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t buf_size, udd_callback_trans_t callback)
 {
 	udd_ep_id_t ep_num;
 	udd_ep_job_t *ptr_job;
-	//irqflags_t flags;
+	irqflags_t flags;
 
 	ep_num = ep & USB_EP_ADDR_MASK;
 	
@@ -478,13 +470,13 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t b
 	
 	ptr_job = udd_ep_get_job(ep);
 
-	//flags = cpu_irq_save();
+	flags = cpu_irq_save();
 	if (ptr_job->busy == true) {
-		//cpu_irq_restore(flags);
+		cpu_irq_restore(flags);
 		return false; // Job already on going
 	}
 	ptr_job->busy = true;
-	//cpu_irq_restore(flags);
+	cpu_irq_restore(flags);
 
 	// No job running, setup a new one.
 	ptr_job->buf = buf;
@@ -719,7 +711,7 @@ static void udd_ctrl_underflow(void* pointer)
 	} else if (UDD_EPCTRL_HANDSHAKE_WAIT_OUT_ZLP == udd_ep_control_state) {
 		// A OUT handshake is waiting by device,
 		// but host want extra IN data then stall extra IN data
-		usb_device_endpoint_set_halt(ep_callback_para->endpoint_address);
+		usb_device_endpoint_set_halt(&usb_device, ep_callback_para->endpoint_address);
 	}
 }
 
@@ -735,7 +727,7 @@ static void udd_ctrl_overflow(void* pointer)
 	} else if (UDD_EPCTRL_HANDSHAKE_WAIT_IN_ZLP == udd_ep_control_state) {
 		// A IN handshake is waiting by device,
 		// but host want extra OUT data then stall extra OUT data and following status stage
-		usb_device_endpoint_set_halt(ep_callback_para->endpoint_address);
+		usb_device_endpoint_set_halt(&usb_device, ep_callback_para->endpoint_address);
 	}
 }
 
@@ -789,18 +781,18 @@ static void udd_ctrl_ep_enable(struct usb_module *module_inst)
 static void _usb_on_suspend(struct usb_module *module_inst)
 {
 	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
-	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_RESUME);
-	#ifdef UDC_SUSPEND_EVENT
+	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
+#ifdef UDC_SUSPEND_EVENT
 	UDC_SUSPEND_EVENT();
-	#endif
+#endif
 }
 
 static void _usb_on_sof_notify(struct usb_module *module_inst)
 {
 	udc_sof_notify();
-	#ifdef UDC_SOF_EVENT
+#ifdef UDC_SOF_EVENT
 	UDC_SOF_EVENT();
-	#endif
+#endif
 }
 
 static void _usb_on_bus_reset(struct usb_module *module_inst)
@@ -811,11 +803,11 @@ static void _usb_on_bus_reset(struct usb_module *module_inst)
 
 static void _usb_on_wakeup(struct usb_module *module_inst)
 {
-	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_RESUME);
+	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
-	#ifdef UDC_RESUME_EVENT
+#ifdef UDC_RESUME_EVENT
 	UDC_RESUME_EVENT();
-	#endif
+#endif
 }
 
 void udd_detach(void)
@@ -830,12 +822,12 @@ void udd_attach(void)
 	usb_device_register_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND, _usb_on_suspend);
 	usb_device_register_callback(&usb_device, USB_DEVICE_CALLBACK_SOF, _usb_on_sof_notify);
 	usb_device_register_callback(&usb_device, USB_DEVICE_CALLBACK_RESET, _usb_on_bus_reset);
-	usb_device_register_callback(&usb_device, USB_DEVICE_CALLBACK_RESUME, _usb_on_wakeup);
+	usb_device_register_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP, _usb_on_wakeup);
 	
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_SOF);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_RESET);
-	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_RESUME);
+	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
 }
 
 void udd_enable(void)
