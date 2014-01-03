@@ -42,8 +42,7 @@
  */
 
 /**
- * \page asfdoc_sam0_sercom_spi_dma_use_case Quick Start Guide for Using DMA with
- * SERCOM SPI
+ * \page asfdoc_sam0_sercom_spi_dma_use_case Quick Start Guide SERCOM SPI DMA
  *
  * This quick start will transmit a buffer data from master to slave through DMA.
  * In this use case the SPI master will be configured with the following settings:
@@ -59,6 +58,7 @@
  * - Not enabled in sleep mode
  * - Baudrate 100000
  * - GLCK generator 0
+ *
  * The SPI slave will be configured with the following settings:
  * - Slave mode enabled
  * - Preloading of shift register enabled
@@ -84,10 +84,10 @@
  *
  * \subsection asfdoc_sam0_spi_dma_use_case_setup_code Code
  * Add to the main application source file, outside of any functions:
- * \snippet qs_spi_dma_use.c module_inst
- * \snippet qs_spi_dma_use.c transfer_done_flag
+ * \snippet qs_spi_dma_use.c spi_module_inst
+ * \snippet qs_spi_dma_use.c dma_transfer_done_flag
  * \snippet qs_spi_dma_use.c spi_buffer
- * \snippet qs_spi_dma_use.c transfer_descriptor
+ * \snippet qs_spi_dma_use.c dma_transfer_descriptor
  *
  * Copy-paste the following setup code to your user application:
  * \snippet qs_spi_dma_use.c setup
@@ -101,7 +101,7 @@
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- *    \snippet qs_spi_dma_use.c module_inst
+ *    \snippet qs_spi_dma_use.c spi_module_inst
  * -# Configure the SPI module.
  * -# Create a module software instance structure for DMA resource to store
  *    the DMA resource state while it is in use.
@@ -109,31 +109,37 @@
  *          In most cases, this should be global.
  *
  *    \snippet qs_spi_dma_use.c dma_resource
- * -# Create a transfer done flag to indication DMA transfer done
- *    \snippet qs_spi_dma_use.c transfer_done_flag
- * -# Create a buffer to store the data to be transferred
- *    \snippet qs_spi_dma_use.c buffer
- *  -# Create a SPI module configuration struct, which can be filled out to
+ * -# Create transfer done flag to indication DMA transfer done
+ *    \snippet qs_spi_dma_use.c dma_transfer_done_flag
+ * -# Create buffer to store the data to be transferred
+ *    \snippet qs_spi_dma_use.c spi_buffer
+ *  -# Create SPI module configuration struct, which can be filled out to
  *     adjust the configuration of a physical SPI peripheral.
- *     \snippet qs_spi_dma_use.c setup_config
+ *     \snippet qs_spi_dma_use.c spi_master_config
+ *     \snippet qs_spi_dma_use.c spi_slave_config
  *  -# Initialize the SPI configuration struct with the module's default values.
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *     \snippet qs_spi_dma_use.c setup_config_defaults
+ *     \snippet qs_spi_dma_use.c spi_master_conf_defaults
+ *     \snippet qs_spi_dma_use.c spi_slave_conf_defaults
  *  -# Alter the SPI settings to configure the physical pinout, baud rate and
  *     other relevant parameters.
- *     \snippet qs_spi_dma_use.c setup_change_config
+ *     \snippet qs_spi_dma_use.c spi_master_mux_setting
+ *     \snippet qs_spi_dma_use.c spi_slave_mux_setting
  *  -# Configure the SPI module with the desired settings, retrying while the
  *     driver is busy until the configuration is stressfully set.
- *     \snippet qs_spi_dma_use.c setup_set_config
+ *     \snippet qs_spi_dma_use.c spi_master_init
+ *     \snippet qs_spi_dma_use.c spi_slave_init
  *  -# Enable the SPI module.
- *     \snippet qs_spi_dma_use.c setup_enable
+ *     \snippet qs_spi_dma_use.c spi_master_enable
+ *     \snippet qs_spi_dma_use.c spi_slave_enable
  *
- * -# Create a DMA resource configuration structure, which can be filled out to
+ * -# Create DMA resource configuration structure, which can be filled out to
  *    adjust the configuration of a single DMA transfer.
- *  \snippet qs_dma_basic.c dma_setup_1
+ *  \snippet qs_spi_dma_use.c dma_tx_setup_1
+ *  \snippet qs_spi_dma_use.c dma_rx_setup_1
  *
  * -# Initialize the DMA resource configuration struct with the module's
  *    default values.
@@ -141,19 +147,23 @@
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_dma_basic.c dma_setup_2
+ *  \snippet qs_spi_dma_use.c dma_tx_setup_2
+ *  \snippet qs_spi_dma_use.c dma_rx_setup_2
  *
  * -# Set extra configurations for the DMA resource. It is using peripheral trigger,
  * SERCOM Tx empty and RX complete trigger causes a beat transfer in
  * this example.
- *  \snippet qs_dma_basic.c dma_setup_3
+ *  \snippet qs_spi_dma_use.c dma_tx_setup_3
+ *  \snippet qs_spi_dma_use.c dma_rx_setup_3
  *
  * -# Allocate a DMA resource with the configurations.
- *  \snippet qs_dma_basic.c dma_setup_4
+ *  \snippet qs_spi_dma_use.c dma_tx_setup_4
+ *  \snippet qs_spi_dma_use.c dma_rx_setup_4
  *
  * -# Create a DMA transfer descriptor configuration structure, which can be
  * filled out to adjust the configuration of a single DMA transfer.
- *  \snippet qs_dma_basic.c dma_setup_5
+ *  \snippet qs_spi_dma_use.c dma_tx_setup_5
+ *  \snippet qs_spi_dma_use.c dma_rx_setup_5
  *
  * -# Initialize the DMA transfer descriptor configuration struct with the module's
  *    default values.
@@ -161,27 +171,36 @@
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_dma_basic.c dma_setup_6
+ *  \snippet qs_spi_dma_use.c dma_tx_setup_6
+ *  \snippet qs_spi_dma_use.c dma_rx_setup_6
  *
  * -# Set the specific parameters for a DMA transfer with transfer size, source
  *    address, destination address.
- *  \snippet qs_dma_basic.c dma_setup_7
+ *  \snippet qs_spi_dma_use.c dma_tx_setup_7
+ *  \snippet qs_spi_dma_use.c dma_rx_setup_7
  *
  * -# Create the DMA transfer descriptor.
- *  \snippet qs_dma_basic.c dma_setup_8
+ *  \snippet qs_spi_dma_use.c dma_tx_setup_8
+ *  \snippet qs_spi_dma_use.c dma_rx_setup_8
  *
  * \section asfdoc_sam0_spi_dma_use_case_main Use Case
  *
  * \subsection asfdoc_sam0_spi_dma_use_case_main_code Code
  * Copy-paste the following code to your user application:
- * \snippet qs_api_dma_use.c main
+ * \snippet qs_spi_dma_use.c main
  *
  * \subsection asfdoc_sam0_spi_dma_use_case_main_flow Workflow
+ * -# Select the slave.
+ *  \snippet qs_spi_dma_use.c select_slave
+ *
  * -# Start the transfer job.
  *  \snippet qs_spi_dma_use.c main_1
  *
  * -# Wait for transfer done.
  *  \snippet qs_spi_dma_use.c main_2
+ *
+ * -# Deselect the slave.
+ *  \snippet qs_spi_dma_use.c deselect_slave
  *
  * -# enter endless loop
  *  \snippet qs_spi_dma_use.c endless_loop
