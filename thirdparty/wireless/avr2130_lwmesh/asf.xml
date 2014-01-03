@@ -11,10 +11,7 @@
 			<require idref="thirdparty.wireless.avr2130_lwmesh.source.service"/>
 			<build type="module-config" subtype="required-header-file" value="config.h"/>
             <build type="module-config" subtype="path" value="module_config"/>
-            <device-support value="atmega256rfr2" />
-			<device-support value="atxmega256a3bu"/>
-			<device-support value="atxmega256a3u"/>
-			<device-support value="samd20"/>
+			<device-support-alias value="avr2025_mac_hal_support"/>
 			<build type="doxygen-entry-point" value="group_lwmesh"/>
             <info type="keyword" value="technology">
                 <keyword value="Wireless"/>

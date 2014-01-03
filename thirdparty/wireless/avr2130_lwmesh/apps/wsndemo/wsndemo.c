@@ -383,12 +383,12 @@ static void APP_TaskHandler(void)
 
     case APP_STATE_SENDING_DONE:
     {
-#if APP_ENDDEVICE
-      appState = APP_STATE_PREPARE_TO_SLEEP;
-#else
+//#if APP_ENDDEVICE
+//      appState = APP_STATE_PREPARE_TO_SLEEP;
+//#else
       SYS_TimerStart(&appDataSendingTimer);
       appState = APP_STATE_WAIT_SEND_TIMER;
-#endif
+//#endif
     } break;
 
     case APP_STATE_PREPARE_TO_SLEEP:

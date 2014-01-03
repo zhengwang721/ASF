@@ -18,26 +18,20 @@
 			<build type="header-file"   value="inc/otaCommon.h"/>
 			<build type="include-path"  value="inc/"/>
 			<build type="define"   name="APP_ENABLE_OTA"                   value=""/>
-			<device-support value="atmega256rfr2"/>
-			<device-support value="atxmega256a3bu"/>
-			<device-support value="atxmega256a3u"/>
-			<device-support value="samd20"/>
+			<device-support-alias value="avr2025_mac_hal_support"/>
 			<build type="doxygen-entry-point" value="group_lwmesh_service"/>
 		</module>
 		
 		<module type="service" id="config.thirdparty.wireless.avr2130_lwmesh.source.service#ota_server"     caption="OTA Server Used">
 			<info type="description" value="summary">			
 			</info>
-<info type="gui-flag" value="hidden"/>			
+			<info type="gui-flag" value="hidden"/>			
 			<build type="c-source"      value="src/otaServer.c"/>
 			<build type="header-file"   value="inc/otaServer.h"/>
 			<build type="header-file"   value="inc/otaCommon.h"/>
 			<build type="include-path"  value="inc/"/>		
 			<build type="define"   name="APP_ENABLE_OTA"                   value=""/>
-			<device-support value="atmega256rfr2"/>
-			<device-support value="atxmega256a3bu"/>
-			<device-support value="atxmega256a3u"/>
-			<device-support value="samd20"/>
+			<device-support-alias value="avr2025_mac_hal_support"/>
 			<build type="doxygen-entry-point" value="group_lwmesh_service"/>			
 		</module>
 	</select-by-config>
@@ -49,10 +43,7 @@
 		<info type="gui-flag" value="hidden"/>
 		<require idref="config.thirdparty.wireless.avr2130_lwmesh.source.service"/>
 		<build type="doxygen-entry-point" value="group_lwmesh_service"/>
-        <device-support value="atmega256rfr2"/>
-        <device-support value="atxmega256a3bu"/>
-        <device-support value="samd20"/>
-        <device-support value="atxmega256a3u"/>
+		<device-support-alias value="avr2025_mac_hal_support"/>
 	</module>
 	
 		

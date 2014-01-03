@@ -14,9 +14,6 @@
 		<build type="header-file"   value="inc/sysTypes.h"/>
 		<build type="include-path"  value="inc/"/>
 		<build type="doxygen-entry-point" value="group_lwmesh_sys"/>
-        <device-support value="atmega256rfr2"/>
-        <device-support value="atxmega256a3bu"/>
-        <device-support value="atxmega256a3u"/>
-        <device-support value="samd20"/>
+		<device-support-alias value="avr2025_mac_hal_support"/>
 	</module>
 </asf>

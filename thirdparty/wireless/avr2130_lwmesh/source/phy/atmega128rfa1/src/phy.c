@@ -1,7 +1,7 @@
 /**
  * \file phy.c
  *
- * \brief ATMEGA256RFR2 PHY implementation
+ * \brief ATMEGA128RFA1 PHY implementation
  *
  * Copyright (C) 2012-2013, Atmel Corporation. All rights reserved.
  *
@@ -41,11 +41,11 @@
  *
  */
 
-#ifdef PHY_ATMEGA256RFR2
+#ifdef PHY_ATMEGA128RFA1
 
 /*- Includes ---------------------------------------------------------------*/
 #include "sysTypes.h"
-#include "atmega256rfr2.h"
+#include "atmega128rfa1.h"
 #include "phy.h"
 #include "hal.h"
 
@@ -84,7 +84,6 @@ typedef struct PhyIb_t
   uint8_t     request;
 
   uint8_t     channel;
-  uint8_t     band;
   uint16_t    panId;
   uint16_t    addr;
   uint8_t     txPower;
@@ -122,8 +121,6 @@ void PHY_Init(void)
 
   phyTrxSetState(TRX_CMD_TRX_OFF);
 
-  TRX_RPC_REG = 0xff;
-
   CSMA_SEED_1_REG_s.aackSetPd = 1;
   CSMA_SEED_1_REG_s.aackDisAck = 0;
 
@@ -141,7 +138,6 @@ void PHY_Init(void)
 
   phyIb.request = PHY_REQ_NONE;
   phyIb.rx = false;
-  phyIb.band = 0;
   phyState = PHY_STATE_IDLE;
 }
 
@@ -159,14 +155,6 @@ void PHY_SetChannel(uint8_t channel)
 {
   phyIb.request |= PHY_REQ_CHANNEL;
   phyIb.channel = channel;
-}
-
-/*************************************************************************//**
-*****************************************************************************/
-void PHY_SetBand(uint8_t band)
-{
-  phyIb.request |= PHY_REQ_CHANNEL;
-  phyIb.band = band;
 }
 
 /*************************************************************************//**
@@ -225,8 +213,8 @@ void PHY_DataReq(uint8_t *data)
   phyTrxSetState(TRX_CMD_TX_ARET_ON);
 
   TRX_FRAME_BUFFER(0) = data[0] + 2/*crc*/;
-  for (uint8_t i = 0; i < data[0]; i++)
-    TRX_FRAME_BUFFER(i+1) = data[i+1];
+  for (uint8_t i = 1; i < data[0]; i++)
+    TRX_FRAME_BUFFER(i) = data[i];
 
   TRX_STATE_REG = TRX_CMD_TX_START;
 
@@ -364,12 +352,7 @@ static void phyHandleSetRequests(void)
 
   if (phyIb.request & PHY_REQ_CHANNEL)
   {
-    CC_CTRL_1_REG_s.ccBand = phyIb.band;
-
-    if (0 == phyIb.band)
-      PHY_CC_CCA_REG_s.channel = phyIb.channel;
-    else
-      CC_CTRL_0_REG = phyIb.channel;
+    PHY_CC_CCA_REG_s.channel = phyIb.channel;
   }
 
   if (phyIb.request & PHY_REQ_PANID)
@@ -500,4 +483,4 @@ void PHY_TaskHandler(void)
   }
 }
 
-#endif // PHY_ATMEGA256RFR2
+#endif // PHY_ATMEGA128RFA1

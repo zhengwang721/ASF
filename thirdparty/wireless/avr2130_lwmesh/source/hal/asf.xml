@@ -14,6 +14,7 @@
 			<require idref="common.utils"/>				
 		    <build type="doxygen-entry-point" value="group_hal"/>			
 			<device-support value="atmega256rfr2"/>
+			<device-support value="atmega128rfa1"/>
 		</module>
 
         <module type="meta" id="config.thirdparty.wireless.avr2130_lwmesh.source.hal#2"     caption="Hal wrapper for external transceivers">
@@ -81,9 +82,15 @@
     <device-alias-map name="avr2025_mac_hal_support">
         <device-support value="atxmega256a3u"/>
         <device-support value="atmega256rfr2"/>
+        <device-support value="atmega128rfa1"/>
         <device-support value="atxmega256a3bu"/>
         <device-support value="samd20"/>
     </device-alias-map>	
+    <device-alias-map name="avr2025_mac_hal_spi_support">
+        <device-support value="atxmega256a3u"/>
+        <device-support value="atxmega256a3bu"/>
+        <device-support value="samd20"/>
+    </device-alias-map>		
 
 
 </asf>

@@ -57,7 +57,7 @@ static void HAL_TimerInit(void);
 void HAL_Init(void)
 {
 
-pal_spi_init();
+
 HAL_TimerInit();
 
 }

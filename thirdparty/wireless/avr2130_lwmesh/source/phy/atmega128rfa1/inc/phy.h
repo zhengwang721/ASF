@@ -1,9 +1,9 @@
 /**
- * \file config.h
+ * \file phy.h
  *
- * \brief WSNDemo application and stack configuration
+ * \brief ATMEGA128RFA1 PHY interface
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2013, Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -37,45 +37,62 @@
  *
  * \asf_license_stop
  *
+ * $Id: phy.h 7863 2013-05-13 20:14:34Z ataradov $
  *
  */
 
-#ifndef _CONFIG_H_
-#define _CONFIG_H_
+#ifndef _PHY_H_
+#define _PHY_H_
 
-/*****************************************************************************
-*****************************************************************************/
-#define APP_ADDR                0x8001
-#define APP_PANID               0x1234
-#define APP_SENDING_INTERVAL    2000
-#define APP_ENDPOINT            1
-#define APP_OTA_ENDPOINT        2
-#define APP_SECURITY_KEY        "TestSecurityKey0"
+/*- Includes ---------------------------------------------------------------*/
+#include <stdint.h>
+#include <stdbool.h>
+#include "sysConfig.h"
+#include "atmega128rfa1.h"
 
-#if (defined (PHY_AT86RF212B) || defined (PHY_AT86RF212) )
-  #define APP_CHANNEL           0x01
-  #define APP_BAND              0x00
-  #define APP_MODULATION        0x24
-#else
-  #define APP_CHANNEL           0x0f
+/*- Definitions ------------------------------------------------------------*/
+#define PHY_RSSI_BASE_VAL                  (-90)
+
+#define PHY_HAS_RANDOM_NUMBER_GENERATOR
+#define PHY_HAS_AES_MODULE
+
+/*- Types ------------------------------------------------------------------*/
+typedef struct PHY_DataInd_t
+{
+  uint8_t    *data;
+  uint8_t    size;
+  uint8_t    lqi;
+  int8_t     rssi;
+} PHY_DataInd_t;
+
+/*- Prototypes -------------------------------------------------------------*/
+void PHY_Init(void);
+void PHY_SetRxState(bool rx);
+void PHY_SetChannel(uint8_t channel);
+void PHY_SetPanId(uint16_t panId);
+void PHY_SetShortAddr(uint16_t addr);
+void PHY_SetTxPower(uint8_t txPower);
+bool PHY_Busy(void);
+void PHY_Sleep(void);
+void PHY_Wakeup(void);
+void PHY_DataReq(uint8_t *data);
+void PHY_DataConf(uint8_t status);
+void PHY_DataInd(PHY_DataInd_t *ind);
+void PHY_TaskHandler(void);
+
+#ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
+void PHY_RandomReq(void);
+void PHY_RandomConf(uint16_t rnd);
 #endif
 
-//#define PHY_ENABLE_RANDOM_NUMBER_GENERATOR
+#ifdef PHY_ENABLE_AES_MODULE
+void PHY_EncryptReq(uint8_t *text, uint8_t *key);
+void PHY_EncryptConf();
+#endif
 
-#define SYS_SECURITY_MODE                   0
+#ifdef PHY_ENABLE_ENERGY_DETECTION
+void PHY_EdReq(void);
+void PHY_EdConf(int8_t ed);
+#endif
 
-#define NWK_BUFFERS_AMOUNT                  10
-#define NWK_DUPLICATE_REJECTION_TABLE_SIZE  50
-#define NWK_DUPLICATE_REJECTION_TTL         2000 // ms
-#define NWK_ROUTE_TABLE_SIZE                100
-#define NWK_ROUTE_DEFAULT_SCORE             3
-#define NWK_ACK_WAIT_TIME                   1000 // ms
-#define NWK_GROUPS_AMOUNT                   3
-#define NWK_ROUTE_DISCOVERY_TABLE_SIZE      5
-#define NWK_ROUTE_DISCOVERY_TIMEOUT         1000 // ms
-#define APP_RX_BUF_SIZE                     5
-#define NWK_ENABLE_ROUTING
-//#define NWK_ENABLE_SECURITY
-//#define NWK_ENABLE_ROUTE_DISCOVERY
-
-#endif // _CONFIG_H_
+#endif // _PHY_H_

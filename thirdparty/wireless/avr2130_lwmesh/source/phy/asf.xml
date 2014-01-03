@@ -10,15 +10,22 @@
             <device-support value="atmega256rfr2"/>
             <build type="doxygen-entry-point" value="group_phy_rfr2"/>
 		</module>
-		<module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy#2" caption="External Transceivers">
+		<module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy#2"     caption="atmegarfa1 phy support enabled">
+            <info type="description" value="summary">
+            ATMegaRFA1 Transceiver Abstraction Layer
+            </info>
+			<info type="gui-flag" value="hidden"/>
+            <require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfa1"/>
+            <device-support value="atmega128rfa1"/>
+            <build type="doxygen-entry-point" value="group_phy_rfa1"/>
+		</module>		
+		<module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy#3" caption="External Transceivers">
 			<info type="description" value="summary">
 			Transceiver Selection for Externally Plugged Transceivers
 			</info>
             <info type="gui-flag" value="hidden"/>
             <require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy.ext"/>
-            <device-support value="atxmega256a3bu"/>
-            <device-support value="atxmega256a3u"/>
-            <device-support value="samd20"/>
+			<device-support-alias value="avr2025_mac_hal_spi_support"/>
 		</module>		
 	</select-by-device>
 
@@ -30,9 +37,7 @@
             </info>
             <info type="gui-flag" value="hidden"/>
             <require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf231"/>
-            <device-support value="atxmega256a3bu"/>
-            <device-support value="atxmega256a3u"/>
-            <device-support value="samd20"/>
+			<device-support-alias value="avr2025_mac_hal_support"/>
         </module>
         <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.ext#at86rf233"     caption="at86rf233 phy support enabled">
             <info type="description" value="summary">
@@ -40,9 +45,7 @@
             </info>
             <info type="gui-flag" value="hidden"/>
             <require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf233"/>
-            <device-support value="atxmega256a3bu"/>
-            <device-support value="atxmega256a3u"/>
-            <device-support value="samd20"/>
+			<device-support-alias value="avr2025_mac_hal_support"/>
         </module>		
         <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.ext#at86rf212b"     caption="at86rf212b phy support enabled">
             <info type="description" value="summary">
@@ -50,9 +53,7 @@
             </info>
             <info type="gui-flag" value="hidden"/>
             <require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf212b"/>
-            <device-support value="atxmega256a3bu"/>
-            <device-support value="atxmega256a3u"/>
-            <device-support value="samd20"/>
+			<device-support-alias value="avr2025_mac_hal_support"/>
         </module>	
 		<module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.ext#at86rf212"     caption="at86rf212 phy support enabled">
             <info type="description" value="summary">
@@ -60,9 +61,7 @@
             </info>
             <info type="gui-flag" value="hidden"/>
             <require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf212"/>
-            <device-support value="atxmega256a3bu"/>
-            <device-support value="atxmega256a3u"/>
-            <device-support value="samd20"/>
+			<device-support-alias value="avr2025_mac_hal_support"/>
         </module>
 	</select-by-config>	
 	
@@ -74,9 +73,7 @@
         <info type="gui-flag" value="hidden"/>
         <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf231"/>
        <build type="doxygen-entry-point" value="group_phy_231"/>
-        <device-support value="atxmega256a3bu"/>
-        <device-support value="atxmega256a3u"/>
-        <device-support value="samd20"/>
+		<device-support-alias value="avr2025_mac_hal_support"/>
     </module>
 	
     <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf212"     caption="at86rf212 phy support enabled">
@@ -86,9 +83,7 @@
         <info type="gui-flag" value="hidden"/>
         <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf212"/>
        <build type="doxygen-entry-point" value="group_phy_212"/>
-        <device-support value="atxmega256a3bu"/>
-        <device-support value="atxmega256a3u"/>
-        <device-support value="samd20"/>
+		<device-support-alias value="avr2025_mac_hal_support"/>
     </module>
 
     <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf212b"     caption="at86rf212b phy support enabled">
@@ -98,9 +93,7 @@
         <info type="gui-flag" value="hidden"/>
         <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf212b"/>
        <build type="doxygen-entry-point" value="group_phy_212b"/>
-        <device-support value="atxmega256a3bu"/>
-        <device-support value="atxmega256a3u"/>
-        <device-support value="samd20"/>
+		<device-support-alias value="avr2025_mac_hal_support"/>
     </module>	
 	
     <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf233"     caption="at86rf233 phy support enabled">
@@ -110,9 +103,7 @@
         <info type="gui-flag" value="hidden"/>
         <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf233"/>
        <build type="doxygen-entry-point" value="group_phy_233"/>
-        <device-support value="atxmega256a3bu"/>
-        <device-support value="atxmega256a3u"/>
-        <device-support value="samd20"/>
+		<device-support-alias value="avr2025_mac_hal_support"/>
     </module>	
 	
     <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfr2"     caption="atmegarfr2 phy support enabled">
@@ -124,6 +115,16 @@
        <build type="doxygen-entry-point" value="group_phy_rfr2"/>
         <device-support value="atmega256rfr2"/>
     </module>
+	
+    <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfa1"     caption="atmegarfa1 phy support enabled">
+        <info type="description" value="summary">
+        ATMegaRFA1 PHY Layer
+        </info>
+		<info type="gui-flag" value="hidden"/>
+        <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfa1"/>
+       <build type="doxygen-entry-point" value="group_phy_rfr2"/>
+        <device-support value="atmega128rfa1"/>
+    </module>	
 
 	<module type="component" id="thirdparty.wireless.avr2130_lwmesh.source.phy" caption="AVR2130 - PHY">
 		<info type="description" value="summary">
@@ -132,10 +133,7 @@
 		<info type="gui-flag" value="hidden"/>
 		<require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy"/>
 		<build type="doxygen-entry-point" value="group_phy"/>
-        <device-support value="atmega256rfr2"/>
-        <device-support value="atxmega256a3bu"/>
-        <device-support value="atxmega256a3u"/>
-        <device-support value="samd20"/>
+		<device-support-alias value="avr2025_mac_hal_support"/>
 	</module>
 
 
