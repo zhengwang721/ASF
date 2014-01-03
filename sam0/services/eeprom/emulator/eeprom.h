@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x EEPROM Emulator
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -439,7 +439,7 @@ enum status_code eeprom_emulator_read_buffer(
  * \section asfdoc_sam0_eeprom_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
- *  - \ref asfdoc_samd20_nvm_group "Non-Volatile Memory Controller Driver"
+ *  - \ref asfdoc_sam0_nvm_group "Non-Volatile Memory Controller Driver"
  *
  *
  * \section asfdoc_sam0_eeprom_extra_errata Errata
