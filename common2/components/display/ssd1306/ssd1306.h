@@ -3,7 +3,7 @@
  *
  * \brief SSD1306 OLED display controller driver.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -195,9 +195,9 @@ static inline void ssd1306_hard_reset(void)
 {
 	uint32_t delay_10us = 10 * (system_gclk_gen_get_hz(0)/1000000);
 	port_pin_set_output_level(SSD1306_RES_PIN, false);
-	delay_cycles(delay_10us); // At lest 3µs
+	delay_cycles(delay_10us); // At lest 10us
 	port_pin_set_output_level(SSD1306_RES_PIN, true);
-	delay_cycles(delay_10us); // At lest 3µs
+	delay_cycles(delay_10us); // At lest 10us
 }
 //@}
 
