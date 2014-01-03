@@ -87,9 +87,10 @@ enum status_code extint_register_callback(
 	if (_extint_dev.callbacks[channel] == NULL) {
 		_extint_dev.callbacks[channel] = callback;
 		return STATUS_OK;
+	} else if (_extint_dev.callbacks[channel] == callback) {
+		return STATUS_OK;
 	}
 
-	Assert(false);
 	return STATUS_ERR_ALREADY_INITIALIZED;
 }
 
