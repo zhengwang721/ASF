@@ -89,9 +89,10 @@ extern "C" {
  *
  * \section dependencies Dependencies
  * This driver depends on the following modules:
- * - \ref asfdoc_samd20_port_group for IO port control.
- * - \ref asfdoc_samd20_system_group for getting system clock speeds for init functions.
- * - \ref asfdoc_samd20_sercom_spi_group for communication with the OLED controller
+ * - \ref asfdoc_sam0_port_group for IO port control.
+ * - \ref asfdoc_sam0_system_group for getting system clock speeds for init functions.
+ * - \ref asfdoc_sam0_sercom_spi_group for communication with the OLED controller
+ * - \ref asfdoc_sam0_sercom_spi_group for communication with the OLED controller
  * @{
  */
 
