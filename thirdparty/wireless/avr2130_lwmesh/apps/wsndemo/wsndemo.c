@@ -332,7 +332,7 @@ static void appInit(void)
   NWK_SetAddr(APP_ADDR);
   NWK_SetPanId(APP_PANID);
   PHY_SetChannel(APP_CHANNEL);
-#ifdef PHY_AT86RF212
+#if (defined(PHY_AT86RF212B) || defined(PHY_AT86RF212))
   PHY_SetBand(APP_BAND);
   PHY_SetModulation(APP_MODULATION);
 #endif

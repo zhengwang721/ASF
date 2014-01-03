@@ -332,16 +332,6 @@ void pal_trx_frame_write(uint8_t *data, uint8_t length)
 	/* Dummy read since SPI RX is double buffered */
 	while(!spi_is_ready_to_read(&master));
 	spi_read(&master, &dummy_read);
-	
-    length= length+2;
-	while(!spi_is_ready_to_write(&master));
-	spi_write(&master,length);
-	while(!spi_is_write_complete(&master));
-	/* Dummy read since SPI RX is double buffered */
-	while(!spi_is_ready_to_read(&master));
-	spi_read(&master, &dummy_read);
-	
-    length= length-2;
 	while(length--){
 		while(!spi_is_ready_to_write(&master));
 		spi_write(&master,*data++);
@@ -361,9 +351,6 @@ void pal_trx_frame_write(uint8_t *data, uint8_t length)
 
 	/* Send the command byte */
 	spi_write_packet(AT86RFX_SPI, &temp, 1);
-        length= length+2;
-        spi_write_packet(AT86RFX_SPI, &length, 1);
-        length= length-2;
 	spi_write_packet(AT86RFX_SPI, data, length);
 
 	/* Stop the SPI transaction by setting SEL high */
