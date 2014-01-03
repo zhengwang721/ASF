@@ -55,7 +55,7 @@
  * This interrupt is enable when the USB host enable remote wakeup feature
  * This interrupt wakeup the CPU if this one is in idle mode
  */
-static void ui_wakeup_handler(uint32_t channel)
+static void ui_wakeup_handler(void)
 {
 		/* It is a wakeup then send wakeup USB */
 		udc_remotewakeup();
@@ -72,9 +72,9 @@ void ui_init(void)
 	config_extint_chan.gpio_pin           = BUTTON_0_EIC_PIN;
 	config_extint_chan.gpio_pin_mux       = BUTTON_0_EIC_MUX;
 	config_extint_chan.gpio_pin_pull      = EXTINT_PULL_UP;
-	config_extint_chan.detection_criteria = EXTINT_DETECT_BOTH;
+	config_extint_chan.detection_criteria = EXTINT_DETECT_FALLING;
 	extint_chan_set_config(BUTTON_0_EIC_LINE, &config_extint_chan);
-	extint_register_callback(ui_wakeup_handler, EXTINT_CALLBACK_TYPE_DETECT);
+	extint_register_callback(ui_wakeup_handler,BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
 	extint_chan_enable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
 	
 	/* Initialize LEDs */
