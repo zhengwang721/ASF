@@ -58,9 +58,13 @@
  * Copy-paste the following setup code to your user application:
  * \snippet qs_dma_basic.c setup
  *
- * Add to user application initialization (typically the start of \c main()):
- * \snippet qs_dma_basic.c setup_init
  *
+ * Create a DMA resource structure and add to user application(typically the start of \c main()):
+ * \snippet qs_dma_basic.c struct_dma_resource_example
+ *
+  * Add to user application initialization (typically the start of \c main()):
+ * \snippet qs_dma_basic.c setup_init
+ 
  * \subsection asfdoc_samd21_dma_basic_use_casesetup_flow Workflow
  * -# Create a DMA resource configuration structure, which can be filled out to
  *    adjust the configuration of a single DMA transfer.

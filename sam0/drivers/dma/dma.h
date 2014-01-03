@@ -42,7 +42,9 @@
  */
 #ifndef DMA_H_INCLUDED
 #define DMA_H_INCLUDED
-
+/**
+ * \defgroup asfdoc_sam0_dma_group SAM D2x Direct Memory Access (DMA)
+ */
 #include <compiler.h>
 
 /** DMA invalid channel number */
