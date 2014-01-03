@@ -137,7 +137,7 @@ uint8_t udd_ctrl_buffer[USB_DEVICE_EP_CTRL_SIZE];
  *          the user must always use a buffer corresponding at endpoint size.
  */
 #if (0 != USB_DEVICE_MAX_EP)
-	
+
 #if (defined USB_DEVICE_LOW_SPEED)
 UDC_BSS(4) uint8_t udd_ep_out_cache_buffer[USB_DEVICE_MAX_EP][8];
 #elif (defined USB_DEVICE_HS_SUPPORT)
@@ -162,11 +162,11 @@ static void udd_ep_trans_in_next(void* pointer)
 	uint16_t next_trans;
 	udd_ep_id_t ep_num;
 	udd_ep_job_t *ptr_job;
-	
+
 	ptr_job = udd_ep_get_job(ep);
 	ep_num = ep & USB_EP_ADDR_MASK;
 
-	ep_size = ptr_job->ep_size;   
+	ep_size = ptr_job->ep_size;
 	// Update number of data transfered
 	nb_trans = ep_callback_para->sent_bytes;
 	ptr_job->nb_trans += nb_trans;
@@ -265,7 +265,7 @@ static void udd_ep_transfer_process(struct usb_module *module_inst, void* pointe
 {
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
 	udd_ep_id_t ep = ep_callback_para->endpoint_address;
-	
+
 	if (ep & USB_EP_DIR_IN) {
 		udd_ep_trans_in_next(pointer);
 	} else {
@@ -277,7 +277,7 @@ static void udd_ep_transfer_process(struct usb_module *module_inst, void* pointe
 void udd_ep_abort(udd_ep_id_t ep)
 {
 	udd_ep_job_t *ptr_job;
-	
+
     usb_device_endpoint_abort_job(&usb_device, ep);
 
 	// Job complete then call callback
@@ -309,10 +309,10 @@ void udd_ep_free(udd_ep_id_t ep)
 {
 	struct usb_device_endpoint_config config_ep;
 	usb_device_endpoint_get_config_defaults(&config_ep);
-	
+
 	uint8_t ep_num = ep & USB_EP_ADDR_MASK;
 	udd_ep_abort(ep);
-	
+
 	config_ep.ep_address = ep;
 	config_ep.ep_type = USB_DEVICE_ENDPOINT_TYPE_DISABLE;
 	usb_device_endpoint_set_config(&usb_device, &config_ep);
@@ -321,13 +321,14 @@ void udd_ep_free(udd_ep_id_t ep)
 }
 
 
+
 bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes, uint16_t MaxEndpointSize)
 {
 	struct usb_device_endpoint_config config_ep;
 	usb_device_endpoint_get_config_defaults(&config_ep);
-	
+
 	config_ep.ep_address = ep;
-	
+
 	if(MaxEndpointSize <= 8) {
 		config_ep.ep_size = USB_ENDPOINT_8_BYTE;
 	} else if(MaxEndpointSize <= 16) {
@@ -349,9 +350,9 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes, uint16_t MaxEndpointSize
 	}
 	udd_ep_job_t *ptr_job = udd_ep_get_job(ep);
 	ptr_job->ep_size = MaxEndpointSize;
-	
+
 	bmAttributes = bmAttributes & USB_EP_TYPE_MASK;
-	
+
 	// Check endpoint type
 	if(USB_EP_TYPE_ISOCHRONOUS == bmAttributes) {
 		config_ep.ep_type = USB_DEVICE_ENDPOINT_TYPE_ISOCHRONOUS;
@@ -362,16 +363,16 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes, uint16_t MaxEndpointSize
 	} else {
 		return false;
 	}
-	
+
 	uint8_t ep_num = ep & USB_EP_ADDR_MASK;
-	
+
 	if (STATUS_OK != usb_device_endpoint_set_config(&usb_device, &config_ep)) {
 		return false;
 	}
 	usb_device_endpoint_register_callback(&usb_device,ep_num,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT,udd_ep_transfer_process);
 	usb_device_endpoint_enable_callback(&usb_device,ep,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT);
 	usb_device_endpoint_enable_callback(&usb_device,ep,USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL);
-	
+
 	return true;
 }
 
@@ -391,7 +392,7 @@ bool udd_ep_set_halt(udd_ep_id_t ep)
 	}
 
 	usb_device_endpoint_set_halt(&usb_device, ep);
-	
+
 	udd_ep_abort(ep);
 	return true;
 }
@@ -408,13 +409,13 @@ bool udd_ep_clear_halt(udd_ep_id_t ep)
 	ptr_job = udd_ep_get_job(ep);
 
 	usb_device_endpoint_clear_halt(&usb_device, ep);
-	
+
 	// If a job is register on clear halt action then execute callback
 	if (ptr_job->busy == true) {
 		ptr_job->busy = false;
 		ptr_job->call_nohalt();
 	}
-	
+
 	return true;
 }
 
@@ -442,7 +443,7 @@ bool udd_ep_wait_stall_clear(udd_ep_id_t ep, udd_callback_halt_cleared_t callbac
 	} else if (usb_device_endpoint_is_configured(&usb_device, ep)) {
 		callback(); // Endpoint not halted then call directly callback
 		return true;
-	} else {  
+	} else {
 		return false;
 	}
 }
@@ -450,7 +451,7 @@ bool udd_ep_wait_stall_clear(udd_ep_id_t ep, udd_callback_halt_cleared_t callbac
 static void udd_ctrl_stall_data(void)
 {
 	udd_ep_control_state = UDD_EPCTRL_STALL_REQ;
-	
+
 	usb_device_endpoint_set_halt(&usb_device, USB_EP_DIR_IN);
 	usb_device_endpoint_clear_halt(&usb_device, USB_EP_DIR_OUT);
 }
@@ -462,11 +463,11 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t b
 	irqflags_t flags;
 
 	ep_num = ep & USB_EP_ADDR_MASK;
-	
+
 	if ((USB_DEVICE_MAX_EP < ep_num) || (udd_ep_is_halted(ep))) {
 		return false;
 	}
-	
+
 	ptr_job = udd_ep_get_job(ep);
 
 	flags = cpu_irq_save();
@@ -554,7 +555,7 @@ static void udd_ctrl_in_sent(void)
 	uint16_t nb_remain;
 
 	nb_remain = udd_g_ctrlreq.payload_size - udd_ctrl_payload_nb_trans;
-	
+
 	if (0 == nb_remain) {
 		// All content of current buffer payload are sent Update number of total data sending by previous payload buffer
 		udd_ctrl_prev_payload_nb_trans += udd_ctrl_payload_nb_trans;
@@ -575,7 +576,7 @@ static void udd_ctrl_in_sent(void)
 			nb_remain = udd_g_ctrlreq.payload_size;
 		}
 	}
-	
+
 	// Continue transfer and send next data
 	if (nb_remain >= USB_DEVICE_EP_CTRL_SIZE) {
 		nb_remain = USB_DEVICE_EP_CTRL_SIZE;
@@ -586,22 +587,22 @@ static void udd_ctrl_in_sent(void)
 
 	// Link payload buffer directly on USB hardware
 	usb_device_endpoint_write_buffer_job(&usb_device,0,udd_g_ctrlreq.payload + udd_ctrl_payload_nb_trans,nb_remain);
-	
+
 	udd_ctrl_payload_nb_trans += nb_remain;
 }
 
 static void udd_ctrl_out_received(void* pointer)
 {
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
-	
+
 	if(ep_callback_para->received_bytes == 0) {
 		usb_device_endpoint_setup_buffer_job(&usb_device,udd_ctrl_buffer);
 		return;
 	}
-	
+
 	uint16_t nb_data;
 	nb_data = ep_callback_para->received_bytes; // Read data received during OUT phase
-	
+
 	if (udd_g_ctrlreq.payload_size < (udd_ctrl_payload_nb_trans + nb_data)) {
 		// Payload buffer too small
 		nb_data = udd_g_ctrlreq.payload_size - udd_ctrl_payload_nb_trans;
@@ -665,7 +666,7 @@ static void udd_ctrl_out_received(void* pointer)
 static void _usb_ep0_on_setup(struct usb_module *module_inst, void* pointer)
 {
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
-	
+
 	if (UDD_EPCTRL_SETUP != udd_ep_control_state) {
 		if (NULL != udd_g_ctrlreq.callback) {
 			udd_g_ctrlreq.callback();
@@ -700,9 +701,9 @@ static void _usb_ep0_on_setup(struct usb_module *module_inst, void* pointer)
 }
 
 static void udd_ctrl_underflow(void* pointer)
-{	
+{
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
-	
+
 	if (UDD_EPCTRL_DATA_OUT == udd_ep_control_state) {
 		// Host want to stop OUT transaction
 		// then stop to wait OUT data phase and wait IN ZLP handshake
@@ -718,7 +719,7 @@ static void udd_ctrl_underflow(void* pointer)
 static void udd_ctrl_overflow(void* pointer)
 {
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
-	
+
 	if (UDD_EPCTRL_DATA_IN == udd_ep_control_state) {
 		// Host want to stop IN transaction
 		// then stop to wait IN data phase and wait OUT ZLP handshake
@@ -733,7 +734,7 @@ static void udd_ctrl_overflow(void* pointer)
 static void _usb_ep0_on_tansfer_fail(struct usb_module *module_inst, void* pointer)
 {
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
-	
+
 	if(ep_callback_para->endpoint_address & USB_EP_DIR_IN) {
 		udd_ctrl_underflow(pointer);
 	} else {
@@ -745,7 +746,7 @@ static void _usb_ep0_on_tansfer_fail(struct usb_module *module_inst, void* point
 static void _usb_ep0_on_tansfer_ok(struct usb_module *module_inst, void * pointer)
 {
 		if (UDD_EPCTRL_DATA_OUT  == udd_ep_control_state) { // handshake Out for status stage
-			udd_ctrl_out_received(pointer);	
+			udd_ctrl_out_received(pointer);
 		} else if (UDD_EPCTRL_DATA_IN == udd_ep_control_state) { // handshake In for status stage
 			udd_ctrl_in_sent();
 		} else {
@@ -753,20 +754,20 @@ static void _usb_ep0_on_tansfer_ok(struct usb_module *module_inst, void * pointe
 				udd_g_ctrlreq.callback();
 			}
 			udd_ep_control_state = UDD_EPCTRL_SETUP;
-		}			
+		}
 }
 
 static void udd_ctrl_ep_enable(struct usb_module *module_inst)
 {
 	/* USB Device Endpoint0 Configuration */
 	 struct usb_device_endpoint_config config_ep0;
-	 
+
 	 usb_device_endpoint_get_config_defaults(&config_ep0);
 	 config_ep0.ep_size =  (32 - clz(((uint32_t)Min(Max(USB_DEVICE_EP_CTRL_SIZE, 8), 1024) << 1) - 1) - 1 - 3);
 	 usb_device_endpoint_set_config(module_inst,&config_ep0);
-	 
+
 	 usb_device_endpoint_setup_buffer_job(module_inst,udd_ctrl_buffer);
-	
+
 	 usb_device_endpoint_register_callback(module_inst,0,USB_DEVICE_ENDPOINT_CALLBACK_RXSTP, _usb_ep0_on_setup );
 	 usb_device_endpoint_register_callback(module_inst,0,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT,_usb_ep0_on_tansfer_ok );
 	 usb_device_endpoint_register_callback(module_inst,0,USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL,_usb_ep0_on_tansfer_fail );
@@ -781,6 +782,7 @@ static void _usb_on_suspend(struct usb_module *module_inst)
 {
 	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
+
 #ifdef UDC_SUSPEND_EVENT
 	UDC_SUSPEND_EVENT();
 #endif
@@ -804,6 +806,7 @@ static void _usb_on_wakeup(struct usb_module *module_inst)
 {
 	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
+
 #ifdef UDC_RESUME_EVENT
 	UDC_RESUME_EVENT();
 #endif
@@ -812,17 +815,18 @@ static void _usb_on_wakeup(struct usb_module *module_inst)
 void udd_detach(void)
 {
 	usb_device_detach(&usb_device);
+
 }
 
 void udd_attach(void)
 {
 	usb_device_attach(&usb_device);
-	
+
 	usb_device_register_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND, _usb_on_suspend);
 	usb_device_register_callback(&usb_device, USB_DEVICE_CALLBACK_SOF, _usb_on_sof_notify);
 	usb_device_register_callback(&usb_device, USB_DEVICE_CALLBACK_RESET, _usb_on_bus_reset);
 	usb_device_register_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP, _usb_on_wakeup);
-	
+
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_SOF);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_RESET);
@@ -832,20 +836,21 @@ void udd_attach(void)
 void udd_enable(void)
 {
 	struct usb_config config_usb;
-	
+
 	/* USB Module configuration */
 	usb_get_config_defaults(&config_usb);
 	usb_init(&usb_device, USB, &config_usb);
-	
+
 	/* USB Module Enable */
 	usb_enable(&usb_device);
-	
+
 	/* USB Attach */
 	udd_attach();
 }
 
 void udd_disable(void)
-{	
+{
 	udd_detach();
+
 	usb_disable(&usb_device);
 }

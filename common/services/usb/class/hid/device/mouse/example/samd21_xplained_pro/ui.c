@@ -47,7 +47,7 @@
 #define  LED_On()          port_pin_set_output_level(LED_0_PIN, 0)
 #define  LED_Off()         port_pin_set_output_level(LED_0_PIN, 1)
 
-#define  MOUSE_MOVE_RANGE  1
+#define  MOUSE_MOVE_RANGE 5
 
 
 /* Interrupt on "pin change" from push button to do wakeup on USB
@@ -66,18 +66,19 @@ static void ui_wakeup_handler(void)
 void ui_init(void)
 {
 	struct extint_chan_conf config_extint_chan;
-	
+
 	extint_chan_get_config_defaults(&config_extint_chan);
-	
-	config_extint_chan.gpio_pin           = BUTTON_0_EIC_PIN;
-	config_extint_chan.gpio_pin_mux       = BUTTON_0_EIC_MUX;
-	config_extint_chan.gpio_pin_pull      = EXTINT_PULL_UP;
+
+	config_extint_chan.gpio_pin            = BUTTON_0_EIC_PIN;
+	config_extint_chan.gpio_pin_mux        = BUTTON_0_EIC_MUX;
+	config_extint_chan.gpio_pin_pull       = EXTINT_PULL_UP;
 	config_extint_chan.filter_input_signal = true;
-	config_extint_chan.detection_criteria = EXTINT_DETECT_FALLING;
+	config_extint_chan.detection_criteria  = EXTINT_DETECT_FALLING;
 	extint_chan_set_config(BUTTON_0_EIC_LINE, &config_extint_chan);
-	extint_register_callback(ui_wakeup_handler,BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
+	extint_register_callback(ui_wakeup_handler, BUTTON_0_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
 	extint_chan_enable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
-	
+
 	/* Initialize LEDs */
 	LED_Off();
 }
@@ -113,9 +114,9 @@ void ui_process(uint16_t framenumber)
 	if ((framenumber % 1000) == 500) {
 		LED_Off();
 	}
-	/* Scan process running each 2ms */
+	/* Scan process running each 5ms */
 	cpt_sof++;
-	if (cpt_sof < 2) {
+	if (cpt_sof < 5) {
 		return;
 	}
 	cpt_sof = 0;
@@ -130,8 +131,8 @@ void ui_process(uint16_t framenumber)
  * \defgroup UI User Interface
  *
  * Human interface on SAMD21-XPlain:
- * - Led 0 is blinks when USB is wakeup
- * - Push button 0 is used to make mouse up
+ * - Led 0 blinks when USB is connected and active
+ * - Push button 0 (SW0) are used to move mouse up
  * - Only a low level on push button 0 will generate a wakeup to USB Host in remote wakeup mode.
  *
  */

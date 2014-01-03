@@ -58,22 +58,22 @@ int main(void)
 	// Initialize the sleep manager
 	sleepmgr_init();
 	board_init();
-	
-#else 
+
+#else
 	system_init();
-	
+
 #endif
-	
+
 	ui_init();
 	ui_powerdown();
-	
+
 	// Start USB stack to authorize VBus monitoring
 	udc_start();
 
 	// The main loop manages only the power mode
 	// because the USB management is done by interrupt
 	while (true) {
-#ifdef   USB_DEVICE_LOW_SPEED
+#ifdef USB_DEVICE_LOW_SPEED
 		// No USB "Keep a live" interrupt available in low speed
 		// to scan mouse interface then use main loop
 		if (main_b_mouse_enable) {
@@ -86,10 +86,10 @@ int main(void)
 				ui_process(virtual_sof++);
 			}
 		}
-#else
-#if !SAMD21
-	sleepmgr_enter_sleep();
-#endif
+#else /* #ifdef USB_DEVICE_LOW_SPEED */
+#  if !SAMD21
+		sleepmgr_enter_sleep();
+#  endif
 #endif
 	}
 }
