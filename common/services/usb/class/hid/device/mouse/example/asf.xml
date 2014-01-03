@@ -1,7 +1,8 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common.services.usb.class.hid.device.mouse.example" caption="USB Device HID Mouse Example">
+	<select-by-device id="common.services.usb.class.hid.device.mouse.example" caption="USB Device HID Mouse Example">
+	<module type="application" id="common.services.usb.class.hid.device.mouse.example#0" caption="USB Device HID Mouse Example - XMEGA/UC3/SAM3/SAM4 implementation">
 		<info type="description" value="summary">
-		Provide an application example of USB Device HID Mouse implementation. Relies on the native HID driver and uses buttons available on the board as a mouse interfaces.
+		Provide an application example of USB Device HID Mouse implementation for XMEGA/UC3/SAM3/SAM4. 
 		</info>
 		<build type="header-file" value="conf_usb.h"/>
 		<build type="header-file" value="ui.h"/>
@@ -38,9 +39,9 @@
 		</info>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
-	<module type="application" id="common.services.usb.class.hid.device.mouse.example.lite" caption="USB Device HID Mouse Example Lite">
+	<module type="application" id="common.services.usb.class.hid.device.mouse.example#1" caption="USB Device HID Mouse Example - SAMD21 implementation">
 		<info type="description" value="summary">
-		Provide a lite application example of USB Device HID Mouse implementation.
+		Provide an application example of USB Device HID Mouse implementation for SAMD21. 
 		</info>
 		<build type="header-file" value="conf_usb.h"/>
 		<build type="header-file" value="ui.h"/>
@@ -55,4 +56,5 @@
 		</info>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
+	</select-by-device>
 </asf>

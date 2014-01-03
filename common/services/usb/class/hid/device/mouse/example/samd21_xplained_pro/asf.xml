@@ -6,7 +6,7 @@
 		<build type="c-source" value="ui.c"/>
 		<build type="include-path" value="."/>
 		<config name="config.common.services.usb.class.device" value="hid_mouse"/>
-		<require idref="common.services.usb.class.hid.device.mouse.example.lite"/>
+		<require idref="common.services.usb.class.hid.device.mouse.example"/>
 		<require idref="sam0.drivers.extint"/>
 		<require idref="board.samd21_xplained_pro"/>
 		<generator value="iarewarm"/>
