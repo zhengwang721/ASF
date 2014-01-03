@@ -209,8 +209,9 @@ void configure_dac_channel(void)
 
 int main(void)
 {
+//! [data_length_var]
 	uint32_t i;
-
+//! [data_length_var]
 	system_init();
 
 //! [setup_init]
@@ -251,7 +252,7 @@ int main(void)
 //! [setup_dac_data]
 //! [setup_init]
 
-//! [main]
+//! [main_TEST]
 //! [main_write]
 	dac_chan_write_buffer_job(&dac_instance, DAC_CHANNEL_0,
 			dac_data, DATA_LENGTH);
@@ -267,6 +268,6 @@ int main(void)
 	while (1) {
 	}
 //! [main_loop]
-//! [main]
+//! [main_TEST]
 }
 

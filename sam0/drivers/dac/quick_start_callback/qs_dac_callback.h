@@ -78,6 +78,9 @@
  * \snippet qs_dac_callback.c setup_dac
  * \snippet qs_dac_callback.c setup_dac_channel
  *
+ * define a  data length variables and add to user application (typically the start of \c main()):
+ * \snippet qs_dac_callback.c data_length_var
+ *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_dac_callback.c setup_init
  *
