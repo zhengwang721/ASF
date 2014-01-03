@@ -115,7 +115,10 @@ static void setup_transfer_descriptor(DmacDescriptor *descriptor )
 
 int main(void)
 {
+//! [struct_dma_resource_example]
 	struct dma_resource example_resource;
+//! [struct_dma_resource_example]
+	
 	system_init();
 
 	//! [setup_dma_resource]

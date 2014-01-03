@@ -252,7 +252,7 @@ int main(void)
 //! [setup_dac_data]
 //! [setup_init]
 
-//! [main_TEST]
+//! [main_start]
 //! [main_write]
 	dac_chan_write_buffer_job(&dac_instance, DAC_CHANNEL_0,
 			dac_data, DATA_LENGTH);
@@ -268,6 +268,6 @@ int main(void)
 	while (1) {
 	}
 //! [main_loop]
-//! [main_TEST]
+//! [main_start]
 }
 

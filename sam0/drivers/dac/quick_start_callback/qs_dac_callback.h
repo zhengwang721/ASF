@@ -125,18 +125,18 @@
  * -# Configure the DAC channel.
  *  -# Create a DAC channel configuration struct, which can be filled out to
  *     adjust the configuration of a physical DAC output channel.
- *     \snippet qs_dac_basic.c setup_dac_chan_config
+ *     \snippet qs_dac_callback.c setup_dac_chan_config
  *  -# Initialize the DAC channel configuration struct with the module's default
  *     values.
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *     \snippet qs_dac_basic.c setup_dac_chan_config_default
+ *     \snippet qs_dac_callback.c setup_dac_chan_config_default
  *  -# Configure the DAC channel with the desired channel settings.
- *     \snippet qs_dac_basic.c set_dac_chan_config
+ *     \snippet qs_dac_callback.c set_dac_chan_config
  *  -# Enable the DAC channel so that it can output a voltage.
- *     \snippet qs_dac_basic.c enable_dac_channel
+ *     \snippet qs_dac_callback.c enable_dac_channel
  *
  * -# Configure the RTC module.
  *  -# Create a RTC module event struct, which can be filled out to
@@ -144,7 +144,7 @@
  *     \snippet qs_dac_callback.c setup_rtc_event
  *  -# Create a RTC module configuration struct, which can be filled out to
  *     adjust the configuration of a physical RTC peripheral.
- *     \snippet qs_dac_callback.c config_rtc_count
+ *     \snippet qs_dac_callback.c setup_rtc_config
  *  -# Initialize the RTC configuration struct with the module's default values.
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
@@ -191,7 +191,7 @@
  *
  * \subsection asfdoc_sam0_dac_basic_use_case_callback_use_code Code
  * Copy-paste the following code to your user application:
- * \snippet qs_dac_callback.c main
+ * \snippet qs_dac_callback.c main_start
  *
  * \subsection asfdoc_sam0_dac_basic_use_case_callback_use_workflow Workflow
  *  -# Start an DAC conversion and generate a callback when complete.
