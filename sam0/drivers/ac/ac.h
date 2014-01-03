@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Analog Comparator Driver
+ * \brief SAM D2x Analog Comparator Driver
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define AC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_ac_group SAM D20 Analog Comparator Driver (AC)
+ * \defgroup asfdoc_samd20_ac_group SAM D2x Analog Comparator Driver (AC)
  *
- * This driver for SAM D20 devices provides an interface for the configuration
+ * This driver for SAM D2x devices provides an interface for the configuration
  * and management of the device's Analog Comparator functionality, for the
  * comparison of analog voltages against a known reference voltage to determine
  * its relative level. The following driver API modes are covered by this
@@ -165,7 +165,7 @@
  * another without requiring software intervention.
  *
  * \note The connection of events between modules requires the use of the
- *       \ref asfdoc_samd20_events_group "SAM D20 Event System Driver (EVENTS)"
+ *       \ref asfdoc_samd20_events_group "SAM D2x Event System Driver (EVENTS)"
  *       to route output event of one module to the the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
