@@ -185,13 +185,17 @@ void PHY_Wakeup(void)
 
 /*************************************************************************//**
 *****************************************************************************/
-void PHY_DataReq(uint8_t *data, uint8_t size)
+void PHY_DataReq(uint8_t *data)
 {
- uint8_t dummy_size;
+
   phyTrxSetState(TRX_CMD_TX_ARET_ON);
- // dummy_size =   size+2; //crc
- // pal_trx_frame_write(&dummy_size,1);
-  pal_trx_frame_write(data,size);  
+ 
+ 
+ /* size of the buffer is sent as first byte of the data
+  * and data starts from second byte.
+  */
+  data[0] += 2;
+  pal_trx_frame_write(data,(data[0]-1) /* length value*/);  
   phyWriteRegister(TRX_STATE_REG, TRX_CMD_TX_START);
   
   
@@ -451,7 +455,7 @@ void PHY_TaskHandler(void)
   }
 }
 
-void phyInterruptHandler()
+void phyInterruptHandler(void)
 {
   uint8_t irq;
 

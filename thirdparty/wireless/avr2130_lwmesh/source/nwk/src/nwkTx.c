@@ -318,7 +318,7 @@ void nwkTxTaskHandler(void)
         {
           nwkTxPhyActiveFrame = frame;
           frame->state = NWK_TX_STATE_WAIT_CONF;
-          PHY_DataReq(frame->data, frame->size);
+          PHY_DataReq(&(frame->size));
         }
       } break;
 

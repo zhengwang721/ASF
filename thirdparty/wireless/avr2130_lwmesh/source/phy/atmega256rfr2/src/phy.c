@@ -220,12 +220,12 @@ void PHY_Wakeup(void)
 
 /*************************************************************************//**
 *****************************************************************************/
-void PHY_DataReq(uint8_t *data, uint8_t size)
+void PHY_DataReq(uint8_t *data)
 {
   phyTrxSetState(TRX_CMD_TX_ARET_ON);
 
-  TRX_FRAME_BUFFER(0) = size + 2/*crc*/;
-  for (uint8_t i = 0; i < size; i++)
+  TRX_FRAME_BUFFER(0) = data[0] + 2/*crc*/;
+  for (uint8_t i = 1; i < data[0]; i++)
     TRX_FRAME_BUFFER(i+1) = data[i];
 
   TRX_STATE_REG = TRX_CMD_TX_START;

@@ -76,7 +76,7 @@ void PHY_SetTxPower(uint8_t txPower);
 bool PHY_Busy(void);
 void PHY_Sleep(void);
 void PHY_Wakeup(void);
-void PHY_DataReq(uint8_t *data, uint8_t size);
+void PHY_DataReq(uint8_t *data);
 void PHY_DataConf(uint8_t status);
 void PHY_DataInd(PHY_DataInd_t *ind);
 void PHY_TaskHandler(void);

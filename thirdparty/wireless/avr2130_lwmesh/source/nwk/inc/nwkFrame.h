@@ -86,7 +86,7 @@ typedef struct PACK NwkFrameMulticastHeader_t
   uint16_t    maxMemberRadius    : 4;
 } NwkFrameMulticastHeader_t;
 
-typedef struct NwkFrame_t
+typedef struct PACK NwkFrame_t
 {
   uint8_t      state;
   uint8_t      size;
