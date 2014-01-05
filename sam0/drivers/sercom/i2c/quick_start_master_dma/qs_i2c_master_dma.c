@@ -85,12 +85,6 @@ void configure_i2c_master(void)
 	i2c_master_init(&i2c_master_instance, SERCOM2, &config_i2c_master);
 	//! [init_module]
 
-	//! [set_addr]
-	i2c_master_instance.hw->I2CM.ADDR.reg =
-		SERCOM_I2CM_ADDR_ADDR(SLAVE_ADDRESS) | SERCOM_I2CM_ADDR_LENEN |
-		SERCOM_I2CM_ADDR_LEN(DATA_LENGTH);
-	//! [set_addr]
-
 	//! [enable_module]
 	i2c_master_enable(&i2c_master_instance);
 	//! [enable_module]
@@ -133,7 +127,7 @@ void configure_dma_resource(struct dma_resource *resource)
 	//! [dma_setup_3]
 	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
 	config.peripheral_trigger = SERCOM2_DMAC_ID_TX;
-	config.trigger_action = DMA_TRIGGER_ACTON_TRANSACTION;
+	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 	//! [dma_setup_3]
 
 	//! [dma_setup_4]
@@ -191,7 +185,13 @@ int main(void)
 	dma_start_transfer_job(&example_resource);
 	//! [start_transfer_job]
 
-	//! [waiting_for_complete]
+//! [set_i2c_addr]
+	i2c_master_instance.hw->I2CM.ADDR.reg =
+		SERCOM_I2CM_ADDR_ADDR(SLAVE_ADDRESS<<1) |
+		SERCOM_I2CM_ADDR_LENEN |
+		SERCOM_I2CM_ADDR_LEN(DATA_LENGTH);
+//! [set_i2c_addr]
+
 	while (!transfer_is_done) {
 		/* Wait for transfer done */
 	}

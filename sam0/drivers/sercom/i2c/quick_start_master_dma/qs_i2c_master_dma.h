@@ -102,8 +102,6 @@ SERCOM I2C Master with DMA
  *    \snippet qs_i2c_master_dma_use.c conf_change
  *   -# Initialize the module with the set configurations.
  *    \snippet qs_i2c_master_dma_use.c init_module
- * -# Set the auto address length and enable flag.
- *  \snippet qs_i2c_master_dma_use.c set_addr
  *   -# Enable the module.
  *    \snippet qs_i2c_master_dma_use.c enable_module
  * -# Create a DMA resource configuration structure, which can be filled out to
@@ -154,6 +152,9 @@ Implementation
 Workflow
  * -# Start the DMA transfer job.
  *  \snippet qs_i2c_master_dma_use.c start_transfer_job
+ *
+ * -# Set the auto address length and enable flag.
+ *  \snippet qs_i2c_master_dma_use.c set_i2c_addr
  * 
  * -# Waiting for transfer complete
  *  \snippet qs_i2c_master_dma_use.c waiting_for_complete
