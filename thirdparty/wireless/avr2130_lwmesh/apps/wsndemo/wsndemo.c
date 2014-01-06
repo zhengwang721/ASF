@@ -3,7 +3,7 @@
  *
  * \brief WSNDemo application implementation
  *
- * Copyright (C) 2012-2013, Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,13 @@
  *
  *
  */
+
+/*
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ */
+ 
 /**
 * \mainpage
 * \section preface Preface

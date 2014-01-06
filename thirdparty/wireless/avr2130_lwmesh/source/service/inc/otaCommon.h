@@ -3,7 +3,7 @@
  *
  * \brief OTA Server and OTA Client common interface
  *
- * Copyright (C) 2012-2013, Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -37,10 +37,14 @@
  *
  * \asf_license_stop
  *
- * $Id: otaCommon.h 8367 2013-07-25 17:18:50Z ataradov $
  *
  */
 
+/*
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ */
 #ifndef _OTA_COMMON_H_
 #define _OTA_COMMON_H_
 

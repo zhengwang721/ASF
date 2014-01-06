@@ -3,7 +3,7 @@
  *
  * \brief System types and definitions
  *
- * Copyright (C) 2012-2013, Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -37,8 +37,13 @@
  *
  * \asf_license_stop
  *
- * $Id: sysTypes.h 8375 2013-07-25 21:26:06Z ataradov $
  *
+ */
+
+/*
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 #ifndef _SYS_TYPES_H_

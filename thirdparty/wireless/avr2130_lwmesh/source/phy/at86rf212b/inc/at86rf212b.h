@@ -1,9 +1,9 @@
 /**
- * \file at86rf212.h
+ * \file at86rf212b.h
  *
- * \brief AT86RF212 registers description and interface
+ * \brief AT86RF212B registers description and interface
  *
- * Copyright (C) 2012-2013, Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -37,8 +37,13 @@
  *
  * \asf_license_stop
  *
- * $Id: at86rf212.h 7863 2013-05-13 20:14:34Z ataradov $
  *
+ */
+
+/*
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 #ifndef _AT86RF212B_H_

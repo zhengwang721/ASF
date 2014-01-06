@@ -1,12 +1,12 @@
  /*
- * @file pal.c
+ * @file hal_ext_trx.c
  *
- * @brief Performs interface functionalities between the TAL layer and ASF drivers
+ * @brief Performs interface functionalities between the PHY layer and ASF drivers
  *  Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
- * \asf_license_start
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
- * \page License
+ * \asf_license_start
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -35,7 +35,12 @@
  * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
  * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ *
  */
+
 /*
  * Copyright (c) 2013, Atmel Corporation All rights reserved.
  *

@@ -3,7 +3,7 @@
  *
  * \brief Route discovery interface
  *
- * Copyright (C) 2012-2013, Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -37,8 +37,13 @@
  *
  * \asf_license_stop
  *
- * $Id: nwkRouteDiscovery.h 7863 2013-05-13 20:14:34Z ataradov $
  *
+ */
+
+/*
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 #ifndef _NWK_ROUTE_DISCOVERY_H_

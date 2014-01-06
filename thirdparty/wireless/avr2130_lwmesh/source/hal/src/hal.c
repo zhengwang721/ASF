@@ -1,7 +1,7 @@
 /**
  * \file hal.c
  *
- * \brief ATmega256rfr2 HAL implementation
+ * \brief  HAL implementation
  *
  * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,6 +38,12 @@
  * \asf_license_stop
  *
  *
+ */
+
+/*
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 #include "sysTypes.h"

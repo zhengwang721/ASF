@@ -3,7 +3,7 @@
  *
  * \brief Main system routines implementation
  *
- * Copyright (C) 2012-2013, Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -37,8 +37,13 @@
  *
  * \asf_license_stop
  *
- * $Id: sys.c 8410 2013-08-08 16:59:55Z ataradov $
  *
+ */
+
+/*
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /*- Includes ---------------------------------------------------------------*/

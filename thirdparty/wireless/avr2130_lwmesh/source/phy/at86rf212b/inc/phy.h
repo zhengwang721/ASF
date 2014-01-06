@@ -1,9 +1,9 @@
 /**
  * \file phy.h
  *
- * \brief AT86RF212 PHY interface
+ * \brief AT86RF212B PHY interface
  *
- * Copyright (C) 2012-2013, Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -37,8 +37,13 @@
  *
  * \asf_license_stop
  *
- * $Id: phy.h 7863 2013-05-13 20:14:34Z ataradov $
  *
+ */
+
+/*
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 #ifndef _PHY_H_
