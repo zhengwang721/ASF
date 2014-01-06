@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 USART Interface Driver
+ * \brief SAM D2x USART Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_sercom_usart_basic_use_case Quick Start Guide for SERCOM USART - Basic
+ * \page asfdoc_sam0_sercom_usart_basic_use_case Quick Start Guide for SERCOM USART - Basic
  *
  * This quick start will echo back characters typed into the terminal. In this
  * use case the USART will be configured with the following settings:
@@ -51,12 +51,12 @@
  * - 8-bits, No Parity and 1 Stop Bit
  * - TX and RX enabled and connected to the Xplained PRO Embedded Debugger virtual COM port
  *
- * \section asfdoc_samd20_sercom_usart_basic_use_case_setup Setup
+ * \section asfdoc_sam0_sercom_usart_basic_use_case_setup Setup
  *
- * \subsection asfdoc_samd20_sercom_usart_basic_use_case_prereq Prerequisites
+ * \subsection asfdoc_sam0_sercom_usart_basic_use_case_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd20_usart_basic_use_case_setup_code Code
+ * \subsection asfdoc_sam0_usart_basic_use_case_setup_code Code
  * Add to the main application source file, outside of any functions:
  * \snippet qs_usart_basic_use.c module_inst
  *
@@ -66,7 +66,7 @@
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_usart_basic_use.c setup_init
  *
- * \subsection asfdoc_samd20_usart_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_sam0_usart_basic_use_case_setup_flow Workflow
  * -# Create a module software instance structure for the USART module to store
  *    the USART driver state while it is in use.
  *    \note This should never go out of scope as long as the module is in use.
@@ -93,13 +93,13 @@
  *     \snippet qs_usart_basic_use.c setup_enable
  *
  *
- * \section asfdoc_samd20_usart_basic_use_case_main Use Case
+ * \section asfdoc_sam0_usart_basic_use_case_main Use Case
  *
- * \subsection asfdoc_samd20_usart_basic_use_case_main_code Code
+ * \subsection asfdoc_sam0_usart_basic_use_case_main_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_usart_basic_use.c main
  *
- * \subsection asfdoc_samd20_usart_basic_use_case_main_flow Workflow
+ * \subsection asfdoc_sam0_usart_basic_use_case_main_flow Workflow
  * -# Send a string to the USART to show the demo is running, blocking until
  *    all characters have been sent.
  *  \snippet qs_usart_basic_use.c main_send_string
