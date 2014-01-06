@@ -212,9 +212,6 @@ static void udd_ep_trans_out_next(void* pointer)
 	ptr_job = udd_ep_get_job(ep);
 	ep_num = ep & USB_EP_ADDR_MASK;
 
-	// Lock emission of new OUT packet
-	//Assert(udd_is_full_bank_out(ep_num));
-
 	ep_size = ptr_job->ep_size;
 	// Update number of data transfered
 	nb_trans = ep_callback_para->received_bytes;

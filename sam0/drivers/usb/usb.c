@@ -1383,7 +1383,11 @@ bool usb_device_endpoint_is_configured(struct usb_module *module_inst, uint8_t e
 	uint8_t ep_num = ep & USB_EP_ADDR_MASK;
 	uint8_t flag;
 
-	flag = (uint8_t)(module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.bit.EPTYPE1);
+	if (ep & USB_EP_DIR_IN) {
+		flag = (uint8_t)(module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.bit.EPTYPE1);
+	} else {
+		flag = (uint8_t)(module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.bit.EPTYPE0);
+	}
 	return ((enum usb_device_endpoint_type)(flag) != USB_DEVICE_ENDPOINT_TYPE_DISABLE);
 }
 
