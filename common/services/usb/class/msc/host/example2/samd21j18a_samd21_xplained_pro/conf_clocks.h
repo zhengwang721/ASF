@@ -100,8 +100,8 @@
 #  define CONF_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK   true
 #  define CONF_CLOCK_DFLL_KEEP_LOCK_ON_WAKEUP     true
 #  define CONF_CLOCK_DFLL_ENABLE_CHILL_CYCLE      true
-#  define CONF_CLOCK_DFLL_MAX_COARSE_STEP_SIZE    (0x1f / 4)
-#  define CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE      (0xff / 4)
+#  define CONF_CLOCK_DFLL_MAX_COARSE_STEP_SIZE    (0x1f / 8)
+#  define CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE      (0xff / 8)
 
 /* SYSTEM_CLOCK_SOURCE_DPLL configuration - Digital Phase-Locked Loop */
 #  define CONF_CLOCK_DPLL_ENABLE                  false
