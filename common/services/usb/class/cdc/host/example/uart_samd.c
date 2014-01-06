@@ -176,11 +176,11 @@ void uart_config(usb_cdc_line_coding_t *cfg)
 
 	/* Options for USART. */
 	usart_conf.baudrate = LE32_TO_CPU(cfg->dwDTERate);
-	usart_conf.mux_setting = CONF_CDC_MUX_SETTING;
-	usart_conf.pinmux_pad0 = CONF_CDC_PINMUX_PAD0;
-	usart_conf.pinmux_pad1 = CONF_CDC_PINMUX_PAD1;
-	usart_conf.pinmux_pad2 = CONF_CDC_PINMUX_PAD2;
-	usart_conf.pinmux_pad3 = CONF_CDC_PINMUX_PAD3;
+	usart_conf.mux_setting = CONF_USART_MUX_SETTING;
+	usart_conf.pinmux_pad0 = CONF_USART_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = CONF_USART_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = CONF_USART_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = CONF_USART_PINMUX_PAD3;
 	usart_init(&usart_module_edbg, CONF_USART_BASE, &usart_conf);
 	usart_enable(&usart_module_edbg);
 
@@ -200,11 +200,11 @@ void uart_open(void)
 
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&usart_conf);
-	usart_conf.mux_setting = CONF_CDC_MUX_SETTING;
-	usart_conf.pinmux_pad0 = CONF_CDC_PINMUX_PAD0;
-	usart_conf.pinmux_pad1 = CONF_CDC_PINMUX_PAD1;
-	usart_conf.pinmux_pad2 = CONF_CDC_PINMUX_PAD2;
-	usart_conf.pinmux_pad3 = CONF_CDC_PINMUX_PAD3;
+	usart_conf.mux_setting = CONF_USART_MUX_SETTING;
+	usart_conf.pinmux_pad0 = CONF_USART_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = CONF_USART_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = CONF_USART_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = CONF_USART_PINMUX_PAD3;
 	usart_conf.baudrate    = 115200;
 
 	usart_init(&usart_module_edbg, CONF_USART_BASE, &usart_conf);
