@@ -3,7 +3,7 @@
  *
  * \brief SAM0+ OSC8MHz Calibration Application
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,9 +39,10 @@
  *
  */
 #include <asf.h>
+#include "conf_example.h"
 
 /**
- * \mainpage SAM D20 OSC8M Calibration Example
+ * \mainpage SAM0+ OSC8M Calibration Example
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
@@ -52,15 +53,15 @@
  */
 
 /**
- * \page appdoc_main SAM D20 OSC8M Calibration Example
+ * \page appdoc_main SAM0+ OSC8M Calibration Example
  *
  * Overview:
- * - \ref appdoc_samd20_osc8m_cal_intro
- * - \ref appdoc_samd20_osc8m_cal_usage
- * - \ref appdoc_samd20_osc8m_cal_compinfo
- * - \ref appdoc_samd20_osc8m_cal_contactinfo
+ * - \ref appdoc_sam0_osc8m_cal_intro
+ * - \ref appdoc_sam0_osc8m_cal_usage
+ * - \ref appdoc_sam0_osc8m_cal_compinfo
+ * - \ref appdoc_sam0_osc8m_cal_contactinfo
  *
- * \section appdoc_samd20_osc8m_cal_intro Introduction
+ * \section appdoc_sam0_osc8m_cal_intro Introduction
  * While some devices require exact timing, and therefore require an external
  * calibration crystal or other high-accuracy clock source, other applications
  * with looser accuracy requirements may use the internal RC Oscillator(s) for
@@ -72,7 +73,7 @@
  * internal 8MHz (nominal) RC Oscillator, OSC8M, so that it is as close as
  * possible to the desired 8MHz frequency.
  *
- * \section appdoc_samd20_osc8m_cal_usage Usage Instructions
+ * \section appdoc_sam0_osc8m_cal_usage Usage Instructions
  * On startup, the application will immediately begin calibration of the OSC8M
  * internal oscillator, against a 32.768KHz watch crystal attached to the device
  * XOSC32K pins (see device datasheet). As the possible calibration values are
@@ -82,13 +83,16 @@
  * board LED will flash rapidly to signal the end of the calibration sequence.
  *
  * \note The calibration values are \b not stored to the device's non-volatile
- *       memory.
+ *       memory. The example execution time is depend on the configuration in
+ *       conf_example file. It's about (2<<CONF_CALIBRATION_RESOLUTION)
+ *       *(2<<CONF_FRANGE_CAL -1)*(2<<CONF_TEMP_CAL -1)*128/32768
+ *       seconds.
  *
- * \section appdoc_samd20_osc8m_cal_compinfo Compilation Info
+ * \section appdoc_sam0_osc8m_cal_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for ARM.
  * Other compilers may or may not work.
  *
- * \section appdoc_samd20_osc8m_cal_contactinfo Contact Information
+ * \section appdoc_sam0_osc8m_cal_contactinfo Contact Information
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
@@ -96,10 +100,10 @@
 /** Target OSC8M calibration frequency */
 #define TARGET_FREQUENCY         8000000
 
-/** Resolution of the calibration binary divider; higher powers of two will
+/** Resolution of the calibration binary divider; lower powers of two will
  *  reduce the calibration resolution.
  */
-#define CALIBRATION_RESOLUTION   13
+#define CALIBRATION_RESOLUTION   CONF_CALIBRATION_RESOLUTION
 
 /** Calibration reference clock generator index. */
 #define REFERENCE_CLOCK          GCLK_GENERATOR_3
@@ -133,14 +137,14 @@ static void setup_tc_channels(void)
 	config.clock_prescaler = TC_CLOCK_PRESCALER_DIV1;
 	config.wave_generation = TC_WAVE_GENERATION_NORMAL_FREQ;
 	config.enable_capture_on_channel[0] = true;
-	tc_init(&tc_calib, TC0, &config);
+	tc_init(&tc_calib, CONF_TC_MEASUREMENT, &config);
 
-	/* Configure reference timer to run from Fcpu and capture when the resolution count is met */
+	/* Configure reference timer to run from reference clock and capture when the resolution count is met */
 	config.counter_size    = TC_COUNTER_SIZE_16BIT;
 	config.clock_source    = REFERENCE_CLOCK;
 	config.enable_capture_on_channel[0] = false;
-	config.size_specific.size_16_bit.compare_capture_channel[0] = (1 << CALIBRATION_RESOLUTION);
-	tc_init(&tc_comp, TC2, &config);
+	config.counter_16_bit.compare_capture_channel[0] = (1 << CALIBRATION_RESOLUTION);
+	tc_init(&tc_comp, CONF_TC_REFERENCE, &config);
 }
 
 /** Set up the measurement and comparison timer events.
@@ -177,10 +181,10 @@ static void setup_events(struct events_resource *event)
 	 * event */
 	config.edge_detect    = EVENTS_EDGE_DETECT_RISING;
 	config.path           = EVENTS_PATH_SYNCHRONOUS;
-	config.generator      = EVSYS_ID_GEN_TC2_MCX_0;
+	config.generator      = CONF_EVENT_GENERATOR_ID;
 
 	events_allocate(event, &config);
-	events_attach_user(event, EVSYS_ID_USER_TC0_EVU);
+	events_attach_user(event, CONF_EVENT_USED_ID);
 
 }
 
@@ -210,8 +214,8 @@ static void setup_clock_out_pin(void)
 	system_pinmux_get_config_defaults(&pin_mux);
 
 	/* MUX out the system clock to a I/O pin of the device */
-	pin_mux.mux_position = MUX_PA28H_GCLK_IO0;
-	system_pinmux_pin_set_config(PIN_PA28H_GCLK_IO0, &pin_mux);
+	pin_mux.mux_position = CONF_CLOCK_PIN_MUX;
+	system_pinmux_pin_set_config(CONF_CLOCK_PIN_OUT, &pin_mux);
 }
 
 /** Retrieves the current system clock frequency, computed from the reference
@@ -253,6 +257,16 @@ int main(void)
 	setup_events(&event);
 	setup_clock_out_pin();
 
+	/* Init the variables with default calibration settings */
+	uint8_t frange_cal = SYSCTRL->OSC8M.bit.FRANGE;
+	uint8_t temp_cal = SYSCTRL->OSC8M.bit.CALIB >> 7;
+	uint8_t comm_cal = SYSCTRL->OSC8M.bit.CALIB & 0x7F;
+	/* Set the calibration test range */
+	uint8_t frange_cal_min = max((frange_cal - CONF_FRANGE_CAL), 0);
+	uint8_t frange_cal_max = min((frange_cal + CONF_FRANGE_CAL), 0x03);
+	uint8_t temp_cal_min = max((temp_cal - CONF_TEMP_CAL), 0);
+	uint8_t temp_cal_max = min((temp_cal + CONF_TEMP_CAL), 0x1F);
+
 	/* Variables to track the previous and best calibration settings */
 	uint16_t comm_best   = -1;
 	uint8_t  frange_best = -1;
@@ -260,38 +274,38 @@ int main(void)
 	uint32_t freq_before = get_osc_frequency();
 
 	/* Run calibration loop */
-	for (uint8_t frange_cal = 1; frange_cal <= 2; frange_cal++) {
-		for (uint16_t comm_cal = 0; comm_cal < 128; comm_cal++) {
-			/* Set the test calibration values */
-			system_clock_source_write_calibration(
-					SYSTEM_CLOCK_SOURCE_OSC8M, (8 << 7) | comm_cal, frange_cal);
+	for (frange_cal = frange_cal_min; frange_cal <= frange_cal_max; frange_cal++) {
+		for (temp_cal = temp_cal_min; temp_cal <= temp_cal_max; temp_cal++) {
+			for (comm_cal = 0; comm_cal < 128; comm_cal++) {
+				/* Set the test calibration values */
+				system_clock_source_write_calibration(
+						SYSTEM_CLOCK_SOURCE_OSC8M, (temp_cal << 7) | comm_cal, frange_cal);
 
-			/* Wait for stabilization */
-			delay_cycles(1000);
+				/* Wait for stabilization */
+				delay_cycles(1000);
 
-			/* Compute the deltas of the current and best system clock
-			 * frequencies, save current settings if they are closer to the
-			 * ideal frequency than the previous best values
-			 */
-			uint32_t freq_current = get_osc_frequency();
-			if (abs(freq_current - TARGET_FREQUENCY) < abs(freq_best - TARGET_FREQUENCY))
-			{
-				freq_best   = freq_current;
-				comm_best   = comm_cal;
-				frange_best = frange_cal;
+				/* Compute the deltas of the current and best system clock
+				 * frequencies, save current settings if they are closer to the
+				 * ideal frequency than the previous best values
+				 */
+				uint32_t freq_current = get_osc_frequency();
+				if (abs(freq_current - TARGET_FREQUENCY) < abs(freq_best - TARGET_FREQUENCY))
+				{
+					freq_best   = freq_current;
+					comm_best   = comm_cal;
+					frange_best = frange_cal;
 
-				port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
-			}
-			else
-			{
-				port_pin_set_output_level(LED_0_PIN, !LED_0_ACTIVE);
+					port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+				} else {
+					port_pin_set_output_level(LED_0_PIN, !LED_0_ACTIVE);
+				}
 			}
 		}
 	}
 
 	/* Set the found best calibration values */
 	system_clock_source_write_calibration(
-			SYSTEM_CLOCK_SOURCE_OSC8M, (8 << 7) | comm_best, frange_best);
+			SYSTEM_CLOCK_SOURCE_OSC8M, (temp_cal << 7) | comm_best, frange_best);
 
 	/* Setup USART module to output results */
 	setup_usart_channel();
@@ -300,10 +314,10 @@ int main(void)
 	 * USART
 	 */
 	printf("Freq Before: %lu\r\n", freq_before);
-	printf("Freq Before: %lu\r\n", freq_best);
+	printf("Freq Best: %lu\r\n", freq_best);
 
 	printf("Freq Range: %u\r\n", frange_best);
-	printf("Calib Value: %u\r\n", (8 << 7) | comm_best);
+	printf("Calib Value: 0x%x\r\n", (temp_cal << 7) | comm_best);
 
 	/* Rapidly flash the board LED to signal the calibration completion */
 	while (1) {
