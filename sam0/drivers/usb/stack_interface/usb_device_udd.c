@@ -212,9 +212,6 @@ static void udd_ep_trans_out_next(void* pointer)
 	ptr_job = udd_ep_get_job(ep);
 	ep_num = ep & USB_EP_ADDR_MASK;
 
-	// Lock emission of new OUT packet
-	//Assert(udd_is_full_bank_out(ep_num));
-
 	ep_size = ptr_job->ep_size;
 	// Update number of data transfered
 	nb_trans = ep_callback_para->received_bytes;
@@ -525,7 +522,10 @@ uint8_t udd_getaddress(void)
 
 void udd_send_remotewakeup(void)
 {
-	usb_send_remote_wake_up(&usb_device);
+	uint32_t try = 5;
+	do {
+		usb_send_remote_wake_up(&usb_device);
+	} while(2 != usb_get_state_machine_status(&usb_device) && try --);
 }
 
 void udd_set_setup_payload( uint8_t *payload, uint16_t payload_size )
