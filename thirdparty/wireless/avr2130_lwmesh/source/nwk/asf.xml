@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="thirdparty.wireless.avr2130_lwmesh.source.nwk" caption="NWK ">
+	<module type="component" id="thirdparty.wireless.avr2130_lwmesh.source.nwk" caption="NWK ">
 		<info type="description" value="summary">
 		
 		</info>
@@ -24,5 +24,6 @@
 		<build type="header-file"   value="inc/nwkRx.h"/>
 		<build type="header-file"   value="inc/nwkTx.h"/>
 		<build type="include-path"  value="inc/"/>
+		<device-support-alias value="avr2025_mac_hal_support"/>		
 	</module>
 </asf>

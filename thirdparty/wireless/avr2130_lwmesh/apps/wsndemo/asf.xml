@@ -15,6 +15,7 @@
 		<device-support-alias value="avr2025_mac_hal_support"/>
 		<!-- ++++++++++++++++++++++++++++++++++++++++++++++REQUIRE++++++++++++++++++++++++++++++++++++++++++++++. -->
 		<require idref="thirdparty.wireless.avr2130_lwmesh"/>
+		<build type="distribute" subtype="user-file" value="wsnmonitor_setup.exe"/>		
 		<!-- .................................................................................................... -->
 		<info type="keyword" value="technology">
 			<keyword value="Wireless"/>

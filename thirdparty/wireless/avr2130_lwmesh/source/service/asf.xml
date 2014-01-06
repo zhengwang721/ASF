@@ -4,9 +4,12 @@
 		<info type="description" value="summary">
 		
 		</info>
-		<module type="meta" id="config.thirdparty.wireless.avr2130_lwmesh.source.service#none"     caption="No Service Used">
+		<module type="service" id="config.thirdparty.wireless.avr2130_lwmesh.source.service#none"     caption="No Service Used">
 			<info type="description" value="summary">
-			</info>			
+			
+			</info>	
+			<device-support-alias value="avr2025_mac_hal_support"/>
+			<build type="doxygen-entry-point" value="group_lwmesh_service"/>
 		</module>
 		
 		<module type="service" id="config.thirdparty.wireless.avr2130_lwmesh.source.service#ota_client"     caption="OTA CLIENT Used">
@@ -36,7 +39,7 @@
 		</module>
 	</select-by-config>
 	
-	<module type="component" id="thirdparty.wireless.avr2130_lwmesh.source.service" caption="AVR2130 - Services">
+	<module type="meta" id="thirdparty.wireless.avr2130_lwmesh.source.service" caption="AVR2130 - Services">
 		<info type="description" value="summary">
        
         </info>

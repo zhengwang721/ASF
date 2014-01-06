@@ -59,7 +59,7 @@
 	</select-by-device>
 
 
-	<module type="component" id="thirdparty.wireless.avr2130_lwmesh.source.hal" caption="AVR2130 - HAL">
+	<module type="component" id="thirdparty.wireless.avr2130_lwmesh.source.hal" caption="HAL">
 		<info type="description" value="summary">
        
         </info>

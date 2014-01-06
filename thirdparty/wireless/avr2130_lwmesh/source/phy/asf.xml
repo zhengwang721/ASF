@@ -6,7 +6,7 @@
             ATMegaRFR2 Transceiver Abstraction Layer
             </info>
 			<info type="gui-flag" value="hidden"/>
-            <require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfr2"/>
+            <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfr2"/>
             <device-support value="atmega256rfr2"/>
             <build type="doxygen-entry-point" value="group_phy_rfr2"/>
 		</module>
@@ -15,7 +15,7 @@
             ATMegaRFA1 Transceiver Abstraction Layer
             </info>
 			<info type="gui-flag" value="hidden"/>
-            <require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfa1"/>
+            <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfa1"/>
             <device-support value="atmega128rfa1"/>
             <build type="doxygen-entry-point" value="group_phy_rfa1"/>
 		</module>		
@@ -36,7 +36,7 @@
             AT86RF231 Transceiver Abstraction Layer
             </info>
             <info type="gui-flag" value="hidden"/>
-            <require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf231"/>
+            <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf231"/>
 			<device-support-alias value="avr2025_mac_hal_support"/>
         </module>
         <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.ext#at86rf233"     caption="at86rf233 phy support enabled">
@@ -44,7 +44,7 @@
             AT86RF233 Transceiver Abstraction Layer
             </info>
             <info type="gui-flag" value="hidden"/>
-            <require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf233"/>
+            <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf233"/>
 			<device-support-alias value="avr2025_mac_hal_support"/>
         </module>		
         <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.ext#at86rf212b"     caption="at86rf212b phy support enabled">
@@ -52,7 +52,7 @@
             AT86RF212B Transceiver Abstraction Layer
             </info>
             <info type="gui-flag" value="hidden"/>
-            <require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf212b"/>
+            <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf212b"/>
 			<device-support-alias value="avr2025_mac_hal_support"/>
         </module>	
 		<module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.ext#at86rf212"     caption="at86rf212 phy support enabled">
@@ -60,73 +60,12 @@
             AT86RF212 Transceiver Abstraction Layer
             </info>
             <info type="gui-flag" value="hidden"/>
-            <require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf212"/>
+            <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf212"/>
 			<device-support-alias value="avr2025_mac_hal_support"/>
         </module>
 	</select-by-config>	
 	
-
-    <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf231"     caption="at86rf231 phy support enabled">
-        <info type="description" value="summary">
-        AT86RF231 Transceiver Abstraction Layer
-        </info>
-        <info type="gui-flag" value="hidden"/>
-        <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf231"/>
-       <build type="doxygen-entry-point" value="group_phy_231"/>
-		<device-support-alias value="avr2025_mac_hal_support"/>
-    </module>
-	
-    <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf212"     caption="at86rf212 phy support enabled">
-        <info type="description" value="summary">
-        AT86RF212 Transceiver Abstraction Layer
-        </info>
-        <info type="gui-flag" value="hidden"/>
-        <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf212"/>
-       <build type="doxygen-entry-point" value="group_phy_212"/>
-		<device-support-alias value="avr2025_mac_hal_support"/>
-    </module>
-
-    <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf212b"     caption="at86rf212b phy support enabled">
-        <info type="description" value="summary">
-        AT86RF212bB Transceiver Abstraction Layer
-        </info>
-        <info type="gui-flag" value="hidden"/>
-        <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf212b"/>
-       <build type="doxygen-entry-point" value="group_phy_212b"/>
-		<device-support-alias value="avr2025_mac_hal_support"/>
-    </module>	
-	
-    <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf233"     caption="at86rf233 phy support enabled">
-        <info type="description" value="summary">
-        AT86RF233 Transceiver Abstraction Layer
-        </info>
-        <info type="gui-flag" value="hidden"/>
-        <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.at86rf233"/>
-       <build type="doxygen-entry-point" value="group_phy_233"/>
-		<device-support-alias value="avr2025_mac_hal_support"/>
-    </module>	
-	
-    <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfr2"     caption="atmegarfr2 phy support enabled">
-        <info type="description" value="summary">
-        ATMegaRFR2 PHY Layer
-        </info>
-		<info type="gui-flag" value="hidden"/>
-        <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfr2"/>
-       <build type="doxygen-entry-point" value="group_phy_rfr2"/>
-        <device-support value="atmega256rfr2"/>
-    </module>
-	
-    <module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfa1"     caption="atmegarfa1 phy support enabled">
-        <info type="description" value="summary">
-        ATMegaRFA1 PHY Layer
-        </info>
-		<info type="gui-flag" value="hidden"/>
-        <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfa1"/>
-       <build type="doxygen-entry-point" value="group_phy_rfr2"/>
-        <device-support value="atmega128rfa1"/>
-    </module>	
-
-	<module type="component" id="thirdparty.wireless.avr2130_lwmesh.source.phy" caption="AVR2130 - PHY">
+	<module type="component" id="thirdparty.wireless.avr2130_lwmesh.source.phy" caption="PHY">
 		<info type="description" value="summary">
        
         </info>
