@@ -101,8 +101,8 @@ enum usb_host_pipe_token {
 	USB_HOST_PIPE_TOKEN_OUT,
 };
 
-/** 
- * \brief Enumeration for the possible callback types for the USB in device module 
+/**
+ * \brief Enumeration for the possible callback types for the USB in device module
  */
 enum usb_device_callback {
 	USB_DEVICE_CALLBACK_SOF,
@@ -115,8 +115,8 @@ enum usb_device_callback {
 	USB_DEVICE_CALLBACK_N,
 };
 
-/** 
- * \brief Enumeration for the possible callback types for the USB endpoint in device module 
+/**
+ * \brief Enumeration for the possible callback types for the USB endpoint in device module
  */
 enum usb_device_endpoint_callback {
 	USB_DEVICE_ENDPOINT_CALLBACK_TRCPT,
@@ -138,7 +138,7 @@ enum usb_device_endpoint_type {
 };
 
 /**
- * \brief Endpoint Size                                                                    
+ * \brief Endpoint Size
  */
 enum usb_endpoint_size {
 	USB_ENDPOINT_8_BYTE,
@@ -171,7 +171,7 @@ struct usb_module;
 typedef void (*usb_host_callback_t)(struct usb_module *module_inst);
 typedef void (*usb_host_pipe_callback_t)(struct usb_module *module_inst, void *);
 
-/** 
+/**
  * \brief Device callback functions types.
  */
 typedef void (*usb_device_callback_t)(struct usb_module *module_inst);
@@ -394,7 +394,7 @@ static inline void usb_device_detach(struct usb_module *module_inst)
 static inline enum usb_speed usb_device_get_speed(struct usb_module *module_inst)
 {
 	if (!(module_inst->hw->DEVICE.STATUS.reg & USB_DEVICE_STATUS_SPEED_Msk)) {
-		return USB_SPEED_FULL; 
+		return USB_SPEED_FULL;
 	} else {
 		return USB_SPEED_LOW;
 	}
@@ -426,7 +426,7 @@ static inline void usb_device_set_address(struct usb_module *module_inst, uint8_
  * \brief Get the frame number of USB device
  *
  * \param module_inst pointer to USB device module instance
- * \return usb device frame number value 
+ * \return usb device frame number value
  */
 static inline uint16_t usb_device_get_frame_number(struct usb_module *module_inst)
 {
@@ -436,11 +436,11 @@ static inline uint16_t usb_device_get_frame_number(struct usb_module *module_ins
  * \brief Get the micro-frame number of USB device
  *
  * \param module_inst pointer to USB device module instance
- * \return usb device micro-frame number value 
+ * \return usb device micro-frame number value
  */
 static inline uint16_t usb_device_get_micro_frame_number(struct usb_module *module_inst)
 {
-	return ((uint16_t)(module_inst->hw->DEVICE.FNUM.bit.MFNUM));
+	return ((uint16_t)(module_inst->hw->DEVICE.FNUM.reg));
 }
 
 static inline void usb_send_remote_wake_up(struct usb_module *module_inst)
@@ -600,7 +600,7 @@ static inline void usb_host_pipe_clear_toggle(struct usb_module *module_inst, ui
 void usb_host_pipe_set_auto_zlp(struct usb_module *module_inst, uint8_t pipe_num, bool value);
 
 /**
- * \brief current endpoint is configured
+ * \brief Check if specified endpoint is configured
  * \param module_inst   Pointer to USB software instance struct
  * \param endpoint address (direction & number)
  * \return true if endpoint is configured, otherwise, false
