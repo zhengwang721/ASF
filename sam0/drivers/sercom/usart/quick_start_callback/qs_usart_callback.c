@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 System related functionality
+ * \brief SAM D2x USART Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
