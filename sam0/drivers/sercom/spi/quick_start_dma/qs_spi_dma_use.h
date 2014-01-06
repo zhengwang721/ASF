@@ -44,6 +44,9 @@
 /**
  * \page asfdoc_sam0_sercom_spi_dma_use_case Quick Start Guide SERCOM SPI DMA
  *
+ * The supported device list:
+ *    - SAMD21
+ *
  * This quick start will transmit a buffer data from master to slave through DMA.
  * In this use case the SPI master will be configured with the following settings:
  * - Master Mode enabled

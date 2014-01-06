@@ -43,15 +43,6 @@
 #include <asf.h>
 #include "conf_quick_start.h"
 
-void configure_spi_master(void);
-void configure_spi_slave(void);
-void transfer_tx_done( const struct dma_resource* const resource );
-void transfer_rx_done( const struct dma_resource* const resource );
-void configure_dma_resource_tx(struct dma_resource *resource);
-void configure_dma_resource_rx(struct dma_resource *resource);
-void setup_transfer_descriptor_tx(DmacDescriptor *descriptor);
-void setup_transfer_descriptor_rx(DmacDescriptor *descriptor);
-
 //! [setup]
 //! [buf_length]
 #define BUF_LENGTH 20
@@ -100,21 +91,21 @@ DmacDescriptor example_descriptor_rx;
 // [dma_transfer_descriptor]
 
 // [_transfer_tx_done]
-void transfer_tx_done( const struct dma_resource* const resource )
+static void transfer_tx_done( const struct dma_resource* const resource )
 {
 	transfer_tx_is_done = true;
 }
 // [_transfer_tx_done]
 
 // [_transfer_rx_done]
-void transfer_rx_done( const struct dma_resource* const resource )
+static void transfer_rx_done( const struct dma_resource* const resource )
 {
 	transfer_rx_is_done = true;
 }
 // [_transfer_rx_done]
 
 // [config_dma_resource_tx]
-void configure_dma_resource_tx(struct dma_resource *tx_resource)
+static void configure_dma_resource_tx(struct dma_resource *tx_resource)
 {
 //! [dma_tx_setup_1]
 	struct dma_resource_config tx_config;
@@ -137,7 +128,7 @@ void configure_dma_resource_tx(struct dma_resource *tx_resource)
 // [config_dma_resource_tx]
 
 // [config_dma_resource_rx]
-void configure_dma_resource_rx(struct dma_resource *rx_resource)
+static void configure_dma_resource_rx(struct dma_resource *rx_resource)
 {
 //! [dma_rx_setup_1]
 	struct dma_resource_config rx_config;
@@ -160,7 +151,7 @@ void configure_dma_resource_rx(struct dma_resource *rx_resource)
 // [config_dma_resource_rx]
 
 // [setup_dma_transfer_descriptor]
-void setup_transfer_descriptor_tx(DmacDescriptor *tx_descriptor)
+static void setup_transfer_descriptor_tx(DmacDescriptor *tx_descriptor)
 {
 //! [dma_tx_setup_5]
 	struct dma_descriptor_config tx_descriptor_config;
@@ -185,7 +176,7 @@ void setup_transfer_descriptor_tx(DmacDescriptor *tx_descriptor)
 // [setup_dma_transfer_descriptor]
 
 // [setup_dma_transfer_descriptor_rx]
-void setup_transfer_descriptor_rx(DmacDescriptor *rx_descriptor)
+static void setup_transfer_descriptor_rx(DmacDescriptor *rx_descriptor)
 {
 //! [dma_rx_setup_5]
 	struct dma_descriptor_config rx_descriptor_config;
@@ -210,7 +201,7 @@ void setup_transfer_descriptor_rx(DmacDescriptor *rx_descriptor)
 // [setup_dma_transfer_descriptor_rx]
 
 //! [configure_spi]
-void configure_spi_master(void)
+static void configure_spi_master(void)
 {
 //! [spi_master_config]
 	struct spi_config config_spi_master;
@@ -264,7 +255,7 @@ void configure_spi_master(void)
 //! [configure_spi]
 
 //! [configure_spi_slave]
-void configure_spi_slave(void)
+static void configure_spi_slave(void)
 {
 //! [spi_slave_config]
 	struct spi_config config_spi_slave;
@@ -374,8 +365,8 @@ int main(void)
 
 //! [endless_loop]
 	while (true) {
-//! [endless_loop]
 	}
+//! [endless_loop]
 
 //! [main]
 }
