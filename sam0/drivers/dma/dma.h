@@ -43,6 +43,163 @@
 #ifndef DMA_H_INCLUDED
 #define DMA_H_INCLUDED
 
+/**
+ * \defgroup asfdoc_sam0_dma_group SAM D2x Direct Memory Access Driver (DMA)
+ *
+ * This driver for SAM D2x devices provides an interface for the configuration
+ * and management of the DMA resources within the device, including the allocating and
+ * free of DMA source and perform data transfer through DMA.
+ *
+ * The following peripherals are used by this module:
+ *
+ * - DMAC (Direct Memory Access Controller)
+ *
+ * The outline of this documentation is as follows:
+ * - \ref asfdoc_sam0_dma_prerequisites
+ * - \ref asfdoc_sam0_dma_module_overview
+ * - \ref asfdoc_sam0_dma_special_considerations
+ * - \ref asfdoc_sam0_dma_extra_info
+ * - \ref asfdoc_sam0_dma_examples
+ * - \ref asfdoc_sam0_dma_api_overview
+ *
+ *
+ * \section asfdoc_sam0_dma_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_sam0_dma_module_overview Module Overview
+ *
+ * SAM D2x devices with DMA provides an approach to transfer data between
+ * memories and peripherals and thus off-load these tasks from the CPU. It
+ * enables high data transfer rates with minimum CPU interversion and frees up
+ * CPU time. With access to all peripherals, the DMA controller can handle automatic
+ * transfer of data to/from communication modules.
+ *
+ * The DMA driver for SAM D2x supports data transfer between peripheral to peripheral,
+ * peripheral to memory, memory to peripheral and memory to memory. The transfer
+ * trigger source can be software, event system or peipherals. Up to 12 DMA resources
+ * can be allocated in one application and each of the DMA resource is independent.
+ *
+ * A simplified block diagram of the DMA can be seen in
+ * \ref asfdoc_sam0_dma_module_block_diagram "the figure below".
+ *
+ * \anchor asfdoc_sam0_dma_module_block_diagram
+ * \dot
+ * digraph overview {
+ * splines = false;
+ * rankdir=LR;
+ *
+ * mux1 [label="Transfer Trigger", shape=box];
+ *
+ * dma [label="DMA", shape=polygon, sides=5, orientation=90, distortion=-0.6, style=filled, fillcolor=darkolivegreen1, height=1, width=1];
+ * descriptor [label="Transfer Descriptor", shape=box, style=filled, fillcolor=lightblue];
+ *
+ * mux1 -> dma;
+ * descriptor -> dma;
+ *
+ * interrupt [label="Interrupt", shape=box];
+ * events [label="Events", shape=box];
+ *
+ * dma:e -> interrupt:w;
+ * dma:e -> events:w;
+ *
+ * {rank=same; descriptor dma}
+ *
+ * }
+ * \enddot
+ *
+ *
+ * \subsection asfdoc_sam0_dma_module_overview_dma_channels DMA Channels
+ * The DMA resource in each device consists of several channels, which defines the
+ * data transfer properties. With a successful DMA resource allocation, a dedicated
+ * DMA channel will be assigned. The channel will be occupied untill the DMA resource
+ * freed. A DMA channel ID is used to identify the specific DMA resource.
+ *
+
+ * \subsection asfdoc_sam0_dma_module_overview_dma_trigger DMA Triggers
+ * DMA transfer can be started only when a DMA transfer request is detected. A
+ * transfer request can be triggered from software, peripheral or an event. There
+ * are dedicated source trigger selections for each DMA channel usage. By default
+ * a software trigger will be used for a DMA transfer.
+ *
+
+ * \subsection asfdoc_sam0_dma_module_overview_dma_transfer_descriptor DMA
+ * Transfer Descriptor
+ * The transfer descriptor defines the transfer properites, as shown in
+
+ * \ref asfdoc_sam0_dma_module_overview_dma_descriptor_layout "the figure below".
+ *
+ * \anchor asfdoc_sam0_dma_module_overview_dma_descriptor_layout
+ * \dot
+ * digraph dma_descriptor_layout {
+ *  size="5,5"
+ *  node [shape=plaintext]
+ *  memory [label=<
+ *   <table border="0" cellborder="1" cellspacing="0" >
+ *    <tr>
+ *     <td rowspan="3" align="center"> Descriptor Next Address </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> </td>
+ *    </tr>
+ *    <tr>
+ *     <td rowspan="3" align="center"> Destination Address </td>
+ *    </tr>
+ *    <tr>
+ *     <td height="300" align="right" border="0"> </td>
+ *    </tr>
+ *    <tr>
+ *     <td rowspan="3" align="center"> Source Address </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> </td>
+ *    </tr>
+ *    <tr>
+ *     <td rowspan="3" align="center"> Block Transfer Counter </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> </td>
+ *    </tr>
+ *    <tr>
+ *     <td rowspan="3" align="center"> Block Transfer Control </td>
+ *    </tr>
+ *    <tr>
+ *     <td align="right" border="0"> </td>
+ *    </tr>
+ *   </table>
+ *  >]
+ * }
+ * \enddot
+ *
+ * Before starting a transfer, at least one initial descriptor should be configured first.
+ * After a successful allocation of DMA resource, the transfer descriptor can be added
+ * or updated during the lifetime of the DMA resource.
+ *
+ * \section asfdoc_sam0_dma_special_considerations Special Considerations
+ *
+ * There are no special considerations for this module.
+ *
+ *
+ * \section asfdoc_sam0_dma_extra_info Extra Information
+ *
+ * For extra information see \ref asfdoc_sam0_dma_extra. This includes:
+ * - \ref asfdoc_sam0_dma_extra_acronyms
+ * - \ref asfdoc_sam0_dma_extra_dependencies
+ * - \ref asfdoc_sam0_dma_extra_errata
+ * - \ref asfdoc_sam0_dma_extra_history
+ *
+ *
+ * \section asfdoc_sam0_dma_examples Examples
+ *
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_sam0_dma_exqsg.
+ *
+ *
+ * \section asfdoc_sam0_dma_api_overview API Overview
+ * @{
+ */
+
 #include <compiler.h>
 
 /** DMA invalid channel number */
@@ -440,5 +597,82 @@ void dma_descriptor_create(DmacDescriptor* descriptor,
 	struct dma_descriptor_config *config);
 enum status_code dma_add_descriptor(struct dma_resource *resource,
 		DmacDescriptor* descriptor);
+
+/** @} */
+
+/**
+ * \page asfdoc_sam0_dma_extra Extra Information for DMA Driver
+ *
+ * \section asfdoc_sam0_dma_extra_acronyms Acronyms
+ * Below is a table listing the acronyms used in this module, along with their
+ * intended meanings.
+ *
+ * <table>
+ *   <tr>
+ *     <th>Acronym</th>
+ *     <th>Description</th>
+ *   </tr>
+ *   <tr>
+ *     <td>DMA</td>
+ *     <td>Direct Memory Access</td>
+ *   </tr>
+ *   <tr>
+ *     <td>CPU</td>
+ *     <td>Central Processing Unit</td>
+ *   </tr>
+ *   <tr>
+ *     <td>MUX</td>
+ *     <td>Multiplexer</td>
+ *   </tr>
+ * </table>
+ *
+ *
+ * \section asfdoc_sam0_dma_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ * - \ref asfdoc_sam0_system_clock_group "System Clock Driver"
+ *
+ *
+ * \section asfdoc_sam0_events_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_sam0_events_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
+ *
+ * <table>
+ *   <tr>
+ *     <th>Changelog</th>
+ *   </tr>
+ *   <tr>
+ *     <td>Initial Release</td>
+ *   </tr>
+ * </table>
+ */
+ 
+ /**
+ * \page asfdoc_sam0_events_exqsg Examples for DMA Driver
+ *
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_sam0_dma_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
+ *
+ * - \subpage asfdoc_sam0_dma_basic_use_case
+ *
+ * \page asfdoc_sam0_dma_document_revision_history Document Revision History
+ *
+ * <table>
+ *    <tr>
+ *        <td>A</td>
+ *        <td>01/2014</td>
+ *        <td>Initial release</td>
+ *    </tr>
+ * </table>
+ */
 
 #endif /* DMA_H_INCLUDED */
