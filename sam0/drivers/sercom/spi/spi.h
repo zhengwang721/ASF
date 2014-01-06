@@ -1376,6 +1376,7 @@ enum status_code spi_select_slave(
  * - \subpage asfdoc_sam0_sercom_spi_master_callback_use
  * - \subpage asfdoc_sam0_sercom_spi_slave_callback_use
  * \endif
+ * - \subpage asfdoc_sam0_sercom_spi_dma_use_case
  */
 
  /**

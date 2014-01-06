@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 USART Interface Driver
+ * \brief SAM D2x USART Quick Start
  *
  * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_sercom_usart_callback_use_case Quick Start Guide for SERCOM USART - Callback
+ * \page asfdoc_sam0_sercom_usart_callback_use_case Quick Start Guide for SERCOM USART - Callback
  *
  * This quick start will echo back characters typed into the terminal, using
  * asynchronous TX and RX callbacks from the USART peripheral. In this use case
@@ -52,12 +52,12 @@
  * - 8-bits, No Parity and 1 Stop Bit
  * - TX and RX enabled and connected to the Xplained PRO Embedded Debugger virtual COM port
  *
- * \section asfdoc_samd20_sercom_usart_callback_use_case_setup Setup
+ * \section asfdoc_sam0_sercom_usart_callback_use_case_setup Setup
  *
- * \subsection asfdoc_samd20_sercom_usart_callback_use_case_prereq Prerequisites
+ * \subsection asfdoc_sam0_sercom_usart_callback_use_case_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd20_usart_callback_use_case_setup_code Code
+ * \subsection asfdoc_sam0_usart_callback_use_case_setup_code Code
  * Add to the main application source file, outside of any functions:
  * \snippet qs_usart_callback.c module_inst
  * \snippet qs_usart_callback.c rx_buffer_var
@@ -71,7 +71,7 @@
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_usart_callback.c setup_init
  *
- * \subsection asfdoc_samd20_usart_callback_use_case_setup_flow Workflow
+ * \subsection asfdoc_sam0_usart_callback_use_case_setup_flow Workflow
  * -# Create a module software instance structure for the USART module to store
  *    the USART driver state while it is in use.
  *    \note This should never go out of scope as long as the module is in use.
@@ -103,13 +103,13 @@
  *     when appropriate.
  *     \snippet qs_usart_callback.c setup_enable_callbacks
  *
- * \section asfdoc_samd20_usart_callback_use_case_main Use Case
+ * \section asfdoc_sam0_usart_callback_use_case_main Use Case
  *
- * \subsection asfdoc_samd20_usart_callback_use_case_main_code Code
+ * \subsection asfdoc_sam0_usart_callback_use_case_main_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_usart_callback.c main
  *
- * \subsection asfdoc_samd20_usart_callback_use_case_main_flow Workflow
+ * \subsection asfdoc_sam0_usart_callback_use_case_main_flow Workflow
  * -# Enable global interrupts, so that the callbacks can be fired.
  *  \snippet qs_usart_callback.c enable_global_interrupts
  * -# Send a string to the USART to show the demo is running, blocking until

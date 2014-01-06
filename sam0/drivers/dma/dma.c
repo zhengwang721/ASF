@@ -286,7 +286,7 @@ void dma_get_config_defaults(struct dma_resource_config *config)
 	config->priority = DMA_PRIORITY_LEVEL_0;
 	/* Only software/event trigger */
 	config->peripheral_trigger = 0;
-	/* Transation trigger */
+	/* Transaction trigger */
 	config->trigger_action = DMA_TRIGGER_ACTON_TRANSACTION;
 
 	/* Event configurations, no event input/output */
@@ -452,7 +452,7 @@ enum status_code dma_start_transfer_job(struct dma_resource *resource)
 	DMAC->CHINTENSET.reg = DMAC_CHINTENSET_TERR |
 			 DMAC_CHINTENSET_TCMPL | DMAC_CHINTENSET_SUSP;
 
-	if (!(DMAC->CHCTRLB.reg & (DMAC_CHCTRLB_TRIGSRC_Msk ||
+	if (!(DMAC->CHCTRLB.reg & (DMAC_CHCTRLB_TRIGSRC_Msk |
 								DMAC_CHCTRLB_EVACT_TRIG_Val))) {
 		DMAC->SWTRIGCTRL.reg |= (1 << resource->channel_id);
 	}
@@ -619,7 +619,7 @@ void dma_descriptor_create(DmacDescriptor* descriptor,
  * \brief Add a DMA transfer descriptor to a DMA resource
  *
  * This function will add a transfer descriptor to a DMA resource. If there was
- * a transfer decriptor already allocated to the DMA resource, the descriptor will
+ * a transfer descriptor already allocated to the DMA resource, the descriptor will
  * be linked to the next descriptor address.
  *
  * \param[in] descriptor Pointer to the DMA resource
