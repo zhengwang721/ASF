@@ -61,8 +61,8 @@
  *   - Read back the status of the SerialFlash.
  *   - Write two sectors to the SerialFlash.
  *   - Read back these sectors and check correct content.
- *   - If all operations are correct, \ref DATA_FLASH_LED_EXAMPLE_0 is 'on' and
- *     \ref DATA_FLASH_LED_EXAMPLE_1 is 'on'(If have).
+ *   - If all operations are correct, \ref SERIAL_FLASH_LED_EXAMPLE_0 is 'on' and
+ *     \ref SERIAL_FLASH_LED_EXAMPLE_0 is 'on'(If have).
  *     The other states of  LEDs mean that the SerialFlash access fails somewhere.
  *
  * \section Usage
@@ -88,8 +88,6 @@
 
 /** Test block start address */
 #define AT25DFX_TEST_BLOCK_ADDR  (0)
-
-#define DATA_FLASH_LED_EXAMPLE_0 LED0_PIN
 
 
 /** RAM buffer used in this example */
@@ -120,14 +118,14 @@ int main(void)
 
 	/* Unprotect the chip */
 	if (at25dfx_protect_chip(AT25_TYPE_UNPROTECT) == AT25_SUCCESS) {
-		port_pin_set_output_level(DATA_FLASH_LED_EXAMPLE_0, false);
+		port_pin_set_output_level(SERIAL_FLASH_LED_EXAMPLE_0, false);
 	} else {
 		test_ko();
 	}
 
 	/* Check if the SerialFlash is valid */
 	if (at25dfx_mem_check() == AT25_SUCCESS) {
-		port_pin_set_output_level(DATA_FLASH_LED_EXAMPLE_0, false);
+		port_pin_set_output_level(SERIAL_FLASH_LED_EXAMPLE_0, false);
 	} else {
 		test_ko();
 	}
@@ -182,12 +180,12 @@ int main(void)
 		}
 	}
 
-	port_pin_set_output_level(DATA_FLASH_LED_EXAMPLE_0, false);
+	port_pin_set_output_level(SERIAL_FLASH_LED_EXAMPLE_0, false);
 	while (1);
 }
 
 void test_ko(void)
 {
-	port_pin_set_output_level(DATA_FLASH_LED_EXAMPLE_0, true);
+	port_pin_set_output_level(SERIAL_FLASH_LED_EXAMPLE_0, true);
 	while (1);
 }

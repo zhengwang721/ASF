@@ -45,4 +45,6 @@
 
 #include "samd21_xplained_pro.h"
 
+#define SERIAL_FLASH_LED_EXAMPLE_0 LED0_PIN
+
 #endif /* CONF_BOARD_H_INCLUDED */

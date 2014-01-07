@@ -46,7 +46,6 @@
 #include "status_codes.h"
 #include "conf_at25dfx.h"
 #include "at25dfx.h"
-//#include "spi_master.h"
 #include "at25dfx_hal_spi.h"
 
 /// @cond 0
