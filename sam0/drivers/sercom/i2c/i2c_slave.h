@@ -598,7 +598,7 @@ void i2c_slave_clear_status(
  * \param[in,out] module Pointer to the driver instance to lock.
  *
  */
-static inline uint8_t i2c_slave_dma_read_interrupt_status(struct i2c_master_module *const module)
+static inline uint8_t i2c_slave_dma_read_interrupt_status(struct i2c_slave_module *const module)
 {
 	return (uint8_t)module->hw->I2CS.INTFLAG.reg;
 }
@@ -611,7 +611,7 @@ static inline uint8_t i2c_slave_dma_read_interrupt_status(struct i2c_master_modu
  * \param[in,out] module Pointer to the driver instance to lock.
  *
  */
-static inline void i2c_slave_dma_write_interrupt_status(struct i2c_master_module *const module,
+static inline void i2c_slave_dma_write_interrupt_status(struct i2c_slave_module *const module,
 		uint8_t flag)
 {
 	module->hw->I2CS.INTFLAG.reg = flag;
