@@ -1,5 +1,5 @@
 /**
- * @file pal_ext_trx.h
+ * @file trx_access.h
  *
  * @brief HAL related APIs for externally plugged transceivers
  *
@@ -47,8 +47,8 @@
  */
 
 /* Prevent double inclusion */
-#ifndef PAL_EXT_TRX_H
-#define PAL_EXT_TRX_H
+#ifndef TRX_ACCESS_H
+#define TRX_ACCESS_H
 
 /*
  * NOTE:- Include 'return_val.h' before this file, as return_val.h has the
@@ -123,7 +123,7 @@
      * @brief Clears the transceiver main interrupt
      *
      */
-#define pal_trx_irq_flag_clr()          CLEAR_TRX_IRQ()
+#define trx_irq_flag_clr()          CLEAR_TRX_IRQ()
 
 /**
  * This macro is used for handling endianness among the different CPUs.
@@ -143,6 +143,11 @@ typedef void (*irq_handler_t)(void);
  */
 //#define MIN_TIMEOUT                     (0x80)
 
+/* This macro saves the global interrupt status */
+#define ENTER_TRX_CRITICAL_REGION()              {uint8_t flags = cpu_irq_save();
+
+/* This macro restores the global interrupt status */
+#define LEAVE_TRX_CRITICAL_REGION()              cpu_irq_restore(flags);}
 
 
 /* === Externals ============================================================ */
@@ -150,9 +155,9 @@ typedef void (*irq_handler_t)(void);
 
 /* === Prototypes =========================================================== */
 
-void pal_trx_irq_init(FUNC_PTR trx_irq_cb);
+void trx_irq_init(FUNC_PTR trx_irq_cb);
 
-void HAL_PhyReset(void);
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -180,7 +185,7 @@ extern "C" {
      * @param[in] length Number of bytes to be read from the frame
      * buffer.
      */
-    void pal_trx_frame_read(uint8_t *data, uint8_t length);
+    void trx_frame_read(uint8_t *data, uint8_t length);
 
     /**
      * @brief Writes data into frame buffer of the transceiver
@@ -190,7 +195,7 @@ extern "C" {
      * @param[in] data Pointer to data to be written into frame buffer
      * @param[in] length Number of bytes to be written into frame buffer
      */
-    void pal_trx_frame_write(uint8_t *data, uint8_t length);
+    void trx_frame_write(uint8_t *data, uint8_t length);
 
     /**
      * @brief Reads current value from a transceiver register
@@ -202,7 +207,7 @@ extern "C" {
      *
      * @return value of the register read
      */
-    uint8_t pal_trx_reg_read(uint8_t addr);
+    uint8_t trx_reg_read(uint8_t addr);
 
     /**
      * @brief Writes data into a transceiver register
@@ -213,7 +218,7 @@ extern "C" {
      * @param data Data to be written to trx register
      *
      */
-    void pal_trx_reg_write(uint8_t addr, uint8_t data);
+    void trx_reg_write(uint8_t addr, uint8_t data);
 
     /**
      * @brief Subregister read
@@ -224,7 +229,7 @@ extern "C" {
      *
      * @return  value of the read bit(s)
      */
-    uint8_t pal_trx_bit_read(uint8_t addr, uint8_t mask, uint8_t pos);
+    uint8_t trx_bit_read(uint8_t addr, uint8_t mask, uint8_t pos);
 
     /**
      * @brief Subregister write
@@ -234,7 +239,7 @@ extern "C" {
      * @param[in]   pos   Bit position of the subregister
      * @param[out]  new_value  Data, which is muxed into the register
      */
-    void pal_trx_bit_write(uint8_t reg_addr, uint8_t mask, uint8_t pos, uint8_t new_value);
+    void trx_bit_write(uint8_t reg_addr, uint8_t mask, uint8_t pos, uint8_t new_value);
 
     /**
      * @brief Reads data from SRAM of the transceiver
@@ -245,7 +250,7 @@ extern "C" {
      * @param[out] data Pointer to the location where data stored
      * @param[in] length Number of bytes to be read from SRAM
      */
-    void pal_trx_sram_read(uint8_t addr, uint8_t *data, uint8_t length);
+    void trx_sram_read(uint8_t addr, uint8_t *data, uint8_t length);
 
     /**
      * @brief Writes data into SRAM of the transceiver
@@ -256,7 +261,7 @@ extern "C" {
      * @param data Pointer to the data to be written into SRAM
      * @param length Number of bytes to be written into SRAM
      */
-    void pal_trx_sram_write(uint8_t addr, uint8_t *data, uint8_t length);
+    void trx_sram_write(uint8_t addr, uint8_t *data, uint8_t length);
 
     /**
      * @brief Writes and reads data into/from SRAM of the transceiver
@@ -268,7 +273,7 @@ extern "C" {
      * @param idata Pointer to the data written/read into/from SRAM
      * @param length Number of bytes written/read into/from SRAM
      */
-    void pal_trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length);
+    void trx_aes_wrrd(uint8_t addr, uint8_t *idata, uint8_t length);
 
 
 #if defined(NON_BLOCKING_SPI) || defined(__DOXYGEN__)
@@ -277,13 +282,13 @@ extern "C" {
      *
      * @param spi_done_cb Pointer to SPI done callback function
      */
-    void pal_spi_done_cb_init(void *spi_done_cb);
+    void trx_spi_done_cb_init(void *spi_done_cb);
 #endif
 
     /**
      * @brief Initializes the SPI interface for communication with the transceiver
      */
-    void pal_spi_init(void);
+    void trx_spi_init(void);
 
 	//! @}
 #ifdef __cplusplus
@@ -292,6 +297,6 @@ extern "C" {
 
 
 
-#endif  /* PAL_EXT_TRX_H */
+#endif  /* TRX_ACCESS_H */
 /* EOF */
 

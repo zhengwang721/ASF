@@ -1,0 +1,81 @@
+<asf xmlversion="1.0">
+	<select-by-device id="thirdparty.wireless.common_services.trx_access" caption="Common TRX Access">
+        <module type="meta" id="thirdparty.wireless.common_services.trx_access#1"     caption=" SPI access for external transceivers">
+            <info type="description" value="summary">
+            The PAL Layer forms the wrapper layer that forms the interface between the Stack and the Low level drivers.This module includes PAL(Platform Abstraction Layer) wrapper files for boards with External Transceivers
+            </info>
+			<info type="gui-flag" value="hidden"/>
+            <build type="header-file"   value="trx_access.h"/>
+            <build type="c-source"      value="trx_access.c"/>
+			<build type="include-path"  value="."/>
+            <require idref="common.services.delay"/>
+            <require idref="common.services.basic.spi_master"/>
+            <require idref="common.services.ioport"/>
+            <require idref="common.utils"/>
+            <device-support-alias value="avr2025_mac_spi_common_support"/>
+		</module>
+
+		<module type="meta" id="thirdparty.wireless.common_services.trx_access#2"     caption="PAL access for SoC">
+            <info type="description" value="summary">
+            The PAL Layer forms the wrapper layer that forms the interface between the Stack and the Low level drivers.This module includes PAL(Platform Abstraction Layer) wrapper files for Soc's
+            </info>
+			<info type="gui-flag" value="hidden"/>
+            <require idref="common.services.delay"/>
+            <device-support-alias value="avr2025_mac_soc_support"/>
+		</module>
+
+		<module type="meta" id="thirdparty.wireless.common_services.trx_access#3"     caption="PAL SPI access (SAMD) for external transceivers">
+            <info type="description" value="summary">
+            This module includes PAL wrapper files for boards with External Transceivers
+            </info>
+			<info type="gui-flag" value="hidden"/>
+            <build type="header-file"   value="trx_access.h"/>
+            <build type="c-source"      value="trx_access.c"/>
+			<build type="include-path"  value="."/>
+            <require idref="common2.services.delay"/>
+            <require idref="sam0.drivers.sercom.spi"/>
+			<require idref="sam0.drivers.extint"/>
+			<require idref="sam0.drivers.tc"/>
+            <require idref="sam0.drivers.port"/>
+            <require idref="sam0.utils"/>
+            <device-support-alias value="avr2025_mac_spi_sam0_support"/>
+		</module>
+    </select-by-device>
+
+
+    <device-alias-map name="avr2025_mac_support">
+        <device-support value="atxmega256a3u"/>
+        <device-support value="atxmega256a3bu"/>
+        <device-support value="atxmega256a3"/>
+        <device-support value="uc3a3_a4"/>
+        <device-support value="sam4l"/>
+		<device-support value="samd20"/>
+        <device-support value="atmega256rfr2"/>
+        <device-support value="atmega2564rfr2"/>
+        <device-support value="atmega128rfa1"/>
+    </device-alias-map>
+    <device-alias-map name="avr2025_mac_spi_support">
+        <device-support value="atxmega256a3u"/>
+        <device-support value="atxmega256a3bu"/>
+        <device-support value="atxmega256a3"/>
+        <device-support value="uc3a3_a4"/>
+		<device-support value="sam4l"/>
+        <device-support value="samd20"/>
+    </device-alias-map>
+    <device-alias-map name="avr2025_mac_spi_common_support">
+        <device-support value="atxmega256a3u"/>
+        <device-support value="atxmega256a3bu"/>
+        <device-support value="atxmega256a3"/>
+        <device-support value="uc3a3_a4"/>
+		<device-support value="sam4l"/>
+    </device-alias-map>
+	<device-alias-map name="avr2025_mac_spi_sam0_support">
+        <device-support value="samd20"/>
+    </device-alias-map>
+    <device-alias-map name="avr2025_mac_soc_support">
+        <device-support value="atmega128rfa1"/>
+        <device-support value="atmega256rfr2"/>
+		<device-support value="atmega128rfa1"/>		
+        <device-support value="atmega2564rfr2"/>
+    </device-alias-map>
+</asf>

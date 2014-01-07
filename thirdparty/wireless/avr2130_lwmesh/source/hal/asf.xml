@@ -8,6 +8,7 @@
 			<info type="gui-flag" value="hidden"/>
 			<build type="c-source"      value="src/hal.c"/>
 			<build type="header-file"   value="inc/hal.h"/>
+            <require idref="thirdparty.wireless.common_services.trx_access"/>			
 			<build type="include-path"  value="inc/"/>
 			<require idref="common.services.delay"/>
 			<require idref="common.services.ioport"/>
@@ -23,9 +24,8 @@
             </info>
 			<info type="gui-flag" value="hidden"/>
 			<build type="c-source"      value="src/hal.c"/>
-			<build type="c-source"      value="src/hal_ext_trx.c"/>
 			<build type="header-file"   value="inc/hal.h"/>
-			<build type="header-file"   value="inc/hal_ext_trx.h"/>
+            <require idref="thirdparty.wireless.common_services.trx_access"/>			
 			<build type="include-path"  value="inc/"/>
 			<require idref="common.services.delay"/>
 			<require idref="common.services.ioport"/>
@@ -41,9 +41,8 @@
             </info>
 			<info type="gui-flag" value="hidden"/>
 			<build type="c-source"      value="src/hal.c"/>
-			<build type="c-source"      value="src/hal_ext_trx.c"/>
 			<build type="header-file"   value="inc/hal.h"/>
-			<build type="header-file"   value="inc/hal_ext_trx.h"/>
+            <require idref="thirdparty.wireless.common_services.trx_access"/>			
 			<build type="include-path"  value="inc/"/>
 		    <build type="doxygen-entry-point" value="group_hal"/>
 			

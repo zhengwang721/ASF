@@ -53,7 +53,7 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "hal.h"
-#include "hal_ext_trx.h"
+#include "trx_access.h"
 
 /*- Definitions ------------------------------------------------------------*/
 #define AES_BLOCK_SIZE                 16
@@ -203,7 +203,7 @@ extern volatile int8_t      phyRxRssi;
 *****************************************************************************/
 INLINE void phyWriteRegisterInline(uint8_t reg, uint8_t value)
 {
-  pal_trx_reg_write(reg,value);
+  trx_reg_write(reg,value);
 }
 
 /*************************************************************************//**
@@ -211,7 +211,7 @@ INLINE void phyWriteRegisterInline(uint8_t reg, uint8_t value)
 INLINE uint8_t phyReadRegisterInline(uint8_t reg)
 {
   uint8_t value;
-  value = pal_trx_reg_read(reg);
+  value = trx_reg_read(reg);
   return value;
 }
 

@@ -69,7 +69,7 @@ void HAL_Init(void);
 void HAL_Delay(uint32_t us);
 void HAL_Sleep(uint32_t interval);
 void hw_expiry_cb(void);
-
+void HAL_PhyReset(void);
 
 /* Enables the global interrupt */
 #define ENABLE_GLOBAL_IRQ()                  Enable_global_interrupt()

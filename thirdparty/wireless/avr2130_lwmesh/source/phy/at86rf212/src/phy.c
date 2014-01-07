@@ -51,7 +51,8 @@
 /*- Includes ---------------------------------------------------------------*/
 #include <stdbool.h>
 #include "phy.h"
-#include "hal_ext_trx.h"
+#include "trx_access.h"
+
 
 /*- Definitions ------------------------------------------------------------*/
 #define RANDOM_NUMBER_UPDATE_INTERVAL  1 // us
@@ -127,7 +128,7 @@ void PHY_Init(void)
   phyIb.modulation = phyReadRegister(TRX_CTRL_2_REG) & 0x3f;
 
   phyState = PHY_STATE_IDLE;
-  pal_trx_irq_init((FUNC_PTR)phyInterruptHandler);  
+  trx_irq_init((FUNC_PTR)phyInterruptHandler);  
   ENABLE_TRX_IRQ();
 }
 
@@ -224,7 +225,7 @@ void PHY_DataReq(uint8_t *data)
   * and data starts from second byte.
   */
   data[0] += 2;
-  pal_trx_frame_write(data,(data[0]-1) /* length value*/);  
+  trx_frame_write(data,(data[0]-1) /* length value*/);  
   phyWriteRegister(TRX_STATE_REG, TRX_CMD_TX_START);
   
   
@@ -493,9 +494,9 @@ void PHY_TaskHandler(void)
       PHY_DataInd_t ind;
       uint8_t size;
 
-      pal_trx_frame_read(&size,1);
+      trx_frame_read(&size,1);
       
-      pal_trx_frame_read(phyRxBuffer,size+2);
+      trx_frame_read(phyRxBuffer,size+2);
       
       ind.data = phyRxBuffer+1;
       ind.size = size - 2/*crc*/;
