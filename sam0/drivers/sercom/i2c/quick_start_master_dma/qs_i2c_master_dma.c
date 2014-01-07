@@ -62,12 +62,8 @@ static uint8_t buffer[DATA_LENGTH] = {
 struct i2c_master_module i2c_master_instance;
 //! [dev_i2c_inst]
 
-void configure_i2c_master(void);
-void configure_dma_resource(struct dma_resource *resource);
-void setup_dma_descriptor(DmacDescriptor *descriptor);
-void transfer_done( const struct dma_resource* const resource);
 //! [initialize_i2c]
-void configure_i2c_master(void)
+static void configure_i2c_master(void)
 {
 	/* Initialize config structure and software module. */
 	//! [init_conf]
@@ -95,26 +91,26 @@ void configure_i2c_master(void)
 struct dma_resource example_resource;
 //! [dma_resource]
 
-// [transfer_done_flag]
+//! [transfer_done_flag]
 static volatile bool transfer_is_done = false;
-// [transfer_done_flag]
+//! [transfer_done_flag]
 
-// [transfer_descriptor]
+//! [transfer_descriptor]
 COMPILER_ALIGNED(16)
 DmacDescriptor example_descriptor;
-// [transfer_descriptor]
+//! [transfer_descriptor]
 
-// [_transfer_done]
-void transfer_done( const struct dma_resource* const resource )
+//! [transfer_done]
+static void transfer_done( const struct dma_resource* const resource )
 {
 	UNUSED(resource);
 
 	transfer_is_done = true;
 }
-// [_transfer_done]
+//! [transfer_done]
 
-// [config_dma_resource]
-void configure_dma_resource(struct dma_resource *resource)
+//! [config_dma_resource]
+static void configure_dma_resource(struct dma_resource *resource)
 {
 	//! [dma_setup_1]
 	struct dma_resource_config config;
@@ -134,10 +130,10 @@ void configure_dma_resource(struct dma_resource *resource)
 	dma_allocate(resource, &config);
 	//! [dma_setup_4]
 }
-// [config_dma_resource]
+//! [config_dma_resource]
 
-// [setup_dma_transfer_descriptor]
-void setup_dma_descriptor(DmacDescriptor *descriptor)
+//! [setup_dma_transfer_descriptor]
+static void setup_dma_descriptor(DmacDescriptor *descriptor)
 {
 	//! [dma_setup_5]
 	struct dma_descriptor_config descriptor_config;
@@ -159,7 +155,7 @@ void setup_dma_descriptor(DmacDescriptor *descriptor)
 	dma_descriptor_create(descriptor, &descriptor_config);
 	//! [dma_setup_8]
 }
-// [setup_dma_transfer_descriptor]
+//! [setup_dma_transfer_descriptor]
 
 int main(void)
 {
@@ -185,17 +181,18 @@ int main(void)
 	dma_start_transfer_job(&example_resource);
 	//! [start_transfer_job]
 
-//! [set_i2c_addr]
-	i2c_master_instance.hw->I2CM.ADDR.reg =
-		SERCOM_I2CM_ADDR_ADDR(SLAVE_ADDRESS<<1) |
-		SERCOM_I2CM_ADDR_LENEN |
-		SERCOM_I2CM_ADDR_LEN(DATA_LENGTH);
-//! [set_i2c_addr]
+	//! [set_i2c_addr]
+	i2c_master_dma_set_transfer(&i2c_master_instance, SLAVE_ADDRESS, DATA_LENGTH);
+	//! [set_i2c_addr]
 
+	//! [waiting_for_complete]
 	while (!transfer_is_done) {
 		/* Wait for transfer done */
 	}
+
 	//! [waiting_for_complete]
-	while(1);
+	while (true) {
+	/* Infinite loop */
+	}
 	//! [main]
 }

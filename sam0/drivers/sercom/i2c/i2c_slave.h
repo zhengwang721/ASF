@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x I2C Slave Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -583,6 +583,40 @@ uint32_t i2c_slave_get_status(
 void i2c_slave_clear_status(
 		struct i2c_slave_module *const module,
 		uint32_t status_flags);
+/** @} */
+
+/**
+ * \name SERCOM I2C slave with DMA interfaces
+ * @{
+ */
+ 
+/**
+ * \brief Read SERCOM I2C interrupt status.
+ *
+ * Read I2C interrupt status for DMA transfer
+ *
+ * \param[in,out] module Pointer to the driver instance to lock.
+ *
+ */
+static inline uint8_t i2c_slave_dma_read_interrupt_status(struct i2c_master_module *const module)
+{
+	return (uint8_t)module->hw->I2CS.INTFLAG.reg;
+}
+
+/**
+ * \brief Write SERCOM I2C interrupt status.
+ *
+ * Write I2C interrupt status for DMA transfer.
+ *
+ * \param[in,out] module Pointer to the driver instance to lock.
+ *
+ */
+static inline void i2c_slave_dma_write_interrupt_status(struct i2c_master_module *const module,
+		uint8_t flag)
+{
+	module->hw->I2CS.INTFLAG.reg = flag;
+}
+
 /** @} */
 
 /** @} */

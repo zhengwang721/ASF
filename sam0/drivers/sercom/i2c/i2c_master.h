@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x I2C Master Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -502,6 +502,34 @@ enum status_code i2c_master_write_packet_wait_no_stop(
 		struct i2c_packet *const packet);
 
 void i2c_master_send_stop(struct i2c_master_module *const module);
+
+/** @} */
+
+/**
+* \name SERCOM I2C master with DMA interfaces
+* @{
+*/
+
+/**
+ * \brief Set I2C for DMA transfer with slave address and transfer size.
+ *
+ * This function will set the slave address, transfer size and enable the auto transfer
+ * mode for DMA.
+ *
+ * \param[in,out] module Pointer to the driver instance to lock.
+ * \param[in] addr I2C slave address
+ * \param[in] length I2C transfer length with DMA.
+ *
+ */
+static inline void i2c_master_dma_set_transfer(struct i2c_master_module *const module,
+		uint16_t addr, uint8_t length)
+{
+	module->hw->I2CM.ADDR.reg =
+		SERCOM_I2CM_ADDR_ADDR(addr<<1) |
+		SERCOM_I2CM_ADDR_LENEN |
+		SERCOM_I2CM_ADDR_LEN(length) |
+		I2C_TRANSFER_WRITE;
+}
 
 /** @} */
 

@@ -167,8 +167,10 @@ int main(void)
 
 	//! [clear_status]
 	while (true) { 
-		if (i2c_slave_instance.hw->I2CS.INTFLAG.reg & SERCOM_I2CS_INTFLAG_AMATCH) {
-			i2c_slave_instance.hw->I2CS.INTFLAG.reg = SERCOM_I2CS_INTFLAG_AMATCH;
+		if (i2c_slave_dma_read_interrupt_status(&i2c_slave_instance) &
+					SERCOM_I2CS_INTFLAG_AMATCH) {
+			i2c_slave_dma_write_interrupt_status(&i2c_slave_instance,
+					SERCOM_I2CS_INTFLAG_AMATCH);
 		}
 	}
 	//! [clear_status]

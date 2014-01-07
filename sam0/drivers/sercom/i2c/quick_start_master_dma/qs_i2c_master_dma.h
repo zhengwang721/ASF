@@ -42,8 +42,7 @@
  */
 
 /**
- * \page asfdoc_sam0_sercom_i2c_master_dma_use_case Quick Start Guide for 
-SERCOM I2C Master with DMA
+ * \page asfdoc_sam0_sercom_i2c_master_dma_use_case Quick Start Guide for SERCOM I2C Master with DMA
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Master mode
@@ -83,7 +82,7 @@ SERCOM I2C Master with DMA
  * \snippet qs_i2c_slave_dma.c transfer_descriptor
  *
  * - Function for transfer done callback:
- * \snippet qs_i2c_slave_dma.c _transfer_done
+ * \snippet qs_i2c_slave_dma.c transfer_done
  *
  * - Function for setting up the DMA resource:
  * \snippet qs_i2c_slave_dma.c config_dma_resource
@@ -142,14 +141,12 @@ SERCOM I2C Master with DMA
  * -# Create the DMA transfer descriptor.
  *  \snippet qs_dma_basic.c dma_setup_8
  *
- * \section asfdoc_sam0_sercom_i2c_master_dma_use_implemenation 
-Implementation
+ * \section asfdoc_sam0_sercom_i2c_master_dma_use_implemenation Implementation
  * \subsection asfdoc_sam0_sercom_i2c_master_dma_use_implemenation_code Code
  * Add to user application \c main():
  * \snippet qs_i2c_master_dma_use.c main
  *
- * \subsection asfdoc_sam0_sercom_i2c_master_dma_use_implemenation_workflow 
-Workflow
+ * \subsection asfdoc_sam0_sercom_i2c_master_dma_use_implemenation_workflow Workflow
  * -# Start the DMA transfer job.
  *  \snippet qs_i2c_master_dma_use.c start_transfer_job
  *
