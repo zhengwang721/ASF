@@ -235,8 +235,10 @@ static at25_status_t at25dfx_send_command(at25_cmd_t *at25cmd)
 		spi_stat = at25dfx_spi_write_packet(at25cmd->data, 
 				at25cmd->data_size);
 	} else {
-		spi_stat = at25dfx_spi_read_packet(at25cmd->data, 
+		if(at25cmd->data_size != 0 ){
+			spi_stat = at25dfx_spi_read_packet(at25cmd->data, 
 				at25cmd->data_size);
+		}
 	}
 
 	if (spi_stat != STATUS_OK) {

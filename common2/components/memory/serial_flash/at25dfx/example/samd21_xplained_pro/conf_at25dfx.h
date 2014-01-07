@@ -57,26 +57,24 @@
 #define AT25DFX_MEM_CNT           1
 
 /* Memory ID of AT25DFx components to manage */
-#define AT25DFX_MEM_ID            0 //0 1
+#define AT25DFX_MEM_ID            0 
 
 
 /** AT25DFx device type */
-#define AT25DFX_MEM_TYPE          AT25DFX_321A
+#define AT25DFX_MEM_TYPE          AT25DFX_081A
 
-//! Size of AT25DFX data flash memories to manage.
-#define AT25DFX_MEM_SIZE            AT45DBX_8MB
 
 
 #define AT25DFX_SPI_PINMUX_SETTING  EXT3_SPI_SERCOM_MUX_SETTING
 #define AT25DFX_SPI_PINMUX_PAD0     EXT3_SPI_SERCOM_PINMUX_PAD0
-#define AT25DFX_SPI_PINMUX_PAD1     EXT3_SPI_SERCOM_PINMUX_PAD1
+#define AT25DFX_SPI_PINMUX_PAD1     PINMUX_UNUSED
 #define AT25DFX_SPI_PINMUX_PAD2     EXT3_SPI_SERCOM_PINMUX_PAD2
 #define AT25DFX_SPI_PINMUX_PAD3     EXT3_SPI_SERCOM_PINMUX_PAD3
 
-#define AT25DFX_CS                  EXT3_PIN_15  // CS0 PB17
+#define AT25DFX_CS                  EXT3_PIN_8 
 
 //! SPI master speed in Hz.
-#define AT25DFX_CLOCK_SPEED         9600
+#define AT25DFX_CLOCK_SPEED         120000
 
 
 #endif  /* CONF_AT25DFX_H_INCLUDED */
