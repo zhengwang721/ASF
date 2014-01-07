@@ -44,6 +44,9 @@
 /**
  * \page asfdoc_sam0_sercom_usart_dma_use_case Quick Start Guide for Using DMA with SERCOM USART
  *
+ * The supported device list:
+ *    - SAMD21
+ *
  * This quick start will receiving 8 bytes of data from PC terminal and transmit back the string 
  * to the terminal through DMA. In this use case the USART will be configured with the following
  * settings:

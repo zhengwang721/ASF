@@ -55,30 +55,30 @@ struct dma_resource example_resource;
 //! [dma_resource]
 
 //! [setup]
-// [transfer_length]
+//! [transfer_length]
 #define TRANSFER_SIZE    (16)
-// [transfer_length]
+//! [transfer_length]
 
-// [transfer_counter]
+//! [transfer_counter]
 #define TRANSFER_COUNTER (64)
-// [transfer_counter]
+//! [transfer_counter]
 
-// [source_memory]
+//! [source_memory]
 static uint8_t source_memory[TRANSFER_SIZE*TRANSFER_COUNTER];
-// [source_memory]
+//! [source_memory]
 
-// [destination_memory]
+//! [destination_memory]
 static uint8_t destination_memory[TRANSFER_SIZE*TRANSFER_COUNTER];
-// [destination_memory]
+//! [destination_memory]
 
-// [transfer_done_flag]
+//! [transfer_done_flag]
 static volatile bool transfer_is_done = false;
-// [transfer_done_flag]
+//! [transfer_done_flag]
 
-// [transfer_descriptor]
+//! [example_descriptor]
 COMPILER_ALIGNED(16)
 DmacDescriptor example_descriptor;
-// [transfer_descriptor]
+//! [example_descriptor]
 
 //! [config_tc]
 void configure_tc(void)
@@ -112,16 +112,16 @@ void configure_tc(void)
 }
 //! [config_tc]
 
-// [_transfer_done]
+//! [_transfer_done]
 void transfer_done( const struct dma_resource* const resource )
 {
 	UNUSED(resource);
 
 	transfer_is_done = true;
 }
-// [_transfer_done]
+//! [_transfer_done]
 
-// [config_dma_resource]
+//! [config_dma_resource]
 void configure_dma_resource(struct dma_resource *resource)
 {
 //! [dma_setup_1]
@@ -131,16 +131,16 @@ void configure_dma_resource(struct dma_resource *resource)
 //! [dma_setup_2]
 	dma_get_config_defaults(&config);
 	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
-	config.peripheral_trigger = EXAMPLE_PERIPHERAL_TRIGGER;
+	config.peripheral_trigger = TC6_DMAC_ID_MC_0;
 //! [dma_setup_2]
 
 //! [dma_setup_3]
 	dma_allocate(resource, &config);
 //! [dma_setup_3]
 }
-// [config_dma_resource]
+//! [config_dma_resource]
 
-// [setup_dma_transfer_descriptor]
+//! [setup_dma_transfer_descriptor]
 void setup_dma_descriptor(DmacDescriptor *descriptor)
 {
 	//! [dma_setup_4]
@@ -161,7 +161,7 @@ void setup_dma_descriptor(DmacDescriptor *descriptor)
 	dma_descriptor_create(descriptor, &descriptor_config);
 	//! [dma_setup_7]
 }
-// [setup_dma_transfer_descriptor]
+//! [setup_dma_transfer_descriptor]
 
 //! [setup]
 

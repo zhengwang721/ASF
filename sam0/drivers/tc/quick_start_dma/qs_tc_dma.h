@@ -44,6 +44,9 @@
 /**
  * \page asfdoc_sam0_tc_dma_use_case Quick Start Guide for Using DMA with TC
  *
+ * The supported device list:
+ *    - SAMD21
+ *
  * In this use case, the TC will be used to generate a PWM signal. Here
  * the pulse width is set to one quarter of the period. Once the counter value matches
  * the values in the Compare/Capture Value register, a event will be tiggered for a
@@ -77,7 +80,6 @@
  * \subsection asfdoc_sam0_tc_dma_use_case_setup_code Code
  * Add to the main application source file, before any functions:
  * \snippet conf_quick_start.h definition_pwm
- * \snippet conf_quick_start.h definition_peripheral_trigger
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_dma.c module_inst

@@ -44,6 +44,9 @@
 /**
  * \page asfdoc_sam0_tcc_dma_use_case Quick Start Guide for Using DMA with TCC
  *
+ * The supported device list:
+ *    - SAMD21
+ *
  * In this use case, the TCC will be used to generate a PWM signal. Here
  * the pulse width varies in following values through DMA transfer: one quater
  * of the period, half of the period and three quaters of the period.

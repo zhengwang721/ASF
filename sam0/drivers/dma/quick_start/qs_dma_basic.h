@@ -44,6 +44,9 @@
 /**
  * \page asfdoc_sam0_dma_basic_use_case Quick Start Guide for Using DMA Driver
  *
+ * The supported device list:
+ *    - SAMD21
+ *
  * In this use case, the DMA module is configured for:
  *  \li Move data from memory to memory
  *  \li Using software trigger
