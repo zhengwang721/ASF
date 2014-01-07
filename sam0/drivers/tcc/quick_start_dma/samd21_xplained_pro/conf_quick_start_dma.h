@@ -55,12 +55,12 @@
 
 //[definition_dma_compare_trigger]
 /** DMA Peripheral to Memory beat trigger: TCC0 OVF */
-#define CONF_COMPARE_TRIGGER 0x0D
+#define CONF_COMPARE_TRIGGER TCC0_DMAC_ID_OVF
 //[definition_dma_compare_trigger]
 
 //[definition_dma_capture_trigger]
 /** DMA Memory to Peripheral beat trigger: TCC0 MC1 */
-#define CONF_CAPTURE_TRIGGER 0x0F
+#define CONF_CAPTURE_TRIGGER TCC0_DMAC_ID_MC_1
 //[definition_dma_capture_trigger]
 
 #endif /* CONF_QUICK_START_H_INCLUDED */

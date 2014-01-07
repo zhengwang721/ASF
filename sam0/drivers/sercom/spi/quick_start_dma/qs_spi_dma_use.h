@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_sam0_sercom_spi_dma_use_case Quick Start Guide SERCOM SPI DMA
+ * \page asfdoc_sam0_sercom_spi_dma_use_case Quick Start Guide for Using DMA with SERCOM SPI
  *
  * The supported device list:
  *    - SAMD21

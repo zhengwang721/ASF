@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_sam0_tc_basic_use_case Quick Start Guide for TC - Basic
+ * \page asfdoc_sam0_tc_basic_use_case Quick Start Guide for Using DMA with TC
  *
  * In this use case, the TC will be used to generate a PWM signal. Here
  * the pulse width is set to one quarter of the period. The TC module will be

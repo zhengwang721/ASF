@@ -25,9 +25,21 @@
 		<build type="module-config" subtype="required-header-file" value="conf_dma.h"/>
 		<build type="module-config" subtype="path" value="module_config"/>
 		<build type="header-file" value="quick_start/qs_dma_basic.h"/>
+		<build type="header-file" value="../tc/quick_start_dma/qs_tc_dma.h"/>
+		<build type="header-file" value="../tc/quick_start_dma/samd21_xplained_pro/conf_quick_start.h"/>
+		<build type="header-file" value="../tcc/quick_start_dma/qs_tcc_dma.h"/>
+		<build type="header-file" value="../tcc/quick_start_dma/samd21_xplained_pro/conf_quick_start_dma.h"/>
+		<build type="header-file" value="../sercom/usart/quick_start_dma/qs_usart_dma_use.h"/>
+		<build type="header-file" value="../sercom/spi/quick_start_dma/qs_spi_dma_use.h"/>
 
 		<build type="doxygen-entry-point" value="asfdoc_sam0_dma_group"/>
 		<build type="doxygen-example-path" value="quick_start"/>
+		<build type="doxygen-example-path" value="../tc/quick_start_dma"/>
+		<build type="doxygen-example-path" value="../tc/quick_start_dma/samd21_xplained_pro"/>
+		<build type="doxygen-example-path" value="../tcc/quick_start_dma"/>
+		<build type="doxygen-example-path" value="../tcc/quick_start_dma/samd21_xplained_pro"/>
+		<build type="doxygen-example-path" value="../sercom/usart/quick_start_dma"/>
+		<build type="doxygen-example-path" value="../sercom/spi/quick_start_dma"/>
 		<build type="doxygen-quick-start" value="asfdoc_sam0_dma_exqsg"/>
 
 		<device-support value="samd21"/>

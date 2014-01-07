@@ -42,26 +42,26 @@
  */
 
 /**
- * \page asfdoc_samd21_dma_basic_use_case Quick Start Guide for DMA - Basic
+ * \page asfdoc_sam0_dma_basic_use_case Quick Start Guide for Using DMA Driver
  *
  * In this use case, the DMA module is configured for:
  *  \li Move data from memory to memory
  *  \li Using software trigger
  *  \li Using DMA priority level 0
  *
- * \section asfdoc_samd21_dma_basic_use_case_setup Setup
+ * \section asfdoc_sam0_dma_basic_use_case_setup Setup
  *
- * \subsection asfdoc_samd21_dma_basic_use_casesetup_prereq Prerequisites
+ * \subsection asfdoc_sam0_dma_basic_use_casesetup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd21_dma_basic_use_casesetup_code Code
+ * \subsection asfdoc_sam0_dma_basic_use_casesetup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_dma_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_dma_basic.c setup_init
  *
- * \subsection asfdoc_samd21_dma_basic_use_casesetup_flow Workflow
+ * \subsection asfdoc_sam0_dma_basic_use_casesetup_flow Workflow
  * -# Create a DMA resource configuration structure, which can be filled out to
  *    adjust the configuration of a single DMA transfer.
  *  \snippet qs_dma_basic.c setup_1
@@ -105,7 +105,7 @@
  *
  * -# Add the DMA transfer descriptor to the allocated DMA resource.
  *
- *  \snippet qs_dma_basic.c add_descriptor_to_resource
+ *  \snippet qs_dma_basic.c add_descriptor_to_dma_resource
  *  \br
  *
  * -# Register a callback to indicate transfer status.
@@ -120,9 +120,9 @@
  *  \snippet qs_dma_basic.c setup_enable_callback
  *  \br
  *
- * \section asfdoc_samd21_dma_basic_use_case_main Use Case
+ * \section asfdoc_sam0_dma_basic_use_case_main Use Case
  *
- * \subsection asfdoc_samd21_dma_basic_use_casecode_code Code
+ * \subsection asfdoc_sam0_dma_basic_use_casecode_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_dma_basic.c main
  *

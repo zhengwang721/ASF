@@ -124,8 +124,7 @@
  * a software trigger will be used for a DMA transfer.
  *
 
- * \subsection asfdoc_sam0_dma_module_overview_dma_transfer_descriptor DMA
- * Transfer Descriptor
+ * \subsection asfdoc_sam0_dma_module_overview_dma_transfer_descriptor DMA Transfer Descriptor
  * The transfer descriptor defines the transfer properites, as shown in
 
  * \ref asfdoc_sam0_dma_module_overview_dma_descriptor_layout "the figure below".
@@ -633,11 +632,11 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  * - \ref asfdoc_sam0_system_clock_group "System Clock Driver"
  *
  *
- * \section asfdoc_sam0_events_extra_errata Errata
+ * \section asfdoc_sam0_dma_extra_errata Errata
  * There are no errata related to this driver.
  *
  *
- * \section asfdoc_sam0_events_extra_history Module History
+ * \section asfdoc_sam0_dma_extra_history Module History
  * An overview of the module history is presented in the table below, with
  * details on the enhancements and fixes made to the module since its first
  * release. The current version of this corresponds to the newest version in
@@ -654,7 +653,7 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  */
  
  /**
- * \page asfdoc_sam0_events_exqsg Examples for DMA Driver
+ * \page asfdoc_sam0_dma_exqsg Examples for DMA Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_dma_group. QSGs are simple examples with
@@ -663,10 +662,19 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  * added to the user application.
  *
  * - \subpage asfdoc_sam0_dma_basic_use_case
+ * - \subpage asfdoc_sam0_tc_dma_use_case
+ * - \subpage asfdoc_sam0_tcc_dma_use_case
+ * - \subpage asfdoc_sam0_sercom_spi_dma_use_case
+ * - \subpage asfdoc_sam0_sercom_usart_dma_use_case
  *
  * \page asfdoc_sam0_dma_document_revision_history Document Revision History
  *
  * <table>
+ *    <tr>
+ *        <th>Doc. Rev.</td>
+ *        <th>Date</td>
+ *        <th>Comments</td>
+ *    </tr>
  *    <tr>
  *        <td>A</td>
  *        <td>01/2014</td>
