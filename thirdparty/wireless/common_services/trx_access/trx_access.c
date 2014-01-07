@@ -112,6 +112,21 @@ void trx_spi_init(void)
 #endif
 }
 
+void HAL_PhyReset(void)
+{
+	/* Ensure control lines have correct levels. */
+	RST_HIGH();
+	SLP_TR_LOW();
+	
+	/* Wait typical time of timer TR1. */
+	delay_us(330);
+	
+	RST_LOW();
+	delay_us(10);
+	RST_HIGH();
+
+}
+
 uint8_t trx_reg_read(uint8_t addr)
 {
 #if SAMD20	

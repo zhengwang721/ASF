@@ -8,6 +8,7 @@
 			<info type="gui-flag" value="hidden"/>
             <require idref="thirdparty.wireless.avr2130_lwmesh.source.phy.atmegarfr2"/>
             <device-support value="atmega256rfr2"/>
+            <device-support value="atmega2564rfr2"/>
             <build type="doxygen-entry-point" value="group_phy_rfr2"/>
 		</module>
 		<module type="driver" id="config.thirdparty.wireless.avr2130_lwmesh.source.phy#2"     caption="atmegarfa1 phy support enabled">

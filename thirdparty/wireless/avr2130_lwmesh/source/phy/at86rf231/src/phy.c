@@ -104,7 +104,7 @@ static uint8_t       phyRxBuffer[128];
 *****************************************************************************/
 void PHY_Init(void)
 {
-	pal_spi_init();
+	trx_spi_init();
   HAL_PhyReset();
 //static uint8_t ver;
 //ver= phyReadRegister(0X1c);

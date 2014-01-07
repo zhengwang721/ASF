@@ -56,9 +56,8 @@
  */
 
  /** 
-  * \ingroup group_pal
-  * \defgroup group_pal_ext PAL Wrapper for External Transceivers
-  * This module includes api's and defenitions required for Devices with externally plugged transceivers(Non Soc's)
+  * \defgroup group_trx_access
+  *  This module includes api's and defenitions required for Devices with externally plugged transceivers(Non Soc's)
   * @{
   */
 /* === Includes ============================================================ */
@@ -290,6 +289,7 @@ extern "C" {
      */
     void trx_spi_init(void);
 
+	void HAL_PhyReset(void);
 	//! @}
 #ifdef __cplusplus
 } /* extern "C" */

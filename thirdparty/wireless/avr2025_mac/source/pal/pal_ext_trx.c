@@ -56,20 +56,6 @@
 #include "conf_pal.h"
 #include "conf_board.h"
 
-static irq_handler_t irq_hdl_trx = NULL;
-
-#if SAMD20
-struct spi_slave_inst_config slave_dev_config;
-struct spi_config config;
-struct spi_module master;
-struct spi_slave_inst slave;
-uint16_t dummy_read;
-#else
-struct spi_device SPI_AT86RFX_DEVICE = {
-	//! Board specific select id
-	.id = AT86RFX_SPI_CS
-};
-#endif
 
 
 void pal_spi_init(void)

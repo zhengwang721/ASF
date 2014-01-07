@@ -48,7 +48,6 @@
 
 #include "sysTypes.h"
 #include "hal.h"
-#include "trx_access.h"
 #include "delay.h"
 
 
@@ -88,22 +87,6 @@ void HAL_TimerInit(void)
   common_tc_init();
   common_tc_delay(HAL_TIMER_INTERVAL*MS);
 }
-
-void HAL_PhyReset(void)
-{
-  /* Ensure control lines have correct levels. */
-  PAL_RST_HIGH();
-  PAL_SLP_TR_LOW();
-  
-  /* Wait typical time of timer TR1. */
-  HAL_Delay(330);
-  
-  RST_LOW();
-  HAL_Delay(10);
-  RST_HIGH();
-
-}
-
 
 
 /*****************************************************************************

@@ -13,5 +13,6 @@
 		<build type="doxygen-entry-point" value="group_phy_rfr2"/>
 		<build type="define" name="PHY_ATMEGA256RFR2" value =""/>
 		<device-support value="atmega256rfr2"/>
+		<device-support value="atmega2564rfr2"/>
 	</module>
 </asf>
