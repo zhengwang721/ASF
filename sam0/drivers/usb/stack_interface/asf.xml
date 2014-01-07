@@ -22,5 +22,7 @@
 		<build type="c-source" value="usb_device_udd.c"/>
 		<device-support value="samd21"/>
 		<require idref="sam0.drivers.usb"/>
+		<require idref="sam0.drivers.usb.dual"/>
+		<require idref="common.services.basic.sleepmgr"/>
 	</module>
 </asf>
