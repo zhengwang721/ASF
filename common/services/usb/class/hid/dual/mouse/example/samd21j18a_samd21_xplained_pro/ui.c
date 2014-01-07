@@ -84,9 +84,9 @@ static void UI_WAKEUP_HANDLER(void)
 			uhc_resume();
 		}
 	} else {
-			/* In device mode, wakeup the USB host. */
-			udc_remotewakeup();
-		}
+		/* In device mode, wakeup the USB host. */
+		udc_remotewakeup();
+	}
 }
 
 /**

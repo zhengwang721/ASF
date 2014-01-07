@@ -525,9 +525,9 @@ uint8_t udd_getaddress(void)
 void udd_send_remotewakeup(void)
 {
 	uint32_t try = 5;
-	do {
+	while(2 != usb_get_state_machine_status(&usb_device) && try --) {
 		usb_send_remote_wake_up(&usb_device);
-	} while(2 != usb_get_state_machine_status(&usb_device) && try --);
+	}
 }
 
 void udd_set_setup_payload( uint8_t *payload, uint16_t payload_size )
