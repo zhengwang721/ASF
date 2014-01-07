@@ -3,7 +3,7 @@
  *
  * \brief SAM0+ EEPROM Emulator Service Quick Start
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_eeprom_basic_use_case Quick Start Guide for the Emulated EEPROM module - Basic Use Case
+ * \page asfdoc_sam0_eeprom_basic_use_case Quick Start Guide for the Emulated EEPROM module - Basic Use Case
  *
  * In this use case, the EEPROM emulator module is configured and a sample page
  * of data read and written. The first byte of the first EEPROM page is toggled,
@@ -50,24 +50,24 @@
  * is reset, the LED should toggle to a different state to indicate correct
  * non-volatile storage and retrieval.
  *
- * \section asfdoc_samd20_eeprom_basic_use_case_prereq Prerequisites
+ * \section asfdoc_sam0_eeprom_basic_use_case_prereq Prerequisites
  * The device's fuses must be configured to reserve a sufficient number of
  * FLASH memory rows for use by the EEPROM emulator service, before the service
  * can be used.
  *
- * \section asfdoc_samd20_eeprom_basic_use_case_setup Setup
+ * \section asfdoc_sam0_eeprom_basic_use_case_setup Setup
  *
- * \subsection asfdoc_samd20_eeprom_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_sam0_eeprom_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd20_eeprom_basic_use_case_setup_code Code
+ * \subsection asfdoc_sam0_eeprom_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_emulator_basic.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_emulator_basic.c setup_init
  *
- * \subsection asfdoc_samd20_eeprom_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_sam0_eeprom_basic_use_case_setup_flow Workflow
  * -# Attempt to initialize the EEPROM emulator service, storing the error code
  *    from the initialization function into a temporary variable.
  *  \snippet qs_emulator_basic.c init_eeprom_service
@@ -81,13 +81,13 @@
  *  \snippet qs_emulator_basic.c check_re-init
  *
  *
- * \section asfdoc_samd20_eeprom_basic_use_case_main Use Case
+ * \section asfdoc_sam0_eeprom_basic_use_case_main Use Case
  *
- * \subsection asfdoc_samd20_eeprom_basic_use_case_main_code Code
+ * \subsection asfdoc_sam0_eeprom_basic_use_case_main_code Code
  * Copy-paste the following code to your user application:
  * \snippet qs_emulator_basic.c main
  *
- * \subsection asfdoc_samd20_eeprom_basic_use_case_main_flow Workflow
+ * \subsection asfdoc_sam0_eeprom_basic_use_case_main_flow Workflow
  * -# Create a buffer to hold a single emulated EEPROM page of memory, and read
  *    out logical EEPROM page zero into it.
  *  \snippet qs_emulator_basic.c read_page

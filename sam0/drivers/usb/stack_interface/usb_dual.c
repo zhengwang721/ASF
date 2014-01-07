@@ -42,7 +42,6 @@
  */
 #include <compiler.h>
 #include "usb_dual.h"
-#include "conf_usb_host.h"
 
 #ifndef UDD_ENABLE
 # define udc_start()
@@ -51,7 +50,7 @@
 
 #ifndef UHD_ENABLE
 # define uhc_start(void)
-# define uhc_stop(bool b_id_stop)
+# define uhc_stop(b_id_stop)
 #endif
 
 /* State of USBC dual initialization */
