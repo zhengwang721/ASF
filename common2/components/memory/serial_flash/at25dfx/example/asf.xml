@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+	<module type="application" id="common2.components.memory.serial_flash.at25dfx.at25dfx_example" caption="AT25DFx Example">
+		<device-support value="samd21"/>
+		<info type="description" value="summary">
+		This example will demonstrates how to use the AT25DFx dataflash component.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="Memory"/>
+		</info>
+		<info type="gui-flag" value="move-to-root"/>
+		<build type="c-source" value="at25dfx_example.c"/>
+		<build type="include-path" value="."/>
+		<require idref="common2.components.memory.serial_flash.at25dfx"/>
+
+	</module>
+</asf>
