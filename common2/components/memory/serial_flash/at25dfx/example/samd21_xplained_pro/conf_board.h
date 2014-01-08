@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 configuration for the AT45DBX example
+ * \brief SAM D21 configuration for the AT25DFX example
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
