@@ -45,7 +45,7 @@
 
 			<info type="description" value="pdf">
 				This document describes how to use the Analog Comparator on the
-				SAM D2x, both the ASF driver and the peripheral itself.7
+				SAM D2x, both the ASF driver and the peripheral itself.
 			</info>
 
 			<build type="include-path" value="." />
