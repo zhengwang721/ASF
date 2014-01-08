@@ -55,9 +55,6 @@ enum usb_speed {
 	USB_SPEED_FULL,
 };
 
-//! @name USB Host related contents
-//! @{
-
 /** Enum for the possible callback types for the USB in host module */
 enum usb_host_callback {
 	USB_HOST_CALLBACK_SOF,
@@ -272,9 +269,13 @@ struct usb_endpoint_callback_parameter {
 	uint8_t endpoint_address;
 };
 
-/** USB simple operation functions */
 void usb_enable(struct usb_module *module_inst);
 void usb_disable(struct usb_module *module_inst);
+/**
+ * \brief Get the status of USB module's state machine
+ *
+ * \param module_inst pointer to USB module instance
+ */
 static inline uint8_t usb_get_state_machine_status(struct usb_module *module_inst)
 {
 	/* Sanity check arguments */
@@ -283,12 +284,16 @@ static inline uint8_t usb_get_state_machine_status(struct usb_module *module_ins
 
 	return module_inst->hw->HOST.FSMSTATUS.reg;
 }
-/** USB init functions */
+
 void usb_get_config_defaults(struct usb_config *module_config);
 enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 		struct usb_config *module_config);
 
-/** Host simple operation functions*/
+/**
+ * \brief Enable the USB host by setting the VBUS is ok
+ *
+ * \param module_inst Pointer to USB software instance struct
+ */
 static inline void usb_host_enable(struct usb_module *module_inst)
 {
 	/* Sanity check arguments */
@@ -297,6 +302,12 @@ static inline void usb_host_enable(struct usb_module *module_inst)
 
 	module_inst->hw->HOST.CTRLB.bit.VBUSOK = 1;
 }
+
+/**
+ * \brief Send the USB reset
+ *
+ * \param module_inst Pointer to USB software instance struct
+ */
 static inline void usb_host_send_reset(struct usb_module *module_inst)
 {
 	/* Sanity check arguments */
@@ -305,6 +316,12 @@ static inline void usb_host_send_reset(struct usb_module *module_inst)
 
 	module_inst->hw->HOST.CTRLB.bit.BUSRESET = 1;
 }
+
+/**
+ * \brief Enable the USB SOF generation
+ *
+ * \param module_inst Pointer to USB software instance struct
+ */
 static inline void usb_host_enable_sof(struct usb_module *module_inst)
 {
 	/* Sanity check arguments */
@@ -313,6 +330,12 @@ static inline void usb_host_enable_sof(struct usb_module *module_inst)
 
 	module_inst->hw->HOST.CTRLB.bit.SOFE = 1;
 }
+
+/**
+ * \brief Disable the USB SOF generation
+ *
+ * \param module_inst Pointer to USB software instance struct
+ */
 static inline void usb_host_disable_sof(struct usb_module *module_inst)
 {
 	/* Sanity check arguments */
@@ -321,6 +344,14 @@ static inline void usb_host_disable_sof(struct usb_module *module_inst)
 
 	module_inst->hw->HOST.CTRLB.bit.SOFE = 0;
 }
+
+/**
+ * \brief Check the USB SOF generation status
+ *
+ * \param module_inst Pointer to USB software instance struct
+ *
+ * \return USB SOF generation status
+ */
 static inline bool usb_host_is_sof_enabled(struct usb_module *module_inst)
 {
 	/* Sanity check arguments */
@@ -329,6 +360,12 @@ static inline bool usb_host_is_sof_enabled(struct usb_module *module_inst)
 
 	return module_inst->hw->HOST.CTRLB.bit.SOFE;
 }
+
+/**
+ * \brief Send the USB host resume
+ *
+ * \param module_inst Pointer to USB software instance struct
+ */
 static inline void usb_host_send_resume(struct usb_module *module_inst)
 {
 	/* Sanity check arguments */
@@ -337,6 +374,12 @@ static inline void usb_host_send_resume(struct usb_module *module_inst)
 
 	module_inst->hw->HOST.CTRLB.bit.RESUME= 1;
 }
+
+/**
+ * \brief Send the USB host LPM resume
+ *
+ * \param module_inst Pointer to USB software instance struct
+ */
 static inline void usb_host_send_l1_resume(struct usb_module *module_inst)
 {
 	/* Sanity check arguments */
@@ -345,6 +388,14 @@ static inline void usb_host_send_l1_resume(struct usb_module *module_inst)
 
 	module_inst->hw->HOST.CTRLB.bit.L1RESUME = 1;
 }
+
+/**
+ * \brief Get the speed mode of USB host
+ *
+ * \param module_inst Pointer to USB software instance struct
+ *
+ * \return enum usb_speed mode
+ */
 static inline enum usb_speed usb_host_get_speed(struct usb_module *module_inst)
 {
 	/* Sanity check arguments */
@@ -357,6 +408,14 @@ static inline enum usb_speed usb_host_get_speed(struct usb_module *module_inst)
 		return USB_SPEED_LOW;
 	}
 }
+
+/**
+ * \brief Get the frame number
+ *
+ * \param module_inst Pointer to USB software instance struct
+ *
+ * \return frame number value
+ */
 static inline uint16_t usb_host_get_frame_number(struct usb_module *module_inst)
 {
 	/* Sanity check arguments */
@@ -365,6 +424,7 @@ static inline uint16_t usb_host_get_frame_number(struct usb_module *module_inst)
 
 	return (uint16_t)(module_inst->hw->HOST.FNUM.bit.FNUM);
 }
+
 /**
  * \brief USB device attach to the bus
  *
@@ -432,6 +492,7 @@ static inline uint16_t usb_device_get_frame_number(struct usb_module *module_ins
 {
 	return ((uint16_t)(module_inst->hw->DEVICE.FNUM.bit.FNUM));
 }
+
 /**
  * \brief Get the micro-frame number of USB device
  *
@@ -443,6 +504,11 @@ static inline uint16_t usb_device_get_micro_frame_number(struct usb_module *modu
 	return ((uint16_t)(module_inst->hw->DEVICE.FNUM.reg));
 }
 
+/**
+ * \brief USB device send the resume wakeup
+ *
+ * \param module_inst pointer to USB device module instance
+ */
 static inline void usb_send_remote_wake_up(struct usb_module *module_inst)
 {
 	module_inst->hw->DEVICE.CTRLB.reg |= USB_DEVICE_CTRLB_UPRSM;
@@ -511,7 +577,6 @@ enum status_code usb_device_endpoint_enable_callback(
 enum status_code usb_device_endpoint_disable_callback(
 		struct usb_module *module_inst, uint8_t ep,
 		enum usb_device_endpoint_callback callback_type);
-
 
 
 /** Pipe high level job functions */

@@ -73,6 +73,7 @@ static void _uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
 /* Maximum size of a transfer in multipacket mode */
 #define UHD_ENDPOINT_MAX_TRANS ((8 *1024 ) - 1)
 
+/* pipe error status */
 #define USB_STATUS_PIPE_DTGLER    (1 << 0)
 #define USB_STATUS_PIPE_DAPIDER   (1 << 1)
 #define USB_STATUS_PIPE_PIDER     (1 << 2)
@@ -223,8 +224,6 @@ typedef enum {
 uhd_ctrl_request_phase_t uhd_ctrl_request_phase;
 
 /** @} */
-
-
 
 /**
  * \name Management of bulk/interrupt/isochronous endpoints
@@ -1185,8 +1184,10 @@ static void _uhd_pipe_trans_complete(struct usb_module *module_inst, void *point
 			ptr_job->nb_trans = ptr_job->buf_size;
 		}
 
-		// If all previous requested data have been received and user buffer not full
-		// then need to receive other data
+		/**
+		 * If all previous requested data have been received and user buffer not full
+		 * then need to receive other data
+		 */
 		if ((nb_trans == p_callback_para->required_size)
 			&& (ptr_job->nb_trans != ptr_job->buf_size)) {
 			next_trans = ptr_job->buf_size - ptr_job->nb_trans;

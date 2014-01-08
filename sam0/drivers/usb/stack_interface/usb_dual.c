@@ -112,7 +112,12 @@ static void usb_id_handler(void)
 #endif
 /** @} */
 
-
+/**
+ * \brief Initialize the dual role
+ * This function is implemented in usb_dual.c file.
+ *
+ * \return \c true if the ID pin management has been started, otherwise \c false.
+ */
 bool usb_dual_enable(void)
 {
 	if (usb_dual_initialized) {
@@ -149,7 +154,10 @@ bool usb_dual_enable(void)
 #endif
 }
 
-
+/**
+ * \brief Deinitialize the dual role
+ * This function is implemented in usb_dual.c file.
+ */
 void usb_dual_disable(void)
 {
 	if (!usb_dual_initialized) {
