@@ -46,11 +46,15 @@
 #ifndef UDD_ENABLE
 # define udc_start()
 # define udc_stop()
+#else
+#include <udc.h>
 #endif
 
 #ifndef UHD_ENABLE
 # define uhc_start(void)
 # define uhc_stop(b_id_stop)
+#else
+#include <uhc.h>
 #endif
 
 /* State of USBC dual initialization */

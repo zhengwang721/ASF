@@ -771,7 +771,7 @@ void system_clock_init(void)
 	system_clock_source_dfll_get_config_defaults(&dfll_conf);
 
 	dfll_conf.loop_mode      = CONF_CLOCK_DFLL_LOOP_MODE;
-	dfll_conf.on_demand      = CONF_CLOCK_DFLL_ON_DEMAND;
+	dfll_conf.on_demand      = false;
 
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN) {
 		dfll_conf.coarse_value = CONF_CLOCK_DFLL_COARSE_VALUE;
@@ -850,6 +850,10 @@ void system_clock_init(void)
 	/* DFLL Enable (Open and Closed Loop) */
 #if CONF_CLOCK_DFLL_ENABLE == true
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
+	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_DFLL));
+	if (CONF_CLOCK_DFLL_ON_DEMAND) {
+		SYSCTRL->DFLLCTRL.bit.ONDEMAND = 1;
+	}
 #endif
 
 	/* DPLL */
