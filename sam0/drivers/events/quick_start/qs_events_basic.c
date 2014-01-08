@@ -80,7 +80,9 @@ static void configure_event_user(struct events_resource *resource)
 
 int main(void)
 {
+//! [events_resource_struct]
 	struct events_resource example_event;
+//! [events_resource_struct]
 
 	system_init();
 
