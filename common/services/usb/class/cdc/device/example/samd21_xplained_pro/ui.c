@@ -47,37 +47,12 @@
 #define  LED_On()          port_pin_set_output_level(LED_0_PIN, 0)
 #define  LED_Off()         port_pin_set_output_level(LED_0_PIN, 1)
 
-#define  MOUSE_MOVE_RANGE  1
-
-
-/* Interrupt on "pin change" from push button to do wakeup on USB
- * Note:
- * This interrupt is enable when the USB host enable remote wakeup feature
- * This interrupt wakeup the CPU if this one is in idle mode
- */
-static void ui_wakeup_handler(void)
-{
-	/* It is a wakeup then send wakeup USB */
-	udc_remotewakeup();
-	LED_On();
-}
+static uint32_t blink_interval;
 
 
 void ui_init(void)
 {
-	struct extint_chan_conf config_extint_chan;
-	
-	extint_chan_get_config_defaults(&config_extint_chan);
-	
-	config_extint_chan.gpio_pin           = BUTTON_0_EIC_PIN;
-	config_extint_chan.gpio_pin_mux       = BUTTON_0_EIC_MUX;
-	config_extint_chan.gpio_pin_pull      = EXTINT_PULL_UP;
-	config_extint_chan.filter_input_signal = true;
-	config_extint_chan.detection_criteria = EXTINT_DETECT_FALLING;
-	extint_chan_set_config(BUTTON_0_EIC_LINE, &config_extint_chan);
-	extint_register_callback(ui_wakeup_handler,BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
-	extint_chan_enable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
-	
+	blink_interval = 1000;
 	/* Initialize LEDs */
 	LED_Off();
 }
@@ -88,41 +63,66 @@ void ui_powerdown(void)
 }
 
 
-void ui_wakeup_enable(void)
-{
-	extint_chan_enable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
-}
-
-void ui_wakeup_disable(void)
-{
-	extint_chan_disable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
-}
-
 void ui_wakeup(void)
 {
 	LED_On();
 }
 
+
+void ui_com_open(uint8_t port)
+{
+	UNUSED(port);
+}
+
+
+void ui_com_close(uint8_t port)
+{
+	UNUSED(port);
+}
+
+
+void ui_com_rx_start(void)
+{
+	blink_interval = 500;
+}
+
+
+void ui_com_rx_stop(void)
+{
+	blink_interval = 1000;
+}
+
+
+void ui_com_tx_start(void)
+{
+	blink_interval = 500;
+}
+
+
+void ui_com_tx_stop(void)
+{
+	blink_interval = 1000;
+}
+
+
+void ui_com_error(void)
+{
+	blink_interval = 100;
+}
+
+
+void ui_com_overflow(void)
+{
+	;
+}
+
 void ui_process(uint16_t framenumber)
 {
-	static uint8_t cpt_sof = 0;
-
-	if ((framenumber % 1000) == 0) {
+	if ((framenumber % blink_interval) == 0) {
 		LED_On();
 	}
-	if ((framenumber % 1000) == 500) {
+	if ((framenumber % blink_interval) == (blink_interval / 2)) {
 		LED_Off();
-	}
-	/* Scan process running each 2ms */
-	cpt_sof++;
-	if (cpt_sof < 2) {
-		return;
-	}
-	cpt_sof = 0;
-
-	/* Uses buttons to move mouse */
-	if (!port_pin_get_input_level(BUTTON_0_PIN)) {
-		udi_hid_mouse_moveY(-MOUSE_MOVE_RANGE);
 	}
 }
 
@@ -130,8 +130,7 @@ void ui_process(uint16_t framenumber)
  * \defgroup UI User Interface
  *
  * Human interface on SAMD21-XPlain:
- * - Led 0 is blinks when USB is wakeup
- * - Push button 0 is used to make mouse up
- * - Only a low level on push button 0 will generate a wakeup to USB Host in remote wakeup mode.
+ * - Led 0 blinks when USB is connected and active
+ * - When communication starts, the blink frequency will be 2HZ. otherwise, it is 1HZ.
  *
  */
