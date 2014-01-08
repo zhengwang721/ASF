@@ -53,7 +53,7 @@
  */
 
 /**
- * \page appdoc_main SAM0+ LED Toggle Example
+ * \page appdoc_main SAM D2x LED Toggle Example
  *
  * Overview:
  * - \ref appdoc_sam0_led_toggle_app_intro
