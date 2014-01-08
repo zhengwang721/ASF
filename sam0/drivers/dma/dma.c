@@ -195,6 +195,8 @@ void DMAC_Handler( void )
 	uint8_t active_channel;
 	struct dma_resource *resource;
 	uint8_t isr;
+	uint32_t write_size;
+	uint32_t total_size;
 
 	system_interrupt_enter_critical_section();
 
@@ -211,9 +213,9 @@ void DMAC_Handler( void )
 	isr = DMAC->CHINTFLAG.reg;
 
 	/* Calculate block transfer size of the DMA transfer */
-	resource->transfered_size
-		= _descriptor_section[resource->channel_id].BTCNT.reg
-			- _write_back_section[resource->channel_id].BTCNT.reg;
+	total_size = _descriptor_section[resource->channel_id].BTCNT.reg;
+	write_size = _write_back_section[resource->channel_id].BTCNT.reg;
+	resource->transfered_size = total_size - write_size;
 
 	/* DMA channel interrupt handler */
 	if (isr & DMAC_CHINTENCLR_TERR) {
@@ -284,7 +286,7 @@ void dma_get_config_defaults(struct dma_resource_config *config)
 	config->priority = DMA_PRIORITY_LEVEL_0;
 	/* Only software/event trigger */
 	config->peripheral_trigger = 0;
-	/* Transation trigger */
+	/* Transaction trigger */
 	config->trigger_action = DMA_TRIGGER_ACTON_TRANSACTION;
 
 	/* Event configurations, no event input/output */
@@ -450,7 +452,7 @@ enum status_code dma_start_transfer_job(struct dma_resource *resource)
 	DMAC->CHINTENSET.reg = DMAC_CHINTENSET_TERR |
 			 DMAC_CHINTENSET_TCMPL | DMAC_CHINTENSET_SUSP;
 
-	if (!(DMAC->CHCTRLB.reg & (DMAC_CHCTRLB_TRIGSRC_Msk ||
+	if (!(DMAC->CHCTRLB.reg & (DMAC_CHCTRLB_TRIGSRC_Msk |
 								DMAC_CHCTRLB_EVACT_TRIG_Val))) {
 		DMAC->SWTRIGCTRL.reg |= (1 << resource->channel_id);
 	}
@@ -485,6 +487,9 @@ enum status_code dma_start_transfer_job(struct dma_resource *resource)
  */
 void dma_abort_job(struct dma_resource *resource)
 {
+	uint32_t write_size;
+	uint32_t total_size;
+
 	Assert(resource);
 	Assert(resource->channel_id != DMA_INVALID_CHANNEL);
 
@@ -496,9 +501,9 @@ void dma_abort_job(struct dma_resource *resource)
 	system_interrupt_leave_critical_section();
 
 	/* Get transferred size */
-	resource->transfered_size
-		= _descriptor_section[resource->channel_id].BTCNT.reg
-			- _write_back_section[resource->channel_id].BTCNT.reg;
+	total_size = _descriptor_section[resource->channel_id].BTCNT.reg;
+	write_size = _write_back_section[resource->channel_id].BTCNT.reg;
+	resource->transfered_size = total_size - write_size;
 
 	resource->job_status = STATUS_ABORTED;
 }
@@ -606,15 +611,15 @@ void dma_descriptor_create(DmacDescriptor* descriptor,
 	descriptor->SRCADDR.reg = config->source_address;
 	descriptor->DSTADDR.reg = config->destination_address;
 
-	/* Set default next transfer descriptor to 0 */
-	descriptor->DESCADDR.reg = 0;
+	/* Set next transfer descriptor address */
+	descriptor->DESCADDR.reg = config->next_descriptor_address;
 }
 
 /**
  * \brief Add a DMA transfer descriptor to a DMA resource
  *
  * This function will add a transfer descriptor to a DMA resource. If there was
- * a transfer decriptor already allocated to the DMA resource, the descriptor will
+ * a transfer descriptor already allocated to the DMA resource, the descriptor will
  * be linked to the next descriptor address.
  *
  * \param[in] descriptor Pointer to the DMA resource

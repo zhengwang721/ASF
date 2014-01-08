@@ -280,10 +280,6 @@
 extern "C" {
 #endif
 
-/* Tempory work around definition */
-#define RTC_MODE2_CLOCK_HOUR_PM_Val     0x10u   /**< \brief (RTC_MODE2_CLOCK)  */
-#define RTC_MODE2_CLOCK_HOUR_PM     (RTC_MODE2_CLOCK_HOUR_PM_Val   << RTC_MODE2_CLOCK_HOUR_Pos)
-
 /**
  * \brief Available alarm channels.
  *

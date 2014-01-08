@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20 Analog Comparator Driver Quick Start
+ * \brief SAM D2x Analog Comparator Driver Quick Start
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -163,7 +163,8 @@
  *  \snippet qs_ac_callback.c main_5
  * -# Set the board LED state to mirror the last comparison state.
  *  \snippet qs_ac_callback.c main_6
- * -# Trigger the next conversion on the Analog Comparator channel.
+ * -# After the interrupt is handled, set the software callback flag to false.
  *  \snippet qs_ac_callback.c main_7
- * -# After the interrupt is handled set the software callback flag to false.
+ * -# Trigger the next conversion on the Analog Comparator channel.
+ *  \snippet qs_ac_callback.c main_8
  */

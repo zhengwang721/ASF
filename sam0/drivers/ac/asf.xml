@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.ac" name="config.sam0.drivers.ac" caption="AC - Analog Comparator" default="callback">
 		<info type="description" value="summary">
-		  Driver for the SAM D2X Analog Comparator module. Provides a unified
+		  Driver for the SAM D2x Analog Comparator module. Provides a unified
 		  interface for the configuration and management of the device's
 		  hardware analog comparators.
 		</info>
@@ -24,7 +24,7 @@
 			<build type="doxygen-entry-point" value="asfdoc_sam0_ac_group" />
 			<build type="doxygen-quick-start" value="asfdoc_sam0_ac_exqsg"/>
 
-			<device-support value="samd20" />
+			<device-support value="sam0" />
 
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
@@ -45,7 +45,7 @@
 
 			<info type="description" value="pdf">
 				This document describes how to use the Analog Comparator on the
-				SAM D2X, both the ASF driver and the peripheral itself.
+				SAM D2x, both the ASF driver and the peripheral itself.7
 			</info>
 
 			<build type="include-path" value="." />
@@ -65,7 +65,7 @@
 			<build type="doxygen-entry-point" value="asfdoc_sam0_ac_group" />
 			<build type="doxygen-quick-start" value="asfdoc_sam0_ac_exqsg"/>
 
-			<device-support value="samd20" />
+			<device-support value="sam0" />
 
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
