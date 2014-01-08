@@ -47,12 +47,9 @@
 #define  LED_On()          port_pin_set_output_level(LED_0_PIN, 0)
 #define  LED_Off()         port_pin_set_output_level(LED_0_PIN, 1)
 
-static uint32_t blink_interval;
-
 
 void ui_init(void)
 {
-	blink_interval = 1000;
 	/* Initialize LEDs */
 	LED_Off();
 }
@@ -83,31 +80,31 @@ void ui_com_close(uint8_t port)
 
 void ui_com_rx_start(void)
 {
-	blink_interval = 500;
+	;
 }
 
 
 void ui_com_rx_stop(void)
 {
-	blink_interval = 1000;
+	;
 }
 
 
 void ui_com_tx_start(void)
 {
-	blink_interval = 500;
+	;
 }
 
 
 void ui_com_tx_stop(void)
 {
-	blink_interval = 1000;
+	;
 }
 
 
 void ui_com_error(void)
 {
-	blink_interval = 100;
+	;
 }
 
 
@@ -118,10 +115,10 @@ void ui_com_overflow(void)
 
 void ui_process(uint16_t framenumber)
 {
-	if ((framenumber % blink_interval) == 0) {
+	if ((framenumber % 1000) == 0) {
 		LED_On();
 	}
-	if ((framenumber % blink_interval) == (blink_interval / 2)) {
+	if ((framenumber % 1000) == 500) {
 		LED_Off();
 	}
 }
@@ -131,6 +128,5 @@ void ui_process(uint16_t framenumber)
  *
  * Human interface on SAMD21-XPlain:
  * - Led 0 blinks when USB is connected and active
- * - When communication starts, the blink frequency will be 2HZ. otherwise, it is 1HZ.
  *
  */
