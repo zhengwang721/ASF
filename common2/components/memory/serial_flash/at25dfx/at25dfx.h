@@ -153,9 +153,9 @@ extern "C" {
 /** Supporting AT25 device type */
 #define AT25DFX_041A 0 /* AT25DF041A */
 #define AT25DFX_161  1 /* AT25DF161  */
-#define AT25DFX_081A 2 /* AT26DF081A */
-#define AT25DFX_0161 3 /* AT26DF0161 */
-#define AT25DFX_161A 4 /* AT26DF161A */
+#define AT25DFX_081A 2 /* AT25DF081A */
+#define AT25DFX_0161 3 /* AT25DF0161 */
+#define AT25DFX_161A 4 /* AT25DF161A */
 #define AT25DFX_321  5 /* AT25DF321  */
 #define AT25DFX_321A 6 /* AT25DF321A */
 #define AT25DFX_512B 7 /* AT25DF512B */
@@ -255,7 +255,7 @@ at25_status_t at25dfx_write(uint8_t *data, uint16_t size, uint32_t address);
  * \code
  *   void at25dfx_init(void)
  *   {
- *       sysclk_init();
+ *       system_init();
  *
  *       board_init();
  *
@@ -282,7 +282,7 @@ at25_status_t at25dfx_write(uint8_t *data, uint16_t size, uint32_t address);
  *          #define AT25DFX_MEM_TYPE            AT25DFX_321
  *   \endcode
  * -# Enable the system clock:
- *   - \code sysclk_init(); \endcode
+ *   - \code system_init(); \endcode
  * -# Enable PIO configurations for SPI master:
  *   - \code board_init(); \endcode
  * -# Initialize the AT25DF321 component; it will set all the configurations
