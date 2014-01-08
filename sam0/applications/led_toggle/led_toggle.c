@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ LED Toggle Example
+ * \brief SAM D2x LED Toggle Example
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage SAM0+ LED Toggle Example
+ * \mainpage SAM D2x LED Toggle Example
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
