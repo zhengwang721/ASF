@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x External Interrupt Driver Configuration Header
+ * \brief SAM D21 Xplained PRO board configuration.
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,9 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXTINT_H_INCLUDED
-#define CONF_EXTINT_H_INCLUDED
 
-#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#endif
+#endif /* CONF_BOARD_H_INCLUDED */

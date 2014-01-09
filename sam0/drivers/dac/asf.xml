@@ -63,7 +63,7 @@
 			<build type="doxygen-enable-section" value="DAC_CALLBACK_MODE"/>
 
 			<build type="doxygen-entry-point" value="asfdoc_sam0_dac_group"/>
-			<build type="doxygen-example-path" value="quick_start"/>
+			<build type="doxygen-example-path" value="quick_start_callback"/>
 			<build type="doxygen-image-path" value="docimg"/>
 			<build type="doxygen-quick-start" value="asfdoc_sam0_dac_exqsg"/>
 

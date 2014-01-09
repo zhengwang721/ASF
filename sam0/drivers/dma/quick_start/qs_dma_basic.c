@@ -115,9 +115,13 @@ static void setup_transfer_descriptor(DmacDescriptor *descriptor )
 
 int main(void)
 {
+//! [struct_dma_resource_example]
 	struct dma_resource example_resource;
+//! [struct_dma_resource_example]
+	
 	system_init();
 
+	//! [setup_init]
 	//! [setup_dma_resource]
 	configure_dma_resource(&example_resource);
 	//! [setup_dma_resource]
@@ -126,9 +130,9 @@ int main(void)
 	setup_transfer_descriptor(&example_descriptor);
 	//! [setup_transfer_descriptor]
 
-	//! [Add descriptor to DMA resource]
+	//! [add_descriptor_to_resource]
 	dma_add_descriptor(&example_resource, &example_descriptor);
-	//! [Add descriptor to DMA resource]
+	//! [add_descriptor_to_resource]
 
 	//! [setup_callback_register]
 	dma_register_callback(&example_resource, transfer_done,
@@ -144,6 +148,7 @@ int main(void)
 		source_memory[i] = i;
 	}
 	//! [setup_source_memory_content]
+	//! [setup_init]
 	
 	//! [main]
 	//! [main_1]
