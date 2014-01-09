@@ -85,13 +85,11 @@ void rtc_set_calibration(Rtc *p_rtc, uint32_t ul_direction_ppm,
 		uint32_t ul_correction, uint32_t ul_range_ppm);
 #endif
 
-#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C)|| (SAM4CP))
-#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C)|| (SAM4CP) || (SAMG))
+#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C) || (SAMG) || (SAM4CP))
 void rtc_set_waveform(Rtc *p_rtc, uint32_t ul_channel, uint32_t ul_value);
 #if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C)|| (SAM4CP))
 void rtc_set_pulse_parameter(Rtc *p_rtc, uint32_t ul_time_high,
 		uint32_t ul_period);
-#endif /* ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C)|| (SAM4CP)) */
 #endif
 #endif
 
@@ -99,7 +97,7 @@ void rtc_set_pulse_parameter(Rtc *p_rtc, uint32_t ul_time_high,
 void rtc_set_writeprotect(Rtc *p_rtc, uint32_t ul_enable);
 #endif /* ((SAM3N) || (SAM3U) || (SAM3XA)) */
 
-#if SAM4C || SAM4CP
+#if ((SAM4C) || (SAM4CP))
 void rtc_get_tamper_time(Rtc *p_rtc, uint32_t *pul_hour, uint32_t *pul_minute,
 		uint32_t *pul_second, uint8_t reg_num);
 void rtc_get_tamper_date(Rtc *p_rtc, uint32_t *pul_year, uint32_t *pul_month,
