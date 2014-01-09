@@ -327,6 +327,8 @@ FUNC_PTR pal_trx_irq_get_hdlr_tx_end(void);
 
 #endif  /* PAL_XTD_IRQ_API */
 
+typedef void (*irq_handler_t)(void);
+
 #ifdef __cplusplus
 extern "C" {
 #endif

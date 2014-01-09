@@ -278,7 +278,8 @@ extern "C" {
      */
     void trx_irq_timestamp_handler_cb(void);
 #endif
-
+    
+typedef void (*irq_handler_t)(void);
     //! @}
 #ifdef __cplusplus
 } /* extern "C" */
