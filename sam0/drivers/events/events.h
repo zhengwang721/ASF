@@ -294,6 +294,8 @@
  */
 
 #include <compiler.h>
+#include "events_common.h"
+
 
 /**
  * \brief Edge detect enum
@@ -344,8 +346,19 @@ struct events_config {
 	uint8_t                    clock_source;
 };
 
-#define EVSYS_ID_GEN_NONE 0
+/**
+ * \internal
+ * Status bit offsets in the status register/interrupt register
+ *
+ * @{
+ */
+#define _EVENTS_START_OFFSET_BUSY_BITS           8
+#define _EVENTS_START_OFFSET_USER_READY_BIT      0
+#define _EVENTS_START_OFFSET_DETECTION_BIT       8
+#define _EVENTS_START_OFFSET_OVERRUN_BIT         0
+/** @} */
 
+#define EVSYS_ID_GEN_NONE 0
 
 /**
  * \brief Event channel resource
@@ -354,6 +367,18 @@ struct events_config {
 struct events_resource {
 	uint8_t channel;
 };
+
+#if EVENTS_INTERRUPT_HOOKS_MODE == true
+typedef void (*events_interrupt_hook)(struct events_resource *resource);
+
+struct events_hook;
+
+struct events_hook {
+	struct events_resource *resource;
+	events_interrupt_hook hook_func;
+	struct events_hook *next;
+};
+#endif
 
 /**
  * \brief Initializes an event configurations struct to defaults
