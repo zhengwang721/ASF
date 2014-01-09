@@ -155,4 +155,7 @@
  * 
  * -# Waiting for transfer complete
  *  \snippet qs_i2c_master_dma_use.c waiting_for_complete
+ *
+ *  -# Enter an infinite loop once transfer complete.
+ *  \snippet qs_i2c_master_dma_use.c inf_loop
  */

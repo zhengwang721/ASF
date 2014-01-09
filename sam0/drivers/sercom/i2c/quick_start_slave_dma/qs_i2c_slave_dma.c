@@ -174,5 +174,10 @@ int main(void)
 		}
 	}
 	//! [clear_status]
+
+	//! [inf_loop]
+	while (true) {
+	}
+	//! [inf_loop]
 	//! [main]
 }

@@ -519,16 +519,17 @@ void i2c_master_send_stop(struct i2c_master_module *const module);
  * \param[in,out] module Pointer to the driver instance to lock.
  * \param[in] addr I2C slave address
  * \param[in] length I2C transfer length with DMA.
+ * \param[in] direction I2C transfer direction
  *
  */
 static inline void i2c_master_dma_set_transfer(struct i2c_master_module *const module,
-		uint16_t addr, uint8_t length)
+		uint16_t addr, uint8_t length, enum i2c_transfer_direction direction)
 {
 	module->hw->I2CM.ADDR.reg =
 		SERCOM_I2CM_ADDR_ADDR(addr<<1) |
 		SERCOM_I2CM_ADDR_LENEN |
 		SERCOM_I2CM_ADDR_LEN(length) |
-		I2C_TRANSFER_WRITE;
+		direction;
 }
 
 /** @} */

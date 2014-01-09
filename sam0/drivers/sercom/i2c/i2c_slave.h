@@ -609,6 +609,7 @@ static inline uint8_t i2c_slave_dma_read_interrupt_status(struct i2c_slave_modul
  * Write I2C interrupt status for DMA transfer.
  *
  * \param[in,out] module Pointer to the driver instance to lock.
+ * \param[in] flag Interrupt flag status.
  *
  */
 static inline void i2c_slave_dma_write_interrupt_status(struct i2c_slave_module *const module,

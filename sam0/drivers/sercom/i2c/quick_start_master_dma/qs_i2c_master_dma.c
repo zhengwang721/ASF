@@ -182,17 +182,19 @@ int main(void)
 	//! [start_transfer_job]
 
 	//! [set_i2c_addr]
-	i2c_master_dma_set_transfer(&i2c_master_instance, SLAVE_ADDRESS, DATA_LENGTH);
+	i2c_master_dma_set_transfer(&i2c_master_instance, SLAVE_ADDRESS,
+			DATA_LENGTH, I2C_TRANSFER_WRITE);
 	//! [set_i2c_addr]
 
 	//! [waiting_for_complete]
 	while (!transfer_is_done) {
 		/* Wait for transfer done */
 	}
-
 	//! [waiting_for_complete]
+
+	//! [inf_loop]
 	while (true) {
-	/* Infinite loop */
 	}
+	//! [inf_loop]
 	//! [main]
 }
