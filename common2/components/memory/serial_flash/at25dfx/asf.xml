@@ -18,6 +18,6 @@
 		<build type="doxygen-quick-start" value="at25dfx_quickstart"/>
 		<require idref="sam0.drivers.sercom.spi"/>
 		<device-support value="samd21"/>
-		<generator value="doxygen-module-v2" default-mcu="samd21"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd21"/>
 	</module>
 </asf>
