@@ -774,7 +774,7 @@ struct tc_config {
 		struct tc_16bit_config counter_16_bit;
 		/** Struct for 32-bit specific timer configuration. */
 		struct tc_32bit_config counter_32_bit;
-	}size_specific;
+	};
 };
 
 #if TC_ASYNC == true
@@ -1366,7 +1366,7 @@ static inline void tc_clear_status(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Optimized  implementation and added new feature for TC</td>
+ *		<td>Optimized implementation and added SAMD21 support</td>
  *	</tr>
  *	<tr>
  *		<td>Added automatic digital clock interface enable for the slave TC
@@ -1403,7 +1403,7 @@ static inline void tc_clear_status(
  *	<tr>
  *		<td>C</td>
  *		<td>01/2014</td>
- *		<td>Optimized  implementation and added new feature </td>
+ *		<td>Optimized implementation and added SAMD21 support</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>
