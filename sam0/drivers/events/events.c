@@ -60,7 +60,7 @@ struct _events_module _events_inst = {
 #endif
 };
 
-uint8_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset)
+uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset)
 {
 	uint8_t byte_ofset = channel >> 3;
 	uint32_t pos;

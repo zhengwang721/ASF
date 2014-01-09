@@ -44,10 +44,12 @@
 
 //! [setup]
 
-#define EXAMPLE_EVENT_GENERATOR    EVSYS_ID_GEN_TC4_MCX_0
+#define EXAMPLE_EVENT_GENERATOR    EVSYS_ID_GEN_TC4_OVF
 #define EXAMPLE_EVENT_USER         EVSYS_ID_USER_TC3_EVU
 
-static volatile event_count = 0;
+#define TC_MODULE TC4
+
+static volatile uint32_t event_count = 0;
 
 static void configure_event_channel(struct events_resource *resource)
 {
@@ -78,8 +80,35 @@ static void configure_event_user(struct events_resource *resource)
 //! [setup_5]
 }
 
+static void configure_tc(struct tc_module *tc_instance)
+{
+	//! [setup_config]
+	struct tc_config config_tc;
+	struct tc_events config_events;
+	//! [setup_config]
+	//! [setup_config_defaults]
+	tc_get_config_defaults(&config_tc);
+	//! [setup_config_defaults]
 
-void event_counter(struct events_resource *resource)
+	//! [setup_change_config]
+	config_tc.counter_size    = TC_COUNTER_SIZE_16BIT;
+	config_tc.wave_generation = TC_WAVE_GENERATION_NORMAL_FREQ;
+	//! [setup_change_config]
+
+	//! [setup_set_config]
+	tc_init(tc_instance, TC_MODULE, &config_tc);
+	//! [setup_set_config]
+
+	config_events.generate_event_on_overflow = true;
+	tc_enable_events(tc_instance, &config_events);
+
+	//! [setup_enable]
+	tc_enable(tc_instance);
+	//! [setup_enable]
+
+}
+
+static void event_counter(struct events_resource *resource)
 {
 	if(events_is_interrupt_set(resource, EVENTS_INTERRUPT_DETECT)) {
 
@@ -89,27 +118,30 @@ void event_counter(struct events_resource *resource)
 	}
 }
 
-static void configure_event_interrupt(struct events_resource *resource)
+static void configure_event_interrupt(struct events_resource *resource, struct events_hook *hook)
 {
-	struct events_hook hook;
+	events_create_hook(hook, event_counter);
 
-	events_create_hook(&hook, event_counter);
-
-	events_add_hook(resource, &hook);
+	events_add_hook(resource, hook);
+	events_enable_interrupt_source(resource, EVENTS_INTERRUPT_DETECT);
 }
 
 //! [setup]
 
 int main(void)
 {
+	struct tc_module tc_instance;
 	struct events_resource example_event;
+	static struct events_hook hook;
 
 	system_init();
+	system_interrupt_enable_global();
 
 //! [setup_init]
 	configure_event_channel(&example_event);
 	configure_event_user(&example_event);
-	configure_event_interrupt(&example_event);
+	configure_event_interrupt(&example_event, &hook);
+	configure_tc(&tc_instance);
 //! [setup_init]
 
 	//! [main]
@@ -120,9 +152,7 @@ int main(void)
 	};
 	//! [main_1]
 
-	//! [main_2]
-	events_trigger(&example_event);
-	//! [main_2]
+	tc_start_counter(&tc_instance);
 
 	while (true) {
 		/* Nothing to do */

@@ -1,17 +1,19 @@
 #include "events.h"
 #include "events_hooks.h"
+#include "system_interrupt.h"
 
 #define _EVENTS_INTFLAGS_DETECT  0x0f00ff00
 #define _EVENTS_INTFLAGS_OVERRUN 0x000f00ff
 
 extern struct _events_module _events_inst;
-extern uint8_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset);
 
 enum status_code events_create_hook(struct events_hook *hook, events_interrupt_hook func)
 {
 	hook->next      = NULL;
 	hook->resource  = NULL;
 	hook->hook_func = func;
+
+	return STATUS_OK;
 }
 
 enum status_code events_add_hook(struct events_resource *resource, struct events_hook *hook)
@@ -32,12 +34,32 @@ enum status_code events_add_hook(struct events_resource *resource, struct events
 
 		tmp_hook->next = hook;
 	}
-	
+
+	if (!system_interrupt_is_enabled(SYSTEM_INTERRUPT_MODULE_EVSYS)) {
+		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_EVSYS);
+	}
+
+
 	return STATUS_OK;
 }
 
 enum status_code events_del_hook(struct events_resource *resource, struct events_hook *hook)
 {
+	return STATUS_OK;
+}
+
+enum status_code events_enable_interrupt_source(struct events_resource *resource, enum events_interrupt_source source)
+{
+
+	if (source == EVENTS_INTERRUPT_DETECT) {
+		EVSYS->INTENSET.reg = _events_find_bit_position(resource->channel, _EVENTS_START_OFFSET_DETECTION_BIT);
+	} else if (source == EVENTS_INTERRUPT_OVERRUN) {
+		EVSYS->INTENSET.reg = _events_find_bit_position(resource->channel, _EVENTS_START_OFFSET_OVERRUN_BIT);
+	} else {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	return STATUS_OK;
 }
 
 bool events_is_interrupt_set(struct events_resource *resource, enum events_interrupt_source source)
@@ -64,6 +86,8 @@ enum status_code events_ack_interrupt(struct events_resource *resource, enum eve
 	}
 
 	_events_inst.interrupt_flag_ack_buffer |= 1 << (bitpos - 1);
+
+	return STATUS_OK;
 }
 
 void EVSYS_Handler(void)

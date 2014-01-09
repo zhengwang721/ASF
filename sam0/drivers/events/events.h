@@ -526,6 +526,15 @@ enum status_code events_release(struct events_resource *resource);
  */
 uint8_t events_get_free_channels(void);
 
+/**
+ * \internal
+ * Function to find bit positons in the CHSTATUS and INTFLAG register
+ *
+ * @{
+ */
+uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset);
+/** @} */
+
 /** @} */
 
 /**
