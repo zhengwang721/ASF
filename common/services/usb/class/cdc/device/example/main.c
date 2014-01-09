@@ -52,13 +52,14 @@ static volatile bool main_b_cdc_enable = false;
  */
 int main(void)
 {
-#if !SAMD21
+
 	irq_initialize_vectors();
 	cpu_irq_enable();
 
 	// Initialize the sleep manager
 	sleepmgr_init();
 
+#if !SAMD21
 	sysclk_init();
 	board_init();
 #else
@@ -74,9 +75,7 @@ int main(void)
 	// The main loop manages only the power mode
 	// because the USB management is done by interrupt
 	while (true) {
-#if !SAMD21
 		sleepmgr_enter_sleep();
-#endif
 	}
 }
 
