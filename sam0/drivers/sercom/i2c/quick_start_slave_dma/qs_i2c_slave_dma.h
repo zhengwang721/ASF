@@ -145,7 +145,4 @@
  * -# Once data ready, clear the address match status.
  *  \snippet qs_i2c_slave_dma.c clear_status
  *
- *  -# Enter an infinite loop once receiving done.
- *  \snippet qs_i2c_slave_dma.c inf_loop
- *
  */
