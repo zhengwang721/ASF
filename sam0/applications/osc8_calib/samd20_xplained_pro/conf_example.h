@@ -50,9 +50,10 @@
 #define CONF_CLOCK_PIN_MUX            MUX_PA28H_GCLK_IO0
 #define CONF_EVENT_GENERATOR_ID       EVSYS_ID_GEN_TC2_MCX_0
 #define CONF_EVENT_USED_ID            EVSYS_ID_USER_TC0_EVU
-/** The value should be 0 or 1*/
+/** The value should be 0 or 1 */
 #define CONF_FRANGE_CAL               0
 #define CONF_TEMP_CAL                 1
+/** The suggested value is 13 to 15 */
 #define CONF_CALIBRATION_RESOLUTION   13
 
 #endif /* CONF_TEST_H_INCLUDED */

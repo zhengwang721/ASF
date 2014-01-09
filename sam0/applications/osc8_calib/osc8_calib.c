@@ -86,7 +86,7 @@
  *       memory. The example execution time is depend on the configuration in
  *       conf_example file. It's about (2<<CONF_CALIBRATION_RESOLUTION)
  *       *(2<<CONF_FRANGE_CAL -1)*(2<<CONF_TEMP_CAL -1)*128/32768
- *       seconds. To get more accurate result, we can larger the value of
+ *       seconds. To get more accurate result, we can increase the value of
  *       CONF_FRANGE_CAL, CONF_TEMP_CAL and CONF_CALIBRATION_RESOLUTION,
  *       but the execution time is also longer.
  *
@@ -279,9 +279,9 @@ int main(void)
 	uint8_t temp_cal_max = min((temp_cal + CONF_TEMP_CAL), TEMP_CAL_MAX);
 
 	/* Variables to track the previous and best calibration settings */
-	uint16_t comm_best   = -1;
-	uint8_t  frange_best = -1;
-	uint32_t freq_best   = -1;
+	uint16_t comm_best   = 0;
+	uint8_t  frange_best = 0;
+	uint32_t freq_best   = 0;
 	uint32_t freq_before = get_osc_frequency();
 
 	/* Run calibration loop */
