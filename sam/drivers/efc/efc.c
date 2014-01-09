@@ -66,7 +66,6 @@ extern "C" {
 # define READ_BUFF_ADDR1    IFLASH1_ADDR
 #elif (SAM3S || SAM3N || SAM4E || SAM4N || SAMG)
 # define READ_BUFF_ADDR     IFLASH_ADDR
-#elif SAM4C || SAM4CP
 #elif (SAM4C || SAM4CP)
 #if SAM4C32
 # define READ_BUFF_ADDR0    IFLASH0_CNC_ADDR
