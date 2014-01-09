@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x Peripheral Digital-to-Analog Converter Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -821,7 +821,7 @@ void dac_clear_status(
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
- *  - \subpage asfdoc_sam0_dac_basic_use_case
+ *  - \subpage asfdoc_sam0_dac_basic_use_case_callback
  *
  * \page asfdoc_sam0_dac_document_revision_history Document Revision History
  *

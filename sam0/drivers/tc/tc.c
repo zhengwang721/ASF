@@ -160,7 +160,7 @@ enum status_code tc_init(
 	 * configured in 32-bit counter size.
 	 */
 	if ((config->counter_size == TC_COUNTER_SIZE_32BIT) &&
-			(instance & 0x01)) {
+			((instance + TC_INSTANCE_OFFSET) & 0x01)) {
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}

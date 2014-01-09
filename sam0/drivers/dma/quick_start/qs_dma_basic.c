@@ -145,6 +145,7 @@ int main(void)
 		source_memory[i] = i;
 	}
 	//! [setup_source_memory_content]
+
 	//! [setup_init]
 
 	//! [main]

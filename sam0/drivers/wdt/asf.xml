@@ -31,7 +31,7 @@
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
 
-			<generator value="doxygen-module-v2" default-mcu="unspecified-sam0"/>
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 
 		<module type="driver" id="sam0.drivers.wdt#callback" caption="WDT - Watchdog Timer (Callback APIs)">
@@ -78,7 +78,7 @@
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
 
-			<generator value="doxygen-module-v2" default-mcu="unspecified-sam0"/>
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 	</select-by-config>
 </asf>
