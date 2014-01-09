@@ -41,8 +41,12 @@
  *
  */
 
-#include "conf_example.h"
 #include <asf.h>
+#include "conf_example.h"
+#include "uart.h"
+#include "main.h"
+#include "ui.h"
+
 
 /* Structure for USART module connected to EDBG */
 struct usart_module usart_module_edbg;
@@ -62,10 +66,10 @@ static uint8_t rx_data;
 static void usart_tx_callback(const struct usart_module *const module)
 {
 	/* Data ready to be sent */
-	if (uhi_cdc_is_rx_ready(0)) {
+	if (udi_cdc_is_rx_ready()) {
 		/* Transmit next data */
 		ui_com_rx_start();
-		tx_data = uhi_cdc_getc(0);
+		tx_data = udi_cdc_getc();
 		usart_write_buffer_job(&usart_module_edbg, &tx_data, 1);
 	} else {
 		/* Fifo empty then Stop UART transmission */
@@ -88,11 +92,12 @@ static void usart_rx_callback(const struct usart_module *const module)
 	ui_com_tx_start();
 
 	/* Transfer UART RX fifo to CDC TX */
-	if (!uhi_cdc_is_tx_ready(0)) {
+	if (!udi_cdc_is_tx_ready()) {
 		/* Fifo full */
+		udi_cdc_signal_overrun();
 		ui_com_overflow();
 	} else {
-		uhi_cdc_putc(0, rx_data);
+		udi_cdc_putc(rx_data);
 	}
 
 	ui_com_tx_stop();
@@ -102,19 +107,21 @@ static void usart_rx_callback(const struct usart_module *const module)
 	return;
 }
 
-void uart_rx_notify(void)
+void uart_rx_notify(uint8_t port)
 {
+	UNUSED(port);
 	/* Transmit first data */
 	ui_com_rx_start();
 	usart_enable_callback(&usart_module_edbg, USART_CALLBACK_BUFFER_TRANSMITTED);
-	tx_data = uhi_cdc_getc(0);
+	tx_data = udi_cdc_getc();
 	usart_write_buffer_job(&usart_module_edbg, &tx_data, 1);
 }
 
-void uart_config(usb_cdc_line_coding_t *cfg)
+void uart_config(uint8_t port,usb_cdc_line_coding_t *cfg)
 {
 	struct usart_config usart_conf;
 
+	UNUSED(port);
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&usart_conf);
 
@@ -193,10 +200,11 @@ void uart_config(usb_cdc_line_coding_t *cfg)
 	usart_read_buffer_job(&usart_module_edbg, &rx_data, 1);
 }
 
-void uart_open(void)
+void uart_open(uint8_t port)
 {
 	struct usart_config usart_conf;
 
+	UNUSED(port);
 	/* Configure USART for unit test output */
 	usart_get_config_defaults(&usart_conf);
 	usart_conf.mux_setting = CONF_USART_MUX_SETTING;
@@ -216,8 +224,9 @@ void uart_open(void)
 			USART_CALLBACK_BUFFER_RECEIVED);
 }
 
-void uart_close(void)
+void uart_close(uint8_t port)
 {
+	UNUSED(port);
 	/* Close RS232 communication */
 	usart_disable(&usart_module_edbg);
 }
