@@ -56,8 +56,6 @@
 extern "C" {
 #endif
 
-struct spi_module at25dfx_master;
-struct spi_slave_inst at25dfx_slave;
 
 #include "spi.h"
 #define DUMMY          0xFF
