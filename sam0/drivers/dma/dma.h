@@ -78,10 +78,14 @@
  *
  * The DMA driver for SAM D2x supports data transfer between peripheral to peripheral,
  * peripheral to memory, memory to peripheral and memory to memory. The transfer
- * trigger source can be software, event system or peipherals. Up to 12 DMA resources
- * can be allocated in one application and each of the DMA resource is independent.
+ * trigger source can be software, event system or peipherals.
  *
- * A simplified block diagram of the DMA can be seen in
+ * The Implementation of the DMA driver is based on DMA resource. A DMA resource is
+ * consisted up with DMA channels, transfer trigger, transfer descriptor and output with interrupt
+ * callbacks or peripheral events. Up to 12 DMA resources can be allocated in one application
+ * and each of the DMA resource is independent.
+ *
+ * A simplified block diagram of the DMA driver module can be seen in
  * \ref asfdoc_sam0_dma_module_block_diagram "the figure below".
  *
  * \anchor asfdoc_sam0_dma_module_block_diagram
@@ -116,14 +120,12 @@
  * DMA channel will be assigned. The channel will be occupied untill the DMA resource
  * freed. A DMA channel ID is used to identify the specific DMA resource.
  *
-
  * \subsection asfdoc_sam0_dma_module_overview_dma_trigger DMA Triggers
  * DMA transfer can be started only when a DMA transfer request is detected. A
  * transfer request can be triggered from software, peripheral or an event. There
  * are dedicated source trigger selections for each DMA channel usage. By default
  * a software trigger will be used for a DMA transfer.
  *
-
  * \subsection asfdoc_sam0_dma_module_overview_dma_transfer_descriptor DMA Transfer Descriptor
  * The transfer descriptor defines the transfer properites.
  *   <table border="0" cellborder="1" cellspacing="0" >
@@ -150,6 +152,16 @@
  * Before starting a transfer, at least one initial descriptor should be configured first.
  * After a successful allocation of DMA resource, the transfer descriptor can be added
  * or updated during the lifetime of the DMA resource.
+ *
+ *
+ * \subsection asfdoc_sam0_dma_module_overview_dma_output DMA Interrupts/Events
+ * The output of a DMA transfer can be a interrupt callback or an peripheral event.
+ * The DMAC has three types of interrupt source: transfer complete, transfer error and channel
+ * suspend. All of these interrupt sources can be registered and enabled independently though
+ * the DMA driver provided.
+ *
+ * The DMAC also can generate output events when transfer is complete. This is configured by
+ * the DMA resource and generated when the transfer done.
  *
  * \section asfdoc_sam0_dma_special_considerations Special Considerations
  *
@@ -642,6 +654,8 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  * - \subpage asfdoc_sam0_tcc_dma_use_case
  * - \subpage asfdoc_sam0_sercom_spi_dma_use_case
  * - \subpage asfdoc_sam0_sercom_usart_dma_use_case
+ * - \subpage asfdoc_sam0_sercom_i2c_master_dma_use_case
+ * - \subpage asfdoc_sam0_sercom_i2c_slave_dma_use_case
  *
  * \page asfdoc_sam0_dma_document_revision_history Document Revision History
  *

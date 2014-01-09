@@ -91,28 +91,28 @@
  *    \snippet qs_usart_dma_use.c usart_buffer
  * -# Create DMA transfer descriptors for RX/TX
  *    \snippet qs_usart_dma_use.c transfer_descriptor
- *  -# Create a USART module configuration struct, which can be filled out to
+ * -# Create a USART module configuration struct, which can be filled out to
  *     adjust the configuration of a physical USART peripheral.
  *     \snippet qs_usart_dma_use.c setup_config
- *  -# Initialize the USART configuration struct with the module's default values.
+ * -# Initialize the USART configuration struct with the module's default values.
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
  *     \snippet qs_usart_dma_use.c setup_config_defaults
- *  -# Alter the USART settings to configure the physical pinout, baud rate and
+ * -# Alter the USART settings to configure the physical pinout, baud rate and
  *     other relevant parameters.
  *     \snippet qs_usart_dma_use.c setup_change_config
- *  -# Configure the USART module with the desired settings, retrying while the
+ * -# Configure the USART module with the desired settings, retrying while the
  *     driver is busy until the configuration is stressfully set.
  *     \snippet qs_usart_dma_use.c setup_set_config
- *  -# Enable the USART module.
+ * -# Enable the USART module.
  *     \snippet qs_usart_dma_use.c setup_enable
  *
- *  -# Create a callback function of receiver done
+ * -# Create a callback function of receiver done
  *     \snippet qs_usart_dma_use.c transfer_done_rx
  *
- *  -# Create a callback function of transmission done
+ * -# Create a callback function of transmission done
  *     \snippet qs_usart_dma_use.c transfer_done_tx
  *
  * -# Create a DMA resource configuration structure, which can be filled out to
