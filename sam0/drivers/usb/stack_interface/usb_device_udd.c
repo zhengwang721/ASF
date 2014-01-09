@@ -843,7 +843,7 @@ void udd_attach(void)
 
 void udd_enable(void)
 {
-		irqflags_t flags;
+	irqflags_t flags;
 
 	/* To avoid USB interrupt before end of initialization */
 	flags = cpu_irq_save();
