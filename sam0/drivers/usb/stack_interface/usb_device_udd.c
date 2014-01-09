@@ -47,6 +47,8 @@
 #include "conf_usb.h"
 #include "udd.h"
 #include "usb.h"
+#include "usb_dual.h"
+#include "sleepmgr.h"
 
 // Check USB device configuration
 #ifdef USB_DEVICE_HS_SUPPORT
@@ -529,9 +531,9 @@ uint8_t udd_getaddress(void)
 void udd_send_remotewakeup(void)
 {
 	uint32_t try = 5;
-	do {
+	while(2 != usb_get_state_machine_status(&usb_device) && try --) {
 		usb_send_remote_wake_up(&usb_device);
-	} while(2 != usb_get_state_machine_status(&usb_device) && try --);
+	}
 }
 
 void udd_set_setup_payload( uint8_t *payload, uint16_t payload_size )
@@ -841,6 +843,20 @@ void udd_attach(void)
 
 void udd_enable(void)
 {
+		irqflags_t flags;
+
+	/* To avoid USB interrupt before end of initialization */
+	flags = cpu_irq_save();
+
+	sleepmgr_lock_mode(SLEEPMGR_ACTIVE);
+
+#if USB_ID_EIC
+	if (usb_dual_enable()) {
+		/* The current mode has been started by otg_dual_enable() */
+		cpu_irq_restore(flags);
+		return;
+	}
+#endif
 	struct usb_config config_usb;
 
 	/* USB Module configuration */
@@ -852,11 +868,17 @@ void udd_enable(void)
 
 	/* USB Attach */
 	udd_attach();
+
+	cpu_irq_restore(flags);
 }
 
 void udd_disable(void)
 {
+	irqflags_t flags;
+
 	udd_detach();
 
-	usb_disable(&usb_device);
+	flags = cpu_irq_save();
+	usb_dual_disable();
+	cpu_irq_restore(flags);
 }
