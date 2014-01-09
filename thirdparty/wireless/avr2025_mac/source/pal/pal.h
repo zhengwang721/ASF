@@ -172,13 +172,6 @@ typedef enum pwr_mode_tag
 
 
 
-
-/**
- * @brief Transceiver ISR handler
- */
-typedef void (*irq_handler_t)(void);
-
-
 #ifdef TEST_HARNESS
 #if (_DEBUG_ > 0)
 /**
