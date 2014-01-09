@@ -48,7 +48,7 @@
 #include <board.h>
 
 
-//! Select the SPI module AT45DBX is connected to
+//! Select the SPI module AT25DFx is connected to
 #define AT25DFX_SPI                 EXT3_SPI_MODULE
 
 

@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="AT25DFx example for SAMD21" id="common2.components.memory.serial_flash.at25dfx.at25dfx_example.samd21_xplained_pro">
 		<info type="description" value="summary">
-		Provide an application example using the Atmel SerialFlash AT25DFx component. The SerialFlash requires an SPI bus as a low level communication interface.
+			Provide an application example using the Atmel SerialFlash AT25DFx component. The SerialFlash requires an SPI bus as a low level communication interface.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="component" id="common2.components.memory.serial_flash.at25dfx" caption="AT25DFx SerialFlash">
 		<info type="description" value="summary">
-		Driver for the AT25DFx series SPI SerialFlash memories. It provides functions for initialization and data access operations.
+			Driver for the AT25DFx series SPI SerialFlash memories. It provides functions for initialization and data access operations.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Memory"/>
