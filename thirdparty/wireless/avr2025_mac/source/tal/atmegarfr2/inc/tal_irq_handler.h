@@ -3,7 +3,7 @@
  *
  * \brief This header file contains the interrupt handling definitions
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
