@@ -56,7 +56,6 @@
 extern "C" {
 #endif
 
-
 #include "spi.h"
 #define DUMMY          0xFF
 

@@ -82,13 +82,11 @@
 #include <asf.h>
 #include "conf_board.h"
 
-
 /** Test size */
 #define AT25DFX_TEST_DATA_SIZE   (1024)
 
 /** Test block start address */
 #define AT25DFX_TEST_BLOCK_ADDR  (0)
-
 
 /** RAM buffer used in this example */
 static uint8_t ram_buff[AT25DFX_TEST_DATA_SIZE];

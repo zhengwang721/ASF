@@ -64,7 +64,6 @@ uint8_t ss_pins[] = {
 # undef AT25DFX_CS_ID
 };
 
-
 /** 
  * \brief Initialize SPI external resource for AT25DFx SerialFlash driver.
  *
@@ -95,7 +94,6 @@ void at25dfx_spi_init(void)
 	spi_enable(&at25dfx_master);
 }
 
-
 /**
  * \brief Select one external SerialFlash component.
  *
@@ -119,7 +117,6 @@ void at25dfx_spi_select_device(uint8_t mem_id)
 	}
 }
 
-
 /** 
  * \brief Deselect one external SerialFlash component.
  *
@@ -139,7 +136,6 @@ void at25dfx_spi_deselect_device(uint8_t mem_id)
 		return;
 	}
 }
-
 
 /**
  * \brief Send one byte to the SerialFlash.
@@ -178,7 +174,6 @@ enum status_code at25dfx_spi_read_byte(uint8_t *data)
 	return STATUS_OK;
 }
 
-
 /**
  * \brief Receive a sequence of bytes from a SerialFlash.
  *
@@ -194,7 +189,6 @@ enum status_code at25dfx_spi_read_packet(void const *data, size_t len)
 
 /**
  * \brief Send a sequence of bytes to a SerialFlash.
- *
  *
  * \param data   Data buffer to write
  * \param len    Length of data

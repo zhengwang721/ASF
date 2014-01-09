@@ -47,11 +47,8 @@
 #include "at25dfx.h"
 #include <board.h>
 
-
 //! Select the SPI module AT25DFx is connected to
 #define AT25DFX_SPI                 EXT3_SPI_MODULE
-
-
 
 /* Number of AT25DFx components to manage */
 #define AT25DFX_MEM_CNT           1
@@ -59,11 +56,8 @@
 /* Memory ID of AT25DFx components to manage */
 #define AT25DFX_MEM_ID            0 
 
-
 /** AT25DFx device type */
 #define AT25DFX_MEM_TYPE          AT25DFX_081A
-
-
 
 #define AT25DFX_SPI_PINMUX_SETTING  EXT3_SPI_SERCOM_MUX_SETTING
 #define AT25DFX_SPI_PINMUX_PAD0     EXT3_SPI_SERCOM_PINMUX_PAD0
@@ -75,6 +69,5 @@
 
 //! SPI master speed in Hz.
 #define AT25DFX_CLOCK_SPEED         120000
-
 
 #endif  /* CONF_AT25DFX_H_INCLUDED */
