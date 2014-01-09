@@ -92,7 +92,7 @@
  *
  * mux1 [label="Transfer Trigger", shape=box];
  *
- * dma [label="DMA", shape=polygon, sides=5, orientation=90, distortion=-0.6, style=filled, fillcolor=darkolivegreen1, height=1, width=1];
+ * dma [label="DMA Channel", shape=polygon, sides=6, orientation=60, style=filled, fillcolor=darkolivegreen1, height=1, width=1];
  * descriptor [label="Transfer Descriptor", shape=box, style=filled, fillcolor=lightblue];
  *
  * mux1 -> dma;
@@ -125,51 +125,27 @@
  *
 
  * \subsection asfdoc_sam0_dma_module_overview_dma_transfer_descriptor DMA Transfer Descriptor
- * The transfer descriptor defines the transfer properites, as shown in
-
- * \ref asfdoc_sam0_dma_module_overview_dma_descriptor_layout "the figure below".
- *
- * \anchor asfdoc_sam0_dma_module_overview_dma_descriptor_layout
- * \dot
- * digraph dma_descriptor_layout {
- *  size="5,5"
- *  node [shape=plaintext]
- *  memory [label=<
+ * The transfer descriptor defines the transfer properites.
  *   <table border="0" cellborder="1" cellspacing="0" >
  *    <tr>
- *     <td rowspan="3" align="center"> Descriptor Next Address </td>
+ *        <th> DMA Transfer Descriptor Overview </td>
  *    </tr>
  *    <tr>
- *     <td align="right" border="0"> </td>
+ *     <td align="center"> Descriptor Next Address </td>
  *    </tr>
  *    <tr>
- *     <td rowspan="3" align="center"> Destination Address </td>
+ *     <td align="center"> Destination Address </td>
  *    </tr>
  *    <tr>
- *     <td height="300" align="right" border="0"> </td>
+ *     <td align="center"> Source Address </td>
  *    </tr>
  *    <tr>
- *     <td rowspan="3" align="center"> Source Address </td>
+ *     <td align="center"> Block Transfer Counter </td>
  *    </tr>
  *    <tr>
- *     <td align="right" border="0"> </td>
- *    </tr>
- *    <tr>
- *     <td rowspan="3" align="center"> Block Transfer Counter </td>
- *    </tr>
- *    <tr>
- *     <td align="right" border="0"> </td>
- *    </tr>
- *    <tr>
- *     <td rowspan="3" align="center"> Block Transfer Control </td>
- *    </tr>
- *    <tr>
- *     <td align="right" border="0"> </td>
+ *     <td align="center"> Block Transfer Control </td>
  *    </tr>
  *   </table>
- *  >]
- * }
- * \enddot
  *
  * Before starting a transfer, at least one initial descriptor should be configured first.
  * After a successful allocation of DMA resource, the transfer descriptor can be added
