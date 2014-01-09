@@ -62,7 +62,7 @@ extern "C" {
  * @{
  */
 
-#if SAM4E || SAM4N || SAM4S || SAM4C || SAMG || SAM4CP)
+#if (SAM4E || SAM4N || SAM4S || SAM4C || SAMG || SAM4CP)
 /* User signature size */
 # define FLASH_USER_SIG_SIZE   (512)
 #endif
