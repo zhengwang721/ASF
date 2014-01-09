@@ -44,6 +44,9 @@
 /**
  * \page asfdoc_sam0_sercom_i2c_master_dma_use_case Quick Start Guide for Using DMA with SERCOM I2C Master
  *
+ * The supported device list:
+ *    - SAMD21
+ *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Master mode
  *  - 100kHz operation speed

@@ -44,6 +44,9 @@
 /**
  * \page asfdoc_sam0_sercom_i2c_slave_dma_use_case Quick Start Guide for Using DMA with SERCOM I2C Slave
  *
+ * The supported device list:
+ *    - SAMD21
+ *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Slave mode
  *  - 100kHz operation speed
