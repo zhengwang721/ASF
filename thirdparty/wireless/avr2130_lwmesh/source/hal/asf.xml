@@ -10,10 +10,10 @@
 		<require idref="thirdparty.wireless.common_services.trx_access"/>
 		<require idref="thirdparty.wireless.common_services.common_hw_timer"/>
 		<build type="doxygen-entry-point" value="group_hal"/>
-		<device-support-alias value="avr2025_mac_hal_support"/>
+		<device-support-alias value="avr2130_lwmesh_hal_support"/>
 	</module>
 
-    <device-alias-map name="avr2025_mac_hal_support">
+    <device-alias-map name="avr2130_lwmesh_hal_support">
         <device-support value="atxmega256a3u"/>
         <device-support value="atmega256rfr2"/>
         <device-support value="atmega2564rfr2"/>
@@ -22,7 +22,7 @@
         <device-support value="samd20"/>
     </device-alias-map>	
 	
-    <device-alias-map name="avr2025_mac_hal_spi_support">
+    <device-alias-map name="avr2130_lwmesh_hal_spi_support">
         <device-support value="atxmega256a3u"/>
         <device-support value="atxmega256a3bu"/>
         <device-support value="samd20"/>

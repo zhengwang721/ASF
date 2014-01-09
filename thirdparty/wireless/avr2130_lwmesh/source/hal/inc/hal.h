@@ -52,12 +52,13 @@
 
 #include "sysTypes.h"
 #include "common_hw_timer.h"
-//#include "sysclk.h"
-
-
-
-
-
+/**
+ * \ingroup group_lwmesh
+ * \defgroup group_lwmesh_hal Hardware Abstraction Layer (HAL)
+ * provides basic hardware dependent functionality, like hardware timer, GPIO access for the radio interface through ASF Drivers
+ *
+ * @{
+ */
 /*****************************************************************************
 *****************************************************************************/
 #define HAL_TIMER_INTERVAL      10ul // ms
@@ -82,5 +83,6 @@ void hw_expiry_cb(void);
 /* This macro restores the global interrupt status */
 #define LEAVE_CRITICAL_REGION()              cpu_irq_restore(flags);}
 
+/** @} */
 #endif // _HAL_H_
 

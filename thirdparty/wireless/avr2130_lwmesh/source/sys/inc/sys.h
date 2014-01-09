@@ -55,8 +55,16 @@
 #include "nwk.h"
 #include "hal.h"
 
+/**
+ * \ingroup group_lwmesh
+ * \defgroup group_lwmesh_sys LWMesh System Services
+ * System services provide common functions for all layers, which are necessary for normal stack operation. 
+ * System services include basic types and definitions, software timers, default configuration parameters, encryption module access, etc.
+ * @{
+ */
+ 
 /*- Prototypes -------------------------------------------------------------*/
 void SYS_Init(void);
 void SYS_TaskHandler(void);
-
+/** @} */
 #endif // _SYS_H_

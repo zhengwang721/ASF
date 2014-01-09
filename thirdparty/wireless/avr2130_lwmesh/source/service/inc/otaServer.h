@@ -53,6 +53,13 @@
 #include "nwk.h"
 #include "otaCommon.h"
 
+/**
+ * \ingroup group_lwmesh_service
+ * \defgroup group_lwmesh_service_ota_server  OTA Server
+ * 
+ * @{
+ */
+ 
 /*- Prototypes -------------------------------------------------------------*/
 void OTA_ServerInit(void);
 void OTA_ServerStartUpdrade(uint16_t addr, uint32_t size);
@@ -60,4 +67,5 @@ void OTA_ServerSendBlock(uint8_t *data);
 void OTA_ServerNotification(OTA_Status_t status);
 void OTA_ServerTaskHandler(void);
 
+/** @} */
 #endif // _OTA_SERVER_H_

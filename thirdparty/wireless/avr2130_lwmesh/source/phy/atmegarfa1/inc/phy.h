@@ -55,6 +55,11 @@
 #include "sysConfig.h"
 #include "atmega128rfa1.h"
 
+/** 
+ * \ingroup group_phy_rfa1
+ * @{
+ */
+ 
 /*- Definitions ------------------------------------------------------------*/
 #define PHY_RSSI_BASE_VAL                  (-90)
 
@@ -100,4 +105,5 @@ void PHY_EdReq(void);
 void PHY_EdConf(int8_t ed);
 #endif
 
+/** @} */
 #endif // _PHY_H_

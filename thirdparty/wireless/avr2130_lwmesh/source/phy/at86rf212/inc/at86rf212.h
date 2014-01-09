@@ -55,6 +55,17 @@
 #include "hal.h"
 #include "trx_access.h"
 
+/**
+ * \ingroup group_phy
+ * \defgroup group_phy_212 AT86RF212 PHY Layer
+ * The AT86RF212 is a  low-power ,low voltage 700/800/900 MHz radio transceiver
+ *designed for industrial
+ * and consumer ZigBee/IEEE 802.15.4, 6LoWPAN, RF4CE and high data rate sub 1GHz
+ * ISM band applications.
+ * \a Refer <A href="http://www.atmel.com/Images/doc8168.pdf">AT86RF212 Data
+ *Sheet </A> \b for \b detailed \b information .
+ */
+ 
 /*- Definitions ------------------------------------------------------------*/
 #define AES_BLOCK_SIZE                 16
 #define AES_CORE_CYCLE_TIME            24 // us

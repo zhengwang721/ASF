@@ -53,8 +53,15 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+/**
+ * \ingroup group_lwmesh_sys
+ * \defgroup group_lwmesh_sys_timer LWMesh System Services - Security
+ * @{
+ */
+ 
 /*- Prototypes -------------------------------------------------------------*/
 void SYS_EncryptReq(uint8_t *text, uint8_t *key);
 void SYS_EncryptConf(void);
 
+/** @} */
 #endif // _SYS_ENCRYPT_H_

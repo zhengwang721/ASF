@@ -8,7 +8,7 @@
 			<info type="description" value="summary">
 			
 			</info>	
-			<device-support-alias value="avr2025_mac_hal_support"/>
+			<device-support-alias value="avr2130_lwmesh_hal_support"/>
 			<build type="doxygen-entry-point" value="group_lwmesh_service"/>
 		</module>
 		
@@ -21,7 +21,7 @@
 			<build type="header-file"   value="inc/otaCommon.h"/>
 			<build type="include-path"  value="inc/"/>
 			<build type="define"   name="APP_ENABLE_OTA"                   value=""/>
-			<device-support-alias value="avr2025_mac_hal_support"/>
+			<device-support-alias value="avr2130_lwmesh_hal_support"/>
 			<build type="doxygen-entry-point" value="group_lwmesh_service"/>
 		</module>
 		
@@ -34,7 +34,7 @@
 			<build type="header-file"   value="inc/otaCommon.h"/>
 			<build type="include-path"  value="inc/"/>		
 			<build type="define"   name="APP_ENABLE_OTA"                   value=""/>
-			<device-support-alias value="avr2025_mac_hal_support"/>
+			<device-support-alias value="avr2130_lwmesh_hal_support"/>
 			<build type="doxygen-entry-point" value="group_lwmesh_service"/>			
 		</module>
 	</select-by-config>
@@ -46,7 +46,7 @@
 		<info type="gui-flag" value="hidden"/>
 		<require idref="config.thirdparty.wireless.avr2130_lwmesh.source.service"/>
 		<build type="doxygen-entry-point" value="group_lwmesh_service"/>
-		<device-support-alias value="avr2025_mac_hal_support"/>
+		<device-support-alias value="avr2130_lwmesh_hal_support"/>
 	</module>
 	
 		

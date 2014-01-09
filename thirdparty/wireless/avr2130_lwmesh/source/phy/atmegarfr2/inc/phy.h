@@ -55,6 +55,10 @@
 #include "sysConfig.h"
 #include "atmega256rfr2.h"
 
+/** 
+ * \ingroup group_phy_rfr2
+ * @{
+ */
 /*- Definitions ------------------------------------------------------------*/
 #define PHY_RSSI_BASE_VAL                  (-90)
 
@@ -101,4 +105,5 @@ void PHY_EdReq(void);
 void PHY_EdConf(int8_t ed);
 #endif
 
+/** @} */
 #endif // _PHY_H_

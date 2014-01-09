@@ -53,6 +53,13 @@
 #include "nwk.h"
 #include "otaCommon.h"
 
+/**
+ * \ingroup group_lwmesh_service
+ * \defgroup group_lwmesh_service_ota_client  OTA Client
+ * 
+ * @{
+ */
+ 
 /*- Prototypes -------------------------------------------------------------*/
 void OTA_ClientInit(void);
 void OTA_ClientNotification(OTA_Status_t status);
@@ -60,4 +67,5 @@ void OTA_ClientBlockIndication(uint8_t size, uint8_t *data);
 void OTA_ClientBlockConfirm(OTA_Status_t status);
 void OTA_ClientTaskHandler(void);
 
+/** @} */
 #endif // _OTA_CLIENT_H_

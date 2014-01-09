@@ -52,6 +52,16 @@
 /*- Includes ---------------------------------------------------------------*/
 #include <sysTypes.h>
 
+/**
+ * \ingroup group_phy
+ * \defgroup group_phy_rfa1 ATMEGARFR2 PHY Layer
+ * The ATmega128RFA1 is a low-power CMOS 8-bit microcontroller based on the AVR
+ * enhanced RISC architecture combined with a high data rate transceiver for the 2.4 GHz
+ *  ISM band. It is derived from the ATmega1281 microcontroller and the AT86RF231 radio transceiver.
+ * \a Refer <A href="http://www.atmel.com/Images/Atmel-8393-MCU_Wireless-ATmega256RFR2-ATmega128RFR2-ATmega64RFR2_Datasheet.pdf">ATMEGARFR2 Data Sheet </A> \b for \b detailed \b information .
+ * @{
+ */
+ 
 /*- Definitions ------------------------------------------------------------*/
 #define AES_BLOCK_SIZE                 16
 
@@ -473,4 +483,5 @@ struct __struct_TRX_RPC_REG
 #define AES_STATUS_RY           0
 #define AES_STATUS_ER           7
 
+/** @} */
 #endif // _ATMEGA256RFR2_H_

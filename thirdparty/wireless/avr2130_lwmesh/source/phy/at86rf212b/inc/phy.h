@@ -56,6 +56,11 @@
 #include "hal.h"
 #include "at86rf212b.h"
 
+/** 
+ * \ingroup group_phy_212b
+ * @{
+ */
+ 
 /*- Definitions ------------------------------------------------------------*/
 #define PHY_RSSI_BASE_VAL_BPSK_20             (-100)
 #define PHY_RSSI_BASE_VAL_BPSK_40             (-99)
@@ -108,5 +113,5 @@ void PHY_EncryptConf();
 void PHY_EdReq(void);
 void PHY_EdConf(int8_t ed);
 #endif
-
+/** @} */
 #endif // _PHY_H_

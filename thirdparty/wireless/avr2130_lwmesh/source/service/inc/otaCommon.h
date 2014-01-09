@@ -48,6 +48,13 @@
 #ifndef _OTA_COMMON_H_
 #define _OTA_COMMON_H_
 
+/**
+ * \ingroup group_lwmesh
+ * \defgroup group_lwmesh_service LWMesh Services 
+ * Application services include modules that are not required by the stack, but are common for most applications.
+ * @{
+ */
+ 
 /*- Definitions ------------------------------------------------------------*/
 #define OTA_MAX_BLOCK_SIZE     90 //(NWK_MAX_PAYLOAD_SIZE - (1 + 2 + 1))
 #define OTA_RESPONSE_TIMEOUT   2000
@@ -134,5 +141,5 @@ static inline uint16_t otaCrcUpdateCcitt(uint16_t crc, uint8_t data)
   data ^= data << 4;
   return (((uint16_t)data << 8) | ((crc >> 8) & 0xff)) ^ (uint8_t)(data >> 4) ^ ((uint16_t)data << 3);
 }
-
+/** @} */
 #endif // _OTA_COMMON_H_

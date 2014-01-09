@@ -53,6 +53,12 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+/**
+ * \ingroup group_lwmesh_sys
+ * \defgroup group_lwmesh_sys_timer LWMesh System Services - Timer
+ * @{
+ */
+ 
 /*- Types ------------------------------------------------------------------*/
 typedef enum SYS_TimerMode_t
 {
@@ -79,4 +85,5 @@ void SYS_TimerStop(SYS_Timer_t *timer);
 bool SYS_TimerStarted(SYS_Timer_t *timer);
 void SYS_TimerTaskHandler(void);
 
+/** @} */
 #endif // _SYS_TIMER_H_

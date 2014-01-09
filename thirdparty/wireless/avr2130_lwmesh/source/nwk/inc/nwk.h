@@ -58,6 +58,35 @@
 #include "nwkSecurity.h"
 #include "nwkDataReq.h"
 
+ /**
+  * \defgroup group_lwmesh Light Weight Mesh 
+  *     Atmel® Lightweight Mesh software stack is an easy to use proprietary low power wireless mesh network protocol. 
+  *     It was designed to address the needs of a wide range of wireless connectivity applications. Some of these applications include:\n
+  *   	• Remote control\n
+ *   	• Alarms and security\n
+  *   	• Automatic Meter Reading (AMR)\n
+  *   	• Home and commercial building automation\n
+  *   	• Toys and educational equipment\n
+  * 
+  */
+  
+/**
+ * \ingroup group_lwmesh
+ * \defgroup group_phy PHY 
+ * Radio physical layer (PHY) provides functions for radio transceiver access. 
+ * Some of them are accessible only by the network layer (request to send data, data indication); 
+ * some of them can be used from the application (channel selection, random number generation, energy detection, etc.)
+ *
+ *
+ */  
+
+/**
+ * \ingroup group_lwmesh
+ * \defgroup group_lwmesh_nwk Network layer
+ *
+ * @{
+ */
+ 
 /*- Definitions ------------------------------------------------------------*/
 #define NWK_MAX_PAYLOAD_SIZE            (127 - 16/*NwkFrameHeader_t*/ - 2/*crc*/)
 
@@ -106,5 +135,5 @@ void NWK_WakeupReq(void);
 void NWK_TaskHandler(void);
 
 uint8_t NWK_LinearizeLqi(uint8_t lqi);
-
+/**  @} */
 #endif // _NWK_H_

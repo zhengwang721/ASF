@@ -12,7 +12,7 @@
 		<require idref="thirdparty.wireless.addons.sio2host"/>
 		<build type="include-path"  value="./"/>
 		<build type="doxygen-entry-point" value="group_wsndemo"/>
-		<device-support-alias value="avr2025_mac_hal_support"/>
+		<device-support-alias value="avr2130_lwmesh_hal_support"/>
 		<!-- ++++++++++++++++++++++++++++++++++++++++++++++REQUIRE++++++++++++++++++++++++++++++++++++++++++++++. -->
 		<require idref="thirdparty.wireless.avr2130_lwmesh"/>
 		<build type="distribute" subtype="user-file" value="wsnmonitor_setup.exe"/>		

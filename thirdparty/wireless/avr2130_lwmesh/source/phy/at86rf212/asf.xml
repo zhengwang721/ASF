@@ -10,6 +10,6 @@
 		<build type="include-path"  value="inc/"/>
 		<build type="doxygen-entry-point" value="group_phy_212"/>
 		<build type="define" name="PHY_AT86RF212" value =""/>
-		<device-support-alias value="avr2025_mac_hal_support"/>
+		<device-support-alias value="avr2130_lwmesh_hal_support"/>
 	</module>
 </asf>
