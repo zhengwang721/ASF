@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x AT30TSE75X Temperature Sensor Driver Quick Start
+ * \brief SAM D21 Xplained PRO board configuration.
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,51 +41,7 @@
  *
  */
 
-#include <asf.h>
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [temp_res]
-double temp_res;
-//! [temp_res]
-
-int main(void)
-{
-//! [init]
-	/* Init system. */
-//! [system_init]
-	system_init();
-//! [system_init]
-	/* Configure device and enable. */
-//! [temp_init]
-	at30tse_init();
-//! [temp_init]
-//! [init]
-
-//! [impl]
-    /* Read thigh and tlow */
-//! [read_thigh]
-	volatile uint16_t thigh = 0;
-	thigh = at30tse_read_register(AT30TSE_THIGH_REG,
-			AT30TSE_NON_VOLATILE_REG, AT30TSE_THIGH_REG_SIZE);
-//! [read_thigh]
-//! [read_tlow]
-	volatile uint16_t tlow = 0;
-	tlow = at30tse_read_register(AT30TSE_TLOW_REG,
-			AT30TSE_NON_VOLATILE_REG, AT30TSE_TLOW_REG_SIZE);
-//! [read_tlow]
-
-	/* Set 12-bit resolution mode. */
-//! [write_conf]
-	at30tse_write_config_register(
-			AT30TSE_CONFIG_RES(AT30TSE_CONFIG_RES_12_bit));
-//! [write_conf]
-
-//! [read_temp]
-	while (1) {
-		temp_res = at30tse_read_temperature();
-	}
-//! [read_temp]
-//! [impl]
-	UNUSED(tlow);
-	UNUSED(thigh);
-}
-//! [qs]
+#endif /* CONF_BOARD_H_INCLUDED */
