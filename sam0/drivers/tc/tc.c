@@ -155,6 +155,16 @@ enum status_code tc_init(
 	/* Associate the given device instance with the hardware module */
 	module_inst->hw = hw;
 
+	/* Check if odd numbered TC modules are being configured in 32-bit
+	 * counter size. Only even numbered counters are allowed to be
+	 * configured in 32-bit counter size.
+	 */
+	if ((config->counter_size == TC_COUNTER_SIZE_32BIT) &&
+			((instance + TC_INSTANCE_OFFSET) & 0x01)) {
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
+	}
+
 	/* Make the counter size variable in the module_inst struct reflect
 	 * the counter size in the module
 	 */

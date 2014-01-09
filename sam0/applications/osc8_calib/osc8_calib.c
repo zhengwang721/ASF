@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ OSC8MHz Calibration Application
+ * \brief SAM D2x OSC8MHz Calibration Application
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
 #include "conf_example.h"
 
 /**
- * \mainpage SAM0+ OSC8M Calibration Example
+ * \mainpage SAM D2x OSC8M Calibration Example
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
@@ -53,7 +53,7 @@
  */
 
 /**
- * \page appdoc_main SAM0+ OSC8M Calibration Example
+ * \page appdoc_main SAM D2x OSC8M Calibration Example
  *
  * Overview:
  * - \ref appdoc_sam0_osc8m_cal_intro
@@ -86,7 +86,9 @@
  *       memory. The example execution time is depend on the configuration in
  *       conf_example file. It's about (2<<CONF_CALIBRATION_RESOLUTION)
  *       *(2<<CONF_FRANGE_CAL -1)*(2<<CONF_TEMP_CAL -1)*128/32768
- *       seconds.
+ *       seconds. To get more accurate result, we can larger the value of
+ *       CONF_FRANGE_CAL, CONF_TEMP_CAL and CONF_CALIBRATION_RESOLUTION,
+ *       but the execution time is also longer.
  *
  * \section appdoc_sam0_osc8m_cal_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for ARM.
@@ -96,6 +98,15 @@
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
+
+/** OSC8M calibration info */
+#define FRANGE_CAL_MIN       0x00
+#define FRANGE_CAL_MAX       0x03
+#define TEMP_CAL_OFFSET      0x07
+#define TEMP_CAL_MIN         0x00
+#define TEMP_CAL_MAX         0x1F
+#define COMM_CAL_MIN         0x00
+#define COMM_CAL_MAX         0x7F
 
 /** Target OSC8M calibration frequency */
 #define TARGET_FREQUENCY         8000000
@@ -259,13 +270,13 @@ int main(void)
 
 	/* Init the variables with default calibration settings */
 	uint8_t frange_cal = SYSCTRL->OSC8M.bit.FRANGE;
-	uint8_t temp_cal = SYSCTRL->OSC8M.bit.CALIB >> 7;
-	uint8_t comm_cal = SYSCTRL->OSC8M.bit.CALIB & 0x7F;
+	uint8_t temp_cal = SYSCTRL->OSC8M.bit.CALIB >> TEMP_CAL_OFFSET;
+	uint8_t comm_cal = SYSCTRL->OSC8M.bit.CALIB & COMM_CAL_MAX;
 	/* Set the calibration test range */
-	uint8_t frange_cal_min = max((frange_cal - CONF_FRANGE_CAL), 0);
-	uint8_t frange_cal_max = min((frange_cal + CONF_FRANGE_CAL), 0x03);
-	uint8_t temp_cal_min = max((temp_cal - CONF_TEMP_CAL), 0);
-	uint8_t temp_cal_max = min((temp_cal + CONF_TEMP_CAL), 0x1F);
+	uint8_t frange_cal_min = max((frange_cal - CONF_FRANGE_CAL), FRANGE_CAL_MIN);
+	uint8_t frange_cal_max = min((frange_cal + CONF_FRANGE_CAL), FRANGE_CAL_MAX);
+	uint8_t temp_cal_min = max((temp_cal - CONF_TEMP_CAL), TEMP_CAL_MIN);
+	uint8_t temp_cal_max = min((temp_cal + CONF_TEMP_CAL), TEMP_CAL_MAX);
 
 	/* Variables to track the previous and best calibration settings */
 	uint16_t comm_best   = -1;
@@ -276,7 +287,7 @@ int main(void)
 	/* Run calibration loop */
 	for (frange_cal = frange_cal_min; frange_cal <= frange_cal_max; frange_cal++) {
 		for (temp_cal = temp_cal_min; temp_cal <= temp_cal_max; temp_cal++) {
-			for (comm_cal = 0; comm_cal < 128; comm_cal++) {
+			for (comm_cal = COMM_CAL_MIN; comm_cal <= COMM_CAL_MAX; comm_cal++) {
 				/* Set the test calibration values */
 				system_clock_source_write_calibration(
 						SYSTEM_CLOCK_SOURCE_OSC8M, (temp_cal << 7) | comm_cal, frange_cal);
