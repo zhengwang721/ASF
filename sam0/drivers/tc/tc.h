@@ -774,7 +774,7 @@ struct tc_config {
 		struct tc_16bit_config counter_16_bit;
 		/** Struct for 32-bit specific timer configuration. */
 		struct tc_32bit_config counter_32_bit;
-	};
+	}size_specific;
 };
 
 #if TC_ASYNC == true
@@ -1366,6 +1366,9 @@ static inline void tc_clear_status(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Optimized  implementation and added new feature for TC</td>
+ *	</tr>
+ *	<tr>
  *		<td>Added automatic digital clock interface enable for the slave TC
  *          module when a timer is initialized in 32-bit mode.</td>
  *	</tr>
@@ -1382,7 +1385,7 @@ static inline void tc_clear_status(
  * applications for \ref asfdoc_sam0_tc_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that QSGs can be compiled as a standalone application or be
- * added to the user application for SAMD2x.
+ * added to the user application.
  *
  *  - \subpage asfdoc_sam0_tc_basic_use_case
  * \if TC_CALLBACK_MODE
@@ -1396,6 +1399,11 @@ static inline void tc_clear_status(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Optimized  implementation and added new feature </td>
  *	</tr>
  *	<tr>
  *		<td>B</td>
