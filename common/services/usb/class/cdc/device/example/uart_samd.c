@@ -158,8 +158,8 @@ void uart_config(uint8_t port,usb_cdc_line_coding_t *cfg)
 		usart_conf.parity = USART_PARITY_NONE;
 		break;
 
-	default:
 	case CDC_PAR_NONE:
+	default:
 		usart_conf.parity = USART_PARITY_NONE;
 		break;
 	}
@@ -174,8 +174,8 @@ void uart_config(uint8_t port,usb_cdc_line_coding_t *cfg)
 	case 7:
 		usart_conf.character_size = USART_CHARACTER_SIZE_7BIT;
 		break;
-	default:
 	case 8:
+	default:
 		usart_conf.character_size = USART_CHARACTER_SIZE_8BIT;
 		break;
 	}
