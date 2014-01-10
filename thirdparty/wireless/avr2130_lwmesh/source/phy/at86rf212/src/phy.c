@@ -109,9 +109,7 @@ void PHY_Init(void)
 {
   trx_spi_init();
   HAL_PhyReset();
-//static uint8_t ver;
-//ver= phyReadRegister(0X1c);
-//  phyReadRegister(IRQ_STATUS_REG);
+
   phyWriteRegister(TRX_STATE_REG, TRX_CMD_TRX_OFF);
   while (TRX_STATUS_TRX_OFF != (phyReadRegister(TRX_STATUS_REG) & TRX_STATUS_TRX_STATUS_MASK));
 
@@ -120,8 +118,6 @@ void PHY_Init(void)
   phyWriteRegister(IRQ_MASK_REG, 0x00);
   phyReadRegister(IRQ_STATUS_REG);
   phyWriteRegister(IRQ_MASK_REG, TRX_END_MASK);
-//ver= ver+1;
-//ver=ver;
   phyIb.request = PHY_REQ_NONE;
   phyIb.rx = false;
   phyIb.band = 0;
