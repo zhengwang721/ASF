@@ -289,12 +289,6 @@
  *  - \ref asfdoc_sam0_dac_extra_history
  *
  *
- * \section asfdoc_sam0_dac_examples Examples
- *
- * For a list of examples related to this driver, see
- * \ref asfdoc_sam0_dac_exqsg.
- *
- *
  * \section asfdoc_sam0_dac_api_overview API Overview
  * @{
  */
@@ -821,7 +815,11 @@ void dac_clear_status(
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
+ *  - \subpage asfdoc_sam0_dac_basic_use_case
+ * \if DAC_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_dac_basic_use_case_callback
+ * \endif
+ *  - \subpage asfdoc_sam0_adc_dma_use_case
  *
  * \page asfdoc_sam0_dac_document_revision_history Document Revision History
  *
