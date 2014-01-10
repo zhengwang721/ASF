@@ -92,7 +92,7 @@ typedef enum coord_state_tag {
 
 /** Defines the scan duration time. */
 #define SCAN_DURATION_COORDINATOR       (5)
-
+
 #ifdef MAC_SECURITY_ZIP
 
 /* MAC security macros */
