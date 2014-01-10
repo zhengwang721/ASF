@@ -1,7 +1,7 @@
 /**
  * \file *********************************************************************
  *
- * \brief Platform Abstraction Layer configuration
+ * \brief Common TRX Access Configuration
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
