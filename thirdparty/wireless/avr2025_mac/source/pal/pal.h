@@ -66,7 +66,7 @@
 #include "common_sw_timer.h"
 #include "board.h"
 #include "delay.h"
-#include "conf_pal.h"
+
 
 #if (PAL_USE_SPI_TRX == 1)
 #include "pal_ext_trx.h"

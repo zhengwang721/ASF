@@ -10,8 +10,6 @@
             <build type="header-file"   value="pal_ext_trx.h"/>
             <build type="c-source"      value="pal_ext_trx.c"/>
             <build type="doxygen-entry-point" value="group_pal"/>
-			<build type="module-config" subtype="required-header-file" value="conf_pal.h"/>
-			<build type="module-config" subtype="path" value="module_config"/>
 			
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.inc"/>
@@ -27,9 +25,6 @@
             <build type="c-source"      value="pal.c"/>
             <build type="header-file"   value="pal.h"/>
             <build type="doxygen-entry-point" value="group_pal"/>
-			<build type="module-config" subtype="required-header-file" value="conf_pal.h"/>
-			<build type="module-config" subtype="path" value="module_config"/>
-
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.inc"/>
             <require idref="thirdparty.wireless.common_services.trx_access"/>
@@ -48,8 +43,7 @@
             <build type="header-file"   value="pal_ext_trx.h"/>
             <build type="c-source"      value="pal_ext_trx.c"/>
             <build type="doxygen-entry-point" value="group_pal"/>
-			<build type="module-config" subtype="required-header-file" value="conf_pal.h"/>
-			<build type="module-config" subtype="path" value="module_config"/>
+
 
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.inc"/>

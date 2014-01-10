@@ -11,6 +11,8 @@
 		<build type="header-file"   value="config.h"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
 		<build type="include-path"  value="./"/>
+		<build type="header-file" value="conf_trx_access.h"/>
+		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="group_wsndemo"/>
 		<device-support-alias value="avr2130_lwmesh_hal_support"/>
 		<!-- ++++++++++++++++++++++++++++++++++++++++++++++REQUIRE++++++++++++++++++++++++++++++++++++++++++++++. -->

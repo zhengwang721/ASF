@@ -8,6 +8,8 @@
             <build type="header-file"   value="trx_access.h"/>
             <build type="c-source"      value="trx_access.c"/>
 			<build type="include-path"  value="."/>
+			<build type="module-config" subtype="required-header-file" value="conf_trx_access.h"/>
+			<build type="module-config" subtype="path" value="module_config"/>
             <require idref="common.services.delay"/>
             <require idref="common.services.basic.spi_master"/>
             <require idref="common.services.ioport"/>
@@ -21,6 +23,8 @@
             </info>
 			<info type="gui-flag" value="hidden"/>
             <require idref="common.services.delay"/>
+			<build type="module-config" subtype="required-header-file" value="conf_trx_access.h"/>
+			<build type="module-config" subtype="path" value="module_config"/>			
             <device-support-alias value="trx_access_soc_support"/>
 		</module>
 
@@ -31,6 +35,8 @@
 			<info type="gui-flag" value="hidden"/>
             <build type="header-file"   value="trx_access.h"/>
             <build type="c-source"      value="trx_access.c"/>
+			<build type="module-config" subtype="required-header-file" value="conf_trx_access.h"/>
+			<build type="module-config" subtype="path" value="module_config"/>			
 			<build type="include-path"  value="."/>
             <require idref="common2.services.delay"/>
             <require idref="sam0.drivers.sercom.spi"/>

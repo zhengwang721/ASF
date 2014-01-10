@@ -53,7 +53,7 @@
 #include "pal.h"
 #include "delay.h"
 #include "interrupt.h"
-#include "conf_pal.h"
+#include "conf_trx_access.h"
 #include "conf_board.h"
 
 
