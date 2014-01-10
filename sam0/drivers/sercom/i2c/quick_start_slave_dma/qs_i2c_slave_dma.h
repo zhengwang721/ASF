@@ -42,7 +42,10 @@
  */
 
 /**
- * \page asfdoc_sam0_sercom_i2c_slave_dma_use_case Quick Start Guide for SERCOM I2C Slave with DMA
+ * \page asfdoc_sam0_sercom_i2c_slave_dma_use_case Quick Start Guide for Using DMA with SERCOM I2C Slave
+ *
+ * The supported device list:
+ *    - SAMD21
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Slave mode
@@ -63,7 +66,7 @@
  * \snippet qs_i2c_slave_dma.c packet_data
  *
  * - Globally accessible module structure:
- * \snippet qs_i2c_slave_dma.c dev_inst
+ * \snippet qs_i2c_slave_dma.c module
  *
  * - Function for setting up the module:
  * \snippet qs_i2c_slave_dma.c initialize_i2c
@@ -86,18 +89,18 @@
  * \subsection asfdoc_sam0_sercom_i2c_slave_dma_use_setup_workflow Workflow
  * -# Configure and enable module:
  *  \snippet qs_i2c_slave_dma.c initialize_i2c
- *   -# Create and initialize configuration structure.
+ * -# Create and initialize configuration structure.
  *    \snippet qs_i2c_slave_dma.c init_conf
- *   -# Change settings in the configuration.
- *    \snippet qs_i2c_slave_dma.c conf_change
- *   -# Initialize the module with the set configurations.
+ * -# Change settings in the configuration.
+ *    \snippet qs_i2c_slave_dma.c conf_changes
+ * -# Initialize the module with the set configurations.
  *    \snippet qs_i2c_slave_dma.c init_module
- *   -# Enable the module.
+ * -# Enable the module.
  *    \snippet qs_i2c_slave_dma.c enable_module
 
  * -# Create a DMA resource configuration structure, which can be filled out to
  *    adjust the configuration of a single DMA transfer.
- *  \snippet qs_dma_basic.c dma_setup_1
+ *  \snippet qs_i2c_slave_dma.c dma_setup_1
  *
  * -# Initialize the DMA resource configuration struct with the module's
  *    default values.
@@ -105,18 +108,18 @@
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_dma_basic.c dma_setup_2
+ *  \snippet qs_i2c_slave_dma.c dma_setup_2
  *
  * -# Set extra configurations for the DMA resource. It is using peripheral trigger,
  * SERCOM RX trigger and trigger causes a beat transfer in this example.
- *  \snippet qs_dma_basic.c dma_setup_3
+ *  \snippet qs_i2c_slave_dma.c dma_setup_3
  *
  * -# Allocate a DMA resource with the configurations.
- *  \snippet qs_dma_basic.c dma_setup_4
+ *  \snippet qs_i2c_slave_dma.c dma_setup_4
  *
  * -# Create a DMA transfer descriptor configuration structure, which can be
  * filled out to adjust the configuration of a single DMA transfer.
- *  \snippet qs_dma_basic.c dma_setup_5
+ *  \snippet qs_i2c_slave_dma.c dma_setup_5
  *
  * -# Initialize the DMA transfer descriptor configuration struct with the module's
  *    default values.
@@ -124,14 +127,14 @@
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_dma_basic.c dma_setup_6
+ *  \snippet qs_i2c_slave_dma.c dma_setup_6
  *
  * -# Set the specific parameters for a DMA transfer with transfer size, source
  *    address, destination address.
- *  \snippet qs_dma_basic.c dma_setup_7
+ *  \snippet qs_i2c_slave_dma.c dma_setup_7
  *
  * -# Create the DMA transfer descriptor.
- *  \snippet qs_dma_basic.c dma_setup_8
+ *  \snippet qs_i2c_slave_dma.c dma_setup_8
  *
  * \section asfdoc_sam0_sercom_i2c_slave_dma_use_implemenation Implementation
  * \subsection asfdoc_sam0_sercom_i2c_slave_dma_use_implemenation_code Code
