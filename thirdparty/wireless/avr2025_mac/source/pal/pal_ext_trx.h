@@ -57,6 +57,7 @@
 
 #include "compiler.h"
 #include "pal_generic.h"
+#include "trx_access.h"
 #if SAMD20
 #include "port.h"
 #include "extint.h"

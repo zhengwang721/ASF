@@ -63,6 +63,7 @@
 /* === Includes ============================================================ */
 
 #include "compiler.h"
+#include "conf_trx_access.h"
 #if SAMD20
 #include "port.h"
 #include "extint.h"
