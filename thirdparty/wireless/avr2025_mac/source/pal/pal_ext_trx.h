@@ -1,9 +1,9 @@
 /**
  * @file pal_ext_trx.h
  *
- * @brief PAL related APIs for ecternally plugged transceivers
+ * @brief PAL related APIs for externally plugged transceivers
  *
- *  Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ *  Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
