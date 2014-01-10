@@ -17,7 +17,6 @@
 		
 		<config name="config.spi_master_type" value="standard_spi"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf231"/>
-		<config name="config.thirdparty.wireless.avr2025_mac.source.sal" value="atxmega_sal"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.mac.api" value="no" />
 		<config name="config.common.drivers.nvm.mem_type" value="no_extmem"/>
         <require idref="thirdparty.wireless.avr2102_rf4control.apps.zid.zid_device"/>
