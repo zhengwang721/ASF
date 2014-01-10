@@ -44,6 +44,9 @@
 /**
  * \page asfdoc_sam0_adc_dma_use_case Quick Start Guide for Using DMA with ADC/DAC
  *
+ * The supported device list:
+ *    - SAMD21
+ *
  * This quick start will convert an analog input signal from PA4 and the converted value
  * to DAC on PA2. The data between ADC and DAC with be transferred through DMA instead of
  * a CPU intervene.
