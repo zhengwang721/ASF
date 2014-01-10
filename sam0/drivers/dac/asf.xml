@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.dac" name="config.sam0.drivers.dac" caption="DAC - Digital-to-Analog Converter" default="callback">
 		<info type="description" value="summary">
-			Driver for the SAM D20 Digital to Analog Converter. Provides a unified
+			Driver for the SAM D2x Digital to Analog Converter. Provides a unified
 			interface for the configuration and management of the DAC in the
 			device, including channel configuration and conversions.
 		</info>
