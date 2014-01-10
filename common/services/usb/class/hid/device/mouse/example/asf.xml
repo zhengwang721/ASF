@@ -50,6 +50,7 @@
 			<build type="include-path" value="."/>
 			<device-support value="samd21"/>
 			<require idref="common.services.usb.class.device"/>
+			<require idref="common.services.basic.sleepmgr"/>
 			<info type="keyword" value="technology">
 				<keyword value="USB"/>
 				<keyword value="Communication"/>
