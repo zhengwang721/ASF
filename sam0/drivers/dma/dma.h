@@ -70,7 +70,7 @@
  *
  * \section asfdoc_sam0_dma_module_overview Module Overview
  *
- * SAM D2x devices with DMA provides an approach to transfer data between
+ * SAM D2x devices with DMA provide an approach to transfer data between
  * memories and peripherals and thus off-load these tasks from the CPU. It
  * enables high data transfer rates with minimum CPU interversion and frees up
  * CPU time. With access to all peripherals, the DMA controller can handle automatic
@@ -115,10 +115,10 @@
  *
  *
  * \subsection asfdoc_sam0_dma_module_overview_dma_channels DMA Channels
- * The DMA resource in each device consists of several channels, which defines the
+ * The DMA controller in each device consists of several channels, which defines the
  * data transfer properties. With a successful DMA resource allocation, a dedicated
  * DMA channel will be assigned. The channel will be occupied untill the DMA resource
- * freed. A DMA channel ID is used to identify the specific DMA resource.
+ * is freed. A DMA channel ID is used to identify the specific DMA resource.
  *
  * \subsection asfdoc_sam0_dma_module_overview_dma_trigger DMA Triggers
  * DMA transfer can be started only when a DMA transfer request is detected. A
@@ -656,6 +656,7 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  * - \subpage asfdoc_sam0_sercom_usart_dma_use_case
  * - \subpage asfdoc_sam0_sercom_i2c_master_dma_use_case
  * - \subpage asfdoc_sam0_sercom_i2c_slave_dma_use_case
+ * - \subpage asfdoc_sam0_adc_dma_use_case
  *
  * \page asfdoc_sam0_dma_document_revision_history Document Revision History
  *

@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_sam0_dma_basic_use_case Quick Start Guide for Using DMA Driver
+ * \page asfdoc_sam0_dma_basic_use_case Quick Start Guide for Using DMA with Memory to Memory
  *
  * The supported device list:
  *    - SAMD21
