@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TC Quick Start configuration for SAM D21 Xplained Pro
+ * \brief SAM D21 SPI configuration
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,16 +41,13 @@
  *
  */
 
-#ifndef CONF_QUICK_START_H_INCLUDED
-#define CONF_QUICK_START_H_INCLUDED
 
-//! [definition_pwm]
-/** PWM module to use */
-#define PWM_MODULE      EXT1_PWM_MODULE
-/** PWM output pin */
-#define PWM_OUT_PIN     EXT1_PWM_0_PIN
-/** PWM output pin mux */
-#define PWM_OUT_MUX     EXT1_PWM_0_MUX
-//! [definition_pwm]
+#ifndef CONF_SPI_H_INCLUDED
+#  define CONF_SPI_H_INCLUDED
 
-#endif /* CONF_QUICK_START_H_INCLUDED */
+#  define CONF_SPI_MASTER_ENABLE     true
+#  define CONF_SPI_SLAVE_ENABLE      false
+#  define CONF_SPI_TIMEOUT           10000
+
+#endif /* CONF_SPI_H_INCLUDED */
+

@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x Quick Start Guide for Using ADC driver with DMA
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,10 @@
  */
 
 /**
- * \page asfdoc_sam0_adc_dma_use_case Quick Start Guide for Using ADC with DMA
+ * \page asfdoc_sam0_adc_dma_use_case Quick Start Guide for Using DMA with ADC/DAC
+ *
+ * The supported device list:
+ *    - SAMD21
  *
  * This quick start will convert an analog input signal from PA4 and the converted value
  * to DAC on PA2. The data between ADC and DAC with be transferred through DMA instead of
@@ -65,18 +68,20 @@
  * - No gain/offset correction
  * - No added sampling time
  * - Pin scan mode disabled
+ *
  * The DAC will be configured with the following settings:
  * - Analog VCC as reference
  * - Internal output disabled
  * - Drive the DAC output to PA2
  * - Right adjust data
  * - The output buffer is disabled when the chip enters STANDBY sleep mode
+ *
  * The DMA module is configured for:
- *  \li Move data from peripheral to peripheral
- *  \li Using ADC result ready trigger
- *  \li Using DMA priority level 0
- *  \li Beat transfer will be triggered on each trigger
- *  \li Loopback descriptor for DAC conversion
+ * - Move data from peripheral to peripheral
+ * - Using ADC result ready trigger
+ * - Using DMA priority level 0
+ * - Beat transfer will be triggered on each trigger
+ * - Loopback descriptor for DAC conversion
  *
  * \section asfdoc_sam0_adc_dma_use_case_setup Setup
  *
@@ -85,10 +90,10 @@
  *
  * \subsection asfdoc_sam0_adc_dma_use_case_setup_code Code
  * Add to the main application source file, outside of any functions:
- * \snippet qs_adc_dma_use.c dac_instance
- * \snippet qs_adc_dma_use.c adc_instance
- * \snippet qs_adc_dma_use.c example_resource
- * \snippet qs_adc_dma_use.c example_descriptor
+ * \snippet qs_adc_dma_use.c dac_module_inst
+ * \snippet qs_adc_dma_use.c adc_module_inst
+ * \snippet qs_adc_dma_use.c dma_resource
+ * \snippet qs_adc_dma_use.c transfer_descriptor
  *
  * Copy-paste the following setup code to your user application:
  * \snippet qs_adc_dma_use.c setup
@@ -103,66 +108,66 @@
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- *    \snippet qs_adc_basic.c adc_module_inst
+ *    \snippet qs_adc_dma_use.c adc_module_inst
  * -# Configure the ADC module.
  *  -# Create a ADC module configuration struct, which can be filled out to
  *     adjust the configuration of a physical ADC peripheral.
- *     \snippet qs_adc_basic.c setup_adc_config
+ *     \snippet qs_adc_dma_use.c setup_adc_config
  *  -# Initialize the ADC configuration struct with the module's default values.
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *     \snippet qs_adc_basic.c setup_adc_config_defaults
+ *     \snippet qs_adc_dma_use.c setup_adc_config_defaults
  *  -# Set extra configurations
- *     \snippet qs_adc_basic.c setup_adc_config_extra
+ *     \snippet qs_adc_dma_use.c setup_adc_config_extra
  *  -# Set ADC configurations
- *     \snippet qs_adc_basic.c setup_adc_set_config
+ *     \snippet qs_adc_dma_use.c setup_adc_set_config
 
  *  -# Enable the ADC module so that conversions can be made.
- *     \snippet qs_adc_basic.c setup_adc_enable
+ *     \snippet qs_adc_dma_use.c setup_adc_enable
  *
  * -# Create a module software instance structure for the DAC module to store
  *    the DAC driver state while it is in use.
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- *    \snippet qs_dac_basic.c dac_module_inst
+ *    \snippet qs_adc_dma_use.c dac_module_inst
  * -# Configure the DAC module.
  *  -# Create a DAC module configuration struct, which can be filled out to
  *     adjust the configuration of a physical DAC peripheral.
- *     \snippet qs_dac_basic.c setup_dac_config
+ *     \snippet qs_adc_dma_use.c setup_dac_config
  *  -# Initialize the DAC configuration struct with the module's default values.
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *     \snippet qs_dac_basic.c setup_dac_config_defaults
+ *     \snippet qs_adc_dma_use.c setup_dac_config_defaults
  *  -# Set extra DAC configurations.
- *     \snippet qs_dac_basic.c setup_dac_config_extra
+ *     \snippet qs_adc_dma_use.c setup_dac_config_extra
  *  -# Set DAC configurations to DAC instance.
- *     \snippet qs_dac_basic.c setup_dac_set_config
+ *     \snippet qs_adc_dma_use.c setup_dac_set_config
  *  -# Enable the DAC module so that channels can be configured.
- *     \snippet qs_dac_basic.c setup_dac_enable
+ *     \snippet qs_adc_dma_use.c setup_dac_enable
  * -# Configure the DAC channel.
  *  -# Create a DAC channel configuration struct, which can be filled out to
  *     adjust the configuration of a physical DAC output channel.
- *     \snippet qs_dac_basic.c setup_dac_ch_config
+ *     \snippet qs_adc_dma_use.c setup_dac_ch_config
  *  -# Initialize the DAC channel configuration struct with the module's default
  *     values.
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *     \snippet qs_dac_basic.c setup_dac_ch_config_defaults
+ *     \snippet qs_adc_dma_use.c setup_dac_ch_config_defaults
  *  -# Configure the DAC channel with the desired channel settings.
- *     \snippet qs_dac_basic.c setup_dac_ch_set_config
+ *     \snippet qs_adc_dma_use.c setup_dac_ch_set_config
  *  -# Enable the DAC channel so that it can output a voltage.
- *     \snippet qs_dac_basic.c setup_dac_ch_enable
+ *     \snippet qs_adc_dma_use.c setup_dac_ch_enable
  *
  * -# Create a DMA resource configuration structure, which can be filled out to
  *    adjust the configuration of a single DMA transfer.
- *  \snippet qs_dma_basic.c setup_dma_config
+ *  \snippet qs_adc_dma_use.c setup_dma_config
  *
  * -# Initialize the DMA resource configuration struct with the module's
  *    default values.
@@ -170,18 +175,18 @@
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_dma_basic.c setup_dma_set_config_default
+ *  \snippet qs_adc_dma_use.c setup_dma_set_config_default
  *
  * -# Set extra configurations for the DMA resource. It is using peripheral trigger,
  * SERCOM Tx empty trigger and trigger causes a beat transfer in this example.
- *  \snippet qs_dma_basic.c setup_dma_set_config_extra
+ *  \snippet qs_adc_dma_use.c setup_dma_set_config_extra
  *
  * -# Allocate a DMA resource with the configurations.
- *  \snippet qs_dma_basic.c allocate_dma_resource
+ *  \snippet qs_adc_dma_use.c allocate_dma_resource
  *
  * -# Create a DMA transfer descriptor configuration structure, which can be
  * filled out to adjust the configuration of a single DMA transfer.
- *  \snippet qs_dma_basic.c setup_dma_desc_config
+ *  \snippet qs_adc_dma_use.c setup_dma_desc_config
  *
  * -# Initialize the DMA transfer descriptor configuration struct with the module's
  *    default values.
@@ -189,17 +194,17 @@
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_dma_basic.c setup_dma_desc_config_set_default
+ *  \snippet qs_adc_dma_use.c setup_dma_desc_config_set_default
  *
  * -# Set the specific parameters for a DMA transfer with transfer size, source
  *    address, destination address.
- *  \snippet qs_dma_basic.c setup_dma_desc_config_set_extra
+ *  \snippet qs_adc_dma_use.c setup_dma_desc_config_set_extra
  *
  * -# Create the DMA transfer descriptor.
- *  \snippet qs_dma_basic.c setup_dma_desc_config_create
+ *  \snippet qs_adc_dma_use.c setup_dma_desc_config_create
  *
  * -# Add DMA descriptor to DMA resource.
- *  \snippet qs_dma_basic.c add_descriptor_to_resource
+ *  \snippet qs_adc_dma_use.c add_descriptor_to_resource
  *
  * \section asfdoc_sam0_adc_dma_use_case_main Use Case
  *
@@ -214,6 +219,6 @@
  * -# Start the transfer job.
  *  \snippet qs_adc_dma_use.c start_transfer
  *
- * -# enter endless loop
+ * -# Enter endless loop
  *  \snippet qs_adc_dma_use.c endless_loop
  */

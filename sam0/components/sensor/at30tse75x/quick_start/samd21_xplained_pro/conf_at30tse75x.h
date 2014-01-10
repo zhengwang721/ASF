@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief TC Quick Start configuration for SAM D21 Xplained Pro
+ * \brief AT30TSE75X Temperature sensor driver configuration file.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,17 +40,13 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_AT30TSE75X_H_INCLUDED
+#define CONF_AT30TSE75X_H_INCLUDED
 
-#ifndef CONF_QUICK_START_H_INCLUDED
-#define CONF_QUICK_START_H_INCLUDED
+#include <board.h>
 
-//! [definition_pwm]
-/** PWM module to use */
-#define PWM_MODULE      EXT1_PWM_MODULE
-/** PWM output pin */
-#define PWM_OUT_PIN     EXT1_PWM_0_PIN
-/** PWM output pin mux */
-#define PWM_OUT_MUX     EXT1_PWM_0_MUX
-//! [definition_pwm]
+#define AT30TSE_SERCOM      EXT1_I2C_MODULE
+#define AT30TSE_PINMUX_PAD0 EXT1_I2C_SERCOM_PINMUX_PAD0
+#define AT30TSE_PINMUX_PAD1 EXT1_I2C_SERCOM_PINMUX_PAD1
 
-#endif /* CONF_QUICK_START_H_INCLUDED */
+#endif /* CONF_AT30TSE75X_H_INCLUDED */

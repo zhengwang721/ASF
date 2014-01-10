@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief TC Quick Start configuration for SAM D21 Xplained Pro
+ * \brief AT25DFx configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,16 +41,33 @@
  *
  */
 
-#ifndef CONF_QUICK_START_H_INCLUDED
-#define CONF_QUICK_START_H_INCLUDED
+#ifndef CONF_AT25DFX_H_INCLUDED
+#define CONF_AT25DFX_H_INCLUDED
 
-//! [definition_pwm]
-/** PWM module to use */
-#define PWM_MODULE      EXT1_PWM_MODULE
-/** PWM output pin */
-#define PWM_OUT_PIN     EXT1_PWM_0_PIN
-/** PWM output pin mux */
-#define PWM_OUT_MUX     EXT1_PWM_0_MUX
-//! [definition_pwm]
+#include "at25dfx.h"
+#include <board.h>
 
-#endif /* CONF_QUICK_START_H_INCLUDED */
+//! Select the SPI module AT25DFx is connected to
+#define AT25DFX_SPI                 EXT3_SPI_MODULE
+
+/* Number of AT25DFx components to manage */
+#define AT25DFX_MEM_CNT           1
+
+/* Memory ID of AT25DFx components to manage */
+#define AT25DFX_MEM_ID            0 
+
+/** AT25DFx device type */
+#define AT25DFX_MEM_TYPE          AT25DFX_081A
+
+#define AT25DFX_SPI_PINMUX_SETTING  EXT3_SPI_SERCOM_MUX_SETTING
+#define AT25DFX_SPI_PINMUX_PAD0     EXT3_SPI_SERCOM_PINMUX_PAD0
+#define AT25DFX_SPI_PINMUX_PAD1     PINMUX_UNUSED
+#define AT25DFX_SPI_PINMUX_PAD2     EXT3_SPI_SERCOM_PINMUX_PAD2
+#define AT25DFX_SPI_PINMUX_PAD3     EXT3_SPI_SERCOM_PINMUX_PAD3
+
+#define AT25DFX_CS                  EXT3_PIN_8 
+
+//! SPI master speed in Hz.
+#define AT25DFX_CLOCK_SPEED         120000
+
+#endif  /* CONF_AT25DFX_H_INCLUDED */

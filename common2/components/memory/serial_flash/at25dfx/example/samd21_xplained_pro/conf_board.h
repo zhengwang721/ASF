@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief TC Quick Start configuration for SAM D21 Xplained Pro
+ * \brief SAM D21 configuration for the AT25DFX example
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,17 +40,11 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifndef CONF_QUICK_START_H_INCLUDED
-#define CONF_QUICK_START_H_INCLUDED
+#include "samd21_xplained_pro.h"
 
-//! [definition_pwm]
-/** PWM module to use */
-#define PWM_MODULE      EXT1_PWM_MODULE
-/** PWM output pin */
-#define PWM_OUT_PIN     EXT1_PWM_0_PIN
-/** PWM output pin mux */
-#define PWM_OUT_MUX     EXT1_PWM_0_MUX
-//! [definition_pwm]
+#define SERIAL_FLASH_LED_EXAMPLE_0 LED0_PIN
 
-#endif /* CONF_QUICK_START_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief TC Quick Start configuration for SAM D21 Xplained Pro
+ * \brief AT25DFx configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,16 +41,31 @@
  *
  */
 
-#ifndef CONF_QUICK_START_H_INCLUDED
-#define CONF_QUICK_START_H_INCLUDED
+#ifndef CONF_AT25DFX_H_INCLUDED
+#define CONF_AT25DFX_H_INCLUDED
 
-//! [definition_pwm]
-/** PWM module to use */
-#define PWM_MODULE      EXT1_PWM_MODULE
-/** PWM output pin */
-#define PWM_OUT_PIN     EXT1_PWM_0_PIN
-/** PWM output pin mux */
-#define PWM_OUT_MUX     EXT1_PWM_0_MUX
-//! [definition_pwm]
+#include "at25dfx.h"
+#include "board.h"
 
-#endif /* CONF_QUICK_START_H_INCLUDED */
+/* Connect AT25DFx driver to SPI master service */
+#define AT25DFX_USES_SPI_MASTER_SERVICE
+
+/* Chip select used by AT25DFx components on the SPI module instance */
+#define AT25DFX_CS      3
+
+/* Number of AT25DFx components to manage */
+#define AT25DFX_MEM_CNT             1
+
+/* Memory ID of AT25DFx components to manage */
+#define AT25DFX_MEM_ID             1
+
+/* SPI master speed in Hz */
+#define AT25DFX_SPI_MASTER_SPEED    12000000
+
+/* Number of bits in each SPI transfer */
+#define AT25DFX_SPI_BITS            8
+
+/** AT25DFx device type */
+#define AT25DFX_MEM_TYPE AT25DFX_321
+
+#endif  /* CONF_AT25DFX_H_INCLUDED */
