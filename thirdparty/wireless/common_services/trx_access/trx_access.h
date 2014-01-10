@@ -288,7 +288,9 @@ extern "C" {
      * @brief Initializes the SPI interface for communication with the transceiver
      */
     void trx_spi_init(void);
-
+    /**
+     * @brief Resets the TRX radio
+     */
 	void HAL_PhyReset(void);
 	//! @}
 #ifdef __cplusplus

@@ -66,9 +66,30 @@
 
 /*****************************************************************************
 *****************************************************************************/
+/**
+ * @brief Initialize the HAL module
+ * This function initialize HAL timer unit
+ */
 void HAL_Init(void);
+
+/**
+ * @brief Initialize the HAL module
+ * This function initialize HAL timer unit
+ * @param[in] us time value
+ */
 void HAL_Delay(uint32_t us);
+
+/**
+ * @brief Triggers the sleep functionality
+ * This function is called to trigger the TRX sleep for the specified interval
+ * @param[in] interval time value 
+ */
 void HAL_Sleep(uint32_t interval);
+
+/**
+ * @brief Hardware timer expiry callback
+ * This function is called after hardware timer is expired.
+ */
 void hw_expiry_cb(void);
 
 /* Enables the global interrupt */
