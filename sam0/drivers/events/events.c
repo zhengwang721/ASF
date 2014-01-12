@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x Event System Controller Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,6 @@
  * \asf_license_stop
  *
  */
-
 #include <events.h>
 #include <system.h>
 #include <system_interrupt.h>
