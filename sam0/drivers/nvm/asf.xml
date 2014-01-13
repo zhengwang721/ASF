@@ -32,7 +32,7 @@
 
 		<build type="doxygen-entry-point" value="asfdoc_sam0_nvm_group"/>
 		<build type="doxygen-example-path" value="quick_start_basic"/>
-		<build type="doxygen-quick-start" value="asfdoc_samd20_nvm_exqsg"/>
+		<build type="doxygen-quick-start" value="asfdoc_sam0_nvm_exqsg"/>
 
 		<device-support value="samd20"/>
 		<device-support value="samd21"/>
