@@ -3,7 +3,7 @@
  *
  * \brief SAM D20 DAC Sound Player Application
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \license
  * \asf_license_start
