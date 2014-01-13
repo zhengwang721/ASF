@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x ADC with DMA quick start
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -144,7 +144,7 @@ void configure_dac_channel(void)
 }
 //! [configure_dac_channel]
 
-// [config_dma_resource]
+//! [config_dma_resource]
 void configure_dma_resource(struct dma_resource *resource)
 {
 //! [setup_dma_config]
@@ -165,9 +165,9 @@ void configure_dma_resource(struct dma_resource *resource)
 	dma_allocate(resource, &config);
 //! [allocate_dma_resource]
 }
-// [config_dma_resource]
+//! [config_dma_resource]
 
-// [setup_dma_transfer_descriptor]
+//! [setup_dma_transfer_descriptor]
 void setup_transfer_descriptor(DmacDescriptor *descriptor)
 {
 //! [setup_dma_desc_config]
@@ -192,7 +192,7 @@ void setup_transfer_descriptor(DmacDescriptor *descriptor)
 	dma_descriptor_create(descriptor, &descriptor_config);
 //! [setup_dma_desc_config_create]
 }
-// [setup_dma_transfer_descriptor]
+//! [setup_dma_transfer_descriptor]
 //! [setup]
 
 //! [main]
@@ -237,7 +237,7 @@ int main(void)
 
 //! [endless_loop]
 	while (true) {
-//! [endless_loop]
 	}
+//! [endless_loop]
 //! [main]
 }

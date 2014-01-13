@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x TC Driver Quick Start
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,10 @@
  */
 
 /**
- * \page asfdoc_sam0_tc_dma_use_case Quick Start Guide for TC with DMA
+ * \page asfdoc_sam0_tc_dma_use_case Quick Start Guide for Using DMA with TC
+ *
+ * The supported device list:
+ *    - SAMD21
  *
  * In this use case, the TC will be used to generate a PWM signal. Here
  * the pulse width is set to one quarter of the period. Once the counter value matches
@@ -77,7 +80,6 @@
  * \subsection asfdoc_sam0_tc_dma_use_case_setup_code Code
  * Add to the main application source file, before any functions:
  * \snippet conf_quick_start.h definition_pwm
- * \snippet conf_quick_start.h definition_peripheral_trigger
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_dma.c module_inst
@@ -131,7 +133,7 @@
  *
  * -# Create a DMA resource configuration structure, which can be filled out to
  *    adjust the configuration of a single DMA transfer.
- *  \snippet qs_dma_basic.c dma_setup_1
+ *  \snippet qs_tc_dma.c dma_setup_1
  *
  * -# Initialize the DMA resource configuration struct with the module's
  *    default values.
@@ -139,14 +141,14 @@
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_dma_basic.c dma_setup_2
+ *  \snippet qs_tc_dma.c dma_setup_2
  *
  * -# Allocate a DMA resource with the configurations.
- *  \snippet qs_dma_basic.c dma_setup_3
+ *  \snippet qs_tc_dma.c dma_setup_3
  *
  * -# Create a DMA transfer descriptor configuration structure, which can be
  * filled out to adjust the configuration of a single DMA transfer.
- *  \snippet qs_dma_basic.c dma_setup_4
+ *  \snippet qs_tc_dma.c dma_setup_4
  *
  * -# Initialize the DMA transfer descriptor configuration struct with the module's
  *    default values.
@@ -154,27 +156,27 @@
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_dma_basic.c dma_setup_5
+ *  \snippet qs_tc_dma.c dma_setup_5
  *
  * -# Set the specific parameters for a DMA transfer with transfer size, source
  *    address, destination address.
- *  \snippet qs_dma_basic.c dma_setup_6
+ *  \snippet qs_tc_dma.c dma_setup_6
  *
  * -# Create the DMA transfer descriptor.
- *  \snippet qs_dma_basic.c dma_setup_7
+ *  \snippet qs_tc_dma.c dma_setup_7
  *
  * -# Add the DMA transfer descriptor to the allocated DMA resource.
  *
- *  \snippet qs_dma_basic.c add_descriptor_to_resource
+ *  \snippet qs_tc_dma.c add_descriptor_to_resource
  *
  * -# Register a callback to indicate transfer status.
- *  \snippet qs_dma_basic.c setup_callback_register
+ *  \snippet qs_tc_dma.c setup_callback_register
  *
  * -# The transfer done flag is set in the registered callback function.
- *  \snippet qs_dma_basic.c _transfer_done
+ *  \snippet qs_tc_dma.c _transfer_done
  *
  * -# Setup memory content for validate transfer.
- *  \snippet qs_dma_basic.c setup_source_memory_content
+ *  \snippet qs_tc_dma.c setup_source_memory_content
  *
  * \section asfdoc_sam0_tc_dma_use_case_main Use Case
  *
