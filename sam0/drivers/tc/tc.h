@@ -56,6 +56,7 @@
  * \if TC_CALLBACK_MODE
  *  - Callback APIs
  * \endif
+ *  - DMA APIs
  *
  *
  * The following peripherals are used by this module:
@@ -775,7 +776,7 @@ struct tc_config {
 	/** Specifies the PWM channel for TC. */
 	struct tc_pwm_channel pwm_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 
-	/** This setting determines what size counter is used. */
+	/** Access the different counter size settings though this configuration member. */
 	union {
 		/** Struct for 8-bit specific timer configuration. */
 		struct tc_8bit_config counter_8_bit;
@@ -1339,6 +1340,10 @@ static inline void tc_clear_status(
  *		<th>Acronym</th>
  *		<th>Description</th>
  *	</tr>
+  *	<tr>
+ *		<td>DMA</td>
+ *		<td>Direct Memory Access</td>
+ *	</tr>
  *	<tr>
  *		<td>TC</td>
  *		<td>Timer Counter</td>
@@ -1379,7 +1384,7 @@ static inline void tc_clear_status(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Optimized implementation and added SAMD21 support</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>Added automatic digital clock interface enable for the slave TC
@@ -1417,7 +1422,7 @@ static inline void tc_clear_status(
  *	<tr>
  *		<td>C</td>
  *		<td>01/2014</td>
- *		<td>Optimized implementation and added SAMD21 support</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>
