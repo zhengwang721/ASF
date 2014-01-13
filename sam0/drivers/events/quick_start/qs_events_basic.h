@@ -62,6 +62,10 @@
  * Copy-paste the following setup code to your user application:
  * \snippet qs_events_basic.c setup
  *
+ *
+ * Create an event resource struct and add to user application (typically the start of \c main()):
+ * \snippet qs_events_basic.c events_resource_struct
+ *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_events_basic.c setup_init
  *

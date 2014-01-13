@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x TCC Driver Quick Start with DMA
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,10 @@
  */
 
 /**
- * \page asfdoc_sam0_tcc_dma_use_case Quick Start Guide for TCC - DMA
+ * \page asfdoc_sam0_tcc_dma_use_case Quick Start Guide for Using DMA with TCC
+ *
+ * The supported device list:
+ *    - SAMD21
  *
  * In this use case, the TCC will be used to generate a PWM signal. Here
  * the pulse width varies in following values through DMA transfer: one quater

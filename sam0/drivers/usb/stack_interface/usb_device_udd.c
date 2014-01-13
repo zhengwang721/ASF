@@ -59,7 +59,7 @@
 
 // Check USB device configuration
 #ifdef USB_DEVICE_HS_SUPPORT
-#  error The High speed mode is not supported on this part, please remove USB_DEVICE_HS_SUPPORT in conf_usb_device.h
+#  error The High speed mode is not supported on this part, please remove USB_DEVICE_HS_SUPPORT in conf_usb.h
 #endif
 
 #if !(SAMD21)
@@ -298,6 +298,12 @@ void udd_ep_abort(udd_ep_id_t ep)
 	}
 }
 
+bool udd_is_high_speed(void)
+{
+#if SAMD21
+	return false;
+#endif
+}
 
 uint16_t udd_get_frame_number(void)
 {
@@ -858,7 +864,6 @@ void udd_enable(void)
 		return;
 	}
 #endif
-
 	struct usb_config config_usb;
 
 	/* USB Module configuration */

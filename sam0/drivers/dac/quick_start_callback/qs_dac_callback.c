@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x DAC Callback Quick Start
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,9 +42,9 @@
  */
 #include <asf.h>
 
-// [transfer_length]
+//! [transfer_length]
 #define DATA_LENGTH (16)
-// [transfer_length]
+//! [transfer_length]
 
 void dac_callback(uint8_t channel);
 void configure_dac(void);
@@ -64,13 +64,13 @@ struct rtc_module rtc_instance;
 	struct events_resource event_dac;
 //! [event_res]
 
-// [transfer_done_flag]
+//! [transfer_done_flag]
 static volatile bool transfer_is_done = false;
-// [transfer_done_flag]
+//! [transfer_done_flag]
 
-// [dac_data]
+//! [dac_data]
 static uint16_t dac_data[DATA_LENGTH];
-// [dac_data]
+//! [dac_data]
 
 //! [setup_event_resource]
 void configure_event_resource(void)
@@ -88,7 +88,7 @@ void configure_event_resource(void)
 	event_config.edge_detect    = EVENTS_EDGE_DETECT_RISING;
 	event_config.path           = EVENTS_PATH_ASYNCHRONOUS;
 	event_config.clock_source   = GCLK_GENERATOR_0;
-//! [set_event_config]
+//! [set_event_modify_conf]
 
 //! [allocate_event_resource]
 	events_allocate(&event_dac, &event_config);
@@ -209,8 +209,9 @@ void configure_dac_channel(void)
 
 int main(void)
 {
+//! [data_length_var]
 	uint32_t i;
-
+//! [data_length_var]
 	system_init();
 
 //! [setup_init]
@@ -251,22 +252,22 @@ int main(void)
 //! [setup_dac_data]
 //! [setup_init]
 
-//! [main]
+//! [main_start]
 //! [main_write]
 	dac_chan_write_buffer_job(&dac_instance, DAC_CHANNEL_0,
 			dac_data, DATA_LENGTH);
 //! [main_write]
 
-	//! [main_check_transfer_done]
+//! [main_check_transfer_done]
 	while (!transfer_is_done) {
 		/* Wait for transfer done */
 	}
-	/* ! [main_check_transfer_done] */
+//! [main_check_transfer_done]
 
 //! [main_loop]
 	while (1) {
 	}
 //! [main_loop]
-//! [main]
+//! [main_start]
 }
 
