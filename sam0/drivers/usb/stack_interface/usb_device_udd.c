@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USB Device wrapper layer for compliance with common driver UHD
+ * \brief USB Device wrapper layer for compliance with common driver UDD
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -49,6 +49,13 @@
 #include "usb.h"
 #include "usb_dual.h"
 #include "sleepmgr.h"
+
+/**
+ * \ingroup usb_device_group
+ * \defgroup usb_device_udd_group USB Device Driver Implement (UDD)
+ * USB low-level driver for USB device mode
+ * @{
+ */
 
 // Check USB device configuration
 #ifdef USB_DEVICE_HS_SUPPORT
@@ -882,3 +889,5 @@ void udd_disable(void)
 	usb_dual_disable();
 	cpu_irq_restore(flags);
 }
+
+/** @} */
