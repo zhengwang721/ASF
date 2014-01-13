@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x TC - Timer Counter Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -413,17 +413,26 @@
 
 #if !defined(__DOXYGEN__)
 #if SAMD20
+#  define TC_INSTANCE_OFFSET 0
+#endif
+#if SAMD21
+#  define TC_INSTANCE_OFFSET 3
+#endif
+
+#if SAMD20
 #  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC0_CC8_NUM
 #else
 #  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC3_CC8_NUM
    /* Same number for 8-, 16- and 32-bit TC and all TC instances */
 #endif
+
 /** TC Instance MAX ID Number */
 #if SAMD20E || SAMD21G || SAMD21E
 #define TC_INST_MAX_ID  5
 #else 
 #define TC_INST_MAX_ID  7
 #endif
+
 #endif
 
 #if TC_ASYNC == true
@@ -1388,6 +1397,7 @@ static inline void tc_clear_status(
  * \if TC_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_tc_callback_use_case
  * \endif
+ *  - \subpage asfdoc_sam0_tc_dma_use_case
  *
  * \page asfdoc_sam0_tc_document_revision_history Document Revision History
  *

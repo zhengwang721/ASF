@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x Quick Start Guide for Using SPI driver with DMA
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_sam0_sercom_spi_dma_use_case Quick Start Guide SERCOM SPI DMA
+ * \page asfdoc_sam0_sercom_spi_dma_use_case Quick Start Guide for Using DMA with SERCOM SPI
  *
  * The supported device list:
  *    - SAMD21
@@ -116,26 +116,26 @@
  *    \snippet qs_spi_dma_use.c dma_transfer_done_flag
  * -# Create buffer to store the data to be transferred
  *    \snippet qs_spi_dma_use.c spi_buffer
- *  -# Create SPI module configuration struct, which can be filled out to
+ * -# Create SPI module configuration struct, which can be filled out to
  *     adjust the configuration of a physical SPI peripheral.
  *     \snippet qs_spi_dma_use.c spi_master_config
  *     \snippet qs_spi_dma_use.c spi_slave_config
- *  -# Initialize the SPI configuration struct with the module's default values.
+ * -# Initialize the SPI configuration struct with the module's default values.
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
  *     \snippet qs_spi_dma_use.c spi_master_conf_defaults
  *     \snippet qs_spi_dma_use.c spi_slave_conf_defaults
- *  -# Alter the SPI settings to configure the physical pinout, baud rate and
+ * -# Alter the SPI settings to configure the physical pinout, baud rate and
  *     other relevant parameters.
  *     \snippet qs_spi_dma_use.c spi_master_mux_setting
  *     \snippet qs_spi_dma_use.c spi_slave_mux_setting
- *  -# Configure the SPI module with the desired settings, retrying while the
+ * -# Configure the SPI module with the desired settings, retrying while the
  *     driver is busy until the configuration is stressfully set.
  *     \snippet qs_spi_dma_use.c spi_master_init
  *     \snippet qs_spi_dma_use.c spi_slave_init
- *  -# Enable the SPI module.
+ * -# Enable the SPI module.
  *     \snippet qs_spi_dma_use.c spi_master_enable
  *     \snippet qs_spi_dma_use.c spi_slave_enable
  *

@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x Non-Volatile Memory driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -738,6 +738,9 @@ static inline enum nvm_error nvm_get_error(void)
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added support for SAMD21</td>
+ *	</tr>
+ *	<tr>
  *		<td>Added functions to read/write fuse settings</td>
  *	</tr>
  *	<tr>
@@ -771,6 +774,11 @@ static inline enum nvm_error nvm_get_error(void)
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>

@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x DMA System Driver Quick Start
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -115,10 +115,7 @@ static void setup_transfer_descriptor(DmacDescriptor *descriptor )
 
 int main(void)
 {
-//! [struct_dma_resource_example]
 	struct dma_resource example_resource;
-//! [struct_dma_resource_example]
-	
 	system_init();
 
 	//! [setup_init]
@@ -130,9 +127,9 @@ int main(void)
 	setup_transfer_descriptor(&example_descriptor);
 	//! [setup_transfer_descriptor]
 
-	//! [add_descriptor_to_resource]
+	//! [add_descriptor_to_dma_resource]
 	dma_add_descriptor(&example_resource, &example_descriptor);
-	//! [add_descriptor_to_resource]
+	//! [add_descriptor_to_dma_resource]
 
 	//! [setup_callback_register]
 	dma_register_callback(&example_resource, transfer_done,
@@ -148,8 +145,9 @@ int main(void)
 		source_memory[i] = i;
 	}
 	//! [setup_source_memory_content]
+
 	//! [setup_init]
-	
+
 	//! [main]
 	//! [main_1]
 	dma_start_transfer_job(&example_resource);

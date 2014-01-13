@@ -80,37 +80,37 @@ void ui_com_close(uint8_t port)
 
 void ui_com_rx_start(void)
 {
-	;
+
 }
 
 
 void ui_com_rx_stop(void)
 {
-	;
+
 }
 
 
 void ui_com_tx_start(void)
 {
-	;
+
 }
 
 
 void ui_com_tx_stop(void)
 {
-	;
+
 }
 
 
 void ui_com_error(void)
 {
-	;
+
 }
 
 
 void ui_com_overflow(void)
 {
-	;
+
 }
 
 void ui_process(uint16_t framenumber)
@@ -127,6 +127,7 @@ void ui_process(uint16_t framenumber)
  * \defgroup UI User Interface
  *
  * Human interface on SAMD21-XPlain:
+ * - SAMD21 USART used USART connected through EDBG CDC USART Port
  * - Led 0 blinks when USB is connected and active
  *
  */
