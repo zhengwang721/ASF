@@ -1045,6 +1045,7 @@ static inline void usart_disable_transceiver(
  * \if USART_CALLBACK_MODE
  * - \subpage asfdoc_sam0_sercom_usart_callback_use_case
  * \endif
+ * - \subpage asfdoc_sam0_sercom_usart_dma_use_case
  */
 
 /**
