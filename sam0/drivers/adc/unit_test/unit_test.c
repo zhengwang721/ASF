@@ -462,7 +462,7 @@ static void run_adc_average_mode_test(const struct test_case *test)
 	adc_start_conversion(&adc_inst);
 	while (adc_read(&adc_inst, &adc_result) != STATUS_OK) {
 	}
-#if (SAMD20)	
+#if (SAMD20)
 	/*
 	 * Errata 10530 for SAMD20: The automatic right shift of the result
 	 * when accumulating/averaging ADC samples does not work.

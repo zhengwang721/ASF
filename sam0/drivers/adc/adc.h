@@ -1679,6 +1679,10 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<td>MSB</td>
  *		<td>Most Significant Bit</td>
  *	</tr>
+ *	<tr>
+ *		<td>DMA</td>
+ *		<td>Direct Memory Access</td>
+ *	</tr>
  * </table>
  *
  *
