@@ -72,7 +72,7 @@
  * \section asfdoc_sam0_events_module_overview Module Overview
  *
  * Peripherals within the SAM D2x devices are capable of generating two types of
- * actions in response to given stimulus; they can set a register flag for later
+ * actions in response to given stimulus: they can set a register flag for later
  * intervention by the CPU (using interrupt or polling methods), or they can
  * generate event signals which can be internally routed directly to other
  * peripherals within the device. The use of events allows for direct actions
@@ -96,9 +96,9 @@
  * digraph overview {
  * rankdir=LR;
  * node [label="Source\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] src_peripheral;
- * node [label="Event\nResource a" shape=square style=""] event_gen0;
- * node [label="Event\nUser x" shape=square style=""] event_user0;
- * node [label="Event\nUser y" shape=square style=""] event_user1;
+ * node [label="Event\nResource A" shape=square style=""] event_gen0;
+ * node [label="Event\nUser X" shape=square style=""] event_user0;
+ * node [label="Event\nUser Y" shape=square style=""] event_user1;
  * node [label="Destination\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral0;
  * node [label="Destination\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral1;
  *
@@ -350,8 +350,10 @@ struct events_config {
 /**
  * \brief Event channel resource
  *
+ * Event resource structure.
  */
 struct events_resource {
+	/** Channel allocated for the event resource */
 	uint8_t channel;
 };
 
@@ -469,7 +471,7 @@ bool events_is_detected(struct events_resource *resource);
  *
  * \note This function will clear the event overrun detected interrupt flag
  *
- * \parm[in] resource Pointer to an \c events_resource struct
+ * \param[in] resource Pointer to an \c events_resource struct
  *
  * \return Status of the event overrun interrupt flag
  * \retval true  Event overrun has been detected
@@ -547,6 +549,9 @@ uint8_t events_get_free_channels(void);
  *     <th>Changelog</th>
  *   </tr>
  *   <tr>
+ *     <td>Update to support SAMD21</td>
+ *   </tr>
+ *   <tr>
  *     <td>Initial Release</td>
  *   </tr>
  * </table>
@@ -570,6 +575,11 @@ uint8_t events_get_free_channels(void);
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>D</td>
+ *		<td>01/2014</td>
+ *		<td>Update to support SAMD21 and corrected documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>

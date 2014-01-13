@@ -220,8 +220,6 @@ enum status_code events_trigger(struct events_resource *resource)
 
 	Assert(resource);
 
-	system_interrupt_enter_critical_section();
-
 	/* Because of indirect access the channel must be set first */
 	((uint8_t*)&EVSYS->CHANNEL)[0] = EVSYS_CHANNEL_CHANNEL(resource->channel);
 
@@ -235,6 +233,7 @@ enum status_code events_trigger(struct events_resource *resource)
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
 
+	system_interrupt_enter_critical_section();
 
 	/* The GCLKREQ bit has to be set while triggering the software event */
 	EVSYS->CTRL.reg = EVSYS_CTRL_GCLKREQ;
