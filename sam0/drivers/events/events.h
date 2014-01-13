@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x Event System Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -72,7 +72,7 @@
  * \section asfdoc_sam0_events_module_overview Module Overview
  *
  * Peripherals within the SAM D2x devices are capable of generating two types of
- * actions in response to given stimulus; they can set a register flag for later
+ * actions in response to given stimulus: they can set a register flag for later
  * intervention by the CPU (using interrupt or polling methods), or they can
  * generate event signals which can be internally routed directly to other
  * peripherals within the device. The use of events allows for direct actions
@@ -96,9 +96,9 @@
  * digraph overview {
  * rankdir=LR;
  * node [label="Source\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] src_peripheral;
- * node [label="Event\nResource a" shape=square style=""] event_gen0;
- * node [label="Event\nUser x" shape=square style=""] event_user0;
- * node [label="Event\nUser y" shape=square style=""] event_user1;
+ * node [label="Event\nResource A" shape=square style=""] event_gen0;
+ * node [label="Event\nUser X" shape=square style=""] event_user0;
+ * node [label="Event\nUser Y" shape=square style=""] event_user1;
  * node [label="Destination\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral0;
  * node [label="Destination\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral1;
  *
@@ -352,6 +352,7 @@ struct events_config {
  *
  */
 struct events_resource {
+	/** Channel allocated for the event resource */
 	uint8_t channel;
 };
 
