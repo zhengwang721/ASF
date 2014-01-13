@@ -161,7 +161,7 @@
  *
  * \note The connection of events between modules requires the use of the
  *       \ref asfdoc_sam0_events_group "SAM D2x Event System Driver (EVENTS)"
- *       to route output event of one module to the the input event of another.
+ *       to route output event of one module to the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
  *
