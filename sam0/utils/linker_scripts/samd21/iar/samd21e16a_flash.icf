@@ -3,7 +3,7 @@
  *
  * \brief Linker script for running in internal FLASH on the SAMD21E16A
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
