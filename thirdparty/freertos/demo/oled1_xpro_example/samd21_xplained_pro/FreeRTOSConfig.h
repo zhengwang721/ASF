@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Default configurations for sysfont
+ * \brief FreeRTOS configurations
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
