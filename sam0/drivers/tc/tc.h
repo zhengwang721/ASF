@@ -56,7 +56,6 @@
  * \if TC_CALLBACK_MODE
  *  - Callback APIs
  * \endif
- *  - DMA APIs
  *
  *
  * The following peripherals are used by this module:
