@@ -50,6 +50,13 @@
 #include "usb.h"
 #include "usb_dual.h"
 
+/**
+ * \ingroup usb_host_group
+ * \defgroup usb_host_uhd_group USB Host Driver Implement (UHD)
+ * USB low-level driver for USB Host mode
+ * @{
+ */
+
 /* Function declare */
 static void _uhd_ctrl_phase_setup(void);
 static void _uhd_ctrl_phase_data_in_start(void);
@@ -89,7 +96,7 @@ static void _uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
 # error The current USB Host Driver supports only SAMD21
 #endif
 
-/** Notify that USB Host is enter in suspemd LPM state */
+/** Notify that USB Host is enter in suspend LPM state */
 static bool uhd_lpm_suspend = false;
 
 /** Store the callback to be called at the end of reset signal */
@@ -128,7 +135,7 @@ static void uhd_sleep_mode(enum uhd_usb_state_enum new_state)
 		/* In suspend state, the SLEEPMGR_STANDBY level is authorized
 		 * even if ID Pin, Vbus... pins are managed through IO.
 		 * When a ID disconnection or Vbus low event occurs,
-		 * the asynchrone USB wakeup occurs.
+		 * the asynchronous USB wakeup occurs.
 		 */
 		SLEEPMGR_ACTIVE,     // UHD_STATE_SUSPEND
 		SLEEPMGR_ACTIVE,     // UHD_STATE_SUSPEND_LPM
@@ -245,7 +252,7 @@ typedef struct {
 	uint8_t *buf_internal;
 	/** Size of buffer to send or fill */
 	iram_size_t buf_size;
-	/** Total number of transfered data on endpoint */
+	/** Total number of transferred data on endpoint */
 	iram_size_t nb_trans;
 	/** Callback to call at the end of transfer */
 	uhd_callback_trans_t call_end;
@@ -333,6 +340,8 @@ static void _uhd_ctrl_phase_data_in_start(void)
 /**
  * \internal
  * \brief Manages the DATA IN phase on control endpoint
+ *
+ * \param nb_byte_received Number of bytes received
  */
 static void _uhd_ctrl_phase_data_in(uint16_t nb_byte_received)
 {
@@ -463,8 +472,9 @@ static void _uhd_ctrl_phase_zlp_out(void)
 
 /**
  * \internal
- * \brief Call the callback linked to control request
- * and start the next request from the queue.
+ * \brief Call the callback linked to control request and start the next request
+ *
+ * \param status Request finish status passed to callback
  */
 static void _uhd_ctrl_request_end(uhd_trans_status_t status)
 {
@@ -515,6 +525,8 @@ static void _uhd_ctrl_request_end(uhd_trans_status_t status)
  * - Timeouts on bulk/interrupt/isochronous endpoint transfers
  * - UHC user notification
  * - SOF user notification
+ *
+ * \param module_inst Pointer to USB module instance
  */
 static void _uhd_sof_interrupt(struct usb_module *module_inst)
 {
@@ -544,7 +556,7 @@ static void _uhd_sof_interrupt(struct usb_module *module_inst)
 	/* Manage a delay to exit of suspend */
 	if (uhd_resume_start) {
 		if (--uhd_resume_start == 0) {
-			/* Restore pipes unfreezed */
+			/* Restore pipes unfrozen */
 			for (uint8_t pipe = 1; pipe < USB_PIPE_NUM; pipe++) {
 				if ((uhd_pipes_unfreeze >> pipe) & 0x01) {
 					usb_host_pipe_unfreeze(&dev, pipe);
@@ -588,6 +600,8 @@ static void _uhd_sof_interrupt(struct usb_module *module_inst)
 /**
  * \internal
  * \brief Manages bus reset interrupt
+ *
+ * \param module_inst Pointer to USB module instance
  */
 static void _uhd_reset(struct usb_module *module_inst)
 {
@@ -599,12 +613,14 @@ static void _uhd_reset(struct usb_module *module_inst)
 /**
  * \internal
  * \brief Manages wakeup interrupt
+ *
+ * \param module_inst Pointer to USB module instance
  */
 static void _uhd_wakeup(struct usb_module *module_inst)
 {
 	/* Here the wakeup interrupt has been used to detect:
-	 * - connection with an asynchrone interrupt
-	 * - down/upstream resume with an asynchrone interrupt
+	 * - connection with an asynchronous interrupt
+	 * - down/upstream resume with an asynchronous interrupt
 	 */
 	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_WAKEUP);
 	uhd_sleep_mode(UHD_STATE_IDLE);
@@ -614,6 +630,8 @@ static void _uhd_wakeup(struct usb_module *module_inst)
 /**
  * \internal
  * \brief Manages downstream resume interrupt
+ *
+ * \param module_inst Pointer to USB module instance
  */
 static void _uhd_downstream_resume(struct usb_module *module_inst)
 {
@@ -634,6 +652,8 @@ static void _uhd_downstream_resume(struct usb_module *module_inst)
 /**
  * \internal
  * \brief Manages upstream resume interrupt
+ *
+ * \param module_inst Pointer to USB module instance
  */
 static void _uhd_upstream_resume(struct usb_module *module_inst)
 {
@@ -656,6 +676,8 @@ static void _uhd_upstream_resume(struct usb_module *module_inst)
 /**
  * \internal
  * \brief Manages ram access error interrupt
+ *
+ * \param module_inst Pointer to USB module instance
  */
 static void _uhd_ram_error(struct usb_module *module_inst)
 {
@@ -668,6 +690,8 @@ static void _uhd_ram_error(struct usb_module *module_inst)
 /**
  * \internal
  * \brief Manages connection interrupt
+ *
+ * \param module_inst Pointer to USB module instance
  */
 static void _uhd_connect(struct usb_module *module_inst)
 {
@@ -685,6 +709,8 @@ static void _uhd_connect(struct usb_module *module_inst)
 /**
  * \internal
  * \brief Manages disconnection interrupt
+ *
+ * \param module_inst Pointer to USB module instance
  */
 static void _uhd_disconnect(struct usb_module *module_inst)
 {
@@ -695,7 +721,7 @@ static void _uhd_disconnect(struct usb_module *module_inst)
 	 * in case of disconnection during suspend mode
 	 */
 	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_WAKEUP);
-	/* Enable asynchrone wakeup interrupt to allow a CPU wakeup
+	/* Enable asynchronous wakeup interrupt to allow a CPU wakeup
 	 * when a connection occurs.
 	 */
 	usb_host_enable_callback(&dev, USB_HOST_CALLBACK_CONNECT);
@@ -713,6 +739,7 @@ static void _uhd_disconnect(struct usb_module *module_inst)
  * @{
  */
 
+ /** Check if USB VBus is available */
 # define is_usb_vbus_high()           port_pin_get_input_level(USB_VBUS_PIN)
 
 /**
@@ -981,6 +1008,9 @@ bool uhd_setup_request(
 /**
  * \internal
  * \brief Manages endpoint 0 transfer complete interrupt
+ *
+ * \param module_inst Pointer to USB module instance
+ * \param pointer     Pointer to USB pipe transfer callback status parameters
  */
 static void _uhd_ep0_transfer_complete(struct usb_module *module_inst, void *pointer)
 {
@@ -1013,6 +1043,9 @@ static void _uhd_ep0_transfer_complete(struct usb_module *module_inst, void *poi
 /**
  * \internal
  * \brief Manages endpoint 0 error interrupt
+ *
+ * \param module_inst Pointer to USB module instance
+ * \param pointer     Pointer to USB pipe transfer callback status parameters
  */
 static void _uhd_ep0_error(struct usb_module *module_inst, void *pointer)
 {
@@ -1047,6 +1080,9 @@ static void _uhd_ep0_error(struct usb_module *module_inst, void *pointer)
 /**
  * \internal
  * \brief Manages endpoint 0 setup interrupt
+ *
+ * \param module_inst Pointer to USB module instance
+ * \param null        Not used
  */
 static void _uhd_ep0_setup(struct usb_module *module_inst, void *null)
 {
@@ -1072,6 +1108,9 @@ static void _uhd_ep0_setup(struct usb_module *module_inst, void *null)
 /**
  * \internal
  * \brief Manages endpoint 0 stall interrupt
+ *
+ * \param module_inst Pointer to USB module instance
+ * \param null        Not used
  */
 static void _uhd_ep0_stall(struct usb_module *module_inst, void *null)
 {
@@ -1085,8 +1124,8 @@ static void _uhd_ep0_stall(struct usb_module *module_inst, void *null)
  * \internal
  * \brief Returns the pipe number matching a USB endpoint
  *
- * \param add   USB address
- * \param endp  Endpoint number
+ * \param add   USB device address
+ * \param endp  Endpoint Address
  *
  * \return Pipe number
  */
@@ -1107,7 +1146,8 @@ static uint8_t _uhd_get_pipe(usb_add_t add, usb_ep_t endp)
  * \internal
  * \brief Computes and starts the next transfer on a pipe
  *
- * \param pipe  Pipe number
+ * \param module_inst Pointer to USB module instance
+ * \param pointer     Pointer to USB pipe transfer callback status parameters
  */
 static void _uhd_pipe_trans_complete(struct usb_module *module_inst, void *pointer)
 {
@@ -1137,7 +1177,7 @@ static void _uhd_pipe_trans_complete(struct usb_module *module_inst, void *point
 		/* Transfer complete on OUT */
 		nb_trans = p_callback_para->transfered_size;
 
-		/* Update number of transfered data */
+		/* Update number of transferred data */
 		ptr_job->nb_trans += nb_trans;
 
 		/* Need to send other data */
@@ -1278,7 +1318,10 @@ static void _uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status)
 
 /**
  * \internal
- * \brief Manages endpoint  error interrupt
+ * \brief Manages pipe endpoint error callback
+ *
+ * \param module_inst Pointer to USB module instance
+ * \param pointer     Pointer to USB pipe transfer callback status parameters
  */
 static void _uhd_ep_error(struct usb_module *module_inst, void *pointer)
 {
@@ -1309,7 +1352,10 @@ static void _uhd_ep_error(struct usb_module *module_inst, void *pointer)
 
 /**
  * \internal
- * \brief Manages endpoint stall interrupt
+ * \brief Manages pipe endpoint stall interrupt
+ *
+ * \param module_inst Pointer to USB module instance
+ * \param pointer     Pointer to USB pipe transfer callback status parameters
  */
 static void _uhd_ep_stall(struct usb_module *module_inst, void *pointer)
 {
@@ -1492,3 +1538,5 @@ void uhd_ep_abort(usb_add_t add, usb_ep_t endp)
 		_uhd_ep_abort_pipe(usb_pipe, UHD_TRANS_ABORTED);
 	}
 }
+
+/** @} */

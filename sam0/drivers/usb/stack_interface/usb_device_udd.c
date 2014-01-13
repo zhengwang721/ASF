@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USB Device wrapper layer for compliance with common driver UHD
+ * \brief USB Device wrapper layer for compliance with common driver UDD
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -43,14 +43,21 @@
 #include <string.h>
 #include <stdlib.h>
 
-/* Get USB host configuration */
+/* Get USB device configuration */
 #include "conf_usb.h"
 #include "udd.h"
 #include "usb.h"
 #include "usb_dual.h"
 #include "sleepmgr.h"
 
-// Check USB host configuration
+/**
+ * \ingroup usb_device_group
+ * \defgroup usb_device_udd_group USB Device Driver Implement (UDD)
+ * USB low-level driver for USB device mode
+ * @{
+ */
+
+// Check USB device configuration
 #ifdef USB_DEVICE_HS_SUPPORT
 #  error The High speed mode is not supported on this part, please remove USB_DEVICE_HS_SUPPORT in conf_usb_device.h
 #endif
@@ -877,3 +884,5 @@ void udd_disable(void)
 	usb_dual_disable();
 	cpu_irq_restore(flags);
 }
+
+/** @} */

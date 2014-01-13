@@ -58,9 +58,7 @@
  */
 #define  USB_EP_DIR_OUT       0x00
 
-/**
- * \brief Define macros for USB device that is not realized in head file
- */
+/* Define macros for USB device that is not realized in head file */
 #define USB_DEVICE_EPINTENCLR_TRCPT0        USB_DEVICE_EPINTENCLR_TRCPT(1)
 #define USB_DEVICE_EPINTENCLR_TRCPT1        USB_DEVICE_EPINTENCLR_TRCPT(2)
 #define USB_DEVICE_EPINTENCLR_TRFAIL0       USB_DEVICE_EPINTENCLR_TRFAIL(1)
@@ -88,7 +86,7 @@
 #define USB_DEVICE_EPSTATUSCLR_STALLRQ1     USB_DEVICE_EPSTATUSCLR_STALLRQ(2)
 
 /**
- * @brief USB SRAM data containing pipe descriptor table
+ * \name USB SRAM data containing pipe descriptor table
  * The content of the USB SRAM can be :
  * - modified by USB hardware interface to update pipe status.
  *   Thereby, it is read by software.
@@ -98,6 +96,15 @@
  *
  * @{
  */
+COMPILER_PACK_SET(1)
+COMPILER_WORD_ALIGNED
+union {
+	UsbDeviceDescriptor usb_endpoint_table[USB_EPT_NUM];
+	UsbHostDescriptor usb_pipe_table[USB_PIPE_NUM];
+} usb_descriptor_table;
+COMPILER_PACK_RESET()
+/** @} */
+ 
 /* Local instance */
 static struct usb_module *_usb_instances;
 
@@ -126,14 +133,6 @@ static const uint8_t _usb_endpoint_irq_bits[USB_DEVICE_EP_CALLBACK_N] = {
 
 /** Bit mask for pipe job busy status */
 uint32_t host_pipe_job_busy_status = 0;
-
-COMPILER_PACK_SET(1)
-COMPILER_WORD_ALIGNED
-union {
-	UsbDeviceDescriptor usb_endpoint_table[USB_EPT_NUM];
-	UsbHostDescriptor usb_pipe_table[USB_PIPE_NUM];
-} usb_descriptor_table;
-COMPILER_PACK_RESET()
 
 /**
  * \brief Registers a USB host callback
@@ -199,7 +198,7 @@ enum status_code usb_host_unregister_callback(struct usb_module *module_inst,
  * \brief Enables USB host callback generation for a given type.
  *
  * Enables asynchronous callbacks for a given logical type.
- * This must be called before usb host generate callback events.
+ * This must be called before USB host generate callback events.
  *
  * \param[in]     module_inst   Pointer to USB software instance struct
  * \param[in]     callback_type Callback type given by an enum
@@ -335,7 +334,7 @@ void usb_host_pipe_get_config_defaults(struct usb_host_pipe_config *ep_config)
  * \param[in] ep_config      Configuration settings for the pipe
  *
  * \return Status of the host pipe configuration operation.
- * \retval STATUS_OK    The host pipe was configurated successfully.
+ * \retval STATUS_OK    The host pipe was configured successfully.
  */
 enum status_code usb_host_pipe_set_config(struct usb_module *module_inst, uint8_t pipe_num,
 		struct usb_host_pipe_config *ep_config)
@@ -501,7 +500,7 @@ enum status_code usb_host_pipe_unregister_callback(
  * \brief Enables USB host pipe callback generation for a given type.
  *
  * Enables asynchronous callbacks for a given logical type.
- * This must be called before usb host pipe generate callback events.
+ * This must be called before USB host pipe generate callback events.
  *
  * \param[in]     module_inst   Pointer to USB software instance struct
  * \param[in]     pipe_num      Pipe to configure
@@ -592,7 +591,7 @@ enum status_code usb_host_pipe_disable_callback(
  * \return Status of the setup operation.
  * \retval STATUS_OK    The setup job was set successfully.
  * \retval STATUS_BUSY    The pipe is busy.
- * \retval STATUS_ERR_NOT_INITIALIZED    The pipe has not been configurated.
+ * \retval STATUS_ERR_NOT_INITIALIZED    The pipe has not been configured.
  */
 enum status_code usb_host_pipe_setup_job(struct usb_module *module_inst,
 		uint8_t pipe_num, uint8_t *buf)
@@ -632,7 +631,7 @@ enum status_code usb_host_pipe_setup_job(struct usb_module *module_inst,
 /**
  * \brief USB host pipe read job.
  *
- * USB host pipe read job by set and start an in transaction tansfer.
+ * USB host pipe read job by set and start an in transaction transfer.
  *
  * \param[in]     module_inst   Pointer to USB software instance struct
  * \param[in]     pipe_num      Pipe to configure
@@ -643,7 +642,7 @@ enum status_code usb_host_pipe_setup_job(struct usb_module *module_inst,
  * \return Status of the setting operation.
  * \retval STATUS_OK    The read job was set successfully.
  * \retval STATUS_BUSY    The pipe is busy.
- * \retval STATUS_ERR_NOT_INITIALIZED    The pipe has not been configurated.
+ * \retval STATUS_ERR_NOT_INITIALIZED    The pipe has not been configured.
  */
 enum status_code usb_host_pipe_read_job(struct usb_module *module_inst,
 		uint8_t pipe_num, uint8_t *buf, uint32_t buf_size)
@@ -684,7 +683,7 @@ enum status_code usb_host_pipe_read_job(struct usb_module *module_inst,
 /**
  * \brief USB host pipe write job.
  *
- * USB host pipe write job by set and start an out transaction tansfer.
+ * USB host pipe write job by set and start an out transaction transfer.
  *
  * \param[in]     module_inst   Pointer to USB software instance struct
  * \param[in]     pipe_num      Pipe to configure
@@ -695,7 +694,7 @@ enum status_code usb_host_pipe_read_job(struct usb_module *module_inst,
  * \return Status of the setting operation.
  * \retval STATUS_OK    The write job was set successfully.
  * \retval STATUS_BUSY    The pipe is busy.
- * \retval STATUS_ERR_NOT_INITIALIZED    The pipe has not been configurated.
+ * \retval STATUS_ERR_NOT_INITIALIZED    The pipe has not been configured.
  */
 enum status_code usb_host_pipe_write_job(struct usb_module *module_inst,
 		uint8_t pipe_num, uint8_t *buf, uint32_t buf_size)
@@ -743,7 +742,7 @@ enum status_code usb_host_pipe_write_job(struct usb_module *module_inst,
  *
  * \return Status of the setting operation.
  * \retval STATUS_OK    The abort job was set successfully.
- * \retval STATUS_ERR_NOT_INITIALIZED    The pipe has not been configurated.
+ * \retval STATUS_ERR_NOT_INITIALIZED    The pipe has not been configured.
  */
 enum status_code usb_host_pipe_abort_job(struct usb_module *module_inst, uint8_t pipe_num)
 {
@@ -965,13 +964,11 @@ static void _usb_host_interrupt_handler(void)
 }
 
 /**
- * \brief USB host pipe auto ZLP setting.
- *
- * USB host pipe auto ZLP setting.
+ * \brief Sets USB host pipe auto ZLP setting value
  *
  * \param[in]     module_inst   Pointer to USB software instance struct
  * \param[in]     pipe_num      Pipe to configure
- * \param[in]     value         Auto ZLP setting value
+ * \param[in]     value         Auto ZLP setting value, \c true to enable
  *
  */
 void usb_host_pipe_set_auto_zlp(struct usb_module *module_inst, uint8_t pipe_num, bool value)
@@ -1045,7 +1042,7 @@ enum status_code usb_device_unregister_callback(struct usb_module *module_inst,
  * \brief Enables USB device callback generation for a given type.
  *
  * Enables asynchronous callbacks for a given logical type.
- * This must be called before usb host generate callback events.
+ * This must be called before USB host generate callback events.
  *
  * \param[in]     module_inst   Pointer to USB software instance struct
  * \param[in]     callback_type Callback type given by an enum
@@ -1136,7 +1133,7 @@ enum status_code usb_device_endpoint_register_callback(
 /**
  * \brief Unregisters a USB device endpoint callback
  *
- * Unregisters an asynchronous callback implemented by the user. Removing it
+ * Unregisters an callback implemented by the user. Removing it
  * from the internal callback registration table.
  *
  * \param[in]     module_inst   Pointer to USB software instance struct
@@ -1166,8 +1163,8 @@ enum status_code usb_device_endpoint_unregister_callback(
 /**
  * \brief Enables USB device endpoint callback generation for a given type.
  *
- * Enables asynchronous callbacks for a given logical type.
- * This must be called before usb host pipe generate callback events.
+ * Enables callbacks for a given logical type.
+ * This must be called before USB host pipe generate callback events.
  *
  * \param[in]     module_inst   Pointer to USB software instance struct
  * \param[in]     ep            Endpoint to configure
@@ -1228,7 +1225,7 @@ enum status_code usb_device_endpoint_enable_callback(
 /**
  * \brief Disables USB device endpoint callback generation for a given type.
  *
- * Disables asynchronous callbacks for a given logical type.
+ * Disables callbacks for a given logical type.
  *
  * \param[in]     module_inst   Pointer to USB software instance struct
  * \param[in]     ep            Endpoint to configure
@@ -1324,8 +1321,9 @@ void usb_device_endpoint_get_config_defaults(struct usb_device_endpoint_config *
  * \param[in] module_inst    Pointer to USB software instance struct
  * \param[in] ep_config      Configuration settings for the endpoint
  *
- * \return Status of the device endpoint configuration operation.
- * \retval STATUS_OK    The device endpoint was configured successfully.
+ * \return Status of the device endpoint configuration operation
+ * \retval STATUS_OK         The device endpoint was configured successfully
+ * \retval STATUS_ERR_DENIED The endpoint address is already configured
  */
 enum status_code usb_device_endpoint_set_config(struct usb_module *module_inst,
 		struct usb_device_endpoint_config *ep_config)
@@ -1432,10 +1430,12 @@ enum status_code usb_device_endpoint_set_config(struct usb_module *module_inst,
 }
 
 /**
- * \brief current endpoint is configured
+ * \brief Check if current endpoint is configured
+ *
  * \param module_inst   Pointer to USB software instance struct
- * \param endpoint address (direction & number)
- * \return null
+ * \param ep            Endpoint address (direction & number)
+ *
+ * \return \c true if endpoint is configured and ready to use
  */
 bool usb_device_endpoint_is_configured(struct usb_module *module_inst, uint8_t ep)
 {
@@ -1452,10 +1452,10 @@ bool usb_device_endpoint_is_configured(struct usb_module *module_inst, uint8_t e
 
 
 /**
- * \brief current endpoint abort
- * \param module_inst   Pointer to USB software instance struct
- * \param endpoint address (direction & number)
- * \return null
+ * \brief Abort ongoing job on the endpoint
+ *
+ * \param module_inst Pointer to USB software instance struct
+ * \param ep          Endpoint address
  */
 void usb_device_endpoint_abort_job(struct usb_module *module_inst, uint8_t ep)
 {
@@ -1475,11 +1475,12 @@ void usb_device_endpoint_abort_job(struct usb_module *module_inst, uint8_t ep)
 }
 
 /**
- * \brief Is endpoint halted
+ * \brief Check if endpoint is halted
+ *
  * \param module_inst Pointer to USB software instance struct
- * \param endpoint address (direction & number)
- * \param endpoint enable flag
- * \return true or false
+ * \param ep          Endpoint address
+ *
+ * \return \c true if the endpoint is halted
  */
 bool usb_device_endpoint_is_halted(struct usb_module *module_inst, uint8_t ep)
 {
@@ -1493,10 +1494,10 @@ bool usb_device_endpoint_is_halted(struct usb_module *module_inst, uint8_t ep)
 }
 
 /**
- * \brief set endpoint halt
+ * \brief Halt the endpoint (send STALL)
+ *
  * \param module_inst Pointer to USB software instance struct
- * \param endpoint address (direction & number)
- * \return null
+ * \param ep          Endpoint address
  */
 void usb_device_endpoint_set_halt(struct usb_module *module_inst, uint8_t ep)
 {
@@ -1511,10 +1512,10 @@ void usb_device_endpoint_set_halt(struct usb_module *module_inst, uint8_t ep)
 }
 
 /**
- * \brief clear endpoint from halted
+ * \brief Clear endpoint halt state
+ *
  * \param module_inst Pointer to USB software instance struct
- * \param endpoint address (direction & number)
- * \return null
+ * \param ep          Endpoint address
  */
 void usb_device_endpoint_clear_halt(struct usb_module *module_inst, uint8_t ep)
 {
@@ -1544,13 +1545,16 @@ void usb_device_endpoint_clear_halt(struct usb_module *module_inst, uint8_t ep)
 }
 
 /**
- * \brief endpoint number n write job
+ * \brief Start write buffer job on a endpoint
  *
- * \param module_inst pointer to USB device module instance
- * \param ep_num number of endpoint
- * \param pbuf pointer to buffer
- * \param buf_size size of buffer
- * \return status code
+ * \param module_inst Pointer to USB module instance
+ * \param ep_num      Endpoint number
+ * \param pbuf        Pointer to buffer
+ * \param buf_size    Size of buffer
+ *
+ * \return Status of procedure
+ * \retval STATUS_OK Job started successfully
+ * \retval STATUS_ERR_DENIED Endpoint is not ready
  */
 enum status_code usb_device_endpoint_write_buffer_job(struct usb_module *module_inst,uint8_t ep_num,
 		uint8_t* pbuf, uint32_t buf_size)
@@ -1577,13 +1581,16 @@ enum status_code usb_device_endpoint_write_buffer_job(struct usb_module *module_
 }
 
 /**
- * \brief endpoint number n read job
+ * \brief Start read buffer job on a endpoint
  *
- * \param module_inst pointer to USB device module instance
- * \param ep_num number of endpoint
- * \param pbuf pointer to buffer
- * \param buf_size size of buffer
- * \return status code
+ * \param module_inst Pointer to USB module instance
+ * \param ep_num      Endpoint number
+ * \param pbuf        Pointer to buffer
+ * \param buf_size    Size of buffer
+ *
+ * \return Status of procedure
+ * \retval STATUS_OK Job started successfully
+ * \retval STATUS_ERR_DENIED Endpoint is not ready
  */
 enum status_code usb_device_endpoint_read_buffer_job(struct usb_module *module_inst,uint8_t ep_num,
 		uint8_t* pbuf, uint32_t buf_size)
@@ -1609,11 +1616,14 @@ enum status_code usb_device_endpoint_read_buffer_job(struct usb_module *module_i
 }
 
 /**
- * \brief endpoint number n setup job
+ * \brief Start setup packet read job on a endpoint
  *
- * \param module_inst pointer to USB device module instance
- * \param pbuf pointer to buffer
- * \return status code
+ * \param module_inst Pointer to USB device module instance
+ * \param pbuf        Pointer to buffer
+ *
+ * \return Status of procedure
+ * \retval STATUS_OK Job started successfully
+ * \retval STATUS_ERR_DENIED Endpoint is not ready
  */
 enum status_code usb_device_endpoint_setup_buffer_job(struct usb_module *module_inst,
 		uint8_t* pbuf)
@@ -1747,7 +1757,7 @@ static void _usb_device_interrupt_handler(void)
 }
 
 /**
- * \brief USB module enable
+ * \brief Enable the USB module peripheral
  *
  * \param module_inst pointer to USB module instance
  */
@@ -1761,7 +1771,7 @@ void usb_enable(struct usb_module *module_inst)
 }
 
 /**
- * \brief USB module disable
+ * \brief Disable the USB module peripheral
  *
  * \param module_inst pointer to USB module instance
  */
@@ -1789,8 +1799,6 @@ void USB_Handler(void)
 /**
  * \brief Get the default USB module settings
  *
- * \param module_inst pointer to USB module instance
- *
  * \param[out] module_config  Configuration structure to initialize to default values
  */
 void usb_get_config_defaults(struct usb_config *module_config)
@@ -1806,7 +1814,7 @@ void usb_get_config_defaults(struct usb_config *module_config)
 	module_config->speed_mode = USB_SPEED_FULL;
 }
 
-/** PAD values */
+/* PAD values */
 #define NVM_USB_PAD_TRANSN_POS  45
 #define NVM_USB_PAD_TRANSN_SIZE 5
 #define NVM_USB_PAD_TRANSP_POS  50
@@ -1815,14 +1823,14 @@ void usb_get_config_defaults(struct usb_config *module_config)
 #define NVM_USB_PAD_TRIM_SIZE 3
 
 /**
- * \brief Initializes a hardware USB module instance.
+ * \brief Initializes USB module instance
  *
  * Enables the clock and initializes the USB module, based on the given
  * configuration values.
  *
- * \param[in,out] module_inst  Pointer to the software module instance struct
- * \param[in]     hw           Pointer to the USB hardware module
- * \param[in]     config       Pointer to the USB configuration options struct
+ * \param[in,out] module_inst   Pointer to the software module instance struct
+ * \param[in]     hw            Pointer to the USB hardware module
+ * \param[in]     module_config Pointer to the USB configuration options struct
  *
  * \return Status of the initialization procedure.
  *
