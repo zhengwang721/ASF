@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USB Device wrapper layer for compliance with common driver UDD
+ * \brief USB Device wrapper layer for compliance with common driver UHD
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -49,13 +49,6 @@
 #include "usb.h"
 #include "usb_dual.h"
 #include "sleepmgr.h"
-
-/**
- * \ingroup usb_device_group
- * \defgroup usb_device_udd_group USB Device Driver Implement (UDD)
- * USB low-level driver for USB device mode
- * @{
- */
 
 // Check USB device configuration
 #ifdef USB_DEVICE_HS_SUPPORT
@@ -256,7 +249,7 @@ static void udd_ep_trans_out_next(void* pointer)
 			usb_device_endpoint_read_buffer_job(&usb_device,ep_num,&ptr_job->buf[ptr_job->nb_trans],next_trans);
 		}
 		return;
-	}
+	} 
 
 	// Job complete then call callback
 	ptr_job->busy = false;
@@ -499,28 +492,63 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t b
 	ptr_job->b_use_out_cache_buffer = false;
 
 	// Initialize value to simulate a empty transfer
-	if (ep & USB_EP_DIR_IN) {
-		if (STATUS_OK != usb_device_endpoint_write_buffer_job(&usb_device,ep_num,&ptr_job->buf[0],ptr_job->buf_size)) {
-			return false;
+	uint16_t next_trans;
+	
+	if (ep & USB_EP_DIR_IN) { 
+		if (0 != ptr_job->buf_size) {	
+			next_trans = ptr_job->buf_size;
+			if (UDD_ENDPOINT_MAX_TRANS < next_trans) {
+				next_trans = UDD_ENDPOINT_MAX_TRANS - (UDD_ENDPOINT_MAX_TRANS % ptr_job->ep_size);
+			}
+			ptr_job->b_shortpacket = ptr_job->b_shortpacket && (0 == (next_trans % ptr_job->ep_size));
+		} else if (true == ptr_job->b_shortpacket) {
+			ptr_job->b_shortpacket = false; // avoid to send zlp again
+			next_trans = 0;
 		} else {
+			ptr_job->busy = false;
+			if (NULL != ptr_job->call_trans) {
+				ptr_job->call_trans(UDD_EP_TRANSFER_OK, 0, ep);
+			}
 			return true;
 		}
-	} else {
-		uint16_t next_trans;
-		next_trans = ptr_job->buf_size - (ptr_job->buf_size % ptr_job->ep_size);
-		if (next_trans < ptr_job->ep_size) {
-			ptr_job->b_use_out_cache_buffer = true;
-			if (STATUS_OK != usb_device_endpoint_read_buffer_job(&usb_device,ep_num,udd_ep_out_cache_buffer[ep_num - 1],ptr_job->ep_size)) {
+		
+		if (STATUS_OK != usb_device_endpoint_write_buffer_job(&usb_device,ep_num,&ptr_job->buf[0],next_trans)) {
 				return false;
-			} else {
+		} else {
 				return true;
+		}
+		
+	} else {
+		if (0 != ptr_job->buf_size) {
+			next_trans = ptr_job->buf_size;
+			if (UDD_ENDPOINT_MAX_TRANS < next_trans) {
+				// The USB hardware support a maximum transfer size
+				// of UDD_ENDPOINT_MAX_TRANS Bytes
+				next_trans = UDD_ENDPOINT_MAX_TRANS - (UDD_ENDPOINT_MAX_TRANS % ptr_job->ep_size);
+			} else {
+				next_trans -= next_trans % ptr_job->ep_size;
+			}
+
+			if (next_trans < ptr_job->ep_size) {
+				ptr_job->b_use_out_cache_buffer = true;
+				if (STATUS_OK != usb_device_endpoint_read_buffer_job(&usb_device,ep_num,udd_ep_out_cache_buffer[ep_num - 1],ptr_job->ep_size)) {
+					return false;
+				} else {
+					return true;
+				}
+			} else {
+				if (STATUS_OK != usb_device_endpoint_read_buffer_job(&usb_device,ep_num,&ptr_job->buf[0],next_trans)) {
+					return false;
+				} else {
+					return true;
+				}
 			}
 		} else {
-			if (STATUS_OK != usb_device_endpoint_read_buffer_job(&usb_device,ep_num,&ptr_job->buf[0],next_trans)) {
-				return false;
-			} else {
-				return true;
+			ptr_job->busy = false;
+			if (NULL != ptr_job->call_trans) {
+				ptr_job->call_trans(UDD_EP_TRANSFER_OK, 0, ep);
 			}
+			return true;
 		}
 	}
 }
@@ -889,5 +917,3 @@ void udd_disable(void)
 	usb_dual_disable();
 	cpu_irq_restore(flags);
 }
-
-/** @} */
