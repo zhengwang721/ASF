@@ -47,8 +47,8 @@
  * The supported device list:
  *    - SAMD21
  *
- *This use case has the following dependencies:
- *  - \ref asfdoc_sam0_dma_group "Direct Memory Access Driver"
+ * This use case has the following dependencies:
+ *    - \ref asfdoc_sam0_dma_group "Direct Memory Access Driver"
  *
  * In this use case, the TC will be used to generate a PWM signal. Here
  * the pulse width is set to one quarter of the period. Once the counter value matches
