@@ -59,7 +59,7 @@ COMPILER_ALIGNED(16) DmacDescriptor rx_dma_descriptor;
 //! [rx_variables]
 
 //! [tx_variables]
-uint16_t tx_values[4] = {0xF87F, 0x803F, 0, 0};
+uint16_t tx_values[4] = {0xF87F, 0x901F, 0, 0};
 //! [tx_dma_resource]
 struct dma_resource tx_dma_resource;
 //! [tx_dma_resource]
@@ -214,7 +214,8 @@ static void _configure_i2s(void)
 	//! [setup_clock_unit_change_pins]
 
 	//! [setup_clock_unit_set_config]
-	i2s_clock_unit_init(&i2s_instance, I2S_CLOCK_UNIT_0, &config_clock_unit);
+	i2s_clock_unit_set_config(&i2s_instance, I2S_CLOCK_UNIT_0,
+			&config_clock_unit);
 	//! [setup_clock_unit_set_config]
 
 	//! [setup_serializer_config]
@@ -237,7 +238,8 @@ static void _configure_i2s(void)
 	//! [setup_serializer_change_config_pin_tx]
 
 	//! [setup_serializer_set_config_tx]
-	i2s_serializer_init(&i2s_instance, I2S_SERIALIZER_0, &config_serializer);
+	i2s_serializer_set_config(&i2s_instance, I2S_SERIALIZER_0,
+			&config_serializer);
 	//! [setup_serializer_set_config_tx]
 
 	//! [setup_serializer_change_config_rx]
@@ -251,7 +253,8 @@ static void _configure_i2s(void)
 	//! [setup_serializer_change_config_pin_rx]
 
 	//! [setup_serializer_set_config_rx]
-	i2s_serializer_init(&i2s_instance, I2S_SERIALIZER_1, &config_serializer);
+	i2s_serializer_set_config(&i2s_instance, I2S_SERIALIZER_1,
+			&config_serializer);
 	//! [setup_serializer_set_config_rx]
 
 	//! [setup_dma]
@@ -261,9 +264,9 @@ static void _configure_i2s(void)
 
 	//! [setup_enable]
 	i2s_enable(&i2s_instance);
+	i2s_clock_unit_enable(&i2s_instance, I2S_CLOCK_UNIT_0);
 	i2s_serializer_enable(&i2s_instance, I2S_SERIALIZER_1);
 	i2s_serializer_enable(&i2s_instance, I2S_SERIALIZER_0);
-	i2s_clock_unit_enable(&i2s_instance, I2S_CLOCK_UNIT_0);
 	//! [setup_enable]
 }
 //! [setup]

@@ -112,7 +112,7 @@ enum status_code i2s_init(
 
 
 /**
- * \brief Initializes specified I2S clock unit
+ * \brief Configure specified I2S clock unit
  *
  * Enables the clock and initialize the clock unit, based on the given
  * configurations.
@@ -122,16 +122,16 @@ enum status_code i2s_init(
  * \param[in]     config       Pointer to the I2S clock unit configuration
  *                             options struct
  *
- * \return Status of the initialization procedure.
+ * \return Status of the configuration procedure.
  *
  * \retval STATUS_OK              The module was initialized successfully
  * \retval STATUS_BUSY            Hardware module was busy when the
- *                                initialization procedure was attempted
+ *                                configuration procedure was attempted
  * \retval STATUS_ERR_DENIED      Hardware module was already enabled
  * \retval STATUS_ERR_INVALID_ARG Invalid divider value or
  *                                MCK direction setting conflict
  */
-enum status_code i2s_clock_unit_init(
+enum status_code i2s_clock_unit_set_config(
 		struct i2s_module *const module_inst,
 		const enum i2s_clock_unit clock_unit,
 		const struct i2s_clock_unit_config *config)
@@ -214,20 +214,14 @@ enum status_code i2s_clock_unit_init(
 	system_pinmux_get_config_defaults(&pin_config);
 	if (config->mck_pin.enable) {
 		pin_config.mux_position = config->mck_pin.mux;
-		pin_config.direction = config->clock.mck_src ?
-				SYSTEM_PINMUX_PIN_DIR_INPUT : SYSTEM_PINMUX_PIN_DIR_OUTPUT;
 		system_pinmux_pin_set_config(config->mck_pin.gpio, &pin_config);
 	}
 	if (config->sck_pin.enable) {
 		pin_config.mux_position = config->sck_pin.mux;
-		pin_config.direction = config->clock.sck_src ?
-				SYSTEM_PINMUX_PIN_DIR_INPUT : SYSTEM_PINMUX_PIN_DIR_OUTPUT;
 		system_pinmux_pin_set_config(config->sck_pin.gpio, &pin_config);
 	}
 	if (config->fs_pin.enable) {
 		pin_config.mux_position = config->fs_pin.mux;
-		pin_config.direction = config->frame.frame_sync.source ?
-				SYSTEM_PINMUX_PIN_DIR_INPUT : SYSTEM_PINMUX_PIN_DIR_OUTPUT;
 		system_pinmux_pin_set_config(config->fs_pin.gpio, &pin_config);
 	}
 
@@ -236,7 +230,7 @@ enum status_code i2s_clock_unit_init(
 
 
 /**
- * \brief Initializes specified I2S serializer
+ * \brief Configure specified I2S serializer
  *
  * Enables the clock and initialize the serializer, based on the given
  * configurations.
@@ -246,14 +240,14 @@ enum status_code i2s_clock_unit_init(
  * \param[in]     config       Pointer to the I2S serializer configuration
  *                             options struct
  *
- * \return Status of the initialization procedure.
+ * \return Status of the configuration procedure.
  *
  * \retval STATUS_OK           The module was initialized successfully
  * \retval STATUS_BUSY         Hardware module was busy when the
- *                             initialization procedure was attempted
+ *                             configuration procedure was attempted
  * \retval STATUS_ERR_DENIED   Hardware module was already enabled
  */
-enum status_code i2s_serializer_init(
+enum status_code i2s_serializer_set_config(
 		struct i2s_module *const module_inst,
 		const enum i2s_serializer serializer,
 		const struct i2s_serializer_config *config)
@@ -291,8 +285,8 @@ enum status_code i2s_serializer_init(
 			(config->disable_data_slot[1] ? I2S_SERCTRL_SLOTDIS1 : 0) |
 			(config->disable_data_slot[0] ? I2S_SERCTRL_SLOTDIS0 : 0) |
 			(config->transfer_lsb_first ? I2S_SERCTRL_BITREV : 0) |
-			(config->data_word_adjust_left ? I2S_SERCTRL_WORDADJ : 0) |
-			(config->data_slot_adjust_left ? I2S_SERCTRL_SLOTADJ : 0) |
+			(config->data_adjust_left_in_word ? I2S_SERCTRL_WORDADJ : 0) |
+			(config->data_adjust_left_in_slot ? I2S_SERCTRL_SLOTADJ : 0) |
 			(config->data_padding ? I2S_SERCTRL_TXSAME : 0);
 
 	if (config->clock_unit < I2S_CLOCK_UNIT_N) {
@@ -315,8 +309,6 @@ enum status_code i2s_serializer_init(
 	system_pinmux_get_config_defaults(&pin_config);
 	if (config->data_pin.enable) {
 		pin_config.mux_position = config->data_pin.mux;
-		pin_config.direction = (config->mode == I2S_SERIALIZER_TRANSMIT) ?
-				SYSTEM_PINMUX_PIN_DIR_OUTPUT : SYSTEM_PINMUX_PIN_DIR_INPUT;
 		system_pinmux_pin_set_config(config->data_pin.gpio, &pin_config);
 	}
 
@@ -366,10 +358,12 @@ uint32_t i2s_get_status(
 	if (intflag & I2S_INTFLAG_TXUR1) {
 		status |= I2S_STATUS_TRANSMIT_UNDERRUN(1);
 	}
-	if (intflag & I2S_INTFLAG_TXRDY0) {
+	if ((intflag & I2S_INTFLAG_TXRDY0) &&
+		!module_inst->hw->SYNCBUSY.bit.DATA0) {
 		status |= I2S_STATUS_TRANSMIT_READY(0);
 	}
-	if (intflag & I2S_INTFLAG_TXRDY1) {
+	if ((intflag & I2S_INTFLAG_TXRDY1) &&
+		!module_inst->hw->SYNCBUSY.bit.DATA1) {
 		status |= I2S_STATUS_TRANSMIT_READY(1);
 	}
 	if (intflag & I2S_INTFLAG_RXOR0) {

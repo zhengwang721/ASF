@@ -95,7 +95,8 @@ static void _configure_i2s(void)
 	//! [setup_clock_unit_change_pins]
 
 	//! [setup_clock_unit_set_config]
-	i2s_clock_unit_init(&i2s_instance, I2S_CLOCK_UNIT_0, &config_clock_unit);
+	i2s_clock_unit_set_config(&i2s_instance, I2S_CLOCK_UNIT_0,
+			&config_clock_unit);
 	//! [setup_clock_unit_set_config]
 
 	//! [setup_serializer_config]
@@ -118,13 +119,14 @@ static void _configure_i2s(void)
 	//! [setup_serializer_change_config_pin_tx]
 
 	//! [setup_serializer_set_config_tx]
-	i2s_serializer_init(&i2s_instance, I2S_SERIALIZER_0, &config_serializer);
+	i2s_serializer_set_config(&i2s_instance, I2S_SERIALIZER_0,
+			&config_serializer);
 	//! [setup_serializer_set_config_tx]
 
 	//! [setup_enable]
 	i2s_enable(&i2s_instance);
-	i2s_serializer_enable(&i2s_instance, I2S_SERIALIZER_0);
 	i2s_clock_unit_enable(&i2s_instance, I2S_CLOCK_UNIT_0);
+	i2s_serializer_enable(&i2s_instance, I2S_SERIALIZER_0);
 	//! [setup_enable]
 }
 //! [setup]
@@ -142,7 +144,7 @@ int main(void)
 	while (true) {
 		/* Infinite loop */
 		i2s_serializer_write_wait(&i2s_instance, I2S_SERIALIZER_0, 0xF87F);
-		i2s_serializer_write_wait(&i2s_instance, I2S_SERIALIZER_0, 0x803F);
+		i2s_serializer_write_wait(&i2s_instance, I2S_SERIALIZER_0, 0x901F);
 		i2s_serializer_write_wait(&i2s_instance, I2S_SERIALIZER_0, 0);
 		i2s_serializer_write_wait(&i2s_instance, I2S_SERIALIZER_0, 0);
 	}

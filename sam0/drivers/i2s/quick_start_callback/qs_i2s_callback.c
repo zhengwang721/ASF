@@ -51,7 +51,7 @@ struct i2s_module i2s_instance;
 //! [module_inst]
 
 //! [data_buffer]
-uint16_t data_buffer[4] = {0xF87F, 0x803F, 0, 0};
+uint16_t data_buffer[4] = {0xF87F, 0x901F, 0, 0};
 //! [data_buffer]
 
 //! [callback_funcs]
@@ -110,7 +110,8 @@ static void _configure_i2s(void)
 	//! [setup_clock_unit_change_pins]
 
 	//! [setup_clock_unit_set_config]
-	i2s_clock_unit_init(&i2s_instance, I2S_CLOCK_UNIT_0, &config_clock_unit);
+	i2s_clock_unit_set_config(&i2s_instance, I2S_CLOCK_UNIT_0,
+			&config_clock_unit);
 	//! [setup_clock_unit_set_config]
 
 	//! [setup_serializer_config]
@@ -133,13 +134,14 @@ static void _configure_i2s(void)
 	//! [setup_serializer_change_config_pin_tx]
 
 	//! [setup_serializer_set_config_tx]
-	i2s_serializer_init(&i2s_instance, I2S_SERIALIZER_0, &config_serializer);
+	i2s_serializer_set_config(&i2s_instance, I2S_SERIALIZER_0,
+			&config_serializer);
 	//! [setup_serializer_set_config_tx]
 
 	//! [setup_enable]
 	i2s_enable(&i2s_instance);
-	i2s_serializer_enable(&i2s_instance, I2S_SERIALIZER_0);
 	i2s_clock_unit_enable(&i2s_instance, I2S_CLOCK_UNIT_0);
+	i2s_serializer_enable(&i2s_instance, I2S_SERIALIZER_0);
 	//! [setup_enable]
 }
 

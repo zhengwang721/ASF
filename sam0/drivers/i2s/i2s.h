@@ -325,7 +325,8 @@ enum i2s_data_padding {
 	I2S_DATA_PADDING_SAME_AS_LAST,
 
 	I2S_DATA_PADDING_ZERO = I2S_DATA_PADDING_0,
-	I2S_DATA_PADDING_LAST = I2S_DATA_PADDING_SAME_AS_LAST
+	I2S_DATA_PADDING_LAST = I2S_DATA_PADDING_SAME_AS_LAST,
+	I2S_DATA_PADDING_SAME = I2S_DATA_PADDING_SAME_AS_LAST
 };
 
 /**
@@ -472,10 +473,12 @@ struct i2s_serializer_config {
 
 	/** Set to \c true to transfer LSB first, \c false to transfer MSB first */
 	bool transfer_lsb_first;
-	/** Data Word Formatting Adjust, set to \c true to adjust left in word */
-	bool data_word_adjust_left;
-	/** Data Slot Formatting Adjust, set to \c true to adjust left in slot */
-	bool data_slot_adjust_left;
+	/** Data Word Formatting Adjust,
+	 *  set to \c true to adjust bits in word to left */
+	bool data_adjust_left_in_word;
+	/** Data Slot Formatting Adjust,
+	 *  set to \c true to adjust words in slot to left */
+	bool data_adjust_left_in_slot;
 
 	/** Data Word Size */
 	enum i2s_data_size data_size;
@@ -702,7 +705,7 @@ static inline void i2s_clock_unit_get_config_defaults(
 	config->fs_pin.gpio = 0;
 }
 
-enum status_code i2s_clock_unit_init(
+enum status_code i2s_clock_unit_set_config(
 		struct i2s_module *const module_inst,
 		const enum i2s_clock_unit clock_unit,
 		const struct i2s_clock_unit_config *config);
@@ -786,8 +789,8 @@ static inline void i2s_clock_unit_disable(
  * - Does not extend mono data (left channel) to right channel
  * - None of the data slot is disabled
  * - MSB of I2S data is transferred first
- * - I2S data is adjusted left in word
- * - I2S data is adjusted left in slot
+ * - In data word data is adjusted right
+ * - In slot data word is adjusted left
  * - The data size is 16-bit width
  * - I2S will padd 0 to not defined bits
  * - I2S will padd 0 to not defined words
@@ -817,8 +820,8 @@ static inline void i2s_serializer_get_config_defaults(
 	config->disable_data_slot[7] = false;
 
 	config->transfer_lsb_first = false;
-	config->data_word_adjust_left = true;
-	config->data_slot_adjust_left = true;
+	config->data_adjust_left_in_word = false;
+	config->data_adjust_left_in_slot = true;
 
 	config->data_size = I2S_DATA_SIZE_16BIT;
 
@@ -838,7 +841,7 @@ static inline void i2s_serializer_get_config_defaults(
 	config->data_pin.mux = 0;
 }
 
-enum status_code i2s_serializer_init(
+enum status_code i2s_serializer_set_config(
 		struct i2s_module *const module_inst,
 		const enum i2s_serializer serializer,
 		const struct i2s_serializer_config *config);
