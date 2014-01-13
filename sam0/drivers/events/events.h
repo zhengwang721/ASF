@@ -350,6 +350,7 @@ struct events_config {
 /**
  * \brief Event channel resource
  *
+ * Event resource structure.
  */
 struct events_resource {
 	/** Channel allocated for the event resource */
@@ -470,7 +471,7 @@ bool events_is_detected(struct events_resource *resource);
  *
  * \note This function will clear the event overrun detected interrupt flag
  *
- * \parm[in] resource Pointer to an \c events_resource struct
+ * \param[in] resource Pointer to an \c events_resource struct
  *
  * \return Status of the event overrun interrupt flag
  * \retval true  Event overrun has been detected
@@ -548,6 +549,9 @@ uint8_t events_get_free_channels(void);
  *     <th>Changelog</th>
  *   </tr>
  *   <tr>
+ *     <td>Update to support SAMD21</td>
+ *   </tr>
+ *   <tr>
  *     <td>Initial Release</td>
  *   </tr>
  * </table>
@@ -571,6 +575,11 @@ uint8_t events_get_free_channels(void);
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>D</td>
+ *		<td>01/2014</td>
+ *		<td>Update to support SAMD21 and corrected documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>
