@@ -161,7 +161,7 @@
  *
  * \note The connection of events between modules requires the use of the
  *       \ref asfdoc_sam0_events_group "SAM D2x Event System Driver (EVENTS)"
- *       to route output event of one module to the the input event of another.
+ *       to route output event of one module to the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
  *
@@ -661,6 +661,9 @@ static inline void extint_nmi_clear_detected(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added support for SAMD21.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Updated interrupt handler to clear interrupt flag before calling
  *          callback function.</td>
  *	</tr>
@@ -695,6 +698,11 @@ static inline void extint_nmi_clear_detected(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>
