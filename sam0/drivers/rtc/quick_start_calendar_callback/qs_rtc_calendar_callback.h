@@ -64,6 +64,10 @@
  * \section asfdoc_sam0_rtc_calendar_callback_use_case_setup Setup
  *
  * \subsection asfdoc_sam0_rtc_calendar_callback_use_case_setup_code Code
+ * Create a rtc_module struct and add to the main application source file,
+ * outside of any functions:
+ * \snippet qs_rtc_calendar_callback.c rtc_module_instance
+ *
  * The following must be added to the user application:
  *
  * Function for setting up the module:

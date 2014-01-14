@@ -46,7 +46,9 @@ void rtc_match_callback(void);
 void configure_rtc_callbacks(void);
 void configure_rtc_calendar(void);
 
+//! [rtc_module_instance]
 struct rtc_module rtc_instance;
+//! [rtc_module_instance]
 
 //! [callback]
 void rtc_match_callback(void)

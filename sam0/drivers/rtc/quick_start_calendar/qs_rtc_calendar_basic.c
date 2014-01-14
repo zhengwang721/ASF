@@ -44,7 +44,9 @@
 
 void configure_rtc_calendar(void);
 
+//! [rtc_module_instance]
 struct rtc_module rtc_instance;
+//! [rtc_module_instance]
 
 //! [initiate]
 void configure_rtc_calendar(void)

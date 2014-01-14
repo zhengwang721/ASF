@@ -64,6 +64,10 @@
  * \section asfdoc_sam0_rtc_count_basic_use_case_setup Setup
  *
  * \subsection asfdoc_sam0_rtc_count_basic_use_case_init_code Initialization Code
+ * Create a rtc_module struct and add to the main application source file,
+ * outside of any functions:
+ * \snippet qs_rtc_count_basic.c rtc_module_instance
+ *
  * Copy-paste the following setup code to your applications \c main():
  * \snippet qs_rtc_count_basic.c initiate
  *
