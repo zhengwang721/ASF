@@ -783,11 +783,7 @@ struct tc_config {
 		struct tc_16bit_config counter_16_bit;
 		/** Struct for 32-bit specific timer configuration. */
 		struct tc_32bit_config counter_32_bit;
-	#if !defined(__DOXYGEN__)
 	};
-	#else
-	}size_specific;
-	#endif
 };
 
 #if TC_ASYNC == true
