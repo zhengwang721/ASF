@@ -255,7 +255,7 @@ static void udd_ep_trans_out_next(void* pointer)
 			usb_device_endpoint_read_buffer_job(&usb_device,ep_num,&ptr_job->buf[ptr_job->nb_trans],next_trans);
 		}
 		return;
-	} 
+	}
 
 	// Job complete then call callback
 	ptr_job->busy = false;
@@ -500,13 +500,15 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t b
 	// Initialize value to simulate a empty transfer
 	uint16_t next_trans;
 
-	if (ep & USB_EP_DIR_IN) { 
+	if (ep & USB_EP_DIR_IN) {
 		if (0 != ptr_job->buf_size) {
 			next_trans = ptr_job->buf_size;
 			if (UDD_ENDPOINT_MAX_TRANS < next_trans) {
-				next_trans = UDD_ENDPOINT_MAX_TRANS - (UDD_ENDPOINT_MAX_TRANS % ptr_job->ep_size);
+				next_trans = UDD_ENDPOINT_MAX_TRANS -
+						(UDD_ENDPOINT_MAX_TRANS % ptr_job->ep_size);
 			}
-			ptr_job->b_shortpacket = ptr_job->b_shortpacket && (0 == (next_trans % ptr_job->ep_size));
+			ptr_job->b_shortpacket = ptr_job->b_shortpacket &&
+					(0 == (next_trans % ptr_job->ep_size));
 		} else if (true == ptr_job->b_shortpacket) {
 			ptr_job->b_shortpacket = false; // avoid to send zlp again
 			next_trans = 0;
@@ -517,34 +519,30 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t b
 			}
 			return true;
 		}
-		if (STATUS_OK != usb_device_endpoint_write_buffer_job(&usb_device,ep_num,&ptr_job->buf[0],next_trans)) {
-				return false;
-		} else {
-				return true;
-		}
+		return (STATUS_OK ==
+				usb_device_endpoint_write_buffer_job(&usb_device,
+						ep_num,&ptr_job->buf[0],next_trans));
 	} else {
 		if (0 != ptr_job->buf_size) {
 			next_trans = ptr_job->buf_size;
 			if (UDD_ENDPOINT_MAX_TRANS < next_trans) {
 				// The USB hardware support a maximum transfer size
 				// of UDD_ENDPOINT_MAX_TRANS Bytes
-				next_trans = UDD_ENDPOINT_MAX_TRANS - (UDD_ENDPOINT_MAX_TRANS % ptr_job->ep_size);
+				next_trans = UDD_ENDPOINT_MAX_TRANS -
+						(UDD_ENDPOINT_MAX_TRANS % ptr_job->ep_size);
 			} else {
 				next_trans -= next_trans % ptr_job->ep_size;
 			}
 			if (next_trans < ptr_job->ep_size) {
 				ptr_job->b_use_out_cache_buffer = true;
-				if (STATUS_OK != usb_device_endpoint_read_buffer_job(&usb_device,ep_num,udd_ep_out_cache_buffer[ep_num - 1],ptr_job->ep_size)) {
-					return false;
-				} else {
-					return true;
-				}
+				return (STATUS_OK ==
+						usb_device_endpoint_read_buffer_job(&usb_device, ep_num,
+								udd_ep_out_cache_buffer[ep_num - 1],
+								ptr_job->ep_size));
 			} else {
-				if (STATUS_OK != usb_device_endpoint_read_buffer_job(&usb_device,ep_num,&ptr_job->buf[0],next_trans)) {
-					return false;
-				} else {
-					return true;
-				}
+				return (STATUS_OK ==
+						usb_device_endpoint_read_buffer_job(&usb_device, ep_num,
+								&ptr_job->buf[0],next_trans));
 			}
 		} else {
 			ptr_job->busy = false;
@@ -861,7 +859,6 @@ static void _usb_on_wakeup(struct usb_module *module_inst)
 void udd_detach(void)
 {
 	usb_device_detach(&usb_device);
-
 }
 
 void udd_attach(void)
