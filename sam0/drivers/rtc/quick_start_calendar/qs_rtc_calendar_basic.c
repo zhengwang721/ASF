@@ -44,7 +44,9 @@
 
 void configure_rtc_calendar(void);
 
+//! [rtc_module_instance]
 struct rtc_module rtc_instance;
+//! [rtc_module_instance]
 
 //! [initiate]
 void configure_rtc_calendar(void)
@@ -115,7 +117,6 @@ int main(void)
 //! [alarm_match_action]
 			/* Do something on RTC alarm match here */
 			port_pin_toggle_output_level(LED_0_PIN);
-			//port_pin_set_output_level(LED_0_PIN, false);
 //! [alarm_match_action]
 
 //! [clear_alarm_match]
