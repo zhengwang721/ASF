@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Quick Start Guide for Using ADC driver with DMA
+ * \brief SAM D2x Quick Start Guide for Using ADC/DAC driver with DMA
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -47,9 +47,10 @@
  * The supported device list:
  *    - SAMD21
  *
- * This quick start will convert an analog input signal from PA4 and the converted value
- * to DAC on PA2. The data between ADC and DAC with be transferred through DMA instead of
- * a CPU intervene.
+ * This quick start will convert an analog input signal from PA4 and output
+ * the converted value to DAC on PA2. The data between ADC and DAC with be
+ * transferred through DMA instead of a CPU intervene.
+ *
  * The ADC will be configured with the following settings:
  * - 1/2 VDDANA
  * - Div 16 clock prescaler
@@ -76,7 +77,7 @@
  * - Right adjust data
  * - The output buffer is disabled when the chip enters STANDBY sleep mode
  *
- * The DMA module is configured for:
+ * The DMA will be configured with the following settings:
  * - Move data from peripheral to peripheral
  * - Using ADC result ready trigger
  * - Using DMA priority level 0

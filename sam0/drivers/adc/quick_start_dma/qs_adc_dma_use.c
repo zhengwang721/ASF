@@ -195,7 +195,6 @@ void setup_transfer_descriptor(DmacDescriptor *descriptor)
 //! [setup_dma_transfer_descriptor]
 //! [setup]
 
-//! [main]
 int main(void)
 {
 	system_init();

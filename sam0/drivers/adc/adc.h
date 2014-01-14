@@ -1679,6 +1679,10 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<td>MSB</td>
  *		<td>Most Significant Bit</td>
  *	</tr>
+ *	<tr>
+ *		<td>DMA</td>
+ *		<td>Direct Memory Access</td>
+ *	</tr>
  * </table>
  *
  *
@@ -1701,6 +1705,9 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for SAMD21</td>
  *	</tr>
  *	<tr>
  *		<td>Added ADC calibration constant loading from the device signature
@@ -1738,7 +1745,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *	<tr>
  *		<td>C</td>
  *		<td>01/2014</td>
- *		<td>Added documentation of DAC callback and DAC DMA quick start guide.</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>
