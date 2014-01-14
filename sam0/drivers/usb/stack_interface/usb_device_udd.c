@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USB Device wrapper layer for compliance with common driver UHD
+ * \brief USB Device wrapper layer for compliance with common driver UDD
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -91,7 +91,7 @@ typedef struct {
 	uint8_t *buf;
 	//! Size of buffer to send or fill
 	iram_size_t buf_size;
-	//! Total number of data transfered on endpoint
+	//! Total number of data transferred on endpoint
 	iram_size_t nb_trans;
 	//! Endpoint size
 	uint16_t ep_size;
@@ -169,7 +169,7 @@ static void udd_ep_trans_in_next(void* pointer)
 	ep_num = ep & USB_EP_ADDR_MASK;
 
 	ep_size = ptr_job->ep_size;
-	// Update number of data transfered
+	// Update number of data transferred
 	nb_trans = ep_callback_para->sent_bytes;
 	ptr_job->nb_trans += nb_trans;
 
@@ -215,7 +215,7 @@ static void udd_ep_trans_out_next(void* pointer)
 	ep_num = ep & USB_EP_ADDR_MASK;
 
 	ep_size = ptr_job->ep_size;
-	// Update number of data transfered
+	// Update number of data transferred
 	nb_trans = ep_callback_para->received_bytes;
 
 	// Can be necessary to copy data receive from cache buffer to user buffer
@@ -223,7 +223,7 @@ static void udd_ep_trans_out_next(void* pointer)
 		memcpy(&ptr_job->buf[ptr_job->nb_trans], udd_ep_out_cache_buffer[ep_num - 1], ptr_job->buf_size % ep_size);
 	}
 
-	// Update number of data transfered
+	// Update number of data transferred
 	ptr_job->nb_trans += nb_trans;
 	if (ptr_job->nb_trans > ptr_job->buf_size) {
 		ptr_job->nb_trans = ptr_job->buf_size;
@@ -483,7 +483,7 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t b
 	ptr_job->busy = true;
 	cpu_irq_restore(flags);
 
-	// No job running, setup a new one.
+	// No job running, set up a new one.
 	ptr_job->buf = buf;
 	ptr_job->buf_size = buf_size;
 	ptr_job->nb_trans = 0;
@@ -493,9 +493,9 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t b
 
 	// Initialize value to simulate a empty transfer
 	uint16_t next_trans;
-	
+
 	if (ep & USB_EP_DIR_IN) { 
-		if (0 != ptr_job->buf_size) {	
+		if (0 != ptr_job->buf_size) {
 			next_trans = ptr_job->buf_size;
 			if (UDD_ENDPOINT_MAX_TRANS < next_trans) {
 				next_trans = UDD_ENDPOINT_MAX_TRANS - (UDD_ENDPOINT_MAX_TRANS % ptr_job->ep_size);
@@ -511,13 +511,11 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t b
 			}
 			return true;
 		}
-		
 		if (STATUS_OK != usb_device_endpoint_write_buffer_job(&usb_device,ep_num,&ptr_job->buf[0],next_trans)) {
 				return false;
 		} else {
 				return true;
 		}
-		
 	} else {
 		if (0 != ptr_job->buf_size) {
 			next_trans = ptr_job->buf_size;
@@ -528,7 +526,6 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t b
 			} else {
 				next_trans -= next_trans % ptr_job->ep_size;
 			}
-
 			if (next_trans < ptr_job->ep_size) {
 				ptr_job->b_use_out_cache_buffer = true;
 				if (STATUS_OK != usb_device_endpoint_read_buffer_job(&usb_device,ep_num,udd_ep_out_cache_buffer[ep_num - 1],ptr_job->ep_size)) {
@@ -603,7 +600,7 @@ static void udd_ctrl_in_sent(void)
 		// All content of current buffer payload are sent Update number of total data sending by previous payload buffer
 		udd_ctrl_prev_payload_nb_trans += udd_ctrl_payload_nb_trans;
 		if ((udd_g_ctrlreq.req.wLength == udd_ctrl_prev_payload_nb_trans) || b_shortpacket) {
-			// All data requested are transfered or a short packet has been sent, then it is the end of data phase.
+			// All data requested are transferred or a short packet has been sent, then it is the end of data phase.
 			// Generate an OUT ZLP for handshake phase.
 			udd_ep_control_state = UDD_EPCTRL_HANDSHAKE_WAIT_OUT_ZLP;
 			usb_device_endpoint_setup_buffer_job(&usb_device,udd_ctrl_buffer);
@@ -657,7 +654,7 @@ static void udd_ctrl_out_received(void* pointer)
 	if ((USB_DEVICE_EP_CTRL_SIZE != nb_data) || \
 	(udd_g_ctrlreq.req.wLength <= (udd_ctrl_prev_payload_nb_trans + udd_ctrl_payload_nb_trans))) {
 		// End of reception because it is a short packet
-		// or all data are transfered
+		// or all data are transferred
 
 		// Before send ZLP, call intermediate callback
 		// in case of data receive generate a stall
