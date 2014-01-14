@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x DAC Quick Start
+ * \brief SAM D20 Xplained PRO example configuration.
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,79 +40,22 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-void configure_dac(void);
-void configure_dac_channel(void);
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-//! [module_inst]
-struct dac_module dac_instance;
-//! [module_inst]
+/** Timer configured to source from the XOSC32K crystal generator */
+#define CONF_TC_XOSC32K               TC0
+/** Timer configured to source from the OSC32K oscillator generator */
+#define CONF_TC_OSC32K                TC2
+#define CONF_CLOCK_PIN_OUT            PIN_PA28H_GCLK_IO0
+#define CONF_CLOCK_PIN_MUX            MUX_PA28H_GCLK_IO0
+#define CONF_EVENT_GENERATOR_ID       EVSYS_ID_GEN_TC0_OVF
+#define CONF_EVENT_USED_ID            EVSYS_ID_USER_TC2_EVU
+/** The value should be 0 or 1 */
+#define CONF_FRANGE_CAL               0
+#define CONF_TEMP_CAL                 1
+/** The suggested value is 13 to 15 */
+#define CONF_CALIBRATION_RESOLUTION   13
 
-//! [setup]
-void configure_dac(void)
-{
-//! [setup_config]
-	struct dac_config config_dac;
-//! [setup_config]
-//! [setup_config_defaults]
-	dac_get_config_defaults(&config_dac);
-//! [setup_config_defaults]
-
-//! [setup_set_config]
-	dac_init(&dac_instance, DAC, &config_dac);
-//! [setup_set_config]
-
-//! [setup_enable]
-	dac_enable(&dac_instance);
-//! [setup_enable]
-}
-
-void configure_dac_channel(void)
-{
-//! [setup_ch_config]
-	struct dac_chan_config config_dac_chan;
-//! [setup_ch_config]
-//! [setup_ch_config_defaults]
-	dac_chan_get_config_defaults(&config_dac_chan);
-//! [setup_ch_config_defaults]
-
-//! [setup_ch_set_config]
-	dac_chan_set_config(&dac_instance, DAC_CHANNEL_0, &config_dac_chan);
-//! [setup_ch_set_config]
-
-//! [setup_ch_enable]
-	dac_chan_enable(&dac_instance, DAC_CHANNEL_0);
-//! [setup_ch_enable]
-}
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-//! [setup_init]
-	configure_dac();
-	configure_dac_channel();
-//! [setup_init]
-
-//! [main]
-//! [main_output_var]
-	uint16_t i = 0;
-//! [main_output_var]
-
-//! [main_loop]
-	while (1) {
-//! [main_loop]
-//! [main_write]
-		dac_chan_write(&dac_instance, DAC_CHANNEL_0, i);
-//! [main_write]
-
-//! [main_inc_val]
-		if (++i == 0x3FF) {
-			i = 0;
-		}
-//! [main_inc_val]
-	}
-//! [main]
-}
+#endif /* CONF_TEST_H_INCLUDED */
