@@ -45,9 +45,9 @@
 #define CONF_TEST_H_INCLUDED
 
 /** Timer configured to source from the XOSC32K crystal generator */
-#define CONF_TC_XOSC32K           TC4
+#define CONF_TC_XOSC32K               TC4
 /** Timer configured to source from the OSC32K oscillator generator */
-#define CONF_TC_OSC32K             TC6
+#define CONF_TC_OSC32K                TC6
 #define CONF_CLOCK_PIN_OUT            PIN_PA28H_GCLK_IO0
 #define CONF_CLOCK_PIN_MUX            MUX_PA28H_GCLK_IO0
 #define CONF_EVENT_GENERATOR_ID       EVSYS_ID_GEN_TC4_OVF

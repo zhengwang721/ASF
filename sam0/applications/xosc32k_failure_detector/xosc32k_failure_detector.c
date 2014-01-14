@@ -83,7 +83,7 @@
  * the external reference availability.
  *
  * \section appdoc_sam0_xosc32k_fail_detect_usageinfo Usage
- * Connect an oscilloscope to PA27 of the SAM D2x Xplained Pro. Run the
+ * Connect an oscilloscope to PA28 of the SAM D2x Xplained Pro. Run the
  * example application, and press and hold the board button to turn off the
  * external XOSC32K crystal clock source to observe the fail-over to the
  * internal clock source. Releasing the button will re-enable the external
@@ -142,8 +142,8 @@ static void init_dfll(
 	system_clock_source_disable(SYSTEM_CLOCK_SOURCE_DFLL);
 
 	/* Configure DFLL reference clock, use raw register write to
-	 * force-configure the channel even if the currently selected generator clock
-	 * has failed */
+	 * force-configure the channel even if the currently selected generator
+	 * clock has failed */
 	GCLK->CLKCTRL.reg =
 			GCLK_CLKCTRL_ID(SYSCTRL_GCLK_ID_DFLL48) |
 			GCLK_CLKCTRL_GEN(source_generator);
@@ -194,7 +194,8 @@ static void init_xosc32k(void)
 
 /** Callback run when a XOSC32K crystal operation is detected.
  *
- *  \param[in]  instance  Timer instance that triggered the operation (\ref CONF_TC_XOSC32K)
+ *  \param[in]  instance  Timer instance that triggered the operation
+ *                        (\ref CONF_TC_XOSC32K)
  */
 static void xosc32k_ok_callback(
 		struct tc_module *instance)
@@ -210,7 +211,8 @@ static void xosc32k_ok_callback(
 
 /** Callback run when a XOSC32K crystal failure is detected.
  *
- *  \param[in]  instance  Timer instance that triggered the failure (\ref CONF_TC_OSC32K)
+ *  \param[in]  instance  Timer instance that triggered the failure
+ *                        (\ref CONF_TC_OSC32K)
  */
 static void xosc32k_fail_callback(
 		struct tc_module *instance)
@@ -244,9 +246,9 @@ static void init_xosc32k_fail_detector(
 
 	/* Must use different clock generators for the crystal and reference, must
 	 * not be CPU generator 0 */
-	Assert(GCLK_GENERATOR_XOSC32K   != GCLK_GENERATOR_OSC32K);
-	Assert(GCLK_GENERATOR_XOSC32K   != GCLK_GENERATOR_0);
-	Assert(GCLK_GENERATOR_OSC32K != GCLK_GENERATOR_0);
+	Assert(GCLK_GENERATOR_XOSC32K != GCLK_GENERATOR_OSC32K);
+	Assert(GCLK_GENERATOR_XOSC32K != GCLK_GENERATOR_0);
+	Assert(GCLK_GENERATOR_OSC32K  != GCLK_GENERATOR_0);
 
 	/* Configure and enable the XOSC32K GCLK generator */
 	struct system_gclk_gen_config xosc32k_gen_conf;
@@ -343,11 +345,11 @@ int main(void)
 
 		/* Check if the XOSC32K needs to be started or stopped when the board
 		 * button is pressed or released */
-		if (new_run_osc != old_run_osc)
-		{
+		if (new_run_osc != old_run_osc) {
 			if (new_run_osc) {
 				system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
-				while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_XOSC32K));
+				while(!system_clock_source_is_ready(
+						SYSTEM_CLOCK_SOURCE_XOSC32K));
 			}
 			else {
 				system_clock_source_disable(SYSTEM_CLOCK_SOURCE_XOSC32K);
