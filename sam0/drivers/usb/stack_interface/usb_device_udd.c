@@ -56,7 +56,6 @@
  * USB low-level driver for USB device mode
  * @{
  */
- 
 // Check USB device configuration
 #ifdef USB_DEVICE_HS_SUPPORT
 #  error The High speed mode is not supported on this part, please remove USB_DEVICE_HS_SUPPORT in conf_usb.h
