@@ -182,10 +182,10 @@ void ui_process(uint16_t framenumber)
 	static uint16_t cpt_sof = 0;
 
 	if ((framenumber % 1000) == 0) {
-		LED_On(LED0);
+		LED_On();
 	}
 	if ((framenumber % 1000) == 500) {
-		LED_Off(LED0);
+		LED_Off();
 	}
 	// Scan process running each 2ms
 	cpt_sof++;
@@ -194,7 +194,7 @@ void ui_process(uint16_t framenumber)
 	}
 
 	// Scan buttons on switch 0 to send keys sequence
-	b_btn_state = (!ioport_get_pin_level(GPIO_PUSH_BUTTON_0));
+	b_btn_state = (!port_pin_get_input_level(BUTTON_0_PIN));
 	if (b_btn_state != btn_last_state) {
 		btn_last_state = b_btn_state;
 		if (btn_wakeup) {
