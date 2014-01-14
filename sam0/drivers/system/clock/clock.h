@@ -73,7 +73,7 @@
  *
  *
  * \section asfdoc_sam0_system_clock_module_overview Module Overview
- * The SAM D20 devices contain a sophisticated clocking system, which is designed
+ * The SAM D2x devices contain a sophisticated clocking system, which is designed
  * to give the maximum flexibility to the user application. This system allows
  * a system designer to tune the performance and power consumption of the device
  * in a dynamic manner, to achieve the best trade-off between the two for a
@@ -82,8 +82,22 @@
  * This driver provides a set of functions for the configuration and management
  * of the various clock related functionality within the device.
  *
+ * \subsection asfdoc_sam0_system_clock_module_features Driver Feature Macro Definition
+ * <table>
+ *	<tr>
+ *		<th>Driver Feature Macro</th>
+ *		<th>Supported devices</th>
+ *	</tr>
+ *	<tr>
+ *		<td>FEATURE_SYSTEM_CLOCK_DPLL</td>
+ *		<td>SAMD21</td>
+ *	</tr>
+ * </table>
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
+ *
  * \subsection asfdoc_sam0_system_clock_module_overview_clock_sources Clock Sources
- * The SAM D20 devices have a number of master clock source modules, each of
+ * The SAM D2x devices have a number of master clock source modules, each of
  * which being capable of producing a stabilized output frequency which can then
  * be fed into the various peripherals and modules within the device.
  *
@@ -244,7 +258,8 @@
  * Define system clock features set according to different device family
  * @{
  */
-#if (SAMD21)
+#if (SAMD21) || defined(__DOXYGEN__)
+/** Digital Phase Locked Loop (DPLL) feature support */
 #  define FEATURE_SYSTEM_CLOCK_DPLL
 #endif
 /*@}*/
@@ -492,7 +507,10 @@ enum system_clock_source {
 	/** Internal Ultra Low Power 32kHz oscillator */
 	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
 #ifdef FEATURE_SYSTEM_CLOCK_DPLL
-	/** Digital Phase Locked Loop (DPLL) */
+	/** Digital Phase Locked Loop (DPLL)
+	 *
+	 * \note Only some devices support this feature,
+	 * check \c FEATURE_SYSTEM_CLOCK_DPLL for supported devices */
 	SYSTEM_CLOCK_SOURCE_DPLL     = GCLK_SOURCE_FDPLL,
 #endif
 };
@@ -1199,6 +1217,11 @@ struct system_clock_source_dpll_config {
 };
 
 /**
+ * \name Internal DPLL management
+ * @{
+ */
+
+/**
  * \brief Retrieve the default configuration for DPLL
  *
  * Fills a configuration structure with the default configuration for a
@@ -1237,6 +1260,8 @@ static inline void system_clock_source_dpll_get_config_defaults(
 
 void system_clock_source_dpll_set_config(
 		struct system_clock_source_dpll_config *const config);
+
+/* @} */
 #endif
 
 /**
@@ -1332,6 +1357,10 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<td>APB</td>
  *		<td>Advanced Peripheral Bus</td>
  *	</tr>
+ *	<tr>
+ *		<td>DPLL</td>
+ *		<td>Digital Phase Locked Loop</td>
+ *	</tr>
  * </table>
  *
  *
@@ -1370,6 +1399,9 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for SAMD21 (DPLL support).</td>
  *	</tr>
  *  <tr>
  *		<td>Fixed \c system_gclk_chan_disable() deadlocking if a channel is enabled
@@ -1429,6 +1461,11 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>

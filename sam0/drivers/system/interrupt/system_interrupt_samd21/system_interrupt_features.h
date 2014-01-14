@@ -68,7 +68,7 @@
  * \brief Table of possible system interrupt/exception vector numbers.
  *
  * Table of all possible interrupt and exception vector indexes within the
- * device.
+ * SAMD21 device.
  */
 enum system_interrupt_vector {
 	/** Interrupt vector index for a NMI interrupt. */
@@ -124,7 +124,7 @@ enum system_interrupt_vector {
 	 *  Each specific device may contain several TC peripherals; each module
 	 *  instance will have its own entry in the table, with the instance number
 	 *  substituted for "n" in the entry name (e.g.
-	 *  \c SYSTEM_INTERRUPT_MODULE_TC0).
+	 *  \c SYSTEM_INTERRUPT_MODULE_TC3).
 	 */
 	SYSTEM_INTERRUPT_MODULE_TCn        = TCn_IRQn,
 #else

@@ -68,7 +68,7 @@
  * \brief Table of possible system interrupt/exception vector numbers.
  *
  * Table of all possible interrupt and exception vector indexes within the
- * device.
+ * SAMD20 device.
  */
 enum system_interrupt_vector {
 	/** Interrupt vector index for a NMI interrupt. */
