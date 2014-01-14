@@ -50,15 +50,15 @@
  */
 struct _events_module {
 	/* Allocated channels bitmask where 1 means allocated */
-        volatile uint32_t allocated_channels;
+	volatile uint32_t allocated_channels;
 	/* Free channels */
-        uint8_t           free_channels;
+	uint8_t           free_channels;
 
 #if EVENTS_INTERRUPT_HOOKS_MODE == true
 	/* Buffer to store a copy of the current interrupt flags */
-        volatile uint32_t interrupt_flag_buffer;
+	volatile uint32_t interrupt_flag_buffer;
 	/* Buffer to store acknowledged interrupt sources */
-        volatile uint32_t interrupt_flag_ack_buffer;
+	volatile uint32_t interrupt_flag_ack_buffer;
 
 	/* Interrup hook linked list start pointer */
 	struct events_hook *hook_list;
