@@ -294,6 +294,7 @@ uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
 		/* Last byte ? */
 		if (cnt == 1  && !stop_sent) {
 			p_twi->TWI_CR = TWI_CR_STOP;
+			stop_sent = 1;
 		}
 
 		if (!(status & TWI_SR_RXRDY)) {
