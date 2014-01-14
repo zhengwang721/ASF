@@ -3,7 +3,7 @@
  *
  * \brief FreeRTOS configurations
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,19 +49,19 @@
  */
 
 #if defined (__GNUC__) || defined (__ICCARM__)
-#  include <gclk.h>
-#  include <stdint.h>
+#include <stdint.h>
 void assert_triggered( const char * file, uint32_t line );
 #endif
 
-
+#include <gclk.h>
 
 #define configUSE_PREEMPTION                    1
+#define configUSE_TICKLESS_IDLE                 2
 #define configUSE_IDLE_HOOK                     0
 #define configUSE_TICK_HOOK                     0
 #define configPRIO_BITS                         2
 #define configCPU_CLOCK_HZ                      ( system_gclk_gen_get_hz(GCLK_GENERATOR_0) )
-#define configTICK_RATE_HZ                      ( ( portTickType ) 200 )
+#define configTICK_RATE_HZ                      ( ( portTickType ) 1000 )
 #define configMAX_PRIORITIES                    ( ( unsigned portBASE_TYPE ) 5 )
 #define configMINIMAL_STACK_SIZE                ( ( unsigned short ) 100 )
 /* configTOTAL_HEAP_SIZE is not used when heap_3.c is used. */
@@ -116,6 +116,9 @@ header file. */
 standard names - or at least those used in the unmodified vector table. */
 #define vPortSVCHandler                         SVC_Handler
 #define xPortPendSVHandler                      PendSV_Handler
-#define xPortSysTickHandler                     SysTick_Handler
+
+#include <portmacro.h>
+void vPortSuppressTicksAndSleep( portTickType xExpectedIdleTime );
+#define portSUPPRESS_TICKS_AND_SLEEP             vPortSuppressTicksAndSleep
 
 #endif /* FREERTOS_CONFIG_H */
