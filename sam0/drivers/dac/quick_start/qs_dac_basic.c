@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 DAC Quick Start
+ * \brief SAM D2x DAC Quick Start
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

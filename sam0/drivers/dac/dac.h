@@ -289,6 +289,12 @@
  *  - \ref asfdoc_sam0_dac_extra_history
  *
  *
+ * \section asfdoc_sam0_dac_examples Examples
+ *
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_sam0_dac_exqsg.
+ *
+ *
  * \section asfdoc_sam0_dac_api_overview API Overview
  * @{
  */
@@ -776,6 +782,10 @@ void dac_clear_status(
  *	<tr>
  *		<td>MSB</td>
  *		<td>Most Significant Bit</td>
+ *	</tr>
+ *	<tr>
+ *		<td>DMA</td>
+ *		<td>Direct Memory Access</td>
  *	</tr>
  * </table>
  *
