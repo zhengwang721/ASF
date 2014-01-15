@@ -63,7 +63,6 @@
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_sercom_spi_prerequisites
  * - \ref asfdoc_sam0_sercom_spi_module_overview
- * - \ref asfdoc_sam0_sercom_spi_module_features
  * - \ref asfdoc_sam0_sercom_spi_special_considerations
  * - \ref asfdoc_sam0_sercom_spi_extra_info
  * - \ref asfdoc_sam0_sercom_spi_examples
