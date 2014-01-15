@@ -101,7 +101,7 @@ void ui_process(uint16_t framenumber)
 	cpt_sof = 0;
 
 	// Scan buttons
-	b_btn_state = !ioport_get_pin_level(GPIO_PUSH_BUTTON_0);
+	b_btn_state = !port_pin_get_input_level(BUTTON_0_PIN);
 	if (b_btn_state != btn0_last_state) {
 		ui_hid_report[0] = b_btn_state;
 		udi_hid_generic_send_report_in(ui_hid_report);
