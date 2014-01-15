@@ -3,7 +3,7 @@
  *
  * \brief Default descriptors for a USB Device with a single interface HID mouse
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -117,7 +117,7 @@ UDC_DESC_STORAGE usb_dev_qual_desc_t udc_device_qual = {
 #endif
 
 #ifdef USB_DEVICE_LPM_SUPPORT
-//! USB Device Qualifier Descriptor for HS
+//! USB Device Qualifier Descriptor
 COMPILER_WORD_ALIGNED
 UDC_DESC_STORAGE usb_dev_lpm_desc_t udc_device_lpm = {
 	.bos.bLength               = sizeof(usb_dev_bos_desc_t),

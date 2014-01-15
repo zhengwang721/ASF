@@ -60,9 +60,6 @@
 //! Authorize the USB HUB support
 // #define USB_HOST_HUB_SUPPORT
 
-//! Authorize LPM support
-#define USB_HOST_LPM_SUPPORT
-
 //! Authorize the USB host to run in High Speed
 #if (UC3A3||UC3A4)
 # define USB_HOST_HS_SUPPORT

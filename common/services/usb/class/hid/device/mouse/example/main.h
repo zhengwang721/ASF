@@ -3,7 +3,7 @@
  *
  * \brief Declaration of main function used by HID mouse example
  *
- * Copyright (c) 2009-2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -65,11 +65,6 @@ void main_sof_action(void);
  */
 void main_suspend_action(void);
 
-/*! \brief Enters the application in low power mode
- * Callback called when USB host sets LPM suspend state
- */
-void main_suspend_lpm_action(void);
-
 /*! \brief Called by UDD when the USB line exit of suspend state
  */
 void main_resume_action(void);
@@ -78,16 +73,23 @@ void main_resume_action(void);
  */
 void main_remotewakeup_enable(void);
 
-/*! \brief Called by UDC when USB Host request to enable LPM remote wakeup
- */
-void main_remotewakeup_lpm_enable(void);
-
 /*! \brief Called by UDC when USB Host request to disable remote wakeup
  */
 void main_remotewakeup_disable(void);
 
+#ifdef USB_DEVICE_LPM_SUPPORT
+/*! \brief Enters the application in low power mode
+ * Callback called when USB host sets LPM suspend state
+ */
+void main_suspend_lpm_action(void);
+
+/*! \brief Called by UDC when USB Host request to enable LPM remote wakeup
+ */
+void main_remotewakeup_lpm_enable(void);
+
 /*! \brief Called by UDC when USB Host request to disable LPM remote wakeup
  */
 void main_remotewakeup_lpm_disable(void);
+#endif
 
 #endif // _MAIN_H_

@@ -96,6 +96,23 @@ void main_sof_action(void)
 	ui_process(udd_get_frame_number());
 }
 
+#ifdef USB_DEVICE_LPM_SUPPORT
+void main_suspend_lpm_action(void)
+{
+	ui_powerdown();
+}
+
+void main_remotewakeup_lpm_disable(void)
+{
+	ui_wakeup_disable();
+}
+
+void main_remotewakeup_lpm_enable(void)
+{
+	ui_wakeup_enable();
+}
+#endif
+
 bool main_cdc_enable(uint8_t port)
 {
 	main_b_cdc_enable = true;

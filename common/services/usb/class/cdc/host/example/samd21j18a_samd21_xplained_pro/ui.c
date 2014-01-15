@@ -48,6 +48,61 @@
 #define LED_Off()     port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE)
 #define LED_Toggle()  port_pin_toggle_output_level(LED_0_PIN)
 
+/**
+ * \name Internal routines to manage asynchronous interrupt pin change
+ * This interrupt is connected to a switch and allows to wakeup CPU in low sleep
+ * mode.
+ * This wakeup the USB devices connected via a downstream resume.
+ * @{
+ */
+static void ui_enable_asynchronous_interrupt(void);
+static void ui_disable_asynchronous_interrupt(void);
+
+/**
+ * \brief Interrupt handler for interrupt pin change
+ */
+static void UI_WAKEUP_HANDLER(void)
+{
+	if (uhc_is_suspend()) {
+		ui_disable_asynchronous_interrupt();
+
+		/* Wakeup host and device */
+		uhc_resume();
+	}
+}
+
+/**
+ * \brief Initializes and enables interrupt pin change
+ */
+static void ui_enable_asynchronous_interrupt(void)
+{
+	/* Initialize EIC for button wakeup */
+	struct extint_chan_conf eint_chan_conf;
+	extint_chan_get_config_defaults(&eint_chan_conf);
+
+	eint_chan_conf.gpio_pin            = BUTTON_0_EIC_PIN;
+	eint_chan_conf.gpio_pin_mux        = BUTTON_0_EIC_MUX;
+	eint_chan_conf.detection_criteria  = EXTINT_DETECT_FALLING;
+	eint_chan_conf.filter_input_signal = true;
+	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
+	extint_register_callback(UI_WAKEUP_HANDLER,
+			BUTTON_0_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_clear_detected(BUTTON_0_EIC_LINE);
+	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+}
+
+/**
+ * \brief Disables interrupt pin change
+ */
+static void ui_disable_asynchronous_interrupt(void)
+{
+	extint_chan_disable_callback(BUTTON_0_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+}
+
+/*! @} */
 
 /**
  * \name Main user interface functions
@@ -134,10 +189,13 @@ void ui_usb_enum_event(uhc_device_t *dev, uhc_enum_status_t status)
 
 void ui_usb_wakeup_event(void)
 {
+	ui_disable_asynchronous_interrupt();
 }
 
 void ui_usb_sof_event(void)
 {
+	bool b_btn_state;
+	static bool btn_suspend_and_remotewakeup = false;
 	static uint16_t counter_sof = 0;
 
 	if (ui_enum_status == UHC_ENUM_SUCCESS) {
@@ -146,6 +204,20 @@ void ui_usb_sof_event(void)
 			counter_sof = 0;
 			if (!ui_data_transfer) {
 				LED_Toggle();
+			}
+		}
+
+		/* Scan button to enter in suspend mode and remote wakeup */
+		b_btn_state = !port_pin_get_input_level(BUTTON_0_PIN);
+		if (b_btn_state != btn_suspend_and_remotewakeup) {
+			/* Button have changed */
+			btn_suspend_and_remotewakeup = b_btn_state;
+			if (b_btn_state) {
+				/* Button has been pressed */
+				ui_enable_asynchronous_interrupt();
+				LED_Off();
+				uhc_suspend_lpm(true, BESL_1000_US);
+				return;
 			}
 		}
 	}
@@ -193,4 +265,7 @@ void ui_com_overflow(void)
  *   - The blink is normal (0.5s) with full speed device
  *   - The blink is fast (0.25s) with high speed device
  * - Led 0 is on during data transfer between CDC and UART
+ * - Button SW0 allows to enter the device in LPM suspend mode with remote
+ *   wakeup feature authorized
+ * - Only SW0 button can be used to wakeup USB device in LPM suspend mode
  */
