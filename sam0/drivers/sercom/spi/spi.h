@@ -1704,7 +1704,7 @@ enum status_code spi_select_slave(
   * <i>\b (1) Not available in all silicon revisions.</i>
   *
   *
-  * \page asfdoc_samd20_sercom_spi_document_revision_history Document Revision History
+  * \page asfdoc_sam0_sercom_spi_document_revision_history Document Revision History
   *
   * <table>
   *	<tr>
