@@ -64,7 +64,6 @@
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_sercom_usart_prerequisites
  * - \ref asfdoc_sam0_sercom_usart_overview
- * - \ref asfdoc_sam0_sercom_usart_features
  * - \ref asfdoc_sam0_sercom_usart_special_considerations
  * - \ref asfdoc_sam0_sercom_usart_extra_info
  * - \ref asfdoc_sam0_sercom_usart_examples
