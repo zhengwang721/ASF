@@ -775,7 +775,7 @@ struct tc_config {
 	/** Specifies the PWM channel for TC. */
 	struct tc_pwm_channel pwm_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 
-	/** This setting determines what size counter is used. */
+	/** Access the different counter size settings though this configuration member. */
 	union {
 		/** Struct for 8-bit specific timer configuration. */
 		struct tc_8bit_config counter_8_bit;
@@ -1335,6 +1335,10 @@ static inline void tc_clear_status(
  *		<th>Acronym</th>
  *		<th>Description</th>
  *	</tr>
+  *	<tr>
+ *		<td>DMA</td>
+ *		<td>Direct Memory Access</td>
+ *	</tr>
  *	<tr>
  *		<td>TC</td>
  *		<td>Timer Counter</td>
@@ -1375,6 +1379,9 @@ static inline void tc_clear_status(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added support for SAMD21.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Added automatic digital clock interface enable for the slave TC
  *          module when a timer is initialized in 32-bit mode.</td>
  *	</tr>
@@ -1391,7 +1398,7 @@ static inline void tc_clear_status(
  * applications for \ref asfdoc_sam0_tc_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that QSGs can be compiled as a standalone application or be
- * added to the user application for SAMD2x.
+ * added to the user application.
  *
  *  - \subpage asfdoc_sam0_tc_basic_use_case
  * \if TC_CALLBACK_MODE
@@ -1406,6 +1413,11 @@ static inline void tc_clear_status(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>
