@@ -87,6 +87,10 @@
  *
  * \subsection asfdoc_sam0_spi_dma_use_case_setup_code Code
  * Add to the main application source file, outside of any functions:
+ * \snippet qs_spi_dma_use.c buf_length
+ * \snippet qs_spi_dma_use.c spi_baudrate
+ * \snippet qs_spi_dma_use.c slave_select_pin
+ * \snippet qs_spi_dma_use.c spi_buffer
  * \snippet qs_spi_dma_use.c spi_module_inst
  * \snippet qs_spi_dma_use.c dma_transfer_done_flag
  * \snippet qs_spi_dma_use.c spi_buffer
@@ -105,7 +109,6 @@
  *          In most cases, this should be global.
  *
  *    \snippet qs_spi_dma_use.c spi_module_inst
- * -# Configure the SPI module.
  * -# Create a module software instance structure for DMA resource to store
  *    the DMA resource state while it is in use.
  *    \note This should never go out of scope as long as the module is in use.
@@ -114,6 +117,8 @@
  *    \snippet qs_spi_dma_use.c dma_resource
  * -# Create transfer done flag to indication DMA transfer done
  *    \snippet qs_spi_dma_use.c dma_transfer_done_flag
+ * -# Define the buffer length for tx/rx
+ *    \snippet qs_spi_dma_use.c buf_length
  * -# Create buffer to store the data to be transferred
  *    \snippet qs_spi_dma_use.c spi_buffer
  * -# Create SPI module configuration struct, which can be filled out to

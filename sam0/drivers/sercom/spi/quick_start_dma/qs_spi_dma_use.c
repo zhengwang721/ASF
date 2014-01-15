@@ -47,8 +47,9 @@
 #define BUF_LENGTH 20
 //! [buf_length]
 
-/* Test Baud rate */
+//! [spi_baudrate]
 #define TEST_SPI_BAUDRATE             1000000UL
+//! [spi_baudrate]
 
 //! [slave_select_pin]
 #define SLAVE_SELECT_PIN EXT2_PIN_SPI_SS_0
@@ -59,7 +60,7 @@ static const uint8_t buffer_tx[BUF_LENGTH] = {
 		0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
 		0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14,
 };
-static uint8_t buffer_rx[20];
+static uint8_t buffer_rx[BUF_LENGTH];
 //! [spi_buffer]
 
 //! [spi_module_inst]
