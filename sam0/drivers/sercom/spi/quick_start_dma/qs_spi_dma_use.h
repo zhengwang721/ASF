@@ -93,7 +93,7 @@
  * \snippet qs_spi_dma_use.c spi_buffer
  * \snippet qs_spi_dma_use.c spi_module_inst
  * \snippet qs_spi_dma_use.c dma_transfer_done_flag
- * \snippet qs_spi_dma_use.c spi_buffer
+ * \snippet qs_spi_dma_use.c slave_dev_inst
  * \snippet qs_spi_dma_use.c dma_transfer_descriptor
  *
  * Copy-paste the following setup code to your user application:
