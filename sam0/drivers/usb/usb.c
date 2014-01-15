@@ -43,6 +43,15 @@
 #include <string.h>
 #include "usb.h"
 
+/** Fields definition from a LPM TOKEN  */
+#define  USB_LPM_ATTRIBUT_BLINKSTATE_MASK      (0xF << 0)
+#define  USB_LPM_ATTRIBUT_BESL_MASK            (0xF << 4)
+#define  USB_LPM_ATTRIBUT_REMOTEWAKE_MASK      (1 << 8)
+#define  USB_LPM_ATTRIBUT_BLINKSTATE(value)    ((value & 0xF) << 0)
+#define  USB_LPM_ATTRIBUT_BESL(value)          ((value & 0xF) << 4)
+#define  USB_LPM_ATTRIBUT_REMOTEWAKE(value)    ((value & 1) << 8)
+#define  USB_LPM_ATTRIBUT_BLINKSTATE_L1        USB_LPM_ATTRIBUT_BLINKSTATE(1)
+
 /**
  * \brief Mask selecting the index part of an endpoint address
  */
@@ -110,6 +119,9 @@ static struct usb_module *_usb_instances;
 
 /* Host pipe callback structure variable */
 static struct usb_pipe_callback_parameter pipe_callback_para;
+
+/* Device LPM callback variable */
+static bool device_callback_lpm_wakeup_enable;
 
 /* Device endpoint callback structure variable */
 static struct usb_endpoint_callback_parameter ep_callback_para;
@@ -765,6 +777,56 @@ enum status_code usb_host_pipe_abort_job(struct usb_module *module_inst, uint8_t
 }
 
 /**
+ * \brief Sends the LPM package.
+ *
+ * Sends the LPM package.
+ *
+ * \param[in]     module_inst   Pointer to USB software instance struct
+ * \param[in]     pipe_num      Pipe to configure
+ * \param[in]     buf           Pointer to data buffer
+ *
+ * \return Status of the setup operation.
+ * \retval STATUS_OK    The setup job was set successfully.
+ * \retval STATUS_BUSY    The pipe is busy.
+ * \retval STATUS_ERR_NOT_INITIALIZED    The pipe has not been configured.
+ */
+enum status_code usb_host_pipe_lpm_job(struct usb_module *module_inst,
+		uint8_t pipe_num, bool b_remotewakeup, uint8_t besl)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(pipe_num < USB_PIPE_NUM);
+
+	if (host_pipe_job_busy_status & (1 << pipe_num)) {
+		return STATUS_BUSY;
+	}
+
+	/* Set busy status */
+	host_pipe_job_busy_status |= 1 << pipe_num;
+
+	if (module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTYPE ==
+			USB_HOST_PIPE_TYPE_DISABLE) {
+		return STATUS_ERR_NOT_INITIALIZED;
+	}
+
+	module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTYPE =
+				USB_HOST_PIPE_TYPE_EXTENDED;
+
+	/* get pipe config from setting register */
+	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].EXTREG.bit.SUBPID = 0x3;
+	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].EXTREG.bit.VARIABLE =
+			USB_LPM_ATTRIBUT_REMOTEWAKE(b_remotewakeup) |
+			USB_LPM_ATTRIBUT_BESL(besl) |
+			USB_LPM_ATTRIBUT_BLINKSTATE_L1;
+
+	module_inst->hw->HOST.HostPipe[pipe_num].PSTATUSSET.reg = USB_HOST_PSTATUSSET_BK0RDY;
+	usb_host_pipe_unfreeze(module_inst, pipe_num);
+
+	return STATUS_OK;
+}
+
+/**
  * \internal
  * \brief Function called by USB interrupt to manage USB host interrupts
  *
@@ -900,12 +962,12 @@ static void _usb_host_interrupt_handler(void)
 			}
 		}
 
-		/* host wakeup interrupts */
-		if (flags & USB_HOST_INTFLAG_WAKEUP) {
+		/* host upstream resume interrupts */
+		if (flags & USB_HOST_INTFLAG_UPRSM) {
 			/* clear the flags */
-			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_WAKEUP;
-			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_WAKEUP)) {
-				(_usb_instances->host_callback[USB_HOST_CALLBACK_WAKEUP])(_usb_instances);
+			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_UPRSM;
+			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_UPRSM)) {
+				(_usb_instances->host_callback[USB_HOST_CALLBACK_UPRSM])(_usb_instances);
 			}
 		}
 
@@ -918,12 +980,12 @@ static void _usb_host_interrupt_handler(void)
 			}
 		}
 
-		/* host upstream resume interrupts */
-		if (flags & USB_HOST_INTFLAG_UPRSM) {
+		/* host wakeup interrupts */
+		if (flags & USB_HOST_INTFLAG_WAKEUP) {
 			/* clear the flags */
-			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_UPRSM;
-			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_UPRSM)) {
-				(_usb_instances->host_callback[USB_HOST_CALLBACK_UPRSM])(_usb_instances);
+			_usb_instances->hw->HOST.INTFLAG.reg = USB_HOST_INTFLAG_WAKEUP;
+			if(_usb_instances->host_enabled_callback_mask & (1 << USB_HOST_CALLBACK_WAKEUP)) {
+				(_usb_instances->host_callback[USB_HOST_CALLBACK_WAKEUP])(_usb_instances);
 			}
 		}
 
@@ -1664,7 +1726,12 @@ static void _usb_device_interrupt_handler(void)
 						_usb_device_irq_bits[i];
 			}
 			if (flags_run & _usb_device_irq_bits[i]) {
-				(_usb_instances->device_callback[i])(_usb_instances);
+				if (i == USB_DEVICE_CALLBACK_LPMSUSP) {
+					device_callback_lpm_wakeup_enable = 
+							usb_descriptor_table.usb_endpoint_table[0].DeviceDescBank[0].EXTREG.bit.VARIABLE
+							& USB_LPM_ATTRIBUT_REMOTEWAKE_MASK;
+				}
+				(_usb_instances->device_callback[i])(_usb_instances, &device_callback_lpm_wakeup_enable);
 			}
 		}
 
@@ -1859,6 +1926,26 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, PM_APBBMASK_USB);
 
+	/* Set up the USB DP/DN pins */
+	system_pinmux_get_config_defaults(&pin_config);
+	pin_config.mux_position = MUX_PA24G_USB_DM;
+	system_pinmux_pin_set_config(PIN_PA24G_USB_DM, &pin_config);
+	pin_config.mux_position = MUX_PA25G_USB_DP;
+	system_pinmux_pin_set_config(PIN_PA25G_USB_DP, &pin_config);
+
+	/* Setup clock for module */
+	system_gclk_chan_get_config_defaults(&gclk_chan_config);
+	gclk_chan_config.source_generator = module_config->source_generator;
+	system_gclk_chan_set_config(USB_GCLK_ID, &gclk_chan_config);
+	system_gclk_chan_enable(USB_GCLK_ID);
+	pin_config.mux_position = MUX_PB14H_GCLK_IO0;
+	pin_config.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
+	system_pinmux_pin_set_config(PIN_PB14H_GCLK_IO0, &pin_config);
+
+	/* Reset */
+	hw->HOST.CTRLA.bit.SWRST = 1;
+	while (hw->HOST.SYNCBUSY.bit.SWRST);
+
 	/* Load Pad Calibration */
 	pad_transn =( *((uint32_t *)(NVMCTRL_OTP4)
 			+ (NVM_USB_PAD_TRANSN_POS / 32))
@@ -1892,23 +1979,6 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 	}
 
 	hw->HOST.PADCAL.bit.TRIM = pad_trim;
-
-	/* Set up the USB DP/DN pins */
-	system_pinmux_get_config_defaults(&pin_config);
-	pin_config.mux_position = MUX_PA24G_USB_DM;
-	system_pinmux_pin_set_config(PIN_PA24G_USB_DM, &pin_config);
-	pin_config.mux_position = MUX_PA25G_USB_DP;
-	system_pinmux_pin_set_config(PIN_PA25G_USB_DP, &pin_config);
-
-	/* Setup clock for module */
-	system_gclk_chan_get_config_defaults(&gclk_chan_config);
-	gclk_chan_config.source_generator = module_config->source_generator;
-	system_gclk_chan_set_config(USB_GCLK_ID, &gclk_chan_config);
-	system_gclk_chan_enable(USB_GCLK_ID);
-
-	/* Reset */
-	hw->HOST.CTRLA.bit.SWRST = 1;
-	while (hw->HOST.SYNCBUSY.bit.SWRST);
 
 	/* Set the configuration */
 	hw->HOST.CTRLA.bit.MODE = module_config->select_host_mode;

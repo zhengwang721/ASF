@@ -622,9 +622,21 @@ static void _uhd_wakeup(struct usb_module *module_inst)
 	 * - connection with an asynchronous interrupt
 	 * - down/upstream resume with an asynchronous interrupt
 	 */
-	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_WAKEUP);
-	uhd_sleep_mode(UHD_STATE_IDLE);
 	dbg_print("WAKEUP\n");
+	if (uhd_lpm_suspend) {
+		usb_host_send_l1_resume(&dev);
+		uhd_lpm_suspend = false;
+		uhc_notify_resume_lpm();
+	} else {
+		usb_host_send_resume(&dev);
+		/* Wait 50ms before restarting transfer */
+		uhd_resume_start = 50;
+	}
+	/* Disable wakeup/resumes interrupts */
+	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_WAKEUP);
+	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_DNRSM);
+	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_UPRSM);
+	uhd_sleep_mode(UHD_STATE_IDLE);
 }
 
 /**
@@ -642,6 +654,7 @@ static void _uhd_downstream_resume(struct usb_module *module_inst)
 	usb_host_disable_callback(&dev, USB_HOST_CALLBACK_UPRSM);
 	if (uhd_lpm_suspend) {
 		uhd_lpm_suspend = false;
+		uhc_notify_resume_lpm();
 	} else {
 		/* Wait 50ms before restarting transfer */
 		uhd_resume_start = 50;
@@ -661,6 +674,7 @@ static void _uhd_upstream_resume(struct usb_module *module_inst)
 	if (uhd_lpm_suspend) {
 		usb_host_send_l1_resume(&dev);
 		uhd_lpm_suspend = false;
+		uhc_notify_resume_lpm();
 	} else {
 		usb_host_send_resume(&dev);
 		/* Wait 50ms before restarting transfer */
@@ -939,6 +953,9 @@ bool uhd_is_suspend(void)
 
 void uhd_resume(void)
 {
+	struct usb_host_pipe_config cfg;
+	usb_host_pipe_get_config(&dev, 0, &cfg);
+
 	if (usb_host_is_sof_enabled(&dev)) {
 		/* Currently in IDLE mode (!=Suspend) */
 		if (uhd_suspend_start) {
@@ -950,6 +967,12 @@ void uhd_resume(void)
 		}
 		return;
 	}
+
+	if (cfg.pipe_type == USB_HOST_PIPE_TYPE_EXTENDED) {
+		/* LPM Suspend command is on going, then ignore resume */
+		return;
+	}
+
 	if (uhd_lpm_suspend) {
 		dbg_print("SEND_RESUME_L1\n");
 		usb_host_send_l1_resume(&dev);
@@ -958,6 +981,21 @@ void uhd_resume(void)
 		usb_host_send_resume(&dev);
 	}
 	uhd_sleep_mode(UHD_STATE_IDLE);
+}
+
+bool uhd_suspend_lpm(bool b_remotewakeup, uint8_t besl)
+{
+	if (uhd_ctrl_request_timeout) {
+		return false;
+	}
+	/* Do not freeze pipe to restart its immediatly after resume */
+	dbg_print("EXT_LPM\n");
+
+	/* Set the LPM job */
+	usb_host_pipe_lpm_job(&dev, 0, b_remotewakeup, besl);	
+
+	/* Wait LPM ACK through interrupt */
+	return true;
 }
 
 bool uhd_setup_request(
@@ -1020,6 +1058,19 @@ static void _uhd_ep0_transfer_complete(struct usb_module *module_inst, void *poi
 	struct usb_host_pipe_config cfg;
 	usb_host_pipe_get_config(&dev, 0, &cfg);
 
+	if (cfg.pipe_type == USB_HOST_PIPE_TYPE_EXTENDED) {
+		dbg_print("EXT_LPM_ACK\n");
+		cfg.pipe_type = USB_HOST_PIPE_TYPE_CONTROL;
+		usb_host_pipe_set_config(&dev, 0, &cfg);
+		/* Enable wakeup/resumes interrupts */
+		usb_host_enable_callback(&dev, USB_HOST_CALLBACK_WAKEUP);
+		usb_host_enable_callback(&dev, USB_HOST_CALLBACK_DNRSM);
+		usb_host_enable_callback(&dev, USB_HOST_CALLBACK_UPRSM);
+		uhd_lpm_suspend = true;
+		uhd_sleep_mode(UHD_STATE_SUSPEND_LPM);
+		return;
+	}
+
 	usb_host_pipe_freeze(&dev, 0);
 	switch(uhd_ctrl_request_phase) {
 	case UHD_CTRL_REQ_PHASE_DATA_IN:
@@ -1049,6 +1100,16 @@ static void _uhd_ep0_transfer_complete(struct usb_module *module_inst, void *poi
  */
 static void _uhd_ep0_error(struct usb_module *module_inst, void *pointer)
 {
+	struct usb_host_pipe_config cfg;
+	usb_host_pipe_get_config(&dev, 0, &cfg);
+
+	if (cfg.pipe_type == USB_HOST_PIPE_TYPE_EXTENDED) {
+		dbg_print("EXT_LPM_ERROR\n");
+		cfg.pipe_type = USB_HOST_PIPE_TYPE_CONTROL;
+		usb_host_pipe_set_config(&dev, 0, &cfg);
+		return;
+	}
+
 	dbg_print("CTRL Error\n");
 	struct usb_pipe_callback_parameter *p_callback_para;
 	p_callback_para = (struct usb_pipe_callback_parameter *)pointer;
@@ -1114,6 +1175,16 @@ static void _uhd_ep0_setup(struct usb_module *module_inst, void *null)
  */
 static void _uhd_ep0_stall(struct usb_module *module_inst, void *null)
 {
+	struct usb_host_pipe_config cfg;
+	usb_host_pipe_get_config(&dev, 0, &cfg);
+
+	if (cfg.pipe_type == USB_HOST_PIPE_TYPE_EXTENDED) {
+		dbg_print("EXT_LPM_STALL\n");
+		cfg.pipe_type = USB_HOST_PIPE_TYPE_CONTROL;
+		usb_host_pipe_set_config(&dev, 0, &cfg);
+		return;
+	}
+
 	dbg_print("CTRL Stall\n");
 	/* Stall Handshake received */
 	_uhd_ctrl_request_end(UHD_TRANS_STALL);

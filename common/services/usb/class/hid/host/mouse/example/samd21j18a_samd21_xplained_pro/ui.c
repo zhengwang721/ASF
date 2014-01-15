@@ -88,6 +88,7 @@ static void ui_enable_asynchronous_interrupt(void)
 	extint_register_callback(UI_WAKEUP_HANDLER,
 			BUTTON_0_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_clear_detected(BUTTON_0_EIC_LINE);
 	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
 }
@@ -205,7 +206,7 @@ void ui_usb_sof_event(void)
 				/* Button has been pressed */
 				ui_enable_asynchronous_interrupt();
 				LED_Off();
-				uhc_suspend(true);
+				uhc_suspend_lpm(true, BESL_1000_US);
 				return;
 			}
 		}

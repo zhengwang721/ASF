@@ -118,6 +118,7 @@ typedef struct {
 	//! USB configuration descriptor and UDI API pointers for high speed
 	udc_config_speed_t UDC_DESC_STORAGE *conf_hs;
 #endif
+	usb_dev_bos_desc_t UDC_DESC_STORAGE *conf_bos;
 } udc_config_t;
 
 //! Global variables of USB Device Descriptor and UDI links

@@ -66,6 +66,23 @@
 # error The current USB Device Driver supports only SAMD21
 #endif
 
+#ifndef UDC_REMOTEWAKEUP_LPM_ENABLE
+#define UDC_REMOTEWAKEUP_LPM_ENABLE()
+#endif
+#ifndef UDC_REMOTEWAKEUP_LPM_DISABLE
+#define UDC_REMOTEWAKEUP_LPM_DISABLE()
+#endif
+#ifndef UDC_SUSPEND_LPM_EVENT
+#define UDC_SUSPEND_LPM_EVENT()
+#endif
+
+/* for debug text */
+#ifdef USB_DEBUG
+#   define dbg_print printf
+#else
+#   define dbg_print(...)
+#endif
+
 #define UDD_ENDPOINT_MAX_TRANS ((8*1024)-1)
 
 //! Bit definitions about endpoint control state machine for udd_ep_control_state
@@ -539,7 +556,7 @@ void udd_send_remotewakeup(void)
 {
 	uint32_t try = 5;
 	while(2 != usb_get_state_machine_status(&usb_device) && try --) {
-		usb_send_remote_wake_up(&usb_device);
+		usb_device_send_remote_wake_up(&usb_device);
 	}
 }
 
@@ -790,10 +807,15 @@ static void udd_ctrl_ep_enable(struct usb_module *module_inst)
 	 usb_device_endpoint_enable_callback(module_inst,0,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT);
 	 usb_device_endpoint_enable_callback(module_inst,0,USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL);
 
+#ifdef  USB_DEVICE_LPM_SUPPORT
+	 // Enable LPM feature
+	 usb_device_set_lpm_mode(module_inst, USB_DEVICE_LPM_ACK);
+#endif
+
 	 udd_ep_control_state = UDD_EPCTRL_SETUP;
 }
 
-static void _usb_on_suspend(struct usb_module *module_inst)
+static void _usb_on_suspend(struct usb_module *module_inst, void *pointer)
 {
 	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
@@ -803,7 +825,30 @@ static void _usb_on_suspend(struct usb_module *module_inst)
 #endif
 }
 
-static void _usb_on_sof_notify(struct usb_module *module_inst)
+#ifdef  USB_DEVICE_LPM_SUPPORT
+static void _usb_device_lpm_suspend(struct usb_module *module_inst, void *pointer)
+{
+	dbg_print("LPM_SUSP\n");
+
+	bool *lpm_wakeup_enable;
+	lpm_wakeup_enable = (bool *)pointer;
+
+	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_LPMSUSP);
+	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
+	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
+	
+//#warning Here the sleep mode must be choose to have a DFLL startup time < bmAttribut.BESL
+//	udd_sleep_mode(false);	// Enter in LPM SUSPEND mode
+	if (*lpm_wakeup_enable) {
+		UDC_REMOTEWAKEUP_LPM_ENABLE();
+	} else {
+		UDC_REMOTEWAKEUP_LPM_DISABLE();
+	}
+	UDC_SUSPEND_LPM_EVENT();
+}
+#endif
+
+static void _usb_on_sof_notify(struct usb_module *module_inst, void *pointer)
 {
 	udc_sof_notify();
 #ifdef UDC_SOF_EVENT
@@ -811,16 +856,22 @@ static void _usb_on_sof_notify(struct usb_module *module_inst)
 #endif
 }
 
-static void _usb_on_bus_reset(struct usb_module *module_inst)
+static void _usb_on_bus_reset(struct usb_module *module_inst, void *pointer)
 {
+	// Reset USB Device Stack Core
+	udc_reset();
 	usb_device_set_address(module_inst,0);
 	udd_ctrl_ep_enable(module_inst);
 }
 
-static void _usb_on_wakeup(struct usb_module *module_inst)
+static void _usb_on_wakeup(struct usb_module *module_inst, void *pointer)
 {
 	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
+#ifdef  USB_DEVICE_LPM_SUPPORT
+	usb_device_register_callback(&usb_device, USB_DEVICE_CALLBACK_LPMSUSP, _usb_device_lpm_suspend);
+	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_LPMSUSP);
+#endif
 
 #ifdef UDC_RESUME_EVENT
 	UDC_RESUME_EVENT();
@@ -846,6 +897,10 @@ void udd_attach(void)
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_SOF);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_RESET);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
+#ifdef  USB_DEVICE_LPM_SUPPORT
+	usb_device_register_callback(&usb_device, USB_DEVICE_CALLBACK_LPMSUSP, _usb_device_lpm_suspend);
+	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_LPMSUSP);
+#endif
 }
 
 void udd_enable(void)

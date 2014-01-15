@@ -745,6 +745,15 @@ static bool udc_req_std_dev_get_descriptor(void)
 		break;
 #endif
 
+	case USB_DT_BOS:
+		// Device BOS descriptor requested
+		if (udc_config.conf_bos == NULL) {
+			return false;
+		}
+		udd_set_setup_payload( (uint8_t *) udc_config.conf_bos,
+				udc_config.conf_bos->wTotalLength);
+		break;
+
 	case USB_DT_STRING:
 		// String descriptor requested
 		if (!udc_req_std_dev_get_str_desc()) {

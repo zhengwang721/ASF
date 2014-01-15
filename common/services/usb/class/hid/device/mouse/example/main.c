@@ -94,6 +94,11 @@ void main_suspend_action(void)
 	ui_powerdown();
 }
 
+void main_suspend_lpm_action(void)
+{
+	ui_powerdown();
+}
+
 void main_resume_action(void)
 {
 	ui_wakeup();
@@ -111,7 +116,17 @@ void main_remotewakeup_enable(void)
 	ui_wakeup_enable();
 }
 
+void main_remotewakeup_lpm_enable(void)
+{
+	ui_wakeup_enable();
+}
+
 void main_remotewakeup_disable(void)
+{
+	ui_wakeup_disable();
+}
+
+void main_remotewakeup_lpm_disable(void)
 {
 	ui_wakeup_disable();
 }
