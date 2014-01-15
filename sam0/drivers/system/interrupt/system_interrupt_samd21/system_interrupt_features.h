@@ -65,12 +65,25 @@
 #endif
 
 /**
+ * \addtogroup asfdoc_sam0_system_interrupt_group
+ * @{
+ */
+
+/**
  * \brief Table of possible system interrupt/exception vector numbers.
  *
  * Table of all possible interrupt and exception vector indexes within the
  * SAMD21 device.
  */
+#if defined(__DOXYGEN__)
+/**
+ * \note The actual enumeration name is "system_interrupt_vector". The _samd21
+ *  suffix is only for Doxygen documentation to identify different devices.
+ */
+enum system_interrupt_vector_samd21 {
+#else
 enum system_interrupt_vector {
+#endif
 	/** Interrupt vector index for a NMI interrupt. */
 	SYSTEM_INTERRUPT_NON_MASKABLE      = NonMaskableInt_IRQn,
 	/** Interrupt vector index for a Hard Fault memory access exception. */
@@ -148,5 +161,7 @@ enum system_interrupt_vector {
 	/** Interrupt vector index for a Digital-to-Analog peripheral interrupt. */
 	SYSTEM_INTERRUPT_MODULE_DAC        = DAC_IRQn,
 };
+
+/** @} */
 
 #endif
