@@ -1004,7 +1004,7 @@ static void _usb_vbus_config(void)
 	eint_chan_conf.gpio_pin           = USB_VBUS_PIN;
 	eint_chan_conf.gpio_pin_mux       = USB_VBUS_EIC_MUX;
 	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_NONE;
-	eint_chan_conf.detection_criteria = EXTINT_DETECT_HIGH;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_RISING;
 	eint_chan_conf.filter_input_signal = true;
 
 	extint_chan_disable_callback(USB_VBUS_EIC_LINE,
