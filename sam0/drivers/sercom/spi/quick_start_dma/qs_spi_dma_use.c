@@ -43,13 +43,13 @@
 #include <asf.h>
 #include "conf_quick_start.h"
 
-//! [setup]
 //! [buf_length]
 #define BUF_LENGTH 20
 //! [buf_length]
 
-/* Test Baud rate */
+//! [spi_baudrate]
 #define TEST_SPI_BAUDRATE             1000000UL
+//! [spi_baudrate]
 
 //! [slave_select_pin]
 #define SLAVE_SELECT_PIN EXT2_PIN_SPI_SS_0
@@ -60,7 +60,7 @@ static const uint8_t buffer_tx[BUF_LENGTH] = {
 		0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
 		0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14,
 };
-static uint8_t buffer_rx[20];
+static uint8_t buffer_rx[BUF_LENGTH];
 //! [spi_buffer]
 
 //! [spi_module_inst]
@@ -72,39 +72,38 @@ struct spi_module spi_slave_instance;
 struct spi_slave_inst slave;
 //! [slave_dev_inst]
 
-//! [setup]
-
 //! [dma_resource]
 struct dma_resource example_resource_tx;
 struct dma_resource example_resource_rx;
 //! [dma_resource]
 
-// [dma_transfer_done_flag]
+//! [dma_transfer_done_flag]
 static volatile bool transfer_tx_is_done = false;
 static volatile bool transfer_rx_is_done = false;
-// [dma_transfer_done_flag]
+//! [dma_transfer_done_flag]
 
-// [dma_transfer_descriptor]
+//! [dma_transfer_descriptor]
 COMPILER_ALIGNED(16)
 DmacDescriptor example_descriptor_tx;
 DmacDescriptor example_descriptor_rx;
-// [dma_transfer_descriptor]
+//! [dma_transfer_descriptor]
 
-// [_transfer_tx_done]
+//! [setup]
+//! [_transfer_tx_done]
 static void transfer_tx_done( const struct dma_resource* const resource )
 {
 	transfer_tx_is_done = true;
 }
-// [_transfer_tx_done]
+//! [_transfer_tx_done]
 
-// [_transfer_rx_done]
+//! [_transfer_rx_done]
 static void transfer_rx_done( const struct dma_resource* const resource )
 {
 	transfer_rx_is_done = true;
 }
-// [_transfer_rx_done]
+//! [_transfer_rx_done]
 
-// [config_dma_resource_tx]
+//! [config_dma_resource_tx]
 static void configure_dma_resource_tx(struct dma_resource *tx_resource)
 {
 //! [dma_tx_setup_1]
@@ -125,9 +124,9 @@ static void configure_dma_resource_tx(struct dma_resource *tx_resource)
 	dma_allocate(tx_resource, &tx_config);
 //! [dma_tx_setup_4]
 }
-// [config_dma_resource_tx]
+//! [config_dma_resource_tx]
 
-// [config_dma_resource_rx]
+//! [config_dma_resource_rx]
 static void configure_dma_resource_rx(struct dma_resource *rx_resource)
 {
 //! [dma_rx_setup_1]
@@ -148,9 +147,9 @@ static void configure_dma_resource_rx(struct dma_resource *rx_resource)
 	dma_allocate(rx_resource, &rx_config);
 //! [dma_rx_setup_4]
 }
-// [config_dma_resource_rx]
+//! [config_dma_resource_rx]
 
-// [setup_dma_transfer_descriptor]
+//! [setup_dma_transfer_descriptor]
 static void setup_transfer_descriptor_tx(DmacDescriptor *tx_descriptor)
 {
 //! [dma_tx_setup_5]
@@ -166,16 +165,17 @@ static void setup_transfer_descriptor_tx(DmacDescriptor *tx_descriptor)
 	tx_descriptor_config.dst_increment_enable = false;
 	tx_descriptor_config.block_transfer_count = sizeof(buffer_tx)/sizeof(uint8_t);
 	tx_descriptor_config.source_address = (uint32_t)buffer_tx + sizeof(buffer_tx);
-	tx_descriptor_config.destination_address = (uint32_t)(&spi_master_instance.hw->SPI.DATA.reg);
+	tx_descriptor_config.destination_address =
+		(uint32_t)(&spi_master_instance.hw->SPI.DATA.reg);
 //! [dma_tx_setup_7]
 
 //! [dma_tx_setup_8]
 	dma_descriptor_create(tx_descriptor, &tx_descriptor_config);
 //! [dma_tx_setup_8]
 }
-// [setup_dma_transfer_descriptor]
+//! [setup_dma_transfer_descriptor]
 
-// [setup_dma_transfer_descriptor_rx]
+//! [setup_dma_transfer_descriptor_rx]
 static void setup_transfer_descriptor_rx(DmacDescriptor *rx_descriptor)
 {
 //! [dma_rx_setup_5]
@@ -190,15 +190,17 @@ static void setup_transfer_descriptor_rx(DmacDescriptor *rx_descriptor)
 	rx_descriptor_config.beat_size = DMA_BEAT_SIZE_BYTE;
 	rx_descriptor_config.src_increment_enable = false;
 	rx_descriptor_config.block_transfer_count = sizeof(buffer_rx)/sizeof(uint8_t);
-	rx_descriptor_config.source_address = (uint32_t)(&spi_slave_instance.hw->SPI.DATA.reg);
-	rx_descriptor_config.destination_address = (uint32_t)buffer_rx + sizeof(buffer_rx);
+	rx_descriptor_config.source_address =
+		(uint32_t)(&spi_slave_instance.hw->SPI.DATA.reg);
+	rx_descriptor_config.destination_address =
+		(uint32_t)buffer_rx + sizeof(buffer_rx);
 //! [dma_rx_setup_7]
 
 //! [dma_rx_setup_8]
 	dma_descriptor_create(rx_descriptor, &rx_descriptor_config);
 //! [dma_rx_setup_8]
 }
-// [setup_dma_transfer_descriptor_rx]
+//! [setup_dma_transfer_descriptor_rx]
 
 //! [configure_spi]
 static void configure_spi_master(void)
@@ -303,6 +305,7 @@ static void configure_spi_slave(void)
 
 }
 //! [configure_spi_slave]
+//! [setup]
 
 int main(void)
 {
