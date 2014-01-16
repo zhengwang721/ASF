@@ -963,6 +963,68 @@ void udd_attach(void)
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
 }
 
+#if USB_VBUS_EIC
+/**
+ * \name USB VBUS PAD management
+ *
+ * @{
+ */
+
+ /** Check if USB VBus is available */
+# define is_usb_vbus_high()           port_pin_get_input_level(USB_VBUS_PIN)
+
+/**
+ * \internal
+ * \brief USB VBUS pin change handler
+ */
+static void _uhd_vbus_handler(void)
+{
+	extint_chan_disable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	if (is_usb_vbus_high()) {
+		udd_attach();
+	} else {
+		udd_detach();
+	}
+	extint_chan_enable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+}
+
+/**
+ * \internal
+ * \brief USB VBUS pin configuration
+ */
+static void _usb_vbus_config(void)
+{
+	struct port_config pin_conf;
+	port_get_config_defaults(&pin_conf);
+
+	/* Set USB VBUS Pin as inputs */
+	pin_conf.direction  = PORT_PIN_DIR_INPUT;
+	pin_conf.input_pull = PORT_PIN_PULL_NONE;
+	port_pin_set_config(USB_VBUS_PIN, &pin_conf);
+
+	/* Initialize EIC for vbus checking */
+	struct extint_chan_conf eint_chan_conf;
+	extint_chan_get_config_defaults(&eint_chan_conf);
+
+	eint_chan_conf.gpio_pin           = USB_VBUS_PIN;
+	eint_chan_conf.gpio_pin_mux       = USB_VBUS_EIC_MUX;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_LOW;
+	eint_chan_conf.filter_input_signal = true;
+
+	extint_chan_disable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_set_config(USB_VBUS_EIC_LINE, &eint_chan_conf);
+	extint_register_callback(_uhd_vbus_handler,
+			USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_enable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+}
+/** @} */
+#endif
+
 void udd_enable(void)
 {
 	irqflags_t flags;
@@ -988,8 +1050,15 @@ void udd_enable(void)
 	/* USB Module Enable */
 	usb_enable(&usb_device);
 
+#if USB_VBUS_EIC
+	_usb_vbus_config();
+	if (is_usb_vbus_high()) {
 	/* USB Attach */
 	udd_attach();
+	}
+#else 
+	udd_attach();
+#endif
 
 	cpu_irq_restore(flags);
 }
