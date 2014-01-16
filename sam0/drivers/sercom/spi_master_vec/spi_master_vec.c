@@ -51,6 +51,8 @@
  * @{
  */
 
+/** \cond INTERNAL */
+
 /**
  * \name Internal functions
  * @{
@@ -86,6 +88,8 @@ static inline void _spi_master_vec_pinmux_helper(uint32_t pinmux,
 };
 
 /** @} */
+
+/** \endcond */
 
 /**
  * \brief Initialize hardware and driver instance

@@ -206,6 +206,7 @@ struct spi_master_vec_bufdesc {
 
 /** Driver instance. */
 struct spi_master_vec_module {
+#if !defined(__DOXYGEN__)
 	Sercom *volatile sercom;
 	volatile bool locked;
 	volatile enum _spi_direction direction;
@@ -217,8 +218,9 @@ struct spi_master_vec_module {
 	volatile uint_fast8_t tx_lead_on_rx;
 	struct spi_master_vec_bufdesc *volatile rx_bufdesc_ptr;
 	struct spi_master_vec_bufdesc *volatile tx_bufdesc_ptr;
-#ifdef CONF_SPI_MASTER_VEC_OS_SUPPORT
+#  ifdef CONF_SPI_MASTER_VEC_OS_SUPPORT
 	CONF_SPI_MASTER_VEC_SEMAPHORE_TYPE busy_semaphore;
+#  endif
 #endif
 };
 
