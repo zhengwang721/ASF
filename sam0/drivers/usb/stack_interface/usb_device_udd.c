@@ -43,7 +43,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-/** Get USB device configuration */
+// Get USB device configuration
 #include "conf_usb.h"
 #include "udd.h"
 #include "usb.h"
@@ -56,7 +56,7 @@
  * USB low-level driver for USB device mode
  * @{
  */
-/** Check USB device configuration */
+// Check USB device configuration 
 #ifdef USB_DEVICE_HS_SUPPORT
 #  error The High speed mode is not supported on this part, please remove USB_DEVICE_HS_SUPPORT in conf_usb.h
 #endif
@@ -184,7 +184,7 @@ static udd_ep_job_t* udd_ep_get_job(udd_ep_id_t ep)
 
 /**
  * \brief     Endpoint IN process, continue to send packets or zero length packet 
- * \param[in] pointer to null, to receive the parameter transferred from driver layer
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
  */
 static void udd_ep_trans_in_next(void* pointer)
 {
@@ -234,7 +234,7 @@ static void udd_ep_trans_in_next(void* pointer)
 
 /**
  * \brief     Endpoint OUT process, continue to receive packets or zero length packet 
- * \param[in] pointer to null, to receive the parameter transferred from driver layer
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
  */
 static void udd_ep_trans_out_next(void* pointer)
 {
@@ -294,8 +294,8 @@ static void udd_ep_trans_out_next(void* pointer)
 
 /**
  * \brief     Endpoint Transfer Complete callback function, to do the next transfer depends on the direction(IN or OUT)
- * \param[in] module_inst, Pointer to USB module instance
- * \param[in] pointer to null, to receive the parameter transferred from driver layer
+ * \param[in] module_inst Pointer to USB module instance
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
  */
 static void udd_ep_transfer_process(struct usb_module *module_inst, void* pointer)
 {
@@ -309,20 +309,11 @@ static void udd_ep_transfer_process(struct usb_module *module_inst, void* pointe
 	}
 }
 
-/**
- * \brief Aborts transfer on going on endpoint
- *
- * If a transfer is on going, then it is stopped and
- * the callback registered is called to signal the end of transfer.
- * Note: The control endpoint is not authorized.
- *
- * \param ep            Endpoint to abort
- */
 void udd_ep_abort(udd_ep_id_t ep)
 {
 	udd_ep_job_t *ptr_job;
 
-    usb_device_endpoint_abort_job(&usb_device, ep);
+	usb_device_endpoint_abort_job(&usb_device, ep);
 
 	/* Job complete then call callback */
 	ptr_job = udd_ep_get_job(ep);
@@ -336,12 +327,6 @@ void udd_ep_abort(udd_ep_id_t ep)
 	}
 }
 
-/**
- * \brief Test whether the USB Device Controller is running at high
- * speed or not.
- *
- * \return \c true if the Device is running at high speed mode, otherwise \c false.
- */
 bool udd_is_high_speed(void)
 {
 #if SAMD21
@@ -349,31 +334,16 @@ bool udd_is_high_speed(void)
 #endif
 }
 
-/**
- * \brief Returns the current start of frame number
- *
- * \return current start of frame number.
- */
 uint16_t udd_get_frame_number(void)
 {
 	return usb_device_get_frame_number(&usb_device);
 }
 
-/**
- * \brief Returns the current micro start of frame number
- *
- * \return current micro start of frame number required in high speed mode.
- */
 uint16_t udd_get_micro_frame_number(void)
 {
 	return usb_device_get_micro_frame_number(&usb_device);
 }
 
-/**
- * \brief Disables an endpoint
- *
- * \param ep  Endpoint number including direction (USB_EP_DIR_IN/USB_EP_DIR_OUT).
- */
 void udd_ep_free(udd_ep_id_t ep)
 {
 	struct usb_device_endpoint_config config_ep;
@@ -389,15 +359,6 @@ void udd_ep_free(udd_ep_id_t ep)
 	usb_device_endpoint_disable_callback(&usb_device,ep,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT);
 }
 
-/**
- * \brief Configures and enables an endpoint
- *
- * \param ep               Endpoint number including direction (USB_EP_DIR_IN/USB_EP_DIR_OUT).
- * \param bmAttributes     Attributes of endpoint declared in the descriptor.
- * \param MaxEndpointSize  Endpoint maximum size
- *
- * \return \c 1 if the endpoint is enabled, otherwise \c 0.
- */
 bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes, uint16_t MaxEndpointSize)
 {
 	struct usb_device_endpoint_config config_ep;
@@ -452,29 +413,11 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes, uint16_t MaxEndpointSize
 	return true;
 }
 
-/**
- * \brief Check if the endpoint \a ep is halted.
- *
- * \param ep The ID of the endpoint to check.
- *
- * \return \c 1 if \a ep is halted, otherwise \c 0.
- */
 bool udd_ep_is_halted(udd_ep_id_t ep)
 {
 	return usb_device_endpoint_is_halted(&usb_device, ep);
 }
 
-/**
- * \brief Set the halted state of the endpoint \a ep
- *
- * After calling this function, any transaction on \a ep will result
- * in a STALL handshake being sent. Any pending transactions will be
- * performed first, however.
- *
- * \param ep The ID of the endpoint to be halted
- *
- * \return \c 1 if \a ep is halted, otherwise \c 0.
- */
 bool udd_ep_set_halt(udd_ep_id_t ep)
 {
 	uint8_t ep_num = ep & USB_EP_ADDR_MASK;
@@ -489,17 +432,6 @@ bool udd_ep_set_halt(udd_ep_id_t ep)
 	return true;
 }
 
-/**
- * \brief Clear the halted state of the endpoint \a ep
- *
- * After calling this function, any transaction on \a ep will
- * be handled normally, i.e. a STALL handshake will not be sent, and
- * the data toggle sequence will start at DATA0.
- *
- * \param ep The ID of the endpoint to be un-halted
- *
- * \return \c 1 if function was successfully done, otherwise \c 0.
- */
 bool udd_ep_clear_halt(udd_ep_id_t ep)
 {
 	udd_ep_job_t *ptr_job;
@@ -521,16 +453,6 @@ bool udd_ep_clear_halt(udd_ep_id_t ep)
 	return true;
 }
 
-/**
- * \brief Registers a callback to call when endpoint halt is cleared
- *
- * \param ep            The ID of the endpoint to use
- * \param callback      NULL or function to call when endpoint halt is cleared
- *
- * \warning if the endpoint is not halted then the \a callback is called immediately.
- *
- * \return \c 1 if the register is accepted, otherwise \c 0.
- */
 bool udd_ep_wait_stall_clear(udd_ep_id_t ep, udd_callback_halt_cleared_t callback)
 {
 	udd_ep_id_t ep_num;
@@ -571,25 +493,6 @@ static void udd_ctrl_stall_data(void)
 	usb_device_endpoint_clear_halt(&usb_device, USB_EP_DIR_OUT);
 }
 
-/**
- * \brief Allows to receive or send data on an endpoint
- *
- *
- * \param ep            The ID of the endpoint to use
- * \param b_shortpacket Enabled automatic short packet
- * \param buf           Buffer on Internal RAM to send or fill.
- *                      It must be align, then use COMPILER_WORD_ALIGNED.
- * \param buf_size      Buffer size to send or fill
- * \param callback      NULL or function to call at the end of transfer
- *
- * \warning About \a b_shortpacket, for IN endpoint it means that a short packet
- * (or a Zero Length Packet) will be sent to the USB line to properly close the USB
- * transfer at the end of the data transfer.
- * For Bulk and Interrupt OUT endpoint, it will automatically stop the transfer
- * at the end of the data transfer (received short packet).
- *
- * \return \c 1 if function was successfully done, otherwise \c 0.
- */
 bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t buf_size, udd_callback_trans_t callback)
 {
 	udd_ep_id_t ep_num;
@@ -677,29 +580,16 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t b
 	}
 }
 
-/**
- * \brief Changes the USB address of device
- *
- * \param address    New USB address
- */
 void udd_set_address(uint8_t address)
 {
 	usb_device_set_address(&usb_device,address);
 }
 
-/**
- * \brief Returns the USB address of device
- *
- * \return USB address
- */
 uint8_t udd_getaddress(void)
 {
 	return usb_device_get_address(&usb_device);
 }
 
-/**
- * \brief The USB driver sends a resume signal called Upstream Resume
- */
 void udd_send_remotewakeup(void)
 {
 	uint32_t try = 5;
@@ -708,13 +598,6 @@ void udd_send_remotewakeup(void)
 	}
 }
 
-/**
- * \brief Load set up payload
- *
- * \param payload       Pointer on payload. It must be align on a WORD
- *                      to be accepted by USB transfer.
- * \param payload_size  Size of payload
- */
 void udd_set_setup_payload( uint8_t *payload, uint16_t payload_size )
 {
 	udd_g_ctrlreq.payload = payload;
@@ -743,7 +626,7 @@ static void udd_ctrl_send_zlp_in(void)
 }
 
 /**
- * \brief Control Endpoint send packets (IN Process)
+ * \brief Process control endpoint IN transaction
  */
 static void udd_ctrl_in_sent(void)
 {
@@ -788,7 +671,8 @@ static void udd_ctrl_in_sent(void)
 }
 
 /**
- * \brief Control Endpoint receive packets (OUT Process)
+ * \brief Process control endpoint OUT transaction
+ * \param[in] Pointer to the endpoint transfer status parameter struct from driver layer.
  */
 static void udd_ctrl_out_received(void* pointer)
 {
@@ -864,10 +748,9 @@ static void udd_ctrl_out_received(void* pointer)
 
 /**
  * \internal 
- * \brief     USB control endpoint receive SETUP token callback function
- * \param[in] module_inst, Pointer to USB module instance
- * \param[in] pointer to null, to receive the parameter transferred from driver layer
- * 
+ * \brief     Endpoint 0 (control) SETUP received callback
+ * \param[in] module_inst pointer to USB module instance
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
  */
 static void _usb_ep0_on_setup(struct usb_module *module_inst, void* pointer)
 {
@@ -908,7 +791,7 @@ static void _usb_ep0_on_setup(struct usb_module *module_inst, void* pointer)
 
 /**
  * \brief Control Endpoint Process when underflow condition has occurred
- * \param[in] pointer to null, to receive the parameter transferred from driver layer
+ * \param[in] Pointer pointer to the endpoint transfer status parameter struct from driver layer.
  */
 static void udd_ctrl_underflow(void* pointer)
 {
@@ -927,7 +810,7 @@ static void udd_ctrl_underflow(void* pointer)
 
 /**
  * \brief Control Endpoint Process when overflow condition has occurred
- * \param[in] pointer to null, to receive the parameter transferred from driver layer
+ * \param[in] Pointer pointer to the endpoint transfer status parameter struct from driver layer.
  */
 static void udd_ctrl_overflow(void* pointer)
 {
@@ -947,8 +830,8 @@ static void udd_ctrl_overflow(void* pointer)
 /**
  * \internal
  * \brief Control endpoint transfer fail callback function
- * \param[in] module_inst, Pointer to USB module instance
- * \param[in] pointer to null, to receive the parameter transferred from driver layer
+ * \param[in] module_inst Pointer to USB module instance
+ * \param[in] Pointer pointer to the endpoint transfer status parameter struct from driver layer.
  */
 static void _usb_ep0_on_tansfer_fail(struct usb_module *module_inst, void* pointer)
 {
@@ -964,8 +847,8 @@ static void _usb_ep0_on_tansfer_fail(struct usb_module *module_inst, void* point
 /**
  * \internal
  * \brief Control endpoint transfer complete callback function
- * \param[in] module_inst, Pointer to USB module instance
- * \param[in] pointer to null, to receive the parameter transferred from driver layer
+ * \param[in] module_inst Pointer to USB module instance
+ * \param[in] Pointer pointer to the endpoint transfer status parameter struct from driver layer.
  */
 static void _usb_ep0_on_tansfer_ok(struct usb_module *module_inst, void * pointer)
 {
@@ -983,7 +866,7 @@ static void _usb_ep0_on_tansfer_ok(struct usb_module *module_inst, void * pointe
 
 /**
  * \brief Enable Control Endpoint
- * \param[in] module_inst, Pointer to USB module instance
+ * \param[in] module_inst Pointer to USB module instance
  */
 static void udd_ctrl_ep_enable(struct usb_module *module_inst)
 {
@@ -1009,7 +892,7 @@ static void udd_ctrl_ep_enable(struct usb_module *module_inst)
 /**
  * \internal
  * \brief Control endpoint Suspend callback function
- * \param[in] module_inst, Pointer to USB module instance
+ * \param[in] module_inst Pointer to USB module instance
  */
 static void _usb_on_suspend(struct usb_module *module_inst)
 {
@@ -1024,7 +907,7 @@ static void _usb_on_suspend(struct usb_module *module_inst)
 /**
  * \internal
  * \brief Control endpoint SOF callback function
- * \param[in] module_inst, Pointer to USB module instance
+ * \param[in] module_inst Pointer to USB module instance
  */
 static void _usb_on_sof_notify(struct usb_module *module_inst)
 {
@@ -1037,7 +920,7 @@ static void _usb_on_sof_notify(struct usb_module *module_inst)
 /**
  * \internal
  * \brief Control endpoint Reset callback function
- * \param[in] module_inst, Pointer to USB module instance
+ * \param[in] module_inst Pointer to USB module instance
  */
 static void _usb_on_bus_reset(struct usb_module *module_inst)
 {
@@ -1048,7 +931,7 @@ static void _usb_on_bus_reset(struct usb_module *module_inst)
 /**
  * \internal
  * \brief Control endpoint Wakeup callback function
- * \param[in] module_inst, Pointer to USB module instance
+ * \param[in] module_inst Pointer to USB module instance
  */
 static void _usb_on_wakeup(struct usb_module *module_inst)
 {

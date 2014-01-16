@@ -59,7 +59,9 @@
 #define  USB_EP_DIR_OUT       0x00
 
 /**
- * \brief Define macros for USB device that is not realized in head file 
+ * \name Macros for USB device those are not realized in head file
+ *
+ * @{ 
  */
 #define USB_DEVICE_EPINTENCLR_TRCPT0        USB_DEVICE_EPINTENCLR_TRCPT(1)
 #define USB_DEVICE_EPINTENCLR_TRCPT1        USB_DEVICE_EPINTENCLR_TRCPT(2)
@@ -86,6 +88,7 @@
 #define USB_DEVICE_EPSTATUSSET_STALLRQ1     USB_DEVICE_EPSTATUSSET_STALLRQ(2)
 #define USB_DEVICE_EPSTATUSCLR_STALLRQ0     USB_DEVICE_EPSTATUSCLR_STALLRQ(1)
 #define USB_DEVICE_EPSTATUSCLR_STALLRQ1     USB_DEVICE_EPSTATUSCLR_STALLRQ(2)
+/** @} */
 
 /**
  * \name USB SRAM data containing pipe descriptor table
@@ -108,7 +111,7 @@ COMPILER_PACK_RESET()
 /** @} */
  
 /**
- * \brief Local instance 
+ * \brief Local USB module instance 
  */
 static struct usb_module *_usb_instances;
 
@@ -1832,9 +1835,6 @@ void usb_get_config_defaults(struct usb_config *module_config)
 	module_config->speed_mode = USB_SPEED_FULL;
 }
 
-/**
- * \brief PAD values 
- */
 #define NVM_USB_PAD_TRANSN_POS  45
 #define NVM_USB_PAD_TRANSN_SIZE 5
 #define NVM_USB_PAD_TRANSP_POS  50
