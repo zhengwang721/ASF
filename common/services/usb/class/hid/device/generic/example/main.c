@@ -64,6 +64,7 @@ int main(void)
 	board_init();
 #else
 	system_init();
+	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_XOSC32K));
 #endif
 	ui_init();
 	ui_powerdown();
