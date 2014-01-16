@@ -986,6 +986,9 @@ static void _uhd_vbus_handler(void)
 	} else {
 		udd_detach();
 	}
+# ifdef UDC_VBUS_EVENT
+	UDC_VBUS_EVENT(Is_pad_vbus_high());
+# endif
 	extint_chan_enable_callback(USB_VBUS_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
 }
@@ -1047,8 +1050,8 @@ void udd_enable(void)
 #if USB_VBUS_EIC
 	_usb_vbus_config();
 	if (is_usb_vbus_high()) {
-	/* USB Attach */
-	udd_attach();
+		/* USB Attach */
+		_uhd_vbus_handler();
 	}
 #else 
 	udd_attach();
