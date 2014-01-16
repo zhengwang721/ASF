@@ -255,7 +255,7 @@
 #include <gclk.h>
 
 /**
- * Define system clock features set according to different device family
+ * \brief Define system clock features set according to different device family
  * @{
  */
 #if (SAMD21) || defined(__DOXYGEN__)
@@ -377,13 +377,13 @@ enum system_osc8m_div {
  * Internal 8Mhz RC oscillator freqency range setting
  */
 enum system_osc8m_frequency_range {
-	/* Frequency range 4 Mhz to 6 Mhz */
+	/** Frequency range 4 Mhz to 6 Mhz */
 	SYSTEM_OSC8M_FREQUENCY_RANGE_4_TO_6,
-	/* Frequency range 6 Mhz to 8 Mhz */
+	/** Frequency range 6 Mhz to 8 Mhz */
 	SYSTEM_OSC8M_FREQUENCY_RANGE_6_TO_8,
-	/* Frequency range 8 Mhz to 11 Mhz */
+	/** Frequency range 8 Mhz to 11 Mhz */
 	SYSTEM_OSC8M_FREQUENCY_RANGE_8_TO_11,
-	/* Frequency range 11 Mhz to 15 Mhz */
+	/** Frequency range 11 Mhz to 15 Mhz */
 	SYSTEM_OSC8M_FREQUENCY_RANGE_11_TO_15,
 };
 
@@ -507,10 +507,9 @@ enum system_clock_source {
 	/** Internal Ultra Low Power 32kHz oscillator */
 	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
 #ifdef FEATURE_SYSTEM_CLOCK_DPLL
-	/** Digital Phase Locked Loop (DPLL)
-	 *
-	 * \note Only some devices support this feature,
-	 * check \c FEATURE_SYSTEM_CLOCK_DPLL for supported devices */
+	/** Digital Phase Locked Loop (DPLL).
+	 * Check \c FEATURE_SYSTEM_CLOCK_DPLL for which device support it.
+	 */
 	SYSTEM_CLOCK_SOURCE_DPLL     = GCLK_SOURCE_FDPLL,
 #endif
 };
@@ -1371,23 +1370,17 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *
  *
  * \section asfdoc_sam0_system_clock_extra_errata Errata
- *	<tr>
- *	<td>
- *	 \li This driver implements workaround for errata 10558
- *	     "Several reset values of SYSCTRL.INTFLAG are wrong (BOD and DFLL)"<br>
- *	     When system_init is called it will reset these interrupts flags before they are used.
- *	</td>
- *	</tr>
  *
- *	<tr>
- *	<td>
- *	 \li This driver implements experimental workaround for errata 9905<br>
- *	     "The DFLL clock must be requested before being configured otherwise a
- *	     write access to a DFLL register can freeze the device."<br>
- *	     This driver will enable and configure the DFLL before the ONDEMAND bit is set.
- *	</td>
- *	</tr>
+ *	- This driver implements workaround for errata 10558
  *
+ *	  "Several reset values of SYSCTRL.INTFLAG are wrong (BOD and DFLL)"
+ *	  When system_init is called it will reset these interrupts flags before they are used.
+
+ *	- This driver implements experimental workaround for errata 9905
+ *
+ *	  "The DFLL clock must be requested before being configured otherwise a
+ *	  write access to a DFLL register can freeze the device."
+ *	  This driver will enable and configure the DFLL before the ONDEMAND bit is set.
  *
  *
  * \section asfdoc_sam0_system_clock_extra_history Module History

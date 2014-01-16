@@ -76,10 +76,7 @@
  * SAMD20 device.
  */
 #if defined(__DOXYGEN__)
-/**
- * \note The actual enumeration name is "system_interrupt_vector". The _samd20
- *  suffix is only for Doxygen documentation to identify different devices.
- */
+/** \note The actual enumeration name is "system_interrupt_vector". */
 enum system_interrupt_vector_samd20 {
 #else
 enum system_interrupt_vector {

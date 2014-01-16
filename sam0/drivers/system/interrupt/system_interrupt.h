@@ -322,6 +322,14 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *		<td>ISR</td>
  *		<td>Interrupt Service Routine</td>
  *	</tr>
+ *	<tr>
+ *		<td>NMI</td>
+ *		<td>Non-maskable interrupt</td>
+ *	</tr>
+ *	<tr>
+ *		<td>SERCOM</td>
+ *		<td>Serial Communication Interface</td>
+ *	</tr>
  * </table>
  *
  *
