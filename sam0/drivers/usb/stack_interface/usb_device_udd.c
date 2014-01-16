@@ -672,7 +672,7 @@ static void udd_ctrl_in_sent(void)
 
 /**
  * \brief Process control endpoint OUT transaction
- * \param[in] Pointer to the endpoint transfer status parameter struct from driver layer.
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
  */
 static void udd_ctrl_out_received(void* pointer)
 {
