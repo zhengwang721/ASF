@@ -52,6 +52,8 @@
 /* Every bit in the interrupt mask. */
 #define MASK_ALL_INTERRUPTS     (0xffffffffUL)
 
+ #define TWI_TIMEOUT_COUNTER    (0xffffffffUL)
+
 /* Interrupts that are enabled to catch error conditions on the bus. */
 #define SR_ERROR_INTERRUPTS     (TWI_SR_NACK | TWI_SR_ARBLST | TWI_SR_OVRE)
 #define IER_ERROR_INTERRUPTS    (TWI_IER_NACK | TWI_IER_ARBLST | TWI_IER_OVRE)
@@ -80,8 +82,16 @@ static void local_twi_handler(const portBASE_TYPE twi_index);
 static freertos_dma_event_control_t tx_dma_control[MAX_TWIS];
 static freertos_dma_event_control_t rx_dma_control[MAX_TWIS];
 
+struct twi_module {
+	uint8_t *buffer;
+	uint32_t length;
+};
+
+/* Structures to manage the DMA control for both Rx and Tx transactions. */
+static struct twi_module twis[MAX_TWIS];
+
 /* Used to detect the init function being called after any part of the DMA
-control structure has already been initialilsed - indicating an error
+control structure has already been initialized - indicating an error
 condition as init should only be called once per port. */
 static const freertos_dma_event_control_t null_dma_control = {NULL, NULL};
 
@@ -466,26 +476,71 @@ status_code_t freertos_twi_read_packet_async(freertos_twi_if p_twi,
 
 			twi_base->TWI_IADR = internal_address;
 
-			/* Start the PDC reception. */
-			freertos_start_pdc_rx(&(rx_dma_control[twi_index]),
-					p_packet->buffer, p_packet->length,
-					all_twi_definitions[twi_index].pdc_base_address,
-					notification_semaphore);
+			if (p_packet->length <= 2) {
+				/* Cannot use PDC transfer, use normal transfer */
+				/* Start the transfer. */
+				twi_base->TWI_CR = TWI_CR_START;
+				uint32_t status;
+				uint32_t cnt = p_packet->length;
+				uint8_t *buffer = p_packet->buffer;
+				while (cnt > 0) {
+					status = twi_base->TWI_SR;
+					if (status & TWI_SR_NACK) {
+						return TWI_RECEIVE_NACK;
+					}
 
-			/* Start the transfer. */
-			twi_base->TWI_CR = TWI_CR_START;
+					/* Last byte ? */
+					if (cnt == 1) {
+						twi_base->TWI_CR = TWI_CR_STOP;
+					}
 
-			/* Catch the end of reception so the access mutex can be returned,
-			and the task notified (if it supplied a notification semaphore).
-			The interrupt can be enabled here because the ENDRX	signal from the
-			PDC to the peripheral will have been de-asserted when the next
-			transfer was configured. */
-			twi_enable_interrupt(twi_base, TWI_IER_ENDRX);
+					if (!(status & TWI_SR_RXRDY)) {
+						continue;
+					}
+					*buffer++ = twi_base->TWI_RHR;
 
-			return_value = freertos_optionally_wait_transfer_completion(
-					&(rx_dma_control[twi_index]),
-					notification_semaphore,
-					block_time_ticks);
+					cnt--;
+				}
+				uint32_t timeout_counter = 0;
+				/* Wait for stop to be sent */
+				while (!(twi_base->TWI_SR & TWI_SR_TXCOMP)) {
+					/* Check timeout condition. */
+					if (++timeout_counter >= TWI_TIMEOUT_COUNTER) {
+						return_value = ERR_TIMEOUT;
+						break;
+					}
+				}
+				/* Release semaphre */
+				xSemaphoreGive(tx_dma_control[twi_index].peripheral_access_mutex);
+				if (rx_dma_control[twi_index].transaction_complete_notification_semaphore != NULL) {
+					xSemaphoreGive(rx_dma_control[twi_index].transaction_complete_notification_semaphore);
+				}
+
+			} else {
+
+				/* Start the PDC reception. */
+				twis[twi_index].buffer = p_packet->buffer;
+				twis[twi_index].length = p_packet->length;
+				freertos_start_pdc_rx(&(rx_dma_control[twi_index]),
+						p_packet->buffer, (p_packet->length)-2,
+						all_twi_definitions[twi_index].pdc_base_address,
+						notification_semaphore);
+
+				/* Start the transfer. */
+				twi_base->TWI_CR = TWI_CR_START;
+
+				/* Catch the end of reception so the access mutex can be returned,
+				and the task notified (if it supplied a notification semaphore).
+				The interrupt can be enabled here because the ENDRX	signal from the
+				PDC to the peripheral will have been de-asserted when the next
+				transfer was configured. */
+				twi_enable_interrupt(twi_base, TWI_IER_ENDRX);
+
+				return_value = freertos_optionally_wait_transfer_completion(
+						&(rx_dma_control[twi_index]),
+						notification_semaphore,
+						block_time_ticks);
+			}
 		}
 	} else {
 		return_value = ERR_INVALID_ARG;
@@ -496,7 +551,7 @@ status_code_t freertos_twi_read_packet_async(freertos_twi_if p_twi,
 
 /*
  * For internal use only.
- * A common SPI interrupt handler that is called for all SPI peripherals.
+ * A common TWI interrupt handler that is called for all TWI peripherals.
  */
 static void local_twi_handler(const portBASE_TYPE twi_index)
 {
@@ -535,10 +590,31 @@ static void local_twi_handler(const portBASE_TYPE twi_index)
 
 	/* Has the PDC completed a reception? */
 	if ((twi_status & TWI_SR_ENDRX) != 0UL) {
-		/* Complete the transfer. */
-		twi_port->TWI_CR = TWI_CR_STOP;
+		/* Must handle the two last bytes */
 
 		twi_disable_interrupt(twi_port, TWI_IDR_ENDRX);
+		/* Complete the transfer. */
+		twi_port->TWI_CR = TWI_CR_STOP;
+		/* Read second last data */
+		twis[twi_index].buffer[(twis[twi_index].length)-2] = twi_port->TWI_RHR;
+
+		/* Restart timeout counter */
+		uint32_t timeout_counter = 0;
+		uint32_t status;
+		/* Wait for RX ready flag */
+		while (1) {
+			status = twi_port->TWI_SR;
+			if (status & TWI_SR_RXRDY) {
+				break;
+			}
+			/* Check timeout condition. */
+			if (++timeout_counter >= TWI_TIMEOUT_COUNTER) {
+				//module->status = TWI_TIMEOUT;
+				break;
+			}
+		}
+		/* Read last data */
+		twis[twi_index].buffer[(twis[twi_index].length)-1] = twi_port->TWI_RHR;
 
 		/* If the driver is supporting multi-threading, then return the access
 		mutex.  NOTE: As the peripheral is half duplex there is only one
