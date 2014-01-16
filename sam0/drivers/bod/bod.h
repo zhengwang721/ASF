@@ -410,7 +410,7 @@ static inline void bod_clear_detected(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD2x</td>
+ *		<td>Added support for SAMD21</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
@@ -440,7 +440,7 @@ static inline void bod_clear_detected(
  *	<tr>
  *		<td>C</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAMD2x.</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>
