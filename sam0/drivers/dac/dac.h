@@ -783,6 +783,10 @@ void dac_clear_status(
  *		<td>MSB</td>
  *		<td>Most Significant Bit</td>
  *	</tr>
+ *	<tr>
+ *		<td>DMA</td>
+ *		<td>Direct Memory Access</td>
+ *	</tr>
  * </table>
  *
  *
@@ -807,6 +811,9 @@ void dac_clear_status(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Add SAMD21 support</td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
@@ -821,7 +828,11 @@ void dac_clear_status(
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
+ *  - \subpage asfdoc_sam0_dac_basic_use_case
+ * \if DAC_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_dac_basic_use_case_callback
+ * \endif
+ *  - \subpage asfdoc_sam0_adc_dma_use_case
  *
  * \page asfdoc_sam0_dac_document_revision_history Document Revision History
  *
@@ -830,6 +841,11 @@ void dac_clear_status(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Add SAMD21 support.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>

@@ -52,7 +52,7 @@
  * This use case sets up the Watchdog to force a system reset after every 4096
  * clocks of the Watchdog's Generic Clock channel, with an Early Warning
  * callback being generated every 2048 clocks. Each time the Early Warning
- * interrupt fires the boar LED is turned on, and each time the device resets
+ * interrupt fires the board LED is turned on, and each time the device resets
  * the board LED is turned off, giving a periodic flashing pattern.
  *
  *
