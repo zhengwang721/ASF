@@ -3,7 +3,7 @@
  *
  * \brief ASF Programmers Manual Revision History
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,13 +41,18 @@
 
 
 /**
- * \page appdoc_samd20_asf_prog_manual_samd20_revision_history Document Revision History
+ * \page appdoc_sam0_asf_prog_manual_sam0_revision_history Document Revision History
  *
  * <table>
  *  <tr>
  *    <th>Doc. Rev.</td>
  *    <th>Date</td>
  *    <th>Comments</td>
+ *  </tr>
+ *  <tr>
+ *    <td>C</td>
+ *    <td>01/2014</td>
+ *    <td>Added SAM D21 support.</td>
  *  </tr>
  *  <tr>
  *    <td>B</td>
