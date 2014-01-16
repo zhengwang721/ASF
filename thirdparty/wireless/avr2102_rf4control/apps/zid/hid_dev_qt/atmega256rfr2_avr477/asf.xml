@@ -23,7 +23,8 @@
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zid.hid_dev_qt"/>
 		<require idref= "thirdparty.wireless.avr2102_rf4control.source.nwk"/>
 		<require idref= "thirdparty.wireless.avr2102_rf4control.source.zid"/>
-		<require idref="board.atmega256rfr2_avr477"/>
+		<require idref="board.user.atmega256rfr2_avr477"/>
+		<require idref="board.dummy.atmega256rfr2"/>
 		<generator value="iarew"/>
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>

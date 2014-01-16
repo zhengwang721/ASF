@@ -160,7 +160,7 @@ int main(void)
      */
     board_init();    
 
-    sysclk_init();
+    //sysclk_init();
 
     sw_timer_init();
     
