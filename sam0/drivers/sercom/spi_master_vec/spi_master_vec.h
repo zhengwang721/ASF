@@ -313,9 +313,6 @@ static inline enum status_code spi_master_vec_lock(
  * use.
  *
  * \param[in,out] module Pointer to the driver instance to lock.
- *
- * \retval STATUS_OK if the module was locked.
- * \retval STATUS_BUSY if the module was already locked.
  */
 static inline void spi_master_vec_unlock(
 		struct spi_master_vec_module *const module)
