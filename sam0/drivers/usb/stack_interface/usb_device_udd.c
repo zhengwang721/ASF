@@ -996,13 +996,6 @@ static void _uhd_vbus_handler(void)
  */
 static void _usb_vbus_config(void)
 {
-	struct port_config pin_conf;
-	port_get_config_defaults(&pin_conf);
-
-	/* Set USB VBUS Pin as inputs */
-	pin_conf.direction  = PORT_PIN_DIR_INPUT;
-	pin_conf.input_pull = PORT_PIN_PULL_NONE;
-	port_pin_set_config(USB_VBUS_PIN, &pin_conf);
 
 	/* Initialize EIC for vbus checking */
 	struct extint_chan_conf eint_chan_conf;
@@ -1010,7 +1003,8 @@ static void _usb_vbus_config(void)
 
 	eint_chan_conf.gpio_pin           = USB_VBUS_PIN;
 	eint_chan_conf.gpio_pin_mux       = USB_VBUS_EIC_MUX;
-	eint_chan_conf.detection_criteria = EXTINT_DETECT_LOW;
+	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_NONE;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_HIGH;
 	eint_chan_conf.filter_input_signal = true;
 
 	extint_chan_disable_callback(USB_VBUS_EIC_LINE,
