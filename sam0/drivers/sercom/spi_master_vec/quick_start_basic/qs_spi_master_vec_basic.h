@@ -107,10 +107,10 @@
  *
  * Add to the application code:
  * \snippet qs_spi_master_vec_basic.c enable_instance
- * \snippet qs_spi_master_vec_basic.c start_reception
- * \snippet qs_spi_master_vec_basic.c wait_reception
+ * \snippet qs_spi_master_vec_basic.c start_reception_wait
  * \snippet qs_spi_master_vec_basic.c start_transmission
- * \snippet qs_spi_master_vec_basic.c wait_start_transception
+ * \snippet qs_spi_master_vec_basic.c start_transception
+ * \snippet qs_spi_master_vec_basic.c wait_transception
  *
  * \subsection asfdoc_samd20_sercom_spi_master_vec_basic_main_flow Workflow
  * -# Enable the SERCOM module before using it.
