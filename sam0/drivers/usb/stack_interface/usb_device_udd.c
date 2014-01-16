@@ -791,7 +791,7 @@ static void _usb_ep0_on_setup(struct usb_module *module_inst, void* pointer)
 
 /**
  * \brief Control Endpoint Process when underflow condition has occurred
- * \param[in] Pointer pointer to the endpoint transfer status parameter struct from driver layer.
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
  */
 static void udd_ctrl_underflow(void* pointer)
 {
@@ -810,7 +810,7 @@ static void udd_ctrl_underflow(void* pointer)
 
 /**
  * \brief Control Endpoint Process when overflow condition has occurred
- * \param[in] Pointer pointer to the endpoint transfer status parameter struct from driver layer.
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
  */
 static void udd_ctrl_overflow(void* pointer)
 {
@@ -831,7 +831,7 @@ static void udd_ctrl_overflow(void* pointer)
  * \internal
  * \brief Control endpoint transfer fail callback function
  * \param[in] module_inst Pointer to USB module instance
- * \param[in] Pointer pointer to the endpoint transfer status parameter struct from driver layer.
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
  */
 static void _usb_ep0_on_tansfer_fail(struct usb_module *module_inst, void* pointer)
 {
@@ -848,7 +848,7 @@ static void _usb_ep0_on_tansfer_fail(struct usb_module *module_inst, void* point
  * \internal
  * \brief Control endpoint transfer complete callback function
  * \param[in] module_inst Pointer to USB module instance
- * \param[in] Pointer pointer to the endpoint transfer status parameter struct from driver layer.
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
  */
 static void _usb_ep0_on_tansfer_ok(struct usb_module *module_inst, void * pointer)
 {
@@ -943,23 +943,11 @@ static void _usb_on_wakeup(struct usb_module *module_inst)
 #endif
 }
 
-/**
- * \brief Detaches the device from the bus
- *
- * The driver must remove pull-up on USB line D- or D+.
- */
 void udd_detach(void)
 {
 	usb_device_detach(&usb_device);
 }
 
-/**
- * \brief Attach device to the bus when possible
- *
- * \warning If a VBus control is included in driver,
- * then it will attach device when an acceptable Vbus
- * level from the host is detected.
- */
 void udd_attach(void)
 {
 	usb_device_attach(&usb_device);
@@ -975,9 +963,6 @@ void udd_attach(void)
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
 }
 
-/**
- * \brief Enables the USB Device mode
- */
 void udd_enable(void)
 {
 	irqflags_t flags;
@@ -1009,9 +994,6 @@ void udd_enable(void)
 	cpu_irq_restore(flags);
 }
 
-/**
- * \brief Disables the USB Device mode
- */
 void udd_disable(void)
 {
 	irqflags_t flags;
