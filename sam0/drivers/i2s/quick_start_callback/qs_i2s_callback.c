@@ -177,6 +177,11 @@ int main(void)
 	system_interrupt_enable_global();
 	//! [enable_global_interrupts]
 
+//! [start_job]
+	i2s_serializer_write_buffer_job(&i2s_instance,
+			I2S_SERIALIZER_0, data_buffer, 4);
+//! [start_job]
+
 	//! [main_loop]
 	while (true) {
 	}

@@ -86,6 +86,10 @@
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_i2s_callback.c setup_init
  *
+ * Add to user application start transmitting job (typically in \c main(), after
+ * initialization):
+ * \snippet qs_i2s_callback.c start_job
+ *
  * \subsection asfdoc_sam0_i2s_callback_use_case_setup_flow Workflow
  * -# Create a module software instance structure for the I2S module to store
  *    the I2S driver state while it is in use.
@@ -143,7 +147,8 @@
  *  -# Enable the Serializer 0 tx ready callback so that it will be called by
  *     the driver when appropriate.
  *     \snippet qs_i2s_callback.c setup_enable_callback
- *
+ * -# Start a transmitting job.
+ *    \snippet qs_i2s_callback start_job
  *
  * \section asfdoc_sam0_i2s_callback_use_case_main Use Case
  *

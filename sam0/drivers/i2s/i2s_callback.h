@@ -145,13 +145,13 @@ static inline void i2s_serializer_enable_callback(
 
 	module_inst->serializer[serializer].enabled_callback_mask |=
 			(1u << callback_type);
-	if (module_inst->serializer[serializer].job_status == STATUS_ABORTED) {
+	if (I2S_SERIALIZER_CALLBACK_OVER_UNDER_RUN != callback_type) {
 		return;
 	}
 	module_inst->hw->INTENSET.reg =
 		(module_inst->serializer[serializer].mode == I2S_SERIALIZER_TRANSMIT) ?
-			(I2S_INTENSET_TXRDY0 << serializer) :
-			(I2S_INTENSET_RXRDY0 << serializer);
+			(I2S_INTFLAG_TXUR0 << serializer) :
+			(I2S_INTFLAG_RXOR0 << serializer);
 }
 
 /**
@@ -172,10 +172,18 @@ static inline void i2s_serializer_disable_callback(
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
+	Assert(module_inst->hw);
 	Assert(serializer < I2S_SERIALIZER_N);
 
 	module_inst->serializer[serializer].enabled_callback_mask &=
 			~(1u << callback_type);
+	if (I2S_SERIALIZER_CALLBACK_OVER_UNDER_RUN != callback_type) {
+		return;
+	}
+	module_inst->hw->INTENCLR.reg =
+		(module_inst->serializer[serializer].mode == I2S_SERIALIZER_TRANSMIT) ?
+			(I2S_INTFLAG_TXUR0 << serializer) :
+			(I2S_INTFLAG_RXOR0 << serializer);
 }
 
 /** @} */
