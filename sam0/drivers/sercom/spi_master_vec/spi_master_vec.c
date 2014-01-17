@@ -51,17 +51,16 @@
  * @{
  */
 
-/** \cond INTERNAL */
-
 /**
  * \name Internal functions
  * @{
  */
 
+/** \cond INTERNAL */
+
 static void _spi_master_vec_int_handler(uint8_t sercom_index);
 
 /**
- * \internal
  * \brief Pin MUX configuration helper
  *
  * \param[in] pinmux Pin MUX setting to apply. Special values:
@@ -87,9 +86,9 @@ static inline void _spi_master_vec_pinmux_helper(uint32_t pinmux,
 	system_pinmux_pin_set_config(pinmux >> 16, &pin_conf);
 };
 
-/** @} */
-
 /** \endcond */
+
+/** @} */
 
 /**
  * \brief Initialize hardware and driver instance
@@ -391,7 +390,6 @@ enum status_code spi_master_vec_transceive_buffer_job(
 }
 
 /**
- * \internal
  * \brief Interrupt handler
  *
  * \param[in] sercom_index SERCOM instance number passed from the master SERCOM
