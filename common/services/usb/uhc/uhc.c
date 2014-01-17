@@ -763,7 +763,7 @@ static void uhc_enumeration_step15(
 
 #ifdef USB_HOST_LPM_SUPPORT
 	// Check LPM support
-	if (g_uhc_device_root.dev_desc.bcdUSB == LE16(USB_V2_1)) {
+	if (g_uhc_device_root.dev_desc.bcdUSB >= LE16(USB_V2_1)) {
 		// Device can support LPM
 		// Start LPM support check
 		uhc_enumeration_step16_lpm();
@@ -823,21 +823,24 @@ static void uhc_enumeration_step17_lpm(
 {
 	UNUSED(add);
 
-	if ((status != UHD_TRANS_NOERROR)
+	if (status == UHD_TRANS_STALL) {
+		free(uhc_dev_enum->lpm_desc);
+		uhc_dev_enum->lpm_desc = NULL;
+	} else if ((status != UHD_TRANS_NOERROR)
 			|| (payload_trans < sizeof(usb_dev_lpm_desc_t))
 			|| (uhc_dev_enum->lpm_desc->bos.bDescriptorType != USB_DT_BOS)
 			|| (payload_trans != le16_to_cpu(uhc_dev_enum->lpm_desc->bos.wTotalLength))) {
 		uhc_enumeration_error((status==UHD_TRANS_DISCONNECT)?
 				UHC_ENUM_DISCONNECT:UHC_ENUM_FAIL);
 		return;
-	}
-
-	// Check LPM support
-	if ((uhc_dev_enum->lpm_desc->capa_ext.bDescriptorType != USB_DT_DEVICE_CAPABILITY)
-			|| (uhc_dev_enum->lpm_desc->capa_ext.bDevCapabilityType != USB_DC_USB20_EXTENSION)
-				|| (!(uhc_dev_enum->lpm_desc->capa_ext.bmAttributes & (USB_DC_EXT_LPM)))) {
-		free(uhc_dev_enum->lpm_desc);
-		uhc_dev_enum->lpm_desc = NULL;
+	} else if (status == UHD_TRANS_NOERROR) {
+		// Check LPM support
+		if ((uhc_dev_enum->lpm_desc->capa_ext.bDescriptorType != USB_DT_DEVICE_CAPABILITY)
+				|| (uhc_dev_enum->lpm_desc->capa_ext.bDevCapabilityType != USB_DC_USB20_EXTENSION)
+					|| (!(uhc_dev_enum->lpm_desc->capa_ext.bmAttributes & (USB_DC_EXT_LPM)))) {
+			free(uhc_dev_enum->lpm_desc);
+			uhc_dev_enum->lpm_desc = NULL;
+		}
 	}
 
 	uhc_enum_try = 0;

@@ -265,7 +265,7 @@ void ui_com_overflow(void)
  *   - The blink is normal (0.5s) with full speed device
  *   - The blink is fast (0.25s) with high speed device
  * - Led 0 is on during data transfer between CDC and UART
- * - Button SW0 allows to enter the device in LPM suspend mode with remote
- *   wakeup feature authorized
+ * - Button SW0 allows to enter the device which support the LPM
+ *    in LPM suspend mode with remote wakeup feature authorized.
  * - Only SW0 button can be used to wakeup USB device in LPM suspend mode
  */

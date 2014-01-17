@@ -932,8 +932,8 @@ static void _usb_device_lpm_suspend(struct usb_module *module_inst, void *pointe
 {
 	dbg_print("LPM_SUSP\n");
 
-	bool *lpm_wakeup_enable;
-	lpm_wakeup_enable = (bool *)pointer;
+	uint32_t *lpm_wakeup_enable;
+	lpm_wakeup_enable = (uint32_t *)pointer;
 
 	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_LPMSUSP);
 	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);

@@ -130,7 +130,7 @@ static struct usb_module *_usb_instances;
 static struct usb_pipe_callback_parameter pipe_callback_para;
 
 /* Device LPM callback variable */
-static bool device_callback_lpm_wakeup_enable;
+static uint32_t device_callback_lpm_wakeup_enable;
 
 /**
  * \brief Device endpoint callback parameter variable, used to transfer info to UDD wrapper layer 
