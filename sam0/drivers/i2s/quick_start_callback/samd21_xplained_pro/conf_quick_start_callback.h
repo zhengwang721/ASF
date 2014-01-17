@@ -48,22 +48,22 @@
 /** I2S module to use */
 #define CONF_I2S_MODULE      I2S
 
-/** I2S MCK output pin */
+/** I2S MCK pin */
 #define CONF_I2S_MCK_PIN     PIN_PA09G_I2S_MCK0
-/** I2S MCK output pin mux */
+/** I2S MCK pin mux */
 #define CONF_I2S_MCK_MUX     MUX_PA09G_I2S_MCK0
-/** I2S SCK output pin */
+/** I2S SCK pin */
 #define CONF_I2S_SCK_PIN     PIN_PA10G_I2S_SCK0
-/** I2S SCK output pin mux */
+/** I2S SCK pin mux */
 #define CONF_I2S_SCK_MUX     MUX_PA10G_I2S_SCK0
-/** I2S FS output pin */
+/** I2S FS pin */
 #define CONF_I2S_FS_PIN      PIN_PA11G_I2S_FS0
-/** I2S FS output pin mux */
+/** I2S FS pin mux */
 #define CONF_I2S_FS_MUX      MUX_PA11G_I2S_FS0
 
-/** I2S SD output pin */
+/** I2S SD pin */
 #define CONF_I2S_SD_PIN      PIN_PA07G_I2S_SD0
-/** I2S SD output pin mux */
+/** I2S SD pin mux */
 #define CONF_I2S_SD_MUX      MUX_PA07G_I2S_SD0
 //[definition_i2s]
 
