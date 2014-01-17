@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0+ EEPROM Emulator Service Quick Start
+ * \brief SAM D2x EEPROM Emulator Service Quick Start
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *

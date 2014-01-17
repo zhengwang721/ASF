@@ -78,7 +78,29 @@
  * interface the user application logic and internal hardware peripherals to
  * an external system. The Pin Multiplexer (PINMUX) driver provides a method
  * of configuring the individual pin peripheral multiplexers to select
- * alternate pin functions,
+ * alternate pin functions.
+ *
+ * \subsection asfdoc_sam0_system_pinmux_features Driver Feature Macro Definition
+ * <table>
+ *	<tr>
+ *		<th>Driver Feature Macro</th>
+ *		<th>Supported devices</th>
+ *	</tr>
+ *	<tr>
+ *		<td>FEATURE_SYSTEM_PINMUX_SLEWRATE_LIMITER</td>
+ *		<td>SAMD21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>FEATURE_SYSTEM_PINMUX_DRIVE_STRENGTH</td>
+ *		<td>SAMD21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>FEATURE_SYSTEM_PINMUX_OPEN_DRAIN</td>
+ *		<td>SAMD21</td>
+ *	</tr>
+ * </table>
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
  *
  * \subsection asfdoc_sam0_system_pinmux_physical_logical_pins Physical and Logical GPIO Pins
  * SAM D2x devices use two naming conventions for the I/O pins in the device; one
@@ -182,9 +204,12 @@ extern "C" {
  * Define pinmux features set according to different device family
  * @{
  */
-#if (SAMD21)
+#if (SAMD21) || defined(__DOXYGEN__)
+/** Output Driver Slew Rate Limiter feature support */
 #  define FEATURE_SYSTEM_PINMUX_SLEWRATE_LIMITER
+/** Output Driver Strength Selection feature support */
 #  define FEATURE_SYSTEM_PINMUX_DRIVE_STRENGTH
+/** Open Drain Output feature support */
 #  define FEATURE_SYSTEM_PINMUX_OPEN_DRAIN
 #endif
 /*@}*/
@@ -588,6 +613,9 @@ void system_pinmux_group_set_output_drive(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Add support for SAMD21.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Fixed broken sampling mode function implementations, which wrote
  *		    corrupt configuration values to the device registers.</td>
  *	</tr>
@@ -618,6 +646,11 @@ void system_pinmux_group_set_output_drive(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>D</td>
+ *		<td>01/2014</td>
+ *		<td>Add support for SAMD21</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>

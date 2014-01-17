@@ -43,7 +43,7 @@
 #include <string.h>
 #include <stdlib.h>
 
-/* Get USB device configuration */
+// Get USB device configuration
 #include "conf_usb.h"
 #include "udd.h"
 #include "usb.h"
@@ -56,7 +56,7 @@
  * USB low-level driver for USB device mode
  * @{
  */
-// Check USB device configuration
+// Check USB device configuration 
 #ifdef USB_DEVICE_HS_SUPPORT
 #  error The High speed mode is not supported on this part, please remove USB_DEVICE_HS_SUPPORT in conf_usb.h
 #endif
@@ -82,9 +82,31 @@
 #   define dbg_print(...)
 #endif
 
+/** Maximum size of a transfer in multi-packet mode */
 #define UDD_ENDPOINT_MAX_TRANS ((8*1024)-1)
 
-//! Bit definitions about endpoint control state machine for udd_ep_control_state
+/** USB software device instance structure */
+struct usb_module usb_device;
+
+/**
+ * \name Control endpoint low level management routine.
+ *
+ * This function performs control endpoint management.
+ * It handles the SETUP/DATA/HANDSHAKE phases of a control transaction.
+ *
+ * @{
+ */
+ 
+/**
+ * \brief Buffer to store the data received on control endpoint (SETUP/OUT endpoint 0)
+ *
+ * Used to avoid a RAM buffer overflow in case of the payload buffer
+ * is smaller than control endpoint size
+ */
+UDC_BSS(4)
+uint8_t udd_ctrl_buffer[USB_DEVICE_EP_CTRL_SIZE];
+
+/** Bit definitions about endpoint control state machine for udd_ep_control_state */
 typedef enum {
 	UDD_EPCTRL_SETUP                  = 0, //!< Wait a SETUP packet
 	UDD_EPCTRL_DATA_OUT               = 1, //!< Wait a OUT data packet
@@ -94,6 +116,20 @@ typedef enum {
 	UDD_EPCTRL_STALL_REQ              = 5, //!< STALL enabled on IN & OUT packet
 } udd_ctrl_ep_state_t;
 
+/** Global variable to give and record information of the set up request management */
+udd_ctrl_request_t udd_g_ctrlreq;
+
+/** State of the endpoint control management */
+static udd_ctrl_ep_state_t udd_ep_control_state;
+
+/** Total number of data received/sent during data packet phase with previous payload buffers */
+static uint16_t udd_ctrl_prev_payload_nb_trans;
+
+/** Number of data received/sent to/from udd_g_ctrlreq.payload buffer */
+static uint16_t udd_ctrl_payload_nb_trans;
+
+/** @} */
+
 /**
  * \name Management of bulk/interrupt/isochronous endpoints
  *
@@ -102,7 +138,29 @@ typedef enum {
  * - Send a ZLP packet if requested
  * - Call callback registered to signal end of transfer
  * The transfer abort and stall feature are supported.
+ *
+ * @{
  */
+ 
+/**
+ * \brief Buffer to store the data received on bulk/interrupt endpoints
+ *
+ * Used to avoid a RAM buffer overflow in case of the user buffer
+ * is smaller than endpoint size
+ *
+ * \warning The protected interrupt endpoint size is 512 bytes maximum.
+ * \warning The isochronous and endpoint is not protected by this system and
+ *          the user must always use a buffer corresponding at endpoint size.
+ */
+#if (defined USB_DEVICE_LOW_SPEED)
+UDC_BSS(4) uint8_t udd_ep_out_cache_buffer[USB_DEVICE_MAX_EP][8];
+#elif (defined USB_DEVICE_HS_SUPPORT)
+UDC_BSS(4) uint8_t udd_ep_out_cache_buffer[USB_DEVICE_MAX_EP][512];
+#else
+UDC_BSS(4) uint8_t udd_ep_out_cache_buffer[USB_DEVICE_MAX_EP][64];
+#endif
+
+/** Structure definition about job registered on an endpoint */
 typedef struct {
 	union {
 		//! Callback to call at the end of transfer
@@ -126,59 +184,25 @@ typedef struct {
 	uint8_t b_use_out_cache_buffer:1;
 } udd_ep_job_t;
 
-//! Global variable to give and record information of the setup request management
-udd_ctrl_request_t udd_g_ctrlreq;
-
-//! State of the endpoint control management
-static udd_ctrl_ep_state_t udd_ep_control_state;
-
-//! Total number of data received/sent during data packet phase with previous payload buffers
-static uint16_t udd_ctrl_prev_payload_nb_trans;
-
-//! Number of data received/sent to/from udd_g_ctrlreq.payload buffer
-static uint16_t udd_ctrl_payload_nb_trans;
-
-//! USB software device instance structure.
-struct usb_module usb_device;
-
-
-/**
- * \brief Buffer to store the data received on control endpoint (SETUP/OUT endpoint 0)
- *
- * Used to avoid a RAM buffer overflow in case of the payload buffer
- * is smaller than control endpoint size
- */
-UDC_BSS(4)
-uint8_t udd_ctrl_buffer[USB_DEVICE_EP_CTRL_SIZE];
-
-/**
- * \brief Buffer to store the data received on bulk/interrupt endpoints
- *
- * Used to avoid a RAM buffer overflow in case of the user buffer
- * is smaller than endpoint size
- *
- * \warning The protected interrupt endpoint size is 512 bytes max.
- * \warning The isochronous and endpoint is not protected by this system and
- *          the user must always use a buffer corresponding at endpoint size.
- */
-#if (0 != USB_DEVICE_MAX_EP)
-
-#if (defined USB_DEVICE_LOW_SPEED)
-UDC_BSS(4) uint8_t udd_ep_out_cache_buffer[USB_DEVICE_MAX_EP][8];
-#elif (defined USB_DEVICE_HS_SUPPORT)
-UDC_BSS(4) uint8_t udd_ep_out_cache_buffer[USB_DEVICE_MAX_EP][512];
-#else
-UDC_BSS(4) uint8_t udd_ep_out_cache_buffer[USB_DEVICE_MAX_EP][64];
-#endif
-
-//! Array to register a job on bulk/interrupt/isochronous endpoint
+/** Array to register a job on bulk/interrupt/isochronous endpoint */
 static udd_ep_job_t udd_ep_job[2 * USB_DEVICE_MAX_EP];
 
+/** @} */
+
+/**
+ * \brief     Get the detailed job by endpoint number
+ * \param[in] ep  Endpoint Address
+ * \retval    pointer to an udd_ep_job_t structure instance
+ */
 static udd_ep_job_t* udd_ep_get_job(udd_ep_id_t ep)
 {
 	return &udd_ep_job[(2 * (ep & USB_EP_ADDR_MASK) + ((ep & USB_EP_DIR_IN) ? 1 : 0)) - 2];
 }
 
+/**
+ * \brief     Endpoint IN process, continue to send packets or zero length packet 
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
+ */
 static void udd_ep_trans_in_next(void* pointer)
 {
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
@@ -192,39 +216,43 @@ static void udd_ep_trans_in_next(void* pointer)
 	ep_num = ep & USB_EP_ADDR_MASK;
 
 	ep_size = ptr_job->ep_size;
-	// Update number of data transferred
+	/* Update number of data transferred */
 	nb_trans = ep_callback_para->sent_bytes;
 	ptr_job->nb_trans += nb_trans;
 
-	// Need to send other data
+	/* Need to send other data */
 	if (ptr_job->nb_trans != ptr_job->buf_size) {
 		next_trans = ptr_job->buf_size - ptr_job->nb_trans;
 		if (UDD_ENDPOINT_MAX_TRANS < next_trans) {
-		// The USB hardware support a maximum
-		// transfer size of UDD_ENDPOINT_MAX_TRANS Bytes
+		/* The USB hardware support a maximum
+		 * transfer size of UDD_ENDPOINT_MAX_TRANS Bytes */
 			next_trans = UDD_ENDPOINT_MAX_TRANS -(UDD_ENDPOINT_MAX_TRANS % ep_size);
 		}
-		// Need ZLP, if requested and last packet is not a short packet
+		/* Need ZLP, if requested and last packet is not a short packet */
 		ptr_job->b_shortpacket = ptr_job->b_shortpacket && (0 == (next_trans % ep_size));
 		usb_device_endpoint_write_buffer_job(&usb_device,ep_num,&ptr_job->buf[ptr_job->nb_trans],next_trans);
 		return;
 	}
 
-	// Need to send a ZLP after all data transfer
+	/* Need to send a ZLP after all data transfer */
 	if (ptr_job->b_shortpacket) {
 		ptr_job->b_shortpacket = false;
-		// Start new transfer
+		/* Start new transfer */
 		usb_device_endpoint_write_buffer_job(&usb_device,ep_num,&ptr_job->buf[ptr_job->nb_trans],0);
 		return;
 	}
 
-	// Job complete then call callback
+	/* Job complete then call callback */
 	ptr_job->busy = false;
 	if (NULL != ptr_job->call_trans) {
 		ptr_job->call_trans(UDD_EP_TRANSFER_OK, ptr_job->nb_trans, ep);
 	}
 }
 
+/**
+ * \brief     Endpoint OUT process, continue to receive packets or zero length packet 
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
+ */
 static void udd_ep_trans_out_next(void* pointer)
 {
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
@@ -238,34 +266,34 @@ static void udd_ep_trans_out_next(void* pointer)
 	ep_num = ep & USB_EP_ADDR_MASK;
 
 	ep_size = ptr_job->ep_size;
-	// Update number of data transferred
+	/* Update number of data transferred */
 	nb_trans = ep_callback_para->received_bytes;
 
-	// Can be necessary to copy data receive from cache buffer to user buffer
+	/* Can be necessary to copy data receive from cache buffer to user buffer */
 	if (ptr_job->b_use_out_cache_buffer) {
 		memcpy(&ptr_job->buf[ptr_job->nb_trans], udd_ep_out_cache_buffer[ep_num - 1], ptr_job->buf_size % ep_size);
 	}
 
-	// Update number of data transferred
+	/* Update number of data transferred */
 	ptr_job->nb_trans += nb_trans;
 	if (ptr_job->nb_trans > ptr_job->buf_size) {
 		ptr_job->nb_trans = ptr_job->buf_size;
 	}
 
-	// If all previous data requested are received and user buffer not full
-	// then need to receive other data
+	/* If all previous data requested are received and user buffer not full
+	 * then need to receive other data */
 	if ((nb_trans == ep_callback_para->out_buffer_size) && (ptr_job->nb_trans != ptr_job->buf_size)) {
 		next_trans = ptr_job->buf_size - ptr_job->nb_trans;
 		if (UDD_ENDPOINT_MAX_TRANS < next_trans) {
-		// The USB hardware support a maximum transfer size
-		// of UDD_ENDPOINT_MAX_TRANS Bytes
+		/* The USB hardware support a maximum transfer size
+		 * of UDD_ENDPOINT_MAX_TRANS Bytes */
 		next_trans = UDD_ENDPOINT_MAX_TRANS - (UDD_ENDPOINT_MAX_TRANS % ep_size);
 		} else {
 			next_trans -= next_trans % ep_size;
 		}
 
 		if (next_trans < ep_size) {
-			// Use the cache buffer for Bulk or Interrupt size endpoint
+			/* Use the cache buffer for Bulk or Interrupt size endpoint */
 			ptr_job->b_use_out_cache_buffer = true;
 			usb_device_endpoint_read_buffer_job(&usb_device,ep_num,udd_ep_out_cache_buffer[ep_num - 1],ep_size);
 		} else {
@@ -274,15 +302,18 @@ static void udd_ep_trans_out_next(void* pointer)
 		return;
 	}
 
-	// Job complete then call callback
+	/* Job complete then call callback */
 	ptr_job->busy = false;
 	if (NULL != ptr_job->call_trans) {
 		ptr_job->call_trans(UDD_EP_TRANSFER_OK, ptr_job->nb_trans, ep);
 	}
 }
-#endif
 
-
+/**
+ * \brief     Endpoint Transfer Complete callback function, to do the next transfer depends on the direction(IN or OUT)
+ * \param[in] module_inst Pointer to USB module instance
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
+ */
 static void udd_ep_transfer_process(struct usb_module *module_inst, void* pointer)
 {
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
@@ -295,21 +326,20 @@ static void udd_ep_transfer_process(struct usb_module *module_inst, void* pointe
 	}
 }
 
-
 void udd_ep_abort(udd_ep_id_t ep)
 {
 	udd_ep_job_t *ptr_job;
 
-    usb_device_endpoint_abort_job(&usb_device, ep);
+	usb_device_endpoint_abort_job(&usb_device, ep);
 
-	// Job complete then call callback
+	/* Job complete then call callback */
 	ptr_job = udd_ep_get_job(ep);
 	if (!ptr_job->busy) {
 		return;
 	}
 	ptr_job->busy = false;
 	if (NULL != ptr_job->call_trans) {
-		// It can be a Transfer or stall callback
+		/* It can be a Transfer or stall callback */
 		ptr_job->call_trans(UDD_EP_TRANSFER_ABORT, ptr_job->nb_trans, ep);
 	}
 }
@@ -326,12 +356,10 @@ uint16_t udd_get_frame_number(void)
 	return usb_device_get_frame_number(&usb_device);
 }
 
-
 uint16_t udd_get_micro_frame_number(void)
 {
 	return usb_device_get_micro_frame_number(&usb_device);
 }
-
 
 void udd_ep_free(udd_ep_id_t ep)
 {
@@ -347,8 +375,6 @@ void udd_ep_free(udd_ep_id_t ep)
 	usb_device_endpoint_unregister_callback(&usb_device,ep_num,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT);
 	usb_device_endpoint_disable_callback(&usb_device,ep,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT);
 }
-
-
 
 bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes, uint16_t MaxEndpointSize)
 {
@@ -381,7 +407,7 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes, uint16_t MaxEndpointSize
 
 	bmAttributes = bmAttributes & USB_EP_TYPE_MASK;
 
-	// Check endpoint type
+	/* Check endpoint type */
 	if(USB_EP_TYPE_ISOCHRONOUS == bmAttributes) {
 		config_ep.ep_type = USB_DEVICE_ENDPOINT_TYPE_ISOCHRONOUS;
 	} else if (USB_EP_TYPE_BULK == bmAttributes) {
@@ -404,12 +430,10 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes, uint16_t MaxEndpointSize
 	return true;
 }
 
-
 bool udd_ep_is_halted(udd_ep_id_t ep)
 {
 	return usb_device_endpoint_is_halted(&usb_device, ep);
 }
-
 
 bool udd_ep_set_halt(udd_ep_id_t ep)
 {
@@ -425,7 +449,6 @@ bool udd_ep_set_halt(udd_ep_id_t ep)
 	return true;
 }
 
-
 bool udd_ep_clear_halt(udd_ep_id_t ep)
 {
 	udd_ep_job_t *ptr_job;
@@ -438,7 +461,7 @@ bool udd_ep_clear_halt(udd_ep_id_t ep)
 
 	usb_device_endpoint_clear_halt(&usb_device, ep);
 
-	// If a job is register on clear halt action then execute callback
+	/* If a job is register on clear halt action then execute callback */
 	if (ptr_job->busy == true) {
 		ptr_job->busy = false;
 		ptr_job->call_nohalt();
@@ -459,23 +482,26 @@ bool udd_ep_wait_stall_clear(udd_ep_id_t ep, udd_callback_halt_cleared_t callbac
 
 	ptr_job = udd_ep_get_job(ep);
 	if (ptr_job->busy == true) {
-		return false; // Job already on going
+		return false; /* Job already on going */
 	}
 
-	// Wait clear halt endpoint
+	/* Wait clear halt endpoint */
 	if (usb_device_endpoint_is_halted(&usb_device, ep)) {
-		// Endpoint halted then registers the callback
+		/* Endpoint halted then registers the callback */
 		ptr_job->busy = true;
 		ptr_job->call_nohalt = callback;
 		return true;
 	} else if (usb_device_endpoint_is_configured(&usb_device, ep)) {
-		callback(); // Endpoint not halted then call directly callback
+		callback(); /* Endpoint not halted then call directly callback */
 		return true;
 	} else {
 		return false;
 	}
 }
 
+/**
+ * \brief Control Endpoint stall sending data 
+ */
 static void udd_ctrl_stall_data(void)
 {
 	udd_ep_control_state = UDD_EPCTRL_STALL_REQ;
@@ -501,12 +527,12 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t b
 	flags = cpu_irq_save();
 	if (ptr_job->busy == true) {
 		cpu_irq_restore(flags);
-		return false; // Job already on going
+		return false; /* Job already on going */
 	}
 	ptr_job->busy = true;
 	cpu_irq_restore(flags);
 
-	// No job running, set up a new one.
+	/* No job running, set up a new one */
 	ptr_job->buf = buf;
 	ptr_job->buf_size = buf_size;
 	ptr_job->nb_trans = 0;
@@ -514,7 +540,7 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t b
 	ptr_job->b_shortpacket = b_shortpacket;
 	ptr_job->b_use_out_cache_buffer = false;
 
-	// Initialize value to simulate a empty transfer
+	/* Initialize value to simulate a empty transfer */
 	uint16_t next_trans;
 
 	if (ep & USB_EP_DIR_IN) {
@@ -527,7 +553,7 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t b
 			ptr_job->b_shortpacket = ptr_job->b_shortpacket &&
 					(0 == (next_trans % ptr_job->ep_size));
 		} else if (true == ptr_job->b_shortpacket) {
-			ptr_job->b_shortpacket = false; // avoid to send zlp again
+			ptr_job->b_shortpacket = false; /* avoid to send zero length packet again */
 			next_trans = 0;
 		} else {
 			ptr_job->busy = false;
@@ -543,8 +569,8 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket, uint8_t * buf, iram_size_t b
 		if (0 != ptr_job->buf_size) {
 			next_trans = ptr_job->buf_size;
 			if (UDD_ENDPOINT_MAX_TRANS < next_trans) {
-				// The USB hardware support a maximum transfer size
-				// of UDD_ENDPOINT_MAX_TRANS Bytes
+				/* The USB hardware support a maximum transfer size
+				 * of UDD_ENDPOINT_MAX_TRANS Bytes */
 				next_trans = UDD_ENDPOINT_MAX_TRANS -
 						(UDD_ENDPOINT_MAX_TRANS % ptr_job->ep_size);
 			} else {
@@ -595,6 +621,9 @@ void udd_set_setup_payload( uint8_t *payload, uint16_t payload_size )
 	udd_g_ctrlreq.payload_size = payload_size;
 }
 
+/**
+ * \brief Control Endpoint translate the data in buffer into Device Request Struct
+ */
 static void udd_ctrl_fetch_ram(void)
 {
 	udd_g_ctrlreq.req.bmRequestType = udd_ctrl_buffer[0];
@@ -604,12 +633,18 @@ static void udd_ctrl_fetch_ram(void)
 	udd_g_ctrlreq.req.wLength = ((uint16_t)(udd_ctrl_buffer[7]) << 8) + udd_ctrl_buffer[6];
 }
 
+/**
+ * \brief Control Endpoint send out zero length packet
+ */
 static void udd_ctrl_send_zlp_in(void)
 {
 	udd_ep_control_state = UDD_EPCTRL_HANDSHAKE_WAIT_IN_ZLP;
 	usb_device_endpoint_write_buffer_job(&usb_device,0,udd_g_ctrlreq.payload,0);
 }
 
+/**
+ * \brief Process control endpoint IN transaction
+ */
 static void udd_ctrl_in_sent(void)
 {
 	static bool b_shortpacket = false;
@@ -618,27 +653,27 @@ static void udd_ctrl_in_sent(void)
 	nb_remain = udd_g_ctrlreq.payload_size - udd_ctrl_payload_nb_trans;
 
 	if (0 == nb_remain) {
-		// All content of current buffer payload are sent Update number of total data sending by previous payload buffer
+		/* All content of current buffer payload are sent Update number of total data sending by previous payload buffer */
 		udd_ctrl_prev_payload_nb_trans += udd_ctrl_payload_nb_trans;
 		if ((udd_g_ctrlreq.req.wLength == udd_ctrl_prev_payload_nb_trans) || b_shortpacket) {
-			// All data requested are transferred or a short packet has been sent, then it is the end of data phase.
-			// Generate an OUT ZLP for handshake phase.
+			/* All data requested are transferred or a short packet has been sent, then it is the end of data phase.
+			 * Generate an OUT ZLP for handshake phase */
 			udd_ep_control_state = UDD_EPCTRL_HANDSHAKE_WAIT_OUT_ZLP;
 			usb_device_endpoint_setup_buffer_job(&usb_device,udd_ctrl_buffer);
 			return;
 		}
-		// Need of new buffer because the data phase is not complete
+		/* Need of new buffer because the data phase is not complete */
 		if ((!udd_g_ctrlreq.over_under_run) || (!udd_g_ctrlreq.over_under_run())) {
-			// Underrun then send zlp on IN
-			// Here nb_remain=0, this allows to send a IN ZLP
+			/* Under run then send zlp on IN
+			 * Here nb_remain=0, this allows to send a IN ZLP */
 		} else {
-			// A new payload buffer is given
+			/* A new payload buffer is given */
 			udd_ctrl_payload_nb_trans = 0;
 			nb_remain = udd_g_ctrlreq.payload_size;
 		}
 	}
 
-	// Continue transfer and send next data
+	/* Continue transfer and send next data */
 	if (nb_remain >= USB_DEVICE_EP_CTRL_SIZE) {
 		nb_remain = USB_DEVICE_EP_CTRL_SIZE;
 		b_shortpacket = false;
@@ -646,12 +681,16 @@ static void udd_ctrl_in_sent(void)
 		b_shortpacket = true;
 	}
 
-	// Link payload buffer directly on USB hardware
+	/* Link payload buffer directly on USB hardware */
 	usb_device_endpoint_write_buffer_job(&usb_device,0,udd_g_ctrlreq.payload + udd_ctrl_payload_nb_trans,nb_remain);
 
 	udd_ctrl_payload_nb_trans += nb_remain;
 }
 
+/**
+ * \brief Process control endpoint OUT transaction
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
+ */
 static void udd_ctrl_out_received(void* pointer)
 {
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
@@ -662,10 +701,10 @@ static void udd_ctrl_out_received(void* pointer)
 	}
 
 	uint16_t nb_data;
-	nb_data = ep_callback_para->received_bytes; // Read data received during OUT phase
+	nb_data = ep_callback_para->received_bytes; /* Read data received during OUT phase */
 
 	if (udd_g_ctrlreq.payload_size < (udd_ctrl_payload_nb_trans + nb_data)) {
-		// Payload buffer too small
+		/* Payload buffer too small */
 		nb_data = udd_g_ctrlreq.payload_size - udd_ctrl_payload_nb_trans;
 	}
 
@@ -674,56 +713,62 @@ static void udd_ctrl_out_received(void* pointer)
 
 	if ((USB_DEVICE_EP_CTRL_SIZE != nb_data) || \
 	(udd_g_ctrlreq.req.wLength <= (udd_ctrl_prev_payload_nb_trans + udd_ctrl_payload_nb_trans))) {
-		// End of reception because it is a short packet
-		// or all data are transferred
+		/* End of reception because it is a short packet
+		 * or all data are transferred */
 
-		// Before send ZLP, call intermediate callback
-		// in case of data receive generate a stall
+		/* Before send ZLP, call intermediate callback
+		 * in case of data receive generate a stall */
 		udd_g_ctrlreq.payload_size = udd_ctrl_payload_nb_trans;
 		if (NULL != udd_g_ctrlreq.over_under_run) {
 			if (!udd_g_ctrlreq.over_under_run()) {
-				// Stall ZLP
+				/* Stall ZLP */
 				udd_ep_control_state = UDD_EPCTRL_STALL_REQ;
-				// Stall all packets on IN & OUT control endpoint
+				/* Stall all packets on IN & OUT control endpoint */
 				udd_ep_set_halt(0);
-				// Ack reception of OUT to replace NAK by a STALL
+				/* Ack reception of OUT to replace NAK by a STALL */
 				return;
 			}
 		}
-		// Send IN ZLP to ACK setup request
+		/* Send IN ZLP to ACK setup request */
 		udd_ctrl_send_zlp_in();
 		return;
 	}
 
 	if (udd_g_ctrlreq.payload_size == udd_ctrl_payload_nb_trans) {
-		// Overrun then request a new payload buffer
+		/* Overrun then request a new payload buffer */
 		if (!udd_g_ctrlreq.over_under_run) {
-			// No callback available to request a new payload buffer
-			// Stall ZLP
+			/* No callback available to request a new payload buffer
+			 * Stall ZLP */
 			udd_ep_control_state = UDD_EPCTRL_STALL_REQ;
-			// Stall all packets on IN & OUT control endpoint
+			/* Stall all packets on IN & OUT control endpoint */
 			udd_ep_set_halt(0);
 			return;
 		}
 		if (!udd_g_ctrlreq.over_under_run()) {
-			// No new payload buffer delivered
-			// Stall ZLP
+			/* No new payload buffer delivered
+			 * Stall ZLP */
 			udd_ep_control_state = UDD_EPCTRL_STALL_REQ;
-			// Stall all packets on IN & OUT control endpoint
+			/* Stall all packets on IN & OUT control endpoint */
 			udd_ep_set_halt(0);
 			return;
 		}
-		// New payload buffer available
-		// Update number of total data received
+		/* New payload buffer available
+		 * Update number of total data received */
 		udd_ctrl_prev_payload_nb_trans += udd_ctrl_payload_nb_trans;
 
-		// Reinit reception on payload buffer
+		/* Reinitialize reception on payload buffer */
 		udd_ctrl_payload_nb_trans = 0;
 	}
-	// Init buffer size and enable OUT bank
+	/* Initialize buffer size and enable OUT bank */
 	usb_device_endpoint_setup_buffer_job(&usb_device,udd_ctrl_buffer);
 }
 
+/**
+ * \internal 
+ * \brief     Endpoint 0 (control) SETUP received callback
+ * \param[in] module_inst pointer to USB module instance
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
+ */
 static void _usb_ep0_on_setup(struct usb_module *module_inst, void* pointer)
 {
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
@@ -761,37 +806,50 @@ static void _usb_ep0_on_setup(struct usb_module *module_inst, void* pointer)
 	}
 }
 
+/**
+ * \brief Control Endpoint Process when underflow condition has occurred
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
+ */
 static void udd_ctrl_underflow(void* pointer)
 {
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
 
 	if (UDD_EPCTRL_DATA_OUT == udd_ep_control_state) {
-		// Host want to stop OUT transaction
-		// then stop to wait OUT data phase and wait IN ZLP handshake
+		/* Host want to stop OUT transaction
+		 * then stop to wait OUT data phase and wait IN ZLP handshake */
 		udd_ctrl_send_zlp_in();
 	} else if (UDD_EPCTRL_HANDSHAKE_WAIT_OUT_ZLP == udd_ep_control_state) {
-		// A OUT handshake is waiting by device,
-		// but host want extra IN data then stall extra IN data
+		/* A OUT handshake is waiting by device,
+		 * but host want extra IN data then stall extra IN data */
 		usb_device_endpoint_set_halt(&usb_device, ep_callback_para->endpoint_address);
 	}
 }
 
-
+/**
+ * \brief Control Endpoint Process when overflow condition has occurred
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
+ */
 static void udd_ctrl_overflow(void* pointer)
 {
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
 
 	if (UDD_EPCTRL_DATA_IN == udd_ep_control_state) {
-		// Host want to stop IN transaction
-		// then stop to wait IN data phase and wait OUT ZLP handshake
+		/* Host want to stop IN transaction
+		 * then stop to wait IN data phase and wait OUT ZLP handshake */
 		udd_ep_control_state = UDD_EPCTRL_HANDSHAKE_WAIT_OUT_ZLP;
 	} else if (UDD_EPCTRL_HANDSHAKE_WAIT_IN_ZLP == udd_ep_control_state) {
-		// A IN handshake is waiting by device,
-		// but host want extra OUT data then stall extra OUT data and following status stage
+		/* A IN handshake is waiting by device,
+		 * but host want extra OUT data then stall extra OUT data and following status stage */
 		usb_device_endpoint_set_halt(&usb_device, ep_callback_para->endpoint_address);
 	}
 }
 
+/**
+ * \internal
+ * \brief Control endpoint transfer fail callback function
+ * \param[in] module_inst Pointer to USB module instance
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
+ */
 static void _usb_ep0_on_tansfer_fail(struct usb_module *module_inst, void* pointer)
 {
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
@@ -803,12 +861,17 @@ static void _usb_ep0_on_tansfer_fail(struct usb_module *module_inst, void* point
 	}
 }
 
-
+/**
+ * \internal
+ * \brief Control endpoint transfer complete callback function
+ * \param[in] module_inst Pointer to USB module instance
+ * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
+ */
 static void _usb_ep0_on_tansfer_ok(struct usb_module *module_inst, void * pointer)
 {
-		if (UDD_EPCTRL_DATA_OUT  == udd_ep_control_state) { // handshake Out for status stage
+		if (UDD_EPCTRL_DATA_OUT  == udd_ep_control_state) { /* handshake Out for status stage */
 			udd_ctrl_out_received(pointer);
-		} else if (UDD_EPCTRL_DATA_IN == udd_ep_control_state) { // handshake In for status stage
+		} else if (UDD_EPCTRL_DATA_IN == udd_ep_control_state) { /* handshake In for status stage */
 			udd_ctrl_in_sent();
 		} else {
 			if (NULL != udd_g_ctrlreq.callback) {
@@ -818,6 +881,10 @@ static void _usb_ep0_on_tansfer_ok(struct usb_module *module_inst, void * pointe
 		}
 }
 
+/**
+ * \brief Enable Control Endpoint
+ * \param[in] module_inst Pointer to USB module instance
+ */
 static void udd_ctrl_ep_enable(struct usb_module *module_inst)
 {
 	/* USB Device Endpoint0 Configuration */
@@ -844,6 +911,12 @@ static void udd_ctrl_ep_enable(struct usb_module *module_inst)
 	 udd_ep_control_state = UDD_EPCTRL_SETUP;
 }
 
+/**
+ * \internal
+ * \brief Control endpoint Suspend callback function
+ * \param[in] module_inst Pointer to USB module instance
+ * \param[in] pointer Pointer to the callback parameter from driver layer.
+ */
 static void _usb_on_suspend(struct usb_module *module_inst, void *pointer)
 {
 	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
@@ -877,6 +950,12 @@ static void _usb_device_lpm_suspend(struct usb_module *module_inst, void *pointe
 }
 #endif
 
+/**
+ * \internal
+ * \brief Control endpoint SOF callback function
+ * \param[in] module_inst Pointer to USB module instance
+ * \param[in] pointer Pointer to the callback parameter from driver layer.
+ */
 static void _usb_on_sof_notify(struct usb_module *module_inst, void *pointer)
 {
 	udc_sof_notify();
@@ -885,6 +964,12 @@ static void _usb_on_sof_notify(struct usb_module *module_inst, void *pointer)
 #endif
 }
 
+/**
+ * \internal
+ * \brief Control endpoint Reset callback function
+ * \param[in] module_inst Pointer to USB module instance
+ * \param[in] pointer Pointer to the callback parameter from driver layer.
+ */
 static void _usb_on_bus_reset(struct usb_module *module_inst, void *pointer)
 {
 	// Reset USB Device Stack Core
@@ -893,6 +978,12 @@ static void _usb_on_bus_reset(struct usb_module *module_inst, void *pointer)
 	udd_ctrl_ep_enable(module_inst);
 }
 
+/**
+ * \internal
+ * \brief Control endpoint Wakeup callback function
+ * \param[in] module_inst Pointer to USB module instance
+ * \param[in] pointer Pointer to the callback parameter from driver layer.
+ */
 static void _usb_on_wakeup(struct usb_module *module_inst, void *pointer)
 {
 	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
