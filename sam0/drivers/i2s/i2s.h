@@ -179,10 +179,11 @@ enum i2s_serial_clock_source {
 enum i2s_data_delay {
 	/** Left Justified (no delay) */
 	I2S_DATA_DELAY_0,
-	/** I2S (1-bit delay) */
+	/** I2S data delay (1-bit delay) */
 	I2S_DATA_DELAY_1,
-
+	/** Left Justified (no delay) */
 	I2S_DATA_DELAY_LEFT_JUSTIFIED = I2S_DATA_DELAY_0,
+	/** I2S data delay (1-bit delay) */
 	I2S_DATA_DELAY_I2S = I2S_DATA_DELAY_1
 };
 
@@ -268,9 +269,6 @@ enum i2s_bit_padding {
 	I2S_BIT_PADDING_MSB,
 	/** Padding with LSBit */
 	I2S_BIT_PADDING_LSB,
-
-	I2S_BIT_PADDING_ZERO = I2S_BIT_PADDING_0,
-	I2S_BIT_PADDING_ONE = I2S_BIT_PADDING_1
 };
 
 /**
@@ -323,9 +321,11 @@ enum i2s_data_padding {
 	I2S_DATA_PADDING_0,
 	/** Padding last data in case of under-run */
 	I2S_DATA_PADDING_SAME_AS_LAST,
-
-	I2S_DATA_PADDING_ZERO = I2S_DATA_PADDING_0,
+	/** Padding last data in case of under-run
+	 *  (abbr. \c I2S_DATA_PADDING_SAME_AS_LAST) */
 	I2S_DATA_PADDING_LAST = I2S_DATA_PADDING_SAME_AS_LAST,
+	/** Padding last data in case of under-run
+	 *  (abbr. \c I2S_DATA_PADDING_SAME_AS_LAST) */
 	I2S_DATA_PADDING_SAME = I2S_DATA_PADDING_SAME_AS_LAST
 };
 
@@ -339,9 +339,8 @@ enum i2s_line_default_state {
 	I2S_LINE_DEFAULT_1,
 	/** Output default value is high impedance */
 	I2S_LINE_DEFAULT_HIGH_IMPEDANCE = 3,
-
-	I2S_LINE_DEFAULT_ZERO = I2S_LINE_DEFAULT_0,
-	I2S_LINE_DEFAULT_ONE = I2S_LINE_DEFAULT_1,
+	/** Output default value is high impedance
+	 *  (abbr. \c I2S_LINE_DEFAULT_HIGH_IMPEDANCE) */
 	I2S_LINE_DEFAULT_HIZ = I2S_LINE_DEFAULT_HIGH_IMPEDANCE
 };
 
@@ -465,8 +464,9 @@ struct i2s_serializer_config {
 	/** Set to \c true to loop-back output to input pin for test */
 	bool loop_back;
 
-	/** Assumes mono input and duplicate it (left channel) to right channel */
-	bool extend_data_to_stereo_channels;
+	/** Set to \c true to assumes mono input and duplicate it (left channel) to
+	 *  right channel */
+	bool mono_mode;
 
 	/** Disable data slot */
 	bool disable_data_slot[8];
@@ -808,7 +808,7 @@ static inline void i2s_serializer_get_config_defaults(
 {
 	config->loop_back = false;
 
-	config->extend_data_to_stereo_channels = false;
+	config->mono_mode = false;
 
 	config->disable_data_slot[0] = false;
 	config->disable_data_slot[1] = false;
@@ -825,14 +825,14 @@ static inline void i2s_serializer_get_config_defaults(
 
 	config->data_size = I2S_DATA_SIZE_16BIT;
 
-	config->bit_padding = I2S_BIT_PADDING_ZERO;
-	config->data_padding = I2S_DATA_PADDING_ZERO;
+	config->bit_padding = I2S_BIT_PADDING_0;
+	config->data_padding = I2S_DATA_PADDING_0;
 
 	config->dma_usage = I2S_DMA_USE_SINGLE_CHANNEL_FOR_ALL;
 
 	config->clock_unit = I2S_CLOCK_UNIT_0;
 
-	config->line_default_state = I2S_LINE_DEFAULT_ZERO;
+	config->line_default_state = I2S_LINE_DEFAULT_0;
 
 	config->mode = I2S_SERIALIZER_TRANSMIT;
 

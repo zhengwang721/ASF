@@ -275,7 +275,7 @@ enum status_code i2s_serializer_set_config(
 	uint32_t serctrl =
 			(config->loop_back ? I2S_SERCTRL_RXLOOP : 0) |
 			(config->dma_usage ? I2S_SERCTRL_DMA : 0) |
-			(config->extend_data_to_stereo_channels ? I2S_SERCTRL_MONO : 0) |
+			(config->mono_mode ? I2S_SERCTRL_MONO : 0) |
 			(config->disable_data_slot[7] ? I2S_SERCTRL_SLOTDIS7 : 0) |
 			(config->disable_data_slot[6] ? I2S_SERCTRL_SLOTDIS6 : 0) |
 			(config->disable_data_slot[5] ? I2S_SERCTRL_SLOTDIS5 : 0) |
