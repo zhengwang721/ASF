@@ -1045,7 +1045,16 @@ static inline void usart_disable_transceiver(
  * \if USART_CALLBACK_MODE
  * - \subpage asfdoc_sam0_sercom_usart_callback_use_case
  * \endif
- * - \subpage asfdoc_sam0_sercom_usart_dma_use_case
+ * \if DMA_MODE_IN_ASF_MANUAL
+ *  - \subpage asfdoc_sam0_sercom_usart_dma_use_case_in_dma
+ *  \else
+ *  - \subpage asfdoc_sam0_sercom_usart_dma_use_case
+ * \endif
+ *
+ * \page asfdoc_sam0_sercom_usart_dma_use_case_in_dma Quick Start Guide for Using DMA with SERCOM USART
+ * For  this examples, see
+ * \ref asfdoc_sam0_sercom_usart_dma_use_case.
+ *
  */
 
 /**

@@ -469,19 +469,19 @@ struct i2c_packet {
  *
  * \if I2C_MASTER_MODE
  * - \subpage asfdoc_sam0_sercom_i2c_master_basic_use_case "Quick Start Guide for the I2C Master module - Basic Use Case"
- * - \subpage asfdoc_sam0_sercom_i2c_master_dma_use_case "Quick Start Guide for the I2C Master module - DMA Use Case"
+ * - \subpage asfdoc_sam0_sercom_i2c_master_dma_use_case_bak "Quick Start Guide for the I2C Master module - DMA Use Case"
  * \endif
  * \if I2C_MASTER_CALLBACK_MODE
  * - \subpage asfdoc_sam0_sercom_i2c_master_callback_use_case "Quick Start Guide for the I2C Master module - Callback Use Case"
- * - \subpage asfdoc_sam0_sercom_i2c_master_dma_use_case "Quick Start Guide for the I2C Master module - DMA Use Case"
+ * - \subpage asfdoc_sam0_sercom_i2c_master_dma_use_case_TEST "Quick Start Guide for the I2C Master module - DMA Use Case"
  * \endif
  * \if I2C_SLAVE_MODE
  * - \subpage asfdoc_sam0_sercom_i2c_slave_basic_use_case "Quick Start Guide for the I2C Slave module - Basic Use Case"
- * - \subpage asfdoc_sam0_sercom_i2c_slave_dma_use_case "Quick Start Guide for the I2C Slave module - DMA Use Case"
+ * - \subpage asfdoc_sam0_sercom_i2c_slave_dma_use_case_bak "Quick Start Guide for the I2C Slave module - DMA Use Case"
  * \endif
  * \if I2C_SLAVE_CALLBACK_MODE
  * - \subpage asfdoc_sam0_sercom_i2c_slave_callback_use_case "Quick Start Guide for the I2C Slave module - Callback Use Case"
- * - \subpage asfdoc_sam0_sercom_i2c_slave_dma_use_case "Quick Start Guide for the I2C Slave module - DMA Use Case"
+ * - \subpage asfdoc_sam0_sercom_i2c_slave_dma_use_case_TEST "Quick Start Guide for the I2C Slave module - DMA Use Case"
  * \endif
  *
  * \page asfdoc_sam0_sercom_i2c_document_revision_history Document Revision History

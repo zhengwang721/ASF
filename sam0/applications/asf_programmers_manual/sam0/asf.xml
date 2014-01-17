@@ -24,11 +24,13 @@
 
 		<build type="include-path" value="."/>
 		<build type="header-file" value="revhistory.h"/>
-
+		<build type="doxygen-enable-section" value="DMA_MODE_IN_ASF_MANUAL"/>
+		
 		<require idref="sam0.drivers.ac"/>
 		<require idref="sam0.drivers.adc"/>
 		<require idref="sam0.drivers.bod"/>
 		<require idref="sam0.drivers.dac"/>
+		<require idref="sam0.drivers.dma"/>
 		<require idref="sam0.drivers.events"/>
 		<require idref="sam0.drivers.extint"/>
 		<require idref="sam0.drivers.nvm"/>
@@ -41,6 +43,8 @@
 		<require idref="sam0.drivers.sercom.spi"/>
 		<require idref="sam0.drivers.system"/>
 		<require idref="sam0.drivers.tc"/>
+		<require idref="sam0.drivers.tcc"/>
+		<require idref="sam0.drivers.usb"/>
 		<require idref="sam0.drivers.wdt"/>
 
 		<require idref="sam0.services.eeprom_emulator"/>
