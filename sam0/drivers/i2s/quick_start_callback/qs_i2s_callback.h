@@ -148,7 +148,7 @@
  *     the driver when appropriate.
  *     \snippet qs_i2s_callback.c setup_enable_callback
  * -# Start a transmitting job.
- *    \snippet qs_i2s_callback start_job
+ *    \snippet qs_i2s_callback.c start_job
  *
  * \section asfdoc_sam0_i2s_callback_use_case_main Use Case
  *

@@ -25,6 +25,7 @@
 			<build type="doxygen-example-path" value="quick_start/samd21_xplained_pro"/>
 			<build type="doxygen-example-path" value="quick_start_dma"/>
 			<build type="doxygen-example-path" value="quick_start_dma/samd21_xplained_pro"/>
+			<build type="doxygen-image-path" value="docimg"/>
 
 			<build type="doxygen-entry-point" value="asfdoc_sam0_i2s_group" />
 			<build type="doxygen-quick-start" value="asfdoc_sam0_i2s_exqsg"/>
@@ -43,11 +44,12 @@
 				<keyword value="Cryptography" />
 			</info>
 
-			<info type="appnote" value="ATxxxxx"/>
+			<info type="appnote" value="AT07451"/>
 			<info type="keyword" value="pdf">
 				<keyword value="I/O"/>
-				<keyword value="I2S"/>
+				<keyword value="Cryptography" />
 				<keyword value="Audio"/>
+				<keyword value="I2S"/>
 			</info>
 
 			<info type="description" value="pdf">
@@ -75,6 +77,8 @@
 			<build type="doxygen-example-path" value="quick_start_callback/samd21_xplained_pro"/>
 			<build type="doxygen-example-path" value="quick_start_dma"/>
 			<build type="doxygen-example-path" value="quick_start_dma/samd21_xplained_pro"/>
+			<build type="doxygen-image-path" value="docimg"/>
+
 			<build type="doxygen-entry-point" value="asfdoc_sam0_i2s_group" />
 			<build type="doxygen-quick-start" value="asfdoc_sam0_i2s_exqsg"/>
 
