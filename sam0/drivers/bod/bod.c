@@ -90,16 +90,6 @@ enum status_code bod_set_config(
 			SYSCTRL->BOD33.reg = SYSCTRL_BOD33_LEVEL(conf->level) |
 					temp | SYSCTRL_BOD33_ENABLE;
 			break;
-#ifdef FEATURE_BOD12
-		case BOD_BOD12:
-			if (conf->level > 0x1F) {
-				return STATUS_ERR_INVALID_ARG;
-			}
-
-			SYSCTRL->BOD12.reg = SYSCTRL_BOD12_LEVEL(conf->level) |
-					temp | SYSCTRL_BOD12_ENABLE;
-			break;
-#endif
 		default:
 			return STATUS_ERR_INVALID_ARG;
 	}
