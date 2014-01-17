@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief ILI93XX configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,19 +41,22 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+//! Configuration of the ILI93XX (ILI9325 or ILI9341) LCD display driver
 
-/* Indicates board has an AAT3155 external component to control LCD backlight */
-#define CONF_BOARD_AAT3155
+#ifndef CONF_ILI93XX_H_INCLUDED
+#define CONF_ILI93XX_H_INCLUDED
 
-/* Indicates board has an ILI93xx external component to control LCD */
-#define CONF_BOARD_ILI93XX
+#include "board.h"
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+#if !defined(BOARD_ILI93XX_ADDR) || !defined(BOARD_ILI93XX_RS)
 
-/** Usart Hw ID used by the console (UART0). */
-#define CONSOLE_UART_ID          ID_UART0
+	#warning The ILI93XX EBI configuration does not exist in the board definition file. Using default settings.
 
-#endif /* CONF_BOARD_H_INCLUDED */
+	/** The base address, depends on which SMC chip select is used by ILI9325. */
+	#define BOARD_ILI93XX_ADDR     0x61000000
+	/** Register select (1 << 1) */
+	#define BOARD_ILI93XX_RS       1 << 1
+
+#endif
+
+#endif /* CONF_ILI93XX_H_INCLUDED */
