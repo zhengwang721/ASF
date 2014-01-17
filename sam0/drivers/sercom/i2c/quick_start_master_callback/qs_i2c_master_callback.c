@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x I2C Master Quick Start Guide with Callbacks
+ * \brief SAM D20/D21 I2C Master Quick Start Guide with Callbacks
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *

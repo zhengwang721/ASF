@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x I2C Slave with DMA Quick Start Guide
+ * \brief SAM D20/D21 I2C Slave with DMA Quick Start Guide
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *

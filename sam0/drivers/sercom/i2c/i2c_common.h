@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x I2C Common Driver
+ * \brief SAM D20/D21 I2C Common Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -52,14 +52,14 @@ extern "C" {
 
 /**
  * \if (I2C_MASTER_MODE && I2C_SLAVE_MODE)
- *   \defgroup asfdoc_sam0_sercom_i2c_group SAM D2x I2C Driver (SERCOM I2C)
+ *   \defgroup asfdoc_sam0_sercom_i2c_group SAM D20/D21 I2C Driver (SERCOM I2C)
  * \elseif I2C_MASTER_MODE
- *   \defgroup asfdoc_sam0_sercom_i2c_group SAM D2x I2C Master Mode Driver (SERCOM I2C)
+ *   \defgroup asfdoc_sam0_sercom_i2c_group SAM D20/D21 I2C Master Mode Driver (SERCOM I2C)
  * \elseif I2C_SLAVE_MODE
- *   \defgroup asfdoc_sam0_sercom_i2c_group SAM D2x I2C Slave Mode Driver (SERCOM I2C)
+ *   \defgroup asfdoc_sam0_sercom_i2c_group SAM D20/D21 I2C Slave Mode Driver (SERCOM I2C)
  * \endif
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the device's SERCOM I<SUP>2</SUP>C module, for the transfer
  * of data via an I<SUP>2</SUP>C bus. The following driver API modes are covered
  * by this manual:
@@ -485,7 +485,10 @@ struct i2c_packet {
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21.</td>
+ *		<td>
+ *		\li Added support for SCL stretch and extended timeout hardware features in SAM D21.
+ *		\li Added fast mode plus support in SAM D21.
+ *		</td>
  *	</tr>
  *	<tr>
  *		<td>Fixed incorrect logical mask for determining if a bus error has
@@ -533,7 +536,7 @@ struct i2c_packet {
  *	<tr>
  *		<td>C</td>
  *		<td>01/2014</td>
- *		<td>Added support for SAMD21.</td>
+ *		<td>Added the SAM D21 to the application note.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>
