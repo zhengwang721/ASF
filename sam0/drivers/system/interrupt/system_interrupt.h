@@ -122,10 +122,6 @@
 #include <core_cm0plus.h>
 #include "system_interrupt_features.h"
 
-#if !defined(__DOXYGEN__)
-#endif
-
-
 /**
  * \brief Table of possible system interrupt/exception vector priorities.
  *
@@ -326,6 +322,14 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *		<td>ISR</td>
  *		<td>Interrupt Service Routine</td>
  *	</tr>
+ *	<tr>
+ *		<td>NMI</td>
+ *		<td>Non-maskable interrupt</td>
+ *	</tr>
+ *	<tr>
+ *		<td>SERCOM</td>
+ *		<td>Serial Communication Interface</td>
+ *	</tr>
  * </table>
  *
  *
@@ -348,6 +352,9 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for SAMD21</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
@@ -374,6 +381,11 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Add support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>
