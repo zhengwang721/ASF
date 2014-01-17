@@ -257,7 +257,8 @@ extern "C" {
 #endif
 
 /**
- * Define USART features set according to different device family
+ * \name Driver feature definition
+ * Define SERCOM USART features set according to different device family.
  * @{
  */
 #if (SAMD21) || defined(__DOXYGEN__)

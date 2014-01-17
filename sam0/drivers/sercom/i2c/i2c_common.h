@@ -94,6 +94,7 @@ extern "C" {
  *
  * \section asfdoc_sam0_sercom_i2c_overview Module Overview
  * The outline of this section is as follows:
+ * - \ref asfdoc_sam0_sercom_i2c_module_features
  * - \ref asfdoc_sam0_sercom_i2c_functional_desc
  * - \ref asfdoc_sam0_sercom_i2c_bus_topology
  * - \ref asfdoc_sam0_sercom_i2c_transactions
@@ -102,9 +103,39 @@ extern "C" {
  * - \ref asfdoc_sam0_sercom_i2c_timeout
  * - \ref asfdoc_sam0_sercom_i2c_sleep_modes
  *
+ * \subsection asfdoc_sam0_sercom_i2c_module_features Driver Feature Macro Definition
+ * <table>
+ *	<tr>
+ *		<th>Driver Feature Macro</th>
+ *		<th>Supported devices</th>
+ *	</tr>
+ *	<tr>
+ *		<td>FEATURE_I2C_SYNC_SCHEME_VERSION_2</td>
+ *		<td>SAMD21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED</td>
+ *		<td>SAMD21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>FEATURE_I2C_10_BIT_ADDRESS</td>
+ *		<td>SAMD21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>FEATURE_I2C_SCL_STRETCH_MODE</td>
+ *		<td>SAMD21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>FEATURE_I2C_SCL_EXTEND_TIMEOUT</td>
+ *		<td>SAMD21</td>
+ *	</tr>
+ * </table>
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
+ *
  * \subsection asfdoc_sam0_sercom_i2c_functional_desc Functional Description
  * The I<SUP>2</SUP>C provides a simple two-wire bidirectional bus consisting of a
- * wired-AND type serial clock line (SCA) and a wired-AND type serial data line
+ * wired-AND type serial clock line (SCL) and a wired-AND type serial data line
  * (SDA).
  *
  * The I<SUP>2</SUP>C bus provides a simple, but efficient method of interconnecting
@@ -356,17 +387,23 @@ extern "C" {
  */
 
 /**
- * \brief Define I2C features set according to different device family
+ * \name Driver feature definition
+ * Define SERCOME I2C driver features set according to different device family.
  *
  * \note The high speed mode and 10-bit address feature are not
  *       supported by the driver now.
  * @{
  */
-#if (SAMD21)
+#if (SAMD21) || defined(__DOXYGEN__)
+/** Sync scheme version 2 support */
 #  define FEATURE_I2C_SYNC_SCHEME_VERSION_2
+/** Fast mode plus and high speed support */
 #  define FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
+/** 10 bit address support */
 #  define FEATURE_I2C_10_BIT_ADDRESS
+/** SCL stretch mode support */
 #  define FEATURE_I2C_SCL_STRETCH_MODE
+/** SCL extend timeout support */
 #  define FEATURE_I2C_SCL_EXTEND_TIMEOUT
 #endif
 /*@}*/
@@ -448,6 +485,9 @@ struct i2c_packet {
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added support for SAMD21.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Fixed incorrect logical mask for determining if a bus error has
  *          occurred in I2C Slave mode.
  *      </td>
@@ -469,7 +509,6 @@ struct i2c_packet {
  *
  * \if I2C_MASTER_MODE
  * - \subpage asfdoc_sam0_sercom_i2c_master_basic_use_case "Quick Start Guide for the I2C Master module - Basic Use Case"
- * - \subpage asfdoc_sam0_sercom_i2c_master_dma_use_case "Quick Start Guide for the I2C Master module - DMA Use Case"
  * \endif
  * \if I2C_MASTER_CALLBACK_MODE
  * - \subpage asfdoc_sam0_sercom_i2c_master_callback_use_case "Quick Start Guide for the I2C Master module - Callback Use Case"
@@ -477,7 +516,6 @@ struct i2c_packet {
  * \endif
  * \if I2C_SLAVE_MODE
  * - \subpage asfdoc_sam0_sercom_i2c_slave_basic_use_case "Quick Start Guide for the I2C Slave module - Basic Use Case"
- * - \subpage asfdoc_sam0_sercom_i2c_slave_dma_use_case "Quick Start Guide for the I2C Slave module - DMA Use Case"
  * \endif
  * \if I2C_SLAVE_CALLBACK_MODE
  * - \subpage asfdoc_sam0_sercom_i2c_slave_callback_use_case "Quick Start Guide for the I2C Slave module - Callback Use Case"
@@ -491,6 +529,11 @@ struct i2c_packet {
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>
