@@ -356,10 +356,10 @@ extern "C" {
  */
 
 /**
- * Define I2C features set according to different device family
+ * \brief Define I2C features set according to different device family
  *
- * Note: The high speed mode and 10-bit address feature are not
- *       supported by the software for now.
+ * \note The high speed mode and 10-bit address feature are not
+ *       supported by the driver now.
  * @{
  */
 #if (SAMD21)
