@@ -81,6 +81,48 @@
  * and configure it to run as a USART interface in either synchronous
  * or asynchronous mode.
  *
+ * \subsection asfdoc_sam0_sercom_usart_features Driver Feature Macro Definition
+ * <table>
+ *  <tr>
+ *    <th>Driver Feature Macro</th>
+ *    <th>Supported devices</th>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_USART_SYNC_SCHEME_V2</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_USART_OVER_SAMPLE</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_USART_HARDWARE_FLOW_CONTROL</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_USART_IRDA</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_USART_LIN_SLAVE</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_USART_COLLISION_DECTION</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_USART_START_FRAME_DECTION</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ * </table>
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
+ *
  * \subsection asfdoc_sam0_sercom_usart_overview_frame_format Frame Format
  *
  * Communication is based on frames, where the frame format can be customized
@@ -218,27 +260,38 @@ extern "C" {
  * Define USART features set according to different device family
  * @{
  */
-#if (SAMD21)
+#if (SAMD21) || defined(__DOXYGEN__)
+/** Usart sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2
+/** Usart over sampling. */
 #  define FEATURE_USART_OVER_SAMPLE
+/** Usart hardware control flow. */
 #  define FEATURE_USART_HARDWARE_FLOW_CONTROL
+/** IrDA mode. */
 #  define FEATURE_USART_IRDA
+/** LIN slave mode. */
 #  define FEATURE_USART_LIN_SLAVE
+/** Usart collision detection. */
 #  define FEATURE_USART_COLLISION_DECTION
+/** Usart start frame detection. */
 #  define FEATURE_USART_START_FRAME_DECTION
+/** Usart start buffer overflow notification. */
 #  define FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
 #endif
 /*@}*/
 
 #ifndef PINMUX_DEFAULT
+/** Default pin mux. */
 #  define PINMUX_DEFAULT 0
 #endif
 
 #ifndef PINMUX_UNUSED
+/** Unused PIN mux. */
 #  define PINMUX_UNUSED 0xFFFFFFFF
 #endif
 
 #ifndef USART_TIMEOUT
+/** USART timeout value. */
 #  define USART_TIMEOUT 0xFFFF
 #endif
 
@@ -536,10 +589,18 @@ struct usart_config {
 };
 
 #if USART_CALLBACK_MODE == true
-/* Forward Declaration for the device instance */
+/**
+ * \brief USART module instance
+ *
+ * Forward Declaration for the device instance
+ */
 struct usart_module;
 
-/* Type of the callback functions */
+/**
+ * \brief USART callback type
+ *
+ * Type of the callback functions
+ */
 typedef void (*usart_callback_t)(const struct usart_module *const module);
 #endif
 
@@ -644,8 +705,6 @@ static inline enum status_code usart_lock(
  *
  * \param[in,out] module Pointer to the driver instance to lock.
  *
- * \retval STATUS_OK if the module was locked.
- * \retval STATUS_BUSY if the module was already locked.
  */
 static inline void usart_unlock(struct usart_module *const module)
 {
@@ -994,6 +1053,10 @@ static inline void usart_disable_transceiver(
 * <td>MSB</td>
 * <td>Most Significant Bit</td>
 * </tr>
+* <tr>
+* <td>DMA</td>
+* <td>Direct Memory Access</td>
+* </tr>
 * </table>
 *
 *
@@ -1017,6 +1080,9 @@ static inline void usart_disable_transceiver(
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Add support for SAMD21</td>
  *	</tr>
  *	<tr>
  *		<td>\li Added new \c transmitter_enable and \c receiver_enable boolean
@@ -1145,6 +1211,11 @@ static inline void usart_disable_transceiver(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>D</td>
+ *		<td>01/2014</td>
+ *		<td>Add support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>

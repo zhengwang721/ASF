@@ -58,7 +58,11 @@
  */
 #define  USB_EP_DIR_OUT       0x00
 
-/* Define macros for USB device that is not realized in head file */
+/**
+ * \name Macros for USB device those are not realized in head file
+ *
+ * @{ 
+ */
 #define USB_DEVICE_EPINTENCLR_TRCPT0        USB_DEVICE_EPINTENCLR_TRCPT(1)
 #define USB_DEVICE_EPINTENCLR_TRCPT1        USB_DEVICE_EPINTENCLR_TRCPT(2)
 #define USB_DEVICE_EPINTENCLR_TRFAIL0       USB_DEVICE_EPINTENCLR_TRFAIL(1)
@@ -84,6 +88,7 @@
 #define USB_DEVICE_EPSTATUSSET_STALLRQ1     USB_DEVICE_EPSTATUSSET_STALLRQ(2)
 #define USB_DEVICE_EPSTATUSCLR_STALLRQ0     USB_DEVICE_EPSTATUSCLR_STALLRQ(1)
 #define USB_DEVICE_EPSTATUSCLR_STALLRQ1     USB_DEVICE_EPSTATUSCLR_STALLRQ(2)
+/** @} */
 
 /**
  * \name USB SRAM data containing pipe descriptor table
@@ -105,15 +110,24 @@ union {
 COMPILER_PACK_RESET()
 /** @} */
  
-/* Local instance */
+/**
+ * \brief Local USB module instance 
+ */
 static struct usb_module *_usb_instances;
 
-/* Host pipe callback structure variable */
+/**
+ * \brief Host pipe callback structure variable 
+ */
 static struct usb_pipe_callback_parameter pipe_callback_para;
 
-/* Device endpoint callback structure variable */
+/**
+ * \brief Device endpoint callback parameter variable, used to transfer info to UDD wrapper layer 
+ */
 static struct usb_endpoint_callback_parameter ep_callback_para;
 
+/**
+ * \internal USB Device IRQ Mask Bits Map 
+ */
 static const uint16_t _usb_device_irq_bits[USB_DEVICE_CALLBACK_N] = {
 	USB_DEVICE_INTFLAG_SOF,
 	USB_DEVICE_INTFLAG_EORST,
@@ -124,6 +138,9 @@ static const uint16_t _usb_device_irq_bits[USB_DEVICE_CALLBACK_N] = {
 	USB_DEVICE_INTFLAG_LPMSUSP,
 };
 
+/**
+ * \internal USB Device IRQ Mask Bits Map 
+ */
 static const uint8_t _usb_endpoint_irq_bits[USB_DEVICE_EP_CALLBACK_N] = {
 	USB_DEVICE_EPINTFLAG_TRCPT_Msk,
 	USB_DEVICE_EPINTFLAG_TRFAIL_Msk,
@@ -131,7 +148,9 @@ static const uint8_t _usb_endpoint_irq_bits[USB_DEVICE_EP_CALLBACK_N] = {
 	USB_DEVICE_EPINTFLAG_STALL_Msk
 };
 
-/** Bit mask for pipe job busy status */
+/** 
+ * \brief Bit mask for pipe job busy status 
+ */
 uint32_t host_pipe_job_busy_status = 0;
 
 /**
@@ -1570,7 +1589,7 @@ enum status_code usb_device_endpoint_write_buffer_job(struct usb_module *module_
 		return STATUS_ERR_DENIED;
 	};
 
-	/* get pipe config from setting register */
+	/* get endpoint configuration from setting register */
 	usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].ADDR.reg = (uint32_t)pbuf;
 	usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].PCKSIZE.bit.MULTI_PACKET_SIZE = 0;
 	usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[1].PCKSIZE.bit.BYTE_COUNT = buf_size;
@@ -1606,7 +1625,7 @@ enum status_code usb_device_endpoint_read_buffer_job(struct usb_module *module_i
 		return STATUS_ERR_DENIED;
 	};
 
-	/* get pipe config from setting register */
+	/* get endpoint configuration from setting register */
 	usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[0].ADDR.reg = (uint32_t)pbuf;
 	usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE = buf_size;
 	usb_descriptor_table.usb_endpoint_table[ep_num].DeviceDescBank[0].PCKSIZE.bit.BYTE_COUNT = 0;
@@ -1633,7 +1652,7 @@ enum status_code usb_device_endpoint_setup_buffer_job(struct usb_module *module_
 	Assert(module_inst->hw);
 	Assert(ep_num < USB_EPT_NUM);
 
-	/* get pipe config from setting register */
+	/* get endpoint configuration from setting register */
 	usb_descriptor_table.usb_endpoint_table[0].DeviceDescBank[0].ADDR.reg = (uint32_t)pbuf;
 	usb_descriptor_table.usb_endpoint_table[0].DeviceDescBank[0].PCKSIZE.bit.MULTI_PACKET_SIZE = 8;
 	usb_descriptor_table.usb_endpoint_table[0].DeviceDescBank[0].PCKSIZE.bit.BYTE_COUNT = 0;
@@ -1784,7 +1803,9 @@ void usb_disable(struct usb_module *module_inst)
 	while (module_inst->hw->HOST.SYNCBUSY.reg == USB_SYNCBUSY_ENABLE);
 }
 
-/** Interrupt handler for the USB module. */
+/**
+ * \brief Interrupt handler for the USB module. 
+ */
 void USB_Handler(void)
 {
 	if (_usb_instances->hw->HOST.CTRLA.bit.MODE) {
@@ -1807,14 +1828,13 @@ void usb_get_config_defaults(struct usb_config *module_config)
 
 	/* Sanity check arguments */
 	Assert(module_config);
-	/* Write default config to config struct */
+	/* Write default configuration to config struct */
 	module_config->select_host_mode = 0;
 	module_config->run_in_standby = 1;
 	module_config->source_generator = GCLK_GENERATOR_0;
 	module_config->speed_mode = USB_SPEED_FULL;
 }
 
-/* PAD values */
 #define NVM_USB_PAD_TRANSN_POS  45
 #define NVM_USB_PAD_TRANSN_SIZE 5
 #define NVM_USB_PAD_TRANSP_POS  50

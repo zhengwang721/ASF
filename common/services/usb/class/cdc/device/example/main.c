@@ -64,7 +64,6 @@ int main(void)
 	board_init();
 #else
 	system_init();
-
 #endif
 	ui_init();
 	ui_powerdown();
