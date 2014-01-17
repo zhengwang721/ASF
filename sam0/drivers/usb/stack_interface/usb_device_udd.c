@@ -981,11 +981,13 @@ static void _uhd_vbus_handler(void)
 {
 	extint_chan_disable_callback(USB_VBUS_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
+# ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
 	if (is_usb_vbus_high()) {
 		udd_attach();
 	} else {
 		udd_detach();
 	}
+# endif
 # ifdef UDC_VBUS_EVENT
 	UDC_VBUS_EVENT(Is_pad_vbus_high());
 # endif
@@ -1007,7 +1009,7 @@ static void _usb_vbus_config(void)
 	eint_chan_conf.gpio_pin           = USB_VBUS_PIN;
 	eint_chan_conf.gpio_pin_mux       = USB_VBUS_EIC_MUX;
 	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_NONE;
-	eint_chan_conf.detection_criteria = EXTINT_DETECT_RISING;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
 	eint_chan_conf.filter_input_signal = true;
 
 	extint_chan_disable_callback(USB_VBUS_EIC_LINE,
@@ -1054,7 +1056,10 @@ void udd_enable(void)
 		_uhd_vbus_handler();
 	}
 #else 
+	// No VBus detect, assume always high
+# ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
 	udd_attach();
+# endif
 #endif
 
 	cpu_irq_restore(flags);
