@@ -257,11 +257,6 @@ static void _configure_i2s(void)
 			&config_serializer);
 	//! [setup_serializer_set_config_rx]
 
-	//! [setup_dma]
-	_config_dma_for_rx();
-	_config_dma_for_tx();
-	//! [setup_dma]
-
 	//! [setup_enable]
 	i2s_enable(&i2s_instance);
 	i2s_clock_unit_enable(&i2s_instance, I2S_CLOCK_UNIT_0);
@@ -276,6 +271,10 @@ int main(void)
 	system_init();
 
 	//! [setup_init]
+	//! [setup_dma]
+	_config_dma_for_rx();
+	_config_dma_for_tx();
+	//! [setup_dma]
 	_configure_i2s();
 	//! [setup_init]
 

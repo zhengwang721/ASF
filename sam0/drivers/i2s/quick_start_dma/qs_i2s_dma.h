@@ -90,7 +90,69 @@
  * \snippet qs_i2s_dma.c setup_init
  *
  * \subsection asfdoc_sam0_i2s_dma_use_case_setup_flow Workflow
- * -# Create a module software instance structure for the I2S module to store
+ * -# Configure the DMAC module to obtain received value from I2S Serializer 1.
+ *  -# Allocate and configure the DMA resource
+ *   -# Create a DMA resource instance.
+ *      \note This should never go out of scope as long as the resource is in
+ *            use. In most cases, this should be global.
+ *
+ *      \snippet qs_i2s_dma.c rx_dma_resource
+ *   -# Create a DMA resource configuration struct.
+ *      \snippet qs_i2s_dma.c dma_setup_1
+ *   -# Initialize the DMA resource configuration struct with default values.
+ *      \note This should always be performed before using the configuration
+ *            struct to ensure that all values are initialized to known default
+ *            settings.
+ *
+ *      \snippet qs_i2s_dma.c dma_setup_2
+ *   -# Adjust the DMA resource configurations.
+ *      \snippet qs_i2s_dma.c dma_setup_3
+ *   -# Allocate a DMA resource with the configurations.
+ *      \snippet qs_i2s_dma.c dma_setup_4
+ *  -# Prepare DMA transfer descriptor
+ *   -# Create a DMA transfer descriptor.
+ *      \note When multiple descriptors are linked. The linked item should
+ *            never go out of scope before it's loaded (to DMA Write-Back
+ *            memory section). In most cases, if more than one descriptors are
+ *            used, they should be global except the very first one.
+ *
+ *      \snippet qs_i2s_dma.c rx_dma_descriptor
+ *   -# Create a DMA transfer descriptor struct.
+ *   -# Create a DMA transfer descriptor configuration structure, which can be
+ *      filled out to adjust the configuration of a single DMA transfer.
+ *      \snippet qs_i2s_dma.c dma_setup_5
+ *   -# Initialize the DMA transfer descriptor configuration struct with
+ *      default values.
+ *      \note This should always be performed before using the configuration
+ *            struct to ensure that all values are initialized to known default
+ *            settings.
+ *
+ *      \snippet qs_i2s_dma.c dma_setup_6
+ *   -# Adjust the DMA transfer descriptor configurations.
+ *      \snippet qs_i2s_dma.c dma_setup_7
+ *   -# Create the DMA transfer descriptor with configuration.
+ *      \snippet qs_i2s_dma.c dma_setup_8
+ *   -# Adjust the DMA transfer descriptor if multiple DMA transfer will be
+ *       performed.
+ *      \snippet qs_i2s_dma.c dma_setup_9
+ *  -# Start DMA transfer job with prepared descriptor
+ *   -# Add the DMA transfer descriptor to the allocated DMA resource.
+ *      \snippet qs_i2s_dma.c dma_setup_10
+ *   -# Start the DMA transfer job with the allocated DMA resource and
+ *      transfer descriptor.
+ *      \snippet qs_i2s_dma.c dma_setup_11
+ * -# Configure the DMAC module to transmit data through I2S serializer 0.
+ *    The flow is similar to last DMA configure step for receive.
+ *  -# Allocate and configure the DMA resource
+ *    \snippet qs_i2s_dma.c tx_dma_resource
+ *    \snippet qs_i2s_dma.c config_dma_resource_for_tx
+ *  -# Prepare DMA transfer descriptor
+ *    \snippet qs_i2s_dma.c tx_dma_descriptor
+ *    \snippet qs_i2s_dma.c config_dma_descriptor_for_tx
+ *  -# Start DMA transfer job with prepared descriptor
+ *    \snippet qs_i2s_dma.c config_dma_job_for_tx
+ *
+ * -# Create I2S module software instance structure for the I2S module to store
  *    the I2S driver state while it is in use.
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
@@ -144,67 +206,6 @@
  *      \snippet qs_i2s_dma.c setup_serializer_change_config_pin_rx
  *   -# Configure the I2S Serializer 1 with the desired transmit settings.
  *      \snippet qs_i2s_dma.c setup_serializer_set_config_rx
- *  -# Configure the DMAC module to obtain received value from I2S Serializer 1.
- *   -# Allocate and configure the DMA resource
- *    -# Create a DMA resource instance.
- *       \note This should never go out of scope as long as the resource is in
- *             use. In most cases, this should be global.
- *
- *       \snippet qs_i2s_dma.c rx_dma_resource
- *    -# Create a DMA resource configuration struct.
- *       \snippet qs_i2s_dma.c dma_setup_1
- *    -# Initialize the DMA resource configuration struct with default values.
- *       \note This should always be performed before using the configuration
- *             struct to ensure that all values are initialized to known default
- *             settings.
- *
- *       \snippet qs_i2s_dma.c dma_setup_2
- *    -# Adjust the DMA resource configurations.
- *       \snippet qs_i2s_dma.c dma_setup_3
- *    -# Allocate a DMA resource with the configurations.
- *       \snippet qs_i2s_dma.c dma_setup_4
- *   -# Prepare DMA transfer descriptor
- *    -# Create a DMA transfer descriptor.
- *       \note When multiple descriptors are linked. The linked item should
- *             never go out of scope before it's loaded (to DMA Write-Back
- *             memory section). In most cases, if more than one descriptors are
- *             used, they should be global except the very first one.
- *
- *       \snippet qs_i2s_dma.c rx_dma_descriptor
- *    -# Create a DMA transfer descriptor struct.
- *    -# Create a DMA transfer descriptor configuration structure, which can be
- *       filled out to adjust the configuration of a single DMA transfer.
- *       \snippet qs_i2s_dma.c dma_setup_5
- *    -# Initialize the DMA transfer descriptor configuration struct with
- *       default values.
- *       \note This should always be performed before using the configuration
- *             struct to ensure that all values are initialized to known default
- *             settings.
- *
- *       \snippet qs_i2s_dma.c dma_setup_6
- *    -# Adjust the DMA transfer descriptor configurations.
- *       \snippet qs_i2s_dma.c dma_setup_7
- *    -# Create the DMA transfer descriptor with configuration.
- *       \snippet qs_i2s_dma.c dma_setup_8
- *    -# Adjust the DMA transfer descriptor if multiple DMA transfer will be
- *        performed.
- *       \snippet qs_i2s_dma.c dma_setup_9
- *   -# Start DMA transfer job with prepared descriptor
- *    -# Add the DMA transfer descriptor to the allocated DMA resource.
- *       \snippet qs_i2s_dma.c dma_setup_10
- *    -# Start the DMA transfer job with the allocated DMA resource and
- *       transfer descriptor.
- *       \snippet qs_i2s_dma.c dma_setup_11
- *  -# Configure the DMAC module to transmit data through I2S serializer 0.
- *     The flow is similar to last DMA configure step for receive.
- *   -# Allocate and configure the DMA resource
- *     \snippet qs_i2s_dma.c tx_dma_resource
- *     \snippet qs_i2s_dma.c config_dma_resource_for_tx
- *   -# Prepare DMA transfer descriptor
- *     \snippet qs_i2s_dma.c tx_dma_descriptor
- *     \snippet qs_i2s_dma.c config_dma_descriptor_for_tx
- *   -# Start DMA transfer job with prepared descriptor
- *     \snippet qs_i2s_dma.c config_dma_job_for_tx
  *  -# Enable the I2S module, the Clock Unit and Serializer to start the clocks
  *     and ready to transmit data.
  *     \snippet qs_i2s_dma.c setup_enable
