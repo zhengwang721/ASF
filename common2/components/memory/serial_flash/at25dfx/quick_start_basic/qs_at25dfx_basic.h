@@ -45,7 +45,7 @@
 #define QS_AT25DFX_BASIC_H
 
 /**
-* \page asfdoc_common2_at25dfx_basic_use_case Quick Start Guide for AT25DFx SerialFlash Driver
+* \page asfdoc_common2_at25dfx_basic_use Quick Start Guide for AT25DFx SerialFlash Driver
 *
 * This quick start will read, unprotect, erase and write bytes to an AT25DF081A
 * that is connected to the SPI interface on EXT1 header.

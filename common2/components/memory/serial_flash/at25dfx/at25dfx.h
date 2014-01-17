@@ -350,7 +350,7 @@ enum status_code at25dfx_chip_wake(struct at25dfx_chip_module *chip);
  * driver in a selection of use cases. Note that QSGs can be compiled as a
  * standalone application or be added to the user application.
  *
- * - \subpage asfdoc_common2_at25dfx_basic_use_case
+ * - \subpage asfdoc_common2_at25dfx_basic_use
  */
 
 /**
