@@ -963,6 +963,67 @@ void udd_attach(void)
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
 }
 
+#if USB_VBUS_EIC
+/**
+ * \name USB VBUS PAD management
+ *
+ * @{
+ */
+
+ /** Check if USB VBus is available */
+# define is_usb_vbus_high()           port_pin_get_input_level(USB_VBUS_PIN)
+
+/**
+ * \internal
+ * \brief USB VBUS pin change handler
+ */
+static void _uhd_vbus_handler(void)
+{
+	extint_chan_disable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+# ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
+	if (is_usb_vbus_high()) {
+		udd_attach();
+	} else {
+		udd_detach();
+	}
+# endif
+# ifdef UDC_VBUS_EVENT
+	UDC_VBUS_EVENT(Is_pad_vbus_high());
+# endif
+	extint_chan_enable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+}
+
+/**
+ * \internal
+ * \brief USB VBUS pin configuration
+ */
+static void _usb_vbus_config(void)
+{
+
+	/* Initialize EIC for vbus checking */
+	struct extint_chan_conf eint_chan_conf;
+	extint_chan_get_config_defaults(&eint_chan_conf);
+
+	eint_chan_conf.gpio_pin           = USB_VBUS_PIN;
+	eint_chan_conf.gpio_pin_mux       = USB_VBUS_EIC_MUX;
+	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_NONE;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
+	eint_chan_conf.filter_input_signal = true;
+
+	extint_chan_disable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_set_config(USB_VBUS_EIC_LINE, &eint_chan_conf);
+	extint_register_callback(_uhd_vbus_handler,
+			USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_enable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+}
+/** @} */
+#endif
+
 void udd_enable(void)
 {
 	irqflags_t flags;
@@ -988,8 +1049,18 @@ void udd_enable(void)
 	/* USB Module Enable */
 	usb_enable(&usb_device);
 
-	/* USB Attach */
+#if USB_VBUS_EIC
+	_usb_vbus_config();
+	if (is_usb_vbus_high()) {
+		/* USB Attach */
+		_uhd_vbus_handler();
+	}
+#else 
+	// No VBus detect, assume always high
+# ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
 	udd_attach();
+# endif
+#endif
 
 	cpu_irq_restore(flags);
 }
