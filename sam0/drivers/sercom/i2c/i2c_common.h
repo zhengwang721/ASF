@@ -368,6 +368,7 @@ extern "C" {
 #  define FEATURE_I2C_10_BIT_ADDRESS
 #  define FEATURE_I2C_SCL_STRETCH_MODE
 #  define FEATURE_I2C_SCL_EXTEND_TIMEOUT
+#  define FEATURE_I2C_DMA_SUPPORT
 #endif
 /*@}*/
 

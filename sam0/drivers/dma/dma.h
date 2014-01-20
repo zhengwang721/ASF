@@ -78,7 +78,7 @@
  *
  * The DMA driver for SAM D2x supports data transfer between peripheral to peripheral,
  * peripheral to memory, memory to peripheral and memory to memory. The transfer
- * trigger source can be software, event system or peipherals.
+ * trigger source can be software, event system or peripherals.
  *
  * The Implementation of the DMA driver is based on DMA resource. A DMA resource is
  * consisted up with DMA channels, transfer trigger, transfer descriptor and output with interrupt
@@ -650,13 +650,11 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  * added to the user application.
  *
  * - \subpage asfdoc_sam0_dma_basic_use_case
- * - \subpage asfdoc_sam0_tc_dma_use_case
- * - \subpage asfdoc_sam0_tcc_dma_use_case
- * - \subpage asfdoc_sam0_sercom_spi_dma_use_case
- * - \subpage asfdoc_sam0_sercom_usart_dma_use_case
- * - \subpage asfdoc_sam0_sercom_i2c_master_dma_use_case
- * - \subpage asfdoc_sam0_sercom_i2c_slave_dma_use_case
- * - \subpage asfdoc_sam0_adc_dma_use_case
+ *
+ * \note More DMA usage examples can be referred in peripheral QSGs, such as TC/TCC
+ * provide an usage of DMA event trigger; SERCOM SPI/USART/I2C provide an usage of
+ * DMA transfer from peripheral to memory or from memory to peripheral; ADC/DAC provide
+ * an usage of DMA transmission of peripheral to peripheral.
  *
  * \page asfdoc_sam0_dma_document_revision_history Document Revision History
  *

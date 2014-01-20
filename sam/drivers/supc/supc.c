@@ -270,7 +270,7 @@ uint32_t supc_get_status(Supc *p_supc)
 	return p_supc->SUPC_SR;
 }
 
-#if SAM4C
+#if (SAM4C || SAM4CP)
 /**
  * \brief Enable Backup Area Power-On Reset.
  *
