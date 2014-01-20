@@ -183,7 +183,7 @@
  *	}
  * \enddot
  *
- * \subsection asfdoc_sam0_pac_code_run_away Run-away program Capture
+ * \subsection asfdoc_sam0_pac_code_run_away Run-away Code
  * Run-away code can be caused by the MCU being operated outside its
  * specification, faulty code or EMI issues. If a run-away code occurs, it is
  * favorable to catch the issue as soon as possible. With a correct
