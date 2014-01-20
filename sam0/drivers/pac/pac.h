@@ -474,10 +474,10 @@
  * locked. It is therefore recommended that any unused peripheral is locked
  * during application initialization.
  *
- * \subsection asfdoc_sam0_pac_no_inline Function Attribute 
- * All function for the given modules are specified to be \c __no_inline. This
- * increases security as it decreases the probability that a return call is
- * directed at the correct location.
+ * \subsection asfdoc_sam0_pac_no_inline Use of __no_inline 
+ * Using the function attribute \c __no_inline will ensure that there will only be
+ * one copy of each functions in the PAC driver API in the application. This will 
+ * lower the likelihood that run-away code will hit any of these functions.
  *
  * \subsection asfdoc_sam0_pac_module_overview_physical Physical Connection
  *
@@ -513,11 +513,10 @@
  * \section asfdoc_sam0_pac_special_considerations Special Considerations
  *
  * \subsection asfdoc_sam0_pac_non_write_protected Non-Writable Registers
- * Not all registers in a given peripheral can be set non-writable. Look in
- * device datasheet peripheral's subsection "Register Access Protection" to 
- * see which is actually available for your device.
- * \note The subsection "Register Access Protection" is shown when a register
- * has the propery "write-protected" in the register description in the datasheet.
+ * Not all registers in a given peripheral can be set non-writable. Which
+ * registers this applies to is showed in \ref asfdoc_sam0_pac_non_write_list
+ * and the peripheral's subsection "Register Access Protection" in the device
+ * datasheet.
  *
  * \subsection asfdoc_sam0_pac_check_lock Reading Lock State
  * Reading the state of the peripheral lock is to be avoided as it greatly
@@ -787,6 +786,126 @@ __no_inline enum status_code system_peripheral_unlock(
  */
 
 /**
+ * \page asfdoc_sam0_pac_non_write_list List of Non-Write Protected Registers
+ *
+ * Look in device datasheet peripheral's subsection "Register Access
+ * Protection" to see which is actually available for your device.
+ * <table>
+ *	<tr>
+ *		<th>Module</th>
+ *		<th>Non-write protected register</th>
+ *	</tr>
+ *	<tr>
+ *		<td>AC</td>
+ *		<td>INTFLAG</td>
+ *	</tr>
+ *	<tr>
+ *		<td></td>
+ *		<td>STATUSA</td>
+ *	</tr>
+ *	<tr>
+ *		<td></td>
+ *		<td>STATUSB</td>
+ *	</tr>
+ *	<tr>
+ *		<td></td>
+ *		<td>STATUSC</td>
+ *	</tr>
+ *	<tr><td colspan="2"/></tr>
+ *	<tr>
+ *		<td>ADC</td>
+ *		<td>INTFLAG</td>
+ *	</tr>
+ *	<tr>
+ *		<td></td>
+ *		<td>STATUS</td>
+ *	</tr>
+ *	<tr>
+ *		<td></td>
+ *		<td>RESULT</td>
+ *	</tr>
+ *	<tr><td colspan="2"/></tr>
+ *	<tr>
+ *		<td>EVSYS</td>
+ *		<td>INTFLAG</td>
+ *	</tr>
+ *	<tr>
+ *		<td></td>
+ *		<td>CHSTATUS</td>
+ *	</tr>
+ *	<tr><td colspan="2"/></tr>
+ *	<tr>
+ *		<td>NVMCTRL</td>
+ *		<td>INTFLAG</td>
+ *	</tr>
+ *	<tr>
+ *		<td></td>
+ *		<td>STATUS</td>
+ *	</tr>
+ *	<tr><td colspan="2"/></tr>
+ *	<tr>
+ *		<td>PM</td>
+ *		<td>INTFLAG</td>
+ *	</tr>
+ *	<tr><td colspan="2"/></tr>
+ *	<tr>
+ *		<td>PORT</td>
+ *		<td>N/A</td>
+ *	</tr>
+ *	<tr><td colspan="2"/></tr>
+ *	<tr>
+ *		<td>RTC</td>
+ *		<td>INTFLAG</td>
+ *	</tr>
+ *	<tr>
+ *		<td></td>
+ *		<td>READREQ</td>
+ *	</tr>
+ *	<tr>
+ *		<td></td>
+ *		<td>STATUS</td>
+ *	</tr>
+ *	<tr><td colspan="2"/></tr>
+ *	<tr>
+ *		<td>SYSCTRL</td>
+ *		<td>INTFLAG</td>
+ *	</tr>
+ *	<tr><td colspan="2"/></tr>
+ *	<tr>
+ *		<td>SERCOM</td>
+ *		<td>INTFALG</td>
+ *	</tr>
+ *	<tr>
+ *		<td></td>
+ *		<td>STATUS</td>
+ *	</tr>
+ *	<tr>
+ *		<td></td>
+ *		<td>DATA</td>
+ *	</tr>
+ *	<tr><td colspan="2"/></tr>
+ *	<tr>
+ *		<td>TC</td>
+ *		<td>INTFLAG</td>
+ *	</tr>
+ *	<tr>
+ *		<td></td>
+ *		<td>STATUS</td>
+ *	</tr>
+ *	<tr><td colspan="2"/></tr>
+ *	<tr>
+ *		<td>WDT</td>
+ *		<td>INTFLAG</td>
+ *	</tr>
+ *	<tr>
+ *		<td></td>
+ *		<td>STATUS</td>
+ *	</tr>
+ *	<tr>
+ *		<td></td>
+ *		<td>(CLEAR)</td>
+ *	</tr>
+ * </table>
  *
  * \page asfdoc_sam0_pac_document_revision_history Document Revision History
  *
