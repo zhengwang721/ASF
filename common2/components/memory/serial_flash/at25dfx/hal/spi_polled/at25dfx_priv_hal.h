@@ -47,9 +47,9 @@
 //! \name Private SPI helpers
 //@{
 
-//! Alias for SPI lock function
+/** Alias for SPI lock function */
 #define _at25dfx_spi_lock    spi_lock
-//! Alias for SPI unlock function
+/** Alias for SPI unlock function */
 #define _at25dfx_spi_unlock  spi_unlock
 
 /**

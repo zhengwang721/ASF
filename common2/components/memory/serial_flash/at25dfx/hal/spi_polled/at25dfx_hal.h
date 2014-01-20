@@ -46,6 +46,13 @@
 
 #include <spi.h>
 
+/**
+ * \ingroup asfdoc_common2_at25dfx_group
+ *
+ * @{
+ */
+
+/** Typedef for SPI HAL */
 typedef struct spi_module at25dfx_spi_module_t;
 
 /**
@@ -57,12 +64,14 @@ typedef struct spi_module at25dfx_spi_module_t;
  * The user can change the baud rate and the MUX settings for SERCOM and GPIO
  * pads, but should leave all other settings intact.
  *
- * \param config Address of config struct to initialize.
+ * \param[out] config Address of config struct to initialize.
  */
 static inline void at25dfx_spi_get_config_defaults(
 		struct spi_config *const config)
 {
 	spi_get_config_defaults(config);
 }
+
+/** @ */
 
 #endif // AT25DFX_HAL_H

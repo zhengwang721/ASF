@@ -70,38 +70,84 @@
  *
  * \section asfdoc_common2_at25dfx_prerequisites Prerequisites
  *
- * This driver requires that the SPI interfaces are instantiated, initialized
- * and enabled by the user, and that the instances are persistent for as long as
- * the instances of this driver exist.
+ * This driver requires that the SPI drivers are instantiated, initialized and
+ * enabled by the user, and that the SPI instances are persistent for as long as
+ * the associated instances of this driver exist or are used. To ensure
+ * persistence of the SPI instances, the convention is to define them in the
+ * same scope as the instances of this driver, which is usually a global one.
  *
- * However, the configuration to use is supplied by this driver with
- * \ref at25dfx_spi_get_config_defaults(). To ensure correct operation, the user
- * should not change anything but the baud rate, the SERCOM MUX and the pin MUX
- * settings in the supplied configuration.
+ * The hardware abstraction layer (HAL) of this driver supports several SPI
+ * driver implementations, but not at the same time. So for a given project, one
+ * must select which implementation to support, and use it for all instances.
+ * The reader is assumed to be familiar with how to configure and initialize the
+ * SPI drivers, but the basic configuration to use is supplied by this driver's
+ * HAL:
+ * - \ref at25dfx_spi_get_config_defaults() for polled SERCOM SPI
+ * - \ref at25dfx_spi_master_vec_get_config_defaults() for SERCOM SPI Master
+ *    with Vectored I/O
  *
- * Persistence of the SPI instances can be ensured by, e.g., defining them in
- * the same scope as the instances of this driver, or by simply making them
- * global.
+ * To ensure correct operation, the user should not change anything in the base
+ * configuration except the baud rate, the SERCOM MUX and the pin MUX settings.
  *
  *
  * \section asfdoc_common2_at25dfx_module_overview Module Overview
  *
- * This driver enables the user to do basic operations on a SerialFlash device,
- * such as checking its presence, reading from and writing to it, putting it to
- * sleep and waking it back up when needed.
+ * This driver enables the user to do basic operations on SerialFlash devices in
+ * the AT25DFx series, such as checking their presence, reading from and writing
+ * to them, putting them to sleep and waking them back up when needed. Basic
+ * security is implemented, i.e., sector protection to prevent accidental erase
+ * and write. Functionality for permanently locking and securing AT25DFx devices
+ * is not implemented in this driver.
  *
- * Functionality for permanently locking and securing the SerialFlash is not
- * implemented in this driver. Only basic security is implemented, i.e.,
- * sector protection to prevent accidental erase and write.
+ * Each instance of this driver corresponds to a single AT25DFx device, and must
+ * be associated with an instance of the SPI driver supported by the selected
+ * HAL implementation, as well as a PORT pin for chip select (CS).
  *
- * Further, this driver is built upon the APIs of the SERCOM SPI and PORT
- * drivers. The API is blocking, meaning the functions do not return until the
- * requested operation is done. It is also thread-safe since it uses the SPI
- * instance lock mechanism to ensure that no two operations can interfere with
- * each other.
+ * All functions of this driver are blocking, which means that they do not
+ * return until the initiated operation completes. Further, since the selected
+ * HAL might use an interrupt-driven driver, this driver should not be used
+ * within interrupts.
+ *
+ *
+ * \subsection asfdoc_common2_at25dfx_module_spi_share SPI Bus Sharing
+ *
+ * SerialFlash devices can share a SPI bus, due to the use of CS lines. SPI bus
+ * sharing is supported by this driver without any special configuration. To
+ * share a SPI bus, simply associate the same SPI driver instance to multiple
+ * instances of this driver.
+ *
+ * The \ref asfdoc_samd20_at25dfx_example "figure below" illustrates an example
+ * where two out of three instances of this driver are associated with the same
+ * SPI driver instance.
+ *
+ * \anchor asfdoc_samd20_at25dfx_example
+ * \image html at25dfx.png "AT25DFx and SPI instance sharing."
+ *
+ *
+ * \subsection asfdoc_common2_at25dfx_module_threads Use in Threaded Environments
+ *
+ * The functions of this driver rely on the locking mechanism in the SPI drivers
+ * to ensure exclusive access to a SPI driver instance for the entire duration
+ * of an operation, such as writing data to the AT25DFx device. They will not
+ * wait for an already locked instance to be unlocked. Instead, they will simply
+ * return a status code indicating that it was busy.
+ *
+ * This behavior means that the functions are thread safe in the sense that no
+ * two operations may interfere with each other. It also means that there is no
+ * queueing of operations. Assuming the illustration above was a multi-threaded
+ * application, it would have to wait for an operation on AT25DFx instance #2 to
+ * end before one could be initiated on instance #3, and vice versa. If queueing
+ * of operations is needed, it must be implemented as a layer on top of this
+ * driver.
+ *
+ * Be aware that the protocol implementation in this driver is not interrupt-
+ * driven, and the HAL may use a polled driver. Hence, an on-going operation may
+ * be temporarily paused if the MCU switches threads.
  *
  *
  * \section asfdoc_common2_at25dfx_special_considerations Special Considerations
+ *
+ * \subsection asfdoc_common2_at25dfx_special_dev Device Specifics
  *
  * The available erase block sizes, and the availability and granularity of
  * protection sectors may differ between devices.
@@ -113,14 +159,18 @@
  * Refer to the SerialFlash device's datasheet for details about which
  * operations are supported and what limitations apply to them.
  *
- * The user should also be aware of some details of how flash memory generally
+ *
+ * \subsection asfdoc_common2_at25dfx_special_flash Flash Memory Behavior
+ *
+ * The reader should be aware of some details of how flash memory generally
  * functions:
  * -# Erasing a flash memory block means that all bits in the block are reset to
- * a high level (logical "1"), i.e., all bytes will read as \c 0xFF afterwards.
+ *    a high level (logical "1"), i.e., all bytes will read as \c 0xFF.
  * -# Writing to a flash memory location will only set relevant bits to a low
- * level (logical "0").
+ *    level (logical "0"), never to a high level.
  * -# It is possible to write several times to a flash memory block without
- * erasing, but there may be limitations on the number of times it can be done.
+ *    erasing, but there may be limitations on the number of times it can be
+ *    done.
  *
  *
  * \section asfdoc_common2_at25dfx_extra_info Extra Information
@@ -144,63 +194,65 @@
 
 #include <compiler.h>
 
-//! SerialFlash type.
+/** SerialFlash type. */
 enum at25dfx_type {
-	//! AT25F512B, compatible with AT25BCM512B
+	/** AT25F512B, compatible with AT25BCM512B */
 	AT25DFX_512B,
-	//! AT25DF021
+	/** AT25DF021 */
 	AT25DFX_021,
-	//! AT25DF041A
+	/** AT25DF041A */
 	AT25DFX_041A,
-	//! AT25DF081, compatible with AT25DL081
+	/** AT25DF081, compatible with AT25DL081 */
 	AT25DFX_081,
-	//! AT25DF081A, compatible with AT26DF081A
+	/** AT25DF081A, compatible with AT26DF081A */
 	AT25DFX_081A,
-	//! AT25DF161
+	/** AT25DF161 */
 	AT25DFX_161,
-	//! AT25DL161
+	/** AT25DL161 */
 	AT25DFX_L161,
-	//! AT25DQ161
+	/** AT25DQ161 */
 	AT25DFX_Q161,
-	//! AT25DF321A
+	/** AT25DF321A */
 	AT25DFX_321A,
-	//! AT25DF641, compatible with AT25DF641A
+	/** AT25DF641, compatible with AT25DF641A */
 	AT25DFX_641,
 };
 
 #include <at25dfx_hal.h>
 
-//! Size of block to erase.
+/** Size of block to erase. */
 enum at25dfx_block_size {
-	//! 4 kiloByte block size.
+	/** 4 kiloByte block size. */
 	AT25DFX_BLOCK_SIZE_4KB,
-	//! 32 kiloByte block size.
+	/** 32 kiloByte block size. */
 	AT25DFX_BLOCK_SIZE_32KB,
-	//! 64 kiloByte block size.
+	/** 64 kiloByte block size. */
 	AT25DFX_BLOCK_SIZE_64KB,
 };
 
-//! SerialFlash internal address.
+/** SerialFlash internal address. */
 typedef uint32_t at25dfx_address_t;
 
-//! Length of data package to read/write.
+/** Length of data package to read/write. */
 typedef uint16_t at25dfx_datalen_t;
 
-//! SerialFlash chip driver instance.
+/** SerialFlash chip driver instance. */
 struct at25dfx_chip_module {
-	//! SPI module to use.
+#if !defined(__DOXYGEN__)
+	/** SPI module to use. */
 	at25dfx_spi_module_t *spi;
-	//! Type of SerialFlash
+	/** Type of SerialFlash */
 	enum at25dfx_type type;
-	//! Chip Select (CS) pin.
+	/** Chip Select (CS) pin. */
 	uint8_t cs_pin;
+#endif
 };
 
-//! SerialFlash chip configuration.
+/** SerialFlash chip configuration. */
 struct at25dfx_chip_config {
-	//! Type of SerialFlash
+	/** Type of SerialFlash */
 	enum at25dfx_type type;
-	//! Chip Select (CS) pin.
+	/** Chip Select (CS) pin. */
 	uint8_t cs_pin;
 };
 
@@ -301,12 +353,16 @@ enum status_code at25dfx_chip_wake(struct at25dfx_chip_module *chip);
  *     <th>Description</td>
  *   </tr>
  *   <tr>
- *     <td>SPI</td>
- *     <td>Serial Peripheral Interface</td>
- *   </tr>
- *   <tr>
  *     <td>CS</td>
  *     <td>Chip Select</td>
+ *   </tr>
+ *   <tr>
+ *     <td>HAL</td>
+ *     <td>Hardware Abstraction Layer</td>
+ *   </tr>
+ *   <tr>
+ *     <td>SPI</td>
+ *     <td>Serial Peripheral Interface</td>
  *   </tr>
  * </table>
  *
@@ -314,7 +370,10 @@ enum status_code at25dfx_chip_wake(struct at25dfx_chip_module *chip);
  * \section asfdoc_common2_at25dfx_extra_dependencies Dependencies
  *
  * This driver has the following dependencies:
- * - \ref asfdoc_samd20_sercom_spi_group "SERCOM SPI driver"
+ * - \ref asfdoc_samd20_sercom_spi_group "SERCOM SPI driver" (depending on
+ *    selected HAL)
+ * - \ref asfdoc_samd20_sercom_spi_master_vec_group "SERCOM SPI master driver w/ vectored I/O"
+ *    (depending on selected HAL)
  * - \ref asfdoc_samd20_port_group "PORT driver"
  * - \ref group_sam0_utils "Compiler driver"
  *

@@ -5,6 +5,7 @@
 		</info>
 		<build type="c-source" value="at25dfx.c"/>
 		<build type="doxygen-example-path" value="quick_start_basic"/>
+		<build type="doxygen-image-path" value="docimg"/>
 		<build type="header-file" subtype="api" value="at25dfx.h"/>
 		<build type="header-file" value="quick_start_basic/qs_at25dfx_basic.h"/>
 		<build type="include-path" value="."/>

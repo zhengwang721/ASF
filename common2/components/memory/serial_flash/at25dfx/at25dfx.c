@@ -43,7 +43,7 @@
 
 #include "at25dfx.h"
 
-//! SerialFlash command opcodes
+/** SerialFlash command opcodes */
 enum at25dfx_command_opcode {
 	AT25DFX_COMMAND_PROGRAM_PAGE         = 0x02,
 	AT25DFX_COMMAND_READ_STATUS          = 0x05,
@@ -63,12 +63,12 @@ enum at25dfx_command_opcode {
 	AT25DFX_COMMAND_WAKE                 = 0xab,
 };
 
-//! AT25DFx page size in bytes
+/** AT25DFx page size in bytes */
 #define AT25DFX_PAGE_SIZE         256
-//! Maximum length of a SerialFlash command
+/** Maximum length of a SerialFlash command */
 #define AT25DFX_COMMAND_MAX_SIZE  (1 + 3 + 2)
 
-//! SerialFlash status bits
+/** SerialFlash status bits */
 enum at25dfx_status_field {
 	// These two are read-fields
 	AT25DFX_STATUS_BUSY            = (1 << 0),
@@ -77,20 +77,20 @@ enum at25dfx_status_field {
 	AT25DFX_STATUS_GLOBAL_PROTECT  = (0x0f << 2),
 };
 
-//! SerialFlash command container
+/** SerialFlash command container */
 struct at25dfx_command {
-	//! Opcode to send
+	/** Opcode to send */
 	enum at25dfx_command_opcode opcode;
-	//! Size: opcode byte (1) [+ address bytes (3)] [+ dummy bytes (N)]
+	/** Size: opcode byte (1) [+ address bytes (3)] [+ dummy bytes (N)] */
 	uint8_t command_size;
-	//! SerialFlash address to operate on
+	/** SerialFlash address to operate on */
 	at25dfx_address_t address;
-	//! Buffer to read from/write to
+	/** Buffer to read from/write to */
 	union {
 		const uint8_t *tx;
 		uint8_t *rx;
 	} data;
-	//! Number of bytes to read/write
+	/** Number of bytes to read/write */
 	at25dfx_datalen_t length;
 };
 
