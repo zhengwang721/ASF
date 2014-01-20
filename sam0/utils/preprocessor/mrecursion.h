@@ -320,14 +320,14 @@
  *
  * This macro represents a horizontal repetition construct.
  *
- * \param[in] count  The number of repetitious calls to macro. Valid values
+ * \param[in] count  The number of repetitious calls to macro. Valid values 
  *                   range from 0 to MRECURSION_LIMIT.
- * \param[in] macro  A binary operation of the form macro(n, data). This macro
+ * \param[in] macro  A binary operation of the form macro(data n).  This macro
  *                   is expanded by MRECURSION with the current repetition number
  *                   and the auxiliary data argument.
  * \param[in] data   Auxiliary data1 passed to macro.
  *
- * \return       <tt>macro(0, data) macro(1, data) ... macro(count - 1, data)</tt>
+ * \return       <tt>macro(data-count+1,0) macro(data-count+2,1)...macro(data,count-1)</tt>
  */
 #define MRECURSION(count, macro, data) TPASTE2(MRECURSION, count) (macro, data)
 
