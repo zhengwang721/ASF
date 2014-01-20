@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Peripheral Access Controller Driver
+ * \brief SAM D20/D21 Peripheral Access Controller Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
