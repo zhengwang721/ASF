@@ -863,8 +863,8 @@ static inline void rtc_count_disable_events(
  *	</tr>
  *	<tr>
  *		<td>
- *                     Added support for SAMD21.
- *                     Added driver instance parameter to all API function calls, except get_config_defaults.
+ *                     Added support for SAMD21 and added driver instance parameter to all 
+ *                     API function calls, except get_config_defaults.
  *             </td>
  *	</tr>
  *	<tr>
