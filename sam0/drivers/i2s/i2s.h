@@ -170,7 +170,7 @@
  * Also the Serializer supports PDM receiving mode, which allows the I2S module
  * receive 1 PDM data on each SCK edge.
  *
- * \subsubsection asfdoc_sam0_i2s_module_overview_data_tdm TDM Stream Rx/Tx
+ * \subsubsection asfdoc_sam0_i2s_module_overview_data_tdm TDM Stream Reception/Transmission
  * In TDM format, most of the configurations could be adjusted:
  *  - Main Frame related settings are as follow:
  *   - Frame Sync (FS) options:
@@ -189,14 +189,14 @@
  * and \ref i2s_serializer_config "Serializer Configurations" for more
  * details.
  *
- * \subsubsection asfdoc_sam0_i2s_module_overview_data_i2s I2S Stream Rx/Tx
+ * \subsubsection asfdoc_sam0_i2s_module_overview_data_i2s I2S Stream Reception/Transmission
  * For I2S protocol, the following settings must be applied:
  *  - Data starting delay after FS transition : one SCK period
  *  - FS width : half of frame
  *  - Data bits adjust in word : left-adjusted
  *  - Bit transmitting order : MSB first
  *
- * \subsubsection asfdoc_sam0_i2s_module_overview_data_pdm PDM Rx
+ * \subsubsection asfdoc_sam0_i2s_module_overview_data_pdm PDM Reception
  * The I2S Serializer integrates PDM reception feature, to use this feature,
  * simply select PDM2 mode in Serializer configuration.
  *
@@ -217,11 +217,8 @@
  *
  * \subsection asfdoc_sam0_i2s_module_overview_loop Loop-back Mode
  * The I2S can be configured to loop back the Transmitter to Receiver. In this
- * mode Serializer's input will be connected to another serializer's output
+ * mode Serializer's input will be connected to another Serializer's output
  * internally.
- *
- * \subsection asfdoc_sam0_i2s_module_overview_events Events
- * Event generation and event actions are not applicable in the I2S.
  *
  * \subsection asfdoc_sam0_i2s_module_overview_sleep Sleep Modes
  * The I2S will continue to operate in any sleep mode, where the selected source
@@ -276,7 +273,7 @@ typedef void (*i2s_serializer_callback_t)
 enum i2s_serializer_callback {
 	/** Callback for buffer read/write finished */
 	I2S_SERIALIZER_CALLBACK_BUFFER_DONE,
-	/** Callback for serializer overrun/underrun */
+	/** Callback for Serializer overrun/underrun */
 	I2S_SERIALIZER_CALLBACK_OVER_UNDER_RUN,
 #  if !defined(__DOXYGEN__)
 	I2S_SERIALIZER_CALLBACK_N
@@ -499,7 +496,7 @@ enum i2s_line_default_state {
 };
 
 /**
- * I2S data serializer mode
+ * I2S Serializer mode
  */
 enum i2s_serializer_mode {
 	/** Serializer is used to receive data */
@@ -523,7 +520,7 @@ enum i2s_clock_unit {
 };
 
 /**
- * I2S data serializer selection
+ * I2S Serializer selection
  */
 enum i2s_serializer {
 	/** Serializer channel 0 */
@@ -615,10 +612,10 @@ struct i2s_clock_unit_config {
 };
 
 /**
- * Configure for I2S serializer
+ * Configure for I2S Serializer
  */
 struct i2s_serializer_config {
-	/** Configure serializer data pin */
+	/** Configure Serializer data pin */
 	struct i2s_pin_config data_pin;
 
 	/** Set to \c true to loop-back output to input pin for test */
@@ -666,7 +663,7 @@ struct i2s_serializer_config {
 struct i2s_serializer_module {
 
 #if I2S_CALLBACK_MODE == true
-	/** Callbacks list for serializer */
+	/** Callbacks list for Serializer */
 	i2s_serializer_callback_t callback[I2S_SERIALIZER_CALLBACK_N];
 
 	/** Job buffer */
@@ -937,7 +934,7 @@ static inline void i2s_clock_unit_disable(
  */
 
 /**
- * \brief Initializes config with predefined default values for I2S serializer.
+ * \brief Initializes config with predefined default values for I2S Serializer.
  *
  * This function will initialize a given I2S Clock Unit configuration structure
  * to a set of known default values. This function should be called on any new
@@ -960,7 +957,7 @@ static inline void i2s_clock_unit_disable(
  * - I2S will transmit data to output line
  * - The data pin and Mux configuration are not set
  *
- * \param[out]  config  Pointer to a I2S module serializer configuration struct
+ * \param[out]  config  Pointer to a I2S module Serializer configuration struct
  *                      to set
  */
 static inline void i2s_serializer_get_config_defaults(
@@ -1018,7 +1015,7 @@ enum status_code i2s_serializer_set_config(
  * Enables a Serializer in I2S module that has been previously initialized.
  *
  * \param[in]  module_inst   Pointer to the software module instance struct
- * \param[in]  serializer    I2S serializer to enable
+ * \param[in]  serializer    I2S Serializer to enable
  */
 static inline void i2s_serializer_enable(
 		const struct i2s_module *const module_inst,
@@ -1043,7 +1040,7 @@ static inline void i2s_serializer_enable(
  * Disables a Serializer in I2S module that has been previously initialized.
  *
  * \param[in]  module_inst   Pointer to the software module instance struct
- * \param[in]  serializer    I2S serializer to disable
+ * \param[in]  serializer    I2S Serializer to disable
  */
 static inline void i2s_serializer_disable(
 		const struct i2s_module *const module_inst,
@@ -1095,7 +1092,7 @@ void i2s_disable_status_interrupt(
  * \brief Write a data word to the specified Serializer of I2S module
  *
  * \param[in]  module_inst   Pointer to the software module instance struct
- * \param[in]  serializer    The serializer to write to
+ * \param[in]  serializer    The Serializer to write to
  * \param[in]  data          The data to write
  *
  */
@@ -1126,7 +1123,7 @@ static inline void i2s_serializer_write_wait(
  * \brief Read a data word from the specified Serializer of I2S module
  *
  * \param[in]  module_inst   Pointer to the software module instance struct
- * \param[in]  serializer    The serializer to read
+ * \param[in]  serializer    The Serializer to read
  */
 static inline uint32_t i2s_serializer_read_wait(
 		const struct i2s_module *const module_inst,
@@ -1157,7 +1154,7 @@ static inline uint32_t i2s_serializer_read_wait(
  * \brief Write buffer to the specified Serializer of I2S module
  *
  * \param[in]  module_inst   Pointer to the software module instance struct
- * \param[in]  serializer    The serializer to write to
+ * \param[in]  serializer    The Serializer to write to
  * \param[in]  buffer        The data buffer to write
  * \param[in]  size          Number of data words to write
  *
@@ -1175,7 +1172,7 @@ enum status_code i2s_serializer_write_buffer_wait(
  * \brief Read from the specified Serializer of I2S module to a buffer
  *
  * \param[in]  module_inst   Pointer to the software module instance struct
- * \param[in]  serializer    The serializer to write to
+ * \param[in]  serializer    The Serializer to write to
  * \param[in]  buffer        The buffer to fill read data
  * \param[in]  size          Number of data words to read
  *
