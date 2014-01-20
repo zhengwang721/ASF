@@ -89,6 +89,58 @@
 struct usb_module usb_device;
 
 /**
+ * \name Power management
+ *
+ * @{
+ */
+#ifndef UDD_NO_SLEEP_MGR
+
+#include "sleepmgr.h"
+/** States of USB interface */
+enum udd_usb_state_enum {
+	UDD_STATE_OFF,
+	UDD_STATE_NO_VBUS,
+	UDD_STATE_SUSPEND,
+	UDD_STATE_SUSPEND_LPM,
+	UDD_STATE_IDLE,
+};
+
+/** \brief Manages the sleep mode following the USB state
+ *
+ * \param new_state  New USB state
+ */
+static void udd_sleep_mode(enum udd_usb_state_enum new_state)
+{
+	enum sleepmgr_mode sleep_mode[] = {
+		SLEEPMGR_ACTIVE,  /* UDD_STATE_OFF (not used) */
+		SLEEPMGR_ACTIVE,  /* UDD_STATE_NO_VBUS */
+		SLEEPMGR_ACTIVE,  /* UDD_STATE_SUSPEND */
+		SLEEPMGR_ACTIVE,  /* UDD_STATE_SUSPEND_LPM */
+		SLEEPMGR_ACTIVE,  /* UDD_STATE_IDLE */
+	};
+
+	static enum udd_usb_state_enum udd_state = UDD_STATE_OFF;
+
+	if (udd_state == new_state) {
+		return; // No change
+	}
+	if (new_state != UDD_STATE_OFF) {
+		/* Lock new limit */
+		sleepmgr_lock_mode(sleep_mode[new_state]);
+	}
+	if (udd_state != UDD_STATE_OFF) {
+		/* Unlock old limit */
+		sleepmgr_unlock_mode(sleep_mode[udd_state]);
+	}
+	udd_state = new_state;
+}
+
+#else
+#  define uhd_sleep_mode(arg)
+#endif
+/** @} */
+
+/**
  * \name Control endpoint low level management routine.
  *
  * This function performs control endpoint management.
