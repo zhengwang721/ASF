@@ -70,7 +70,7 @@
  * \subsection asfdoc_sam0_ac_callback_use_case_setup_flow Workflow
  * -# Create an AC device instance struct, which will be associated with an
  *    Analog Comparator peripheral hardware instance.
- *    \note Device instance structures should \b never go out of scope when in
+ *    \note Device instance structures shall \b never go out of scope when in
  *          use.
  *
  *  \snippet qs_ac_callback.c setup_1
