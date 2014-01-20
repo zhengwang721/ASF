@@ -3,7 +3,7 @@
  *
  * \brief SERCOM SPI master with vectored I/O driver implementation
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -293,13 +293,13 @@ void spi_master_vec_reset(struct spi_master_vec_module *const module)
  *
  * To initiate a unidirectional transfer, pass \c NULL as the address of either
  * buffer descriptor array, like this:
- * \code
- *     // Transmit some buffers
- *     spi_master_vec_transceive_buffer_job(&module, tx_buffers, NULL);
- *
- *     // Receive some buffers
- *     spi_master_vec_transceive_buffer_job(&module, NULL, rx_buffers);
- * \endcode
+\code
+	// Transmit some buffers
+	spi_master_vec_transceive_buffer_job(&module, tx_buffers, NULL);
+
+	// Receive some buffers
+	spi_master_vec_transceive_buffer_job(&module, NULL, rx_buffers);
+\endcode
  *
  * \pre \ref spi_master_vec_init() and \ref spi_master_vec_enable() must have
  * been called before this function.

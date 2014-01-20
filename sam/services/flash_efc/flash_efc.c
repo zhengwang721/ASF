@@ -62,7 +62,7 @@ extern "C" {
  * @{
  */
 
-#if SAM4E || SAM4N || SAM4S || SAM4C || SAMG
+#if (SAM4E || SAM4N || SAM4S || SAM4C || SAMG || SAM4CP)
 /* User signature size */
 # define FLASH_USER_SIG_SIZE   (512)
 #endif
@@ -122,7 +122,7 @@ extern "C" {
 # define GPNVM_NUM_MAX        2
 #endif
 
-#if SAM4C
+#if (SAM4C || SAM4CP)
 #if SAM4C32
 # define EFC     EFC0
 /* Internal Flash 0 base address. */
@@ -357,7 +357,7 @@ uint32_t flash_set_wait_state_adaptively(uint32_t ul_address)
 	} else {
 		efc_set_wait_state(p_efc, 4);
 	}
-#elif (SAM4S || SAM4E || SAM4N || SAM4C)
+#elif (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
 	} else if (clock < CHIP_FREQ_FWS_3) {
 		efc_set_wait_state(p_efc, 3);
 	} else if (clock < CHIP_FREQ_FWS_4) {
@@ -520,7 +520,7 @@ uint32_t flash_erase_plane(uint32_t ul_address)
 }
 #endif
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
 /**
  * \brief Erase the specified pages of flash.
  *
@@ -787,12 +787,12 @@ uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end)
 	Assert(ul_end >= ul_start);
 
 #ifdef EFC1
-	Assert(((ul_start >= IFLASH0_ADDR) 
+	Assert(((ul_start >= IFLASH0_ADDR)
 				&& (ul_end <= IFLASH0_ADDR + IFLASH0_SIZE))
 				|| ((ul_start >= IFLASH1_ADDR)
 					&& (ul_end <= IFLASH1_ADDR + IFLASH1_SIZE)));
 #else
-	Assert((ul_start >= IFLASH_ADDR) 
+	Assert((ul_start >= IFLASH_ADDR)
 				&& (ul_end <= IFLASH_ADDR + IFLASH_SIZE));
 #endif
 
@@ -810,6 +810,7 @@ uint32_t flash_is_locked(uint32_t ul_start, uint32_t ul_end)
 	if (ul_error) {
 		return ul_error;
 	}
+    UNUSED(ul_error);
 
 	/* Skip unrequested regions (if necessary) */
 	ul_status = efc_get_result(p_efc);
@@ -970,7 +971,7 @@ uint32_t flash_read_unique_id(uint32_t *pul_data, uint32_t ul_size)
 	return FLASH_RC_OK;
 }
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
 /**
  * \brief Read the flash user signature.
  *

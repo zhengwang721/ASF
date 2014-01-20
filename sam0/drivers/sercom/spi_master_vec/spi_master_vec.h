@@ -3,7 +3,7 @@
  *
  * \brief SERCOM SPI master with vectored I/O driver include
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -61,6 +61,11 @@
  * The following peripherals are used by this driver:
  * - SERCOM (Serial Communication Interface)
  *
+ * The reader is assumed to be familiar with the regular SERCOM SPI driver, and
+ * how it is configured and operated. Configuration of this driver is done a
+ * similar way and actually re-uses several enumerations (configuration values)
+ * from the regular SERCOM SPI driver.
+ *
  *
  * \section asfdoc_samd20_sercom_spi_master_vec_prerequisites Prerequisites
  *
@@ -83,20 +88,79 @@
  * usage is in stacks which usually have their own protocols and handshaking
  * schemes.
  *
+ *
+ * \subsection asfdoc_samd20_sercom_spi_master_vectored_io Vectored I/O
+ *
  * Vectored I/O enables the transfer of data from/to any number of buffers with
  * arbitrary memory locations without having to do several transfers, i.e., one
  * buffer at a time. This feature is useful in stacks because it allows each
  * layer of the stack to have a dedicated data buffer, thus avoiding the need
- * for a "master" data buffer that the different layers must use in cooperation.
+ * for a centralized data buffer that the different layers must use in
+ * cooperation.
  *
  * The vectored I/O relies on arrays of buffer descriptors which must be passed
  * to the driver to start a transfer. These buffer descriptors specify where in
  * memory each buffer is, and how large they are.
+ * \ref asfdoc_samd20_vectored_io_example "The figure below" illustrates this
+ * for an example with three buffers of varying sizes that are transmitted.
  *
- * Lastly, the driver has configurable OS support for the purpose of allowing
- * more efficient waiting for transfer completions.
+ * \anchor asfdoc_samd20_vectored_io_example
+ * \dot
+digraph bufptr_to_spiord {
+	rankdir=LR;
+	subgraph cluster_bufptr {
+		style=invis;
+		bufptr_label [shape=none, label="Buffer descriptors"];
+		bufptrs [shape=record, label="<bf1> [0]|<bf2> [1]|<bf3> [2]|<bf4> [3]"];
+	}
+	subgraph cluster_buf {
+		style=invis;
+		buf_label [shape=none, label="Memory layout"];
+		bufs [shape=record, label="...|<b1>&quot;yy&quot;|...|<b3>&quot;z&quot;|<b2>&quot;xxx&quot;|..."];
+	}
+	subgraph cluster_spiord {
+		style=invis;
+		spiord_label [shape=none, label="SPI transmission"];
+		spiord [shape=record, label="<s1>&quot;yy&quot;|<s2>&quot;xxx&quot;|<s3>&quot;z&quot;"];
+	}
+	bufptrs:bf1 -> bufs:b1 -> spiord:s1;
+	bufptrs:bf2 -> bufs:b2 -> spiord:s2;
+	bufptrs:bf3 -> bufs:b3 -> spiord:s3;
+	bufptrs:bf4 -> "NULL";
+}
+ * \enddot
+ *
+ * Note that the last descriptor \e must have a NULL-pointer in order for the
+ * driver to detect that the end of the buffer list has been reached. This means
+ * that for \c N buffers, \c N+1 buffer descriptors are needed.
+ *
+ * Bidirectional transfers are supported without any restrictions on the buffer
+ * descriptors, so the number of bytes and buffers to receive and transmit do
+ * \e not have to be the same.
  *
  * \sa spi_master_vec_transceive_buffer_job() for details on starting transfers.
+ *
+ *
+ * \subsection asfdoc_samd20_sercom_spi_master_os_support OS support
+ *
+ * Since this driver is interrupt-driven, it is possible for the MCU to run
+ * other code while a transfer is on-going.
+ *
+ * In a single-threaded application, this can be achieved by starting a transfer
+ * and then avoid any waiting for completion until absolutely required, e.g.,
+ * when a new transfer is needed.
+ *
+ * But in a multi-threaded application, for example based on FreeRTOS, one can
+ * utilize \e semaphores to let the OS know when a function is waiting and thus
+ * blocking the thread, and that other threads can be run instead. Put another
+ * way, the waiting can be made efficient.
+ *
+ * This driver has an internal semaphore which is used to signal to the OS
+ * whenever a function is waiting for a transfer to complete. And since the
+ * semaphore datatypes and functions are OS-specific, the support has been made
+ * configurable by the use of macros. Note that support for FreeRTOS is already
+ * implemented, but must be enabled.
+ *
  * \sa CONF_SPI_MASTER_VEC_OS_SUPPORT for more on the configurable OS support.
  *
  *
@@ -158,7 +222,7 @@
  */
 
 /**
- * \brief Driver configuration structure
+ * Driver configuration structure
  *
  * \sa asfdoc_samd20_sercom_spi_master_vec_special_considerations for more
  * information regarding SERCOM pad and pin MUX.
@@ -186,11 +250,6 @@ struct spi_master_vec_config {
 	uint32_t pinmux_pad3;
 };
 
-/**
- * \name Buffer Description
- * @{
- */
-
 /** Buffer length container. */
 typedef uint16_t spi_master_vec_buflen_t;
 
@@ -201,8 +260,6 @@ struct spi_master_vec_bufdesc {
 	/** Length of buffer. */
 	spi_master_vec_buflen_t length;
 };
-
-/** @} */
 
 /** Driver instance. */
 struct spi_master_vec_module {
