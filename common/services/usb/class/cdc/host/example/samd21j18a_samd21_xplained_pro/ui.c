@@ -48,6 +48,7 @@
 #define LED_Off()     port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE)
 #define LED_Toggle()  port_pin_toggle_output_level(LED_0_PIN)
 
+#ifdef USB_HOST_LPM_SUPPORT
 /**
  * \name Internal routines to manage asynchronous interrupt pin change
  * This interrupt is connected to a switch and allows to wakeup CPU in low sleep
@@ -101,6 +102,7 @@ static void ui_disable_asynchronous_interrupt(void)
 	extint_chan_disable_callback(BUTTON_0_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
 }
+#endif // #ifdef USB_HOST_LPM_SUPPORT
 
 /*! @} */
 
@@ -189,13 +191,18 @@ void ui_usb_enum_event(uhc_device_t *dev, uhc_enum_status_t status)
 
 void ui_usb_wakeup_event(void)
 {
+#ifdef USB_HOST_LPM_SUPPORT
 	ui_disable_asynchronous_interrupt();
+#endif
 }
 
 void ui_usb_sof_event(void)
 {
+#ifdef USB_HOST_LPM_SUPPORT
 	bool b_btn_state;
 	static bool btn_suspend_and_remotewakeup = false;
+#endif
+
 	static uint16_t counter_sof = 0;
 
 	if (ui_enum_status == UHC_ENUM_SUCCESS) {
@@ -206,7 +213,7 @@ void ui_usb_sof_event(void)
 				LED_Toggle();
 			}
 		}
-
+#ifdef USB_HOST_LPM_SUPPORT
 		/* Scan button to enter in suspend mode and remote wakeup */
 		b_btn_state = !port_pin_get_input_level(BUTTON_0_PIN);
 		if (b_btn_state != btn_suspend_and_remotewakeup) {
@@ -220,6 +227,7 @@ void ui_usb_sof_event(void)
 				return;
 			}
 		}
+#endif // #ifdef USB_HOST_LPM_SUPPORT
 	}
 }
 

@@ -390,7 +390,7 @@ typedef struct {
 	uint8_t bLength;
 	uint8_t bDescriptorType;
 	uint8_t bDevCapabilityType;
-	uint32_t bmAttributes;
+	le32_t  bmAttributes;
 } usb_dev_capa_ext_desc_t;
 
 /**

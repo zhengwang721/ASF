@@ -70,7 +70,7 @@
 /**
  * \name Macros for USB device those are not realized in head file
  *
- * @{ 
+ * @{
  */
 #define USB_DEVICE_EPINTENCLR_TRCPT0        USB_DEVICE_EPINTENCLR_TRCPT(1)
 #define USB_DEVICE_EPINTENCLR_TRCPT1        USB_DEVICE_EPINTENCLR_TRCPT(2)
@@ -118,14 +118,14 @@ union {
 } usb_descriptor_table;
 COMPILER_PACK_RESET()
 /** @} */
- 
+
 /**
- * \brief Local USB module instance 
+ * \brief Local USB module instance
  */
 static struct usb_module *_usb_instances;
 
 /**
- * \brief Host pipe callback structure variable 
+ * \brief Host pipe callback structure variable
  */
 static struct usb_pipe_callback_parameter pipe_callback_para;
 
@@ -133,12 +133,12 @@ static struct usb_pipe_callback_parameter pipe_callback_para;
 static uint32_t device_callback_lpm_wakeup_enable;
 
 /**
- * \brief Device endpoint callback parameter variable, used to transfer info to UDD wrapper layer 
+ * \brief Device endpoint callback parameter variable, used to transfer info to UDD wrapper layer
  */
 static struct usb_endpoint_callback_parameter ep_callback_para;
 
 /**
- * \internal USB Device IRQ Mask Bits Map 
+ * \internal USB Device IRQ Mask Bits Map
  */
 static const uint16_t _usb_device_irq_bits[USB_DEVICE_CALLBACK_N] = {
 	USB_DEVICE_INTFLAG_SOF,
@@ -151,7 +151,7 @@ static const uint16_t _usb_device_irq_bits[USB_DEVICE_CALLBACK_N] = {
 };
 
 /**
- * \internal USB Device IRQ Mask Bits Map 
+ * \internal USB Device IRQ Mask Bits Map
  */
 static const uint8_t _usb_endpoint_irq_bits[USB_DEVICE_EP_CALLBACK_N] = {
 	USB_DEVICE_EPINTFLAG_TRCPT_Msk,
@@ -160,8 +160,8 @@ static const uint8_t _usb_endpoint_irq_bits[USB_DEVICE_EP_CALLBACK_N] = {
 	USB_DEVICE_EPINTFLAG_STALL_Msk
 };
 
-/** 
- * \brief Bit mask for pipe job busy status 
+/**
+ * \brief Bit mask for pipe job busy status
  */
 uint32_t host_pipe_job_busy_status = 0;
 
@@ -1746,7 +1746,7 @@ static void _usb_device_interrupt_handler(void)
 			}
 			if (flags_run & _usb_device_irq_bits[i]) {
 				if (i == USB_DEVICE_CALLBACK_LPMSUSP) {
-					device_callback_lpm_wakeup_enable = 
+					device_callback_lpm_wakeup_enable =
 							usb_descriptor_table.usb_endpoint_table[0].DeviceDescBank[0].EXTREG.bit.VARIABLE
 							& USB_LPM_ATTRIBUT_REMOTEWAKE_MASK;
 				}
@@ -1871,7 +1871,7 @@ void usb_disable(struct usb_module *module_inst)
 }
 
 /**
- * \brief Interrupt handler for the USB module. 
+ * \brief Interrupt handler for the USB module.
  */
 void USB_Handler(void)
 {
@@ -1964,7 +1964,9 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 
 	/* Reset */
 	hw->HOST.CTRLA.bit.SWRST = 1;
-	while (hw->HOST.SYNCBUSY.bit.SWRST);
+	while (hw->HOST.SYNCBUSY.bit.SWRST) {
+		/* Sync wait */
+	}
 
 	/* Load Pad Calibration */
 	pad_transn =( *((uint32_t *)(NVMCTRL_OTP4)

@@ -74,7 +74,7 @@
  * \ingroup uhc_group
  * \defgroup uhc_group_interne Implementation of UHC
  *
- * Internal implementation 
+ * Internal implementation
  * @{
  */
 
@@ -773,7 +773,7 @@ static void uhc_enumeration_step15(
 #endif
 
 	uhc_enum_try = 0;
-	
+
 	UHC_ENUM_EVENT(uhc_dev_enum, UHC_ENUM_SUCCESS);
 }
 
@@ -847,7 +847,7 @@ static void uhc_enumeration_step17_lpm(
 	UHC_ENUM_EVENT(uhc_dev_enum, UHC_ENUM_SUCCESS);
 }
 #endif // USB_HOST_LPM_SUPPORT
-	
+
 /**
  * \brief Manage error during device enumeration
  *
@@ -1054,7 +1054,7 @@ bool uhc_suspend_lpm(bool b_remotewakeup, uint8_t besl)
 		// Device cannot support LPM
 		return false;
 	}
-	
+
 	// Suspend all USB devices
 	return uhd_suspend_lpm(b_remotewakeup, besl);
 }
