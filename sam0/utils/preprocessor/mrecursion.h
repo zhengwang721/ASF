@@ -320,9 +320,9 @@
  *
  * This macro represents a horizontal repetition construct.
  *
- * \param[in] count  The number of repetitious calls to macro. Valid values 
+ * \param[in] count  The number of repetitious calls to macro. Valid values
  *                   range from 0 to MRECURSION_LIMIT.
- * \param[in] macro  A binary operation of the form macro(data n).  This macro
+ * \param[in] macro  A binary operation of the form macro(data, n).  This macro
  *                   is expanded by MRECURSION with the current repetition number
  *                   and the auxiliary data argument.
  * \param[in] data   Auxiliary data1 passed to macro.
