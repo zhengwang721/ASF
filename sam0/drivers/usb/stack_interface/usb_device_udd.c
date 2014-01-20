@@ -113,10 +113,10 @@ static void udd_sleep_mode(enum udd_usb_state_enum new_state)
 {
 	enum sleepmgr_mode sleep_mode[] = {
 		SLEEPMGR_ACTIVE,  /* UDD_STATE_OFF (not used) */
-		SLEEPMGR_ACTIVE,  /* UDD_STATE_NO_VBUS */
-		SLEEPMGR_ACTIVE,  /* UDD_STATE_SUSPEND */
-		SLEEPMGR_ACTIVE,  /* UDD_STATE_SUSPEND_LPM */
-		SLEEPMGR_ACTIVE,  /* UDD_STATE_IDLE */
+		SLEEPMGR_IDLE_2,  /* UDD_STATE_NO_VBUS */
+		SLEEPMGR_IDLE_1,  /* UDD_STATE_SUSPEND */
+		SLEEPMGR_IDLE_1,  /* UDD_STATE_SUSPEND_LPM */
+		SLEEPMGR_IDLE_0,  /* UDD_STATE_IDLE */
 	};
 
 	static enum udd_usb_state_enum udd_state = UDD_STATE_OFF;
@@ -662,6 +662,7 @@ uint8_t udd_getaddress(void)
 void udd_send_remotewakeup(void)
 {
 	uint32_t try = 5;
+	udd_sleep_mode(UDD_STATE_IDLE);
 	while(2 != usb_get_state_machine_status(&usb_device) && try --) {
 		usb_device_send_remote_wake_up(&usb_device);
 	}
@@ -973,7 +974,7 @@ static void _usb_on_suspend(struct usb_module *module_inst, void *pointer)
 {
 	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
-
+	udd_sleep_mode(UDD_STATE_SUSPEND);
 #ifdef UDC_SUSPEND_EVENT
 	UDC_SUSPEND_EVENT();
 #endif
@@ -992,13 +993,14 @@ static void _usb_device_lpm_suspend(struct usb_module *module_inst, void *pointe
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
 	
 //#warning Here the sleep mode must be choose to have a DFLL startup time < bmAttribut.BESL
-//	udd_sleep_mode(false);	// Enter in LPM SUSPEND mode
+//	udd_sleep_mode(UDD_STATE_SUSPEND_LPM);	// Enter in LPM SUSPEND mode
 	if (*lpm_wakeup_enable) {
 		UDC_REMOTEWAKEUP_LPM_ENABLE();
 	} else {
 		UDC_REMOTEWAKEUP_LPM_DISABLE();
 	}
 	UDC_SUSPEND_LPM_EVENT();
+	
 }
 #endif
 
@@ -1044,7 +1046,7 @@ static void _usb_on_wakeup(struct usb_module *module_inst, void *pointer)
 	usb_device_register_callback(&usb_device, USB_DEVICE_CALLBACK_LPMSUSP, _usb_device_lpm_suspend);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_LPMSUSP);
 #endif
-
+	udd_sleep_mode(UDD_STATE_IDLE);
 #ifdef UDC_RESUME_EVENT
 	UDC_RESUME_EVENT();
 #endif
@@ -1053,10 +1055,12 @@ static void _usb_on_wakeup(struct usb_module *module_inst, void *pointer)
 void udd_detach(void)
 {
 	usb_device_detach(&usb_device);
+	udd_sleep_mode(UDD_STATE_NO_VBUS);
 }
 
 void udd_attach(void)
 {
+	udd_sleep_mode(UDD_STATE_IDLE);
 	usb_device_attach(&usb_device);
 
 	usb_device_register_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND, _usb_on_suspend);
