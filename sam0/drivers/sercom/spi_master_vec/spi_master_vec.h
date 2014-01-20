@@ -61,6 +61,11 @@
  * The following peripherals are used by this driver:
  * - SERCOM (Serial Communication Interface)
  *
+ * The reader is assumed to be familiar with the regular SERCOM SPI driver, and
+ * how it is configured and operated. Configuration of this driver is done a
+ * similar way and actually re-uses several enumerations (configuration values)
+ * from the regular SERCOM SPI driver.
+ *
  *
  * \section asfdoc_samd20_sercom_spi_master_vec_prerequisites Prerequisites
  *
