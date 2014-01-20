@@ -862,7 +862,10 @@ static inline void rtc_count_disable_events(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21.</td>
+ *		<td>
+ *                     Added support for SAMD21.
+ *                     Added driver instance parameter to all API function calls, except get_config_defaults.
+ *             </td>
  *	</tr>
  *	<tr>
  *		<td>Updated initialization function to also enable the digital interface

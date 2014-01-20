@@ -1082,7 +1082,15 @@ static inline void usart_disable_transceiver(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Add support for SAMD21</td>
+ *		<td>Add support for SAMD21 and added new feature as below:
+                \li Oversample
+                \li Buffer overflow notification
+                \li Irda
+                \li Lin slave
+                \li Start frame detection
+                \li Hardware flow control
+                \li Collision detection
+                \li DMA support </td>
  *	</tr>
  *	<tr>
  *		<td>\li Added new \c transmitter_enable and \c receiver_enable boolean

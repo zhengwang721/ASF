@@ -410,6 +410,9 @@ static inline void bod_clear_detected(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Removed BOD12 reference</td>
+ *	</tr>
+ *	<tr>
  *		<td>Added support for SAMD21</td>
  *	</tr>
  *	<tr>

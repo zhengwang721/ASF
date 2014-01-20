@@ -1398,7 +1398,10 @@ enum status_code spi_select_slave(
  *		<th>Changelog</th>
  *	</tr>
  *	 <tr>
- *		<td>Add SAMD21 support.</td>
+ *		<td>Add SAMD21 support and added new features as below:
+ *             \li Slave select low detect
+ *             \li Hardware slave select
+ *             \li DMA support </td>
  *	</tr>
  *	 <tr>
  *		<td>Edited slave part of write and transceive buffer functions to ensure
