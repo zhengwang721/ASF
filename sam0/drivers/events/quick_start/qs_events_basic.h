@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x Event System Driver Quick Start
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -61,6 +61,10 @@
  * \subsection asfdoc_sam0_events_basic_use_casesetup_code Code
  * Copy-paste the following setup code to your user application:
  * \snippet qs_events_basic.c setup
+ *
+ *
+ * Create an event resource struct and add to user application (typically the start of \c main()):
+ * \snippet qs_events_basic.c events_resource_struct
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_events_basic.c setup_init

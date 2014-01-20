@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x Watchdog Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -412,6 +412,9 @@ void wdt_reset_count(void);
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
+  *	<tr>
+ *		<td>Add SAMD21 support</td>
+ *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
@@ -439,6 +442,11 @@ void wdt_reset_count(void);
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Add SAMD21 support.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>

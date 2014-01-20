@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x Watchdog Driver Callback Quick Start
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,7 @@
  * This use case sets up the Watchdog to force a system reset after every 4096
  * clocks of the Watchdog's Generic Clock channel, with an Early Warning
  * callback being generated every 2048 clocks. Each time the Early Warning
- * interrupt fires the boar LED is turned on, and each time the device resets
+ * interrupt fires the board LED is turned on, and each time the device resets
  * the board LED is turned off, giving a periodic flashing pattern.
  *
  *

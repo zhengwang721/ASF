@@ -3,7 +3,7 @@
  *
  * \brief SAM D20 Clock Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -698,11 +698,15 @@ void system_clock_init(void)
 	xosc32k_conf.auto_gain_control   = CONF_CLOCK_XOSC32K_AUTO_AMPLITUDE_CONTROL;
 	xosc32k_conf.enable_1khz_output  = CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT;
 	xosc32k_conf.enable_32khz_output = CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT;
-	xosc32k_conf.on_demand           = CONF_CLOCK_XOSC32K_ON_DEMAND;
+	xosc32k_conf.on_demand           = false;
 	xosc32k_conf.run_in_standby      = CONF_CLOCK_XOSC32K_RUN_IN_STANDBY;
 
 	system_clock_source_xosc32k_set_config(&xosc32k_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
+	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_XOSC32K));
+	if (CONF_CLOCK_XOSC32K_ON_DEMAND) {
+		SYSCTRL->XOSC32K.bit.ONDEMAND = 1;
+	}
 #endif
 
 
@@ -731,7 +735,7 @@ void system_clock_init(void)
 	system_clock_source_dfll_get_config_defaults(&dfll_conf);
 
 	dfll_conf.loop_mode      = CONF_CLOCK_DFLL_LOOP_MODE;
-	dfll_conf.on_demand      = CONF_CLOCK_DFLL_ON_DEMAND;
+	dfll_conf.on_demand      = false;
 
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN) {
 		dfll_conf.coarse_value = CONF_CLOCK_DFLL_COARSE_VALUE;
@@ -810,6 +814,10 @@ void system_clock_init(void)
 	/* DFLL Enable (Open and Closed Loop) */
 #if CONF_CLOCK_DFLL_ENABLE == true
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
+	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_DFLL));
+	if (CONF_CLOCK_DFLL_ON_DEMAND) {
+		SYSCTRL->DFLLCTRL.bit.ONDEMAND = 1;
+	}
 #endif
 
 	/* CPU and BUS clocks */

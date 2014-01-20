@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x RTC Driver (Calendar Mode)
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -992,6 +992,9 @@ static inline void rtc_calendar_disable_events(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added support for SAMD21.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Updated initialization function to also enable the digital interface
  *          clock to the module if it is disabled.</td>
  *	</tr>
@@ -1022,6 +1025,11 @@ static inline void rtc_calendar_disable_events(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>

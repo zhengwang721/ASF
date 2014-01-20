@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x TC - Timer Counter Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -413,17 +413,26 @@
 
 #if !defined(__DOXYGEN__)
 #if SAMD20
+#  define TC_INSTANCE_OFFSET 0
+#endif
+#if SAMD21
+#  define TC_INSTANCE_OFFSET 3
+#endif
+
+#if SAMD20
 #  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC0_CC8_NUM
 #else
 #  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC3_CC8_NUM
    /* Same number for 8-, 16- and 32-bit TC and all TC instances */
 #endif
+
 /** TC Instance MAX ID Number */
 #if SAMD20E || SAMD21G || SAMD21E
 #define TC_INST_MAX_ID  5
 #else 
 #define TC_INST_MAX_ID  7
 #endif
+
 #endif
 
 #if TC_ASYNC == true
@@ -766,7 +775,7 @@ struct tc_config {
 	/** Specifies the PWM channel for TC. */
 	struct tc_pwm_channel pwm_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 
-	/** This setting determines what size counter is used. */
+	/** Access the different counter size settings though this configuration member. */
 	union {
 		/** Struct for 8-bit specific timer configuration. */
 		struct tc_8bit_config counter_8_bit;
@@ -1326,6 +1335,10 @@ static inline void tc_clear_status(
  *		<th>Acronym</th>
  *		<th>Description</th>
  *	</tr>
+  *	<tr>
+ *		<td>DMA</td>
+ *		<td>Direct Memory Access</td>
+ *	</tr>
  *	<tr>
  *		<td>TC</td>
  *		<td>Timer Counter</td>
@@ -1366,6 +1379,9 @@ static inline void tc_clear_status(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added support for SAMD21.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Added automatic digital clock interface enable for the slave TC
  *          module when a timer is initialized in 32-bit mode.</td>
  *	</tr>
@@ -1382,12 +1398,13 @@ static inline void tc_clear_status(
  * applications for \ref asfdoc_sam0_tc_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that QSGs can be compiled as a standalone application or be
- * added to the user application for SAMD20.
+ * added to the user application.
  *
  *  - \subpage asfdoc_sam0_tc_basic_use_case
  * \if TC_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_tc_callback_use_case
  * \endif
+ *  - \subpage asfdoc_sam0_tc_dma_use_case
  *
  * \page asfdoc_sam0_tc_document_revision_history Document Revision History
  *
@@ -1396,6 +1413,11 @@ static inline void tc_clear_status(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>

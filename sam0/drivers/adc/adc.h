@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x Peripheral Analog-to-Digital Converter Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1679,6 +1679,10 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<td>MSB</td>
  *		<td>Most Significant Bit</td>
  *	</tr>
+ *	<tr>
+ *		<td>DMA</td>
+ *		<td>Direct Memory Access</td>
+ *	</tr>
  * </table>
  *
  *
@@ -1703,6 +1707,9 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added support for SAMD21</td>
+ *	</tr>
+ *	<tr>
  *		<td>Added ADC calibration constant loading from the device signature
  *          row when the module is initialized.</td>
  *	</tr>
@@ -1725,6 +1732,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * \if ADC_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_adc_basic_use_case_callback
  * \endif
+ *  - \subpage asfdoc_sam0_adc_dma_use_case
  *
  * \page asfdoc_sam0_adc_document_revision_history Document Revision History
  *
@@ -1733,6 +1741,11 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>

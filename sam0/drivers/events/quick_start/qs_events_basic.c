@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x Event System Driver Quick Start
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -80,7 +80,9 @@ static void configure_event_user(struct events_resource *resource)
 
 int main(void)
 {
+//! [events_resource_struct]
 	struct events_resource example_event;
+//! [events_resource_struct]
 
 	system_init();
 

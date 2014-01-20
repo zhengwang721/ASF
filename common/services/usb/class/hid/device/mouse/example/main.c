@@ -51,19 +51,16 @@ static volatile bool main_b_mouse_enable = false;
  */
 int main(void)
 {
-#if !SAMD21
-	sysclk_init();
 	irq_initialize_vectors();
 	cpu_irq_enable();
-	// Initialize the sleep manager
-	sleepmgr_init();
+#if !SAMD21
+	sysclk_init();
 	board_init();
-
 #else
 	system_init();
-
 #endif
-
+	// Initialize the sleep manager
+	sleepmgr_init();
 	ui_init();
 	ui_powerdown();
 
@@ -87,9 +84,7 @@ int main(void)
 			}
 		}
 #else /* #ifdef USB_DEVICE_LOW_SPEED */
-#  if !SAMD21
 		sleepmgr_enter_sleep();
-#  endif
 #endif
 	}
 }

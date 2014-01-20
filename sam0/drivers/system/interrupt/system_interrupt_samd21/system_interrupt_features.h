@@ -3,7 +3,7 @@
  *
  * \brief SAM D21 System Interrupt Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -65,12 +65,22 @@
 #endif
 
 /**
+ * \addtogroup asfdoc_sam0_system_interrupt_group
+ * @{
+ */
+
+/**
  * \brief Table of possible system interrupt/exception vector numbers.
  *
  * Table of all possible interrupt and exception vector indexes within the
- * device.
+ * SAMD21 device.
  */
+#if defined(__DOXYGEN__)
+/** \note The actual enumeration name is "system_interrupt_vector". */
+enum system_interrupt_vector_samd21 {
+#else
 enum system_interrupt_vector {
+#endif
 	/** Interrupt vector index for a NMI interrupt. */
 	SYSTEM_INTERRUPT_NON_MASKABLE      = NonMaskableInt_IRQn,
 	/** Interrupt vector index for a Hard Fault memory access exception. */
@@ -124,7 +134,7 @@ enum system_interrupt_vector {
 	 *  Each specific device may contain several TC peripherals; each module
 	 *  instance will have its own entry in the table, with the instance number
 	 *  substituted for "n" in the entry name (e.g.
-	 *  \c SYSTEM_INTERRUPT_MODULE_TC0).
+	 *  \c SYSTEM_INTERRUPT_MODULE_TC3).
 	 */
 	SYSTEM_INTERRUPT_MODULE_TCn        = TCn_IRQn,
 #else
@@ -148,5 +158,7 @@ enum system_interrupt_vector {
 	/** Interrupt vector index for a Digital-to-Analog peripheral interrupt. */
 	SYSTEM_INTERRUPT_MODULE_DAC        = DAC_IRQn,
 };
+
+/** @} */
 
 #endif

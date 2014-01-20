@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x RTC Basic Usage Example
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,7 +44,9 @@
 
 void configure_rtc_count(void);
 
+//! [rtc_module_instance]
 struct rtc_module rtc_instance;
+//! [rtc_module_instance]
 
 //! [initiate]
 void configure_rtc_count(void)

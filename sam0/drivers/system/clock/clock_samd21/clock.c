@@ -3,7 +3,7 @@
  *
  * \brief SAM D21 Clock Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -738,11 +738,15 @@ void system_clock_init(void)
 	xosc32k_conf.auto_gain_control   = CONF_CLOCK_XOSC32K_AUTO_AMPLITUDE_CONTROL;
 	xosc32k_conf.enable_1khz_output  = CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT;
 	xosc32k_conf.enable_32khz_output = CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT;
-	xosc32k_conf.on_demand           = CONF_CLOCK_XOSC32K_ON_DEMAND;
+	xosc32k_conf.on_demand           = false;
 	xosc32k_conf.run_in_standby      = CONF_CLOCK_XOSC32K_RUN_IN_STANDBY;
 
 	system_clock_source_xosc32k_set_config(&xosc32k_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
+	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_XOSC32K));
+	if (CONF_CLOCK_XOSC32K_ON_DEMAND) {
+		SYSCTRL->XOSC32K.bit.ONDEMAND = 1;
+	}
 #endif
 
 

@@ -51,33 +51,33 @@ struct dma_resource usart_dma_resource_rx;
 struct dma_resource usart_dma_resource_tx;
 //! [dma_resource]
 
-// [usart_buffer]
+//! [usart_buffer]
 #define BUFFER_LEN    8
 static uint16_t string[BUFFER_LEN];
-// [usart_buffer]
+//! [usart_buffer]
 
-// [transfer_descriptor]
+//! [transfer_descriptor]
 COMPILER_ALIGNED(16)
 DmacDescriptor example_descriptor_rx;
 DmacDescriptor example_descriptor_tx;
-// [transfer_descriptor]
+//! [transfer_descriptor]
 
 //! [setup]
-// [transfer_done_rx]
+//! [transfer_done_rx]
 static void transfer_done_rx( const struct dma_resource* const resource )
 {
 	dma_start_transfer_job(&usart_dma_resource_tx);
 }
-// [transfer_done_rx]
+//! [transfer_done_rx]
 
-// [transfer_done_tx]
+//! [transfer_done_tx]
 static void transfer_done_tx( const struct dma_resource* const resource )
 {
 	dma_start_transfer_job(&usart_dma_resource_rx);
 }
-// [transfer_done_tx]
+//! [transfer_done_tx]
 
-// [config_dma_resource_rx]
+//! [config_dma_resource_rx]
 static void configure_dma_resource_rx(struct dma_resource *resource)
 {
 //! [setup_rx_1]
@@ -98,9 +98,9 @@ static void configure_dma_resource_rx(struct dma_resource *resource)
 	dma_allocate(resource, &config);
 //! [setup_rx_4]
 }
-// [config_dma_resource_rx]
+//! [config_dma_resource_rx]
 
-// [setup_dma_transfer_rx_descriptor]
+//! [setup_dma_transfer_rx_descriptor]
 static void setup_transfer_descriptor_rx(DmacDescriptor *descriptor)
 {
 //! [setup_rx_5]
@@ -124,9 +124,9 @@ static void setup_transfer_descriptor_rx(DmacDescriptor *descriptor)
 	dma_descriptor_create(descriptor, &descriptor_config);
 //! [setup_rx_8]
 }
-// [setup_dma_transfer_rx_descriptor]
+//! [setup_dma_transfer_rx_descriptor]
 
-// [config_dma_resource_tx]
+//! [config_dma_resource_tx]
 static void configure_dma_resource_tx(struct dma_resource *resource)
 {
 //! [setup_tx_1]
@@ -147,9 +147,9 @@ static void configure_dma_resource_tx(struct dma_resource *resource)
 	dma_allocate(resource, &config);
 //! [setup_tx_4]
 }
-// [config_dma_resource_tx]
+//! [config_dma_resource_tx]
 
-// [setup_dma_transfer_tx_descriptor]
+//! [setup_dma_transfer_tx_descriptor]
 static void setup_transfer_descriptor_tx(DmacDescriptor *descriptor)
 {
 //! [setup_tx_5]
@@ -173,7 +173,7 @@ static void setup_transfer_descriptor_tx(DmacDescriptor *descriptor)
 	dma_descriptor_create(descriptor, &descriptor_config);
 //! [setup_tx_8]
 }
-// [setup_dma_transfer_tx_descriptor]
+//! [setup_dma_transfer_tx_descriptor]
 
 //! [setup_usart]
 static void configure_usart(void)

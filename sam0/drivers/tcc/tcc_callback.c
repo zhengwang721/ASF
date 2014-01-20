@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x  TCC - Timer Counter for Control Applications Callback Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

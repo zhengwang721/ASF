@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x RTC Calendar Callback Quick Start
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,7 +46,9 @@ void rtc_match_callback(void);
 void configure_rtc_callbacks(void);
 void configure_rtc_calendar(void);
 
+//! [rtc_module_instance]
 struct rtc_module rtc_instance;
+//! [rtc_module_instance]
 
 //! [callback]
 void rtc_match_callback(void)

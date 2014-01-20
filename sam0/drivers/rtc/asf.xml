@@ -47,7 +47,7 @@
 
 			<info type="description" value="pdf">
 				This document describes how to use the Real Time Counter in
-				Count mode on the SAM D20, both the ASF driver and the
+				Count mode on the SAM D2x, both the ASF driver and the
 				peripheral itself.
 			</info>
 
