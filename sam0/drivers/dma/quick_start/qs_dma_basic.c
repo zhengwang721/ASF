@@ -43,35 +43,35 @@
 #include <asf.h>
 
 //! [setup]
-// [transfer_length]
+//! [transfer_length]
 #define DATA_LENGTH (1024)
-// [transfer_length]
+//! [transfer_length]
 
-// [source_memory]
+//! [source_memory]
 static uint8_t source_memory[DATA_LENGTH];
-// [source_memory]
+//! [source_memory]
 
-// [destination_memory]
+//! [destination_memory]
 static uint8_t destination_memory[DATA_LENGTH];
-// [destination_memory]
+//! [destination_memory]
 
-// [transfer_done_flag]
+//! [transfer_done_flag]
 static volatile bool transfer_is_done = false;
-// [transfer_done_flag]
+//! [transfer_done_flag]
 
-// [transfer_descriptor]
+//! [transfer_descriptor]
 COMPILER_ALIGNED(16)
 DmacDescriptor example_descriptor;
-// [transfer_descriptor]
+//! [transfer_descriptor]
 
-// [_transfer_done]
+//! [_transfer_done]
 static void transfer_done( const struct dma_resource* const resource )
 {
 	transfer_is_done = true;
 }
-// [_transfer_done]
+//! [_transfer_done]
 
-// [config_dma_resource]
+//! [config_dma_resource]
 static void configure_dma_resource(struct dma_resource *resource)
 {
 //! [setup_1]
@@ -86,9 +86,9 @@ static void configure_dma_resource(struct dma_resource *resource)
 	dma_allocate(resource, &config);
 //! [setup_3]
 }
-// [config_dma_resource]
+//! [config_dma_resource]
 
-// [setup_dma_transfer_descriptor]
+//! [setup_dma_transfer_descriptor]
 static void setup_transfer_descriptor(DmacDescriptor *descriptor )
 {
 	//! [setup_4]
@@ -109,7 +109,7 @@ static void setup_transfer_descriptor(DmacDescriptor *descriptor )
 	dma_descriptor_create(descriptor, &descriptor_config);
 	//! [setup_7]
 }
-// [setup_dma_transfer_descriptor]
+//! [setup_dma_transfer_descriptor]
 
 //! [setup]
 

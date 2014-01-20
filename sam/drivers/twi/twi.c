@@ -82,7 +82,7 @@ extern "C" {
 
 #if SAM4E
 #define TWI_WP_KEY_VALUE TWI_WPROT_MODE_SECURITY_CODE((uint32_t)0x545749)
-#elif SAM4C
+#elif (SAM4C || SAM4CP)
 #define TWI_WP_KEY_VALUE TWI_WPMR_WPKEY_PASSWD
 #elif SAMG
 #define TWI_WP_KEY_VALUE TWI_WPROT_MODE_WPKEY_PASSWD
@@ -608,7 +608,7 @@ Pdc *twi_get_pdc_base(Twi *p_twi)
 	return p_pdc_base;
 }
 
-#if (SAM4E || SAM4C || SAMG)
+#if (SAM4E || SAM4C || SAMG || SAM4CP)
 /**
  * \brief Enables/Disables write protection mode.
  *
