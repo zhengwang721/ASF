@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Digital-to-Analog Interrupt Driver
+ * \brief SAM D20/D21 Digital-to-Analog Interrupt Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *

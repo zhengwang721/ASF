@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x DMA cyclic redundancy check (CRC) Driver
+ * \brief SAM D21 DMA cyclic redundancy check (CRC) Driver
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *

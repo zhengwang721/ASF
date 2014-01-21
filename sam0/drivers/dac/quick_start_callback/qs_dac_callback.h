@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x DAC Callback Quick Start
+ * \brief SAM D20/D21 DAC Callback Quick Start
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
