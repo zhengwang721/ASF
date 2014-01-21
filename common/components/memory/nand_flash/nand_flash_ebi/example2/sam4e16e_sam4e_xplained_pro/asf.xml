@@ -12,6 +12,7 @@
 		<require idref="common.components.memory.nand_flash.example2"/>
 		<require idref="sam.utils.cmsis.sam4e.source.template"/>
 		<require idref="board.sam4e_xplained_pro"/>
+		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<generator value="doxygen"/>
