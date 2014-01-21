@@ -66,14 +66,22 @@
  * similar way and actually re-uses several enumerations (configuration values)
  * from the regular SERCOM SPI driver.
  *
+ * The outline of this documentation is as follows:
+ * - \ref asfdoc_samd20_sercom_spi_master_vec_prerequisites
+ * - \ref asfdoc_samd20_sercom_spi_master_vec_module_overview
+ * - \ref asfdoc_samd20_sercom_spi_master_vec_special_considerations
+ * - \ref asfdoc_samd20_sercom_spi_master_vec_extra_info
+ * - \ref asfdoc_samd20_sercom_spi_master_vec_examples
+ * - \ref asfdoc_samd20_sercom_spi_master_vec_api_overview
+ *
  *
  * \section asfdoc_samd20_sercom_spi_master_vec_prerequisites Prerequisites
  *
  * This driver uses the \ref asfdoc_samd20_system_clock_group "SYSTEM clock driver"
  * to select the SERCOM's clock source and to configure the SERCOM for the
  * desired baud rate. Ensure that the selected clock source is configured and
- * that the clock system is initialized -- this is typically done indirectly
- * with \ref system_init(), or directly with \ref system_clock_init().
+ * that the clock system is initialized. This is typically done indirectly with
+ * \ref system_init(), or directly with \ref system_clock_init().
  *
  * According to the datasheet, the minimum and maximum limits for the baud rate
  * is given by: \f$ \frac{1}{2^{17}} \times f_{clk} \le f_{baud}
