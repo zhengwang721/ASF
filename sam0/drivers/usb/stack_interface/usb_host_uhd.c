@@ -841,10 +841,13 @@ void uhd_enable(void)
 	usb_init(&dev,USB, &cfg);
 	usb_enable(&dev);
 
+	uhd_sleep_mode(UHD_STATE_NO_VBUS);
+
 #if USB_VBUS_EIC
 	_usb_vbus_config();
 	if (is_usb_vbus_high()) {
 		usb_host_enable(&dev);
+		uhd_sleep_mode(UHD_STATE_DISCONNECT);
 	} else {
 		dbg_print("VBUS low, there is some power issue on board!!! \n");
 	}
@@ -870,8 +873,6 @@ void uhd_enable(void)
 	usb_host_enable_callback(&dev, USB_HOST_CALLBACK_DISCONNECT);
 
 	cpu_irq_restore(flags);
-
-	uhd_sleep_mode(UHD_STATE_IDLE);
 }
 
 void uhd_disable(bool b_id_stop)
