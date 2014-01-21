@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Brown Out Detector Driver
+ * \brief SAM D20/D21 Brown Out Detector Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -46,9 +46,9 @@
 #include <compiler.h>
 
 /**
- * \defgroup asfdoc_sam0_bod_group SAM D2x Brown Out Detector Driver (BOD)
+ * \defgroup asfdoc_sam0_bod_group SAM D20/D21 Brown Out Detector Driver (BOD)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the device's Brown Out Detector (BOD) modules, to detect
  * and respond to under-voltage events and take an appropriate action.
  *
@@ -72,7 +72,7 @@
  *
  * \section asfdoc_sam0_bod_module_overview Module Overview
  *
- * The SAM D2x devices contain a number of Brown Out Detector (BOD) modules. Each
+ * The SAM D20/D21 devices contain a number of Brown Out Detector (BOD) modules. Each
  * BOD monitors the supply voltage for any dips that go below the set threshold
  * for the module. In case of a BOD detection the BOD will either reset the
  * system or raise a hardware interrupt so that a safe power-down sequence can
