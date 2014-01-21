@@ -429,7 +429,7 @@
 /** TC Instance MAX ID Number */
 #if SAMD20E || SAMD21G || SAMD21E
 #define TC_INST_MAX_ID  5
-#else 
+#else
 #define TC_INST_MAX_ID  7
 #endif
 
@@ -1379,7 +1379,11 @@ static inline void tc_clear_status(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21.</td>
+ *    <td>Added support for SAMD21 and do some modifications as below:
+ *          \li Clean up in the configuration structure, the counter size
+ *              setting specific registers is accessed through the counter_8_bit,
+ *              counter_16_bit and counter_32_bit structures.
+ *          \li All event related settings moved into the tc_event structure </td>
  *	</tr>
  *	<tr>
  *		<td>Added automatic digital clock interface enable for the slave TC
