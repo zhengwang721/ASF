@@ -52,7 +52,6 @@ extern "C" {
 #include <conf_sleepmgr.h>
 #include <interrupt.h>
 #include "system.h"
-#include <conf_clocks.h>
 
 /**
  * \weakgroup sleepmgr_group
