@@ -462,6 +462,14 @@ struct i2c_packet {
  *		<td>SCL</td>
  *		<td>Serial Clock Line</td>
  *	</tr>
+ *	<tr>
+ *		<td>SERCOM</td>
+ *		<td>Serial Communication Interface</td>
+ *	</tr>
+ *	<tr>
+ *		<td>DMA</td>
+ *		<td>Direct Memory Access</td>
+ *	</tr>
  * </table>
  *
  * \section asfdoc_sam0_sercom_i2c_extra_dependencies Dependencies
