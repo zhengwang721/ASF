@@ -123,28 +123,24 @@ enum uhd_usb_state_enum {
 	UHD_STATE_IDLE = 6,
 };
 
+enum sleepmgr_mode sleep_mode[] = {
+	SLEEPMGR_STANDBY,  // UHD_STATE_OFF (not used)
+	SLEEPMGR_IDLE_2,   // UHD_STATE_WAIT_ID_HOST
+	SLEEPMGR_IDLE_2,   // UHD_STATE_NO_VBUS
+	SLEEPMGR_IDLE_2,   // UHD_STATE_DISCONNECT
+	SLEEPMGR_IDLE_2,   // UHD_STATE_SUSPEND
+	SLEEPMGR_IDLE_2,   // UHD_STATE_SUSPEND_LPM
+	SLEEPMGR_IDLE_0,   // UHD_STATE_IDLE
+};
+
+static enum uhd_usb_state_enum uhd_state = UHD_STATE_OFF;
+
 /** \brief Manages the sleep mode following the USB state
  *
  * \param new_state  New USB state
  */
 static void uhd_sleep_mode(enum uhd_usb_state_enum new_state)
 {
-	enum sleepmgr_mode sleep_mode[] = {
-		SLEEPMGR_ACTIVE,  // UHD_STATE_OFF (not used)
-		SLEEPMGR_ACTIVE, // UHD_STATE_WAIT_ID_HOST
-		SLEEPMGR_ACTIVE, // UHD_STATE_NO_VBUS
-		SLEEPMGR_ACTIVE, // UHD_STATE_DISCONNECT
-		/* In suspend state, the SLEEPMGR_STANDBY level is authorized
-		 * even if ID Pin, Vbus... pins are managed through IO.
-		 * When a ID disconnection or Vbus low event occurs,
-		 * the asynchronous USB wakeup occurs.
-		 */
-		SLEEPMGR_ACTIVE,     // UHD_STATE_SUSPEND
-		SLEEPMGR_ACTIVE,     // UHD_STATE_SUSPEND_LPM
-		SLEEPMGR_ACTIVE, // UHD_STATE_IDLE
-	};
-	static enum uhd_usb_state_enum uhd_state = UHD_STATE_OFF;
-
 	if (uhd_state == new_state) {
 		return; // No change
 	}
@@ -825,8 +821,6 @@ void uhd_enable(void)
 	/* To avoid USB interrupt before end of initialization */
 	flags = cpu_irq_save();
 
-	sleepmgr_lock_mode(SLEEPMGR_ACTIVE);
-
 #if USB_ID_EIC
 	if (usb_dual_enable()) {
 		/* The current mode has been started by otg_dual_enable() */
@@ -847,10 +841,13 @@ void uhd_enable(void)
 	usb_init(&dev,USB, &cfg);
 	usb_enable(&dev);
 
+	uhd_sleep_mode(UHD_STATE_NO_VBUS);
+
 #if USB_VBUS_EIC
 	_usb_vbus_config();
 	if (is_usb_vbus_high()) {
 		usb_host_enable(&dev);
+		uhd_sleep_mode(UHD_STATE_DISCONNECT);
 	} else {
 		dbg_print("VBUS low, there is some power issue on board!!! \n");
 	}

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x GPIO Port Driver
+ * \brief SAM D20/D21 GPIO Port Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *

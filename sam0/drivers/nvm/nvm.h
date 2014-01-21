@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Non-Volatile Memory driver
+ * \brief SAM D20/D21 Non-Volatile Memory driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define NVM_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_nvm_group SAM D2x Non-Volatile Memory Driver (NVM)
+ * \defgroup asfdoc_sam0_nvm_group SAM D20/D21 Non-Volatile Memory Driver (NVM)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of non-volatile memories within the device, for partitioning,
  * erasing, reading and writing of data.
  *
@@ -75,7 +75,7 @@
  * erased and reconfigured in a standardized manner.
  *
  * \subsection asfdoc_sam0_nvm_module_overview_regions Memory Regions
- * The NVM memory space of the SAM D2x devices is divided into two sections:
+ * The NVM memory space of the SAM D20/D21 devices is divided into two sections:
  * a Main Array section, and an Auxiliary space section. The Main Array space
  * can be configured to have an (emulated) EEPROM and/or boot loader section.
  * The memory layout with the EEPROM and bootloader partitions is shown in
@@ -717,7 +717,8 @@ static inline enum nvm_error nvm_get_error(void)
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21</td>
+ *		<td>Added support for SAMD21, removed BOD12 reference, removed
+ *          nvm_set_fuses() API.</td>
  *	</tr>
  *	<tr>
  *		<td>Added functions to read/write fuse settings</td>

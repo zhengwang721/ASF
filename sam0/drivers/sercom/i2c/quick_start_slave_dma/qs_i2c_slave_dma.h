@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x SERCOM I2C Slave with DMA Quick Start Guide
+ * \brief SAM D21 SERCOM I2C Slave with DMA Quick Start Guide
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -61,6 +61,9 @@
  *
  * \subsection asfdoc_sam0_sercom_i2c_slave_dma_use_setup_code Code
  * The following must be added to the user application:
+ *
+ * - Address to respond to:
+ * \snippet qs_i2c_slave_dma.c address
  *
  * - A sample buffer to send, number of entries to send and address of slave:
  * \snippet qs_i2c_slave_dma.c packet_data
