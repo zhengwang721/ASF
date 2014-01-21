@@ -254,7 +254,8 @@ freertos_twi_if freertos_twi_master_init(Twi *p_twi,
  * parameter passed into the initialization function defines the driver behavior.
  * freertos_twi_write_packet_async() can only be used if the
  * freertos_driver_parameters.options_flags parameter passed to the initialization
- * function had the WAIT_TX_COMPLETE bit clear.
+ * function had the WAIT_TX_COMPLETE bit clear. It can also only be used if packet
+ * length is more than 1.
  *
  * freertos_twi_write_packet_async() is an advanced function and readers are
  * recommended to also reference the application note and examples that
@@ -344,22 +345,79 @@ status_code_t freertos_twi_write_packet_async(freertos_twi_if p_twi,
 			}
 			twi_base->TWI_IADR = internal_address;
 
-			freertos_start_pdc_tx(&(tx_dma_control[twi_index]),
-					p_packet->buffer, p_packet->length,
-					all_twi_definitions[twi_index].pdc_base_address,
-					notification_semaphore);
+			if (p_packet->length == 1) {
+				uint32_t status;
+				uint32_t timeout_counter = 0;
+				/* Do not handle errors for short packets in interrupt handler */
+				twi_disable_interrupt(
+						all_twi_definitions[twi_index].peripheral_base_address,
+						IER_ERROR_INTERRUPTS);
+				/* Send start condition */
+				twi_base->TWI_THR = *((uint8_t*)(p_packet->buffer));
+				while (1) {
+					status = twi_base->TWI_SR;
+					if (status & TWI_SR_NACK) {
+						/* Re-enable interrupts */
+						twi_enable_interrupt(
+								all_twi_definitions[twi_index].peripheral_base_address,
+								IER_ERROR_INTERRUPTS);
+						/* Release semaphore */
+						xSemaphoreGive(tx_dma_control[twi_index].peripheral_access_mutex);
+						return TWI_RECEIVE_NACK;
+					}
+					if (status & TWI_SR_TXRDY) {
+						break;
+					}
+					/* Check timeout condition. */
+					if (++timeout_counter >= TWI_TIMEOUT_COUNTER) {
+						return_value = ERR_TIMEOUT;
+						break;
+					}
+				}
+				twi_base->TWI_CR = TWI_CR_STOP;
+				/* Wait for TX complete */
+				while (!(twi_base->TWI_SR & TWI_SR_TXCOMP)) {
+					/* Check timeout condition. */
+					if (++timeout_counter >= TWI_TIMEOUT_COUNTER) {
+						return_value = ERR_TIMEOUT;
+						break;
+					}
+				}
 
-			/* Catch the end of transmission so the access mutex can be
-			returned, and the task notified (if it supplied a notification
-			semaphore).  The interrupt can be enabled here because the ENDTX
-			signal from the PDC to the peripheral will have been de-asserted when
-			the next transfer was configured. */
-			twi_enable_interrupt(twi_base, TWI_IER_ENDTX);
+				/* Re-enable interrupts */
+				twi_enable_interrupt(
+						all_twi_definitions[twi_index].peripheral_base_address,
+						IER_ERROR_INTERRUPTS);
+				/* Release semaphores */
+				xSemaphoreGive(tx_dma_control[twi_index].peripheral_access_mutex);
+				if (return_value != ERR_TIMEOUT) {
+					if (tx_dma_control[twi_index].transaction_complete_notification_semaphore != NULL) {
+						xSemaphoreGive(tx_dma_control[twi_index].transaction_complete_notification_semaphore);
+					}
+				}
 
-			return_value = freertos_optionally_wait_transfer_completion(
-					&(tx_dma_control[twi_index]),
-					notification_semaphore,
-					block_time_ticks);
+			} else {
+
+				twis[twi_index].buffer = p_packet->buffer;
+				twis[twi_index].length = p_packet->length;
+
+				freertos_start_pdc_tx(&(tx_dma_control[twi_index]),
+						p_packet->buffer, p_packet->length - 1,
+						all_twi_definitions[twi_index].pdc_base_address,
+						notification_semaphore);
+
+				/* Catch the end of transmission so the access mutex can be
+				returned, and the task notified (if it supplied a notification
+				semaphore).  The interrupt can be enabled here because the ENDTX
+				signal from the PDC to the peripheral will have been de-asserted when
+				the next transfer was configured. */
+				twi_enable_interrupt(twi_base, TWI_IER_ENDTX);
+
+				return_value = freertos_optionally_wait_transfer_completion(
+						&(tx_dma_control[twi_index]),
+						notification_semaphore,
+						block_time_ticks);
+			}
 		}
 	} else {
 		return_value = ERR_INVALID_ARG;
@@ -599,12 +657,29 @@ static void local_twi_handler(const portBASE_TYPE twi_index)
 
 	/* Has the PDC completed a transmission? */
 	if ((twi_status & TWI_SR_ENDTX) != 0UL) {
-		/* Complete the transfer. */
-		twi_port->TWI_CR = TWI_CR_STOP;
+		/* Disable PDC */
+		pdc_disable_transfer(all_twi_definitions[twi_index].pdc_base_address, PERIPH_PTCR_TXTDIS);
 		twi_disable_interrupt(twi_port, TWI_IDR_ENDTX);
 
 		uint8_t status;
 		uint32_t timeout_counter = 0;
+
+		/* Wait for TX ready flag */
+		while (1) {
+			status = twi_port->TWI_SR;
+			if (status & TWI_SR_TXRDY) {
+				break;
+			}
+			/* Check timeout condition. */
+			if (++timeout_counter >= TWI_TIMEOUT_COUNTER) {
+				status = ERR_TIMEOUT;
+				break;
+			}
+		}
+		/* Complete the transfer - stop and last byte */
+		twi_port->TWI_CR = TWI_CR_STOP;
+		twi_port->TWI_THR = twis[twi_index].buffer[twis[twi_index].length-1];
+
 		/* Wait for TX complete flag */
 		while (1) {
 			status = twi_port->TWI_SR;
@@ -627,7 +702,7 @@ static void local_twi_handler(const portBASE_TYPE twi_index)
 
 		/* if the sending task supplied a notification semaphore, then
 		notify the task that the transmission has completed. */
-		if (status != ERR_TIMEOUT) {
+		if (!(timeout_counter >= TWI_TIMEOUT_COUNTER)) {
 			if (tx_dma_control[twi_index]. transaction_complete_notification_semaphore != NULL) {
 				xSemaphoreGiveFromISR(
 						tx_dma_control[twi_index].transaction_complete_notification_semaphore,
@@ -638,16 +713,30 @@ static void local_twi_handler(const portBASE_TYPE twi_index)
 
 	/* Has the PDC completed a reception? */
 	if ((twi_status & TWI_SR_ENDRX) != 0UL) {
+		uint32_t timeout_counter = 0;
+		uint32_t status;
 		/* Must handle the two last bytes */
+		/* Disable PDC */
+		pdc_disable_transfer(all_twi_definitions[twi_index].pdc_base_address, PERIPH_PTCR_RXTDIS);
 
 		twi_disable_interrupt(twi_port, TWI_IDR_ENDRX);
+
+		/* Wait for RX ready flag */
+		while (1) {
+			status = twi_port->TWI_SR;
+			if (status & TWI_SR_RXRDY) {
+				break;
+			}
+			/* Check timeout condition. */
+			if (++timeout_counter >= TWI_TIMEOUT_COUNTER) {
+				break;
+			}
+		}
 		/* Complete the transfer. */
 		twi_port->TWI_CR = TWI_CR_STOP;
 		/* Read second last data */
 		twis[twi_index].buffer[(twis[twi_index].length)-2] = twi_port->TWI_RHR;
 
-		uint32_t timeout_counter = 0;
-		uint32_t status;
 		/* Wait for RX ready flag */
 		while (1) {
 			status = twi_port->TWI_SR;
