@@ -1146,8 +1146,6 @@ void udd_enable(void)
 	/* To avoid USB interrupt before end of initialization */
 	flags = cpu_irq_save();
 
-	sleepmgr_lock_mode(SLEEPMGR_ACTIVE);
-
 #if USB_ID_EIC
 	if (usb_dual_enable()) {
 		/* The current mode has been started by otg_dual_enable() */
