@@ -41,14 +41,78 @@
  *
  */
 
+/**
+ * \mainpage AT25DFx SerialFlash Driver Unit Test
+ *
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails appdoc_preface
+ *
+ *
+ * \page appdoc_preface Overview
+ *
+ * This application runs a suite of tests for the AT25DFx SerialFlash driver
+ * with any SPI HAL that is supported by the driver and for which setup code
+ * has been added to this application.
+ */
+
+/**
+ * \page appdoc_main AT25DFx SerialFlash Driver Unit Test
+ *
+ * Overview:
+ * - \ref appdoc_common2_at25dfx_unit_test_intro
+ * - \ref appdoc_common2_at25dfx_unit_test_setup
+ * - \ref appdoc_common2_at25dfx_unit_test_compinfo
+ * - \ref appdoc_common2_at25dfx_unit_test_contactinfo
+ *
+ *
+ * \section appdoc_common2_at25dfx_unit_test_intro Introduction
+ * \copydetails appdoc_preface
+ *
+ * The test suite consists of test cases for the following functionality:
+ * - chip presence checking
+ * - reading and writing of buffers
+ * - chip erase
+ * - block erase
+ * - global protection
+ * - sector protection
+ * - sleeping and waking
+ *
+ * The test suite has been written to test with an AT25DF081A on the EXT1 header
+ * of an Xplained Pro board.
+ *
+ * Test reporting is done via UART configured on \ref CONF_STDIO_USART_MODULE,
+ * with baud rate \ref CONF_STDIO_BAUDRATE. The convention is to use EDBG CDC.
+ *
+ *
+ * \section appdoc_common2_at25dfx_unit_test_setup Setup
+ *
+ * Connect a SerialFlash () wing board to EXT1 of the Xplained Pro.
+ * The SPI pin mapping is according to the convention, meaning the regular MISO,
+ * MOSI, SCK and SS_0 as defined in the board definition header file.
+ *
+ * \note SS_1 is used as a dummy pin in verification of presence checking.
+ *
+ *
+ * \section appdoc_common2_at25dfx_unit_test_compinfo Compilation Info
+ *
+ * This software was written for the GNU GCC for ARM.
+ * Other compilers may or may not work.
+ *
+ *
+ * \section appdoc_common2_at25dfx_unit_test_contactinfo Contact Information
+ *
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
+ */
+
 #include <asf.h>
 #include <conf_test.h>
 
 
 #define TEST_BUFFER_SIZE  16
 #define TEST_ERASE_VALUE  0xff
-#define TEST_FLASH_SIZE  (1024 * 1024UL)
-#define TEST_PAGE_SIZE  256
+#define TEST_FLASH_SIZE   (1024 * 1024UL)
+#define TEST_PAGE_SIZE    256
 
 
 static at25dfx_spi_module_t at25dfx_spi;
