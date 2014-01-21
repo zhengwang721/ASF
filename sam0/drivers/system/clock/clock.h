@@ -255,7 +255,8 @@
 #include <gclk.h>
 
 /**
- * \brief Define system clock features set according to different device family
+ * \name Driver feature definition
+ * Define system clock features set according to different device family.
  * @{
  */
 #if (SAMD21) || defined(__DOXYGEN__)

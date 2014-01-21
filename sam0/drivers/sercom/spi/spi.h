@@ -373,7 +373,8 @@ Make sure that either/both CONF_SPI_MASTER_ENABLE/CONF_SPI_SLAVE_ENABLE is set t
 #endif
 
 /**
- * Define SPI features set according to different device family
+ * \name Driver feature definition
+ * Define SERCOM SPI features set according to different device family.
  * @{
  */
 #  if (SAMD21)  || defined(__DOXYGEN__)
