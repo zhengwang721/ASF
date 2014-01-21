@@ -63,6 +63,8 @@
  * - Flash lock
  * - Flash gpnvm utilities
  * - For sam3sd8, an additional erase test will be performed.
+ * - For sam4s, sam4e, sam4c, samg and sam4cp, an additional user
+ *   signature test will be performed.
  *
  * \section files Main Files
  * - \ref unit_tests.c
@@ -468,6 +470,56 @@ static void run_flash_gpnvm_test(const struct test_case *test)
 	}
 }
 
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+/**
+ * \brief Test flash User Signature functions.
+ *
+ * This test erases the User Signature area, writes and reads it to check the
+ * content of this area.
+ *
+ * \param test Current test case.
+ */
+static void run_flash_user_signature_test(const struct test_case *test)
+{
+    	uint32_t ul_page_wr_buffer[IFLASH_PAGE_SIZE / sizeof(uint32_t)];
+        uint32_t ul_page_rd_buffer[IFLASH_PAGE_SIZE / sizeof(uint32_t)];
+        uint32_t ul_idx;
+        uint32_t ul_rc = 0;
+        
+        /* Write the wr_buffer page with walking bit pattern */
+	for (ul_idx = 0; ul_idx < (IFLASH_PAGE_SIZE / 4); ul_idx++) {
+		ul_page_wr_buffer[ul_idx] = ul_idx;
+	}
+        
+        /* Reset the rd_buffer */
+        memset((void *)ul_page_rd_buffer, 0, sizeof(ul_page_rd_buffer));
+        
+        /* Erase User Signature */
+        flash_erase_user_signature();
+        
+        /* Read User Signature */
+        flash_read_user_signature(ul_page_rd_buffer, IFLASH_PAGE_SIZE / sizeof(uint32_t));
+        
+        /* Write User Signature */
+        flash_write_user_signature(IFLASH_ADDR + IFLASH_SIZE - IFLASH_PAGE_SIZE, (void *)ul_page_wr_buffer,
+                                   sizeof(ul_page_wr_buffer));
+        
+        /* Read User Signature */
+        flash_read_user_signature(ul_page_rd_buffer, IFLASH_PAGE_SIZE / sizeof(uint32_t));
+        
+        /* Validate page contents */
+	for (ul_idx = 0; ul_idx < (IFLASH_PAGE_SIZE / 4); ul_idx++) {
+		if (ul_page_wr_buffer[ul_idx] != ul_page_rd_buffer[ul_idx]) {
+			ul_rc = 1;
+		}
+	}
+
+	/* Validate the flash write function */
+	test_assert_true(test, ul_rc == 0, 
+                         "Test flash user signature: user signature error!");
+}
+#endif
+
 
 /**
  * \brief Run flash efc driver unit tests.
@@ -511,6 +563,12 @@ int main(void)
 	DEFINE_TEST_CASE(flash_erase_test, NULL, run_flash_erase_test, NULL,
 			"Erase function test");
 #endif
+
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+	DEFINE_TEST_CASE(flash_user_signature_test, NULL, run_flash_user_signature_test, NULL,
+			"User Signature function test");
+#endif
+        
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(flash_efc_tests) = {
 		&flash_device_id_test,
@@ -522,6 +580,9 @@ int main(void)
 #if SAM3SD8
 		&flash_erase_test,
 #endif
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+		&flash_user_signature_test,
+#endif                
 	};
 
 	/* Define the test suite */
