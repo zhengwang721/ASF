@@ -1055,7 +1055,7 @@ static void _usb_on_wakeup(struct usb_module *module_inst, void *pointer)
 void udd_detach(void)
 {
 	usb_device_detach(&usb_device);
-	udd_sleep_mode(UDD_STATE_NO_VBUS);
+	udd_sleep_mode(UDD_STATE_SUSPEND);
 }
 
 void udd_attach(void)
@@ -1161,6 +1161,10 @@ void udd_enable(void)
 
 	/* USB Module Enable */
 	usb_enable(&usb_device);
+	
+#ifndef UDD_NO_SLEEP_MGR
+	sleepmgr_lock_mode(UDD_STATE_NO_VBUS);
+#endif 
 
 #if USB_VBUS_EIC
 	_usb_vbus_config();
@@ -1183,6 +1187,9 @@ void udd_disable(void)
 	irqflags_t flags;
 
 	udd_detach();
+#ifndef UDD_NO_SLEEP_MGR
+	sleepmgr_unlock_mode(UDD_STATE_NO_VBUS);
+#endif
 
 	flags = cpu_irq_save();
 	usb_dual_disable();
