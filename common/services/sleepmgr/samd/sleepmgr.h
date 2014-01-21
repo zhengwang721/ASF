@@ -111,12 +111,6 @@ static inline void sleepmgr_sleep(const enum sleepmgr_mode sleep_mode)
 	system_set_sleepmode((enum system_sleepmode)(sleep_mode - 1));
 	system_sleep();
 	cpu_irq_enable();
-#if CONF_CLOCK_XOSC32K_ENABLE == true
-	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_XOSC32K));
-#endif
-#if CONF_CLOCK_DFLL_ENABLE == true
-	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_DFLL));
-#endif
 #else
 	UNUSED(sleep_mode);
 	cpu_irq_enable();
