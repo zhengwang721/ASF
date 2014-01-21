@@ -99,7 +99,6 @@ struct usb_module usb_device;
 /** States of USB interface */
 enum udd_usb_state_enum {
 	UDD_STATE_OFF,
-	UDD_STATE_NO_VBUS,
 	UDD_STATE_SUSPEND,
 	UDD_STATE_SUSPEND_LPM,
 	UDD_STATE_IDLE,
@@ -113,8 +112,7 @@ static void udd_sleep_mode(enum udd_usb_state_enum new_state)
 {
 	enum sleepmgr_mode sleep_mode[] = {
 		SLEEPMGR_ACTIVE,  /* UDD_STATE_OFF (not used) */
-		SLEEPMGR_IDLE_2,  /* UDD_STATE_NO_VBUS */
-		SLEEPMGR_IDLE_1,  /* UDD_STATE_SUSPEND */
+		SLEEPMGR_IDLE_2,  /* UDD_STATE_SUSPEND */
 		SLEEPMGR_IDLE_1,  /* UDD_STATE_SUSPEND_LPM */
 		SLEEPMGR_IDLE_0,  /* UDD_STATE_IDLE */
 	};
@@ -136,7 +134,7 @@ static void udd_sleep_mode(enum udd_usb_state_enum new_state)
 }
 
 #else
-#  define uhd_sleep_mode(arg)
+#  define udd_sleep_mode(arg)
 #endif
 /** @} */
 
@@ -1161,10 +1159,8 @@ void udd_enable(void)
 
 	/* USB Module Enable */
 	usb_enable(&usb_device);
-	
-#ifndef UDD_NO_SLEEP_MGR
-	sleepmgr_lock_mode(UDD_STATE_NO_VBUS);
-#endif 
+
+	udd_sleep_mode(UDD_STATE_SUSPEND);
 
 #if USB_VBUS_EIC
 	_usb_vbus_config();
@@ -1187,9 +1183,8 @@ void udd_disable(void)
 	irqflags_t flags;
 
 	udd_detach();
-#ifndef UDD_NO_SLEEP_MGR
-	sleepmgr_unlock_mode(UDD_STATE_NO_VBUS);
-#endif
+
+	udd_sleep_mode(UDD_STATE_OFF);
 
 	flags = cpu_irq_save();
 	usb_dual_disable();
