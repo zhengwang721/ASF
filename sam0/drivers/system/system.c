@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x System related functionality
+ * \brief SAM D20/D21 System related functionality
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
