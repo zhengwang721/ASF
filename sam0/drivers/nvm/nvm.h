@@ -460,18 +460,6 @@ enum nvm_bod33_action {
 };
 
 /**
- * \brief BOD12 Action
- *
- * What action should be triggered when BOD12 is detected.
- *
- */
-enum nvm_bod12_action {
-	NVM_BOD12_ACTION_NONE,
-	NVM_BOD12_ACTION_RESET,
-	NVM_BOD12_ACTION_INTERRUPT,
-};
-
-/**
  * \brief WDT Window time-out period
  *
  * Windows mode time-out period in clock cycles.
@@ -531,12 +519,6 @@ struct nvm_fusebits {
 	bool                              bod33_enable;
 	/** BOD33 Action at power on */
 	enum nvm_bod33_action             bod33_action;
-	/** BOD12 Threshold level at power on */
-	uint8_t                           bod12_level;
-	/** BOD12 Enable at power on */
-	bool                              bod12_enable;
-	/** BOD12 Action at power on */
-	enum nvm_bod12_action             bod12_action;
 	/** WDT Enable at power on */
 	bool                              wdt_enable;
 	/** WDT Always-on at power on */
@@ -646,9 +628,6 @@ enum status_code nvm_execute_command(
 		const uint32_t parameter);
 
 enum status_code nvm_get_fuses(struct nvm_fusebits *fusebits);
-
-enum status_code nvm_set_fuses(struct nvm_fusebits *fusebits);
-
 
 bool nvm_is_page_locked(uint16_t page_number);
 

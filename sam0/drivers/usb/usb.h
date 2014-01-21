@@ -107,8 +107,8 @@ enum usb_device_callback {
 	USB_DEVICE_CALLBACK_WAKEUP,
 	USB_DEVICE_CALLBACK_RAMACER,
 	USB_DEVICE_CALLBACK_SUSPEND,
-	USB_DEIVCE_CALLBACK_LPMNYET,
-	USB_DEIVCE_CALLBACK_LPMSUSP,
+	USB_DEVICE_CALLBACK_LPMNYET,
+	USB_DEVICE_CALLBACK_LPMSUSP,
 	USB_DEVICE_CALLBACK_N,
 };
 
@@ -151,10 +151,10 @@ enum usb_endpoint_size {
 /**
  * \brief Link Power Management Handshake.
  */
-enum usb_lpm_mode {
-	USB_LPM_NOT_SUPPORT,
-	USB_LPM_ACK,
-	USB_LPM_NYET,
+enum usb_device_lpm_mode {
+	USB_DEVICE_LPM_NOT_SUPPORT,
+	USB_DEVICE_LPM_ACK,
+	USB_DEVICE_LPM_NYET,
 };
 
 /**
@@ -174,8 +174,8 @@ typedef void (*usb_host_pipe_callback_t)(struct usb_module *module_inst, void *)
  * \name Device callback functions types
  * @{
  */
-typedef void (*usb_device_callback_t)(struct usb_module *module_inst);
-typedef void (*usb_device_endpoint_callback_t)(struct usb_module *module_inst,void* pointer);
+typedef void (*usb_device_callback_t)(struct usb_module *module_inst, void* pointer);
+typedef void (*usb_device_endpoint_callback_t)(struct usb_module *module_inst, void* pointer);
 /** @} */
 
 
@@ -513,9 +513,21 @@ static inline uint16_t usb_device_get_micro_frame_number(struct usb_module *modu
  *
  * \param module_inst Pointer to USB device module instance
  */
-static inline void usb_send_remote_wake_up(struct usb_module *module_inst)
+static inline void usb_device_send_remote_wake_up(struct usb_module *module_inst)
 {
 	module_inst->hw->DEVICE.CTRLB.reg |= USB_DEVICE_CTRLB_UPRSM;
+}
+
+/**
+ * \brief USB device set the LPM mode
+ *
+ * \param module_inst Pointer to USB device module instance
+ * \param lpm_mode    LPM mode
+ */
+static inline void usb_device_set_lpm_mode(struct usb_module *module_inst,
+		enum usb_device_lpm_mode lpm_mode)
+{
+	module_inst->hw->DEVICE.CTRLB.bit.LPMHDSK = lpm_mode;
 }
 
 /**
@@ -618,6 +630,8 @@ enum status_code usb_host_pipe_read_job(struct usb_module *module_inst,
 enum status_code usb_host_pipe_write_job(struct usb_module *module_inst,
 		uint8_t pipe_num, uint8_t *buf, uint32_t buf_size);
 enum status_code usb_host_pipe_abort_job(struct usb_module *module_inst, uint8_t pipe_num);
+enum status_code usb_host_pipe_lpm_job(struct usb_module *module_inst,
+		uint8_t pipe_num, bool b_remotewakeup, uint8_t besl);
 /** @} */
 
 /**
