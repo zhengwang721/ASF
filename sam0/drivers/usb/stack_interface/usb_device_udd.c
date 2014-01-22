@@ -65,11 +65,78 @@
 # error The current USB Device Driver supports only SAMD21
 #endif
 
+#ifndef UDC_REMOTEWAKEUP_LPM_ENABLE
+#define UDC_REMOTEWAKEUP_LPM_ENABLE()
+#endif
+#ifndef UDC_REMOTEWAKEUP_LPM_DISABLE
+#define UDC_REMOTEWAKEUP_LPM_DISABLE()
+#endif
+#ifndef UDC_SUSPEND_LPM_EVENT
+#define UDC_SUSPEND_LPM_EVENT()
+#endif
+
+/* for debug text */
+#ifdef USB_DEBUG
+#   define dbg_print printf
+#else
+#   define dbg_print(...)
+#endif
+
 /** Maximum size of a transfer in multi-packet mode */
 #define UDD_ENDPOINT_MAX_TRANS ((8*1024)-1)
 
 /** USB software device instance structure */
 struct usb_module usb_device;
+
+/**
+ * \name Power management
+ *
+ * @{
+ */
+#ifndef UDD_NO_SLEEP_MGR
+
+#include "sleepmgr.h"
+/** States of USB interface */
+enum udd_usb_state_enum {
+	UDD_STATE_OFF,
+	UDD_STATE_SUSPEND,
+	UDD_STATE_SUSPEND_LPM,
+	UDD_STATE_IDLE,
+};
+
+/** \brief Manages the sleep mode following the USB state
+ *
+ * \param new_state  New USB state
+ */
+static void udd_sleep_mode(enum udd_usb_state_enum new_state)
+{
+	enum sleepmgr_mode sleep_mode[] = {
+		SLEEPMGR_ACTIVE,  /* UDD_STATE_OFF (not used) */
+		SLEEPMGR_IDLE_2,  /* UDD_STATE_SUSPEND */
+		SLEEPMGR_IDLE_1,  /* UDD_STATE_SUSPEND_LPM */
+		SLEEPMGR_IDLE_0,  /* UDD_STATE_IDLE */
+	};
+
+	static enum udd_usb_state_enum udd_state = UDD_STATE_OFF;
+
+	if (udd_state == new_state) {
+		return; // No change
+	}
+	if (new_state != UDD_STATE_OFF) {
+		/* Lock new limit */
+		sleepmgr_lock_mode(sleep_mode[new_state]);
+	}
+	if (udd_state != UDD_STATE_OFF) {
+		/* Unlock old limit */
+		sleepmgr_unlock_mode(sleep_mode[udd_state]);
+	}
+	udd_state = new_state;
+}
+
+#else
+#  define udd_sleep_mode(arg)
+#endif
+/** @} */
 
 /**
  * \name Control endpoint low level management routine.
@@ -593,8 +660,9 @@ uint8_t udd_getaddress(void)
 void udd_send_remotewakeup(void)
 {
 	uint32_t try = 5;
+	udd_sleep_mode(UDD_STATE_IDLE);
 	while(2 != usb_get_state_machine_status(&usb_device) && try --) {
-		usb_send_remote_wake_up(&usb_device);
+		usb_device_send_remote_wake_up(&usb_device);
 	}
 }
 
@@ -886,6 +954,11 @@ static void udd_ctrl_ep_enable(struct usb_module *module_inst)
 	 usb_device_endpoint_enable_callback(module_inst,0,USB_DEVICE_ENDPOINT_CALLBACK_TRCPT);
 	 usb_device_endpoint_enable_callback(module_inst,0,USB_DEVICE_ENDPOINT_CALLBACK_TRFAIL);
 
+#ifdef  USB_DEVICE_LPM_SUPPORT
+	 // Enable LPM feature
+	 usb_device_set_lpm_mode(module_inst, USB_DEVICE_LPM_ACK);
+#endif
+
 	 udd_ep_control_state = UDD_EPCTRL_SETUP;
 }
 
@@ -893,23 +966,49 @@ static void udd_ctrl_ep_enable(struct usb_module *module_inst)
  * \internal
  * \brief Control endpoint Suspend callback function
  * \param[in] module_inst Pointer to USB module instance
+ * \param[in] pointer Pointer to the callback parameter from driver layer.
  */
-static void _usb_on_suspend(struct usb_module *module_inst)
+static void _usb_on_suspend(struct usb_module *module_inst, void *pointer)
 {
 	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
-
+	udd_sleep_mode(UDD_STATE_SUSPEND);
 #ifdef UDC_SUSPEND_EVENT
 	UDC_SUSPEND_EVENT();
 #endif
 }
 
+#ifdef  USB_DEVICE_LPM_SUPPORT
+static void _usb_device_lpm_suspend(struct usb_module *module_inst, void *pointer)
+{
+	dbg_print("LPM_SUSP\n");
+
+	uint32_t *lpm_wakeup_enable;
+	lpm_wakeup_enable = (uint32_t *)pointer;
+
+	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_LPMSUSP);
+	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
+	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
+	
+//#warning Here the sleep mode must be choose to have a DFLL startup time < bmAttribut.BESL
+	udd_sleep_mode(UDD_STATE_SUSPEND_LPM);  // Enter in LPM SUSPEND mode
+	if (*lpm_wakeup_enable) {
+		UDC_REMOTEWAKEUP_LPM_ENABLE();
+	} else {
+		UDC_REMOTEWAKEUP_LPM_DISABLE();
+	}
+	UDC_SUSPEND_LPM_EVENT();
+	
+}
+#endif
+
 /**
  * \internal
  * \brief Control endpoint SOF callback function
  * \param[in] module_inst Pointer to USB module instance
+ * \param[in] pointer Pointer to the callback parameter from driver layer.
  */
-static void _usb_on_sof_notify(struct usb_module *module_inst)
+static void _usb_on_sof_notify(struct usb_module *module_inst, void *pointer)
 {
 	udc_sof_notify();
 #ifdef UDC_SOF_EVENT
@@ -921,9 +1020,12 @@ static void _usb_on_sof_notify(struct usb_module *module_inst)
  * \internal
  * \brief Control endpoint Reset callback function
  * \param[in] module_inst Pointer to USB module instance
+ * \param[in] pointer Pointer to the callback parameter from driver layer.
  */
-static void _usb_on_bus_reset(struct usb_module *module_inst)
+static void _usb_on_bus_reset(struct usb_module *module_inst, void *pointer)
 {
+	// Reset USB Device Stack Core
+	udc_reset();
 	usb_device_set_address(module_inst,0);
 	udd_ctrl_ep_enable(module_inst);
 }
@@ -932,12 +1034,17 @@ static void _usb_on_bus_reset(struct usb_module *module_inst)
  * \internal
  * \brief Control endpoint Wakeup callback function
  * \param[in] module_inst Pointer to USB module instance
+ * \param[in] pointer Pointer to the callback parameter from driver layer.
  */
-static void _usb_on_wakeup(struct usb_module *module_inst)
+static void _usb_on_wakeup(struct usb_module *module_inst, void *pointer)
 {
 	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
-
+#ifdef  USB_DEVICE_LPM_SUPPORT
+	usb_device_register_callback(&usb_device, USB_DEVICE_CALLBACK_LPMSUSP, _usb_device_lpm_suspend);
+	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_LPMSUSP);
+#endif
+	udd_sleep_mode(UDD_STATE_IDLE);
 #ifdef UDC_RESUME_EVENT
 	UDC_RESUME_EVENT();
 #endif
@@ -946,10 +1053,12 @@ static void _usb_on_wakeup(struct usb_module *module_inst)
 void udd_detach(void)
 {
 	usb_device_detach(&usb_device);
+	udd_sleep_mode(UDD_STATE_SUSPEND);
 }
 
 void udd_attach(void)
 {
+	udd_sleep_mode(UDD_STATE_IDLE);
 	usb_device_attach(&usb_device);
 
 	usb_device_register_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND, _usb_on_suspend);
@@ -961,7 +1070,72 @@ void udd_attach(void)
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_SOF);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_RESET);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
+#ifdef  USB_DEVICE_LPM_SUPPORT
+	usb_device_register_callback(&usb_device, USB_DEVICE_CALLBACK_LPMSUSP, _usb_device_lpm_suspend);
+	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_LPMSUSP);
+#endif
 }
+
+#if USB_VBUS_EIC
+/**
+ * \name USB VBUS PAD management
+ *
+ * @{
+ */
+
+ /** Check if USB VBus is available */
+# define is_usb_vbus_high()           port_pin_get_input_level(USB_VBUS_PIN)
+
+/**
+ * \internal
+ * \brief USB VBUS pin change handler
+ */
+static void _uhd_vbus_handler(void)
+{
+	extint_chan_disable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+# ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
+	if (is_usb_vbus_high()) {
+		udd_attach();
+	} else {
+		udd_detach();
+	}
+# endif
+# ifdef UDC_VBUS_EVENT
+	UDC_VBUS_EVENT(Is_pad_vbus_high());
+# endif
+	extint_chan_enable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+}
+
+/**
+ * \internal
+ * \brief USB VBUS pin configuration
+ */
+static void _usb_vbus_config(void)
+{
+
+	/* Initialize EIC for vbus checking */
+	struct extint_chan_conf eint_chan_conf;
+	extint_chan_get_config_defaults(&eint_chan_conf);
+
+	eint_chan_conf.gpio_pin           = USB_VBUS_PIN;
+	eint_chan_conf.gpio_pin_mux       = USB_VBUS_EIC_MUX;
+	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_NONE;
+	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
+	eint_chan_conf.filter_input_signal = true;
+
+	extint_chan_disable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_set_config(USB_VBUS_EIC_LINE, &eint_chan_conf);
+	extint_register_callback(_uhd_vbus_handler,
+			USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_enable_callback(USB_VBUS_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+}
+/** @} */
+#endif
 
 void udd_enable(void)
 {
@@ -969,8 +1143,6 @@ void udd_enable(void)
 
 	/* To avoid USB interrupt before end of initialization */
 	flags = cpu_irq_save();
-
-	sleepmgr_lock_mode(SLEEPMGR_ACTIVE);
 
 #if USB_ID_EIC
 	if (usb_dual_enable()) {
@@ -988,8 +1160,20 @@ void udd_enable(void)
 	/* USB Module Enable */
 	usb_enable(&usb_device);
 
-	/* USB Attach */
+	udd_sleep_mode(UDD_STATE_SUSPEND);
+
+#if USB_VBUS_EIC
+	_usb_vbus_config();
+	if (is_usb_vbus_high()) {
+		/* USB Attach */
+		_uhd_vbus_handler();
+	}
+#else 
+	// No VBus detect, assume always high
+# ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
 	udd_attach();
+# endif
+#endif
 
 	cpu_irq_restore(flags);
 }
@@ -999,6 +1183,8 @@ void udd_disable(void)
 	irqflags_t flags;
 
 	udd_detach();
+
+	udd_sleep_mode(UDD_STATE_OFF);
 
 	flags = cpu_irq_save();
 	usb_dual_disable();

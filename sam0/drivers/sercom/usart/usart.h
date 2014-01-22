@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief SAM D2x SERCOM USART Driver
+ * \brief SAM D20/D21 SERCOM USART Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -45,9 +45,9 @@
 #define USART_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_sercom_usart_group SAM D2x Serial USART Driver (SERCOM USART)
+ * \defgroup asfdoc_sam0_sercom_usart_group SAM D20/D21 Serial USART Driver (SERCOM USART)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the SERCOM module in its USART mode to transfer or receive
  * USART data frames. The following driver API modes are covered by this
  * manual:
@@ -212,7 +212,7 @@
  * The SERCOM module has four internal pads; the RX pin can be placed freely on
  * any one of the four pads, and the TX and XCK pins have two predefined
  * positions that can be selected as a pair. The pads can then be routed to an
- * external GPIO pin using the normal pin multiplexing scheme on the SAM D2x.
+ * external GPIO pin using the normal pin multiplexing scheme on the SAM D20/D21.
  *
  * \section asfdoc_sam0_sercom_usart_special_considerations Special Considerations
  *
@@ -257,7 +257,8 @@ extern "C" {
 #endif
 
 /**
- * Define USART features set according to different device family
+ * \name Driver feature definition
+ * Define SERCOM USART features set according to different device family.
  * @{
  */
 #if (SAMD21) || defined(__DOXYGEN__)
@@ -1082,7 +1083,15 @@ static inline void usart_disable_transceiver(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Add support for SAMD21</td>
+ *		<td>Add support for SAMD21 and added new feature as below:
+                \li Oversample
+                \li Buffer overflow notification
+                \li Irda
+                \li Lin slave
+                \li Start frame detection
+                \li Hardware flow control
+                \li Collision detection
+                \li DMA support </td>
  *	</tr>
  *	<tr>
  *		<td>\li Added new \c transmitter_enable and \c receiver_enable boolean

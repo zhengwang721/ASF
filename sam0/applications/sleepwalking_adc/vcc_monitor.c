@@ -119,6 +119,9 @@
 /* ADC module instance */
 struct adc_module module_inst;
 
+/* RTC module instance */
+struct rtc_module rtc_instance;
+
 /* Flag to indicate if a low-voltage situation has occurred */
 volatile bool low_voltage = false;
 
@@ -147,9 +150,9 @@ static void rtc_setup(void)
 	struct rtc_count_events evconfig;
 	evconfig.generate_event_on_compare[0] = true;
 
-	rtc_count_init(&conf);
-	rtc_count_enable_events(&evconfig);
-	rtc_count_enable();
+	rtc_count_init(&rtc_instance, RTC, &conf);
+	rtc_count_enable_events(&rtc_instance, &evconfig);
+	rtc_count_enable(&rtc_instance);
 }
 
 /* Setup the event system to route RTC events to the ADC */

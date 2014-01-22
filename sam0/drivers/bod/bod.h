@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Brown Out Detector Driver
+ * \brief SAM D20/D21 Brown Out Detector Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -45,14 +45,10 @@
 
 #include <compiler.h>
 
-#if (SAMD20)
-#  define FEATURE_BOD12
-#endif
-
 /**
- * \defgroup asfdoc_sam0_bod_group SAM D2x Brown Out Detector Driver (BOD)
+ * \defgroup asfdoc_sam0_bod_group SAM D20/D21 Brown Out Detector Driver (BOD)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the device's Brown Out Detector (BOD) modules, to detect
  * and respond to under-voltage events and take an appropriate action.
  *
@@ -76,7 +72,7 @@
  *
  * \section asfdoc_sam0_bod_module_overview Module Overview
  *
- * The SAM D2x devices contain a number of Brown Out Detector (BOD) modules. Each
+ * The SAM D20/D21 devices contain a number of Brown Out Detector (BOD) modules. Each
  * BOD monitors the supply voltage for any dips that go below the set threshold
  * for the module. In case of a BOD detection the BOD will either reset the
  * system or raise a hardware interrupt so that a safe power-down sequence can
@@ -116,10 +112,6 @@
  * List of possible BOD controllers within the device.
  */
 enum bod {
-#ifdef FEATURE_BOD12
-	/** BOD12 Internal core voltage. */
-	BOD_BOD12,
-#endif
 	/** BOD33 External I/O voltage, */
 	BOD_BOD33,
 };
@@ -263,11 +255,6 @@ static inline enum status_code bod_enable(
 		case BOD_BOD33:
 			SYSCTRL->BOD33.reg |= SYSCTRL_BOD33_ENABLE;
 			break;
-#ifdef FEATURE_BOD12
-		case BOD_BOD12:
-			SYSCTRL->BOD12.reg |= SYSCTRL_BOD12_ENABLE;
-			break;
-#endif
 		default:
 			Assert(false);
 			return STATUS_ERR_INVALID_ARG;
@@ -295,11 +282,6 @@ static inline enum status_code bod_disable(
 		case BOD_BOD33:
 			SYSCTRL->BOD33.reg &= ~SYSCTRL_BOD33_ENABLE;
 			break;
-#ifdef FEATURE_BOD12
-		case BOD_BOD12:
-			SYSCTRL->BOD12.reg &= ~SYSCTRL_BOD12_ENABLE;
-			break;
-#endif
 		default:
 			Assert(false);
 			return STATUS_ERR_INVALID_ARG;
@@ -327,10 +309,6 @@ static inline bool bod_is_detected(
 	switch (bod_id) {
 		case BOD_BOD33:
 			return SYSCTRL->INTFLAG.bit.BOD33DET;
-#ifdef FEATURE_BOD12
-		case BOD_BOD12:
-			return SYSCTRL->INTFLAG.bit.BOD12DET;
-#endif
 		default:
 			Assert(false);
 			return false;
@@ -352,11 +330,6 @@ static inline void bod_clear_detected(
 		case BOD_BOD33:
 			SYSCTRL->INTFLAG.bit.BOD33DET = true;
 			return;
-#ifdef FEATURE_BOD12
-		case BOD_BOD12:
-			SYSCTRL->INTFLAG.bit.BOD12DET = true;
-			return;
-#endif
 		default:
 			Assert(false);
 			return;
@@ -410,7 +383,7 @@ static inline void bod_clear_detected(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21</td>
+ *		<td>Added support for SAMD21 and removed BOD12 reference</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>

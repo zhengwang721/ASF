@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x DMA Driver
+ * \brief SAM D21 DMA Driver
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define DMA_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_dma_group SAM D2x Direct Memory Access Driver (DMA)
+ * \defgroup asfdoc_sam0_dma_group SAM D21 Direct Memory Access Driver (DMA)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D21 devices provides an interface for the configuration
  * and management of the DMA resources within the device, including the allocating and
  * free of DMA source and perform data transfer through DMA.
  *
@@ -70,15 +70,15 @@
  *
  * \section asfdoc_sam0_dma_module_overview Module Overview
  *
- * SAM D2x devices with DMA provide an approach to transfer data between
+ * SAM D21 devices with DMA provide an approach to transfer data between
  * memories and peripherals and thus off-load these tasks from the CPU. It
- * enables high data transfer rates with minimum CPU interversion and frees up
+ * enables high data transfer rates with minimum CPU intervention and frees up
  * CPU time. With access to all peripherals, the DMA controller can handle automatic
  * transfer of data to/from communication modules.
  *
- * The DMA driver for SAM D2x supports data transfer between peripheral to peripheral,
+ * The DMA driver for SAM D21 supports data transfer between peripheral to peripheral,
  * peripheral to memory, memory to peripheral and memory to memory. The transfer
- * trigger source can be software, event system or peipherals.
+ * trigger source can be software, event system or peripherals.
  *
  * The Implementation of the DMA driver is based on DMA resource. A DMA resource is
  * consisted up with DMA channels, transfer trigger, transfer descriptor and output with interrupt
@@ -324,7 +324,7 @@ enum dma_callback_type {
 };
 
 /**
- * DMA tansfer descriptor configuration. When the source or destination address
+ * DMA transfer descriptor configuration. When the source or destination address
  * increment is enable, the address value that must be programmed corresponds
  * to the end of the transfer.
  */
@@ -650,13 +650,11 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  * added to the user application.
  *
  * - \subpage asfdoc_sam0_dma_basic_use_case
- * - \subpage asfdoc_sam0_tc_dma_use_case
- * - \subpage asfdoc_sam0_tcc_dma_use_case
- * - \subpage asfdoc_sam0_sercom_spi_dma_use_case
- * - \subpage asfdoc_sam0_sercom_usart_dma_use_case
- * - \subpage asfdoc_sam0_sercom_i2c_master_dma_use_case
- * - \subpage asfdoc_sam0_sercom_i2c_slave_dma_use_case
- * - \subpage asfdoc_sam0_adc_dma_use_case
+ *
+ * \note More DMA usage examples can be referred in peripheral QSGs, such as TC/TCC
+ * provide an usage of DMA event trigger; SERCOM SPI/USART/I2C provide an usage of
+ * DMA transfer from peripheral to memory or from memory to peripheral; ADC/DAC provide
+ * an usage of DMA transmission of peripheral to peripheral.
  *
  * \page asfdoc_sam0_dma_document_revision_history Document Revision History
  *

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x RTC Calendar Callback Quick Start
+ * \brief SAM D20/D21 RTC Calendar Callback Quick Start
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *

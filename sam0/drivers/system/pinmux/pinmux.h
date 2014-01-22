@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Pin Multiplexer Driver
+ * \brief SAM D20/D21 Pin Multiplexer Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define PINMUX_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_system_pinmux_group SAM D2x System Pin Multiplexer Driver (SYSTEM PINMUX)
+ * \defgroup asfdoc_sam0_system_pinmux_group SAM D20/D21 System Pin Multiplexer Driver (SYSTEM PINMUX)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the device's physical I/O Pins, to alter the direction and
  * input/drive characteristics as well as to configure the pin peripheral
  * multiplexer selection.
@@ -74,36 +74,14 @@
  *
  * \section asfdoc_sam0_system_pinmux_module_overview Module Overview
  *
- * The SAM D2x devices contain a number of General Purpose I/O pins, used to
+ * The SAM D20/D21 devices contain a number of General Purpose I/O pins, used to
  * interface the user application logic and internal hardware peripherals to
  * an external system. The Pin Multiplexer (PINMUX) driver provides a method
  * of configuring the individual pin peripheral multiplexers to select
  * alternate pin functions.
  *
- * \subsection asfdoc_sam0_system_pinmux_features Driver Feature Macro Definition
- * <table>
- *	<tr>
- *		<th>Driver Feature Macro</th>
- *		<th>Supported devices</th>
- *	</tr>
- *	<tr>
- *		<td>FEATURE_SYSTEM_PINMUX_SLEWRATE_LIMITER</td>
- *		<td>SAMD21</td>
- *	</tr>
- *	<tr>
- *		<td>FEATURE_SYSTEM_PINMUX_DRIVE_STRENGTH</td>
- *		<td>SAMD21</td>
- *	</tr>
- *	<tr>
- *		<td>FEATURE_SYSTEM_PINMUX_OPEN_DRAIN</td>
- *		<td>SAMD21</td>
- *	</tr>
- * </table>
- * \note The specific features are only available in the driver when the
- * selected device supports those features.
- *
  * \subsection asfdoc_sam0_system_pinmux_physical_logical_pins Physical and Logical GPIO Pins
- * SAM D2x devices use two naming conventions for the I/O pins in the device; one
+ * SAM D20/D21 devices use two naming conventions for the I/O pins in the device; one
  * physical, and one logical. Each physical pin on a device package is assigned
  * both a physical port and pin identifier (e.g. "PORTA.0") as well as a
  * monotonically incrementing logical GPIO number (e.g. "GPIO0"). While the
@@ -112,7 +90,7 @@
  * numbers instead.
  *
  * \subsection asfdoc_sam0_system_pinmux_peripheral_muxing Peripheral Multiplexing
- * SAM D2x devices contain a peripheral MUX, which is individually controllable
+ * SAM D20/D21 devices contain a peripheral MUX, which is individually controllable
  * for each I/O pin of the device. The peripheral MUX allows you to select the
  * function of a physical package pin - whether it will be controlled as a user
  * controllable GPIO pin, or whether it will be connected internally to one of
@@ -167,7 +145,7 @@
  *
  * \section asfdoc_sam0_system_pinmux_special_considerations Special Considerations
  *
- * The SAM D2x port pin input sampling mode is set in groups of four physical
+ * The SAM D20/D21 port pin input sampling mode is set in groups of four physical
  * pins; setting the sampling mode of any pin in a sub-group of eight I/O pins
  * will configure the sampling mode of the entire sub-group.
  *
@@ -199,20 +177,6 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/**
- * Define pinmux features set according to different device family
- * @{
- */
-#if (SAMD21) || defined(__DOXYGEN__)
-/** Output Driver Slew Rate Limiter feature support */
-#  define FEATURE_SYSTEM_PINMUX_SLEWRATE_LIMITER
-/** Output Driver Strength Selection feature support */
-#  define FEATURE_SYSTEM_PINMUX_DRIVE_STRENGTH
-/** Open Drain Output feature support */
-#  define FEATURE_SYSTEM_PINMUX_OPEN_DRAIN
-#endif
-/*@}*/
 
 /** Peripheral multiplexer index to select GPIO mode for a pin. */
 #define SYSTEM_PINMUX_GPIO    (1 << 7)
@@ -429,141 +393,6 @@ static inline void system_pinmux_pin_set_input_sample_mode(
 
 /** @} */
 
-#ifdef FEATURE_SYSTEM_PINMUX_DRIVE_STRENGTH
-/**
- * \brief Port pin drive output strength enum.
- *
- * Enum for the possible output drive strengths for the port pin
- * configuration structure, to indicate the driver strength the pin should
- * use.
- */
-enum system_pinmux_pin_strength {
-	/** Normal output driver strength. */
-	SYSTEM_PINMUX_PIN_STRENGTH_NORMAL,
-	/** High current output driver strength. */
-	SYSTEM_PINMUX_PIN_STRENGTH_HIGH,
-};
-
-/**
- * \brief Configures the output driver strength mode for a GPIO pin.
- *
- * Configures the output drive strength for a GPIO output, to
- * control the amount of current the pad is able to sink/source.
- *
- * \param[in] gpio_pin  Index of the GPIO pin to configure.
- * \param[in] mode      New output driver strength mode to configure.
- */
-static inline void system_pinmux_pin_set_output_strength(
-		const uint8_t gpio_pin,
-		const enum system_pinmux_pin_strength mode)
-{
-	PortGroup* const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
-	uint32_t pin_index = (gpio_pin % 32);
-
-	if (mode == SYSTEM_PINMUX_PIN_STRENGTH_HIGH) {
-		port->PINCFG[pin_index].reg |=  PORT_PINCFG_DRVSTR;
-	}
-	else {
-		port->PINCFG[pin_index].reg &= ~PORT_PINCFG_DRVSTR;
-	}
-}
-
-void system_pinmux_group_set_output_strength(
-		PortGroup *const port,
-		const uint32_t mask,
-		const enum system_pinmux_pin_strength mode);
-#endif
-
-#ifdef FEATURE_SYSTEM_PINMUX_SLEWRATE_LIMITER
-/**
- * \brief Port pin output slew rate enum.
- *
- * Enum for the possible output drive slew rates for the port pin
- * configuration structure, to indicate the driver slew rate the pin should
- * use.
- */
-enum system_pinmux_pin_slew_rate {
-	/** Normal pin output slew rate. */
-	SYSTEM_PINMUX_PIN_SLEW_RATE_NORMAL,
-	/** Enable slew rate limiter on the pin. */
-	SYSTEM_PINMUX_PIN_SLEW_RATE_LIMITED,
-};
-
-/**
- * \brief Configures the output slew rate mode for a GPIO pin.
- *
- * Configures the output slew rate mode for a GPIO output, to
- * control the speed at which the physical output pin can react to
- * logical changes of the I/O pin value.
- *
- * \param[in] gpio_pin  Index of the GPIO pin to configure.
- * \param[in] mode      New pin slew rate mode to configure.
- */
-static inline void system_pinmux_pin_set_output_slew_rate(
-		const uint8_t gpio_pin,
-		const enum system_pinmux_pin_slew_rate mode)
-{
-	PortGroup* const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
-	uint32_t pin_index = (gpio_pin % 32);
-
-	if (mode == SYSTEM_PINMUX_PIN_SLEW_RATE_LIMITED) {
-		port->PINCFG[pin_index].reg |=  PORT_PINCFG_SLEWLIM;
-	}
-	else {
-		port->PINCFG[pin_index].reg &= ~PORT_PINCFG_SLEWLIM;
-	}
-}
-
-void system_pinmux_group_set_output_slew_rate(
-		PortGroup *const port,
-		const uint32_t mask,
-		const enum system_pinmux_pin_slew_rate mode);
-#endif
-
-#ifdef FEATURE_SYSTEM_PINMUX_OPEN_DRAIN
-/**
- * \brief Port pin output drive mode enum.
- *
- * Enum for the possible output drive modes for the port pin configuration
- * structure, to indicate the output mode the pin should use.
- */
-enum system_pinmux_pin_drive {
-	/** Use totem pole output drive mode. */
-	SYSTEM_PINMUX_PIN_DRIVE_TOTEM,
-	/** Use open drain output drive mode. */
-	SYSTEM_PINMUX_PIN_DRIVE_OPEN_DRAIN,
-};
-
-/**
- * \brief Configures the output driver mode for a GPIO pin.
- *
- * Configures the output driver mode for a GPIO output, to
- * control the pad behavior.
- *
- * \param[in] gpio_pin  Index of the GPIO pin to configure.
- * \param[in] mode      New pad output driver mode to configure.
- */
-static inline void system_pinmux_pin_set_output_drive(
-		const uint8_t gpio_pin,
-		const enum system_pinmux_pin_drive mode)
-{
-	PortGroup* const port = system_pinmux_get_group_from_gpio_pin(gpio_pin);
-	uint32_t pin_index = (gpio_pin % 32);
-
-	if (mode == SYSTEM_PINMUX_PIN_DRIVE_OPEN_DRAIN) {
-		port->PINCFG[pin_index].reg |=  PORT_PINCFG_ODRAIN;
-	}
-	else {
-		port->PINCFG[pin_index].reg &= ~PORT_PINCFG_ODRAIN;
-	}
-}
-
-void system_pinmux_group_set_output_drive(
-		PortGroup *const port,
-		const uint32_t mask,
-		const enum system_pinmux_pin_drive mode);
-#endif
-
 #ifdef __cplusplus
 }
 #endif
@@ -613,7 +442,8 @@ void system_pinmux_group_set_output_drive(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Add support for SAMD21.</td>
+ *		<td>Removed code of open drain, slew limit and drive strength
+ *		features.</td>
  *	</tr>
  *	<tr>
  *		<td>Fixed broken sampling mode function implementations, which wrote

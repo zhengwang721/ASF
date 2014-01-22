@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Direct Memory Access(DMA) Driver Quick Start
+ * \brief SAM D21 Direct Memory Access(DMA) Driver Quick Start
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *

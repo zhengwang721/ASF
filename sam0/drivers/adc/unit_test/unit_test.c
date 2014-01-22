@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Analog to Digital Converter (ADC) Unit test
+ * \brief SAM D20/D21 Analog to Digital Converter (ADC) Unit test
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage SAM D2x ADC Unit Test
+ * \mainpage SAM D20/D21 ADC Unit Test
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
@@ -58,7 +58,7 @@
  */
 
 /**
- * \page appdoc_main SAM D2x ADC Unit Test
+ * \page appdoc_main SAM D20/D21 ADC Unit Test
  *
  * Overview:
  * - \ref asfdoc_sam0_adc_unit_test_intro
@@ -630,7 +630,7 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(adc_test_suite, adc_tests,
-			"SAM D2x ADC driver test suite");
+			"SAM D20/D21 ADC driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&adc_test_suite);

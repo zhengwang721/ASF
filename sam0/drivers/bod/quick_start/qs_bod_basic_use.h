@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x BOD Driver Quick Start
+ * \brief SAM D20/D21 BOD Driver Quick Start
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *

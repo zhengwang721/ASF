@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x I2C Slave Driver
+ * \brief SAM D20/D21 I2C Slave Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -585,6 +585,7 @@ void i2c_slave_clear_status(
 		uint32_t status_flags);
 /** @} */
 
+#ifdef FEATURE_I2C_DMA_SUPPORT
 /**
  * \name SERCOM I2C slave with DMA interfaces
  * @{
@@ -619,6 +620,7 @@ static inline void i2c_slave_dma_write_interrupt_status(struct i2c_slave_module 
 }
 
 /** @} */
+#endif
 
 /** @} */
 
