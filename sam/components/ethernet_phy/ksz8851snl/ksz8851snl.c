@@ -127,8 +127,6 @@ uint16_t ksz8851_reg_read(uint16_t reg)
 {
 	pdc_packet_t g_pdc_spi_tx_packet;
 	pdc_packet_t g_pdc_spi_rx_packet;
-	uint8_t	inbuf[4];
-	uint8_t	outbuf[4];
 	uint16_t cmd = 0;
 	uint16_t res = 0;
 
@@ -149,15 +147,15 @@ uint16_t ksz8851_reg_read(uint16_t reg)
 
 	/* Add command read code. */
 	cmd |= CMD_READ;
-	outbuf[0] = cmd >> 8;
-	outbuf[1] = cmd & 0xff;
-	outbuf[2] = CONFIG_SPI_MASTER_DUMMY;
-	outbuf[3] = CONFIG_SPI_MASTER_DUMMY;
+	tmpbuf[0] = cmd >> 8;
+	tmpbuf[1] = cmd & 0xff;
+	tmpbuf[2] = CONFIG_SPI_MASTER_DUMMY;
+	tmpbuf[3] = CONFIG_SPI_MASTER_DUMMY;
 
 	/* Prepare PDC transfer. */
-	g_pdc_spi_tx_packet.ul_addr = (uint32_t) outbuf;
+	g_pdc_spi_tx_packet.ul_addr = (uint32_t) tmpbuf;
 	g_pdc_spi_tx_packet.ul_size = 4;
-	g_pdc_spi_rx_packet.ul_addr = (uint32_t) inbuf;
+	g_pdc_spi_rx_packet.ul_addr = (uint32_t) tmpbuf;
 	g_pdc_spi_rx_packet.ul_size = 4;
 	pdc_disable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 	pdc_tx_init(g_p_spi_pdc, &g_pdc_spi_tx_packet, 0);
@@ -168,7 +166,7 @@ uint16_t ksz8851_reg_read(uint16_t reg)
 
 	gpio_set_pin_high(KSZ8851SNL_CSN_GPIO);
 
-	res = (inbuf[3] << 8) | inbuf[2];
+	res = (tmpbuf[3] << 8) | tmpbuf[2];
 	return res;
 }
 
@@ -182,8 +180,6 @@ void ksz8851_reg_write(uint16_t reg, uint16_t wrdata)
 {
 	pdc_packet_t g_pdc_spi_tx_packet;
 	pdc_packet_t g_pdc_spi_rx_packet;
-	uint8_t	inbuf[4];
-	uint8_t	outbuf[4];
 	uint16_t cmd = 0;
 
 	gpio_set_pin_low(KSZ8851SNL_CSN_GPIO);
@@ -203,15 +199,15 @@ void ksz8851_reg_write(uint16_t reg, uint16_t wrdata)
 
 	/* Add command write code. */
 	cmd |= CMD_WRITE;
-	outbuf[0] = cmd >> 8;
-	outbuf[1] = cmd & 0xff;
-	outbuf[2] = wrdata & 0xff;
-	outbuf[3] = wrdata >> 8;
+	tmpbuf[0] = cmd >> 8;
+	tmpbuf[1] = cmd & 0xff;
+	tmpbuf[2] = wrdata & 0xff;
+	tmpbuf[3] = wrdata >> 8;
 
 	/* Prepare PDC transfer. */
-	g_pdc_spi_tx_packet.ul_addr = (uint32_t) outbuf;
+	g_pdc_spi_tx_packet.ul_addr = (uint32_t) tmpbuf;
 	g_pdc_spi_tx_packet.ul_size = 4;
-	g_pdc_spi_rx_packet.ul_addr = (uint32_t) inbuf;
+	g_pdc_spi_rx_packet.ul_addr = (uint32_t) tmpbuf;
 	g_pdc_spi_rx_packet.ul_size = 4;
 	pdc_disable_transfer(g_p_spi_pdc, PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 	pdc_tx_init(g_p_spi_pdc, &g_pdc_spi_tx_packet, 0);
@@ -264,7 +260,6 @@ void ksz8851_fifo_read(uint8_t *buf, uint32_t len)
  */
 void ksz8851_fifo_write(uint8_t *buf, uint32_t tot_len, uint32_t len)
 {
-	uint8_t	outbuf[5];
 	static uint8_t frameID = 0;
 	pdc_packet_t g_pdc_spi_tx_packet;
 	pdc_packet_t g_pdc_spi_rx_packet;
@@ -272,16 +267,16 @@ void ksz8851_fifo_write(uint8_t *buf, uint32_t tot_len, uint32_t len)
 	pdc_packet_t g_pdc_spi_rx_npacket;
 
 	/* Prepare control word and byte count. */
-	outbuf[0] = FIFO_WRITE;
-	outbuf[1] = frameID++ & 0x3f;
-	outbuf[2] = 0;
-	outbuf[3] = tot_len & 0xff;
-	outbuf[4] = tot_len >> 8;
+	tmpbuf[0] = FIFO_WRITE;
+	tmpbuf[1] = frameID++ & 0x3f;
+	tmpbuf[2] = 0;
+	tmpbuf[3] = tot_len & 0xff;
+	tmpbuf[4] = tot_len >> 8;
 
 	/* Prepare PDC transfer. */
-	g_pdc_spi_tx_packet.ul_addr = (uint32_t) outbuf;
+	g_pdc_spi_tx_packet.ul_addr = (uint32_t) tmpbuf;
 	g_pdc_spi_tx_packet.ul_size = 5;
-	g_pdc_spi_rx_packet.ul_addr = (uint32_t) outbuf;
+	g_pdc_spi_rx_packet.ul_addr = (uint32_t) tmpbuf;
 	g_pdc_spi_rx_packet.ul_size = 5;
 	g_pdc_spi_tx_npacket.ul_addr = (uint32_t) buf;
 	g_pdc_spi_tx_npacket.ul_size = len;
