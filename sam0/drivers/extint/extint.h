@@ -667,7 +667,7 @@ static inline void extint_nmi_clear_detected(
  *		    \c extint_enable() functions. Added internal function
  *		    \c _system_extint_init().
  *		\li Added configuration EXTINT_CLOCK_SOURCE in conf_extint.h.
- *		\li Remove configuration EXTINT_CALLBACKS_MAX in conf_extint.h, and
+ *		\li Removed configuration EXTINT_CALLBACKS_MAX in conf_extint.h, and
  *		    added channel parameter in the register functions
  *		    \c extint_register_callback() and \c extint_unregister_callback().
  *		</td>
