@@ -64,7 +64,7 @@ void app_init(void)
 	event_qtouch_init();
 
 	// Set MCU Status
-	ui_set_mcu_status(POWER_SCALING_PS0, SLEEP_MODE_RUN,
+	ui_set_mcu_status(POWER_SCALING_PS1, SLEEP_MODE_RUN,
 		12000000, CPU_SRC_RC4M);
 
 	// Initialize Board Monitor
