@@ -60,6 +60,7 @@ extern "C" {
  * @{
  */
 
+#if (!SAMG)
 /**
  * \brief Switch off the voltage regulator to put the device in backup mode.
  *
@@ -70,24 +71,6 @@ void supc_enable_backup_mode(Supc *p_supc)
 	p_supc->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF;
 	__WFE();
 	__WFI();
-}
-
-/**
- * \brief Switch slow clock source selection to external 32k (Xtal or Bypass) oscillator.
- * This function disables the PLLs.
- *
- * \note Switching sclk back to 32krc is only possible by shutting down the VDDIO power supply.
- *
- * \param ul_bypass 0 for Xtal, 1 for bypass.
- */
-void supc_switch_sclk_to_32kxtal(Supc *p_supc, uint32_t ul_bypass)
-{
-	/* Set Bypass mode if required */
-	if (ul_bypass == 1) {
-		p_supc->SUPC_MR |= SUPC_MR_KEY_PASSWD | SUPC_MR_OSCBYPASS;
-	}
-
-	p_supc->SUPC_CR |= SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL;
 }
 
 /**
@@ -119,6 +102,25 @@ void supc_disable_voltage_regulator(Supc *p_supc)
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_ONREG));
 #endif
 	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr;
+}
+#endif
+
+/**
+ * \brief Switch slow clock source selection to external 32k (Xtal or Bypass) oscillator.
+ * This function disables the PLLs.
+ *
+ * \note Switching sclk back to 32krc is only possible by shutting down the VDDIO power supply.
+ *
+ * \param ul_bypass 0 for Xtal, 1 for bypass.
+ */
+void supc_switch_sclk_to_32kxtal(Supc *p_supc, uint32_t ul_bypass)
+{
+	/* Set Bypass mode if required */
+	if (ul_bypass == 1) {
+		p_supc->SUPC_MR |= SUPC_MR_KEY_PASSWD | SUPC_MR_OSCBYPASS;
+	}
+
+	p_supc->SUPC_CR |= SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL;
 }
 
 /**
@@ -229,6 +231,7 @@ void supc_disable_monitor_interrupt(Supc *p_supc)
 	p_supc->SUPC_SMMR &= ~SUPC_SMMR_SMIEN;
 }
 
+#if (!SAMG)
 /**
  * \brief Set system controller wake up mode.
  *
@@ -255,6 +258,7 @@ void supc_set_wakeup_inputs(Supc *p_supc, uint32_t ul_inputs,
 {
 	p_supc->SUPC_WUIR = ul_inputs | ul_transition;
 }
+#endif
 
 /**
  * \brief Get supply controller status.
@@ -268,7 +272,7 @@ uint32_t supc_get_status(Supc *p_supc)
 	return p_supc->SUPC_SR;
 }
 
-#if SAM4C
+#if (SAM4C || SAM4CP)
 /**
  * \brief Enable Backup Area Power-On Reset.
  *
