@@ -50,9 +50,9 @@
  *    <th>Comments</td>
  *  </tr>
  *  <tr>
- *    <td>C</td>
+ *    <td>A</td>
  *    <td>01/2014</td>
- *    <td>Added SAM D21 support.</td>
+ *    <td>Initial release.</td>
  *  </tr>
  * </table>
  */

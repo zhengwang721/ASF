@@ -1408,17 +1408,8 @@ static inline void tc_clear_status(
  * \if TC_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_tc_callback_use_case
  * \endif
- * \if DMA_MODE_IN_ASF_MANUAL
- *  - \subpage asfdoc_sam0_tc_dma_use_case_in_dma
- *  \else
  *  - \subpage asfdoc_sam0_tc_dma_use_case
- * \endif
  *
- * \page asfdoc_sam0_tc_dma_use_case_in_dma Quick Start Guide for Using DMA with TC
- * For  this examples, see
- * \ref asfdoc_sam0_tc_dma_use_case.
- *
- 
  * \page asfdoc_sam0_tc_document_revision_history Document Revision History
  *
  * <table>

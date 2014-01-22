@@ -1433,16 +1433,7 @@ enum status_code spi_select_slave(
  * - \subpage asfdoc_sam0_sercom_spi_master_callback_use
  * - \subpage asfdoc_sam0_sercom_spi_slave_callback_use
  * \endif
- * \if DMA_MODE_IN_ASF_MANUAL
- *  - \subpage asfdoc_sam0_sercom_spi_dma_use_case_in_dma
- *  \else
- *  - \subpage asfdoc_sam0_sercom_spi_dma_use_case
- * \endif
- *
- * \page asfdoc_sam0_sercom_spi_dma_use_case_in_dma Quick Start Guide for Using DMA with SERCOM SPI
- * For  this examples, see
- * \ref asfdoc_sam0_sercom_spi_dma_use_case.
- *
+ * - \subpage asfdoc_sam0_sercom_spi_dma_use_case
  */
 
  /**
