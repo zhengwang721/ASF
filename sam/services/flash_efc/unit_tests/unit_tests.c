@@ -63,8 +63,7 @@
  * - Flash lock
  * - Flash gpnvm utilities
  * - For sam3sd8, an additional erase test will be performed.
- * - For sam4s, sam4e, sam4c, samg and sam4cp, an additional user
- *   signature test will be performed.
+ * - For sam4cp, an additional user signature test will be performed.
  *
  * \section files Main Files
  * - \ref unit_tests.c
@@ -470,7 +469,7 @@ static void run_flash_gpnvm_test(const struct test_case *test)
 	}
 }
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+#if SAM4CP
 /**
  * \brief Test flash User Signature functions.
  *
@@ -564,7 +563,7 @@ int main(void)
 			"Erase function test");
 #endif
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+#if SAM4CP
 	DEFINE_TEST_CASE(flash_user_signature_test, NULL, run_flash_user_signature_test, NULL,
 			"User Signature function test");
 #endif
@@ -580,7 +579,7 @@ int main(void)
 #if SAM3SD8
 		&flash_erase_test,
 #endif
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+#if SAM4CP
 		&flash_user_signature_test,
 #endif                
 	};
