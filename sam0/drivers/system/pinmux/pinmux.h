@@ -442,7 +442,8 @@ static inline void system_pinmux_pin_set_input_sample_mode(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Removed code of Open Drain, Slew Limit and Drive Strength.</td>
+ *		<td>Removed code of open drain, slew limit and drive strength
+ *		features.</td>
  *	</tr>
  *	<tr>
  *		<td>Fixed broken sampling mode function implementations, which wrote
