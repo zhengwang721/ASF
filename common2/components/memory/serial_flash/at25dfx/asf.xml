@@ -27,7 +27,7 @@
 		<build type="header-file" value="hal/spi_master_vec/at25dfx_priv_hal.h"/>
 	</module>
 
-	<select-by-config id="common2.components.memory.serial_flash.at25dfx" caption="AT25DFx SerialFlash driver" name="config.at25dfx.hal" default="polled_spi">
+	<select-by-config id="common2.components.memory.serial_flash.at25dfx" caption="AT25DFx SerialFlash" name="config.at25dfx.hal" default="polled_spi">
 			<info type="description" value="summary">
 			AT25DFx SerialFlash driver, supplying basic functions for reading,
 			writing, (globally) protecting and unprotecting sectors, putting to
@@ -40,7 +40,7 @@
 			available, depending on the device.
 			</info>
 
-			<select-by-device id="common2.components.memory.serial_flash.at25dfx#polled_spi" caption="AT25DFx SerialFlash driver with polled SPI">
+			<select-by-device id="common2.components.memory.serial_flash.at25dfx#polled_spi" caption="AT25DFx SerialFlash with polled SPI">
 				<info type="description" value="summary">
 				Polled SPI variant of the AT25DFx SerialFlash driver.
 
@@ -48,7 +48,7 @@
 				at high baud rates, in single-threaded applications.
 				</info>
 
-				<module type="component" id="common2.components.memory.serial_flash.at25dfx#polled_spi#samd20" caption="SAM D20 implementation of AT25DFx SerialFlash driver with polled SPI">
+				<module type="component" id="common2.components.memory.serial_flash.at25dfx#polled_spi#samd20" caption="SAM D20 implementation of AT25DFx SerialFlash with polled SPI">
 					<info type="description" value="summary">
 					SAM D20 implementation of AT25DFx SerialFlash driver with polled SPI.
 					</info>
@@ -75,12 +75,12 @@
 
 		</select-by-device>
 
-		<select-by-device id="common2.components.memory.serial_flash.at25dfx#vectored_master_spi" caption="AT25DFx SerialFlash driver with vector master SPI">
+		<select-by-device id="common2.components.memory.serial_flash.at25dfx#vectored_master_spi" caption="AT25DFx SerialFlash with vectored master SPI">
 				<info type="description" value="summary">
 				Vectored master SPI variant of the AT25DFx SerialFlash driver.
 				</info>
 
-				<module type="component" id="common2.components.memory.serial_flash.at25dfx#vectored_master_spi#samd20" caption="SAM D20 implementation of AT25DFx SerialFlash driver with vectored master SPI">
+				<module type="component" id="common2.components.memory.serial_flash.at25dfx#vectored_master_spi#samd20" caption="SAM D20 implementation of AT25DFx SerialFlash with vectored master SPI">
 					<info type="description" value="summary">
 					SAM D20 implementation of AT25DFx SerialFlash driver with vectored
 					master SPI.
