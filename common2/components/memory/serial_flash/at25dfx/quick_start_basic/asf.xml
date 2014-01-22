@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="common2.components.memory.serial_flash.at25dfx.quick_start_basic" caption="Quick Start for the AT25DFx SerialFlash driver">
+	<module type="application" id="common2.components.memory.serial_flash.at25dfx.quick_start_basic" caption="Quick Start for the AT25DFx SerialFlash Component">
 		<info type="description" value="summary">
 			Quick start guide demonstrating some basic use of the AT25DFx SerialFlash driver.
 		</info>
