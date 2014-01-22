@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x I2S - Inter-IC Sound Controller
+ * \brief SAM D21 I2S - Inter-IC Sound Controller
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *

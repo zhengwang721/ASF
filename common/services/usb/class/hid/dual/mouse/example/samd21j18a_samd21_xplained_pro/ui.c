@@ -106,6 +106,7 @@ static void ui_enable_asynchronous_interrupt(void)
 	extint_register_callback(UI_WAKEUP_HANDLER,
 			BUTTON_0_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_clear_detected(BUTTON_0_EIC_LINE);
 	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
 }
