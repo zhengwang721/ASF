@@ -68,6 +68,8 @@ extern "C" {
 void supc_enable_backup_mode(Supc *p_supc)
 {
 	p_supc->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF;
+	__WFE();
+	__WFI();
 }
 
 /**
