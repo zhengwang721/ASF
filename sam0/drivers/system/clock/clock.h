@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Clock Driver
+ * \brief SAM D20/D21 Clock Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define SYSTEM_CLOCK_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_system_clock_group SAM D2x System Clock Management Driver (SYSTEM CLOCK)
+ * \defgroup asfdoc_sam0_system_clock_group SAM D20/D21 System Clock Management Driver (SYSTEM CLOCK)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection and
@@ -73,7 +73,7 @@
  *
  *
  * \section asfdoc_sam0_system_clock_module_overview Module Overview
- * The SAM D2x devices contain a sophisticated clocking system, which is designed
+ * The SAM D20/D21 devices contain a sophisticated clocking system, which is designed
  * to give the maximum flexibility to the user application. This system allows
  * a system designer to tune the performance and power consumption of the device
  * in a dynamic manner, to achieve the best trade-off between the two for a
@@ -97,7 +97,7 @@
  * selected device supports those features.
  *
  * \subsection asfdoc_sam0_system_clock_module_overview_clock_sources Clock Sources
- * The SAM D2x devices have a number of master clock source modules, each of
+ * The SAM D20/D21 devices have a number of master clock source modules, each of
  * which being capable of producing a stabilized output frequency which can then
  * be fed into the various peripherals and modules within the device.
  *
@@ -149,7 +149,7 @@
  * module, but will reduce the overall device power consumption.
  *
  * \subsection asfdoc_sam0_system_clock_module_overview_gclk Generic Clocks
- * Within the SAM D2x devices are a number of Generic Clocks; these are used to
+ * Within the SAM D20/D21 devices are a number of Generic Clocks; these are used to
  * provide clocks to the various peripheral clock domains in the device in a
  * standardized manner. One or more master source clocks can be selected as the
  * input clock to a Generic Clock Generator, which can prescale down the input
@@ -1395,7 +1395,19 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21 (DPLL support).</td>
+ *		<td>
+ *			\li Corrected OSC32K startup time definitions.
+ *			\li Support locking of OSC32K and XOSC32K config register (default: false).
+ *			\li Added DPLL support, functions added:
+ *			    \c system_clock_source_dpll_get_config_defaults() and
+ *		        \c system_clock_source_dpll_set_config().
+ *			\li Moved gclk channel locking feature out of the config struct,
+ *			    functions added:
+ *			    \c system_gclk_chan_lock(),
+ *			    \c system_gclk_chan_is_locked(),
+ *			    \c system_gclk_chan_is_enabled() and
+ *			    \c system_gclk_gen_is_enabled().
+ *		</td>
  *	</tr>
  *  <tr>
  *		<td>Fixed \c system_gclk_chan_disable() deadlocking if a channel is enabled
