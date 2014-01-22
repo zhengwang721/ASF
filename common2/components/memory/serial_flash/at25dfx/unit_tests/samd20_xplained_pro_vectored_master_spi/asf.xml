@@ -14,6 +14,7 @@
 		<require idref="board.samd20_xplained_pro"/>
 		<config name="config.at25dfx.hal" value="vectored_master_spi"/>
 		<device-support value="atsamd20j18"/>
+		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 	</project>
 </asf>

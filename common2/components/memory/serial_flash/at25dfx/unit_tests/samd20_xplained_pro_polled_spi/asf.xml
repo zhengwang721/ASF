@@ -12,6 +12,7 @@
 		<require idref="common2.components.memory.serial_flash.at25dfx.unit_test"/>
 		<require idref="board.samd20_xplained_pro"/>
 		<device-support value="atsamd20j18"/>
+		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 	</project>
 </asf>
