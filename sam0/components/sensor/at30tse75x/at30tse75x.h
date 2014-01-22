@@ -61,7 +61,7 @@
  *
  * \section asfdoc_sam0_at30tse75x_dependencies Dependencies
  * This driver depends on the following module:
- * - \ref asfdoc_sam0_i2c_group "SAM D2x I2C master"
+ * - \ref asfdoc_sam0_i2c_group "SAM D20/D21 I2C master"
  *
  * \section asfdoc_sam0_at30tse75x_api_overview API Overview
  * @{
