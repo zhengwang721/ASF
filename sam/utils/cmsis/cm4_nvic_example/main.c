@@ -201,7 +201,7 @@ static void Int1Handler(uint32_t ul_id, uint32_t ul_mask)
 
 	gpio_set_pin_low(LED0_GPIO);
 
-	delay_ticks(1000);
+	delay_ticks(2000);
 
 	gpio_set_pin_high(LED0_GPIO);
 
@@ -228,7 +228,7 @@ static void Int2Handler(uint32_t ul_id, uint32_t ul_mask)
 	gpio_set_pin_low(LED1_GPIO);
 
 	/* Delay for a while. */
-	delay_ticks(1000);
+	delay_ticks(2000);
 
 	/* Exit INT2. */
 	gpio_set_pin_high(LED1_GPIO);
@@ -335,7 +335,7 @@ int main(void)
 	uint8_t uc_key;
 
 	/* Initialize the SAM4 system */
-	SystemInit();
+	sysclk_init();
 	board_init();
 
 	WDT->WDT_MR = WDT_MR_WDDIS;

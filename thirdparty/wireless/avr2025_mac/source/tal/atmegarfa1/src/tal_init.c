@@ -123,6 +123,7 @@ static void trx_config(void);
 static retval_t trx_reset(void);
 static retval_t internal_tal_reset(bool set_default_pib);
 static retval_t tal_timer_init(void);
+static void tal_timers_stop(void);
 //! @}
 
 /* === IMPLEMENTATION ====================================================== */
@@ -419,14 +420,7 @@ static retval_t trx_reset(void)
 {
     tal_trx_status_t trx_status;
     uint8_t poll_counter = 0;
-#if (EXTERN_EEPROM_AVAILABLE == 1)
-    uint8_t xtal_trim_value;
-#endif
 
-    /* Get trim value for 16 MHz xtal; needs to be done before reset */
-#if (EXTERN_EEPROM_AVAILABLE == 1)
-    pal_ps_get(EXTERN_EEPROM, EE_XTAL_TRIM_ADDR, 1, &xtal_trim_value);
-#endif
 
     /* trx might sleep, so wake it up */
     PAL_SLP_TR_LOW();
@@ -459,14 +453,7 @@ static retval_t trx_reset(void)
 
     tal_trx_status = TRX_OFF;
 
-    // Write 16MHz xtal trim value to trx.
-    // It's only necessary if it differs from the reset value.
-#if (EXTERN_EEPROM_AVAILABLE == 1)
-    if (xtal_trim_value != 0x00)
-    {
-        pal_trx_bit_write(SR_XTAL_TRIM, xtal_trim_value);
-    }
-#endif
+
 
     return MAC_SUCCESS;
 }
@@ -493,11 +480,11 @@ retval_t tal_reset(bool set_default_pib)
         return FAILURE;
     }
 
-#if (NUMBER_OF_TAL_TIMERS > 0)
+
     ENTER_CRITICAL_REGION();
     tal_timers_stop();
     LEAVE_CRITICAL_REGION();
-#endif
+
 
     /* Clear TAL Incoming Frame queue and free used buffers. */
     while (tal_incoming_frame_queue.size > 0)
@@ -662,8 +649,9 @@ static retval_t tal_timer_init(void)
 }
 
 
-retval_t tal_timers_stop(void)
+static void tal_timers_stop(void)
 {
+#if (NUMBER_OF_TAL_TIMERS > 0)	
 #ifdef BEACON_SUPPORT
 // Beacon Support
 #ifdef ENABLE_FTN_PLL_CALIBRATION
@@ -679,6 +667,7 @@ retval_t tal_timers_stop(void)
 	pal_timer_stop(TAL_CALIBRATION);
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
 #endif  /* BEACON_SUPPORT */
-	return MAC_SUCCESS;
+#endif //#if (NUMBER_OF_TAL_TIMERS > 0)
+
 }
 /* EOF */

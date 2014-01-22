@@ -82,7 +82,9 @@
  * - sam4s16c_sam4s_ek
  * - sam4sd32c_sam4s_ek2
  * - sam4e16e_sam4e_ek
- * - sam4n16c_sam4n_xplained_pro 
+ * - sam4n16c_sam4n_xplained_pro
+ * - sam4c16c_sam4c_ek
+ * - sam4cp16b_sam4cp16bmb
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -133,6 +135,7 @@ static void run_flash_configure_test(const struct test_case *test)
 {
 	uint32_t ul_default_ws;
 	uint32_t ul_tmp_ws;
+	uint32_t ul_mck = sysclk_get_cpu_hz();
 
 	/* Backup default wait state */
 	ul_default_ws = flash_get_wait_state(IFLASH_ADDR);
@@ -163,20 +166,20 @@ static void run_flash_configure_test(const struct test_case *test)
 	/* Validate the adaptively set wait state function, get the wait state and
 	 * check with the default>
 	 */
-	if (SystemCoreClock < CHIP_FREQ_FWS_0) {
+	if (ul_mck < CHIP_FREQ_FWS_0) {
 		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
 		test_assert_true(test, ul_tmp_ws == 0,
 				"Test flash configure:adaptively set wait state error!");
-	} else if (SystemCoreClock < CHIP_FREQ_FWS_1) {
+	} else if (ul_mck < CHIP_FREQ_FWS_1) {
 		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
 		test_assert_true(test, ul_tmp_ws == 1,
 				"Test flash configure:adaptively set wait state error!");
-	} else if (SystemCoreClock < CHIP_FREQ_FWS_2) {
+	} else if (ul_mck < CHIP_FREQ_FWS_2) {
 		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
 		test_assert_true(test, ul_tmp_ws == 2,
 				"Test flash configure:adaptively set wait state error!");
 #if (SAM3XA || SAM3U)
-	} else if (SystemCoreClock < CHIP_FREQ_FWS_3) {
+	} else if (ul_mck < CHIP_FREQ_FWS_3) {
 		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
 		test_assert_true(test, ul_tmp_ws == 3,
 				"Test flash configure:adaptively set wait state error!");
@@ -185,12 +188,12 @@ static void run_flash_configure_test(const struct test_case *test)
 		test_assert_true(test, ul_tmp_ws == 4,
 				"Test flash configure:adaptively set wait state error!");
 	}
-#elif (SAM4S || SAM4E || SAM4N)
-	} else if (SystemCoreClock < CHIP_FREQ_FWS_3) {
+#elif (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
+	} else if (ul_mck < CHIP_FREQ_FWS_3) {
 		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
 		test_assert_true(test, ul_tmp_ws == 3,
 				"Test flash configure:adaptively set wait state error!");
-	} else if (SystemCoreClock < CHIP_FREQ_FWS_4) {
+	} else if (ul_mck < CHIP_FREQ_FWS_4) {
 		ul_tmp_ws =  flash_get_wait_state(IFLASH_ADDR);
 		test_assert_true(test, ul_tmp_ws == 4,
 				"Test flash configure:adaptively set wait state error!");
@@ -311,7 +314,7 @@ static void run_flash_write_test(const struct test_case *test)
 		ul_page_buffer[ul_idx] = 1 << (ul_idx % 32);
 	}
 
-#if (SAM4S || SAM4E || SAM4N)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
 	/* Write the last page */
 	flash_erase_sector(ul_last_page_addr);
 
@@ -348,11 +351,11 @@ static void run_flash_lock_test(const struct test_case *test)
 	volatile uint32_t ul_locked_region_num;
 	volatile uint32_t lockerror = 0;
 	uint32_t ul_last_page_addr = LAST_PAGE_ADDRESS;
-#if (SAM4S || SAM4E || SAM4N)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
 	flash_erase_sector(ul_last_page_addr);
 #endif
 	uint32_t ul_page_buffer[IFLASH_PAGE_SIZE / sizeof(uint32_t)];
-	memset(ul_page_buffer, IFLASH_PAGE_SIZE / sizeof(uint32_t), 0xFF);
+	memset((void *)ul_page_buffer, 0xFF, IFLASH_PAGE_SIZE);
 
 
 	/* Check if there is any region blocked */
@@ -384,9 +387,9 @@ static void run_flash_lock_test(const struct test_case *test)
 	lockerror = flash_write(ul_last_page_addr, (void *)ul_page_buffer,
 			IFLASH_PAGE_SIZE, 0);
 
-#if (SAM3SD8 || SAM4S || SAM4E || SAM4N)
-	/* SAM3SD8, SAM4S and SAM4E have a bigger page region which requires special
-	 * attention.
+#if (SAM3SD8 || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
+	/* SAM3SD8, SAM4S, SAM4E, SAM4N, SAM4C and SAM4CP have a bigger page region which
+	 * requires special attention.
 	 */
 	ul_locked_region_num = flash_is_locked(IFLASH_ADDR,
 			ul_last_page_addr + IFLASH_PAGE_SIZE - 1);

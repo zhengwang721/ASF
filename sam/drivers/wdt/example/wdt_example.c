@@ -57,12 +57,12 @@
  *
  * At first, the example configures the pins of LED and Console UART, enables
  * the watchdog timer, and then prints some information via UART. Before user
- * presses the push button that the information mentions, the LED keeps blinking and
- * the counter of the watchdog timer is restarted before any fault of the
- * watchdog timer occurs (the interrupt in this case). The example enters a
- * deadlock status after user presses the push button and it causes that the counter
- * will not be restarted until a fault occurs (the interrupt). In the interrupt
- * handler, the counter is restarted.
+ * presses the push button that the information mentions, the LED keeps
+ * blinking and the counter of the watchdog timer is restarted before any
+ * fault of the watchdog timer occurs (the interrupt in this case).
+ * The example enters a deadlock status after user presses the push button
+ * and it causes that the counter will not be restarted until a fault
+ * occurs (the interrupt). In the interrupt handler, the counter is restarted.
  *
  *
  * \section Usage
@@ -97,8 +97,6 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-/** Baud rate of console UART */
-#define CONSOLE_BAUD_RATE                 115200
 /** Watchdog period 3000ms */
 #define WDT_PERIOD                        3000
 /** LED blink time 300ms */
@@ -202,7 +200,7 @@ static void configure_led(void)
 }
 
 /**
- * \brief Application entry point for wdt_irq example.
+ * \brief Application entry point for WDT example.
  *
  * \return Unused (ANSI-C compatibility).
  */
@@ -224,7 +222,7 @@ int main(void)
 
 	/* Systick configuration. */
 	puts("Configure systick to get 1ms tick period.\r");
-	if (SysTick_Config(SystemCoreClock / 1000)) {
+	if (SysTick_Config(sysclk_get_cpu_hz() / 1000)) {
 		puts("-F- Systick configuration error\r");
 	}
 
@@ -237,10 +235,10 @@ int main(void)
 		}
 	}
 	/* Configure WDT to trigger an interrupt (or reset). */
-	wdt_mode = WDT_MR_WDFIEN |	/* Enable WDT fault interrupt. */
-			WDT_MR_WDRPROC |	/* WDT fault resets processor only. */
-			WDT_MR_WDDBGHLT |	/* WDT stops in debug state. */
-			WDT_MR_WDIDLEHLT;	/* WDT stops in idle state. */
+	wdt_mode = WDT_MR_WDFIEN |  /* Enable WDT fault interrupt. */
+			WDT_MR_WDRPROC   |  /* WDT fault resets processor only. */
+			WDT_MR_WDDBGHLT  |  /* WDT stops in debug state. */
+			WDT_MR_WDIDLEHLT;   /* WDT stops in idle state. */
 	/* Initialize WDT with the given parameters. */
 	wdt_init(WDT, wdt_mode, timeout_value, timeout_value);
 	printf("Enable watchdog with %d microseconds period\n\r",
@@ -265,7 +263,7 @@ int main(void)
 
 			/* Toggle LED at the given period. */
 			if ((g_ul_ms_ticks % BLINK_PERIOD) == 0) {
-#if SAM4E || SAM4N
+#if (SAM4E || SAM4N || SAM4C || SAMG)
 				LED_Toggle(LED0);
 #else
 				LED_Toggle(LED0_GPIO);
