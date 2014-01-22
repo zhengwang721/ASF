@@ -24,7 +24,8 @@
 
 		<build type="include-path" value="."/>
 		<build type="header-file" value="revhistory.h"/>
-
+		<build type="doxygen-enable-section" value="DMA_MODE_IN_ASF_MANUAL"/>
+		
 		<require idref="sam0.drivers.ac"/>
 		<require idref="sam0.drivers.adc"/>
 		<require idref="sam0.drivers.bod"/>

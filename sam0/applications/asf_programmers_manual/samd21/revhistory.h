@@ -41,7 +41,7 @@
 
 
 /**
- * \page appdoc_sam0_asf_prog_manual_sam0_revision_history Document Revision History
+ * \page appdoc_samd21_asf_prog_manual_samd21_revision_history Document Revision History
  *
  * <table>
  *  <tr>
