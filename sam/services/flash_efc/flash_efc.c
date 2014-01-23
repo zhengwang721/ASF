@@ -999,59 +999,30 @@ uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size)
 /**
  * \brief Write the flash user signature.
  *
- * \param ul_address Write address.
- * \param p_data Pointer to a data buffer to store 512 bytes of user signature.
- * \param ul_size Data buffer size.
+ * \param p_data Pointer to a data buffer to store info for the user signature.
+ * \param ul_size Data buffer size in 32 bit words.
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_write_user_signature(uint32_t ul_address, const void *p_buffer,
-		uint32_t ul_size)
+uint32_t flash_write_user_signature(const void *p_buffer, uint32_t ul_size)
 {
-	Efc *p_efc;
-	uint32_t ul_fws_temp;
-	uint16_t us_page;
-	uint16_t us_offset;
-	uint32_t writeSize;
-	uint32_t ul_page_addr;
-	uint16_t us_padding;
 	uint32_t ul_idx;
 	uint32_t *p_aligned_dest;
-	uint8_t *puc_page_buffer = (uint8_t *) gs_ul_page_buffer;
 
 	/* The user signature should be no longer than 512 bytes */
 	if (ul_size > (IFLASH_PAGE_SIZE / sizeof(uint32_t))) {
 		return FLASH_RC_INVALID;
 	}
-        
-	translate_address(&p_efc, ul_address, &us_page, &us_offset);
 
-	/* According to the errata, set the wait state value to 6. */
-	ul_fws_temp = efc_get_wait_state(p_efc);
-	efc_set_wait_state(p_efc, 6);
+	/* Copy Buffer data */
+	memcpy((uint8_t *) gs_ul_page_buffer, p_buffer, 
+               ul_size * sizeof(uint32_t));
 
-	/* Copy data in temporary buffer to avoid alignment problems. */
-	writeSize = Min((uint32_t) IFLASH_PAGE_SIZE - us_offset,
-			ul_size);
-	compute_address(p_efc, us_page, 0, &ul_page_addr);
-	us_padding = IFLASH_PAGE_SIZE - us_offset - writeSize;
-
-	/* Pre-buffer data */
-	memcpy(puc_page_buffer, (void *)ul_page_addr, us_offset);
-
-	/* Buffer data */
-	memcpy(puc_page_buffer + us_offset, p_buffer, writeSize);
-
-	/* Post-buffer data */
-	memcpy(puc_page_buffer + us_offset + writeSize,
-			(void *)(ul_page_addr + us_offset + writeSize),
-			us_padding);
-
-	/* Write page.
+	/* Write page buffer.
         * Writing 8-bit and 16-bit data is not allowed and may lead to
         * unpredictable data corruption.
         */
-	p_aligned_dest = (uint32_t *) ul_page_addr;
+	p_aligned_dest = (uint32_t *)(IFLASH_ADDR - IFLASH_PAGE_SIZE);
 	for (ul_idx = 0; ul_idx < (IFLASH_PAGE_SIZE / sizeof(uint32_t));
 			++ul_idx) {
 		*p_aligned_dest++ = gs_ul_page_buffer[ul_idx];
@@ -1061,9 +1032,6 @@ uint32_t flash_write_user_signature(uint32_t ul_address, const void *p_buffer,
 	if (FLASH_RC_OK != efc_perform_command(EFC, EFC_FCMD_WUS, 0)) {
 		return FLASH_RC_ERROR;
 	}
-
-	/* According to the errata, restore the wait state value. */
-	efc_set_wait_state(p_efc, ul_fws_temp);
 
 	return FLASH_RC_OK;
 }

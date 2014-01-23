@@ -480,7 +480,7 @@ static void run_flash_gpnvm_test(const struct test_case *test)
  */
 static void run_flash_user_signature_test(const struct test_case *test)
 {
-    	uint32_t ul_page_wr_buffer[IFLASH_PAGE_SIZE / sizeof(uint32_t)];
+        uint32_t ul_page_wr_buffer[IFLASH_PAGE_SIZE / sizeof(uint32_t)];
         uint32_t ul_page_rd_buffer[IFLASH_PAGE_SIZE / sizeof(uint32_t)];
         uint32_t ul_idx;
         uint32_t ul_rc = 0;
@@ -497,14 +497,16 @@ static void run_flash_user_signature_test(const struct test_case *test)
         flash_erase_user_signature();
         
         /* Read User Signature */
-        flash_read_user_signature(ul_page_rd_buffer, IFLASH_PAGE_SIZE / sizeof(uint32_t));
+        flash_read_user_signature(ul_page_rd_buffer, 
+                                  IFLASH_PAGE_SIZE / sizeof(uint32_t));
         
         /* Write User Signature */
-        flash_write_user_signature(IFLASH_ADDR + IFLASH_SIZE - IFLASH_PAGE_SIZE, (void *)ul_page_wr_buffer,
-                                   sizeof(ul_page_wr_buffer));
+        flash_write_user_signature(ul_page_wr_buffer,  
+                                  IFLASH_PAGE_SIZE / sizeof(uint32_t));
         
         /* Read User Signature */
-        flash_read_user_signature(ul_page_rd_buffer, IFLASH_PAGE_SIZE / sizeof(uint32_t));
+        flash_read_user_signature(ul_page_rd_buffer, 
+                                  IFLASH_PAGE_SIZE / sizeof(uint32_t));
         
         /* Validate page contents */
 	for (ul_idx = 0; ul_idx < (IFLASH_PAGE_SIZE / 4); ul_idx++) {
@@ -514,8 +516,9 @@ static void run_flash_user_signature_test(const struct test_case *test)
 	}
 
 	/* Validate the flash write function */
-	test_assert_true(test, ul_rc == 0, 
-                         "Test flash user signature: user signature error!");
+	test_assert_true(test, ul_rc == 0,
+                        "Test flash user signature: user signature error!");
+        
 }
 #endif
 
@@ -564,8 +567,9 @@ int main(void)
 #endif
 
 #if SAM4CP
-	DEFINE_TEST_CASE(flash_user_signature_test, NULL, run_flash_user_signature_test, NULL,
-			"User Signature function test");
+	DEFINE_TEST_CASE(flash_user_signature_test, NULL, 
+                     run_flash_user_signature_test, NULL, 
+                     "User Signature function test");
 #endif
         
 	/* Put test case addresses in an array */
