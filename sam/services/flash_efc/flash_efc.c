@@ -1020,7 +1020,7 @@ uint32_t flash_write_user_signature(uint32_t ul_address, const void *p_buffer,
 	uint8_t *puc_page_buffer = (uint8_t *) gs_ul_page_buffer;
 
 	/* The user signature should be no longer than 512 bytes */
-	if (ul_size > FLASH_USER_SIG_SIZE) {
+	if (ul_size > (IFLASH_PAGE_SIZE / sizeof(uint32_t))) {
 		return FLASH_RC_INVALID;
 	}
         
