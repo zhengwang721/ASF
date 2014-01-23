@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x AT30TSE75X Temperature Sensor driver Quick Start
+ * \brief AT30TSE75X Temperature Sensor driver Quick Start
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_sam0_at30tse75x_qs Quick Start Guide for the SAM D2x AT30TSE75X Temperature Sensor Driver
+ * \page asfdoc_sam0_at30tse75x_qs Quick Start Guide for the SAM AT30TSE75X Temperature Sensor Driver
  * In this use case we will interface the temperature sensor, set a resolution and read
  * the temperature.
  *

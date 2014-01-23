@@ -386,7 +386,7 @@ static void run_capture_and_compare_test(const struct test_case *test)
 	struct tcc_events tcc_events = {
 		.on_input_event_perform_action[1] = true,
 		.input_config[1].modify_action = true,
-		.input_config[1].action = TCC_EVENT1_ACTION_PULSE_PULSE_WIDTH_CAPTURE,
+		.input_config[1].action = TCC_EVENT1_ACTION_PERIOD_PULSE_WIDTH_CAPTURE,
 		.on_event_perform_channel_action[CONF_CAPTURE_CHAN_0] = true,
 		.on_event_perform_channel_action[CONF_CAPTURE_CHAN_1] = true
 	};
