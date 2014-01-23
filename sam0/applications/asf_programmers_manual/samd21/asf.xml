@@ -38,8 +38,8 @@
 		<require idref="sam0.drivers.port"/>
 		<require idref="sam0.drivers.rtc"/>
 		<require idref="sam0.drivers.sercom.usart"/>
-		<require idref="sam0.drivers.sercom.i2c.master"/>
-		<require idref="sam0.drivers.sercom.i2c.slave"/>
+		<require idref="sam0.drivers.sercom.i2c.master.appnote"/>
+		<require idref="sam0.drivers.sercom.i2c.slave.appnote"/>
 		<require idref="sam0.drivers.sercom.spi"/>
 		<require idref="sam0.drivers.system"/>
 		<require idref="sam0.drivers.tc"/>
