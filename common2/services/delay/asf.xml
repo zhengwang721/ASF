@@ -2,7 +2,7 @@
 	<module type="service" id="common2.services.delay" caption="Delay routines">
 		<info type="description" value="summary">
 		Loop based delay routines. Provides cycle, milliseconds
-		and second delays. Common API for SAMD2x.
+		and second delays. Common API for SAMD20/D21.
 		</info>
 		<build type="doxygen-entry-point" value="group_common_services_delay"/>
 		<build type="include-path" value="."/>
