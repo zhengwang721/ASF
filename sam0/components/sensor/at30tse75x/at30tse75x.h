@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- 
+
 #ifndef AT30TSE75X_H_INCLUDED
 #define AT30TSE75X_H_INCLUDED
 
