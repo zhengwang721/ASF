@@ -374,21 +374,28 @@ void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
              mouse_desc_t *mouse_desc;
              mouse_desc = (mouse_desc_t *)zid_report_data_record_ptr->report_data;
              uint8_t value;
-             udi_hid_mouse_moveX((mouse_desc->x_coordinate));
-             udi_hid_mouse_moveY((mouse_desc->y_coordinate));
+             
              if(value=(mouse_desc->button0))
              { 
-               udi_hid_mouse_btnleft(value);
+               udi_hid_mouse_btnleft(true);
+			   udi_hid_mouse_btnleft(false);
              }
-             if(value=(mouse_desc->button1))
+             else if(value=(mouse_desc->button1))
              { 
-               udi_hid_mouse_btnright(value);
+               udi_hid_mouse_btnright(true);
+			   udi_hid_mouse_btnright(false);
              }
-             if(value=(mouse_desc->button2))
+			 else if(0x80==(mouse_desc->button2))
+			 {   
+				 udi_hid_mouse_moveScroll((mouse_desc->y_coordinate));
+				 mouse_desc->y_coordinate = 0;
+			 }
+             else if(0x01==(mouse_desc->button2))
              { 
-               udi_hid_mouse_btnmiddle(value);
+               udi_hid_mouse_btnmiddle(0x01);
              }
-             
+             udi_hid_mouse_moveX((mouse_desc->x_coordinate));
+             udi_hid_mouse_moveY((mouse_desc->y_coordinate));
           
              break;
          }
