@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.i2s" name="config.sam0.drivers.i2s" caption="I2S - Inter-IC Sound Controller" default="callback">
 		<info type="description" value="summary">
-		  Driver for the SAM D2x Inter-IC Sound Controller (I2S) module.
+		  Driver for the SAM D21 Inter-IC Sound Controller (I2S) module.
 		  Provides a unified interface for the configuration and management of
 		  the device's I2S hardware.
 		</info>
@@ -25,6 +25,7 @@
 			<build type="doxygen-example-path" value="quick_start/samd21_xplained_pro"/>
 			<build type="doxygen-example-path" value="quick_start_dma"/>
 			<build type="doxygen-example-path" value="quick_start_dma/samd21_xplained_pro"/>
+			<build type="doxygen-image-path" value="docimg"/>
 
 			<build type="doxygen-entry-point" value="asfdoc_sam0_i2s_group" />
 			<build type="doxygen-quick-start" value="asfdoc_sam0_i2s_exqsg"/>
@@ -43,15 +44,16 @@
 				<keyword value="Cryptography" />
 			</info>
 
-			<info type="appnote" value="ATxxxxx"/>
+			<info type="appnote" value="AT07451"/>
 			<info type="keyword" value="pdf">
 				<keyword value="I/O"/>
-				<keyword value="I2S"/>
+				<keyword value="Cryptography" />
 				<keyword value="Audio"/>
+				<keyword value="I2S"/>
 			</info>
 
 			<info type="description" value="pdf">
-				This document describes how to use the Inter-IC Sound Controller on the SAM D2x,
+				This document describes how to use the Inter-IC Sound Controller on the SAM D21,
 				both the ASF driver and the peripheral itself.
 			</info>
 
@@ -75,6 +77,8 @@
 			<build type="doxygen-example-path" value="quick_start_callback/samd21_xplained_pro"/>
 			<build type="doxygen-example-path" value="quick_start_dma"/>
 			<build type="doxygen-example-path" value="quick_start_dma/samd21_xplained_pro"/>
+			<build type="doxygen-image-path" value="docimg"/>
+
 			<build type="doxygen-entry-point" value="asfdoc_sam0_i2s_group" />
 			<build type="doxygen-quick-start" value="asfdoc_sam0_i2s_exqsg"/>
 

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x System related functionality
+ * \brief SAM D20/D21 System related functionality
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -49,9 +49,9 @@
 #include <pinmux.h>
 
 /**
- * \defgroup asfdoc_sam0_system_group SAM D2x System Driver (SYSTEM)
+ * \defgroup asfdoc_sam0_system_group SAM D20/D21 System Driver (SYSTEM)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the device's system relation functionality, necessary for
  * the basic device operation. This is not limited to a single peripheral, but
  * extends across multiple hardware peripherals,
@@ -89,11 +89,11 @@
  *
  *
  * \subsection asfdoc_sam0_system_module_overview_vref Voltage References
- * The various analog modules within the SAM D2x devices (such as AC, ADC and
+ * The various analog modules within the SAM D20/D21 devices (such as AC, ADC and
  * DAC) require a voltage reference to be configured to act as a reference point
  * for comparisons and conversions.
  *
- * The SAM D2x devices contain multiple references, including an internal
+ * The SAM D20/D21 devices contain multiple references, including an internal
  * temperature sensor, and a fixed band-gap voltage source. When enabled, the
  * associated voltage reference can be selected within the desired peripheral
  * where applicable.
@@ -108,7 +108,7 @@
  * reset, so that appropriate action can be taken.
  *
  * \subsection asfdoc_sam0_system_module_overview_sleep_mode Sleep Modes
- * The SAM D2x devices have several sleep modes, where the sleep mode controls
+ * The SAM D20/D21 devices have several sleep modes, where the sleep mode controls
  * which clock systems on the device will remain enabled or disabled when the
  * device enters a low power sleep mode.
  * \ref asfdoc_sam0_system_module_sleep_mode_table "The table below" lists the
@@ -116,7 +116,7 @@
  *
  * \anchor asfdoc_sam0_system_module_sleep_mode_table
  * <table>
- *  <caption>SAM D2x Device Sleep Modes</caption>
+ *  <caption>SAM D20/D21 Device Sleep Modes</caption>
  * 	<tr>
  * 		<th>Sleep mode</th>
  * 		<th>CPU clock</th>

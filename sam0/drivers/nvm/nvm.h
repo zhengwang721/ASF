@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Non-Volatile Memory driver
+ * \brief SAM D20/D21 Non-Volatile Memory driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define NVM_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_nvm_group SAM D2x Non-Volatile Memory Driver (NVM)
+ * \defgroup asfdoc_sam0_nvm_group SAM D20/D21 Non-Volatile Memory Driver (NVM)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of non-volatile memories within the device, for partitioning,
  * erasing, reading and writing of data.
  *
@@ -75,7 +75,7 @@
  * erased and reconfigured in a standardized manner.
  *
  * \subsection asfdoc_sam0_nvm_module_overview_regions Memory Regions
- * The NVM memory space of the SAM D2x devices is divided into two sections:
+ * The NVM memory space of the SAM D20/D21 devices is divided into two sections:
  * a Main Array section, and an Auxiliary space section. The Main Array space
  * can be configured to have an (emulated) EEPROM and/or boot loader section.
  * The memory layout with the EEPROM and bootloader partitions is shown in
@@ -460,18 +460,6 @@ enum nvm_bod33_action {
 };
 
 /**
- * \brief BOD12 Action
- *
- * What action should be triggered when BOD12 is detected.
- *
- */
-enum nvm_bod12_action {
-	NVM_BOD12_ACTION_NONE,
-	NVM_BOD12_ACTION_RESET,
-	NVM_BOD12_ACTION_INTERRUPT,
-};
-
-/**
  * \brief WDT Window time-out period
  *
  * Windows mode time-out period in clock cycles.
@@ -531,12 +519,6 @@ struct nvm_fusebits {
 	bool                              bod33_enable;
 	/** BOD33 Action at power on */
 	enum nvm_bod33_action             bod33_action;
-	/** BOD12 Threshold level at power on */
-	uint8_t                           bod12_level;
-	/** BOD12 Enable at power on */
-	bool                              bod12_enable;
-	/** BOD12 Action at power on */
-	enum nvm_bod12_action             bod12_action;
 	/** WDT Enable at power on */
 	bool                              wdt_enable;
 	/** WDT Always-on at power on */
@@ -647,9 +629,6 @@ enum status_code nvm_execute_command(
 
 enum status_code nvm_get_fuses(struct nvm_fusebits *fusebits);
 
-enum status_code nvm_set_fuses(struct nvm_fusebits *fusebits);
-
-
 bool nvm_is_page_locked(uint16_t page_number);
 
 /**
@@ -738,7 +717,8 @@ static inline enum nvm_error nvm_get_error(void)
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21</td>
+ *		<td>Added support for SAMD21, removed BOD12 reference, removed
+ *          nvm_set_fuses() API.</td>
  *	</tr>
  *	<tr>
  *		<td>Added functions to read/write fuse settings</td>

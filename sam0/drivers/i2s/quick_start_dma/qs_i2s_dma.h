@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x I2S - Inter-IC Sound Controller Driver Quick Start with DMA
+ * \brief SAM D21 I2S - Inter-IC Sound Controller Driver Quick Start with DMA
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -47,7 +47,7 @@
  * In this use case, the I2S will be used to generate Master Clock (MCK), Serial
  * Clock (SCK), Frame Sync (FS) and Serial Data (SD) signals.
  *
- * Here MCK is set to the half of processor clock. SCK is set to a quater of
+ * Here MCK is set to the half of processor clock. SCK is set to a quarter of
  * the frequency of processor. FS generates half-half square wave for left and
  * right audio channel data. The output serial data of channels toggle from two
  * values to generate square wave, if codec or DAC is connected.
@@ -62,7 +62,7 @@
  * - MCK output divider set to 2
  * - SCK generation divider set to 4
  * - Each frame will contain 2 32-bit slots
- * - Data will be left ajusted and start transmit without delay
+ * - Data will be left adjusted and start transmit without delay
  *
  * \section asfdoc_sam0_i2s_dma_use_case_setup Quick Start
  *
@@ -117,8 +117,7 @@
  *            used, they should be global except the very first one.
  *
  *      \snippet qs_i2s_dma.c rx_dma_descriptor
- *   -# Create a DMA transfer descriptor struct.
- *   -# Create a DMA transfer descriptor configuration structure, which can be
+ *   -# Create a DMA transfer descriptor configuration struct, which can be
  *      filled out to adjust the configuration of a single DMA transfer.
  *      \snippet qs_i2s_dma.c dma_setup_5
  *   -# Initialize the DMA transfer descriptor configuration struct with

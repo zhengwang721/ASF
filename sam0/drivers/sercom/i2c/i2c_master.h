@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x I2C Master Driver
+ * \brief SAM D20/D21 I2C Master Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -505,6 +505,7 @@ void i2c_master_send_stop(struct i2c_master_module *const module);
 
 /** @} */
 
+#ifdef FEATURE_I2C_DMA_SUPPORT
 /**
 * \name SERCOM I2C master with DMA interfaces
 * @{
@@ -533,6 +534,7 @@ static inline void i2c_master_dma_set_transfer(struct i2c_master_module *const m
 }
 
 /** @} */
+#endif
 
 /** @} */
 

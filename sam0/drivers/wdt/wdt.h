@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Watchdog Driver
+ * \brief SAM D20/D21 Watchdog Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define WDT_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_wdt_group SAM D2x Watchdog Driver (WDT)
+ * \defgroup asfdoc_sam0_wdt_group SAM D20/D21 Watchdog Driver (WDT)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the device's Watchdog Timer module, including the enabling,
  * disabling and kicking within the device. The following driver API modes are
  * covered by this manual:
@@ -412,8 +412,11 @@ void wdt_reset_count(void);
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
-  *	<tr>
- *		<td>Add SAMD21 support</td>
+ *	<tr>
+ *		<td>Add SAMD21 support and driver updated to follow driver type convention:
+ *             \li wdt_init, wdt_enable, wdt_disable functions removed
+ *             \li wdt_set_config function added
+ *             \li WDT module enable state moved inside the configuration struct </td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>

@@ -47,9 +47,38 @@
 #define  LED_On()          port_pin_set_output_level(LED_0_PIN, 0)
 #define  LED_Off()         port_pin_set_output_level(LED_0_PIN, 1)
 
+#ifdef USB_DEVICE_LPM_SUPPORT
+/* Interrupt on "pin change" from push button to do wakeup on USB
+ * Note:
+ * This interrupt is enable when the USB host enable remote wakeup feature
+ * This interrupt wakeup the CPU if this one is in idle mode
+ */
+static void ui_wakeup_handler(void)
+{
+	/* It is a wakeup then send wakeup USB */
+	udc_remotewakeup();
+	LED_On();
+}
+#endif
 
 void ui_init(void)
 {
+#ifdef USB_DEVICE_LPM_SUPPORT
+	struct extint_chan_conf config_extint_chan;
+
+	extint_chan_get_config_defaults(&config_extint_chan);
+
+	config_extint_chan.gpio_pin            = BUTTON_0_EIC_PIN;
+	config_extint_chan.gpio_pin_mux        = BUTTON_0_EIC_MUX;
+	config_extint_chan.gpio_pin_pull       = EXTINT_PULL_UP;
+	config_extint_chan.filter_input_signal = true;
+	config_extint_chan.detection_criteria  = EXTINT_DETECT_FALLING;
+	extint_chan_set_config(BUTTON_0_EIC_LINE, &config_extint_chan);
+	extint_register_callback(ui_wakeup_handler, BUTTON_0_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_enable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
+#endif
+
 	/* Initialize LEDs */
 	LED_Off();
 }
@@ -59,6 +88,17 @@ void ui_powerdown(void)
 	LED_Off();
 }
 
+#ifdef USB_DEVICE_LPM_SUPPORT
+void ui_wakeup_enable(void)
+{
+	extint_chan_enable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
+}
+
+void ui_wakeup_disable(void)
+{
+	extint_chan_disable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
+}
+#endif // #ifdef USB_DEVICE_LPM_SUPPORT
 
 void ui_wakeup(void)
 {
@@ -129,5 +169,6 @@ void ui_process(uint16_t framenumber)
  * Human interface on SAMD21-XPlain:
  * - SAMD21 USART used USART connected through EDBG CDC USART Port
  * - Led 0 blinks when USB is connected and active
+ * - Push SW0 button will generate a wakeup to USB Host in remote wakeup mode.
  *
  */
