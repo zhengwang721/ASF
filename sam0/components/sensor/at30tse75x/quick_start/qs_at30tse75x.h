@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM AT30TSE75X Temperature Sensor driver Quick Start
+ * \brief AT30TSE75X Temperature Sensor driver Quick Start
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
