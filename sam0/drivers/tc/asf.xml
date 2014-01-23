@@ -20,7 +20,6 @@
 
 			<build type="header-file" value="quick_start/qs_tc_basic.h" />
 			<build type="header-file" value="quick_start_dma/qs_tc_dma.h" />
-			<build type="header-file" value="quick_start_dma/samd21_xplained_pro/conf_quick_start.h" />
 
 			<build type="doxygen-example-path" value="quick_start_dma"/>
 			<build type="doxygen-example-path" value="quick_start_dma/samd21_xplained_pro"/>
@@ -72,7 +71,6 @@
 			<build type="header-file" value="quick_start_callback/qs_tc_callback.h" />
 			<build type="header-file" value="quick_start/qs_tc_basic.h" />
 			<build type="header-file" value="quick_start_dma/qs_tc_dma.h" />
-			<build type="header-file" value="quick_start_dma/samd21_xplained_pro/conf_quick_start.h" />
 
 			<build type="doxygen-example-path" value="quick_start"/>
 			<build type="doxygen-example-path" value="quick_start/samd20_xplained_pro"/>

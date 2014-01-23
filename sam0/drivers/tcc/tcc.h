@@ -365,11 +365,11 @@ enum tcc_event_action {
 	/** Store period in capture register 0, pulse width in capture
 	 *  register 1.
 	 */
-	TCC_EVENT_ACTION_PULSE_PULSE_WIDTH_CAPTURE,
+	TCC_EVENT_ACTION_PERIOD_PULSE_WIDTH_CAPTURE,
 	/** Store pulse width in capture register 0, period in capture
 	 *  register 1.
 	 */
-	TCC_EVENT_ACTION_PULSE_WIDTH_PULSE_CAPTURE,
+	TCC_EVENT_ACTION_PULSE_WIDTH_PERIOD_CAPTURE,
 
 	/** Generate Non-Recoverable Fault on event. */
 	TCC_EVENT_ACTION_NON_RECOVERABLE_FAULT,
@@ -421,11 +421,11 @@ enum tcc_event1_action {
 	/** Store period in capture register 0, pulse width in capture
 	 *  register 1.
 	 */
-	TCC_EVENT1_ACTION_PULSE_PULSE_WIDTH_CAPTURE  = TCC_EVENT_ACTION_PULSE_PULSE_WIDTH_CAPTURE,
+	TCC_EVENT1_ACTION_PERIOD_PULSE_WIDTH_CAPTURE  = TCC_EVENT_ACTION_PERIOD_PULSE_WIDTH_CAPTURE,
 	/** Store pulse width in capture register 0, period in capture
 	 *  register 1.
 	 */
-	TCC_EVENT1_ACTION_PULSE_WIDTH_PULSE_CAPTURE  = TCC_EVENT_ACTION_PULSE_WIDTH_PULSE_CAPTURE,
+	TCC_EVENT1_ACTION_PULSE_WIDTH_PERIOD_CAPTURE  = TCC_EVENT_ACTION_PULSE_WIDTH_PERIOD_CAPTURE,
 
 	/** Generate Non-Recoverable Fault on event. */
 	TCC_EVENT1_ACTION_NON_RECOVERABLE_FAULT = TCC_EVENT_ACTION_NON_RECOVERABLE_FAULT
