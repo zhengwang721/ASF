@@ -300,8 +300,7 @@ int main(void)
 				 * ideal frequency than the previous best values
 				 */
 				uint32_t freq_current = get_osc_frequency();
-				if (abs(freq_current - TARGET_FREQUENCY) < abs(freq_best - TARGET_FREQUENCY))
-				{
+				if (abs(freq_current - TARGET_FREQUENCY) < abs(freq_best - TARGET_FREQUENCY)) {
 					freq_best   = freq_current;
 					comm_best   = comm_cal;
 					frange_best = frange_cal;
