@@ -72,9 +72,9 @@
  * \subsection asfdoc_sam0_i2s_dma_use_case_setup_code Code
  *
  * Add to the main application source file, before any functions:
- * \snippet conf_quick_start_dma.h definition_i2s
- * \snippet conf_quick_start_dma.h definition_dma_receive_trigger
- * \snippet conf_quick_start_dma.h definition_dma_transmit_trigger
+ * \snippet conf_i2s_quick_start_dma.h definition_i2s
+ * \snippet conf_i2s_quick_start_dma.h definition_dma_receive_trigger
+ * \snippet conf_i2s_quick_start_dma.h definition_dma_transmit_trigger
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_i2s_dma.c module_inst
