@@ -72,7 +72,7 @@
 
 /*----------------------------------------------------------------------------*/
 /**
- * \page sam4e_ek_board_info "SAM4E-EK - Board informations"
+ * \page sam4e_xpro_board_info "SAM4E-XPRO - Board informations"
  * This page lists several definition related to the board description.
  *
  * \section Definitions
@@ -103,27 +103,27 @@
 
 //! \name LED0 definitions
 //@{
-#define LED0_GPIO            (PIO_PB4_IDX)
+#define LED0_GPIO            (PIO_PD22_IDX)
 #define LED0_FLAGS           (0)
-#define LED0_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_LOW
-#define LED0_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
+#define LED0_ACTIVE_LEVEL    (IOPORT_PIN_LEVEL_LOW)
+#define LED0_INACTIVE_LEVEL  (IOPORT_PIN_LEVEL_HIGH)
 //@}
 
 //! \name SW0 definitions
 //@{
-#define SW0_PIN                   IOPORT_CREATE_PIN(PIOE, 1)
-#define SW0_ACTIVE                false
-#define SW0_INACTIVE              !SW0_ACTIVE
+#define SW0_PIN                   (PIO_PA2_IDX)
+#define SW0_ACTIVE                (IOPORT_PIN_LEVEL_LOW)
+#define SW0_INACTIVE              (!SW0_ACTIVE)
 #define SW0_SUPC_INPUT            2
 
 /**
  * Wrapper macros for SW0, to ensure common naming across all Xplained Pro
  * boards.
  */
-#define PIN_SW0      {PIO_PE1, PIOE, ID_PIOE, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
-#define PIN_SW0_MASK PIO_PE1
-#define PIN_SW0_PIO  PIOE
-#define PIN_SW0_ID   ID_PIOE
+#define PIN_SW0      {PIO_PA2, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define PIN_SW0_MASK PIO_PA2
+#define PIN_SW0_PIO  PIOA
+#define PIN_SW0_ID   ID_PIOA
 #define PIN_SW0_TYPE PIO_INPUT
 #define PIN_SW0_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
 //@}
@@ -164,10 +164,10 @@
 #define LED_0_ACTIVE              LED0_ACTIVE_LEVEL
 #define LED_0_INACTIVE            LED0_INACTIVE_LEVEL
 
-#define PIN_LED_0       {PIO_PB4, PIOB, ID_PIOB, PIO_OUTPUT_1, PIO_DEFAULT}
-#define PIN_LED_0_MASK  PIO_PB4
-#define PIN_LED_0_PIO   PIOB
-#define PIN_LED_0_ID    ID_PIOB
+#define PIN_LED_0       {PIO_PD22, PIOD, ID_PIOD, PIO_OUTPUT_1, PIO_DEFAULT}
+#define PIN_LED_0_MASK  PIO_PD22
+#define PIN_LED_0_PIO   PIOD
+#define PIN_LED_0_ID    ID_PIOD
 #define PIN_LED_0_TYPE  PIO_OUTPUT_1
 #define PIN_LED_0_ATTR  PIO_DEFAULT
 //@}
@@ -186,20 +186,20 @@
 #define BUTTON_0_SUPC_INPUT       SW0_SUPC_INPUT
 
 #define PUSHBUTTON_1_NAME        "SW0"
-//#define PUSHBUTTON_1_WKUP_LINE   (9)
-//#define PUSHBUTTON_1_WKUP_FSTT   (PMC_FSMR_FSTT9)
-#define GPIO_PUSH_BUTTON_1       (PIO_PE1_IDX)
+#define PUSHBUTTON_1_WKUP_LINE   (2)
+#define PUSHBUTTON_1_WKUP_FSTT   (PMC_FSMR_FSTT2)
+#define GPIO_PUSH_BUTTON_1       (PIO_PA2_IDX)
 #define GPIO_PUSH_BUTTON_1_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
 #define GPIO_PUSH_BUTTON_1_SENSE (IOPORT_SENSE_RISING)
 
-#define PIN_PUSHBUTTON_1       {PIO_PE1, PIOE, ID_PIOE, PIO_INPUT, \
+#define PIN_PUSHBUTTON_1       {PIO_PA2, PIOA, ID_PIOA, PIO_INPUT, \
 		PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
-#define PIN_PUSHBUTTON_1_MASK  PIO_PE1
-#define PIN_PUSHBUTTON_1_PIO   PIOE
-#define PIN_PUSHBUTTON_1_ID    ID_PIOE
+#define PIN_PUSHBUTTON_1_MASK  PIO_PA2
+#define PIN_PUSHBUTTON_1_PIO   PIOA
+#define PIN_PUSHBUTTON_1_ID    ID_PIOA
 #define PIN_PUSHBUTTON_1_TYPE  PIO_INPUT
 #define PIN_PUSHBUTTON_1_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
-#define PIN_PUSHBUTTON_1_IRQn  PIOE_IRQn
+#define PIN_PUSHBUTTON_1_IRQn  PIOA_IRQn
 
 /** List of all push button definitions. */
 #define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1}
@@ -229,8 +229,8 @@
 #define PIN_TC0_TIOA2_ATTR   PIO_DEFAULT
 
 /** PWM LED0 pin definitions. */
-#define PIN_PWM_LED0_GPIO     PIO_PB4_IDX
-#define PIN_PWM_LED0_FLAGS    (IOPORT_MODE_MUX_B)
+#define PIN_PWM_LED0_GPIO     PIO_PD22_IDX
+#define PIN_PWM_LED0_FLAGS    (IOPORT_MODE_MUX_A)
 #define PIN_PWM_LED0_CHANNEL  PWM_CHANNEL_2
 
 /** SPI MISO pin definition. */
@@ -341,12 +341,12 @@
 #define PIN_USART1_EN_INACTIVE_LEVEL IOPORT_PIN_LEVEL_HIGH
 
 /** USB VBus monitoring pin definition. */
-#define PIN_USB_VBUS    {PIO_PC21, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP}
+#define PIN_USB_VBUS    {PIO_PE2, PIOE, ID_PIOE, PIO_INPUT, PIO_PULLUP}
 #define USB_VBUS_FLAGS    (PIO_INPUT | PIO_DEBOUNCE | PIO_IT_EDGE)
-#define USB_VBUS_PIN_IRQn (PIOC_IRQn)
-#define USB_VBUS_PIN      (PIO_PC21_IDX)
-#define USB_VBUS_PIO_ID   (ID_PIOC)
-#define USB_VBUS_PIO_MASK (PIO_PC21)
+#define USB_VBUS_PIN_IRQn (PIOE_IRQn)
+#define USB_VBUS_PIN      (PIO_PE2_IDX)
+#define USB_VBUS_PIO_ID   (ID_PIOE)
+#define USB_VBUS_PIO_MASK (PIO_PE2)
 /* This pin can not be used as fast wakeup source such as
  * USB_VBUS_WKUP PMC_FSMR_FSTT7 */
 
@@ -406,10 +406,10 @@
 #define SRAM_CHIP_SELECT_2ND       3
 
 /* KSZ8051MNL relate PIN definition */
-#define PIN_KSZ8051MNL_RXC_IDX                PIO_PD14_IDX
-#define PIN_KSZ8051MNL_RXC_FLAGS            (IOPORT_MODE_MUX_A)
-#define PIN_KSZ8051MNL_TXC_IDX                PIO_PD0_IDX
-#define PIN_KSZ8051MNL_TXC_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_RXC_IDX                 PIO_PD14_IDX
+#define PIN_KSZ8051MNL_RXC_FLAGS             (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_TXC_IDX                 PIO_PD0_IDX
+#define PIN_KSZ8051MNL_TXC_FLAGS             (IOPORT_MODE_MUX_A)
 #define PIN_KSZ8051MNL_TXEN_IDX                PIO_PD1_IDX
 #define PIN_KSZ8051MNL_TXEN_FLAGS            (IOPORT_MODE_MUX_A)
 #define PIN_KSZ8051MNL_TXD3_IDX                PIO_PD16_IDX
@@ -432,15 +432,15 @@
 #define PIN_KSZ8051MNL_RXER_FLAGS            (IOPORT_MODE_MUX_A)
 #define PIN_KSZ8051MNL_RXDV_IDX                PIO_PD4_IDX
 #define PIN_KSZ8051MNL_RXDV_FLAGS            (IOPORT_MODE_MUX_A)
-#define PIN_KSZ8051MNL_CRS_IDX                PIO_PD10_IDX
-#define PIN_KSZ8051MNL_CRS_FLAGS            (IOPORT_MODE_MUX_A)
-#define PIN_KSZ8051MNL_COL_IDX                PIO_PD13_IDX
-#define PIN_KSZ8051MNL_COL_FLAGS            (IOPORT_MODE_MUX_A)
-#define PIN_KSZ8051MNL_MDC_IDX          PIO_PD8_IDX
-#define PIN_KSZ8051MNL_MDC_FLAGS            (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_CRS_IDX                 PIO_PD10_IDX
+#define PIN_KSZ8051MNL_CRS_FLAGS             (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_COL_IDX                 PIO_PD13_IDX
+#define PIN_KSZ8051MNL_COL_FLAGS             (IOPORT_MODE_MUX_A)
+#define PIN_KSZ8051MNL_MDC_IDX                 PIO_PD8_IDX
+#define PIN_KSZ8051MNL_MDC_FLAGS             (IOPORT_MODE_MUX_A)
 #define PIN_KSZ8051MNL_MDIO_IDX                PIO_PD9_IDX
 #define PIN_KSZ8051MNL_MDIO_FLAGS            (IOPORT_MODE_MUX_A)
-#define PIN_KSZ8051MNL_INTRP_IDX                PIO_PD28_IDX
+#define PIN_KSZ8051MNL_INTRP_IDX               PIO_PD28_IDX
 
 /** NandFlash pins definition: OE. */
 #define PIN_EBI_NANDOE    (PIO_PC9_IDX)
@@ -494,7 +494,7 @@
 
 /*----------------------------------------------------------------------------*/
 /**
- * \page sam4e_ek_usb "SAM4E-EK - USB device"
+ * \page sam4e_xpro_usb "SAM4E-XPRO - USB device"
  *
  * \section Definitions
  * - \ref BOARD_USB_BMATTRIBUTES
@@ -544,9 +544,9 @@
 
 /*----------------------------------------------------------------------------*/
 /**
- * \page sam4e_ek_extcomp "SAM4E-EK - External components"
+ * \page sam4e_xpro_extcomp "SAM4E-XPRO - External components"
  * This page lists the definitions related to external on-board components
- * located in the board.h file for the SAM4E-EK.
+ * located in the board.h file for the SAM4E-XPRO.
  *
  * SD Card
  * - \ref BOARD_SD_PINS
@@ -565,7 +565,7 @@
 
 /*----------------------------------------------------------------------------*/
 /**
- * \page sam4e_ek_mem "SAM4E-EK - Memories"
+ * \page sam4e_xpro_mem "SAM4E-XPRO - Memories"
  * This page lists definitions related to internal & external on-board memories.
  *
  * \section NandFlash
@@ -614,7 +614,7 @@
 
 /*----------------------------------------------------------------------------*/
 /**
- * \page sam4e_ek_CAN "SAM4E-EK - CAN"
+ * \page sam4e_xpro_CAN "SAM4E-XPRO - CAN"
  * This page lists definitions related to CAN0 and CAN1.
  *
  * CAN
