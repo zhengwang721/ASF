@@ -49,6 +49,7 @@
 #include "sysTypes.h"
 #include "hal.h"
 #include "delay.h"
+#include "sleep_mgr.h"
 
 
 /*****************************************************************************
@@ -61,9 +62,10 @@ static void HAL_TimerInit(void);
 *****************************************************************************/
 void HAL_Init(void)
 {
-
-
-HAL_TimerInit();
+   /* HAL Timer module initialization */
+   HAL_TimerInit();
+   /* Sleep manager initialization */
+   sm_init();
 
 }
 
@@ -76,7 +78,8 @@ void HAL_Delay(uint32_t us)
 
 void HAL_Sleep(uint32_t interval)
 {
-//
+  /* Call sleep manager routine */
+  sm_sleep(interval);
 }
 
 

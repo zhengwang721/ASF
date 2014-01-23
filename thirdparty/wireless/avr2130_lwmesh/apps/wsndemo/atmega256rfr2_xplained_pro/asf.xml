@@ -8,7 +8,8 @@
 		<build type="header-file" value="conf_usart_serial.h"/>
 		<build type="header-file" value="conf_hw_timer.h"/>
 		<build type="header-file" value="conf_clock.h"/>
-
+		<build type="header-file" value="conf_sleepmgr.h"/>
+		
 		<config name="config.thirdparty.wireless.addons.sio2host" value="uart"/>
 		<build type="include-path" value="."/>
 		<require idref="thirdparty.wireless.avr2130_lwmesh.apps.wsndemo"/>

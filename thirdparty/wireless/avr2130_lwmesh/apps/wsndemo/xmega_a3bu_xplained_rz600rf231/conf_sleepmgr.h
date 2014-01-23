@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Sleep manager configuration
+ * \brief Chip-specific sleep manager configuration
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,6 +43,7 @@
 #ifndef CONF_SLEEPMGR_H
 #define CONF_SLEEPMGR_H
 
+// Sleep manager options
 #define CONFIG_SLEEPMGR_ENABLE
 
 #endif /* CONF_SLEEPMGR_H */
