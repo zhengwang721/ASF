@@ -384,7 +384,7 @@
  * The number of capture compare registers in each TC module is dependent on
  * the specific SAM D20/D21 device being used, and in some cases the counter size.
  *
- * The maximum amount of capture compare registers available in any SAMD2x
+ * The maximum amount of capture compare registers available in any SAM D20/D21
  * device is two when running in 32-bit mode and four in 8-, and 16-bit modes.
  *
  *
