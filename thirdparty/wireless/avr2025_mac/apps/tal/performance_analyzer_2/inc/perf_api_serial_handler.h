@@ -86,7 +86,7 @@ void init_sio(trx_id_t trx);
 /**
  *   \brief Function to handle the state machine serial data exchange.
  */
-void serial_data_handler();
+void serial_data_handler(void);
 
 /**
  * \brief Function to write messages into UART/USB, used to send assert

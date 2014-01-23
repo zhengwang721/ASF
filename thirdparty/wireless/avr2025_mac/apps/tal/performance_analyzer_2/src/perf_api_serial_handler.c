@@ -186,7 +186,7 @@ void init_sio(trx_id_t trx)
 /*
  * \brief Function to handle the state machine serial data exchange.
  */
-void serial_data_handler()
+void serial_data_handler(void)
 {
 	for(uint8_t trx = 0;trx < 2 ;trx ++)
 	{

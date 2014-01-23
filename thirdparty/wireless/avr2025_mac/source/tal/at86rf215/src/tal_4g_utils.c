@@ -992,7 +992,7 @@ static inline void get_sun_freq_f0(trx_id_t trx_id, uint32_t *freq, uint32_t *sp
                     *freq = (uint32_t)PGM_READ_DWORD(&oqpsk_freq0_map[i][1]);
                     if (tal_pib[trx_id].phy.freq_band == EU_863)
                     {
-                        *spacing = 600000; // ?
+                        *spacing = 0; // ? //check
                     }
                     else
                     {
@@ -1051,7 +1051,7 @@ void get_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *freq
 		          *freq = (uint32_t)PGM_READ_DWORD(&oqpsk_freq0_map[i][1]);
 		          if (freq_band == EU_863)
 		          {
-			          *spacing = 600000; // ?
+			          *spacing = 0; // ?
 		          }
 		          else
 		          {

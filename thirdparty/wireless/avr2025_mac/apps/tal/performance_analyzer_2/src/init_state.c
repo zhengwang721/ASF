@@ -155,10 +155,6 @@ void init_after_disconnect(trx_id_t trx)
 
 
     tal_rx_buffer[trx] = bmm_buffer_alloc(LARGE_BUFFER_SIZE);
-    if (tal_rx_buffer[trx] == NULL)
-    {
-        return FAILURE;
-    }
 
     /* Init incoming frame queue */
     qmm_queue_init(&tal_incoming_frame_queue[trx]);

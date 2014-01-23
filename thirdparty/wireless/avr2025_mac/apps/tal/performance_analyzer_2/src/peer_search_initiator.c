@@ -563,7 +563,6 @@ static void peer_rsp_rcvd_tx_cb(trx_id_t trx,retval_t status, frame_info_t *fram
         }
         else if (PEER_SEARCH_PER_TX == node_info[trx].main_state)
         {
-			app_alert();
             /* Send the confirmation to the PC application via Serial interface */
             usr_perf_start_confirm(trx,
 									NO_PEER_FOUND,

@@ -422,6 +422,7 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
         uint32_t spacing = tal_pib[trx_id].phy.ch_spacing;
         uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
         uint16_t reg_val;
+		uint8_t temp_val;
 
         /* Offset handling for 2.4GHz only */
         if (trx_id == RF24)
@@ -498,8 +499,35 @@ else
 		{
 		tal_pib[trx_id].CurrentChannel = (max_ch-1);		
 		}
+		if ((tal_pib[trx_id].phy.freq_band == EU_863)&&(tal_pib[trx_id].phy.modulation == OQPSK))
+		{
+			if(tal_pib[trx_id].CurrentChannel == 0)
+			{
+				freq = 868300000;
+
+
+			}			
+			else if(tal_pib[trx_id].CurrentChannel == 1)
+			{
+				 freq = 868950000;
+
+			}
+			else if(tal_pib[trx_id].CurrentChannel == 2)
+			{
+				freq = 869525000;
+
+			}	
+			temp_val = 0;
+			reg_val = (uint16_t)(freq / 25000);					
+			pal_trx_write(rf_reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
+			pal_trx_write(rf_reg_offset + RG_RF09_CNL,
+			(uint8_t *)&temp_val, 2); // write cnl as 0 to get the same freq as freq			
+		}
+		else
+		{
         pal_trx_write(rf_reg_offset + RG_RF09_CNL,
                       (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
+		}
 }					  
         /* Wait until channel set is completed */
         if (trx_state[trx_id] == RF_TXPREP)
@@ -859,7 +887,8 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 {
 			uint16_t channel,channel_to_set;
 			channel = channel_to_set = value->pib_value_16bit;
-
+			uint32_t freq ;
+			uint16_t reg_val;
 
             /* Adjust internal channel number to IEEE compliant numbering */
             if (tal_pib[trx_id].phy.modulation == LEG_OQPSK)
@@ -932,10 +961,37 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                     /* Set TXPREP and wait until it is reached. */
                     switch_to_txprep(trx_id);
                 }
+				tal_pib[trx_id].CurrentChannel = channel_to_set;
+				if ((tal_pib[trx_id].phy.freq_band == EU_863)&&(tal_pib[trx_id].phy.modulation == OQPSK))
+				{
+					if(tal_pib[trx_id].CurrentChannel == 0)
+					{
+						freq = 868300000;
 
-                tal_pib[trx_id].CurrentChannel = channel_to_set;
+
+					}
+					else if(tal_pib[trx_id].CurrentChannel == 1)
+					{
+						freq = 868950000;
+
+					}
+					else if(tal_pib[trx_id].CurrentChannel == 2)
+					{
+						freq = 869525000;
+
+					}
+					channel = 0;
+					reg_val = (uint16_t)(freq / 25000);
+					pal_trx_write(rf_reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
+					pal_trx_write(rf_reg_offset + RG_RF09_CNL,
+					(uint8_t *)&channel, 2); // write cnl as 0 to get the same freq as freq
+				}
+				else
+				{
                 pal_trx_write(rf_reg_offset + RG_RF09_CNL,
-                              (uint8_t *)&channel, 2);
+                (uint8_t *)&channel, 2);
+				}			
+
 
                 if (trx_state[trx_id] == RF_TXPREP)
                 {

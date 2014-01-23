@@ -27,7 +27,7 @@
 #include "return_val.h"
 #include "tal.h"
 #include "ieee_const.h"
-#include "at86rf215.h"
+#include "at86rf215lt.h"
 #include "tal_internal.h"
 #include "tfa.h"
 

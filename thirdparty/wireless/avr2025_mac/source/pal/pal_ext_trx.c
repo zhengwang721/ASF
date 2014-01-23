@@ -89,7 +89,7 @@ void pal_trx_read(uint16_t addr,uint8_t *data, uint16_t length)
 	/*Saving the current interrupt status & disabling the global interrupt
 	 **/
 	//ENTER_CRITICAL_REGION();
-	
+	//ENTER_TRX_REGION();
       pal_trx_reg_write( RG_BBC0_IRQM, 0);
       pal_trx_reg_write(BB_BASE_ADDR_OFFSET + RG_BBC0_IRQM, 0);
 
@@ -136,7 +136,6 @@ void pal_trx_read(uint16_t addr,uint8_t *data, uint16_t length)
 
 void pal_trx_write(uint16_t addr, uint8_t *data,uint16_t length)
 {
-	uint32_t dw_status;
 	/*Saving the current interrupt status & disabling the global interrupt
 	 **/
 	//ENTER_TRX_REGION();

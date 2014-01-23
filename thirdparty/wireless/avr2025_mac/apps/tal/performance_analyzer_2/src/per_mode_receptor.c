@@ -53,6 +53,7 @@
 #include <inttypes.h>
 #include <ctype.h>
 #include "app_init.h"
+# include "sio2host.h"
 #include "tal_pib.h"
 #include "tal_helper.h"
 #include "ieee_const.h"
@@ -102,9 +103,11 @@ static void send_crc_status_rsp(trx_id_t trx);
 static uint16_t crc_test(uint16_t crc, uint8_t data);
 #endif /* End of CRC_SETTING_ON_REMOTE_NODE */
 
-static bool range_test_in_progress[NO_TRX] = {false,false};
+static uint8_t read_int_value_in_hex(uint16_t *value);
+static uint8_t read_value_in_hex(uint8_t *value);
+static void read_write_reg(void);
 /* === GLOBALS ============================================================= */
-
+static bool range_test_in_progress[NO_TRX] = {false,false};
 static uint32_t number_rx_frames[NO_TRX];
 static uint32_t aver_lqi[NO_TRX];
 static uint32_t aver_rssi[NO_TRX];
@@ -112,6 +115,7 @@ static uint8_t seq_num_receptor[NO_TRX];
 #ifdef CRC_SETTING_ON_REMOTE_NODE
 uint32_t frames_with_wrong_crc[NO_TRX];
 bool manual_crc[NO_TRX]= {false,false};
+int char_received;
 #endif
 static uint8_t marker_seq_num[NO_TRX] = {0,0};
 
@@ -128,10 +132,11 @@ void per_mode_receptor_init(trx_id_t trx, void *parameter)
 
 	/* PER TEST Receptor sequence number */
 	seq_num_receptor[trx] = rand();
-
-	
+	/* As tx power is already configure by TAL in tal_pib.c get it for application*/
+	int8_t temp_dbm = TAL_TRANSMIT_POWER_DEFAULT;
+	tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_dbm);	
 	printf("\r\n Starting PER Measurement mode as Reflector");
-	
+	//printf("\r\n Read/Write/Dump Transceiver Registers By Pressing SW0 when in idle mode\n  ");
 	/* keep the compiler happy */
 	parameter = parameter;
 }
@@ -143,12 +148,14 @@ void per_mode_receptor_init(trx_id_t trx, void *parameter)
  */
 void per_mode_receptor_task(trx_id_t trx)
 {
+	static uint8_t key_press;
+	/* Check for any key press */
+	key_press = app_debounce_button();
+	
 if((range_test_in_progress[RF24])||(range_test_in_progress[RF09]))	
 {
 
-static uint8_t key_press;
-/* Check for any key press */
-key_press = app_debounce_button();
+
 
 if (key_press != 0) {	
 
@@ -174,11 +181,26 @@ printf("\r\n\nButton Pressed...");
 			LED_BLINK_RATE_IN_MICRO_SEC,
 			SW_TIMEOUT_RELATIVE,
 			(FUNC_PTR)marker_tx_timer_handler_cb,
-			NULL);
+			(void*) trx);
 		}
 }
-}
+/*** REG READ/WRITEDUMP Impl ************/
 
+/*
+else 
+{
+	if(!((number_rx_frames[RF09] > 0) || (number_rx_frames[RF24]>0)))
+	{
+
+		     if (key_press != 0) 	
+		    {
+			   read_write_reg();
+		    }
+		
+	
+}
+}*/
+}
 
 /**
  * \brief Function to send the range test marker command to the initiator node
@@ -290,7 +312,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 expected_frame_size = (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                           sizeof(general_pkt_t)) +
                                                          sizeof(set_parm_req_t)));
-                if ((mac_frame_info->length) == expected_frame_size)
+                //if ((mac_frame_info->length) == expected_frame_size)  //check removed for working with both legacy and 215 kits
                 {
                     /* Extract and process the cmd received */
                     set_paramter_on_recptor_node(trx, msg);
@@ -313,7 +335,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 			}
 			else
 			{							
-			printf("Sun PHY Page Changed");			
+			printf("\r\nSun PHY Page Changed");			
 			}
 	        }
 	        break;
@@ -328,11 +350,11 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                     
 					printf("\r\nReceiving..");
                     aver_lqi[trx] += mac_frame_info->mpdu[lqi_pos];
-                    aver_rssi[trx] += mac_frame_info->mpdu[ed_pos];
+                    aver_rssi[trx] += (((int8_t)(mac_frame_info->mpdu[ed_pos]))+127); 
 #ifdef CRC_SETTING_ON_REMOTE_NODE
                     frames_with_wrong_crc[trx] = 0;
 #endif /* #ifdef CRC_SETTING_ON_REMOTE_NODE */
-                    number_rx_frames[trx]++;
+                   number_rx_frames[trx]++;
                     /* Get the seq no. of the first packet */
                     prev_seq_no[trx] = mac_frame_info->mpdu[PL_POS_SEQ_NUM-1];//sriram
                 }
@@ -348,7 +370,8 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                         prev_seq_no[trx] = cur_seq_no[trx];
                         /* Extract LQI and  RSSI */
                         aver_lqi[trx] += mac_frame_info->mpdu[lqi_pos];
-                        aver_rssi[trx] += mac_frame_info->mpdu[ed_pos];
+                        aver_rssi[trx] += (((int8_t)(mac_frame_info->mpdu[ed_pos]))+127);
+						//printf("\r\n RSSI = %d dBm",(int8_t)mac_frame_info->mpdu[ed_pos]);
                     }
 					else
 					{
@@ -356,8 +379,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 					}
 
                 }
-	// sriram			printf("\n\rPrev Seq no \t Curr Seq No: %ld,%ld ",prev_seq_no[trx],cur_seq_no[trx]);
-                /* Led is toggled indicating the test in progress at the count of
+	           /* Led is toggled indicating the test in progress at the count of
                  * LED_TOGGLE_COUNT_FOR_PER
                  */
                 if (rx_count >= LED_TOGGLE_COUNT_FOR_PER)
@@ -384,15 +406,14 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                     {
                         aver_lqi[trx] = aver_lqi[trx] / number_rx_frames[trx];
                         aver_rssi[trx] = aver_rssi[trx] / number_rx_frames[trx];
-						aver_rssi[trx] = scale_ed_to_reg_val((int8_t)aver_rssi[trx]);//sriram
+						aver_rssi[trx] = (int8_t)(aver_rssi[trx]-127);
+						//aver_rssi[trx] = scale_ed_to_reg_val((int8_t)aver_rssi[trx]);//sriram
                     }
-                    send_result_rsp(trx);
-
-                    
-                    int8_t rssi_val = scale_reg_value_to_ed(aver_rssi[trx]);
+                    send_result_rsp(trx);                    
+                    //int8_t rssi_val = (int8_t)aver_rssi[trx] ; //scale_reg_value_to_ed(aver_rssi[trx]);
                     printf("\r\nNumber of received frames = %"
                     PRIu32 "; average LQI = %d, average RSSI = %d dBm",
-                    number_rx_frames[trx], (uint8_t)aver_lqi[trx], (int8_t)rssi_val );
+                    number_rx_frames[trx], (uint8_t)aver_lqi[trx], (int8_t)aver_rssi[trx]);
 #ifdef CRC_SETTING_ON_REMOTE_NODE
                         if (manual_crc[trx])
                         {
@@ -527,7 +548,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                                 LED_BLINK_RATE_IN_MICRO_SEC,
                                 SW_TIMEOUT_RELATIVE,
                                 (FUNC_PTR)identify_timer_handler_cb,
-                                NULL);
+                                (void*) trx);
                 break;
             }
         case DISCONNECT_NODE:
@@ -599,7 +620,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 		/* Print the received values to the terminal */
 		printf(
 				"\r\nRange Test Packet Received...\tFrame No : %" PRIu32 "\tLQI : %d\tED : %d",
-				frame_count,mac_frame_info->mpdu[lqi_pos],mac_frame_info->mpdu[ed_pos]);
+				frame_count,mac_frame_info->mpdu[lqi_pos],(int8_t)mac_frame_info->mpdu[ed_pos]);
 	}
 	break;
 
@@ -611,13 +632,13 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 		uint8_t phy_frame_len = mac_frame_info->length;
 		printf("\r\nMarker Response Received... LQI : %d\t ED %d \n",
 									mac_frame_info->mpdu[lqi_pos],
-									mac_frame_info->mpdu[ed_pos]);
+									(int8_t)mac_frame_info->mpdu[ed_pos]);
 		/* Timer for LED Blink for Reception of Marker Response*/
 		sw_timer_start(T_APP_TIMER,
 				LED_BLINK_RATE_IN_MICRO_SEC,
 				SW_TIMEOUT_RELATIVE,
 				(FUNC_PTR)marker_rsp_timer_handler_cb,
-				NULL);
+				(void*) trx);
 	}
 	break;
 
@@ -684,7 +705,7 @@ static void set_paramter_on_recptor_node(trx_id_t trx, app_payload_t *msg)
                 /* Get the the received tx power in dBm */
                 temp_var = (uint8_t)msg->payload.set_parm_req_data.param_value;
                // temp_var = CONV_DBM_TO_phyTransmitPower((int8_t)param_val);sriram
-
+				printf("\r\n Tx Pwr Value in Dbm changed to : %d \n\r",temp_var);
 				tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_var);
 
 			}
@@ -698,6 +719,7 @@ static void set_paramter_on_recptor_node(trx_id_t trx, app_payload_t *msg)
 
                 /* get the the received tx power as reg value */
                 param_val = (uint8_t)msg->payload.set_parm_req_data.param_value;
+				printf("\r\n Tx Pwr Value  Reg changed to : %d \n\r",param_val);
                 if (MAC_SUCCESS == tal_convert_reg_value_to_dBm(param_val, &tx_pwr_dbm))
                 {
                    // uint8_t temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);sriram
@@ -1128,5 +1150,267 @@ static void send_crc_status_rsp(trx_id_t trx)
                    true);
 }
 #endif /* End of #ifdef CRC_SETTING_ON_REMOTE_NODE */
+
+/************************** REG Write/Read/Dump Implementation ********************************/
+
+/**
+ * @brief used to read - write radio transceiver registers
+ */
+static void read_write_reg(void)
+{
+	
+    uint16_t i;
+    uint8_t input;
+    uint8_t reg_val;
+    uint16_t num_of_reg_to_read;
+    uint16_t reg;
+    uint16_t reg_start;
+    uint16_t reg_end;
+	printf("***********TRX Register Read/Write/Dump**************");
+    printf("\r\n R - to Read Reg");
+    printf("\r\n W - to Write Reg");
+    printf("\r\n D - to get register Dump");
+	printf("\r\n Press Enter to Exit From this Menu");
+    printf("\r\n >");
+
+    /* Get input from terminal program / user. */
+    input = sio2host_getchar();
+	if(input == '\r')
+	{
+		printf("\n");
+		printf("\n\r Returning Back as Receptor... \n\r");
+		return;
+	}
+	
+    input = toupper(input);
+
+    /* Handle input from terminal program. */
+    switch (input)
+    {
+        case 'R':
+            {
+                printf("\r\n Read Register: 0x");
+                if (read_int_value_in_hex(&reg) == false)
+                {
+                    return;
+                }
+if (reg > 0X3FFE)
+
+
+                {
+                    printf("\r\n Out of Range register value..");
+					printf("\n\r Returning Back as Receptor... \n\r");
+                    return;
+                }
+
+                reg_val = pal_trx_reg_read(reg);
+
+                printf("\r\n Value of Reg 0x%x is 0x%x", reg, reg_val);
+
+            }
+			printf("\n\r Returning Back as Receptor... \n\r");
+            break;
+
+        case 'W':
+            {
+                printf("\r\n Write Register: 0x");
+                if (read_int_value_in_hex(&reg) == false)
+
+                {
+                    return;
+                }
+
+
+                if (reg > 0X3FFE)
+                {
+                    printf("\r\n Out of Range register value..");
+					printf("\n\r Returning Back as Receptor... \n\r");
+                    return;
+                }
+
+                printf("\r\n Write Value: 0x");
+                if (read_value_in_hex(&reg_val) == false)
+                {
+                    return;
+                }
+
+                pal_trx_reg_write(reg, reg_val);
+
+                printf("\r\n Value written in Reg 0x%x is 0x%x", reg, reg_val);
+            }
+			printf(" Returning Back as Receptor... \n\r");
+            break;
+		
+        case 'D':
+            {
+                printf("\r\n Start Register: 0x");
+                if (read_int_value_in_hex(&reg_start) == false)
+
+                {
+                    return;
+                }
+
+                if (reg_start > 0X3FFE)
+
+                {
+                    printf("\r\n Out of Range register value.. ");
+					printf("\n\r Returning Back as Receptor... \n\r");
+                    return;
+                }
+
+                printf("\r\n End Register: 0x");
+                if (read_int_value_in_hex(&reg_end) == false)
+                {
+                    return;
+                }
+
+                if (reg_end > 0X3FFE)
+                {
+                    printf("\r\n Out of Range register value.. ");
+					printf("\n\r Returning Back as Receptor... \n\r");
+                    return;
+                }
+				
+
+                if (reg_end < reg_start)
+                {
+                    printf("\r\n Registers order incorrect.. ");
+					printf("\n\r Returning Back as Receptor... \n\r");
+                    return;
+                }
+                else
+                {
+			     	num_of_reg_to_read = ((reg_end - reg_start));
+                    num_of_reg_to_read += 1;
+                }
+
+                reg = reg_start;
+
+                for (i = 0 ; i < num_of_reg_to_read ; i++)
+                {
+                    reg_val = pal_trx_reg_read(reg + i);
+                    printf("\r\n Value of Reg 0x%x is 0x%x", (reg + i), reg_val);
+                }
+				printf("\n\r Returning Back as Receptor... \n\r");
+            }
+            break;
+    }
+}
+
+/**
+ * @brief the value is input in UART term as hex
+ *
+ * @param value Pointer to data received in UART
+ *
+ * @return true if correct data received, false otherwise
+ */
+static uint8_t read_int_value_in_hex(uint16_t *value)
+{
+    char input_char[4] = {0, 0, 0, 0};
+    uint8_t i;
+    uint8_t input;
+    uint16_t temp,val = 0;
+
+
+    for (i = 0; i < 4; i++)
+    {
+        input = sio2host_getchar();
+		if(input == '\r')
+		{
+			break;
+		}		
+        input = toupper(input);
+        if (((input < '0') || (input > '9')) &&
+            ((input < 'A') || (input > 'F')))
+        {
+            printf("\r\n Wrong value.. ");
+			printf("\n\r Returning Back as Receptor... \n\r");
+            return(false);
+        }
+        else
+        {
+
+			sio2host_tx(&input,1);
+            temp = input - 0x30;
+            if (temp > 9)
+            {
+                temp = temp - 7;
+            }
+            input_char[i] = temp;
+			val = (val<<4) | (input_char[i]) ;
+			
+        }
+    }
+/*
+    temp = input_char[0];
+    temp = temp << 4;
+    temp |= input_char[1];
+    temp = temp << 4;
+    temp |= input_char[2];
+    temp = temp << 4;
+    temp |= input_char[3];	*/
+
+    *(value) = val;
+    return(true);
+}
+
+/**
+ * @brief the value is input in UART term as hex
+ *
+ * @param value Pointer to data received in UART
+ *
+ * @return true if correct data received, false otherwise
+ */
+static uint8_t read_value_in_hex(uint8_t *value)
+{
+    char input_char[3] = {0, 0, 0};
+    uint8_t i;
+    uint8_t input;
+    uint8_t temp;
+
+    for (i = 0; i < 2; i++)
+    {
+        input = sio2host_getchar();
+        input = toupper(input);
+        if (((input < '0') || (input > '9')) &&
+            ((input < 'A') || (input > 'F')) && (input != '\r') )
+        {
+            printf("\r\n Wrong value..");
+			printf("\n\r Returning Back as Receptor... \n\r");
+            return(false);
+        }
+        else
+        {
+            /* First key pressed is 'Enter' */
+            if ((i == 0) && (input == '\r'))
+            {
+                printf("\r\n Wrong value..");
+				printf("\n\r Returning Back as Receptor... \n\r");
+                return(false);
+            }
+            else if (input == '\r')/* Proess and don't wait for the next character */
+            {
+                *(value) = input_char[i - 1] ;
+                return(true);
+            }
+            else /* Process and wait for next character until last char */
+            {
+				sio2host_tx(&input,1);
+                temp = input - 0x30;
+                if (temp > 9)
+                {
+                    temp = temp - 7;
+                }
+                input_char[i] = temp;
+            }
+        }
+    }
+    temp = input_char[0];
+    temp = temp << 4;
+    temp |= input_char[1];
+
+    *(value) = temp;
+    return(true);
+}
 
 /*EOF */

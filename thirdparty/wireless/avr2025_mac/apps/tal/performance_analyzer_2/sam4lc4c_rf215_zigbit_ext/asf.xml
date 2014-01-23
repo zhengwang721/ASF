@@ -24,7 +24,8 @@
 		<build type="define"   name="ENABLE_LARGE_BUFFER"              value=""/>
 		<build type="define"   name="MULTI_TRX_SUPPORT"              value=""/>
 		<build type="define"   name="ENABLE_DEEP_SLEEP"              value=""/>
-
+		<build type="define"   name="ANTENNA_DIVERSITY"                   value="0"/>
+		<build type="define"   name="_DEBUG_"                             value="0"/>
         <build type="define"   name="FFD"                                 value=""/>
         <build type="define"   name="ENABLE_TFA"                          value=""/>
 		
@@ -32,6 +33,7 @@
 		
 		<generator value="doxygen"/>
 		<generator value="as5_arm"/>
+		<generator value="armgcc" />
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>

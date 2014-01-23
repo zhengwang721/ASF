@@ -200,7 +200,6 @@ static float reverse_float( const float float_val );
 static bool send_range_test_start_cmd(trx_id_t trx);
 static bool send_range_test_stop_cmd(trx_id_t trx);
 
-static float reverse_float( const float float_val );
 
 /* === GLOBALS ============================================================= */
 
@@ -236,15 +235,10 @@ static uint8_t *sun_page_param_val[NO_TRX];
  */
 static uint32_t fw_feature_mask = 0;
 
-static uint8_t phy_tx_power[NO_TRX];
-
 #if (ANTENNA_DIVERSITY == 1)
 static uint8_t ant_sel_before_ct[NO_TRX];
 static uint8_t ant_div_before_ct[NO_TRX];
 #endif /* End of #if (ANTENNA_DIVERSITY == 1) */
-
-
-static uint8_t last_tx_power_format_se[NO_TRX];
 
 static uint32_t range_test_frame_cnt[NO_TRX] = {0,0};
 
@@ -329,7 +323,7 @@ void per_mode_initiator_init(trx_id_t trx,void *parameter)
 					TIMEOUT_FOR_RESPONSE_IN_MICRO_SEC,
 					SW_TIMEOUT_RELATIVE,
 					(FUNC_PTR)wait_for_reply_timer_handler_cb,
-					NULL);
+					(void*) trx);
 			op_mode[trx] = PEER_INFO_RSP_WAIT;
 		}
 	} else {
@@ -380,10 +374,7 @@ void per_mode_initiator_task(trx_id_t trx)
 		 * be
 		 * queried from the remote node */
 		if (!node_info[trx].transmitting) {
-			//LED_Off(LED0);
-			//pal_get_current_time(&tstamp);
-			//printf("\n\rTime During Trx Start %ld\n\r",tstamp);
-			//delay_ms(50);
+
 			node_info[trx].transmitting = true;
 
 			node_info[trx].tx_frame_info->mpdu[PL_POS_SEQ_NUM-1]++; //sriram
@@ -392,21 +383,22 @@ void per_mode_initiator_task(trx_id_t trx)
 				true );*/
 			
 			if (curr_trx_config_params[trx].csma_enabled) {
-			//sriram issue due to sync loss btwn rx and tx -> to be fixed,till that app will add additional delay
-			if(tal_pib[trx].phy.modulation == OFDM) // workaround to be changed
+
+			if(tal_pib[trx].phy.modulation == OFDM) 
 			{
-				delay_ms(2); //sriram -> issue to be fixed in csma_start()
+				delay_ms(2); /* \\check -> issue to be fixed in csma_start() ,sync loss between tx and rx when sw csma is enabled,
+				hence data rate reduces when csma enabled in ui */
 			}
 				
 				tal_tx_frame(trx,node_info[trx].tx_frame_info,
 						CSMA_UNSLOTTED,
 						curr_trx_config_params[trx].retry_enabled );
-						//LED_On(LED0);
+
 			} else {
 				tal_tx_frame(trx,node_info[trx].tx_frame_info,
-						NO_CSMA_WITH_IFS,//sriram
+						NO_CSMA_WITH_IFS,
 						curr_trx_config_params[trx].retry_enabled );
-						//LED_On(LED0);
+
 			}
 		}
 	} else {
@@ -457,11 +449,13 @@ void per_mode_initiator_task(trx_id_t trx)
 		{
 			/* Test frames has been sent, now ask for the result */
 			if (send_result_req(trx)) {
-				sw_timer_start(APP_TIMER_TO_TX,
-						TIMEOUT_FOR_RESPONSE_IN_MICRO_SEC,
-						SW_TIMEOUT_RELATIVE,
-						(FUNC_PTR)wait_for_reply_timer_handler_cb,
-						NULL);
+
+					sw_timer_start(APP_TIMER_TO_TX,
+					300000, // check -> result wait time increased from 200us to 500us to accomodate timings of 863eu -> 6.25kbps
+					SW_TIMEOUT_RELATIVE,
+					(FUNC_PTR)wait_for_reply_timer_handler_cb,
+					(void*) trx);		
+				
 				op_mode[trx] = WAIT_FOR_TEST_RES;
 			} else {
 				op_mode[trx] = TX_OP_MODE;
@@ -474,6 +468,7 @@ void per_mode_initiator_task(trx_id_t trx)
 		}
 	}
 }
+
 
 /** \brief This function is called periodically by the range test
  * timer to initiate the transmission of range test packets to the receptor
@@ -504,7 +499,7 @@ static void  range_test_timer_handler_rf24_cb(void *parameter)
 				RANGE_TX_BEACON_INTERVAL,
 				SW_TIMEOUT_RELATIVE,
 				(FUNC_PTR)range_test_timer_handler_rf24_cb,
-				NULL);
+				(void*) trx);
 }
 
 /** \brief This function is called periodically by the range test
@@ -536,7 +531,7 @@ static void  range_test_timer_handler_rf09_cb(void *parameter)
 				RANGE_TX_BEACON_INTERVAL,
 				SW_TIMEOUT_RELATIVE,
 				(FUNC_PTR)range_test_timer_handler_rf09_cb,
-				NULL);
+				(void*) trx);
 }
 
 /**
@@ -634,7 +629,7 @@ void per_mode_initiator_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *f
 			{
 			tal_pib[trx].CurrentPage = 9; //sriram -> to be revisited
 			curr_trx_config_params[trx].channel_page = 9;
-			tal_pib_get(trx,phyCurrentChannel, &channel);
+			tal_pib_get(trx,phyCurrentChannel, (uint8_t *)&channel);
 			curr_trx_config_params[trx].channel = channel;		
 			memcpy(&curr_trx_config_params[trx].sun_phy_page, &sun_page[trx], sizeof(sun_phy_t));
 			usr_perf_set_confirm(trx,MAC_SUCCESS,PARAM_CHANNEL_PAGE,(param_value_t *)sun_page_param_val[trx]);
@@ -977,7 +972,6 @@ else
  */
 static void set_parameter_on_transmitter_node(trx_id_t trx,retval_t status) 
 {
-	   uint8_t temp_var;
 
     /* set the parameter on this node */
     if (MAC_SUCCESS != status)
@@ -1030,7 +1024,7 @@ if((curr_trx_config_params[trx].phy_frame_length > aMaxPHYPacketSize) && (curr_t
 	curr_trx_config_params[trx].phy_frame_length = aMaxPHYPacketSize; //sriram
 	configure_frame_sending(trx);
 }
-					 tal_pib_get(trx,phyCurrentChannel, &channel);
+					 tal_pib_get(trx,phyCurrentChannel, (uint8_t *)&channel);
 
 					 curr_trx_config_params[trx].channel = channel;
 
@@ -1122,22 +1116,22 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
             {
                 if (op_mode[trx] == WAIT_FOR_TEST_RES)
                 {
+					
                     if ((mac_frame_info->length) == ( FRAME_OVERHEAD +
                                                      ((sizeof(app_payload_t) -
                                                        sizeof(general_pkt_t)) +
                                                       sizeof(result_rsp_t))))
                     {
                         uint32_t aver_lqi;
-                        uint32_t aver_rssi;
-                        uint32_t number_rx_frames;
+                         uint32_t number_rx_frames;
                         float per_test_duration_sec;
                         float net_data_rate;
 
                         uint32_t frames_with_wrong_crc;
-
-                        int8_t rssi_val =CCPU_ENDIAN_TO_LE32(msg->payload.test_result_rsp_data.rssi_avrg_rx);//sriram
-						rssi_val = scale_reg_value_to_ed((uint8_t)rssi_val);
-                        sw_timer_stop(APP_TIMER_TO_TX);
+						sw_timer_stop(APP_TIMER_TO_TX);
+                        int8_t rssi_val =(int8_t)CCPU_ENDIAN_TO_LE32(msg->payload.test_result_rsp_data.rssi_avrg_rx);//sriram
+						//rssi_val = scale_reg_value_to_ed((uint8_t)rssi_val); sriram
+                        
                         number_rx_frames = (msg->payload.test_result_rsp_data.num_of_frames_rx);
                         aver_lqi = CCPU_ENDIAN_TO_LE32(msg->payload.test_result_rsp_data.lqi_avrg_rx);
 
@@ -1170,6 +1164,7 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                                                    );
                         op_mode[trx] = TX_OP_MODE;
                     }
+					
                 }
                 break;
             }
@@ -1251,6 +1246,7 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
             {
                 if (op_mode[trx] == PEER_INFO_RSP_WAIT)
                 {
+					
                     if ((mac_frame_info->length) == ( FRAME_OVERHEAD +
                                                      ((sizeof(app_payload_t) -
                                                        sizeof(general_pkt_t)) +
@@ -1314,7 +1310,7 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 					LED_BLINK_RATE_IN_MICRO_SEC,
 					SW_TIMEOUT_RELATIVE,
 					(FUNC_PTR)marker_rsp_timer_handler_cb,
-					NULL);
+					(void*) trx);
 
 			/* Send response to the receptor on receiving the marker
 			 * packet */
@@ -1903,7 +1899,7 @@ void per_mode_initiator_ed_end_cb(trx_id_t trx, uint8_t energy_level)
 
     /* Print result */
 
-	tal_pib_get(trx,phyCurrentChannel, &channel);
+	tal_pib_get(trx,phyCurrentChannel, (uint8_t *)&channel);
 
 if(trx==0)
 {
@@ -3331,7 +3327,16 @@ void initiate_per_test(trx_id_t trx)
         {
             op_mode[trx] = PER_TEST_START;
         }
+		else
+		{
+			usr_per_test_start_confirm(trx, UNABLE_TO_CONTACT_PEER);
+		}
     }
+	else
+	{
+		usr_per_test_start_confirm(trx, INVALID_CMD);
+	}
+
 }
 
 /*
@@ -4217,7 +4222,7 @@ if(RF24 == trx)
 			RANGE_TX_BEACON_START_INTERVAL,
 			SW_TIMEOUT_RELATIVE,
 			(FUNC_PTR)range_test_timer_handler_rf24_cb,
-			NULL);
+			(void*) trx);
 }
 else
 {
@@ -4227,7 +4232,7 @@ else
 			RANGE_TX_BEACON_START_INTERVAL,
 			SW_TIMEOUT_RELATIVE,
 			(FUNC_PTR)range_test_timer_handler_rf09_cb,
-			NULL);	
+			(void*) trx);	
 }
 }
 
