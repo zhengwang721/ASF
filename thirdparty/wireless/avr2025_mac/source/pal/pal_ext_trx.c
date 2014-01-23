@@ -71,12 +71,11 @@ struct spi_device SPI_AT86RFX_DEVICE = {
 #endif
 
 #if SAMD20
-void AT86RFX_ISR(uint32_t i);
-void AT86RFX_ISR(uint32_t i)
+void AT86RFX_ISR();
+void AT86RFX_ISR()
 #else
 AT86RFX_ISR()
 #endif
- 
 {
     /*Clearing the RF interrupt*/
     pal_trx_irq_flag_clr();
