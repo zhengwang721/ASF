@@ -50,6 +50,20 @@
 #include "usb.h"
 #include "usb_dual.h"
 
+/* Optional UHC callbacks */
+#ifndef UHC_MODE_CHANGE
+# define UHC_MODE_CHANGE(arg)
+#endif
+#ifndef UHC_SOF_EVENT
+# define UHC_SOF_EVENT()
+#endif
+#ifndef UHC_VBUS_CHANGE
+# define UHC_VBUS_CHANGE(b_present)
+#endif
+#ifndef UHC_VBUS_ERROR
+# define UHC_VBUS_ERROR()
+#endif
+
 /**
  * \ingroup usb_host_group
  * \defgroup usb_host_uhd_group USB Host Driver Implement (UHD)
