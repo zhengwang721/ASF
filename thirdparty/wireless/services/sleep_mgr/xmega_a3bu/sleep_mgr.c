@@ -69,10 +69,11 @@ static void RTC32_Initialize( uint32_t period,uint32_t count,uint32_t compareVal
 	VBAT.CTRL = VBAT_ACCEN_bm;
 
 	// Reset the module. (Reset bit is protected by CCP.)
-	ENTER_CRITICAL_REGION();
+	
+	{uint8_t flags = cpu_irq_save();
 	CCP = 0xD8;
 	VBAT.CTRL = VBAT_RESET_bm;
-	LEAVE_CRITICAL_REGION();
+	cpu_irq_restore(flags);}
 	
 	// Enable the failure detection.
 	VBAT.CTRL |= VBAT_XOSCFDEN_bm;
