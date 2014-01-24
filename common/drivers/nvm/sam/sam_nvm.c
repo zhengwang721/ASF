@@ -137,8 +137,7 @@ status_code_t nvm_write_char(mem_type_t mem, uint32_t address, uint8_t data)
 
 #if SAM4S
 	case INT_USERPAGE:
-		if (flash_write_user_signature(address, (const void *)&data,
-				1)) {
+		if (flash_write_user_signature((const void *)&data,	1)) {
 			return ERR_INVALID_ARG;
 		}
 		break;
@@ -240,8 +239,7 @@ status_code_t nvm_write(mem_type_t mem, uint32_t address, void *buffer,
 
 #if SAM4S
 	case INT_USERPAGE:
-		if (flash_write_user_signature(address, (const void *)buffer,
-				len)) {
+		if (flash_write_user_signature((const void *)buffer, len)) {
 			return ERR_INVALID_ARG;
 		}
 		break;
