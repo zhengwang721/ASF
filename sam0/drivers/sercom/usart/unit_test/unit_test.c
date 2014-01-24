@@ -198,7 +198,7 @@ static void cdc_uart_init(void)
  */
 static void run_transfer_single_8bit_char_test(const struct test_case *test)
 {
-	volatile uint16_t tx_char = 0x53;
+	uint16_t tx_char = 0x53;
 	volatile uint16_t rx_char = 0;
 
 	/* Write and read the data */
