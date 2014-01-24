@@ -1022,7 +1022,7 @@ uint32_t flash_write_user_signature(const void *p_buffer, uint32_t ul_size)
 	* Writing 8-bit and 16-bit data is not allowed and may lead to
 	* unpredictable data corruption.
 	*/
-	p_dest = (uint32_t *)IFLASH_ADDR;
+	p_dest = (uint32_t *)IFLASH_ADDR;	
 	for (ul_idx = 0; ul_idx < (IFLASH_PAGE_SIZE / sizeof(uint32_t));
 			ul_idx++) {
               *p_dest++ = gs_ul_page_buffer[ul_idx];
