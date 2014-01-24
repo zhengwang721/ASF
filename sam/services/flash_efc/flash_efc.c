@@ -1019,10 +1019,10 @@ uint32_t flash_write_user_signature(const void *p_buffer, uint32_t ul_size)
                ul_size * sizeof(uint32_t));
 
 	/* Write page buffer.
-        * Writing 8-bit and 16-bit data is not allowed and may lead to
-        * unpredictable data corruption.
-        */
-	p_aligned_dest = (uint32_t *)(IFLASH_ADDR - IFLASH_PAGE_SIZE);
+	* Writing 8-bit and 16-bit data is not allowed and may lead to
+	* unpredictable data corruption.
+	*/
+	p_aligned_dest = (uint32_t *) IFLASH_ADDR;
 	for (ul_idx = 0; ul_idx < (IFLASH_PAGE_SIZE / sizeof(uint32_t));
 			++ul_idx) {
 		*p_aligned_dest++ = gs_ul_page_buffer[ul_idx];
