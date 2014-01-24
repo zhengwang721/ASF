@@ -35,5 +35,9 @@
 		<require idref="common.boards"/>
 		<require idref="config.board.sam4e_xplained_pro.init"/>
 		<require idref="config.board.sam4e_xplained_pro.led"/>
+		
+		<!-- Debug drivers default configuration -->
+		<config name="config.compiler.iarewarm.debugger.driver" value="cmsisdap"/>
+		<config name="config.compiler.iarewarm.debugger.use_macro_file" value="no"/>
 	</board>
 </asf>
