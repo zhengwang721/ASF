@@ -2,7 +2,7 @@
  * @file pal.c
  *
  * @brief Performs interface functionalities between the TAL layer and ASF drivers
- *  Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ *  Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -37,7 +37,7 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -71,12 +71,11 @@ struct spi_device SPI_AT86RFX_DEVICE = {
 #endif
 
 #if SAMD20
-void AT86RFX_ISR(uint32_t i);
-void AT86RFX_ISR(uint32_t i)
+void AT86RFX_ISR();
+void AT86RFX_ISR()
 #else
 AT86RFX_ISR()
 #endif
- 
 {
     /*Clearing the RF interrupt*/
     pal_trx_irq_flag_clr();
