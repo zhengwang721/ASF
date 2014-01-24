@@ -172,20 +172,20 @@ enum status_code i2s_clock_unit_set_config(
 		(config->frame.data_delay ? I2S_CLKCTRL_BITDELAY : 0);
 
 	uint8_t div_val = config->clock.mck_out_div;
-	if (div_val > 0x20) {
+	if ((div_val > 0x21) || (div_val == 0)) {
 		return STATUS_ERR_INVALID_ARG;
-	} else if (div_val == 0) {
-		div_val ++;
+	} else {
+		div_val --;
 	}
-	clkctrl |= I2S_CLKCTRL_MCKOUTDIV(--div_val);
+	clkctrl |= I2S_CLKCTRL_MCKOUTDIV(div_val);
 
 	div_val = config->clock.sck_div;
-	if (div_val > 0x20) {
+	if ((div_val > 0x21) || (div_val == 0)) {
 		return STATUS_ERR_INVALID_ARG;
-	} else if (div_val == 0) {
-		div_val ++;
+	} else {
+		div_val --;
 	}
-	clkctrl |= I2S_CLKCTRL_MCKDIV(--div_val);
+	clkctrl |= I2S_CLKCTRL_MCKDIV(div_val);
 
 	uint8_t number_slots = config->frame.number_slots;
 	if (number_slots > 8) {
