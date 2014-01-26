@@ -76,6 +76,11 @@
 				<build type="module-config" subtype="path" value="samd20/module_config"/>
 				<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
 
+				<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
+				<build type="doxygen-example-path" value="quick_start_gclk"/>
+				<build type="doxygen-example-path" value="quick_start_clock"/>
+				<build type="doxygen-quick-start" value="asfdoc_sam0_system_clock_exqsg"/>
+		
 				<require idref="sam0.drivers.system.interrupt"/>
 				<require idref="sam0.utils"/>
 
@@ -106,7 +111,11 @@
 
 				<build type="module-config" subtype="path" value="samd21/module_config"/>
 				<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
-
+				<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
+				<build type="doxygen-example-path" value="quick_start_gclk"/>
+				<build type="doxygen-example-path" value="quick_start_clock"/>
+				<build type="doxygen-quick-start" value="asfdoc_sam0_system_clock_exqsg"/>
+				
 				<require idref="sam0.drivers.system.interrupt"/>
 				<require idref="sam0.utils"/>
 
