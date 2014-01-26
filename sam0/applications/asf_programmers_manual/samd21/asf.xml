@@ -4,7 +4,7 @@
 
 		<generator value="doxygen-v2"/>
 
-		<info type="appnote" value="AT03665"/>
+		<info type="appnote" value="AT07627"/>
 
 		<info type="description" value="pdf">
 		This application note describes the Atmel Software Framework low level
@@ -24,7 +24,7 @@
 
 		<build type="include-path" value="."/>
 		<build type="header-file" value="revhistory.h"/>
-		<build type="doxygen-enable-section" value="DMA_MODE_IN_ASF_MANUAL"/>
+		<build type="doxygen-enable-section" value="DAC_DMA_USE_MODE_SELECTION"/>
 		
 		<require idref="sam0.drivers.ac"/>
 		<require idref="sam0.drivers.adc"/>

@@ -837,7 +837,7 @@ void dac_clear_status(
  * \if DAC_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_dac_basic_use_case_callback
  * \endif
- * \if DMA_MODE_IN_ASF_MANUAL  
+ * \if DAC_DMA_USE_MODE_SELECTION  
  *	- \subpage asfdoc_sam0_adc_dma_use_case_dac_in_dma	
  *	\else  
  *  - \subpage asfdoc_sam0_adc_dma_use_case  
