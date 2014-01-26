@@ -61,21 +61,16 @@
  *   - Read back the status of the SerialFlash.
  *   - Write two sectors to the SerialFlash.
  *   - Read back these sectors and check correct content.
- *   - If all operations are correct, \ref SERIAL_FLASH_LED_EXAMPLE_0 is 'on' and
- *     \ref SERIAL_FLASH_LED_EXAMPLE_0 is 'on'(If have).
+ *   - If all operations are correct, \ref SERIAL_FLASH_LED_EXAMPLE_0 is 'on'.
  *     The other states of  LEDs mean that the SerialFlash access fails somewhere.
  *
- * \section Usage
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for AVR.
+ * Other compilers may or may not work.
  *
- * -# Build the program and download it into the evaluation board. Please
- *    refer to the
- *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6224.pdf">
- *    SAM-BA User Guide</a>, the
- *    <a href="http://www.atmel.com/dyn/resources/prod_documents/doc6310.pdf">
- *    GNU-Based Software Development</a> application note or the
- *    <a href="ftp://ftp.iar.se/WWWfiles/arm/Guides/EWARM_UserGuide.ENU.pdf">
- *    IAR EWARM User Guide</a>, depending on the solutions that users choose.
- * -# Some texts, images and basic shapes should be displayed on the LCD.
+ * \section contactinfo Contact Information
+ * For further information, visit
+ * <A href="http://www.atmel.com/">Atmel</A>.\n
  *
  */
 

@@ -693,8 +693,8 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	/* WDT Windows timout lay between two 32-bit words in the user row. Because only one bit lays in word[0],
 	   bits in word[1] must be left sifted by one to make the correct number */
 	fusebits->wdt_window_timeout = (enum nvm_wdt_window_timeout)
-			((raw_user_row[0] & WDT_FUSES_WINDOW_0_Msk) >> WDT_FUSES_WINDOW_0_Pos) |
-			((raw_user_row[1] & WDT_FUSES_WINDOW_1_Msk) << 1);
+			(((raw_user_row[0] & WDT_FUSES_WINDOW_0_Msk) >> WDT_FUSES_WINDOW_0_Pos) |
+			((raw_user_row[1] & WDT_FUSES_WINDOW_1_Msk) << 1));
 
 	fusebits->wdt_early_warning_offset = (enum nvm_wdt_early_warning_offset)
 			((raw_user_row[1] & WDT_FUSES_EWOFFSET_Msk) >> WDT_FUSES_EWOFFSET_Pos);
