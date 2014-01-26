@@ -52,7 +52,7 @@
 /**
  * \defgroup asfdoc_sam0_usb_group SAM D21 Universal Serial Bus (USB)
  *
- * The Universal Serial Bus (USB) module complies the USB 2.1 specification.
+ * The Universal Serial Bus (USB) module complies with the USB 2.1 specification.
  *
  * The USB module covers following mode:
  * \if USB_DEVICE_MODE
