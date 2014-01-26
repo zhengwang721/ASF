@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="ASF Manual (SAM D20)" force-caption="true" id="sam0.applications.asf_programmers_manual.atsamd20">
+	<project caption="ASF Manual (SAM D21)" force-caption="true" id="sam0.applications.asf_programmers_manual.atsamd21">
 		<require idref="sam0.applications.asf_programmers_manual"/>
 
 		<generator value="doxygen-v2"/>
@@ -8,7 +8,7 @@
 
 		<info type="description" value="pdf">
 		This application note describes the Atmel Software Framework low level
-		module driver APIs for the Atmel SAM D20 series of devices.
+		module driver APIs for the Atmel SAM D21 series of devices.
 		</info>
 		<info type="keyword" value="pdf">
 			<keyword value="ASF"/>
@@ -30,6 +30,7 @@
 		<require idref="sam0.drivers.adc"/>
 		<require idref="sam0.drivers.bod"/>
 		<require idref="sam0.drivers.dac"/>
+		<require idref="sam0.drivers.dma"/>
 		<require idref="sam0.drivers.events"/>
 		<require idref="sam0.drivers.extint"/>
 		<require idref="sam0.drivers.nvm"/>
@@ -42,10 +43,12 @@
 		<require idref="sam0.drivers.sercom.spi"/>
 		<require idref="sam0.drivers.system"/>
 		<require idref="sam0.drivers.tc"/>
+		<require idref="sam0.drivers.tcc"/>
 		<require idref="sam0.drivers.wdt"/>
+		<require idref="sam0.drivers.i2s"/>
 
 		<require idref="sam0.services.eeprom_emulator"/>
 
-		<device-support value="unspecified-samd20"/>
+		<device-support value="unspecified-samd21"/>
 	</project>
 </asf>

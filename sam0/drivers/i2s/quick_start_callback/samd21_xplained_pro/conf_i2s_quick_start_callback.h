@@ -41,10 +41,10 @@
  *
  */
 
-#ifndef CONF_QUICK_START_H_INCLUDED
-#define CONF_QUICK_START_H_INCLUDED
+#ifndef CONF_QUICK_START_CALLBACK_H_INCLUDED
+#define CONF_QUICK_START_CALLBACK_H_INCLUDED
 
-//[definition_i2s]
+//! [definition_i2s]
 /** I2S module to use */
 #define CONF_I2S_MODULE      I2S
 
@@ -65,6 +65,6 @@
 #define CONF_I2S_SD_PIN      PIN_PA07G_I2S_SD0
 /** I2S SD pin mux */
 #define CONF_I2S_SD_MUX      MUX_PA07G_I2S_SD0
-//[definition_i2s]
+//! [definition_i2s]
 
-#endif /* CONF_QUICK_START_H_INCLUDED */
+#endif /* CONF_QUICK_START_CALLBACK_H_INCLUDED */
