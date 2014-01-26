@@ -44,6 +44,10 @@
 #ifndef SPI_INTERRUPT_H_INCLUDED
 #define SPI_INTERRUPT_H_INCLUDED
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \addtogroup asfdoc_sam0_sercom_spi_group
  *
@@ -175,5 +179,9 @@ static inline enum status_code spi_get_job_status_wait(
 /**
  * @}
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SPI_INTERRUPT_H_INCLUDED */

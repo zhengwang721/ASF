@@ -45,6 +45,10 @@
 
 #include <compiler.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \defgroup asfdoc_sam0_bod_group SAM D20/D21 Brown Out Detector Driver (BOD)
  *
@@ -427,5 +431,9 @@ static inline void bod_clear_detected(
  *	</tr>
  * </table>
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* BOD_H_INCLUDED */

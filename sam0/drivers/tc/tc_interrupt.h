@@ -47,6 +47,10 @@
 #include "tc.h"
 #include <system_interrupt.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if !defined(__DOXYGEN__)
 extern void *_tc_instances[TC_INST_NUM];
 
@@ -157,5 +161,9 @@ static inline void tc_disable_callback(
 /**
  * @}
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TC_INTERRUPT_H_INCLUDED */

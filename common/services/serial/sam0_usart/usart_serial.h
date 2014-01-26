@@ -50,6 +50,10 @@
 #include "status_codes.h"
 #include "usart.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \name Serial Management Configuration */
 
 typedef Sercom * usart_inst_t;
@@ -137,5 +141,9 @@ static inline enum status_code usart_serial_read_packet(
 {
 	return usart_read_buffer_wait(module, rx_data, length);
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // _USART_SERIAL_H_

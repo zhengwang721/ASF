@@ -62,6 +62,10 @@
 # error Unsupported device.
 #endif
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \defgroup sleepmgr_group Sleep manager
  *
@@ -244,5 +248,9 @@ static inline void sleepmgr_enter_sleep(void)
 
 
 //! @}
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SLEEPMGR_H */

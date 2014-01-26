@@ -43,6 +43,10 @@
 #ifndef SYSTEM_INTERRUPT_H_INCLUDED
 #define SYSTEM_INTERRUPT_H_INCLUDED
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \defgroup asfdoc_sam0_system_interrupt_group SAM D20/D21 System Interrupt Driver (SYSTEM INTERRUPT)
  *
@@ -400,4 +404,8 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  * </table>
  */
 
+#ifdef __cplusplus
+}
 #endif
+
+#endif // #ifndef SYSTEM_INTERRUPT_H_INCLUDED

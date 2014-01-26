@@ -47,6 +47,10 @@
 #include <compiler.h>
 #include <parts.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \weakgroup interrupt_group
  *
@@ -174,5 +178,9 @@ void cpu_irq_leave_critical(void);
 //@}
 
 //@}
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* UTILS_INTERRUPT_INTERRUPT_H */

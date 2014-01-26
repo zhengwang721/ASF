@@ -49,6 +49,10 @@
 #include <pinmux.h>
 #include <system_interrupt.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \defgroup asfdoc_sam0_usb_group SAM D21 Universal Serial Bus (USB)
  *
@@ -800,5 +804,9 @@ void usb_device_endpoint_set_halt(struct usb_module *module_inst, uint8_t ep);
 void usb_device_endpoint_clear_halt(struct usb_module *module_inst, uint8_t ep);
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* USB_H_INCLUDED */

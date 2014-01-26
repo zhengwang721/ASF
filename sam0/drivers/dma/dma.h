@@ -43,6 +43,10 @@
 #ifndef DMA_H_INCLUDED
 #define DMA_H_INCLUDED
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \defgroup asfdoc_sam0_dma_group SAM D21 Direct Memory Access Driver (DMA)
  *
@@ -671,5 +675,9 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  *    </tr>
  * </table>
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DMA_H_INCLUDED */

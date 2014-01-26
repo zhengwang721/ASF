@@ -48,6 +48,10 @@
 #include "tcc.h"
 #include <system_interrupt.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if !defined(__DOXYGEN__)
 extern void *_tcc_instances[TCC_INST_NUM];
 #endif
@@ -78,5 +82,9 @@ void tcc_disable_callback(
 /**
  * @}
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TCC_CALLBACK_H_INCLUDED */
