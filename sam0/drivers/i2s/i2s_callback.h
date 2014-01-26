@@ -44,6 +44,10 @@
 #ifndef I2S_CALLBACK_H_INCLUDED
 #define I2S_CALLBACK_H_INCLUDED
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \addtogroup asfdoc_sam0_i2s_group
  *
@@ -220,5 +224,8 @@ enum status_code i2s_serializer_get_job_status(
 
 /** @} */
 
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* #ifndef I2S_CALLBACK_H_INCLUDED */

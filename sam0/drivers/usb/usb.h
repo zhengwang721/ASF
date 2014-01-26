@@ -49,6 +49,62 @@
 #include <pinmux.h>
 #include <system_interrupt.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+/**
+ * \defgroup asfdoc_sam0_usb_group SAM D21 Universal Serial Bus (USB)
+ *
+ * The Universal Serial Bus (USB) module complies with the USB 2.1 specification.
+ *
+ * The USB module covers following mode:
+ * \if USB_DEVICE_MODE
+ *  - USB Device Mode
+ * \endif
+ * \if USB_HOST_MODE
+ *  - USB Host Mode
+ * \endif
+ *
+ * The USB module covers following speed:
+ * \if USB_HS_MODE
+ *  - USB High Speed (480Mbit/s)
+ * \endif
+ *  - USB Full Speed (12Mbit/s)
+ * \if USB_LS_MODE
+ *  - USB Low Speed (1.5Mbit/s)
+ * \endif
+ *
+ * \if USB_LPM_MODE
+ * The USB module supports Link Power Management (LPM-L1) protocol.
+ * \endif
+ *
+ * USB support needs whole set of enumeration process, to make the device
+ * recognizable and usable. The USB driver is designed to interface to the
+ * USB Stack in Atmel Software Framework (ASF).
+ *
+ * \if USB_DEVICE_MODE
+ * \section asfdoc_sam0_usb_device USB Device Mode
+ * The ASF USB Device Stack has defined the USB Device Driver (UDD) interface,
+ * to support USB device operations. The USB module device driver complies with
+ * this interface, so that the USB Device Stack can work based on the
+ * USB module.
+ *
+ * Refer to <a href="http://www.atmel.com/images/doc8360.pdf">
+ * "ASF - USB Device Stack"</a> for more details.
+ * \endif
+ *
+ * \if USB_HOST_MODE
+ * \section adfdoc_sam0_usb_host USB Host Mode
+ * The ASF USB Host Stack has defined the USB Host Driver (UHD) interface,
+ * to support USB host operations. The USB module host driver complies with
+ * this interface, so that the USB Host Stack can work based on the USB module.
+ *
+ * Refer to <a href="http://www.atmel.com/images/doc8486.pdf">
+ * "ASF - USB Host Stack"</a> for more details.
+ * \endif
+ */
+
 /** Enum for the speed status for the USB module */
 enum usb_speed {
 	USB_SPEED_LOW,
@@ -748,5 +804,9 @@ void usb_device_endpoint_set_halt(struct usb_module *module_inst, uint8_t ep);
 void usb_device_endpoint_clear_halt(struct usb_module *module_inst, uint8_t ep);
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* USB_H_INCLUDED */

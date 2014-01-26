@@ -49,6 +49,10 @@
 #ifndef STDIO_SERIAL_H_INCLUDED
 #define STDIO_SERIAL_H_INCLUDED
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \defgroup group_common_utils_stdio_stdio_serial Standard serial I/O (stdio)
  * \ingroup group_common_utils_stdio
@@ -103,5 +107,9 @@ static inline void stdio_serial_init(
 /**
  * @}
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // _STDIO_SERIAL_H_

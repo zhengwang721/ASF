@@ -53,6 +53,10 @@
 #include "extint.h"
 #include "port.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \ingroup usb_group
  * \defgroup usb_dual_group USB dual role driver
@@ -95,6 +99,10 @@ void usb_dual_disable(void);
 #define USB_VBUS_EIC         (defined(USB_VBUS_PIN) && USB_VBUS_DETECT)
 /** @} */
 
-
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif // _USB_DUAL_H_
