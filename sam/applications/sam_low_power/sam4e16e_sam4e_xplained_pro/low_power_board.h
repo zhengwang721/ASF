@@ -116,7 +116,6 @@ static inline void rtt_wakeup(void)
 	/* Configure RTT for a 1 second tick interrupt */
 	rtt_init(RTT, 32768);
 
-	ul_previous_time = rtt_get_status(RTT);
 	ul_previous_time = rtt_read_timer_value(RTT);
 	while (ul_previous_time == rtt_read_timer_value(RTT));
 
