@@ -46,6 +46,7 @@
 		<require idref="sam0.drivers.tcc"/>
 		<require idref="sam0.drivers.wdt"/>
 		<require idref="sam0.drivers.i2s"/>
+		<require idref="sam0.drivers.usb"/>
 
 		<require idref="sam0.services.eeprom_emulator"/>
 
