@@ -45,6 +45,10 @@
 
 #include "usart.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if !defined(__DOXYGEN__)
 void _usart_write_buffer(
 		struct usart_module *const module,
@@ -161,4 +165,9 @@ enum status_code usart_get_job_status(
 /**
  * @}
  */
+ 
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* USART_INTERRUPT_H_INCLUDED */

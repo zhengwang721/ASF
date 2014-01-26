@@ -49,6 +49,10 @@
 #include <pinmux.h>
 #include <system_interrupt.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** Enum for the speed status for the USB module */
 enum usb_speed {
 	USB_SPEED_LOW,
@@ -748,5 +752,9 @@ void usb_device_endpoint_set_halt(struct usb_module *module_inst, uint8_t ep);
 void usb_device_endpoint_clear_halt(struct usb_module *module_inst, uint8_t ep);
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* USB_H_INCLUDED */

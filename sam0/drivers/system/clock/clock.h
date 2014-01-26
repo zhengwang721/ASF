@@ -43,6 +43,10 @@
 #ifndef SYSTEM_CLOCK_H_INCLUDED
 #define SYSTEM_CLOCK_H_INCLUDED
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \defgroup asfdoc_sam0_system_clock_group SAM D20/D21 System Clock Management Driver (SYSTEM CLOCK)
  *
@@ -1486,5 +1490,9 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	</tr>
  * </table>
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SYSTEM_CLOCK_H_INCLUDED */
