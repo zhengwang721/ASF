@@ -4,7 +4,7 @@
 
 		<generator value="doxygen-v2"/>
 
-		<info type="appnote" value="AT03665"/>
+		<info type="appnote" value="AT07627"/>
 
 		<info type="description" value="pdf">
 		This application note describes the Atmel Software Framework low level
@@ -46,6 +46,7 @@
 		<require idref="sam0.drivers.tcc"/>
 		<require idref="sam0.drivers.wdt"/>
 		<require idref="sam0.drivers.i2s"/>
+		<require idref="sam0.drivers.usb"/>
 
 		<require idref="sam0.services.eeprom_emulator"/>
 
