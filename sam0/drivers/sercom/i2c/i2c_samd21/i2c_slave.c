@@ -94,7 +94,7 @@ static enum status_code _i2c_slave_set_config(
 	system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
 
 	/* Write config to register CTRLA */
-	i2c_hw->CTRLA.reg |= config->sda_hold_time |
+	i2c_hw->CTRLA.reg |= (uint32_t)config->sda_hold_time |
 			config->transfer_speed |
 			(config->scl_low_timeout << SERCOM_I2CS_CTRLA_LOWTOUTEN_Pos) |
 			(config->scl_stretch_only_after_ack_bit << SERCOM_I2CS_CTRLA_SCLSM_Pos) |
