@@ -5,7 +5,7 @@
 		</info>
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="c-source" value="qs_i2s_basic.c"/>
-		<build type="module-config" subtype="required-header-file" value="conf_quick_start.h"/>
+		<build type="module-config" subtype="required-header-file" value="conf_i2s_quick_start.h"/>
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.i2s"/>
 		<device-support value="samd21"/>

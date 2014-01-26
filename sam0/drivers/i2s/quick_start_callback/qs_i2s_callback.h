@@ -69,7 +69,7 @@
  * \subsection asfdoc_sam0_i2s_callback_use_case_setup_code Code
  *
  * Add to the main application source file, before any functions:
- * \snippet conf_quick_start.h definition_i2s
+ * \snippet conf_i2s_quick_start_callback.h definition_i2s
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_i2s_callback.c module_inst
