@@ -139,9 +139,9 @@ enum uhd_usb_state_enum {
 
 enum sleepmgr_mode sleep_mode[] = {
 	SLEEPMGR_STANDBY,  // UHD_STATE_OFF (not used)
-	SLEEPMGR_IDLE_2,   // UHD_STATE_WAIT_ID_HOST
-	SLEEPMGR_IDLE_2,   // UHD_STATE_NO_VBUS
-	SLEEPMGR_IDLE_2,   // UHD_STATE_DISCONNECT
+	SLEEPMGR_IDLE_0,   // UHD_STATE_WAIT_ID_HOST
+	SLEEPMGR_IDLE_0,   // UHD_STATE_NO_VBUS
+	SLEEPMGR_IDLE_0,   // UHD_STATE_DISCONNECT
 	SLEEPMGR_IDLE_2,   // UHD_STATE_SUSPEND
 	SLEEPMGR_IDLE_2,   // UHD_STATE_SUSPEND_LPM
 	SLEEPMGR_IDLE_0,   // UHD_STATE_IDLE
@@ -1515,14 +1515,14 @@ bool uhd_ep_alloc(usb_add_t add, usb_ep_desc_t *ep_desc)
 		usb_host_pipe_get_config_defaults(&cfg);
 		/* Enable pipe */
 		ep_type = (ep_desc->bmAttributes & USB_EP_TYPE_MASK) + 1;
-		if (ep_type == USB_EP_TYPE_BULK) {
+		if (ep_type == USB_HOST_PIPE_TYPE_BULK) {
 			ep_interval = 0; // Ignore bInterval for bulk endpoint
 		} else {
 			ep_interval = ep_desc->bInterval;
 		}
 		cfg.device_address = add;
 		cfg.endpoint_address = ep_desc->bEndpointAddress;
-		cfg.pipe_type = ep_type;
+		cfg.pipe_type = (enum usb_host_pipe_type)ep_type;
 		cfg.binterval = ep_interval;
 		cfg.size = le16_to_cpu(ep_desc->wMaxPacketSize);
 		usb_host_pipe_set_config(&dev,pipe,&cfg);
