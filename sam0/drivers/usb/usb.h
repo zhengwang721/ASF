@@ -75,14 +75,14 @@
  * The USB module supports Link Power Management (LPM-L1) protocol.
  * \endif
  *
- * Since USB support needs whole set of enumeration process, to make the device
+ * USB support needs whole set of enumeration process, to make the device
  * recognizable and usable. The USB driver is designed to interface to the
  * USB Stack in Atmel Software Framework (ASF).
  *
  * \if USB_DEVICE_MODE
  * \section asfdoc_sam0_usb_device USB Device Mode
  * The ASF USB Device Stack has defined the USB Device Driver (UDD) interface,
- * to support USB Device Operations. The USB module device driver complies to
+ * to support USB device operations. The USB module device driver complies with
  * this interface, so that the USB Device Stack can work based on the
  * USB module.
  *
@@ -93,7 +93,7 @@
  * \if USB_HOST_MODE
  * \section adfdoc_sam0_usb_host USB Host Mode
  * The ASF USB Host Stack has defined the USB Host Driver (UHD) interface,
- * to support USB Host Operations. The USB module host driver complies to
+ * to support USB host operations. The USB module host driver complies with
  * this interface, so that the USB Host Stack can work based on the USB module.
  *
  * Refer to <a href="http://www.atmel.com/images/doc8486.pdf">
