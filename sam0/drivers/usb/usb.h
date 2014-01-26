@@ -83,7 +83,8 @@
  * \section asfdoc_sam0_usb_device USB Device Mode
  * The ASF USB Device Stack has defined the USB Device Driver (UDD) interface,
  * to support USB Device Operations. The USB module device driver complies to
- * this interface, so that the USB Device Stack can work base on the USB module.
+ * this interface, so that the USB Device Stack can work based on the
+ * USB module.
  *
  * Refer to <a href="http://www.atmel.com/images/doc8360.pdf">
  * "ASF - USB Device Stack"</a> for more details.
@@ -93,7 +94,7 @@
  * \section adfdoc_sam0_usb_host USB Host Mode
  * The ASF USB Host Stack has defined the USB Host Driver (UHD) interface,
  * to support USB Host Operations. The USB module host driver complies to
- * this interface, so that the USB Host Stack can work base on the USB module.
+ * this interface, so that the USB Host Stack can work based on the USB module.
  *
  * Refer to <a href="http://www.atmel.com/images/doc8486.pdf">
  * "ASF - USB Host Stack"</a> for more details.
