@@ -97,13 +97,6 @@ static unsigned portBASE_TYPE uxCriticalNesting = 0xaaaaaaaa;
 void vPortSetupTimerInterrupt( void );
 
 /*
- * Exception handlers.
- */
-void xPortPendSVHandler( void ) __attribute__ (( naked ));
-void xPortSysTickHandler( void );
-void vPortSVCHandler( void ) __attribute__ (( naked ));
-
-/*
  * Start first task is a separate function so it can be tested in isolation.
  */
 static void vPortStartFirstTask( void ) __attribute__ (( naked ));
