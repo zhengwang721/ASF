@@ -110,6 +110,7 @@
  *
  * @{
  */
+COMPILER_PACK_SET(1)
 COMPILER_WORD_ALIGNED
 union {
 	UsbDeviceDescriptor usb_endpoint_table[USB_EPT_NUM];
