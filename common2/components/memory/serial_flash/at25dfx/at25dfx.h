@@ -194,6 +194,10 @@
 
 #include <compiler.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** SerialFlash type. */
 enum at25dfx_type {
 	/** AT25F512B, compatible with AT25BCM512B */
@@ -291,10 +295,6 @@ static inline enum status_code at25dfx_chip_init(
 
 //@}
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 //! \name Presence
 //@{
 enum status_code at25dfx_chip_check_presence(struct at25dfx_chip_module *chip);
@@ -332,10 +332,6 @@ enum status_code at25dfx_chip_get_sector_protect(
 enum status_code at25dfx_chip_sleep(struct at25dfx_chip_module *chip);
 enum status_code at25dfx_chip_wake(struct at25dfx_chip_module *chip);
 //@}
-
-#ifdef __cplusplus
-}
-#endif
 
 /** @} */
 
@@ -428,5 +424,9 @@ enum status_code at25dfx_chip_wake(struct at25dfx_chip_module *chip);
  * </tr>
  * </table>
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // AT25DFX_H

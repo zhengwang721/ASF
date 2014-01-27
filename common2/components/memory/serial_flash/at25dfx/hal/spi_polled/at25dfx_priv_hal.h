@@ -44,6 +44,10 @@
 #ifndef AT25DFX_PRIV_HAL_H
 #define AT25DFX_PRIV_HAL_H
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 //! \name Private SPI helpers
 //@{
 
@@ -192,5 +196,9 @@ static inline enum status_code _at25dfx_chip_get_nonbusy_status(
 }
 
 //@}
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // AT25DFX_PRIV_HAL_H

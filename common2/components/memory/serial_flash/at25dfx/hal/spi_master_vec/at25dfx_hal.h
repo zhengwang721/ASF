@@ -46,6 +46,10 @@
 
 #include <spi_master_vec.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \ingroup asfdoc_common2_at25dfx_group
  *
@@ -73,5 +77,9 @@ static inline void at25dfx_spi_master_vec_get_config_defaults(
 }
 
 /** @ */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif // AT25DFX_HAL_H
