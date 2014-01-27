@@ -288,7 +288,7 @@ static void run_callback_test(const struct test_case *test)
 
 	tcc_test0_config.counter.period = 4000;
 	tcc_test0_config.compare.wave_generation = TCC_WAVE_GENERATION_NORMAL_FREQ;
-	tcc_test0_config.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0] = 400;
+	tcc_test0_config.compare.match[TCC_MATCH_CAPTURE_CHANNEL_0] = 3990;
 
 	tcc_init(&tcc_test0_module, CONF_TEST_TCC0, &tcc_test0_config);
 
@@ -386,9 +386,7 @@ static void run_capture_and_compare_test(const struct test_case *test)
 	struct tcc_events tcc_events = {
 		.on_input_event_perform_action[1] = true,
 		.input_config[1].modify_action = true,
-		.input_config[1].action = TCC_EVENT1_ACTION_PERIOD_PULSE_WIDTH_CAPTURE,
-		.on_event_perform_channel_action[CONF_CAPTURE_CHAN_0] = true,
-		.on_event_perform_channel_action[CONF_CAPTURE_CHAN_1] = true
+		.input_config[1].action = TCC_EVENT_ACTION_PERIOD_PULSE_WIDTH_CAPTURE
 	};
 
 	tcc_enable_events(&tcc_test1_module, &tcc_events);
@@ -405,7 +403,7 @@ static void run_capture_and_compare_test(const struct test_case *test)
 
 	/* Configure external interrupt module to be event generator */
 	struct extint_events extint_event_conf;
-	extint_event_conf.generate_event_on_detect[0] = true;
+	extint_event_conf.generate_event_on_detect[CONF_EIC_CHAN] = true;
 	extint_enable_events(&extint_event_conf);
 
 	/* Configure event system */
