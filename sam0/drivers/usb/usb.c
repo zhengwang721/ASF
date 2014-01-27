@@ -1261,9 +1261,9 @@ enum status_code usb_device_endpoint_enable_callback(
 	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw);
-	Assert(ep_num < USB_EPT_NUM);
 
 	uint8_t ep_num = ep & USB_EP_ADDR_MASK;
+	Assert(ep_num < USB_EPT_NUM);
 
 	/* Enable callback */
 	module_inst->device_endpoint_enabled_callback_mask[ep_num] |= _usb_endpoint_irq_bits[callback_type];
@@ -1322,9 +1322,9 @@ enum status_code usb_device_endpoint_disable_callback(
 	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw);
-	Assert(ep_num < USB_EPT_NUM);
 
 	uint8_t ep_num = ep & USB_EP_ADDR_MASK;
+	Assert(ep_num < USB_EPT_NUM);
 
 	/* Enable callback */
 	module_inst->device_endpoint_enabled_callback_mask[ep_num] &= ~_usb_endpoint_irq_bits[callback_type];
@@ -1712,7 +1712,6 @@ enum status_code usb_device_endpoint_setup_buffer_job(struct usb_module *module_
 	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw);
-	Assert(ep_num < USB_EPT_NUM);
 
 	/* get endpoint configuration from setting register */
 	usb_descriptor_table.usb_endpoint_table[0].DeviceDescBank[0].ADDR.reg = (uint32_t)pbuf;
