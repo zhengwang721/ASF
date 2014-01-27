@@ -205,7 +205,7 @@ static void xosc32k_ok_callback(
 	tc_enable_callback(&tc_osc32k, TC_CALLBACK_CC_CHANNEL0);
 
 	/* Crystal OK - switch DFLL to XOSC32K */
-	init_dfll(GCLK_GENERATOR_XOSC32K);
+	init_dfll((enum system_clock_source)GCLK_GENERATOR_XOSC32K);
 	port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
 }
 
@@ -222,7 +222,7 @@ static void xosc32k_fail_callback(
 	tc_disable_callback(&tc_osc32k, TC_CALLBACK_CC_CHANNEL0);
 
 	/* Crystal failed - switch DFLL to OSC32K */
-	init_dfll(GCLK_GENERATOR_OSC32K);
+	init_dfll((enum system_clock_source)GCLK_GENERATOR_OSC32K);
 	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
 }
 
