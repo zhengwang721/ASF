@@ -48,6 +48,10 @@
 #include <gclk.h>
 #include <pinmux.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \defgroup asfdoc_sam0_system_group SAM D20/D21 System Driver (SYSTEM)
  *
@@ -535,5 +539,9 @@ void system_init(void);
  *	</tr>
  * </table>
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SYSTEM_H_INCLUDED */

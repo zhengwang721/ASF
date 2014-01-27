@@ -47,6 +47,10 @@
 #include <conf_board.h>
 #include <compiler.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \ingroup group_common_boards
  * \defgroup samd21_xplained_pro_group SAM D21 Xplained Pro board
@@ -563,5 +567,9 @@ void system_board_init(void);
 /** @} */
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* SAMD21_XPLAINED_PRO_H_INCLUDED */

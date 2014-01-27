@@ -47,6 +47,10 @@
 #include <conf_board.h>
 #include <compiler.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \ingroup group_common_boards
  * \defgroup samd20_xplained_pro_group SAM D20 Xplained Pro board
@@ -599,5 +603,9 @@ void system_board_init(void);
  * \note The pins of the specified LEDs are set to GPIO output mode.
  */
 #define LED_Toggle(led_gpio)  port_pin_toggle_output_level(led_gpio)
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* SAMD20_XPLAINED_PRO_H_INCLUDED */

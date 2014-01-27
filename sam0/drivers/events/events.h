@@ -43,6 +43,10 @@
 #ifndef EVENTS_H_INCLUDED
 #define EVENTS_H_INCLUDED
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \defgroup asfdoc_sam0_events_group SAM D20/D21 Event System Driver (EVENTS)
  *
@@ -599,5 +603,9 @@ uint8_t events_get_free_channels(void);
  *	</tr>
  * </table>
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* EVENTS_H_INCLUDED */

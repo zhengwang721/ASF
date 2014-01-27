@@ -22,6 +22,13 @@
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system"/>
 
+		<build type="doxygen-enable-section" value="USB_DEVICE_MODE"/>
+		<build type="doxygen-enable-section" value="USB_HOST_MODE"/>
+		<build type="doxygen-enable-section" value="USB_LS_MODE"/>
+		<build type="doxygen-enable-section" value="USB_LPM_MODE"/>
+
+		<build type="doxygen-entry-point" value="asfdoc_sam0_usb_group" />
+
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd21"/>
 
 		<generator value="doxygen-module" default-mcu="unspecified-samd21"/>
