@@ -180,7 +180,8 @@ enum status_code events_allocate(
 		struct system_gclk_chan_config gclk_chan_conf;
 
 		system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-		gclk_chan_conf.source_generator = config->clock_source;
+		gclk_chan_conf.source_generator =
+				(enum gclk_generator)config->clock_source;
 		system_gclk_chan_set_config(EVSYS_GCLK_ID_0 + new_channel, &gclk_chan_conf);
 		system_gclk_chan_enable(EVSYS_GCLK_ID_0 + new_channel);
 	}

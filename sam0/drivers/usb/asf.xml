@@ -31,6 +31,5 @@
 
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd21"/>
 
-		<generator value="doxygen-module" default-mcu="unspecified-samd21"/>
 	</module>
 </asf>
