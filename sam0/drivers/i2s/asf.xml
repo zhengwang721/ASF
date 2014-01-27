@@ -8,7 +8,7 @@
 
 		<module caption="I2S - Inter-IC Sound Controller (Polled APIs)" id="sam0.drivers.i2s#polled" type="driver">
 			<info type="keyword" value="technology">
-				<keyword value="Cryptography" />
+				<keyword value="Communication" />
 			</info>
 
 			<build type="include-path" value="." />
@@ -41,13 +41,13 @@
 
 		<module caption="I2S - Inter-IC Sound Controller (Callback APIs)" id="sam0.drivers.i2s#callback" type="driver">
 			<info type="keyword" value="technology">
-				<keyword value="Cryptography" />
+				<keyword value="Communication" />
 			</info>
 
 			<info type="appnote" value="AT07451"/>
 			<info type="keyword" value="pdf">
 				<keyword value="I/O"/>
-				<keyword value="Cryptography" />
+				<keyword value="Communication" />
 				<keyword value="Audio"/>
 				<keyword value="I2S"/>
 			</info>

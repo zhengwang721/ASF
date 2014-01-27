@@ -448,7 +448,7 @@ enum status_code usb_host_pipe_get_config(struct usb_module *module_inst, uint8_
 		ep_config->endpoint_address |= USB_EP_DIR_IN;
 	}
 
-	ep_config->pipe_type = module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTYPE;
+	ep_config->pipe_type = (enum usb_host_pipe_type)module_inst->hw->HOST.HostPipe[pipe_num].PCFG.bit.PTYPE;
 	ep_config->binterval =
 			module_inst->hw->HOST.HostPipe[pipe_num].BINTERVAL.reg;
 	size = usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].PCKSIZE.bit.SIZE;
