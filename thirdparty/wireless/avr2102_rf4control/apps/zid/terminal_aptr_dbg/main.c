@@ -422,9 +422,10 @@ void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
                     }
                     static uint16_t u_value;
                     u_value= convert_byte_array_to_16_bit(&(keyboard_input_desc->key_code[4]));
-                    if(u_value)
+		            if(u_value)
                     {   
                         udi_hid_mkbd_modifier_down(u_value);
+						udi_hid_mkbd_modifier_up(u_value);
                     }
               
              }
