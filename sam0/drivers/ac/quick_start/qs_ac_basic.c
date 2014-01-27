@@ -58,8 +58,8 @@ static struct ac_module ac_instance;
 
 //! [setup_3]
 void configure_ac(void)
-{
 //! [setup_3]
+{
 	/* Create a new configuration structure for the Analog Comparator settings
 	 * and fill with the default module settings. */
 	//! [setup_4]
@@ -79,8 +79,8 @@ void configure_ac(void)
 
 //! [setup_7]
 void configure_ac_channel(void)
-{
 //! [setup_7]
+{
 	/* Create a new configuration structure for the Analog Comparator channel
 	 * settings and fill with the default module channel settings. */
 	//! [setup_8]
