@@ -44,6 +44,10 @@
 #ifndef ADC_CALLBACK_H_INCLUDED
 #define ADC_CALLBACK_H_INCLUDED
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \addtogroup asfdoc_sam0_adc_group
  *
@@ -167,5 +171,9 @@ void adc_abort_job(
 /** @} */
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ADC_CALLBACK_H_INCLUDED */

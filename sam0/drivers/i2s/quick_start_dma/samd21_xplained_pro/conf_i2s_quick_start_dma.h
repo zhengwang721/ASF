@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 Xplained PRO board configuration.
+ * \brief I2S Quick Start configuration for SAM D21 Xplained Pro
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,7 +41,40 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_QUICK_START_DMA_H_INCLUDED
+#define CONF_QUICK_START_DMA_H_INCLUDED
 
-#endif /* CONF_BOARD_H_INCLUDED */
+//! [definition_i2s]
+/** I2S module to use */
+#define CONF_I2S_MODULE      I2S
+
+/** I2S MCK pin */
+#define CONF_I2S_MCK_PIN     PIN_PA09G_I2S_MCK0
+/** I2S MCK pin mux */
+#define CONF_I2S_MCK_MUX     MUX_PA09G_I2S_MCK0
+/** I2S SCK pin */
+#define CONF_I2S_SCK_PIN     PIN_PA10G_I2S_SCK0
+/** I2S SCK pin mux */
+#define CONF_I2S_SCK_MUX     MUX_PA10G_I2S_SCK0
+/** I2S FS pin */
+#define CONF_I2S_FS_PIN      PIN_PA11G_I2S_FS0
+/** I2S FS pin mux */
+#define CONF_I2S_FS_MUX      MUX_PA11G_I2S_FS0
+
+/** I2S SD pin */
+#define CONF_I2S_SD_PIN      PIN_PA07G_I2S_SD0
+/** I2S SD pin mux */
+#define CONF_I2S_SD_MUX      MUX_PA07G_I2S_SD0
+//! [definition_i2s]
+
+//! [definition_dma_receive_trigger]
+/** DMA Peripheral to Memory beat trigger: I2S Rx1 */
+#define CONF_RX_TRIGGER 0x2A
+//! [definition_dma_receive_trigger]
+
+//! [definition_dma_transmit_trigger]
+/** DMA Memory to Peripheral beat trigger: I2S Tx0 */
+#define CONF_TX_TRIGGER 0x2B
+//! [definition_dma_transmit_trigger]
+
+#endif /* CONF_QUICK_START_DMA_H_INCLUDED */

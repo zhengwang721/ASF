@@ -45,6 +45,10 @@
 
 #include <compiler.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** DMA channel n offset*/
 #define DMA_CRC_CHANNEL_N_OFFSET 0x20
 
@@ -174,5 +178,9 @@ static inline uint32_t dma_crc_io_calculation(uint32_t *buffer,
 
 	return DMAC->CRCCHKSUM.reg;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DMA_CRC_H_INCLUDED */

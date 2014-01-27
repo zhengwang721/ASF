@@ -333,8 +333,7 @@
  * \section asfdoc_sam0_sercom_spi_special_considerations Special Considerations
  * \subsection pin_mux Pin MUX Settings
  * The pin MUX settings must be configured properly, as not all settings
- * can be used in different modes of operation, see
- * \ref asfdoc_sam0_sercom_spi_mux_settings.
+ * can be used in different modes of operation.
  *
  * \section asfdoc_sam0_sercom_spi_extra_info Extra Information
  * For extra information see \ref asfdoc_sam0_sercom_spi_extra. This includes:

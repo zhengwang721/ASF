@@ -57,6 +57,10 @@
 #ifndef _CTRL_ACCESS_H_
 #define _CTRL_ACCESS_H_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \defgroup group_common_services_storage_ctrl_access Memory Control Access
  *
@@ -387,5 +391,9 @@ extern U16 stream_stop(U8 id);
 /**
  * \}
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // _CTRL_ACCESS_H_

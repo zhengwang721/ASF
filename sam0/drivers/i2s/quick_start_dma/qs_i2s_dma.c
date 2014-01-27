@@ -40,7 +40,7 @@
  */
 
 #include <asf.h>
-#include <conf_quick_start_dma.h>
+#include <conf_i2s_quick_start_dma.h>
 
 static void _configure_i2s(void);
 
