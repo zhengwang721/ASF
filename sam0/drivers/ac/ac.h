@@ -687,7 +687,7 @@ static inline bool ac_is_syncing(
  * structure to safe defaults.
  *
  *  Initializes all members of a given Analog Comparator configuration
- *  structure to safe know default values. This function should be called on
+ *  structure to safe known default values. This function should be called on
  *  all new instances of these configuration structures before being modified
  *  by the user application.
  *
