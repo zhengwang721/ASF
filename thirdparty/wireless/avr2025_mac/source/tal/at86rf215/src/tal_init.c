@@ -311,11 +311,8 @@ void trx_config(trx_id_t trx_id)
     /* Keep analog voltage regulator on during TRXOFF */
 	/* Commented for Errata#2*/
    // pal_trx_bit_write(rf_reg_offset + SR_RF09_AUXS_AVEN, 1);
-   if(trx_id == RF09)
-   {
-	 pal_trx_bit_write(SR_RF09_AUXS_AVEN, 1);  
-   }
-   pal_trx_bit_write(SR_RF09_AUXS_PAVC, 2);  //setting to 2.4 sriram
+
+   pal_trx_bit_write(rf_reg_offset + SR_RF09_AUXS_PAVC, 2);  //setting to 2.4 sriram
 #endif
 }
 

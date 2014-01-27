@@ -447,11 +447,16 @@ void per_mode_initiator_task(trx_id_t trx)
 
 		case TEST_FRAMES_SENT:
 		{
+			uint32_t timeout = 300000;
+			if (sun_phy_page_set[trx].phy_mode.oqpsk.chip_rate == CHIP_RATE_100)
+			{
+				timeout = 500000;
+			}
 			/* Test frames has been sent, now ask for the result */
 			if (send_result_req(trx)) {
 
 					sw_timer_start(APP_TIMER_TO_TX,
-					300000, // check -> result wait time increased from 200us to 500us to accomodate timings of 863eu -> 6.25kbps
+					timeout, 
 					SW_TIMEOUT_RELATIVE,
 					(FUNC_PTR)wait_for_reply_timer_handler_cb,
 					(void*) trx);		
