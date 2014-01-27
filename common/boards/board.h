@@ -6,7 +6,7 @@
  * This file includes the appropriate board header file according to the
  * defined board (parameter BOARD).
  *
- * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -129,6 +129,7 @@ extern "C" {
 #define RCB256RFR2_XPRO            65  //!< RFR2 RCB Xplained Pro board.
 #define SAMG53_XPLAINED_PRO        66  //!< SAMG53 Xplained Pro board.
 #define SAM4CP16BMB                67  //!< SAM4CP16BMB board.
+#define SAM4E_XPLAINED_PRO         68  //!< SAM4E Xplained Pro board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< Simulator for the AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -291,6 +292,8 @@ extern "C" {
 #  include "atmega256rfr2_rcb_xpro/atmega256rfr2_rcb_xpro.h"
 #elif BOARD == XMEGA_RF212B_ZIGBIT
 #  include "xmega_rf212b_zigbit/xmega_rf212b_zigbit.h"
+#elif BOARD == SAM4E_XPLAINED_PRO
+#  include "sam4e_xplained_pro/sam4e_xplained_pro.h"
 #elif BOARD == AVR_SIMULATOR_UC3
 #  include "avr_simulator_uc3/avr_simulator_uc3.h"
 #elif BOARD == USER_BOARD
