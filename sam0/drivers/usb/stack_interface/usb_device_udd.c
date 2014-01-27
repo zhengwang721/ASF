@@ -89,6 +89,42 @@
 struct usb_module usb_device;
 
 /**
+ * \name Clock management
+ *
+ * @{
+ */
+#ifndef UDD_CLOCK_GEN
+#  define UDD_CLOCK_GEN      GCLK_GENERATOR_0
+#endif
+#ifndef UDD_CLOCK_SOURCE
+#  define UDD_CLOCK_SOURCE   SYSTEM_CLOCK_SOURCE_DFLL
+#endif
+static inline void udd_wait_clock_ready(void)
+{
+
+	if (UDD_CLOCK_SOURCE == SYSTEM_CLOCK_SOURCE_DPLL) {
+
+#define DPLL_READY_FLAG (SYSCTRL_DPLLSTATUS_ENABLE | \
+		SYSCTRL_DPLLSTATUS_CLKRDY | SYSCTRL_DPLLSTATUS_LOCK)
+
+		while((SYSCTRL->DPLLSTATUS.reg & DPLL_READY_FLAG) != DPLL_READY_FLAG);
+	}
+
+	if (UDD_CLOCK_SOURCE == SYSTEM_CLOCK_SOURCE_DFLL) {
+		
+#define DFLL_READY_FLAG (SYSCTRL_PCLKSR_DFLLRDY | \
+		SYSCTRL_PCLKSR_DFLLLCKF | SYSCTRL_PCLKSR_DFLLLCKC)
+
+		/* In USB recovery mode the status is not checked */
+		if (!(SYSCTRL->DFLLCTRL.reg & SYSCTRL_DFLLCTRL_USBCRM)) {
+			while((SYSCTRL->PCLKSR.reg & DFLL_READY_FLAG) != DFLL_READY_FLAG);
+		}
+	}
+
+}
+/** @} */
+
+/**
  * \name Power management
  *
  * @{
@@ -660,6 +696,7 @@ uint8_t udd_getaddress(void)
 void udd_send_remotewakeup(void)
 {
 	uint32_t try = 5;
+	udd_wait_clock_ready();
 	udd_sleep_mode(UDD_STATE_IDLE);
 	while(2 != usb_get_state_machine_status(&usb_device) && try --) {
 		usb_device_send_remote_wake_up(&usb_device);
@@ -1038,6 +1075,8 @@ static void _usb_on_bus_reset(struct usb_module *module_inst, void *pointer)
  */
 static void _usb_on_wakeup(struct usb_module *module_inst, void *pointer)
 {
+	udd_wait_clock_ready();
+
 	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
 #ifdef  USB_DEVICE_LPM_SUPPORT
@@ -1155,10 +1194,14 @@ void udd_enable(void)
 
 	/* USB Module configuration */
 	usb_get_config_defaults(&config_usb);
+	config_usb.source_generator = UDD_CLOCK_GEN;
 	usb_init(&usb_device, USB, &config_usb);
 
 	/* USB Module Enable */
 	usb_enable(&usb_device);
+
+	/* Check clock after enable module, request the clock */
+	udd_wait_clock_ready();
 
 	udd_sleep_mode(UDD_STATE_SUSPEND);
 
