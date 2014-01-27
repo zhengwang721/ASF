@@ -64,10 +64,11 @@
  * All AVR devices can be used.
  * This example has been tested with the following setup:
  * - SAMD20 Xplained Pro
+ * - SAMD21 Xplained Pro
  *
  * \section asfdoc_common2_spinctrl_example_description Description of the example application
  * This example application will initialize string spinner and two integer
- * spinners, set up a spincollection with the spinners and display them on
+ * spinners, set up a spin collection with the spinners and display them on
  * the screen.
  *
  * \section asfdoc_common2_spinctrl_example_dependencies Dependencies

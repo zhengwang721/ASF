@@ -91,10 +91,10 @@
  * The module has a built in safety feature requiring that an already locked
  * peripheral is not relocked, and that already unlocked peripherals are not
  * unlocked again. Attempting to unlock and already unlocked peripheral, or
- * attempting to lock a peripheral that is currently locked will generate and
+ * attempting to lock a peripheral that is currently locked will generate a
  * non-maskable interrupt (NMI). This implies that the implementer must keep
  * strict control over the peripheral's lock-state before modifying them. With
- * this added safety, the probability of stopping code run-away increases as
+ * this added safety, the probability of stopping run-away code increases as
  * the program pointer can be caught inside the exception handler, and necessary
  * countermeasures can be initiated. The implementer should also consider using
  * sanity checks after an unlock has been performed to further increase the
@@ -107,7 +107,7 @@
  * \anchor asfdoc_sam0_pac_rec_imp_diagram
  * \dot
  *	digraph correct {
- *		subgraph cluster_a {
+ *		subgraph cluster_a {
  *			style="filled, dotted";
  *			coler=lightgray;
  *			init [label="Initialize Peripheral", shape=box];
@@ -183,14 +183,14 @@
  *	}
  * \enddot
  *
- * \subsection asfdoc_sam0_pac_code_run_away Code Run-away
- * Code run-away can be caused by the MCU being operated outside its
- * specification, faulty code or EMI issues. If a code run-away occurs, it is
+ * \subsection asfdoc_sam0_pac_code_run_away Run-away Code
+ * Run-away code can be caused by the MCU being operated outside its
+ * specification, faulty code or EMI issues. If a run-away code occurs, it is
  * favorable to catch the issue as soon as possible. With a correct
- * implementation of the PAC, the code run-away can potentially be stopped.
+ * implementation of the PAC, the run-away code can potentially be stopped.
  *
  * A graphical example showing how a PAC implementation will behave for
- * different circumstances of code run-away in shown in
+ * different circumstances of run-away code in shown in
  * \ref asfdoc_sam0_pac_code_runaway_diagram "the first" and
  * \ref asfdoc_sam0_pac_code_runaway_diagram2 "second figures below".
  *
@@ -200,7 +200,7 @@
  *	   subgraph cluster_away1{
  *		rankdir=TB;
  *		color=white;
- *		runaway1 [label="Code run-away", shape=box];
+ *		runaway1 [label="Run-away code", shape=box];
  *		node [shape=plaintext];
  *		program1 [label=<
  *			<table>
@@ -255,11 +255,11 @@
  *			</table>
  *			>]
  *			runaway1 -> program1:f0;
- *			label="1. Code run-away is caught in sanity check.\nA NMI is executed."
+ *			label="1. Run-away code is caught in sanity check.\nA NMI is executed."
  *		}
  *	   subgraph cluster_away2{
  *		rankdir=TB;
- *		runaway2 [label="Code run-away", shape=box];
+ *		runaway2 [label="Run-away code", shape=box];
  *		color=white;
  *		node [shape=plaintext];
  *		program2 [label=<
@@ -315,7 +315,7 @@
  *			</table>
  *			>]
  *			runaway2 -> program2:f0;
- *			label="2. Code run-away is caught when modifying\nlocked peripheral. A NMI is executed."
+ *			label="2. Run-away code is caught when modifying\nlocked peripheral. A NMI is executed."
  *		}
  *	}
  * \enddot
@@ -325,7 +325,7 @@
  *	digraph run_away2 {
  *	   subgraph cluster_away3{
  *		rankdir=TB;
- *		runaway3 [label="Code run-away", shape=box];
+ *		runaway3 [label="Run-away code", shape=box];
  *		color=white;
  *		node [shape=plaintext];
  *		program3 [label=<
@@ -381,11 +381,11 @@
  *			</table>
  *			>]
  *			runaway3 -> program3:f0;
- *			label="3. Code run-away is caught when locking\nlocked peripheral. A NMI is executed."
+ *			label="3. Run-away code is caught when locking\nlocked peripheral. A NMI is executed."
  *		}
  *	subgraph cluster_away4 {
  *		rankdir=TB;
- *		runaway4 [label="Code run-away", shape=box];
+ *		runaway4 [label="Run-away code", shape=box];
  *		color=white;
  *		node [shape=plaintext];
  *		program4 [label=<
@@ -441,22 +441,22 @@
  *			</table>
  *			>]
  *			runaway4 -> program4:f0;
- *			label="4. Code run-away is not caught.\n "
+ *			label="4. Run-away code is not caught.\n "
  *		}
  *	}
  * \enddot
  *
  * In the example, green indicates that the command is allowed, red indicates
- * where the code run-away will be caught, and the arrow where the code
- * run-away enters the application. In special circumstances, like example 4
- * above, the code run-away will not be caught. However, the protection scheme
+ * where the run-away code will be caught, and the arrow where the run-away
+ * code enters the application. In special circumstances, like example 4
+ * above, the run-away code will not be caught. However, the protection scheme
  * will greatly enhance peripheral configuration security from being affected by
- * code run-away.
+ * run-away code.
  *
  * \subsubsection asfdoc_sam0_pac_bitwise_code Key-Argument
- * To protect the module functions against code run-away themselves, a key
+ * To protect the module functions against run-away code themselves, a key
  * is required as one of the input arguments. The key-argument will make sure
- * that code run-away entering the function without a function call will be
+ * that run-away code entering the function without a function call will be
  * rejected before inflicting any damage. The argument is simply set to be
  * the bitwise inverse of the module flag, i.e.
  *
@@ -474,10 +474,10 @@
  * locked. It is therefore recommended that any unused peripheral is locked
  * during application initialization.
  *
- * \subsection asfdoc_sam0_pac_no_inline Use of __no_inline
- * All function for the given modules are specified to be \c __no_inline. This
- * increases security as it decreases the probability that a return call is
- * directed at the correct location.
+ * \subsection asfdoc_sam0_pac_no_inline Use of __no_inline 
+ * Using the function attribute \c __no_inline will ensure that there will only be
+ * one copy of each functions in the PAC driver API in the application. This will 
+ * lower the likelihood that run-away code will hit any of these functions.
  *
  * \subsection asfdoc_sam0_pac_module_overview_physical Physical Connection
  *
@@ -531,7 +531,7 @@
  *	   subgraph cluster_read1{
  *		rankdir=TB;
  *		color=white;
- *		runaway1 [label="Code run-away\nwith peripheral unlocked", shape=box];
+ *		runaway1 [label="Run-away code\nwith peripheral unlocked", shape=box];
  *		node [shape=plaintext];
  *		program1 [label=<
  *			<table>
@@ -579,7 +579,7 @@
  *	   subgraph cluster_read2{
  *		rankdir=TB;
  *		color=white;
- *		runaway2 [label="Code run-away\nwith peripheral unlocked", shape=box];
+ *		runaway2 [label="Run-away code\nwith peripheral unlocked", shape=box];
  *		node [shape=plaintext];
  *		program2 [label=<
  *			<table>
@@ -624,9 +624,9 @@
  *	}
  * \enddot
  *
- * In the left figure above, one can see the code run-away continues as all
- * illegal operations are conditional. On the right side figure, the code
- * run-away is caught as it tries to unlock the peripheral.
+ * In the left figure above, one can see the run-away code continues as all
+ * illegal operations are conditional. On the right side figure, the run-away
+ * code is caught as it tries to unlock the peripheral.
  *
  * \section asfdoc_sam0_pac_extra_info Extra Information
  *

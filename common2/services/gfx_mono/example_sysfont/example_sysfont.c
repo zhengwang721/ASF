@@ -58,6 +58,7 @@
  * \section asfdoc_common2_sysfont_example_device_info Device Info
  * This example has been tested with the following setup:
  * - SAM D20 Xplained Pro
+ * - SAM D21 Xplained Pro 
  *
  * \section asfdoc_common2_sysfont_example_description Description of the example application
  * The example application will upon power up display two text strings on the
