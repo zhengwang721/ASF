@@ -105,7 +105,7 @@ static volatile uint8_t time_to_measure_touch = 0u;
 /* current time, set by timer ISR */
 volatile uint16_t current_time_ms_touch = 0u;
 
-//static BSP_TouchEventHandler_t bspTouchEventHandler = NULL;
+static BSP_TouchEventHandler_t bspTouchEventHandler = NULL;
 /******************************************************************************
                     Extern variables
 ******************************************************************************/
@@ -309,7 +309,7 @@ void BSP_InitQTouch(BSP_TouchEventHandler_t handler)
        Just for demo purpose */
     qt_filter_callback = qt_avr477_filter_cb; 
     
-    //bspTouchEventHandler = handler;   
+    bspTouchEventHandler = handler;   
     
     __enable_interrupt();
 }
@@ -428,8 +428,7 @@ uint8_t Touch_measurement(uint8_t *button_event, uint8_t *button_state)
 #ifdef QDEBUG                  
                   rotor_down++;
 #endif                  
-               }
-               memory_map.body.wheel_position = qt_measure_data.qt_touch_status.rotor_slider_values[0];
+               }               
              }
 
              /* Store back the current sensor status */ 
@@ -437,6 +436,7 @@ uint8_t Touch_measurement(uint8_t *button_event, uint8_t *button_state)
             temp_status2 = 0;
             memory_map.body.sensor_status[0] = qt_measure_data.qt_touch_status.sensor_states[0];
             memory_map.body.sensor_status[1] = qt_measure_data.qt_touch_status.sensor_states[1];            
+			memory_map.body.wheel_position = qt_measure_data.qt_touch_status.rotor_slider_values[0];
            
             
              if (event != BUTTON_NO_EVENT)
@@ -597,16 +597,16 @@ void touch_interrupt_call_back(void)
  */
 void config_sensors(void)
 {  
-    qt_enable_key(CHANNEL_19, AKS_GROUP_1, 20u, HYST_6_25 ); //20  /* Sensor 0 */
-    qt_enable_key(CHANNEL_3, AKS_GROUP_1, 25u, HYST_6_25 );  //33  /* Sensor 1 */ 
-    qt_enable_key(CHANNEL_0, AKS_GROUP_1, 23u, HYST_6_25 );  //28  /* Sensor 2 */ 
-    qt_enable_key(CHANNEL_17, AKS_GROUP_1, 22u, HYST_6_25 ); //22  /* Sensor 3 */
-    qt_enable_key(CHANNEL_18, AKS_GROUP_1, 20u, HYST_6_25 ); //20  /* Sensor 4 */
-    qt_enable_key(CHANNEL_2, AKS_GROUP_1, 15u, HYST_6_25 );  //15  /* Sensor 5 */
-    qt_enable_key(CHANNEL_1, AKS_GROUP_1, 15u, HYST_6_25 );  //15  /* Sensor 6 */
-    qt_enable_key(CHANNEL_16, AKS_GROUP_1, 16u, HYST_6_25 ); //16  /* Sensor 7 */    
-    qt_enable_rotor(CHANNEL_8, CHANNEL_11, AKS_GROUP_1, 40u, HYST_25, RES_8_BIT, 3u ); //55 HYST_25 3u/* Sensor 8 */
-    qt_enable_key(CHANNEL_12, AKS_GROUP_1, 20u, HYST_6_25 ); //20  /* Sensor 9 */   
+    qt_enable_key(CHANNEL_19, AKS_GROUP_1, 20u, HYST_6_25 );   /* Sensor 0 */
+    qt_enable_key(CHANNEL_3, AKS_GROUP_1, 33u, HYST_6_25 );    /* Sensor 1 */ 
+    qt_enable_key(CHANNEL_0, AKS_GROUP_1, 28u, HYST_6_25 );    /* Sensor 2 */ 
+    qt_enable_key(CHANNEL_17, AKS_GROUP_1, 22u, HYST_6_25 );   /* Sensor 3 */
+    qt_enable_key(CHANNEL_18, AKS_GROUP_1, 20u, HYST_6_25 );   /* Sensor 4 */
+    qt_enable_key(CHANNEL_2, AKS_GROUP_1, 15u, HYST_6_25 );    /* Sensor 5 */
+    qt_enable_key(CHANNEL_1, AKS_GROUP_1, 15u, HYST_6_25 );    /* Sensor 6 */
+    qt_enable_key(CHANNEL_16, AKS_GROUP_1, 16u, HYST_6_25 );   /* Sensor 7 */
+    qt_enable_rotor(CHANNEL_8, CHANNEL_11, AKS_GROUP_1, 55u, HYST_25, RES_8_BIT, 3u ); /* Sensor 8 */
+    qt_enable_key(CHANNEL_12, AKS_GROUP_1, 20u, HYST_6_25 );   /* Sensor 9 */
 }
 
 /**
