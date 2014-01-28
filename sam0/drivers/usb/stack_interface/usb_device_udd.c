@@ -979,7 +979,7 @@ static void udd_ctrl_ep_enable(struct usb_module *module_inst)
 	 struct usb_device_endpoint_config config_ep0;
 
 	 usb_device_endpoint_get_config_defaults(&config_ep0);
-	 config_ep0.ep_size =  (32 - clz(((uint32_t)Min(Max(USB_DEVICE_EP_CTRL_SIZE, 8), 1024) << 1) - 1) - 1 - 3);
+	 config_ep0.ep_size = (enum usb_endpoint_size)(32 - clz(((uint32_t)Min(Max(USB_DEVICE_EP_CTRL_SIZE, 8), 1024) << 1) - 1) - 1 - 3);
 	 usb_device_endpoint_set_config(module_inst,&config_ep0);
 
 	 usb_device_endpoint_setup_buffer_job(module_inst,udd_ctrl_buffer);
