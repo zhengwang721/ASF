@@ -4,7 +4,7 @@
 			Thread-safe, buffered debug print service for use with FreeRTOS,
 			with output via SERCOM UART.
 
-			This service requires FreeRTOS.
+			This service requires FreeRTOS. Tested with v7.4.2.
 		</info>
 		<build type="doxygen-entry-point" value="asfdoc_common_freertos_dbg_print_group"/>
 		<build type="doxygen-example-path" value="quick_start_basic"/>
