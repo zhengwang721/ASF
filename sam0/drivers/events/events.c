@@ -1,9 +1,9 @@
 /*
  * \file
  *
- * \brief SAM D2x Event System Controller Driver
+ * \brief SAM D20/D21 Event System Controller Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,12 +40,30 @@
  * \asf_license_stop
  *
  */
+
 #include <events.h>
 #include <system.h>
 #include <system_interrupt.h>
 #include <status_codes.h>
 
 #define EVENTS_INVALID_CHANNEL                  0xff
+
+/**
+ * \internal
+ * Status bit offsets in the status register/interrupt register
+ *
+ * @{
+ */
+#define _EVENTS_START_OFFSET_BUSY_BITS           8
+#define _EVENTS_START_OFFSET_USER_READY_BIT      0
+#define _EVENTS_START_OFFSET_DETECTION_BIT       8
+#define _EVENTS_START_OFFSET_OVERRUN_BIT         0
+/** @} */
+
+struct _events_module {
+	volatile uint32_t allocated_channels;
+	uint8_t           free_channels;
+};
 
 struct _events_module _events_inst = {
 		.allocated_channels = 0,
@@ -169,7 +187,8 @@ enum status_code events_allocate(
 		struct system_gclk_chan_config gclk_chan_conf;
 
 		system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-		gclk_chan_conf.source_generator = config->clock_source;
+		gclk_chan_conf.source_generator =
+				(enum gclk_generator)config->clock_source;
 		system_gclk_chan_set_config(EVSYS_GCLK_ID_0 + new_channel, &gclk_chan_conf);
 		system_gclk_chan_enable(EVSYS_GCLK_ID_0 + new_channel);
 	}

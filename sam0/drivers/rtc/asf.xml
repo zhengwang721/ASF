@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.rtc" name="config.sam0.drivers.rtc" caption="RTC - Real Time Counter Driver" default="count_callback">
 		<info type="description" value="summary">
-			Driver for the SAM D2x RTC. Provides a unified interface
+			Driver for the SAM D20/D21 RTC. Provides a unified interface
 			for the configuration and management of the RTC module.
 		</info>
 
@@ -20,7 +20,7 @@
 
 			<build type="doxygen-entry-point" value="asfdoc_sam0_rtc_count_group"/>
 			<build type="doxygen-example-path" value="quick_start_count"/>
-			<build type="doxygen-example-path" value="quick_start_count/samd20_xplained_pro"/>
+			<build type="doxygen-example-path" value="quick_start_count/samd20_xplained_pro"/> 
 			<build type="doxygen-quick-start" value="asfdoc_sam0_rtc_count_exqsg"/>
 
 			<device-support value="samd20"/>
@@ -47,7 +47,7 @@
 
 			<info type="description" value="pdf">
 				This document describes how to use the Real Time Counter in
-				Count mode on the SAM D20, both the ASF driver and the
+				Count mode on the SAM D20/D21, both the ASF driver and the
 				peripheral itself.
 			</info>
 
@@ -112,7 +112,7 @@
 
 			<info type="description" value="pdf">
 				This document describes how to use the Real Time Counter in
-				Calendar mode on the SAM D2x, both the ASF driver and the
+				Calendar mode on the SAM D20/D21, both the ASF driver and the
 				peripheral itself.
 			</info>
 

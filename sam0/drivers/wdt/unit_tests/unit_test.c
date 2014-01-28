@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Watchdog Unit test
+ * \brief SAM D20/D21 Watchdog Unit test
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage SAM D2x WDT Unit Test
+ * \mainpage SAM D20/D21 WDT Unit Test
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
@@ -56,7 +56,7 @@
  */
 
 /**
- * \page appdoc_main SAM D2x WDT Unit Test
+ * \page appdoc_main SAM D20/D21 WDT Unit Test
  *
  * Overview:
  * - \ref appdoc_sam0_wdt_unit_test_intro
@@ -77,7 +77,7 @@
  *  - None
  *
  * To run the test:
- *  - Connect the SAM D2x Xplained Pro board to the computer using a
+ *  - Connect the SAM D20/D21 Xplained Pro board to the computer using a
  *    micro USB cable.
  *  - Open the virtual COM port in a terminal application.
  *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
@@ -233,7 +233,7 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(wdt_suite, wdt_tests,
-			"SAM D2x WDT driver test suite");
+			"SAM D20/D21 WDT driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&wdt_suite);

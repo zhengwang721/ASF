@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x RTC Calendar Quick Start
+ * \brief SAM D20/D21 RTC Calendar Quick Start
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,17 +42,17 @@
  */
 
 /**
- * \page asfdoc_samd20_rtc_calendar_basic_use_case Quick Start Guide for RTC (CAL) - Basic
+ * \page asfdoc_sam0_rtc_calendar_basic_use_case Quick Start Guide for RTC (CAL) - Basic
  * In this use case, the RTC is set up in calendar mode. The time is set and
  * also a alarm is set to show a general use of the RTC in calendar mode. Also
  * the clock is swapped from 24h to 12h mode after initialization. The board LED
  * will be toggled once the current time matches the set time.
  *
- * \section asfdoc_samd20_rtc_calendar_basic_use_case_prereq Prerequisites
+ * \section asfdoc_sam0_rtc_calendar_basic_use_case_prereq Prerequisites
  * The Generic Clock Generator for the RTC should be configured and enabled; if
  * you are using the System Clock driver, this may be done via \c conf_clocks.h.
  *
- * \subsection asfdoc_samd20_rtc_calendar_basic_use_case_setup_clocks Clocks and Oscillators
+ * \subsection asfdoc_sam0_rtc_calendar_basic_use_case_setup_clocks Clocks and Oscillators
  * The \c conf_clock.h file needs to be changed with the following values to
  * configure the clocks and oscillators for the module.
  *
@@ -61,17 +61,21 @@
  * The following generic clock settings are needed:
  * \snippet conf_clocks.h gclk_settings
  *
- * \section asfdoc_samd20_rtc_calendar_basic_use_case_setup Setup
+ * \section asfdoc_sam0_rtc_calendar_basic_use_case_setup Setup
  *
- * \subsection asfdoc_samd20_rtc_calendar_basic_use_case_init_code Initialization Code
+ * \subsection asfdoc_sam0_rtc_calendar_basic_use_case_init_code Initialization Code
+ * Create a rtc_module struct and add to the main application source file,
+ * outside of any functions:
+ * \snippet qs_rtc_calendar_basic.c rtc_module_instance
+ *
  * Copy-paste the following setup code to your application:
  * \snippet qs_rtc_calendar_basic.c initiate
  *
- * \subsection asfdoc_samd20_rtc_calendar_basic_use_case_main_code Add to Main
+ * \subsection asfdoc_sam0_rtc_calendar_basic_use_case_main_code Add to Main
  * Add the following to \c main().
  * \snippet qs_rtc_calendar_basic.c add_main
  *
- * \subsection asfdoc_samd20_rtc_calendar_basic_use_case_cal_basic_use_workflow Workflow
+ * \subsection asfdoc_sam0_rtc_calendar_basic_use_case_cal_basic_use_workflow Workflow
  * -# Make configuration structure.
  *  \snippet qs_rtc_calendar_basic.c set_conf
  * -# Fill the configuration structure with the default driver configuration.
@@ -89,11 +93,11 @@
  * -# Enable module
  *  \snippet qs_rtc_calendar_basic.c enable
  *
- * \section asfdoc_samd20_rtc_calendar_basic_use_case_count_basic_implement Implementation
+ * \section asfdoc_sam0_rtc_calendar_basic_use_case_count_basic_implement Implementation
  * Add the following to \c main().
  * \snippet qs_rtc_calendar_basic.c main_imp
  *
- * \subsection asfdoc_samd20_rtc_calendar_basic_use_case_count_basic_workflow Workflow
+ * \subsection asfdoc_sam0_rtc_calendar_basic_use_case_count_basic_workflow Workflow
  * -# Start an infinite loop, to continuously poll for a RTC alarm match.
  * \snippet qs_rtc_calendar_basic.c main_loop
  * -# Check to see if a RTC alarm match has occurred.

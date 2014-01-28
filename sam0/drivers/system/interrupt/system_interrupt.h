@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x System Interrupt Driver
+ * \brief SAM D20/D21 System Interrupt Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,10 +43,14 @@
 #ifndef SYSTEM_INTERRUPT_H_INCLUDED
 #define SYSTEM_INTERRUPT_H_INCLUDED
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
- * \defgroup asfdoc_sam0_system_interrupt_group SAM D2x System Interrupt Driver (SYSTEM INTERRUPT)
+ * \defgroup asfdoc_sam0_system_interrupt_group SAM D20/D21 System Interrupt Driver (SYSTEM INTERRUPT)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of internal software and hardware interrupts/exceptions.
  *
  * The following peripherals are used by this module:
@@ -94,7 +98,7 @@
  *
  * \section asfdoc_sam0_system_interrupt_special_considerations Special Considerations
  *
- * Interrupts from peripherals in the SAM D2x devices are on a per-module basis;
+ * Interrupts from peripherals in the SAM D20/D21 devices are on a per-module basis;
  * an interrupt raised from any source within a module will cause a single,
  * module-common handler to execute. It is the user application or driver's
  * responsibility to de-multiplex the module-common interrupt to determine the
@@ -121,10 +125,6 @@
 #include <compiler.h>
 #include <core_cm0plus.h>
 #include "system_interrupt_features.h"
-
-#if !defined(__DOXYGEN__)
-#endif
-
 
 /**
  * \brief Table of possible system interrupt/exception vector priorities.
@@ -326,6 +326,14 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *		<td>ISR</td>
  *		<td>Interrupt Service Routine</td>
  *	</tr>
+ *	<tr>
+ *		<td>NMI</td>
+ *		<td>Non-maskable interrupt</td>
+ *	</tr>
+ *	<tr>
+ *		<td>SERCOM</td>
+ *		<td>Serial Communication Interface</td>
+ *	</tr>
  * </table>
  *
  *
@@ -348,6 +356,9 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for SAMD21</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
@@ -376,6 +387,11 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Add support for SAMD21.</td>
+ *	</tr>
+ *	<tr>
  *		<td>B</td>
  *		<td>06/2013</td>
  *		<td>Corrected documentation typos.</td>
@@ -388,4 +404,8 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  * </table>
  */
 
+#ifdef __cplusplus
+}
 #endif
+
+#endif // #ifndef SYSTEM_INTERRUPT_H_INCLUDED

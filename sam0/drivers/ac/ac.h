@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Analog Comparator Driver
+ * \brief SAM D20/D21 Analog Comparator Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,9 +44,9 @@
 #define AC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_ac_group SAM D2x Analog Comparator Driver (AC)
+ * \defgroup asfdoc_sam0_ac_group SAM D20/D21 Analog Comparator Driver (AC)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the device's Analog Comparator functionality, for the
  * comparison of analog voltages against a known reference voltage to determine
  * its relative level. The following driver API modes are covered by this
@@ -148,7 +148,7 @@
  *
  * For systems requiring a lower latency or more frequent comparisons,
  * continuous mode will place the comparator into continuous sampling mode,
- * which increases the module power consumption but decreases the latency
+ * which increases the module's power consumption, but decreases the latency
  * between each comparison result by automatically performing a comparison on
  * every cycle of the module's clock.
  *
@@ -165,7 +165,7 @@
  * another without requiring software intervention.
  *
  * \note The connection of events between modules requires the use of the
- *       \ref asfdoc_sam0_events_group "SAM D2x Event System Driver (EVENTS)"
+ *       \ref asfdoc_sam0_events_group "SAM D20/D21 Event System Driver (EVENTS)"
  *       to route output event of one module to the the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
@@ -276,7 +276,9 @@ extern struct ac_module *_ac_instance[AC_INST_NUM];
 /**
  * \name AC window channel status flags
  *
- * AC window channel status flags, returned by \ref ac_win_get_status()
+ * AC window channel status flags, returned by \ref ac_win_get_status().
+ *
+ * @{
  */
 
  /** Unknown output state; the comparator window channel was not ready. */
@@ -293,11 +295,14 @@ extern struct ac_module *_ac_instance[AC_INST_NUM];
  * to be cleared by the of \ref ac_win_clear_status().
  */
 #define AC_WIN_STATUS_INTERRUPT_SET   (1UL << 4)
+/** @} */
 
 /**
  * \name AC channel status flags
  *
- * AC channel status flags, returned by \ref ac_chan_get_status()
+ * AC channel status flags, returned by \ref ac_chan_get_status().
+ *
+ * @{
  */
 
 /** Unknown output state; the comparator channel was not ready. */
@@ -314,7 +319,7 @@ extern struct ac_module *_ac_instance[AC_INST_NUM];
  * to be cleared by the of ac_chan_clear_status().
  */
 #define AC_CHAN_STATUS_INTERRUPT_SET  (1UL << 3)
-
+/** @} */
 
 /** Type definition for a AC module callback function. */
 typedef void (*ac_callback_t)(struct ac_module *const module_inst);
@@ -586,9 +591,10 @@ struct ac_chan_config {
 	enum ac_chan_pos_mux positive_input;
 	/** Input multiplexer selection for the comparator's negative input pin. */
 	enum ac_chan_neg_mux negative_input;
-	/** Scaled \f$\frac{V_{CC}\times\mbox{n}}{64}\f$ VCC voltage division factor
-	 *  for the channel, when a comparator pin is connected to the VCC voltage
-	 *  scalar input. If the VCC voltage scalar is not selected as a comparator
+	/** Scaled VCC voltage division factor for the channel, when a comparator
+	 *  pin is connected to the VCC voltage scalar input. The formular is:
+	 *      Vscale = Vdd * vcc_scale_factor / 64.
+	 *  If the VCC voltage scalar is not selected as a comparator
 	 *  channel pin's input, this value will be ignored. */
 	uint8_t vcc_scale_factor;
 	/** Interrupt criteria for the comparator channel, to select the condition
@@ -677,12 +683,13 @@ static inline bool ac_is_syncing(
 }
 
 /**
- * \brief Initializes an Analog Comparator configuration structure to defaults.
+ * \brief Initializes all members of an Analog Comparator configuration
+ * structure to safe defaults.
  *
- *  Initializes a given Analog Comparator configuration structure to a set of
- *  known default values. This function should be called on all new instances
- *  of these configuration structures before being modified by the user
- *  application.
+ *  Initializes all members of a given Analog Comparator configuration
+ *  structure to safe known default values. This function should be called on
+ *  all new instances of these configuration structures before being modified
+ *  by the user application.
  *
  *  The default configuration is as follows:
  *   \li All comparator pairs disabled during sleep mode
@@ -706,7 +713,7 @@ static inline void ac_get_config_defaults(
 /**
  * \brief Enables an Analog Comparator that was previously configured.
  *
- * Enables and starts an Analog Comparator that was previously configured via a
+ * Enables an Analog Comparator that was previously configured via a
  * call to \ref ac_init().
  *
  * \param[in] module_inst  Software instance for the Analog Comparator peripheral
@@ -731,7 +738,7 @@ static inline void ac_enable(
 /**
  * \brief Disables an Analog Comparator that was previously enabled.
  *
- * Stops an Analog Comparator that was previously started via a call to
+ * Disables an Analog Comparator that was previously started via a call to
  * \ref ac_enable().
  *
  * \param[in] module_inst  Software instance for the Analog Comparator peripheral
@@ -854,10 +861,11 @@ static inline void ac_disable_events(
  */
 
 /**
- * \brief Initializes an Analog Comparator channel configuration structure to defaults.
+ * \brief Initializes all members of an Analog Comparator channel configuration
+ * structure to safe defaults.
  *
- *  Initializes a given Analog Comparator channel configuration structure to a
- *  set of known default values. This function should be called on all new
+ *  Initializes all members of an Analog Comparator channel configuration
+ *  structure to safe defaults. This function should be called on all new
  *  instances of these configuration structures before being modified by the
  *  user application.
  *
@@ -868,7 +876,7 @@ static inline void ac_disable_events(
  *   \li Internal comparator output mode
  *   \li Comparator pin multiplexer 0 selected as the positive input
  *   \li Scaled VCC voltage selected as the negative input
- *   \li VCC voltage scaler set for a division factor of 2 (\f$\frac{V_{CC}\times32}{64}\f$)
+ *   \li VCC voltage scaler set for a division factor of 2
  *   \li Channel interrupt set to occur when the compare threshold is passed
  *
  *   \param[out] config  Channel configuration structure to initialize to
@@ -899,7 +907,7 @@ enum status_code ac_chan_set_config(
 /**
  * \brief Enables an Analog Comparator channel that was previously configured.
  *
- *  Enables and starts an Analog Comparator channel that was previously
+ *  Enables an Analog Comparator channel that was previously
  *  configured via a call to \ref ac_chan_set_config().
  *
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
@@ -1152,7 +1160,7 @@ uint8_t ac_win_get_status(
 /**
  * \brief Clears an interrupt status flag
  *
- * This function is used to clear the AC_WIN_STATus_INTERRUPT_SET flag
+ * This function is used to clear the AC_WIN_STATUS_INTERRUPT_SET flag
  * it will clear the flag for the channel indicated by the win_channel argument
  *
  * \param[in]  module_inst  Software instance for the Analog Comparator peripheral
@@ -1224,6 +1232,9 @@ static inline void ac_win_clear_status(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added support for SAMD21</td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
@@ -1250,6 +1261,11 @@ static inline void ac_win_clear_status(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>

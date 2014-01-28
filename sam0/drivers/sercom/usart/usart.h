@@ -2,9 +2,9 @@
  *
  * \file
  *
- * \brief SAM D2x SERCOM USART Driver
+ * \brief SAM D20/D21 SERCOM USART Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,9 +45,9 @@
 #define USART_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_sercom_usart_group SAM D2x Serial USART Driver (SERCOM USART)
+ * \defgroup asfdoc_sam0_sercom_usart_group SAM D20/D21 Serial USART Driver (SERCOM USART)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the SERCOM module in its USART mode to transfer or receive
  * USART data frames. The following driver API modes are covered by this
  * manual:
@@ -80,6 +80,48 @@
  * This driver will use one (or more) SERCOM interfaces on the system
  * and configure it to run as a USART interface in either synchronous
  * or asynchronous mode.
+ *
+ * \subsection asfdoc_sam0_sercom_usart_features Driver Feature Macro Definition
+ * <table>
+ *  <tr>
+ *    <th>Driver Feature Macro</th>
+ *    <th>Supported devices</th>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_USART_SYNC_SCHEME_V2</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_USART_OVER_SAMPLE</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_USART_HARDWARE_FLOW_CONTROL</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_USART_IRDA</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_USART_LIN_SLAVE</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_USART_COLLISION_DECTION</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_USART_START_FRAME_DECTION</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ * </table>
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
  *
  * \subsection asfdoc_sam0_sercom_usart_overview_frame_format Frame Format
  *
@@ -170,7 +212,7 @@
  * The SERCOM module has four internal pads; the RX pin can be placed freely on
  * any one of the four pads, and the TX and XCK pins have two predefined
  * positions that can be selected as a pair. The pads can then be routed to an
- * external GPIO pin using the normal pin multiplexing scheme on the SAM D2x.
+ * external GPIO pin using the normal pin multiplexing scheme on the SAM D20/D21.
  *
  * \section asfdoc_sam0_sercom_usart_special_considerations Special Considerations
  *
@@ -215,30 +257,42 @@ extern "C" {
 #endif
 
 /**
- * Define USART features set according to different device family
+ * \name Driver feature definition
+ * Define SERCOM USART features set according to different device family.
  * @{
  */
-#if (SAMD21)
+#if (SAMD21) || defined(__DOXYGEN__)
+/** Usart sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2
+/** Usart over sampling. */
 #  define FEATURE_USART_OVER_SAMPLE
+/** Usart hardware control flow. */
 #  define FEATURE_USART_HARDWARE_FLOW_CONTROL
+/** IrDA mode. */
 #  define FEATURE_USART_IRDA
+/** LIN slave mode. */
 #  define FEATURE_USART_LIN_SLAVE
+/** Usart collision detection. */
 #  define FEATURE_USART_COLLISION_DECTION
+/** Usart start frame detection. */
 #  define FEATURE_USART_START_FRAME_DECTION
+/** Usart start buffer overflow notification. */
 #  define FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
 #endif
 /*@}*/
 
 #ifndef PINMUX_DEFAULT
+/** Default pin mux. */
 #  define PINMUX_DEFAULT 0
 #endif
 
 #ifndef PINMUX_UNUSED
+/** Unused PIN mux. */
 #  define PINMUX_UNUSED 0xFFFFFFFF
 #endif
 
 #ifndef USART_TIMEOUT
+/** USART timeout value. */
 #  define USART_TIMEOUT 0xFFFF
 #endif
 
@@ -536,10 +590,18 @@ struct usart_config {
 };
 
 #if USART_CALLBACK_MODE == true
-/* Forward Declaration for the device instance */
+/**
+ * \brief USART module instance
+ *
+ * Forward Declaration for the device instance
+ */
 struct usart_module;
 
-/* Type of the callback functions */
+/**
+ * \brief USART callback type
+ *
+ * Type of the callback functions
+ */
 typedef void (*usart_callback_t)(const struct usart_module *const module);
 #endif
 
@@ -644,8 +706,6 @@ static inline enum status_code usart_lock(
  *
  * \param[in,out] module Pointer to the driver instance to lock.
  *
- * \retval STATUS_OK if the module was locked.
- * \retval STATUS_BUSY if the module was already locked.
  */
 static inline void usart_unlock(struct usart_module *const module)
 {
@@ -994,6 +1054,10 @@ static inline void usart_disable_transceiver(
 * <td>MSB</td>
 * <td>Most Significant Bit</td>
 * </tr>
+* <tr>
+* <td>DMA</td>
+* <td>Direct Memory Access</td>
+* </tr>
 * </table>
 *
 *
@@ -1017,6 +1081,17 @@ static inline void usart_disable_transceiver(
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Add support for SAMD21 and added new feature as below:
+                \li Oversample
+                \li Buffer overflow notification
+                \li Irda
+                \li Lin slave
+                \li Start frame detection
+                \li Hardware flow control
+                \li Collision detection
+                \li DMA support </td>
  *	</tr>
  *	<tr>
  *		<td>\li Added new \c transmitter_enable and \c receiver_enable boolean
@@ -1045,6 +1120,7 @@ static inline void usart_disable_transceiver(
  * \if USART_CALLBACK_MODE
  * - \subpage asfdoc_sam0_sercom_usart_callback_use_case
  * \endif
+ * - \subpage asfdoc_sam0_sercom_usart_dma_use_case
  */
 
 /**
@@ -1135,6 +1211,11 @@ static inline void usart_disable_transceiver(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>D</td>
+ *		<td>01/2014</td>
+ *		<td>Add support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>

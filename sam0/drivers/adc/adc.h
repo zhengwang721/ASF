@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Peripheral Analog-to-Digital Converter Driver
+ * \brief SAM D20/D21 Peripheral Analog-to-Digital Converter Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,9 +45,9 @@
 #define ADC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_adc_group SAM D2x Analog to Digital Converter Driver (ADC)
+ * \defgroup asfdoc_sam0_adc_group SAM D20/D21 Analog to Digital Converter Driver (ADC)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the device's Analog to Digital Converter functionality, for
  * the conversion of analog voltages into a corresponding digital form.
  * The following driver API modes are covered by this manual:
@@ -359,7 +359,7 @@
  * conversion is completed.
  *
  * \note The connection of events between modules requires the use of the
- *       \ref asfdoc_sam0_events_group "SAM D2x Event System Driver (EVENTS)"
+ *       \ref asfdoc_sam0_events_group "SAM D20/D21 Event System Driver (EVENTS)"
  *       to route output event of one module to the the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
@@ -1679,6 +1679,10 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<td>MSB</td>
  *		<td>Most Significant Bit</td>
  *	</tr>
+ *	<tr>
+ *		<td>DMA</td>
+ *		<td>Direct Memory Access</td>
+ *	</tr>
  * </table>
  *
  *
@@ -1703,6 +1707,9 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added support for SAMD21 and new DMA quick start guide.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Added ADC calibration constant loading from the device signature
  *          row when the module is initialized.</td>
  *	</tr>
@@ -1725,6 +1732,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * \if ADC_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_adc_basic_use_case_callback
  * \endif
+ *  - \subpage asfdoc_sam0_adc_dma_use_case
  *
  * \page asfdoc_sam0_adc_document_revision_history Document Revision History
  *
@@ -1733,6 +1741,11 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>

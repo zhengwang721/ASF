@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x TC - Timer Counter Callback Driver
+ * \brief SAM D20/D21 TC - Timer Counter Callback Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,6 +46,10 @@
 
 #include "tc.h"
 #include <system_interrupt.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #if !defined(__DOXYGEN__)
 extern void *_tc_instances[TC_INST_NUM];
@@ -157,5 +161,9 @@ static inline void tc_disable_callback(
 /**
  * @}
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TC_INTERRUPT_H_INCLUDED */

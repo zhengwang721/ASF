@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x DMA System Driver Quick Start
+ * \brief SAM D21 DMA System Driver Quick Start
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,35 +43,35 @@
 #include <asf.h>
 
 //! [setup]
-// [transfer_length]
+//! [transfer_length]
 #define DATA_LENGTH (1024)
-// [transfer_length]
+//! [transfer_length]
 
-// [source_memory]
+//! [source_memory]
 static uint8_t source_memory[DATA_LENGTH];
-// [source_memory]
+//! [source_memory]
 
-// [destination_memory]
+//! [destination_memory]
 static uint8_t destination_memory[DATA_LENGTH];
-// [destination_memory]
+//! [destination_memory]
 
-// [transfer_done_flag]
+//! [transfer_done_flag]
 static volatile bool transfer_is_done = false;
-// [transfer_done_flag]
+//! [transfer_done_flag]
 
-// [transfer_descriptor]
+//! [transfer_descriptor]
 COMPILER_ALIGNED(16)
 DmacDescriptor example_descriptor;
-// [transfer_descriptor]
+//! [transfer_descriptor]
 
-// [_transfer_done]
+//! [_transfer_done]
 static void transfer_done( const struct dma_resource* const resource )
 {
 	transfer_is_done = true;
 }
-// [_transfer_done]
+//! [_transfer_done]
 
-// [config_dma_resource]
+//! [config_dma_resource]
 static void configure_dma_resource(struct dma_resource *resource)
 {
 //! [setup_1]
@@ -86,9 +86,9 @@ static void configure_dma_resource(struct dma_resource *resource)
 	dma_allocate(resource, &config);
 //! [setup_3]
 }
-// [config_dma_resource]
+//! [config_dma_resource]
 
-// [setup_dma_transfer_descriptor]
+//! [setup_dma_transfer_descriptor]
 static void setup_transfer_descriptor(DmacDescriptor *descriptor )
 {
 	//! [setup_4]
@@ -109,7 +109,7 @@ static void setup_transfer_descriptor(DmacDescriptor *descriptor )
 	dma_descriptor_create(descriptor, &descriptor_config);
 	//! [setup_7]
 }
-// [setup_dma_transfer_descriptor]
+//! [setup_dma_transfer_descriptor]
 
 //! [setup]
 
@@ -118,6 +118,7 @@ int main(void)
 	struct dma_resource example_resource;
 	system_init();
 
+	//! [setup_init]
 	//! [setup_dma_resource]
 	configure_dma_resource(&example_resource);
 	//! [setup_dma_resource]
@@ -126,9 +127,9 @@ int main(void)
 	setup_transfer_descriptor(&example_descriptor);
 	//! [setup_transfer_descriptor]
 
-	//! [Add descriptor to DMA resource]
+	//! [add_descriptor_to_dma_resource]
 	dma_add_descriptor(&example_resource, &example_descriptor);
-	//! [Add descriptor to DMA resource]
+	//! [add_descriptor_to_dma_resource]
 
 	//! [setup_callback_register]
 	dma_register_callback(&example_resource, transfer_done,
@@ -144,7 +145,9 @@ int main(void)
 		source_memory[i] = i;
 	}
 	//! [setup_source_memory_content]
-	
+
+	//! [setup_init]
+
 	//! [main]
 	//! [main_1]
 	dma_start_transfer_job(&example_resource);

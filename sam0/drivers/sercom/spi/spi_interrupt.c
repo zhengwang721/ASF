@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Serial Peripheral Interface Driver
+ * \brief SAM D20/D21 Serial Peripheral Interface Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -414,7 +414,7 @@ void spi_abort_job(
 	module->dir = SPI_DIRECTION_IDLE;
 }
 
-#  if CONF_SPI_SLAVE_ENABLE == true
+#  if CONF_SPI_SLAVE_ENABLE == true || CONF_SPI_MASTER_ENABLE == true
 /**
  * \internal
  * Writes a character from the TX buffer to the Data register.
@@ -545,7 +545,8 @@ void _spi_interrupt_handler(
 			module->enabled_callback & module->registered_callback;
 
 	/* Read and mask interrupt flag register */
-	uint16_t interrupt_status = (spi_hw->INTFLAG.reg & spi_hw->INTENSET.reg);
+	uint16_t interrupt_status = spi_hw->INTFLAG.reg;
+	interrupt_status &= spi_hw->INTENSET.reg;
 
 	/* Data register empty interrupt */
 	if (interrupt_status & SPI_INTERRUPT_FLAG_DATA_REGISTER_EMPTY) {
@@ -561,9 +562,17 @@ void _spi_interrupt_handler(
 			}
 		}
 #  endif
+
+		if (0
+#  if CONF_SPI_MASTER_ENABLE == true
+		|| ((module->mode == SPI_MODE_MASTER) &&
+			(module->dir != SPI_DIRECTION_READ))
+#  endif
 #  if CONF_SPI_SLAVE_ENABLE == true
-		if ((module->mode == SPI_MODE_SLAVE) &&
-			(module->dir != SPI_DIRECTION_READ)) {
+		|| ((module->mode == SPI_MODE_SLAVE) &&
+			(module->dir != SPI_DIRECTION_READ))
+#  endif
+		) {
 			/* Write next byte from buffer */
 			_spi_write(module);
 			if (module->remaining_tx_buffer_length == 0) {
@@ -584,7 +593,6 @@ void _spi_interrupt_handler(
 				}
 			}
 		}
-#  endif
 	}
 
 	/* Receive complete interrupt*/

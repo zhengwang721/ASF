@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x I2C Slave Interrupt Driver
+ * \brief SAM D20/D21 I2C Slave Interrupt Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

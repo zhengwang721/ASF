@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x System Clock Driver Quick Start
+ * \brief SAM D20/D21 System Clock Driver Quick Start
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /**
- * \page asfdoc_samd2x_system_clock_basic_use_case Quick Start Guide for SYSTEM CLOCK - Basic
+ * \page asfdoc_sam0_system_clock_basic_use_case Quick Start Guide for SYSTEM CLOCK - Basic
  *
  * In this case we apply the following configuration:
  * - RC8MHz (internal 8MHz RC oscillator)
@@ -53,16 +53,16 @@
  *  - Use two wait states when reading from flash memory
  *  - Use the DFLL, configured to 48MHz
  *
- * \section asfdoc_samd2x_system_clock_basic_use_case_setup Setup
+ * \section asfdoc_sam0_system_clock_basic_use_case_setup Setup
  *
- * \subsection asfdoc_samd2x_system_clock_basic_use_case_setup_prereq Prerequisites
+ * \subsection asfdoc_sam0_system_clock_basic_use_case_setup_prereq Prerequisites
  * There are no special setup requirements for this use-case.
  *
- * \subsection asfdoc_samd2x_system_clock_basic_use_case_setup_code Code
+ * \subsection asfdoc_sam0_system_clock_basic_use_case_setup_code Code
  * Copy-paste the following setup code to your application:
  * \snippet qs_clock_source.c setup
  *
- * \subsection asfdoc_samd2x_system_clock_basic_use_case_setup_flow Workflow
+ * \subsection asfdoc_sam0_system_clock_basic_use_case_setup_flow Workflow
  * -# Create a EXTOSC32K module configuration struct, which can be filled
  *    out to adjust the configuration of the external 32KHz oscillator channel.
  *  \snippet qs_clock_source.c config_extosc32k_config
@@ -98,14 +98,14 @@
  *  \snippet qs_clock_source.c config_dfll_set_config
  *
  *
- * \section asfdoc_samd2x_system_clock_basic_use_case_use_main Use Case
+ * \section asfdoc_sam0_system_clock_basic_use_case_use_main Use Case
  *
- * \subsection asfdoc_samd2x_system_clock_basic_use_case_code Code
+ * \subsection asfdoc_sam0_system_clock_basic_use_case_code Code
  *
  * Copy-paste the following code to your user application:
  * \snippet qs_clock_source.c main
  *
- * \subsection asfdoc_samd2x_system_clock_basic_use_case_flow Workflow
+ * \subsection asfdoc_sam0_system_clock_basic_use_case_flow Workflow
  * -# Configure the external 32KHz oscillator source using the previously
  *    defined setup function.
  * \snippet qs_clock_source.c config_extosc32k_main

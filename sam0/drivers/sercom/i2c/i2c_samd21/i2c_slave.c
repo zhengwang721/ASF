@@ -3,7 +3,7 @@
  *
  * \brief SAM D21 I2C Slave Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -94,12 +94,12 @@ static enum status_code _i2c_slave_set_config(
 	system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
 
 	/* Write config to register CTRLA */
-	i2c_hw->CTRLA.reg |= config->sda_hold_time |
+	i2c_hw->CTRLA.reg |= (uint32_t)(config->sda_hold_time |
 			config->transfer_speed |
 			(config->scl_low_timeout << SERCOM_I2CS_CTRLA_LOWTOUTEN_Pos) |
 			(config->scl_stretch_only_after_ack_bit << SERCOM_I2CS_CTRLA_SCLSM_Pos) |
 			(config->slave_scl_low_extend_timeout << SERCOM_I2CS_CTRLA_SEXTTOEN_Pos) |
-			(config->run_in_standby << SERCOM_I2CS_CTRLA_RUNSTDBY_Pos);
+			(config->run_in_standby << SERCOM_I2CS_CTRLA_RUNSTDBY_Pos));
 
 	/* Set CTRLB configuration */
 	i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_SMEN | config->address_mode;

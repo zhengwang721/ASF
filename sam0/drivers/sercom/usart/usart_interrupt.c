@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x SERCOM USART Asynchronous Driver
+ * \brief SAM D20/D21 SERCOM USART Asynchronous Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -454,9 +454,10 @@ void _usart_interrupt_handler(
 	_usart_wait_for_sync(module);
 
 	/* Read and mask interrupt flag register */
-	interrupt_status = usart_hw->INTFLAG.reg & usart_hw->INTENSET.reg;
-	callback_status = module->callback_reg_mask
-			&module->callback_enable_mask;
+	interrupt_status = usart_hw->INTFLAG.reg;
+	interrupt_status &= usart_hw->INTENSET.reg;
+	callback_status = module->callback_reg_mask &
+			module->callback_enable_mask;
 
 	/* Check if a DATA READY interrupt has occurred,
 	 * and if there is more to transfer */

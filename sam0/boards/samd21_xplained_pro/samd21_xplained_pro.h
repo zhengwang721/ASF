@@ -47,6 +47,10 @@
 #include <conf_board.h>
 #include <compiler.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \ingroup group_common_boards
  * \defgroup samd21_xplained_pro_group SAM D21 Xplained Pro board
@@ -110,6 +114,21 @@ void system_board_init(void);
 
 /** Number of on-board LEDs */
 #define LED_COUNT                 1
+
+/**
+ * \name Serialflash definitions
+ *
+ * On board Serialflash definitions.
+ *
+ *  @{ */
+#define SERIALFLASH_SPI_MODULE      SERCOM5
+#define SERIALFLASH_SPI_MUX_SETTING SPI_SIGNAL_MUX_SETTING_E
+#define SERIALFLASH_SPI_PINMUX_PAD0 PINMUX_PB16C_SERCOM5_PAD0
+#define SERIALFLASH_SPI_PINMUX_PAD1 PINMUX_UNUSED
+#define SERIALFLASH_SPI_PINMUX_PAD2 PINMUX_PB22D_SERCOM5_PAD2
+#define SERIALFLASH_SPI_PINMUX_PAD3 PINMUX_PB23D_SERCOM5_PAD3
+#define SERIALFLASH_SPI_CS PIN_PA13
+/** @} */
 
 /**
  * \name Button #0 definitions
@@ -548,5 +567,9 @@ void system_board_init(void);
 /** @} */
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  /* SAMD21_XPLAINED_PRO_H_INCLUDED */

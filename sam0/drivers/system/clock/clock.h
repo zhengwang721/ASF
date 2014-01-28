@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Clock Driver
+ * \brief SAM D20/D21 Clock Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,10 +43,14 @@
 #ifndef SYSTEM_CLOCK_H_INCLUDED
 #define SYSTEM_CLOCK_H_INCLUDED
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
- * \defgroup asfdoc_sam0_system_clock_group SAM D2x System Clock Management Driver (SYSTEM CLOCK)
+ * \defgroup asfdoc_sam0_system_clock_group SAM D20/D21 System Clock Management Driver (SYSTEM CLOCK)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection and
@@ -73,7 +77,7 @@
  *
  *
  * \section asfdoc_sam0_system_clock_module_overview Module Overview
- * The SAM D20 devices contain a sophisticated clocking system, which is designed
+ * The SAM D20/D21 devices contain a sophisticated clocking system, which is designed
  * to give the maximum flexibility to the user application. This system allows
  * a system designer to tune the performance and power consumption of the device
  * in a dynamic manner, to achieve the best trade-off between the two for a
@@ -82,8 +86,22 @@
  * This driver provides a set of functions for the configuration and management
  * of the various clock related functionality within the device.
  *
+ * \subsection asfdoc_sam0_system_clock_module_features Driver Feature Macro Definition
+ * <table>
+ *	<tr>
+ *		<th>Driver Feature Macro</th>
+ *		<th>Supported devices</th>
+ *	</tr>
+ *	<tr>
+ *		<td>FEATURE_SYSTEM_CLOCK_DPLL</td>
+ *		<td>SAMD21</td>
+ *	</tr>
+ * </table>
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
+ *
  * \subsection asfdoc_sam0_system_clock_module_overview_clock_sources Clock Sources
- * The SAM D20 devices have a number of master clock source modules, each of
+ * The SAM D20/D21 devices have a number of master clock source modules, each of
  * which being capable of producing a stabilized output frequency which can then
  * be fed into the various peripherals and modules within the device.
  *
@@ -135,7 +153,7 @@
  * module, but will reduce the overall device power consumption.
  *
  * \subsection asfdoc_sam0_system_clock_module_overview_gclk Generic Clocks
- * Within the SAM D2x devices are a number of Generic Clocks; these are used to
+ * Within the SAM D20/D21 devices are a number of Generic Clocks; these are used to
  * provide clocks to the various peripheral clock domains in the device in a
  * standardized manner. One or more master source clocks can be selected as the
  * input clock to a Generic Clock Generator, which can prescale down the input
@@ -241,10 +259,12 @@
 #include <gclk.h>
 
 /**
- * Define system clock features set according to different device family
+ * \name Driver feature definition
+ * Define system clock features set according to different device family.
  * @{
  */
-#if (SAMD21)
+#if (SAMD21) || defined(__DOXYGEN__)
+/** Digital Phase Locked Loop (DPLL) feature support */
 #  define FEATURE_SYSTEM_CLOCK_DPLL
 #endif
 /*@}*/
@@ -362,13 +382,13 @@ enum system_osc8m_div {
  * Internal 8Mhz RC oscillator freqency range setting
  */
 enum system_osc8m_frequency_range {
-	/* Frequency range 4 Mhz to 6 Mhz */
+	/** Frequency range 4 Mhz to 6 Mhz */
 	SYSTEM_OSC8M_FREQUENCY_RANGE_4_TO_6,
-	/* Frequency range 6 Mhz to 8 Mhz */
+	/** Frequency range 6 Mhz to 8 Mhz */
 	SYSTEM_OSC8M_FREQUENCY_RANGE_6_TO_8,
-	/* Frequency range 8 Mhz to 11 Mhz */
+	/** Frequency range 8 Mhz to 11 Mhz */
 	SYSTEM_OSC8M_FREQUENCY_RANGE_8_TO_11,
-	/* Frequency range 11 Mhz to 15 Mhz */
+	/** Frequency range 11 Mhz to 15 Mhz */
 	SYSTEM_OSC8M_FREQUENCY_RANGE_11_TO_15,
 };
 
@@ -492,7 +512,9 @@ enum system_clock_source {
 	/** Internal Ultra Low Power 32kHz oscillator */
 	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
 #ifdef FEATURE_SYSTEM_CLOCK_DPLL
-	/** Digital Phase Locked Loop (DPLL) */
+	/** Digital Phase Locked Loop (DPLL).
+	 * Check \c FEATURE_SYSTEM_CLOCK_DPLL for which device support it.
+	 */
 	SYSTEM_CLOCK_SOURCE_DPLL     = GCLK_SOURCE_FDPLL,
 #endif
 };
@@ -1199,6 +1221,11 @@ struct system_clock_source_dpll_config {
 };
 
 /**
+ * \name Internal DPLL management
+ * @{
+ */
+
+/**
  * \brief Retrieve the default configuration for DPLL
  *
  * Fills a configuration structure with the default configuration for a
@@ -1237,6 +1264,8 @@ static inline void system_clock_source_dpll_get_config_defaults(
 
 void system_clock_source_dpll_set_config(
 		struct system_clock_source_dpll_config *const config);
+
+/* @} */
 #endif
 
 /**
@@ -1332,6 +1361,10 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<td>APB</td>
  *		<td>Advanced Peripheral Bus</td>
  *	</tr>
+ *	<tr>
+ *		<td>DPLL</td>
+ *		<td>Digital Phase Locked Loop</td>
+ *	</tr>
  * </table>
  *
  *
@@ -1342,23 +1375,17 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *
  *
  * \section asfdoc_sam0_system_clock_extra_errata Errata
- *	<tr>
- *	<td>
- *	 \li This driver implements workaround for errata 10558
- *	     "Several reset values of SYSCTRL.INTFLAG are wrong (BOD and DFLL)"<br>
- *	     When system_init is called it will reset these interrupts flags before they are used.
- *	</td>
- *	</tr>
  *
- *	<tr>
- *	<td>
- *	 \li This driver implements experimental workaround for errata 9905<br>
- *	     "The DFLL clock must be requested before being configured otherwise a
- *	     write access to a DFLL register can freeze the device."<br>
- *	     This driver will enable and configure the DFLL before the ONDEMAND bit is set.
- *	</td>
- *	</tr>
+ *	- This driver implements workaround for errata 10558
  *
+ *	  "Several reset values of SYSCTRL.INTFLAG are wrong (BOD and DFLL)"
+ *	  When system_init is called it will reset these interrupts flags before they are used.
+
+ *	- This driver implements experimental workaround for errata 9905
+ *
+ *	  "The DFLL clock must be requested before being configured otherwise a
+ *	  write access to a DFLL register can freeze the device."
+ *	  This driver will enable and configure the DFLL before the ONDEMAND bit is set.
  *
  *
  * \section asfdoc_sam0_system_clock_extra_history Module History
@@ -1370,6 +1397,21 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>
+ *			\li Corrected OSC32K startup time definitions.
+ *			\li Support locking of OSC32K and XOSC32K config register (default: false).
+ *			\li Added DPLL support, functions added:
+ *			    \c system_clock_source_dpll_get_config_defaults() and
+ *		        \c system_clock_source_dpll_set_config().
+ *			\li Moved gclk channel locking feature out of the config struct,
+ *			    functions added:
+ *			    \c system_gclk_chan_lock(),
+ *			    \c system_gclk_chan_is_locked(),
+ *			    \c system_gclk_chan_is_enabled() and
+ *			    \c system_gclk_gen_is_enabled().
+ *		</td>
  *	</tr>
  *  <tr>
  *		<td>Fixed \c system_gclk_chan_disable() deadlocking if a channel is enabled
@@ -1431,6 +1473,11 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAMD21.</td>
+ *	</tr>
+ *	<tr>
  *		<td>B</td>
  *		<td>06/2013</td>
  *		<td>Corrected documentation typos. Fixed missing steps in the Basic
@@ -1443,5 +1490,9 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	</tr>
  * </table>
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SYSTEM_CLOCK_H_INCLUDED */

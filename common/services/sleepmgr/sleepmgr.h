@@ -46,7 +46,7 @@
 #include <compiler.h>
 #include <parts.h>
 
-#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E || SAM4N || SAM4C || SAMG)
+#if (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
 # include "sam/sleepmgr.h"
 #elif XMEGA
 # include "xmega/sleepmgr.h"
@@ -60,6 +60,10 @@
 # include "samd/sleepmgr.h"
 #else
 # error Unsupported device.
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 /**
@@ -244,5 +248,9 @@ static inline void sleepmgr_enter_sleep(void)
 
 
 //! @}
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SLEEPMGR_H */

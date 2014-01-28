@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x RTC Calendar Callback Quick Start
+ * \brief SAM D20/D21 RTC Calendar Callback Quick Start
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,17 +42,17 @@
  */
 
 /**
- * \page asfdoc_samd20_rtc_calendar_callback_use_case Quick Start Guide for RTC (CAL) - Callback
+ * \page asfdoc_sam0_rtc_calendar_callback_use_case Quick Start Guide for RTC (CAL) - Callback
  * In this use case, the RTC is set up in calendar mode. The time is set and an
  * alarm is enabled, as well as a callback for when the alarm time is hit. Each
  * time the callback fires, the alarm time is reset to 5 seconds in the future
  * and the board LED toggled.
  *
- * \section asfdoc_samd20_rtc_calendar_callback_use_case_prereq Prerequisites
+ * \section asfdoc_sam0_rtc_calendar_callback_use_case_prereq Prerequisites
  * The Generic Clock Generator for the RTC should be configured and enabled; if
  * you are using the System Clock driver, this may be done via \c conf_clocks.h.
  *
- * \subsection asfdoc_samd20_rtc_calendar_callback_use_case_setup_clocks Clocks and Oscillators
+ * \subsection asfdoc_sam0_rtc_calendar_callback_use_case_setup_clocks Clocks and Oscillators
  * The \c conf_clock.h file needs to be changed with the following values to
  * configure the clocks and oscillators for the module.
  *
@@ -61,9 +61,13 @@
  * The following generic clock settings are needed:
  * \snippet conf_clocks.h gclk_settings
  *
- * \section asfdoc_samd20_rtc_calendar_callback_use_case_setup Setup
+ * \section asfdoc_sam0_rtc_calendar_callback_use_case_setup Setup
  *
- * \subsection asfdoc_samd20_rtc_calendar_callback_use_case_setup_code Code
+ * \subsection asfdoc_sam0_rtc_calendar_callback_use_case_setup_code Code
+ * Create a rtc_module struct and add to the main application source file,
+ * outside of any functions:
+ * \snippet qs_rtc_calendar_callback.c rtc_module_instance
+ *
  * The following must be added to the user application:
  *
  * Function for setting up the module:
@@ -78,7 +82,7 @@
  * Add to user application \c main():
  * \snippet qs_rtc_calendar_callback.c run_initialize_rtc
  *
- * \subsection asfdoc_samd20_rtc_calendar_callback_use_case_setup_workflow Workflow
+ * \subsection asfdoc_sam0_rtc_calendar_callback_use_case_setup_workflow Workflow
  * -# Initialize system.
  *  \snippet qs_rtc_calendar_callback.c system_init
  * -# Create and initialize a time structure.
@@ -109,18 +113,18 @@
  * -# Set time of the RTC calendar.
  *  \snippet qs_rtc_calendar_callback.c set_time
  *
- * \section asfdoc_samd20_rtc_calendar_callback_use_case_implementation Implementation
- * \subsection asfdoc_samd20_rtc_calendar_callback_use_case_implementation_code Code
+ * \section asfdoc_sam0_rtc_calendar_callback_use_case_implementation Implementation
+ * \subsection asfdoc_sam0_rtc_calendar_callback_use_case_implementation_code Code
  * Add to user application main:
  * \snippet qs_rtc_calendar_callback.c while
- * \subsection asfdoc_samd20_rtc_calendar_callback_use_case_implementation_workflow Workflow
+ * \subsection asfdoc_sam0_rtc_calendar_callback_use_case_implementation_workflow Workflow
  * -# Infinite while loop while waiting for callbacks.
  *  \snippet qs_rtc_calendar_callback.c main_loop
  *
- * \section asfdoc_samd20_rtc_calendar_callback_use_case_callback Callback
+ * \section asfdoc_sam0_rtc_calendar_callback_use_case_callback Callback
  * Each time the RTC time matches the configured alarm, the callback function
  * will be called.
- * \subsection asfdoc_samd20_rtc_calendar_callback_use_case_callback_workflow Workflow
+ * \subsection asfdoc_sam0_rtc_calendar_callback_use_case_callback_workflow Workflow
  * -# Create alarm struct and initialize the time with current time.
  *  \snippet qs_rtc_calendar_callback.c alarm_struct
  * -# Set alarm to trigger on seconds only.

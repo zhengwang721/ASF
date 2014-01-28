@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x SERCOM USART Asynchronous Driver
+ * \brief SAM D20/D21 SERCOM USART Asynchronous Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,6 +44,10 @@
 #define USART_INTERRUPT_H_INCLUDED
 
 #include "usart.h"
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 #if !defined(__DOXYGEN__)
 void _usart_write_buffer(
@@ -161,4 +165,9 @@ enum status_code usart_get_job_status(
 /**
  * @}
  */
+ 
+#ifdef __cplusplus
+}
+#endif
+
 #endif /* USART_INTERRUPT_H_INCLUDED */

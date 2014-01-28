@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x TC Unit test
+ * \brief SAM D20/D21 TC Unit test
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage SAM D2x TC Unit Test
+ * \mainpage SAM D20/D21 TC Unit Test
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
@@ -58,7 +58,7 @@
  */
 
 /**
- * \page appdoc_main SAM D2x TC Unit Test
+ * \page appdoc_main SAM D20/D21 TC Unit Test
  *
  * Overview:
  * - \ref appdoc_sam0_tc_unit_test_intro
@@ -71,15 +71,15 @@
  * \copydetails appdoc_preface
  *
  * The following kit is required for carrying out the test:
- *      - SAM D2x Xplained Pro board
+ *      - SAM D20/D21 Xplained Pro board
  *
  * \section appdoc_sam0_tc_unit_test_setup Setup
  * The following connections has to be made using wires:
  *  - \b SAMD20 Xplained Pro:EXTINT 0 (PA16, EXT2 pin 17) <-----> TC0 WO1 (PA05, EXT1 pin 15)
- *  - \b SAMD21 Xplained Pro:EXTINT 0 (PA16, EXT2 pin 17) <-----> TC3 WO1 (PA19, EXT2 pin 18)
+ *  - \b SAMD21 Xplained Pro:EXTINT 0 (PA16, EXT2 pin 17) <-----> TC4 WO1 (PB09, EXT1 pin 13)
  *
  * To run the test:
- *  - Connect the SAM D2x Xplained Pro board to the computer using a
+ *  - Connect the SAM D20/D21 Xplained Pro board to the computer using a
  *    micro USB cable.
  *  - Open the virtual COM port in a terminal application.
  *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
@@ -543,7 +543,7 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(tc_suite, tc_tests,
-			"SAM D2x TC driver test suite");
+			"SAM D20/D21 TC driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&tc_suite);

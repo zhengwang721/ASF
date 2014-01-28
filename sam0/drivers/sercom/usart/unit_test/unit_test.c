@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x USART Unit test
+ * \brief SAM D20/D21 USART Unit test
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage SAM D2x USART Unit Test
+ * \mainpage SAM D20/D21 USART Unit Test
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
@@ -58,7 +58,7 @@
  */
 
 /**
- * \page appdoc_main SAM D2x USART Unit Test
+ * \page appdoc_main SAM D20/D21 USART Unit Test
  *
  * Overview:
  * - \ref appdoc_sam0_usart_unit_test_intro
@@ -79,7 +79,7 @@
  *  - \b TX/RX: EXT1 PIN17 (PA04) <--> EXT1 PIN13 (PB09)
  *
  * To run the test:
- *  - Connect the SAM D2x Xplained Pro board to the computer using a
+ *  - Connect the SAM D20/D21 Xplained Pro board to the computer using a
  *    micro USB cable.
  *  - Open the virtual COM port in a terminal application.
  *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
@@ -119,7 +119,7 @@
 /* TX USART to test
  *
  * There is only one SERCOM for USART on the EXT headers of the rev. 2
- * SAM D2x Xplained Pro. The settings below are a hack to get a second
+ * SAM D20/D21 Xplained Pro. The settings below are a hack to get a second
  * USART via a SERCOM that is not mapped to a RX/TX pin on a header.
  *
  * More specifically, it is the SPI SERCOM on EXT1, with RX mapped to PA05
@@ -198,7 +198,7 @@ static void cdc_uart_init(void)
  */
 static void run_transfer_single_8bit_char_test(const struct test_case *test)
 {
-	volatile uint16_t tx_char = 0x53;
+	uint16_t tx_char = 0x53;
 	volatile uint16_t rx_char = 0;
 
 	/* Write and read the data */
@@ -374,7 +374,7 @@ static void run_buffer_read_write_interrupt_test(const struct test_case *test)
  * the actual unit tests (one for RX and one for TX).
  *
  * The RX USART used is the one connected to EXT1 on rev. 2 of the
- * SAM D2x Xplained Pro, while the TX USART used is the one reserved
+ * SAM D20/D21 Xplained Pro, while the TX USART used is the one reserved
  * for SPI on EXT1.
  *
  * The two SERCOMs have RX on pin 13 (RX) and 15 (SS_0), and TX on pin
@@ -452,7 +452,7 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(usart_suite, usart_tests,
-			"SAM D2x USART driver test suite");
+			"SAM D20/D21 USART driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&usart_suite);

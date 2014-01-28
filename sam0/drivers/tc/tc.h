@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x TC - Timer Counter Driver
+ * \brief SAM D20/D21 TC - Timer Counter Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,9 +45,9 @@
 #define TC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_tc_group SAM D2x Timer/Counter Driver (TC)
+ * \defgroup asfdoc_sam0_tc_group SAM D20/D21 Timer/Counter Driver (TC)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the timer modules within the device, for waveform
  * generation and timing operations. The following driver API modes are covered
  * by this manual:
@@ -84,7 +84,7 @@
  * periodic operations. TC modules can be configured to use an 8-, 16-, or
  * 32-bit counter size.
  *
- * This TC module for the SAM D2x is capable of the following functions:
+ * This TC module for the SAM D20/D21 is capable of the following functions:
  *
  * - Generation of PWM signals
  * - Generation of timestamps for events
@@ -115,7 +115,7 @@
  * signal generation.
  *
  * \note The connection of events between modules requires the use of the
- *       \ref asfdoc_sam0_events_group "SAM D2x Event System Driver (EVENTS)"
+ *       \ref asfdoc_sam0_events_group "SAM D20/D21 Event System Driver (EVENTS)"
  *       to route output event of one module to the the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
@@ -200,7 +200,7 @@
  * more information.
  *
  * \subsubsection asfdoc_sam0_tc_module_overview_clock_prescaler Prescaler
- * Each TC module in the SAM D2x has its own individual clock prescaler, which
+ * Each TC module in the SAM D20/D21 has its own individual clock prescaler, which
  * can be used to divide the input clock frequency used in the counter. This
  * prescaler only scales the clock used to provide clock pulses for the counter
  * to count, and does not affect the digital register interface portion of
@@ -382,9 +382,9 @@
  * \section asfdoc_sam0_tc_special_considerations Special Considerations
  *
  * The number of capture compare registers in each TC module is dependent on
- * the specific SAM D2x device being used, and in some cases the counter size.
+ * the specific SAM D20/D21 device being used, and in some cases the counter size.
  *
- * The maximum amount of capture compare registers available in any SAMD2x
+ * The maximum amount of capture compare registers available in any SAM D20/D21
  * device is two when running in 32-bit mode and four in 8-, and 16-bit modes.
  *
  *
@@ -413,17 +413,26 @@
 
 #if !defined(__DOXYGEN__)
 #if SAMD20
+#  define TC_INSTANCE_OFFSET 0
+#endif
+#if SAMD21
+#  define TC_INSTANCE_OFFSET 3
+#endif
+
+#if SAMD20
 #  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC0_CC8_NUM
 #else
 #  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC3_CC8_NUM
    /* Same number for 8-, 16- and 32-bit TC and all TC instances */
 #endif
+
 /** TC Instance MAX ID Number */
 #if SAMD20E || SAMD21G || SAMD21E
 #define TC_INST_MAX_ID  5
-#else 
+#else
 #define TC_INST_MAX_ID  7
 #endif
+
 #endif
 
 #if TC_ASYNC == true
@@ -766,7 +775,7 @@ struct tc_config {
 	/** Specifies the PWM channel for TC. */
 	struct tc_pwm_channel pwm_channel[NUMBER_OF_COMPARE_CAPTURE_CHANNELS];
 
-	/** This setting determines what size counter is used. */
+	/** Access the different counter size settings though this configuration member. */
 	union {
 		/** Struct for 8-bit specific timer configuration. */
 		struct tc_8bit_config counter_8_bit;
@@ -1326,6 +1335,10 @@ static inline void tc_clear_status(
  *		<th>Acronym</th>
  *		<th>Description</th>
  *	</tr>
+  *	<tr>
+ *		<td>DMA</td>
+ *		<td>Direct Memory Access</td>
+ *	</tr>
  *	<tr>
  *		<td>TC</td>
  *		<td>Timer Counter</td>
@@ -1366,6 +1379,13 @@ static inline void tc_clear_status(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *    <td>Added support for SAMD21 and do some modifications as below:
+ *          \li Clean up in the configuration structure, the counter size
+ *              setting specific registers is accessed through the counter_8_bit,
+ *              counter_16_bit and counter_32_bit structures.
+ *          \li All event related settings moved into the tc_event structure </td>
+ *	</tr>
+ *	<tr>
  *		<td>Added automatic digital clock interface enable for the slave TC
  *          module when a timer is initialized in 32-bit mode.</td>
  *	</tr>
@@ -1382,12 +1402,13 @@ static inline void tc_clear_status(
  * applications for \ref asfdoc_sam0_tc_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that QSGs can be compiled as a standalone application or be
- * added to the user application for SAMD20.
+ * added to the user application.
  *
  *  - \subpage asfdoc_sam0_tc_basic_use_case
  * \if TC_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_tc_callback_use_case
  * \endif
+ *  - \subpage asfdoc_sam0_tc_dma_use_case
  *
  * \page asfdoc_sam0_tc_document_revision_history Document Revision History
  *
@@ -1396,6 +1417,11 @@ static inline void tc_clear_status(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>

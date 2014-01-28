@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x EEPROM Emulator
+ * \brief SAM D20/D21 EEPROM Emulator
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define EEPROM_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_eeprom_group SAM D2x EEPROM Emulator Service (EEPROM)
+ * \defgroup asfdoc_sam0_eeprom_group SAM D20/D21 EEPROM Emulator Service (EEPROM)
  *
- * This driver for SAM D2x devices provides an emulated EEPROM memory space in
+ * This driver for SAM D20/D21 devices provides an emulated EEPROM memory space in
  * the device's FLASH memory, for the storage and retrieval of user-application
  * configuration data into and out of non-volatile memory.
  *
@@ -65,7 +65,7 @@
  *
  * \section asfdoc_sam0_eeprom_prerequisites Prerequisites
  *
- * The SAM D2x device fuses must be configured via an external programmer or
+ * The SAM D20/D21 device fuses must be configured via an external programmer or
  * debugger, so that an EEPROM section is allocated in the main NVM flash
  * memory contents. If a NVM section is not allocated for the EEPROM emulator,
  * or if insufficient space for the emulator is reserved, the module will fail
@@ -74,7 +74,7 @@
  *
  * \section asfdoc_sam0_eeprom_module_overview Module Overview
  *
- * As the SAM D2x devices do not contain any physical EEPROM memory, the storage
+ * As the SAM D20/D21 devices do not contain any physical EEPROM memory, the storage
  * of non-volatile user data is instead emulated using a special section of the
  * device's main FLASH memory. The use of FLASH memory technology over EEPROM
  * presents several difficulties over true EEPROM memory; data must be written
@@ -119,7 +119,7 @@
  * entire emulated EEPROM space.
  *
  * \subsubsection asfdoc_sam0_eeprom_module_overview_implementation_pf Physical Memory
- * The SAM D2x non-volatile FLASH is divided into a number of physical rows, each
+ * The SAM D20/D21 non-volatile FLASH is divided into a number of physical rows, each
  * containing four identically sized flash pages. Pages may be read or written
  * to individually, however pages must be erased before being reprogrammed and
  * the smallest granularity available for erasure is one single row.
@@ -456,6 +456,9 @@ enum status_code eeprom_emulator_read_buffer(
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
+  *	<tr>
+ *		<td>Fix warnings and document for SAM D21</td>
+ *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
@@ -480,6 +483,11 @@ enum status_code eeprom_emulator_read_buffer(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Add SAM D21 support.</td>
  *	</tr>
  *  <tr>
  *	   <td>B</td>

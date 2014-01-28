@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Serial Peripheral Interface Driver (Callback Mode)
+ * \brief SAM D20/D21 Serial Peripheral Interface Driver (Callback Mode)
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,6 +43,10 @@
 
 #ifndef SPI_INTERRUPT_H_INCLUDED
 #define SPI_INTERRUPT_H_INCLUDED
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /**
  * \addtogroup asfdoc_sam0_sercom_spi_group
@@ -175,5 +179,9 @@ static inline enum status_code spi_get_job_status_wait(
 /**
  * @}
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SPI_INTERRUPT_H_INCLUDED */

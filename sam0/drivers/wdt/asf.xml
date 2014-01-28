@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.wdt" name="config.sam0.drivers.wdt" caption="WDT - Watchdog Timer" default="callback">
 		<info type="description" value="summary">
-			Driver for the SAM D2x WDT module. Provides a unified interface for
+			Driver for the SAM D20/D21 WDT module. Provides a unified interface for
 			the configuration and management of the Watchdog module, including
 			timeout period, window period and early warning indications.
 		</info>
@@ -31,7 +31,7 @@
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
 
-			<generator value="doxygen-module-v2" default-mcu="unspecified-sam0"/>
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 
 		<module type="driver" id="sam0.drivers.wdt#callback" caption="WDT - Watchdog Timer (Callback APIs)">
@@ -52,7 +52,7 @@
 
 			<info type="description" value="pdf">
 				This document describes how to use the Watchdog Timer on the
-				SAM D2x, both the ASF driver and the peripheral itself.
+				SAM D20/D21, both the ASF driver and the peripheral itself.
 			</info>
 
 			<build type="include-path" value="."/>
@@ -78,7 +78,7 @@
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
 
-			<generator value="doxygen-module-v2" default-mcu="unspecified-sam0"/>
+			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 	</select-by-config>
 </asf>

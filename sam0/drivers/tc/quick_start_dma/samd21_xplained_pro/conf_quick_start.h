@@ -3,7 +3,7 @@
  *
  * \brief TC Quick Start configuration for SAM D21 Xplained Pro
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,18 +44,13 @@
 #ifndef CONF_QUICK_START_H_INCLUDED
 #define CONF_QUICK_START_H_INCLUDED
 
-//[definition_pwm]
+//! [definition_pwm]
 /** PWM module to use */
 #define PWM_MODULE      EXT1_PWM_MODULE
 /** PWM output pin */
 #define PWM_OUT_PIN     EXT1_PWM_0_PIN
 /** PWM output pin mux */
 #define PWM_OUT_MUX     EXT1_PWM_0_MUX
-//[definition_pwm]
-
-//[definition_peripheral_trigger]
-/** TC6 Match/Compare 0 Trigger is used in the example */
-#define EXAMPLE_PERIPHERAL_TRIGGER   0x22
-//[definition_peripheral_trigger]
+//! [definition_pwm]
 
 #endif /* CONF_QUICK_START_H_INCLUDED */

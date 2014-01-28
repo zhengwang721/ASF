@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Watchdog Driver
+ * \brief SAM D20/D21 Watchdog Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -125,13 +125,12 @@ enum status_code wdt_enable_callback(
 	{
 	case WDT_CALLBACK_EARLY_WARNING:
 		WDT_module->INTENSET.reg = WDT_INTENSET_EW;
+		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_WDT);
 		return STATUS_OK;
 	default:
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}
-
-	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_WDT);
 }
 
 /**

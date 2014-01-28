@@ -3,7 +3,7 @@
  *
  * \brief SAM D2x TCC - Timer Counter for Control Applications Callback Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,6 +48,10 @@
 #include "tcc.h"
 #include <system_interrupt.h>
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 #if !defined(__DOXYGEN__)
 extern void *_tcc_instances[TCC_INST_NUM];
 #endif
@@ -78,5 +82,9 @@ void tcc_disable_callback(
 /**
  * @}
  */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* TCC_CALLBACK_H_INCLUDED */

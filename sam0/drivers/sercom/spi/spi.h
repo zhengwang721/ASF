@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Serial Peripheral Interface Driver
+ * \brief SAM D20/D21 Serial Peripheral Interface Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,9 +45,9 @@
 #define SPI_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_sercom_spi_group SAM D2x Serial Peripheral Interface Driver (SERCOM SPI)
+ * \defgroup asfdoc_sam0_sercom_spi_group SAM D20/D21 Serial Peripheral Interface Driver (SERCOM SPI)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the SERCOM module in its SPI mode to transfer SPI  data
  * frames. The following driver API modes are covered by this manual:
  *
@@ -88,6 +88,32 @@
  * Master In - Slave Out (MISO) line. After each data transfer, the master can
  * synchronize to the slave by pulling the SS line high.
  *
+ * \subsection asfdoc_sam0_sercom_spi_module_features Driver Feature Macro Definition
+ * <table>
+ *  <tr>
+ *    <th>Driver Feature Macro</th>
+ *    <th>Supported devices</th>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_SPI_SLAVE_SELECT_LOW_DETECT</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_SPI_HARDWARE_SLAVE_SELECT</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_SPI_ERROR_INTERRUPT</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_SPI_SYNC_SCHEME_VERSION_2</td>
+ *    <td>SAMD21</td>
+ *  </tr>
+ * </table>
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
+ *
  * \subsection asfdoc_sam0_sercom_spi_bus SPI Bus Connection
  * In \ref asfdoc_sam0_spi_connection_example "the figure below", the
  * connection between one master and one slave is shown.
@@ -127,7 +153,7 @@
  * \enddot
  *
  * The different lines are as follows:
- * - \b MOSI Master Input, Slave Output. The line where the data is shifted
+ * - \b MOSI Master Input Slave Output. The line where the data is shifted
  *   out from the master and in to the slave.
  * - \b MISO Master Output Slave Input. The line where the data is shifted
  *   out from the slave and in to the master.
@@ -346,26 +372,34 @@ Make sure that either/both CONF_SPI_MASTER_ENABLE/CONF_SPI_SLAVE_ENABLE is set t
 #endif
 
 /**
- * Define SPI features set according to different device family
+ * \name Driver feature definition
+ * Define SERCOM SPI features set according to different device family.
  * @{
  */
-#  if (SAMD21)
+#  if (SAMD21)  || defined(__DOXYGEN__)
+/** SPI slave select low detection */
 #  define FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
+/** Slave select can be controlled by hardware */
 #  define FEATURE_SPI_HARDWARE_SLAVE_SELECT
+/** SPI with error detect feature */
 #  define FEATURE_SPI_ERROR_INTERRUPT
+/** SPI sync scheme version 2 */
 #  define FEATURE_SPI_SYNC_SCHEME_VERSION_2
 #  endif
 /*@}*/
 
 #  ifndef PINMUX_DEFAULT
+/** Default pin mux */
 #  define PINMUX_DEFAULT 0
 #  endif
 
 #  ifndef PINMUX_UNUSED
+/** Unused PIN mux */
 #  define PINMUX_UNUSED 0xFFFFFFFF
 #  endif
 
 #  ifndef SPI_TIMEOUT
+/** SPI timeout value */
 #  define SPI_TIMEOUT 10000
 #  endif
 
@@ -425,7 +459,7 @@ enum _spi_direction {
 /**
  * \brief SPI Interrupt Flags
  *
- * Interrupt flags for the SPI module
+ * Interrupt flags for the SPI module.
  *
  */
 enum spi_interrupt_flag {
@@ -581,6 +615,8 @@ enum spi_addr_mode {
 
 /**
  * \brief SPI modes enum
+ *
+ * SPI mode selection.
  */
 enum spi_mode {
 	/** Master mode */
@@ -591,6 +627,9 @@ enum spi_mode {
 
 /**
  * \brief SPI data order enum
+ *
+ * SPI data order.
+ *
  */
 enum spi_data_order {
 	/** The LSB of the data is transmitted first */
@@ -601,6 +640,9 @@ enum spi_data_order {
 
 /**
  * \brief SPI character size enum
+ *
+ * SPI character size.
+ *
  */
 enum spi_character_size {
 	/** 8 bit character */
@@ -1297,6 +1339,10 @@ enum status_code spi_select_slave(
  *		<th>Description</th>
  *	</tr>
  *	<tr>
+ *		<td>SERCOM</td>
+ *		<td>Serial Communication Interface</td>
+ *	</tr>
+ *	<tr>
  *		<td>SPI</td>
  *		<td>Serial Peripheral Interface</td>
  *	</tr>
@@ -1328,6 +1374,10 @@ enum status_code spi_select_slave(
  *		<td>DI</td>
  *		<td>Data Input</td>
  *	</tr>
+ *	<tr>
+ *		<td>DMA</td>
+ *		<td>Direct Memory Access</td>
+ *	</tr>
  * </table>
  *
  * \section asfdoc_sam0_sercom_spi_extra_dependencies Dependencies
@@ -1346,6 +1396,12 @@ enum status_code spi_select_slave(
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	 <tr>
+ *		<td>Add SAMD21 support and added new features as below:
+ *             \li Slave select low detect
+ *             \li Hardware slave select
+ *             \li DMA support </td>
  *	</tr>
  *	 <tr>
  *		<td>Edited slave part of write and transceive buffer functions to ensure
@@ -1650,13 +1706,18 @@ enum status_code spi_select_slave(
   * <i>\b (1) Not available in all silicon revisions.</i>
   *
   *
-  * \page asfdoc_samd20_sercom_spi_document_revision_history Document Revision History
+  * \page asfdoc_sam0_sercom_spi_document_revision_history Document Revision History
   *
   * <table>
   *	<tr>
   *		<th>Doc. Rev.</td>
   *		<th>Date</td>
   *		<th>Comments</td>
+  *	</tr>
+   *	<tr>
+  *		<td>C</td>
+  *		<td>01/2014</td>
+  *		<td>Add SAMD21 support.</td>
   *	</tr>
   *	<tr>
   *		<td>B</td>

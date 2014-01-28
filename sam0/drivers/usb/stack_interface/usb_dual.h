@@ -53,26 +53,19 @@
 #include "extint.h"
 #include "port.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \ingroup usb_group
- * \defgroup usb_dual_group USB dual driver
- * USB low-level driver for dual features
+ * \defgroup usb_dual_group USB dual role driver
+ * USB low-level driver for dual role features
  *
  * @{
  */
 
-/**
- * \brief Initialize the dual role
- * This function is implemented in usb_dual.c file.
- *
- * \return \c true if the ID pin management has been started, otherwise \c false.
- */
 bool usb_dual_enable(void);
-
-/**
- * \brief Deinitialize the dual role
- * This function is implemented in usb_dual.c file.
- */
 void usb_dual_disable(void);
 
 /**
@@ -87,7 +80,7 @@ void usb_dual_disable(void);
 *
 * @{
 */
-#define USB_ID_DETECT       (defined(CONF_BOARD_USB_ID_DETECT))
+#define USB_ID_DETECT        (defined(CONF_BOARD_USB_ID_DETECT))
 #define USB_ID_EIC           (defined(USB_ID_PIN) && USB_ID_DETECT)
 /** @} */
 
@@ -102,10 +95,14 @@ void usb_dual_disable(void);
  *
  * @{
  */
-#define USB_VBUS_DETECT     (defined(CONF_BOARD_USB_VBUS_DETECT))
+#define USB_VBUS_DETECT      (defined(CONF_BOARD_USB_VBUS_DETECT))
 #define USB_VBUS_EIC         (defined(USB_VBUS_PIN) && USB_VBUS_DETECT)
 /** @} */
 
-
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
+
 #endif // _USB_DUAL_H_

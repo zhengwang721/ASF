@@ -1,9 +1,9 @@
 /*
  * \file
  *
- * \brief SAM D2x Direct Memory Controller Driver
+ * \brief SAM D21 Direct Memory Controller Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

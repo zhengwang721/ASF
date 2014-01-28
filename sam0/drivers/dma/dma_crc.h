@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x DMA cyclic redundancy check (CRC) Driver
+ * \brief SAM D21 DMA cyclic redundancy check (CRC) Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,6 +44,10 @@
 #define DMA_CRC_H_INCLUDED
 
 #include <compiler.h>
+
+#ifdef __cplusplus
+extern "C" {
+#endif
 
 /** DMA channel n offset*/
 #define DMA_CRC_CHANNEL_N_OFFSET 0x20
@@ -174,5 +178,9 @@ static inline uint32_t dma_crc_io_calculation(uint32_t *buffer,
 
 	return DMAC->CRCCHKSUM.reg;
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* DMA_CRC_H_INCLUDED */

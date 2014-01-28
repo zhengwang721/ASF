@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Peripheral Digital-to-Analog Converter Driver
+ * \brief SAM D20/D21 Peripheral Digital-to-Analog Converter Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,9 +44,9 @@
 #define DAC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_dac_group SAM D2x Digital-to-Analog Driver (DAC)
+ * \defgroup asfdoc_sam0_dac_group SAM D20/D21 Digital-to-Analog Driver (DAC)
  *
- * This driver for SAM D2x devices provides an interface for the conversion of
+ * This driver for SAM D20/D21 devices provides an interface for the conversion of
  * digital values to analog voltage. The following driver API modes are covered
  * by this manual:
  *
@@ -76,7 +76,7 @@
  * \section asfdoc_sam0_dac_module_overview Module Overview
  *
  * The Digital-to-Analog converter converts a digital value to analog voltage.
- * The SAM D2x DAC module has one channel with 10-bit resolution, and is capable
+ * The SAM D20/D21 DAC module has one channel with 10-bit resolution, and is capable
  * of converting up to 350k samples per second (ksps).
  *
  * A common use of DAC is to generate audio signals by connecting the DAC
@@ -150,7 +150,7 @@
  * new data can be loaded to the buffer.
  *
  * \note The connection of events between modules requires the use of the
- *       \ref asfdoc_sam0_events_group "SAM D2x Event System Driver (EVENTS)"
+ *       \ref asfdoc_sam0_events_group "SAM D20/D21 Event System Driver (EVENTS)"
  *       to route output event of one module to the the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
@@ -783,6 +783,10 @@ void dac_clear_status(
  *		<td>MSB</td>
  *		<td>Most Significant Bit</td>
  *	</tr>
+ *	<tr>
+ *		<td>DMA</td>
+ *		<td>Direct Memory Access</td>
+ *	</tr>
  * </table>
  *
  *
@@ -807,6 +811,14 @@ void dac_clear_status(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added new configuration parameters \c databuf_protection_bypass,
+ *		\c voltage_pump_disable. Added new callback functions 
+ *		\c dac_chan_write_buffer_wait,
+ *		\c dac_chan_write_buffer_job, \c dac_chan_write_job,
+ *		\c dac_get_job_status, \c dac_abort_job and new callback type
+ *		\c DAC_CALLBACK_TRANSFER_COMPLETE for DAC conversion job</td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
@@ -822,6 +834,18 @@ void dac_clear_status(
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_dac_basic_use_case
+ * \if DAC_CALLBACK_MODE
+ *  - \subpage asfdoc_sam0_dac_basic_use_case_callback
+ * \endif
+ * \if DAC_DMA_USE_MODE_SELECTION  
+ *	- \subpage asfdoc_sam0_adc_dma_use_case_dac_in_dma	
+ *	\else  
+ *  - \subpage asfdoc_sam0_adc_dma_use_case  
+ * \endif  
+ *	
+ * \page asfdoc_sam0_adc_dma_use_case_dac_in_dma Quick Start Guide for Using DMA with ADC/DAC  
+ * For	this examples, see	
+ * \ref asfdoc_sam0_adc_dma_use_case  
  *
  * \page asfdoc_sam0_dac_document_revision_history Document Revision History
  *
@@ -830,6 +854,11 @@ void dac_clear_status(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Add SAMD21 support.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>

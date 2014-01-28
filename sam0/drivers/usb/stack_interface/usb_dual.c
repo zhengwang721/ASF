@@ -46,17 +46,21 @@
 #ifndef UDD_ENABLE
 # define udc_start()
 # define udc_stop()
+#else
+#include <udc.h>
 #endif
 
 #ifndef UHD_ENABLE
 # define uhc_start(void)
 # define uhc_stop(b_id_stop)
+#else
+#include <uhc.h>
 #endif
 
-/* State of USBC dual initialization */
-static bool usb_dual_initialized = false;
+/* State of USB dual role initialization */
+static bool _initialized = false;
 
-#define is_usb_id_device()         port_pin_get_input_level(USB_ID_PIN)
+#define _usb_is_id_device()         port_pin_get_input_level(USB_ID_PIN)
 
 #if USB_ID_EIC
 static void usb_id_handler(void);
@@ -65,6 +69,10 @@ static void usb_id_handler(void);
  * \name USB ID PAD management
  *
  * @{
+ */
+
+/**
+ * USB ID pin configuration
  */
 static void usb_id_config(void)
 {
@@ -93,7 +101,7 @@ static void usb_id_handler(void)
 {
 	extint_chan_disable_callback(USB_ID_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
-	if (is_usb_id_device()) {
+	if (_usb_is_id_device()) {
 		uhc_stop(false);
 		UHC_MODE_CHANGE(false);
 		udc_start();
@@ -108,15 +116,19 @@ static void usb_id_handler(void)
 #endif
 /** @} */
 
-
+/**
+ * \brief Initialize the USB peripheral and set right role according to ID pin
+ *
+ * \return \c true if the ID pin management has been started, otherwise \c false.
+ */
 bool usb_dual_enable(void)
 {
-	if (usb_dual_initialized) {
+	if (_initialized) {
 		return false; // Dual role already initialized
 	}
 
 #if USB_ID_EIC
-	usb_dual_initialized = true;
+	_initialized = true;
 
 	struct port_config pin_conf;
 	port_get_config_defaults(&pin_conf);
@@ -127,7 +139,7 @@ bool usb_dual_enable(void)
 	port_pin_set_config(USB_ID_PIN, &pin_conf);
 
 	usb_id_config();
-	if (is_usb_id_device()) {
+	if (_usb_is_id_device()) {
 		UHC_MODE_CHANGE(false);
 		udc_start();
 	} else {
@@ -145,13 +157,15 @@ bool usb_dual_enable(void)
 #endif
 }
 
-
+/**
+ * \brief Deinitialize the dual role driver
+ */
 void usb_dual_disable(void)
 {
-	if (!usb_dual_initialized) {
+	if (!_initialized) {
 		return; // Dual role not initialized
 	}
-	usb_dual_initialized = false;
+	_initialized = false;
 
 #if USB_ID_EIC
 	extint_chan_disable_callback(USB_ID_EIC_LINE,

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x GPIO Port Driver
+ * \brief SAM D20/D21 GPIO Port Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,9 +44,9 @@
 #define PORT_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_port_group SAM D2x Port Driver (PORT)
+ * \defgroup asfdoc_sam0_port_group SAM D20/D21 Port Driver (PORT)
  *
- * This driver for SAM D2x devices provides an interface for the configuration
+ * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the device's General Purpose Input/Output (GPIO) pin
  * functionality, for manual pin state reading and writing.
  *
@@ -77,7 +77,7 @@
  * from or written to for general purpose external hardware control.
  *
  * \subsection asfdoc_sam0_port_module_overview_pin_numbering Physical and Logical GPIO Pins
- * SAM D2x devices use two naming conventions for the I/O pins in the device; one
+ * SAM D20/D21 devices use two naming conventions for the I/O pins in the device; one
  * physical, and one logical. Each physical pin on a device package is assigned
  * both a physical port and pin identifier (e.g. "PORTA.0") as well as a
  * monotonically incrementing logical GPIO number (e.g. "GPIO0"). While the
@@ -110,7 +110,7 @@
  *
  * \section asfdoc_sam0_port_special_considerations Special Considerations
  *
- * The SAM D2x port pin input sampler can be disabled when the pin is configured
+ * The SAM D20/D21 port pin input sampler can be disabled when the pin is configured
  * in pure output mode to save power; reading the pin state of a pin configured
  * in output-only mode will read the logical output state that was last set.
  *
@@ -502,6 +502,9 @@ static inline void port_pin_toggle_output_level(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added support for SAMD21</td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
@@ -525,6 +528,11 @@ static inline void port_pin_toggle_output_level(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>

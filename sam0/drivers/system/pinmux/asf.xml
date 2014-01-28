@@ -1,87 +1,42 @@
 <asf xmlversion="1.0">
-	<select-by-device id="sam0.drivers.system.pinmux" caption="SYSTEM - I/O Pin Multiplexer">
+	<module type="driver" id="sam0.drivers.system.pinmux" caption="SYSTEM - I/O Pin Multiplexer">
+		<info type="description" value="summary">
+			Driver for the SAM D20/D21 Pin Multiplexer. Provides a unified interface
+			for the configuration and routing of physical device I/O pins to
+			peripherals within the device.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="I/O"/>
+		</info>
 
-			<module type="driver" id="sam0.drivers.system.pinmux#samd20" caption="SYSTEM - I/O Pin Multiplexer for SAM D20">
-				<info type="description" value="summary">
-					Driver for the SAM D20 Pin Multiplexer. Provides a unified interface
-					for the configuration and routing of physical device I/O pins to
-					peripherals within the device.
-				</info>
-				<info type="keyword" value="technology">
-					<keyword value="I/O"/>
-				</info>
+		<info type="appnote" value="AT03262"/>
+		<info type="keyword" value="pdf">
+			<keyword value="SYSTEM"/>
+			<keyword value="I/O"/>
+			<keyword value="PINMUX" />
+			<keyword value="Pin Multiplexer"/>
+		</info>
 
-				<info type="appnote" value="AT03262"/>
-				<info type="keyword" value="pdf">
-					<keyword value="SYSTEM"/>
-					<keyword value="I/O"/>
-					<keyword value="PINMUX" />
-					<keyword value="Pin Multiplexer"/>
-				</info>
+		<info type="description" value="pdf">
+			This document describes how to use the Pin Multiplexer on the
+			SAM D20/D21, both the ASF driver and the peripheral itself.
+		</info>
 
-				<info type="description" value="pdf">
-					This document describes how to use the Pin Multiplexer on the
-					SAM D20, both the ASF driver and the peripheral itself.
-				</info>
+		<build type="include-path" value="."/>
 
-				<build type="include-path" value="."/>
+		<build type="header-file" subtype="api" value="pinmux.h"/>
+		<build type="c-source" value="pinmux.c"/>
 
-				<build type="header-file" subtype="api" value="pinmux.h"/>
-				<build type="c-source" value="pinmux.c"/>
+		<build type="doxygen-entry-point" value="asfdoc_sam0_system_pinmux_group"/>
+		<build type="doxygen-example-path" value="quick_start"/>
+		<build type="doxygen-quick-start" value="asfdoc_sam0_system_pinmux_exqsg"/>
 
-				<build type="doxygen-entry-point" value="asfdoc_sam0_system_pinmux_group"/>
-				<build type="doxygen-example-path" value="quick_start"/>
-				<build type="doxygen-quick-start" value="asfdoc_sam0_system_pinmux_exqsg"/>
+		<build type="header-file" value="quick_start/qs_pinmux_basic.h"/>
 
-				<build type="header-file" value="quick_start/qs_pinmux_basic.h"/>
+		<device-support value="sam0"/>
 
-				<device-support value="samd20"/>
+		<require idref="sam0.utils"/>
 
-				<require idref="sam0.utils"/>
-
-				<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
-			</module>
-
-			<module type="driver" id="sam0.drivers.system.pinmux#samd21" caption="SYSTEM - I/O Pin Multiplexer for SAM D21">
-				<info type="description" value="summary">
-					Driver for the SAM D21 Pin Multiplexer. Provides a unified interface
-					for the configuration and routing of physical device I/O pins to
-					peripherals within the device.
-				</info>
-				<info type="keyword" value="technology">
-					<keyword value="I/O"/>
-				</info>
-
-				<info type="appnote" value="AT03262"/>
-				<info type="keyword" value="pdf">
-					<keyword value="SYSTEM"/>
-					<keyword value="I/O"/>
-					<keyword value="PINMUX" />
-					<keyword value="Pin Multiplexer"/>
-				</info>
-
-				<info type="description" value="pdf">
-					This document describes how to use the Pin Multiplexer on the
-					SAM D21, both the ASF driver and the peripheral itself.
-				</info>
-
-				<build type="include-path" value="."/>
-
-				<build type="header-file" subtype="api" value="pinmux.h"/>
-				<build type="c-source" value="pinmux.c"/>
-
-				<build type="doxygen-entry-point" value="asfdoc_sam0_system_pinmux_group"/>
-				<build type="doxygen-example-path" value="quick_start"/>
-				<build type="doxygen-quick-start" value="asfdoc_sam0_system_pinmux_exqsg"/>
-
-				<build type="header-file" value="quick_start/qs_pinmux_basic.h"/>
-
-				<device-support value="samd21"/>
-
-				<require idref="sam0.utils"/>
-
-				<generator value="doxygen-module-v2" default-mcu="unspecified-samd21"/>
-			</module>
-
-	</select-by-device>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+	</module>
 </asf>
