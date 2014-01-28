@@ -1,11 +1,13 @@
 /**
- * \file sys.c
+ * \file
  *
- * \brief Main system routines implementation
+ * \brief  Configuration File for SAM4L-EK Board.
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,41 +39,14 @@
  *
  * \asf_license_stop
  *
- *
  */
 
-/*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/*- Includes ---------------------------------------------------------------*/
-#include "sysConfig.h"
-#include "phy.h"
-#include "nwk.h"
-#include "hal.h"
-#include "sys.h"
-#include "sysTimer.h"
+/** Enable Com Port. */
+#define CONF_BOARD_COM_PORT
+#define CONF_BOARD_AT86RFX
+#define IC_TYPE             (0x00)
 
-/*- Implementations --------------------------------------------------------*/
-
-/*************************************************************************//**
-*****************************************************************************/
-void SYS_Init(void)
-{
-  HAL_Init();
-  SYS_TimerInit();
-  PHY_Init();
-  NWK_Init();
-}
-
-/*************************************************************************//**
-*****************************************************************************/
-void SYS_TaskHandler(void)
-{
-  PHY_TaskHandler();
-  NWK_TaskHandler();
-  SYS_TimerTaskHandler();
-  
-}
+#endif  /* CONF_BOARD_H_INCLUDED */

@@ -1,11 +1,13 @@
 /**
- * \file sys.c
+ * \file *********************************************************************
  *
- * \brief Main system routines implementation
+ * \brief Serial Input & Output configuration
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,42 +38,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
- *
  */
 
-/*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
 
-/*- Includes ---------------------------------------------------------------*/
-#include "sysConfig.h"
-#include "phy.h"
-#include "nwk.h"
-#include "hal.h"
-#include "sys.h"
-#include "sysTimer.h"
+/** USART Interface */
+#define USART_HOST                 USART1
+/** Baudrate setting */
+#define USART_HOST_BAUDRATE        9600
+/** Character length setting */
+#define USART_HOST_CHAR_LENGTH     US_MR_CHRL_8_BIT
+/** Parity setting */
+#define USART_HOST_PARITY          US_MR_PAR_NO
+/** Stop bits setting */
+#define USART_HOST_STOP_BITS       US_MR_NBSTOP_1_BIT
 
-/*- Implementations --------------------------------------------------------*/
+#define USART_HOST_ISR_VECT()      ISR(USART1_Handler)
 
-/*************************************************************************//**
-*****************************************************************************/
-void SYS_Init(void)
-{
-  HAL_Init();
-  SYS_TimerInit();
-  PHY_Init();
-  NWK_Init();
-}
+#define USART_HOST_IRQn            USART1_IRQn
 
-/*************************************************************************//**
-*****************************************************************************/
-void SYS_TaskHandler(void)
-{
-  PHY_TaskHandler();
-  NWK_TaskHandler();
-  SYS_TimerTaskHandler();
-  
-}
+#define USART_HOST_RX_ISR_ENABLE() usart_enable_interrupt(USART_HOST, \
+		US_IER_RXRDY); \
+	NVIC_EnableIRQ(USART_HOST_IRQn);
+
+#endif /* CONF_SIO2HOST_H_INCLUDED */

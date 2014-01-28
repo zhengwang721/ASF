@@ -3,7 +3,7 @@
 #include "conf_sleepmgr.h"
 #include "sysclk.h"
 #include "delay.h"
-
+#include "led.h"
 /*! \brief This macro initiates read synchronization of the RTC32 CNT register
  *
  *  Initiates synchronization of CNT register from RTC to system clock domain.
@@ -52,6 +52,7 @@ void sm_init(void)
 */
 void sm_sleep(unsigned int interval)
 {
+	LED_Toggle(LED0);
 	RTC32_SetTimeout((interval*1000));
 	sleepmgr_enter_sleep();
 }

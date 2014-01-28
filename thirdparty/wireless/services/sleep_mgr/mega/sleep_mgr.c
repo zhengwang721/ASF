@@ -3,7 +3,7 @@
 #include "conf_sleepmgr.h"
 #include "macsc_megarf.h"
 #include "sysclk.h"
-
+#include "led.h"
 
 #define COMPARE_MODE                               MACSC_RELATIVE_CMP
 
@@ -28,7 +28,6 @@ void sm_init(void)
 	macsc_set_cmp3_int_cb(cmp3_int_cb);
 	macsc_enable_cmp_int(MACSC_CC3);
 	macsc_enable_manual_bts();	
-
 }
 
 /**
@@ -36,8 +35,8 @@ void sm_init(void)
 */
 void sm_sleep(unsigned int interval)
 {
+	LED_Toggle(LED0);
 	macsc_use_cmp(COMPARE_MODE, interval*CONFIG_MACSC_HZ, MACSC_CC3);
  	sleep_enable();
  	sleep_enter();
-
 }

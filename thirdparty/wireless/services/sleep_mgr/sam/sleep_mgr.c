@@ -1,8 +1,8 @@
 ﻿#include "sleep_mgr.h"
-#include "wireless_api.h"
 #include "sleepmgr.h"
 #include "conf_sleepmgr.h"
-
+#include "ast.h"
+#include "osc.h"
 
 uint32_t ast_alarm, ast_counter;
 
@@ -79,7 +79,7 @@ void sm_init(void)
 /**
  * \brief This function puts the transceiver and device to sleep
  */
-void sm_sleep(uint32_t interval)
+void sm_sleep(unsigned int interval)
 {
 
 	ast_counter = ast_read_counter_value(AST);

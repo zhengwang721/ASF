@@ -81,7 +81,9 @@
 #include "nwkRoute.h"
 #include "nwkSecurity.h"
 #include "sysTimer.h"
+#ifdef APP_COORDINATOR
 #include "sio2host.h"
+#endif
 
 #ifdef APP_ENABLE_OTA
   #include "otaClient.h"
@@ -178,7 +180,7 @@ static uint8_t* rx_data;
 
 static AppMessage_t appMsg;
 static SYS_Timer_t appDataSendingTimer;
-
+#ifdef APP_COORDINATOR
 /** Hal_Uart_Byte_received Removed */
 /*****************************************************************************
 *****************************************************************************/
@@ -206,7 +208,7 @@ static void appSendMessage(uint8_t *data, uint8_t size)
 
   sio2host_putchar(cs);
 }
-
+#endif
 /*****************************************************************************
 *****************************************************************************/
 static bool appDataInd(NWK_DataInd_t *ind)
@@ -217,8 +219,9 @@ static bool appDataInd(NWK_DataInd_t *ind)
 
   msg->lqi = ind->lqi;
   msg->rssi = ind->rssi;
-
+#ifdef APP_COORDINATOR
   appSendMessage(ind->data, ind->size);
+#endif  
   return true;
 }
 
@@ -398,12 +401,12 @@ static void APP_TaskHandler(void)
 
     case APP_STATE_SENDING_DONE:
     {
-//#if APP_ENDDEVICE
-//      appState = APP_STATE_PREPARE_TO_SLEEP;
-//#else
+#if APP_ENDDEVICE
+      appState = APP_STATE_PREPARE_TO_SLEEP;
+#else
       SYS_TimerStart(&appDataSendingTimer);
       appState = APP_STATE_WAIT_SEND_TIMER;
-//#endif
+#endif
     } break;
 
     case APP_STATE_PREPARE_TO_SLEEP:
@@ -419,8 +422,8 @@ static void APP_TaskHandler(void)
     {
       PHY_SetRxState(false);
 
-      //HAL_Sleep(APP_SENDING_INTERVAL);
-      appState = APP_STATE_WAKEUP;
+      HAL_Sleep(APP_SENDING_INTERVAL/1000);
+	  appState = APP_STATE_WAKEUP;
     } break;
 
     case APP_STATE_WAKEUP:
@@ -464,18 +467,24 @@ int main(void)
 	board_init();    
 #endif  
     SYS_Init();
+	//sysclk_enable_peripheral_clock(&TRX_CTRL_0);
     cpu_irq_enable();
+	//while(1){PHY_Sleep();HAL_Sleep(5);PHY_Wakeup();LED_Toggle(LED0);delay_ms(1000);}
+#ifdef APP_COORDINATOR		
     sio2host_init();
-    #ifdef APP_ENABLE_OTA
+#endif	
+	#ifdef APP_ENABLE_OTA
     OTA_ClientInit();
     #endif
- 
+    		
     while (1)
     {
+		
         SYS_TaskHandler();
         #ifdef APP_ENABLE_OTA
         OTA_ClientTaskHandler();
         #endif
-        APP_TaskHandler();
+	    APP_TaskHandler();
+		
     }
 }

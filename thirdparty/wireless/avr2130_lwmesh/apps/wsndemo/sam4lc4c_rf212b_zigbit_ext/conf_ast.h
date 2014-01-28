@@ -1,11 +1,13 @@
 /**
- * \file sys.c
+ * \file
  *
- * \brief Main system routines implementation
+ * \brief AST configuration.
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,41 +39,17 @@
  *
  * \asf_license_stop
  *
- *
  */
 
-/*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+//! Configuration of the AST driver
 
-/*- Includes ---------------------------------------------------------------*/
-#include "sysConfig.h"
-#include "phy.h"
-#include "nwk.h"
-#include "hal.h"
-#include "sys.h"
-#include "sysTimer.h"
+#ifndef CONF_AST_H_INCLUDED
+#define CONF_AST_H_INCLUDED
 
-/*- Implementations --------------------------------------------------------*/
+//#define AST_PER_ENABLE
+#define AST_ALARM_ENABLE
+// #define AST_OVF_ENABLE
+// #define AST_READY_ENABLE
+// #define AST_CLKREADY_ENABLE
 
-/*************************************************************************//**
-*****************************************************************************/
-void SYS_Init(void)
-{
-  HAL_Init();
-  SYS_TimerInit();
-  PHY_Init();
-  NWK_Init();
-}
-
-/*************************************************************************//**
-*****************************************************************************/
-void SYS_TaskHandler(void)
-{
-  PHY_TaskHandler();
-  NWK_TaskHandler();
-  SYS_TimerTaskHandler();
-  
-}
+#endif /* CONF_AST_H_INCLUDED */

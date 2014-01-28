@@ -3,6 +3,8 @@
 #include "rtc_count.h"
 #include "system.h"
 #include "rtc_count_interrupt.h"
+#include "samd20_xplained_pro.h"
+#include "port.h"
 /**
  * @brief Configuring RTC Callback Funtion on Overflow
  *
@@ -37,6 +39,7 @@ void sm_init(void)
 	 *  needed for reading. */
 	config_rtc_count.continuously_update = true;
 	rtc_count_init(&config_rtc_count);	
+	configure_rtc_callbacks();
 }
 
 /**
@@ -44,15 +47,15 @@ void sm_init(void)
 */
 void sm_sleep(unsigned int interval)
 {
-    rtc_count_enable();	
+   	LED_Toggle(LED0);
    /* Set timeout period for rtc*/
-	res = interval % 1000;
-	interval = interval/1000;	
+	//res = interval % 1000;
+	interval = interval*1000;	
 	rtc_count_set_period(interval);
+	rtc_count_enable();
 	/*put the MCU in standby mode with RTC as wakeup source*/
 	system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
 	system_sleep();
-
 }
 
 void configure_rtc_callbacks(void)
@@ -66,4 +69,5 @@ void rtc_overflow_callback(void)
 {
 	/* Do something on RTC overflow here */
 	rtc_count_disable();
+	
 }
