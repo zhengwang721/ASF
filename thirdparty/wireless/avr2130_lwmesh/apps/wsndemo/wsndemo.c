@@ -67,6 +67,9 @@
 #include <stdio.h>
 #include <string.h>
 #include "config.h"
+#ifdef APP_COORDINATOR
+#include "sio2host.h"
+#endif
 #include "hal.h"
 #include "sys.h"
 #if SAMD20
@@ -81,9 +84,7 @@
 #include "nwkRoute.h"
 #include "nwkSecurity.h"
 #include "sysTimer.h"
-#ifdef APP_COORDINATOR
-#include "sio2host.h"
-#endif
+
 
 #ifdef APP_ENABLE_OTA
   #include "otaClient.h"
@@ -91,19 +92,7 @@
 
 /*****************************************************************************
 *****************************************************************************/
-#if APP_ADDR == 0
-  #define APP_CAPTION     "Coordinator"
-  #define APP_NODE_TYPE   0
-  #define APP_COORDINATOR 1
-#elif APP_ADDR < 0x8000
-  #define APP_CAPTION     "Router"
-  #define APP_NODE_TYPE   1
-  #define APP_ROUTER      1
-#else
-  #define APP_CAPTION     "End Device"
-  #define APP_NODE_TYPE   2
-  #define APP_ENDDEVICE   1
-#endif
+
 
 #define APP_CAPTION_SIZE  (sizeof(APP_CAPTION) - 1)
 
