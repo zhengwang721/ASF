@@ -42,7 +42,8 @@
 
 #define EDBG_CDC
 #ifndef CONF_SIO2HOST_H_INCLUDED
-#define CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED 
+ #define SERIAL_RX_BUF_SIZE_HOST    156
 #ifdef EDBG_CDC
 #define USART_HOST                 EDBG_CDC_MODULE
 // /** Baudrate setting */

@@ -40,7 +40,8 @@
  * \asf_license_stop
  */
 #ifndef CONF_SIO2HOST_H_INCLUDED
-#define CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED 
+ #define SERIAL_RX_BUF_SIZE_HOST    156
 #define USART_HOST                 EDBG_CDC_MODULE
 
 #define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(3, USART_HOST_ISR_VECT);\

@@ -80,7 +80,7 @@ static void app_alert(void);
 static void app_task(void);
 static void extended_delay_ms(uint16_t delay_ms);
 static void indicate_fault_behavior(void);
-static key_state_t key_state_read(key_id_t key_no);
+static key_id_t key_state_read(void);
 #ifdef RF4CE_CALLBACK_PARAM
 static void nlme_reset_confirm(nwk_enum_t Status);
 static void nlme_start_confirm(nwk_enum_t Status);
@@ -136,10 +136,10 @@ int main(void)
      cpu_irq_enable();
 
     
-    key_state_t key_state = key_state_read(SELECT_KEY);
+    key_id_t key_state = key_state_read();
     // For debugging: Force button press
     //button = BUTTON_PRESSED;
-    if (key_state == KEY_PRESSED)
+    if (key_state == BUTTON_0)
     {
         // Force push button pairing
         /* Cold start */
@@ -421,12 +421,124 @@ static void app_task(void)
                 static uint32_t current_time;
                 static uint32_t previous_button_time;
                 uint8_t num_records = 1;
+                zid_report_data_record_t zid_report_data[2];
+                uint8_t report_data_buffer[80];
+                uint8_t *msg_ptr = &report_data_buffer[0];
+                key_state = key_state_read();
+				if(key_state == BUTTON_0)
+				{   
+					current_time= sw_timer_get_time();
+					if ((current_time - previous_button_time) < INTER_FRAME_DURATION_US)
+					{
+						return;
+					}
+					else
+					{
+						/* Store current time*/
+						previous_button_time = current_time;
+					}
+					zid_report_data[0].report_type = INPUT;
+					zid_report_data[0].report_desc_identifier = KEYBOARD;
+					zid_report_data[0].report_data = (void *)msg_ptr;
 
-                key_state = key_state_read(SELECT_KEY);
-                if ((key_state == KEY_PRESSED) || (loop_end == false))
+					keyboard_input_desc_t *keyboard_input_desc;
+					keyboard_input_desc = (keyboard_input_desc_t *)msg_ptr;
+
+					keyboard_input_desc->modifier_keys = 0x00;
+					keyboard_input_desc->key_code[0] = 0x00;
+					keyboard_input_desc->key_code[1] = 0x00;
+					keyboard_input_desc->key_code[2] = 0x00;
+					keyboard_input_desc->key_code[3] = 0x00;
+					keyboard_input_desc->key_code[4] = 0x01;
+					keyboard_input_desc->key_code[5] = 0x00;
+					num_records = 1;
+					 if (zid_report_data_request(pairing_ref,num_records, zid_report_data, TX_OPTIONS
+					 #ifdef RF4CE_CALLBACK_PARAM
+					 ,(FUNC_PTR)zid_report_data_confirm
+					 #endif
+					 ))
+
+					 {
+						 node_status = TRANSMITTING;
+					 }
+				}
+				else if(key_state == BUTTON_1)
+				{
+					current_time= sw_timer_get_time();
+					if ((current_time - previous_button_time) < INTER_FRAME_DURATION_US)
+					{
+						return;
+					}
+					else
+					{
+						/* Store current time*/
+						previous_button_time = current_time;
+					}
+					zid_report_data[0].report_type = INPUT;
+					zid_report_data[0].report_desc_identifier = KEYBOARD;
+					zid_report_data[0].report_data = (void *)msg_ptr;
+
+					keyboard_input_desc_t *keyboard_input_desc;
+					keyboard_input_desc = (keyboard_input_desc_t *)msg_ptr;
+
+					keyboard_input_desc->modifier_keys = 0x00;
+					keyboard_input_desc->key_code[0] = 62;
+					keyboard_input_desc->key_code[1] = 0x00;
+					keyboard_input_desc->key_code[2] = 0x00;
+					keyboard_input_desc->key_code[3] = 0x00;
+					keyboard_input_desc->key_code[4] = 0x00;
+					keyboard_input_desc->key_code[5] = 0x00;
+					num_records = 1;
+					if (zid_report_data_request(pairing_ref,num_records, zid_report_data, TX_OPTIONS
+					#ifdef RF4CE_CALLBACK_PARAM
+					,(FUNC_PTR)zid_report_data_confirm
+					#endif
+					))
+
+					{
+						node_status = TRANSMITTING;
+					}
+				}
+				/*else if(key_state == BUTTON_1)
+				{
+					current_time= sw_timer_get_time();
+					if ((current_time - previous_button_time) < INTER_FRAME_DURATION_US)
+					{
+						return;
+					}
+					else
+					{
+						/ * Store current time * /
+						previous_button_time = current_time;
+					}
+					zid_report_data_record_t *zid_report_data_ptr[1];
+					zid_report_data[0].report_type = INPUT;
+					zid_report_data[0].report_desc_identifier = MOUSE;
+					zid_report_data[0].report_data = (void *)msg_ptr;
+
+					mouse_desc_t *mouse_desc;
+					mouse_desc = (mouse_desc_t *)msg_ptr;
+
+					mouse_desc->button0 = 0x00;
+					mouse_desc->button1 = 0x00;
+					mouse_desc->button2 = 0x00;
+					mouse_desc->x_coordinate = 0x05;
+					mouse_desc->y_coordinate = 0x05;
+					num_records = 1;
+					if (zid_report_data_request(pairing_ref,num_records, zid_report_data, TX_OPTIONS
+					 #ifdef RF4CE_CALLBACK_PARAM
+					 ,(FUNC_PTR)zid_report_data_confirm
+					 #endif
+					 ))
+
+					 {
+						 node_status = TRANSMITTING;
+					 }
+				}*/
+                /*if ((key_state == KEY_PRESSED) || (loop_end == false))
                 {
                     loop_end = false;
-                    /* Check time to previous transmission. */
+                    / * Check time to previous transmission. * /
 #if 1
                      current_time= sw_timer_get_time();
                     if ((current_time - previous_button_time) < INTER_FRAME_DURATION_US)
@@ -435,225 +547,233 @@ static void app_task(void)
                     }
                     else
                     {
-                        /* Store current time */
+                        / * Store current time * /
                         previous_button_time = current_time;
                     }
 #endif
                     //pal_led(LED0, LED_On);
 
                     //uint8_t cmd = 0x6b;//POWER_TOGGLE_FUNCTION;  // 0x6b
-                    /*
+                    / *
                     zrc_cmd_request(pairing_ref, 0x0000, USER_CONTROL_PRESSED,
                                     1, &cmd, TX_OPTIONS);
-                    */
+                    * /
                     //uint8_t cmd[3];
-                    zid_report_data_record_t zid_report_data[2];
-                    uint8_t report_data_buffer[80];
-                    uint8_t *msg_ptr = &report_data_buffer[0];
-                    if(report_id == 0)
-                    {
+                   zid_report_data_record_t zid_report_data[2];
+                   uint8_t report_data_buffer[80];
+                   uint8_t *msg_ptr = &report_data_buffer[0];
+                   if(report_id == 0)
+                   {
 
-                        //zid_report_data_record_t *zid_report_data_ptr[1];
-                        zid_report_data[0].report_type = INPUT;
-                        zid_report_data[0].report_desc_identifier = MOUSE;
-                        zid_report_data[0].report_data = (void *)msg_ptr;
+	                   zid_report_data_record_t *zid_report_data_ptr[1];
+	                   zid_report_data[0].report_type = INPUT;
+	                   zid_report_data[0].report_desc_identifier = MOUSE;
+	                   zid_report_data[0].report_data = (void *)msg_ptr;
 
-                        mouse_desc_t *mouse_desc;
-                        mouse_desc = (mouse_desc_t *)msg_ptr;
+	                   mouse_desc_t *mouse_desc;
+	                   mouse_desc = (mouse_desc_t *)msg_ptr;
 
-                        mouse_desc->button0 = 0x01;
-                        mouse_desc->button1 = 0x01;
-                        mouse_desc->button2 = 0x01;
-                        mouse_desc->x_coordinate = 0xA1;
-                        mouse_desc->y_coordinate = 0xA2;
-                        msg_ptr += sizeof(mouse_desc_t);
-
-
-
-                        zid_report_data[1].report_type = INPUT;
-                        zid_report_data[1].report_desc_identifier = KEYBOARD;
-                        zid_report_data[1].report_data = (void *)msg_ptr;
-
-                        keyboard_input_desc_t *keyboard_input_desc;
-                        keyboard_input_desc = (keyboard_input_desc_t *)msg_ptr;
-
-                        keyboard_input_desc->modifier_keys = 0xA3;
-                        keyboard_input_desc->key_code[0] = 0xA4;
-                        keyboard_input_desc->key_code[1] = 0xA5;
-                        keyboard_input_desc->key_code[2] = 0xA6;
-                        keyboard_input_desc->key_code[3] = 0xA7;
-                        keyboard_input_desc->key_code[4] = 0xA8;
-                        keyboard_input_desc->key_code[5] = 0xA9;
-                        //report_id = 1;
-                        num_records = 2;
-
-                    }
-                    else if(report_id == 1)
-                    {
-                        // sending contact_data
-                        zid_report_data[0].report_type = INPUT;
-                        zid_report_data[0].report_desc_identifier = CONTACT_DATA;
-                        zid_report_data[0].report_data = (void *)msg_ptr;
-
-                        contact_data_report_t *contact_data_report;
-                        contact_data_report = (contact_data_report_t *)msg_ptr;
-
-                        contact_data_report->contact_type = 0x0A;
-                        contact_data_report->contact_index = 0x0B;
-                        contact_data_report->contact_state = 0x02;
-                        contact_data_report->major_axis_orientation = 0xB1;
-                        contact_data_report->pressure = 0xB2;
-                        contact_data_report->location_x = 0x3B3;
-                        contact_data_report->location_y = 0x4B4;
-                        contact_data_report->major_axis_length = 0xB5B5;
-                        contact_data_report->minor_axis_length = 0xB6B6;
-                        num_records = 1;
-
-                        //report_id = 2;
-                    }
-                    else if(report_id == 2)
-                    {
-                        // sending tap_gesture
-                        zid_report_data[0].report_type = INPUT;
-                        zid_report_data[0].report_desc_identifier = TAP_GESTURE;
-                        zid_report_data[0].report_data = (void *)msg_ptr;
-
-                        tap_gesture_report_t *tap_gesture_report;
-                        tap_gesture_report = (tap_gesture_report_t *)msg_ptr;
-
-                        tap_gesture_report->type = 0x1C;
-                        tap_gesture_report->finger_count = 0x5;
-                        tap_gesture_report->location_x = 0x1C1;
-                        tap_gesture_report->location_y = 0x2C2;
-                        num_records = 1;
-
-                        //report_id = 3;
-                    }
-                    else if(report_id == 3)
-                    {
-                        // sending pinch_gesture & scroll_gesture
-                        zid_report_data[0].report_type = INPUT;
-                        zid_report_data[0].report_desc_identifier = SCROLL_GESTURE;
-                        zid_report_data[0].report_data = (void *)msg_ptr;
-
-                        scroll_gesture_report_t *scroll_gesture_report;
-                        scroll_gesture_report = (scroll_gesture_report_t *)msg_ptr;
-
-                        scroll_gesture_report->type = 0x1D;
-                        scroll_gesture_report->finger_count = 0x6;
-                        scroll_gesture_report->direction = 0x7;
-                        scroll_gesture_report->distance = 0x1D1;
-
-                        msg_ptr += sizeof(scroll_gesture_report_t);
-
-                        zid_report_data[1].report_type = INPUT;
-                        zid_report_data[1].report_desc_identifier = PINCH_GESTURE;
-                        zid_report_data[1].report_data = (void *)msg_ptr;
-
-                        pinch_gesture_report_t *pinch_gesture_report;
-                        pinch_gesture_report = (pinch_gesture_report_t *)msg_ptr;
-
-                        pinch_gesture_report->finger_present = 0x1;
-                        pinch_gesture_report->direction = 0x1;
-                        pinch_gesture_report->distance = 0x2D2;
-                        pinch_gesture_report->center_x = 0x3D3;
-                        pinch_gesture_report->center_y = 0x4D4;
-
-                        num_records = 2;
-                        //report_id = 4;
-                    }
-                    else if(report_id == 4)
-                    {
-                        // sending rotate_gesture & sync
-                        zid_report_data[0].report_type = INPUT;
-                        zid_report_data[0].report_desc_identifier = ROTATE_GESTURE;
-                        zid_report_data[0].report_data = (void *)msg_ptr;
-
-                        rotation_gesture_report_t *rotation_gesture_report;
-                        rotation_gesture_report = (rotation_gesture_report_t *)msg_ptr;
-
-                        rotation_gesture_report->finger_present = 0x1;
-                        rotation_gesture_report->direction = 0x1;
-                        rotation_gesture_report->magnitude = 0xE1;
-
-                        msg_ptr += sizeof(rotation_gesture_report_t);
-
-                        zid_report_data[1].report_type = INPUT;
-                        zid_report_data[1].report_desc_identifier = SYNC;
-                        zid_report_data[1].report_data = (void *)msg_ptr;
-
-                        sync_report_t *sync_report;
-                        sync_report = (sync_report_t *)msg_ptr;
-
-                        sync_report->gesture = 0x1;
-                        sync_report->contact_count = 0xE;
+	                   mouse_desc->button0 = 0x00;
+	                   mouse_desc->button1 = 0x00;
+	                   mouse_desc->button2 = 0x00;
+	                   mouse_desc->x_coordinate = 0x05;
+	                   mouse_desc->y_coordinate = 0x05;
+	                   // msg_ptr += sizeof(mouse_desc_t);
 
 
-                        num_records = 2;
 
-                        //report_id = 5;
-                    }
-                    else if(report_id == 5)
-                    {
-                        // sending touch & tap properties
+	                   
+	                   //msg_ptr += sizeof(keyboard_input_desc_t);
+	                   //report_id = 1;
+	                   //                        num_records = 1;
+	                   //                        zid_report_data[0].report_type = INPUT;
+	                   //                        zid_report_data[0].report_desc_identifier = KEYBOARD;
+	                   //                        zid_report_data[0].report_data = (void *)msg_ptr;
+	                   //                        keyboard_input_desc_t *keyboard_input_desc;
+	                   //                        keyboard_input_desc = (keyboard_input_desc_t *)msg_ptr;
+	                   //                        keyboard_input_desc->modifier_keys =0x00;
+	                   //                         keyboard_input_desc->key_code[0] = 0x01;
+	                   //                          keyboard_input_desc->key_code[1] = 0x00;
+	                   //                          keyboard_input_desc->key_code[2] = 0xA6;
+	                   //                        keyboard_input_desc->key_code[3] = 0xA7;
+	                   //                        keyboard_input_desc->key_code[4] = 0xA8;
+	                   //                        keyboard_input_desc->key_code[5] = 0xA9;
+	                   //
+	                   num_records = 1;
+                   }
+                   else if(report_id == 1)
+                   {
+	                   // sending contact_data
+	                   zid_report_data[0].report_type = INPUT;
+	                   zid_report_data[0].report_desc_identifier = CONTACT_DATA;
+	                   zid_report_data[0].report_data = (void *)msg_ptr;
 
-                        zid_report_data[0].report_type = INPUT;
-                        zid_report_data[0].report_desc_identifier = TOUCH_SENSOR_PROPERTIES;
-                        zid_report_data[0].report_data = (void *)msg_ptr;
+	                   contact_data_report_t *contact_data_report;
+	                   contact_data_report = (contact_data_report_t *)msg_ptr;
 
-                        touch_sensor_properties_t *touch_sensor_properties;
-                        touch_sensor_properties = (touch_sensor_properties_t *)msg_ptr;
+	                   contact_data_report->contact_type = 0x0A;
+	                   contact_data_report->contact_index = 0x0B;
+	                   contact_data_report->contact_state = 0x02;
+	                   contact_data_report->major_axis_orientation = 0xB1;
+	                   contact_data_report->pressure = 0xB2;
+	                   contact_data_report->location_x = 0x3B3;
+	                   contact_data_report->location_y = 0x4B4;
+	                   contact_data_report->major_axis_length = 0xB5B5;
+	                   contact_data_report->minor_axis_length = 0xB6B6;
+	                   num_records = 1;
 
-                        touch_sensor_properties->no_of_additional_contacts = 0xF;
-                        touch_sensor_properties->origin = 0x2;
-                        touch_sensor_properties->reliable_index = 0x1;
-                        touch_sensor_properties->gestures = 0x1;
-                        touch_sensor_properties->resolution_x = 0xF1;
-                        touch_sensor_properties->resolution_y = 0xF2;
-                        touch_sensor_properties->max_coordinate_x = 0x3F3;
-                        touch_sensor_properties->max_coordinate_y = 0x4F4;
-                        touch_sensor_properties->shape = 0x5;
+	                   //report_id = 2;
+                   }
+                   else if(report_id == 2)
+                   {
+	                   //                        // sending tap_gesture
+	                   //                        zid_report_data[0].report_type = INPUT;
+	                   //                        zid_report_data[0].report_desc_identifier = TAP_GESTURE;
+	                   //                        zid_report_data[0].report_data = (void *)msg_ptr;
+	                   //
+	                   //                        tap_gesture_report_t *tap_gesture_report;
+	                   //                        tap_gesture_report = (tap_gesture_report_t *)msg_ptr;
+	                   //
+	                   //                        tap_gesture_report->type = 0x1C;
+	                   //                        tap_gesture_report->finger_count = 0x5;
+	                   //                        tap_gesture_report->location_x = 0x1C1;
+	                   //                        tap_gesture_report->location_y = 0x2C2;
+	                   //                        num_records = 1;
+	                   zid_report_data[0].report_type = INPUT;
+	                   zid_report_data[0].report_desc_identifier = KEYBOARD;
+	                   zid_report_data[0].report_data = (void *)msg_ptr;
 
-                        msg_ptr += sizeof(touch_sensor_properties_t);
+	                   keyboard_input_desc_t *keyboard_input_desc;
+	                   keyboard_input_desc = (keyboard_input_desc_t *)msg_ptr;
 
-                        zid_report_data[1].report_type = INPUT;
-                        zid_report_data[1].report_desc_identifier = TAP_SUPPORT_PROPERTIES;
-                        zid_report_data[1].report_data = (void *)msg_ptr;
+	                   keyboard_input_desc->modifier_keys = 0x00;
+	                   keyboard_input_desc->key_code[0] = 0x00;
+	                   keyboard_input_desc->key_code[1] = 0x00;
+	                   keyboard_input_desc->key_code[2] = 0x00;
+	                   keyboard_input_desc->key_code[3] = 0x00;
+	                   keyboard_input_desc->key_code[4] = 0x08;
+	                   keyboard_input_desc->key_code[5] = 0x00;
+	                   num_records = 1;
+	                   //report_id = 3;
+                   }
+                   else if(report_id == 3)
+                   {
+	                   // sending pinch_gesture & scroll_gesture
+	                   zid_report_data[0].report_type = INPUT;
+	                   zid_report_data[0].report_desc_identifier = SCROLL_GESTURE;
+	                   zid_report_data[0].report_data = (void *)msg_ptr;
 
-                        tap_support_properties_t *tap_support_properties;
-                        tap_support_properties = (tap_support_properties_t *)msg_ptr;
+	                   scroll_gesture_report_t *scroll_gesture_report;
+	                   scroll_gesture_report = (scroll_gesture_report_t *)msg_ptr;
 
-                        tap_support_properties->single_tap = 0x1;
-                        tap_support_properties->tap_and_a_half = 0x1;
-                        tap_support_properties->double_tap = 0x1;
-                        tap_support_properties->long_tap = 0x1;
+	                   scroll_gesture_report->type = 0x1D;
+	                   scroll_gesture_report->finger_count = 0x6;
+	                   scroll_gesture_report->direction = 0x7;
+	                   scroll_gesture_report->distance = 0x1D1;
 
-                        num_records = 2;
-                        loop_end = true;
+	                   msg_ptr += sizeof(scroll_gesture_report_t);
 
-                        //report_id = 6;
-                    }
+	                   zid_report_data[1].report_type = INPUT;
+	                   zid_report_data[1].report_desc_identifier = PINCH_GESTURE;
+	                   zid_report_data[1].report_data = (void *)msg_ptr;
+
+	                   pinch_gesture_report_t *pinch_gesture_report;
+	                   pinch_gesture_report = (pinch_gesture_report_t *)msg_ptr;
+
+	                   pinch_gesture_report->finger_present = 0x1;
+	                   pinch_gesture_report->direction = 0x1;
+	                   pinch_gesture_report->distance = 0x2D2;
+	                   pinch_gesture_report->center_x = 0x3D3;
+	                   pinch_gesture_report->center_y = 0x4D4;
+
+	                   num_records = 2;
+	                   //report_id = 4;
+                   }
+                   else if(report_id == 4)
+                   {
+	                   // sending rotate_gesture & sync
+	                   zid_report_data[0].report_type = INPUT;
+	                   zid_report_data[0].report_desc_identifier = ROTATE_GESTURE;
+	                   zid_report_data[0].report_data = (void *)msg_ptr;
+
+	                   rotation_gesture_report_t *rotation_gesture_report;
+	                   rotation_gesture_report = (rotation_gesture_report_t *)msg_ptr;
+
+	                   rotation_gesture_report->finger_present = 0x1;
+	                   rotation_gesture_report->direction = 0x1;
+	                   rotation_gesture_report->magnitude = 0xE1;
+
+	                   msg_ptr += sizeof(rotation_gesture_report_t);
+
+	                   zid_report_data[1].report_type = INPUT;
+	                   zid_report_data[1].report_desc_identifier = SYNC;
+	                   zid_report_data[1].report_data = (void *)msg_ptr;
+
+	                   sync_report_t *sync_report;
+	                   sync_report = (sync_report_t *)msg_ptr;
+
+	                   sync_report->gesture = 0x1;
+	                   sync_report->contact_count = 0xE;
 
 
-                    if (zid_report_data_request(pairing_ref,num_records, zid_report_data, TX_OPTIONS
-  #ifdef RF4CE_CALLBACK_PARAM
-                                                ,(FUNC_PTR)zid_report_data_confirm
-  #endif
-                             ))
+	                   num_records = 2;
 
-                      {
-                          node_status = TRANSMITTING;
-                      }
-                }
+	                   //report_id = 5;
+                   }
+                   else if(report_id == 5)
+                   {
+	                   // sending touch & tap properties
+
+	                   zid_report_data[0].report_type = INPUT;
+	                   zid_report_data[0].report_desc_identifier = TOUCH_SENSOR_PROPERTIES;
+	                   zid_report_data[0].report_data = (void *)msg_ptr;
+
+	                   touch_sensor_properties_t *touch_sensor_properties;
+	                   touch_sensor_properties = (touch_sensor_properties_t *)msg_ptr;
+
+	                   touch_sensor_properties->no_of_additional_contacts = 0xF;
+	                   touch_sensor_properties->origin = 0x2;
+	                   touch_sensor_properties->reliable_index = 0x1;
+	                   touch_sensor_properties->gestures = 0x1;
+	                   touch_sensor_properties->resolution_x = 0xF1;
+	                   touch_sensor_properties->resolution_y = 0xF2;
+	                   touch_sensor_properties->max_coordinate_x = 0x3F3;
+	                   touch_sensor_properties->max_coordinate_y = 0x4F4;
+	                   touch_sensor_properties->shape = 0x5;
+
+	                   msg_ptr += sizeof(touch_sensor_properties_t);
+
+	                   zid_report_data[1].report_type = INPUT;
+	                   zid_report_data[1].report_desc_identifier = TAP_SUPPORT_PROPERTIES;
+	                   zid_report_data[1].report_data = (void *)msg_ptr;
+
+	                   tap_support_properties_t *tap_support_properties;
+	                   tap_support_properties = (tap_support_properties_t *)msg_ptr;
+
+	                   tap_support_properties->single_tap = 0x1;
+	                   tap_support_properties->tap_and_a_half = 0x1;
+	                   tap_support_properties->double_tap = 0x1;
+	                   tap_support_properties->long_tap = 0x1;
+
+	                   num_records = 2;
+	                   loop_end = false;
+
+	                   //report_id = 6;
+                    }*/
+
+
+                   
+                
                 else //(button == BUTTON_OFF)
                 {
                     if (nwk_stack_idle())
                     {
                         /* Set MCU to sleep */
                        // pal_sleep_mode(SLEEP_MODE_PWR_SAVE);
-                        /* MCU is awake again */
+                        /* MCU is awake again*/
                     }
                 }
+				
             }
             break;
         case CONFIGURING_ATTRIBUTES:
@@ -881,6 +1001,7 @@ static void app_alert(void)
 		delay_us(0xFFFF);
 	}
 }
+/*
 static key_state_t key_state_read(key_id_t key_no)
 {
     key_state_t key_val = KEY_RELEASED;
@@ -894,6 +1015,27 @@ static key_state_t key_state_read(key_id_t key_no)
 	  }
       
    return key_val;
+}*/
+static key_id_t key_state_read(void)
+{
+	key_id_t key = NO_BUTTON;
+	
+	if(!ioport_get_pin_level(GPIO_PUSH_BUTTON_0))
+	{
+		key = BUTTON_0;
+	}
+		if(!ioport_get_pin_level(GPIO_PUSH_BUTTON_1))
+	{
+		key = BUTTON_1;
+	}
+	if(!ioport_get_pin_level(GPIO_PUSH_BUTTON_2))
+	{
+		key = BUTTON_2;
+	}
+
+
+	
+	return key;
 }
 
 
