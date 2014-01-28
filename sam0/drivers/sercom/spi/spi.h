@@ -1515,56 +1515,56 @@ enum status_code spi_select_slave(
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>I <sup>\b (1)</sup></td>
+  *			<td>I <sup>(1)</sup></td>
   *			<td>MISO</td>
   *			<td>SCK</td>
   *			<td>-</td>
   *			<td>MOSI</td>
   *		</tr>
   *		<tr>
-  *			<td>J <sup>\b (1)</sup></td>
+  *			<td>J <sup>(1)</sup></td>
   *			<td>-</td>
   *			<td>SCK</td>
   *			<td>-</td>
   *			<td>MOSI</td>
   *		</tr>
   *		<tr>
-  *			<td>K <sup>\b (1)</sup></td>
+  *			<td>K <sup>(1)</sup></td>
   *			<td>-</td>
   *			<td>SCK</td>
   *			<td>MISO</td>
   *			<td>MOSI</td>
   *		</tr>
   *		<tr>
-  *			<td>L <sup>\b (1)</sup></td>
+  *			<td>L <sup>(1)</sup></td>
   *			<td>-</td>
   *			<td>SCK</td>
   *			<td>-</td>
   *			<td>MOSI</td>
   *		</tr>
   *		<tr>
-  *			<td>M <sup>\b (1)</sup></td>
+  *			<td>M <sup>(1)</sup></td>
   *			<td>MOSI</td>
   *			<td>-</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>N <sup>\b (1)</sup></td>
+  *			<td>N <sup>(1)</sup></td>
   *			<td>MOSI</td>
   *			<td>MISO</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>O <sup>\b (1)</sup></td>
+  *			<td>O <sup>(1)</sup></td>
   *			<td>MOSI</td>
   *			<td>-</td>
   *			<td>MISO</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>P <sup>\b (1)</sup></td>
+  *			<td>P <sup>(1)</sup></td>
   *			<td>MOSI</td>
   *			<td>-</td>
   *			<td>-</td>
@@ -1572,7 +1572,7 @@ enum status_code spi_select_slave(
   *		</tr>
   * </table>
   *
-  * <i>\b (1) Not available in all silicon revisions.</i>
+  * <i>(1) Not available in all silicon revisions.</i>
   *
   * \section asfdoc_sam0_sercom_spi_mux_settings_slave Slave Mode Settings
   * The following table describes the SERCOM pin functionalities for the various
@@ -1646,56 +1646,56 @@ enum status_code spi_select_slave(
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>I <sup>\b (1)</sup></td>
+  *			<td>I <sup>(1)</sup></td>
   *			<td>MOSI</td>
   *			<td>SCK</td>
   *			<td>/SS</td>
   *			<td>MISO</td>
   *		</tr>
   *		<tr>
-  *			<td>J <sup>\b (1)</sup></td>
+  *			<td>J <sup>(1)</sup></td>
   *			<td>-</td>
   *			<td>SCK</td>
   *			<td>/SS</td>
   *			<td>MISO</td>
   *		</tr>
   *		<tr>
-  *			<td>K <sup>\b (1)</sup></td>
+  *			<td>K <sup>(1)</sup></td>
   *			<td>-</td>
   *			<td>SCK</td>
   *			<td>/SS</td>
   *			<td>MISO</td>
   *		</tr>
   *		<tr>
-  *			<td>L <sup>\b (1)</sup></td>
+  *			<td>L <sup>(1)</sup></td>
   *			<td>-</td>
   *			<td>SCK</td>
   *			<td>/SS</td>
   *			<td>MISO</td>
   *		</tr>
   *		<tr>
-  *			<td>M <sup>\b (1)</sup></td>
+  *			<td>M <sup>(1)</sup></td>
   *			<td>MISO</td>
   *			<td>/SS</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>N <sup>\b (1)</sup></td>
+  *			<td>N <sup>(1)</sup></td>
   *			<td>MISO</td>
   *			<td>/SS</td>
   *			<td>-</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>O <sup>\b (1)</sup></td>
+  *			<td>O <sup>(1)</sup></td>
   *			<td>MISO</td>
   *			<td>/SS</td>
   *			<td>MOSI</td>
   *			<td>SCK</td>
   *		</tr>
   *		<tr>
-  *			<td>P <sup>\b (1)</sup></td>
+  *			<td>P <sup>(1)</sup></td>
   *			<td>MISO</td>
   *			<td>/SS</td>
   *			<td>-</td>
@@ -1703,7 +1703,7 @@ enum status_code spi_select_slave(
   *		</tr>
   * </table>
   *
-  * <i>\b (1) Not available in all silicon revisions.</i>
+  * <i>(1) Not available in all silicon revisions.</i>
   *
   *
   * \page asfdoc_sam0_sercom_spi_document_revision_history Document Revision History
