@@ -10,10 +10,6 @@
 		<build type="header-file" value="conf_flash.h"/>
 		<build type="header-file" value="conf_hw_timer.h"/>
 		<build type="header-file" value="conf_board.h"/>
-		
-		<build type="define" name="EXTERN_EEPROM_AVAILABLE" value ="0"/>
-		<build type="define" name="AVR477_QTOUCH" value =""/>
-		<build type="define" name="DEBUG" value ="0"/>
 	
 		<config name="config.thirdparty.wireless.avr2025_mac.source.mac.api" value="no" />
 		<config name="config.common.drivers.nvm.mem_type" value="no_extmem"/>

@@ -15,16 +15,6 @@
  */
 
 /* === INCLUDES ============================================================ */
-
-//#include <stddef.h>
-//#include <stdint.h>
-//#include <stdbool.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <ctype.h>
-//#include <inttypes.h>
-//#include <stdio.h>
-
 #include <asf.h>
 #include "conf_board.h"
 #include "led.h"
@@ -43,7 +33,7 @@
 #define BUTTON_2 2
 
 /* === TYPES =============================================================== */
-
+/* ZID States for Tracking */
 typedef enum node_status_tag
 {
     IDLE,
@@ -111,8 +101,6 @@ FLASH_DECLARE(uint8_t app_user_string[15]) = APP_USER_STRING;
 
 static node_status_t node_status;
 static uint8_t pairing_ref = 0xFF;
-//static uint32_t previous_button_time;
-//static uint32_t current_time;
 #if (defined  RF4CE_CALLBACK_PARAM)
 static zid_indication_callback_t zid_ind;
 
@@ -132,7 +120,6 @@ static void app_nlme_rx_enable_confirm(nwk_enum_t Status);
 static void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef);
 static void zid_report_data_confirm(nwk_enum_t Status, uint8_t PairingRef);
 static void zid_data_confirm(nwk_enum_t Status, uint8_t PairingRef);
-//static void zid_heart_beat_confirm(nwk_enum_t Status, uint8_t PairingRef);
 static void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
                                                 zid_report_data_record_t *zid_report_data_record_ptr, uint8_t RxLinkQuality, uint8_t RxFlags);
 static void zid_get_report_indication(uint8_t PairingRef,zid_report_types_t zid_report_type, zid_report_desc_t zid_report_desc,
