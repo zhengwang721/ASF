@@ -205,11 +205,11 @@ static inline void _dbg_write_str_to_buffer(const char *str,
  *
  * \attention The print buffer should be full when this function is called
  *    because requesting more buffer space than is currently used in will cause
- *    \ref _dbg_request_free_space() to never return.
+ *    \ref _dbg_wait_for_requested_space() to never return.
  *
  * \pre \ref _dbg_stop_uart() must be called before this function.
- * \post \ref _dbg_request_free_space() must be used to detect when the space
- *    has been freed.
+ * \post \ref _dbg_wait_for_requested_space() must be used to detect when the
+ *    space has been freed.
  */
 static inline dbg_buffer_space_t _dbg_request_free_space(
 		dbg_buffer_space_t length)
@@ -257,6 +257,7 @@ static inline void _dbg_putstr(const char *str, size_t length)
 
 	_dbg_stop_uart();
 
+	// Write entire string, or as much as will fit into buffer
 	write_length = _dbg_get_free_buffer_space();
 	if (write_length) {
 		write_length = min(write_length, length);
