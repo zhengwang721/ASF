@@ -89,8 +89,8 @@ typedef enum node_status_tag
 
 
 uint16_t key_mapping_media[] = {BUTTON_STOP, BUTTON_PREVIOUS, BUTTON_NEXT, BUTTON_MPLAYER, \
-                               BUTTON_MUTE, BUTTON_PLAY, BUTTON_PAUSE, BUTTON_MODE, \
-                               BUTTON_VOLUME_P, BUTTON_VOLUME_N, BUTTON_REPEAT, LAST_BUTTON_INDEX};
+                               BUTTON_VOLUME_P, BUTTON_PLAY, BUTTON_PAUSE, BUTTON_VOLUME_N, \
+                               LAST_BUTTON_INDEX, LAST_BUTTON_INDEX, BUTTON_MUTE, LAST_BUTTON_INDEX};
 
 uint8_t key_mapping_ppt[] = {BUTTON_ESC, BUTTON_UP, BUTTON_LEFT, BUTTON_RIGHT, \
                              BUTTON_TAB, BUTTON_DOWN, BUTTON_DELETE, BUTTON_MODE, \
@@ -166,14 +166,14 @@ int main(void)
     
     BSP_InitQTouch(appButtonsInd);
 #ifdef QDEBUG 
-    while(1)
-    {
-      //If Touch Detected return will be true else false
-      if(Touch_measurement(&b_event, &b_state))
-      {
-        ;
-      }      
-    }
+//    while(1)
+//    {
+//      //If Touch Detected return will be true else false
+//      if(Touch_measurement(&b_event, &b_state))
+//      {
+//        ;
+//      }      
+//    }
 #endif
     
        
@@ -197,7 +197,7 @@ int main(void)
     
     // any button press after power on
     
-    if(Touch_measurement(&b_event, &b_state))
+    if(b_event)
     {
         // Force push button pairing
         /* Cold start */
@@ -223,7 +223,7 @@ int main(void)
     /* Endless while loop */
     while (1)
     {
-        Touch_measurement(&b_event, &b_state);
+        //Touch_measurement(&b_event, &b_state);
         app_task(); /* Application task */
         nwk_task(); /* RF4CE network layer task */
     }
@@ -479,7 +479,7 @@ static void app_task(void)
                 static uint32_t previous_button_time;
                 uint8_t num_records = 1;
                            
-                if (Touch_measurement(&b_event, &b_state))
+                if (Touch_measurement(&b_event, &b_state)/*num_records != 1*/)
                 {                  
 
                     current_time= sw_timer_get_time();
@@ -491,22 +491,10 @@ static void app_task(void)
                     {
                         /* Store current time */
                         previous_button_time = current_time;
-                    }
+                    }              
+
                     
-                    if(key_mapping_media[b_state] == BUTTON_MODE)
-                    {
-                      if(button_mode == BUTTON_MEDIA_MODE)
-                      {
-                        button_mode = BUTTON_PPT_MODE;
-                      }
-                      else
-                      {
-                        button_mode = BUTTON_MEDIA_MODE;
-                      }
-                      return;
-                    }
-                    
-                    if(button_mode == BUTTON_MEDIA_MODE)
+                    if(key_mapping_media[b_state] != LAST_BUTTON_INDEX)
                     {
                       zid_report_data_record_t zid_report_data[2];
                       uint8_t report_data_buffer[80];
@@ -539,41 +527,6 @@ static void app_task(void)
                           node_status = TRANSMITTING;
                       }
                     }
-                    else
-                    {
-                      zid_report_data_record_t zid_report_data[2];
-                      uint8_t report_data_buffer[80];
-                      uint8_t *msg_ptr = &report_data_buffer[0];
-
-                      zid_report_data[0].report_type = INPUT;
-                      zid_report_data[0].report_desc_identifier = KEYBOARD;
-                      zid_report_data[0].report_data = (void *)msg_ptr;
-
-                      keyboard_input_desc_t *keyboard_input_desc;
-                      keyboard_input_desc = (keyboard_input_desc_t *)msg_ptr;
-
-                      keyboard_input_desc->modifier_keys = 0x00;
-                      keyboard_input_desc->key_code[0] = key_mapping_ppt[b_state];
-                      keyboard_input_desc->key_code[1] = 0x00;
-                      keyboard_input_desc->key_code[2] = 0x00;
-                      keyboard_input_desc->key_code[3] = 0x00;
-                      keyboard_input_desc->key_code[4] = 0x00;
-                      keyboard_input_desc->key_code[5] = 0x00;
-                      //report_id = 1;
-                      num_records = 1;
-                    if (zid_report_data_request(pairing_ref,num_records, zid_report_data, TX_OPTIONS
-  #ifdef RF4CE_CALLBACK_PARAM
-                                                ,(FUNC_PTR)zid_report_data_confirm
-  #endif
-                        ))
-
-                      {
-                          node_status = TRANSMITTING;
-                          b_state = LAST_BUTTON_INDEX;
-                          b_event = LAST_BUTTON_INDEX;
-                      }
-                    }
-
                 }
                 else //(button == BUTTON_OFF)
                 {
