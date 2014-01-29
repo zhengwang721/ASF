@@ -663,13 +663,13 @@ static inline void extint_nmi_clear_detected(
  *	<tr>
  *		<td>
  *		\li Driver updated to follow driver type convention.
- *		\li Removed \c extint_reset(), \c extint_disable() and
+ *		\li Removed \c %extint_reset(), \c %extint_disable() and
  *		    \c extint_enable() functions. Added internal function
- *		    \c _system_extint_init().
+ *		    \c %_system_extint_init().
  *		\li Added configuration EXTINT_CLOCK_SOURCE in conf_extint.h.
  *		\li Removed configuration EXTINT_CALLBACKS_MAX in conf_extint.h, and
  *		    added channel parameter in the register functions
- *		    \c extint_register_callback() and \c extint_unregister_callback().
+ *		    \c %extint_register_callback() and \c %extint_unregister_callback().
  *		</td>
  *	</tr>
  *	<tr>
