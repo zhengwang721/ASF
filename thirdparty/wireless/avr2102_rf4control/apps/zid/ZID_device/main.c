@@ -1,9 +1,43 @@
 /**
  * @file main.c
  *
- * @brief Single button controller application
+ * @brief ZID Device application
  *
- * $Id: main.c 34021 2013-01-29 05:42:49Z agasthian.s $
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
@@ -99,11 +133,52 @@ static void zid_set_attribute_confirm(nwk_enum_t status,uint8_t PairingRef, zid_
 #endif
 
 /* === IMPLEMENTATION ====================================================== */
-
+/**
+ * \mainpage
+ * \section preface Preface
+ * This is the reference manual for ZID device demo
+ *application.
+ * \section main_files Application Files
+ * - main.c                     Application main file.
+ * - vendor_data.c               Vendor Specific API functions
+ * \section intro Application Introduction
+ *  ZID Class device is the RF4CE demo application which can be used in
+ *the ZID adaptor - Class device setup
+ *  This will support push button pairing procedure and zid reports i.e Sending
+ *the Standard HID reports(Keyboard,Mouse,Touch sensor etc...)  to the remote terminal adaptor over the air.
+ *
+ *	Application supports cold reset and warm reset. While powering on the
+ *device, if the Select key is  pressed then it does cold reset.
+ *  Otherwise it does warm reset i.e retrieving the network information base
+ *from NVM.
+ *
+ *  If the Select key is pressed on power on, it does the push pairing procedure
+ *following the cold reset.
+ *
+ *  The Application will use the ZID reports to send hid reports to
+ *paired device.
+ * \section api_modules Application Dependent Modules
+ * - \ref group_rf4control
+ * - \subpage api
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR .
+ * Other compilers may or may not work.
+ *
+ * \section references References
+ * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
+ *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
+ *Area
+ *     Networks (WPANs).\n\n
+ * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
+ *
+ * \section contactinfo Contact Information
+ * For further information,visit
+ * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
+ */
 
 
 /**
- * @brief Main function of the Single Button Controller application
+ * @brief Main function of the ZID Device application
  */
 int main(void)
 {
