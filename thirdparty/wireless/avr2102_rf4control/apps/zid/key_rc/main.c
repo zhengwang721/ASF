@@ -232,6 +232,7 @@ static uint8_t set_attribute_index= 0;
 /* === PROTOTYPES ========================================================== */
 static void app_alert(void);
 uint8_t get_zid_keyrc_button(button_id_t button_id);
+void key_rc_board_init(void);
 static void app_task(void);
 static void extended_delay_ms(uint16_t delay_ms);
 static void indicate_fault_behavior(void);
@@ -270,7 +271,7 @@ int main(void)
      * The board-specific conf_board.h file contains the configuration of
      * the board initialization.
      */
-    board_init();
+    key_rc_board_init();
     
 //    while(1)
 //    {
@@ -1070,17 +1071,9 @@ uint8_t get_zid_keyrc_button(button_id_t button_id)
 #include "pal.h"
 
 
-void board_init(void)
-{
-//	/* On board LED initialization */
-//	ioport_configure_pin(LED_ON_BOARD,	
-//	IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);
-//		
-//	/* On board Switch initialization */
-//	ioport_configure_pin(GPIO_PUSH_BUTTON_ON_BOARD,	
-//	IOPORT_DIR_INPUT | IOPORT_PULL_UP);
-  
-      /* Initialize buttons and LEDs */
+void key_rc_board_init(void)
+{ 
+    /* Initialize buttons and LEDs */
     pal_button_init();
     pal_led_init();
 }
