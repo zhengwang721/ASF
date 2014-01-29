@@ -1,13 +1,48 @@
 /**
  * @file main.c
  *
- * @brief RF4CE Serial Interface Application
+ * @brief Terminal Adaptor application
  *
- * $Id: main.c 33720 2012-12-04 09:34:59Z agasthian.s $
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
  */
+
 /*
  * Copyright (c) 2009, Atmel Corporation All rights reserved.
  *
@@ -118,6 +153,51 @@ static void print_pairing_table(bool start_from_scratch, uint8_t *table_entry, u
 static void led_handling(void *callback_parameter);
 static void app_alert(void);
 /* === Implementation ====================================================== */
+/**
+ * \mainpage
+ * \section preface Preface
+ * This is the reference manual for ZID Terminal adaptor application.
+ * \section main_files Application Files
+ * - main.c                      Application main file.
+ * - vendor_data.c               Vendor Specific API functions
+ * \section intro Application Introduction
+ * Terminal Adaptor Example Application will act as adaptor for the RF4CE ZID
+ *Class device application. Terminal adaptor stack will respond for the user
+ *input via serial interface.
+ * The user options will be printed on the serial console. Where as the user
+ *will choose the options like cold start, warm start, reset(NIB will be reset
+ *to default values and stored in EEPROM),
+ * start network and push button pairing, print the pairing table, 
+ * 
+ *
+ * options are user selectable via serial console, response will be printed on
+ *the serial console after processing the requests.
+ *
+ * Push button pairing procedure can be triggered at target side either by using
+ *"All-in-one start" option or "Reset"->"Start"->"ZID Connecting" sequence and make
+ *sure that the PBP is triggered at the ZID class device side also.
+ * The status of the push button pairing procedure will be displayed on the
+ *terminal.Then it displays ZID reports  received from the ZID Class device.
+ *
+ * Terminal adaptor can be used with the ZID device application.
+ * \section api_modules Application Dependent Modules
+ * - \ref group_rf4control
+ * - \subpage api
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR .
+ * Other compilers may or may not work.
+ *
+ * \section references References
+ * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
+ *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
+ *Area
+ *     Networks (WPANs).\n\n
+ * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
+ *
+ * \section contactinfo Contact Information
+ * For further information,visit
+ * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
+ */
 
 
 /**
