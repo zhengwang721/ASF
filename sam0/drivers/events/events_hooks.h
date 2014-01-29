@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Event System Driver
+ * \brief SAM D20/D21 Event System Driver
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -82,7 +82,7 @@ enum status_code events_create_hook(struct events_hook *hook, events_interrupt_h
 /**
  * \brief Insert hook into the event drivers interrupt hook queue
  *
- * Inserts a hook into the event drivers interrupt hook queue 
+ * Inserts a hook into the event drivers interrupt hook queue
  *
  * \param[in] resource Pointer to an \ref events_resource struct instance
  * \param[in] hook     Pointer to an \ref events_hook struct instance
@@ -115,7 +115,7 @@ enum status_code events_del_hook(struct events_resource *resource, struct events
  * Enable an interrupt source so can trigger execution of an interrupt hook
  *
  * \param[in] resource Pointer to an \ref events_resource struct instance
- * \param[in] source   One of the members in the \ref events_interrupt_source enumerator 
+ * \param[in] source   One of the members in the \ref events_interrupt_source enumerator
  *
  * \return Status of the interrupt source enable procedure
  * \retval STATUS_OK              Enabling of the interrupt source went sucessful
@@ -150,7 +150,7 @@ bool events_is_interrupt_set(struct events_resource *resource, enum events_inter
  * \return Status of the interrupt source
  * \retval STATUS_OK Interrupt source was acknowledged sucessfully
  *
- */ 
+ */
 enum status_code events_ack_interrupt(struct events_resource *resource, enum events_interrupt_source source);
 
 #endif

@@ -60,11 +60,6 @@
 #define _EVENTS_START_OFFSET_OVERRUN_BIT         0
 /** @} */
 
-struct _events_module {
-	volatile uint32_t allocated_channels;
-	uint8_t           free_channels;
-};
-
 struct _events_module _events_inst = {
 		.allocated_channels = 0,
 		.free_channels      = EVSYS_CHANNELS,

@@ -30,13 +30,13 @@
 
 			<info type="description" value="pdf">
 				This document describes how to use the Peripheral Event System on
- 				the SAM D20/D21, both the ASF driver and the peripheral itself.
+				the SAM D20/D21, both the ASF driver and the peripheral itself.
 			</info>
 
 			<build type="include-path" value="."/>
 			<build type="header-file" subtype="api" value="events.h"/>
 			<build type="c-source" value="events.c"/>
-	
+
 			<build type="header-file" value="quick_start/qs_events_basic.h"/>
 
 			<build type="doxygen-entry-point" value="asfdoc_sam0_events_group"/>

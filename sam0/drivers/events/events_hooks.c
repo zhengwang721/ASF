@@ -1,7 +1,7 @@
 /*
  * \file
  *
- * \brief SAM D2x Event System Controller Driver
+ * \brief SAM D20/D21 Event System Controller Driver
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -47,6 +47,7 @@
 #define _EVENTS_INTFLAGS_DETECT  0x0f00ff00
 #define _EVENTS_INTFLAGS_OVERRUN 0x000f00ff
 #define _EVENTS_INTFLAGS_MASK    _EVENTS_INTFLAGS_DETECT | _EVENTS_INTFLAGS_OVERRUN
+
 extern struct _events_module _events_inst;
 
 enum status_code events_create_hook(struct events_hook *hook, events_interrupt_hook func)
@@ -103,7 +104,7 @@ enum status_code events_del_hook(struct events_resource *resource, struct events
 			/* Check if the current hook is the one we are looking for */
 			while (tmp_hook != hook) {
 
-				/* If the current hook pointer is NULL the hook is not found in the list */ 
+				/* If the current hook pointer is NULL the hook is not found in the list */
 				if(tmp_hook == NULL) {
 					return STATUS_ERR_NOT_FOUND;
 				}
