@@ -25,7 +25,7 @@
 		<config name="config.common.services.usb.class.hid.device.keyboard.composite" value="multimedia"/>
 		<config name="thirdparty.config.common.services.usb.class.hid.device.keyboard.composite" value = "enable"/>
 		<config name="config.common.drivers.nvm.mem_type" value="no_extmem"/>
-
+        <config name="config.compiler.iarew.dlib" value="full"/>
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zid.terminal_aptr_dbg"/>
 		<require idref="board.xmega_rf233_zigbit"/>
 		<generator value="iarew"/>
