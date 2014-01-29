@@ -96,7 +96,7 @@
   #error Unsupported compiler
 */
 #else
-  #if defined(SAMD20) || defined (SAM4L)
+  #if SAMD20 
     #define PRAGMA(x)
 
     #define PACK __attribute__ ((packed))

@@ -67,9 +67,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "config.h"
-#ifdef APP_COORDINATOR
-#include "sio2host.h"
-#endif
+
 #include "hal.h"
 #include "sys.h"
 #if SAMD20
@@ -84,7 +82,9 @@
 #include "nwkRoute.h"
 #include "nwkSecurity.h"
 #include "sysTimer.h"
-
+#ifdef APP_COORDINATOR
+#include "sio2host.h"
+#endif
 
 #ifdef APP_ENABLE_OTA
   #include "otaClient.h"
