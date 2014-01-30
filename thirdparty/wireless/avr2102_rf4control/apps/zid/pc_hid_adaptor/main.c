@@ -56,7 +56,7 @@
  * Once the pairing is successful the adaptor will receive ZID reports from class device and redirect the HID reports to PC.
  *  There by moving the mouse or replicating the keyboard functionality.
  *
- * Then it displays ZID reports  received from the ZID Class device.
+ * 
  *
  * Terminal adaptor can be used with the ZID device application.
  * \section api_modules Application Dependent Modules
@@ -80,7 +80,7 @@
 
 
 /*
- * Copyright (c) 2009, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
