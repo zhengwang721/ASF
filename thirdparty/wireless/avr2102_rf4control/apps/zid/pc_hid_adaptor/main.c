@@ -1,13 +1,84 @@
 /**
  * @file main.c
  *
- * @brief RF4CE Serial Interface Application
+ * @brief ZID HID PC Adaptor Application
  *
- * $Id: main.c 33720 2012-12-04 09:34:59Z agasthian.s $
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
  */
+ /**
+ * \mainpage
+ * \section preface Preface
+ * This is the reference manual for ZID HID PC adaptor application.
+ * \section main_files Application Files
+ * - main.c                      Application main file.
+ * - vendor_data.c               Vendor Specific API functions
+ * \section intro Application Introduction
+ * PC Adaptor Example Application will act as HID adaptor for the RF4CE ZID
+ * Class device application.Once connected the ZID HID adaptor will enumerate 
+ * as a composite device in PC(HID Compliant keyboard,HID compliant Mouse and HID compliant consumer control device).
+ * After enumeration it will start a network ,initiates push button pairing 
+ * and wait for ZID class device to pair.
+ * Once the pairing is successful the adaptor will receive ZID reports from class device and redirect the HID reports to PC.
+ *  There by moving the mouse or replicating the keyboard functionality.
+ *
+ * Then it displays ZID reports  received from the ZID Class device.
+ *
+ * Terminal adaptor can be used with the ZID device application.
+ * \section api_modules Application Dependent Modules
+ * - \ref group_rf4control
+ * - \subpage api
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR .
+ * Other compilers may or may not work.
+ *
+ * \section references References
+ * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
+ *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
+ *Area
+ *     Networks (WPANs).\n\n
+ * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
+ *
+ * \section contactinfo Contact Information
+ * For further information,visit
+ * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
+ */
+
+
 /*
  * Copyright (c) 2009, Atmel Corporation All rights reserved.
  *

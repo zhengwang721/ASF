@@ -3,7 +3,7 @@
  *
  * \brief ATmega256RFR2 AVR477 board configuration template
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
