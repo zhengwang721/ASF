@@ -54,7 +54,7 @@
  * After enumeration it will start a network ,initiates push button pairing 
  * and wait for ZID class device to pair.
  * Once the pairing is successful the adaptor will receive ZID reports from class device and redirect the HID reports to PC.
- *  There by moving the mouse or replicating the keyboard functionality.
+ * There by moving the mouse or replicating the keyboard functionality.
  *
  * 
  *
@@ -323,7 +323,7 @@ static void led_handling(void *callback_parameter)
          case ZID_CONNECTING:
          case ALL_IN_ONE_START:
              pal_timer_start(T_LED_TIMER,
-                             500000,
+                             PAIR_WAIT_PERIOD,
                              TIMEOUT_RELATIVE,
                              (FUNC_PTR)led_handling,
                              NULL);
@@ -393,7 +393,7 @@ static
 #endif
 void zid_heartbeat_indication(uint8_t PairingRef)
 {
-    //printf("ZID-heartbeat from pairing ref:%d\r\n\r\n",PairingRef);
+    PairingRef = PairingRef;
 }
 
 
@@ -410,17 +410,11 @@ void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef)
             number_of_paired_dev++;
         }
         LED_On(LED0);
-      // zid_standby_request(0x01,(FUNC_PTR)zid_standby_confirm);
+      
   }
  
- // printf("ZID-connect status code:0x%x pairing ref:%d\r\n\r\n",Status,PairingRef);
+ 
 }
-//static void zid_standby_confirm(nwk_enum_t Status, bool StdbyEnable)
-//{       
-//  Status=Status;
-//  StdbyEnable=StdbyEnable;
-//  
-//}
 void zid_standby_leave_indication(void)
 {
   LED_Off(LED0);
@@ -478,10 +472,10 @@ void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
                  keyboard_input_desc_t *keyboard_input_desc;
                  keyboard_input_desc = (keyboard_input_desc_t *)zid_report_data_record_ptr->report_data;
                     uint8_t k_value;
-                   /* if(k_value = (keyboard_input_desc->modifier_keys))
+                    /*if(k_value = (keyboard_input_desc->modifier_keys))
                     {
                         udi_hid_kbd_modifier_down(k_value);
-                    } */ 
+                    }  */
                     for(uint8_t j=0;j<4;j++)
                     {  
                         if(k_value = (keyboard_input_desc->key_code[j]))
@@ -510,30 +504,30 @@ void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
          }
          zid_report_data_record_ptr++;
      }
-//
+
     RxLinkQuality = RxLinkQuality;
     RxFlags = RxFlags;
 
 }
 void main_suspend_action(void)
 {
-	//ui_powerdown();
+	
 }
 
 void main_resume_action(void)
 {
-	//ui_wakeup();
+	
 }
 void main_sof_action(void)
 {
 	if (!main_b_kbd_enable)
 		return;
-	//ui_process(udd_get_frame_number());
+	
 }
 
 void main_remotewakeup_enable(void)
 {
-	//ui_wakeup_enable();
+	
 }
 bool main_mouse_enable(void)
 {
@@ -547,7 +541,7 @@ void main_mouse_disable(void)
 }
 void main_remotewakeup_disable(void)
 {
-	//ui_wakeup_disable();
+	
 }
 
 bool main_kbd_enable(void)
