@@ -90,6 +90,13 @@
    ------------------------------------
 */
 
+/** ETH_PAD_SIZE: number of bytes added before the ethernet header to ensure
+ * alignment of payload after that header. Since the header is 14 bytes long,
+ * without this padding e.g. addresses in the IP header will not be aligned
+ * on a 32-bit boundary, so setting this to 2 can speed up 32-bit-platforms.
+ */
+#define ETH_PAD_SIZE                    2
+
 /**
  * MEM_ALIGNMENT: should be set to the alignment of the CPU
  *    4 byte alignment -> #define MEM_ALIGNMENT 4
