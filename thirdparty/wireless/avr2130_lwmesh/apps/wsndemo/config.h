@@ -81,7 +81,7 @@
 #define APP_RX_BUF_SIZE                     5
 #define NWK_ENABLE_ROUTING
 //#define NWK_ENABLE_SECURITY
-//#define NWK_ENABLE_ROUTE_DISCOVERY
+#define NWK_ENABLE_ROUTE_DISCOVERY
 
 
 #if APP_ADDR == 0
