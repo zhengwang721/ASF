@@ -137,7 +137,7 @@ typedef struct {
  *
  * \return \c 1 if function was successfully done, otherwise \c 0.
  */
-bool udi_hid_mkbd_modifier_up(uint16_t modifier_id);
+bool udi_hid_kbd_modifier_up(uint8_t modifier_id);
 
 /**
  * \brief Send events key modifier pressed
@@ -146,9 +146,24 @@ bool udi_hid_mkbd_modifier_up(uint16_t modifier_id);
  *
  * \return \c 1 if function was successfully done, otherwise \c 0.
  */
-bool udi_hid_mkbd_modifier_down(uint16_t modifier_id);
-bool udi_hid_kbd_modifier_up(uint8_t modifier_id);
 bool udi_hid_kbd_modifier_down(uint8_t modifier_id);
+/**
+ * \brief Send events media key modifier released
+ *
+ * \param modifier_id   ID of key modifier
+ *
+ * \return \c 1 if function was successfully done, otherwise \c 0.
+ */
+bool udi_hid_mkbd_modifier_up(uint16_t modifier_id);
+/**
+ * \brief Send events media key modifier pressed
+ *
+ * \param modifier_id   ID of key modifier
+ *
+ * \return \c 1 if function was successfully done, otherwise \c 0.
+ */
+bool udi_hid_mkbd_modifier_down(uint16_t modifier_id);
+
 
 
 /**
