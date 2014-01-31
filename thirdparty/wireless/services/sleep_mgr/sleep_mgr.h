@@ -1,4 +1,4 @@
-﻿ /*
+/*
  * @file sleep_mgr.h
  *
  * @brief 
