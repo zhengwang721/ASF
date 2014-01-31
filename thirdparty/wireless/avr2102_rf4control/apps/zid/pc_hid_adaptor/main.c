@@ -48,17 +48,18 @@
  * - main.c                      Application main file.
  * - vendor_data.c               Vendor Specific API functions
  * \section intro Application Introduction
- * PC Adaptor Example Application will act as HID adaptor for the RF4CE ZID
- * Class device application.Once connected the ZID HID adaptor will enumerate 
- * as a composite device in PC(HID Compliant keyboard,HID compliant Mouse and HID compliant consumer control device).
- * After enumeration it will start a network ,initiates push button pairing 
- * and wait for ZID class device to pair.
- * Once the pairing is successful the adaptor will receive ZID reports from class device and redirect the HID reports to PC.
- * There by moving the mouse or replicating the keyboard functionality.
- *
- * 
- *
- * Terminal adaptor can be used with the ZID device application.
+ * When ZID PC adaptor is plugged into a PC,it enumerates as a HID compliant 
+ * composite device(HID Compliant keyboard,HID compliant Mouse and HID compliant consumer control device)and
+ * a green LED on the dongle will blink. It indicates that after initialization pairing procedure is in progress. 
+ * If it finds a remote and pairing is successful the green led will become stable.
+ * Once the pairing is successful the adaptor will receive ZID reports from class device/ZID Remote 
+ * and redirect the HID reports to PC. ZID reports triggered by media player keys( volume up/down/mute keys, 
+ * play / pause / stop /next/previous keys are handled by supporting applications (for example, Windows master volume control, media player, 
+ * etc...) Along with media player remote, the ZID Remote application also demonstrates Power point(PPT) remote
+ * and Pointing and clicking functionality as mouse.
+ * Warm reset,Multiple devices
+ *  
+ * ZID PC adaptor can be used with the ZID device application.
  * \section api_modules Application Dependent Modules
  * - \ref group_rf4control
  * - \subpage api
@@ -164,7 +165,6 @@ static bool main_b_mouse_enable = false;
 FLASH_DECLARE(uint16_t VendorIdentifier) = (uint16_t)NWKC_VENDOR_IDENTIFIER;
 FLASH_DECLARE(uint8_t vendor_string[7]) = NWKC_VENDOR_STRING;
 FLASH_DECLARE(uint8_t app_user_string[15]) = APP_USER_STRING;
-
 static uint8_t led_timer;
 
 /* === Prototypes ========================================================== */
@@ -176,19 +176,13 @@ static void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef);
 static void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
                                                 zid_report_data_record_t *zid_report_data_record_ptr, uint8_t RxLinkQuality, uint8_t RxFlags);
 
-static void nlme_rx_enable_confirm(nwk_enum_t Status);
 void zid_standby_leave_indication(void);
 static void nlme_reset_confirm(nwk_enum_t Status);
 static void nlme_start_confirm(nwk_enum_t Status);
-static void nlme_set_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute, uint8_t NIBAttributeIndex);
-static void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
-                             uint8_t NIBAttributeIndex, void *NIBAttributeValue);
-static void zid_standby_confirm(nwk_enum_t Status, bool StdbyEnable);
 #endif
 
 static void led_handling(void *callback_parameter);
 static void app_task(void);
-static void print_pairing_table(bool start_from_scratch, uint8_t *table_entry, uint8_t index);
 static void led_handling(void *callback_parameter);
 static void app_alert(void);
 /* === Implementation ====================================================== */
@@ -267,7 +261,7 @@ static void app_task(void)
  * @brief Notify the application of the status of its request to reset the NWK
  *        layer.
  *
- * @param Status              nwk status
+ * @param Status  nwk status
  */
 #ifdef RF4CE_CALLBACK_PARAM
 static
@@ -283,7 +277,12 @@ void nlme_reset_confirm(nwk_enum_t Status)
              );
     }
 }
-
+/**
+ * @brief Notify the application of the status of its request to start the NWK.
+ *        
+ *
+ * @param Status  nwk status
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -315,7 +314,12 @@ void nlme_start_confirm(nwk_enum_t Status)
 }
 
 
-
+/**
+ * @brief Function to handle the LED States based on application state.
+ *        
+ *
+ * @param callback_parameter  callback parameter if any.
+ */
 static void led_handling(void *callback_parameter)
 {
      switch (node_status)
@@ -340,17 +344,21 @@ static void led_handling(void *callback_parameter)
      /* Keep compiler happy */
      callback_parameter = callback_parameter;
 }
-
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void nlme_rx_enable_confirm(nwk_enum_t Status)
-{
-   
-
-    /* Keep compiler happy */
-    Status = Status;
-}
+/**
+ * @brief This function decides whether push button pairing request should be
+ *        allowed.
+ *
+ * Decision could be based on one of the parameter.
+ *
+ * @param Status              nwk status
+ * @param SrcIEEEAddr         IEEE Address of the source requesting the pair.
+ * @param OrgVendorId         Vendor Id of the source requesting the pair.
+ * @param OrgVendorString     Vendor string of the source requesting the pair.
+ * @param OrgUserString       User string of the source requesting the pair.
+ * @param KeyExTransferCount  Number of key seeds to establish key.
+ *
+ * @return true if pairing is granted; else false
+ */
 bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr, uint16_t OrgVendorId,
                        uint8_t OrgVendorString[7], uint8_t OrgUserString[15],
                        uint8_t KeyExTransferCount)
@@ -366,7 +374,10 @@ bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr, uint16_t OrgVend
     return true;
 }
 
-
+/**
+ * @brief This function registers the callback function for indications from the stack.
+ *
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static void zid_indication_callback_init(void)
 {
@@ -379,7 +390,16 @@ static void zid_indication_callback_init(void)
     register_nwk_indication_callback(&nwk_ind);
 }
 #endif
-
+/**
+ * @brief Notify the application of the removal of link by another device.
+ *
+ * The NLME-UNPAIR.indication primitive allows the NLME to notify the
+ *application
+ * of the removal of a pairing link by another device.
+ *
+ * @param PairingRef       Pairing Ref for which entry is removed from pairing
+ *table.
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -387,7 +407,12 @@ void nlme_unpair_indication(uint8_t PairingRef)
 {
   number_of_paired_dev--;
 }
-
+/**
+ * @brief Notify the application of the status of its heartbeat request.
+ *        
+ *
+ * @param PairingRef  Pairing reference.
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -396,7 +421,12 @@ void zid_heartbeat_indication(uint8_t PairingRef)
     PairingRef = PairingRef;
 }
 
-
+/**
+ * @brief Notify the application of the status of its connect request.
+ *        
+ * @param Status  nwk status.
+ * @param PairingRef  Pairing reference.
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -412,13 +442,26 @@ void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef)
         LED_On(LED0);
       
   }
+ }
  
- 
-}
+
+/**
+ * @brief Notify the application of the status of its standby request.
+ *        
+ */
 void zid_standby_leave_indication(void)
 {
   LED_Off(LED0);
 }
+/**
+ * @brief Notify the application when ZID report data is received from the paired device.
+ *  
+ * @param PairingRef Pairing reference.
+ * @param num_report_records number of Report records.
+ * @param *zid_report_data_record_ptr pointer to the report data received.
+ * @param  RxLinkQuality    LQI value of the report data frame.
+ * @param  RxFlags          Receive flags.
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -440,17 +483,17 @@ void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
              mouse_desc = (mouse_desc_t *)zid_report_data_record_ptr->report_data;
              uint8_t value;
              
-             if(value=(mouse_desc->button0))
+             if((value=(mouse_desc->button0)))
              { 
                udi_hid_mouse_btnleft(true);
 			   udi_hid_mouse_btnleft(false);
              }
-             else if(value=(mouse_desc->button1))
+             else if((value=(mouse_desc->button1)))
              { 
                udi_hid_mouse_btnright(true);
 			   udi_hid_mouse_btnright(false);
              }
-			 else if(0x80==(mouse_desc->button2))
+			 else if((0x80==(mouse_desc->button2)))
 			 {   
 				 udi_hid_mouse_moveScroll((mouse_desc->y_coordinate));
 				 mouse_desc->y_coordinate = 0;
@@ -478,7 +521,7 @@ void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
                     }  */
                     for(uint8_t j=0;j<4;j++)
                     {  
-                        if(k_value = (keyboard_input_desc->key_code[j]))
+                        if((k_value = (keyboard_input_desc->key_code[j])))
                         {    
                             udi_hid_kbd_down(k_value);
                             udi_hid_kbd_up(k_value);
@@ -500,7 +543,8 @@ void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
              }
              break;
          }
-         
+         default:
+		 break;
          }
          zid_report_data_record_ptr++;
      }
@@ -509,52 +553,26 @@ void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
     RxFlags = RxFlags;
 
 }
-void main_suspend_action(void)
-{
-	
-}
 
-void main_resume_action(void)
-{
-	
-}
-void main_sof_action(void)
-{
-	if (!main_b_kbd_enable)
-		return;
-	
-}
 
-void main_remotewakeup_enable(void)
-{
-	
-}
 bool main_mouse_enable(void)
 {
 	main_b_mouse_enable = true;
 	return true;
 }
-
 void main_mouse_disable(void)
 {
 	main_b_mouse_enable = false;
 }
-void main_remotewakeup_disable(void)
-{
-	
-}
-
 bool main_kbd_enable(void)
 {
 	main_b_kbd_enable = true;
 	return true;
 }
-
 void main_kbd_disable(void)
 {
 	main_b_kbd_enable = false;
 }
-
 /* Alert to indicate something has gone wrong in the application */
 static void app_alert(void)
 {
