@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Quick Start for the SAM D20 EVENTS Driver (Polled)" id="sam0.drivers.events.quick_start_hook.samd20_xplained_pro">
+	<project caption="Quick Start for the SAM D20 EVENTS Driver (Interrut hook)" id="sam0.drivers.events.quick_start_hook.samd20_xplained_pro">
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_clocks.h"/>

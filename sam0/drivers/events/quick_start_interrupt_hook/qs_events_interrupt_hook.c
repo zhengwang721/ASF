@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D2x Event System Driver Quick Start
+ * \brief SAM D20/D21 Event System Driver Quick Start
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,11 +45,13 @@
 //! [setup]
 
 #define EXAMPLE_EVENT_GENERATOR    EVSYS_ID_GEN_TC4_OVF
-#define EXAMPLE_EVENT_USER         EVSYS_ID_USER_TC3_EVU
+#define EXAMPLE_EVENT_USER         EVSYS_ID_USER_NONE
 
 #define TC_MODULE TC4
 
 static volatile uint32_t event_count = 0;
+
+void event_counter(struct events_resource *resource);
 
 static void configure_event_channel(struct events_resource *resource)
 {
@@ -82,62 +84,77 @@ static void configure_event_user(struct events_resource *resource)
 
 static void configure_tc(struct tc_module *tc_instance)
 {
-	//! [setup_config]
+	//! [setup_6]
 	struct tc_config config_tc;
 	struct tc_events config_events;
-	//! [setup_config]
-	//! [setup_config_defaults]
+	//! [setup_6]
+
+	//! [setup_7]
 	tc_get_config_defaults(&config_tc);
-	//! [setup_config_defaults]
+	//! [setup_7]
 
-	//! [setup_change_config]
-	config_tc.counter_size    = TC_COUNTER_SIZE_16BIT;
+	//! [setup_8]
+	config_tc.counter_size    = TC_COUNTER_SIZE_8BIT;
 	config_tc.wave_generation = TC_WAVE_GENERATION_NORMAL_FREQ;
-	//! [setup_change_config]
+	config_tc.clock_source    = GCLK_GENERATOR_1;
+	config_tc.clock_prescaler = TC_CLOCK_PRESCALER_DIV64;
+	//! [setup_8]
 
-	//! [setup_set_config]
+	//! [setup_9]
 	tc_init(tc_instance, TC_MODULE, &config_tc);
-	//! [setup_set_config]
+	//! [setup_9]
 
+	//! [setup_10]
 	config_events.generate_event_on_overflow = true;
 	tc_enable_events(tc_instance, &config_events);
+	//! [setup_10]
 
-	//! [setup_enable]
+	//! [setup_11]
 	tc_enable(tc_instance);
-	//! [setup_enable]
+	//! [setup_11]
 
 }
 
-static void event_counter(struct events_resource *resource)
+static void configure_event_interrupt(struct events_resource *resource, struct events_hook *hook)
+{
+	//! [setup_12]
+	events_create_hook(hook, event_counter);
+	//! [setup_12]
+
+	//! [setup_13]
+	events_add_hook(resource, hook);
+	events_enable_interrupt_source(resource, EVENTS_INTERRUPT_DETECT);
+	//! [setup_13]
+}
+
+
+//! [setup_14]
+void event_counter(struct events_resource *resource)
 {
 	if(events_is_interrupt_set(resource, EVENTS_INTERRUPT_DETECT)) {
+		port_pin_toggle_output_level(LED_0_PIN);
 
 		event_count++;
 		events_ack_interrupt(resource, EVENTS_INTERRUPT_DETECT);
 
 	}
 }
-
-static void configure_event_interrupt(struct events_resource *resource, struct events_hook *hook)
-{
-	events_create_hook(hook, event_counter);
-
-	events_add_hook(resource, hook);
-	events_enable_interrupt_source(resource, EVENTS_INTERRUPT_DETECT);
-}
+//! [setup_14]
 
 //! [setup]
 
+
 int main(void)
 {
-	struct tc_module tc_instance;
+
+//! [setup_init]
+	struct tc_module       tc_instance;
 	struct events_resource example_event;
-	static struct events_hook hook;
+	struct events_hook     hook;
 
 	system_init();
 	system_interrupt_enable_global();
 
-//! [setup_init]
 	configure_event_channel(&example_event);
 	configure_event_user(&example_event);
 	configure_event_interrupt(&example_event, &hook);
@@ -152,7 +169,9 @@ int main(void)
 	};
 	//! [main_1]
 
+	//! [main_2]
 	tc_start_counter(&tc_instance);
+	//! [main_2]
 
 	while (true) {
 		/* Nothing to do */

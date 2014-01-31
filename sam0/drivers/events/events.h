@@ -362,7 +362,8 @@ struct events_config {
 #define _EVENTS_START_OFFSET_OVERRUN_BIT         0
 /** @} */
 
-#define EVSYS_ID_GEN_NONE 0
+#define EVSYS_ID_GEN_NONE   0
+#define EVSYS_ID_USER_NONE  0
 
 /**
  * \brief Event channel resource
@@ -605,6 +606,7 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset);
  * added to the user application.
  *
  * - \subpage asfdoc_sam0_events_basic_use_case
+ * - \subpage asfdoc_sam0_events_interrupt_hook_use_case
  *
  * \page asfdoc_sam0_events_document_revision_history Document Revision History
  *
