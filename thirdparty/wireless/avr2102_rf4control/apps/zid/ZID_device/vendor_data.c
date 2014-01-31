@@ -218,7 +218,7 @@ void vendor_data_ind(uint8_t PairingRef, uint16_t VendorId,
 
         /* Transmit response message */
 
-        nlde_data_request(PairingRef, PROFILE_ID_ZRC, VendorId,
+        nlde_data_request(PairingRef, PROFILE_ID_ZID, VendorId,
                           nsduLength, nsdu,
                           TXO_UNICAST | TXO_DST_ADDR_NET | TXO_ACK_REQ | TXO_SEC_REQ | TXO_MULTI_CH | TXO_CH_NOT_SPEC | TXO_VEND_SPEC
 #ifdef NLDE_HANDLE
