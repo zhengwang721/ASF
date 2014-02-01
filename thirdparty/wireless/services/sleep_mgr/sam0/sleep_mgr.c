@@ -46,7 +46,6 @@
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 #include "sleep_mgr.h"
-#include "conf_sleepmgr.h"
 #include "rtc_count.h"
 #include "system.h"
 #include "rtc_count_interrupt.h"
