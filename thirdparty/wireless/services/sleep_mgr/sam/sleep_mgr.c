@@ -130,7 +130,7 @@ void sm_init(void)
  */
 void sm_sleep(unsigned int interval)
 {
-    LED_Toggle(LED0);
+
 	ast_counter = ast_read_counter_value(AST);
 	ast_alarm = ast_counter + interval; 
 	ast_write_alarm0_value(AST, ast_alarm);

@@ -99,7 +99,6 @@ void sm_init(void)
 */
 void sm_sleep(unsigned int interval)
 {
-	LED_Toggle(LED0);
 	RTC32_SetTimeout((interval*1000));
 	sleepmgr_enter_sleep();
 }

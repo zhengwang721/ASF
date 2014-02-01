@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file sleep_mgr.c
  *
  * @brief 
@@ -82,7 +82,6 @@ void sm_init(void)
 */
 void sm_sleep(unsigned int interval)
 {
-	LED_Toggle(LED0);
 	macsc_use_cmp(COMPARE_MODE, interval*CONFIG_MACSC_HZ, MACSC_CC3);
  	sleep_enable();
  	sleep_enter();

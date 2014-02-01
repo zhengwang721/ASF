@@ -94,7 +94,7 @@ void sm_init(void)
 */
 void sm_sleep(unsigned int interval)
 {
-   	LED_Toggle(LED0);
+
    /* Set timeout period for rtc*/
 	//res = interval % 1000;
 	interval = interval*1000;	

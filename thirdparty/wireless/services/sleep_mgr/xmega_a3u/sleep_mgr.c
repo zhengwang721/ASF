@@ -1,4 +1,4 @@
-﻿/**
+/**
  * @file sleep_mgr.c
  *
  * @brief 
@@ -81,7 +81,6 @@ void sm_init(void)
 void sm_sleep(unsigned int interval)
 {
 	// Configure RTC for wakeup at interval period .
-	LED_Toggle(LED0);
 	RTC.PER = interval-1; 
 	RTC.CNT = 0;
 	RTC.CTRL = RTC_PRESCALER_DIV1024_gc;
