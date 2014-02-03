@@ -3,7 +3,7 @@
  *
  * @brief RF4CE Serial Interface Implementation
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  *
  */
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -115,7 +115,7 @@
 
 #define SIO_BUF_COUNT                   (2)
 
-#define SIO_RX_BUF_SIZE                 (264)
+#define SIO_RX_BUF_SIZE                 (156)
 #define SIO_TX_BUF_SIZE                 SIO_RX_BUF_SIZE
 
 /* Set the Interface to Transfer the Serial Data */

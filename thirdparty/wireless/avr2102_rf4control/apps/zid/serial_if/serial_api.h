@@ -3,13 +3,13 @@
  *
  * @brief RF4CE Serial API
  *
- * $Id: serial_api.h 33723 2012-12-04 12:17:21Z agasthian.s $
+ * $Id: serial_api.h 33723 2014-12-04 12:17:21Z agasthian.s $
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
  */
 /*
- * Copyright (c) 2009, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */

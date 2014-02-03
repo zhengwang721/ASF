@@ -3,7 +3,7 @@
  *
  * \brief USB Device Human Interface Device (HID) keyboard interface.
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -153,7 +153,7 @@ UDC_DESC_STORAGE udi_hid_kbd_report_desc_t udi_hid_kbd_report_desc = {
 				 0x09, 0xe2,                    //   USAGE (Mute) 0x01
 				 0x09, 0xe9,                    //   USAGE (Volume Up) 0x02
 				 0x09, 0xea,                    //   USAGE (Volume Down) 0x03
-				 0x0a, 0x83,0x01,                    //   USAGE (Play/Pause) 0x04
+				 0x0a, 0x83,0x01,               //   USAGE (Play/Pause) 0x04
 				 0x09, 0xb7,                    //   USAGE (Stop) 0x05
 				 0x09, 0xb6,                    //  USAGE (Scan Previous Track) 0x06
 				 0x09, 0xb5,                    //   USAGE (Scan Next Track) 0x07
@@ -163,7 +163,7 @@ UDC_DESC_STORAGE udi_hid_kbd_report_desc_t udi_hid_kbd_report_desc = {
 				 0x0a, 0x21, 0x02,              //   USAGE (www search) 0x0a
 				 0x0a, 0x23, 0x02,              //   USAGE (www home) 0x0b
 				 0x0a, 0x2a, 0x02,              //   USAGE (www favorites) 0x0c
-				 0x0a, 0x27, 0x02,              //   USAGE (www refresh) 0x0d     0x0a, 0x26, 0x02,              //   USAGE (www stop) 0x0e
+				 0x0a, 0x27, 0x02,              //   USAGE (www refresh) 0x0d     0x0a, 0x26, 0x02,              
 				 0x0a, 0x25, 0x02,              //   USAGE (www forward) 0x0f
 				 0x0a, 0x24, 0x02,              //   USAGE (www back) 0x10
 				 0x15, 0x00,                    //   LOGICAL_MINIMUM (0)

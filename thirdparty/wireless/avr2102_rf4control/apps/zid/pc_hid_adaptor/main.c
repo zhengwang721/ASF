@@ -1,15 +1,87 @@
 /**
  * @file main.c
  *
- * @brief RF4CE Serial Interface Application
+ * @brief ZID HID PC Adaptor Application
  *
- * $Id: main.c 33720 2012-12-04 09:34:59Z agasthian.s $
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
  */
+ /**
+ * \mainpage
+ * \section preface Preface
+ * This is the reference manual for ZID HID PC adaptor application.
+ * \section main_files Application Files
+ * - main.c                      Application main file.
+ * - vendor_data.c               Vendor Specific API functions
+ * \section intro Application Introduction
+ * When ZID PC adaptor is plugged into a PC,it enumerates as a HID compliant 
+ * composite device(HID Compliant keyboard,HID compliant Mouse and HID compliant consumer control device)and
+ * a green LED on the dongle will blink. It indicates that after initialization pairing procedure is in progress. 
+ * If it finds a remote and pairing is successful the green led will become stable.
+ * Once the pairing is successful the adaptor will receive ZID reports from class device/ZID Remote 
+ * and redirect the HID reports to PC. ZID reports triggered by media player keys( volume up/down/mute keys, 
+ * play / pause / stop /next/previous keys are handled by supporting applications (for example, Windows master volume control, media player, 
+ * etc...) Along with media player remote, the ZID Remote application also demonstrates Power point(PPT) remote
+ * and Pointing and clicking functionality as mouse.
+ * Warm reset,Multiple devices
+ *  
+ * ZID PC adaptor can be used with the ZID device application.
+ * \section api_modules Application Dependent Modules
+ * - \ref group_rf4control
+ * - \subpage api
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR .
+ * Other compilers may or may not work.
+ *
+ * \section references References
+ * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
+ *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
+ *Area
+ *     Networks (WPANs).\n\n
+ * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
+ *
+ * \section contactinfo Contact Information
+ * For further information,visit
+ * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
+ */
+
+
 /*
- * Copyright (c) 2009, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -93,7 +165,6 @@ static bool main_b_mouse_enable = false;
 FLASH_DECLARE(uint16_t VendorIdentifier) = (uint16_t)NWKC_VENDOR_IDENTIFIER;
 FLASH_DECLARE(uint8_t vendor_string[7]) = NWKC_VENDOR_STRING;
 FLASH_DECLARE(uint8_t app_user_string[15]) = APP_USER_STRING;
-
 static uint8_t led_timer;
 
 /* === Prototypes ========================================================== */
@@ -105,19 +176,13 @@ static void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef);
 static void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
                                                 zid_report_data_record_t *zid_report_data_record_ptr, uint8_t RxLinkQuality, uint8_t RxFlags);
 
-static void nlme_rx_enable_confirm(nwk_enum_t Status);
 void zid_standby_leave_indication(void);
 static void nlme_reset_confirm(nwk_enum_t Status);
 static void nlme_start_confirm(nwk_enum_t Status);
-static void nlme_set_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute, uint8_t NIBAttributeIndex);
-static void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
-                             uint8_t NIBAttributeIndex, void *NIBAttributeValue);
-static void zid_standby_confirm(nwk_enum_t Status, bool StdbyEnable);
 #endif
 
 static void led_handling(void *callback_parameter);
 static void app_task(void);
-static void print_pairing_table(bool start_from_scratch, uint8_t *table_entry, uint8_t index);
 static void led_handling(void *callback_parameter);
 static void app_alert(void);
 /* === Implementation ====================================================== */
@@ -196,7 +261,7 @@ static void app_task(void)
  * @brief Notify the application of the status of its request to reset the NWK
  *        layer.
  *
- * @param Status              nwk status
+ * @param Status  nwk status
  */
 #ifdef RF4CE_CALLBACK_PARAM
 static
@@ -212,7 +277,12 @@ void nlme_reset_confirm(nwk_enum_t Status)
              );
     }
 }
-
+/**
+ * @brief Notify the application of the status of its request to start the NWK.
+ *        
+ *
+ * @param Status  nwk status
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -244,7 +314,12 @@ void nlme_start_confirm(nwk_enum_t Status)
 }
 
 
-
+/**
+ * @brief Function to handle the LED States based on application state.
+ *        
+ *
+ * @param callback_parameter  callback parameter if any.
+ */
 static void led_handling(void *callback_parameter)
 {
      switch (node_status)
@@ -252,7 +327,7 @@ static void led_handling(void *callback_parameter)
          case ZID_CONNECTING:
          case ALL_IN_ONE_START:
              pal_timer_start(T_LED_TIMER,
-                             500000,
+                             PAIR_WAIT_PERIOD,
                              TIMEOUT_RELATIVE,
                              (FUNC_PTR)led_handling,
                              NULL);
@@ -269,17 +344,21 @@ static void led_handling(void *callback_parameter)
      /* Keep compiler happy */
      callback_parameter = callback_parameter;
 }
-
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void nlme_rx_enable_confirm(nwk_enum_t Status)
-{
-   
-
-    /* Keep compiler happy */
-    Status = Status;
-}
+/**
+ * @brief This function decides whether push button pairing request should be
+ *        allowed.
+ *
+ * Decision could be based on one of the parameter.
+ *
+ * @param Status              nwk status
+ * @param SrcIEEEAddr         IEEE Address of the source requesting the pair.
+ * @param OrgVendorId         Vendor Id of the source requesting the pair.
+ * @param OrgVendorString     Vendor string of the source requesting the pair.
+ * @param OrgUserString       User string of the source requesting the pair.
+ * @param KeyExTransferCount  Number of key seeds to establish key.
+ *
+ * @return true if pairing is granted; else false
+ */
 bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr, uint16_t OrgVendorId,
                        uint8_t OrgVendorString[7], uint8_t OrgUserString[15],
                        uint8_t KeyExTransferCount)
@@ -295,7 +374,10 @@ bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr, uint16_t OrgVend
     return true;
 }
 
-
+/**
+ * @brief This function registers the callback function for indications from the stack.
+ *
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static void zid_indication_callback_init(void)
 {
@@ -308,7 +390,16 @@ static void zid_indication_callback_init(void)
     register_nwk_indication_callback(&nwk_ind);
 }
 #endif
-
+/**
+ * @brief Notify the application of the removal of link by another device.
+ *
+ * The NLME-UNPAIR.indication primitive allows the NLME to notify the
+ *application
+ * of the removal of a pairing link by another device.
+ *
+ * @param PairingRef       Pairing Ref for which entry is removed from pairing
+ *table.
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -316,16 +407,26 @@ void nlme_unpair_indication(uint8_t PairingRef)
 {
   number_of_paired_dev--;
 }
-
+/**
+ * @brief Notify the application of the status of its heartbeat request.
+ *        
+ *
+ * @param PairingRef  Pairing reference.
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
 void zid_heartbeat_indication(uint8_t PairingRef)
 {
-    //printf("ZID-heartbeat from pairing ref:%d\r\n\r\n",PairingRef);
+    PairingRef = PairingRef;
 }
 
-
+/**
+ * @brief Notify the application of the status of its connect request.
+ *        
+ * @param Status  nwk status.
+ * @param PairingRef  Pairing reference.
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -339,21 +440,28 @@ void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef)
             number_of_paired_dev++;
         }
         LED_On(LED0);
-      // zid_standby_request(0x01,(FUNC_PTR)zid_standby_confirm);
+      
   }
+ }
  
- // printf("ZID-connect status code:0x%x pairing ref:%d\r\n\r\n",Status,PairingRef);
-}
-//static void zid_standby_confirm(nwk_enum_t Status, bool StdbyEnable)
-//{       
-//  Status=Status;
-//  StdbyEnable=StdbyEnable;
-//  
-//}
+
+/**
+ * @brief Notify the application of the status of its standby request.
+ *        
+ */
 void zid_standby_leave_indication(void)
 {
   LED_Off(LED0);
 }
+/**
+ * @brief Notify the application when ZID report data is received from the paired device.
+ *  
+ * @param PairingRef Pairing reference.
+ * @param num_report_records number of Report records.
+ * @param *zid_report_data_record_ptr pointer to the report data received.
+ * @param  RxLinkQuality    LQI value of the report data frame.
+ * @param  RxFlags          Receive flags.
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -375,17 +483,17 @@ void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
              mouse_desc = (mouse_desc_t *)zid_report_data_record_ptr->report_data;
              uint8_t value;
              
-             if(value=(mouse_desc->button0))
+             if((value=(mouse_desc->button0)))
              { 
                udi_hid_mouse_btnleft(true);
 			   udi_hid_mouse_btnleft(false);
              }
-             else if(value=(mouse_desc->button1))
+             else if((value=(mouse_desc->button1)))
              { 
                udi_hid_mouse_btnright(true);
 			   udi_hid_mouse_btnright(false);
              }
-			 else if(0x80==(mouse_desc->button2))
+			 else if((0x80==(mouse_desc->button2)))
 			 {   
 				 udi_hid_mouse_moveScroll((mouse_desc->y_coordinate));
 				 mouse_desc->y_coordinate = 0;
@@ -407,13 +515,13 @@ void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
                  keyboard_input_desc_t *keyboard_input_desc;
                  keyboard_input_desc = (keyboard_input_desc_t *)zid_report_data_record_ptr->report_data;
                     uint8_t k_value;
-                   /* if(k_value = (keyboard_input_desc->modifier_keys))
+                    /*if(k_value = (keyboard_input_desc->modifier_keys))
                     {
                         udi_hid_kbd_modifier_down(k_value);
-                    } */ 
+                    }  */
                     for(uint8_t j=0;j<4;j++)
                     {  
-                        if(k_value = (keyboard_input_desc->key_code[j]))
+                        if((k_value = (keyboard_input_desc->key_code[j])))
                         {    
                             udi_hid_kbd_down(k_value);
                             udi_hid_kbd_up(k_value);
@@ -435,61 +543,36 @@ void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
              }
              break;
          }
-         
+         default:
+		 break;
          }
          zid_report_data_record_ptr++;
      }
-//
+
     RxLinkQuality = RxLinkQuality;
     RxFlags = RxFlags;
 
 }
-void main_suspend_action(void)
-{
-	//ui_powerdown();
-}
 
-void main_resume_action(void)
-{
-	//ui_wakeup();
-}
-void main_sof_action(void)
-{
-	if (!main_b_kbd_enable)
-		return;
-	//ui_process(udd_get_frame_number());
-}
 
-void main_remotewakeup_enable(void)
-{
-	//ui_wakeup_enable();
-}
 bool main_mouse_enable(void)
 {
 	main_b_mouse_enable = true;
 	return true;
 }
-
 void main_mouse_disable(void)
 {
 	main_b_mouse_enable = false;
 }
-void main_remotewakeup_disable(void)
-{
-	//ui_wakeup_disable();
-}
-
 bool main_kbd_enable(void)
 {
 	main_b_kbd_enable = true;
 	return true;
 }
-
 void main_kbd_disable(void)
 {
 	main_b_kbd_enable = false;
 }
-
 /* Alert to indicate something has gone wrong in the application */
 static void app_alert(void)
 {

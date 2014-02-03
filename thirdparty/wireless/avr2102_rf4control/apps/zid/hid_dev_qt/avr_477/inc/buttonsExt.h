@@ -8,7 +8,7 @@
     Atmel Corporation: http://www.atmel.com \n
     Support email: avr@atmel.com
 
-  Copyright (c) 2008-2012, Atmel Corporation. All rights reserved.
+  Copyright (c) 2008-2014, Atmel Corporation. All rights reserved.
   Licensed under Atmel's Limited License Agreement (BitCloudTM).
 
   \internal

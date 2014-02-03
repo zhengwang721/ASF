@@ -3,7 +3,7 @@
  *
  * @brief ZID Device application
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,22 +43,12 @@
  * @author    Support email: avr@atmel.com
  */
 /*
- * Copyright (c) 2010, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 /* === INCLUDES ============================================================ */
-
-//#include <stddef.h>
-//#include <stdint.h>
-//#include <stdbool.h>
-//#include <stdlib.h>
-//#include <string.h>
-//#include <ctype.h>
-//#include <inttypes.h>
-//#include <stdio.h>
-
 #include <asf.h>
 #include "conf_board.h"
 #include "led.h"
@@ -70,7 +60,7 @@
 #include "pb_pairing.h"
 #include "zid.h"
 #include "zid_device.h"
-//#include "pb_pairing.h"
+
 
 /* === TYPES =============================================================== */
 
@@ -99,8 +89,6 @@ FLASH_DECLARE(uint8_t app_user_string[15]) = APP_USER_STRING;
 
 static node_status_t node_status;
 static uint8_t pairing_ref = 0xFF;
-//static uint32_t previous_button_time;
-//static uint32_t current_time;
 #if (defined  RF4CE_CALLBACK_PARAM)
 static zid_indication_callback_t zid_ind;
 
@@ -122,7 +110,6 @@ static void app_nlme_rx_enable_confirm(nwk_enum_t Status);
 static void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef);
 static void zid_report_data_confirm(nwk_enum_t Status, uint8_t PairingRef);
 static void zid_data_confirm(nwk_enum_t Status, uint8_t PairingRef);
-//static void zid_heart_beat_confirm(nwk_enum_t Status, uint8_t PairingRef);
 static void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
                                                 zid_report_data_record_t *zid_report_data_record_ptr, uint8_t RxLinkQuality, uint8_t RxFlags);
 static void zid_get_report_indication(uint8_t PairingRef,zid_report_types_t zid_report_type, zid_report_desc_t zid_report_desc,
@@ -418,15 +405,6 @@ void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef)
 
 }
 
-
-
-void zid_heartbeat_confirm(nwk_enum_t Status, uint8_t PairingRef)
-{
-    /* Keep compiler happy. */
-    Status = Status;
-    PairingRef = PairingRef;
-}
-
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -502,7 +480,7 @@ static void app_task(void)
                 {
                     loop_end = false;
                     /* Check time to previous transmission. */
-#if 1
+
                      current_time= sw_timer_get_time();
                     if ((current_time - previous_button_time) < INTER_FRAME_DURATION_US)
                     {
@@ -513,22 +491,13 @@ static void app_task(void)
                         /* Store current time */
                         previous_button_time = current_time;
                     }
-#endif
-                    //pal_led(LED0, LED_On);
 
-                    //uint8_t cmd = 0x6b;//POWER_TOGGLE_FUNCTION;  // 0x6b
-                    /*
-                    zrc_cmd_request(pairing_ref, 0x0000, USER_CONTROL_PRESSED,
-                                    1, &cmd, TX_OPTIONS);
-                    */
-                    //uint8_t cmd[3];
                     zid_report_data_record_t zid_report_data[2];
                     uint8_t report_data_buffer[80];
                     uint8_t *msg_ptr = &report_data_buffer[0];
                     if(report_id == 0)
                     {
 
-                        //zid_report_data_record_t *zid_report_data_ptr[1];
                         zid_report_data[0].report_type = INPUT;
                         zid_report_data[0].report_desc_identifier = MOUSE;
                         zid_report_data[0].report_data = (void *)msg_ptr;
@@ -559,13 +528,12 @@ static void app_task(void)
                         keyboard_input_desc->key_code[3] = 0xA7;
                         keyboard_input_desc->key_code[4] = 0xA8;
                         keyboard_input_desc->key_code[5] = 0xA9;
-                        //report_id = 1;
                         num_records = 2;
 
                     }
                     else if(report_id == 1)
                     {
-                        // sending contact_data
+                        
                         zid_report_data[0].report_type = INPUT;
                         zid_report_data[0].report_desc_identifier = CONTACT_DATA;
                         zid_report_data[0].report_data = (void *)msg_ptr;
@@ -584,7 +552,7 @@ static void app_task(void)
                         contact_data_report->minor_axis_length = 0xB6B6;
                         num_records = 1;
 
-                        //report_id = 2;
+                        
                     }
                     else if(report_id == 2)
                     {
@@ -602,7 +570,7 @@ static void app_task(void)
                         tap_gesture_report->location_y = 0x2C2;
                         num_records = 1;
 
-                        //report_id = 3;
+                        
                     }
                     else if(report_id == 3)
                     {
@@ -635,7 +603,7 @@ static void app_task(void)
                         pinch_gesture_report->center_y = 0x4D4;
 
                         num_records = 2;
-                        //report_id = 4;
+                        
                     }
                     else if(report_id == 4)
                     {
@@ -666,7 +634,7 @@ static void app_task(void)
 
                         num_records = 2;
 
-                        //report_id = 5;
+                       
                     }
                     else if(report_id == 5)
                     {
@@ -706,7 +674,7 @@ static void app_task(void)
                         num_records = 2;
                         loop_end = true;
 
-                        //report_id = 6;
+                        
                     }
 
 
@@ -745,7 +713,11 @@ static void app_task(void)
             break;
     }
 }
-
+/**
+ * @brief Confirmation status to the application for its report data request.
+ * @param Status nwk status
+ * @param PairingRef Pairing reference.
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -774,7 +746,11 @@ void zid_report_data_confirm(nwk_enum_t Status, uint8_t PairingRef)
     /* Keep compiler happy. */
     PairingRef = PairingRef;
 }
-
+/**
+ * @brief Confirmation status to the application for its ZID data request.
+ * @param Status nwk status
+ * @param PairingRef Pairing reference.
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -795,7 +771,15 @@ void zid_data_confirm(nwk_enum_t Status, uint8_t PairingRef)
     PairingRef = PairingRef;
 }
 
-
+/**
+ * @brief Notify the application when ZID report data is received from the paired device.
+ *  
+ * @param PairingRef Pairing reference.
+ * @param num_report_records number of Report records.
+ * @param *zid_report_data_record_ptr pointer to the report data received.
+ * @param  RxLinkQuality    LQI value of the report data frame.
+ * @param  RxFlags          Receive flags.
+ */
 static void zid_get_report_indication(uint8_t PairingRef,zid_report_types_t zid_report_type, zid_report_desc_t zid_report_desc,
                                                 uint8_t RxLinkQuality, uint8_t RxFlags)
 {
@@ -817,10 +801,6 @@ static void zid_get_report_indication(uint8_t PairingRef,zid_report_types_t zid_
     mouse_desc.button2 = true;
     mouse_desc.x_coordinate = 0x11;
     mouse_desc.y_coordinate = 0x22;
-    //zid_report_data_ptr[0] = &zid_report_data;
-
-                    ///cmd[0] = INPUT; // report type
-                    ///cmd[1] = KEYBOARD;   // report identifier
     if(node_status == IDLE)
     {
         if (zid_report_data_request(pairing_ref,1, &zid_report_data, TX_OPTIONS
@@ -836,8 +816,11 @@ static void zid_get_report_indication(uint8_t PairingRef,zid_report_types_t zid_
     }
 }
 /*
- * The NLDE-DATA.confirm primitive is generated by the NWK layer entity in
+ * @brief The NLDE-DATA.confirm primitive is generated by the NWK layer entity in
  * response to an NLDE-DATA.request primitive.
+ * @param Status nwk status
+ * @param PairimgRef Pairing reference.
+ * @param ProfileId Profile Identifier.
  */
 void nlde_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId)
 {
@@ -856,13 +839,24 @@ void nlde_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t Profi
     PairingRef = PairingRef;
     ProfileId = ProfileId;
 }
-
+/**
+ * @brief This function checks the Adaptor compatibility while pairing decides whether 
+ * push button pairing request should be allowed.
+ *
+ * Decision could be based on one of the parameter.
+ *
+ * @param PairingRef Pairing reference.
+ * @param payload_length Length of the Payload
+ * @param *payload Pointer to the Payload Adaptor attributes can be extracted from the payload.
+ *
+ * @return true if pairing is granted; else false
+ */
 bool check_zid_adaptor_compatibility(uint8_t PairingRef,uint8_t payload_length,uint8_t *payload)
 {
-    // Application need to find out the compatibility with the adaptor
-    // It needs to extract the adaptor attributes from the following payloas
-    // Payload format is as per the GET_ATTRIBUTES_RESPONSE packet format excluding the header
-    // payload[0] = attr_id...........
+    /*Application need to find out the compatibility with the adaptor
+     It needs to extract the adaptor attributes from the following payload
+     Payload format is as per the GET_ATTRIBUTES_RESPONSE packet format excluding the header
+     payload[0] = attr_id...........*/
     PairingRef = PairingRef;
     payload_length = payload_length;
     payload = payload;
@@ -912,12 +906,13 @@ static void indicate_fault_behavior(void)
  */
 void vendor_app_alive_req(void)
 {
-    /* Variant to demonstrate FOTA featue */
+    /* Variant to demonstrate FOTA feature */
 
     LED_On(LED0);
     delay_ms(500);
     LED_Off(LED0);
 }
+/* Alert to indicate something has gone wrong in the application */
 static void app_alert(void)
 {
     while (1)
@@ -956,6 +951,11 @@ static void app_alert(void)
 		delay_us(0xFFFF);
 	}
 }
+/**
+ * @brief Read key_state
+ *
+ * @param key_no Keyid to be read.
+ */
 static key_state_t key_state_read(key_id_t key_no)
 {
     key_state_t key_val = KEY_RELEASED;

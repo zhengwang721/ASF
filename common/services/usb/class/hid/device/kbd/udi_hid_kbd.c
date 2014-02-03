@@ -88,9 +88,7 @@ UDC_DESC_STORAGE udi_api_t udi_api_hid_kbd = {
 //@{
 
 //! Size of report for standard HID keyboard
-
-#define UDI_HID_KBD_REPORT_SIZE  9
-#define UDI_HID_MKBD_REPORT_SIZE  3
+#define UDI_HID_KBD_REPORT_SIZE  8
 
 
 //! To store current rate of HID keyboard
@@ -104,7 +102,6 @@ static bool udi_hid_kbd_b_report_valid;
 //! Report ready to send
 static uint8_t udi_hid_kbd_report[UDI_HID_KBD_REPORT_SIZE];
 //! Signal if a report transfer is on going
-static uint8_t report_size;
 static bool udi_hid_kbd_b_report_trans_ongoing;
 //! Buffer used to send report
 COMPILER_WORD_ALIGNED
@@ -115,10 +112,10 @@ COMPILER_WORD_ALIGNED
 
 //! HID report descriptor for standard HID keyboard
 UDC_DESC_STORAGE udi_hid_kbd_report_desc_t udi_hid_kbd_report_desc = {
-	{                       0x05, 0x01,	/* Usage Page (Generic Desktop)      */
+	{
+				0x05, 0x01,	/* Usage Page (Generic Desktop)      */
 				0x09, 0x06,	/* Usage (Keyboard)                  */
 				0xA1, 0x01,	/* Collection (Application)          */
-                                0x85, 0x01,
 				0x05, 0x07,	/* Usage Page (Keyboard)             */
 				0x19, 224,	/* Usage Minimum (224)               */
 				0x29, 231,	/* Usage Maximum (231)               */
@@ -145,32 +142,7 @@ UDC_DESC_STORAGE udi_hid_kbd_report_desc_t udi_hid_kbd_report_desc = {
 				0x91, 0x02,	/* Output (Data, Variable, Absolute) */
 				0x95, 0x03,	/* Report Count (3)                  */
 				0x91, 0x01,	/* Output (Constant)                 */
-				0xC0,	/* End Collection                    */
-				 0x05, 0x0c,                    // USAGE_PAGE (Consumer Devices)
-				 0x09, 0x01,                    // USAGE (Consumer Control)
-				 0xa1, 0x01,
-                                 0x85, 0x02, 
-				 0x09, 0xe2,                    //   USAGE (Mute) 0x01
-				 0x09, 0xe9,                    //   USAGE (Volume Up) 0x02
-				 0x09, 0xea,                    //   USAGE (Volume Down) 0x03
-				 0x0a, 0x83,0x01,                    //   USAGE (Play/Pause) 0x04
-				 0x09, 0xb7,                    //   USAGE (Stop) 0x05
-				 0x09, 0xb6,                    //  USAGE (Scan Previous Track) 0x06
-				 0x09, 0xb5,                    //   USAGE (Scan Next Track) 0x07
-				 0x0a, 0x8a, 0x01,              //   USAGE (Mail) 0x08
-				 0x0a, 0x92, 0x01,              //   USAGE (Calculator) 0x09
-				 0x0a, 0x21, 0x02,              //   USAGE (www search) 0x0a
-				 0x0a, 0x23, 0x02,              //   USAGE (www home) 0x0b
-				 0x0a, 0x2a, 0x02,              //   USAGE (www favorites) 0x0c
-				 0x0a, 0x27, 0x02,              //   USAGE (www refresh) 0x0d     0x0a, 0x26, 0x02,              //   USAGE (www stop) 0x0e
-				 0x0a, 0x25, 0x02,              //   USAGE (www forward) 0x0f
-				 0x0a, 0x24, 0x02,              //   USAGE (www back) 0x10
-				 0x15, 0x00,                    //   LOGICAL_MINIMUM (0)
-				 0x25, 0x01,                    //   LOGICAL_MAXIMUM (1)
-				 0x75, 0x01,                    //   REPORT_SIZE (1)
-				 0x95, 0x10,                    //   REPORT_COUNT (16)
-				 0x81, 0x62,                    //   INPUT (Data,Var,Abs,NPrf,Null)
-				 0xc0
+				0xC0	/* End Collection                    */
 			}
 };
 
@@ -269,64 +241,28 @@ static bool udi_hid_kbd_setreport(void)
 //--------------------------------------------
 //------ Interface for application
 
-bool udi_hid_mkbd_modifier_up(uint16_t modifier_id)
-{
-	irqflags_t flags = cpu_irq_save();
-
-	// Fill report
-        udi_hid_kbd_report[0]=0x02;
-	udi_hid_kbd_report[1] &= ~(uint8_t)modifier_id;
-	udi_hid_kbd_report[2] &= ~(uint8_t)(modifier_id >> 8);
-	udi_hid_kbd_b_report_valid = true;
-        report_size = UDI_HID_MKBD_REPORT_SIZE ;
-	// Send report
-	udi_hid_kbd_send_report();
-
-	cpu_irq_restore(flags);
-	return true;
-}
 bool udi_hid_kbd_modifier_up(uint8_t modifier_id)
 {
 	irqflags_t flags = cpu_irq_save();
 
 	// Fill report
-         
-        udi_hid_kbd_report[0]= 0x01;
-	udi_hid_kbd_report[1] &= ~(unsigned)modifier_id;
+	udi_hid_kbd_report[0] &= ~(unsigned)modifier_id;
 	udi_hid_kbd_b_report_valid = true;
-        report_size = UDI_HID_KBD_REPORT_SIZE ;
+
 	// Send report
 	udi_hid_kbd_send_report();
 
 	cpu_irq_restore(flags);
 	return true;
 }
+
+
 bool udi_hid_kbd_modifier_down(uint8_t modifier_id)
 {
 	irqflags_t flags = cpu_irq_save();
 
 	// Fill report
-        
-        udi_hid_kbd_report[0]= 0x01;
-	udi_hid_kbd_report[1] |= modifier_id;
-	udi_hid_kbd_b_report_valid = true;
-        report_size = UDI_HID_KBD_REPORT_SIZE ;
-	// Send report
-	udi_hid_kbd_send_report();
-
-	cpu_irq_restore(flags);
-	return true;
-}
-
-bool udi_hid_mkbd_modifier_down(uint16_t modifier_id)
-{
-	irqflags_t flags = cpu_irq_save();
-
-	// Fill report
-        udi_hid_kbd_report[0]= 0x02;
-	udi_hid_kbd_report[1] = (uint8_t)modifier_id;
-	udi_hid_kbd_report[2] = (uint8_t)(modifier_id >> 8);
-	report_size = UDI_HID_MKBD_REPORT_SIZE ;
+	udi_hid_kbd_report[0] |= modifier_id;
 	udi_hid_kbd_b_report_valid = true;
 
 	// Send report
@@ -342,9 +278,9 @@ bool udi_hid_kbd_up(uint8_t key_id)
 	uint8_t i;
 
 	irqflags_t flags = cpu_irq_save();
-        udi_hid_kbd_report[0]= 0x01;
+
 	// Fill report
-	for (i = 3; i < UDI_HID_KBD_REPORT_SIZE; i++) {
+	for (i = 2; i < UDI_HID_KBD_REPORT_SIZE; i++) {
 		if (0 == udi_hid_kbd_report[i]) {
 			// Already removed
 			cpu_irq_restore(flags);
@@ -364,7 +300,6 @@ bool udi_hid_kbd_up(uint8_t key_id)
 		i++;
 	}
 	udi_hid_kbd_report[UDI_HID_KBD_REPORT_SIZE - 1] = 0x00;
-        report_size = UDI_HID_KBD_REPORT_SIZE ;
 	udi_hid_kbd_b_report_valid = true;
 
 	// Send report
@@ -380,9 +315,9 @@ bool udi_hid_kbd_down(uint8_t key_id)
 	uint8_t i;
 
 	irqflags_t flags = cpu_irq_save();
-        udi_hid_kbd_report[0]= 0x01;
+
 	// Fill report
-	for (i = 3; i < UDI_HID_KBD_REPORT_SIZE; i++) {
+	for (i = 2; i < UDI_HID_KBD_REPORT_SIZE; i++) {
 		if (0 == udi_hid_kbd_report[i])
 			break;
 		if (key_id == udi_hid_kbd_report[i]) {
@@ -400,7 +335,6 @@ bool udi_hid_kbd_down(uint8_t key_id)
 	}
 	// Add key at the end of array
 	udi_hid_kbd_report[i] = key_id;
-        report_size = UDI_HID_KBD_REPORT_SIZE ;
 	udi_hid_kbd_b_report_valid = true;
 
 	// Send report
@@ -420,13 +354,13 @@ static bool udi_hid_kbd_send_report(void)
 	if (udi_hid_kbd_b_report_trans_ongoing)
 		return false;
 	memcpy(udi_hid_kbd_report_trans, udi_hid_kbd_report,
-			report_size);
+			UDI_HID_KBD_REPORT_SIZE);
 	udi_hid_kbd_b_report_valid = false;
 	udi_hid_kbd_b_report_trans_ongoing =
 			udd_ep_run(	UDI_HID_KBD_EP_IN,
 							false,
 							udi_hid_kbd_report_trans,
-							report_size,
+							UDI_HID_KBD_REPORT_SIZE,
 							udi_hid_kbd_report_sent);
 	return udi_hid_kbd_b_report_trans_ongoing;
 }

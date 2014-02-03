@@ -1,18 +1,87 @@
 /**
  * @file main.c
  *
- * @brief QTouch Device Application
+ * @brief ZID HID PC Adaptor Application
  *
- * $Id: main.c 34021 2013-01-29 05:42:49Z agasthian.s $
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
  */
-/*
- * Copyright (c) 2010, Atmel Corporation All rights reserved.
+ /**
+ * \mainpage
+ * \section preface Preface
+ * This application demonstrates the use of  AVR477 remote control as ZID class device,
+ * Which pairs with the ZID HID PC adaptor and controls the PC.
+ * \section main_files Application Files
+ * - main.c                     Application main file.
+ * - vendor_data.c              Vendor Specific API functions
+ * \section intro Application Introduction
+ *  HID QTOUCH Remote is the demo application which can act as a media player remote when paired up with ZID HID PC adaptor.
+ *  On Power on,Remote will initiate a push button pairing procedure and pairs with an adaptor if it is found.After pairing it can be used as a media player remote,supporting the following Command
+ *  1. Opening the media player
+    2. Play
+	3.Pause
+	4.Volume up
+	5.Volume down
+	6.Mute
+	7.Stop
+ *  Qtouch button movements in the remote will send Corresponding HID commands.
+ * 
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ *  The Application will use the ZID reports to send hid reports to
+ *paired device.
+ * \section api_modules Application Dependent Modules
+ * - \ref group_rf4control
+ * - \subpage api
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR .
+ * Other compilers may or may not work.
+ *
+ * \section references References
+ * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
+ *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
+ *Area
+ *     Networks (WPANs).\n\n
+ * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
+ *
+ * \section contactinfo Contact Information
+ * For further information,visit
+ * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
  */
+
 
 /* === INCLUDES ============================================================ */
 #include <asf.h>
@@ -501,7 +570,6 @@ static void app_task(void)
                       keyboard_input_desc->key_code[3] = 0x00;
                       keyboard_input_desc->key_code[4] = (uint8_t)key_mapping_media[b_state];
                       keyboard_input_desc->key_code[5] = (uint8_t)(key_mapping_media[b_state] >> 8);
-                      //report_id = 1;
                       num_records = 1;
                       
                       if (zid_report_data_request(pairing_ref,num_records, zid_report_data, TX_OPTIONS
