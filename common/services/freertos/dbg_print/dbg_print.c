@@ -42,15 +42,18 @@
  */
 
 #include "dbg_print.h"
-#include <FreeRTOS.h>
 #include <gclk.h>
-#include <semphr.h>
 #include <sercom.h>
 #include <status_codes.h>
 #include <string.h>
 #include <system.h>
-#include <task.h>
 #include <usart.h>
+
+#if defined(__FREERTOS__) || defined(__DOXYGEN__)
+# include <FreeRTOS.h>
+# include <semphr.h>
+# include <task.h>
+#endif
 
 
 //! \name Convenience macros
@@ -102,10 +105,15 @@ static dbg_buffer_space_t buffer_head;
 static dbg_buffer_space_t buffer_tail;
 //! Variable for buffer space requests
 static dbg_buffer_space_t requested_space;
+
+#if defined(__FREERTOS__) || defined(__DOXYGEN__)
 //! Mutex to prevent concurrent writes to print buffer
 static xSemaphoreHandle dbg_is_free;
 //! Semaphore to signal buffer has requested space
 static xSemaphoreHandle requested_space_is_free;
+#else
+static volatile bool requested_space_is_free;
+#endif
 
 //@}
 
@@ -120,13 +128,17 @@ static xSemaphoreHandle requested_space_is_free;
  */
 static inline void _dbg_wait_for_lock(void)
 {
+#if defined(__FREERTOS__) || defined(__DOXYGEN__)
 	xSemaphoreTake(dbg_is_free, portMAX_DELAY);
+#endif
 }
 
 //! Unlock access
 static inline void _dbg_unlock(void)
 {
+#if defined(__FREERTOS__) || defined(__DOXYGEN__)
 	xSemaphoreGive(dbg_is_free);
+#endif
 }
 
 //@}
@@ -237,7 +249,13 @@ static inline dbg_buffer_space_t _dbg_request_free_space(
  */
 static inline void _dbg_wait_for_requested_space(void)
 {
+#if defined(__FREERTOS__) || defined(__DOXYGEN__)
 	xSemaphoreTake(requested_space_is_free, portMAX_DELAY);
+#else
+	do {
+	} while (!requested_space_is_free);
+	requested_space_is_free = false;
+#endif
 }
 
 /**
@@ -318,7 +336,11 @@ static void _dbg_interrupt_handler(uint8_t dummy)
 	// Handle buffer space request
 	if (requested_space) {
 		if (--requested_space == 0) {
+#if defined(__FREERTOS__) || defined(__DOXYGEN__)
 			xSemaphoreGiveFromISR(requested_space_is_free, NULL);
+#else
+			requested_space_is_free = true;
+#endif
 		}
 	}
 }
@@ -435,9 +457,13 @@ enum status_code dbg_init(void)
 	uint16_t baud;
 	uint32_t sercom_index, pm_index, gclk_index;
 
+#if defined(__FREERTOS__) || defined(__DOXYGEN__)
 	dbg_is_free = xSemaphoreCreateMutex();
 	vSemaphoreCreateBinary(requested_space_is_free);
 	xSemaphoreTake(requested_space_is_free, 0);
+#else
+	requested_space_is_free = false;
+#endif
 
 	// Get required indexes
 	sercom_index = _sercom_get_sercom_inst_index(sercom);

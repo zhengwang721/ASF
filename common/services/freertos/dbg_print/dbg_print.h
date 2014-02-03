@@ -58,6 +58,9 @@ extern "C" {
  * This service provides a thread-safe, buffered debug print facility via UART
  * for FreeRTOS-based applications.
  *
+ * It can also be used without FreeRTOS, but will then not be thread-safe nor
+ * have efficient waiting when the buffer is full.
+ *
  * The following peripherals are used by this module:
  * - SERCOM (Serial Communication Interface)
  *
@@ -74,6 +77,17 @@ extern "C" {
  * The reader is assumed to be familiar with configuration of the SERCOM USART
  * driver since this service uses similar configuration settings.
  *
+ * To enable FreeRTOS-support, the symbol \c __FREERTOS__ must be defined. This
+ * will typically be done automatically if FreeRTOS is included from ASF.
+ *
+ * To get thread-safety and efficient waiting with other OS or schedulers, the
+ * following functions in \ref dbg_print.c must be modified:
+ * - \ref _dbg_wait_for_lock()
+ * - \ref _dbg_unlock()
+ * - \ref _dbg_interrupt_handler()
+ * - \ref _dbg_wait_for_requested_space()
+ * - \ref dbg_init()
+ *
  *
  * \section asfdoc_common_freertos_dbg_print_module_overview Module Overview
  *
@@ -83,6 +97,11 @@ extern "C" {
  * written for use in FreeRTOS-based applications where concurrent tasks need to
  * output debug messages, for example via the Communication Device Class (CDC)
  * of the Embedded Debugger (EDBG) on Xplained Pro boards.
+ *
+ * This service can be used without FreeRTOS, but will then not be thread safe
+ * nor have efficient waiting when the buffer is full. To support other OSes and
+ * schedulers, see \ref asfdoc_common_freertos_dbg_print_prerequisites for a
+ * list of the functions that must be modified.
  *
  * This service should not be used within interrupts.
  *
