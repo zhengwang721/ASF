@@ -115,7 +115,7 @@
 
 #define SIO_BUF_COUNT                   (2)
 
-#define SIO_RX_BUF_SIZE                 (156)
+#define SIO_RX_BUF_SIZE                 (250)
 #define SIO_TX_BUF_SIZE                 SIO_RX_BUF_SIZE
 
 /* Set the Interface to Transfer the Serial Data */
