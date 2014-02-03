@@ -148,8 +148,8 @@ typedef enum node_status_tag
 
 
 uint16_t key_mapping_media[] = {BUTTON_STOP, BUTTON_PREVIOUS, BUTTON_NEXT, BUTTON_MPLAYER, \
-                               BUTTON_VOLUME_P, BUTTON_PLAY, BUTTON_PAUSE, BUTTON_VOLUME_N, \
-                               LAST_BUTTON_INDEX, LAST_BUTTON_INDEX, BUTTON_MUTE, LAST_BUTTON_INDEX};
+                                BUTTON_VOLUME_P, BUTTON_PLAY, BUTTON_PAUSE, BUTTON_VOLUME_N, \
+                                BUTTON_MUTE, LAST_BUTTON_INDEX, LAST_BUTTON_INDEX, LAST_BUTTON_INDEX};
 
 uint8_t key_mapping_ppt[] = {BUTTON_ESC, BUTTON_UP, BUTTON_LEFT, BUTTON_RIGHT, \
                              BUTTON_TAB, BUTTON_DOWN, BUTTON_DELETE, BUTTON_MODE, \
@@ -559,7 +559,7 @@ static void app_task(void)
                       zid_report_data[0].report_type = INPUT;
                       zid_report_data[0].report_desc_identifier = KEYBOARD;
                       zid_report_data[0].report_data = (void *)msg_ptr;
-
+                      
                       keyboard_input_desc_t *keyboard_input_desc;
                       keyboard_input_desc = (keyboard_input_desc_t *)msg_ptr;
 
