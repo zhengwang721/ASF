@@ -110,8 +110,8 @@ void PHY_Init(void)
 //static uint8_t ver;
 //ver= phyReadRegister(0X1c);
 //  phyReadRegister(IRQ_STATUS_REG);
-  phyWriteRegister(TRX_STATE_REG, TRX_CMD_TRX_OFF);
-  while (TRX_STATUS_TRX_OFF != (phyReadRegister(TRX_STATUS_REG) & TRX_STATUS_TRX_STATUS_MASK));
+  do { phyWriteRegister(TRX_STATE_REG, TRX_CMD_TRX_OFF);
+  } while (TRX_STATUS_TRX_OFF != (phyReadRegister(TRX_STATUS_REG) & TRX_STATUS_TRX_STATUS_MASK));
   phyWriteRegister(TRX_RPC_REG, 0xFF);
   phyWriteRegister(IRQ_MASK_REG, 0x00);
   phyReadRegister(IRQ_STATUS_REG);
@@ -396,11 +396,11 @@ static void phyHandleSetRequests(void)
 *****************************************************************************/
 static void phyTrxSetState(uint8_t state)
 {
-  phyWriteRegister(TRX_STATE_REG, TRX_CMD_FORCE_TRX_OFF);
-  while (TRX_STATUS_TRX_OFF != (phyReadRegister(TRX_STATUS_REG) & TRX_STATUS_TRX_STATUS_MASK));
+  do {  phyWriteRegister(TRX_STATE_REG, TRX_CMD_FORCE_TRX_OFF);
+  } while (TRX_STATUS_TRX_OFF != (phyReadRegister(TRX_STATUS_REG) & TRX_STATUS_TRX_STATUS_MASK));
 
-  phyWriteRegister(TRX_STATE_REG, state);
-  while (state != (phyReadRegister(TRX_STATUS_REG) & TRX_STATUS_TRX_STATUS_MASK));
+  do {  phyWriteRegister(TRX_STATE_REG, state);
+  }while (state != (phyReadRegister(TRX_STATUS_REG) & TRX_STATUS_TRX_STATUS_MASK));
 }
 
 /*************************************************************************//**

@@ -110,8 +110,8 @@ void PHY_Init(void)
   trx_spi_init();
   HAL_PhyReset();
 
-  phyWriteRegister(TRX_STATE_REG, TRX_CMD_TRX_OFF);
-  while (TRX_STATUS_TRX_OFF != (phyReadRegister(TRX_STATUS_REG) & TRX_STATUS_TRX_STATUS_MASK));
+  do{   phyWriteRegister(TRX_STATE_REG, TRX_CMD_TRX_OFF);
+  }while (TRX_STATUS_TRX_OFF != (phyReadRegister(TRX_STATUS_REG) & TRX_STATUS_TRX_STATUS_MASK));
 
   phyWriteRegister(PHY_TX_PWR_REG, 0x41);
 
@@ -428,8 +428,8 @@ static void phyHandleSetRequests(void)
 *****************************************************************************/
 static void phyTrxSetState(uint8_t state)
 {
-  phyWriteRegister(TRX_STATE_REG, TRX_CMD_FORCE_TRX_OFF);
-  while (TRX_STATUS_TRX_OFF != (phyReadRegister(TRX_STATUS_REG) & TRX_STATUS_TRX_STATUS_MASK));
+  do{   phyWriteRegister(TRX_STATE_REG, TRX_CMD_FORCE_TRX_OFF);
+  }while (TRX_STATUS_TRX_OFF != (phyReadRegister(TRX_STATUS_REG) & TRX_STATUS_TRX_STATUS_MASK));
 
   phyWriteRegister(TRX_STATE_REG, state);
   while (state != (phyReadRegister(TRX_STATUS_REG) & TRX_STATUS_TRX_STATUS_MASK));
