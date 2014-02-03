@@ -40,6 +40,48 @@
  * \asf_license_stop
  *
  */
+ /**
+ * \mainpage
+ * \section preface Preface
+ * This application demonstrates the use of  AVR477 remote control as ZID class device,
+ * Which pairs with the ZID HID PC adaptor and controls the PC.
+ * \section main_files Application Files
+ * - main.c                     Application main file.
+ * - vendor_data.c              Vendor Specific API functions
+ * \section intro Application Introduction
+ *  HID QTOUCH Remote is the demo application which can act as a media player remote when paired up with ZID HID PC adaptor.
+ *  On Power on,Remote will initiate a push button pairing procedure and pairs with an adaptor if it is found.After pairing it can be used as a media player remote,supporting the following Command
+ *  1. Opening the media player
+    2. Play
+	3.Pause
+	4.Volume up
+	5.Volume down
+	6.Mute
+	7.Stop
+ *  Qtouch button movements in the remote will send Corresponding HID commands.
+ * 
+ *
+ *  The Application will use the ZID reports to send hid reports to
+ *paired device.
+ * \section api_modules Application Dependent Modules
+ * - \ref group_rf4control
+ * - \subpage api
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR .
+ * Other compilers may or may not work.
+ *
+ * \section references References
+ * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
+ *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
+ *Area
+ *     Networks (WPANs).\n\n
+ * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
+ *
+ * \section contactinfo Contact Information
+ * For further information,visit
+ * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
+ */
+
 
 /* === INCLUDES ============================================================ */
 #include <asf.h>
@@ -528,7 +570,6 @@ static void app_task(void)
                       keyboard_input_desc->key_code[3] = 0x00;
                       keyboard_input_desc->key_code[4] = (uint8_t)key_mapping_media[b_state];
                       keyboard_input_desc->key_code[5] = (uint8_t)(key_mapping_media[b_state] >> 8);
-                      //report_id = 1;
                       num_records = 1;
                       
                       if (zid_report_data_request(pairing_ref,num_records, zid_report_data, TX_OPTIONS

@@ -48,6 +48,51 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+/**
+ * \mainpage
+ * \section preface Preface
+ * This is the reference manual for ZID Terminal adaptor application.
+ * \section main_files Application Files
+ * - main.c                      Application main file.
+ * - vendor_data.c               Vendor Specific API functions
+ * \section intro Application Introduction
+ * Terminal Adaptor Example Application will act as adaptor for the RF4CE ZID
+ *Class device application. Terminal adaptor stack will respond for the user
+ *input via serial interface.
+ * The user options will be printed on the serial console. Where as the user
+ *will choose the options like cold start, warm start, reset(NIB will be reset
+ *to default values and stored in EEPROM),
+ * start network and push button pairing, print the pairing table, 
+ * 
+ *
+ * options are user selectable via serial console, response will be printed on
+ *the serial console after processing the requests.
+ *
+ * Push button pairing procedure can be triggered at target side either by using
+ *"All-in-one start" option or "Reset"->"Start"->"ZID Connecting" sequence and make
+ *sure that the PBP is triggered at the ZID class device side also.
+ * The status of the push button pairing procedure will be displayed on the
+ *terminal.Then it displays ZID reports  received from the ZID Class device.
+ *
+ * Terminal adaptor can be used with the ZID device application.
+ * \section api_modules Application Dependent Modules
+ * - \ref group_rf4control
+ * - \subpage api
+ * \section compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR .
+ * Other compilers may or may not work.
+ *
+ * \section references References
+ * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
+ *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
+ *Area
+ *     Networks (WPANs).\n\n
+ * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
+ *
+ * \section contactinfo Contact Information
+ * For further information,visit
+ * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
+ */
 
 /* === Includes ============================================================ */
 #include <stddef.h>
@@ -150,55 +195,8 @@ static void handle_input(uint8_t input_char);
 static void print_node_status(void);
 static void print_app_header(void);
 static void print_pairing_table(bool start_from_scratch, uint8_t *table_entry, uint8_t index);
-static void led_handling(void *callback_parameter);
 static void app_alert(void);
 /* === Implementation ====================================================== */
-/**
- * \mainpage
- * \section preface Preface
- * This is the reference manual for ZID Terminal adaptor application.
- * \section main_files Application Files
- * - main.c                      Application main file.
- * - vendor_data.c               Vendor Specific API functions
- * \section intro Application Introduction
- * Terminal Adaptor Example Application will act as adaptor for the RF4CE ZID
- *Class device application. Terminal adaptor stack will respond for the user
- *input via serial interface.
- * The user options will be printed on the serial console. Where as the user
- *will choose the options like cold start, warm start, reset(NIB will be reset
- *to default values and stored in EEPROM),
- * start network and push button pairing, print the pairing table, 
- * 
- *
- * options are user selectable via serial console, response will be printed on
- *the serial console after processing the requests.
- *
- * Push button pairing procedure can be triggered at target side either by using
- *"All-in-one start" option or "Reset"->"Start"->"ZID Connecting" sequence and make
- *sure that the PBP is triggered at the ZID class device side also.
- * The status of the push button pairing procedure will be displayed on the
- *terminal.Then it displays ZID reports  received from the ZID Class device.
- *
- * Terminal adaptor can be used with the ZID device application.
- * \section api_modules Application Dependent Modules
- * - \ref group_rf4control
- * - \subpage api
- * \section compinfo Compilation Info
- * This software was written for the GNU GCC and IAR .
- * Other compilers may or may not work.
- *
- * \section references References
- * 1)  IEEE Std 802.15.4-2006 Part 15.4: Wireless Medium Access Control (MAC)
- *     and Physical Layer (PHY) Specifications for Low-Rate Wireless Personal
- *Area
- *     Networks (WPANs).\n\n
- * 2)  AVR Wireless Support <A href="http://avr@atmel.com">avr@atmel.com</A>.\n
- *
- * \section contactinfo Contact Information
- * For further information,visit
- * <A href="http://www.atmel.com/avr">www.atmel.com</A>.\n
- */
-
 
 /**
  * Main function, initialization and main message loop
@@ -610,7 +608,12 @@ void nlme_reset_confirm(nwk_enum_t Status)
         );
     }
 }
-
+/**
+ * @brief Notify the application of the status of its request to start the NWK.
+ *        
+ *
+ * @param Status  nwk status
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -649,7 +652,12 @@ void nlme_start_confirm(nwk_enum_t Status)
                                 );
     }
 }
-
+/**
+ * @brief Function to handle the LED States based on application state.
+ *        
+ *
+ * @param callback_parameter  callback parameter if any.
+ */
 static void led_handling(void *callback_parameter)
 {
     switch (node_status)
@@ -674,7 +682,12 @@ static void led_handling(void *callback_parameter)
     /* Keep compiler happy */
     callback_parameter = callback_parameter;
 }
-
+/**
+ * @brief Notify the application of the status of its rx enable request.
+ *        
+ *
+ * @param Status  nwk status
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -693,6 +706,21 @@ void nlme_rx_enable_confirm(nwk_enum_t Status)
     /* Keep compiler happy */
     Status = Status;
 }
+/**
+ * @brief This function decides whether push button pairing request should be
+ *        allowed.
+ *
+ * Decision could be based on one of the parameter.
+ *
+ * @param Status              nwk status
+ * @param SrcIEEEAddr         IEEE Address of the source requesting the pair.
+ * @param OrgVendorId         Vendor Id of the source requesting the pair.
+ * @param OrgVendorString     Vendor string of the source requesting the pair.
+ * @param OrgUserString       User string of the source requesting the pair.
+ * @param KeyExTransferCount  Number of key seeds to establish key.
+ *
+ * @return true if pairing is granted; else false
+ */
 bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr, uint16_t OrgVendorId,
                        uint8_t OrgVendorString[7], uint8_t OrgUserString[15],
                        uint8_t KeyExTransferCount)
@@ -708,7 +736,10 @@ bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr, uint16_t OrgVend
     return true;
 }
 
-
+/**
+ * @brief This function registers the callback function for indications from the stack.
+ *
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static void zid_indication_callback_init(void)
 {
@@ -721,7 +752,16 @@ static void zid_indication_callback_init(void)
     register_nwk_indication_callback(&nwk_ind);
 }
 #endif
-
+/**
+ * @brief Notify the application of the removal of link by another device.
+ *
+ * The NLME-UNPAIR.indication primitive allows the NLME to notify the
+ *application
+ * of the removal of a pairing link by another device.
+ *
+ * @param PairingRef       Pairing Ref for which entry is removed from pairing
+ *table.
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -729,7 +769,12 @@ void nlme_unpair_indication(uint8_t PairingRef)
 {
   printf(" Unpair indication from pairing ref:%d\r\n",PairingRef);
 }
-
+/**
+ * @brief Notify the application of the status of its heartbeat request.
+ *        
+ *
+ * @param PairingRef  Pairing reference.
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -738,7 +783,12 @@ void zid_heartbeat_indication(uint8_t PairingRef)
     printf("ZID-heartbeat from pairing ref:%d\r\n\r\n",PairingRef);
 }
 
-
+/**
+ * @brief Notify the application of the status of its connect request.
+ *        
+ * @param Status  nwk status.
+ * @param PairingRef  Pairing reference.
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
@@ -754,7 +804,15 @@ void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef)
   }
   printf("ZID-connect status code:0x%x pairing ref:%d\r\n\r\n",Status,PairingRef);
 }
-
+/**
+ * @brief Notify the application when ZID report data is received from the paired device.
+ *  
+ * @param PairingRef Pairing reference.
+ * @param num_report_records number of Report records.
+ * @param *zid_report_data_record_ptr pointer to the report data received.
+ * @param  RxLinkQuality    LQI value of the report data frame.
+ * @param  RxFlags          Receive flags.
+ */
 #ifdef RF4CE_CALLBACK_PARAM
 static
 #endif
