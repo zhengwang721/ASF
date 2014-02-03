@@ -1,7 +1,7 @@
 /**
  * @file main.c
  *
- * @brief ZID HID PC Adaptor Application
+ * @brief ZID HID Qtouch Remote Application
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -44,25 +44,24 @@
  * \mainpage
  * \section preface Preface
  * This application demonstrates the use of  AVR477 remote control as ZID class device,
- * Which pairs with the ZID HID PC adaptor and controls the PC.
+ * Which pairs with the ZID HID PC adaptor and controls the PC applications like Windows Media player.
  * \section main_files Application Files
  * - main.c                     Application main file.
  * - vendor_data.c              Vendor Specific API functions
  * \section intro Application Introduction
  *  HID QTOUCH Remote is the demo application which can act as a media player remote when paired up with ZID HID PC adaptor.
- *  On Power on,Remote will initiate a push button pairing procedure and pairs with an adaptor if it is found.After pairing it can be used as a media player remote,supporting the following Command
+ *  On Power up,Remote will initiate push button pairing procedure and pairs with an adaptor if it is found.After pairing it can be used as a media player remote,The demo application 
+ *  shows the following Commands,
  *  1. Opening the media player
-    2. Play
-	3.Pause
-	4.Volume up
-	5.Volume down
-	6.Mute
-	7.Stop
+ *  2. Play
+ *	3. Pause
+ *	4. Volume up
+ *	5. Volume down
+ *	6. Mute
+ *	7. Stop
  *  Qtouch button movements in the remote will send Corresponding HID commands.
- * 
- *
- *  The Application will use the ZID reports to send hid reports to
- *paired device.
+ *  the Application uses the ZID reports to send hid reports to
+ *  paired device.
  * \section api_modules Application Dependent Modules
  * - \ref group_rf4control
  * - \subpage api

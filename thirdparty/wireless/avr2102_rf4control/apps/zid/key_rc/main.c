@@ -1,7 +1,7 @@
 /**
  * @file main.c
  *
- * @brief ZID HID PC Adaptor Application
+ * @brief ZID Remote Key RC  Application
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -89,35 +89,6 @@ FLASH_DECLARE(uint8_t app_user_string[15]) = APP_USER_STRING;
 
 static node_status_t node_status;
 static uint8_t pairing_ref = 0xFF;
-
-//static uint8_t key_rc_button[TOTAL_NO_OF_ZID_KEY_RC] =     { 0x72, /* BUTTON_F2_RED    */
-//                                                             0x73, /* BUTTON_F3_GREEN  */
-//                                                             0x74, /* BUTTON_F4_YELLOW */
-//                                                             0x71, /* BUTTON_F1_BLUE   */
-//                                                             0xFF, /* Not valid for SELECT KEY */
-//                                                             0x20, /* BUTTON_NUMBER_0 */
-//                                                             0x6C, /* BUTTON_POWER_OFF_FUNCTION */
-//                                                             0xFF, /* Invalid */
-//                                                             0xFF, /* Invalid */
-//                                                             0x21, /* BUTTON_NUMBER_1 */
-//                                                             0x22, /* BUTTON_NUMBER_2 */
-//                                                             0x23, /* BUTTON_NUMBER_3 */
-//                                                             0x24, /* BUTTON_NUMBER_4 */
-//                                                             0x25, /* BUTTON_NUMBER_5 */
-//                                                             0x26, /* BUTTON_NUMBER_6 */
-//                                                             0x27, /* BUTTON_NUMBER_7 */
-//                                                             0x28, /* BUTTON_NUMBER_8 */
-//                                                             0x29, /* BUTTON_NUMBER_9 */
-//                                                             0x01, /* BUTTON_UP       */
-//                                                             0x03, /* BUTTON_LEFT     */
-//                                                             0x2B, /* BUTTON_ENTER    */
-//                                                             0x04, /* BUTTON_RIGHT    */
-//                                                             0x02, /* BUTTON_DOWN     */
-//                                                             0x07, /* BUTTON_LEFT_UP  */
-//                                                             0x08, /* BUTTON_LEFT_DOWN */
-//                                                             0x05, /* ZRC_BUTTON_RIGHT_UP */
-//                                                             0x06 /* ZRC_BUTTON_RIGHT_DOWN */
-//                                                           };
 
 
 #define  BUTTON_PLAY       (0x0080)
@@ -300,15 +271,6 @@ int main(void)
      */
     key_rc_board_init();
     
-//    while(1)
-//    {
-//       button_val = pal_button_scan();
-//       if(button_val != BUTTON_UNKNOWN)
-//       {
-//         pal_led(LED_1, LED_TOGGLE);         
-//       } 
-//    }
-//    sysclk_init();
 
     sw_timer_init();
        
