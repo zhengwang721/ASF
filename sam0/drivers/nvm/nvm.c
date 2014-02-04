@@ -111,7 +111,7 @@ enum status_code nvm_set_config(
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, PM_APBBMASK_NVMCTRL);
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
 
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
@@ -188,7 +188,7 @@ enum status_code nvm_execute_command(
 	nvm_module->CTRLB.reg = temp | NVMCTRL_CTRLB_CACHEDIS;
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
 
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
@@ -202,7 +202,7 @@ enum status_code nvm_execute_command(
 		case NVM_COMMAND_WRITE_AUX_ROW:
 
 			/* Auxiliary space cannot be accessed if the security bit is set */
-			if(nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
+			if (nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
 				return STATUS_ERR_IO;
 			}
 
@@ -408,7 +408,7 @@ enum status_code nvm_write_buffer(
 	}
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
 
 	uint32_t nvm_address = destination_address / 2;
 
@@ -485,7 +485,7 @@ enum status_code nvm_read_buffer(
 	}
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
 
 	uint32_t page_address = source_address / 2;
 
@@ -548,7 +548,7 @@ enum status_code nvm_erase_row(
 	}
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
 
 	/* Set address and command */
 	nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[row_address / 4];
@@ -576,7 +576,7 @@ void nvm_get_parameters(
 	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
 
 	/* Read out from the PARAM register */
 	uint32_t param_reg = nvm_module->PARAM.reg;
@@ -654,7 +654,7 @@ bool nvm_is_page_locked(uint16_t page_number)
 /**
  * \internal
  *
- * \brief Translate fusebit words into struct content. 
+ * \brief Translate fusebit words into struct content.
  *
  */
 static void _nvm_translate_raw_fusebits_to_struct (
