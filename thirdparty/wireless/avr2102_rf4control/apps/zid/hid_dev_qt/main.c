@@ -250,8 +250,6 @@ int main(void)
      cpu_irq_enable();
 
     
-    // any button press after power on
-    
     if(b_event)
     {
         // Force push button pairing
