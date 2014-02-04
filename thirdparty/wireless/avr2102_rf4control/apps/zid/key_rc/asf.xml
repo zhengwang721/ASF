@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" caption="ZID - HID Class Device application" id="thirdparty.wireless.avr2102_rf4control.apps.zid.key_rc">
+	<module type="application" caption="ZID Remote- HID Class Device application" id="thirdparty.wireless.avr2102_rf4control.apps.zid.key_rc">
 		<info type="description" value="summary">
          RF4CE-ZID Key Remote Controller - HID Class Device
 		</info>
