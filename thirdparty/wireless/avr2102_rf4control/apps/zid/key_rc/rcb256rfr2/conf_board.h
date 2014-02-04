@@ -49,22 +49,6 @@
 #define GET_BATTERY_VOLTAGE()    tfa_get_batmon_voltage()  
 
 
-
-
-
-
-
-
-/* Enumerations used to identify LEDs */
-typedef enum led_id_tag
-{
-    LED_1,
-    LED_2,
-    LED_3,
-    LED_4,
-    LED_5
-} SHORTENUM led_id_t;
-
 /* Enumerations used to idenfify ADC Channels */
 typedef enum adc_channel_tag
 {
@@ -80,19 +64,6 @@ typedef enum acc_status_tag
     ACC_OFF,
     ACC_ON
 } SHORTENUM acc_status_t;
-
-/**
- * @brief LED action
- */
-typedef enum led_action_tag
-{
-    /** Switch LED on. */
-    LED_ON,
-    /** Switch LED off. */
-    LED_OFF,
-    /** Toggle LED. */
-    LED_TOGGLE
-} SHORTENUM led_action_t;
 
 
 /**
@@ -164,121 +135,7 @@ typedef enum button_state_tag
 #define button_id_t             uint32_t
 #define NO_OF_BUTTONS           (24)
 
-/*
- * PORT where LEDs are connected
- */
-#define LED_PORT                        (PORTB)
-#define LED_PORT_DIR                    (DDRB)
-
-/*
- * PINs where LEDs are connected
- */
-#define LED_1_PIN                       (PB0)
-#define LED_2_PIN                       (PB1)
-#define LED_3_PIN                       (PB2)
-#define LED_4_PIN                       (PB3)
-#define LED_5_PIN                       (PB4)
-#define LED_MASK                        ((1 << LED_1_PIN) | (1 << LED_2_PIN) \
-                                         | (1 << LED_3_PIN) | (1 << LED_4_PIN) \
-                                         | (1 << LED_5_PIN))
-
-/*
- * PINs where Accelerometer power is connected
- */
-#define ACC_PWR                         (PB5)
-
-/*
- * PORT where button is connected
- */
-#define BUTTON_IRQ_PORT                 (PORTD)
-#define BUTTON_IRQ_PORT_DIR             (DDRD)
-#define BUTTON_IRQ_PORT_IN              (PIND)
-#define BUTTON_PORT1                    (PORTB)
-#define BUTTON_PORT1_DIR                (DDRB)
-#define BUTTON_PORT1_IN                 (PINB)
-#define BUTTON_PORT2                    (PORTD)
-#define BUTTON_PORT2_DIR                (DDRD)
-#define BUTTON_PORT2_IN                 (PIND)
-
-/*
- * PINs where buttons are connected
- */
-#define BUTTON_IRQ_PIN_1                (PD1)
-#define BUTTON_IRQ_PIN_2                (PD2)
-#define BUTTON_IRQ_PIN_3                (PD3)
-#define BUTTON_PIN_0                    (PB0)
-#define BUTTON_PIN_1                    (PB1)
-#define BUTTON_PIN_2                    (PB2)
-#define BUTTON_PIN_3                    (PB3)
-#define BUTTON_PIN_4                    (PB4)
-#define BUTTON_PIN_5                    (PB5)
-#define BUTTON_PIN_6                    (PB6)
-#define BUTTON_PIN_7                    (PD5)
-#define BUTTON_PIN_8                    (PD7)
-
-/*
- * ISR vectors for buttons
- */
-#define BUTTON_1_ISR_vect               (INT1_vect)
-#define BUTTON_2_ISR_vect               (INT2_vect)
-#define BUTTON_3_ISR_vect               (INT3_vect)
-
-/*
- * ISR mask for buttons
- */
-#define BUTTON_1_ISR_MASK               (1 << INT1)
-#define BUTTON_2_ISR_MASK               (1 << INT2)
-#define BUTTON_3_ISR_MASK               (1 << INT3)
-
-/*
- * ISR flag for buttons
- */
-#define BUTTON_FLAG_REG                 (EIFR)
-#define BUTTON_1_ISR_FLAG               (1 << INTF1)
-#define BUTTON_2_ISR_FLAG               (1 << INTF2)
-#define BUTTON_3_ISR_FLAG               (1 << INTF3)
-
-/*
- * Button input mask
- */
-#define BUTTON_IRQ_1_IN_MASK            (1 << PIND1)
-#define BUTTON_IRQ_2_IN_MASK            (1 << PIND2)
-#define BUTTON_IRQ_3_IN_MASK            (1 << PIND3)
-
-
-/* Disable all button interrupts */
-#define DISABLE_ALL_BUTTON_IRQS()       EIMSK &= ~(BUTTON_1_ISR_MASK | BUTTON_2_ISR_MASK | BUTTON_3_ISR_MASK)
-/* Enable all button interrupts */
-#define ENABLE_ALL_BUTTON_IRQS()        EIMSK |= (BUTTON_1_ISR_MASK | BUTTON_2_ISR_MASK | BUTTON_3_ISR_MASK)
-/* Clear all button IRQ flags */
-#define CLEAR_ALL_BUTTON_IRQ_FLAGS()    BUTTON_FLAG_REG = BUTTON_1_ISR_FLAG | BUTTON_2_ISR_FLAG | BUTTON_3_ISR_FLAG
-
-/*
- * Macros controlling the latch
- */
-#define LATCH_PORT                      PORTE
-#define LATCH_PORT_DIR                  DDRE
-#define LATCH_PIN                       PE5
-#define LATCH_HIGH()                    LATCH_PORT |= 1 << LATCH_PIN
-#define LATCH_LOW()                     LATCH_PORT &= ~(1 << LATCH_PIN)
-#define LATCH_PULSE()                   LATCH_HIGH(); LATCH_LOW()
-#define LATCH_DATA                      PORTB
-#define LATCH_DATA_DIR                  DDRB
-#define LATCH_INIT()                    do { \
-        LATCH_PORT &= ~(1 << LATCH_PIN); \
-        LATCH_PORT_DIR |= 1 << LATCH_PIN; \
-    } while (0)   
-   
-
-button_id_t pal_button_scan(void);
-void pal_button_init(void);
-void pal_led(led_id_t led_no, led_action_t led_setting);
-void pal_led_init(void);
-
-
-
-
-
+#define LED0    LED_4
 
 
 

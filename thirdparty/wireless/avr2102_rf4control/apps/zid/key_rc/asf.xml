@@ -29,12 +29,14 @@
 		<build type="define" name="RSSI_TO_LQI_MAPPING" value =""/>
 		<build type="define" name="REDUCED_PARAM_CHECK" value =""/>
 		<build type="define" name="ENABLE_STACK_NVM" value =""/>
+		<build type="define" name="KEY_RC_BOARD" value =""/>
 		
 		<require idref="thirdparty.wireless.avr2102_rf4control.include"/>
         <require idref="thirdparty.wireless.avr2102_rf4control.lib.zid.dev"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.pal"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.mac"/>
 		<require idref="common.drivers.nvm"/>
+		<require idref="board.atmegarfx_rcb"/>
 
 		<device-support-alias value="avr2102_rf4control_zid_dev_support"/>
 		<device-support value="xmega"/>

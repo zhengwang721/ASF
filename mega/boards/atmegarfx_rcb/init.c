@@ -51,6 +51,44 @@
 
 void board_init(void)
 {
+#ifdef KEY_RC_BOARD
+    /* On board Button initialization */
+	ioport_configure_pin(BUTTON_IRQ_PIN_1,IOPORT_DIR_INPUT | IOPORT_PULL_UP);
+	ioport_configure_pin(BUTTON_IRQ_PIN_2,IOPORT_DIR_INPUT | IOPORT_PULL_UP);
+	ioport_configure_pin(BUTTON_IRQ_PIN_3,IOPORT_DIR_INPUT | IOPORT_PULL_UP);
+	
+    set_button_pins_for_normal_mode();
+
+    /* Initialize the IRQ lines' interrupt behaviour. */
+    DISABLE_ALL_BUTTON_IRQS();
+	
+	/* LED Init */
+	/* LCD initialization for inactive use */    
+    /* On board LED initialization */
+	ioport_configure_pin(LCD_CS_ON_BOARD,	
+	IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);
+	
+    PORTE |= 1 << PE4;
+    DDRE |=  1 << PE4;
+    // LCD RST: out, high
+    PORTE |= 1 << PE2;
+    DDRE |= 1 << PE2;
+    // PE3, PE6, PE7: out, high
+    PORTE |= ((1 << PE3) | (1 << PE6) | (1 << PE7));
+    DDRE |= (1 << PE3) | (1 << PE6) | (1 << PE7);
+
+    // Unused pin
+    DDRG &= ~(1 << PG2);
+    PORTG |= 1 << PG2;
+
+    LATCH_INIT();
+    
+	update_latch_status();   
+
+    /* Apply latch pulse to set LED status */
+    pulse_latch();
+	
+#else
     /* To identify if it is a plain or STB*/
     board_identify();
 
@@ -61,7 +99,7 @@ void board_init(void)
 	ioport_configure_pin(LED2_RCB,IOPORT_DIR_OUTPUT |  IOPORT_INIT_HIGH);
 
 	/* On board Switch initialization */
-	ioport_configure_pin(GPIO_PUSH_BUTTON_0,IOPORT_DIR_INPUT | IOPORT_PULL_UP);
+	ioport_configure_pin(GPIO_PUSH_BUTTON_0,IOPORT_DIR_INPUT | IOPORT_PULL_UP);    
 
     
 
@@ -70,6 +108,7 @@ void board_init(void)
 
     DDRD = 0XD0; 	//(1 << 4) | (1 << 6) | (1 << 7);
     PORTD = 0XC0 ;  //(0 << 4) | (1 << 6) | (1 << 7);
+#endif
 #endif
 
 }

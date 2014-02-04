@@ -73,7 +73,7 @@
 #endif
 
 
-
+#ifdef SENSOR_TERMINAL_BOARD
 #define NUM_CHECK 10
 #if (defined __ICCAVR__)
 #define _BV(x) (1 << (x))
@@ -234,6 +234,114 @@
     } while (0)           
 
 #endif //STB
+#endif /* SENSOR_TERMINAL_BOARD */
+
+#ifdef KEY_RC_BOARD
+
+/* Key RC Button Specific macros */
+#define MAX_KEY_SCANS           6
+#define NUM_OF_IDENTICAL_KEYS   3
+#define INTER_BUTTON_SCAN_DELAY 100
+#define WAKEUP_DEBOUNCE_DELAY   5000
+
+/*
+ * PINs where buttons are connected
+ */
+#define BUTTON_IRQ_PIN_1                IOPORT_CREATE_PIN(PORTD, 1)
+#define BUTTON_IRQ_PIN_2                IOPORT_CREATE_PIN(PORTD, 2)
+#define BUTTON_IRQ_PIN_3                IOPORT_CREATE_PIN(PORTD, 3)
+#define BUTTON_PIN_0                    IOPORT_CREATE_PIN(PORTB, 0)
+#define BUTTON_PIN_1                    IOPORT_CREATE_PIN(PORTB, 1)
+#define BUTTON_PIN_2                    IOPORT_CREATE_PIN(PORTB, 2)
+#define BUTTON_PIN_3                    IOPORT_CREATE_PIN(PORTB, 3)
+#define BUTTON_PIN_4                    IOPORT_CREATE_PIN(PORTB, 4)
+#define BUTTON_PIN_5                    IOPORT_CREATE_PIN(PORTB, 5)
+#define BUTTON_PIN_6                    IOPORT_CREATE_PIN(PORTB, 6)
+#define BUTTON_PIN_7                    IOPORT_CREATE_PIN(PORTD, 5)
+#define BUTTON_PIN_8                    IOPORT_CREATE_PIN(PORTD, 7)
+
+/*
+ * PINs where LEDs are connected
+ */
+#define LED_1_PIN                       IOPORT_CREATE_PIN(PORTB, 0)
+#define LED_2_PIN                       IOPORT_CREATE_PIN(PORTB, 1)
+#define LED_3_PIN                       IOPORT_CREATE_PIN(PORTB, 2)
+#define LED_4_PIN                       IOPORT_CREATE_PIN(PORTB, 3)
+#define LED_5_PIN                       IOPORT_CREATE_PIN(PORTB, 4)
+
+/*
+ * PINs where LCDs are connected
+ */
+#define LCD_CS_ON_BOARD      IOPORT_CREATE_PIN(PORTE, 4)
+#define LCD_RST_ON_BOARD     IOPORT_CREATE_PIN(PORTE, 4)
+
+/*
+ * PORT where button is connected
+ */
+#define BUTTON_IRQ_PORT                 (PORTD)
+#define BUTTON_IRQ_PORT_DIR             (DDRD)
+#define BUTTON_IRQ_PORT_IN              (PIND)
+#define BUTTON_PORT1                    (PORTB)
+#define BUTTON_PORT1_DIR                (DDRB)
+#define BUTTON_PORT1_IN                 (PINB)
+#define BUTTON_PORT2                    (PORTD)
+#define BUTTON_PORT2_DIR                (DDRD)
+#define BUTTON_PORT2_IN                 (PIND)
+
+/*
+ * ISR vectors for buttons
+ */
+#define BUTTON_1_ISR_vect               (INT1_vect)
+#define BUTTON_2_ISR_vect               (INT2_vect)
+#define BUTTON_3_ISR_vect               (INT3_vect)
+
+/*
+ * ISR mask for buttons
+ */
+#define BUTTON_1_ISR_MASK               (1 << INT1)
+#define BUTTON_2_ISR_MASK               (1 << INT2)
+#define BUTTON_3_ISR_MASK               (1 << INT3)
+
+/*
+ * ISR flag for buttons
+ */
+#define BUTTON_FLAG_REG                 (EIFR)
+#define BUTTON_1_ISR_FLAG               (1 << INTF1)
+#define BUTTON_2_ISR_FLAG               (1 << INTF2)
+#define BUTTON_3_ISR_FLAG               (1 << INTF3)
+
+/*
+ * Button input mask
+ */
+#define BUTTON_IRQ_1_IN_MASK            (1 << PIND1)
+#define BUTTON_IRQ_2_IN_MASK            (1 << PIND2)
+#define BUTTON_IRQ_3_IN_MASK            (1 << PIND3)
+
+
+/* Disable all button interrupts */
+#define DISABLE_ALL_BUTTON_IRQS()       EIMSK &= ~(BUTTON_1_ISR_MASK | BUTTON_2_ISR_MASK | BUTTON_3_ISR_MASK)
+/* Enable all button interrupts */
+#define ENABLE_ALL_BUTTON_IRQS()        EIMSK |= (BUTTON_1_ISR_MASK | BUTTON_2_ISR_MASK | BUTTON_3_ISR_MASK)
+/* Clear all button IRQ flags */
+#define CLEAR_ALL_BUTTON_IRQ_FLAGS()    BUTTON_FLAG_REG = BUTTON_1_ISR_FLAG | BUTTON_2_ISR_FLAG | BUTTON_3_ISR_FLAG
+
+/*
+ * Macros controlling the latch
+ */
+#define LATCH_PORT                      PORTE
+#define LATCH_PORT_DIR                  DDRE
+#define LATCH_PIN                       PE5
+#define LATCH_HIGH()                    LATCH_PORT |= 1 << LATCH_PIN
+#define LATCH_LOW()                     LATCH_PORT &= ~(1 << LATCH_PIN)
+#define LATCH_PULSE()                   LATCH_HIGH(); LATCH_LOW()
+#define LATCH_DATA                      PORTB
+#define LATCH_DATA_DIR                  DDRB
+#define LATCH_INIT()                    do { \
+        LATCH_PORT &= ~(1 << LATCH_PIN); \
+        LATCH_PORT_DIR |= 1 << LATCH_PIN; \
+    } while (0)   
+
+#endif /* KEY_RC_BOARD */
 
 
 #endif  /* _ATMEGARFX_RCB_ */
