@@ -78,7 +78,9 @@ extern "C" {
  * driver since this service uses similar configuration settings.
  *
  * To enable FreeRTOS-support, the symbol \c __FREERTOS__ must be defined. This
- * will typically be done automatically if FreeRTOS is included from ASF.
+ * will typically be done automatically if FreeRTOS is included from ASF. As
+ * this service is meant to be used in tasks, the FreeRTOS scheduler should be
+ * started before any of the print functions are called.
  *
  * To get thread-safety and efficient waiting with other OS or schedulers, the
  * following functions in \ref dbg_print.c must be modified:
