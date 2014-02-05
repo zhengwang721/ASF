@@ -1,7 +1,7 @@
 /**
  * @file main.c
  *
- * @brief ZID HID Key Remote Controller Application
+ * @brief HID Key Remote Application
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -99,7 +99,6 @@
 #include "pb_pairing.h"
 #include "zid.h"
 #include "zid_device.h"
-#include "pal.h"
 
 /* === TYPES =============================================================== */
 
@@ -319,7 +318,6 @@ static void zid_set_attribute_confirm(nwk_enum_t status,uint8_t PairingRef, zid_
 /**
  * Main function, initialization and main message loop
  *
- * @return error code
  */
 int main(void)
 {
@@ -718,7 +716,7 @@ static void app_task(void)
                       break;
                       
                     case BUTTON_GAME_MODE:
-					 /* Configure for the game controller mode */
+					 /* Configure for the game controller mode. */
                       button_mode = BUTTON_GAME_MODE;
                        led_ctrl(LED_2, LED_OFF);
                        led_ctrl(LED_3, LED_OFF);
