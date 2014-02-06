@@ -21,6 +21,7 @@
         <device-support value="atmega128rfa1"/>
         <device-support value="atxmega256a3bu"/>
         <device-support value="samd20"/>
+        <device-support value="sam4l"/>
     </device-alias-map>	
 	
     <device-alias-map name="avr2130_lwmesh_hal_spi_support">

@@ -10,22 +10,13 @@
 			
 			<build type="header-file"   value="sleep_mgr.h"/>
             <build type="include-path"  value="."/>			
-			<build type="c-source"      value="mega/sleep_mgr.c"/>
+			<build type="c-source"      value="megarf/sleep_mgr.c"/>
 			<build type="doxygen-entry-point" value="sleep_mgr_group"/>
 			<require idref="mega.drivers.macsc"/>
 			<require idref="common.services.basic.sleepmgr"/>
 			<device-support-alias value="mega_sleep_mgr_support"/>
 		</module>
-	    <module type="meta" id="thirdparty.wireless.common_services.sleep_mgr#1" caption="Common Sleep Manager - UC3 ">
-			
-			<build type="header-file"   value="sleep_mgr.h"/>
-            <build type="include-path"  value="."/>			
-			<build type="c-source"      value="uc3/sleep_mgr.c"/>
-			<build type="doxygen-entry-point" value="sleep_mgr_group"/>
-			<require idref="avr32.drivers.rtc"/>
-			<require idref="common.services.basic.sleepmgr"/>
-			<device-support-alias value="uc3_sleep_mgr_support"/>
-		</module>
+
 		<module type="meta" id="thirdparty.wireless.common_services.sleep_mgr#2" caption="Common Sleep Manager - XMEGA A3U ">
 			
 			<build type="header-file"   value="sleep_mgr.h"/>
@@ -48,7 +39,7 @@
 			
 			<build type="header-file"   value="sleep_mgr.h"/>
             <build type="include-path"  value="."/>			
-			<build type="c-source"      value="sam/sleep_mgr.c"/>
+			<build type="c-source"      value="sam4l/sleep_mgr.c"/>
 			<build type="doxygen-entry-point" value="sleep_mgr_group"/>
 			<require idref="sam.drivers.ast"/>
 			<require idref="common.services.basic.sleepmgr"/>
