@@ -7,7 +7,6 @@
 		</info>
 		<!-- +++++++++++++++++++++++++++++++++++++++++++++++BUILD+++++++++++++++++++++++++++++++++++++++++++++++. -->
 		<build type="c-source" value="wsndemo.c"/>
-		<build type="c-source" value="otaInterface.c"/>
 		<build type="header-file"   value="config.h"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
 		<build type="include-path"  value="./"/>

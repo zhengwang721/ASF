@@ -54,7 +54,6 @@
 #define APP_PANID               0x1235
 #define APP_SENDING_INTERVAL    2000
 #define APP_ENDPOINT            1
-#define APP_OTA_ENDPOINT        2
 #define APP_SECURITY_KEY        "TestSecurityKey0"
 
 #if (defined (PHY_AT86RF212B) || defined (PHY_AT86RF212) )

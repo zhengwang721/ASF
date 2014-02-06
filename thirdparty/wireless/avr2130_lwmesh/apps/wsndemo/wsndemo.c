@@ -86,9 +86,6 @@
 #include "sio2host.h"
 #endif
 
-#ifdef APP_ENABLE_OTA
-  #include "otaClient.h"
-#endif
 
 /*****************************************************************************
 *****************************************************************************/
@@ -462,17 +459,11 @@ int main(void)
 #ifdef APP_COORDINATOR		
     sio2host_init();
 #endif	
-	#ifdef APP_ENABLE_OTA
-    OTA_ClientInit();
-    #endif
     		
     while (1)
     {
 		
         SYS_TaskHandler();
-        #ifdef APP_ENABLE_OTA
-        OTA_ClientTaskHandler();
-        #endif
 	    APP_TaskHandler();
 		
     }
