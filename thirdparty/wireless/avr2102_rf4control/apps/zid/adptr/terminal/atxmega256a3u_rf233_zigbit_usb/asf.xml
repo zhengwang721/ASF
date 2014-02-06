@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project force-caption="true" force-description="true" caption="RF4CE-ZID Adaptor serial interface AT86RF233-XMEGA-A3U AT86RF233 Zigbit(USB)" id="thirdparty.wireless.avr2102_rf4control.apps.zid.terminal_aptr_dbg.atxmega256a3u_rf233_zigbit_usb">
+	<project force-caption="true" force-description="true" caption="RF4CE-ZID Adaptor serial interface AT86RF233-XMEGA-A3U AT86RF233 Zigbit(USB)" id="thirdparty.wireless.avr2102_rf4control.apps.zid.adptr.terminal.atxmega256a3u_rf233_zigbit_usb">
 		<info type="description" value="summary">
 		ZID Serial Interface Adaptor application for RF4CE-ZID adaptor-device setup
 		</info>
@@ -8,6 +8,7 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_spi_master.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
+		<build type="header-file" value="conf_sio2host.h"/>
 		<build type="header-file" value="conf_usb.h"/>
         <build type="header-file" value="conf_nvm.h"/>
 		<build type="header-file" value="conf_hw_timer.h"/>
@@ -19,14 +20,11 @@
 		<config name="config.spi_master_type" value="standard_spi"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf233"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.mac.api" value="no" />
-		<require idref="common.services.usb.class.device"/>
-		<config name="config.common.services.usb.class.device" value="composite"/>
-		<config name="config.common.services.usb.class.hid.device.mouse.composite" value="enable"/>
-		<config name="config.common.services.usb.class.hid.device.keyboard.composite" value="multimedia"/>
-		<config name="thirdparty.config.common.services.usb.class.hid.device.keyboard.composite" value = "enable"/>
+		<config name="config.thirdparty.wireless.addons.sio2host" value="usb"/>
+		<config name="config.common.services.usb.class.device" value="cdc"/>
 		<config name="config.common.drivers.nvm.mem_type" value="no_extmem"/>
         <config name="config.compiler.iarew.dlib" value="full"/>
-		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zid.terminal_aptr_dbg"/>
+		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zid.adptr.terminal"/>
 		<require idref="board.xmega_rf233_zigbit"/>
 		<generator value="iarew"/>
 		<generator value="avrgcc"/>
