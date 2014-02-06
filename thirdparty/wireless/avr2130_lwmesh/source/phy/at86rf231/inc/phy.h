@@ -100,7 +100,7 @@ void phyInterruptHandler(void);
 
 #ifdef PHY_ENABLE_AES_MODULE
 void PHY_EncryptReq(uint8_t *text, uint8_t *key);
-void PHY_EncryptConf();
+void PHY_EncryptConf(void);
 #endif
 
 #ifdef PHY_ENABLE_ENERGY_DETECTION

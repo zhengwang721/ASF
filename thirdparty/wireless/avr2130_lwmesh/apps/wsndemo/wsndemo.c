@@ -453,10 +453,8 @@ int main(void)
 	board_init();    
 #endif  
     SYS_Init();
-	//sysclk_enable_peripheral_clock(&TRX_CTRL_0);
     cpu_irq_enable();
-	//while(1){PHY_Sleep();HAL_Sleep(5);PHY_Wakeup();LED_Toggle(LED0);delay_ms(1000);}
-#ifdef APP_COORDINATOR		
+#if APP_COORDINATOR		
     sio2host_init();
 #endif	
     		

@@ -114,9 +114,11 @@ void sm_init(void)
 {
 	// Set the sleep mode to initially lock.
 	enum sleepmgr_mode mode = SLEEPMGR_RET;
-
-	config_ast();
+	
 	bpm_set_clk32_source(BPM,BPM_CLK32_SOURCE_RC32K);
+	
+	config_ast();
+	
 	/* AST can wakeup the device */
 	bpm_enable_wakeup_source(BPM, (1 << BPM_BKUPWEN_AST));
 
