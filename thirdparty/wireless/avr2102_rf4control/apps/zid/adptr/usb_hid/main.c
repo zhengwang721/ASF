@@ -515,10 +515,10 @@ void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
                  keyboard_input_desc_t *keyboard_input_desc;
                  keyboard_input_desc = (keyboard_input_desc_t *)zid_report_data_record_ptr->report_data;
                     uint8_t k_value;
-                    /*if(k_value = (keyboard_input_desc->modifier_keys))
+                    if(k_value = (keyboard_input_desc->modifier_keys))
                     {
                         udi_hid_kbd_modifier_down(k_value);
-                    }  */
+                    }  
                     for(uint8_t j=0;j<4;j++)
                     {  
                         if((k_value = (keyboard_input_desc->key_code[j])))
