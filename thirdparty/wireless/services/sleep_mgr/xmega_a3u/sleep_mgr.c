@@ -50,7 +50,7 @@
 #include "sleepmgr.h"
 #include "conf_sleepmgr.h"
 #include "sysclk.h"
-#include "led.h"
+
 /**
  * \brief This function Initializes the Sleep functions 
 */
@@ -59,10 +59,10 @@ void sm_init(void)
 	// Set the sleep mode to initially lock.
 	enum sleepmgr_mode mode = SLEEPMGR_PSAVE;
 
-	// Enable RTC with ULP as clock source.
+	// Enable RTC with Internal RCOSC as clock source.
 	sysclk_enable_module(SYSCLK_PORT_GEN, SYSCLK_RTC);
-	CLK.RTCCTRL = CLK_RTCSRC_TOSC_gc | CLK_RTCEN_bm;
-
+	
+	CLK.RTCCTRL = CLK_RTCSRC_RCOSC_gc | CLK_RTCEN_bm;
 
 	RTC.INTCTRL = RTC_OVFINTLVL_LO_gc;
 
@@ -74,11 +74,11 @@ void sm_init(void)
 	sleepmgr_lock_mode(mode);
 }
 
-//TODO (Project Wizard) - Call this function to make device and transceiver into sleep
+
 /**
- * \brief This function puts the transceiver and device to sleep
+ * \brief This function puts the  device to sleep
 */
-void sm_sleep(unsigned int interval)
+void sm_sleep(uint32_t interval)
 {
 	// Configure RTC for wakeup at interval period .
 	RTC.PER = interval-1; 

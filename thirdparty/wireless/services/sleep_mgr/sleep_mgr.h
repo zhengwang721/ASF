@@ -46,12 +46,12 @@
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
-#ifndef _SLEEPWAKE_H_
-#define _SLEEPWAKE_H_
+#ifndef _SLEEP_MGR_H_
+#define _SLEEP_MGR_H_
+
+# include "compiler.h"
 
 
-
- 
 /**
  * \brief This function Initializes the Sleep functions 
 */
@@ -59,6 +59,6 @@ void sm_init(void);
 /**
  *  \brief This function puts the transceiver and device to sleep
 */
-void sm_sleep(unsigned int interval);
+void sm_sleep(uint32_t interval);
 
 #endif 

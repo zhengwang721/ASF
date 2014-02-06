@@ -50,8 +50,8 @@
 
 /*****************************************************************************
 *****************************************************************************/
-#define APP_ADDR                0x0000
-#define APP_PANID               0x1234
+#define APP_ADDR                0x8002
+#define APP_PANID               0x1235
 #define APP_SENDING_INTERVAL    2000
 #define APP_ENDPOINT            1
 #define APP_OTA_ENDPOINT        2
@@ -81,20 +81,26 @@
 #define APP_RX_BUF_SIZE                     5
 #define NWK_ENABLE_ROUTING
 //#define NWK_ENABLE_SECURITY
-#define NWK_ENABLE_ROUTE_DISCOVERY
+//#define NWK_ENABLE_ROUTE_DISCOVERY
 
 
 #if APP_ADDR == 0
 #define APP_CAPTION     "Coordinator"
 #define APP_NODE_TYPE   0
 #define APP_COORDINATOR 1
+#define APP_ROUTER      0
+#define APP_ENDDEVICE   0
 #elif APP_ADDR < 0x8000
 #define APP_CAPTION     "Router"
 #define APP_NODE_TYPE   1
+#define APP_COORDINATOR 0
 #define APP_ROUTER      1
+#define APP_ENDDEVICE   0
 #else
 #define APP_CAPTION     "End Device"
 #define APP_NODE_TYPE   2
+#define APP_COORDINATOR 0
+#define APP_ROUTER      0
 #define APP_ENDDEVICE   1
 #endif
 

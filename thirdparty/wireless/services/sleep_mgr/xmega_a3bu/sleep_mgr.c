@@ -50,7 +50,7 @@
 #include "conf_sleepmgr.h"
 #include "sysclk.h"
 #include "delay.h"
-#include "led.h"
+
 /*! \brief This macro initiates read synchronization of the RTC32 CNT register
  *
  *  Initiates synchronization of CNT register from RTC to system clock domain.
@@ -93,11 +93,11 @@ void sm_init(void)
 		sleepmgr_lock_mode(mode);
 }
 
-//TODO (Project Wizard) - Call this function to make device and transceiver into sleep
+
 /**
- * \brief This function puts the transceiver and device to sleep
+ * \brief This function puts the  device to sleep
 */
-void sm_sleep(unsigned int interval)
+void sm_sleep(uint32_t interval)
 {
 	RTC32_SetTimeout((interval*1000));
 	sleepmgr_enter_sleep();

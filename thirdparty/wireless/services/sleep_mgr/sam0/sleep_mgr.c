@@ -45,39 +45,38 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+
 #include "sleep_mgr.h"
 #include "rtc_count.h"
 #include "system.h"
 #include "rtc_count_interrupt.h"
-#include "samd20_xplained_pro.h"
-#include "port.h"
+#include "asf.h"
+
+
+
 /**
- * @brief Configuring RTC Callback Funtion on Overflow
+ * @brief Configuring RTC Callback Function on Overflow
  *
  * @param void
  */
-void configure_rtc_callbacks(void);
+static void configure_rtc_callbacks(void);
 
 /**
  * @brief Callback Function indicating RTC Overflow
  *
  * @param void
  */
-void rtc_overflow_callback(void);
+static void rtc_overflow_callback(void);
 
-/* Residual time returned to MAC for Synchronization after wakeup,When Switched to Low precision clock during sleep*/
-static uint32_t res;
-/* This variable denotes the sleep duration returned from MAC*/
-uint32_t sleep_time =0;
-/* Sleep State of the Application and MAC*/
-bool sys_sleep = false;
 
 /**
  * \brief This function Initializes the Sleep functions 
+ * Enable RTC Clock in conf_clocks.h
 */
 void sm_init(void)
 {
 	struct rtc_count_config config_rtc_count;
+	
 	rtc_count_get_config_defaults(&config_rtc_count);
 	config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
 	config_rtc_count.mode                = RTC_COUNT_MODE_16BIT;
@@ -91,11 +90,9 @@ void sm_init(void)
 /**
  * \brief This function puts the transceiver and device to sleep
 */
-void sm_sleep(unsigned int interval)
+void sm_sleep(uint32_t interval)
 {
 
-   /* Set timeout period for rtc*/
-	//res = interval % 1000;
 	interval = interval*1000;	
 	rtc_count_set_period(interval);
 	rtc_count_enable();
@@ -104,14 +101,14 @@ void sm_sleep(unsigned int interval)
 	system_sleep();
 }
 
-void configure_rtc_callbacks(void)
+static void configure_rtc_callbacks(void)
 {   
 	/*Register rtc callback*/
 	rtc_count_register_callback(
 	rtc_overflow_callback, RTC_COUNT_CALLBACK_OVERFLOW);
 	rtc_count_enable_callback(RTC_COUNT_CALLBACK_OVERFLOW);
 }
-void rtc_overflow_callback(void)
+static void rtc_overflow_callback(void)
 {
 	/* Do something on RTC overflow here */
 	rtc_count_disable();
