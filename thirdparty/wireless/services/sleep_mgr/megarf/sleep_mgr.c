@@ -49,7 +49,7 @@
 #include "sleepmgr.h"
 #include "conf_sleepmgr.h"
 #include "macsc_megarf.h"
-
+# include "sysclk.h"
 
 #define COMPARE_MODE                               MACSC_RELATIVE_CMP
 
@@ -68,6 +68,7 @@ void sm_init(void)
 {
 	// Set the sleep mode to initially lock.
 	sleep_set_mode(SLEEP_SMODE_PSAVE);	
+	sysclk_enable_peripheral_clock(&TCCR2A);
 	macsc_write_clock_source(MACSC_32KHz);
 	macsc_sleep_clk_enable();
 	macsc_set_cmp3_int_cb(cmp3_int_cb);

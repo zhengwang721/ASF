@@ -50,9 +50,9 @@
 
 /*****************************************************************************
 *****************************************************************************/
-#define APP_ADDR                0x8002
-#define APP_PANID               0x1235
-#define APP_SENDING_INTERVAL    2000
+#define APP_ADDR                0x8001
+#define APP_PANID               0x1236
+#define APP_SENDING_INTERVAL    10000
 #define APP_ENDPOINT            1
 #define APP_SECURITY_KEY        "TestSecurityKey0"
 
@@ -79,7 +79,7 @@
 #define NWK_ROUTE_DISCOVERY_TIMEOUT         1000 // ms
 #define APP_RX_BUF_SIZE                     5
 #define NWK_ENABLE_ROUTING
-//#define NWK_ENABLE_SECURITY
+#define NWK_ENABLE_SECURITY
 //#define NWK_ENABLE_ROUTE_DISCOVERY
 
 

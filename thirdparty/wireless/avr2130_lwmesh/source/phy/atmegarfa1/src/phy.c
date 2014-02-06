@@ -322,20 +322,8 @@ static uint16_t phyGetRandomNumber(void)
 *****************************************************************************/
 static void phyEncryptBlock(void)
 {
-  for (uint8_t i = 0; i < AES_BLOCK_SIZE; i++)
-    AES_KEY = phyIb.key[i];
-
-  AES_CTRL = (0 << AES_CTRL_DIR) | (0 << AES_CTRL_MODE);
-
-  for (uint8_t i = 0; i < AES_BLOCK_SIZE; i++)
-    AES_STATE = phyIb.text[i];
-
-  AES_CTRL |= (1 << AES_CTRL_REQUEST);
-
-  while (0 == (AES_STATUS & (1 << AES_STATUS_RY)));
-
-  for (uint8_t i = 0; i < AES_BLOCK_SIZE; i++)
-    phyIb.text[i] = AES_STATE;
+	#warning "Security Mode 0 Not Supported"
+return;
 }
 #endif
 

@@ -295,31 +295,8 @@ static uint16_t phyGetRandomNumber(void)
 *****************************************************************************/
 static void phyEncryptBlock(void)
 {
-  HAL_PhySpiSelect();
-  HAL_PhySpiWriteByte(RF_CMD_SRAM_W);
-  HAL_PhySpiWriteByte(AES_CTRL_REG);
-  HAL_PhySpiWriteByte((1 << AES_CTRL_MODE) | (0 << AES_CTRL_DIR));
-  for (uint8_t i = 0; i < AES_BLOCK_SIZE; i++)
-    HAL_PhySpiWriteByte(phyIb.key[i]);
-  HAL_PhySpiDeselect();
-
-  HAL_PhySpiSelect();
-  HAL_PhySpiWriteByte(RF_CMD_SRAM_W);
-  HAL_PhySpiWriteByte(AES_CTRL_REG);
-  HAL_PhySpiWriteByte((0 << AES_CTRL_MODE) | (0 << AES_CTRL_DIR));
-  for (uint8_t i = 0; i < AES_BLOCK_SIZE; i++)
-    HAL_PhySpiWriteByte(phyIb.text[i]);
-  HAL_PhySpiWriteByte((1 << AES_CTRL_REQUEST) | (0 << AES_CTRL_MODE) | (0 << AES_CTRL_DIR));
-  HAL_PhySpiDeselect();
-
-  HAL_Delay(AES_CORE_CYCLE_TIME);
-
-  HAL_PhySpiSelect();
-  HAL_PhySpiWriteByte(RF_CMD_SRAM_R);
-  HAL_PhySpiWriteByte(AES_STATE_REG);
-  for (uint8_t i = 0; i < AES_BLOCK_SIZE; i++)
-    phyIb.text[i] = HAL_PhySpiWriteByte(0);
-  HAL_PhySpiDeselect();
+	#warning "Security Mode 0 Not Supported"
+return;
 }
 #endif
 
