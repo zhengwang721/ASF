@@ -311,7 +311,7 @@ void BSP_InitQTouch(BSP_TouchEventHandler_t handler)
     
     bspTouchEventHandler = handler;   
     
-    __enable_interrupt();
+    cpu_irq_enable();
 }
 
 uint32_t rotor_up;
@@ -598,14 +598,14 @@ void touch_interrupt_call_back(void)
 void config_sensors(void)
 {  
     qt_enable_key(CHANNEL_19, AKS_GROUP_1, 20u, HYST_6_25 );   /* Sensor 0 */
-    qt_enable_key(CHANNEL_3, AKS_GROUP_1, 33u, HYST_6_25 );    /* Sensor 1 */ 
-    qt_enable_key(CHANNEL_0, AKS_GROUP_1, 28u, HYST_6_25 );    /* Sensor 2 */ 
-    qt_enable_key(CHANNEL_17, AKS_GROUP_1, 22u, HYST_6_25 );   /* Sensor 3 */
+    qt_enable_key(CHANNEL_3, AKS_GROUP_1, 20u, HYST_6_25 );    /* Sensor 1 */ 
+    qt_enable_key(CHANNEL_0, AKS_GROUP_1, 20u, HYST_6_25 );    /* Sensor 2 */ 
+    qt_enable_key(CHANNEL_17, AKS_GROUP_1, 20u, HYST_6_25 );   /* Sensor 3 */
     qt_enable_key(CHANNEL_18, AKS_GROUP_1, 20u, HYST_6_25 );   /* Sensor 4 */
     qt_enable_key(CHANNEL_2, AKS_GROUP_1, 15u, HYST_6_25 );    /* Sensor 5 */
     qt_enable_key(CHANNEL_1, AKS_GROUP_1, 15u, HYST_6_25 );    /* Sensor 6 */
     qt_enable_key(CHANNEL_16, AKS_GROUP_1, 16u, HYST_6_25 );   /* Sensor 7 */
-    qt_enable_rotor(CHANNEL_8, CHANNEL_11, AKS_GROUP_1, 55u, HYST_25, RES_8_BIT, 3u ); /* Sensor 8 */
+    qt_enable_rotor(CHANNEL_8, CHANNEL_11, AKS_GROUP_1, 45u, HYST_25, RES_8_BIT, 3u ); /* Sensor 8 */
     qt_enable_key(CHANNEL_12, AKS_GROUP_1, 20u, HYST_6_25 );   /* Sensor 9 */
 }
 

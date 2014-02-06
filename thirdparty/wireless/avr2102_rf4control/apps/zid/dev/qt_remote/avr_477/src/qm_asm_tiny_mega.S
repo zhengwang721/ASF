@@ -31,7 +31,7 @@
 */
 
 
-#ifdef AVR477_QTOUCH
+//#ifdef AVR477_QTOUCH
 
 #include "qm_asm_avr.h"
 
