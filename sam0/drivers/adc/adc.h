@@ -1375,7 +1375,7 @@ static inline void adc_start_conversion(
  * \return Status of the ADC read request.
  * \retval STATUS_OK           The result was retrieved successfully
  * \retval STATUS_BUSY         A conversion result was not ready
- * \retval STATUS_ERR_OVERFLOW The result register has be overwritten by the
+ * \retval STATUS_ERR_OVERFLOW The result register has been overwritten by the
  *                             ADC module before the result was read by the software
  */
 static inline enum status_code adc_read(
