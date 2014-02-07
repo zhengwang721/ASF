@@ -256,8 +256,10 @@ static uint32_t twi_mk_addr(const uint8_t *addr, int len)
  */
 uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
 {
-	uint32_t status, cnt = p_packet->length;
+	uint32_t status;
+	uint32_t cnt = p_packet->length;
 	uint8_t *buffer = p_packet->buffer;
+	uint8_t stop_sent = 0;
 	
 	/* Check argument */
 	if (cnt == 0) {
@@ -274,8 +276,14 @@ uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
 	p_twi->TWI_IADR = 0;
 	p_twi->TWI_IADR = twi_mk_addr(p_packet->addr, p_packet->addr_length);
 
-	/* Send a START Condition */
-	p_twi->TWI_CR = TWI_CR_START;
+	/* Send a START condition */
+	if (cnt == 1) {
+		p_twi->TWI_CR = TWI_CR_START | TWI_CR_STOP;
+		stop_sent = 1;
+	} else {
+		p_twi->TWI_CR = TWI_CR_START;
+		stop_sent = 0;
+	}
 
 	while (cnt > 0) {
 		status = p_twi->TWI_SR;
@@ -284,8 +292,9 @@ uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
 		}
 
 		/* Last byte ? */
-		if (cnt == 1) {
+		if (cnt == 1  && !stop_sent) {
 			p_twi->TWI_CR = TWI_CR_STOP;
+			stop_sent = 1;
 		}
 
 		if (!(status & TWI_SR_RXRDY)) {
@@ -316,7 +325,8 @@ uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
  */
 uint32_t twi_master_write(Twi *p_twi, twi_packet_t *p_packet)
 {
-	uint32_t status, cnt = p_packet->length;
+	uint32_t status;
+	uint32_t cnt = p_packet->length;
 	uint8_t *buffer = p_packet->buffer;
 
 	/* Check argument */
