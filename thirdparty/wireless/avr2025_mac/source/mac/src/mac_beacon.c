@@ -78,7 +78,7 @@
  */
 #define ADVNC_BCN_PREP_TIME                 (50)
 /* Minimum Wakeup time for beacon synchronization when handling Wakeup from application sleep*/
-#define MAC_MIN_WAKEUP_US                   (100)
+#define MAC_MIN_WAKEUP_US                   (200)
 /*
  * (Minimal) Beacon payload length
  * 2 octets Superframe Spec
