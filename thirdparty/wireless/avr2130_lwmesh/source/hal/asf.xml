@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="component" id="thirdparty.wireless.avr2130_lwmesh.source.hal" caption="HAL">
+	<module type="component" id="thirdparty.wireless.avr2130_lwmesh.source.hal" caption="HAL(Hardware Abstraction Layer)">
 		<info type="description" value="summary">
         The HAL Layer forms the wrapper layer that forms the interface between the Stack and the Low level drivers.
         </info>

@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="thirdparty.wireless.avr2130_lwmesh.source.sys" caption="Sys ">
+	<module type="meta" id="thirdparty.wireless.avr2130_lwmesh.source.sys" caption="SYS(System/Stack Services)">
 		<info type="description" value="summary">
-		
+		System services provide common functions for all layers, which are necessary for normal stack operation. System services include basic types and definitions, software timers, default configuration parameters, encryption module access, etc.
 		</info>
         <info type="gui-flag" value="hidden"/>
 		<build type="c-source"      value="src/sys.c"/>

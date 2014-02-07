@@ -66,9 +66,9 @@
         </module>
 	</select-by-config>	
 	
-	<module type="component" id="thirdparty.wireless.avr2130_lwmesh.source.phy" caption="PHY">
+	<module type="component" id="thirdparty.wireless.avr2130_lwmesh.source.phy" caption="PHY(Radio Physical Layer)">
 		<info type="description" value="summary">
-       
+        Radio physical layer (PHY) provides functions for radio transceiver access. Some of them are accessible only by the network layer (request to send data, data indication); some of them can be used from the application (channel selection, random number generation, energy detection, etc.)
         </info>
 		<info type="gui-flag" value="hidden"/>
 		<require idref="config.thirdparty.wireless.avr2130_lwmesh.source.phy"/>
