@@ -55,7 +55,7 @@
 #include "rf4ce.h"
 #include "zrc.h"
 #include "vendor_data.h"
-#include "pal.h"
+
 
 
 /* === MACROS ============================================================== */
