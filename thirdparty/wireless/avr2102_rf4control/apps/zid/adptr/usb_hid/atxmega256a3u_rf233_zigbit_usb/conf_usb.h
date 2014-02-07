@@ -236,8 +236,6 @@
 //#include "udi_msc.h"
 #include "udi_hid_mouse.h"
 #include "udi_hid_kbd.h"
-//#include "uart.h"
 #include "app_config.h"
-//#include "ui.h"
 
 #endif // _CONF_USB_H_
