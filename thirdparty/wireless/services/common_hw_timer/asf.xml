@@ -75,7 +75,7 @@
             <build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
             <build type="module-config" subtype="path" value="module_config"/>
             <build type="doxygen-entry-point" value="common_hw_timer_group"/>
-            <require idref="thirdparty.wireless.avr2025_mac.source.pal.mega.drivers.tc"/>
+            <require idref="thirdparty.wireless.services.mega.drivers.tc"/>
             <require idref="common.services.basic.clock"/>
             <device-support-alias value="megarfr2_hw_timer_support"/>
 		</module>
@@ -92,7 +92,7 @@
             <build type="module-config" subtype="required-header-file" value="conf_hw_timer.h"/>
             <build type="module-config" subtype="path" value="module_config"/>
             <build type="doxygen-entry-point" value="common_hw_timer_group"/>
-            <require idref="thirdparty.wireless.avr2025_mac.source.pal.mega.drivers.tc"/>
+            <require idref="thirdparty.wireless.services.mega.drivers.tc"/>
             <require idref="common.services.basic.clock"/>
             <device-support-alias value="megarfa1_hw_timer_support"/>
 		</module>
