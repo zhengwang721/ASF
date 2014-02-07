@@ -299,8 +299,6 @@ static void led_handling(void *callback_parameter)
 
          default:
              sw_timer_stop(APP_TIMER);
-             LED_Off(LED_DATA);
-             LED_Off(LED_NWK_SETUP);
              break;
      }
 
@@ -433,8 +431,7 @@ static void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_re
             
              mouse_desc_t *mouse_desc;
              mouse_desc = (mouse_desc_t *)zid_report_data_record_ptr->report_data;
-			 if(main_b_mouse_enable)
-			 {
+			 
 				udi_hid_mouse_btnleft(mouse_desc->button0); 
 				udi_hid_mouse_btnright(mouse_desc->button1);
 			   
@@ -449,7 +446,7 @@ static void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_re
 				}
 				udi_hid_mouse_moveX((mouse_desc->x_coordinate));
 				udi_hid_mouse_moveY((mouse_desc->y_coordinate));
-			 }
+			 
           
              break;
          }
@@ -461,9 +458,12 @@ static void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_re
                  keyboard_input_desc_t *keyboard_input_desc;
                  keyboard_input_desc = (keyboard_input_desc_t *)zid_report_data_record_ptr->report_data;
                     if(main_b_kbd_enable)
-					{
-						udi_hid_kbd_modifier_down(keyboard_input_desc->modifier_keys);
-						udi_hid_kbd_modifier_up(keyboard_input_desc->modifier_keys);
+                    {   
+						if(keyboard_input_desc->modifier_keys)
+						{
+							udi_hid_kbd_modifier_down(keyboard_input_desc->modifier_keys);
+							udi_hid_kbd_modifier_up(keyboard_input_desc->modifier_keys);
+						}
 					                    
 						for(uint8_t j=0;j<4;j++)
 						{  
