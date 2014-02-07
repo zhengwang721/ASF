@@ -81,7 +81,7 @@
 #include "nwkRoute.h"
 #include "nwkSecurity.h"
 #include "sysTimer.h"
-#ifdef APP_COORDINATOR
+#if APP_COORDINATOR
 #include "sio2host.h"
 #endif
 
@@ -165,7 +165,7 @@ static uint8_t* rx_data;
 
 static AppMessage_t appMsg;
 static SYS_Timer_t appDataSendingTimer;
-#ifdef APP_COORDINATOR
+#if APP_COORDINATOR
 /** Hal_Uart_Byte_received Removed */
 /*****************************************************************************
 *****************************************************************************/
@@ -204,7 +204,7 @@ static bool appDataInd(NWK_DataInd_t *ind)
 
   msg->lqi = ind->lqi;
   msg->rssi = ind->rssi;
-#ifdef APP_COORDINATOR
+#if APP_COORDINATOR
   appSendMessage(ind->data, ind->size);
 #endif  
   return true;
