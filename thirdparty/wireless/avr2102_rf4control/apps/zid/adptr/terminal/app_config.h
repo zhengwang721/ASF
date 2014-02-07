@@ -33,36 +33,11 @@
 
 /* === Macros =============================================================== */
 
-/** @brief This is the first timer identifier of the application.
- *
- *  The value of this identifier is an increment of the largest identifier
- *  value used by the MAC.
- */
-#if (NUMBER_OF_TOTAL_STACK_TIMERS == 0)
-#define APP_FIRST_TIMER_ID          (0)
-#else
-#define APP_FIRST_TIMER_ID          (LAST_STACK_TIMER_ID + 1)
-#endif
+
 
 /* === Types ================================================================ */
 
-/** Timer ID's used by the Application */
-typedef enum
-{
-    /* App Timers start from APP_FIRST_TIMER_ID */
-
-    /** Application timer id used to switch off LED */
-    T_LED_TIMER     = (APP_FIRST_TIMER_ID)
-} app_timer_t;
-
-/** Defines the number of timers used by the application. */
-#define NUMBER_OF_APP_TIMERS        (1)
-
-/** Defines the largest timer identifier used by the application */
-#define APP_LAST_TIMER_ID           (LAST_STACK_TIMER_ID + NUMBER_OF_APP_TIMERS)
-
-#define TOTAL_STACK_TIMERS (NUMBER_OF_TAL_TIMERS + NUMBER_OF_MAC_TIMERS + NUMBER_OF_NWK_TIMERS)
-
+#define NUMBER_OF_APP_TIMERS 2
 /** Defines the total number of timers used by the application and the layers below. */
 #define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS + TOTAL_STACK_TIMERS)
 
@@ -87,61 +62,6 @@ typedef enum
 #define TOTAL_NUMBER_OF_BUFS        (TOTAL_NUMBER_OF_LARGE_BUFS + TOTAL_NUMBER_OF_SMALL_BUFS)
 
 
-/*
- * USB-specific definitions
- */
-
-/*
- * USB Vendor ID (16-bit number)
- */
-#define USB_VID                 0x03EB /* Atmel's USB vendor ID */
-
-/*
- * USB Product ID (16-bit number)
- */
-#define USB_PID                 0x2018 /* RZ USB stick product ID */
-
-/*
- * USB Release number (BCD format, two bytes)
- */
-#define USB_RELEASE             { 0x00, 0x01 } /* 01.00 */
-
-/*
- * Maximal number of UTF-16 characters used in any of the strings
- * below.  This is only used for compilers that cannot handle the
- * initialization of flexible array members within structs.
- */
-#define USB_STRING_SIZE         10
-
-/*
- * String representation for the USB vendor name.
- */
-#define USB_VENDOR_NAME L"ATMEL"
-
-/*
- * String representation for the USB product name.
- */
-#define USB_PRODUCT_NAME L"RZUSBSTICK"
-
-/**
- * Defines the USB transmit buffer size
- */
-#define USB_TX_BUF_SIZE             (200)
-
-/**
- * Defines the USB receive buffer size
- */
-#define USB_RX_BUF_SIZE             (10)
-
-/**
- * Defines the UART transmit buffer size
- */
-#define UART_MAX_TX_BUF_LENGTH      (200)
-
-/**
- * Defines the UART receive buffer size
- */
-#define UART_MAX_RX_BUF_LENGTH      (10)
 
 
 
@@ -166,23 +86,6 @@ typedef enum
 #endif
 
 
-
-/* Define the periodic wakeup interval */
-#define WDT_WAKEUP_INTERVAL         WDT_TO_1S
-#define WDT_WAKEUP_INTERVAL_US      1000000 /* micro seconds */
-/* Define the watchdog timeout for system reset */
-#define WDT_TIMEOUT_PERIOD          WDT_TO_4S
-
-
-/* Number of variables that are stored using NVM */
-#define NVM_NUM_VARS                (NWKC_MAX_PAIRING_TABLE_ENTRIES + 1) // 1 = own frame counter
-/* Size of the flash used for NVM; i.e. number of flash pages.
-   For every variable two pages are used. */
-#define NVM_MULTI_WRITE_NUM_PG_PER_VAR  2
-/* Size of the multi write NVM flash section */
-#define NVM_MULTI_WRITE_SIZE        (NVM_NUM_VARS * NVM_MULTI_WRITE_NUM_PG_PER_VAR * SPM_PAGESIZE)
-/* Flash address where the NVM starts. For final application adjust accordingly. */
-#define NVM_MULTI_WRITE_START       (NIB_FLASH_ADDR - NVM_MULTI_WRITE_SIZE)
 
 /* === Externals ============================================================ */
 

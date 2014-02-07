@@ -95,22 +95,12 @@
  */
 
 /* === Includes ============================================================ */
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
-#include <stdlib.h>
-#include <string.h>
 #include <ctype.h>
-#include <inttypes.h>
-#include <stdio.h>
-
 #include "conf_board.h"
 #include <asf.h>
 #include "app_config.h"
-#include "pal.h"
 #include "led.h"
 #include "delay.h"
-#include "tal.h"
 #include "vendor_data.h"
 #include "pb_pairing.h"
 #include "common_sw_timer.h"
@@ -118,19 +108,18 @@
 
 
 /* === Macros ============================================================== */
-#define MAX_PAIRED_DEVICES  NWKC_MAX_PAIRING_TABLE_ENTRIES
-
-#if (NO_OF_LEDS >= 3)
+#if (LED_COUNT >= 3)
 #define LED_START                       (LED0)
 #define LED_NWK_SETUP                   (LED1)
 #define LED_DATA                        (LED2)
-#elif (NO_OF_LEDS == 2)
+#elif (LED_COUNT == 2)
 #define LED_START                       (LED0)
 #define LED_NWK_SETUP                   (LED0)
 #define LED_DATA                        (LED1)
 #else
 #define LED_START                       (LED0)
 #define LED_NWK_SETUP                   (LED0)
+#define LED_DATA                        (LED0)
 #define LED_DATA                        (LED0)
 #endif
 
@@ -145,35 +134,27 @@ typedef enum node_status_tag
     ALL_IN_ONE_START,
     WARM_STARTING,
     PRINTING_PAIRING_TABLE,
-    UNPAIRING,
-    CH_AGILITY_EXECUTION,
-    BASE_CHANNEL_CHANGE,
-    GETTING_CH_AG_NIBS
+    UNPAIRING
+    
 } SHORTENUM node_status_t;
 
 /* === Globals ============================================================= */
 
-#ifdef RF4CE_CALLBACK_PARAM
 static zid_indication_callback_t zid_ind;
 static nwk_indication_callback_t nwk_ind;
-#endif
-
 static uint8_t number_of_paired_dev = 0;
 static node_status_t node_status;
 static node_status_t previous_node_status;
 /* This is used to find out the duplicate entry
  on receiving the pairing confirmation */
 static bool duplicate_pair_entry = false;
-
 /* Write application specific values into flash memory */
 FLASH_DECLARE(uint16_t VendorIdentifier) = (uint16_t)NWKC_VENDOR_IDENTIFIER;
 FLASH_DECLARE(uint8_t vendor_string[7]) = NWKC_VENDOR_STRING;
 FLASH_DECLARE(uint8_t app_user_string[15]) = APP_USER_STRING;
-
-static uint8_t led_timer;
+static uint8_t APP_TIMER;
 
 /* === Prototypes ========================================================== */
-#ifdef RF4CE_CALLBACK_PARAM
 static void zid_indication_callback_init(void);
 static void nlme_unpair_indication(uint8_t PairingRef);
 static void zid_heartbeat_indication(uint8_t PairingRef);
@@ -186,7 +167,7 @@ static void nlme_reset_confirm(nwk_enum_t Status);
 static void nlme_start_confirm(nwk_enum_t Status);
 static void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
                              uint8_t NIBAttributeIndex, void *NIBAttributeValue);
-#endif
+
 
 static void led_handling(void *callback_parameter);
 static void app_task(void);
@@ -201,7 +182,7 @@ static void app_alert(void);
 /**
  * Main function, initialization and main message loop
  *
- * @return error code
+ * 
  */
 int main (void)
 {
@@ -222,9 +203,7 @@ int main (void)
         app_alert();
     }
 
-#ifdef RF4CE_CALLBACK_PARAM
     zid_indication_callback_init();
-#endif
 
     /* Initialize LEDs. */
     LED_On(LED_START);         /* indicating application is started */
@@ -244,7 +223,7 @@ int main (void)
 
 #endif   
    
-   pal_timer_get_id(&led_timer);
+   sw_timer_get_id(&APP_TIMER);
 
     /* Endless while loop */
     while (1)
@@ -282,9 +261,7 @@ static void app_task(void)
 static void print_main_menu(void)
 {
     printf("\n");
-    
     print_app_header();
-
     printf("\r\n");
     print_node_status();
     printf("\r\n");
@@ -308,8 +285,6 @@ static void print_app_header(void)
     printf("Configuration: ");
     printf("Adaptor, ");
 
-    printf("ATmega128RFA1, ");
-
 }
 
 /**
@@ -317,9 +292,7 @@ static void print_app_header(void)
  */
 static void print_node_status(void)
 {
-    uint8_t addr[8];
-    uint8_t i;
-
+         
     printf("Node status: ");
 
     switch (node_status)
@@ -349,15 +322,7 @@ static void print_node_status(void)
     printf("  No.of paired devices: %d", number_of_paired_dev);
     printf("\r\n");
 
-    memcpy(addr, &tal_pib.IeeeAddress, 8);
-    printf("IEEE addr 0x");
-    for (i = 0; i < 8; i++)
-    {
-        printf("%.2X", addr[7 - i]);
-    }
-
-    printf(", PAN Id 0x%.2X%.2X, ", (uint8_t)(tal_pib.PANId >> 8), (uint8_t)tal_pib.PANId);
-    printf("channel %d\r\n", tal_pib.CurrentChannel);
+    nlme_get_request(nwkBaseChannel,0,(FUNC_PTR)nlme_get_confirm);
 
 }
 
@@ -376,9 +341,8 @@ static void handle_input(uint8_t input_char)
             printf("Reset node - \r\n");
             node_status = RESETTING;
             nlme_reset_request(true
-#ifdef RF4CE_CALLBACK_PARAM
                                , (FUNC_PTR)nlme_reset_confirm
-#endif
+
                               );
             break;
 
@@ -386,9 +350,7 @@ static void handle_input(uint8_t input_char)
             printf("Start node - \r\n");
             node_status = STARTING;
             nlme_start_request(
-#ifdef RF4CE_CALLBACK_PARAM
                 (FUNC_PTR)nlme_start_confirm
-#endif
             );
             break;
        case 'Z':
@@ -403,9 +365,7 @@ static void handle_input(uint8_t input_char)
 
 
             zid_rec_connect_request(APP_CAPABILITIES, RecDevTypeList, RecProfileIdList
-#ifdef RF4CE_CALLBACK_PARAM
                                      , (FUNC_PTR)zid_connect_confirm
-#endif
                                     );
          }
             break;
@@ -415,9 +375,7 @@ static void handle_input(uint8_t input_char)
             node_status = ALL_IN_ONE_START;
             printf("Reset node - \r\n");
             nlme_reset_request(true
-#ifdef RF4CE_CALLBACK_PARAM
                                , (FUNC_PTR)nlme_reset_confirm
-#endif
                               );
             break;
 
@@ -426,9 +384,7 @@ static void handle_input(uint8_t input_char)
             printf("Warm start - \r\n");
             node_status = WARM_STARTING;
             nlme_reset_request(false
-#ifdef RF4CE_CALLBACK_PARAM
                                , (FUNC_PTR)nlme_reset_confirm
-#endif
                               );
             break;
 
@@ -458,7 +414,7 @@ static
 #endif
 void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
                       uint8_t NIBAttributeIndex, void *NIBAttributeValue)
-{
+{   uint8_t channel;
     if (Status == NWK_SUCCESS)
     {
         switch (NIBAttribute)
@@ -483,9 +439,7 @@ void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
                 if (NIBAttributeIndex < (MAX_PAIRED_DEVICES - 1))
                 {
                     nlme_get_request(nwkPairingTable, NIBAttributeIndex + 1
-#ifdef RF4CE_CALLBACK_PARAM
                                      , (FUNC_PTR)nlme_get_confirm
-#endif
                                     );
                 }
                 else
@@ -498,7 +452,11 @@ void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
                 node_status = previous_node_status;
 #endif
                 break;
-
+            case nwkBaseChannel:
+				
+				channel = *((uint8_t *)NIBAttributeValue);
+				printf("channel %uh\r\n",channel);
+				break;
             default:
                 break;
 
@@ -521,9 +479,7 @@ static void print_pairing_table(bool start_from_scratch, uint8_t *table_entry, u
         printf("Pairing table:\r\n");
 
         nlme_get_request(nwkPairingTable, 0
-#ifdef RF4CE_CALLBACK_PARAM
                          , (FUNC_PTR)nlme_get_confirm
-#endif
                         );
     }
     else
@@ -593,18 +549,14 @@ void nlme_reset_confirm(nwk_enum_t Status)
     else if (node_status == WARM_STARTING)
     {
         nlme_rx_enable_request(RX_DURATION_INFINITY
-#ifdef RF4CE_CALLBACK_PARAM
                                , (FUNC_PTR)nlme_rx_enable_confirm
-#endif
                               );
     }
     else if (node_status == ALL_IN_ONE_START)
     {
         printf("Start RF4CE network layer - \r\n");
         nlme_start_request(
-#ifdef RF4CE_CALLBACK_PARAM
             (FUNC_PTR)nlme_start_confirm
-#endif
         );
     }
 }
@@ -614,10 +566,7 @@ void nlme_reset_confirm(nwk_enum_t Status)
  *
  * @param Status  nwk status
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
-void nlme_start_confirm(nwk_enum_t Status)
+static void nlme_start_confirm(nwk_enum_t Status)
 {
   printf("Node start completed - status :%0x\r\n",Status);
     if (node_status == STARTING)
@@ -629,9 +578,9 @@ void nlme_start_confirm(nwk_enum_t Status)
     if (node_status == ALL_IN_ONE_START)
     {
 
-        pal_timer_start(T_LED_TIMER,
+        sw_timer_start(APP_TIMER,
                         500000,
-                        TIMEOUT_RELATIVE,
+                        SW_TIMEOUT_RELATIVE,
                         (FUNC_PTR)led_handling,
                         NULL);
         LED_On(LED_NWK_SETUP);
@@ -646,9 +595,8 @@ void nlme_start_confirm(nwk_enum_t Status)
 
 
         zid_rec_connect_request(APP_CAPABILITIES, RecDevTypeList, RecProfileIdList
-#ifdef RF4CE_CALLBACK_PARAM
-                                 , (FUNC_PTR)zid_connect_confirm
-#endif
+     , (FUNC_PTR)zid_connect_confirm
+
                                 );
     }
 }
@@ -664,16 +612,16 @@ static void led_handling(void *callback_parameter)
     {
         case ZID_CONNECTING:
         case ALL_IN_ONE_START:
-            pal_timer_start(T_LED_TIMER,
+            sw_timer_start(APP_TIMER,
                             500000,
-                            TIMEOUT_RELATIVE,
+                            SW_TIMEOUT_RELATIVE,
                             (FUNC_PTR)led_handling,
                             NULL);
             LED_Toggle(LED_NWK_SETUP);
             break;
 
         default:
-            pal_timer_stop(T_LED_TIMER);
+            sw_timer_stop(APP_TIMER);
             LED_Off(LED_DATA);
             LED_Off(LED_NWK_SETUP);
             break;
@@ -696,9 +644,7 @@ void nlme_rx_enable_confirm(nwk_enum_t Status)
     if (node_status == WARM_STARTING)
     {
         nlme_get_request(nwkPairingTable, 0
-#ifdef RF4CE_CALLBACK_PARAM
                          , (FUNC_PTR) nlme_get_confirm
-#endif
                         );
 
     }
@@ -740,7 +686,6 @@ bool pbp_allow_pairing(nwk_enum_t Status, uint64_t SrcIEEEAddr, uint16_t OrgVend
  * @brief This function registers the callback function for indications from the stack.
  *
  */
-#ifdef RF4CE_CALLBACK_PARAM
 static void zid_indication_callback_init(void)
 {
     zid_ind.zid_heartbeat_indication_cb = zid_heartbeat_indication;
@@ -751,7 +696,6 @@ static void zid_indication_callback_init(void)
 
     register_nwk_indication_callback(&nwk_ind);
 }
-#endif
 /**
  * @brief Notify the application of the removal of link by another device.
  *
@@ -762,9 +706,6 @@ static void zid_indication_callback_init(void)
  * @param PairingRef       Pairing Ref for which entry is removed from pairing
  *table.
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
 void nlme_unpair_indication(uint8_t PairingRef)
 {
   printf(" Unpair indication from pairing ref:%d\r\n",PairingRef);
@@ -775,9 +716,6 @@ void nlme_unpair_indication(uint8_t PairingRef)
  *
  * @param PairingRef  Pairing reference.
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
 void zid_heartbeat_indication(uint8_t PairingRef)
 {
     printf("ZID-heartbeat from pairing ref:%d\r\n\r\n",PairingRef);
@@ -789,9 +727,6 @@ void zid_heartbeat_indication(uint8_t PairingRef)
  * @param Status  nwk status.
  * @param PairingRef  Pairing reference.
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
 void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef)
 {
   node_status = IDLE;
@@ -813,9 +748,6 @@ void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef)
  * @param  RxLinkQuality    LQI value of the report data frame.
  * @param  RxFlags          Receive flags.
  */
-#ifdef RF4CE_CALLBACK_PARAM
-static
-#endif
 void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_records,
                                                 zid_report_data_record_t *zid_report_data_record_ptr, uint8_t RxLinkQuality, uint8_t RxFlags)
 {

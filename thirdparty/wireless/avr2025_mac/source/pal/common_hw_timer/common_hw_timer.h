@@ -58,7 +58,8 @@
 /*! \brief  To initialize common hw timer
  */
 void common_tc_init(void);
-
+void hw_overflow_cb(void);
+void hw_expiry_cb(void);
 /*! \brief  To read current count of the timer after issuing common tc delay
  */
 uint16_t common_tc_read_count(void);

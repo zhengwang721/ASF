@@ -24,6 +24,8 @@
 		<config name="config.compiler.iarew.dlib" value="full"/>
 		<generator value="iarew"/>
 		<generator value="avrgcc"/>
+		<generator value="as5_8"/>
+		<generator value="doxygen"/>
 		<device-support value="atmega256rfr2"/>
 	</project>
 </asf>

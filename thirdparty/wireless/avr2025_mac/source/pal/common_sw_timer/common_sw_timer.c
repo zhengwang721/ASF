@@ -97,9 +97,6 @@ static void internal_timer_handler(void);
 static inline bool compare_time(uint32_t t1, uint32_t t2);
 static void load_hw_timer(uint8_t timer_id);
 
-void hw_overflow_cb(void);
-void hw_expiry_cb(void);
-
 status_code_t sw_timer_get_id(uint8_t *timer_id)
 {
 	if (alloc_timer_id < TOTAL_NUMBER_OF_SW_TIMERS) {

@@ -105,9 +105,8 @@
 /* === Macros ============================================================== */
 
 /* === Globals ============================================================= */
-#ifdef RF4CE_CALLBACK_PARAM
 extern void zid_indication_callback_init(void);
-#endif
+
 
 /* Write application specific values into flash memory */
 FLASH_DECLARE(uint16_t VendorIdentifier) = (uint16_t)NWKC_VENDOR_IDENTIFIER;
@@ -145,24 +144,15 @@ int main (void)
         app_alert();
     }
 
-#ifdef RF4CE_CALLBACK_PARAM
     zid_indication_callback_init();
-#endif   
 
-
-#ifdef FLASH_NVRAM
-    pal_ps_set(EE_IEEE_ADDR, 8, &tal_pib.IeeeAddress);
-#endif
-    /* Initialize LEDs */
-    //pal_led_init();
     cpu_irq_enable();
 
     /*
      * The global interrupt has to be enabled here as TAL uses the timer
      * delay which in turn requires interrupt to be enabled
      */
-    //pal_global_irq_enable();
-
+   
     serial_interface_init();
 
     /* Loop forever, the interrupts are doing the rest */
