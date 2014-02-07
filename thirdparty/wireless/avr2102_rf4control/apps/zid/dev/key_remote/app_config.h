@@ -68,8 +68,6 @@
 /** Defines the number of timers used by the application. */
 #define NUMBER_OF_APP_TIMERS        (1)
 
-#define TOTAL_STACK_TIMERS (NUMBER_OF_TAL_TIMERS + NUMBER_OF_MAC_TIMERS + NUMBER_OF_NWK_TIMERS)
-
 /** Defines the total number of timers used by the application and the layers below. */
 #define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS + TOTAL_STACK_TIMERS)
 
