@@ -284,10 +284,7 @@ void nlme_start_confirm(nwk_enum_t Status)
 {
     if (Status != NWK_SUCCESS)
     {
-        while (1)
-        {
-          app_alert();
-        }
+       app_alert();
     }
 
     if(node_status == COLD_START)
@@ -346,10 +343,7 @@ static void zid_set_attribute_confirm(nwk_enum_t status,uint8_t PairingRef, zid_
    }
    else
    {
-        while (1)
-        {
-            app_alert();
-        }
+      app_alert();
    }
    PairingRef = PairingRef;
    ZIDAttribute = ZIDAttribute;
@@ -372,10 +366,7 @@ void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef)
 {
     if (Status != NWK_SUCCESS)
     {
-        while(1)
-        {
-           app_alert();
-        }
+      app_alert();
     }
 
     pairing_ref = PairingRef;

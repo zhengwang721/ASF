@@ -465,14 +465,11 @@ void nlme_start_confirm(nwk_enum_t Status)
     {
 		if(node_status == COLD_START)
 		{
-			while (1)
-			{
-			  app_alert();
-			}
+			app_alert();
 		}
 		else
 		{
-		  app_alert();
+		  indicate_fault_behavior();
 		  /* Reset the network and start again */
 		  /* Warm start */
 			node_status = WARM_START;
@@ -545,14 +542,11 @@ static void zid_set_attribute_confirm(nwk_enum_t status,uint8_t PairingRef, zid_
    {
         if(node_status == COLD_START)
 		{
-			while (1)
-			{
-			  app_alert();
-			}
+			app_alert();
 		}
 		else
 		{
-		  app_alert();
+		  indicate_fault_behavior();
 		  /* Reset the network and start again */
 		  /* Warm start */
 			node_status = WARM_START;
@@ -586,14 +580,11 @@ void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef)
     {
         if(node_status == COLD_START)
 		{
-			while (1)
-			{
-			  app_alert();
-			}
+			app_alert();
 		}
 		else
 		{
-		  app_alert();
+		  indicate_fault_behavior();
 		  /* Reset the network and start again */
 		  /* Warm start */
 			node_status = WARM_START;
