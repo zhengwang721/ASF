@@ -1,5 +1,5 @@
 /**
- * \file
+ * \file *********************************************************************
  *
  * \brief Example specific board configuration file
  *
@@ -38,7 +38,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ */ 
+ /*
+ * Copyright (c) 2014, Atmel Corporation All rights reserved.
  *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 #ifndef CONF_BOARD_H
 #define CONF_BOARD_H
@@ -49,7 +53,7 @@
 #define GET_BATTERY_VOLTAGE()    tfa_get_batmon_voltage()  
 
 
-/* Enumerations used to idenfify ADC Channels */
+/* Enumerations used to identify ADC Channels */
 typedef enum adc_channel_tag
 {
     X_AXIS,
@@ -100,7 +104,6 @@ typedef enum button_state_tag
  */
 #define ANTENNA_DIVERSITY               (0)
 
-
 #define NO_OF_LEDS                      (5)
 
 /* Definitions to identify buttons, reference HDMI specification */
@@ -136,7 +139,5 @@ typedef enum button_state_tag
 #define NO_OF_BUTTONS           (24)
 
 #define LED0    LED_4
-
-
 
 #endif /* CONF_BOARD_H */

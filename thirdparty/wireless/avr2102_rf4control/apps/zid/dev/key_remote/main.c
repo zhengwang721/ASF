@@ -92,7 +92,6 @@
 #include "conf_board.h"
 #include "led.h"
 #include "common_sw_timer.h"
-#include "keyboard.h"
 #include "app_config.h"
 #include "rf4ce.h"
 #include "vendor_data.h"
@@ -101,7 +100,7 @@
 #include "zid_device.h"
 
 /* === TYPES =============================================================== */
-
+/* ZID States for Tracking */
 typedef enum node_status_tag
 {
     IDLE,
@@ -115,13 +114,15 @@ typedef enum node_status_tag
 
 /* === MACROS ============================================================== */
 
-#define INTER_FRAME_DURATION_US        (200000) // 200 ms
-#define INTER_FRAME_DURATION_MOUSE_US  (5000)  //5ms
+#define INTER_FRAME_DURATION_US        (200000) // 200ms
+#define INTER_FRAME_DURATION_MOUSE_US  (5000)   // 5ms
 
+/* ZID Tx Options */
 #define TX_OPTIONS  (TXO_UNICAST | TXO_DST_ADDR_NET | \
                      TXO_ACK_REQ | TXO_SEC_REQ | TXO_MULTI_CH | \
                      TXO_CH_NOT_SPEC | TXO_VEND_NOT_SPEC)
 
+/* Key Remote controller board key count */
 #define TOTAL_NO_OF_ZID_KEY_RC (27)
 
 /* media player control definition */
@@ -170,103 +171,120 @@ typedef enum node_status_tag
 
 
 /* === GLOBALS ============================================================= */
+/* ZID Attribute Request Size */
+#define ZID_ATTRIBUTE_REQ_SIZE (10)
 
+/* Macros and Flash declaration for vendor and application string */
+#define VENDOR_STRING_LEN_SIZE (7)
+#define APP_USER_STRING_SIZE   (15)
 FLASH_DECLARE(uint16_t VendorIdentifier) = (uint16_t)NWKC_VENDOR_IDENTIFIER;
-FLASH_DECLARE(uint8_t vendor_string[7]) = NWKC_VENDOR_STRING;
-FLASH_DECLARE(uint8_t app_user_string[15]) = APP_USER_STRING;
+FLASH_DECLARE(uint8_t vendor_string[VENDOR_STRING_LEN_SIZE]) = NWKC_VENDOR_STRING;
+FLASH_DECLARE(uint8_t app_user_string[APP_USER_STRING_SIZE]) = APP_USER_STRING;
 
+/* ZID Node Status */
 static node_status_t node_status;
 
 /* default pairing reference value */
 static uint8_t pairing_ref = 0xFF;
 
+/* ZID application status indication LED */
+#define ZID_APP_LED (LED0)
+
 /* Key mapping for media control */
-static uint16_t key_mapping_media[TOTAL_NO_OF_ZID_KEY_RC] =     {  BUTTON_REPEAT, /* BUTTON_REPEAT    */
-                                                                   BUTTON_MOUSE_MODE, /* BUTTON_MOUSE_MODE  */
-                                                                   BUTTON_PPT_MODE, /* BUTTON_PPT_MODE */
-                                                                   BUTTON_GAME_MODE, /* BUTTON_GAME_MODE   */
-                                                                   BUTTON_MEDIA_MODE, /* BUTTON_MEDIA_MODE */
-                                                                   BUTTON_INVALID, /* BUTTON_INVALID */
-                                                                   BUTTON_INVALID, /* BUTTON_INVALID */
-                                                                   BUTTON_INVALID, /* BUTTON_INVALID */
-                                                                   BUTTON_INVALID, /* BUTTON_INVALID */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_1 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_2 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_3 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_4 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_5 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_6 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_7 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_8 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_9 */
-                                                                   BUTTON_PLAY,    /* BUTTON_UP       */
-                                                                   BUTTON_PREVIOUS,/* BUTTON_LEFT     */
-                                                                   BUTTON_MPLAYER, /* BUTTON_ENTER    */
-                                                                   BUTTON_NEXT,    /* BUTTON_RIGHT    */
-                                                                   BUTTON_PAUSE,   /* BUTTON_DOWN     */
-                                                                   BUTTON_VOLUME_P,/* BUTTON_VOLUME_P  */
-                                                                   BUTTON_VOLUME_N,/* BUTTON_VOLUME_N */
-                                                                   BUTTON_MUTE,    /* BUTTON_MUTE */
-                                                                   BUTTON_STOP     /* BUTTON_STOP */
-                                                                 };
+static uint16_t key_mapping_media[TOTAL_NO_OF_ZID_KEY_RC] =     
+{  BUTTON_REPEAT, /* BUTTON_REPEAT    */
+   BUTTON_MOUSE_MODE, /* BUTTON_MOUSE_MODE  */
+   BUTTON_PPT_MODE, /* BUTTON_PPT_MODE */
+   BUTTON_GAME_MODE, /* BUTTON_GAME_MODE   */
+   BUTTON_MEDIA_MODE, /* BUTTON_MEDIA_MODE */
+   BUTTON_INVALID, /* BUTTON_INVALID */
+   BUTTON_INVALID, /* BUTTON_INVALID */
+   BUTTON_INVALID, /* BUTTON_INVALID */
+   BUTTON_INVALID, /* BUTTON_INVALID */
+   BUTTON_INVALID, /* BUTTON_NUMBER_1 */
+   BUTTON_INVALID, /* BUTTON_NUMBER_2 */
+   BUTTON_INVALID, /* BUTTON_NUMBER_3 */
+   BUTTON_INVALID, /* BUTTON_NUMBER_4 */
+   BUTTON_INVALID, /* BUTTON_NUMBER_5 */
+   BUTTON_INVALID, /* BUTTON_NUMBER_6 */
+   BUTTON_INVALID, /* BUTTON_NUMBER_7 */
+   BUTTON_INVALID, /* BUTTON_NUMBER_8 */
+   BUTTON_INVALID, /* BUTTON_NUMBER_9 */
+   BUTTON_PLAY,    /* BUTTON_UP       */
+   BUTTON_PREVIOUS,/* BUTTON_LEFT     */
+   BUTTON_MPLAYER, /* BUTTON_ENTER    */
+   BUTTON_NEXT,    /* BUTTON_RIGHT    */
+   BUTTON_PAUSE,   /* BUTTON_DOWN     */
+   BUTTON_VOLUME_P,/* BUTTON_VOLUME_P  */
+   BUTTON_VOLUME_N,/* BUTTON_VOLUME_N */
+   BUTTON_MUTE,    /* BUTTON_MUTE */
+   BUTTON_STOP     /* BUTTON_STOP */
+};
+
 /* Key mapping for ZID Keyboard Control */
-static uint8_t key_mapping_ppt[TOTAL_NO_OF_ZID_KEY_RC] =        {  BUTTON_ESC, /* BUTTON_ESC    */
-                                                                   BUTTON_MOUSE_MODE, /* BUTTON_MOUSE_MODE  */
-                                                                   BUTTON_PPT_MODE, /* BUTTON_PPT_MODE */
-                                                                   BUTTON_GAME_MODE, /* BUTTON_GAME_MODE   */
-                                                                   BUTTON_MEDIA_MODE, /* BUTTON_MEDIA_MODE */
-                                                                   BUTTON_INVALID, /* BUTTON_INVALID */
-                                                                   BUTTON_INVALID, /* BUTTON_INVALID */
-                                                                   BUTTON_INVALID, /* BUTTON_INVALID */
-                                                                   BUTTON_INVALID, /* BUTTON_INVALID */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_1 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_2 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_3 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_4 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_5 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_6 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_7 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_8 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_9 */
-                                                                   BUTTON_UP_E, /* BUTTON_UP_E       */
-                                                                   BUTTON_LEFT_E, /* BUTTON_LEFT_E     */
-                                                                   BUTTON_FUNCTION_F5, /* BUTTON_FUNCTION_F5    */
-                                                                   BUTTON_RIGHT_E, /* BUTTON_RIGHT_E    */
-                                                                   BUTTON_DOWN_E, /* BUTTON_DOWN_E     */
-                                                                   BUTTON_TAB, /* BUTTON_TAB  */
-                                                                   BUTTON_DELETE, /* BUTTON_DELETE */
-                                                                   BUTTON_PAGE_UP, /* BUTTON_PAGE_UP */
-                                                                   BUTTON_PAGE_DOWN /* BUTTON_PAGE_DOWN */
-                                                                 };
+static uint8_t key_mapping_ppt[TOTAL_NO_OF_ZID_KEY_RC] =        
+{  BUTTON_ESC, /* BUTTON_ESC    */
+   BUTTON_MOUSE_MODE, /* BUTTON_MOUSE_MODE  */
+   BUTTON_PPT_MODE, /* BUTTON_PPT_MODE */
+   BUTTON_GAME_MODE, /* BUTTON_GAME_MODE   */
+   BUTTON_MEDIA_MODE, /* BUTTON_MEDIA_MODE */
+   BUTTON_INVALID, /* BUTTON_INVALID */
+   BUTTON_INVALID, /* BUTTON_INVALID */
+   BUTTON_INVALID, /* BUTTON_INVALID */
+   BUTTON_INVALID, /* BUTTON_INVALID */
+   BUTTON_INVALID, /* BUTTON_NUMBER_1 */
+   BUTTON_INVALID, /* BUTTON_NUMBER_2 */
+   BUTTON_INVALID, /* BUTTON_NUMBER_3 */
+   BUTTON_INVALID, /* BUTTON_NUMBER_4 */
+   BUTTON_INVALID, /* BUTTON_NUMBER_5 */
+   BUTTON_INVALID, /* BUTTON_NUMBER_6 */
+   BUTTON_INVALID, /* BUTTON_NUMBER_7 */
+   BUTTON_INVALID, /* BUTTON_NUMBER_8 */
+   BUTTON_INVALID, /* BUTTON_NUMBER_9 */
+   BUTTON_UP_E, /* BUTTON_UP_E       */
+   BUTTON_LEFT_E, /* BUTTON_LEFT_E     */
+   BUTTON_FUNCTION_F5, /* BUTTON_FUNCTION_F5    */
+   BUTTON_RIGHT_E, /* BUTTON_RIGHT_E    */
+   BUTTON_DOWN_E, /* BUTTON_DOWN_E     */
+   BUTTON_TAB, /* BUTTON_TAB  */
+   BUTTON_DELETE, /* BUTTON_DELETE */
+   BUTTON_PAGE_UP, /* BUTTON_PAGE_UP */
+   BUTTON_PAGE_DOWN /* BUTTON_PAGE_DOWN */
+ };
+ 
 /* Key mapping for ZID mouse Control */
-static uint8_t key_mapping_mouse[TOTAL_NO_OF_ZID_KEY_RC] =        {BUTTON_INVALID, /* BUTTON_INVALID    */
-                                                                   BUTTON_MOUSE_MODE, /* BUTTON_MOUSE_MODE  */
-                                                                   BUTTON_PPT_MODE, /* BUTTON_PPT_MODE */
-                                                                   BUTTON_GAME_MODE, /* BUTTON_GAME_MODE   */
-                                                                   BUTTON_MEDIA_MODE, /* BUTTON_MEDIA_MODE */
-                                                                   BUTTON_INVALID, /* BUTTON_INVALID */
-                                                                   BUTTON_INVALID, /* BUTTON_INVALID */
-                                                                   BUTTON_INVALID, /* BUTTON_INVALID */
-                                                                   BUTTON_INVALID, /* BUTTON_INVALID */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_1 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_2 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_3 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_4 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_5 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_6 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_7 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_8 */
-                                                                   BUTTON_INVALID, /* BUTTON_NUMBER_9 */
-                                                                   BUTTON_UP_E, /* BUTTON_UP_E       */
-                                                                   BUTTON_LEFT_E, /* BUTTON_LEFT_E     */
-                                                                   BUTTON_MIDDLE_CLK, /* BUTTON_MIDDLE_CLK    */
-                                                                   BUTTON_RIGHT_E, /* BUTTON_RIGHT_E    */
-                                                                   BUTTON_DOWN_E, /* BUTTON_DOWN_E     */
-                                                                   BUTTON_LEFT_SINGLE_CLK, /* BUTTON_LEFT_SINGLE_CLK  */
-                                                                   BUTTON_RIGHT_SINGLE_CLK, /* BUTTON_RIGHT_SINGLE_CLK */
-                                                                   BUTTON_SCROLL_UP, /* BUTTON_SCROLL_UP */
-                                                                   BUTTON_SCROLL_DOWN /* BUTTON_SCROLL_DOWN */
-                                                                 };
+static uint8_t key_mapping_mouse[TOTAL_NO_OF_ZID_KEY_RC] =       
+{   BUTTON_INVALID, /* BUTTON_INVALID    */
+	BUTTON_MOUSE_MODE, /* BUTTON_MOUSE_MODE  */
+	BUTTON_PPT_MODE, /* BUTTON_PPT_MODE */
+	BUTTON_GAME_MODE, /* BUTTON_GAME_MODE   */
+	BUTTON_MEDIA_MODE, /* BUTTON_MEDIA_MODE */
+	BUTTON_INVALID, /* BUTTON_INVALID */
+	BUTTON_INVALID, /* BUTTON_INVALID */
+	BUTTON_INVALID, /* BUTTON_INVALID */
+	BUTTON_INVALID, /* BUTTON_INVALID */
+	BUTTON_INVALID, /* BUTTON_NUMBER_1 */
+	BUTTON_INVALID, /* BUTTON_NUMBER_2 */
+	BUTTON_INVALID, /* BUTTON_NUMBER_3 */
+	BUTTON_INVALID, /* BUTTON_NUMBER_4 */
+	BUTTON_INVALID, /* BUTTON_NUMBER_5 */
+	BUTTON_INVALID, /* BUTTON_NUMBER_6 */
+	BUTTON_INVALID, /* BUTTON_NUMBER_7 */
+	BUTTON_INVALID, /* BUTTON_NUMBER_8 */
+	BUTTON_INVALID, /* BUTTON_NUMBER_9 */
+	BUTTON_UP_E, /* BUTTON_UP_E       */
+	BUTTON_LEFT_E, /* BUTTON_LEFT_E     */
+	BUTTON_MIDDLE_CLK, /* BUTTON_MIDDLE_CLK    */
+	BUTTON_RIGHT_E, /* BUTTON_RIGHT_E    */
+	BUTTON_DOWN_E, /* BUTTON_DOWN_E     */
+	BUTTON_LEFT_SINGLE_CLK, /* BUTTON_LEFT_SINGLE_CLK  */
+	BUTTON_RIGHT_SINGLE_CLK, /* BUTTON_RIGHT_SINGLE_CLK */
+	BUTTON_SCROLL_UP, /* BUTTON_SCROLL_UP */
+	BUTTON_SCROLL_DOWN /* BUTTON_SCROLL_DOWN */
+};
+
+#define MOUSE_POSITIVE_DISPLACEMENT  (2)
+#define MOUSE_NEGATIVE_DISPLACEMENT  (-2)
 																 
 /* Default mode for the key remote controller board is media player control */
 uint16_t button_mode = BUTTON_MEDIA_MODE;
@@ -278,10 +296,11 @@ uint32_t zid_interframe_duration = INTER_FRAME_DURATION_US;
 static zid_indication_callback_t zid_ind;
 #endif
 
+/* Initial value for ZID Report and attribute index */
 static uint8_t report_id = 0;
 static uint8_t set_attribute_index = 0;
 
-/* Store the current button val */
+/* Store the current button val & set the initial button state */
 button_id_t button_val;
 uint8_t b_state = 0xFF;
 
@@ -289,11 +308,7 @@ uint8_t b_state = 0xFF;
 /* === PROTOTYPES ========================================================== */
 static void app_alert(void);
 uint8_t get_zid_keyrc_button(button_id_t button_id);
-void key_rc_board_init(void);
-static inline void pulse_latch(void);
-static void set_button_pins_for_normal_mode(void);
 static void app_task(void);
-static void extended_delay_ms(uint16_t delay_ms);
 static void indicate_fault_behavior(void);
 #ifdef RF4CE_CALLBACK_PARAM
 static void nlme_reset_confirm(nwk_enum_t Status);
@@ -336,6 +351,7 @@ int main(void)
     }
 
 #ifdef RF4CE_CALLBACK_PARAM
+	/* Register the ZID Callback indication */
     zid_ind.zid_report_data_indication_cb = zid_report_data_indication;
     zid_ind.zid_get_report_indication_cb = zid_get_report_indication;
     register_zid_indication_callback(&zid_ind);
@@ -348,7 +364,7 @@ int main(void)
     if (get_zid_keyrc_button(pal_button_scan()) == ZID_COLD_START)
     {        
         /* Cold start */
-        LED_On(LED0);
+        LED_On(ZID_APP_LED);
         node_status = COLD_START;
         nlme_reset_request(true
 #ifdef RF4CE_CALLBACK_PARAM
@@ -389,15 +405,30 @@ void nlme_reset_confirm(nwk_enum_t Status)
 {
     if (Status != NWK_SUCCESS)
     {
-        while (1)
-        {
-            // endless while loop!
-            indicate_fault_behavior();
-        }
+		if(node_status == COLD_START)
+		{
+			while (1)
+			{
+			  indicate_fault_behavior();
+			}
+		}
+		else
+		{
+		  indicate_fault_behavior();
+		  /* Reset the network and start again */
+		  /* Warm start */
+			node_status = WARM_START;
+			nlme_reset_request(false
+#ifdef RF4CE_CALLBACK_PARAM
+                          ,(FUNC_PTR)nlme_reset_confirm
+#endif
+                           );
+		}
     }
 
     if (node_status == COLD_START)
     {
+		/* cold start procedure starts here */
         pairing_ref = 0xFF;
         nlme_start_request(
 #ifdef RF4CE_CALLBACK_PARAM
@@ -406,7 +437,7 @@ void nlme_reset_confirm(nwk_enum_t Status)
 
                            );
     }
-    else    // warm start
+    else    /* warm start procedure starts here */
     {
         pairing_ref = 0;
         /* Set power save mode: sleep */
@@ -432,15 +463,30 @@ void nlme_start_confirm(nwk_enum_t Status)
 {
     if (Status != NWK_SUCCESS)
     {
-        while (1)
-        {
-          app_alert();
-        }
+		if(node_status == COLD_START)
+		{
+			while (1)
+			{
+			  app_alert();
+			}
+		}
+		else
+		{
+		  app_alert();
+		  /* Reset the network and start again */
+		  /* Warm start */
+			node_status = WARM_START;
+			nlme_reset_request(false
+#ifdef RF4CE_CALLBACK_PARAM
+                          ,(FUNC_PTR)nlme_reset_confirm
+#endif
+                           );
+		}
     }
 
     if(node_status == COLD_START)
     {
-        uint8_t value= 10;
+        uint8_t value = ZID_ATTRIBUTE_REQ_SIZE;
         zid_set_attribute_request(0xFF, aplHIDNumStdDescComps, 0, &value
 #ifdef RF4CE_CALLBACK_PARAM
                                , (FUNC_PTR)zid_set_attribute_confirm
@@ -466,10 +512,10 @@ static void zid_set_attribute_confirm(nwk_enum_t status,uint8_t PairingRef, zid_
    {
        if(ZIDAttribute == aplHIDStdDescCompsList)
        {
-          if(ZIDAttributeIndex >= 9)
+          if(ZIDAttributeIndex >= (ZID_ATTRIBUTE_REQ_SIZE - 1))
           {
               set_attribute_index = 0;
-              LED_Off(LED0);
+              LED_Off(ZID_APP_LED);
               
 
               node_status = CONNECTING;
@@ -497,10 +543,25 @@ static void zid_set_attribute_confirm(nwk_enum_t status,uint8_t PairingRef, zid_
    }
    else
    {
-        while (1)
-        {
-            app_alert();
-        }
+        if(node_status == COLD_START)
+		{
+			while (1)
+			{
+			  app_alert();
+			}
+		}
+		else
+		{
+		  app_alert();
+		  /* Reset the network and start again */
+		  /* Warm start */
+			node_status = WARM_START;
+			nlme_reset_request(false
+#ifdef RF4CE_CALLBACK_PARAM
+                          ,(FUNC_PTR)nlme_reset_confirm
+#endif
+                           );
+		}
    }
    PairingRef = PairingRef;
    ZIDAttribute = ZIDAttribute;
@@ -523,24 +584,30 @@ void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef)
 {
     if (Status != NWK_SUCCESS)
     {
-        while(1)
-        {
-           app_alert();
-        }
+        if(node_status == COLD_START)
+		{
+			while (1)
+			{
+			  app_alert();
+			}
+		}
+		else
+		{
+		  app_alert();
+		  /* Reset the network and start again */
+		  /* Warm start */
+			node_status = WARM_START;
+			nlme_reset_request(false
+#ifdef RF4CE_CALLBACK_PARAM
+                          ,(FUNC_PTR)nlme_reset_confirm
+#endif
+                           );
+		}
     }
 
     pairing_ref = PairingRef;
 
     /* Set power save mode */
-
-
-    if (Status != NWK_SUCCESS)
-    {
-        while(1)
-        {
-            indicate_fault_behavior();
-        }
-    }
 
     if (node_status == CONNECTING)
     {
@@ -548,14 +615,14 @@ void zid_connect_confirm(nwk_enum_t Status, uint8_t PairingRef)
         zid_state = ZID_STATE_IDLE;
 
        /* LED handling */
-	   LED_On(LED0);
-	   extended_delay_ms(1000);
-	   LED_Off(LED0);
-       led_ctrl(LED_1, LED_ON); 
-       led_ctrl(LED_2, LED_OFF);
-       led_ctrl(LED_3, LED_OFF);
-       led_ctrl(LED_4, LED_OFF);
-       led_ctrl(LED_5, LED_ON);       
+	   LED_On(ZID_APP_LED);
+	   delay_ms(1000);
+	   LED_Off(ZID_APP_LED);
+       LED_On(LED_1); 
+       LED_Off(LED_2);
+       LED_Off(LED_3);
+       LED_Off(LED_4);
+       LED_On(LED_5);       
     }
 }
 
@@ -580,7 +647,6 @@ void zid_heartbeat_confirm(nwk_enum_t Status, uint8_t PairingRef)
  * @brief ZID Report Data indication used to know if the adaptor sends 
  *        any output report to the ZID Device.
  *
- * @param Status        Status of the heartbeat command
  * @param PairingRef    PairingRef contains assigned pairing reference.
  * @param num_report_records total no of reports in the report data 
  * @param zid_report_data_record_ptr pointer to the report data
@@ -613,10 +679,25 @@ void app_nlme_rx_enable_confirm(nwk_enum_t Status)
 {
     if (Status != NWK_SUCCESS)
     {
-        while(1)
-        {
-            indicate_fault_behavior();
-        }
+        if(node_status == COLD_START)
+		{
+			while (1)
+			{
+			  indicate_fault_behavior();
+			}
+		}
+		else
+		{
+		  indicate_fault_behavior();
+		  /* Reset the network and start again */
+		  /* Warm start */
+			node_status = WARM_START;
+			nlme_reset_request(false
+#ifdef RF4CE_CALLBACK_PARAM
+                          ,(FUNC_PTR)nlme_reset_confirm
+#endif
+                           );
+		}
     }
 
     if (node_status == COLD_START)
@@ -624,17 +705,16 @@ void app_nlme_rx_enable_confirm(nwk_enum_t Status)
         node_status = IDLE;
 
         /* LED handling */
-        LED_On(LED0);
-        extended_delay_ms(1000);
-        LED_Off(LED0);
+        LED_On(ZID_APP_LED);
+        delay_ms(1000);
+        LED_Off(ZID_APP_LED);
     }
     else if (node_status == WARM_START)
     {
-        node_status = IDLE;
-
-         LED_On(LED0);
-         extended_delay_ms(250);
-         LED_Off(LED0);
+        node_status = IDLE;		
+         LED_On(ZID_APP_LED);
+         delay_ms(250);
+         LED_Off(ZID_APP_LED);
     }
 }
 
@@ -696,10 +776,10 @@ static void app_task(void)
                     case BUTTON_MOUSE_MODE:
 					   /* Configure for the mouse mode */
                        button_mode = BUTTON_MOUSE_MODE;
-                       led_ctrl(LED_2, LED_ON);
-                       led_ctrl(LED_3, LED_OFF);
-                       led_ctrl(LED_4, LED_OFF);
-                       led_ctrl(LED_5, LED_OFF);
+                       LED_On(LED_2);
+                       LED_Off(LED_3);
+                       LED_Off(LED_4);
+                       LED_Off(LED_5);
                        zid_interframe_duration = INTER_FRAME_DURATION_MOUSE_US;
                        return;
                       break;
@@ -707,10 +787,10 @@ static void app_task(void)
                     case BUTTON_PPT_MODE:
 					/* Configure for the ppt mode */
                       button_mode = BUTTON_PPT_MODE;
-                       led_ctrl(LED_2, LED_OFF);
-                       led_ctrl(LED_3, LED_ON);
-                       led_ctrl(LED_4, LED_OFF);
-                       led_ctrl(LED_5, LED_OFF);
+                       LED_Off(LED_2);
+                       LED_On(LED_3);
+                       LED_Off(LED_4);
+                       LED_Off(LED_5);
                        zid_interframe_duration = INTER_FRAME_DURATION_US;
                        return;
                       break;
@@ -718,10 +798,10 @@ static void app_task(void)
                     case BUTTON_GAME_MODE:
 					 /* Configure for the game controller mode. */
                       button_mode = BUTTON_GAME_MODE;
-                       led_ctrl(LED_2, LED_OFF);
-                       led_ctrl(LED_3, LED_OFF);
-                       led_ctrl(LED_4, LED_ON);
-                       led_ctrl(LED_5, LED_OFF);
+                       LED_Off(LED_2);
+                       LED_Off(LED_3);
+                       LED_On(LED_4);
+                       LED_Off(LED_5);
                        zid_interframe_duration = INTER_FRAME_DURATION_US;
                        return;
                       break;
@@ -729,16 +809,16 @@ static void app_task(void)
                     case BUTTON_MEDIA_MODE:
 					/* Configure for the media player control mode */
                       button_mode = BUTTON_MEDIA_MODE;
-                       led_ctrl(LED_2, LED_OFF);
-                       led_ctrl(LED_3, LED_OFF);
-                       led_ctrl(LED_4, LED_OFF);
-                       led_ctrl(LED_5, LED_ON);
+                       LED_Off(LED_2);
+                       LED_Off(LED_3);
+                       LED_Off(LED_4);
+                       LED_On(LED_5);
                        zid_interframe_duration = INTER_FRAME_DURATION_US;
                        return;
                       break;
                       
                     default:
-                      led_ctrl(LED_1, LED_TOGGLE);
+                      LED_On(LED_1);
                       break;
                     } 
                     
@@ -847,16 +927,16 @@ static void app_task(void)
                           switch(key_mapping_mouse[b_state])
                           {
                           case BUTTON_UP_E:
-                             mouse_desc->y_coordinate = -2;
+                             mouse_desc->y_coordinate = MOUSE_NEGATIVE_DISPLACEMENT;
                             break;
                           case BUTTON_LEFT_E:
-                             mouse_desc->x_coordinate = -2;
+                             mouse_desc->x_coordinate = MOUSE_NEGATIVE_DISPLACEMENT;
                             break;
                           case BUTTON_RIGHT_E:
-                            mouse_desc->x_coordinate = 2;
+                            mouse_desc->x_coordinate = MOUSE_POSITIVE_DISPLACEMENT;
                             break;
                           case BUTTON_DOWN_E:
-                            mouse_desc->y_coordinate = 2;
+                            mouse_desc->y_coordinate = MOUSE_POSITIVE_DISPLACEMENT;
                             break;
                           case BUTTON_LEFT_SINGLE_CLK:
                             mouse_desc->button0 = 0x01;
@@ -919,7 +999,7 @@ static void app_task(void)
         case CONFIGURING_ATTRIBUTES:
           {
 			   /* Configure the attributes */
-               uint8_t value[10]= {MOUSE,KEYBOARD,CONTACT_DATA,TAP_GESTURE,SCROLL_GESTURE,PINCH_GESTURE,ROTATE_GESTURE,SYNC,TOUCH_SENSOR_PROPERTIES,TAP_SUPPORT_PROPERTIES};
+               uint8_t value[ZID_ATTRIBUTE_REQ_SIZE]= {MOUSE,KEYBOARD,CONTACT_DATA,TAP_GESTURE,SCROLL_GESTURE,PINCH_GESTURE,ROTATE_GESTURE,SYNC,TOUCH_SENSOR_PROPERTIES,TAP_SUPPORT_PROPERTIES};
                zid_set_attribute_request(0xFF, aplHIDStdDescCompsList, set_attribute_index, &value[set_attribute_index]
 #ifdef RF4CE_CALLBACK_PARAM
                                , (FUNC_PTR) zid_set_attribute_confirm
@@ -957,7 +1037,7 @@ void zid_report_data_confirm(nwk_enum_t Status, uint8_t PairingRef)
 
     if (Status == NWK_SUCCESS)
     {
-        LED_Off(LED0);
+        LED_Off(ZID_APP_LED);
     }
     else
     {
@@ -984,7 +1064,7 @@ void zid_data_confirm(nwk_enum_t Status, uint8_t PairingRef)
 
     if (Status == NWK_SUCCESS)
     {
-        LED_Off(LED0);
+        LED_Off(ZID_APP_LED);
     }
     else
     {
@@ -1001,7 +1081,6 @@ void zid_data_confirm(nwk_enum_t Status, uint8_t PairingRef)
  *        it to the appropriate HID class device. On receipt of the 
  *        corresponding report data  command frame, the HID adaptor shall pass the
  *        report to the HID class driver.
-
  *
  * @param zid_report_type Report type
  * @param PairingRef pairing reference for current transaction
@@ -1009,7 +1088,7 @@ void zid_data_confirm(nwk_enum_t Status, uint8_t PairingRef)
  * @param RxLinkQuality Received frame link quality
  * @param RxFlags Received frame RxFlags
  */
-static void zid_get_report_indication(uint8_t PairingRef,zid_report_types_t zid_report_type, zid_report_desc_t zid_report_desc,
+static void zid_get_report_indication(uint8_t PairingRef, zid_report_types_t zid_report_type, zid_report_desc_t zid_report_desc,
                                                 uint8_t RxLinkQuality, uint8_t RxFlags)
 {
     PairingRef = PairingRef;
@@ -1058,7 +1137,7 @@ void nlde_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t Profi
 
     if (Status == NWK_SUCCESS)
     {
-         LED_Off(LED0);
+         LED_Off(ZID_APP_LED);
     }
     else
     {
@@ -1070,8 +1149,24 @@ void nlde_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t Profi
     ProfileId = ProfileId;
 }
 
-bool check_zid_adaptor_compatibility(uint8_t PairingRef,uint8_t payload_length,uint8_t *payload)
+ /**
+ * @brief nlde_data_confirm The NLDE-DATA.confirm primitive is generated by the
+ *        NWK layer entity in response to an NLDE-DATA.request primitive.
+ *
+ * @param PairingRef PairingRef for the current transaction
+ * @param payload_length payload length
+ * @param payload payload to check the adaptor compatibility
+ * @return bool true or false 
+ */
+bool check_zid_adaptor_compatibility(uint8_t PairingRef,uint8_t payload_length, uint8_t *payload)
 {
+    /* 
+     * Application need to find out the compatibility with the adaptor
+     * It needs to extract the adaptor attributes from the following payloas
+     * Payload format is as per the GET_ATTRIBUTES_RESPONSE packet format excluding the header
+     * payload[0] = attr_id...........
+     *
+     */
     PairingRef = PairingRef;
     payload_length = payload_length;
     payload = payload;
@@ -1079,26 +1174,6 @@ bool check_zid_adaptor_compatibility(uint8_t PairingRef,uint8_t payload_length,u
 
 }
 /* --- Helper functions ---------------------------------------------------- */
-
-
-/**
- * @brief Extended blocking delay
- *
- * @param delay_ms Delay value in ms
- */
-static void extended_delay_ms(uint16_t delay_ms)
-{
-    uint16_t i;
-    uint16_t timer_delay;
-
-    timer_delay = delay_ms / 50;
-    for (i = 0; i < timer_delay; i++)
-    {
-        delay_ms(5);
-    }
-}
-
-
 /**
  * @brief Indicating malfunction
  */
@@ -1108,9 +1183,10 @@ static void indicate_fault_behavior(void)
 
     for (i = 0; i < 10; i++)
     {
-          LED_On(LED0);
-          extended_delay_ms(200);
-          LED_Off(LED0);
+          LED_On(ZID_APP_LED);
+          delay_ms(250);
+          LED_Off(ZID_APP_LED);
+		  delay_ms(250);
         
     }
 }
@@ -1121,10 +1197,10 @@ static void indicate_fault_behavior(void)
 void vendor_app_alive_req(void)
 {
     /* Variant to demonstrate FOTA featue */
-
-    LED_On(LED0);
+    LED_On(ZID_APP_LED);
     delay_ms(500);
-    LED_Off(LED0);
+    LED_Off(ZID_APP_LED);
+	delay_ms(500);
 }
 
 /**
@@ -1165,7 +1241,7 @@ static void app_alert(void)
 		#if LED_COUNT > 7
 		LED_Toggle(LED7);
 		#endif
-		//delay_us(0xFFFF);
+		delay_ms(300);
 	}
 }
 
@@ -1173,7 +1249,7 @@ static void app_alert(void)
  * @brief get_zid_keyrc_button This function will get the index for each key
  *
  * @param button_id pressed button id will be given as input
- * @param uint8_t button index
+ * @return uint8_t button index
  */
 uint8_t get_zid_keyrc_button(button_id_t button_id)
 {

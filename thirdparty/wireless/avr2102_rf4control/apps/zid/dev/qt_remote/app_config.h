@@ -1,14 +1,45 @@
 /**
- * @file app_config.h
+ * \file *********************************************************************
  *
- * @brief Single Button Controller application config
+ * \brief ZID Device Application Specific configuration
  *
- * $Id: app_config.h 33908 2013-01-10 04:57:43Z agasthian.s $
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
- */
-/*
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ */ 
+ /*
  * Copyright (c) 2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
@@ -31,29 +62,9 @@
 
 /* === Macros =============================================================== */
 
-/** @brief This is the first timer identifier of the application.
- *
- *  The value of this identifier is an increment of the largest identifier
- *  value used by the MAC.
- */
-#if (NUMBER_OF_TOTAL_STACK_TIMERS == 0)
-#define APP_FIRST_TIMER_ID          (0)
-#else
-#define APP_FIRST_TIMER_ID          (LAST_STACK_TIMER_ID + 1)
-#endif
 
 /* === Types ================================================================ */
 
-/** Timer ID's used by the Application */
-typedef enum
-{
-    /* App Timers start from APP_FIRST_TIMER_ID */
-
-    /** Application timer id used to switch off LED */
-    T_LED_TIMER     = (APP_FIRST_TIMER_ID)
-} app_timer_t;
-
-/** Defines the number of timers used by the application. */
 /** Defines the number of timers used by the application. */
 #define NUMBER_OF_APP_TIMERS        (1)
 
@@ -82,9 +93,6 @@ typedef enum
 #define TOTAL_NUMBER_OF_BUFS        (TOTAL_NUMBER_OF_LARGE_BUFS + TOTAL_NUMBER_OF_SMALL_BUFS)
 
 
-
-
-
 /* Offset of IEEE address storage location within EEPROM */
 #define EE_IEEE_ADDR                (0)
 
@@ -101,7 +109,7 @@ typedef enum
  * ChannelNormalizationCapableTrue
  * ChannelNormalizationCapableFalse    */
 
-#define APP_USER_STRING             "Single Btn Ctrl"    /* 15 characters ! */
+#define APP_USER_STRING             "ZID -HID Device"    /* 15 characters ! */
 #define USER_STRING_AVAILABLE       true
 #define NUM_SUPPORTED_DEV_TYPES         (1)
 #define NUM_SUPPORTED_PROFILES          (1)
@@ -121,43 +129,12 @@ typedef enum
 #define APP_CAPABILITIES                ((NUM_SUPPORTED_DEV_TYPES << 1) | (NUM_SUPPORTED_PROFILES << 4))
 #endif
 
-/* Implementation specific ZRC constant defines */
+/* Implementation specific ZID constant defines */
 #define FW_VERSION_MAJOR            1
-#define FW_VERSION_MINOR            2
+#define FW_VERSION_MINOR            0
 #define FW_VERSION_REV              0
 
 #define APL_HID_NUM_DESCRIPTORS             HID_NUM_DESCRIPTORS
-//#define APL_HID_DESCRIPTOR_SPEC             HID_DESCRIPTOR_SPEC
-
-/* Define the periodic wakeup interval */
-#define WDT_WAKEUP_INTERVAL         WDT_TO_1S
-#define WDT_WAKEUP_INTERVAL_US      1000000 /* micro seconds */
-/* Define the watchdog timeout for system reset */
-#define WDT_TIMEOUT_PERIOD          WDT_TO_4S
-
-
-/* Number of variables that are stored using NVM */
-#define NVM_NUM_VARS                (NWKC_MAX_PAIRING_TABLE_ENTRIES + 1) // 1 = own frame counter
-/* Size of the flash used for NVM; i.e. number of flash pages.
-   For every variable two pages are used. */
-#define NVM_MULTI_WRITE_NUM_PG_PER_VAR  2
-/* Size of the multi write NVM flash section */
-#define NVM_MULTI_WRITE_SIZE        (NVM_NUM_VARS * NVM_MULTI_WRITE_NUM_PG_PER_VAR * SPM_PAGESIZE)
-/* Flash address where the NVM starts. For final application adjust accordingly. */
-#define NVM_MULTI_WRITE_START       (NIB_FLASH_ADDR - NVM_MULTI_WRITE_SIZE)
-
-
-/* EEPROM address to save the qdebug data */
-#define EE_QDEBUG_OFFSET    (EE_IEEE_ADDR + 0xC8)
-
-/* QTouch related parameters */
-#define USED_QT_CHANNELS     0xF1F0F   //each bit represents one QT channel
-#define QT_STATE_LENGTH	     0x0F	
-#define QT_DELTA_LENGTH	     0x2D 	
-#define QT_SIGNAL_LENGTH     0x45
-#define QT_REFERENCES_LENGTH      0x45
-#define QT_START_DELTA_DATA  0x11
-#define QT_START_REF_DATA    0x1D
 
 /* === Externals ============================================================ */
 

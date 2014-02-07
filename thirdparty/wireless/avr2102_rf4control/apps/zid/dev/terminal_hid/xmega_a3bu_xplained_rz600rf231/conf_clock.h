@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Example specific clock configuration file
+ * \brief Chip-specific system clock manager configuration
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -38,7 +38,13 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+ /*
+ * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ */ 
 #ifndef CONF_CLOCK_H_INCLUDED
 #define CONF_CLOCK_H_INCLUDED
 ////! Use the 32 MHz RC oscilaltor as PLL reference

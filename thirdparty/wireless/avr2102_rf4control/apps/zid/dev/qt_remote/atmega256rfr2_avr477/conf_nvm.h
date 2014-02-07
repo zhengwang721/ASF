@@ -1,7 +1,7 @@
 /**
- * \file
+ * \file *********************************************************************
  *
- * \brief Non volatile memories management for UC3 devices
+ * \brief Non volatile memories management
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -38,7 +38,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ */ 
+ /*
+ * Copyright (c) 2014, Atmel Corporation All rights reserved.
  *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
  
 #ifndef CONF_NVM_H_INCLUDED
@@ -50,4 +54,4 @@
 
 
 
-#endif //CONF_NVM_H_INCLUDED
+#endif /* CONF_NVM_H_INCLUDED */

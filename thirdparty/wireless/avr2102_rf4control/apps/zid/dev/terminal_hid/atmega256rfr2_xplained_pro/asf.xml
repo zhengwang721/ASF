@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project force-caption="true" force-description="true" caption="ZID Terminal Adaptor application" id="thirdparty.wireless.avr2102_rf4control.apps.zid.zid_device.atmega256rfr2_xplained_pro">
+	<project force-caption="true" force-description="true" caption="ZID Terminal Device application" id="thirdparty.wireless.avr2102_rf4control.apps.zid.dev.terminal_hid.atmega256rfr2_xplained_pro">
 		<info type="description" value="summary">
-		Terminal Adaptor application for RF4CE-ZID adaptor-device setup
+		Terminal ZID application for RF4CE-ZID adaptor-device setup
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
@@ -16,11 +16,12 @@
 
         <build type="linker-config" subtype="flags" value="--section-start=.bootloader=0x3f000" toolchain="avrgcc"/>
 		<build type="linker-config" subtype="script" value="link_iar.xcl" toolchain="iarew"/>
-		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zid.zid_device"/>
+		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zid.dev.terminal_hid"/>
 		<require idref="board.atmega256rfr2_xplained_pro"/>
 		<generator value="iarew"/>
 		<generator value="avrgcc"/>
 		<generator value="as5_8"/>
+		<generator value="doxygen"/>
 		<device-support value="atmega256rfr2"/>
 	</project>
 </asf>

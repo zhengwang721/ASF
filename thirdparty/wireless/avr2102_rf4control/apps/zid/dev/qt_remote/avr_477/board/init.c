@@ -42,6 +42,11 @@
  * \asf_license_stop
  *
  */
+  /*
+ * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ */
 #include <board.h>
 #include <compiler.h>
 #include <conf_board.h>

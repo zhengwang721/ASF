@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Example specific board configuration file
+ * \brief board configuration file
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -38,11 +38,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+/*
+ * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ */
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-//#define CONF_BOARD_ENABLE_USARTE0
+
 #define CONF_BOARD_AT86RFX
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_BOARD_H */

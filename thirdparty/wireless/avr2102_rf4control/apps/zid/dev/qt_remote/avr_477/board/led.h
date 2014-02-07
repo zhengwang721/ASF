@@ -1,5 +1,5 @@
 /**
- * \file
+ * \file *********************************************************************
  *
  * \brief  ATMEGA256RFR2 LED support package.
  *
@@ -44,6 +44,11 @@
  *
  * \asf_license_stop
  *
+ */
+/*
+ * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
 #ifndef _LED_H_

@@ -58,14 +58,14 @@
  * LED0 is connected to PORTE pin 4
  */
  #define LED_ON_BOARD         IOPORT_CREATE_PIN(PORTE, 4)
- #define LED0_GPIO	      LED_ON_BOARD		  
+ #define LED0_GPIO	          LED_ON_BOARD		  
  #define LED0                 LED0_GPIO
  
  /*!  \name GPIO Connections of Switch
  * Push button is connected to PORTE pin 3. 
  */
  #define LED_ON_BOARD1        IOPORT_CREATE_PIN(PORTE, 3)
- #define LED1_GPIO	      LED_ON_BOARD1		  
+ #define LED1_GPIO	          LED_ON_BOARD1		  
  #define LED1                 LED1_GPIO
  
 

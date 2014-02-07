@@ -1,5 +1,5 @@
 /**
- * \file
+ * \file *********************************************************************
  *
  * \brief Example specific board configuration file
  *
@@ -38,7 +38,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ */ 
+ /*
+ * Copyright (c) 2014, Atmel Corporation All rights reserved.
  *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 #ifndef CONF_BOARD_H
 #define CONF_BOARD_H

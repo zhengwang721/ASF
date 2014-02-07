@@ -1,24 +1,49 @@
-/**************************************************************************//**
-  \file avr477QTouch.c
-
-  \brief
-    AVR477QTouch buttons handling implementation.
-
-  \author
-    Atmel Corporation: http://www.atmel.com \n
-    Support email: avr@atmel.com
-
-  Copyright (c) 2008-2014, Atmel Corporation. All rights reserved.
-  Licensed under Atmel's Limited License Agreement (BitCloudTM).
-
-  \internal
-    History:
-    
-******************************************************************************/
-
-/******************************************************************************
-                    Includes section
-******************************************************************************/
+/**
+ * \file *********************************************************************
+ *
+ * \brief AVR477QTouch buttons handling implementation.
+ *
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ */ 
+ /*
+ * Copyright (c) 2014, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ */
 #ifdef AVR477_QTOUCH
 
 #include "touch_api.h"
@@ -105,7 +130,6 @@ static volatile uint8_t time_to_measure_touch = 0u;
 /* current time, set by timer ISR */
 volatile uint16_t current_time_ms_touch = 0u;
 
-static BSP_TouchEventHandler_t bspTouchEventHandler = NULL;
 /******************************************************************************
                     Extern variables
 ******************************************************************************/
@@ -307,11 +331,11 @@ void BSP_InitQTouch(BSP_TouchEventHandler_t handler)
     *   functions to the measured signal values.(Possibly to fix sensor layout faults)    */
     /* This function is also used to send signal values to simulate Accelero meter,
        Just for demo purpose */
-    qt_filter_callback = qt_avr477_filter_cb; 
-    
-    bspTouchEventHandler = handler;   
+    qt_filter_callback = qt_avr477_filter_cb;      
     
     cpu_irq_enable();
+    
+    handler = handler;  
 }
 
 uint32_t rotor_up;
@@ -681,5 +705,5 @@ void appButtonsInd(BSP_TouchEvent_t event, uint8_t button, uint8_t data)
   qt_button = button;
   qt_event = event;
 }
-// eof avr477QTouch.c
+/*End of file  avr477QTouch.c */
 

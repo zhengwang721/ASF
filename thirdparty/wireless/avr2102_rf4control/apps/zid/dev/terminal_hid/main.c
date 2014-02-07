@@ -39,8 +39,6 @@
  *
  * \asf_license_stop
  *
- * @author    Atmel Corporation: http://www.atmel.com
- * @author    Support email: avr@atmel.com
  */
 /*
  * Copyright (c) 2014, Atmel Corporation All rights reserved.

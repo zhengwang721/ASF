@@ -11,9 +11,8 @@
 		<build type="c-source" value="avr_477/src/memorymap.c"/>
 		<build type="asm-source" value="avr_477/src/qm_asm_tiny_mega.S"/>
 		<build type="header-file" value="conf_common_sw_timer.h"/>
-		<build type="header-file" value="conf_pal.h"/>
-		<build type="header-file" value="keyboard.h"/>
 		<build type="header-file" value="app_config.h"/>
+		<build type="header-file" value="conf_pal.h"/>
 		<build type="header-file" value="avr_477/inc/Avr477QTouch.h"/>
 		<build type="header-file" value="avr_477/inc/buttonsExt.h"/>
 		<build type="header-file" value="avr_477/inc/memorymap.h"/>
@@ -44,8 +43,8 @@
 		<build type="define" name="AVR477_QTOUCH" value =""/>
 		
 		
-		<build type="library" subtype="user" value="avr_477/lib/libm256rfr2_32qm_8x_4y_krs_4rs.r90" toolchain="iarew"/>
-        <build type="library" subtype="user" value="atxmega256a3u/as5_8/libm256rfr2_32qm_8x_4y_krs_4rs.a" toolchain="avrgcc"/>
+		<build type="library" subtype="user" value="avr_477/lib/iar/libm256rfr2_32qm_8x_4y_krs_4rs.r90" toolchain="iarew"/>
+        <build type="library" subtype="user" value="avr_477/lib/as5_8/libm256rfr2_32qm_8x_4y_krs_4rs.a" toolchain="avrgcc"/>
 		
 		<require idref="thirdparty.wireless.avr2102_rf4control.include"/>
         <require idref="thirdparty.wireless.avr2102_rf4control.lib.zid.dev"/>
