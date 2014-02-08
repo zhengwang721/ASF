@@ -54,10 +54,20 @@
 # include "led.h"
 
 
+
+#ifdef KEY_RC_BOARD
+void pulse_latch(void);
+void set_button_pins_for_normal_mode(void);
+void led_ctrl(led_id_t led_no, led_action_t led_setting);
+button_id_t pal_button_scan(void);
+void update_latch_status(void);
+#else /* KEY_RC_BOARD */
+
 typedef enum
 {
     PLAIN,
-    SENSOR_TERM_BOARD
+    KEYRC_BOARD,
+    SENSOR_TERM_BOARD    
 } board_t;
 
 typedef struct
@@ -89,4 +99,6 @@ bool stb_button_read(void);
 void led_helper_func(void);
 
 void led_ctrl(led_id_t led_no, led_action_t led_setting);
+#endif /* KEY_RC_BOARD */
+
 #endif  /* _HELPER_ */

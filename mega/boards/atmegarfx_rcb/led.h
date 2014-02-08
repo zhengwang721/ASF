@@ -57,7 +57,10 @@ typedef enum led_id_tag
 {
     LED_0,
     LED_1,
-    LED_2
+    LED_2,
+    LED_3,
+    LED_4,
+    LED_5
 } SHORTENUM led_id_t;
 /**
  * \brief LED action
