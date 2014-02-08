@@ -7,7 +7,7 @@
  * CSMA-CA after reception of a beacon request frame in a nonbeacon-enabled PAN.
  *
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
