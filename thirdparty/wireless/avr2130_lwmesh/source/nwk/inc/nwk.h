@@ -63,7 +63,7 @@
   *     Atmel® Lightweight Mesh software stack is an easy to use proprietary low power wireless mesh network protocol. 
   *     It was designed to address the needs of a wide range of wireless connectivity applications. Some of these applications include:\n
   *   	• Remote control\n
- *   	• Alarms and security\n
+  *   	• Alarms and security\n
   *   	• Automatic Meter Reading (AMR)\n
   *   	• Home and commercial building automation\n
   *   	• Toys and educational equipment\n

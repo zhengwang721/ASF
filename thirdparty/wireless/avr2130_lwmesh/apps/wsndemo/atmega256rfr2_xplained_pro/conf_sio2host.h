@@ -52,7 +52,7 @@
 #define USART_HOST_PARITY         USART_PMODE_DISABLED_gc
 #define USART_HOST_STOP_BITS       1
 //! @}
-
+#define SERIAL_RX_BUF_SIZE_HOST    156
 #define USART_HOST_RX_ISR_ENABLE() usart_rx_complete_interrupt_enable(USART_HOST)
 #define USART_HOST_ISR_VECT()     ISR(USART1_RX_vect)
 
