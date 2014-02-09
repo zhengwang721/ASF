@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief AT25DFx configuration.
+ * \brief Configuration of unit tests for AT25DFx driver.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,31 +41,19 @@
  *
  */
 
-#ifndef CONF_AT25DFX_H_INCLUDED
-#define CONF_AT25DFX_H_INCLUDED
+#ifndef CONF_TEST_H
+#define CONF_TEST_H
 
-#include "at25dfx.h"
-#include "board.h"
+#include <board.h>
 
-/* Connect AT25DFx driver to SPI master service */
-#define AT25DFX_USES_SPI_MASTER_SERVICE
+#define CONF_STDIO_USART_MODULE  EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING   EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0   EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1   EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2   EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3   EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE      115200
 
-/* Chip select used by AT25DFx components on the SPI module instance */
-#define AT25DFX_CS      3
+#define CONF_TEST_VECTORED_MASTER
 
-/* Number of AT25DFx components to manage */
-#define AT25DFX_MEM_CNT             1
-
-/* Memory ID of AT25DFx components to manage */
-#define AT25DFX_MEM_ID             1
-
-/* SPI master speed in Hz */
-#define AT25DFX_SPI_MASTER_SPEED    12000000
-
-/* Number of bits in each SPI transfer */
-#define AT25DFX_SPI_BITS            8
-
-/** AT25DFx device type */
-#define AT25DFX_MEM_TYPE AT25DFX_321
-
-#endif  /* CONF_AT25DFX_H_INCLUDED */
+#endif // CONF_TEST_H
