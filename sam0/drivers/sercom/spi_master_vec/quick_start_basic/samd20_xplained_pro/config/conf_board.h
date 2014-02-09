@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21 SPI configuration
+ * \brief SAMD20 Xplained PRO board configuration.
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,13 +41,7 @@
  *
  */
 
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifndef CONF_SPI_H_INCLUDED
-#  define CONF_SPI_H_INCLUDED
-
-#  define CONF_SPI_MASTER_ENABLE     true
-#  define CONF_SPI_SLAVE_ENABLE      false
-#  define CONF_SPI_TIMEOUT           10000
-
-#endif /* CONF_SPI_H_INCLUDED */
-
+#endif /* CONF_BOARD_H_INCLUDED */

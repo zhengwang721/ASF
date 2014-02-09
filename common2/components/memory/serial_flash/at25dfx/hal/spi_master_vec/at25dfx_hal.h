@@ -1,14 +1,9 @@
 /**
  * \file
  *
- * \brief Connection of the AT25DFx SerialFlash to SPI interface driver.
+ * \brief AT25DFx SerialFlash driver public SPI HAL interface.
  *
- * This file manages the connection of the AT25DFx SerialFlash driver to an
- * SPI service (could be spi master service or usart in spi mode). The SPI
- * service selection depends on  AT25DFX_USES_SPI_MASTER_SERVICE or
- * AT25DFX_USES_USART_SPI_SERVICE in conf_at25dfx.h.
- *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,32 +41,45 @@
  *
  */
 
-#ifndef AT25DFX_HAL_SPI_H_INCLUDED
-#define AT25DFX_HAL_SPI_H_INCLUDED
+#ifndef AT25DFX_HAL_H
+#define AT25DFX_HAL_H
 
-#include "conf_at25dfx.h"
-#include "status_codes.h"
+#include <spi_master_vec.h>
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#include "spi.h"
-#define DUMMY          0xFF
+/**
+ * \ingroup asfdoc_common2_at25dfx_group
+ *
+ * @{
+ */
 
-/* Create as many slave instances as required... */
-#define AT25DFX_CS0    AT25DFX_CS  // To keep compliance
+/** Typedef for SPI HAL */
+typedef struct spi_master_vec_module at25dfx_spi_module_t;
 
-void at25dfx_spi_init(void);
-void at25dfx_spi_select_device(uint8_t mem_id);
-void at25dfx_spi_deselect_device(uint8_t mem_id);
-enum status_code at25dfx_spi_write_byte(uint8_t data);
-enum status_code at25dfx_spi_read_byte(uint8_t *data);
-enum status_code at25dfx_spi_read_packet(void const *data, size_t len);
-enum status_code at25dfx_spi_write_packet(void const *data, size_t len);
+/**
+ * \brief Initialize SPI configuration
+ *
+ * This function initializes the SPI configuration struct with default settings
+ * that should work with SerialFlash devices.
+ *
+ * The user can change the baud rate and the MUX settings for SERCOM and GPIO
+ * pads, but should leave all other settings intact.
+ *
+ * \param[out] config Address of config struct to initialize.
+ */
+static inline void at25dfx_spi_master_vec_get_config_defaults(
+		struct spi_master_vec_config *const config)
+{
+	spi_master_vec_get_config_defaults(config);
+}
+
+/** @ */
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* AT25DFX_HAL_SPI_H_INCLUDED */
+#endif // AT25DFX_HAL_H

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief AT25DFx configuration.
+ * \brief SERCOM SPI master with vectored I/O driver configuration
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,33 +41,25 @@
  *
  */
 
-#ifndef CONF_AT25DFX_H_INCLUDED
-#define CONF_AT25DFX_H_INCLUDED
+#ifndef CONF_SPI_MASTER_VEC_H
+#define CONF_SPI_MASTER_VEC_H
 
-#include "at25dfx.h"
-#include <board.h>
+#if defined(__FREERTOS__) || defined(__DOXYGEN__)
+#  include <FreeRTOS.h>
+#  include <semphr.h>
 
-//! Select the SPI module AT25DFx is connected to
-#define AT25DFX_SPI                 SERIALFLASH_SPI_MODULE
+#  define CONF_SPI_MASTER_VEC_OS_SUPPORT
+#  define CONF_SPI_MASTER_VEC_SEMAPHORE_TYPE                   xSemaphoreHandle
+#  define CONF_SPI_MASTER_VEC_CREATE_SEMAPHORE(semaphore)  \
+		vSemaphoreCreateBinary(semaphore)
+#  define CONF_SPI_MASTER_VEC_DELETE_SEMAPHORE(semaphore)  \
+		vSemaphoreDelete(semaphore)
+#  define CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE(semaphore)  \
+		xSemaphoreTake((semaphore), portMAX_DELAY)
+#  define CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE(semaphore)  \
+		xSemaphoreGive((semaphore))
+#  define CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE_FROM_ISR(semaphore)  \
+		xSemaphoreGiveFromISR((semaphore), NULL)
+#endif
 
-/* Number of AT25DFx components to manage */
-#define AT25DFX_MEM_CNT           1
-
-/* Memory ID of AT25DFx components to manage */
-#define AT25DFX_MEM_ID            0 
-
-/** AT25DFx device type */
-#define AT25DFX_MEM_TYPE          AT25DFX_081A
-
-#define AT25DFX_SPI_PINMUX_SETTING  SERIALFLASH_SPI_MUX_SETTING
-#define AT25DFX_SPI_PINMUX_PAD0     SERIALFLASH_SPI_PINMUX_PAD0
-#define AT25DFX_SPI_PINMUX_PAD1     SERIALFLASH_SPI_PINMUX_PAD1
-#define AT25DFX_SPI_PINMUX_PAD2     SERIALFLASH_SPI_PINMUX_PAD2
-#define AT25DFX_SPI_PINMUX_PAD3     SERIALFLASH_SPI_PINMUX_PAD3
-
-#define AT25DFX_CS                  SERIALFLASH_SPI_CS 
-
-//! SPI master speed in Hz.
-#define AT25DFX_CLOCK_SPEED         120000
-
-#endif  /* CONF_AT25DFX_H_INCLUDED */
+#endif // CONF_SPI_MASTER_VEC_H
