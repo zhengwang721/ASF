@@ -12,5 +12,6 @@
 		<build type="include-path" value="."/>
 		<require idref="common2.components.memory.serial_flash.at25dfx"/>
 		<device-support value="samd20"/>
+		<device-support value="samd21"/>
 	</module>
 </asf>
