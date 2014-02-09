@@ -76,14 +76,18 @@ static int main_count_states(test_state_t state);
  */
 int main(void)
 {
+#if SAMD21
+	system_init();
+#else
 	sysclk_init();
+	board_init();
+#endif
 	irq_initialize_vectors();
 	cpu_irq_enable();
 
 	// Initialize the sleep manager
 	sleepmgr_init();
 
-	board_init();
 	ui_init();
 
 	// Start USB host stack
