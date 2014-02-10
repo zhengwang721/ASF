@@ -1,7 +1,7 @@
 /**
  * \file hal.h
  *
- * \brief ATmega256rfr2 HAL interface
+ * \brief  The HAL Layer forms the wrapper layer that forms the interface between the Stack and the Low level drivers.
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -52,6 +52,36 @@
 
 #include "sysTypes.h"
 #include "common_hw_timer.h"
+
+ /**
+  * \defgroup group_lwmesh Light Weight Mesh 
+  *     Atmel® Lightweight Mesh software stack is an easy to use proprietary low power wireless mesh network protocol. 
+  *     It was designed to address the needs of a wide range of wireless connectivity applications. Some of these applications include:\n
+  *   	• Remote control\n
+  *   	• Alarms and security\n
+  *   	• Automatic Meter Reading (AMR)\n
+  *   	• Home and commercial building automation\n
+  *   	• Toys and educational equipment\n
+  * 
+  */
+  
+/**
+ * \ingroup group_lwmesh
+ * \defgroup group_phy PHY 
+ * Radio physical layer (PHY) provides functions for radio transceiver access. 
+ * Some of them are accessible only by the network layer (request to send data, data indication); 
+ * some of them can be used from the application (channel selection, random number generation, energy detection, etc.)
+ *
+ *
+ */  
+
+/**
+ * \ingroup group_lwmesh
+ * \defgroup group_lwmesh_nwk Network layer(NWK)
+ *  Network layer (NWK) provides core stack functionality and provides two routing algorithms,1.Native routing and 2.AODV routing.
+ * 
+ */
+ 
 /**
  * \ingroup group_lwmesh
  * \defgroup group_lwmesh_hal Hardware Abstraction Layer (HAL)

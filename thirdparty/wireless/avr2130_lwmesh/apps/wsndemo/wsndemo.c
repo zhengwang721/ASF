@@ -78,8 +78,6 @@
 #include "phy.h"
 #include "sys.h"
 #include "nwk.h"
-#include "nwkRoute.h"
-#include "nwkSecurity.h"
 #include "sysTimer.h"
 #if APP_COORDINATOR
 #include "sio2host.h"
