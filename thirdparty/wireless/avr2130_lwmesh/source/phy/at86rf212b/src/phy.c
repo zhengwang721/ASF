@@ -255,15 +255,11 @@ int8_t PHY_EdReq(void)
   return ed + phyRssiBaseVal();
 }
 #endif
-
 /*************************************************************************//**
 *****************************************************************************/
 static void phyWriteRegister(uint8_t reg, uint8_t value)
 {
-  HAL_PhySpiSelect();
-  HAL_PhySpiWriteByteInline(RF_CMD_REG_W | reg);
-  HAL_PhySpiWriteByteInline(value);
-  HAL_PhySpiDeselect();
+  trx_reg_write(reg,value);
 }
 
 /*************************************************************************//**
@@ -272,10 +268,7 @@ static uint8_t phyReadRegister(uint8_t reg)
 {
   uint8_t value;
 
-  HAL_PhySpiSelect();
-  HAL_PhySpiWriteByteInline(RF_CMD_REG_R | reg);
-  value = HAL_PhySpiWriteByteInline(0);
-  HAL_PhySpiDeselect();
+  value = trx_reg_read(reg);
 
   return value;
 }
@@ -336,7 +329,7 @@ static int8_t phyRssiBaseVal(void)
 {
   bool oqpsk = (phyModulation & (1<<BPSK_OQPSK));
   bool sub   = (phyModulation & (1<<SUB_MODE));
-  bool rc    = (phyModulation & (1<<ALT_SPEC));
+  bool rc    = (phyModulation & (1<<4/*ALT_SPEC*/));
 
   if (0 == oqpsk)
   {
