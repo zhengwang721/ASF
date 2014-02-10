@@ -107,7 +107,7 @@
 
 #include <asf.h>
 #include <conf_test.h>
-
+#include <conf_at25dfx.h>
 
 #define TEST_BUFFER_SIZE  16
 #define TEST_ERASE_VALUE  0xff
