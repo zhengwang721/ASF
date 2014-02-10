@@ -46,7 +46,7 @@
 #include <system_interrupt.h>
 
 /**
- * \ingroup asfdoc_samd20_sercom_spi_master_vec_group
+ * \ingroup asfdoc_sam0_sercom_spi_master_vec_group
  *
  * @{
  */
