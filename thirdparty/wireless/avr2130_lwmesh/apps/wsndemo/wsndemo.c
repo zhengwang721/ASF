@@ -396,7 +396,6 @@ static void APP_TaskHandler(void)
 
     case APP_STATE_SLEEP:
     {
-      PHY_SetRxState(false);
 
       HAL_Sleep(APP_SENDING_INTERVAL/1000);
 	  appState = APP_STATE_WAKEUP;
@@ -408,7 +407,6 @@ static void APP_TaskHandler(void)
 
       LED_On(LED_NETWORK);
 
-      PHY_SetRxState(true);
 
       appState = APP_STATE_SEND;
     } break;

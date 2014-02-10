@@ -83,7 +83,7 @@ static void xtea(uint32_t text[2], uint32_t const key[4])
 void SYS_EncryptReq(uint32_t *text, uint32_t *key)
 {
 #if SYS_SECURITY_MODE == 0
-  PHY_EncryptReq(text, key);
+  PHY_EncryptReq((uint8_t *)text, (uint8_t *)key);
 
 #elif SYS_SECURITY_MODE == 1
   xtea(&text[0], key);
