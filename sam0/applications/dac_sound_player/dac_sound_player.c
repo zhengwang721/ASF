@@ -156,7 +156,7 @@ static void configure_tc(struct tc_module *tc_module)
 	config.clock_source    = GCLK_GENERATOR_0;
 	config.wave_generation = TC_WAVE_GENERATION_MATCH_FREQ;
 
-	tc_init(tc_module, TC0, &config);
+	tc_init(tc_module, TC3, &config);
 
 	/* Enable periodic event output generation */
 	struct tc_events events = { .generate_event_on_overflow = true };
@@ -183,7 +183,7 @@ static void configure_events(struct events_resource *event)
 
 	events_get_config_defaults(&config);
 
-	config.generator    = EVSYS_ID_GEN_TC0_OVF;
+	config.generator    = EVSYS_ID_GEN_TC3_OVF;
 	config.path         = EVENTS_PATH_ASYNCHRONOUS;
 
 	events_allocate(event, &config);
