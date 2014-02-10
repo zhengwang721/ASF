@@ -74,6 +74,7 @@ void NWK_Init(void)
   nwkIb.nwkSeqNum = 0;
   nwkIb.macSeqNum = 0;
   nwkIb.addr = 0;
+  nwkIb.lock = 0;
 
   for (uint8_t i = 0; i < NWK_ENDPOINTS_AMOUNT; i++)
     nwkIb.endpoint[i] = NULL;
@@ -136,7 +137,23 @@ void NWK_OpenEndpoint(uint8_t id, bool (*handler)(NWK_DataInd_t *ind))
 *****************************************************************************/
 bool NWK_Busy(void)
 {
-  return PHY_Busy() || (NULL != nwkFrameNext(NULL));
+  return nwkIb.lock > 0;
+}
+
+/*************************************************************************//**
+  @brief Increases the lock counter and sets a busy state
+*****************************************************************************/
+void NWK_Lock(void)
+{
+  nwkIb.lock++;
+}
+
+/*************************************************************************//**
+  @brief Decreases the lock counter and sets a free state if counter reaches 0
+*****************************************************************************/
+void NWK_Unlock(void)
+{
+  nwkIb.lock--;
 }
 
 /*************************************************************************//**

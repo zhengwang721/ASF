@@ -1,9 +1,9 @@
 /**
  * \file phy.c
  *
- * \brief ATMEGA128RFA1 PHY implementation
+ * \brief ATMEGAxxxRFA1 PHY implementation
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014, Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,79 +40,34 @@
  *
  */
 
-/*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
-
-#ifdef PHY_ATMEGA128RFA1
+#ifdef PHY_ATMEGARFA1
 
 /*- Includes ---------------------------------------------------------------*/
 #include "sysTypes.h"
-#include "atmega128rfa1.h"
-#include "phy.h"
 #include "hal.h"
+#include "phy.h"
+#include "atmegarfa1.h"
 
 /*- Definitions ------------------------------------------------------------*/
-#define IRQ_STATUS_CLEAR_VALUE         0xff
-#define RANDOM_NUMBER_UPDATE_INTERVAL  1 // us
+#define PHY_CRC_SIZE          2
 
 /*- Types ------------------------------------------------------------------*/
-typedef enum PhyState_t
+typedef enum
 {
   PHY_STATE_INITIAL,
   PHY_STATE_IDLE,
   PHY_STATE_SLEEP,
   PHY_STATE_TX_WAIT_END,
-  PHY_STATE_TX_CONFIRM,
-  PHY_STATE_RX_IND,
-  PHY_STATE_ED_WAIT,
-  PHY_STATE_ED_DONE,
 } PhyState_t;
 
-enum
-{
-  PHY_REQ_NONE     = 0,
-  PHY_REQ_CHANNEL  = (1 << 0),
-  PHY_REQ_PANID    = (1 << 1),
-  PHY_REQ_ADDR     = (1 << 2),
-  PHY_REQ_TX_POWER = (1 << 3),
-  PHY_REQ_RX       = (1 << 4),
-  PHY_REQ_RANDOM   = (1 << 5),
-  PHY_REQ_ENCRYPT  = (1 << 6),
-  PHY_REQ_ED       = (1 << 7),
-};
-
-typedef struct PhyIb_t
-{
-  uint8_t     request;
-
-  uint8_t     channel;
-  uint16_t    panId;
-  uint16_t    addr;
-  uint8_t     txPower;
-  bool        rx;
-#ifdef PHY_ENABLE_AES_MODULE
-  uint8_t     *text;
-  uint8_t     *key;
-#endif
-} PhyIb_t;
-
 /*- Prototypes -------------------------------------------------------------*/
-static inline void phyTrxSetState(uint8_t state);
+static void phyTrxSetState(uint8_t state);
 static void phySetRxState(void);
-#ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
-static uint16_t phyGetRandomNumber(void);
-#endif
 
 /*- Variables --------------------------------------------------------------*/
-static PhyIb_t              phyIb;
-static volatile PhyState_t  phyState = PHY_STATE_INITIAL;
-static volatile uint8_t     phyTxStatus;
-static volatile int8_t      phyRxRssi;
-static volatile uint8_t     phyRxSize;
-static uint8_t              phyRxBuffer[128];
+static PhyState_t phyState = PHY_STATE_INITIAL;
+static uint8_t phyRxBuffer[128];
+static bool phyRxState;
 
 /*- Implementations --------------------------------------------------------*/
 
@@ -124,73 +79,62 @@ void PHY_Init(void)
   
   TRXPR_REG_s.trxrst = 1;
 
+  phyRxState = false;
+  phyState = PHY_STATE_IDLE;
+
   phyTrxSetState(TRX_CMD_TRX_OFF);
-
-  CSMA_SEED_1_REG_s.aackSetPd = 1;
-  CSMA_SEED_1_REG_s.aackDisAck = 0;
-
-  IRQ_STATUS_REG = IRQ_STATUS_CLEAR_VALUE;
-  IRQ_MASK_REG_s.rxEndEn = 1;
-  IRQ_MASK_REG_s.txEndEn = 1;
 
   TRX_CTRL_2_REG_s.rxSafeMode = 1;
 
 #ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
-  CSMA_SEED_0_REG = (uint8_t)phyGetRandomNumber();
-#else
-  CSMA_SEED_0_REG = 0x11;
+  CSMA_SEED_0_REG = (uint8_t)PHY_RandomReq();
 #endif
-
-  phyIb.request = PHY_REQ_NONE;
-  phyIb.rx = false;
-  phyState = PHY_STATE_IDLE;
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 void PHY_SetRxState(bool rx)
 {
-  phyIb.request |= PHY_REQ_RX;
-  phyIb.rx = rx;
+  phyRxState = rx;
+  phySetRxState();
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 void PHY_SetChannel(uint8_t channel)
 {
-  phyIb.request |= PHY_REQ_CHANNEL;
-  phyIb.channel = channel;
+  PHY_CC_CCA_REG_s.channel = channel;
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 void PHY_SetPanId(uint16_t panId)
 {
-  phyIb.request |= PHY_REQ_PANID;
-  phyIb.panId = panId;
+  uint8_t *d = (uint8_t *)&panId;
+
+  PAN_ID_0_REG = d[0];
+  PAN_ID_1_REG = d[1];
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 void PHY_SetShortAddr(uint16_t addr)
 {
-  phyIb.request |= PHY_REQ_ADDR;
-  phyIb.addr = addr;
+  uint8_t *d = (uint8_t *)&addr;
+
+  SHORT_ADDR_0_REG = d[0];
+  SHORT_ADDR_1_REG = d[1];
+
+#ifndef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
+  CSMA_SEED_0_REG = d[0] + d[1];
+#endif
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 void PHY_SetTxPower(uint8_t txPower)
 {
-  phyIb.request |= PHY_REQ_TX_POWER;
-  phyIb.txPower = txPower;
-}
-
-/*************************************************************************//**
-*****************************************************************************/
-bool PHY_Busy(void)
-{
-  return PHY_STATE_IDLE != phyState || PHY_REQ_NONE != phyIb.request;
+  PHY_TX_PWR_REG_s.txPwr = txPower;
 }
 
 /*************************************************************************//**
@@ -217,88 +161,21 @@ void PHY_DataReq(uint8_t *data)
 {
   phyTrxSetState(TRX_CMD_TX_ARET_ON);
 
-  TRX_FRAME_BUFFER(0) = data[0] + 2/*crc*/;
-  for (uint8_t i = 1; i < data[0]; i++)
-    TRX_FRAME_BUFFER(i) = data[i];
-
-  TRX_STATE_REG = TRX_CMD_TX_START;
+  TRX_FRAME_BUFFER(0) = data[0] + PHY_CRC_SIZE;
+  for (uint8_t i = 0; i < data[0]; i++)
+    TRX_FRAME_BUFFER(i+1) = data[i+1];
 
   phyState = PHY_STATE_TX_WAIT_END;
+  TRX_STATE_REG = TRX_CMD_TX_START;
 }
 
 #ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
 /*************************************************************************//**
 *****************************************************************************/
-void PHY_RandomReq(void)
-{
-  phyIb.request |= PHY_REQ_RANDOM;
-}
-#endif
-
-#ifdef PHY_ENABLE_AES_MODULE
-/*************************************************************************//**
-*****************************************************************************/
-void PHY_EncryptReq(uint8_t *text, uint8_t *key)
-{
-  phyIb.request |= PHY_REQ_ENCRYPT;
-  phyIb.text = text;
-  phyIb.key = key;
-}
-#endif
-
-#ifdef PHY_ENABLE_ENERGY_DETECTION
-/*************************************************************************//**
-*****************************************************************************/
-void PHY_EdReq(void)
-{
-  phyIb.request |= PHY_REQ_ED;
-}
-#endif
-
-/*************************************************************************//**
-*****************************************************************************/
-ISR(TRX24_TX_END_vect)
-{
-  if (TRX_STATUS_TX_ARET_ON == TRX_STATUS_REG_s.trxStatus)
-  {
-    phyTxStatus = TRX_STATE_REG_s.tracStatus;
-    TRX_STATE_REG = TRX_CMD_PLL_ON; // Don't wait for this to complete
-    phyState = PHY_STATE_TX_CONFIRM;
-  }
-  else
-  {
-    // Auto ACK transmission completed
-  }
-}
-
-/*************************************************************************//**
-*****************************************************************************/
-ISR(TRX24_RX_END_vect)
-{
-  TRX_STATE_REG = TRX_CMD_PLL_ON; // Don't wait for this to complete
-  phyRxRssi = (int8_t)PHY_ED_LEVEL_REG;
-  phyRxSize = TST_RX_LENGTH_REG;
-  phyState = PHY_STATE_RX_IND;
-}
-
-#ifdef PHY_ENABLE_ENERGY_DETECTION
-/*************************************************************************//**
-*****************************************************************************/
-ISR(TRX24_CCA_ED_DONE_vect)
-{
-  phyRxRssi = (int8_t)PHY_ED_LEVEL_REG;
-  phyState = PHY_STATE_ED_DONE;
-}
-#endif
-
-#ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
-/*************************************************************************//**
-*****************************************************************************/
-static uint16_t phyGetRandomNumber(void)
+uint16_t PHY_RandomReq(void)
 {
   uint16_t rnd = 0;
 
-  IRQ_MASK_REG = 0x00;
   phyTrxSetState(TRX_CMD_RX_ON);
 
   for (uint8_t i = 0; i < 16; i += 2)
@@ -307,11 +184,7 @@ static uint16_t phyGetRandomNumber(void)
     rnd |= PHY_RSSI_REG_s.rndValue << i;
   }
 
-  phyTrxSetState(TRX_CMD_TRX_OFF);
-
-  IRQ_STATUS_REG = IRQ_STATUS_CLEAR_VALUE;
-  IRQ_MASK_REG_s.rxEndEn = 1;
-  IRQ_MASK_REG_s.txEndEn = 1;
+  phySetRxState();
 
   return rnd;
 }
@@ -320,10 +193,31 @@ static uint16_t phyGetRandomNumber(void)
 #ifdef PHY_ENABLE_AES_MODULE
 /*************************************************************************//**
 *****************************************************************************/
-static void phyEncryptBlock(void)
+void PHY_EncryptReq(uint8_t *text, uint8_t *key)
 {
 	#warning "Security Mode 0 Not Supported"
-return;
+	return;
+}
+#endif
+
+#ifdef PHY_ENABLE_ENERGY_DETECTION
+/*************************************************************************//**
+*****************************************************************************/
+int8_t PHY_EdReq(void)
+{
+  int8_t ed;
+
+  phyTrxSetState(TRX_CMD_RX_ON);
+
+  IRQ_STATUS_REG_s.ccaEdDone = 1;
+  PHY_ED_LEVEL_REG = 0;
+  while (0 == IRQ_STATUS_REG_s.ccaEdDone);
+
+  ed = (int8_t)PHY_ED_LEVEL_REG + PHY_RSSI_BASE_VAL;
+
+  phySetRxState();
+
+  return ed;
 }
 #endif
 
@@ -331,7 +225,7 @@ return;
 *****************************************************************************/
 static void phySetRxState(void)
 {
-  if (phyIb.rx)
+  if (phyRxState)
     phyTrxSetState(TRX_CMD_RX_AACK_ON);
   else
     phyTrxSetState(TRX_CMD_TRX_OFF);
@@ -339,76 +233,7 @@ static void phySetRxState(void)
 
 /*************************************************************************//**
 *****************************************************************************/
-static void phyHandleSetRequests(void)
-{
-  phyTrxSetState(TRX_CMD_TRX_OFF);
-
-  if (phyIb.request & PHY_REQ_CHANNEL)
-  {
-    PHY_CC_CCA_REG_s.channel = phyIb.channel;
-  }
-
-  if (phyIb.request & PHY_REQ_PANID)
-  {
-    uint8_t *d = (uint8_t *)&phyIb.panId;
-    PAN_ID_0_REG = d[0];
-    PAN_ID_1_REG = d[1];
-  }
-
-  if (phyIb.request & PHY_REQ_ADDR)
-  {
-    uint8_t *d = (uint8_t *)&phyIb.addr;
-    SHORT_ADDR_0_REG = d[0];
-    SHORT_ADDR_1_REG = d[1];
-  }
-
-  if (phyIb.request & PHY_REQ_TX_POWER)
-  {
-    PHY_TX_PWR_REG_s.txPwr = phyIb.txPower;
-  }
-
-#ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
-  if (phyIb.request & PHY_REQ_RANDOM)
-  {
-    uint16_t rnd = phyGetRandomNumber();
-    PHY_RandomConf(rnd);
-  }
-#endif
-
-#ifdef PHY_ENABLE_AES_MODULE
-  if (phyIb.request & PHY_REQ_ENCRYPT)
-  {
-    phyEncryptBlock();
-    PHY_EncryptConf();
-  }
-#endif
-
-#ifdef PHY_ENABLE_ENERGY_DETECTION
-  if (phyIb.request & PHY_REQ_ED)
-  {
-    IRQ_MASK_REG_s.rxEndEn = 0;
-    IRQ_MASK_REG_s.txEndEn = 0;
-    IRQ_MASK_REG_s.ccaEdReadyEn = 1;
-
-    phyTrxSetState(TRX_CMD_RX_ON);
-    PHY_ED_LEVEL_REG = 0;
-    phyState = PHY_STATE_ED_WAIT;
-  }
-#endif
-
-#ifdef PHY_ENABLE_ENERGY_DETECTION
-  if (!(phyIb.request & PHY_REQ_ED))
-    phySetRxState();
-#else
-  phySetRxState();
-#endif
-
-  phyIb.request = PHY_REQ_NONE;
-}
-
-/*************************************************************************//**
-*****************************************************************************/
-static inline void phyTrxSetState(uint8_t state)
+static void phyTrxSetState(uint8_t state)
 {
   TRX_STATE_REG = TRX_CMD_FORCE_TRX_OFF;
   while (TRX_STATUS_TRX_OFF != TRX_STATUS_REG_s.trxStatus);
@@ -421,59 +246,53 @@ static inline void phyTrxSetState(uint8_t state)
 *****************************************************************************/
 void PHY_TaskHandler(void)
 {
-  switch (phyState)
+  if (PHY_STATE_SLEEP == phyState)
+    return;
+
+  if (IRQ_STATUS_REG_s.rxEnd)
   {
-    case PHY_STATE_IDLE:
-    {
-      if (phyIb.request)
-        phyHandleSetRequests();
-    } break;
+    PHY_DataInd_t ind;
+    uint8_t size = TST_RX_LENGTH_REG;
 
-    case PHY_STATE_TX_CONFIRM:
-    {
-      PHY_DataConf(phyTxStatus);
+    for (uint8_t i = 0; i < size + 1/*lqi*/; i++)
+      phyRxBuffer[i] = TRX_FRAME_BUFFER(i);
 
-      while (TRX_CMD_PLL_ON != TRX_STATUS_REG_s.trxStatus);
-      phyState = PHY_STATE_IDLE;
+    ind.data = phyRxBuffer;
+    ind.size = size - PHY_CRC_SIZE;
+    ind.lqi  = phyRxBuffer[size];
+    ind.rssi = (int8_t)PHY_ED_LEVEL_REG + PHY_RSSI_BASE_VAL;
+    PHY_DataInd(&ind);
+
+    while (TRX_STATUS_RX_AACK_ON != TRX_STATUS_REG_s.trxStatus);
+
+    IRQ_STATUS_REG_s.rxEnd = 1;
+    TRX_CTRL_2_REG_s.rxSafeMode = 0;
+    TRX_CTRL_2_REG_s.rxSafeMode = 1;
+  }
+
+  else if (IRQ_STATUS_REG_s.txEnd)
+  {
+    if (TRX_STATUS_TX_ARET_ON == TRX_STATUS_REG_s.trxStatus)
+    {
+      uint8_t status = TRX_STATE_REG_s.tracStatus;
+
+      if (TRAC_STATUS_SUCCESS == status)
+        status = PHY_STATUS_SUCCESS;
+      else if (TRAC_STATUS_CHANNEL_ACCESS_FAILURE == status)
+        status = PHY_STATUS_CHANNEL_ACCESS_FAILURE;
+      else if (TRAC_STATUS_NO_ACK == status)
+        status = PHY_STATUS_NO_ACK;
+      else
+        status = PHY_STATUS_ERROR;
+
       phySetRxState();
-    } break;
-
-    case PHY_STATE_RX_IND:
-    {
-      PHY_DataInd_t ind;
-
-      for (uint8_t i = 0; i < phyRxSize + 1/*lqi*/; i++)
-        phyRxBuffer[i] = TRX_FRAME_BUFFER(i);
-
-      ind.data = phyRxBuffer;
-      ind.size = phyRxSize - 2/*crc*/;
-      ind.lqi  = phyRxBuffer[phyRxSize];
-      ind.rssi = phyRxRssi + PHY_RSSI_BASE_VAL;
-      PHY_DataInd(&ind);
-
-      while (TRX_CMD_PLL_ON != TRX_STATUS_REG_s.trxStatus);
       phyState = PHY_STATE_IDLE;
-      phySetRxState();
-    } break;
 
-#ifdef PHY_ENABLE_ENERGY_DETECTION
-    case PHY_STATE_ED_DONE:
-    {
-      PHY_EdConf(phyRxRssi + PHY_RSSI_BASE_VAL);
+      PHY_DataConf(status);
+    }
 
-      IRQ_STATUS_REG = IRQ_STATUS_CLEAR_VALUE;
-      IRQ_MASK_REG_s.rxEndEn = 1;
-      IRQ_MASK_REG_s.txEndEn = 1;
-      IRQ_MASK_REG_s.ccaEdReadyEn = 0;
-
-      phyState = PHY_STATE_IDLE;
-      phySetRxState();
-    } break;
-#endif
-
-    default:
-      break;
+    IRQ_STATUS_REG_s.txEnd = 1;
   }
 }
 
-#endif // PHY_ATMEGA128RFA1
+#endif // PHY_ATMEGARFA1

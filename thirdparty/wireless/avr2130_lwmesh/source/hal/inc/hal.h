@@ -90,7 +90,7 @@ void HAL_Sleep(uint32_t interval);
  * @brief Hardware timer expiry callback
  * This function is called after hardware timer is expired.
  */
-void hw_expiry_cb(void);
+void hal_hw_expiry_cb(void);
 
 /* Enables the global interrupt */
 #define ENABLE_GLOBAL_IRQ()                  Enable_global_interrupt()

@@ -62,10 +62,24 @@ static void HAL_TimerInit(void);
 *****************************************************************************/
 void HAL_Init(void)
 {
+    irq_initialize_vectors();
+#if SAMD20
+	system_init();
+	delay_init();
+#else
+	sysclk_init();
+	/* Initialize the board.
+	 * The board-specific conf_board.h file contains the configuration of
+	 * the board initialization.
+	 */
+	board_init();    
+#endif  
    /* HAL Timer module initialization */
    HAL_TimerInit();
    /* Sleep manager initialization */
    sm_init();
+   
+   cpu_irq_enable();   
 
 }
 
@@ -86,7 +100,7 @@ void HAL_Sleep(uint32_t interval)
 void HAL_TimerInit(void)
 {
   halTimerIrqCount = 0;
-  set_common_tc_expiry_callback(hw_expiry_cb);
+  set_common_tc_expiry_callback(hal_hw_expiry_cb);
   common_tc_init();
   common_tc_delay(HAL_TIMER_INTERVAL*MS);
 }
@@ -94,7 +108,7 @@ void HAL_TimerInit(void)
 
 /*****************************************************************************
 *****************************************************************************/
-void hw_expiry_cb(void)
+void hal_hw_expiry_cb(void)
 {
   halTimerIrqCount++;
   common_tc_delay(HAL_TIMER_INTERVAL*MS);

@@ -60,7 +60,7 @@
  */
  
 /*- Prototypes -------------------------------------------------------------*/
-void SYS_EncryptReq(uint8_t *text, uint8_t *key);
+void SYS_EncryptReq(uint32_t *text, uint32_t *key);
 void SYS_EncryptConf(void);
 
 /** @} */

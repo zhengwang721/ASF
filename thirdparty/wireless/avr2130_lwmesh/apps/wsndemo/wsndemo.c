@@ -297,15 +297,6 @@ static void appSendData(void)
 #endif
 }
 
-#ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
-/*****************************************************************************
-*****************************************************************************/
-void PHY_RandomConf(uint16_t rnd)
-{
-  srand(rnd);
-}
-#endif
-
 /*************************************************************************//**
 *****************************************************************************/
 static void appInit(void)
@@ -362,7 +353,7 @@ static void appInit(void)
 #endif
 
 #ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
-  PHY_RandomReq();
+  srand(PHY_RandomReq());
 #endif
 
   appState = APP_STATE_SEND;
@@ -438,21 +429,9 @@ static void APP_TaskHandler(void)
 *****************************************************************************/
 int main(void)
 {
-    irq_initialize_vectors();
-#if SAMD20
-	system_init();
-	delay_init();
-#else
-	sysclk_init();
 
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
-	board_init();    
-#endif  
     SYS_Init();
-    cpu_irq_enable();
+
 #if APP_COORDINATOR		
     sio2host_init();
 #endif	

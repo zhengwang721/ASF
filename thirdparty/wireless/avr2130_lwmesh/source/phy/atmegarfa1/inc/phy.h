@@ -1,9 +1,9 @@
 /**
  * \file phy.h
  *
- * \brief ATMEGA128RFA1 PHY interface
+ * \brief ATMEGAxxxRFA1 PHY interface
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014, Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,12 +40,6 @@
  *
  */
 
-/*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
-
 #ifndef _PHY_H_
 #define _PHY_H_
 
@@ -53,7 +47,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "sysConfig.h"
-#include "atmega128rfa1.h"
 
 /** 
  * \ingroup group_phy_rfa1
@@ -61,7 +54,7 @@
  */
  
 /*- Definitions ------------------------------------------------------------*/
-#define PHY_RSSI_BASE_VAL                  (-90)
+#define PHY_RSSI_BASE_VAL                     (-90)
 
 #define PHY_HAS_RANDOM_NUMBER_GENERATOR
 #define PHY_HAS_AES_MODULE
@@ -75,6 +68,14 @@ typedef struct PHY_DataInd_t
   int8_t     rssi;
 } PHY_DataInd_t;
 
+enum
+{
+  PHY_STATUS_SUCCESS                = 0,
+  PHY_STATUS_CHANNEL_ACCESS_FAILURE = 1,
+  PHY_STATUS_NO_ACK                 = 2,
+  PHY_STATUS_ERROR                  = 3,
+};
+
 /*- Prototypes -------------------------------------------------------------*/
 void PHY_Init(void);
 void PHY_SetRxState(bool rx);
@@ -82,7 +83,6 @@ void PHY_SetChannel(uint8_t channel);
 void PHY_SetPanId(uint16_t panId);
 void PHY_SetShortAddr(uint16_t addr);
 void PHY_SetTxPower(uint8_t txPower);
-bool PHY_Busy(void);
 void PHY_Sleep(void);
 void PHY_Wakeup(void);
 void PHY_DataReq(uint8_t *data);
@@ -91,18 +91,15 @@ void PHY_DataInd(PHY_DataInd_t *ind);
 void PHY_TaskHandler(void);
 
 #ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
-void PHY_RandomReq(void);
-void PHY_RandomConf(uint16_t rnd);
+uint16_t PHY_RandomReq(void);
 #endif
 
 #ifdef PHY_ENABLE_AES_MODULE
 void PHY_EncryptReq(uint8_t *text, uint8_t *key);
-void PHY_EncryptConf(void);
 #endif
 
 #ifdef PHY_ENABLE_ENERGY_DETECTION
-void PHY_EdReq(void);
-void PHY_EdConf(int8_t ed);
+int8_t PHY_EdReq(void);
 #endif
 
 /** @} */

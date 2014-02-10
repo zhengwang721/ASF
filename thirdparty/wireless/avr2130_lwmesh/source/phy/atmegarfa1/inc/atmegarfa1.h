@@ -1,9 +1,9 @@
 /**
- * \file atmega256rfr2.h
+ * \file atmegarfa1.h
  *
- * \brief ATMEGA256RFR2 registers description
+ * \brief ATMEGAxxxRFA1 registers description
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C)2014, Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,30 +40,25 @@
  *
  */
 
-/*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
-
-#ifndef _ATMEGA256RFR2_H_
-#define _ATMEGA256RFR2_H_
+#ifndef _ATMEGARFA1_H_
+#define _ATMEGARFA1_H_
 
 /*- Includes ---------------------------------------------------------------*/
 #include <sysTypes.h>
 
 /**
  * \ingroup group_phy
- * \defgroup group_phy_rfa1 ATMEGARFR2 PHY Layer
+ * \defgroup group_phy_rfa1 ATMEGARFA1 PHY Layer
  * The ATmega128RFA1 is a low-power CMOS 8-bit microcontroller based on the AVR
  * enhanced RISC architecture combined with a high data rate transceiver for the 2.4 GHz
  *  ISM band. It is derived from the ATmega1281 microcontroller and the AT86RF231 radio transceiver.
- * \a Refer <A href="http://www.atmel.com/Images/Atmel-8393-MCU_Wireless-ATmega256RFR2-ATmega128RFR2-ATmega64RFR2_Datasheet.pdf">ATMEGARFR2 Data Sheet </A> \b for \b detailed \b information .
+ * \a Refer <A href="http://www.atmel.com/Images/doc8266.pdf">ATMEGARFA1 Data Sheet </A> \b for \b detailed \b information .
  * @{
  */
  
 /*- Definitions ------------------------------------------------------------*/
 #define AES_BLOCK_SIZE                 16
+#define RANDOM_NUMBER_UPDATE_INTERVAL  1 // us
 
 /*- Types ------------------------------------------------------------------*/
 
@@ -139,7 +134,7 @@ enum // tracStatus values
   TRAC_STATUS_SUCCESS_WAIT_FOR_ACK   = 2,
   TRAC_STATUS_CHANNEL_ACCESS_FAILURE = 3,
   TRAC_STATUS_NO_ACK                 = 5,
-  TRAC_STATUS_INVALID                = 7
+  TRAC_STATUS_INVALID                = 7,
 };
 
 // Transceiver Control Register 1
@@ -159,27 +154,28 @@ struct __struct_TRX_CTRL_1_REG
 struct __struct_PHY_TX_PWR_REG
 {
   uint8_t txPwr   : 4; // Transmit Power Setting
-  uint8_t         : 4;
+  uint8_t paLt    : 2; // Power Amplifier Lead Time
+  uint8_t paBufLt : 2; // Power Amplifier Buffer Lead Time
 };
 
 enum // txPwr values
 {
-  TX_PWR_3_2DBM     = 0x00,
-  TX_PWR_2_8DBM     = 0x01,
-  TX_PWR_2_3DBM     = 0x02,
-  TX_PWR_1_8DBM     = 0x03,
-  TX_PWR_1_3DBM     = 0x04,
-  TX_PWR_0_7DBM     = 0x05,
-  TX_PWR_0_DBM      = 0x06,
-  TX_PWR_MIN_1_DBM  = 0x07,
-  TX_PWR_MIN_2_DBM  = 0x08,
-  TX_PWR_MIN_3_DBM  = 0x09,
-  TX_PWR_MIN_4_DBM  = 0x0A,
-  TX_PWR_MIN_5_DBM  = 0x0B,
-  TX_PWR_MIN_7_DBM  = 0x0C,
-  TX_PWR_MIN_9_DBM  = 0x0D,
-  TX_PWR_MIN_12_DBM = 0x0E,
-  TX_PWR_MIN_17_DBM = 0x0F
+  TX_PWR_3_5_DBM      = 0x00,
+  TX_PWR_3_3_DBM      = 0x01,
+  TX_PWR_2_8_DBM      = 0x02,
+  TX_PWR_2_3_DBM      = 0x03,
+  TX_PWR_1_8_DBM      = 0x04,
+  TX_PWR_1_2_DBM      = 0x05,
+  TX_PWR_0_5_DBM      = 0x06,
+  TX_PWR_MIN_0_5_DBM  = 0x07,
+  TX_PWR_MIN_1_5_DBM  = 0x08,
+  TX_PWR_MIN_2_5_DBM  = 0x09,
+  TX_PWR_MIN_3_5_DBM  = 0x0A,
+  TX_PWR_MIN_4_5_DBM  = 0x0B,
+  TX_PWR_MIN_6_5_DBM  = 0x0C,
+  TX_PWR_MIN_8_5_DBM  = 0x0D,
+  TX_PWR_MIN_11_5_DBM = 0x0E,
+  TX_PWR_MIN_16_5_DBM = 0x0F,
 };
 
 enum // paLt values
@@ -187,7 +183,7 @@ enum // paLt values
   TX_PWR_PA_LT_2US = 0,
   TX_PWR_PA_LT_4US = 1,
   TX_PWR_PA_LT_6US = 2,
-  TX_PWR_PA_LT_8US = 3
+  TX_PWR_PA_LT_8US = 3,
 };
 
 enum // paBufLt values
@@ -195,7 +191,7 @@ enum // paBufLt values
   TX_PWR_PA_BUF_LT_0US = 0,
   TX_PWR_PA_BUF_LT_2US = 1,
   TX_PWR_PA_BUF_LT_4US = 2,
-  TX_PWR_PA_BUF_LT_6US = 3
+  TX_PWR_PA_BUF_LT_6US = 3,
 };
 
 // Receiver Signal Strength Indicator Register
@@ -273,7 +269,7 @@ struct __struct_IRQ_MASK_REG
   uint8_t pllUnlockEn  : 1; // PLL Unlock Interrupt Enable
   uint8_t rxStartEn    : 1; // RX_START Interrupt Enable
   uint8_t rxEndEn      : 1; // RX_END Interrupt Enable
-  uint8_t ccaEdReadyEn : 1; // End of ED Measurement Interrupt Enable
+  uint8_t ccaEdDoneEn  : 1; // End of ED Measurement Interrupt Enable
   uint8_t amiEn        : 1; // Address Match Interrupt Enable
   uint8_t txEndEn      : 1; // TX_END Interrupt Enable
   uint8_t awakeEn      : 1; // Awake Interrupt Enable
@@ -288,7 +284,7 @@ struct __struct_IRQ_STATUS_REG
   uint8_t pllUnlock  : 1; // PLL Unlock Interrupt Status
   uint8_t rxStart    : 1; // RX_START Interrupt Status
   uint8_t rxEnd      : 1; // RX_END Interrupt Status
-  uint8_t ccaEdReady : 1; // End of ED Measurement Interrupt Status
+  uint8_t ccaEdDone  : 1; // End of ED Measurement Interrupt Status
   uint8_t ami        : 1; // Address Match Interrupt Status
   uint8_t txEnd      : 1; // TX_END Interrupt Status
   uint8_t awake      : 1; // Awake Interrupt Status
@@ -301,10 +297,9 @@ struct __struct_IRQ_STATUS_REG
 #define VREG_CTRL_REG_s MMIO_REG(0x150, struct __struct_VREG_CTRL_REG)
 struct __struct_VREG_CTRL_REG
 {
-  uint8_t dvregTrim : 2; // Adjust DVDD Supply Voltage
+  uint8_t           : 2;
   uint8_t dvddOk    : 1; // DVDD Supply Voltage Valid
-  uint8_t dvregExt  : 1; // Use External DVDD Regulator
-  uint8_t avregTrim : 2; // Adjust AVDD Supply Voltage
+  uint8_t           : 3;
   uint8_t avddOk    : 1; // AVDD Supply Voltage Valid
   uint8_t avregExt  : 1; // Use External AVDD Regulator
 };
@@ -328,18 +323,6 @@ struct __struct_XOSC_CTRL_REG
 {
   uint8_t xtalTrim : 4; // Crystal Oscillator Load Capacitance Trimming
   uint8_t xtalMode : 4; // Crystal Oscillator Operating Mode
-};
-
-// Channel Control Register 0
-#define CC_CTRL_0_REG   MMIO_REG(0x153, uint8_t)
-
-// Channel Control Register 1
-#define CC_CTRL_1_REG   MMIO_REG(0x154, uint8_t)
-#define CC_CTRL_1_REG_s MMIO_REG(0x154, struct __struct_CC_CTRL_1_REG)
-struct __struct_CC_CTRL_1_REG
-{
-  uint8_t ccBand : 4; // Channel Band
-  uint8_t        : 4;
 };
 
 // Transceiver Receiver Sensitivity Control Register
@@ -455,19 +438,8 @@ struct __struct_CSMA_BE_REG
   uint8_t maxBe : 4; // Maximum Back-off Exponent
 };
 
-// Reduced Power Consumption Control Register
-#define TRX_RPC_REG   MMIO_REG(0x156, uint8_t)
-#define TRX_RPC_REG_s MMIO_REG(0x156, struct __struct_TRX_RPC_REG)
-struct __struct_TRX_RPC_REG
-{
-  uint8_t xahRpcEn  : 1;
-  uint8_t ipanRpcEn : 1;
-  uint8_t           : 1;
-  uint8_t pllRpcEn  : 1;
-  uint8_t pdtRpcEn  : 1;
-  uint8_t rxRpcEn   : 1;
-  uint8_t rxRpcCtrl : 2;
-};
+// Transceiver Digital Test Control Register
+#define TST_CTRL_DIGI_REG MMIO_REG(0x176, uint8_t)
 
 // Transceiver Received Frame Length Register
 #define TST_RX_LENGTH_REG MMIO_REG(0x17B, uint8_t)
@@ -482,6 +454,5 @@ struct __struct_TRX_RPC_REG
 
 #define AES_STATUS_RY           0
 #define AES_STATUS_ER           7
-
 /** @} */
-#endif // _ATMEGA256RFR2_H_
+#endif // _ATMEGARFA1_H_

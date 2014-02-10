@@ -55,32 +55,7 @@
 
 #ifdef NWK_ENABLE_SECURITY
 
-/*- Prototypes -------------------------------------------------------------*/
-#if SYS_SECURITY_MODE == 1
-static void swEncryptReq(uint32_t *text, uint32_t *key);
-#endif
-
 /*- Implementations --------------------------------------------------------*/
-
-/*************************************************************************//**
-*****************************************************************************/
-void SYS_EncryptReq(uint8_t *text, uint8_t *key)
-{
-#if SYS_SECURITY_MODE == 0
-  PHY_EncryptReq(text, key);
-#elif SYS_SECURITY_MODE == 1
-  swEncryptReq((uint32_t *)text, (uint32_t *)key);
-#endif
-}
-
-#if SYS_SECURITY_MODE == 0
-/*************************************************************************//**
-*****************************************************************************/
-void PHY_EncryptConf(void)
-{
-  SYS_EncryptConf();
-}
-#endif
 
 #if SYS_SECURITY_MODE == 1
 /*************************************************************************//**
@@ -101,18 +76,24 @@ static void xtea(uint32_t text[2], uint32_t const key[4])
   text[0] = t0;
   text[1] = t1;
 }
+#endif
 
 /*************************************************************************//**
 *****************************************************************************/
-static void swEncryptReq(uint32_t *text, uint32_t *key)
+void SYS_EncryptReq(uint32_t *text, uint32_t *key)
 {
+#if SYS_SECURITY_MODE == 0
+  PHY_EncryptReq(text, key);
+
+#elif SYS_SECURITY_MODE == 1
   xtea(&text[0], key);
   text[2] ^= text[0];
   text[3] ^= text[1];
   xtea(&text[2], key);
 
+#endif
+
   SYS_EncryptConf();
 }
-#endif // SYS_SECURITY_MODE == 1
 
 #endif // NWK_ENABLE_SECURITY

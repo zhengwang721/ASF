@@ -206,7 +206,7 @@ void nwkSecurityTaskHandler(void)
     else if (NWK_SECURITY_STATE_PROCESS == nwkSecurityActiveFrame->state)
     {
       nwkSecurityActiveFrame->state = NWK_SECURITY_STATE_WAIT;
-      SYS_EncryptReq((uint8_t *)nwkSecurityVector, (uint8_t *)nwkIb.key);
+      SYS_EncryptReq((uint32_t *)nwkSecurityVector, (uint32_t *)nwkIb.key);
     }
 
     return;
