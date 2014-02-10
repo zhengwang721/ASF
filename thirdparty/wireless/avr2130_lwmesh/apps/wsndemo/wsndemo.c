@@ -159,7 +159,7 @@ static bool appNetworkStatus;
 #endif
 
 #if APP_COORDINATOR
-static uint8_t* rx_data;
+static uint8_t rx_data[APP_RX_BUF_SIZE];
 #endif
 
 static AppMessage_t appMsg;
