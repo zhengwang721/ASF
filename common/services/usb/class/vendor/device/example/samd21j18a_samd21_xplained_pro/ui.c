@@ -3,7 +3,7 @@
  *
  * \brief User Interface
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,22 +44,25 @@
 #include <asf.h>
 #include "ui.h"
 
+#define  LED_On()          port_pin_set_output_level(LED_0_PIN, 0)
+#define  LED_Off()         port_pin_set_output_level(LED_0_PIN, 1)
+
 static volatile bool ui_b_loopback = true;
 
 void ui_init(void)
 {
 	// Initialize LEDs
-	LED_On(LED0);
+	LED_On();
 }
 
 void ui_powerdown(void)
 {
-	LED_Off(LED0);
+	LED_Off();
 }
 
 void ui_wakeup(void)
 {
-	LED_On(LED0);
+	LED_On();
 }
 
 void ui_loop_back_state(bool b_started)
@@ -70,22 +73,22 @@ void ui_loop_back_state(bool b_started)
 void ui_process(uint16_t framenumber)
 {
 	if (ui_b_loopback) {
-		LED_On(LED0);
+		LED_On();
 		return;
 	}
 
 	if ((framenumber % 1000) == 0) {
-		LED_On(LED0);
+		LED_On();
 	}
 	if ((framenumber % 1000) == 500) {
-		LED_Off(LED0);
+		LED_Off();
 	}
 }
 
 /**
  * \defgroup UI User Interface
  *
- * Human interface on SAM4L8 Xplained Pro:
+ * Human interface on SAMD21-XPlain:
  * - LED0 blinks when USB host has checked and enabled Vendor interface
  * - LED0 is on when
  *   - USB is in IDLE mode and Vendor interface is not enabled by Host
