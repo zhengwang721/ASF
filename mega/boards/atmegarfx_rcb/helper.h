@@ -66,7 +66,6 @@ void update_latch_status(void);
 typedef enum
 {
     PLAIN,
-    KEYRC_BOARD,
     SENSOR_TERM_BOARD    
 } board_t;
 

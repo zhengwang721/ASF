@@ -79,6 +79,7 @@
 #include "sys.h"
 #include "nwk.h"
 #include "sysTimer.h"
+# include "sleep_mgr.h"
 #if APP_COORDINATOR
 #include "sio2host.h"
 #endif
@@ -395,7 +396,7 @@ static void APP_TaskHandler(void)
     case APP_STATE_SLEEP:
     {
 
-      HAL_Sleep(APP_SENDING_INTERVAL/1000);
+      sm_sleep(APP_SENDING_INTERVAL/1000);
 	  appState = APP_STATE_WAKEUP;
     } break;
 

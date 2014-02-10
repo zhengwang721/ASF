@@ -109,12 +109,6 @@ void HAL_Init(void);
  */
 void HAL_Delay(uint32_t us);
 
-/**
- * @brief Triggers the sleep functionality
- * This function is called to trigger the TRX sleep for the specified interval
- * @param[in] interval time value 
- */
-void HAL_Sleep(uint32_t interval);
 
 /**
  * @brief Hardware timer expiry callback

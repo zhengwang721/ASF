@@ -90,11 +90,6 @@ void HAL_Delay(uint32_t us)
   delay_us(us);
 }
 
-void HAL_Sleep(uint32_t interval)
-{
-  /* Call sleep manager routine */
-  sm_sleep(interval);
-}
 
 
 void HAL_TimerInit(void)
