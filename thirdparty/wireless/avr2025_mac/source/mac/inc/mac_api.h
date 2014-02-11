@@ -4,7 +4,7 @@
  *
  * @brief MAC API for IEEE 802.15.4-2006
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
