@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 TCC - Enhanced Timer Counter Driver
+ * \brief SAM D21 TCC - Timer Counter for Control Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -45,7 +45,7 @@
 #define TCC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_tcc_group SAM D21 Enhanced Timer/Counter Driver (TCC)
+ * \defgroup asfdoc_sam0_tcc_group SAM D21 Timer/Counter for Control Driver (TCC)
  *
  * This driver for SAM D21 devices provides an interface for the configuration
  * and management of the timer modules within the device, for waveform
