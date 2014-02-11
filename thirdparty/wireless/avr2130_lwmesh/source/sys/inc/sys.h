@@ -55,7 +55,7 @@
 #include "nwk.h"
 
  /**
-  * \defgroup group_lwmesh Light Weight Mesh 
+  * \defgroup group_lwmesh Light Weight Mesh  v2.0
   *      Lightweight Mesh software stack is an easy to use proprietary low power wireless mesh network protocol. 
   * 
   */
