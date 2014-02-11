@@ -324,16 +324,21 @@ static inline void _dbg_putstr(const char *str, size_t length)
  */
 static void _dbg_interrupt_handler(uint8_t dummy)
 {
-	// The only enabled interrupt is DRE, so just output next byte
-	sercom_uart->DATA.reg = dbg_buffer[buffer_tail++];
+	uint8_t data;
+
+	// First, read out next byte to send
+	data = dbg_buffer[buffer_tail++];
 	buffer_tail &= DBG_BUFFER_MASK;
 
-	// Have all pending bytes in buffer been sent?
+	// Disable DRE if it was the last byte to send
 	if (buffer_tail == buffer_head) {
 		sercom_uart->INTENCLR.reg = SERCOM_USART_INTFLAG_DRE;
 	}
 
-	// Handle buffer space request
+	// Must send _after_ disabling DRE, or we risk
+	// instantly getting another interrupt.
+	sercom_uart->DATA.reg = data;
+
 	if (requested_space) {
 		if (--requested_space == 0) {
 #if defined(__FREERTOS__) || defined(__DOXYGEN__)
