@@ -65,6 +65,4 @@ typedef enum button_state_tag
 
 
 
-#define LED0    LED_4
-
 #endif /* CONF_BOARD_H */
