@@ -20,7 +20,8 @@
 		<build type="header-file" value="quick_start_basic/qs_spi_master_vec_basic.h"/>
 		<build type="module-config" subtype="path" value="module-config"/>
 		<build type="module-config" subtype="required-header-file" value="conf_spi_master_vec.h"/>
-
+		<build type="module-config" subtype="required-header-file" value="conf_spi.h"/>
+		
 		<build type="include-path" value="."/>
 		<device-support value="samd20"/>
 		<device-support value="samd21"/>
