@@ -738,6 +738,8 @@ static void _uhd_connect(struct usb_module *module_inst)
 	uhd_sleep_mode(UHD_STATE_IDLE);
 	uhd_suspend_start = 0;
 	uhd_resume_start = 0;
+	/* Clean up pipes when error in enumeration */
+	uhd_ep_free(0, 0xFF);
 	uhc_notify_connection(true);
 }
 
@@ -860,6 +862,8 @@ void uhd_enable(void)
 #if USB_VBUS_EIC
 	_usb_vbus_config();
 	if (is_usb_vbus_high()) {
+		/* Force Vbus interrupt when Vbus is always high */
+		_uhd_vbus_handler();
 		usb_host_enable(&dev);
 		uhd_sleep_mode(UHD_STATE_DISCONNECT);
 	} else {
@@ -1160,8 +1164,10 @@ static void _uhd_ep0_error(struct usb_module *module_inst, void *pointer)
 		break;
 	case USB_STATUS_PIPE_DAPIDER:
 	case USB_STATUS_PIPE_PIDER:
-	default:
 		uhd_error = UHD_TRANS_PIDFAILURE;
+		break;
+	default:
+		uhd_error = UHD_TRANS_TIMEOUT;
 		break;
 	}
 
@@ -1447,8 +1453,11 @@ static void _uhd_ep_error(struct usb_module *module_inst, void *pointer)
 		break;
 	case USB_STATUS_PIPE_DAPIDER:
 	case USB_STATUS_PIPE_PIDER:
-	default:
 		uhd_error = UHD_TRANS_PIDFAILURE;
+		break;
+	default:
+		uhd_error = UHD_TRANS_TIMEOUT;
+		break;
 	}
 
 	_uhd_ep_abort_pipe(p_callback_para->pipe_num, uhd_error);
