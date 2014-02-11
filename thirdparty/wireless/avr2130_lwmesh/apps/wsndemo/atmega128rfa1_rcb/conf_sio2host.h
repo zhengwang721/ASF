@@ -47,7 +47,7 @@
  */
 //! @{
 #define SERIAL_RX_BUF_SIZE_HOST    156
-#define USART_HOST                (&USARTA0)
+#define USART_HOST                (&USARTA1)
 #define USART_HOST_BAUDRATE       9600
 #define USART_HOST_CHAR_LENGTH    USART_CHSIZE_8BIT_gc
 #define USART_HOST_PARITY         USART_PMODE_DISABLED_gc

@@ -6,7 +6,6 @@
  * This file contains definitions and services related to the features of the
  * ATmega256RFR2 Xplained Pro board.
  *
- * To use this board, define BOARD= ATMEGA256RFR2_XPLAINED_PRO.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -52,7 +51,6 @@
 #include "helper.h"
 
 
-
 #if AVR8_PART_IS_DEFINED(ATmega128RFA1)
 #define MCU_SOC_NAME        "ATMEGA128RFA1"
 
@@ -75,6 +73,68 @@
 
 
 #ifdef KEY_RC_BOARD
+
+
+/* Enumerations used to identify ADC Channels */
+typedef enum adc_channel_tag
+{
+	X_AXIS,
+	Y_AXIS,
+	Z_AXIS,
+	ADC_REF
+} SHORTENUM adc_channel_t;
+
+/* Enumerations states for enabling or disabling the Accelerometer */
+typedef enum acc_status_tag
+{
+	ACC_OFF,
+	ACC_ON
+} SHORTENUM acc_status_t;
+
+
+
+
+
+/* === Externals ============================================================*/
+
+
+/* === Macros ===============================================================*/
+
+#define NO_OF_LEDS                      (5)
+
+#define KEY_RC_IO_MASK			0XDC
+#define KEY_RC_IO_VAL           0XDC
+/* Definitions to identify buttons, reference HDMI specification */
+#define BUTTON_UNKNOWN            0x00000000
+#define BUTTON_F2_RED             0x00000001
+#define BUTTON_F3_GREEN           0x00000002
+#define BUTTON_F4_YELLOW          0x00000004
+#define BUTTON_F1_BLUE            0x00000008
+#define BUTTON_SELECT             0x00000010
+#define BUTTON_NUMBER_0           0x00000020
+#define BUTTON_POWER_OFF_FUNCTION 0x00000040
+#define BUTTON_NUMBER_1           0x00000200
+#define BUTTON_NUMBER_2           0x00000400
+#define BUTTON_NUMBER_3           0x00000800
+#define BUTTON_NUMBER_4           0x00001000
+#define BUTTON_NUMBER_5           0x00002000
+#define BUTTON_NUMBER_6           0x00004000
+#define BUTTON_NUMBER_7           0x00008000
+#define BUTTON_NUMBER_8           0x00010000
+#define BUTTON_NUMBER_9           0x00020000
+#define BUTTON_UP                 0x00040000
+#define BUTTON_LEFT               0x00080000
+#define BUTTON_ENTER              0x00100000
+#define BUTTON_RIGHT              0x00200000
+#define BUTTON_DOWN               0x00400000
+#define BUTTON_LEFT_UP            0x00800000
+#define BUTTON_LEFT_DOWN          0x01000000
+#define BUTTON_RIGHT_UP           0x02000000
+#define BUTTON_RIGHT_DOWN         0x04000000
+
+
+#define button_id_t             uint32_t
+#define NO_OF_BUTTONS           (24)
 
 /* Key RC Button Specific macros */
 #define MAX_KEY_SCANS           6
@@ -163,6 +223,15 @@
 /* Clear all button IRQ flags */
 #define CLEAR_ALL_BUTTON_IRQ_FLAGS()    BUTTON_FLAG_REG = BUTTON_1_ISR_FLAG | BUTTON_2_ISR_FLAG | BUTTON_3_ISR_FLAG
 
+#define LED0                 0
+#define LED1                 1
+#define LED2                 2
+#define LED3                 3
+#define LED4                 4
+
+
+#define LED_COUNT             5
+
 /*
  * Macros controlling the latch
  */
@@ -181,6 +250,8 @@
 
 #else /* KEY_RC_BOARD */
       
+#define BB_SIO_MASK  0XD0
+#define BB_SIO_VAL 	 0XC0 
 /*
  * PINs where buttons are connected
  */

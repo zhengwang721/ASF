@@ -50,12 +50,13 @@
 #include "compiler.h"
 #include "conf_board.h"
 #include "board.h"
-# include "gpio.h"
-# include "led.h"
+#include "gpio.h"
+#include "led.h"
 
 
 
 #ifdef KEY_RC_BOARD
+#define button_id_t             uint32_t
 void pulse_latch(void);
 void set_button_pins_for_normal_mode(void);
 void led_ctrl(led_id_t led_no, led_action_t led_setting);

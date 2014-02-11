@@ -58,6 +58,9 @@
  * \defgroup group_lwmesh_sys_timer LWMesh System Services - Timer
  * @{
  */
+
+ #define SYS_TIMER_INTERVAL      10ul // ms
+ #define MS 1000
  
 /*- Types ------------------------------------------------------------------*/
 typedef enum SYS_TimerMode_t
@@ -84,6 +87,7 @@ void SYS_TimerStart(SYS_Timer_t *timer);
 void SYS_TimerStop(SYS_Timer_t *timer);
 bool SYS_TimerStarted(SYS_Timer_t *timer);
 void SYS_TimerTaskHandler(void);
+void SYS_HwExpiry_Cb(void);
 
 /** @} */
 #endif // _SYS_TIMER_H_
