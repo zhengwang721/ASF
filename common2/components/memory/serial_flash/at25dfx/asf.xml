@@ -9,6 +9,8 @@
 		<build type="header-file" subtype="api" value="at25dfx.h"/>
 		<build type="header-file" value="quick_start_basic/qs_at25dfx_basic.h"/>
 		<build type="include-path" value="."/>
+		<build type="module-config" subtype="path" value="module_config"/>
+		<build type="module-config" subtype="required-header-file" value="conf_spi.h"/>
 		<!-- The two following tags must be copied into the driver modules (for Studio):
 		<build type="doxygen-entry-point" value="asfdoc_common2_at25dfx_group"/>
 		<build type="doxygen-quick-start" value="asfdoc_common2_at25dfx_exqsg"/>
