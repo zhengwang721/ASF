@@ -49,8 +49,8 @@
  *
  * \page appdoc_preface Overview
  * This application demonstrates how to configure the ADC in a sleepwalking
- * operation, where the device supply voltage is measured at a fixed interval,
- * but the device is not woken from sleep  until the measured value is below
+ * operation, where the input voltage is measured at a fixed interval,
+ * but the device is not woken from sleep until the measured value is below
  * a given threshold; in this application 0.5 Volts.
  */
 
@@ -71,11 +71,10 @@
  * a given threshold; in this application 0.5 Volts.
  *
  * \section appdoc_sam0_adc_sleepwalking_setup Hardware Setup
- * This application use AIN0 as ADC input channel, so connect GND to PA02 in boad.
- * Because the measured voltage is lower than 0.5V, then the device will start toggling
- * a pin to signal that the low voltage condition has happened.
- * To trigger it again the device need to be reset, as the application will be
- * stuck in an infinite loop toggling the pin.
+ * This application use AIN0 as ADC input channel.
+ * When the measured voltage is lower than 0.5V, then the device will start toggling
+ * the led pin to signal that the low voltage condition has happened.
+ * Connect the PA02(EXT3 pin3) to GND in board to trigger it.
  *
  * If debugging it is also possible to start a debug session and place a
  * breakpoint in the window callback that will trigger whenever the voltage
