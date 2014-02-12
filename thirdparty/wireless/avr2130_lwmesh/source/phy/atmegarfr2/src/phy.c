@@ -269,11 +269,11 @@ static void phySetRxState(void)
 *****************************************************************************/
 static void phyTrxSetState(uint8_t state)
 {
-  TRX_STATE_REG = TRX_CMD_FORCE_TRX_OFF;
-  while (TRX_STATUS_TRX_OFF != TRX_STATUS_REG_s.trxStatus);
+  do{TRX_STATE_REG = TRX_CMD_FORCE_TRX_OFF;
+  }while (TRX_STATUS_TRX_OFF != TRX_STATUS_REG_s.trxStatus);
 
-  TRX_STATE_REG = state;
-  while (state != TRX_STATUS_REG_s.trxStatus);
+  do{TRX_STATE_REG = state;
+  }while (state != TRX_STATUS_REG_s.trxStatus);
 }
 
 /*************************************************************************//**
