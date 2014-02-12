@@ -56,7 +56,7 @@
  * USB low-level driver for USB device mode
  * @{
  */
-// Check USB device configuration 
+// Check USB device configuration
 #ifdef USB_DEVICE_HS_SUPPORT
 #  error The High speed mode is not supported on this part, please remove USB_DEVICE_HS_SUPPORT in conf_usb.h
 #endif
@@ -103,7 +103,6 @@ static inline void udd_wait_clock_ready(void)
 {
 
 	if (UDD_CLOCK_SOURCE == SYSTEM_CLOCK_SOURCE_DPLL) {
-
 #define DPLL_READY_FLAG (SYSCTRL_DPLLSTATUS_ENABLE | \
 		SYSCTRL_DPLLSTATUS_CLKRDY | SYSCTRL_DPLLSTATUS_LOCK)
 
@@ -111,13 +110,14 @@ static inline void udd_wait_clock_ready(void)
 	}
 
 	if (UDD_CLOCK_SOURCE == SYSTEM_CLOCK_SOURCE_DFLL) {
-		
 #define DFLL_READY_FLAG (SYSCTRL_PCLKSR_DFLLRDY | \
 		SYSCTRL_PCLKSR_DFLLLCKF | SYSCTRL_PCLKSR_DFLLLCKC)
 
 		/* In USB recovery mode the status is not checked */
 		if (!(SYSCTRL->DFLLCTRL.reg & SYSCTRL_DFLLCTRL_USBCRM)) {
 			while((SYSCTRL->PCLKSR.reg & DFLL_READY_FLAG) != DFLL_READY_FLAG);
+		} else {
+			while((SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY) != SYSCTRL_PCLKSR_DFLLRDY);
 		}
 	}
 
@@ -182,7 +182,7 @@ static void udd_sleep_mode(enum udd_usb_state_enum new_state)
  *
  * @{
  */
- 
+
 /**
  * \brief Buffer to store the data received on control endpoint (SETUP/OUT endpoint 0)
  *
@@ -227,7 +227,7 @@ static uint16_t udd_ctrl_payload_nb_trans;
  *
  * @{
  */
- 
+
 /**
  * \brief Buffer to store the data received on bulk/interrupt endpoints
  *
@@ -286,7 +286,7 @@ static udd_ep_job_t* udd_ep_get_job(udd_ep_id_t ep)
 }
 
 /**
- * \brief     Endpoint IN process, continue to send packets or zero length packet 
+ * \brief     Endpoint IN process, continue to send packets or zero length packet
  * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
  */
 static void udd_ep_trans_in_next(void* pointer)
@@ -336,7 +336,7 @@ static void udd_ep_trans_in_next(void* pointer)
 }
 
 /**
- * \brief     Endpoint OUT process, continue to receive packets or zero length packet 
+ * \brief     Endpoint OUT process, continue to receive packets or zero length packet
  * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
  */
 static void udd_ep_trans_out_next(void* pointer)
@@ -586,7 +586,7 @@ bool udd_ep_wait_stall_clear(udd_ep_id_t ep, udd_callback_halt_cleared_t callbac
 }
 
 /**
- * \brief Control Endpoint stall sending data 
+ * \brief Control Endpoint stall sending data
  */
 static void udd_ctrl_stall_data(void)
 {
@@ -784,7 +784,7 @@ static void udd_ctrl_out_received(void* pointer)
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
 
 	if(ep_callback_para->received_bytes == 0) {
-		usb_device_endpoint_setup_buffer_job(&usb_device,udd_ctrl_buffer);
+		usb_device_endpoint_read_buffer_job(&usb_device,0,udd_ctrl_buffer,USB_DEVICE_EP_CTRL_SIZE);
 		return;
 	}
 
@@ -847,12 +847,11 @@ static void udd_ctrl_out_received(void* pointer)
 		/* Reinitialize reception on payload buffer */
 		udd_ctrl_payload_nb_trans = 0;
 	}
-	/* Initialize buffer size and enable OUT bank */
-	usb_device_endpoint_setup_buffer_job(&usb_device,udd_ctrl_buffer);
+	usb_device_endpoint_read_buffer_job(&usb_device,0,udd_ctrl_buffer,USB_DEVICE_EP_CTRL_SIZE);
 }
 
 /**
- * \internal 
+ * \internal
  * \brief     Endpoint 0 (control) SETUP received callback
  * \param[in] module_inst pointer to USB module instance
  * \param[in] pointer Pointer to the endpoint transfer status parameter struct from driver layer.
@@ -888,7 +887,8 @@ static void _usb_ep0_on_setup(struct usb_module *module_inst, void* pointer)
 				udd_ctrl_prev_payload_nb_trans = 0;
 				udd_ctrl_payload_nb_trans = 0;
 				udd_ep_control_state = UDD_EPCTRL_DATA_OUT;
-				udd_ctrl_out_received(pointer);
+				/* Initialize buffer size and enable OUT bank */
+				usb_device_endpoint_read_buffer_job(&usb_device,0,udd_ctrl_buffer,USB_DEVICE_EP_CTRL_SIZE);
 			}
 		}
 	}
@@ -1035,7 +1035,6 @@ static void _usb_device_lpm_suspend(struct usb_module *module_inst, void *pointe
 		UDC_REMOTEWAKEUP_LPM_DISABLE();
 	}
 	UDC_SUSPEND_LPM_EVENT();
-	
 }
 #endif
 
@@ -1211,7 +1210,7 @@ void udd_enable(void)
 		/* USB Attach */
 		_uhd_vbus_handler();
 	}
-#else 
+#else
 	// No VBus detect, assume always high
 # ifndef USB_DEVICE_ATTACH_AUTO_DISABLE
 	udd_attach();
