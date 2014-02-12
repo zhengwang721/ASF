@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project force-caption="true" force-description="true" caption="ZID Terminal Device application" id="thirdparty.wireless.avr2102_rf4control.apps.zid.dev.terminal_hid.xmega_a3bu_xplained_rz600rf231">
+	<project force-caption="true" force-description="true" caption="ZID Terminal Device application" id="thirdparty.wireless.avr2102_rf4control.apps.zid.dev.terminal.xmega_a3bu_xplained_rz600rf231">
 		<info type="description" value="summary">
 		The RF4CE ZID Device Profile running on the atxmega256a3bu xplained
 		</info>
@@ -19,7 +19,7 @@
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf231"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.mac.api" value="no" />
 		<config name="config.common.drivers.nvm.mem_type" value="no_extmem"/>
-        <require idref="thirdparty.wireless.avr2102_rf4control.apps.zid.dev.terminal_hid"/>
+        <require idref="thirdparty.wireless.avr2102_rf4control.apps.zid.dev.terminal"/>
 		<require idref="board.xmega_a3bu_xplained"/>
 		<generator value="iarew"/>
 		<generator value="avrgcc"/>
