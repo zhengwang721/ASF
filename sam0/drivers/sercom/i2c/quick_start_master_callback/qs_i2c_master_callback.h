@@ -83,23 +83,23 @@
  *
  * \subsection asfdoc_sam0_sercom_i2c_master_callback_use_case_setup_workflow Workflow
  * -# Configure and enable module.
- *  \snippet qs_i2c_master_callback.c init_conf
+ *    \snippet qs_i2c_master_callback.c config
  *  -# Create and initialize configuration structure.
- *   \snippet qs_i2c_master_callback.c init_conf
+ *     \snippet qs_i2c_master_callback.c init_conf
  *  -# Change settings in the configuration.
- *   \snippet qs_i2c_master_callback.c conf_change
+ *     \snippet qs_i2c_master_callback.c conf_change
  *  -# Initialize the module with the set configurations.
- *   \snippet qs_i2c_master_callback.c init_module
+ *     \snippet qs_i2c_master_callback.c init_module
  *  -# Enable the module.
- *   \snippet qs_i2c_master_callback.c enable_module
+ *     \snippet qs_i2c_master_callback.c enable_module
  * -# Configure callback functionality.
- *  \snippet qs_i2c_master_callback.c config_callback
+ *    \snippet qs_i2c_master_callback.c config_callback
  *  -# Register write complete callback.
- *   \snippet qs_i2c_master_callback.c callback_reg
+ *     \snippet qs_i2c_master_callback.c callback_reg
  *  -# Enable write complete callback.
- *   \snippet qs_i2c_master_callback.c callback_en
+ *     \snippet qs_i2c_master_callback.c callback_en
  * -# Create a packet to send to slave.
- *  \snippet qs_i2c_master_callback.c packet
+ *    \snippet qs_i2c_master_callback.c packet
  *
  * \section asfdoc_sam0_sercom_i2c_master_callback_use_case_implementation Implementation
  * \subsection asfdoc_sam0_sercom_i2c_master_callback_use_case_code Code
@@ -107,9 +107,9 @@
  * \snippet qs_i2c_master_callback.c while
  * \subsection asfdoc_sam0_sercom_i2c_master_callback_use_case_implementation_workflow Workflow
  * -# Write packet to slave.
- *  \snippet qs_i2c_master_callback.c write_packet
+ *    \snippet qs_i2c_master_callback.c write_packet
  * -# Infinite while loop, while waiting for interaction with slave.
- *  \snippet qs_i2c_master_callback.c while
+ *    \snippet qs_i2c_master_callback.c while
  *
  * \section asfdoc_sam0_sercom_i2c_master_callback_use_case_callback Callback
  * Each time a packet is sent, the callback function will be called.
@@ -117,9 +117,9 @@
  * \subsection asfdoc_sam0_sercom_i2c_master_callback_use_case_callback_workflow Workflow
  * - Write complete callback:
  *  -# Send every other packet in reversed order.
- *   \snippet qs_i2c_master_callback.c revert_order
+ *     \snippet qs_i2c_master_callback.c revert_order
  *  -# Write new packet to slave.
- *   \snippet qs_i2c_master_callback.c write_next
+ *     \snippet qs_i2c_master_callback.c write_next
  *
  */
 

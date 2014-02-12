@@ -77,21 +77,21 @@
  *
  * \subsection asfdoc_sam0_rtc_calendar_basic_use_case_cal_basic_use_workflow Workflow
  * -# Make configuration structure.
- *  \snippet qs_rtc_calendar_basic.c set_conf
+ *    \snippet qs_rtc_calendar_basic.c set_conf
  * -# Fill the configuration structure with the default driver configuration.
- *  \note This should always be performed before using the configuration
- *        struct to ensure that all values are initialized to known default
- *        settings.
+ *    \snippet qs_rtc_calendar_basic.c get_default
+ *    \note This should always be performed before using the configuration
+ *          struct to ensure that all values are initialized to known default
+ *          settings.
  *
- *  \snippet qs_rtc_calendar_basic.c get_default
  * -# Make time structure for alarm and set with default and desired values.
- *  \snippet qs_rtc_calendar_basic.c time_struct
+ *    \snippet qs_rtc_calendar_basic.c time_struct
  * -# Change configurations as desired.
- *  \snippet qs_rtc_calendar_basic.c set_config
+ *    \snippet qs_rtc_calendar_basic.c set_config
  * -# Initialize module.
- *  \snippet qs_rtc_calendar_basic.c init_rtc
+ *    \snippet qs_rtc_calendar_basic.c init_rtc
  * -# Enable module
- *  \snippet qs_rtc_calendar_basic.c enable
+ *    \snippet qs_rtc_calendar_basic.c enable
  *
  * \section asfdoc_sam0_rtc_calendar_basic_use_case_count_basic_implement Implementation
  * Add the following to \c main().
@@ -99,11 +99,11 @@
  *
  * \subsection asfdoc_sam0_rtc_calendar_basic_use_case_count_basic_workflow Workflow
  * -# Start an infinite loop, to continuously poll for a RTC alarm match.
- * \snippet qs_rtc_calendar_basic.c main_loop
+ *    \snippet qs_rtc_calendar_basic.c main_loop
  * -# Check to see if a RTC alarm match has occurred.
- * \snippet qs_rtc_calendar_basic.c check_alarm_match
+ *    \snippet qs_rtc_calendar_basic.c check_alarm_match
  * -# Once an alarm match occurs, perform the desired user action.
- * \snippet qs_rtc_calendar_basic.c alarm_match_action
+ *    \snippet qs_rtc_calendar_basic.c alarm_match_action
  * -# Clear the alarm match, so that future alarms may occur.
- * \snippet qs_rtc_calendar_basic.c clear_alarm_match
+ *    \snippet qs_rtc_calendar_basic.c clear_alarm_match
  */

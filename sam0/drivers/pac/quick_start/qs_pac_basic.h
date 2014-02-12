@@ -70,29 +70,29 @@
  *
  * \subsection asfdoc_sam0_pac_basic_use_case_flow Workflow
  * -# Configure some GPIO port pins for input and output.
- *  \snippet qs_pac_basic.c init
+ *    \snippet qs_pac_basic.c init
  * -# Lock peripheral access for the PORT module; attempting to update the
  *    module while it is in a protected state will cause a Hard Fault exception.
- *  \snippet qs_pac_basic.c init_lock
+ *    \snippet qs_pac_basic.c init_lock
  * -# Enable global interrupts.
- *  \snippet qs_pac_basic.c enable_interrupts
+ *    \snippet qs_pac_basic.c enable_interrupts
  * -# Loop to wait for a button press before continuing.
- *  \snippet qs_pac_basic.c button_press
+ *    \snippet qs_pac_basic.c button_press
  * -# Enter a critical section, so that the PAC module can be unlocked safely
  *    and the peripheral manipulated without the possibility of an interrupt
  *    modifying the protected module's state.
- *  \snippet qs_pac_basic.c disable_interrupts
+ *    \snippet qs_pac_basic.c disable_interrupts
  * -# Unlock the PORT peripheral registers.
- *  \snippet qs_pac_basic.c unlock_perph
+ *    \snippet qs_pac_basic.c unlock_perph
  * -# Toggle pin 11, and clear edge detect flag.
- *  \snippet qs_pac_basic.c alter_config
+ *    \snippet qs_pac_basic.c alter_config
  * -# Lock the PORT peripheral registers.
- *  \snippet qs_pac_basic.c lock_perph
+ *    \snippet qs_pac_basic.c lock_perph
  * -# Exit the critical section to allow interrupts to function normally again.
- *  \snippet qs_pac_basic.c enable_interrupts_2
+ *    \snippet qs_pac_basic.c enable_interrupts_2
  * -# Enter an infinite while loop once the module state has been modified
  *    successfully.
- *  \snippet qs_pac_basic.c inf_loop
+ *    \snippet qs_pac_basic.c inf_loop
  */
 
 

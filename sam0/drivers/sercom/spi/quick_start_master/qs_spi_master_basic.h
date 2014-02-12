@@ -87,37 +87,37 @@
  *
  * \section asfdoc_sam0_sercom_spi_master_basic_use_workflow Workflow
  * -# Initialize system.
- *  \snippet qs_spi_master_basic.c system_init
+ *    \snippet qs_spi_master_basic.c system_init
  * -# Setup the SPI:
- *  \snippet qs_spi_master_basic.c run_config
+ *    \snippet qs_spi_master_basic.c run_config
  *   -# Create configuration struct.
- *     \snippet qs_spi_master_basic.c config
+ *      \snippet qs_spi_master_basic.c config
  *   -# Create peripheral slave configuration struct.
- *     \snippet qs_spi_master_basic.c slave_config
+ *      \snippet qs_spi_master_basic.c slave_config
  *   -# Create peripheral slave software device instance struct.
- *     \snippet qs_spi_master_basic.c slave_dev_inst
+ *      \snippet qs_spi_master_basic.c slave_dev_inst
  *   -# Get default peripheral slave configuration.
- *     \snippet qs_spi_master_basic.c slave_conf_defaults
+ *      \snippet qs_spi_master_basic.c slave_conf_defaults
  *   -# Set Slave Select pin.
- *     \snippet qs_spi_master_basic.c ss_pin
+ *      \snippet qs_spi_master_basic.c ss_pin
  *   -# Initialize peripheral slave software instance with configuration.
- *     \snippet qs_spi_master_basic.c slave_init
+ *      \snippet qs_spi_master_basic.c slave_init
  *   -# Get default configuration to edit.
- *     \snippet qs_spi_master_basic.c conf_defaults
+ *      \snippet qs_spi_master_basic.c conf_defaults
  *   -# Set mux setting E.
- *     \snippet qs_spi_master_basic.c mux_setting
+ *      \snippet qs_spi_master_basic.c mux_setting
  *   -# Set pinmux for pad 0 (data in (MISO) on extension header 1, pin 17).
- *     \snippet qs_spi_master_basic.c di
+ *      \snippet qs_spi_master_basic.c di
  *   -# Set pinmux for pad 1 as unused, so the pin can be used for other purposes.
- *     \snippet qs_spi_master_basic.c ss
+ *      \snippet qs_spi_master_basic.c ss
  *   -# Set pinmux for pad 2 (data out (MOSI) on extension header 1, pin 16).
- *     \snippet qs_spi_master_basic.c do
+ *      \snippet qs_spi_master_basic.c do
  *   -# Set pinmux for pad 3 (SCK on extension header 1, pin 18).
- *     \snippet qs_spi_master_basic.c sck
+ *      \snippet qs_spi_master_basic.c sck
  *   -# Initialize SPI module with configuration.
- *     \snippet qs_spi_master_basic.c init
+ *      \snippet qs_spi_master_basic.c init
  *   -# Enable SPI module.
- *     \snippet qs_spi_master_basic.c enable
+ *      \snippet qs_spi_master_basic.c enable
  *
  * \section asfdoc_sam0_sercom_spi_master_basic_use_case Use Case
  * \subsection asfdoc_sam0_sercom_spi_master_basic_use_case_code Code
@@ -125,12 +125,11 @@
  * \snippet qs_spi_master_basic.c main_use_case
  * \subsection asfdoc_sam0_sercom_spi_master_basic_use_case_workflow Workflow
  * -# Select slave.
- *  \snippet qs_spi_master_basic.c select_slave
+ *    \snippet qs_spi_master_basic.c select_slave
  * -# Write buffer to SPI slave.
- *  \snippet qs_spi_master_basic.c write
+ *    \snippet qs_spi_master_basic.c write
  * -# Deselect slave.
- *  \snippet qs_spi_master_basic.c deselect_slave
+ *    \snippet qs_spi_master_basic.c deselect_slave
  * -# Infinite loop.
- *  \snippet qs_spi_master_basic.c inf_loop
- *
+ *    \snippet qs_spi_master_basic.c inf_loop
  */

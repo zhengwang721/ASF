@@ -72,31 +72,31 @@
  * \subsection asfdoc_sam0_extint_callback_setup_flow Workflow
  * -# Create an EXTINT module channel configuration struct, which can be filled
  *    out to adjust the configuration of a single external interrupt channel.
- *  \snippet qs_extint_callback.c setup_1
+ *    \snippet qs_extint_callback.c setup_1
  * -# Initialize the channel configuration struct with the module's default
  *    values.
+ *    \snippet qs_extint_callback.c setup_2
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_extint_callback.c setup_2
  * -# Adjust the configuration struct to configure the pin MUX (to route the
  *    desired physical pin to the logical channel) to the board button, and to
  *    configure the channel to detect both rising and falling edges.
- *  \snippet qs_extint_callback.c setup_3
+ *    \snippet qs_extint_callback.c setup_3
  * -# Configure external interrupt channel with the desired channel settings.
- *  \snippet qs_extint_callback.c setup_4
+ *    \snippet qs_extint_callback.c setup_4
  * -# Register a callback function \c extint_handler() to handle detections from
  *    the External Interrupt controller.
- *  \snippet qs_extint_callback.c setup_5
+ *    \snippet qs_extint_callback.c setup_5
  * -# Enable the registered callback function for the configured External
  *    Interrupt channel, so that it will be called by the module when the
  *    channel detects an edge.
- *  \snippet qs_extint_callback.c setup_6
+ *    \snippet qs_extint_callback.c setup_6
  * -# Define the EXTINT callback that will be fired when a detection event
  *    occurs. For this example, a LED will mirror the new button state on each
  *    detection edge.
- *  \snippet qs_extint_callback.c setup_7
+ *    \snippet qs_extint_callback.c setup_7
  *
  *
  * \section asfdoc_sam0_extint_callback_main Use Case
