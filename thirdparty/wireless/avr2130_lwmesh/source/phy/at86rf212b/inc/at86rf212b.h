@@ -50,8 +50,6 @@
  *designed for industrial
  * and consumer ZigBee/IEEE 802.15.4, 6LoWPAN, RF4CE and high data rate sub 1GHz
  * ISM band applications.
- * \a Refer <A href="http://www.atmel.com/Images/doc8168.pdf">AT86RF212 Data
- *Sheet </A> \b for \b detailed \b information .
  * @{
  */
  
