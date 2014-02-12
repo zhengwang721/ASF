@@ -118,6 +118,8 @@ static inline void udd_wait_clock_ready(void)
 		/* In USB recovery mode the status is not checked */
 		if (!(SYSCTRL->DFLLCTRL.reg & SYSCTRL_DFLLCTRL_USBCRM)) {
 			while((SYSCTRL->PCLKSR.reg & DFLL_READY_FLAG) != DFLL_READY_FLAG);
+		} else {
+			while((SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_DFLLRDY) != SYSCTRL_PCLKSR_DFLLRDY);
 		}
 	}
 
@@ -784,7 +786,7 @@ static void udd_ctrl_out_received(void* pointer)
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
 
 	if(ep_callback_para->received_bytes == 0) {
-		usb_device_endpoint_setup_buffer_job(&usb_device,udd_ctrl_buffer);
+		usb_device_endpoint_read_buffer_job(&usb_device,0,udd_ctrl_buffer,USB_DEVICE_EP_CTRL_SIZE);
 		return;
 	}
 
@@ -847,8 +849,7 @@ static void udd_ctrl_out_received(void* pointer)
 		/* Reinitialize reception on payload buffer */
 		udd_ctrl_payload_nb_trans = 0;
 	}
-	/* Initialize buffer size and enable OUT bank */
-	usb_device_endpoint_setup_buffer_job(&usb_device,udd_ctrl_buffer);
+	usb_device_endpoint_read_buffer_job(&usb_device,0,udd_ctrl_buffer,USB_DEVICE_EP_CTRL_SIZE);
 }
 
 /**
@@ -888,7 +889,8 @@ static void _usb_ep0_on_setup(struct usb_module *module_inst, void* pointer)
 				udd_ctrl_prev_payload_nb_trans = 0;
 				udd_ctrl_payload_nb_trans = 0;
 				udd_ep_control_state = UDD_EPCTRL_DATA_OUT;
-				udd_ctrl_out_received(pointer);
+				/* Initialize buffer size and enable OUT bank */
+				usb_device_endpoint_read_buffer_job(&usb_device,0,udd_ctrl_buffer,USB_DEVICE_EP_CTRL_SIZE);
 			}
 		}
 	}
