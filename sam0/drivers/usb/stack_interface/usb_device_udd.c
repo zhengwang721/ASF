@@ -1026,7 +1026,7 @@ static void _usb_device_lpm_suspend(struct usb_module *module_inst, void *pointe
 	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_LPMSUSP);
 	usb_device_disable_callback(&usb_device, USB_DEVICE_CALLBACK_SUSPEND);
 	usb_device_enable_callback(&usb_device, USB_DEVICE_CALLBACK_WAKEUP);
-	
+
 //#warning Here the sleep mode must be choose to have a DFLL startup time < bmAttribut.BESL
 	udd_sleep_mode(UDD_STATE_SUSPEND_LPM);  // Enter in LPM SUSPEND mode
 	if (*lpm_wakeup_enable) {
