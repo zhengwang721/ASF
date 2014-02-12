@@ -125,114 +125,108 @@
  * \snippet qs_tcc_dma.c setup_init
  *
  * \subsection asfdoc_sam0_tcc_dma_use_case_setup_flow Workflow
+ * \subsubsection asfdoc_sam0_tcc_dma_use_case_setup_flow_tcc Configure the TCC
  * -# Create a module software instance structure for the TCC module to store
  *    the TCC driver state while it is in use.
+ *    \snippet qs_tcc_dma.c module_inst
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
- *
- *    \snippet qs_tcc_dma.c module_inst
- * -# Configure the TCC module.
- *  -# Create a TCC module configuration struct, which can be filled out to
+ * -# Create a TCC module configuration struct, which can be filled out to
  *     adjust the configuration of a physical TCC peripheral.
  *     \snippet qs_tcc_dma.c setup_config
- *  -# Initialize the TCC configuration struct with the module's default values.
+ * -# Initialize the TCC configuration struct with the module's default values.
+ *     \snippet qs_tcc_dma.c setup_config_defaults
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
- *
- *     \snippet qs_tcc_dma.c setup_config_defaults
- *  -# Alter the TCC settings to configure the counter width, wave generation
+ * -# Alter the TCC settings to configure the counter width, wave generation
  *     mode and the compare channel 0 value.
  *     \snippet qs_tcc_dma.c setup_change_config
- *  -# Alter the TCC settings to configure the PWM output on a physical device
+ * -# Alter the TCC settings to configure the PWM output on a physical device
  *     pin.
  *     \snippet qs_tcc_dma.c setup_change_config_pwm
- *  -# Configure the TCC module with the desired settings.
+ * -# Configure the TCC module with the desired settings.
  *     \snippet qs_tcc_dma.c setup_set_config
- *  -# Configure and enable the desired events for TCC module.
+ * -# Configure and enable the desired events for TCC module.
  *     \snippet qs_tcc_dma.c setup_events
- *  -# Configure the EVSYS module to wire channel 0 event to channel 1.
- *   -# Create an event resource instance.
- *       \note This should never go out of scope as long as the resource is in
- *             use. In most cases, this should be global.
+ * \subsubsection asfdoc_sam0_tcc_dma_use_case_setup_flow_event Configure the Event System
+ * Configure the EVSYS module to wire channel 0 event to channel 1.
+ * -# Create an event resource instance.
+ *     \snippet qs_tcc_dma.c capture_event_resource
+ *     \note This should never go out of scope as long as the resource is in
+ *     use. In most cases, this should be global.
  *
- *      \snippet qs_tcc_dma.c capture_event_resource
- *   -# Create an event resource configuration struct.
+ * -# Create an event resource configuration struct.
  *      \snippet qs_tcc_dma.c event_setup_1
- *   -# Initialize the event resource configuration struct with default values.
+ * -# Initialize the event resource configuration struct with default values.
+ *      \snippet qs_tcc_dma.c event_setup_2
  *      \note This should always be performed before using the configuration
  *            struct to ensure that all values are initialized to known default
  *            settings.
- *
- *      \snippet qs_tcc_dma.c event_setup_2
- *   -# Adjust the event resource configuration to desired values.
+ * -# Adjust the event resource configuration to desired values.
  *      \snippet qs_tcc_dma.c event_setup_3
- *   -# Allocate and configure the resource using the configuration structure.
+ * -# Allocate and configure the resource using the configuration structure.
  *      \snippet qs_tcc_dma.c event_setup_4
- *   -# Attach an user to the resource
+ * -# Attach an user to the resource
  *      \snippet qs_tcc_dma.c event_setup_5
- *  -# Configure the DMAC module to obtain captured value from TCC channel 1.
- *   -# Allocate and configure the DMA resource
- *    -# Create a DMA resource instance.
- *       \note This should never go out of scope as long as the resource is in
+ * \subsubsection asfdoc_sam0_tcc_dma_use_case_setup_flow_dma_capture Configure the DMA for Capture TCC Channel 1
+ * Configure the DMAC module to obtain captured value from TCC channel 1.
+ * -# Create a DMA resource instance.
+ *     \snippet qs_tcc_dma.c capture_dma_resource
+ *     \note This should never go out of scope as long as the resource is in
  *             use. In most cases, this should be global.
- *
- *       \snippet qs_tcc_dma.c capture_dma_resource
- *    -# Create a DMA resource configuration struct.
+ * -# Create a DMA resource configuration struct.
  *       \snippet qs_tcc_dma.c dma_setup_1
- *    -# Initialize the DMA resource configuration struct with default values.
+ * -# Initialize the DMA resource configuration struct with default values.
+ *       \snippet qs_tcc_dma.c dma_setup_2
  *       \note This should always be performed before using the configuration
  *             struct to ensure that all values are initialized to known default
  *             settings.
- *
- *       \snippet qs_tcc_dma.c dma_setup_2
- *    -# Adjust the DMA resource configurations.
+ * -# Adjust the DMA resource configurations.
  *       \snippet qs_tcc_dma.c dma_setup_3
- *    -# Allocate a DMA resource with the configurations.
+ * -# Allocate a DMA resource with the configurations.
  *       \snippet qs_tcc_dma.c dma_setup_4
- *   -# Prepare DMA transfer descriptor
- *    -# Create a DMA transfer descriptor.
+ * -# Prepare DMA transfer descriptor
+ *  -# Create a DMA transfer descriptor.
+ *       \snippet qs_tcc_dma.c capture_dma_descriptor
  *       \note When multiple descriptors are linked. The linked item should
  *             never go out of scope before it's loaded (to DMA Write-Back
  *             memory section). In most cases, if more than one descriptors are
  *             used, they should be global except the very first one.
- *
- *       \snippet qs_tcc_dma.c capture_dma_descriptor
- *    -# Create a DMA transfer descriptor struct.
- *    -# Create a DMA transfer descriptor configuration structure, which can be
+ *  -# Create a DMA transfer descriptor struct.
+ *  -# Create a DMA transfer descriptor configuration structure, which can be
  *       filled out to adjust the configuration of a single DMA transfer.
  *       \snippet qs_tcc_dma.c dma_setup_5
- *    -# Initialize the DMA transfer descriptor configuration struct with
+ *  -# Initialize the DMA transfer descriptor configuration struct with
  *       default values.
+ *       \snippet qs_tcc_dma.c dma_setup_6
  *       \note This should always be performed before using the configuration
  *             struct to ensure that all values are initialized to known default
  *             settings.
- *
- *       \snippet qs_tcc_dma.c dma_setup_6
- *    -# Adjust the DMA transfer descriptor configurations.
+ *  -# Adjust the DMA transfer descriptor configurations.
  *       \snippet qs_tcc_dma.c dma_setup_7
- *    -# Create the DMA transfer descriptor with configuration.
+ *  -# Create the DMA transfer descriptor with configuration.
  *       \snippet qs_tcc_dma.c dma_setup_8
- *    -# Adjust the DMA transfer descriptor if multiple DMA transfer will be
+ *  -# Adjust the DMA transfer descriptor if multiple DMA transfer will be
  *        performed.
  *       \snippet qs_tcc_dma.c dma_setup_9
- *   -# Start DMA transfer job with prepared descriptor
- *    -# Add the DMA transfer descriptor to the allocated DMA resource.
+ * -# Start DMA transfer job with prepared descriptor
+ *  -# Add the DMA transfer descriptor to the allocated DMA resource.
  *       \snippet qs_tcc_dma.c dma_setup_10
- *    -# Start the DMA transfer job with the allocated DMA resource and
+ *  -# Start the DMA transfer job with the allocated DMA resource and
  *       transfer descriptor.
  *       \snippet qs_tcc_dma.c dma_setup_11
- *  -# Configure the DMAC module to update TCC channel 0 compare value.
- *     The flow is similar to last DMA configure step for capture.
- *   -# Allocate and configure the DMA resource
+ \subsubsection asfdoc_sam0_tcc_dma_use_case_setup_flow_dma_compare Configure the DMA for Compare TCC Channel 0
+ * Configure the DMAC module to update TCC channel 0 compare value. The flow is similar to last DMA configure step for capture.
+ * -# Allocate and configure the DMA resource
  *     \snippet qs_tcc_dma.c compare_dma_resource
  *     \snippet qs_tcc_dma.c config_dma_resource_for_wave
- *   -# Prepare DMA transfer descriptor
+ * -# Prepare DMA transfer descriptor
  *     \snippet qs_tcc_dma.c compare_dma_descriptor
  *     \snippet qs_tcc_dma.c config_dma_descriptor_for_wave
- *   -# Start DMA transfer job with prepared descriptor
+ * -# Start DMA transfer job with prepared descriptor
  *     \snippet qs_tcc_dma.c config_dma_job_for_wave
- *  -# Enable the TCC module to start the timer and begin PWM signal generation.
+ * -# Enable the TCC module to start the timer and begin PWM signal generation.
  *     \snippet qs_tcc_dma.c setup_enable
  *
  * \section asfdoc_sam0_tcc_dma_use_case_main Use Case
