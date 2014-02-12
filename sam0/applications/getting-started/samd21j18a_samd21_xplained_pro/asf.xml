@@ -1,0 +1,38 @@
+<asf xmlversion="1.0">
+	<project caption="Getting Started for SAMd21 xplained pro" id="sam0.applications.getting-started.samd21_xplained_pro">
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_uart_serial.h"/>
+		<build type="header-file" value="conf_extint.h"/>
+		
+		<build type="include-path" value="."/>
+		<require idref="sam0.applications.getting-started"/>
+		<require idref="board.samd21_xplained_pro"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamd21j18a"/>
+	</project>
+
+	<project id="sam.appnote.getting-started.samd21" caption="Getting-started appnote for samd21">
+		<info type="description" value="summary">
+		This document describes how to getting started with SAMD21 development.
+		</info>
+		<info type="appnote" value="XXXX"/>
+		<info type="description" value="pdf">
+		This document describes how to getting started with SAMD21 development.
+		</info>
+		<info type="keyword" value="pdf">
+			<keyword value="ASF"/>
+			<keyword value="pdf"/>
+			<keyword value="SAMD21"/>
+		</info>
+		<build type="header-file" value="appnote.h"/>
+		<build type="header-file" value="appnote_patch.h"/>
+		<build type="include-path" value="."/>
+		<device-support value="unspecified-samd21"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samd21"/>
+	</project>
+</asf>
