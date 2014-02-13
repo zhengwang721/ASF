@@ -94,41 +94,41 @@
  *
  * \section asfdoc_sam0_sercom_spi_master_callback_use_workflow Workflow
  * -# Initialize system.
- *  \snippet qs_spi_master_callback.c system_init
+ *    \snippet qs_spi_master_callback.c system_init
  * -# Setup the SPI:
- *  \snippet qs_spi_master_callback.c run_config
+ *    \snippet qs_spi_master_callback.c run_config
  *   -# Create configuration struct.
- *     \snippet qs_spi_master_callback.c config
+ *      \snippet qs_spi_master_callback.c config
  *   -# Create peripheral slave configuration struct.
- *     \snippet qs_spi_master_callback.c slave_config
+ *      \snippet qs_spi_master_callback.c slave_config
  *   -# Get default peripheral slave configuration.
- *     \snippet qs_spi_master_callback.c slave_conf_defaults
+ *      \snippet qs_spi_master_callback.c slave_conf_defaults
  *   -# Set Slave Select pin.
- *     \snippet qs_spi_master_callback.c ss_pin
+ *      \snippet qs_spi_master_callback.c ss_pin
  *   -# Initialize peripheral slave software instance with configuration.
- *     \snippet qs_spi_master_callback.c slave_init
+ *      \snippet qs_spi_master_callback.c slave_init
  *   -# Get default configuration to edit.
- *     \snippet qs_spi_master_callback.c conf_defaults
+ *      \snippet qs_spi_master_callback.c conf_defaults
  *   -# Set mux setting E.
- *     \snippet qs_spi_master_callback.c mux_setting
+ *      \snippet qs_spi_master_callback.c mux_setting
  *   -# Set pinmux for pad 0 (data in (MISO) on extension header 1, pin 17).
- *     \snippet qs_spi_master_callback.c di
+ *      \snippet qs_spi_master_callback.c di
  *   -# Set pinmux for pad 1 as unused, so the pin can be used for other purposes.
- *     \snippet qs_spi_master_callback.c ss
+ *      \snippet qs_spi_master_callback.c ss
  *   -# Set pinmux for pad 2 (data out (MOSI) on extension header 1, pin 16).
- *     \snippet qs_spi_master_callback.c do
+ *      \snippet qs_spi_master_callback.c do
  *   -# Set pinmux for pad 3 (SCK on extension header 1, pin 18).
- *     \snippet qs_spi_master_callback.c sck
+ *      \snippet qs_spi_master_callback.c sck
  *   -# Initialize SPI module with configuration.
- *     \snippet qs_spi_master_callback.c init
+ *      \snippet qs_spi_master_callback.c init
  *   -# Enable SPI module.
- *     \snippet qs_spi_master_callback.c enable
+ *      \snippet qs_spi_master_callback.c enable
  * -# Setup the callback functionality:
- *  \snippet qs_spi_master_callback.c run_callback_config
+ *    \snippet qs_spi_master_callback.c run_callback_config
  *   -# Register callback function for buffer transmitted
- *     \snippet qs_spi_master_callback.c reg_callback
+ *      \snippet qs_spi_master_callback.c reg_callback
  *   -# Enable callback for buffer transmitted
- *     \snippet qs_spi_master_callback.c en_callback
+ *      \snippet qs_spi_master_callback.c en_callback
  *
  * \section asfdoc_sam0_sercom_spi_master_callback_use_case Use Case
  * \subsection asfdoc_sam0_sercom_spi_master_callback_use_case_code Code
@@ -136,21 +136,21 @@
  * \snippet qs_spi_master_callback.c main_use_case
  * \subsection asfdoc_sam0_sercom_spi_master_callback_use_case_workflow Workflow
  * -# Select slave.
- *  \snippet qs_spi_master_callback.c select_slave
+ *    \snippet qs_spi_master_callback.c select_slave
  * -# Write buffer to SPI slave.
- *  \snippet qs_spi_master_callback.c write
+ *    \snippet qs_spi_master_callback.c write
  * -# Wait for the transfer to be complete.
- *  \snippet qs_spi_master_callback.c wait
+ *    \snippet qs_spi_master_callback.c wait
  * -# Deselect slave.
- *  \snippet qs_spi_master_callback.c deselect_slave
+ *    \snippet qs_spi_master_callback.c deselect_slave
  * -# Infinite loop.
- *  \snippet qs_spi_master_callback.c inf_loop
+ *    \snippet qs_spi_master_callback.c inf_loop
  *
  * \section asfdoc_sam0_sercom_spi_master_callback_use_callback Callback
  * When the buffer is successfully transmitted to the slave, the callback
  * function will be called.
  * \subsection asfdoc_sam0_sercom_spi_master_callback_use_callback_workflow Workflow
  * -# Let the application know that the buffer is transmitted by setting the
- * global variable to true.
- *  \snippet qs_spi_master_callback.c callback_var
+ *    global variable to true.
+ *    \snippet qs_spi_master_callback.c callback_var
  */

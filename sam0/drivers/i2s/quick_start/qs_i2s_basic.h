@@ -83,10 +83,10 @@
  * \subsection asfdoc_sam0_i2s_basic_use_case_setup_flow Workflow
  * -# Create a module software instance structure for the I2S module to store
  *    the I2S driver state while it is in use.
+ *    \snippet qs_i2s_basic.c module_inst
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- *    \snippet qs_i2s_basic.c module_inst
  * -# Configure the I2S module.
  *  -# Initialize the I2S module.
  *     \snippet qs_i2s_basic.c setup_i2s_init
@@ -96,11 +96,11 @@
  *      \snippet qs_i2s_basic.c setup_clock_unit_config
  *   -# Initialize the I2S Clock Unit configuration struct with the module's
  *      default values.
+ *      \snippet qs_i2s_basic.c setup_clock_unit_config_defaults
  *      \note This should always be performed before using the configuration
  *            struct to ensure that all values are initialized to known default
  *            settings.
  *
- *      \snippet qs_i2s_basic.c setup_clock_unit_config_defaults
  *   -# Alter the I2S Clock Unit settings to configure the general clock source,
  *      MCK, SCK and FS generation.
  *      \snippet qs_i2s_basic.c setup_clock_unit_change_config
@@ -115,11 +115,11 @@
  *      \snippet qs_i2s_basic.c setup_serializer_config
  *   -# Initialize the I2S Serializer configuration struct with the module's
  *      default values.
+ *      \snippet qs_i2s_basic.c setup_serializer_config_defaults
  *      \note This should always be performed before using the configuration
  *            struct to ensure that all values are initialized to known default
  *            settings.
  *
- *      \snippet qs_i2s_basic.c setup_serializer_config_defaults
  *   -# Alter the I2S Serializer settings to configure the serial
  *      data generation.
  *      \snippet qs_i2s_basic.c setup_serializer_change_config_tx
