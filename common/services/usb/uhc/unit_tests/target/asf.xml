@@ -31,7 +31,7 @@
 			</info>
 			<build type="header-file" value="conf_usb_host.h"/>
 			<build type="header-file" value="unit_tests.h"/>
-			<build type="c-source" value="unit_tests_sam0.c"/>
+			<build type="c-source" value="unit_tests.c"/>
 			<build type="include-path" value="."/>
 			<device-support value="samd21"/>
 			<require idref="common.utils.unit_test"/>
