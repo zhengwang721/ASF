@@ -738,8 +738,6 @@ static void _uhd_connect(struct usb_module *module_inst)
 	uhd_sleep_mode(UHD_STATE_IDLE);
 	uhd_suspend_start = 0;
 	uhd_resume_start = 0;
-	/* Clean up pipes when error in enumeration */
-	uhd_ep_free(0, 0xFF);
 	uhc_notify_connection(true);
 }
 
@@ -1583,7 +1581,8 @@ void uhd_ep_free(usb_add_t add, usb_ep_t endp)
 			/* Disable and stop transfer on control endpoint */
 			if (cfg.device_address == add) {
 				usb_host_pipe_freeze(&dev, 0);
-				if (uhd_ctrl_request_timeout) {
+				if (uhd_ctrl_request_timeout ||
+						(uhd_ctrl_request_first != NULL)) {
 					_uhd_ctrl_request_end(UHD_TRANS_DISCONNECT);
 				}
 				continue;
