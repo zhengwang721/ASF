@@ -77,19 +77,19 @@
  *
  * \subsection asfdoc_sam0_sercom_i2c_master_basic_use_setup_workflow Workflow
  * -# Configure and enable module:
- *  \snippet qs_i2c_master_basic_use.c initialize_i2c
+ *    \snippet qs_i2c_master_basic_use.c initialize_i2c
  *   -# Create and initialize configuration structure.
- *    \snippet qs_i2c_master_basic_use.c init_conf
+ *      \snippet qs_i2c_master_basic_use.c init_conf
  *   -# Change settings in the configuration.
- *    \snippet qs_i2c_master_basic_use.c conf_change
+ *      \snippet qs_i2c_master_basic_use.c conf_change
  *   -# Initialize the module with the set configurations.
- *    \snippet qs_i2c_master_basic_use.c init_module
+ *      \snippet qs_i2c_master_basic_use.c init_module
  *   -# Enable the module.
- *    \snippet qs_i2c_master_basic_use.c enable_module
+ *      \snippet qs_i2c_master_basic_use.c enable_module
  * -# Create a variable to see when we should stop trying to send packet.
- *  \snippet qs_i2c_master_basic_use.c timeout_counter
+ *    \snippet qs_i2c_master_basic_use.c timeout_counter
  * -# Create a packet to send:
- *  \snippet qs_i2c_master_basic_use.c packet
+ *    \snippet qs_i2c_master_basic_use.c packet
  *
  * \section asfdoc_sam0_sercom_i2c_master_basic_use_implemenation Implementation
  * \subsection asfdoc_sam0_sercom_i2c_master_basic_use_implemenation_code Code
@@ -98,7 +98,7 @@
  *
  * \subsection asfdoc_sam0_sercom_i2c_master_basic_use_implemenation_workflow Workflow
  * -# Write packet to slave.
- *  \snippet qs_i2c_master_basic_use.c write_packet
+ *    \snippet qs_i2c_master_basic_use.c write_packet
  * The module will try to send the packet TIMEOUT number of times or until it is
  * successfully sent.
  *

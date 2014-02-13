@@ -430,7 +430,8 @@ static void _spi_master_vec_int_handler(uint8_t sercom_index)
 	SercomSpi *const spi_hw = &(module->sercom->SPI);
 	uint8_t int_status;
 
-	int_status = spi_hw->INTFLAG.reg & spi_hw->INTENSET.reg;
+	int_status = spi_hw->INTFLAG.reg ;
+    int_status &= spi_hw->INTENSET.reg;
 
 	if (int_status & SERCOM_SPI_INTFLAG_DRE) {
 		uint_fast8_t tx_lead_on_rx = module->tx_lead_on_rx;
