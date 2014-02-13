@@ -96,8 +96,8 @@
  * \snippet qs_i2c_master_dma.c init
  *
  * \subsection asfdoc_sam0_sercom_i2c_master_dma_use_setup_workflow Workflow
- * -# Configure and enable module:
- *  \snippet qs_i2c_master_dma.c initialize_i2c
+ * \subsubsection asfdoc_sam0_sercom_i2c_master_dma_use_setup_workflow_i2c Configure and enable SERCOM:
+ * \snippet qs_i2c_master_dma.c config_i2c
  * -# Create and initialize configuration structure.
  *    \snippet qs_i2c_master_dma.c init_conf
  * -# Change settings in the configuration.
@@ -106,43 +106,44 @@
  *    \snippet qs_i2c_master_dma.c init_module
  * -# Enable the module.
  *    \snippet qs_i2c_master_dma.c enable_module
+ *
+ * \subsubsection asfdoc_sam0_sercom_i2c_master_dma_use_setup_workflow_dma Configure DMA
  * -# Create a DMA resource configuration structure, which can be filled out to
  *    adjust the configuration of a single DMA transfer.
- *  \snippet qs_i2c_master_dma.c dma_setup_1
+ *    \snippet qs_i2c_master_dma.c dma_setup_1
  *
  * -# Initialize the DMA resource configuration struct with the module's
  *    default values.
+ *    \snippet qs_i2c_master_dma.c dma_setup_2
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_i2c_master_dma.c dma_setup_2
- *
- * -# Set extra configurations for the DMA resource. It is using peripheral trigger,
- * SERCOM Tx trigger and trigger causes a transaction transfer in this example.
- *  \snippet qs_i2c_master_dma.c dma_setup_3
+ * -# Set extra configurations for the DMA resource. It is using peripheral
+ *    trigger, SERCOM Tx trigger and trigger causes a transaction transfer in
+ *    this example.
+ *    \snippet qs_i2c_master_dma.c dma_setup_3
  *
  * -# Allocate a DMA resource with the configurations.
- *  \snippet qs_i2c_master_dma.c dma_setup_4
+ *    \snippet qs_i2c_master_dma.c dma_setup_4
  *
  * -# Create a DMA transfer descriptor configuration structure, which can be
- * filled out to adjust the configuration of a single DMA transfer.
- *  \snippet qs_i2c_master_dma.c dma_setup_5
+ *    filled out to adjust the configuration of a single DMA transfer.
+ *    \snippet qs_i2c_master_dma.c dma_setup_5
  *
  * -# Initialize the DMA transfer descriptor configuration struct with the module's
  *    default values.
+ *    \snippet qs_i2c_master_dma.c dma_setup_6
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_i2c_master_dma.c dma_setup_6
- *
  * -# Set the specific parameters for a DMA transfer with transfer size, source
  *    address, destination address.
- *  \snippet qs_i2c_master_dma.c dma_setup_7
+ *    \snippet qs_i2c_master_dma.c dma_setup_7
  *
  * -# Create the DMA transfer descriptor.
- *  \snippet qs_i2c_master_dma.c dma_setup_8
+ *    \snippet qs_i2c_master_dma.c dma_setup_8
  *
  * \section asfdoc_sam0_sercom_i2c_master_dma_use_implemenation Implementation
  * \subsection asfdoc_sam0_sercom_i2c_master_dma_use_implemenation_code Code
@@ -151,14 +152,14 @@
  *
  * \subsection asfdoc_sam0_sercom_i2c_master_dma_use_implemenation_workflow Workflow
  * -# Start the DMA transfer job.
- *  \snippet qs_i2c_master_dma.c start_transfer_job
+ *    \snippet qs_i2c_master_dma.c start_transfer_job
  *
  * -# Set the auto address length and enable flag.
- *  \snippet qs_i2c_master_dma.c set_i2c_addr
+ *    \snippet qs_i2c_master_dma.c set_i2c_addr
  * 
  * -# Waiting for transfer complete
- *  \snippet qs_i2c_master_dma.c waiting_for_complete
+ *    \snippet qs_i2c_master_dma.c waiting_for_complete
  *
  * -# Enter an infinite loop once transfer complete.
- *  \snippet qs_i2c_master_dma.c inf_loop
+ *    \snippet qs_i2c_master_dma.c inf_loop
  */

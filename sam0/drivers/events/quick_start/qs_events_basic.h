@@ -72,35 +72,31 @@
  * \subsection asfdoc_sam0_events_basic_use_casesetup_flow Workflow
  * -# Create an event channel configuration struct, which can be filled out to
  *    adjust the configuration of a single event channel.
- *  \snippet qs_events_basic.c setup_1
- *  \br
+ *    \snippet qs_events_basic.c setup_1
+ *    \br
  *
  * -# Initialize the event channel configuration struct with the module's
  *    default values.
+ *    \snippet qs_events_basic.c setup_2
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_events_basic.c setup_2
- *  \br
- *
  * -# Adjust the configuration struct to request that the channel be attached
  *    to the specified event generator, that rising edges of the event signal
  *    be detected on the channel and that the synchronous event path be used.
- *  \snippet qs_events_basic.c setup_3
- *  \br
+ *    \snippet qs_events_basic.c setup_3
+ *    \br
  *
  * -# Allocate and configure the channel using the configuration structure.
+ *    \snippet qs_events_basic.c setup_4
  *    \note The existing configuration struct may be re-used, as long as any
  *          values that have been altered from the default settings are taken
  *          into account by the user application.
  *
- *  \snippet qs_events_basic.c setup_4
- *  \br
- *
  * -# Attach an user to the channel
- *  \snippet qs_events_basic.c setup_5
- *  \br
+ *    \snippet qs_events_basic.c setup_5
+ *    \br
  *
  * \section asfdoc_sam0_events_basic_use_case_main Use Case
  *
@@ -110,7 +106,7 @@
  *
  * \subsection events_basic_use_case_code_flow Workflow
  * -# Wait for the even channel to become ready to accept a new event trigger.
- *  \snippet qs_events_basic.c main_1
+ *    \snippet qs_events_basic.c main_1
  * -# Perform a software event trigger on the configured event channel.
- *  \snippet qs_events_basic.c main_2
+ *    \snippet qs_events_basic.c main_2
  */

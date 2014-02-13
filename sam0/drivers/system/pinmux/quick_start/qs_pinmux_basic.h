@@ -66,19 +66,19 @@
  * \subsection asfdoc_sam0_system_pinmux_basic_use_case_setup_flow Workflow
  * -# Create a PINMUX module pin configuration struct, which can be filled out
  *    to adjust the configuration of a single port pin.
- *  \snippet qs_pinmux_basic.c pinmux_config
+ *    \snippet qs_pinmux_basic.c pinmux_config
  * -# Initialize the pin configuration struct with the module's default values.
+ *    \snippet qs_pinmux_basic.c pinmux_config_defaults
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_pinmux_basic.c pinmux_config_defaults
  * -# Adjust the configuration struct to request an input pin with pullup
  *    connected to the GPIO peripheral.
  *  \snippet qs_pinmux_basic.c pinmux_update_config_values
  * -# Configure GPIO10 with the initialized pin configuration struct, to enable
  *    the input sampler on the pin.
- *  \snippet qs_pinmux_basic.c pinmux_set_config
+ *    \snippet qs_pinmux_basic.c pinmux_set_config
  *
  * \section asfdoc_sam0_system_pinmux_basic_use_case_use_main Use Case
  *
@@ -89,5 +89,5 @@
  * \subsection asfdoc_sam0_system_pinmux_basic_use_case_flow Workflow
 
  * -# Adjust the configuration of the pin to enable on-demand sampling mode.
- *  \snippet qs_pinmux_basic.c pinmux_change_input_sampling
+ *    \snippet qs_pinmux_basic.c pinmux_change_input_sampling
  */
