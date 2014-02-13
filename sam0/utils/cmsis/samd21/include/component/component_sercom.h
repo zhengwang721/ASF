@@ -1058,8 +1058,6 @@ typedef union {
 
 #define SERCOM_SPI_STATUS_BUFOVF_Pos 2            /**< \brief (SERCOM_SPI_STATUS) Buffer Overflow */
 #define SERCOM_SPI_STATUS_BUFOVF    (0x1u << SERCOM_SPI_STATUS_BUFOVF_Pos)
-#define SERCOM_SPI_STATUS_SYNCBUSY_Pos 15           /**< \brief (SERCOM_SPI_STATUS) Synchronization Busy */
-#define SERCOM_SPI_STATUS_SYNCBUSY  (0x1u << SERCOM_SPI_STATUS_SYNCBUSY_Pos)
 #define SERCOM_SPI_STATUS_MASK      0x0004u      /**< \brief (SERCOM_SPI_STATUS) MASK Register */
 
 /* -------- SERCOM_USART_STATUS : (SERCOM Offset: 0x1A) (R/W 16) USART USART Status -------- */

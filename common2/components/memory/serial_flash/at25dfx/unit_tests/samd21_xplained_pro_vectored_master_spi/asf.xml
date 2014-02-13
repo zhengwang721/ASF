@@ -18,5 +18,7 @@
 		<device-support value="atsamd21j18a"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
+		<generator value="iarewarm"/>
+		<config name="config.compiler.iarewarm.dlib" value="full"/>
 	</project>
 </asf>
