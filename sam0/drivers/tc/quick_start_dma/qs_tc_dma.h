@@ -98,85 +98,85 @@
  * \snippet qs_tc_dma.c setup_init
  *
  * \subsection asfdoc_sam0_tc_dma_use_case_setup_flow Workflow
+ * \subsubsection asfdoc_sam0_tc_dma_use_case_setup_flow_inst Create variables
  * -# Create a module software instance structure for the TC module to store
  *    the TC driver state while it is in use.
+ *    \snippet qs_tc_dma.c module_inst
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- *    \snippet qs_tc_dma.c module_inst
  * -# Create a module software instance structure for DMA resource to store
  *    the DMA resource state while it is in use.
+ *    \snippet qs_tc_dma.c dma_resource
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- *    \snippet qs_tc_dma.c dma_resource
- * -# Configure the TC module.
- *  -# Create a TC module configuration struct, which can be filled out to
- *     adjust the configuration of a physical TC peripheral.
- *     \snippet qs_tc_dma.c setup_config
- *  -# Initialize the TC configuration struct with the module's default values.
- *     \note This should always be performed before using the configuration
- *           struct to ensure that all values are initialized to known default
- *           settings.
+ * \subsubsection asfdoc_sam0_tc_dma_use_case_setup_flow_tc Configure TC
+ * -# Create a TC module configuration struct, which can be filled out to
+ *    adjust the configuration of a physical TC peripheral.
+ *    \snippet qs_tc_dma.c setup_config
+ * -# Initialize the TC configuration struct with the module's default values.
+ *    \snippet qs_tc_dma.c setup_config_defaults
+ *    \note This should always be performed before using the configuration
+ *          struct to ensure that all values are initialized to known default
+ *          settings.
  *
- *     \snippet qs_tc_dma.c setup_config_defaults
- *  -# Alter the TC settings to configure the counter width, wave generation
- *     mode and the compare channel 0 value.
- *     \snippet qs_tc_dma.c setup_change_config
- *  -# Alter the TC settings to configure the PWM output on a physical device
- *     pin.
- *     \snippet qs_tc_dma.c setup_change_config_pwm
- *  -# Configure the TC module with the desired settings.
- *     \snippet qs_tc_dma.c setup_set_config
- *  -# Enable the TC module to start the timer and begin PWM signal generation.
- *     \snippet qs_tc_dma.c setup_enable
+ * -# Alter the TC settings to configure the counter width, wave generation
+ *    mode and the compare channel 0 value.
+ *    \snippet qs_tc_dma.c setup_change_config
+ * -# Alter the TC settings to configure the PWM output on a physical device
+ *    pin.
+ *    \snippet qs_tc_dma.c setup_change_config_pwm
+ * -# Configure the TC module with the desired settings.
+ *    \snippet qs_tc_dma.c setup_set_config
+ * -# Enable the TC module to start the timer and begin PWM signal generation.
+ *    \snippet qs_tc_dma.c setup_enable
  *
+ * \subsubsection asfdoc_sam0_tc_dma_use_case_setup_flow_dma Configure DMA
  * -# Create a DMA resource configuration structure, which can be filled out to
  *    adjust the configuration of a single DMA transfer.
- *  \snippet qs_tc_dma.c dma_setup_1
+ *    \snippet qs_tc_dma.c dma_setup_1
  *
  * -# Initialize the DMA resource configuration struct with the module's
  *    default values.
+ *    \snippet qs_tc_dma.c dma_setup_2
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_tc_dma.c dma_setup_2
- *
  * -# Allocate a DMA resource with the configurations.
- *  \snippet qs_tc_dma.c dma_setup_3
+ *    \snippet qs_tc_dma.c dma_setup_3
  *
  * -# Create a DMA transfer descriptor configuration structure, which can be
- * filled out to adjust the configuration of a single DMA transfer.
- *  \snippet qs_tc_dma.c dma_setup_4
+ *    filled out to adjust the configuration of a single DMA transfer.
+ *    \snippet qs_tc_dma.c dma_setup_4
  *
  * -# Initialize the DMA transfer descriptor configuration struct with the module's
  *    default values.
+ *    \snippet qs_tc_dma.c dma_setup_5
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_tc_dma.c dma_setup_5
- *
  * -# Set the specific parameters for a DMA transfer with transfer size, source
  *    address, destination address.
- *  \snippet qs_tc_dma.c dma_setup_6
+ *    \snippet qs_tc_dma.c dma_setup_6
  *
  * -# Create the DMA transfer descriptor.
- *  \snippet qs_tc_dma.c dma_setup_7
+ *    \snippet qs_tc_dma.c dma_setup_7
  *
  * -# Add the DMA transfer descriptor to the allocated DMA resource.
- *
- *  \snippet qs_tc_dma.c add_descriptor_to_resource
+ *    \snippet qs_tc_dma.c add_descriptor_to_resource
  *
  * -# Register a callback to indicate transfer status.
- *  \snippet qs_tc_dma.c setup_callback_register
+ *    \snippet qs_tc_dma.c setup_callback_register
  *
  * -# The transfer done flag is set in the registered callback function.
- *  \snippet qs_tc_dma.c _transfer_done
+ *    \snippet qs_tc_dma.c _transfer_done
  *
+ * \subsubsection asfdoc_sam0_tc_dma_use_case_setup_flow_data Prepare data
  * -# Setup memory content for validate transfer.
- *  \snippet qs_tc_dma.c setup_source_memory_content
+ *    \snippet qs_tc_dma.c setup_source_memory_content
  *
  * \section asfdoc_sam0_tc_dma_use_case_main Use Case
  *
@@ -186,20 +186,20 @@
  *
  * \subsection asfdoc_sam0_tc_dma_use_case_main_flow Workflow
  * -# Start the loop for transfer.
- *  \snippet qs_tc_dma.c main_transfer_loop
+ *    \snippet qs_tc_dma.c main_transfer_loop
  *
  * -# Set the transfer done flag as false.
- *  \snippet qs_tc_dma.c main_1
+ *    \snippet qs_tc_dma.c main_1
  *
  * -# Start the transfer job.
- *  \snippet qs_tc_dma.c main_2
+ *    \snippet qs_tc_dma.c main_2
  *
  * -# Wait for transfer done.
- *  \snippet qs_tc_dma.c main_3
+ *    \snippet qs_tc_dma.c main_3
  *
  * -# Update the source and destination address for next transfer
- *  \snippet qs_tc_dma.c main_4
+ *    \snippet qs_tc_dma.c main_4
  *
  * -# enter endless loop
- *  \snippet qs_tc_dma.c endless_loop
+ *    \snippet qs_tc_dma.c endless_loop
  */

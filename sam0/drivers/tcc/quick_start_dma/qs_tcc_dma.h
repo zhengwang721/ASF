@@ -216,7 +216,7 @@
  *  -# Start the DMA transfer job with the allocated DMA resource and
  *       transfer descriptor.
  *       \snippet qs_tcc_dma.c dma_setup_11
- \subsubsection asfdoc_sam0_tcc_dma_use_case_setup_flow_dma_compare Configure the DMA for Compare TCC Channel 0
+ * \subsubsection asfdoc_sam0_tcc_dma_use_case_setup_flow_dma_compare Configure the DMA for Compare TCC Channel 0
  * Configure the DMAC module to update TCC channel 0 compare value. The flow is similar to last DMA configure step for capture.
  * -# Allocate and configure the DMA resource
  *     \snippet qs_tcc_dma.c compare_dma_resource

@@ -91,39 +91,39 @@
  *
  * \subsection asfdoc_sam0_sercom_spi_slave_callback_use_workflow Workflow
  * -# Initialize system.
- *  \snippet qs_spi_slave_callback.c system_init
+ *    \snippet qs_spi_slave_callback.c system_init
  * -# Setup the SPI:
- *  \snippet qs_spi_slave_callback.c run_config
+ *    \snippet qs_spi_slave_callback.c run_config
  *   -# Create configuration struct.
- *     \snippet qs_spi_slave_callback.c config
+ *      \snippet qs_spi_slave_callback.c config
  *   -# Get default configuration to edit.
- *     \snippet qs_spi_slave_callback.c conf_defaults
+ *      \snippet qs_spi_slave_callback.c conf_defaults
  *   -# Set the SPI in slave mode.
- *     \snippet qs_spi_slave_callback.c conf_spi_slave_instance
+ *      \snippet qs_spi_slave_callback.c conf_spi_slave_instance
  *   -# Enable preloading of shift register.
- *     \snippet qs_spi_slave_callback.c conf_preload
+ *      \snippet qs_spi_slave_callback.c conf_preload
  *   -# Set frame format to SPI frame.
- *     \snippet qs_spi_slave_callback.c conf_format
+ *      \snippet qs_spi_slave_callback.c conf_format
  *   -# Set mux setting E.
- *     \snippet qs_spi_slave_callback.c mux_setting
+ *      \snippet qs_spi_slave_callback.c mux_setting
  *   -# Set pinmux for pad 0 (data in (MOSI) on extension header 1, pin 17).
- *     \snippet qs_spi_slave_callback.c di
+ *      \snippet qs_spi_slave_callback.c di
  *   -# Set pinmux for pad 1 (slave select on on extension header 1, pin 15)
- *     \snippet qs_spi_slave_callback.c ss
+ *      \snippet qs_spi_slave_callback.c ss
  *   -# Set pinmux for pad 2 (data out (MISO) on extension header 1, pin 16).
- *     \snippet qs_spi_slave_callback.c do
+ *      \snippet qs_spi_slave_callback.c do
  *   -# Set pinmux for pad 3 (SCK on extension header 1, pin 18).
- *     \snippet qs_spi_slave_callback.c sck
+ *      \snippet qs_spi_slave_callback.c sck
  *   -# Initialize SPI module with configuration.
- *     \snippet qs_spi_slave_callback.c init
+ *      \snippet qs_spi_slave_callback.c init
  *   -# Enable SPI module.
- *     \snippet qs_spi_slave_callback.c enable
+ *      \snippet qs_spi_slave_callback.c enable
  * -# Setup the callback functionality:
- *  \snippet qs_spi_slave_callback.c run_callback_config
+ *    \snippet qs_spi_slave_callback.c run_callback_config
  *   -# Register callback function for buffer transmitted
- *     \snippet qs_spi_slave_callback.c reg_callback
+ *      \snippet qs_spi_slave_callback.c reg_callback
  *   -# Enable callback for buffer transmitted
- *     \snippet qs_spi_slave_callback.c en_callback
+ *      \snippet qs_spi_slave_callback.c en_callback
  *
  * \section asfdoc_sam0_sercom_spi_slave_callback_usecase Use Case
  * \subsection asfdoc_sam0_sercom_spi_slave_callback_usecase_code Code
@@ -131,17 +131,17 @@
  * \snippet qs_spi_slave_callback.c main_use_case
  * \subsection asfdoc_sam0_sercom_spi_slave_callback_usecase_workflow Workflow
  * -# Initiate a write buffer job.
- *  \snippet qs_spi_slave_callback.c write
+ *    \snippet qs_spi_slave_callback.c write
  * -# Wait for the transfer to be complete.
- *  \snippet qs_spi_slave_callback.c transf_complete
+ *    \snippet qs_spi_slave_callback.c transf_complete
  * -# Infinite loop.
- *  \snippet qs_spi_slave_callback.c inf_loop
+ *    \snippet qs_spi_slave_callback.c inf_loop
  *
  * \section asfdoc_sam0_sercom_spi_slave_callback_use_callback Callback
  * When the buffer is successfully transmitted to the master, the callback
  * function will be called.
  * \subsection asfdoc_sam0_sercom_spi_slave_callback_use_callback_workflow Workflow
  * -# Let the application know that the buffer is transmitted by setting the
- * global variable to true.
- *  \snippet qs_spi_slave_callback.c callback_var
+ *    global variable to true.
+ *    \snippet qs_spi_slave_callback.c callback_var
  */

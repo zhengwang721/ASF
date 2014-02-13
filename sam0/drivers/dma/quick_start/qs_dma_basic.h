@@ -67,61 +67,56 @@
  * \subsection asfdoc_sam0_dma_basic_use_casesetup_flow Workflow
  * -# Create a DMA resource configuration structure, which can be filled out to
  *    adjust the configuration of a single DMA transfer.
- *  \snippet qs_dma_basic.c setup_1
- *  \br
+ *    \snippet qs_dma_basic.c setup_1
+ *    \br
  *
  * -# Initialize the DMA resource configuration struct with the module's
  *    default values.
+ *    \snippet qs_dma_basic.c setup_2
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_dma_basic.c setup_2
- *  \br
- *
  * -# Allocate a DMA resource with the configurations.
- *  \snippet qs_dma_basic.c setup_3
- *  \br
+ *    \snippet qs_dma_basic.c setup_3
+ *    \br
 
  * -# Create a DMA transfer descriptor configuration structure, which can be
- * filled out to adjust the configuration of a single DMA transfer.
- *  \snippet qs_dma_basic.c setup_4
- *  \br
+ *    filled out to adjust the configuration of a single DMA transfer.
+ *    \snippet qs_dma_basic.c setup_4
+ *    \br
  *
  * -# Initialize the DMA transfer descriptor configuration struct with the module's
  *    default values.
+ *    \snippet qs_dma_basic.c setup_5
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_dma_basic.c setup_5
- *  \br
- *
  * -# Set the specific parameters for a DMA transfer with transfer size, source
  *    address, destination address.
- *  \snippet qs_dma_basic.c setup_6
- *  \br
+ *    \snippet qs_dma_basic.c setup_6
+ *    \br
  *
  * -# Create the DMA transfer descriptor.
- *  \snippet qs_dma_basic.c setup_7
- *  \br
+ *    \snippet qs_dma_basic.c setup_7
+ *    \br
  *
  * -# Add the DMA transfer descriptor to the allocated DMA resource.
- *
- *  \snippet qs_dma_basic.c add_descriptor_to_dma_resource
- *  \br
+ *    \snippet qs_dma_basic.c add_descriptor_to_dma_resource
+ *    \br
  *
  * -# Register a callback to indicate transfer status.
- *  \snippet qs_dma_basic.c setup_callback_register
- *  \br
+ *    \snippet qs_dma_basic.c setup_callback_register
+ *    \br
  *
  * -# The transfer done flag is set in the registered callback function.
- *  \snippet qs_dma_basic.c _transfer_done
- *  \br
+ *    \snippet qs_dma_basic.c _transfer_done
+ *    \br
  *
  * -# Enable the registered callbacks.
- *  \snippet qs_dma_basic.c setup_enable_callback
- *  \br
+ *    \snippet qs_dma_basic.c setup_enable_callback
+ *    \br
  *
  * \section asfdoc_sam0_dma_basic_use_case_main Use Case
  *
@@ -132,7 +127,7 @@
  * \subsection dma_basic_use_case_code_flow Workflow
  * -# Start the DMA transfer job with the allocated DMA resource and
  *    transfer descriptor.
- *  \snippet qs_dma_basic.c main_1
+ *    \snippet qs_dma_basic.c main_1
  * -# Waiting for the setting of the transfer done flag.
- *  \snippet qs_dma_basic.c main_2
+ *    \snippet qs_dma_basic.c main_2
  */
