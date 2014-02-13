@@ -72,11 +72,38 @@
  * Then, the test firmware starts.
  */
 
+//! \name Unit test configuration for AVR and SAM3/SAM4
+//@{
+/**
+ * \def CONF_TEST_USART
+ * \brief USART to redirect STDIO to
+ */
+/**
+ * \def CONF_TEST_BAUDRATE
+ * \brief Baudrate of USART
+ */
+/**
+ * \def CONF_TEST_CHARLENGTH
+ * \brief Character length (bits) of USART
+ */
+/**
+ * \def CONF_TEST_PARITY
+ * \brief Parity mode of USART
+ */
+/**
+ * \def CONF_TEST_STOPBITS
+ * \brief Stopbit configuration of USART
+ */
+//@}
+
 #if (UC3C || SAM4L || SAM3XA || SAMD21)
+// USBC(UC3C and SAM4L) have no hardware limit about endpoint size
+// UOTGHS(SAM3XA) has no hardware limit about ep0
+// USB(SAMD21) have no hardware limit about endpoint size
 #  define TST_15_DIS
 #endif
 
-#if (UC3C)
+#if (UC3C) // USBC downstream fails (ERRATA)
 #  define TST_18_DIS
 #endif
 
