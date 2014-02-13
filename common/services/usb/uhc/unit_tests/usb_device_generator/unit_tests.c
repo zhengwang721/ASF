@@ -89,11 +89,11 @@
 #ifdef SAMX_UOTGHS_TST
 #  define TST_15_DIS
 #endif
-#ifdef (SAM4L_USBC_TST || SAMD21_USB_TST)
+#if defined(SAM4L_USBC_TST) || defined(SAMD21_USB_TST)
 #  define TST_15_DIS
 #endif
 
-#ifdef (SAM4L_USBC_TST || SAMD21_USB_TST)
+#if defined(SAM4L_USBC_TST) || defined(SAMD21_USB_TST)
 #  define TST_DETACH_DELAY 800 // Delay more since clock slow
 #else
 #  define TST_DETACH_DELAY 200
