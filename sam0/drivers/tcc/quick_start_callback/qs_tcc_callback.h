@@ -46,7 +46,8 @@
  *
  * In this use case, the TCC will be used to generate a PWM signal, with a
  * varying duty cycle. Here the pulse width is increased each time the timer
- * count matches the set compare value. The TCC module will be set up as follows:
+ * count matches the set compare value. Because the PWM output pin is connected
+ * to LED0, then the brightness of LED will change. The TCC module will be set up as follows:
  *
  * - GCLK generator 0 (GCLK main) clock source
  * - No dithering on the counter or compare
