@@ -91,11 +91,11 @@
  *     adjust the configuration of a physical ADC peripheral.
  *     \snippet qs_adc_basic.c setup_config
  *  -# Initialize the ADC configuration struct with the module's default values.
+ *     \snippet qs_adc_basic.c setup_config_defaults
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *     \snippet qs_adc_basic.c setup_config_defaults
  *  -# Enable the ADC module so that conversions can be made.
  *     \snippet qs_adc_basic.c setup_enable
  *
