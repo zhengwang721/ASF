@@ -874,6 +874,7 @@ static void _usb_ep0_on_setup(struct usb_module *module_inst, void* pointer)
 			udd_ctrl_prev_payload_nb_trans = 0;
 			udd_ctrl_payload_nb_trans = 0;
 			udd_ep_control_state = UDD_EPCTRL_DATA_IN;
+			usb_device_endpoint_read_buffer_job(&usb_device,0,udd_ctrl_buffer,USB_DEVICE_EP_CTRL_SIZE);
 			udd_ctrl_in_sent();
 		} else {
 			if(0 == udd_g_ctrlreq.req.wLength) {
