@@ -49,9 +49,9 @@
  *
  * In this use case, the TCC will be used to generate a PWM signal. Here
  * the pulse width varies in following values through DMA transfer: one quater
- * of the period, half of the period and three quaters of the period.
- * The output signal is also fed back to another TCC channel by event system,
- * the event stamps are captured and transfer to values buffer by DMA.
+ * of the period, half of the period and three quaters of the period. Because the PWM output pin
+ * is connected to LED0, then the LED will lighten.The output signal is also fed back to another
+ * TCC channel by event system, the event stamps are captured and transfer to values buffer by DMA.
  *
  * The TCC module will be setup as follows:
  *

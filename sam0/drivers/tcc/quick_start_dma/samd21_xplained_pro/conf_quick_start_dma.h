@@ -46,12 +46,22 @@
 
 //[definition_pwm]
 /** PWM module to use */
-#define CONF_PWM_MODULE      TCC0
+#define CONF_PWM_MODULE      LED_0_PWM_MODULE
+/** PWM output channel */
+#define CONF_PWM_CHANNEL     LED_0_PWM_CHANNEL
 /** PWM output pin */
-#define CONF_PWM_OUT_PIN     PIN_PA08E_TCC0_WO0
+#define CONF_PWM_OUT_PIN     LED_0_PWM_PIN
 /** PWM output pin mux */
-#define CONF_PWM_OUT_MUX     MUX_PA08E_TCC0_WO0
+#define CONF_PWM_OUT_MUX     LED_0_PWM_MUX
 //[definition_pwm]
+
+/** TCC channel to capture */
+#define CONF_TCC_CAPTURE_CHANNEL      1
+
+/** Generator of TCC event */
+#define CONF_TCC_EVENT_GENERATOR      EVSYS_ID_GEN_TCC0_MCX_0
+/** User of TCC event */
+#define CONF_TCC_EVENT_USER           EVSYS_ID_USER_TCC0_MC_1
 
 //[definition_dma_compare_trigger]
 /** DMA Peripheral to Memory beat trigger: TCC0 OVF */
