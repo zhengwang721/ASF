@@ -3,7 +3,7 @@
  *
  * \brief User Interface
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,108 +44,64 @@
 #include <asf.h>
 #include "ui.h"
 
-#define  MOUSE_MOVE_RANGE  3
-#define  MOUSE_MOVE_COUNT  50
+#define  LED_On()          port_pin_set_output_level(LED_0_PIN, 0)
+#define  LED_Off()         port_pin_set_output_level(LED_0_PIN, 1)
 
-#define  MOVE_UP     0
-#define  MOVE_RIGHT  1
-#define  MOVE_DOWN   2
-#define  MOVE_LEFT   3
+#define  MOUSE_MOVE_RANGE 5
 
-static uint8_t move_dir = MOVE_UP;
-static int32_t move_count = MOUSE_MOVE_COUNT;
 
-/* Wakeup pin is SW0 (PC24, EIC1) */
-#define UI_WAKEUP_IRQN         EIC_1_IRQn
-#define UI_WAKEUP_IRQ_LEVEL    5
-#define UI_WAKEUP_EIC_LINE     SW0_EIC_LINE
-#define UI_WAKEUP_HANDLER      button_handler
-#define UI_WAKEUP_BPM_SRC      BPM_BKUPWEN_EIC
-
-/*!
- * \name Internal routines to manage asynchronous interrupt pin change
- * This interrupt is connected to a switch and allows to wakeup CPU in low sleep
- * mode.
- * This wakeup the USB devices connected via a downstream resume.
- * @{
+/* Interrupt on "pin change" from push button to do wakeup on USB
+ * Note:
+ * This interrupt is enable when the USB host enable remote wakeup feature
+ * This interrupt wakeup the CPU if this one is in idle mode
  */
-static void ui_enable_asynchronous_interrupt(void);
-static void ui_disable_asynchronous_interrupt(void);
-
-// Interrupt on "pin change" from SW0 to do wakeup on USB
-// Note:
-// This interrupt is enable when the USB host enable remotewakeup feature
-// This interrupt wakeup the CPU if this one is in idle mode
-static void UI_WAKEUP_HANDLER(void)
+static void ui_wakeup_handler(void)
 {
-	sysclk_enable_peripheral_clock(EIC);
-	if(eic_line_interrupt_is_pending(EIC, UI_WAKEUP_EIC_LINE)) {
-		eic_line_clear_interrupt(EIC, UI_WAKEUP_EIC_LINE);
-		ui_disable_asynchronous_interrupt();
-		// It is a wakeup then send wakeup USB
-		udc_remotewakeup();
-	}
-	sysclk_disable_peripheral_clock(EIC);
+	/* It is a wakeup then send wakeup USB */
+	udc_remotewakeup();
+	LED_On();
 }
 
-/**
- * \brief Initializes and enables interrupt pin change
- */
-static void ui_enable_asynchronous_interrupt(void)
-{
-	/* Initialize EIC for button wakeup */
-	sysclk_enable_peripheral_clock(EIC);
-	struct eic_line_config eic_opt ={
-		.eic_mode = EIC_MODE_EDGE_TRIGGERED,
-		.eic_edge = EIC_EDGE_FALLING_EDGE,
-		.eic_level = EIC_LEVEL_LOW_LEVEL,
-		.eic_filter = EIC_FILTER_DISABLED,
-		.eic_async = EIC_ASYNCH_MODE
-	};
-	eic_enable(EIC);
-	eic_line_set_config(EIC, UI_WAKEUP_EIC_LINE, &eic_opt);
-	eic_line_set_callback(EIC, UI_WAKEUP_EIC_LINE, UI_WAKEUP_HANDLER,
-		UI_WAKEUP_IRQN, UI_WAKEUP_IRQ_LEVEL);
-	eic_line_enable(EIC, UI_WAKEUP_EIC_LINE);
-	eic_line_enable_interrupt(EIC, UI_WAKEUP_EIC_LINE);
-}
-
-/**
- * \brief Disables interrupt pin change
- */
-static void ui_disable_asynchronous_interrupt(void)
-{
-	eic_line_disable_interrupt(EIC, UI_WAKEUP_EIC_LINE);
-	sysclk_disable_peripheral_clock(EIC);
-}
-
-//! @}
 
 void ui_init(void)
 {
-	// Initialize LEDs
-	LED_On(LED0);
+	struct extint_chan_conf config_extint_chan;
+
+	extint_chan_get_config_defaults(&config_extint_chan);
+
+	config_extint_chan.gpio_pin            = BUTTON_0_EIC_PIN;
+	config_extint_chan.gpio_pin_mux        = BUTTON_0_EIC_MUX;
+	config_extint_chan.gpio_pin_pull       = EXTINT_PULL_UP;
+	config_extint_chan.filter_input_signal = true;
+	config_extint_chan.detection_criteria  = EXTINT_DETECT_FALLING;
+	extint_chan_set_config(BUTTON_0_EIC_LINE, &config_extint_chan);
+	extint_register_callback(ui_wakeup_handler, BUTTON_0_EIC_LINE,
+			EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_enable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
+
+	/* Initialize LEDs */
+	LED_Off();
 }
 
 void ui_powerdown(void)
 {
-	LED_Off(LED0);
+	LED_Off();
 }
 
 
 void ui_wakeup_enable(void)
 {
-	ui_enable_asynchronous_interrupt();
+	extint_chan_enable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
 }
 
 void ui_wakeup_disable(void)
 {
-	ui_disable_asynchronous_interrupt();
+	extint_chan_disable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
 }
 
 void ui_wakeup(void)
 {
-	LED_On(LED0);
+	LED_On();
 }
 
 void ui_start_read(void)
@@ -169,61 +125,30 @@ void ui_process(uint16_t framenumber)
 	static uint8_t cpt_sof = 0;
 
 	if ((framenumber % 1000) == 0) {
-		LED_On(LED0);
+		LED_On();
 	}
 	if ((framenumber % 1000) == 500) {
-		LED_Off(LED0);
+		LED_Off();
 	}
-	// Scan process running each 2ms
+	/* Scan process running each 5ms */
 	cpt_sof++;
-	if (cpt_sof < 2) {
+	if (cpt_sof < 5) {
 		return;
 	}
 	cpt_sof = 0;
 
-	// Uses buttons to move mouse
-	if (!ioport_get_pin_level(SW0_PIN)) {
-		move_count --;
-		switch(move_dir) {
-		case MOVE_UP:
-			udi_hid_mouse_moveY(-MOUSE_MOVE_RANGE);
-			if (move_count < 0) {
-				move_dir = MOVE_RIGHT;
-				move_count = MOUSE_MOVE_COUNT;
-			}
-			break;
-		case MOVE_RIGHT:
-			udi_hid_mouse_moveX(+MOUSE_MOVE_RANGE);
-			if (move_count < 0) {
-				move_dir = MOVE_DOWN;
-				move_count = MOUSE_MOVE_COUNT;
-			}
-			break;
-		case MOVE_DOWN:
-			udi_hid_mouse_moveY(+MOUSE_MOVE_RANGE);
-			if (move_count < 0) {
-				move_dir = MOVE_LEFT;
-				move_count = MOUSE_MOVE_COUNT;
-			}
-			break;
-		case MOVE_LEFT:
-			udi_hid_mouse_moveX(-MOUSE_MOVE_RANGE);
-			if (move_count < 0) {
-				move_dir = MOVE_UP;
-				move_count = MOUSE_MOVE_COUNT;
-			}
-			break;
-		}
+	/* Uses buttons to move mouse */
+	if (!port_pin_get_input_level(BUTTON_0_PIN)) {
+		udi_hid_mouse_moveY(-MOUSE_MOVE_RANGE);
 	}
 }
 
 /**
  * \defgroup UI User Interface
  *
- * Human interface on SAM4L8 Xplained Pro:
- * - LED0 blinks when USB host has checked and enabled Mouse and MSC interface
- * - No mouse buttons are linked
- * - SW0 is used to move mouse around
- * - Only a low level on SW0 will generate a wakeup to USB Host in remote wakeup mode.
+ * Human interface on SAMD21-XPlain:
+ * - Led 0 blinks when USB is connected and enabled Mouse and MSC interface
+ * - Push button 0 (SW0) are used to move mouse up
+ * - Only a low level on push button 0 will generate a wakeup to USB Host in remote wakeup mode.
  *
  */

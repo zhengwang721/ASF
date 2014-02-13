@@ -79,7 +79,7 @@
 			<build type="header-file" value="ui.h"/>
 			<build type="header-file" value="main.h"/>
 			<build type="c-source" value="main.c"/>
-			<build type="c-source" value="memories_initialization_sam.c"/>
+			<build type="c-source" value="memories_initialization_samd.c"/>
 			<build type="include-path" value="."/>
 			<require idref="common.services.basic.sleepmgr"/>
 			<require idref="common.services.usb.class.device"/>
