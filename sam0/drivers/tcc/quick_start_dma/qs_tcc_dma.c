@@ -138,7 +138,8 @@ static void _config_dma_for_capture(void)
 	descriptor_config.beat_size = DMA_BEAT_SIZE_HWORD;
 	descriptor_config.step_selection = DMA_STEPSEL_SRC;
 	descriptor_config.src_increment_enable = false;
-	descriptor_config.source_address = (uint32_t)&CONF_PWM_MODULE->CC[1];
+	descriptor_config.source_address =
+			(uint32_t)&CONF_PWM_MODULE->CC[CONF_TCC_CAPTURE_CHANNEL];
 	descriptor_config.destination_address =
 			(uint32_t)capture_values + sizeof(capture_values);
 	//! [dma_setup_7]
@@ -185,7 +186,8 @@ static void _config_dma_for_wave(void)
 	descriptor_config.dst_increment_enable = false;
 	descriptor_config.source_address =
 			(uint32_t)compare_values + sizeof(compare_values);
-	descriptor_config.destination_address = (uint32_t)&CONF_PWM_MODULE->CC[0];
+	descriptor_config.destination_address =
+			(uint32_t)&CONF_PWM_MODULE->CC[CONF_PWM_CHANNEL];
 
 	dma_descriptor_create(&compare_dma_descriptor, &descriptor_config);
 
@@ -211,7 +213,8 @@ static void _configure_tcc(void)
 
 	//! [setup_change_config]
 	config_tcc.counter.period = 0x1000;
-	config_tcc.compare.channel_function[CONF_TCC_CAPTURE_CHANNEL] = TCC_CHANNEL_FUNCTION_CAPTURE;
+	config_tcc.compare.channel_function[CONF_TCC_CAPTURE_CHANNEL] =
+			TCC_CHANNEL_FUNCTION_CAPTURE;
 	config_tcc.compare.wave_generation = TCC_WAVE_GENERATION_SINGLE_SLOPE_PWM;
 	config_tcc.compare.wave_polarity[CONF_PWM_CHANNEL] = TCC_WAVE_POLARITY_0;
 	config_tcc.compare.match[CONF_PWM_CHANNEL] = compare_values[2];

@@ -44,11 +44,22 @@
 /**
  * \page asfdoc_sam0_tcc_callback_use_case Quick Start Guide for TCC - Callback
  *
+ * The supported device list:
+ *    - SAMD21
+ *
  * In this use case, the TCC will be used to generate a PWM signal, with a
  * varying duty cycle. Here the pulse width is increased each time the timer
- * count matches the set compare value. Because the PWM output pin is connected
- * to LED0, then the brightness of LED will change. The TCC module will be set up as follows:
+ * count matches the set compare value.
+ * When connect PWM output to LED it makes the LED vary its light. To see the
+ * waveform, you may need an ossiliscope.
  *
+ * The PWM output is set up as follows:
+ * <table>
+ *  <tr><th> board        </td><th> pin  </td><th> connect to </td></tr>
+ *  <tr><td> SAMD21 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
+ * </table>
+ *
+ * The TCC module will be set up as follows:
  * - GCLK generator 0 (GCLK main) clock source
  * - No dithering on the counter or compare
  * - No prescaler

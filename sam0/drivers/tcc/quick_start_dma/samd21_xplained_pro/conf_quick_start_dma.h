@@ -55,6 +55,7 @@
 #define CONF_PWM_OUT_MUX     LED_0_PWM_MUX
 //[definition_pwm]
 
+//[definition_feedback]
 /** TCC channel to capture */
 #define CONF_TCC_CAPTURE_CHANNEL      1
 
@@ -62,6 +63,7 @@
 #define CONF_TCC_EVENT_GENERATOR      EVSYS_ID_GEN_TCC0_MCX_0
 /** User of TCC event */
 #define CONF_TCC_EVENT_USER           EVSYS_ID_USER_TCC0_MC_1
+//[definition_feedback]
 
 //[definition_dma_compare_trigger]
 /** DMA Peripheral to Memory beat trigger: TCC0 OVF */
