@@ -3,7 +3,7 @@
  *
  * \brief Embedded Flash service for SAM.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -976,15 +976,15 @@ uint32_t flash_read_unique_id(uint32_t *pul_data, uint32_t ul_size)
  * \brief Read the flash user signature.
  *
  * \param p_data Pointer to a data buffer to store 512 bytes of user signature.
- * \param ul_size Data buffer size.
+ * \param ul_size Data buffer size in 32 bit words.
  *
  * \return 0 if successful; otherwise returns an error code.
  */
 uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size)
 {
-	if (ul_size > FLASH_USER_SIG_SIZE) {
-		/* Only 512 byte to store unique ID */
-		ul_size = FLASH_USER_SIG_SIZE;
+	if (ul_size > (FLASH_USER_SIG_SIZE / sizeof(uint32_t))) {
+		/* Only 512 byte to store user signature */
+		ul_size = FLASH_USER_SIG_SIZE / sizeof(uint32_t);
 	}
 
 	/* Send the read user signature commands */
@@ -999,22 +999,34 @@ uint32_t flash_read_user_signature(uint32_t *p_data, uint32_t ul_size)
 /**
  * \brief Write the flash user signature.
  *
- * \param ul_address Write address.
- * \param p_data Pointer to a data buffer to store 512 bytes of user signature.
- * \param ul_size Data buffer size.
+ * \param p_data Pointer to a data buffer to store info for the user signature.
+ * \param ul_size Data buffer size in 32 bit words.
  *
  * \return 0 if successful; otherwise returns an error code.
  */
-uint32_t flash_write_user_signature(uint32_t ul_address, const void *p_buffer,
-		uint32_t ul_size)
+uint32_t flash_write_user_signature(const void *p_buffer, uint32_t ul_size)
 {
+	uint32_t ul_idx;
+	uint32_t *p_dest;
+
 	/* The user signature should be no longer than 512 bytes */
-	if (ul_size > FLASH_USER_SIG_SIZE) {
+	if (ul_size > (IFLASH_PAGE_SIZE / sizeof(uint32_t))) {
 		return FLASH_RC_INVALID;
 	}
 
-	/* Write the full page */
-	flash_write(ul_address,  p_buffer, ul_size, 0);
+	/* Copy Buffer data */
+	memcpy((uint8_t *) gs_ul_page_buffer, p_buffer, 
+			ul_size * sizeof(uint32_t));
+
+	/* Write page buffer.
+	* Writing 8-bit and 16-bit data is not allowed and may lead to
+	* unpredictable data corruption.
+	*/
+	p_dest = (uint32_t *)IFLASH_ADDR;
+	for (ul_idx = 0; ul_idx < (IFLASH_PAGE_SIZE / sizeof(uint32_t)); 
+			ul_idx++) {
+		*p_dest++ = gs_ul_page_buffer[ul_idx];
+	}
 
 	/* Send the write signature command */
 	if (FLASH_RC_OK != efc_perform_command(EFC, EFC_FCMD_WUS, 0)) {
