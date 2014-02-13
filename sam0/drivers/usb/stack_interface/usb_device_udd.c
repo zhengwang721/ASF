@@ -727,6 +727,7 @@ static void udd_ctrl_fetch_ram(void)
 static void udd_ctrl_send_zlp_in(void)
 {
 	udd_ep_control_state = UDD_EPCTRL_HANDSHAKE_WAIT_IN_ZLP;
+	usb_device_endpoint_setup_buffer_job(&usb_device,udd_ctrl_buffer);
 	usb_device_endpoint_write_buffer_job(&usb_device,0,udd_g_ctrlreq.payload,0);
 }
 
@@ -782,11 +783,6 @@ static void udd_ctrl_in_sent(void)
 static void udd_ctrl_out_received(void* pointer)
 {
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
-
-	if(ep_callback_para->received_bytes == 0) {
-		usb_device_endpoint_read_buffer_job(&usb_device,0,udd_ctrl_buffer,USB_DEVICE_EP_CTRL_SIZE);
-		return;
-	}
 
 	uint16_t nb_data;
 	nb_data = ep_callback_para->received_bytes; /* Read data received during OUT phase */
