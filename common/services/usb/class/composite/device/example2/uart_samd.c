@@ -188,6 +188,7 @@ void uart_config(uint8_t port,usb_cdc_line_coding_t *cfg)
 	usart_conf.pinmux_pad1 = CONF_USART_PINMUX_PAD1;
 	usart_conf.pinmux_pad2 = CONF_USART_PINMUX_PAD2;
 	usart_conf.pinmux_pad3 = CONF_USART_PINMUX_PAD3;
+	usart_disable(&usart_module_edbg);
 	usart_init(&usart_module_edbg, CONF_USART_BASE, &usart_conf);
 	usart_enable(&usart_module_edbg);
 
@@ -205,6 +206,7 @@ void uart_open(uint8_t port)
 {
 	UNUSED(port);
 
+	usart_disable(&usart_module_edbg);
 	usart_init(&usart_module_edbg, CONF_USART_BASE, &usart_conf);
 	usart_enable(&usart_module_edbg);
 
