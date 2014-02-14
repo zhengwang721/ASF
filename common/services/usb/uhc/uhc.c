@@ -349,6 +349,8 @@ static void uhc_enumeration_step5(void)
 	req.wLength = offsetof(uhc_device_t, dev_desc.bMaxPacketSize0)
 			+ sizeof(uhc_dev_enum->dev_desc.bMaxPacketSize0);
 
+	// After a USB reset, the reallocation is required
+	uhd_ep_free(0, 0);
 	if (!uhd_ep0_alloc(0, 64)) {
 		uhc_enumeration_error(UHC_ENUM_HARDWARE_LIMIT);
 		return;

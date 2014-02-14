@@ -70,15 +70,15 @@
  * \subsection asfdoc_sam0_eeprom_basic_use_case_setup_flow Workflow
  * -# Attempt to initialize the EEPROM emulator service, storing the error code
  *    from the initialization function into a temporary variable.
- *  \snippet qs_emulator_basic.c init_eeprom_service
+ *    \snippet qs_emulator_basic.c init_eeprom_service
  * -# Check if the emulator failed to initialize due to the device fuses not
  *    being configured to reserve enough of the main FLASH memory rows for
  *    emulated EEPROM usage - abort if the fuses are mis-configured.
- *  \snippet qs_emulator_basic.c check_init_ok
+ *    \snippet qs_emulator_basic.c check_init_ok
  * -# Check if the emulator service failed to initialize for any other reason;
  *    if so assume the emulator physical memory is unformatted or corrupt and
  *    erase/re-try initialization.
- *  \snippet qs_emulator_basic.c check_re-init
+ *    \snippet qs_emulator_basic.c check_re-init
  *
  *
  * \section asfdoc_sam0_eeprom_basic_use_case_main Use Case
@@ -90,13 +90,13 @@
  * \subsection asfdoc_sam0_eeprom_basic_use_case_main_flow Workflow
  * -# Create a buffer to hold a single emulated EEPROM page of memory, and read
  *    out logical EEPROM page zero into it.
- *  \snippet qs_emulator_basic.c read_page
+ *    \snippet qs_emulator_basic.c read_page
  * -# Toggle the first byte of the read page.
- *  \snippet qs_emulator_basic.c toggle_first_byte
+ *    \snippet qs_emulator_basic.c toggle_first_byte
  * -# Output the toggled LED state onto the board LED.
- *  \snippet qs_emulator_basic.c set_led
+ *    \snippet qs_emulator_basic.c set_led
  * -# Write the modified page back to logical EEPROM page zero, flushing the
  *    internal emulator write cache afterwards to ensure it is immediately
  *    written to physical non-volatile memory.
- *  \snippet qs_emulator_basic.c write_page
+ *    \snippet qs_emulator_basic.c write_page
  */

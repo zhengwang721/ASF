@@ -72,25 +72,25 @@
  * -# Configure and enable the Watchdog driver
  *  -# Create a Watchdog module configuration struct, which can be filled out to
  *     adjust the configuration of the Watchdog.
- *   \snippet qs_wdt_callback.c setup_1
+ *     \snippet qs_wdt_callback.c setup_1
  *  -# Initialize the Watchdog configuration struct with the module's default
  *     values.
+ *     \snippet qs_wdt_callback.c setup_2
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *   \snippet qs_wdt_callback.c setup_2
  *  -# Adjust the configuration struct to set the timeout and early warning
  *     periods of the Watchdog.
- *   \snippet qs_wdt_callback.c setup_3
+ *     \snippet qs_wdt_callback.c setup_3
  *  -# Sets up the WDT hardware module with the requested settings.
- *   \snippet qs_wdt_callback.c setup_4
+ *     \snippet qs_wdt_callback.c setup_4
  * -# Register and enable the Early Warning callback handler
  *  -# Register the user-provided Early Warning callback function with the
  *     driver, so that it will be run when an Early Warning condition occurs.
- *   \snippet qs_wdt_callback.c setup_5
+ *     \snippet qs_wdt_callback.c setup_5
  *  -# Enable the Early Warning callback so that it will generate callbacks.
- *   \snippet qs_wdt_callback.c setup_6
+ *     \snippet qs_wdt_callback.c setup_6
  *
  * \section asfdoc_sam0_wdt_callback_use_case Use Case
  *
@@ -100,9 +100,9 @@
  *
  * \subsection asfdoc_sam0_wdt_callback_use_case_main Workflow
  * -# Turn off the board LED when the application starts.
- *  \snippet qs_wdt_callback.c main_1
+ *    \snippet qs_wdt_callback.c main_1
  * -# Enable global interrupts so that callbacks can be generated.
- *  \snippet qs_wdt_callback.c main_2
+ *    \snippet qs_wdt_callback.c main_2
  * -# Enter an infinite loop to hold the main program logic.
- *  \snippet qs_wdt_callback.c main_3
+ *    \snippet qs_wdt_callback.c main_3
  */

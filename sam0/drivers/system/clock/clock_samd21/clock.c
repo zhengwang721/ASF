@@ -370,6 +370,15 @@ void system_clock_source_dfll_set_config(
 		/* Enable the closed loop mode */
 		_system_clock_inst.dfll.control |= config->loop_mode;
 	}
+	if (config->loop_mode == SYSTEM_CLOCK_DFLL_LOOP_MODE_USB_RECOVERY) {
+
+		_system_clock_inst.dfll.mul =
+				SYSCTRL_DFLLMUL_MUL(config->multiply_factor);
+
+		/* Enable the USB recovery mode */
+		_system_clock_inst.dfll.control |= config->loop_mode |
+				SYSCTRL_DFLLCTRL_BPLCKC;
+	}
 }
 
 #ifdef FEATURE_SYSTEM_CLOCK_DPLL
@@ -812,6 +821,36 @@ void system_clock_init(void)
 
 	dfll_conf.coarse_max_step = CONF_CLOCK_DFLL_MAX_COARSE_STEP_SIZE;
 	dfll_conf.fine_max_step   = CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE;
+
+	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_USB_RECOVERY) {
+#define NVM_DFLL_COARSE_POS    58
+#define NVM_DFLL_COARSE_SIZE   6
+#define NVM_DFLL_FINE_POS      64
+#define NVM_DFLL_FINE_SIZE     10
+		uint32_t coarse =( *((uint32_t *)(NVMCTRL_OTP4)
+				+ (NVM_DFLL_COARSE_POS / 32))
+			>> (NVM_DFLL_COARSE_POS % 32))
+			& ((1 << NVM_DFLL_COARSE_SIZE) - 1);
+		if (coarse == 0x3f) {
+			coarse = 0x1f;
+		}
+		uint32_t fine =( *((uint32_t *)(NVMCTRL_OTP4)
+				+ (NVM_DFLL_FINE_POS / 32))
+			>> (NVM_DFLL_FINE_POS % 32))
+			& ((1 << NVM_DFLL_FINE_SIZE) - 1);
+		if (fine == 0x3ff) {
+			fine = 0x1ff;
+		}
+		dfll_conf.coarse_value = coarse;
+		dfll_conf.fine_value   = fine;
+
+		dfll_conf.quick_lock = SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE;
+		dfll_conf.stable_tracking = SYSTEM_CLOCK_DFLL_STABLE_TRACKING_FIX_AFTER_LOCK;
+		dfll_conf.wakeup_lock = SYSTEM_CLOCK_DFLL_WAKEUP_LOCK_KEEP;
+		dfll_conf.chill_cycle = SYSTEM_CLOCK_DFLL_CHILL_CYCLE_DISABLE;
+
+		dfll_conf.multiply_factor = 48000;
+	}
 
 	system_clock_source_dfll_set_config(&dfll_conf);
 #endif

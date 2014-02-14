@@ -860,6 +860,8 @@ void uhd_enable(void)
 #if USB_VBUS_EIC
 	_usb_vbus_config();
 	if (is_usb_vbus_high()) {
+		/* Force Vbus interrupt when Vbus is always high */
+		_uhd_vbus_handler();
 		usb_host_enable(&dev);
 		uhd_sleep_mode(UHD_STATE_DISCONNECT);
 	} else {
@@ -1160,8 +1162,10 @@ static void _uhd_ep0_error(struct usb_module *module_inst, void *pointer)
 		break;
 	case USB_STATUS_PIPE_DAPIDER:
 	case USB_STATUS_PIPE_PIDER:
-	default:
 		uhd_error = UHD_TRANS_PIDFAILURE;
+		break;
+	default:
+		uhd_error = UHD_TRANS_TIMEOUT;
 		break;
 	}
 
@@ -1447,8 +1451,11 @@ static void _uhd_ep_error(struct usb_module *module_inst, void *pointer)
 		break;
 	case USB_STATUS_PIPE_DAPIDER:
 	case USB_STATUS_PIPE_PIDER:
-	default:
 		uhd_error = UHD_TRANS_PIDFAILURE;
+		break;
+	default:
+		uhd_error = UHD_TRANS_TIMEOUT;
+		break;
 	}
 
 	_uhd_ep_abort_pipe(p_callback_para->pipe_num, uhd_error);
@@ -1574,7 +1581,8 @@ void uhd_ep_free(usb_add_t add, usb_ep_t endp)
 			/* Disable and stop transfer on control endpoint */
 			if (cfg.device_address == add) {
 				usb_host_pipe_freeze(&dev, 0);
-				if (uhd_ctrl_request_timeout) {
+				if (uhd_ctrl_request_timeout ||
+						(uhd_ctrl_request_first != NULL)) {
 					_uhd_ctrl_request_end(UHD_TRANS_DISCONNECT);
 				}
 				continue;
