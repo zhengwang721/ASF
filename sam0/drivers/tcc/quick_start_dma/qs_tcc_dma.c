@@ -221,9 +221,9 @@ static void _configure_tcc(void)
 	//! [setup_change_config]
 
 	//! [setup_change_config_pwm]
-	config_tcc.pins.enable_wave_out_pin[CONF_PWM_CHANNEL] = true;
-	config_tcc.pins.wave_out_pin[CONF_PWM_CHANNEL]        = CONF_PWM_OUT_PIN;
-	config_tcc.pins.wave_out_pin_mux[CONF_PWM_CHANNEL]    = CONF_PWM_OUT_MUX;
+	config_tcc.pins.enable_wave_out_pin[CONF_PWM_OUTPUT] = true;
+	config_tcc.pins.wave_out_pin[CONF_PWM_OUTPUT]        = CONF_PWM_OUT_PIN;
+	config_tcc.pins.wave_out_pin_mux[CONF_PWM_OUTPUT]    = CONF_PWM_OUT_MUX;
 	//! [setup_change_config_pwm]
 
 	//! [setup_set_config]

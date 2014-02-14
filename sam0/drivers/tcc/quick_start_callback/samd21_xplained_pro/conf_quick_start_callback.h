@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief TC Quick Start configuration for SAMD21 Xplained Pro
+ * \brief TCC Quick Start configuration for SAMD21 Xplained Pro
  *
  * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -47,8 +47,10 @@
 //[definition_pwm]
 /** PWM module to use */
 #define CONF_PWM_MODULE      LED_0_PWM_MODULE
-/** PWM output channel */
+/** PWM channel */
 #define CONF_PWM_CHANNEL     LED_0_PWM_CHANNEL
+/** PWM output */
+#define CONF_PWM_OUTPUT      LED_0_PWM_OUTPUT
 /** PWM output pin */
 #define CONF_PWM_OUT_PIN     LED_0_PWM_PIN
 /** PWM output pin mux */

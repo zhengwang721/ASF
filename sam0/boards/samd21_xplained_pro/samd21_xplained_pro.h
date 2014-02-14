@@ -113,6 +113,7 @@ void system_board_init(void);
 
 #define LED_0_PWM_MODULE          TCC0
 #define LED_0_PWM_CHANNEL         0
+#define LED_0_PWM_OUTPUT          0
 #define LED_0_PWM_PIN             PIN_PB30E_TCC0_WO0
 #define LED_0_PWM_MUX             MUX_PB30E_TCC0_WO0
 #define LED_0_PWM_PINMUX          PINMUX_PB30E_TCC0_WO0
