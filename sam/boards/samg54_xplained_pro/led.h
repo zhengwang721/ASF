@@ -1,9 +1,7 @@
 /**
  * \file
  *
- * \brief Arch file for SAM.
- *
- * This file defines common SAM series.
+ * \brief SAMG54-XPLAINED-PRO LEDs support package.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -43,78 +41,38 @@
  *
  */
 
-#ifndef _SAM_IO_
-#define _SAM_IO_
+#ifndef LED_H_INCLUDED
+#define LED_H_INCLUDED
 
-/* SAM3 family */
+#include "compiler.h"
+#include "ioport.h"
 
-/* SAM3S series */
-#if (SAM3S)
-# if (SAM3S8 || SAM3SD8)
-#  include "sam3s8.h"
-# else
-#  include "sam3s.h"
-# endif
-#endif
+/**
+ * \brief Turns off the specified LEDs.
+ *
+ * \param led LED to turn off (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Off(led)     ioport_set_pin_level(led##_GPIO, led##_INACTIVE_LEVEL)
 
-/* SAM3U series */
-#if (SAM3U)
-#  include "sam3u.h"
-#endif
+/**
+ * \brief Turns on the specified LEDs.
+ *
+ * \param led LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_On(led)      ioport_set_pin_level(led##_GPIO, led##_ACTIVE_LEVEL)
 
-/* SAM3N series */
-#if (SAM3N)
-#  include "sam3n.h"
-#endif
+/**
+ * \brief Toggles the specified LEDs.
+ *
+ * \param led LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Toggle(led)  ioport_toggle_pin_level(led##_GPIO)
 
-/* SAM3XA series */
-#if (SAM3XA)
-#  include "sam3xa.h"
-#endif
 
-/* SAM4S series */
-#if (SAM4S)
-#  include "sam4s.h"
-#endif
-
-/* SAM4L series */
-#if (SAM4L)
-#  include "sam4l.h"
-#endif
-
-/* SAM4E series */
-#if (SAM4E)
-#  include "sam4e.h"
-#endif
-
-/* SAM4N series */
-#if (SAM4N)
-#  include "sam4n.h"
-#endif
-
-/* SAM4C series */
-#if (SAM4C)
-#  include "sam4c.h"
-#endif
-
-/* SAM4CP series */
-#if (SAM4CP)
-#  include "sam4cp.h"
-#endif
-
-/* SAMG51 series */
-#if (SAMG51)
-#  include "samg51.h"
-#endif
-
-/* SAMG53 series */
-#if (SAMG53)
-#  include "samg53.h"
-#endif
-
-/* SAMG54 series */
-#if (SAMG54)
-#  include "samg54.h"
-#endif
-
-#endif /* _SAM_IO_ */
+#endif  // LED_H_INCLUDED

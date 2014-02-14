@@ -1,10 +1,6 @@
 /**
  * \file
  *
- * \brief Arch file for SAM.
- *
- * This file defines common SAM series.
- *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
@@ -43,78 +39,14 @@
  *
  */
 
-#ifndef _SAM_IO_
-#define _SAM_IO_
+#ifndef _SAMG54_GPBR_INSTANCE_
+#define _SAMG54_GPBR_INSTANCE_
 
-/* SAM3 family */
+/* ========== Register definition for GPBR peripheral ========== */
+#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+  #define REG_GPBR_GPBR                  (0x400E1490U) /**< \brief (GPBR) General Purpose Backup Register */
+#else
+  #define REG_GPBR_GPBR (*(__IO uint32_t*)0x400E1490U) /**< \brief (GPBR) General Purpose Backup Register */
+#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-/* SAM3S series */
-#if (SAM3S)
-# if (SAM3S8 || SAM3SD8)
-#  include "sam3s8.h"
-# else
-#  include "sam3s.h"
-# endif
-#endif
-
-/* SAM3U series */
-#if (SAM3U)
-#  include "sam3u.h"
-#endif
-
-/* SAM3N series */
-#if (SAM3N)
-#  include "sam3n.h"
-#endif
-
-/* SAM3XA series */
-#if (SAM3XA)
-#  include "sam3xa.h"
-#endif
-
-/* SAM4S series */
-#if (SAM4S)
-#  include "sam4s.h"
-#endif
-
-/* SAM4L series */
-#if (SAM4L)
-#  include "sam4l.h"
-#endif
-
-/* SAM4E series */
-#if (SAM4E)
-#  include "sam4e.h"
-#endif
-
-/* SAM4N series */
-#if (SAM4N)
-#  include "sam4n.h"
-#endif
-
-/* SAM4C series */
-#if (SAM4C)
-#  include "sam4c.h"
-#endif
-
-/* SAM4CP series */
-#if (SAM4CP)
-#  include "sam4cp.h"
-#endif
-
-/* SAMG51 series */
-#if (SAMG51)
-#  include "samg51.h"
-#endif
-
-/* SAMG53 series */
-#if (SAMG53)
-#  include "samg53.h"
-#endif
-
-/* SAMG54 series */
-#if (SAMG54)
-#  include "samg54.h"
-#endif
-
-#endif /* _SAM_IO_ */
+#endif /* _SAMG54_GPBR_INSTANCE_ */
