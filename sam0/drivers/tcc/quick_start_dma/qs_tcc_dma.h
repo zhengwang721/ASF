@@ -50,11 +50,18 @@
  * In this use case, the TCC will be used to generate a PWM signal. Here
  * the pulse width varies in following values through DMA transfer: one quater
  * of the period, half of the period and three quaters of the period.
+ * When connect PWM output to LED it makes the LED light. To see the waveform,
+ * you may need an ossiliscope.
  * The output signal is also fed back to another TCC channel by event system,
  * the event stamps are captured and transfer to values buffer by DMA.
  *
- * The TCC module will be setup as follows:
+ * The PWM output is set up as follows:
+ * <table>
+ *  <tr><th> board        </td><th> pin  </td><th> connect to </td></tr>
+ *  <tr><td> SAMD21 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
+ * </table>
  *
+ * The TCC module will be setup as follows:
  * - GCLK generator 0 (GCLK main) clock source
  * - No dithering on the counter or compare
  * - No prescaler
@@ -107,6 +114,7 @@
  *
  * Add to the main application source file, before any functions:
  * \snippet conf_quick_start_dma.h definition_pwm
+ * \snippet conf_quick_start_dma.h definition_feedback
  * \snippet conf_quick_start_dma.h definition_dma_compare_trigger
  * \snippet conf_quick_start_dma.h definition_dma_capture_trigger
  *
