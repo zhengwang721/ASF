@@ -269,7 +269,7 @@ void ui_kbd_led(uint8_t value)
  * \defgroup UI User Interface
  *
  * Human interface on SAMD21-XPlain:
- * - LED0 blinks when USB host has checked and enabled Mouse and MSC interface
+ * - LED0 blinks when USB host has checked and enabled Keyboard and MSC interface
  * - SW0 down opens a notepad application on Windows O.S.
  *   and sends key sequence "Atmel ARM"
  * - Only SW0 down will generate a wakeup to USB Host in remote wakeup mode.
