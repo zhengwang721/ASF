@@ -163,7 +163,3 @@ is defined as 1.
 \defgroup CLOCK_FORMULA system clock formula
 <tt>SYSCLK = XTAL * MUL / DIV / PRES = 8MHz * 6 / 1 / 1 = 48MHz</tt>
 */
-
-
-
-
