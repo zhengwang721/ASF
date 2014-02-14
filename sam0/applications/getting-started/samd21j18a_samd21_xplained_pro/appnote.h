@@ -68,7 +68,9 @@ Web page: http://www.atmel.com/SAMD21
 
 Documents: SAMD21 Series Datasheet (Summary, Complete) (.pdf) 
 - Select the required device (ie. SAMD21) or and get the latest datasheet
-  (.pdf file). There are two versions: 
+  (.pdf file). 
+  
+There are two versions: 
 - Complete version (Full datasheet)
 - Summary version (short version includes product features, package, pinout and
   order information)
@@ -83,12 +85,12 @@ Web page: http://www.atmel.com/tools/SAMD21
 Get the kit: http://store.atmel.com
 
 Document/file:
-- SAM4C-EK production files: schematics (.pdf), gerber, BOM,  test software 
-- SAM4C-EK User Guide (.pdf)
+- SAMD21 xplained pro  production files: schematics (.pdf), gerber, BOM,  test software 
+- SAMD21 xplained pro  User Guide (.pdf)
 
 \copydoc BOARD_FEATURE
 
-The SAMD21 xplained pro Guide introduces the SAM4C-EK and describes its development
+The SAMD21 xplained pro Guide introduces the SAMD21 xplained pro  and describes its development
 and debugging capabilities.
 */
 
@@ -184,8 +186,7 @@ chip. The pins are managed by a PORT driver. In addition, it is possible to
 have the controller generate an interrupt when the status of one of its pins
 changes; buttons are configured to have this behavior.
 
-The TC and SysTick are used to generate two timebases, in order to obtain the
-LED blinking rates. They are both used in interrupt mode: 
+The TC and SysTick are used to generate two timebases: 
 - The TC triggers an interrupt at a fixed rate, each time toggling the LED state
   (on/off). 
 - The SysTick is used for delay a fixed time.
@@ -323,11 +324,7 @@ location can be determined or relocated in the CODE or SRAM partitions of the
 memory map using the Vector Table Offset Register (VTOR). Details on the
 register can be found in the "Cortex™-M0+ Technical Reference Manual".
 
-In the getting-started example, a full vector table looks like this:
-
-\anchor code_startup_vector_table
-<b>Code: The Full Vector Table in the getting-started example</b>
-\snippet startup_sam4c.c startup_vector_table
+To get a full vector table,refer to startup_samd21.c in IAR project.
 
 \subsubsection appdoc_chap_06_section4_sub1_subsub2 Reset Exception
 The handler of reset exception is responsible for starting up the application
@@ -367,9 +364,11 @@ configuration file, <i>conf_clocks.h</i>.
 
 \anchor code_clock_configuration
 <b>Code: Clock Configuration</b>
-\snippet conf_clock.h conf_clock_sysclk_settings
-\snippet conf_clock.h conf_clock_pll1_settings
-
+\snippet conf_clocks.h conf_clock_sysclk_settings
+\snippet conf_clocks.h conf_clock_pll1_settings
+\snippet conf_clocks.h conf_clock_pll1_settings_1
+\snippet conf_clocks.h conf_clock_pll1_settings_2
+\snippet conf_clocks.h conf_clock_pll1_settings_3
 \copydoc SYS_CLOCK
 
 So after calling <i>system_init()</i> with this configuration, the system clock
@@ -377,137 +376,99 @@ frequency (SYSCLK) is
 
 \copydoc CLOCK_FORMULA
 
-Note that on the SAM4C-EK, 8MHz crystal oscillator is connected to XIN and XOUT
-pins.
-
-\copydoc CORE1_CLOCK
+Note that on the SAMD21, 8MHz crystal oscillator is connected to XIN and XOUT pins.
 
 \subsection appdoc_chap_06_section4_sub3 Board Initialization
 To contol the on-board components, buttons, LEDs and COM port in the case of the
-getting-started example, <i>board_init()</i> is called in the <i>main()</i>.
+getting-started example, <i>board_init()</i> can be called in the <i>main()</i>.
 With the <i>conf_board.h</i>, the corresponding pins are configured in the
 appropriate mode.
 
-\anchor code_com_enable
-<b>Code: Board Configuration</b>
-\snippet conf_board.h conf_board_uart_enable
-
 In <i>board_init()</i>, the pins connected to buttons are configured as input
 ports and the pins connected to LEDs are configured as output ports.
-
-In the getting-started example, \c CONF_BOARD_UART_CONSOLE is predefined as
-above, which enables the COM port by configuring PB4 and PB5 as URXD0 and UTXD0
-respectively.
+The example has no special board initialization,<i>board_init()</i> is ignored.
 
 \subsection appdoc_chap_06_section4_sub4 Peripherals Configuration and Usage
-\subsubsection appdoc_chap_06_section4_sub4_subsub1 UART
-UART outputs the debug information via the USB-to-COM port in the
+\subsubsection appdoc_chap_06_section4_sub4_subsub1 USART
+USART outputs the debug information via the USB-to-COM port in the
 getting-started example. To display characters on PC terminal software
 correctly, several parameters must be configured before calling <i>puts()</i>
 and <i>printf()</i>.
 
-In SAM4C, the UART peripheral operates in asynchronous mode only and supports
+In SAMD21, the USART peripheral operates in asynchronous mode only and supports
 only 8-bit character handling (with no parity) and 1 stop bit. No flow control
 is supported. So there are the baudrate and parity left to be configured.
 
 \anchor code_com_parameters
-<b>Code: UART Parameters</b>
+<b>Code: USART Parameters</b>
 \snippet conf_uart_serial.h conf_uart_serial_settings
 
 In <i>conf_uart_serial.h</i>, the baudrate is set as 115200bps and no parity is
 used.
 
 \anchor code_com_configuration
-<b>Code: UART Configuration</b>
+<b>Code: USART Configuration</b>
 \snippet main.c main_console_configure
 
-In the above code, the peripheral clock for \c UART0 is enabled by calling
-<i>sysclk_enable_peripheral_clock()</i>. Then <i>stdio_serial_init()</i>
-configures the baudrate and the parity type.
-
 \subsubsection appdoc_chap_06_section4_sub4_subsub2 SysTick
-SysTick can be easily configured by calling <i>SysTick_Config()</i>. To generate
-1ms period, the only parameter of this function should be <i>system clock
-frequency</i> / 1000.
+SysTick can be easily configured by calling <i>delay_init()</i>. To generate
+1s/1ms/1us period, the only parameter of this function should be time.
 
 \anchor code_systick_configuration
 <b>Code: SysTick Configuration</b>
-\snippet main.c main_step_systick_init
-
-<i>sysclk_get_cpu_hz()</i> returns the current system clock frequency in Hz.
-Then the SysTick interrupt will be triggered every 1ms. In the getting-started
-example, the SysTick interrupt handler <i>SysTick_Handler()</i> simply increases
-a global counter by 1 every time, which is used by the wait function to generate
-a specified period delay.
-
-\anchor code_systick_handler
-<b>Code: SysTick Interrupt Handler</b>
-\snippet main.c main_var_ticks
-\snippet main.c main_systick_handler
+\snippet main.c main_step_delay_init
 
 \anchor code_delay_fun
-<b>Code: Wait Function</b>
-\snippet main.c main_ms_delay
+<b>Code: Delay usage</b>
+\snippet main.c main_step_delay_usage
 
-Note that the global counter, \a g_ul_ms_ticks, is declared as a volatile
-variable. It prevents the compiler from optimizing the code casuing that the
-wait function does not work.
 
 \subsubsection appdoc_chap_06_section4_sub4_subsub3 TC
-SAM4C provides six 32-bit TC channels, which could be used to measure
+SAMD21 provides six 32-bit TC channels, which could be used to measure
 frequency, count event, generate PWM wave and so on.
 
-In the getting-started example, the TC channel 0 is configured to generate an
+In the getting-started example, the TC channel 3 is configured to generate an
 interrupt per a quarter of a second.
 
 \anchor code_tc_configuration
 <b>Code: Timer Counter Configuration</b>
 \snippet main.c main_tc_configure
+\snippet main.c main_tc_callback
 
 Before any configuration, TC peripheral clock is enabled. 2 necessary
-parameters, the TC divider, the tick value for the compare register (RC is used
-in the example), must be calculated to initialize the TC and the compare
+parameters, the TC count size, the tick value for the compare register , 
+must be calculated to initialize the TC and the compare
 register. Then the program enables the TC channel 0 interrupt and the compare
 interrupt. In the end, it starts TC channel 0 and the counter starts ticking.
 
-In the TC channel 0 interrupt handler, the LED status is toggled every time.
+In the TC channel 0 interrupt handler, Output some message .
 
 \anchor code_tc_handler
 <b>Code: Interrupt Handler for TC Channel 0</b>
 \snippet main.c main_tc0_handler
 
-\subsubsection appdoc_chap_06_section4_sub4_subsub4 PIO
-Besides toggling LEDs, in the getting-started example, PIO retrieves the button
+\subsubsection appdoc_chap_06_section4_sub4_subsub4 EXTINT
+Besides toggling LEDs, in the getting-started example, EXTINT retrieves the button
 input. When a button is pressed, the level of the corresponding pin is changed.
-PIO detects the change and triggers an interrupt.
+EXTINT detects the change and triggers an interrupt.
 
-\anchor code_pio_configuration
-<b>Code: PIO Configuration for one button (one pin)</b>
+\anchor code_EXTINT_configuration
+<b>Code: Configures the External Interrupt Controller for one button(one pin)</b>
 \snippet main.c main_button1_configure
+<b>Code: Configures and registers the External Interrupt callback</b>
+\snippet main.c main_button1_callback
 
-The PIO peripheral clock is enabled at first so that the configuration below can
-take effect.
-
-Usually in an application with the button inputs, there are some glitches on the
-input lines of the buttons. In PIO of SAM4C, the debouncing filter can be set to
-reject these unwanted pulses. In the getting-started example, if the period of a
-glitch is less than 10 slow clock cycles (slow clock frequency is 32768Hz in
-this case), the glitch will be ignored by PIO.
-
-Pressing different button leads to different action, so there should be a
-specified handler for a specified button pressing. Before enabling the PIO
-interrupt and any pin interrupt, a handler, \a _button0_handler, is set by
-calling <i>pio_handler_set()</i>. Also the condition to trigger a pin interrupt
+Pressing the button leads to a action, so there should be a
+specified handler for a specified button pressing. Before enabling the
+interrupt and any pin interrupt, a handler, \a extint_callback, is set by
+calling <i>extint_register_callback()</i>. Also the condition to trigger a pin interrupt
 is chosen here.
 
 \copydoc HOW_IT_WORKS
 
 \anchor code_button_press_process
 <b>Code: Button Pressing Process</b>
-\snippet main.c main_button1_evnt_process
 \snippet main.c main_button1_handler
-\snippet main.c main_button2_evnt_process
-\snippet main.c main_button2_handler
 */
 
 /**

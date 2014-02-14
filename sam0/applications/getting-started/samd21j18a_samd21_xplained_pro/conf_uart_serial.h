@@ -45,7 +45,7 @@
 #define CONF_TEST_H
 
 #include <board.h>
-
+//! [conf_uart_serial_settings]
 #define CONF_STDIO_USART_MODULE  EDBG_CDC_MODULE
 #define CONF_STDIO_MUX_SETTING   EDBG_CDC_SERCOM_MUX_SETTING
 #define CONF_STDIO_PINMUX_PAD0   EDBG_CDC_SERCOM_PINMUX_PAD0
@@ -53,5 +53,5 @@
 #define CONF_STDIO_PINMUX_PAD2   EDBG_CDC_SERCOM_PINMUX_PAD2
 #define CONF_STDIO_PINMUX_PAD3   EDBG_CDC_SERCOM_PINMUX_PAD3
 #define CONF_STDIO_BAUDRATE      115200
-
+//! [conf_uart_serial_settings]
 #endif // CONF_TEST_H
