@@ -1,7 +1,8 @@
 /**
  * \file
  *
- * \brief Example configuration
+ * \brief Initialization of memories
+ * Specific SAMDx functions to initialize the memories
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,14 +41,44 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
 
-#define CONF_USART_BASE           EDBG_CDC_MODULE
-#define CONF_USART_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
-#define CONF_USART_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
-#define CONF_USART_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
-#define CONF_USART_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
-#define CONF_USART_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+#include <asf.h>
+/* To get on-board memories configurations */
+#include "conf_board.h" 
+#include "conf_access.h"
+#include "main.h"
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#ifdef CONF_BOARD_SMC_PSRAM
+static void psram_init(void)
+{
+	// To add code here, when this feature can be realized in board
+}
+#endif
+
+#ifdef CONF_BOARD_SRAM
+static void ext_sram_init(void)
+{
+	// To add code here, when this feature can be realized in board
+}
+#endif
+
+#ifdef CONF_BOARD_NAND
+static void nand_init(void)
+{
+	/* All operations have been done in ftl_lib.
+	   No additional actions to do */
+}
+#endif
+
+void memories_initialization(void)
+{
+#ifdef CONF_BOARD_SMC_PSRAM
+	psram_init();
+#endif
+#ifdef CONF_BOARD_SRAM
+	ext_sram_init();
+#endif
+#ifdef CONF_BOARD_NAND
+	nand_init();
+#endif
+}

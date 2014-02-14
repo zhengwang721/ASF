@@ -1,7 +1,10 @@
 /**
+ *
  * \file
  *
- * \brief Example configuration
+ * \brief Virtual memory configuration file.
+ *
+ * This file contains the possible external configuration of the Virtual Memory.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,14 +43,12 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
 
-#define CONF_USART_BASE           EDBG_CDC_MODULE
-#define CONF_USART_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
-#define CONF_USART_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
-#define CONF_USART_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
-#define CONF_USART_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
-#define CONF_USART_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#ifndef _CONF_VIRTUAL_MEM_H_
+#define _CONF_VIRTUAL_MEM_H_
+
+//! Size of Virtual Memory on internal RAM (unit 512B)
+#define VMEM_NB_SECTOR 48 // Internal RAM 24KB (should > 20KB or PC can not format it)
+
+#endif // _CONF_VIRTUAL_MEM_H_
