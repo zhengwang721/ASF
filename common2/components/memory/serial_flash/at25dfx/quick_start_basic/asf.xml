@@ -10,7 +10,9 @@
 		<build type="c-source" value="qs_at25dfx_basic.c"/>
 		<build type="header-file" value="qs_at25dfx_basic.h"/>
 		<build type="include-path" value="."/>
+		<build type="module-config" subtype="required-header-file" value="conf_at25dfx.h"/>
 		<require idref="common2.components.memory.serial_flash.at25dfx"/>
 		<device-support value="samd20"/>
+		<device-support value="samd21"/>
 	</module>
 </asf>

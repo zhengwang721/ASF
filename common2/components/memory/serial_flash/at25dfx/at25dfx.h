@@ -116,11 +116,11 @@
  * share a SPI bus, simply associate the same SPI driver instance to multiple
  * instances of this driver.
  *
- * The \ref asfdoc_samd20_at25dfx_example "figure below" illustrates an example
+ * The \ref asfdoc_sam0_at25dfx_example "figure below" illustrates an example
  * where two out of three instances of this driver are associated with the same
  * SPI driver instance.
  *
- * \anchor asfdoc_samd20_at25dfx_example
+ * \anchor asfdoc_sam0_at25dfx_example
  * \image html at25dfx.png "AT25DFx and SPI instance sharing."
  *
  *
@@ -366,11 +366,11 @@ enum status_code at25dfx_chip_wake(struct at25dfx_chip_module *chip);
  * \section asfdoc_common2_at25dfx_extra_dependencies Dependencies
  *
  * This driver has the following dependencies:
- * - \ref asfdoc_samd20_sercom_spi_group "SERCOM SPI driver" (depending on
+ * - \ref asfdoc_sam0_sercom_spi_group "SERCOM SPI driver" (depending on
  *    selected HAL)
- * - \ref asfdoc_samd20_sercom_spi_master_vec_group "SERCOM SPI master driver w/ vectored I/O"
+ * - \ref asfdoc_sam0_sercom_spi_master_vec_group "SERCOM SPI master driver w/ vectored I/O"
  *    (depending on selected HAL)
- * - \ref asfdoc_samd20_port_group "PORT driver"
+ * - \ref asfdoc_sam0_port_group "PORT driver"
  * - \ref group_sam0_utils "Compiler driver"
  *
  *
@@ -419,7 +419,7 @@ enum status_code at25dfx_chip_wake(struct at25dfx_chip_module *chip);
  * </tr>
  * <tr>
  * <td>A</td>
- * <td>XX/2013</td>
+ * <td>01/2014</td>
  * <td>Initial release</td>
  * </tr>
  * </table>

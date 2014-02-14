@@ -105,16 +105,16 @@
  * \subsection asfdoc_sam0_spi_dma_use_case_setup_flow Workflow
  * -# Create a module software instance structure for the SPI module to store
  *    the SPI driver state while it is in use.
+ *    \snippet qs_spi_dma_use.c spi_module_inst
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- *    \snippet qs_spi_dma_use.c spi_module_inst
  * -# Create a module software instance structure for DMA resource to store
  *    the DMA resource state while it is in use.
+ *    \snippet qs_spi_dma_use.c dma_resource
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- *    \snippet qs_spi_dma_use.c dma_resource
  * -# Create transfer done flag to indication DMA transfer done
  *    \snippet qs_spi_dma_use.c dma_transfer_done_flag
  * -# Define the buffer length for tx/rx
@@ -126,12 +126,12 @@
  *     \snippet qs_spi_dma_use.c spi_master_config
  *     \snippet qs_spi_dma_use.c spi_slave_config
  * -# Initialize the SPI configuration struct with the module's default values.
+ *     \snippet qs_spi_dma_use.c spi_master_conf_defaults
+ *     \snippet qs_spi_dma_use.c spi_slave_conf_defaults
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *     \snippet qs_spi_dma_use.c spi_master_conf_defaults
- *     \snippet qs_spi_dma_use.c spi_slave_conf_defaults
  * -# Alter the SPI settings to configure the physical pinout, baud rate and
  *     other relevant parameters.
  *     \snippet qs_spi_dma_use.c spi_master_mux_setting
@@ -146,50 +146,48 @@
  *
  * -# Create DMA resource configuration structure, which can be filled out to
  *    adjust the configuration of a single DMA transfer.
- *  \snippet qs_spi_dma_use.c dma_tx_setup_1
- *  \snippet qs_spi_dma_use.c dma_rx_setup_1
+ *    \snippet qs_spi_dma_use.c dma_tx_setup_1
+ *    \snippet qs_spi_dma_use.c dma_rx_setup_1
  *
  * -# Initialize the DMA resource configuration struct with the module's
  *    default values.
+ *    \snippet qs_spi_dma_use.c dma_tx_setup_2
+ *    \snippet qs_spi_dma_use.c dma_rx_setup_2
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_spi_dma_use.c dma_tx_setup_2
- *  \snippet qs_spi_dma_use.c dma_rx_setup_2
- *
- * -# Set extra configurations for the DMA resource. It is using peripheral trigger,
- * SERCOM Tx empty and RX complete trigger causes a beat transfer in
- * this example.
- *  \snippet qs_spi_dma_use.c dma_tx_setup_3
- *  \snippet qs_spi_dma_use.c dma_rx_setup_3
+ * -# Set extra configurations for the DMA resource. It is using peripheral
+ *    trigger, SERCOM Tx empty and RX complete trigger causes a beat transfer in
+ *    this example.
+ *    \snippet qs_spi_dma_use.c dma_tx_setup_3
+ *    \snippet qs_spi_dma_use.c dma_rx_setup_3
  *
  * -# Allocate a DMA resource with the configurations.
- *  \snippet qs_spi_dma_use.c dma_tx_setup_4
- *  \snippet qs_spi_dma_use.c dma_rx_setup_4
+ *    \snippet qs_spi_dma_use.c dma_tx_setup_4
+ *    \snippet qs_spi_dma_use.c dma_rx_setup_4
  *
  * -# Create a DMA transfer descriptor configuration structure, which can be
- * filled out to adjust the configuration of a single DMA transfer.
- *  \snippet qs_spi_dma_use.c dma_tx_setup_5
- *  \snippet qs_spi_dma_use.c dma_rx_setup_5
+ *    filled out to adjust the configuration of a single DMA transfer.
+ *    \snippet qs_spi_dma_use.c dma_tx_setup_5
+ *    \snippet qs_spi_dma_use.c dma_rx_setup_5
  *
  * -# Initialize the DMA transfer descriptor configuration struct with the module's
  *    default values.
+ *    \snippet qs_spi_dma_use.c dma_tx_setup_6
+ *    \snippet qs_spi_dma_use.c dma_rx_setup_6
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_spi_dma_use.c dma_tx_setup_6
- *  \snippet qs_spi_dma_use.c dma_rx_setup_6
- *
  * -# Set the specific parameters for a DMA transfer with transfer size, source
  *    address, destination address.
- *  \snippet qs_spi_dma_use.c dma_tx_setup_7
- *  \snippet qs_spi_dma_use.c dma_rx_setup_7
+ *    \snippet qs_spi_dma_use.c dma_tx_setup_7
+ *    \snippet qs_spi_dma_use.c dma_rx_setup_7
  *
  * -# Create the DMA transfer descriptor.
- *  \snippet qs_spi_dma_use.c dma_tx_setup_8
- *  \snippet qs_spi_dma_use.c dma_rx_setup_8
+ *    \snippet qs_spi_dma_use.c dma_tx_setup_8
+ *    \snippet qs_spi_dma_use.c dma_rx_setup_8
  *
  * \section asfdoc_sam0_spi_dma_use_case_main Use Case
  *
@@ -199,17 +197,17 @@
  *
  * \subsection asfdoc_sam0_spi_dma_use_case_main_flow Workflow
  * -# Select the slave.
- *  \snippet qs_spi_dma_use.c select_slave
+ *    \snippet qs_spi_dma_use.c select_slave
  *
  * -# Start the transfer job.
- *  \snippet qs_spi_dma_use.c main_1
+ *    \snippet qs_spi_dma_use.c main_1
  *
  * -# Wait for transfer done.
- *  \snippet qs_spi_dma_use.c main_2
+ *    \snippet qs_spi_dma_use.c main_2
  *
  * -# Deselect the slave.
- *  \snippet qs_spi_dma_use.c deselect_slave
+ *    \snippet qs_spi_dma_use.c deselect_slave
  *
  * -# enter endless loop
- *  \snippet qs_spi_dma_use.c endless_loop
+ *    \snippet qs_spi_dma_use.c endless_loop
  */

@@ -48,14 +48,14 @@
 				at high baud rates, in single-threaded applications.
 				</info>
 
-				<module type="component" id="common2.components.memory.serial_flash.at25dfx#polled_spi#samd20" caption="SAM D20 implementation of AT25DFx SerialFlash with polled SPI">
+				<module type="component" id="common2.components.memory.serial_flash.at25dfx#polled_spi#sam0" caption="SAM D20/D21 implementation of AT25DFx SerialFlash with polled SPI">
 					<info type="description" value="summary">
-					SAM D20 implementation of AT25DFx SerialFlash driver with polled SPI.
+					SAM D20/D21 implementation of AT25DFx SerialFlash driver with polled SPI.
 					</info>
 
 					<info type="description" value="pdf">
 					This document describes how to use the AT25DFx SerialFlash driver
-					with polled SPI on the SAM D20.
+					with polled SPI on the SAM D20/D21.
 					</info>
 
 					<info type="keyword" value="technology">
@@ -70,6 +70,7 @@
 					<require idref="sam0.drivers.port"/>
 					<require idref="sam0.utils"/>
 					<device-support value="samd20"/>
+					<device-support value="samd21"/>
 					<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 				</module>
 
@@ -80,15 +81,15 @@
 				Vectored master SPI variant of the AT25DFx SerialFlash driver.
 				</info>
 
-				<module type="component" id="common2.components.memory.serial_flash.at25dfx#vectored_master_spi#samd20" caption="SAM D20 implementation of AT25DFx SerialFlash with vectored master SPI">
+				<module type="component" id="common2.components.memory.serial_flash.at25dfx#vectored_master_spi#sam0" caption="SAM D20/D21 implementation of AT25DFx SerialFlash with vectored master SPI">
 					<info type="description" value="summary">
-					SAM D20 implementation of AT25DFx SerialFlash driver with vectored
+					SAM D20/D21 implementation of AT25DFx SerialFlash driver with vectored
 					master SPI.
 					</info>
 
 					<info type="description" value="pdf">
 					This document describes how to use the AT25DFx SerialFlash driver
-					with vectored master SPI on the SAM D20.
+					with vectored master SPI on the SAM D20/D21.
 					</info>
 
 					<info type="keyword" value="technology">
@@ -103,6 +104,7 @@
 					<require idref="sam0.drivers.port"/>
 					<require idref="sam0.utils"/>
 					<device-support value="samd20"/>
+					<device-support value="samd21"/>
 					<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 				</module>
 

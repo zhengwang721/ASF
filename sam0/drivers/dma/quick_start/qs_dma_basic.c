@@ -157,7 +157,7 @@ int main(void)
 	while (!transfer_is_done) {
 		/* Wait for transfer done */
 	}
-	/* ! [main_2] */
+	//! [main_2]
 
 	while (true) {
 		/* Nothing to do */
