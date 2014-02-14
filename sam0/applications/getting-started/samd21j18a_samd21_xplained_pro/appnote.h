@@ -187,8 +187,7 @@ have the controller generate an interrupt when the status of one of its pins
 changes; buttons are configured to have this behavior.
 
 The TC and SysTick are used to generate two timebases: 
-- The TC triggers an interrupt at a fixed rate, each time toggling the LED state
-  (on/off). 
+- The TC triggers an interrupt at a fixed rate, each time output some message 
 - The SysTick is used for delay a fixed time.
 
 

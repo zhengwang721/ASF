@@ -178,7 +178,9 @@ static void tc_callback_to_counter(
 //! [main_tc0_handler]
 	static uint32_t count = 0;
 	count ++;
-	
+	if(count%100 == 0){
+		printf("The output is triggered by TC counter\n");
+	}
 	tc_set_count_value(&tc_instance,TC_COUNT_VALUE);	
 //! [main_tc0_handler]
 }
