@@ -1,7 +1,7 @@
 /**
  * \file *********************************************************************
  *
- * \brief Common TRX Access Configuration
+ * \brief Platform Abstraction Layer configuration
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  */
 
-#ifndef CONF_TRX_ACCESS_H_INCLUDED
-#define CONF_TRX_ACCESS_H_INCLUDED
+#ifndef CONF_PAL_H_INCLUDED
+#define CONF_PAL_H_INCLUDED
 
-#endif /* CONF_TRX_ACCESS_H_INCLUDED */
+#endif /* CONF_PAL_H_INCLUDED */
