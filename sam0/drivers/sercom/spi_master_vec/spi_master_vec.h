@@ -269,12 +269,20 @@ struct spi_master_vec_bufdesc {
 	spi_master_vec_buflen_t length;
 };
 
+/** Transfer direction */
+enum _spi_master_vec_direction {
+	SPI_MASTER_VEC_DIRECTION_READ,
+	SPI_MASTER_VEC_DIRECTION_WRITE,
+	SPI_MASTER_VEC_DIRECTION_BOTH,
+	SPI_MASTER_VEC_DIRECTION_IDLE,
+};
+
 /** Driver instance. */
 struct spi_master_vec_module {
 #if !defined(__DOXYGEN__)
 	Sercom *volatile sercom;
 	volatile bool locked;
-	volatile enum _spi_direction direction;
+	volatile enum _spi_master_vec_direction direction;
 	volatile enum status_code status;
 	volatile spi_master_vec_buflen_t rx_length;
 	volatile spi_master_vec_buflen_t tx_length;

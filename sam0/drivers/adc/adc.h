@@ -3,7 +3,7 @@
  *
  * \brief SAM D20 Peripheral Analog-to-Digital Converter Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1373,8 +1373,10 @@ static inline void adc_start_conversion(
  * \param[out] result       Pointer to store the result value in
  *
  * \return Status of the ADC read request.
- * \retval STATUS_OK    The result was retrieved successfully
- * \retval STATUS_BUSY  A conversion result was not ready
+ * \retval STATUS_OK           The result was retrieved successfully
+ * \retval STATUS_BUSY         A conversion result was not ready
+ * \retval STATUS_ERR_OVERFLOW The result register has been overwritten by the
+ *                             ADC module before the result was read by the software
  */
 static inline enum status_code adc_read(
 		struct adc_module *const module_inst,
@@ -1400,6 +1402,11 @@ static inline enum status_code adc_read(
 
 	/* Reset ready flag */
 	adc_clear_status(module_inst, ADC_STATUS_RESULT_READY);
+
+	if (adc_get_status(module_inst) & ADC_STATUS_OVERRUN) {
+		adc_clear_status(module_inst, ADC_STATUS_OVERRUN);
+		return STATUS_ERR_OVERFLOW;
+	}
 
 	return STATUS_OK;
 }
