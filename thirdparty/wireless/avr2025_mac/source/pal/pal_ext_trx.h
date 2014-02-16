@@ -3,7 +3,7 @@
  *
  * @brief PAL related APIs for externally plugged transceivers
  *
- *  Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ *  Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

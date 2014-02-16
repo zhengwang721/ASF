@@ -5,7 +5,7 @@
  *
  * To use this board, define BOARD=ATMEGA256RFR2_XPLAINED_PRO.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

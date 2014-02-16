@@ -3,7 +3,6 @@
  *
  * @brief This header file declares macros for various build configurations
  *
- * $Id: zid_build_config.h 33680 2012-11-30 12:26:17Z agasthian.s $
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com

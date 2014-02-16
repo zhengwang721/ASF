@@ -3,7 +3,6 @@
  *
  * @brief API for ZID profile
  *
- * $Id: gdp_config.h 33949 2013-01-17 10:18:08Z agasthian.s $
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
