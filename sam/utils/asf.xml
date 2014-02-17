@@ -266,5 +266,20 @@
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="samg53"/>
 		</module>
+
+		<!-- SAMG54 //-->
+		<module type="driver" id="sam.utils#13" caption="SAMG54 compiler driver">
+			<info type="description" value="summary">
+			Compiler abstraction layer and code utilities for SAMG54 devices. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
+			</info>
+			<require idref="sam.utils.common"/>
+			<require idref="sam.utils.cmsis.samg54.include"/>
+			<require idref="sam.utils.cmsis.samg54.include.component"/>
+			<require idref="sam.utils.cmsis.samg54.include.instance"/>
+			<require idref="sam.utils.cmsis.samg54.include.pio"/>
+			<require idref="sam.utils.cmsis.samg54.source.template"/>
+			<info type="gui-flag" value="hidden"/>
+			<device-support value="samg54"/>
+		</module>
 	</select-by-device>
 </asf>
