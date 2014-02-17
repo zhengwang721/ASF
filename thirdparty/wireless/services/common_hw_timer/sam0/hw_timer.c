@@ -4,7 +4,7 @@
  * @brief
  *
 
- *  Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ *  Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -161,7 +161,7 @@ uint8_t tmr_init(void)
 		timer_config.run_in_standby=true;
 	}
 	#endif
-	timer_config.size_specific.size_16_bit.compare_capture_channel[0] = TIMER_PERIOD;
+	timer_config.counter_16_bit.compare_capture_channel[0] = TIMER_PERIOD;
 	tc_init(&module_inst, TIMER, &timer_config);
 	tc_register_callback(&module_inst, tc_ovf_callback, TC_CALLBACK_OVERFLOW);
 	tc_register_callback(&module_inst, tc_cca_callback, TC_CALLBACK_CC_CHANNEL0);

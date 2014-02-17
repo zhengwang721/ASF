@@ -3,7 +3,7 @@
  *
  * \brief Common TRX Access Configuration
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -211,8 +211,7 @@
         config.pinmux_pad3 = PINMUX_UNUSED;
 
 #define AT86RFX_IRQ_CHAN             6
-#define AT86RFX_INTC_INIT()          extint_enable(); \
-									struct extint_chan_conf eint_chan_conf; \
+#define AT86RFX_INTC_INIT()           struct extint_chan_conf eint_chan_conf; \
 									extint_chan_get_config_defaults(&eint_chan_conf); \
 									eint_chan_conf.gpio_pin = AT86RFX_IRQ_PIN; \
 									eint_chan_conf.gpio_pin_mux = PINMUX_PA22A_EIC_EXTINT6; \
@@ -221,7 +220,7 @@
 									eint_chan_conf.filter_input_signal = false; \
 									eint_chan_conf.detection_criteria  = EXTINT_DETECT_RISING; \
 									extint_chan_set_config(AT86RFX_IRQ_CHAN, &eint_chan_conf); \
-									extint_register_callback(AT86RFX_ISR, EXTINT_CALLBACK_TYPE_DETECT);
+									extint_register_callback(AT86RFX_ISR, AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT);
                                                 
 
 /** Enables the transceiver main interrupt. */

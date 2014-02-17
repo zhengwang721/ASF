@@ -3,7 +3,7 @@
  *
  * \brief Sleep manager
  *
- * Copyright (c) 2010 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -56,8 +56,14 @@
 # include "sam4l/sleepmgr.h"
 #elif MEGA
 # include "mega/sleepmgr.h"
+#elif (SAMD20 || SAMD21)
+# include "samd/sleepmgr.h"
 #else
 # error Unsupported device.
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 /**
@@ -242,5 +248,9 @@ static inline void sleepmgr_enter_sleep(void)
 
 
 //! @}
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* SLEEPMGR_H */

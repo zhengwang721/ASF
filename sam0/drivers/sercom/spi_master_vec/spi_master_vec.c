@@ -46,7 +46,7 @@
 #include <system_interrupt.h>
 
 /**
- * \ingroup asfdoc_samd20_sercom_spi_master_vec_group
+ * \ingroup asfdoc_sam0_sercom_spi_master_vec_group
  *
  * @{
  */
@@ -139,10 +139,17 @@ enum status_code spi_master_vec_init(struct spi_master_vec_module *const module,
 	system_gclk_chan_enable(gclk_index);
 	sercom_set_gclk_generator(config->gclk_generator, false);
 
+#  ifdef FEATURE_SPI_SYNC_SCHEME_VERSION_2
+	/* In case the SERCOM was reset, ensure that it is synched */
+	while (spi_hw->STATUS.reg) {
+		/* Intentionally left empty */
+	}
+#  else
 	/* In case the SERCOM was reset, ensure that it is synched */
 	while (spi_hw->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY) {
 		/* Intentionally left empty */
 	}
+#  endif
 
 	/* Set up the SERCOM SPI module as master */
 	spi_hw->CTRLA.reg = SERCOM_SPI_CTRLA_MODE_SPI_MASTER;
@@ -212,10 +219,15 @@ void spi_master_vec_enable(const struct spi_master_vec_module *const module)
 	spi_hw->INTENCLR.reg = SERCOM_SPI_INTFLAG_DRE | SERCOM_SPI_INTFLAG_RXC
 			| SERCOM_SPI_INTFLAG_TXC;
 
+#  ifdef FEATURE_SPI_SYNC_SCHEME_VERSION_2
+	while (spi_hw->STATUS.reg) {
+		/* Intentionally left empty */
+	}
+#  else
 	while (spi_hw->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY) {
 		/* Intentionally left empty */
 	}
-
+#  endif
 	spi_hw->CTRLA.reg |= SERCOM_SPI_CTRLA_ENABLE;
 
 	system_interrupt_enable(_sercom_get_interrupt_vector(module->sercom));
@@ -235,10 +247,15 @@ void spi_master_vec_disable(struct spi_master_vec_module *const module)
 
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->sercom));
 
+#  ifdef FEATURE_SPI_SYNC_SCHEME_VERSION_2
+	while (spi_hw->STATUS.reg) {
+		/* Intentionally left empty */
+	}
+#  else
 	while (spi_hw->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY) {
 		/* Intentionally left empty */
 	}
-
+#  endif
 	spi_hw->CTRLB.reg = 0;
 	spi_hw->CTRLA.reg &= ~SERCOM_SPI_CTRLA_ENABLE;
 	module->rx_bufdesc_ptr = NULL;
@@ -266,10 +283,15 @@ void spi_master_vec_reset(struct spi_master_vec_module *const module)
 	/* Disable the module */
 	spi_master_vec_disable(module);
 
+#  ifdef FEATURE_SPI_SYNC_SCHEME_VERSION_2
+	while (spi_hw->STATUS.reg) {
+		/* Intentionally left empty */
+	}
+#  else
 	while (spi_hw->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY) {
 		/* Intentionally left empty */
 	}
-
+#  endif
 	/* Software reset the module */
 	spi_hw->CTRLA.reg |= SERCOM_SPI_CTRLA_SWRST;
 
@@ -379,10 +401,15 @@ enum status_code spi_master_vec_transceive_buffer_job(
 	}
 
 	/* Ensure the SERCOM is sync'ed before writing these registers */
+#  ifdef FEATURE_SPI_SYNC_SCHEME_VERSION_2
+	while (spi_hw->STATUS.reg) {
+		/* Intentionally left empty */
+	}
+#  else
 	while (spi_hw->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY) {
 		/* Intentionally left empty */
 	}
-
+#  endif
 	spi_hw->CTRLB.reg = tmp_ctrlb;
 	spi_hw->INTENSET.reg = tmp_intenset;
 
@@ -403,7 +430,8 @@ static void _spi_master_vec_int_handler(uint8_t sercom_index)
 	SercomSpi *const spi_hw = &(module->sercom->SPI);
 	uint8_t int_status;
 
-	int_status = spi_hw->INTFLAG.reg & spi_hw->INTENSET.reg;
+	int_status = spi_hw->INTFLAG.reg ;
+    int_status &= spi_hw->INTENSET.reg;
 
 	if (int_status & SERCOM_SPI_INTFLAG_DRE) {
 		uint_fast8_t tx_lead_on_rx = module->tx_lead_on_rx;
