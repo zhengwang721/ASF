@@ -10,21 +10,23 @@
 		<build type="c-source" value="ui.c"/>
 		<build type="include-path" value="."/>
 		<require idref="common.components.memory.virtual_mem"/>
-		<require idref="common.services.usb.composite.device.example.cdc_msc"/>
+		<require idref="common.services.usb.class.composite.device.example.hids_cdc_msc"/>
 		<config name="config.common.services.usb.class.device" value="composite"/>
 		<config name="config.common.services.usb.class.cdc.device.composite" value="enable"/>
 		<config name="config.common.services.usb.class.msc.device.composite" value="enable"/>
+		<config name="config.common.services.usb.class.hid.device.mouse.composite" value="enable"/>
+		<config name="config.common.services.usb.class.hid.device.keyboard.composite" value="enable"/>
 		<require idref="board.samd21_xplained_pro"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 		<generator value="doxygen"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
-		<config name="config.compiler.iarewarm.sys_stack_size" value="0x0E00"/>
+		<config name="config.compiler.iarewarm.sys_stack_size" value="0x0C00"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
-		<config name="config.compiler.armgcc.stack_size" value="0x0E00"/>
+		<config name="config.compiler.armgcc.stack_size" value="0x0C00"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
-		<toolchain-config name="armgcc.linker.miscellaneous.LinkerFlags" value="-Wl,--defsym,STACK_SIZE=0x0E00" toolchain="armgcc"/>
+		<toolchain-config name="armgcc.linker.miscellaneous.LinkerFlags" value="-Wl,--defsym,STACK_SIZE=0x0C00" toolchain="armgcc"/>
 		<device-support value="atsamd21j18a"/>
 	</project>
 </asf>

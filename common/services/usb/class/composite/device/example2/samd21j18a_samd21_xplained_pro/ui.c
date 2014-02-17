@@ -170,6 +170,11 @@ void ui_wakeup_disable(void)
 	extint_chan_disable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
 }
 
+void ui_wakeup(void)
+{
+	LED_On();
+}
+
 void ui_com_open(uint8_t port)
 {
 	UNUSED(port);
@@ -251,17 +256,20 @@ void ui_process(uint16_t framenumber)
 	}
 	/* Scan process running each 5ms */
 	cpt_sof++;
-	if (cpt_sof < 5) {
-		return;
-	}
-	cpt_sof = 0;
-
+	
 	if(button_function) {
+		if (cpt_sof < 5) {
+			return;
+		}
+		cpt_sof = 0;
 		/* Uses buttons to move mouse */
 		if (!port_pin_get_input_level(BUTTON_0_PIN)) {
-		udi_hid_mouse_moveY(-MOUSE_MOVE_RANGE);
+			udi_hid_mouse_moveY(-MOUSE_MOVE_RANGE);
 		}
 	} else {
+		if ((cpt_sof % 2) == 0) {
+			return;
+		}
 		// Scan buttons on switch 0 to send keys sequence
 		b_btn_state = (!port_pin_get_input_level(BUTTON_0_PIN));
 		if (b_btn_state != btn_last_state) {
@@ -271,7 +279,7 @@ void ui_process(uint16_t framenumber)
 					btn_wakeup = false;
 				}
 			} else {
-			sequence_running = true;
+				sequence_running = true;
 			}
 		}
 		// Sequence process running each period
@@ -307,6 +315,7 @@ void ui_process(uint16_t framenumber)
 				sizeof(ui_sequence) / sizeof(ui_sequence[0])) {
 				sequence_pos = 0;
 				sequence_running = false;
+				button_function  = 1;
 			}
 		}
 	}
