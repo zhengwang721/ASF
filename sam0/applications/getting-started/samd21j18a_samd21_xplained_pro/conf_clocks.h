@@ -52,12 +52,10 @@
 #  define CONF_CLOCK_APBA_DIVIDER                 SYSTEM_MAIN_CLOCK_DIV_1
 #  define CONF_CLOCK_APBB_DIVIDER                 SYSTEM_MAIN_CLOCK_DIV_1
 
-//! [conf_clock_pll1_settings_1]
 /* SYSTEM_CLOCK_SOURCE_OSC8M configuration - Internal 8MHz oscillator */
 #  define CONF_CLOCK_OSC8M_PRESCALER              SYSTEM_OSC8M_DIV_1
 #  define CONF_CLOCK_OSC8M_ON_DEMAND              true
 #  define CONF_CLOCK_OSC8M_RUN_IN_STANDBY         false
-//! [conf_clock_pll1_settings_1]
 
 /* SYSTEM_CLOCK_SOURCE_XOSC configuration - External clock/oscillator */
 #  define CONF_CLOCK_XOSC_ENABLE                  false
@@ -95,7 +93,6 @@
 #  define CONF_CLOCK_DFLL_COARSE_VALUE            (0x1f / 4)
 #  define CONF_CLOCK_DFLL_FINE_VALUE              (0xff / 4)
 
-//! [conf_clock_pll1_settings_2]
 /* DFLL closed loop mode configuration */
 #  define CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR   GCLK_GENERATOR_1
 #  define CONF_CLOCK_DFLL_MULTIPLY_FACTOR         6
@@ -105,7 +102,6 @@
 #  define CONF_CLOCK_DFLL_ENABLE_CHILL_CYCLE      true
 #  define CONF_CLOCK_DFLL_MAX_COARSE_STEP_SIZE    (0x1f / 4)
 #  define CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE      (0xff / 4)
-//! [conf_clock_pll1_settings_2]
 
 /* SYSTEM_CLOCK_SOURCE_DPLL configuration - Digital Phase-Locked Loop */
 #  define CONF_CLOCK_DPLL_ENABLE                  false
@@ -119,11 +115,9 @@
 #  define CONF_CLOCK_DPLL_REFERENCE_CLOCK         SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0
 #  define CONF_CLOCK_DPLL_FILTER                  SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT
 
-//! [conf_clock_pll1_settings_3]
 #  define CONF_CLOCK_DPLL_REFERENCE_FREQUENCY     32768
 #  define CONF_CLOCK_DPLL_REFEREMCE_DIVIDER       1
 #  define CONF_CLOCK_DPLL_OUTPUT_FREQUENCY        48000000
-//! [conf_clock_pll1_settings_3]
 
 /* Set this to true to configure the GCLK when running clocks_init. If set to
  * false, none of the GCLK generators will be configured in clocks_init(). */

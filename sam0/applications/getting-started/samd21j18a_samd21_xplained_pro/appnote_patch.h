@@ -57,12 +57,13 @@ The SAMD21 xplained pro  feature
 
 /**
 \defgroup DEV_TOOLS development tools
-- Atmel Studio 6.1: http://www.atmel.com/atmelstudio
+- Atmel Studio 6.2: http://www.atmel.com/atmelstudio 
+  - For Atmel Studio 6.1,please install patch ATSAMD21-trunk-6.1.7.vsix
+  (provided with the application note)
 - IAR Embedded Workbench for ARM 6.70.1:
   http://www.iar.com/en/Products/IAR-Embedded-Workbench/ARM/
   - SAMD21 patch for IAR Embedded Workbench for eariler version of IAR:
     <i>ewarm add-on v0.1.1.zip</i> (provided with the application note)
-- Segger J-Link (v4.75d or above): http://www.segger.com/download_jlink.html
 - SAM-BA (v2.12 or above): http://www.atmel.com/tools/atmelsam-bain-systemprogrammer.aspx
   - SAMD21 patch for SAM-BA v2.12: <i>sam-ba_2.12_patchsamd21.exe</i>
     (provided with the application note)
@@ -73,8 +74,7 @@ The SAMD21 xplained pro  feature
 \defgroup AS6_USAGE Studio usage
 - Atmel Studio 6.1 (or above) installed
 - Atmel Software Framework (ASF) v3.15.0 or above
-- Segger J-Link installed
-- SAMD21 xplained pro board connected to Atmel Studio through SAM-ICE and powered on
+- SAMD21 xplained pro board connected to Atmel Studio and powered on
 */
 
 /**
@@ -82,8 +82,7 @@ The SAMD21 xplained pro  feature
 - ASF 3.15.0 or above standalone package installed
 - IAR Embedded Workbench for ARM 6.70.1 installed
 - SAMD21 xplained pro patch for IAR Embedded Workbench installed
-- Segger J-Link v4.75d or above installed
-- SAMD21 xplained pro board connected to IAR Embedded Workbench for ARM through SAM-ICE and
+- SAMD21 xplained pro board connected to IAR Embedded Workbench for ARM and
   powered on
 */
 
@@ -92,14 +91,13 @@ The SAMD21 xplained pro  feature
 - Atmel Studio 6.1 (or above) installed
 - ASF 3.15.0 or above standalone package installed
 - SAM-BA v2.12 and SAMD21 patch for it installed
-- Segger J-Link v4.75d or above installed
-- SAMD21 xplained pro board connected to SAM-BA through SAM-ICE and powered on
+- SAMD21 xplained pro board connected to SAM-BA and powered on
 */
 
 /**
 \defgroup SAM-BA_LOAD SAM-BA load binary
 - Open SAM-BA
-- Select <i>\\jlink\\ARM0</i> (could be ARM1, 2 or other number) as the
+- Select <i>COM1</i> (could be COM2, 3 or other number) as the
   connection
 - Select <i>SAMD21 xplained pro</i> as the target board. Then press \a Connect
 - In SAM-BA GUI, choose \a Flash tab
@@ -151,15 +149,8 @@ are defined.
 /**
 \defgroup SYS_CLOCK system clock setting
 As shown in the code above, the exteneral crystal oscillator
-(\c SYSTEM_CLOCK_SOURCE_OSC8M) is selected as the PLLB source
+(\c SYSTEM_CLOCK_SOURCE_OSC8M) is selected as the system clock source
 (\c CONF_CLOCK_GCLK_0_CLOCK_SOURCE).
-The factor (\c CONF_CLOCK_DFLL_MULTIPLY_FACTOR) and divider (\c CONF_CLOCK_DPLL_REFEREMCE_DIVIDER) are defined
-respectively. PLLB (\c GCLK_GENERATOR_1) is chosen as the system clock
-source (\c CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR), the prescaler of which (\c CONF_CLOCK_GCLK_0_PRESCALER)
-is defined as 1.
 */
 
-/**
-\defgroup CLOCK_FORMULA system clock formula
-<tt>SYSCLK = XTAL * MUL / DIV / PRES = 8MHz * 6 / 1 / 1 = 48MHz</tt>
-*/
+

@@ -52,7 +52,7 @@
 
 - Getting started with SAMD21 device and tools
 - Getting started with SAMD21 xplained pro in Atmel Studio, IAR Embedded Workbench® for
-  ARM® and SAM-BA®
+  ARM®
 - Getting started example in Atmel Software Framework (ASF)
 
 <b>Description</b>
@@ -64,7 +64,7 @@ instruction on how to load and buildup a single example project to SAMD21 xplain
 /**
 \page appdoc_chap_00_title1 Get the Device Datasheet
 
-Web page: http://www.atmel.com/SAMD21
+Web page: http://www.atmel.com/
 
 Documents: SAMD21 Series Datasheet (Summary, Complete) (.pdf) 
 - Select the required device (ie. SAMD21) or and get the latest datasheet
@@ -80,7 +80,7 @@ There are two versions:
 /**
 \page appdoc_chap_01_title2 Get the SAMD21 xplained pro
 
-Web page: http://www.atmel.com/tools/SAMD21
+Web page: http://www.atmel.com/tools/
 
 Get the kit: http://store.atmel.com
 
@@ -152,7 +152,7 @@ of <i>main()</i>. To execute it, click on <i>Debug->Go</i>.
 
 Now the application has been programmed. To execute it, reset the board.
 
-Besides J-Link, UART can be used for the communication between SAM-BA
+UART can be used for the communication between SAM-BA
 and SAMD21, please refer to the chapter “SAM-BA Boot Program for SAMD21
 Microcontrollers” in SAMD21 datasheet for the details.
 */
@@ -252,19 +252,7 @@ associated with the exception handler entries
       <td>Hard Fault</td>
  </tr>
  <tr>
-      <td>4</td>
-      <td>Memory Management</td>
- </tr>
- <tr>
-      <td>5</td>
-      <td>Bus Fault</td>
- </tr>
- <tr>
-      <td>6</td>
-      <td>Usage Fault</td>
- </tr>
- <tr>
-      <td>7-10</td>
+      <td>4-10</td>
       <td>Reserved</td>
  </tr>
  <tr>
@@ -272,11 +260,7 @@ associated with the exception handler entries
       <td>SVCall</td>
  </tr>
  <tr>
-      <td>12</td>
-      <td>Debug Monitor</td>
- </tr>
- <tr>
-      <td>13</td>
+      <td>12-13</td>
       <td>Reserved</td>
  </tr>
  <tr>
@@ -323,7 +307,11 @@ location can be determined or relocated in the CODE or SRAM partitions of the
 memory map using the Vector Table Offset Register (VTOR). Details on the
 register can be found in the "Cortex™-M0+ Technical Reference Manual".
 
-To get a full vector table,refer to startup_samd21.c in IAR project.
+In the getting-started example, a full vector table looks like this:
+\anchor code_startup_vector_table
+
+<b>Code: The Full Vector Table in the getting-started example</b>
+\snippet startup_samd21.c startup_vector_table
 
 \subsubsection appdoc_chap_06_section4_sub1_subsub2 Reset Exception
 The handler of reset exception is responsible for starting up the application
@@ -365,15 +353,10 @@ configuration file, <i>conf_clocks.h</i>.
 <b>Code: Clock Configuration</b>
 \snippet conf_clocks.h conf_clock_sysclk_settings
 \snippet conf_clocks.h conf_clock_pll1_settings
-\snippet conf_clocks.h conf_clock_pll1_settings_1
-\snippet conf_clocks.h conf_clock_pll1_settings_2
-\snippet conf_clocks.h conf_clock_pll1_settings_3
 \copydoc SYS_CLOCK
 
 So after calling <i>system_init()</i> with this configuration, the system clock
-frequency (SYSCLK) is
-
-\copydoc CLOCK_FORMULA
+frequency (SYSCLK) is 8MHz
 
 Note that on the SAMD21, 8MHz crystal oscillator is connected to XIN and XOUT pins.
 

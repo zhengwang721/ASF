@@ -35,6 +35,7 @@
 		<build type="doxygen-image-path" value="."/>
 		<build type="doxygen-example-path" value="."/>
 		<build type="doxygen-example-path" value="../"/>
+		<build type="doxygen-example-path" value="../../../utils/cmsis/samd21/source/iar"/>
 		<generator value="doxygen-v2"/>
 		<device-support value="unspecified-samd21"/>
 	</project>
