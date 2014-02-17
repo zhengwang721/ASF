@@ -50,7 +50,7 @@
 #include "sysConfig.h"
 #include "phy.h"
 #include "nwk.h"
-#include "hal.h"
+#include "sleep_mgr.h"
 #include "sys.h"
 #include "sysTimer.h"
 
@@ -60,10 +60,19 @@
 *****************************************************************************/
 void SYS_Init(void)
 {
-  HAL_Init();
-  SYS_TimerInit();
+  irq_initialize_vectors();
+#if SAMD20
+  system_init();
+  delay_init();
+#else
+  sysclk_init();
+  board_init();    
+#endif  	
+  SYS_TimerInit();  
   PHY_Init();
   NWK_Init();
+  sm_init();     
+  cpu_irq_enable();
 }
 
 /*************************************************************************//**
@@ -75,3 +84,4 @@ void SYS_TaskHandler(void)
   SYS_TimerTaskHandler();
   
 }
+

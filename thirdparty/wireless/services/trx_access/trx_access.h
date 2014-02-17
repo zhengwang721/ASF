@@ -70,6 +70,7 @@
 #else
 #include "ioport.h"
 #endif
+#include "board.h"
 /* === Macros =============================================================== */
 
 /**
@@ -292,7 +293,7 @@ extern "C" {
     /**
      * @brief Resets the TRX radio
      */
-	void HAL_PhyReset(void);
+	void PhyReset(void);
 	//! @}
 #ifdef __cplusplus
 } /* extern "C" */

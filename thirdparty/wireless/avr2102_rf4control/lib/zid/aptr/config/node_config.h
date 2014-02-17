@@ -5,7 +5,6 @@
  *        in the example application of the coordinator in addition to the
  *        underlaying stack.
  *
- * $Id: node_config.h 33965 2013-01-20 06:28:21Z agasthian.s $
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com

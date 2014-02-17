@@ -66,8 +66,6 @@
 #include <stdio.h>
 #include <string.h>
 #include "config.h"
-
-#include "hal.h"
 #include "sys.h"
 #if SAMD20
 #include "system.h"
@@ -165,7 +163,6 @@ static uint8_t rx_data[APP_RX_BUF_SIZE];
 static AppMessage_t appMsg;
 static SYS_Timer_t appDataSendingTimer;
 #if APP_COORDINATOR
-/** Hal_Uart_Byte_received Removed */
 /*****************************************************************************
 *****************************************************************************/
 static void appSendMessage(uint8_t *data, uint8_t size)
@@ -248,7 +245,6 @@ static void appDataConf(NWK_DataReq_t *req)
   }
   else
   {
-   // msg.sensors.light++;
 
     if (appNetworkStatus)
     {
@@ -426,7 +422,7 @@ static void APP_TaskHandler(void)
 *****************************************************************************/
 int main(void)
 {
-
+	
     SYS_Init();
 
 #if APP_COORDINATOR		

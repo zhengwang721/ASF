@@ -24,6 +24,6 @@
 		<build type="header-file"   value="inc/nwkRx.h"/>
 		<build type="header-file"   value="inc/nwkTx.h"/>
 		<build type="include-path"  value="inc/"/>
-		<device-support-alias value="avr2130_lwmesh_hal_support"/>		
+		<device-support-alias value="avr2130_lwmesh_support"/>		
 	</module>
 </asf>

@@ -48,11 +48,11 @@
 
 /*- Includes ---------------------------------------------------------------*/
 #include <stdlib.h>
-#include "hal.h"
-//#include "halTimer.h"
+#include "sysTypes.h"
+#include "common_hw_timer.h"
 #include "sysTimer.h"
 
-extern volatile uint8_t halTimerIrqCount;
+volatile uint8_t SysTimerIrqCount;
 /*****************************************************************************
 *****************************************************************************/
 static void placeTimer(SYS_Timer_t *timer);
@@ -66,6 +66,10 @@ static SYS_Timer_t *timers;
 *****************************************************************************/
 void SYS_TimerInit(void)
 {
+  SysTimerIrqCount = 0;
+  set_common_tc_expiry_callback(SYS_HwExpiry_Cb);
+  common_tc_init();
+  common_tc_delay(SYS_TIMER_INTERVAL*MS);
   timers = NULL;
 }
 
@@ -118,15 +122,15 @@ void SYS_TimerTaskHandler(void)
   uint32_t elapsed;
   uint8_t cnt;
 
-  if (0 == halTimerIrqCount)
+  if (0 == SysTimerIrqCount)
     return;
 
   ATOMIC_SECTION_ENTER
-    cnt = halTimerIrqCount;
-    halTimerIrqCount = 0;
+    cnt = SysTimerIrqCount;
+    SysTimerIrqCount = 0;
   ATOMIC_SECTION_LEAVE
 
-  elapsed = cnt * HAL_TIMER_INTERVAL;
+  elapsed = cnt * SYS_TIMER_INTERVAL;
 
   while (timers && (timers->timeout <= elapsed))
   {
@@ -184,4 +188,12 @@ static void placeTimer(SYS_Timer_t *timer)
     timer->timeout = timer->interval;
     timers = timer;
   }
+}
+
+/*****************************************************************************
+*****************************************************************************/
+void SYS_HwExpiry_Cb(void)
+{
+	SysTimerIrqCount++;
+	common_tc_delay(SYS_TIMER_INTERVAL*MS);
 }

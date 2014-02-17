@@ -49,7 +49,7 @@
 			<info type="gui-flag" value="hidden"/>
 			<require idref="thirdparty.common.services.usb.class.hid.device.keyboard.composite"/>
 			<device-support value="xmegaa3u"/>
-			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
+			<generator value="doxygen-module" default-mcu="unspecified-xmegaau"/>
 		</module>
 	</select-by-config>
 	<module type="service" id="common.services.usb.class.hid.device.keyboard.single" caption="USB Device HID Keyboard (Single Interface Device)">

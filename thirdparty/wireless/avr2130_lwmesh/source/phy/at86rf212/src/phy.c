@@ -45,8 +45,8 @@
 /*- Includes ---------------------------------------------------------------*/
 #include <stdbool.h>
 #include "phy.h"
-#include "hal.h"
 #include "trx_access.h"
+#include "delay.h"
 #include "at86rf212.h"
 
 /*- Definitions ------------------------------------------------------------*/
@@ -85,7 +85,7 @@ static uint8_t phyModulation;
 void PHY_Init(void)
 {
   trx_spi_init();
-  HAL_PhyReset();
+  PhyReset();
 
   phyRxState = false;
   phyBand = 0;
@@ -196,11 +196,10 @@ void PHY_DataReq(uint8_t *data)
   */
   data[0] += 2;
   trx_frame_write(data,(data[0]-1) /* length value*/); 
-
+  phyWriteRegister(TRX_STATE_REG, TRX_CMD_TX_START);
   phyState = PHY_STATE_TX_WAIT_END;
-  PAL_SLP_TR_HIGH();
-  delay_us(1);
-  PAL_SLP_TR_LOW();
+  
+
 }
 
 #ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
@@ -215,7 +214,7 @@ uint16_t PHY_RandomReq(void)
 
   for (uint8_t i = 0; i < 16; i += 2)
   {
-    HAL_Delay(RANDOM_NUMBER_UPDATE_INTERVAL);
+    delay_us(RANDOM_NUMBER_UPDATE_INTERVAL);
     rndValue = (phyReadRegister(PHY_RSSI_REG) >> RND_VALUE) & 3;
     rnd |= rndValue << i;
   }

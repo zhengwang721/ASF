@@ -112,7 +112,7 @@ void trx_spi_init(void)
 #endif
 }
 
-void HAL_PhyReset(void)
+void PhyReset(void)
 {
 	/* Ensure control lines have correct levels. */
 	RST_HIGH();

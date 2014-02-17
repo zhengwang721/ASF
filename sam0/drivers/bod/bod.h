@@ -3,7 +3,7 @@
  *
  * \brief SAM D20 Brown Out Detector Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -229,7 +229,7 @@ static inline void bod_get_config_defaults(
 	conf->prescaler      = BOD_PRESCALE_DIV_2;
 	conf->mode           = BOD_MODE_CONTINUOUS;
 	conf->action         = BOD_ACTION_RESET;
-	conf->level          = 0x12;
+	conf->level          = 0x27;
 	conf->hysteresis     = true;
 	conf->run_in_standby = true;
 }

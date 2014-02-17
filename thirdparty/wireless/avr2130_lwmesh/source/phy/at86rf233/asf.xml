@@ -10,6 +10,6 @@
 		<build type="include-path"  value="inc/"/>
 		<build type="doxygen-entry-point" value="group_phy_233"/>
 		<build type="define" name="PHY_AT86RF233" value =""/>
-		<device-support-alias value="avr2130_lwmesh_hal_support"/>
+		<device-support-alias value="avr2130_lwmesh_support"/>
 	</module>
 </asf>

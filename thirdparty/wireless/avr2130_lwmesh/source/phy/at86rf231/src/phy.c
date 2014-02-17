@@ -45,8 +45,8 @@
 /*- Includes ---------------------------------------------------------------*/
 #include <stdbool.h>
 #include "phy.h"
-#include "hal.h"
 #include "trx_access.h"
+#include "delay.h"
 #include "at86rf231.h"
 
 /*- Definitions ------------------------------------------------------------*/
@@ -80,7 +80,7 @@ static bool phyRxState;
 void PHY_Init(void)
 {
   trx_spi_init();
-  HAL_PhyReset();
+  PhyReset();
   phyRxState = false;
   phyState = PHY_STATE_IDLE;
 
@@ -191,7 +191,7 @@ uint16_t PHY_RandomReq(void)
 
   for (uint8_t i = 0; i < 16; i += 2)
   {
-    HAL_Delay(RANDOM_NUMBER_UPDATE_INTERVAL);
+    delay_us(RANDOM_NUMBER_UPDATE_INTERVAL);
     rndValue = (phyReadRegister(PHY_RSSI_REG) >> RND_VALUE) & 3;
     rnd |= rndValue << i;
   }

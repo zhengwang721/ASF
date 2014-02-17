@@ -330,7 +330,9 @@ uhc_enum_status_t uhi_cdc_install(uhc_device_t* dev)
 			if (!b_iface_comm) {
 				break;
 			}
-			ptr_port->iface_data = ((usb_cdc_call_mgmt_desc_t*)ptr_iface)->bDataInterface;
+			if (((usb_cdc_call_mgmt_desc_t*)ptr_iface)->bDescriptorSubtype == CDC_SCS_CALL_MGMT) {
+				ptr_port->iface_data = ((usb_cdc_call_mgmt_desc_t*)ptr_iface)->bDataInterface;
+			}
 			break;
 
 		case USB_DT_ENDPOINT:
