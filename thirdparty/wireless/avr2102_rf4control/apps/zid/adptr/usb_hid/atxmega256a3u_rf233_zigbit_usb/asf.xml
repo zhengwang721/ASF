@@ -22,11 +22,12 @@
 		<require idref="common.services.usb.class.device"/>
 		<config name="config.common.services.usb.class.device" value="composite"/>
 		<config name="config.common.services.usb.class.hid.device.mouse.composite" value="enable"/>
-		<config name="config.common.services.usb.class.hid.device.keyboard.composite" value="multimedia"/>
+		<config name="config.common.services.usb.class.hid.device.keyboard.composite" value="disable"/>
 		<config name="thirdparty.config.common.services.usb.class.hid.device.keyboard.composite" value = "enable"/>
 		<config name="config.common.drivers.nvm.mem_type" value="no_extmem"/>
         <config name="config.compiler.iarew.dlib" value="full"/>
 		<require idref="thirdparty.wireless.avr2102_rf4control.apps.zid.adptr.usb_hid"/>
+		<require idref="thirdparty.common.services.usb.class.hid.device.keyboard.composite"/>
 		<require idref="board.xmega_rf233_zigbit"/>
 		<generator value="iarew"/>
 		<generator value="avrgcc"/>
