@@ -53,7 +53,12 @@ extern "C" {
  * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the device's peripheral event resources and users within
  * the device, including the enabling and disabling of peripheral source selection
- * and synchronization of clock domains between various modules.
+ * and synchronization of clock domains between various modules. The following API
+ * modes is covered by this manual:
+ *  - Polled API
+ * \if EVENTS_INTERRUPT_HOOK_MODE
+ *  - Interrupt hook API
+ * \endif
  *
  * The following peripherals are used by this module:
  *
@@ -615,7 +620,9 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset);
  * added to the user application.
  *
  * - \subpage asfdoc_sam0_events_basic_use_case
+ * \if EVENTS_INTERRUPT_HOOK_MODE
  * - \subpage asfdoc_sam0_events_interrupt_hook_use_case
+ * \endif
  *
  * \page asfdoc_sam0_events_document_revision_history Document Revision History
  *
@@ -625,6 +632,11 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset);
  *		<th>Date</td>
  *		<th>Comments</td>
  *	</tr>
+ *      <tr>
+ *		<td>E</td>
+ *		<td>02/2014</td>
+ *		<td>Added support for interrupt hook mode</td>
+ *      </tr>
  *	<tr>
  *		<td>D</td>
  *		<td>01/2014</td>

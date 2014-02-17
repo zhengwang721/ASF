@@ -61,6 +61,7 @@
 			</info>
 
 			<build type="define" name="EVENTS_INTERRUPT_HOOKS_MODE" value="true"/>
+			<build type="doxygen-enable-section" value="EVENTS_INTERRUPT_HOOK_MODE"/>
 
 			<build type="include-path" value="."/>
 			<build type="header-file" value="quick_start/qs_events_basic.h"/>
