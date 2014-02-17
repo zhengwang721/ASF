@@ -350,6 +350,8 @@ struct events_config {
 	uint8_t                    clock_source;
 };
 
+
+///@cond INTERNAL
 /**
  * \internal
  * Status bit offsets in the status register/interrupt register
@@ -361,8 +363,11 @@ struct events_config {
 #define _EVENTS_START_OFFSET_DETECTION_BIT       8
 #define _EVENTS_START_OFFSET_OVERRUN_BIT         0
 /** @} */
+///@endcond
 
+/** Definition for no generator selection */
 #define EVSYS_ID_GEN_NONE   0
+/** Definition for no user selection */
 #define EVSYS_ID_USER_NONE  0
 
 /**
@@ -378,7 +383,7 @@ struct events_resource {
 #if EVENTS_INTERRUPT_HOOKS_MODE == true
 typedef void (*events_interrupt_hook)(struct events_resource *resource);
 
-struct events_hook;
+//struct events_hook;
 
 struct events_hook {
 	struct events_resource *resource;
@@ -471,7 +476,7 @@ enum status_code events_trigger(struct events_resource *resource);
  *
  * Check if all users connected to the channel is ready to handle incomming events
  *
- * \param[in] resource Ppointer to an \c event_resource struct
+ * \param[in] resource Pointer to an \c event_resource struct
  *
  * \return The ready status of users connected to an event channel
  * \retval true  All users connect to event channel is ready handle incomming events
@@ -533,6 +538,8 @@ enum status_code events_release(struct events_resource *resource);
  */
 uint8_t events_get_free_channels(void);
 
+
+///@cond INTERNAL
 /**
  * \internal
  * Function to find bit positons in the CHSTATUS and INTFLAG register
@@ -541,6 +548,8 @@ uint8_t events_get_free_channels(void);
  */
 uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset);
 /** @} */
+///@endcond
+
 
 /** @} */
 

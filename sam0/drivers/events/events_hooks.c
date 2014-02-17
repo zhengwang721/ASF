@@ -141,6 +141,22 @@ enum status_code events_enable_interrupt_source(struct events_resource *resource
 	return STATUS_OK;
 }
 
+enum status_code events_disable_interrupt_source(struct events_resource *resource, enum events_interrupt_source source)
+{
+	Assert((source == EVENTS_INTERRUPT_DETECT) || (source == EVENTS_INTERRUPT_OVERRUN));
+
+	if (source == EVENTS_INTERRUPT_DETECT) {
+		EVSYS->INTENCLR.reg = _events_find_bit_position(resource->channel, _EVENTS_START_OFFSET_DETECTION_BIT);
+	} else if (source == EVENTS_INTERRUPT_OVERRUN) {
+		EVSYS->INTENCLR.reg = _events_find_bit_position(resource->channel, _EVENTS_START_OFFSET_OVERRUN_BIT);
+	} else {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	return STATUS_OK;
+}
+
+
 bool events_is_interrupt_set(struct events_resource *resource, enum events_interrupt_source source)
 {
 	Assert((source == EVENTS_INTERRUPT_DETECT) || (source == EVENTS_INTERRUPT_OVERRUN));

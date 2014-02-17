@@ -48,18 +48,6 @@
 
 #define EVENTS_INVALID_CHANNEL                  0xff
 
-/**
- * \internal
- * Status bit offsets in the status register/interrupt register
- *
- * @{
- */
-#define _EVENTS_START_OFFSET_BUSY_BITS           8
-#define _EVENTS_START_OFFSET_USER_READY_BIT      0
-#define _EVENTS_START_OFFSET_DETECTION_BIT       8
-#define _EVENTS_START_OFFSET_OVERRUN_BIT         0
-/** @} */
-
 struct _events_module _events_inst = {
 		.allocated_channels = 0,
 		.free_channels      = EVSYS_CHANNELS,
@@ -72,6 +60,10 @@ struct _events_module _events_inst = {
 #endif
 };
 
+/**
+ * \internal
+ *
+ */
 uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset)
 {
 	uint8_t byte_ofset = channel >> 3;

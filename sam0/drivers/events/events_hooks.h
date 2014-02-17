@@ -47,7 +47,7 @@
 #define _EVENTS_HOOKS_H_INCLUDED_
 
 /**
- * \addtogroup asfdoc_sam0_events_api_overview API Overview
+ * \addtogroup asfdoc_sam0_events_group
  * @{
  *
  */
@@ -123,6 +123,21 @@ enum status_code events_del_hook(struct events_resource *resource, struct events
  *
  */
 enum status_code events_enable_interrupt_source(struct events_resource *resource, enum events_interrupt_source source);
+
+/**
+ * \brief Disable interrupt source
+ *
+ * Disable an interrupt source so can trigger execution of an interrupt hook
+ *
+ * \param[in] resource Pointer to an \ref events_resource struct instance
+ * \param[in] source   One of the members in the \ref events_interrupt_source enumerator
+ *
+ * \return Status of the interrupt source enable procedure
+ * \retval STATUS_OK              Enabling of the interrupt source went sucessful
+ * \retval STATUS_ERR_INVALID_ARG Interrupt source does not exist
+ *
+ */
+enum status_code events_disable_interrupt_source(struct events_resource *resource, enum events_interrupt_source source);
 
 /**
  * \brief Check if interrupt source is set

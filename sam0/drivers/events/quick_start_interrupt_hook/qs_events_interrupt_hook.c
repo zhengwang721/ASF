@@ -42,7 +42,7 @@
  */
 #include <asf.h>
 
-//! [setup]
+	//! [setup]
 
 #define EXAMPLE_EVENT_GENERATOR    EVSYS_ID_GEN_TC4_OVF
 #define EXAMPLE_EVENT_USER         EVSYS_ID_USER_NONE
@@ -55,31 +55,31 @@ void event_counter(struct events_resource *resource);
 
 static void configure_event_channel(struct events_resource *resource)
 {
-//! [setup_1]
+	//! [setup_1]
 	struct events_config config;
-//! [setup_1]
+	//! [setup_1]
 
-//! [setup_2]
+	//! [setup_2]
 	events_get_config_defaults(&config);
-//! [setup_2]
+	//! [setup_2]
 
-//! [setup_3]
+	//! [setup_3]
 	config.generator      = EXAMPLE_EVENT_GENERATOR;
 	config.edge_detect    = EVENTS_EDGE_DETECT_RISING;
 	config.path           = EVENTS_PATH_SYNCHRONOUS;
 	config.clock_source   = GCLK_GENERATOR_0;
-//! [setup_3]
+	//! [setup_3]
 
-//! [setup_4]
+	//! [setup_4]
 	events_allocate(resource, &config);
-//! [setup_4]
+	//! [setup_4]
 }
 
 static void configure_event_user(struct events_resource *resource)
 {
-//! [setup_5]
+	//! [setup_5]
 	events_attach_user(resource, EXAMPLE_EVENT_USER);
-//! [setup_5]
+	//! [setup_5]
 }
 
 static void configure_tc(struct tc_module *tc_instance)
@@ -128,7 +128,7 @@ static void configure_event_interrupt(struct events_resource *resource, struct e
 }
 
 
-//! [setup_14]
+	//! [setup_14]
 void event_counter(struct events_resource *resource)
 {
 	if(events_is_interrupt_set(resource, EVENTS_INTERRUPT_DETECT)) {
@@ -139,15 +139,15 @@ void event_counter(struct events_resource *resource)
 
 	}
 }
-//! [setup_14]
+	//! [setup_14]
 
-//! [setup]
+	//! [setup]
 
 
 int main(void)
 {
 
-//! [setup_init]
+	//! [setup_init]
 	struct tc_module       tc_instance;
 	struct events_resource example_event;
 	struct events_hook     hook;
@@ -159,7 +159,7 @@ int main(void)
 	configure_event_user(&example_event);
 	configure_event_interrupt(&example_event, &hook);
 	configure_tc(&tc_instance);
-//! [setup_init]
+	//! [setup_init]
 
 	//! [main]
 

@@ -22,17 +22,6 @@
 				<keyword value="Peripheral Event System"/>
 			</info>
 
-			<info type="appnote" value="AT03245"/>
-			<info type="keyword" value="pdf">
-				<keyword value="EVSYS"/>
-				<keyword value="Peripheral Event System"/>
-			</info>
-
-			<info type="description" value="pdf">
-				This document describes how to use the Peripheral Event System on
-				the SAM D20/D21, both the ASF driver and the peripheral itself.
-			</info>
-
 			<build type="include-path" value="."/>
 			<build type="header-file" subtype="api" value="events.h"/>
 			<build type="c-source" value="events.c"/>
