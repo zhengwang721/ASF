@@ -364,7 +364,12 @@ static enum status_code _i2c_master_write_packet(
 			SERCOM_I2CM_INTENSET_MB | SERCOM_I2CM_INTENSET_SB;
 
 	/* Set address and direction bit, will send start command on bus */
-	i2c_module->ADDR.reg = (packet->address << 1) | I2C_TRANSFER_WRITE;
+	if (packet->ten_bit_address) {
+		i2c_module->ADDR.reg = (packet->address << 1) | I2C_TRANSFER_WRITE |
+			SERCOM_I2CM_ADDR_TENBITEN;
+	} else {
+		i2c_module->ADDR.reg = (packet->address << 1) | I2C_TRANSFER_WRITE;
+	}
 
 	return STATUS_OK;
 }
