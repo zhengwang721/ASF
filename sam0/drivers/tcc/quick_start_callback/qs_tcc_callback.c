@@ -64,7 +64,8 @@ static void _tcc_callback_to_change_duty_cycle(
 	}
 	delay = 10;
 	i = (i + 0x0800) & 0xFFFF;
-	tcc_set_compare_value(module_inst, TCC_MATCH_CAPTURE_CHANNEL_0, i + 1);
+	tcc_set_compare_value(module_inst,
+			TCC_MATCH_CAPTURE_CHANNEL_0 + CONF_PWM_CHANNEL, i + 1);
 }
 //! [callback_funcs]
 
@@ -81,13 +82,13 @@ static void _configure_tcc(void)
 	//! [setup_change_config]
 	config_tcc.counter.period = 0xFFFF;
 	config_tcc.compare.wave_generation = TCC_WAVE_GENERATION_SINGLE_SLOPE_PWM;
-	config_tcc.compare.match[0] = 0xFFFF;
+	config_tcc.compare.match[CONF_PWM_CHANNEL] = 0xFFFF;
 	//! [setup_change_config]
 
 	//! [setup_change_config_pwm]
-	config_tcc.pins.enable_wave_out_pin[0] = true;
-	config_tcc.pins.wave_out_pin[0]        = CONF_PWM_OUT_PIN;
-	config_tcc.pins.wave_out_pin_mux[0]    = CONF_PWM_OUT_MUX;
+	config_tcc.pins.enable_wave_out_pin[CONF_PWM_OUTPUT] = true;
+	config_tcc.pins.wave_out_pin[CONF_PWM_OUTPUT]        = CONF_PWM_OUT_PIN;
+	config_tcc.pins.wave_out_pin_mux[CONF_PWM_OUTPUT]    = CONF_PWM_OUT_MUX;
 	//! [setup_change_config_pwm]
 
 	//! [setup_set_config]
@@ -105,11 +106,12 @@ static void _configure_tcc_callbacks(void)
 	tcc_register_callback(
 			&tcc_instance,
 			_tcc_callback_to_change_duty_cycle,
-			TCC_CALLBACK_CHANNEL_0);
+			TCC_CALLBACK_CHANNEL_0 + CONF_PWM_CHANNEL);
 	//! [setup_register_callback]
 
 	//! [setup_enable_callback]
-	tcc_enable_callback(&tcc_instance, TCC_CALLBACK_CHANNEL_0);
+	tcc_enable_callback(&tcc_instance,
+			TCC_CALLBACK_CHANNEL_0 + CONF_PWM_CHANNEL);
 	//! [setup_enable_callback]
 }
 //! [setup]

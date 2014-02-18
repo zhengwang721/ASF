@@ -219,9 +219,9 @@ void tcc_get_config_defaults(
 
 #define _TCC_CHANNEL_OUT_PIN_INIT(n, dummy) \
 		config->pins.enable_wave_out_pin[n]                          = false;\
-		config->pins.wave_out_pin[TCC_MATCH_CAPTURE_CHANNEL_##n]     = 0;   \
-		config->pins.wave_out_pin_mux[TCC_MATCH_CAPTURE_CHANNEL_##n] = 0;
-	MREPEAT(TCC_NUM_CHANNELS,
+		config->pins.wave_out_pin[TCC_WAVE_OUTPUT_##n]     = 0;   \
+		config->pins.wave_out_pin_mux[TCC_WAVE_OUTPUT_##n] = 0;
+	MREPEAT(TCC_NUM_WAVE_OUTPUTS,
 		_TCC_CHANNEL_OUT_PIN_INIT, 0)
 #undef _TCC_CHANNEL_OUT_PIN_INIT
 
