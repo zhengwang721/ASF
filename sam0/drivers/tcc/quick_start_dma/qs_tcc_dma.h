@@ -215,12 +215,12 @@
  *       \snippet qs_tcc_dma.c dma_setup_7
  *  -# Create the DMA transfer descriptor with configuration.
  *       \snippet qs_tcc_dma.c dma_setup_8
- *  -# Adjust the DMA transfer descriptor if multiple DMA transfer will be
- *        performed.
- *       \snippet qs_tcc_dma.c dma_setup_9
  * -# Start DMA transfer job with prepared descriptor
  *  -# Add the DMA transfer descriptor to the allocated DMA resource.
  *       \snippet qs_tcc_dma.c dma_setup_10
+ *       \note When adding multiple descriptors, the last added one is linked
+ *             at the end of descriptor queue. If ringed list is needed, just
+ *             add the first descriptor again to build the circle.
  *  -# Start the DMA transfer job with the allocated DMA resource and
  *       transfer descriptor.
  *       \snippet qs_tcc_dma.c dma_setup_11
