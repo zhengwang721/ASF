@@ -427,11 +427,21 @@ enum i2c_transfer_direction {
  */
 struct i2c_packet {
 	/** Address to slave device  */
-	uint8_t address;
+	uint16_t address;
 	/** Length of data array */
 	uint16_t data_length;
 	/** Data array containing all data to be transferred */
 	uint8_t *data;
+#ifdef FEATURE_I2C_10_BIT_ADDRESS
+	/** Use 10 bit addressing. Set to false if the feature is not supported by the device  */
+	bool ten_bit_address;
+#endif
+#ifdef FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
+	/** Use high speed transfer. Set to false if the feature is not supported by the device */
+	bool high_speed;
+	/** High speed mode master code, valid if high_speed is true */
+	uint8_t high_speed_code;
+#endif
 };
 
 /** @} */

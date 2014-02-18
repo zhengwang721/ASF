@@ -235,6 +235,10 @@ struct i2c_slave_module {
 	volatile bool locked;
 	/** Timeout value for polled functions */
 	uint16_t buffer_timeout;
+#  ifdef FEATURE_I2C_10_BIT_ADDRESS
+	/** Using 10 bit addressing for the slave */
+	bool ten_bit_address;
+#  endif
 #  if I2C_SLAVE_CALLBACK_MODE == true
 	/** Nack on address match */
 	bool nack_on_address;
@@ -279,9 +283,13 @@ struct i2c_slave_config {
 	/** Addressing mode */
 	enum i2c_slave_address_mode address_mode;
 	/** Address or upper limit of address range */
-	uint8_t address;
+	uint16_t address;
 	/** Address mask, second address or lower limit of address range */
-	uint8_t address_mask;
+	uint16_t address_mask;
+#ifdef FEATURE_I2C_10_BIT_ADDRESS
+	/** Enable 10 bit addressing */
+	bool ten_bit_address;
+#endif
 	/**
 	 * Enable general call address recognition (general call address
 	 * is defined as 0000000 with direction bit 0)
@@ -461,6 +469,9 @@ static inline void i2c_slave_get_config_defaults(
 	config->address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
 	config->address = 0;
 	config->address_mask = 0;
+#ifdef FEATURE_I2C_10_BIT_ADDRESS
+	config->ten_bit_address = false;
+#endif
 	config->enable_general_call_address = false;
 #ifdef FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
 	config->transfer_speed = I2C_SLAVE_SPEED_STANDARD_AND_FAST;
@@ -590,7 +601,7 @@ void i2c_slave_clear_status(
  * \name SERCOM I2C slave with DMA interfaces
  * @{
  */
- 
+
 /**
  * \brief Read SERCOM I2C interrupt status.
  *
