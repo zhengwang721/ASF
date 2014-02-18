@@ -161,6 +161,9 @@ uint8_t _tcc_get_inst_index(
  *      \li Waveform generation polarity set to 0
  *      \li Don't perform ramp on waveform
  *  \li The waveform extension configurations:
+ *      \li No recoverable fault is enabled, fault actions are disabled, filter
+ *          is set to 0
+ *      \li No non-recoverable fault state output is enabled and filter is 0
  *      \li No inversion of waveform output
  *  \li No channel output enabled
  *  \li No PWM pin output enabled
@@ -196,6 +199,7 @@ void tcc_get_config_defaults(
 		_TCC_CHANNEL_MATCH_VALUE_INIT, 0)
 #  undef _TCC_CHANNEL_MATCH_VALUE_INIT
 
+	/* Wave pollarity defaults */
 #  define _TCC_CHANNEL_WAVE_POLARITY_INIT(n, value) \
 		config->compare.wave_polarity[n] = value;
 	MREPEAT(TCC_NUM_CHANNELS,
@@ -211,19 +215,40 @@ void tcc_get_config_defaults(
 			_TCC_CHANNEL_FUNCTION_INIT, TCC_CHANNEL_FUNCTION_COMPARE)
 #  undef _TCC_CHANNEL_FUNCTION_INIT
 
+	/* Recoverable fault defaults */
+#  define _TCC_FAULT_FUNCTION_INIT(n, dummy) \
+		config->wave_ext.recoverable_fault[n].filter_value = 0;      \
+		config->wave_ext.recoverable_fault[n].blanking_cycles = 0;   \
+		config->wave_ext.recoverable_fault[n].restart = false;       \
+		config->wave_ext.recoverable_fault[n].keep = false;          \
+		config->wave_ext.recoverable_fault[n].qualification = false; \
+		config->wave_ext.recoverable_fault[n].source = TCC_FAULT_SOURCE_DISABLE;           \
+		config->wave_ext.recoverable_fault[n].blanking = TCC_FAULT_BLANKING_DISABLE;       \
+		config->wave_ext.recoverable_fault[n].halt_action = TCC_FAULT_HALT_ACTION_DISABLE; \
+		config->wave_ext.recoverable_fault[n].capture_action = TCC_FAULT_CAPTURE_DISABLE;  \
+		config->wave_ext.recoverable_fault[n].capture_channel = TCC_FAULT_CAPTURE_CHANNEL_0;
+	MREPEAT(TCC_NUM_FAULTS, _TCC_FAULT_FUNCTION_INIT, 0)
+#  undef _TCC_FAULT_FUNCTION_INIT
+
+	/* Non-recoverable fault defaults */
+#  define _TCC_NRF_FUNCTION_INIT(n, dummy) \
+		config->wave_ext.non_recoverable_fault[n].filter_value = 0; \
+		config->wave_ext.non_recoverable_fault[n].output = TCC_FAULT_STATE_OUTPUT_OFF;
+	MREPEAT(TCC_NUM_WAVE_OUTPUTS, _TCC_NRF_FUNCTION_INIT, 0)
+#  undef _TCC_NRF_FUNCTION_INIT
+
+	/* Output inversion defaults */
 #  define _TCC_OUT_INVERT_INIT(n, value) \
 		config->wave_ext.invert[n] = value;
-	MREPEAT(TCC_NUM_WAVE_OUTPUTS,
-		_TCC_OUT_INVERT_INIT, false)
+	MREPEAT(TCC_NUM_WAVE_OUTPUTS, _TCC_OUT_INVERT_INIT, false)
 #  undef _TCC_OUT_INVERT_INIT
 
-#define _TCC_CHANNEL_OUT_PIN_INIT(n, dummy) \
-		config->pins.enable_wave_out_pin[n]                          = false;\
-		config->pins.wave_out_pin[TCC_WAVE_OUTPUT_##n]     = 0;   \
+#  define _TCC_CHANNEL_OUT_PIN_INIT(n, dummy) \
+		config->pins.enable_wave_out_pin[n]                = false;\
+		config->pins.wave_out_pin[TCC_WAVE_OUTPUT_##n]     = 0;    \
 		config->pins.wave_out_pin_mux[TCC_WAVE_OUTPUT_##n] = 0;
-	MREPEAT(TCC_NUM_WAVE_OUTPUTS,
-		_TCC_CHANNEL_OUT_PIN_INIT, 0)
-#undef _TCC_CHANNEL_OUT_PIN_INIT
+	MREPEAT(TCC_NUM_WAVE_OUTPUTS, _TCC_CHANNEL_OUT_PIN_INIT, 0)
+#  undef _TCC_CHANNEL_OUT_PIN_INIT
 
 	config->run_in_standby          = false;
 }
@@ -297,6 +322,52 @@ static inline uint8_t _tcc_get_ctrlb(
 }
 
 /**
+ * \brief Build FAULTs register values from configuration
+ *
+ * \param[in]  module_index The software module instance index
+ * \param[in]  config       Pointer to the TCC configuration options struct
+ * \param[out] value_buffer Pointer to the buffer to fill with built values
+ *
+ * \retval STATUS_OK              Configuration values are good and register
+ *                                value built and save to buffer
+ * \retval STATUS_ERR_INVALID_ARG Invalid parameter found: assigned fault
+ *                                capture channel is invalid; assigned filter
+ *                                value is invalid.
+ */
+static inline enum status_code _tcc_build_faults(
+		const uint8_t module_index,
+		const struct tcc_config *const config,
+		uint32_t *value_buffer)
+{
+	struct tcc_recoverable_fault_config *cfg;
+	uint8_t cc_num = _tcc_cc_nums[module_index];
+	uint32_t fault;
+	int i;
+	for (i = 0; i < TCC_NUM_FAULTS; i ++) {
+		cfg = (struct tcc_recoverable_fault_config *)
+				&config->wave_ext.recoverable_fault[i];
+		if (cfg->capture_channel >= cc_num) {
+			return STATUS_ERR_INVALID_ARG;
+		}
+		if (cfg->filter_value > 0xF) {
+			return STATUS_ERR_INVALID_ARG;
+		}
+		fault = TCC_FCTRLA_FILTERVAL(cfg->filter_value)
+				| TCC_FCTRLA_BLANKVAL(cfg->blanking_cycles)
+				| (cfg->restart ? TCC_FCTRLA_RESTART : 0)
+				| (cfg->keep ? TCC_FCTRLA_KEEP : 0)
+				| (cfg->qualification ? TCC_FCTRLA_QUAL : 0)
+				| TCC_FCTRLA_SRC(cfg->source)
+				| TCC_FCTRLA_BLANK(cfg->blanking)
+				| TCC_FCTRLA_HALT(cfg->halt_action)
+				| TCC_FCTRLA_CAPTURE(cfg->capture_action)
+				| TCC_FCTRLA_CHSEL(cfg->capture_channel);
+		value_buffer[i] = fault;
+	}
+	return STATUS_OK;
+}
+
+/**
  * \brief Build DRVCTRL register values from configuration
  *
  * \param[in]  module_index The software module instance index
@@ -325,6 +396,18 @@ static inline enum status_code _tcc_build_drvctrl(
 				return STATUS_ERR_INVALID_ARG;
 			}
 			drvctrl |= (TCC_DRVCTRL_INVEN0 << i);
+		}
+		if (config->wave_ext.non_recoverable_fault[i].output !=
+			TCC_FAULT_STATE_OUTPUT_OFF) {
+			if (i >= ow_num) {
+				return STATUS_ERR_INVALID_ARG;
+			}
+			if (config->wave_ext.non_recoverable_fault[i].output ==
+				TCC_FAULT_STATE_OUTPUT_1) {
+				drvctrl |= (TCC_DRVCTRL_NRE0 | TCC_DRVCTRL_NRV0) << i;
+			} else {
+				drvctrl |= (TCC_DRVCTRL_NRE0) << i;
+			}
 		}
 	}
 	*value_buffer = drvctrl;
@@ -462,6 +545,14 @@ enum status_code tcc_init(
 	/* CTRLB settings */
 	uint8_t ctrlb = _tcc_get_ctrlb(module_index, config);
 
+	/* FAULTs settings */
+	uint32_t faults[TCC_NUM_FAULTS];
+
+	status = _tcc_build_faults(module_index, config, faults);
+	if (STATUS_OK != status) {
+		return status;
+	}
+
 	/* DRVCTRL */
 	uint32_t drvctrl = 0;
 
@@ -528,8 +619,8 @@ enum status_code tcc_init(
 	}
 	hw->CTRLBSET.reg = ctrlb;
 
-	hw->FCTRLA.reg = 0;
-	hw->FCTRLB.reg = 0;
+	hw->FCTRLA.reg = faults[0];
+	hw->FCTRLB.reg = faults[1];
 
 	hw->DRVCTRL.reg = drvctrl;
 
@@ -588,6 +679,11 @@ enum status_code tcc_enable_events(
 	Assert(events);
 
 	Tcc *const tcc_module = module_inst->hw;
+
+	/* Check if it's enabled or resetting. */
+	if (tcc_module->CTRLA.reg & (TCC_CTRLA_ENABLE | TCC_CTRLA_SWRST)) {
+		return STATUS_ERR_DENIED;
+	}
 
 	uint32_t evctrl = tcc_module->EVCTRL.reg;
 
@@ -737,6 +833,13 @@ void tcc_disable_events(
 	Assert(events);
 
 	Tcc *const tcc_module = module_inst->hw;
+
+	/* Check if it's enabled or resetting. */
+	if (tcc_module->CTRLA.reg & (TCC_CTRLA_ENABLE | TCC_CTRLA_SWRST)) {
+		return;
+	}
+
+
 	uint32_t evctrl = 0;
 	uint32_t ch;
 	for(ch = 0; ch < TCC_NUM_CHANNELS; ch ++) {

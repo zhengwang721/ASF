@@ -589,7 +589,7 @@
  */
 #define TCC_NUM_WAVE_OUTPUTS       8
 
-/** Max number of faults supported by the driver. */
+/** Max number of (recoverable) faults supported by the driver. */
 #define TCC_NUM_FAULTS             2
 
 #if TCC_ASYNC == true
@@ -1032,6 +1032,172 @@ enum tcc_channel_function {
 };
 
 /**
+ * \brief TCC (recoverable) fault Halt action
+ */
+enum tcc_fault_halt_action {
+	/** Halt action disabled */
+	TCC_FAULT_HALT_ACTION_DISABLE,
+	/** Hardware halt action, counter is halted until restart */
+	TCC_FAULT_HALT_ACTION_HW_HALT,
+	/** Software halt action, counter is halted until fault bit cleared */
+	TCC_FAULT_HALT_ACTION_SW_HALT,
+	/** Non-Recoverable fault, force output to pre-defined level */
+	TCC_FAULT_HALT_ACTION_NON_RECOVERABLE
+};
+
+/**
+ * \brief TCC (recoverable) fault Capture action
+ */
+enum tcc_fault_capture_action {
+	/** Capture disabled */
+	TCC_FAULT_CAPTURE_DISABLE,
+	/** Capture on Fault, each value is captured */
+	TCC_FAULT_CAPTURE_EACH,
+	/** Capture the minimum detection, but notify on smaller ones */
+	TCC_FAULT_CAPTURE_MINIMUM,
+	/** Capture the maximum detection, but notify on bigger ones */
+	TCC_FAULT_CAPTURE_MAXIMUM,
+	/** Capture if the value is smaller than last */
+	TCC_FAULT_CAPTURE_SMALLER,
+	/** Capture if the value is bigger than last */
+	TCC_FAULT_CAPTURE_BIGGER,
+	/** Capture if the value is changed */
+	TCC_FAULT_CAPTURE_CHANGE
+};
+
+/**
+ * \brief Capture Channel triggered by TCC (recoverable) fault
+ */
+enum tcc_fault_capture_channel {
+	/** Recoverable fault triggers channel 0 capture operation */
+	TCC_FAULT_CAPTURE_CHANNEL_0,
+	/** Recoverable fault triggers channel 1 capture operation */
+	TCC_FAULT_CAPTURE_CHANNEL_1,
+	/** Recoverable fault triggers channel 2 capture operation */
+	TCC_FAULT_CAPTURE_CHANNEL_2,
+	/** Recoverable fault triggers channel 3 capture operation */
+	TCC_FAULT_CAPTURE_CHANNEL_3
+};
+
+/**
+ * \brief TCC (recoverable) fault Input Source
+ */
+enum tcc_fault_source {
+	/** Fault input is disabled */
+	TCC_FAULT_SOURCE_DISABLE,
+	/** Match Capture Event x (MCE 0,1) input */
+	TCC_FAULT_SOURCE_ENABLE,
+	/** Inverted MCEx (x=0,1) event input */
+	TCC_FAULT_SOURCE_INVERT,
+	/** Alternate fault (A or B) state at the end of the previous period */
+	TCC_FAULT_SOURCE_ALTFAULT
+};
+
+/**
+ * \brief TCC (recoverable) fault Input Blanking Start Point
+ */
+enum tcc_fault_blanking {
+	/** No blanking */
+	TCC_FAULT_BLANKING_DISABLE,
+	/** Blanking applied from rising edge of the output waveform */
+	TCC_FAULT_BLANKING_RISING_EDGE,
+	/** Blanking applied from falling edge of the output waveform */
+	TCC_FAULT_BLANKING_FALLING_EDGE,
+	/** Blanking applied from each toggle of the output waveform */
+	TCC_FAULT_BLANKING_BOTH_EDGE
+};
+
+/**
+ * \brief TCC (recoverable) fault Input Qualification Action
+ */
+enum tcc_fault_qualification {
+	/** The input is not disabled on compare condition */
+	TCC_FAULT_QUALIFICATION_DISABLE,
+	/** The input is disabled when match output signal is at inactive level */
+	TCC_FAULT_QUALIFICATION_BY_OUTPUT
+};
+
+/**
+ * \brief TCC (recoverable) fault Output Keep Action
+ */
+enum tcc_fault_keep {
+	/** Disable keeping, wave output released as soon as fault is released */
+	TCC_FAULT_KEEP_DISABLE,
+	/** Keep wave output until end of TCC cycle */
+	TCC_FAULT_KEEP_TILL_END
+};
+
+/**
+ * \brief TCC Non-recoverable State Outupt
+ */
+enum tcc_fault_state_output {
+	/** Non-recoverable fault output is tri-stated */
+	TCC_FAULT_STATE_OUTPUT_OFF,
+	/** Non-recoverable fault force output 0 */
+	TCC_FAULT_STATE_OUTPUT_0,
+	/** Non-recoverable fault force output 1 */
+	TCC_FAULT_STATE_OUTPUT_1
+};
+
+/**
+ * \brief TCC (recoverable) fault Restart Action
+ */
+enum tcc_fault_restart {
+	/** Restart Action disabled */
+	TCC_FAULT_RESTART_DISABLE,
+	/** Restart Action enabled */
+	TCC_FAULT_RESTART_ENABLE
+};
+
+/**
+ * \brief Configuration struct for TCC module recoverable fault
+ */
+struct tcc_recoverable_fault_config {
+	/** Fault filter value applied on MCEx event input line (0x0 ~ 0xF).
+	 *  Must be 0 when MCEx event is used as synchronous event.
+	 *  Apply to both recoverable and non-recoverable fault. */
+	uint8_t filter_value;
+	/** Fault blanking value (0 ~ 255), disable input source for several TCC
+	 * clocks after the detection of the waveform edge. */
+	uint8_t blanking_cycles;
+
+	/** Set to \c true to enable restart action */
+	bool restart;
+	/** Set to \c true to enable keep action (keep until end of TCC cycle) */
+	bool keep;
+
+	/** Set to \c true to enable input qualification
+	 *  (disable input when output is inactive) */
+	bool qualification;
+
+	/** Specifies if the event input generates recoverable Fault.
+	 *  The Event System Channel connected to MCEx event input must be
+	 *  configured to asynchronous.
+	 */
+	enum tcc_fault_source source;
+	/** Fault Blanking Start Point for recoverable Fault */
+	enum tcc_fault_blanking blanking;
+
+	/** Halt action for recoverable Fault */
+	enum tcc_fault_halt_action halt_action;
+	/** Capture action for recoverable Fault */
+	enum tcc_fault_capture_action capture_action;
+	/** Channel triggered by recoverable Fault */
+	enum tcc_fault_capture_channel capture_channel;
+};
+
+/**
+ * \brief Configuration struct for TCC module non-recoverable fault
+ */
+struct tcc_non_recoverable_fault_config {
+	/** Fault filter value applied on TCEx event input line (0x0 ~ 0xF).
+	 *  Must be 0 when TCEx event is used as synchronous event. */
+	uint8_t filter_value;
+	/** Output */
+	enum tcc_fault_state_output output;
+};
+
+/**
  * \brief TCC input event enable/disable/configure structure.
  */
 struct tcc_input_event_config {
@@ -1141,6 +1307,13 @@ struct tcc_match_wave_config {
  * \brief Configuration struct for TCC module waveform extension processes
  */
 struct tcc_wave_extension_config {
+	/** Configuration for recoverable faults. */
+	struct tcc_recoverable_fault_config
+			recoverable_fault[TCC_NUM_FAULTS];
+	/** Configuration for non-recoverable faults. */
+	struct tcc_non_recoverable_fault_config
+			non_recoverable_fault[TCC_NUM_WAVE_OUTPUTS];
+
 	/** Invert waveform final outputs lines. */
 	bool invert[TCC_NUM_WAVE_OUTPUTS];
 };
@@ -1775,6 +1948,8 @@ void tcc_clear_status(
  *  - \subpage asfdoc_sam0_tcc_basic_use_case
  * \if TCC_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_tcc_callback_use_case
+ *  - \subpage asfdoc_sam0_tcc_faultx_use_case
+ *  - \subpage asfdoc_sam0_tcc_faultn_use_case
  * \endif
  *  - \subpage asfdoc_sam0_tcc_dma_use_case
  *
