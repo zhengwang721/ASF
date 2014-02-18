@@ -310,6 +310,7 @@ register can be found in the "Cortex™-M0+ Technical Reference Manual".
 In the getting-started example, a full vector table looks like this:
 \anchor code_startup_vector_table
 
+
 <b>Code: The Full Vector Table in the getting-started example</b>
 \snippet startup_samd21.c startup_vector_table
 

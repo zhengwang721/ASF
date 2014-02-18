@@ -140,10 +140,7 @@ SERCOM3 of the SAMD21 is connected to the USB-to-COM port (UART) on the SAMD21 x
 /**
 \defgroup CONF_CLOCK about conf_clock.h
 In the <i>conf_clocks.h</i>, the system clock source (\c CONF_CLOCK_CONFIGURE_GCLK)
-and system clock prescaler (\c CONF_CLOCK_GCLK_0_PRESCALER) must be defined. In the case
-of the getting-started example, since the Phase Lock Loop block (PLLB) is used
-to multiply the frequency of the system clock, PLLB source, factor and divider
-are defined.
+and system clock prescaler (\c CONF_CLOCK_GCLK_0_PRESCALER) must be defined.
 */
 
 /**

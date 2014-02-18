@@ -99,7 +99,8 @@ extern "C" {
 static struct usart_module cdc_uart_module;
 static struct tc_module tc_instance;
 
-#define TC_COUNT_VALUE 10000
+#define TC_COUNT_VALUE 55535
+
 /**
  *  Configure UART console.
  */
@@ -178,10 +179,11 @@ static void tc_callback_to_counter(
 //! [main_tc0_handler]
 	static uint32_t count = 0;
 	count ++;
-	if(count%100 == 0){
-		printf("The output is triggered by TC counter\n");
+	if(count%800 == 0){
+		printf("The output is triggered by TC counter\r\n");
 	}
-	tc_set_count_value(&tc_instance,TC_COUNT_VALUE);	
+	
+	tc_set_count_value(module_inst,TC_COUNT_VALUE);
 //! [main_tc0_handler]
 }
 
@@ -194,7 +196,7 @@ static void configure_tc(void)
 
 	tc_get_config_defaults(&config_tc);
 	config_tc.counter_size    = TC_COUNTER_SIZE_16BIT;
-	config_tc.counter_16_bit.compare_capture_channel[0] = TC_COUNT_VALUE;
+	config_tc.counter_16_bit.value = TC_COUNT_VALUE;
 
 	tc_init(&tc_instance, TC3, &config_tc);
 	tc_enable(&tc_instance);
@@ -209,8 +211,8 @@ static void configure_tc_callbacks(void)
 	tc_register_callback(
 			&tc_instance,
 			tc_callback_to_counter,
-			TC_CALLBACK_CC_CHANNEL0);
-	tc_enable_callback(&tc_instance, TC_CALLBACK_CC_CHANNEL0);
+			TC_CALLBACK_OVERFLOW);
+	tc_enable_callback(&tc_instance, TC_CALLBACK_OVERFLOW);
 //! [main_tc_callback]
 }
 
