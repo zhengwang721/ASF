@@ -3,7 +3,7 @@
  *
  * \brief Power Management Controller (PMC) driver for SAM.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -335,7 +335,7 @@ uint32_t pmc_get_writeprotect_status(void);
 
 //@}
 
-#if (SAMG53)
+#if (SAMG53 || SAMG54)
 /**
  * \name Sleepwalking configuration
  *
