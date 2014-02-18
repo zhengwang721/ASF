@@ -145,6 +145,10 @@ of <i>main()</i>. To execute it, click on <i>Debug->Go</i>.
 \section appdoc_chap_05_section3 Build the Binary File
 - Open the Atmel Studio command line: <i>Start->All Programs->Atmel->Atmel
   Studio 6.1 Command Prompt</i>
+- To change the linker script under Atmel Studio:
+  -	Menu Project, Properties
+  -	Toolchain Tab, ATM®/GNU Linker, Miscellaneous
+  -	Include -Wl,--section-start=.text=0x2000  
 - Change the directory where the a SAMD21 xplained pro example makefile is
 - Type “make” and enter. Then the binary file (<i>getting-started_flash.bin</i>)
   will be generated in the directory
