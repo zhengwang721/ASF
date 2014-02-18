@@ -1,7 +1,7 @@
 /*
  * \file
  *
- * \brief SAM D21 Direct Memory Controller Driver
+ * \brief SAM D21 Direct Memory Access Controller Driver
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -264,14 +264,14 @@ void DMAC_Handler( void )
  *
  * This function will initialize a given DMA configuration structure to
  * a set of known default values. This function should be called on
- * any new instance of the configuration structures before being
+ * any new instance of the configuration structure before being
  * modified by the user application.
  *
  * The default configuration is as follows:
- *  \li software trigger is used as the transfer trigger
- *  \li priority level 0
+ *  \li Software trigger is used as the transfer trigger
+ *  \li Priority level 0
  *  \li Only software/event trigger
- *  \li Trigger for transaction 
+ *  \li Requires a trigger for each transaction 
  *  \li No event input /output
  * \param[out] config Pointer to the configuration
  *
@@ -355,12 +355,12 @@ enum status_code dma_allocate(struct dma_resource *resource,
 	DMAC->CHCTRLA.reg &= ~DMAC_CHCTRLA_ENABLE;
 	DMAC->CHCTRLA.reg = DMAC_CHCTRLA_SWRST;
 
-	/** Config the DMA control,channel registers and descriptors here */
+	/** Configure the DMA control,channel registers and descriptors here */
 	_dma_set_config(resource, config);
 
 	resource->descriptor = NULL;
 
-	/* Log the DMA resouce into the internal DMA resource pool */
+	/* Log the DMA resource into the internal DMA resource pool */
 	_dma_active_resource[resource->channel_id] = resource;
 
 	system_interrupt_leave_critical_section();
@@ -371,7 +371,7 @@ enum status_code dma_allocate(struct dma_resource *resource,
 /**
  * \brief Free an allocated DMA resource.
  *
- * This function will Free an allocated DMA resource.
+ * This function will free an allocated DMA resource.
  *
  * \param[in,out] resource Pointer to the DMA resource
  *
@@ -417,9 +417,8 @@ enum status_code dma_free(struct dma_resource *resource)
  * This function will start a DMA transfer through an allocated DMA resource.
  *
  * \param[in,out] resource Pointer to the DMA resource
- * \param[in] transfer_descriptor Pointer to the DMA transfer descriptor
  *
- * \return Status of the release procedure.
+ * \return Status of the transfer start procedure
  *
  * \retval STATUS_OK The transfer was started successfully
  * \retval STATUS_BUSY The DMA resource was busy and the transfer was not started
@@ -475,12 +474,13 @@ enum status_code dma_start_transfer_job(struct dma_resource *resource)
 /**
  * \brief Abort a DMA transfer.
  *
- * This function will abort a DMA transfer. The channel used for the DMA
+ * This function will abort a DMA transfer. The DMA channel used for the DMA
  * resource will be disabled.
- * The block transfer count will be also calculated and output in the DMA
+ * The block transfer count will be also calculated and written to the DMA
  * resource structure.
  *
  * \note The DMA resource will not be freed after calling this function.
+ *       The function \ref dma_free() can be used to free an allocated resource. 
  *
  * \param[in,out] resource Pointer to the DMA resource
  *
@@ -512,9 +512,13 @@ void dma_abort_job(struct dma_resource *resource)
  * \brief Suspend a DMA transfer.
  *
  * This function will request to suspend the transfer of the DMA resource.
+ * The channel is kept enabled, can receive transfer triggers (the transfer
+ * pending bit will be set), but will be removed from the arbitration scheme.
+ * The channel operation can be resumed by calling \ref dma_resume_job().
  *
- * \note This function will send the request only. A channel suspend interrupt
- * will be triggered and then the transfer is truly suspended.
+ * \note This function sets the command to suspend the DMA channel 
+ * associated with a DMA resource. The channel suspend interrupt flag
+ * indicates whether the transfer is truly suspended.
  *
  * \param[in] resource Pointer to the DMA resource
  *
@@ -618,12 +622,12 @@ void dma_descriptor_create(DmacDescriptor* descriptor,
 /**
  * \brief Add a DMA transfer descriptor to a DMA resource
  *
- * This function will add a transfer descriptor to a DMA resource. If there was
- * a transfer descriptor already allocated to the DMA resource, the descriptor will
- * be linked to the next descriptor address.
+ * This function will add a DMA transfer descriptor to a DMA resource. 
+ * If there was a transfer descriptor already allocated to the DMA resource,
+ * the descriptor will be linked to the next descriptor address.
  *
- * \param[in] descriptor Pointer to the DMA resource
- * \param[in] config Pointer to the transfer descriptor
+ * \param[in] resource Pointer to the DMA resource
+ * \param[in] descriptor Pointer to the transfer descriptor
  *
  * \retval STATUS_OK The descriptor is added to the DMA resource
  * \retval STATUS_BUSY The DMA resource was busy and the descriptor is not added
