@@ -71,7 +71,7 @@ enum status_code _sercom_get_sync_baud_val(
 	uint16_t baud_calculated = 0;
 
 	/* Check if baudrate is outside of valid range. */
-	if (baudrate > (external_clock / 2)) {
+	if (baudrate > (external_clock / 4)) {
 		/* Return with error code */
 		return STATUS_ERR_BAUDRATE_UNAVAILABLE;
 	}

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Common Delay Service
+ * \brief ARM functions for busy-wait delay loops
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,59 +40,56 @@
  * \asf_license_stop
  *
  */
-#ifndef DELAY_H_INCLUDED
-#define DELAY_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef SYSTICK_MODE
-#include "sam0/systick_counter.h"
-#endif
-#ifdef CYCLE_MODE
-#include "sam0/cycle_counter.h"
-#endif
-
-void delay_init(void);
+#include "delay.h"
 
 /**
- * @defgroup group_common_services_delay Busy-Wait Delay Routines
+ * Value used to calculate ms delay. Default to be used with a 8MHz clock;
+ */
+static uint32_t cycles_per_ms = 8000000UL / 1000;
+static uint32_t cycles_per_us = 8000000UL / 1000000;
+
+/**
+ * \def delay_init
  *
- * This module provides simple loop-based delay routines for those
- * applications requiring a brief wait during execution. Common for
- * API ver. 2.
+ * \brief Initialize the delay driver.
  *
- * @{
+ * This must be called during start up to initialize the delay routine with
+ * the current used main clock. It must run any time the main CPU clock is changed.
  */
+void delay_init(void)
+{
+	cycles_per_ms = system_gclk_gen_get_hz(0);
+	cycles_per_ms /= 1000;
+	cycles_per_us = cycles_per_ms / 1000;
 
-/**
- * \def delay_s
- * \brief Delay in at least specified number of seconds.
- * \param delay Delay in seconds
- */
-#define delay_s(delay)          cpu_delay_s(delay)
-
-/**
- * \def delay_ms
- * \brief Delay in at least specified number of milliseconds.
- * \param delay Delay in milliseconds
- */
-#define delay_ms(delay)         cpu_delay_ms(delay)
-
-/**
- * \def delay_us
- * \brief Delay in at least specified number of microseconds.
- * \param delay Delay in microseconds
- */
-#define delay_us(delay)         cpu_delay_us(delay)
-
-#ifdef __cplusplus
+	SysTick->CTRL = SysTick_CTRL_CLKSOURCE_Msk | SysTick_CTRL_ENABLE_Msk;
 }
-#endif
 
 /**
- * @}
+ * \brief Delay loop to delay at least n number of microseconds
+ *
+ * \param n  Number of microseconds to wait
  */
+void delay_cycles_us(
+		uint32_t n)
+{
+	while (n--) {
+		/* Devide up to blocks of 10u */
+		delay_cycles(cycles_per_us);
+	}
+}
 
-#endif /* DELAY_H_INCLUDED */
+/**
+ * \brief Delay loop to delay at least n number of milliseconds
+ *
+ * \param n  Number of milliseconds to wait
+ */
+void delay_cycles_ms(
+		uint32_t n)
+{
+	while (n--) {
+		/* Devide up to blocks of 1ms */
+		delay_cycles(cycles_per_ms);
+	}
+}

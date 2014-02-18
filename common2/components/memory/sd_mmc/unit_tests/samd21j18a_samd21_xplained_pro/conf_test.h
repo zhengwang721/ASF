@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Common Delay Service
+ * \brief SAM D21 Xplained PRO test configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,59 +40,16 @@
  * \asf_license_stop
  *
  */
-#ifndef DELAY_H_INCLUDED
-#define DELAY_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-#ifdef SYSTICK_MODE
-#include "sam0/systick_counter.h"
-#endif
-#ifdef CYCLE_MODE
-#include "sam0/cycle_counter.h"
-#endif
+#define CONF_STDIO_USART          EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE       38400
 
-void delay_init(void);
-
-/**
- * @defgroup group_common_services_delay Busy-Wait Delay Routines
- *
- * This module provides simple loop-based delay routines for those
- * applications requiring a brief wait during execution. Common for
- * API ver. 2.
- *
- * @{
- */
-
-/**
- * \def delay_s
- * \brief Delay in at least specified number of seconds.
- * \param delay Delay in seconds
- */
-#define delay_s(delay)          cpu_delay_s(delay)
-
-/**
- * \def delay_ms
- * \brief Delay in at least specified number of milliseconds.
- * \param delay Delay in milliseconds
- */
-#define delay_ms(delay)         cpu_delay_ms(delay)
-
-/**
- * \def delay_us
- * \brief Delay in at least specified number of microseconds.
- * \param delay Delay in microseconds
- */
-#define delay_us(delay)         cpu_delay_us(delay)
-
-#ifdef __cplusplus
-}
-#endif
-
-/**
- * @}
- */
-
-#endif /* DELAY_H_INCLUDED */
+#endif /* CONF_TEST_H_INCLUDED */

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Common Delay Service
+ * \brief Time tick for SAM.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,59 +40,46 @@
  * \asf_license_stop
  *
  */
-#ifndef DELAY_H_INCLUDED
-#define DELAY_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#include "asf.h"
+#include "time_tick.h"
 
-#ifdef SYSTICK_MODE
-#include "sam0/systick_counter.h"
-#endif
-#ifdef CYCLE_MODE
-#include "sam0/cycle_counter.h"
-#endif
+/** Counts for 1ms time ticks. */
+volatile uint32_t g_ms_ticks = 0;
 
-void delay_init(void);
-
+#define TICK_US 1000
 /**
- * @defgroup group_common_services_delay Busy-Wait Delay Routines
+ * \brief Handler for Sytem Tick interrupt.
  *
- * This module provides simple loop-based delay routines for those
- * applications requiring a brief wait during execution. Common for
- * API ver. 2.
- *
- * @{
+ * Process System Tick Event
+ * Increments the g_ms_ticks counter.
  */
-
-/**
- * \def delay_s
- * \brief Delay in at least specified number of seconds.
- * \param delay Delay in seconds
- */
-#define delay_s(delay)          cpu_delay_s(delay)
-
-/**
- * \def delay_ms
- * \brief Delay in at least specified number of milliseconds.
- * \param delay Delay in milliseconds
- */
-#define delay_ms(delay)         cpu_delay_ms(delay)
-
-/**
- * \def delay_us
- * \brief Delay in at least specified number of microseconds.
- * \param delay Delay in microseconds
- */
-#define delay_us(delay)         cpu_delay_us(delay)
-
-#ifdef __cplusplus
+void SysTick_Handler(void)
+{
+	g_ms_ticks++;
 }
-#endif
 
-/**
- * @}
- */
+void time_tick_init(void)
+{
+	g_ms_ticks = 0;
 
-#endif /* DELAY_H_INCLUDED */
+	/* Configure systick */
+	if (system_gclk_gen_get_hz(0) / TICK_US) {
+		Assert(false);
+	}
+}
+
+uint32_t time_tick_get(void)
+{
+	return g_ms_ticks;
+}
+
+uint32_t time_tick_calc_delay(uint32_t tick_start, uint32_t tick_end)
+{
+	if (tick_end >= tick_start) {
+		return (tick_end - tick_start) * (1000 / TICK_US);
+	} else {
+		/* In the case of 32-bit couter number overflow */
+		return (tick_end + (0xFFFFFFFF - tick_start)) * (1000 / TICK_US);
+	}
+}

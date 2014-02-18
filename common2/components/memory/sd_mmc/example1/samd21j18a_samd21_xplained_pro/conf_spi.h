@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Common Delay Service
+ * \brief SAM D21 SPI configuration
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,59 +40,14 @@
  * \asf_license_stop
  *
  */
-#ifndef DELAY_H_INCLUDED
-#define DELAY_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
 
-#ifdef SYSTICK_MODE
-#include "sam0/systick_counter.h"
-#endif
-#ifdef CYCLE_MODE
-#include "sam0/cycle_counter.h"
-#endif
+#ifndef CONF_SPI_H_INCLUDED
+#  define CONF_SPI_H_INCLUDED
 
-void delay_init(void);
+#  define CONF_SPI_MASTER_ENABLE     true
+#  define CONF_SPI_SLAVE_ENABLE      true
+#  define CONF_SPI_TIMEOUT           10000
 
-/**
- * @defgroup group_common_services_delay Busy-Wait Delay Routines
- *
- * This module provides simple loop-based delay routines for those
- * applications requiring a brief wait during execution. Common for
- * API ver. 2.
- *
- * @{
- */
+#endif /* CONF_SPI_H_INCLUDED */
 
-/**
- * \def delay_s
- * \brief Delay in at least specified number of seconds.
- * \param delay Delay in seconds
- */
-#define delay_s(delay)          cpu_delay_s(delay)
-
-/**
- * \def delay_ms
- * \brief Delay in at least specified number of milliseconds.
- * \param delay Delay in milliseconds
- */
-#define delay_ms(delay)         cpu_delay_ms(delay)
-
-/**
- * \def delay_us
- * \brief Delay in at least specified number of microseconds.
- * \param delay Delay in microseconds
- */
-#define delay_us(delay)         cpu_delay_us(delay)
-
-#ifdef __cplusplus
-}
-#endif
-
-/**
- * @}
- */
-
-#endif /* DELAY_H_INCLUDED */

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Common Delay Service
+ * \brief SD/MMC stack configuration file.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,59 +40,35 @@
  * \asf_license_stop
  *
  */
-#ifndef DELAY_H_INCLUDED
-#define DELAY_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+#ifndef CONF_SD_MMC_H_INCLUDED
+#define CONF_SD_MMC_H_INCLUDED
 
-#ifdef SYSTICK_MODE
-#include "sam0/systick_counter.h"
-#endif
-#ifdef CYCLE_MODE
-#include "sam0/cycle_counter.h"
-#endif
+// Define to enable the SPI mode instead of Multimedia Card interface mode
+#define SD_MMC_SPI_MODE
 
-void delay_init(void);
+// Define to enable the SDIO support
+//#define SDIO_SUPPORT_ENABLE
 
-/**
- * @defgroup group_common_services_delay Busy-Wait Delay Routines
- *
- * This module provides simple loop-based delay routines for those
- * applications requiring a brief wait during execution. Common for
- * API ver. 2.
- *
- * @{
- */
+// Define to enable the debug trace to the current standard output (stdio)
+//#define SD_MMC_DEBUG
 
-/**
- * \def delay_s
- * \brief Delay in at least specified number of seconds.
- * \param delay Delay in seconds
- */
-#define delay_s(delay)          cpu_delay_s(delay)
+// Define to memory count
+#define SD_MMC_SPI_MEM_CNT          1
 
-/**
- * \def delay_ms
- * \brief Delay in at least specified number of milliseconds.
- * \param delay Delay in milliseconds
- */
-#define delay_ms(delay)         cpu_delay_ms(delay)
+//! Select the SPI module SD/MMC is connected to
+#define SD_MMC_SPI                 EXT1_SPI_MODULE
 
-/**
- * \def delay_us
- * \brief Delay in at least specified number of microseconds.
- * \param delay Delay in microseconds
- */
-#define delay_us(delay)         cpu_delay_us(delay)
+#define SD_MMC_SPI_PINMUX_SETTING  EXT1_SPI_SERCOM_MUX_SETTING
+#define SD_MMC_SPI_PINMUX_PAD0     EXT1_SPI_SERCOM_PINMUX_PAD0
+#define SD_MMC_SPI_PINMUX_PAD1     EXT1_SPI_SERCOM_PINMUX_PAD1
+#define SD_MMC_SPI_PINMUX_PAD2     EXT1_SPI_SERCOM_PINMUX_PAD2
+#define SD_MMC_SPI_PINMUX_PAD3     EXT1_SPI_SERCOM_PINMUX_PAD3
 
-#ifdef __cplusplus
-}
-#endif
+#define SD_MMC_CS                  EXT1_PIN_15
 
-/**
- * @}
- */
+#define SD_MMC_0_CD_GPIO           (EXT1_PIN_10)
+#define SD_MMC_0_CD_DETECT_VALUE    0
 
-#endif /* DELAY_H_INCLUDED */
+#endif /* CONF_SD_MMC_H_INCLUDED */
+

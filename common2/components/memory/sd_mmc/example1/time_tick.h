@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Common Delay Service
+ * \brief Time tick functions
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,59 +40,30 @@
  * \asf_license_stop
  *
  */
-#ifndef DELAY_H_INCLUDED
-#define DELAY_H_INCLUDED
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#ifdef SYSTICK_MODE
-#include "sam0/systick_counter.h"
-#endif
-#ifdef CYCLE_MODE
-#include "sam0/cycle_counter.h"
-#endif
-
-void delay_init(void);
+#ifndef TIME_TICK_H_INCLUDED
+#define TIME_TICK_H_INCLUDED
 
 /**
- * @defgroup group_common_services_delay Busy-Wait Delay Routines
+ * \brief Initialize for 1ms time tick.
  *
- * This module provides simple loop-based delay routines for those
- * applications requiring a brief wait during execution. Common for
- * API ver. 2.
+ * \return \c true if initialization is OK, else \c false.
+ */
+void time_tick_init(void);
+
+/**
+ * \brief Get current time tick.
+ */
+uint32_t time_tick_get(void);
+
+/**
+ * \brief Calculate the delay (ms) between two ticks.
  *
- * @{
+ * \param tick_start Start tick number.
+ * \param tick_end   End tick number.
+ *
+ * \return the timing in ms between the both ticks
  */
+uint32_t time_tick_calc_delay(uint32_t tick_start, uint32_t tick_end);
 
-/**
- * \def delay_s
- * \brief Delay in at least specified number of seconds.
- * \param delay Delay in seconds
- */
-#define delay_s(delay)          cpu_delay_s(delay)
-
-/**
- * \def delay_ms
- * \brief Delay in at least specified number of milliseconds.
- * \param delay Delay in milliseconds
- */
-#define delay_ms(delay)         cpu_delay_ms(delay)
-
-/**
- * \def delay_us
- * \brief Delay in at least specified number of microseconds.
- * \param delay Delay in microseconds
- */
-#define delay_us(delay)         cpu_delay_us(delay)
-
-#ifdef __cplusplus
-}
-#endif
-
-/**
- * @}
- */
-
-#endif /* DELAY_H_INCLUDED */
+#endif /* TIME_TICK_H_INCLUDED */
