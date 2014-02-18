@@ -103,7 +103,6 @@ static inline void udd_wait_clock_ready(void)
 {
 
 	if (UDD_CLOCK_SOURCE == SYSTEM_CLOCK_SOURCE_DPLL) {
-
 #define DPLL_READY_FLAG (SYSCTRL_DPLLSTATUS_ENABLE | \
 		SYSCTRL_DPLLSTATUS_CLKRDY | SYSCTRL_DPLLSTATUS_LOCK)
 
@@ -111,7 +110,6 @@ static inline void udd_wait_clock_ready(void)
 	}
 
 	if (UDD_CLOCK_SOURCE == SYSTEM_CLOCK_SOURCE_DFLL) {
-
 #define DFLL_READY_FLAG (SYSCTRL_PCLKSR_DFLLRDY | \
 		SYSCTRL_PCLKSR_DFLLLCKF | SYSCTRL_PCLKSR_DFLLLCKC)
 
@@ -729,6 +727,7 @@ static void udd_ctrl_fetch_ram(void)
 static void udd_ctrl_send_zlp_in(void)
 {
 	udd_ep_control_state = UDD_EPCTRL_HANDSHAKE_WAIT_IN_ZLP;
+	usb_device_endpoint_setup_buffer_job(&usb_device,udd_ctrl_buffer);
 	usb_device_endpoint_write_buffer_job(&usb_device,0,udd_g_ctrlreq.payload,0);
 }
 
@@ -784,11 +783,6 @@ static void udd_ctrl_in_sent(void)
 static void udd_ctrl_out_received(void* pointer)
 {
 	struct usb_endpoint_callback_parameter *ep_callback_para = (struct usb_endpoint_callback_parameter*)pointer;
-
-	if(ep_callback_para->received_bytes == 0) {
-		usb_device_endpoint_setup_buffer_job(&usb_device,udd_ctrl_buffer);
-		return;
-	}
 
 	uint16_t nb_data;
 	nb_data = ep_callback_para->received_bytes; /* Read data received during OUT phase */
@@ -849,8 +843,7 @@ static void udd_ctrl_out_received(void* pointer)
 		/* Reinitialize reception on payload buffer */
 		udd_ctrl_payload_nb_trans = 0;
 	}
-	/* Initialize buffer size and enable OUT bank */
-	usb_device_endpoint_setup_buffer_job(&usb_device,udd_ctrl_buffer);
+	usb_device_endpoint_read_buffer_job(&usb_device,0,udd_ctrl_buffer,USB_DEVICE_EP_CTRL_SIZE);
 }
 
 /**
@@ -881,6 +874,7 @@ static void _usb_ep0_on_setup(struct usb_module *module_inst, void* pointer)
 			udd_ctrl_prev_payload_nb_trans = 0;
 			udd_ctrl_payload_nb_trans = 0;
 			udd_ep_control_state = UDD_EPCTRL_DATA_IN;
+			usb_device_endpoint_read_buffer_job(&usb_device,0,udd_ctrl_buffer,USB_DEVICE_EP_CTRL_SIZE);
 			udd_ctrl_in_sent();
 		} else {
 			if(0 == udd_g_ctrlreq.req.wLength) {
@@ -890,7 +884,8 @@ static void _usb_ep0_on_setup(struct usb_module *module_inst, void* pointer)
 				udd_ctrl_prev_payload_nb_trans = 0;
 				udd_ctrl_payload_nb_trans = 0;
 				udd_ep_control_state = UDD_EPCTRL_DATA_OUT;
-				udd_ctrl_out_received(pointer);
+				/* Initialize buffer size and enable OUT bank */
+				usb_device_endpoint_read_buffer_job(&usb_device,0,udd_ctrl_buffer,USB_DEVICE_EP_CTRL_SIZE);
 			}
 		}
 	}
@@ -1037,7 +1032,6 @@ static void _usb_device_lpm_suspend(struct usb_module *module_inst, void *pointe
 		UDC_REMOTEWAKEUP_LPM_DISABLE();
 	}
 	UDC_SUSPEND_LPM_EVENT();
-
 }
 #endif
 

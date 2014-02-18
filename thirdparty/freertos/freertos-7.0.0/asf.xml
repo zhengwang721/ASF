@@ -12,6 +12,7 @@
         
 			<build type="distribute" subtype="file" value="readme.txt"/>
 			<build type="distribute" subtype="file" value="ATMEL-disclaimer.txt"/>
+			<build type="define" name="__FREERTOS__" value=""/>
 			<build type="c-source" value="source/croutine.c"/>
 			<build type="c-source" value="source/list.c"/>
 			<build type="c-source" value="source/queue.c"/>
@@ -61,6 +62,7 @@
 
 			<build type="distribute" subtype="file" value="readme.txt"/>
 			<build type="distribute" subtype="file" value="ATMEL-disclaimer.txt"/>
+			<build type="define" name="__FREERTOS__" value=""/>
 			<build type="c-source" value="source/croutine.c"/>
 			<build type="c-source" value="source/list.c"/>
 			<build type="c-source" value="source/queue.c"/>
@@ -106,6 +108,7 @@
 
 			<build type="distribute" subtype="file" value="readme.txt"/>
 			<build type="distribute" subtype="file" value="ATMEL-disclaimer.txt"/>
+			<build type="define" name="__FREERTOS__" value=""/>
 			<build type="c-source" value="source/croutine.c"/>
 			<build type="c-source" value="source/list.c"/>
 			<build type="c-source" value="source/queue.c"/>
