@@ -91,6 +91,7 @@ The SAMD21 xplained pro  feature
 - Atmel Studio 6.1 (or above) installed
 - ASF 3.15.0 or above standalone package installed
 - SAM-BA v2.12 and SAMD21 patch for it installed
+- Bootloader image file sam-ba_bootloader_image.elf.
 - SAMD21 xplained pro board connected to SAM-BA and powered on
 */
 
