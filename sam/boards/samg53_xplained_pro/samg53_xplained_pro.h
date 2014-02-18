@@ -3,7 +3,7 @@
  *
  * \brief SAMG53 Xplained Pro board definition
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -134,8 +134,8 @@ void system_board_init(void);
  *  @{ */
 #define LED_0_NAME                "LED0 (yellow)"
 #define LED_0_PIN                 LED0_PIN
-#define LED_0_ACTIVE              LED0_ACTIVE
-#define LED_0_INACTIVE            LED0_INACTIVE
+#define LED_0_ACTIVE              LED0_ACTIVE_LEVEL
+#define LED_0_INACTIVE            LED0_INACTIVE_LEVEL
 
 #define PIN_LED_0      {PIO_PA16, PIOA, ID_PIOA, PIO_OUTPUT_1, PIO_DEFAULT}
 #define PIN_LED_0_MASK PIO_PA16
