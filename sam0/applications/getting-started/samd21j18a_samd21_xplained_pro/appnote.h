@@ -137,7 +137,7 @@ of <i>main()</i>. To execute it, click on <i>Debug->Go</i>.
 /**
 \page appdoc_chap_05_title6 Get Started with SAM-BA
 \section appdoc_chap_05_section1 Requirements
-\copydoc SAM-BA_REQ
+\copydoc SAM-BA_REQ 
 \section appdoc_chap_05_section2 Download bootloader
 - In Atmel Studio, open “Tools\Device Programming”, select debugger and Apply.
 - From the memories tab, launch a chip erase.
