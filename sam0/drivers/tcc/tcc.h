@@ -2053,6 +2053,11 @@ void tcc_clear_status(
  *      <td>01/2014</td>
  *      <td>Initial release</td>
  *  </tr>
+ *  <tr>
+ *      <td></td>
+ *      <td>02/2014</td>
+ *      <td>Add faults support</td>
+ *  </tr>
  * </table>
  */
 
