@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 Xplained Pro board configuration.
+ * \brief Sleep manager configuration
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,10 +41,9 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_SLEEPMGR_H_INCLUDED
+#define CONF_SLEEPMGR_H_INCLUDED
 
-/* Enable USB VBUS detect */
-#define CONF_BOARD_USB_VBUS_DETECT
+#define CONFIG_SLEEPMGR_ENABLE
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_H_INCLUDED */

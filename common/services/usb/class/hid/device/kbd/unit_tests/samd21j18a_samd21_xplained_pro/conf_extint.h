@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21 Xplained Pro board configuration.
+ * \brief SAM D21 External Interrupt Driver Configuration Header
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,11 +40,9 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
 
-/* Enable USB VBUS detect */
-#define CONF_BOARD_USB_VBUS_DETECT
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif
