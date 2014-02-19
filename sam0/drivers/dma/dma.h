@@ -51,9 +51,9 @@ extern "C" {
  * \defgroup asfdoc_sam0_dma_group SAM D21 Direct Memory Access Controller Driver (DMAC)
  *
  * This driver for SAM D21 devices provides an interface for the configuration
- * and management of the Direct Memory Access Controller(DMAC) module within 
- * the device. The DMAC can transfer data between memories and peripherals, and 
- * thus off-load these tasks from the CPU. The module supports peripheral to 
+ * and management of the Direct Memory Access Controller(DMAC) module within
+ * the device. The DMAC can transfer data between memories and peripherals, and
+ * thus off-load these tasks from the CPU. The module supports peripheral to
  * peripheral, peripheral to memory, memory to peripheral and memory to memory
  * transfers.
  *
@@ -78,49 +78,49 @@ extern "C" {
  * \section asfdoc_sam0_dma_module_overview Module Overview
  *
  * SAM D21 devices with DMAC enables high data transfer rates with minimum
- * CPU intervention and frees up CPU time. With access to all peripherals, 
- * the DMAC can handle automatic transfer of data to/from 
+ * CPU intervention and frees up CPU time. With access to all peripherals,
+ * the DMAC can handle automatic transfer of data to/from
  * communication modules.
- * It supports static and incremental addressing for both source and 
+ * It supports static and incremental addressing for both source and
  * destination.
  *
- * The DMAC when used with Event System or peripheral triggers, provides a 
+ * The DMAC when used with Event System or peripheral triggers, provides a
  * considerable advantage by reducing the power consumption and performing
  * data transfer in the background.
  * For example if the ADC is configured to generate an event, it can trigger
- * the DMAC to transfer the data into another peripheral or into SRAM. 
+ * the DMAC to transfer the data into another peripheral or into SRAM.
  * The CPU can remain in sleep during this time to reduce power consumption.
  *
- * The DMAC module has 12 channels. The DMA channel 
+ * The DMAC module has 12 channels. The DMA channel
  * operation can be suspended at any time by software, by events
  * from event system, or after selectable descriptor execution. The operation
  * can be resumed by software or by events from event system.
- * The DMAC driver for SAM D21 supports four types of transfers such as 
+ * The DMAC driver for SAM D21 supports four types of transfers such as
  * peripheral to peripheral, peripheral to memory, memory to peripheral and
  * memory to memory.
  *
  * The basic transfer unit is a beat which is defined as a single bus access.
- * There can be multiple beats in a single block transfer and multiple block 
+ * There can be multiple beats in a single block transfer and multiple block
  * transfers in a DMA transaction.
  * DMA transfer is based on descriptors, which holds transfer properties
- * such as the source and destination addresses, transfer counter and other 
- * additional transfer control information. 
+ * such as the source and destination addresses, transfer counter and other
+ * additional transfer control information.
  * The descriptors can be static or linked. When static, a single block transfer
- * is performed. When linked, a number of transfer descriptors can be used to 
+ * is performed. When linked, a number of transfer descriptors can be used to
  * enable multiple block transfers within a single DMA transaction.
- * 
- * Implementation of the DMAC driver is based on DMA resource. 
- * DMA resource is composed of a DMA channel, a transfer trigger and 
+ *
+ * Implementation of the DMAC driver is based on DMA resource.
+ * DMA resource is composed of a DMA channel, a transfer trigger and
  * one or more transfer descriptors. It has the capability to perform an interrupt
- * callback or generate peripheral events. Event generation capability is 
- * available only for the four lower channels. Up to 12 DMA resources can be 
+ * callback or generate peripheral events. Event generation capability is
+ * available only for the four lower channels. Up to 12 DMA resources can be
  * allocated in one application and each of the DMA resource is independent.
  *
  * The other main features are
  *
  * - Selectable transfer trigger source
- *	- Software
- *	- Event System
+ *  - Software
+ *  - Event System
  *  - Peripheral
  * - Event input and output is supported for the 4 lower channels
  * - 4 level channel priority
@@ -163,22 +163,22 @@ extern "C" {
  *        <th> Name </th> <th> Description </th>
  *    </tr>
  *    <tr>
- *     <td > Beat </td> 
- *     <td > It is a single bus access by the DMAC. 
- *           Configurable as 8-bit, 16-bit or 32-bit 
+ *     <td > Beat </td>
+ *     <td > It is a single bus access by the DMAC.
+ *           Configurable as 8-bit, 16-bit or 32-bit
  *     </td>
  *    </tr>
  *    <tr>
- *     <td > Burst </td> 
- *     <td> It is a transfer of n-beats (n=1,4,8,16). 
- *			For the DMAC module in SAM D21, the burst size is one beat.
+ *     <td > Burst </td>
+ *     <td> It is a transfer of n-beats (n=1,4,8,16).
+ *          For the DMAC module in SAM D21, the burst size is one beat.
  *          Arbitration takes place each time a burst transfer is completed
  *     </td>
  *    </tr>
  *    <tr>
- *     <td > Block transfer </td> 
+ *     <td > Block transfer </td>
  *     <td>  A single block transfer is a configurable number of (1 to 64k)
- *           beat transfers 
+ *           beat transfers
  *     </td>
  *    </tr>
  *   </table>
@@ -187,7 +187,7 @@ extern "C" {
  * The DMAC in each device consists of several DMA channels, which 
  * along with the transfer descriptors defines the data transfer properties.
  * With a successful DMA resource allocation, a dedicated
- * DMA channel will be assigned. The channel will be occupied until the 
+ * DMA channel will be assigned. The channel will be occupied until the
  * DMA resource is freed. A DMA channel ID is used to identify the specific
  * DMA resource.
  * When there are multiple channels with active requests, the arbiter prioritizes
@@ -195,15 +195,15 @@ extern "C" {
  *
  * \subsection asfdoc_sam0_dma_module_overview_dma_trigger DMA Triggers
  * A DMA transfer can be started only when a DMA transfer request is
- * acknowledged/granted by the arbiter. 
+ * acknowledged/granted by the arbiter.
  * A transfer request can be triggered from software, peripheral or an event
  * from the Event System.
- * There are dedicated trigger source selections for each DMA channel. 
- * The function \ref dma_get_config_defaults() sets software trigger as the 
+ * There are dedicated trigger source selections for each DMA channel.
+ * The function \ref dma_get_config_defaults() sets software trigger as the
  * default transfer trigger for a DMA transfer.
  *
  * \subsection asfdoc_sam0_dma_module_overview_dma_transfer_descriptor DMA Transfer Descriptor
- * The transfer descriptor resides in the SRAM and 
+ * The transfer descriptor resides in the SRAM and
  * defines the transfer properties.
  *   <table border="0" cellborder="1" cellspacing="0" >
  *    <tr>
@@ -228,21 +228,21 @@ extern "C" {
  *
  * Before starting a transfer, at least one descriptor should be configured.
  * After a successful allocation of a DMA channel, the transfer descriptor can
- * be added with a call to \ref dma_add_descriptor(). If there is a transfer 
+ * be added with a call to \ref dma_add_descriptor(). If there is a transfer
  * descriptor already allocated to the DMA resource, the descriptor will
  * be linked to the next descriptor address.
  *
  * \subsection asfdoc_sam0_dma_module_overview_dma_output DMA Interrupts/Events
- * The output of a DMA transfer can be an interrupt callback or a peripheral 
+ * The output of a DMA transfer can be an interrupt callback or a peripheral
  * event. The DMAC has three types of interrupt sources: transfer complete,
  * transfer error and channel suspend. All of these interrupt sources can be
  * registered and enabled independently through the DMAC driver.
  *
  * The DMAC also can generate output events when transfer is complete. This is
  * configured by the DMA resource and the event is generated when the transfer
- * is complete. 
+ * is complete.
  *
- * The DMAC can generate events in the below cases: 
+ * The DMAC can generate events in the below cases:
  *
  * - When a block transfer is complete
  *
@@ -361,7 +361,7 @@ enum dma_block_action {
 	/** No action */
 	DMA_BLOCK_ACTION_NOACT = 0,
 	/** Channel in normal operation and sets transfer complete interrupt flag
-     *	after block transfer */
+	 *  after block transfer */
 	DMA_BLOCK_ACTION_INT,
 	/** Trigger channel suspend after block transfer and sets channel 
 	 *  suspend interrupt flag once the channel is suspended */
@@ -422,15 +422,15 @@ enum dma_callback_type {
 
 /**
  * DMA transfer descriptor configuration. When the source or destination address
- * increment is enabled, the addresses stored into the configuration structure 
+ * increment is enabled, the addresses stored into the configuration structure
  * must correspond to the end of the transfer.
  *
  */
 struct dma_descriptor_config {
-	/** Descriptor valid flag used to identify whether a descriptor is 
+	/** Descriptor valid flag used to identify whether a descriptor is
 	    valid or not*/
 	bool descriptor_valid;
-	/** This is used to generate an event on specific transfer action in 
+	/** This is used to generate an event on specific transfer action in
 	    a channel. Supported only in four lower channels */
 	enum dma_event_output_selection event_output_selection;
 	/** Action taken when a block transfer is completed */
@@ -441,12 +441,12 @@ struct dma_descriptor_config {
 	bool src_increment_enable;
 	/** Used for enabling the destination address increment */
 	bool dst_increment_enable;
-	/** This bit selects whether the source or destination address is 
+	/** This bit selects whether the source or destination address is
 	    using the step size settings */
 	enum dma_step_selection step_selection;
-	/** The step size for source/destination address increment. 
+	/** The step size for source/destination address increment.
 	    The next address is calculated
-        as next_addr = addr + (2^step_size * beat size)*/
+	    as next_addr = addr + (2^step_size * beat size)*/
 	enum dma_address_increment_stepsize step_size;
 	/** It is the number of beats in a block. This count value is
 	 * decremented by one after each beat data transfer */
@@ -455,7 +455,7 @@ struct dma_descriptor_config {
 	uint32_t source_address;
 	/** Transfer destination address */
 	uint32_t destination_address;
-	/** Set to zero for static descriptors. This must have a valid memory 
+	/** Set to zero for static descriptors. This must have a valid memory
 	    address for linked descriptors */
 	uint32_t next_descriptor_address;
 };
@@ -768,7 +768,7 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  *
  * - \subpage asfdoc_sam0_dma_basic_use_case
  *
- * \note More DMA usage examples are available in peripheral QSGs. 
+ * \note More DMA usage examples are available in peripheral QSGs.
  * A quick start guide for TC/TCC
  * shows the usage of DMA event trigger; SERCOM SPI/USART/I2C has example for
  * DMA transfer from peripheral to memory or from memory to peripheral;

@@ -103,8 +103,8 @@
  *  \br
  *
  * -# Set the specific parameters for a DMA transfer with transfer size, source
- *    address, destination address. In this example, we have enabled the 
- * 	  source and destination address increment.
+ *    address, destination address. In this example, we have enabled the
+ *    source and destination address increment.
  *    The source and destination addresses to be stored into descriptor_config
  *    must correspond to the end of the transfer.
  *

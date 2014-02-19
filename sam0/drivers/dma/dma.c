@@ -271,7 +271,7 @@ void DMAC_Handler( void )
  *  \li Software trigger is used as the transfer trigger
  *  \li Priority level 0
  *  \li Only software/event trigger
- *  \li Requires a trigger for each transaction 
+ *  \li Requires a trigger for each transaction
  *  \li No event input /output
  * \param[out] config Pointer to the configuration
  *
@@ -516,7 +516,7 @@ void dma_abort_job(struct dma_resource *resource)
  * pending bit will be set), but will be removed from the arbitration scheme.
  * The channel operation can be resumed by calling \ref dma_resume_job().
  *
- * \note This function sets the command to suspend the DMA channel 
+ * \note This function sets the command to suspend the DMA channel
  * associated with a DMA resource. The channel suspend interrupt flag
  * indicates whether the transfer is truly suspended.
  *
@@ -622,7 +622,7 @@ void dma_descriptor_create(DmacDescriptor* descriptor,
 /**
  * \brief Add a DMA transfer descriptor to a DMA resource
  *
- * This function will add a DMA transfer descriptor to a DMA resource. 
+ * This function will add a DMA transfer descriptor to a DMA resource.
  * If there was a transfer descriptor already allocated to the DMA resource,
  * the descriptor will be linked to the next descriptor address.
  *

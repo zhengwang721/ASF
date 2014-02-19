@@ -101,9 +101,9 @@ static void setup_transfer_descriptor(DmacDescriptor *descriptor )
 
 	//! [setup_6]
 	descriptor_config.block_transfer_count = sizeof(source_memory);
-	descriptor_config.source_address = (uint32_t)source_memory + 
+	descriptor_config.source_address = (uint32_t)source_memory +
 		sizeof(source_memory);
-	descriptor_config.destination_address = (uint32_t)destination_memory + 
+	descriptor_config.destination_address = (uint32_t)destination_memory +
 		sizeof(source_memory);
 	//! [setup_6]
 
@@ -120,7 +120,7 @@ int main(void)
 	//! [sample_resource]
 	struct dma_resource example_resource;
 	//! [sample_resource]
-	
+
 	system_init();
 
 	//! [setup_init]
