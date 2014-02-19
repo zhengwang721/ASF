@@ -47,6 +47,13 @@
 # include "i2c_master_interrupt.h"
 #endif
 
+/* Forward declaration */
+enum status_code _i2c_master_wait_for_bus(
+		struct i2c_master_module *const module);
+
+enum status_code _i2c_master_address_response(
+		struct i2c_master_module *const module);
+
 #if !defined(__DOXYGEN__)
 
 /**
@@ -318,7 +325,7 @@ void i2c_master_reset(struct i2c_master_module *const module)
  * \retval STATUS_ERR_BAD_ADDRESS       If slave is busy, or no slave
  *                                      acknowledged the address
  */
-static enum status_code _i2c_master_address_response(
+enum status_code _i2c_master_address_response(
 		struct i2c_master_module *const module)
 {
 	/* Sanity check arguments */
@@ -362,7 +369,7 @@ static enum status_code _i2c_master_address_response(
  * \retval STATUS_ERR_TIMEOUT  If no response was given within specified timeout
  *                             period
  */
-static enum status_code _i2c_master_wait_for_bus(
+enum status_code _i2c_master_wait_for_bus(
 		struct i2c_master_module *const module)
 {
 	/* Sanity check arguments */

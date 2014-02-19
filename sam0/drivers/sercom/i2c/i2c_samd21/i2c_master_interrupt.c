@@ -43,6 +43,12 @@
 
 #include "i2c_master_interrupt.h"
 
+extern enum status_code _i2c_master_wait_for_bus(
+		struct i2c_master_module *const module);
+
+extern enum status_code _i2c_master_address_response(
+		struct i2c_master_module *const module);
+
 /**
  * \internal
  * Read next data. Used by interrupt handler to get next data byte from slave.
@@ -243,6 +249,7 @@ static enum status_code _i2c_master_read_packet(
 	Assert(module->hw);
 
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
+	enum status_code tmp_status;
 
 	/* Save packet to software module */
 	module->buffer             = packet->data;
@@ -250,12 +257,47 @@ static enum status_code _i2c_master_read_packet(
 	module->transfer_direction = I2C_TRANSFER_READ;
 	module->status             = STATUS_BUSY;
 
-	/* Enable interrupts */
-	i2c_module->INTENSET.reg =
+	if (packet->ten_bit_address) {
+		/*
+		 * Write ADDR.ADDR[10:1] with the 10-bit address. ADDR.TENBITEN must
+		 * be set and read/write bit (ADDR.ADDR[0]) equal to 0.
+		 */
+		i2c_module->ADDR.reg = (packet->address << 1) | SERCOM_I2CM_ADDR_TENBITEN;
+
+		/* Wait for response on bus. */
+		tmp_status = _i2c_master_wait_for_bus(module);
+
+		/* Set action to ack. */
+		i2c_module->CTRLB.reg &= ~SERCOM_I2CM_CTRLB_ACKACT;
+
+		/* Check for address response error unless previous error is
+		 * detected. */
+		if (tmp_status == STATUS_OK) {
+			tmp_status = _i2c_master_address_response(module);
+		}
+
+		if (tmp_status == STATUS_OK) {
+			/* Enable interrupts */
+			i2c_module->INTENSET.reg =
+				SERCOM_I2CM_INTENSET_MB | SERCOM_I2CM_INTENSET_SB;
+
+			/*
+			 * Write ADDR[7:0] register to “11110 address[9:8] 1”.
+			 * ADDR.TENBITEN must be cleared
+			 */
+			i2c_module->ADDR.reg = (((packet->address >> 8) | 0x78) << 1) |
+				I2C_TRANSFER_READ;
+		} else {
+			return tmp_status;
+		}
+	} else {
+		/* Enable interrupts */
+		i2c_module->INTENSET.reg =
 			SERCOM_I2CM_INTENSET_MB | SERCOM_I2CM_INTENSET_SB;
 
-	/* Set address and direction bit. Will send start command on bus */
-	i2c_module->ADDR.reg = (packet->address << 1) | I2C_TRANSFER_READ;
+		/* Set address and direction bit. Will send start command on bus */
+		i2c_module->ADDR.reg = (packet->address << 1) | I2C_TRANSFER_READ;
+	}
 
 	return STATUS_OK;
 }
