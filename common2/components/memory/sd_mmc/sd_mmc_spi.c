@@ -76,8 +76,7 @@ static struct spi_module sd_mmc_master;
 //! Slot array of SPI structures
 static struct spi_slave_inst sd_mmc_spi_devices[SD_MMC_SPI_MEM_CNT];
 static struct spi_slave_inst_config slave_configs[SD_MMC_SPI_MEM_CNT];
-uint8_t ss_pins[SD_MMC_SPI_MEM_CNT] = {SD_MMC_CS
-};
+uint8_t ss_pins[SD_MMC_SPI_MEM_CNT] = {SD_MMC_CS};
 
 //! Internal global error status
 static sd_mmc_spi_errno_t sd_mmc_spi_err;
@@ -369,8 +368,13 @@ void sd_mmc_spi_select_device(uint8_t slot, uint32_t clock, uint8_t bus_width,
 	UNUSED(high_speed);
 	sd_mmc_spi_err = SD_MMC_SPI_NO_ERR;
 
+#ifdef SD_MMC_SPI_MAX_CLOCK
+	if (clock > SD_MMC_SPI_MAX_CLOCK) {
+		clock = SD_MMC_SPI_MAX_CLOCK;
+	}
+#endif
 	while (STATUS_ERR_INVALID_ARG == spi_set_baudrate(&sd_mmc_master, clock)) {
-		clock = clock / 2;
+		clock -= clock / 8;
 	}
 	spi_select_slave(&sd_mmc_master, &sd_mmc_spi_devices[slot], true);
 }

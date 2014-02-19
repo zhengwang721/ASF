@@ -70,7 +70,7 @@
 #define SD_MMC_0_CD_GPIO           (EXT1_PIN_10)
 #define SD_MMC_0_CD_DETECT_VALUE   0
 
-#define SD_MMC_SPI_MAX_CLOCK       10000000
+#define SD_MMC_SPI_MAX_CLOCK       4000000
 
 #endif /* CONF_SD_MMC_H_INCLUDED */
 

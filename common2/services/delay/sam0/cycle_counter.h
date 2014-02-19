@@ -111,9 +111,9 @@ extern "C" {
 void portable_delay_cycles(unsigned long n);
 
 #define cpu_ms_2_cy(ms, f_cpu)  \
-	(((uint64_t)(ms) * (f_cpu) + (uint64_t)(14e3-1ul)) / (uint64_t)14e3)
+	(((uint64_t)(ms) * (f_cpu) + (uint64_t)(7e3-1ul)) / (uint64_t)7e3)
 #define cpu_us_2_cy(us, f_cpu)  \
-	(((uint64_t)(us) * (f_cpu) + (uint64_t)(14e6-1ul)) / (uint64_t)14e6)
+	(((uint64_t)(us) * (f_cpu) + (uint64_t)(7e6-1ul)) / (uint64_t)7e6)
 
 #define delay_cycles               portable_delay_cycles
 

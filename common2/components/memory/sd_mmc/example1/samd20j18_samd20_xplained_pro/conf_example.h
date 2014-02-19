@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SD/MMC stack configuration file.
+ * \brief Example configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,36 +41,15 @@
  *
  */
 
-#ifndef CONF_SD_MMC_H_INCLUDED
-#define CONF_SD_MMC_H_INCLUDED
+#ifndef CONF_EXAMPLE_H_INCLUDED
+#define CONF_EXAMPLE_H_INCLUDED
 
-// Define to enable the SPI mode instead of Multimedia Card interface mode
-#define SD_MMC_SPI_MODE
+#define CONF_STDIO_USART          EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE       38400
 
-// Define to enable the SDIO support
-//#define SDIO_SUPPORT_ENABLE
-
-// Define to enable the debug trace to the current standard output (stdio)
-//#define SD_MMC_DEBUG
-
-// Define to memory count
-#define SD_MMC_SPI_MEM_CNT          1
-
-//! Select the SPI module SD/MMC is connected to
-#define SD_MMC_SPI                 EXT1_SPI_MODULE
-
-#define SD_MMC_SPI_PINMUX_SETTING  EXT1_SPI_SERCOM_MUX_SETTING
-#define SD_MMC_SPI_PINMUX_PAD0     EXT1_SPI_SERCOM_PINMUX_PAD0
-#define SD_MMC_SPI_PINMUX_PAD1     EXT1_SPI_SERCOM_PINMUX_PAD1
-#define SD_MMC_SPI_PINMUX_PAD2     EXT1_SPI_SERCOM_PINMUX_PAD2
-#define SD_MMC_SPI_PINMUX_PAD3     EXT1_SPI_SERCOM_PINMUX_PAD3
-
-#define SD_MMC_CS                  EXT1_PIN_15
-
-#define SD_MMC_0_CD_GPIO           (EXT1_PIN_10)
-#define SD_MMC_0_CD_DETECT_VALUE   0
-
-#define SD_MMC_SPI_MAX_CLOCK       10000000
-
-#endif /* CONF_SD_MMC_H_INCLUDED */
-
+#endif /* CONF_EXAMPLE_H_INCLUDED */

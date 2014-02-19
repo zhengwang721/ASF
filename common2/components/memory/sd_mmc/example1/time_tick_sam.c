@@ -47,7 +47,7 @@
 /** Counts for 1ms time ticks. */
 volatile uint32_t g_ms_ticks = 0;
 
-#define TICK_US 1000
+#define TICK_MS 1000
 /**
  * \brief Handler for Sytem Tick interrupt.
  *
@@ -64,7 +64,7 @@ void time_tick_init(void)
 	g_ms_ticks = 0;
 
 	/* Configure systick */
-	if (system_gclk_gen_get_hz(0) / TICK_US) {
+	if (SysTick_Config(system_gclk_gen_get_hz(0) / TICK_MS)) {
 		Assert(false);
 	}
 }
@@ -77,9 +77,9 @@ uint32_t time_tick_get(void)
 uint32_t time_tick_calc_delay(uint32_t tick_start, uint32_t tick_end)
 {
 	if (tick_end >= tick_start) {
-		return (tick_end - tick_start) * (1000 / TICK_US);
+		return (tick_end - tick_start);
 	} else {
 		/* In the case of 32-bit couter number overflow */
-		return (tick_end + (0xFFFFFFFF - tick_start)) * (1000 / TICK_US);
+		return (tick_end + (0xFFFFFFFF - tick_start));
 	}
 }
