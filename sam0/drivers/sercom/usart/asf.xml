@@ -32,6 +32,7 @@
 
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
+			<device-support value="samr21"/>
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
@@ -83,6 +84,7 @@
 
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
+			<device-support value="samr21"/>
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>

@@ -18,6 +18,7 @@
 		<build type="header-file" subtype="api" value="usb.h"/>
 
 		<device-support value="samd21"/>
+		<device-support value="samr21" />
 
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system"/>
