@@ -68,7 +68,10 @@
 static bool key_change = true;
 static uint8_t last_key[AES_BLOCKSIZE];
 static bool stb_restart_required = false;
+/* State of trx before AES use; use to re-store trx state. */
+static tal_trx_status_t prev_trx_status;
 
+extern tal_trx_status_t tal_trx_status;
 /* === Implementation ====================================================== */
 
 /**
@@ -136,7 +139,15 @@ stb_ccm_t stb_ccm_secure(uint8_t *buffer,
 	uint8_t enc_flag = ENCRYPTION_NOT_REQD;
 
 	if (stb_restart_required) {
+	
+		prev_trx_status = tal_trx_status;
+		if (tal_trx_status == TRX_SLEEP) {
+			tal_trx_wakeup();
+		}
+#if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF231) || \
+	((TAL_TYPE == AT86RF233) && (defined ENABLE_DEEP_SLEEP)))	
 		sal_aes_restart();
+#endif		
 		stb_restart_required = false;
 	}
 
@@ -199,12 +210,14 @@ stb_ccm_t stb_ccm_secure(uint8_t *buffer,
 			(uint16_t)mic_len > aMaxPHYPacketSize)
 			)			
 	{
+	    TRX_SLEEP();
 		sal_aes_clean_up();
 		return (STB_CCM_ILLPARM);
 	}
 
 	if (key_change && (key == NULL)) 
 	{
+	    TRX_SLEEP();
 		sal_aes_clean_up();
 		/* Initial call, but no key given. */
 		return (STB_CCM_KEYMISS); 
@@ -307,7 +320,7 @@ stb_ccm_t stb_ccm_secure(uint8_t *buffer,
 			}
 		}
 	}
-
+    TRX_SLEEP();
 	sal_aes_clean_up();
 	return (STB_CCM_OK);
 }

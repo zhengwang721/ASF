@@ -230,8 +230,8 @@ uint16_t PHY_RandomReq(void)
 *****************************************************************************/
 void PHY_EncryptReq(uint8_t *text, uint8_t *key)
 {
-	#warning "Security Mode 0 Not Supported"
-	return;
+	sal_aes_setup(key,AES_MODE_ECB, AES_DIR_ENCRYPT);
+	sal_aes_read(text);
 }
 #endif
 
@@ -275,6 +275,8 @@ return value;
 
 /*************************************************************************//**
 *****************************************************************************/
+
+
 static void phyWaitState(uint8_t state)
 {
   while (state != (phyReadRegister(TRX_STATUS_REG) & TRX_STATUS_MASK));
