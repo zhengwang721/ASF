@@ -63,7 +63,11 @@ void portable_delay_cycles(unsigned long n)
 
 	__asm (
 		"loop: DMB	\n"
+#ifdef __ICCARM__
+		"SUBS r0, r0, #1 \n"
+#else
 		"SUB r0, r0, #1 \n"
+#endif
 		"CMP r0, #0  \n"
 		"BNE loop         "
 	);

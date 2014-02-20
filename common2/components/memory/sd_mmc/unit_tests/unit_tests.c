@@ -111,13 +111,15 @@ struct usart_module cdc_uart_module;
  * \brief SD/MMC card read and write test.
  *
  * \param test Current test case.
+ * \param nb_block Test blocks.
+ * \param split_tansfer Split transfer setting.
  */
-static void rw_test(const struct test_case *test)
+static void rw_test(const struct test_case *test, uint16_t nb_block,
+		bool split_tansfer)
 {
 	uint32_t i;
 	uint32_t last_blocks_addr;
-	uint16_t nb_block, nb_trans;
-	bool split_tansfer = false;
+	uint16_t nb_trans;
 
 	/* Compute the last address */
 	last_blocks_addr = sd_mmc_get_capacity(0) * (1024/SD_MMC_BLOCK_SIZE) - 50;
@@ -125,10 +127,7 @@ static void rw_test(const struct test_case *test)
 			"Error: SD/MMC capacity.");
 
 	last_blocks_addr -= NB_MULTI_BLOCKS;
-	nb_block = 1;
 	
-run_sd_mmc_rw_test_next:
-
 	/* Read (save blocks) the last blocks */
 	test_assert_true(test, SD_MMC_OK ==
 			sd_mmc_init_read_blocks(0, last_blocks_addr, nb_block),
@@ -235,17 +234,6 @@ run_sd_mmc_rw_test_next:
 				((uint32_t*)buf_test)[i] == ((uint32_t*)buf_save)[i],
 				"Error: SD/MMC verify restore operation.");
 	}
-
-	if (nb_block == 1) {
-		/* Launch second test */
-		nb_block = NB_MULTI_BLOCKS;
-		goto run_sd_mmc_rw_test_next;
-	}
-	if (!split_tansfer) {
-		/* Launch third test */
-		split_tansfer = true;
-		goto run_sd_mmc_rw_test_next;
-	}
 }
 
 /**
@@ -285,7 +273,9 @@ static void run_sd_mmc_rw_test(const struct test_case *test)
 			"SD/MMC card is not initialized OK.");
 
 	if (sd_mmc_get_type(0) & (CARD_TYPE_SD | CARD_TYPE_MMC)) {
-		rw_test(test);
+		rw_test(test, 1, false);
+		rw_test(test, NB_MULTI_BLOCKS, false);
+		rw_test(test, NB_MULTI_BLOCKS, true);
 	}
 }
 
