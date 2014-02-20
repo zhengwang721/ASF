@@ -3,7 +3,7 @@
  *
  * \brief Common IOPORT service example 2.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,6 +71,7 @@
  *  - ATmega256RFR2 Xplained Pro kit 
  *  - SAM4C evaluation kit
  *  - SAMG53 Xplained Pro kit
+ *  - SAMG54 Xplained Pro kit
  *
  * \section example_description Description of the example
  * This example flashes a single LEDs present with flash speed of 1Hz.
