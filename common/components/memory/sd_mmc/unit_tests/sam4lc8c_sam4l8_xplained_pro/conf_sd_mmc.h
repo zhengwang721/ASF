@@ -53,5 +53,8 @@
 /* Define it to enable the debug trace to the current standard output (stdio) */
 //#define SD_MMC_DEBUG
 
+/* Define the SPI max clock */
+#define SD_MMC_SPI_MAX_CLOCK       10000000
+
 #endif /* CONF_SD_MMC_H_INCLUDED */
 
