@@ -37,22 +37,31 @@
  *
  * \asf_license_stop
  *
- * $Id: Peer2Peer.c 9163 2014-02-01 01:34:29Z ataradov $
  *
  */
-
+ 
+/**
+* \mainpage
+* \section preface Preface
+* This is the reference manual for the LWMesh Peer2Peer Application
+* //TODO
+*/
 /*- Includes ---------------------------------------------------------------*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include "config.h"
-#include "hal.h"
-#include "phy.h"
 #include "sys.h"
+#if SAMD20
+#include "system.h"
+#else
+#include "led.h"
+#include "sysclk.h"
+#endif
+#include "phy.h"
 #include "nwk.h"
 #include "sysTimer.h"
-#include "halBoard.h"
-#include "halUart.h"
+#include "sio2host.h"
 
 /*- Definitions ------------------------------------------------------------*/
 #ifdef NWK_ENABLE_SECURITY
@@ -60,6 +69,8 @@
 #else
   #define APP_BUFFER_SIZE     NWK_MAX_PAYLOAD_SIZE
 #endif
+
+static uint8_t rx_data[APP_RX_BUF_SIZE];
 
 /*- Types ------------------------------------------------------------------*/
 typedef enum AppState_t
@@ -79,7 +90,7 @@ static bool appDataReqBusy = false;
 static uint8_t appDataReqBuffer[APP_BUFFER_SIZE];
 static uint8_t appUartBuffer[APP_BUFFER_SIZE];
 static uint8_t appUartBufferPtr = 0;
-
+static uint8_t sio_rx_length;
 /*- Implementations --------------------------------------------------------*/
 
 /*************************************************************************//**
@@ -110,26 +121,9 @@ static void appSendData(void)
 
   appUartBufferPtr = 0;
   appDataReqBusy = true;
+  LED_Toggle(LED0);
 }
 
-/*************************************************************************//**
-*****************************************************************************/
-void HAL_UartBytesReceived(uint16_t bytes)
-{
-  for (uint16_t i = 0; i < bytes; i++)
-  {
-    uint8_t byte = HAL_UartReadByte();
-
-    if (appUartBufferPtr == sizeof(appUartBuffer))
-      appSendData();
-
-    if (appUartBufferPtr < sizeof(appUartBuffer))
-      appUartBuffer[appUartBufferPtr++] = byte;
-  }
-
-  SYS_TimerStop(&appTimer);
-  SYS_TimerStart(&appTimer);
-}
 
 /*************************************************************************//**
 *****************************************************************************/
@@ -144,8 +138,10 @@ static void appTimerHandler(SYS_Timer_t *timer)
 static bool appDataInd(NWK_DataInd_t *ind)
 {
   for (uint8_t i = 0; i < ind->size; i++)
-    HAL_UartWriteByte(ind->data[i]);
+    sio2host_putchar(ind->data[i]);
+   LED_Toggle(LED0);
   return true;
+  
 }
 
 /*************************************************************************//**
@@ -162,8 +158,6 @@ static void appInit(void)
   PHY_SetRxState(true);
 
   NWK_OpenEndpoint(APP_ENDPOINT, appDataInd);
-
-  HAL_BoardInit();
 
   appTimer.interval = APP_FLUSH_TIMER_INTERVAL;
   appTimer.mode = SYS_TIMER_INTERVAL_MODE;
@@ -188,6 +182,23 @@ static void APP_TaskHandler(void)
     default:
       break;
   }
+  sio_rx_length = sio2host_rx(rx_data,APP_RX_BUF_SIZE);
+  if(sio_rx_length)
+  {
+  for (uint16_t i = 0; i < sio_rx_length; i++)
+  {
+	sio2host_putchar(rx_data[i]);	
+    if (appUartBufferPtr == sizeof(appUartBuffer))
+      appSendData();
+
+    if (appUartBufferPtr < sizeof(appUartBuffer))
+      appUartBuffer[appUartBufferPtr++] = rx_data[i];
+  }
+
+  SYS_TimerStop(&appTimer);
+  SYS_TimerStart(&appTimer);
+  }
+  
 }
 
 /*************************************************************************//**
@@ -195,12 +206,11 @@ static void APP_TaskHandler(void)
 int main(void)
 {
   SYS_Init();
-  HAL_UartInit(38400);
-
+  sio2host_init();
+  LED_On(LED0);
   while (1)
   {
     SYS_TaskHandler();
-    HAL_UartTaskHandler();
     APP_TaskHandler();
   }
 }

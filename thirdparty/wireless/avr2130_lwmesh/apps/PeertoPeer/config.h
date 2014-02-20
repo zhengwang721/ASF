@@ -37,7 +37,6 @@
  *
  * \asf_license_stop
  *
- * $Id: config.h 9165 2014-02-03 23:47:21Z ataradov $
  *
  */
 
@@ -61,12 +60,9 @@
   #define APP_CHANNEL             0x0f
 #endif
 
-#define HAL_UART_CHANNEL          1
-#define HAL_UART_RX_FIFO_SIZE     200
-#define HAL_UART_TX_FIFO_SIZE     200
 
-#define SYS_SECURITY_MODE                   0
-
+#define SYS_SECURITY_MODE                   1
+#define APP_RX_BUF_SIZE  20
 #define NWK_BUFFERS_AMOUNT                  3
 #define NWK_DUPLICATE_REJECTION_TABLE_SIZE  10
 #define NWK_DUPLICATE_REJECTION_TTL         3000 // ms
@@ -75,6 +71,6 @@
 #define NWK_ACK_WAIT_TIME                   1000 // ms
 
 #define NWK_ENABLE_ROUTING
-//#define NWK_ENABLE_SECURITY
+#define NWK_ENABLE_SECURITY
 
 #endif // _CONFIG_H_
