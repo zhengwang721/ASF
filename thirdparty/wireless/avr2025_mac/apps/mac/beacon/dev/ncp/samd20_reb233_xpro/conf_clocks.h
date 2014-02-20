@@ -3,7 +3,7 @@
  *
  * \brief SAM D20 Clock configuration
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -82,14 +82,14 @@
 #  define CONF_CLOCK_OSC32K_STARTUP_TIME          SYSTEM_OSC32K_STARTUP_130
 #  define CONF_CLOCK_OSC32K_ENABLE_1KHZ_OUTPUT    true
 #  define CONF_CLOCK_OSC32K_ENABLE_32KHZ_OUTPUT   true
-#  define CONF_CLOCK_OSC32K_ON_DEMAND             true
+#  define CONF_CLOCK_OSC32K_ON_DEMAND             false
 #  define CONF_CLOCK_OSC32K_RUN_IN_STANDBY        true
 
 /* SYSTEM_CLOCK_SOURCE_DFLL configuration - Digital Frequency Locked Loop */
 #  define CONF_CLOCK_DFLL_ENABLE                  true
 #  define CONF_CLOCK_DFLL_LOOP_MODE               SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED
 #  define CONF_CLOCK_DFLL_ON_DEMAND               false
-#  define CONF_CLOCK_DFLL_RUN_IN_STANDBY          true
+#  define CONF_CLOCK_DFLL_RUN_IN_STANDBY          false
 
 /* DFLL open loop mode configuration */
 #  define CONF_CLOCK_DFLL_COARSE_VALUE            (0x1f / 4)
