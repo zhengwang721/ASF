@@ -53,8 +53,7 @@
 typedef struct {
   __O  uint32_t ADC_CR;        /**< \brief (Adc Offset: 0x00) Control Register */
   __IO uint32_t ADC_MR;        /**< \brief (Adc Offset: 0x04) Mode Register */
-  __IO uint32_t ADC_SEQR1;     /**< \brief (Adc Offset: 0x08) Channel Sequence Register 1 */
-  __IO uint32_t ADC_SEQR2;     /**< \brief (Adc Offset: 0x0C) Channel Sequence Register 2 */
+  __IO uint32_t ADC_SEQR[2];   /**< \brief (Adc Offset: 0x08) Channel Sequence Register */
   __O  uint32_t ADC_CHER;      /**< \brief (Adc Offset: 0x10) Channel Enable Register */
   __O  uint32_t ADC_CHDR;      /**< \brief (Adc Offset: 0x14) Channel Disable Register */
   __I  uint32_t ADC_CHSR;      /**< \brief (Adc Offset: 0x18) Channel Status Register */
