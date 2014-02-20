@@ -15,28 +15,4 @@
 		<generator value="doxygen"/>
 		<device-support value="atsamd21j18a"/>
 	</project>
-
-	<project id="sam.appnote.getting-started.samd21" caption="Getting-started appnote for samd21">
-		<info type="description" value="summary">
-		This document describes how to getting started with SAMD21 xplained pro development.
-		</info>
-		<info type="appnote" value="AT07998"/>
-		<info type="description" value="pdf">
-		This document describes how to getting started with SAMD21 xplained pro development.
-		</info>
-		<info type="keyword" value="pdf">
-			<keyword value="ASF"/>
-			<keyword value="pdf"/>
-			<keyword value="SAMD21"/>
-		</info>
-		<build type="header-file" value="appnote.h"/>
-		<build type="header-file" value="appnote_patch.h"/>
-		<build type="include-path" value="."/>
-		<build type="doxygen-image-path" value="."/>
-		<build type="doxygen-example-path" value="."/>
-		<build type="doxygen-example-path" value="../"/>
-		<build type="doxygen-example-path" value="../../../utils/cmsis/samd21/source/iar"/>
-		<generator value="doxygen-v2"/>
-		<device-support value="unspecified-samd21"/>
-	</project>
 </asf>
