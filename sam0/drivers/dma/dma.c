@@ -43,7 +43,6 @@
 
 #include <string.h>
 #include "dma.h"
-#include "conf_dma.h"
 #include "clock.h"
 #include "system_interrupt.h"
 
@@ -65,9 +64,6 @@ struct _dma_module _dma_inst = {
 /** DMA channel mask*/
 #define DMA_CHANNEL_MASK   (0x1f)
 
-/** Initial description section */
-COMPILER_ALIGNED(16)
-static DmacDescriptor _descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
 /** Initial write back memory section */
 COMPILER_ALIGNED(16)
 static DmacDescriptor _write_back_section[CONF_MAX_USED_CHANNEL_NUM];
@@ -213,7 +209,7 @@ void DMAC_Handler( void )
 	isr = DMAC->CHINTFLAG.reg;
 
 	/* Calculate block transfer size of the DMA transfer */
-	total_size = _descriptor_section[resource->channel_id].BTCNT.reg;
+	total_size = descriptor_section[resource->channel_id].BTCNT.reg;
 	write_size = _write_back_section[resource->channel_id].BTCNT.reg;
 	resource->transfered_size = total_size - write_size;
 
@@ -271,7 +267,7 @@ void DMAC_Handler( void )
  *  \li software trigger is used as the transfer trigger
  *  \li priority level 0
  *  \li Only software/event trigger
- *  \li Trigger for transaction 
+ *  \li Trigger for transaction
  *  \li No event input /output
  * \param[out] config Pointer to the configuration
  *
@@ -328,7 +324,7 @@ enum status_code dma_allocate(struct dma_resource *resource,
 
 		/* Setup descriptor base address and write back section base
 		 * address */
-		DMAC->BASEADDR.reg = (uint32_t)_descriptor_section;
+		DMAC->BASEADDR.reg = (uint32_t)descriptor_section;
 		DMAC->WRBADDR.reg = (uint32_t)_write_back_section;
 
 		/* Enable all priority level at the same time */
@@ -343,7 +339,7 @@ enum status_code dma_allocate(struct dma_resource *resource,
 	/* If no channel available, return not found */
 	if (new_channel == DMA_INVALID_CHANNEL) {
 		system_interrupt_leave_critical_section();
-		
+
 		return STATUS_ERR_NOT_FOUND;
 	}
 
@@ -461,7 +457,7 @@ enum status_code dma_start_transfer_job(struct dma_resource *resource)
 	resource->job_status = STATUS_BUSY;
 
 	/* Set channel x descriptor 0 to the descriptor base address */
-	memcpy(&_descriptor_section[resource->channel_id], resource->descriptor,
+	memcpy(&descriptor_section[resource->channel_id], resource->descriptor,
 						sizeof(DmacDescriptor));
 
 	/* Enable the transfer channel */
@@ -501,7 +497,7 @@ void dma_abort_job(struct dma_resource *resource)
 	system_interrupt_leave_critical_section();
 
 	/* Get transferred size */
-	total_size = _descriptor_section[resource->channel_id].BTCNT.reg;
+	total_size = descriptor_section[resource->channel_id].BTCNT.reg;
 	write_size = _write_back_section[resource->channel_id].BTCNT.reg;
 	resource->transfered_size = total_size - write_size;
 
