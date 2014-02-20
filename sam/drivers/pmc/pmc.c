@@ -3,7 +3,7 @@
  *
  * \brief Power Management Controller (PMC) driver for SAM.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,8 +55,12 @@
 # define MAX_PERIPH_ID    47
 #elif (SAM4N)
 # define MAX_PERIPH_ID    31
-#elif (SAM4C)
+#elif (SAM4C || SAM4CP)
 # define MAX_PERIPH_ID    43
+#elif (SAMG51)
+# define MAX_PERIPH_ID    47
+#elif (SAMG53)
+# define MAX_PERIPH_ID    47
 #endif
 
 /// @cond 0
@@ -200,7 +204,7 @@ uint32_t pmc_switch_mck_to_pllack(uint32_t ul_pres)
 	return 0;
 }
 
-#if (SAM3S || SAM4S || SAM4C)
+#if (SAM3S || SAM4S || SAM4C || SAM4CP)
 /**
  * \brief Switch master clock source selection to PLLB clock.
  *
@@ -529,12 +533,12 @@ void pmc_enable_pllack(uint32_t mula, uint32_t pllacount, uint32_t diva)
 	/* first disable the PLL to unlock the lock */
 	pmc_disable_pllack();
 
-#if (SAM4C)
-	PMC->CKGR_PLLAR = diva |
+#if (SAM4C || SAM4CP || SAMG)
+	PMC->CKGR_PLLAR = CKGR_PLLAR_PLLAEN(diva) |
 			CKGR_PLLAR_PLLACOUNT(pllacount) | CKGR_PLLAR_MULA(mula);
 #else
 	PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | CKGR_PLLAR_DIVA(diva) |
-		CKGR_PLLAR_PLLACOUNT(pllacount) | CKGR_PLLAR_MULA(mula);
+			CKGR_PLLAR_PLLACOUNT(pllacount) | CKGR_PLLAR_MULA(mula);
 #endif
 	while ((PMC->PMC_SR & PMC_SR_LOCKA) == 0);
 }
@@ -544,7 +548,7 @@ void pmc_enable_pllack(uint32_t mula, uint32_t pllacount, uint32_t diva)
  */
 void pmc_disable_pllack(void)
 {
-#if (SAM4C)
+#if (SAM4C || SAM4CP || SAMG)
 	PMC->CKGR_PLLAR = CKGR_PLLAR_MULA(0);
 #else
 	PMC->CKGR_PLLAR = CKGR_PLLAR_ONE | CKGR_PLLAR_MULA(0);
@@ -562,7 +566,7 @@ uint32_t pmc_is_locked_pllack(void)
 	return (PMC->PMC_SR & PMC_SR_LOCKA);
 }
 
-#if (SAM3S || SAM4S || SAM4C)
+#if (SAM3S || SAM4S || SAM4C || SAM4CP)
 /**
  * \brief Enable PLLB clock.
  *
@@ -653,7 +657,7 @@ uint32_t pmc_enable_periph_clk(uint32_t ul_id)
 		if ((PMC->PMC_PCSR0 & (1u << ul_id)) != (1u << ul_id)) {
 			PMC->PMC_PCER0 = 1 << ul_id;
 		}
-#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CP)
 	} else {
 		ul_id -= 32;
 		if ((PMC->PMC_PCSR1 & (1u << ul_id)) != (1u << ul_id)) {
@@ -685,7 +689,7 @@ uint32_t pmc_disable_periph_clk(uint32_t ul_id)
 		if ((PMC->PMC_PCSR0 & (1u << ul_id)) == (1u << ul_id)) {
 			PMC->PMC_PCDR0 = 1 << ul_id;
 		}
-#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CP)
 	} else {
 		ul_id -= 32;
 		if ((PMC->PMC_PCSR1 & (1u << ul_id)) == (1u << ul_id)) {
@@ -704,7 +708,7 @@ void pmc_enable_all_periph_clk(void)
 	PMC->PMC_PCER0 = PMC_MASK_STATUS0;
 	while ((PMC->PMC_PCSR0 & PMC_MASK_STATUS0) != PMC_MASK_STATUS0);
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CP)
 	PMC->PMC_PCER1 = PMC_MASK_STATUS1;
 	while ((PMC->PMC_PCSR1 & PMC_MASK_STATUS1) != PMC_MASK_STATUS1);
 #endif
@@ -718,7 +722,7 @@ void pmc_disable_all_periph_clk(void)
 	PMC->PMC_PCDR0 = PMC_MASK_STATUS0;
 	while ((PMC->PMC_PCSR0 & PMC_MASK_STATUS0) != 0);
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CP)
 	PMC->PMC_PCDR1 = PMC_MASK_STATUS1;
 	while ((PMC->PMC_PCSR1 & PMC_MASK_STATUS1) != 0);
 #endif
@@ -740,7 +744,7 @@ uint32_t pmc_is_periph_clk_enabled(uint32_t ul_id)
 		return 0;
 	}
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CP)
 	if (ul_id < 32) {
 #endif
 		if ((PMC->PMC_PCSR0 & (1u << ul_id))) {
@@ -748,7 +752,7 @@ uint32_t pmc_is_periph_clk_enabled(uint32_t ul_id)
 		} else {
 			return 0;
 		}
-#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CP)
 	} else {
 		ul_id -= 32;
 		if ((PMC->PMC_PCSR1 & (1u << ul_id))) {
@@ -860,7 +864,7 @@ uint32_t pmc_switch_pck_to_pllack(uint32_t ul_id, uint32_t ul_pres)
 	return 0;
 }
 
-#if (SAM3S || SAM4S || SAM4C)
+#if (SAM3S || SAM4S || SAM4C || SAM4CP)
 /**
  * \brief Switch programmable clock source selection to PLLB clock.
  *
@@ -967,7 +971,7 @@ uint32_t pmc_is_pck_enabled(uint32_t ul_id)
 	return (PMC->PMC_SCSR & (PMC_SCSR_PCK0 << ul_id));
 }
 
-#if SAM4C
+#if (SAM4C || SAM4CP)
 /**
  * \brief Enable Coprocessor Clocks.
  */
@@ -1179,7 +1183,7 @@ void pmc_clr_fast_startup_input(uint32_t ul_inputs)
 	PMC->PMC_FSMR &= ~ul_inputs;
 }
 
-#if SAM4C
+#if (SAM4C || SAM4CP)
 /**
  * \brief Set the wake-up inputs of coprocessor for fast startup mode registers
  *        (event generation).
@@ -1205,22 +1209,23 @@ void pmc_cp_clr_fast_startup_input(uint32_t ul_inputs)
 }
 #endif
 
+#if (!SAMG)
 /**
  * \brief Enable Sleep Mode.
  * Enter condition: (WFE or WFI) + (SLEEPDEEP bit = 0) + (LPM bit = 0)
  *
  * \param uc_type 0 for wait for interrupt, 1 for wait for event.
- * \note For SAM4S, SAM4C and SAM4E series, since only WFI is effective,
+ * \note For SAM4S, SAM4C, SAM4CP and SAM4E series, since only WFI is effective,
  * uc_type = 1 will be treated as uc_type = 0.
  */
 void pmc_enable_sleepmode(uint8_t uc_type)
 {
-#if !(SAM4S || SAM4E || SAM4N || SAM4C)
+#if !(SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
 	PMC->PMC_FSMR &= (uint32_t) ~ PMC_FSMR_LPM; // Enter Sleep mode
 #endif
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk; // Deep sleep
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
 	UNUSED(uc_type);
 	__WFI();
 #else
@@ -1231,8 +1236,9 @@ void pmc_enable_sleepmode(uint8_t uc_type)
 	}
 #endif
 }
+#endif
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
 static uint32_t ul_flash_in_wait_mode = PMC_WAIT_MODE_FLASH_DEEP_POWERDOWN;
 /**
  * \brief Set the embedded flash state in wait mode
@@ -1262,6 +1268,25 @@ void pmc_enable_waitmode(void)
 	/* Clear SLEEPDEEP bit */
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk;
 
+	/* Backup FWS setting and set Flash Wait State at 0 */
+#if (!SAMG)
+#if defined(ID_EFC)
+	uint32_t fmr_backup;
+	fmr_backup = EFC->EEFC_FMR;
+	EFC->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
+#endif
+#if defined(ID_EFC0)
+	uint32_t fmr0_backup;
+	fmr0_backup = EFC0->EEFC_FMR;
+	EFC0->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
+#endif
+#if defined(ID_EFC1)
+	uint32_t fmr1_backup;
+	fmr1_backup = EFC1->EEFC_FMR;
+	EFC1->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
+#endif
+#endif
+
 	/* Set the WAITMODE bit = 1 */
 	PMC->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_WAITMODE;
 
@@ -1276,11 +1301,13 @@ void pmc_enable_waitmode(void)
 	}
 	while (!(PMC->CKGR_MOR & CKGR_MOR_MOSCRCEN));
 
+#if (!SAMG)
 	/* Restore Flash in idle mode */
 	i = PMC->PMC_FSMR;
 	i &= ~PMC_FSMR_FLPM_Msk;
 	i |= PMC_WAIT_MODE_FLASH_IDLE;
 	PMC->PMC_FSMR = i;
+#endif
 }
 #else
 /**
@@ -1307,24 +1334,28 @@ void pmc_enable_waitmode(void)
 }
 #endif
 
+#if (!SAMG)
 /**
  * \brief Enable Backup Mode. Enter condition: WFE/(VROFF bit = 1) +
  * (SLEEPDEEP bit = 1)
  */
 void pmc_enable_backupmode(void)
 {
-#if SAM4C
+#if (SAM4C || SAM4CP)
 	uint32_t tmp = SUPC->SUPC_MR & ~(SUPC_MR_BUPPOREN | SUPC_MR_KEY_Msk);
 	SUPC->SUPC_MR = tmp | SUPC_MR_KEY_PASSWD;
 	while (SUPC->SUPC_SR & SUPC_SR_BUPPORS);
 #endif
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-#if (SAM4S || SAM4E || SAM4N || SAM4C)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
 	SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF_STOP_VREG;
+	__WFE();
+	__WFI();
 #else
 	__WFE();
 #endif
 }
+#endif
 
 /**
  * \brief Enable Clock Failure Detector.
@@ -1346,7 +1377,7 @@ void pmc_disable_clock_failure_detector(void)
 	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | ul_reg;
 }
 
-#if SAM4N || SAM4C
+#if (SAM4N || SAM4C || SAM4CP)
 /**
  * \brief Enable Slow Crystal Oscillator Frequency Monitoring.
  */
@@ -1392,6 +1423,80 @@ uint32_t pmc_get_writeprotect_status(void)
 {
 	return PMC->PMC_WPMR & PMC_WPMR_WPEN;
 }
+
+#if (SAMG53)
+/**
+ * \brief Enable the specified peripheral clock.
+ *
+ * \note The ID must NOT be shifted (i.e., 1 << ID_xxx).
+ *
+ * \param ul_id Peripheral ID (ID_xxx).
+ *
+ * \retval 0 Success.
+ * \retval 1 Fail.
+ */
+uint32_t pmc_enable_sleepwalking(uint32_t ul_id)
+{
+	uint32_t temp;
+
+	if ((8 <= ul_id) && (ul_id<= 29)) {
+		temp = pmc_get_active_status();
+		if (temp & (1 << ul_id)) {
+			return 1;
+		}
+		PMC->PMC_SLPWK_ER = 1 << ul_id;
+		temp = pmc_get_active_status();
+		if (temp & (1 << ul_id)) {
+			pmc_disable_sleepwalking(ul_id);
+			return 1;
+		}
+		return 0;
+	} else {
+		return 1;
+	}
+}
+
+/**
+ * \brief Disable the sleepwalking of specified peripheral.
+ *
+ * \note The ID must NOT be shifted (i.e., 1 << ID_xxx).
+ *
+ * \param ul_id Peripheral ID (ID_xxx).
+ *
+ * \retval 0 Success.
+ * \retval 1 Invalid parameter.
+ */
+uint32_t pmc_disable_sleepwalking(uint32_t ul_id)
+{
+	if ((8 <= ul_id) && (ul_id<= 29)) {
+		PMC->PMC_SLPWK_DR = 1 << ul_id;
+		return 0;
+	} else {
+		return 1;
+	}
+}
+
+/**
+ * \brief Return peripheral sleepwalking enable status.
+ *
+ * \return the status register value.
+ */
+uint32_t pmc_get_sleepwalking_status(void)
+{
+	return PMC->PMC_SLPWK_SR;
+}
+
+/**
+ * \brief Return peripheral active status.
+ *
+ * \return the status register value.
+ */
+uint32_t pmc_get_active_status(void)
+{
+	return PMC->PMC_SLPWK_ASR;
+}
+
+#endif
 
 /// @cond 0
 /**INDENT-OFF**/
