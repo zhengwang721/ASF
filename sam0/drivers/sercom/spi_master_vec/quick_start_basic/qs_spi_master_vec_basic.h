@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_samd20_sercom_spi_master_vec_basic Quick Start Guide for SERCOM SPI Master Driver w/ Vectored I/O
+ * \page asfdoc_sam0_sercom_spi_master_vec_basic Quick Start Guide for SERCOM SPI Master Driver w/ Vectored I/O
  *
  * This quick start will receive, transmit and transceive bytes on the EXT1
  * header. In this use case the SERCOM SPI will be configured with the following
@@ -53,15 +53,15 @@
  *   rising)
  *
  *
- * \section asfdoc_samd20_sercom_spi_master_vec_basic_setup Setup
+ * \section asfdoc_sam0_sercom_spi_master_vec_basic_setup Setup
  *
  *
- * \subsection asfdoc_samd20_sercom_spi_master_vec_basic_prereq Prerequisites
+ * \subsection asfdoc_sam0_sercom_spi_master_vec_basic_prereq Prerequisites
  *
  * There are no special setup requirements for this use-case.
  *
  *
- * \subsection asfdoc_samd20_sercom_spi_master_vec_basic_setup_code Code
+ * \subsection asfdoc_sam0_sercom_spi_master_vec_basic_setup_code Code
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_spi_master_vec_basic.c transceive_buffers
@@ -77,18 +77,18 @@
  * \snippet qs_spi_master_vec_basic.c init_instance
  *
  *
- * \subsection asfdoc_samd20_sercom_spi_master_vec_basic_setup_flow Workflow
+ * \subsection asfdoc_sam0_sercom_spi_master_vec_basic_setup_flow Workflow
  *
  * -# Create data buffers to transfer to/from.
+ *    \snippet qs_spi_master_vec_basic.c transceive_buffers
  *    \note These example buffers are in total 6 bytes long for transmit (TX)
  *        and 5 bytes long for receive (RX).
  *
- *    \snippet qs_spi_master_vec_basic.c transceive_buffers
  * -# Create descriptors for the data buffers.
+ *    \snippet qs_spi_master_vec_basic.c buffer_descriptors
  *    \attention The last descriptor in the array \e must specify zero length
  *        for the driver to know when it has reached the last buffer.
  *
- *    \snippet qs_spi_master_vec_basic.c buffer_descriptors
  * -# Create an instance of the driver to operate on.
  *
  *    \snippet qs_spi_master_vec_basic.c driver_instance
@@ -103,7 +103,7 @@
  *    \snippet qs_spi_master_vec_basic.c init_instance
  *
  *
- * \subsection asfdoc_samd20_sercom_spi_master_vec_basic_main_code Code
+ * \subsection asfdoc_sam0_sercom_spi_master_vec_basic_main_code Code
  *
  * Add to the application code:
  * \snippet qs_spi_master_vec_basic.c enable_instance
@@ -112,7 +112,7 @@
  * \snippet qs_spi_master_vec_basic.c start_transception
  * \snippet qs_spi_master_vec_basic.c wait_transception
  *
- * \subsection asfdoc_samd20_sercom_spi_master_vec_basic_main_flow Workflow
+ * \subsection asfdoc_sam0_sercom_spi_master_vec_basic_main_flow Workflow
  * -# Enable the SERCOM module before using it.
  *
  *    \snippet qs_spi_master_vec_basic.c enable_instance

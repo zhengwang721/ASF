@@ -65,11 +65,11 @@
  *    adjust the configuration of a physical BOD peripheral.
  *    \snippet qs_bod_basic_use.c setup_config
  * -# Initialize the BOD configuration struct with the module's default values.
+ *    \snippet qs_bod_basic_use.c setup_config_defaults
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *    \snippet qs_bod_basic_use.c setup_config_defaults
  * -# Configure the BOD module with the desired settings.
  *    \snippet qs_bod_basic_use.c setup_set_config
  * -# Enable the BOD module so that it will monitor the power supply voltage.
@@ -85,5 +85,5 @@
  * \subsection asfdoc_sam0_bod_basic_use_case_main_flow Workflow
  * -# Enter an infinite loop so that the BOD can continue to monitor the supply
  *    voltage level.
- *  \snippet qs_bod_basic_use.c main_loop
+ *    \snippet qs_bod_basic_use.c main_loop
  */

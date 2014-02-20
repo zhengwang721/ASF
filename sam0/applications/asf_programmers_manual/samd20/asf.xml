@@ -25,7 +25,7 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="revhistory.h"/>
 		<build type="doxygen-enable-section" value="DAC_DMA_USE_MODE_SELECTION"/>
-		
+
 		<require idref="sam0.drivers.ac"/>
 		<require idref="sam0.drivers.adc"/>
 		<require idref="sam0.drivers.bod"/>
@@ -36,6 +36,7 @@
 		<require idref="sam0.drivers.pac"/>
 		<require idref="sam0.drivers.port"/>
 		<require idref="sam0.drivers.rtc"/>
+		<require idref="sam0.drivers.rtc.calendar_appnote"/>
 		<require idref="sam0.drivers.sercom.usart"/>
 		<require idref="sam0.drivers.sercom.i2c.master.appnote"/>
 		<require idref="sam0.drivers.sercom.i2c.slave.appnote"/>

@@ -78,20 +78,20 @@
  * \subsection rtc_count_basic_use_workflow Workflow
  * -# Create a RTC configuration structure to hold the desired RTC driver
  *    settings.
- *  \snippet qs_rtc_count_basic.c set_conf
+ *    \snippet qs_rtc_count_basic.c set_conf
  * -# Fill the configuration structure with the default driver configuration.
- *  \note This should always be performed before using the configuration
- *        struct to ensure that all values are initialized to known default
- *        settings.
+ *    \snippet qs_rtc_count_basic.c get_default
+ *    \note This should always be performed before using the configuration
+ *          struct to ensure that all values are initialized to known default
+ *          settings.
  *
- *  \snippet qs_rtc_count_basic.c get_default
  * -# Alter the RTC driver configuration to run in 16-bit counting mode, with
  *    continuous counter register updates.
- *  \snippet qs_rtc_count_basic.c set_config
+ *    \snippet qs_rtc_count_basic.c set_config
  * -# Initialize the RTC module.
- *  \snippet qs_rtc_count_basic.c init_rtc
+ *    \snippet qs_rtc_count_basic.c init_rtc
  * -# Enable the RTC module, so that it may begin counting.
- *  \snippet qs_rtc_count_basic.c enable
+ *    \snippet qs_rtc_count_basic.c enable
  *
  * \section asfdoc_sam0_rtc_count_basic_use_case_implement Implementation
  * Code used to implement the initialized module.
@@ -103,15 +103,15 @@
  * \subsection asfdoc_sam0_rtc_count_basic_use_case_imp_workflow Workflow
  * -# Set RTC period to 2000ms (2 seconds) so that it will overflow and reset
  *    back to zero every two seconds.
- *  \snippet qs_rtc_count_basic.c period
+ *    \snippet qs_rtc_count_basic.c period
  * -# Enter an infinite loop to poll the RTC driver to check when a comparison
  *    match occurs.
- *  \snippet qs_rtc_count_basic.c main_loop
+ *    \snippet qs_rtc_count_basic.c main_loop
  * -# Check if the RTC driver has found a match on compare channel 0 against the
  *    current RTC count value.
- *  \snippet qs_rtc_count_basic.c check_match
+ *    \snippet qs_rtc_count_basic.c check_match
  * -# Once a compare match occurs, perform the desired user action.
- * \snippet qs_rtc_count_basic.c compare_match_action
+ *    \snippet qs_rtc_count_basic.c compare_match_action
  * -# Clear the compare match, so that future matches may occur.
- * \snippet qs_rtc_count_basic.c clear_compare_match
+ *    \snippet qs_rtc_count_basic.c clear_compare_match
  */

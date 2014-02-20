@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 TCC - Enhanced Timer Counter Driver
+ * \brief SAM D21 TCC - Timer Counter for Control Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -45,7 +45,7 @@
 #define TCC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_tcc_group SAM D21 Enhanced Timer/Counter Driver (TCC)
+ * \defgroup asfdoc_sam0_tcc_group SAM D21 Timer/Counter for Control Driver (TCC)
  *
  * This driver for SAM D21 devices provides an interface for the configuration
  * and management of the timer modules within the device, for waveform
@@ -600,14 +600,19 @@
 extern "C" {
 #endif
 
-/* Generates a interrupt vector table enum list entry for a given type
-   and index (e.g. "TCC_CALLBACK_MC_CHANNEL0,"). */
-#define _TCC_CHANNEL_ENUM(n, type) TCC_##type##_CHANNEL_##n,
+/* Generates a table enum list entry for a given type
+   and index (e.g. "TCC_CALLBACK_MC_CHANNEL_0,"). */
+#define _TCC_ENUM(n, type) TCC_##type##_##n,
 
-/* Generates callback table enum list entries for all channels of a
+/* Generates table enum list entries for all channels of a
    given type and channel number on TCC module. */
 #define _TCC_CHANNEL_ENUM_LIST(type) \
-		MREPEAT(TCC_NUM_CHANNELS, _TCC_CHANNEL_ENUM, type)
+		MREPEAT(TCC_NUM_CHANNELS, _TCC_ENUM, type##_CHANNEL)
+/* Generates table enum list entries for all output of a
+   given type and waveform output number on TCC module. */
+#define _TCC_WO_ENUM_LIST(type) \
+		MREPEAT(TCC_NUM_WAVE_OUTPUTS, _TCC_ENUM, type)
+
 
 #if TCC_ASYNC == true
 /** Enum for the possible callback types for the TCC module. */
@@ -721,6 +726,31 @@ enum tcc_match_capture_channel {
 #  if !defined(__DOXYGEN__)
 	/** Number of supported channels */
 	TCC_MATCH_CAPTURE_CHANNEL_N
+#  endif
+};
+
+/**
+ * \brief Index of the wave outputs
+ *
+ * This enum is used to specify which wave output to do
+ * operations on.
+ */
+enum tcc_wave_output {
+#  if defined(__DOXYGEN__)
+	/** Waveform output index table for TCC
+	 *
+	 *  Each TCC module may contain several wave outputs; each output
+	 *  will have its own index in the table, with the index number substituted
+	 *  for "n" in the index name (e.g. \c TCC_WAVE_OUTPUT_0).
+	 */
+	TCC_WAVE_OUTPUT_n = n,
+#  else
+	/** Indexes of match capture channels, e.g., TCC_WAVEFORM_OUTPUT_0. */
+	_TCC_WO_ENUM_LIST(WAVE_OUTPUT)
+#  endif
+#  if !defined(__DOXYGEN__)
+	/** Number of supported channels */
+	TCC_WAVE_OUTPUT_N
 #  endif
 };
 

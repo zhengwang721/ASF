@@ -44,10 +44,21 @@
 /**
  * \page asfdoc_sam0_tcc_basic_use_case Quick Start Guide for TCC - Basic
  *
- * In this use case, the TCC will be used to generate a PWM signal. Here
- * the pulse width is set to one quarter of the period. The TCC module will be
- * set up as follows:
+ * The supported device list:
+ *    - SAMD21
  *
+ * In this use case, the TCC will be used to generate a PWM signal. Here
+ * the pulse width is set to one quarter of the period.
+ * When connect PWM output to LED it makes the LED light. To see the waveform,
+ * you may need an ossiliscope.
+ *
+ * The PWM output is set up as follows:
+ * <table>
+ *  <tr><th> board        </td><th> pin  </td><th> connect to </td></tr>
+ *  <tr><td> SAMD21 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
+ * </table>
+ *
+ * The TCC module will be set up as follows:
  * - GCLK generator 0 (GCLK main) clock source
  * - No dithering on the counter or compare
  * - No prescaler
@@ -88,20 +99,20 @@
  * \subsection asfdoc_sam0_tcc_basic_use_case_setup_flow Workflow
  * -# Create a module software instance structure for the TCC module to store
  *    the TCC driver state while it is in use.
+ *    \snippet qs_tcc_basic.c module_inst
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- *    \snippet qs_tcc_basic.c module_inst
  * -# Configure the TCC module.
  *  -# Create a TCC module configuration struct, which can be filled out to
  *     adjust the configuration of a physical TCC peripheral.
  *     \snippet qs_tcc_basic.c setup_config
  *  -# Initialize the TCC configuration struct with the module's default values.
+ *     \snippet qs_tcc_basic.c setup_config_defaults
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *     \snippet qs_tcc_basic.c setup_config_defaults
  *  -# Alter the TCC settings to configure the counter width, wave generation
  *     mode and the compare channel 0 value.
  *     \snippet qs_tcc_basic.c setup_change_config

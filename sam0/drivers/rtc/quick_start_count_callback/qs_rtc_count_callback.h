@@ -85,31 +85,31 @@
  *
  * \subsection asfdoc_sam0_rtc_count_callback_use_case_setup_workflow Workflow
  * -# Initialize system.
- *  \snippet qs_rtc_count_callback.c system_init
+ *    \snippet qs_rtc_count_callback.c system_init
  * -# Configure and enable module.
- *  \snippet qs_rtc_count_callback.c run_conf
+ *    \snippet qs_rtc_count_callback.c run_conf
  * -# Create a RTC configuration structure to hold the desired RTC driver
  *    settings and fill it with the default driver configuration values.
- *  \note This should always be performed before using the configuration
- *        struct to ensure that all values are initialized to known default
- *        settings.
+ *    \snippet qs_rtc_count_callback.c init_conf
+ *    \note This should always be performed before using the configuration
+ *          struct to ensure that all values are initialized to known default
+ *          settings.
  *
- *   \snippet qs_rtc_count_callback.c init_conf
  * -# Alter the RTC driver configuration to run in 16-bit counting mode, with
  *    continuous counter register updates and a compare value of 1000ms.
- *   \snippet qs_rtc_count_callback.c set_config
+ *    \snippet qs_rtc_count_callback.c set_config
  * -# Initialize the RTC module.
- *   \snippet qs_rtc_count_callback.c init_rtc
+ *    \snippet qs_rtc_count_callback.c init_rtc
  * -# Enable the RTC module, so that it may begin counting.
- *   \snippet qs_rtc_count_callback.c enable
+ *    \snippet qs_rtc_count_callback.c enable
  * -# Configure callback functionality.
- *  \snippet qs_rtc_count_callback.c run_callback
+ *    \snippet qs_rtc_count_callback.c run_callback
  *  -# Register overflow callback.
- *   \snippet qs_rtc_count_callback.c reg_callback
+ *     \snippet qs_rtc_count_callback.c reg_callback
  *  -# Enable overflow callback.
- *   \snippet qs_rtc_count_callback.c en_callback
+ *     \snippet qs_rtc_count_callback.c en_callback
  * -# Set period.
- *  \snippet qs_rtc_count_callback.c period
+ *    \snippet qs_rtc_count_callback.c period
  *
  * \section asfdoc_sam0_rtc_count_callback_use_case_implementation Implementation
  *
@@ -118,11 +118,11 @@
  * \snippet qs_rtc_count_callback.c while
  * \subsection asfdoc_sam0_rtc_count_callback_use_case_implementation_workflow Workflow
  * -# Infinite while loop while waiting for callbacks.
- *  \snippet qs_rtc_count_callback.c while
+ *    \snippet qs_rtc_count_callback.c while
  *
  * \section asfdoc_sam0_rtc_count_callback_use_case_callback Callback
  * Each time the RTC counter overflows, the callback function will be called.
  * \subsection asfdoc_sam0_rtc_count_callback_use_case_callback_workflow Workflow
  * -# Perform the desired user action for each RTC overflow:
- *  \snippet qs_rtc_count_callback.c overflow_act
+ *    \snippet qs_rtc_count_callback.c overflow_act
  */
