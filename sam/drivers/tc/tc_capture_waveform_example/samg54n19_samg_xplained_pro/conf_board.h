@@ -48,7 +48,7 @@
 #define CONF_BOARD_UART_CONSOLE
 
 /**
- * \note For test the example on SAMG53 Xplained Pro, we need to connect pin7
+ * \note For test the example on SAMG54 Xplained Pro, we need to connect pin7
  * in EXT1 and pin7 in EXT3.
  */
 
