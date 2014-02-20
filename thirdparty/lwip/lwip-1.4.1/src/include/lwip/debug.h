@@ -72,7 +72,7 @@
 /** if "expression" isn't true, then print "message" and execute "handler" expression */
 #ifndef LWIP_ERROR
 #define LWIP_ERROR(message, expression, handler) do { if (!(expression)) { \
-  LWIP_PLATFORM_ASSERT(message); /*handler;*/}} while(0)
+  LWIP_PLATFORM_ASSERT(message); handler;}} while(0)
 #endif /* LWIP_ERROR */
 
 #ifdef LWIP_DEBUG
@@ -92,7 +92,7 @@
                              } while(0)
 
 #else  /* LWIP_DEBUG */
-#define LWIP_DEBUGF(debug, message) /*LWIP_PLATFORM_DIAG(message);*/
+#define LWIP_DEBUGF(debug, message)
 #endif /* LWIP_DEBUG */
 
 #endif /* __LWIP_DEBUG_H__ */
