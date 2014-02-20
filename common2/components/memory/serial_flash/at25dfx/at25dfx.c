@@ -511,7 +511,7 @@ enum status_code at25dfx_chip_erase_block(struct at25dfx_chip_module *chip,
 
 	default:
 		Assert(false);
-		cmd.opcode = 0;
+		cmd.opcode = (enum at25dfx_command_opcode)0;
 	}
 	cmd.command_size = 4;
 	cmd.address = address;
