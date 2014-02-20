@@ -106,6 +106,18 @@ extern "C" {
 
 /** @} */
 
+/**
+ * \brief I<SUP>2</SUP>C slave packet for read/write
+ *
+ * Structure to be used when transferring I<SUP>2</SUP>C slave packets.
+ */
+struct i2c_slave_packet {
+	/** Length of data array */
+	uint16_t data_length;
+	/** Data array containing all data to be transferred */
+	uint8_t *data;
+};
+
 #if I2C_SLAVE_CALLBACK_MODE == true
  /**
  * \brief Callback types
@@ -320,8 +332,7 @@ struct i2c_slave_config {
 	/** Set to enable SCL low time-out */
 	bool scl_low_timeout;
 #ifdef FEATURE_I2C_SCL_STRETCH_MODE
-	/** Set to enable SCL stretch only after ACK bit
-	 * (note: enable it if using high speed mode) */
+	/** Set to enable SCL stretch only after ACK bit */
 	bool scl_stretch_only_after_ack_bit;
 #endif
 #ifdef FEATURE_I2C_SCL_EXTEND_TIMEOUT
@@ -575,10 +586,10 @@ void i2c_slave_reset(
 
 enum status_code i2c_slave_write_packet_wait(
 		struct i2c_slave_module *const module,
-		struct i2c_packet *const packet);
+		struct i2c_slave_packet *const packet);
 enum status_code i2c_slave_read_packet_wait(
 		struct i2c_slave_module *const module,
-		struct i2c_packet *const packet);
+		struct i2c_slave_packet *const packet);
 enum i2c_slave_direction i2c_slave_get_direction_wait(
 		struct i2c_slave_module *const module);
 enum i2c_slave_direction i2c_slave_get_direction(

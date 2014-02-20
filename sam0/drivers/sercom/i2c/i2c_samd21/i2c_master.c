@@ -128,16 +128,8 @@ static enum status_code _i2c_master_set_config(
 		tmp_ctrla |= config->start_hold_time;
 	}
 
-	/* Check transfer speed mode */
-	if (config->baud_rate > I2C_MASTER_BAUD_RATE_400KHZ) {
-		if (config->baud_rate <= I2C_MASTER_BAUD_RATE_1000KHZ) {
-			/* Fast-mode Plus up to 1MHz */
-			tmp_ctrla |= SERCOM_I2CM_CTRLA_SPEED(1);
-		} else if (config->baud_rate <= I2C_MASTER_BAUD_RATE_3400KHZ) {
-			/* High-speed mode up to 3.4MHz */
-			tmp_ctrla |= SERCOM_I2CM_CTRLA_SPEED(2);
-		}
-	}
+	/* Check and set transfer speed */
+	tmp_ctrla |= config->transfer_speed;
 
 	/* Check and set SCL low timeout. */
 	if (config->scl_low_timeout) {
@@ -403,6 +395,43 @@ enum status_code _i2c_master_wait_for_bus(
 
 /**
  * \internal
+ * Send master code for high speed transfer.
+ *
+ * \param[in,out] module  Pointer to software module structure
+ * \param[in]     hs_master_code 8-bit master code (0000 1XXX)
+ *
+ * \return Status of bus.
+ * \retval STATUS_OK           No error happen.
+ */
+static enum status_code _i2c_master_send_hs_master_code(
+		struct i2c_master_module *const module,
+		uint8_t hs_master_code)
+{
+	SercomI2cm *const i2c_module = &(module->hw->I2CM);
+	/* Return value. */
+	enum status_code tmp_status;
+
+	/* Set NACK for high speed code */
+	i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
+	/* Send high speed code */
+	i2c_module->ADDR.reg = hs_master_code;
+	/* Wait for response on bus. */
+	tmp_status = _i2c_master_wait_for_bus(module);
+#if 0 // Nash
+	uint32_t tmp_ctrla;
+
+	i2c_module->CTRLA.reg &= ~SERCOM_I2CS_CTRLA_ENABLE;
+	tmp_ctrla = i2c_module->CTRLA.reg;
+	tmp_ctrla &= (~(SERCOM_I2CM_CTRLA_SPEED_Msk | SERCOM_I2CM_CTRLA_SCLSM));
+	tmp_ctrla |= (SERCOM_I2CM_CTRLA_SPEED(2) | SERCOM_I2CM_CTRLA_SCLSM);
+	i2c_module->CTRLA.reg = tmp_ctrla | SERCOM_I2CM_CTRLA_ENABLE;
+#endif
+	return tmp_status;
+}
+
+
+/**
+ * \internal
  * Starts blocking read operation.
  *
  * \param[in,out] module  Pointer to software module struct.
@@ -420,7 +449,7 @@ enum status_code _i2c_master_wait_for_bus(
  */
 static enum status_code _i2c_master_read(
 		struct i2c_master_module *const module,
-		struct i2c_packet *const packet)
+		struct i2c_master_packet *const packet)
 {
 	/* Sanity check arguments */
 	Assert(module);
@@ -436,13 +465,20 @@ static enum status_code _i2c_master_read(
 	/* Written buffer counter. */
 	uint16_t counter = 0;
 
+	/* Switch to high speed mode */
+	if (packet->high_speed) {
+		_i2c_master_send_hs_master_code(module, packet->hs_master_code);
+	}
+
 	/* Set address and direction bit. Will send start command on bus. */
 	if (packet->ten_bit_address) {
 		/*
 		 * Write ADDR.ADDR[10:1] with the 10-bit address. ADDR.TENBITEN must
 		 * be set and read/write bit (ADDR.ADDR[0]) equal to 0.
 		 */
-		i2c_module->ADDR.reg = (packet->address << 1) | SERCOM_I2CM_ADDR_TENBITEN;
+		i2c_module->ADDR.reg = (packet->address << 1) |
+			(packet->high_speed << SERCOM_I2CM_ADDR_HS_Pos) |
+			SERCOM_I2CM_ADDR_TENBITEN;
 
 		/* Wait for response on bus. */
 		tmp_status = _i2c_master_wait_for_bus(module);
@@ -462,12 +498,14 @@ static enum status_code _i2c_master_read(
 			 * ADDR.TENBITEN must be cleared
 			 */
 			i2c_module->ADDR.reg = (((packet->address >> 8) | 0x78) << 1) |
+				(packet->high_speed << SERCOM_I2CM_ADDR_HS_Pos) |
 				I2C_TRANSFER_READ;
 		} else {
 			return tmp_status;
 		}
 	} else {
-		i2c_module->ADDR.reg = (packet->address << 1) | I2C_TRANSFER_READ;
+		i2c_module->ADDR.reg = (packet->address << 1) | I2C_TRANSFER_READ |
+			(packet->high_speed << SERCOM_I2CM_ADDR_HS_Pos);
 	}
 
 	/* Wait for response on bus. */
@@ -545,7 +583,7 @@ static enum status_code _i2c_master_read(
  */
 enum status_code i2c_master_read_packet_wait(
 		struct i2c_master_module *const module,
-		struct i2c_packet *const packet)
+		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
 	Assert(module);
@@ -591,7 +629,7 @@ enum status_code i2c_master_read_packet_wait(
  */
 enum status_code i2c_master_read_packet_wait_no_stop(
 		struct i2c_master_module *const module,
-		struct i2c_packet *const packet)
+		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
 	Assert(module);
@@ -628,7 +666,7 @@ enum status_code i2c_master_read_packet_wait_no_stop(
  */
 static enum status_code _i2c_master_write_packet(
 		struct i2c_master_module *const module,
-		struct i2c_packet *const packet)
+		struct i2c_master_packet *const packet)
 {
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
@@ -638,12 +676,19 @@ static enum status_code _i2c_master_write_packet(
 
 	_i2c_master_wait_for_sync(module);
 
+	/* Switch to high speed mode */
+	if (packet->high_speed) {
+		_i2c_master_send_hs_master_code(module, packet->hs_master_code);
+	}
+
 	/* Set address and direction bit. Will send start command on bus. */
 	if (packet->ten_bit_address) {
 		i2c_module->ADDR.reg = (packet->address << 1) | I2C_TRANSFER_WRITE |
+			(packet->high_speed << SERCOM_I2CM_ADDR_HS_Pos) |
 			SERCOM_I2CM_ADDR_TENBITEN;
 	} else {
-		i2c_module->ADDR.reg = (packet->address << 1) | I2C_TRANSFER_WRITE;
+		i2c_module->ADDR.reg = (packet->address << 1) | I2C_TRANSFER_WRITE |
+			(packet->high_speed << SERCOM_I2CM_ADDR_HS_Pos);
 	}
 	/* Wait for response on bus. */
 	tmp_status = _i2c_master_wait_for_bus(module);
@@ -723,7 +768,7 @@ static enum status_code _i2c_master_write_packet(
  */
 enum status_code i2c_master_write_packet_wait(
 		struct i2c_master_module *const module,
-		struct i2c_packet *const packet)
+		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
 	Assert(module);
@@ -771,7 +816,7 @@ enum status_code i2c_master_write_packet_wait(
  */
 enum status_code i2c_master_write_packet_wait_no_stop(
 		struct i2c_master_module *const module,
-		struct i2c_packet *const packet)
+		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
 	Assert(module);

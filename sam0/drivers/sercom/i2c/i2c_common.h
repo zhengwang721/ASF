@@ -419,31 +419,6 @@ enum i2c_transfer_direction {
 	I2C_TRANSFER_READ  = 1,
 };
 
-/**
- * \brief I<SUP>2</SUP>C packet for read/write
- *
- * Structure to be used when transferring I<SUP>2</SUP>C packets. Used both for
- * master and slave driver modes.
- */
-struct i2c_packet {
-	/** Address to slave device  */
-	uint16_t address;
-	/** Length of data array */
-	uint16_t data_length;
-	/** Data array containing all data to be transferred */
-	uint8_t *data;
-#ifdef FEATURE_I2C_10_BIT_ADDRESS
-	/** Use 10 bit addressing. Set to false if the feature is not supported by the device  */
-	bool ten_bit_address;
-#endif
-#ifdef FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
-	/** Use high speed transfer. Set to false if the feature is not supported by the device */
-	bool high_speed;
-	/** High speed mode master code (0bXXX), valid if high_speed is true */
-	uint8_t high_speed_code;
-#endif
-};
-
 /** @} */
 
 #ifdef __cplusplus

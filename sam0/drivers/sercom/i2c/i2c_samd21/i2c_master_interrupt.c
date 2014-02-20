@@ -242,7 +242,7 @@ void i2c_master_unregister_callback(
  */
 static enum status_code _i2c_master_read_packet(
 		struct i2c_master_module *const module,
-		struct i2c_packet *const packet)
+		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
 	Assert(module);
@@ -317,7 +317,7 @@ static enum status_code _i2c_master_read_packet(
  */
 enum status_code i2c_master_read_packet_job(
 		struct i2c_master_module *const module,
-		struct i2c_packet *const packet)
+		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
 	Assert(module);
@@ -356,7 +356,7 @@ enum status_code i2c_master_read_packet_job(
  */
 enum status_code i2c_master_read_packet_job_no_stop(
 		struct i2c_master_module *const module,
-		struct i2c_packet *const packet)
+		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
 	Assert(module);
@@ -387,7 +387,7 @@ enum status_code i2c_master_read_packet_job_no_stop(
  */
 static enum status_code _i2c_master_write_packet(
 		struct i2c_master_module *const module,
-		struct i2c_packet *const packet)
+		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
 	Assert(module);
@@ -431,7 +431,7 @@ static enum status_code _i2c_master_write_packet(
  */
 enum status_code i2c_master_write_packet_job(
 		struct i2c_master_module *const module,
-		struct i2c_packet *const packet)
+		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
 	Assert(module);
@@ -470,7 +470,7 @@ enum status_code i2c_master_write_packet_job(
  */
 enum status_code i2c_master_write_packet_job_no_stop(
 		struct i2c_master_module *const module,
-		struct i2c_packet *const packet)
+		struct i2c_master_packet *const packet)
 {
 	/* Sanity check */
 	Assert(module);
