@@ -3,7 +3,6 @@
 		<device-support value="avr"/>
 		<device-support value="sam"/>
 		<device-support value="sam0"/>
-		<device-support value="samg"/>
 		<build type="c-source" value="main.c"/>
 		<require idref="common.boards"/>
 		<require idref="common.services.ioport"/>

@@ -617,7 +617,7 @@
 	</project>
 	<project id="common.applications.user_application.user_board.samg54g19" caption="User board project template for SAMG54G19" type="template">
 		<info type="description" value="summary">
-		User board project template for SAMG53G19 devices.
+		User board project template for SAMG54G19 devices.
 		</info>
 		<require idref="common.applications.user_application.user_board.common"/>
 		<require idref="board.user_board.samg54g19"/>
