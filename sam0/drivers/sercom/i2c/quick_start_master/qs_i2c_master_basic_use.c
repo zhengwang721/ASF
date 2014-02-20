@@ -132,6 +132,7 @@ int main(void)
 	
 	/* Read from slave until success. */
 	//! [read_packet]
+	timeout = 0;
 	packet.data = read_buffer;
 	while (i2c_master_read_packet_wait(&i2c_master_instance, &packet) !=
 			STATUS_OK) {

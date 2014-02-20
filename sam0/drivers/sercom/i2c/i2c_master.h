@@ -114,15 +114,12 @@ enum i2c_master_inactive_timeout {
 /**
  * \brief I<SUP>2</SUP>C frequencies
  *
- * Values for standard I<SUP>2</SUP>C speeds supported by the module. The driver
- * will also support setting any value between 10 and 100kHz, in which case set
+ * Values for I<SUP>2</SUP>C speeds supported by the module. The driver
+ * will also support setting any other value, in which case set
  * the value in the \ref i2c_master_config at desired value divided by 1000.
  *
  * Example: If 10kHz operation is required, give baud_rate in the configuration
  * structure the value 10.
- *
- * \note Max speed is given by GCLK-frequency divided by 10, and lowest is
- *       given by GCLK-frequency divided by 510.
  */
 enum i2c_master_baud_rate {
 	/** Baud rate at 100kHz (Standard-mode) */
@@ -219,8 +216,15 @@ struct i2c_master_module {
  * \ref i2c_master_get_config_defaults .
  */
 struct i2c_master_config {
-	/** Baud rate for I<SUP>2</SUP>C operations */
-	enum i2c_master_baud_rate baud_rate;
+	/** Baud rate (in KHZ) for I<SUP>2</SUP>C operations in
+	 * standard-mode, Fast-mode and Fast-mode Plus Transfers, 
+	 * \ref i2c_master_baud_rate */
+	uint32_t baud_rate;
+#ifdef FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
+	/** Baud rate (in KHz) for I<SUP>2</SUP>C operations in
+	 * High-speed mode, \ref i2c_master_baud_rate */
+	uint32_t baud_rate_high_speed;
+#endif
 	/** GCLK generator to use as clock source */
 	enum gclk_generator generator_source;
 	/** Bus hold time after start signal on data line */
@@ -240,7 +244,8 @@ struct i2c_master_config {
 	/** Inactive bus time out */
 	enum i2c_master_inactive_timeout inactive_timeout;
 #ifdef FEATURE_I2C_SCL_STRETCH_MODE
-	/** Set to enable SCL stretch only after ACK bit */
+	/** Set to enable SCL stretch only after ACK bit
+	 * (note: enable it if using high speed mode) */
 	bool scl_stretch_only_after_ack_bit;
 #endif
 #ifdef FEATURE_I2C_SCL_EXTEND_TIMEOUT
@@ -382,6 +387,9 @@ static inline void i2c_master_get_config_defaults(
 	/*Sanity check argument. */
 	Assert(config);
 	config->baud_rate        = I2C_MASTER_BAUD_RATE_100KHZ;
+#ifdef FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
+	config->baud_rate_high_speed = I2C_MASTER_BAUD_RATE_3400KHZ;
+#endif
 	config->generator_source = GCLK_GENERATOR_0;
 	config->run_in_standby   = false;
 	config->start_hold_time  = I2C_MASTER_START_HOLD_TIME_300NS_600NS;

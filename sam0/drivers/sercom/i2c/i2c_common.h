@@ -439,7 +439,7 @@ struct i2c_packet {
 #ifdef FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
 	/** Use high speed transfer. Set to false if the feature is not supported by the device */
 	bool high_speed;
-	/** High speed mode master code, valid if high_speed is true */
+	/** High speed mode master code (0bXXX), valid if high_speed is true */
 	uint8_t high_speed_code;
 #endif
 };
