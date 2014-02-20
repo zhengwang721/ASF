@@ -69,9 +69,9 @@ static const char http_html_hdr_500[] = "HTTP/1.0 500 Internal Server Error\r\n"
 const char http_server_error[] = " \
 <!DOCTYPE html PUBLIC \"-//IETF//DTD HTML 2.0//EN\"> \
 <html><head><meta http-equiv=\"Content-Type\" content=\"text/html; charset=ISO-8859-1\"> \
-<title>500 Internal Server error</title></head><body><img src=\"bertos_logo_jpg\"><h1>500 Internal Server error</h1>\
-<p>The internal server error was occur while processing the requested page.</p><hr>\
-<address>BeRTOS simple HTTP server</address></body></html>";
+<title>500 Internal Server error</title></head><body><h1>500 Internal Server error</h1> \
+<p>The internal server error was occur while processing the requested page.</p> \
+</body></html>";
 
 BoardStatus status;
 
