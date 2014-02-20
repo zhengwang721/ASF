@@ -6,7 +6,7 @@
  * This file includes the appropriate board header file according to the
  * defined board (parameter BOARD).
  *
- * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -127,6 +127,10 @@ extern "C" {
 #define ATMEGARFX_RCB              63  //!< RFR2 & RFA1 RCB
 #define SAM4C_EK                   64  //!< SAM4C-EK board.
 #define RCB256RFR2_XPRO            65  //!< RFR2 RCB Xplained Pro board.
+#define SAMG53_XPLAINED_PRO        66  //!< SAMG53 Xplained Pro board.
+#define SAM4CP16BMB                67  //!< SAM4CP16BMB board.
+#define SAM4E_XPLAINED_PRO         68  //!< SAM4E Xplained Pro board.
+#define SAMD21_XPLAINED_PRO        69  //!< SAMD21 Xplained Pro board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< Simulator for the AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -195,6 +199,8 @@ extern "C" {
 #  include "stk600/rcuc3d/stk600_rcuc3d.h"
 #elif BOARD == STK600_RCUC3C0
 #  include "stk600/rcuc3c0/stk600_rcuc3c0.h"
+#elif BOARD == SAMG53_XPLAINED_PRO
+#  include "samg53_xplained_pro/samg53_xplained_pro.h"
 #elif BOARD == XMEGA_B1_XPLAINED
 #  include "xmega_b1_xplained/xmega_b1_xplained.h"
 #elif BOARD == STK600_RC064X_LCDX
@@ -243,6 +249,8 @@ extern "C" {
 #  include "sam4e_ek/sam4e_ek.h"
 #elif BOARD == SAMD20_XPLAINED_PRO
 #  include "samd20_xplained_pro/samd20_xplained_pro.h"
+#elif BOARD == SAMD21_XPLAINED_PRO
+#  include "samd21_xplained_pro/samd21_xplained_pro.h"
 #elif BOARD == SAM4N_XPLAINED_PRO
 #  include "sam4n_xplained_pro/sam4n_xplained_pro.h"
 #elif BOARD == MEGA1284P_XPLAINED_BC
@@ -271,6 +279,8 @@ extern "C" {
 #  include "sam4l8_xplained_pro/sam4l8_xplained_pro.h"
 #elif BOARD == SAM4C_EK
 #  include "sam4c_ek/sam4c_ek.h"
+#elif BOARD == SAM4CP16BMB
+#  include "sam4cp16bmb/sam4cp16bmb.h"
 #elif BOARD == SIMULATOR_XMEGA_A1
 #  include "simulator/xmega_a1/simulator_xmega_a1.h"
 #elif BOARD == XMEGA_C3_XPLAINED
@@ -285,6 +295,8 @@ extern "C" {
 #  include "atmega256rfr2_rcb_xpro/atmega256rfr2_rcb_xpro.h"
 #elif BOARD == XMEGA_RF212B_ZIGBIT
 #  include "xmega_rf212b_zigbit/xmega_rf212b_zigbit.h"
+#elif BOARD == SAM4E_XPLAINED_PRO
+#  include "sam4e_xplained_pro/sam4e_xplained_pro.h"
 #elif BOARD == AVR_SIMULATOR_UC3
 #  include "avr_simulator_uc3/avr_simulator_uc3.h"
 #elif BOARD == USER_BOARD
