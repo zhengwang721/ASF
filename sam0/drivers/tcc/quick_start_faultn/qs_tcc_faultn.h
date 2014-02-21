@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x TCC - Timer Counter for Control Applications Callback Driver Quick Start (with Recoverable Fault)
+ * \brief SAM D21 TCC - Timer Counter for Control Applications Callback Driver Quick Start (with Recoverable Fault)
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -57,7 +57,7 @@
  * When connect PWM output to LED it makes the LED vary its light. If fault
  * input is from a button, the LED will be frozen and not changing it's light
  * when the button is down and will go on when the button is up.
- * To see the PWM waveform, you may need an ossiliscope.
+ * To see the PWM waveform, you may need an oscilloscope.
  *
  * The PWM output and fault input is set up as follows:
  * <table>

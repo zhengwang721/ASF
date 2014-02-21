@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x TCC - Enhanced Timer Counter Driver
+ * \brief SAM D21 TCC - Enhanced Timer Counter Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -199,7 +199,7 @@ void tcc_get_config_defaults(
 		_TCC_CHANNEL_MATCH_VALUE_INIT, 0)
 #  undef _TCC_CHANNEL_MATCH_VALUE_INIT
 
-	/* Wave pollarity defaults */
+	/* Wave polarity defaults */
 #  define _TCC_CHANNEL_WAVE_POLARITY_INIT(n, value) \
 		config->compare.wave_polarity[n] = value;
 	MREPEAT(TCC_NUM_CHANNELS,

@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.tcc" name="config.sam0.drivers.tcc" caption="TCC - Timer Counter for Control Applications" default="callback">
 		<info type="description" value="summary">
-		  Driver for the SAM D2x Timer/Counter for Control Applications module.
+		  Driver for the SAM D21 Timer/Counter for Control Applications module.
 		  Provides a unified interface for the configuration and management of
 		  the device's hardware timers.
 		</info>
@@ -55,7 +55,7 @@
 			</info>
 
 			<info type="description" value="pdf">
-				This document describes how to use the Timer Counter for Control Applications on the SAM D2x, 
+				This document describes how to use the Timer Counter for Control Applications on the SAM D21, 
 				both the ASF driver and the peripheral itself.
 			</info>
 

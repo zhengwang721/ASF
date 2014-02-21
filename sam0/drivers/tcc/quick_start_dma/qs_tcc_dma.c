@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Timer/Counter Driver for Control Applications DMA Quickstart
+ * \brief SAM D21 Timer/Counter Driver for Control Applications DMA Quickstart
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x TCC Driver Quick Start with DMA
+ * \brief SAM D21 TCC Driver Quick Start with DMA
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -51,7 +51,7 @@
  * the pulse width varies in following values through DMA transfer: one quater
  * of the period, half of the period and three quaters of the period.
  * When connect PWM output to LED it makes the LED light. To see the waveform,
- * you may need an ossiliscope.
+ * you may need an oscilloscope.
  * The output signal is also fed back to another TCC channel by event system,
  * the event stamps are captured and transfer to values buffer by DMA.
  *

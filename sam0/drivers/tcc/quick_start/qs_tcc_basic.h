@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x TCC Driver Quick Start
+ * \brief SAM D21 TCC Driver Quick Start
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
