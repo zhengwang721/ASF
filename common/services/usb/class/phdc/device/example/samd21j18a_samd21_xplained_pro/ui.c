@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Xplained Pro board configuration.
+ * \brief User Interface
  *
- * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,16 +41,78 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#include <asf.h>
+#include "ui.h"
+#include "ieee11073_skeleton.h"
 
-/* Buttons on OLED1 Xplained Pro */
-#  define WING_BUTTON_1 EXT3_PIN_9
-#  define WING_BUTTON_2 EXT3_PIN_3
-#  define WING_BUTTON_3 EXT3_PIN_4
+#define  LED_On()          port_pin_set_output_level(LED_0_PIN, 0)
+#define  LED_Off()         port_pin_set_output_level(LED_0_PIN, 1)
 
-/* Height and width of LCD */
-#  define LCD_WIDTH_PIXELS  128
-#  define LCD_HEIGHT_PIXELS  32
+static bool associated = false;
 
-#endif /* CONF_BOARD_H_INCLUDED */
+void ui_init(void)
+{
+	// Initialize LEDs
+	LED_Off();
+}
+
+void ui_powerdown(void)
+{
+	LED_Off();
+}
+
+
+void ui_wakeup(void)
+{
+	LED_On();
+}
+
+void ui_association(bool state)
+{
+	associated = state;
+}
+
+void ui_process(uint16_t framenumber)
+{
+	static uint8_t cpt_sof = 0;
+	bool b_btn_state;
+	static bool btn0_last_state = false;
+
+	if (!associated) {
+		if ((framenumber % 1000) == 0) {
+			LED_On();
+		}
+		if ((framenumber % 1000) == 500) {
+			LED_Off();
+		}
+	} else {
+		LED_On();
+	}
+
+	/* Scan process running each 20ms */
+	cpt_sof++;
+	if (20 > cpt_sof) {
+		return;
+	}
+
+	cpt_sof = 0;
+
+	/* Use buttons to send measures */
+	b_btn_state = !port_pin_get_input_level(BUTTON_0_PIN);
+	if (b_btn_state != btn0_last_state) {
+		btn0_last_state = b_btn_state;
+		if (b_btn_state) {
+			ieee11073_skeleton_send_measure_1();
+		}
+	}
+}
+
+/**
+ * \defgroup UI User Interface
+ *
+ * Human interface on SAMD21-XPlain:
+ * - LED0 blinks when USB host has checked and enabled PHDC interface
+ * - LED0 is on when PHDC has validated association
+ * - SW0 is used to send a measure
+ *
+ */

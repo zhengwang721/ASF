@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Xplained Pro board configuration.
+ * \brief SAM D21 Xplained Pro board configuration.
  *
- * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,13 +44,7 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/* Buttons on OLED1 Xplained Pro */
-#  define WING_BUTTON_1 EXT3_PIN_9
-#  define WING_BUTTON_2 EXT3_PIN_3
-#  define WING_BUTTON_3 EXT3_PIN_4
-
-/* Height and width of LCD */
-#  define LCD_WIDTH_PIXELS  128
-#  define LCD_HEIGHT_PIXELS  32
+/* Enable USB VBUS detect */
+#define CONF_BOARD_USB_VBUS_DETECT
 
 #endif /* CONF_BOARD_H_INCLUDED */

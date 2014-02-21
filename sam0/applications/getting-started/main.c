@@ -76,7 +76,7 @@
  *     -- xxxxxx-xx
  *     -- Compiled: xxx xx xxxx xx:xx:xx --
  *    \endcode
- * -# Pressing and release button 1 should make LED0 on and off 
+ * -# Pressing and release button SW0 should make LED0 on and off 
  *    blinking.
  *
  */
@@ -104,7 +104,6 @@ static struct tc_module tc_instance;
 /**
  *  Configure UART console.
  */
-// [main_console_configure]
 static void configure_console(void)
 {
 	struct usart_config usart_conf;
@@ -120,15 +119,12 @@ static void configure_console(void)
 	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART_MODULE, &usart_conf);
 	usart_enable(&cdc_uart_module);
 }
-// [main_console_configure]
 
-/** Updates the board LED to the current button state. */
+/* Updates the board LED to the current button state. */
 static void update_led_state(void)
 {
-//! [main_button1_handler]
 	bool pin_state = port_pin_get_input_level(BUTTON_0_PIN);
 	port_pin_set_output_level(LED_0_PIN, pin_state);
-//! [main_button1_handler]
 }
 
 /** Callback function for the EXTINT driver, called when an external interrupt
@@ -144,13 +140,11 @@ static void extint_callback(void)
  */
 static void configure_eic_callback(void)
 {
-//! [main_button1_callback]
 	extint_register_callback(extint_callback,
 			BUTTON_0_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
 	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
-//! [main_button1_callback]
 }
 
 /** Configures the External Interrupt Controller to detect changes in the board
@@ -158,7 +152,6 @@ static void configure_eic_callback(void)
  */
 static void configure_extint(void)
 {
-//! [main_button1_configure]
 	struct extint_chan_conf eint_chan_conf;
 	extint_chan_get_config_defaults(&eint_chan_conf);
 
@@ -167,7 +160,6 @@ static void configure_extint(void)
 	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
 	eint_chan_conf.filter_input_signal = true;
 	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
-//! [main_button1_configure] 
 }
 
 
@@ -176,7 +168,6 @@ static void configure_extint(void)
 static void tc_callback_to_counter(
 		struct tc_module *const module_inst)
 {	
-//! [main_tc0_handler]
 	static uint32_t count = 0;
 	count ++;
 	if(count%800 == 0){
@@ -184,14 +175,12 @@ static void tc_callback_to_counter(
 	}
 	
 	tc_set_count_value(module_inst,TC_COUNT_VALUE);
-//! [main_tc0_handler]
 }
 
 /** Configures  TC function with the  driver.
  */
 static void configure_tc(void)
 {
-//! [main_tc_configure]
 	struct tc_config config_tc;
 
 	tc_get_config_defaults(&config_tc);
@@ -200,20 +189,17 @@ static void configure_tc(void)
 
 	tc_init(&tc_instance, TC3, &config_tc);
 	tc_enable(&tc_instance);
-//! [main_tc_configure]
 }
 
 /** Registers TC callback function with the  driver.
  */
 static void configure_tc_callbacks(void)
 {
-//! [main_tc_callback]
 	tc_register_callback(
 			&tc_instance,
 			tc_callback_to_counter,
 			TC_CALLBACK_OVERFLOW);
 	tc_enable_callback(&tc_instance, TC_CALLBACK_OVERFLOW);
-//! [main_tc_callback]
 }
 
 /**
@@ -221,54 +207,45 @@ static void configure_tc_callbacks(void)
  *
  *  \return Unused (ANSI-C compatibility).
 */
-// [main]
 int main(void)
 {
 	struct port_config pin;
 	
-//! [main_step_sys_init]
 	system_init();
-//! [main_step_sys_init]
 
-//! [main_step_console_init]
+	/*Configure UART console.*/
 	configure_console();
-//! [main_step_console_init]
 
-//! [main_step_extint_init]
+	/*Configures the External Interrupt*/
 	configure_extint();
-//! [main_step_extint_init]
 
-//! [main_step_eic_callback]
+	/*Configures the External Interrupt callback*/
 	configure_eic_callback();
-//! [main_step_eic_callback]
-
-//! [main_step_tc_init]
+	
+	/*Configures  TC driver*/
 	configure_tc();
-//! [main_step_tc_init]
 
-//! [main_step_tc_callbacks]
+	/*Configures TC callback*/
 	configure_tc_callbacks();	
-//! [main_step_tc_callbacks]
-
-//! [main_step_delay_init]
+	
+	/*Initialize the delay driver*/
 	delay_init();
-//! [main_step_delay_init]
+
 
 	/* Output example information */
 	puts(STRING_HEADER);
 
-//! [main_step_interrupt_enable]	
+	/*Enable system interrupt*/
 	system_interrupt_enable_global();
-//! [main_step_interrupt_enable]
 
-//! [main_step_pin_usage]
+
+    /*Configures PORT for LED0*/
 	port_get_config_defaults(&pin);
 	pin.direction = PORT_PIN_DIR_OUTPUT;
 	port_pin_set_config(LED0_PIN, &pin);
+	
 	port_pin_set_output_level(LED0_PIN, LED0_INACTIVE);
-//! [main_step_pin_usage]	
-
-//! [main_step_delay_usage]	
+	
 	for (int i = 0; i < 3; i++) {
 		port_pin_toggle_output_level(LED0_PIN);
 		delay_s(1);
@@ -278,13 +255,12 @@ int main(void)
 		port_pin_toggle_output_level(LED0_PIN);
 		delay_ms(100);
 	}
-//! [main_step_delay_usage]	
 
 	port_pin_set_output_level(LED0_PIN, LED0_INACTIVE);
-	
+
+	/*main loop*/
 	while(1);
 }
-// [main]
 
 #ifdef __cplusplus
 }
