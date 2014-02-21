@@ -126,16 +126,16 @@ typedef enum node_status_tag
 #define TOTAL_NO_OF_ZID_KEY_RC (27)
 
 /* media player control definition */
-#define  BUTTON_PLAY       (0x0080)
-#define  BUTTON_PAUSE      (0x0100)
-#define  BUTTON_MPLAYER    (0x0008)
-#define  BUTTON_STOP       (0x0010)
-#define  BUTTON_NEXT       (0x0040)
-#define  BUTTON_PREVIOUS   (0x0020)
-#define  BUTTON_VOLUME_P   (0x0002)
-#define  BUTTON_VOLUME_N   (0x0004)
-#define  BUTTON_MUTE       (0x0001)
-#define  BUTTON_REPEAT     (0x0200)
+#define  BUTTON_PLAY       HID_MPLAYER_PLAY
+#define  BUTTON_PAUSE      HID_MPLAYER_PAUSE
+#define  BUTTON_MPLAYER    HID_MPLAYER_OPEN
+#define  BUTTON_STOP       HID_STOP
+#define  BUTTON_NEXT       HID_NEXT
+#define  BUTTON_PREVIOUS   HID_PREVIOUS
+#define  BUTTON_VOLUME_P   HID_VOLUME_UP
+#define  BUTTON_VOLUME_N   HID_VOLUME_DOWN
+#define  BUTTON_MUTE       HID_MUTE
+#define  BUTTON_REPEAT     HID_REPEAT
 
 /* Key Remote Controller Modes */
 #define  BUTTON_MOUSE_MODE (0xFB)
@@ -144,16 +144,16 @@ typedef enum node_status_tag
 #define  BUTTON_MEDIA_MODE (0xFE)
 
 /* Keyboard control definition */
-#define  BUTTON_ESC         (41)
-#define  BUTTON_TAB         (43)
-#define  BUTTON_UP_E        (82)
-#define  BUTTON_DOWN_E      (81)
-#define  BUTTON_LEFT_E      (80)
-#define  BUTTON_RIGHT_E     (79)
-#define  BUTTON_DELETE      (76)
-#define  BUTTON_PAGE_UP     (75)
-#define  BUTTON_PAGE_DOWN   (78)
-#define  BUTTON_FUNCTION_F5 (62)
+#define  BUTTON_ESC         HID_ESCAPE
+#define  BUTTON_TAB         HID_TAB
+#define  BUTTON_UP_E        HID_UP
+#define  BUTTON_DOWN_E      HID_DOWN
+#define  BUTTON_LEFT_E      HID_LEFT
+#define  BUTTON_RIGHT_E     HID_RIGHT
+#define  BUTTON_DELETE      HID_DELETE
+#define  BUTTON_PAGE_UP     HID_PAGEUP
+#define  BUTTON_PAGE_DOWN   HID_PAGEDOWN
+#define  BUTTON_FUNCTION_F5 HID_F5
 
 /* mouse control definition */
 #define  BUTTON_LEFT_SINGLE_CLK  (90)
