@@ -480,6 +480,11 @@ enum i2c_transfer_direction {
  *	</tr>
  *	<tr>
  *		<td>
+ *		\li Added 10-bit addressing and high speed support in SAM D21.
+ *		</td>
+ *	</tr>
+ *	<tr>
+ *		<td>
  *		\li Added support for SCL stretch and extended timeout hardware features in SAM D21.
  *		\li Added fast mode plus support in SAM D21.
  *		</td>
