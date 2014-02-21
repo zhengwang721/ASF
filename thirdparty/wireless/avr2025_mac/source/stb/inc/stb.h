@@ -191,7 +191,7 @@
 
 	/* Set radio to SLEEP, if it has been in SLEEP before sal_aes_restart()
 	 **/
-#define TRX_SLEEP()                         \	 
+#define TRX_SLEEP()                         \
 {                                           \
 	if (prev_trx_status == TRX_SLEEP) {     \
 		tal_trx_sleep(SLEEP_MODE_1);        \

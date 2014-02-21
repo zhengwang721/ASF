@@ -54,6 +54,7 @@
 #include <stdio.h>
 #include <string.h>
 #include "trx_access.h"
+#include "sysclk.h"
 #include "sal.h"
 
 /* === Macros ============================================================== */
