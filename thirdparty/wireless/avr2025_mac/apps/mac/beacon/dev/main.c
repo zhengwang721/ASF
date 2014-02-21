@@ -3,7 +3,7 @@
  *
  * @brief MAC Example Beacon Application - Device
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -158,6 +158,9 @@ static uint32_t indirect_rx_cnt;
 /** This variable stores the current state of the node. */
 app_state_t app_state = APP_IDLE;
 static uint8_t APP_TIMER;
+#ifdef RTC_SLEEP
+struct rtc_module rtc_instance;
+#endif
 /* RTC Configuration and Callback functions */
 /** This function shows the stack and application
  *  capabilities on terminal if SIO_HUB switch 
@@ -1241,8 +1244,8 @@ static void enter_sleep(uint32_t timeout)
    /* Set timeout period for rtc*/
 	res = timeout % 1000;
 	timeout = timeout/1000;
-	rtc_count_set_period(timeout);
-	rtc_count_enable();
+	rtc_count_set_period(&rtc_instance,timeout);
+	rtc_count_enable(&rtc_instance);
 	system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
 	system_sleep();
 	#endif
@@ -1251,6 +1254,7 @@ static void enter_sleep(uint32_t timeout)
 #ifdef RTC_SLEEP
 void configure_rtc_count(void)
 {   /* Configuring rtc clock prescaler and mode*/
+	
 	struct rtc_count_config config_rtc_count;
     rtc_count_get_config_defaults(&config_rtc_count);
 	config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
@@ -1258,20 +1262,20 @@ void configure_rtc_count(void)
 	/* Continuously update the counter value so no synchronization is
 	needed for reading. */
 	config_rtc_count.continuously_update = true;
-	rtc_count_init(&config_rtc_count);	
+	rtc_count_init(&rtc_instance,RTC,&config_rtc_count);	
 	
 }
 
 void configure_rtc_callbacks(void)
 {   
 	/*Register rtc callback*/
-	rtc_count_register_callback(rtc_overflow_callback, RTC_COUNT_CALLBACK_OVERFLOW);
-	rtc_count_enable_callback(RTC_COUNT_CALLBACK_OVERFLOW);
+	rtc_count_register_callback(&rtc_instance,rtc_overflow_callback, RTC_COUNT_CALLBACK_OVERFLOW);
+	rtc_count_enable_callback(&rtc_instance,RTC_COUNT_CALLBACK_OVERFLOW);
 }
 void rtc_overflow_callback(void)
 {
 	/* Do something on RTC overflow here */
-	rtc_count_disable();
+	rtc_count_disable(&rtc_instance);
 	/* Wakeup callback to switch the timer to default cpu clock*/
 	wakeup_cb(NULL);		
 }

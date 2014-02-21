@@ -6,9 +6,8 @@
  * This file contains definitions and services related to the features of the
  * ATmega256RFR2 Xplained Pro board.
  *
- * To use this board, define BOARD= ATMEGA256RFR2_XPLAINED_PRO.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +51,6 @@
 #include "helper.h"
 
 
-
 #if AVR8_PART_IS_DEFINED(ATmega128RFA1)
 #define MCU_SOC_NAME        "ATMEGA128RFA1"
 
@@ -73,170 +71,70 @@
 #endif
 
 
-#ifdef SENSOR_TERMINAL_BOARD
-#define NUM_CHECK 10
-#if (defined __ICCAVR__)
-#define _BV(x) (1 << (x))
-#endif
-
-/*
- * Various helper macros for accessing the memory mapped External RAM on the
- * Sensor Terminal Board
- */
-#define XRAM_DATA_SETINP()   do{ XRAM_DATA_DDR = 0x00; XRAM_DATA_PORT = 0x00; }while(0)
-#define XRAM_DATA_SETOUTP()  do{ XRAM_DATA_DDR = 0xFF; }while(0)
-#define XRAM_CTRL_RD_LO()    do{ XRAM_CTRL_PORT &= ~XRAM_RD; }while(0)
-#define XRAM_CTRL_RD_HI()    do{ XRAM_CTRL_PORT |= XRAM_RD; }while(0)
-#define XRAM_CTRL_WR_LO()    do{ XRAM_CTRL_PORT &= ~XRAM_WR; }while(0)
-#define XRAM_CTRL_WR_HI()    do{ XRAM_CTRL_PORT |= XRAM_WR; }while(0)
-
-/**
- * \name Macros for XRAM access
- * \{
- */
-
-/* XRAM specific port macros */
-
-/* XRAM control port output register */
-#define XRAM_CTRL_PORT                   (PORTE)
-
-/* XRAM control port direction register */
-#define XRAM_CTRL_DDR                    (DDRE)
-
-/* Port pin which is used to signal a read access from the XRAM */
-#define XRAM_RD                          (0x20)  /* PE5 */
-
-/* Port pin which is used to signal a write access to the XRAM */
-#define XRAM_WR                          (0x10)  /* PE4 */
-
-/* XRAM data port output register */
-#define XRAM_DATA_PORT                   (PORTB)
-
-/* XRAM data port direction register */
-#define XRAM_DATA_DDR                    (DDRB)
-
-/* XRAM data port input register */
-#define XRAM_DATA_PIN                    (PINB)
-
-/* Port where the latch's ALE signal is connected to */
-#define XRAM_ALE_PORT                    (PORTG)
-
-/* Data direction register used to activate the ALE signal */
-#define XRAM_ALE_DDR                     (DDRG)
-
-/* Pin where the latch's ALE signal is connected to */
-#define XRAM_ALE_PIN                     (0x04)  /* PG2 */
-
-/*
- * PINs where buttons are connected
- */
-#define BUTTON_PIN_0                    (PB0)
-
-#define LED0                 LED0_GPIO
-#define LED1                 LED1_GPIO
-#define LED2                 LED2_GPIO
-#define LED0_GPIO			  LED_0  
-#define LED1_GPIO			  LED_1 
-#define LED2_GPIO			  LED_2 
-#define LED_COUNT             3
-
-#define LED0_RCB			  IOPORT_CREATE_PIN(PORTE, 2)	  
-#define LED1_RCB		      IOPORT_CREATE_PIN(PORTE, 3)	  
-#define LED2_RCB			  IOPORT_CREATE_PIN(PORTE, 4)	  
-
-#define LED_ADDR_DEC_DDR                (DDRD)
-
-/* LED address decoding port output register */
-#define LED_ADDR_DEC_PORT               (PORTD)
-
-#define GPIO_PUSH_BUTTON_0			  IOPORT_CREATE_PIN(PORTE, 5)
-
-#ifdef SENSOR_TERMINAL_BOARD
-
-/* Button address decoding port output register */
-#define BUTTON_ADDR_DEC_PORT            (PORTD)
-#define BUTTON_PORT                     (PORTB)
-#define BUTTON_PORT_DIR                 (DDRB)
-
-/* Button address decoding port direction register */
-#define BUTTON_ADDR_DEC_DDR             (DDRD)
-/* LED address decoding port direction register */
-
-#define BUTTON_INPUT_PINS               (PINB)
-
-/**
- * \name FTDI based USB macros
- * \{
- */
-
-/* USB specific port macros */
-
-/* USB control port output register */
-#define USB_CTRL_PORT                   (PORTE)
-
-/* USB control port direction register */
-#define USB_CTRL_DDR                    (DDRE)
-
-/* USB control port input register */
-#define USB_CTRL_PIN                    (PINE)
-
-/* Port pin which gives indication of reception of byte */
-#define USB_RXF                         (0x80)  /* PE7*/
-
-/* Port pin which gives indication of transmission of byte */
-#define USB_TXE                         (0x40)  /* PE6*/
-
-/* Port pin which is used to signal a read access from the FT245 */
-#define USB_RD                          (0x20)  /* PE5 */
-
-/* Port pin which is used to signal a write access to the FT245 */
-#define USB_WR                          (0x10)  /* PE4 */
-
-/* USB data port output register */
-#define USB_DATA_PORT                   (PORTB)
-
-/* USB data port direction register */
-#define USB_DATA_DDR                    (DDRB)
-
-/* USB data port input register */
-#define USB_DATA_PIN                    (PINB)
-
-/* Memory address mapped to USB FIFO */
-#define USB_FIFO_AD                     (0x2200)
-
-/* Port where the latch's ALE signal is connected to */
-#define USB_ALE_PORT                    (PORTG)
-
-/* Data direction register used to activate the ALE signal */
-#define USB_ALE_DDR                     (DDRG)
-
-/* Pin where the latch's ALE signal is connected to */
-#define USB_ALE_PIN                     (0x04)  /* PG2 */
-
-/* USB address decoding port output register */
-#define USB_ADDR_DEC_PORT               (PORTD)
-
-/* USB address decoding port direction register */
-#define USB_ADDR_DEC_DDR                (DDRD)
-
-//! \}
-/*
- * USB0 non-generic (board specific) initialization part.
- * If this is required, the following macro is filled with the proper
- * implementation.
- */
-/* Enable USB address decoding. */
-#define USB_INIT_NON_GENERIC()      do { \
-        USB_ADDR_DEC_PORT &= ~_BV(6);        \
-        USB_ADDR_DEC_DDR |= _BV(6);          \
-        USB_ADDR_DEC_PORT &= ~_BV(7);        \
-        USB_ADDR_DEC_DDR |= _BV(7);          \
-    } while (0)           
-
-#endif //STB
-#endif /* SENSOR_TERMINAL_BOARD */
 
 #ifdef KEY_RC_BOARD
+
+
+/* Enumerations used to identify ADC Channels */
+typedef enum adc_channel_tag
+{
+	X_AXIS,
+	Y_AXIS,
+	Z_AXIS,
+	ADC_REF
+} SHORTENUM adc_channel_t;
+
+/* Enumerations states for enabling or disabling the Accelerometer */
+typedef enum acc_status_tag
+{
+	ACC_OFF,
+	ACC_ON
+} SHORTENUM acc_status_t;
+
+
+
+
+
+/* === Externals ============================================================*/
+
+
+/* === Macros ===============================================================*/
+
+#define NO_OF_LEDS                      (5)
+
+#define KEY_RC_IO_MASK			0XDC
+#define KEY_RC_IO_VAL           0XDC
+/* Definitions to identify buttons, reference HDMI specification */
+#define BUTTON_UNKNOWN            0x00000000
+#define BUTTON_F2_RED             0x00000001
+#define BUTTON_F3_GREEN           0x00000002
+#define BUTTON_F4_YELLOW          0x00000004
+#define BUTTON_F1_BLUE            0x00000008
+#define BUTTON_SELECT             0x00000010
+#define BUTTON_NUMBER_0           0x00000020
+#define BUTTON_POWER_OFF_FUNCTION 0x00000040
+#define BUTTON_NUMBER_1           0x00000200
+#define BUTTON_NUMBER_2           0x00000400
+#define BUTTON_NUMBER_3           0x00000800
+#define BUTTON_NUMBER_4           0x00001000
+#define BUTTON_NUMBER_5           0x00002000
+#define BUTTON_NUMBER_6           0x00004000
+#define BUTTON_NUMBER_7           0x00008000
+#define BUTTON_NUMBER_8           0x00010000
+#define BUTTON_NUMBER_9           0x00020000
+#define BUTTON_UP                 0x00040000
+#define BUTTON_LEFT               0x00080000
+#define BUTTON_ENTER              0x00100000
+#define BUTTON_RIGHT              0x00200000
+#define BUTTON_DOWN               0x00400000
+#define BUTTON_LEFT_UP            0x00800000
+#define BUTTON_LEFT_DOWN          0x01000000
+#define BUTTON_RIGHT_UP           0x02000000
+#define BUTTON_RIGHT_DOWN         0x04000000
+
+
+#define button_id_t             uint32_t
+#define NO_OF_BUTTONS           (24)
 
 /* Key RC Button Specific macros */
 #define MAX_KEY_SCANS           6
@@ -325,6 +223,15 @@
 /* Clear all button IRQ flags */
 #define CLEAR_ALL_BUTTON_IRQ_FLAGS()    BUTTON_FLAG_REG = BUTTON_1_ISR_FLAG | BUTTON_2_ISR_FLAG | BUTTON_3_ISR_FLAG
 
+#define LED0                 0
+#define LED1                 1
+#define LED2                 2
+#define LED3                 3
+#define LED4                 4
+
+
+#define LED_COUNT             5
+
 /*
  * Macros controlling the latch
  */
@@ -341,7 +248,171 @@
         LATCH_PORT_DIR |= 1 << LATCH_PIN; \
     } while (0)   
 
-#endif /* KEY_RC_BOARD */
+#else /* KEY_RC_BOARD */
+      
+#define BB_SIO_MASK  0XD0
+#define BB_SIO_VAL 	 0XC0 
+/*
+ * PINs where buttons are connected
+ */
+#define BUTTON_PIN_0                    (PB0)
 
+#define LED0                 LED0_GPIO
+#define LED1                 LED1_GPIO
+#define LED2                 LED2_GPIO
+#define LED0_GPIO			  LED_0  
+#define LED1_GPIO			  LED_1 
+#define LED2_GPIO			  LED_2 
+#define LED_COUNT             3
+
+#define LED0_RCB			  IOPORT_CREATE_PIN(PORTE, 2)	  
+#define LED1_RCB		      IOPORT_CREATE_PIN(PORTE, 3)	  
+#define LED2_RCB			  IOPORT_CREATE_PIN(PORTE, 4)	  
+
+#define LED_ADDR_DEC_DDR                (DDRD)
+
+/* LED address decoding port output register */
+#define LED_ADDR_DEC_PORT               (PORTD)
+
+#define GPIO_PUSH_BUTTON_0			  IOPORT_CREATE_PIN(PORTE, 5)
+
+
+#define NUM_CHECK 10
+#if (defined __ICCAVR__)
+#define _BV(x) (1 << (x))
+#endif
+
+/*
+ * Various helper macros for accessing the memory mapped External RAM on the
+ * Sensor Terminal Board
+ */
+#define XRAM_DATA_SETINP()   do{ XRAM_DATA_DDR = 0x00; XRAM_DATA_PORT = 0x00; }while(0)
+#define XRAM_DATA_SETOUTP()  do{ XRAM_DATA_DDR = 0xFF; }while(0)
+#define XRAM_CTRL_RD_LO()    do{ XRAM_CTRL_PORT &= ~XRAM_RD; }while(0)
+#define XRAM_CTRL_RD_HI()    do{ XRAM_CTRL_PORT |= XRAM_RD; }while(0)
+#define XRAM_CTRL_WR_LO()    do{ XRAM_CTRL_PORT &= ~XRAM_WR; }while(0)
+#define XRAM_CTRL_WR_HI()    do{ XRAM_CTRL_PORT |= XRAM_WR; }while(0)
+
+/**
+ * \name Macros for XRAM access
+ * \{
+ */
+
+/* XRAM specific port macros */
+
+/* XRAM control port output register */
+#define XRAM_CTRL_PORT                   (PORTE)
+
+/* XRAM control port direction register */
+#define XRAM_CTRL_DDR                    (DDRE)
+
+/* Port pin which is used to signal a read access from the XRAM */
+#define XRAM_RD                          (0x20)  /* PE5 */
+
+/* Port pin which is used to signal a write access to the XRAM */
+#define XRAM_WR                          (0x10)  /* PE4 */
+
+/* XRAM data port output register */
+#define XRAM_DATA_PORT                   (PORTB)
+
+/* XRAM data port direction register */
+#define XRAM_DATA_DDR                    (DDRB)
+
+/* XRAM data port input register */
+#define XRAM_DATA_PIN                    (PINB)
+
+/* Port where the latch's ALE signal is connected to */
+#define XRAM_ALE_PORT                    (PORTG)
+
+/* Data direction register used to activate the ALE signal */
+#define XRAM_ALE_DDR                     (DDRG)
+
+/* Pin where the latch's ALE signal is connected to */
+#define XRAM_ALE_PIN                     (0x04)  /* PG2 */
+
+
+/* Button address decoding port output register */
+#define BUTTON_ADDR_DEC_PORT            (PORTD)
+#define BUTTON_PORT                     (PORTB)
+#define BUTTON_PORT_DIR                 (DDRB)
+
+/* Button address decoding port direction register */
+#define BUTTON_ADDR_DEC_DDR             (DDRD)
+/* LED address decoding port direction register */
+
+#define BUTTON_INPUT_PINS               (PINB)
+
+#ifdef SENSOR_TERMINAL_BOARD
+/**
+ * \name FTDI based USB macros
+ * \{
+ */
+
+/* USB specific port macros */
+
+/* USB control port output register */
+#define USB_CTRL_PORT                   (PORTE)
+
+/* USB control port direction register */
+#define USB_CTRL_DDR                    (DDRE)
+
+/* USB control port input register */
+#define USB_CTRL_PIN                    (PINE)
+
+/* Port pin which gives indication of reception of byte */
+#define USB_RXF                         (0x80)  /* PE7*/
+
+/* Port pin which gives indication of transmission of byte */
+#define USB_TXE                         (0x40)  /* PE6*/
+
+/* Port pin which is used to signal a read access from the FT245 */
+#define USB_RD                          (0x20)  /* PE5 */
+
+/* Port pin which is used to signal a write access to the FT245 */
+#define USB_WR                          (0x10)  /* PE4 */
+
+/* USB data port output register */
+#define USB_DATA_PORT                   (PORTB)
+
+/* USB data port direction register */
+#define USB_DATA_DDR                    (DDRB)
+
+/* USB data port input register */
+#define USB_DATA_PIN                    (PINB)
+
+/* Memory address mapped to USB FIFO */
+#define USB_FIFO_AD                     (0x2200)
+
+/* Port where the latch's ALE signal is connected to */
+#define USB_ALE_PORT                    (PORTG)
+
+/* Data direction register used to activate the ALE signal */
+#define USB_ALE_DDR                     (DDRG)
+
+/* Pin where the latch's ALE signal is connected to */
+#define USB_ALE_PIN                     (0x04)  /* PG2 */
+
+/* USB address decoding port output register */
+#define USB_ADDR_DEC_PORT               (PORTD)
+
+/* USB address decoding port direction register */
+#define USB_ADDR_DEC_DDR                (DDRD)
+
+//! \}
+/*
+ * USB0 non-generic (board specific) initialization part.
+ * If this is required, the following macro is filled with the proper
+ * implementation.
+ */
+/* Enable USB address decoding. */
+#define USB_INIT_NON_GENERIC()      do { \
+        USB_ADDR_DEC_PORT &= ~_BV(6);        \
+        USB_ADDR_DEC_DDR |= _BV(6);          \
+        USB_ADDR_DEC_PORT &= ~_BV(7);        \
+        USB_ADDR_DEC_DDR |= _BV(7);          \
+    } while (0)           
+
+#endif     
+#endif
 
 #endif  /* _ATMEGARFX_RCB_ */

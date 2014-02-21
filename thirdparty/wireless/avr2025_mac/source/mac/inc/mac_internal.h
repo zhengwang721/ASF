@@ -3,7 +3,7 @@
  *
  * @brief Declares MAC internal functions, globals, and macros.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

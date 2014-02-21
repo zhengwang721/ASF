@@ -3,7 +3,6 @@
  *
  * @brief API for ZID profile
  *
- * $Id: zid.h 34097 2013-02-11 09:07:27Z agasthian.s $
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com

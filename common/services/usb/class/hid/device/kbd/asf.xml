@@ -45,12 +45,6 @@
 			<device-support value="sam"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
-		<module type="service" id="common.services.usb.class.hid.device.keyboard.composite#multimedia" caption="USB Device HID Keyboard and Multimedia">
-			<info type="gui-flag" value="hidden"/>
-			<require idref="thirdparty.common.services.usb.class.hid.device.keyboard.composite"/>
-			<device-support value="xmegaa3u"/>
-			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
-		</module>
 	</select-by-config>
 	<module type="service" id="common.services.usb.class.hid.device.keyboard.single" caption="USB Device HID Keyboard (Single Interface Device)">
 		<info type="description" value="summary">
@@ -91,6 +85,7 @@
 		<device-support value="sam4s"/>
 		<device-support value="sam4l"/>
 		<device-support value="sam4e"/>
+		<device-support value="samd21"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>
 </asf>

@@ -8,7 +8,7 @@
  *
  * To use this board, define BOARD= ATMEGA256RFR2_XPLAINED_PRO.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -246,6 +246,7 @@ button_id_t pal_button_scan(void)
 
 #else /* KEY_RC_BOARD */
 
+
 /**
  * \brief Read XRAM
  *
@@ -331,39 +332,6 @@ void xram_write(uint16_t addr, uint8_t data)
 }
 
 
-
-
- void board_identify(void)
-{
-    uint8_t i;
-    uint8_t count = 0;
-    mem_test_t mem_vals[NUM_CHECK];
-    for (i = 0; i < NUM_CHECK ; i++)
-    {
-        mem_vals[i].addr = 0x8000 + (i * 10);
-        mem_vals[i].val = 4;
-        xram_write(mem_vals[i].addr, mem_vals[i].val);
-    }
-    for (i = 0; i < NUM_CHECK ; i++)
-    {
-        if (mem_vals[i].val == xram_read(mem_vals[i].addr))
-        {
-            count++;
-        }
-    }
-    if (count)
-    {
-        board_type = SENSOR_TERM_BOARD;
-
-    }
-    else
-    {
-        board_type = PLAIN;    
-    }   
-
-
-}
-#ifdef  SENSOR_TERMINAL_BOARD
 bool stb_button_read(void)
 {
 
@@ -434,7 +402,38 @@ switch (board_type)
     return false;
 
 }
-#endif
+
+void board_identify(void)
+{
+    uint8_t i;
+    uint8_t count = 0;
+    mem_test_t mem_vals[NUM_CHECK];
+    for (i = 0; i < NUM_CHECK ; i++)
+    {
+        mem_vals[i].addr = 0x8000 + (i * 10);
+        mem_vals[i].val = 4;
+        xram_write(mem_vals[i].addr, mem_vals[i].val);
+    }
+    for (i = 0; i < NUM_CHECK ; i++)
+    {
+        if (mem_vals[i].val == xram_read(mem_vals[i].addr))
+        {
+            count++;
+        }
+    }
+    if (count)
+    {
+        board_type = SENSOR_TERM_BOARD;
+
+    }
+    else
+    {
+        board_type = PLAIN;    
+    }   
+
+
+}
+
 
 void led_ctrl(led_id_t led_no, led_action_t led_setting)
 {
@@ -545,7 +544,9 @@ case PLAIN:
         break;
         }
     }
+	
 }
+
 }
 
 
@@ -575,4 +576,4 @@ void led_helper_func(void)
     LED_ADDR_DEC_PORT &= ~_BV(7);
     LED_ADDR_DEC_DDR |= _BV(7);
 }
-#endif /* KEY_RC_BOARD */
+#endif

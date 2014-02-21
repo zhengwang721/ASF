@@ -5,7 +5,7 @@
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_common_sw_timer.h"/>
-		<build type="header-file" value="conf_pal.h"/>
+		<build type="header-file" value="conf_trx_access.h"/>
 
 		<build type="define" name="FLASH_SUPPORT" value =""/>
 		<build type="define" name="HIGHEST_STACK_LAYER" value ="RF4CE"/>
