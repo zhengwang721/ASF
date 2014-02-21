@@ -74,7 +74,7 @@
  *      - SAM D2x Xplained Pro board
  *
  * \section appdoc_sam0_tcc_unit_test_setup Setup
- * The following connections has to be made using wires on SAMD21 Xplained Pro:
+ * The following connections has to be made using wires on SAM D21 Xplained Pro:
  *  - \b EXTINT 4 (PB04, EXT1 pin 9) <-----> TCC0 WO0 (PA08, EXT2 pin 11)
  *
  * To run the test:
