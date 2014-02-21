@@ -85,7 +85,7 @@ void pal_trx_irq_init(FUNC_PTR trx_irq_cb)
 
 uint8_t pal_trx_bit_read(uint8_t addr, uint8_t mask, uint8_t pos)
 {
-    reutrn (trx_bit_read(addr,mask,pos));
+    return (trx_bit_read(addr,mask,pos));
 }
 
 void pal_trx_bit_write(uint8_t reg_addr, uint8_t mask, uint8_t pos, uint8_t new_value)
