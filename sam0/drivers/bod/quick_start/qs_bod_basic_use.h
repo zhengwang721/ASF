@@ -43,6 +43,10 @@
 /**
  * \page asfdoc_sam0_bod_basic_use_case Quick Start Guide for BOD - Basic
  *
+ * The preferred method of setting BOD33 levels and settings is trough the fuses.
+ * For a use case for when it is desirable to set it in software see the bod driver
+ * documentation.
+ *
  * In this use case, the BOD33 will be configured with the following settings:
  * - Continuous sampling mode
  * - Prescaler setting of 2

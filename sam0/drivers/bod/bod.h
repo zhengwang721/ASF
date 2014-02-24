@@ -90,12 +90,6 @@ extern "C" {
  * specific; care must be taken that all critical BOD detection events can
  * complete within the amount of time available.
  *
- * The preferred method of configuring BOD33 levels and settings is trough the fuses.
- * For example, if the clock settings are adjusted up after a battery has charged to a higher level
- * a new BOD33 level might be set in SW. When the battery discharges, the chip will reset
- * when the level is below SW BOD33 and then continue running at a lower clock rate and 
- * fuse BOD33 levels. The chip should always measure the voltage before adjusting the frequency up
- *
  * \section asfdoc_sam0_bod_extra_info Extra Information
  *
  * For extra information see \ref asfdoc_sam0_bod_extra. This includes:
@@ -410,6 +404,11 @@ static inline void bod_clear_detected(
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_bod_basic_use_case
+ * In this use case, if the clock settings are adjusted up after a battery has charged to
+ * a higher level a new BOD33 level might be set in SW. When the battery discharges,
+ * the chip will reset when the level is below SW BOD33 and then continue running at
+ * a lower clock rate and fuse BOD33 levels. The chip should always measure the voltage
+ * before adjusting the frequency up.
  *
  * \page asfdoc_sam0_bod_document_revision_history Document Revision History
  *
