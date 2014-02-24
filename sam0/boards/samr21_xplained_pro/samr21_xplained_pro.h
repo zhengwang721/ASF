@@ -203,10 +203,10 @@ void system_board_init(void);
  *  @{
  */
 #define EXT3_PIN_GPIO_0           EXT3_PIN_5
-#define EXT3_PIN_RFCTRL           EXT3_PIN_10
+#define EXT3_PIN_GPIO_1           EXT3_PIN_10
 #define EXT3_PIN_I2C_SDA          EXT3_PIN_11
 #define EXT3_PIN_I2C_SCL          EXT3_PIN_12
-#define EXT3_PIN_GPIO_1           EXT3_PIN_15
+#define EXT3_PIN_GPIO_2           EXT3_PIN_15
 #define EXT3_PIN_SPI_MOSI         EXT3_PIN_16
 #define EXT3_PIN_SPI_MISO         EXT3_PIN_17
 #define EXT3_PIN_SPI_SCK          EXT3_PIN_18
