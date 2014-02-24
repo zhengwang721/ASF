@@ -50,7 +50,7 @@
  * In this use case, the TCC will be used to generate a PWM signal. Here
  * the pulse width is set to one quarter of the period.
  * When connect PWM output to LED it makes the LED light. To see the waveform,
- * you may need an ossiliscope.
+ * you may need an oscilloscope.
  *
  * The PWM output is set up as follows:
  * <table>
