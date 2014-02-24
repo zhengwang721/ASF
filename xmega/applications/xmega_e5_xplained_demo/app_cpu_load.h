@@ -63,12 +63,12 @@
  *
  * Usage:
  * \code
- * ISR(FOO_vect)
- * {
- *     app_cpu_load_exit_sleep();
- *     ...
- * }
- * \endcode
+	ISR(FOO_vect)
+	{
+	    app_cpu_load_exit_sleep();
+	    ...
+	}
+\endcode
  *
  * \param vect Interrupt vector name as found in the device header files.
  */

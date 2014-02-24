@@ -56,9 +56,9 @@
  * When the QDec position change, the QDec position, direction and frequency
  * is sent on serial COM, as bellow:
  * \code
- * 04 ++   317mHz
- * 05 ++  1436mHz
- * \endcode
+	04 ++   317mHz
+	05 ++  1436mHz
+\endcode
  *
  * To change the direction of Quadrature encoder, press 'd'.
  * To change increase speed of Quadrature encoder, press '+'.

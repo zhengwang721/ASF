@@ -55,9 +55,9 @@
  * When the QDec position changes, the QDec position, direction and frequency
  * is sent on serial COM, as bellow:
  * \code
- * 04 ++   317mHz
- * 05 ++  1436mHz
- * \endcode
+	04 ++   317mHz
+	05 ++  1436mHz
+\endcode
  *
  * \note
  * All AVR XMEGA devices can be used.
