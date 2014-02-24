@@ -73,11 +73,11 @@
  * \brief Table of possible system interrupt/exception vector numbers.
  *
  * Table of all possible interrupt and exception vector indexes within the
- * SAMD21 device.
+ * SAMR21 device.
  */
 #if defined(__DOXYGEN__)
 /** \note The actual enumeration name is "system_interrupt_vector". */
-enum system_interrupt_vector_samd21 {
+enum system_interrupt_vector_samr21 {
 #else
 enum system_interrupt_vector {
 #endif
@@ -145,24 +145,15 @@ enum system_interrupt_vector {
 	SYSTEM_INTERRUPT_MODULE_TC3        = TC3_IRQn,
 	SYSTEM_INTERRUPT_MODULE_TC4        = TC4_IRQn,
 	SYSTEM_INTERRUPT_MODULE_TC5        = TC5_IRQn,
-#  if (SAMD21J)
-	SYSTEM_INTERRUPT_MODULE_TC6        = TC6_IRQn,
-	SYSTEM_INTERRUPT_MODULE_TC7        = TC7_IRQn,
-#  endif
 #endif
 
 	/** Interrupt vector index for an Analog Comparator peripheral interrupt. */
 	SYSTEM_INTERRUPT_MODULE_AC         = AC_IRQn,
 	/** Interrupt vector index for an Analog-to-Digital peripheral interrupt. */
 	SYSTEM_INTERRUPT_MODULE_ADC        = ADC_IRQn,
-	/** Interrupt vector index for a Digital-to-Analog peripheral interrupt. */
-	SYSTEM_INTERRUPT_MODULE_DAC        = DAC_IRQn,
 	/** Interrupt vector index for a Peripheral Touch Controller peripheral
 	 *  interrupt. */
 	SYSTEM_INTERRUPT_MODULE_PTC        = PTC_IRQn,
-	/** Interrupt vector index for a Inter-IC Sound Interface peripheral
-	 *  interrupt. */
-	SYSTEM_INTERRUPT_MODULE_I2S        = I2S_IRQn,
 };
 
 /** @} */
