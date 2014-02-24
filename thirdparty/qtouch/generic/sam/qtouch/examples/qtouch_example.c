@@ -79,13 +79,13 @@
  *  -# In the terminal window, the
  *     following text should appear (values depend on the board and the chip used):
  *     \code
- *      -- QTouch Project--
- *      -- xxxxxx-xx
- *      -- Compiled: xxx xx xxxx xx:xx:xx --
- *      supports xxxxxxx
- *      Maximum number of Rotors/Sliders xxxxx
- *      Version xxxx
- *     \endcode
+	-- QTouch Project--
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+	supports xxxxxxx
+	Maximum number of Rotors/Sliders xxxxx
+	Version xxxx
+\endcode
  *  -# The application will output the Qtouch value when touching the slider or the key
  * on the EK boards.
  *

@@ -82,10 +82,10 @@
  * -# LED should start blinking on the board. In the terminal window, the
  *    following text should appear (values depend on the board and chip used):
  *    \code
- *     -- Freertos Example xxx --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *    \endcode
+	-- Freertos Example xxx --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+\endcode
  *
  */
 

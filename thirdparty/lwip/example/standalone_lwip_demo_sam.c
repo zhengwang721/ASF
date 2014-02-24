@@ -85,8 +85,8 @@
  *  -# In the terminal window, the
  *     following text should appear (values depend on the board and the chip used):
  *     \code
- *      LwIP: DHCP StartedNetwork upIP=xxx.xxx.xxx.xxx
- *     \endcode
+	LwIP: DHCP StartedNetwork upIP=xxx.xxx.xxx.xxx
+\endcode
  *  -# The application will output converted value to hyperterminal and display
  *     a menu for users to set different modes.
  *
