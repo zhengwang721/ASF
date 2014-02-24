@@ -103,11 +103,11 @@ enum SLEEP_SMODE_enum {
  * \subsection mega_sleep_basic_usage_code Example code
  * Add to, e.g., the main loop in the application C-file:
  * \code
- * sleep_set_mode(SLEEP_SMODE_PDOWN_gc);
- * sleep_enable();
- * sleep_enter();
- * sleep_disable();
- * \endcode
+	sleep_set_mode(SLEEP_SMODE_PDOWN_gc);
+	sleep_enable();
+	sleep_enter();
+	sleep_disable();
+\endcode
  *
  * \subsection Workflow
  * -# Set what sleep mode to use.
