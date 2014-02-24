@@ -63,7 +63,7 @@ COMPILER_ALIGNED(16) DmacDescriptor compare_dma_descriptor;
 //! [capture_variables]
 uint16_t capture_values[3] = {0, 0, 0};
 //! [capture_dma_resource]
-struct dma_resource captrure_dma_resource;
+struct dma_resource capture_dma_resource;
 //! [capture_dma_resource]
 //! [capture_dma_descriptor]
 COMPILER_ALIGNED(16) DmacDescriptor capture_dma_descriptor;
@@ -120,7 +120,7 @@ static void _config_dma_for_capture(void)
 	//! [dma_setup_3]
 
 	//! [dma_setup_4]
-	dma_allocate(&captrure_dma_resource, &config);
+	dma_allocate(&capture_dma_resource, &config);
 	//! [dma_setup_4]
 	//! [config_dma_resource_for_capture]
 
@@ -151,11 +151,11 @@ static void _config_dma_for_capture(void)
 
 	//! [config_dma_job_for_capture]
 	//! [dma_setup_10]
-	dma_add_descriptor(&captrure_dma_resource, &capture_dma_descriptor);
-	dma_add_descriptor(&captrure_dma_resource, &capture_dma_descriptor);
+	dma_add_descriptor(&capture_dma_resource, &capture_dma_descriptor);
+	dma_add_descriptor(&capture_dma_resource, &capture_dma_descriptor);
 	//! [dma_setup_10]
 	//! [dma_setup_11]
-	dma_start_transfer_job(&captrure_dma_resource);
+	dma_start_transfer_job(&capture_dma_resource);
 	//! [dma_setup_11]
 	//! [config_dma_job_for_capture]
 }
