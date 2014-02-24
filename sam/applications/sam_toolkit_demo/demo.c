@@ -83,10 +83,10 @@
  * -# In the terminal window, the following text should appear (values depend
  * on the board and chip used):
  *    \code
- *     -- SAM Toolkit Demo Example xxx --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *    \endcode
+	-- SAM Toolkit Demo Example xxx --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+\endcode
  * -# Pressing and release the icon buttons on the LCD. The corresponding window
  * will show and display the result.
  *

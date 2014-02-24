@@ -1114,65 +1114,65 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  * \subsection gmac_basic_use_case_setup_code Example code
  * Content of conf_eth.h
  * \code
- * #define GMAC_RX_BUFFERS                               16
- * #define GMAC_TX_BUFFERS                               8
- * #define MAC_PHY_RETRY_MAX                             1000000
- * #define ETHERNET_CONF_ETHADDR0                        0x00
- * #define ETHERNET_CONF_ETHADDR0                        0x00
- * #define ETHERNET_CONF_ETHADDR1                        0x04
- * #define ETHERNET_CONF_ETHADDR2                        0x25
- * #define ETHERNET_CONF_ETHADDR3                        0x1C
- * #define ETHERNET_CONF_ETHADDR4                        0xA0
- * #define ETHERNET_CONF_ETHADDR5                        0x02
- * #define ETHERNET_CONF_IPADDR0                         192
- * #define ETHERNET_CONF_IPADDR1                         168
- * #define ETHERNET_CONF_IPADDR2                         0
- * #define ETHERNET_CONF_IPADDR3                         2
- * #define ETHERNET_CONF_GATEWAY_ADDR0                   192
- * #define ETHERNET_CONF_GATEWAY_ADDR1                   168
- * #define ETHERNET_CONF_GATEWAY_ADDR2                   0
- * #define ETHERNET_CONF_GATEWAY_ADDR3                   1
- * #define ETHERNET_CONF_NET_MASK0                       255
- * #define ETHERNET_CONF_NET_MASK1                       255
- * #define ETHERNET_CONF_NET_MASK2                       255
- * #define ETHERNET_CONF_NET_MASK3                       0
- * #define ETH_PHY_MODE                                  ETH_PHY_MODE
- * \endcode
+	#define GMAC_RX_BUFFERS                               16
+	#define GMAC_TX_BUFFERS                               8
+	#define MAC_PHY_RETRY_MAX                             1000000
+	#define ETHERNET_CONF_ETHADDR0                        0x00
+	#define ETHERNET_CONF_ETHADDR0                        0x00
+	#define ETHERNET_CONF_ETHADDR1                        0x04
+	#define ETHERNET_CONF_ETHADDR2                        0x25
+	#define ETHERNET_CONF_ETHADDR3                        0x1C
+	#define ETHERNET_CONF_ETHADDR4                        0xA0
+	#define ETHERNET_CONF_ETHADDR5                        0x02
+	#define ETHERNET_CONF_IPADDR0                         192
+	#define ETHERNET_CONF_IPADDR1                         168
+	#define ETHERNET_CONF_IPADDR2                         0
+	#define ETHERNET_CONF_IPADDR3                         2
+	#define ETHERNET_CONF_GATEWAY_ADDR0                   192
+	#define ETHERNET_CONF_GATEWAY_ADDR1                   168
+	#define ETHERNET_CONF_GATEWAY_ADDR2                   0
+	#define ETHERNET_CONF_GATEWAY_ADDR3                   1
+	#define ETHERNET_CONF_NET_MASK0                       255
+	#define ETHERNET_CONF_NET_MASK1                       255
+	#define ETHERNET_CONF_NET_MASK2                       255
+	#define ETHERNET_CONF_NET_MASK3                       0
+	#define ETH_PHY_MODE                                  ETH_PHY_MODE
+\endcode
  *
  * A specific gmac device and the receive data buffer must be defined; another ul_frm_size should be defined
  * to trace the actual size of the data received.
  * \code
- * static gmac_device_t gs_gmac_dev;
- * static volatile uint8_t gs_uc_eth_buffer[GMAC_FRAME_LENTGH_MAX];
- *
- * uint32_t ul_frm_size;
- * \endcode
+	 static gmac_device_t gs_gmac_dev;
+	 static volatile uint8_t gs_uc_eth_buffer[GMAC_FRAME_LENTGH_MAX];
+
+	 uint32_t ul_frm_size;
+\endcode
  *
  * Add to application C-file:
  * \code
- *   void gmac_init(void)
- *   {
- *       sysclk_init();
- *
- *       board_init();
- *
- *       pmc_enable_periph_clk(ID_GMAC);
- *
- *       gmac_option.uc_copy_all_frame = 0;
- *       gmac_option.uc_no_boardcast = 0;
- *       memcpy(gmac_option.uc_mac_addr, gs_uc_mac_address, sizeof(gs_uc_mac_address));
- *       gs_gmac_dev.p_hw = GMAC;
- *
- *       gmac_dev_init(GMAC, &gs_gmac_dev, &gmac_option);
- *
- *       NVIC_EnableIRQ(GMAC_IRQn);
- *
- *       ethernet_phy_init(GMAC, BOARD_GMAC_PHY_ADDR, sysclk_get_cpu_hz());
- * 
- *       ethernet_phy_auto_negotiate(GMAC, BOARD_GMAC_PHY_ADDR);
- *
- *       ethernet_phy_set_link(GMAC, BOARD_GMAC_PHY_ADDR, 1);
- * \endcode
+	   void gmac_init(void)
+	   {
+	       sysclk_init();
+
+	       board_init();
+
+	       pmc_enable_periph_clk(ID_GMAC);
+
+	       gmac_option.uc_copy_all_frame = 0;
+	       gmac_option.uc_no_boardcast = 0;
+	       memcpy(gmac_option.uc_mac_addr, gs_uc_mac_address, sizeof(gs_uc_mac_address));
+	       gs_gmac_dev.p_hw = GMAC;
+
+	       gmac_dev_init(GMAC, &gs_gmac_dev, &gmac_option);
+
+	       NVIC_EnableIRQ(GMAC_IRQn);
+
+	       ethernet_phy_init(GMAC, BOARD_GMAC_PHY_ADDR, sysclk_get_cpu_hz());
+ 
+	       ethernet_phy_auto_negotiate(GMAC, BOARD_GMAC_PHY_ADDR);
+
+	       ethernet_phy_set_link(GMAC, BOARD_GMAC_PHY_ADDR, 1);
+\endcode
  *
  * \subsection gmac_basic_use_case_setup_flow Workflow
  * - Ensure that conf_eth.h is present and contains the
@@ -1186,47 +1186,47 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  * (2048/128)=16, and as there are additional frames coming, a preferred
  * number is 24 depending on a normal Ethernet throughput.
  *   - \code
- *        #define GMAC_RX_BUFFERS                               16
- *   \endcode
+	#define GMAC_RX_BUFFERS                               16
+\endcode
  * -# Define the transmitting buffer size used in the internal GMAC driver.
  * The buffer size used for TX is GMAC_TX_BUFFERS * 1518.
  *   - \code
- *        #define GMAC_TX_BUFFERS                               8
- *   \endcode
+	#define GMAC_TX_BUFFERS                               8
+\endcode
  * -# Define maximum retry time for a PHY read/write operation.
  *   - \code
- *        #define MAC_PHY_RETRY_MAX                             1000000
- *   \endcode
+	#define MAC_PHY_RETRY_MAX                             1000000
+\endcode
  * -# Define the MAC address. 00:04:25:1C:A0:02 is the address reserved
  * for ATMEL, application should always change this address to its' own.
  *   - \code
- *        #define ETHERNET_CONF_ETHADDR0                        0x00
- *        #define ETHERNET_CONF_ETHADDR1                        0x04
- *        #define ETHERNET_CONF_ETHADDR2                        0x25
- *        #define ETHERNET_CONF_ETHADDR3                        0x1C
- *        #define ETHERNET_CONF_ETHADDR4                        0xA0
- *        #define ETHERNET_CONF_ETHADDR5                        0x02
- *   \endcode
+	#define ETHERNET_CONF_ETHADDR0                        0x00
+	#define ETHERNET_CONF_ETHADDR1                        0x04
+	#define ETHERNET_CONF_ETHADDR2                        0x25
+	#define ETHERNET_CONF_ETHADDR3                        0x1C
+	#define ETHERNET_CONF_ETHADDR4                        0xA0
+	#define ETHERNET_CONF_ETHADDR5                        0x02
+\endcode
  * -# Define the IP address configration used in the application. When DHCP
  *  is enabled, this configuration is not effected.
  *   - \code
- *        #define ETHERNET_CONF_IPADDR0                         192
- *        #define ETHERNET_CONF_IPADDR1                         168
- *        #define ETHERNET_CONF_IPADDR2                         0
- *        #define ETHERNET_CONF_IPADDR3                         2
- *        #define ETHERNET_CONF_GATEWAY_ADDR0                   192
- *        #define ETHERNET_CONF_GATEWAY_ADDR1                   168
- *        #define ETHERNET_CONF_GATEWAY_ADDR2                   0
- *        #define ETHERNET_CONF_GATEWAY_ADDR3                   1
- *        #define ETHERNET_CONF_NET_MASK0                       255
- *        #define ETHERNET_CONF_NET_MASK1                       255
- *        #define ETHERNET_CONF_NET_MASK2                       255
- *        #define ETHERNET_CONF_NET_MASK3                       0
- *   \endcode
+	#define ETHERNET_CONF_IPADDR0                         192
+	#define ETHERNET_CONF_IPADDR1                         168
+	#define ETHERNET_CONF_IPADDR2                         0
+	#define ETHERNET_CONF_IPADDR3                         2
+	#define ETHERNET_CONF_GATEWAY_ADDR0                   192
+	#define ETHERNET_CONF_GATEWAY_ADDR1                   168
+	#define ETHERNET_CONF_GATEWAY_ADDR2                   0
+	#define ETHERNET_CONF_GATEWAY_ADDR3                   1
+	#define ETHERNET_CONF_NET_MASK0                       255
+	#define ETHERNET_CONF_NET_MASK1                       255
+	#define ETHERNET_CONF_NET_MASK2                       255
+	#define ETHERNET_CONF_NET_MASK3                       0
+\endcode
  * -# Configure the PHY maintainance interface.
  *   - \code
- *        #define ETH_PHY_MODE                                  GMAC_PHY_MII
- *   \endcode
+	#define ETH_PHY_MODE                                  GMAC_PHY_MII
+\endcode
  * -# Enable the system clock:
  *   - \code sysclk_init(); \endcode
  * -# Enable PIO configurations for GMAC:
@@ -1235,38 +1235,38 @@ void gmac_handler(gmac_device_t* p_gmac_dev);
  *   - \code pmc_enable_periph_clk(ID_GMAC); \endcode
  * -# Set the GMAC options; it's set to copy all frame and support broadcast:
  *   - \code
- *         gmac_option.uc_copy_all_frame = 0;
- *         gmac_option.uc_no_boardcast = 0;
- *         memcpy(gmac_option.uc_mac_addr, gs_uc_mac_address, sizeof(gs_uc_mac_address));
- *         gs_gmac_dev.p_hw = GMAC;
- * \endcode
+	gmac_option.uc_copy_all_frame = 0;
+	gmac_option.uc_no_boardcast = 0;
+	memcpy(gmac_option.uc_mac_addr, gs_uc_mac_address, sizeof(gs_uc_mac_address));
+	gs_gmac_dev.p_hw = GMAC;
+\endcode
  * -# Initialize GMAC device with the filled option:
  *   - \code
- *         gmac_dev_init(GMAC, &gs_gmac_dev, &gmac_option);
- * \endcode
+	gmac_dev_init(GMAC, &gs_gmac_dev, &gmac_option);
+\endcode
  * -# Enable the interrupt service for GMAC:
  *   - \code
- *         NVIC_EnableIRQ(GMAC_IRQn);
- * \endcode
+	NVIC_EnableIRQ(GMAC_IRQn);
+\endcode
  * -# Initialize the PHY component:
  *   - \code
- *         ethernet_phy_init(GMAC, BOARD_GMAC_PHY_ADDR, sysclk_get_cpu_hz());
- * \endcode
+	ethernet_phy_init(GMAC, BOARD_GMAC_PHY_ADDR, sysclk_get_cpu_hz());
+\endcode
   * -# The link will be established based on auto negotiation.
  *   - \code
- *         ethernet_phy_auto_negotiate(GMAC, BOARD_GMAC_PHY_ADDR);
- * \endcode
+	ethernet_phy_auto_negotiate(GMAC, BOARD_GMAC_PHY_ADDR);
+\endcode
  * -# Establish the ethernet link; the network can be worked from now on:
  *   - \code
- *         ethernet_phy_set_link(GMAC, BOARD_GMAC_PHY_ADDR, 1);
- * \endcode
+	ethernet_phy_set_link(GMAC, BOARD_GMAC_PHY_ADDR, 1);
+\endcode
  *
  * \section gmac_basic_use_case_usage Usage steps
  * \subsection gmac_basic_use_case_usage_code Example code
  * Add to, e.g., main loop in application C-file:
  * \code
- *    gmac_dev_read(&gs_gmac_dev, (uint8_t *) gs_uc_eth_buffer, sizeof(gs_uc_eth_buffer), &ul_frm_size));
- * \endcode
+	gmac_dev_read(&gs_gmac_dev, (uint8_t *) gs_uc_eth_buffer, sizeof(gs_uc_eth_buffer), &ul_frm_size));
+\endcode
  *
  * \subsection gmac_basic_use_case_usage_flow Workflow
  * -# Start reading the data from the ethernet:

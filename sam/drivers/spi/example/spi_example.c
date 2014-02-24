@@ -85,10 +85,10 @@
  * -# Upon startup, the application will output the following line on the
  *    terminal:
  *    \code
- *     -- Spi Example  --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *    \endcode
+	-- Spi Example  --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+\endcode
  * -# The following traces detail operations on the SPI example, displaying
  *    success or error messages depending on the results of the commands.
  *

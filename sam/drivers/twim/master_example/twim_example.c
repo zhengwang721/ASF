@@ -73,11 +73,11 @@
  *        - No flow control
  *  -# Start the application. The following traces shall appear on the terminal:
  *     \code
- *     -- TWIM Master Example --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *
- *     \endcode
+	     -- TWIM Master Example --
+	     -- xxxxxx-xx
+	     -- Compiled: xxx xx xxxx xx:xx:xx --
+
+\endcode
  *
  */
 

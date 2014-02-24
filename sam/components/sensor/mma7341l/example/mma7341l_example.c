@@ -71,10 +71,10 @@
  *  -# In the terminal window, the
  *     following text should appear (values depend on the board and the chip used):
  *     \code
- *      -- MMA7341L Example xxx --
- *      -- xxxxxx-xx
- *      -- Compiled: xxx xx xxxx xx:xx:xx --
- *     \endcode
+	-- MMA7341L Example xxx --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+\endcode
  */
 
 #include "asf.h"

@@ -76,10 +76,10 @@
  * -# Start the application.
  * -# In the terminal window, the following text should appear:
  *    \code
- *     -- RTC Tamper Example xxx --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *    \endcode
+	-- RTC Tamper Example xxx --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+\endcode
  */
 
 #include "asf.h"

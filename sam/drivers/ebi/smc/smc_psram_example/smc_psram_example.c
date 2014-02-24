@@ -80,15 +80,15 @@
  * -# Start the application.
  * -# In the terminal window, the following text should appear:
  *    \code
- *     -- SMC PSRAM Example --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *
- *     -I- Configure PMC to enable the SMC clock.
- *     -I- Configure SMC timing and mode.
- *     -I- Test external PSRAM access.
- *     -I- Psram access successful.
- *    \endcode
+	     -- SMC PSRAM Example --
+	     -- xxxxxx-xx
+	     -- Compiled: xxx xx xxxx xx:xx:xx --
+
+	     -I- Configure PMC to enable the SMC clock.
+	     -I- Configure SMC timing and mode.
+	     -I- Test external PSRAM access.
+	     -I- Psram access successful.
+\endcode
  * 
  */
 

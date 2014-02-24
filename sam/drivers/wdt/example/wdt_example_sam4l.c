@@ -87,10 +87,10 @@
  * -# In the terminal window, the following text should appear (values depend
  *    on the board and chip used):
  *    \code
- *     -- Watchdog example --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *    \endcode
+	-- Watchdog example --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+\endcode
  * -# A LED keeps blinking and watchdog timer is cleared before
  *  watchdog timeout.
  * -# The example will enter a deadlock status if user presses the push button

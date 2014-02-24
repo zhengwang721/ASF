@@ -78,10 +78,10 @@
  *     following text should appear (values depend on the board and the chip
  * used):
  *     \code
- *      -- LIN Example xxx --
- *      -- xxxxxx-xx
- *      -- Compiled: xxx xx xxxx xx:xx:xx --
- *     \endcode
+	-- LIN Example xxx --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+\endcode
  *  -# The application will output converted value to hyperterminal and display
  *     a menu for users to set different modes.
  *

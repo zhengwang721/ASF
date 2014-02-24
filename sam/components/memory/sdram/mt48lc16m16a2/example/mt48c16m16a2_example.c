@@ -73,11 +73,11 @@
  * -# In the terminal window, the following text should appear
  *    (values depend on the board and the chip used):
  *    \code
- *     -- SDRAMC Example --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *     ...
- *    \endcode
+	-- SDRAMC Example --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+	...
+\endcode
  *
  */
 

@@ -77,16 +77,16 @@
  * -# In the terminal window, the following text should appear
  *    (values depend on the board and the chip used):
  *    \code
- *     -- DMAC Example --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *
- *     Test single buffer transfer......
- *     > Test OK
- *
- *     Test multiple buffer transfer......
- *     > Test OK.
- *    \endcode
+	     -- DMAC Example --
+	     -- xxxxxx-xx
+	     -- Compiled: xxx xx xxxx xx:xx:xx --
+
+	     Test single buffer transfer......
+	     > Test OK
+
+	     Test multiple buffer transfer......
+	     > Test OK.
+\endcode
  */
 
 #include "asf.h"

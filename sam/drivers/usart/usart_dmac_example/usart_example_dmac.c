@@ -76,10 +76,10 @@
  *   - No flow control
  * -# In the terminal window, the following text should appear:
  *    \code
- *     -- USART DMAC Example --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *    \endcode
+	-- USART DMAC Example --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+\endcode
  * -# Send a file in text format from the HyperTerminal connected with USART
  *    port to the device. On HyperTerminal, this is done by selecting
  *    "Transfer -> Send Text File"(this does not prevent you from sending

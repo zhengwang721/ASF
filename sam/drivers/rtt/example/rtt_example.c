@@ -72,15 +72,15 @@
  * -# Start the application.
  * -# In the terminal window, the following text should appear:
  *    \code
- *     -- RTT Example --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *     Time: 1
- *     Menu:
- *     r - Reset timer
- *     s - Set alarm
- *     Choice?
- *    \endcode
+	-- RTT Example --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+	Time: 1
+	Menu:
+	r - Reset timer
+	s - Set alarm
+	Choice?
+\endcode
  */
 
 #include "asf.h"

@@ -86,11 +86,11 @@
  * -# In the terminal window, the following text should appear
  *    (values depend on the board and chip used):
  *    \code
- *     -- CRCCU Example --
- *     -- SAMXX-EK
- *     -- Compiled: XXXXXXXX --
- *     ...
- *    \endcode
+	-- CRCCU Example --
+	-- SAMXX-EK
+	-- Compiled: XXXXXXXX --
+	...
+\endcode
  *
  */
 

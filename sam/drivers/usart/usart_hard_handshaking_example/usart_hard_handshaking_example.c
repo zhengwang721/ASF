@@ -92,11 +92,11 @@
  *        - Hardware flow control (RTS/CTS)
  *  -# Start the application. The following traces shall appear on the terminal:
  *     \code
- *     -- USART Hardware Handshaking Example --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *     Bps:    0; Tot:      0
- *     \endcode
+	-- USART Hardware Handshaking Example --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+	Bps:    0; Tot:      0
+\endcode
  *  -# Send a file in text format to the device. On HyperTerminal, this is done
  *     by selecting "Transfer -> Send Text File" (this does not prevent you from
  *     sending binary files). The transfer will start and the device will update

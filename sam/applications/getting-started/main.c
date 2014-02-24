@@ -74,10 +74,10 @@
  * -# The LED(s) should start blinking on the board. In the terminal window, the
  *    following text should appear (values depend on the board and chip used):
  *    \code
- *     -- Getting Started Example xxx --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *    \endcode
+	-- Getting Started Example xxx --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+\endcode
  * -# Pressing and release button 1 should make one LED stop & restart
  *    blinking.
  * -# If the button 2 available, pressing button 2 should make the other LED

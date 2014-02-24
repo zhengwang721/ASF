@@ -83,19 +83,19 @@
  *        - No flow control
  *  -# Start the application. The following traces shall appear on the terminal:
  *     \code
- *     -- USART Synchronous Mode Example --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *     -- Menu Choices for this example --
- *     -- [0-3]:Select clock freq of master --
- *     -- i: Display configuration info
- *     -- w: Write data block .--
- *     -- r: Read data block.--
- *     -- s: Switch between master and slave mode.--
- *     -- m: Display this menu again.--
- *     --USART in MASTER mode--
- *
- *     \endcode
+	     -- USART Synchronous Mode Example --
+	     -- xxxxxx-xx
+	     -- Compiled: xxx xx xxxx xx:xx:xx --
+	     -- Menu Choices for this example --
+	     -- [0-3]:Select clock freq of master --
+	     -- i: Display configuration info
+	     -- w: Write data block .--
+	     -- r: Read data block.--
+	     -- s: Switch between master and slave mode.--
+	     -- m: Display this menu again.--
+	     --USART in MASTER mode--
+
+\endcode
  *  -# The main menu will guide the user to configure the device and conduct
  *     operations.
  *

@@ -81,10 +81,10 @@
  *  -# In the terminal window, the
  *     following text should appear (values depend on the board and the chip used):
  *     \code
- *      -- PIO Alternate Function Example --
- *      -- xxxxxx-xx --
- *      -- Compiled: xxx xx xxxx xx:xx:xx --
- *     \endcode
+	-- PIO Alternate Function Example --
+	-- xxxxxx-xx --
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+\endcode
  *  -# Perform erase operation following the application prompt.
  *
  */

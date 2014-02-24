@@ -76,10 +76,10 @@
  * -# In the terminal window, the
  *    following text should appear (values depend on the board and the chip used):
  *    \code
- *     -- ADC Temperature Sensor Example xxx --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *    \endcode
+	-- ADC Temperature Sensor Example xxx --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+\endcode
  * -# The application will output current Celsius temperature on the terminal.
  *
  */

@@ -74,10 +74,10 @@
  * -# Start the application
  * -# In HyperTerminal, it will show something like
  *     \code
- *     -- SPI_Touchscreen Example xxx --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *     \endcode
+	-- SPI_Touchscreen Example xxx --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+\endcode
  * -# Touch the dots on the LCD to calibrate the touchscreen, the calibration
  *    results will output on the terminal and LCD.
  * -# Touch the LCD, the pen position will output on the terminal

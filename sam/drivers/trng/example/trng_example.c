@@ -71,11 +71,11 @@
  * -# Start the application.
  * -# In the terminal window, the following text should appear:
  *    \code
- *     -- TRNG Example --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *     Random Value: xxxx
- *    \endcode
+	-- TRNG Example --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+	Random Value: xxxx
+\endcode
  */
 
 #include "asf.h"

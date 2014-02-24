@@ -78,20 +78,20 @@
  * -# In the terminal window, the following text should appear (values depend
  *    on the board and chip used):
  *    \code
- *     -- ADCIFE Example xxx --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *     =========================================================
- *     Menu: press a key to change the configuration.
- *     ---------------------------------------------------------
- *     [X] 0: Set ADCIFE trigger mode: Software.
- *     [ ] 1: Set ADCIFE trigger mode: Internal Timer.
- *     [ ] 2: Set ADCIFE trigger mode: Continuous.
- *     [D] T: Enable/Disable to transfer with PDCA in multichannel mode.
- *     [D] G: Enable/Disable to set gain=2 for channel.
- *         Q: Quit configuration and start ADCIFE.
- *     =========================================================
- *    \endcode
+	-- ADCIFE Example xxx --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+	=========================================================
+	Menu: press a key to change the configuration.
+	---------------------------------------------------------
+	[X] 0: Set ADCIFE trigger mode: Software.
+	[ ] 1: Set ADCIFE trigger mode: Internal Timer.
+	[ ] 2: Set ADCIFE trigger mode: Continuous.
+	[D] T: Enable/Disable to transfer with PDCA in multichannel mode.
+	[D] G: Enable/Disable to set gain=2 for channel.
+	    Q: Quit configuration and start ADCIFE.
+	=========================================================
+\endcode
  * -# The application will output converted value to HyperTerminal and display
  *    a menu for users to set different modes..
  */
