@@ -62,11 +62,11 @@
  *
  * Usage:
  * \code
- * ISR(FOO_vect)
- * {
- *     ...
- * }
- * \endcode
+	ISR(FOO_vect)
+	{
+	    ...
+	}
+\endcode
  *
  * \param vect Interrupt vector name as found in the device header files.
  */

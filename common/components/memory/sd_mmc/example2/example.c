@@ -64,10 +64,10 @@
  * -# Start the application.
  * -# In the terminal window, the following text should appear:
  *    \code
- *     -- SD/MMC/SDIO Card Example on FatFs --
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *     Please plug an SD, MMC or SDIO card in slot.
- *    \endcode
+	-- SD/MMC/SDIO Card Example on FatFs --
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+	Please plug an SD, MMC or SDIO card in slot.
+\endcode
  */
 
 #include <asf.h>

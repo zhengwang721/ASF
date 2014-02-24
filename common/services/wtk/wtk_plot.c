@@ -504,8 +504,8 @@ static bool wtk_plot_handler(struct win_window *win,
  * memory, call \ref win_destroy() on the plot's child reference, given
  * by \ref wtk_plot_as_child(), similar to:
  * \code
- *     win_destroy(wtk_plot_as_child(my_plot_ptr));
- * \endcode
+	win_destroy(wtk_plot_as_child(my_plot_ptr));
+\endcode
  *
  * The plotted graph will shift from right to left as new data values are added.
  * Data values will be overwritten in the ring buffer as they shift out of

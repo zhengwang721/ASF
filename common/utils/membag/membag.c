@@ -81,14 +81,14 @@ struct membag {
  * conf_membag.h header file. Example:
  *
  * \code
- * #define CONF_MEMBAG_ARRAY \
- *     MEMBAG(32, 4),        \
- *     MEMBAG(16, 2),
- *
- * #define CONF_MEMBAG_POOL_SIZE \
- *     MEMBAG_SIZE(32, 4) +      \
- *     MEMBAG_SIZE(16, 2)
- * \endcode
+	 #define CONF_MEMBAG_ARRAY \
+	     MEMBAG(32, 4),        \
+	     MEMBAG(16, 2),
+
+	 #define CONF_MEMBAG_POOL_SIZE \
+	     MEMBAG_SIZE(32, 4) +      \
+	     MEMBAG_SIZE(16, 2)
+\endcode
  *
  */
 static struct membag membag_list[] = {

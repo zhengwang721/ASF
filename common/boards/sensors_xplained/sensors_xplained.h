@@ -201,19 +201,19 @@ extern "C" {
  * functions:
  *
  * \code
- *
- *      10-pin Header           Function
- *  -------------------------------------------
- *      Pin 1                   SDA
- *      Pin 2                   SCL
- *      Pin 3                   RXD
- *      Pin 4                   TXD
- *      Pin 5                   SS
- *      Pin 6                   MOSI
- *      Pin 7                   MISO
- *      Pin 8                   SCK
- *
- * \endcode
+
+	      10-pin Header           Function
+	  -------------------------------------------
+	      Pin 1                   SDA
+	      Pin 2                   SCL
+	      Pin 3                   RXD
+	      Pin 4                   TXD
+	      Pin 5                   SS
+	      Pin 6                   MOSI
+	      Pin 7                   MISO
+	      Pin 8                   SCK
+
+\endcode
  * @{
  */
 #define SENSOR_BOARD_PIN1           XPLD_HEADER_J1_PIN1

@@ -359,11 +359,11 @@ static inline bool reset_cause_is_watchdog(void)
  * \subsection reset_cause_basic_use_case_setup_code Example code
  * Add to application C-file:
  * \code
- * if (reset_cause_is_watchdog()) {
- *	// Do action due to last reset being a watchdog reset
- *	reset_cause_clear_causes(RESET_CAUSE_WDT);
- * }
- * \endcode
+	 if (reset_cause_is_watchdog()) {
+		// Do action due to last reset being a watchdog reset
+		reset_cause_clear_causes(RESET_CAUSE_WDT);
+	 }
+\endcode
  *
  * \subsection reset_cause_basic_use_case_setup_flow Workflow
  * -# Check for watchdog reset flag:
