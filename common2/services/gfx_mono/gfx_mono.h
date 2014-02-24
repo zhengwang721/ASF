@@ -291,10 +291,10 @@ enum gfx_mono_bitmap_type {
  * \subsection asfdoc_common2_gfx_mono_basic_usage_code Example code
  * Add to, e.g., the main function in the application C-file:
  * \code
- * system_init();
- * gfx_mono_init();
- * gfx_mono_draw_line(10, 10, 20, 20, GFX_PIXEL_SET);
- * \endcode
+	system_init();
+	gfx_mono_init();
+	gfx_mono_draw_line(10, 10, 20, 20, GFX_PIXEL_SET);
+\endcode
  *
  * \subsection gfx_mono_basic_usage_workflow Workflow
  * -# Initialize system:
