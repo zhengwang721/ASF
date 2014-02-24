@@ -214,7 +214,7 @@ bool uhd_is_suspend(void);
 /**
  * \brief Enables the IDLE state on the USB line.
  * The IDLE state is enable when SOF are present on USB line.
- * A “Downstream Resume?signal can be sent.
+ * A Downstream Resume signal can be sent.
  */
 void uhd_resume(void);
 
