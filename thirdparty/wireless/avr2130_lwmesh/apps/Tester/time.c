@@ -43,7 +43,7 @@
 /*- Includes ---------------------------------------------------------------*/
 #include "sysTypes.h"
 #include "time.h"
-# include "tc_megarf.h"
+//# include "tc_megarf.h"
 
 /*- Definitions ------------------------------------------------------------*/
 #define TIMER_PRESCALER     8
@@ -62,7 +62,9 @@ void app_compa_cb(void);
 *****************************************************************************/
 void appTimeInit(void)
 {
+
   appTime = 0;
+  /*
   uint16_t comp_value;
   comp_value = ((F_CPU / 1000ul) / TIMER_PRESCALER) * APP_TIMER_INTERVAL;
   
@@ -71,7 +73,7 @@ void appTimeInit(void)
   tc_set_compa_interrupt_callback(APP_TIMER,app_compa_cb);
   tc_enable_compa_int(APP_TIMER);
   tc_set_mode(APP_TIMER, CTC_Mode1);
-  tc_write_clock_source(APP_TIMER, TC_CLKSEL_DIV8_gc);
+  tc_write_clock_source(APP_TIMER, TC_CLKSEL_DIV8_gc);*/
 
 /*
   OCR1A = ((F_CPU / 1000ul) / TIMER_PRESCALER) * APP_TIMER_INTERVAL;

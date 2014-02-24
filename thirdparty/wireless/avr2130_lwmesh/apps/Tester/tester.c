@@ -249,7 +249,7 @@ int main(void)
 {
   SYS_Init();
   sio2host_init();
-
+  LED_On(LED0);
   while (1)
   {
     SYS_TaskHandler();
