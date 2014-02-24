@@ -96,7 +96,7 @@
 //#define NWK_ENABLE_SECURE_COMMANDS
 
 #ifndef SYS_SECURITY_MODE
-#define SYS_SECURITY_MODE                        0
+#define SYS_SECURITY_MODE                        1
 #endif
 
 /*- Sanity checks ----------------------------------------------------------*/
