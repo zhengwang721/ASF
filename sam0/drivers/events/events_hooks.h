@@ -46,6 +46,10 @@
 #ifndef _EVENTS_HOOKS_H_INCLUDED_
 #define _EVENTS_HOOKS_H_INCLUDED_
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
  * \addtogroup asfdoc_sam0_events_group
  * @{
@@ -167,5 +171,9 @@ bool events_is_interrupt_set(struct events_resource *resource, enum events_inter
  *
  */
 enum status_code events_ack_interrupt(struct events_resource *resource, enum events_interrupt_source source);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
