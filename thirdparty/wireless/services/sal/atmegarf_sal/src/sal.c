@@ -296,7 +296,13 @@ bool sal_aes_setup(uint8_t *key,
 	return (true);
 }
 
+/**
+ * @brief Cleans up the SAL/AES after STB has been finished
+ */
+void _sal_aes_clean_up(void)
+{
 
+}
 /**
  * @brief En/decrypt one AES block.
  *

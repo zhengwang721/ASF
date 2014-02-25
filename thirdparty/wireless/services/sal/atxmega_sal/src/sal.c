@@ -218,6 +218,14 @@ void sal_aes_restart(void)
 	/* Nothing to be done for ATxmega */
 }
 
+
+/**
+ * @brief Cleans up the SAL/AES after STB has been finished
+ */
+void _sal_aes_clean_up(void)
+{
+
+}
 /**
  * @brief En/decrypt one AES block.
  *

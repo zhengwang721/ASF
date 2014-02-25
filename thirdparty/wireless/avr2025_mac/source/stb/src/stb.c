@@ -56,6 +56,7 @@
 #include "tal.h"
 #include "ieee_const.h"
 #include "stb.h"
+#include "sal.h"
 #include "stb_internal.h"
 
 /* === Macros ============================================================== */

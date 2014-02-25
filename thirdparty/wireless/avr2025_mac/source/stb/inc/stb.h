@@ -215,25 +215,7 @@ extern "C" {
  * @ingroup group_StbApi
  */
 void stb_restart(void);
-/**
- * @brief Cleans up the SAL/AES after STB has been completed
- *
- * This function puts the radio to SLEEP if it has been in SLEEP
- * before sal_aes_restart().
- *
- * @ingroup group_SalApi
- */
-#if (SAL_TYPE == AT86RF2xx) || (SAL_TYPE == ATMEGARF_SAL) || \
-	(defined __DOXYGEN__)
-void _sal_aes_clean_up(void);
 
-/** Route function macro to the corresponding function. */
-#define sal_aes_clean_up()      _sal_aes_clean_up()
-#else
-/** Route function macro to the corresponding function; here: no routing
- *required. */
-#define stb_aes_clean_up()
-#endif
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
