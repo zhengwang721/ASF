@@ -96,7 +96,7 @@ void system_board_init(void);
 #define SW0_EIC_PIN               PIN_PA28A_EIC_EXTINT8
 #define SW0_EIC_MUX               MUX_PA28A_EIC_EXTINT8
 #define SW0_EIC_PINMUX            PINMUX_PA28A_EIC_EXTINT8
-#define SW0_EIC_LINE              28
+#define SW0_EIC_LINE              8
 /** @} */
 
 /**
@@ -114,9 +114,9 @@ void system_board_init(void);
 #define LED_0_PWM_MODULE          TCC0
 #define LED_0_PWM_CHANNEL         0
 #define LED_0_PWM_OUTPUT          0
-#define LED_0_PWM_PIN             PIN_PB30E_TCC0_WO0
-#define LED_0_PWM_MUX             MUX_PB30E_TCC0_WO0
-#define LED_0_PWM_PINMUX          PINMUX_PB30E_TCC0_WO0
+#define LED_0_PWM_PIN             PIN_PA19F_TCC0_WO3
+#define LED_0_PWM_MUX             MUX_PA19F_TCC0_WO3
+#define LED_0_PWM_PINMUX          PINMUX_PA19F_TCC0_WO3
 /** @} */
 
 /** Number of on-board LEDs */

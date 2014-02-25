@@ -252,7 +252,7 @@
 		</module>
 		<module type="build-specific" caption="Linker script for SAMR21E17A" id="sam0.utils.linker_scripts#atsamr21e17a">
 			<info type="description" value="summary">
-			Linker script for the SAMD21E16 device.
+			Linker script for the SAMR21E17 device.
 			</info>
 			<build type="linker-config" subtype="script" value="samr21/gcc/samr21e17a_flash.ld" toolchain="armgcc"/>
 			<build type="linker-config" subtype="aux-script" value="samr21/gcc/samr21e17a_sram.ld" toolchain="armgcc"/>
