@@ -320,15 +320,15 @@ static retval_t trx_init(void)
 		poll_counter++;
 		/* Check if AT86RF212 is connected; omit manufacturer id check
 		 **/
-	} while (pal_trx_reg_read(RG_PART_NUM) != PART_NUM_AT86RF212);
+	} while (trx_reg_read(RG_PART_NUM) != PART_NUM_AT86RF212);
 #endif  /* !defined FPGA_EMULATION */
 
 	/* Ensure right CLKM value for external timer clock source, i.e. 1 MHz
 	 **/
-	pal_trx_bit_write(SR_CLKM_CTRL, CLKM_1MHZ);
+	trx_bit_write(SR_CLKM_CTRL, CLKM_1MHZ);
 
 	/* Set trx to off mode */
-	pal_trx_reg_write(RG_TRX_STATE, CMD_FORCE_TRX_OFF);
+	trx_reg_write(RG_TRX_STATE, CMD_FORCE_TRX_OFF);
 
 	/* Verify that the trx has reached TRX_OFF. */
 	poll_counter = 0;
@@ -336,7 +336,7 @@ static retval_t trx_init(void)
 		/* Wait a short time interval. */
 		pal_timer_delay(TRX_POLL_WAIT_TIME_US);
 
-		trx_status = (tal_trx_status_t)pal_trx_bit_read(SR_TRX_STATUS);
+		trx_status = (tal_trx_status_t)trx_bit_read(SR_TRX_STATUS);
 
 		/* Wait not more than max. value of TR2. */
 		if (poll_counter == SLEEP_TO_TRX_OFF_ATTEMPTS) {
@@ -420,9 +420,9 @@ static retval_t internal_tal_reset(bool set_default_pib)
 static void trx_config(void)
 {
 	/* Set pin driver strength */
-	pal_trx_bit_write(SR_PAD_IO_CLKM, PAD_CLKM_2_MA);
-	pal_trx_bit_write(SR_CLKM_SHA_SEL, CLKM_SHA_DISABLE);
-	pal_trx_bit_write(SR_CLKM_CTRL, CLKM_1MHZ);
+	trx_bit_write(SR_PAD_IO_CLKM, PAD_CLKM_2_MA);
+	trx_bit_write(SR_CLKM_SHA_SEL, CLKM_SHA_DISABLE);
+	trx_bit_write(SR_CLKM_CTRL, CLKM_1MHZ);
 
 #ifndef SW_CONTROLLED_CSMA
 
@@ -436,8 +436,8 @@ static void trx_config(void)
 	 * Init the SEED value of the CSMA backoff algorithm.
 	 */
 	uint16_t rand_value = (uint16_t)rand();
-	pal_trx_reg_write(RG_CSMA_SEED_0, (uint8_t)rand_value);
-	pal_trx_bit_write(SR_CSMA_SEED_1, (uint8_t)(rand_value >> 8));
+	trx_reg_write(RG_CSMA_SEED_0, (uint8_t)rand_value);
+	trx_bit_write(SR_CSMA_SEED_1, (uint8_t)(rand_value >> 8));
 
 	/*
 	 * To make sure that the CSMA seed is properly set within the
@@ -448,25 +448,25 @@ static void trx_config(void)
 	tal_trx_wakeup();
 #endif
 
-	pal_trx_bit_write(SR_AACK_SET_PD, SET_PD); /* ACKs for data requests,
+	trx_bit_write(SR_AACK_SET_PD, SET_PD); /* ACKs for data requests,
 	                                            *indicate pending data */
-	pal_trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_ENABLE); /* Enable
+	trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_ENABLE); /* Enable
 	                                                          *buffer
 	                                                          *protection
 	                                                          *mode */
-	pal_trx_bit_write(SR_IRQ_MASK_MODE, IRQ_MASK_MODE_ON); /* Enable poll
+	trx_bit_write(SR_IRQ_MASK_MODE, IRQ_MASK_MODE_ON); /* Enable poll
 	                                                        *mode */
-	pal_trx_reg_write(RG_IRQ_MASK, TRX_IRQ_DEFAULT); /* The TRX_END
+	trx_reg_write(RG_IRQ_MASK, TRX_IRQ_DEFAULT); /* The TRX_END
 	                                                  *interrupt of the
 	                                                  *transceiver is
 	                                                  *enabled. */
 
 #if (ANTENNA_DIVERSITY == 1)
-	pal_trx_bit_write(SR_ANT_EXT_SW_EN, ANT_EXT_SW_ENABLE); /* Enable
+	trx_bit_write(SR_ANT_EXT_SW_EN, ANT_EXT_SW_ENABLE); /* Enable
 	                                                         *antenna
 	                                                         *diversity. */
 #if (ANTENNA_DEFAULT != ANT_CTRL_1)
-	pal_trx_bit_write(SR_ANT_CTRL, ANTENNA_DEFAULT);
+	trx_bit_write(SR_ANT_CTRL, ANTENNA_DEFAULT);
 #endif  /* ANTENNA_DEFAULT */
 #endif
 #if ((defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)) && \
@@ -478,7 +478,7 @@ static void trx_config(void)
 	 * or if timestamping is explicitly enabled.
 	 */
 	/* Enable timestamping output signal - DIG2. */
-	pal_trx_bit_write(SR_IRQ_2_EXT_EN, RX_TIMESTAMPING_ENABLE);
+	trx_bit_write(SR_IRQ_2_EXT_EN, RX_TIMESTAMPING_ENABLE);
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
 
 #ifdef CCA_ED_THRESHOLD
@@ -486,7 +486,7 @@ static void trx_config(void)
 	/*
 	 * Set CCA ED Threshold to other value than standard register due to
 	 * board specific loss (see pal_config.h). */
-	pal_trx_bit_write(SR_CCA_ED_THRES, CCA_ED_THRESHOLD);
+	trx_bit_write(SR_CCA_ED_THRES, CCA_ED_THRESHOLD);
 #endif
 }
 
@@ -514,7 +514,7 @@ static retval_t trx_reset(void)
 		/* Wait a short time interval. */
 		pal_timer_delay(TRX_POLL_WAIT_TIME_US);
 
-		trx_status = (tal_trx_status_t)pal_trx_bit_read(SR_TRX_STATUS);
+		trx_status = (tal_trx_status_t)trx_bit_read(SR_TRX_STATUS);
 
 		/* Wait not more than max. value of TR2. */
 		if (poll_counter == SLEEP_TO_TRX_OFF_ATTEMPTS) {
@@ -649,7 +649,7 @@ void tal_generate_rand_seed(void)
 	} while (trx_state != RX_ON);
 
 	/* Ensure that register bit RX_PDT_DIS is set to 0. */
-	pal_trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE);
+	trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE);
 
 	/*
 	 * We need to disable TRX IRQs while generating random values in RX_ON,
@@ -663,7 +663,7 @@ void tal_generate_rand_seed(void)
 	 */
 	for (uint8_t i = 0; i < 8; i++) {
 		/* Now we can safely read the 2-bit random number. */
-		cur_random_val = pal_trx_bit_read(SR_RND_VALUE);
+		cur_random_val = trx_bit_read(SR_RND_VALUE);
 		seed = seed << 2;
 		seed |= cur_random_val;
 		PAL_WAIT_1_US(); /* wait that the random value gets updated */
@@ -675,7 +675,7 @@ void tal_generate_rand_seed(void)
 	 * Now we need to clear potential pending TRX IRQs and
 	 * enable the TRX IRQs again.
 	 */
-	pal_trx_reg_read(RG_IRQ_STATUS);
+	trx_reg_read(RG_IRQ_STATUS);
 	pal_trx_irq_flag_clr();
 	LEAVE_TRX_REGION();
 

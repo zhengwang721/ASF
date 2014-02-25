@@ -643,7 +643,7 @@ static uint8_t perform_cca_twice(void)
     }
 
     /* no interest in receiving frames while doing CCA */
-    pal_trx_bit_write(SR_RX_PDT_DIS, RX_DISABLE); // disable frame reception indication
+    trx_bit_write(SR_RX_PDT_DIS, RX_DISABLE); // disable frame reception indication
 
     /* do CCA twice */
     do
@@ -663,7 +663,7 @@ static uint8_t perform_cca_twice(void)
         PIN_CCA_START();
 
         /* Start CCA */
-        pal_trx_bit_write(SR_CCA_REQUEST, CCA_START);
+        trx_bit_write(SR_CCA_REQUEST, CCA_START);
 
         /* wait until CCA is done and get status */
         pal_timer_delay(TAL_CONVERT_SYMBOLS_TO_US(CCA_DURATION_SYM));
@@ -671,7 +671,7 @@ static uint8_t perform_cca_twice(void)
         do
         {
             /* poll until CCA is really done; */
-            cca_done = pal_trx_bit_read(SR_CCA_DONE);
+            cca_done = trx_bit_read(SR_CCA_DONE);
         }
         while (cca_done != CCA_COMPLETED);
 
@@ -682,7 +682,7 @@ static uint8_t perform_cca_twice(void)
         PIN_CCA_END();
 
         /* check if channel was idle or busy */
-        if (pal_trx_bit_read(SR_CCA_STATUS) == CCA_CH_IDLE)
+        if (trx_bit_read(SR_CCA_STATUS) == CCA_CH_IDLE)
         {
             /* do next CCA at next backoff boundary */
             cca_starttime_us = pal_add_time_us(cca_starttime_us,
@@ -711,7 +711,7 @@ static uint8_t perform_cca_twice(void)
      * interrupt that are not handled cause an assert in the ISR.
      */
 #if (_DEBUG_ > 0)
-    pal_trx_reg_write(RG_IRQ_STATUS, 0xFF);
+    trx_reg_write(RG_IRQ_STATUS, 0xFF);
 #endif
 
     /*
@@ -719,7 +719,7 @@ static uint8_t perform_cca_twice(void)
      * during CCA, reject any information that indicates a previous frame
      * reception.
      */
-    pal_trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE); // enable frame reception indication
+    trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE); // enable frame reception indication
 
     CONF_REG_WRITE();
 

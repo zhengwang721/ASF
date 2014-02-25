@@ -393,7 +393,7 @@ void ed_scan_done(void);
  * \param data Data to be written to trx register
  * \ingroup group_pal_trx
  */
-#define pal_trx_reg_write(addr, data) \
+#define trx_reg_write(addr, data) \
 	(*(volatile uint8_t *)(addr)) = (data)
 
 /**
@@ -406,7 +406,7 @@ void ed_scan_done(void);
  * \ingroup group_pal_trx
  * \return value of the register read
  */
-#define pal_trx_reg_read(addr) \
+#define trx_reg_read(addr) \
 	(*(volatile uint8_t *)(addr))
 
 /**
@@ -419,7 +419,7 @@ void ed_scan_done(void);
  * buffer.
  * \ingroup group_pal_trx
  */
-#define pal_trx_frame_read(data, length) \
+#define trx_frame_read(data, length) \
 	memcpy((data), (void *)&TRXFBST, (length))
 
 /**
@@ -431,11 +431,11 @@ void ed_scan_done(void);
  * \param[in] length Number of bytes to be written into frame buffer
  * \ingroup group_pal_trx
  */
-#define pal_trx_frame_write(data, length) \
+#define trx_frame_write(data, length) \
 	memcpy((void *)&TRXFBST, (data), (length))
 
 #ifndef __DOXYGEN__
-#define _pal_trx_bit_read(addr, mask, pos) \
+#define _trx_bit_read(addr, mask, pos) \
 	(((*(volatile uint8_t *)(addr)) & (mask)) >> (pos))
 #endif
 
@@ -447,11 +447,11 @@ void ed_scan_done(void);
  * \return  Value of the read subregister
  * \ingroup group_pal_trx
  */
-#define pal_trx_bit_read(arg) \
-	_pal_trx_bit_read(arg)
+#define trx_bit_read(arg) \
+	_trx_bit_read(arg)
 
 #ifndef __DOXYGEN__
-#define _pal_trx_bit_write(addr, mask, pos, val) do { \
+#define _trx_bit_write(addr, mask, pos, val) do { \
 		(*(volatile uint8_t *)(addr)) \
 			= ((*(volatile uint8_t *)(addr)) & ~(mask)) | \
 				(((val) << (pos)) & (mask)); \
@@ -466,8 +466,8 @@ void ed_scan_done(void);
  * \param[out]  val  Data, which is muxed into the register
  * \ingroup group_pal_trx
  */
-#define pal_trx_bit_write(arg1, val) \
-	_pal_trx_bit_write(arg1, val)
+#define trx_bit_write(arg1, val) \
+	_trx_bit_write(arg1, val)
 
 /* ! @} */
 

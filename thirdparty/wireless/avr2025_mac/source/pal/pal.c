@@ -59,7 +59,7 @@ bool pal_calibrate_rc_osc(void)
 retval_t pal_init(void)
 {
 #if (PAL_USE_SPI_TRX == 1)
-	pal_spi_init();
+	trx_spi_init();
 #endif /* #if (PAL_USE_SPI_TRX = 1) */
 	return MAC_SUCCESS;
 }

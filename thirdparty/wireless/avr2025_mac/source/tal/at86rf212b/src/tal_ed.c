@@ -136,19 +136,19 @@ retval_t tal_ed_start(uint8_t scan_duration)
 	 */
 	pal_trx_irq_dis(); /* Disable transceiver main interrupt. */
 	set_trx_state(CMD_FORCE_PLL_ON);
-	pal_trx_reg_read(RG_IRQ_STATUS);    /* Clear existing interrupts */
-	pal_trx_bit_write(SR_RX_PDT_DIS, RX_DISABLE);
+	trx_reg_read(RG_IRQ_STATUS);    /* Clear existing interrupts */
+	trx_bit_write(SR_RX_PDT_DIS, RX_DISABLE);
 	pal_trx_irq_init((FUNC_PTR)trx_ed_irq_handler_cb);
-	pal_trx_bit_write(SR_IRQ_MASK, TRX_IRQ_4_CCA_ED_DONE); /* Enable
+	trx_bit_write(SR_IRQ_MASK, TRX_IRQ_4_CCA_ED_DONE); /* Enable
 	                                                        *interrupt */
 	pal_trx_irq_en(); /* Enable main transceiver interrupt. */
 
 	/* Make sure that receiver is switched on. */
 	if (set_trx_state(CMD_RX_ON) != RX_ON) {
 		/* Restore previous configuration */
-		pal_trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE);
+		trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE);
 		pal_trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
-		pal_trx_reg_write(RG_IRQ_MASK, TRX_IRQ_DEFAULT); /* enable
+		trx_reg_write(RG_IRQ_MASK, TRX_IRQ_DEFAULT); /* enable
 		                                                  *TRX_END
 		                                                  *interrupt */
 		pal_trx_irq_en(); /* Enable main transceiver interrupt. */
@@ -157,7 +157,7 @@ retval_t tal_ed_start(uint8_t scan_duration)
 	}
 
 	/* write dummy value to start measurement */
-	pal_trx_reg_write(RG_PHY_ED_LEVEL, 0xFF);
+	trx_reg_write(RG_PHY_ED_LEVEL, 0xFF);
 
 	/* Perform ED in TAL_ED_RUNNING state. */
 	tal_state = TAL_ED_RUNNING;
@@ -180,11 +180,11 @@ static void trx_ed_irq_handler_cb(void)
 	uint8_t ed_value;
 	trx_irq_reason_t trx_irq_cause;
 
-	trx_irq_cause = (trx_irq_reason_t)pal_trx_reg_read(RG_IRQ_STATUS);
+	trx_irq_cause = (trx_irq_reason_t)trx_reg_read(RG_IRQ_STATUS);
 
 	if (trx_irq_cause & TRX_IRQ_4_CCA_ED_DONE) {
 		/* Read the ED Value. */
-		ed_value = pal_trx_reg_read(RG_PHY_ED_LEVEL);
+		ed_value = trx_reg_read(RG_PHY_ED_LEVEL);
 
 		/*
 		 * Update the peak ED value received, if greater than the
@@ -198,7 +198,7 @@ static void trx_ed_irq_handler_cb(void)
 		sampler_counter--;
 		if (sampler_counter > 0) {
 			/* write dummy value to start measurement */
-			pal_trx_reg_write(RG_PHY_ED_LEVEL, 0xFF);
+			trx_reg_write(RG_PHY_ED_LEVEL, 0xFF);
 		} else {
 			tal_state = TAL_ED_DONE;
 		}
@@ -222,9 +222,9 @@ static void trx_ed_irq_handler_cb(void)
  */
 void ed_scan_done(void)
 {
-	pal_trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE);
+	trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE);
 	pal_trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
-	pal_trx_reg_write(RG_IRQ_MASK, TRX_IRQ_DEFAULT); /* enable TRX_END
+	trx_reg_write(RG_IRQ_MASK, TRX_IRQ_DEFAULT); /* enable TRX_END
 	                                                  *interrupt */
 	pal_trx_irq_en(); /* Enable transceiver main interrupt. */
 

@@ -69,7 +69,7 @@
 
 
 #if (PAL_USE_SPI_TRX == 1)
-#include "pal_ext_trx.h"
+#include "trx_access.h"
 #else
 #include "sysclk.h"
 #endif //#if (PAL_USE_SPI_TRX = 1)

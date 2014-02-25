@@ -127,7 +127,7 @@ void handle_received_frame_irq(void)
 		 * frame resets the buffer protection mode.
 		 */
 		uint8_t dummy;
-		pal_trx_frame_read(&dummy, 1);
+		trx_frame_read(&dummy, 1);
 		return;
 	}
 
@@ -136,7 +136,7 @@ void handle_received_frame_irq(void)
 #ifdef PROMISCUOUS_MODE
 	if (tal_pib.PromiscuousMode) {
 		/* Check for valid FCS */
-		if (pal_trx_bit_read(SR_RX_CRC_VALID) == CRC16_NOT_VALID) {
+		if (trx_bit_read(SR_RX_CRC_VALID) == CRC16_NOT_VALID) {
 			return;
 		}
 	}
@@ -144,16 +144,16 @@ void handle_received_frame_irq(void)
 #endif
 
 	/* Get ED value; needed to normalize LQI. */
-	ed_value = pal_trx_reg_read(RG_PHY_ED_LEVEL);
+	ed_value = trx_reg_read(RG_PHY_ED_LEVEL);
 
 #if (defined ENABLE_TRX_SRAM) || defined(ENABLE_TRX_SRAM_READ)
 	/* Use SRAM read to keep rx safe mode armed. */
-	pal_trx_sram_read(0x00, &phy_frame_len, LENGTH_FIELD_LEN); /* 0x00: SRAM
+	trx_sram_read(0x00, &phy_frame_len, LENGTH_FIELD_LEN); /* 0x00: SRAM
 	                                                            * offset
 	                                                            * address */
 #else
 	/* Get frame length from transceiver. */
-	pal_trx_frame_read(&phy_frame_len, LENGTH_FIELD_LEN);
+	trx_frame_read(&phy_frame_len, LENGTH_FIELD_LEN);
 #endif
 
 	/* Check for valid frame length. */
@@ -180,7 +180,7 @@ void handle_received_frame_irq(void)
 	 *field
 	 * in the first octet.
 	 */
-	pal_trx_frame_read(frame_ptr, LENGTH_FIELD_LEN + phy_frame_len +
+	trx_frame_read(frame_ptr, LENGTH_FIELD_LEN + phy_frame_len +
 			LQI_LEN);
 	receive_frame->mpdu = frame_ptr;
 	/* Add ED value at the end of the frame buffer. */
@@ -221,7 +221,7 @@ void handle_received_frame_irq(void)
 		 * Keep the following as a reminder, if receiver is used with
 		 *RX_ON instead.
 		 */
-		/* pal_trx_reg_write(RG_TRX_STATE, CMD_RX_AACK_ON); */
+		/* trx_reg_write(RG_TRX_STATE, CMD_RX_AACK_ON); */
 	}
 }
 

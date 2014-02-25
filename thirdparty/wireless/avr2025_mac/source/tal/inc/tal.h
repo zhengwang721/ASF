@@ -520,7 +520,7 @@ __PACK__RST_DATA__
  * is in one of the PLL states. See also datasheet, section "Register access".
  */
 #define CONF_REG_WRITE()   do {	\
-		pal_trx_reg_write(RG_PART_NUM, PART_NUM); \
+		trx_reg_write(RG_PART_NUM, PART_NUM); \
 } \
 	while (0)
 #endif /* TAL_TYPE == ATMEGA128RFA1 */

@@ -269,25 +269,25 @@ void send_frame(csma_mode_t csma_mode, bool tx_retries)
 
 	/* Configure tx according to tx_retries */
 	if (tx_retries) {
-		pal_trx_bit_write(SR_MAX_FRAME_RETRIES,
+		trx_bit_write(SR_MAX_FRAME_RETRIES,
 				tal_pib.MaxFrameRetries);
 	} else {
-		pal_trx_bit_write(SR_MAX_FRAME_RETRIES, 0);
+		trx_bit_write(SR_MAX_FRAME_RETRIES, 0);
 	}
 
 	/* Configure tx according to csma usage */
 	if ((csma_mode == NO_CSMA_NO_IFS) || (csma_mode == NO_CSMA_WITH_IFS)) {
 		if (tx_retries) {
-			pal_trx_bit_write(SR_MAX_CSMA_RETRIES,
+			trx_bit_write(SR_MAX_CSMA_RETRIES,
 					tal_pib.MaxCSMABackoffs);
-			pal_trx_reg_write(RG_CSMA_BE, 0x00);
+			trx_reg_write(RG_CSMA_BE, 0x00);
 		} else {
-			pal_trx_bit_write(SR_MAX_CSMA_RETRIES, 7);
+			trx_bit_write(SR_MAX_CSMA_RETRIES, 7);
 		}
 	} else {
-		pal_trx_reg_write(RG_CSMA_BE,
+		trx_reg_write(RG_CSMA_BE,
 				((tal_pib.MaxBE << 4) | tal_pib.MinBE));
-		pal_trx_bit_write(SR_MAX_CSMA_RETRIES, tal_pib.MaxCSMABackoffs);
+		trx_bit_write(SR_MAX_CSMA_RETRIES, tal_pib.MaxCSMABackoffs);
 	}
 
 	do {
@@ -333,13 +333,13 @@ void send_frame(csma_mode_t csma_mode, bool tx_retries)
 	 * be sent to the transceiver and this contains the frame
 	 * length.
 	 * The actual length of the frame to be downloaded
-	 * (parameter two of pal_trx_frame_write)
+	 * (parameter two of trx_frame_write)
 	 * is
 	 * 1 octet frame length octet
 	 * + n octets frame (i.e. value of frame_tx[0])
 	 * - 2 octets FCS
 	 */
-	pal_trx_frame_write(tal_frame_to_tx, tal_frame_to_tx[0] - 1);
+	trx_frame_write(tal_frame_to_tx, tal_frame_to_tx[0] - 1);
 
 	tal_state = TAL_TX_AUTO;
 
@@ -377,7 +377,7 @@ void handle_tx_end_irq(void)
 #endif /* ((MAC_START_REQUEST_CONFIRM == 1) && (defined BEACON_SUPPORT)) */
 	{
 		/* Read trac status before enabling RX_AACK_ON. */
-		trx_trac_status = (trx_trac_status_t)pal_trx_bit_read(
+		trx_trac_status = (trx_trac_status_t)trx_bit_read(
 				SR_TRAC_STATUS);
 
 #ifdef BEACON_SUPPORT
@@ -485,13 +485,13 @@ void tal_tx_beacon(frame_info_t *tx_frame)
 	 * be sent to the transceiver and this contains the frame
 	 * length.
 	 * The actual length of the frame to be downloaded
-	 * (parameter two of pal_trx_frame_write)
+	 * (parameter two of trx_frame_write)
 	 * is
 	 * 1 octet frame length octet
 	 * + n octets frame (i.e. value of frame_tx[0])
 	 * - 2 octets FCS
 	 */
-	pal_trx_frame_write(tal_beacon_to_tx, tal_beacon_to_tx[0] - 1);
+	trx_frame_write(tal_beacon_to_tx, tal_beacon_to_tx[0] - 1);
 
 	tal_beacon_transmission = true;
 
