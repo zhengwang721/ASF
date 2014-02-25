@@ -3,7 +3,7 @@
  *
  * \brief Chip Identifier (CHIPID) example for SAM.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -219,7 +219,7 @@ const chipidtype_t chipid_archsize[CHIPID_ARCH_SIZE] = {
 	{0x40,              "AT91x40 Series"},
 	{0x42,              "AT91x42 Series"},
 	{0x43,              "AT91SAMG51 Series"},
-	{0x47,              "AT91SAMG53 Series"},
+	{0x47,              "AT91SAMG53/SAMG54 Series"},
 	{0x55,              "AT91x55 Series"},
 	{0x60,              "AT91SAM7Axx Series"},
 	{0x61,              "AT91SAM7AQxx Series"},
