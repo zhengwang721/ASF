@@ -434,7 +434,7 @@ int main(void)
 	remaining_len = len;
 
 	do {
-		/* Read data of AT45DBX_SECTOR_SIZE */
+		/* Read data of NVMCTRL_PAGE_SIZE from I2C master */
 		fetch_data(buff, min(NVMCTRL_PAGE_SIZE, len));
 
 		/* Program the read data into Flash */
