@@ -404,10 +404,14 @@ static inline void bod_clear_detected(
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_bod_basic_use_case
- * In this use case, if the clock settings are adjusted up after a battery has charged to
- * a higher level a new BOD33 level might be set in SW. When the battery discharges,
- * the chip will reset when the level is below SW BOD33 and then continue running at
- * a lower clock rate and fuse BOD33 levels. The chip should always measure the voltage
+ *
+ *  - \subpage asfdoc_sam0_bod_application_use_case
+ * The preferred method of setting BOD33 levels and settings is trough the fuses.
+ * when it is desirable to set it in software, please see the below use case.
+ * In this use case, a new BOD33 level might be set in SW if the clock settings are
+ * adjusted up after a battery has charged to a higher level. When the battery discharges,
+ * the chip will reset when the level is below SW BOD33 level and then continue running at
+ * a lower clock rate and fuse BOD33 level. The chip should always measure the voltage
  * before adjusting the frequency up.
  *
  * \page asfdoc_sam0_bod_document_revision_history Document Revision History
