@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Timer/Counter Driver for Control Applications DMA Quickstart
+ * \brief SAM D21 Timer/Counter Driver for Control Applications DMA Quickstart
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -63,7 +63,7 @@ COMPILER_ALIGNED(16) DmacDescriptor compare_dma_descriptor;
 //! [capture_variables]
 uint16_t capture_values[3] = {0, 0, 0};
 //! [capture_dma_resource]
-struct dma_resource captrure_dma_resource;
+struct dma_resource capture_dma_resource;
 //! [capture_dma_resource]
 //! [capture_dma_descriptor]
 COMPILER_ALIGNED(16) DmacDescriptor capture_dma_descriptor;
@@ -120,7 +120,7 @@ static void _config_dma_for_capture(void)
 	//! [dma_setup_3]
 
 	//! [dma_setup_4]
-	dma_allocate(&captrure_dma_resource, &config);
+	dma_allocate(&capture_dma_resource, &config);
 	//! [dma_setup_4]
 	//! [config_dma_resource_for_capture]
 
@@ -147,18 +147,15 @@ static void _config_dma_for_capture(void)
 	//! [dma_setup_8]
 	dma_descriptor_create(&capture_dma_descriptor, &descriptor_config);
 	//! [dma_setup_8]
-
-	//! [dma_setup_9]
-	capture_dma_descriptor.DESCADDR.reg = (uint32_t)&capture_dma_descriptor;
-	//! [dma_setup_9]
 	//! [config_dma_descriptor_for_capture]
 
 	//! [config_dma_job_for_capture]
 	//! [dma_setup_10]
-	dma_add_descriptor(&captrure_dma_resource, &capture_dma_descriptor);
+	dma_add_descriptor(&capture_dma_resource, &capture_dma_descriptor);
+	dma_add_descriptor(&capture_dma_resource, &capture_dma_descriptor);
 	//! [dma_setup_10]
 	//! [dma_setup_11]
-	dma_start_transfer_job(&captrure_dma_resource);
+	dma_start_transfer_job(&capture_dma_resource);
 	//! [dma_setup_11]
 	//! [config_dma_job_for_capture]
 }
@@ -190,11 +187,10 @@ static void _config_dma_for_wave(void)
 			(uint32_t)&CONF_PWM_MODULE->CC[CONF_PWM_CHANNEL];
 
 	dma_descriptor_create(&compare_dma_descriptor, &descriptor_config);
-
-	compare_dma_descriptor.DESCADDR.reg = (uint32_t)&compare_dma_descriptor;
 	//! [config_dma_descriptor_for_wave]
 
 	//! [config_dma_job_for_wave]
+	dma_add_descriptor(&compare_dma_resource, &compare_dma_descriptor);
 	dma_add_descriptor(&compare_dma_resource, &compare_dma_descriptor);
 	dma_start_transfer_job(&compare_dma_resource);
 	//! [config_dma_job_for_wave]
