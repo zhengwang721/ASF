@@ -4,6 +4,7 @@
 		<build type="c-source" value="usb_dual.c"/>
 		<build type="header-file" subtype="api" value="usb_dual.h"/>
 		<device-support value="samd21"/>
+		<device-support value="samr21" />
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system"/>
 		<require idref="sam0.drivers.extint"/>
@@ -20,6 +21,7 @@
 		<build type="include-path" value="."/>
 		<build type="c-source" value="usb_host_uhd.c"/>
 		<device-support value="samd21"/>
+		<device-support value="samr21" />
 		<require idref="sam0.drivers.usb"/>
 		<require idref="sam0.drivers.usb.dual"/>
 		<require idref="common.services.basic.sleepmgr"/>
@@ -35,6 +37,7 @@
 		<build type="include-path" value="."/>
 		<build type="c-source" value="usb_device_udd.c"/>
 		<device-support value="samd21"/>
+		<device-support value="samr21" />
 		<require idref="sam0.drivers.usb"/>
 		<require idref="sam0.drivers.usb.dual"/>
 		<require idref="common.services.basic.sleepmgr"/>

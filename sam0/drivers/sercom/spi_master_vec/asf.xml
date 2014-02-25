@@ -25,6 +25,7 @@
 		<build type="include-path" value="."/>
 		<device-support value="samd20"/>
 		<device-support value="samd21"/>
+		<device-support value="samr21"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.sercom"/>
 		<require idref="sam0.drivers.sercom.spi"/>
