@@ -43,61 +43,39 @@
 /*- Includes ---------------------------------------------------------------*/
 #include "sysTypes.h"
 #include "time.h"
-//# include "tc_megarf.h"
 
-/*- Definitions ------------------------------------------------------------*/
-#define TIMER_PRESCALER     8
-#define APP_TIMER_INTERVAL  1ul // ms
-#define APP_TIMER &TCCR3A
 /*- Variables --------------------------------------------------------------*/
-static volatile uint32_t appTime;
-/*- Prototypes --------------------------------------------------------------*/
-static volatile uint32_t appTime;
-void app_compa_cb(void);
+volatile uint16_t sys_time;
 
+/*- Prototypes --------------------------------------------------------------*/
+static inline uint32_t gettime(void);
 
 /*- Implementations --------------------------------------------------------*/
 
-/*************************************************************************//**
-*****************************************************************************/
 void appTimeInit(void)
 {
-
-  appTime = 0;
-  /*
-  uint16_t comp_value;
-  comp_value = ((F_CPU / 1000ul) / TIMER_PRESCALER) * APP_TIMER_INTERVAL;
-  
-  tc_enable(APP_TIMER);
-  tc_write_cc(APP_TIMER,TC_COMPA,comp_value);
-  tc_set_compa_interrupt_callback(APP_TIMER,app_compa_cb);
-  tc_enable_compa_int(APP_TIMER);
-  tc_set_mode(APP_TIMER, CTC_Mode1);
-  tc_write_clock_source(APP_TIMER, TC_CLKSEL_DIV8_gc);*/
-
-/*
-  OCR1A = ((F_CPU / 1000ul) / TIMER_PRESCALER) * APP_TIMER_INTERVAL;
-  TCCR1B = (1 << WGM12);              // CTC mode
-  TCCR1B |= (1 << CS11);              // Prescaler 8
-  TIMSK1 |= (1 << OCIE1A);            // Enable TC1 interrupt*/
+  set_common_tc_overflow_callback(hw_overflow_cb);
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 uint32_t appTimeGet(void)
 {
-  uint32_t r;
+	uint16_t current_sys_time;
+	uint32_t current_time;
 
-  ATOMIC_SECTION_ENTER
-    r = appTime;
-  ATOMIC_SECTION_LEAVE
+	do {
+		current_sys_time = sys_time;
+		current_time = current_sys_time;
+		current_time = current_time << 16;
+		current_time = current_time | common_tc_read_count();
 
-  return r;
+	} while (current_sys_time != sys_time);
+
+	return current_time;
 }
 
-/*************************************************************************//**
-*****************************************************************************/
-void app_compa_cb(void)
+void hw_overflow_cb(void)
 {
-  appTime++;
+	sys_time++;	
 }

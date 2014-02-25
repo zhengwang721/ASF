@@ -225,7 +225,6 @@ static void APP_TaskHandler(void)
   {
     case APP_STATE_INITIAL:
     {
-      appTimeInit();
       appCommandsInit();
     #ifdef NWK_ENABLE_ADDRESS_FILTER
       appFilterInit();
@@ -248,6 +247,7 @@ static void APP_TaskHandler(void)
 int main(void)
 {
   SYS_Init();
+  appTimeInit();
   sio2host_init();
   LED_On(LED0);
   while (1)

@@ -45,6 +45,7 @@
 
 /*- Includes ---------------------------------------------------------------*/
 #include "sysTypes.h"
+#include "common_hw_timer.h"
 
 /*- Prototypes -------------------------------------------------------------*/
 void appTimeInit(void);
