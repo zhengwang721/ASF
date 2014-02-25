@@ -87,30 +87,30 @@
  * \subsection asfdoc_sam0_dac_basic_use_case_callback_workflow Workflow
  * -# Create a module software instance structure for the DAC module to store
  *    the DAC driver state while it is in use.
+ *    \snippet qs_dac_callback.c dac_module_inst
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- *    \snippet qs_dac_callback.c dac_module_inst
  * -# RTC module is used as the event trigger for DAC in this case, create a module
  *    software instance structure for the RTC module to store the RTC driver state.
+ *    \snippet qs_dac_callback.c rtc_module_inst
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- *    \snippet qs_dac_callback.c rtc_module_inst
  * -# Create a buffer for the DAC samples to be converted by the driver.
  *    \snippet qs_dac_callback.c dac_data
  * -# Create a callback function that will be called when DAC completes convert job.
- * \snippet qs_dac_callback.c job_complete_callback
+ *    \snippet qs_dac_callback.c job_complete_callback
  * -# Configure the DAC module.
  *  -# Create a DAC module configuration struct, which can be filled out to
  *     adjust the configuration of a physical DAC peripheral.
  *     \snippet qs_dac_callback.c setup_dac_config
  *  -# Initialize the DAC configuration struct with the module's default values.
+ *     \snippet qs_dac_callback.c setup_dac_config_default
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *     \snippet qs_dac_callback.c setup_dac_config_default
  *  -# Configure the DAC module with starting conversion on event.
  *     \snippet qs_dac_callback.c setup_dac_start_on_event
  *  -# Initialize the DAC module.
@@ -128,11 +128,11 @@
  *     \snippet qs_dac_callback.c setup_dac_chan_config
  *  -# Initialize the DAC channel configuration struct with the module's default
  *     values.
+ *     \snippet qs_dac_callback.c setup_dac_chan_config_default
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *     \snippet qs_dac_callback.c setup_dac_chan_config_default
  *  -# Configure the DAC channel with the desired channel settings.
  *     \snippet qs_dac_callback.c set_dac_chan_config
  *  -# Enable the DAC channel so that it can output a voltage.
@@ -146,11 +146,11 @@
  *     adjust the configuration of a physical RTC peripheral.
  *     \snippet qs_dac_callback.c setup_rtc_config
  *  -# Initialize the RTC configuration struct with the module's default values.
+ *     \snippet qs_dac_callback.c setup_rtc_config_defaults
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *     \snippet qs_dac_callback.c setup_rtc_config_defaults
  *  -# Change the RTC module configuration to suit the application.
  *     \snippet qs_dac_callback.c setup_rtc_modify_conf
  *  -# Initialize the RTC module.
@@ -167,25 +167,26 @@
  *     adjust the configuration of a physical event peripheral.
  *     \snippet qs_dac_callback.c event_config
  *  -# Initialize the event configuration struct with the module's default values.
+ *     \snippet qs_dac_callback.c get_event_default
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *     \snippet qs_dac_callback.c get_event_default
  *  -# Change the event module configuration to suit the application.
  *     \snippet qs_dac_callback.c set_event_modify_conf
  *  -# Allocate the event resource.
  *     \snippet qs_dac_callback.c allocate_event_resource
  *  -# Attach the event resource with user DAC start
  *     \snippet qs_dac_callback.c attach_event_to_dac
+ *
  * -# Register and enable the DAC Write Buffer Complete callback handler
  *  -# Register the user-provided Write Buffer Complete callback function with
  *     the driver, so that it will be run when an asynchronous buffer write job
  *     completes.
- *   \snippet qs_dac_callback.c register_dac_callback
+ *     \snippet qs_dac_callback.c register_dac_callback
  *  -# Enable the Read Buffer Complete callback so that it will generate
  *     callbacks.
- *   \snippet qs_dac_callback.c enable_dac_callback
+ *     \snippet qs_dac_callback.c enable_dac_callback
  *
  * \section asfdoc_sam0_dac_basic_use_case_callback_use Use Case
  *

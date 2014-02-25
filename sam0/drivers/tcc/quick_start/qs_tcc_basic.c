@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Timer/Counter Driver for Control Applications Basic Quickstart
+ * \brief SAM D21 Timer/Counter Driver for Control Applications Basic Quickstart
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -61,13 +61,13 @@ static void _configure_tcc(void)
 	//! [setup_change_config]
 	config_tcc.counter.period = 0xFFFF;
 	config_tcc.compare.wave_generation = TCC_WAVE_GENERATION_SINGLE_SLOPE_PWM;
-	config_tcc.compare.match[0] = (0xFFFF / 4);
+	config_tcc.compare.match[CONF_PWM_CHANNEL] = (0xFFFF / 4);
 	//! [setup_change_config]
 
 	//! [setup_change_config_pwm]
-	config_tcc.pins.enable_wave_out_pin[0] = true;
-	config_tcc.pins.wave_out_pin[0]        = CONF_PWM_OUT_PIN;
-	config_tcc.pins.wave_out_pin_mux[0]    = CONF_PWM_OUT_MUX;
+	config_tcc.pins.enable_wave_out_pin[CONF_PWM_OUTPUT] = true;
+	config_tcc.pins.wave_out_pin[CONF_PWM_OUTPUT]        = CONF_PWM_OUT_PIN;
+	config_tcc.pins.wave_out_pin_mux[CONF_PWM_OUTPUT]    = CONF_PWM_OUT_MUX;
 	//! [setup_change_config_pwm]
 
 	//! [setup_set_config]

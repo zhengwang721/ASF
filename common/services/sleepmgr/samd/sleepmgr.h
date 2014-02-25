@@ -108,8 +108,8 @@ static inline void sleepmgr_sleep(const enum sleepmgr_mode sleep_mode)
 
 	/* Enter the sleep mode. */
 	system_set_sleepmode((enum system_sleepmode)(sleep_mode - 1));
-	system_sleep();
 	cpu_irq_enable();
+	system_sleep();
 #else
 	UNUSED(sleep_mode);
 	cpu_irq_enable();

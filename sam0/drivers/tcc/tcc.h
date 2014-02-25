@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 TCC - Enhanced Timer Counter Driver
+ * \brief SAM D21 TCC - Timer Counter for Control Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -45,7 +45,7 @@
 #define TCC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_tcc_group SAM D21 Enhanced Timer/Counter Driver (TCC)
+ * \defgroup asfdoc_sam0_tcc_group SAM D21 Timer/Counter for Control Driver (TCC)
  *
  * This driver for SAM D21 devices provides an interface for the configuration
  * and management of the timer modules within the device, for waveform
@@ -125,7 +125,7 @@
  * signal generation.
  *
  * \note The connection of events between modules requires the use of the
- *       \ref asfdoc_sam0_events_group "SAM D2x Event System Driver (EVENTS)"
+ *       \ref asfdoc_sam0_events_group "SAM Event System Driver (EVENTS)"
  *       to route output event of one module to the the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
@@ -209,62 +209,66 @@
  *     <th>Applied Event#</th>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_OFF</td>
+ *     <td>\ref TCC_EVENT_ACTION_OFF "TCC_EVENT_ACTION_OFF"</td>
  *     <td>No action on the event input</td>
  *     <td>All</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_RETRIGGER</td>
+ *     <td>\ref TCC_EVENT_ACTION_RETRIGGER "TCC_EVENT_ACTION_RETRIGGER"</td>
  *     <td>Re-trigger Counter on event</td>
  *     <td>All</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_NON_RECOVERABLE_FAULT</td>
+ *     <td>\ref TCC_EVENT_ACTION_NON_RECOVERABLE_FAULT
+ *         "TCC_EVENT_ACTION_NON_RECOVERABLE_FAULT"</td>
  *     <td>Generate Non-Recoverable Fault on event</td>
  *     <td>All</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_START</td>
+ *     <td>\ref TCC_EVENT_ACTION_START "TCC_EVENT_ACTION_START"</td>
  *     <td>Counter start on event</td>
  *     <td>TCE0</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_DIR_CONTROL</td>
+ *     <td>\ref TCC_EVENT_ACTION_DIR_CONTROL "TCC_EVENT_ACTION_DIR_CONTROL"</td>
  *     <td>Counter direction control (event line low: up; high: down)</td>
  *     <td>TCE0</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_DECREMENT</td>
+ *     <td>\ref TCC_EVENT_ACTION_DECREMENT "TCC_EVENT_ACTION_DECREMENT"</td>
  *     <td>Counter decrement on event</td>
  *     <td>TCE0</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_PERIOD_PULSE_WIDTH_CAPTURE</td>
+ *     <td>\ref TCC_EVENT_ACTION_PERIOD_PULSE_WIDTH_CAPTURE
+ *         "TCC_EVENT_ACTION_PERIOD_PULSE_WIDTH_CAPTURE"</td>
  *     <td>Capture pulse period and pulse width</td>
  *     <td>TCE0</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_PULSE_WIDTH_PERIOD_CAPTURE</td>
+ *     <td>\ref TCC_EVENT_ACTION_PULSE_WIDTH_PERIOD_CAPTURE
+ *         "TCC_EVENT_ACTION_PULSE_WIDTH_PERIOD_CAPTURE"</td>
  *     <td>Capture pulse width and pulse period</td>
  *     <td>TCE0</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_STOP</td>
+ *     <td>\ref TCC_EVENT_ACTION_STOP "TCC_EVENT_ACTION_STOP"</td>
  *     <td>Counter stop on event</td>
  *     <td>TCE1</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_COUNT_EVENT</td>
+ *     <td>\ref TCC_EVENT_ACTION_COUNT_EVENT "TCC_EVENT_ACTION_COUNT_EVENT"</td>
  *     <td>Counter count on event</td>
  *     <td>TCE1</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_INCREMENT</td>
+ *     <td>\ref TCC_EVENT_ACTION_INCREMENT "TCC_EVENT_ACTION_INCREMENT"</td>
  *     <td>Counter increment on event</td>
  *     <td>TCE1</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_COUNT_DURING_ACTIVE</td>
+ *     <td>\ref TCC_EVENT_ACTION_COUNT_DURING_ACTIVE
+ *         "TCC_EVENT_ACTION_COUNT_DURING_ACTIVE"</td>
  *     <td>Counter count during active state of asynchronous event</td>
  *     <td>TCE1</td>
  *   </tr>
@@ -289,17 +293,17 @@
  *     <th>Description</th>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_RELOAD_ACTION_GCLK </td>
+ *     <td>\ref TCC_RELOAD_ACTION_GCLK "TCC_RELOAD_ACTION_GCLK"</td>
  *     <td>Reload TCC counter value on next GCLK cycle. Leave prescaler
  *         as-is.</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_RELOAD_ACTION_PRESC </td>
+ *     <td>\ref TCC_RELOAD_ACTION_PRESC "TCC_RELOAD_ACTION_PRESC"</td>
  *     <td>Reloads TCC counter value on next prescaler clock. Leave prescaler
  *         as-is.</td>
  *   </tr>
  *  <tr>
- *    <td> \ref TCC_RELOAD_ACTION_RESYNC </td>
+ *    <td> \ref TCC_RELOAD_ACTION_RESYNC "TCC_RELOAD_ACTION_RESYNC"</td>
  *    <td>Reload TCC counter value on next GCLK cycle. Clear prescaler to
  *        zero.</td>
  *  </tr>
@@ -440,33 +444,112 @@
  *     <th>Description</th>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_OUTPUT_PATTERN_DISABLE </td>
+ *     <td>\ref TCC_OUTPUT_PATTERN_DISABLE "TCC_OUTPUT_PATTERN_DISABLE"</td>
  *     <td>Pattern disabled, generate output as is</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_OUTPUT_PATTERN_0 </td>
+ *     <td>\ref TCC_OUTPUT_PATTERN_0 "TCC_OUTPUT_PATTERN_0"</td>
  *     <td>Generate pattern 0 on output (keep output to low level)</td>
  *   </tr>
  *  <tr>
- *    <td> \ref TCC_OUTPUT_PATTERN_1 </td>
+ *    <td> \ref TCC_OUTPUT_PATTERN_1 "TCC_OUTPUT_PATTERN_1"</td>
  *    <td>Generate pattern 1 on output (keep output to high level)</td>
  *  </tr>
  * </table>
  *
  * \subsubsection asfdoc_sam0_tcc_module_overview_ext_r_fault Recoverable Faults
  *
- * The recoverable faults can restart or halt the TCC timer/counter. So that the
- * final output wave is kept in a defined state. When the fault state is removed
- * it's possible to recover the counter and waveform generation.
+ * The recoverable faults can trigger one or several of following fault actions:
+ * -# *Halt* action: The recoverable faults can halt the TCC timer/counter.
+ *    So that the final output wave is kept in a defined state. When the fault
+ *    state is removed it's possible to recover the counter and waveform
+ *    generation. The halt action is defined as follow:
+ * \anchor asfdoc_sam0_tcc_module_fault_halt_action
+ * <table>
+ *   <caption>TCC module Recoverable Fault Halt Actions</caption>
+ *   <tr>
+ *     <th>Action</th>
+ *     <th>Description</th>
+ *   </tr>
+ *   <tr>
+ *     <td>\ref TCC_FAULT_HALT_ACTION_DISABLE
+ *         "TCC_FAULT_HALT_ACTION_DISABLE"</td>
+ *     <td>Halt action is disabled</td>
+ *   </tr>
+ *   <tr>
+ *     <td>\ref TCC_FAULT_HALT_ACTION_HW_HALT
+ *         "TCC_FAULT_HALT_ACTION_HW_HALT"</td>
+ *     <td>The timer/counter is halted as long as the corresponding fault is
+ *         present</td>
+ *   </tr>
+ *   <tr>
+ *     <td>\ref TCC_FAULT_HALT_ACTION_SW_HALT
+ *         "TCC_FAULT_HALT_ACTION_SW_HALT"</td>
+ *     <td>The timer/counter is halted until the corresponding fault is removed
+ *         and fault state cleared by software</td>
+ *   </tr>
+ *   <tr>
+ *     <td>\ref TCC_FAULT_HALT_ACTION_NON_RECOVERABLE
+ *         "TCC_FAULT_HALT_ACTION_NON_RECOVERABLE"</td>
+ *     <td>Force all the TCC output pins to a pre-defined level, as what
+ *         Non-Recoverable Fault do</td>
+ *   </tr>
+ * </table>
+ * -# *Restart* action: When enabled, the recoverable faults can restart the TCC
+ *    timer/counter.
+ * -# *Keep* action: When enabled, the recoverable faults can keep the
+ *    corresponding channel output to zero when the fault condition is present.
+ * -# *Capture* action: When the recoverable fault occurs, the capture action can
+ *    time stamps the corresponding fault. The following capture mode is
+ *    supported:
+ * \anchor asfdoc_sam0_tcc_module_fault_capt_action
+ * <table>
+ *   <caption>TCC module Recoverable Fault Capture Actions</caption>
+ *   <tr>
+ *     <th>Action</th>
+ *     <th>Description</th>
+ *   </tr>
+ *   <tr>
+ *     <td>\ref TCC_FAULT_CAPTURE_DISABLE "TCC_FAULT_CAPTURE_DISABLE"</td>
+ *     <td>Capture action is disabled</td>
+ *   </tr>
+ *   <tr>
+ *     <td>\ref TCC_FAULT_CAPTURE_EACH "TCC_FAULT_CAPTURE_EACH"</td>
+ *     <td>Equivalent to standard capture operation, on each fault occurrence
+ *         the time stamp is captured</td>
+ *   </tr>
+ *   <tr>
+ *     <td>\ref TCC_FAULT_CAPTURE_MINIMUM "TCC_FAULT_CAPTURE_MINIMUM"</td>
+ *     <td>Get the minimum time stamped value in all time stamps</td>
+ *   </tr>
+ *   <tr>
+ *     <td>\ref TCC_FAULT_CAPTURE_MAXIMUM "TCC_FAULT_CAPTURE_MAXIMUM"</td>
+ *     <td>Get the maximum time stamped value in all time stamps</td>
+ *   </tr>
+ *   <tr>
+ *     <td>\ref TCC_FAULT_CAPTURE_SMALLER "TCC_FAULT_CAPTURE_SMALLER"</td>
+ *     <td>Time stamp the fault input if the value is smaller than last one</td>
+ *   </tr>
+ *   <tr>
+ *     <td>\ref TCC_FAULT_CAPTURE_BIGGER "TCC_FAULT_CAPTURE_BIGGER"</td>
+ *     <td>Time stamp the fault input if the value is bigger than last one</td>
+ *   </tr>
+ *   <tr>
+ *     <td>\ref TCC_FAULT_CAPTURE_CHANGE "TCC_FAULT_CAPTURE_CHANGE"</td>
+ *     <td>Time stamp the fault input if the time stamps changes its increment
+ *         direction</td>
+ *   </tr>
+ * </table>
  *
  * In TCC module, only first of two compare channels (CC0 and CC1) can work with
  * recoverable fault inputs. The corresponding event inputs (MCE0 and MCE1) are
  * then used as fault inputs respectively. The faults are called Fault A and
  * Fault B.
  *
- * The recoverable fault can be filtered. On fault condition there are many
- * actions can be chosen. Also it's possible to get the fault time stamp. Please
- * refer to data sheet for more details about the recoverable fault operations.
+ * The recoverable fault can be filtered or effected by corresponding channel
+ * output. On fault condition there are many other settings that can be chosen.
+ * Please refer to data sheet for more details about the recoverable fault
+ * operations.
  *
  * \subsubsection asfdoc_sam0_tcc_module_overview_ext_n_fault Non-Recoverable Faults
  *
@@ -589,7 +672,7 @@
  */
 #define TCC_NUM_WAVE_OUTPUTS       8
 
-/** Max number of faults supported by the driver. */
+/** Max number of (recoverable) faults supported by the driver. */
 #define TCC_NUM_FAULTS             2
 
 #if TCC_ASYNC == true
@@ -600,14 +683,19 @@
 extern "C" {
 #endif
 
-/* Generates a interrupt vector table enum list entry for a given type
-   and index (e.g. "TCC_CALLBACK_MC_CHANNEL0,"). */
-#define _TCC_CHANNEL_ENUM(n, type) TCC_##type##_CHANNEL_##n,
+/* Generates a table enum list entry for a given type
+   and index (e.g. "TCC_CALLBACK_MC_CHANNEL_0,"). */
+#define _TCC_ENUM(n, type) TCC_##type##_##n,
 
-/* Generates callback table enum list entries for all channels of a
+/* Generates table enum list entries for all channels of a
    given type and channel number on TCC module. */
 #define _TCC_CHANNEL_ENUM_LIST(type) \
-		MREPEAT(TCC_NUM_CHANNELS, _TCC_CHANNEL_ENUM, type)
+		MREPEAT(TCC_NUM_CHANNELS, _TCC_ENUM, type##_CHANNEL)
+/* Generates table enum list entries for all output of a
+   given type and waveform output number on TCC module. */
+#define _TCC_WO_ENUM_LIST(type) \
+		MREPEAT(TCC_NUM_WAVE_OUTPUTS, _TCC_ENUM, type)
+
 
 #if TCC_ASYNC == true
 /** Enum for the possible callback types for the TCC module. */
@@ -721,6 +809,31 @@ enum tcc_match_capture_channel {
 #  if !defined(__DOXYGEN__)
 	/** Number of supported channels */
 	TCC_MATCH_CAPTURE_CHANNEL_N
+#  endif
+};
+
+/**
+ * \brief Index of the wave outputs
+ *
+ * This enum is used to specify which wave output to do
+ * operations on.
+ */
+enum tcc_wave_output {
+#  if defined(__DOXYGEN__)
+	/** Waveform output index table for TCC
+	 *
+	 *  Each TCC module may contain several wave outputs; each output
+	 *  will have its own index in the table, with the index number substituted
+	 *  for "n" in the index name (e.g. \c TCC_WAVE_OUTPUT_0).
+	 */
+	TCC_WAVE_OUTPUT_n = n,
+#  else
+	/** Indexes of match capture channels, e.g., TCC_WAVEFORM_OUTPUT_0. */
+	_TCC_WO_ENUM_LIST(WAVE_OUTPUT)
+#  endif
+#  if !defined(__DOXYGEN__)
+	/** Number of supported channels */
+	TCC_WAVE_OUTPUT_N
 #  endif
 };
 
@@ -1002,6 +1115,176 @@ enum tcc_channel_function {
 };
 
 /**
+ * \brief TCC (recoverable) fault Halt action
+ */
+enum tcc_fault_halt_action {
+	/** Halt action disabled */
+	TCC_FAULT_HALT_ACTION_DISABLE,
+	/** Hardware halt action, counter is halted until restart */
+	TCC_FAULT_HALT_ACTION_HW_HALT,
+	/** Software halt action, counter is halted until fault bit cleared */
+	TCC_FAULT_HALT_ACTION_SW_HALT,
+	/** Non-Recoverable fault, force output to pre-defined level */
+	TCC_FAULT_HALT_ACTION_NON_RECOVERABLE
+};
+
+/**
+ * \brief TCC (recoverable) fault Capture action
+ */
+enum tcc_fault_capture_action {
+	/** Capture disabled */
+	TCC_FAULT_CAPTURE_DISABLE,
+	/** Capture on Fault, each value is captured */
+	TCC_FAULT_CAPTURE_EACH,
+	/** Capture the minimum detection, but notify on smaller ones */
+	TCC_FAULT_CAPTURE_MINIMUM,
+	/** Capture the maximum detection, but notify on bigger ones */
+	TCC_FAULT_CAPTURE_MAXIMUM,
+	/** Capture if the value is smaller than last, notify event or interrupt
+	 *  if previous stamp is confirmed to be "local minimum" (not bigger than
+	 *  current stamp) */
+	TCC_FAULT_CAPTURE_SMALLER,
+	/** Capture if the value is bigger than last, notify event or interrupt
+	 *  if previous stamp is confirmed to be "local maximum" (not smaller than
+	 *  current stamp) */
+	TCC_FAULT_CAPTURE_BIGGER,
+	/** Capture if the time stamps changes its increment direction */
+	TCC_FAULT_CAPTURE_CHANGE
+};
+
+/**
+ * \brief Capture Channel triggered by TCC (recoverable) fault
+ */
+enum tcc_fault_capture_channel {
+	/** Recoverable fault triggers channel 0 capture operation */
+	TCC_FAULT_CAPTURE_CHANNEL_0,
+	/** Recoverable fault triggers channel 1 capture operation */
+	TCC_FAULT_CAPTURE_CHANNEL_1,
+	/** Recoverable fault triggers channel 2 capture operation */
+	TCC_FAULT_CAPTURE_CHANNEL_2,
+	/** Recoverable fault triggers channel 3 capture operation */
+	TCC_FAULT_CAPTURE_CHANNEL_3
+};
+
+/**
+ * \brief TCC (recoverable) fault Input Source
+ */
+enum tcc_fault_source {
+	/** Fault input is disabled */
+	TCC_FAULT_SOURCE_DISABLE,
+	/** Match Capture Event x (MCE 0,1) input */
+	TCC_FAULT_SOURCE_ENABLE,
+	/** Inverted MCEx (x=0,1) event input */
+	TCC_FAULT_SOURCE_INVERT,
+	/** Alternate fault (A or B) state at the end of the previous period */
+	TCC_FAULT_SOURCE_ALTFAULT
+};
+
+/**
+ * \brief TCC (recoverable) fault Input Blanking Start Point
+ */
+enum tcc_fault_blanking {
+	/** No blanking */
+	TCC_FAULT_BLANKING_DISABLE,
+	/** Blanking applied from rising edge of the output waveform */
+	TCC_FAULT_BLANKING_RISING_EDGE,
+	/** Blanking applied from falling edge of the output waveform */
+	TCC_FAULT_BLANKING_FALLING_EDGE,
+	/** Blanking applied from each toggle of the output waveform */
+	TCC_FAULT_BLANKING_BOTH_EDGE
+};
+
+/**
+ * \brief TCC (recoverable) fault Input Qualification Action
+ */
+enum tcc_fault_qualification {
+	/** The input is not disabled on compare condition */
+	TCC_FAULT_QUALIFICATION_DISABLE,
+	/** The input is disabled when match output signal is at inactive level */
+	TCC_FAULT_QUALIFICATION_BY_OUTPUT
+};
+
+/**
+ * \brief TCC (recoverable) fault Output Keep Action
+ */
+enum tcc_fault_keep {
+	/** Disable keeping, wave output released as soon as fault is released */
+	TCC_FAULT_KEEP_DISABLE,
+	/** Keep wave output until end of TCC cycle */
+	TCC_FAULT_KEEP_TILL_END
+};
+
+/**
+ * \brief TCC Non-recoverable State Outupt
+ */
+enum tcc_fault_state_output {
+	/** Non-recoverable fault output is tri-stated */
+	TCC_FAULT_STATE_OUTPUT_OFF,
+	/** Non-recoverable fault force output 0 */
+	TCC_FAULT_STATE_OUTPUT_0,
+	/** Non-recoverable fault force output 1 */
+	TCC_FAULT_STATE_OUTPUT_1
+};
+
+/**
+ * \brief TCC (recoverable) fault Restart Action
+ */
+enum tcc_fault_restart {
+	/** Restart Action disabled */
+	TCC_FAULT_RESTART_DISABLE,
+	/** Restart Action enabled */
+	TCC_FAULT_RESTART_ENABLE
+};
+
+/**
+ * \brief Configuration struct for TCC module recoverable fault
+ */
+struct tcc_recoverable_fault_config {
+	/** Fault filter value applied on MCEx event input line (0x0 ~ 0xF).
+	 *  Must be 0 when MCEx event is used as synchronous event.
+	 *  Apply to both recoverable and non-recoverable fault. */
+	uint8_t filter_value;
+	/** Fault blanking value (0 ~ 255), disable input source for several TCC
+	 * clocks after the detection of the waveform edge. */
+	uint8_t blanking_cycles;
+
+	/** Set to \c true to enable restart action */
+	bool restart;
+	/** Set to \c true to enable keep action (keep until end of TCC cycle) */
+	bool keep;
+
+	/** Set to \c true to enable input qualification
+	 *  (disable input when output is inactive) */
+	bool qualification;
+
+	/** Specifies if the event input generates recoverable Fault.
+	 *  The Event System Channel connected to MCEx event input must be
+	 *  configured to asynchronous.
+	 */
+	enum tcc_fault_source source;
+	/** Fault Blanking Start Point for recoverable Fault */
+	enum tcc_fault_blanking blanking;
+
+	/** Halt action for recoverable Fault */
+	enum tcc_fault_halt_action halt_action;
+	/** Capture action for recoverable Fault */
+	enum tcc_fault_capture_action capture_action;
+	/** Channel triggered by recoverable Fault */
+	enum tcc_fault_capture_channel capture_channel;
+};
+
+/**
+ * \brief Configuration struct for TCC module non-recoverable fault
+ */
+struct tcc_non_recoverable_fault_config {
+	/** Fault filter value applied on TCEx event input line (0x0 ~ 0xF).
+	 *  Must be 0 when TCEx event is used as synchronous event. */
+	uint8_t filter_value;
+	/** Output */
+	enum tcc_fault_state_output output;
+};
+
+/**
  * \brief TCC input event enable/disable/configure structure.
  */
 struct tcc_input_event_config {
@@ -1111,6 +1394,13 @@ struct tcc_match_wave_config {
  * \brief Configuration struct for TCC module waveform extension processes
  */
 struct tcc_wave_extension_config {
+	/** Configuration for recoverable faults. */
+	struct tcc_recoverable_fault_config
+			recoverable_fault[TCC_NUM_FAULTS];
+	/** Configuration for non-recoverable faults. */
+	struct tcc_non_recoverable_fault_config
+			non_recoverable_fault[TCC_NUM_WAVE_OUTPUTS];
+
 	/** Invert waveform final outputs lines. */
 	bool invert[TCC_NUM_WAVE_OUTPUTS];
 };
@@ -1745,6 +2035,8 @@ void tcc_clear_status(
  *  - \subpage asfdoc_sam0_tcc_basic_use_case
  * \if TCC_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_tcc_callback_use_case
+ *  - \subpage asfdoc_sam0_tcc_faultx_use_case
+ *  - \subpage asfdoc_sam0_tcc_faultn_use_case
  * \endif
  *  - \subpage asfdoc_sam0_tcc_dma_use_case
  *
@@ -1760,6 +2052,11 @@ void tcc_clear_status(
  *      <td>A</td>
  *      <td>01/2014</td>
  *      <td>Initial release</td>
+ *  </tr>
+ *  <tr>
+ *      <td></td>
+ *      <td>02/2014</td>
+ *      <td>Add faults support</td>
  *  </tr>
  * </table>
  */

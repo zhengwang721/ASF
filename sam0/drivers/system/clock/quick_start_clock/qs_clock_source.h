@@ -65,37 +65,35 @@
  * \subsection asfdoc_sam0_system_clock_basic_use_case_setup_flow Workflow
  * -# Create a EXTOSC32K module configuration struct, which can be filled
  *    out to adjust the configuration of the external 32KHz oscillator channel.
- *  \snippet qs_clock_source.c config_extosc32k_config
+ *    \snippet qs_clock_source.c config_extosc32k_config
  *
  * -# Initialize the oscillator configuration struct with the module's default
  *    values.
+ *    \snippet qs_clock_source.c config_extosc32k_get_defaults
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
- *
- *  \snippet qs_clock_source.c config_extosc32k_get_defaults
  *
  * -# Alter the EXTOSC32K module configuration struct to require a start-up time
  *    of 4096 clock cycles.
- *  \snippet qs_clock_source.c config_extosc32k_change_defaults
+ *    \snippet qs_clock_source.c config_extosc32k_change_defaults
  *
  * -# Write the new configuration to the EXTOSC32K module.
- *  \snippet qs_clock_source.c config_extosc32k_set_config
+ *    \snippet qs_clock_source.c config_extosc32k_set_config
  *
  * -# Create a DFLL module configuration struct, which can be filled
  *    out to adjust the configuration of the external 32KHz oscillator channel.
- *  \snippet qs_clock_source.c config_dfll_config
+ *    \snippet qs_clock_source.c config_dfll_config
  *
  * -# Initialize the DFLL oscillator configuration struct with the module's
  *    default values.
+ *    \snippet qs_clock_source.c config_dfll_get_defaults
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- *  \snippet qs_clock_source.c config_dfll_get_defaults
- *
  * -# Write the new configuration to the DFLL module.
- *  \snippet qs_clock_source.c config_dfll_set_config
+ *    \snippet qs_clock_source.c config_dfll_set_config
  *
  *
  * \section asfdoc_sam0_system_clock_basic_use_case_use_main Use Case
@@ -108,24 +106,24 @@
  * \subsection asfdoc_sam0_system_clock_basic_use_case_flow Workflow
  * -# Configure the external 32KHz oscillator source using the previously
  *    defined setup function.
- * \snippet qs_clock_source.c config_extosc32k_main
+ *    \snippet qs_clock_source.c config_extosc32k_main
  *
  * -# Enable the configured external 32KHz oscillator source.
- * \snippet qs_clock_source.c enable_extosc32k_main
+ *    \snippet qs_clock_source.c enable_extosc32k_main
  *
  * -# Configure the DFLL oscillator source using the previously defined setup
  *    function.
- * \snippet qs_clock_source.c config_dfll_main
+ *    \snippet qs_clock_source.c config_dfll_main
  *
  * -# Enable the configured DFLL oscillator source.
- * \snippet qs_clock_source.c enable_dfll_main
+ *    \snippet qs_clock_source.c enable_dfll_main
  *
  * -# Configure the flash wait states to have two wait states per read, as the
  *    high speed DFLL will be used as the system clock. If insufficient wait
  *    states are used, the device may crash randomly due to misread instructions.
- * \snippet qs_clock_source.c set_sys_wait_states
+ *    \snippet qs_clock_source.c set_sys_wait_states
  *
  * -# Switch the system clock source to the DFLL, by reconfiguring the main
  *    clock generator.
- * \snippet qs_clock_source.c set_sys_clk_src
+ *    \snippet qs_clock_source.c set_sys_clk_src
  */

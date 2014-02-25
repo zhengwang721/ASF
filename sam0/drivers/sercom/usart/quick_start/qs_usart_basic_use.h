@@ -49,7 +49,7 @@
  * - Asynchronous mode
  * - 9600 Baudrate
  * - 8-bits, No Parity and 1 Stop Bit
- * - TX and RX enabled and connected to the Xplained PRO Embedded Debugger virtual COM port
+ * - TX and RX enabled and connected to the Xplained Pro Embedded Debugger virtual COM port
  *
  * \section asfdoc_sam0_sercom_usart_basic_use_case_setup Setup
  *
@@ -69,20 +69,20 @@
  * \subsection asfdoc_sam0_usart_basic_use_case_setup_flow Workflow
  * -# Create a module software instance structure for the USART module to store
  *    the USART driver state while it is in use.
+ *    \snippet qs_usart_basic_use.c module_inst
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- *    \snippet qs_usart_basic_use.c module_inst
  * -# Configure the USART module.
  *  -# Create a USART module configuration struct, which can be filled out to
  *     adjust the configuration of a physical USART peripheral.
  *     \snippet qs_usart_basic_use.c setup_config
  *  -# Initialize the USART configuration struct with the module's default values.
+ *     \snippet qs_usart_basic_use.c setup_config_defaults
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *     \snippet qs_usart_basic_use.c setup_config_defaults
  *  -# Alter the USART settings to configure the physical pinout, baud rate and
  *     other relevant parameters.
  *     \snippet qs_usart_basic_use.c setup_change_config
@@ -102,12 +102,12 @@
  * \subsection asfdoc_sam0_usart_basic_use_case_main_flow Workflow
  * -# Send a string to the USART to show the demo is running, blocking until
  *    all characters have been sent.
- *  \snippet qs_usart_basic_use.c main_send_string
+ *    \snippet qs_usart_basic_use.c main_send_string
  * -# Enter an infinite loop to continuously echo received values on the USART.
- *  \snippet qs_usart_basic_use.c main_loop
+ *    \snippet qs_usart_basic_use.c main_loop
  * -# Perform a blocking read of the USART, storing the received character into
  *    the previously declared temporary variable.
- *  \snippet qs_usart_basic_use.c main_read
+ *    \snippet qs_usart_basic_use.c main_read
  * -# Echo the received variable back to the USART via a blocking write.
- *  \snippet qs_usart_basic_use.c main_write
+ *    \snippet qs_usart_basic_use.c main_write
  */

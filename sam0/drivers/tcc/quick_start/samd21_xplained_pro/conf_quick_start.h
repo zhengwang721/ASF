@@ -46,11 +46,15 @@
 
 //[definition_pwm]
 /** PWM module to use */
-#define CONF_PWM_MODULE      TCC0
+#define CONF_PWM_MODULE      LED_0_PWM_MODULE
+/** PWM channel */
+#define CONF_PWM_CHANNEL     LED_0_PWM_CHANNEL
+/** PWM output */
+#define CONF_PWM_OUTPUT      LED_0_PWM_OUTPUT
 /** PWM output pin */
-#define CONF_PWM_OUT_PIN     PIN_PA08E_TCC0_WO0
+#define CONF_PWM_OUT_PIN     LED_0_PWM_PIN
 /** PWM output pin mux */
-#define CONF_PWM_OUT_MUX     MUX_PA08E_TCC0_WO0
+#define CONF_PWM_OUT_MUX     LED_0_PWM_MUX
 //[definition_pwm]
 
 #endif /* CONF_QUICK_START_H_INCLUDED */

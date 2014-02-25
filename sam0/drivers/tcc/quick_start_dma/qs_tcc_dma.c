@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x Timer/Counter Driver for Control Applications DMA Quickstart
+ * \brief SAM D21 Timer/Counter Driver for Control Applications DMA Quickstart
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -63,7 +63,7 @@ COMPILER_ALIGNED(16) DmacDescriptor compare_dma_descriptor;
 //! [capture_variables]
 uint16_t capture_values[3] = {0, 0, 0};
 //! [capture_dma_resource]
-struct dma_resource captrure_dma_resource;
+struct dma_resource capture_dma_resource;
 //! [capture_dma_resource]
 //! [capture_dma_descriptor]
 COMPILER_ALIGNED(16) DmacDescriptor capture_dma_descriptor;
@@ -85,7 +85,7 @@ static void _config_event_for_capture(void)
 	//! [event_setup_2]
 
 	//! [event_setup_3]
-	config.generator      = EVSYS_ID_GEN_TCC0_MCX_0;
+	config.generator      = CONF_TCC_EVENT_GENERATOR;
 	config.edge_detect    = EVENTS_EDGE_DETECT_RISING;
 	config.path           = EVENTS_PATH_SYNCHRONOUS;
 	config.clock_source   = GCLK_GENERATOR_0;
@@ -96,7 +96,7 @@ static void _config_event_for_capture(void)
 	//! [event_setup_4]
 
 	//! [event_setup_5]
-	events_attach_user(&capture_event_resource, EVSYS_ID_USER_TCC0_MC_1);
+	events_attach_user(&capture_event_resource, CONF_TCC_EVENT_USER);
 	//! [event_setup_5]
 }
 //! [config_event_for_capture]
@@ -120,7 +120,7 @@ static void _config_dma_for_capture(void)
 	//! [dma_setup_3]
 
 	//! [dma_setup_4]
-	dma_allocate(&captrure_dma_resource, &config);
+	dma_allocate(&capture_dma_resource, &config);
 	//! [dma_setup_4]
 	//! [config_dma_resource_for_capture]
 
@@ -138,7 +138,8 @@ static void _config_dma_for_capture(void)
 	descriptor_config.beat_size = DMA_BEAT_SIZE_HWORD;
 	descriptor_config.step_selection = DMA_STEPSEL_SRC;
 	descriptor_config.src_increment_enable = false;
-	descriptor_config.source_address = (uint32_t)&CONF_PWM_MODULE->CC[1];
+	descriptor_config.source_address =
+			(uint32_t)&CONF_PWM_MODULE->CC[CONF_TCC_CAPTURE_CHANNEL];
 	descriptor_config.destination_address =
 			(uint32_t)capture_values + sizeof(capture_values);
 	//! [dma_setup_7]
@@ -146,18 +147,15 @@ static void _config_dma_for_capture(void)
 	//! [dma_setup_8]
 	dma_descriptor_create(&capture_dma_descriptor, &descriptor_config);
 	//! [dma_setup_8]
-
-	//! [dma_setup_9]
-	capture_dma_descriptor.DESCADDR.reg = (uint32_t)&capture_dma_descriptor;
-	//! [dma_setup_9]
 	//! [config_dma_descriptor_for_capture]
 
 	//! [config_dma_job_for_capture]
 	//! [dma_setup_10]
-	dma_add_descriptor(&captrure_dma_resource, &capture_dma_descriptor);
+	dma_add_descriptor(&capture_dma_resource, &capture_dma_descriptor);
+	dma_add_descriptor(&capture_dma_resource, &capture_dma_descriptor);
 	//! [dma_setup_10]
 	//! [dma_setup_11]
-	dma_start_transfer_job(&captrure_dma_resource);
+	dma_start_transfer_job(&capture_dma_resource);
 	//! [dma_setup_11]
 	//! [config_dma_job_for_capture]
 }
@@ -185,14 +183,14 @@ static void _config_dma_for_wave(void)
 	descriptor_config.dst_increment_enable = false;
 	descriptor_config.source_address =
 			(uint32_t)compare_values + sizeof(compare_values);
-	descriptor_config.destination_address = (uint32_t)&CONF_PWM_MODULE->CC[0];
+	descriptor_config.destination_address =
+			(uint32_t)&CONF_PWM_MODULE->CC[CONF_PWM_CHANNEL];
 
 	dma_descriptor_create(&compare_dma_descriptor, &descriptor_config);
-
-	compare_dma_descriptor.DESCADDR.reg = (uint32_t)&compare_dma_descriptor;
 	//! [config_dma_descriptor_for_wave]
 
 	//! [config_dma_job_for_wave]
+	dma_add_descriptor(&compare_dma_resource, &compare_dma_descriptor);
 	dma_add_descriptor(&compare_dma_resource, &compare_dma_descriptor);
 	dma_start_transfer_job(&compare_dma_resource);
 	//! [config_dma_job_for_wave]
@@ -211,16 +209,17 @@ static void _configure_tcc(void)
 
 	//! [setup_change_config]
 	config_tcc.counter.period = 0x1000;
-	config_tcc.compare.channel_function[1] = TCC_CHANNEL_FUNCTION_CAPTURE;
+	config_tcc.compare.channel_function[CONF_TCC_CAPTURE_CHANNEL] =
+			TCC_CHANNEL_FUNCTION_CAPTURE;
 	config_tcc.compare.wave_generation = TCC_WAVE_GENERATION_SINGLE_SLOPE_PWM;
-	config_tcc.compare.wave_polarity[0] = TCC_WAVE_POLARITY_0;
-	config_tcc.compare.match[0] = compare_values[2];
+	config_tcc.compare.wave_polarity[CONF_PWM_CHANNEL] = TCC_WAVE_POLARITY_0;
+	config_tcc.compare.match[CONF_PWM_CHANNEL] = compare_values[2];
 	//! [setup_change_config]
 
 	//! [setup_change_config_pwm]
-	config_tcc.pins.enable_wave_out_pin[0] = true;
-	config_tcc.pins.wave_out_pin[0]        = CONF_PWM_OUT_PIN;
-	config_tcc.pins.wave_out_pin_mux[0]    = CONF_PWM_OUT_MUX;
+	config_tcc.pins.enable_wave_out_pin[CONF_PWM_OUTPUT] = true;
+	config_tcc.pins.wave_out_pin[CONF_PWM_OUTPUT]        = CONF_PWM_OUT_PIN;
+	config_tcc.pins.wave_out_pin_mux[CONF_PWM_OUTPUT]    = CONF_PWM_OUT_MUX;
 	//! [setup_change_config_pwm]
 
 	//! [setup_set_config]
@@ -232,8 +231,8 @@ static void _configure_tcc(void)
 		.input_config[0].modify_action = false,
 		.input_config[1].modify_action = false,
 		.output_config.modify_generation_selection = false,
-		.generate_event_on_channel[0] = true,
-		.on_event_perform_channel_action[1] = true
+		.generate_event_on_channel[CONF_PWM_CHANNEL] = true,
+		.on_event_perform_channel_action[CONF_TCC_CAPTURE_CHANNEL] = true
 	};
 	tcc_enable_events(&tcc_instance, &events_tcc);
 	//! [setup_events]

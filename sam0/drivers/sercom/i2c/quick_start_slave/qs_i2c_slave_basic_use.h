@@ -75,19 +75,19 @@
  *
  * \subsection asfdoc_sam0_sercom_i2c_slave_basic_use_setup_workflow Workflow
  * -# Configure and enable module:
- *  \snippet qs_i2c_slave_basic_use.c config
+ *    \snippet qs_i2c_slave_basic_use.c config
  *   -# Create and initialize configuration structure.
- *    \snippet qs_i2c_slave_basic_use.c init_conf
+ *      \snippet qs_i2c_slave_basic_use.c init_conf
  *   -# Change address and address mode settings in the configuration.
- *    \snippet qs_i2c_slave_basic_use.c conf_changes
+ *      \snippet qs_i2c_slave_basic_use.c conf_changes
  *   -# Initialize the module with the set configurations.
- *     \snippet qs_i2c_slave_basic_use.c init_module
+ *      \snippet qs_i2c_slave_basic_use.c init_module
  *   -# Enable the module.
- *    \snippet qs_i2c_slave_basic_use.c enable_module
+ *      \snippet qs_i2c_slave_basic_use.c enable_module
  * -# Create variable to hold transfer direction
- *  \snippet qs_i2c_slave_basic_use.c dir
+ *    \snippet qs_i2c_slave_basic_use.c dir
  * -# Create packet variable to transfer
- *  \snippet qs_i2c_slave_basic_use.c pack
+ *    \snippet qs_i2c_slave_basic_use.c pack
  *
  * \section asfdoc_sam0_sercom_i2c_slave_basic_use_implementation Implementation
  * \subsection asfdoc_sam0_sercom_i2c_slave_basic_use_implementation_code Code
@@ -95,10 +95,10 @@
  * \snippet qs_i2c_slave_basic_use.c while
  * \subsection i2c_slave_basic_use_implementation_workflow Workflow
  * -# Wait for start condition from master and get transfer direction.
- *  \snippet qs_i2c_slave_basic_use.c get_dir
+ *    \snippet qs_i2c_slave_basic_use.c get_dir
  * -# Depending on transfer direction, set up buffer to read to or write from,
- * and write or read from master.
- *  \snippet qs_i2c_slave_basic_use.c transfer
+ *    and write or read from master.
+ *    \snippet qs_i2c_slave_basic_use.c transfer
  */
 
 #include <asf.h>

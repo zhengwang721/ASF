@@ -85,20 +85,20 @@
  * \subsection asfdoc_sam0_tc_basic_use_case_setup_flow Workflow
  * -# Create a module software instance structure for the TC module to store
  *    the TC driver state while it is in use.
+ *    \snippet qs_tc_basic.c module_inst
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- *    \snippet qs_tc_basic.c module_inst
  * -# Configure the TC module.
  *  -# Create a TC module configuration struct, which can be filled out to
  *     adjust the configuration of a physical TC peripheral.
  *     \snippet qs_tc_basic.c setup_config
  *  -# Initialize the TC configuration struct with the module's default values.
+ *     \snippet qs_tc_basic.c setup_config_defaults
  *     \note This should always be performed before using the configuration
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *     \snippet qs_tc_basic.c setup_config_defaults
  *  -# Alter the TC settings to configure the counter width, wave generation
  *     mode and the compare channel 0 value.
  *     \snippet qs_tc_basic.c setup_change_config
@@ -119,5 +119,5 @@
  *
  * \subsection asfdoc_sam0_tc_basic_use_case_main_flow Workflow
  * -# Enter an infinite loop while the PWM wave is generated via the TC module.
- *  \snippet qs_tc_basic.c main_loop
+ *    \snippet qs_tc_basic.c main_loop
  */

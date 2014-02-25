@@ -52,7 +52,7 @@ extern "C" {
  *
  * This driver for SAM D20/D21 devices provides an interface for the configuration
  * and management of the device's peripheral event resources and users within
- * the device, including the enabling and disabling of peripheral source selection
+ * the device, including enabling and disabling of peripheral source selection
  * and synchronization of clock domains between various modules. The following API
  * modes is covered by this manual:
  *  - Polled API
@@ -81,13 +81,13 @@ extern "C" {
  * \section asfdoc_sam0_events_module_overview Module Overview
  *
  * Peripherals within the SAM D20/D21 devices are capable of generating two types of
- * actions in response to given stimulus: they can set a register flag for later
- * intervention by the CPU (using interrupt or polling methods), or they can
- * generate event signals which can be internally routed directly to other
+ * actions in response to given stimulus: set a register flag for later
+ * intervention by the CPU (using interrupt or polling methods), or generate
+ * event signals which can be internally routed directly to other
  * peripherals within the device. The use of events allows for direct actions
  * to be performed in one peripheral in response to a stimulus in another
  * without CPU intervention. This can lower the overall power consumption of the
- * system if the CPU is able to remain in sleep modes for longer periods, and
+ * system if the CPU is able to remain in sleep modes for longer periods (SleepWalking&trade;), and
  * lowers the latency of the system response.
  *
  * The event system is comprised of a number of freely configurable Event
@@ -104,12 +104,12 @@ extern "C" {
  * \dot
  * digraph overview {
  * rankdir=LR;
- * node [label="Source\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] src_peripheral;
+ * node [label="Source\nPeripheral\n(Generator)" shape=ellipse style=filled fillcolor=lightgray] src_peripheral;
  * node [label="Event\nResource A" shape=square style=""] event_gen0;
  * node [label="Event\nUser X" shape=square style=""] event_user0;
  * node [label="Event\nUser Y" shape=square style=""] event_user1;
- * node [label="Destination\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral0;
- * node [label="Destination\nPeripheral" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral1;
+ * node [label="Destination\nPeripheral\n(User)" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral0;
+ * node [label="Destination\nPeripheral\n(User)" shape=ellipse style=filled fillcolor=lightgray] dst_peripheral1;
  *
  * src_peripheral -> event_gen0;
  * event_gen0 -> event_user0;
@@ -266,10 +266,10 @@ extern "C" {
  *     event enabled.
 
  * \subsubsection asfdoc_sam0_events_module_overview_config_evsys Event System
- *  -# The event system channel must be configured and enabled, with the
- *     correct source peripheral selected as the channel's Event Generator.
- *  -# The event system user must be configured and enabled, with the
- *     correct source Event Channel selected as the source.
+ *  -# An event system channel must be allocated and configured with the
+ *     correct source peripheral selected as the channel's event generator.
+ *  -# The event system user must be configured and enabled, and attached to
+ #     event channel previously allocated.
 
  * \subsubsection asfdoc_sam0_events_module_overview_config_dst Destination Peripheral
  *  -# The destination peripheral (that will receive events) must be configured
@@ -355,6 +355,13 @@ struct events_config {
 	uint8_t                    clock_source;
 };
 
+/**
+ * \brief No event generator definition
+ *
+ * Use this to disable any peripheral event input to a channel. This can be usefull
+ * if you only want to use a channel for software generated events.
+ *
+ */
 
 ///@cond INTERNAL
 /**
@@ -374,15 +381,19 @@ struct events_config {
 #define EVSYS_ID_GEN_NONE   0
 /** Definition for no user selection */
 #define EVSYS_ID_USER_NONE  0
-
 /**
  * \brief Event channel resource
  *
  * Event resource structure.
+ *
+ * \note The fields in this structure should not be altered by the user application;
+ *       they are reserved for driver internals only.
  */
 struct events_resource {
-	/** Channel allocated for the event resource */
+#if !defined(__DOXYGEN__)
+	/* Channel allocated for the event resource */
 	uint8_t channel;
+#endif
 };
 
 #if EVENTS_INTERRUPT_HOOKS_MODE == true
@@ -400,21 +411,21 @@ struct events_hook {
 /**
  * \brief Initializes an event configurations struct to defaults
  *
- * Initailize an event configuration struct to predefined default settings.
+ * Initailizes an event configuration struct to predefined safe default settings.
  *
- * \param[in] config Pointer to an instance of \c struct events_config
+ * \param[in] config Pointer to an instance of \ref struct events_config
  *
  */
 void events_get_config_defaults(struct events_config *config);
 
 /**
- * \brief Allocate a event channel and set configuration
+ * \brief Allocate an event channel and set configuration
  *
- * Allocates an event channel from the even channel pool and sets
+ * Allocates an event channel from the event channel pool and sets
  * the channel configuration.
  *
- * \param[out] resource Pointer to a events_resource struct instance
- * \param[in]  config     Pointer to a events_config struct
+ * \param[out] resource Pointer to a \ref events_resource struct instance
+ * \param[in]  config   Pointer to a \ref events_config struct
  *
  * \return Status of the configuration procedure
  * \retval STATUS_OK            Allocation and configuration went successful
@@ -428,8 +439,9 @@ enum status_code events_allocate(struct events_resource *resource, struct events
  *
  * Attach a user peripheral to the event channel to receive events.
  *
- * \param[in] resource Pointer to an event_resource struct instance
- * \param[in] user_id    A number identifying the user peripheral found in the device header file.
+ * \param[in] resource Pointer to an \ref events_resource struct instance
+ * \param[in] user_id  A number identifying the user peripheral found in the device header file.
+ *
  * \return Status of the user attach procedure
  * \retval STATUS_OK No errors detected when attaching the event user
  */
@@ -440,11 +452,11 @@ enum status_code events_attach_user(struct events_resource *resource, uint8_t us
  *
  * Deattach an user peripheral from the event channels so it does not receive any more events.
  *
- * \param[in] resource Pointer to an event_resource struct instance
+ * \param[in] resource Pointer to an \ref event_resource struct instance
  * \param[in] user_id  A number identifying the user peripheral found in the device header file.
  *
  * \return Status of the user detach procedure
- * \retval STATUS_OK No errors detected when deattaching the event user
+ * \retval STATUS_OK No errors detected when detaching the event user
  */
 enum status_code events_detach_user(struct events_resource *resource, uint8_t user_id);
 
@@ -454,11 +466,11 @@ enum status_code events_detach_user(struct events_resource *resource, uint8_t us
  * Check if a channel is busy, a channels stays busy until all users connected to the channel
  * has handled an event
  *
- * \param[in] resource Pointer to a events_resource struct instance
+ * \param[in] resource Pointer to a \ref events_resource struct instance
  *
  * \return Status of the channels busy state
  * \retval true   One or more users connected to the channel has not handled the last event
- * \retval false  All users are redy handle new events
+ * \retval false  All users are ready handle new events
  */
 bool events_is_busy(struct events_resource *resource);
 
@@ -467,11 +479,11 @@ bool events_is_busy(struct events_resource *resource);
  *
  * Trigger an event by software
  *
- * \param[in] resource Pointer to an \c events_resource struct
+ * \param[in] resource Pointer to an \ref events_resource struct
  *
  * \return Status of the event software procedure
  * \retval STATUS_OK No error was detected when software tigger signal was issued
- * \retval STATUS_ERR_UNSUPPORTED_DEV If the channel path is asynchronous and/or the 
+ * \retval STATUS_ERR_UNSUPPORTED_DEV If the channel path is asynchronous and/or the
  *                                    edge detection is not set to RISING
  */
 enum status_code events_trigger(struct events_resource *resource);
@@ -481,7 +493,7 @@ enum status_code events_trigger(struct events_resource *resource);
  *
  * Check if all users connected to the channel is ready to handle incomming events
  *
- * \param[in] resource Pointer to an \c event_resource struct
+ * \param[in] resource Pointer to an \ref events_resource struct
  *
  * \return The ready status of users connected to an event channel
  * \retval true  All users connect to event channel is ready handle incomming events
@@ -495,8 +507,8 @@ bool events_is_users_ready(struct events_resource *resource);
  * Check if an event has been detected on the channel
  *
  * \note This function will clear the event detected interrupt flag
- * 
- * \param[in] resource Pointer to an \c events_resource struct
+ *
+ * \param[in] resource Pointer to an \ref events_resource struct
  *
  * \return Status of the event detection interrupt flag
  * \retval true  Event has been detected
@@ -505,13 +517,13 @@ bool events_is_users_ready(struct events_resource *resource);
 bool events_is_detected(struct events_resource *resource);
 
 /**
- * \brief Check if the has been an overrun situation for this channel
+ * \brief Check if there has been an overrun situation on this channel
  *
- * Check if there has been an overrun situation for this channel
+ * Check if there has been an overrun situation on this channel
  *
  * \note This function will clear the event overrun detected interrupt flag
  *
- * \param[in] resource Pointer to an \c events_resource struct
+ * \param[in] resource Pointer to an \ref events_resource struct
  *
  * \return Status of the event overrun interrupt flag
  * \retval true  Event overrun has been detected
@@ -522,9 +534,9 @@ bool events_is_overrun(struct events_resource *resource);
 /**
  * \brief Release allocated channel back the the resource pool
  *
- * Release an allocated channel back to the resource pool to make it availble for other purposes.
+ * Release an allocated channel back to the resource pool to make it available for other purposes.
  *
- * \param[in] resource Pointer to an \c event_resource struct
+ * \param[in] resource Pointer to an \ref events_resource struct
  *
  * \return Status of channel release procedure
  * \retval STATUS_OK                  No error was detected when channel was released
@@ -536,7 +548,7 @@ enum status_code events_release(struct events_resource *resource);
 /**
  * \brief Get number of free channels
  *
- * Get number of allocatable channels in the event system
+ * Get number of allocatable channels in the events system resource pool
  *
  * \return The number of free channels in the event system
  *
@@ -602,7 +614,7 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset);
  *     <th>Changelog</th>
  *   </tr>
  *   <tr>
- *     <td>Rewrite of events driver. Added support for interrupts through hooks.</td>
+ *     <td>Rewrite of events driver.</td>
  *   </tr>
  *   <tr>
  *     <td>Initial Release</td>
