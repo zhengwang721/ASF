@@ -3,7 +3,7 @@
  *
  * \brief Interface of the USB Device Controller (UDC)
  *
- * Copyright (c) 2009 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
