@@ -24,8 +24,7 @@
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
-		<config name="config.compiler.iarewarm.heap_size" value="0x8000"/>
-		<config name="config.compiler.iarewarm.stack_size" value="0x4000"/>
+		<config name="config.compiler.iarewarm.stack_size" value="0x1800"/>
 		<config name="config.compiler.armgcc.optimization" value="high"/>
 		<toolchain-config name="armgcc.linker.miscellaneous.LinkerFlags" value="-Xlinker --defsym=STACK_SIZE=0x1800" toolchain="armgcc"/>
 		<generator value="doxygen"/>

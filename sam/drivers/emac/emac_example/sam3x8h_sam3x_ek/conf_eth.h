@@ -61,14 +61,12 @@
 #define ETHERNET_CONF_ETHADDR4                        0xA0
 #define ETHERNET_CONF_ETHADDR5                        0x02
 
-/** WAN Address: 192.168.0.2 */
-/* The IP address being used. */
+/** The IP address being used. */
 #define ETHERNET_CONF_IPADDR0                         192
 #define ETHERNET_CONF_IPADDR1                         168
 #define ETHERNET_CONF_IPADDR2                         0
 #define ETHERNET_CONF_IPADDR3                         2
 
-/** WAN gateway: 192.168.0.1 */
 /** The gateway address being used. */
 #define ETHERNET_CONF_GATEWAY_ADDR0                   192
 #define ETHERNET_CONF_GATEWAY_ADDR1                   168
@@ -82,6 +80,6 @@
 #define ETHERNET_CONF_NET_MASK3                       0
 
 /** Ethernet MII/RMII mode */
-#define ETH_PHY_MODE  BOARD_EMAC_MODE_RMII
+#define ETH_PHY_MODE                                  BOARD_EMAC_MODE_RMII
 
 #endif /* CONF_EMAC_H_INCLUDED */
