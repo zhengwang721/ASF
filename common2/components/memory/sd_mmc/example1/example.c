@@ -109,7 +109,7 @@ struct usart_module cdc_uart_module;
 #define TEST_MEM_START_OFFSET  (1024lu * 1024lu * 4lu) // 4MB
 
 //! Memory area size dedicated for the read/write test
-#define TEST_MEM_AREA_SIZE (1024lu * 1024lu * 1lu) // 1MB
+#define TEST_MEM_AREA_SIZE (1024lu * 128lu) // 128KB
 /**
  * Size of each read or write access.
  * Increasing this number can get higher R/W performance.

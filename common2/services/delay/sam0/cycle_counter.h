@@ -53,16 +53,6 @@ extern "C" {
 /**
  * @def F_CPU
  * @brief MCU Clock Frequency (Hertz)
- *
- * @deprecated
- * The \ref F_CPU configuration constant is used for compatibility with the
- * \ref group_common_services_delay routines. The common loop-based delay
- * routines are designed to use the \ref clk_group modules while anticipating
- * support for legacy applications assuming a statically defined clock
- * frequency. Applications using a statically configured MCU clock frequency
- * can define \ref F_CPU (Hertz), in which case the common delay routines will
- * use this value rather than calling sysclk_get_cpu_hz() to get the current
- * MCU clock frequency.
  */
 #ifndef F_CPU
 #       define F_CPU system_gclk_gen_get_hz(0)

@@ -351,6 +351,7 @@ void sd_mmc_spi_init(void)
 	config.pinmux_pad1 = SD_MMC_SPI_PINMUX_PAD1;
 	config.pinmux_pad2 = SD_MMC_SPI_PINMUX_PAD2;
 	config.pinmux_pad3 = SD_MMC_SPI_PINMUX_PAD3;
+	config.generator_source = SD_MMC_SPI_SOURCE_CLOCK;
 	config.mode_specific.master.baudrate = SDMMC_CLOCK_INIT;
 
 	spi_init(&sd_mmc_master, SD_MMC_SPI, &config);
