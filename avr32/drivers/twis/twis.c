@@ -148,7 +148,7 @@ ISR(twis_slave_interrupt_handler,CONF_TWIS_IRQ_GROUP,CONF_TWIS_IRQ_LEVEL)
 	 * BTF bit too.
 	 *
 	 * L4U  Errata 38.1.3.2:
-	 * CClearing the NAK bit before the BTF bit is set locks up the TWI bus
+	 * Clearing the NAK bit before the BTF bit is set locks up the TWI bus
 	 * When the TWIS is in transmit mode, clearing the NAK Received (NAK)
 	 * bit of the Status Register (SR) before the end of the
 	 * Acknowledge/Not Acknowledge cycle will cause the TWIS to
