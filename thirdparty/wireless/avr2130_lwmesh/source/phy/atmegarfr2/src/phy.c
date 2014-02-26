@@ -212,7 +212,6 @@ uint16_t PHY_RandomReq(void)
 }
 #endif
 
-#ifdef PHY_ENABLE_AES_MODULE
 /*************************************************************************//**
 *****************************************************************************/
 void PHY_EncryptReq(uint8_t *text, uint8_t *key)
@@ -221,7 +220,6 @@ void PHY_EncryptReq(uint8_t *text, uint8_t *key)
 	sal_aes_exec(text);
 	sal_aes_read(text);
 }
-#endif
 
 #ifdef PHY_ENABLE_ENERGY_DETECTION
 /*************************************************************************//**

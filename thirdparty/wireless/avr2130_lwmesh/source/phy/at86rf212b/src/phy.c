@@ -45,6 +45,7 @@
 /*- Includes ---------------------------------------------------------------*/
 #include <stdbool.h>
 #include "phy.h"
+#include "sal.h"
 #include "trx_access.h"
 #include "delay.h"
 #include "at86rf212b.h"
@@ -227,7 +228,6 @@ uint16_t PHY_RandomReq(void)
 }
 #endif
 
-#ifdef PHY_ENABLE_AES_MODULE
 /*************************************************************************//**
 *****************************************************************************/
 void PHY_EncryptReq(uint8_t *text, uint8_t *key)
@@ -235,7 +235,6 @@ void PHY_EncryptReq(uint8_t *text, uint8_t *key)
 	sal_aes_setup(key,AES_MODE_ECB, AES_DIR_ENCRYPT);
 	sal_aes_read(text);
 }
-#endif
 
 #ifdef PHY_ENABLE_ENERGY_DETECTION
 /*************************************************************************//**

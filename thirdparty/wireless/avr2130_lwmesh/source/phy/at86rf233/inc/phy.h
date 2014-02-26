@@ -46,7 +46,6 @@
 /*- Includes ---------------------------------------------------------------*/
 #include <stdint.h>
 #include <stdbool.h>
-#include "sysConfig.h"
 
 /** 
  * \ingroup group_phy_233
@@ -94,9 +93,7 @@ void PHY_TaskHandler(void);
 uint16_t PHY_RandomReq(void);
 #endif
 
-#ifdef PHY_ENABLE_AES_MODULE
 void PHY_EncryptReq(uint8_t *text, uint8_t *key);
-#endif
 
 #ifdef PHY_ENABLE_ENERGY_DETECTION
 int8_t PHY_EdReq(void);
