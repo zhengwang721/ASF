@@ -80,11 +80,12 @@
 		"  8: 24MHz from Fast RC\n\r"                      \
 		"  a: 32MHz from PLL clock\n\r"                    \
 		"  b: 48MHz from PLL clock\n\r"                    \
+		"  c: 96MHz from PLL clock\n\r"                    \
 
 #define MIN_CLOCK_FAST_RC_ITEM '1'
 #define MAX_CLOCK_FAST_RC_ITEM '8'
 #define MIN_CLOCK_PLL_ITEM     'a'
-#define MAX_CLOCK_PLL_ITEM     'b'
+#define MAX_CLOCK_PLL_ITEM     'c'
 
 extern uint32_t g_fastrc_clock_list[][3];
 extern uint32_t g_pll_clock_list[][4];

@@ -70,6 +70,8 @@ uint32_t g_pll_clock_list[][4] = {
 	{32000000, 999, 1, PMC_MCKR_PRES_CLK_1},
 	/* MCK = 32000 * (1499+1) / 1 / 1 = 48 MHz */
 	{48000000, 1499, 1, PMC_MCKR_PRES_CLK_1},
+	/* MCK = 32000 * (2999+1) / 1 / 1 = 96 MHz */
+	{96000000, 2999, 1, PMC_MCKR_PRES_CLK_1},
 };
 
 /**
