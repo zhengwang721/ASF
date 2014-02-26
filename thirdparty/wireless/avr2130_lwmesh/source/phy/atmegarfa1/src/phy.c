@@ -170,7 +170,6 @@ void PHY_DataReq(uint8_t *data)
   TRX_STATE_REG = TRX_CMD_TX_START;
 }
 
-#ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
 /*************************************************************************//**
 *****************************************************************************/
 uint16_t PHY_RandomReq(void)
@@ -189,7 +188,7 @@ uint16_t PHY_RandomReq(void)
 
   return rnd;
 }
-#endif
+
 
 /*************************************************************************//**
 *****************************************************************************/
@@ -243,7 +242,16 @@ static void phyTrxSetState(uint8_t state)
   do{TRX_STATE_REG = state;
   }while (state != TRX_STATUS_REG_s.trxStatus);
 }
-
+/*************************************************************************//**
+*****************************************************************************/
+void PHY_SetIEEEAddr(uint8_t *ieee_addr)
+{
+	uint8_t *ptr_to_reg = &ieee_addr;
+	for (uint8_t i = 0; i < 8; i++) {
+		trx_reg_write((IEEE_ADDR_0_REG + i), *ptr_to_reg);
+		ptr_to_reg++;
+	}
+}
 /*************************************************************************//**
 *****************************************************************************/
 void PHY_TaskHandler(void)

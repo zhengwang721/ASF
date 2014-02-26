@@ -66,7 +66,7 @@
 
 #define PHY_ENABLE_RANDOM_NUMBER_GENERATOR
 
-#define SYS_SECURITY_MODE                   1
+#define SYS_SECURITY_MODE                   0
 
 #define NWK_BUFFERS_AMOUNT                  10
 #define NWK_DUPLICATE_REJECTION_TABLE_SIZE  50
