@@ -3,7 +3,7 @@
  *
  * @brief This file implements functions for initializing TAL.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -247,7 +247,7 @@ retval_t tal_init(void)
 	 * Configure interrupt handling.
 	 * Install a handler for the main transceiver interrupt.
 	 */
-	pal_trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
+	trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
 	pal_trx_irq_en(); /* Enable main transceiver interrupt. */
 
 #if ((defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)) && \
@@ -584,7 +584,7 @@ retval_t tal_reset(bool set_default_pib)
 	 * Configure interrupt handling.
 	 * Install a handler for the transceiver interrupt.
 	 */
-	pal_trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
+	trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
 	/* The pending transceiver interrupts on the microcontroller are
 	 *cleared. */
 	pal_trx_irq_flag_clr();

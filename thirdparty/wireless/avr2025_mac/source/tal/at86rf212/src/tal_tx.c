@@ -3,7 +3,7 @@
  *
  * @brief This file handles the frame transmission within the TAL.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -707,7 +707,7 @@ static void cca_start(void *parameter)
 			trx_state = set_trx_state(CMD_RX_ON);
 		} while (trx_state != RX_ON);
 		/* Setup interrupt handling for CCA IRQ */
-		pal_trx_irq_init((FUNC_PTR)cca_done_irq_handler);
+		trx_irq_init((FUNC_PTR)cca_done_irq_handler);
 		trx_reg_write(RG_IRQ_MASK, TRX_IRQ_4_CCA_ED_DONE); /* enable
 		                                                        *CCA
 		                                                        *interrupt
@@ -749,7 +749,7 @@ void cca_done_handling(void)
 {
 	set_trx_state(CMD_PLL_ON); /* leave RX_ON */
 	/* Restore IRQ handling */
-	pal_trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
+	trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
 	trx_reg_write(RG_IRQ_MASK, TRX_IRQ_DEFAULT);
 	trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE); /* Enable frame reception.
 	                                              **/

@@ -4,7 +4,7 @@
  * \brief Receptor functionalities in PER Measurement mode - Performance
  * Analyzer
  * application
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -141,7 +141,7 @@ pib_value_t pib_value;
 
 #ifdef EXT_RF_FRONT_END_CTRL
     /* Enable RF front end control in PER Measurement mode*/
-    pal_trx_bit_write(SR_PA_EXT_EN, PA_EXT_ENABLE);
+    trx_bit_write(SR_PA_EXT_EN, PA_EXT_ENABLE);
     /* set the TX power to default level */
 	pib_value.pib_value_8bit = TAL_TRANSMIT_POWER_DEFAULT;
     tal_pib_set(phyTransmitPower,&pib_value);

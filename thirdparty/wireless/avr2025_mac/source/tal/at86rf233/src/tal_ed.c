@@ -3,7 +3,7 @@
  *
  * @brief This file implements ED Scan
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -135,7 +135,7 @@ retval_t tal_ed_start(uint8_t scan_duration)
 	set_trx_state(CMD_FORCE_PLL_ON);
 	trx_reg_read(RG_IRQ_STATUS);    /* Clear existing interrupts */
 	trx_bit_write(SR_RX_PDT_DIS, RX_DISABLE);
-	pal_trx_irq_init((FUNC_PTR)trx_ed_irq_handler_cb);
+	trx_irq_init((FUNC_PTR)trx_ed_irq_handler_cb);
 	trx_bit_write(SR_IRQ_MASK, TRX_IRQ_4_CCA_ED_DONE); /* enable
 	                                                        *interrupt */
 	pal_trx_irq_en(); /* Enable transceiver main interrupt. */
@@ -144,7 +144,7 @@ retval_t tal_ed_start(uint8_t scan_duration)
 	if (set_trx_state(CMD_RX_ON) != RX_ON) {
 		/* Restore previous configuration */
 		trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE);
-		pal_trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
+		trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
 		trx_reg_write(RG_IRQ_MASK, TRX_IRQ_DEFAULT); /* enable
 		                                                  *TRX_END
 		                                                  *interrupt */
@@ -221,7 +221,7 @@ static void trx_ed_irq_handler_cb(void)
 void ed_scan_done(void)
 {
 	trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE);
-	pal_trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
+	trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
 	trx_reg_write(RG_IRQ_MASK, TRX_IRQ_DEFAULT); /* enable TRX_END
 	                                                  *interrupt */
 	pal_trx_irq_en(); /* Enable transceiver main interrupt. */
