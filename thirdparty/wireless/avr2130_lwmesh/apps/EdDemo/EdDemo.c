@@ -50,17 +50,17 @@
 #include <stdio.h>
 #include <string.h>
 #include "config.h"
+#include "phy.h"
+#include "sys.h"
+#include "nwk.h"
+#include "sysTimer.h"
+#include "sio2host.h"
 #if SAMD20
 #include "system.h"
 #else
 #include "led.h"
 #include "sysclk.h"
 #endif
-#include "phy.h"
-#include "sys.h"
-#include "nwk.h"
-#include "sysTimer.h"
-#include "sio2host.h"
 
 
 /*- Types ------------------------------------------------------------------*/

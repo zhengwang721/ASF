@@ -316,7 +316,7 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 		}
 		tal_awake_end_flag = false;
 		/* Set callback function for the awake interrupt. */
-		pal_trx_irq_init((FUNC_PTR)trx_irq_awake_handler_cb);
+		trx_irq_init((FUNC_PTR)trx_irq_awake_handler_cb);
 		/* The pending transceiver interrupts on the microcontroller are
 		 *cleared. */
 		pal_trx_irq_flag_clr();
@@ -335,7 +335,7 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 		/* Clear existing interrupts */
 		trx_reg_read(RG_IRQ_STATUS);
 		/* Re-install default IRQ handler for main interrupt. */
-		pal_trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
+		trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
 		/* Re-enable regular interrupts except Awake-IRQ */
 		trx_reg_write(RG_IRQ_MASK, TRX_IRQ_DEFAULT);
 

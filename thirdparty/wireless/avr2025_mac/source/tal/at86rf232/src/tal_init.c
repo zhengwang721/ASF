@@ -246,7 +246,7 @@ retval_t tal_init(void)
      * Configure interrupt handling.
      * Install a handler for the transceiver interrupt.
      */
-    pal_trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
+    trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
     pal_trx_irq_en();   /* Enable transceiver main interrupt. */
 
 #if ((defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)) && (DISABLE_TSTAMP_IRQ == 0)
@@ -584,7 +584,7 @@ retval_t tal_reset(bool set_default_pib)
      * Configure interrupt handling.
      * Install a handler for the transceiver interrupt.
      */
-    pal_trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
+    trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
     /* The pending transceiver interrupts on the microcontroller are cleared. */
     pal_trx_irq_flag_clr();
     pal_trx_irq_en();   /* Enable transceiver main interrupt. */
