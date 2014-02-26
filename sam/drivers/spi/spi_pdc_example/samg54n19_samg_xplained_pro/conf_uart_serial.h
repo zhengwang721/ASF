@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SPI PDC example configuration.
+ * \brief USART Serial Configuration
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,37 +41,14 @@
  *
  */
 
-/**
- * \defgroup spi_example_pin_defs
- *  - <b> SAMG53 XPRO -- SAMG53 XPRO </b>
- *  - VCC -- VCC
- *  - NPCS0(PA11) -- NPCS0(PA11)
- *  - MISO(PA12) -- MISO(PA12)
- *  - MOSI(PA13) -- MOSI(PA13)
- *  - SPCK(PA14) -- SPCK(PA14)
- *  - GND -- GND
- */
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-#ifndef CONF_SPI_PDC_EXAMPLE_H_INCLUDED
-#define CONF_SPI_PDC_EXAMPLE_H_INCLUDED
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   115200
+/** Parity setting */
+#define CONF_UART_PARITY     UART_MR_PAR_NO
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-#define SPI_Handler     SPI_Handler
-#define SPI_IRQn        SPI_IRQn
-
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-#endif /* CONF_SPI_PDC_EXAMPLE_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */
