@@ -41,7 +41,6 @@
 		<build type="header-file" value="instance_usart1.h"/>
 		<build type="header-file" value="instance_usart2.h"/>
 		<build type="header-file" value="instance_usart3.h"/>
-		<build type="header-file" value="instance_usart4.h"/>
 		<build type="header-file" value="instance_wdt.h"/>
 		<device-support value="sam4cm"/>
 		<info type="gui-flag" value="hidden"/>

@@ -371,9 +371,9 @@ static inline uint32_t sysclk_get_main_hz_core1(void)
  */
 static inline uint32_t sysclk_get_main_hz(void)
 {
-#if (SAM4C_0)
+#if (SAM4CM_0)
 	return sysclk_get_main_hz_core0();
-#elif (SAM4C_1) && (defined CONFIG_CPCLK_ENABLE)
+#elif (SAM4CM_1) && (defined CONFIG_CPCLK_ENABLE)
 	return sysclk_get_main_hz_core1();
 #else
 #error "No specifid core 0 or core 1 for clock service."

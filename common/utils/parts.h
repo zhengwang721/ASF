@@ -991,7 +991,7 @@
 		)
 
 
-#define SAM4C32 (SAM4C32_0 || SAM4C32_1) 
+#define SAM4C32 (SAM4C32_0 || SAM4C32_1)
 
 /** @} */
 

@@ -46,7 +46,7 @@
 
 #include "compiler.h"
 
-#warning "1. Need to clean up according to the DB board! 2. Update conf_board.h template"
+#warning "1. Need to clean up according to the DB board! 2. Update conf_board.h in module_config folder"
 
 /**
  * \ingroup group_common_boards
