@@ -191,6 +191,7 @@ void PHY_DataReq(uint8_t *data)
 {
   phyTrxSetState(TRX_CMD_TX_ARET_ON);
 
+ phyReadRegister(IRQ_STATUS_REG);
  /* size of the buffer is sent as first byte of the data
   * and data starts from second byte.
   */
@@ -308,10 +309,12 @@ static void phySetChannel(void)
 *****************************************************************************/
 static void phySetRxState(void)
 {
+  phyTrxSetState(TRX_CMD_TRX_OFF);
+
+  phyReadRegister(IRQ_STATUS_REG);
+
   if (phyRxState)
     phyTrxSetState(TRX_CMD_RX_AACK_ON);
-  else
-    phyTrxSetState(TRX_CMD_TRX_OFF);
 }
 
 /*************************************************************************//**

@@ -260,10 +260,12 @@ static void phySetChannel(void)
 *****************************************************************************/
 static void phySetRxState(void)
 {
+  phyTrxSetState(TRX_CMD_TRX_OFF);
+
+  IRQ_STATUS_REG = IRQ_CLEAR_VALUE;
+
   if (phyRxState)
     phyTrxSetState(TRX_CMD_RX_AACK_ON);
-  else
-    phyTrxSetState(TRX_CMD_TRX_OFF);
 }
 
 /*************************************************************************//**
