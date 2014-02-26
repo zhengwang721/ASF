@@ -406,8 +406,11 @@ static inline void bod_clear_detected(
  *  - \subpage asfdoc_sam0_bod_basic_use_case
  *
  *  - \subpage asfdoc_sam0_bod_application_use_case
+ *
+ * \page asfdoc_sam0_bod_application_use_case Application Use Case for BOD - Application
  * The preferred method of setting BOD33 levels and settings is trough the fuses.
  * when it is desirable to set it in software, please see the below use case.
+ *
  * In this use case, a new BOD33 level might be set in SW if the clock settings are
  * adjusted up after a battery has charged to a higher level. When the battery discharges,
  * the chip will reset when the level is below SW BOD33 level and then continue running at
