@@ -79,8 +79,7 @@ extern "C" {
  *
  * SAM D21 devices with DMAC enables high data transfer rates with minimum
  * CPU intervention and frees up CPU time. With access to all peripherals,
- * the DMAC can handle automatic transfer of data to/from
- * communication modules.
+ * the DMAC can handle automatic transfer of data to/from modules.
  * It supports static and incremental addressing for both source and
  * destination.
  *
@@ -109,13 +108,12 @@ extern "C" {
  * is performed. When linked, a number of transfer descriptors can be used to
  * enable multiple block transfers within a single DMA transaction.
  *
- * Implementation of the DMAC driver is based on DMA resource.
- * DMA resource is composed of a DMA channel, a transfer trigger and
- * one or more transfer descriptors. It has the capability to perform an interrupt
- * callback or generate peripheral events. Event generation capability is
- * available only for the four lower channels. Up to 12 DMA resources can be
- * allocated in one application and each of the DMA resource is independent.
- *
+ * The implementation of the DMA driver is based on the idea that DMA channel
+ * is a finite resource of entities with the same abilities. A DMA channel resource
+ * is able to move a defined set of data from a source address to destination
+ * address triggered by a transfer trigger. On the SAM D21 devices there are 12
+ * DMA resources available for allocation. Each of these DMA resources can trigger
+ * interrupt callback routines and peripheral events.
  * The other main features are
  *
  * - Selectable transfer trigger source
@@ -186,9 +184,16 @@ extern "C" {
  * \subsection asfdoc_sam0_dma_module_overview_dma_channels DMA Channels
  * The DMAC in each device consists of several DMA channels, which 
  * along with the transfer descriptors defines the data transfer properties.
+ * - The transfer control descriptor defines the source and destination
+ * addresses, source and destination address increment settings, the
+ * block transfer count and event output condition selection.
+ * - Dedicated channel registers control the peripheral trigger source,
+ * trigger mode settings, event input actions and channel priority level
+ * settings.
+ *
  * With a successful DMA resource allocation, a dedicated
  * DMA channel will be assigned. The channel will be occupied until the
- * DMA resource is freed. A DMA channel ID is used to identify the specific
+ * DMA resource is freed. A DMA resource handle is used to identify the specific
  * DMA resource.
  * When there are multiple channels with active requests, the arbiter prioritizes
  * the channels requesting access to the bus.
@@ -204,7 +209,7 @@ extern "C" {
  *
  * \subsection asfdoc_sam0_dma_module_overview_dma_transfer_descriptor DMA Transfer Descriptor
  * The transfer descriptor resides in the SRAM and
- * defines the transfer properties.
+ * defines these channel properties.
  *   <table border="0" cellborder="1" cellspacing="0" >
  *    <tr>
  *        <th> Field Name </th> <th> Field Width </th>
@@ -233,14 +238,15 @@ extern "C" {
  * be linked to the next descriptor address.
  *
  * \subsection asfdoc_sam0_dma_module_overview_dma_output DMA Interrupts/Events
- * The output of a DMA transfer can be an interrupt callback or a peripheral
- * event. The DMAC has three types of interrupt sources: transfer complete,
- * transfer error and channel suspend. All of these interrupt sources can be
- * registered and enabled independently through the DMAC driver.
+ * Both an interrupt callback and an peripheral event can be triggered by the
+ * DMA transfer. Three types of callbacks are supported by the DMA driver:
+ * transfer complete, channel suspend and transfer error. Each of these callback
+ * types can be registered and enabled for each channel independently through
+ * the DMA driver API. 
  *
- * The DMAC also can generate output events when transfer is complete. This is
- * configured by the DMA resource and the event is generated when the transfer
- * is complete.
+ * The DMAC module can also generate events on transfer complete. Event
+ * generation is enabled through the DMA channel, event channel configuration
+ * and event user multiplexing is done through the events driver.
  *
  * The DMAC can generate events in the below cases:
  *
