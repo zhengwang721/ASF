@@ -41,11 +41,12 @@
  */
 
 #ifdef PHY_ATMEGARFR2
-
+#define IRQ_CLEAR_VALUE       0xff
 /*- Includes ---------------------------------------------------------------*/
 #include "sysTypes.h"
 #include "phy.h"
 #include "delay.h"
+#include "sal.h"
 #include "atmegarfr2.h"
 
 /*- Definitions ------------------------------------------------------------*/
@@ -281,10 +282,16 @@ static void phyTrxSetState(uint8_t state)
 void PHY_SetIEEEAddr(uint8_t *ieee_addr)
 {
 	uint8_t *ptr_to_reg = &ieee_addr;
-	for (uint8_t i = 0; i < 8; i++) {
-		trx_reg_write((IEEE_ADDR_0_REG + i), *ptr_to_reg);
-		ptr_to_reg++;
-	}
+	IEEE_ADDR_0_REG = *ptr_to_reg++;
+	IEEE_ADDR_1_REG = *ptr_to_reg++;
+	IEEE_ADDR_2_REG = *ptr_to_reg++;
+	IEEE_ADDR_3_REG = *ptr_to_reg++;
+	IEEE_ADDR_4_REG = *ptr_to_reg++;
+	IEEE_ADDR_5_REG = *ptr_to_reg++;
+	IEEE_ADDR_6_REG = *ptr_to_reg++;
+	IEEE_ADDR_7_REG = *ptr_to_reg;
+
+
 }
 /*************************************************************************//**
 *****************************************************************************/

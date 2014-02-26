@@ -92,11 +92,7 @@ void PHY_DataInd(PHY_DataInd_t *ind);
 void PHY_TaskHandler(void);
 void PHY_SetIEEEAddr(uint8_t *ieee_addr);
 uint16_t PHY_RandomReq(void);
-
-
-#ifdef PHY_ENABLE_AES_MODULE
 void PHY_EncryptReq(uint8_t *text, uint8_t *key);
-#endif
 
 #ifdef PHY_ENABLE_ENERGY_DETECTION
 int8_t PHY_EdReq(void);
