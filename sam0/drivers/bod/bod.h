@@ -76,10 +76,10 @@ extern "C" {
  *
  * \section asfdoc_sam0_bod_module_overview Module Overview
  *
- * The SAM D20/D21 devices contain a number of Brown Out Detector (BOD) modules. Each
- * BOD monitors the supply voltage for any dips that go below the set threshold
- * for the module. In case of a BOD detection the BOD will either reset the
- * system or raise a hardware interrupt so that a safe power-down sequence can
+ * The SAM D20/D21 devices contain a number of Brown Out Detector (BOD) modules.
+ * Each BOD monitors the supply voltage for any dips that go below the set
+ * threshold for the module. In case of a BOD detection the BOD will either reset
+ * the system or raise a hardware interrupt so that a safe power-down sequence can
  * be attempted.
  *
  *
@@ -411,11 +411,11 @@ static inline void bod_clear_detected(
  * The preferred method of setting BOD33 levels and settings is trough the fuses.
  * when it is desirable to set it in software, please see the below use case.
  *
- * In this use case, a new BOD33 level might be set in SW if the clock settings are
- * adjusted up after a battery has charged to a higher level. When the battery discharges,
- * the chip will reset when the level is below SW BOD33 level and then continue running at
- * a lower clock rate and fuse BOD33 level. The chip should always measure the voltage
- * before adjusting the frequency up.
+ * In this use case, a new BOD33 level might be set in SW if the clock settings
+ * are adjusted up after a battery has charged to a higher level. When the battery
+ * discharges, the chip will reset when the battery level is below SW BOD33 level.
+ * Now the chip will run at a lower clock rate and the BOD33 level from fuse.
+ * The chip should always measure the voltage before adjusting the frequency up.
  *
  * \page asfdoc_sam0_bod_document_revision_history Document Revision History
  *
