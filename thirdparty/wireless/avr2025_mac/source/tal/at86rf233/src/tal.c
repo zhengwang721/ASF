@@ -305,7 +305,7 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 		/* Force enabling of global interrupts. */
 		ENABLE_GLOBAL_IRQ();
 		/* Leave trx sleep mode. */
-		PAL_SLP_TR_LOW();
+		TRX_SLP_TR_LOW();
 		/* Poll wake-up interrupt flag until set within ISR. */
 		while (!tal_awake_end_flag) {
 		}
@@ -341,7 +341,7 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 			return TRX_DEEP_SLEEP;
 		}
 		/* Leave trx sleep mode. */
-		PAL_SLP_TR_LOW();
+		TRX_SLP_TR_LOW();
 		/* Check if trx has left deep sleep. */
 		tal_trx_status_t trx_state;
 		do {
@@ -419,7 +419,7 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 		tal_trx_status = TRX_SLEEP;
 #endif
 		PAL_WAIT_1_US();
-		PAL_SLP_TR_HIGH();
+		TRX_SLP_TR_HIGH();
 		pal_timer_delay(TRX_OFF_TO_SLEEP_TIME_CLKM_CYCLES);
 		/* Transceiver register cannot be read during TRX_SLEEP or
 		 *DEEP_SLEEP. */
@@ -633,7 +633,7 @@ static void switch_pll_on(void)
 	pal_get_current_time(&start_time);
 
 	/* Wait for transceiver interrupt: check for IRQ line */
-	while (PAL_TRX_IRQ_HIGH() == false) {
+	while (TRX_IRQ_HIGH() == false) {
 		/* Handle errata "potential long PLL settling duration". */
 		pal_get_current_time(&current_time);
 		if (pal_sub_time_us(current_time,

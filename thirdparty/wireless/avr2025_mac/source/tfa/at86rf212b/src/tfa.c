@@ -602,8 +602,8 @@ void tfa_continuous_tx_start(continuous_tx_mode_t tx_mode, bool random_content)
 	/* step 12, 13: Stwitch PLL on */
 	set_trx_state(CMD_PLL_ON);
 	/* step 14: Initiate transmission using SLP_TR line */
-	PAL_SLP_TR_HIGH();
-	PAL_SLP_TR_LOW();
+	TRX_SLP_TR_HIGH();
+	TRX_SLP_TR_LOW();
 }
 
 #endif

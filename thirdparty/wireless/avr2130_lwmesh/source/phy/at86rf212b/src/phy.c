@@ -172,7 +172,7 @@ void PHY_SetTxPower(uint8_t txPower)
 void PHY_Sleep(void)
 {
   phyTrxSetState(TRX_CMD_TRX_OFF);
-  PAL_SLP_TR_HIGH();
+  TRX_SLP_TR_HIGH();
   phyState = PHY_STATE_SLEEP;
 }
 
@@ -180,7 +180,7 @@ void PHY_Sleep(void)
 *****************************************************************************/
 void PHY_Wakeup(void)
 {
-  PAL_SLP_TR_LOW();
+  TRX_SLP_TR_LOW();
   phySetRxState();
   phyState = PHY_STATE_IDLE;
 }
@@ -198,9 +198,9 @@ void PHY_DataReq(uint8_t *data)
   trx_frame_write(data,(data[0]-1) /* length value*/); 
 
   phyState = PHY_STATE_TX_WAIT_END;
-  PAL_SLP_TR_HIGH();
+  TRX_SLP_TR_HIGH();
   delay_us(1);
-  PAL_SLP_TR_LOW();
+  TRX_SLP_TR_LOW();
 }
 
 #ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR

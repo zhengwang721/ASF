@@ -304,10 +304,10 @@ static retval_t trx_init(void)
 	/* Apply reset pulse. Ensure control lines have correct levels (SEL is
 	 * already set in TRX_INIT().
 	 */
-	PAL_RST_LOW();
-	PAL_SLP_TR_LOW();
+	TRX_RST_LOW();
+	TRX_SLP_TR_LOW();
 	pal_timer_delay(RST_PULSE_WIDTH_US);
-	PAL_RST_HIGH();
+	TRX_RST_HIGH();
 
 	/* Wait typical time of timer TR13. */
 	pal_timer_delay(30);
@@ -511,13 +511,13 @@ static retval_t trx_reset(void)
 
 
 	/* trx might sleep, so wake it up */
-	PAL_SLP_TR_LOW();
+	TRX_SLP_TR_LOW();
 	pal_timer_delay(SLEEP_TO_TRX_OFF_TYP_US);
 
 	/* Apply reset pulse */
-	PAL_RST_LOW();
+	TRX_RST_LOW();
 	pal_timer_delay(RST_PULSE_WIDTH_US);
-	PAL_RST_HIGH();
+	TRX_RST_HIGH();
 
 	/* verify that trx has reached TRX_OFF */
 	do {

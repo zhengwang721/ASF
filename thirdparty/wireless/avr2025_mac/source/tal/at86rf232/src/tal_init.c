@@ -294,16 +294,16 @@ static retval_t trx_init(void)
     tal_trx_status_t trx_status;
     uint8_t poll_counter = 0;
 
-    PAL_RST_HIGH();
-    PAL_SLP_TR_LOW();
+    TRX_RST_HIGH();
+    TRX_SLP_TR_LOW();
 
     /* Wait typical time of timer TR1. */
     pal_timer_delay(P_ON_TO_CLKM_AVAILABLE_TYP_US);
 
     /* Apply reset pulse */
-    PAL_RST_LOW();
+    TRX_RST_LOW();
     pal_timer_delay(RST_PULSE_WIDTH_US);
-    PAL_RST_HIGH();
+    TRX_RST_HIGH();
 
 #if !(defined FPGA_EMULATION)
     do
@@ -482,13 +482,13 @@ static retval_t trx_reset(void)
     uint8_t poll_counter = 0;
 
     /* trx might sleep, so wake it up */
-    PAL_SLP_TR_LOW();
+    TRX_SLP_TR_LOW();
     pal_timer_delay(SLEEP_TO_TRX_OFF_TYP_US);
 
     /* Apply reset pulse */
-    PAL_RST_LOW();
+    TRX_RST_LOW();
     pal_timer_delay(RST_PULSE_WIDTH_US);
-    PAL_RST_HIGH();
+    TRX_RST_HIGH();
 
     /* verify that trx has reached TRX_OFF */
     do

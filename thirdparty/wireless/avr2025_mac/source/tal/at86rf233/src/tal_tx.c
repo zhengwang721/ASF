@@ -357,9 +357,9 @@ void send_frame(csma_mode_t csma_mode, bool tx_retries)
 	}
 
 	/* Toggle the SLP_TR pin triggering transmission. */
-	PAL_SLP_TR_HIGH();
+	TRX_SLP_TR_HIGH();
 	PAL_WAIT_65_NS();
-	PAL_SLP_TR_LOW();
+	TRX_SLP_TR_LOW();
 
 	/*
 	 * Send the frame to the transceiver.
@@ -481,9 +481,9 @@ void handle_tx_end_irq(bool underrun_occured)
 					trx_status = set_trx_state(CMD_TX_ARET_ON);
 				} while (trx_status != TX_ARET_ON);
 				/* Toggle the SLP_TR pin triggering transmission. */
-				PAL_SLP_TR_HIGH();
+				TRX_SLP_TR_HIGH();
 				PAL_WAIT_65_NS();
-				PAL_SLP_TR_LOW();
+				TRX_SLP_TR_LOW();
 				if(--tal_sw_retry_count == 0)
 				{
 					tal_sw_retry_no_csma_ca = false;
@@ -545,9 +545,9 @@ void tal_tx_beacon(frame_info_t *tx_frame)
 	pal_trx_irq_dis();
 
 	/* Toggle the SLP_TR pin triggering transmission. */
-	PAL_SLP_TR_HIGH();
+	TRX_SLP_TR_HIGH();
 	PAL_WAIT_65_NS();
-	PAL_SLP_TR_LOW();
+	TRX_SLP_TR_LOW();
 
 	/*
 	 * Send the frame to the transceiver.

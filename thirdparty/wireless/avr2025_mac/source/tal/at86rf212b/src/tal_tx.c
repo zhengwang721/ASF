@@ -369,9 +369,9 @@ void send_frame(csma_mode_t csma_mode, bool tx_retries)
 	}
 
 	/* Toggle the SLP_TR pin triggering transmission. */
-	PAL_SLP_TR_HIGH();
+	TRX_SLP_TR_HIGH();
 	PAL_WAIT_65_NS();
-	PAL_SLP_TR_LOW();
+	TRX_SLP_TR_LOW();
 
 	/*
 	 * Send the frame to the transceiver.
@@ -532,9 +532,9 @@ void tal_tx_beacon(frame_info_t *tx_frame)
 	pal_trx_irq_dis();
 
 	/* Toggle the SLP_TR pin triggering transmission. */
-	PAL_SLP_TR_HIGH();
+	TRX_SLP_TR_HIGH();
 	PAL_WAIT_65_NS();
-	PAL_SLP_TR_LOW();
+	TRX_SLP_TR_LOW();
 
 	/*
 	 * Send the frame to the transceiver.
@@ -786,9 +786,9 @@ static void tx_frame(void)
 	pal_trx_irq_dis();
 
 	/* Toggle the SLP_TR pin triggering transmission. */
-	PAL_SLP_TR_HIGH();
+	TRX_SLP_TR_HIGH();
 	PAL_WAIT_65_NS();
-	PAL_SLP_TR_LOW();
+	TRX_SLP_TR_LOW();
 
 	/*
 	 * Send the frame to the transceiver.

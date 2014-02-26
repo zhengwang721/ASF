@@ -167,15 +167,15 @@ extern "C" {
      * Macros for TRX GPIO pins access.
      */
     /** Macro to set Reset pin to high */
-#define PAL_RST_HIGH()                  RST_HIGH()
+#define TRX_RST_HIGH()                  RST_HIGH()
     /** Macro to set Reset pin to low */
-#define PAL_RST_LOW()                   RST_LOW()
+#define TRX_RST_LOW()                   RST_LOW()
     /** Macro to set SLP_TR pin to high */
-#define PAL_SLP_TR_HIGH()               SLP_TR_HIGH()
+#define TRX_SLP_TR_HIGH()               SLP_TR_HIGH()
     /** Macro to set SLP_TR pin to low */
-#define PAL_SLP_TR_LOW()                SLP_TR_LOW()
+#define TRX_SLP_TR_LOW()                SLP_TR_LOW()
     /** Macro to get the transceiver's main IRQ status */
-#define PAL_TRX_IRQ_HIGH()              IRQ_PINGET()
+#define TRX_IRQ_HIGH()              IRQ_PINGET()
 
     /**
      * @brief Reads frame buffer of the transceiver

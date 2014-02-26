@@ -348,9 +348,9 @@ void send_frame(csma_mode_t csma_mode, bool tx_retries)
     ENTER_CRITICAL_REGION();    // prevent from buffer underrun
 
     /* Toggle the SLP_TR pin triggering transmission. */
-    PAL_SLP_TR_HIGH();
+    TRX_SLP_TR_HIGH();
     PAL_WAIT_65_NS();
-    PAL_SLP_TR_LOW();
+    TRX_SLP_TR_LOW();
 
     /*
      * Send the frame to the transceiver.
@@ -506,9 +506,9 @@ void tal_tx_beacon(frame_info_t *tx_frame)
     ENTER_CRITICAL_REGION();    // prevent from buffer underrun
 
     /* Toggle the SLP_TR pin triggering transmission. */
-    PAL_SLP_TR_HIGH();
+    TRX_SLP_TR_HIGH();
     PAL_WAIT_65_NS();
-    PAL_SLP_TR_LOW();
+    TRX_SLP_TR_LOW();
 
     /*
      * Send the frame to the transceiver.

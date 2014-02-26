@@ -517,8 +517,8 @@ void tfa_continuous_tx_start(continuous_tx_mode_t tx_mode, bool random_content)
     trx_reg_write(RG_PART_NUM, 0x54);
     trx_reg_write(RG_PART_NUM, 0x46);
     set_trx_state(CMD_PLL_ON);
-    PAL_SLP_TR_HIGH();
-    PAL_SLP_TR_LOW();
+    TRX_SLP_TR_HIGH();
+    TRX_SLP_TR_LOW();
 }
 #endif
 

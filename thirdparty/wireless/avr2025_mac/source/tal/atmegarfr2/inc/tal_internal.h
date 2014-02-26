@@ -479,16 +479,16 @@ void ed_scan_done(void);
 /*
  * Set TRX GPIO pins.
  */
-#define PAL_RST_HIGH()                      (TRXPR |= _BV(TRXRST))  /**< Set
+#define TRX_RST_HIGH()                      (TRXPR |= _BV(TRXRST))  /**< Set
 	                                                             *Reset Bit.
 	                                                             **/
-#define PAL_RST_LOW()                       (TRXPR &= ~_BV(TRXRST)) /**< Clear
+#define TRX_RST_LOW()                       (TRXPR &= ~_BV(TRXRST)) /**< Clear
 	                                                             *Reset Bit.
 	                                                             **/
-#define PAL_SLP_TR_HIGH()                   (TRXPR |= _BV(SLPTR))   /**< Set
+#define TRX_SLP_TR_HIGH()                   (TRXPR |= _BV(SLPTR))   /**< Set
 	                                                             *Sleep/TR
 	                                                             *Bit. */
-#define PAL_SLP_TR_LOW()                    (TRXPR &= ~_BV(SLPTR))  /**< Clear
+#define TRX_SLP_TR_LOW()                    (TRXPR &= ~_BV(SLPTR))  /**< Clear
 	                                                             *Sleep/TR
 	                                                             *Bit. */
 
