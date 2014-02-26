@@ -1,11 +1,9 @@
 /**
  * \file
  *
- * \brief Arch file for SAM.
+ * \brief SAM4CMP-DB board configuration.
  *
- * This file defines common SAM series.
- *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,78 +41,66 @@
  *
  */
 
-#ifndef _SAM_IO_
-#define _SAM_IO_
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/* SAM3 family */
+#warning "Need to clean up!"
 
-/* SAM3S series */
-#if (SAM3S)
-# if (SAM3S8 || SAM3SD8)
-#  include "sam3s8.h"
-# else
-#  include "sam3s.h"
-# endif
-#endif
+/* Keep watchdog at board initialization (not disable it) */
+//#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
 
-/* SAM3U series */
-#if (SAM3U)
-#  include "sam3u.h"
-#endif
+/* Configure UART0 pins */
+//#define CONF_BOARD_UART_CONSOLE
 
-/* SAM3N series */
-#if (SAM3N)
-#  include "sam3n.h"
-#endif
+/* Configure LCD backlight */
+//#define CONF_BOARD_UART_CONSOLE
 
-/* SAM3XA series */
-#if (SAM3XA)
-#  include "sam3xa.h"
-#endif
+/* Configure PWM LED0 pin */
+//#define CONF_BOARD_PWM_LED0
 
-/* SAM4S series */
-#if (SAM4S)
-#  include "sam4s.h"
-#endif
+/* Configure PWM LED1 pin */
+//#define CONF_BOARD_PWM_LED1
 
-/* SAM4L series */
-#if (SAM4L)
-#  include "sam4l.h"
-#endif
+/* Configure PWM LED2 pin */
+//#define CONF_BOARD_PWM_LED2
 
-/* SAM4E series */
-#if (SAM4E)
-#  include "sam4e.h"
-#endif
+/* Configure SPI0 pins */
+//#define CONF_BOARD_SPI0
+//#define CONF_BOARD_SPI0_NPCS0
 
-/* SAM4N series */
-#if (SAM4N)
-#  include "sam4n.h"
-#endif
+/* Configure SPI1 pins */
+//#define CONF_BOARD_SPI1
+//#define CONF_BOARD_SPI0_NPCS1
 
-/* SAM4C series */
-#if (SAM4C)
-#  include "sam4c.h"
-#endif
+/* Configure TWI0 pins */
+//#define CONF_BOARD_TWI0
 
-/* SAM4CM series */
-#if (SAM4CM)
-#  include "sam4cm.h"
-#endif
+/* Configure TWI0 pins for AT30TSE */
+//#define CONF_BOARD_AT30TSE
 
-/* SAM4CP series */
-#if (SAM4CP)
-#  include "sam4cp.h"
-#endif
+/* Configure TWI1 pins */
+//#define CONF_BOARD_TWI1
 
-/* SAMG51 series */
-#if (SAMG51)
-#  include "samg51.h"
-#endif
+/* Configure USART pins */
+//#define CONF_BOARD_USART_RXD
+//#define CONF_BOARD_USART_TXD
+//#define CONF_BOARD_USART_CTS
+//#define CONF_BOARD_USART_RTS
+//#define CONF_BOARD_USART_SCK
 
-/* SAMG53 series */
-#if (SAMG53)
-#  include "samg53.h"
-#endif
+/* Configure IrDA transceiver shutdown pin */
+//#define CONF_BOARD_TFDU4300_SD
 
-#endif /* _SAM_IO_ */
+/* Configure RS485 transceiver RE pin */
+//#define CONF_BOARD_ADM3485_RE
+
+/* Configure ISO7816 card reset pin */
+//#define CONF_BOARD_ISO7816_RST
+
+/* Configure ISO7816 interface TXD & SCK pin */
+//#define CONF_BOARD_ISO7816
+
+/* Configure ADC pins */
+//#define CONF_BOARD_ADC
+
+#endif /* CONF_BOARD_H_INCLUDED */
