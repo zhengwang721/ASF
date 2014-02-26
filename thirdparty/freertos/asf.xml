@@ -42,15 +42,15 @@
 				<build type="header-file" subtype="api" value="freertos-7.3.0/source/include/StackMacros.h"/>
 				<build type="header-file" subtype="api" value="freertos-7.3.0/source/include/task.h"/>
 				<build type="header-file" subtype="api" value="freertos-7.3.0/source/include/timers.h"/>
-				<build type="c-source"     value="freertos-7.3.0/source/portable/gcc/arm_cm3/port.c" toolchain="armgcc"/>
-				<build type="header-file"  value="freertos-7.3.0/source/portable/gcc/arm_cm3/portmacro.h" toolchain="armgcc"/>
-				<build type="c-source"     value="freertos-7.3.0/source/portable/iar/arm_cm3/port.c" toolchain="iarewarm"/>
-				<build type="asm-source"   value="freertos-7.3.0/source/portable/iar/arm_cm3/portasm.s" toolchain="iarewarm"/>
-				<build type="header-file"  value="freertos-7.3.0/source/portable/iar/arm_cm3/portmacro.h" toolchain="iarewarm"/>
+				<build type="c-source"     value="freertos-7.3.0/source/portable/gcc/sam/port.c" toolchain="armgcc"/>
+				<build type="header-file"  value="freertos-7.3.0/source/portable/gcc/sam/portmacro.h" toolchain="armgcc"/>
+				<build type="c-source"     value="freertos-7.3.0/source/portable/iar/sam/port.c" toolchain="iarewarm"/>
+				<build type="asm-source"   value="freertos-7.3.0/source/portable/iar/sam/portasm.s" toolchain="iarewarm"/>
+				<build type="header-file"  value="freertos-7.3.0/source/portable/iar/sam/portmacro.h" toolchain="iarewarm"/>
 				<build type="c-source"     value="freertos-7.3.0/source/portable/memmang/heap_4.c"/>
 				<build type="include-path" value="./freertos-7.3.0/source/include"/>
-				<build type="include-path" value="./freertos-7.3.0/source/portable/gcc/arm_cm3" toolchain="armgcc"/>
-				<build type="include-path" value="./freertos-7.3.0/source/portable/iar/arm_cm3" toolchain="iarewarm"/>
+				<build type="include-path" value="./freertos-7.3.0/source/portable/gcc/sam" toolchain="armgcc"/>
+				<build type="include-path" value="./freertos-7.3.0/source/portable/iar/sam" toolchain="iarewarm"/>
 				<require idref="common.services.basic.clock"/>
 	    			<device-support value="sam3"/>
 	    			<device-support value="sam4l"/>
