@@ -3,7 +3,7 @@
  *
  * \brief Real-Time Clock (RTC) example for SAM.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -584,7 +584,7 @@ int main(void)
 		if (uc_key == 'i') {
 			gs_ul_state = STATE_SET_TIME_ALARM;
 
-			rtc_clear_data_alarm(RTC);
+			rtc_clear_date_alarm(RTC);
 
 			do {
 				puts("\n\r\n\r Set time alarm(hh:mm:ss): ");
