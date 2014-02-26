@@ -103,7 +103,7 @@ void board_init(void)
 	 * Here IOPORT must be initialized for others to use before setting up IO.
 	 */
 	ioport_init();
-
+#if 0 //TODO: check LED pin etc.
 #ifdef CONFIG_CPCLK_ENABLE
 	/* Configure the pins connected to LEDs as output and set their
 	 * default initial state to high (LEDs off).
@@ -128,6 +128,7 @@ void board_init(void)
 #ifdef CONF_BOARD_UART_CONSOLE
 	ioport_set_pin_peripheral_mode(PIO_PB4_IDX, IOPORT_MODE_MUX_A);
 	ioport_set_pin_peripheral_mode(PIO_PB5_IDX, IOPORT_MODE_MUX_A);
+#endif
 #endif
 }
 
