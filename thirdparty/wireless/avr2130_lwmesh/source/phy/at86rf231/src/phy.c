@@ -282,7 +282,7 @@ static void phyTrxSetState(uint8_t state)
 *****************************************************************************/
 void PHY_SetIEEEAddr(uint8_t *ieee_addr)
 {
-	uint8_t *ptr_to_reg = &ieee_addr;
+	uint8_t *ptr_to_reg = ieee_addr;
 	for (uint8_t i = 0; i < 8; i++) {
 		trx_reg_write((IEEE_ADDR_0_REG + i), *ptr_to_reg);
 		ptr_to_reg++;
