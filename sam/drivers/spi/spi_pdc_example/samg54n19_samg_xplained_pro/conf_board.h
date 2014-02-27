@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SPI PDC example configuration.
+ * \brief Board configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,37 +41,24 @@
  *
  */
 
-/**
- * \defgroup spi_example_pin_defs
- *  - <b> SAMG53 XPRO -- SAMG53 XPRO </b>
- *  - VCC -- VCC
- *  - NPCS0(PA11) -- NPCS0(PA11)
- *  - MISO(PA12) -- MISO(PA12)
- *  - MOSI(PA13) -- MOSI(PA13)
- *  - SPCK(PA14) -- SPCK(PA14)
- *  - GND -- GND
- */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifndef CONF_SPI_PDC_EXAMPLE_H_INCLUDED
-#define CONF_SPI_PDC_EXAMPLE_H_INCLUDED
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
+/** SPI MACRO definition */
+#define CONF_BOARD_SPI
 
-#define SPI_Handler     SPI_Handler
-#define SPI_IRQn        SPI_IRQn
+/** SPI slave select MACRO definition */
+#define CONF_BOARD_SPI_NPCS0
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
+/** Spi Hw ID . */
+#define SPI_ID          ID_SPI
 
-#endif /* CONF_SPI_PDC_EXAMPLE_H_INCLUDED */
+/** SPI base address for SPI master mode*/
+#define SPI_MASTER_BASE      SPI
+/** SPI base address for SPI slave mode, (on different board) */
+#define SPI_SLAVE_BASE       SPI
+
+#endif /* CONF_BOARD_H_INCLUDED */

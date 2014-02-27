@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SPI PDC example configuration.
+ * \brief SPI example configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,7 +43,7 @@
 
 /**
  * \defgroup spi_example_pin_defs
- *  - <b> SAMG53 XPRO -- SAMG53 XPRO </b>
+ *  - <b> SAMG54 XPRO -- SAMG54 XPRO </b>
  *  - VCC -- VCC
  *  - NPCS0(PA11) -- NPCS0(PA11)
  *  - MISO(PA12) -- MISO(PA12)
@@ -52,8 +52,8 @@
  *  - GND -- GND
  */
 
-#ifndef CONF_SPI_PDC_EXAMPLE_H_INCLUDED
-#define CONF_SPI_PDC_EXAMPLE_H_INCLUDED
+#ifndef CONF_SPI_EXAMPLE_H_INCLUDED
+#define CONF_SPI_EXAMPLE_H_INCLUDED
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -74,4 +74,4 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-#endif /* CONF_SPI_PDC_EXAMPLE_H_INCLUDED */
+#endif /* CONF_SPI_EXAMPLE_H_INCLUDED */
