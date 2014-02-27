@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21 TCC - Timer Counter for Control Applications Callback Driver
+ * \brief SAM D21 External Interrupt Driver Configuration Header
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,51 +40,9 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
+#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
 
-#ifndef TCC_CALLBACK_H_INCLUDED
-#define TCC_CALLBACK_H_INCLUDED
-
-#include "tcc.h"
-#include <system_interrupt.h>
-
-#ifdef __cplusplus
-extern "C" {
 #endif
-
-#if !defined(__DOXYGEN__)
-extern void *_tcc_instances[TCC_INST_NUM];
-#endif
-
-
-/**
- * \name Callback Management
- * {@
- */
-
-enum status_code tcc_register_callback(
-		struct tcc_module *const module,
-		tcc_callback_t callback_func,
-		const enum tcc_callback callback_type);
-
-enum status_code tcc_unregister_callback(
-		struct tcc_module *const module,
-		const enum tcc_callback callback_type);
-
-void tcc_enable_callback(
-		struct tcc_module *const module,
-		const enum tcc_callback callback_type);
-
-void tcc_disable_callback(
-		struct tcc_module *const module,
-		const enum tcc_callback callback_type);
-
-/**
- * @}
- */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* TCC_CALLBACK_H_INCLUDED */

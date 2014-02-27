@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21 TCC - Timer Counter for Control Applications Callback Driver
+ * \brief TCC Quick Start configuration for SAMD21 Xplained Pro
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,50 +41,34 @@
  *
  */
 
+#ifndef CONF_QUICK_START_H_INCLUDED
+#define CONF_QUICK_START_H_INCLUDED
 
-#ifndef TCC_CALLBACK_H_INCLUDED
-#define TCC_CALLBACK_H_INCLUDED
+//[definition_pwm]
+/** PWM module to use */
+#define CONF_PWM_MODULE      LED_0_PWM_MODULE
+/** PWM channel */
+#define CONF_PWM_CHANNEL     LED_0_PWM_CHANNEL
+/** PWM output */
+#define CONF_PWM_OUTPUT      LED_0_PWM_OUTPUT
+/** PWM output pin */
+#define CONF_PWM_OUT_PIN     LED_0_PWM_PIN
+/** PWM output pin mux */
+#define CONF_PWM_OUT_MUX     LED_0_PWM_MUX
+//[definition_pwm]
 
-#include "tcc.h"
-#include <system_interrupt.h>
+//[definition_fault]
+/** FAULT EIC pin */
+#define CONF_FAULT_EIC_PIN       SW0_EIC_PIN
+/** FAULT EIC pin mux */
+#define CONF_FAULT_EIC_PIN_MUX   SW0_EIC_PINMUX
+/** FAULT EIC line */
+#define CONF_FAULT_EIC_LINE      SW0_EIC_LINE
 
-#ifdef __cplusplus
-extern "C" {
-#endif
+/** FAULT event generator */
+#define CONF_FAULT_EVENT_GENERATOR EVSYS_ID_GEN_EIC_EXTINT_15
+/** FAULT event user for recoverable fault */
+#define CONF_FAULT_EVENT_USER      EVSYS_ID_USER_TCC0_MC_0
+//[definition_fault]
 
-#if !defined(__DOXYGEN__)
-extern void *_tcc_instances[TCC_INST_NUM];
-#endif
-
-
-/**
- * \name Callback Management
- * {@
- */
-
-enum status_code tcc_register_callback(
-		struct tcc_module *const module,
-		tcc_callback_t callback_func,
-		const enum tcc_callback callback_type);
-
-enum status_code tcc_unregister_callback(
-		struct tcc_module *const module,
-		const enum tcc_callback callback_type);
-
-void tcc_enable_callback(
-		struct tcc_module *const module,
-		const enum tcc_callback callback_type);
-
-void tcc_disable_callback(
-		struct tcc_module *const module,
-		const enum tcc_callback callback_type);
-
-/**
- * @}
- */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* TCC_CALLBACK_H_INCLUDED */
+#endif /* CONF_QUICK_START_H_INCLUDED */
