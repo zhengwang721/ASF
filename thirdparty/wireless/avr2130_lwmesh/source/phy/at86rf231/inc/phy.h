@@ -93,8 +93,6 @@ uint16_t PHY_RandomReq(void);
 
 void PHY_EncryptReq(uint8_t *text, uint8_t *key);
 
-#ifdef PHY_ENABLE_ENERGY_DETECTION
 int8_t PHY_EdReq(void);
-#endif
 /** @} */
 #endif // _PHY_H_

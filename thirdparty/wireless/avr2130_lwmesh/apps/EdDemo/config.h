@@ -48,7 +48,4 @@
 #define APP_LAST_CHANNEL                    26
 #define APP_SCAN_INTERVAL                   500
 
-
-#define PHY_ENABLE_ENERGY_DETECTION
-
 #endif // _CONFIG_H_
