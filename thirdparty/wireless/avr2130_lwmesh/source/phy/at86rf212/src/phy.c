@@ -230,6 +230,7 @@ uint16_t PHY_RandomReq(void)
 void PHY_EncryptReq(uint8_t *text, uint8_t *key)
 {
 	sal_aes_setup(key,AES_MODE_ECB, AES_DIR_ENCRYPT);
+	sal_aes_wrrd(text);	
 	sal_aes_read(text);
 }
 
