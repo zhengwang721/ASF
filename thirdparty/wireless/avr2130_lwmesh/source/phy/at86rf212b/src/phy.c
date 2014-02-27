@@ -231,7 +231,11 @@ uint16_t PHY_RandomReq(void)
 void PHY_EncryptReq(uint8_t *text, uint8_t *key)
 {
 	sal_aes_setup(key,AES_MODE_ECB, AES_DIR_ENCRYPT);
-	sal_aes_wrrd(text);
+#if (SAL_TYPE == AT86RF2xx)
+	sal_aes_wrrd(text, NULL);
+#else
+	sal_aes_exec(text);
+#endif		
 	sal_aes_read(text);
 }
 

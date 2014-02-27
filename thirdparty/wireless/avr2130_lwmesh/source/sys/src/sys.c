@@ -50,6 +50,9 @@
 #include "sysConfig.h"
 #include "phy.h"
 #include "nwk.h"
+#if SYS_SECURITY_MODE == 0
+#include "sal.h"
+#endif
 #include "sleep_mgr.h"
 #include "sys.h"
 #include "sysTimer.h"
@@ -68,7 +71,10 @@ void SYS_Init(void)
   sysclk_init();
   board_init();    
 #endif  	
-  SYS_TimerInit();  
+  SYS_TimerInit(); 
+#if SYS_SECURITY_MODE == 0
+sal_init();
+#endif  
   PHY_Init();
   NWK_Init();
   sm_init();     
