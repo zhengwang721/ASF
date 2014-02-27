@@ -52,7 +52,7 @@
 //! [spi_baudrate]
 
 //! [slave_select_pin]
-#define SLAVE_SELECT_PIN EXT2_PIN_SPI_SS_0
+#define SLAVE_SELECT_PIN CONF_MASTER_SS_PIN
 //! [slave_select_pin]
 
 //! [spi_buffer]
@@ -116,7 +116,7 @@ static void configure_dma_resource_tx(struct dma_resource *tx_resource)
 
 //! [dma_tx_setup_3]
 	tx_config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
-	tx_config.peripheral_trigger = PERIPHERAL_TRIGGER_SERCOM_TX;
+	tx_config.peripheral_trigger = CONF_PERIPHERAL_TRIGGER_TX;
 	tx_config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 //! [dma_tx_setup_3]
 
@@ -139,7 +139,7 @@ static void configure_dma_resource_rx(struct dma_resource *rx_resource)
 
 //! [dma_rx_setup_3]
 	rx_config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
-	rx_config.peripheral_trigger = PERIPHERAL_TRIGGER_SERCOM_RX;
+	rx_config.peripheral_trigger = CONF_PERIPHERAL_TRIGGER_RX;
 	rx_config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 //! [dma_rx_setup_3]
 
@@ -227,26 +227,26 @@ static void configure_spi_master(void)
 //! [spi_master_conf_defaults]
 	config_spi_master.mode_specific.master.baudrate = TEST_SPI_BAUDRATE;
 //! [spi_master_mux_setting]
-	config_spi_master.mux_setting = EXT2_SPI_SERCOM_MUX_SETTING;
+	config_spi_master.mux_setting = CONF_MASTER_MUX_SETTING;
 //! [spi_master_mux_setting]
 	/* Configure pad 0 for data in */
 //! [di]
-	config_spi_master.pinmux_pad0 = EXT2_SPI_SERCOM_PINMUX_PAD0;
+	config_spi_master.pinmux_pad0 = CONF_MASTER_PINMUX_PAD0;
 //! [di]
 	/* Configure pad 1 as unused */
 //! [ss]
-	config_spi_master.pinmux_pad1 = PINMUX_UNUSED;
+	config_spi_master.pinmux_pad1 = CONF_MASTER_PINMUX_PAD1;
 //! [ss]
 	/* Configure pad 2 for data out */
 //! [do]
-	config_spi_master.pinmux_pad2 = EXT2_SPI_SERCOM_PINMUX_PAD2;
+	config_spi_master.pinmux_pad2 = CONF_MASTER_PINMUX_PAD2;
 //! [do]
 	/* Configure pad 3 for SCK */
 //! [sck]
-	config_spi_master.pinmux_pad3 = EXT2_SPI_SERCOM_PINMUX_PAD3;
+	config_spi_master.pinmux_pad3 = CONF_MASTER_PINMUX_PAD3;
 //! [sck]
 //! [spi_master_init]
-	spi_init(&spi_master_instance, EXT2_SPI_MODULE, &config_spi_master);
+	spi_init(&spi_master_instance, CONF_MASTER_SPI_MODULE, &config_spi_master);
 //! [spi_master_init]
 
 //! [spi_master_enable]
@@ -277,26 +277,26 @@ static void configure_spi_slave(void)
 	config_spi_slave.mode_specific.slave.frame_format = SPI_FRAME_FORMAT_SPI_FRAME;
 //! [conf_format]
 //! [spi_slave_mux_setting]
-	config_spi_slave.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING;
+	config_spi_slave.mux_setting = CONF_SLAVE_MUX_SETTING;
 //! [spi_slave_mux_setting]
 	/* Configure pad 0 for data in */
 //! [di]
-	config_spi_slave.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0;
+	config_spi_slave.pinmux_pad0 = CONF_SLAVE_PINMUX_PAD0;
 //! [di]
 	/* Configure pad 1 as unused */
 //! [ss]
-	config_spi_slave.pinmux_pad1 = EXT1_SPI_SERCOM_PINMUX_PAD1;
+	config_spi_slave.pinmux_pad1 = CONF_SLAVE_PINMUX_PAD1;
 //! [ss]
 	/* Configure pad 2 for data out */
 //! [do]
-	config_spi_slave.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2;
+	config_spi_slave.pinmux_pad2 = CONF_SLAVE_PINMUX_PAD2;
 //! [do]
 	/* Configure pad 3 for SCK */
 //! [sck]
-	config_spi_slave.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
+	config_spi_slave.pinmux_pad3 = CONF_SLAVE_PINMUX_PAD3;
 //! [sck]
 //! [spi_slave_init]
-	spi_init(&spi_slave_instance, EXT1_SPI_MODULE, &config_spi_slave);
+	spi_init(&spi_slave_instance, CONF_SLAVE_SPI_MODULE, &config_spi_slave);
 //! [spi_slave_init]
 
 //! [spi_slave_enable]

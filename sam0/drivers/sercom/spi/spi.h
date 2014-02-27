@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21 Serial Peripheral Interface Driver
+ * \brief SAM D20/D21/R21 Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -45,9 +45,9 @@
 #define SPI_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_sercom_spi_group SAM D20/D21 Serial Peripheral Interface Driver (SERCOM SPI)
+ * \defgroup asfdoc_sam0_sercom_spi_group SAM D20/D21/R21 Serial Peripheral Interface Driver (SERCOM SPI)
  *
- * This driver for SAM D20/D21 devices provides an interface for the configuration
+ * This driver for SAM D20/D21/R21 devices provides an interface for the configuration
  * and management of the SERCOM module in its SPI mode to transfer SPI  data
  * frames. The following driver API modes are covered by this manual:
  *
@@ -376,7 +376,7 @@ Make sure that either/both CONF_SPI_MASTER_ENABLE/CONF_SPI_SLAVE_ENABLE is set t
  * Define SERCOM SPI features set according to different device family.
  * @{
  */
-#  if (SAMD21)  || defined(__DOXYGEN__)
+#  if (SAMD21) || (SAMR21)  || defined(__DOXYGEN__)
 /** SPI slave select low detection */
 #  define FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 /** Slave select can be controlled by hardware */
@@ -1714,7 +1714,12 @@ enum status_code spi_select_slave(
   *		<th>Date</td>
   *		<th>Comments</td>
   *	</tr>
-   *	<tr>
+  *	<tr>
+  *		<td>D</td>
+  *		<td>03/2014</td>
+  *		<td>Add SAMR21 support.</td>
+  *	</tr>
+  *	<tr>
   *		<td>C</td>
   *		<td>01/2014</td>
   *		<td>Add SAMD21 support.</td>
