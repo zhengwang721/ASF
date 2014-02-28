@@ -297,6 +297,35 @@ bool sal_aes_setup(uint8_t *key,
 }
 
 /**
+ * @brief Re-inits key and state after a sleep or TRX reset
+ *
+ * This function re-initializes the AES key and the state of the
+ * AES engine after TRX sleep or reset.
+ * The contents of AES register AES_CON is restored,
+ * the next AES operation started with sal_aes_exec()
+ * will be executed correctly.
+ */
+void sal_aes_restart(void)
+{
+	uint8_t i;
+	uint8_t *keyp;
+
+
+	if (last_dir == AES_DIR_ENCRYPT) {
+		keyp = enc_key;
+	} else {
+		keyp = dec_key;
+	}
+
+	/* fill in key */
+	for (i = 0; i < AES_BLOCKSIZE; ++i) {
+		trx_reg_write(RG_AES_KEY, *keyp++);
+	}
+
+	trx_reg_write(RG_AES_CTRL, mode_byte);
+}
+
+/**
  * @brief Cleans up the SAL/AES after STB has been finished
  */
 void _sal_aes_clean_up(void)

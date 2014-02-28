@@ -220,13 +220,6 @@ void sal_aes_restart(void)
 
 
 /**
- * @brief Cleans up the SAL/AES after STB has been finished
- */
-void _sal_aes_clean_up(void)
-{
-
-}
-/**
  * @brief En/decrypt one AES block.
  *
  * The function returns after the AES operation is finished.
