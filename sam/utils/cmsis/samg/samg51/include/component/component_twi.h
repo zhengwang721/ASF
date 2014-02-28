@@ -189,16 +189,15 @@ typedef struct {
 #define TWI_THR_TXDATA_Pos 0
 #define TWI_THR_TXDATA_Msk (0xffu << TWI_THR_TXDATA_Pos) /**< \brief (TWI_THR) Master or Slave Transmit Holding Data */
 #define TWI_THR_TXDATA(value) ((TWI_THR_TXDATA_Msk & ((value) << TWI_THR_TXDATA_Pos)))
-/* -------- TWI_WPMR : (TWI Offset: 0xE4) Protection Mode Register -------- */
-#define TWI_WPROT_MODE_WPROT (0x1u << 0) /**< \brief (TWI_WPROT_MODE) Write protection bit */
-#define TWI_WPROT_MODE_SECURITY_CODE_Pos 8
-#define TWI_WPROT_MODE_SECURITY_CODE_Msk (0xffffffu << TWI_WPROT_MODE_SECURITY_CODE_Pos) /**< \brief (TWI_WPROT_MODE) Write protection mode security code */
-#define TWI_WPROT_MODE_SECURITY_CODE(value) ((TWI_WPROT_MODE_SECURITY_CODE_Msk & ((value) << TWI_WPROT_MODE_SECURITY_CODE_Pos)))
-#define TWI_WPROT_MODE_WPKEY_PASSWD (0x545749u << 8) /**< \brief (TWI_WPROT_MODE) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0 */
-/* -------- TWI_WPSR : (TWI Offset: 0xE8) Protection Status Register -------- */
-#define TWI_WPROT_STATUS_WPROTERR (0x1u << 0) /**< \brief (TWI_WPROT_STATUS) Write Protection Error */
-#define TWI_WPROT_STATUS_WPROTADDR_Pos 8
-#define TWI_WPROT_STATUS_WPROTADDR_Msk (0xffffffu << TWI_WPROT_STATUS_WPROTADDR_Pos) /**< \brief (TWI_WPROT_STATUS) Write Protection Error Address */
+/* -------- TWI_WPMR : (TWI Offset: 0xE4) Write Protection Mode Register -------- */
+#define TWI_WPMR_WPEN (0x1u << 0) /**< \brief (TWI_WPMR) Write Protection Enable */
+#define TWI_WPMR_WPKEY_Pos 8
+#define TWI_WPMR_WPKEY_Msk (0xffffffu << TWI_WPMR_WPKEY_Pos) /**< \brief (TWI_WPMR) Write Protection Key */
+#define   TWI_WPMR_WPKEY_PASSWD (0x545749u << 8) /**< \brief (TWI_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0 */
+/* -------- TWI_WPSR : (TWI Offset: 0xE8) Write Protection Status Register -------- */
+#define TWI_WPSR_WPVS (0x1u << 0) /**< \brief (TWI_WPSR) Write Protection Violation Status */
+#define TWI_WPSR_WPVSRC_Pos 8
+#define TWI_WPSR_WPVSRC_Msk (0xffffffu << TWI_WPSR_WPVSRC_Pos) /**< \brief (TWI_WPSR) Write Protection Violation Source */
 /* -------- TWI_RPR : (TWI Offset: 0x100) Receive Pointer Register -------- */
 #define TWI_RPR_RXPTR_Pos 0
 #define TWI_RPR_RXPTR_Msk (0xffffffffu << TWI_RPR_RXPTR_Pos) /**< \brief (TWI_RPR) Receive Pointer Register */

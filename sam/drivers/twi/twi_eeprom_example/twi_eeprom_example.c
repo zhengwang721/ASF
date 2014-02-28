@@ -3,7 +3,7 @@
  *
  * \brief TWI EEPROM Example for SAM.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,6 +54,7 @@
  * This package can be used with the following setup:
  *  - SAM3X evaluation kit
  *  - SAMG53 Xplained Pro kit
+ *  - SAMG54 Xplained Pro kit
  *  - SAM4N Xplained Pro kit
  *
  * \section files Main files:
@@ -71,8 +72,8 @@
  * received with the test pattern sent before and prints the comparison result.
  * The corresponding LED is turned on.
  *
- * On SAM4N Xplained Pro, the EEPROM is simulated though the twi_slave_example,
- * which means 2 SAM4N Xplained Pro boards are required to run this example.
+ * On SAM Xplained Pro, the EEPROM is simulated though the twi_slave_example,
+ * which means 2 SAM Xplained Pro boards are required to run this example.
  * One board executes this example as the twi master and another runs
  * twi_salve_example as the simulated EEPROM.
  * The TWI PINs and GND PIN should be connected between these 2 boards.
