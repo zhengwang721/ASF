@@ -99,6 +99,53 @@
  */
 #define AES_MODE_CBC                 (1)
 #endif
+#else 
+
+/** Access parameters for sub-register AES_DIR in register @ref RG_AES_CTRL */
+#define SR_AES_DIR   0x03, 0x08, 3
+
+/** Access parameters for sub-register AES_MODE in register @ref RG_AES_CTRL */
+#define SR_AES_MODE   0x03, 0x70, 4
+
+/** Access parameters for sub-register AES_REQUEST in register @ref RG_AES_CTRL */
+#define SR_AES_REQUEST   0x03, 0x80, 7
+
+/** Base address for Transceiver AES address space **/
+#define AES_BASE_ADDR   (0x80)
+
+/** Offset for register AES_STATUS */
+#define RG_AES_STATUS   (0x02)
+
+/** Offset for register AES_CTRL */
+#define RG_AES_CTRL   (0x03)
+
+/** Offset for register AES_STATE_KEY_0 */
+#define RG_AES_STATE_KEY_0   (0x04)
+
+/** AES core operation direction: Decryption (ECB) */
+#define AES_DIR_DECRYPT   (1)
+
+/** AES core operation direction: Encryption (ECB, CBC) */
+#define AES_DIR_ENCRYPT   (0)
+
+/** Set CBC mode */
+#define AES_MODE_CBC   (2)
+
+/** Set ECB mode */
+#define AES_MODE_ECB   (0)
+
+/** Set key mode */
+#define AES_MODE_KEY   (1)
+
+/** Initiate an AES operation */
+#define AES_REQUEST   (1)
+
+/** AES core operation status: AES module finished */
+#define AES_DONE   (1)
+
+/** AES core operation status: AES module did not finish */
+#define AES_NOT_DONE   (0)
+
 #endif  /* (SAL_TYPE != AT86RF2xx) */
 
 /* === Types ============================================================== */
