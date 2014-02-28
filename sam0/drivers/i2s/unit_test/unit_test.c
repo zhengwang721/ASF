@@ -396,10 +396,10 @@ static void run_i2s_callback_mode_test(const struct test_case *test)
 }
 
 /**
- * \brief Run External Interrupt unit tests
+ * \brief Run I2S unit tests
  *
  * Initializes the system and serial output, then sets up the
- * External Interrupt unit test suite and runs it.
+ * I2S unit test suite and runs it.
  */
 int main(void)
 {
