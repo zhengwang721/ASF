@@ -3,7 +3,7 @@
  *
  * \brief Two-Wire Interface High Speed (TWIHS) driver for SAM.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -289,7 +289,7 @@ static inline void twihs_clear_disable_clock_wait_state(Twihs *p_twihs)
 	p_twihs->TWIHS_SMR &= ~TWIHS_SMR_SCLWSDIS;
 }
 
-#if (SAMG53)
+#if (SAMG53 || SAMG54)
 /**
  * \brief Slave Address 1 matching disabled.
  *
