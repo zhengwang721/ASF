@@ -168,16 +168,15 @@ static void i2s_callback_rx(struct i2s_module *const module_inst)
 }
 
 /**
- * \brief Initialize the I2S module
+ * \brief Initialize the I2S module Clock Unit and Serializer
  *
- * Reset and enable I2S module.
+ * Reset I2S module.
  * Initialize Clock Unit 0 and Serializer 0 for TX.
  * Initialize Serializer 1 for RX.
  * Data format is I2S compatible 16 bit stream.
  */
 static void setup_i2s(void)
 {
-	i2s_init(&i2s_instance, CONF_TEST_I2S);
 	i2s_reset(&i2s_instance);
 
 	struct i2s_clock_unit_config config_clock_unit;
@@ -288,6 +287,11 @@ static void cleanup_i2s_polled_mode_test(const struct test_case *test)
 /**
  * \internal
  * \brief Test for I2S TX/RX by polling.
+ *
+ * Send several words by polling and receive them.
+ * \note In polling mode, the first received word may not be the first one sent
+ *       due to timing delay, so test words list are sent twice, to confirm that
+ *       all words are received.
  *
  * \param test Current test case.
  */
@@ -402,6 +406,9 @@ int main(void)
 	system_init();
 	cdc_uart_init();
 
+	/* Initialize module instance */
+	i2s_init(&i2s_instance, CONF_TEST_I2S);
+
 	/* Define Test Cases */
 	DEFINE_TEST_CASE(i2s_polled_mode_test,
 			setup_i2s_polled_mode_test,
@@ -416,17 +423,17 @@ int main(void)
 			"Testing I2S TX/RX using callback");
 
 	/* Put test case addresses in an array */
-	DEFINE_TEST_ARRAY(extint_tests) = {
+	DEFINE_TEST_ARRAY(i2s_tests) = {
 		&i2s_callback_mode_test,
 		&i2s_polled_mode_test,
 	};
 
 	/* Define the test suite */
-	DEFINE_TEST_SUITE(extint_test_suite, extint_tests,
+	DEFINE_TEST_SUITE(i2s_test_suite, i2s_tests,
 			"SAM D21 I2S driver test suite");
 
 	/* Run all tests in the suite*/
-	test_suite_run(&extint_test_suite);
+	test_suite_run(&i2s_test_suite);
 
 	while (true) {
 		/* Intentionally left empty */
