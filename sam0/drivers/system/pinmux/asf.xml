@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.system.pinmux" caption="SYSTEM - I/O Pin Multiplexer">
 		<info type="description" value="summary">
-			Driver for the SAM D20/D21 Pin Multiplexer. Provides a unified interface
+			Driver for the SAM D20/D21/R21 Pin Multiplexer. Provides a unified interface
 			for the configuration and routing of physical device I/O pins to
 			peripherals within the device.
 		</info>
