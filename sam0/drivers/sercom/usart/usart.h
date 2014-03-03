@@ -261,7 +261,7 @@ extern "C" {
  * Define SERCOM USART features set according to different device family.
  * @{
  */
-#if (SAMD21) || defined(__DOXYGEN__)
+#if (SAMD21) || (SAMR21) || defined(__DOXYGEN__)
 /** Usart sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2
 /** Usart over sampling. */

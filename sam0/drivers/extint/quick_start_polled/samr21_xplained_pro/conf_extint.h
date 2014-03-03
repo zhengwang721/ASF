@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 External Interrupt Driver
+ * \brief SAM R21 External Interrupt Driver Configuration Header
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,74 +40,9 @@
  * \asf_license_stop
  *
  */
-#ifndef EXTINT_CALLBACK_H_INCLUDED
-#define EXTINT_CALLBACK_H_INCLUDED
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
-#include <compiler.h>
-#include "extint.h"
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/**
- * \addtogroup asfdoc_sam0_extint_group
- *
- * @{
- */
-
-#ifndef EIC_NUMBER_OF_INTERRUPTS
-#  define EIC_NUMBER_OF_INTERRUPTS 16
-#endif
-
-/** \name Callback configuration and initialization
- * @{
- */
-
-/** Type definition for an EXTINT module callback function. */
-typedef void (*extint_callback_t)(void);
-
-/** Enum for the possible callback types for the EXTINT module. */
-enum extint_callback_type
-{
-	/** Callback type for when an external interrupt detects the configured
-	 *  channel criteria (i.e. edge or level detection)
-	 */
-	EXTINT_CALLBACK_TYPE_DETECT,
-};
-
-enum status_code extint_register_callback(
-	const extint_callback_t callback,
-	const uint8_t channel,
-	const enum extint_callback_type type);
-
-enum status_code extint_unregister_callback(
-	const extint_callback_t callback,
-	const uint8_t channel,
-	const enum extint_callback_type type);
-
-uint8_t extint_get_current_channel(void);
-
-/** @} */
-
-/** \name Callback enabling and disabling (channel)
- * @{
- */
-
-enum status_code extint_chan_enable_callback(
-	const uint8_t channel,
-	const enum extint_callback_type type);
-
-enum status_code extint_chan_disable_callback(
-	const uint8_t channel,
-	const enum extint_callback_type type);
-
-/** @} */
-
-/** @} */
-
-#ifdef __cplusplus
-}
-#endif
+#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
 
 #endif

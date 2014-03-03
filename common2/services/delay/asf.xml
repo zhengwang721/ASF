@@ -14,6 +14,7 @@
 			<require idref="sam0.drivers.system"/>
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
+			<device-support value="samr21"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
 		</module>
 		<module type="service" id="common2.services.delay#cycle" caption="Delay routines">
@@ -30,6 +31,7 @@
 			<require idref="sam0.drivers.system"/>
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
+			<device-support value="samr21"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samd20"/>
 		</module>
 	</select-by-config>
