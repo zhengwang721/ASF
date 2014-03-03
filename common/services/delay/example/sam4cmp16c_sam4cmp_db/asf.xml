@@ -1,0 +1,16 @@
+<asf xmlversion="1.0">
+	<project caption="SAM4CMP-DB Common Delay Service Example" id="common.services.delay.example.sam4cmp_db">
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clock.h"/>
+		<build type="include-path" value="."/>
+		<require idref="common.services.delay.example"/>
+		<require idref="common.services.basic.gpio"/>
+		<require idref="board.sam4cmp_db"/>
+		<config name="config.board.sam4cmp_db.led" value="yes"/>
+		<generator value="iarewarm"/>
+		<generator value="armgcc"/>
+		<generator value="as5_arm"/>
+		<device-support value="atsam4cmp16c_0"/>
+	</project>
+</asf>
