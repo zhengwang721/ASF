@@ -128,14 +128,14 @@
  * \name LED #3 pin definition
  * @{
  */
-#define LED3_GPIO            (PIO_PC6_IDX)
+#define LED3_GPIO            (PIO_PC7_IDX)
 #define LED3_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_HIGH
 #define LED3_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_LOW
 
 /* Wrapper macros to ensure common naming across all boards */
 #define LED_3_NAME      "LED3"
-#define PIN_LED_3       {PIO_PC6, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
-#define PIN_LED_3_MASK   PIO_PC6
+#define PIN_LED_3       {PIO_PC7, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
+#define PIN_LED_3_MASK   PIO_PC7
 #define PIN_LED_3_PIO    PIOC
 #define PIN_LED_3_ID     ID_PIOC
 #define PIN_LED_3_TYPE   PIO_OUTPUT_1
@@ -146,14 +146,14 @@
  * \name LED #4 pin definition
  * @{
  */
-#define LED4_GPIO            (PIO_PC7_IDX)
+#define LED4_GPIO            (PIO_PC6_IDX)
 #define LED4_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_HIGH
 #define LED4_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_LOW
 
 /* Wrapper macros to ensure common naming across all boards */
 #define LED_4_NAME      "LED4"
-#define PIN_LED_4       {PIO_PC7, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
-#define PIN_LED_4_MASK   PIO_PC7
+#define PIN_LED_4       {PIO_PC6, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
+#define PIN_LED_4_MASK   PIO_PC6
 #define PIN_LED_4_PIO    PIOC
 #define PIN_LED_4_ID     ID_PIOC
 #define PIN_LED_4_TYPE   PIO_OUTPUT_1
@@ -256,9 +256,9 @@
 /** SPI0 SPCK pin definition. */
 #define SPI0_SPCK_GPIO         (PIO_PA8_IDX)
 #define SPI0_SPCK_FLAGS        (IOPORT_MODE_MUX_A)
-/** SPI0 chip select 0 pin definition. */
-#define SPI0_NPCS0_GPIO        (PIO_PA21_IDX)
-#define SPI0_NPCS0_FLAGS       (IOPORT_MODE_MUX_A)
+/** SPI0 chip select 1 pin definition. */
+#define SPI0_NPCS1_GPIO        (PIO_PA21_IDX)
+#define SPI0_NPCS1_FLAGS       (IOPORT_MODE_MUX_A)
 /* @} */
 
 /* Select the SPI module that AT25DFx is connected to */
