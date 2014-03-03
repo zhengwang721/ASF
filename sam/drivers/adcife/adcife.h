@@ -3,7 +3,7 @@
  *
  * \brief Analog-to-Digital Converter driver for SAM4L.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -513,6 +513,7 @@ void adc_disable(struct adc_dev_inst *const dev_inst);
 static inline void adc_configure_trigger(struct adc_dev_inst *const dev_inst,
 		const enum adc_trigger_t trigger)
 {
+	dev_inst->hw_dev->ADCIFE_SEQCFG &= ~ADCIFE_SEQCFG_TRGSEL_Msk;
 	dev_inst->hw_dev->ADCIFE_SEQCFG |= ADCIFE_SEQCFG_TRGSEL(trigger);
 }
 
@@ -526,6 +527,7 @@ static inline void adc_configure_trigger(struct adc_dev_inst *const dev_inst,
 static inline void adc_configure_gain(struct adc_dev_inst *const dev_inst,
 		const enum adc_gain_t gain)
 {
+	dev_inst->hw_dev->ADCIFE_SEQCFG &= ~ADCIFE_SEQCFG_GAIN_Msk;
 	dev_inst->hw_dev->ADCIFE_SEQCFG |= ADCIFE_SEQCFG_GAIN(gain);
 }
 
