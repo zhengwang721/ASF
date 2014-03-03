@@ -53,7 +53,7 @@ static uint8_t read_buffer[DATA_LENGTH];
 //! [packet_data]
 
 //! [address]
-#define SLAVE_ADDRESS 0x12
+#define SLAVE_ADDRESS 0x4F
 //! [address]
 
 /* Number of times to try to send packet if failed. */
@@ -80,6 +80,11 @@ void configure_i2c_master(void)
 	/* Change buffer timeout to something longer. */
 	//! [conf_change]
 	config_i2c_master.buffer_timeout = 10000;
+	
+	//Nash: 100kHZ for F/S mode, 400KHz for high speed mode
+	config_i2c_master.baud_rate_high_speed = 400;
+	config_i2c_master.transfer_speed = I2C_MASTER_SPEED_HIGH_SPEED;
+	config_i2c_master.scl_stretch_only_after_ack_bit = true;
 	//! [conf_change]
 
 	/* Initialize and enable device with config. */
@@ -115,41 +120,37 @@ int main(void)
 		.data_length = DATA_LENGTH,
 		.data        = write_buffer,
 		.ten_bit_address = false,
-		.high_speed      = false,
-		.hs_master_code  = 0x0,
+		.high_speed      = true,
+		.hs_master_code  = 0x08,
 	};
 	//! [packet]
 	//! [init]
 
-	//! [main]
-	/* Write buffer to slave until success. */
-	//! [write_packet]
-	while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) !=
-			STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			break;
-		}
-	}
-	//! [write_packet]
-	
-	/* Read from slave until success. */
-	//! [read_packet]
-	timeout = 0;
-	packet.data = read_buffer;
-	while (i2c_master_read_packet_wait(&i2c_master_instance, &packet) !=
-			STATUS_OK) {
-		/* Increment timeout counter and check if timed out. */
-		if (timeout++ == TIMEOUT) {
-			break;
-		}
-	}
-	//! [read_packet]
-
-	//! [main]
-
 	while (true) {
-		/* Infinite loop */
+		// Write Pointer Register ( 0-Temperature Register, 1-Configuration Register)
+		timeout = 0;
+		packet.data = write_buffer;
+		write_buffer[0] = 0;
+		packet.data_length = 1;
+		while (i2c_master_write_packet_wait(&i2c_master_instance, &packet) !=
+				STATUS_OK) {
+			/* Increment timeout counter and check if timed out. */
+			if (timeout++ == TIMEOUT) {
+				break;
+			}
+		}	
+
+		// Read tempture (0x1a80, 0x1b00)
+		timeout = 0;
+		packet.data = read_buffer;
+		packet.data_length = 2;
+		while (i2c_master_read_packet_wait(&i2c_master_instance, &packet) !=
+				STATUS_OK) {
+			/* Increment timeout counter and check if timed out. */
+			if (timeout++ == TIMEOUT) {
+				break;
+			}
+		}	
 	}
 
 }
