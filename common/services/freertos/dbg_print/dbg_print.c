@@ -530,7 +530,7 @@ enum status_code dbg_init(void)
 	system_interrupt_enable(_sercom_get_interrupt_vector(sercom));
 
 	// Wait for sync before returning
-#if (REV_SERCOM == 0x200)
+#if (REV_SERCOM >= 0x200)
 	while (sercom_uart->SYNCBUSY.reg) {
 		/* Intentionally left empty */
 	}
