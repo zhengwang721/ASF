@@ -424,7 +424,7 @@ static inline void system_sleep(void)
  */
 static inline bool system_is_debugger_present(void)
 {
-	return (DSU->STATUSB.reg & DSU_STATUSB_DBGPRES) >> DSU_STATUSB_DBGPRES_Pos;
+	return DSU->STATUSB.reg & DSU_STATUSB_DBGPRES;
 }
 
 /**
