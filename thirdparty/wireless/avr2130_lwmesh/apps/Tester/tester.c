@@ -64,6 +64,7 @@
 #include "events.h"
 #include "time.h"
 #include "sio2host.h"
+# include "asf.h"
 
 
 /*- Types ------------------------------------------------------------------*/

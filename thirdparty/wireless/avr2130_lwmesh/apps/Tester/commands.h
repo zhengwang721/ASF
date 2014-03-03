@@ -334,6 +334,5 @@ typedef union
 COMPILER_PACK_RESET()
 /*- Prototypes -------------------------------------------------------------*/
 void appCommandsInit(void);
-AppStatus_t appCommandReceived(uint8_t *buf, uint16_t size);
 void appUartSendCommand(uint8_t *buf, uint16_t size);
 #endif // _COMMANDS_H_

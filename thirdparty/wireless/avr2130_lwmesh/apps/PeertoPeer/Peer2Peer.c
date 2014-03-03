@@ -62,6 +62,7 @@
 #include "nwk.h"
 #include "sysTimer.h"
 #include "sio2host.h"
+#include "asf.h"
 
 /*- Definitions ------------------------------------------------------------*/
 #ifdef NWK_ENABLE_SECURITY
