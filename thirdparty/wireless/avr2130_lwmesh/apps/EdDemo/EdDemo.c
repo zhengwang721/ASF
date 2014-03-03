@@ -61,7 +61,7 @@
 #include "led.h"
 #include "sysclk.h"
 #endif
-
+#include "asf.h"
 
 /*- Types ------------------------------------------------------------------*/
 typedef enum AppState_t
