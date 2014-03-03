@@ -478,6 +478,11 @@ static inline void system_pinmux_pin_set_input_sample_mode(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *		<td>E</td>
+ *		<td>02/2014</td>
+ *		<td>Add support for SAMR21</td>
+ *	</tr>
+ *	<tr>
  *		<td>D</td>
  *		<td>01/2014</td>
  *		<td>Add support for SAMD21</td>

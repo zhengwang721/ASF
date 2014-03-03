@@ -94,7 +94,7 @@ extern "C" {
  *	</tr>
  *	<tr>
  *		<td>FEATURE_SYSTEM_CLOCK_DPLL</td>
- *		<td>SAMD21</td>
+ *		<td>SAMD21, SAMR21</td>
  *	</tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -1475,6 +1475,11 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>D</td>
+ *		<td>02/2014</td>
+ *		<td>Added support for SAMR21.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>
