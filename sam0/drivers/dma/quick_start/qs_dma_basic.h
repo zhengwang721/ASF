@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 Direct Memory Access Controller(DMAC) Driver Quick Start
+ * \brief SAM D21/R21 Direct Memory Access Controller(DMAC) Driver Quick Start
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -42,11 +42,11 @@
  */
 
 /**
- * \page asfdoc_sam0_dma_basic_use_case Quick Start Guide for Memory to Memory 
+ * \page asfdoc_sam0_dma_basic_use_case Quick Start Guide for Memory to Memory
  * data transfer using DMAC
  *
  * The supported device list:
- *    - SAMD21
+ *    - SAM D21/R21
  *
  * In this use case, the DMAC is configured for:
  *  \li Moving data from memory to memory
