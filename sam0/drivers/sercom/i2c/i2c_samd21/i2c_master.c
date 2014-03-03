@@ -54,6 +54,10 @@ enum status_code _i2c_master_wait_for_bus(
 enum status_code _i2c_master_address_response(
 		struct i2c_master_module *const module);
 
+enum status_code _i2c_master_send_hs_master_code(
+		struct i2c_master_module *const module,
+		uint8_t hs_master_code);
+
 #if !defined(__DOXYGEN__)
 
 /**
@@ -403,7 +407,7 @@ enum status_code _i2c_master_wait_for_bus(
  * \return Status of bus.
  * \retval STATUS_OK           No error happen.
  */
-static enum status_code _i2c_master_send_hs_master_code(
+enum status_code _i2c_master_send_hs_master_code(
 		struct i2c_master_module *const module,
 		uint8_t hs_master_code)
 {
@@ -417,18 +421,9 @@ static enum status_code _i2c_master_send_hs_master_code(
 	i2c_module->ADDR.reg = hs_master_code;
 	/* Wait for response on bus. */
 	tmp_status = _i2c_master_wait_for_bus(module);
-	/* Set action back to ACK. */
-	i2c_module->CTRLB.reg &= ~SERCOM_I2CM_CTRLB_ACKACT;
+	/* Clear write interrupt flag */
+	i2c_module->INTFLAG.reg = SERCOM_I2CM_INTENCLR_MB;
 
-#if 0 // Nash
-	uint32_t tmp_ctrla;
-
-	i2c_module->CTRLA.reg &= ~SERCOM_I2CS_CTRLA_ENABLE;
-	tmp_ctrla = i2c_module->CTRLA.reg;
-	tmp_ctrla &= (~(SERCOM_I2CM_CTRLA_SPEED_Msk | SERCOM_I2CM_CTRLA_SCLSM));
-	tmp_ctrla |= (SERCOM_I2CM_CTRLA_SPEED(2) | SERCOM_I2CM_CTRLA_SCLSM);
-	i2c_module->CTRLA.reg = tmp_ctrla | SERCOM_I2CM_CTRLA_ENABLE;
-#endif
 	return tmp_status;
 }
 
@@ -450,7 +445,7 @@ static enum status_code _i2c_master_send_hs_master_code(
  *                                      acknowledged the address
  *
  */
-static enum status_code _i2c_master_read(
+static enum status_code _i2c_master_read_packet(
 		struct i2c_master_module *const module,
 		struct i2c_master_packet *const packet)
 {
@@ -474,7 +469,10 @@ static enum status_code _i2c_master_read(
 	if (packet->high_speed) {
 		_i2c_master_send_hs_master_code(module, packet->hs_master_code);
 	}
-	
+
+	/* Set action to ACK. */
+	i2c_module->CTRLB.reg &= ~SERCOM_I2CM_CTRLB_ACKACT;
+
 	/* Set address and direction bit. Will send start command on bus. */
 	if (packet->ten_bit_address) {
 		/*
@@ -534,7 +532,7 @@ static enum status_code _i2c_master_read(
 				return STATUS_ERR_PACKET_COLLISION;
 			}
 
-			if (((!sclsm_flag) && (tmp_data_length == 0)) || 
+			if (((!sclsm_flag) && (tmp_data_length == 0)) ||
 					((sclsm_flag) && (tmp_data_length == 1))) {
 				/* Set action to NACK */
 				i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_ACKACT;
@@ -543,7 +541,6 @@ static enum status_code _i2c_master_read(
 				_i2c_master_wait_for_sync(module);
 				packet->data[counter++] = i2c_module->DATA.reg;
 				/* Wait for response. */
-				// Nash: seems it will timeout after set SCLSM to 1 ???
 				tmp_status = _i2c_master_wait_for_bus(module);
 			}
 
@@ -606,7 +603,7 @@ enum status_code i2c_master_read_packet_wait(
 
 	module->send_stop = true;
 
-	return _i2c_master_read(module, packet);
+	return _i2c_master_read_packet(module, packet);
 }
 
 /**
@@ -652,7 +649,7 @@ enum status_code i2c_master_read_packet_wait_no_stop(
 
 	module->send_stop = false;
 
-	return _i2c_master_read(module, packet);
+	return _i2c_master_read_packet(module, packet);
 }
 
 /**
@@ -687,6 +684,9 @@ static enum status_code _i2c_master_write_packet(
 	if (packet->high_speed) {
 		_i2c_master_send_hs_master_code(module, packet->hs_master_code);
 	}
+
+	/* Set action to ACK. */
+	i2c_module->CTRLB.reg &= ~SERCOM_I2CM_CTRLB_ACKACT;
 
 	/* Set address and direction bit. Will send start command on bus. */
 	if (packet->ten_bit_address) {

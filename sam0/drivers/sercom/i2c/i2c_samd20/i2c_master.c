@@ -371,7 +371,7 @@ static enum status_code _i2c_master_wait_for_bus(
  *                                      acknowledged the address
  *
  */
-static enum status_code _i2c_master_read(
+static enum status_code _i2c_master_read_packet(
 		struct i2c_master_module *const module,
 		struct i2c_master_packet *const packet)
 {
@@ -483,7 +483,7 @@ enum status_code i2c_master_read_packet_wait(
 
 	module->send_stop = true;
 
-	return _i2c_master_read(module, packet);
+	return _i2c_master_read_packet(module, packet);
 }
 
 /**
@@ -529,7 +529,7 @@ enum status_code i2c_master_read_packet_wait_no_stop(
 
 	module->send_stop = false;
 
-	return _i2c_master_read(module, packet);
+	return _i2c_master_read_packet(module, packet);
 }
 
 /**
