@@ -43,7 +43,6 @@
 #ifdef PHY_ATMEGARFA1
 
 /*- Includes ---------------------------------------------------------------*/
-#include "sysTypes.h"
 #include "phy.h"
 #include "sal.h"
 #include "delay.h"

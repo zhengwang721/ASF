@@ -44,7 +44,7 @@
 #define _COMMANDS_H_
 
 /*- Includes ---------------------------------------------------------------*/
-#include "sysTypes.h"
+#include "compiler.h"
 #include "config.h"
 
 /*- Types ------------------------------------------------------------------*/
@@ -84,47 +84,49 @@ typedef enum AppCommandId_t
   APP_COMMAND_FILTER_REMOVE    = 0x72,
 } AppCommandId_t;
 
-typedef struct PACK
+COMPILER_PACK_SET(1)
+
+typedef struct 
 {
   uint8_t  id;
 } AppCommandHeader_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint8_t  status;
   uint32_t time;
 } AppCommandAck_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
 } AppCommandDummy_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
 } AppCommandReset_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint16_t rnd;
 } AppCommandRandomize_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
 } AppCommandGetEvents_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint16_t size;
   uint8_t  events[APP_EVENTS_BUFFER_SIZE];
 } AppCommandEvents_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint8_t  handle;
@@ -138,7 +140,7 @@ typedef struct PACK
   uint8_t  data; // An array actually, uint8_t is used to retrieve a pointer
 } AppCommandDataReq_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint8_t  handle;
@@ -152,7 +154,7 @@ typedef struct PACK
   uint8_t  nonMemberRadius;
 } AppCommandDataConf_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint32_t time;
@@ -167,33 +169,33 @@ typedef struct PACK
   uint8_t  data[NWK_MAX_PAYLOAD_SIZE];
 } AppCommandDataInd_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint8_t  index;
   uint8_t  state;
 } AppCommandOpenEndpoint_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint8_t  index;
   uint8_t  state;
 } AppCommandSetAckState_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint16_t addr;
 } AppCommandSetAddr_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint16_t panId;
 } AppCommandSetPanId_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint8_t  channel;
@@ -201,37 +203,37 @@ typedef struct PACK
   uint8_t  modulation;
 } AppCommandSetChannel_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint8_t  rxState;
 } AppCommandSetRxState_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint8_t  securityKey[16];
 } AppCommandSetSecurityKey_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint8_t  txPower;
 } AppCommandSetTxPower_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint16_t group;
 } AppCommandGroupAdd_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint16_t group;
 } AppCommandGroupRemove_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint8_t  fixed;
@@ -241,7 +243,7 @@ typedef struct PACK
   uint8_t  lqi;
 } AppCommandRouteAdd_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint16_t dstAddr;
@@ -249,18 +251,18 @@ typedef struct PACK
   uint8_t  removeFixed;
 } AppCommandRouteRemove_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint8_t  removeFixed;
 } AppCommandRouteFlush_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
 } AppCommandRouteTable_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint16_t index;
@@ -273,7 +275,7 @@ typedef struct PACK
   uint8_t  lqi;
 } AppCommandRouteEntry_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint16_t addr;
@@ -282,13 +284,13 @@ typedef struct PACK
   uint8_t  lqi;
 } AppCommandFilterAdd_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t  id;
   uint16_t addr;
 } AppCommandFilterRemove_t;
 
-typedef union PACK
+typedef union 
 {
   AppCommandHeader_t         header;
   AppCommandDummy_t          dummy;
@@ -329,9 +331,9 @@ typedef union PACK
   AppCommandFilterRemove_t   filterRemove;
 #endif
 } AppReceiveCommand_t;
-
+COMPILER_PACK_RESET()
 /*- Prototypes -------------------------------------------------------------*/
 void appCommandsInit(void);
 AppStatus_t appCommandReceived(uint8_t *buf, uint16_t size);
-
+void appUartSendCommand(uint8_t *buf, uint16_t size);
 #endif // _COMMANDS_H_

@@ -51,7 +51,6 @@
 
 /*- Includes ---------------------------------------------------------------*/
 #include <stdint.h>
-#include "sysTypes.h"
 
 #ifdef NWK_ENABLE_MULTICAST
 

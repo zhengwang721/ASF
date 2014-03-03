@@ -51,7 +51,6 @@
 
 /*- Includes ---------------------------------------------------------------*/
 #include <stdint.h>
-#include "sysTypes.h"
 
 /*- Types ------------------------------------------------------------------*/
 enum
@@ -61,15 +60,15 @@ enum
   NWK_COMMAND_ROUTE_REQUEST       = 0x02,
   NWK_COMMAND_ROUTE_REPLY         = 0x03,
 };
-
-typedef struct PACK NwkCommandAck_t
+COMPILER_PACK_SET(1)
+typedef struct  NwkCommandAck_t
 {
   uint8_t    id;
   uint8_t    seq;
   uint8_t    control;
 } NwkCommandAck_t;
 
-typedef struct PACK NwkCommandRouteError_t
+typedef struct  NwkCommandRouteError_t
 {
   uint8_t    id;
   uint16_t   srcAddr;
@@ -77,7 +76,7 @@ typedef struct PACK NwkCommandRouteError_t
   uint8_t    multicast;
 } NwkCommandRouteError_t;
 
-typedef struct PACK NwkCommandRouteRequest_t
+typedef struct  NwkCommandRouteRequest_t
 {
   uint8_t    id;
   uint16_t   srcAddr;
@@ -86,7 +85,7 @@ typedef struct PACK NwkCommandRouteRequest_t
   uint8_t    linkQuality;
 } NwkCommandRouteRequest_t;
 
-typedef struct PACK NwkCommandRouteReply_t
+typedef struct  NwkCommandRouteReply_t
 {
   uint8_t    id;
   uint16_t   srcAddr;
@@ -95,5 +94,5 @@ typedef struct PACK NwkCommandRouteReply_t
   uint8_t    forwardLinkQuality;
   uint8_t    reverseLinkQuality;
 } NwkCommandRouteReply_t;
-
+COMPILER_PACK_RESET()
 #endif // _NWK_COMMAND_H_

@@ -81,6 +81,7 @@
 #if APP_COORDINATOR
 #include "sio2host.h"
 #endif
+# include "asf.h"
 
 
 /*****************************************************************************
@@ -104,7 +105,8 @@
 #endif
 
 /*- Types ------------------------------------------------------------------*/
-typedef struct PACK AppMessage_t
+COMPILER_PACK_SET(1)
+typedef struct  AppMessage_t
 {
   uint8_t     messageType;
   uint8_t     nodeType;
@@ -118,7 +120,7 @@ typedef struct PACK AppMessage_t
   uint8_t     lqi;
   int8_t      rssi;
 
-  struct PACK
+  struct 
   {
     uint8_t   type;
     uint8_t   size;
@@ -127,7 +129,7 @@ typedef struct PACK AppMessage_t
     int32_t   light;
   } sensors;
 
-  struct PACK
+  struct 
   {
     uint8_t   type;
     uint8_t   size;
@@ -146,7 +148,7 @@ typedef enum AppState_t
   APP_STATE_SLEEP,
   APP_STATE_WAKEUP,
 } AppState_t;
-
+COMPILER_PACK_RESET()
 /*- Variables --------------------------------------------------------------*/
 static AppState_t appState = APP_STATE_INITIAL;
 

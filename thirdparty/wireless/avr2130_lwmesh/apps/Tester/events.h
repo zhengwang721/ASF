@@ -44,7 +44,6 @@
 #define _EVENTS_H_
 
 /*- Includes ---------------------------------------------------------------*/
-#include "sysTypes.h"
 #include "config.h"
 
 #ifdef APP_ENABLE_EVENTS_BUFFER

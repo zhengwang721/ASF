@@ -43,7 +43,6 @@
 #ifdef PHY_ATMEGARFR2
 #define IRQ_CLEAR_VALUE       0xff
 /*- Includes ---------------------------------------------------------------*/
-#include "sysTypes.h"
 #include "phy.h"
 #include "delay.h"
 #include "sal.h"

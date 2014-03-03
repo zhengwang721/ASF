@@ -67,7 +67,6 @@ typedef struct AppRequestBuffer_t
 } AppRequestBuffer_t;
 
 /*- Prototypes -------------------------------------------------------------*/
-void appUartSendCommand(uint8_t *buf, uint16_t size);
 static void appOpenEndpoint(uint8_t index, bool state);
 static bool appDataInd(NWK_DataInd_t *ind);
 static void appDataConf(NWK_DataReq_t *req);

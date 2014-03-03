@@ -56,6 +56,7 @@
 #include "sleep_mgr.h"
 #include "sys.h"
 #include "sysTimer.h"
+#include "asf.h"
 
 /*- Implementations --------------------------------------------------------*/
 

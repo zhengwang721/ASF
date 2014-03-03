@@ -11,7 +11,6 @@
 		<build type="header-file"   value="inc/sysEncrypt.h"/>
 		<build type="header-file"   value="inc/sysTimer.h"/>
 		<build type="header-file"   value="inc/sysConfig.h"/>
-		<build type="header-file"   value="inc/sysTypes.h"/>
 		<build type="include-path"  value="inc/"/>
 		<require idref="thirdparty.wireless.common_services.trx_access"/>
 		<require idref="thirdparty.wireless.common_services.common_hw_timer"/>
