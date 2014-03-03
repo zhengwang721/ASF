@@ -59,7 +59,7 @@ extern "C" {
  * @{
  */
 //! Global structure which contains standard UDI API for UDC
-extern UDC_DESC_STORAGE udi_api_t udi_api_hid_kbd;
+extern UDC_DESC_STORAGE udi_api_t udi_api_hid_gpd;
 //@}
 
 /**
@@ -76,45 +76,45 @@ typedef struct {
 	usb_iface_desc_t iface;
 	usb_hid_descriptor_t hid;
 	usb_ep_desc_t ep;
-} udi_hid_kbd_desc_t;
+} udi_hid_gpd_desc_t;
 
 //! Report descriptor for HID keyboard
 typedef struct {
 	uint8_t array[75];
-} udi_hid_kbd_report_desc_t;
+} udi_hid_gpd_report_desc_t;
 
 
 //! By default no string associated to this interface
-#ifndef UDI_HID_KBD_STRING_ID
-#define UDI_HID_KBD_STRING_ID 0
+#ifndef UDI_HID_GPD_STRING_ID
+#define UDI_HID_GPD_STRING_ID 0
 #endif
 
 //! HID keyboard endpoints size
-#define UDI_HID_KBD_EP_SIZE  8
+#define UDI_HID_GPD_EP_SIZE  8
 
 //! Content of HID keyboard interface descriptor for all speed
-#define UDI_HID_KBD_DESC    {\
+#define UDI_HID_GPD_DESC    {\
 	.iface.bLength             = sizeof(usb_iface_desc_t),\
 	.iface.bDescriptorType     = USB_DT_INTERFACE,\
-	.iface.bInterfaceNumber    = UDI_HID_KBD_IFACE_NUMBER,\
+	.iface.bInterfaceNumber    = UDI_HID_GPD_IFACE_NUMBER,\
 	.iface.bAlternateSetting   = 0,\
 	.iface.bNumEndpoints       = 1,\
 	.iface.bInterfaceClass     = HID_CLASS,\
 	.iface.bInterfaceSubClass  = HID_SUB_CLASS_NOBOOT,\
 	.iface.bInterfaceProtocol  = 0x00,\ 
-	.iface.iInterface          = UDI_HID_KBD_STRING_ID,\
+	.iface.iInterface          = UDI_HID_GPD_STRING_ID,\
 	.hid.bLength               = sizeof(usb_hid_descriptor_t),\
 	.hid.bDescriptorType       = USB_DT_HID,\
 	.hid.bcdHID                = LE16(USB_HID_BDC_V1_11),\
 	.hid.bCountryCode          = USB_HID_NO_COUNTRY_CODE,\
 	.hid.bNumDescriptors       = USB_HID_NUM_DESC,\
 	.hid.bRDescriptorType      = USB_DT_HID_REPORT,\
-	.hid.wDescriptorLength     = LE16(sizeof(udi_hid_kbd_report_desc_t)),\
+	.hid.wDescriptorLength     = LE16(sizeof(udi_hid_gpd_report_desc_t)),\
 	.ep.bLength                = sizeof(usb_ep_desc_t),\
 	.ep.bDescriptorType        = USB_DT_ENDPOINT,\
-	.ep.bEndpointAddress       = UDI_HID_KBD_EP_IN,\
+	.ep.bEndpointAddress       = UDI_HID_GPD_EP_IN,\
 	.ep.bmAttributes           = USB_EP_TYPE_INTERRUPT,\
-	.ep.wMaxPacketSize         = LE16(UDI_HID_KBD_EP_SIZE),\
+	.ep.wMaxPacketSize         = LE16(UDI_HID_GPD_EP_SIZE),\
 	.ep.bInterval              = 5,\
 	}
 //@}
@@ -137,7 +137,7 @@ typedef struct {
  *
  * \return \c 1 if function was successfully done, otherwise \c 0.
  */
-bool udi_hid_kbd_modifier_up(uint8_t modifier_id);
+bool udi_hid_gpd_modifier_up(uint8_t modifier_id);
 
 /**
  * \brief Send events key modifier pressed
@@ -146,7 +146,7 @@ bool udi_hid_kbd_modifier_up(uint8_t modifier_id);
  *
  * \return \c 1 if function was successfully done, otherwise \c 0.
  */
-bool udi_hid_kbd_modifier_down(uint8_t modifier_id);
+bool udi_hid_gpd_modifier_down(uint8_t modifier_id);
 
 
 /**
@@ -156,7 +156,7 @@ bool udi_hid_kbd_modifier_down(uint8_t modifier_id);
  *
  * \return \c 1 if function was successfully done, otherwise \c 0.
  */
-bool udi_hid_kbd_up(uint8_t key_id);
+bool udi_hid_gpd_up(uint8_t key_id);
 
 /**
  * \brief Send events key pressed
@@ -164,9 +164,10 @@ bool udi_hid_kbd_up(uint8_t key_id);
  * \param key_id   ID of key
  *
  */
-bool udi_hid_kbd_down(uint8_t key_id);
+bool udi_hid_gpd_down(uint8_t key_id);
 bool udi_hid_throttle_move(int8_t pos);
 bool udi_hid_moveX(int8_t pos);
+bool udi_hid_moveY(int8_t pos);
 //@}
 
 #ifdef __cplusplus

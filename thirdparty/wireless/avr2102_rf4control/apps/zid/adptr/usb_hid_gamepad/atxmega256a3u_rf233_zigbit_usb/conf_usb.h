@@ -111,7 +111,7 @@
 #define  USB_DEVICE_EP_CTRL_SIZE       8
 
 //! Two interfaces for this device (CDC + MSC + HID mouse + HID keyboard)
-#define  USB_DEVICE_NB_INTERFACE       2
+#define  USB_DEVICE_NB_INTERFACE       1
 
 //! 7 endpoints used by HID mouse, HID keyboard, CDC and MSC interfaces
 //! but an IN and OUT endpoints can be defined with the same number on XMEGA, thus 5
@@ -175,9 +175,9 @@
  * @{
  */
 //! Interface callback definition
-#define  UDI_HID_KBD_ENABLE_EXT()       main_kbd_enable()
-#define  UDI_HID_KBD_DISABLE_EXT()      main_kbd_disable()
-#define  UDI_HID_KBD_CHANGE_LED(value)  
+#define  UDI_HID_GPD_ENABLE_EXT()       main_kbd_enable()
+#define  UDI_HID_GPD_DISABLE_EXT()      main_kbd_disable()
+#define  UDI_HID_GPD_CHANGE_LED(value)  
 
 //! Enable id string of interface to add an extra USB string
 //#define  UDI_HID_KBD_STRING_ID            0
@@ -189,10 +189,10 @@
  * @{
  */
 //! Endpoint numbers definition
-#define  UDI_HID_KBD_EP_IN           (2 | USB_EP_DIR_IN)
+#define  UDI_HID_GPD_EP_IN           (2 | USB_EP_DIR_IN)
 
 //! Interface number
-#define  UDI_HID_KBD_IFACE_NUMBER    1
+#define  UDI_HID_GPD_IFACE_NUMBER    1
 //@}
 //@}
 
@@ -205,27 +205,23 @@
  */
 //! USB Interfaces descriptor structure
 #define	UDI_COMPOSITE_DESC_T \
-	udi_hid_mouse_desc_t udi_hid_mouse; \
-	udi_hid_kbd_desc_t   udi_hid_kbd
+		udi_hid_gpd_desc_t   udi_hid_gpd
 
 //! USB Interfaces descriptor value for Full Speed
 #define UDI_COMPOSITE_DESC_FS \
-	.udi_hid_mouse = UDI_HID_MOUSE_DESC, \
-	.udi_hid_kbd   = UDI_HID_KBD_DESC
+	   .udi_hid_gpd   = UDI_HID_GPD_DESC
 
 //! USB Interfaces descriptor value for High Speed
 #define UDI_COMPOSITE_DESC_HS \
-	.udi_hid_mouse = UDI_HID_MOUSE_DESC, \
-	.udi_hid_kbd   = UDI_HID_KBD_DESC
+	.udi_hid_gpd   = UDI_HID_GPD_DESC
 
 //! USB Interface APIs
 #define	UDI_COMPOSITE_API \
-	&udi_api_hid_mouse, \
-	&udi_api_hid_kbd
+	&udi_api_hid_gpd
 //@}
 
 
-/**
+/**o
  * USB Device Driver Configuration
  * @{
  */
@@ -234,7 +230,6 @@
 //! The includes of classes and other headers must be done at the end of this file to avoid compile error
 //#include "udi_cdc.h"
 //#include "udi_msc.h"
-#include "udi_hid_mouse.h"
 #include "udi_hid_kbd.h"
 #include "app_config.h"
 
