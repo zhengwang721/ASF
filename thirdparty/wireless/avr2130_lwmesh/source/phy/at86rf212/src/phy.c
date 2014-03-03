@@ -198,8 +198,12 @@ void PHY_DataReq(uint8_t *data)
   */
   data[0] += 2;
   trx_frame_write(data,(data[0]-1) /* length value*/); 
-  phyWriteRegister(TRX_STATE_REG, TRX_CMD_TX_START);
+
   phyState = PHY_STATE_TX_WAIT_END;
+  
+  TRX_SLP_TR_HIGH();
+  TRX_TRIG_DELAY();
+  TRX_SLP_TR_LOW();  
   
 
 }

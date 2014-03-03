@@ -103,6 +103,7 @@
  */
 #define TRX_CMD_SR                      (0x00)
 
+#define TRX_TRIG_DELAY()  {nop(); nop();}
 /**
  * Set TRX GPIO pins.
  */

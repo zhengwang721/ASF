@@ -161,6 +161,7 @@ void PHY_Wakeup(void)
   phyState = PHY_STATE_IDLE;
 }
 
+
 /*************************************************************************//**
 *****************************************************************************/
 void PHY_DataReq(uint8_t *data)
@@ -177,7 +178,7 @@ void PHY_DataReq(uint8_t *data)
   phyState = PHY_STATE_TX_WAIT_END;
   
   TRX_SLP_TR_HIGH();
-  delay_us(1);
+  TRX_TRIG_DELAY();
   TRX_SLP_TR_LOW();
 }
 
