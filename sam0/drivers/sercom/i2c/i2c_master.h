@@ -282,7 +282,7 @@ struct i2c_master_config {
 	/** Inactive bus time out */
 	enum i2c_master_inactive_timeout inactive_timeout;
 #ifdef FEATURE_I2C_SCL_STRETCH_MODE
-	/** Set to enable SCL stretch only after ACK bit */
+	/** Set to enable SCL stretch only after ACK bit (required for high speed) */
 	bool scl_stretch_only_after_ack_bit;
 #endif
 #ifdef FEATURE_I2C_SCL_EXTEND_TIMEOUT

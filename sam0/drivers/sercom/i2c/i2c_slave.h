@@ -332,7 +332,7 @@ struct i2c_slave_config {
 	/** Set to enable SCL low time-out */
 	bool scl_low_timeout;
 #ifdef FEATURE_I2C_SCL_STRETCH_MODE
-	/** Set to enable SCL stretch only after ACK bit */
+	/** Set to enable SCL stretch only after ACK bit (required for high speed) */
 	bool scl_stretch_only_after_ack_bit;
 #endif
 #ifdef FEATURE_I2C_SCL_EXTEND_TIMEOUT

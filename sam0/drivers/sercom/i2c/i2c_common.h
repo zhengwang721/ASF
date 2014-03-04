@@ -481,6 +481,7 @@ enum i2c_transfer_direction {
  *	<tr>
  *		<td>
  *		\li Added 10-bit addressing and high speed support in SAM D21.
+ *		\li Seperate structure i2c_packet into i2c_master_packet and i2c_slave packet.
  *		</td>
  *	</tr>
  *	<tr>
@@ -531,6 +532,11 @@ enum i2c_transfer_direction {
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>D</td>
+ *		<td>03/2014</td>
+ *		<td>Added 10-bit addressing and high speed support in SAM D21.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>
