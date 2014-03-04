@@ -375,7 +375,9 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * Common prerequisites for all USB hosts.
  *
  * This module is based on USB host stack full interrupt driven and supporting
- * \ref sleepmgr_group sleepmgr.
+ * \ref sleepmgr_group sleepmgr. For AVR and SAM3/4 devices the
+ * \ref clk_group clock services is supported. For SAMD devices the
+ * \ref asfdoc_sam0_system_clock_group clock driver is supported.
  *
  * The following procedure must be executed to setup the project correctly:
  * - Specify the clock configuration:
@@ -398,14 +400,18 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \subpage uhc_conf_clock.
  *
- * Add to the initialization code:
+ * For AVR and SAM3/4 devices, add to the initialization code:
  * \code
- * #if SAMD21
- *     system_init();
- * #else
  *     sysclk_init();
+ *     irq_initialize_vectors();
+ *     cpu_irq_enable();
  *     board_init();
- * #endif
+ *     sleepmgr_init(); // Optional
+ * \endcode
+ *
+ * For SAMD devices, add to the initialization code:
+ * \code
+ *     system_init();
  *     irq_initialize_vectors();
  *     cpu_irq_enable();
  *     sleepmgr_init(); // Optional
@@ -505,10 +511,6 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * #  define CONF_CLOCK_DFLL_LOOP_MODE               SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED
  * #  define CONF_CLOCK_DFLL_ON_DEMAND               true
  *
- * // DFLL open loop mode configuration
- * #  define CONF_CLOCK_DFLL_COARSE_VALUE            (0x1f / 4)
- * #  define CONF_CLOCK_DFLL_FINE_VALUE              (0xff / 4)
- *
  * // DFLL closed loop mode configuration
  * #  define CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR   GCLK_GENERATOR_1
  * #  define CONF_CLOCK_DFLL_MULTIPLY_FACTOR         (48000000/32768)
@@ -533,7 +535,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * #  define CONF_CLOCK_GCLK_1_RUN_IN_STANDBY        false
  * #  define CONF_CLOCK_GCLK_1_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_XOSC32K
  * #  define CONF_CLOCK_GCLK_1_PRESCALER             1
- * #  define CONF_CLOCK_GCLK_1_OUTPUT_ENABLE         false
+ * #  define CONF_CLOCK_GCLK_1_OUTPUT_ENABLE         true
  *
  * \endcode
  */
