@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 Quick Start Guide for Using SPI driver with DMA
+ * \brief SAM D21/R21 Quick Start Guide for Using SPI driver with DMA
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
