@@ -149,20 +149,26 @@ static void _dma_set_config(struct dma_resource *resource,
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
 	DMAC->SWTRIGCTRL.reg &= (uint32_t)(~(1 << resource->channel_id));
 
-	temp_CTRLB_reg = DMAC_CHCTRLB_LVL(priority) | DMAC_CHCTRLB_TRIGSRC(resource_config->peripheral_trigger);
+	temp_CTRLB_reg = DMAC_CHCTRLB_LVL(resource_config->priority) | \
+			DMAC_CHCTRLB_TRIGSRC(resource_config->peripheral_trigger) | \
+			DMAC_CHCTRLB_TRIGACT(resource_config->trigger_action);
 
 
-	DMAC->CHCTRLB.reg |= DMAC_CHCTRLB_EVIE | DMAC_CHCTRLB_EVACT(
+	if(resource_config->event_config.input_action){
+	temp_CTRLB_reg |= DMAC_CHCTRLB_EVIE | DMAC_CHCTRLB_EVACT(
 				resource_config->event_config.input_action);
-
-	/* Configure Trigger action */
-	DMAC->CHCTRLB.bit.TRIGACT = resource_config->trigger_action;
+	}
 
 	/** Enable event output, the event output selection is configured in
 	 * each transfer descriptor  */
 	if (resource_config->event_config.event_output_enable) {
-		DMAC->CHCTRLB.reg |= DMAC_CHCTRLB_EVOE;
+		temp_CTRLB_reg |= DMAC_CHCTRLB_EVOE;
 	}
+
+	/* Write config to CTRLB register */
+	DMAC->CHCTRLB.reg = temp_CTRLB_reg;
+
+
 
 	system_interrupt_leave_critical_section();
 }
