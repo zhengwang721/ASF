@@ -78,15 +78,13 @@ static struct dma_resource* _dma_active_resource[CONF_MAX_USED_CHANNEL_NUM];
 /**
  * \brief Find a free channel for a DMA resource.
  *
- * Find and set the priority level for the requested DMA resource.
- *
- * \param[in]  priority         DMA resource priority level
+ * Find a channel for the requested DMA resource.
  *
  * \return Status of channel allocation
  * \retval DMA_INVALID_CHANNEL  No channel available
  * \retval count          Allocated channel for the DMA resource
  */
-static uint8_t _dma_find_first_free_channel_and_allocate(uint8_t priority)
+static uint8_t _dma_find_first_free_channel_and_allocate()
 {
 	uint8_t count;
 	uint32_t tmp;
@@ -116,10 +114,6 @@ static uint8_t _dma_find_first_free_channel_and_allocate(uint8_t priority)
 	if (!allocated) {
 		return DMA_INVALID_CHANNEL;
 	} else {
-		/* Set priority level for the allocated channel */
-		DMAC->CHID.reg = DMAC_CHID_ID(count);
-		DMAC->CHCTRLB.reg &= ~DMAC_CHCTRLB_LVL_Msk;
-		DMAC->CHCTRLB.reg |=  DMAC_CHCTRLB_LVL(priority);
 		return count;
 	}
 }
@@ -338,7 +332,7 @@ enum status_code dma_allocate(struct dma_resource *resource,
 	}
 
 	/* Find the proper channel */
-	new_channel = _dma_find_first_free_channel_and_allocate(config->priority);
+	new_channel = _dma_find_first_free_channel_and_allocate();
 
 	/* If no channel available, return not found */
 	if (new_channel == DMA_INVALID_CHANNEL) {
