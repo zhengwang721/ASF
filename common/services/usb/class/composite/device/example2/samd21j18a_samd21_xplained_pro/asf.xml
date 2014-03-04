@@ -22,11 +22,11 @@
 		<generator value="as5_arm"/>
 		<generator value="doxygen"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
-		<config name="config.compiler.iarewarm.sys_stack_size" value="0x0C00"/>
+		<config name="config.compiler.iarewarm.sys_stack_size" value="0x0BF0"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
-		<config name="config.compiler.armgcc.stack_size" value="0x0C00"/>
+		<config name="config.compiler.armgcc.stack_size" value="0x0BF0"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
-		<toolchain-config name="armgcc.linker.miscellaneous.LinkerFlags" value="-Wl,--defsym,STACK_SIZE=0x0C00" toolchain="armgcc"/>
+		<toolchain-config name="armgcc.linker.miscellaneous.LinkerFlags" value="-Wl,--defsym,STACK_SIZE=0x0BF0" toolchain="armgcc"/>
 		<device-support value="atsamd21j18a"/>
 	</project>
 </asf>
