@@ -3,7 +3,7 @@
  *
  * \brief Common IOPORT service demo configuration header file.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,10 +43,10 @@
 #ifndef CONF_EXAMPLE_H_INCLUDED
 #define CONF_EXAMPLE_H_INCLUDED
 
-/* Using D10 SAM4C-EK (PC6) */
-#define EXAMPLE_LED LED0_GPIO
+/* Using LED4 SAM4CMP-DB (PC6) */
+#define EXAMPLE_LED LED4_GPIO
 
-/* Using button BP5 on SAM4C-EK (PA20) */
+/* Using button PB1 on SAM4CMP-DB (PA19) */
 #define EXAMPLE_BUTTON GPIO_PUSH_BUTTON_1
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */
