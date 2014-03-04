@@ -235,7 +235,7 @@
  *   </tr>
  *   <tr>
  *     <td>\ref TCC_EVENT_ACTION_DIR_CONTROL "TCC_EVENT_ACTION_DIR_CONTROL"</td>
- *     <td>Counter direction control (event line low: up; high: down)</td>
+ *     <td>Counter direction control</td>
  *     <td>EV0</td>
  *   </tr>
  *   <tr>
@@ -1124,8 +1124,7 @@ enum tcc_event1_action {
 };
 
 /**
- * \brief On which part of the counter cycle the counter event output is
- * generated
+ * \brief On which part of the counter cycle the counter event output is generated
  *
  * This enum is used to define the point at which the counter event is generated
  */
@@ -1548,8 +1547,7 @@ uint8_t _tcc_get_inst_index(
  */
 
 /**
- * \brief Determines if the hardware module is currently synchronizing to the
- * bus.
+ * \brief Determines if the hardware module is currently synchronizing to the bus.
  *
  * Checks to see if the underlying hardware peripheral module is currently
  * synchronizing across multiple clock domains to the hardware bus. This

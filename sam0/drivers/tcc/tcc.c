@@ -155,16 +155,16 @@ uint8_t _tcc_get_inst_index(
  *     - Counter starts on 0
  *     - Period/top value set to maximum
  *  \li The match/capture configurations:
- *      \li All Capture compare channel value set to 0
- *      \li No capture enabled (all channels use compare function)
- *      \li Normal frequency wave generation
- *      \li Waveform generation polarity set to 0
- *      \li Don't perform ramp on waveform
+ *     - All Capture compare channel value set to 0
+ *     - No capture enabled (all channels use compare function)
+ *     - Normal frequency wave generation
+ *     - Waveform generation polarity set to 0
+ *     - Don't perform ramp on waveform
  *  \li The waveform extension configurations:
- *      \li No recoverable fault is enabled, fault actions are disabled, filter
+ *     - No recoverable fault is enabled, fault actions are disabled, filter
  *          is set to 0
- *      \li No non-recoverable fault state output is enabled and filter is 0
- *      \li No inversion of waveform output
+ *     - No non-recoverable fault state output is enabled and filter is 0
+ *     - No inversion of waveform output
  *  \li No channel output enabled
  *  \li No PWM pin output enabled
  *  \li Pin and Mux configuration not set

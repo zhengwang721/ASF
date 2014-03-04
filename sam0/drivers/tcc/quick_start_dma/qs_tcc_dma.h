@@ -210,7 +210,7 @@
  *             settings.
  *  -# Adjust the DMA transfer descriptor configurations.
  *       \snippet qs_tcc_dma.c dma_setup_7
- *    -# Create the DMA transfer descriptor with the given configuration.
+ *  -# Create the DMA transfer descriptor with the given configuration.
  *       \snippet qs_tcc_dma.c dma_setup_8
  * -# Start DMA transfer job with prepared descriptor
  *  -# Add the DMA transfer descriptor to the allocated DMA resource.
