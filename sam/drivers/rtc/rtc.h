@@ -3,7 +3,7 @@
  *
  * \brief Real-Time Clock (RTC) driver for SAM.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -75,7 +75,7 @@ uint32_t rtc_set_date_alarm(Rtc *p_rtc,
 		uint32_t ul_month_flag, uint32_t ul_month,
 		uint32_t ul_day_flag, uint32_t ul_day);
 void rtc_clear_time_alarm(Rtc *p_rtc);
-void rtc_clear_data_alarm(Rtc *p_rtc);
+void rtc_clear_date_alarm(Rtc *p_rtc);
 uint32_t rtc_get_status(Rtc *p_rtc);
 void rtc_clear_status(Rtc *p_rtc, uint32_t ul_clear);
 
