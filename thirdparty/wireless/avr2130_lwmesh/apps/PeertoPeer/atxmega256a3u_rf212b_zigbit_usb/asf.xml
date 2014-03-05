@@ -1,6 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="Peer2Peer Application AT86RF212B-XMEGA-A3U AT86RF233 Zigbit(USB)" id="thirdparty.wireless.avr2130_lwmesh.apps.peer2peer.atxmega256a3u_rf212b_zigbit_usb" force-caption="true" force-description="true">
+	<project caption="LWMesh-Peer2Peer Application:AT86RF212B-XMEGA-A3U AT86RF233 Zigbit(USB)" id="thirdparty.wireless.avr2130_lwmesh.apps.peer2peer.atxmega256a3u_rf212b_zigbit_usb" force-caption="true" force-description="true">
 		<info type="description" value="summary">
+		The LWMesh Peer2Peer application performs a Wireless UART functionality using two nodes with preconfigured addresses.
 		</info>		
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="header-file" value="conf_board.h"/>
