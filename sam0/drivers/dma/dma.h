@@ -484,15 +484,15 @@ static inline void dma_unregister_callback(struct dma_resource *resource,
 }
 
 /**
- * \brief Will sett a software trigger for resource
+ * \brief Will set a software trigger for resource
  *
- * This function is used to start a software trigger on the DMA channel
+ * This function is used to set a software trigger on the DMA channel
  * associated with resource. If a trigger is already pending no new trigger
  * will be generated for the channel.
  *
  * \param[in] resource Pointer to the DMA resource
  */
-static inline void dma_start_software_trigger(struct dma_resource *resource) {
+static inline void dma_start_transfer(struct dma_resource *resource) {
 	Assert(resource);
 
 	DMAC->SWTRIGCTRL.reg |= (1 << resource->channel_id);
