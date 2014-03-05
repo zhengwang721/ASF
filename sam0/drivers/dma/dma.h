@@ -296,16 +296,6 @@ enum dma_event_output_selection {
 	DMA_EVENT_OUTPUT_BEAT,
 };
 
-/** DMA transfer trigger type */
-enum dma_transfer_trigger {
-	/** Use software as the DMA trigger */
-	DMA_TRIGGER_SOFTWARE,
-	/** Use peripheral as the DMA trigger */
-	DMA_TRIGGER_PERIPHERAL,
-	/** Use event as the DMA trigger */
-	DMA_TRIGGER_EVENT,
-};
-
 /** DMA trigger action type */
 enum dma_transfer_trigger_action{
 	DMA_TRIGGER_ACTON_BLOCK = DMAC_CHCTRLB_TRIGACT_BLOCK_Val,
@@ -372,8 +362,6 @@ struct dma_events_config {
 struct dma_resource_config {
 	/** DMA transfer priority */
 	enum dma_priority_level priority;
-	/** DMA transfer trigger selection */
-	enum dma_transfer_trigger transfer_trigger;
 	/**DMA peripheral trigger index*/
 	uint8_t peripheral_trigger;
 	/** DMA trigger action */
@@ -493,6 +481,21 @@ static inline void dma_unregister_callback(struct dma_resource *resource,
 	Assert(resource);
 
 	resource->callback[type] = NULL;
+}
+
+/**
+ * \brief Will sett a software trigger for resource
+ *
+ * This function is used to start a software trigger on the DMA channel
+ * associated with resource. If a trigger is already pending no new trigger
+ * will be generated for the channel.
+ *
+ * \param[in] resource Pointer to the DMA resource
+ */
+static inline void dma_start_software_trigger(struct dma_resource *resource) {
+	Assert(resource);
+
+	DMAC->SWTRIGCTRL.reg |= (1 << resource->channel_id);
 }
 
 /**

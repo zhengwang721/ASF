@@ -152,7 +152,10 @@ int main(void)
 	//! [main_1]
 	dma_start_transfer_job(&example_resource);
 	//! [main_1]
-	
+
+	// TODO need a snippet and a documentation around this:
+	dma_start_software_trigger(&example_resource);
+
 	//! [main_2]
 	while (!transfer_is_done) {
 		/* Wait for transfer done */
