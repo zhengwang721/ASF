@@ -108,10 +108,6 @@ void board_init(void)
 	/* Configure the pins connected to LEDs as output and set their
 	 * default initial state to high (LEDs off).
 	 */
-	ioport_set_pin_dir(LED2_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LED2_GPIO, LED2_INACTIVE_LEVEL);
-	ioport_set_pin_dir(LED3_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LED3_GPIO, LED3_INACTIVE_LEVEL);
 	ioport_set_pin_dir(LED4_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(LED4_GPIO, LED4_INACTIVE_LEVEL);
 #else

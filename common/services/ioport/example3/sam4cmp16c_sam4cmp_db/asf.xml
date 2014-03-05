@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="Common IOPORT service example 3 for SAM4CMP-DB" id="common.services.ioport.example3.sam4cmp_db">
 		<info type="description" value="summary">
-			Example that reads button 0 and outputs it on LED0.
+			Example that reads button PB1 and outputs it on LED4.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>

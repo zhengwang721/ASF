@@ -724,7 +724,7 @@ uint32_t pio_get_pin_value(uint32_t ul_pin)
 		p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
 	}
 #elif (SAM4CM)
-	if (ul_pin > 63) {
+	if (ul_pin > PIO_PB21_IDX) {
 		p_pio = PIOC;
 	} else {
 		p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
@@ -752,7 +752,7 @@ void pio_set_pin_high(uint32_t ul_pin)
 		p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
 	}
 #elif (SAM4CM)
-	if (ul_pin > 63) {
+	if (ul_pin > PIO_PB21_IDX) {
 		p_pio = PIOC;
 	} else {
 		p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
@@ -781,7 +781,7 @@ void pio_set_pin_low(uint32_t ul_pin)
 		p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
 	}
 #elif (SAM4CM)
-	if (ul_pin > 63) {
+	if (ul_pin > PIO_PB21_IDX) {
 		p_pio = PIOC;
 	} else {
 		p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
@@ -810,7 +810,7 @@ void pio_toggle_pin(uint32_t ul_pin)
 		p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
 	}
 #elif (SAM4CM)
-	if (ul_pin > 63) {
+	if (ul_pin > PIO_PB21_IDX) {
 		p_pio = PIOC;
 	} else {
 		p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
@@ -846,7 +846,7 @@ uint32_t pio_configure_pin(uint32_t ul_pin, const uint32_t ul_flags)
 		p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
 	}
 #elif (SAM4CM)
-	if (ul_pin > 63) {
+	if (ul_pin > PIO_PB21_IDX) {
 		p_pio = PIOC;
 	} else {
 		p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
@@ -1012,7 +1012,7 @@ void pio_enable_pin_interrupt(uint32_t ul_pin)
 		p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
 	}
 #elif (SAM4CM)
-	if (ul_pin > 63) {
+	if (ul_pin > PIO_PB21_IDX) {
 		p_pio = PIOC;
 	} else {
 		p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
@@ -1041,7 +1041,7 @@ void pio_disable_pin_interrupt(uint32_t ul_pin)
 		p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
 	}
 #elif (SAM4CM)
-	if (ul_pin > 63) {
+	if (ul_pin > PIO_PB21_IDX) {
 		p_pio = PIOC;
 	} else {
 		p_pio = (Pio *)((uint32_t)PIOA + (PIO_DELTA * (ul_pin >> 5)));
@@ -1098,7 +1098,7 @@ uint32_t pio_get_pin_group_id(uint32_t ul_pin)
 		ul_id = ID_PIOA + (ul_pin >> 5);
 	}
 #elif (SAM4CM)
-	if (ul_pin > 63) {
+	if (ul_pin > PIO_PB21_IDX) {
 		ul_id = ID_PIOC;
 	} else {
 		ul_id = ID_PIOA + (ul_pin >> 5);

@@ -3,7 +3,7 @@
  *
  * \brief Common IOPORT service example 3.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -73,6 +73,8 @@
  *  - ATmega256RFR2 Xplained Pro kit
  *  - SAM4C evaluation kit
  *  - SAMG53 Xplained Pro kit
+ *  - SAM4CMP16C demo board
+ *  - SAM4CMS16C demo board
  *
  * \section example_description Description of the example
  * This example reads input from a button and outputs it on a LED.
