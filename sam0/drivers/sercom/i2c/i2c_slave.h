@@ -468,6 +468,12 @@ static void _i2c_slave_wait_for_sync(
  * - Do not run in standby
  * - PINMUX_DEFAULT for SERCOM pads
  *
+ * Those default configuration only availale if the device supports it:
+ * - Not using 10 bit addressing
+ * - Standard-mode and Fast-mode transfer speed
+ * - SCL stretch disabled
+ * - slave SCL low extend time-out disabled
+ *
  * \param[out] config  Pointer to configuration structure to be initialized
  */
 static inline void i2c_slave_get_config_defaults(

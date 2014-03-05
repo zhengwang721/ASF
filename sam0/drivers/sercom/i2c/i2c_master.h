@@ -416,6 +416,13 @@ static void _i2c_master_wait_for_sync(
  * - Do not run in standby
  * - PINMUX_DEFAULT for SERCOM pads
  *
+ * Those default configuration only availale if the device supports it:
+ * - High speed baudrate 3.4MHz
+ * - Standard-mode and Fast-mode transfer speed
+ * - SCL stretch disabled
+ * - slave SCL low extend time-out disabled
+ * - maser SCL low extend time-out disabled
+ *
  * \param[out] config  Pointer to configuration structure to be initiated
  */
 static inline void i2c_master_get_config_defaults(
