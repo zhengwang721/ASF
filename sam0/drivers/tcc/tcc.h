@@ -1493,7 +1493,7 @@ struct tcc_config {
 		 * compare,
 		 *  when a TCC channel is configured for wave generation */
 		struct tcc_match_wave_config wave;
-	}tcc_match_capture_conf;
+	};
 
 	/** Structure for configuring TCC waveform extension */
 	struct tcc_wave_extension_config wave_ext;
