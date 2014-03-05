@@ -3,7 +3,7 @@
  *
  * \brief UART Sleepwalking Example for SAM.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -141,23 +141,19 @@ static void uart_sleepwalking_test_active(void)
  */
 static void uart_sleepwalking_test_wait(void)
 {
-	enum sleepmgr_mode current_sleep_mode = SLEEPMGR_WAIT;
-
-	puts("Test in wait mode, press any key to wake up.\r");
+	puts("Test in wait mode, press number '0' to '9' to wake up.\r");
 
 	/* Wait for the puts operation to finish. */
 	delay_ms(50);
 
 	/* Set the wakeup condition */
-	uart_set_sleepwalking(CONSOLE_UART, 0x00, true, false, 0xFF);
+	uart_set_sleepwalking(CONSOLE_UART, '0', true, true, '9');
 
 	/* Enable the sleepwalking in PMC */
 	pmc_enable_sleepwalking(CONSOLE_UART_ID);
 
 	/* Enter wait mode. */
-	sleepmgr_init();
-	sleepmgr_lock_mode(current_sleep_mode);
-	sleepmgr_enter_sleep();
+	pmc_enable_waitmode();
 
 	puts("A character is received, system wake up.\r\n\r");
 

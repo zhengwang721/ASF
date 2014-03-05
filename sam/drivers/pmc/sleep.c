@@ -3,7 +3,7 @@
  *
  * \brief Sleep mode access
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -135,8 +135,13 @@ __always_inline static void pmc_save_clock_settings(
 	while (!(PMC->PMC_SR & PMC_SR_MOSCRCS));
 
 	/* Switch mainck to FAST RC */
+#if SAMG
+	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCSEL) | CKGR_MOR_MOSCRCF_24_MHz |
+			CKGR_MOR_KEY_PASSWD;
+#else
 	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCSEL) |
 			CKGR_MOR_KEY_PASSWD;
+#endif
 	while (!(PMC->PMC_SR & PMC_SR_MOSCSELS));
 
 	/* FWS update */
