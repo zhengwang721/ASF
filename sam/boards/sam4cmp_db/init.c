@@ -103,17 +103,13 @@ void board_init(void)
 	 * Here IOPORT must be initialized for others to use before setting up IO.
 	 */
 	ioport_init();
-#if 0 //TODO: check LED pin etc.
+
 #ifdef CONFIG_CPCLK_ENABLE
 	/* Configure the pins connected to LEDs as output and set their
 	 * default initial state to high (LEDs off).
 	 */
-	ioport_set_pin_dir(LED0_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LED0_GPIO, LED0_INACTIVE_LEVEL);
-	ioport_set_pin_dir(LED1_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LED1_GPIO, LED0_INACTIVE_LEVEL);
-	ioport_set_pin_dir(LED2_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LED2_GPIO, LED0_INACTIVE_LEVEL);
+	ioport_set_pin_dir(LED4_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(LED4_GPIO, LED4_INACTIVE_LEVEL);
 #else
 #warning Please enable CONFIG_CPCLK_ENABLE in conf_clock.h to use LEDs (PIOC).
 #endif
@@ -128,7 +124,6 @@ void board_init(void)
 #ifdef CONF_BOARD_UART_CONSOLE
 	ioport_set_pin_peripheral_mode(PIO_PB4_IDX, IOPORT_MODE_MUX_A);
 	ioport_set_pin_peripheral_mode(PIO_PB5_IDX, IOPORT_MODE_MUX_A);
-#endif
 #endif
 }
 

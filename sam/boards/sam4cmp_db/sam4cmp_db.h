@@ -70,7 +70,7 @@
 /** Core definition */
 #define cortexm4
 /** Board revision definition */
-#define BOARD_REV_2
+#define BOARD_REV_B
 
 /* @} */
 
@@ -107,43 +107,9 @@
  */
 
 /**
- * \name LED #2 pin definition
- * @{
- */
-#define LED2_GPIO            (PIO_PC0_IDX)
-#define LED2_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_HIGH
-#define LED2_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_LOW
-
-/* Wrapper macros to ensure common naming across all boards */
-#define LED_2_NAME      "LED2"
-#define PIN_LED_2       {PIO_PC0, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
-#define PIN_LED_2_MASK   PIO_PC0
-#define PIN_LED_2_PIO    PIOC
-#define PIN_LED_2_ID     ID_PIOC
-#define PIN_LED_2_TYPE   PIO_OUTPUT_1
-#define PIN_LED_2_ATTR   PIO_DEFAULT
-/* @} */
-
-/**
- * \name LED #3 pin definition
- * @{
- */
-#define LED3_GPIO            (PIO_PC7_IDX)
-#define LED3_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_HIGH
-#define LED3_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_LOW
-
-/* Wrapper macros to ensure common naming across all boards */
-#define LED_3_NAME      "LED3"
-#define PIN_LED_3       {PIO_PC7, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
-#define PIN_LED_3_MASK   PIO_PC7
-#define PIN_LED_3_PIO    PIOC
-#define PIN_LED_3_ID     ID_PIOC
-#define PIN_LED_3_TYPE   PIO_OUTPUT_1
-#define PIN_LED_3_ATTR   PIO_DEFAULT
-/* @} */
-
-/**
  * \name LED #4 pin definition
+ * Short pin 5 and 6 on J11, and solder 0 ohm resistor on R304 to make this
+ * LED available.
  * @{
  */
 #define LED4_GPIO            (PIO_PC6_IDX)
@@ -151,7 +117,7 @@
 #define LED4_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_LOW
 
 /* Wrapper macros to ensure common naming across all boards */
-#define LED_4_NAME      "LED4"
+#define LED_4_NAME      "blue LED4"
 #define PIN_LED_4       {PIO_PC6, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
 #define PIN_LED_4_MASK   PIO_PC6
 #define PIN_LED_4_PIO    PIOC
@@ -214,7 +180,7 @@
 /* @} */
 
 /**
- * \name UART0 pis (UTXD0 and URXD0) definitions
+ * \name UART0 pin (UTXD0 and URXD0) definitions
  * @{
  */
 #define PINS_UART0        (PIO_PB4A_URXD0 | PIO_PB5A_UTXD0)
@@ -229,7 +195,7 @@
 /* @} */
 
 /**
- * \name UART1 pis (UTXD1 and URXD1) definitions
+ * \name UART1 pin (UTXD1 and URXD1) definitions
  * @{
  */
 #define PINS_UART1        (PIO_PC1A_URXD1 | PIO_PC0A_UTXD1)
