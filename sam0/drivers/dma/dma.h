@@ -492,7 +492,7 @@ static inline void dma_unregister_callback(struct dma_resource *resource,
  *
  * \param[in] resource Pointer to the DMA resource
  */
-static inline void dma_start_transfer(struct dma_resource *resource) {
+static inline void dma_trigger_transfer(struct dma_resource *resource) {
 	Assert(resource);
 
 	DMAC->SWTRIGCTRL.reg |= (1 << resource->channel_id);
