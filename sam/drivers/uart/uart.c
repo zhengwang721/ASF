@@ -3,7 +3,7 @@
  *
  * \brief Universal Asynchronous Receiver Transceiver (UART) driver for SAM.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -410,7 +410,7 @@ Pdc *uart_get_pdc_base(Uart *p_uart)
 {
 	Pdc *p_pdc_base;
 
-#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 	if (p_uart == UART0)
 		p_pdc_base = PDC_UART0;
 #elif (SAM3XA || SAM3U)
@@ -420,7 +420,7 @@ Pdc *uart_get_pdc_base(Uart *p_uart)
 #error "Unsupported device"
 #endif
 
-#if (SAM3S || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+#if (SAM3S || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 	if (p_uart == UART1)
 		p_pdc_base = PDC_UART1;
 #endif
@@ -433,7 +433,7 @@ Pdc *uart_get_pdc_base(Uart *p_uart)
 	return p_pdc_base;
 }
 
-#if (SAM4C || SAM4CP)
+#if (SAM4C || SAM4CP || SAM4CM)
 /**
  * \brief Enable UART optical interface.
  *
