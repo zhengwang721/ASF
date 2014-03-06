@@ -70,8 +70,6 @@ static inline void _at25dfx_chip_issue_read_command_wait(
 	enum status_code status;
 	uint8_t cmd_buffer[AT25DFX_COMMAND_MAX_SIZE];
 
-	UNUSED(status);
-
 	Assert((cmd.command_size) && (cmd.command_size <= AT25DFX_COMMAND_MAX_SIZE));
 
 	// Construct command to send
@@ -124,8 +122,6 @@ static inline void _at25dfx_chip_issue_write_command_wait(
 
 	enum status_code status;
 	uint8_t cmd_buffer[AT25DFX_COMMAND_MAX_SIZE];
-
-	UNUSED(status);
 
 	Assert((cmd.command_size) && (cmd.command_size <= AT25DFX_COMMAND_MAX_SIZE));
 
@@ -184,8 +180,6 @@ static inline enum status_code _at25dfx_chip_get_nonbusy_status(
 
 	enum status_code status;
 	uint8_t data;
-
-	UNUSED(status);
 
 	vectors[0].data = &data;
 	vectors[0].length = 1;
