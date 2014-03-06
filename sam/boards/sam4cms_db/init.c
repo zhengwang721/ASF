@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4CMP-DB board init.
+ * \brief SAM4CMS-DB board init.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -48,7 +48,7 @@
 #include "ioport.h"
 
 /**
- * \addtogroup sam4cmp_db_group
+ * \addtogroup sam4cms_db_group
  * @{
  */
 

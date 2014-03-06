@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4CMP-DB Board Definition.
+ * \brief SAM4CMS-DB Board Definition.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,32 +41,32 @@
  *
  */
 
-#ifndef SAM4CMP_DB_H_INCLUDED
-#define SAM4CMP_DB_H_INCLUDED
+#ifndef SAM4CMS_DB_H_INCLUDED
+#define SAM4CMS_DB_H_INCLUDED
 
 #include "compiler.h"
 
 /**
  * \ingroup group_common_boards
- * \defgroup sam4cmp_db_group "SAM4CMP-DB"
- * Demo Board for SAM4CMP devices.
+ * \defgroup sam4cms_db_group "SAM4CMS-DB"
+ * Demo Board for SAM4CMS devices.
  *
  * @{
  */
 
 /**
- * \defgroup sam4cmp_db_board_info_group "SAM4CMP-DB - Board informations"
+ * \defgroup sam4cms_db_board_info_group "SAM4CMS-DB - Board informations"
  * Definitions related to the board description.
  *
  * @{
  */
 
 /** Name of the board */
-#define BOARD_NAME "SAM4CMP-DB"
+#define BOARD_NAME "SAM4CMS-DB"
 /** Board definition */
-#define sam4cmpdb
+#define sam4cmsdb
 /** Family definition (already defined) */
-#define sam4cmp
+#define sam4cms
 /** Core definition */
 #define cortexm4
 /** Board revision definition */
@@ -75,7 +75,7 @@
 /* @} */
 
 /**
- *  \defgroup sam4cmp_db_opfreq_group "SAM4CMP-DB - Operating frequencies"
+ *  \defgroup sam4cms_db_opfreq_group "SAM4CMS-DB - Operating frequencies"
  *  Definitions related to the board operating frequency.
  *
  *  @{
@@ -100,7 +100,7 @@
 /* @} */
 
 /**
- * \defgroup sam4cmp_db_features_group "SAM4CMP-DB - Features"
+ * \defgroup sam4cms_db_features_group "SAM4CMS-DB - Features"
  * Symbols that describe features and capabilities of the board.
  *
  * @{
@@ -229,9 +229,9 @@
 #define PIN_PCK0_MUX    (IOPORT_MODE_MUX_A)
 /* @} */
 
-/* @} */ /* End of sam4cmp_db_features_group */
+/* @} */ /* End of sam4cms_db_features_group */
 
-/* @} */ /* End of sam4cmp_db_group */
+/* @} */ /* End of sam4cms_db_group */
 
-#endif  /* SAM4CMP_DB_H_INCLUDED */
+#endif  /* SAM4CMS_DB_H_INCLUDED */
 
