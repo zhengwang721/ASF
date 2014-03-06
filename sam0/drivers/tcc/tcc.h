@@ -213,66 +213,62 @@
  *     <th>Applied Event</th>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_OFF "TCC_EVENT_ACTION_OFF"</td>
+ *     <td>TCC_EVENT_ACTION_OFF</td>
  *     <td>No action on the event input</td>
  *     <td>All</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_RETRIGGER "TCC_EVENT_ACTION_RETRIGGER"</td>
+ *     <td>TCC_EVENT_ACTION_RETRIGGER</td>
  *     <td>Re-trigger Counter on event</td>
  *     <td>All</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_NON_RECOVERABLE_FAULT
- *         "TCC_EVENT_ACTION_NON_RECOVERABLE_FAULT"</td>
+ *     <td>TCC_EVENT_ACTION_NON_RECOVERABLE_FAULT</td>
  *     <td>Generate Non-Recoverable Fault on event</td>
  *     <td>All</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_START "TCC_EVENT_ACTION_START"</td>
+ *     <td>TCC_EVENT_ACTION_START</td>
  *     <td>Counter start on event</td>
  *     <td>EV0</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_DIR_CONTROL "TCC_EVENT_ACTION_DIR_CONTROL"</td>
+ *     <td>TCC_EVENT_ACTION_DIR_CONTROL</td>
  *     <td>Counter direction control</td>
  *     <td>EV0</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_DECREMENT "TCC_EVENT_ACTION_DECREMENT"</td>
+ *     <td>TCC_EVENT_ACTION_DECREMENT</td>
  *     <td>Counter decrement on event</td>
  *     <td>EV0</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_PERIOD_PULSE_WIDTH_CAPTURE
- *         "TCC_EVENT_ACTION_PERIOD_PULSE_WIDTH_CAPTURE"</td>
+ *     <td>TCC_EVENT_ACTION_PERIOD_PULSE_WIDTH_CAPTURE</td>
  *     <td>Capture pulse period and pulse width</td>
  *     <td>EV0</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_PULSE_WIDTH_PERIOD_CAPTURE
- *         "TCC_EVENT_ACTION_PULSE_WIDTH_PERIOD_CAPTURE"</td>
+ *     <td>TCC_EVENT_ACTION_PULSE_WIDTH_PERIOD_CAPTURE</td>
  *     <td>Capture pulse width and pulse period</td>
  *     <td>EV0</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_STOP "TCC_EVENT_ACTION_STOP"</td>
+ *     <td>TCC_EVENT_ACTION_STOP</td>
  *     <td>Counter stop on event</td>
  *     <td>EV1</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_COUNT_EVENT "TCC_EVENT_ACTION_COUNT_EVENT"</td>
+ *     <td>TCC_EVENT_ACTION_COUNT_EVENT</td>
  *     <td>Counter count on event</td>
  *     <td>EV1</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_INCREMENT "TCC_EVENT_ACTION_INCREMENT"</td>
+ *     <td>TCC_EVENT_ACTION_INCREMENT</td>
  *     <td>Counter increment on event</td>
  *     <td>EV1</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_EVENT_ACTION_COUNT_DURING_ACTIVE
- *         "TCC_EVENT_ACTION_COUNT_DURING_ACTIVE"</td>
+ *     <td>TCC_EVENT_ACTION_COUNT_DURING_ACTIVE</td>
  *     <td>Counter count during active state of asynchronous event</td>
  *     <td>EV1</td>
  *   </tr>
@@ -297,17 +293,17 @@
  *     <th>Description</th>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_RELOAD_ACTION_GCLK "TCC_RELOAD_ACTION_GCLK"</td>
+ *     <td>TCC_RELOAD_ACTION_GCLK</td>
  *     <td>Reload TCC counter value on next GCLK cycle. Leave prescaler
  *         as-is.</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_RELOAD_ACTION_PRESC "TCC_RELOAD_ACTION_PRESC"</td>
+ *     <td>TCC_RELOAD_ACTION_PRESC</td>
  *     <td>Reloads TCC counter value on next prescaler clock. Leave prescaler
  *         as-is.</td>
  *   </tr>
  *  <tr>
- *    <td> \ref TCC_RELOAD_ACTION_RESYNC "TCC_RELOAD_ACTION_RESYNC"</td>
+ *    <td>TCC_RELOAD_ACTION_RESYNC</td>
  *    <td>Reload TCC counter value on next GCLK cycle. Clear prescaler to
  *        zero.</td>
  *  </tr>
@@ -449,15 +445,15 @@
  *     <th>Description</th>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_OUTPUT_PATTERN_DISABLE "TCC_OUTPUT_PATTERN_DISABLE"</td>
+ *     <td>TCC_OUTPUT_PATTERN_DISABLE</td>
  *     <td>Pattern disabled, generate output as is</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_OUTPUT_PATTERN_0 "TCC_OUTPUT_PATTERN_0"</td>
+ *     <td>TCC_OUTPUT_PATTERN_0</td>
  *     <td>Generate pattern 0 on output (keep the output LOW)</td>
  *   </tr>
  *  <tr>
- *    <td> \ref TCC_OUTPUT_PATTERN_1 "TCC_OUTPUT_PATTERN_1"</td>
+ *    <td>TCC_OUTPUT_PATTERN_1</td>
  *    <td>Generate pattern 1 on output (keep the output HIGH)</td>
  *  </tr>
  * </table>
@@ -477,25 +473,21 @@
  *     <th>Description</th>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_FAULT_HALT_ACTION_DISABLE
- *         "TCC_FAULT_HALT_ACTION_DISABLE"</td>
+ *     <td>TCC_FAULT_HALT_ACTION_DISABLE</td>
  *     <td>Halt action is disabled</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_FAULT_HALT_ACTION_HW_HALT
- *         "TCC_FAULT_HALT_ACTION_HW_HALT"</td>
+ *     <td>TCC_FAULT_HALT_ACTION_HW_HALT</td>
  *     <td>The timer/counter is halted as long as the corresponding fault is
  *         present</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_FAULT_HALT_ACTION_SW_HALT
- *         "TCC_FAULT_HALT_ACTION_SW_HALT"</td>
+ *     <td>TCC_FAULT_HALT_ACTION_SW_HALT</td>
  *     <td>The timer/counter is halted until the corresponding fault is removed
  *         and fault state cleared by software</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_FAULT_HALT_ACTION_NON_RECOVERABLE
- *         "TCC_FAULT_HALT_ACTION_NON_RECOVERABLE"</td>
+ *     <td>TCC_FAULT_HALT_ACTION_NON_RECOVERABLE</td>
  *     <td>Force all the TCC output pins to a pre-defined level, as what
  *         Non-Recoverable Fault do</td>
  *   </tr>
@@ -515,32 +507,32 @@
  *     <th>Description</th>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_FAULT_CAPTURE_DISABLE "TCC_FAULT_CAPTURE_DISABLE"</td>
+ *     <td>TCC_FAULT_CAPTURE_DISABLE</td>
  *     <td>Capture action is disabled</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_FAULT_CAPTURE_EACH "TCC_FAULT_CAPTURE_EACH"</td>
+ *     <td>TCC_FAULT_CAPTURE_EACH</td>
  *     <td>Equivalent to standard capture operation, on each fault occurrence
  *         the time stamp is captured</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_FAULT_CAPTURE_MINIMUM "TCC_FAULT_CAPTURE_MINIMUM"</td>
+ *     <td>TCC_FAULT_CAPTURE_MINIMUM</td>
  *     <td>Get the minimum time stamped value in all time stamps</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_FAULT_CAPTURE_MAXIMUM "TCC_FAULT_CAPTURE_MAXIMUM"</td>
+ *     <td>TCC_FAULT_CAPTURE_MAXIMUM</td>
  *     <td>Get the maximum time stamped value in all time stamps</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_FAULT_CAPTURE_SMALLER "TCC_FAULT_CAPTURE_SMALLER"</td>
+ *     <td>TCC_FAULT_CAPTURE_SMALLER</td>
  *     <td>Time stamp the fault input if the value is smaller than last one</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_FAULT_CAPTURE_BIGGER "TCC_FAULT_CAPTURE_BIGGER"</td>
+ *     <td>TCC_FAULT_CAPTURE_BIGGER</td>
  *     <td>Time stamp the fault input if the value is bigger than last one</td>
  *   </tr>
  *   <tr>
- *     <td>\ref TCC_FAULT_CAPTURE_CHANGE "TCC_FAULT_CAPTURE_CHANGE"</td>
+ *     <td>TCC_FAULT_CAPTURE_CHANGE</td>
  *     <td>Time stamp the fault input if the time stamps changes its increment
  *         direction</td>
  *   </tr>
