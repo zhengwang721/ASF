@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief ILI9325 configuration.
+ * \brief ILI93xx configuration.
  *
  * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
  *
@@ -43,18 +43,18 @@
 
 //! Configuration of the ILI9325 LCD display driver
 
-#ifndef CONF_ILI9325_H_INCLUDED
-#define CONF_ILI9325_H_INCLUDED
+#ifndef CONF_ILI93XX_H_INCLUDED
+#define CONF_ILI93XX_H_INCLUDED
 
 #include "board.h"
 
-#if !defined(BOARD_ILI9325_ADDR) || !defined(BOARD_ILI9325_RS)
+#if !defined(BOARD_ILI93XX_ADDR) || !defined(BOARD_ILI93XX_RS)
 
-	#warning The ILI9325 EBI configuration does not exist in the board definition file. Using default settings.
+	#warning The ILI93XX EBI configuration does not exist in the board definition file. Using default settings.
 
-	#define BOARD_ILI9325_ADDR     0x61000000 /* The base address, depends on which SMC chip select is used by ILI9325. */
-	#define BOARD_ILI9325_RS       1 << 1 /* Register select (1 << 1) */
+	#define BOARD_ILI93XX_ADDR     0x61000000 /* The base address, depends on which SMC chip select is used by ILI9325. */
+	#define BOARD_ILI93XX_RS       1 << 1 /* Register select (1 << 1) */
 
 #endif
 
-#endif /* CONF_ILI9325_H_INCLUDED */
+#endif /* CONF_ILI93XX_H_INCLUDED */

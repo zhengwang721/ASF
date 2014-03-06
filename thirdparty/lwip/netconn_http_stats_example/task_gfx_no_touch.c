@@ -60,7 +60,9 @@
 #include <pmc.h>
 #include <sysclk.h>
 
-#include "ili9325.h"
+#include "ili93xx.h"
+#include "ili9325_regs.h"
+#include "ili9341_regs.h"
 #include "aat31xx.h"
 #include "smc.h"
 #include "ethernet.h"
@@ -76,7 +78,7 @@ static void gfx_draw_bmpfile(const uint8_t *bmpImage);
 #define IP_SELECTION        IP_FIXED
 
 /* Chip select number to be set */
-#define ILI9325_LCD_CS       1
+#define ILI93XX_LCD_CS       1
 
 /** IRQ priority for PIO (The lower the value, the greater the priority) */
 #define IRQ_PRIOR_PIO        13
@@ -146,75 +148,82 @@ static void gfx_task(void *pvParameters)
 	/* Get rid of this compiler warning. */
 	pvParameters = pvParameters;
 
-	/* Display ATMEL logo. */
-	ili9325_set_cursor_position(0,0);
+	/* Enable display, backlight and print ATMEL logo. */
+	ili93xx_set_cursor_position(0,0);
+	ili93xx_set_foreground_color(COLOR_WHITE);
+	ili93xx_draw_filled_rectangle(0, 0, ILI93XX_LCD_WIDTH, ILI93XX_LCD_HEIGHT);
 	gfx_draw_bmpfile(logo_atmel_bmp);
+	ili93xx_display_on();
+	for (uint32_t i = AAT31XX_MIN_BACKLIGHT_LEVEL; i <= AAT31XX_MAX_BACKLIGHT_LEVEL; ++i) {
+		aat31xx_set_backlight(i);
+		vTaskDelay(40);
+	}
 	vTaskDelay(presentation_delay);
 
 	/* Draw IP config menu. */
-	ili9325_set_foreground_color(COLOR_WHITE);
-	ili9325_draw_filled_rectangle(0, 0, ILI9325_LCD_WIDTH, ILI9325_LCD_HEIGHT);
+	ili93xx_set_foreground_color(COLOR_WHITE);
+	ili93xx_draw_filled_rectangle(0, 0, ILI93XX_LCD_WIDTH, ILI93XX_LCD_HEIGHT);
 
 #if (IP_SELECTION == IP_FIXED)
 	/* Static IP button selected. */
 	/* Button 1. */
-	ili9325_set_foreground_color(COLOR_BLACK);
-	ili9325_draw_rectangle(20,70,220,130);
-	ili9325_set_foreground_color(0xE4E4E4u);
-	ili9325_draw_rectangle(22,72,222,132);
-	ili9325_set_foreground_color(COLOR_LIGHTGREY);
-	ili9325_draw_filled_rectangle(21,71,221,131);
-	ili9325_set_foreground_color(COLOR_BLACK);
-	ili9325_draw_string(92, 91, (uint8_t *)"Static");
+	ili93xx_set_foreground_color(COLOR_BLACK);
+	ili93xx_draw_rectangle(20,70,220,130);
+	ili93xx_set_foreground_color(0xE4E4E4u);
+	ili93xx_draw_rectangle(22,72,222,132);
+	ili93xx_set_foreground_color(COLOR_LIGHTGREY);
+	ili93xx_draw_filled_rectangle(21,71,221,131);
+	ili93xx_set_foreground_color(COLOR_BLACK);
+	ili93xx_draw_string(92, 91, (uint8_t *)"Static");
 
 	/* Button 2. */
-	ili9325_set_foreground_color(0xE4E4E4u);
-	ili9325_draw_rectangle(20,170,220,230);
-	ili9325_set_foreground_color(COLOR_BLACK);
-	ili9325_draw_rectangle(22,172,222,232);
-	ili9325_set_foreground_color(COLOR_LIGHTGREY);
-	ili9325_draw_filled_rectangle(21,171,221,231);
-	ili9325_set_foreground_color(COLOR_BLACK);
-	ili9325_draw_string(102, 191, (uint8_t *)"DHCP");
+	ili93xx_set_foreground_color(0xE4E4E4u);
+	ili93xx_draw_rectangle(20,170,220,230);
+	ili93xx_set_foreground_color(COLOR_BLACK);
+	ili93xx_draw_rectangle(22,172,222,232);
+	ili93xx_set_foreground_color(COLOR_LIGHTGREY);
+	ili93xx_draw_filled_rectangle(21,171,221,231);
+	ili93xx_set_foreground_color(COLOR_BLACK);
+	ili93xx_draw_string(102, 191, (uint8_t *)"DHCP");
 #else
 	/* DHCP IP button selected. */
 	/* Button 1. */
-	ili9325_set_foreground_color(0xE4E4E4u);
-	ili9325_draw_rectangle(20,70,220,130);
-	ili9325_set_foreground_color(COLOR_BLACK);
-	ili9325_draw_rectangle(22,72,222,132);
-	ili9325_set_foreground_color(COLOR_LIGHTGREY);
-	ili9325_draw_filled_rectangle(21,71,221,131);
-	ili9325_set_foreground_color(COLOR_BLACK);
-	ili9325_draw_string(92, 91, (uint8_t *)"Static");
+	ili93xx_set_foreground_color(0xE4E4E4u);
+	ili93xx_draw_rectangle(20,70,220,130);
+	ili93xx_set_foreground_color(COLOR_BLACK);
+	ili93xx_draw_rectangle(22,72,222,132);
+	ili93xx_set_foreground_color(COLOR_LIGHTGREY);
+	ili93xx_draw_filled_rectangle(21,71,221,131);
+	ili93xx_set_foreground_color(COLOR_BLACK);
+	ili93xx_draw_string(92, 91, (uint8_t *)"Static");
 
 	/* Button 2. */
-	ili9325_set_foreground_color(COLOR_BLACK);
-	ili9325_draw_rectangle(20,170,220,230);
-	ili9325_set_foreground_color(0xE4E4E4u);
-	ili9325_draw_rectangle(22,172,222,232);
-	ili9325_set_foreground_color(COLOR_LIGHTGREY);
-	ili9325_draw_filled_rectangle(21,171,221,231);
-	ili9325_set_foreground_color(COLOR_BLACK);
-	ili9325_draw_string(102, 191, (uint8_t *)"DHCP");
+	ili93xx_set_foreground_color(COLOR_BLACK);
+	ili93xx_draw_rectangle(20,170,220,230);
+	ili93xx_set_foreground_color(0xE4E4E4u);
+	ili93xx_draw_rectangle(22,172,222,232);
+	ili93xx_set_foreground_color(COLOR_LIGHTGREY);
+	ili93xx_draw_filled_rectangle(21,171,221,231);
+	ili93xx_set_foreground_color(COLOR_BLACK);
+	ili93xx_draw_string(102, 191, (uint8_t *)"DHCP");
 #endif
 
-	ili9325_draw_string(22, 30, (uint8_t *)"IP Configuration");
-	ili9325_draw_string(20, 260, (uint8_t *)"Assigned IP:");
-	ili9325_draw_rectangle(20,280,220,310);
+	ili93xx_draw_string(22, 30, (uint8_t *)"IP Configuration");
+	ili93xx_draw_string(20, 260, (uint8_t *)"Assigned IP:");
+	ili93xx_draw_rectangle(20,280,220,310);
 
 	/* Bring up the ethernet interface & initializes timer0, channel0 */
-	ili9325_draw_string(30, 290, (uint8_t *)"Please wait...");
+	ili93xx_draw_string(30, 290, (uint8_t *)"Please wait...");
 	init_ethernet();
 	app_hold = 0;
 
 	/* Show configured IP and unlock all other waiting tasks. */
-	ili9325_set_foreground_color(COLOR_WHITE);
-	ili9325_draw_filled_rectangle(20,280,220,310);
-	ili9325_draw_filled_rectangle(0,0,240,60);
-	ili9325_set_foreground_color(COLOR_BLACK);
-	ili9325_draw_rectangle(20,280,220,310);
-	ili9325_draw_string(30, 290, (uint8_t const*)g_c_ipconfig);
+	ili93xx_set_foreground_color(COLOR_WHITE);
+	ili93xx_draw_filled_rectangle(20,280,220,310);
+	ili93xx_draw_filled_rectangle(0,0,240,60);
+	ili93xx_set_foreground_color(COLOR_BLACK);
+	ili93xx_draw_rectangle(20,280,220,310);
+	ili93xx_draw_string(30, 290, (uint8_t const*)g_c_ipconfig);
 
 	/* GFX task Loop. */
 	while (1)
@@ -222,14 +231,14 @@ static void gfx_task(void *pvParameters)
 		/* Make HTTP text to blink to show GFX task activity. */
 		if (blink == 0)
 		{
-			ili9325_draw_string(5, 30, (uint8_t *)"HTTP server running!");
+			ili93xx_draw_string(5, 30, (uint8_t *)"HTTP server running!");
 			blink = 1;
 		}
 		else
 		{
-			ili9325_set_foreground_color(COLOR_WHITE);
-			ili9325_draw_filled_rectangle(0,0,240,60);
-			ili9325_set_foreground_color(COLOR_BLACK);
+			ili93xx_set_foreground_color(COLOR_WHITE);
+			ili93xx_draw_filled_rectangle(0,0,240,60);
+			ili93xx_set_foreground_color(COLOR_BLACK);
 			blink = 0;
 		}
 
@@ -244,41 +253,35 @@ static void gfx_task(void *pvParameters)
  */
 static void gfx_init(void)
 {
-	struct ili9325_opt_t g_ili9325_display_opt;
+	struct ili93xx_opt_t g_ili93xx_display_opt;
 
-	/* Enable peripheral clock */
+	/* Enable peripheral clock. */
 	pmc_enable_periph_clk(ID_SMC);
 
-	/* Configure SMC interface for Lcd */
-	smc_set_setup_timing(SMC,ILI9325_LCD_CS,SMC_SETUP_NWE_SETUP(2)
-	| SMC_SETUP_NCS_WR_SETUP(2)
-	| SMC_SETUP_NRD_SETUP(2)
-	| SMC_SETUP_NCS_RD_SETUP(2));
-	smc_set_pulse_timing(SMC, ILI9325_LCD_CS , SMC_PULSE_NWE_PULSE(4)
-	| SMC_PULSE_NCS_WR_PULSE(4)
-	| SMC_PULSE_NRD_PULSE(10)
-	| SMC_PULSE_NCS_RD_PULSE(10));
-	smc_set_cycle_timing(SMC, ILI9325_LCD_CS, SMC_CYCLE_NWE_CYCLE(10)
-	| SMC_CYCLE_NRD_CYCLE(22));
-	smc_set_mode(SMC, ILI9325_LCD_CS, SMC_MODE_READ_MODE
-	| SMC_MODE_WRITE_MODE);
+	/* Configure SMC interface for LCD. */
+	smc_set_setup_timing(SMC,ILI93XX_LCD_CS,SMC_SETUP_NWE_SETUP(2)
+			| SMC_SETUP_NCS_WR_SETUP(2)
+			| SMC_SETUP_NRD_SETUP(2)
+			| SMC_SETUP_NCS_RD_SETUP(2));
+	smc_set_pulse_timing(SMC, ILI93XX_LCD_CS , SMC_PULSE_NWE_PULSE(4)
+			| SMC_PULSE_NCS_WR_PULSE(4)
+			| SMC_PULSE_NRD_PULSE(10)
+			| SMC_PULSE_NCS_RD_PULSE(10));
+	smc_set_cycle_timing(SMC, ILI93XX_LCD_CS, SMC_CYCLE_NWE_CYCLE(10)
+			| SMC_CYCLE_NRD_CYCLE(22));
+	smc_set_mode(SMC, ILI93XX_LCD_CS, SMC_MODE_READ_MODE
+			| SMC_MODE_WRITE_MODE);
 
-	/* Initialize display parameter */
-	g_ili9325_display_opt.ul_width = ILI9325_LCD_WIDTH;
-	g_ili9325_display_opt.ul_height = ILI9325_LCD_HEIGHT;
-	g_ili9325_display_opt.foreground_color = COLOR_WHITE;
-	g_ili9325_display_opt.background_color = COLOR_WHITE;
+	/* Initialize display parameter. */
+	g_ili93xx_display_opt.ul_width = ILI93XX_LCD_WIDTH;
+	g_ili93xx_display_opt.ul_height = ILI93XX_LCD_HEIGHT;
+	g_ili93xx_display_opt.foreground_color = COLOR_WHITE;
+	g_ili93xx_display_opt.background_color = COLOR_WHITE;
 
-	/* Initialize LCD */
-	if (1 == ili9325_init(&g_ili9325_display_opt)) {
+	/* Initialize LCD. */
+	if (1 == ili93xx_init(&g_ili93xx_display_opt)) {
 		while(1);
 	}
-
-	/* Set backlight level */
-	aat31xx_set_backlight(AAT31XX_MAX_BACKLIGHT_LEVEL);
-
-	/* Turn on LCD */
-	ili9325_display_on();
 }
 
 /**
@@ -294,20 +297,34 @@ static void gfx_draw_bmpfile(const uint8_t *bmpImage)
 	uint32_t i = 0;
 	uint32_t offset;
 
-	bmp_header = (struct bmpfile_header*) bmpImage;
+	bmp_header = (struct bmpfile_header *) bmpImage;
 	length = bmp_header->height * bmp_header->width * 3;
 	offset = sizeof(struct bmpfile_header);
 
-	ili9325_set_cursor_position(0,0);
+	if (ili93xx_device_type() == DEVICE_TYPE_ILI9325) {
+		ili93xx_set_cursor_position(0, 0);
 
-	/* Prepare to write in GRAM */
-	LCD_IR(0);
-	LCD_IR(ILI9325_GRAM_DATA_REG);
+		/* Prepare to write in GRAM. */
+		LCD_IR(0);
+		LCD_IR(ILI9325_GRAM_DATA_REG);
+		for (i = offset; i < length; i += 3) {
+			/* Invert red and blue. */
+			LCD_WD(bmpImage[i + 2]);
+			LCD_WD(bmpImage[i + 1]);
+			LCD_WD(bmpImage[i]);
+		}
+	}
+	else if (ili93xx_device_type() == DEVICE_TYPE_ILI9341) {
+		ili93xx_set_window(0, 0, bmp_header->width - 15, bmp_header->height);
+		LCD_IR(ILI9341_CMD_MEMORY_WRITE); /* memory write command (R2Ch) */
+		LCD_IR(ILI9341_CMD_WRITE_MEMORY_CONTINUE);
 
-	for (i = offset; i < length; i += 3) {
-	  	/* Invert red and blue. */
-		LCD_WD(bmpImage[i+2]);
-		LCD_WD(bmpImage[i+1]);
-		LCD_WD(bmpImage[i]);
+		/* The original image is mirrored. */
+		for (i = bmp_header->height - 1 ; (i * bmp_header->width * 3) > offset ; i -= 1)
+			for (uint16_t j = 45; j < (bmp_header->width * 3); j += 3) {
+				LCD_WD(bmpImage[i * bmp_header->width * 3 + j + 2]);
+				LCD_WD(bmpImage[i * bmp_header->width * 3 + j + 1]);
+				LCD_WD(bmpImage[i * bmp_header->width * 3 + j]);
+			}
 	}
 }

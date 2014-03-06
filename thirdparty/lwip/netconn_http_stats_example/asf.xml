@@ -42,7 +42,7 @@
 			<require idref="sam.drivers.tc"/>
 			<require idref="sam.utils.syscalls"/>
 			<require idref="sam.components.display.aat31xx"/>
-			<require idref="sam.components.display.ili9325"/>
+			<require idref="sam.components.display.ili93xx"/>
 			<require idref="sam.components.ethernet_phy.ksz8051mnl"/>
 			<require idref="sam.services.resistive_touch"/>
 			<require idref="common.services.ioport"/>
@@ -96,7 +96,7 @@
 			<require idref="sam.drivers.tc"/>
 			<require idref="sam.utils.syscalls"/>
 			<require idref="sam.components.display.aat31xx"/>
-			<require idref="sam.components.display.ili9325"/>
+			<require idref="sam.components.display.ili93xx"/>
 			<require idref="common.services.ioport"/>
 			<require idref="common.services.basic.gpio"/>
 			<require idref="common.services.basic.clock"/>

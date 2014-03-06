@@ -12,7 +12,7 @@
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="header-file" value="conf_aat31xx.h"/>
 		<build type="header-file" value="conf_ads7843.h"/>
-		<build type="header-file" value="conf_ili9325.h"/>
+		<build type="header-file" value="conf_ili93xx.h"/>
 		<build type="header-file" value="conf_spi_master.h"/>
 		<require idref="thirdparty.lwip.netconn_http_stats_example"/>
 		<require idref="board.sam4e_ek"/>
