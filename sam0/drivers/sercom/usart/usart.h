@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief SAM D20/D21 SERCOM USART Driver
+ * \brief SAM D20/D21/R21 SERCOM USART Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -45,9 +45,9 @@
 #define USART_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_sercom_usart_group SAM D20/D21 Serial USART Driver (SERCOM USART)
+ * \defgroup asfdoc_sam0_sercom_usart_group SAM D20/D21/R21 Serial USART Driver (SERCOM USART)
  *
- * This driver for SAM D20/D21 devices provides an interface for the configuration
+ * This driver for SAM D20/D21/R21 devices provides an interface for the configuration
  * and management of the SERCOM module in its USART mode to transfer or receive
  * USART data frames. The following driver API modes are covered by this
  * manual:
@@ -212,7 +212,7 @@
  * The SERCOM module has four internal pads; the RX pin can be placed freely on
  * any one of the four pads, and the TX and XCK pins have two predefined
  * positions that can be selected as a pair. The pads can then be routed to an
- * external GPIO pin using the normal pin multiplexing scheme on the SAM D20/D21.
+ * external GPIO pin using the normal pin multiplexing scheme on the SAM D20/D21/R21.
  *
  * \section asfdoc_sam0_sercom_usart_special_considerations Special Considerations
  *
@@ -1211,6 +1211,11 @@ static inline void usart_disable_transceiver(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>03/2014</td>
+ *		<td>Add support for SAMR21.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

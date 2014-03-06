@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 Quick Start Guide for Using Usart driver with DMA
+ * \brief SAM D21/R21 Quick Start Guide for Using Usart driver with DMA
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -45,9 +45,9 @@
  * \page asfdoc_sam0_sercom_usart_dma_use_case Quick Start Guide for Using DMA with SERCOM USART
  *
  * The supported device list:
- *    - SAMD21
+ *    - SAM D21/R21
  *
- * This quick start will receiving 8 bytes of data from PC terminal and transmit back the string 
+ * This quick start will receiving 8 bytes of data from PC terminal and transmit back the string
  * to the terminal through DMA. In this use case the USART will be configured with the following
  * settings:
  * - Asynchronous mode
