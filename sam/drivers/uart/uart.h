@@ -54,6 +54,13 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+/* UART internal div factor for sampling */
+#define UART_MCK_DIV             16
+/* Div factor to get the maximum baud rate */
+#define UART_MCK_DIV_MIN_FACTOR  1
+/* Div factor to get the minimum baud rate */
+#define UART_MCK_DIV_MAX_FACTOR  65535
+
 /*! \brief Option list for UART peripheral initialization */
 typedef struct sam_uart_opt {
 	/** MCK for UART */
@@ -90,6 +97,7 @@ uint32_t uart_is_rx_buf_end(Uart *p_uart);
 uint32_t uart_is_tx_buf_end(Uart *p_uart);
 uint32_t uart_is_rx_buf_full(Uart *p_uart);
 uint32_t uart_is_tx_buf_empty(Uart *p_uart);
+void uart_set_clock_divisor(Uart *p_uart, uint16_t us_divisor);
 uint32_t uart_write(Uart *p_uart, const uint8_t uc_data);
 uint32_t uart_read(Uart *p_uart, uint8_t *puc_data);
 Pdc *uart_get_pdc_base(Uart *p_uart);
