@@ -1,6 +1,6 @@
-#*******************************************************
+#*************************************************
 #
-#  Connect to J-Link and debug application in flash.
+#  Connect to J-Link and debug application in sram.
 #
 
 # define 'reset' command
@@ -12,11 +12,6 @@ target remote localhost:2331
 # Reset the chip to get to a known state
 monitor reset
 
-# Select flash device
-monitor flash device = ATSAM4CMP16C
-# Enable flash download and flash breakpoints
-monitor flash download = 1
-
 # Load the program
 load
 
@@ -27,8 +22,8 @@ set *0x400e1400 = 0xA5000004
 set *0x400e140C = 0x5A000000
 
 # Initializing PC and stack pointer
-mon reg sp=(0x1000000)
-mon reg pc=(0x1000004)
+mon reg sp=(0x20000000)
+mon reg pc=(0x20000004)
 info reg
 
 # end of 'reset' command
