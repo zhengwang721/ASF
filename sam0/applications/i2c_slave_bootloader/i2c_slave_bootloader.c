@@ -154,10 +154,7 @@
 
 struct i2c_slave_module slave;
 
-struct i2c_packet packet = {
-	.address     = SLAVE_ADDRESS,
-	.data_length = NVMCTRL_PAGE_SIZE,
-};
+struct i2c_slave_packet packet;
 
 /* Function prototypes */
 static uint32_t get_length(void);
