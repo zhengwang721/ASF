@@ -83,7 +83,7 @@
 
 #include "asf.h"
 
-#if ((BOARD == SAM4CMP_DB) || (BOARD == SAM4CMP_DB))
+#if ((BOARD == SAM4CMP_DB) || (BOARD == SAM4CMS_DB))
 #  define EXAMPLE_LED_GPIO    LED4_GPIO
 #else
 #  define EXAMPLE_LED_GPIO    LED0_GPIO
