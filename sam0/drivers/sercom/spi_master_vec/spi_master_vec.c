@@ -313,6 +313,22 @@ void spi_master_vec_reset(struct spi_master_vec_module *const module)
  * length. The number of bytes to transmit and to receive do not have to be
  * equal.
  *
+ * If the address for a receive buffer is set to \c NULL, the received bytes
+ * corresponding to that buffer descriptor will be discarded. This is useful if
+ * slave is already set up to transfer a number of bytes, but the master has no
+ * available buffer to receive them into. As an example, to receive the two
+ * first bytes and discard the 128 following, the buffer descriptors could be:
+\code
+		struct spi_master_vec_bufdesc rx_buffers[3] = {
+			// Read two status bytes
+			{.data = status_buffer, .length = 2},
+			// Discard 128 data bytes
+			{.data = NULL, .length = 128},
+			// End of reception
+			{.length = 0},
+		};
+\endcode
+ *
  * To initiate a unidirectional transfer, pass \c NULL as the address of either
  * buffer descriptor array, like this:
 \code
@@ -514,7 +530,11 @@ check_for_read_end:
 		uint8_t *rx_head_ptr;
 
 		rx_head_ptr = module->rx_head_ptr;
-		*(rx_head_ptr++) = spi_hw->DATA.reg;
+		if (rx_head_ptr != NULL) {
+			*(rx_head_ptr++) = spi_hw->DATA.reg;
+		} else {
+			uint8_t dummy = spi_hw->DATA.reg;
+		}
 		module->tx_lead_on_rx--;
 
 		/* Check if this was the last byte to receive */
