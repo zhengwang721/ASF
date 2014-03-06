@@ -617,24 +617,23 @@ __always_inline static void pdm_disable_callback(
  * \subsection pdm_basic_use_case_setup_code Example code
  * Add to application C-file:
  * \code
- * struct pdm_instance pdm;
- * struct pdm_config pdm_cfg;
- * uint32_t data;
- *
- * pdm_get_config_default(&pdm_cfg);
- * pdm_init(&pdm, PDMIC0, &pdm_cfg);
- *
- * \endcode
+	 struct pdm_instance pdm;
+	 struct pdm_config pdm_cfg;
+	 uint32_t data;
+
+	 pdm_get_config_default(&pdm_cfg);
+	 pdm_init(&pdm, PDMIC0, &pdm_cfg);
+\endcode
  *
  * \subsection pdm_basic_use_case_setup_flow Workflow
  * -# Get default configurations:
  *   - \code
- *   pdm_get_config_default(&pdm_cfg);
- * \endcode
+	pdm_get_config_default(&pdm_cfg);
+\endcode
  * -# Initialize the pdm module with configuration:
  *   - \code
- *   pdm_init(&pdm, PDMIC0, &pdm_cfg);
- * \endcode
+	pdm_init(&pdm, PDMIC0, &pdm_cfg);
+\endcode
  * -# Enable pdm module conversion:
  *   - \code pdm_enable(&pdm); \endcode
  * -# Get converted data:
