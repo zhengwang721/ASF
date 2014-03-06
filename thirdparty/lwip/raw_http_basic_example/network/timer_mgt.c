@@ -67,7 +67,7 @@ void sys_init_timing(void)
 
 	config_tc.counter_size    = TC_COUNTER_SIZE_16BIT;
 	config_tc.wave_generation = TC_WAVE_GENERATION_MATCH_FREQ;
-	config_tc.size_specific.size_16_bit.compare_capture_channel[0] = 0x5DC0;
+	config_tc.counter_16_bit.compare_capture_channel[0] = 0x5DC0;
 	config_tc.clock_source = GCLK_GENERATOR_0;
 	config_tc.clock_prescaler = TC_CLOCK_PRESCALER_DIV2;
 

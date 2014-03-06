@@ -134,21 +134,19 @@ volatile uint32_t g_intn_flag = 0;
 /**
  * \brief Handler for INTN falling edge interrupt.
  */
-static void INTN_Handler(uint32_t channel)
+static void INTN_Handler()
 {
 #if NO_SYS == 0
 	portBASE_TYPE xKSZTaskWoken = pdFALSE;
 #endif
 
-	/* Check the INTN pin and set flag if asserted. */
-	if (channel == KSZ8851SNL_INTN_EIC_CHANNEL) {
-		g_intn_flag = 1;
+	/* Enable INTN flag. */
+	g_intn_flag = 1;
 
 #if NO_SYS == 0
-		xSemaphoreGiveFromISR(gs_ksz8851snl_dev.sync_sem, &xKSZTaskWoken);
-		portEND_SWITCHING_ISR(xKSZTaskWoken);
+	xSemaphoreGiveFromISR(gs_ksz8851snl_dev.sync_sem, &xKSZTaskWoken);
+	portEND_SWITCHING_ISR(xKSZTaskWoken);
 #endif
-	}
 }
 
 /**

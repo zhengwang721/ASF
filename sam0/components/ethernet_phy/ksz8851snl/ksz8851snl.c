@@ -98,12 +98,9 @@ static inline void ksz8851snl_hard_reset(void)
  *
  * \param p_handler callback pointer to use when INTN interrupt raises.
  */
-void configure_intn(void (*p_handler) (uint32_t))
+void configure_intn(void (*p_handler) (void))
 {
 	struct extint_chan_conf eic_conf;
-
-	/* Enable the external interrupt module. */
-	extint_enable();
 
 	/* Configure the external interrupt channel. */
 	extint_chan_get_config_defaults(&eic_conf);
@@ -116,6 +113,7 @@ void configure_intn(void (*p_handler) (uint32_t))
 
 	/* Register and enable the callback function. */
 	extint_register_callback(p_handler,
+			KSZ8851SNL_INTN_EIC_CHANNEL,
 			EXTINT_CALLBACK_TYPE_DETECT);
 	extint_chan_enable_callback(KSZ8851SNL_INTN_EIC_CHANNEL,
 			EXTINT_CALLBACK_TYPE_DETECT);
