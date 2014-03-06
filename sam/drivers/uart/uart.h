@@ -97,7 +97,7 @@ uint32_t uart_is_rx_buf_end(Uart *p_uart);
 uint32_t uart_is_tx_buf_end(Uart *p_uart);
 uint32_t uart_is_rx_buf_full(Uart *p_uart);
 uint32_t uart_is_tx_buf_empty(Uart *p_uart);
-uint32_t uart_set_clock_divisor(Uart *p_uart, uint16_t us_divisor);
+void uart_set_clock_divisor(Uart *p_uart, uint16_t us_divisor);
 uint32_t uart_write(Uart *p_uart, const uint8_t uc_data);
 uint32_t uart_read(Uart *p_uart, uint8_t *puc_data);
 Pdc *uart_get_pdc_base(Uart *p_uart);

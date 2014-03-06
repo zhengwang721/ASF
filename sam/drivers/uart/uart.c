@@ -357,19 +357,10 @@ uint32_t uart_is_tx_buf_empty(Uart *p_uart)
  * \param p_uart Pointer to a UART instance.
  * \param us_divisor Value to be set.
  *
- * \retval 0 Success.
- * \retval 1 Bad baud rate generator value.
  */
-uint32_t uart_set_clock_divisor(Uart *p_uart, uint16_t us_divisor)
+void uart_set_clock_divisor(Uart *p_uart, uint16_t us_divisor)
 {
-	if (us_divisor < UART_MCK_DIV_MIN_FACTOR ||
-			us_divisor > UART_MCK_DIV_MAX_FACTOR) {
-		return 1;
-	}
-
 	p_uart->UART_BRGR = us_divisor;
-
-	return 0;
 }
 
 /**
