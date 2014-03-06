@@ -108,13 +108,13 @@
 
 /**
  * \name LED #4 pin definition
- * Short pin 5 and 6 on J11, and solder 0 ohm resistor on R304 to make this
- * LED available.
+ * Note: Must short pin 5 and 6 on J11, and solder 0 ohm resistor on R304
+ * to make this LED available.
  * @{
  */
 #define LED4_GPIO            (PIO_PC6_IDX)
-#define LED4_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_HIGH
-#define LED4_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_LOW
+#define LED4_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_LOW
+#define LED4_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
 
 /* Wrapper macros to ensure common naming across all boards */
 #define LED_4_NAME      "blue LED4"
@@ -264,6 +264,14 @@
 #define TWIO_CLK_FLAG             IOPORT_MODE_MUX_A
 #define BOARD_CLK_TWI_EEPROM      TWIO_CLK_GPIO
 #define BOARD_CLK_TWI_MUX_EEPROM  TWIO_CLK_FLAG
+/* @} */
+
+/**
+ * \name PCK pin definitions
+ * @{
+ */
+#define PIN_PCK0        (PIO_PB13_IDX)
+#define PIN_PCK0_MUX    (IOPORT_MODE_MUX_A)
 /* @} */
 
 /* @} */ /* End of sam4cmp_db_features_group */

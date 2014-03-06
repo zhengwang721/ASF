@@ -1,12 +1,14 @@
 <asf xmlversion="1.0">
-	<project caption="Common API for Clocks Control / Example 1 for SAM4CMP_DB" id="common.services.basic.clock.example1.sam4cmp_db">
+	<project caption="Common API for Clocks Control / Example 2 for SAM4CMP_DB" id="common.services.basic.clock.example2.sam4cmp_db">
 		<info type="description" value="summary">
-		Initialize the system clock and blink a LED at a constant 1Hz frequency.
+		Initialize the clock system and output the CPU clock on a dedicated pin.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
-		<require idref="common.services.basic.clock.example1"/>
+		<build type="header-file" value="conf_example2.h"/>
+		<build type="include-path" value="."/>
+		<require idref="common.services.basic.clock.example2"/>
 		<require idref="board.sam4cmp_db"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
