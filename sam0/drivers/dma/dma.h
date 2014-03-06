@@ -108,7 +108,7 @@ extern "C" {
  * is performed. When linked, a number of transfer descriptors can be used to
  * enable multiple block transfers within a single DMA transaction.
  *
- * The implementation of the DMA driver is based on the idea that DMA channels
+ * The implementation of the DMA driver is based on the idea that DMA channel
  * is a finite resource of entities with the same abilities. A DMA channel resource
  * is able to move a defined set of data from a source address to destination
  * address triggered by a transfer trigger. On the SAM D21/R21 devices there are 12
@@ -241,7 +241,7 @@ extern "C" {
  * Both an interrupt callback and an peripheral event can be triggered by the
  * DMA transfer. Three types of callbacks are supported by the DMA driver:
  * transfer complete, channel suspend and transfer error. Each of these callback
- * types can be registerd and enabled for each channel independently through
+ * types can be registered and enabled for each channel independently through
  * the DMA driver API.
  *
  * The DMAC module can also generate events on transfer complete. Event

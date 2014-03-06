@@ -66,7 +66,7 @@
  * - Single Slope PWM wave generation
  * - GCLK reload action
  * - Don't run in standby
- * - No faults or waveform extentions
+ * - No faults or waveform extensions
  * - No inversion of waveform output
  * - No capture enabled
  * - Count upward

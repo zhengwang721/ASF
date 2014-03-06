@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 TCC - Enhanced Timer Counter Driver
+ * \brief SAM D21 TCC - Timer Counter for Control Applications Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -115,9 +115,9 @@ const uint8_t _tcc_cc_nums[TCC_INST_NUM] = TCC_CC_NUMS;
 const uint8_t _tcc_ow_nums[TCC_INST_NUM] = TCC_OW_NUMS;
 
 /**
- * \internal Find the index of given TCC module instance.
+ * \internal Find the index of the given TCC module instance.
  *
- * \param[in] TCC module instance pointer.
+ * \param[in] The TCC module instance pointer.
  *
  * \return Index of the given TCC module instance.
  */
@@ -147,24 +147,24 @@ uint8_t _tcc_get_inst_index(
  * The default configuration is as follows:
  *  \li Don't run in standby
  *  \li The base timer/counter configurations:
- *      \li GCLK generator 0 (GCLK main) clock source
- *      \li No prescaler
- *      \li GCLK reload action
- *      \li Count upward
- *      \li Don't perform one-shot operations
- *      \li Counter starts on 0
- *      \li Period/top value set to maximum of counting
+ *     - GCLK generator 0 clock source
+ *     - No prescaler
+ *     - GCLK reload action
+ *     - Count upward
+ *     - Don't perform one-shot operations
+ *     - Counter starts on 0
+ *     - Period/top value set to maximum
  *  \li The match/capture configurations:
- *      \li All Capture compare channel value set to 0
- *      \li No capture enabled (all channels use compare function)
- *      \li Normal frequency wave generation
- *      \li Waveform generation polarity set to 0
- *      \li Don't perform ramp on waveform
+ *     - All Capture compare channel value set to 0
+ *     - No capture enabled (all channels use compare function)
+ *     - Normal frequency wave generation
+ *     - Waveform generation polarity set to 0
+ *     - Don't perform ramp on waveform
  *  \li The waveform extension configurations:
- *      \li No recoverable fault is enabled, fault actions are disabled, filter
+ *     - No recoverable fault is enabled, fault actions are disabled, filter
  *          is set to 0
- *      \li No non-recoverable fault state output is enabled and filter is 0
- *      \li No inversion of waveform output
+ *     - No non-recoverable fault state output is enabled and filter is 0
+ *     - No inversion of waveform output
  *  \li No channel output enabled
  *  \li No PWM pin output enabled
  *  \li Pin and Mux configuration not set
@@ -460,8 +460,8 @@ static inline enum status_code _tcc_build_waves(
 /**
  * \brief Initializes a hardware TCC module instance.
  *
- * Enables the clock and initializes the TCC module, based on the given
- * configuration values.
+ * Enables the clock and initializes the given TCC module, based on the given
+ * configuration values
  *
  * \param[in,out] module_inst  Pointer to the software module instance struct
  * \param[in]     hw           Pointer to the TCC hardware module
@@ -652,7 +652,7 @@ enum status_code tcc_init(
 
 
 /**
- * \brief Enables TCC module event input or output.
+ * \brief Enables the TCC module event input or output.
  *
  * Enables one or more input or output events to or from the TCC module.
  * See \ref tcc_events for a list of events this module supports.
@@ -813,9 +813,9 @@ enum status_code tcc_enable_events(
 }
 
 /**
- * \brief Disables TCC module event input or output.
+ * \brief Disables the event input or output of a TCC instance.
  *
- * Disables one or more input or output events to or from the TCC module.
+ * Disables one or more input or output events for the given TCC module.
  * See \ref tcc_events for a list of events this module supports.
  *
  * \note Events cannot be altered while the module is enabled.
@@ -878,15 +878,15 @@ void tcc_disable_events(
 
 
 /**
- * \brief Sets TCC module count value.
+ * \brief Sets count value for the given TCC module.
  *
- * Sets the current timer count value of a initialized TCC module. The
- * specified TCC module may be started or stopped.
+ * Sets the timer count value of an initialized TCC module. The
+ * specified TCC module can remain running or stopped.
  *
  * \param[in] module_inst  Pointer to the software module instance struct
  * \param[in] count        New timer count value to set
  *
- * \return Status of the count update procedure.
+ * \return Status which indicates whether the new value is set.
  *
  * \retval STATUS_OK               The timer count was updated successfully
  * \retval STATUS_ERR_INVALID_ARG  An invalid timer counter size was specified
@@ -921,10 +921,10 @@ enum status_code tcc_set_count_value(
 }
 
 /**
- * \brief Get TCC module count value.
+ * \brief Get count value of the given TCC module.
  *
  * Retrieves the current count value of a TCC module. The specified TCC module
- * may be started or stopped.
+ * can remain running or stopped.
  *
  * \param[in] module_inst  Pointer to the software module instance struct
  *
@@ -1054,7 +1054,7 @@ enum status_code tcc_set_compare_value(
 /**
  * \brief Set the timer TOP/PERIOD value.
  *
- * This function writes the top value.
+ * This function writes the given value to the PER register.
  *
  * If double buffering is enabled, it always write to the buffer register.
  * The value will then be updated immediately by calling
@@ -1065,7 +1065,7 @@ enum status_code tcc_set_compare_value(
  * other waveforms operation the top value is defined by PER register value.
  *
  * \param[in]  module_inst   Pointer to the software module instance struct
- * \param[in]  top_value     New timer TOP value to set
+ * \param[in]  top_value     New value to be loaded into the PER register
  *
  * \return Status of the TOP set procedure.
  *
@@ -1102,7 +1102,7 @@ enum status_code tcc_set_top_value(
 }
 
 /**
- * \brief Sets TCC module waveform output pattern
+ * \brief Sets the TCC module waveform output pattern
  *
  * Force waveform output line to generate specific pattern (0, 1 or as is).
  *
@@ -1112,7 +1112,7 @@ enum status_code tcc_set_top_value(
  *
  * \return Status of the pattern set procedure.
  *
- * \retval  STATUS_OK               The compare value was updated successfully
+ * \retval  STATUS_OK               The PATT register is updated successfully
  * \retval  STATUS_ERR_INVALID_ARG  An invalid line index was supplied
  */
 enum status_code tcc_set_pattern(
@@ -1172,7 +1172,7 @@ enum status_code tcc_set_pattern(
  * \retval TCC_STATUS_RECOVERABLE_FAULT_PRESENT(n)     Recoverable fault n input present
  * \retval TCC_STATUS_SYNC_READY          None of register is syncing
  * \retval TCC_STATUS_CAPTURE_OVERFLOW    Timer capture data has overflowed
- * \retval TCC_STATUS_COUNTER_EVENT       Timer counter event has occured
+ * \retval TCC_STATUS_COUNTER_EVENT       Timer counter event has occurred
  * \retval TCC_STATUS_COUNT_OVERFLOW      Timer count value has overflowed
  * \retval TCC_STATUS_COUNTER_RETRIGGERED Timer counter has been retriggered
  * \retval TCC_STATUS_STOP                Timer counter has been stopped
@@ -1196,7 +1196,7 @@ uint32_t tcc_get_status(
 	}
 
 	/* Channels */
-	for (i = 0; i < TCC_NUM_CHANNELS; i ++) {
+	for (i = 0; i < TCC_NUM_CHANNELS; i++) {
 		if (int_flags & TCC_INTFLAG_MC(i)) {
 			status |= TCC_STATUS_CHANNEL_MATCH_CAPTURE(i);
 		}
@@ -1281,7 +1281,7 @@ void tcc_clear_status(
 	int i;
 
 	/* Channels */
-	for (i = 0; i < TCC_NUM_CHANNELS; i ++) {
+	for (i = 0; i < TCC_NUM_CHANNELS; i++) {
 		if (status_flags & TCC_STATUS_CHANNEL_MATCH_CAPTURE(i)) {
 			int_clr |= TCC_INTFLAG_MC(i);
 		}
