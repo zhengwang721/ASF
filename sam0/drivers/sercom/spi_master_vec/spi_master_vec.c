@@ -517,7 +517,9 @@ check_for_read_end:
 		if (rx_head_ptr != NULL) {
 			*(rx_head_ptr++) = spi_hw->DATA.reg;
 		} else {
-			uint8_t dummy = spi_hw->DATA.reg;
+			uint8_t dummy;
+			UNUSED(dummy);
+			dummy = spi_hw->DATA.reg;
 		}
 		module->tx_lead_on_rx--;
 
