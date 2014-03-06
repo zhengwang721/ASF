@@ -106,10 +106,13 @@ int main(void)
 
 	/* Init i2c packet. */
 	//! [packet]
-	struct i2c_packet packet = {
+	struct i2c_master_packet packet = {
 		.address     = SLAVE_ADDRESS,
 		.data_length = DATA_LENGTH,
 		.data        = buffer,
+		.ten_bit_address = false,
+		.high_speed      = false,
+		.hs_master_code  = 0x0,
 	};
 	//! [packet]
 	//! [init]
