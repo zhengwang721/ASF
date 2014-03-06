@@ -415,7 +415,7 @@
 #if SAMD20
 #  define TC_INSTANCE_OFFSET 0
 #endif
-#if SAMD21
+#if SAMD21 || SAMR21
 #  define TC_INSTANCE_OFFSET 3
 #endif
 
