@@ -316,11 +316,11 @@ void spi_master_vec_reset(struct spi_master_vec_module *const module)
  * To initiate a unidirectional transfer, pass \c NULL as the address of either
  * buffer descriptor array, like this:
 \code
-	// Transmit some buffers
-	spi_master_vec_transceive_buffer_job(&module, tx_buffers, NULL);
+		// Transmit some buffers
+		spi_master_vec_transceive_buffer_job(&module, tx_buffers, NULL);
 
-	// Receive some buffers
-	spi_master_vec_transceive_buffer_job(&module, NULL, rx_buffers);
+		// Receive some buffers
+		spi_master_vec_transceive_buffer_job(&module, NULL, rx_buffers);
 \endcode
  *
  * \pre \ref spi_master_vec_init() and \ref spi_master_vec_enable() must have
