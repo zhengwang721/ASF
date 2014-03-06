@@ -998,7 +998,7 @@ enum tcc_clock_prescaler {
 };
 
 /**
- * \brief TCC module count direction.
+ * \brief TCC module count direction
  *
  * Used when selecting the Timer/Counter count direction.
  */
@@ -1010,7 +1010,7 @@ enum tcc_count_direction {
 };
 
 /**
- * \brief Action to perform when the TCC module is triggered by events.
+ * \brief Action to perform when the TCC module is triggered by events
  *
  * Event action to perform when the module is triggered by events.
  */
@@ -1066,7 +1066,7 @@ enum tcc_event_action {
 
 
 /**
- * \brief Action to be performed when the TCC module is triggered by event0.
+ * \brief Action to be performed when the TCC module is triggered by event0
  *
  * Event action to perform when the module is triggered by event0.
  */
@@ -1090,7 +1090,7 @@ enum tcc_event0_action {
 };
 
 /**
- * \brief Action to perform when the TCC module is triggered by event1.
+ * \brief Action to perform when the TCC module is triggered by event1
  *
  * Event action to perform when the module is triggered by event1.
  */
@@ -1323,7 +1323,7 @@ struct tcc_non_recoverable_fault_config {
 };
 
 /**
- * \brief TCC input event enable/disable/configure structure.
+ * \brief TCC input event enable/disable/configure structure
  *
  * For configuring an input event
  */
@@ -1337,7 +1337,7 @@ struct tcc_input_event_config {
 };
 
 /**
- * \brief TCC output event enable/disable/configure structure.
+ * \brief TCC output event enable/disable/configure structure
  *
  * Structure used for configuring an output event
  */
@@ -1352,7 +1352,7 @@ struct tcc_output_event_config {
 };
 
 /**
- * \brief TCC event enable/disable structure.
+ * \brief TCC event enable/disable structure
  *
  * Event flags for the \ref tcc_enable_events() and \ref tcc_disable_events().
  */
@@ -1474,7 +1474,7 @@ struct tcc_pins_config {
 };
 
 /**
- * \brief TCC configuration structure.
+ * \brief TCC configuration structure
  *
  * Configuration struct for a TCC instance. This structure should be
  * initialized by the \ref tcc_get_config_defaults function before being
@@ -1493,7 +1493,7 @@ struct tcc_config {
 		 * compare,
 		 *  when a TCC channel is configured for wave generation */
 		struct tcc_match_wave_config wave;
-	}tcc_match_capture_conf;
+	};
 
 	/** Structure for configuring TCC waveform extension */
 	struct tcc_wave_extension_config wave_ext;
@@ -1501,7 +1501,7 @@ struct tcc_config {
 	/** Structure for configuring TCC output pins */
 	struct tcc_pins_config pins;
 
-	/** When \c true the module is enabled during standby. */
+	/** When \c true the module is enabled during standby */
 	bool run_in_standby;
 };
 
@@ -1514,7 +1514,7 @@ typedef void (*tcc_callback_t)(struct tcc_module *const module);
 #endif
 
 /**
- * \brief TCC software device instance structure.
+ * \brief TCC software device instance structure
  *
  * TCC software instance structure, used to retain software state information
  * of an associated hardware module instance.
@@ -1547,7 +1547,7 @@ uint8_t _tcc_get_inst_index(
  */
 
 /**
- * \brief Determines if the hardware module is currently synchronizing to the bus.
+ * \brief Determines if the hardware module is currently synchronizing to the bus
  *
  * Checks to see if the underlying hardware peripheral module is currently
  * synchronizing across multiple clock domains to the hardware bus. This
@@ -1605,7 +1605,7 @@ void tcc_disable_events(
  */
 
 /**
- * \brief Enable the TCC module.
+ * \brief Enable the TCC module
  *
  * Enables a TCC module that has been previously initialized. The counter will
  * start when the counter is enabled.
@@ -1635,7 +1635,7 @@ static inline void tcc_enable(
 }
 
 /**
- * \brief Disables the TCC module.
+ * \brief Disables the TCC module
  *
  * Disables a TCC module and stops the counter.
  *
@@ -1660,7 +1660,7 @@ static inline void tcc_disable(
 }
 
 /**
- * \brief Resets the TCC module.
+ * \brief Resets the TCC module
  *
  * Resets the TCC module, restoring all hardware module registers to their
  * default values and disabling the module. The TCC module will not be
@@ -1703,7 +1703,7 @@ static inline void tcc_reset(
  */
 
 /**
- * \brief Sets the TCC module count direction.
+ * \brief Sets the TCC module count direction
  *
  * Sets the count direction of an initialized TCC module. The
  * specified TCC module can remain running or stopped.
@@ -1735,7 +1735,7 @@ static inline void tcc_set_count_direction(
 }
 
 /**
- * \brief Toggles the TCC module count direction.
+ * \brief Toggles the TCC module count direction
  *
  * Toggles the count direction of an initialized TCC module. The
  * specified TCC module can remain running or stopped.
@@ -1785,7 +1785,7 @@ enum status_code tcc_set_count_value(
  */
 
 /**
- * \brief Stops the counter.
+ * \brief Stops the counter
  *
  * This function will stop the counter. When the counter is stopped
  * the value in the count register is set to 0 if the counter was
@@ -1827,7 +1827,7 @@ static inline void tcc_stop_counter(
 }
 
 /**
- * \brief Starts the counter from beginning.
+ * \brief Starts the counter from beginning
  *
  * Restarts an initialized TCC module's counter.
  *
@@ -1968,7 +1968,7 @@ static inline void tcc_set_ramp_index(
  */
 
 /**
- * \brief Checks if the timer/counter is running.
+ * \brief Checks if the timer/counter is running
  *
  * \param[in] module_inst  Pointer to the TCC software instance struct
  *
