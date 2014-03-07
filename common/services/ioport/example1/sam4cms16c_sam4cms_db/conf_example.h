@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief Common IOPORT service demo configuration header file.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,10 +40,11 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_EXAMPLE_H_INCLUDED
+#define CONF_EXAMPLE_H_INCLUDED
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+/* Using LED4 SAM4CMP16C-DB (PC6) */
+#define EXAMPLE_LED_PORT (2)
+#define EXAMPLE_LED_MASK ((1 << 6))
 
-/* Intentionally empty */
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_EXAMPLE_H_INCLUDED */
