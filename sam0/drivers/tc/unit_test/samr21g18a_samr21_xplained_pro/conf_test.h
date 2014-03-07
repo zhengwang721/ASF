@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief TC Quick Start configuration for SAM D21 Xplained Pro
+ * \brief SAM R21 Xplained Pro test configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,20 +41,26 @@
  *
  */
 
-#ifndef CONF_QUICK_START_H_INCLUDED
-#define CONF_QUICK_START_H_INCLUDED
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-//! [definition_pwm]
-/** PWM module to use */
-#define PWM_MODULE      EXT1_PWM_MODULE
-/** PWM output pin */
-#define PWM_OUT_PIN     EXT1_PWM_0_PIN
-/** PWM output pin mux */
-#define PWM_OUT_MUX     EXT1_PWM_0_MUX
-//! [definition_pwm]
+#define CONF_STDIO_USART          EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE       38400
+#define CONF_TEST_TC0             TC4
+#define CONF_TEST_TC1             TC5
+#define CONF_EIC_PIN              PIN_PA16A_EIC_EXTINT0
+#define CONF_EIC_MUX              MUX_PA16A_EIC_EXTINT0
+#define CONF_TEST_PIN_OUT         PIN_PA23E_TC4_WO1
+#define CONF_TEST_PIN_MUX         MUX_PA23E_TC4_WO1
+#define CONF_EVENT_GENERATOR_ID   EVSYS_ID_GEN_EIC_EXTINT_0
+#define CONF_EVENT_USED_ID        EVSYS_ID_USER_TC5_EVU
+#define CONF_CAPTURE_CHAN_0       0
+#define CONF_CAPTURE_CHAN_1       1
+#define CONF_TEST_TOLERANCE       10
 
-//! [definition_dma]
-#define M2M_DMAC_TRIGGER_ID TC3_DMAC_ID_MC_0
-//! [definition_dma]
-
-#endif /* CONF_QUICK_START_H_INCLUDED */
+#endif /* CONF_TEST_H_INCLUDED */

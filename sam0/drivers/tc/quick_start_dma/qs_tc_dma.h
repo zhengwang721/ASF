@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 TC Driver Quick Start
+ * \brief SAM D21/R21 TC Driver Quick Start
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -45,12 +45,13 @@
  * \page asfdoc_sam0_tc_dma_use_case Quick Start Guide for Using DMA with TC
  *
  * The supported device list:
- *    - SAMD21
+ *    - SAM D21/R21
  *
  * In this use case, the TC will be used to generate a PWM signal. Here
- * the pulse width is set to one quarter of the period. Once the counter value matches
- * the values in the Compare/Capture Value register, a event will be tiggered for a
- * DMA memory transfer. The TC module will be set up as follows:
+ * the pulse width is set to one quarter of the period. Once the counter value
+ * matches the values in the Compare/Capture Value register, a event will be
+ * tiggered for a DMA memory to memory transfer.
+ * The TC module will be set up as follows:
  *
  * \li GCLK generator 0 (GCLK main) clock source
  * \li 16 bit resolution on the counter
@@ -80,6 +81,7 @@
  * \subsection asfdoc_sam0_tc_dma_use_case_setup_code Code
  * Add to the main application source file, before any functions:
  * \snippet conf_quick_start.h definition_pwm
+ * \snippet conf_quick_start.h definition_dma
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_dma.c module_inst
