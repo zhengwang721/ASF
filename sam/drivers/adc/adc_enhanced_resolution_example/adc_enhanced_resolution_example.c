@@ -80,10 +80,10 @@
  *    following text should appear (values depend on the board and the chip
  *used):
  *    \code
- *     -- ADC Enhanced Resolution Example xxx --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *    \endcode
+	-- ADC Enhanced Resolution Example xxx --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+\endcode
  *
  */
 
