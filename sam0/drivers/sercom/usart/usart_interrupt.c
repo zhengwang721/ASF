@@ -469,7 +469,7 @@ void _usart_interrupt_handler(
 			(module->tx_buffer_ptr)++;
 
 			if (module->character_size == USART_CHARACTER_SIZE_9BIT) {
-				data_to_send = (*(module->tx_buffer_ptr) << 8);
+				data_to_send |= (*(module->tx_buffer_ptr) << 8);
 				/* Increment 8-bit pointer */
 				(module->tx_buffer_ptr)++;
 			}
