@@ -434,11 +434,18 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  *
  * Content of conf_clocks.h for SAMD devices (USB):
  * \code
+	// System clock bus configuration
+	#  define CONF_CLOCK_FLASH_WAIT_STATES            2
+
 	// USB Clock Source fixed at DFLL.
 	// SYSTEM_CLOCK_SOURCE_DFLL configuration - Digital Frequency Locked Loop
 	#  define CONF_CLOCK_DFLL_ENABLE                  true
 	#  define CONF_CLOCK_DFLL_LOOP_MODE               SYSTEM_CLOCK_DFLL_LOOP_MODE_USB_RECOVERY
 	#  define CONF_CLOCK_DFLL_ON_DEMAND               true
+
+	// Set this to true to configure the GCLK when running clocks_init. 
+	// If set to false, none of the GCLK generators will be configured in clocks_init().
+	#  define CONF_CLOCK_CONFIGURE_GCLK               true
 
 	// Configure GCLK generator 0 (Main Clock)
 	#  define CONF_CLOCK_GCLK_0_ENABLE                true
