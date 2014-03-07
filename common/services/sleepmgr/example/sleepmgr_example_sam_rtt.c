@@ -3,7 +3,7 @@
  *
  * \brief Sleep manager example for SAM series
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -59,6 +59,7 @@
  * The example has been tested on the boards:
  *  - SAM4N Xplained Pro kit
  *  - SAMG53 Xplained Pro kit
+ *  - SAMG54 Xplained Pro kit
  *  - SAM4C evaluation kit
  *
  * \section exampledescription Description of the example
