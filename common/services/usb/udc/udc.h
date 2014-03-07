@@ -439,19 +439,7 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
 	#  define CONF_CLOCK_DFLL_ENABLE                  true
 	#  define CONF_CLOCK_DFLL_LOOP_MODE               SYSTEM_CLOCK_DFLL_LOOP_MODE_USB_RECOVERY
 	#  define CONF_CLOCK_DFLL_ON_DEMAND               true
-	// DFLL open loop mode configuration
-	#  define CONF_CLOCK_DFLL_COARSE_VALUE            (0x1f / 4)
-	#  define CONF_CLOCK_DFLL_FINE_VALUE              (0xff / 4)
-	// DFLL closed loop mode configuration
-	#  define CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR   GCLK_GENERATOR_1
-	#  define CONF_CLOCK_DFLL_MULTIPLY_FACTOR         6
-	#  define CONF_CLOCK_DFLL_QUICK_LOCK              true
-	#  define CONF_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK   true
-	#  define CONF_CLOCK_DFLL_KEEP_LOCK_ON_WAKEUP     true
-	#  define CONF_CLOCK_DFLL_ENABLE_CHILL_CYCLE      true
-	#  define CONF_CLOCK_DFLL_MAX_COARSE_STEP_SIZE    (0x1f / 4)
-	#  define CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE      (0xff / 4)
-	#  define CONF_CLOCK_CONFIGURE_GCLK               true
+
 	// Configure GCLK generator 0 (Main Clock)
 	#  define CONF_CLOCK_GCLK_0_ENABLE                true
 	#  define CONF_CLOCK_GCLK_0_RUN_IN_STANDBY        true
