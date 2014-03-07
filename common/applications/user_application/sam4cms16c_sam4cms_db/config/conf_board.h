@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4CMP-DB board configuration.
+ * \brief Board configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -44,10 +44,7 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/* Keep watchdog at board initialization (not disable it) */
-//#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
-
-/* Configure UART0 pins */
-//#define CONF_BOARD_UART_CONSOLE
+/* Configure UART pins */
+#define CONF_BOARD_UART_CONSOLE
 
 #endif /* CONF_BOARD_H_INCLUDED */

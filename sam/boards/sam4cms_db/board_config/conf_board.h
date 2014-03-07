@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4CMP-DB board configuration.
+ * \brief SAM4CMS-DB board configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
