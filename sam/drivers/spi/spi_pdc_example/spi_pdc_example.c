@@ -3,7 +3,7 @@
  *
  * \brief Serial Peripheral Interface (SPI) PDC example for SAM.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,6 +71,7 @@
  * - sam4n16c_sam4n_xplained_pro
  * - sam4c16c_sam4c_ek
  * - samg53n19_samg_xplained_pro
+ * - samg54n19_samg_xplained_pro
  * - sam4cp16b_sam4cp16bmb
  *
  * The code can be roughly broken down as follows:
