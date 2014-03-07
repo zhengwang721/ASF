@@ -5,7 +5,7 @@
  *
  * This files includes the correct header files for the graphics service
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -296,8 +296,8 @@ void gfx_draw_bitmap(const struct gfx_bitmap *bmp, gfx_coord_t x,
  * size, the function can be used like this:
  *
  * \code
- * gfx_draw_bitmap_tiled(bmp, 0, 0, gfx_get_width(), gfx_get_height(), 0, ,0);
- * \endcode
+	gfx_draw_bitmap_tiled(bmp, 0, 0, gfx_get_width(), gfx_get_height(), 0, ,0);
+\endcode
  *
  * The function is used by the "window system" to redraw the
  * background of a parent window when a transparent child window needs to be
@@ -307,11 +307,11 @@ void gfx_draw_bitmap(const struct gfx_bitmap *bmp, gfx_coord_t x,
  * corner of the window, so the function is used like this:
  *
  * \code
- * gfx_draw_bitmap_tiled(parent_background_bmp,
- *                       child_window_x1, child_window_y1,
- *                       child_window_x2, child_window_y2,
- *                       parent_window_origin_x, parent_window_origin_y);
- * \endcode
+	gfx_draw_bitmap_tiled(parent_background_bmp,
+	                      child_window_x1, child_window_y1,
+	                      child_window_x2, child_window_y2,
+	                      parent_window_origin_x, parent_window_origin_y);
+\endcode
  *
  * \note If CONF_GFX_USE_CLIPPING is used, the output is clipped to the
  * output area and nothing will be drawn outside the output area.
@@ -783,11 +783,11 @@ void gfx_set_ext_handler(gfx_ext_draw_handler_t gfx_ext_draw_handler);
  * \subsection gfx_basic_usage_code Example code
  * Add to, e.g., the main function in the application C-file:
  * \code
- * board_init();
- * sysclk_init();
- * gfx_init();
- * gfx_draw_line(10, 10, 20, 20, GFX_COLOR(0xFF, 0, 0));
- * \endcode
+	board_init();
+	sysclk_init();
+	gfx_init();
+	gfx_draw_line(10, 10, 20, 20, GFX_COLOR(0xFF, 0, 0));
+\endcode
  *
  * \subsection gfx_basic_usage Workflow
  * -# Initialize board IO:
