@@ -992,9 +992,6 @@ static inline void rtc_calendar_disable_events(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMR21</td>
- *	</tr>
- *	<tr>
  *		<td>
  *             Added support for SAMD21 and added driver instance parameter to all
  *             API function calls, except get_config_defaults.
