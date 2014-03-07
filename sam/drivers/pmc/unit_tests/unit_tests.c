@@ -158,7 +158,7 @@ static void run_periph_clk_cfg_test(const struct test_case *test)
 	for (i = PERIPH_ID_START; i <= PERIPH_ID_END; i++) {
 		rc = pmc_enable_periph_clk(i);
 		test_assert_true(test, rc == 0,
-				"pmc_enable_periph_clk() failed: %d", i);
+				"pmc_enable_periph_clk() failed: %d", (int)i);
 	}
 
 	/* Disable all peripheral clocks */
@@ -167,7 +167,7 @@ static void run_periph_clk_cfg_test(const struct test_case *test)
 		/* Re-enable UART clock for console */
 		pmc_enable_periph_clk(CONSOLE_UART_ID);
 		test_assert_true(test, rc == 0,
-				"pmc_disable_periph_clk() failed: %d!", i);
+				"pmc_disable_periph_clk() failed: %d!", (int)i);
 	}
 }
 
