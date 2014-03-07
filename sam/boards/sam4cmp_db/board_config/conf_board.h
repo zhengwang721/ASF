@@ -44,63 +44,10 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-#warning "Need to clean up!"
-
 /* Keep watchdog at board initialization (not disable it) */
 //#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
 
 /* Configure UART0 pins */
 //#define CONF_BOARD_UART_CONSOLE
-
-/* Configure LCD backlight */
-//#define CONF_BOARD_UART_CONSOLE
-
-/* Configure PWM LED0 pin */
-//#define CONF_BOARD_PWM_LED0
-
-/* Configure PWM LED1 pin */
-//#define CONF_BOARD_PWM_LED1
-
-/* Configure PWM LED2 pin */
-//#define CONF_BOARD_PWM_LED2
-
-/* Configure SPI0 pins */
-//#define CONF_BOARD_SPI0
-//#define CONF_BOARD_SPI0_NPCS0
-
-/* Configure SPI1 pins */
-//#define CONF_BOARD_SPI1
-//#define CONF_BOARD_SPI0_NPCS1
-
-/* Configure TWI0 pins */
-//#define CONF_BOARD_TWI0
-
-/* Configure TWI0 pins for AT30TSE */
-//#define CONF_BOARD_AT30TSE
-
-/* Configure TWI1 pins */
-//#define CONF_BOARD_TWI1
-
-/* Configure USART pins */
-//#define CONF_BOARD_USART_RXD
-//#define CONF_BOARD_USART_TXD
-//#define CONF_BOARD_USART_CTS
-//#define CONF_BOARD_USART_RTS
-//#define CONF_BOARD_USART_SCK
-
-/* Configure IrDA transceiver shutdown pin */
-//#define CONF_BOARD_TFDU4300_SD
-
-/* Configure RS485 transceiver RE pin */
-//#define CONF_BOARD_ADM3485_RE
-
-/* Configure ISO7816 card reset pin */
-//#define CONF_BOARD_ISO7816_RST
-
-/* Configure ISO7816 interface TXD & SCK pin */
-//#define CONF_BOARD_ISO7816
-
-/* Configure ADC pins */
-//#define CONF_BOARD_ADC
 
 #endif /* CONF_BOARD_H_INCLUDED */

@@ -114,12 +114,6 @@ void board_init(void)
 #warning Please enable CONFIG_CPCLK_ENABLE in conf_clock.h to use LEDs (PIOC).
 #endif
 
-	/* Configure Push Button pins */
-	ioport_set_pin_input_mode(GPIO_PUSH_BUTTON_1, GPIO_PUSH_BUTTON_1_FLAGS,
-			GPIO_PUSH_BUTTON_1_SENSE);
-	ioport_set_pin_input_mode(GPIO_PUSH_BUTTON_2, GPIO_PUSH_BUTTON_2_FLAGS,
-			GPIO_PUSH_BUTTON_2_SENSE);
-
 	/* Configure UART0 pins */
 #ifdef CONF_BOARD_UART_CONSOLE
 	ioport_set_pin_peripheral_mode(PIO_PB4_IDX, IOPORT_MODE_MUX_A);

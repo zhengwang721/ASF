@@ -70,7 +70,7 @@
 /** Core definition */
 #define cortexm4
 /** Board revision definition */
-#define BOARD_REV_2
+#define BOARD_REV_B
 
 /* @} */
 
@@ -108,14 +108,16 @@
 
 /**
  * \name LED #4 pin definition
+ * Note: Must short pin 5 and 6 on J11, and solder 0 ohm resistor on R304
+ * to make this LED available.
  * @{
  */
 #define LED4_GPIO            (PIO_PC6_IDX)
-#define LED4_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_HIGH
-#define LED4_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_LOW
+#define LED4_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_LOW
+#define LED4_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
 
 /* Wrapper macros to ensure common naming across all boards */
-#define LED_4_NAME      "LED4"
+#define LED_4_NAME      "blue LED4"
 #define PIN_LED_4       {PIO_PC6, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
 #define PIN_LED_4_MASK   PIO_PC6
 #define PIN_LED_4_PIO    PIOC
@@ -123,51 +125,6 @@
 #define PIN_LED_4_TYPE   PIO_OUTPUT_1
 #define PIN_LED_4_ATTR   PIO_DEFAULT
 /* @} */
-
-/**
- * \name Push button #1 definition
- * Attributes = pull-up + debounce + interrupt on rising edge.
- * @{
- */
-#define PUSHBUTTON_1_NAME        "SCROLL_UP (PB1)"
-#define GPIO_PUSH_BUTTON_1       (PIO_PA19_IDX)
-#define GPIO_PUSH_BUTTON_1_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
-#define GPIO_PUSH_BUTTON_1_SENSE (IOPORT_SENSE_RISING)
-
-#define PIN_PUSHBUTTON_1       {PIO_PA19, PIOA, ID_PIOA, PIO_INPUT, \
-		PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
-#define PIN_PUSHBUTTON_1_MASK  PIO_PA19
-#define PIN_PUSHBUTTON_1_PIO   PIOA
-#define PIN_PUSHBUTTON_1_ID    ID_PIOA
-#define PIN_PUSHBUTTON_1_TYPE  PIO_INPUT
-#define PIN_PUSHBUTTON_1_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
-#define PIN_PUSHBUTTON_1_IRQn  PIOA_IRQn
-/* @} */
-
-/**
- * \name Push button #2 definition
- * Attributes = pull-up + debounce + interrupt on rising edge.
- * @{
- */
-#define PUSHBUTTON_2_NAME        "SCROLL_DOWN (PB2)"
-#define PUSHBUTTON_2_WKUP_LINE   (4)
-#define PUSHBUTTON_2_WKUP_FSTT   (PMC_FSMR_FSTT4)
-#define GPIO_PUSH_BUTTON_2       (PIO_PA17_IDX)
-#define GPIO_PUSH_BUTTON_2_FLAGS (IOPORT_MODE_PULLUP | IOPORT_MODE_DEBOUNCE)
-#define GPIO_PUSH_BUTTON_2_SENSE (IOPORT_SENSE_RISING)
-
-#define PIN_PUSHBUTTON_2       {PIO_PA17, PIOA, ID_PIOA, PIO_INPUT, \
-		PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
-#define PIN_PUSHBUTTON_2_MASK  PIO_PA17
-#define PIN_PUSHBUTTON_2_PIO   PIOA
-#define PIN_PUSHBUTTON_2_ID    ID_PIOA
-#define PIN_PUSHBUTTON_2_TYPE  PIO_INPUT
-#define PIN_PUSHBUTTON_2_ATTR  (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE)
-#define PIN_PUSHBUTTON_2_IRQn  PIOA_IRQn
-/* @} */
-
-/** List of all push button definitions. */
-#define PINS_PUSHBUTTONS    {PIN_PUSHBUTTON_1, PIN_PUSHBUTTON_2}
 
 /**
  * \name Console UART definitions
@@ -178,7 +135,7 @@
 /* @} */
 
 /**
- * \name UART0 pins (UTXD0 and URXD0) definitions
+ * \name UART0 pin (UTXD0 and URXD0) definitions
  * @{
  */
 #define PINS_UART0        (PIO_PB4A_URXD0 | PIO_PB5A_UTXD0)
@@ -193,7 +150,7 @@
 /* @} */
 
 /**
- * \name UART1 pins (UTXD1 and URXD1) definitions
+ * \name UART1 pin (UTXD1 and URXD1) definitions
  * @{
  */
 #define PINS_UART1        (PIO_PC1A_URXD1 | PIO_PC0A_UTXD1)
@@ -262,6 +219,14 @@
 #define TWIO_CLK_FLAG             IOPORT_MODE_MUX_A
 #define BOARD_CLK_TWI_EEPROM      TWIO_CLK_GPIO
 #define BOARD_CLK_TWI_MUX_EEPROM  TWIO_CLK_FLAG
+/* @} */
+
+/**
+ * \name PCK pin definitions
+ * @{
+ */
+#define PIN_PCK0        (PIO_PB13_IDX)
+#define PIN_PCK0_MUX    (IOPORT_MODE_MUX_A)
 /* @} */
 
 /* @} */ /* End of sam4cmp_db_features_group */
