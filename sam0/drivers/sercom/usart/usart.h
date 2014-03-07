@@ -89,35 +89,35 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_SYNC_SCHEME_V2</td>
- *    <td>SAMD21</td>
+ *    <td>SAM D21/R21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_OVER_SAMPLE</td>
- *    <td>SAMD21</td>
+ *    <td>SAM D21/R21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_HARDWARE_FLOW_CONTROL</td>
- *    <td>SAMD21</td>
+ *    <td>SAM D21/R21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IRDA</td>
- *    <td>SAMD21</td>
+ *    <td>SAM D21/R21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_LIN_SLAVE</td>
- *    <td>SAMD21</td>
+ *    <td>SAM D21/R21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_COLLISION_DECTION</td>
- *    <td>SAMD21</td>
+ *    <td>SAM D21/R21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_START_FRAME_DECTION</td>
- *    <td>SAMD21</td>
+ *    <td>SAM D21/R21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION</td>
- *    <td>SAMD21</td>
+ *    <td>SAM D21/R21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -1082,6 +1082,9 @@ static inline void usart_disable_transceiver(
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
+ *  <tr>
+ *		<td>Add support for SAMR21 (same features as SAMD21).</td>
+ *  </tr>
  *	<tr>
  *		<td>Add support for SAMD21 and added new feature as below:
                 \li Oversample

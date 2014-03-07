@@ -349,25 +349,8 @@ static void run_buffer_read_write_interrupt_test(const struct test_case *test)
 /**
  * \brief Initialize USARTs for unit tests
  *
- * Initializes the three USARTs used by the unit test. One for
- * outputting the results (using embedded debugger) and two for
- * the actual unit tests (one for RX and one for TX).
+ * Initializes the two USARTs used by the unit test (one for RX and one for TX).
  *
- * The following describes detailed connection example for SAM D20/D21
- * unit tests:
- *
- * The RX USART used is the one connected to EXT1 on rev. 2 of the
- * SAM D20/D21 Xplained Pro, while the TX USART used is the one reserved
- * for SPI on EXT1.
- *
- * The two SERCOMs have RX on pin 13 (RX) and 15 (SS_0), and TX on pin
- * 14 (TX) and 17 (MISO), respectively, on the EXT1 header.
- * Hence, the required connections on SAM D20/D21 Xplained Pro EXT1 are:
- * - 13 <--> 17
- * - 14 <--> 15
- *
- * For more details, refer to conf_test.h for TX and RX modules and pins
- * configuration.
  */
 static void test_system_init(void)
 {
