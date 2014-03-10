@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 Xplained Pro board configuration.
+ * \brief TCC Quick Start configuration for SAM R21 Xplained Pro
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,7 +41,34 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_QUICK_START_H_INCLUDED
+#define CONF_QUICK_START_H_INCLUDED
 
-#endif /* CONF_BOARD_H_INCLUDED */
+//[definition_pwm]
+/** PWM module to use */
+#define CONF_PWM_MODULE      TCC1
+/** PWM channel */
+#define CONF_PWM_CHANNEL     0
+/** PWM output */
+#define CONF_PWM_OUTPUT      0
+/** PWM output pin */
+#define CONF_PWM_OUT_PIN     PIN_PA06E_TCC1_WO0
+/** PWM output pin mux */
+#define CONF_PWM_OUT_MUX     MUX_PA06E_TCC1_WO0
+//[definition_pwm]
+
+//[definition_fault]
+/** FAULT EIC pin */
+#define CONF_FAULT_EIC_PIN       SW0_EIC_PIN
+/** FAULT EIC pin mux */
+#define CONF_FAULT_EIC_PIN_MUX   SW0_EIC_PINMUX
+/** FAULT EIC line */
+#define CONF_FAULT_EIC_LINE      SW0_EIC_LINE
+
+/** FAULT event generator */
+#define CONF_FAULT_EVENT_GENERATOR EVSYS_ID_GEN_EIC_EXTINT_8
+/** FAULT event user for recoverable fault */
+#define CONF_FAULT_EVENT_USER      EVSYS_ID_USER_TCC1_MC_0
+//[definition_fault]
+
+#endif /* CONF_QUICK_START_H_INCLUDED */
