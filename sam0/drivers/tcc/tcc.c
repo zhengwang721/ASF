@@ -43,8 +43,6 @@
 
 #include "tcc.h"
 
-#define CONF_DBGRUN true
-
 #if TCC_ASYNC == true
 #  include "tcc_callback.h"
 #  include <system_interrupt.h>
@@ -513,9 +511,6 @@ enum status_code tcc_init(
 	}
 
 	/* Write to registers */
-#if CONF_DBGRUN
-	hw->DBGCTRL.bit.DBGRUN = 1;
-#endif
 
 	hw->CTRLA.reg = ctrla;
 	while (hw->SYNCBUSY.reg & TCC_SYNCBUSY_CTRLB) {
