@@ -269,8 +269,8 @@ static enum status_code _spi_set_config(
 	/* Set SPI character size */
 	ctrlb |= config->character_size;
 
-	if (config->run_in_standby) {
-		/* Enable in sleep mode */
+	/* Set whether module should run in standby. */
+	if (config->run_in_standby || system_is_debugger_present()) {
 		ctrla |= SERCOM_SPI_CTRLA_RUNSTDBY;
 	}
 
