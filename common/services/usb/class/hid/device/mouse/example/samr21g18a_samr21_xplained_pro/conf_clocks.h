@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 Clock configuration
+ * \brief SAM R21 Clock configuration
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
