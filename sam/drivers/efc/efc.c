@@ -112,7 +112,7 @@ extern uint32_t efc_perform_fcr(Efc *p_efc, uint32_t ul_fcr);
  */
 uint32_t efc_init(Efc *p_efc, uint32_t ul_access_mode, uint32_t ul_fws)
 {
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
 	efc_write_fmr(p_efc, ul_access_mode | EEFC_FMR_FWS(ul_fws) | EEFC_FMR_CLOE);
 #else
 	efc_write_fmr(p_efc, ul_access_mode | EEFC_FMR_FWS(ul_fws));
@@ -120,7 +120,7 @@ uint32_t efc_init(Efc *p_efc, uint32_t ul_access_mode, uint32_t ul_fws)
 	return EFC_RC_OK;
 }
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
 /**
  * \brief Enable code loop optimization.
  *
