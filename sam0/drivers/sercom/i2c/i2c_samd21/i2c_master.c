@@ -83,7 +83,7 @@ static enum status_code _i2c_master_set_config(
 	Assert(config);
 
 	/* Temporary variables. */
-	uint32_t tmp_ctrla = 0;
+	uint32_t tmp_ctrla;
 	int32_t tmp_baud;
 	int32_t tmp_baud_hs;
 	enum status_code tmp_status_code = STATUS_OK;
@@ -122,9 +122,11 @@ static enum status_code _i2c_master_set_config(
 	/* Save timeout on buffer write. */
 	module->buffer_timeout = config->buffer_timeout;
 
-	/* Check and set if module should run in standby. */
-	if (config->run_in_standby) {
+	/* Set whether module should run in standby. */
+	if (config->run_in_standby || system_is_debugger_present()) {
 		tmp_ctrla = SERCOM_I2CM_CTRLA_RUNSTDBY;
+	} else {
+		tmp_ctrla = 0;
 	}
 
 	/* Check and set start data hold timeout. */

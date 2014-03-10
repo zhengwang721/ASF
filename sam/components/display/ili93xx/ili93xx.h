@@ -3,7 +3,7 @@
  *
  * \brief API driver for ili93xx TFT display component.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -289,13 +289,13 @@ uint8_t ili93xx_device_type_identify(void);
  *
  * Add this to the main loop or a setup function:
  * \code
- * struct ili93xx_opt_t g_ili93xx_display_opt;
- * g_ili93xx_display_opt.ul_width = ILI93XX_LCD_WIDTH;
- * g_ili93xx_display_opt.ul_height = ILI93XX_LCD_HEIGHT;
- * g_ili93xx_display_opt.foreground_color = COLOR_BLACK;
- * g_ili93xx_display_opt.background_color = COLOR_WHITE;
- * ili93xx_init(&g_ili93xx_display_opt);
- * \endcode
+	struct ili93xx_opt_t g_ili93xx_display_opt;
+	g_ili93xx_display_opt.ul_width = ILI93XX_LCD_WIDTH;
+	g_ili93xx_display_opt.ul_height = ILI93XX_LCD_HEIGHT;
+	g_ili93xx_display_opt.foreground_color = COLOR_BLACK;
+	g_ili93xx_display_opt.background_color = COLOR_WHITE;
+	ili93xx_init(&g_ili93xx_display_opt);
+\endcode
  *
  * \subsection ili93xx_basic_setup_workflow
  * -\ref ili93xx_basic_setup_code
@@ -306,44 +306,44 @@ uint8_t ili93xx_device_type_identify(void);
  *
  * -# Set display on
  * \code
- * ili93xx_display_on();
- * \endcode
+	ili93xx_display_on();
+\endcode
  *
  * -# Turn display off
  * \code
- * ili93xx_display_off();
- * \endcode
+	ili93xx_display_off();
+\endcode
  *
  * -# Draw a pixel
  * \code
- * ili93xx_set_foreground_color(COLOR_RED);
- * ili93xx_draw_pixel(60, 60);
- * \endcode
+	ili93xx_set_foreground_color(COLOR_RED);
+	ili93xx_draw_pixel(60, 60);
+\endcode
  *
  * -# Draw a line and circle
  * \code
- * ili93xx_set_foreground_color(COLOR_BLUE);
- * ili93xx_draw_circle(180, 160, 40);
- * ili93xx_set_foreground_color(COLOR_VIOLET);
- * ili93xx_draw_line(0, 0, 240, 320);
- * \endcode
+	ili93xx_set_foreground_color(COLOR_BLUE);
+	ili93xx_draw_circle(180, 160, 40);
+	ili93xx_set_foreground_color(COLOR_VIOLET);
+	ili93xx_draw_line(0, 0, 240, 320);
+\endcode
  *
  * -# Draw a string of text
  * \code
- * ili93xx_set_foreground_color(COLOR_BLACK);
- * ili93xx_draw_string(10, 20, (uint8_t *)"ili93xx_lcd example");
- * \endcode
+	ili93xx_set_foreground_color(COLOR_BLACK);
+	ili93xx_draw_string(10, 20, (uint8_t *)"ili93xx_lcd example");
+\endcode
  *
  * -# Fill a rectangle with one certain color
  * \code
- * ili93xx_set_foreground_color(COLOR_BLUE);
- * ili93xx_draw_filled_rectangle(0, 0, ILI93XX_LCD_WIDTH, ILI93XX_LCD_HEIGHT);
- * \endcode
+	ili93xx_set_foreground_color(COLOR_BLUE);
+	ili93xx_draw_filled_rectangle(0, 0, ILI93XX_LCD_WIDTH, ILI93XX_LCD_HEIGHT);
+\endcode
  *
  * -# Get device type
  * \code
- * ili93xx_device_type();
- * \endcode
+	ili93xx_device_type();
+\endcode
  */
 
 #endif /* ILI93XX_H_INCLUDED */

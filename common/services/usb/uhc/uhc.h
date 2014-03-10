@@ -402,24 +402,24 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * For AVR and SAM3/4 devices, add to the initialization code:
  * \code
- *     sysclk_init();
- *     irq_initialize_vectors();
- *     cpu_irq_enable();
- *     board_init();
- *     sleepmgr_init(); // Optional
- * \endcode
+	sysclk_init();
+	irq_initialize_vectors();
+	cpu_irq_enable();
+	board_init();
+	sleepmgr_init(); // Optional
+\endcode
  *
  * For SAMD devices, add to the initialization code:
- * \code
- *     system_init();
- *     irq_initialize_vectors();
- *     cpu_irq_enable();
- *     sleepmgr_init(); // Optional
- * \endcode
+   \code
+   system_init();
+   irq_initialize_vectors();
+   cpu_irq_enable();
+   sleepmgr_init(); // Optional
+ \endcode
  * Add to the main IDLE loop:
  * \code
- *     sleepmgr_enter_sleep(); // Optional
- * \endcode
+	sleepmgr_enter_sleep(); // Optional
+\endcode
  *
  */
 
@@ -430,16 +430,16 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * Content of conf_usb_host.h:
  * \code
- * #define USB_HOST_POWER_MAX  500
- * \endcode
+	#define USB_HOST_POWER_MAX  500
+\endcode
  *
  * Add to application C-file:
  * \code
- * void usb_init(void)
- * {
- * uhc_start();
- * }
- * \endcode
+	void usb_init(void)
+	{
+	uhc_start();
+	}
+\endcode
  */
 
 /**
@@ -450,7 +450,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * -# Ensure that conf_usb_host.h is available and contains the following configuration
  * which is the main USB device configuration:
  *   - \code // Maximum current allowed on Vbus (mA) which depends of 5V generator
- * #define USB_HOST_POWER_MAX  500 // (500mA) \endcode
+	#define USB_HOST_POWER_MAX  500 // (500mA) \endcode
  * -# Call the USB host stack start function to enable USB Host stack:
  *   - \code uhc_start(); \endcode
  */
@@ -460,84 +460,84 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * Content of conf_clock.h for AT32UC3A0, AT32UC3A1, AT32UC3B devices (USBB):
  * \code
- * // Configuration based on 12MHz external OSC:
- * #define CONFIG_PLL1_SOURCE          PLL_SRC_OSC0
- * #define CONFIG_PLL1_MUL             8
- * #define CONFIG_PLL1_DIV             2
- * #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL1
- * #define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
- * \endcode
+	// Configuration based on 12MHz external OSC:
+	#define CONFIG_PLL1_SOURCE          PLL_SRC_OSC0
+	#define CONFIG_PLL1_MUL             8
+	#define CONFIG_PLL1_DIV             2
+	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL1
+	#define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
+\endcode
  *
  * Content of conf_clock.h for AT32UC3A3, AT32UC3A4 devices (USBB with high speed support):
  * \code
- * // Configuration based on 12MHz external OSC:
- * #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_OSC0
- * #define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
- * \endcode
+	// Configuration based on 12MHz external OSC:
+	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_OSC0
+	#define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
+\endcode
  *
  * Content of conf_clock.h for AT32UC3C device (USBC):
  * \code
- * // Configuration based on 12MHz external OSC:
- * #define CONFIG_PLL1_SOURCE          PLL_SRC_OSC0
- * #define CONFIG_PLL1_MUL             8
- * #define CONFIG_PLL1_DIV             2
- * #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL1
- * #define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
- * // CPU clock need of clock > 25MHz to run with USBC
- * #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL1
- * \endcode
- * 
+	// Configuration based on 12MHz external OSC:
+	#define CONFIG_PLL1_SOURCE          PLL_SRC_OSC0
+	#define CONFIG_PLL1_MUL             8
+	#define CONFIG_PLL1_DIV             2
+	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL1
+	#define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
+	// CPU clock need of clock > 25MHz to run with USBC
+	#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL1
+\endcode
+ *
  * Content of conf_clock.h for SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed):
  * \code
- * // USB Clock Source fixed at UPLL.
- * #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_UPLL
- * #define CONFIG_USBCLK_DIV           1
- * \endcode
- * 
+	// USB Clock Source fixed at UPLL.
+	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_UPLL
+	#define CONFIG_USBCLK_DIV           1
+\endcode
+ *
  * Content of conf_clocks.h for SAMD devices (USB):
  * \code
- * // USB Clock Source fixed at DFLL.
- * // SYSTEM_CLOCK_SOURCE_XOSC32K configuration - External 32KHz crystal/clock oscillator
- * #  define CONF_CLOCK_XOSC32K_ENABLE               true
- * #  define CONF_CLOCK_XOSC32K_EXTERNAL_CRYSTAL     SYSTEM_CLOCK_EXTERNAL_CRYSTAL
- * #  define CONF_CLOCK_XOSC32K_STARTUP_TIME         SYSTEM_XOSC32K_STARTUP_65536
- * #  define CONF_CLOCK_XOSC32K_AUTO_AMPLITUDE_CONTROL  false
- * #  define CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT    false
- * #  define CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT  true
- * #  define CONF_CLOCK_XOSC32K_ON_DEMAND            false
- * #  define CONF_CLOCK_XOSC32K_RUN_IN_STANDBY       true
- * // SYSTEM_CLOCK_SOURCE_DFLL configuration - Digital Frequency Locked Loop
- * #  define CONF_CLOCK_DFLL_ENABLE                  true
- * #  define CONF_CLOCK_DFLL_LOOP_MODE               SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED
- * #  define CONF_CLOCK_DFLL_ON_DEMAND               true
- *
- * // DFLL closed loop mode configuration
- * #  define CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR   GCLK_GENERATOR_1
- * #  define CONF_CLOCK_DFLL_MULTIPLY_FACTOR         (48000000/32768)
- * #  define CONF_CLOCK_DFLL_QUICK_LOCK              true
- * #  define CONF_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK   true
- * #  define CONF_CLOCK_DFLL_KEEP_LOCK_ON_WAKEUP     true
- * #  define CONF_CLOCK_DFLL_ENABLE_CHILL_CYCLE      true
- * #  define CONF_CLOCK_DFLL_MAX_COARSE_STEP_SIZE    (0x1f / 8)
- * #  define CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE      (0xff / 8)
- *
- * #  define CONF_CLOCK_CONFIGURE_GCLK               true
- *
- * // Configure GCLK generator 0 (Main Clock)
- * #  define CONF_CLOCK_GCLK_0_ENABLE                true
- * #  define CONF_CLOCK_GCLK_0_RUN_IN_STANDBY        true
- * #  define CONF_CLOCK_GCLK_0_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_DFLL
- * #  define CONF_CLOCK_GCLK_0_PRESCALER             1
- * #  define CONF_CLOCK_GCLK_0_OUTPUT_ENABLE         false
- *
- * // Configure GCLK generator 1
- * #  define CONF_CLOCK_GCLK_1_ENABLE                true
- * #  define CONF_CLOCK_GCLK_1_RUN_IN_STANDBY        false
- * #  define CONF_CLOCK_GCLK_1_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_XOSC32K
- * #  define CONF_CLOCK_GCLK_1_PRESCALER             1
- * #  define CONF_CLOCK_GCLK_1_OUTPUT_ENABLE         true
- *
- * \endcode
+  // USB Clock Source fixed at DFLL.
+  // SYSTEM_CLOCK_SOURCE_XOSC32K configuration - External 32KHz crystal/clock oscillator
+  #  define CONF_CLOCK_XOSC32K_ENABLE               true
+  #  define CONF_CLOCK_XOSC32K_EXTERNAL_CRYSTAL     SYSTEM_CLOCK_EXTERNAL_CRYSTAL
+  #  define CONF_CLOCK_XOSC32K_STARTUP_TIME         SYSTEM_XOSC32K_STARTUP_65536
+  #  define CONF_CLOCK_XOSC32K_AUTO_AMPLITUDE_CONTROL  false
+  #  define CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT    false
+  #  define CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT  true
+  #  define CONF_CLOCK_XOSC32K_ON_DEMAND            false
+  #  define CONF_CLOCK_XOSC32K_RUN_IN_STANDBY       true
+  // SYSTEM_CLOCK_SOURCE_DFLL configuration - Digital Frequency Locked Loop
+  #  define CONF_CLOCK_DFLL_ENABLE                  true
+  #  define CONF_CLOCK_DFLL_LOOP_MODE               SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED
+  #  define CONF_CLOCK_DFLL_ON_DEMAND               true
+
+  // DFLL closed loop mode configuration
+  #  define CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR   GCLK_GENERATOR_1
+  #  define CONF_CLOCK_DFLL_MULTIPLY_FACTOR         (48000000/32768)
+  #  define CONF_CLOCK_DFLL_QUICK_LOCK              true
+  #  define CONF_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK   true
+  #  define CONF_CLOCK_DFLL_KEEP_LOCK_ON_WAKEUP     true
+  #  define CONF_CLOCK_DFLL_ENABLE_CHILL_CYCLE      true
+  #  define CONF_CLOCK_DFLL_MAX_COARSE_STEP_SIZE    (0x1f / 8)
+  #  define CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE      (0xff / 8)
+
+  #  define CONF_CLOCK_CONFIGURE_GCLK               true
+
+  // Configure GCLK generator 0 (Main Clock)
+  #  define CONF_CLOCK_GCLK_0_ENABLE                true
+  #  define CONF_CLOCK_GCLK_0_RUN_IN_STANDBY        true
+  #  define CONF_CLOCK_GCLK_0_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_DFLL
+  #  define CONF_CLOCK_GCLK_0_PRESCALER             1
+  #  define CONF_CLOCK_GCLK_0_OUTPUT_ENABLE         false
+
+  // Configure GCLK generator 1
+  #  define CONF_CLOCK_GCLK_1_ENABLE                true
+  #  define CONF_CLOCK_GCLK_1_RUN_IN_STANDBY        false
+  #  define CONF_CLOCK_GCLK_1_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_XOSC32K
+  #  define CONF_CLOCK_GCLK_1_PRESCALER             1
+  #  define CONF_CLOCK_GCLK_1_OUTPUT_ENABLE         true
+
+  \endcode
  */
 
 /**
@@ -547,7 +547,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \section uhc_use_case_1_setup Setup steps
  *
- * Prior to implement this use case, be sure to have already 
+ * Prior to implement this use case, be sure to have already
  * apply the UDI module "basic use case".
  *
  * \section uhc_use_case_1_usage Usage steps
@@ -555,8 +555,8 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * \subsection uhc_use_case_1_usage_code Example code
  * Content of conf_usb_host.h:
  * \code
- * #define USB_HOST_HS_SUPPORT
- * \endcode
+	#define USB_HOST_HS_SUPPORT
+\endcode
  *
  * \subsection uhc_use_case_1_usage_flow Workflow
  * -# Ensure that conf_usb_host.h is available and contains the following parameters
@@ -571,7 +571,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \section uhc_use_case_2_setup Setup steps
  *
- * Prior to implement this use case, be sure to have already 
+ * Prior to implement this use case, be sure to have already
  * apply the UDI module "basic use case".
  *
  * \section uhc_use_case_2_usage Usage steps
@@ -579,8 +579,8 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * \subsection uhc_use_case_2_usage_code Example code
  * Content of conf_usb_host.h:
  * \code
- * #define USB_HOST_UHI   UHI_HID_MOUSE, UHI_MSC, UHI_CDC
- * \endcode
+	#define USB_HOST_UHI   UHI_HID_MOUSE, UHI_MSC, UHI_CDC
+\endcode
  *
  * \subsection uhc_use_case_2_usage_flow Workflow
  * -# Ensure that conf_usb_host.h is available and contains the following parameters:
@@ -601,7 +601,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \section uhc_use_case_3_setup Setup steps
  *
- * Prior to implement this use case, be sure to have already 
+ * Prior to implement this use case, be sure to have already
  * apply the UDI module "basic use case".
  *
  * \section uhc_use_case_3_usage Usage steps
@@ -609,63 +609,63 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * \subsection uhc_use_case_3_usage_code Example code
  * Content of conf_usb_host.h:
  * \code
- * #define UHC_MODE_CHANGE(b_host_mode)   my_callback_mode_change(b_host_mode)
- * extern void my_callback_mode_change(bool b_host_mode);
- * \endcode
+	#define UHC_MODE_CHANGE(b_host_mode)   my_callback_mode_change(b_host_mode)
+	extern void my_callback_mode_change(bool b_host_mode);
+\endcode
  *
  * Add to application C-file:
  * \code
- * void usb_init(void)
- * {
- *   //udc_start();
- *   uhc_start();
- * }
- *
- * bool my_host_mode;
- * void my_callback_mode_change(bool b_host_mode)
- * {
- *   my_host_mode = b_host_mode;
- * }
- * 
- * void my_usb_task(void)
- * {
- *   if (my_host_mode) {
- *     // CALL USB Host task
- *   } else {
- *     // CALL USB Device task
- *   }
- * }
- * \endcode
+	 void usb_init(void)
+	 {
+	   //udc_start();
+	   uhc_start();
+	 }
+
+	 bool my_host_mode;
+	 void my_callback_mode_change(bool b_host_mode)
+	 {
+	   my_host_mode = b_host_mode;
+	 }
+
+	 void my_usb_task(void)
+	 {
+	   if (my_host_mode) {
+	     // CALL USB Host task
+	   } else {
+	     // CALL USB Device task
+	   }
+	 }
+\endcode
  *
  * \subsection uhc_use_case_3_usage_flow Workflow
  * -# In case of USB dual roles (Device and Host), the USB stack must be enabled
  * by uhc_start() and the udc_start() must not be called.
  *   - \code //udc_start();
- * uhc_start(); \endcode
+	 uhc_start(); \endcode
  * -# In dual role, to known the current USB mode, the callback to notify the
  * mode changes can be used.
  *   - Ensure that conf_usb_host.h contains the following parameters.
  * \code
- * #define UHC_MODE_CHANGE(b_host_mode)   my_callback_mode_change(b_host_mode)
- * extern void my_callback_mode_change(bool b_host_mode);
- * \endcode
+	#define UHC_MODE_CHANGE(b_host_mode)   my_callback_mode_change(b_host_mode)
+	extern void my_callback_mode_change(bool b_host_mode);
+\endcode
  *   - Ensure that application contains the following code:
  * \code
- * bool my_host_mode;
- * void my_callback_mode_change(bool b_host_mode)
- * {
- *   my_host_mode = b_host_mode;
- * }
- * 
- * void my_usb_task(void)
- * {
- *   if (my_host_mode) {
- *     // CALL USB Host task
- *   } else {
- *     // CALL USB Device task
- *   }
- * }
- * \endcode
+	bool my_host_mode;
+	void my_callback_mode_change(bool b_host_mode)
+	{
+	  my_host_mode = b_host_mode;
+	}
+
+	void my_usb_task(void)
+	{
+	  if (my_host_mode) {
+	    // CALL USB Host task
+	  } else {
+	    // CALL USB Device task
+	  }
+	}
+\endcode
  */
 
 #endif // _UHC_H_

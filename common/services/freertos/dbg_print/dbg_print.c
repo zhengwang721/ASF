@@ -500,7 +500,8 @@ enum status_code dbg_init(void)
 	sercom_uart->CTRLB.reg = SERCOM_USART_CTRLB_TXEN;
 	sercom_uart->CTRLA.reg = SERCOM_USART_CTRLA_MODE_USART_INT_CLK
 			| SERCOM_USART_CTRLA_DORD | SERCOM_USART_CTRLA_ENABLE
-			| CONF_DBG_PRINT_SERCOM_MUX;
+			| CONF_DBG_PRINT_SERCOM_MUX | (system_is_debugger_present() ?
+					SERCOM_USART_CTRLA_RUNSTDBY : 0);
 
 	// Set up the pin MUXes
 	system_pinmux_get_config_defaults(&pin_conf);

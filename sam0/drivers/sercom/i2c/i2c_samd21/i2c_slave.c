@@ -61,6 +61,8 @@ static enum status_code _i2c_slave_set_config(
 		struct i2c_slave_module *const module,
 		const struct i2c_slave_config *const config)
 {
+	uint32_t tmp_ctrla;
+
 	/* Sanity check arguments. */
 	Assert(module);
 	Assert(module->hw);
@@ -94,13 +96,20 @@ static enum status_code _i2c_slave_set_config(
 	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT_WITH_READBACK;
 	system_pinmux_pin_set_config(pad1 >> 16, &pin_conf);
 
-	/* Write config to register CTRLA */
-	i2c_hw->CTRLA.reg |= (uint32_t)(config->sda_hold_time |
+	/* Prepare config to write to register CTRLA */
+	if (config->run_in_standby || system_is_debugger_present()) {
+		tmp_ctrla = SERCOM_I2CS_CTRLA_RUNSTDBY;
+	} else {
+		tmp_ctrla = 0;
+	}
+
+	tmp_ctrla |= (uint32_t)(config->sda_hold_time |
 			config->transfer_speed |
 			(config->scl_low_timeout << SERCOM_I2CS_CTRLA_LOWTOUTEN_Pos) |
 			(config->scl_stretch_only_after_ack_bit << SERCOM_I2CS_CTRLA_SCLSM_Pos) |
-			(config->slave_scl_low_extend_timeout << SERCOM_I2CS_CTRLA_SEXTTOEN_Pos) |
-			(config->run_in_standby << SERCOM_I2CS_CTRLA_RUNSTDBY_Pos));
+			(config->slave_scl_low_extend_timeout << SERCOM_I2CS_CTRLA_SEXTTOEN_Pos));
+
+	i2c_hw->CTRLA.reg |= tmp_ctrla;
 
 	/* Set CTRLB configuration */
 	i2c_hw->CTRLB.reg = SERCOM_I2CS_CTRLB_SMEN | config->address_mode;
