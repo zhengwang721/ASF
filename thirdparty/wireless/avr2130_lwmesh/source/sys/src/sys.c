@@ -53,7 +53,6 @@
 #if SYS_SECURITY_MODE == 0
 #include "sal.h"
 #endif
-#include "sleep_mgr.h"
 #include "sys.h"
 #include "sysTimer.h"
 #include "asf.h"
@@ -64,22 +63,12 @@
 *****************************************************************************/
 void SYS_Init(void)
 {
-  irq_initialize_vectors();
-#if SAMD20
-  system_init();
-  delay_init();
-#else
-  sysclk_init();
-  board_init();    
-#endif  	
   SYS_TimerInit(); 
 #if SYS_SECURITY_MODE == 0
 sal_init();
 #endif  
   PHY_Init();
   NWK_Init();
-  sm_init();     
-  cpu_irq_enable();
 }
 
 /*************************************************************************//**

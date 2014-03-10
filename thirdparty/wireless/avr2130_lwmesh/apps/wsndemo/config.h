@@ -50,9 +50,9 @@
 
 /*****************************************************************************
 *****************************************************************************/
-#define APP_ADDR                0x2002
+#define APP_ADDR                0x0000
 #define APP_PANID               0x1234
-#define APP_SENDING_INTERVAL    2000
+#define APP_SENDING_INTERVAL    1000
 #define APP_ENDPOINT            1
 #define APP_SECURITY_KEY        "TestSecurityKey0"
 
@@ -102,5 +102,7 @@
 #define APP_ROUTER      0
 #define APP_ENDDEVICE   1
 #endif
+
+
 
 #endif // _CONFIG_H_
