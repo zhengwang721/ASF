@@ -47,8 +47,6 @@
 /** Enable Com Port. */
 #define CONF_BOARD_COM_PORT
 #define CONF_BOARD_AT86RFX
-#define IC_TYPE             (0x00)
-
 #define MCU_SOC_NAME        "ATSAMD20J18"
 
 #define AT86RFX_SPI_BAUDRATE		 4000000UL 

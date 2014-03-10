@@ -98,6 +98,10 @@
 
 #define OFFSET_FOR_SRC_IEEE_ADDR    (7)
 
+#ifndef LED_COUNT
+#define LED_COUNT 0
+#endif
+
 #if (LED_COUNT >= 3)
 #define STATUS_LED              LED0
 #define TX_LED                  LED1
@@ -106,7 +110,7 @@
 #define STATUS_LED              LED0
 #define TX_LED                  LED0
 #define RX_LED                  LED1
-#else
+#elif (LED_COUNT == 1)
 #define STATUS_LED              LED0
 #define TX_LED                  LED0
 #define RX_LED                  LED0
@@ -118,6 +122,13 @@
 	(TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF233))
 #define CRC_SETTING_ON_REMOTE_NODE
 #endif
+
+#if ((TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == ATMEGARFR2))
+#define IC_TYPE 0X01
+#else
+#define IC_TYPE 0X00
+#endif
+
 /* === Types ================================================================ */
 /* Main states */
 typedef enum {

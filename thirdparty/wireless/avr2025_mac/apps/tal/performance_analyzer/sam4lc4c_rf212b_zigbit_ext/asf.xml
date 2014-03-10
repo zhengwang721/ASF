@@ -17,14 +17,6 @@
 		<config name="config.thirdparty.wireless.addons.sio2host" value="uart"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="at86rf212b"/>
 
-		<build type="define"   name="HIGHEST_STACK_LAYER"                 value="TAL"/>
-		<build type="define"   name="HIGH_DATA_RATE_SUPPORT"              value=""/>
-
-        <build type="define"   name="FFD"                                 value=""/>
-        <build type="define"   name="ENABLE_TFA"                          value=""/>
-        <build type="define"   name="TRX_REG_RAW_VALUE"                   value=""/>
-		<build type="define"   name="ANTENNA_DIVERSITY"                   value="0"/>
-		
 		<require idref="board.sam4l_xplained_pro"/>
 		
 		<generator value="iarewarm"/>

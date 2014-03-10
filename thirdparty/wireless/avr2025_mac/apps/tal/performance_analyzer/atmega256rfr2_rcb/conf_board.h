@@ -44,8 +44,6 @@
 #define CONF_BOARD_H
 
 
-#define IC_TYPE             (0x01)
-
 #define SENSOR_TERMINAL_BOARD
 //#define BREAKOUT_BOARD
 

@@ -1,7 +1,7 @@
 /**
- * \file
+ * \file performance_main.h
  *
- * \brief Board configuration
+ * \brief API function protypes - Performance Analyzer application
  *
  * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
@@ -38,15 +38,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-#define CONF_BOARD_ENABLE_USARTD0
-#define CONF_BOARD_AT86RFX
-#define BOARD_NAME          "REB232ED-EK"
+/*
+ * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ */
 
+/* Prevent double inclusion */
+#ifndef PERF_MAIN_H
+#define PERF_MAIN_H
 
+void performance_analyzer_main(void);
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif

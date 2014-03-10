@@ -1,9 +1,9 @@
 /**
- * \file
+ * \file main.c
  *
- * \brief Board configuration
+ * \brief  Main of Performance_Analyzer application
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,15 +38,22 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
 
-#define CONF_BOARD_ENABLE_USARTD0
-#define CONF_BOARD_AT86RFX
-#define BOARD_NAME          "REB232ED-EK"
+/**
+ * \page license License
+ * Copyright(c) 2012, Atmel Corporation All rights reserved.
+ *
+ * Licensed under Atmel's Limited License Agreement --> EULA.txt
+ */
 
-
-
-#endif /* CONF_BOARD_H_INCLUDED */
+ #include "app_config.h"
+ # include "performance_main.h"
+ int main(void)
+ {
+	performance_analyzer_main();
+ }
+ 
+ 
+ 
+ 

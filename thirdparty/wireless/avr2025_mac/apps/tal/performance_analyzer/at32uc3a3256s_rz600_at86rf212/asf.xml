@@ -23,12 +23,6 @@
 		<generator value="as5_32" />
 		<generator value="doxygen"/>
 		<device-support value="at32uc3a3256s"/>
-
-		<build type="define"   name="HIGHEST_STACK_LAYER"                 value="TAL"/>
-		<build type="define"   name="HIGH_DATA_RATE_SUPPORT"              value=""/>
-
-        <build type="define"   name="FFD"                                 value=""/>
-        <build type="define"   name="ENABLE_TFA"                          value=""/>
-        <build type="define"   name="TRX_REG_RAW_VALUE"                   value=""/>
+        
 	</project>
 </asf>

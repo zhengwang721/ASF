@@ -46,7 +46,5 @@
 #define ZIGBIT_USB
 #define CONF_BOARD_AT86RFX
 
-#define IC_TYPE             (0x00)
-
 # include "conf_usb.h"
 #endif /* CONF_BOARD_H_INCLUDED */

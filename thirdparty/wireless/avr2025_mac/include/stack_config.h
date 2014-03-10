@@ -51,6 +51,7 @@
 #ifndef STACK_CONFIG_H
 #define STACK_CONFIG_H
 
+#include "compiler.h"
 /**
  * \ingroup group_inc
  * \defgroup group_stack Common Stack Definitions
@@ -146,6 +147,7 @@
 #define LARGE_BUFFER_SIZE                   (((sizeof(frame_info_t) + \
 	aMaxPHYPacketSize + \
 	LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN) / 4 + 1) * 4)
+
 
 /**
  * The following macro holds the size of a small buffer.
