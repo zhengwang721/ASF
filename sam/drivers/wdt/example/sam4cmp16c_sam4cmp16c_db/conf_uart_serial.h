@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Watchdog Timer (WDT) driver for SAM.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,35 +41,14 @@
  *
  */
 
-#ifndef WDT_H_INCLUDED
-#define WDT_H_INCLUDED
+#ifndef CONF_USART_SERIAL_H_INCLUDED
+#define CONF_USART_SERIAL_H_INCLUDED
 
-#include "compiler.h"
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   115200UL
+/** Parity setting */
+#define CONF_UART_PARITY     UART_MR_PAR_NO
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-#define WDT_INVALID_ARGUMENT 0xFFFF
-
-uint32_t wdt_get_timeout_value(uint32_t ul_us, uint32_t ul_sclk);
-void wdt_init(Wdt *p_wdt, uint32_t ul_mode, uint16_t us_counter,
-		uint16_t us_delta);
-void wdt_disable(Wdt *p_wdt);
-void wdt_restart(Wdt *p_wdt);
-uint32_t wdt_get_status(Wdt *p_wdt);
-uint32_t wdt_get_us_timeout_period(Wdt *p_wdt, uint32_t ul_sclk);
-
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-#endif /* WDT_H_INCLUDED */
+#endif /* CONF_USART_SERIAL_H_INCLUDED */
