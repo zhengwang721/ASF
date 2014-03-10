@@ -61,7 +61,7 @@
  *
  * The PWM output and fault input is set up as follows:
  * <table>
- *  <tr><th> board        </td><th> pin  </td><th> connect to </td></tr>
+ *  <tr><th> Board        </td><th> Pin  </td><th> Connect to </td></tr>
  *  <tr><td> SAMD21 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
  *  <tr><td> SAMD21 Xpro  </td><td> PA15 </td><td> SW0        </td></tr>
  * </table>
