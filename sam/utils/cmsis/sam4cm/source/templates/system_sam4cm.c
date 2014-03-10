@@ -131,23 +131,7 @@ void SystemCoreClockUpdate( void )
     break;
 
     case PMC_MCKR_CSS_PLLA_CLK: /* PLLA clock */
-      if ( SUPC->SUPC_SR & SUPC_SR_OSCSEL )
-      {
-        if ( ((PMC->CKGR_PLLAR & CKGR_PLLAR_MULA_Msk) >> CKGR_PLLAR_MULA_Pos) == CHIP_FREQ_PLLA_TYPICAL_MULA )
-        {
-          SystemCoreClock = CHIP_FREQ_PLLA_TYPICAL; /* PLLA outputs at 8.192MHz */
-        }
-        else
-        {
-          // TODO: We have another frequency output here: between 7.5MHz and 8.5MHz.
-          SystemCoreClock = CHIP_FREQ_PLLA_TYPICAL;
-        }
-      }
-      else
-      {
-        // TODO: We have another frequency output here based on Internal RC Slow Clock which should not be accurate.
-        SystemCoreClock = CHIP_FREQ_PLLA_TYPICAL;
-      }
+      SystemCoreClock = CHIP_FREQ_PLLA_TYPICAL;
     break;
 
     case PMC_MCKR_CSS_PLLB_CLK: /* PLLB clock */
