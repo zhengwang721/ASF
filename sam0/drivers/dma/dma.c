@@ -47,6 +47,8 @@
 #include "clock.h"
 #include "system_interrupt.h"
 
+static uint8_t _dma_find_first_free_channel_and_allocate(void);
+
 struct _dma_module {
 	volatile bool _dma_init;
 	volatile uint32_t allocated_channels;
