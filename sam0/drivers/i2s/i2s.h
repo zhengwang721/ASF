@@ -110,8 +110,6 @@
  *  - configure and control the I2S Clock Unit and Serializer
  *  - transmit/receive data through I2S Serializer
  *
- * To use the driver, please refer to \ref asfdoc_sam0_i2s_exqsg.
- *
  * \subsection asfdoc_sam0_i2s_module_overview_clocks Clocks
  *
  * To use I2S module, the I2S bus interface clock (clk_i2s) must be enabled via
