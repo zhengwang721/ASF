@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Watchdog Timer Example on SAM4CMP_DB" id="sam.drivers.wdt.example.sam4cmp16c">
+	<project caption="Watchdog Timer Example on SAM4CMP_DB" id="sam.drivers.wdt.example.sam4cmp16c_db">
 		<info type="description" value="summary">
 		Basic example of watchdog timer on SAM4CMP_DB.
 		</info>
