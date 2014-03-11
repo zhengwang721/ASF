@@ -8,6 +8,8 @@
 
 	    <require idref="thirdparty.wireless.avr2130_lwmesh.apps.wsndemo_module"/>
 		<build type="doxygen-entry-point" value="group_wsndemo"/>
+		<build type="header-file" value="conf_trx_access.h"/>	
+		<build type="include-path"  value="./"/>		
 		<build type="c-source" value="main.c"/>
 		
 		<device-support-alias value="avr2130_lwmesh_support"/>
@@ -27,9 +29,7 @@
 		<!-- +++++++++++++++++++++++++++++++++++++++++++++++BUILD+++++++++++++++++++++++++++++++++++++++++++++++. -->
 		<build type="c-source" value="wsndemo.c"/>
 		<build type="header-file"   value="config.h"/>
-		<build type="header-file"   value="wsndemo.h"/>
-		<build type="include-path"  value="./"/>
-		<build type="header-file" value="conf_trx_access.h"/>
+		<build type="header-file"   value="wsndemo.h"/>		
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="group_wsndemo"/>
 		<build type="distribute" subtype="user-file" value="wsnmonitor_setup.exe"/>				
