@@ -51,9 +51,12 @@ typedef Twi *twi_slave_t;
 
 static inline void twi_slave_setup(twi_slave_t p_twi, uint32_t dw_device_addr)
 {
+#if (!SAMG)
 	if (p_twi == TWI0) {
 		sysclk_enable_peripheral_clock(ID_TWI0);
-	} else if (p_twi == TWI1) {
+	} else
+#endif
+	if (p_twi == TWI1) {
 		sysclk_enable_peripheral_clock(ID_TWI1);
 #if SAM4N
 	} else if (p_twi == TWI2) {

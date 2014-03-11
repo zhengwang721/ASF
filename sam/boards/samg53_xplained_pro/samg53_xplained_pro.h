@@ -539,6 +539,39 @@ void system_board_init(void);
 #define I2S1_WS_GPIO         (PIO_PA20_IDX)
 #define I2S1_WS_FLAGS        (IOPORT_MODE_MUX_B)
 //@}
+
+//! \name IO1 SD card definitions */
+//@{
+#define SD_MMC_SPI_MEM_CNT          1
+#define SD_MMC_0_CD_GPIO            (PIO_PA20_IDX)
+#define SD_MMC_0_CD_DIR             (IOPORT_DIR_INPUT)
+#define SD_MMC_0_CD_MODE            (IOPORT_MODE_PULLUP)
+#define SD_MMC_0_CD_DETECT_VALUE    0
+#define SD_MMC_SPI                  SPI
+#define SD_MMC_SPI_0_CS             0
+#define SD_MMC_0_CD_PIO_ID          ID_PIOA
+/**
+ * Wrapper macros for IO1 SD, to ensure common naming across all Xplained Pro
+ * boards.
+ */
+#define SD_MMC_0_CD_FLAGS           (PIO_INPUT | PIO_PULLUP)
+#define SD_MMC_0_CD    {PIO_PA20, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define SD_MMC_0_CD_MASK PIO_PA20
+#define SD_MMC_0_CD_PIO PIOA
+#define SD_MMC_0_CD_ID ID_PIOA
+#define SD_MMC_0_CD_TYPE PIO_INPUT
+#define SD_MMC_0_CD_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_EDGE)
+//@}
+
+//! \name IO1 temperature sensor definitions */
+//@{
+#define BOARD_AT30TSE_TWI          TWI2
+#define BOARD_AT30TSE_TWI_ID       ID_TWI2
+#define BOARD_TWI_SPEED            (400000u)
+#define BOARD_USING_AT30TSE        AT30TSE758
+#define BOARD_AT30TSE_DEVICE_ADDR  0x07
+//@}
+
 /** @} */
 
 /** @} */

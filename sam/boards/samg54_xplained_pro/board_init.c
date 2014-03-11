@@ -123,10 +123,16 @@ void system_board_init(void)
 			IOPORT_MODE_MUX_B);
 #endif
 
-#if defined(CONF_BOARD_SPI)
+#if defined(CONF_BOARD_SPI) || defined(CONF_BOARD_SD_MMC_SPI)
 	ioport_set_pin_peripheral_mode(SPI_MISO_GPIO, SPI_MISO_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
+
+#ifdef CONF_BOARD_SD_MMC_SPI
+	/* Setting SD detection pin */
+	ioport_set_pin_dir(SD_MMC_0_CD_GPIO, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(SD_MMC_0_CD_GPIO, IOPORT_MODE_PULLUP);
+#endif
 
 #ifdef CONF_BOARD_SPI_NPCS0
 	ioport_set_pin_peripheral_mode(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
@@ -147,7 +153,7 @@ void system_board_init(void)
 	ioport_set_pin_peripheral_mode(TWI1_CLK_GPIO, TWI1_CLK_FLAGS);
 #endif
 
-#ifdef CONF_BOARD_TWI2
+#if defined(CONF_BOARD_TWI2) || defined(CONF_BOARD_AT30TSE)
 	ioport_set_pin_peripheral_mode(TWI2_DATA_GPIO, TWI2_DATA_FLAGS);
 	ioport_set_pin_peripheral_mode(TWI2_CLK_GPIO, TWI2_CLK_FLAGS);
 #endif

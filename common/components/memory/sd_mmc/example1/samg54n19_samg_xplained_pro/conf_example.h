@@ -1,9 +1,8 @@
-/**
- * \file
+/*! \file
  *
- * \brief TWI Master driver for SAM.
+ * \brief Example configuration.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,41 +40,19 @@
  *
  */
 
-#ifndef _TWI_MASTER_H_
-#define _TWI_MASTER_H_
+#ifndef CONF_EXAMPLE_H_INCLUDED
+#define CONF_EXAMPLE_H_INCLUDED
 
-#include "twi.h"
-#include "sysclk.h"
 
-typedef Twi *twi_master_t;
-typedef twi_options_t twi_master_options_t;
-typedef twi_packet_t twi_package_t;
+/** USART Interface  : Console UART */
+#define CONF_TEST_USART      CONSOLE_UART
+/** Baudrate setting : 115200 */
+#define CONF_TEST_BAUDRATE   115200
+/** Char setting     : 8-bit character length (don't care for UART) */
+#define CONF_TEST_CHARLENGTH 0
+/** Parity setting   : No parity check */
+#define CONF_TEST_PARITY     UART_MR_PAR_NO
+/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
+#define CONF_TEST_STOPBITS   false
 
-static inline uint32_t twi_master_setup(twi_master_t p_twi,
-		twi_master_options_t *p_opt)
-{
-	p_opt->master_clk = sysclk_get_cpu_hz();
-	p_opt->smbus      = 0;
-
-#if (!SAMG)
-	if (p_twi == TWI0) {
-		sysclk_enable_peripheral_clock(ID_TWI0);
-	} else
-#endif
-	if (p_twi == TWI1) {
-		sysclk_enable_peripheral_clock(ID_TWI1);
-#if SAM4N | SAMG
-	} else if (p_twi == TWI2) {
-		sysclk_enable_peripheral_clock(ID_TWI2);
-#endif
-	} else {
-		// Do Nothing
-	}
-
-	return (twi_master_init(p_twi, p_opt));
-}
-
-#define twi_master_enable(p_twi)   twi_enable_master_mode(p_twi)
-#define twi_master_disable(p_twi)  twi_disable_master_mode(p_twi)
-
-#endif // _TWI_MASTER_H_
+#endif /* CONF_EXAMPLE_H_INCLUDED */

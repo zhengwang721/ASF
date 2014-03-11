@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWI Master driver for SAM.
+ * \brief Spi Master configuration.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,41 +41,24 @@
  *
  */
 
-#ifndef _TWI_MASTER_H_
-#define _TWI_MASTER_H_
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
-#include "twi.h"
-#include "sysclk.h"
+/* Possibility to change low-level configurations here. */
 
-typedef Twi *twi_master_t;
-typedef twi_options_t twi_master_options_t;
-typedef twi_packet_t twi_package_t;
+/** Default Configuration of SPI Master Delay BCS */
+#define CONFIG_SPI_MASTER_DELAY_BCS            0
 
-static inline uint32_t twi_master_setup(twi_master_t p_twi,
-		twi_master_options_t *p_opt)
-{
-	p_opt->master_clk = sysclk_get_cpu_hz();
-	p_opt->smbus      = 0;
+/** Default Configuration of SPI Master Bits per Transfer Definition */
+#define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8
 
-#if (!SAMG)
-	if (p_twi == TWI0) {
-		sysclk_enable_peripheral_clock(ID_TWI0);
-	} else
-#endif
-	if (p_twi == TWI1) {
-		sysclk_enable_peripheral_clock(ID_TWI1);
-#if SAM4N | SAMG
-	} else if (p_twi == TWI2) {
-		sysclk_enable_peripheral_clock(ID_TWI2);
-#endif
-	} else {
-		// Do Nothing
-	}
+/** Default Configuration of SPI Master Delay BCT */
+#define CONFIG_SPI_MASTER_DELAY_BCT            0
 
-	return (twi_master_init(p_twi, p_opt));
-}
+/** Default Configuration of SPI Master Delay BS */
+#define CONFIG_SPI_MASTER_DELAY_BS             0
 
-#define twi_master_enable(p_twi)   twi_enable_master_mode(p_twi)
-#define twi_master_disable(p_twi)  twi_disable_master_mode(p_twi)
+/** Default Configuration of SPI Master Dummy Field */
+#define CONFIG_SPI_MASTER_DUMMY                0xFF
 
-#endif // _TWI_MASTER_H_
+#endif /* CONF_SPI_MASTER_H_INCLUDED */

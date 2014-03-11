@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWI Master driver for SAM.
+ * \brief SD/MMC stack configuration file.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,41 +41,17 @@
  *
  */
 
-#ifndef _TWI_MASTER_H_
-#define _TWI_MASTER_H_
+#ifndef CONF_SD_MMC_H_INCLUDED
+#define CONF_SD_MMC_H_INCLUDED
 
-#include "twi.h"
-#include "sysclk.h"
+/* Define it to enable the SPI mode instead of Multimedia Card interface mode */
+#define SD_MMC_SPI_MODE
 
-typedef Twi *twi_master_t;
-typedef twi_options_t twi_master_options_t;
-typedef twi_packet_t twi_package_t;
+/* Define it to enable the SDIO support */
+#define SDIO_SUPPORT_ENABLE
 
-static inline uint32_t twi_master_setup(twi_master_t p_twi,
-		twi_master_options_t *p_opt)
-{
-	p_opt->master_clk = sysclk_get_cpu_hz();
-	p_opt->smbus      = 0;
+/* Define it to enable the debug trace to the current standard output (stdio) */
+//#define SD_MMC_DEBUG
 
-#if (!SAMG)
-	if (p_twi == TWI0) {
-		sysclk_enable_peripheral_clock(ID_TWI0);
-	} else
-#endif
-	if (p_twi == TWI1) {
-		sysclk_enable_peripheral_clock(ID_TWI1);
-#if SAM4N | SAMG
-	} else if (p_twi == TWI2) {
-		sysclk_enable_peripheral_clock(ID_TWI2);
-#endif
-	} else {
-		// Do Nothing
-	}
+#endif /* CONF_SD_MMC_H_INCLUDED */
 
-	return (twi_master_init(p_twi, p_opt));
-}
-
-#define twi_master_enable(p_twi)   twi_enable_master_mode(p_twi)
-#define twi_master_disable(p_twi)  twi_disable_master_mode(p_twi)
-
-#endif // _TWI_MASTER_H_
