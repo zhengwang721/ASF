@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Watchdog Timer (WDT) driver for SAM.
+ * \brief Board configuration.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,35 +41,20 @@
  *
  */
 
-#ifndef WDT_H_INCLUDED
-#define WDT_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include "compiler.h"
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
+/** Define to avoid disabling the watchdog at startup. */
+#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
 
-#define WDT_INVALID_ARGUMENT 0xFFFF
+/** LED definition */
+#define LED_MASK           PIN_LED_4_MASK
+#define LED_PIO            PIN_LED_4_PIO
+#define LED_ID             PIN_LED_4_ID
+#define LED_TYPE           PIN_LED_4_TYPE
+#define LED_ATTR           PIN_LED_4_ATTR
 
-uint32_t wdt_get_timeout_value(uint32_t ul_us, uint32_t ul_sclk);
-void wdt_init(Wdt *p_wdt, uint32_t ul_mode, uint16_t us_counter,
-		uint16_t us_delta);
-void wdt_disable(Wdt *p_wdt);
-void wdt_restart(Wdt *p_wdt);
-uint32_t wdt_get_status(Wdt *p_wdt);
-uint32_t wdt_get_us_timeout_period(Wdt *p_wdt, uint32_t ul_sclk);
-
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-#endif /* WDT_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
