@@ -434,19 +434,6 @@ volatile node_ib_t node_info;
  */
 void performance_analyzer_main(void)
 {
-	irq_initialize_vectors();
-#if SAMD20
-	system_init();
-	delay_init();
-#else
-	sysclk_init();
-
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
-	board_init();    
-#endif
 
 	sio2host_init();
 	/*

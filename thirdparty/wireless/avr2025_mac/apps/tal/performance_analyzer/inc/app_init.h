@@ -129,6 +129,12 @@
 #define IC_TYPE 0X00
 #endif
 
+#ifndef BOARD_NAME
+#define BOARD_NAME "USER_BOARD"
+#endif
+#ifndef MCU_SOC_NAME
+#define MCU_SOC_NAME "USER_MCU"
+#endif
 /* === Types ================================================================ */
 /* Main states */
 typedef enum {

@@ -47,10 +47,23 @@
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
- #include "app_config.h"
+ #include "asf.h"
  # include "performance_main.h"
  int main(void)
  {
+	irq_initialize_vectors();
+#if SAMD20
+	system_init();
+	delay_init();
+#else
+	sysclk_init();
+
+	/* Initialize the board.
+	 * The board-specific conf_board.h file contains the configuration of
+	 * the board initialization.
+	 */
+	board_init();    
+#endif	 
 	performance_analyzer_main();
  }
  

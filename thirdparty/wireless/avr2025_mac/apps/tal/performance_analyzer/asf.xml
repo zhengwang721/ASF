@@ -8,6 +8,7 @@
 		</info>
 		<build type="c-source" value="main.c"/>
 		<require idref="thirdparty.wireless.avr2025_mac.apps.tal.performance_analyzer.component"/>
+		<build type="header-file" value="conf_trx_access.h"/>		
 		<device-support-alias value="avr2025_mac_pal_support"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
@@ -37,7 +38,6 @@
 		<build type="header-file" value="inc/user_interface.h"/>
 		<build type="include-path" value="inc/"/>
 		<build type="header-file" value="conf_common_sw_timer.h"/>
-		<build type="header-file" value="conf_trx_access.h"/>
 		<build type="include-path" value="."/>
 		
 		<require idref="thirdparty.wireless.avr2025_mac.includes"/>
