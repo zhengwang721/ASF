@@ -199,7 +199,7 @@ extern "C" {
 
 /** Initial description section */
 COMPILER_ALIGNED(16)
-static DmacDescriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
+DmacDescriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
 
 /** DMA priority level */
 enum dma_priority_level {
