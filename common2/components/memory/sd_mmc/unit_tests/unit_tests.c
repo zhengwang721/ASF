@@ -313,6 +313,9 @@ int main(void)
 	delay_init();
 	cdc_uart_init();
 
+	/* Wait stdio stable */
+	delay_ms(5);
+
 	irq_initialize_vectors();
 	cpu_irq_enable();
 
