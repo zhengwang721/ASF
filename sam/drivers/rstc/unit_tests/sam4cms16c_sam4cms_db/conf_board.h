@@ -44,6 +44,9 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
+/** Watchdog won't be disabled at startup. */
+#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
