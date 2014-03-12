@@ -76,7 +76,7 @@
 /*
  * Size of each PCM sample.
  * 1 MHz PDM clock, decimation of 64 -> Sampling rate 16kHz
- * 480 samples gives us 30 seconds of data.
+ * 480 samples gives us 30 milliseconds of data.
  */
 #define PCM_BUF_SIZE 480
 
@@ -88,7 +88,7 @@ struct pdm_instance pdm;
 /* Two buffers to store the PCM data */
 int16_t audio_buffer[2][PCM_BUF_SIZE];
 /* Global variable to say which of the buffers should be used */
-int8_t select;
+uint8_t select;
  
  
  /* Function to initalize the PDC transfer */
