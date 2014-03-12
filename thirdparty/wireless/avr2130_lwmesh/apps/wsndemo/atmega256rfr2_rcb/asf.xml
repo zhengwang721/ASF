@@ -9,6 +9,7 @@
 		<build type="header-file" value="conf_hw_timer.h"/>
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
+		<build type="header-file" value="conf_trx_access.h"/>		
 		
 		<config name="config.thirdparty.wireless.addons.sio2host" value="uart"/>
 		<build type="include-path" value="."/>

@@ -70,9 +70,6 @@
 #if SAMD20
 #include "system.h"
 #else
-#if (LED_COUNT > 0)
-#include "led.h"
-#endif
 #include "sysclk.h"
 #endif
 #include "phy.h"
@@ -88,6 +85,9 @@
 #include "asf.h"
 #include "board.h"
 #include "wsndemo.h"
+#if (LED_COUNT > 0)
+#include "led.h"
+#endif
 
 /*****************************************************************************
 *****************************************************************************/
