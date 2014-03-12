@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief General Purpose Backup Registers (GPBR) driver for SAM.
+ * \brief Unit test configuration.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,66 +41,14 @@
  *
  */
 
-#ifndef GPBR_H_INCLUDED
-#define GPBR_H_INCLUDED
+#ifndef CONF_TEST_H
+#define CONF_TEST_H
 
-#include "compiler.h"
+/** USART Interface */
+#define CONF_TEST_USART      CONSOLE_UART
+/** Baudrate setting */
+#define CONF_TEST_BAUDRATE   115200
+/** Parity setting */
+#define CONF_TEST_PARITY     UART_MR_PAR_NO
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-/** GPBR register number type */
-typedef enum gpbr_num_type {
-	GPBR0 = 0,
-	GPBR1,
-	GPBR2,
-	GPBR3,
-#if !SAM3U	
-	GPBR4,
-	GPBR5,
-	GPBR6,
-	GPBR7,
-#if (SAM4C || SAM4CP || SAM4CM)
-	GPBR8,
-	GPBR9,
-	GPBR10,
-	GPBR11,
-	GPBR12,
-	GPBR13,
-	GPBR14,
-	GPBR15,
-#endif
-#if SAM4E
-	GPBR8,
-	GPBR9,
-	GPBR10,
-	GPBR11,
-	GPBR12,
-	GPBR13,
-	GPBR14,
-	GPBR15,
-	GPBR16,
-	GPRB17,
-	GPBR18,
-	GPBR19,
-#endif
-#endif
-} gpbr_num_t;
-
-uint32_t gpbr_read(gpbr_num_t ul_reg_num);
-void gpbr_write(gpbr_num_t ul_reg_num, uint32_t ul_value);
-
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-#endif /* GPBR_H_INCLUDED */
+#endif /* CONF_TEST_H_INCLUDED */
