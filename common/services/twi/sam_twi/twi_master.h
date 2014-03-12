@@ -64,7 +64,7 @@ static inline uint32_t twi_master_setup(twi_master_t p_twi,
 #endif
 	if (p_twi == TWI1) {
 		sysclk_enable_peripheral_clock(ID_TWI1);
-#if SAM4N | SAMG
+#if (SAM4N || SAMG)
 	} else if (p_twi == TWI2) {
 		sysclk_enable_peripheral_clock(ID_TWI2);
 #endif

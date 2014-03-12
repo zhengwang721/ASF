@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWIHS Slave Mode management
+ * \brief TWIHS Master Mode management
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,14 +40,14 @@
  * \asf_license_stop
  *
  */
-#ifndef TWIHS_SLAVE_H_INCLUDED
-#define TWIHS_SLAVE_H_INCLUDED
+#ifndef TWIHS_MASTER_H_INCLUDED
+#define TWIHS_MASTER_H_INCLUDED
 
 #include <parts.h>
 #include <compiler.h>
 
 #if (SAMG)
-# include "sam_twihs/twihs_slave.h"
+# include "sam_twihs/twihs_master.h"
 #else
 # error Unsupported chip type
 #endif
@@ -56,12 +56,14 @@
  *
  * \defgroup twihs_group Two Wire-interface High Speed(TWIHS)
  *
- * This is the common API for TWIHs. Additional features are available
+ * This is the common API for TWIHS. Additional features are available
  * in the documentation of the specific modules.
+ *
+ * See \ref twihs_quickstart.
  *
  * \section twihs_group_platform Platform Dependencies
  *
- * The twihs API is partially chip- or platform-specific. While all
+ * The TWIHS API is partially chip- or platform-specific. While all
  * platforms provide mostly the same functionality, there are some
  * variations around how different bus types and clock tree structures
  * are handled.
@@ -71,21 +73,27 @@
  * behaviour. These functions are typically called by platform-specific
  * parts of drivers, and applications that aren't intended to be
  * portable:
- *   - twihs_slave_setup()
- *   - twihs_slave_enable()
- *   - twihs_slave_disable()
- *   - twihs_slave_read()
- *   - twihs_slave_write()
+ *   - Master TWIHS Module initialization
+ *   \code status_code_t twihs_master_setup(*twihs_module_pointer, twihs_master_options_t *opt) \endcode
+ *   - Enables TWIHS Module
+ *   \code void twihs_master_enable(*twihs_module_pointer) \endcode
+ *   - Disables TWIHS Module
+ *   \code void twihs_master_disable(*twihs_module_pointer) \endcode
+ *   - Read data from a slave device
+ *   \code status_code_t twihs_master_read(*twihs_module_pointer, twihs_package_t *package) \endcode
+ *   - Write data from to a slave device
+ *   \code status_code_t twihs_master_write(*twihs_module_pointer, twihs_package_t *package) \endcode
  *
  * @{
  */
 
 /**
- * \typedef twihs_slave_t
- * This type can be used independently to refer to TWIHS slave module for the
- * architecture used.
+ * \typedef twihs_master_t
+ * This type can be used independently to refer to TWIHS master module for the
+ * architecture used. It refers to the correct type definition for the
+ * architecture.
  */
 
 //! @}
 
-#endif /* TWIHS_SLAVE_H_INCLUDED */
+#endif /* TWI_MASTER_H_INCLUDED */
