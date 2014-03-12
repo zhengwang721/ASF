@@ -67,11 +67,6 @@
 #include <string.h>
 #include "config.h"
 #include "sys.h"
-#if SAMD20
-#include "system.h"
-#else
-#include "sysclk.h"
-#endif
 #include "phy.h"
 #include "sys.h"
 #include "nwk.h"
@@ -85,9 +80,15 @@
 #include "asf.h"
 #include "board.h"
 #include "wsndemo.h"
+#if SAMD20
+#include "system.h"
+#else
+#include "sysclk.h"
 #if (LED_COUNT > 0)
 #include "led.h"
 #endif
+#endif
+
 
 /*****************************************************************************
 *****************************************************************************/
