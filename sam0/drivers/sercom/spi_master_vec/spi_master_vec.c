@@ -43,6 +43,7 @@
 
 #include "spi_master_vec.h"
 #include <sercom_interrupt.h>
+#include <system.h>
 #include <system_interrupt.h>
 
 /**
@@ -156,7 +157,8 @@ enum status_code spi_master_vec_init(struct spi_master_vec_module *const module,
 	spi_hw->CTRLA.reg |= (uint32_t)config->mux_setting
 			| config->transfer_mode
 			| config->data_order
-			| (config->run_in_standby ? SERCOM_SPI_CTRLA_RUNSTDBY : 0);
+			| ((config->run_in_standby || system_is_debugger_present()) ?
+					SERCOM_SPI_CTRLA_RUNSTDBY : 0);
 
 	/* Get baud value from configured baudrate and internal clock rate */
 	gclk_hz = system_gclk_chan_get_hz(gclk_index);
@@ -316,11 +318,11 @@ void spi_master_vec_reset(struct spi_master_vec_module *const module)
  * To initiate a unidirectional transfer, pass \c NULL as the address of either
  * buffer descriptor array, like this:
 \code
-	// Transmit some buffers
-	spi_master_vec_transceive_buffer_job(&module, tx_buffers, NULL);
+		// Transmit some buffers
+		spi_master_vec_transceive_buffer_job(&module, tx_buffers, NULL);
 
-	// Receive some buffers
-	spi_master_vec_transceive_buffer_job(&module, NULL, rx_buffers);
+		// Receive some buffers
+		spi_master_vec_transceive_buffer_job(&module, NULL, rx_buffers);
 \endcode
  *
  * \pre \ref spi_master_vec_init() and \ref spi_master_vec_enable() must have

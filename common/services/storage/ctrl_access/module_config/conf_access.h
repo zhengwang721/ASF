@@ -217,15 +217,16 @@
 //! @{
 #define MEM_USB                                 LUN_USB
 #define LUN_ID_MEM_USB                          LUN_ID_USB
-#define LUN_USB_INCLUDE                         "host_mem.h"
-#define Lun_usb_test_unit_ready(lun)            host_test_unit_ready(lun)
-#define Lun_usb_read_capacity(lun, nb_sect)     host_read_capacity(lun, nb_sect)
-#define Lun_usb_read_sector_size(lun)           host_read_sector_size(lun)
+#define LUN_USB_INCLUDE                         "uhi_msc_mem.h"
+#define Lun_usb_get_lun()                       uhi_msc_mem_get_lun()
+#define Lun_usb_test_unit_ready(lun)            uhi_msc_mem_test_unit_ready(lun)
+#define Lun_usb_read_capacity(lun, nb_sect)     uhi_msc_mem_read_capacity(lun, nb_sect)
+#define Lun_usb_read_sector_size(lun)           uhi_msc_mem_read_sector_size(lun)
 #define Lun_usb_unload                          NULL
-#define Lun_usb_wr_protect(lun)                 host_wr_protect(lun)
-#define Lun_usb_removal()                       host_removal()
-#define Lun_usb_mem_2_ram(addr, ram)            host_read_10_ram(addr, ram)
-#define Lun_usb_ram_2_mem(addr, ram)            host_write_10_ram(addr, ram)
+#define Lun_usb_wr_protect(lun)                 uhi_msc_mem_wr_protect(lun)
+#define Lun_usb_removal()                       uhi_msc_mem_removal()
+#define Lun_usb_mem_2_ram(addr, ram)            uhi_msc_mem_read_10_ram(addr, ram)
+#define Lun_usb_ram_2_mem(addr, ram)            uhi_msc_mem_write_10_ram(addr, ram)
 #define LUN_USB_NAME                            "\"Host Mass-Storage Memory\""
 //! @}
 
