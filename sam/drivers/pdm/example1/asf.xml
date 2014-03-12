@@ -11,6 +11,8 @@
 		<build type="module-config" subtype="required-header-file" value="conf_example.h"/>
 		<device-support value="samg"/>
 		<require idref="sam.drivers.pdm"/>
+		<require idref="sam.drivers.pdc"/>
+		<require idref="sam.drivers.ioport"/>
 		<require idref="common.services.basic.clock"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>

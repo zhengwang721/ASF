@@ -54,7 +54,7 @@
  * A PDM microphone must be connected on PA9 (PDMDAT) and PA10 (PDMCLK).
  *
  * \section Description
- * This example will continuously read 30 ms blocks of PDM data from the microphone and
+ * This example will continuously read 30 ms blocks of PDM data from the microphone via DMA and
  * place the filtered PCM data into the two buffers in the audio_buffer array. This means
  * the application can process 30 ms of data at a time, while the module continues to read
  * from the microphone.
