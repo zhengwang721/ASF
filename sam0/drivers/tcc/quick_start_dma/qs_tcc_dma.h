@@ -58,7 +58,7 @@
  *
  * The PWM output is set up as follows:
  * <table>
- *  <tr><th> board        </td><th> pin  </td><th> connect to </td></tr>
+ *  <tr><th> Board        </td><th> Pin  </td><th> Connect to </td></tr>
  *  <tr><td> SAMD21 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
  * </table>
  *
@@ -210,7 +210,7 @@
  *             settings.
  *  -# Adjust the DMA transfer descriptor configurations.
  *       \snippet qs_tcc_dma.c dma_setup_7
- *    -# Create the DMA transfer descriptor with the given configuration.
+ *  -# Create the DMA transfer descriptor with the given configuration.
  *       \snippet qs_tcc_dma.c dma_setup_8
  * -# Start DMA transfer job with prepared descriptor
  *  -# Add the DMA transfer descriptor to the allocated DMA resource.
