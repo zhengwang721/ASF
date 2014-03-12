@@ -531,8 +531,17 @@ enum status_code dbg_init(void)
 	system_interrupt_enable(_sercom_get_interrupt_vector(sercom));
 
 	// Wait for sync before returning
-	while (sercom_uart->STATUS.reg & SERCOM_USART_STATUS_SYNCBUSY) {
+#if (REV_SERCOM >= 0x200)
+	while (sercom_uart->SYNCBUSY.reg) {
+		/* Intentionally left empty */
 	}
+#elif (REV_SERCOM == 0x101)
+	while (sercom_uart->STATUS.reg & SERCOM_USART_STATUS_SYNCBUSY) {
+		/* Intentionally left empty */
+	}
+#else
+#  error Unknown revision of SERCOM
+#endif
 
 	return status;
 }
