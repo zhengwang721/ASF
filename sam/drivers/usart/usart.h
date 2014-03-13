@@ -336,11 +336,13 @@ uint32_t usart_get_version(Usart *p_usart);
  *       peripherals. UART modules are compatible with the USART driver, but
  *       only for the functions and modes supported by the base UART driver.
  *
- * \section usart_basic_use_case Basic use case
  * \section usart_use_cases USART use cases
  * - \ref usart_basic_use_case
  * - \subpage usart_use_case_1
  * - \subpage usart_use_case_2
+ *
+ * \note The USART pins configuration are not included here. Please refer
+ *       the related code in board_init() function.
  *
  * \section usart_basic_use_case Basic use case - transmit a character
  * In this use case, the USART module is configured for:
@@ -363,10 +365,6 @@ uint32_t usart_get_version(Usart *p_usart);
  * \code
 	#define USART_SERIAL                 USART0
 	#define USART_SERIAL_ID              ID_USART0  //USART0 for sam4l
-	#define USART_SERIAL_PIO             PINS_USART_PIO
-	#define USART_SERIAL_TYPE            PINS_USART_TYPE
-	#define USART_SERIAL_PINS            PINS_USART_PINS
-	#define USART_SERIAL_MASK            PINS_USART_MASK
 	#define USART_SERIAL_BAUDRATE        9600
 	#define USART_SERIAL_CHAR_LENGTH     US_MR_CHRL_8_BIT
 	#define USART_SERIAL_PARITY          US_MR_PAR_NO
@@ -469,10 +467,6 @@ uint32_t usart_get_version(Usart *p_usart);
  * \code
 	#define USART_SERIAL                 USART0
 	#define USART_SERIAL_ID              ID_USART0  //USART0 for sam4l
-	#define USART_SERIAL_PIO             PINS_USART_PIO
-	#define USART_SERIAL_TYPE            PINS_USART_TYPE
-	#define USART_SERIAL_PINS            PINS_USART_PINS
-	#define USART_SERIAL_MASK            PINS_USART_MASK
 	#define USART_SERIAL_BAUDRATE        9600
 	#define USART_SERIAL_CHAR_LENGTH     US_MR_CHRL_8_BIT
 	#define USART_SERIAL_PARITY          US_MR_PAR_NO
@@ -585,10 +579,6 @@ uint32_t usart_get_version(Usart *p_usart);
 	#define USART_SERIAL                 USART0
 	#define USART_SERIAL_ID              ID_USART0  //USART0 for sam4l
 	#define USART_SERIAL_ISR_HANDLER     USART0_Handler
-	#define USART_SERIAL_PIO             PINS_USART_PIO
-	#define USART_SERIAL_TYPE            PINS_USART_TYPE
-	#define USART_SERIAL_PINS            PINS_USART_PINS
-	#define USART_SERIAL_MASK            PINS_USART_MASK
 	#define USART_SERIAL_BAUDRATE        9600
 	#define USART_SERIAL_CHAR_LENGTH     US_MR_CHRL_8_BIT
 	#define USART_SERIAL_PARITY          US_MR_PAR_NO
