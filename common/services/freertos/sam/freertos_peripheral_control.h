@@ -3,7 +3,7 @@
  *
  * \brief FreeRTOS Peripheral Control API Functions
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -90,6 +90,16 @@
  * - freertos_twi_read_packet_async()
  *
  * See \ref freertos_twi_peripheral_control_quick_start
+ *
+ * The following functions are provided for the TWIHS peripheral
+ *
+ * - freertos_twihs_master_init()
+ * - freertos_twihs_write_packet()
+ * - freertos_twihs_write_packet_async()
+ * - freertos_twihs_read_packet()
+ * - freertos_twihs_read_packet_async()
+ *
+ * See \ref freertos_twihs_peripheral_control_quick_start
  *
  * The following functions are provided for the SPI peripheral
  *
@@ -193,7 +203,10 @@ enum peripheral_operation_mode {
 	
 	//! Valid only for the TWI peripheral.
 	TWI_I2C_MASTER,
-	
+
+	//! Valid only for the TWIHS peripheral.
+	TWIHS_I2C_MASTER,
+
 	//! No other values can be used.
 	NOT_SUPPORTED
 };
