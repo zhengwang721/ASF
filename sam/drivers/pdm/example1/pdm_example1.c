@@ -149,16 +149,16 @@ static void init_pdm(void)
 	conf.conver_data_size = PDMIC_CONVERTED_DATA_SIZE_16;
 	
 	/* Initialize PDMIC0 with configuration */
-	pdm_init(&pdm, PDMIC0, &conf);	
-	
-	/* Mux PDM pins */
-	ioport_set_pin_peripheral_mode(CONF_PDM_CLK_GPIO, CONF_PDM_CLK_FLAGS);
-	ioport_set_pin_peripheral_mode(CONF_PDM_DAT_GPIO, CONF_PDM_DAT_FLAGS);
-
+	pdm_init(&pdm, PDMIC0, &conf);
 }
 
 int main (void)
 {
+
+	/* Initialize the SAM system */
+	sysclk_init();
+	board_init();
+
 	/* Configure PDM module*/
 	init_pdm();
 	/* Configure PDC */
