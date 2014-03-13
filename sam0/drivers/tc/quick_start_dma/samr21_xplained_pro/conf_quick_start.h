@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief TC Quick Start configuration for SAM D21 Xplained Pro
+ * \brief TC Quick Start configuration for SAM R21 Xplained Pro
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -54,7 +54,7 @@
 //! [definition_pwm]
 
 //! [definition_dma]
-#define M2M_DMAC_TRIGGER_ID TC6_DMAC_ID_MC_0
+#define M2M_DMAC_TRIGGER_ID TC3_DMAC_ID_MC_0
 //! [definition_dma]
 
 #endif /* CONF_QUICK_START_H_INCLUDED */

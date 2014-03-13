@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TC Quick Start configuration for SAM D21 Xplained Pro
+ * \brief SAM R21 Direct Memory Access Driver Configuration Header
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,21 +40,9 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_DMA_H_INCLUDED
+#define CONF_DMA_H_INCLUDED
 
-#ifndef CONF_QUICK_START_H_INCLUDED
-#define CONF_QUICK_START_H_INCLUDED
+#  define CONF_MAX_USED_CHANNEL_NUM     1
 
-//! [definition_pwm]
-/** PWM module to use */
-#define PWM_MODULE      EXT1_PWM_MODULE
-/** PWM output pin */
-#define PWM_OUT_PIN     EXT1_PWM_0_PIN
-/** PWM output pin mux */
-#define PWM_OUT_MUX     EXT1_PWM_0_MUX
-//! [definition_pwm]
-
-//! [definition_dma]
-#define M2M_DMAC_TRIGGER_ID TC6_DMAC_ID_MC_0
-//! [definition_dma]
-
-#endif /* CONF_QUICK_START_H_INCLUDED */
+#endif
