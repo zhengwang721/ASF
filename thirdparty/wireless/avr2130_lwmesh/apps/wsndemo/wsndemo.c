@@ -100,17 +100,17 @@
 #define APP_CAPTION_SIZE  (sizeof(APP_CAPTION) - 1)
 
 #if LED_COUNT>2
-#define LED_NETWORK       LED0
-#define LED_DATA          LED1
-#define LED_BLINK         LED2  
+#define LED_NETWORK       LED0_GPIO
+#define LED_DATA          LED1_GPIO
+#define LED_BLINK         LED2_GPIO 
 #elif LED_COUNT==2
-#define LED_NETWORK       LED0
-#define LED_DATA          LED1
-#define LED_BLINK         LED1
+#define LED_NETWORK       LED0_GPIO
+#define LED_DATA          LED1_GPIO
+#define LED_BLINK         LED1_GPIO
 #elif LED_COUNT==1
-#define LED_NETWORK       LED0
-#define LED_DATA          LED0
-#define LED_BLINK         LED0
+#define LED_NETWORK       LED0_GPIO
+#define LED_DATA          LED0_GPIO
+#define LED_BLINK         LED0_GPIO
 #endif
 
 /*- Types ------------------------------------------------------------------*/
