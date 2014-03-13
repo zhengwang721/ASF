@@ -103,17 +103,17 @@
 #endif
 
 #if (LED_COUNT >= 3)
-#define STATUS_LED              LED0
-#define TX_LED                  LED1
-#define RX_LED                  LED2
+#define STATUS_LED              LED0_GPIO
+#define TX_LED                  LED1_GPIO
+#define RX_LED                  LED2_GPIO
 #elif (LED_COUNT >= 2)
-#define STATUS_LED              LED0
-#define TX_LED                  LED0
-#define RX_LED                  LED1
+#define STATUS_LED              LED0_GPIO
+#define TX_LED                  LED0_GPIO
+#define RX_LED                  LED1_GPIO
 #elif (LED_COUNT == 1)
-#define STATUS_LED              LED0
-#define TX_LED                  LED0
-#define RX_LED                  LED0
+#define STATUS_LED              LED0_GPIO
+#define TX_LED                  LED0_GPIO
+#define RX_LED                  LED0_GPIO
 #endif
 
 /* Macro to enable the feature of counting wrong CRC packets */

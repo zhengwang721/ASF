@@ -9,6 +9,7 @@
 		<build type="header-file" value="conf_clock.h"/>
 		<build type="header-file" value="conf_sio2host.h"/>
 		<build type="header-file" value="conf_hw_timer.h"/>
+		
 
 		<config name="config.thirdparty.wireless.addons.sio2host" value="usb-ftdi"/>
 		

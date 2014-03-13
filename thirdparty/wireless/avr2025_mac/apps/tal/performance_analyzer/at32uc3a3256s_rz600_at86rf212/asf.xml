@@ -13,6 +13,7 @@
 		<build type="header-file" value="conf_hw_timer.h"/>
 		<build type="header-file" value="conf_usb.h"/>
 		<build type="header-file" value="conf_sio2host.h"/>
+		<build type="header-file" value="conf_trx_access.h"/>
 
 		<config name="config.thirdparty.wireless.addons.sio2host" value="usb"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="at86rf212"/>
