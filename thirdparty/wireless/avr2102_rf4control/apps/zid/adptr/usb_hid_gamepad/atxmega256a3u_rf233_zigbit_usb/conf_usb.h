@@ -66,7 +66,7 @@
 
 //! USB Device string definitions (Optional)
 #define  USB_DEVICE_MANUFACTURE_NAME      "ATMEL ASF"
-#define  USB_DEVICE_PRODUCT_NAME          "HID Mouse, keyboard"
+#define  USB_DEVICE_PRODUCT_NAME          "HID Gamepad"
 #define  USB_DEVICE_SERIAL_NAME           "123123123123" // Disk SN for MSC
 
 /**
@@ -122,7 +122,7 @@
 // (2 | USB_EP_DIR_OUT) // MSC OUT
 // (3 | USB_EP_DIR_IN)  // HID mouse report
 // (4 | USB_EP_DIR_IN)  // HID keyboard report
-#define  USB_DEVICE_MAX_EP             2
+#define  USB_DEVICE_MAX_EP             1
 #  if SAM3XA && defined(USB_DEVICE_HS_SUPPORT)
 // In HS mode, size of bulk endpoints are 512
 // If CDC and MSC endpoints all uses 2 banks, DPRAM is not enough: 4 bulk
@@ -139,44 +139,13 @@
  * USB Interface Configuration
  * @{
  */
-
-
-
-
-
-
-/**
- * Configuration of HID Mouse interface
- * @{
- */
-//! Interface callback definition
-#define  UDI_HID_MOUSE_ENABLE_EXT()       main_mouse_enable()
-#define  UDI_HID_MOUSE_DISABLE_EXT()      main_mouse_disable()
-
-//! Enable id string of interface to add an extra USB string
-//#define  UDI_HID_MOUSE_STRING_ID          0
-
-/**
- * USB HID Mouse low level configuration
- * In standalone these configurations are defined by the HID Mouse module.
- * For composite device, these configuration must be defined here
- * @{
- */
-//! Endpoint numbers definition
-#define  UDI_HID_MOUSE_EP_IN           (1 | USB_EP_DIR_IN)
-
-//! Interface number
-#define  UDI_HID_MOUSE_IFACE_NUMBER    0
-//@}
-//@}
-
 /**
  * Configuration of HID Keyboard interface
  * @{
  */
 //! Interface callback definition
-#define  UDI_HID_GPD_ENABLE_EXT()       main_kbd_enable()
-#define  UDI_HID_GPD_DISABLE_EXT()      main_kbd_disable()
+#define  UDI_HID_GPD_ENABLE_EXT()      main_kbd_enable()
+#define  UDI_HID_GPD_DISABLE_EXT()     main_kbd_disable()
 #define  UDI_HID_GPD_CHANGE_LED(value)  
 
 //! Enable id string of interface to add an extra USB string
@@ -189,10 +158,10 @@
  * @{
  */
 //! Endpoint numbers definition
-#define  UDI_HID_GPD_EP_IN           (2 | USB_EP_DIR_IN)
+#define  UDI_HID_GPD_EP_IN           (1 | USB_EP_DIR_IN)
 
 //! Interface number
-#define  UDI_HID_GPD_IFACE_NUMBER    1
+#define  UDI_HID_GPD_IFACE_NUMBER    0
 //@}
 //@}
 
@@ -205,11 +174,11 @@
  */
 //! USB Interfaces descriptor structure
 #define	UDI_COMPOSITE_DESC_T \
-		udi_hid_gpd_desc_t   udi_hid_gpd
+	udi_hid_gpd_desc_t   udi_hid_gpd
 
 //! USB Interfaces descriptor value for Full Speed
 #define UDI_COMPOSITE_DESC_FS \
-	   .udi_hid_gpd   = UDI_HID_GPD_DESC
+	.udi_hid_gpd   = UDI_HID_GPD_DESC
 
 //! USB Interfaces descriptor value for High Speed
 #define UDI_COMPOSITE_DESC_HS \
@@ -221,7 +190,7 @@
 //@}
 
 
-/**o
+/**
  * USB Device Driver Configuration
  * @{
  */
@@ -230,6 +199,7 @@
 //! The includes of classes and other headers must be done at the end of this file to avoid compile error
 //#include "udi_cdc.h"
 //#include "udi_msc.h"
+//#include "udi_hid_mouse.h"
 #include "udi_hid_kbd.h"
 #include "app_config.h"
 
