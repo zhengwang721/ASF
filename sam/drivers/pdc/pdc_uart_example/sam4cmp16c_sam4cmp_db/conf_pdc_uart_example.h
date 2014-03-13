@@ -50,12 +50,4 @@
 /* Configuration for console uart IRQ handler */
 #define console_uart_irq_handler    UART0_Handler
 
-/** UART Interface ID*/
-#undef CONSOLE_UART_ID
-#define CONSOLE_UART_ID      ID_UART0
-
-/** UART Interface */
-#undef CONSOLE_UART
-#define CONSOLE_UART         UART0
-
 #endif /* CONF_PDC_UART_EXAMPLE_H_INCLUDED */
