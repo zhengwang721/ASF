@@ -69,16 +69,14 @@ static void _spi_master_vec_int_handler(uint8_t sercom_index);
  */
 static inline void _spi_master_vec_wait_for_sync(SercomSpi *const sercom_spi)
 {
-#if (REV_SERCOM >= 0x200)
-	while (sercom_spi->SYNCBUSY.reg) {
-		/* Intentionally left empty */
-	}
-#elif (REV_SERCOM == 0x101)
+#if defined(FEATURE_SERCOM_SYNCBUSY_SCHEME_VERSION_1)
 	while (sercom_spi->STATUS.reg & SERCOM_SPI_STATUS_SYNCBUSY) {
 		/* Intentionally left empty */
 	}
-#else
-#  error Unknown revision of SERCOM
+#elif defined(FEATURE_SERCOM_SYNCBUSY_SCHEME_VERSION_2)
+	while (sercom_spi->SYNCBUSY.reg) {
+		/* Intentionally left empty */
+	}
 #endif
 }
 
