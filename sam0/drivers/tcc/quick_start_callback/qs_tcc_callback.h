@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D2x TCC - Timer Counter for Control Applications Callback Driver Quick Start
+ * \brief SAM D21 TCC - Timer Counter for Control Applications Callback Driver Quick Start
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -51,11 +51,11 @@
  * varying duty cycle. Here the pulse width is increased each time the timer
  * count matches the set compare value.
  * When connect PWM output to LED it makes the LED vary its light. To see the
- * waveform, you may need an ossiliscope.
+ * waveform, you may need an oscilloscope.
  *
  * The PWM output is set up as follows:
  * <table>
- *  <tr><th> board        </td><th> pin  </td><th> connect to </td></tr>
+ *  <tr><th> Board        </td><th> Pin  </td><th> Connect to </td></tr>
  *  <tr><td> SAMD21 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
  * </table>
  *
@@ -66,7 +66,7 @@
  * - Single Slope PWM wave generation
  * - GCLK reload action
  * - Don't run in standby
- * - No faults or waveform extentions
+ * - No faults or waveform extensions
  * - No inversion of waveform output
  * - No capture enabled
  * - Count upward

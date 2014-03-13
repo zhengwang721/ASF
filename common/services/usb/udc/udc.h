@@ -132,7 +132,7 @@ extern "C" {
  * The VBus monitoring is used only for USB SELF Power application.
  *
  * - By default the USB device is automatically attached when Vbus is high
- * or when USB is start for devices without internal Vbus monitoring. 
+ * or when USB is start for devices without internal Vbus monitoring.
  * conf_usb.h file does not contains define USB_DEVICE_ATTACH_AUTO_DISABLE.
  * \code //#define USB_DEVICE_ATTACH_AUTO_DISABLE \endcode
  *
@@ -153,7 +153,7 @@ extern "C" {
 \endcode
  *
  * - Case of battery charging. conf_usb.h file contains define
- * USB_DEVICE_ATTACH_AUTO_DISABLE:    
+ * USB_DEVICE_ATTACH_AUTO_DISABLE:
  * \code #define USB_DEVICE_ATTACH_AUTO_DISABLE \endcode
  * User C file contains:
  * \code  
@@ -263,7 +263,8 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  * Common prerequisites for all USB devices.
  *
  * This module is based on USB device stack full interrupt driven, and supporting
- * \ref sleepmgr_group sleepmgr and \ref clk_group clock services.
+ * \ref sleepmgr_group sleepmgr. For AVR and SAM3/4 devices the \ref clk_group clock services
+ * is supported. For SAMD devices the \ref asfdoc_sam0_system_clock_group clock driver is supported.
  *
  * The following procedure must be executed to setup the project correctly:
  * - Specify the clock configuration:
@@ -271,11 +272,13 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  *     XMEGA USB devices need CPU frequency higher than 12MHz.\n
  *     You can use either an internal RC48MHz auto calibrated by Start of Frames
  *     or an external OSC.
- *   - UC3 and SAM devices without USB high speed support need 48MHz clock input.\n
+ *   - UC3 and SAM3/4 devices without USB high speed support need 48MHz clock input.\n
  *     You must use a PLL and an external OSC.
- *   - UC3 and SAM devices with USB high speed support need 12MHz clock input.\n
+ *   - UC3 and SAM3/4 devices with USB high speed support need 12MHz clock input.\n
  *     You must use an external OSC.
  *   - UC3 devices with USBC hardware need CPU frequency higher than 25MHz.
+ *   - SAMD devices without USB high speed support need 48MHz clock input.\n
+ *     You should use DFLL with USBCRM.
  * - In conf_board.h, the define CONF_BOARD_USB_PORT must be added to enable USB lines.
  * (Not mandatory for all boards)
  * - Enable interrupts
@@ -288,12 +291,20 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  *
  * \subpage udc_conf_clock.
  *
- * Add to the initialization code:
+ * for AVR and SAM3/4 devices, add to the initialization code:
  * \code
 	sysclk_init();
 	irq_initialize_vectors();
 	cpu_irq_enable();
 	board_init();
+	sleepmgr_init(); // Optional
+\endcode
+ *
+ * For SAMD devices, add to the initialization code:
+ * \code
+	system_init();
+	irq_initialize_vectors();
+	cpu_irq_enable();
 	sleepmgr_init(); // Optional
 \endcode
  * Add to the main IDLE loop:
@@ -408,17 +419,40 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
 	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL1
 	#define CONFIG_USBCLK_DIV           2
 \endcode
- * 
+ *
  * Content of conf_clock.h for SAM3U device (UPDHS: USB Peripheral Device High Speed):
  * \code
 	// USB Clock Source fixed at UPLL.
 \endcode
- * 
+ *
  * Content of conf_clock.h for SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed):
  * \code
 	// USB Clock Source fixed at UPLL.
 	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_UPLL
 	#define CONFIG_USBCLK_DIV           1
+\endcode
+ *
+ * Content of conf_clocks.h for SAMD devices (USB):
+ * \code
+	// System clock bus configuration
+	#  define CONF_CLOCK_FLASH_WAIT_STATES            2
+
+	// USB Clock Source fixed at DFLL.
+	// SYSTEM_CLOCK_SOURCE_DFLL configuration - Digital Frequency Locked Loop
+	#  define CONF_CLOCK_DFLL_ENABLE                  true
+	#  define CONF_CLOCK_DFLL_LOOP_MODE               SYSTEM_CLOCK_DFLL_LOOP_MODE_USB_RECOVERY
+	#  define CONF_CLOCK_DFLL_ON_DEMAND               true
+
+	// Set this to true to configure the GCLK when running clocks_init. 
+	// If set to false, none of the GCLK generators will be configured in clocks_init().
+	#  define CONF_CLOCK_CONFIGURE_GCLK               true
+
+	// Configure GCLK generator 0 (Main Clock)
+	#  define CONF_CLOCK_GCLK_0_ENABLE                true
+	#  define CONF_CLOCK_GCLK_0_RUN_IN_STANDBY        true
+	#  define CONF_CLOCK_GCLK_0_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_DFLL
+	#  define CONF_CLOCK_GCLK_0_PRESCALER             1
+	#  define CONF_CLOCK_GCLK_0_OUTPUT_ENABLE         false
 \endcode
  */
 
@@ -429,7 +463,7 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  *
  * \section udc_use_case_1_setup Setup steps
  *
- * Prior to implement this use case, be sure to have already 
+ * Prior to implement this use case, be sure to have already
  * apply the UDI module "basic use case".
  *
  * \section udc_use_case_1_usage Usage steps
@@ -473,7 +507,7 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  * In this use case, the usual USB strings is added in the USB device.
  *
  * \section udc_use_case_2_setup Setup steps
- * Prior to implement this use case, be sure to have already 
+ * Prior to implement this use case, be sure to have already
  * apply the UDI module "basic use case".
  *
  * \section udc_use_case_2_usage Usage steps
@@ -503,7 +537,7 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  * In this use case, the USB remote wakeup feature is enabled.
  *
  * \section udc_use_case_3_setup Setup steps
- * Prior to implement this use case, be sure to have already 
+ * Prior to implement this use case, be sure to have already
  * apply the UDI module "basic use case".
  *
  * \section udc_use_case_3_usage Usage steps
@@ -558,7 +592,7 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  * This feature requires a correct power consumption management.
  *
  * \section udc_use_case_5_setup Setup steps
- * Prior to implement this use case, be sure to have already 
+ * Prior to implement this use case, be sure to have already
  * apply the UDI module "basic use case".
  *
  * \section udc_use_case_5_usage Usage steps
@@ -609,7 +643,7 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  * For a static serial string refer to \ref udc_use_case_2.
  *
  * \section udc_use_case_6_setup Setup steps
- * Prior to implement this use case, be sure to have already 
+ * Prior to implement this use case, be sure to have already
  * apply the UDI module "basic use case".
  *
  * \section udc_use_case_6_usage Usage steps

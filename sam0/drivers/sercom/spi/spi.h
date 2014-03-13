@@ -1049,6 +1049,10 @@ void spi_reset(
 
 /** @} */
 
+enum status_code spi_set_baudrate(
+		struct spi_module *const module,
+		uint32_t baudrate);
+
 /**
  * \name Lock/Unlock
  * @{
