@@ -82,6 +82,13 @@
 
 #include <asf.h>
 
+/** Define CMCC Base */
+#if SAM4C
+#define CMCC_BASE    CMCC0
+#else
+#define CMCC_BASE    CMCC
+#endif
+
 /** Fibonacci number */
 #define FIBONACCI_NUM    30
 
@@ -143,22 +150,14 @@ int main(void)
 
 	/* Enable the CMCC module. */
 	cmcc_get_config_defaults(&g_cmcc_cfg);
-#if !SAM4C
-	cmcc_init(CMCC, &g_cmcc_cfg);
-	cmcc_enable(CMCC);
-#else
-	cmcc_init(CMCC0, &g_cmcc_cfg);
-	cmcc_enable(CMCC0);
-#endif
+	cmcc_init(CMCC_BASE, &g_cmcc_cfg);
+	cmcc_enable(CMCC_BASE);
 
 	/* Do the Fibonacci calculation. */
 	recfibo(FIBONACCI_NUM);
 	printf("Fibonacci calculation completed \r\n");
-#if !SAM4C
-	printf("Cache Data hit: %ul \r\n", cmcc_get_monitor_cnt(CMCC));
-#else
-	printf("Cache Data hit: %ul \r\n", cmcc_get_monitor_cnt(CMCC0));
-#endif
+	printf("Cache Data hit: %ld \r\n", cmcc_get_monitor_cnt(CMCC_BASE));
+
 	while (true) {
 	}
 }

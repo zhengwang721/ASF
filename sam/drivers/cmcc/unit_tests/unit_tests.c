@@ -72,6 +72,13 @@
  * Support and FAQ: http://support.atmel.no/
  */
 
+/** Define CMCC Base */
+#if SAM4C
+#define CMCC_BASE    CMCC0
+#else
+#define CMCC_BASE    CMCC
+#endif
+
 #define FIBONACCI_NUM    30
 
 /** CMCC configuration */
@@ -103,11 +110,7 @@ static uint32_t recfibo(uint32_t n)
 static void run_cache_data_hit_test(const struct test_case *test)
 {
 	recfibo(FIBONACCI_NUM);
-#if !SAM4C
-	if (0 == cmcc_get_monitor_cnt(CMCC)) {
-#else
-	if (0 == cmcc_get_monitor_cnt(CMCC0)) { 
-#endif 
+	if (0 == cmcc_get_monitor_cnt(CMCC_BASE)) {
 		flag = false;
 	} else {
 		flag = true;
@@ -132,13 +135,9 @@ int main(void)
 
 	/* Enable the CMCC module. */
 	cmcc_get_config_defaults(&g_cmcc_cfg);
-#if !SAM4C
-	cmcc_init(CMCC, &g_cmcc_cfg);
-	cmcc_enable(CMCC);
-#else
-	cmcc_init(CMCC0, &g_cmcc_cfg);
-	cmcc_enable(CMCC0);
-#endif
+	cmcc_init(CMCC_BASE, &g_cmcc_cfg);
+	cmcc_enable(CMCC_BASE);
+
 	/* Define all the test cases. */
 	DEFINE_TEST_CASE(dhit_mode_test, NULL, run_cache_data_hit_test, NULL,
 			"SAM CMCC Data Hit Mode test.");
