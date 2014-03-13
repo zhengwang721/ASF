@@ -45,8 +45,6 @@
 
 #define CONF_BOARD_ENABLE_USARTD0
 #define CONF_BOARD_AT86RFX
-
-#define IC_TYPE             (0x00)
 #define BOARD_NAME          "REB233SMAD-EK"
 
 

@@ -44,7 +44,6 @@
 #define CONF_BOARD_H
 #define ZIGBIT_EXT
 
-#define IC_TYPE             (0x01)
 
 #define CONF_BOARD_ENABLE_USARTA1
 

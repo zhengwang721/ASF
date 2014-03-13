@@ -44,7 +44,5 @@
 #define CONF_BOARD_H
 #define ZIGBIT_EXT
 
-#define IC_TYPE             (0x01)
-
 
 #endif /* CONF_BOARD_H */

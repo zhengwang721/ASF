@@ -27,6 +27,7 @@
 		<build type="header-file"   value="inc/tal_tx.h"/>
 		<build type="include-path"  value="inc/"/>
 		<build type="doxygen-entry-point" value="tal.atmegarfa1_group"/>
+		<build type="define"   name="HIGH_DATA_RATE_SUPPORT"              value=""/>
 		<build type="define" name="TAL_TYPE" value ="ATMEGARFA1"/>
 		<device-support value="atmega128rfa1"/>
 	</module>

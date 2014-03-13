@@ -1,7 +1,7 @@
 /**
- * \file main.c
+ * \file
  *
- * \brief  Main of TAL Examples - Performance_Analyzer application
+ * \brief  Main of Performance_Analyzer application
  *
  * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -57,13 +57,17 @@
 #include "app_per_mode.h"
 #include "app_range_mode.h"
 #include "perf_api_serial_handler.h"
+#include "app_config.h"
 #if SAMD20
 #include "system.h"
 #else
+#if (LED_COUNT > 0)
 #include "led.h"
+#endif /* (LED_COUNT > 0) */
 #endif
 #include "sio2host.h"
 #include "conf_board.h"
+# include "performance_main.h"
 
 /**
  * \mainpage
@@ -87,7 +91,7 @@
 /**
  * \page overview Overview
  * \section intro Introduction
- * This  application Performance Analyzer is a serial interface based
+ * This Application Performance Analyzer is a serial interface based
  * application,
  * which communicates with Performance Analyzer to demonstrate various features
  * and
@@ -227,7 +231,7 @@
  * shall come to the normal mode where the nodes can be kept far.
  *
  * \page main_files Application Files
- * - main.c\n                      Application main file.
+ * - main.c\n                     Application main file.
  * - init_state.c\n                Initialization functions and utilities of
  * Performance Analyzer application.
  * - peer_search_initiator.c\n     Handles Initiator functionalities in Peer
@@ -428,21 +432,8 @@ volatile node_ib_t node_info;
  * \brief Main function of the Performance Analyzer application
  * \ingroup group_app_init
  */
-int main(void)
+void performance_analyzer_main(void)
 {
-	irq_initialize_vectors();
-#if SAMD20
-	system_init();
-	delay_init();
-#else
-	sysclk_init();
-
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
-	board_init();    
-#endif
 
 	sio2host_init();
 	/*
