@@ -103,7 +103,7 @@
  * with the standard, this should be no greater than than 50% of the total
  * period.
  */
-#define CLASSB_WDT_PER  WDT_PER_500CLK_gc
+#define CLASSB_WDT_PER  WDT_PER_512CLK_gc
 
 /**
  * \brief Closed period, during which WDT cannot be reset.
