@@ -333,10 +333,10 @@ static inline bool i2c_master_is_syncing (
 
 	SercomI2cm *const i2c_hw = &(module->hw->I2CM);
 
-#ifdef FEATURE_I2C_SYNC_SCHEME_VERSION_2
-	return (i2c_hw->SYNCBUSY.reg & SERCOM_I2CM_SYNCBUSY_MASK);
-#else
+#if defined(FEATURE_SERCOM_SYNCBUSY_SCHEME_VERSION_1)
 	return (i2c_hw->STATUS.reg & SERCOM_I2CM_STATUS_SYNCBUSY);
+#elif defined(FEATURE_SERCOM_SYNCBUSY_SCHEME_VERSION_2)
+	return (i2c_hw->SYNCBUSY.reg & SERCOM_I2CM_SYNCBUSY_MASK);
 #endif
 }
 
