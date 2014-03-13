@@ -53,8 +53,8 @@ extern "C" {
 /**INDENT-ON**/
 /* @endcond */
 
-/* Clock Settings (48MHz) */
-#define SYS_BOARD_PLLAR     (CKGR_PLLAR_MULA(0x5dcU) \
+/* Clock Settings (96MHz) */
+#define SYS_BOARD_PLLAR     (CKGR_PLLAR_MULA(0xbb8U) \
 							| CKGR_PLLAR_PLLACOUNT(0x3fU) \
 							| CKGR_PLLAR_PLLAEN(0x1U))
 #define SYS_BOARD_MCKR      (PMC_MCKR_PRES_CLK_1 | PMC_MCKR_CSS_PLLA_CLK)
@@ -150,8 +150,18 @@ void system_init_flash(uint32_t ul_clk)
 		EFC0->EEFC_FMR = EEFC_FMR_FWS(1)|EEFC_FMR_CLOE;
 	} else if (ul_clk < CHIP_FREQ_FWS_2) {
 		EFC0->EEFC_FMR = EEFC_FMR_FWS(2)|EEFC_FMR_CLOE;
-	} else {
+	} else if (ul_clk < CHIP_FREQ_FWS_3) {
 		EFC0->EEFC_FMR = EEFC_FMR_FWS(3)|EEFC_FMR_CLOE;
+	} else if (ul_clk < CHIP_FREQ_FWS_4) {
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(4)|EEFC_FMR_CLOE;
+	} else if (ul_clk < CHIP_FREQ_FWS_5) {
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(5)|EEFC_FMR_CLOE;
+	} else if (ul_clk < CHIP_FREQ_FWS_6) {
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(6)|EEFC_FMR_CLOE;
+	} else if (ul_clk < CHIP_FREQ_FWS_7) {
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(7)|EEFC_FMR_CLOE;
+	} else {
+		EFC0->EEFC_FMR = EEFC_FMR_FWS(8)|EEFC_FMR_CLOE;
 	}
 }
 

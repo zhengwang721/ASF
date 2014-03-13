@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWIHS Slave Mode management
+ * \brief TWIHS Master driver for SAM.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,52 +40,33 @@
  * \asf_license_stop
  *
  */
-#ifndef TWIHS_SLAVE_H_INCLUDED
-#define TWIHS_SLAVE_H_INCLUDED
 
-#include <parts.h>
-#include <compiler.h>
+#ifndef _TWIHS_MASTER_H_
+#define _TWIHS_MASTER_H_
 
-#if (SAMG)
-# include "sam_twihs/twihs_slave.h"
-#else
-# error Unsupported chip type
-#endif
+#include "twihs.h"
+#include "sysclk.h"
 
-/**
- *
- * \defgroup twihs_group Two Wire-interface High Speed(TWIHS)
- *
- * This is the common API for TWIHs. Additional features are available
- * in the documentation of the specific modules.
- *
- * \section twihs_group_platform Platform Dependencies
- *
- * The twihs API is partially chip- or platform-specific. While all
- * platforms provide mostly the same functionality, there are some
- * variations around how different bus types and clock tree structures
- * are handled.
- *
- * The following functions are available on all platforms, but there may
- * be variations in the function signature (i.e. parameters) and
- * behaviour. These functions are typically called by platform-specific
- * parts of drivers, and applications that aren't intended to be
- * portable:
- *   - twihs_slave_setup()
- *   - twihs_slave_enable()
- *   - twihs_slave_disable()
- *   - twihs_slave_read()
- *   - twihs_slave_write()
- *
- * @{
- */
+typedef Twihs *twihs_master_t;
+typedef twihs_options_t twihs_master_options_t;
+typedef twihs_packet_t twihs_package_t;
 
-/**
- * \typedef twihs_slave_t
- * This type can be used independently to refer to TWIHS slave module for the
- * architecture used.
- */
+static inline uint32_t twihs_master_setup(twihs_master_t p_twihs,
+		twihs_master_options_t *p_opt)
+{
+	p_opt->master_clk = sysclk_get_cpu_hz();
+	p_opt->smbus      = 0;
 
-//! @}
+	if (p_twihs == TWI0) {
+		sysclk_enable_peripheral_clock(ID_TWI0);
+	} else {
+		// Do Nothing
+	}
 
-#endif /* TWIHS_SLAVE_H_INCLUDED */
+	return (twihs_master_init(p_twihs, p_opt));
+}
+
+#define twihs_master_enable(p_twihs)   twihs_enable_master_mode(p_twihs)
+#define twihs_master_disable(p_twihs)  twihs_disable_master_mode(p_twihs)
+
+#endif // _TWIHS_MASTER_H_

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWIHS Slave Mode management
+ * \brief Board configuration.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,52 +40,17 @@
  * \asf_license_stop
  *
  */
-#ifndef TWIHS_SLAVE_H_INCLUDED
-#define TWIHS_SLAVE_H_INCLUDED
 
-#include <parts.h>
-#include <compiler.h>
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#if (SAMG)
-# include "sam_twihs/twihs_slave.h"
-#else
-# error Unsupported chip type
-#endif
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-/**
- *
- * \defgroup twihs_group Two Wire-interface High Speed(TWIHS)
- *
- * This is the common API for TWIHs. Additional features are available
- * in the documentation of the specific modules.
- *
- * \section twihs_group_platform Platform Dependencies
- *
- * The twihs API is partially chip- or platform-specific. While all
- * platforms provide mostly the same functionality, there are some
- * variations around how different bus types and clock tree structures
- * are handled.
- *
- * The following functions are available on all platforms, but there may
- * be variations in the function signature (i.e. parameters) and
- * behaviour. These functions are typically called by platform-specific
- * parts of drivers, and applications that aren't intended to be
- * portable:
- *   - twihs_slave_setup()
- *   - twihs_slave_enable()
- *   - twihs_slave_disable()
- *   - twihs_slave_read()
- *   - twihs_slave_write()
- *
- * @{
- */
+/** Enable SD MMC interface pins through SPI */
+#define CONF_BOARD_SD_MMC_SPI
 
-/**
- * \typedef twihs_slave_t
- * This type can be used independently to refer to TWIHS slave module for the
- * architecture used.
- */
+/** SPI slave select MACRO definition */
+#define CONF_BOARD_SPI_NPCS0
 
-//! @}
-
-#endif /* TWIHS_SLAVE_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

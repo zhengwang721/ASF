@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWIHS Slave Mode management
+ * \brief USART Serial Configuration
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,52 +40,10 @@
  * \asf_license_stop
  *
  */
-#ifndef TWIHS_SLAVE_H_INCLUDED
-#define TWIHS_SLAVE_H_INCLUDED
 
-#include <parts.h>
-#include <compiler.h>
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-#if (SAMG)
-# include "sam_twihs/twihs_slave.h"
-#else
-# error Unsupported chip type
-#endif
+/* Intentionally empty */
 
-/**
- *
- * \defgroup twihs_group Two Wire-interface High Speed(TWIHS)
- *
- * This is the common API for TWIHs. Additional features are available
- * in the documentation of the specific modules.
- *
- * \section twihs_group_platform Platform Dependencies
- *
- * The twihs API is partially chip- or platform-specific. While all
- * platforms provide mostly the same functionality, there are some
- * variations around how different bus types and clock tree structures
- * are handled.
- *
- * The following functions are available on all platforms, but there may
- * be variations in the function signature (i.e. parameters) and
- * behaviour. These functions are typically called by platform-specific
- * parts of drivers, and applications that aren't intended to be
- * portable:
- *   - twihs_slave_setup()
- *   - twihs_slave_enable()
- *   - twihs_slave_disable()
- *   - twihs_slave_read()
- *   - twihs_slave_write()
- *
- * @{
- */
-
-/**
- * \typedef twihs_slave_t
- * This type can be used independently to refer to TWIHS slave module for the
- * architecture used.
- */
-
-//! @}
-
-#endif /* TWIHS_SLAVE_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */
