@@ -361,6 +361,7 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4l"/>
 			<device-support value="samd21"/>
+			<device-support value="samr21"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.host#mass_storage" caption="USB Host Mass Storage Class">
@@ -379,6 +380,7 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4l"/>
 			<device-support value="samd21"/>
+			<device-support value="samr21"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.host#multiple_classes" caption="USB Host Multiple classes">
@@ -399,6 +401,7 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4l"/>
 			<device-support value="samd21"/>
+			<device-support value="samr21"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.host#hid_mouse" caption="USB Host HID mouse">
@@ -417,6 +420,7 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4l"/>
 			<device-support value="samd21"/>
+			<device-support value="samr21"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.host#vendor" caption="USB Host Vendor">
@@ -435,6 +439,7 @@
 			<device-support value="sam3a"/>
 			<device-support value="sam4l"/>
 			<device-support value="samd21"/>
+			<device-support value="samr21"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 	</select-by-config>
