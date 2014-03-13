@@ -44,4 +44,7 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
+/* Enable PDM pins */
+#define CONF_BOARD_PDM
+
 #endif /* CONF_BOARD_H_INCLUDED */
