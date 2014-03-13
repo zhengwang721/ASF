@@ -106,8 +106,8 @@ static inline void pll_config_init(struct pll_config *p_cfg,
 	vco_hz = osc_get_rate(e_src) / ul_div;
 
 	vco_hz *= ul_mul;
-	Assert(vco_hz >= (PLL_OUTPUT_MIN_HZ - (PLL_OUTPUT_MIN_HZ >> 3)));
-	Assert(vco_hz <= (PLL_OUTPUT_MAX_HZ + (PLL_OUTPUT_MAX_HZ >> 3)));
+	Assert(vco_hz >= (PLL_OUTPUT_MIN_HZ - (PLL_OUTPUT_MIN_HZ >> 6)));
+	Assert(vco_hz <= (PLL_OUTPUT_MAX_HZ + (PLL_OUTPUT_MAX_HZ >> 6)));
 
 	/* PMC hardware will automatically make it mul+1 */
 	p_cfg->ctrl = CKGR_PLLAR_MULA(ul_mul - 1) | CKGR_PLLAR_PLLAEN(ul_div) | CKGR_PLLAR_PLLACOUNT(PLL_COUNT);
