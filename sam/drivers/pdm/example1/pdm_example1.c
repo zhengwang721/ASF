@@ -152,7 +152,8 @@ static void init_pdm(void)
 	pdm_init(&pdm, PDMIC0, &conf);	
 	
 	/* Mux PDM pins */
-	pio_set_peripheral(PIOA, PIO_PERIPH_B, PIO_PA10 | PIO_PA9);
+	ioport_set_pin_peripheral_mode(CONF_PDM_CLK_GPIO, CONF_PDM_CLK_FLAGS);
+	ioport_set_pin_peripheral_mode(CONF_PDM_DAT_GPIO, CONF_PDM_DAT_FLAGS);
 
 }
 
