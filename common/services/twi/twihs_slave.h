@@ -56,7 +56,7 @@
  *
  * \defgroup twihs_group Two Wire-interface High Speed(TWIHS)
  *
- * This is the common API for TWIHs. Additional features are available
+ * This is the common API for TWIHS. Additional features are available
  * in the documentation of the specific modules.
  *
  * \section twihs_group_platform Platform Dependencies

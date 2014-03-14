@@ -81,6 +81,8 @@ typedef struct twihs_options {
 	uint32_t speed;
 	//! The desired address.
 	uint8_t chip;
+	//! SMBUS mode (set 1 to use SMBUS quick command, otherwise don't).
+	uint8_t smbus;
 } twihs_options_t;
 
 /**
