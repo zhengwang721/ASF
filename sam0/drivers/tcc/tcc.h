@@ -83,7 +83,7 @@
  * waveforms, the capturing of a periodic waveform's frequency/duty cycle,
  * software timekeeping for periodic operations, waveform extension control,
  * fault detection etc.
- * 
+ *
  * The counter size of the TCC modules can be 16- or 24-bit depending on
  * the TCC instance.
  * Please refer \ref asfdoc_sam0_tc_special_considerations_tcc_d21 for details
@@ -112,7 +112,7 @@
  * - Waveform extension control and fault detection
  * - Interface to the event system, DMAC and the interrupt system
  *
- * The base counter can be configured to either count a prescaled generic 
+ * The base counter can be configured to either count a prescaled generic
  * clock or events from the event system.(TCEx, with event action configured
  * to counting).
  * The counter value can be used by compare/capture channels which can be
@@ -139,13 +139,13 @@
  * are available, to arrange the compare outputs into specific formats.
  * The Output matrix can change the channel output routing, Pattern generation
  * unit can overwrite the output signal line to specific state.
- * The Fault protection feature of the TCC supports recoverable and 
+ * The Fault protection feature of the TCC supports recoverable and
  * non-recoverable faults.
  *
  * \subsection asfdoc_sam0_tcc_module_overview_tc Base Timer/Counter
  *
  * \subsubsection asfdoc_sam0_tcc_module_overview_tc_size Timer/Counter Size
- * Each TCC has a counter size of either 16- or 24-bits. The size of the 
+ * Each TCC has a counter size of either 16- or 24-bits. The size of the
  * counter determines the maximum value it can count to before an overflow
  * occurs.
  * \ref asfdoc_sam0_tcc_count_size_vs_top "The table below" shows the
@@ -200,7 +200,7 @@
  *
  * \subsubsection asfdoc_sam0_tcc_module_overview_tc_ctrl Timer/Counter Control Inputs (Events)
  *
- * The TCC can take several actions on the occurrence of an input event. 
+ * The TCC can take several actions on the occurrence of an input event.
  * The event actions are listed
  * in \ref asfdoc_sam0_tcc_module_event_act "events action settings".
  *
@@ -552,7 +552,7 @@
  *
  * The non-recoverable faults force all the TCC output pins to a pre-defined
  * level (can be forced to 0 or 1). The input control signal of non-recoverable
- * fault is from timer/counter event (TCCx EV0 and TCCx EV1). 
+ * fault is from timer/counter event (TCCx EV0 and TCCx EV1).
  * To enable non-recoverable fault,
  * corresponding TCEx event action must be set to non-recoverable fault action
  * (\ref TCC_EVENT_ACTION_NON_RECOVERABLE_FAULT).
@@ -1493,6 +1493,9 @@ struct tcc_config {
 	/** Structure for configuring TCC output pins */
 	struct tcc_pins_config pins;
 
+	/** When \c true the double buffering is enabled */
+	bool double_buffering;
+
 	/** When \c true the module is enabled during standby */
 	bool run_in_standby;
 };
@@ -1526,6 +1529,9 @@ struct tcc_module {
 	/** Bit mask for callbacks enabled */
 	uint32_t enable_callback_mask;
 #  endif
+
+	/** Double buffering access enabled/disabled */
+	bool double_buffering;
 };
 
 #if !defined(__DOXYGEN__)
@@ -1988,6 +1994,156 @@ void tcc_clear_status(
 
 /** @} */
 
+/**
+ * \name Double Buffering Management
+ * @{
+ */
+
+/**
+ * \brief Enable TCC double buffering
+ *
+ * When double buffering is enabled, following writing values will be buffered:
+ * - PER: through \ref tcc_set_top_value()
+ * - CCx(x is 0~3): through \ref tcc_set_compare_value()
+ * - PATT: through \ref tcc_set_pattern()
+ *
+ * \note The double buffer lock update is not cleared by this function, use
+ * \ref tcc_unlock_double_buffer_update() to enable the updates from buffered
+ * values to using values.
+ *
+ * \param[in] module_inst  Pointer to the TCC software instance struct
+ */
+static inline void tcc_enable_double_buffering(
+		struct tcc_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+
+	module_inst->double_buffering = true;
+}
+
+/**
+ * \brief Disable TCC double buffering and lock buffer update
+ *
+ * \note The double buffering update is auto locked after disable, so when
+ *       double buffering is enabled, \ref tcc_unlock_double_buffer_update()
+ *       must be invoked to unlock update.
+ *
+ * \param[in] module_inst  Pointer to the TCC software instance struct
+ */
+static inline void tcc_disable_double_buffering(
+		struct tcc_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	module_inst->hw->CTRLBSET.reg = TCC_CTRLBSET_LUPD;
+	module_inst->double_buffering = false;
+}
+
+/**
+ * \brief Lock the TCC double buffered registers
+ *
+ * Locks the double buffered registers so they will not be updated through
+ * their buffered values on update conditions.
+ *
+ * \param[in] module_inst  Pointer to the TCC software instance struct
+ *
+ * \retval STATUS_OK           The module was initialized successfully
+ * \retval STATUS_ERR_DENIED   Wrong mode, double buffering is not enabled
+ */
+static inline enum status_code tcc_lock_double_buffer_update(
+		struct tcc_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	if (!module_inst->double_buffering) {
+		return STATUS_ERR_DENIED;
+	}
+	module_inst->hw->CTRLBSET.reg = TCC_CTRLBSET_LUPD;
+	return STATUS_OK;
+}
+
+/**
+ * \brief Unlock the TCC double buffered registers
+ *
+ * Unlock the double buffered registers so they will be updated through
+ * their buffered values on update conditions.
+ *
+ * \param[in] module_inst  Pointer to the TCC software instance struct
+ *
+ * \retval STATUS_OK           The module was initialized successfully
+ * \retval STATUS_ERR_DENIED   Wrong mode, double buffering is not enabled
+ */
+static inline enum status_code tcc_unlock_double_buffer_update(
+		struct tcc_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	if (!module_inst->double_buffering) {
+		return STATUS_ERR_DENIED;
+	}
+	module_inst->hw->CTRLBCLR.reg = TCC_CTRLBCLR_LUPD;
+	return STATUS_OK;
+}
+
+/**
+ * \brief Force the TCC double buffered registers to update once
+ *
+ * \param[in] module_inst  Pointer to the TCC software instance struct
+ *
+ * \retval STATUS_OK           The module was initialized successfully
+ * \retval STATUS_ERR_DENIED   Wrong mode, double buffering is not enabled
+ */
+static inline enum status_code tcc_force_double_buffer_update(
+		struct tcc_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	if (!module_inst->double_buffering) {
+		return STATUS_ERR_DENIED;
+	}
+	/* Get a pointer to the module's hardware instance */
+	Tcc *const tcc_module = module_inst->hw;
+	uint32_t last_cmd;
+
+	/* Wait until last command is done */
+	do {
+		while (tcc_module->SYNCBUSY.bit.CTRLB) {
+			/* Wait for sync */
+		}
+		last_cmd = tcc_module->CTRLBSET.reg & TCC_CTRLBSET_CMD_Msk;
+		if (TCC_CTRLBSET_CMD_NONE == last_cmd) {
+			break;
+		} else if (TCC_CTRLBSET_CMD_UPDATE == last_cmd) {
+			/* Command have been issued */
+			return STATUS_OK;
+		}
+	} while (1);
+
+	/* Write command to execute */
+	tcc_module->CTRLBSET.reg = TCC_CTRLBSET_CMD_UPDATE;
+	return STATUS_OK;
+}
+
+enum status_code tcc_set_circular_of_compare_values(
+		struct tcc_module *const module_inst,
+		enum tcc_match_capture_channel channel_index,
+		bool enable_circular);
+
+enum status_code tcc_set_circular_of_top_values(
+		struct tcc_module *const module_inst,
+		bool enable_circular);
+
+/** @} */
+
 /** @} */
 
 #ifdef __cplusplus
@@ -2049,6 +2205,12 @@ void tcc_clear_status(
  *      <th>Changelog</th>
  *  </tr>
  *  <tr>
+ *      <td>Add double buffering functionality</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Add fault handling functionality</td>
+ *  </tr>
+ *  <tr>
  *      <td>Initial Release</td>
  *  </tr>
  * </table>
@@ -2064,10 +2226,13 @@ void tcc_clear_status(
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_tcc_basic_use_case
+ *  - \subpage asfdoc_sam0_tcc_buffering_use_case
  * \if TCC_CALLBACK_MODE
+ *  - \subpage asfdoc_sam0_tcc_timer_use_case
  *  - \subpage asfdoc_sam0_tcc_callback_use_case
  *  - \subpage asfdoc_sam0_tcc_faultx_use_case
  *  - \subpage asfdoc_sam0_tcc_faultn_use_case
+ *  - \subpage asfdoc_sam0_tcc_bldc_use_case
  * \endif
  *  - \subpage asfdoc_sam0_tcc_dma_use_case
  *
@@ -2080,14 +2245,21 @@ void tcc_clear_status(
  *      <th>Comments</td>
  *  </tr>
  *  <tr>
- *      <td>A</td>
- *      <td>01/2014</td>
- *      <td>Initial release</td>
+ *      <td>C</td>
+ *      <td>03/2014</td>
+ *      <td>Added double buffering functionality with use case; Add timer use
+ *          case and BLDC use case
+ *      </td>
  *  </tr>
  *  <tr>
  *      <td>B</td>
  *      <td>02/2014</td>
  *      <td>Added fault handling functionality</td>
+ *  </tr>
+ *  <tr>
+ *      <td>A</td>
+ *      <td>01/2014</td>
+ *      <td>Initial release</td>
  *  </tr>
  * </table>
  */

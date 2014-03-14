@@ -44,14 +44,14 @@
 /**
  * \page asfdoc_sam0_tcc_dma_use_case Quick Start Guide for Using DMA with TCC
  *
- * The supported device list:
- *    - SAMD21
+ * The supported board list:
+ *    - SAM D21 Xplained Pro
  *
  * In this use case, the TCC will be used to generate a PWM signal. Here
  * the pulse width varies through following values with the help of DMA
  * transfer: one quarter of the period, half of the period and three quarters
  * of the period.
- * The PWM output can be used to drive an LED. The waveform can also be 
+ * The PWM output can be used to drive an LED. The waveform can also be
  * viewed using an oscilloscope.
  * The output signal is also fed back to another TCC channel by event system,
  * the event stamps are captured and transferred to a buffer by DMA.

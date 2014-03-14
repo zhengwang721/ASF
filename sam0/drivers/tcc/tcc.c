@@ -248,6 +248,7 @@ void tcc_get_config_defaults(
 	MREPEAT(TCC_NUM_WAVE_OUTPUTS, _TCC_CHANNEL_OUT_PIN_INIT, 0)
 #  undef _TCC_CHANNEL_OUT_PIN_INIT
 
+	config->double_buffering        = false;
 	config->run_in_standby          = false;
 }
 
@@ -307,13 +308,16 @@ static inline uint8_t _tcc_get_ctrlb(
 		const uint8_t module_index,
 		const struct tcc_config *const config)
 {
-	uint8_t ctrlb = TCC_CTRLBSET_LUPD;
+	uint8_t ctrlb = 0;
 
 	if (config->counter.oneshot) {
 		ctrlb |= TCC_CTRLBSET_ONESHOT;
 	}
 	if (config->counter.direction == TCC_COUNT_DIRECTION_DOWN) {
 		ctrlb |= TCC_CTRLBSET_DIR;
+	}
+	if (!config->double_buffering) {
+		ctrlb |= TCC_CTRLBSET_LUPD;
 	}
 
 	return ctrlb;
@@ -579,6 +583,8 @@ enum status_code tcc_init(
 #endif
 
 	module_inst->hw = hw;
+
+	module_inst->double_buffering = config->double_buffering;
 
 	/* Setup clock for module */
 	struct system_gclk_chan_config gclk_chan_config;
@@ -996,9 +1002,9 @@ uint32_t tcc_get_capture_value(
  *
  * Writes a compare value to the given TCC module compare/capture channel.
  *
- * If double buffering is enabled, it always write to the buffer register.
- * The value will then be updated immediately by calling
- * \ref tcc_update_buffered_values, or be updated when the lock update bit
+ * If double buffering is enabled it always write to the buffer
+ * register The value will then be updated immediately by calling
+ * \ref tcc_force_double_buffer_update(), or be updated when the lock update bit
  * is cleared and the update condition happen.
  *
  * \param[in]  module_inst    Pointer to the software module instance struct
@@ -1037,6 +1043,16 @@ enum status_code tcc_set_compare_value(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
+	if (module_inst->double_buffering) {
+		while(tcc_module->SYNCBUSY.reg  &
+				(TCC_SYNCBUSY_CCB0 << channel_index)) {
+			/* Sync wait */
+		}
+		tcc_module->CCB[channel_index].reg = compare;
+
+		return STATUS_OK;
+	}
+
 	while(tcc_module->SYNCBUSY.reg  & (TCC_SYNCBUSY_CC0 << channel_index)) {
 		/* Sync wait */
 	}
@@ -1051,9 +1067,9 @@ enum status_code tcc_set_compare_value(
  *
  * This function writes the given value to the PER register.
  *
- * If double buffering is enabled, it always write to the buffer register.
- * The value will then be updated immediately by calling
- * \ref tcc_update_buffered_values, or be updated when the lock update bit
+ * If double buffering is enabled it always write to the buffer
+ * register The value will then be updated immediately by calling
+ * \ref tcc_force_double_buffer_update(), or be updated when the lock update bit
  * is cleared and the update condition happen.
  *
  * When using MFRQ, the top value is defined by the CC0 register value, for all
@@ -1088,6 +1104,15 @@ enum status_code tcc_set_top_value(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
+	if (module_inst->double_buffering) {
+		while(tcc_module->SYNCBUSY.reg  & TCC_SYNCBUSY_PERB) {
+			/* Sync wait */
+		}
+		tcc_module->PERB.reg = top_value;
+
+		return STATUS_OK;
+	}
+
 	while(tcc_module->SYNCBUSY.reg  & TCC_SYNCBUSY_PER) {
 		/* Sync wait */
 	}
@@ -1100,6 +1125,11 @@ enum status_code tcc_set_top_value(
  * \brief Sets the TCC module waveform output pattern
  *
  * Force waveform output line to generate specific pattern (0, 1 or as is).
+ *
+ * If double buffering is enabled it always write to the buffer
+ * register The value will then be updated immediately by calling
+ * \ref tcc_force_double_buffer_update(), or be updated when the lock update bit
+ * is cleared and the update condition happen.
  *
  * \param[in]  module_inst Pointer to the software module instance struct
  * \param[in]  line_index  Output line index
@@ -1145,6 +1175,15 @@ enum status_code tcc_set_pattern(
 	} else {
 		patt_value |=  ((TCC_PATT_PGE0 | TCC_PATT_PGV0) << line_index);
 	}
+
+	if (module_inst->double_buffering) {
+		while(tcc_module->SYNCBUSY.reg  & TCC_SYNCBUSY_PERB) {
+			/* Sync wait */
+		}
+		tcc_module->PATTB.reg = patt_value;
+		return STATUS_OK;
+	}
+
 	tcc_module->PATT.reg = patt_value;
 
 	return STATUS_OK;
@@ -1318,4 +1357,95 @@ void tcc_clear_status(
 	module_inst->hw->STATUS.reg = status_clr;
 	/* Clear interrupt flag */
 	module_inst->hw->INTFLAG.reg = int_clr;
+}
+
+/**
+ * \brief Enable/Disable Circular Buffer for Compare Values
+ *
+ * Circulars the double buffered compare values or not.
+ * Circular means when updating values, the using values and their buffered
+ * values are switched - the previously using one will be buffered and the
+ * buffered one will then be used.
+ *
+ * \param[in] module_inst     Pointer to the TCC software instance struct
+ * \param[in] channel_index   Index of the compare channel to set up to
+ * \param[in] enable_circular Set to \c true to enable circular,
+ *                            \c false to disable
+ *
+ * \retval STATUS_OK           The module was initialized successfully
+ * \retval STATUS_INVALID_ARG  An invalid channel index is supplied
+ * \retval STATUS_ERR_DENIED   Wrong mode, double buffering is not enabled
+ */
+enum status_code tcc_set_circular_of_compare_values(
+		struct tcc_module *const module_inst,
+		enum tcc_match_capture_channel channel_index,
+		bool enable_circular)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+
+	/* Check if double buffering is enabled */
+	if (!module_inst->double_buffering) {
+		return STATUS_ERR_DENIED;
+	}
+
+	Assert(module_inst->hw);
+	/* Get a pointer to the module's hardware instance */
+	Tcc *const tcc_module = module_inst->hw;
+	/* Get a index of the module */
+	uint8_t module_index = _tcc_get_inst_index(tcc_module);
+
+	/* Check index */
+	if (channel_index > 3) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+	if (channel_index >= _tcc_cc_nums[module_index]) {
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	if (enable_circular) {
+		tcc_module->WAVE.reg |=  (TCC_WAVE_CICCEN0 << channel_index);
+	} else {
+		tcc_module->WAVE.reg &= ~(TCC_WAVE_CICCEN0 << channel_index);
+	}
+
+	return STATUS_OK;
+}
+
+/**
+ * \brief Enable/Disable Circular Buffer for Top/Period Values
+ *
+ * Circulars the double buffered top/period values or not.
+ * Circular means when updating values, the using values and their buffered
+ * values are switched - the previously using one will be buffered and the
+ * buffered one will then be used.
+ *
+ * \param[in] module_inst     Pointer to the TCC software instance struct
+ * \param[in] enable_circular Set to \c true to enable circular,
+ *                            \c false to disable
+ *
+ * \retval STATUS_OK           The module was initialized successfully
+ * \retval STATUS_ERR_DENIED   Wrong mode, double buffering is not enabled
+ */
+enum status_code tcc_set_circular_of_top_values(
+		struct tcc_module *const module_inst,
+		bool enable_circular)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+
+	/* Check if double buffering is enabled */
+	if (!module_inst->double_buffering) {
+		return STATUS_ERR_DENIED;
+	}
+
+	Assert(module_inst->hw);
+
+	if (enable_circular) {
+		module_inst->hw->WAVE.reg |=  TCC_WAVE_CIPEREN;
+	} else {
+		module_inst->hw->WAVE.reg &= ~TCC_WAVE_CIPEREN;
+	}
+
+	return STATUS_OK;
 }
