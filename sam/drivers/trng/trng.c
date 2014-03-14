@@ -3,7 +3,7 @@
  *
  * \brief TRNG driver for SAM.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,7 +71,11 @@ extern "C" {
  */
 void trng_enable(Trng *p_trng)
 {
+#if SAM4CM
+	p_trng->TRNG_CR = TRNG_CR_ENABLE | TRNG_CR_KEY_PASSWD;
+#else
 	p_trng->TRNG_CR = TRNG_CR_ENABLE | TRNG_CR_KEY(TRNG_KEY);
+#endif
 }
 
 /**
@@ -82,7 +86,11 @@ void trng_enable(Trng *p_trng)
  */
 void trng_disable(Trng *p_trng)
 {
+#if SAM4CM
+	p_trng->TRNG_CR = TRNG_CR_KEY_PASSWD;
+#else
 	p_trng->TRNG_CR = TRNG_CR_KEY(TRNG_KEY);
+#endif
 }
 
 /**
