@@ -66,7 +66,7 @@
 #endif /* (LED_COUNT > 0) */
 #endif
 #include "sio2host.h"
-#include "conf_board.h"
+#include "board.h"
 # include "performance_main.h"
 
 /**
@@ -737,35 +737,35 @@ void app_alert()
 {
 	while (1) {
 		#if LED_COUNT > 0
-		LED_Toggle(LED0);
+		LED_Toggle(LED0_GPIO);
 		#endif
 
 		#if LED_COUNT > 1
-		LED_Toggle(LED1);
+		LED_Toggle(LED1_GPIO);
 		#endif
 
 		#if LED_COUNT > 2
-		LED_Toggle(LED2);
+		LED_Toggle(LED2_GPIO);
 		#endif
 
 		#if LED_COUNT > 3
-		LED_Toggle(LED3);
+		LED_Toggle(LED3_GPIO);
 		#endif
 
 		#if LED_COUNT > 4
-		LED_Toggle(LED4);
+		LED_Toggle(LED4_GPIO);
 		#endif
 
 		#if LED_COUNT > 5
-		LED_Toggle(LED5);
+		LED_Toggle(LED5_GPIO);
 		#endif
 
 		#if LED_COUNT > 6
-		LED_Toggle(LED6);
+		LED_Toggle(LED6_GPIO);
 		#endif
 
 		#if LED_COUNT > 7
-		LED_Toggle(LED7);
+		LED_Toggle(LED7_GPIO);
 		#endif
 		delay_us(0xFFFF);
 	}

@@ -77,9 +77,6 @@
 #if APP_COORDINATOR
 #include "sio2host.h"
 #endif
-#include "asf.h"
-#include "board.h"
-#include "wsndemo.h"
 #if SAMD20
 #include "system.h"
 #else
@@ -88,30 +85,15 @@
 #include "led.h"
 #endif
 #endif
-
+#include "asf.h"
+#include "board.h"
+#include "wsndemo.h"
 
 /*****************************************************************************
 *****************************************************************************/
 
-#ifndef LED_COUNT
-#define LED_COUNT 0
-#endif
-
 #define APP_CAPTION_SIZE  (sizeof(APP_CAPTION) - 1)
 
-#if LED_COUNT>2
-#define LED_NETWORK       LED0_GPIO
-#define LED_DATA          LED1_GPIO
-#define LED_BLINK         LED2_GPIO 
-#elif LED_COUNT==2
-#define LED_NETWORK       LED0_GPIO
-#define LED_DATA          LED1_GPIO
-#define LED_BLINK         LED1_GPIO
-#elif LED_COUNT==1
-#define LED_NETWORK       LED0_GPIO
-#define LED_DATA          LED0_GPIO
-#define LED_BLINK         LED0_GPIO
-#endif
 
 /*- Types ------------------------------------------------------------------*/
 COMPILER_PACK_SET(1)
