@@ -3,7 +3,7 @@
  *
  * \brief  Main of Performance_Analyzer application
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -737,7 +737,11 @@ void app_alert()
 {
 	while (1) {
 		#if LED_COUNT > 0
+		#ifdef LED0_ACTIVE_LEVEL
+		LED_Toggle(LED0);
+		#else		
 		LED_Toggle(LED0_GPIO);
+		#endif		
 		#endif
 
 		#if LED_COUNT > 1

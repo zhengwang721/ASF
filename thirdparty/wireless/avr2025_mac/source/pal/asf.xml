@@ -25,7 +25,6 @@
             <build type="doxygen-entry-point" value="group_pal"/>
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.inc"/>
-            <require idref="thirdparty.wireless.common_services.trx_access"/>
             <device-support-alias value="avr2025_mac_pal_soc_support"/>
 		</module>
 
