@@ -20,9 +20,9 @@
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
 	
-	<module type="component" id="thirdparty.wireless.avr2130_lwmesh.apps.wsndemo_module" caption="WSN Demo">
+	<module type="component" id="thirdparty.wireless.avr2130_lwmesh.apps.wsndemo_module" caption="LWMesh-WSNDemo Application">
 		<info type="description" value="summary">
-		The WSNDemo application implements a typical wireless sensor network scenario, in which one central node collects the data from a network of sensors and passes this data over a serial connection for further processing. In the case of the WSNDemo this processing is performed by the WSNMonitor PC application
+		The LWMEsh based WSNDemo application implements a typical wireless sensor network scenario, in which one central node collects the data from a network of sensors and passes this data over a serial connection for further processing. In the case of the WSNDemo this processing is performed by the WSNMonitor PC application
 		</info>
 		<!-- +++++++++++++++++++++++++++++++++++++++++++++++BUILD+++++++++++++++++++++++++++++++++++++++++++++++. -->
 		<build type="c-source" value="wsndemo.c"/>
