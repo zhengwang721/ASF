@@ -22,7 +22,7 @@
            The TRX Access Layer does not provide files for trx access for SOC's .It  includes  Other Basic ASF Drivers Required by Wireless Stack.
             </info>
 			<info type="gui-flag" value="hidden"/>
-			<require idref="common.services.delay"/>
+			<require idref="common.services.delay"/>			
             <device-support-alias value="trx_access_soc_support"/>
 		</module>
 
