@@ -54,6 +54,11 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+/** Key to unlock TRNG_CR register */
+#ifndef TRNG_CR_KEY_PASSWD
+#define TRNG_CR_KEY_PASSWD    TRNG_CR_KEY(0x524E47)
+#endif
+
 void trng_enable(Trng *p_trng);
 void trng_disable(Trng *p_trng);
 void trng_enable_interrupt(Trng *p_trng);

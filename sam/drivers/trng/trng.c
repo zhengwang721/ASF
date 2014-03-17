@@ -60,9 +60,6 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-/* TRNG Security Key Value */
-#define TRNG_KEY  0x524E47
-
 /**
  * \brief Enable TRNG.
  *
@@ -71,11 +68,7 @@ extern "C" {
  */
 void trng_enable(Trng *p_trng)
 {
-#if SAM4CM
 	p_trng->TRNG_CR = TRNG_CR_ENABLE | TRNG_CR_KEY_PASSWD;
-#else
-	p_trng->TRNG_CR = TRNG_CR_ENABLE | TRNG_CR_KEY(TRNG_KEY);
-#endif
 }
 
 /**
@@ -86,11 +79,7 @@ void trng_enable(Trng *p_trng)
  */
 void trng_disable(Trng *p_trng)
 {
-#if SAM4CM
 	p_trng->TRNG_CR = TRNG_CR_KEY_PASSWD;
-#else
-	p_trng->TRNG_CR = TRNG_CR_KEY(TRNG_KEY);
-#endif
 }
 
 /**
