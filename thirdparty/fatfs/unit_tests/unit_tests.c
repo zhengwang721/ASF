@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for FatFS service.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -124,6 +124,11 @@ static uint8_t data_buffer[DATA_SIZE];
 /* File name to be validated */
 const char *file_name = STR_ROOT_DIRECTORY "Basic.bin";
 
+#if SAMD20 || SAMD21 || SAMR21
+/* Structure for UART module connected to EDBG (used for unit test output) */
+struct usart_module cdc_uart_module;
+#endif
+
 /**
  * \brief Do FatFS tests.
  *
@@ -239,13 +244,26 @@ static void run_fatfs_test(const struct test_case *test)
  */
 int main(void)
 {
+#if SAMD20 || SAMD21 || SAMR21
+	system_init();
+	struct usart_config usart_conf;
+	usart_get_config_defaults(&usart_conf);
+	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
+	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
+	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
+	usart_enable(&cdc_uart_module);
+#else
 	const usart_serial_options_t usart_serial_options = {
 		.baudrate   = CONF_TEST_BAUDRATE,
 		.paritytype = CONF_TEST_PARITY,
-#if !SAM
+#  if !SAM
 		.charlength = CONF_TEST_CHARLENGTH,
 		.stopbits   = CONF_TEST_STOPBITS,
-#endif
+#  endif
 	};
 
 	/* Initialize the system clock and board */
@@ -253,10 +271,11 @@ int main(void)
 	board_init();
 
 	/* Enable the debug uart */
-#if SAM
+#  if SAM
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);
-#endif
+#  endif
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
+#endif
 
 	/* Intialize the memory device */
 	memories_initialization();

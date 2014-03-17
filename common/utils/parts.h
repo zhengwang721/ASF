@@ -1068,6 +1068,9 @@
 /** SAMD21 Family */
 #define SAMD21 (SAMD21J || SAMD21G || SAMD21E)
 
+/** SAMD Family */
+#define SAMD   (SAMD20 || SAMD21)
+
 /** SAMR21 Family */
 #define SAMR21 (SAMR21G || SAMR21E)
 
