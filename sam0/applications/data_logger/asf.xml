@@ -24,7 +24,10 @@
 		<require idref="sam0.drivers.sercom.usart"/>
 		<require idref="common2.components.memory.serial_flash.at25dfx"/>
 		<require idref="common.boards"/>
-
+		
+		<build type="doxygen-image-path" value="docimg" />
+		<build type="doxygen-entry-point" value="appdoc_main" />
+			
 		<device-support value="samd21"/>
 	</module>
 </asf>

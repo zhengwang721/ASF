@@ -65,28 +65,28 @@ extern "C" {
  * \page appdoc_main SAM D21 Data Logger Application
  *
  * Overview:
- * - \ref appdoc_sam0_dmac_datalogger_intro
- * - \ref appdoc_sam0_dmac_datalogger_setup
- * - \ref appdoc_sam0_dmac_datalogger_usage
- * - \ref appdoc_sam0_dmac_datalogger_compinfo
- * - \ref appdoc_sam0_dmac_datalogger_contactinfo
+ * - \ref appdoc_sam0_datalogger_intro
+ * - \ref appdoc_sam0_datalogger_setup
+ * - \ref appdoc_sam0_datalogger_usage
+ * - \ref appdoc_sam0_datalogger_compinfo
+ * - \ref appdoc_sam0_datalogger_contactinfo
  * - \ref asfdoc_sam0_datalogger_api
  *
- * \section appdoc_sam0_dmac_datalogger_intro Introduction
+ * \section appdoc_sam0_datalogger_intro Introduction
  * Data logger, as its name indicates measures the given input periodically
  * and stores them in a non-volatile media. In this application, the RTC inside
  * SAM D21 is configured to trigger ADC conversions at regular intervals.
  *
  *
- * \section appdoc_sam0_dmac_datalogger_setup Hardware Setup
+ * \section appdoc_sam0_datalogger_setup Hardware Setup
  * Connect the thermistor as shown in
- * \ref appdoc_sam0_dmac_datalogger_thermistor_conn "the diagram below"
+ * \ref appdoc_sam0_datalogger_thermistor_conn "the diagram below"
  *
- * \anchor appdoc_sam0_dmac_datalogger_thermistor_conn
+ * \anchor appdoc_sam0_datalogger_thermistor_conn
  *
  * \image html therm_conn.svg "Thermistor connection"
  *
- * \section appdoc_sam0_dmac_datalogger_usage Usage
+ * \section appdoc_sam0_datalogger_usage Usage
  * The CPU is kept in Idle sleep and the RTC timeout event triggers ADC
  * conversion. The DMAC module is used for data transfer from the ADC result
  * register into an array in SRAM. Once a predefined number of conversions
@@ -97,11 +97,11 @@ extern "C" {
  * This is the same port used as virtual COM port, by the Embedded debugger
  * on the SAM D21 Xplained Pro.
  *
- * \section appdoc_sam0_dmac_datalogger_compinfo Compilation Info
+ * \section appdoc_sam0_datalogger_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for ARM.
  * Other compilers may or may not work.
  *
- * \section appdoc_sam0_dmac_datalogger_contactinfo Contact Information
+ * \section appdoc_sam0_datalogger_contactinfo Contact Information
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */

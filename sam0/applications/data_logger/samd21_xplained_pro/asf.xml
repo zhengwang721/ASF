@@ -11,8 +11,6 @@
 		<build type="header-file" value="config/conf_spi.h"/>
 		<build type="header-file" value="config/conf_at25dfx.h"/>
 		
-		<build type="doxygen-image-path" value="docimg" />
-		
 		<require idref="board.samd21_xplained_pro"/>
 		<require idref="sam0.applications.data_logger"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
