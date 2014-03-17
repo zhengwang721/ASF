@@ -379,6 +379,8 @@ static inline bool i2c_master_is_syncing (
 	return (i2c_hw->STATUS.reg & SERCOM_I2CM_STATUS_SYNCBUSY);
 #elif defined(FEATURE_SERCOM_SYNCBUSY_SCHEME_VERSION_2)
 	return (i2c_hw->SYNCBUSY.reg & SERCOM_I2CM_SYNCBUSY_MASK);
+#else
+#  error Unknown SERCOM SYNCBUSY scheme!
 #endif
 }
 

@@ -539,6 +539,8 @@ enum status_code dbg_init(void)
 	while (sercom_uart->SYNCBUSY.reg) {
 		/* Intentionally left empty */
 	}
+#else
+#  error Unknown SERCOM SYNCBUSY scheme!
 #endif
 
 	return status;

@@ -847,6 +847,8 @@ static inline bool spi_is_syncing(
 #elif defined(FEATURE_SERCOM_SYNCBUSY_SCHEME_VERSION_2)
 	/* Return synchronization status */
 	return (spi_module->SYNCBUSY.reg);
+#else
+#  error Unknown SERCOM SYNCBUSY scheme!
 #endif
 }
 

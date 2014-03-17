@@ -737,6 +737,8 @@ static inline bool usart_is_syncing(
 	return (usart_hw->STATUS.reg & SERCOM_USART_STATUS_SYNCBUSY);
 #elif defined(FEATURE_SERCOM_SYNCBUSY_SCHEME_VERSION_2)
 	return (usart_hw->SYNCBUSY.reg);
+#else
+#  error Unknown SERCOM SYNCBUSY scheme!
 #endif
 }
 

@@ -78,6 +78,8 @@ static inline void _spi_master_vec_wait_for_sync(SercomSpi *const sercom_spi)
 	while (sercom_spi->SYNCBUSY.reg) {
 		/* Intentionally left empty */
 	}
+#else
+#  error Unknown SERCOM SYNCBUSY scheme!
 #endif
 }
 
