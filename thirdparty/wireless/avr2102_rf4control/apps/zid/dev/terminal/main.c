@@ -486,79 +486,65 @@ static void app_task(void)
                     uint8_t *msg_ptr = &report_data_buffer[0];
                     if(report_id == 0)
                     {
-
+                        // Sending Media player Open Command
                         zid_report_data[0].report_type = INPUT;
-                        zid_report_data[0].report_desc_identifier = MOUSE;
+                        zid_report_data[0].report_desc_identifier = KEYBOARD;
                         zid_report_data[0].report_data = (void *)msg_ptr;
-
-                        mouse_desc_t *mouse_desc;
-                        mouse_desc = (mouse_desc_t *)msg_ptr;
-
-                        mouse_desc->button0 = 0x01;
-                        mouse_desc->button1 = 0x01;
-                        mouse_desc->button2 = 0x01;
-                        mouse_desc->x_coordinate = 0xA1;
-                        mouse_desc->y_coordinate = 0xA2;
-                        msg_ptr += sizeof(mouse_desc_t);
-
-
-
-                        zid_report_data[1].report_type = INPUT;
-                        zid_report_data[1].report_desc_identifier = KEYBOARD;
-                        zid_report_data[1].report_data = (void *)msg_ptr;
 
                         keyboard_input_desc_t *keyboard_input_desc;
                         keyboard_input_desc = (keyboard_input_desc_t *)msg_ptr;
 
-                        keyboard_input_desc->modifier_keys = 0xA3;
-                        keyboard_input_desc->key_code[0] = 0xA4;
-                        keyboard_input_desc->key_code[1] = 0xA5;
-                        keyboard_input_desc->key_code[2] = 0xA6;
-                        keyboard_input_desc->key_code[3] = 0xA7;
-                        keyboard_input_desc->key_code[4] = 0xA8;
-                        keyboard_input_desc->key_code[5] = 0xA9;
-                        num_records = 2;
-
+                        keyboard_input_desc->modifier_keys = 0x00;
+                        keyboard_input_desc->key_code[0] = 0x00
+                        keyboard_input_desc->key_code[1] = 0x00;
+                        keyboard_input_desc->key_code[2] = 0x00;
+                        keyboard_input_desc->key_code[3] = 0x00;
+                        keyboard_input_desc->key_code[4] = 0x08;
+                        keyboard_input_desc->key_code[5] = 0x00;
+                        num_records = 1;
+                       
                     }
                     else if(report_id == 1)
                     {
                         
-                        zid_report_data[0].report_type = INPUT;
-                        zid_report_data[0].report_desc_identifier = CONTACT_DATA;
-                        zid_report_data[0].report_data = (void *)msg_ptr;
+                       //sending Media player Play command.
+                       zid_report_data[0].report_type = INPUT;
+                       zid_report_data[0].report_desc_identifier = KEYBOARD;
+                       zid_report_data[0].report_data = (void *)msg_ptr;
 
-                        contact_data_report_t *contact_data_report;
-                        contact_data_report = (contact_data_report_t *)msg_ptr;
+                       keyboard_input_desc_t *keyboard_input_desc;
+                       keyboard_input_desc = (keyboard_input_desc_t *)msg_ptr;
 
-                        contact_data_report->contact_type = 0x0A;
-                        contact_data_report->contact_index = 0x0B;
-                        contact_data_report->contact_state = 0x02;
-                        contact_data_report->major_axis_orientation = 0xB1;
-                        contact_data_report->pressure = 0xB2;
-                        contact_data_report->location_x = 0x3B3;
-                        contact_data_report->location_y = 0x4B4;
-                        contact_data_report->major_axis_length = 0xB5B5;
-                        contact_data_report->minor_axis_length = 0xB6B6;
-                        num_records = 1;
-
+                       keyboard_input_desc->modifier_keys = 0x00;
+                       keyboard_input_desc->key_code[0] = 0x00
+                       keyboard_input_desc->key_code[1] = 0x00;
+                       keyboard_input_desc->key_code[2] = 0x00;
+                       keyboard_input_desc->key_code[3] = 0x00;
+                       keyboard_input_desc->key_code[4] = 0x80;
+                       keyboard_input_desc->key_code[5] = 0x00;
+                       num_records = 1;
+                       
                         
                     }
                     else if(report_id == 2)
                     {
-                        // sending tap_gesture
+                        //Sending Media Player Stop command.
                         zid_report_data[0].report_type = INPUT;
-                        zid_report_data[0].report_desc_identifier = TAP_GESTURE;
+                        zid_report_data[0].report_desc_identifier = KEYBOARD;
                         zid_report_data[0].report_data = (void *)msg_ptr;
 
-                        tap_gesture_report_t *tap_gesture_report;
-                        tap_gesture_report = (tap_gesture_report_t *)msg_ptr;
+                        keyboard_input_desc_t *keyboard_input_desc;
+                        keyboard_input_desc = (keyboard_input_desc_t *)msg_ptr;
 
-                        tap_gesture_report->type = 0x1C;
-                        tap_gesture_report->finger_count = 0x5;
-                        tap_gesture_report->location_x = 0x1C1;
-                        tap_gesture_report->location_y = 0x2C2;
+                        keyboard_input_desc->modifier_keys = 0x00;
+                        keyboard_input_desc->key_code[0] = 0x00
+                        keyboard_input_desc->key_code[1] = 0x00;
+                        keyboard_input_desc->key_code[2] = 0x00;
+                        keyboard_input_desc->key_code[3] = 0x00;
+                        keyboard_input_desc->key_code[4] = 0x10;
+                        keyboard_input_desc->key_code[5] = 0x00;
                         num_records = 1;
-
+                        
                         
                     }
                     else if(report_id == 3)
