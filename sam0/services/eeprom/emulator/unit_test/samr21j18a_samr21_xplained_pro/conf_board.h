@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 EEPROM Emulator Service Quick Start
+ * \brief SAM R21 Xplained Pro board configuration.
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,64 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-void configure_eeprom(void);
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [setup]
-void configure_eeprom(void)
-{
-	/* Setup EEPROM emulator service */
-//! [init_eeprom_service]
-	enum status_code error_code = eeprom_emulator_init();
-//! [init_eeprom_service]
-
-//! [check_init_ok]
-	if (error_code == STATUS_ERR_NO_MEMORY) {
-		while (true) {
-			/* No EEPROM section has been set in the device's fuses */
-		}
-	}
-//! [check_init_ok]
-//! [check_re-init]
-	else if (error_code != STATUS_OK) {
-		/* Erase the emulated EEPROM memory (assume it is unformatted or
-		 * irrecoverably corrupt) */
-		eeprom_emulator_erase_memory();
-		eeprom_emulator_init();
-	}
-//! [check_re-init]
-}
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-//! [setup_init]
-	configure_eeprom();
-//! [setup_init]
-
-//! [main]
-//! [read_page]
-	uint8_t page_data[EEPROM_PAGE_SIZE];
-	eeprom_emulator_read_page(0, page_data);
-//! [read_page]
-
-//! [toggle_first_byte]
-	page_data[0] = !page_data[0];
-//! [toggle_first_byte]
-//! [set_led]
-	port_pin_set_output_level(LED_0_PIN, page_data[0]);
-//! [set_led]
-
-//! [write_page]
-	eeprom_emulator_write_page(0, page_data);
-	eeprom_emulator_commit_page_buffer();
-//! [write_page]
-
-	while (true) {
-
-	}
-//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */
