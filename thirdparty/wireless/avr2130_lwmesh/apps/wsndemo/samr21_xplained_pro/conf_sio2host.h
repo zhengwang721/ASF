@@ -1,11 +1,13 @@
 /**
- * \file sys.c
+ * \file conf_sio2host.h
  *
- * \brief Main system routines implementation
+ * \brief Serial Input & Output configuration
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,52 +38,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
- *
  */
 
-/*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
 
-/*- Includes ---------------------------------------------------------------*/
-#include "sysConfig.h"
-#include "phy.h"
-#include "nwk.h"
-#include "sleep_mgr.h"
-#include "sys.h"
-#include "sysTimer.h"
+#define USART_HOST                 EDBG_CDC_MODULE
 
-/*- Implementations --------------------------------------------------------*/
+/** Baudrate setting */
+#define USART_HOST_BAUDRATE        9600
+ 
 
-/*************************************************************************//**
-*****************************************************************************/
-void SYS_Init(void)
-{
-  irq_initialize_vectors();
-#if SAMD20 || SAMR21
-  system_init();
-  delay_init();
-#else
-  sysclk_init();
-  board_init();    
-#endif  	
-  SYS_TimerInit();  
-  PHY_Init();
-  NWK_Init();
-  sm_init();     
-  cpu_irq_enable();
-}
-
-/*************************************************************************//**
-*****************************************************************************/
-void SYS_TaskHandler(void)
-{
-  PHY_TaskHandler();
-  NWK_TaskHandler();
-  SYS_TimerTaskHandler();
-  
-}
-
+#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(0, USART_HOST_ISR_VECT);\
+                                    USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC;\
+                                    system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM0);
+#endif /* CONF_SIO2HOST_H_INCLUDED */

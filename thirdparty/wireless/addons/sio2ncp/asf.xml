@@ -31,6 +31,7 @@
 				<build type="module-config" subtype="required-header-file" value="conf_sio2ncp.h"/>
 				<build type="module-config" subtype="path" value="module_config"/>
 				<device-support value="samd20"/>
+				<device-support value="samr21"/>
 				<build type="doxygen-entry-point" value="group_sio2ncp_uart"/>			
 			</module>
 		</select-by-device>

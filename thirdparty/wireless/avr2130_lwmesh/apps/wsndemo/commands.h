@@ -1,9 +1,9 @@
 /**
- * \file sys.c
+ * \file commands.h
  *
- * \brief Main system routines implementation
+ * \brief WSNDemo command handler interface
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014, Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -37,51 +37,23 @@
  *
  * \asf_license_stop
  *
+ * $Id: commands.h 9244 2014-03-11 22:38:51Z ataradov $
  *
  */
 
-/*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+#ifndef _COMMANDS_H_
+#define _COMMANDS_H_
 
-/*- Includes ---------------------------------------------------------------*/
-#include "sysConfig.h"
-#include "phy.h"
-#include "nwk.h"
-#include "sleep_mgr.h"
-#include "sys.h"
-#include "sysTimer.h"
-
-/*- Implementations --------------------------------------------------------*/
-
-/*************************************************************************//**
-*****************************************************************************/
-void SYS_Init(void)
+/*- Types ------------------------------------------------------------------*/
+enum
 {
-  irq_initialize_vectors();
-#if SAMD20 || SAMR21
-  system_init();
-  delay_init();
-#else
-  sysclk_init();
-  board_init();    
-#endif  	
-  SYS_TimerInit();  
-  PHY_Init();
-  NWK_Init();
-  sm_init();     
-  cpu_irq_enable();
-}
+  APP_COMMAND_ID_NETWORK_INFO = 0x01,
+  APP_COMMAND_ID_IDENTIFY     = 0x10,
+};
 
-/*************************************************************************//**
-*****************************************************************************/
-void SYS_TaskHandler(void)
-{
-  PHY_TaskHandler();
-  NWK_TaskHandler();
-  SYS_TimerTaskHandler();
-  
-}
+/*- Prototypes -------------------------------------------------------------*/
+void APP_CommandsInit(void);
+bool APP_CommandsPending(uint16_t addr);
+void APP_CommandsByteReceived(uint8_t byte);
 
+#endif // _COMMANDS_H_

@@ -52,7 +52,7 @@
 /* === PROTOTYPES ========================================================== */
 
 /* === GLOBALS ========================================================== */
-#if SAMD20
+#if SAMD20 || SAMR21
 static struct usart_module cdc_uart_module;
 #else
 static usart_serial_options_t usart_serial_options = {
@@ -87,7 +87,7 @@ static uint8_t serial_rx_count;
 
 void sio2host_init(void)
 {
-#if SAMD20
+#if SAMD20 || SAMR21
 	struct usart_config cdc_uart_config;
     /* Configure USART for unit test output */
     usart_get_config_defaults(&cdc_uart_config);
@@ -108,14 +108,14 @@ void sio2host_init(void)
 
 uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 {
-#if SAMD20
+#if SAMD20 || SAMR21
 	status_code_genare_t status;
 #else
 	status_code_t status;
-#endif /* SAMD20 */
+#endif /* SAMD20 || SAMR21 */
 
 	do {
-#if SAMD20
+#if SAMD20 || SAMR21
 status = usart_serial_write_packet(&cdc_uart_module,(const uint8_t *)data,length);
 #else 
 status = usart_serial_write_packet(USART_HOST,(const uint8_t *)data,length);
@@ -209,14 +209,14 @@ int sio2host_getchar_nowait(void)
 	}
 }
 
-#if SAMD20
+#if SAMD20 || SAMR21
 void USART_HOST_ISR_VECT(uint8_t instance)
 #else 
 USART_HOST_ISR_VECT()
 #endif
 {
 	uint8_t temp;
-#if SAMD20
+#if SAMD20 || SAMR21
  	usart_serial_read_packet(&cdc_uart_module, &temp, 1);
 #else 
 	usart_serial_read_packet(USART_HOST, &temp, 1);

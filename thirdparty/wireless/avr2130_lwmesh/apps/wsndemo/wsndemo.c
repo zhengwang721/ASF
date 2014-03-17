@@ -67,7 +67,7 @@
 #include <string.h>
 #include "config.h"
 #include "sys.h"
-#if SAMD20
+#if SAMD20 || SAMR21
 #include "system.h"
 #else
 #include "led.h"
@@ -78,6 +78,7 @@
 #include "nwk.h"
 #include "sysTimer.h"
 # include "sleep_mgr.h"
+#include "commands.h"
 #if APP_COORDINATOR
 #include "sio2host.h"
 #endif
@@ -104,34 +105,34 @@
 #endif
 
 /*- Types ------------------------------------------------------------------*/
-typedef struct PACK AppMessage_t
+typedef struct PACK
 {
-  uint8_t     messageType;
-  uint8_t     nodeType;
-  uint64_t    extAddr;
-  uint16_t    shortAddr;
-  uint32_t    softVersion;
-  uint32_t    channelMask;
-  uint16_t    panId;
-  uint8_t     workingChannel;
-  uint16_t    parentShortAddr;
-  uint8_t     lqi;
-  int8_t      rssi;
+  uint8_t      commandId;
+  uint8_t      nodeType;
+  uint64_t     extAddr;
+  uint16_t     shortAddr;
+  uint32_t     softVersion;
+  uint32_t     channelMask;
+  uint16_t     panId;
+  uint8_t      workingChannel;
+  uint16_t     parentShortAddr;
+  uint8_t      lqi;
+  int8_t       rssi;
 
   struct PACK
   {
-    uint8_t   type;
-    uint8_t   size;
-    int32_t   battery;
-    int32_t   temperature;
-    int32_t   light;
+    uint8_t    type;
+    uint8_t    size;
+    int32_t    battery;
+    int32_t    temperature;
+    int32_t    light;
   } sensors;
 
   struct PACK
   {
-    uint8_t   type;
-    uint8_t   size;
-    char      text[APP_CAPTION_SIZE];
+    uint8_t    type;
+    uint8_t    size;
+    char       text[APP_CAPTION_SIZE];
   } caption;
 } AppMessage_t;
 
@@ -142,6 +143,7 @@ typedef enum AppState_t
   APP_STATE_WAIT_CONF,
   APP_STATE_SENDING_DONE,
   APP_STATE_WAIT_SEND_TIMER,
+  APP_STATE_WAIT_COMMAND_TIMER,
   APP_STATE_PREPARE_TO_SLEEP,
   APP_STATE_SLEEP,
   APP_STATE_WAKEUP,
@@ -151,8 +153,9 @@ typedef enum AppState_t
 static AppState_t appState = APP_STATE_INITIAL;
 
 #if APP_ROUTER || APP_ENDDEVICE
-static NWK_DataReq_t nwkDataReq;
+static NWK_DataReq_t appNwkDataReq;
 static SYS_Timer_t appNetworkStatusTimer;
+static SYS_Timer_t appCommandWaitTimer;
 static bool appNetworkStatus;
 #endif
 
@@ -162,10 +165,26 @@ static uint8_t rx_data[APP_RX_BUF_SIZE];
 
 static AppMessage_t appMsg;
 static SYS_Timer_t appDataSendingTimer;
+
+/*- Implementations --------------------------------------------------------*/
+
+/*************************************************************************//**
+*****************************************************************************/
+void HAL_UartBytesReceived(uint16_t bytes)
+{
+  for (uint16_t i = 0; i < bytes; i++)
+  {
+    uint8_t byte = HAL_UartReadByte();
+    APP_CommandsByteReceived(byte);
+  }
+}
+
+/*************************************************************************//**
+
 #if APP_COORDINATOR
 /*****************************************************************************
 *****************************************************************************/
-static void appSendMessage(uint8_t *data, uint8_t size)
+static void appUartSendMessage(uint8_t *data, uint8_t size)
 {
   uint8_t cs = 0;
 
@@ -201,7 +220,10 @@ static bool appDataInd(NWK_DataInd_t *ind)
   msg->lqi = ind->lqi;
   msg->rssi = ind->rssi;
 #if APP_COORDINATOR
-  appSendMessage(ind->data, ind->size);
+  appUartSendMessage(ind->data, ind->size);
+
+  if (APP_CommandsPending(ind->srcAddr))
+    NWK_SetAckControl(APP_COMMAND_PENDING);
 #endif  
   return true;
 }
@@ -224,6 +246,14 @@ static void appDataSendingTimerHandler(SYS_Timer_t *timer)
 static void appNetworkStatusTimerHandler(SYS_Timer_t *timer)
 {
   LED_Toggle(LED_NETWORK);
+  (void)timer;
+}
+
+/*************************************************************************//**
+*****************************************************************************/
+static void appCommandWaitTimerHandler(SYS_Timer_t *timer)
+{
+  appState = APP_STATE_SENDING_DONE;
   (void)timer;
 }
 #endif
@@ -254,7 +284,15 @@ static void appDataConf(NWK_DataReq_t *req)
     }
   }
 
-  appState = APP_STATE_SENDING_DONE;
+  if (APP_COMMAND_PENDING == req->control)
+  {
+    SYS_TimerStart(&appCommandWaitTimer);
+    appState = APP_STATE_WAIT_COMMAND_TIMER;
+  }
+  else
+  {
+    appState = APP_STATE_SENDING_DONE;
+  }
 }
 #endif
 
@@ -273,20 +311,20 @@ static void appSendData(void)
   appMsg.sensors.light       = rand() & 0xff;
 
 #if APP_COORDINATOR
-  appSendMessage((uint8_t *)&appMsg, sizeof(appMsg));
+  appUartSendMessage((uint8_t *)&appMsg, sizeof(appMsg));
   SYS_TimerStart(&appDataSendingTimer);
   appState = APP_STATE_WAIT_SEND_TIMER;
 #else
-  nwkDataReq.dstAddr = 0;
-  nwkDataReq.dstEndpoint = APP_ENDPOINT;
-  nwkDataReq.srcEndpoint = APP_ENDPOINT;
-  nwkDataReq.options = NWK_OPT_ACK_REQUEST | NWK_OPT_ENABLE_SECURITY;
-  nwkDataReq.data = (uint8_t *)&appMsg;
-  nwkDataReq.size = sizeof(appMsg);
-  nwkDataReq.confirm = appDataConf;
+  appNwkDataReq.dstAddr = 0;
+  appNwkDataReq.dstEndpoint = APP_ENDPOINT;
+  appNwkDataReq.srcEndpoint = APP_ENDPOINT;
+  appNwkDataReq.options = NWK_OPT_ACK_REQUEST | NWK_OPT_ENABLE_SECURITY;
+  appNwkDataReq.data = (uint8_t *)&appMsg;
+  appNwkDataReq.size = sizeof(appMsg);
+  appNwkDataReq.confirm = appDataConf;
 
   LED_On(LED_DATA);
-  NWK_DataReq(&nwkDataReq);
+  NWK_DataReq(&appNwkDataReq);
 
   appState = APP_STATE_WAIT_CONF;
 #endif
@@ -296,7 +334,7 @@ static void appSendData(void)
 *****************************************************************************/
 static void appInit(void)
 {
-  appMsg.messageType          = 1;
+  appMsg.commandId            = APP_COMMAND_ID_NETWORK_INFO;
   appMsg.nodeType             = APP_NODE_TYPE;
   appMsg.extAddr              = APP_ADDR;
   appMsg.shortAddr            = APP_ADDR;
@@ -343,6 +381,10 @@ static void appInit(void)
   appNetworkStatusTimer.mode = SYS_TIMER_PERIODIC_MODE;
   appNetworkStatusTimer.handler = appNetworkStatusTimerHandler;
   SYS_TimerStart(&appNetworkStatusTimer);
+
+  appCommandWaitTimer.interval = NWK_ACK_WAIT_TIME;
+  appCommandWaitTimer.mode = SYS_TIMER_INTERVAL_MODE;
+  appCommandWaitTimer.handler = appCommandWaitTimerHandler;
 #else
   LED_On(LED_NETWORK);
 #endif
@@ -350,6 +392,8 @@ static void appInit(void)
 #ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
   srand(PHY_RandomReq());
 #endif
+
+  APP_CommandsInit();
 
   appState = APP_STATE_SEND;
 }
@@ -433,6 +477,7 @@ int main(void)
     {
 		
         SYS_TaskHandler();
+    HAL_UartTaskHandler();
 	    APP_TaskHandler();
 		
     }

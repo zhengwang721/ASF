@@ -1,11 +1,13 @@
 /**
- * \file sys.c
+ * \file
  *
- * \brief Main system routines implementation
+ * \brief Board configuration
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,51 +39,17 @@
  *
  * \asf_license_stop
  *
- *
  */
 
-/*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/*- Includes ---------------------------------------------------------------*/
-#include "sysConfig.h"
-#include "phy.h"
-#include "nwk.h"
-#include "sleep_mgr.h"
-#include "sys.h"
-#include "sysTimer.h"
 
-/*- Implementations --------------------------------------------------------*/
+#define CONF_BOARD_AT86RFX
+#define IC_TYPE             (0x00)
 
-/*************************************************************************//**
-*****************************************************************************/
-void SYS_Init(void)
-{
-  irq_initialize_vectors();
-#if SAMD20 || SAMR21
-  system_init();
-  delay_init();
-#else
-  sysclk_init();
-  board_init();    
-#endif  	
-  SYS_TimerInit();  
-  PHY_Init();
-  NWK_Init();
-  sm_init();     
-  cpu_irq_enable();
-}
+#define MCU_SOC_NAME        "ATSAMR21G18A"
 
-/*************************************************************************//**
-*****************************************************************************/
-void SYS_TaskHandler(void)
-{
-  PHY_TaskHandler();
-  NWK_TaskHandler();
-  SYS_TimerTaskHandler();
-  
-}
+#define AT86RFX_SPI_BAUDRATE		 5000000UL
 
+#endif /* CONF_BOARD_H_INCLUDED */

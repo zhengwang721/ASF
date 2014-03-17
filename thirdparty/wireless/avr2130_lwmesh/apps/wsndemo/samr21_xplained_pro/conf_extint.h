@@ -1,11 +1,13 @@
 /**
- * \file sys.c
+ * \file
  *
- * \brief Main system routines implementation
+ * \brief SAM D20 External Interrupt Driver Configuration Header
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,51 +39,11 @@
  *
  * \asf_license_stop
  *
- *
  */
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
-/*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
+#  define EXTINT_CALLBACKS_MAX     10
 
-/*- Includes ---------------------------------------------------------------*/
-#include "sysConfig.h"
-#include "phy.h"
-#include "nwk.h"
-#include "sleep_mgr.h"
-#include "sys.h"
-#include "sysTimer.h"
-
-/*- Implementations --------------------------------------------------------*/
-
-/*************************************************************************//**
-*****************************************************************************/
-void SYS_Init(void)
-{
-  irq_initialize_vectors();
-#if SAMD20 || SAMR21
-  system_init();
-  delay_init();
-#else
-  sysclk_init();
-  board_init();    
-#endif  	
-  SYS_TimerInit();  
-  PHY_Init();
-  NWK_Init();
-  sm_init();     
-  cpu_irq_enable();
-}
-
-/*************************************************************************//**
-*****************************************************************************/
-void SYS_TaskHandler(void)
-{
-  PHY_TaskHandler();
-  NWK_TaskHandler();
-  SYS_TimerTaskHandler();
-  
-}
-
+#endif
