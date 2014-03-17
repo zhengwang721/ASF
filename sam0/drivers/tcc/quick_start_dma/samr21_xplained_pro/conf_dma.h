@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21 Xplained Pro board configuration.
+ * \brief SAM R21 Direct Memory Access Driver Configuration Header
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,8 +40,9 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_DMA_H_INCLUDED
+#define CONF_DMA_H_INCLUDED
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#  define CONF_MAX_USED_CHANNEL_NUM     2
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif

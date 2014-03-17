@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 TCC - Timer Counter for Control Applications Driver
+ * \brief SAM D21/R21 TCC - Timer Counter for Control Applications Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -45,9 +45,9 @@
 #define TCC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_tcc_group SAM D21 Timer Counter for Control Applications Driver (TCC)
+ * \defgroup asfdoc_sam0_tcc_group SAM D21/R21 Timer Counter for Control Applications Driver (TCC)
  *
- * This driver for SAM D21 devices provides an interface for the configuration
+ * This driver for SAM D21/R21 devices provides an interface for the configuration
  * and management of the TCC module within the device, for waveform
  * generation and timing operations. It also provides extended options for
  * control applications.
@@ -83,13 +83,13 @@
  * waveforms, the capturing of a periodic waveform's frequency/duty cycle,
  * software timekeeping for periodic operations, waveform extension control,
  * fault detection etc.
- * 
+ *
  * The counter size of the TCC modules can be 16- or 24-bit depending on
  * the TCC instance.
  * Please refer \ref asfdoc_sam0_tc_special_considerations_tcc_d21 for details
  * on TCC instances.
  *
- * The TCC module for the SAM D21 includes the following functions:
+ * The TCC module for the SAM D21/R21 includes the following functions:
  *
  * - Generation of PWM signals
  * - Generation of timestamps for events
@@ -112,7 +112,7 @@
  * - Waveform extension control and fault detection
  * - Interface to the event system, DMAC and the interrupt system
  *
- * The base counter can be configured to either count a prescaled generic 
+ * The base counter can be configured to either count a prescaled generic
  * clock or events from the event system.(TCEx, with event action configured
  * to counting).
  * The counter value can be used by compare/capture channels which can be
@@ -139,13 +139,13 @@
  * are available, to arrange the compare outputs into specific formats.
  * The Output matrix can change the channel output routing, Pattern generation
  * unit can overwrite the output signal line to specific state.
- * The Fault protection feature of the TCC supports recoverable and 
+ * The Fault protection feature of the TCC supports recoverable and
  * non-recoverable faults.
  *
  * \subsection asfdoc_sam0_tcc_module_overview_tc Base Timer/Counter
  *
  * \subsubsection asfdoc_sam0_tcc_module_overview_tc_size Timer/Counter Size
- * Each TCC has a counter size of either 16- or 24-bits. The size of the 
+ * Each TCC has a counter size of either 16- or 24-bits. The size of the
  * counter determines the maximum value it can count to before an overflow
  * occurs.
  * \ref asfdoc_sam0_tcc_count_size_vs_top "The table below" shows the
@@ -183,7 +183,7 @@
  * etc. - see the \ref asfdoc_sam0_system_clock_group "Generic Clock driver" for
  * more information.
  *
- * Each TCC module in the SAM D21 has its own individual clock prescaler, which
+ * Each TCC module in the SAM D21/R21 has its own individual clock prescaler, which
  * can be used to divide the input clock frequency used by the counter. This
  * prescaler only scales the clock used to provide clock pulses for the counter
  * to count, and does not affect the digital register interface portion of
@@ -200,7 +200,7 @@
  *
  * \subsubsection asfdoc_sam0_tcc_module_overview_tc_ctrl Timer/Counter Control Inputs (Events)
  *
- * The TCC can take several actions on the occurrence of an input event. 
+ * The TCC can take several actions on the occurrence of an input event.
  * The event actions are listed
  * in \ref asfdoc_sam0_tcc_module_event_act "events action settings".
  *
@@ -552,7 +552,7 @@
  *
  * The non-recoverable faults force all the TCC output pins to a pre-defined
  * level (can be forced to 0 or 1). The input control signal of non-recoverable
- * fault is from timer/counter event (TCCx EV0 and TCCx EV1). 
+ * fault is from timer/counter event (TCCx EV0 and TCCx EV1).
  * To enable non-recoverable fault,
  * corresponding TCEx event action must be set to non-recoverable fault action
  * (\ref TCC_EVENT_ACTION_NON_RECOVERABLE_FAULT).
@@ -573,11 +573,11 @@
  * channels, number of outputs, are dependent on the TCC module instance being
  * used.
  *
- * \subsubsection asfdoc_sam0_tc_special_considerations_tcc_d21 SAM D21 TCC Feature List
- * For SAM D21, the TCC features are as follow:
+ * \subsubsection asfdoc_sam0_tc_special_considerations_tcc_d21 SAM D21/R21 TCC Feature List
+ * For SAM D21/R21, the TCC features are as follow:
  * \anchor asfdoc_sam0_tcc_features_d21
  * <table>
- *   <caption>TCC module features for SAM D21</caption>
+ *   <caption>TCC module features for SAM D21/R21</caption>
  *   <tr>
  *     <th>TCC#</th>
  *     <th>Match/Capture Channels</th>
@@ -2049,6 +2049,9 @@ void tcc_clear_status(
  *      <th>Changelog</th>
  *  </tr>
  *  <tr>
+ *      <td>Added fault handling functionality</td>
+ *  </tr>
+ *  <tr>
  *      <td>Initial Release</td>
  *  </tr>
  * </table>
@@ -2080,14 +2083,19 @@ void tcc_clear_status(
  *      <th>Comments</td>
  *  </tr>
  *  <tr>
- *      <td>A</td>
- *      <td>01/2014</td>
- *      <td>Initial release</td>
+ *      <td>C</td>
+ *      <td>03/2014</td>
+ *      <td>Added SAM R21 support</td>
  *  </tr>
  *  <tr>
  *      <td>B</td>
  *      <td>02/2014</td>
  *      <td>Added fault handling functionality</td>
+ *  </tr>
+ *  <tr>
+ *      <td>A</td>
+ *      <td>01/2014</td>
+ *      <td>Initial release</td>
  *  </tr>
  * </table>
  */

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 TCC Driver Quick Start with DMA
+ * \brief SAM D21/R21 TCC Driver Quick Start with DMA
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -45,13 +45,13 @@
  * \page asfdoc_sam0_tcc_dma_use_case Quick Start Guide for Using DMA with TCC
  *
  * The supported device list:
- *    - SAMD21
+ *    - SAM D21/R21
  *
  * In this use case, the TCC will be used to generate a PWM signal. Here
  * the pulse width varies through following values with the help of DMA
  * transfer: one quarter of the period, half of the period and three quarters
  * of the period.
- * The PWM output can be used to drive an LED. The waveform can also be 
+ * The PWM output can be used to drive an LED. The waveform can also be
  * viewed using an oscilloscope.
  * The output signal is also fed back to another TCC channel by event system,
  * the event stamps are captured and transferred to a buffer by DMA.
@@ -60,6 +60,7 @@
  * <table>
  *  <tr><th> Board        </td><th> Pin  </td><th> Connect to </td></tr>
  *  <tr><td> SAMD21 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
+ *  <tr><td> SAMR21 Xpro  </td><td> PA19 </td><td> LED0       </td></tr>
  * </table>
  *
  * The TCC module will be setup as follows:
@@ -76,11 +77,13 @@
  * - Don't perform one-shot operations
  * - Counter starts on 0
  * - Counter top set to 0x1000
- * - Channel 0 is set to compare and match value 0x1000*3/4 and generate event
+ * - Channel 0 (on SAM D21 Xpro) or 3 (on SAM R21 Xpro) is set to
+ *   compare and match value 0x1000*3/4 and generate event
  * - Channel 1 is set to capture on input event
  *
  * The event resource of EVSYS module will be setup as follows:
- * - TCC match capture channel 0 is selected as event generator
+ * - TCC match capture channel 0 (on SAM D21 Xpro) or 3 (on SAM R21 Xpro) is
+ *   selected as event generator
  * - Event generation is synchronous, with rising edge detected
  * - TCC match capture channel 1 is the event user
  *
