@@ -84,7 +84,7 @@ extern "C" {
  *
  * \anchor appdoc_sam0_dmac_datalogger_thermistor_conn
  *
- * \image html therm_conn.svg "test"
+ * \image html therm_conn.svg "Thermistor connection"
  *
  * \section appdoc_sam0_dmac_datalogger_usage Usage
  * The CPU is kept in Idle sleep and the RTC timeout event triggers ADC
