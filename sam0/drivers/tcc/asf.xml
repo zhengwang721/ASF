@@ -94,7 +94,7 @@
 
 				<info type="description" value="pdf">
 					This document describes how to use the Timer Counter for Control Applications on the
-					SAM D21/R21, both the ASF driver and the peripheral itself.
+					SAM D21, both the ASF driver and the peripheral itself.
 				</info>
 
 				<build name="TCC_ASYNC" type="define" value="true" />
@@ -153,7 +153,7 @@
 
 				<info type="description" value="pdf">
 					This document describes how to use the Timer Counter for Control Applications on the
-					SAM D21/R21, both the ASF driver and the peripheral itself.
+					SAM R21, both the ASF driver and the peripheral itself.
 				</info>
 
 				<build name="TCC_ASYNC" type="define" value="true" />
@@ -173,15 +173,15 @@
 				<build type="header-file" value="quick_start_dma/qs_tcc_dma.h" />
 
 				<build type="doxygen-example-path" value="quick_start"/>
-				<build type="doxygen-example-path" value="quick_start/samd21_xplained_pro"/>
+				<build type="doxygen-example-path" value="quick_start/samr21_xplained_pro"/>
 				<build type="doxygen-example-path" value="quick_start_callback"/>
-				<build type="doxygen-example-path" value="quick_start_callback/samd21_xplained_pro"/>
+				<build type="doxygen-example-path" value="quick_start_callback/samr21_xplained_pro"/>
 				<build type="doxygen-example-path" value="quick_start_faultx"/>
-				<build type="doxygen-example-path" value="quick_start_faultx/samd21_xplained_pro"/>
+				<build type="doxygen-example-path" value="quick_start_faultx/samr21_xplained_pro"/>
 				<build type="doxygen-example-path" value="quick_start_faultn"/>
-				<build type="doxygen-example-path" value="quick_start_faultn/samd21_xplained_pro"/>
+				<build type="doxygen-example-path" value="quick_start_faultn/samr21_xplained_pro"/>
 				<build type="doxygen-example-path" value="quick_start_dma"/>
-				<build type="doxygen-example-path" value="quick_start_dma/samd21_xplained_pro"/>
+				<build type="doxygen-example-path" value="quick_start_dma/samr21_xplained_pro"/>
 
 				<build type="doxygen-image-path" value="docimg" />
 
