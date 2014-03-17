@@ -86,7 +86,7 @@
  *
  * The counter size of the TCC modules can be 16- or 24-bit depending on
  * the TCC instance.
- * Please refer \ref asfdoc_sam0_tc_special_considerations_tcc_d21 for details
+ * Please refer \ref asfdoc_sam0_tcc_special_considerations_tcc_d21 for details
  * on TCC instances.
  *
  * The TCC module for the SAM D21 includes the following functions:
@@ -559,7 +559,21 @@
  * Refer to \ref asfdoc_sam0_tcc_module_overview_tc_ctrl to see the available
  * event input action.
  *
- * \subsection asfdoc_sam0_tcc_module_overview_tc_sleep Sleep Mode
+ * \subsection asfdoc_sam0_tcc_module_overview_buffering Double and Circular Buffering
+ *
+ * The pattern, period and the compare channels registers are double buffered.
+ * When writing to their buffer registers, the written value will then be
+ * buffered and committed when UPDATE condition happen.
+ *
+ * Usually the buffered value is cleared after it's committed, but there is also
+ * option to circular the register buffers. The period and four lowest compare
+ * channels register support this option. When circular option is used, on
+ * UPDATE the previous period or compare values are copied back into the
+ * corresponding period buffer and compare buffers. This way, the register value
+ * and its buffer register value is actually switched on UPDATE condition, and
+ * will be switched back on next UPDATE condition. 
+ *
+ * \subsection asfdoc_sam0_tcc_module_overview_sleep Sleep Mode
  *
  * TCC modules can be configured to operate in any sleep mode, with its "run
  * in standby" function enabled. It can wakeup the device using interrupts or
@@ -567,13 +581,13 @@
  *
  * \section asfdoc_sam0_tcc_special_considerations Special Considerations
  *
- * \subsection asfdoc_sam0_tc_special_considerations_tcc_feature Module Features
+ * \subsection asfdoc_sam0_tcc_special_considerations_tcc_feature Module Features
  *
  * The features of TCC, such as timer/counter size, number of compare capture
  * channels, number of outputs, are dependent on the TCC module instance being
  * used.
  *
- * \subsubsection asfdoc_sam0_tc_special_considerations_tcc_d21 SAM D21 TCC Feature List
+ * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM D21 TCC Feature List
  * For SAM D21, the TCC features are as follow:
  * \anchor asfdoc_sam0_tcc_features_d21
  * <table>
@@ -628,7 +642,7 @@
  *   </tr>
  * </table>
  *
- * \subsection asfdoc_sam0_tc_special_considerations_tcc_pin Channels VS. Pin outs
+ * \subsection asfdoc_sam0_tcc_special_considerations_tcc_pin Channels VS. Pin outs
  *
  * As the TCC module may have more waveform output pins than the number of
  * compare/capture channels, the free pins (with number higher than number of

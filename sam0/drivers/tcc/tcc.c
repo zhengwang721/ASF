@@ -1003,7 +1003,7 @@ uint32_t tcc_get_capture_value(
  * Writes a compare value to the given TCC module compare/capture channel.
  *
  * If double buffering is enabled it always write to the buffer
- * register The value will then be updated immediately by calling
+ * register. The value will then be updated immediately by calling
  * \ref tcc_force_double_buffer_update(), or be updated when the lock update bit
  * is cleared and the update condition happen.
  *
@@ -1068,7 +1068,7 @@ enum status_code tcc_set_compare_value(
  * This function writes the given value to the PER register.
  *
  * If double buffering is enabled it always write to the buffer
- * register The value will then be updated immediately by calling
+ * register. The value will then be updated immediately by calling
  * \ref tcc_force_double_buffer_update(), or be updated when the lock update bit
  * is cleared and the update condition happen.
  *
@@ -1127,7 +1127,7 @@ enum status_code tcc_set_top_value(
  * Force waveform output line to generate specific pattern (0, 1 or as is).
  *
  * If double buffering is enabled it always write to the buffer
- * register The value will then be updated immediately by calling
+ * register. The value will then be updated immediately by calling
  * \ref tcc_force_double_buffer_update(), or be updated when the lock update bit
  * is cleared and the update condition happen.
  *
