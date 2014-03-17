@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief API for SAM TRNG.
+ * \brief Board configuration.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,38 +41,10 @@
  *
  */
 
-#ifndef TRNG_H_INCLUDED
-#define TRNG_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include "compiler.h"
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-/** Key to unlock TRNG_CR register */
-#ifndef TRNG_CR_KEY_PASSWD
-#define TRNG_CR_KEY_PASSWD    TRNG_CR_KEY(0x524E47)
-#endif
-
-void trng_enable(Trng *p_trng);
-void trng_disable(Trng *p_trng);
-void trng_enable_interrupt(Trng *p_trng);
-void trng_disable_interrupt(Trng *p_trng);
-uint32_t trng_get_interrupt_mask(Trng *p_trng);
-uint32_t trng_get_interrupt_status(Trng *p_trng);
-uint32_t trng_read_output_data(Trng *p_trng);
-
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-#endif /* TRNG_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
