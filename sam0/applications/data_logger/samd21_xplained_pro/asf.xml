@@ -2,6 +2,8 @@
 	<project caption="Data Logger Application for the SAM D21 Xplained Pro" id="sam0.applications.data_logger.samd21_xplained_pro">
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="."/>
+		<build type="include-path" value="./conf"/>
+		
 		<build type="header-file" value="config/conf_clocks.h"/>
 		<build type="header-file" value="config/conf_board.h"/>
 		<build type="header-file" value="config/conf_dma.h"/>
