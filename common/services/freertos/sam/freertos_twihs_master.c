@@ -51,8 +51,8 @@
 
 /* Every bit in the interrupt mask. */
 #define MASK_ALL_INTERRUPTS     (0xffffffffUL)
-/* TWI timeout counter */
-#define TWI_TIMEOUT_COUNTER    (0xffffffffUL)
+/* TWIHS timeout counter */
+#define TWIHS_TIMEOUT_COUNTER    (0xffffffffUL)
 
 /* Interrupts that are enabled to catch error conditions on the bus. */
 #define SR_ERROR_INTERRUPTS  (TWIHS_SR_NACK | TWIHS_SR_ARBLST | TWIHS_SR_OVRE)
