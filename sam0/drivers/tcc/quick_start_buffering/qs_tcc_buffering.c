@@ -59,7 +59,6 @@ static void configure_tcc(void)
 	//! [setup_config_defaults]
 
 	//! [setup_change_config]
-	config_tcc.double_buffering = true;
 	config_tcc.counter.clock_prescaler = TCC_CLOCK_PRESCALER_DIV1024;
 	config_tcc.counter.period = 8000;
 	config_tcc.compare.wave_generation = TCC_WAVE_GENERATION_SINGLE_SLOPE_PWM;
@@ -78,7 +77,7 @@ static void configure_tcc(void)
 
 	//! [setup_set_buffering]
 	tcc_set_compare_value(&tcc_instance, CONF_PWM_CHANNEL, 8000*3/4);
-	tcc_set_circular_of_compare_values(&tcc_instance, CONF_PWM_CHANNEL, true);
+	tcc_enable_circular_buffer_compare(&tcc_instance, CONF_PWM_CHANNEL);
 	//! [setup_set_buffering]
 
 	//! [setup_enable]

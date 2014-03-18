@@ -77,7 +77,6 @@
 			<build type="header-file" value="quick_start_callback/qs_tcc_callback.h" />
 			<build type="header-file" value="quick_start_faultx/qs_tcc_faultx.h" />
 			<build type="header-file" value="quick_start_faultn/qs_tcc_faultn.h" />
-			<build type="header-file" value="quick_start_bldc/qs_tcc_bldc.h" />
 			<build type="header-file" value="quick_start_dma/qs_tcc_dma.h" />
 
 			<build type="doxygen-example-path" value="quick_start"/>
@@ -89,8 +88,6 @@
 			<build type="doxygen-example-path" value="quick_start_faultx/samd21_xplained_pro"/>
 			<build type="doxygen-example-path" value="quick_start_faultn"/>
 			<build type="doxygen-example-path" value="quick_start_faultn/samd21_xplained_pro"/>
-			<build type="doxygen-example-path" value="quick_start_bldc"/>
-			<build type="doxygen-example-path" value="quick_start_bldc/samd21_xplained_pro"/>
 			<build type="doxygen-example-path" value="quick_start_dma"/>
 			<build type="doxygen-example-path" value="quick_start_dma/samd21_xplained_pro"/>
 

@@ -562,16 +562,30 @@
  * \subsection asfdoc_sam0_tcc_module_overview_buffering Double and Circular Buffering
  *
  * The pattern, period and the compare channels registers are double buffered.
- * When writing to their buffer registers, the written value will then be
- * buffered and committed when UPDATE condition happen.
+ * For these options there are effective registers (PATT, PER and CCx) and
+ * buffer registers (PATTB, PERB and CCx). When writing to the buffer
+ * registers, the values are buffered and will be committed to effective
+ * registers on UPDATE condition.
  *
  * Usually the buffered value is cleared after it's committed, but there is also
- * option to circular the register buffers. The period and four lowest compare
- * channels register support this option. When circular option is used, on
- * UPDATE the previous period or compare values are copied back into the
- * corresponding period buffer and compare buffers. This way, the register value
- * and its buffer register value is actually switched on UPDATE condition, and
- * will be switched back on next UPDATE condition. 
+ * option to circular the register buffers. The period (PER) and four lowest
+ * compare channels register (CCx, x is 0 ~ 3) support this function. When
+ * circular buffer is used, on UPDATE the previous period or compare values are
+ * copied back into the corresponding period buffer and compare buffers.
+ * This way, the register value and its buffer register value is actually
+ * switched on UPDATE condition, and will be switched back on next UPDATE
+ * condition.
+ *
+ * For input capture, the buffer register (CCBx) and the corresponding capture
+ * channel register (CCx) act like a FIFO. When regular register (CCx) is empty
+ * or read, any content in the buffer register is passed to regular one.
+ *
+ * In TCC module driver, when the double buffering write is enabled, any
+ * write through \ref tcc_set_top_value(), \ref tcc_set_compare_value() and
+ * \ref tcc_set_pattern() will be done to the corresponding buffer register.
+ * Then the value in the buffer register will be transferred to the regular
+ * register on the next UPDATE condition or by a force UPDATE using
+ * \ref tcc_force_double_buffer_update().
  *
  * \subsection asfdoc_sam0_tcc_module_overview_sleep Sleep Mode
  *
@@ -1507,8 +1521,17 @@ struct tcc_config {
 	/** Structure for configuring TCC output pins */
 	struct tcc_pins_config pins;
 
-	/** When \c true the double buffering is enabled */
-	bool double_buffering;
+	/** Set to \c true to enable double buffering write. When enabled any write
+	 *  through \ref tcc_set_top_value(), \ref tcc_set_compare_value() and
+	 *  \ref tcc_set_pattern() will direct to the buffer register as buffered
+	 *  value, and the buffered value will be committed to effective register
+	 *  on UPDATE condition, if update is not locked.
+	 *
+	 *  \note The init values in \ref tcc_config for \ref tcc_init are always
+	 *        filled to effective registers, no matter double buffering
+	 *        enabled or not.
+	 */
+	bool double_buffering_enabled;
 
 	/** When \c true the module is enabled during standby */
 	bool run_in_standby;
@@ -1544,8 +1567,8 @@ struct tcc_module {
 	uint32_t enable_callback_mask;
 #  endif
 
-	/** Double buffering access enabled/disabled */
-	bool double_buffering;
+	/** Set to \c true to write to buffered registers */
+	bool double_buffering_enabled;
 };
 
 #if !defined(__DOXYGEN__)
@@ -1823,12 +1846,12 @@ static inline void tcc_stop_counter(
 			/* Wait for sync */
 		}
 		last_cmd = tcc_module->CTRLBSET.reg & TCC_CTRLBSET_CMD_Msk;
-		if (TCC_CTRLBSET_CMD_NONE == last_cmd) {
+		if (last_cmd == TCC_CTRLBSET_CMD_NONE) {
 			break;
-		} else if (TCC_CTRLBSET_CMD_STOP == last_cmd) {
+		} else if (last_cmd == TCC_CTRLBSET_CMD_STOP) {
 			/* Command have been issued */
 			return;
-		} else if (TCC_CTRLBSET_CMD_RETRIGGER == last_cmd) {
+		} else if (last_cmd == TCC_CTRLBSET_CMD_RETRIGGER) {
 			/* Cancel RETRIGGER command and issue STOP */
 			tcc_module->CTRLBCLR.reg = TCC_CTRLBCLR_CMD_Msk;
 		}
@@ -1862,12 +1885,12 @@ static inline void tcc_restart_counter(
 			/* Wait for sync */
 		}
 		last_cmd = tcc_module->CTRLBSET.reg & TCC_CTRLBSET_CMD_Msk;
-		if (TCC_CTRLBSET_CMD_NONE == last_cmd) {
+		if (last_cmd == TCC_CTRLBSET_CMD_NONE) {
 			break;
-		} else if (TCC_CTRLBSET_CMD_RETRIGGER == last_cmd) {
+		} else if (last_cmd == TCC_CTRLBSET_CMD_RETRIGGER) {
 			/* Command have been issued */
 			return;
-		} else if (TCC_CTRLBSET_CMD_STOP == last_cmd) {
+		} else if (last_cmd == TCC_CTRLBSET_CMD_STOP) {
 			/* Cancel STOP command and issue RETRIGGER */
 			tcc_module->CTRLBCLR.reg = TCC_CTRLBCLR_CMD_Msk;
 		}
@@ -1960,9 +1983,9 @@ static inline void tcc_set_ramp_index(
 			return;
 		}
 		last_cmd = tcc_module->CTRLBSET.reg & TCC_CTRLBSET_IDXCMD_Msk;
-		if (TCC_CTRLBSET_IDXCMD_DISABLE == last_cmd) {
+		if (last_cmd == TCC_CTRLBSET_IDXCMD_DISABLE) {
 			break;
-		} else if (TCC_CTRLBSET_CMD(ramp_index) == last_cmd) {
+		} else if (last_cmd == TCC_CTRLBSET_CMD(ramp_index)) {
 			/* Command have been issued */
 			return;
 		}
@@ -2014,16 +2037,16 @@ void tcc_clear_status(
  */
 
 /**
- * \brief Enable TCC double buffering
+ * \brief Enable TCC double buffering write
  *
- * When double buffering is enabled, following writing values will be buffered:
- * - PER: through \ref tcc_set_top_value()
- * - CCx(x is 0~3): through \ref tcc_set_compare_value()
- * - PATT: through \ref tcc_set_pattern()
+ * When double buffering write is enabled, following function will write values
+ * to buffered registers instead of effective ones (buffered):
+ * - PERB: through \ref tcc_set_top_value()
+ * - CCBx(x is 0~3): through \ref tcc_set_compare_value()
+ * - PATTB: through \ref tcc_set_pattern()
  *
- * \note The double buffer lock update is not cleared by this function, use
- * \ref tcc_unlock_double_buffer_update() to enable the updates from buffered
- * values to using values.
+ * Then on UPDATE condition the buffered registers are committed to regular ones
+ * to take effect.
  *
  * \param[in] module_inst  Pointer to the TCC software instance struct
  */
@@ -2033,15 +2056,23 @@ static inline void tcc_enable_double_buffering(
 	/* Sanity check arguments */
 	Assert(module_inst);
 
-	module_inst->double_buffering = true;
+	module_inst->double_buffering_enabled = true;
 }
 
 /**
- * \brief Disable TCC double buffering and lock buffer update
+ * \brief Disable TCC double buffering Write
  *
- * \note The double buffering update is auto locked after disable, so when
- *       double buffering is enabled, \ref tcc_unlock_double_buffer_update()
- *       must be invoked to unlock update.
+ * When double buffering write is disabled, following function will write values
+ * to effective registers (not buffered):
+ * - PER: through \ref tcc_set_top_value()
+ * - CCx(x is 0~3): through \ref tcc_set_compare_value()
+ * - PATT: through \ref tcc_set_pattern()
+ *
+ * \note This function does not lock double buffer update, which means on next
+ *       UPDATE condition the last written buffered values will be committed to
+ *       take effect. Invoke \ref tcc_lock_double_buffer_update() before this
+ *       function to disable double buffering update, if this change is not
+ *       expected.
  *
  * \param[in] module_inst  Pointer to the TCC software instance struct
  */
@@ -2052,58 +2083,51 @@ static inline void tcc_disable_double_buffering(
 	Assert(module_inst);
 	Assert(module_inst->hw);
 
-	module_inst->hw->CTRLBSET.reg = TCC_CTRLBSET_LUPD;
-	module_inst->double_buffering = false;
+	module_inst->double_buffering_enabled = false;
 }
 
 /**
- * \brief Lock the TCC double buffered registers
+ * \brief Lock the TCC double buffered registers updates
  *
  * Locks the double buffered registers so they will not be updated through
- * their buffered values on update conditions.
+ * their buffered values on UPDATE conditions.
  *
  * \param[in] module_inst  Pointer to the TCC software instance struct
  *
- * \retval STATUS_OK           The module was initialized successfully
- * \retval STATUS_ERR_DENIED   Wrong mode, double buffering is not enabled
  */
-static inline enum status_code tcc_lock_double_buffer_update(
+static inline void tcc_lock_double_buffer_update(
 		struct tcc_module *const module_inst)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw);
 
-	if (!module_inst->double_buffering) {
-		return STATUS_ERR_DENIED;
+	while (module_inst->hw->SYNCBUSY.bit.CTRLB) {
+		/* Wait for sync */
 	}
 	module_inst->hw->CTRLBSET.reg = TCC_CTRLBSET_LUPD;
-	return STATUS_OK;
 }
 
 /**
- * \brief Unlock the TCC double buffered registers
+ * \brief Unlock the TCC double buffered registers updates
  *
  * Unlock the double buffered registers so they will be updated through
- * their buffered values on update conditions.
+ * their buffered values on UPDATE conditions.
  *
  * \param[in] module_inst  Pointer to the TCC software instance struct
  *
- * \retval STATUS_OK           The module was initialized successfully
- * \retval STATUS_ERR_DENIED   Wrong mode, double buffering is not enabled
  */
-static inline enum status_code tcc_unlock_double_buffer_update(
+static inline void tcc_unlock_double_buffer_update(
 		struct tcc_module *const module_inst)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw);
 
-	if (!module_inst->double_buffering) {
-		return STATUS_ERR_DENIED;
+	while (module_inst->hw->SYNCBUSY.bit.CTRLB) {
+		/* Wait for sync */
 	}
 	module_inst->hw->CTRLBCLR.reg = TCC_CTRLBCLR_LUPD;
-	return STATUS_OK;
 }
 
 /**
@@ -2111,19 +2135,14 @@ static inline enum status_code tcc_unlock_double_buffer_update(
  *
  * \param[in] module_inst  Pointer to the TCC software instance struct
  *
- * \retval STATUS_OK           The module was initialized successfully
- * \retval STATUS_ERR_DENIED   Wrong mode, double buffering is not enabled
  */
-static inline enum status_code tcc_force_double_buffer_update(
+static inline void tcc_force_double_buffer_update(
 		struct tcc_module *const module_inst)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw);
 
-	if (!module_inst->double_buffering) {
-		return STATUS_ERR_DENIED;
-	}
 	/* Get a pointer to the module's hardware instance */
 	Tcc *const tcc_module = module_inst->hw;
 	uint32_t last_cmd;
@@ -2134,27 +2153,75 @@ static inline enum status_code tcc_force_double_buffer_update(
 			/* Wait for sync */
 		}
 		last_cmd = tcc_module->CTRLBSET.reg & TCC_CTRLBSET_CMD_Msk;
-		if (TCC_CTRLBSET_CMD_NONE == last_cmd) {
+		if (last_cmd == TCC_CTRLBSET_CMD_NONE) {
 			break;
-		} else if (TCC_CTRLBSET_CMD_UPDATE == last_cmd) {
+		} else if (last_cmd == TCC_CTRLBSET_CMD_UPDATE) {
 			/* Command have been issued */
-			return STATUS_OK;
+			return;
 		}
 	} while (1);
 
 	/* Write command to execute */
 	tcc_module->CTRLBSET.reg = TCC_CTRLBSET_CMD_UPDATE;
-	return STATUS_OK;
 }
 
-enum status_code tcc_set_circular_of_compare_values(
+/**
+ * \brief Enable Circular Buffer for double buffered Top/Period Values
+ *
+ * Circulars the double buffered top/period values or not.
+ * Circular means when updating values, the using values and their buffered
+ * values are switched - the previously using one will be buffered and the
+ * buffered one will then be used.
+ *
+ * \param[in] module_inst     Pointer to the TCC software instance struct
+ */
+static inline void tcc_enable_circular_buffer_top(
+		struct tcc_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	module_inst->hw->WAVE.reg |=  TCC_WAVE_CIPEREN;
+}
+
+/**
+ * \brief Disable Circular Buffer for double buffered Top/Period Values
+ *
+ * Circulars the double buffered top/period values or not.
+ * Circular means when updating values, the using values and their buffered
+ * values are switched - the previously using one will be buffered and the
+ * buffered one will then be used.
+ *
+ * \param[in] module_inst     Pointer to the TCC software instance struct
+ */
+static inline void tcc_disable_circular_buffer_top(
+		struct tcc_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	module_inst->hw->WAVE.reg &= ~TCC_WAVE_CIPEREN;
+}
+
+enum status_code tcc_set_double_buffer_top_values(
+		const struct tcc_module *const module_inst,
+		const uint32_t top_value, const uint32_t top_buffer_value);
+
+
+enum status_code tcc_enable_circular_buffer_compare(
+		struct tcc_module *const module_inst,
+		enum tcc_match_capture_channel channel_index);
+enum status_code tcc_disable_circular_buffer_compare(
+		struct tcc_module *const module_inst,
+		enum tcc_match_capture_channel channel_index);
+enum status_code tcc_set_double_buffer_compare_values(
 		struct tcc_module *const module_inst,
 		enum tcc_match_capture_channel channel_index,
-		bool enable_circular);
+		const uint32_t compare,
+		const uint32_t compare_buffer);
 
-enum status_code tcc_set_circular_of_top_values(
-		struct tcc_module *const module_inst,
-		bool enable_circular);
 
 /** @} */
 
@@ -2246,7 +2313,6 @@ enum status_code tcc_set_circular_of_top_values(
  *  - \subpage asfdoc_sam0_tcc_callback_use_case
  *  - \subpage asfdoc_sam0_tcc_faultx_use_case
  *  - \subpage asfdoc_sam0_tcc_faultn_use_case
- *  - \subpage asfdoc_sam0_tcc_bldc_use_case
  * \endif
  *  - \subpage asfdoc_sam0_tcc_dma_use_case
  *
@@ -2261,8 +2327,8 @@ enum status_code tcc_set_circular_of_top_values(
  *  <tr>
  *      <td>C</td>
  *      <td>03/2014</td>
- *      <td>Added double buffering functionality with use case; Add timer use
- *          case and BLDC use case
+ *      <td>Added double buffering functionality with use case; Added timer use
+ *          case
  *      </td>
  *  </tr>
  *  <tr>
