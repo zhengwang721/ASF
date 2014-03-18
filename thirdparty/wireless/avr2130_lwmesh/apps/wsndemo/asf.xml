@@ -7,7 +7,9 @@
 		</info>
 		<!-- +++++++++++++++++++++++++++++++++++++++++++++++BUILD+++++++++++++++++++++++++++++++++++++++++++++++. -->
 		<build type="c-source" value="wsndemo.c"/>
+		<build type="c-source" value="commands.c"/>
 		<build type="header-file"   value="config.h"/>
+		<build type="header-file"   value="commands.h"/>
 		<require idref="thirdparty.wireless.addons.sio2host"/>
 		<build type="include-path"  value="./"/>
 		<build type="header-file" value="conf_trx_access.h"/>

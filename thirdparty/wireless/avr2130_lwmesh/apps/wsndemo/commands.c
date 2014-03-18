@@ -47,7 +47,6 @@
 #include "config.h"
 #include "nwk.h"
 #include "sysTimer.h"
-#include "halLed.h"
 #include "commands.h"
 
 /*- Definitions ------------------------------------------------------------*/
@@ -383,7 +382,7 @@ static bool appCmdHandle(uint8_t *data, uint8_t size)
     appCmdIdentifyPeriodTimer.handler = appCmdIdentifyPeriodTimerHandler;
     SYS_TimerStart(&appCmdIdentifyPeriodTimer);
 
-    HAL_LedOn(LED_IDENTIFY);
+    LED_On(LED_IDENTIFY);
     NWK_Lock();
 
     return true;
@@ -397,7 +396,7 @@ static bool appCmdHandle(uint8_t *data, uint8_t size)
 static void appCmdIdentifyDurationTimerHandler(SYS_Timer_t *timer)
 {
   NWK_Unlock();
-  HAL_LedOn(LED_IDENTIFY);
+  LED_On(LED_IDENTIFY);
   SYS_TimerStop(&appCmdIdentifyPeriodTimer);
   (void)timer;
 }
@@ -406,6 +405,6 @@ static void appCmdIdentifyDurationTimerHandler(SYS_Timer_t *timer)
 *****************************************************************************/
 static void appCmdIdentifyPeriodTimerHandler(SYS_Timer_t *timer)
 {
-  HAL_LedToggle(LED_IDENTIFY);
+  LED_Toggle(LED_IDENTIFY);
   (void)timer;
 }

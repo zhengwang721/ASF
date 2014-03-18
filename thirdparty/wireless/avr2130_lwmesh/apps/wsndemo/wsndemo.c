@@ -89,7 +89,7 @@
 
 
 #define APP_CAPTION_SIZE  (sizeof(APP_CAPTION) - 1)
-
+#define APP_COMMAND_PENDING 0x01
 #if LED_COUNT>2
 #define LED_NETWORK       LED0
 #define LED_DATA          LED1
@@ -174,14 +174,15 @@ void HAL_UartBytesReceived(uint16_t bytes)
 {
   for (uint16_t i = 0; i < bytes; i++)
   {
-    uint8_t byte = HAL_UartReadByte();
+    uint8_t byte;
+	sio2host_rx(&byte, 1);
     APP_CommandsByteReceived(byte);
   }
 }
-
+#if APP_COORDINATOR
 /*************************************************************************//**
 
-#if APP_COORDINATOR
+
 /*****************************************************************************
 *****************************************************************************/
 static void appUartSendMessage(uint8_t *data, uint8_t size)
@@ -477,7 +478,6 @@ int main(void)
     {
 		
         SYS_TaskHandler();
-    HAL_UartTaskHandler();
 	    APP_TaskHandler();
 		
     }
