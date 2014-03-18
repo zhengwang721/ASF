@@ -170,21 +170,21 @@ static SYS_Timer_t appDataSendingTimer;
 
 /*************************************************************************//**
 *****************************************************************************/
-void HAL_UartBytesReceived(uint16_t bytes)
-{
-  for (uint16_t i = 0; i < bytes; i++)
-  {
-    uint8_t byte;
-	sio2host_rx(&byte, 1);
-    APP_CommandsByteReceived(byte);
-  }
-}
+
 #if APP_COORDINATOR
 /*************************************************************************//**
 
 
 /*****************************************************************************
 *****************************************************************************/
+void HAL_UartBytesReceived(uint16_t bytes,uint8_t * byte )
+{
+	for (uint16_t i = 0; i < bytes; i++)
+	{
+		APP_CommandsByteReceived(byte[i]);
+	}
+}
+
 static void appUartSendMessage(uint8_t *data, uint8_t size)
 {
   uint8_t cs = 0;
@@ -288,6 +288,7 @@ static void appDataConf(NWK_DataReq_t *req)
   if (APP_COMMAND_PENDING == req->control)
   {
     SYS_TimerStart(&appCommandWaitTimer);
+	LED_On(LED_NETWORK);
     appState = APP_STATE_WAIT_COMMAND_TIMER;
   }
   else
@@ -324,7 +325,7 @@ static void appSendData(void)
   appNwkDataReq.size = sizeof(appMsg);
   appNwkDataReq.confirm = appDataConf;
 
-  LED_On(LED_DATA);
+  //LED_On(LED_DATA);
   NWK_DataReq(&appNwkDataReq);
 
   appState = APP_STATE_WAIT_CONF;
@@ -445,7 +446,7 @@ static void APP_TaskHandler(void)
     {
       NWK_WakeupReq();
 
-      LED_On(LED_NETWORK);
+      //LED_On(LED_NETWORK);
 
 
       appState = APP_STATE_SEND;
@@ -456,9 +457,10 @@ static void APP_TaskHandler(void)
   }
   
 #if APP_COORDINATOR
-  if(sio2host_rx(rx_data,APP_RX_BUF_SIZE) > 0)
+  uint16_t bytes;
+  if((bytes = sio2host_rx(rx_data,APP_RX_BUF_SIZE)) > 0)
   {
-  LED_Toggle(LED_BLINK);  
+  HAL_UartBytesReceived(bytes,&rx_data);  
   }
 #endif
 }
