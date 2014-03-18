@@ -143,11 +143,9 @@ static void demo_draw_bmpfile(  struct gfx_bitmap const *bmp,
 	uint32_t min_length;
 	volatile uint32_t read_line_num = 0;
 	volatile uint32_t offset;
-	uint32_t start_x = map_x, start_y = map_y;
-	uint32_t offset_x,offset_y;
+	uint32_t start_y = map_y;
+	uint32_t offset_y;
 	uint32_t read_length;
-	static volatile uint32_t xx;
-	static volatile uint32_t yy;
 	gfx_coord_t width = bmp->width;
 	uint32_t lcd_type = ili93xx_get_lcd_type();
 
@@ -211,7 +209,6 @@ static void demo_draw_bmpfile(  struct gfx_bitmap const *bmp,
 	}else {
 	gfx_set_orientation(GFX_FLIP_Y);
 
-
 	offset_y = FF_BUFF_SIZE/(x+1)/3;
 	read_length = offset_y*(x+1)*3;
 
@@ -243,10 +240,10 @@ static void demo_draw_bmpfile(  struct gfx_bitmap const *bmp,
 							demo_bmp_filedata, length/3);
 
 						start_y -= offset_y;
-						
+
 					} while (length == (read_length));
 				} else {
-				
+
 					read_line_num = FF_BUFF_SIZE / line_length;
 
 					do {
@@ -263,7 +260,7 @@ static void demo_draw_bmpfile(  struct gfx_bitmap const *bmp,
 							offset += line_length;
 						}
 					} while (length == read_line_num * line_length);
-					
+
 				}
 
 				break;
