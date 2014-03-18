@@ -16,8 +16,19 @@
 			<require idref="thirdparty.wireless.avr2025_mac.source.tfa.atmegarfr2"/>
 			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal.atmegarfr2"/>
             <device-support value="atmega256rfr2"/>
+            <device-support value="atmega2564rfr2"/>
 			<build type="doxygen-entry-point" value="group_tfa"/>
 		</module>	
+		
+		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa#3"     caption="atmegarfa1 tfa  support enabled">
+			<info type="description" value="summary">
+			ATMEGARFR2 Transceiver Feature Access
+			</info>
+			<require idref="thirdparty.wireless.avr2025_mac.source.tfa.atmegarfa1"/>
+			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal.atmegarfa1"/>
+            <device-support value="atmega128rfa1"/>
+			<build type="doxygen-entry-point" value="group_tfa"/>
+		</module>			
     </select-by-device>
 
 	<select-by-config id="config.thirdparty.wireless.avr2025_mac.source.tfa.ext" name="config.thirdparty.wireless.avr2025_mac.source.tfa" caption="TFA Configuration" default="at86rf212">
@@ -31,6 +42,18 @@
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
 			<build type="doxygen-entry-point" value="group_tfa"/>
 		</module>
+
+		
+		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa.ext#at86rf232"     caption="at86rf232 tfa  support enabled">
+			<info type="description" value="summary">
+			AT86Rf232 Transceiver Feature Access
+			</info>
+			<info type="gui-flag" value="hidden"/>
+			<require idref="thirdparty.wireless.avr2025_mac.source.tfa.at86rf232"/>
+			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf232"/>
+            <device-support-alias value="avr2025_mac_pal_spi_support"/>
+			<build type="doxygen-entry-point" value="group_tfa"/>
+		</module>		
 
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa.ext#at86rf212"     caption="at86rf212  tfa  support enabled">
 			<info type="description" value="summary">
@@ -52,19 +75,9 @@
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
 			<build type="doxygen-entry-point" value="group_tfa"/>
 		</module>
-		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa.ext#at86rf230b"     caption="at86rf230B tfa  support enabled">
-			<info type="description" value="summary">
-			AT86Rf230B Transceiver Feature Access
-			</info>
-			<info type="gui-flag" value="hidden"/>
-			<require idref="thirdparty.wireless.avr2025_mac.source.tfa.at86rf230b"/>
-			<require idref="config.thirdparty.wireless.avr2025_mac.source.tal.at86rf230b"/>
-            <device-support-alias value="avr2025_mac_pal_spi_support"/>
-			<build type="doxygen-entry-point" value="group_tfa"/>
-		</module>
 		<module type="driver" id="config.thirdparty.wireless.avr2025_mac.source.tfa.ext#at86rf233"     caption="at86rf233 tfa  support enabled">
 			<info type="description" value="summary">
-			AT86Rf231 Transceiver Feature Access
+			AT86Rf233 Transceiver Feature Access
 			</info>
 			<info type="gui-flag" value="hidden"/>
 			<require idref="thirdparty.wireless.avr2025_mac.source.tfa.at86rf233"/>
@@ -72,6 +85,7 @@
             <device-support-alias value="avr2025_mac_pal_spi_support"/>
 			<build type="doxygen-entry-point" value="group_tfa"/>
 		</module>
+	
 	</select-by-config>
 	
 	<module type="component" id="thirdparty.wireless.avr2025_mac.source.tfa" caption="AVR2025 - TFA">
@@ -80,12 +94,10 @@
 		</info>
 		<build type="header-file"   value="inc/tfa.h"/>
 		<build type="include-path"  value="inc/"/>
-        <device-support-alias value="avr2025_mac_pal_spi_support"/>
-        <device-support-alias value="avr2025_mac_pal_soc_support"/>
+        <device-support-alias value="avr2025_mac_pal_support"/>
 		<build type="doxygen-entry-point" value="group_tfa"/>
 		<require idref="config.thirdparty.wireless.avr2025_mac.source.tfa"/>
 		<require idref="thirdparty.wireless.avr2025_mac.source.tal.generic"/>
         <build type="define"   name="ENABLE_TFA"                          value=""/>		
-
 	</module>
 </asf>

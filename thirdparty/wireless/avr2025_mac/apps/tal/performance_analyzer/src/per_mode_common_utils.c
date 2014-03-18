@@ -58,7 +58,9 @@
 /* === TYPES =============================================================== */
 
 /* === GLOBALS============================================================== */
-
+#ifdef EXT_RF_FRONT_END_CTRL
+static uint8_t prev_non_26chn_tx_power;
+#endif
 /* === IMPLEMENTATION======================================================= */
 
 /*
@@ -74,5 +76,49 @@ void app_reset(void)
 	/* INIT was a success - so change to WAIT_FOR_EVENT state */
 	set_main_state(WAIT_FOR_EVENT, NULL);
 }
+
+#ifdef EXT_RF_FRONT_END_CTRL
+/*
+ * \brief handle the tx power settings in case of External PA enabled,
+ * and the channel changes from or to 26.This is to meet the FCC compliance
+ *
+ * \param Current channel and Previous channel
+ */
+void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl)
+{
+	pib_value_t pib_value;
+	
+    /* If the cuurent channel set to 26*/
+    if (curr_chnl == CHANNEL_26)
+    {
+        /* Get last previous non 26 channel tx power  */
+        if (prev_chnl != CHANNEL_26)
+        {
+            tal_pib_get(phyTransmitPower, &prev_non_26chn_tx_power);
+        }
+        /* If the Tx power is more than 13dBm, i.e. TX_PWR < 0x0d */
+        if (pal_trx_bit_read(SR_TX_PWR) <= MAX_TX_PWR_REG_VAL_CH26)
+        {
+			pib_value.pib_value_8bit = DEFAULT_TX_POWER_CH26;
+            tal_pib_set(phyTransmitPower, &pib_value);
+            curr_trx_config_params.tx_power_reg = pal_trx_bit_read(SR_TX_PWR);
+            curr_trx_config_params.tx_power_dbm = CONV_phyTransmitPower_TO_DBM(pib_value.pib_value_8bit);
+        }
+    }
+    else
+    {
+        /* if the channel changed from 26 to other  */
+        if (prev_chnl == CHANNEL_26 )
+        {
+
+            /* Set back the tx power to default value i.e. 20dBm, TX_PWR 0x09 */
+			pib_value.pib_value_8bit = prev_non_26chn_tx_power;
+            tal_pib_set(phyTransmitPower, &pib_value);
+            curr_trx_config_params.tx_power_reg = pal_trx_bit_read(SR_TX_PWR);
+            curr_trx_config_params.tx_power_dbm = CONV_phyTransmitPower_TO_DBM(pib_value.pib_value_8bit);
+        }
+    }
+}
+#endif /* End of EXT_RF_FRONT_END_CTRL */
 
 /* EOF */

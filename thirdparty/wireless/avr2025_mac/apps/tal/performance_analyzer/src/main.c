@@ -3,7 +3,7 @@
  *
  * \brief  Main of TAL Examples - Performance_Analyzer application
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -57,14 +57,18 @@
 #include "app_per_mode.h"
 #include "app_range_mode.h"
 #include "perf_api_serial_handler.h"
-#include "asf.h"
+#if SAMD20
+#include "system.h"
+#else
+#include "led.h"
+#endif
 #include "sio2host.h"
 #include "conf_board.h"
 
 /**
  * \mainpage
  * \section preface Preface
- * This is the reference manual for the Performance Analyzer Application
+ * This is the reference manual for the Performance Analyzer v2.3 Application
  * \section toc Table of Contents
  *  - \subpage overview
  *  - \ref group_perf_analyzer
@@ -427,23 +431,30 @@ volatile node_ib_t node_info;
 int main(void)
 {
 	irq_initialize_vectors();
+#if SAMD20
+	system_init();
+	delay_init();
+#else
 	sysclk_init();
 
 	/* Initialize the board.
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-	board_init();
+	board_init();    
+#endif
 
+	sio2host_init();
 	/*
 	 * Power ON - so set the board to INIT state. All hardware, PAL, TAL and
 	 * stack level initialization must be done using this function
 	 */
+
 	set_main_state(INIT, NULL);
 
 	cpu_irq_enable();
 
-	sio2host_init();
+    
 
 	/* INIT was a success - so change to WAIT_FOR_EVENT state */
 	set_main_state(WAIT_FOR_EVENT, NULL);
@@ -455,6 +466,7 @@ int main(void)
 		tal_task(); /* Handle transceiver specific tasks */
 		app_task(); /* Application task */
 		serial_data_handler();
+        
 	}
 }
 
@@ -683,17 +695,17 @@ retval_t transmit_frame(uint8_t dst_addr_mode,
 	/* Destination address */
 	if (FCF_SHORT_ADDR == dst_addr_mode) {
 		frame_ptr -= SHORT_ADDR_LEN;
-		convert_16_bit_to_byte_array(*((uint16_t *)dst_addr),
-				frame_ptr);
-
+		//convert_16_bit_to_byte_array(*((uint16_t *)dst_addr),
+		//		frame_ptr);
+	memcpy(frame_ptr, (uint8_t *)dst_addr, sizeof(uint16_t));
 		fcf |= FCF_SET_DEST_ADDR_MODE(FCF_SHORT_ADDR);
 	} else {
 		frame_ptr -= EXT_ADDR_LEN;
 		frame_length += PL_POS_DST_ADDR_START;
 
-		convert_64_bit_to_byte_array(*((uint64_t *)dst_addr),
-				frame_ptr);
-
+		//convert_64_bit_to_byte_array(*((uint64_t *)dst_addr),
+		//		frame_ptr);
+		memcpy(frame_ptr, (uint8_t *)dst_addr, sizeof(uint64_t));
 		fcf |= FCF_SET_DEST_ADDR_MODE(FCF_LONG_ADDR);
 	}
 

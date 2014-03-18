@@ -71,7 +71,13 @@ extern "C" {
  */
 
 /* The write protect key value. */
-#define US_WPKEY_VALUE                0x555341
+#ifndef US_WPMR_WPKEY_PASSWD
+#define US_WPMR_WPKEY_PASSWD    US_WPMR_WPKEY(0x555341U)
+#endif
+
+#ifndef US_WPMR_WPKEY_PASSWD
+#  define US_WPMR_WPKEY_PASSWD US_WPMR_WPKEY(US_WPKEY_VALUE)
+#endif
 
 /* The CD value scope programmed in MR register. */
 #define MIN_CD_VALUE                  0x01
@@ -384,9 +390,11 @@ uint32_t usart_init_modem(Usart *p_usart,
 	 * SAM3U and SAM4L series support MODEM mode only on USART0.
 	 */
 #if (SAM3S || SAM4S || SAM4E)
+#ifdef USART1
 	if (p_usart != USART1) {
 		return 1;
 	}
+#endif
 #elif (SAM3U || SAM4L)
 	if (p_usart != USART0) {
 		return 1;
@@ -1579,7 +1587,7 @@ Pdc *usart_get_pdc_base(Usart *p_usart)
  */
 void usart_enable_writeprotect(Usart *p_usart)
 {
-	p_usart->US_WPMR = US_WPMR_WPEN | US_WPMR_WPKEY(US_WPKEY_VALUE);
+	p_usart->US_WPMR = US_WPMR_WPEN | US_WPMR_WPKEY_PASSWD;
 }
 
 /**
@@ -1589,7 +1597,7 @@ void usart_enable_writeprotect(Usart *p_usart)
  */
 void usart_disable_writeprotect(Usart *p_usart)
 {
-	p_usart->US_WPMR = US_WPMR_WPKEY(US_WPKEY_VALUE);
+	p_usart->US_WPMR = US_WPMR_WPKEY_PASSWD;
 }
 
 /**
@@ -1624,7 +1632,7 @@ uint8_t usart_get_error_number(Usart *p_usart)
 	return (p_usart->US_NER & US_NER_NB_ERRORS_Msk);
 }
 
-#if (SAM3S || SAM4S || SAM3U || SAM3XA || SAM4L || SAM4E)
+#if (SAM3S || SAM4S || SAM3U || SAM3XA || SAM4L || SAM4E || SAM4C || SAM4CP)
 
 /**
  * \brief Configure the transmitter preamble length when the Manchester

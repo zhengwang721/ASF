@@ -51,7 +51,6 @@
 #define TAL_HELPER_H
 
 /* === INCLUDES ============================================================ */
-
 /* === EXTERNALS =========================================================== */
 
 /* === TYPES =============================================================== */
@@ -148,6 +147,22 @@ typedef enum param_tag {
 #endif
 	TX_PWR            = 0x06
 } SHORTENUM param_type;
+
+
+#ifdef EXT_RF_FRONT_END_CTRL /*For External PA for 231FEM-EK*/
+
+/**
+  * RSSI BASE VAL based on External LNA Gain.
+  */
+#define RSSI_BASE_VAL_EXT      (RSSI_BASE_VAL_DBM - EXT_LNA_HIGH_GAIN)
+
+
+/*
+ * Default tx power for Ch26 to meet FCC compliance
+  */
+#define DEFAULT_TX_POWER_CH26             (0x80 | 0x0d)
+
+#endif
 /* === PROTOTYPES ========================================================== */
 
 #ifdef __cplusplus
@@ -336,10 +351,10 @@ retval_t tal_dump_registers(uint16_t start_addr, uint16_t end_addr,
  * \return MAC_SUCCESS if the register is written correctly
  *         FAILURE otherwise
  */
-#if (TAL_TYPE == AT86RF233)
+#if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2))
 retval_t tal_rpc_mode_config(uint8_t rpc_mode_sel);
 
-#endif /* End of TAL_TYPE = AT86RF233 */
+#endif /* End of ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2))*/
 
 /*
  * \brief This function is called to get the base RSSI value for repective
@@ -358,8 +373,6 @@ int8_t tal_get_rssi_base_val(void);
  *         FAILURE      otherwise
  */
 retval_t tal_rxsafe_mode_ctrl(bool safe_mode_ctrl);
-
-    
 
 #ifdef __cplusplus
 } /* extern "C" */

@@ -96,7 +96,11 @@
 #define  FREQ_BAND_08     (4)
 #define  FREQ_BAND_09     (5)
 #endif
-
+#ifdef EXT_RF_FRONT_END_CTRL
+#define CHANNEL_26                          (0x1A)
+#define MAX_TX_PWR_REG_VAL                  (0x09)
+#define MAX_TX_PWR_REG_VAL_CH26             (0x0d)
+#endif
 #define LED_TOGGLE_COUNT_FOR_PER            (50)
 #define MIN_TX_PWR_REG_VAL                  (0x0f)
 
@@ -105,15 +109,18 @@
 #define MIN_ISM_FREQUENCY_MHZ               (2322)
 #define MAX_ISM_FREQUENCY_MHZ               (2527)
 #define MID_ISM_FREQUENCY_MHZ               (2434)
-
-#define ENABLE_ALL_RPC_MODES                (0xff)
-#define DISABLE_ALL_RPC_MODES               (0xC1)
 #define CC_BAND_0                           (0x00)
 #define CC_BAND_8                           (0x08)
 #define CC_BAND_9                           (0x09)
 #define CC_NUMBER_0                         (0x00)
 #endif
 
+#if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2))
+#define ENABLE_ALL_RPC_MODES                     (0xff)
+#define DISABLE_ALL_RPC_MODES                    (0xC1)
+#define ENABLE_RX_SAFE_MODE                      (0xA0)
+#define DISABLE_RX_SAFE_MODE                     (0x60)
+#endif
 /**
  * \addtogroup group_per_mode
  * \{
@@ -171,7 +178,7 @@ typedef struct {
 	bool crc_settings_on_peer;
 #endif
 
-#if (TAL_TYPE == AT86RF233)
+#if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2))
 	bool rpc_enable;
 #endif
 
@@ -327,6 +334,18 @@ void marker_tx_timer_handler_cb(void *parameter);
  * \param parameter pass parameters to timer handler
  */
 void marker_rsp_timer_handler_cb(void *parameter);
+
+#ifdef EXT_RF_FRONT_END_CTRL
+
+/**
+ * \brief handle the tx power settings in case of External PA enabled,
+ * and the channel changes from or to 26.This is to meet the FCC compliance
+ *
+ * \param Curr_chnl Current Channel
+ * \param prev_chnl Previous Channel
+ */
+void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl);
+#endif
 
 /* ! \} */
 #ifdef __cplusplus
