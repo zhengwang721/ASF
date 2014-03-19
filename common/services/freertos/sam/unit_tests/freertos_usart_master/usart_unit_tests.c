@@ -54,7 +54,7 @@
 #include <conf_example.h>
 #include "FreeRTOS.h"
 #include "task.h"
-#include "freertos_uart_serial.h"
+#include "freertos_usart_serial.h"
 
 /**
  * \mainpage

@@ -90,6 +90,7 @@ void uart_enable_interrupt(Uart *p_uart, uint32_t ul_sources);
 void uart_disable_interrupt(Uart *p_uart, uint32_t ul_sources);
 uint32_t uart_get_interrupt_mask(Uart *p_uart);
 uint32_t uart_get_status(Uart *p_uart);
+void uart_reset_status(Uart *p_uart);
 uint32_t uart_is_tx_ready(Uart *p_uart);
 uint32_t uart_is_tx_empty(Uart *p_uart);
 uint32_t uart_is_rx_ready(Uart *p_uart);

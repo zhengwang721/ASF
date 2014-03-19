@@ -116,11 +116,38 @@
 			<require idref="common.services.layer.freertos.pdc"/>
 			<require idref="common.services.basic.serial"/>
 
-			<build type="header-file" subtype="api" value="freertos_uart_serial.h"/>
+			<build type="header-file" subtype="api" value="freertos_usart_serial.h"/>
 			<build type="c-source" value="freertos_usart_serial.c"/>
 
 			<build type="include-path" value="."/>
 			<build type="doxygen-entry-point" value="freertos_usart_peripheral_control_group"/>
+			<device-support value="sam3"/>
+			<device-support value="sam4s"/>
+			<device-support value="sam4n"/>
+			<device-support value="sam4c"/>
+			<device-support value="sam4cp"/>
+			<device-support value="samg"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
+		</module>
+	</select-by-device>
+
+	<select-by-device id="common.services.layer.freertos.uart" caption="FreeRTOS - UART Interface Layer">
+		<module type="service" id="common.services.layer.freertos.uart#0" caption="FreeRTOS - UART Interface Layer">
+			<info type="description" value="summary">
+				UART interface abstraction layer to the FreeRTOS kernel.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="I/O"/>
+			</info>
+			<require idref="thirdparty.os.freertos.version"/>
+			<require idref="common.services.layer.freertos.pdc"/>
+			<require idref="common.services.basic.serial"/>
+
+			<build type="header-file" subtype="api" value="freertos_uart_serial.h"/>
+			<build type="c-source" value="freertos_uart_serial.c"/>
+
+			<build type="include-path" value="."/>
+			<build type="doxygen-entry-point" value="freertos_uart_peripheral_control_group"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4n"/>
