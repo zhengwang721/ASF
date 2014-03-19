@@ -3,7 +3,7 @@
  *
  * \brief Flash program example for SAM.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -89,23 +89,23 @@
  * -# Start the application.
  * -# In the terminal window, the following text should appear:
  *    \code
- *     -- Flash Program Example --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *     -I- Unlocking last page
- *     -I- Writing last page with walking bit pattern
- *     -I- Checking page contents  ......................................... ok
- *     -I- Locking last page
- *     -I- Try to program the locked page...
- *     -I- Please open Segger's JMem program
- *     -I- Read memory at address 0xxxxxxxxx to check contents
- *     -I- Press any key to continue...
- *     -I- Good job!
- *     -I- Now set the security bit
- *     -I- Press any key to continue to see what happened...
- *     -I- Setting security bit
- *     -I- All tests done
- * \endcode
+	-- Flash Program Example --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+	-I- Unlocking last page
+	-I- Writing last page with walking bit pattern
+	-I- Checking page contents  ......................................... ok
+	-I- Locking last page
+	-I- Try to program the locked page...
+	-I- Please open Segger's JMem program
+	-I- Read memory at address 0xxxxxxxxx to check contents
+	-I- Press any key to continue...
+	-I- Good job!
+	-I- Now set the security bit
+	-I- Press any key to continue to see what happened...
+	-I- Setting security bit
+	-I- All tests done
+\endcode
  *
  */
 
@@ -181,10 +181,9 @@ int main(void)
 		ul_page_buffer[ul_idx] = 1 << (ul_idx % 32);
 	}
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C)
-	/* The EWP command is not supported for non-8KByte sectors in SAM4S,
-	 * SAM4E, SAM4C and SAM4N, so an erase command is requried before the
-	 * write operation.
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAMG)
+	/* The EWP command is not supported for non-8KByte sectors in all devices
+	 *  SAM4 series, so an erase command is requried before the write operation.
 	 */
 	ul_rc = flash_erase_sector(ul_last_page_addr);
 	if (ul_rc != FLASH_RC_OK) {
@@ -214,10 +213,9 @@ int main(void)
 	}
 	printf("OK\n\r");
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C)
-	/* The EWP command is not supported for non-8KByte sectors in SAM4S,
-	 * SAM4E, SAM4C and SAM4N, so an erase command is requried before the
-	 * write operation.
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAMG)
+	/* The EWP command is not supported for non-8KByte sectors in some SAM4
+	 * series, so an erase command is requried before the write operation.
 	 */
 	ul_rc = flash_erase_sector(ul_last_page_addr);
 	if (ul_rc != FLASH_RC_OK) {
@@ -239,7 +237,7 @@ int main(void)
 	printf("-I- Try to program the locked page ...\n\r");
 	ul_rc = flash_write(ul_last_page_addr, ul_page_buffer,
 			IFLASH_PAGE_SIZE,
-#if (SAM4S || SAM4E || SAM4N || SAM4C)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
 			0);
 #else
 			1);

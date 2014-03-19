@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Peripheral Analog-to-Digital Converter Driver
+ * \brief SAM D20/D21 Peripheral Analog-to-Digital Converter Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -58,7 +58,7 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 
 	/* Pinmapping table for AINxx -> GPIO pin number */
 	const uint32_t pinmapping[] = {
-#if (SAMD20E)
+#if (SAMD20E | SAMD21E)
 			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_PA04B_ADC_AIN4,  PIN_PA05B_ADC_AIN5,
@@ -69,7 +69,7 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_PA08B_ADC_AIN16, PIN_PA09B_ADC_AIN17,
 			PIN_PA10B_ADC_AIN18, PIN_PA11B_ADC_AIN19,
-#elif (SAMD20G)
+#elif (SAMD20G | SAMD21G)
 			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
 			PIN_PB08B_ADC_AIN2,  PIN_PB09B_ADC_AIN3,
 			PIN_PA04B_ADC_AIN4,  PIN_PA05B_ADC_AIN5,
@@ -80,7 +80,7 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_PA08B_ADC_AIN16, PIN_PA09B_ADC_AIN17,
 			PIN_PA10B_ADC_AIN18, PIN_PA11B_ADC_AIN19,
-#elif (SAMD20J)
+#elif (SAMD20J | SAMD21J)
 			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
 			PIN_PB08B_ADC_AIN2,  PIN_PB09B_ADC_AIN3,
 			PIN_PA04B_ADC_AIN4,  PIN_PA05B_ADC_AIN5,
@@ -146,15 +146,16 @@ static enum status_code _adc_set_config(
 
 	/* Setup pinmuxing for analog inputs */
 	if (config->pin_scan.inputs_to_scan != 0) {
+		uint8_t offset = config->pin_scan.offset_start_scan;
 		uint8_t start_pin =
-				config->pin_scan.offset_start_scan +
-				(uint8_t)config->positive_input;
+				offset +(uint8_t)config->positive_input;
 		uint8_t end_pin =
 				start_pin + config->pin_scan.inputs_to_scan;
 
 		while (start_pin < end_pin) {
-			_adc_configure_ain_pin(start_pin);
+			_adc_configure_ain_pin((offset % 16)+(uint8_t)config->positive_input);
 			start_pin++;
+			offset++;
 		}
 		_adc_configure_ain_pin(config->negative_input);
 	} else {
