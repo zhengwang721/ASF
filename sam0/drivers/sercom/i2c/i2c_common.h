@@ -110,10 +110,6 @@ extern "C" {
  *		<th>Supported devices</th>
  *	</tr>
  *	<tr>
- *		<td>FEATURE_I2C_SYNC_SCHEME_VERSION_2</td>
- *		<td>SAMD21</td>
- *	</tr>
- *	<tr>
  *		<td>FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED</td>
  *		<td>SAMD21</td>
  *	</tr>
@@ -395,8 +391,6 @@ extern "C" {
  * @{
  */
 #if (SAMD21) || defined(__DOXYGEN__)
-/** Sync scheme version 2 support */
-#  define FEATURE_I2C_SYNC_SCHEME_VERSION_2
 /** Fast mode plus and high speed support */
 #  define FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
 /** 10 bit address support */
