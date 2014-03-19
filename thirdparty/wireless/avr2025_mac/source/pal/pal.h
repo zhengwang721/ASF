@@ -69,7 +69,7 @@
 
 
 #if (PAL_USE_SPI_TRX == 1)
-#include "pal_ext_trx.h"
+#include "trx_access.h"
 #else
 #include "sysclk.h"
 #endif //#if (PAL_USE_SPI_TRX = 1)
@@ -298,15 +298,7 @@ extern "C" {
         DISABLE_GLOBAL_IRQ();
     }
 
-    /**
-     * \brief Initializes the transceiver main interrupt
-     *
-     * This function sets the microcontroller specific registers
-     * responsible for handling the transceiver main interrupt
-     *
-     * \param trx_irq_cb Callback function for the transceiver main interrupt
-     */
-    void pal_trx_irq_init(FUNC_PTR trx_irq_cb);
+
 
     /**
      * @brief Provides timestamp of the last received frame

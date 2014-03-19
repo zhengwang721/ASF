@@ -3,7 +3,7 @@
  *
  * @brief High-level security tool box
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -56,6 +56,7 @@
 #include "tal.h"
 #include "ieee_const.h"
 #include "stb.h"
+#include "sal.h"
 #include "stb_internal.h"
 
 /* === Macros ============================================================== */
@@ -68,7 +69,12 @@
 static bool key_change = true;
 static uint8_t last_key[AES_BLOCKSIZE];
 static bool stb_restart_required = false;
+#if (SAL_TYPE != ATXMEGA_SAL)
+/* State of trx before AES use; use to re-store trx state. */
+static tal_trx_status_t prev_trx_status;
 
+extern tal_trx_status_t tal_trx_status;
+#endif
 /* === Implementation ====================================================== */
 
 /**
@@ -136,6 +142,12 @@ stb_ccm_t stb_ccm_secure(uint8_t *buffer,
 	uint8_t enc_flag = ENCRYPTION_NOT_REQD;
 
 	if (stb_restart_required) {
+#if (SAL_TYPE != ATXMEGA_SAL)
+		prev_trx_status = tal_trx_status;
+		if (tal_trx_status == TRX_SLEEP) {
+			tal_trx_wakeup();
+		}
+#endif
 		sal_aes_restart();
 		stb_restart_required = false;
 	}
@@ -199,13 +211,19 @@ stb_ccm_t stb_ccm_secure(uint8_t *buffer,
 			(uint16_t)mic_len > aMaxPHYPacketSize)
 			)			
 	{
+#if (SAL_TYPE != ATXMEGA_SAL)
+	    TRX_SLEEP();
 		sal_aes_clean_up();
+#endif
 		return (STB_CCM_ILLPARM);
 	}
 
 	if (key_change && (key == NULL)) 
 	{
+#if (SAL_TYPE != ATXMEGA_SAL)
+	    TRX_SLEEP();
 		sal_aes_clean_up();
+#endif
 		/* Initial call, but no key given. */
 		return (STB_CCM_KEYMISS); 
 	}
@@ -307,8 +325,10 @@ stb_ccm_t stb_ccm_secure(uint8_t *buffer,
 			}
 		}
 	}
-
+#if (SAL_TYPE != ATXMEGA_SAL)
+    TRX_SLEEP();
 	sal_aes_clean_up();
+#endif
 	return (STB_CCM_OK);
 }
 

@@ -44,7 +44,6 @@
 #define _ATMEGARFR2_H_
 
 /*- Includes ---------------------------------------------------------------*/
-#include <sysTypes.h>
 
 /**
  * \ingroup group_phy

@@ -3,7 +3,7 @@
  *
  * @brief This file implements the frame reception functions.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -122,10 +122,10 @@ void handle_received_frame_irq(void)
          * been switched to PLL_ON, the next incoming frame was faster.
          * It cannot be handled and is discarded.
          */
-        pal_trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_DISABLE);  /* Disable buffer protection mode */
+        trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_DISABLE);  /* Disable buffer protection mode */
         CONF_REG_WRITE();
         pal_timer_delay(2); // Allow pin change to get effective
-        pal_trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_ENABLE);  /* Enable buffer protection mode */
+        trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_ENABLE);  /* Enable buffer protection mode */
         CONF_REG_WRITE();
         return;
     }
@@ -136,7 +136,7 @@ void handle_received_frame_irq(void)
     if (tal_pib.PromiscuousMode)
     {
         /* Check for valid FCS */
-        if (pal_trx_bit_read(SR_RX_CRC_VALID) == CRC16_NOT_VALID)
+        if (trx_bit_read(SR_RX_CRC_VALID) == CRC16_NOT_VALID)
         {
             return;
         }
@@ -144,10 +144,10 @@ void handle_received_frame_irq(void)
 #endif
 
     /* Get ED value; needed to normalize LQI. */
-    ed_value = pal_trx_reg_read(RG_PHY_ED_LEVEL);
+    ed_value = trx_reg_read(RG_PHY_ED_LEVEL);
 
     /* Get frame length from transceiver. */
-    phy_frame_len = ext_frame_length = pal_trx_reg_read(RG_TST_RX_LENGTH);
+    phy_frame_len = ext_frame_length = trx_reg_read(RG_TST_RX_LENGTH);
 
     /* Check for valid frame length. */
     if (phy_frame_len > 127)
@@ -170,7 +170,7 @@ void handle_received_frame_irq(void)
      * transceivers, where reading the frame via SPI contains the length field
      * in the first octet.
      */
-    pal_trx_frame_read(frame_ptr, phy_frame_len + LQI_LEN);
+    trx_frame_read(frame_ptr, phy_frame_len + LQI_LEN);
     frame_ptr--;
     *frame_ptr = phy_frame_len;
     receive_frame->mpdu = frame_ptr;
@@ -208,15 +208,15 @@ void handle_received_frame_irq(void)
          * Trx returns to RX_AACK_ON automatically, if this was its previous state.
          * Keep the following as a reminder, if receiver is used with RX_ON instead.
          */
-        //pal_trx_reg_write(RG_TRX_STATE, CMD_RX_AACK_ON);
+        //trx_reg_write(RG_TRX_STATE, CMD_RX_AACK_ON);
 
         /*
          * Release the protected buffer and set it again for further protection since
          * the buffer is available
          */
-        pal_trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_DISABLE);  /* Disable buffer protection mode */
+        trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_DISABLE);  /* Disable buffer protection mode */
         pal_timer_delay(2); // Allow pin change to get effective
-        pal_trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_ENABLE);  /* Enable buffer protection mode */
+        trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_ENABLE);  /* Enable buffer protection mode */
 
         CONF_REG_WRITE();
     }

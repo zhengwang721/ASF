@@ -61,4 +61,4 @@ void sm_init(void);
 */
 void sm_sleep(uint32_t interval);
 
-#endif 
+#endif

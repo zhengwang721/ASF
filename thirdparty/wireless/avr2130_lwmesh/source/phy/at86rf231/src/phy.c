@@ -45,6 +45,7 @@
 /*- Includes ---------------------------------------------------------------*/
 #include <stdbool.h>
 #include "phy.h"
+#include "sal.h"
 #include "trx_access.h"
 #include "delay.h"
 #include "at86rf231.h"
@@ -147,7 +148,7 @@ void PHY_SetTxPower(uint8_t txPower)
 void PHY_Sleep(void)
 {
   phyTrxSetState(TRX_CMD_TRX_OFF);
-  PAL_SLP_TR_HIGH();
+  TRX_SLP_TR_HIGH();
   phyState = PHY_STATE_SLEEP;
 }
 
@@ -155,7 +156,7 @@ void PHY_Sleep(void)
 *****************************************************************************/
 void PHY_Wakeup(void)
 {
-  PAL_SLP_TR_LOW();
+  TRX_SLP_TR_LOW();
   phySetRxState();
   phyState = PHY_STATE_IDLE;
 }
@@ -166,6 +167,7 @@ void PHY_DataReq(uint8_t *data)
 {
   phyTrxSetState(TRX_CMD_TX_ARET_ON);
 
+  phyReadRegister(IRQ_STATUS_REG);
  /* size of the buffer is sent as first byte of the data
   * and data starts from second byte.
   */
@@ -174,12 +176,11 @@ void PHY_DataReq(uint8_t *data)
 
   phyState = PHY_STATE_TX_WAIT_END;
   
-  PAL_SLP_TR_HIGH();
-  delay_us(1);
-  PAL_SLP_TR_LOW();
+  TRX_SLP_TR_HIGH();
+  TRX_TRIG_DELAY();
+  TRX_SLP_TR_LOW();
 }
 
-#ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
 /*************************************************************************//**
 *****************************************************************************/
 uint16_t PHY_RandomReq(void)
@@ -200,19 +201,20 @@ uint16_t PHY_RandomReq(void)
 
   return rnd;
 }
-#endif
 
-#ifdef PHY_ENABLE_AES_MODULE
 /*************************************************************************//**
 *****************************************************************************/
 void PHY_EncryptReq(uint8_t *text, uint8_t *key)
 {
-	#warning "Security Mode 0 Not Supported"
-	return;
+	sal_aes_setup(key,AES_MODE_ECB, AES_DIR_ENCRYPT);
+#if (SAL_TYPE == AT86RF2xx)
+	sal_aes_wrrd(text, NULL);
+#else
+	sal_aes_exec(text);
+#endif		
+	sal_aes_read(text);
 }
-#endif
 
-#ifdef PHY_ENABLE_ENERGY_DETECTION
 /*************************************************************************//**
 *****************************************************************************/
 int8_t PHY_EdReq(void)
@@ -230,7 +232,7 @@ int8_t PHY_EdReq(void)
 
   return ed + PHY_RSSI_BASE_VAL;
 }
-#endif
+
 
 /*************************************************************************//**
 *****************************************************************************/
@@ -261,10 +263,12 @@ static void phyWaitState(uint8_t state)
 *****************************************************************************/
 static void phySetRxState(void)
 {
+  phyTrxSetState(TRX_CMD_TRX_OFF);
+
+  phyReadRegister(IRQ_STATUS_REG);
+
   if (phyRxState)
     phyTrxSetState(TRX_CMD_RX_AACK_ON);
-  else
-    phyTrxSetState(TRX_CMD_TRX_OFF);
 }
 
 /*************************************************************************//**
@@ -278,7 +282,16 @@ static void phyTrxSetState(uint8_t state)
   }while (state != (phyReadRegister(TRX_STATUS_REG) & TRX_STATUS_MASK));
 
 }
-
+/*************************************************************************//**
+*****************************************************************************/
+void PHY_SetIEEEAddr(uint8_t *ieee_addr)
+{
+	uint8_t *ptr_to_reg = ieee_addr;
+	for (uint8_t i = 0; i < 8; i++) {
+		trx_reg_write((IEEE_ADDR_0_REG + i), *ptr_to_reg);
+		ptr_to_reg++;
+	}
+}
 /*************************************************************************//**
 *****************************************************************************/
 void PHY_TaskHandler(void)

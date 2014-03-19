@@ -3,7 +3,7 @@
  *
  * @brief Handles Serial Interface Functionalities
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -729,10 +729,10 @@ static inline void handle_fake_frame_irq(uint8_t *fake_frame)
     receive_frame = (frame_info_t *)BMM_BUFFER_POINTER(tal_rx_buffer);
 
     /* Get ED value; needed to normalize LQI. */
-    ed_value = pal_trx_reg_read(RG_PHY_ED_LEVEL);
+    ed_value = trx_reg_read(RG_PHY_ED_LEVEL);
 
     /* Get frame length from transceiver. */
-    //pal_trx_frame_read(&phy_frame_len, LENGTH_FIELD_LEN);
+    //trx_frame_read(&phy_frame_len, LENGTH_FIELD_LEN);
     phy_frame_len = 0x2C;
 
     /*
@@ -750,7 +750,7 @@ static inline void handle_fake_frame_irq(uint8_t *fake_frame)
      * transceivers, since reading the frame via SPI contains the length field
      * in the first octet.
      */
-    // pal_trx_frame_read(frame_ptr, LENGTH_FIELD_LEN + phy_frame_len + LQI_LEN);
+    // trx_frame_read(frame_ptr, LENGTH_FIELD_LEN + phy_frame_len + LQI_LEN);
     memcpy(frame_ptr, fake_frame, LENGTH_FIELD_LEN + phy_frame_len + LQI_LEN);
 
     receive_frame->mpdu = frame_ptr;

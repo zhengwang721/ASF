@@ -3,7 +3,7 @@
  *
  * @brief 
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -117,7 +117,7 @@ void handle_received_frame_irq(void)
          * frame resets the buffer protection mode.
          */
         uint8_t dummy;
-        pal_trx_frame_read(&dummy, 1);
+        trx_frame_read(&dummy, 1);
         return;
     }
 
@@ -127,7 +127,7 @@ void handle_received_frame_irq(void)
     if (tal_pib.PromiscuousMode)
     {
         /* Check for valid FCS */
-        if (pal_trx_bit_read(SR_RX_CRC_VALID) == CRC16_NOT_VALID)
+        if (trx_bit_read(SR_RX_CRC_VALID) == CRC16_NOT_VALID)
         {
             return;
         }
@@ -136,10 +136,10 @@ void handle_received_frame_irq(void)
 
 #if (defined ENABLE_TRX_SRAM) || defined(ENABLE_TRX_SRAM_READ)
     /* Use SRAM read to keep rx safe mode armed. */
-    pal_trx_sram_read(0x00, &phy_frame_len, LENGTH_FIELD_LEN); // 0x00: SRAM offset address
+    trx_sram_read(0x00, &phy_frame_len, LENGTH_FIELD_LEN); // 0x00: SRAM offset address
 #else
     /* Get frame length from transceiver. */
-    pal_trx_frame_read(&phy_frame_len, LENGTH_FIELD_LEN);
+    trx_frame_read(&phy_frame_len, LENGTH_FIELD_LEN);
 #endif
 
     /* Check for valid frame length. */
@@ -163,7 +163,7 @@ void handle_received_frame_irq(void)
      * transceivers, since reading the frame via SPI contains the length field
      * in the first octet. RF232's frame buffer includes ED value too.
      */
-    pal_trx_frame_read(frame_ptr, LENGTH_FIELD_LEN + phy_frame_len + LQI_LEN + ED_VAL_LEN);
+    trx_frame_read(frame_ptr, LENGTH_FIELD_LEN + phy_frame_len + LQI_LEN + ED_VAL_LEN);
     receive_frame->mpdu = frame_ptr;
 
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)
@@ -198,7 +198,7 @@ void handle_received_frame_irq(void)
          * Trx returns to RX_AACK_ON automatically, if this was its previous state.
          * Keep the following as a reminder, if receiver is used with RX_ON instead.
          */
-        //pal_trx_reg_write(RG_TRX_STATE, CMD_RX_AACK_ON);
+        //trx_reg_write(RG_TRX_STATE, CMD_RX_AACK_ON);
     }
 }
 

@@ -48,7 +48,7 @@
 
 /*- Includes ---------------------------------------------------------------*/
 #include <stdlib.h>
-#include "sysTypes.h"
+#include "compiler.h"
 #include "common_hw_timer.h"
 #include "sysTimer.h"
 
@@ -121,14 +121,17 @@ void SYS_TimerTaskHandler(void)
 {
   uint32_t elapsed;
   uint8_t cnt;
+  irqflags_t flags;
 
   if (0 == SysTimerIrqCount)
     return;
-
-  ATOMIC_SECTION_ENTER
+  
+  // Enter a critical section
+  flags = cpu_irq_save();
     cnt = SysTimerIrqCount;
     SysTimerIrqCount = 0;
-  ATOMIC_SECTION_LEAVE
+  // Leave the critical section
+  cpu_irq_restore(flags);
 
   elapsed = cnt * SYS_TIMER_INTERVAL;
 

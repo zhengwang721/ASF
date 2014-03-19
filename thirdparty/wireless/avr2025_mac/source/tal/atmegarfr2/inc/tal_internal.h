@@ -4,7 +4,7 @@
  * \brief This header file contains types and variable definition that are used
  *within the TAL only.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,7 +43,7 @@
  */
 
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -393,7 +393,7 @@ void ed_scan_done(void);
  * \param data Data to be written to trx register
  * \ingroup group_pal_trx
  */
-#define pal_trx_reg_write(addr, data) \
+#define trx_reg_write(addr, data) \
 	(*(volatile uint8_t *)(addr)) = (data)
 
 /**
@@ -406,7 +406,7 @@ void ed_scan_done(void);
  * \ingroup group_pal_trx
  * \return value of the register read
  */
-#define pal_trx_reg_read(addr) \
+#define trx_reg_read(addr) \
 	(*(volatile uint8_t *)(addr))
 
 /**
@@ -419,7 +419,7 @@ void ed_scan_done(void);
  * buffer.
  * \ingroup group_pal_trx
  */
-#define pal_trx_frame_read(data, length) \
+#define trx_frame_read(data, length) \
 	memcpy((data), (void *)&TRXFBST, (length))
 
 /**
@@ -431,11 +431,11 @@ void ed_scan_done(void);
  * \param[in] length Number of bytes to be written into frame buffer
  * \ingroup group_pal_trx
  */
-#define pal_trx_frame_write(data, length) \
+#define trx_frame_write(data, length) \
 	memcpy((void *)&TRXFBST, (data), (length))
 
 #ifndef __DOXYGEN__
-#define _pal_trx_bit_read(addr, mask, pos) \
+#define _trx_bit_read(addr, mask, pos) \
 	(((*(volatile uint8_t *)(addr)) & (mask)) >> (pos))
 #endif
 
@@ -447,11 +447,11 @@ void ed_scan_done(void);
  * \return  Value of the read subregister
  * \ingroup group_pal_trx
  */
-#define pal_trx_bit_read(arg) \
-	_pal_trx_bit_read(arg)
+#define trx_bit_read(arg) \
+	_trx_bit_read(arg)
 
 #ifndef __DOXYGEN__
-#define _pal_trx_bit_write(addr, mask, pos, val) do { \
+#define _trx_bit_write(addr, mask, pos, val) do { \
 		(*(volatile uint8_t *)(addr)) \
 			= ((*(volatile uint8_t *)(addr)) & ~(mask)) | \
 				(((val) << (pos)) & (mask)); \
@@ -466,8 +466,8 @@ void ed_scan_done(void);
  * \param[out]  val  Data, which is muxed into the register
  * \ingroup group_pal_trx
  */
-#define pal_trx_bit_write(arg1, val) \
-	_pal_trx_bit_write(arg1, val)
+#define trx_bit_write(arg1, val) \
+	_trx_bit_write(arg1, val)
 
 /* ! @} */
 
@@ -479,16 +479,16 @@ void ed_scan_done(void);
 /*
  * Set TRX GPIO pins.
  */
-#define PAL_RST_HIGH()                      (TRXPR |= _BV(TRXRST))  /**< Set
+#define TRX_RST_HIGH()                      (TRXPR |= _BV(TRXRST))  /**< Set
 	                                                             *Reset Bit.
 	                                                             **/
-#define PAL_RST_LOW()                       (TRXPR &= ~_BV(TRXRST)) /**< Clear
+#define TRX_RST_LOW()                       (TRXPR &= ~_BV(TRXRST)) /**< Clear
 	                                                             *Reset Bit.
 	                                                             **/
-#define PAL_SLP_TR_HIGH()                   (TRXPR |= _BV(SLPTR))   /**< Set
+#define TRX_SLP_TR_HIGH()                   (TRXPR |= _BV(SLPTR))   /**< Set
 	                                                             *Sleep/TR
 	                                                             *Bit. */
-#define PAL_SLP_TR_LOW()                    (TRXPR &= ~_BV(SLPTR))  /**< Clear
+#define TRX_SLP_TR_LOW()                    (TRXPR &= ~_BV(SLPTR))  /**< Clear
 	                                                             *Sleep/TR
 	                                                             *Bit. */
 

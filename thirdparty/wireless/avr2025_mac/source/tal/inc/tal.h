@@ -3,7 +3,7 @@
  *
  * @brief This file contains TAL API function declarations
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -520,7 +520,7 @@ __PACK__RST_DATA__
  * is in one of the PLL states. See also datasheet, section "Register access".
  */
 #define CONF_REG_WRITE()   do {	\
-		pal_trx_reg_write(RG_PART_NUM, PART_NUM); \
+		trx_reg_write(RG_PART_NUM, PART_NUM); \
 } \
 	while (0)
 #endif /* TAL_TYPE == ATMEGA128RFA1 */

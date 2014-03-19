@@ -48,6 +48,12 @@
 #include "nwk.h"
 #include "sysTimer.h"
 #include "commands.h"
+#if ! (SAMD20 || SAMR21)
+#if (LED_COUNT > 0)
+#include "led.h"
+#endif
+#endif
+#include "asf.h"
 
 /*- Definitions ------------------------------------------------------------*/
 #define APP_CMD_UART_BUFFER_SIZE    16
@@ -68,13 +74,15 @@ typedef enum
   APP_CMD_UART_STATE_CSUM,
 } AppCmdUartState_t;
 
-typedef struct PACK
+COMPILER_PACK_SET(1)
+
+typedef struct 
 {
   uint8_t      commandId;
   uint64_t     dstAddr;
 } AppCmdUartHeader_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t      commandId;
   uint64_t     dstAddr;
@@ -82,19 +90,19 @@ typedef struct PACK
   uint16_t     period;
 } AppCmdUartIdentify_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t      id;
 } AppCmdHeader_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint8_t      id;
   uint16_t     duration;
   uint16_t     period;
 } AppCmdIdentify_t;
 
-typedef struct PACK
+typedef struct 
 {
   uint16_t     addr;
   uint8_t      size;
@@ -106,7 +114,7 @@ typedef struct PACK
     AppCmdIdentify_t identify;
   };
 } AppCmdPendingTableEntry_t;
-
+COMPILER_PACK_RESET()
 /*- Prototypes -------------------------------------------------------------*/
 static void appCmdUartProcess(uint8_t *data, uint8_t size);
 static void appCmdBuffer(uint16_t addr, uint8_t *data, uint8_t size);
@@ -381,8 +389,9 @@ static bool appCmdHandle(uint8_t *data, uint8_t size)
     appCmdIdentifyPeriodTimer.mode = SYS_TIMER_PERIODIC_MODE;
     appCmdIdentifyPeriodTimer.handler = appCmdIdentifyPeriodTimerHandler;
     SYS_TimerStart(&appCmdIdentifyPeriodTimer);
-
+#if (LED_COUNT > 0)
     LED_On(LED_IDENTIFY);
+#endif	
     NWK_Lock();
 
     return true;
@@ -396,7 +405,9 @@ static bool appCmdHandle(uint8_t *data, uint8_t size)
 static void appCmdIdentifyDurationTimerHandler(SYS_Timer_t *timer)
 {
   NWK_Unlock();
+#if (LED_COUNT > 0)  
   LED_On(LED_IDENTIFY);
+#endif  
   SYS_TimerStop(&appCmdIdentifyPeriodTimer);
   (void)timer;
 }
@@ -405,6 +416,8 @@ static void appCmdIdentifyDurationTimerHandler(SYS_Timer_t *timer)
 *****************************************************************************/
 static void appCmdIdentifyPeriodTimerHandler(SYS_Timer_t *timer)
 {
+#if (LED_COUNT > 0)	
   LED_Toggle(LED_IDENTIFY);
+#endif  
   (void)timer;
 }

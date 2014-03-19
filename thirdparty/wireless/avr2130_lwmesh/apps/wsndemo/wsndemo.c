@@ -67,72 +67,65 @@
 #include <string.h>
 #include "config.h"
 #include "sys.h"
-#if SAMD20 || SAMR21
-#include "system.h"
-#else
-#include "led.h"
-#include "sysclk.h"
-#endif
 #include "phy.h"
 #include "sys.h"
 #include "nwk.h"
 #include "sysTimer.h"
-# include "sleep_mgr.h"
+#if APP_ENDDEVICE
+#include "sleep_mgr.h"
+#endif
 #include "commands.h"
 #if APP_COORDINATOR
 #include "sio2host.h"
 #endif
-
+#if SAMD20 || SAMR21
+#include "system.h"
+#else
+#include "sysclk.h"
+#if (LED_COUNT > 0)
+#include "led.h"
+#endif
+#endif
+#include "asf.h"
+#include "board.h"
+#include "wsndemo.h"
 
 /*****************************************************************************
 *****************************************************************************/
 
-
 #define APP_CAPTION_SIZE  (sizeof(APP_CAPTION) - 1)
-#define APP_COMMAND_PENDING 0x01
-#if LED_COUNT>2
-#define LED_NETWORK       LED0
-#define LED_DATA          LED1
-#define LED_BLINK         LED2  
-#elif LED_COUNT==2
-#define LED_NETWORK       LED0
-#define LED_DATA          LED1
-#define LED_BLINK         LED1
-#elif LED_COUNT==1
-#define LED_NETWORK       LED0
-#define LED_DATA          LED0
-#define LED_BLINK         LED0
-#endif
+
 
 /*- Types ------------------------------------------------------------------*/
-typedef struct PACK
+COMPILER_PACK_SET(1)
+typedef struct  AppMessage_t
 {
-  uint8_t      commandId;
-  uint8_t      nodeType;
-  uint64_t     extAddr;
-  uint16_t     shortAddr;
-  uint32_t     softVersion;
-  uint32_t     channelMask;
-  uint16_t     panId;
-  uint8_t      workingChannel;
-  uint16_t     parentShortAddr;
-  uint8_t      lqi;
-  int8_t       rssi;
+  uint8_t    commandId;
+  uint8_t     nodeType;
+  uint64_t    extAddr;
+  uint16_t    shortAddr;
+  uint32_t    softVersion;
+  uint32_t    channelMask;
+  uint16_t    panId;
+  uint8_t     workingChannel;
+  uint16_t    parentShortAddr;
+  uint8_t     lqi;
+  int8_t      rssi;
 
-  struct PACK
+  struct 
   {
-    uint8_t    type;
-    uint8_t    size;
-    int32_t    battery;
-    int32_t    temperature;
-    int32_t    light;
+    uint8_t   type;
+    uint8_t   size;
+    int32_t   battery;
+    int32_t   temperature;
+    int32_t   light;
   } sensors;
 
-  struct PACK
+  struct 
   {
-    uint8_t    type;
-    uint8_t    size;
-    char       text[APP_CAPTION_SIZE];
+    uint8_t   type;
+    uint8_t   size;
+    char      text[APP_CAPTION_SIZE];
   } caption;
 } AppMessage_t;
 
@@ -148,7 +141,7 @@ typedef enum AppState_t
   APP_STATE_SLEEP,
   APP_STATE_WAKEUP,
 } AppState_t;
-
+COMPILER_PACK_RESET()
 /*- Variables --------------------------------------------------------------*/
 static AppState_t appState = APP_STATE_INITIAL;
 
@@ -165,19 +158,14 @@ static uint8_t rx_data[APP_RX_BUF_SIZE];
 
 static AppMessage_t appMsg;
 static SYS_Timer_t appDataSendingTimer;
-
+#define APP_COMMAND_PENDING 0x01
+void UartBytesReceived(uint16_t bytes,uint8_t * byte );
 /*- Implementations --------------------------------------------------------*/
 
-/*************************************************************************//**
-*****************************************************************************/
-
 #if APP_COORDINATOR
-/*************************************************************************//**
-
-
 /*****************************************************************************
 *****************************************************************************/
-void HAL_UartBytesReceived(uint16_t bytes,uint8_t * byte )
+void UartBytesReceived(uint16_t bytes,uint8_t * byte )
 {
 	for (uint16_t i = 0; i < bytes; i++)
 	{
@@ -215,9 +203,9 @@ static void appUartSendMessage(uint8_t *data, uint8_t size)
 static bool appDataInd(NWK_DataInd_t *ind)
 {
   AppMessage_t *msg = (AppMessage_t *)ind->data;
-
+#if (LED_COUNT > 0)
   LED_Toggle(LED_DATA);
-
+#endif
   msg->lqi = ind->lqi;
   msg->rssi = ind->rssi;
 #if APP_COORDINATOR
@@ -246,7 +234,9 @@ static void appDataSendingTimerHandler(SYS_Timer_t *timer)
 *****************************************************************************/
 static void appNetworkStatusTimerHandler(SYS_Timer_t *timer)
 {
+#if (LED_COUNT > 0)
   LED_Toggle(LED_NETWORK);
+#endif
   (void)timer;
 }
 
@@ -263,13 +253,17 @@ static void appCommandWaitTimerHandler(SYS_Timer_t *timer)
 #if APP_ROUTER || APP_ENDDEVICE
 static void appDataConf(NWK_DataReq_t *req)
 {
+#if (LED_COUNT > 0)
   LED_Off(LED_DATA);
+#endif  
 
   if (NWK_SUCCESS_STATUS == req->status)
   {
     if (!appNetworkStatus)
     {
+#if (LED_COUNT > 0)	
       LED_On(LED_NETWORK);
+#endif	  
       SYS_TimerStop(&appNetworkStatusTimer);
       appNetworkStatus = true;
     }
@@ -279,7 +273,9 @@ static void appDataConf(NWK_DataReq_t *req)
 
     if (appNetworkStatus)
     {
+#if (LED_COUNT > 0)	
       LED_Off(LED_NETWORK);
+#endif	  
       SYS_TimerStart(&appNetworkStatusTimer);
       appNetworkStatus = false;
     }
@@ -288,7 +284,7 @@ static void appDataConf(NWK_DataReq_t *req)
   if (APP_COMMAND_PENDING == req->control)
   {
     SYS_TimerStart(&appCommandWaitTimer);
-	LED_On(LED_NETWORK);
+	LED_Toggle(LED_NETWORK);
     appState = APP_STATE_WAIT_COMMAND_TIMER;
   }
   else
@@ -388,7 +384,9 @@ static void appInit(void)
   appCommandWaitTimer.mode = SYS_TIMER_INTERVAL_MODE;
   appCommandWaitTimer.handler = appCommandWaitTimerHandler;
 #else
+#if (LED_COUNT > 0)
   LED_On(LED_NETWORK);
+#endif  
 #endif
 
 #ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
@@ -425,7 +423,7 @@ static void APP_TaskHandler(void)
       appState = APP_STATE_WAIT_SEND_TIMER;
 #endif
     } break;
-
+#if APP_ENDDEVICE
     case APP_STATE_PREPARE_TO_SLEEP:
     {
       if (!NWK_Busy())
@@ -445,42 +443,44 @@ static void APP_TaskHandler(void)
     case APP_STATE_WAKEUP:
     {
       NWK_WakeupReq();
-
-      //LED_On(LED_NETWORK);
-
+/*
+#if (LED_COUNT > 0)
+      LED_On(LED_NETWORK);
+#endif*/
 
       appState = APP_STATE_SEND;
     } break;
-
+#endif
     default:
       break;
   }
   
-#if APP_COORDINATOR
+#if (APP_COORDINATOR) 
   uint16_t bytes;
   if((bytes = sio2host_rx(rx_data,APP_RX_BUF_SIZE)) > 0)
   {
-  HAL_UartBytesReceived(bytes,&rx_data);  
+  UartBytesReceived(bytes,(uint8_t *)&rx_data);  
   }
 #endif
 }
 
 /*****************************************************************************
 *****************************************************************************/
-int main(void)
+int wsndemo_main(void)
 {
-	
-    SYS_Init();
 
-#if APP_COORDINATOR		
-    sio2host_init();
-#endif	
-    		
-    while (1)
-    {
-		
-        SYS_TaskHandler();
-	    APP_TaskHandler();
-		
-    }
+#if APP_ENDDEVICE		
+	sm_init();  
+#endif
+	SYS_Init();
+#if APP_COORDINATOR
+	sio2host_init();
+#endif
+	cpu_irq_enable();
+while (1)
+{	
+	SYS_TaskHandler();
+	APP_TaskHandler();
+	
+}
 }

@@ -51,7 +51,6 @@
 
 /*- Includes ---------------------------------------------------------------*/
 #include <stdint.h>
-#include "sysTypes.h"
 #include "nwkRx.h"
 #include "nwkFrame.h"
 

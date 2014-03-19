@@ -24,6 +24,7 @@
 		<build type="header-file"   value="inc/tal_tx.h"/>
 		<build type="include-path"  value="inc/"/>
 		<build type="define" name="TAL_TYPE" value ="AT86RF212"/>
+		<build type="define"   name="HIGH_DATA_RATE_SUPPORT"              value=""/>
 		<build type="define" name="PAL_USE_SPI_TRX" value ="1"/>
 		<build type="define" name="DISABLE_TSTAMP_IRQ" value ="1"/>
 	</module>

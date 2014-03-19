@@ -47,7 +47,6 @@
 /*- Includes ---------------------------------------------------------------*/
 #include <stdint.h>
 #include <stdbool.h>
-#include "sysConfig.h"
 
 /** 
  * \ingroup group_phy_212b
@@ -96,14 +95,11 @@ void PHY_DataReq(uint8_t *data);
 void PHY_DataConf(uint8_t status);
 void PHY_DataInd(PHY_DataInd_t *ind);
 void PHY_TaskHandler(void);
-
-#ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
+void PHY_SetIEEEAddr(uint8_t *ieee_addr);
 uint16_t PHY_RandomReq(void);
-#endif
 
-#ifdef PHY_ENABLE_AES_MODULE
+
 void PHY_EncryptReq(uint8_t *text, uint8_t *key);
-#endif
 
 #ifdef PHY_ENABLE_ENERGY_DETECTION
 int8_t PHY_EdReq(void);

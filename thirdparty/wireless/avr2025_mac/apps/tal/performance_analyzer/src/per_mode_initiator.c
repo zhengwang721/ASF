@@ -6,7 +6,7 @@
  * This is the source code of a Packet Error Rate Measurement mode as Initiator.
  *
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,7 +44,7 @@
  */
 
 /*
- * Copyright(c) 2012, Atmel Corporation All rights reserved.
+ * Copyright(c) 2013-2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -1894,8 +1894,8 @@ static void save_all_settings(void)
 #endif
 
 #if (TAL_TYPE == AT86RF233)
-	cc_band_ct = pal_trx_bit_read(SR_CC_BAND);
-	cc_number_ct = pal_trx_bit_read(SR_CC_NUMBER);
+	cc_band_ct = trx_bit_read(SR_CC_BAND);
+	cc_number_ct = trx_bit_read(SR_CC_NUMBER);
 #endif /* End of #if(TAL_TYPE == AT86RF233) */
 }
 
@@ -4645,8 +4645,8 @@ static void config_frequency(float frequency)
 	} else {
 		/* write the CC_BAND,CC_NUMBER registers as transceiver is in
 		 * TRX_OFF */
-		pal_trx_bit_write(SR_CC_BAND, cc_band);
-		pal_trx_bit_write(SR_CC_NUMBER, cc_number);
+		trx_bit_write(SR_CC_BAND, cc_band);
+		trx_bit_write(SR_CC_NUMBER, cc_number);
 		tal_calculate_frequency(cc_band, cc_number,
 				&(curr_trx_config_params.ism_frequency));
 

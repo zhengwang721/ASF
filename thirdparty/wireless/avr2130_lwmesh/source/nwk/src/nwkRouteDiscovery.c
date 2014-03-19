@@ -50,7 +50,6 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdbool.h>
-#include "sysTypes.h"
 #include "sysTimer.h"
 #include "sysConfig.h"
 #include "nwk.h"

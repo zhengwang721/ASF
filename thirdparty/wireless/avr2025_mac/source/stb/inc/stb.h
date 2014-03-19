@@ -3,7 +3,7 @@
  *
  * @brief Declarations for security tool box
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -189,6 +189,14 @@
  */
 #define AUX_HDR_LEN                     (MSDU_POS_KEY_SEQ_NO)
 
+	/* Set radio to SLEEP, if it has been in SLEEP before sal_aes_restart()
+	 **/
+#define TRX_SLEEP()                         \
+{                                           \
+	if (prev_trx_status == TRX_SLEEP) {     \
+		tal_trx_sleep(SLEEP_MODE_1);        \
+	}                                       \
+}                                           \
 /* === Types ============================================================== */
 
 /* === Externals ========================================================== */

@@ -3,7 +3,7 @@
  *
  * @brief This file implements the frame reception functions.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -125,7 +125,7 @@ void handle_received_frame_irq(void)
 		 * frame resets the buffer protection mode.
 		 */
 		uint8_t dummy;
-		pal_trx_frame_read(&dummy, 1);
+		trx_frame_read(&dummy, 1);
 		return;
 	}
 
@@ -134,7 +134,7 @@ void handle_received_frame_irq(void)
 #ifdef PROMISCUOUS_MODE
 	if (tal_pib.PromiscuousMode) {
 		/* Check for valid FCS */
-		if (pal_trx_bit_read(SR_RX_CRC_VALID) == CRC16_NOT_VALID) {
+		if (trx_bit_read(SR_RX_CRC_VALID) == CRC16_NOT_VALID) {
 			return;
 		}
 	}
@@ -143,12 +143,12 @@ void handle_received_frame_irq(void)
 
 #if (defined ENABLE_TRX_SRAM) || defined(ENABLE_TRX_SRAM_READ)
 	/* Use SRAM read to keep rx safe mode armed. */
-	pal_trx_sram_read(0x00, &phy_frame_len, LENGTH_FIELD_LEN); /* 0x00: SRAM
+	trx_sram_read(0x00, &phy_frame_len, LENGTH_FIELD_LEN); /* 0x00: SRAM
 	                                                            * offset
 	                                                            * address */
 #else
 	/* Get frame length from transceiver. */
-	pal_trx_frame_read(&phy_frame_len, LENGTH_FIELD_LEN);
+	trx_frame_read(&phy_frame_len, LENGTH_FIELD_LEN);
 #endif
 
 	/* Check for valid frame length. */
@@ -175,7 +175,7 @@ void handle_received_frame_irq(void)
 	 *field
 	 * in the first octet. RF233's frame buffer includes ED value too.
 	 */
-	pal_trx_frame_read(frame_ptr,
+	trx_frame_read(frame_ptr,
 			LENGTH_FIELD_LEN + phy_frame_len + LQI_LEN +
 			ED_VAL_LEN);
 	receive_frame->mpdu = frame_ptr;
@@ -215,7 +215,7 @@ void handle_received_frame_irq(void)
 		 * Keep the following as a reminder, if receiver is used with
 		 *RX_ON instead.
 		 */
-		/* pal_trx_reg_write(RG_TRX_STATE, CMD_RX_AACK_ON); */
+		/* trx_reg_write(RG_TRX_STATE, CMD_RX_AACK_ON); */
 	}
 }
 

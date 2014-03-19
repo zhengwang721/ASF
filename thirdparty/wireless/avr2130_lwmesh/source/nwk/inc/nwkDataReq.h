@@ -53,7 +53,6 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include "sysConfig.h"
-#include "sysTypes.h"
 
 /*- Types ------------------------------------------------------------------*/
 enum

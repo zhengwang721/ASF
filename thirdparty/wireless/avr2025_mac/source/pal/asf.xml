@@ -7,8 +7,6 @@
 			<info type="gui-flag" value="hidden"/>
             <build type="c-source"      value="pal.c"/>
             <build type="header-file"   value="pal.h"/>
-            <build type="header-file"   value="pal_ext_trx.h"/>
-            <build type="c-source"      value="pal_ext_trx.c"/>
             <build type="doxygen-entry-point" value="group_pal"/>
 			
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
@@ -26,8 +24,8 @@
             <build type="header-file"   value="pal.h"/>
             <build type="doxygen-entry-point" value="group_pal"/>
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.common_sw_timer"/>
+			<require idref="common.services.delay"/>
             <require idref="thirdparty.wireless.avr2025_mac.source.pal.inc"/>
-            <require idref="thirdparty.wireless.common_services.trx_access"/>
             <device-support-alias value="avr2025_mac_pal_soc_support"/>
 		</module>
 
@@ -40,8 +38,6 @@
             <build type="include-path"  value="."/>
             <build type="c-source"      value="pal.c"/>
             <build type="header-file"   subtype="api" value="pal.h"/>
-            <build type="header-file"   value="pal_ext_trx.h"/>
-            <build type="c-source"      value="pal_ext_trx.c"/>
             <build type="doxygen-entry-point" value="group_pal"/>
 
 

@@ -47,7 +47,7 @@
 #define USART_HOST                 EDBG_CDC_MODULE
 
 /** Baudrate setting */
-#define USART_HOST_BAUDRATE        9600
+#define USART_HOST_BAUDRATE        38400
  
 
 #define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(0, USART_HOST_ISR_VECT);\

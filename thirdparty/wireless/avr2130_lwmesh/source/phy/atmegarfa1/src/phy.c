@@ -43,14 +43,14 @@
 #ifdef PHY_ATMEGARFA1
 
 /*- Includes ---------------------------------------------------------------*/
-#include "sysTypes.h"
 #include "phy.h"
+#include "sal.h"
 #include "delay.h"
 #include "atmegarfa1.h"
 
 /*- Definitions ------------------------------------------------------------*/
 #define PHY_CRC_SIZE          2
-
+#define IRQ_CLEAR_VALUE       0xff
 /*- Types ------------------------------------------------------------------*/
 typedef enum
 {
@@ -169,7 +169,6 @@ void PHY_DataReq(uint8_t *data)
   TRX_STATE_REG = TRX_CMD_TX_START;
 }
 
-#ifdef PHY_ENABLE_RANDOM_NUMBER_GENERATOR
 /*************************************************************************//**
 *****************************************************************************/
 uint16_t PHY_RandomReq(void)
@@ -188,19 +187,17 @@ uint16_t PHY_RandomReq(void)
 
   return rnd;
 }
-#endif
 
-#ifdef PHY_ENABLE_AES_MODULE
+
 /*************************************************************************//**
 *****************************************************************************/
 void PHY_EncryptReq(uint8_t *text, uint8_t *key)
 {
-	#warning "Security Mode 0 Not Supported"
-	return;
+	sal_aes_setup(key,AES_MODE_ECB, AES_DIR_ENCRYPT);
+	sal_aes_exec(text);
+	sal_aes_read(text);
 }
-#endif
 
-#ifdef PHY_ENABLE_ENERGY_DETECTION
 /*************************************************************************//**
 *****************************************************************************/
 int8_t PHY_EdReq(void)
@@ -219,16 +216,17 @@ int8_t PHY_EdReq(void)
 
   return ed;
 }
-#endif
 
 /*************************************************************************//**
 *****************************************************************************/
 static void phySetRxState(void)
 {
+  phyTrxSetState(TRX_CMD_TRX_OFF);
+
+  IRQ_STATUS_REG = IRQ_CLEAR_VALUE;
+
   if (phyRxState)
     phyTrxSetState(TRX_CMD_RX_AACK_ON);
-  else
-    phyTrxSetState(TRX_CMD_TRX_OFF);
 }
 
 /*************************************************************************//**
@@ -241,7 +239,20 @@ static void phyTrxSetState(uint8_t state)
   do{TRX_STATE_REG = state;
   }while (state != TRX_STATUS_REG_s.trxStatus);
 }
-
+/*************************************************************************//**
+*****************************************************************************/
+void PHY_SetIEEEAddr(uint8_t *ieee_addr)
+{
+	uint8_t *ptr_to_reg = ieee_addr;
+	IEEE_ADDR_0_REG = *ptr_to_reg++;
+	IEEE_ADDR_1_REG = *ptr_to_reg++;
+	IEEE_ADDR_2_REG = *ptr_to_reg++;
+	IEEE_ADDR_3_REG = *ptr_to_reg++;
+	IEEE_ADDR_4_REG = *ptr_to_reg++;
+	IEEE_ADDR_5_REG = *ptr_to_reg++;
+	IEEE_ADDR_6_REG = *ptr_to_reg++;
+	IEEE_ADDR_7_REG = *ptr_to_reg;
+}
 /*************************************************************************//**
 *****************************************************************************/
 void PHY_TaskHandler(void)

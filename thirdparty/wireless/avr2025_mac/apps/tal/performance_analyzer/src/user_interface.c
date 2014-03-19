@@ -4,7 +4,7 @@
  * \brief LED, Button and terminal print functions - Perfoamnce Analyzer
  * application
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,12 +48,15 @@
  */
 /* === INCLUDES ============================================================ */
 #include "tal.h"
+# include "app_init.h"
+#if (LED_COUNT > 0) 
 #if !SAMD20
 # include "led.h"
 #endif
+#endif
 #include <stdio.h>
 #include <stdlib.h>
-# include "app_init.h"
+
 
 /**
  * \addtogroup group_user_interface
@@ -74,8 +77,10 @@
 #define LED_ON_DURAION_MICRO_SEC        (100000)
 
 /* === PROTOTYPES ========================================================== */
+#if (LED_COUNT>0)
 static void app_switch_off_tx_led_cb(void *parameter);
 static void app_switch_off_rx_led_cb(void *parameter);
+#endif
 
 /* === GLOBALS ============================================================= */
 
@@ -241,7 +246,8 @@ bool button_pressed(void)
  *
  */
 void app_led_event(led_event_t ev)
-{
+ {
+#if (LED_COUNT > 0) 
 	switch (ev) {
 	case LED_EVENT_TX_FRAME:
 		LED_On(TX_LED);
@@ -293,8 +299,10 @@ void app_led_event(led_event_t ev)
 		LED_Off(RX_LED);
 		break;
 	}
+#endif	
 }
 
+#if (LED_COUNT > 0) 	
 /**
  * \brief Callback function switching off the TX_LED
  *
@@ -303,9 +311,9 @@ void app_led_event(led_event_t ev)
  */
 static void app_switch_off_tx_led_cb(void *parameter)
 {
+
 	/* switch off the LED */
 	LED_Off(TX_LED);
-
 	/* keep the compiler happy */
 	parameter = parameter;
 }
@@ -323,8 +331,9 @@ static void app_switch_off_rx_led_cb(void *parameter)
 
 	/* keep the compiler happy */
 	parameter = parameter;
-}
 
+}
+#endif
 /* Print related functions */
 
 /*

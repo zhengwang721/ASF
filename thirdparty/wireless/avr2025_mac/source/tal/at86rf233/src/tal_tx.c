@@ -3,7 +3,7 @@
  *
  * @brief This file handles the frame transmission within the TAL.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,7 @@
  */
 
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -314,15 +314,15 @@ void send_frame(csma_mode_t csma_mode, bool tx_retries)
 
 	/* Configure tx according to tx_retries */
 	if (tx_retries) {
-		pal_trx_bit_write(SR_MAX_FRAME_RETRIES,
+		trx_bit_write(SR_MAX_FRAME_RETRIES,
 				tal_pib.MaxFrameRetries);
 	} else {
-		pal_trx_bit_write(SR_MAX_FRAME_RETRIES, 0);
+		trx_bit_write(SR_MAX_FRAME_RETRIES, 0);
 	}
 
 	/* Configure tx according to csma usage */
 	if ((csma_mode == NO_CSMA_NO_IFS) || (csma_mode == NO_CSMA_WITH_IFS)) {
-		pal_trx_bit_write(SR_MAX_CSMA_RETRIES, 7); /* immediate
+		trx_bit_write(SR_MAX_CSMA_RETRIES, 7); /* immediate
 		                                            * transmission */
 		if(tx_retries)
 		{
@@ -330,7 +330,7 @@ void send_frame(csma_mode_t csma_mode, bool tx_retries)
 			tal_sw_retry_no_csma_ca = true;
 		}
 	} else {
-		pal_trx_bit_write(SR_MAX_CSMA_RETRIES, tal_pib.MaxCSMABackoffs);
+		trx_bit_write(SR_MAX_CSMA_RETRIES, tal_pib.MaxCSMABackoffs);
 	}
 
 	do {
@@ -357,9 +357,9 @@ void send_frame(csma_mode_t csma_mode, bool tx_retries)
 	}
 
 	/* Toggle the SLP_TR pin triggering transmission. */
-	PAL_SLP_TR_HIGH();
+	TRX_SLP_TR_HIGH();
 	PAL_WAIT_65_NS();
-	PAL_SLP_TR_LOW();
+	TRX_SLP_TR_LOW();
 
 	/*
 	 * Send the frame to the transceiver.
@@ -367,13 +367,13 @@ void send_frame(csma_mode_t csma_mode, bool tx_retries)
 	 * be sent to the transceiver and this contains the frame
 	 * length.
 	 * The actual length of the frame to be downloaded
-	 * (parameter two of pal_trx_frame_write)
+	 * (parameter two of trx_frame_write)
 	 * is
 	 * 1 octet frame length octet
 	 * + n octets frame (i.e. value of frame_tx[0])
 	 * - 2 octets FCS
 	 */
-	pal_trx_frame_write(tal_frame_to_tx, tal_frame_to_tx[0] - 1);
+	trx_frame_write(tal_frame_to_tx, tal_frame_to_tx[0] - 1);
 
 	tal_state = TAL_TX_AUTO;
 
@@ -428,7 +428,7 @@ void handle_tx_end_irq(bool underrun_occured)
 		if (underrun_occured) {
 			trx_trac_status = TRAC_INVALID;
 		} else {
-			trx_trac_status = /*(trx_trac_status_t)*/pal_trx_bit_read(
+			trx_trac_status = /*(trx_trac_status_t)*/trx_bit_read(
 					SR_TRAC_STATUS);
 		}
 
@@ -481,9 +481,9 @@ void handle_tx_end_irq(bool underrun_occured)
 					trx_status = set_trx_state(CMD_TX_ARET_ON);
 				} while (trx_status != TX_ARET_ON);
 				/* Toggle the SLP_TR pin triggering transmission. */
-				PAL_SLP_TR_HIGH();
+				TRX_SLP_TR_HIGH();
 				PAL_WAIT_65_NS();
-				PAL_SLP_TR_LOW();
+				TRX_SLP_TR_LOW();
 				if(--tal_sw_retry_count == 0)
 				{
 					tal_sw_retry_no_csma_ca = false;
@@ -545,9 +545,9 @@ void tal_tx_beacon(frame_info_t *tx_frame)
 	pal_trx_irq_dis();
 
 	/* Toggle the SLP_TR pin triggering transmission. */
-	PAL_SLP_TR_HIGH();
+	TRX_SLP_TR_HIGH();
 	PAL_WAIT_65_NS();
-	PAL_SLP_TR_LOW();
+	TRX_SLP_TR_LOW();
 
 	/*
 	 * Send the frame to the transceiver.
@@ -555,13 +555,13 @@ void tal_tx_beacon(frame_info_t *tx_frame)
 	 * be sent to the transceiver and this contains the frame
 	 * length.
 	 * The actual length of the frame to be downloaded
-	 * (parameter two of pal_trx_frame_write)
+	 * (parameter two of trx_frame_write)
 	 * is
 	 * 1 octet frame length octet
 	 * + n octets frame (i.e. value of frame_tx[0])
 	 * - 2 octets FCS
 	 */
-	pal_trx_frame_write(tal_beacon_to_tx, tal_beacon_to_tx[0] - 1);
+	trx_frame_write(tal_beacon_to_tx, tal_beacon_to_tx[0] - 1);
 
 	tal_beacon_transmission = true;
 
