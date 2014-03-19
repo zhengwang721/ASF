@@ -186,7 +186,7 @@
 #define AT25DFX_SPI_MODULE     SPI0
 
 /* Chip select used by AT25DFx components on the SPI module instance */
-#define AT25DFX_CS             0
+#define AT25DFX_CS             1
 
 /**
  * \name TWIx pin definitions
