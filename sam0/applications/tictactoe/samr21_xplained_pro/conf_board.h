@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 Xplained Pro board configuration.
+ * \brief SAM R21 Xplained Pro board configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -43,5 +43,14 @@
 
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
+
+/* Buttons on OLED1 Xplained Pro */
+#  define WING_BUTTON_1 EXT1_PIN_9
+#  define WING_BUTTON_2 EXT1_PIN_3
+#  define WING_BUTTON_3 EXT1_PIN_4
+
+/* Height and width of LCD */
+#  define LCD_WIDTH_PIXELS  128
+#  define LCD_HEIGHT_PIXELS  32
 
 #endif /* CONF_BOARD_H_INCLUDED */
