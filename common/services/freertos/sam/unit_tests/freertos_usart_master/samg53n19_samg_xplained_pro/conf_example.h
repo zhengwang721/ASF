@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Serial USART service configuration.
+ * \brief Task configurations.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,9 +41,9 @@
  *
  */
 
-#ifndef CONF_USART_SERIAL_H
-#define CONF_USART_SERIAL_H
+#ifndef CONF_EXAMPLE_H
+#define CONF_EXAMPLE_H
 
-/* Intentionally empty */
+#define BOARD_USART	USART
 
-#endif/* CONF_USART_SERIAL_H_INCLUDED */
+#endif/* CONF_EXAMPLE_H */

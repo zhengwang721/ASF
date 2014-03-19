@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Serial USART service configuration.
+ * \brief Unit test configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,9 +41,14 @@
  *
  */
 
-#ifndef CONF_USART_SERIAL_H
-#define CONF_USART_SERIAL_H
+#ifndef CONF_TEST_H
+#define CONF_TEST_H
 
-/* Intentionally empty */
+/** USART Interface */
+#define CONF_TEST_USART      CONSOLE_UART
+/** Baudrate setting */
+#define CONF_TEST_BAUDRATE   115200
+/** Parity setting */
+#define CONF_TEST_PARITY     UART_MR_PAR_NO
 
-#endif/* CONF_USART_SERIAL_H_INCLUDED */
+#endif /* CONF_TEST_H_INCLUDED */
