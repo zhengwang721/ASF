@@ -284,7 +284,9 @@ static void appDataConf(NWK_DataReq_t *req)
   if (APP_COMMAND_PENDING == req->control)
   {
     SYS_TimerStart(&appCommandWaitTimer);
+#if (LED_COUNT > 0)	
 	LED_Toggle(LED_NETWORK);
+#endif	
     appState = APP_STATE_WAIT_COMMAND_TIMER;
   }
   else

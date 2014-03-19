@@ -74,7 +74,7 @@
 /* ! @} */
 //! \name Configuration for SAMD20
 //! @{
-#if (SAMD20)
+#if (SAMD20 || SAMR21)
 #define TIMER     (TC0)
 #endif /* SAMD20 */
 //! @}

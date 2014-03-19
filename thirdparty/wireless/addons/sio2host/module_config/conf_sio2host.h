@@ -113,7 +113,7 @@
 
 /* ! \name Configuration for SAMD20 */
 /* ! @{ */
-#if (SAMD20)
+#if (SAMD20 || SAMR21)
 #define USART_HOST                 SERCOM0
 /** Baudrate setting */
 #define USART_HOST_BAUDRATE        9600
