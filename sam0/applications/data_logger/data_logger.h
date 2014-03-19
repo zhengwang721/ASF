@@ -58,7 +58,7 @@ extern "C" {
  * This application demonstrates a data logger. The environment temperature is
  * read using 103 AP-2 thermistor from Semitec.
  * The readings are then stored in the serial flash AT25FD081A on the
- * SAM D21 Xplained PRO. The user can access the logs via serial port.
+ * SAM D21 Xplained Pro. The user can access the logs via serial port.
  */
 
 /**
@@ -76,7 +76,17 @@ extern "C" {
  * Data logger, as its name indicates measures the given input periodically
  * and stores them in a non-volatile media. In this application, the RTC inside
  * SAM D21 is configured to trigger ADC conversions at regular intervals.
- *
+ * This application also demonstrates the use of Direct Memory Access
+ * Controller (DMAC).
+ * 
+ * The DMAC when used with Event System or peripheral triggers, provides a
+ * considerable advantage by reducing the power consumption and performing
+ * data transfer in the background.
+ * SAM D21 devices with DMAC enables high data transfer rates with minimum
+ * CPU intervention and frees up CPU time. With access to all peripherals,
+ * the DMAC can handle automatic transfer of data to/from modules.
+ * It supports static and incremental addressing for both source and
+ * destination.
  *
  * \section appdoc_sam0_datalogger_setup Hardware Setup
  * Connect the thermistor as shown in
@@ -87,12 +97,70 @@ extern "C" {
  * \image html therm_conn.svg "Thermistor connection"
  *
  * \section appdoc_sam0_datalogger_usage Usage
- * The CPU is kept in Idle sleep and the RTC timeout event triggers ADC
+ *
+ * This application uses an NTC (Negative Temperature Coefficient) thermistor,
+ * whose resistance decreases as temperature increases.
+ * For the thermistor used in this application, the Steinhart–Hart
+ * coefficients are found using three reference points as shown below.
+ * The 'Temperature Vs Resistance' characteristics of the thermistor
+ * can be obtained from the manufacturer.
+ *
+ *   <table border="0" cellborder="1" cellspacing="0" >
+ *    <tr>
+ *        <th> Temperature (Deg C) </th> <th> Resistance of the Thermistor  (Ohms)</th>
+ *    </tr>
+ *    <tr>
+ *     <td > 0 </td>
+ *     <td > 27250 </td>
+ *    </tr>
+ *    <tr>
+ *     <td > 25 </td>
+ *     <td > 10000 </td>
+ *    </tr>
+ *    <tr>
+ *     <td > 50 </td>
+ *     <td > 4162 </td>
+ *    </tr>
+ *   </table>
+ * 
+ * The Steinhart-Hart equation is used to find temperature in degrees Kelvin.
+ *
+ * 1/T = A + B ln(R) + C (ln(R))^3
+ *
+ * The coefficients are defined in the code as below
+ *
+\code{.cpp}
+ #define SHH_COEFF_A 0.0008913055475
+ #define SHH_COEFF_B 0.0002507779917
+ #define SHH_COEFF_C 0.0000001957724056
+\endcode
+ *
+ * 
+ * As shown in hardware setup, a voltage divider is made using the
+ * thermistor and a 10 k Ohm series resistor. When the room temperature is
+ * 25 Deg C, the thermistor resistance is 10 k Ohm and the ADC input voltage
+ * will be close to VCC/2. 
+ * This voltage has dependency on the tolerance of the series
+ * resistor.
+ *
+ * Reference for the ADC is chosen as VCC/1.48.
+ * By using oversampling and decimation, the ADC resolution is increased from
+ * 12 bits to 16 bits. To increase the resolution by n bits, 4^n samples must
+ * be accumulated. The result must then be shifted right by n bits.
+ * In this example the ADC is configured for averaging mode and the number
+ * of samples accumulated is chosen as 256. In this case, the number of
+ * automatic right shifts will be four, which results in 16-bit resolution.
+ * More details on the ADC configuration is available in the device datasheet.
+ *
+ * The CPU is kept in Idle sleep and the RTC time-out event triggers ADC
  * conversion. The DMAC module is used for data transfer from the ADC result
  * register into an array in SRAM. Once a predefined number of conversions
  * are done, the data is transferred into the Serial Flash for non-volatile
  * storage.
  *
+ * When a read request is received via the serial port, the logs are read from
+ * the serial flash and send through the serial port.
+ * This SRAM to USART data transfer also makes use of the DMAC.
  * SERCOM3 is configured as USART, through which the user can read the logs.
  * This is the same port used as virtual COM port, by the Embedded debugger
  * on the SAM D21 Xplained Pro.
@@ -132,7 +200,7 @@ extern "C" {
  * The number of locations written, before we start again from address 0
  * in a 4K block of the serial flash
  */
-#define SF_ADDRESS_LIMIT                     600
+#define SF_ADDRESS_LIMIT                     4000
 /** Size of the buffer used for storing different messages */
 #define INFO_BUFFER_SIZE                     50
 /** Macros used when accessing the Serial Flash */
@@ -146,7 +214,7 @@ extern "C" {
  * Prescaler for the RTC. When the prescaler is 1024, the RTC
  * overflows every 1 sec
  */
-#define TIMER_PRESCALER                      RTC_COUNT_PRESCALER_DIV_128
+#define TIMER_PRESCALER                      RTC_COUNT_PRESCALER_DIV_256
 
 /**
  * Parameters for the ADC channel to which the thermistor is connected
@@ -164,7 +232,7 @@ extern "C" {
 /**
  * Define the Steinhart-Hart coefficients
  * The equation is
- * 1/T = A + B ln(R) + C(ln(R))^3
+ * 1/T = A + B ln(R) + C (ln(R))^3
  * Reference points taken are 0, 25 and 50 Deg C
  */
 #define SHH_COEFF_A                          0.0008913055475

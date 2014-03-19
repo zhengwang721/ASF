@@ -501,7 +501,7 @@ void sf_store_logs(float *envir_temp_sf_buff)
 		 * Represent the float value in two bytes,
 		 * one for the integer part and another for fractional part.
 		 */
-		integer_part = envir_temp_sf_buff[i];
+		integer_part = (char) envir_temp_sf_buff[i];
 		fract_part = ((int)(envir_temp_sf_buff[i] * 100)) % 100;
 		sprintf(&envir_temp_decim[i * BYTES_USED_FOR_A_READING], "%c%c",
 			integer_part, fract_part);
@@ -520,7 +520,7 @@ void sf_store_logs(float *envir_temp_sf_buff)
 		init_success = false;
 	}
 
-	/* Indicate that we've stored n reading into the SF */
+	/* Indicate that we've stored n readings into the serial flash */
 	sf_write_count += SF_TRANSFER_SIZE;
 }
 
@@ -743,7 +743,7 @@ int main(void)
 
 			/*
 			 * Copy the contents from adc_results_array into a local
-			 * array, right after we wakeup from sleep.
+			 * array, right after the wakeup from sleep.
 			 */
 			while (j < SF_TRANSFER_SIZE) {
 				adc_results_conv_array[j]
@@ -760,8 +760,7 @@ int main(void)
 					(THERM_EXCITATION_VOLT - input_voltage);
 				envir_temp
 					= (float)(1 /
-					(shh_a + shh_b *
-					log(thermistor_res) +
+					(shh_a + shh_b * log(thermistor_res) +
 					shh_c * (pow(log(thermistor_res), 3)))) - 273;
 				envir_temp_sf[j] = envir_temp;
 				j++;
@@ -786,8 +785,8 @@ int main(void)
 		}
 
 		/*
-		 * Once we've received a read request, check if the
-		 * write count is a non-zero
+		 * When a read request is received, check if the
+		 * write count is non-zero
 		 */
 		if (sf_read_request_received && sf_write_count) {
 			if (true == read_entire_logs) {
