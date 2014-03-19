@@ -5,7 +5,7 @@
  * Example which shows two-point calibration of the internal temperature sensor
  * of Xmega E.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,12 +47,12 @@
  * \mainpage
  *
  * \section intro Introduction
- * This example shows the usage of two calibration points available for 
- * the internal temperature sensor in Xmega E devices. 
+ * This example shows the usage of two calibration points available for
+ * the internal temperature sensor in Xmega E devices.
  * Two-point calibration of the Xmega E internal temperature sensor helps
  * to keep the error in temperature readings to the lowest levels.
  *
- * The production signature row of XmegaE device contains calibration data 
+ * The production signature row of XmegaE device contains calibration data
  * for the internal temperature sensor, stored during device manufacturing.
  * These two calibration points can be used for two-point calibration
  *
@@ -65,7 +65,7 @@
  *
  * \note
  * All AVR XMEGA E devices can be used.
- * The usage of two avilable calibration points is described in the 
+ * The usage of two available calibration points is described in the
  * Application Note AT03217
  * The ADC driver API can be found \ref adc_group "here".
  *
@@ -92,12 +92,13 @@
 #include <asf.h>
 #include <conf_example.h>
 
-/* Use 'y = mx + c' to find out the Temperature reading 
- * corresponding to the ADC reading */
+/* Use 'y = mx + c' to find out the Temperature reading
+ * corresponding to the ADC reading
+ */
 float m = 0.0;
 float c = 0.0;
 
-/* Internal ADC funtions */
+/* Internal ADC functions */
 static void main_adc_init(void);
 static void main_adc_averaging(void);
 
@@ -111,7 +112,7 @@ static void main_adc_averaging(void);
 static void adc_handler(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 {
 	volatile uint16_t temperature;
-	
+
 	temperature = (uint16_t)((m * result) + c);
 	/* Display values */
 	printf("The temperature is now %u Deg C\n\r", temperature);
@@ -134,7 +135,6 @@ int main(void)
 	int16_t adc_val_hottemp = 0;
 	int16_t adc_val_roomtemp = 0;
 
-	
 	/* Initializations */
 	board_init();
 	sysclk_init();
@@ -143,25 +143,29 @@ int main(void)
 	cpu_irq_enable();
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
-	printf("\x0C\n\r-- Xmega E - Internal Temperature Sensor - Two point calibration");
+	printf(
+		"\x0C\n\r-- Xmega E - Internal Temperature Sensor - Two point calibration");
 	printf("  (Compiled: %s %s)\n\r", __DATE__, __TIME__);
 
-	/* Get the calibration point data from production signature row into the device*/
+	/* Get the calibration point data from production signature row into the
+	 * device
+	 */
 	calib_hottemp = adc_get_calibration_data(ADC_CAL_HOTTEMP);
 	calib_roomtemp = adc_get_calibration_data(ADC_CAL_ROOMTEMP);
 	adc_val_hottemp = adc_get_calibration_data(ADC_CAL_TEMPSENSE);
 	adc_val_roomtemp = adc_get_calibration_data(ADC_CAL_TEMPSENSE2);
 
 	/* Find the slope of the line m = (y2-y1)/(x2-x1)*/
-	m = (float) (calib_hottemp - calib_roomtemp) / (adc_val_hottemp - adc_val_roomtemp);
+	m = (float)(calib_hottemp -
+		calib_roomtemp) / (adc_val_hottemp - adc_val_roomtemp);
 	/* Find the y intercept c = y - mx*/
-	c = (float) calib_hottemp - (m * adc_val_hottemp);
-	
+	c = (float)calib_hottemp - (m * adc_val_hottemp);
+
 	/* ADC initialization */
 	main_adc_init();
 	/* Enable averaging */
 	main_adc_averaging();
-	
+
 	adcch_read_configuration(&ADCA, ADC_CH0, &adcch_conf);
 	adcch_enable_interrupt(&adcch_conf);
 	adcch_write_configuration(&ADCA, ADC_CH0, &adcch_conf);
@@ -169,17 +173,18 @@ int main(void)
 	/* Enable ADC */
 	adc_enable(&ADCA);
 	adc_start_conversion(&ADCA, ADC_CH0);
-	
-	uint16_t i,j;
+
+	uint16_t i, j;
 	while (1) {
-		// Allow a small delay to finish the previous printf from ISR
+		/* Allow a small delay to finish the previous printf from ISR */
 		i = 0xFFFF;
 		j = 0x9;
-		while(j--){
-			while(i--);
+		while (j--) {
+			while (i--) {
+			}
 		}
-		
-		// Start next conversion.
+
+		/* Start next conversion. */
 		adc_start_conversion(&ADCA, ADC_CH0);
 	}
 }
@@ -202,7 +207,7 @@ static void main_adc_init(void)
 	 */
 	adc_read_configuration(&ADCA, &adc_conf); /* Initialize structures. */
 	adc_set_conversion_parameters(&adc_conf, ADC_SIGN_ON, ADC_RES_MT12,
-			ADC_REF_BANDGAP);
+		ADC_REF_BANDGAP);
 	adc_set_clock_rate(&adc_conf, 125000UL);
 	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_MANUAL, 1, 0);
 	adc_enable_internal_input(&adc_conf, ADC_INT_TEMPSENSE);
@@ -239,7 +244,7 @@ static void main_adc_averaging(void)
 	/* Change resolution parameter to accept averaging */
 	adc_read_configuration(&ADCA, &adc_conf);
 	adc_set_conversion_parameters(&adc_conf, ADC_SIGN_ON, ADC_RES_MT12,
-			ADC_REF_BANDGAP);
+		ADC_REF_BANDGAP);
 	adc_write_configuration(&ADCA, &adc_conf);
 
 	/* Enable averaging */

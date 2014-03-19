@@ -208,6 +208,14 @@ struct adc_config {
 #define TEMPSENSE0    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE0)
 /** Temperature sensor calibration byte 1. */
 #define TEMPSENSE1    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE1)
+/** Temperature at which TEMPSENSE1/TEMPSENSE0 is measured. */
+#define HOTTEMP       offsetof(NVM_PROD_SIGNATURES_t, HOTTEMP)
+/** Temperature at which TEMPSENSE3/TEMPSENSE2 is measured. */
+#define ROOMTEMP      offsetof(NVM_PROD_SIGNATURES_t, ROOMTEMP)
+/** Temperature sensor calibration byte 2. */
+#define TEMPSENSE2    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE2)
+/** Temperature sensor calibration byte 3. */
+#define TEMPSENSE3    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE3)
 
 /** @} */
 
@@ -768,7 +776,7 @@ static inline uint16_t adc_get_calibration_data(enum adc_calibration_data cal)
 		data <<= 8;
 		data |= nvm_read_production_signature_row(TEMPSENSE0);
 		break;
-
+#endif
 
 #if XMEGA_E
 	case ADC_CAL_HOTTEMP:
