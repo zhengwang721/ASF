@@ -2,7 +2,7 @@
 	<module type="application" id="xmega.drivers.adc.example9" caption="Xmega E - Internal Temperature Sensor - Two point calibration">
 		<info type="description" value="summary">
 		This example shows the usage of two calibration points available for the internal temperature sensor in Xmega E devices. 
-		Two-point calibration of the Xmega E internal temperature sensor helps to keep the accuracy within +/-2.5 Deg C in a temperature range of 0 to 105 Deg C
+		Two-point calibration of the Xmega E internal temperature sensor helps to improve the accuracy of temperature readings.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Sensors"/>
