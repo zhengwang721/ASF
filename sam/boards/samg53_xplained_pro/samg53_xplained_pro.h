@@ -572,6 +572,16 @@ void system_board_init(void);
 #define BOARD_AT30TSE_DEVICE_ADDR  0x07
 //@}
 
+//! \name PDM
+//@{
+/** PDM CLK pin definition. */
+#define PDM_CLK_GPIO        (PIO_PA10_IDX)
+#define PDM_CLK_FLAGS       (IOPORT_MODE_MUX_B)
+/** PDM DAT pin definition. */
+#define PDM_DAT_GPIO        (PIO_PA9_IDX)
+#define PDM_DAT_FLAGS       (IOPORT_MODE_MUX_B)
+//@}
+
 /** @} */
 
 /** @} */
