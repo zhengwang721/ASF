@@ -302,6 +302,13 @@ static void twis_interrupt_handler(uint32_t ch)
 	}
 	/* Check if the slave address match flag is raised */
 	if (pending & TWIS_IER_SAM) {
+		/* Ignore repeated start and transmission complete flags */
+		if (pending & TWIS_SR_REP) {
+			twis_clear_status(dev_inst, TWIS_SCR_REP);
+		}
+		if (pending & TWIS_SR_TCOMP) {
+			twis_clear_status(dev_inst, TWIS_SCR_TCOMP);
+		}
 		/* Enable error handling */
 		twis_enable_interrupt(dev_inst, TWIS_INTERRUPT_ERRORS);
 
