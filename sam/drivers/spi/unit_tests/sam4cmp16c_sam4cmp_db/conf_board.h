@@ -48,9 +48,9 @@
 #define CONF_BOARD_UART_CONSOLE
 
 /** SPI pins initialization */
-#define CONF_BOARD_SPI1
+#define CONF_BOARD_SPI0
 
-/** SPI pin NPCS0 initialization */
-#define CONF_BOARD_SPI1_NPCS0
+/** SPI pin NPCS1 initialization */
+#define CONF_BOARD_SPI0_NPCS1
 
 #endif /* CONF_BOARD_H_INCLUDED */

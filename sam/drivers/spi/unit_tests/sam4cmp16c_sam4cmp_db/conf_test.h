@@ -45,13 +45,13 @@
 #define CONF_TEST_H_INCLUDED
 
 /** Perform unit tests using SPI */
-#define CONF_TEST_SPI         SPI1
+#define CONF_TEST_SPI         SPI0
 /** unit test SPI ID */
-#define CONF_TEST_SPI_ID      ID_SPI1
+#define CONF_TEST_SPI_ID      ID_SPI0
 /** unit test SPI NPCS */
 #define CONF_TEST_SPI_NPCS    0
 /** unit test SPI handler in vector table */
-#define CONF_TEST_SPI_HANDLER SPI1_Handler
+#define CONF_TEST_SPI_HANDLER SPI0_Handler
 
 /** USART Interface  : Console UART */
 #define CONF_TEST_USART      CONSOLE_UART
@@ -66,5 +66,18 @@
 
 #define SPI_WPSR_WPVS_Msk SPI_WPSR_WPVSRC_Msk
 
+/** \brief SPI DataFlash settings.
+ *  Define \ref CONF_TEST_DF to enable DataFlash test.
+ */
+/** DataFlash test enable */
+#define CONF_TEST_DF
+/** DataFlash NPCS (using CONF_TEST_SPI for SPI) */
+#define CONF_TEST_DF_NPCS        1
+/** DataFlash ID expected (AT25DF321A) */
+#define CONF_TEST_DF_ID          0x0001471F
+/** DataFlash Page Size */
+#define CONF_TEST_DF_PAGE_SIZE   256
+/** DataFlash address to test (last block) */
+#define CONF_TEST_DF_ADDRESS     (4*1024*1024-4*1024)
 
 #endif /* CONF_TEST_H_INCLUDED */

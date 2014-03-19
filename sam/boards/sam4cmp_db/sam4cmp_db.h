@@ -180,26 +180,13 @@
 /** SPI0 chip select 1 pin definition. */
 #define SPI0_NPCS1_GPIO        (PIO_PA21_IDX)
 #define SPI0_NPCS1_FLAGS       (IOPORT_MODE_MUX_A)
-
-/** SPI1 MISO pin definition. */
-#define SPI1_MISO_GPIO         (PIO_PC3_IDX)
-#define SPI1_MISO_FLAGS        (IOPORT_MODE_MUX_A)
-/** SPI1 MOSI pin definition. */
-#define SPI1_MOSI_GPIO         (PIO_PC4_IDX)
-#define SPI1_MOSI_FLAGS        (IOPORT_MODE_MUX_A)
-/** SPI1 SPCK pin definition. */
-#define SPI1_SPCK_GPIO         (PIO_PC5_IDX)
-#define SPI1_SPCK_FLAGS        (IOPORT_MODE_MUX_A)
-/** SPI1 chip select 0 pin definition. */
-#define SPI1_NPCS0_GPIO        (PIO_PC2_IDX)
-#define SPI1_NPCS0_FLAGS       (IOPORT_MODE_MUX_A)
 /* @} */
 
 /* Select the SPI module that AT25DFx is connected to */
 #define AT25DFX_SPI_MODULE     SPI0
 
 /* Chip select used by AT25DFx components on the SPI module instance */
-#define AT25DFX_CS             0
+#define AT25DFX_CS             1
 
 /**
  * \name TWIx pin definitions
