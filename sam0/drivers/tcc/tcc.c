@@ -998,6 +998,7 @@ uint32_t tcc_get_capture_value(
 }
 
 /**
+ * \internal
  * \brief Sets a TCC module compare value/buffer.
  *
  * Writes a compare value to the given TCC module compare/capture channel or
@@ -1006,7 +1007,7 @@ uint32_t tcc_get_capture_value(
  * \param[in]  module_inst    Pointer to the software module instance struct
  * \param[in]  channel_index  Index of the compare channel to write to
  * \param[in]  compare        New compare value/buffer value to set
- * \param[in]  buffered       Write to buffered register or not
+ * \param[in]  double_buffering_enabled Set to \c true to write to CCBx
  *
  * \return Status of the compare update procedure.
  *
@@ -1018,7 +1019,7 @@ static enum status_code _tcc_set_compare_value(
 		const struct tcc_module *const module_inst,
 		const enum tcc_match_capture_channel channel_index,
 		const uint32_t compare,
-		const bool buffered)
+		const bool double_buffering_enabled)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -1041,7 +1042,7 @@ static enum status_code _tcc_set_compare_value(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	if (buffered) {
+	if (double_buffering_enabled) {
 		while(tcc_module->SYNCBUSY.reg  &
 				(TCC_SYNCBUSY_CCB0 << channel_index)) {
 			/* Sync wait */
@@ -1126,13 +1127,14 @@ enum status_code tcc_set_double_buffer_compare_values(
 
 
 /**
+ * \internal
  * \brief Set the timer TOP/PERIOD buffer/value.
  *
  * This function writes the given value to the PER/PERB register.
  *
- * \param[in]  module_inst   Pointer to the software module instance struct
- * \param[in]  top_value     New value to be loaded into the PER/PERB register
- * \param[in]  buffered      Write to buffered register or not
+ * \param[in] module_inst   Pointer to the software module instance struct
+ * \param[in] top_value     New value to be loaded into the PER/PERB register
+ * \param[in] double_buffering_enabled Set to \c true to write to PERB
  *
  * \return Status of the TOP set procedure.
  *
@@ -1143,7 +1145,7 @@ enum status_code tcc_set_double_buffer_compare_values(
 static enum status_code _tcc_set_top_value(
 		const struct tcc_module *const module_inst,
 		const uint32_t top_value,
-		const bool buffered)
+		const bool double_buffering_enabled)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -1161,7 +1163,7 @@ static enum status_code _tcc_set_top_value(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	if (buffered) {
+	if (double_buffering_enabled) {
 		while(tcc_module->SYNCBUSY.reg  & TCC_SYNCBUSY_PERB) {
 			/* Sync wait */
 		}
@@ -1186,8 +1188,12 @@ static enum status_code _tcc_set_top_value(
  * \ref tcc_force_double_buffer_update(), or be updated when the lock update bit
  * is cleared and the UPDATE condition happen.
  *
- * When using MFRQ, the top value is defined by the CC0 register value, for all
- * other waveforms operation the top value is defined by PER register value.
+ * When using MFRQ, the top value is defined by the CC0 register value and the
+ * PER value is ignored, so
+ * \ref tcc_set_compare_value(module,channel_0,value) must be used instead of
+ * this function to change the actual top value in that case.
+ * For all other waveforms operation the top value is defined by PER register
+ * value.
  *
  * \param[in]  module_inst   Pointer to the software module instance struct
  * \param[in]  top_value     New value to be loaded into the PER/PERB register
@@ -1215,8 +1221,12 @@ enum status_code tcc_set_top_value(
  * This function writes the given value to the PER and PERB register. Usually as
  * preparation for double buffer or circulared double buffer (circular buffer).
  *
- * When using MFRQ, the top value is defined by the CC0 register value, for all
- * other waveforms operation the top value is defined by PER register value.
+ * When using MFRQ, the top values are defined by the CC0 and CCB0, the PER and
+ * PERB values are ignored, so
+ * \ref tcc_set_double_buffer_compare_values(module,channel_0,value,buffer) must
+ * be used instead of this function to change the actual top values in that
+ * case. For all other waveforms operation the top values are defined by PER and
+ * PERB registers values.
  *
  * \param[in]  module_inst      Pointer to the software module instance struct
  * \param[in]  top_value        New value to be loaded into the PER register
@@ -1481,13 +1491,12 @@ void tcc_clear_status(
 }
 
 /**
- * \brief Enable Circular Buffer for Compare Values
+ * \brief Enable Circular option for double buffered Compare Values
  *
- * Circulars the double buffered compare values.
- *
- * Circular means when updating values, the using values and their buffered
- * values are switched - the previously using one will be buffered and the
- * buffered one will then be used.
+ * Enable circular option for the double buffered channel compare values.
+ * On each UPDATE condition, the contents of CCBx and CCx are switched, meaning
+ * that the contents of CCBx are transferred to CCx and the contents of CCx are
+ * transferred to CCBx.
  *
  * \param[in] module_inst     Pointer to the TCC software instance struct
  * \param[in] channel_index   Index of the compare channel to set up to
@@ -1522,13 +1531,9 @@ enum status_code tcc_enable_circular_buffer_compare(
 }
 
 /**
- * \brief Disable Circular Buffer for Compare Values
+ * \brief Disable Circular option for double buffered Compare Values
  *
  * Stop circularing the double buffered compare values.
- *
- * Circular means when updating values, the using values and their buffered
- * values are switched - the previously using one will be buffered and the
- * buffered one will then be used.
  *
  * \param[in] module_inst     Pointer to the TCC software instance struct
  * \param[in] channel_index   Index of the compare channel to set up to

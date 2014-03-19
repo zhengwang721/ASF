@@ -2166,12 +2166,12 @@ static inline void tcc_force_double_buffer_update(
 }
 
 /**
- * \brief Enable Circular Buffer for double buffered Top/Period Values
+ * \brief Enable Circular option for double buffered Top/Period Values
  *
- * Circulars the double buffered top/period values or not.
- * Circular means when updating values, the using values and their buffered
- * values are switched - the previously using one will be buffered and the
- * buffered one will then be used.
+ * Enable circular option for the double buffered top/period values.
+ * On each UPDATE condition, the contents of PERB and PER are switched, meaning
+ * that the contents of PERB are transferred to PER and the contents of PER are
+ * transferred to PERB.
  *
  * \param[in] module_inst     Pointer to the TCC software instance struct
  */
@@ -2186,12 +2186,9 @@ static inline void tcc_enable_circular_buffer_top(
 }
 
 /**
- * \brief Disable Circular Buffer for double buffered Top/Period Values
+ * \brief Disable Circular option for double buffered Top/Period Values
  *
- * Circulars the double buffered top/period values or not.
- * Circular means when updating values, the using values and their buffered
- * values are switched - the previously using one will be buffered and the
- * buffered one will then be used.
+ * Stop circularing the double buffered top/period values.
  *
  * \param[in] module_inst     Pointer to the TCC software instance struct
  */

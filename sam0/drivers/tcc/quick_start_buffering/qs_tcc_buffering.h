@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_sam0_tcc_buffering_use_case Quick Start Guide for TCC - Double Buffering
+ * \page asfdoc_sam0_tcc_buffering_use_case Quick Start Guide for TCC - Double Buffering & Circular
  *
  * The supported board list:
  *    - SAM D21 Xplained Pro
@@ -76,8 +76,10 @@
  * - No event generation enabled
  * - Counter starts on 0
  * - Counter top set to 8000
- * - Capture compare channel 0 set to 8000/4
- * - Capture compare channel 0 buffer set to 8000*3/4
+ * - Capture compare channel set to 8000/4
+ * - Capture compare channel buffer set to 8000*3/4
+ * - Circular option for compare channel is enabled so that the compare
+ *   values keep switching on update condition
  *
  * \section asfdoc_sam0_tcc_buffering_use_case_setup Quick Start
  *

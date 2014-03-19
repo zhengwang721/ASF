@@ -42,6 +42,10 @@
 #include <asf.h>
 #include <conf_quick_start_buffering.h>
 
+#if CONF_PWM_CHANNEL > 3
+#  error Only the four lowest channels support circular option, please check CONF_PWM_CHANNEL
+#endif
+
 static void configure_tcc(void);
 
 //! [module_inst]
