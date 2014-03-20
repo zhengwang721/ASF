@@ -27,7 +27,6 @@
 	<device-support value="atxmega256a3bu"/>
 	<device-support value="samd20"/>
 	<device-support value="sam4l"/>
-	<device-support value="sam4s"/>
 </device-alias-map>	
 
 <device-alias-map name="avr2130_lwmesh_spi_support">
@@ -35,7 +34,6 @@
 	<device-support value="atxmega256a3bu"/>
 	<device-support value="samd20"/>
 	<device-support value="sam4l"/>
-	<device-support value="sam4s"/>
 </device-alias-map>	
 	
 </asf>
