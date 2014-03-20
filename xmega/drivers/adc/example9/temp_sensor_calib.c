@@ -143,8 +143,8 @@ int main(void)
 	cpu_irq_enable();
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
-	printf(
-		"\x0C\n\r-- Xmega E - Internal Temperature Sensor - Two point calibration");
+	printf("\x0C\n\r-- Xmega E Internal Temperature Sensor \
+			Two Point Calibration");
 	printf("  (Compiled: %s %s)\n\r", __DATE__, __TIME__);
 
 	/* Get the calibration point data from production signature row into the
