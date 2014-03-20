@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief API for SAM TRNG.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,38 +41,14 @@
  *
  */
 
-#ifndef TRNG_H_INCLUDED
-#define TRNG_H_INCLUDED
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
 
-#include "compiler.h"
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   115200
+/** Parity setting */
+#define CONF_UART_PARITY     UART_MR_PAR_NO
 
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-/** Key to unlock TRNG_CR register */
-#ifndef TRNG_CR_KEY_PASSWD
-#define TRNG_CR_KEY_PASSWD    TRNG_CR_KEY(0x524E47)
-#endif
-
-void trng_enable(Trng *p_trng);
-void trng_disable(Trng *p_trng);
-void trng_enable_interrupt(Trng *p_trng);
-void trng_disable_interrupt(Trng *p_trng);
-uint32_t trng_get_interrupt_mask(Trng *p_trng);
-uint32_t trng_get_interrupt_status(Trng *p_trng);
-uint32_t trng_read_output_data(Trng *p_trng);
-
-/// @cond 0
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/// @endcond
-
-#endif /* TRNG_H_INCLUDED */
+#endif/* CONF_USART_SERIAL_H_INCLUDED */
