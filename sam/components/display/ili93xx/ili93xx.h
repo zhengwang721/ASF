@@ -107,7 +107,7 @@ typedef int16_t gfx_coord_t;
 #if defined(BOARD_ILI93XX_ADDR) && defined (BOARD_ILI93XX_RS)
 static inline void LCD_IR(uint8_t lcd_index)
 {
-	/** ILI9325 index register address */
+	/** ILI93XX index register address */
 	*((volatile uint8_t *)(BOARD_ILI93XX_ADDR)) = lcd_index;
 }
 

@@ -151,129 +151,86 @@ static void demo_draw_bmpfile(  struct gfx_bitmap const *bmp,
 
 	if (lcd_type == 1)
 	{
-	gfx_coord_t width = bmp->width;
+		gfx_coord_t width = bmp->width;
 
-	if (f_open( &fp, (const char *)bmp->data.custom, FA_OPEN_EXISTING |
-			FA_READ ) == FR_OK) {
-		if (f_read( &fp, &bmp_header, sizeof(bmp_header),
-				&length ) == FR_OK) {
-			switch (bmp_header.bits) {
-			case 24:
-				/* Set window */
-				gfx_set_limits(map_x, map_y, map_x + x,
-						map_y + y);
+		if (f_open(&fp, (const char *)bmp->data.custom, FA_OPEN_EXISTING |
+				FA_READ) == FR_OK) {
+			if (f_read(&fp, &bmp_header, sizeof(bmp_header), &length) == FR_OK) {
+				switch (bmp_header.bits) {
+				case 24:
+					/* Set window */
+					gfx_set_limits(map_x, map_y, map_x + x, map_y + y);
 
-				line_length = (((bmp_header.width * bmp_header.bits) +31) / 32) * 4;
+					line_length = (((bmp_header.width * bmp_header.bits) +31) / 32) * 4;
 
-				min_length = width * 3;
-				if (min_length == line_length) {
-					/* Read buffer and write it on
-					 * backend */
-					do {
-						f_read( &fp, demo_bmp_filedata,
-								sizeof(
-									demo_bmp_filedata),
-								&length );
-						gfx_copy_progmem_pixels_to_screen(
-								demo_bmp_filedata, length /3);
-					} while (length == sizeof(demo_bmp_filedata));
-				} else {
-					read_line_num = FF_BUFF_SIZE / line_length;
-
-					do {
-						f_read( &fp, demo_bmp_filedata,
-								read_line_num * line_length,
-								&length );
-
-						offset = 0;
-
-						for (i = 0; i < length / line_length; i++) {
-							gfx_copy_progmem_pixels_to_screen(
-									&demo_bmp_filedata[offset],
-									width);
-							offset += line_length;
-						}
-					} while (length == read_line_num * line_length);
+					min_length = width * 3;
+					if (min_length == line_length) {
+						/* Read buffer and write it on backend */
+						do {
+							f_read(&fp, demo_bmp_filedata, sizeof(demo_bmp_filedata), &length);
+							gfx_copy_progmem_pixels_to_screen(demo_bmp_filedata, length /3);
+						} while (length == sizeof(demo_bmp_filedata));
+					} else {
+						read_line_num = FF_BUFF_SIZE / line_length;
+						do {
+							f_read( &fp, demo_bmp_filedata, read_line_num * line_length, &length );
+							offset = 0;
+							for (i = 0; i < length / line_length; i++) {
+								gfx_copy_progmem_pixels_to_screen(&demo_bmp_filedata[offset], width);
+								offset += line_length;
+							}
+						} while (length == read_line_num * line_length);
+					}
+					break;
+				default:
+					break;
 				}
-
-				break;
-
-			default:
-				break;
 			}
+			f_close(&fp);
 		}
+	} else {
+		gfx_set_orientation(GFX_FLIP_Y);
 
-		f_close( &fp );
-	}
+		offset_y = FF_BUFF_SIZE/(x+1)/3;
+		read_length = offset_y*(x+1)*3;
 
-	}else {
-	gfx_set_orientation(GFX_FLIP_Y);
+		if (f_open(&fp, (const char *)bmp->data.custom, FA_OPEN_EXISTING |
+				FA_READ) == FR_OK) {
+			if (f_read( &fp, &bmp_header, sizeof(bmp_header), &length ) == FR_OK) {
+				switch (bmp_header.bits) {
+				case 24:
+					/* Set window */
+					gfx_set_limits(map_x, 320- start_y - y, map_x + x, 320 - map_y);
 
-	offset_y = FF_BUFF_SIZE/(x+1)/3;
-	read_length = offset_y*(x+1)*3;
+					line_length = (((bmp_header.width * bmp_header.bits) +31) / 32) * 4;
 
-	if (f_open( &fp, (const char *)bmp->data.custom, FA_OPEN_EXISTING |
-			FA_READ ) == FR_OK) {
-		if (f_read( &fp, &bmp_header, sizeof(bmp_header),
-				&length ) == FR_OK) {
-			switch (bmp_header.bits) {
-			case 24:
-				/* Set window */
-				gfx_set_limits(map_x, 320- start_y - y, map_x + x,
-						320 - map_y);
-
-				line_length = (((bmp_header.width * bmp_header.bits) +31) / 32) * 4;
-
-				min_length = width * 3;
-				if (min_length == line_length) {
-					/* Read buffer and write it on
-					 * backend */
-					do {
-						f_read( &fp, demo_bmp_filedata,
-								read_length,
-								&length );
-
-						gfx_set_limits(map_x, 320-start_y-y, map_x+x,
-												320- map_y);
-
-						gfx_copy_progmem_pixels_to_screen(
-							demo_bmp_filedata, length/3);
-
-						start_y -= offset_y;
-
-					} while (length == (read_length));
-				} else {
-
-					read_line_num = FF_BUFF_SIZE / line_length;
-
-					do {
-						f_read( &fp, demo_bmp_filedata,
-								read_line_num * line_length,
-								&length );
-
-						offset = 0;
-
-						for (i = 0; i < length / line_length; i++) {
-							gfx_copy_progmem_pixels_to_screen(
-									&demo_bmp_filedata[offset],
-									width);
-							offset += line_length;
-						}
-					} while (length == read_line_num * line_length);
-
+					min_length = width * 3;
+					if (min_length == line_length) {
+						/* Read buffer and write it on backend */
+						do {
+							f_read(&fp, demo_bmp_filedata, read_length, &length );
+							gfx_set_limits(map_x, 320-start_y-y, map_x+x, 320- map_y);
+							gfx_copy_progmem_pixels_to_screen(demo_bmp_filedata, length/3);
+							start_y -= offset_y;
+						} while (length == (read_length));
+					} else {
+						read_line_num = FF_BUFF_SIZE / line_length;
+						do {
+							f_read( &fp, demo_bmp_filedata, read_line_num * line_length, &length );
+							offset = 0;
+							for (i = 0; i < length / line_length; i++) {
+								gfx_copy_progmem_pixels_to_screen(&demo_bmp_filedata[offset], width);
+								offset += line_length;
+							}
+						} while (length == read_line_num * line_length);
+					}
+					break;
+				default:
+					break;
 				}
-
-				break;
-
-			default:
-				break;
 			}
+			f_close( &fp );
 		}
-
-		f_close( &fp );
-	}
-
 		gfx_set_orientation(0);
-
 	}
 }

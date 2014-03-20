@@ -77,8 +77,6 @@ static volatile ili93xx_coord_t limit_end_x, limit_end_y;
 /** Global variable describing the font size used by the driver */
 const struct ili93xx_font gfont = {10, 14};
 
-static uint32_t lcd_device_type=0;
-
 /**
  * Character set table for font 10x14
  * Coding format:
@@ -723,7 +721,6 @@ uint32_t ili93xx_init(struct ili93xx_opt_t *p_opt)
 		ili93xx_set_window(0, 0, p_opt->ul_width, p_opt->ul_height);
 		ili93xx_set_foreground_color(p_opt->foreground_color);
 		ili93xx_set_cursor_position(0, 0);
-		lcd_device_type = 1;
 	} else if (g_uc_device_type == DEVICE_TYPE_ILI9341) {
 		/** init for ILI9341 **/
 		/** power control A configuration*/
@@ -798,7 +795,6 @@ uint32_t ili93xx_init(struct ili93xx_opt_t *p_opt)
 		ili93xx_delay(10);
 		/** Display on*/
 		ili93xx_write_register(ILI9341_CMD_DISPLAY_ON, paratable, 0);
-		lcd_device_type = 2;
 	} else {
 		/** exit with return value 1 if device type is not supported.*/
 		return 1;
@@ -1851,7 +1847,7 @@ void ili93xx_set_orientation(uint8_t flags)
 
 uint32_t ili93xx_get_lcd_type(void)
 {
-	return lcd_device_type;
+	return g_uc_device_type;
 
 }
 /**

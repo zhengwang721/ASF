@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Graphic service settings for the LCD panel using the ILI9325
+ * \brief Graphic service settings for the LCD panel using the ILI93XX
  * display controller
  *
  * This files includes the correct header files for the graphics service
@@ -55,10 +55,10 @@ extern "C" {
 
 /**
  * \ingroup gfx_group
- * \defgroup gfx_ili93xx display using ILI93xx display controller
+ * \defgroup gfx_ili93xx display using ILI93XX display controller
  *
  * This is hardware specific configuration that configures the graphical
- * service for use with the ILI93xx display controller display.
+ * service for use with the ILI93XX display controller display.
  * All the drawing functionality in this configuration is provided
  * by the \ref gfx_generic driver. This configuration includes information
  * about the panel size, data type used for coordinates and color and
@@ -74,7 +74,7 @@ extern "C" {
 
 /**
  * It is not possible to define a color that is outside the color spectrum for
- * the ILI9325 driver, hence use a dark color as invalid color.
+ * the ILI93XX driver, hence use a dark color as invalid color.
  */
 #define GFX_COLOR_INVALID       GFX_COLOR(1, 2, 3)
 
@@ -152,49 +152,49 @@ void gfx_ili93xx_draw_line_pixel(gfx_coord_t x, gfx_coord_t y,
 void gfx_ili93xx_set_orientation(uint8_t flags);
 
 /**
- * ILI9325 display driver uses generic gfx implementation for this function. See
+ * ILI93XX display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_horizontal_line
  */
 #define gfx_draw_horizontal_line(x, y, length, color)\
 	gfx_generic_draw_horizontal_line(x, y, length, color)
 
 /**
- * ILI9325 display driver uses generic gfx implementation for this function. See
+ * ILI93XX display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_vertical_line
  */
 #define gfx_draw_vertical_line(x, y, length, color)\
 	gfx_generic_draw_vertical_line(x, y, length, color)
 
 /**
- * ILI9325 display driver uses generic gfx implementation for this function. See
+ * ILI93XX display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_line
  */
 #define gfx_draw_line(x1, y1, x2, y2, color)\
 	gfx_generic_draw_line(x1, y1, x2, y2, color)
 
 /**
- * ILI9325 display driver uses generic gfx implementation for this function. See
+ * ILI93XX display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_rect
  */
 #define gfx_draw_rect(x, y, width, height, color)\
 	gfx_generic_draw_rect(x, y, width, height, color)
 
 /**
- * ILI9325 display driver uses generic gfx implementation for this function. See
+ * ILI93XX display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_filled_rect
  */
 #define gfx_draw_filled_rect(x, y, width, height, color)\
 	gfx_generic_draw_filled_rect(x, y, width, height, color)
 
 /**
- * ILI9325 display driver uses generic gfx implementation for this function. See
+ * ILI93XX display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_circle
  */
 #define gfx_draw_circle(x, y, radius, color, octant_mask)\
 	gfx_generic_draw_circle(x, y, radius, color, octant_mask)
 
 /**
- * ILI9325 display driver uses generic gfx implementation for this function. See
+ * ILI93XX display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_filled_circle
  */
 #define gfx_draw_filled_circle(x, y, radius, color, quadrant_mask)\
@@ -202,7 +202,7 @@ void gfx_ili93xx_set_orientation(uint8_t flags);
 		quadrant_mask)
 
 /**
- * ILI9325 display driver uses generic gfx implementation for this function. See
+ * ILI93XX display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_get_pixmap
  */
 #define gfx_get_pixmap(pixmap, map_width, map_x, map_y, x, y, width, height)\
@@ -210,7 +210,7 @@ void gfx_ili93xx_set_orientation(uint8_t flags);
 		width, height)
 
 /**
- * ILI9325 display driver uses generic gfx implementation for this function. See
+ * ILI93XX display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_put_pixmap
  */
 #define gfx_put_pixmap(pixmap, map_width, map_x, map_y, x, y, width, height)\
@@ -218,14 +218,14 @@ void gfx_ili93xx_set_orientation(uint8_t flags);
 		width, height)
 
 /**
- * ILI9325 display driver uses generic gfx implementation for this function. See
+ * ILI93XX display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_put_bitmap
  */
 #define gfx_put_bitmap(bmp, map_x, map_y, x, y, width, height)\
 	gfx_generic_put_bitmap(bmp, map_x, map_y, x, y, width, height)
 
 /**
- * ILI9325 display driver uses generic gfx implementation for this function. See
+ * ILI93XX display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_bitmap_tiled
  */
 #define gfx_draw_bitmap_tiled(bmp, x1, y1, x2, y2, tile_origin_x,\
@@ -234,102 +234,102 @@ void gfx_ili93xx_set_orientation(uint8_t flags);
 		tile_origin_x, tile_origin_y)
 
 /**
- * ILI9325 display driver uses generic gfx implementation for this function. See
+ * ILI93XX display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_draw_bitmap
  */
 #define gfx_draw_bitmap(bmp, x, y) gfx_generic_draw_bitmap(bmp, x, y)
 
 /**
- * ILI9325 display driver uses generic gfx implementation for this function. See
+ * ILI93XX display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_set_ext_handler
  */
 #define gfx_set_ext_handler(ext_draw_handler)\
 	gfx_generic_set_ext_handler(ext_draw_handler)
 
 /**
- * ILI9325 display driver specific function, see
+ * ILI93XX display driver specific function, see
  * \ref ili93xx_duplicate_pixel
  */
 #define gfx_duplicate_pixel(color, count) ili93xx_duplicate_pixel(color, count)
 
 /**
- * ILI9325 display driver specific function, see
+ * ILI93XX display driver specific function, see
  * \ref gfx_ili93xx_get_pixel
  */
 #define gfx_get_pixel(x, y) gfx_ili93xx_get_pixel(x, y)
 
 /**
- * ILI9325 display driver specific function, see
+ * ILI93XX display driver specific function, see
  * \ref gfx_ili93xx_draw_pixel
  */
 #define gfx_draw_pixel(x, y, color) gfx_ili93xx_draw_pixel(x, y, color)
 
 /**
- * ILI9325 display driver specific function, see
+ * ILI93XX display driver specific function, see
  * \ref gfx_ili93xx_draw_line_pixel
  */
 #define gfx_draw_line_pixel(x, y, color) gfx_ili93xx_draw_line_pixel(x, y,\
 		color)
 
 /**
- * ILI9325 display driver specific function, see
+ * ILI93XX display driver specific function, see
  * \ref ili93xx_set_top_left_limit
  */
 #define gfx_set_top_left_limit(x, y) ili93xx_set_top_left_limit(x, y)
 
 /**
- * ILI9325 display driver specific function, see
+ * ILI93XX display driver specific function, see
  * \ref ili93xx_set_bottom_right_limit
  */
 #define gfx_set_bottom_right_limit(x, y) ili93xx_set_bottom_right_limit(x, y)
 
 /**
- * ILI9325 display driver specific function, see
+ * ILI93XX display driver specific function, see
  * \ref ili93xx_set_limits
  */
 #define gfx_set_limits(x1, y1, x2, y2) ili93xx_set_limits(x1, y1, x2, y2)
 
 /**
- * ILI9325 display driver specific function, see
+ * ILI93XX display driver specific function, see
  * \ref ili93xx_copy_pixels_to_screen
  */
 #define gfx_copy_pixels_to_screen(pixels, count)\
 	ili93xx_copy_pixels_to_screen(pixels, count)
 
 /**
- * ILI9325 display driver specific function, see
+ * ILI93XX display driver specific function, see
  * \ref ili93xx_copy_pixels_from_screen
  */
 #define gfx_copy_pixels_from_screen(pixels, count)\
 	ili93xx_copy_pixels_from_screen(pixels, count)
 
 /**
- * ILI9325 display driver specific function available for ATmega and ATXmega
+ * ILI93XX display driver specific function available for ATmega and ATXmega
  * devices, see \ref ili93xx_copy_progmem_pixels_to_screen
  */
 #define gfx_copy_progmem_pixels_to_screen(pixels, count)\
 	ili93xx_copy_raw_pixel_24bits_to_screen(pixels, count)
 
 /**
- * ILI9325 display driver specific function, see
+ * ILI93XX display driver specific function, see
  * \ref gfx_ili93xx_color
  */
 #define gfx_color(r, g, b) gfx_ili93xx_color(r, g, b)
 
 /**
- * ILI9325 display driver specific function, see
+ * ILI93XX display driver specific function, see
  * \ref gfx_ili93xx_set_orientation
  */
  #define gfx_set_orientation(flags) gfx_ili93xx_set_orientation(flags)
 
 /**
- * ILI9325 display driver specific function, see
+ * ILI93XX display driver specific function, see
  * \ref gfx_ili93xx_init
  */
 #define gfx_init() gfx_ili93xx_init()
 
 /**
- * ILI9325 display driver uses generic gfx implementation for this function. See
+ * ILI93XX display driver uses generic gfx implementation for this function. See
  * \ref gfx_generic_sync
  */
 #define gfx_sync() gfx_generic_sync()
