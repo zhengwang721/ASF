@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Xmega E - Internal Temperature Sensor - Two point calibration" id="xmega.drivers.adc.example9.xmega32e5_stk600">
+	<project caption="Xmega E Internal Temperature Sensor Two Point Calibration for stk600-rc032x with ATxmega32E5" id="xmega.drivers.adc.example9.xmega32e5_stk600">
 		<build type="header-file" value="conf_adc.h"/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>

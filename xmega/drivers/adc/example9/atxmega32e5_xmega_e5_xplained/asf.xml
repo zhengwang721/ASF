@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="Xmega E - Internal Temperature Sensor - Two point calibration" id="xmega.drivers.adc.example9.xmega_e5_xplained">
+	<project caption="Xmega E Internal Temperature Sensor Two Point Calibration on XMEGA-E5 Xplained" id="xmega.drivers.adc.example9.xmega_e5_xplained">
 		<build type="header-file" value="conf_adc.h"/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
