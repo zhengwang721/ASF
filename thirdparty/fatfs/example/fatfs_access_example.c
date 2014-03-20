@@ -63,7 +63,8 @@
  * device, e.g., the file system can be created in the internal RAM, NAND Flash 
  * and DataFlash (an AT45DBX needs to be connected) on SAM3X-EK/SAM3N-EK/
  * SAM3S-EK/SAM3U-EK/SAM4E-EK/SAM4S-EK/SAM4S-Xplained/ATxmega128A1-Xplained/
- * ATxmegaA3BU-Xplained/SAM4N-Xplained-Pro.
+ * ATxmegaA3BU-Xplained/SAM4N-Xplained-Pro, the file system is created in the
+ * Micro SD/MMC on IO1 extension board connected to SAM D/R Xplained Pro.
  *
  *  \section Description
  *
@@ -84,7 +85,7 @@
  *  -# Build the program and download it into the evaluation board.
  *  -# On the computer, open and configure a terminal application
  *     (e.g., HyperTerminal on Microsoft Windows) with these settings:
- *    - 115200 bauds
+ *    - 115200 bauds (or 38400 bauds on SAM D/R Xplained Pro)
  *    - 8 bits of data
  *    - No parity
  *    - 1 stop bit

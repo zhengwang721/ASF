@@ -58,6 +58,17 @@
  * - Read the data from the file and compare
  *
  * \section files Main Files
+ * \subsection SAM D/R Xplained Pro
+ * - \ref unit_tests.c
+ * - \ref conf_access.h
+ * - \ref conf_fatfs.h
+ * - \ref conf_test.h
+ * - \ref conf_board.h
+ * - \ref conf_clocks.h
+ * - \ref conf_sd_mmc.h
+ * - \ref conf_spi.h
+ *
+ * \subsection Other boards
  * - \ref unit_tests.c
  * - \ref conf_access.h
  * - \ref conf_fatfs.h
@@ -76,8 +87,10 @@
  * - XMEGA-A1 Xplained
  * - sam4e16e_sam4e_ek
  * - sam4n16c_sam4n_xplained_pro
+ * - samr21g18a_samr21_xplained_pro
  *
  * \section connection_note Connection
+ * \subsection SAM4N Xplained Pro extra connection
  * Because for SAM4N Xplained Pro the file system is created in the external
  * AT45DBX, extra connection is required.
  * - <b> SAM4N Xplained Pro -- AT45DBX component </b>
@@ -87,6 +100,10 @@
  * - PA12(EXT2/PIN17) -- MISO
  * - PA13(EXT2/PIN16) -- MOSI
  * - GND -- GND
+ *
+ * \subsection SAM D/R Xplained Pro extra connection
+ * Because for SAM D/R Xplained Pro the file system is created in the external
+ * Micro SD/MMC, IO1 Extension board must be connected to EXT1.
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
