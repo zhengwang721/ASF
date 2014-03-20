@@ -88,7 +88,7 @@ UDC_DESC_STORAGE udi_api_t udi_api_hid_gpd = {
 //@{
 
 //! Size of report for standard HID keyboard
-#define UDI_HID_GPD_REPORT_SIZE  8
+#define UDI_HID_GPD_REPORT_SIZE  4
 
 
 //! To store current rate of HID keyboard
@@ -137,7 +137,6 @@ UDC_DESC_STORAGE udi_hid_gpd_report_desc_t udi_hid_gpd_report_desc = {
 				0x35,0x00,/*Physical Minimum(0),*/
 				0x46,0x0E,0x01, /*	Physical Maximum(270),*/
 				0x65,0x14, /*Unit (English Rotation: Angular Position), ;Degrees*/
-				//0x55,0x00,/*	Unit Exponent (0),*/
 				0x75,0x04,/*	Report Size(4),*/
 				0x95,0x01,/*	Report Count(1),*/
 				0x81,0x02,/*	Input (Data, Variable, Absolute, NULL State),*/
@@ -146,8 +145,6 @@ UDC_DESC_STORAGE udi_hid_gpd_report_desc_t udi_hid_gpd_report_desc = {
 				0x29,0x04,/*	Usage Maximum (Button 4),*/
 				0x15,0x00,                    //   LOGICAL_MINIMUM (0)
 				0x25,0x01,	//					Logical Maximum (1),
-				//0x35,0x00,//	Physical Minimum (0),
-				//0x46,0x01,//	Physical Maximum (1),
 				0x95,0x04,//	Report Count (4),
 				0x75,0x01,/* Report size*/
 				0x55,0x00,/*unit exponent*/
@@ -250,6 +247,7 @@ static bool udi_hid_gpd_setreport(void)
 }
 
 
+/*
 //--------------------------------------------
 //------ Interface for application
 
@@ -421,7 +419,96 @@ bool udi_hid_moveY(int8_t pos)
 
 	cpu_irq_restore(flags);
 	return true;
+}*/
+bool udi_hid_gpd_throttle_move(int8_t pos)
+{
+	int16_t s16_newpos;
+
+	irqflags_t flags = cpu_irq_save();
+
+	// Add position in HID mouse report
+	s16_newpos = (int8_t) udi_hid_gpd_report[0];
+	s16_newpos += pos;
+	if ((-127 > s16_newpos) || (127 < s16_newpos)) {
+		cpu_irq_restore(flags);
+		return false;	// Overflow of report
+	}
+	udi_hid_gpd_report[0] = (uint8_t) s16_newpos;
+	udi_hid_gpd_report[1] = 0x00;
+	udi_hid_gpd_report[2] =0x00;
+	udi_hid_gpd_report[3] = 0x00;
+	// Valid and send report
+	udi_hid_gpd_b_report_valid = true;
+	udi_hid_gpd_send_report();
+
+	cpu_irq_restore(flags);
+	return true;
 }
+bool udi_hid_gpd_moveX(int8_t pos)
+{  
+	int16_t s16_newpos;
+
+	irqflags_t flags = cpu_irq_save();
+
+	// Add position in HID mouse report
+	/*s16_newpos = (int8_t) udi_hid_gpd_report[1];
+	s16_newpos += pos;
+	if ((-127 > s16_newpos) || (127 < s16_newpos)) {
+		cpu_irq_restore(flags);
+		return false;	// Overflow of report
+	}*/
+	udi_hid_gpd_report[0] = 0x00;
+	udi_hid_gpd_report[1] = pos;
+    udi_hid_gpd_report[2] =0x00;
+    udi_hid_gpd_report[3] = 0x00;
+	// Valid and send report
+	udi_hid_gpd_b_report_valid = true;
+	udi_hid_gpd_send_report();
+
+	cpu_irq_restore(flags);
+	return true;
+}
+bool udi_hid_gpd_moveY(int8_t pos)
+{
+  int16_t s16_newpos;
+
+  irqflags_t flags = cpu_irq_save();
+
+  // Add position in HID mouse report
+  s16_newpos = (int8_t) udi_hid_gpd_report[1];
+  s16_newpos += pos;
+  if ((-127 > s16_newpos) || (127 < s16_newpos)) {
+	  cpu_irq_restore(flags);
+	  return false;	// Overflow of report
+  }
+  udi_hid_gpd_report[0] = 0x00;
+  udi_hid_gpd_report[1] =0x00;
+  udi_hid_gpd_report[2] = (uint8_t) s16_newpos;
+  udi_hid_gpd_report[3] = 0x00;
+  // Valid and send report
+  udi_hid_gpd_b_report_valid = true;
+  udi_hid_gpd_send_report();
+  
+  cpu_irq_restore(flags);
+  return true;
+}
+bool udi_hid_gpd_buttons(bool b_state,uint8_t key_id)
+{ 
+	udi_hid_gpd_report[0] = 0x00;
+	udi_hid_gpd_report[1] = 0x00;
+	udi_hid_gpd_report[2] = 0x00;
+	udi_hid_gpd_report[3] |= key_id;
+	irqflags_t flags = cpu_irq_save();
+
+	// Valid and send report
+	udi_hid_gpd_b_report_valid = true;
+	udi_hid_gpd_send_report();
+
+	cpu_irq_restore(flags);
+	return true;
+	
+}
+
 
 //--------------------------------------------
 //------ Internal routines

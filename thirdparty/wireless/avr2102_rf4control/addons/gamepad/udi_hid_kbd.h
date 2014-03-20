@@ -164,10 +164,10 @@ bool udi_hid_gpd_up(uint8_t key_id);
  * \param key_id   ID of key
  *
  */
-bool udi_hid_gpd_down(uint8_t key_id);
-bool udi_hid_throttle_move(int8_t pos);
-bool udi_hid_moveX(int8_t pos);
-bool udi_hid_moveY(int8_t pos);
+bool udi_hid_gpd_buttons(bool b_state,uint8_t key_id);
+bool udi_hid_gpd_throttle_move(int8_t pos);
+bool udi_hid_gpd_moveX(int8_t pos);
+bool udi_hid_gpd_moveY(int8_t pos);
 //@}
 
 #ifdef __cplusplus
