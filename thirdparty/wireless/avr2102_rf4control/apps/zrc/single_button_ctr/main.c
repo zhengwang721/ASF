@@ -582,7 +582,7 @@ static void enter_sleep(void)
 		wakeup_handle();
 		
 		/* sw timer  - add the sleep offset time duration */
-		sw_timer_add_offset(MIN_SLEEP_TIME);			
+		sw_timer_run_residual_time(MIN_SLEEP_TIME);			
 	}
 }
 #endif

@@ -53,7 +53,11 @@
 
 #define COMPARE_MODE                               MACSC_RELATIVE_CMP
 
-#define CONFIG_MACSC_HZ                            62500
+#ifdef SLEEP_MGR_TIMER_RES
+#define CONFIG_MACSC_HZ							   (1)
+#else
+#define CONFIG_MACSC_HZ                            (62500)
+#endif
 
 static void cmp3_int_cb(void)
 {
@@ -86,7 +90,7 @@ void sm_sleep(uint32_t interval)
 	macsc_enable();
 	/*Timestamp the current symbol counter value for Comparison*/
 	macsc_enable_manual_bts();	
-	macsc_use_cmp(COMPARE_MODE, interval*CONFIG_MACSC_HZ, MACSC_CC3);
+	macsc_use_cmp(COMPARE_MODE, interval*CONFIG_MACSC_HZ, MACSC_CC3);	
  	sleep_enable();
  	sleep_enter();
 }
