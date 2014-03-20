@@ -1,9 +1,9 @@
 /**
  * \file *********************************************************************
  *
- * \brief Common Hardware Timer configuration
+ * \brief Serial Input & Output configuration
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,49 +40,27 @@
  * \asf_license_stop
  */
 
-#ifndef CONF_HW_TIMER_H_INCLUDED
-#define CONF_HW_TIMER_H_INCLUDED
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED 
+ #define SERIAL_RX_BUF_SIZE_HOST    156
 
-/* ! \name Configuration for XMEGA */
-/* ! @{ */
-#if (XMEGA)
-#define TIMER     (&TCC0)
-#endif /* XMEGA */
-/* ! @} */
+/** USART Interface */
+#define USART_HOST                 UART1
+/** Baudrate setting */
+#define USART_HOST_BAUDRATE        9600
+/** Character length setting */
+#define USART_HOST_CHAR_LENGTH     US_MR_CHRL_8_BIT
+/** Parity setting */
+#define USART_HOST_PARITY          US_MR_PAR_NO
+/** Stop bits setting */
+#define USART_HOST_STOP_BITS       US_MR_NBSTOP_1_BIT
 
-/* ! \name Configuration for UC3 */
-/* ! @{ */
-#if (UC3)
-#define TIMER                (&AVR32_TC0)
-#define TIMER_CHANNEL_ID     0
-#endif /* UC3 */
-/* ! @} */
+#define USART_HOST_ISR_VECT()      ISR(UART1_Handler)
 
-/* ! \name Configuration for SAM4L */
-/* ! @{ */
-#if (SAM4L)
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     (0)
-#endif /* SAM4L */
+#define USART_HOST_IRQn            UART1_IRQn
 
-#if (SAM4S)
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     0
-#define ID_TC                (ID_TC0)
-#endif /* SAM4S */
-/* ! @} */
+#define USART_HOST_RX_ISR_ENABLE() usart_enable_interrupt(USART_HOST, \
+		US_IER_RXRDY); \
+	NVIC_EnableIRQ(USART_HOST_IRQn);
 
-/* ! \name Configuration for MEGARF */
-/* ! @{ */
-#if (MEGA_RF)
-#define TIMER     (&TCCR1A)
-#endif /* MEGA_RF */
-/* ! @} */
-//! \name Configuration for SAMD20
-//! @{
-#if (SAMD20)
-#define TIMER     (TC0)
-#endif /* SAMD20 */
-//! @}
-
-#endif /* CONF_HW_TIMER_H_INCLUDED */
+#endif /* CONF_SIO2HOST_H_INCLUDED */

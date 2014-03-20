@@ -44,12 +44,17 @@
 #include "hw_timer.h"
 #include "common_hw_timer.h"
 #include "conf_hw_timer.h"
+#include "sysclk.h"
 
 extern uint8_t timer_multiplier;
 tmr_callback_t tmr_callback;
 
 /* === Prototypes =========================================================== */
+#if SAM4L
 extern void sysclk_enable_peripheral_clock(const volatile void *module);
+#else
+extern void sysclk_enable_peripheral_clock(uint32_t ul_id);
+#endif
 extern uint32_t sysclk_get_peripheral_bus_hz(const volatile void *module);
 static void configure_NVIC(Tc *cmn_hw_timer, uint8_t cmn_hw_timer_ch);
 static void tc_callback(void);
@@ -96,14 +101,24 @@ uint8_t tmr_init(void)
 {
 	uint8_t timer_multiplier;
 	/* Configure clock service. */
+	#if SAM4L
 	sysclk_enable_peripheral_clock(TIMER);
+	#else
+	sysclk_enable_peripheral_clock(ID_TC);
+	#endif
 
 	/* Get system clock. */
 	timer_multiplier = sysclk_get_peripheral_bus_hz(TIMER) / DEF_1MHZ;
 	timer_multiplier = timer_multiplier >> 1;
+	#if SAM4L
 	tc_init(TIMER, TIMER_CHANNEL_ID,
-			TC_CMR_TCCLKS_TIMER_CLOCK2 | TC_CMR_WAVE |
-			TC_CMR_WAVSEL_UP_NO_AUTO);
+	TC_CMR_TCCLKS_TIMER_CLOCK2 | TC_CMR_WAVE |
+	TC_CMR_WAVSEL_UP_NO_AUTO);
+	#else
+	tc_init(TIMER, TIMER_CHANNEL_ID,
+			TC_CMR_TCCLKS_TIMER_CLOCK1 | TC_CMR_WAVE |
+			TC_CMR_WAVSEL_UP);
+	#endif
 
 	/* Configure and enable interrupt on RC compare. */
 	configure_NVIC(TIMER, TIMER_CHANNEL_ID);
@@ -142,39 +157,68 @@ void tmr_disable_ovf_interrupt(void)
 
 /*! \brief  to enable the corresponding IRQ in NVIC and set the tme callback
  */
+
 void configure_NVIC(Tc *cmn_hw_timer, uint8_t cmn_hw_timer_ch)
 {
+
 	if (TC0 == cmn_hw_timer) {
-		switch (cmn_hw_timer_ch) {
-		case 0:
+	switch (cmn_hw_timer_ch) {
+#if SAM4L
+			case 0:
 			NVIC_EnableIRQ(TC00_IRQn);
 			break;
 
-		case 1:
+			case 1:
 			NVIC_EnableIRQ(TC01_IRQn);
 			break;
 
-		case 2:
+			case 2:
 			NVIC_EnableIRQ(TC02_IRQn);
+			break;	
+#else
+		case 0:
+			NVIC_EnableIRQ(TC0_IRQn);
 			break;
 
+		case 1:
+			NVIC_EnableIRQ(TC1_IRQn);
+			break;
+
+		case 2:
+			NVIC_EnableIRQ(TC2_IRQn);
+			break;
+#endif
 		default:
 			break;
 		}
 	} else if (TC1 == cmn_hw_timer) {
 		switch (cmn_hw_timer_ch) {
+#if SAM4L
+
 		case 0:
-			NVIC_EnableIRQ(TC10_IRQn);
+		NVIC_EnableIRQ(TC10_IRQn);
+		break;
+
+		case 1:
+		NVIC_EnableIRQ(TC11_IRQn);
+		break;
+
+		case 2:
+		NVIC_EnableIRQ(TC12_IRQn);
+		break;			
+#else				
+		case 0:
+			NVIC_EnableIRQ(TC3_IRQn);
 			break;
 
 		case 1:
-			NVIC_EnableIRQ(TC11_IRQn);
+			NVIC_EnableIRQ(TC4_IRQn);
 			break;
 
 		case 2:
-			NVIC_EnableIRQ(TC12_IRQn);
+			NVIC_EnableIRQ(TC5_IRQn);
 			break;
-
+#endif
 		default:
 			break;
 		}
@@ -206,7 +250,11 @@ void tc_callback(void)
 /**
  * \brief Interrupt handler for TC00
  */
+#if SAM4L
 void TC00_Handler(void)
+#else
+void TC0_Handler(void)
+#endif
 {
 	if (tmr_callback) {
 		tmr_callback();
@@ -216,7 +264,11 @@ void TC00_Handler(void)
 /**
  * \brief Interrupt handler for TC01
  */
+#if SAM4L
 void TC01_Handler(void)
+#else
+void TC1_Handler(void)
+#endif
 {
 	if (tmr_callback) {
 		tmr_callback();
@@ -226,7 +278,11 @@ void TC01_Handler(void)
 /**
  * \brief Interrupt handler for TC02
  */
+#if SAM4L
 void TC02_Handler(void)
+#else
+void TC2_Handler(void)
+#endif
 {
 	if (tmr_callback) {
 		tmr_callback();
@@ -236,7 +292,11 @@ void TC02_Handler(void)
 /**
  * \brief Interrupt handlers for TC10
  */
+#if SAM4L
 void TC10_Handler(void)
+#else
+void TC3_Handler(void)
+#endif
 {
 	if (tmr_callback) {
 		tmr_callback();
@@ -246,7 +306,11 @@ void TC10_Handler(void)
 /**
  * \brief Interrupt handler for TC11
  */
+#if SAM4L
 void TC11_Handler(void)
+#else
+void TC4_Handler(void)
+#endif
 {
 	if (tmr_callback) {
 		tmr_callback();
@@ -256,7 +320,11 @@ void TC11_Handler(void)
 /**
  * \brief Interrupt handler for TC12
  */
+#if SAM4L
 void TC12_Handler(void)
+#else
+void TC5_Handler(void)
+#endif
 {
 	if (tmr_callback) {
 		tmr_callback();

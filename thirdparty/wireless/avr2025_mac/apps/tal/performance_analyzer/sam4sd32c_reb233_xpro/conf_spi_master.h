@@ -1,9 +1,9 @@
 /**
- * \file *********************************************************************
+ * \file
  *
- * \brief Common Hardware Timer configuration
+ * \brief Spi Master configuration
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,51 +38,28 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
-#ifndef CONF_HW_TIMER_H_INCLUDED
-#define CONF_HW_TIMER_H_INCLUDED
+/* Possibility to change low-level configurations here */
 
-/* ! \name Configuration for XMEGA */
-/* ! @{ */
-#if (XMEGA)
-#define TIMER     (&TCC0)
-#endif /* XMEGA */
-/* ! @} */
+#define AT86RFX_SPI_BAUDRATE 3000000
 
-/* ! \name Configuration for UC3 */
-/* ! @{ */
-#if (UC3)
-#define TIMER                (&AVR32_TC0)
-#define TIMER_CHANNEL_ID     0
-#endif /* UC3 */
-/* ! @} */
+/* ! Default Config Spi Master Delay BCS */
+/* #define CONFIG_SPI_MASTER_DELAY_BCS            0 */
 
-/* ! \name Configuration for SAM4L */
-/* ! @{ */
-#if (SAM4L)
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     (0)
-#endif /* SAM4L */
+/* ! Default Config Spi Master Bits per Transfer Definition */
+/* #define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8 */
 
-#if (SAM4S)
-#define TIMER                (TC0)
-#define TIMER_CHANNEL_ID     0
-#define ID_TC                (ID_TC0)
-#endif /* SAM4S */
-/* ! @} */
+/* ! Default Config Spi Master Delay BCT */
+/* #define CONFIG_SPI_MASTER_DELAY_BCT            0 */
 
-/* ! \name Configuration for MEGARF */
-/* ! @{ */
-#if (MEGA_RF)
-#define TIMER     (&TCCR1A)
-#endif /* MEGA_RF */
-/* ! @} */
-//! \name Configuration for SAMD20
-//! @{
-#if (SAMD20)
-#define TIMER     (TC0)
-#endif /* SAMD20 */
-//! @}
+/* ! Default Config Spi Master Delay BS */
+/* #define CONFIG_SPI_MASTER_DELAY_BS             0 */
 
-#endif /* CONF_HW_TIMER_H_INCLUDED */
+/* ! Default Config Spi Master Dummy Field */
+/* #define CONFIG_SPI_MASTER_DUMMY                0xFF */
+
+#endif /* CONF_SPI_MASTER_H_INCLUDED */

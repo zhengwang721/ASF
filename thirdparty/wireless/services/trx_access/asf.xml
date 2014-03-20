@@ -54,6 +54,7 @@
         <device-support value="atxmega256a3"/>
         <device-support value="uc3a3_a4"/>
 		<device-support value="sam4l"/>
+		<device-support value="sam4s"/>
     </device-alias-map>
 	<device-alias-map name="trx_access_spi_sam0_support">
         <device-support value="samd20"/>

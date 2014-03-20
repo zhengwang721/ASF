@@ -64,6 +64,7 @@
         <device-support value="atxmega256a3"/>
         <device-support value="uc3a3_a4"/>
         <device-support value="sam4l"/>
+        <device-support value="sam4s"/>
 		<device-support value="samd20"/>
         <device-support value="atmega256rfr2"/>
         <device-support value="atmega2564rfr2"/>
@@ -75,6 +76,7 @@
         <device-support value="atxmega256a3"/>
         <device-support value="uc3a3_a4"/>
 		<device-support value="sam4l"/>
+		<device-support value="sam4s"/>
         <device-support value="samd20"/>
     </device-alias-map>
     <device-alias-map name="avr2025_mac_pal_spi_common_support">
@@ -83,6 +85,7 @@
         <device-support value="atxmega256a3"/>
         <device-support value="uc3a3_a4"/>
 		<device-support value="sam4l"/>
+		<device-support value="sam4s"/>
     </device-alias-map>
 	<device-alias-map name="avr2025_mac_pal_spi_sam0_support">
         <device-support value="samd20"/>
