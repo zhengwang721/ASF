@@ -531,16 +531,16 @@ enum status_code dbg_init(void)
 	system_interrupt_enable(_sercom_get_interrupt_vector(sercom));
 
 	// Wait for sync before returning
-#if (REV_SERCOM >= 0x200)
-	while (sercom_uart->SYNCBUSY.reg) {
-		/* Intentionally left empty */
-	}
-#elif (REV_SERCOM == 0x101)
+#if defined(FEATURE_SERCOM_SYNCBUSY_SCHEME_VERSION_1)
 	while (sercom_uart->STATUS.reg & SERCOM_USART_STATUS_SYNCBUSY) {
 		/* Intentionally left empty */
 	}
+#elif defined(FEATURE_SERCOM_SYNCBUSY_SCHEME_VERSION_2)
+	while (sercom_uart->SYNCBUSY.reg) {
+		/* Intentionally left empty */
+	}
 #else
-#  error Unknown revision of SERCOM
+#  error Unknown SERCOM SYNCBUSY scheme!
 #endif
 
 	return status;
