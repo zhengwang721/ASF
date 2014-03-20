@@ -164,6 +164,10 @@ uint8_t app_timer;
 int main(void)
 {
 	irq_initialize_vectors();
+#if SAMD21 || SAMD20 || SAMR21
+	system_init();
+	delay_init();
+#else	
     sysclk_init();
 
 	/* Initialize the board.
@@ -171,7 +175,7 @@ int main(void)
 	 * the board initialization.
 	 */
 	board_init();
-
+#endif
 	sw_timer_init();
 
 	/* Initialize all layers */
@@ -519,9 +523,16 @@ static key_state_t key_state_read(key_id_t key_no)
 	key_state_t key_val = KEY_RELEASED;
 
 	if (SELECT_KEY == key_no) {
+#if SAMD20 || SAMD21 || SAMR21
+		if (!port_pin_get_input_level(BUTTON_0_PIN))
+		{
+			key_val = KEY_PRESSED;
+		}
+#else
 		if (!ioport_get_pin_level(GPIO_PUSH_BUTTON_0)) {
 			key_val = KEY_PRESSED;
 		}
+#endif
 	}
 
 	return key_val;

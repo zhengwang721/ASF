@@ -52,7 +52,7 @@
 /* === PROTOTYPES ========================================================== */
 
 /* === GLOBALS ========================================================== */
-#if SAMD20
+#if SAMD20 || SAMD21 || SAMR21
 static struct usart_module cdc_uart_module;
 #else
 static usart_serial_options_t usart_serial_options = {
@@ -87,14 +87,25 @@ static uint8_t serial_rx_count;
 
 void sio2host_init(void)
 {
-#if SAMD20
+	
+#if SAMD20 || SAMD21 || SAMR21
 	struct usart_config cdc_uart_config;
     /* Configure USART for unit test output */
     usart_get_config_defaults(&cdc_uart_config);
+	
     cdc_uart_config.mux_setting     = EDBG_CDC_SERCOM_MUX_SETTING; 
+	#if SAMD20
     cdc_uart_config.pinmux_pad3     = EDBG_CDC_SERCOM_PINMUX_PAD3; 
     cdc_uart_config.pinmux_pad2     = EDBG_CDC_SERCOM_PINMUX_PAD2; 
+	#elif SAMD21 || SAMR21
+	cdc_uart_config.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
+	cdc_uart_config.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
+	cdc_uart_config.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
+	cdc_uart_config.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
+	#endif
     cdc_uart_config.baudrate        = USART_HOST_BAUDRATE;
+	
+	
     stdio_serial_init(&cdc_uart_module, USART_HOST,&cdc_uart_config);
     usart_enable(&cdc_uart_module);
     /* Enable transceivers */
@@ -108,14 +119,14 @@ void sio2host_init(void)
 
 uint8_t sio2host_tx(uint8_t *data, uint8_t length)
 {
-#if SAMD20
+#if SAMD20 || SAMD21 || SAMR21
 	status_code_genare_t status;
 #else
 	status_code_t status;
 #endif /* SAMD20 */
 
 	do {
-#if SAMD20
+#if SAMD20 || SAMD21 || SAMR21
 status = usart_serial_write_packet(&cdc_uart_module,(const uint8_t *)data,length);
 #else 
 status = usart_serial_write_packet(USART_HOST,(const uint8_t *)data,length);
@@ -209,14 +220,14 @@ int sio2host_getchar_nowait(void)
 	}
 }
 
-#if SAMD20
+#if SAMD20 || SAMD21 || SAMR21
 void USART_HOST_ISR_VECT(uint8_t instance)
 #else 
 USART_HOST_ISR_VECT()
 #endif
 {
 	uint8_t temp;
-#if SAMD20
+#if SAMD20 || SAMD21 || SAMR21
  	usart_serial_read_packet(&cdc_uart_module, &temp, 1);
 #else 
 	usart_serial_read_packet(USART_HOST, &temp, 1);

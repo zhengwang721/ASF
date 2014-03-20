@@ -211,6 +211,7 @@
 #define ALIGN8BIT
 /* === Types ================================================================ */
 
+__PACK__DATA__
 /**
  * NWK enumerations as defined by
  * 094945r00ZB_RF4CE-Specification.pdf, Table 45 - NWK enumerations description
@@ -590,6 +591,8 @@ typedef enum profile_id_tag {
 	PROFILE_ID_WILDCARD         = 0xFF
 } SHORTENUM profile_id_t;
 
+__PACK__RST_DATA__
+
 /**
  * @brief Confirms the previous channel agility request, i.e.
  *nwk_ch_agility_req()
@@ -604,7 +607,6 @@ typedef enum profile_id_tag {
  * @see nwk_ch_agility_request
  * @ingroup group_RF4CONTROL_NWK_API
  */
-
 #if (defined CHANNEL_AGILITY) || (defined DOXYGEN) || (defined RF4CE_PLATFORM)
 typedef void (*nwk_ch_agility_confirm_cb_t)(
 	nwk_enum_t Status, bool ChannelChanged, uint8_t LogicalChannel);

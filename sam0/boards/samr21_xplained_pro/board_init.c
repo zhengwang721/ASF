@@ -53,13 +53,19 @@ void board_init(void);
 #  pragma weak board_init=system_board_init
 #endif
 
+#define FECTRL             (*( volatile uint32_t *)0x42005400) /**< \brief (GCLK) APB Base Address */	
+
 void system_board_init(void)
 {
 	struct port_config pin_conf;
 	port_get_config_defaults(&pin_conf);
+	
 
 	/* Configure LEDs as outputs, turn them off */
 	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(LED_0_PIN, &pin_conf);
+	port_pin_set_config(PIN_PA09, &pin_conf);
+	port_pin_set_config(PIN_PA12, &pin_conf);
 	port_pin_set_config(LED_0_PIN, &pin_conf);
 	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
 
@@ -67,4 +73,29 @@ void system_board_init(void)
 	pin_conf.direction  = PORT_PIN_DIR_INPUT;
 	pin_conf.input_pull = PORT_PIN_PULL_UP;
 	port_pin_set_config(BUTTON_0_PIN, &pin_conf);
+	
+
+	port_get_config_defaults(&pin_conf);
+	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(AT86RFX_SPI_SCK, &pin_conf);
+	port_pin_set_config(AT86RFX_SPI_MOSI, &pin_conf);
+	port_pin_set_config(AT86RFX_SPI_CS, &pin_conf);
+	port_pin_set_config(AT86RFX_RST_PIN, &pin_conf);
+	port_pin_set_config(AT86RFX_SLP_PIN, &pin_conf);
+	port_pin_set_output_level(AT86RFX_SPI_SCK, true);
+	port_pin_set_output_level(AT86RFX_SPI_MOSI, true);
+	port_pin_set_output_level(AT86RFX_SPI_CS, true);
+	port_pin_set_output_level(AT86RFX_RST_PIN, true);
+	port_pin_set_output_level(AT86RFX_SLP_PIN, true);
+
+	pin_conf.direction  = PORT_PIN_DIR_INPUT;
+	port_pin_set_config(AT86RFX_SPI_MISO, &pin_conf);
+	PM->APBCMASK.reg |= (1<<21);
+	FECTRL = 4;
+	struct system_pinmux_config config_pinmux;
+	system_pinmux_get_config_defaults(&config_pinmux);
+	config_pinmux.mux_position = 5;
+	config_pinmux.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
+	system_pinmux_pin_set_config(PIN_PA09, &config_pinmux);
+	system_pinmux_pin_set_config(PIN_PA12, &config_pinmux);
 }

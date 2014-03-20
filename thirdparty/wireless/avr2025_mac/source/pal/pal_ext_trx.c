@@ -43,7 +43,7 @@
  */
 
 #include "board.h"
-#if SAMD20
+#if SAMD20 || SAMD21 || SAMR21
 #include "spi.h"
 #else
 #include "spi_master.h"

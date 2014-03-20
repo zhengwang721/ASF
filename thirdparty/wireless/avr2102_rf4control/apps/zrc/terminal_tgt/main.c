@@ -98,11 +98,14 @@
 #include "conf_board.h"
 #include <asf.h>
 #include "app_config.h"
+#if (!defined SAMD20) || (!defined SAMD21) || (!defined SAMR21)
 #include "led.h"
+#endif
 #include "delay.h"
 #include "vendor_data.h"
 #include "pb_pairing.h"
 #include "common_sw_timer.h"
+#include "sio2host.h"
 
 /* === TYPES =============================================================== */
 
@@ -227,6 +230,10 @@ static void app_alert(void);
 int main(void)
 {
     irq_initialize_vectors();
+#if SAMD21 || SAMD20 || SAMR21
+	system_init();
+	delay_init();
+#else
 	sysclk_init();
 
     /* Initialize the board.
@@ -234,6 +241,7 @@ int main(void)
      * the board initialization.
      */
     board_init();
+#endif
 
     sw_timer_init();
 

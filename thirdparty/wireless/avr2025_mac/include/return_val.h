@@ -55,7 +55,7 @@
 /* === Includes ============================================================ */
 #include "compiler.h"
 
-#if (SAMD20) || (SAM4L)
+#if (SAMD20) || (SAM4L) || (SAMR21) || (SAMD21)
  #define __PACK__RST_DATA__  COMPILER_PACK_RESET()
  #define __PACK__DATA__		 COMPILER_PACK_SET(1)
 #ifdef SAM4L

@@ -414,6 +414,102 @@ void system_board_init(void);
 #define EDBG_CDC_SERCOM_DMAC_ID_RX   SERCOM0_DMAC_ID_RX
 /** @} */
 
+
+#define EXT_SPI_MODULE              SERCOM4
+#define EXT_SPI_SERCOM_MUX_SETTING  SPI_SIGNAL_MUX_SETTING_E
+#define EXT_SPI_SERCOM_PINMUX_PAD0  PINMUX_PC19F_SERCOM4_PAD0
+#define EXT_SPI_SERCOM_PINMUX_PAD1  PINMUX_PB31D_SERCOM5_PAD1
+#define EXT_SPI_SERCOM_PINMUX_PAD2  PINMUX_PB30F_SERCOM4_PAD2
+#define EXT_SPI_SERCOM_PINMUX_PAD3  PINMUX_PC18F_SERCOM4_PAD3
+
+
+#define EXT_IRQ_MODULE           EIC
+#define EXT_IRQ_INPUT            0
+#define EXT_IRQ_PIN              PIN_PB00A_EIC_EXTINT0
+#define EXT_IRQ_MUX              MUX_PB00A_EIC_EXTINT0
+#define EXT_IRQ_PINMUX           PINMUX_PB00A_EIC_EXTINT0
+
+#define AT86RFX_SPI                  SERCOM4
+#define AT86RFX_RST_PIN              PIN_PB15
+#define AT86RFX_IRQ_PIN              PIN_PB00
+#define AT86RFX_SLP_PIN              PIN_PA20
+#define AT86RFX_SPI_CS               PIN_PB31
+#define AT86RFX_SPI_MOSI             PIN_PB30
+#define AT86RFX_SPI_MISO             PIN_PC19
+#define AT86RFX_SPI_SCK              PIN_PC18
+
+#define LED0 LED0_PIN
+
+//#define AT86RFX_SPI_BAUDRATE         (5000000)
+
+#define AT86RFX_SPI_CONFIG(config) \
+config.mux_setting = EXT_SPI_SERCOM_MUX_SETTING; \
+config.mode_specific.master.baudrate = AT86RFX_SPI_BAUDRATE; \
+config.pinmux_pad0 = EXT_SPI_SERCOM_PINMUX_PAD0; \
+config.pinmux_pad1 = PINMUX_UNUSED; \
+config.pinmux_pad2 = EXT_SPI_SERCOM_PINMUX_PAD2; \
+config.pinmux_pad3 = EXT_SPI_SERCOM_PINMUX_PAD3;
+
+#define AT86RFX_IRQ_CHAN             EXT_IRQ_INPUT
+#define AT86RFX_INTC_INIT()            			struct extint_chan_conf eint_chan_conf; \
+extint_chan_get_config_defaults(&eint_chan_conf); \
+eint_chan_conf.gpio_pin = AT86RFX_IRQ_PIN; \
+eint_chan_conf.gpio_pin_mux = EXT_IRQ_PINMUX; \
+eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_NONE; \
+eint_chan_conf.wake_if_sleeping    = true; \
+eint_chan_conf.filter_input_signal = false; \
+eint_chan_conf.detection_criteria  = EXTINT_DETECT_BOTH; \
+extint_chan_set_config(AT86RFX_IRQ_CHAN, &eint_chan_conf); \
+extint_register_callback((extint_callback_t)AT86RFX_ISR,AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT);\
+extint_chan_enable_callback(AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT);
+
+
+/** Enables the transceiver main interrupt. */
+#define ENABLE_TRX_IRQ()                extint_chan_enable_callback(AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT)
+
+/** Disables the transceiver main interrupt. */
+#define DISABLE_TRX_IRQ()               extint_chan_disable_callback(AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT)
+
+/** Clears the transceiver main interrupt. */
+#define CLEAR_TRX_IRQ()                 extint_chan_clear_detected(AT86RFX_IRQ_CHAN);
+
+/*
+ * This macro saves the trx interrupt status and disables the trx interrupt.
+ */
+#define ENTER_TRX_REGION()   { extint_chan_disable_callback(AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT)
+
+/*
+ *  This macro restores the transceiver interrupt status
+ */
+#define LEAVE_TRX_REGION()   extint_chan_enable_callback(AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT); }
+                                                
+/**
+ * \brief Turns off the specified LEDs.
+ *
+ * \param led_gpio LED to turn off (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Off(led_gpio)     port_pin_set_output_level(led_gpio,true)
+
+/**
+ * \brief Turns on the specified LEDs.
+ *
+ * \param led_gpio LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_On(led_gpio)      port_pin_set_output_level(led_gpio,false)
+
+/**
+ * \brief Toggles the specified LEDs.
+ *
+ * \param led_gpio LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Toggle(led_gpio)  port_pin_toggle_output_level(led_gpio)
+
 #ifdef __cplusplus
 }
 #endif

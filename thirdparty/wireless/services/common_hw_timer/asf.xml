@@ -128,6 +128,7 @@
     </device-alias-map>
     <device-alias-map name="sam0_hw_timer_support">
         <device-support value="samd20"/>
+		<device-support value="samr21"/>
     </device-alias-map>    
 	<device-alias-map name="megarfr2_hw_timer_support">
         <device-support value="atmega256rfr2"/>

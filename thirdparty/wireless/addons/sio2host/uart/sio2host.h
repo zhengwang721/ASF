@@ -54,7 +54,7 @@
 #include "compiler.h"
 #include "status_codes.h"
 
-
+#define SERIAL_RX_BUF_SIZE_HOST    250
 /* === PROTOTYPES ============================================================
  **/
 
@@ -104,7 +104,7 @@ void sio2host_putchar(uint8_t);
  */
 int sio2host_getchar_nowait(void);
 
-#if SAMD20
+#if SAMD20 || SAMD21 || SAMR21
 void USART_HOST_ISR_VECT(uint8_t instance);
 #endif
 
