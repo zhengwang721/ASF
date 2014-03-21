@@ -84,6 +84,12 @@ typedef struct {
 #define   SUPC_SMMR_SMIEN_NOT_ENABLE (0x0u << 13) /**< \brief (SUPC_SMMR) The SUPC interrupt signal is not affected when a supply monitor detection occurs. */
 #define   SUPC_SMMR_SMIEN_ENABLE (0x1u << 13) /**< \brief (SUPC_SMMR) The SUPC interrupt signal is asserted when a supply monitor detection occurs. */
 /* -------- SUPC_MR : (SUPC Offset: 0x08) Supply Controller Mode Register -------- */
+#define SUPC_MR_VDDSEL (0x1u << 8) /**< \brief (SUPC_MR) VRVDD Field Selection */
+#define   SUPC_MR_VDDSEL_FACTORY (0x0u << 8) /**< \brief (SUPC_MR) The voltage regulator output value is the factory value programmed. */
+#define   SUPC_MR_VDDSEL_USER_VRVDD (0x1u << 8) /**< \brief (SUPC_MR) The voltage regulator output value is defined by the value programmed in the field VRVDD. */
+#define SUPC_MR_VRVDD_Pos 9
+#define SUPC_MR_VRVDD_Msk (0x7u << SUPC_MR_VRVDD_Pos) /**< \brief (SUPC_MR) VRVDD Field Selection */
+#define SUPC_MR_VRVDD(value) ((SUPC_MR_VRVDD_Msk & ((value) << SUPC_MR_VRVDD_Pos)))
 #define SUPC_MR_BODRSTEN (0x1u << 12) /**< \brief (SUPC_MR) POR Core Reset Enable */
 #define   SUPC_MR_BODRSTEN_NOT_ENABLE (0x0u << 12) /**< \brief (SUPC_MR) The core reset signal "vddcore_nreset" is not affected when a brownout detection occurs. */
 #define   SUPC_MR_BODRSTEN_ENABLE (0x1u << 12) /**< \brief (SUPC_MR) The core reset signal, vddcore_nreset is asserted when a brownout detection occurs. */
@@ -93,9 +99,6 @@ typedef struct {
 #define SUPC_MR_OSCBYPASS (0x1u << 20) /**< \brief (SUPC_MR) Oscillator Bypass */
 #define   SUPC_MR_OSCBYPASS_NO_EFFECT (0x0u << 20) /**< \brief (SUPC_MR) No effect. Clock selection depends on XTALSEL value. */
 #define   SUPC_MR_OSCBYPASS_BYPASS (0x1u << 20) /**< \brief (SUPC_MR) The 32 kHz crystal oscillator is selected and put in bypass mode. */
-#define SUPC_MR_PSWITCH0 (0x1u << 21) /**< \brief (SUPC_MR) SRAM0 Power Switch */
-#define   SUPC_MR_PSWITCH0_OFF (0x0u << 21) /**< \brief (SUPC_MR) The SRAM0 is not powered */
-#define   SUPC_MR_PSWITCH0_ON (0x1u << 21) /**< \brief (SUPC_MR) The SRAM0 is powered */
 #define SUPC_MR_PSWITCH1 (0x1u << 22) /**< \brief (SUPC_MR) SRAM1 Power Switch */
 #define   SUPC_MR_PSWITCH1_OFF (0x0u << 22) /**< \brief (SUPC_MR) The SRAM1 is not powered */
 #define   SUPC_MR_PSWITCH1_ON (0x1u << 22) /**< \brief (SUPC_MR) The SRAM1 is powered */

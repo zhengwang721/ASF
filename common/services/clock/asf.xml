@@ -552,6 +552,8 @@
 			<build type="doxygen-quick-start" value="sysclk_quickstart"/>
 			<device-support value="samg"/>
 			<require idref="sam.drivers.pmc"/>
+			<require idref="sam.drivers.efc"/>
+			<require idref="sam.drivers.supc"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samg53"/>
 		</module>
 		<module type="service" id="common.services.basic.clock#22" caption="System Clock Control - SAM4CP implementation">
