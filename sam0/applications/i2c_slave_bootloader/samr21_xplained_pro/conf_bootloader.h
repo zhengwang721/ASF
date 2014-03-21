@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 Xplained Pro board configuration.
+ * \brief Bootloader specific configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,7 +41,20 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_BOOTLOADER_H_INCLUDED
+#define CONF_BOOTLOADER_H_INCLUDED
+
+#include "conf_board.h"
+
+#define APP_START_ADDRESS          0x00002000
+#define BOOT_LED                   LED0_PIN
+#define BOOT_LOAD_PIN              SW0_PIN
+#define GPIO_BOOT_PIN_MASK         (1U << (BOOT_LOAD_PIN & 0x1F))
+
+/* I2C Slave configurations */
+#define BOOT_SERCOM                EXT1_I2C_MODULE
+#define SLAVE_ADDRESS              0x15
+#define BOOT_I2C_PAD0              EXT1_I2C_SERCOM_PINMUX_PAD0
+#define BOOT_I2C_PAD1              EXT1_I2C_SERCOM_PINMUX_PAD1
 
 #endif /* CONF_BOARD_H_INCLUDED */
