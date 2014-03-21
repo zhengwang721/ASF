@@ -73,7 +73,8 @@
  *
  * \section appdoc_sam0_tictactoe_setup Hardware Setup
  * The OLED1 Xplained Pro extension board must be connected to extension
- * header 3 on the SAM D20/D21/R21 Xplained Pro.
+ * header 3 on the SAM D20/D21 Xplained Pro, and extension header 1 on the SAM
+ * R21 Xplained Pro.
  * To use another extension header, edit the configuration in:
  * - \ref conf_board.h
  * - \ref conf_ssd1306.h
