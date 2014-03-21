@@ -52,7 +52,7 @@
 
 	#warning The ILI93XX EBI configuration does not exist in the board definition file. Using default settings.
 
-	#define BOARD_ILI93XX_ADDR     0x61000000 /* The base address, depends on which SMC chip select is used by ILI9325. */
+	#define BOARD_ILI93XX_ADDR     0x61000000 /* The base address, depends on which SMC chip select is used by ILI93XX. */
 	#define BOARD_ILI93XX_RS       1 << 1 /* Register select (1 << 1) */
 
 #endif

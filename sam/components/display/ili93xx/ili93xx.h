@@ -90,11 +90,11 @@ typedef int16_t gfx_coord_t;
 #define ILI93XX_SWITCH_XY_WIDTH  240
 #define ILI93XX_SWITCH_XY_HEIGHT 320
 
-/** Bit mask for flipping X for ili9325_set_orientation() */
+/** Bit mask for flipping X for ili93xx_set_orientation() */
 #define ILI93XX_FLIP_X 1
-/** Bit mask for flipping Y for ili9325_set_orientation() */
+/** Bit mask for flipping Y for ili93xx_set_orientation() */
 #define ILI93XX_FLIP_Y 2
-/** Bit mask for swapping X and Y for ili9325_set_orientation() */
+/** Bit mask for swapping X and Y for ili93xx_set_orientation() */
 #define ILI93XX_SWITCH_XY 4
 
 
