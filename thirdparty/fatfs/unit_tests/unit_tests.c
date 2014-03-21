@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for FatFS service.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -76,6 +76,8 @@
  * - XMEGA-A1 Xplained
  * - sam4e16e_sam4e_ek
  * - sam4n16c_sam4n_xplained_pro
+ * - 4cmp16c-sam4cmp-db
+ * - 4cms16c-sam4cms-db
  *
  * \section connection_note Connection
  * Because for SAM4N Xplained Pro the file system is created in the external
