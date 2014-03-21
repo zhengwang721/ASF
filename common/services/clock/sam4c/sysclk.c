@@ -123,6 +123,8 @@ static void sysclk_configure_cpclk(void)
 #if ((CONFIG_CPCLK_PRES < CPCLK_PRES_MIN) || (CONFIG_CPCLK_PRES > CPCLK_PRES_MAX))
 #error Invalid CONFIG_CPCLK_PRES setting.
 #endif
+	/* Assert coprocessor reset and reset its peripheral */
+	RSTC->RSTC_CPMR = RSTC_CPMR_CPKEY(0x5Au);
 
 #ifdef CONFIG_PLL0_SOURCE
 	if ((CONFIG_CPCLK_SOURCE == CPCLK_SRC_PLLACK) &&

@@ -3,7 +3,7 @@
  *
  * \brief Link binary image of core 1 into core 0.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,9 +41,7 @@
  *
  */
 
-#warning Make sure correct path for "CORE1_IMAGE_FILE"
-//#define CORE1_IMAGE_FILE "../../project_core1/gcc/ipc_example_core1_flash.bin"
-#define CORE1_IMAGE_FILE "../../project_core1/as5_arm/Debug/IPC_EXAMPLE_CORE1.bin"
+#define CORE1_IMAGE_FILE "./core1_image.bin"
 
 /*
  * Note: This link method is for GCC and AS6.

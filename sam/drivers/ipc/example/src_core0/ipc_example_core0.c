@@ -3,7 +3,7 @@
  *
  * \brief Interprocessor Communication (IPC) example on core 0 for SAM.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -103,8 +103,6 @@ static volatile SHARED_MEMORY_TYPE *cnt = SHARED_MEMORY_ADDR;
 static void ipc_core1_signal_handler(Ipc *p, enum ipc_interrupt_source mask)
 {
 	is_core1_signal = true;
-	LED_Off(LED0);
-	printf("Got IRQ signal from core1 %d\r\n", (int)*cnt);
 	ipc_clear_command(p, mask);
 }
 
@@ -179,6 +177,8 @@ int main(void)
 	while (1) {
 		if (is_core1_signal == true) {
 			is_core1_signal = false;
+			LED_Off(LED0);
+			printf("Got IRQ signal from core1 %d\r\n", (int)*cnt);
 			delay_s(1);
 			ipc_set_command(IPC1, IPC_INTERRUPT_SRC_IRQ0);
 		}

@@ -3,7 +3,7 @@
  *
  * \brief Interprocessor Communication (IPC) driver for SAM.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -294,7 +294,7 @@ void ipc_disable(Ipc *p_ipc);
  *   ipc_set_handler(IPC0, IPC_INTERRUPT_SRC_IRQ0, ipc_core1_signal_handler);
  *  \endcode
  *
- * -# Enable IRQ0 of IPC0. To receive the interrupt signal correctly, the 
+ * -# Enable IRQ0 of IPC0. To receive the interrupt signal correctly, the
  * interrupt for IRQ of IPC as well as the interrupt of IPC itself (controlled
  * by NVIC) must be enabled.
  *  \code
