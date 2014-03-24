@@ -42,8 +42,7 @@
  */
 
 /**
- * \page asfdoc_sam0_dma_basic_use_case Quick Start Guide for Memory to Memory
- * data transfer using DMAC
+ * \page asfdoc_sam0_dma_basic_use_case Quick Start Guide for using DMA with Memory to Memory
  *
  * The supported board list:
  *    - SAMD21 Xplained Pro
