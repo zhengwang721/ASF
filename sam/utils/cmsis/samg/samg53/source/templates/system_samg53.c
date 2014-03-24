@@ -149,13 +149,13 @@ void system_init_flash(uint32_t ul_clk)
 {
 	/* Set FWS for embedded Flash access according to operating frequency */
 	if (ul_clk < CHIP_FREQ_FWS_0) {
-		EFC0->EEFC_FMR = EEFC_FMR_FWS(0)|EEFC_FMR_CLOE;
+		EFC->EEFC_FMR = EEFC_FMR_FWS(0)|EEFC_FMR_CLOE;
 	} else if (ul_clk < CHIP_FREQ_FWS_1) {
-		EFC0->EEFC_FMR = EEFC_FMR_FWS(1)|EEFC_FMR_CLOE;
+		EFC->EEFC_FMR = EEFC_FMR_FWS(1)|EEFC_FMR_CLOE;
 	} else if (ul_clk < CHIP_FREQ_FWS_2) {
-		EFC0->EEFC_FMR = EEFC_FMR_FWS(2)|EEFC_FMR_CLOE;
+		EFC->EEFC_FMR = EEFC_FMR_FWS(2)|EEFC_FMR_CLOE;
 	} else {
-		EFC0->EEFC_FMR = EEFC_FMR_FWS(3)|EEFC_FMR_CLOE;
+		EFC->EEFC_FMR = EEFC_FMR_FWS(3)|EEFC_FMR_CLOE;
 	}
 }
 
