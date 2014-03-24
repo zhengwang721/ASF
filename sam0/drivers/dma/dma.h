@@ -197,9 +197,8 @@ extern "C" {
 /** DMA invalid channel number */
 #define DMA_INVALID_CHANNEL        0xff
 
-/** Initial description section */
-COMPILER_ALIGNED(16)
-DmacDescriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
+/** ExInitial description section */
+extern DmacDescriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
 
 /** DMA priority level */
 enum dma_priority_level {

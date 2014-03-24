@@ -64,6 +64,9 @@ struct _dma_module _dma_inst = {
 /** DMA channel mask*/
 #define DMA_CHANNEL_MASK   (0x1f)
 
+COMPILER_ALIGNED(16)
+DmacDescriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
+
 /** Initial write back memory section */
 COMPILER_ALIGNED(16)
 static DmacDescriptor _write_back_section[CONF_MAX_USED_CHANNEL_NUM];
