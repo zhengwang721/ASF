@@ -79,10 +79,10 @@ typedef struct {
   __I  uint32_t PMC_WPSR;       /**< \brief (Pmc Offset: 0x00E8) Write Protection Status Register */
   __I  uint32_t Reserved7[9];
   __IO uint32_t PMC_OCR;        /**< \brief (Pmc Offset: 0x0110) Oscillator Calibration Register */
-  __O  uint32_t PMC_SLPWK_ER;  /**< \brief (Pmc Offset: 0x114) SleepWalking Enable Register 0 */
-  __O  uint32_t PMC_SLPWK_DR;  /**< \brief (Pmc Offset: 0x118) SleepWalking Disable Register 0 */
-  __I  uint32_t PMC_SLPWK_SR;  /**< \brief (Pmc Offset: 0x11C) SleepWalking Status Register 0 */
-  __I  uint32_t PMC_SLPWK_ASR; /**< \brief (Pmc Offset: 0x120) SleepWalking Activity Status Register 0 */
+  __O  uint32_t PMC_SLPWK_ER0;  /**< \brief (Pmc Offset: 0x114) SleepWalking Enable Register 0 */
+  __O  uint32_t PMC_SLPWK_DR0;  /**< \brief (Pmc Offset: 0x118) SleepWalking Disable Register 0 */
+  __I  uint32_t PMC_SLPWK_SR0;  /**< \brief (Pmc Offset: 0x11C) SleepWalking Status Register 0 */
+  __I  uint32_t PMC_SLPWK_ASR0; /**< \brief (Pmc Offset: 0x120) SleepWalking Activity Status Register 0 */
   __I  uint32_t Reserved8[3];
   __IO uint32_t PMC_PMMR;       /**< \brief (Pmc Offset: 0x130) PLL Maximum Multiplier Value Register */
 } Pmc;

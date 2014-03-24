@@ -102,7 +102,7 @@ typedef struct {
   __I  uint32_t PIO_ELSR;      /**< \brief (Pio Offset: 0x00C8) Edge/Level Status Register */
   __I  uint32_t Reserved10[1];
   __O  uint32_t PIO_FELLSR;    /**< \brief (Pio Offset: 0x00D0) Falling Edge/Low-Level Select Register */
-  __O  uint32_t PIO_REHLSR;    /**< \brief (Pio Offset: 0x00D4) Rising Edge/ High-Level Select Register */
+  __O  uint32_t PIO_REHLSR;    /**< \brief (Pio Offset: 0x00D4) Rising Edge/High-Level Select Register */
   __I  uint32_t PIO_FRLHSR;    /**< \brief (Pio Offset: 0x00D8) Fall/Rise - Low/High Status Register */
   __I  uint32_t Reserved11[2];
   __IO uint32_t PIO_WPMR;      /**< \brief (Pio Offset: 0x00E4) Write Protection Mode Register */
@@ -673,104 +673,104 @@ typedef struct {
 #define PIO_ISR_P30 (0x1u << 30) /**< \brief (PIO_ISR) Input Change Interrupt Status */
 #define PIO_ISR_P31 (0x1u << 31) /**< \brief (PIO_ISR) Input Change Interrupt Status */
 /* -------- PIO_MDER : (PIO Offset: 0x0050) Multi-driver Enable Register -------- */
-#define PIO_MDER_P0 (0x1u << 0) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P1 (0x1u << 1) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P2 (0x1u << 2) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P3 (0x1u << 3) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P4 (0x1u << 4) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P5 (0x1u << 5) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P6 (0x1u << 6) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P7 (0x1u << 7) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P8 (0x1u << 8) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P9 (0x1u << 9) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P10 (0x1u << 10) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P11 (0x1u << 11) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P12 (0x1u << 12) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P13 (0x1u << 13) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P14 (0x1u << 14) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P15 (0x1u << 15) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P16 (0x1u << 16) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P17 (0x1u << 17) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P18 (0x1u << 18) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P19 (0x1u << 19) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P20 (0x1u << 20) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P21 (0x1u << 21) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P22 (0x1u << 22) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P23 (0x1u << 23) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P24 (0x1u << 24) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P25 (0x1u << 25) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P26 (0x1u << 26) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P27 (0x1u << 27) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P28 (0x1u << 28) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P29 (0x1u << 29) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P30 (0x1u << 30) /**< \brief (PIO_MDER) Multi-Drive Enable */
-#define PIO_MDER_P31 (0x1u << 31) /**< \brief (PIO_MDER) Multi-Drive Enable */
+#define PIO_MDER_P0 (0x1u << 0) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P1 (0x1u << 1) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P2 (0x1u << 2) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P3 (0x1u << 3) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P4 (0x1u << 4) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P5 (0x1u << 5) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P6 (0x1u << 6) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P7 (0x1u << 7) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P8 (0x1u << 8) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P9 (0x1u << 9) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P10 (0x1u << 10) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P11 (0x1u << 11) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P12 (0x1u << 12) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P13 (0x1u << 13) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P14 (0x1u << 14) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P15 (0x1u << 15) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P16 (0x1u << 16) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P17 (0x1u << 17) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P18 (0x1u << 18) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P19 (0x1u << 19) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P20 (0x1u << 20) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P21 (0x1u << 21) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P22 (0x1u << 22) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P23 (0x1u << 23) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P24 (0x1u << 24) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P25 (0x1u << 25) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P26 (0x1u << 26) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P27 (0x1u << 27) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P28 (0x1u << 28) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P29 (0x1u << 29) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P30 (0x1u << 30) /**< \brief (PIO_MDER) Multi-drive Enable */
+#define PIO_MDER_P31 (0x1u << 31) /**< \brief (PIO_MDER) Multi-drive Enable */
 /* -------- PIO_MDDR : (PIO Offset: 0x0054) Multi-driver Disable Register -------- */
-#define PIO_MDDR_P0 (0x1u << 0) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P1 (0x1u << 1) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P2 (0x1u << 2) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P3 (0x1u << 3) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P4 (0x1u << 4) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P5 (0x1u << 5) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P6 (0x1u << 6) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P7 (0x1u << 7) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P8 (0x1u << 8) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P9 (0x1u << 9) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P10 (0x1u << 10) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P11 (0x1u << 11) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P12 (0x1u << 12) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P13 (0x1u << 13) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P14 (0x1u << 14) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P15 (0x1u << 15) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P16 (0x1u << 16) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P17 (0x1u << 17) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P18 (0x1u << 18) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P19 (0x1u << 19) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P20 (0x1u << 20) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P21 (0x1u << 21) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P22 (0x1u << 22) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P23 (0x1u << 23) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P24 (0x1u << 24) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P25 (0x1u << 25) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P26 (0x1u << 26) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P27 (0x1u << 27) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P28 (0x1u << 28) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P29 (0x1u << 29) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P30 (0x1u << 30) /**< \brief (PIO_MDDR) Multi-Drive Disable */
-#define PIO_MDDR_P31 (0x1u << 31) /**< \brief (PIO_MDDR) Multi-Drive Disable */
+#define PIO_MDDR_P0 (0x1u << 0) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P1 (0x1u << 1) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P2 (0x1u << 2) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P3 (0x1u << 3) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P4 (0x1u << 4) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P5 (0x1u << 5) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P6 (0x1u << 6) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P7 (0x1u << 7) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P8 (0x1u << 8) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P9 (0x1u << 9) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P10 (0x1u << 10) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P11 (0x1u << 11) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P12 (0x1u << 12) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P13 (0x1u << 13) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P14 (0x1u << 14) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P15 (0x1u << 15) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P16 (0x1u << 16) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P17 (0x1u << 17) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P18 (0x1u << 18) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P19 (0x1u << 19) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P20 (0x1u << 20) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P21 (0x1u << 21) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P22 (0x1u << 22) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P23 (0x1u << 23) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P24 (0x1u << 24) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P25 (0x1u << 25) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P26 (0x1u << 26) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P27 (0x1u << 27) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P28 (0x1u << 28) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P29 (0x1u << 29) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P30 (0x1u << 30) /**< \brief (PIO_MDDR) Multi-drive Disable */
+#define PIO_MDDR_P31 (0x1u << 31) /**< \brief (PIO_MDDR) Multi-drive Disable */
 /* -------- PIO_MDSR : (PIO Offset: 0x0058) Multi-driver Status Register -------- */
-#define PIO_MDSR_P0 (0x1u << 0) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P1 (0x1u << 1) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P2 (0x1u << 2) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P3 (0x1u << 3) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P4 (0x1u << 4) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P5 (0x1u << 5) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P6 (0x1u << 6) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P7 (0x1u << 7) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P8 (0x1u << 8) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P9 (0x1u << 9) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P10 (0x1u << 10) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P11 (0x1u << 11) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P12 (0x1u << 12) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P13 (0x1u << 13) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P14 (0x1u << 14) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P15 (0x1u << 15) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P16 (0x1u << 16) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P17 (0x1u << 17) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P18 (0x1u << 18) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P19 (0x1u << 19) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P20 (0x1u << 20) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P21 (0x1u << 21) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P22 (0x1u << 22) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P23 (0x1u << 23) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P24 (0x1u << 24) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P25 (0x1u << 25) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P26 (0x1u << 26) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P27 (0x1u << 27) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P28 (0x1u << 28) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P29 (0x1u << 29) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P30 (0x1u << 30) /**< \brief (PIO_MDSR) Multi-Drive Status */
-#define PIO_MDSR_P31 (0x1u << 31) /**< \brief (PIO_MDSR) Multi-Drive Status */
+#define PIO_MDSR_P0 (0x1u << 0) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P1 (0x1u << 1) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P2 (0x1u << 2) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P3 (0x1u << 3) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P4 (0x1u << 4) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P5 (0x1u << 5) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P6 (0x1u << 6) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P7 (0x1u << 7) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P8 (0x1u << 8) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P9 (0x1u << 9) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P10 (0x1u << 10) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P11 (0x1u << 11) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P12 (0x1u << 12) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P13 (0x1u << 13) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P14 (0x1u << 14) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P15 (0x1u << 15) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P16 (0x1u << 16) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P17 (0x1u << 17) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P18 (0x1u << 18) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P19 (0x1u << 19) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P20 (0x1u << 20) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P21 (0x1u << 21) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P22 (0x1u << 22) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P23 (0x1u << 23) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P24 (0x1u << 24) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P25 (0x1u << 25) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P26 (0x1u << 26) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P27 (0x1u << 27) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P28 (0x1u << 28) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P29 (0x1u << 29) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P30 (0x1u << 30) /**< \brief (PIO_MDSR) Multi-drive Status */
+#define PIO_MDSR_P31 (0x1u << 31) /**< \brief (PIO_MDSR) Multi-drive Status */
 /* -------- PIO_PUDR : (PIO Offset: 0x0060) Pull-up Disable Register -------- */
 #define PIO_PUDR_P0 (0x1u << 0) /**< \brief (PIO_PUDR) Pull-Up Disable */
 #define PIO_PUDR_P1 (0x1u << 1) /**< \brief (PIO_PUDR) Pull-Up Disable */
@@ -904,71 +904,71 @@ typedef struct {
 #define PIO_ABCDSR_P30 (0x1u << 30) /**< \brief (PIO_ABCDSR[2]) Peripheral Select */
 #define PIO_ABCDSR_P31 (0x1u << 31) /**< \brief (PIO_ABCDSR[2]) Peripheral Select */
 /* -------- PIO_IFSCDR : (PIO Offset: 0x0080) Input Filter Slow Clock Disable Register -------- */
-#define PIO_IFSCDR_P0 (0x1u << 0) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P1 (0x1u << 1) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P2 (0x1u << 2) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P3 (0x1u << 3) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P4 (0x1u << 4) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P5 (0x1u << 5) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P6 (0x1u << 6) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P7 (0x1u << 7) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P8 (0x1u << 8) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P9 (0x1u << 9) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P10 (0x1u << 10) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P11 (0x1u << 11) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P12 (0x1u << 12) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P13 (0x1u << 13) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P14 (0x1u << 14) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P15 (0x1u << 15) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P16 (0x1u << 16) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P17 (0x1u << 17) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P18 (0x1u << 18) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P19 (0x1u << 19) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P20 (0x1u << 20) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P21 (0x1u << 21) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P22 (0x1u << 22) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P23 (0x1u << 23) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P24 (0x1u << 24) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P25 (0x1u << 25) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P26 (0x1u << 26) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P27 (0x1u << 27) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P28 (0x1u << 28) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P29 (0x1u << 29) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P30 (0x1u << 30) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
-#define PIO_IFSCDR_P31 (0x1u << 31) /**< \brief (PIO_IFSCDR) PIO Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P0 (0x1u << 0) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P1 (0x1u << 1) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P2 (0x1u << 2) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P3 (0x1u << 3) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P4 (0x1u << 4) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P5 (0x1u << 5) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P6 (0x1u << 6) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P7 (0x1u << 7) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P8 (0x1u << 8) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P9 (0x1u << 9) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P10 (0x1u << 10) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P11 (0x1u << 11) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P12 (0x1u << 12) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P13 (0x1u << 13) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P14 (0x1u << 14) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P15 (0x1u << 15) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P16 (0x1u << 16) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P17 (0x1u << 17) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P18 (0x1u << 18) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P19 (0x1u << 19) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P20 (0x1u << 20) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P21 (0x1u << 21) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P22 (0x1u << 22) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P23 (0x1u << 23) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P24 (0x1u << 24) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P25 (0x1u << 25) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P26 (0x1u << 26) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P27 (0x1u << 27) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P28 (0x1u << 28) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P29 (0x1u << 29) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P30 (0x1u << 30) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
+#define PIO_IFSCDR_P31 (0x1u << 31) /**< \brief (PIO_IFSCDR) Peripheral Clock Glitch Filtering Select */
 /* -------- PIO_IFSCER : (PIO Offset: 0x0084) Input Filter Slow Clock Enable Register -------- */
-#define PIO_IFSCER_P0 (0x1u << 0) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P1 (0x1u << 1) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P2 (0x1u << 2) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P3 (0x1u << 3) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P4 (0x1u << 4) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P5 (0x1u << 5) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P6 (0x1u << 6) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P7 (0x1u << 7) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P8 (0x1u << 8) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P9 (0x1u << 9) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P10 (0x1u << 10) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P11 (0x1u << 11) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P12 (0x1u << 12) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P13 (0x1u << 13) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P14 (0x1u << 14) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P15 (0x1u << 15) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P16 (0x1u << 16) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P17 (0x1u << 17) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P18 (0x1u << 18) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P19 (0x1u << 19) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P20 (0x1u << 20) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P21 (0x1u << 21) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P22 (0x1u << 22) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P23 (0x1u << 23) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P24 (0x1u << 24) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P25 (0x1u << 25) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P26 (0x1u << 26) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P27 (0x1u << 27) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P28 (0x1u << 28) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P29 (0x1u << 29) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P30 (0x1u << 30) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
-#define PIO_IFSCER_P31 (0x1u << 31) /**< \brief (PIO_IFSCER) Debouncing Filtering Select */
+#define PIO_IFSCER_P0 (0x1u << 0) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P1 (0x1u << 1) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P2 (0x1u << 2) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P3 (0x1u << 3) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P4 (0x1u << 4) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P5 (0x1u << 5) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P6 (0x1u << 6) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P7 (0x1u << 7) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P8 (0x1u << 8) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P9 (0x1u << 9) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P10 (0x1u << 10) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P11 (0x1u << 11) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P12 (0x1u << 12) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P13 (0x1u << 13) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P14 (0x1u << 14) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P15 (0x1u << 15) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P16 (0x1u << 16) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P17 (0x1u << 17) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P18 (0x1u << 18) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P19 (0x1u << 19) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P20 (0x1u << 20) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P21 (0x1u << 21) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P22 (0x1u << 22) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P23 (0x1u << 23) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P24 (0x1u << 24) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P25 (0x1u << 25) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P26 (0x1u << 26) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P27 (0x1u << 27) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P28 (0x1u << 28) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P29 (0x1u << 29) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P30 (0x1u << 30) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
+#define PIO_IFSCER_P31 (0x1u << 31) /**< \brief (PIO_IFSCER) Slow Clock Debouncing Filtering Select */
 /* -------- PIO_IFSCSR : (PIO Offset: 0x0088) Input Filter Slow Clock Status Register -------- */
 #define PIO_IFSCSR_P0 (0x1u << 0) /**< \brief (PIO_IFSCSR) Glitch or Debouncing Filter Selection Status */
 #define PIO_IFSCSR_P1 (0x1u << 1) /**< \brief (PIO_IFSCSR) Glitch or Debouncing Filter Selection Status */
@@ -1435,76 +1435,76 @@ typedef struct {
 #define PIO_FELLSR_P29 (0x1u << 29) /**< \brief (PIO_FELLSR) Falling Edge/Low-Level Interrupt Selection */
 #define PIO_FELLSR_P30 (0x1u << 30) /**< \brief (PIO_FELLSR) Falling Edge/Low-Level Interrupt Selection */
 #define PIO_FELLSR_P31 (0x1u << 31) /**< \brief (PIO_FELLSR) Falling Edge/Low-Level Interrupt Selection */
-/* -------- PIO_REHLSR : (PIO Offset: 0x00D4) Rising Edge/ High-Level Select Register -------- */
-#define PIO_REHLSR_P0 (0x1u << 0) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P1 (0x1u << 1) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P2 (0x1u << 2) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P3 (0x1u << 3) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P4 (0x1u << 4) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P5 (0x1u << 5) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P6 (0x1u << 6) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P7 (0x1u << 7) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P8 (0x1u << 8) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P9 (0x1u << 9) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P10 (0x1u << 10) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P11 (0x1u << 11) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P12 (0x1u << 12) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P13 (0x1u << 13) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P14 (0x1u << 14) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P15 (0x1u << 15) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P16 (0x1u << 16) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P17 (0x1u << 17) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P18 (0x1u << 18) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P19 (0x1u << 19) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P20 (0x1u << 20) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P21 (0x1u << 21) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P22 (0x1u << 22) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P23 (0x1u << 23) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P24 (0x1u << 24) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P25 (0x1u << 25) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P26 (0x1u << 26) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P27 (0x1u << 27) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P28 (0x1u << 28) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P29 (0x1u << 29) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P30 (0x1u << 30) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
-#define PIO_REHLSR_P31 (0x1u << 31) /**< \brief (PIO_REHLSR) Rising Edge /High-Level Interrupt Selection */
+/* -------- PIO_REHLSR : (PIO Offset: 0x00D4) Rising Edge/High-Level Select Register -------- */
+#define PIO_REHLSR_P0 (0x1u << 0) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P1 (0x1u << 1) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P2 (0x1u << 2) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P3 (0x1u << 3) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P4 (0x1u << 4) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P5 (0x1u << 5) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P6 (0x1u << 6) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P7 (0x1u << 7) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P8 (0x1u << 8) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P9 (0x1u << 9) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P10 (0x1u << 10) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P11 (0x1u << 11) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P12 (0x1u << 12) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P13 (0x1u << 13) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P14 (0x1u << 14) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P15 (0x1u << 15) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P16 (0x1u << 16) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P17 (0x1u << 17) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P18 (0x1u << 18) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P19 (0x1u << 19) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P20 (0x1u << 20) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P21 (0x1u << 21) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P22 (0x1u << 22) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P23 (0x1u << 23) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P24 (0x1u << 24) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P25 (0x1u << 25) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P26 (0x1u << 26) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P27 (0x1u << 27) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P28 (0x1u << 28) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P29 (0x1u << 29) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P30 (0x1u << 30) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
+#define PIO_REHLSR_P31 (0x1u << 31) /**< \brief (PIO_REHLSR) Rising Edge/High-Level Interrupt Selection */
 /* -------- PIO_FRLHSR : (PIO Offset: 0x00D8) Fall/Rise - Low/High Status Register -------- */
-#define PIO_FRLHSR_P0 (0x1u << 0) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P1 (0x1u << 1) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P2 (0x1u << 2) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P3 (0x1u << 3) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P4 (0x1u << 4) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P5 (0x1u << 5) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P6 (0x1u << 6) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P7 (0x1u << 7) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P8 (0x1u << 8) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P9 (0x1u << 9) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P10 (0x1u << 10) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P11 (0x1u << 11) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P12 (0x1u << 12) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P13 (0x1u << 13) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P14 (0x1u << 14) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P15 (0x1u << 15) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P16 (0x1u << 16) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P17 (0x1u << 17) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P18 (0x1u << 18) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P19 (0x1u << 19) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P20 (0x1u << 20) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P21 (0x1u << 21) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P22 (0x1u << 22) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P23 (0x1u << 23) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P24 (0x1u << 24) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P25 (0x1u << 25) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P26 (0x1u << 26) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P27 (0x1u << 27) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P28 (0x1u << 28) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P29 (0x1u << 29) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P30 (0x1u << 30) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
-#define PIO_FRLHSR_P31 (0x1u << 31) /**< \brief (PIO_FRLHSR) Edge /Level Interrupt Source Selection */
+#define PIO_FRLHSR_P0 (0x1u << 0) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P1 (0x1u << 1) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P2 (0x1u << 2) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P3 (0x1u << 3) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P4 (0x1u << 4) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P5 (0x1u << 5) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P6 (0x1u << 6) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P7 (0x1u << 7) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P8 (0x1u << 8) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P9 (0x1u << 9) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P10 (0x1u << 10) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P11 (0x1u << 11) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P12 (0x1u << 12) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P13 (0x1u << 13) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P14 (0x1u << 14) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P15 (0x1u << 15) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P16 (0x1u << 16) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P17 (0x1u << 17) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P18 (0x1u << 18) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P19 (0x1u << 19) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P20 (0x1u << 20) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P21 (0x1u << 21) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P22 (0x1u << 22) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P23 (0x1u << 23) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P24 (0x1u << 24) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P25 (0x1u << 25) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P26 (0x1u << 26) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P27 (0x1u << 27) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P28 (0x1u << 28) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P29 (0x1u << 29) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P30 (0x1u << 30) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
+#define PIO_FRLHSR_P31 (0x1u << 31) /**< \brief (PIO_FRLHSR) Edge/Level Interrupt Source Selection */
 /* -------- PIO_WPMR : (PIO Offset: 0x00E4) Write Protection Mode Register -------- */
 #define PIO_WPMR_WPEN (0x1u << 0) /**< \brief (PIO_WPMR) Write Protection Enable */
 #define PIO_WPMR_WPKEY_Pos 8
-#define PIO_WPMR_WPKEY_Msk (0xffffffu << PIO_WPMR_WPKEY_Pos) /**< \brief (PIO_WPMR) Write Protection Key. */
+#define PIO_WPMR_WPKEY_Msk (0xffffffu << PIO_WPMR_WPKEY_Pos) /**< \brief (PIO_WPMR) Write Protection Key */
 #define   PIO_WPMR_WPKEY_PASSWD (0x50494Fu << 8) /**< \brief (PIO_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit. Always reads as 0. */
 /* -------- PIO_WPSR : (PIO Offset: 0x00E8) Write Protection Status Register -------- */
 #define PIO_WPSR_WPVS (0x1u << 0) /**< \brief (PIO_WPSR) Write Protection Violation Status */

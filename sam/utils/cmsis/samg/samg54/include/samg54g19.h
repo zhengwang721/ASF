@@ -538,7 +538,7 @@ void WKUP15_Handler     ( void );
 #define CHIP_FREQ_MAINCK_RC_24MHZ       (24000000UL)
 #define CHIP_FREQ_CPU_MAX               (96000000UL)
 #define CHIP_FREQ_XTAL_32K              (32768UL)
-#define CHIP_FREQ_XTAL_12M              (12000000UL)
+
 
 /* Embedded Flash Write Wait State */
 #define CHIP_FLASH_WRITE_WAIT_STATE     (8U)
@@ -552,13 +552,6 @@ void WKUP15_Handler     ( void );
 #define CHIP_FREQ_FWS_5                 (76000000UL)  /**< \brief Maximum operating frequency when FWS is 5 */
 #define CHIP_FREQ_FWS_6                 (88000000UL)  /**< \brief Maximum operating frequency when FWS is 6 */
 #define CHIP_FREQ_FWS_7                 (96000000UL)  /**< \brief Maximum operating frequency when FWS is 7 */
-
-#define EFC0 EFC
-#define USART0 USART
-#define PDC_USART0 PDC_USART
-#define ID_USART0 ID_USART
-#define USART0_IRQn USART_IRQn
-#define USART0_Handler USART_Handler
 
 #ifdef __cplusplus
 }

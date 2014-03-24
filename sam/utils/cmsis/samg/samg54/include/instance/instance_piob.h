@@ -84,7 +84,7 @@
   #define REG_PIOB_LSR                      (0x400E10C4U) /**< \brief (PIOB) Level Select Register */
   #define REG_PIOB_ELSR                     (0x400E10C8U) /**< \brief (PIOB) Edge/Level Status Register */
   #define REG_PIOB_FELLSR                   (0x400E10D0U) /**< \brief (PIOB) Falling Edge/Low-Level Select Register */
-  #define REG_PIOB_REHLSR                   (0x400E10D4U) /**< \brief (PIOB) Rising Edge/ High-Level Select Register */
+  #define REG_PIOB_REHLSR                   (0x400E10D4U) /**< \brief (PIOB) Rising Edge/High-Level Select Register */
   #define REG_PIOB_FRLHSR                   (0x400E10D8U) /**< \brief (PIOB) Fall/Rise - Low/High Status Register */
   #define REG_PIOB_WPMR                     (0x400E10E4U) /**< \brief (PIOB) Write Protection Mode Register */
   #define REG_PIOB_WPSR                     (0x400E10E8U) /**< \brief (PIOB) Write Protection Status Register */
@@ -131,7 +131,7 @@
   #define REG_PIOB_LSR     (*(__O  uint32_t*)0x400E10C4U) /**< \brief (PIOB) Level Select Register */
   #define REG_PIOB_ELSR    (*(__I  uint32_t*)0x400E10C8U) /**< \brief (PIOB) Edge/Level Status Register */
   #define REG_PIOB_FELLSR  (*(__O  uint32_t*)0x400E10D0U) /**< \brief (PIOB) Falling Edge/Low-Level Select Register */
-  #define REG_PIOB_REHLSR  (*(__O  uint32_t*)0x400E10D4U) /**< \brief (PIOB) Rising Edge/ High-Level Select Register */
+  #define REG_PIOB_REHLSR  (*(__O  uint32_t*)0x400E10D4U) /**< \brief (PIOB) Rising Edge/High-Level Select Register */
   #define REG_PIOB_FRLHSR  (*(__I  uint32_t*)0x400E10D8U) /**< \brief (PIOB) Fall/Rise - Low/High Status Register */
   #define REG_PIOB_WPMR    (*(__IO uint32_t*)0x400E10E4U) /**< \brief (PIOB) Write Protection Mode Register */
   #define REG_PIOB_WPSR    (*(__I  uint32_t*)0x400E10E8U) /**< \brief (PIOB) Write Protection Status Register */
