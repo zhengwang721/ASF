@@ -33,7 +33,7 @@
 		<build type="header-file" subtype="api" value="system_interrupt.h"/>
 		<build type="header-file" value="system_interrupt_samd20/system_interrupt_features.h"/>
 		<build type="header-file" value="system_interrupt_samd21/system_interrupt_features.h"/>
-		<build type="header-file" value="system_interrupt_samdr1/system_interrupt_features.h"/>
+		<build type="header-file" value="system_interrupt_samd21/system_interrupt_features.h"/>
 
 		<build type="header-file" value="quick_start/qs_system_interrupt.h"/>
 

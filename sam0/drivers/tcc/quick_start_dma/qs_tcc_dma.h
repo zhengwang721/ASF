@@ -44,8 +44,8 @@
 /**
  * \page asfdoc_sam0_tcc_dma_use_case Quick Start Guide for Using DMA with TCC
  *
- * The supported device list:
- *    - SAM D21/R21
+ * The supported kit list:
+ *    - SAM D21/R21 Xplained Pro
  *
  * In this use case, the TCC will be used to generate a PWM signal. Here
  * the pulse width varies through following values with the help of DMA
@@ -112,11 +112,18 @@
  *
  * \subsection asfdoc_sam0_tcc_dma_use_case_setup_code Code
  *
- * Add to the main application source file, before any functions:
- * \snippet conf_quick_start_dma.h definition_pwm
- * \snippet conf_quick_start_dma.h definition_feedback
- * \snippet conf_quick_start_dma.h definition_dma_compare_trigger
- * \snippet conf_quick_start_dma.h definition_dma_capture_trigger
+ * Add to the main application source file, before any functions, according to
+ * the kit used:
+ * - SAM D21 Xplained Pro:
+ * \snippet samd21_xplained_pro/conf_quick_start_dma.h definition_pwm
+ * \snippet samd21_xplained_pro/conf_quick_start_dma.h definition_feedback
+ * \snippet samd21_xplained_pro/conf_quick_start_dma.h definition_dma_compare_trigger
+ * \snippet samd21_xplained_pro/conf_quick_start_dma.h definition_dma_capture_trigger
+ * - SAM R21 Xplained Pro:
+ * \snippet samr21_xplained_pro/conf_quick_start_dma.h definition_pwm
+ * \snippet samr21_xplained_pro/conf_quick_start_dma.h definition_feedback
+ * \snippet samr21_xplained_pro/conf_quick_start_dma.h definition_dma_compare_trigger
+ * \snippet samr21_xplained_pro/conf_quick_start_dma.h definition_dma_capture_trigger
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tcc_dma.c module_inst
