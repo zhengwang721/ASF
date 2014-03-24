@@ -44,9 +44,9 @@
 /**
  * \page asfdoc_sam0_sercom_spi_dma_use_case Quick Start Guide for Using DMA with SERCOM SPI
  *
- * The supported device list:
- *    - SAMD21
- *    - SAMR21
+ * The supported board list:
+ *    - SAMD21 Xplained Pro
+ *    - SAMR21 Xplained Pro
  *
  * This quick start will transmit a buffer data from master to slave through DMA.
  * In this use case the SPI master will be configured with the following
