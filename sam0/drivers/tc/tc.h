@@ -426,13 +426,6 @@
    /* Same number for 8-, 16- and 32-bit TC and all TC instances */
 #endif
 
-#if SAMR21 // Patch header file
-#  undef TC_INST_NUM
-#  define TC_INST_NUM 3
-#  undef TC_INSTS
-#  define TC_INSTS { TC3, TC4, TC5 }
-#endif
-
 /** TC Instance MAX ID Number */
 #if SAMD20E || SAMD21G || SAMD21E || SAMR21
 #define TC_INST_MAX_ID  5
