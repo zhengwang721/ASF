@@ -508,7 +508,7 @@ void WKUP15_Handler     ( void );
 #define IFLASH_SIZE             (0x80000u)
 #define IFLASH_PAGE_SIZE        (512u)
 #define IFLASH_LOCK_REGION_SIZE (8192u)
-#define IFLASH_NB_OF_PAGES      (512u)
+#define IFLASH_NB_OF_PAGES      (1024u)
 #define IFLASH_NB_OF_LOCK_BITS  (64u)
 #define IRAM_SIZE               (0x18000u)
 
