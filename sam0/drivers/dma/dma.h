@@ -127,8 +127,7 @@ extern "C" {
  * \subsection asfdoc_sam0_dma_module_overview_dma_trigger DMA Triggers
  * DMA transfer can be started only when a DMA transfer request is detected. A
  * transfer request can be triggered from software, peripheral or an event. There
- * are dedicated source trigger selections for each DMA channel usage. By default
- * a software trigger will be used for a DMA transfer.
+ * are dedicated source trigger selections for each DMA channel usage.
  *
  * \subsection asfdoc_sam0_dma_module_overview_dma_transfer_descriptor DMA Transfer Descriptor
  * The transfer descriptor defines the transfer properites.
