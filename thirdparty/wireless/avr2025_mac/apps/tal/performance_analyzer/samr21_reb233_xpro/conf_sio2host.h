@@ -1,9 +1,9 @@
 /**
- * \file main.c
+ * \file conf_sio2host.h
  *
- * \brief  Main of Performance_Analyzer application
+ * \brief Serial Input & Output configuration
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,33 +40,17 @@
  * \asf_license_stop
  */
 
-/**
- * \page license License
- * Copyright(c) 2012, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED 
+ #define SERIAL_RX_BUF_SIZE_HOST    156
 
- #include "asf.h"
- # include "performance_main.h"
- int main(void)
- {
-	irq_initialize_vectors();
-#if SAMD20 || SAMR21
-	system_init();
-	delay_init();
-#else
-	sysclk_init();
+#define USART_HOST                 EDBG_CDC_MODULE
 
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
-	board_init();    
-#endif	 
-	performance_analyzer_main();
- }
+/** Baudrate setting */
+#define USART_HOST_BAUDRATE        9600
  
- 
- 
- 
+
+#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(0, USART_HOST_ISR_VECT);\
+                                    USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC;\
+                                    system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM0);
+#endif /* CONF_SIO2HOST_H_INCLUDED */

@@ -1,7 +1,7 @@
 /**
- * \file main.c
+ * \file *********************************************************************
  *
- * \brief  Main of Performance_Analyzer application
+ * \brief Common TRX Access Configuration
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,33 +40,7 @@
  * \asf_license_stop
  */
 
-/**
- * \page license License
- * Copyright(c) 2012, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+#ifndef CONF_TRX_ACCESS_H_INCLUDED
+#define CONF_TRX_ACCESS_H_INCLUDED
 
- #include "asf.h"
- # include "performance_main.h"
- int main(void)
- {
-	irq_initialize_vectors();
-#if SAMD20 || SAMR21
-	system_init();
-	delay_init();
-#else
-	sysclk_init();
-
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
-	board_init();    
-#endif	 
-	performance_analyzer_main();
- }
- 
- 
- 
- 
+#endif /* CONF_TRX_ACCESS_H_INCLUDED */

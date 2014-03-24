@@ -1,9 +1,9 @@
 /**
- * \file main.c
+ * \file
  *
- * \brief  Main of Performance_Analyzer application
+ * \brief SAM D2x SPI configuration
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,35 +38,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
-
-/**
- * \page license License
- * Copyright(c) 2012, Atmel Corporation All rights reserved.
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
- #include "asf.h"
- # include "performance_main.h"
- int main(void)
- {
-	irq_initialize_vectors();
-#if SAMD20 || SAMR21
-	system_init();
-	delay_init();
-#else
-	sysclk_init();
 
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
-	board_init();    
-#endif	 
-	performance_analyzer_main();
- }
- 
- 
- 
- 
+#ifndef CONF_SPI_H_INCLUDED
+#  define CONF_SPI_H_INCLUDED
+
+#  define CONF_SPI_MASTER_ENABLE     true
+#  define CONF_SPI_SLAVE_ENABLE      false
+#  define CONF_SPI_TIMEOUT           10000
+
+#endif /* CONF_SPI_H_INCLUDED */
+

@@ -1,9 +1,9 @@
 /**
- * \file main.c
+ * \file
  *
- * \brief  Main of Performance_Analyzer application
+ * \brief SAM D20 External Interrupt Driver Configuration Header
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,35 +38,12 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
-
-/**
- * \page license License
- * Copyright(c) 2012, Atmel Corporation All rights reserved.
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
- #include "asf.h"
- # include "performance_main.h"
- int main(void)
- {
-	irq_initialize_vectors();
-#if SAMD20 || SAMR21
-	system_init();
-	delay_init();
-#else
-	sysclk_init();
+#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
+#  define EXTINT_CALLBACKS_MAX     10
 
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
-	board_init();    
-#endif	 
-	performance_analyzer_main();
- }
- 
- 
- 
- 
+#endif

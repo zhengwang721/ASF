@@ -1,7 +1,7 @@
 /**
- * \file main.c
+ * \file
  *
- * \brief  Main of Performance_Analyzer application
+ * \brief Board configuration
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -38,35 +38,17 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
-
-/**
- * \page license License
- * Copyright(c) 2012, Atmel Corporation All rights reserved.
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
- #include "asf.h"
- # include "performance_main.h"
- int main(void)
- {
-	irq_initialize_vectors();
-#if SAMD20 || SAMR21
-	system_init();
-	delay_init();
-#else
-	sysclk_init();
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
-	board_init();    
-#endif	 
-	performance_analyzer_main();
- }
- 
- 
- 
- 
+
+#define CONF_BOARD_AT86RFX
+
+#define MCU_SOC_NAME        "ATSAMR21G18A"
+
+#define AT86RFX_SPI_BAUDRATE		 5000000UL
+
+#endif /* CONF_BOARD_H_INCLUDED */

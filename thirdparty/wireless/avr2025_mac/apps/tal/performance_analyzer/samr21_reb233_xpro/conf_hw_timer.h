@@ -1,9 +1,9 @@
 /**
- * \file main.c
+ * \file *********************************************************************
  *
- * \brief  Main of Performance_Analyzer application
+ * \brief USART Serial configuration
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,33 +40,14 @@
  * \asf_license_stop
  */
 
-/**
- * \page license License
- * Copyright(c) 2012, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
+#ifndef CONF_HW_TIMER_H_INCLUDED
+#define CONF_HW_TIMER_H_INCLUDED
+
+/*! \name Configuration
  */
+/* ! @{ */
+#define TIMER                (TC3)
+#define TIMER_CHANNEL_ID     0
+/* ! @} */
 
- #include "asf.h"
- # include "performance_main.h"
- int main(void)
- {
-	irq_initialize_vectors();
-#if SAMD20 || SAMR21
-	system_init();
-	delay_init();
-#else
-	sysclk_init();
-
-	/* Initialize the board.
-	 * The board-specific conf_board.h file contains the configuration of
-	 * the board initialization.
-	 */
-	board_init();    
-#endif	 
-	performance_analyzer_main();
- }
- 
- 
- 
- 
+#endif /* CONF_HW_TIMER_H_INCLUDED */

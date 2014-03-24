@@ -50,7 +50,7 @@
 #include "tal.h"
 # include "app_init.h"
 #if (LED_COUNT > 0) 
-#if !SAMD20
+#if !(SAMD20 ||  SAMR21)
 # include "led.h"
 #endif
 #endif
