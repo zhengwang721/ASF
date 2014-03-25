@@ -136,7 +136,6 @@ static void _config_dma_for_tx(void)
 	//! [config_dma_resource_for_tx]
 	struct dma_resource_config config;
 	dma_get_config_defaults(&config);
-	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
 	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 	config.peripheral_trigger = CONF_TX_TRIGGER;
 	dma_allocate(&tx_dma_resource, &config);

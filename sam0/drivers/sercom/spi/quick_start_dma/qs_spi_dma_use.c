@@ -137,7 +137,6 @@ static void configure_dma_resource_rx(struct dma_resource *rx_resource)
 //! [dma_rx_setup_2]
 
 //! [dma_rx_setup_3]
-	rx_config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
 	rx_config.peripheral_trigger = PERIPHERAL_TRIGGER_SERCOM_RX;
 	rx_config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 //! [dma_rx_setup_3]
