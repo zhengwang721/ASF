@@ -44,7 +44,7 @@
 #ifndef CONF_QUICK_START_DMA_H_INCLUDED
 #define CONF_QUICK_START_DMA_H_INCLUDED
 
-//[definition_master_samr21]
+//[definition_master]
 #define CONF_MASTER_SPI_MODULE  SERCOM3
 #define CONF_MASTER_SS_PIN      EXT1_PIN_10
 #define CONF_MASTER_MUX_SETTING SPI_SIGNAL_MUX_SETTING_E
@@ -52,20 +52,20 @@
 #define CONF_MASTER_PINMUX_PAD1 PINMUX_UNUSED
 #define CONF_MASTER_PINMUX_PAD2 PINMUX_PA18D_SERCOM3_PAD2
 #define CONF_MASTER_PINMUX_PAD3 PINMUX_PA19D_SERCOM3_PAD3
-//[definition_master_samr21]
+//[definition_master]
 
-//[definition_slave_samr21]
+//[definition_slave]
 #define CONF_SLAVE_SPI_MODULE  EXT1_SPI_MODULE
 #define CONF_SLAVE_MUX_SETTING EXT1_SPI_SERCOM_MUX_SETTING
 #define CONF_SLAVE_PINMUX_PAD0 EXT1_SPI_SERCOM_PINMUX_PAD0
 #define CONF_SLAVE_PINMUX_PAD1 EXT1_SPI_SERCOM_PINMUX_PAD1
 #define CONF_SLAVE_PINMUX_PAD2 EXT1_SPI_SERCOM_PINMUX_PAD2
 #define CONF_SLAVE_PINMUX_PAD3 EXT1_SPI_SERCOM_PINMUX_PAD3
-//[definition_slave_samr21]
+//[definition_slave]
 
-//[definition_peripheral_trigger_samr21]
+//[definition_peripheral_trigger]
 #define CONF_PERIPHERAL_TRIGGER_TX   SERCOM3_DMAC_ID_TX
 #define CONF_PERIPHERAL_TRIGGER_RX   SERCOM5_DMAC_ID_RX
-//[definition_peripheral_trigger_samr21]
+//[definition_peripheral_trigger]
 
 #endif /* CONF_QUICK_START_DMA_H_INCLUDED */

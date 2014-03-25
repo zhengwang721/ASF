@@ -102,13 +102,13 @@
  * functions according to your board:
  *
  * For SAMD21 Xplained Pro
- * \snippet samd21_xplained_pro/conf_quick_start.h definition_master_samd21
- * \snippet samd21_xplained_pro/conf_quick_start.h definition_slave_samd21
- * \snippet samd21_xplained_pro/conf_quick_start.h definition_peripheral_trigger_samd21
+ * \snippet samd21_xplained_pro/conf_quick_start.h definition_master
+ * \snippet samd21_xplained_pro/conf_quick_start.h definition_slave
+ * \snippet samd21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
  * For SAMR21 Xplained Pro
- * \snippet samr21_xplained_pro/conf_quick_start.h definition_master_samr21
- * \snippet samr21_xplained_pro/conf_quick_start.h definition_slave_samr21
- * \snippet samr21_xplained_pro/conf_quick_start.h definition_peripheral_trigger_samr21
+ * \snippet samr21_xplained_pro/conf_quick_start.h definition_master
+ * \snippet samr21_xplained_pro/conf_quick_start.h definition_slave
+ * \snippet samr21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
 
  * Add to the main application source file, outside of any functions:
  * \snippet qs_spi_dma_use.c buf_length
