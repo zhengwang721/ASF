@@ -88,6 +88,7 @@ typedef struct {
 /* -------- ADC_CR : (ADC Offset: 0x00) Control Register -------- */
 #define ADC_CR_SWRST (0x1u << 0) /**< \brief (ADC_CR) Software Reset */
 #define ADC_CR_START (0x1u << 1) /**< \brief (ADC_CR) Start Conversion */
+#define ADC_CR_AUTOCAL (0x1u << 3) /**< \brief (ADC_CR) Automatic Calibration of ADC */
 /* -------- ADC_MR : (ADC Offset: 0x04) Mode Register -------- */
 #define ADC_MR_TRGEN (0x1u << 0) /**< \brief (ADC_MR) Trigger Enable */
 #define   ADC_MR_TRGEN_DIS (0x0u << 0) /**< \brief (ADC_MR) Hardware triggers are disabled. Starting a conversion is only possible by software. */
@@ -254,6 +255,7 @@ typedef struct {
 #define ADC_ISR_EOC6 (0x1u << 6) /**< \brief (ADC_ISR) End of Conversion 6 */
 #define ADC_ISR_EOC7 (0x1u << 7) /**< \brief (ADC_ISR) End of Conversion 7 */
 #define ADC_ISR_LCCHG (0x1u << 19) /**< \brief (ADC_ISR) Last Channel Change */
+#define ADC_ISR_EOCAL (0x1u << 23) /**< \brief (ADC_ISR) End of Calibration Sequence */
 #define ADC_ISR_DRDY (0x1u << 24) /**< \brief (ADC_ISR) Data Ready */
 #define ADC_ISR_GOVRE (0x1u << 25) /**< \brief (ADC_ISR) General Overrun Error */
 #define ADC_ISR_COMPE (0x1u << 26) /**< \brief (ADC_ISR) Comparison Event */
