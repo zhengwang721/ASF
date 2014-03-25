@@ -78,7 +78,7 @@ typedef int16_t ili93xx_coord_t;
 /** This macro generates a 16-bit native color for the display from a
  *  24-bit RGB value.
  */
-#define ili93xx_COLOR(r, g, b) ((r << 16) | (g << 8) | b)
+#define ILI93XX_COLOR(r, g, b) ((r << 16) | (g << 8) | b)
 
 typedef ili93xx_color_t gfx_color_t;
 typedef int16_t gfx_coord_t;
@@ -86,6 +86,17 @@ typedef int16_t gfx_coord_t;
 /** ili93xx screen size */
 #define ILI93XX_LCD_WIDTH  240
 #define ILI93XX_LCD_HEIGHT 320
+
+#define ILI93XX_SWITCH_XY_WIDTH  240
+#define ILI93XX_SWITCH_XY_HEIGHT 320
+
+/** Bit mask for flipping X for ili93xx_set_orientation() */
+#define ILI93XX_FLIP_X 1
+/** Bit mask for flipping Y for ili93xx_set_orientation() */
+#define ILI93XX_FLIP_Y 2
+/** Bit mask for swapping X and Y for ili93xx_set_orientation() */
+#define ILI93XX_SWITCH_XY 4
+
 
 /** ili93xx ID code */
 #define ILI9325_DEVICE_CODE (0x9325u)
@@ -96,7 +107,7 @@ typedef int16_t gfx_coord_t;
 #if defined(BOARD_ILI93XX_ADDR) && defined (BOARD_ILI93XX_RS)
 static inline void LCD_IR(uint8_t lcd_index)
 {
-	/** ILI9325 index register address */
+	/** ILI93XX index register address */
 	*((volatile uint8_t *)(BOARD_ILI93XX_ADDR)) = lcd_index;
 }
 
@@ -246,6 +257,9 @@ uint8_t ili93xx_device_type(void);
 void ili93xx_vscroll_area_define(uint16_t us_tfa, uint16_t us_vsa,
 		uint16_t us_bfa);
 uint8_t ili93xx_device_type_identify(void);
+void ili93xx_set_orientation(uint8_t flags);
+uint32_t ili93xx_get_lcd_type(void);
+
 
 /** @cond 0 */
 /**INDENT-OFF**/
