@@ -3,7 +3,7 @@
  *
  * \brief GMAC (Ethernet MAC) driver configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
