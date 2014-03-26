@@ -3,7 +3,7 @@
  *
  * \brief Flash program example for SAM.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -89,23 +89,23 @@
  * -# Start the application.
  * -# In the terminal window, the following text should appear:
  *    \code
- *     -- Flash Program Example --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *     -I- Unlocking last page
- *     -I- Writing last page with walking bit pattern
- *     -I- Checking page contents  ......................................... ok
- *     -I- Locking last page
- *     -I- Try to program the locked page...
- *     -I- Please open Segger's JMem program
- *     -I- Read memory at address 0xxxxxxxxx to check contents
- *     -I- Press any key to continue...
- *     -I- Good job!
- *     -I- Now set the security bit
- *     -I- Press any key to continue to see what happened...
- *     -I- Setting security bit
- *     -I- All tests done
- * \endcode
+	-- Flash Program Example --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+	-I- Unlocking last page
+	-I- Writing last page with walking bit pattern
+	-I- Checking page contents  ......................................... ok
+	-I- Locking last page
+	-I- Try to program the locked page...
+	-I- Please open Segger's JMem program
+	-I- Read memory at address 0xxxxxxxxx to check contents
+	-I- Press any key to continue...
+	-I- Good job!
+	-I- Now set the security bit
+	-I- Press any key to continue to see what happened...
+	-I- Setting security bit
+	-I- All tests done
+\endcode
  *
  */
 
