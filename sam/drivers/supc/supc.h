@@ -3,7 +3,7 @@
  *
  * \brief Supply Controller (SUPC) driver for SAM.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -103,6 +103,10 @@ void supc_disable_backup_power_on_reset(Supc *p_supc);
 enum slcdc_power_mode supc_get_slcd_power_mode(Supc *p_supc);
 void supc_set_slcd_power_mode(Supc *p_supc, enum slcdc_power_mode mode);
 void supc_set_slcd_vol(Supc *p_supc, uint32_t vol);
+#endif
+#if SAMG54
+void supc_set_regulator_trim_factory(Supc *p_supc);
+void supc_set_regulator_trim_user(Supc *p_supc, uint32_t value);
 #endif
 
 /// @cond 0
