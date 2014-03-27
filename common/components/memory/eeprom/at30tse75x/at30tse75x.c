@@ -171,7 +171,7 @@ uint8_t at30tse_eeprom_read(uint8_t *data, uint8_t length,
 		/* Data buffer */
 		.buffer = data,
 		.length = length,
-		/* 
+		/*
 		 * Chip addr
 		 * TWI addr + 2 upper bytes of page addr.
 		 */
