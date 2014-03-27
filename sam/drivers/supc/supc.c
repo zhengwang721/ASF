@@ -356,7 +356,7 @@ void supc_set_slcd_vol(Supc *p_supc, uint32_t vol)
 
 #if SAMG54
 /**
- * \brief Set the internal voltage regulator with factory trim value.
+ * \brief Set the internal voltage regulator to use factory trim value.
  *
  * \param p_supc Pointer to a SUPC instance.
  */

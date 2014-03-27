@@ -114,7 +114,7 @@ void sysclk_set_source(uint32_t ul_src)
 
 void sysclk_init(void)
 {
-	uint8_t user_signature[512];
+	uint32_t unique_id[32];
 
 	/* Set a flash wait state depending on the new cpu frequency */
 	system_init_flash(sysclk_get_cpu_hz());
@@ -181,16 +181,16 @@ void sysclk_init(void)
 	/* Update the SystemFrequency variable */
 	SystemCoreClockUpdate();
 
-	/* Set the trim value when system run in 84~96M */
+	/* Set the trim value when system run near 96M */
 	if ((SystemCoreClock <= (CHIP_FREQ_CPU_MAX + (CHIP_FREQ_CPU_MAX >> 3))) &&
 		(SystemCoreClock >= (CHIP_FREQ_CPU_MAX - (CHIP_FREQ_CPU_MAX >> 3)))) {
 		/* Get the trim value from unique ID area */
 		efc_perform_read_sequence(EFC, EFC_FCMD_STUI, EFC_FCMD_SPUI,
-				(uint32_t *)user_signature, 512 / sizeof(uint32_t));
+				unique_id, 32);
 #ifdef BOARD_VDDIO_18
-		supc_set_regulator_trim_user(SUPC, user_signature[0x40]);
+		supc_set_regulator_trim_user(SUPC, unique_id[0x10]);
 #else
-		supc_set_regulator_trim_user(SUPC, user_signature[0x50]);
+		supc_set_regulator_trim_user(SUPC, unique_id[0x14]);
 #endif
 	}
 
