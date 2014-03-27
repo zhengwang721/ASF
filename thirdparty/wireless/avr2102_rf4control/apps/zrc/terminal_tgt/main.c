@@ -909,7 +909,7 @@ static void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
 			break;
 		case nwkBaseChannel:
 		    channel = *((uint8_t *)NIBAttributeValue);
-		    printf("channel %u\r\n",channel);
+		    //printf("channel %u\r\n",channel);
 			break;
 
 		default:
@@ -1131,10 +1131,10 @@ static void print_ch_change_submenu(void)
 	uint8_t i;
 	uint8_t input;
 
-#if (RF_BAND == BAND_900)
-	printf("Enter new base channel (1, 4, or 7): \r\n");
+#if (RF_BAND == BAND_2400)
+    printf("Enter new base channel (15, 20, or 25): \r\n");	
 #else
-	printf("Enter new base channel (15, 20, or 25): \r\n");
+	printf("Enter new base channel (1, 4, or 7): \r\n");
 #endif
 
 	for (i = 0; i < 3; i++) {
@@ -1147,10 +1147,10 @@ static void print_ch_change_submenu(void)
 	}
 	channel = atol(input_char);
 
-#if (RF_BAND == BAND_900)
-	if ((channel == 1) || (channel == 4) || (channel == 7))
-#else
+#if (RF_BAND == BAND_2400)
 	if ((channel == 15) || (channel == 20) || (channel == 25))
+#else
+	if ((channel == 1) || (channel == 4) || (channel == 7))
 #endif
 	{
 		nlme_set_request(nwkBaseChannel, 0, &channel,

@@ -52,7 +52,7 @@ status_code_t nvm_read(mem_type_t mem, uint32_t address, void *buffer,
 	switch (mem) 
 	{
 	case INT_FLASH:
-	    nvm_read_buffer(address, (const void *)buffer, (uint16_t)len);				
+	    nvm_read_buffer(address, buffer, (uint16_t)len);				
 		break;
 		
 	default:
@@ -68,8 +68,7 @@ status_code_t nvm_write(mem_type_t mem, uint32_t address, void *buffer,
 	switch (mem) 
 	{
 	case INT_FLASH:
-
-		if (STATUS_OK != nvm_write_buffer(address, (const void *)buffer, (uint16_t)len)) 
+		if (STATUS_OK != nvm_write_buffer(address, buffer, len)) 
 		{
 			return ERR_INVALID_ARG;
 		}
