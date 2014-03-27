@@ -47,8 +47,6 @@
 #include "clock.h"
 #include "system_interrupt.h"
 
-static uint8_t _dma_find_first_free_channel_and_allocate(void);
-
 struct _dma_module {
 	volatile bool _dma_init;
 	volatile uint32_t allocated_channels;
@@ -86,7 +84,7 @@ static struct dma_resource* _dma_active_resource[CONF_MAX_USED_CHANNEL_NUM];
  * \retval DMA_INVALID_CHANNEL  No channel available
  * \retval count          Allocated channel for the DMA resource
  */
-static uint8_t _dma_find_first_free_channel_and_allocate()
+static uint8_t _dma_find_first_free_channel_and_allocate(void)
 {
 	uint8_t count;
 	uint32_t tmp;
@@ -144,31 +142,31 @@ static void _dma_set_config(struct dma_resource *resource,
 {
 	Assert(resource);
 	Assert(resource_config);
-	uint32_t temp_CTRLB_reg;
+	uint32_t temp_CHCTRLB_reg;
 	system_interrupt_enter_critical_section();
 
 	/** Select the DMA channel and clear software trigger */
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
 	DMAC->SWTRIGCTRL.reg &= (uint32_t)(~(1 << resource->channel_id));
 
-	temp_CTRLB_reg = DMAC_CHCTRLB_LVL(resource_config->priority) | \
+	temp_CHCTRLB_reg = DMAC_CHCTRLB_LVL(resource_config->priority) | \
 			DMAC_CHCTRLB_TRIGSRC(resource_config->peripheral_trigger) | \
 			DMAC_CHCTRLB_TRIGACT(resource_config->trigger_action);
 
 
 	if(resource_config->event_config.input_action){
-	temp_CTRLB_reg |= DMAC_CHCTRLB_EVIE | DMAC_CHCTRLB_EVACT(
+	temp_CHCTRLB_reg |= DMAC_CHCTRLB_EVIE | DMAC_CHCTRLB_EVACT(
 				resource_config->event_config.input_action);
 	}
 
 	/** Enable event output, the event output selection is configured in
 	 * each transfer descriptor  */
 	if (resource_config->event_config.event_output_enable) {
-		temp_CTRLB_reg |= DMAC_CHCTRLB_EVOE;
+		temp_CHCTRLB_reg |= DMAC_CHCTRLB_EVOE;
 	}
 
 	/* Write config to CTRLB register */
-	DMAC->CHCTRLB.reg = temp_CTRLB_reg;
+	DMAC->CHCTRLB.reg = temp_CHCTRLB_reg;
 
 
 
