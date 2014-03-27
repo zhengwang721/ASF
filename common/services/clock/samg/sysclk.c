@@ -115,6 +115,7 @@ void sysclk_set_source(uint32_t ul_src)
 void sysclk_init(void)
 {
 	uint32_t unique_id[32];
+	uint32_t trim_value;
 
 	/* Set a flash wait state depending on the new cpu frequency */
 	system_init_flash(sysclk_get_cpu_hz());
@@ -188,9 +189,11 @@ void sysclk_init(void)
 		efc_perform_read_sequence(EFC, EFC_FCMD_STUI, EFC_FCMD_SPUI,
 				unique_id, 32);
 #ifdef BOARD_VDDIO_18
-		supc_set_regulator_trim_user(SUPC, unique_id[0x10]);
+		trim_value = unique_id[0x10] & 0x000000FF;
+		supc_set_regulator_trim_user(SUPC, trim_value);
 #else
-		supc_set_regulator_trim_user(SUPC, unique_id[0x14]);
+		trim_value = unique_id[0x14] & 0x000000FF;
+		supc_set_regulator_trim_user(SUPC, trim_value);
 #endif
 	}
 
