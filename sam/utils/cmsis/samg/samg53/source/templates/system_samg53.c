@@ -62,6 +62,13 @@ extern "C" {
 /* Key to unlock MOR register */
 #define SYS_CKGR_MOR_KEY_VALUE    CKGR_MOR_KEY(0x37)
 
+/* External oscillator definition, to be overriden by application */
+#define CHIP_FREQ_XTAL_12M (12000000UL)
+
+#if (!defined CHIP_FREQ_XTAL)
+#  define CHIP_FREQ_XTAL CHIP_FREQ_XTAL_12M
+#endif
+
 uint32_t SystemCoreClock = CHIP_FREQ_MAINCK_RC_8MHZ;
 
 /**
@@ -71,10 +78,7 @@ uint32_t SystemCoreClock = CHIP_FREQ_MAINCK_RC_8MHZ;
 void SystemInit(void)
 {
 	/* Set FWS according to SYS_BOARD_MCKR configuration */
-	EFC0->EEFC_FMR = EEFC_FMR_FWS(2)|EEFC_FMR_CLOE;
-#if defined(ID_EFC1)
-	EFC1->EEFC_FMR = EEFC_FMR_FWS(2)|EEFC_FMR_CLOE;
-#endif
+	EFC->EEFC_FMR = EEFC_FMR_FWS(2)|EEFC_FMR_CLOE;
 
 	/* Initialize PLLA */
 	PMC->CKGR_PLLAR = SYS_BOARD_PLLAR;
@@ -102,7 +106,7 @@ void SystemCoreClockUpdate(void)
 		break;
 	case PMC_MCKR_CSS_MAIN_CLK:	/* Main clock */
 		if (PMC->CKGR_MOR & CKGR_MOR_MOSCSEL) {
-			SystemCoreClock = CHIP_FREQ_XTAL_12M;
+			SystemCoreClock = CHIP_FREQ_XTAL;
 		} else {
 			SystemCoreClock = CHIP_FREQ_MAINCK_RC_8MHZ;
 
@@ -145,13 +149,13 @@ void system_init_flash(uint32_t ul_clk)
 {
 	/* Set FWS for embedded Flash access according to operating frequency */
 	if (ul_clk < CHIP_FREQ_FWS_0) {
-		EFC0->EEFC_FMR = EEFC_FMR_FWS(0)|EEFC_FMR_CLOE;
+		EFC->EEFC_FMR = EEFC_FMR_FWS(0)|EEFC_FMR_CLOE;
 	} else if (ul_clk < CHIP_FREQ_FWS_1) {
-		EFC0->EEFC_FMR = EEFC_FMR_FWS(1)|EEFC_FMR_CLOE;
+		EFC->EEFC_FMR = EEFC_FMR_FWS(1)|EEFC_FMR_CLOE;
 	} else if (ul_clk < CHIP_FREQ_FWS_2) {
-		EFC0->EEFC_FMR = EEFC_FMR_FWS(2)|EEFC_FMR_CLOE;
+		EFC->EEFC_FMR = EEFC_FMR_FWS(2)|EEFC_FMR_CLOE;
 	} else {
-		EFC0->EEFC_FMR = EEFC_FMR_FWS(3)|EEFC_FMR_CLOE;
+		EFC->EEFC_FMR = EEFC_FMR_FWS(3)|EEFC_FMR_CLOE;
 	}
 }
 

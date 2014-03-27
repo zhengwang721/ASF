@@ -53,11 +53,12 @@
 typedef struct {
   __O  uint32_t ADC_CR;        /**< \brief (Adc Offset: 0x00) Control Register */
   __IO uint32_t ADC_MR;        /**< \brief (Adc Offset: 0x04) Mode Register */
-  __IO uint32_t ADC_SEQR[2];   /**< \brief (Adc Offset: 0x08) Channel Sequence Register */
+  __IO uint32_t ADC_SEQR1;     /**< \brief (Adc Offset: 0x08) Channel Sequence Register 1 */
+  __I  uint32_t Reserved1[1];
   __O  uint32_t ADC_CHER;      /**< \brief (Adc Offset: 0x10) Channel Enable Register */
   __O  uint32_t ADC_CHDR;      /**< \brief (Adc Offset: 0x14) Channel Disable Register */
   __I  uint32_t ADC_CHSR;      /**< \brief (Adc Offset: 0x18) Channel Status Register */
-  __I  uint32_t Reserved1[1];
+  __I  uint32_t Reserved2[1];
   __I  uint32_t ADC_LCDR;      /**< \brief (Adc Offset: 0x20) Last Converted Data Register */
   __O  uint32_t ADC_IER;       /**< \brief (Adc Offset: 0x24) Interrupt Enable Register */
   __O  uint32_t ADC_IDR;       /**< \brief (Adc Offset: 0x28) Interrupt Disable Register */
@@ -68,18 +69,18 @@ typedef struct {
   __I  uint32_t ADC_OVER;      /**< \brief (Adc Offset: 0x3C) Overrun Status Register */
   __IO uint32_t ADC_EMR;       /**< \brief (Adc Offset: 0x40) Extended Mode Register */
   __IO uint32_t ADC_CWR;       /**< \brief (Adc Offset: 0x44) Compare Window Register */
-  __I  uint32_t Reserved2[2];
+  __I  uint32_t Reserved3[2];
   __I  uint32_t ADC_CDR[8];    /**< \brief (Adc Offset: 0x50) Channel Data Register */
-  __I  uint32_t Reserved3[29];
+  __I  uint32_t Reserved4[29];
   __IO uint32_t ADC_WPMR;      /**< \brief (Adc Offset: 0xE4) Write Protection Mode Register */
   __I  uint32_t ADC_WPSR;      /**< \brief (Adc Offset: 0xE8) Write Protection Status Register */
-  __I  uint32_t Reserved4[5];
+  __I  uint32_t Reserved5[5];
   __IO uint32_t ADC_RPR;       /**< \brief (Adc Offset: 0x100) Receive Pointer Register */
   __IO uint32_t ADC_RCR;       /**< \brief (Adc Offset: 0x104) Receive Counter Register */
-  __I  uint32_t Reserved5[2];
+  __I  uint32_t Reserved6[2];
   __IO uint32_t ADC_RNPR;      /**< \brief (Adc Offset: 0x110) Receive Next Pointer Register */
   __IO uint32_t ADC_RNCR;      /**< \brief (Adc Offset: 0x114) Receive Next Counter Register */
-  __I  uint32_t Reserved6[2];
+  __I  uint32_t Reserved7[2];
   __O  uint32_t ADC_PTCR;      /**< \brief (Adc Offset: 0x120) Transfer Control Register */
   __I  uint32_t ADC_PTSR;      /**< \brief (Adc Offset: 0x124) Transfer Status Register */
 } Adc;
@@ -101,11 +102,11 @@ typedef struct {
 #define   ADC_MR_TRGSEL_ADC_TRIG4 (0x4u << 1) /**< \brief (ADC_MR) RTCOUT0 */
 #define   ADC_MR_TRGSEL_ADC_TRIG5 (0x5u << 1) /**< \brief (ADC_MR) RTTINC */
 #define ADC_MR_LOWRES (0x1u << 4) /**< \brief (ADC_MR) Resolution */
-#define   ADC_MR_LOWRES_BITS_10 (0x0u << 4) /**< \brief (ADC_MR) 10-bit resolution. For higher resolution by averaging, please refer to "ADC Extended Mode Register" on page 80 */
+#define   ADC_MR_LOWRES_BITS_10 (0x0u << 4) /**< \brief (ADC_MR) 10-bit resolution. For higher resolution by averaging, please refer to "ADC Extended Mode Register" on page 77 */
 #define   ADC_MR_LOWRES_BITS_8 (0x1u << 4) /**< \brief (ADC_MR) 8-bit resolution */
 #define ADC_MR_SLEEP (0x1u << 5) /**< \brief (ADC_MR) Sleep Mode */
-#define   ADC_MR_SLEEP_NORMAL (0x0u << 5) /**< \brief (ADC_MR) Normal Mode: The ADC Core and reference voltage circuitry are kept ON between conversions */
-#define   ADC_MR_SLEEP_SLEEP (0x1u << 5) /**< \brief (ADC_MR) Sleep Mode: The ADC Core and reference voltage circuitry are OFF between conversions */
+#define   ADC_MR_SLEEP_NORMAL (0x0u << 5) /**< \brief (ADC_MR) Normal Mode: The ADC core and reference voltage circuitry are kept ON between conversions */
+#define   ADC_MR_SLEEP_SLEEP (0x1u << 5) /**< \brief (ADC_MR) Sleep Mode: The ADC core and reference voltage circuitry are OFF between conversions */
 #define ADC_MR_FREERUN (0x1u << 7) /**< \brief (ADC_MR) Free Run Mode */
 #define   ADC_MR_FREERUN_OFF (0x0u << 7) /**< \brief (ADC_MR) Normal Mode */
 #define   ADC_MR_FREERUN_ON (0x1u << 7) /**< \brief (ADC_MR) Free Run Mode: Never wait for any trigger. */
@@ -132,7 +133,7 @@ typedef struct {
 #define   ADC_MR_STARTUP_SUT960 (0xFu << 16) /**< \brief (ADC_MR) 960 periods of ADCClock */
 #define ADC_MR_DIV1 (0x1u << 22) /**< \brief (ADC_MR) ADCClock Prescaler Division forced to 1 */
 #define   ADC_MR_DIV1_NO_DIV1 (0x0u << 22) /**< \brief (ADC_MR) The PRESCAL field is used to generate the ADCClock unless DIV3 is written to 1. */
-#define   ADC_MR_DIV1_FORCE_DIV1 (0x1u << 22) /**< \brief (ADC_MR) The ADCClock equals MCK (PRESCAL and DIV3 fields have no effects). */
+#define   ADC_MR_DIV1_FORCE_DIV1 (0x1u << 22) /**< \brief (ADC_MR) The ADCClock equals peripheral clock (PRESCAL and DIV3 fields have no effects). */
 #define ADC_MR_TRACKTIM_Pos 24
 #define ADC_MR_TRACKTIM_Msk (0xfu << ADC_MR_TRACKTIM_Pos) /**< \brief (ADC_MR) Tracking Time */
 #define ADC_MR_TRACKTIM(value) ((ADC_MR_TRACKTIM_Msk & ((value) << ADC_MR_TRACKTIM_Pos)))
@@ -141,10 +142,10 @@ typedef struct {
 #define ADC_MR_TRANSFER(value) ((ADC_MR_TRANSFER_Msk & ((value) << ADC_MR_TRANSFER_Pos)))
 #define ADC_MR_DIV3 (0x1u << 30) /**< \brief (ADC_MR) ADCClock Prescaler Division forced to 3 */
 #define   ADC_MR_DIV3_NO_DIV3 (0x0u << 30) /**< \brief (ADC_MR) The PRESCAL field is used to generate the ADCClock unless DIV1 is written to 1. */
-#define   ADC_MR_DIV3_FORCE_DIV3 (0x1u << 30) /**< \brief (ADC_MR) The ADCClock equals MCK/3 unless DIV1 is written to 1. */
+#define   ADC_MR_DIV3_FORCE_DIV3 (0x1u << 30) /**< \brief (ADC_MR) The ADCClock equals peripheral clock/3 unless DIV1 is written to 1. */
 #define ADC_MR_USEQ (0x1u << 31) /**< \brief (ADC_MR) Use Sequence Enable */
 #define   ADC_MR_USEQ_NUM_ORDER (0x0u << 31) /**< \brief (ADC_MR) Normal Mode: The controller converts channels in a simple numeric order depending only on the channel index. */
-#define   ADC_MR_USEQ_REG_ORDER (0x1u << 31) /**< \brief (ADC_MR) User Sequence Mode: The sequence respects what is defined in ADC_SEQR1 and ADC_SEQR2 registers and can be used to convert several times the same channel. */
+#define   ADC_MR_USEQ_REG_ORDER (0x1u << 31) /**< \brief (ADC_MR) User Sequence Mode: The sequence respects what is defined in ADC_SEQR1 register and can be used to convert the same channel several times. */
 /* -------- ADC_SEQR1 : (ADC Offset: 0x08) Channel Sequence Register 1 -------- */
 #define ADC_SEQR1_USCH1_Pos 0
 #define ADC_SEQR1_USCH1_Msk (0xfu << ADC_SEQR1_USCH1_Pos) /**< \brief (ADC_SEQR1) User Sequence Number 1 */
@@ -260,7 +261,7 @@ typedef struct {
 #define ADC_ISR_EOCAL (0x1u << 23) /**< \brief (ADC_ISR) End of Calibration Sequence */
 #define ADC_ISR_DRDY (0x1u << 24) /**< \brief (ADC_ISR) Data Ready */
 #define ADC_ISR_GOVRE (0x1u << 25) /**< \brief (ADC_ISR) General Overrun Error */
-#define ADC_ISR_COMPE (0x1u << 26) /**< \brief (ADC_ISR) Comparison Error */
+#define ADC_ISR_COMPE (0x1u << 26) /**< \brief (ADC_ISR) Comparison Event */
 #define ADC_ISR_ENDRX (0x1u << 27) /**< \brief (ADC_ISR) End of Receiver Transfer */
 #define ADC_ISR_RXBUFF (0x1u << 28) /**< \brief (ADC_ISR) Reception Buffer Full */
 /* -------- ADC_LCTMR : (ADC Offset: 0x34) Last Channel Trigger Mode Register -------- */
@@ -303,7 +304,7 @@ typedef struct {
 #define ADC_EMR_CMPFILTER(value) ((ADC_EMR_CMPFILTER_Msk & ((value) << ADC_EMR_CMPFILTER_Pos)))
 #define ADC_EMR_OSR_Pos 16
 #define ADC_EMR_OSR_Msk (0x3u << ADC_EMR_OSR_Pos) /**< \brief (ADC_EMR) Over Sampling Rate */
-#define   ADC_EMR_OSR_NO_AVERAGE (0x0u << 16) /**< \brief (ADC_EMR) no averaging. ADC sample rate is maximum. */
+#define   ADC_EMR_OSR_NO_AVERAGE (0x0u << 16) /**< \brief (ADC_EMR) No averaging. ADC sample rate is maximum. */
 #define   ADC_EMR_OSR_OSR4 (0x1u << 16) /**< \brief (ADC_EMR) 1-bit enhanced resolution by averaging. ADC sample rate divided by 4. */
 #define   ADC_EMR_OSR_OSR16 (0x2u << 16) /**< \brief (ADC_EMR) 2-bit enhanced resolution by averaging. ADC sample rate divided by 16. */
 #define ADC_EMR_ASTE (0x1u << 20) /**< \brief (ADC_EMR) Averaging on Single Trigger Event */

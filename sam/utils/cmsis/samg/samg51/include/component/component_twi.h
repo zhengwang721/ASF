@@ -65,8 +65,8 @@ typedef struct {
   __I  uint32_t TWI_RHR;       /**< \brief (Twi Offset: 0x30) Receive Holding Register */
   __O  uint32_t TWI_THR;       /**< \brief (Twi Offset: 0x34) Transmit Holding Register */
   __I  uint32_t Reserved2[43];
-  __IO uint32_t TWI_WPROT_MODE;      /**< \brief (Twi Offset: 0xE4) Protection Mode Register */
-  __I  uint32_t TWI_WPROT_STATUS;      /**< \brief (Twi Offset: 0xE8) Protection Status Register */
+  __IO uint32_t TWI_WPMR;      /**< \brief (Twi Offset: 0xE4) Write Protection Mode Register */
+  __I  uint32_t TWI_WPSR;      /**< \brief (Twi Offset: 0xE8) Write Protection Status Register */
   __I  uint32_t Reserved3[5];
   __IO uint32_t TWI_RPR;       /**< \brief (Twi Offset: 0x100) Receive Pointer Register */
   __IO uint32_t TWI_RCR;       /**< \brief (Twi Offset: 0x104) Receive Counter Register */
@@ -92,10 +92,10 @@ typedef struct {
 /* -------- TWI_MMR : (TWI Offset: 0x04) Master Mode Register -------- */
 #define TWI_MMR_IADRSZ_Pos 8
 #define TWI_MMR_IADRSZ_Msk (0x3u << TWI_MMR_IADRSZ_Pos) /**< \brief (TWI_MMR) Internal Device Address Size */
-#define TWI_MMR_IADRSZ_NONE (0x0u << 8) /**< \brief (TWI_MMR) No internal device address */
-#define TWI_MMR_IADRSZ_1_BYTE (0x1u << 8) /**< \brief (TWI_MMR) One-byte internal device address */
-#define TWI_MMR_IADRSZ_2_BYTE (0x2u << 8) /**< \brief (TWI_MMR) Two-byte internal device address */
-#define TWI_MMR_IADRSZ_3_BYTE (0x3u << 8) /**< \brief (TWI_MMR) Three-byte internal device address */
+#define   TWI_MMR_IADRSZ_NONE (0x0u << 8) /**< \brief (TWI_MMR) No internal device address */
+#define   TWI_MMR_IADRSZ_1_BYTE (0x1u << 8) /**< \brief (TWI_MMR) One-byte internal device address */
+#define   TWI_MMR_IADRSZ_2_BYTE (0x2u << 8) /**< \brief (TWI_MMR) Two-byte internal device address */
+#define   TWI_MMR_IADRSZ_3_BYTE (0x3u << 8) /**< \brief (TWI_MMR) Three-byte internal device address */
 #define TWI_MMR_MREAD (0x1u << 12) /**< \brief (TWI_MMR) Master Read Direction */
 #define TWI_MMR_DADR_Pos 16
 #define TWI_MMR_DADR_Msk (0x7fu << TWI_MMR_DADR_Pos) /**< \brief (TWI_MMR) Device Address */

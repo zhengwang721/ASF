@@ -53,7 +53,7 @@
   #define REG_SPI_IDR                   (0x40008018U) /**< \brief (SPI) Interrupt Disable Register */
   #define REG_SPI_IMR                   (0x4000801CU) /**< \brief (SPI) Interrupt Mask Register */
   #define REG_SPI_CSR                   (0x40008030U) /**< \brief (SPI) Chip Select Register */
-  #define REG_SPI_WPMR                  (0x400080E4U) /**< \brief (SPI) Write Protection Control Register */
+  #define REG_SPI_WPMR                  (0x400080E4U) /**< \brief (SPI) Write Protection Mode Register */
   #define REG_SPI_WPSR                  (0x400080E8U) /**< \brief (SPI) Write Protection Status Register */
   #define REG_SPI_RPR                   (0x40008100U) /**< \brief (SPI) Receive Pointer Register */
   #define REG_SPI_RCR                   (0x40008104U) /**< \brief (SPI) Receive Counter Register */
@@ -75,7 +75,7 @@
   #define REG_SPI_IDR  (*(__O  uint32_t*)0x40008018U) /**< \brief (SPI) Interrupt Disable Register */
   #define REG_SPI_IMR  (*(__I  uint32_t*)0x4000801CU) /**< \brief (SPI) Interrupt Mask Register */
   #define REG_SPI_CSR  (*(__IO uint32_t*)0x40008030U) /**< \brief (SPI) Chip Select Register */
-  #define REG_SPI_WPMR (*(__IO uint32_t*)0x400080E4U) /**< \brief (SPI) Write Protection Control Register */
+  #define REG_SPI_WPMR (*(__IO uint32_t*)0x400080E4U) /**< \brief (SPI) Write Protection Mode Register */
   #define REG_SPI_WPSR (*(__I  uint32_t*)0x400080E8U) /**< \brief (SPI) Write Protection Status Register */
   #define REG_SPI_RPR  (*(__IO uint32_t*)0x40008100U) /**< \brief (SPI) Receive Pointer Register */
   #define REG_SPI_RCR  (*(__IO uint32_t*)0x40008104U) /**< \brief (SPI) Receive Counter Register */

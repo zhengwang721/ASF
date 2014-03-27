@@ -83,7 +83,7 @@ typedef struct {
 #define UART_CR_RXDIS (0x1u << 5) /**< \brief (UART_CR) Receiver Disable */
 #define UART_CR_TXEN (0x1u << 6) /**< \brief (UART_CR) Transmitter Enable */
 #define UART_CR_TXDIS (0x1u << 7) /**< \brief (UART_CR) Transmitter Disable */
-#define UART_CR_RSTSTA (0x1u << 8) /**< \brief (UART_CR) Reset Status Bits */
+#define UART_CR_RSTSTA (0x1u << 8) /**< \brief (UART_CR) Reset Status */
 #define UART_CR_REQCLR (0x1u << 12) /**< \brief (UART_CR) Request Clear */
 /* -------- UART_MR : (UART Offset: 0x0004) Mode Register -------- */
 #define UART_MR_FILTER (0x1u << 4) /**< \brief (UART_MR) Receiver Digital Filter */
