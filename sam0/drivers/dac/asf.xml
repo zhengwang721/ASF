@@ -15,7 +15,8 @@
 			<build type="header-file" subtype="api" value="dac.h"/>
 			<build type="c-source" value="dac.c"/>
 			<build type="define" name="DAC_CALLBACK_MODE" value="false"/>
-			<device-support value="sam0"/>
+			<device-support value="samd20"/>
+			<device-support value="samd21"/>
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
 		</module>
@@ -44,8 +45,8 @@
 			<build type="header-file" subtype="api" value="dac_callback.h"/>
 			<build type="c-source" value="dac_callback.c"/>
 			<build type="define" name="DAC_CALLBACK_MODE" value="true"/>
-			<device-support value="sam0"/>
-
+			<device-support value="samd20"/>
+			<device-support value="samd21"/>
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
 		</module>
@@ -87,7 +88,8 @@
 			<build type="doxygen-example-path" value="../adc/quick_start_dma"/>
 			<build type="doxygen-image-path" value="docimg"/>
 			<build type="doxygen-quick-start" value="asfdoc_sam0_dac_exqsg"/>
-			<device-support value="sam0"/>
+			<device-support value="samd20"/>
+			<device-support value="samd21"/>
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>
