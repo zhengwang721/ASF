@@ -80,7 +80,7 @@
 			<build type="doxygen-example-path" value="quick_start_gclk"/>
 			<build type="doxygen-example-path" value="quick_start_clock"/>
 			<build type="doxygen-quick-start" value="asfdoc_sam0_system_clock_exqsg"/>
-	
+
 			<require idref="sam0.drivers.system.interrupt"/>
 			<require idref="sam0.utils"/>
 
@@ -115,13 +115,13 @@
 			<build type="doxygen-example-path" value="quick_start_gclk"/>
 			<build type="doxygen-example-path" value="quick_start_clock"/>
 			<build type="doxygen-quick-start" value="asfdoc_sam0_system_clock_exqsg"/>
-			
+
 			<require idref="sam0.drivers.system.interrupt"/>
 			<require idref="sam0.utils"/>
 
 			<device-support value="samd21"/>
 		</module>
-		
+
 		<module type="driver" id="sam0.drivers.system.clock#samr21" caption="SYSTEM - Clock Management for SAMR21">
 			<info type="description" value="summary">
 				Driver for the SAM R21 Clock management units. Provides a unified
@@ -150,7 +150,7 @@
 			<build type="doxygen-example-path" value="quick_start_gclk"/>
 			<build type="doxygen-example-path" value="quick_start_clock"/>
 			<build type="doxygen-quick-start" value="asfdoc_sam0_system_clock_exqsg"/>
-			
+
 			<require idref="sam0.drivers.system.interrupt"/>
 			<require idref="sam0.utils"/>
 

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief TC Quick Start configuration for SAM D21 Xplained Pro
+ * \brief TCC Quick Start configuration
  *
  * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -44,11 +44,17 @@
 #ifndef CONF_QUICK_START_H_INCLUDED
 #define CONF_QUICK_START_H_INCLUDED
 
+//[definition_pwm]
 /** PWM module to use */
-#define PWM_MODULE      EXT1_PWM_MODULE
+#define CONF_PWM_MODULE      LED_0_PWM4CTRL_MODULE
+/** PWM channel */
+#define CONF_PWM_CHANNEL     LED_0_PWM4CTRL_CHANNEL
+/** PWM output */
+#define CONF_PWM_OUTPUT      LED_0_PWM4CTRL_OUTPUT
 /** PWM output pin */
-#define PWM_OUT_PIN     EXT1_PWM_0_PIN
+#define CONF_PWM_OUT_PIN     LED_0_PWM4CTRL_PIN
 /** PWM output pin mux */
-#define PWM_OUT_MUX     EXT1_PWM_0_MUX
+#define CONF_PWM_OUT_MUX     LED_0_PWM4CTRL_MUX
+//[definition_pwm]
 
 #endif /* CONF_QUICK_START_H_INCLUDED */
