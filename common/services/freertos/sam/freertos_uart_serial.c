@@ -261,7 +261,7 @@ freertos_uart_if freertos_uart_serial_init(Uart *p_uart,
 			/* Catch the DMA running out of Rx space, and gaps in the
 			reception.  These events are both used to signal that there is
 			data available in the Rx buffer. */
-			uart_enable_interrupt(p_uart, UART_IER_ENDRX | UART_SR_RXRDY);
+			uart_enable_interrupt(p_uart, UART_IER_ENDRX | UART_IER_RXRDY);
 
 			/* The Rx DMA is running all the time, so enable it now. */
 			pdc_enable_transfer(
@@ -606,14 +606,14 @@ static void configure_rx_dma(uint32_t uart_index,
 				PERIPH_PTCR_RXTEN);
 		uart_enable_interrupt(
 				all_uart_definitions[uart_index].peripheral_base_address,
-				UART_IER_ENDRX | UART_SR_RXRDY);
+				UART_IER_ENDRX | UART_IER_RXRDY);
 	} else {
 		/* The write pointer has reached the read pointer.  There is no
 		more room so the DMA is not re-enabled until a read has created
 		space. */
 		uart_disable_interrupt(
 				all_uart_definitions[uart_index].peripheral_base_address,
-				UART_IER_ENDRX | UART_SR_RXRDY);
+				UART_IDR_ENDRX | UART_IDR_RXRDY);
 	}
 }
 
@@ -638,7 +638,7 @@ static void local_uart_handler(const portBASE_TYPE uart_index)
 	if ((uart_status & UART_SR_ENDTX) != 0UL) {
 		uart_disable_interrupt(
 				all_uart_definitions[uart_index].peripheral_base_address,
-				UART_IER_ENDTX);
+				UART_IDR_ENDTX);
 
 		/* If the driver is supporting multi-threading, then return the access
 		mutex. */
@@ -690,7 +690,13 @@ static void local_uart_handler(const portBASE_TYPE uart_index)
 		}
 	}
 
-	/* RXRDY interrupt case which the flag has been cleared by PDC */
+	/**
+	 * Normally the uart_status can't be "0" when the interrupt happened.
+	 * It happened only when in PDC mode with TXRDY and RXRDY interrupts since
+	 * the flags has been cleared by PDC.
+	 * As the TXRDY is never enabled in this service, here we
+	 * check the RXRDY interrupt case.
+	 */
 	if (uart_status == 0UL) {
 		/* Character has been placed into the Rx buffer. */
 		if (rx_buffer_definition->rx_event_semaphore != NULL) {
