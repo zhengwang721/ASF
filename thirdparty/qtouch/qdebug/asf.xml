@@ -58,10 +58,12 @@
 			<build type="c-source" value="QDebug_samd.c"/>
 			<build type="header-file" value="../devspecific/sam0/samd/common/BitBangSPI_Master.h"/>
 			<build type="c-source" value="../devspecific/sam0/samd/common/BitBangSPI_Master.c"/>
+			<build type="header-file" value="../devspecific/sam0/samd/include/touch_api_SAMD.h"/>
 			<build type="c-source" value="QDebugTransport.c"/>
 			<build type="header-file" value="QDebugTransport.h"/>
 			<build type="include-path" value="."/>
 			<build type="include-path" value="../devspecific/sam0/samd/common"/>
+			<build type="include-path" value="../devspecific/sam0/samd/include"/>
 			<require idref="common2.services.delay"/>
 			<require idref="sam0.drivers.port"/>
 			<require idref="sam0.drivers.sercom.usart"/>

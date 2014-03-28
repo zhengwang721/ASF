@@ -58,7 +58,6 @@ extern "C"
 #endif
 
 /*============================ INCLUDES ======================================*/
-#include "touch.h"
 #include "touch_api_samd.h"
 
 /* ! compile file only when QDebug is enabled. */
