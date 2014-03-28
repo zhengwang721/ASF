@@ -1276,19 +1276,6 @@ void pmc_enable_waitmode(void)
 	/* Clear SLEEPDEEP bit */
 	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk;
 
-	/* Set Flash Wait State to 0 */
-#if (!SAMG)
-#if defined(ID_EFC)
-	EFC->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
-#endif
-#if defined(ID_EFC0)
-	EFC0->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
-#endif
-#if defined(ID_EFC1)
-	EFC1->EEFC_FMR &= (uint32_t) ~ EEFC_FMR_FWS_Msk;
-#endif
-#endif
-
 	/* Set the WAITMODE bit = 1 */
 	PMC->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_WAITMODE;
 
