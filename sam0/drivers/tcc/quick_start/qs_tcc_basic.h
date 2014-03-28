@@ -44,8 +44,8 @@
 /**
  * \page asfdoc_sam0_tcc_basic_use_case Quick Start Guide for TCC - Basic
  *
- * The supported device list:
- *    - SAMD21
+ * The supported board list:
+ *    - SAM D21 Xplained Pro
  *
  * In this use case, the TCC will be used to generate a PWM signal. Here
  * the pulse width is set to one quarter of the period.
@@ -60,6 +60,7 @@
  *
  * The TCC module will be set up as follows:
  * - GCLK generator 0 (GCLK main) clock source
+ * - Use double buffering write when set top, compare or pattern through API
  * - No dithering on the counter or compare
  * - No prescaler
  * - Single Slope PWM wave generation

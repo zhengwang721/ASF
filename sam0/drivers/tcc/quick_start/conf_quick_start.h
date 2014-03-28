@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief ILI9325 configuration.
+ * \brief TCC Quick Start configuration for SAM D21 Xplained Pro
  *
- * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,20 +41,20 @@
  *
  */
 
-//! Configuration of the ILI9325 LCD display driver
+#ifndef CONF_QUICK_START_H_INCLUDED
+#define CONF_QUICK_START_H_INCLUDED
 
-#ifndef CONF_ILI9325_H_INCLUDED
-#define CONF_ILI9325_H_INCLUDED
+//[definition_pwm]
+/** PWM module to use */
+#define CONF_PWM_MODULE      LED_0_PWM_MODULE
+/** PWM channel */
+#define CONF_PWM_CHANNEL     LED_0_PWM_CHANNEL
+/** PWM output */
+#define CONF_PWM_OUTPUT      LED_0_PWM_OUTPUT
+/** PWM output pin */
+#define CONF_PWM_OUT_PIN     LED_0_PWM_PIN
+/** PWM output pin mux */
+#define CONF_PWM_OUT_MUX     LED_0_PWM_MUX
+//[definition_pwm]
 
-#include "board.h"
-
-#if !defined(BOARD_ILI9325_ADDR) || !defined(BOARD_ILI9325_RS)
-
-	#warning The ILI9325 EBI configuration does not exist in the board definition file. Using default settings.
-
-	#define BOARD_ILI9325_ADDR     0x61000000 /* The base address, depends on which SMC chip select is used by ILI9325. */
-	#define BOARD_ILI9325_RS       1 << 1 /* Register select (1 << 1) */
-
-#endif
-
-#endif /* CONF_ILI9325_H_INCLUDED */
+#endif /* CONF_QUICK_START_H_INCLUDED */
