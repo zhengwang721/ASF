@@ -18,6 +18,7 @@
 			<device-support value="sam4l"/>
 			<device-support value="samd20"/>
 			<device-support value="sam4s"/>
+			<device-support value="sam4e"/>
 		</module>
 		<module type="driver" id="config.thirdparty.wireless.common_services.sal#atmegarf_sal"     caption="atmegarf_sal  support enabled">
 			<info type="description" value="summary">
@@ -42,6 +43,7 @@
     <device-support value="uc3"/>
     <device-support value="megarf"/>
 		<device-support value="sam4l"/>
+		<device-support value="sam4e"/>
 		<device-support value="sam4s"/>
 		<device-support value="samd20"/>
 	</module>

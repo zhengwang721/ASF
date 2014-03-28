@@ -130,13 +130,12 @@ uint8_t tmr_init(void)
 
 	/* Configure and enable interrupt on RC compare. */
 	configure_NVIC(TIMER, TIMER_CHANNEL_ID);
-#if SAM4E	
+#ifdef SAM4E	
 	tc_get_status(TIMER, TIMER_CHANNEL_ID);
 	tc_enable_interrupt(TIMER, TIMER_CHANNEL_ID, TC_IER_CPCS);
 	tc_write_rc(TIMER, TIMER_CHANNEL_ID, UINT16_MAX);	
 #else
-	tc_get_status(TIMER, TIMER_CHANNEL_ID);
-	tc_enable_interrupt(TIMER, TIMER_CHANNEL_ID, TC_IER_COVFS);	
+	tc_enable_interrupt(TIMER, TIMER_CHANNEL_ID, TC_IER_COVFS)	
 #endif	
 	tmr_disable_cc_interrupt();
 	tc_start(TIMER, TIMER_CHANNEL_ID);	
@@ -302,11 +301,12 @@ void TC00_Handler(void)
 void TC0_Handler(void)
 #endif
 {
-
+	{uint8_t flags = cpu_irq_save();
 	if (tmr_callback) {
 		tmr_callback();
 		
 	}
+	cpu_irq_restore(flags);}
 }
 
 /**

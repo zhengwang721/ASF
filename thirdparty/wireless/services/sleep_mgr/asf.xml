@@ -53,7 +53,12 @@
 			<build type="doxygen-entry-point" value="sleep_mgr_group"/>
 			<require idref="sam0.drivers.rtc"/>
 			<device-support-alias value="sam0_sleep_mgr_support"/>
-		</module> </select-by-device>
+		</module> </select-by-device>		
+		<module type="meta" id="thirdparty.wireless.common_services.sleep_mgr#6" caption="Common Sleep Manager - SAM ">
+
+			<build type="doxygen-entry-point" value="sleep_mgr_group"/>
+			<device-support value="sam4e"/>
+		</module>		
 		<device-alias-map name="xmega_a3u_sleep_mgr_support">
 			<device-support value="atxmega256a3"/>
 			<device-support value="atxmega256a3u"/>
