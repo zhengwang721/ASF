@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief Task configurations.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,44 +41,29 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_EXAMPLE_H
+#define CONF_EXAMPLE_H
 
-/** Usart Hw ID used by the console (UART0). */
-#define CONSOLE_UART_ID          ID_UART0
+#define BOARD_UART  UART0
+#define BOARD_USART  USART
 
-/* Configure UART pins */
-#define CONF_BOARD_UART_CONSOLE
+/* Comment/Uncomment the following definitions to enable/disable to corresponding tasks. */
+/* Note: only the listed tasks have hardware support. */
 
-/* The SAM4S Xplain has one push button only */
-#define BOARD_NO_PUSHBUTTON_2
+#define confINCLUDE_UART_CLI
+#define confINCLUDE_USART_ECHO_TASKS
+//#define confINCLUDE_USART_CLI
+//#define confINCLUDE_CDC_CLI
+//#define confINCLUDE_TWI_EEPROM_TASK
+//#define confINCLUDE_SPI_FLASH_TASK
 
-/* Configure ADC example pins */
-//#define CONF_BOARD_ADC
+/* Less user LEDS are available on this kit, so redefine the corresponding define. */
+#define partestNUM_LEDS                 (1UL)
 
-/* Configure SPI pins */
-//#define CONF_BOARD_SPI
-//#define CONF_BOARD_SPI_NPCS0
-//#define CONF_BOARD_SPI_NPCS1
-//#define CONF_BOARD_SPI_NPCS2
-//#define CONF_BOARD_SPI_NPCS3
+/* No LED1 and LED2 available for this board. Junk values. */
+#define LED1_GPIO						(0UL)
+#define LED1_ACTIVE_LEVEL				(0UL)
+#define LED2_GPIO						(0UL)
+#define LED2_ACTIVE_LEVEL				(0UL)
 
-/* Configure USART RXD pin */
-//#define CONF_BOARD_USART_RXD
-
-/* Configure USART TXD pin */
-//#define CONF_BOARD_USART_TXD
-
-/* Configure USART CTS pin */
-//#define CONF_BOARD_USART_CTS
-
-/* Configure USART RTS pin */
-//#define CONF_BOARD_USART_RTS
-
-/* Configure USART synchronous communication SCK pin */
-//#define CONF_BOARD_USART_SCK
-
-/* Configure SRAM pin */
-//#define CONF_BOARD_SRAM
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif/* CONF_EXAMPLE_H */

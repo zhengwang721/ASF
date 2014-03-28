@@ -49,6 +49,13 @@
 
 void vRegisterCLICommands(void);
 
+#if (defined confINCLUDE_UART_CLI)
+#include "uart.h"
+void create_uart_cli_task(Uart *uart_base, uint16_t stack_depth_words,
+		unsigned portBASE_TYPE task_priority);
+void uart_cli_output(const uint8_t *message_string);
+#endif
+
 #if (defined confINCLUDE_USART_ECHO_TASKS) || (defined confINCLUDE_USART_CLI)
 #include "usart.h"
 void create_usart_cli_task(Usart *usart_base, uint16_t stack_depth_words,

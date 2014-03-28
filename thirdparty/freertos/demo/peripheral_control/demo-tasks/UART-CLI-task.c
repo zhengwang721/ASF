@@ -4,7 +4,7 @@
  *
  * \brief FreeRTOS+CLI task implementation example
  *
- * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -56,17 +56,18 @@
 #include "FreeRTOS_CLI.h"
 
 /* Atmel library includes. */
-#include <freertos_usart_serial.h>
+#include <freertos_uart_serial.h>
+#include "sysclk.h"
 
 /* Demo includes. */
 #include "demo-tasks.h"
 
-#if (defined confINCLUDE_CDC_CLI) || (defined confINCLUDE_USART_CLI)
+#if (defined confINCLUDE_UART_CLI)
 
 /* Dimensions the buffer into which input characters are placed. */
 #define MAX_INPUT_SIZE          50
 
-/* The size of the buffer provided to the USART driver for storage of received
+/* The size of the buffer provided to the UART driver for storage of received
  * bytes. */
 #define RX_BUFFER_SIZE_BYTES    (50)
 
@@ -78,7 +79,7 @@
 /*
  * The task that implements the command console processing.
  */
-static void usart_command_console_task(void *pvParameters);
+static void uart_command_console_task(void *pvParameters);
 
 /*-----------------------------------------------------------*/
 
@@ -87,56 +88,53 @@ static const uint8_t *const welcome_message = (uint8_t *) "FreeRTOS command serv
 static const uint8_t *const new_line = (uint8_t *) "\r\n";
 static const uint8_t *const line_separator = (uint8_t *) "\r\n[Press ENTER to execute the previous command again]\r\n>";
 
-/* The buffer provided to the USART driver to store incoming character in. */
+/* The buffer provided to the UART driver to store incoming character in. */
 static uint8_t receive_buffer[RX_BUFFER_SIZE_BYTES] = {0};
 
-/* The USART instance used for input and output. */
-static freertos_usart_if cli_usart = NULL;
+/* The UART instance used for input and output. */
+static freertos_uart_if cli_uart = NULL;
 
 /*-----------------------------------------------------------*/
 
-void create_usart_cli_task(Usart *usart_base, uint16_t stack_depth_words,
+void create_uart_cli_task(Uart *uart_base, uint16_t stack_depth_words,
 		unsigned portBASE_TYPE task_priority)
 {
-	freertos_usart_if freertos_usart;
+	freertos_uart_if freertos_uart;
 	freertos_peripheral_options_t driver_options = {
-		receive_buffer,									/* The buffer used internally by the USART driver to store incoming characters. */
-		RX_BUFFER_SIZE_BYTES,							/* The size of the buffer provided to the USART driver to store incoming characters. */
-		configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY,	/* The priority used by the USART interrupts. */
-		USART_RS232,									/* Configure the USART for RS232 operation. */
+		receive_buffer,									/* The buffer used internally by the UART driver to store incoming characters. */
+		RX_BUFFER_SIZE_BYTES,							/* The size of the buffer provided to the UART driver to store incoming characters. */
+		configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY,	/* The priority used by the UART interrupts. */
+		UART_RS232,									/* Configure the UART for RS232 operation. */
 		(WAIT_TX_COMPLETE | USE_TX_ACCESS_MUTEX)		/* Use access mutex on Tx (as more than one task transmits) but not Rx. Wait for a Tx to complete before returning from send functions. */
 	};
 
-	const sam_usart_opt_t usart_settings = {
-		CLI_BAUD_RATE,
-		US_MR_CHRL_8_BIT,
-		US_MR_PAR_NO,
-		US_MR_NBSTOP_1_BIT,
-		US_MR_CHMODE_NORMAL,
-		0 /* Only used in IrDA mode. */
-	};
+	sam_uart_opt_t uart_settings;
+	uart_settings.ul_mck = sysclk_get_peripheral_hz();
+	uart_settings.ul_baudrate = CLI_BAUD_RATE;
+	uart_settings.ul_mode = UART_MR_PAR_NO;
+	uart_settings.ul_chmode = UART_MR_CHMODE_NORMAL;
 
-	/* Initialise the USART interface. */
-	freertos_usart = freertos_usart_serial_init(usart_base,
-			&usart_settings,
+	/* Initialise the UART interface. */
+	freertos_uart = freertos_uart_serial_init(uart_base,
+			&uart_settings,
 			&driver_options);
-	configASSERT(freertos_usart);
+	configASSERT(freertos_uart);
 
 	/* Register the default CLI commands. */
 	vRegisterCLICommands();
 
-	/* Create the USART CLI task. */
-	xTaskCreate(	usart_command_console_task,			/* The task that implements the command console. */
+	/* Create the UART CLI task. */
+	xTaskCreate(	uart_command_console_task,			/* The task that implements the command console. */
 					(const int8_t *const) "U_CLI",	/* Text name assigned to the task.  This is just to assist debugging.  The kernel does not use this name itself. */
 					stack_depth_words,					/* The size of the stack allocated to the task. */
-					(void *) freertos_usart,			/* The parameter is used to pass the already configured USART port into the task. */
+					(void *) freertos_uart,			/* The parameter is used to pass the already configured UART port into the task. */
 					task_priority,						/* The priority allocated to the task. */
 					NULL);								/* Used to store the handle to the created task - in this case the handle is not required. */
 }
 
 /*-----------------------------------------------------------*/
 
-static void usart_command_console_task(void *pvParameters)
+static void uart_command_console_task(void *pvParameters)
 {
 	uint8_t received_char, input_index = 0, *output_string;
 	static int8_t input_string[MAX_INPUT_SIZE],
@@ -144,8 +142,8 @@ static void usart_command_console_task(void *pvParameters)
 	portBASE_TYPE returned_value;
 	portTickType max_block_time_ticks = 200UL / portTICK_RATE_MS;
 
-	cli_usart = (freertos_usart_if) pvParameters;
-	configASSERT(cli_usart);
+	cli_uart = (freertos_uart_if) pvParameters;
+	configASSERT(cli_uart);
 
 	/* Obtain the address of the output buffer.  Note there is no mutual
 	exclusion on this buffer as it is assumed only one command console
@@ -155,17 +153,17 @@ static void usart_command_console_task(void *pvParameters)
 	/* Send the welcome message.  The message is copied into RAM first as the
 	DMA cannot send from Flash addresses. */
 	strcpy((char *) output_string, (char *) welcome_message);
-	freertos_usart_write_packet(cli_usart, output_string,
+	freertos_uart_write_packet(cli_uart, output_string,
 			strlen((char *) welcome_message),
 			max_block_time_ticks);
 
 	for (;;) {
 		/* Only interested in reading one character at a time. */
-		if (freertos_usart_serial_read_packet(cli_usart,
+		if (freertos_uart_serial_read_packet(cli_uart,
 				&received_char, sizeof(received_char),
 				portMAX_DELAY) == sizeof(received_char)) {
 			/* Echo the character. */
-			freertos_usart_write_packet(cli_usart, &received_char,
+			freertos_uart_write_packet(cli_uart, &received_char,
 					sizeof(received_char),
 					max_block_time_ticks);
 
@@ -174,7 +172,7 @@ static void usart_command_console_task(void *pvParameters)
 				easier to read. */
 				strcpy((char *) output_string,
 						(char *) new_line);
-				freertos_usart_write_packet(cli_usart,
+				freertos_uart_write_packet(cli_uart,
 						output_string, strlen(
 						(char *) new_line),
 						max_block_time_ticks);
@@ -197,8 +195,8 @@ static void usart_command_console_task(void *pvParameters)
 							(int8_t *) output_string,
 							configCOMMAND_INT_MAX_OUTPUT_SIZE);
 
-					/* Start the USART transmitting the generated string. */
-					freertos_usart_write_packet(cli_usart,
+					/* Start the UART transmitting the generated string. */
+					freertos_uart_write_packet(cli_uart,
 							output_string,
 							strlen((char *)
 							output_string),
@@ -218,7 +216,7 @@ static void usart_command_console_task(void *pvParameters)
 				easier to read. */
 				strcpy((char *) output_string,
 						(char *) line_separator);
-				freertos_usart_write_packet(cli_usart,
+				freertos_uart_write_packet(cli_uart,
 						output_string, strlen(
 						(char *) line_separator),
 						max_block_time_ticks);
@@ -248,14 +246,14 @@ static void usart_command_console_task(void *pvParameters)
 
 /*-----------------------------------------------------------*/
 
-void usart_cli_output(const uint8_t *message_string)
+void uart_cli_output(const uint8_t *message_string)
 {
 	const portTickType max_block_time_ticks = 200UL / portTICK_RATE_MS;
 
-	/* The USART is configured to use a mutex on Tx, so can be safely written
+	/* The UART is configured to use a mutex on Tx, so can be safely written
 	to directly. */
-	if (cli_usart != NULL) {
-		freertos_usart_write_packet(cli_usart, message_string,
+	if (cli_uart != NULL) {
+		freertos_uart_write_packet(cli_uart, message_string,
 				strlen((const char *) message_string), max_block_time_ticks);
 	}
 }

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief FreeRTOS Peripheral Control API For the USART
+ * \brief FreeRTOS Peripheral Control API For the UART
  *
- * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,47 +46,31 @@
 
 /* ASF includes. */
 #include "serial.h"
-#include "freertos_usart_serial.h"
+#include "freertos_uart_serial.h"
 #include "freertos_peripheral_control_private.h"
 
 /* Every bit in the interrupt mask. */
 #define MASK_ALL_INTERRUPTS         (0xffffffffUL)
 
 /* Interrupts that are enabled to catch error conditions on the bus. */
-#define SR_ERROR_INTERRUPTS         (US_CSR_OVRE | US_CSR_FRAME | US_CSR_PARE)
-#define IER_ERROR_INTERRUPTS        (US_IER_OVRE | US_IER_FRAME | US_IER_PARE)
+#define SR_ERROR_INTERRUPTS         (UART_SR_OVRE | UART_SR_FRAME |UART_SR_PARE)
+#define IER_ERROR_INTERRUPTS        (UART_IER_OVRE | UART_IER_FRAME | UART_IER_PARE)
 
 /* A value written to a member of an Rx buffer to show that the Rx side was not
 initialised and therefore should not be used. */
 #define RX_NOT_USED                 (uint8_t *) 0x1
 
-/* Divide by this number to convert bits per second to bits per 5 milliseconds.
-Equivalent to times 5 then divide by 1000. */
-#define BITS_PER_5_MS               (200UL)
-
-/* Work out how many USARTS are present. */
-#if defined(USART6)
-	#define MAX_USARTS                              (7)
-#elif defined(USART5)
-	#define MAX_USARTS                              (6)
-#elif defined(USART4)
-	#define MAX_USARTS                              (5)
-#elif defined(USART3)
-	#define MAX_USARTS                              (4)
-#elif defined(USART2)
-	#define MAX_USARTS                              (3)
-#elif defined(USART1)
-	#define MAX_USARTS                              (2)
-#elif defined(USART0)
-	#define MAX_USARTS                              (1)
+/* Work out how many UARTS with PDC are present. */
+#if defined(UART2)
+	#define MAX_UARTS                              (3)
+#elif defined(UART1)
+	#define MAX_UARTS                              (2)
+#elif defined(UART0)
+	#define MAX_UARTS                              (1)
+#elif defined(UART)
+	#define MAX_UARTS                              (1)
 #else
-	#error No USARTS defined
-#endif
-
-/* SAM3N only has PDC support on USART0 */
-#if SAM3N
-	#undef MAX_USARTS
-	#define MAX_USARTS                              (1)
+	#error No UARTS defined
 #endif
 
 enum buffer_operations {
@@ -95,96 +79,86 @@ enum buffer_operations {
 };
 
 /* Configures the Rx DMA to receive data into free space within the Rx buffer. */
-static void configure_rx_dma(uint32_t usart_index,
+static void configure_rx_dma(uint32_t uart_index,
 		enum buffer_operations operation_performed);
 
-/* A common interrupt handler called by all the USART peripherals. */
-static void local_usart_handler(const portBASE_TYPE usart_index);
+/* A common interrupt handler called by all the UART peripherals. */
+static void local_uart_handler(const portBASE_TYPE uart_index);
 
 /* Structures to manage the DMA control for both Rx and Tx transactions. */
-static freertos_pdc_rx_control_t rx_buffer_definitions[MAX_USARTS];
-static freertos_dma_event_control_t tx_dma_control[MAX_USARTS];
+static freertos_pdc_rx_control_t rx_buffer_definitions[MAX_UARTS];
+static freertos_dma_event_control_t tx_dma_control[MAX_UARTS];
 
 /* Create an array that holds the information required about each defined
-USART. */
-static const freertos_pdc_peripheral_parameters_t all_usart_definitions[MAX_USARTS] = {
-	{USART0, PDC_USART0, ID_USART0, USART0_IRQn},
-
-	#if (MAX_USARTS > 1)
-	{USART1, PDC_USART1, ID_USART1, USART1_IRQn},
+UART. */
+static const freertos_pdc_peripheral_parameters_t all_uart_definitions[MAX_UARTS] = {
+	#if defined(UART)
+	{UART, PDC_UART, ID_UART, UART_IRQn},
 	#endif
 
-	#if (MAX_USARTS > 2)
-	{USART2, PDC_USART2, ID_USART2, USART2_IRQn},
+	#if defined(UART0)
+	{UART0, PDC_UART0, ID_UART0, UART0_IRQn},
 	#endif
 
-	#if (MAX_USARTS > 3)
-	{USART3, PDC_USART3, ID_USART3, USART3_IRQn},
+	#if (MAX_UARTS > 1)
+	{UART1, PDC_UART1, ID_UART1, UART1_IRQn},
 	#endif
 
-	#if (MAX_USARTS > 4)
-	{USART4, PDC_USART4, ID_USART4, USART4_IRQn},
-	#endif
-
-	#if (MAX_USARTS > 5)
-	{USART4, PDC_USART5, ID_USART4, USART4_IRQn},
-	#endif
-
-	#if (MAX_USARTS > 6)
-	{USART4, PDC_USART6, ID_USART4, USART4_IRQn},
+	#if (MAX_UARTS > 2)
+	{UART2, PDC_UART2, ID_UART2, UART2_IRQn},
 	#endif
 };
 
 /**
- * \ingroup freertos_usart_peripheral_control_group
- * \brief Initializes the FreeRTOS ASF USART driver for the specified USART
+ * \ingroup freertos_uart_peripheral_control_group
+ * \brief Initializes the FreeRTOS ASF UART driver for the specified UART
  * port.
  *
- * freertos_usart_serial_init() is an ASF specific FreeRTOS driver function.  It
+ * freertos_uart_serial_init() is an ASF specific FreeRTOS driver function.  It
  * must be called before any other ASF specific FreeRTOS driver functions
- * attempt to access the same USART port.
+ * attempt to access the same UART port.
  *
- * If freertos_driver_parameters->operation_mode equals USART_RS232 then
- * freertos_usart_serial_init() will configure the USART port for standard RS232
+ * If freertos_driver_parameters->operation_mode equals UART_RS232 then
+ * freertos_uart_serial_init() will configure the UART port for standard RS232
  * operation.  If freertos_driver_parameters->operation_mode equals any other
- * value then freertos_usart_serial_init() will not take any action.
+ * value then freertos_uart_serial_init() will not take any action.
  *
- * Other ASF USART functions can be called after freertos_usart_serial_init()
+ * Other ASF UART functions can be called after freertos_uart_serial_init()
  * has completed successfully.
  *
- * The FreeRTOS ASF driver both installs and handles the USART PDC interrupts.
+ * The FreeRTOS ASF driver both installs and handles the UART PDC interrupts.
  * Users do not need to concern themselves with interrupt handling, and must
  * not install their own interrupt handler.
  *
  * This driver is provided with an application note, and an example project that
  * demonstrates the use of this function.
  *
- * \param p_usart    The USART peripheral being initialized.
- * \param uart_parameters    Structure that defines the USART bus and transfer
+ * \param p_uart    The UART peripheral being initialized.
+ * \param uart_parameters    Structure that defines the UART bus and transfer
  *     parameters, such the baud rate and the number of data bits.
- *     sam_usart_opt_t is a standard ASF type (it is not FreeRTOS specific).
+ *     sam_uart_opt_t is a standard ASF type (it is not FreeRTOS specific).
  * \param freertos_driver_parameters    Defines the driver behavior.  See the
  *    freertos_peripheral_options_t documentation, and the application note that
  *    accompanies the ASF specific FreeRTOS functions.
  *
  * \return If the initialization completes successfully then a handle that can
- *     be used with FreeRTOS USART read and write functions is returned.  If
+ *     be used with FreeRTOS UART read and write functions is returned.  If
  *     the initialisation fails then NULL is returned.
  */
-freertos_usart_if freertos_usart_serial_init(Usart *p_usart,
-		const sam_usart_opt_t *const uart_parameters,
+freertos_uart_if freertos_uart_serial_init(Uart *p_uart,
+		const sam_uart_opt_t *const uart_parameters,
 		const freertos_peripheral_options_t *const freertos_driver_parameters)
 {
-	portBASE_TYPE usart_index;
+	portBASE_TYPE uart_index;
 	bool is_valid_operating_mode;
-	freertos_usart_if return_value;
-	const enum peripheral_operation_mode valid_operating_modes[] = {USART_RS232};
+	freertos_uart_if return_value;
+	const enum peripheral_operation_mode valid_operating_modes[] = {UART_RS232};
 
-	/* Find the index into the all_usart_definitions array that holds details of
-	the p_usart peripheral. */
-	usart_index = get_pdc_peripheral_details(all_usart_definitions,
-			MAX_USARTS,
-			(void *) p_usart);
+	/* Find the index into the all_uart_definitions array that holds details of
+	the p_uart peripheral. */
+	uart_index = get_pdc_peripheral_details(all_uart_definitions,
+			MAX_UARTS,
+			(void *) p_uart);
 
 	/* Check the requested operating mode is valid for the peripheral. */
 	is_valid_operating_mode = check_requested_operating_mode(
@@ -193,28 +167,27 @@ freertos_usart_if freertos_usart_serial_init(Usart *p_usart,
 			sizeof(valid_operating_modes) /
 			sizeof(enum peripheral_operation_mode));
 
-	/* Don't do anything unless a valid p_usart pointer was used, and a valid
+	/* Don't do anything unless a valid p_uart pointer was used, and a valid
 	operating mode was requested. */
-	if ((usart_index < MAX_USARTS) && (is_valid_operating_mode == true)) {
-		/* This function must be called exactly once per supported USART.  Check it
+	if ((uart_index < MAX_UARTS) && (is_valid_operating_mode == true)) {
+		/* This function must be called exactly once per supported UART.  Check it
 		has not been called	before. */
-		configASSERT(rx_buffer_definitions[usart_index].next_byte_to_read == NULL);
+		configASSERT(rx_buffer_definitions[uart_index].next_byte_to_read == NULL);
 
 		/* Disable everything before enabling the clock. */
-		usart_disable_tx(p_usart);
-		usart_disable_rx(p_usart);
-		pdc_disable_transfer(all_usart_definitions[usart_index].pdc_base_address,
+		uart_disable_tx(p_uart);
+		uart_disable_rx(p_uart);
+		pdc_disable_transfer(all_uart_definitions[uart_index].pdc_base_address,
 				(PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS));
 
 		/* Enable the peripheral clock in the PMC. */
 		pmc_enable_periph_clk(
-				all_usart_definitions[usart_index].peripheral_id);
+				all_uart_definitions[uart_index].peripheral_id);
 
 		switch (freertos_driver_parameters->operation_mode) {
-		case USART_RS232:
+		case UART_RS232:
 			/* Call the standard ASF init function. */
-			usart_init_rs232(p_usart, uart_parameters,
-					sysclk_get_cpu_hz());
+			uart_init(p_uart, uart_parameters);
 			break;
 
 		default:
@@ -223,7 +196,7 @@ freertos_usart_if freertos_usart_serial_init(Usart *p_usart,
 		}
 
 		/* Disable all the interrupts. */
-		usart_disable_interrupt(p_usart, MASK_ALL_INTERRUPTS);
+		uart_disable_interrupt(p_uart, MASK_ALL_INTERRUPTS);
 
 		/* Create any required peripheral access mutexes and transaction complete
 		semaphores.  This peripheral is full duplex so only the Tx semaphores
@@ -231,7 +204,7 @@ freertos_usart_if freertos_usart_serial_init(Usart *p_usart,
 		created	separately. */
 		create_peripheral_control_semaphores(
 				freertos_driver_parameters->options_flags,
-				&(tx_dma_control[usart_index]),
+				&(tx_dma_control[uart_index]),
 				NULL /* The rx structures are not created in this function. */);
 
 		/* Is the driver also going to receive? */
@@ -249,80 +222,73 @@ freertos_usart_if freertos_usart_serial_init(Usart *p_usart,
 			semaphore was a binary semaphore, it would then be 'taken' even
 			though, unknown to the reading task, unread and therefore available
 			data remained at the beginning of the buffer. */
-			rx_buffer_definitions[usart_index].rx_event_semaphore =
+			rx_buffer_definitions[uart_index].rx_event_semaphore =
 					xSemaphoreCreateCounting(portMAX_DELAY, 0);
-			configASSERT(rx_buffer_definitions[usart_index].rx_event_semaphore);
-
-			/* Set the timeout to 5ms, then start waiting for a character (the
-			timeout is not started until characters have started to	be
-			received). */
-			usart_set_rx_timeout(p_usart,
-					(uart_parameters->baudrate / BITS_PER_5_MS));
-			usart_start_rx_timeout(p_usart);
+			configASSERT(rx_buffer_definitions[uart_index].rx_event_semaphore);
 
 			/* The receive buffer is currently empty, so the DMA has control
 			over the entire buffer. */
-			rx_buffer_definitions[usart_index].rx_pdc_parameters.ul_addr =
+			rx_buffer_definitions[uart_index].rx_pdc_parameters.ul_addr =
 					(uint32_t)freertos_driver_parameters->receive_buffer;
-			rx_buffer_definitions[usart_index].rx_pdc_parameters.ul_size =
+			rx_buffer_definitions[uart_index].rx_pdc_parameters.ul_size =
 					freertos_driver_parameters->receive_buffer_size;
 			pdc_rx_init(
-					all_usart_definitions[usart_index].pdc_base_address,
-					&(rx_buffer_definitions[usart_index].rx_pdc_parameters),
+					all_uart_definitions[uart_index].pdc_base_address,
+					&(rx_buffer_definitions[uart_index].rx_pdc_parameters),
 					NULL);
 
 			/* Set the next byte to read to the start of the buffer as no data
 			has yet been read. */
-			rx_buffer_definitions[usart_index].next_byte_to_read =
+			rx_buffer_definitions[uart_index].next_byte_to_read =
 					freertos_driver_parameters->receive_buffer;
 
 			/* Remember the limits of entire buffer. */
-			rx_buffer_definitions[usart_index].rx_buffer_start_address =
-					rx_buffer_definitions[usart_index].rx_pdc_parameters.ul_addr;
-			rx_buffer_definitions[usart_index].past_rx_buffer_end_address =
-					rx_buffer_definitions[usart_index].rx_buffer_start_address +
+			rx_buffer_definitions[uart_index].rx_buffer_start_address =
+					rx_buffer_definitions[uart_index].rx_pdc_parameters.ul_addr;
+			rx_buffer_definitions[uart_index].past_rx_buffer_end_address =
+					rx_buffer_definitions[uart_index].rx_buffer_start_address +
 					freertos_driver_parameters->receive_buffer_size;
 
 			/* If the rx driver is to be thread aware, create an access control
 			mutex. */
 			if ((freertos_driver_parameters->options_flags &
 					USE_RX_ACCESS_MUTEX) != 0) {
-				rx_buffer_definitions[usart_index].rx_access_mutex =
+				rx_buffer_definitions[uart_index].rx_access_mutex =
 					xSemaphoreCreateMutex();
-				configASSERT(rx_buffer_definitions[usart_index].rx_access_mutex);
+				configASSERT(rx_buffer_definitions[uart_index].rx_access_mutex);
 			}
 
 			/* Catch the DMA running out of Rx space, and gaps in the
 			reception.  These events are both used to signal that there is
 			data available in the Rx buffer. */
-			usart_enable_interrupt(p_usart, US_IER_ENDRX | US_IER_TIMEOUT);
+			uart_enable_interrupt(p_uart, UART_IER_ENDRX | UART_IER_RXRDY);
 
 			/* The Rx DMA is running all the time, so enable it now. */
 			pdc_enable_transfer(
-					all_usart_definitions[usart_index].pdc_base_address,
+					all_uart_definitions[uart_index].pdc_base_address,
 					PERIPH_PTCR_RXTEN);
 		} else {
 			/* next_byte_to_read is used to check to see if this function
 			has been called before, so it must be set to something, even if
 			it is not going to be used.  The value it is set to is not
 			important, provided it is not zero (NULL). */
-			rx_buffer_definitions[usart_index].next_byte_to_read = RX_NOT_USED;
+			rx_buffer_definitions[uart_index].next_byte_to_read = RX_NOT_USED;
 		}
 
-		/* Configure and enable the USART interrupt in the interrupt controller. */
-		configure_interrupt_controller(all_usart_definitions[usart_index].peripheral_irq,
+		/* Configure and enable the UART interrupt in the interrupt controller. */
+		configure_interrupt_controller(all_uart_definitions[uart_index].peripheral_irq,
 				freertos_driver_parameters->interrupt_priority);
 
 		/* Error interrupts are always enabled. */
-		usart_enable_interrupt(
-				all_usart_definitions[usart_index].peripheral_base_address,
+		uart_enable_interrupt(
+				all_uart_definitions[uart_index].peripheral_base_address,
 				IER_ERROR_INTERRUPTS);
 
 		/* Finally, enable the receiver and transmitter. */
-		usart_enable_tx(p_usart);
-		usart_enable_rx(p_usart);
+		uart_enable_tx(p_uart);
+		uart_enable_rx(p_uart);
 
-		return_value = (freertos_usart_if) p_usart;
+		return_value = (freertos_uart_if) p_uart;
 	} else {
 		return_value = NULL;
 	}
@@ -331,43 +297,43 @@ freertos_usart_if freertos_usart_serial_init(Usart *p_usart,
 }
 
 /**
- * \ingroup freertos_usart_peripheral_control_group
+ * \ingroup freertos_uart_peripheral_control_group
  * \brief Initiate a completely asynchronous multi-byte write operation on a
- * USART peripheral.
+ * UART peripheral.
  *
- * freertos_usart_write_packet_async() is an ASF specific FreeRTOS driver
- * function.  It configures the USART peripheral DMA controller (PDC) to
- * transmit data on the USART port, then returns.
- * freertos_usart_write_packet_async() does not wait for the transmission to
+ * freertos_uart_write_packet_async() is an ASF specific FreeRTOS driver
+ * function.  It configures the UART peripheral DMA controller (PDC) to
+ * transmit data on the UART port, then returns.
+ * freertos_uart_write_packet_async() does not wait for the transmission to
  * complete before returning.
  *
- * The FreeRTOS USART driver is initialized using a call to
- * freertos_usart_serial_init().  The freertos_driver_parameters.options_flags
+ * The FreeRTOS UART driver is initialized using a call to
+ * freertos_uart_serial_init().  The freertos_driver_parameters.options_flags
  * parameter passed into the initialization function defines the driver behavior.
- * freertos_usart_write_packet_async() can only be used if the
+ * freertos_uart_write_packet_async() can only be used if the
  * freertos_driver_parameters.options_flags parameter passed to the initialization
  * function had the WAIT_TX_COMPLETE bit clear.
  *
- * freertos_usart_write_packet_async() is an advanced function and readers are
+ * freertos_uart_write_packet_async() is an advanced function and readers are
  * recommended to also reference the application note and examples that
- * accompany the FreeRTOS ASF drivers.  freertos_usart_write_packet() is a
+ * accompany the FreeRTOS ASF drivers.  freertos_uart_write_packet() is a
  * version that does not exit until the PDC transfer is complete, but still
  * allows other RTOS tasks to execute while the transmission is in progress.
  *
- * The FreeRTOS ASF driver both installs and handles the USART PDC interrupts.
+ * The FreeRTOS ASF driver both installs and handles the UART PDC interrupts.
  * Users do not need to concern themselves with interrupt handling, and must
  * not install their own interrupt handler.
  *
- * \param p_usart    The handle to the USART peripheral returned by the
- *     freertos_usart_serial_init() call used to initialise the peripheral.
+ * \param p_uart    The handle to the UART peripheral returned by the
+ *     freertos_uart_serial_init() call used to initialise the peripheral.
  * \param data    A pointer to the data to be transmitted.
  * \param len    The number of bytes to transmit.
- * \param block_time_ticks    The FreeRTOS ASF USART driver is initialized using
- *     a call to freertos_usart_serial_init().  The
+ * \param block_time_ticks    The FreeRTOS ASF UART driver is initialized using
+ *     a call to freertos_uart_serial_init().  The
  *     freertos_driver_parameters.options_flags parameter passed to the
  *     initialization function defines the driver behavior.  If
  *     freertos_driver_parameters.options_flags had the USE_TX_ACCESS_MUTEX bit
- *     set, then the driver will only write to the USART peripheral if it has
+ *     set, then the driver will only write to the UART peripheral if it has
  *     first gained exclusive access to it.  block_time_ticks specifies the
  *     maximum amount of time the driver will wait to get exclusive access
  *     before aborting the write operation.  Other tasks will execute during any
@@ -390,44 +356,44 @@ freertos_usart_if freertos_usart_serial_init(Usart *p_usart,
  *
  * \return     ERR_INVALID_ARG is returned if an input parameter is invalid.
  *     ERR_TIMEOUT is returned if block_time_ticks passed before exclusive
- *     access to the USART peripheral could be obtained.  STATUS_OK is returned
- *     if the PDC was successfully configured to perform the USART write
+ *     access to the UART peripheral could be obtained.  STATUS_OK is returned
+ *     if the PDC was successfully configured to perform the UART write
  *     operation.
  */
-status_code_t freertos_usart_write_packet_async(freertos_usart_if p_usart,
+status_code_t freertos_uart_write_packet_async(freertos_uart_if p_uart,
 		const uint8_t *data, size_t len, portTickType block_time_ticks,
 		xSemaphoreHandle notification_semaphore)
 {
 	status_code_t return_value;
-	portBASE_TYPE usart_index;
-	Usart *usart_base;
+	portBASE_TYPE uart_index;
+	Uart *uart_base;
 
-	usart_base = (Usart *) p_usart;
-	usart_index = get_pdc_peripheral_details(all_usart_definitions,
-			MAX_USARTS,
-			(void *) usart_base);
+	uart_base = (Uart *) p_uart;
+	uart_index = get_pdc_peripheral_details(all_uart_definitions,
+			MAX_UARTS,
+			(void *) uart_base);
 
-	/* Don't do anything unless a valid USART pointer was used. */
-	if (usart_index < MAX_USARTS) {
+	/* Don't do anything unless a valid UART pointer was used. */
+	if (uart_index < MAX_UARTS) {
 		return_value = freertos_obtain_peripheral_access_mutex(
-				&(tx_dma_control[usart_index]),
+				&(tx_dma_control[uart_index]),
 				&block_time_ticks);
 
 		if (return_value == STATUS_OK) {
-			freertos_start_pdc_tx(&(tx_dma_control[usart_index]),
+			freertos_start_pdc_tx(&(tx_dma_control[uart_index]),
 					data, len,
-					all_usart_definitions[usart_index].pdc_base_address,
+					all_uart_definitions[uart_index].pdc_base_address,
 					notification_semaphore);
 
 			/* Catch the end of transmission so the access mutex can be
 			returned, and the task notified (if it supplied a notification
 			semaphore).  The interrupt can be enabled here because the ENDTX
-			signal from the PDC to the USART will have been de-asserted when
+			signal from the PDC to the UART will have been de-asserted when
 			the next transfer was configured. */
-			usart_enable_interrupt(usart_base, US_IER_ENDTX);
+			uart_enable_interrupt(uart_base, UART_IER_ENDTX);
 
 			return_value = freertos_optionally_wait_transfer_completion(
-					&(tx_dma_control[usart_index]),
+					&(tx_dma_control[uart_index]),
 					notification_semaphore,
 					block_time_ticks);
 		}
@@ -439,24 +405,24 @@ status_code_t freertos_usart_write_packet_async(freertos_usart_if p_usart,
 }
 
 /**
- * \ingroup freertos_usart_peripheral_control_group
- * \brief Initiate a completely multi-byte read operation on a USART peripheral.
+ * \ingroup freertos_uart_peripheral_control_group
+ * \brief Initiate a completely multi-byte read operation on a UART peripheral.
  *
- * The FreeRTOS ASF USART driver uses the PDC to transfer data from a peripheral
+ * The FreeRTOS ASF UART driver uses the PDC to transfer data from a peripheral
  * to a circular buffer.  Reception happens in the background, while the
- * microcontroller is executing application code.* freertos_usart_read_packet()
+ * microcontroller is executing application code.* freertos_uart_read_packet()
  * copies bytes from the DMA buffer into the buffer passed as a
- * freertos_usart_read_packet() parameter.
+ * freertos_uart_read_packet() parameter.
  *
  * Readers are recommended to also reference the application note and examples
  * that accompany the FreeRTOS ASF drivers.
  *
- * The FreeRTOS ASF driver both installs and handles the USART PDC interrupts.
+ * The FreeRTOS ASF driver both installs and handles the UART PDC interrupts.
  * Users do not need to concern themselves with interrupt handling, and must
  * not install their own interrupt handler.
  *
- * \param p_usart    The handle to the USART port returned by the
- *     freertos_usart_serial_init() call used to initialise the port.
+ * \param p_uart    The handle to the UART port returned by the
+ *     freertos_uart_serial_init() call used to initialise the port.
  * \param data    A pointer to the buffer into which received data is to be
  *     copied.
  * \param len    The number of bytes to copy.
@@ -465,18 +431,18 @@ status_code_t freertos_usart_write_packet_async(freertos_usart_if p_usart,
  *     requested number of bytes.  Other tasks will execute during any waiting
  *     time.
  *
- *     The FreeRTOS ASF USART driver is initialized using a
- *     call to freertos_usart_serial_init().  The
+ *     The FreeRTOS ASF UART driver is initialized using a
+ *     call to freertos_uart_serial_init().  The
  *     freertos_driver_parameters.options_flags parameter passed to the
  *     initialization function defines the driver behavior.  If
  *     freertos_driver_parameters.options_flags had the USE_RX_ACCESS_MUTEX bit
- *     set, then the driver will only read from the USART buffer if it has
+ *     set, then the driver will only read from the UART buffer if it has
  *     first gained exclusive access to it.  block_time_ticks specifies the
  *     maximum amount of time the driver will wait to get exclusive access
  *     before aborting the read operation.
  *
  *     If the number of bytes available is less than the number requested then
- *     freertos_usart_serial_read_packet() will wait for more bytes to become
+ *     freertos_uart_serial_read_packet() will wait for more bytes to become
  *     available.  block_time_ticks specifies the maximum amount of time the
  *     driver will wait before returning fewer bytes than were requested.
  *
@@ -488,39 +454,39 @@ status_code_t freertos_usart_write_packet_async(freertos_usart_if p_usart,
  * \return     The number of bytes that were copied into data.  This will be
  *     less than the requested number of bytes if a time out occurred.
  */
-uint32_t freertos_usart_serial_read_packet(freertos_usart_if p_usart,
+uint32_t freertos_uart_serial_read_packet(freertos_uart_if p_uart,
 		uint8_t *data, uint32_t len, portTickType block_time_ticks)
 {
-	portBASE_TYPE usart_index, attempt_read;
-	Usart *usart_base;
+	portBASE_TYPE uart_index, attempt_read;
+	Uart *uart_base;
 	xTimeOutType time_out_definition;
 	uint32_t bytes_read = 0;
 
-	usart_base = (Usart *) p_usart;
-	usart_index = get_pdc_peripheral_details(all_usart_definitions,
-			MAX_USARTS,
-			(void *) usart_base);
+	uart_base = (Uart *) p_uart;
+	uart_index = get_pdc_peripheral_details(all_uart_definitions,
+			MAX_UARTS,
+			(void *) uart_base);
 
 	/* It is possible to initialise the peripheral to only use Tx and not Rx.
 	Check that Rx has been initialised. */
-	configASSERT(rx_buffer_definitions[usart_index].next_byte_to_read);
-	configASSERT(rx_buffer_definitions[usart_index].next_byte_to_read !=
+	configASSERT(rx_buffer_definitions[uart_index].next_byte_to_read);
+	configASSERT(rx_buffer_definitions[uart_index].next_byte_to_read !=
 			RX_NOT_USED);
 
-	/* Only do anything if the USART is valid. */
-	if (usart_index < MAX_USARTS) {
+	/* Only do anything if the UART is valid. */
+	if (uart_index < MAX_UARTS) {
 		/* Must not request more bytes than will fit in the buffer. */
 		if (len <=
-				(rx_buffer_definitions[usart_index].past_rx_buffer_end_address
-				- rx_buffer_definitions[usart_index].rx_buffer_start_address)) {
+				(rx_buffer_definitions[uart_index].past_rx_buffer_end_address
+				- rx_buffer_definitions[uart_index].rx_buffer_start_address)) {
 			/* Remember the time on entry. */
 			vTaskSetTimeOutState(&time_out_definition);
 
 			/* If an Rx mutex is in use, attempt to obtain it. */
-			if (rx_buffer_definitions[usart_index].rx_access_mutex != NULL) {
+			if (rx_buffer_definitions[uart_index].rx_access_mutex != NULL) {
 				/* Attempt to obtain the mutex. */
 				attempt_read = xSemaphoreTake(
-						rx_buffer_definitions[usart_index].rx_access_mutex,
+						rx_buffer_definitions[uart_index].rx_access_mutex,
 						block_time_ticks);
 
 				if (attempt_read == pdTRUE) {
@@ -532,7 +498,7 @@ uint32_t freertos_usart_serial_read_packet(freertos_usart_if p_usart,
 
 						/* The port is not going to be used, so return the
 						mutex now. */
-						xSemaphoreGive(rx_buffer_definitions[usart_index].rx_access_mutex);
+						xSemaphoreGive(rx_buffer_definitions[uart_index].rx_access_mutex);
 					}
 				}
 			} else {
@@ -542,14 +508,14 @@ uint32_t freertos_usart_serial_read_packet(freertos_usart_if p_usart,
 			if (attempt_read == pdTRUE) {
 				do {
 					/* Wait until data is available. */
-					xSemaphoreTake(rx_buffer_definitions[usart_index].rx_event_semaphore,
+					xSemaphoreTake(rx_buffer_definitions[uart_index].rx_event_semaphore,
 							block_time_ticks);
 
 					/* Copy as much data as is available, up to however much
 					a maximum of the total number of requested bytes. */
 					bytes_read += freertos_copy_bytes_from_pdc_circular_buffer(
-							&(rx_buffer_definitions[usart_index]),
-							all_usart_definitions[usart_index].pdc_base_address->PERIPH_RPR,
+							&(rx_buffer_definitions[uart_index]),
+							all_uart_definitions[uart_index].pdc_base_address->PERIPH_RPR,
 							&(data[bytes_read]),
 							(len - bytes_read));
 
@@ -560,8 +526,8 @@ uint32_t freertos_usart_serial_read_packet(freertos_usart_if p_usart,
 					if (bytes_read > 0) {
 						taskENTER_CRITICAL();
 						{
-							if(rx_buffer_definitions[usart_index].rx_pdc_parameters.ul_size == 0UL) {
-								configure_rx_dma(usart_index, data_removed);
+							if(rx_buffer_definitions[uart_index].rx_pdc_parameters.ul_size == 0UL) {
+								configure_rx_dma(uart_index, data_removed);
 							}
 						}
 						taskEXIT_CRITICAL();
@@ -573,9 +539,9 @@ uint32_t freertos_usart_serial_read_packet(freertos_usart_if p_usart,
 						&time_out_definition,
 						&block_time_ticks) == pdFALSE));
 
-				if (rx_buffer_definitions[usart_index].rx_access_mutex != NULL) {
+				if (rx_buffer_definitions[uart_index].rx_access_mutex != NULL) {
 					/* Return the mutex. */
-					xSemaphoreGive(rx_buffer_definitions[usart_index].rx_access_mutex);
+					xSemaphoreGive(rx_buffer_definitions[uart_index].rx_access_mutex);
 				}
 			}
 		}
@@ -588,12 +554,12 @@ uint32_t freertos_usart_serial_read_packet(freertos_usart_if p_usart,
  * For internal use only.
  * Configures the Rx DMA to receive data into free space within the Rx buffer.
  */
-static void configure_rx_dma(uint32_t usart_index,
+static void configure_rx_dma(uint32_t uart_index,
 		enum buffer_operations operation_performed)
 {
 	freertos_pdc_rx_control_t *rx_buffer_definition;
 
-	rx_buffer_definition = &(rx_buffer_definitions[usart_index]);
+	rx_buffer_definition = &(rx_buffer_definitions[uart_index]);
 
 	/* How much space is there between the start of the DMA buffer and the
 	current read pointer?  */
@@ -633,65 +599,65 @@ static void configure_rx_dma(uint32_t usart_index,
 		as remaining.  First clear any characters that might already be in the
 		registers. */
 		pdc_rx_init(
-				all_usart_definitions[usart_index].pdc_base_address, &rx_buffer_definition->rx_pdc_parameters,
+				all_uart_definitions[uart_index].pdc_base_address, &rx_buffer_definition->rx_pdc_parameters,
 				NULL);
 		pdc_enable_transfer(
-				all_usart_definitions[usart_index].pdc_base_address,
+				all_uart_definitions[uart_index].pdc_base_address,
 				PERIPH_PTCR_RXTEN);
-		usart_enable_interrupt(
-				all_usart_definitions[usart_index].peripheral_base_address, US_IER_ENDRX |
-				US_IER_TIMEOUT);
+		uart_enable_interrupt(
+				all_uart_definitions[uart_index].peripheral_base_address,
+				UART_IER_ENDRX | UART_IER_RXRDY);
 	} else {
 		/* The write pointer has reached the read pointer.  There is no
 		more room so the DMA is not re-enabled until a read has created
 		space. */
-		usart_disable_interrupt(
-				all_usart_definitions[usart_index].peripheral_base_address, US_IER_ENDRX |
-				US_IER_TIMEOUT);
+		uart_disable_interrupt(
+				all_uart_definitions[uart_index].peripheral_base_address,
+				UART_IDR_ENDRX | UART_IDR_RXRDY);
 	}
 }
 
 /*
  * For internal use only.
- * A common USART interrupt handler that is called for all USART peripherals.
+ * A common UART interrupt handler that is called for all UART peripherals.
  */
-static void local_usart_handler(const portBASE_TYPE usart_index)
+static void local_uart_handler(const portBASE_TYPE uart_index)
 {
 	portBASE_TYPE higher_priority_task_woken = pdFALSE;
-	uint32_t usart_status;
+	uint32_t uart_status;
 	freertos_pdc_rx_control_t *rx_buffer_definition;
 
-	usart_status = usart_get_status(
-			all_usart_definitions[usart_index].peripheral_base_address);
-	usart_status &= usart_get_interrupt_mask(
-			all_usart_definitions[usart_index].peripheral_base_address);
+	uart_status = uart_get_status(
+			all_uart_definitions[uart_index].peripheral_base_address);
+	uart_status &= uart_get_interrupt_mask(
+			all_uart_definitions[uart_index].peripheral_base_address);
 
-	rx_buffer_definition = &(rx_buffer_definitions[usart_index]);
+	rx_buffer_definition = &(rx_buffer_definitions[uart_index]);
 
 	/* Has the PDC completed a transmission? */
-	if ((usart_status & US_CSR_ENDTX) != 0UL) {
-		usart_disable_interrupt(
-				all_usart_definitions[usart_index].peripheral_base_address,
-				US_IER_ENDTX);
+	if ((uart_status & UART_SR_ENDTX) != 0UL) {
+		uart_disable_interrupt(
+				all_uart_definitions[uart_index].peripheral_base_address,
+				UART_IDR_ENDTX);
 
 		/* If the driver is supporting multi-threading, then return the access
 		mutex. */
-		if (tx_dma_control[usart_index].peripheral_access_mutex != NULL) {
+		if (tx_dma_control[uart_index].peripheral_access_mutex != NULL) {
 			xSemaphoreGiveFromISR(
-					tx_dma_control[usart_index].peripheral_access_mutex,
+					tx_dma_control[uart_index].peripheral_access_mutex,
 					&higher_priority_task_woken);
 		}
 
 		/* if the sending task supplied a notification semaphore, then
 		notify the task that the transmission has completed. */
-		if (tx_dma_control[usart_index].transaction_complete_notification_semaphore != NULL) {
+		if (tx_dma_control[uart_index].transaction_complete_notification_semaphore != NULL) {
 			xSemaphoreGiveFromISR(
-					tx_dma_control[usart_index].transaction_complete_notification_semaphore,
+					tx_dma_control[uart_index].transaction_complete_notification_semaphore,
 					&higher_priority_task_woken);
 		}
 	}
 
-	if ((usart_status & US_CSR_ENDRX) != 0UL) {
+	if ((uart_status & UART_SR_ENDRX) != 0UL) {
 		/* It is possible to initialise the peripheral to only use Tx and not Rx.
 		Check that Rx has been initialised. */
 		configASSERT(rx_buffer_definition->next_byte_to_read);
@@ -714,7 +680,7 @@ static void local_usart_handler(const portBASE_TYPE usart_index)
 
 		/* Reset the Rx DMA to receive data into whatever free space remains in
 		the Rx buffer. */
-		configure_rx_dma(usart_index, data_added);
+		configure_rx_dma(uart_index, data_added);
 
 		if (rx_buffer_definition->rx_event_semaphore != NULL) {
 			/* Notify that new data is available. */
@@ -724,12 +690,15 @@ static void local_usart_handler(const portBASE_TYPE usart_index)
 		}
 	}
 
-	if ((usart_status & US_IER_TIMEOUT) != 0UL) {
-		/* More characters have been placed into the Rx buffer.
-
-		Restart the timeout after more data has been received. */
-		usart_start_rx_timeout(all_usart_definitions[usart_index].peripheral_base_address);
-
+	/**
+	 * Normally the uart_status can't be "0" when the interrupt happened.
+	 * It happened only when in PDC mode with TXRDY and RXRDY interrupts since
+	 * the flags has been cleared by PDC.
+	 * As the TXRDY is never enabled in this service, here we
+	 * check the RXRDY interrupt case.
+	 */
+	if (uart_status == 0UL) {
+		/* Character has been placed into the Rx buffer. */
 		if (rx_buffer_definition->rx_event_semaphore != NULL) {
 			/* Notify that new data is available. */
 			xSemaphoreGiveFromISR(
@@ -738,14 +707,14 @@ static void local_usart_handler(const portBASE_TYPE usart_index)
 		}
 	}
 
-	if ((usart_status & SR_ERROR_INTERRUPTS) != 0) {
+	if ((uart_status & SR_ERROR_INTERRUPTS) != 0) {
 		/* An error occurred in either a transmission or reception.  Abort, and
 		ensure the peripheral access mutex is made available to tasks. */
-		usart_reset_status(
-				all_usart_definitions[usart_index].peripheral_base_address);
-		if (tx_dma_control[usart_index].peripheral_access_mutex != NULL) {
+		uart_reset_status(
+				all_uart_definitions[uart_index].peripheral_base_address);
+		if (tx_dma_control[uart_index].peripheral_access_mutex != NULL) {
 			xSemaphoreGiveFromISR(
-					tx_dma_control[usart_index].peripheral_access_mutex,
+					tx_dma_control[uart_index].peripheral_access_mutex,
 					&higher_priority_task_woken);
 		}
 	}
@@ -764,65 +733,30 @@ static void local_usart_handler(const portBASE_TYPE usart_index)
  * handler calls the common interrupt handler.
  */
 
-#ifdef USART0
+#ifdef UART0
 
-void USART0_Handler(void)
+void UART0_Handler(void)
 {
-	local_usart_handler(0);
+	local_uart_handler(0);
 }
 
-#endif /* USART0 */
+#endif /* UART0 */
 
-#ifdef USART1
+#ifdef UART1
 
-void USART1_Handler(void)
+void UART1_Handler(void)
 {
-	local_usart_handler(1);
+	local_uart_handler(1);
 }
 
-#endif /* USART1 */
+#endif /* UART1 */
 
-#ifdef USART2
+#ifdef UART2
 
-void USART2_Handler(void)
+void UART2_Handler(void)
 {
-	local_usart_handler(2);
+	local_uart_handler(2);
 }
 
-#endif /* USART2 */
+#endif /* UART2 */
 
-#ifdef USART3
-
-void USART3_Handler(void)
-{
-	local_usart_handler(3);
-}
-
-#endif /* USART3 */
-
-#ifdef USART4
-
-void USART4_Handler(void)
-{
-	local_usart_handler(4);
-}
-
-#endif /* USART4 */
-
-#ifdef USART5
-
-void USART5_Handler(void)
-{
-	local_usart_handler(5);
-}
-
-#endif /* USART5 */
-
-#ifdef USART6
-
-void USART6_Handler(void)
-{
-	local_usart_handler(6);
-}
-
-#endif /* USART6 */

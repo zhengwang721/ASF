@@ -256,6 +256,16 @@ uint32_t uart_get_status(Uart *p_uart)
 }
 
 /**
+ * \brief Reset status bits.
+ *
+ * \param p_uart Pointer to a UART instance.
+ */
+void uart_reset_status(Uart *p_uart)
+{
+	p_uart->UART_CR = UART_CR_RSTSTA;
+}
+
+/**
  * \brief Check if Transmit is Ready.
  * Check if data has been loaded in UART_THR and is waiting to be loaded in the
  * Transmit Shift Register (TSR).
