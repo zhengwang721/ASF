@@ -83,7 +83,7 @@
 #include <asf.h>
 
 /** Define CMCC Base */
-#if SAM4C
+#if SAM4C || SAM4CM
 #define CMCC_BASE    CMCC0
 #else
 #define CMCC_BASE    CMCC
