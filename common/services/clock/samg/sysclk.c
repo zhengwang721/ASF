@@ -114,8 +114,10 @@ void sysclk_set_source(uint32_t ul_src)
 
 void sysclk_init(void)
 {
+#if SAMG54
 	uint32_t unique_id[32];
 	uint32_t trim_value;
+#endif
 
 	/* Set a flash wait state depending on the new cpu frequency */
 	system_init_flash(sysclk_get_cpu_hz());
@@ -182,6 +184,7 @@ void sysclk_init(void)
 	/* Update the SystemFrequency variable */
 	SystemCoreClockUpdate();
 
+#if SAMG54
 	/* Set the trim value when system run near 96M */
 	if ((SystemCoreClock <= (CHIP_FREQ_CPU_MAX + (CHIP_FREQ_CPU_MAX >> 3))) &&
 		(SystemCoreClock >= (CHIP_FREQ_CPU_MAX - (CHIP_FREQ_CPU_MAX >> 3)))) {
@@ -196,6 +199,7 @@ void sysclk_init(void)
 		supc_set_regulator_trim_user(SUPC, trim_value);
 #endif
 	}
+#endif
 
 #if (defined CONFIG_SYSCLK_DEFAULT_RETURNS_SLOW_OSC)
 	/* Signal that the internal frequencies are setup */
