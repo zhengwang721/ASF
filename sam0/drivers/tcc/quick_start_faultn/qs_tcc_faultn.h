@@ -44,8 +44,8 @@
 /**
  * \page asfdoc_sam0_tcc_faultn_use_case Quick Start Guide for TCC - Recoverable Fault
  *
- * The supported device list:
- *    - SAM D21/R21
+ * The supported kit list:
+ *    - SAM D21/R21 Xplained Pro
  *
  * In this use case, the TCC will be used to generate a PWM signal, with a
  * varying duty cycle. Here the pulse width is increased each time the timer
@@ -94,9 +94,14 @@
  *
  * \subsection asfdoc_sam0_tcc_faultn_use_case_setup_code Code
  *
- * Add to the main application source file, before any functions:
- * \snippet conf_quick_start_faultn.h definition_pwm
- * \snippet conf_quick_start_faultn.h definition_fault
+ * Add to the main application source file, before any functions, according to
+ * the kit used:
+ * - SAM D21 Xplained Pro:
+ *   \snippet samd21_xplained_pro/conf_quick_start_faultn.h definition_pwm
+ *   \snippet samd21_xplained_pro/conf_quick_start_faultn.h definition_fault
+ * - SAM R21 Xplained Pro:
+ *   \snippet samd21_xplained_pro/conf_quick_start_faultn.h definition_pwm
+ *   \snippet samd21_xplained_pro/conf_quick_start_faultn.h definition_fault
  *
  * Add to the main application source file, before any functions:
  * \snippet qs_tcc_faultn.c additional_include
