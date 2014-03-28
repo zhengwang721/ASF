@@ -65,7 +65,6 @@
 			<require idref="common2.services.delay"/>
 			<require idref="sam0.drivers.port"/>
 			<require idref="sam0.drivers.sercom.usart"/>
-			<build type="define" name="_DEBUG_INTERFACE_" value =""/>
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
 		</module>

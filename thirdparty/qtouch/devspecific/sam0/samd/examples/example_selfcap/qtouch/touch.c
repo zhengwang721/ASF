@@ -1,20 +1,20 @@
 /* This source file is part of the ATMEL QTouch Library 5.0.1 */
 
-/*****************************************************************************
+/**
  *
  * \file
  *
  * \brief  This file contains the SAMD QTouch library initialization,
  * sensor configuration and measurement routines.
  *
- *
  * - Userguide:          QTouch Library Peripheral Touch Controller User Guide.
  * - Support email:      touch@atmel.com
- *
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -46,11 +46,7 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
-
-/*----------------------------------------------------------------------------
-*                               include files
-*  ----------------------------------------------------------------------------*/
+ */
 
 /**
  * Includes for Touch Library.

@@ -1,19 +1,13 @@
-/* This source file is part of the ATMEL QTouch Library 5.0.1 */
-
-/*****************************************************************************
- *
+/**
  * \file
  *
  * \brief  This file contains the SAMD QTouch library sample user application.
  *
- *
- * - Userguide:          QTouch Library Peripheral Touch Controller User Guide.
- * - Support email:      touch@atmel.com
- *
- *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -45,12 +39,26 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
+ */
 
 /**
- * Include header files for all drivers that have been imported from
- * Atmel Software Framework (ASF).
+ * \mainpage SAMD20/D21 QTouch Example
+ *
+ * \section Purpose
+ *
+ * This example demonstrates how to use QTouch library on SAMD20/D21 devices.
+ *
+ * \section Requirements
+ *
+ * This example can be used on SAMD20/D21 Xplained Pro and QT1 Xplained Pro.
+ *
+ * \section Description
+ *
+ * The program configures the necessary modules for using QTouch library. After
+ * it started, users can turn on and off the LED by touching the button and slider,
+ * change the color of RGB LED by touching wheel on QT1 Xplained Pro board.
  */
+ 
 #include <asf.h>
 
 /* Macros */

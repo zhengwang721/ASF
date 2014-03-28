@@ -1,20 +1,20 @@
 /* This source file is part of the ATMEL QTouch Library 5.0.1 */
 
-/*****************************************************************************
+/**
  *
  * \file
  *
  * \brief  This file contains the SAMD QTouch library initialization,
  * sensor configuration and measurement routines.
  *
- *
  * - Userguide:          QTouch Library Peripheral Touch Controller User Guide.
  * - Support email:      touch@atmel.com
- *
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -46,11 +46,7 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
-
-/*----------------------------------------------------------------------------
-*                               include files
-*  ----------------------------------------------------------------------------*/
+ */
 
 /**
  * Includes for Touch Library.
@@ -67,8 +63,8 @@
 /*----------------------------------------------------------------------------
 *                           manifest constants
 *  ----------------------------------------------------------------------------*/
-#define   DEF_MUTLCAP_CAL_SEQ1_COUNT	        8
-#define   DEF_MUTLCAP_CAL_SEQ2_COUNT	        4
+#define   DEF_MUTLCAP_CAL_SEQ1_COUNT            8
+#define   DEF_MUTLCAP_CAL_SEQ2_COUNT            4
 #define   DEF_MUTLCAP_CC_CAL_CLK_PRESCALE       PRSC_DIV_SEL_8
 #define   DEF_MUTLCAP_CC_CAL_SENSE_RESISTOR     RSEL_VAL_100
 #define   DEF_MUTLCAP_QUICK_REBURST_ENABLE      1u

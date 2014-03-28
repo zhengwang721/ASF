@@ -1,6 +1,6 @@
 /* This source file is part of the ATMEL QTouch Library 5.0.1 */
 
-/*****************************************************************************
+/**
  *
  * \file
  *
@@ -15,6 +15,8 @@
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -46,7 +48,7 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
+ */
 
 #ifndef TOUCH_API_SAMD_H
 #define TOUCH_API_SAMD_H
@@ -168,6 +170,16 @@ extern "C"
 
 #if (DEF_MUTLCAP_NUM_SENSORS > DEF_MUTLCAP_NUM_CHANNELS)
   #error 'Number of Sensors cannot exceed number of channels'
+#endif
+
+/**
+  * QTouch number of channels.
+  */
+#if DEF_TOUCH_MUTLCAP == 1
+#define QT_NUM_CHANNELS  DEF_MUTLCAP_NUM_CHANNELS
+#endif
+#if DEF_TOUCH_SELFCAP == 1
+#define QT_NUM_CHANNELS  DEF_SELFCAP_NUM_CHANNELS
 #endif
 
 /**

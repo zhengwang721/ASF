@@ -1,13 +1,12 @@
 /* This source file is part of the ATMEL QTouch Library 5.0.1 */
 
-/*****************************************************************************
+/**
  *
  * \file
  *
  * \brief  This file contains the QDebug bitbang API that can be used to
  * transfer data from a Touch Device to QTouch Studio using the QT600
  * USB Bridge.
- *
  *
  * - Userguide:          QTouch Library Peripheral Touch Controller User Guide.
  * - Support email:      touch@atmel.com
@@ -16,6 +15,8 @@
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -47,7 +48,7 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
+ */
 
 #include "asf.h"
 

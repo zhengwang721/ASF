@@ -1,6 +1,6 @@
 /* This source file is part of the ATMEL QTouch Library 5.0.1 */
 
-/*****************************************************************************
+/**
  *
  * \file
  *
@@ -11,10 +11,11 @@
  * - Userguide:          QTouch Library Peripheral Touch Controller User Guide.
  * - Support email:      touch@atmel.com
  *
- *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -46,7 +47,7 @@
  *
  * \asf_license_stop
  *
- ******************************************************************************/
+ */
 
 #ifndef TOUCH_CONFIG_SAMD_H
 #define TOUCH_CONFIG_SAMD_H
@@ -374,7 +375,9 @@
 
 #define DEF_TOUCH_QDEBUG_ENABLE 0u
 
-#define QT_NUM_CHANNELS  DEF_MUTLCAP_NUM_CHANNELS
+#if DEF_TOUCH_QDEBUG_ENABLE == 1
+#define _DEBUG_INTERFACE_
+#endif
 
 /* ! @} */
 
