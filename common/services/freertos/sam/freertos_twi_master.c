@@ -68,10 +68,6 @@
 	#define MAX_TWIS                                (2)
 #elif defined(PDC_TWI1)
 	#define MAX_TWIS                                (1)
-#elif defined(PDC_TWI0)
-	#define MAX_TWIS                                (0)
-#elif defined(PDC_TWI)
-	#define MAX_TWIS                                (0)
 #else
 	#error No TWI peripherals with PDC support defined
 #endif
