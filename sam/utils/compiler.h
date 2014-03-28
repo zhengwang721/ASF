@@ -161,6 +161,21 @@
 #	define __always_inline   _Pragma("inline=forced")
 #endif
 
+/**
+ * \def __no_inline
+ * \brief The function should not be inlined.
+ *
+ * This annotation instructs the compiler to ignore its inlining
+ * heuristics and not inline the function.
+ */
+#if defined(__CC_ARM)
+#   define __no_inline   __attribute__((noinline))
+#elif (defined __GNUC__)
+#	define __no_inline   __attribute__((__noinline__))
+#elif (defined __ICCARM__)
+#	define __no_inline   _Pragma("inline=never")
+#endif
+
 /*! \brief This macro is used to test fatal errors.
  *
  * The macro tests if the expression is false. If it is, a fatal error is

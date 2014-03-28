@@ -285,6 +285,7 @@ uint32_t efc_get_result(Efc *p_efc)
  *
  * \return 0 if successful, otherwise returns an error code.
  */
+__no_inline
 RAMFUNC
 uint32_t efc_perform_read_sequence(Efc *p_efc,
 		uint32_t ul_cmd_st, uint32_t ul_cmd_sp,
@@ -358,6 +359,7 @@ uint32_t efc_perform_read_sequence(Efc *p_efc,
  * \param p_efc Pointer to an EFC instance.
  * \param ul_fmr Value of mode register
  */
+__no_inline
 RAMFUNC
 void efc_write_fmr(Efc *p_efc, uint32_t ul_fmr)
 {
@@ -372,6 +374,7 @@ void efc_write_fmr(Efc *p_efc, uint32_t ul_fmr)
  *
  * \return The current status.
  */
+__no_inline
 RAMFUNC
 uint32_t efc_perform_fcr(Efc *p_efc, uint32_t ul_fcr)
 {
