@@ -61,16 +61,16 @@ initialised and therefore should not be used. */
 #define RX_NOT_USED                 (uint8_t *) 0x1
 
 /* Work out how many UARTS with PDC are present. */
-#if defined(UART2)
+#if defined(PDC_UART2)
 	#define MAX_UARTS                              (3)
-#elif defined(UART1)
+#elif defined(PDC_UART1)
 	#define MAX_UARTS                              (2)
-#elif defined(UART0)
+#elif defined(PDC_UART0)
 	#define MAX_UARTS                              (1)
-#elif defined(UART)
+#elif defined(PDC_UART)
 	#define MAX_UARTS                              (1)
 #else
-	#error No UARTS defined
+	#error No PDC UARTS defined
 #endif
 
 enum buffer_operations {

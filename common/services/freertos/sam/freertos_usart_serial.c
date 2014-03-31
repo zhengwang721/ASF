@@ -65,29 +65,26 @@ Equivalent to times 5 then divide by 1000. */
 #define BITS_PER_5_MS               (200UL)
 
 /* Work out how many USARTS are present. */
-#if defined(USART6)
+#if defined(PDC_USART6)
 	#define MAX_USARTS                              (7)
-#elif defined(USART5)
+#elif defined(PDC_USART5)
 	#define MAX_USARTS                              (6)
-#elif defined(USART4)
+#elif defined(PDC_USART4)
 	#define MAX_USARTS                              (5)
-#elif defined(USART3)
+#elif defined(PDC_USART3)
 	#define MAX_USARTS                              (4)
-#elif defined(USART2)
+#elif defined(PDC_USART2)
 	#define MAX_USARTS                              (3)
-#elif defined(USART1)
+#elif defined(PDC_USART1)
 	#define MAX_USARTS                              (2)
-#elif defined(USART0)
+#elif defined(PDC_USART0)
+	#define MAX_USARTS                              (1)
+#elif defined(PDC_USART)
 	#define MAX_USARTS                              (1)
 #else
-	#error No USARTS defined
+	#error No PDC USARTS defined
 #endif
 
-/* SAM3N only has PDC support on USART0 */
-#if SAM3N
-	#undef MAX_USARTS
-	#define MAX_USARTS                              (1)
-#endif
 
 enum buffer_operations {
 	data_added = 0,

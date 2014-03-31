@@ -75,7 +75,7 @@ struct twihs_module {
 };
 
 /* Structures to manage the DMA control for both Rx and Tx transactions. */
-static struct twihs_module twihss[MAX_TWIS];
+static struct twihs_module twihss[MAX_TWIHS];
 
 /* Used to detect the init function being called after any part of the DMA
 control structure has already been initialilsed - indicating an error
@@ -744,7 +744,7 @@ static void local_twihs_handler(const portBASE_TYPE twihs_index)
 
 		/* if the receiving task supplied a notification semaphore, then
 		notify the task that the transmission has completed. */
-		if  (!(timeout_counter >= TWI_TIMEOUT_COUNTER)) {
+		if  (!(timeout_counter >= TWIHS_TIMEOUT_COUNTER)) {
 			if (rx_dma_control[twihs_index].transaction_complete_notification_semaphore != NULL) {
 				xSemaphoreGiveFromISR(
 						rx_dma_control[twihs_index].transaction_complete_notification_semaphore,
