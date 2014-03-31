@@ -60,7 +60,7 @@
 #elif SAM4L
 #include "touch_api_sam4l.h"
 #elif (SAMD20 || SAMD21)
-#include "touch_api_samd.h"
+#include "touch_api_SAMD.h"
 #else
 #include "touch_api.h"
 #endif
