@@ -3,7 +3,7 @@
  *
  * \brief SAM architecture specific IOPORT service implementation header file.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -191,12 +191,12 @@ inline static void arch_ioport_set_port_mode(ioport_port_t port,
 
 	base->WRCONFIG.reg =
 			(lower_pin_mask << PORT_WRCONFIG_PINMASK_Pos) |
-			(config_mask << 16) | config_mux |
+			config_mask | config_mux |
 			PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG;
 
 	base->WRCONFIG.reg =
 			(upper_pin_mask << PORT_WRCONFIG_PINMASK_Pos) |
-			(config_mask << 16) | config_mux |
+			config_mask | config_mux |
 			PORT_WRCONFIG_WRPMUX | PORT_WRCONFIG_WRPINCFG |
 			PORT_WRCONFIG_HWSEL;
 
