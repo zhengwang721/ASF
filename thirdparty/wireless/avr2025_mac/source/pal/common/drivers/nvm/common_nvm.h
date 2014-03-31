@@ -102,6 +102,11 @@ typedef enum {
  * in the documentation of the specific modules.
  *
  */
+enum status_code nvm_memcpy(
+const uint32_t destination_address,
+uint8_t *const buffer,
+uint16_t length,
+bool erase_flag);
 
 /**
  * \brief Initialize the non volatile memory specified.
@@ -137,7 +142,7 @@ status_code_t nvm_write_char(mem_type_t mem, uint32_t address, uint8_t data);
  * \param buffer Pointer to destination buffer
  * \param len Number of bytes to read
  */
-status_code_t nvm_read(mem_type_t mem, uint32_t address, void *buffer,
+status_code_t nvm_read(mem_type_t mem, uint32_t address,uint8_t *const buffer,
 		uint32_t len);
 
 /**
