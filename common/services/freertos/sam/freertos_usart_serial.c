@@ -105,31 +105,37 @@ static freertos_dma_event_control_t tx_dma_control[MAX_USARTS];
 /* Create an array that holds the information required about each defined
 USART. */
 static const freertos_pdc_peripheral_parameters_t all_usart_definitions[MAX_USARTS] = {
+#if	defined(PDC_USART0)
 	{USART0, PDC_USART0, ID_USART0, USART0_IRQn},
+#endif
 
-	#if (MAX_USARTS > 1)
+#if	defined(PDC_USART)
+	{USART, PDC_USART, ID_USART, USART_IRQn},
+#endif
+
+#if (MAX_USARTS > 1)
 	{USART1, PDC_USART1, ID_USART1, USART1_IRQn},
-	#endif
+#endif
 
-	#if (MAX_USARTS > 2)
+#if (MAX_USARTS > 2)
 	{USART2, PDC_USART2, ID_USART2, USART2_IRQn},
-	#endif
+#endif
 
-	#if (MAX_USARTS > 3)
+#if (MAX_USARTS > 3)
 	{USART3, PDC_USART3, ID_USART3, USART3_IRQn},
-	#endif
+#endif
 
-	#if (MAX_USARTS > 4)
+#if (MAX_USARTS > 4)
 	{USART4, PDC_USART4, ID_USART4, USART4_IRQn},
-	#endif
+#endif
 
-	#if (MAX_USARTS > 5)
+#if (MAX_USARTS > 5)
 	{USART4, PDC_USART5, ID_USART4, USART4_IRQn},
-	#endif
+#endif
 
-	#if (MAX_USARTS > 6)
+#if (MAX_USARTS > 6)
 	{USART4, PDC_USART6, ID_USART4, USART4_IRQn},
-	#endif
+#endif
 };
 
 /**
@@ -760,6 +766,14 @@ static void local_usart_handler(const portBASE_TYPE usart_index)
  * Individual interrupt handlers follow from here.  Each individual interrupt
  * handler calls the common interrupt handler.
  */
+#ifdef USART
+
+void USART_Handler(void)
+{
+	local_usart_handler(0);
+}
+
+#endif /* USART */
 
 #ifdef USART0
 

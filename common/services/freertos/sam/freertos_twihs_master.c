@@ -284,7 +284,7 @@ status_code_t freertos_twihs_write_packet_async(freertos_twihs_if p_twihs,
 			(void *) twihs_base);
 
 	/* Don't do anything unless a valid TWIHS pointer was used. */
-	if ((twihs_index < MAX_TWIHS) && (p_packet->addr_length > 0)) {
+	if ((twihs_index < MAX_TWIHS) && (p_packet->length > 0)) {
 		return_value = freertos_obtain_peripheral_access_mutex(
 				&(tx_dma_control[twihs_index]), &block_time_ticks);
 
@@ -470,7 +470,7 @@ status_code_t freertos_twihs_read_packet_async(freertos_twihs_if p_twihs,
 			(void *) twihs_base);
 
 	/* Don't do anything unless a valid TWIHS pointer was used. */
-	if ((twihs_index < MAX_TWIHS) && (p_packet->addr_length > 0)) {
+	if ((twihs_index < MAX_TWIHS) && (p_packet->length > 0)) {
 		/* Because the peripheral is half duplex, there is only one access mutex
 		and the rx uses the tx mutex. */
 		return_value = freertos_obtain_peripheral_access_mutex(
