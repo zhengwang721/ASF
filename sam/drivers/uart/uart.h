@@ -62,11 +62,6 @@ typedef struct sam_uart_opt {
 	uint32_t ul_baudrate;
 	/** Initialize value for UART mode register */
 	uint32_t ul_mode;
-	/**
-	 * Configure channel mode (Normal, Automatic, Local_loopback or
-	 * Remote_loopback)
-	 */
-	uint32_t ul_chmode;
 } sam_uart_opt_t;
 
 uint32_t uart_init(Uart *p_uart, const sam_uart_opt_t *p_uart_opt);
