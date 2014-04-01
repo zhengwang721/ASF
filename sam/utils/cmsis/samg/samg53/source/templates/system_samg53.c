@@ -125,7 +125,11 @@ void SystemCoreClockUpdate(void)
 		}
 		break;
 	case PMC_MCKR_CSS_PLLA_CLK:	/* PLLA clock */
-		SystemCoreClock = CHIP_FREQ_SLCK_RC;
+		if (SUPC->SUPC_SR & SUPC_SR_OSCSEL) {
+			SystemCoreClock = CHIP_FREQ_XTAL_32K;
+		} else {
+			SystemCoreClock = CHIP_FREQ_SLCK_RC;
+		}
 		if ((uint32_t) (PMC->PMC_MCKR & (uint32_t) PMC_MCKR_CSS_Msk) == PMC_MCKR_CSS_PLLA_CLK) {
 			SystemCoreClock *= ((((PMC->CKGR_PLLAR) & CKGR_PLLAR_MULA_Msk) >> 
 					CKGR_PLLAR_MULA_Pos) + 1U);
