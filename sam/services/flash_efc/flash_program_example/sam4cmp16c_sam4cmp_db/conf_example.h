@@ -44,7 +44,7 @@
 #ifndef CONF_EXAMPLE_H
 #define CONF_EXAMPLE_H
 
-/* Last page start address. */
-#define LAST_PAGE_ADDRESS (IFLASH_CNC_ADDR + IFLASH_SIZE - IFLASH_PAGE_SIZE * 4)
+/* Test page start address. */
+#define TEST_PAGE_ADDRESS (IFLASH_CNC_ADDR + IFLASH_SIZE - IFLASH_PAGE_SIZE * 4)
 
 #endif /* CONF_EXAMPLE_H */
