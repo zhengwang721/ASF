@@ -1,4 +1,4 @@
-﻿/**
+/**
  * \file
  *
  * \brief FreeRTOS Peripheral Control API For the USART
