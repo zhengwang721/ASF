@@ -276,11 +276,15 @@ extern "C" {
  */
 
 #include <compiler.h>
+#include "conf_dma.h"
 
 /** DMA invalid channel number */
 #define DMA_INVALID_CHANNEL        0xff
 
-/** DMA priority level. */
+/** ExInitial description section */
+extern DmacDescriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
+
+/** DMA priority level */
 enum dma_priority_level {
 	/** Priority level 0 */
 	DMA_PRIORITY_LEVEL_0,
