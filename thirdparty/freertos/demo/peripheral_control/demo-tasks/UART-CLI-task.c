@@ -112,7 +112,6 @@ void create_uart_cli_task(Uart *uart_base, uint16_t stack_depth_words,
 	uart_settings.ul_mck = sysclk_get_peripheral_hz();
 	uart_settings.ul_baudrate = CLI_BAUD_RATE;
 	uart_settings.ul_mode = UART_MR_PAR_NO;
-	uart_settings.ul_chmode = UART_MR_CHMODE_NORMAL;
 
 	/* Initialise the UART interface. */
 	freertos_uart = freertos_uart_serial_init(uart_base,
