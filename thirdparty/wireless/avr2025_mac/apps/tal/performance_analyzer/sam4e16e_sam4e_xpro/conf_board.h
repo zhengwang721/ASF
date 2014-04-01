@@ -46,7 +46,7 @@
 
 /* Configure UART pins */
 #define CONF_BOARD_UART_CONSOLE
-
+#define MCU_SOC_NAME "ATSAM4E16E"
 #define CONF_BOARD_AT86RFX
 
 #endif  /* CONF_BOARD_H_INCLUDED */

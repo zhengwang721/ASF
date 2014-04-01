@@ -187,7 +187,7 @@
 
 #endif /* SAM4L */
 
-#if SAM4S
+#if (SAM4S || SAM4E)
 #include <pio.h>
 # include "pio_handler.h"
 
