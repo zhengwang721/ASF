@@ -22,7 +22,6 @@
 		<build type="define"   name="_DEBUG_"                   value="0"/>
 		
 		<require idref="board.sam4e_xplained_pro"/>
-		<require idref="sam.drivers.pio"/>
 		
 		<generator value="armgcc"/>
 		<generator value="doxygen"/>
