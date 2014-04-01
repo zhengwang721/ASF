@@ -170,7 +170,7 @@ inline static void arch_ioport_set_port_mode(ioport_port_t port,
 	uint32_t config_mask = 0;
 	uint32_t config_mux  = 0;
 
-	config_mask |= PORT_PINCFG_INEN;
+	config_mask |= PORT_WRCONFIG_INEN;
 
 	if ((mode & IOPORT_MODE_PULLDOWN) || (mode & IOPORT_MODE_PULLUP)) {
 		config_mask |= PORT_WRCONFIG_PULLEN;
