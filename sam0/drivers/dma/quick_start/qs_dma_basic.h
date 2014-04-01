@@ -42,7 +42,7 @@
  */
 
 /**
- * \page asfdoc_sam0_dma_basic_use_case Quick Start Guide for Memory to Memory 
+ * \page asfdoc_sam0_dma_basic_use_case Quick Start Guide for Memory to Memory
  * data transfer using DMAC
  *
  * The supported device list:
@@ -139,6 +139,12 @@
  * -# Start the DMA transfer job with the allocated DMA resource and
  *    transfer descriptor.
  *    \snippet qs_dma_basic.c main_1
+ *
+ * -# Set the software trigger for the DMA channel. This can be done before
+ *    or after the DMA job is started. Note that all transfers needs a trigger
+ *    to start.
+ *    \snippet qs_dma_basic.c main_1_1
+ *
  * -# Waiting for the setting of the transfer done flag.
  *    \snippet qs_dma_basic.c main_2
  */
