@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage web_dsp_demo FreeRTOS Web/DSP Demo
+ * \mainpage FreeRTOS Web/DSP Demo
  *
  * \section Purpose
  *
@@ -75,7 +75,7 @@
  * Once the IP address is configured from the touch screen interface, the board
  * ressources can be accessed from any web browser providing the IP address. For
  * instance, when the IP address is configured statically :
- * <a href="http://192.168.0.100/">
+ * <a href="http://192.168.0.100/">http://192.168.0.100/</a>
  *
  * The web page gives the following information about the board status:
  * - CPU core type.
