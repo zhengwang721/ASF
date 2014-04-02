@@ -426,13 +426,6 @@
    /* Same number for 8-, 16- and 32-bit TC and all TC instances */
 #endif
 
-#if SAMR21 // Patch header file
-#  undef TC_INST_NUM
-#  define TC_INST_NUM 3
-#  undef TC_INSTS
-#  define TC_INSTS { TC3, TC4, TC5 }
-#endif
-
 /** TC Instance MAX ID Number */
 #if SAMD20E || SAMD21G || SAMD21E || SAMR21
 #define TC_INST_MAX_ID  5
@@ -1416,6 +1409,7 @@ static inline void tc_clear_status(
  *
  *  - \subpage asfdoc_sam0_tc_basic_use_case
  * \if TC_CALLBACK_MODE
+ *  - \subpage asfdoc_sam0_tc_timer_use_case
  *  - \subpage asfdoc_sam0_tc_callback_use_case
  * \endif
  *  - \subpage asfdoc_sam0_tc_dma_use_case
@@ -1429,9 +1423,14 @@ static inline void tc_clear_status(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>D</td>
+ *		<td>E</td>
  *		<td>03/2014</td>
  *		<td>Added support for SAMR21.</td>
+ *	</tr>
+ *	<tr>
+ *		<td>D</td>
+ *		<td>03/2014</td>
+ *		<td>Added timer use case.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>

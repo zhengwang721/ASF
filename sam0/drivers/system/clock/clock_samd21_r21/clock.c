@@ -44,6 +44,11 @@
 #include <conf_clocks.h>
 #include <system.h>
 
+#ifndef SYSCTRL_FUSES_OSC32K_ADDR
+#  define SYSCTRL_FUSES_OSC32K_ADDR SYSCTRL_FUSES_OSC32K_CAL_ADDR
+#  define SYSCTRL_FUSES_OSC32K_Pos  SYSCTRL_FUSES_OSC32K_CAL_Pos
+#endif
+
 /**
  * \internal
  * \brief DFLL-specific data container
@@ -937,7 +942,11 @@ void system_clock_init(void)
 
 	/* CPU and BUS clocks */
 	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
+
+#ifdef FEATURE_SYSTEM_CLOCK_FAILURE_DETECT
 	system_main_clock_set_failure_detect(CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT);
+#endif
+
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);
 
