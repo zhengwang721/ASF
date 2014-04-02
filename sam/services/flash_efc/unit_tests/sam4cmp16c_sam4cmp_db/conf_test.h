@@ -54,7 +54,7 @@
 #define IFLASH_ADDR          IFLASH_CNC_ADDR
 
 /* Last page start address. */
-#define LAST_PAGE_ADDRESS    (IFLASH_ADDR + IFLASH_SIZE / 4 - IFLASH_PAGE_SIZE)
+#define TEST_PAGE_ADDRESS    (IFLASH_ADDR + IFLASH_SIZE / 4 - IFLASH_PAGE_SIZE)
 
 /* default page count number */
 #define DEFAULT_PAGE_COUNT   (IFLASH_SIZE / IFLASH_PAGE_SIZE)
