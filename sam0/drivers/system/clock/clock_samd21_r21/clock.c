@@ -44,6 +44,11 @@
 #include <conf_clocks.h>
 #include <system.h>
 
+#ifndef SYSCTRL_FUSES_OSC32K_ADDR
+#  define SYSCTRL_FUSES_OSC32K_ADDR SYSCTRL_FUSES_OSC32K_CAL_ADDR
+#  define SYSCTRL_FUSES_OSC32K_Pos  SYSCTRL_FUSES_OSC32K_CAL_Pos
+#endif
+
 /**
  * \internal
  * \brief DFLL-specific data container
