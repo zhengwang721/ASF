@@ -129,6 +129,9 @@ static uint32_t find_twim_channel_num(Twim *twim)
  */
 void twim_default_callback(Twim *twim)
 {
+#define NCMDR_FREE_WAIT    2000
+	volatile uint32_t ncmdr_wait = NCMDR_FREE_WAIT;
+
 	/* Get masked status register value */
 	uint32_t twim_ch = find_twim_channel_num(twim);
 	uint32_t status = twim->TWIM_SR;
@@ -172,6 +175,9 @@ void twim_default_callback(Twim *twim)
 				}
 				/* If all data transfer done */
 				if (twim_next_rx_nb_bytes[twim_ch] > 0) {
+					ncmdr_wait = NCMDR_FREE_WAIT;
+					while ((twim->TWIM_NCMDR & TWIM_NCMDR_VALID) && (ncmdr_wait--)) {
+					}
 					/* Fill transfer command */
 					cmdr_reg = twim->TWIM_CMDR;
 					cmdr_reg &= (~(TWIM_CMDR_NBYTES_Msk | TWIM_CMDR_START | TWIM_CMDR_ACKLAST));
@@ -205,7 +211,9 @@ void twim_default_callback(Twim *twim)
 			/* Finish the receive operation */
 			twim->TWIM_IDR = TWIM_IDR_TXRDY;
 			/* Set next transfer to false */
-			twim_next_cmd_xfer_valid[twim_ch] = false;
+			if (twim_next_rx_nb_bytes[twim_ch] == 0) {
+				twim_next_cmd_xfer_valid[twim_ch] = false;
+			}
 #if TWIM_LOW_POWER_ENABLE
 			twim->TWIM_SCR = TWIM_SCR_CCOMP;
 			twim->TWIM_IER = TWIM_IER_CCOMP;
@@ -231,6 +239,9 @@ void twim_default_callback(Twim *twim)
 					}
 					/* If all data transfer done */
 					if (twim_next_tx_nb_bytes[twim_ch] > 0) {
+						ncmdr_wait = NCMDR_FREE_WAIT;
+						while ((twim->TWIM_NCMDR & TWIM_NCMDR_VALID) && (ncmdr_wait--)) {
+						}
 						/* Fill transfer command */
 						cmdr_reg = twim->TWIM_CMDR;
 						cmdr_reg &= (~(TWIM_CMDR_NBYTES_Msk | TWIM_CMDR_START));
@@ -244,6 +255,21 @@ void twim_default_callback(Twim *twim)
 					} else {
 						twim_next_cmd_xfer_valid[twim_ch] = false;
 					}
+				} else if ((twim_next_cmd_xfer_valid[twim_ch]) &&
+						(twim_next_rx_nb_bytes[twim_ch] != 0)) {
+					/* Fill transfer command (In case of RX after internal address write) */
+					ncmdr_wait = NCMDR_FREE_WAIT;
+					while ((twim->TWIM_NCMDR & TWIM_NCMDR_VALID) && (ncmdr_wait--)) {
+					}
+					cmdr_reg = twim->TWIM_CMDR;
+					cmdr_reg &= (~(TWIM_CMDR_NBYTES_Msk | TWIM_CMDR_START | TWIM_CMDR_ACKLAST));
+					if (twim_next_rx_nb_bytes[twim_ch] > TWIM_MAX_NBYTES_PER_XFER) {
+						cmdr_reg |=  (TWIM_CMDR_NBYTES(TWIM_MAX_NBYTES_PER_XFER) | TWIM_CMDR_ACKLAST);
+					} else {
+						cmdr_reg |=  (TWIM_CMDR_NBYTES(twim_next_rx_nb_bytes[twim_ch])
+								| TWIM_CMDR_STOP);
+					}
+					twim->TWIM_NCMDR = cmdr_reg;
 				}
 			}
 		}
