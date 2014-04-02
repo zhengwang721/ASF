@@ -51,7 +51,4 @@
 /** Parity setting */
 #define CONF_TEST_PARITY     UART_MR_PAR_NO
 
-/* Last page start address. */
-#define LAST_PAGE_ADDRESS (IFLASH_ADDR + IFLASH_SIZE / 4 - IFLASH_PAGE_SIZE)
-
 #endif /* CONF_TEST_H_INCLUDED */
