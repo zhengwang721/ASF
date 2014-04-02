@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief TCC Quick Start configuration
+ * \brief AT30TSE75X Temperature sensor driver configuration file.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,21 +40,13 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_AT30TSE75X_H_INCLUDED
+#define CONF_AT30TSE75X_H_INCLUDED
 
-#ifndef CONF_QUICK_START_H_INCLUDED
-#define CONF_QUICK_START_H_INCLUDED
+#include <board.h>
 
-//[definition_pwm]
-/** PWM module to use */
-#define CONF_PWM_MODULE      LED_0_PWM4CTRL_MODULE
-/** PWM channel */
-#define CONF_PWM_CHANNEL     LED_0_PWM4CTRL_CHANNEL
-/** PWM output */
-#define CONF_PWM_OUTPUT      LED_0_PWM4CTRL_OUTPUT
-/** PWM output pin */
-#define CONF_PWM_OUT_PIN     LED_0_PWM4CTRL_PIN
-/** PWM output pin mux */
-#define CONF_PWM_OUT_MUX     LED_0_PWM4CTRL_MUX
-//[definition_pwm]
+#define AT30TSE_SERCOM      EXT1_I2C_MODULE
+#define AT30TSE_PINMUX_PAD0 EXT1_I2C_SERCOM_PINMUX_PAD0
+#define AT30TSE_PINMUX_PAD1 EXT1_I2C_SERCOM_PINMUX_PAD1
 
-#endif /* CONF_QUICK_START_H_INCLUDED */
+#endif /* CONF_AT30TSE75X_H_INCLUDED */
