@@ -3,6 +3,7 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="touch_config_samd.h"/>
 		<require idref="sam.applications.samd_qtouch_selfcap_example"/>
 		<require idref="board.samd21_xplained_pro"/>
 		<config name="config.common.services.qtouch.qdebug.qt600.samd" value="yes"/>

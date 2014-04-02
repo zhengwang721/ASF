@@ -58,7 +58,7 @@
  * it started, users can turn on and off the LED by touching the button and slider,
  * change the color of RGB LED by touching wheel on QT1 Xplained Pro board.
  */
- 
+
 #include <asf.h>
 
 /* Macros */
@@ -383,7 +383,7 @@ int main(void)
 	/**
 	 * Enable global interrupts.
 	 */
-        system_interrupt_enable_global();
+	system_interrupt_enable_global();
 
 	/**
 	 * Initialize delay service.
@@ -445,121 +445,120 @@ int main(void)
 
 			p_selfcap_measure_data->measurement_done_touch = 0u;
 
-				/**
-		 * Get touch sensor states
-		 */
-		button1_state = GET_SELFCAP_SENSOR_STATE(0);
-		button2_state = GET_SELFCAP_SENSOR_STATE(1);
-		rotor_state = GET_SELFCAP_SENSOR_STATE(2);
-		slider_state = GET_SELFCAP_SENSOR_STATE(3);
-
-		if(button1_state)
-		{
-			port_pin_set_output_level(LED_8_PIN, 0);
-		}
-		else
-		{
-			port_pin_set_output_level(LED_8_PIN, 1);
-		}
-
-		if(button2_state)
-		{
-			port_pin_set_output_level(LED_9_PIN, 0);
-		}
-		else
-		{
-			port_pin_set_output_level(LED_9_PIN, 1);
-		}
-
-
-		/**
-		 * Clear all slider controlled LEDs
-		 */
-		port_pin_set_output_level(LED_0_PIN, 1);
-		port_pin_set_output_level(LED_1_PIN, 1);
-		port_pin_set_output_level(LED_2_PIN, 1);
-		port_pin_set_output_level(LED_3_PIN, 1);
-		port_pin_set_output_level(LED_4_PIN, 1);
-		port_pin_set_output_level(LED_5_PIN, 1);
-		port_pin_set_output_level(LED_6_PIN, 1);
-		port_pin_set_output_level(LED_7_PIN, 1);
-
-				/**
-		 * If slider is activated
-		 */
-		if(slider_state)
-		{
 			/**
-			 * Parse slider position
+			 * Get touch sensor states
 			 */
-			slider_position = GET_SELFCAP_ROTOR_SLIDER_POSITION(1);
-			slider_position = slider_position >> 5u;
-			switch(slider_position)
+			button1_state = GET_SELFCAP_SENSOR_STATE(0);
+			button2_state = GET_SELFCAP_SENSOR_STATE(1);
+			rotor_state = GET_SELFCAP_SENSOR_STATE(2);
+			slider_state = GET_SELFCAP_SENSOR_STATE(3);
+
+			if(button1_state)
 			{
-				case 0:
-					port_pin_set_output_level(LED_0_PIN, 0);
-					break;
-				case 1:
-					port_pin_set_output_level(LED_0_PIN, 0);
-					port_pin_set_output_level(LED_1_PIN, 0);
-					break;
-				case 2:
-					port_pin_set_output_level(LED_0_PIN, 0);
-					port_pin_set_output_level(LED_1_PIN, 0);
-					port_pin_set_output_level(LED_2_PIN, 0);
-					break;
-				case 3:
-					port_pin_set_output_level(LED_0_PIN, 0);
-					port_pin_set_output_level(LED_1_PIN, 0);
-					port_pin_set_output_level(LED_2_PIN, 0);
-					port_pin_set_output_level(LED_3_PIN, 0);
-					break;
-				case 4:
-					port_pin_set_output_level(LED_0_PIN, 0);
-					port_pin_set_output_level(LED_1_PIN, 0);
-					port_pin_set_output_level(LED_2_PIN, 0);
-					port_pin_set_output_level(LED_3_PIN, 0);
-					port_pin_set_output_level(LED_4_PIN, 0);
-					break;
-				case 5:
-					port_pin_set_output_level(LED_0_PIN, 0);
-					port_pin_set_output_level(LED_1_PIN, 0);
-					port_pin_set_output_level(LED_2_PIN, 0);
-					port_pin_set_output_level(LED_3_PIN, 0);
-					port_pin_set_output_level(LED_4_PIN, 0);
-					port_pin_set_output_level(LED_5_PIN, 0);
-					break;
-				case 6:
-					port_pin_set_output_level(LED_0_PIN, 0);
-					port_pin_set_output_level(LED_1_PIN, 0);
-					port_pin_set_output_level(LED_2_PIN, 0);
-					port_pin_set_output_level(LED_3_PIN, 0);
-					port_pin_set_output_level(LED_4_PIN, 0);
-					port_pin_set_output_level(LED_5_PIN, 0);
-					port_pin_set_output_level(LED_6_PIN, 0);
-					break;
-				case 7:
-					port_pin_set_output_level(LED_0_PIN, 0);
-					port_pin_set_output_level(LED_1_PIN, 0);
-					port_pin_set_output_level(LED_2_PIN, 0);
-					port_pin_set_output_level(LED_3_PIN, 0);
-					port_pin_set_output_level(LED_4_PIN, 0);
-					port_pin_set_output_level(LED_5_PIN, 0);
-					port_pin_set_output_level(LED_6_PIN, 0);
-					port_pin_set_output_level(LED_7_PIN, 0);
-					break;
-				default:
-					port_pin_set_output_level(LED_0_PIN, 1);
-					port_pin_set_output_level(LED_1_PIN, 1);
-					port_pin_set_output_level(LED_2_PIN, 1);
-					port_pin_set_output_level(LED_3_PIN, 1);
-					port_pin_set_output_level(LED_4_PIN, 1);
-					port_pin_set_output_level(LED_5_PIN, 1);
-					port_pin_set_output_level(LED_6_PIN, 1);
-					port_pin_set_output_level(LED_7_PIN, 1);
-					break;
+				port_pin_set_output_level(LED_8_PIN, 0);
 			}
-		}
+			else
+			{
+				port_pin_set_output_level(LED_8_PIN, 1);
+			}
+
+			if(button2_state)
+			{
+				port_pin_set_output_level(LED_9_PIN, 0);
+			}
+			else
+			{
+				port_pin_set_output_level(LED_9_PIN, 1);
+			}
+
+			/**
+			 * Clear all slider controlled LEDs
+			 */
+			port_pin_set_output_level(LED_0_PIN, 1);
+			port_pin_set_output_level(LED_1_PIN, 1);
+			port_pin_set_output_level(LED_2_PIN, 1);
+			port_pin_set_output_level(LED_3_PIN, 1);
+			port_pin_set_output_level(LED_4_PIN, 1);
+			port_pin_set_output_level(LED_5_PIN, 1);
+			port_pin_set_output_level(LED_6_PIN, 1);
+			port_pin_set_output_level(LED_7_PIN, 1);
+
+					/**
+			 * If slider is activated
+			 */
+			if(slider_state)
+			{
+				/**
+				 * Parse slider position
+				 */
+				slider_position = GET_SELFCAP_ROTOR_SLIDER_POSITION(1);
+				slider_position = slider_position >> 5u;
+				switch(slider_position)
+				{
+					case 0:
+						port_pin_set_output_level(LED_0_PIN, 0);
+						break;
+					case 1:
+						port_pin_set_output_level(LED_0_PIN, 0);
+						port_pin_set_output_level(LED_1_PIN, 0);
+						break;
+					case 2:
+						port_pin_set_output_level(LED_0_PIN, 0);
+						port_pin_set_output_level(LED_1_PIN, 0);
+						port_pin_set_output_level(LED_2_PIN, 0);
+						break;
+					case 3:
+						port_pin_set_output_level(LED_0_PIN, 0);
+						port_pin_set_output_level(LED_1_PIN, 0);
+						port_pin_set_output_level(LED_2_PIN, 0);
+						port_pin_set_output_level(LED_3_PIN, 0);
+						break;
+					case 4:
+						port_pin_set_output_level(LED_0_PIN, 0);
+						port_pin_set_output_level(LED_1_PIN, 0);
+						port_pin_set_output_level(LED_2_PIN, 0);
+						port_pin_set_output_level(LED_3_PIN, 0);
+						port_pin_set_output_level(LED_4_PIN, 0);
+						break;
+					case 5:
+						port_pin_set_output_level(LED_0_PIN, 0);
+						port_pin_set_output_level(LED_1_PIN, 0);
+						port_pin_set_output_level(LED_2_PIN, 0);
+						port_pin_set_output_level(LED_3_PIN, 0);
+						port_pin_set_output_level(LED_4_PIN, 0);
+						port_pin_set_output_level(LED_5_PIN, 0);
+						break;
+					case 6:
+						port_pin_set_output_level(LED_0_PIN, 0);
+						port_pin_set_output_level(LED_1_PIN, 0);
+						port_pin_set_output_level(LED_2_PIN, 0);
+						port_pin_set_output_level(LED_3_PIN, 0);
+						port_pin_set_output_level(LED_4_PIN, 0);
+						port_pin_set_output_level(LED_5_PIN, 0);
+						port_pin_set_output_level(LED_6_PIN, 0);
+						break;
+					case 7:
+						port_pin_set_output_level(LED_0_PIN, 0);
+						port_pin_set_output_level(LED_1_PIN, 0);
+						port_pin_set_output_level(LED_2_PIN, 0);
+						port_pin_set_output_level(LED_3_PIN, 0);
+						port_pin_set_output_level(LED_4_PIN, 0);
+						port_pin_set_output_level(LED_5_PIN, 0);
+						port_pin_set_output_level(LED_6_PIN, 0);
+						port_pin_set_output_level(LED_7_PIN, 0);
+						break;
+					default:
+						port_pin_set_output_level(LED_0_PIN, 1);
+						port_pin_set_output_level(LED_1_PIN, 1);
+						port_pin_set_output_level(LED_2_PIN, 1);
+						port_pin_set_output_level(LED_3_PIN, 1);
+						port_pin_set_output_level(LED_4_PIN, 1);
+						port_pin_set_output_level(LED_5_PIN, 1);
+						port_pin_set_output_level(LED_6_PIN, 1);
+						port_pin_set_output_level(LED_7_PIN, 1);
+						break;
+				}
+			}
 		}//measurement done touch
 
 	}//while(1)

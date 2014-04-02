@@ -71,7 +71,6 @@ extern "C"
 #else
 #include "touch_api.h"
 #endif
-
 /*============================ MACROS ========================================*/
 
 #ifdef _DEBUG_INTERFACE_
@@ -116,15 +115,13 @@ extern "C"
 #else
 #endif
 
-#if (DEF_TOUCH_QDEBUG_ENABLE == 0)
-#if (!(UC3L0)) && (!(SAM4L))
+#if (!(UC3L0)) && (!(SAM4L)) && (!(SAMD20)) && (!(SAMD21))
 #ifdef _ROTOR_SLIDER_
 #define TX_BUFFER_SIZE (QT_NUM_CHANNELS*4)+10
 #define RX_BUFFER_SIZE (QT_NUM_CHANNELS*4)+10
 #else
 #define TX_BUFFER_SIZE (QT_NUM_CHANNELS*3)+10
 #define RX_BUFFER_SIZE (QT_NUM_CHANNELS*3)+10
-#endif
 #endif
 #endif
 

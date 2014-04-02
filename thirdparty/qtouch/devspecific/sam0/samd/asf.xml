@@ -8,7 +8,7 @@
 			<build type="include-path" value="include/"/>
 			<build type="library" subtype="user" value="lib/iar/libsamd20_qt_iar.a" toolchain="iarewarm" />
 			<build type="library" subtype="user" value="lib/gcc/libsamd20_qt_gcc.a" toolchain="armgcc"/>
-			<build type="module-config" subtype="required-header-file" value="touch.h"/>
+			<build type="module-config" subtype="required-header-file" value="touch_config_samd.h"/>
 			<build type="module-config" subtype="path" value="module_config"/>
 			<build type="doxygen-entry-point" value="group_thirdparty_qtouch_devspecific_sam0_samd"/>
 			<device-support value="samd20" />
@@ -26,7 +26,7 @@
 			<build type="include-path" value="include/"/>
 			<build type="library" subtype="user" value="lib/iar/libsamd21_qt_iar.a" toolchain="iarewarm" />
 			<build type="library" subtype="user" value="lib/gcc/libsamd21_qt_gcc.a" toolchain="armgcc"/>
-			<build type="module-config" subtype="required-header-file" value="touch.h"/>
+			<build type="module-config" subtype="required-header-file" value="touch_config_samd.h"/>
 			<build type="module-config" subtype="path" value="module_config"/>
 			<build type="doxygen-entry-point" value="group_thirdparty_qtouch_devspecific_sam0_samd"/>
 			<device-support value="samd21" />

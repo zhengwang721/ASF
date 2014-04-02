@@ -6,7 +6,6 @@
 		<build type="c-source" value="main.c"/>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="qtouch/touch.c"/>
-		<build type="header-file" value="qtouch/touch.h"/>
 		<build type="header-file" value="qtouch/QDebugSettings.h"/>
 		<build type="include-path" value="qtouch/"/>
 		<require idref="sam0.drivers.rtc"/>

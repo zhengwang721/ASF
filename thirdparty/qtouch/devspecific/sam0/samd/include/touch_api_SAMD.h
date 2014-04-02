@@ -66,7 +66,7 @@ extern "C"
 *                               include files
 *  ----------------------------------------------------------------------------*/
 #include "compiler.h"
-#include "touch.h"
+#include "touch_config_samd.h"
 
 /*----------------------------------------------------------------------------
 *                                   macros
@@ -164,6 +164,7 @@ extern "C"
 *                          Mutual cap  macros
 *  ----------------------------------------------------------------------------*/
 #if DEF_TOUCH_MUTLCAP == 1
+
 #if (DEF_MUTLCAP_NUM_SENSORS == 0u)
 #error 'Number of Sensors cannot be 0.'
 #endif
@@ -175,12 +176,7 @@ extern "C"
 /**
   * QTouch number of channels.
   */
-#if DEF_TOUCH_MUTLCAP == 1
 #define QT_NUM_CHANNELS  DEF_MUTLCAP_NUM_CHANNELS
-#endif
-#if DEF_TOUCH_SELFCAP == 1
-#define QT_NUM_CHANNELS  DEF_SELFCAP_NUM_CHANNELS
-#endif
 
 /**
  * Size of Touch Sensor.
@@ -230,6 +226,7 @@ extern "C"
 *                          Self cap  macros
 *  ----------------------------------------------------------------------------*/
 #if DEF_TOUCH_SELFCAP == 1
+
 #if (DEF_SELFCAP_NUM_SENSORS == 0u)
 #error 'Number of Sensors cannot be 0.'
 #endif
@@ -237,6 +234,11 @@ extern "C"
 #if (DEF_SELFCAP_NUM_SENSORS > DEF_SELFCAP_NUM_CHANNELS)
   #error 'Number of Sensors cannot exceed number of channels'
 #endif
+
+/**
+  * QTouch number of channels.
+  */
+#define QT_NUM_CHANNELS  DEF_SELFCAP_NUM_CHANNELS
 
 /**
  * Size of Touch Sensor.
@@ -277,6 +279,8 @@ extern "C"
 #else
 #define PRIV_SELFCAP_RS_TABLE_INIT  NULL
 #endif /* SELF_NUM_ROTORS_SLIDERS*/
+
+
 #endif /* DEF_TOUCH_SELFCAP. */
 
 /*----------------------------------------------------------------------------
