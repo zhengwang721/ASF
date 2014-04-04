@@ -600,8 +600,6 @@ enum status_code i2c_slave_read_packet_wait(
 		struct i2c_slave_packet *const packet);
 enum i2c_slave_direction i2c_slave_get_direction_wait(
 		struct i2c_slave_module *const module);
-enum i2c_slave_direction i2c_slave_get_direction(
-		struct i2c_slave_module *const module);
 
 /** @} */
 

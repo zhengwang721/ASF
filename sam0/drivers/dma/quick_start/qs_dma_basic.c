@@ -158,6 +158,10 @@ int main(void)
 	dma_start_transfer_job(&example_resource);
 	//! [main_1]
 
+	//! [main_1_1]
+	dma_trigger_transfer(&example_resource);
+	//! [main_1_1]
+
 	//! [main_2]
 	while (!transfer_is_done) {
 		/* Wait for transfer done */
