@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief TCC Quick Start configuration
+ * \brief SAM R21 Xplained Pro board configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,20 +41,7 @@
  *
  */
 
-#ifndef CONF_QUICK_START_H_INCLUDED
-#define CONF_QUICK_START_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//[definition_pwm]
-/** PWM module to use */
-#define CONF_PWM_MODULE      LED_0_PWM4CTRL_MODULE
-/** PWM channel */
-#define CONF_PWM_CHANNEL     LED_0_PWM4CTRL_CHANNEL
-/** PWM output */
-#define CONF_PWM_OUTPUT      LED_0_PWM4CTRL_OUTPUT
-/** PWM output pin */
-#define CONF_PWM_OUT_PIN     LED_0_PWM4CTRL_PIN
-/** PWM output pin mux */
-#define CONF_PWM_OUT_MUX     LED_0_PWM4CTRL_MUX
-//[definition_pwm]
-
-#endif /* CONF_QUICK_START_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
