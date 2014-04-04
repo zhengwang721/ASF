@@ -199,7 +199,7 @@ static enum status_code _adc_set_config(
 
 	case ADC_RESOLUTION_15BIT:
 		/* Increase resolution by 3 bit */
-		adjres = ADC_DIVIDE_RESULT_8;
+		adjres = ADC_DIVIDE_RESULT_2;
 		accumulate = ADC_ACCUMULATE_SAMPLES_64;
 		/* 16-bit result register */
 		resolution = ADC_RESOLUTION_16BIT;
@@ -207,8 +207,10 @@ static enum status_code _adc_set_config(
 
 	case ADC_RESOLUTION_16BIT:
 		/* Increase resolution by 4 bit */
-		adjres = ADC_DIVIDE_RESULT_16;
+		adjres = ADC_DIVIDE_RESULT_DISABLE;
 		accumulate = ADC_ACCUMULATE_SAMPLES_256;
+		/* 16-bit result register */
+		resolution = ADC_RESOLUTION_16BIT;		
 		break;
 
 	case ADC_RESOLUTION_8BIT:
