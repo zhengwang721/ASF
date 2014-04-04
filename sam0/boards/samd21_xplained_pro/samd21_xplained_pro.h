@@ -111,12 +111,12 @@ void system_board_init(void);
 #define LED_0_ACTIVE              LED0_ACTIVE
 #define LED_0_INACTIVE            LED0_INACTIVE
 
-#define LED_0_PWM_MODULE          TCC0
-#define LED_0_PWM_CHANNEL         0
-#define LED_0_PWM_OUTPUT          0
-#define LED_0_PWM_PIN             PIN_PB30E_TCC0_WO0
-#define LED_0_PWM_MUX             MUX_PB30E_TCC0_WO0
-#define LED_0_PWM_PINMUX          PINMUX_PB30E_TCC0_WO0
+#define LED_0_PWM4CTRL_MODULE     TCC0
+#define LED_0_PWM4CTRL_CHANNEL    0
+#define LED_0_PWM4CTRL_OUTPUT     0
+#define LED_0_PWM4CTRL_PIN        PIN_PB30E_TCC0_WO0
+#define LED_0_PWM4CTRL_MUX        MUX_PB30E_TCC0_WO0
+#define LED_0_PWM4CTRL_PINMUX     PINMUX_PB30E_TCC0_WO0
 /** @} */
 
 /** Number of on-board LEDs */
@@ -343,6 +343,22 @@ void system_board_init(void);
 #define EXT2_PWM_1_PINMUX         PINMUX_PB13E_TC4_WO1
 /** @} */
 
+/** \name Extension header #2 PWM for Control definitions
+ *  @{
+ */
+#define EXT2_PWM4CTRL_MODULE      TCC0
+#define EXT2_PWM4CTRL_0_CHANNEL   2
+#define EXT2_PWM4CTRL_0_OUTPUT    6
+#define EXT2_PWM4CTRL_0_PIN       PIN_PB12F_TCC0_WO6
+#define EXT2_PWM4CTRL_0_MUX       MUX_PB12F_TCC0_WO6
+#define EXT2_PWM4CTRL_0_PINMUX    PINMUX_PB12F_TCC0_WO6
+#define EXT2_PWM4CTRL_1_CHANNEL   3
+#define EXT2_PWM4CTRL_1_OUTPUT    7
+#define EXT2_PWM4CTRL_1_PIN       PIN_PB13F_TCC0_WO7
+#define EXT2_PWM4CTRL_1_MUX       MUX_PB13F_TCC0_WO7
+#define EXT2_PWM4CTRL_1_PINMUX    PINMUX_PB13F_TCC0_WO7
+/** @} */
+
 /** \name Extension header #2 IRQ/External interrupt definitions
  *  @{
  */
@@ -445,18 +461,20 @@ void system_board_init(void);
 #define EXT3_ADC_1_PINMUX         PINMUX_PA03B_ADC_AIN1
 /** @} */
 
-/** \name Extension header #3 PWM definitions
+/** \name Extension header #3 PWM for Control definitions
  *  @{
  */
-#define EXT3_PWM_MODULE           TC2
-#define EXT3_PWM_0_CHANNEL        0
-#define EXT3_PWM_0_PIN            PIN_PA12E_TC2_WO0
-#define EXT3_PWM_0_MUX            MUX_PA12E_TC2_WO0
-#define EXT3_PWM_0_PINMUX         PINMUX_PA12E_TC2_WO0
-#define EXT3_PWM_1_CHANNEL        1
-#define EXT3_PWM_1_PIN            PIN_PA13E_TC2_WO1
-#define EXT3_PWM_1_MUX            MUX_PA13E_TC2_WO1
-#define EXT3_PWM_1_PINMUX         PINMUX_PA13E_TC2_WO1
+#define EXT3_PWM4CTRL_MODULE      TCC2
+#define EXT3_PWM4CTRL_0_CHANNEL   0
+#define EXT3_PWM4CTRL_0_OUTPUT    0
+#define EXT3_PWM4CTRL_0_PIN       PIN_PA12E_TCC2_WO0
+#define EXT3_PWM4CTRL_0_MUX       MUX_PA12E_TCC2_WO0
+#define EXT3_PWM4CTRL_0_PINMUX    PINMUX_PA12E_TCC2_WO0
+#define EXT3_PWM4CTRL_1_CHANNEL   1
+#define EXT3_PWM4CTRL_1_OUTPUT    1
+#define EXT3_PWM4CTRL_1_PIN       PIN_PA13E_TCC2_WO1
+#define EXT3_PWM4CTRL_1_MUX       MUX_PA13E_TCC2_WO1
+#define EXT3_PWM4CTRL_1_PINMUX    PINMUX_PA13E_TCC2_WO1
 /** @} */
 
 /** \name Extension header #3 IRQ/External interrupt definitions

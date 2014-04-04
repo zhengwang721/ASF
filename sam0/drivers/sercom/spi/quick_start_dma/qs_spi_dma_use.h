@@ -44,9 +44,9 @@
 /**
  * \page asfdoc_sam0_sercom_spi_dma_use_case Quick Start Guide for Using DMA with SERCOM SPI
  *
- * The supported device list:
- *    - SAMD21
- *    - SAMR21
+ * The supported board list:
+ *    - SAMD21 Xplained Pro
+ *    - SAMR21 Xplained Pro
  *
  * This quick start will transmit a buffer data from master to slave through DMA.
  * In this use case the SPI master will be configured with the following
@@ -85,7 +85,7 @@
  *
  * \subsection asfdoc_sam0_sercom_spi_dma_use_case_prereq Prerequisites
  * The following connections has to be made using wires:
- * - SAM D20/D21 Xplained Pro
+ * - SAM D21 Xplained Pro
  *  - \b SS_0:  EXT1 PIN15 (PA05) <--> EXT2 PIN15 (PA17)
  *  - \b DO/DI: EXT1 PIN16 (PA06) <--> EXT2 PIN17 (PA16)
  *  - \b DI/DO: EXT1 PIN17 (PA04) <--> EXT2 PIN16 (PA18)
@@ -99,11 +99,17 @@
  * \subsection asfdoc_sam0_spi_dma_use_case_setup_code Code
  *
  * Add to the main application source file, before user definitions and
- * functions:
- * \snippet conf_quick_start.h definition_master
- * \snippet conf_quick_start.h definition_slave
- * \snippet conf_quick_start.h definition_peripheral_trigger
+ * functions according to your board:
  *
+ * For SAMD21 Xplained Pro
+ * \snippet samd21_xplained_pro/conf_quick_start.h definition_master
+ * \snippet samd21_xplained_pro/conf_quick_start.h definition_slave
+ * \snippet samd21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
+ * For SAMR21 Xplained Pro
+ * \snippet samr21_xplained_pro/conf_quick_start.h definition_master
+ * \snippet samr21_xplained_pro/conf_quick_start.h definition_slave
+ * \snippet samr21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
+
  * Add to the main application source file, outside of any functions:
  * \snippet qs_spi_dma_use.c buf_length
  * \snippet qs_spi_dma_use.c spi_baudrate

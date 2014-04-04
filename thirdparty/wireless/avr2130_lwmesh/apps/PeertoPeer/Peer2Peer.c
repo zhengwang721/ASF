@@ -52,7 +52,7 @@
 #include <string.h>
 #include "config.h"
 #include "sys.h"
-#if SAMD20
+#if SAMD20 || SAMR21
 #include "system.h"
 #else
 #include "led.h"
@@ -206,12 +206,20 @@ static void APP_TaskHandler(void)
 *****************************************************************************/
 int main(void)
 {
-  SYS_Init();
-  sio2host_init();
-  LED_On(LED0);
-  while (1)
-  {
-    SYS_TaskHandler();
-    APP_TaskHandler();
-  }
+	irq_initialize_vectors();
+	#if SAMD20 ||SAMR21
+	system_init();
+	delay_init();
+	#else
+	sysclk_init();
+	board_init();
+	#endif	
+	SYS_Init();
+	 sio2host_init();
+	LED_On(LED0);
+	while (1)
+	{
+	  SYS_TaskHandler();
+	  APP_TaskHandler();
+	}
 }
