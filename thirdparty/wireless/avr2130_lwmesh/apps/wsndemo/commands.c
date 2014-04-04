@@ -60,7 +60,7 @@
 #define APP_CMD_PENDING_TABLE_SIZE  5
 #define APP_CMD_INVALID_ADDR        0xffff
 
-#define LED_IDENTIFY        0
+#define LED_IDENTIFY     LED0_GPIO
 
 #define APP_CMD_ENDPOINT    2
 
@@ -406,7 +406,7 @@ static void appCmdIdentifyDurationTimerHandler(SYS_Timer_t *timer)
 {
   NWK_Unlock();
 #if (LED_COUNT > 0)  
-  LED_On(LED_IDENTIFY);
+  LED_Off(LED_IDENTIFY);
 #endif  
   SYS_TimerStop(&appCmdIdentifyPeriodTimer);
   (void)timer;
