@@ -26,6 +26,8 @@
 	<device-support value="atmega128rfa1"/>
 	<device-support value="atxmega256a3bu"/>
 	<device-support value="samd20"/>
+	<device-support value="sam4e"/>
+	<device-support value="sam4s"/>
 	<device-support value="sam4l"/>
 </device-alias-map>	
 
@@ -34,6 +36,8 @@
 	<device-support value="atxmega256a3bu"/>
 	<device-support value="samd20"/>
 	<device-support value="sam4l"/>
+	<device-support value="sam4e"/>
+	<device-support value="sam4s"/>	
 </device-alias-map>	
 	
 </asf>
