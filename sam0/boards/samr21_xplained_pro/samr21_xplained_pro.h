@@ -110,15 +110,7 @@ void system_board_init(void);
 #define LED_0_PIN                 LED0_PIN
 #define LED_0_ACTIVE              LED0_ACTIVE
 #define LED_0_INACTIVE            LED0_INACTIVE
-<<<<<<< HEAD
 #define LED0_GPIO 				  LED0_PIN
-#define LED_0_PWM_MODULE          TCC0
-#define LED_0_PWM_CHANNEL         0
-#define LED_0_PWM_OUTPUT          0
-#define LED_0_PWM_PIN             PIN_PA19F_TCC0_WO3
-#define LED_0_PWM_MUX             MUX_PA19F_TCC0_WO3
-#define LED_0_PWM_PINMUX          PINMUX_PA19F_TCC0_WO3
-=======
 
 #define LED_0_PWM_MODULE          TC3
 #define LED_0_PWM_CHANNEL         1
@@ -133,7 +125,6 @@ void system_board_init(void);
 #define LED_0_PWM4CTRL_PIN        PIN_PA19F_TCC0_WO3
 #define LED_0_PWM4CTRL_MUX        MUX_PA19F_TCC0_WO3
 #define LED_0_PWM4CTRL_PINMUX     PINMUX_PA19F_TCC0_WO3
->>>>>>> 181c02b8dbb5a826d6bda900b8692835ef149f49
 /** @} */
 
 /** Number of on-board LEDs */
