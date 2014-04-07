@@ -194,7 +194,7 @@ static void appUartSendMessage(uint8_t *data, uint8_t size)
   sio2host_putchar(0x10);
   sio2host_putchar(0x03);
   cs += 0x10 + 0x02 + 0x10 + 0x03;
-
+  
   sio2host_putchar(cs);
 }
 #endif
@@ -471,10 +471,11 @@ static void APP_TaskHandler(void)
 int wsndemo_main(void)
 {
 
-#if APP_ENDDEVICE		
-	sm_init();  
-#endif
+
 	SYS_Init();
+#if APP_ENDDEVICE
+	sm_init();
+#endif
 #if APP_COORDINATOR
 	sio2host_init();
 #endif
@@ -482,7 +483,7 @@ int wsndemo_main(void)
 while (1)
 {	
 	SYS_TaskHandler();
-	APP_TaskHandler();
-	
+	APP_TaskHandler();	
+
 }
 }

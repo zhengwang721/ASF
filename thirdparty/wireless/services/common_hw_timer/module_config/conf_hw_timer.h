@@ -64,6 +64,12 @@
 #define TIMER                (TC0)
 #define TIMER_CHANNEL_ID     (0)
 #endif /* SAM4L */
+
+#if (SAM4S || SAM4E)
+#define TIMER                (TC0)
+#define TIMER_CHANNEL_ID     0
+#define ID_TC                (ID_TC0)
+#endif /* SAM4S */
 /* ! @} */
 
 /* ! \name Configuration for MEGARF */

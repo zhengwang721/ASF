@@ -52,7 +52,6 @@
  
  int main(void)
  {
- 	irq_initialize_vectors();
 	#if SAMD20 ||SAMR21
 	system_init();
 	delay_init();
@@ -60,6 +59,7 @@
 	sysclk_init();
 	board_init();
 	#endif	
+	irq_initialize_vectors();
 	wsndemo_main();
  }
  
