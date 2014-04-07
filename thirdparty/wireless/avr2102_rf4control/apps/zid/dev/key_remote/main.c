@@ -87,7 +87,7 @@
  */
  
 /* === INCLUDES ============================================================ */
-
+#include "helper.h"
 #include <asf.h>
 #include "conf_board.h"
 #include "led.h"
@@ -110,7 +110,13 @@ typedef enum node_status_tag
     CONNECTING,
     TRANSMITTING
 } SHORTENUM node_status_t;
-
+typedef struct joystick_desc_tag
+{
+	int8_t throttle;
+	int8_t xaxis;
+	int8_t yaxis;
+	uint8_t buttons;
+}joystick_desc_t;
 
 /* === MACROS ============================================================== */
 
@@ -138,6 +144,7 @@ typedef enum node_status_tag
 #define  BUTTON_REPEAT     HID_REPEAT
 
 /* Key Remote Controller Modes */
+
 #define  BUTTON_MOUSE_MODE (0xFB)
 #define  BUTTON_PPT_MODE   (0xFC)
 #define  BUTTON_GAME_MODE  (0xFD)
@@ -162,10 +169,17 @@ typedef enum node_status_tag
 #define  BUTTON_SCROLL_DOWN      (93)
 #define  BUTTON_MIDDLE_CLK       (94)
 
+#define BUTTON_1 0x01
+#define BUTTON_2 0x02
+#define BUTTON_3 0x04
+#define BUTTON_4 0x08
+#define BUTTON_THROTTLE_UP 0x11
+#define BUTTON_THROTTLE_DOWN 0x00
+
 #define ZID_COLD_START           (0)
 
 /* Invalid button definition */
-#define  BUTTON_INVALID        (0xFF)
+#define  BUTTON_INVALID         (0xFF)
 
 
 
@@ -282,9 +296,41 @@ static uint8_t key_mapping_mouse[TOTAL_NO_OF_ZID_KEY_RC] =
 	BUTTON_SCROLL_UP, /* BUTTON_SCROLL_UP */
 	BUTTON_SCROLL_DOWN /* BUTTON_SCROLL_DOWN */
 };
+/* Key mapping for ZID mouse Control */
+static uint8_t key_mapping_gamepad[TOTAL_NO_OF_ZID_KEY_RC] =
+{   BUTTON_INVALID, /* BUTTON_INVALID    */
+	BUTTON_MOUSE_MODE, /* BUTTON_MOUSE_MODE  */
+	BUTTON_PPT_MODE, /* BUTTON_PPT_MODE */
+	BUTTON_GAME_MODE, /* BUTTON_GAME_MODE   */
+	BUTTON_MEDIA_MODE, /* BUTTON_MEDIA_MODE */
+	BUTTON_INVALID, /* BUTTON_INVALID */
+	BUTTON_INVALID, /* BUTTON_INVALID */
+	BUTTON_INVALID, /* BUTTON_INVALID */
+	BUTTON_INVALID, /* BUTTON_INVALID */
+	BUTTON_INVALID, /* BUTTON_NUMBER_1 */
+	BUTTON_INVALID, /* BUTTON_NUMBER_2 */
+	BUTTON_INVALID, /* BUTTON_NUMBER_3 */
+	BUTTON_INVALID, /* BUTTON_NUMBER_4 */
+	BUTTON_INVALID, /* BUTTON_NUMBER_5 */
+	BUTTON_INVALID, /* BUTTON_NUMBER_6 */
+	BUTTON_INVALID, /* BUTTON_NUMBER_7 */
+	BUTTON_INVALID, /* BUTTON_NUMBER_8 */
+	BUTTON_INVALID, /* BUTTON_NUMBER_9 */
+	BUTTON_INVALID, /* BUTTON_UP_E       */
+	BUTTON_INVALID, /* BUTTON_LEFT_E     */
+	BUTTON_INVALID, /* BUTTON_MIDDLE_CLK    */
+	BUTTON_THROTTLE_UP, /* BUTTON_DOWN_E     */
+	BUTTON_THROTTLE_DOWN, /* BUTTON_RIGHT_E    */
+	BUTTON_1, /* BUTTON_LEFT_SINGLE_CLK  */
+	BUTTON_2, /* BUTTON_RIGHT_SINGLE_CLK */
+	BUTTON_3, /* BUTTON_SCROLL_UP */
+	BUTTON_4 /* BUTTON_SCROLL_DOWN */
+};
 
 #define MOUSE_POSITIVE_DISPLACEMENT  (2)
 #define MOUSE_NEGATIVE_DISPLACEMENT  (-2)
+#define JOYSTICK_POSITIVE_DISPLACEMENT (10)
+#define JOYSTICK_NEGATIVE_DISPLACEMENT (-10)
 																 
 /* Default mode for the key remote controller board is media player control */
 uint16_t button_mode = BUTTON_MEDIA_MODE;
@@ -303,7 +349,7 @@ static uint8_t set_attribute_index = 0;
 /* Store the current button val & set the initial button state */
 button_id_t button_val;
 uint8_t b_state = 0xFF;
-
+#define APPX_5_DEGREE_VALUE    3
 
 /* === PROTOTYPES ========================================================== */
 static void app_alert(void);
@@ -328,8 +374,11 @@ static void zid_set_attribute_confirm(nwk_enum_t status,uint8_t PairingRef, zid_
 #endif
 
 /* === IMPLEMENTATION ====================================================== */
-
-
+uint16_t x_val;
+uint16_t y_val;
+uint16_t z_val;
+uint16_t ADC_val;
+uint8_t status;
 /**
  * Main function, initialization and main message loop
  *
@@ -382,12 +431,13 @@ int main(void)
 #endif
                            );
     }
-
+//pal_ADC_init();
     /* Endless while loop */
+	//app_calculate_offset();
     while (1)
     {
         app_task(); /* Application task */
-        nwk_task(); /* RF4CE network layer task */
+		nwk_task(); /* RF4CE network layer task */
     }
 }
 
@@ -789,11 +839,23 @@ static void app_task(void)
                     case BUTTON_GAME_MODE:
 					 /* Configure for the game controller mode. */
                       button_mode = BUTTON_GAME_MODE;
-                       LED_Off(LED_2);
-                       LED_Off(LED_3);
-                       LED_On(LED_4);
-                       LED_Off(LED_5);
+                      
+					   /* zid_report_data[0].report_type = INPUT;
+                        zid_report_data[0].report_desc_identifier = TAP_GESTURE;
+                        zid_report_data[0].report_data = (void *)msg_ptr;                        
+                        mouse_desc = (mouse_desc_t *)msg_ptr;
+                        
+                        mouse_desc->button0 = 0x00;
+                        mouse_desc->button1 = throttle;
+                        mouse_desc->button2 = 0x00;
+                        mouse_desc->x_coordinate = 0x00;
+                        mouse_desc->y_coordinate = 0x00;*/
+					   app_calculate_offset();
+                       pal_read_acc(&x_val,&y_val,&z_val,&ADC_val);
+					   Correct_x_offset(&x_val,x_offset);
+					   Correct_y_offset(&y_val,y_offset);
                        zid_interframe_duration = INTER_FRAME_DURATION_US;
+					   
                        return;
                       break;
                       
@@ -966,12 +1028,82 @@ static void app_task(void)
                     }
                     else if(button_mode == BUTTON_GAME_MODE)
                     {
-                      /* Inputs for the game mode not implemented */
-                      if(key_mapping_ppt[b_state] == BUTTON_INVALID)
+                      /* get the valid key inputs for the mouse mode */
+                      zid_report_data_record_t zid_report_data[2];
+                      uint8_t report_data_buffer[80];
+                      uint8_t *msg_ptr = &report_data_buffer[0];
+                      joystick_desc_t *jys_desc;
+                      if(key_mapping_gamepad[b_state] == BUTTON_INVALID)
                       {
                         return;
                       }
+                       /* Create the input report for the mouse control */
+                       zid_report_data[0].report_type = INPUT;
+                       zid_report_data[0].report_desc_identifier = SYNC;
+                       zid_report_data[0].report_data = (void *)msg_ptr;
+                       jys_desc = (joystick_desc_t *)msg_ptr;
+                       
+                       jys_desc-> throttle= 0x00;//throttle
+                       jys_desc->xaxis = 0x00;//x-axis
+                       jys_desc->yaxis= 0x00;//y-axis
+                       jys_desc->buttons = 0x00;//buttons
                       
+					   uint16_t x_temp = x_val;
+					   uint16_t y_temp = y_val;
+					  if((x_temp==ADC_val)||(y_temp ==ADC_val))
+					  {
+						  //do nothing
+						  break;
+					  }
+                      else if (y_temp > (ADC_val + APPX_5_DEGREE_VALUE))
+                      {
+	                     jys_desc->yaxis = -5;//down y-axis negative
+                      }
+                      else if (y_temp < (ADC_val - APPX_5_DEGREE_VALUE))
+                      {
+	                     jys_desc->yaxis = 5;//up y-axis positive
+                      }
+
+                      else if (x_temp > (ADC_val + APPX_5_DEGREE_VALUE))
+                      {
+	                      jys_desc->xaxis = -5;//left x-axis negative
+                      }
+                      else if (x_temp < (ADC_val - APPX_5_DEGREE_VALUE))
+                      {
+	                      jys_desc->xaxis = 5;//right x-axis positive
+                      }
+                      switch(key_mapping_gamepad[b_state])
+                       {  
+						  case BUTTON_1:
+						  case BUTTON_2:
+						  case BUTTON_3:
+						  case BUTTON_4:
+						  jys_desc->buttons = key_mapping_gamepad[b_state];	   
+						  break;
+						  case BUTTON_THROTTLE_UP:
+						  jys_desc->throttle = JOYSTICK_POSITIVE_DISPLACEMENT;
+						  break;
+						  case BUTTON_THROTTLE_DOWN:
+						  jys_desc->throttle = JOYSTICK_NEGATIVE_DISPLACEMENT;
+						  break;
+											                    	                       
+                       }
+					   
+					   
+                       
+                       
+                       msg_ptr += sizeof(joystick_desc_t);
+                       num_records = 1;
+                       if (zid_report_data_request(pairing_ref, num_records, zid_report_data, TX_OPTIONS
+                       #ifdef RF4CE_CALLBACK_PARAM
+                       ,(FUNC_PTR)zid_report_data_confirm
+                       #endif
+                       ))
+
+                       {
+	                       node_status = TRANSMITTING;
+	                       b_state = BUTTON_INVALID;
+                       }
                     }
                 }
                 else 

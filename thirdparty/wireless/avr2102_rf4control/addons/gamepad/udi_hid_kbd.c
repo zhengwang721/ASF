@@ -497,7 +497,14 @@ bool udi_hid_gpd_buttons(bool b_state,uint8_t key_id)
 	udi_hid_gpd_report[0] = 0x00;
 	udi_hid_gpd_report[1] = 0x00;
 	udi_hid_gpd_report[2] = 0x00;
-	udi_hid_gpd_report[3] |= key_id;
+	if(b_state)
+	{
+		udi_hid_gpd_report[3] |= key_id;
+	}
+	else
+	{
+		udi_hid_gpd_report[3] &= ~key_id;
+	}
 	irqflags_t flags = cpu_irq_save();
 
 	// Valid and send report

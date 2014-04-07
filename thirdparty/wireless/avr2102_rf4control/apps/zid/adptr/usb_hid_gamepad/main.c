@@ -129,7 +129,13 @@ typedef enum node_status_tag
     WARM_STARTING
   
 } SHORTENUM node_status_t;
-
+typedef struct joystick_desc_tag
+{
+	int8_t throttle;
+	int8_t xaxis;
+	int8_t yaxis;
+	uint8_t buttons;
+}joystick_desc_t;
 /* === Globals ============================================================= */
 static zid_indication_callback_t zid_ind;
 static nwk_indication_callback_t nwk_ind;
@@ -197,11 +203,14 @@ int main (void)
    sw_timer_get_id(&APP_TIMER);
 
     /* Endless while loop */
-	
+	//udi_hid_gpd_up(16);
     while (1)
     {    
+		//udi_hid_throttle_move(100);//udi_hid_gpd_down(0x01);
+		//udi_hid_gpd_moveX(100);
        app_task(); /* Application task */
         nwk_task(); /* RF4CE network layer task */
+		//udi_hid_gpd_buttons(1,0x01);
 		
     }
 }
@@ -428,70 +437,20 @@ static void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_re
     
          switch(zid_report_data_record_ptr->report_desc_identifier)
          {
-         case MOUSE:
-         {
-            
-             mouse_desc_t *mouse_desc;
-             mouse_desc = (mouse_desc_t *)zid_report_data_record_ptr->report_data;
-			 
-				//udi_hid_mouse_btnleft(mouse_desc->button0); 
-				//udi_hid_mouse_btnright(mouse_desc->button1);
+     
+		   case SYNC:
+		   {
 			   
-				if((0x80==(mouse_desc->button2)))
-				{   
-					//udi_hid_mouse_moveScroll((mouse_desc->y_coordinate));
-					mouse_desc->y_coordinate = 0;
-				}
-				else if(0x01==(mouse_desc->button2))
-				{ 
-					//udi_hid_mouse_btnmiddle(0x01);
-				}
-				//udi_hid_mouse_moveX((mouse_desc->x_coordinate));
-				//udi_hid_mouse_moveY((mouse_desc->y_coordinate));
-			 
-          
-             break;
-         }
-         case KEYBOARD:
-         {
-             if(zid_report_data_record_ptr->report_type == INPUT)
-             {
-                 
-                 keyboard_input_desc_t *keyboard_input_desc;
-                 keyboard_input_desc = (keyboard_input_desc_t *)zid_report_data_record_ptr->report_data;
-                    if(main_b_kbd_enable)
-                    {   
-						if(keyboard_input_desc->modifier_keys)
-						{
-							//udi_hid_kbd_modifier_down(keyboard_input_desc->modifier_keys);
-							//udi_hid_kbd_modifier_up(keyboard_input_desc->modifier_keys);
-						}
-					                    
-						for(uint8_t j=0;j<4;j++)
-						{  
-							if(keyboard_input_desc->key_code[j])
-							{    
-								//udi_hid_kbd_down(keyboard_input_desc->key_code[j]);
-								//udi_hid_kbd_up(keyboard_input_desc->key_code[j]);
-							}   
-                   
-						}
-						uint16_t u_value;
-						u_value= convert_byte_array_to_16_bit(&(keyboard_input_desc->key_code[4]));
-						if(u_value)
-						{   
-							//udi_hid_mkbd_modifier_down(u_value);
-							//udi_hid_mkbd_modifier_up(u_value);
-						}
-					}
-              
-             }
-             else
-             {
-                /* Application can implement for other report types.*/
-             }
-             break;
-         }
+			   joystick_desc_t *jys_desc;
+			   jys_desc = (joystick_desc_t *)zid_report_data_record_ptr->report_data;
+			   udi_hid_gpd_throttle_move(jys_desc->throttle);
+			   udi_hid_gpd_moveX(jys_desc->xaxis);
+			   udi_hid_gpd_moveY(jys_desc->yaxis);
+			   udi_hid_gpd_buttons(true,jys_desc->buttons);
+			   
+			   
+			   break;
+		   }
          default:
 		 break;
          }
