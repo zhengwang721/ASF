@@ -1,11 +1,13 @@
 /**
- * @file sleep_mgr.c
+ * \file
  *
- * @brief 
+ * \brief Chip-specific sleep manager configuration
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -37,60 +39,22 @@
  *
  * \asf_license_stop
  *
- *
  */
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-/*
- * Copyright (c) 2014, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
-#include "sleep_mgr.h"
-#include "sleepmgr.h"
-#include "conf_sleepmgr.h"
-#include "macsc_megarf.h"
-# include "sysclk.h"
+#ifdef SLEEP_ENABLE
+/* Sleep manager options */
+#define CONFIG_SLEEPMGR_ENABLE
 
-#define COMPARE_MODE                               MACSC_RELATIVE_CMP
+/* Sleep manager timer resolution is 16us per count */
+#define SLEEP_MGR_TIMER_RES (16)
 
-#ifdef SLEEP_MGR_TIMER_RES
-#define CONFIG_MACSC_HZ							   (1)
-#else
-#define CONFIG_MACSC_HZ                            (62500)
+/** To use sleep manager and reduce the controller goes sleep and wakes-up immediately 
+   * it requires to have minimum sleep duration in us 
+   */
+#define MIN_SLEEP_TIME (1000)
+
 #endif
 
-static void cmp3_int_cb(void)
-{
-	/*Disable The MAC Symbol Counter*/
-	macsc_disable();
-}
-
-/**
- * \brief This function Initializes the Sleep functions 
-*/
-void sm_init(void)
-{
-	// Set the sleep mode to initially lock.
-	sleep_set_mode(SLEEP_SMODE_PSAVE);	
-	sysclk_enable_peripheral_clock(&TCCR2A);
-	macsc_write_clock_source(MACSC_32KHz);
-	macsc_sleep_clk_enable();
-	macsc_set_cmp3_int_cb(cmp3_int_cb);
-	macsc_enable_cmp_int(MACSC_CC3);
-	
-}
-
-/**
- * \brief This function puts the  device to sleep
- * \param interval : in seconds for the device to sleep.Range of Interval is 1-68719s
-*/
-void sm_sleep(uint32_t interval)
-{
-	/*Enable MAC Symbol Counter*/
-	macsc_enable();
-	/*Timestamp the current symbol counter value for Comparison*/
-	macsc_enable_manual_bts();	
-	macsc_use_cmp(COMPARE_MODE, interval*CONFIG_MACSC_HZ, MACSC_CC3);	
- 	sleep_enable();
- 	sleep_enter();
-}
+#endif /* CONF_SLEEPMGR_H */
