@@ -78,7 +78,7 @@
 #if APP_COORDINATOR
 #include "sio2host.h"
 #endif
-#if SAMD20 || SAMR21
+#if SAMD || SAMR21
 #include "system.h"
 #else
 #include "sysclk.h"

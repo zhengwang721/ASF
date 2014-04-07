@@ -67,7 +67,7 @@
 #include <stdlib.h>
 #include "serial_bridge.h"
 #include "asf.h"
-#if SAMD20
+#if SAMD || SAMR21
 #include "system.h"
 #endif
 /* === PROTOTYPES
@@ -86,7 +86,7 @@ int main(void)
 {
 	irq_initialize_vectors();
 
-#if SAMD20
+#if SAMD || SAMR21
 	system_init();
 	delay_init();
 #else

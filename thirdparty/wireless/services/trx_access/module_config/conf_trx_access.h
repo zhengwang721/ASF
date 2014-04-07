@@ -234,7 +234,7 @@
 
 #endif
 
-#if (SAMD20)
+#if (SAMD || SAMR21)
 
 #define AT86RFX_SPI                  SERCOM0
 #define AT86RFX_RST_PIN              PIN_PA23
@@ -291,5 +291,5 @@
 
 #define AT86RFX_SPI_BAUDRATE         (4000000)
 
-#endif /* SAMD20 */
+#endif /* SAMD || SAMR21 */
 #endif /* CONF_TRX_ACCESS_H_INCLUDED */

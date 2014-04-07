@@ -283,7 +283,7 @@ static void print_stack_app_build_features(void);
 int main(void)
 {	
 	irq_initialize_vectors();
-	#if SAMD20
+	#if SAMD || SAMR21
 	system_init();
 	delay_init();
 	#else

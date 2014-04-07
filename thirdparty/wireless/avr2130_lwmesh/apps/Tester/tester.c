@@ -52,7 +52,7 @@
 #include "phy.h"
 #include "sys.h"
 #include "nwk.h"
-#if SAMD20
+#if SAMD || SAMR21
 #include "system.h"
 #else
 #include "led.h"

@@ -59,7 +59,7 @@
 #include "app_frame_format.h"
 #include "app_per_mode.h"
 #include "conf_board.h"
-#if !(SAMD20 || SAMR21)
+#if !(SAMD || SAMR21)
 #include "led.h"
 #endif
 

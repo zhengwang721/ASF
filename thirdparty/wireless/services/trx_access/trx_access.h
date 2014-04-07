@@ -64,7 +64,7 @@
 
 #include "compiler.h"
 #include "conf_trx_access.h"
-#if SAMD20 || SAMR21
+#if SAMD || SAMR21
 #include "port.h"
 #include "extint.h"
 #else
@@ -107,7 +107,7 @@
 /**
  * Set TRX GPIO pins.
  */
-#if SAMD20 || SAMR21
+#if SAMD || SAMR21
 #define RST_HIGH()                      port_pin_set_output_level(AT86RFX_RST_PIN, true)
 #define RST_LOW()                       port_pin_set_output_level(AT86RFX_RST_PIN, false)
 #define SLP_TR_HIGH()                   port_pin_set_output_level(AT86RFX_SLP_PIN, true)

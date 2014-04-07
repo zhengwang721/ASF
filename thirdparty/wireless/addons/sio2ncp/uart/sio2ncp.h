@@ -99,7 +99,7 @@ int sio2ncp_getchar_nowait(void);
  */
 uint8_t sio2ncp_getchar(void);
 
-#if SAMD20
+#if SAMD || SAMR21
 void USART_NCP_ISR_VECT(uint8_t instance);
 #endif
 

@@ -16,8 +16,7 @@
 			<require idref="thirdparty.wireless.common_services.sal.at86rf2xx"/>
 			<device-support value="uc3"/>
 			<device-support value="sam4l"/>
-			<device-support value="samd20"/>
-			<device-support value="samr21"/>
+			<device-support value="sam0"/>
 			<device-support value="sam4e"/>
 			<device-support value="sam4s"/>		</module>
 		<module type="driver" id="config.thirdparty.wireless.common_services.sal#atmegarf_sal"     caption="atmegarf_sal  support enabled">
@@ -45,8 +44,7 @@
 		<device-support value="sam4l"/>
 		<device-support value="sam4e"/>
 		<device-support value="sam4s"/>
-		<device-support value="samd20"/>
-		<device-support value="samr21"/>
+		<device-support value="sam0"/>
 	</module>
 	<module type="meta" id="thirdparty.wireless.common_services.sal.inc" caption="SAL">
 		<info type="description" value="summary">

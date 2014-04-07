@@ -46,7 +46,7 @@
 #include "asf.h"
 #include "sio2ncp.h"
 #include "conf_sio2ncp.h"
-#if SAMD20
+#if SAMD || SAMR21
 #include "stdio_serial.h"
 #endif
 /* === TYPES =============================================================== */
@@ -56,7 +56,7 @@
 /* === PROTOTYPES ========================================================== */
 
 /* === GLOBALS ========================================================== */
-#if SAMD20
+#if SAMD || SAMR21
 static struct usart_module uart_module;
 #else
 static usart_serial_options_t usart_serial_options = {
@@ -91,7 +91,7 @@ static uint8_t serial_rx_count;
 
 void sio2ncp_init(void)
 {
-#if SAMD20
+#if SAMD || SAMR21
 	SIO2NCP_USART_INIT();
 	stdio_serial_init(&uart_module, USART_NCP,&uart_config);	
     usart_enable(&uart_module);
@@ -112,14 +112,14 @@ ioport_set_pin_level(NCP_RESET_GPIO, IOPORT_PIN_LEVEL_HIGH);
 
 uint8_t sio2ncp_tx(uint8_t *data, uint8_t length)
 {
-#if SAMD20
+#if SAMD || SAMR21
 	status_code_genare_t status;
 #else
 	status_code_t status;
-#endif /* SAMD20 */
+#endif /* SAMD || SAMR21 */
 
 	do {
-#if SAMD20
+#if SAMD || SAMR21
 status = usart_serial_write_packet(&uart_module,(const uint8_t *)data,length);
 #else 
 status = usart_serial_write_packet(USART_NCP,(const uint8_t *)data,length);
@@ -208,14 +208,14 @@ int sio2ncp_getchar_nowait(void)
 	}
 }
 
-#if SAMD20
+#if SAMD || SAMR21
 void USART_NCP_ISR_VECT(uint8_t instance)
 #else 
 USART_NCP_ISR_VECT()
 #endif
 {
 	uint8_t temp;
-#if SAMD20
+#if SAMD || SAMR21
  	usart_serial_read_packet(&uart_module, &temp, 1);
 #else 
 	usart_serial_read_packet(USART_NCP, &temp, 1);

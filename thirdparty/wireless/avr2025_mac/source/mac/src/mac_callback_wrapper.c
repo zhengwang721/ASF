@@ -226,7 +226,7 @@ void mlme_associate_ind(uint8_t *m)
 	/* Get the buffer body from buffer header */
 	pmsg = (mlme_associate_ind_t *)BMM_BUFFER_POINTER((buffer_t *)m);
 
-#if (defined __SAMD20J18__) || (defined __SAM4LC4C__)	
+#if  SAMD || SAMR21
     uint64_t device_addr_temp = 0;
     memcpy((uint8_t *)&device_addr_temp, (uint8_t *)&pmsg->DeviceAddress, sizeof(device_addr_temp));
 	usr_mlme_associate_ind(device_addr_temp, pmsg->CapabilityInformation);

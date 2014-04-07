@@ -42,9 +42,9 @@
 #include "conf_common_sw_timer.h"
 #include "common_hw_timer.h"
 #include "common_sw_timer.h"
-#if SAMD20
+#if SAMD || SAMR21
 #include "system.h"
-#endif /* SAMD20 */
+#endif /* SAMD || SAMR21 */
 #include "board.h"
 
 #if (TOTAL_NUMBER_OF_SW_TIMERS > 0)

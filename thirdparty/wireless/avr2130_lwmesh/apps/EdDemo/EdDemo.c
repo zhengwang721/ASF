@@ -55,7 +55,7 @@
 #include "nwk.h"
 #include "sysTimer.h"
 #include "sio2host.h"
-#if SAMD20
+#if SAMD || SAMR21
 #include "system.h"
 #else
 #include "led.h"

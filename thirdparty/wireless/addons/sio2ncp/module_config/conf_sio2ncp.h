@@ -90,7 +90,7 @@
 
 /* ! \name Configuration for SAM4L */
 /* ! @{ */
-#if (SAM && !SAMD20)
+#if (SAM && !(SAMD || SAMR21))
 #define NCP_RESET_GPIO            PIN_PC00
 
 #define USART_NCP                 USART1
@@ -106,7 +106,7 @@
 	NVIC_EnableIRQ(USART_NCP_IRQn);
 #endif /* (SAM && !SAMD20) */
 /* ! @} */
-#if SAMD20
+#if SAMD || SAMR21
 #define USART_NCP                 SERCOM4
 
 /** Baudrate setting */

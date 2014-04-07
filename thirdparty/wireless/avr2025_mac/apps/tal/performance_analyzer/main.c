@@ -51,7 +51,7 @@
  # include "performance_main.h"
  int main(void)
  {
-#if SAMD20 || SAMR21
+#if SAMD || SAMR21
 	system_init();
 	delay_init();
 #else
