@@ -1,9 +1,9 @@
 /**
- * \file main.c
+ * \file
  *
- * \brief  Main of WSNDemo application
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,32 +38,10 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
-
-/**
- * \page license License
- * Copyright(c) 2014, Atmel Corporation All rights reserved.
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
- #include "wsndemo.h"
- #include "asf.h"
- 
- int main(void)
- {
- 	
-	#if SAMD20
-	system_init();
-	delay_init();
-	#else
-	sysclk_init();
-	board_init();
-	#endif	
-	irq_initialize_vectors();
-	wsndemo_main();
- }
- 
- 
- 
- 
+#ifndef CONF_USART_SERIAL_H
+#define CONF_USART_SERIAL_H
+
+#endif /* CONF_USART_SERIAL_H_INCLUDED */

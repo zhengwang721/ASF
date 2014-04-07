@@ -1,9 +1,9 @@
 /**
- * \file main.c
+ * \file *********************************************************************
  *
- * \brief  Main of WSNDemo application
+ * \brief Serial Input & Output configuration
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,30 +40,27 @@
  * \asf_license_stop
  */
 
-/**
- * \page license License
- * Copyright(c) 2014, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED 
+ #define SERIAL_RX_BUF_SIZE_HOST    156
 
- #include "wsndemo.h"
- #include "asf.h"
- 
- int main(void)
- {
- 	
-	#if SAMD20
-	system_init();
-	delay_init();
-	#else
-	sysclk_init();
-	board_init();
-	#endif	
-	irq_initialize_vectors();
-	wsndemo_main();
- }
- 
- 
- 
- 
+/** USART Interface */
+#define USART_HOST                 CONSOLE_UART
+/** Baudrate setting */
+#define USART_HOST_BAUDRATE        38400
+/** Character length setting */
+#define USART_HOST_CHAR_LENGTH     US_MR_CHRL_8_BIT
+/** Parity setting */
+#define USART_HOST_PARITY          US_MR_PAR_NO
+/** Stop bits setting */
+#define USART_HOST_STOP_BITS       US_MR_NBSTOP_1_BIT
+
+#define USART_HOST_ISR_VECT()      ISR(UART0_Handler)
+
+#define USART_HOST_IRQn            UART0_IRQn
+
+#define USART_HOST_RX_ISR_ENABLE() usart_enable_interrupt(USART_HOST, \
+		US_IER_RXRDY); \
+	NVIC_EnableIRQ(USART_HOST_IRQn);
+
+#endif /* CONF_SIO2HOST_H_INCLUDED */

@@ -1,7 +1,7 @@
 /**
- * \file main.c
+ * \file *********************************************************************
  *
- * \brief  Main of WSNDemo application
+ * \brief Common TRX Access Configuration
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,30 +40,7 @@
  * \asf_license_stop
  */
 
-/**
- * \page license License
- * Copyright(c) 2014, Atmel Corporation All rights reserved.
- *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
- */
+#ifndef CONF_TRX_ACCESS_H_INCLUDED
+#define CONF_TRX_ACCESS_H_INCLUDED
 
- #include "wsndemo.h"
- #include "asf.h"
- 
- int main(void)
- {
- 	
-	#if SAMD20
-	system_init();
-	delay_init();
-	#else
-	sysclk_init();
-	board_init();
-	#endif	
-	irq_initialize_vectors();
-	wsndemo_main();
- }
- 
- 
- 
- 
+#endif /* CONF_TRX_ACCESS_H_INCLUDED */

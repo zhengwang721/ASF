@@ -1,7 +1,7 @@
 /**
- * \file main.c
+ * \file
  *
- * \brief  Main of WSNDemo application
+ * \brief Sleep manager configuration
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -38,32 +38,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
-
-/**
- * \page license License
- * Copyright(c) 2014, Atmel Corporation All rights reserved.
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
- #include "wsndemo.h"
- #include "asf.h"
- 
- int main(void)
- {
- 	
-	#if SAMD20
-	system_init();
-	delay_init();
-	#else
-	sysclk_init();
-	board_init();
-	#endif	
-	irq_initialize_vectors();
-	wsndemo_main();
- }
- 
- 
- 
- 
+#define CONFIG_SLEEPMGR_ENABLE
+
+#endif /* CONF_SLEEPMGR_H */

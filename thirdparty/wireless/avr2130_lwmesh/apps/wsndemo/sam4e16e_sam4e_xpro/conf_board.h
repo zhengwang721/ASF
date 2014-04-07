@@ -1,9 +1,9 @@
 /**
- * \file main.c
+ * \file
  *
- * \brief  Main of WSNDemo application
+ * \brief  Configuration File for SAM4L-EK Board.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,32 +38,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- */
-
-/**
- * \page license License
- * Copyright(c) 2014, Atmel Corporation All rights reserved.
  *
- * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 
- #include "wsndemo.h"
- #include "asf.h"
- 
- int main(void)
- {
- 	
-	#if SAMD20
-	system_init();
-	delay_init();
-	#else
-	sysclk_init();
-	board_init();
-	#endif	
-	irq_initialize_vectors();
-	wsndemo_main();
- }
- 
- 
- 
- 
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
+
+/* Configure UART pins */
+#define CONF_BOARD_UART_CONSOLE
+#define MCU_SOC_NAME "ATSAM4E16E"
+#define CONF_BOARD_AT86RFX
+
+#endif  /* CONF_BOARD_H_INCLUDED */
