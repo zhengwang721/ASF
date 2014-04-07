@@ -232,13 +232,14 @@ bool button_pressed(void)
 		return true;
 	}
 
+#if !SAMD20
 #elif defined BUTTON_0_PIN	/*Read the current state of the button*/
 if (ioport_get_pin_level(BUTTON_0_PIN)) {
 	return false;
 	} else {
 	return true;
 }	
-
+#endif
 #else
 	return false;
 #endif
