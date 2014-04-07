@@ -323,7 +323,7 @@ static void appSendData(void)
   appNwkDataReq.size = sizeof(appMsg);
   appNwkDataReq.confirm = appDataConf;
 
-  //LED_On(LED_DATA);
+  LED_On(LED_DATA);
   NWK_DataReq(&appNwkDataReq);
 
   appState = APP_STATE_WAIT_CONF;
