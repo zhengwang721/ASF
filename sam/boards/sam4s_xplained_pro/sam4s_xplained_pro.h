@@ -106,11 +106,11 @@
 
 //! \name LED0 definitions
 //@{
-#define LED0_GPIO                  IOPORT_CREATE_PIN(PIOC, 23)
+#define LED0_PIN                  IOPORT_CREATE_PIN(PIOC, 23)
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
 #define LED0				      LED0_GPIO
-#define LED0_PIN				  LED0_GPIO
+#define LED0_GPIO				  LED0_PIN
 //@}
 
 //! \name SW0 definitions

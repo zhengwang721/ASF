@@ -86,6 +86,7 @@ void system_board_init(void);
 #define LED0_PIN                  PIN_PA19
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
+#define LED0 LED0_PIN
 /** @} */
 
 /** \name SW0 definitions
@@ -429,6 +430,10 @@ void system_board_init(void);
 #define EXT_IRQ_MUX              MUX_PB00A_EIC_EXTINT0
 #define EXT_IRQ_PINMUX           PINMUX_PB00A_EIC_EXTINT0
 
+/** \name 802.15.4 TRX Interface definitions
+ * @{
+ */
+ 
 #define AT86RFX_SPI                  SERCOM4
 #define AT86RFX_RST_PIN              PIN_PB15
 #define AT86RFX_IRQ_PIN              PIN_PB00
@@ -437,10 +442,10 @@ void system_board_init(void);
 #define AT86RFX_SPI_MOSI             PIN_PB30
 #define AT86RFX_SPI_MISO             PIN_PC19
 #define AT86RFX_SPI_SCK              PIN_PC18
+#define PIN_RFCTRL1					 PIN_PA09
+#define PIN_RFCTRL2                  PIN_PA12
+#define RFCTRL_CFG_ANT_DIV			 4
 
-#define LED0 LED0_PIN
-
-//#define AT86RFX_SPI_BAUDRATE         (5000000)
 
 #define AT86RFX_SPI_CONFIG(config) \
 config.mux_setting = EXT_SPI_SERCOM_MUX_SETTING; \
@@ -482,6 +487,8 @@ extint_chan_enable_callback(AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT);
  *  This macro restores the transceiver interrupt status
  */
 #define LEAVE_TRX_REGION()   extint_chan_enable_callback(AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT); }
+
+/** @} */
 /**
  * \brief Turns off the specified LEDs.
  *

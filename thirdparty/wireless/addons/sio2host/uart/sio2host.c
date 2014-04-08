@@ -91,10 +91,13 @@ void sio2host_init(void)
 	struct usart_config cdc_uart_config;
     /* Configure USART for unit test output */
     usart_get_config_defaults(&cdc_uart_config);
-    cdc_uart_config.mux_setting     = EDBG_CDC_SERCOM_MUX_SETTING; 
-    cdc_uart_config.pinmux_pad3     = EDBG_CDC_SERCOM_PINMUX_PAD3; 
-    cdc_uart_config.pinmux_pad2     = EDBG_CDC_SERCOM_PINMUX_PAD2; 
-    cdc_uart_config.baudrate        = USART_HOST_BAUDRATE;
+	cdc_uart_config.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
+
+	cdc_uart_config.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
+	cdc_uart_config.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
+	cdc_uart_config.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
+	cdc_uart_config.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;	
+	cdc_uart_config.baudrate    = USART_HOST_BAUDRATE;
     stdio_serial_init(&cdc_uart_module, USART_HOST,&cdc_uart_config);
     usart_enable(&cdc_uart_module);
     /* Enable transceivers */

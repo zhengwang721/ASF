@@ -58,7 +58,7 @@
 #if (SAMD || SAMR21 || SAM4L || SAM4S || SAM4E)
  #define __PACK__RST_DATA__  COMPILER_PACK_RESET()
  #define __PACK__DATA__		 COMPILER_PACK_SET(1)
-#ifdef SAM4L || SAM4S || SAM4E
+#if (SAM4L || SAM4S || SAM4E)
 #define status_code_genare_t status_code_t 
 #endif
 #else

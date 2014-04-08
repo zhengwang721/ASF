@@ -442,9 +442,7 @@ void performance_analyzer_main(void)
 	 */
 	set_main_state(INIT, NULL);
 
-	cpu_irq_enable();
-
-    
+	cpu_irq_enable();    
 
 	/* INIT was a success - so change to WAIT_FOR_EVENT state */
 	set_main_state(WAIT_FOR_EVENT, NULL);
