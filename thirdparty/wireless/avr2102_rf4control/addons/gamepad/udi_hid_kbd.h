@@ -101,7 +101,7 @@ typedef struct {
 	.iface.bNumEndpoints       = 1,\
 	.iface.bInterfaceClass     = HID_CLASS,\
 	.iface.bInterfaceSubClass  = HID_SUB_CLASS_NOBOOT,\
-	.iface.bInterfaceProtocol  = 0x00,\ 
+	.iface.bInterfaceProtocol  = 0x00,\
 	.iface.iInterface          = UDI_HID_GPD_STRING_ID,\
 	.hid.bLength               = sizeof(usb_hid_descriptor_t),\
 	.hid.bDescriptorType       = USB_DT_HID,\
