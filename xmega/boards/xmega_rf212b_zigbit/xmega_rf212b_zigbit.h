@@ -49,6 +49,7 @@
 #define _XMEGA_RF212B_ZIGBIT_H_
 
 #include <compiler.h>
+# include "conf_board.h"
 
 #define MCU_SOC_NAME        "ATxmega256A3U"
 

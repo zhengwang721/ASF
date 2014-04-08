@@ -61,8 +61,6 @@
 #define APP_CMD_PENDING_TABLE_SIZE  5
 #define APP_CMD_INVALID_ADDR        0xffff
 
-#define LED_IDENTIFY     LED0_GPIO
-
 #define APP_CMD_ENDPOINT    2
 
 /*- Types ------------------------------------------------------------------*/
