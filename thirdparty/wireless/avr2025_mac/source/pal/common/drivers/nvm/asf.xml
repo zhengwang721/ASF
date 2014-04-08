@@ -46,9 +46,7 @@
         <build type="include-path" value="."/>
 		<build type="module-config" subtype="required-header-file" value="conf_nvm.h"/>
         <build type="module-config" subtype="path" value="sam0/module_config"/>
-        <device-support value="samd20"/>
-		<device-support value="samd21"/>
-		<device-support value="samr21"/>
+       	<device-support value="samr21"/>
 	</module>
 	</select-by-device>	
 </asf>
