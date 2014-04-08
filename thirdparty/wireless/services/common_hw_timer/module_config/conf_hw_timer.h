@@ -80,9 +80,14 @@
 /* ! @} */
 //! \name Configuration for SAMD20
 //! @{
-#if (SAMD || SAMR21)
+#if (SAMD20)
 #define TIMER     (TC0)
 #endif /* SAMD */
+
+#if (SAMD21 || SAMR21)
+#define TIMER                (TC3)
+#define TIMER_CHANNEL_ID     0
+#endif
 //! @}
 
 #endif /* CONF_HW_TIMER_H_INCLUDED */
