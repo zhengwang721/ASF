@@ -69,11 +69,11 @@ static uint16_t z_val;
 static uint16_t ADC_val;
 
 
-#endif /* ADC_ACCELEROMETER */
+
 static void pal_acc_enable(acc_status_t status);
 static void correct_negative_offset(uint16_t *temp_val, uint16_t temp_offset);
 static void correct_positive_offset(uint16_t *temp_val, uint16_t temp_offset);
-
+#endif /* ADC_ACCELEROMETER */
  
 /**
  * @brief Button pins setting for active/normal mode
@@ -87,6 +87,7 @@ void set_button_pins_for_normal_mode(void)
     BUTTON_PORT1 |= 0x7F;
     BUTTON_PORT2 |= (1 << PD5) | (1 << PD7);
 }
+#ifdef ADC_ACCELEROMETER
 /**
  * @brief Initialize ADC for Accelerometer
  */
@@ -261,7 +262,7 @@ void pal_read_acc(uint16_t *x, uint16_t *y, uint16_t *z, uint16_t *ref)
     (*z) = z_axis_val;
     (*ref) = ADC_ref_val;
 }
-
+#endif /* ADC_ACCELEROMETER */
 
 /**
  * @brief Pulse latch for connected external hardware
@@ -384,7 +385,7 @@ button_id_t pal_button_scan(void)
                     ret_val |= (((uint32_t)1 << (((i - 1) * 9) + pin_no)));
                 }
                 if (ioport_get_pin_level(BUTTON_PIN_4) == 0)
-                {;
+                {
                     pin_no = 4;
                     ret_val |= (((uint32_t)1 << (((i - 1) * 9) + pin_no)));
                 }
@@ -772,6 +773,7 @@ void led_helper_func(void)
     LED_ADDR_DEC_DDR |= _BV(7);
 }
 #endif
+#ifdef ADC_ACCELEROMETER
 /**
  * @brief Offset calculation function.
  *
@@ -862,4 +864,5 @@ static void correct_negative_offset(uint16_t *temp_val, uint16_t temp_offset)
     /* Add the offset form the sampled value */
     *(temp_val) += temp_offset;
 }
+#endif
 

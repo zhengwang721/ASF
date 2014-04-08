@@ -54,7 +54,6 @@
 #include "compiler.h"
 #include "status_codes.h"
 
-#define SERIAL_RX_BUF_SIZE_HOST    250
 /* === PROTOTYPES ============================================================
  **/
 

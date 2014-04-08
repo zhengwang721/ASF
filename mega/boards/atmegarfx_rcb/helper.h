@@ -54,7 +54,7 @@
 #include "led.h"
 
 
-
+#ifdef ADC_ACCELEROMETER
 /* Enumerations used to identify ADC Channels */
 typedef enum adc_channel_tag
 {
@@ -78,17 +78,20 @@ uint16_t z_offset;
 void (*Correct_x_offset)(uint16_t *temp_val, uint16_t temp_offset);
 void (*Correct_y_offset)(uint16_t *temp_val, uint16_t temp_offset);
 void (*Correct_z_offset)(uint16_t *temp_val, uint16_t temp_offset);
+#endif
 #ifdef KEY_RC_BOARD
 #define button_id_t             uint32_t
 void pulse_latch(void);
 void set_button_pins_for_normal_mode(void);
 void led_ctrl(led_id_t led_no, led_action_t led_setting);
+#ifdef ADC_ACCELEROMETER
 void pal_ADC_init(void);
 void pal_acc_init(void);
 void pal_acc_disable(void);
 uint16_t pal_ADC_read(adc_channel_t channel);
 void pal_read_acc(uint16_t *x, uint16_t *y, uint16_t *z, uint16_t *ref);
 void app_calculate_offset();
+#endif
 button_id_t pal_button_scan(void);
 void update_latch_status(void);
 #else /* KEY_RC_BOARD */
