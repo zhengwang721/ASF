@@ -8,9 +8,8 @@
 #ifndef CONF_BOARD_H
 #define CONF_BOARD_H
 
-/*Use either of the definitions below for the used board*/
-#define ZIGBIT_USB
-//#define ZIGBIT_EXT
+
+#define ZIGBIT_EXT
 
 #define CONF_BOARD_AT86RFX
 
