@@ -185,7 +185,6 @@ void pal_get_current_time(uint32_t *timer_count)
 	uint32_t time_val;
 	/* This will avoid the hard faults, due to aligned nature of access */
 	time_val = sw_timer_get_time();
-	#if (SAMD20) || (SAMD21) || (SAMR21)
 	MEMCPY_ENDIAN((uint8_t *)timer_count, (uint8_t *)&time_val, sizeof(time_val));
-	#endif
+	
 }
