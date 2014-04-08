@@ -91,6 +91,7 @@ static void at25dfx_init(void)
 
 int main(void)
 {
+	bool protected;
 //! [init_calls]
 	system_init();
 	at25dfx_init();
@@ -102,6 +103,14 @@ int main(void)
 		// Handle missing or non-responsive device
 	}
 //! [check_presence]
+
+	at25dfx_chip_wake(&at25dfx_chip);
+	
+	at25dfx_chip_get_sector_protect(&at25dfx_chip, 0x0000, &protected);
+	
+	at25dfx_chip_set_global_sector_protect(&at25dfx_chip, false);
+	at25dfx_chip_set_sector_protect(&at25dfx_chip, 0x10000, false);
+	at25dfx_chip_erase(&at25dfx_chip);
 
 //! [read_buffer]
 	at25dfx_chip_read_buffer(&at25dfx_chip, 0x0000, read_buffer, AT25DFX_BUFFER_SIZE);
@@ -118,6 +127,8 @@ int main(void)
 //! [write_buffer]
 	at25dfx_chip_write_buffer(&at25dfx_chip, 0x10000, write_buffer, AT25DFX_BUFFER_SIZE);
 //! [write_buffer]
+
+	at25dfx_chip_read_buffer(&at25dfx_chip, 0x10000, read_buffer, AT25DFX_BUFFER_SIZE);
 
 //! [global_protect]
 	at25dfx_chip_set_global_sector_protect(&at25dfx_chip, true);
