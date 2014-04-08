@@ -98,19 +98,22 @@ int main(void)
 //! [init_calls]
 
 //! [use_code]
+//! [wake_chip]
+	at25dfx_chip_wake(&at25dfx_chip);
+//! [wake_chip]
+	
 //! [check_presence]
 	if (at25dfx_chip_check_presence(&at25dfx_chip) != STATUS_OK) {
 		// Handle missing or non-responsive device
 	}
 //! [check_presence]
 
-	at25dfx_chip_wake(&at25dfx_chip);
-	
-	at25dfx_chip_get_sector_protect(&at25dfx_chip, 0x0000, &protected);
-	
+//! [check_erase]	
+	at25dfx_chip_get_sector_protect(&at25dfx_chip, 0x0000, &protected);	
 	at25dfx_chip_set_global_sector_protect(&at25dfx_chip, false);
 	at25dfx_chip_set_sector_protect(&at25dfx_chip, 0x10000, false);
 	at25dfx_chip_erase(&at25dfx_chip);
+//! [check_erase]	
 
 //! [read_buffer]
 	at25dfx_chip_read_buffer(&at25dfx_chip, 0x0000, read_buffer, AT25DFX_BUFFER_SIZE);
