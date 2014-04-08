@@ -495,7 +495,7 @@ static void app_task(void)
                         keyboard_input_desc = (keyboard_input_desc_t *)msg_ptr;
 
                         keyboard_input_desc->modifier_keys = 0x00;
-                        keyboard_input_desc->key_code[0] = 0x00
+                        keyboard_input_desc->key_code[0] = 0x00;
                         keyboard_input_desc->key_code[1] = 0x00;
                         keyboard_input_desc->key_code[2] = 0x00;
                         keyboard_input_desc->key_code[3] = 0x00;
@@ -516,7 +516,7 @@ static void app_task(void)
                        keyboard_input_desc = (keyboard_input_desc_t *)msg_ptr;
 
                        keyboard_input_desc->modifier_keys = 0x00;
-                       keyboard_input_desc->key_code[0] = 0x00
+                       keyboard_input_desc->key_code[0] = 0x00;
                        keyboard_input_desc->key_code[1] = 0x00;
                        keyboard_input_desc->key_code[2] = 0x00;
                        keyboard_input_desc->key_code[3] = 0x00;
@@ -537,7 +537,7 @@ static void app_task(void)
                         keyboard_input_desc = (keyboard_input_desc_t *)msg_ptr;
 
                         keyboard_input_desc->modifier_keys = 0x00;
-                        keyboard_input_desc->key_code[0] = 0x00
+                        keyboard_input_desc->key_code[0] = 0x00;
                         keyboard_input_desc->key_code[1] = 0x00;
                         keyboard_input_desc->key_code[2] = 0x00;
                         keyboard_input_desc->key_code[3] = 0x00;
