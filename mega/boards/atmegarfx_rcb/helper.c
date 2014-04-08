@@ -71,8 +71,7 @@ static uint16_t ADC_val;
 
 
 static void pal_acc_enable(acc_status_t status);
-static void correct_negative_offset(uint16_t *temp_val, uint16_t temp_offset);
-static void correct_positive_offset(uint16_t *temp_val, uint16_t temp_offset);
+
 #endif /* ADC_ACCELEROMETER */
  
 /**
@@ -771,98 +770,6 @@ void led_helper_func(void)
     LED_ADDR_DEC_DDR |= _BV(6);
     LED_ADDR_DEC_PORT &= ~_BV(7);
     LED_ADDR_DEC_DDR |= _BV(7);
-}
-#endif
-#ifdef ADC_ACCELEROMETER
-/**
- * @brief Offset calculation function.
- *
- * @ingroup apiPalAppDemo
- */
-void app_calculate_offset()
-{
-    uint16_t temp;
-
-    if (x_val >= ADC_val)
-    {
-        /* Positive or No offset on the axis */
-        x_offset = x_val - ADC_val;
-
-        /* Initalise the Positive offset correction function to the function pointer */
-        Correct_x_offset = &correct_positive_offset;
-    }
-    else
-    {
-        /* Negative Offset */
-        x_offset = ADC_val - x_val;
-
-        /* Initalise the Negative offset correction function to the function pointer */
-        Correct_x_offset = &correct_negative_offset;
-    }
-
-    if (y_val >= ADC_val)
-    {
-        /* Positive or No offset on the axis */
-        y_offset = y_val - ADC_val;
-
-        /* Initalise the Positive offset correction function to the function pointer */
-        Correct_y_offset = &correct_positive_offset;
-    }
-    else
-    {
-        /* Negative Offset */
-        y_offset = ADC_val - y_val;
-
-        /* Initalise the Negative offset correction function to the function pointer */
-        Correct_y_offset = &correct_negative_offset;
-    }
-
-    /* On Z-axis a voltage of 1g is expected */
-    temp = (ADC_val + (ADC_val * 2) / 10) ;
-
-    if (z_val >= temp)
-    {
-        /* Positive or No offset on the axis */
-        z_offset = z_val - temp;
-
-        /* Initalise the Positive offset correction function to the function pointer */
-        Correct_z_offset = &correct_positive_offset;
-    }
-    else
-    {
-        /* Negative Offset */
-        z_offset = temp - z_val;
-
-        /* Initalise the Negative offset correction function to the function pointer */
-        Correct_z_offset = &correct_negative_offset;
-    }
-}
-/**
- * @brief Positive offset correction function.
- *
- * @param temp_val value to be corrected
- * @param temp_offset Offset value
- *
- * @ingroup apiPalAppDemo
- */
-static void correct_positive_offset(uint16_t *temp_val, uint16_t temp_offset)
-{
-    /* Subtract the offset form the sampled value */
-    *(temp_val) -= temp_offset;
-}
-
-/**
- * @brief Negative offset correction function.
- *
- * @param temp_val value to be corrected
- * @param temp_offset Offset value
- *
- * @ingroup apiPalAppDemo
- */
-static void correct_negative_offset(uint16_t *temp_val, uint16_t temp_offset)
-{
-    /* Add the offset form the sampled value */
-    *(temp_val) += temp_offset;
 }
 #endif
 

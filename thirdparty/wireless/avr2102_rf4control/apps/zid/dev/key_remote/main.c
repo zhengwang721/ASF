@@ -194,10 +194,16 @@ typedef struct joystick_desc_tag
 FLASH_DECLARE(uint16_t VendorIdentifier) = (uint16_t)NWKC_VENDOR_IDENTIFIER;
 FLASH_DECLARE(uint8_t vendor_string[VENDOR_STRING_LEN_SIZE]) = NWKC_VENDOR_STRING;
 FLASH_DECLARE(uint8_t app_user_string[APP_USER_STRING_SIZE]) = APP_USER_STRING;
-
+   /* Function pointers for offset correction function assignment */
+static void (*Correct_x_offset)(uint16_t *temp_val, uint16_t temp_offset);
+static void (*Correct_y_offset)(uint16_t *temp_val, uint16_t temp_offset);
+static void correct_negative_offset(uint16_t *temp_val, uint16_t temp_offset);
+static void correct_positive_offset(uint16_t *temp_val, uint16_t temp_offset);
 /* ZID Node Status */
 static node_status_t node_status;
-
+/* Offset values for the axis */
+static uint16_t x_offset;
+static uint16_t y_offset;
 /* default pairing reference value */
 static uint8_t pairing_ref = 0xFF;
 
@@ -776,6 +782,8 @@ static void app_task(void)
                 static uint32_t previous_button_time;
                 uint8_t num_records = 1;
                 static button_id_t previous_button;
+                uint16_t x_temp = x_val;
+                uint16_t y_temp = y_val;
 				
 				/* Scan the button events */
                 button = pal_button_scan();
@@ -852,8 +860,9 @@ static void app_task(void)
                         mouse_desc->y_coordinate = 0x00;*/
 					   app_calculate_offset();
                        pal_read_acc(&x_val,&y_val,&z_val,&ADC_val);
-					   Correct_x_offset(&x_val,x_offset);
-					   Correct_y_offset(&y_val,y_offset);
+                         /* Temporarily store the old values */
+                      Correct_x_offset(&x_temp,x_offset);
+	              Correct_y_offset(&y_temp,y_offset);
                        zid_interframe_duration = INTER_FRAME_DURATION_US;
 					   
                        return;
@@ -1386,6 +1395,82 @@ uint8_t get_zid_keyrc_button(button_id_t button_id)
     }
     return (BUTTON_INVALID);
 }
+#ifdef ADC_ACCELEROMETER
+/**
+ * @brief Offset calculation function.
+ *
+ * @ingroup apiPalAppDemo
+ */
+void app_calculate_offset()
+{
+    uint16_t temp;
+
+    if (x_val >= ADC_val)
+    {
+        /* Positive or No offset on the axis */
+        x_offset = x_val - ADC_val;
+
+        /* Initalise the Positive offset correction function to the function pointer */
+        Correct_x_offset = &correct_positive_offset;
+    }
+    else
+    {
+        /* Negative Offset */
+        x_offset = ADC_val - x_val;
+
+        /* Initalise the Negative offset correction function to the function pointer */
+        Correct_x_offset = &correct_negative_offset;
+    }
+
+    if (y_val >= ADC_val)
+    {
+        /* Positive or No offset on the axis */
+        y_offset = y_val - ADC_val;
+
+        /* Initalise the Positive offset correction function to the function pointer */
+        //Correct_y_offset = &correct_positive_offset;
+    }
+    else
+    {
+        /* Negative Offset */
+        y_offset = ADC_val - y_val;
+
+        /* Initalise the Negative offset correction function to the function pointer */
+      //  Correct_y_offset = &correct_negative_offset;
+    }
+
+    /* On Z-axis a voltage of 1g is expected */
+    temp = (ADC_val + (ADC_val * 2) / 10) ;
+
+}
+/**
+ * @brief Positive offset correction function.
+ *
+ * @param temp_val value to be corrected
+ * @param temp_offset Offset value
+ *
+ * @ingroup apiPalAppDemo
+ */
+static void correct_positive_offset(uint16_t *temp_val, uint16_t temp_offset)
+{
+    /* Subtract the offset form the sampled value */
+    *(temp_val) -= temp_offset;
+}
+
+/**
+ * @brief Negative offset correction function.
+ *
+ * @param temp_val value to be corrected
+ * @param temp_offset Offset value
+ *
+ * @ingroup apiPalAppDemo
+ */
+static void correct_negative_offset(uint16_t *temp_val, uint16_t temp_offset)
+{
+    /* Add the offset form the sampled value */
+    *(temp_val) += temp_offset;
+}
+#endif
 
 
 /* EOF */

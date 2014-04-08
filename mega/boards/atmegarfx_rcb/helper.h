@@ -70,14 +70,7 @@ typedef enum acc_status_tag
 	ACC_OFF,
 	ACC_ON
 } SHORTENUM acc_status_t;
-/* Offset values for the axis */
-uint16_t x_offset;
-uint16_t y_offset;
-uint16_t z_offset;
-/* Function pointers for offset correction function assignment */
-void (*Correct_x_offset)(uint16_t *temp_val, uint16_t temp_offset);
-void (*Correct_y_offset)(uint16_t *temp_val, uint16_t temp_offset);
-void (*Correct_z_offset)(uint16_t *temp_val, uint16_t temp_offset);
+
 #endif
 #ifdef KEY_RC_BOARD
 #define button_id_t             uint32_t
