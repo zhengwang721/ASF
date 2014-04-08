@@ -1,5 +1,5 @@
  /*
- * @file hal_ext_trx.c
+ * @file trx_access.c
  *
  * @brief Performs interface functionalities between the PHY layer and ASF drivers
  *  Copyright (c) 2014 Atmel Corporation. All rights reserved.
