@@ -77,6 +77,11 @@
 #if (SAMD20)
 #define TIMER     (TC0)
 #endif /* SAMD20 */
+//! @}*/
+//! \name Configuration for SAMR21
+//! @{
+#if (SAMR21)
+#define TIMER                (TC3)
+#endif /* SAMR21 */
 //! @}
-
 #endif /* CONF_HW_TIMER_H_INCLUDED */

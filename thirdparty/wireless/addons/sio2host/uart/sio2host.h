@@ -105,6 +105,8 @@ int sio2host_getchar_nowait(void);
 
 #if SAMD20 || SAMD21 || SAMR21
 void USART_HOST_ISR_VECT(uint8_t instance);
+#else
+void USART_HOST_ISR_VECT(void);
 #endif
 
 #endif /* SIO2HOST_H */
