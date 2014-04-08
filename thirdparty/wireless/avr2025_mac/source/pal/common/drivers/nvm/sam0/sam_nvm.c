@@ -46,11 +46,23 @@
 #include "system_interrupt.h"
 #include "string.h"
 
+static status_code_t nvm_sam0_read(mem_type_t mem, uint32_t address, uint8_t *const buffer,
+uint32_t len);
+static enum status_code nvm_memcpy(
+const uint32_t destination_address,
+uint8_t *const buffer,
+uint16_t length,
+bool erase_flag);
 /**
  * \internal Pointer to the NVM MEMORY region start address
  */
 #define NVM_MEMORY        ((volatile uint16_t *)FLASH_ADDR)
-status_code_t nvm_read(mem_type_t mem, uint32_t address, uint8_t *const buffer,
+status_code_t nvm_read(mem_type_t mem, uint32_t address, void *buffer,
+uint32_t len)
+{
+	nvm_sam0_read(mem,address,buffer,len);
+}
+status_code_t nvm_sam0_read(mem_type_t mem, uint32_t address, uint8_t *const buffer,
 		uint32_t len)
 {
 	switch (mem) 

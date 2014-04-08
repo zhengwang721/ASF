@@ -44,6 +44,7 @@
 
 #include "pal.h"
 #include "delay.h"
+#include <string.h>
 #if SAMD20 || SAMD21 || SAMR21
 #include "port.h"
 #else
@@ -61,9 +62,10 @@ retval_t pal_init(void)
 #if (PAL_USE_SPI_TRX == 1)
 	pal_spi_init();
 #endif /* #if (PAL_USE_SPI_TRX = 1) */
-
+#ifdef ENABLE_STACK_NVM
 #if (SAMD20) || (SAMD21) || (SAMR21)
 	nvm_init(INT_FLASH);
+#endif
 #endif
 	return MAC_SUCCESS;
 }
@@ -183,5 +185,7 @@ void pal_get_current_time(uint32_t *timer_count)
 	uint32_t time_val;
 	/* This will avoid the hard faults, due to aligned nature of access */
 	time_val = sw_timer_get_time();
+	#if (SAMD20) || (SAMD21) || (SAMR21)
 	MEMCPY_ENDIAN((uint8_t *)timer_count, (uint8_t *)&time_val, sizeof(time_val));
+	#endif
 }
