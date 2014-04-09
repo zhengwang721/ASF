@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4S-XPLAINED LEDs support package.
+ * \brief SAM4S Xplained Pro LEDs support package.
  *
  * Copyright (c) 2011-2012 Atmel Corporation. All rights reserved.
  *

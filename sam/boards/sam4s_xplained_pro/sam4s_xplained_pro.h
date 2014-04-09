@@ -44,8 +44,6 @@
 #define SAM4S_XPLAINED_PRO_H
 
 #include <conf_board.h>
-#include <pio.h>
-# include "pio_handler.h"
 
 /**
  * \ingroup group_common_boards
