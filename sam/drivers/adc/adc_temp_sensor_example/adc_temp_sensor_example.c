@@ -57,6 +57,10 @@
  * set to 3300 mv in order to provide reliable temperature information. Please
  * refer to the board schematics for ADVREF jumper configuration.
  *
+ * \note For SAM4CMP-DB and SAM4CMS-DB (Rev B), the ADVREF is not connected to
+ * 3300mv by default, so need to solder DNP component to get this example
+ * work correctly.
+ *
  * \section Description
  *
  * The adc_temp_sensor is aimed to demonstrate the temperature sensor feature
