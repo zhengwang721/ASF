@@ -91,10 +91,6 @@ static void at25dfx_init(void)
 
 int main(void)
 {
-//! [var_define]	
-	bool protected;
-//! [var_define]
-
 //! [init_calls]
 	system_init();
 	at25dfx_init();
@@ -111,13 +107,6 @@ int main(void)
 	}
 //! [check_presence]
 
-//! [check_erase]	
-	at25dfx_chip_get_sector_protect(&at25dfx_chip, 0x0000, &protected);	
-	at25dfx_chip_set_global_sector_protect(&at25dfx_chip, false);
-	at25dfx_chip_set_sector_protect(&at25dfx_chip, 0x10000, false);
-	at25dfx_chip_erase(&at25dfx_chip);
-//! [check_erase]	
-
 //! [read_buffer]
 	at25dfx_chip_read_buffer(&at25dfx_chip, 0x0000, read_buffer, AT25DFX_BUFFER_SIZE);
 //! [read_buffer]
@@ -133,8 +122,6 @@ int main(void)
 //! [write_buffer]
 	at25dfx_chip_write_buffer(&at25dfx_chip, 0x10000, write_buffer, AT25DFX_BUFFER_SIZE);
 //! [write_buffer]
-
-	at25dfx_chip_read_buffer(&at25dfx_chip, 0x10000, read_buffer, AT25DFX_BUFFER_SIZE);
 
 //! [global_protect]
 	at25dfx_chip_set_global_sector_protect(&at25dfx_chip, true);
