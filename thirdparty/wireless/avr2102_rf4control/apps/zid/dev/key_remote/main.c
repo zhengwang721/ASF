@@ -848,21 +848,15 @@ static void app_task(void)
 					 /* Configure for the game controller mode. */
                       button_mode = BUTTON_GAME_MODE;
                       
-					   /* zid_report_data[0].report_type = INPUT;
-                        zid_report_data[0].report_desc_identifier = TAP_GESTURE;
-                        zid_report_data[0].report_data = (void *)msg_ptr;                        
-                        mouse_desc = (mouse_desc_t *)msg_ptr;
-                        
-                        mouse_desc->button0 = 0x00;
-                        mouse_desc->button1 = throttle;
-                        mouse_desc->button2 = 0x00;
-                        mouse_desc->x_coordinate = 0x00;
-                        mouse_desc->y_coordinate = 0x00;*/
+					    LED_Off(LED_2);
+					    LED_Off(LED_3);
+					    LED_On(LED_4);
+					    LED_Off(LED_5);
 					   app_calculate_offset();
                        pal_read_acc(&x_val,&y_val,&z_val,&ADC_val);
-                         /* Temporarily store the old values */
-                      Correct_x_offset(&x_temp,x_offset);
-	              Correct_y_offset(&y_temp,y_offset);
+                       /* Temporarily store the old values */
+                       Correct_x_offset(&x_temp,x_offset);
+	                   Correct_y_offset(&y_temp,y_offset);
                        zid_interframe_duration = INTER_FRAME_DURATION_US;
 					   
                        return;
