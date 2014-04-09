@@ -85,6 +85,9 @@
 * Create a new function for initializing the AT25DFx:
 * \snippet qs_at25dfx_basic.c init_function
 *
+* Create a bool variable and  add to the main application source file:
+* \snippet qs_at25dfx_basic.c var_define
+*
 * If not already present, add to the initialization code:
 * \snippet qs_at25dfx_basic.c init_calls
 *
@@ -115,8 +118,12 @@
 *
 * \subsection asfdoc_common2_at25dfx_basic_use_case_flow Workflow
 *
+* -# Wakeup serialFlash.
+*    \snippet qs_at25dfx_basic.c wake_chip
 * -# Check that the SerialFlash is present.
 *    \snippet qs_at25dfx_basic.c check_presence
+* -# Check if the SerialFlash is protected and erase it.
+*    \snippet qs_at25dfx_basic.c check_erase
 * -# Read out the first \ref AT25DFX_BUFFER_SIZE bytes, starting at the very
 * first flash address.
 *    \snippet qs_at25dfx_basic.c read_buffer

@@ -91,7 +91,10 @@ static void at25dfx_init(void)
 
 int main(void)
 {
+//! [var_define]	
 	bool protected;
+//! [var_define]
+
 //! [init_calls]
 	system_init();
 	at25dfx_init();
