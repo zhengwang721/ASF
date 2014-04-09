@@ -32,7 +32,8 @@
 		<build type="doxygen-quick-start" value="asfdoc_sam0_dma_exqsg"/>
 
 		<device-support value="samd21"/>
-
+		<device-support value="samd10"/>
+		<device-support value="samd11"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system"/>
 

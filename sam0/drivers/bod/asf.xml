@@ -32,9 +32,7 @@
 
 		<build type="header-file" value="quick_start/qs_bod_basic_use.h"/>
 
-		<device-support value="samd20"/>
-		<device-support value="samd21"/>
-
+		<device-support value="sam0"/>
 		<require idref="sam0.utils"/>
 
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>

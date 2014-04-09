@@ -925,6 +925,51 @@
 	)
 /** @} */
 
+/**
+ * \name SAMD10 series
+ * @{
+ */
+#define SAMD10C ( \
+		SAM_PART_IS_DEFINED(SAMD10C12A) || \
+		SAM_PART_IS_DEFINED(SAMD10C13A) || \
+		SAM_PART_IS_DEFINED(SAMD10C14A) \
+	)
+
+#define SAMD10D ( \
+		SAM_PART_IS_DEFINED(SAMD10D12A) || \
+		SAM_PART_IS_DEFINED(SAMD10D13A) || \
+		SAM_PART_IS_DEFINED(SAMD10D14A) \
+	)
+
+#define SAMD10E ( \
+		SAM_PART_IS_DEFINED(SAMD10E12A) || \
+		SAM_PART_IS_DEFINED(SAMD10E13A) || \
+		SAM_PART_IS_DEFINED(SAMD10E14A) \
+	)
+/** @} */
+
+/**
+ * \name SAMD11 series
+ * @{
+ */
+#define SAMD11C ( \
+		SAM_PART_IS_DEFINED(SAMD11C12A) || \
+		SAM_PART_IS_DEFINED(SAMD11C13A) || \
+		SAM_PART_IS_DEFINED(SAMD11C14A) \
+	)
+
+#define SAMD11D ( \
+		SAM_PART_IS_DEFINED(SAMD11D12A) || \
+		SAM_PART_IS_DEFINED(SAMD11D13A) || \
+		SAM_PART_IS_DEFINED(SAMD11D14A) \
+	)
+
+#define SAMD11E ( \
+		SAM_PART_IS_DEFINED(SAMD11E12A) || \
+		SAM_PART_IS_DEFINED(SAMD11E13A) || \
+		SAM_PART_IS_DEFINED(SAMD11E14A) \
+	)
+/** @} */
 
 /**
  * \name SAM4E series
@@ -1052,6 +1097,13 @@
 /** SAMD21 Family */
 #define SAMD21 (SAMD21J || SAMD21G || SAMD21E)
 
+/** SAMD10 Family */
+#define SAMD10 (SAMD10C || SAMD10D || SAMD10E)
+
+/** SAMD11 Family */
+#define SAMD11 (SAMD11C || SAMD11D || SAMD11E)
+
+
 /** SAM4E Family */
 #define SAM4E (SAM4E8 || SAM4E16)
 
@@ -1075,7 +1127,7 @@
 
 /** SAM product line */
 #define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || \
-		SAMD20 || SAMD21 || SAM4N || SAM4C || SAM4CP || SAMG)
+		SAMD20 || SAMD21 || SAMD10 || SAMD11 || SAM4N || SAM4C || SAM4CP || SAMG)
 
 /** @} */
 
