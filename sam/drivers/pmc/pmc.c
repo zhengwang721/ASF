@@ -320,16 +320,19 @@ void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
 
 	/* Enable Fast RC oscillator but DO NOT switch to RC now */
 	if (PMC->CKGR_MOR & CKGR_MOR_MOSCXTEN) {
-		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
-				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN |
-				ul_moscrcf;
+		PMC->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN;
 	} else {
 		ul_needXTEN = 1;
-		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
-				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN |
-				CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCXTST_Msk |
-				ul_moscrcf;
+		PMC->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN |
+				CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCXTST_Msk;
 	}
+
+	/* Wait the Fast RC to stabilize */
+	while (!(PMC->PMC_SR & PMC_SR_MOSCRCS));
+
+	/* Change Fast RC oscillator frequency but DO NOT switch to RC now */
+	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
+			CKGR_MOR_KEY_PASSWD | ul_moscrcf;
 
 	/* Wait the Fast RC to stabilize */
 	while (!(PMC->PMC_SR & PMC_SR_MOSCRCS));
