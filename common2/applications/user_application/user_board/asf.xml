@@ -17,17 +17,17 @@
 
 	<module type="meta" id="common.applications.user_application.sam0_system.user_board.common_samd10" caption="User board project template">
 		<info type="gui-flag" value="move-to-root"/>
-		<build type="include-path" value="config_samd10"/>
-		<build type="header-file" value="config_samd10/conf_board.h"/>
-		<build type="header-file" value="config_samd10/conf_clocks.h"/>
+		<build type="include-path" value="config_samd10_d11"/>
+		<build type="header-file" value="config_samd10_d11/conf_board.h"/>
+		<build type="header-file" value="config_samd10_d11/conf_clocks.h"/>
 		<require idref="common.applications.user_application.sam0_system"/>
 	</module>
 
 	<module type="meta" id="common.applications.user_application.sam0_system.user_board.common_samd11" caption="User board project template">
 		<info type="gui-flag" value="move-to-root"/>
-		<build type="include-path" value="config_samd11"/>
-		<build type="header-file" value="config_samd11/conf_board.h"/>
-		<build type="header-file" value="config_samd11/conf_clocks.h"/>
+		<build type="include-path" value="config_samd10_d11"/>
+		<build type="header-file" value="config_samd10_d11/conf_board.h"/>
+		<build type="header-file" value="config_samd10_d11/conf_clocks.h"/>
 		<require idref="common.applications.user_application.sam0_system"/>
 	</module>
 	
@@ -293,6 +293,98 @@
 		<generator value="as5_arm_template"/>
 		<generator value="doxygen"/>
 		<device-support value="atsamd21e15a"/>
+	</project>
+	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd10c12a" caption="User board project template for SAMD10C12A" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMD10C12A devices.
+		</info>
+		<require idref="common.applications.user_application.sam0_system.user_board.common_samd10"/>
+		<require idref="board.user_board.samd10c"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamd10c12a"/>
+	</project>
+	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd10c13a" caption="User board project template for SAMD10C13A" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMD10C13A devices.
+		</info>
+		<require idref="common.applications.user_application.sam0_system.user_board.common_samd10"/>
+		<require idref="board.user_board.samd10c"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamd10c13a"/>
+	</project>
+	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd10c14a" caption="User board project template for SAMD10C14A" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMD10C14A devices.
+		</info>
+		<require idref="common.applications.user_application.sam0_system.user_board.common_samd10"/>
+		<require idref="board.user_board.samd10c"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamd10c14a"/>
+	</project>
+
+	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd10d12a" caption="User board project template for SAMD10D12A" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMD10D12A devices.
+		</info>
+		<require idref="common.applications.user_application.sam0_system.user_board.common_samd10"/>
+		<require idref="board.user_board.samd10d"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamd10d12a"/>
+	</project>
+	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd10d13a" caption="User board project template for SAMD10D13A" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMD10D13A devices.
+		</info>
+		<require idref="common.applications.user_application.sam0_system.user_board.common_samd10"/>
+		<require idref="board.user_board.samd10d"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamd10d13a"/>
+	</project>
+	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd10d14a" caption="User board project template for SAMD10D14A" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMD10D14A devices.
+		</info>
+		<require idref="common.applications.user_application.sam0_system.user_board.common_samd10"/>
+		<require idref="board.user_board.samd10d"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamd10d14a"/>
+	</project>
+
+	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd10e12a" caption="User board project template for SAMD10E12A" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMD10E12A devices.
+		</info>
+		<require idref="common.applications.user_application.sam0_system.user_board.common_samd10"/>
+		<require idref="board.user_board.samd10e"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamd10e12a"/>
+	</project>
+	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd10e13a" caption="User board project template for SAMD10E13A" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMD10E13A devices.
+		</info>
+		<require idref="common.applications.user_application.sam0_system.user_board.common_samd10"/>
+		<require idref="board.user_board.samd10e"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamd10e13a"/>
+	</project>
+	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd10e14a" caption="User board project template for SAMD10E14A" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMD10E14A devices.
+		</info>
+		<require idref="common.applications.user_application.sam0_system.user_board.common_samd10"/>
+		<require idref="board.user_board.samd10e"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamd10e14a"/>
 	</project>
 
 	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd11c12a" caption="User board project template for SAMD11C12A" type="template">

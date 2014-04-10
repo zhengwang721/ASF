@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D11 Clock Driver
+ * \brief SAM D1x Clock Driver
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -874,7 +874,7 @@ void system_clock_init(void)
 
 	/* Configure all GCLK generators except for the main generator, which
 	 * is configured later after all other clock systems are set up */
-	MREPEAT(8, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
+	MREPEAT(5, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
 
 #  if CONF_CLOCK_DFLL_ENABLE == true
 	/* Enable DFLL reference clock if in closed loop mode */
@@ -937,7 +937,11 @@ void system_clock_init(void)
 
 	/* CPU and BUS clocks */
 	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
+
+#ifdef FEATURE_SYSTEM_CLOCK_FAILURE_DETECT
 	system_main_clock_set_failure_detect(CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT);
+#endif
+
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBA, CONF_CLOCK_APBA_DIVIDER);
 	system_apb_clock_set_divider(SYSTEM_CLOCK_APB_APBB, CONF_CLOCK_APBB_DIVIDER);
 

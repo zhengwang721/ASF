@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D11 System Interrupt Driver
+ * \brief SAM D1x System Interrupt Driver
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -73,11 +73,11 @@
  * \brief Table of possible system interrupt/exception vector numbers.
  *
  * Table of all possible interrupt and exception vector indexes within the
- * SAMD11 device.
+ * SAMD1x device.
  */
 #if defined(__DOXYGEN__)
 /** \note The actual enumeration name is "system_interrupt_vector". */
-enum system_interrupt_vector_samd11 {
+enum system_interrupt_vector_samd1x {
 #else
 enum system_interrupt_vector {
 #endif
@@ -106,8 +106,10 @@ enum system_interrupt_vector {
 	SYSTEM_INTERRUPT_MODULE_NVMCTRL    = NVMCTRL_IRQn,
 	/** Interrupt vector index for a Direct Memory Access interrupt. */
 	SYSTEM_INTERRUPT_MODULE_DMA        = DMAC_IRQn,
+#if (SAMD11)
 	/** Interrupt vector index for a Universal Serial Bus interrupt. */
 	SYSTEM_INTERRUPT_MODULE_USB        = USB_IRQn,
+#endif
 	/** Interrupt vector index for an Event System interrupt. */
 	SYSTEM_INTERRUPT_MODULE_EVSYS      = EVSYS_IRQn,
 #if defined(__DOXYGEN__)

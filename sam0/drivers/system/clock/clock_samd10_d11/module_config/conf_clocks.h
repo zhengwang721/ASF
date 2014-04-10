@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D11 Clock configuration
+ * \brief SAM D1x Clock configuration
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -46,7 +46,6 @@
 #  define CONF_CLOCKS_H_INCLUDED
 
 /* System clock bus configuration */
-#  define CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT     false
 #  define CONF_CLOCK_FLASH_WAIT_STATES            0
 #  define CONF_CLOCK_CPU_DIVIDER                  SYSTEM_MAIN_CLOCK_DIV_1
 #  define CONF_CLOCK_APBA_DIVIDER                 SYSTEM_MAIN_CLOCK_DIV_1

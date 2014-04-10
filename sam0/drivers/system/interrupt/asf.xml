@@ -139,6 +139,31 @@
 				<require idref="thirdparty.cmsis"/>
 			</module>
 
+			<module type="driver" id="sam0.drivers.system.interrupt#samd10" caption="SYSTEM - Interrupt Driver">
+				<info type="description" value="summary">
+					Driver for the SAM D10 Interrupt System. Provides a unified
+					interface for the configuration and management interrupts within
+					the device, including the enabling, disabling and entering, leaving
+					of critical sections.
+				</info>
+
+				<info type="keyword" value="technology">
+					<keyword value="Interrupt" />
+				</info>
+				<build type="include-path" value="." />
+				<build type="include-path" value="system_interrupt_samd10_d11"/>
+
+				<build type="c-source" value="system_interrupt.c"/>
+
+				<build type="header-file" subtype="api" value="system_interrupt.h"/>
+				<build type="header-file" value="system_interrupt_samd10_d11/system_interrupt_features.h"/>
+
+				<device-support value="samd10"/>
+
+				<require idref="sam0.utils"/>
+				<require idref="thirdparty.cmsis"/>
+			</module>
+			
 			<module type="driver" id="sam0.drivers.system.interrupt#samd11" caption="SYSTEM - Interrupt Driver">
 				<info type="description" value="summary">
 					Driver for the SAM D11 Interrupt System. Provides a unified
@@ -151,12 +176,12 @@
 					<keyword value="Interrupt" />
 				</info>
 				<build type="include-path" value="." />
-				<build type="include-path" value="system_interrupt_samd11"/>
+				<build type="include-path" value="system_interrupt_samd10_d11"/>
 
 				<build type="c-source" value="system_interrupt.c"/>
 
 				<build type="header-file" subtype="api" value="system_interrupt.h"/>
-				<build type="header-file" value="system_interrupt_samd11/system_interrupt_features.h"/>
+				<build type="header-file" value="system_interrupt_samd10_d11/system_interrupt_features.h"/>
 
 				<device-support value="samd11"/>
 

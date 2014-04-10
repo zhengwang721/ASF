@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D11 Generic Clock Driver
+ * \brief SAM D1x Generic Clock Driver
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *

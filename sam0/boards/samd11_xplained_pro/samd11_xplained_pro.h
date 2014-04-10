@@ -83,14 +83,14 @@ void system_board_init(void);
 
 /** \name LED0 definitions
  *  @{ */
-#define LED0_PIN                  PIN_PB30
+#define LED0_PIN                  PIN_PA16
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
 /** @} */
 
 /** \name SW0 definitions
  *  @{ */
-#define SW0_PIN                   PIN_PA15
+#define SW0_PIN                   PIN_PA14
 #define SW0_ACTIVE                false
 #define SW0_INACTIVE              !SW0_ACTIVE
 #define SW0_EIC_PIN               PIN_PA15A_EIC_EXTINT15
@@ -117,21 +117,6 @@ void system_board_init(void);
 #define LED_COUNT                 1
 
 /**
- * \name Serialflash definitions
- *
- * On board Serialflash definitions.
- *
- *  @{ */
-#define SERIALFLASH_SPI_MODULE      SERCOM5
-#define SERIALFLASH_SPI_MUX_SETTING SPI_SIGNAL_MUX_SETTING_E
-#define SERIALFLASH_SPI_PINMUX_PAD0 PINMUX_PB16C_SERCOM5_PAD0
-#define SERIALFLASH_SPI_PINMUX_PAD1 PINMUX_UNUSED
-#define SERIALFLASH_SPI_PINMUX_PAD2 PINMUX_PB22D_SERCOM5_PAD2
-#define SERIALFLASH_SPI_PINMUX_PAD3 PINMUX_PB23D_SERCOM5_PAD3
-#define SERIALFLASH_SPI_CS PIN_PA13
-/** @} */
-
-/**
  * \name Button #0 definitions
  *
  * Wrapper macros for SW0, to ensure common naming across all Xplained Pro
@@ -151,10 +136,48 @@ void system_board_init(void);
 /** Number of on-board buttons */
 #define BUTTON_COUNT 1
 
-
+/** \name Extension header #1 pin definitions
+ *  @{
+ */
+#define EXT1_PIN_3                PIN_PA02
+#define EXT1_PIN_4                PIN_PA03
+#define EXT1_PIN_5                PIN_PA04
+#define EXT1_PIN_6                PIN_PA05
+#define EXT1_PIN_7                PIN_PA16
+#define EXT1_PIN_8                PIN_PA17
+#define EXT1_PIN_9                PIN_PA14
+#define EXT1_PIN_10               PIN_PA15
+#define EXT1_PIN_11               PIN_PA22
+#define EXT1_PIN_12               PIN_PA23
+#define EXT1_PIN_13               PIN_PA11
+#define EXT1_PIN_14               PIN_PA10
+#define EXT1_PIN_15               PIN_PA08
+#define EXT1_PIN_16               PIN_PA06
+#define EXT1_PIN_17               PIN_PA09
+#define EXT1_PIN_18               PIN_PA07
 /** @} */
 
+/** \name Extension header #1 pin definitions by function
+ *  @{
+ */
+#define EXT1_PIN_ADC_0            EXT1_PIN_3
+#define EXT1_PIN_ADC_1            EXT1_PIN_4
+#define EXT1_PIN_GPIO_0           EXT1_PIN_5
+#define EXT1_PIN_GPIO_1           EXT1_PIN_6
+#define EXT1_PIN_PWM_0            EXT1_PIN_7
+#define EXT1_PIN_PWM_1            EXT1_PIN_8
+#define EXT1_PIN_GPIO_3           EXT1_PIN_9
+#define EXT1_PIN_GPIO_4           EXT1_PIN_10
+#define EXT1_PIN_I2C_SDA          EXT1_PIN_11
+#define EXT1_PIN_I2C_SCL          EXT1_PIN_12
+#define EXT1_PIN_UART_RX          EXT1_PIN_13
+#define EXT1_PIN_UART_TX          EXT1_PIN_14
+#define EXT1_PIN_SPI_SS_0         EXT1_PIN_15
+#define EXT1_PIN_SPI_MOSI         EXT1_PIN_16
+#define EXT1_PIN_SPI_MISO         EXT1_PIN_17
+#define EXT1_PIN_SPI_SCK          EXT1_PIN_18
 /** @} */
+
 
 #ifdef __cplusplus
 }

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D11 Clock Driver
+ * \brief SAM D1x Clock Driver
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -43,10 +43,6 @@
 
 #ifndef CLOCK_CONFIG_CHECK_H
 #  define CLOCK_CONFIG_CHECK_H
-
-#if !defined(CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT)
-#  error CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT not defined in conf_clock.h
-#endif
 
 #if !defined(CONF_CLOCK_FLASH_WAIT_STATES)
 #  error CONF_CLOCK_FLASH_WAIT_STATES not defined in conf_clock.h
