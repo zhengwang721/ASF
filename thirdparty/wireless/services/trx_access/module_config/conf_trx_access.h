@@ -296,7 +296,7 @@ extint_chan_enable_callback(AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT);
  *  This macro restores the transceiver interrupt status
  */
 #define LEAVE_TRX_REGION()   extint_chan_enable_callback(AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT); }
-#define AT86RFX_SPI_BAUDRATE         (5000000)                                              
-/**
-#endif/*SAMR21*/
+#define AT86RFX_SPI_BAUDRATE         (5000000)  
+#endif /* SAMR21 */                                             
+
 #endif /* CONF_TRX_ACCESS_H_INCLUDED */
