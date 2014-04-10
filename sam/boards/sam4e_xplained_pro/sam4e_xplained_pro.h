@@ -683,7 +683,7 @@
 #define AT86RFX_SPI_MISO             IOPORT_CREATE_PIN(PIOA, 12)
 #define AT86RFX_SPI_SCK              IOPORT_CREATE_PIN(PIOA, 14)
 
-
+void at86rfx_isr(void);
 #define AT86RFX_INTC_INIT()         ioport_set_pin_dir(AT86RFX_IRQ_PIN, IOPORT_DIR_INPUT);\
 									ioport_set_pin_sense_mode(AT86RFX_IRQ_PIN, IOPORT_SENSE_RISING);\
 									pmc_enable_periph_clk(ID_PIOA);\
