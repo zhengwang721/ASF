@@ -73,7 +73,7 @@
 			<build type="header-file" value="quick_start_gclk/qs_gclk_basic.h"/>
 			<build type="header-file" value="quick_start_clock/qs_clock_source.h"/>
 
-			<build type="module-config" subtype="path" value="samd20/module_config"/>
+			<build type="module-config" subtype="path" value="clock_samd20/module_config"/>
 			<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
 
 			<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
@@ -109,7 +109,7 @@
 			<build type="header-file" value="quick_start_gclk/qs_gclk_basic.h"/>
 			<build type="header-file" value="quick_start_clock/qs_clock_source.h"/>
 
-			<build type="module-config" subtype="path" value="samd21/module_config"/>
+			<build type="module-config" subtype="path" value="clock_samd21/module_config"/>
 			<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
 			<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
 			<build type="doxygen-example-path" value="quick_start_gclk"/>
@@ -120,6 +120,36 @@
 			<require idref="sam0.utils"/>
 
 			<device-support value="samd21"/>
+		</module>
+
+		<module type="driver" id="sam0.drivers.system.clock#samd11" caption="SYSTEM - Clock Management for SAMD11">
+			<info type="description" value="summary">
+				Driver for the SAM D11 Clock management units. Provides a unified
+				interface for the configuration and management of the various clocks
+				in the device, including the bus and generic peripheral clocks.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="Clocks" />
+			</info>
+
+			<build type="include-path" value="."/>
+			<build type="include-path" value="clock_samd11/"/>
+
+			<build type="header-file" subtype="api" value="clock.h"/>
+			<build type="header-file" subtype="api" value="gclk.h"/>
+			<build type="header-file" value="clock_samd11/clock_config_check.h" />
+			<build type="c-source" value="clock_samd11/clock.c"/>
+			<build type="c-source" value="clock_samd11/gclk.c"/>
+
+			<build type="header-file" value="quick_start_gclk/qs_gclk_basic.h"/>
+			<build type="header-file" value="quick_start_clock/qs_clock_source.h"/>
+
+			<build type="module-config" subtype="path" value="clock_samd11/module_config"/>
+			<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
+			<require idref="sam0.drivers.system.interrupt"/>
+			<require idref="sam0.utils"/>
+
+			<device-support value="samd11"/>
 		</module>
 	</select-by-device>
 </asf>
