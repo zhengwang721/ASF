@@ -50,12 +50,12 @@ extern uint8_t timer_multiplier;
 tmr_callback_t tmr_callback;
 
 /* === Prototypes =========================================================== */
-#if SAM4L
-extern void sysclk_enable_peripheral_clock(const volatile void *module);
-#else
+#ifndef SAM4L
+/*extern void sysclk_enable_peripheral_clock(const volatile void *module);
+#else*/
 extern void sysclk_enable_peripheral_clock(uint32_t ul_id);
 #endif
-extern uint32_t sysclk_get_peripheral_bus_hz(const volatile void *module);
+/*extern uint32_t sysclk_get_peripheral_bus_hz(const volatile void *module);*/
 static void configure_NVIC(Tc *cmn_hw_timer, uint8_t cmn_hw_timer_ch);
 static void tc_callback(void);
 
@@ -103,7 +103,7 @@ void tmr_write_cmpreg(uint16_t compare_value)
  */
 uint8_t tmr_init(void)
 {
-	uint8_t timer_multiplier;
+	uint8_t tmr_mul;
 	/* Configure clock service. */
 	#if SAM4L
 	sysclk_enable_peripheral_clock(TIMER);
@@ -112,8 +112,8 @@ uint8_t tmr_init(void)
 	#endif
 
 	/* Get system clock. */
-	timer_multiplier = sysclk_get_peripheral_bus_hz(TIMER) / DEF_1MHZ;
-	timer_multiplier = timer_multiplier >> 1;
+	tmr_mul = sysclk_get_peripheral_bus_hz(TIMER) / DEF_1MHZ;
+	tmr_mul = tmr_mul >> 1;
 	#if SAM4L
 	tc_init(TIMER, TIMER_CHANNEL_ID,
 	TC_CMR_TCCLKS_TIMER_CLOCK2 | TC_CMR_WAVE |
@@ -140,7 +140,7 @@ uint8_t tmr_init(void)
 #endif	
 	tmr_disable_cc_interrupt();
 	tc_start(TIMER, TIMER_CHANNEL_ID);	
-	return timer_multiplier;
+	return tmr_mul;
 }
 
 /*! \brief  to disable compare interrupt

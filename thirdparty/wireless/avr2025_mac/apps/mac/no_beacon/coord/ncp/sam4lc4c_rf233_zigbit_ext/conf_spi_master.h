@@ -45,8 +45,6 @@
 
 /* Possibility to change low-level configurations here */
 
-#define AT86RFX_SPI_BAUDRATE 3000000
-
 /* ! Default Config Spi Master Delay BCS */
 /* #define CONFIG_SPI_MASTER_DELAY_BCS            0 */
 

@@ -186,7 +186,9 @@ uint16_t no_of_assoc_devices;
 
 /** This array stores the current beacon payload. */
 uint8_t beacon_payload[] = {"Atmel beacon demo 0"};
+#ifdef GPIO_PUSH_BUTTON_0	
 static uint8_t broadcast_payload[] ={"Broadcast Data"};
+#endif	
 #ifdef GTS_SUPPORT
 static uint8_t gts_payload[] = {"GTS Data from coordinator"};
 #endif /* GTS_SUPPORT */

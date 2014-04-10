@@ -246,6 +246,7 @@ static void bc_data_cb(void *parameter);
  *                  to indicated LED to be switched off)
  */
 static void indirect_data_cb(void *parameter);
+#ifdef GTS_SUPPORT
 /**
  * @brief Callback function for initiation of gts data transmission
  *
@@ -254,6 +255,7 @@ static void indirect_data_cb(void *parameter);
  *                  to indicated LED to be switched off)
  */
 static void gts_data_cb(void *parameter);
+#endif
 /**
  * @brief Callback function for updating the beacon payload
  *
@@ -353,7 +355,7 @@ printf("\nNO Beacon_Application\r\n\n");
 			if (!ioport_get_pin_level(GPIO_PUSH_BUTTON_0)) {
 				dst_addr.Addr.short_address = BROADCAST;
 				wpan_mcps_data_req(FCF_SHORT_ADDR, &dst_addr,
-						strlen(broadcast_payload),
+						strlen((const char*)broadcast_payload),
 						(uint8_t *)&broadcast_payload, 1,
 						WPAN_TXOPT_OFF);
 			}
@@ -1205,7 +1207,9 @@ static void bc_data_cb(void *parameter)
 	 **/
 	static uint8_t curr_msdu_handle_temp;
 	uint8_t src_addr_mode;
+#ifndef GPIO_PUSH_BUTTON_0
 	wpan_addr_spec_t dst_addr;
+#endif	
 	uint8_t payload;
 #ifdef SIO_HUB
 	/*char sio_array[255];*/
@@ -1286,7 +1290,9 @@ static void indirect_data_cb(void *parameter)
 {
 	uint16_t cur_device;
 	uint8_t src_addr_mode;
+#ifndef GPIO_PUSH_BUTTON_0
 	wpan_addr_spec_t dst_addr;
+#endif	
 	const char *payload = "Indirect Data from Coordinator";
 
 	/* Loop over all associated devices. */
