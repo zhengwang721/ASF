@@ -1,8 +1,8 @@
 <asf xmlversion="1.0">
-	<select-by-device id="sam0.applications.usb_bootloader" caption="USB Host MSC Bootloader Example">
-		<module type="application" id="sam0.applications.usb_bootloader#0" caption="SAM D21 USB MSC Bootloader Example">
+	<select-by-device id="sam0.applications.usb_fw_gen" caption="USB Host MSC Firmware Generator Example">
+		<module type="application" id="sam0.applications.usb_fw_gen#0" caption="SAM D21 USB MSC Firmware Generator Example">
 			<info type="description" value="summary">
-			USB Host MSC Bootloader application for SAM D21 for safe and secure firmware upgrade.
+			Generates the output binary to use with the USB Host MSC Bootloader application for SAM D21.
 			</info>
 			<build type="include-path" value="."/>
 			<build type="c-source" value="main.c"/>

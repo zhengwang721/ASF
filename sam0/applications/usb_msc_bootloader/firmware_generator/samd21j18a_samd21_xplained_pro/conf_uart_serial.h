@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Bootloader configuration.
+ * \brief SAMD21 USART configuration.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,44 +41,17 @@
  *
  */
 
-//! Configuration of the bootloader
+#ifndef CONF_TEST_H
+#define CONF_TEST_H
 
-#ifndef CONF_BOOTLOADER_H_
-#define CONF_BOOTLOADER_H_
-
-//! Enable/disable the CRC check
-#define FIRMWARE_CRC_ENABLED         DISABLE
-//! Enable/disable the Console message output
-#define CONSOLE_OUTPUT_ENABLED       DISABLE
-//! Enable/disable the verification of memory after programming
-#define VERIFY_PROGRAMMING_ENABLED   DISABLE
-
-//! Firmware file input name
-#define FIRMWARE_IN_FILE_NAME        "0:firmware.bin"
-//! GPIO pin used to activate the bootloader mode
-
-//! Application starting offset - Verify with bootloader footprint*/
-#define APP_START_OFFSET             0x10000
-//! Application starting address in Flash
-#define APP_START_ADDRESS            (FLASH_ADDR + APP_START_OFFSET)
-//! Maximum possible size of the Application
-#define APP_MAX_SIZE                 (FLASH_ADDR + FLASH_SIZE  \
-										- APP_START_ADDRESS)
-//! Buffer size to be used for programming
-#define FLASH_BUFFER_SIZE            (FLASH_PAGE_SIZE)
-
-//! Offset for the firmware in the input application binary - 16 bytes
-#define APP_BINARY_OFFSET            (APP_CRC_SIZE + APP_SIGNATURE_SIZE)
-//! CRCCU Polynomial Selection
-#define APP_CRC_POLYNOMIAL_TYPE      CRC_TYPE_32 //32-bit CRC
-//! Application Signature
-#define APP_SIGNATURE                "ATMEL SAM D21 "
-//! Size of signature in bytes
-#define APP_SIGNATURE_SIZE           12
-//! Size of CRC32 in bytes
-#define APP_CRC_SIZE                 4
-
-
-
-
-#endif /* CONF_BOOTLOADER_H_ */
+#include <board.h>
+//! [conf_uart_serial_settings]
+#define CONF_STDIO_USART_MODULE  EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING   EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0   EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1   EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2   EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3   EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE      115200
+//! [conf_uart_serial_settings]
+#endif // CONF_TEST_H

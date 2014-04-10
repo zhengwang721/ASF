@@ -47,15 +47,14 @@
 #define CONF_BOOTLOADER_H_
 
 //! Enable/disable the CRC check
-#define FIRMWARE_CRC_ENABLED         DISABLE
+#define FIRMWARE_CRC_ENABLED         ENABLE
 //! Enable/disable the Console message output
-#define CONSOLE_OUTPUT_ENABLED       DISABLE
-//! Enable/disable the verification of memory after programming
-#define VERIFY_PROGRAMMING_ENABLED   DISABLE
+#define CONSOLE_OUTPUT_ENABLED       ENABLE
 
 //! Firmware file input name
-#define FIRMWARE_IN_FILE_NAME        "0:firmware.bin"
-//! GPIO pin used to activate the bootloader mode
+#define FIRMWARE_IN_FILE_NAME        "0:firmware_input.bin"
+//! Firmware file output name
+#define FIRMWARE_OUT_FILE_NAME       "0:firmware.bin"
 
 //! Application starting offset - Verify with bootloader footprint*/
 #define APP_START_OFFSET             0x10000

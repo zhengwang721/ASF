@@ -77,10 +77,6 @@ volatile uint8_t buffer[FLASH_BUFFER_SIZE];
 #if FIRMWARE_CRC_ENABLED
 /* CRC32 Value of the firmware */
 static uint32_t firmware_crc = 0;
-
-/* CRC descriptor - Should be 512 byte aligned */
-COMPILER_ALIGNED(512)
-static crccu_dscr_type_t crc_dscr;
 #endif
 
 #if CONSOLE_OUTPUT_ENABLED
@@ -166,6 +162,18 @@ static void check_boot_mode(void)
 	start_application();
 }
 
+#if FIRMWARE_CRC_ENABLED
+static void crc32_calculate(uint32_t address, uint32_t size)
+{
+	struct dma_crc_config crc_config;
+
+	dma_crc_get_config_defaults(&crc_config);
+
+	dma_crc_io_calculation(address, size, &crc_config);
+
+}
+#endif
+
 /**
  * \brief Function to program the Flash. Decrypt the firmware and program it.
  */
@@ -188,7 +196,7 @@ static bool program_memory(void)
 			(char const *)input_file_name,
 			FA_OPEN_EXISTING | FA_READ);
 
-	file_size = file_object.fsize;
+	file_size = file_object.fsize - APP_BINARY_OFFSET;
 
 #if FIRMWARE_CRC_ENABLED
 	/* Read the CRC data & Signature from the firmware */
@@ -253,27 +261,13 @@ static bool program_memory(void)
 	f_close(&file_object);
 
 #if VERIFY_PROGRAMMING_ENABLED
-	/* Update the buffer size */
-	buffer_size = address_offset;
-	/* Re-initialize offset to zero */
-	address_offset = 0;
-
-	/* Reset the CRCCU to start fresh calculation */
-	crccu_reset(CRCCU);
-
-	/* CRC calculation with max 0xFFF since the CRCCU size limit is 12-bit */
-	do {
-		/* Calculate the CRC32 of the programmed memory */
-		crc32_calculate((uint32_t)(APP_START_ADDRESS + address_offset),
-							min(0xFFF, buffer_size));
-		buffer_size -= min(0xFFF, buffer_size);
-		address_offset += 0xFFF;
-	} while (buffer_size!=0);
+	/* Calculate the CRC32 of the programmed memory */
+	crc32_calculate((uint32_t)(APP_START_ADDRESS), file_size);
 
 	/* Get the CRC32 value */
-	firmware_crc_output = crccu_read_crc_value(CRCCU);
+	firmware_crc_output = dma_crc_get_checksum();
 
-	if (APP_CRC_POLYNOMIAL_TYPE == CRCCU_MR_PTYPE_CCITT16) {
+	if (APP_CRC_POLYNOMIAL_TYPE == CRC_TYPE_16) {
 		/* 16-bit CRC */
 		firmware_crc_output &= 0xFFFF;
 	}
@@ -297,15 +291,12 @@ static bool program_memory(void)
 /**
  * \brief Function to check the integrity of the firmware.
  */
-static bool integrity_check()
+static bool integrity_check(void)
 {
 	uint8_t *buf = NULL;
 	uint32_t firmware_crc_output = 0;
 	uint32_t buffer_size = 0;
 	uint8_t *signature_bytes = APP_SIGNATURE;
-
-	/* Reset the CRCCU */
-	crccu_reset(CRCCU);
 
 	/* Open the input file */
 	f_open(&file_object,
@@ -366,9 +357,9 @@ static bool integrity_check()
 	}
 
 	/* Get the CRC32 value */
-	firmware_crc_output = crccu_read_crc_value(CRCCU);
+	firmware_crc_output = dma_crc_get_checksum();
 
-	if (APP_CRC_POLYNOMIAL_TYPE == CRCCU_MR_PTYPE_CCITT16) {
+	if (APP_CRC_POLYNOMIAL_TYPE == CRC_TYPE_16) {
 		/* 16-bit CRC */
 		firmware_crc_output &= 0xFFFF;
 	}
@@ -386,32 +377,6 @@ static bool integrity_check()
 
 	/* Return true on compare match pass */
 	return true;
-}
-#endif
-
-#if FIRMWARE_CRC_ENABLED
-static void crc32_calculate(uint32_t address, uint32_t size)
-{
-	/* Set the memory address for CRCCU DMA transfer */
-	crc_dscr.ul_tr_addr = address;
-
-	/* Transfer width: byte, interrupt disable(here interrupt mask enabled) */
-	crc_dscr.ul_tr_ctrl =
-	CRCCU_TR_CTRL_TRWIDTH_BYTE | size |
-	CRCCU_TR_CTRL_IEN_DISABLE;
-
-	/* Configure the CRCCU descriptor */
-	crccu_configure_descriptor(CRCCU, (uint32_t) &crc_dscr);
-
-	/* Configure CRCCU mode */
-	crccu_configure_mode(CRCCU, CRCCU_MR_ENABLE | APP_CRC_POLYNOMIAL_TYPE);
-
-	/* Start the CRC calculation */
-	crccu_enable_dma(CRCCU);
-
-	/* Wait for calculation ready */
-	while ((crccu_get_dma_status(CRCCU) == CRCCU_DMA_SR_DMASR)) {
-	}
 }
 #endif
 
@@ -449,7 +414,7 @@ static void bootloader_system_init(void)
 	/* Initialize the system */
 	system_init();
 
-    /*Configures PORT for LED0*/
+	/*Configures PORT for LED0*/
 	port_get_config_defaults(&pin);
 	pin.direction = PORT_PIN_DIR_OUTPUT;
 	port_pin_set_config(LED0_PIN, &pin);

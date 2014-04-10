@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Bootloader configuration.
+ * \brief Declaration of main function used by example
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,44 +41,20 @@
  *
  */
 
-//! Configuration of the bootloader
+#ifndef _MAIN_H_
+#define _MAIN_H_
 
-#ifndef CONF_BOOTLOADER_H_
-#define CONF_BOOTLOADER_H_
+#include <asf.h>
+#include "uhc.h"
 
-//! Enable/disable the CRC check
-#define FIRMWARE_CRC_ENABLED         DISABLE
-//! Enable/disable the Console message output
-#define CONSOLE_OUTPUT_ENABLED       DISABLE
-//! Enable/disable the verification of memory after programming
-#define VERIFY_PROGRAMMING_ENABLED   DISABLE
+//! \brief Notify that a SOF has been sent (each 1 ms)
+void main_usb_sof_event(void);
 
-//! Firmware file input name
-#define FIRMWARE_IN_FILE_NAME        "0:firmware.bin"
-//! GPIO pin used to activate the bootloader mode
+/*! \brief Notify that a USB device has been connected or disconnected.
+ *
+ * \param dev         Pointer on USB device information
+ * \param b_present   true, if the device has been connected
+ */
+void main_usb_connection_event(uhc_device_t *dev, bool b_present);
 
-//! Application starting offset - Verify with bootloader footprint*/
-#define APP_START_OFFSET             0x10000
-//! Application starting address in Flash
-#define APP_START_ADDRESS            (FLASH_ADDR + APP_START_OFFSET)
-//! Maximum possible size of the Application
-#define APP_MAX_SIZE                 (FLASH_ADDR + FLASH_SIZE  \
-										- APP_START_ADDRESS)
-//! Buffer size to be used for programming
-#define FLASH_BUFFER_SIZE            (FLASH_PAGE_SIZE)
-
-//! Offset for the firmware in the input application binary - 16 bytes
-#define APP_BINARY_OFFSET            (APP_CRC_SIZE + APP_SIGNATURE_SIZE)
-//! CRCCU Polynomial Selection
-#define APP_CRC_POLYNOMIAL_TYPE      CRC_TYPE_32 //32-bit CRC
-//! Application Signature
-#define APP_SIGNATURE                "ATMEL SAM D21 "
-//! Size of signature in bytes
-#define APP_SIGNATURE_SIZE           12
-//! Size of CRC32 in bytes
-#define APP_CRC_SIZE                 4
-
-
-
-
-#endif /* CONF_BOOTLOADER_H_ */
+#endif // _MAIN_H_
