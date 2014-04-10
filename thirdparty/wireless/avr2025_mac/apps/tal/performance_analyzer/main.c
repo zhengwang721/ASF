@@ -51,6 +51,7 @@
  # include "performance_main.h"
  int main(void)
  {
+	irq_initialize_vectors();
 #if SAMD || SAMR21
 	system_init();
 	delay_init();
@@ -62,8 +63,8 @@
 	 * the board initialization.
 	 */
 	board_init();    
-#endif	 
-	irq_initialize_vectors();
+#endif	
+	
 	performance_analyzer_main();
  }
  
