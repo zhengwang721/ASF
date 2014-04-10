@@ -80,7 +80,7 @@
 
 // Note:
 // CONFIG_CPCLK_ENABLE  MUST be defined if using peripherals on bus matrix 1.
-#define CONFIG_CPCLK_ENABLE
+//#define CONFIG_CPCLK_ENABLE
 
 // Coprocessor System Clock Source Options
 //#define CONFIG_CPCLK_SOURCE         CPCLK_SRC_SLCK

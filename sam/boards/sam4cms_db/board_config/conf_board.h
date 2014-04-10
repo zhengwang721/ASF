@@ -50,4 +50,16 @@
 /* Configure UART0 pins */
 //#define CONF_BOARD_UART_CONSOLE
 
+/* Configure SPI pins */
+//#define CONF_BOARD_SPI0
+
+/* Configure SPI0 NPCS1 */
+//#define CONF_BOARD_SPI0_NPCS1
+
+/* Configure TWI pins*/
+//#define CONF_BOARD_TWI0
+
+/* Configure AT30TSE pins */
+//#define CONF_BOARD_AT30TSE
+
 #endif /* CONF_BOARD_H_INCLUDED */
