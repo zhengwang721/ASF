@@ -363,7 +363,7 @@ status_code_t freertos_twi_write_packet_async(freertos_twi_if p_twi,
 								IER_ERROR_INTERRUPTS);
 						/* Release semaphore */
 						xSemaphoreGive(tx_dma_control[twi_index].peripheral_access_mutex);
-						return STATUS_ERR_BUSY;
+						return ERR_BUSY;
 					}
 					if (status & TWI_SR_TXRDY) {
 						break;
@@ -569,7 +569,7 @@ status_code_t freertos_twi_read_packet_async(freertos_twi_if p_twi,
 								IER_ERROR_INTERRUPTS);
 						/* Release semaphore */
 						xSemaphoreGive(tx_dma_control[twi_index].peripheral_access_mutex);
-						return STATUS_ERR_BUSY;
+						return ERR_BUSY;
 					}
 					/* Last byte ? */
 					if (cnt == 1 && !stop_sent) {
@@ -649,7 +649,7 @@ static void local_twi_handler(const portBASE_TYPE twi_index)
 	portBASE_TYPE higher_priority_task_woken = pdFALSE;
 	uint32_t twi_status;
 	Twi *twi_port;
-	status_code_t status_value = STATUS_OK;
+	bool transfer_timeout = false;
 
 	twi_port = all_twi_definitions[twi_index].peripheral_base_address;
 
@@ -673,7 +673,7 @@ static void local_twi_handler(const portBASE_TYPE twi_index)
 			}
 			/* Check timeout condition. */
 			if (++timeout_counter >= TWI_TIMEOUT_COUNTER) {
-				status_value = ERR_TIMEOUT;
+				transfer_timeout = true;
 				break;
 			}
 		}
@@ -689,7 +689,7 @@ static void local_twi_handler(const portBASE_TYPE twi_index)
 			}
 			/* Check timeout condition. */
 			if (++timeout_counter >= TWI_TIMEOUT_COUNTER) {
-				status_value = ERR_TIMEOUT;
+				transfer_timeout = true;
 				break;
 			}
 		}
@@ -762,7 +762,7 @@ static void local_twi_handler(const portBASE_TYPE twi_index)
 				}
 				/* Check timeout condition. */
 				if (++timeout_counter >= TWI_TIMEOUT_COUNTER) {
-					status_value = ERR_TIMEOUT;
+					transfer_timeout = true;
 					break;
 				}
 			}
@@ -788,7 +788,7 @@ static void local_twi_handler(const portBASE_TYPE twi_index)
 		}
 	}
 
-	if (((twi_status & SR_ERROR_INTERRUPTS) != 0) || (status_value == ERR_TIMEOUT)) {
+	if (((twi_status & SR_ERROR_INTERRUPTS) != 0) || (transfer_timeout == true)) {
 		/* An error occurred in either a transmission or reception.  Abort.
 		Stop the transmission, disable interrupts used by the peripheral, and
 		ensure the peripheral access mutex is made available to tasks.  As this
