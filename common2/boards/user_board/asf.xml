@@ -44,4 +44,40 @@
 		<require idref="sam0.utils.linker_scripts"/>
 		<device-support value="samd21e"/>
 	</board>
+
+	<board id="board.user_board.samd10c" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samd10c"/>
+	</board>
+
+	<board id="board.user_board.samd10d" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samd10d"/>
+	</board>
+
+	<board id="board.user_board.samd10e" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samd10e"/>
+	</board>
+
+	<board id="board.user_board.samd11c" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samd11c"/>
+	</board>
+
+	<board id="board.user_board.samd11d" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samd11d"/>
+	</board>
+
+	<board id="board.user_board.samd11e" caption="User Board template">
+		<require idref="common2.boards.user_board.common"/>
+		<require idref="sam0.utils.linker_scripts"/>
+		<device-support value="samd11e"/>
+	</board>
 </asf>
