@@ -380,44 +380,4 @@
 #  error CONF_CLOCK_GCLK_5_OUTPUT_ENABLE not defined in conf_clock.h
 #endif
 
-#if !defined(CONF_CLOCK_GCLK_6_ENABLE)
-#  error CONF_CLOCK_GCLK_6_ENABLE not defined in conf_clock.h
-#endif
-
-#if !defined(CONF_CLOCK_GCLK_6_RUN_IN_STANDBY)
-#  error CONF_CLOCK_GCLK_6_RUN_IN_STANDBY not defined in conf_clock.h
-#endif
-
-#if !defined(CONF_CLOCK_GCLK_6_CLOCK_SOURCE)
-#  error CONF_CLOCK_GCLK_6_CLOCK_SOURCE not defined in conf_clock.h
-#endif
-
-#if !defined(CONF_CLOCK_GCLK_6_PRESCALER)
-#  error CONF_CLOCK_GCLK_6_PRESCALER not defined in conf_clock.h
-#endif
-
-#if !defined(CONF_CLOCK_GCLK_6_OUTPUT_ENABLE)
-#  error CONF_CLOCK_GCLK_6_OUTPUT_ENABLE not defined in conf_clock.h
-#endif
-
-#if !defined(CONF_CLOCK_GCLK_7_ENABLE)
-#  error CONF_CLOCK_GCLK_7_ENABLE not defined in conf_clock.h
-#endif
-
-#if !defined(CONF_CLOCK_GCLK_7_RUN_IN_STANDBY)
-#  error CONF_CLOCK_GCLK_7_RUN_IN_STANDBY not defined in conf_clock.h
-#endif
-
-#if !defined(CONF_CLOCK_GCLK_7_CLOCK_SOURCE)
-#  error CONF_CLOCK_GCLK_7_CLOCK_SOURCE not defined in conf_clock.h
-#endif
-
-#if !defined(CONF_CLOCK_GCLK_7_PRESCALER)
-#  error CONF_CLOCK_GCLK_7_PRESCALER not defined in conf_clock.h
-#endif
-
-#if !defined(CONF_CLOCK_GCLK_7_OUTPUT_ENABLE)
-#  error CONF_CLOCK_GCLK_7_OUTPUT_ENABLE not defined in conf_clock.h
-#endif
-
 #endif /* CLOCK_CONFIG_CHECK_H */

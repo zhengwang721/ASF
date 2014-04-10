@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D11 Clock configuration
+ * \brief SAM D1x Clock configuration
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
