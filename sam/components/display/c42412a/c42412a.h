@@ -269,6 +269,16 @@ void c42412a_clear_numeric_dec(void);
  */
 void c42412a_show_battery(enum c42412a_battery_value val);
 
+/**
+ * \brief Show wireless signal condition by the wireless icons on the LCD glass.
+ *
+ * This function allows to Show wireless signal condition by the wireless icons
+ * on the LCD glass..
+ *
+ * \param val The 0 to 3 value which show the wireless signal condition.
+ */
+ void c42412a_show_wireless(enum c42412a_wless_value val);
+
 /** @} */
 
 

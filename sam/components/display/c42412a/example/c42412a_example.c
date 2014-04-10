@@ -193,6 +193,7 @@ int main(void)
 			c42412a_show_icon(C42412A_ICON_ATMEL);
 			c42412a_show_numeric_dec(value);
 			c42412a_show_battery(C42412A_BATTERY_TWO);
+			c42412a_show_wireless(C42412A_WLESS_TWO);
 			break;
 
 		case '2':

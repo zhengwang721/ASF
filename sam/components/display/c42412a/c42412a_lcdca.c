@@ -176,6 +176,23 @@ void c42412a_show_battery(enum c42412a_battery_value val)
 	}
 }
 
+void c42412a_show_wireless(enum c42412a_wless_value val)
+{
+	lcdca_clear_pixel(C42412A_ICON_WLESS_LEVEL_1);
+	lcdca_clear_pixel(C42412A_ICON_WLESS_LEVEL_2);
+	lcdca_clear_pixel(C42412A_ICON_WLESS_LEVEL_3);
+	lcdca_set_pixel(C42412A_ICON_WLESS);
+	if (val > 2) {
+		lcdca_set_pixel(C42412A_ICON_WLESS_LEVEL_3);
+	}
+	if (val > 1) {
+		lcdca_set_pixel(C42412A_ICON_WLESS_LEVEL_2);
+	}
+	if (val > 0) {
+		lcdca_set_pixel(C42412A_ICON_WLESS_LEVEL_1);
+	}
+}
+
 void c42412a_show_numeric_dec(int32_t value)
 {
 	uint8_t lcd_num[6];
