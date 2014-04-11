@@ -50,6 +50,9 @@
 #endif
 #include "main.h"
 
+/* Small delay to ensure that the MSC device is ready */
+#define MSC_DELAY_SOF_COUNT     1000  // 1000ms
+
 /* SOF Event Counter */
 static volatile uint32_t sof_count = 0;
 
@@ -74,8 +77,8 @@ char input_file_name[] = {
 COMPILER_WORD_ALIGNED
 volatile uint8_t buffer[FLASH_BUFFER_SIZE];
 
-#if FIRMWARE_CRC_ENABLED
-/* CRC32 Value of the firmware */
+#if FIRMWARE_CRC_CHECK
+/* CRC Value of the firmware */
 static uint32_t firmware_crc = 0;
 #endif
 
@@ -129,6 +132,173 @@ static void start_application_with_wdt(void)
 	}
 }
 
+#if FIRMWARE_CRC_CHECK
+/**
+ * \brief Function to check the integrity of the firmware in usb disk.
+ */
+static bool integrity_check_in_disk(void)
+{
+	uint8_t *buf = NULL;
+	uint32_t firmware_crc_output = 0;
+	uint32_t buffer_size = 0;
+	uint8_t *signature_bytes = APP_SIGNATURE;
+	struct dma_crc_config crc_config;
+
+	/* Open the input file */
+	f_open(&file_object,
+			(char const *)input_file_name,
+			FA_OPEN_EXISTING | FA_READ);
+
+	/* Routine to check the signature for decryption
+	 * Firmware - First 4 bytes - CRC, 12 bytes - Firmware Signature/Password
+	 * Remaining bytes - Application binary file
+	 */
+
+	/* Read the CRC data & Signature from the firmware */
+	f_read(&file_object, (void *)buffer, APP_BINARY_OFFSET, &buffer_size);
+	/* Check if there is any buffer */
+	if (!buffer_size) {
+		/* Close the File after operation. */
+		f_close(&file_object);
+		return false;
+	}
+
+	/* Update the buffer */
+	buf = (uint8_t *) buffer;
+
+	/* Store the firmware CRC */
+	firmware_crc = *(uint32_t *)buf;
+	/* Update the buffer size */
+	buffer_size -= 4;
+	buf += 4;
+	/* Validate the Signature bytes */
+	while (buffer_size--) {
+		if (*buf++ != *signature_bytes++) {
+			/* Signature verification failed */
+			/* Close the File after operation. */
+			f_close(&file_object);
+			return false;
+		}
+	}
+
+	/*
+	 * File pointer didnt get updated at this point to the binary offset value.
+	 * Calling F_SEEK again.
+	 */
+	f_lseek(&file_object, APP_BINARY_OFFSET);
+
+	/* Start the DMA CRC with I/O mode */
+	dma_crc_get_config_defaults(&crc_config);
+	crc_config.type = APP_CRC_POLYNOMIAL_TYPE;
+//	crc_config.size = CRC_BEAT_SIZE_WORD;
+	dma_crc_io_enable(&crc_config);
+
+	/* Verify the CRC of the entire file before programming */
+	while (true) {
+		/* Read the data from the firmware */
+		f_read(&file_object, (void *)buffer, FLASH_BUFFER_SIZE, &buffer_size);
+		/* Check if there is any buffer */
+		if (!buffer_size) {
+			break;
+		}
+
+		/* Calculate the CRC for the buffer */
+		dma_crc_io_calculation((void *)(buffer), buffer_size);
+	}
+
+	/* stop the DMA CRC with I/O mode */
+	dma_crc_disable();
+
+	/* Store the CRC Value */
+	firmware_crc_output = dma_crc_get_checksum();
+
+	if (APP_CRC_POLYNOMIAL_TYPE == CRC_TYPE_16) {
+		/* 16-bit CRC */
+		firmware_crc_output &= 0xFFFF;
+		firmware_crc &= 0xFFFF;
+	}
+
+	/* Compare the calculated CRC Value */
+	if (firmware_crc != firmware_crc_output) {
+		/* Close the File after operation. */
+		f_close(&file_object);
+		/* Return false on compare match fail */
+		return false;
+	}
+
+	/* Close the File after operation. */
+	f_close(&file_object);
+
+	/* Return true on compare match pass */
+	return true;
+}
+#endif
+
+#if FIRMWARE_CRC_CHECK
+/**
+ * \brief Function to check the integrity of the firmware in internal flash.
+ */
+static bool integrity_check_in_flash(void)
+{
+	uint32_t firmware_crc_output = 0;
+	struct dma_crc_config crc_config;
+	uint32_t curr_address = 0;
+	uint32_t current_page = 0;
+	uint32_t file_size = 0;
+	uint32_t read_size = 0;
+	uint8_t page_buffer[NVMCTRL_PAGE_SIZE];
+
+	current_page = APP_START_ADDRESS / NVMCTRL_PAGE_SIZE;
+	curr_address = 0;
+	file_size = file_object.fsize - APP_BINARY_OFFSET;
+
+	/* Start the DMA CRC with I/O mode */
+	dma_crc_get_config_defaults(&crc_config);
+	crc_config.type = APP_CRC_POLYNOMIAL_TYPE;
+	dma_crc_io_enable(&crc_config);
+
+	/* Verify the CRC of the entire file after programming */
+	while (curr_address < file_size) {
+		if ((curr_address + FLASH_BUFFER_SIZE) < file_size) {
+			read_size = FLASH_BUFFER_SIZE;
+		} else {
+			read_size = file_size - curr_address;
+		}
+
+		/* Read the data from the firmware */
+		nvm_read_buffer(current_page * NVMCTRL_PAGE_SIZE,
+					page_buffer, FLASH_BUFFER_SIZE);
+
+		curr_address +=  read_size;
+		current_page++;
+
+		/* Calculate the CRC for the buffer */
+		dma_crc_io_calculation((void *)(page_buffer), read_size);
+	};
+
+	/* stop the DMA CRC with I/O mode */
+	dma_crc_disable();
+
+	/* Store the CRC Value */
+	firmware_crc_output = dma_crc_get_checksum();
+
+	if (APP_CRC_POLYNOMIAL_TYPE == CRC_TYPE_16) {
+		/* 16-bit CRC */
+		firmware_crc_output &= 0xFFFF;
+		firmware_crc &= 0xFFFF;
+	}
+
+	/* Compare the calculated CRC Value */
+	if (firmware_crc != firmware_crc_output) {
+		/* Return false on compare match fail */
+		return false;
+	}
+
+	/* Return true on compare match pass */
+	return true;
+}
+#endif
+
 /* 
  * This function check if the applicatino or bootloade should be run
  */
@@ -154,25 +324,13 @@ static void check_boot_mode(void)
 	}
 
 	if (*app_check_address_ptr == 0xFFFFFFFF) {
-		/* No application; run bootloader */
+		/* No valid application; run bootloader */
 		return;
 	}
 
 	/* Enters application mode*/
 	start_application();
 }
-
-#if FIRMWARE_CRC_ENABLED
-static void crc32_calculate(uint32_t address, uint32_t size)
-{
-	struct dma_crc_config crc_config;
-
-	dma_crc_get_config_defaults(&crc_config);
-
-	dma_crc_io_calculation(address, size, &crc_config);
-
-}
-#endif
 
 /**
  * \brief Function to program the Flash. Decrypt the firmware and program it.
@@ -187,10 +345,6 @@ static bool program_memory(void)
 	enum status_code error_code;
 	uint8_t page_buffer[NVMCTRL_PAGE_SIZE];
 
-#if VERIFY_PROGRAMMING_ENABLED
-	uint32_t firmware_crc_output;
-#endif
-
 	/* Open the input file */
 	f_open(&file_object,
 			(char const *)input_file_name,
@@ -198,7 +352,7 @@ static bool program_memory(void)
 
 	file_size = file_object.fsize - APP_BINARY_OFFSET;
 
-#if FIRMWARE_CRC_ENABLED
+#if FIRMWARE_CRC_CHECK
 	/* Read the CRC data & Signature from the firmware */
 	f_read(&file_object, (void *)buffer, APP_BINARY_OFFSET, &buffer_size);
 
@@ -211,8 +365,7 @@ static bool program_memory(void)
 	/* Set the busy LED */
 	port_pin_set_output_level(LED0_PIN, LED0_ACTIVE);
 
-	current_page = APP_START_ADDRESS /
-			NVMCTRL_PAGE_SIZE;
+	current_page = APP_START_ADDRESS / NVMCTRL_PAGE_SIZE;
 	curr_address = 0;
 	
 	/* Erase flash rows to fit new firmware */
@@ -243,12 +396,8 @@ static bool program_memory(void)
 		/* Program the Flash Memory. */
 		/* Write page buffer to flash */
 		do {
-			error_code =
-			nvm_write_buffer(
-				current_page *
-				NVMCTRL_PAGE_SIZE,
-				page_buffer,
-				buffer_size);
+			error_code = nvm_write_buffer(current_page * NVMCTRL_PAGE_SIZE,
+				page_buffer, buffer_size);
 		} while (error_code == STATUS_BUSY);
 
 		/* Enable the global interrupts */
@@ -260,20 +409,9 @@ static bool program_memory(void)
 	/* Close the File after operation. */
 	f_close(&file_object);
 
-#if VERIFY_PROGRAMMING_ENABLED
-	/* Calculate the CRC32 of the programmed memory */
-	crc32_calculate((uint32_t)(APP_START_ADDRESS), file_size);
-
-	/* Get the CRC32 value */
-	firmware_crc_output = dma_crc_get_checksum();
-
-	if (APP_CRC_POLYNOMIAL_TYPE == CRC_TYPE_16) {
-		/* 16-bit CRC */
-		firmware_crc_output &= 0xFFFF;
-	}
-
+#if FIRMWARE_CRC_CHECK
 	/* Compare the calculated CRC Value */
-	if (firmware_crc != firmware_crc_output) {
+	if (!integrity_check_in_flash()) {
 		/* Verification Failed */
 		return false;
 	}
@@ -285,100 +423,6 @@ static bool program_memory(void)
 	/* return true */
 	return true;
 }
-
-
-#if FIRMWARE_CRC_ENABLED
-/**
- * \brief Function to check the integrity of the firmware.
- */
-static bool integrity_check(void)
-{
-	uint8_t *buf = NULL;
-	uint32_t firmware_crc_output = 0;
-	uint32_t buffer_size = 0;
-	uint8_t *signature_bytes = APP_SIGNATURE;
-
-	/* Open the input file */
-	f_open(&file_object,
-			(char const *)input_file_name,
-			FA_OPEN_EXISTING | FA_READ);
-
-	/* Routine to check the signature for decryption
-	 * Firmware - First 4 bytes - CRC32, 12 bytes - Firmware Signature/Password
-	 * Remaining bytes - Application binary file
-	 */
-
-	/* Read the CRC data & Signature from the firmware */
-	f_read(&file_object, (void *)buffer, APP_BINARY_OFFSET, &buffer_size);
-	/* Check if there is any buffer */
-	if (!buffer_size) {
-		/* Close the File after operation. */
-		f_close(&file_object);
-		return false;
-	}
-
-	/* Update the buffer */
-	buf = (uint8_t *) buffer;
-
-	/* Store the firmware CRC */
-	firmware_crc = *(uint32_t *)buf;
-	/* Update the buffer size */
-	buffer_size-=4;
-	buf+=4;
-	/* Validate the Signature bytes */
-	while (buffer_size--) {
-		if (*buf++ != *signature_bytes++) {
-			/* Signature verification failed */
-			/* Close the File after operation. */
-			f_close(&file_object);
-			return false;
-		}
-	}
-
-	/*
-	 * File pointer didnt get updated at this point to the binary offset value.
-	 * Calling F_SEEK again.
-	 */
-	f_lseek(&file_object, APP_BINARY_OFFSET);
-	/* Verify the CRC32 of the entire decrypted file before programming */
-	while (true) {
-		/* Read the data from the firmware */
-		f_read(&file_object, (void *)buffer, FLASH_BUFFER_SIZE, &buffer_size);
-		/* Check if there is any buffer */
-		if (!buffer_size) {
-			break;
-		}
-
-		/* Update the output buffer */
-		buf = (uint8_t *) buffer;
-
-		/* Calculate the CRC32 for the buffer */
-		crc32_calculate((uint32_t) buf, buffer_size);
-	}
-
-	/* Get the CRC32 value */
-	firmware_crc_output = dma_crc_get_checksum();
-
-	if (APP_CRC_POLYNOMIAL_TYPE == CRC_TYPE_16) {
-		/* 16-bit CRC */
-		firmware_crc_output &= 0xFFFF;
-	}
-
-	/* Compare the calculated CRC Value */
-	if (firmware_crc != firmware_crc_output) {
-		/* Close the File after operation. */
-		f_close(&file_object);
-		/* Return false on compare match fail */
-		return false;
-	}
-
-	/* Close the File after operation. */
-	f_close(&file_object);
-
-	/* Return true on compare match pass */
-	return true;
-}
-#endif
 
 #if CONSOLE_OUTPUT_ENABLED
 /**
@@ -467,7 +511,7 @@ int main(void)
 			continue;
 		}
 		/* Adding a small delay to ensure that the MSC device is ready */
-		while (sof_count < 1000);
+		while (sof_count < MSC_DELAY_SOF_COUNT);
 
 #if CONSOLE_OUTPUT_ENABLED
 		/* Print a header */
@@ -542,9 +586,9 @@ int main(void)
 			printf("Integrity check...\r\n");
 #endif
 
-#if FIRMWARE_CRC_ENABLED
+#if FIRMWARE_CRC_CHECK
 			/* Validate the firmware file */
-			if (!integrity_check()) {
+			if (!integrity_check_in_disk()) {
 #if CONSOLE_OUTPUT_ENABLED
 				/* Print a header */
 				printf(TASK_FAILED);
@@ -556,7 +600,7 @@ int main(void)
 #if CONSOLE_OUTPUT_ENABLED
 			/* Print the current task */
 			printf(TASK_PASSED);
-#  if VERIFY_PROGRAMMING_ENABLED
+#  if FIRMWARE_CRC_CHECK
 			printf("Programming & verifying...\r\n");
 #  else
 			printf("Programming...\r\n");

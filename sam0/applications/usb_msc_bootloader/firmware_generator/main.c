@@ -50,7 +50,7 @@
 #include "main.h"
 
 /* Small delay to ensure that the MSC device is ready */
-#define MSC_DELAY_SOF_COUNT     100  // 100ms
+#define MSC_DELAY_SOF_COUNT     1000  // 1000ms
 
 /* SOF Event Counter */
 static volatile uint32_t sof_count = 0;
@@ -95,16 +95,6 @@ struct usart_module usart_instance;
 
 static void console_init(void);
 #endif
-
-static void crc32_calculate(uint32_t address, uint32_t size)
-{
-	struct dma_crc_config crc_config;
-
-	dma_crc_get_config_defaults(&crc_config);
-
-	dma_crc_io_calculation(address, size, &crc_config);
-
-}
 
 /**
  * \brief Function to generate the final firmware
@@ -210,6 +200,13 @@ static bool generate_firmware(void)
 static void generate_crc(void)
 {
 	uint32_t buffer_size = 0;
+	struct dma_crc_config crc_config;
+
+	/* Start the DMA CRC with I/O mode */
+	dma_crc_get_config_defaults(&crc_config);
+	crc_config.type = APP_CRC_POLYNOMIAL_TYPE;
+	crc_config.size = CRC_BEAT_SIZE_WORD;
+	dma_crc_io_enable(&crc_config);
 
 	/* Open the input file for CRC32 generation */
 	f_open(&file_object1,
@@ -227,10 +224,13 @@ static void generate_crc(void)
 			break;
 		}
 
-		crc32_calculate((uint32_t)(buffer), buffer_size);
+		dma_crc_io_calculation((void *)(buffer), buffer_size / 4);
 	}
 
-	/* Store the CRC32 Value */
+	/* stop the DMA CRC with I/O mode */
+	dma_crc_disable();
+
+	/* Store the CRC Value */
 	firmware_crc = dma_crc_get_checksum();
 
 	/* Close the input file */
@@ -265,14 +265,8 @@ static void console_init(void)
  */
 static void firmware_gen_system_init(void)
 {
-	struct nvm_config nvm_cfg;
-
 	/* Initialize the system */
 	system_init();
-
-	/* Initialize the NVM */
-	nvm_get_config_defaults(&nvm_cfg);
-	nvm_set_config(&nvm_cfg);
 
 	/* Initialize the sleep manager */
 	sleepmgr_init();
@@ -280,6 +274,8 @@ static void firmware_gen_system_init(void)
 #if CONSOLE_OUTPUT_ENABLED
 	/* Initialize the console */
 	console_init();
+	/* Wait stdio stable */
+	delay_ms(5);
 	/* Print a header */
 	printf(APP_HEADER);
 #endif
@@ -323,7 +319,7 @@ int main(void)
 		printf("Device Connected\r\n");
 #endif
 		/* Go through the different LUN and check for the file. */
-		for (lun = 0; (lun < uhi_msc_mem_get_lun()) && (lun < 8); lun++) {
+		for (lun = 0; ((lun < uhi_msc_mem_get_lun()) && (lun < 8)); lun++) {
 
 			TCHAR root_directory[3] = "0:";
 			root_directory[0] = '0' + lun;
@@ -469,46 +465,16 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  *   - CONSOLE_OUTPUT_ENABLED     -> Enable/disable the Console message output
  *   - APP_START_OFFSET           -> Application starting offset from Flash
  *   - FIRMWARE_IN_FILE_NAME      -> Input Application Firmware
- *   - FIRMWARE_OUT_FILE_NAME     -> Encrypted/Unencrypted Application Firmware
- *                                   for bootloader
+ *   - FIRMWARE_OUT_FILE_NAME     -> Output Application Firmware for bootloader
  *   - APP_SIGNATURE              -> Signature bytes to be verified
- * 
- * \section board Board Configuration
- * Board Configurations are managed in conf_board.h
- * - SAM4L-EK configuration
- *   - Has an IO configured for VBUS Detect. VBUS Pin jumper PA06/USB
- *     should be set
- *   - CONF_BOARD_USB_PORT           -> Enable USB pins
- *   - CONF_BOARD_USB_VBUS_CONTROL   -> VBUS control enabled, jumper PC08/USB
- *                                      should be set
- *   - CONF_BOARD_USB_VBUS_ERR_DETECT-> VBUS error control enabled, jumper
- *                                      PC07/USB should be set
- *   - An external power supply should be used since the VBUS is powered only
- *     through the external power supply controlled by the VBUS Control(VBOF)
- *     pin. Refer the SAM4L-EK schematics for more details.
- *   - Console message output is sent through the Embedded Debugger(onboard)'s 
- *     COM PORT.
- * - SAM4L Xplained Pro configuration
- *   - Has an IO configured for VBUS Detect.
- *   - CONF_BOARD_USB_PORT           -> Enable USB pins
- *   - CONF_BOARD_USB_VBUS_CONTROL   -> VBUS control enabled
- *   - An external power supply should be used if the EDBG USB port is not able
- *     to provide enough power to the USB MSC device.
- *   - Console message output is sent through the Embedded Debugger(onboard)'s 
- *     COM PORT.
  * 
  * \section func Application Output Format
  * The application binary structure is modified by the firmware generator. The
  * final application binary structure would be as below
- * - AES Enabled:
- *   - 4 bytes   -> Encrypted CRC32
- *   - 12 bytes  -> Encrypted Signature Data
- *   - Rest data -> Encrypted Input Firmware
- * - AES Disabled:
- *   - 4 bytes   -> CRC32
+ *   - 4 bytes   -> CRC
  *   - 12 bytes  -> Signature Data
  *   - Rest data -> Input Firmware
- * - A sample application binary output (AES encrypted) is provided for testing
+ * - A sample application binary output is provided for testing
  *   with the firmware generator.
  *
  * \copydoc UI
@@ -521,11 +487,12 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  * - Configuration Files
  *    - conf_bootloader.h
  *    - conf_board.h
- *    - conf_clock.h
+ *    - conf_clocks.h
  *    - conf_fatfs.h
  *    - conf_access.h
- *    - conf_aesa.h
- *    - conf_ast.h
+ *    - conf_dma.h
+ *    - conf_extint.h
+ *    - conf_uart_serial.h
  *    - conf_usb_host.h
  *    - conf_sleepmgr.h
  * - Basic modules:

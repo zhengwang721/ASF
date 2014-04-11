@@ -47,15 +47,12 @@
 #define CONF_BOOTLOADER_H_
 
 //! Enable/disable the CRC check
-#define FIRMWARE_CRC_ENABLED         DISABLE
+#define FIRMWARE_CRC_CHECK           ENABLE
 //! Enable/disable the Console message output
 #define CONSOLE_OUTPUT_ENABLED       DISABLE
-//! Enable/disable the verification of memory after programming
-#define VERIFY_PROGRAMMING_ENABLED   DISABLE
 
 //! Firmware file input name
 #define FIRMWARE_IN_FILE_NAME        "0:firmware.bin"
-//! GPIO pin used to activate the bootloader mode
 
 //! Application starting offset - Verify with bootloader footprint*/
 #define APP_START_OFFSET             0x10000
@@ -72,7 +69,7 @@
 //! CRCCU Polynomial Selection
 #define APP_CRC_POLYNOMIAL_TYPE      CRC_TYPE_32 //32-bit CRC
 //! Application Signature
-#define APP_SIGNATURE                "ATMEL SAM D21 "
+#define APP_SIGNATURE                "ATMEL SAMD21"
 //! Size of signature in bytes
 #define APP_SIGNATURE_SIZE           12
 //! Size of CRC32 in bytes
