@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief TCC Quick Start configuration for SAM D21 Xplained Pro
+ * \brief TCC Quick Start configuration
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *

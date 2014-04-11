@@ -130,7 +130,6 @@ void configure_dma_resource(struct dma_resource *resource)
 
 //! [dma_setup_2]
 	dma_get_config_defaults(&config);
-	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
 	config.peripheral_trigger = M2M_DMAC_TRIGGER_ID;
 //! [dma_setup_2]
 
