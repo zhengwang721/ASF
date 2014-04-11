@@ -216,11 +216,11 @@ static uint16_t get_batmon_voltage(void)
 {
 	uint16_t voltage;
 	/* GET_BATTERY_VOLTAGE - will be board specific */
-	#if (!defined SAMD20) || (!defined SAMD21) || (!defined SAMR21)
+	//#if (!defined SAMD20) || (!defined SAMD21) || (!defined SAMR21)
 	voltage = GET_BATTERY_VOLTAGE();
-	#else
+	/*#else
 	voltage = 0;
-	#endif
+	#endif*/
 
 	return voltage;
 }
