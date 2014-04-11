@@ -54,7 +54,6 @@
  * This package can be used with the following setup:
  *  - SAM3X evaluation kit
  *  - SAMG53 Xplained Pro kit
- *  - SAMG54 Xplained Pro kit
  *  - SAM4N Xplained Pro kit
  *
  * \section files Main files:

@@ -69,7 +69,6 @@
  * SAM devices with I2SC module can be used.
  * This example has been tested with the following setup:
  * - SAMG53 Xplained Pro
- * - SAMG54 Xplained Pro
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
