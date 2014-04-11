@@ -53,7 +53,6 @@
  * This example can be used on boards:
  * - sam4n16c_sam4n_xplained_pro
  * - samg53n19_samg_xplained_pro
- * - samg54n19_samg_xplained_pro
  *
  * \section Description
  *

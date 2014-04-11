@@ -59,7 +59,6 @@
  * The example has been tested on the boards:
  *  - SAM4N Xplained Pro kit
  *  - SAMG53 Xplained Pro kit
- *  - SAMG54 Xplained Pro kit
  *  - SAM4C evaluation kit
  *
  * \section exampledescription Description of the example

@@ -131,7 +131,6 @@ extern "C" {
 #define SAM4CP16BMB                67  //!< SAM4CP16BMB board.
 #define SAM4E_XPLAINED_PRO         68  //!< SAM4E Xplained Pro board.
 #define SAMD21_XPLAINED_PRO        69  //!< SAMD21 Xplained Pro board.
-#define SAMG54_XPLAINED_PRO        70  //!< SAMG54 Xplained Pro board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< Simulator for the AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -202,8 +201,6 @@ extern "C" {
 #  include "stk600/rcuc3c0/stk600_rcuc3c0.h"
 #elif BOARD == SAMG53_XPLAINED_PRO
 #  include "samg53_xplained_pro/samg53_xplained_pro.h"
-#elif BOARD == SAMG54_XPLAINED_PRO
-#  include "samg54_xplained_pro/samg54_xplained_pro.h"
 #elif BOARD == XMEGA_B1_XPLAINED
 #  include "xmega_b1_xplained/xmega_b1_xplained.h"
 #elif BOARD == STK600_RC064X_LCDX
