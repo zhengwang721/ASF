@@ -1,9 +1,9 @@
 /**
- * \file
+ * \file *********************************************************************
  *
- * \brief  Configuration File for SAM4L-EK Board.
+ * \brief Common TRX Access Configuration
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,13 +38,9 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_TRX_ACCESS_H_INCLUDED
+#define CONF_TRX_ACCESS_H_INCLUDED
 
-#define CONF_BOARD_UART_CONSOLE
-#define CONF_BOARD_AT86RFX
-#define MCU_SOC_NAME "ATSAM4SD32C"
-#endif  /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_TRX_ACCESS_H_INCLUDED */

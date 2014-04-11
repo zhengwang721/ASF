@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L-EK Board.
+ * \brief SAM D20 External Interrupt Driver Configuration Header
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,11 +40,10 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
+#  define EXTINT_CALLBACKS_MAX     10
 
-#define CONF_BOARD_UART_CONSOLE
-#define CONF_BOARD_AT86RFX
-#define MCU_SOC_NAME "ATSAM4SD32C"
-#endif  /* CONF_BOARD_H_INCLUDED */
+#endif

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief  Configuration File for SAM4L-EK Board.
+ * \brief Sleep manager configuration
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,11 +40,9 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#define CONFIG_SLEEPMGR_ENABLE
 
-#define CONF_BOARD_UART_CONSOLE
-#define CONF_BOARD_AT86RFX
-#define MCU_SOC_NAME "ATSAM4SD32C"
-#endif  /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_H */

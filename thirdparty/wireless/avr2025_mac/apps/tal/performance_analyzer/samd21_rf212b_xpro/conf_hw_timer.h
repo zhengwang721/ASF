@@ -1,9 +1,9 @@
 /**
- * \file
+ * \file *********************************************************************
  *
- * \brief  Configuration File for SAM4L-EK Board.
+ * \brief USART Serial configuration
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,13 +38,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_HW_TIMER_H_INCLUDED
+#define CONF_HW_TIMER_H_INCLUDED
 
-#define CONF_BOARD_UART_CONSOLE
-#define CONF_BOARD_AT86RFX
-#define MCU_SOC_NAME "ATSAM4SD32C"
-#endif  /* CONF_BOARD_H_INCLUDED */
+/*! \name Configuration
+ */
+/* ! @{ */
+#define TIMER                (TC3)
+#define TIMER_CHANNEL_ID     0
+/* ! @} */
+
+#endif /* CONF_HW_TIMER_H_INCLUDED */
