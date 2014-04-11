@@ -134,7 +134,7 @@ typedef struct joystick_desc_tag
 	int8_t throttle;
 	int8_t xaxis;
 	int8_t yaxis;
-	uint8_t buttons;
+	int8_t buttons;
 }joystick_desc_t;
 /* === Globals ============================================================= */
 static zid_indication_callback_t zid_ind;
@@ -206,11 +206,11 @@ int main (void)
 	//udi_hid_gpd_up(16);
     while (1)
     {    
-		//udi_hid_throttle_move(100);//udi_hid_gpd_down(0x01);
-		//udi_hid_gpd_moveX(100);
-       app_task(); /* Application task */
+		
+		
+         app_task(); /* Application task */
         nwk_task(); /* RF4CE network layer task */
-		//udi_hid_gpd_buttons(1,0x01);
+		
 		
     }
 }
@@ -258,7 +258,6 @@ static void nlme_reset_confirm(nwk_enum_t Status)
 }
 /**
  * @brief Notify the application of the status of its request to start the NWK.
- *        
  *
  * @param Status  nwk status
  */
@@ -438,15 +437,17 @@ static void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_re
          switch(zid_report_data_record_ptr->report_desc_identifier)
          {
      
-		   case SYNC:
+		   case MOUSE:
 		   {
 			   
-			   joystick_desc_t *jys_desc;
-			   jys_desc = (joystick_desc_t *)zid_report_data_record_ptr->report_data;
-			   udi_hid_gpd_throttle_move(jys_desc->throttle);
-			   udi_hid_gpd_moveX(jys_desc->xaxis);
-			   udi_hid_gpd_moveY(jys_desc->yaxis);
-			   udi_hid_gpd_buttons(true,jys_desc->buttons);
+			 
+			    joystick_desc_t *joystick_desc;
+			   joystick_desc = (joystick_desc_t *)zid_report_data_record_ptr->report_data;
+			 //  udi_hid_gpd_throttle_move(mouse_desc->button0);
+			   //udi_hid_gpd_moveX(mouse_desc->button1);
+			  // udi_hid_gpd_moveY(mouse_desc->button2);
+			  udi_hid_gpd_buttons(true,joystick_desc->buttons);
+			   //udi_hid_gpd_buttons(false,jys_desc->buttons);*/
 			   
 			   
 			   break;

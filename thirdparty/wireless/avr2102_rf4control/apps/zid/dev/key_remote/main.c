@@ -115,7 +115,7 @@ typedef struct joystick_desc_tag
 	int8_t throttle;
 	int8_t xaxis;
 	int8_t yaxis;
-	uint8_t buttons;
+	int8_t buttons;
 }joystick_desc_t;
 
 /* === MACROS ============================================================== */
@@ -169,10 +169,10 @@ typedef struct joystick_desc_tag
 #define  BUTTON_SCROLL_DOWN      (93)
 #define  BUTTON_MIDDLE_CLK       (94)
 
-#define BUTTON_1 0x01
-#define BUTTON_2 0x02
-#define BUTTON_3 0x04
-#define BUTTON_4 0x08
+#define BUTTON_1 0x10
+#define BUTTON_2 0x20
+#define BUTTON_3 0x40
+#define BUTTON_4 0x80
 #define BUTTON_THROTTLE_UP 0x11
 #define BUTTON_THROTTLE_DOWN 0x00
 
@@ -194,17 +194,10 @@ typedef struct joystick_desc_tag
 FLASH_DECLARE(uint16_t VendorIdentifier) = (uint16_t)NWKC_VENDOR_IDENTIFIER;
 FLASH_DECLARE(uint8_t vendor_string[VENDOR_STRING_LEN_SIZE]) = NWKC_VENDOR_STRING;
 FLASH_DECLARE(uint8_t app_user_string[APP_USER_STRING_SIZE]) = APP_USER_STRING;
-   /* Function pointers for offset correction function assignment */
-static void (*Correct_x_offset)(uint16_t *temp_val, uint16_t temp_offset);
-static void (*Correct_y_offset)(uint16_t *temp_val, uint16_t temp_offset);
-static void correct_negative_offset(uint16_t *temp_val, uint16_t temp_offset);
-static void correct_positive_offset(uint16_t *temp_val, uint16_t temp_offset);
-static void app_calculate_offset(void);
+
 /* ZID Node Status */
 static node_status_t node_status;
-/* Offset values for the axis */
-static uint16_t x_offset;
-static uint16_t y_offset;
+
 /* default pairing reference value */
 static uint8_t pairing_ref = 0xFF;
 
@@ -293,7 +286,7 @@ static uint8_t key_mapping_mouse[TOTAL_NO_OF_ZID_KEY_RC] =
 	BUTTON_INVALID, /* BUTTON_NUMBER_7 */
 	BUTTON_INVALID, /* BUTTON_NUMBER_8 */
 	BUTTON_INVALID, /* BUTTON_NUMBER_9 */
-	BUTTON_UP_E, /* BUTTON_UP_E       */
+	BUTTON_UP_E, /* BUTTON_UP_E       */  //down 5 buttons
 	BUTTON_LEFT_E, /* BUTTON_LEFT_E     */
 	BUTTON_MIDDLE_CLK, /* BUTTON_MIDDLE_CLK    */
 	BUTTON_RIGHT_E, /* BUTTON_RIGHT_E    */
@@ -323,15 +316,15 @@ static uint8_t key_mapping_gamepad[TOTAL_NO_OF_ZID_KEY_RC] =
 	BUTTON_INVALID, /* BUTTON_NUMBER_7 */
 	BUTTON_INVALID, /* BUTTON_NUMBER_8 */
 	BUTTON_INVALID, /* BUTTON_NUMBER_9 */
-	BUTTON_INVALID, /* BUTTON_UP_E       */
-	BUTTON_INVALID, /* BUTTON_LEFT_E     */
-	BUTTON_INVALID, /* BUTTON_MIDDLE_CLK    */
-	BUTTON_THROTTLE_UP, /* BUTTON_DOWN_E     */
-	BUTTON_THROTTLE_DOWN, /* BUTTON_RIGHT_E    */
 	BUTTON_1, /* BUTTON_LEFT_SINGLE_CLK  */
 	BUTTON_2, /* BUTTON_RIGHT_SINGLE_CLK */
-	BUTTON_3, /* BUTTON_SCROLL_UP */
-	BUTTON_4 /* BUTTON_SCROLL_DOWN */
+	BUTTON_INVALID, /* BUTTON_SCROLL_UP */
+	BUTTON_3, /* BUTTON_SCROLL_DOWN */
+	BUTTON_4, /* BUTTON_RIGHT_E    */
+	BUTTON_THROTTLE_UP, /* BUTTON_LEFT_SINGLE_CLK  */
+	BUTTON_THROTTLE_DOWN, /* BUTTON_RIGHT_SINGLE_CLK */
+	BUTTON_INVALID, /* BUTTON_SCROLL_UP */
+	BUTTON_INVALID /* BUTTON_SCROLL_DOWN */
 };
 
 #define MOUSE_POSITIVE_DISPLACEMENT  (2)
@@ -783,8 +776,6 @@ static void app_task(void)
                 static uint32_t previous_button_time;
                 uint8_t num_records = 1;
                 static button_id_t previous_button;
-                uint16_t x_temp = x_val;
-                uint16_t y_temp = y_val;
 				
 				/* Scan the button events */
                 button = pal_button_scan();
@@ -849,15 +840,24 @@ static void app_task(void)
 					 /* Configure for the game controller mode. */
                       button_mode = BUTTON_GAME_MODE;
                       
+					   /* zid_report_data[0].report_type = INPUT;
+                        zid_report_data[0].report_desc_identifier = TAP_GESTURE;
+                        zid_report_data[0].report_data = (void *)msg_ptr;                        
+                        mouse_desc = (mouse_desc_t *)msg_ptr;
+                        
+                        mouse_desc->button0 = 0x00;
+                        mouse_desc->button1 = throttle;
+                        mouse_desc->button2 = 0x00;
+                        mouse_desc->x_coordinate = 0x00;
+                        mouse_desc->y_coordinate = 0x00;*/
 					    LED_Off(LED_2);
 					    LED_Off(LED_3);
 					    LED_On(LED_4);
 					    LED_Off(LED_5);
 					   app_calculate_offset();
                        pal_read_acc(&x_val,&y_val,&z_val,&ADC_val);
-                       /* Temporarily store the old values */
-                       Correct_x_offset(&x_temp,x_offset);
-	                   Correct_y_offset(&y_temp,y_offset);
+					   Correct_x_offset(&x_val,x_offset);
+					   Correct_y_offset(&y_val,y_offset);
                        zid_interframe_duration = INTER_FRAME_DURATION_US;
 					   
                        return;
@@ -956,7 +956,7 @@ static void app_task(void)
                           b_state = BUTTON_INVALID;
                       }
                     }
-                    else if(button_mode == BUTTON_MOUSE_MODE)
+					 else if(button_mode == BUTTON_MOUSE_MODE)
                     {              
 						/* get the valid key inputs for the mouse mode */
                         zid_report_data_record_t zid_report_data[2];
@@ -1031,84 +1031,64 @@ static void app_task(void)
                       }              
                     }
                     else if(button_mode == BUTTON_GAME_MODE)
-                    {
-                      /* get the valid key inputs for the mouse mode */
-                      zid_report_data_record_t zid_report_data[2];
-                      uint8_t report_data_buffer[80];
-                      uint8_t *msg_ptr = &report_data_buffer[0];
-                      joystick_desc_t *jys_desc;
-                      if(key_mapping_gamepad[b_state] == BUTTON_INVALID)
-                      {
-                        return;
-                      }
-                       /* Create the input report for the mouse control */
-                       zid_report_data[0].report_type = INPUT;
-                       zid_report_data[0].report_desc_identifier = SYNC;
-                       zid_report_data[0].report_data = (void *)msg_ptr;
-                       jys_desc = (joystick_desc_t *)msg_ptr;
+                    {              
+						/* get the valid key inputs for the mouse mode */
+                        zid_report_data_record_t zid_report_data[2];
+                        uint8_t report_data_buffer[80];
+                        uint8_t *msg_ptr = &report_data_buffer[0];
+                        joystick_desc_t *joystick_desc;
+                        
+                        if(key_mapping_gamepad[b_state] == BUTTON_INVALID)
+                        {
+                          return;
+                        }
+						
+                        /* Create the input report for the mouse control */
+                        zid_report_data[0].report_type = INPUT;
+                        zid_report_data[0].report_desc_identifier = MOUSE;
+                        zid_report_data[0].report_data = (void *)msg_ptr;                        
+                        joystick_desc = (joystick_desc_t*)msg_ptr;
+                        
+                        joystick_desc->throttle = 0x00;
+                        joystick_desc->xaxis = 0x00;
+                        joystick_desc->yaxis = 0x00;
+                        joystick_desc->buttons = 0x00;
                        
-                       jys_desc-> throttle= 0x00;//throttle
-                       jys_desc->xaxis = 0x00;//x-axis
-                       jys_desc->yaxis= 0x00;//y-axis
-                       jys_desc->buttons = 0x00;//buttons
-                      
-					   uint16_t x_temp = x_val;
-					   uint16_t y_temp = y_val;
-					  if((x_temp==ADC_val)||(y_temp ==ADC_val))
-					  {
-						  //do nothing
-						  break;
-					  }
-                      else if (y_temp > (ADC_val + APPX_5_DEGREE_VALUE))
-                      {
-	                     jys_desc->yaxis = -5;//down y-axis negative
-                      }
-                      else if (y_temp < (ADC_val - APPX_5_DEGREE_VALUE))
-                      {
-	                     jys_desc->yaxis = 5;//up y-axis positive
-                      }
 
-                      else if (x_temp > (ADC_val + APPX_5_DEGREE_VALUE))
-                      {
-	                      jys_desc->xaxis = -5;//left x-axis negative
-                      }
-                      else if (x_temp < (ADC_val - APPX_5_DEGREE_VALUE))
-                      {
-	                      jys_desc->xaxis = 5;//right x-axis positive
-                      }
-                      switch(key_mapping_gamepad[b_state])
-                       {  
-						  case BUTTON_1:
-						  case BUTTON_2:
-						  case BUTTON_3:
-						  case BUTTON_4:
-						  jys_desc->buttons = key_mapping_gamepad[b_state];	   
-						  break;
-						  case BUTTON_THROTTLE_UP:
-						  jys_desc->throttle = JOYSTICK_POSITIVE_DISPLACEMENT;
-						  break;
-						  case BUTTON_THROTTLE_DOWN:
-						  jys_desc->throttle = JOYSTICK_NEGATIVE_DISPLACEMENT;
-						  break;
-											                    	                       
-                       }
-					   
-					   
+                          switch(key_mapping_gamepad[b_state])
+                          {
+                          case BUTTON_1:
+                             joystick_desc->buttons = BUTTON_1;
+                            break;
+                          case BUTTON_2:
+                             joystick_desc->buttons = BUTTON_2;
+                            break;
+                          case BUTTON_3:
+                            joystick_desc->buttons = BUTTON_3;
+                            break;
+                          case BUTTON_4:
+                            joystick_desc->buttons = BUTTON_4;
+							joystick_desc->throttle=4;
+                            break;
+                            default:
+                            break;
+                          }                   
                        
-                       
-                       msg_ptr += sizeof(joystick_desc_t);
-                       num_records = 1;
-                       if (zid_report_data_request(pairing_ref, num_records, zid_report_data, TX_OPTIONS
-                       #ifdef RF4CE_CALLBACK_PARAM
-                       ,(FUNC_PTR)zid_report_data_confirm
-                       #endif
-                       ))
 
-                       {
-	                       node_status = TRANSMITTING;
-	                       b_state = BUTTON_INVALID;
-                       }
+                        msg_ptr += sizeof(mouse_desc_t);
+                        num_records = 1;
+                    if (zid_report_data_request(pairing_ref, num_records, zid_report_data, TX_OPTIONS
+  #ifdef RF4CE_CALLBACK_PARAM
+                                                ,(FUNC_PTR)zid_report_data_confirm
+  #endif
+                        ))
+
+                      {
+                          node_status = TRANSMITTING;
+                          b_state = BUTTON_INVALID;
+                      }              
                     }
+                   
                 }
                 else 
                 {
@@ -1259,8 +1239,7 @@ static void zid_get_report_indication(uint8_t PairingRef, zid_report_types_t zid
  * @param ProfileId ProfileId used for the current transaction
  */
 void nlde_data_confirm(nwk_enum_t Status, uint8_t PairingRef, profile_id_t ProfileId)
-{
-    node_status = IDLE;
+{    node_status = IDLE;
 
     if (Status == NWK_SUCCESS)
     {
@@ -1390,82 +1369,6 @@ uint8_t get_zid_keyrc_button(button_id_t button_id)
     }
     return (BUTTON_INVALID);
 }
-#ifdef ADC_ACCELEROMETER
-/**
- * @brief Offset calculation function.
- *
- * @ingroup apiPalAppDemo
- */
-void app_calculate_offset(void)
-{
-    uint16_t temp;
-
-    if (x_val >= ADC_val)
-    {
-        /* Positive or No offset on the axis */
-        x_offset = x_val - ADC_val;
-
-        /* Initalise the Positive offset correction function to the function pointer */
-        Correct_x_offset = &correct_positive_offset;
-    }
-    else
-    {
-        /* Negative Offset */
-        x_offset = ADC_val - x_val;
-
-        /* Initalise the Negative offset correction function to the function pointer */
-        Correct_x_offset = &correct_negative_offset;
-    }
-
-    if (y_val >= ADC_val)
-    {
-        /* Positive or No offset on the axis */
-        y_offset = y_val - ADC_val;
-
-        /* Initalise the Positive offset correction function to the function pointer */
-        //Correct_y_offset = &correct_positive_offset;
-    }
-    else
-    {
-        /* Negative Offset */
-        y_offset = ADC_val - y_val;
-
-        /* Initalise the Negative offset correction function to the function pointer */
-      //  Correct_y_offset = &correct_negative_offset;
-    }
-
-    /* On Z-axis a voltage of 1g is expected */
-    temp = (ADC_val + (ADC_val * 2) / 10) ;
-
-}
-/**
- * @brief Positive offset correction function.
- *
- * @param temp_val value to be corrected
- * @param temp_offset Offset value
- *
- * @ingroup apiPalAppDemo
- */
-static void correct_positive_offset(uint16_t *temp_val, uint16_t temp_offset)
-{
-    /* Subtract the offset form the sampled value */
-    *(temp_val) -= temp_offset;
-}
-
-/**
- * @brief Negative offset correction function.
- *
- * @param temp_val value to be corrected
- * @param temp_offset Offset value
- *
- * @ingroup apiPalAppDemo
- */
-static void correct_negative_offset(uint16_t *temp_val, uint16_t temp_offset)
-{
-    /* Add the offset form the sampled value */
-    *(temp_val) += temp_offset;
-}
-#endif
 
 
 /* EOF */
