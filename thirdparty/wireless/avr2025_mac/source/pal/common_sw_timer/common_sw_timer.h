@@ -191,6 +191,10 @@ void sw_timer_init(void);
 
 uint32_t sw_timer_get_residual_time(uint8_t timer_id);
 
+void sw_timer_run_residual_time(uint32_t offset);
+
+uint32_t sw_timer_next_timer_expiry_duration(void);
+
 /* ! @} */
 #endif /* COMMON_SW_TIMER_H */
 /* EOF */

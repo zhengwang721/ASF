@@ -254,6 +254,9 @@ extern uint8_t Channel_Offset;
 
 //typedef void (*handler_t)(uint8_t *);
 
+/* packing of the data types starts here. Some architecture requires the data type to be aligned, like CM0 */
+__PACK__DATA__
+
 /* Structure implementing the NIB */
 typedef struct nib_tag
 {
@@ -646,6 +649,9 @@ typedef struct phy_layer_attrib_tag
     uint8_t CurrentChannel;
 }phy_layer_attrib_t;
 
+/* Reset the Packing of data types here */
+__PACK__RST_DATA__
+
 /* === Externals ============================================================ */
 
 
@@ -654,7 +660,6 @@ extern nwk_state_t nwk_state;
 extern nib_t nib;
 extern queue_t nhle_nwk_q;
 extern queue_t nwk_nhle_q;
-extern queue_t mac_nhle_q;
 extern nwk_var_t nwk_var;
 
 extern phy_layer_attrib_t phy_layer_attrib;

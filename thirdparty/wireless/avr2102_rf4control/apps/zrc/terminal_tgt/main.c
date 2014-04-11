@@ -98,11 +98,14 @@
 #include "conf_board.h"
 #include <asf.h>
 #include "app_config.h"
+#if (!defined SAMD20) || (!defined SAMD21) || (!defined SAMR21)
 #include "led.h"
+#endif
 #include "delay.h"
 #include "vendor_data.h"
 #include "pb_pairing.h"
 #include "common_sw_timer.h"
+#include "sio2host.h"
 
 /* === TYPES =============================================================== */
 
@@ -227,6 +230,10 @@ static void app_alert(void);
 int main(void)
 {
     irq_initialize_vectors();
+#if SAMD21 || SAMD20 || SAMR21
+	system_init();
+	delay_init();
+#else
 	sysclk_init();
 
     /* Initialize the board.
@@ -234,6 +241,7 @@ int main(void)
      * the board initialization.
      */
     board_init();
+#endif
 
     sw_timer_init();
 
@@ -901,7 +909,7 @@ static void nlme_get_confirm(nwk_enum_t Status, nib_attribute_t NIBAttribute,
 			break;
 		case nwkBaseChannel:
 		    channel = *((uint8_t *)NIBAttributeValue);
-		    printf("channel %u\r\n",channel);
+		    //printf("channel %u\r\n",channel);
 			break;
 
 		default:
@@ -1123,10 +1131,10 @@ static void print_ch_change_submenu(void)
 	uint8_t i;
 	uint8_t input;
 
-#if (RF_BAND == BAND_900)
-	printf("Enter new base channel (1, 4, or 7): \r\n");
+#if (RF_BAND == BAND_2400)
+    printf("Enter new base channel (15, 20, or 25): \r\n");	
 #else
-	printf("Enter new base channel (15, 20, or 25): \r\n");
+	printf("Enter new base channel (1, 4, or 7): \r\n");
 #endif
 
 	for (i = 0; i < 3; i++) {
@@ -1139,10 +1147,10 @@ static void print_ch_change_submenu(void)
 	}
 	channel = atol(input_char);
 
-#if (RF_BAND == BAND_900)
-	if ((channel == 1) || (channel == 4) || (channel == 7))
-#else
+#if (RF_BAND == BAND_2400)
 	if ((channel == 15) || (channel == 20) || (channel == 25))
+#else
+	if ((channel == 1) || (channel == 4) || (channel == 7))
 #endif
 	{
 		nlme_set_request(nwkBaseChannel, 0, &channel,

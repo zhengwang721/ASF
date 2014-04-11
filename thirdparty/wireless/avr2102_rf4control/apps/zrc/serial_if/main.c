@@ -126,6 +126,10 @@ static void app_alert(void);
 int main(void)
 {
 	irq_initialize_vectors();
+#if SAMD21 || SAMD20 || SAMR21
+	system_init();
+	delay_init();
+#else
 	sysclk_init();
 
 	/* Initialize the board.
@@ -133,6 +137,8 @@ int main(void)
 	 * the board initialization.
 	 */
 	board_init();
+#endif	
+	
 
 	sw_timer_init();
 

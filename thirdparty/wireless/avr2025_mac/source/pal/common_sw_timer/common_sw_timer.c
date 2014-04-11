@@ -168,7 +168,14 @@ uint32_t sw_timer_get_residual_time(uint8_t timer_id)
 	uint32_t res_time;
 	uint32_t current_time;
 	current_time = gettime();
-	res_time = timer_array[timer_id].abs_exp_timer-current_time;
+	if (current_time < timer_array[timer_id].abs_exp_timer)
+	{
+		res_time = timer_array[timer_id].abs_exp_timer-current_time;
+	} 
+	else
+	{
+		res_time = 0;
+	}
 	return res_time;
 }
 static void start_absolute_timer(uint8_t timer_id,
@@ -538,6 +545,27 @@ static void internal_timer_handler(void)
 			}
 		}
 	}
+}
+
+void sw_timer_run_residual_time(uint32_t offset)
+{
+   /* Run the software timer call back now */
+  FUNC_PTR timer_cb = timer_array[running_timer_queue_head].timer_cb;
+  void *param_cb = timer_array[running_timer_queue_head].param_cb;
+  uint8_t timer_id = running_timer_queue_head;
+ if(sw_timer_stop(running_timer_queue_head) == STATUS_OK)
+ {
+  sw_timer_start(timer_id,
+				  offset,
+				  SW_TIMEOUT_RELATIVE,
+				  timer_cb,
+				  param_cb);	
+ }
+}
+
+uint32_t sw_timer_next_timer_expiry_duration(void)
+{
+	return ((NO_TIMER == running_timer_queue_head)?false:(sw_timer_get_residual_time(running_timer_queue_head)));
 }
 
 void hw_overflow_cb(void)
