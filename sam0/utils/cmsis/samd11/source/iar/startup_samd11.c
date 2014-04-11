@@ -160,7 +160,7 @@ const DeviceVectors __vector_table[] = {
         (void*) ADC_Handler,            /* 15 Analog Digital Converter */
         (void*) AC_Handler,             /* 16 Analog Comparators */
         (void*) DAC_Handler,            /* 17 Digital Analog Converter */
-        (void*) PTC_Handler,            /* 18 Peripheral Touch Controller */
+        (void*) PTC_Handler             /* 18 Peripheral Touch Controller */
 };
 //! [startup_vector_table]
 
