@@ -504,7 +504,7 @@ int main(void)
 	for (gs_uc_wait_button = 1; gs_uc_wait_button;) {
 	}
 	puts("\r\n\r\n-I- Done.\r\n");
-    /* Wait for UART transmit done */
+	/* Wait for UART transmit done */
 	while (!uart_is_tx_empty(CONF_UART)) {
 	};
 
