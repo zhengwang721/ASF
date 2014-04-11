@@ -199,6 +199,7 @@ static void (*Correct_x_offset)(uint16_t *temp_val, uint16_t temp_offset);
 static void (*Correct_y_offset)(uint16_t *temp_val, uint16_t temp_offset);
 static void correct_negative_offset(uint16_t *temp_val, uint16_t temp_offset);
 static void correct_positive_offset(uint16_t *temp_val, uint16_t temp_offset);
+static void app_calculate_offset(void);
 /* ZID Node Status */
 static node_status_t node_status;
 /* Offset values for the axis */
@@ -1395,7 +1396,7 @@ uint8_t get_zid_keyrc_button(button_id_t button_id)
  *
  * @ingroup apiPalAppDemo
  */
-void app_calculate_offset()
+void app_calculate_offset(void)
 {
     uint16_t temp;
 

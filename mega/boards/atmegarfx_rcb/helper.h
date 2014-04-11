@@ -83,7 +83,7 @@ void pal_acc_init(void);
 void pal_acc_disable(void);
 uint16_t pal_ADC_read(adc_channel_t channel);
 void pal_read_acc(uint16_t *x, uint16_t *y, uint16_t *z, uint16_t *ref);
-void app_calculate_offset();
+
 #endif
 button_id_t pal_button_scan(void);
 void update_latch_status(void);
