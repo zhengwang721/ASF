@@ -61,6 +61,7 @@ status_code_t nvm_read(mem_type_t mem, uint32_t address, void *buffer,
 uint32_t len)
 {
 	nvm_sam0_read(mem,address,buffer,len);
+	return STATUS_OK;
 }
 status_code_t nvm_sam0_read(mem_type_t mem, uint32_t address, uint8_t *const buffer,
 		uint32_t len)

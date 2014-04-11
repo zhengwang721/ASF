@@ -53,8 +53,7 @@
 #if (SAL_TYPE == ATXMEGA_SAL)
 #include <stdio.h>
 #include <string.h>
-#include "trx_access.h"
-#include "sysclk.h"
+#include "pal.h"
 #include "sal.h"
 
 /* === Macros ============================================================== */
