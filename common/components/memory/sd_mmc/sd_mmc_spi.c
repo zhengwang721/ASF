@@ -41,7 +41,6 @@
  *
  */
 
-#include <asf.h>
 #include <string.h>
 #include "conf_board.h"
 #include "conf_sd_mmc.h"
@@ -64,6 +63,15 @@
 #if (!defined SD_MMC_SPI_MEM_CNT) || (SD_MMC_SPI_MEM_CNT == 0)
 #  warning SD_MMC_SPI_MEM_CNT must be defined in board.h file.
 #  define SD_MMC_SPI_MEM_CNT 1
+#endif
+#if (!defined SD_MMC_SPI_0_CS)
+#  warning SD_MMC_SPI_0_CS must be defined in conf_board.h file.
+#  define SD_MMC_SPI_0_CS 0
+#endif
+
+#if (!defined SD_MMC_SPI)
+#  warning SD_MMC_SPI must be defined in conf_board.h file.
+#  define SD_MMC_SPI SPI
 #endif
 #ifndef CONF_BOARD_SD_MMC_SPI
 #  warning CONF_BOARD_SD_MMC_SPI must be defined in conf_board.h file.
