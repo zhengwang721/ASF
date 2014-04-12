@@ -92,12 +92,16 @@
  */
 #define AES_MODE_ECB                 (0)
 #endif
-#ifndef AES_MODE_CBC
 
 /**
  * Defines AES mode as CBC
  */
+#ifndef AES_MODE_CBC
+#if (SAL_TYPE == ATXMEGA_SAL)
+#define AES_MODE_CBC                 (2)
+#else /*MegaRF*/
 #define AES_MODE_CBC                 (1)
+#endif
 #endif
 #else 
 

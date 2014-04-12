@@ -72,6 +72,9 @@
 #if ((defined MAC_SECURITY_ZIP)  || (defined MAC_SECURITY_2006))
 #include "mac_security.h"
 #endif  /* (MAC_SECURITY_ZIP || MAC_SECURITY_2006) */
+#ifdef STB_ON_SAL
+#include "stb.h"
+#endif
 
 /* === Macros =============================================================== */
 
@@ -188,6 +191,10 @@ retval_t mac_init(void)
 	if (tal_init() != MAC_SUCCESS) {
 		return FAILURE;
 	}
+
+#ifdef STB_ON_SAL
+	stb_init();
+#endif
 
 #ifdef ENABLE_RTB
 	/* Initialize RTB */

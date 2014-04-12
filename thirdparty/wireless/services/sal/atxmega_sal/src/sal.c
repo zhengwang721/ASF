@@ -53,8 +53,8 @@
 #if (SAL_TYPE == ATXMEGA_SAL)
 #include <stdio.h>
 #include <string.h>
-#include "pal.h"
 #include "sal.h"
+#include "sysclk.h"
 
 /* === Macros ============================================================== */
 
@@ -216,7 +216,6 @@ void sal_aes_restart(void)
 {
 	/* Nothing to be done for ATxmega */
 }
-
 
 /**
  * @brief En/decrypt one AES block.
