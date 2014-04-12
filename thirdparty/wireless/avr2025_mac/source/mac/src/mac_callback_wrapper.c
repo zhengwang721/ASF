@@ -5,7 +5,7 @@
  * @brief Wrapper code for MAC callback functions.
  *
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -226,7 +226,7 @@ void mlme_associate_ind(uint8_t *m)
 	/* Get the buffer body from buffer header */
 	pmsg = (mlme_associate_ind_t *)BMM_BUFFER_POINTER((buffer_t *)m);
 
-#if  SAMD || SAMR21
+#if  SAMD || SAMR21 || SAM4L || SAM4S || SAM4E
     uint64_t device_addr_temp = 0;
     memcpy((uint8_t *)&device_addr_temp, (uint8_t *)&pmsg->DeviceAddress, sizeof(device_addr_temp));
 	usr_mlme_associate_ind(device_addr_temp, pmsg->CapabilityInformation);
