@@ -15,6 +15,8 @@
 		<build type="header-file" value="conf_sio2host.h"/>
 		<build type="header-file" value="conf_trx_access.h"/>
 
+		<build type="define"   name="HIGH_DATA_RATE_SUPPORT"              value=""/>
+
 		<config name="config.thirdparty.wireless.addons.sio2host" value="usb"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="at86rf231"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf231"/>

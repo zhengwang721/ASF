@@ -50,8 +50,6 @@
         <build type="define"   name="FFD" value=""/>
 		<build type="define"   name="HIGHEST_STACK_LAYER" value="TAL"/>
 		<build type="define"   name="TRX_REG_RAW_VALUE"                   value=""/>
-		<build type="define"   name="ENABLE_DEEP_SLEEP"              value=""/>		
-		<build type="define"   name="HIGH_DATA_RATE_SUPPORT"              value=""/>
 		
 		<build type="doxygen-entry-point" value="group_perf_analyzer"/>		
 		<device-support-alias value="avr2025_mac_pal_support"/>

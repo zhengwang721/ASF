@@ -11,6 +11,8 @@
 		<build type="header-file" value="conf_hw_timer.h"/>
 
 		<config name="config.thirdparty.wireless.addons.sio2host" value="usb-ftdi"/>
+	
+		<build type="define"   name="HIGH_DATA_RATE_SUPPORT"              value=""/>
 		
 		<require idref="thirdparty.wireless.avr2025_mac.apps.tal.performance_analyzer"/>
 		<require idref="board.atmegarfx_rcb"/>
