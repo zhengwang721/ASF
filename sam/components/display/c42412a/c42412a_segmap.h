@@ -41,8 +41,8 @@
  *
  */
 
-#ifndef C42412A_TEMPLATE_H_INCLUDED
-#define C42412A_TEMPLATE_H_INCLUDED
+#ifndef C42412A_SEGMAP_H_INCLUDED
+#define C42412A_SEGMAP_H_INCLUDED
 
 #include "board.h"
 
@@ -51,13 +51,12 @@
  * @{
  */
 #if BOARD == SAM4L_XPLAINED_PRO
-/* name Icon with selected segments blinking feature */
+/* Icon with selected segments blinking feature */
 #define C42412A_ICON_USB            1, 1
 #define C42412A_ICON_COLON          3, 1
-#define C42412A_ICON_WLESS          3, 3
 #define C42412A_ICON_BAT            0, 0
 #define C42412A_ICON_ATMEL          0, 1
-/* name Icon without selected segments blinking feature */
+/* Icon without selected segments blinking feature */
 #define C42412A_ICON_MINUS          0, 17
 #define C42412A_ICON_MINUS_SEG1     0, 13
 #define C42412A_ICON_MINUS_SEG2     0, 9
@@ -69,6 +68,7 @@
 #define C42412A_ICON_BAT_LEVEL_1    2, 0
 #define C42412A_ICON_BAT_LEVEL_2    3, 0
 #define C42412A_ICON_BAT_LEVEL_3    1, 0
+#define C42412A_ICON_WLESS_LEVEL_0  3, 3
 #define C42412A_ICON_WLESS_LEVEL_1  3, 2
 #define C42412A_ICON_WLESS_LEVEL_2  2, 3
 #define C42412A_ICON_WLESS_LEVEL_3  2, 2
@@ -80,6 +80,41 @@
 #define C42412A_ICON_VOLT           1, 2
 #define C42412A_ICON_MILLI_VOLT     1, 3
 /* @} */
-#endif
 
-#endif  /* C42412A_TEMPLATE_H_INCLUDED */
+/**
+ * \name LCD component C42364A segment map default definitions
+ * @{
+ */
+#else
+/* Icon with selected segments blinking feature */
+#define C42412A_ICON_USB            1, 1
+#define C42412A_ICON_COLON          3, 1
+#define C42412A_ICON_BAT            0, 0
+#define C42412A_ICON_ATMEL          0, 1
+/* Icon without selected segments blinking feature */
+#define C42412A_ICON_MINUS          0, 17
+#define C42412A_ICON_MINUS_SEG1     0, 13
+#define C42412A_ICON_MINUS_SEG2     0, 9
+#define C42412A_ICON_DOT_1          0, 5
+#define C42412A_ICON_DOT_2          3, 6
+#define C42412A_ICON_DOT_3          3, 10
+#define C42412A_ICON_DOT_4          3, 14
+#define C42412A_ICON_DOT_5          3, 18
+#define C42412A_ICON_BAT_LEVEL_1    2, 0
+#define C42412A_ICON_BAT_LEVEL_2    3, 0
+#define C42412A_ICON_BAT_LEVEL_3    1, 0
+#define C42412A_ICON_WLESS_LEVEL_0  3, 3
+#define C42412A_ICON_WLESS_LEVEL_1  3, 2
+#define C42412A_ICON_WLESS_LEVEL_2  2, 3
+#define C42412A_ICON_WLESS_LEVEL_3  2, 2
+#define C42412A_ICON_AUDIO_PLAY     2, 1
+#define C42412A_ICON_AM             0, 2
+#define C42412A_ICON_PM             0, 3
+#define C42412A_ICON_DEGREE_C       3, 22
+#define C42412A_ICON_DEGREE_F       0, 21
+#define C42412A_ICON_VOLT           1, 2
+#define C42412A_ICON_MILLI_VOLT     1, 3
+#endif
+/* @} */
+
+#endif  /* C42412A_SEGMAP_H_INCLUDED */

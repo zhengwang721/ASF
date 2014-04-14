@@ -97,10 +97,6 @@
  * \name Digit Decoder
  * @{
  */
-/** 7-segment with 4 commons terminals */
-#define C42412A_FIRST_7SEG_4C 10
-#define C42412A_WIDTH_7SEG_4C 4
-
 /** 14-segment with 4 commons terminals */
 #define C42412A_FIRST_14SEG_4C  4
 #define C42412A_WIDTH_14SEG_4C 5

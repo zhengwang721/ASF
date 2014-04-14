@@ -176,12 +176,12 @@ void c42412a_show_battery(enum c42412a_battery_value val)
 	}
 }
 
-void c42412a_show_wireless(enum c42412a_wless_value val)
+void c42412a_show_wireless(enum c42412a_wireless_value val)
 {
 	lcdca_clear_pixel(C42412A_ICON_WLESS_LEVEL_1);
 	lcdca_clear_pixel(C42412A_ICON_WLESS_LEVEL_2);
 	lcdca_clear_pixel(C42412A_ICON_WLESS_LEVEL_3);
-	lcdca_set_pixel(C42412A_ICON_WLESS);
+	lcdca_set_pixel(C42412A_ICON_WLESS_LEVEL_0);
 	if (val > 2) {
 		lcdca_set_pixel(C42412A_ICON_WLESS_LEVEL_3);
 	}

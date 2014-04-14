@@ -63,7 +63,6 @@ extern "C" {
  * \section dependencies Dependencies
  * This driver depends on the following modules:
  * - \ref group_sam_drivers_lcdca for Liquid Crystal Display (LCD) module.
- * - \ref group_sam_drivers_slcdc for Liquid Crystal Display (LCD) module.
  * @{
  */
 
@@ -93,11 +92,11 @@ enum c42412a_battery_value {
  * \name Value for wireless Icon setting
  * @{
  */
-enum c42412a_wless_value {
-	C42412A_WLESS_NONE = 0,
-	C42412A_WLESS_ONE,
-	C42412A_WLESS_TWO,
-	C42412A_WLESS_THREE,
+enum c42412a_wireless_value {
+	C42412A_WIRELESS_NONE = 0,
+	C42412A_WIRELESS_ONE,
+	C42412A_WIRELESS_TWO,
+	C42412A_WIRELESS_THREE,
 };
 /** @} */
 
@@ -277,7 +276,7 @@ void c42412a_show_battery(enum c42412a_battery_value val);
  *
  * \param val The 0 to 3 value which show the wireless signal condition.
  */
- void c42412a_show_wireless(enum c42412a_wless_value val);
+ void c42412a_show_wireless(enum c42412a_wireless_value val);
 
 /** @} */
 
@@ -332,11 +331,11 @@ void c42412a_show_battery(enum c42412a_battery_value val);
  *
  * We can set all the contents by
  * \code
-	c42412a_set_all();;
+	c42412a_set_all();
 \endcode
  * Or we can clear all the contents by
  * \code
-	c42412a_clear_all();;
+	c42412a_clear_all();
 \endcode
  *
  * We can use the basic show feature by
@@ -347,7 +346,7 @@ void c42412a_show_battery(enum c42412a_battery_value val);
  *
  * We can use the blink feature by
  * \code
-	c42412a_blink_icon_start(C42412A_ICON_COLON);;
+	c42412a_blink_icon_start(C42412A_ICON_COLON);
 \endcode
  *
  * We can start/stop the text scrolling feature by
