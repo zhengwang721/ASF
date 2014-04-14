@@ -68,6 +68,9 @@ static DIR file_dir;
 /* File object management */
 static FIL file_object;
 
+/* root directory */
+static TCHAR root_directory[20] = {'0', ':', 0};
+
 /* Input file name */
 char input_file_name[] = {
 	FIRMWARE_IN_FILE_NAME
@@ -206,11 +209,11 @@ static bool integrity_check_in_disk(void)
 		dma_crc_io_calculation((void *)(buffer), buffer_size);
 	}
 
-	/* stop the DMA CRC with I/O mode */
-	dma_crc_disable();
-
 	/* Store the CRC Value */
 	firmware_crc_output = dma_crc_get_checksum();
+
+	/* stop the DMA CRC with I/O mode */
+	dma_crc_disable();
 
 	if (APP_CRC_POLYNOMIAL_TYPE == CRC_TYPE_16) {
 		/* 16-bit CRC */
@@ -276,11 +279,11 @@ static bool integrity_check_in_flash(void)
 		dma_crc_io_calculation((void *)(page_buffer), read_size);
 	};
 
-	/* stop the DMA CRC with I/O mode */
-	dma_crc_disable();
-
 	/* Store the CRC Value */
 	firmware_crc_output = dma_crc_get_checksum();
+
+	/* stop the DMA CRC with I/O mode */
+	dma_crc_disable();
 
 	if (APP_CRC_POLYNOMIAL_TYPE == CRC_TYPE_16) {
 		/* 16-bit CRC */
@@ -473,6 +476,8 @@ static void bootloader_system_init(void)
 #if CONSOLE_OUTPUT_ENABLED
 	/* Initialize the console */
 	console_init();
+	/* Wait stdio stable */
+	delay_ms(5);
 	/* Print a header */
 	printf(APP_HEADER);
 #endif
@@ -520,7 +525,7 @@ int main(void)
 		/* Go through the different LUN and check for the file. */
 		for (lun = 0; (lun < uhi_msc_mem_get_lun()) && (lun < 8); lun++) {
 
-			TCHAR root_directory[3] = "0:";
+			root_directory[3] = "0:";
 			root_directory[0] = '0' + lun;
 
 			/* Initialize the file system object */

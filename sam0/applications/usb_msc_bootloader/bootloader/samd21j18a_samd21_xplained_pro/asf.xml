@@ -15,6 +15,7 @@
 		<config name="config.common.services.fs.fatfs.codepage" value="sbcs"/>
 		<config name="config.common.services.usb.class.host" value="mass_storage"/>
 		<config name="config.sam0.drivers.rtc" value="calendar_polled"/>
+		<config name="config.common2.services.delay" value="cycle"/>
 		<require idref="sam0.applications.usb_bootloader"/>
 		<require idref="board.samd21_xplained_pro"/>
 		<generator value="iarewarm"/>

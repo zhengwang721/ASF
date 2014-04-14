@@ -47,7 +47,7 @@
 #define CONF_BOOTLOADER_H_
 
 //! Enable/disable the Console message output
-#define CONSOLE_OUTPUT_ENABLED       DISABLE
+#define CONSOLE_OUTPUT_ENABLED       ENABLE
 
 //! Firmware file input name
 #define FIRMWARE_IN_FILE_NAME        "0:firmware_input.bin"

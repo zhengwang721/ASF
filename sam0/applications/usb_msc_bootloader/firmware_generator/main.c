@@ -67,6 +67,9 @@ static DIR file_dir;
 /* File object management */
 static FIL file_object1, file_object2;
 
+/* root directory */
+static TCHAR root_directory[20] = {'0', ':', 0};
+
 /* Input file name */
 static char input_file_name[] = {
 	FIRMWARE_IN_FILE_NAME
@@ -227,11 +230,11 @@ static void generate_crc(void)
 		dma_crc_io_calculation((void *)(buffer), buffer_size / 4);
 	}
 
-	/* stop the DMA CRC with I/O mode */
-	dma_crc_disable();
-
 	/* Store the CRC Value */
 	firmware_crc = dma_crc_get_checksum();
+
+	/* stop the DMA CRC with I/O mode */
+	dma_crc_disable();
 
 	/* Close the input file */
 	f_close(&file_object1);
@@ -321,7 +324,7 @@ int main(void)
 		/* Go through the different LUN and check for the file. */
 		for (lun = 0; ((lun < uhi_msc_mem_get_lun()) && (lun < 8)); lun++) {
 
-			TCHAR root_directory[3] = "0:";
+			root_directory[3] = "0:";
 			root_directory[0] = '0' + lun;
 
 			/* Initialize the file system object */

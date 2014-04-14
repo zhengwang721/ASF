@@ -130,10 +130,6 @@ static inline enum status_code dma_crc_channel_enable(uint32_t channel_id,
  */
 static inline void dma_crc_disable(void)
 {
-	if (DMAC->CRCCTRL.bit.CRCSRC == DMAC_CRCCTRL_CRCSRC_IO_Val) {
-		DMAC->CRCSTATUS.reg = DMAC_CRCSTATUS_CRCBUSY;
-	}
-
 	DMAC->CTRL.reg &= ~DMAC_CTRL_CRCENABLE;
 	DMAC->CRCCTRL.reg = 0;
 }
@@ -145,6 +141,10 @@ static inline void dma_crc_disable(void)
  */
 static inline uint32_t dma_crc_get_checksum(void)
 {
+	if (DMAC->CRCCTRL.bit.CRCSRC == DMAC_CRCCTRL_CRCSRC_IO_Val) {
+		DMAC->CRCSTATUS.reg = DMAC_CRCSTATUS_CRCBUSY;
+	}
+
 	return DMAC->CRCCHKSUM.reg;
 }
 
@@ -170,8 +170,9 @@ static inline enum status_code dma_crc_io_enable(
 		DMAC_CRCCTRL_CRCPOLY(config->type) |
 		DMAC_CRCCTRL_CRCSRC_IO;
 
-	DMAC->CRCDATAIN.reg = 0;
-	DMAC->CRCCHKSUM.reg = 0;
+	if (config->type == CRC_TYPE_32) {
+		DMAC->CRCCHKSUM.reg = 0xFFFFFFFF;
+	}
 
 	DMAC->CTRL.reg |= DMAC_CTRL_CRCENABLE;
 

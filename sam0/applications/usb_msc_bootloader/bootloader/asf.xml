@@ -16,6 +16,7 @@
 			<require idref="sam0.utils.stdio.stdio_serial"/>
 			<require idref="common.services.fs.fatfs"/>
 			<require idref="common.services.usb.class.host"/>
+			<require idref="common2.services.delay"/>
 			<info type="gui-flag" value="move-to-root"/>
 		</module>
 	</select-by-device>
