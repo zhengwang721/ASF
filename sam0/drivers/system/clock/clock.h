@@ -263,7 +263,7 @@ extern "C" {
  * Define system clock features set according to different device family.
  * @{
  */
-#if (SAMD21) || defined(__DOXYGEN__)
+#if (SAMD21) || (SAMD11) || (SAMD10)|| defined(__DOXYGEN__)
 /** Digital Phase Locked Loop (DPLL) feature support */
 #  define FEATURE_SYSTEM_CLOCK_DPLL
 #endif
@@ -894,6 +894,7 @@ uint32_t system_clock_source_get_hz(
  * @{
  */
 
+#ifdef FEATURE_SYSTEM_CLOCK_FAILURE_DETECT
 /**
  * \brief Enable or disable the main clock failure detection.
  *
@@ -924,6 +925,7 @@ static inline void system_main_clock_set_failure_detect(
 		PM->CTRL.reg &= ~PM_CTRL_CFDEN;
 	}
 }
+#endif
 
 /**
  * \brief Set main CPU clock divider.

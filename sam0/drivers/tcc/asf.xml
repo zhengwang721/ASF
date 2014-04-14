@@ -34,6 +34,8 @@
 			<build type="doxygen-quick-start" value="asfdoc_sam0_tcc_exqsg"/>
 
 			<device-support value="samd21" />
+			<device-support value="samd10" />
+			<device-support value="samd11" />
 
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
@@ -97,7 +99,9 @@
 			<build type="doxygen-quick-start" value="asfdoc_sam0_tcc_exqsg"/>
 
 			<device-support value="samd21" />
-
+			<device-support value="samd10" />
+			<device-support value="samd11" />
+			
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
 			<require idref="sam0.drivers.port" />
