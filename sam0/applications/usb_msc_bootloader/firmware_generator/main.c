@@ -324,7 +324,6 @@ int main(void)
 		/* Go through the different LUN and check for the file. */
 		for (lun = 0; ((lun < uhi_msc_mem_get_lun()) && (lun < 8)); lun++) {
 
-			root_directory[3] = "0:";
 			root_directory[0] = '0' + lun;
 
 			/* Initialize the file system object */
