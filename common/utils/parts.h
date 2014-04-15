@@ -925,6 +925,22 @@
 	)
 /** @} */
 
+/**
+ * \name SAMR21 series
+ * @{
+ */
+#define SAMR21G ( \
+		SAM_PART_IS_DEFINED(SAMR21G16A) || \
+		SAM_PART_IS_DEFINED(SAMR21G17A) || \
+		SAM_PART_IS_DEFINED(SAMR21G18A) \
+	)
+
+#define SAMR21E ( \
+		SAM_PART_IS_DEFINED(SAMR21E16A) || \
+		SAM_PART_IS_DEFINED(SAMR21E17A) || \
+		SAM_PART_IS_DEFINED(SAMR21E18A) \
+	)
+/** @} */
 
 /**
  * \name SAM4E series
@@ -1058,6 +1074,12 @@
 /** SAMD21 Family */
 #define SAMD21 (SAMD21J || SAMD21G || SAMD21E)
 
+/** SAMD Family */
+#define SAMD   (SAMD20 || SAMD21)
+
+/** SAMR21 Family */
+#define SAMR21 (SAMR21G || SAMR21E)
+
 /** SAM4E Family */
 #define SAM4E (SAM4E8 || SAM4E16)
 
@@ -1081,7 +1103,7 @@
 
 /** SAM product line */
 #define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || \
-		SAMD20 || SAMD21 || SAM4N || SAM4C || SAM4CP || SAMG)
+		SAMD20 || SAMD21 || SAMR21 || SAM4N || SAM4C || SAM4CP || SAMG)
 
 /** @} */
 
