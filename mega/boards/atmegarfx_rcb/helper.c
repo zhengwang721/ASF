@@ -63,10 +63,7 @@ static uint16_t x_axis_val;
 static uint16_t y_axis_val;
 static uint16_t z_axis_val;
 static uint16_t ADC_ref_val;
-static uint16_t x_val;
-static uint16_t y_val;
-static uint16_t z_val;
-static uint16_t ADC_val;
+
 
 
 
