@@ -40,12 +40,15 @@
  * \asf_license_stop
  *
  */
-#include "compiler.h"
+#include <compiler.h>
+#include <status_codes.h>
+#include <board.h>
 #include <string.h>
 #include "conf_board.h"
 #include "conf_sd_mmc.h"
 #include "sd_mmc_protocol.h"
 #include "sd_mmc_spi.h"
+#include "sd_mmc.h"
 #include "ioport.h"
 
 #ifdef SD_MMC_SPI_MODE
@@ -64,7 +67,6 @@
 #  warning SD_MMC_SPI_MEM_CNT must be defined in board.h file.
 #  define SD_MMC_SPI_MEM_CNT 1
 #endif
-
 #ifndef CONF_BOARD_SD_MMC_SPI
 #  warning CONF_BOARD_SD_MMC_SPI must be defined in conf_board.h file.
 #endif
