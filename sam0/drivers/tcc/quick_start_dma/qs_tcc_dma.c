@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 Timer/Counter Driver for Control Applications DMA Quickstart
+ * \brief SAM D21/R21 Timer/Counter Driver for Control Applications DMA Quickstart
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -114,7 +114,6 @@ static void config_dma_for_capture(void)
 	//! [dma_setup_2]
 
 	//! [dma_setup_3]
-	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
 	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 	config.peripheral_trigger = CONF_CAPTURE_TRIGGER;
 	//! [dma_setup_3]
@@ -167,7 +166,6 @@ static void config_dma_for_wave(void)
 	//! [config_dma_resource_for_wave]
 	struct dma_resource_config config;
 	dma_get_config_defaults(&config);
-	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
 	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 	config.peripheral_trigger = CONF_COMPARE_TRIGGER;
 	dma_allocate(&compare_dma_resource, &config);

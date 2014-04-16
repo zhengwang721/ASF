@@ -316,20 +316,15 @@ uint32_t pmc_osc_is_ready_32kxtal(void)
  */
 void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
 {
-	uint32_t ul_needXTEN = 0;
-
 	/* Enable Fast RC oscillator but DO NOT switch to RC now */
-	if (PMC->CKGR_MOR & CKGR_MOR_MOSCXTEN) {
-		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
-				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN |
-				ul_moscrcf;
-	} else {
-		ul_needXTEN = 1;
-		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
-				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN |
-				CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCXTST_Msk |
-				ul_moscrcf;
-	}
+	PMC->CKGR_MOR |= (CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN);
+
+	/* Wait the Fast RC to stabilize */
+	while (!(PMC->PMC_SR & PMC_SR_MOSCRCS));
+
+	/* Change Fast RC oscillator frequency */
+	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
+			CKGR_MOR_KEY_PASSWD | ul_moscrcf;
 
 	/* Wait the Fast RC to stabilize */
 	while (!(PMC->PMC_SR & PMC_SR_MOSCRCS));
@@ -339,7 +334,7 @@ void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
 			CKGR_MOR_KEY_PASSWD;
 
 	/* Disable xtal oscillator */
-	if (ul_needXTEN) {
+	if (PMC->CKGR_MOR & CKGR_MOR_MOSCXTEN) {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
 				CKGR_MOR_KEY_PASSWD;
 	}
@@ -352,10 +347,14 @@ void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
  */
 void pmc_osc_enable_fastrc(uint32_t ul_rc)
 {
-	/* Enable Fast RC oscillator but DO NOT switch to RC now.
-	 * Keep MOSCSEL to 1 */
-	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL |
-			CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCRCEN | ul_rc;
+	/* Enable Fast RC oscillator but DO NOT switch to RC */
+	PMC->CKGR_MOR |= (CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN);
+	/* Wait the Fast RC to stabilize */
+	while (!(PMC->PMC_SR & PMC_SR_MOSCRCS));
+
+	/* Change Fast RC oscillator frequency */
+	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
+			CKGR_MOR_KEY_PASSWD | ul_rc;
 	/* Wait the Fast RC to stabilize */
 	while (!(PMC->PMC_SR & PMC_SR_MOSCRCS));
 }
