@@ -3,7 +3,7 @@
  *
  * \brief SAM4L Xplained Pro board definition
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -201,6 +201,18 @@
 
 //! Number of on-board LEDs
 #define LED_COUNT                 1
+
+/**
+ * \name LCD Backlight
+ */
+//@{
+#define LCD_BL                        PC05
+#define LCD_BL_GPIO                   PIN_PC05
+#define LCD_BL_GPIO_MASK              GPIO_PC05
+
+#define LCD_BL_ACTIVE_LEVEL             IOPORT_PIN_LEVEL_HIGH
+#define LCD_BL_INACTIVE_LEVEL           IOPORT_PIN_LEVEL_LOW
+//@}
 
 /**
  * \name Button #0 definitions
