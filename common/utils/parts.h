@@ -1074,6 +1074,9 @@
 /** SAMR21 Family */
 #define SAMR21 (SAMR21G || SAMR21E)
 
+/** SAM0 Family */
+#define SAM0 (SAMD20 || SAMD21 || SAMR21)
+
 /** SAM4E Family */
 #define SAM4E (SAM4E8 || SAM4E16)
 
@@ -1097,7 +1100,7 @@
 
 /** SAM product line */
 #define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || \
-		SAMD20 || SAMD21 || SAMR21 || SAM4N || SAM4C || SAM4CP || SAMG)
+		SAM0 || SAM4N || SAM4C || SAM4CP || SAMG)
 
 /** @} */
 
