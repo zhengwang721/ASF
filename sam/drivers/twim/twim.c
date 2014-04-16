@@ -69,9 +69,9 @@
 twim_callback_t twim_callback_pointer[NUM_TWIM_CH];
 
 /** \internal Pointer to the application TWI transmit buffer. */
-static const volatile uint8_t  *twim_tx_data[NUM_TWIM_CH] = {NULL};
+static const volatile uint8_t  *p_twim_tx_data[NUM_TWIM_CH] = {NULL};
 /** \internal Pointer to the application TWI receive buffer. */
-static volatile uint8_t *twim_rx_data[NUM_TWIM_CH] = {NULL};
+static volatile uint8_t *p_twim_rx_data[NUM_TWIM_CH] = {NULL};
 /** \internal Status of the bus transfer */
 static volatile twim_transfer_status_t transfer_status[NUM_TWIM_CH];
 /** \internal Remaining number of bytes to transmit per command. */
@@ -83,9 +83,9 @@ static volatile uint32_t twim_it_mask[NUM_TWIM_CH];
 /** \internal If next transfer command valid */
 static volatile bool twim_next_cmd_xfer_valid[NUM_TWIM_CH] = {false};
 /** \internal Pointer to the application TWI transmit buffer for next transfer. */
-static const volatile uint8_t  *twim_next_tx_data[NUM_TWIM_CH] = {NULL};
+static const volatile uint8_t  *p_twim_next_tx_data[NUM_TWIM_CH] = {NULL};
 /** \internal Pointer to the application TWI receive buffer for next transfer. */
-static volatile uint8_t *twim_next_rx_data[NUM_TWIM_CH] = {NULL};
+static volatile uint8_t *p_twim_next_rx_data[NUM_TWIM_CH] = {NULL};
 /** \internal Remaining number of bytes to transmit for next transfer. */
 static volatile uint32_t twim_next_tx_nb_bytes[NUM_TWIM_CH] = {0};
 /** \internal Remaining number of bytes to receive for next transfer. */
@@ -155,8 +155,8 @@ void twim_default_callback(Twim *twim)
 	/* This is a RXRDY */
 	else if (status & TWIM_SR_RXRDY) {
 		/* Get data from Receive Holding Register */
-		*twim_rx_data[twim_ch] = twim->TWIM_RHR;
-		twim_rx_data[twim_ch]++;
+		*p_twim_rx_data[twim_ch] = twim->TWIM_RHR;
+		p_twim_rx_data[twim_ch]++;
 		/* Decrease received bytes number */
 		twim_rx_nb_bytes[twim_ch]--;
 		/* Receive complete for current command */
@@ -164,16 +164,16 @@ void twim_default_callback(Twim *twim)
 			/* Check for next transfer */
 			if ((twim_next_cmd_xfer_valid[twim_ch]) &&
 					(twim_next_rx_nb_bytes[twim_ch] != 0)) {
-				twim_rx_data[twim_ch] = twim_next_rx_data[twim_ch];
+				p_twim_rx_data[twim_ch] = p_twim_next_rx_data[twim_ch];
 				if (twim_next_rx_nb_bytes[twim_ch] > TWIM_MAX_NBYTES_PER_XFER) {
 					twim_rx_nb_bytes[twim_ch] = TWIM_MAX_NBYTES_PER_XFER;
-					twim_next_rx_data[twim_ch] += TWIM_MAX_NBYTES_PER_XFER;
+					p_twim_next_rx_data[twim_ch] += TWIM_MAX_NBYTES_PER_XFER;
 					twim_next_rx_nb_bytes[twim_ch] -= TWIM_MAX_NBYTES_PER_XFER;
 				} else {
 					twim_rx_nb_bytes[twim_ch] = twim_next_rx_nb_bytes[twim_ch];
 					twim_next_rx_nb_bytes[twim_ch] = 0;
 				}
-				/* If all data transfer done */
+				/* Need next transfer? */
 				if (twim_next_rx_nb_bytes[twim_ch] > 0) {
 					ncmdr_wait = NCMDR_FREE_WAIT;
 					while ((twim->TWIM_NCMDR & TWIM_NCMDR_VALID) && (ncmdr_wait--)) {
@@ -194,7 +194,7 @@ void twim_default_callback(Twim *twim)
 			} else {
 				/* Finish the receive operation */
 				twim->TWIM_IDR = TWIM_IDR_RXRDY;
-				/* Set busy to false */
+				/* Set next transfer to false */
 				twim_next_cmd_xfer_valid[twim_ch] = false;
 #if TWIM_LOW_POWER_ENABLE
 				twim->TWIM_SCR = TWIM_SCR_CCOMP;
@@ -221,23 +221,23 @@ void twim_default_callback(Twim *twim)
 #endif
 		} else {
 			/* Put the byte in the Transmit Holding Register */
-			twim->TWIM_THR = *twim_tx_data[twim_ch]++;
+			twim->TWIM_THR = *p_twim_tx_data[twim_ch]++;
 			/* Decrease transmitted bytes number */
 			twim_tx_nb_bytes[twim_ch]--;
 			if (twim_tx_nb_bytes[twim_ch] == 0) {
 				/* Check for next transfer */
 				if ((twim_next_cmd_xfer_valid[twim_ch]) &&
 						(twim_next_tx_nb_bytes[twim_ch] != 0)) {
-					twim_tx_data[twim_ch] = twim_next_tx_data[twim_ch];
+					p_twim_tx_data[twim_ch] = p_twim_next_tx_data[twim_ch];
 					if (twim_next_tx_nb_bytes[twim_ch] > TWIM_MAX_NBYTES_PER_XFER) {
 						twim_tx_nb_bytes[twim_ch] = TWIM_MAX_NBYTES_PER_XFER;
-						twim_next_tx_data[twim_ch] += TWIM_MAX_NBYTES_PER_XFER;
+						p_twim_next_tx_data[twim_ch] += TWIM_MAX_NBYTES_PER_XFER;
 						twim_next_tx_nb_bytes[twim_ch] -= TWIM_MAX_NBYTES_PER_XFER;
 					} else {
 						twim_tx_nb_bytes[twim_ch] = twim_next_tx_nb_bytes[twim_ch];
 						twim_next_tx_nb_bytes[twim_ch] = 0;
 					}
-					/* If all data transfer done */
+					/* Need next transfer? */
 					if (twim_next_tx_nb_bytes[twim_ch] > 0) {
 						ncmdr_wait = NCMDR_FREE_WAIT;
 						while ((twim->TWIM_NCMDR & TWIM_NCMDR_VALID) && (ncmdr_wait--)) {
@@ -497,7 +497,7 @@ status_code_t twi_master_read(Twim *twim, struct twim_package *package)
 	uint32_t twim_ch = find_twim_channel_num(twim);
 	uint32_t cmdr_reg;
 
-	/* Reset the TWIM module to clear the THR register */
+	/* Reset the TWIM module */
 	twim->TWIM_CR = TWIM_CR_MEN;
 	twim->TWIM_CR = TWIM_CR_SWRST;
 	twim->TWIM_CR = TWIM_CR_MDIS;
@@ -506,8 +506,8 @@ status_code_t twi_master_read(Twim *twim, struct twim_package *package)
 	/* Clear the status flags */
 	twim->TWIM_SCR = ~0UL;
 	/* Get a pointer to application data */
-	twim_rx_data[twim_ch] = package->buffer;
-	/* Set next write transfer to false */
+	p_twim_rx_data[twim_ch] = package->buffer;
+	/* Set next transfer to false */
 	twim_next_cmd_xfer_valid[twim_ch] = false;
 	twim_next_rx_nb_bytes[twim_ch] = 0;
 	twim_next_tx_nb_bytes[twim_ch] = 0;
@@ -515,6 +515,9 @@ status_code_t twi_master_read(Twim *twim, struct twim_package *package)
 	transfer_status[twim_ch] = TWI_SUCCESS;
 
 	if (package->ten_bit) {
+		/* Mask NACK and RXRDY interrupts */
+		twim_it_mask[twim_ch] = TWIM_IER_STD_MASK | TWIM_IER_RXRDY;
+
 		/* Set the command register to initiate the transfer */
 		cmdr_reg = (package->high_speed ? (TWIM_CMDR_HS |
 					TWIM_CMDR_HSMCODE(package->high_speed_code)) : 0)
@@ -525,16 +528,16 @@ status_code_t twi_master_read(Twim *twim, struct twim_package *package)
 
 		if (package->addr_length) {
 			/* Selection of first valid byte of the address */
-			twim_tx_data[twim_ch] = package->addr;
+			p_twim_tx_data[twim_ch] = package->addr;
 			/* Set the number of bytes to transmit */
 			twim_tx_nb_bytes[twim_ch] = package->addr_length;
 			/* Fill transfer command */
 			cmdr_reg |= twim_tx_nb_bytes[twim_ch];
+			/* Mask TXRDY interrupt */
+			twim_it_mask[twim_ch] |= TWIM_IER_TXRDY;
 		}
 		twim->TWIM_CMDR = cmdr_reg;
 
-		/* Mask NACK and RXRDY interrupts */
-		twim_it_mask[twim_ch] = TWIM_IER_STD_MASK | TWIM_IER_RXRDY;
 		/* Set the command register to initiate the transfer */
 		cmdr_reg = (package->high_speed ? (TWIM_CMDR_HS |
 					TWIM_CMDR_HSMCODE(package->high_speed_code)) : 0)
@@ -548,7 +551,7 @@ status_code_t twi_master_read(Twim *twim, struct twim_package *package)
 		if (package->length > TWIM_MAX_NBYTES_PER_XFER) {
 			twim_next_cmd_xfer_valid[twim_ch] = true;
 			twim_rx_nb_bytes[twim_ch] = TWIM_MAX_NBYTES_PER_XFER;
-			twim_next_rx_data[twim_ch] = twim_rx_data[twim_ch] + TWIM_MAX_NBYTES_PER_XFER;
+			p_twim_next_rx_data[twim_ch] = p_twim_rx_data[twim_ch] + TWIM_MAX_NBYTES_PER_XFER;
 			twim_next_rx_nb_bytes[twim_ch] = package->length - TWIM_MAX_NBYTES_PER_XFER;
 			cmdr_reg |=  (TWIM_CMDR_NBYTES(TWIM_MAX_NBYTES_PER_XFER) | TWIM_CMDR_ACKLAST);
 		} else {
@@ -561,7 +564,7 @@ status_code_t twi_master_read(Twim *twim, struct twim_package *package)
 		/* Check if internal address access is performed */
 		if (package->addr_length) {
 			/* Selection of first valid byte of the address */
-			twim_tx_data[twim_ch] = package->addr;
+			p_twim_tx_data[twim_ch] = package->addr;
 			/* Set the number of bytes to transmit */
 			twim_tx_nb_bytes[twim_ch] = package->addr_length;
 			/* Mask NACK, TXRDY and RXRDY interrupts */
@@ -587,7 +590,7 @@ status_code_t twi_master_read(Twim *twim, struct twim_package *package)
 			if (package->length > TWIM_MAX_NBYTES_PER_XFER) {
 				twim_next_cmd_xfer_valid[twim_ch] = true;
 				twim_rx_nb_bytes[twim_ch] = TWIM_MAX_NBYTES_PER_XFER;
-				twim_next_rx_data[twim_ch] = twim_rx_data[twim_ch] + TWIM_MAX_NBYTES_PER_XFER;
+				p_twim_next_rx_data[twim_ch] = p_twim_rx_data[twim_ch] + TWIM_MAX_NBYTES_PER_XFER;
 				twim_next_rx_nb_bytes[twim_ch] = package->length - TWIM_MAX_NBYTES_PER_XFER;
 				cmdr_reg |=  (TWIM_CMDR_NBYTES(TWIM_MAX_NBYTES_PER_XFER) | TWIM_CMDR_ACKLAST);
 			} else {
@@ -611,7 +614,7 @@ status_code_t twi_master_read(Twim *twim, struct twim_package *package)
 			if (package->length > TWIM_MAX_NBYTES_PER_XFER) {
 				twim_next_cmd_xfer_valid[twim_ch] = true;
 				twim_rx_nb_bytes[twim_ch] = TWIM_MAX_NBYTES_PER_XFER;
-				twim_next_rx_data[twim_ch] = twim_rx_data[twim_ch] + TWIM_MAX_NBYTES_PER_XFER;
+				p_twim_next_rx_data[twim_ch] = p_twim_rx_data[twim_ch] + TWIM_MAX_NBYTES_PER_XFER;
 				twim_next_rx_nb_bytes[twim_ch] = package->length - TWIM_MAX_NBYTES_PER_XFER;
 				cmdr_reg |=  (TWIM_CMDR_NBYTES(TWIM_MAX_NBYTES_PER_XFER) | TWIM_CMDR_ACKLAST);
 			} else {
@@ -675,7 +678,7 @@ status_code_t twi_master_write(Twim *twim, struct twim_package *package)
 	uint32_t twim_ch = find_twim_channel_num(twim);
 	uint32_t cmdr_reg;
 
-	/* Reset the TWIM module to clear the THR register */
+	/* Reset the TWIM module */
 	twim->TWIM_CR = TWIM_CR_MEN;
 	twim->TWIM_CR = TWIM_CR_SWRST;
 	twim->TWIM_CR = TWIM_CR_MDIS;
@@ -703,24 +706,24 @@ status_code_t twi_master_write(Twim *twim, struct twim_package *package)
 	/* Check if internal address access is performed */
 	if (package->addr_length) {
 		/* Selection of first valid byte of the address */
-		twim_tx_data[twim_ch] = package->addr;
+		p_twim_tx_data[twim_ch] = package->addr;
 		/* Set the number of bytes to transmit */
 		twim_tx_nb_bytes[twim_ch] = package->addr_length;
 		/* Set next transfer to true */
 		twim_next_cmd_xfer_valid[twim_ch] = true;
 		/* Set the number of bytes & address for next transfer */
-		twim_next_tx_data[twim_ch] = package->buffer;
+		p_twim_next_tx_data[twim_ch] = package->buffer;
 		twim_next_tx_nb_bytes[twim_ch] = package->length;
 		/* Fill transfer command (no stop) */
 		cmdr_reg |=  TWIM_CMDR_NBYTES(twim_tx_nb_bytes[twim_ch]);
 	} else {
 		/* Get a pointer to application data */
-		twim_tx_data[twim_ch] = package->buffer;
+		p_twim_tx_data[twim_ch] = package->buffer;
 		/* Fill transfer command */
 		if (package->length > TWIM_MAX_NBYTES_PER_XFER) {
 			twim_next_cmd_xfer_valid[twim_ch] = true;
 			twim_tx_nb_bytes[twim_ch] = TWIM_MAX_NBYTES_PER_XFER;
-			twim_next_tx_data[twim_ch] = twim_tx_data[twim_ch] + TWIM_MAX_NBYTES_PER_XFER;
+			p_twim_next_tx_data[twim_ch] = p_twim_tx_data[twim_ch] + TWIM_MAX_NBYTES_PER_XFER;
 			twim_next_tx_nb_bytes[twim_ch] = package->length - TWIM_MAX_NBYTES_PER_XFER;
 		} else {
 			twim_tx_nb_bytes[twim_ch] = package->length;
