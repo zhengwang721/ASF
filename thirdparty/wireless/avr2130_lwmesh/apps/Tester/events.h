@@ -55,6 +55,6 @@ uint8_t *appEventsGetBuffer(void);
 void appEventsClearBuffer();
 void appEventsLog(uint8_t event);
 
-#endif // APP_ENABLE_EVENTS_BUFFER
+#endif /* APP_ENABLE_EVENTS_BUFFER */
 
-#endif // _EVENTS_H_
+#endif /* _EVENTS_H_ */

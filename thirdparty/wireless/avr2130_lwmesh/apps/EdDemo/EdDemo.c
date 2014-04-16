@@ -40,11 +40,11 @@
  *
  */
 
- /**
-* \mainpage
-* \section preface Preface
-* This is the reference manual for the EDDemo  Application
-*/
+/**
+ * \mainpage
+ * \section preface Preface
+ * This is the reference manual for the EDDemo  Application
+ */
 /*- Includes ---------------------------------------------------------------*/
 #include <stdlib.h>
 #include <stdio.h>
@@ -64,11 +64,10 @@
 #include "asf.h"
 
 /*- Types ------------------------------------------------------------------*/
-typedef enum AppState_t
-{
-  APP_STATE_INITIAL,
-  APP_STATE_MEASURE_ED,
-  APP_STATE_WAIT_SCAN_TIMER,
+typedef enum AppState_t {
+	APP_STATE_INITIAL,
+	APP_STATE_MEASURE_ED,
+	APP_STATE_WAIT_SCAN_TIMER,
 } AppState_t;
 
 /*- Variables --------------------------------------------------------------*/
@@ -78,87 +77,83 @@ static SYS_Timer_t appScanTimer;
 
 /*- Implementations --------------------------------------------------------*/
 
-
 /*************************************************************************//**
 *****************************************************************************/
 static void appPrintEdValues(void)
 {
-  char hex[] = "0123456789abcdef";
+	char hex[] = "0123456789abcdef";
 
-  for (uint8_t i = 0; i < sizeof(appEdValue); i++)
-  {
-    uint8_t v = appEdValue[i] - PHY_RSSI_BASE_VAL;
-    sio2host_putchar(hex[(v >> 4) & 0x0f]);
-    sio2host_putchar(hex[v & 0x0f]);
-    sio2host_putchar(' ');
-  }
+	for (uint8_t i = 0; i < sizeof(appEdValue); i++) {
+		uint8_t v = appEdValue[i] - PHY_RSSI_BASE_VAL;
+		sio2host_putchar(hex[(v >> 4) & 0x0f]);
+		sio2host_putchar(hex[v & 0x0f]);
+		sio2host_putchar(' ');
+	}
 
-  sio2host_putchar('\r');
-  sio2host_putchar('\n');
+	sio2host_putchar('\r');
+	sio2host_putchar('\n');
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 static void appScanTimerHandler(SYS_Timer_t *timer)
 {
-  appState = APP_STATE_MEASURE_ED;
-  (void)timer;
+	appState = APP_STATE_MEASURE_ED;
+	(void)timer;
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 static void appInit(void)
 {
+	PHY_SetRxState(true);
 
-  PHY_SetRxState(true);
+	appScanTimer.interval = APP_SCAN_INTERVAL;
+	appScanTimer.mode = SYS_TIMER_PERIODIC_MODE;
+	appScanTimer.handler = appScanTimerHandler;
+	SYS_TimerStart(&appScanTimer);
 
-  appScanTimer.interval = APP_SCAN_INTERVAL;
-  appScanTimer.mode = SYS_TIMER_PERIODIC_MODE;
-  appScanTimer.handler = appScanTimerHandler;
-  SYS_TimerStart(&appScanTimer);
-
-  appState = APP_STATE_MEASURE_ED;
+	appState = APP_STATE_MEASURE_ED;
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 static void APP_TaskHandler(void)
 {
-  switch (appState)
-  {
-    case APP_STATE_INITIAL:
-    {
-      appInit();
-    } break;
+	switch (appState) {
+	case APP_STATE_INITIAL:
+	{
+		appInit();
+	}
+	break;
 
-    case APP_STATE_MEASURE_ED:
-    {
-      for (uint8_t i = 0; i < sizeof(appEdValue); i++)
-      {
-        PHY_SetChannel(APP_FIRST_CHANNEL + i);
-        appEdValue[i] = PHY_EdReq();
-      }
+	case APP_STATE_MEASURE_ED:
+	{
+		for (uint8_t i = 0; i < sizeof(appEdValue); i++) {
+			PHY_SetChannel(APP_FIRST_CHANNEL + i);
+			appEdValue[i] = PHY_EdReq();
+		}
 
-      appPrintEdValues();
+		appPrintEdValues();
 
-      appState = APP_STATE_WAIT_SCAN_TIMER;
-    } break;
+		appState = APP_STATE_WAIT_SCAN_TIMER;
+	}
+	break;
 
-    default:
-      break;
-  }
+	default:
+		break;
+	}
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 int main(void)
 {
-  SYS_Init();
-  sio2host_init();
-  LED_On(LED0);
-  while (1)
-  {
-    SYS_TaskHandler();
-    APP_TaskHandler();
-  }
+	SYS_Init();
+	sio2host_init();
+	LED_On(LED0);
+	while (1) {
+		SYS_TaskHandler();
+		APP_TaskHandler();
+	}
 }

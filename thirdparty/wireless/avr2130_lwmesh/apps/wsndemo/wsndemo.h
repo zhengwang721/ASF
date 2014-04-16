@@ -57,17 +57,17 @@ int wsndemo_main(void);
 #define LED_COUNT 0
 #endif
 
-#if LED_COUNT>2
+#if LED_COUNT > 2
 #define LED_NETWORK       LED0_GPIO
 #define LED_DATA          LED1_GPIO
 #define LED_BLINK         LED2_GPIO
 #define LED_IDENTIFY      LED0_GPIO
-#elif LED_COUNT==2
+#elif LED_COUNT == 2
 #define LED_NETWORK       LED0_GPIO
 #define LED_DATA          LED1_GPIO
 #define LED_BLINK         LED1_GPIO
 #define LED_IDENTIFY      LED0_GPIO
-#elif LED_COUNT==1
+#elif LED_COUNT == 1
 #define LED_NETWORK       LED0_GPIO
 #define LED_DATA          LED0_GPIO
 #define LED_BLINK         LED0_GPIO
@@ -90,6 +90,3 @@ int wsndemo_main(void);
 #endif
 
 #endif /* WSNDEMO_H */
- 
- 
- 

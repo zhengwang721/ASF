@@ -44,7 +44,6 @@
 #define CONF_BOARD_H
 #define ZIGBIT_EXT
 
-
 #define CONF_BOARD_ENABLE_USARTA1
 
 #endif /* CONF_BOARD_H */

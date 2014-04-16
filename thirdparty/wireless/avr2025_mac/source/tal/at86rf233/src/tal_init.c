@@ -150,7 +150,7 @@ static retval_t internal_tal_reset(bool set_default_pib);
 
 /**
  * \brief Initializes all timers used by the TAL module by assigning id's to
- *each of them
+ * each of them
  */
 static retval_t tal_timer_init(void);
 
@@ -211,9 +211,10 @@ retval_t tal_init(void)
 	 * generated again, we must repeat this.
 	 */
 	uint64_t invalid_ieee_address;
-	memset((uint8_t *)&invalid_ieee_address, 0xFF, sizeof(invalid_ieee_address));
+	memset((uint8_t *)&invalid_ieee_address, 0xFF,
+			sizeof(invalid_ieee_address));
 	while ((tal_pib.IeeeAddress == 0x0000000000000000) ||
-	(tal_pib.IeeeAddress == invalid_ieee_address)){
+			(tal_pib.IeeeAddress == invalid_ieee_address)) {
 		/*
 		 * In case no valid IEEE address is available, a random
 		 * IEEE address will be generated to be able to run the
@@ -223,9 +224,9 @@ retval_t tal_init(void)
 
 		/*
 		 * The proper seed for function rand() has already been
-		 *generated
+		 * generated
 		 * in function tal_generate_rand_seed().
-		 */		
+		 */
 		uint8_t *ptr_pib = (uint8_t *)&tal_pib.IeeeAddress;
 
 		for (uint8_t i = 0; i < 8; i++) {
@@ -240,7 +241,7 @@ retval_t tal_init(void)
 			 * smaller using 8-bit here.
 			 * And timing is not an issue at this place...
 			 */
-		}	
+		}
 	}
 #endif  /* #ifndef DISABLE_IEEE_ADDR_CHECK */
 #ifdef ENABLE_STACK_NVM
@@ -262,7 +263,7 @@ retval_t tal_init(void)
 #endif
 
 	/* Initialize the buffer management module and get a buffer to store
-	 *received frames. */
+	 * received frames. */
 	bmm_buffer_init();
 	tal_rx_buffer = bmm_buffer_alloc(LARGE_BUFFER_SIZE);
 #if _DEBUG_ > 0
@@ -322,8 +323,9 @@ static retval_t trx_init(void)
 		/* Wait a short time interval. */
 		pal_timer_delay(TRX_POLL_WAIT_TIME_US);
 		poll_counter++;
+
 		/* Check if AT86RF233 is connected; omit manufacturer id check
-		 **/
+		**/
 	} while (trx_reg_read(RG_PART_NUM) != PART_NUM_AT86RF233);
 #endif  /* !defined FPGA_EMULATION */
 
@@ -336,7 +338,7 @@ static retval_t trx_init(void)
 		/* Wait a short time interval. */
 		pal_timer_delay(TRX_POLL_WAIT_TIME_US);
 
-		trx_status = /*(tal_trx_status_t)*/trx_bit_read(SR_TRX_STATUS);
+		trx_status = /*(tal_trx_status_t)*/ trx_bit_read(SR_TRX_STATUS);
 
 		/* Wait not more than max. value of TR15. */
 		if (poll_counter == P_ON_TO_TRX_OFF_ATTEMPTS) {
@@ -386,7 +388,7 @@ static retval_t internal_tal_reset(bool set_default_pib)
 		init_tal_pib(); /* implementation can be found in 'tal_pib.c' */
 	} else {
 		/* nothing to do - the current TAL PIB attribute values are used
-		 **/
+		**/
 	}
 
 	/*
@@ -444,15 +446,15 @@ void trx_config(void)
 	 */
 	trx_bit_write(SR_AACK_FVN_MODE, FRAME_VERSION_01);
 	trx_bit_write(SR_AACK_SET_PD, SET_PD); /* ACKs for data requests,
-	                                            *indicate pending data */
+	                                        * indicate pending data */
 	trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_ENABLE); /* Enable
-	                                                          *buffer
-	                                                          *protection
-	                                                          *mode */
+	                                                      * buffer
+	                                                      * protection
+	                                                      * mode */
 	trx_reg_write(RG_IRQ_MASK, TRX_IRQ_DEFAULT); /* The TRX_END
-	                                                  *interrupt of the
-	                                                  *transceiver is
-	                                                  *enabled. */
+	                                              * interrupt of the
+	                                              * transceiver is
+	                                              * enabled. */
 	trx_reg_write(RG_TRX_RPC, 0xFF); /* RPC feature configuration. */
 
 #if (ANTENNA_DIVERSITY == 1)
@@ -510,7 +512,7 @@ static retval_t trx_reset(void)
 		/* Wait a short time interval. */
 		pal_timer_delay(TRX_POLL_WAIT_TIME_US);
 
-		trx_status = /*(tal_trx_status_t)*/trx_bit_read(SR_TRX_STATUS);
+		trx_status = /*(tal_trx_status_t)*/ trx_bit_read(SR_TRX_STATUS);
 
 		/* Wait not more than max. value of TR2. */
 		if (poll_counter == SLEEP_TO_TRX_OFF_ATTEMPTS) {
@@ -526,8 +528,6 @@ static retval_t trx_reset(void)
 	} while (trx_status != TRX_OFF);
 
 	tal_trx_status = TRX_OFF;
-
-
 
 #ifdef STB_ON_SAL
 #if (SAL_TYPE == AT86RF2xx)
@@ -552,7 +552,7 @@ retval_t tal_reset(bool set_default_pib)
 	/*
 	 * Do the reset stuff.
 	 * Set the default PIBs depending on the given parameter
-	 *set_default_pib.
+	 * set_default_pib.
 	 * Do NOT generate random seed again.
 	 */
 	if (internal_tal_reset(set_default_pib) != MAC_SUCCESS) {
@@ -581,8 +581,9 @@ retval_t tal_reset(bool set_default_pib)
 	 * Install a handler for the transceiver interrupt.
 	 */
 	trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
+
 	/* The pending transceiver interrupts on the microcontroller are
-	 *cleared. */
+	 * cleared. */
 	pal_trx_irq_flag_clr();
 	pal_trx_irq_en(); /* Enable transceiver main interrupt. */
 
@@ -592,7 +593,7 @@ retval_t tal_reset(bool set_default_pib)
 		retval_t timer_status;
 
 		/* Calibration timer has already been stopped within this
-		 *function. */
+		 * function. */
 
 		/* Start periodic calibration timer. */
 		timer_status = pal_timer_start(TAL_CALIBRATION,
@@ -659,7 +660,7 @@ void tal_generate_rand_seed(void)
 
 	/*
 	 * The 16-bit random value is generated from various 2-bit random
-	 *values.
+	 * values.
 	 */
 	for (uint8_t i = 0; i < 8; i++) {
 		/* Now we can safely read the 2-bit random number. */

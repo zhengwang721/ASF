@@ -57,7 +57,7 @@
 /**
  * \defgroup group_perf_analyzer Performance Analyzer Application
  * This  application Performance Analyzer  is a Serial interface based
- *application,
+ * application,
  * which communicates with Wireless Analyzer to demonstrate various features and
  * capabilities of Atmel Transceivers
  *
@@ -260,7 +260,7 @@ extern volatile node_ib_t node_info;
  * \param ack_req           specifies ack requested for frame if set to 1
  *
  * \return MAC_SUCCESS      if the TAL has accepted the data for frame
- *transmission
+ * transmission
  *         TAL_BUSY         if the TAL is busy servicing the previous tx request
  */
 extern retval_t transmit_frame( uint8_t dst_addr_mode,

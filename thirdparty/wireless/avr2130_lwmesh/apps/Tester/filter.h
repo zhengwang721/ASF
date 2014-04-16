@@ -53,6 +53,6 @@ void appFilterInit(void);
 bool appFilterAdd(uint16_t addr, uint8_t allow, uint8_t setLqi, uint8_t lqi);
 bool appFilterRemove(uint16_t addr);
 
-#endif // NWK_ENABLE_ADDRESS_FILTER
+#endif /* NWK_ENABLE_ADDRESS_FILTER */
 
-#endif // _FILTER_H_
+#endif /* _FILTER_H_ */

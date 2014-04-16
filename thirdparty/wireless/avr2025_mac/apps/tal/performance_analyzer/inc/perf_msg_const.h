@@ -64,7 +64,7 @@
  */
 
 #define PROTOCOL_ID                     (0x00) /*i.e TAL- Performance Analyzer
-	                                        *Application*/
+	                                        * Application*/
 
 /**
  * \name Command Lengths

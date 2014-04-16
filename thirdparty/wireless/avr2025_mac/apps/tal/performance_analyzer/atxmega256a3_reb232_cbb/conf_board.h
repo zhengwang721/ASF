@@ -47,6 +47,4 @@
 #define CONF_BOARD_AT86RFX
 #define BOARD_NAME          "REB232ED-EK"
 
-
-
 #endif /* CONF_BOARD_H_INCLUDED */

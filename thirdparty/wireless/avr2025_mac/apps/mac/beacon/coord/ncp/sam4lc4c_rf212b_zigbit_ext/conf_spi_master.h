@@ -43,7 +43,6 @@
 #ifndef CONF_SPI_MASTER_H_INCLUDED
 #define CONF_SPI_MASTER_H_INCLUDED
 
-
 /* ! Default Config Spi Master Delay BCS */
 /* #define CONFIG_SPI_MASTER_DELAY_BCS            0 */
 

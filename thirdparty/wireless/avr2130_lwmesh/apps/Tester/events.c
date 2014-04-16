@@ -58,38 +58,39 @@ static uint8_t appEventsSize;
 *****************************************************************************/
 void appEventsInit(void)
 {
-  appEventsSize = 0;
+	appEventsSize = 0;
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 uint16_t appEventsGetSize(void)
 {
-  return appEventsSize;
+	return appEventsSize;
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 uint8_t *appEventsGetBuffer(void)
 {
-  return appEventsBuffer;
+	return appEventsBuffer;
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 void appEventsClearBuffer()
 {
-  appEventsSize = 0;
+	appEventsSize = 0;
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 void appEventsLog(uint8_t event)
 {
-  if (appEventsSize < APP_EVENTS_BUFFER_SIZE)
-    appEventsBuffer[appEventsSize++] = event;
-  else
-    appEventsBuffer[appEventsSize - 1] = 0xff;
+	if (appEventsSize < APP_EVENTS_BUFFER_SIZE) {
+		appEventsBuffer[appEventsSize++] = event;
+	} else {
+		appEventsBuffer[appEventsSize - 1] = 0xff;
+	}
 }
 
-#endif // APP_ENABLE_EVENTS_BUFFER
+#endif /* APP_ENABLE_EVENTS_BUFFER */

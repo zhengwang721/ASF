@@ -62,7 +62,7 @@
 #define NUMBER_OF_APP_TIMERS        (0)
 
 /** Defines the total number of timers used by the application and the layers
- *below. */
+ * below. */
 #define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS + \
 	NUMBER_OF_TOTAL_STACK_TIMERS)
 

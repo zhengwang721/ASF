@@ -52,13 +52,13 @@
 #include "rf4ce.h"
 #include "nwk_config.h"
 
-
 /* === Macros =============================================================== */
 
 /* === Types ================================================================ */
 
 /* Start pack the data  types, which is unaligned in some of ARM architecture */
 __PACK__DATA__
+
 /**
  * \addtogroup group_rf4control_ds
  * @{

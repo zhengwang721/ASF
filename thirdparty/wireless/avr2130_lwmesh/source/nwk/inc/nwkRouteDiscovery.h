@@ -62,6 +62,6 @@ void nwkRouteDiscoveryRequest(NwkFrame_t *frame);
 bool nwkRouteDiscoveryReplyReceived(NWK_DataInd_t *ind);
 bool nwkRouteDiscoveryRequestReceived(NWK_DataInd_t *ind);
 
-#endif // NWK_ENABLE_ROUTE_DISCOVERY
+#endif /* NWK_ENABLE_ROUTE_DISCOVERY */
 
-#endif // _NWK_ROUTE_DISCOVERY_H_
+#endif /* _NWK_ROUTE_DISCOVERY_H_ */

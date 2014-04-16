@@ -48,4 +48,4 @@
 #define APP_LAST_CHANNEL                    26
 #define APP_SCAN_INTERVAL                   500
 
-#endif // _CONFIG_H_
+#endif /* _CONFIG_H_ */

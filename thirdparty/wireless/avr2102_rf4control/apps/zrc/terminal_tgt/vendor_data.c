@@ -68,8 +68,10 @@ extern void vendor_data_confirm(nwk_enum_t Status, uint8_t PairingRef,
 		profile_id_t ProfileId,
 		uint8_t Handle
 		);
+
 #ifndef RF4CE_TARGET
 static uint16_t get_batmon_voltage(void);
+
 #endif
 
 #else /* RF4CE_TARGET */
@@ -214,5 +216,6 @@ static uint16_t get_batmon_voltage(void)
 #endif
 	return voltage;
 }
+
 #endif
 #endif  /* #ifdef VENDOR_DATA */

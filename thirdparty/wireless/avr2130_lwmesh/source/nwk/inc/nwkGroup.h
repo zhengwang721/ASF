@@ -64,6 +64,6 @@ bool NWK_GroupRemove(uint16_t group);
 
 void nwkGroupInit(void);
 
-#endif // NWK_ENABLE_MULTICAST
+#endif /* NWK_ENABLE_MULTICAST */
 
-#endif // _NWK_FRAME_H_
+#endif /* _NWK_FRAME_H_ */

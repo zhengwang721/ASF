@@ -110,6 +110,7 @@ void calculate_transaction_duration(void);
 
 #ifdef BEACON_SUPPORT
 uint16_t calc_frame_transmit_duration(uint8_t *phy_frame);
+
 #endif /* BEACON_SUPPORT */
 /* ! @} */
 

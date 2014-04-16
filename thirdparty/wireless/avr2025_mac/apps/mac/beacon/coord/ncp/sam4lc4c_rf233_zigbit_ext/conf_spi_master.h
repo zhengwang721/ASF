@@ -45,7 +45,6 @@
 
 /* Possibility to change low-level configurations here */
 
-
 /* ! Default Config Spi Master Delay BCS */
 /* #define CONFIG_SPI_MASTER_DELAY_BCS            0 */
 

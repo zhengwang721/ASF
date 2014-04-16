@@ -102,7 +102,7 @@ typedef struct
 
 	/**
 	 * Maximum number of buffers that can be accomodated in the current
-	 *queue
+	 * queue
 	 * Note: This is only required if the queue capacity shall be different
 	 * from 255.
 	 */

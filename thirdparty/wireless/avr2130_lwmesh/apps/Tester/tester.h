@@ -48,19 +48,18 @@
 #define APP_UART_BUFFER_SIZE      500
 
 /*- Types ------------------------------------------------------------------*/
-typedef enum AppStatus_t
-{
-  APP_STATUS_SUCESS               = 0x00,
-  APP_STATUS_INVALID_CRC          = 0x01,
-  APP_STATUS_UNKNOWN_COMMAND      = 0x02,
-  APP_STATUS_MALFORMED_COMMAND    = 0x03,
-  APP_STATUS_TABLE_IS_FULL        = 0x04,
-  APP_STATUS_ENTRY_NOT_FOUND      = 0x05,
-  APP_STATUS_OUT_OF_MEMORY        = 0x06,
-  APP_STATUS_INVALID_PARAMETERS   = 0x07,
+typedef enum AppStatus_t {
+	APP_STATUS_SUCESS               = 0x00,
+	APP_STATUS_INVALID_CRC          = 0x01,
+	APP_STATUS_UNKNOWN_COMMAND      = 0x02,
+	APP_STATUS_MALFORMED_COMMAND    = 0x03,
+	APP_STATUS_TABLE_IS_FULL        = 0x04,
+	APP_STATUS_ENTRY_NOT_FOUND      = 0x05,
+	APP_STATUS_OUT_OF_MEMORY        = 0x06,
+	APP_STATUS_INVALID_PARAMETERS   = 0x07,
 } AppStatus_t;
 
 /*- Prototypes -------------------------------------------------------------*/
 AppStatus_t appCommandReceived(uint8_t *buf, uint16_t size);
 
-#endif // _TESTER_H_
+#endif /* _TESTER_H_ */

@@ -117,7 +117,7 @@ typedef struct timer_info_tag {
 	FUNC_PTR timer_cb;
 
 	/* Parameter to be passed to the callback function of the expired timer
-	 **/
+	**/
 	void *param_cb;
 
 	/* Next timer which was started or has expired */

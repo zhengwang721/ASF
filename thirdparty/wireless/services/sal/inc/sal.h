@@ -53,7 +53,6 @@
 
 /* === Includes =========================================================== */
 
-
 #include "sal_types.h"
 #include "sal_generic.h"
 #include "stdbool.h"
@@ -103,7 +102,7 @@
 #define AES_MODE_CBC                 (1)
 #endif
 #endif
-#else 
+#else
 
 /** Access parameters for sub-register AES_DIR in register @ref RG_AES_CTRL */
 #define SR_AES_DIR   0x03, 0x08, 3
@@ -111,7 +110,8 @@
 /** Access parameters for sub-register AES_MODE in register @ref RG_AES_CTRL */
 #define SR_AES_MODE   0x03, 0x70, 4
 
-/** Access parameters for sub-register AES_REQUEST in register @ref RG_AES_CTRL */
+/** Access parameters for sub-register AES_REQUEST in register @ref RG_AES_CTRL
+ **/
 #define SR_AES_REQUEST   0x03, 0x80, 7
 
 /** Base address for Transceiver AES address space **/
@@ -254,7 +254,7 @@ void sal_aes_restart(void);
  * @ingroup group_SalApi
  */
 #if (SAL_TYPE == AT86RF2xx) || (SAL_TYPE == ATMEGARF_SAL) || \
-(defined __DOXYGEN__)
+	(defined __DOXYGEN__)
 void _sal_aes_clean_up(void);
 
 /** Route function macro to the corresponding function. */

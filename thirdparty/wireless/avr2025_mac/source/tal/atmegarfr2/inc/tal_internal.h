@@ -2,7 +2,7 @@
  * \file tal_internal.h
  *
  * \brief This header file contains types and variable definition that are used
- *within the TAL only.
+ * within the TAL only.
  *
  * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -72,20 +72,20 @@
  * \defgroup group_tal_rfr2 ATMEGARFR2 Transceiver Abstraction Layer
  * The ATmega256RFR2 is a low-power CMOS 8-bit microcontroller based on the AVR
  * enhanced RISC architecture combined with a high data rate transceiver for the
- *2.4 GHz
+ * 2.4 GHz
  *  ISM band. It is derived from the ATmega1281 microcontroller and the
- *AT86RF231 radio transceiver.
+ * AT86RF231 radio transceiver.
  * The Transceiver Abstraction Layer (TAL) implements the transceiver specific
- *functionalities and
+ * functionalities and
  * provides interfaces to the upper layers (like IEEE 802.15.4 MAC )and  uses
- *the services of PAL.
+ * the services of PAL.
  */
 
 /**
  * \ingroup group_tal_rfr2
  * \defgroup group_tal_state_machine_rfr2  TAL State Machine
  * The different operating states of the Transceiver are controlled by the TAL
- *state machine.
+ * state machine.
  *
  */
 
@@ -114,7 +114,7 @@
  * \ingroup group_tal_rfr2
  * \defgroup group_tal_pib_rfr2   TAL PIB Storage
  * The PIB(Pan Information Base) attributes related to the TAL are Stored and
- *handled  by the TAL PIB storage.
+ * handled  by the TAL PIB storage.
  *
  */
 
@@ -130,7 +130,7 @@
  * \defgroup group_tal_tx_csma_rfr2   TAL CSMA/CA Module
  * Performs channel access mechanism for frame transmission
  * For Detailed information refer  CSMA-CA algorithm section of IEEE Std
- *802.15.4-2006
+ * 802.15.4-2006
  *
  */
 
@@ -480,17 +480,19 @@ void ed_scan_done(void);
  * Set TRX GPIO pins.
  */
 #define TRX_RST_HIGH()                      (TRXPR |= _BV(TRXRST))  /**< Set
-	                                                             *Reset Bit.
+	                                                             * Reset
+	                                                             *Bit.
 	                                                             **/
 #define TRX_RST_LOW()                       (TRXPR &= ~_BV(TRXRST)) /**< Clear
-	                                                             *Reset Bit.
+	                                                             * Reset
+	                                                             *Bit.
 	                                                             **/
 #define TRX_SLP_TR_HIGH()                   (TRXPR |= _BV(SLPTR))   /**< Set
-	                                                             *Sleep/TR
-	                                                             *Bit. */
+	                                                            * Sleep/TR
+	                                                            * Bit. */
 #define TRX_SLP_TR_LOW()                    (TRXPR &= ~_BV(SLPTR))  /**< Clear
-	                                                             *Sleep/TR
-	                                                             *Bit. */
+	                                                             * Sleep/TR
+	                                                             * Bit. */
 
 /* ! @} */
 

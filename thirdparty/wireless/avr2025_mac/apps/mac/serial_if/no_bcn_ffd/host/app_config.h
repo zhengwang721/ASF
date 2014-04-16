@@ -60,10 +60,11 @@
 #define NUMBER_OF_APP_TIMERS        (0)
 
 /** Defines the total number of timers used by the application and the layers
- *below. */
+ * below. */
 #define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS)
 
 #ifdef MAC_SECURITY_ZIP
+
 /**
  * The maximum number of entries supported in the macKeyTable.
  * This value is implementation specific.
@@ -79,6 +80,7 @@
 #else
 #define MAC_ZIP_MAX_DEV_TABLE_ENTRIES           (3)
 #endif  /* (MAC_START_REQUEST_CONFIRM == 1) */
+
 /**
  * The maximum number of entries supported in the macSecurityLevelTable.
  * This value is implementation specific.

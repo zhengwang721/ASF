@@ -49,14 +49,13 @@
 /* === INCLUDES ============================================================ */
 #include "tal.h"
 # include "app_init.h"
-#if (LED_COUNT > 0) 
+#if (LED_COUNT > 0)
 #if !(SAMD ||  SAMR21)
 # include "led.h"
 #endif
 #endif
 #include <stdio.h>
 #include <stdlib.h>
-
 
 /**
  * \addtogroup group_user_interface
@@ -77,9 +76,10 @@
 #define LED_ON_DURAION_MICRO_SEC        (100000)
 
 /* === PROTOTYPES ========================================================== */
-#if (LED_COUNT>0)
+#if (LED_COUNT > 0)
 static void app_switch_off_tx_led_cb(void *parameter);
 static void app_switch_off_rx_led_cb(void *parameter);
+
 #endif
 
 /* === GLOBALS ============================================================= */
@@ -187,7 +187,9 @@ bool app_debounce_button(void)
 		}
 	} else if (!(button_pressed()) &&
 			(key_cnt == COUNT_FOR_VALID_KEY_PRESS)) {           /*
-		                                                             * Button
+		                                                             *
+		                                                             *Button
+		                                                             *
 		                                                             *
 		                                                             *released
 		                                                             **/
@@ -208,25 +210,21 @@ bool app_debounce_button(void)
 bool button_pressed(void)
 {
 #if SAMD || SAMR21
-	if(port_pin_get_input_level(SW0_PIN))
-	{
+	if (port_pin_get_input_level(SW0_PIN)) {
 		return false;
-	}
-	else
-	{
+	} else {
 		return true;
 	}
 #endif
 
 #ifdef SENSOR_TERMINAL_BOARD
-
-  	if (stb_button_read()) {
+	if (stb_button_read()) {
 		return true;
 	} else {
 		return false;
 	}
 
-#elif defined GPIO_PUSH_BUTTON_0	/*Read the current state of the button*/
+#elif defined GPIO_PUSH_BUTTON_0        /*Read the current state of the button*/
 	if (ioport_get_pin_level(GPIO_PUSH_BUTTON_0)) {
 		return false;
 	} else {
@@ -235,7 +233,6 @@ bool button_pressed(void)
 #endif
 
 	return false;
-
 }
 
 /* LED related functions */
@@ -247,8 +244,8 @@ bool button_pressed(void)
  *
  */
 void app_led_event(led_event_t ev)
- {
-#if (LED_COUNT > 0) 
+{
+#if (LED_COUNT > 0)
 	switch (ev) {
 	case LED_EVENT_TX_FRAME:
 		LED_On(TX_LED);
@@ -300,10 +297,11 @@ void app_led_event(led_event_t ev)
 		LED_Off(RX_LED);
 		break;
 	}
-#endif	
+#endif
 }
 
-#if (LED_COUNT > 0) 	
+#if (LED_COUNT > 0)
+
 /**
  * \brief Callback function switching off the TX_LED
  *
@@ -312,7 +310,6 @@ void app_led_event(led_event_t ev)
  */
 static void app_switch_off_tx_led_cb(void *parameter)
 {
-
 	/* switch off the LED */
 	LED_Off(TX_LED);
 	/* keep the compiler happy */
@@ -332,8 +329,8 @@ static void app_switch_off_rx_led_cb(void *parameter)
 
 	/* keep the compiler happy */
 	parameter = parameter;
-
 }
+
 #endif
 /* Print related functions */
 

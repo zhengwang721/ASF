@@ -50,25 +50,25 @@
  * @{
  */
 
-//! Control endpoint size
+/* ! Control endpoint size */
 #define  USB_DEVICE_EP_CTRL_SIZE    8
 
-//! Endpoint number used by HID keyboard interface
+/* ! Endpoint number used by HID keyboard interface */
 #define  UDI_HID_KBD_EP_IN           (1 | USB_EP_DIR_IN)
 
-//! Interface number
+/* ! Interface number */
 #define  UDI_HID_KBD_IFACE_NUMBER    0
 
 /**
  * \name UDD Configuration
  */
-//@{
-//! 1 endpoint used by HID keyboard standard interface
+/* @{ */
+/* ! 1 endpoint used by HID keyboard standard interface */
 #define  USB_DEVICE_MAX_EP             1
-//@}
+/* @} */
 
-//@}
+/* @} */
 
 #include "udi_hid_kbd.h"
 
-#endif // _UDI_HID_KBD_CONF_H_
+#endif /* _UDI_HID_KBD_CONF_H_ */

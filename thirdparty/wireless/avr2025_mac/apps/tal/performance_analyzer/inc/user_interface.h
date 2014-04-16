@@ -53,7 +53,7 @@
  * \ingroup group_perf_analyzer
  * \defgroup group_user_interface  User Interface
  * Handles all User interface related functions such as Button, Print,LED
- *events.
+ * events.
  *  \{
  */
 

@@ -78,7 +78,7 @@
 	NUMBER_OF_NWK_TIMERS)
 
 /** Defines the total number of timers used by the application and the layers
- *below. */
+ * below. */
 #define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS + TOTAL_STACK_TIMERS)
 
 /** Defines the number of additional large buffers used by the application */

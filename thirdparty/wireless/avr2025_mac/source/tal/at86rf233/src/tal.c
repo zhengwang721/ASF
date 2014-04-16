@@ -200,7 +200,7 @@ void tal_task(void)
 			/*
 			 * Note:
 			 * This flag needs to be reset BEFORE the received is
-			 *switched on.
+			 * switched on.
 			 */
 			tal_rx_on_required = false;
 
@@ -227,7 +227,7 @@ void tal_task(void)
 		buffer_t *rx_frame;
 
 		/* Check if there are any pending data in the
-		 *incoming_frame_queue. */
+		 * incoming_frame_queue. */
 		rx_frame = qmm_queue_remove(&tal_incoming_frame_queue, NULL);
 		if (NULL != rx_frame) {
 			process_incoming_frame(rx_frame);
@@ -239,8 +239,9 @@ void tal_task(void)
 	case TAL_IDLE:
 	/* Do nothing, but fall through... */
 	case TAL_TX_AUTO:
+
 		/* Wait until state is changed to TAL_TX_DONE inside tx end ISR
-		 **/
+		**/
 		break;
 
 	case TAL_TX_DONE:
@@ -261,7 +262,6 @@ void tal_task(void)
 	case TAL_ED_DONE:
 		ed_scan_done();
 		break;
-
 #endif /* (MAC_SCAN_ED_REQUEST_CONFIRM == 1) */
 	default:
 		Assert("tal_state is not handled" == 0);
@@ -285,19 +285,20 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 		 * we need to make sure that the global interrupts are enabled
 		 * during wake-up procedure.
 		 * Once the TRX is awake, the original state of the global
-		 *interrupts
+		 * interrupts
 		 * will be restored.
 		 */
 		/* Reset wake-up interrupt flag. */
-		if(CMD_SLEEP == trx_cmd)
-		{
+		if (CMD_SLEEP == trx_cmd) {
 			return TRX_SLEEP;
 		}
+
 		tal_awake_end_flag = false;
 		/* Set callback function for the awake interrupt. */
 		trx_irq_init((FUNC_PTR)trx_irq_awake_handler_cb);
+
 		/* The pending transceiver interrupts on the microcontroller are
-		 *cleared. */
+		 * cleared. */
 		pal_trx_irq_flag_clr();
 		pal_trx_irq_en(); /* Enable transceiver main interrupt. */
 		/* Save current state of global interrupts. */
@@ -336,10 +337,10 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 
 #ifdef ENABLE_DEEP_SLEEP
 	else if (tal_trx_status == TRX_DEEP_SLEEP) {
-		if(CMD_DEEP_SLEEP == trx_cmd)
-		{
+		if (CMD_DEEP_SLEEP == trx_cmd) {
 			return TRX_DEEP_SLEEP;
 		}
+
 		/* Leave trx sleep mode. */
 		TRX_SLP_TR_LOW();
 		/* Check if trx has left deep sleep. */
@@ -349,8 +350,9 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 					RG_TRX_STATUS);
 		} while (trx_state != TRX_OFF);
 		tal_trx_status = TRX_OFF;
+
 		/* Using deep sleep, the transceiver's registers need to be
-		 *restored. */
+		 * restored. */
 		trx_config();
 
 		/*
@@ -378,7 +380,7 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 
 		/*
 		 *  Disable antenna diversity: to reduce the power consumption
-		 *or
+		 * or
 		 *  avoid leakage current of an external RF switch during SLEEP.
 		 */
 		trx_bit_write(SR_ANT_EXT_SW_EN, ANT_EXT_SW_DISABLE);
@@ -421,8 +423,9 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 		PAL_WAIT_1_US();
 		TRX_SLP_TR_HIGH();
 		pal_timer_delay(TRX_OFF_TO_SLEEP_TIME_CLKM_CYCLES);
+
 		/* Transceiver register cannot be read during TRX_SLEEP or
-		 *DEEP_SLEEP. */
+		 * DEEP_SLEEP. */
 		return tal_trx_status;
 
 	case CMD_TRX_OFF:
@@ -538,7 +541,8 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 
 		case TRX_OFF:
 			switch_pll_on(); /* state change from TRX_OFF to
-			                  * RX_AACK_ON can be done directly, too */
+			                  * RX_AACK_ON can be done directly, too
+			                  **/
 			trx_reg_write(RG_TRX_STATE, CMD_RX_AACK_ON);
 			PAL_WAIT_1_US();
 			break;
@@ -570,7 +574,8 @@ tal_trx_status_t set_trx_state(trx_cmd_t trx_cmd)
 
 		case TRX_OFF:
 			switch_pll_on(); /* state change from TRX_OFF to
-			                  * TX_ARET_ON can be done directly, too */
+			                  * TX_ARET_ON can be done directly, too
+			                  **/
 			trx_reg_write(RG_TRX_STATE, CMD_TX_ARET_ON);
 			PAL_WAIT_1_US();
 			break;
@@ -612,7 +617,7 @@ static void switch_pll_on(void)
 	uint32_t current_time;
 
 	/* Check if trx is in TRX_OFF; only from PLL_ON the following procedure
-	 *is applicable */
+	 * is applicable */
 	if (trx_bit_read(SR_TRX_STATUS) != TRX_OFF) {
 		Assert(
 				"Switch PLL_ON failed, because trx is not in TRX_OFF" ==
@@ -715,13 +720,13 @@ static void handle_ftn_pll_calibration(void)
 		/*
 		 * PLL calibration:
 		 * Do nothing, because the PLL is calibrated during a state
-		 *change from
+		 * change from
 		 * state TRX_OFF to any of the PLL_ACTIVE state
 		 * (RX_ON, PLL_ON, TX_ARET_ON, RX_AACK_ON).
 		 *
 		 * So whenever the radio is woken up is goes into TRX_OFF first.
 		 * Later from TRX_OFF we always go via one of the above states
-		 *when the
+		 * when the
 		 * transceiver shall be used actively.
 		 */
 	} else if (TRX_OFF == tal_trx_status) {
@@ -731,12 +736,12 @@ static void handle_ftn_pll_calibration(void)
 		/*
 		 * PLL calibration:
 		 * Do nothing, because the PLL is calibrated during a state
-		 *change from
+		 * change from
 		 * state TRX_OFF to any of the PLL_ACTIVE state
 		 * (RX_ON, PLL_ON, TX_ARET_ON, RX_AACK_ON).
 		 *
 		 * From TRX_OFF we always go via one of the above states when
-		 *the
+		 * the
 		 * transceiver shall be used actively.
 		 */
 	} else {

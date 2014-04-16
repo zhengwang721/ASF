@@ -69,7 +69,6 @@
 #include "mac.h"
 #include "mac_build_config.h"
 
-
 /* === Macros ============================================================== */
 
 /* === Globals ============================================================= */
@@ -184,7 +183,7 @@ void mcps_purge_conf(uint8_t *m)
 }
 
 #endif /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
-        **/
+       **/
 
 #if (MAC_ASSOCIATION_REQUEST_CONFIRM == 1)
 
@@ -227,14 +226,14 @@ void mlme_associate_ind(uint8_t *m)
 	pmsg = (mlme_associate_ind_t *)BMM_BUFFER_POINTER((buffer_t *)m);
 
 #if  SAMD || SAMR21 || SAM4L || SAM4S || SAM4E
-    uint64_t device_addr_temp = 0;
-    memcpy((uint8_t *)&device_addr_temp, (uint8_t *)&pmsg->DeviceAddress, sizeof(device_addr_temp));
+	uint64_t device_addr_temp = 0;
+	memcpy((uint8_t *)&device_addr_temp, (uint8_t *)&pmsg->DeviceAddress,
+			sizeof(device_addr_temp));
 	usr_mlme_associate_ind(device_addr_temp, pmsg->CapabilityInformation);
-#else			
+#else
 	usr_mlme_associate_ind(pmsg->DeviceAddress,
-			            pmsg->CapabilityInformation);			
-#endif			
-			
+			pmsg->CapabilityInformation);
+#endif
 
 	/* Free the buffer */
 	bmm_buffer_free((buffer_t *)m);
@@ -622,5 +621,6 @@ void mlme_gts_ind(uint8_t *m)
 	/* Free the buffer */
 	bmm_buffer_free((buffer_t *)m);
 }
+
 #endif /* GTS_SUPPORT */
 /* EOF */

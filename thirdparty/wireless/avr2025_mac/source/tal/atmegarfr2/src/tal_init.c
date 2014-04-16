@@ -126,7 +126,7 @@ static retval_t internal_tal_reset(bool set_default_pib);
 
 /**
  * \brief Initializes all timers used by the TAL module by assigning id's to
- *each of them
+ * each of them
  */
 static retval_t tal_timer_init(void);
 
@@ -206,7 +206,7 @@ retval_t tal_init(void)
 
 		/*
 		 * The proper seed for function rand() has already been
-		 *generated
+		 * generated
 		 * in function tal_generate_rand_seed().
 		 */
 		uint8_t *ptr_pib = (uint8_t *)&tal_pib.IeeeAddress;
@@ -218,7 +218,7 @@ retval_t tal_init(void)
 			 * Note:
 			 * Even if casting the 16 bit rand value back to 8 bit,
 			 * and running the loop 8 timers (instead of only 4
-			 *times)
+			 * times)
 			 * may look cumbersome, it turns out that the code gets
 			 * smaller using 8-bit here.
 			 * And timing is not an issue at this place...
@@ -244,7 +244,7 @@ retval_t tal_init(void)
 #endif /* (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
 
 	/* Initialize the buffer management module and get a buffer to store
-	 *reveived frames. */
+	 * reveived frames. */
 	bmm_buffer_init();
 	tal_rx_buffer = bmm_buffer_alloc(LARGE_BUFFER_SIZE);
 
@@ -316,7 +316,6 @@ static retval_t trx_init(void)
 	if (ATMEGARFR2_PART_NUM != trx_reg_read(RG_PART_NUM)) {
 		return FAILURE;
 	}
-
 #endif
 	return MAC_SUCCESS;
 }
@@ -351,7 +350,7 @@ static retval_t internal_tal_reset(bool set_default_pib)
 		init_tal_pib(); /* implementation can be found in 'tal_pib.c' */
 	} else {
 		/* nothing to do - the current TAL PIB attribute values are used
-		 **/
+		**/
 	}
 
 	/*
@@ -398,15 +397,15 @@ static void trx_config(void)
 	trx_bit_write(SR_CSMA_SEED_1, (uint8_t)(rand_value >> 8));
 
 	trx_bit_write(SR_AACK_SET_PD, PD_ACK_BIT_SET_ENABLE); /* ACKs for
-	                                                           *data
-	                                                           *requests,
-	                                                           *indicate
-	                                                           *pending data
-	                                                           **/
+	                                                       * data
+	                                                       * requests,
+	                                                       * indicate
+	                                                       * pending data
+	                                                       **/
 	trx_bit_write(SR_RX_SAFE_MODE, RX_SAFE_MODE_ENABLE); /* Enable
-	                                                          *buffer
-	                                                          *protection
-	                                                          *mode */
+	                                                      * buffer
+	                                                      * protection
+	                                                      * mode */
 	trx_reg_write(RG_IRQ_MASK, TRX_IRQ_DEFAULT);
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)
 	/* The TX start timestamp is taken by the respective PAL layer */
@@ -488,7 +487,7 @@ static retval_t trx_reset(void)
 	} while (trx_status != TRX_OFF);
 
 	tal_trx_status = TRX_OFF;
-	
+
 	return MAC_SUCCESS;
 }
 
@@ -506,7 +505,7 @@ retval_t tal_reset(bool set_default_pib)
 	/*
 	 * Do the reset stuff.
 	 * Set the default PIBs depending on the given parameter
-	 *set_default_pib.
+	 * set_default_pib.
 	 * Do NOT generate random seed again.
 	 */
 	if (internal_tal_reset(set_default_pib) != MAC_SUCCESS) {
@@ -544,7 +543,7 @@ retval_t tal_reset(bool set_default_pib)
 
 	/*
 	 * To make sure that the CSMA seed is properly set within the
-	 *transceiver,
+	 * transceiver,
 	 * put the trx to sleep briefly and wake it up again.
 	 */
 	tal_trx_sleep(SLEEP_MODE_1);
@@ -557,7 +556,7 @@ retval_t tal_reset(bool set_default_pib)
 		retval_t timer_status;
 
 		/* Calibration timer has already been stopped within this
-		 *function. */
+		 * function. */
 
 		/* Start periodic calibration timer.*/
 		timer_status = pal_timer_start(TAL_CALIBRATION,
@@ -624,7 +623,7 @@ void tal_generate_rand_seed(void)
 
 	/*
 	 * The 16-bit random value is generated from various 2-bit random
-	 *values.
+	 * values.
 	 */
 	for (uint8_t i = 0; i < 8; i++) {
 		/* Now we can safely read the 2-bit random number. */
@@ -672,7 +671,6 @@ static retval_t tal_timer_init(void)
 	if (MAC_SUCCESS != pal_timer_get_id(&TAL_CSMA_BEACON_LOSS_TIMER)) {
 		return FAILURE;
 	}
-
 #endif  /* ENABLE_FTN_PLL_CALIBRATION */
 #else /* No BEACON_SUPPORT */
 #ifdef ENABLE_FTN_PLL_CALIBRATION

@@ -40,12 +40,12 @@
  *
  */
 
- /**
-* \mainpage
-* \section preface Preface
-* This is the reference manual for the LWMesh Tester Application
-* //TODO
-*/
+/**
+ * \mainpage
+ * \section preface Preface
+ * This is the reference manual for the LWMesh Tester Application
+ * //TODO
+ */
 
 /*- Includes ---------------------------------------------------------------*/
 #include "config.h"
@@ -66,27 +66,25 @@
 #include "sio2host.h"
 # include "asf.h"
 
-
 /*- Types ------------------------------------------------------------------*/
-typedef enum AppState_t
-{
-  APP_STATE_INITIAL,
-  APP_STATE_IDLE,
+typedef enum AppState_t {
+	APP_STATE_INITIAL,
+	APP_STATE_IDLE,
 } AppState_t;
 
-typedef enum AppUartState_t
-{
-  APP_UART_STATE_IDLE,
-  APP_UART_STATE_READ_SIZE_1,
-  APP_UART_STATE_READ_SIZE_2,
-  APP_UART_STATE_READ_DATA,
-  APP_UART_STATE_READ_CRC_1,
-  APP_UART_STATE_READ_CRC_2,
+typedef enum AppUartState_t {
+	APP_UART_STATE_IDLE,
+	APP_UART_STATE_READ_SIZE_1,
+	APP_UART_STATE_READ_SIZE_2,
+	APP_UART_STATE_READ_DATA,
+	APP_UART_STATE_READ_CRC_1,
+	APP_UART_STATE_READ_CRC_2,
 } AppUartState_t;
 
 /*- Prototypes -------------------------------------------------------------*/
 
 static void Serial_Handler(void);
+
 /*- Variables --------------------------------------------------------------*/
 static AppState_t appState = APP_STATE_INITIAL;
 static AppUartState_t appUartState = APP_UART_STATE_IDLE;
@@ -104,157 +102,157 @@ static uint8_t rx_data[APP_RX_BUF_SIZE];
 *****************************************************************************/
 static uint16_t appCrcCcittUpdate(uint16_t crc, uint8_t byte)
 {
-  byte ^= (byte ^ (crc & 0xff)) << 4;
-  crc = (((uint16_t)byte << 8) | ((crc >> 8) & 0xff)) ^
-      (uint8_t)(byte >> 4) ^ ((uint16_t)byte << 3);
-  return crc;
+	byte ^= (byte ^ (crc & 0xff)) << 4;
+	crc = (((uint16_t)byte << 8) | ((crc >> 8) & 0xff)) ^
+			(uint8_t)(byte >> 4) ^ ((uint16_t)byte << 3);
+	return crc;
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 void appUartSendCommand(uint8_t *buf, uint16_t size)
 {
-  uint16_t crc = 0xffff;
+	uint16_t crc = 0xffff;
 
-  sio2host_putchar(APP_UART_START_SYMBOL);
-  sio2host_putchar(size & 0xff);
-  sio2host_putchar(size >> 8);
+	sio2host_putchar(APP_UART_START_SYMBOL);
+	sio2host_putchar(size & 0xff);
+	sio2host_putchar(size >> 8);
 
-  for (uint16_t i = 0; i < size; i++)
-  {
-    sio2host_putchar(buf[i]);
-    crc = appCrcCcittUpdate(crc, buf[i]);
-  }
+	for (uint16_t i = 0; i < size; i++) {
+		sio2host_putchar(buf[i]);
+		crc = appCrcCcittUpdate(crc, buf[i]);
+	}
 
-  sio2host_putchar(crc & 0xff);
-  sio2host_putchar(crc >> 8);
+	sio2host_putchar(crc & 0xff);
+	sio2host_putchar(crc >> 8);
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 static void appUartSendAck(AppStatus_t status)
 {
-  AppCommandAck_t ack;
+	AppCommandAck_t ack;
 
-  ack.id = APP_COMMAND_ACK;
-  ack.status = status;
-  ack.time = appTimeGet();
+	ack.id = APP_COMMAND_ACK;
+	ack.status = status;
+	ack.time = appTimeGet();
 
-  appUartSendCommand((uint8_t *)&ack, sizeof(ack));
+	appUartSendCommand((uint8_t *)&ack, sizeof(ack));
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 static void appUartStateMachine(uint8_t byte)
 {
-  switch (appUartState)
-  {
-    case APP_UART_STATE_IDLE:
-    {
-      if (APP_UART_START_SYMBOL == byte)
-        appUartState = APP_UART_STATE_READ_SIZE_1;
-    } break;
+	switch (appUartState) {
+	case APP_UART_STATE_IDLE:
+	{
+		if (APP_UART_START_SYMBOL == byte) {
+			appUartState = APP_UART_STATE_READ_SIZE_1;
+		}
+	}
+	break;
 
-    case APP_UART_STATE_READ_SIZE_1:
-    {
-      appUartSize = byte;
-      appUartState = APP_UART_STATE_READ_SIZE_2;
-    } break;
+	case APP_UART_STATE_READ_SIZE_1:
+	{
+		appUartSize = byte;
+		appUartState = APP_UART_STATE_READ_SIZE_2;
+	}
+	break;
 
-    case APP_UART_STATE_READ_SIZE_2:
-    {
-      appUartSize |= (uint16_t)byte << 8;
-      appUartBufferPtr = 0;
-      appUartBufferCrc = 0xffff;
-      appUartState = APP_UART_STATE_READ_DATA;
-    } break;
+	case APP_UART_STATE_READ_SIZE_2:
+	{
+		appUartSize |= (uint16_t)byte << 8;
+		appUartBufferPtr = 0;
+		appUartBufferCrc = 0xffff;
+		appUartState = APP_UART_STATE_READ_DATA;
+	}
+	break;
 
-    case APP_UART_STATE_READ_DATA:
-    {
-      appUartBuffer[appUartBufferPtr++] = byte;
-      appUartBufferCrc = appCrcCcittUpdate(appUartBufferCrc, byte);
+	case APP_UART_STATE_READ_DATA:
+	{
+		appUartBuffer[appUartBufferPtr++] = byte;
+		appUartBufferCrc = appCrcCcittUpdate(appUartBufferCrc, byte);
 
-      if (appUartBufferPtr == appUartSize)
-        appUartState = APP_UART_STATE_READ_CRC_1;
-    } break;
+		if (appUartBufferPtr == appUartSize) {
+			appUartState = APP_UART_STATE_READ_CRC_1;
+		}
+	}
+	break;
 
-    case APP_UART_STATE_READ_CRC_1:
-    {
-      appUartCrc = byte;
-      appUartState = APP_UART_STATE_READ_CRC_2;
-    } break;
+	case APP_UART_STATE_READ_CRC_1:
+	{
+		appUartCrc = byte;
+		appUartState = APP_UART_STATE_READ_CRC_2;
+	}
+	break;
 
-    case APP_UART_STATE_READ_CRC_2:
-    {
-      appUartCrc |= (uint16_t)byte << 8;
+	case APP_UART_STATE_READ_CRC_2:
+	{
+		appUartCrc |= (uint16_t)byte << 8;
 
-      if (appUartCrc == appUartBufferCrc)
-        appUartSendAck(appCommandReceived(appUartBuffer, appUartSize));
-      else
-        appUartSendAck(APP_STATUS_INVALID_CRC);
+		if (appUartCrc == appUartBufferCrc) {
+			appUartSendAck(appCommandReceived(appUartBuffer,
+					appUartSize));
+		} else {
+			appUartSendAck(APP_STATUS_INVALID_CRC);
+		}
 
-      appUartState = APP_UART_STATE_IDLE;
-    } break;
-  }
+		appUartState = APP_UART_STATE_IDLE;
+	}
+	break;
+	}
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 void Serial_Handler(void)
 {
-	
-  sio_rx_length = sio2host_rx(rx_data,APP_RX_BUF_SIZE);
+	sio_rx_length = sio2host_rx(rx_data, APP_RX_BUF_SIZE);
 
-  if(sio_rx_length)
-  {
-	  for (uint16_t i = 0; i < sio_rx_length; i++)
-	  {
-		appUartStateMachine(rx_data[i]);
-	  }
-
-  }
-
+	if (sio_rx_length) {
+		for (uint16_t i = 0; i < sio_rx_length; i++) {
+			appUartStateMachine(rx_data[i]);
+		}
+	}
 }
-
-
 
 /*************************************************************************//**
 *****************************************************************************/
 static void APP_TaskHandler(void)
 {
-  switch (appState)
-  {
-    case APP_STATE_INITIAL:
-    {
-      appCommandsInit();
+	switch (appState) {
+	case APP_STATE_INITIAL:
+	{
+		appCommandsInit();
     #ifdef NWK_ENABLE_ADDRESS_FILTER
-      appFilterInit();
+		appFilterInit();
     #endif
     #ifdef APP_ENABLE_EVENTS_BUFFER
-      appEventsInit();
+		appEventsInit();
     #endif
-      appState = APP_STATE_IDLE;
-    } break;
+		appState = APP_STATE_IDLE;
+	}
+	break;
 
-    case APP_STATE_IDLE:
-    {
-    } break;
-  }
-  
+	case APP_STATE_IDLE:
+	{
+	}
+	break;
+	}
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 int main(void)
 {
-  SYS_Init();
-  appTimeInit();
-  sio2host_init();
-  LED_On(LED0);
-  while (1)
-  {
-    SYS_TaskHandler();
-    APP_TaskHandler();
-	Serial_Handler();
-  }
+	SYS_Init();
+	appTimeInit();
+	sio2host_init();
+	LED_On(LED0);
+	while (1) {
+		SYS_TaskHandler();
+		APP_TaskHandler();
+		Serial_Handler();
+	}
 }

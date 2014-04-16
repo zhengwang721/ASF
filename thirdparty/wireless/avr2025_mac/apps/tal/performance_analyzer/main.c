@@ -49,8 +49,8 @@
 
  #include "asf.h"
  # include "performance_main.h"
- int main(void)
- {
+int main(void)
+{
 	irq_initialize_vectors();
 #if SAMD || SAMR21
 	system_init();
@@ -62,12 +62,8 @@
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-	board_init();    
-#endif	
-	
+	board_init();
+#endif
+
 	performance_analyzer_main();
- }
- 
- 
- 
- 
+}

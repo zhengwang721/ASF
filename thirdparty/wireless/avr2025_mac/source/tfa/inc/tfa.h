@@ -58,7 +58,7 @@
  * The Atmel transceivers provide a variety of additional hardware features
  * features that are not reflected in the IEEE 802.15.4 standard.
  * These features are for eg .Reading battery voltage, Continuous wave
- *transmission etc .
+ * transmission etc .
  * @{
  */
 

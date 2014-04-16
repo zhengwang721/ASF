@@ -120,12 +120,12 @@
 #endif
 
 #define MAX_TX_PWR_CHINA            (8)     /* MAX TX power limit for
-	                                     *250,500kbps data rates */
+	                                     * 250,500kbps data rates */
 #define MAX_TX_PWR_CHINA_1000       (5)     /* MAX TX power limit for 1000kbps
-	                                     *data rates */
+	                                     * data rates */
 
 #endif  /* #ifndef CUSTOM_PWR_TABLE */
-      
+
 /* === PROTOTYPES ========================================================== */
 
 #ifdef __cplusplus

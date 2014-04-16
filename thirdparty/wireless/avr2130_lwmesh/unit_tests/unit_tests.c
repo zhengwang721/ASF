@@ -64,20 +64,20 @@
 static void unitDataConf(NWK_DataReq_t *req);
 static void unitDataReq(void);
 static void NetworkStatusTimerHandler(SYS_Timer_t *timer);
-static SYS_Timer_t NetworkStatusTimer;
-static bool result = false,timeout = false;
-/**
 
+static SYS_Timer_t NetworkStatusTimer;
+static bool result = false, timeout = false;
+
+/**
+ *
  * Initializes the clock system, board and USB.
  * Then runs the wireless task continuously.
  */
 int main(void)
 {
 	SYS_Init();
-    stdio_usb_init();
+	stdio_usb_init();
 	while (1) {
-		
-		
 	}
 }
 
@@ -93,29 +93,26 @@ int main(void)
 static void run_lwmesh_nwk_darareq_test(const struct test_case *test)
 {
 	unitDataReq();
-	while(1)
-	{
-	if(result)
-	{
-		break;
-	}
-	if(timeout)
-	{
-		test_assert_true(test, 0,
-		"AVR2130_LWMesh - NWK Data request failed");
-	}
-	SYS_TaskHandler();
-	
-	}	
+	while (1) {
+		if (result) {
+			break;
+		}
 
+		if (timeout) {
+			test_assert_true(test, 0,
+					"AVR2130_LWMesh - NWK Data request failed");
+		}
+
+		SYS_TaskHandler();
+	}
 }
 
 void main_cdc_set_dtr(bool b_enable)
 {
 	if (b_enable) {
-		DEFINE_TEST_CASE(lwmesh_nwk_darareq_test, NULL, run_lwmesh_nwk_darareq_test,
+		DEFINE_TEST_CASE(lwmesh_nwk_darareq_test, NULL,
+				run_lwmesh_nwk_darareq_test,
 				NULL, "AVR2130_LWMesh - NWK Data Request");
-
 
 		/* Put test case addresses in an array. */
 		DEFINE_TEST_ARRAY(lwmesh_tests) = {
@@ -134,10 +131,8 @@ void main_cdc_set_dtr(bool b_enable)
 
 static void unitDataConf(NWK_DataReq_t *req)
 {
-
- SYS_TimerStop(&NetworkStatusTimer);
- result = true;
-
+	SYS_TimerStop(&NetworkStatusTimer);
+	result = true;
 }
 
 static void unitDataReq(void)
@@ -155,7 +150,6 @@ static void unitDataReq(void)
 	NetworkStatusTimer.mode = SYS_TIMER_PERIODIC_MODE;
 	NetworkStatusTimer.handler = NetworkStatusTimerHandler;
 	SYS_TimerStart(&NetworkStatusTimer);
-
 }
 
 static void NetworkStatusTimerHandler(SYS_Timer_t *timer)
@@ -163,4 +157,3 @@ static void NetworkStatusTimerHandler(SYS_Timer_t *timer)
 	timeout = true;
 	(void)timer;
 }
-

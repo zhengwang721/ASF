@@ -48,6 +48,4 @@
 
 #define BOARD_NAME          "REB231ED-EK"
 
-
-
 #endif /* CONF_BOARD_H_INCLUDED */

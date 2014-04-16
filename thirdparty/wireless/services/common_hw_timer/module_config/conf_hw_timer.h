@@ -78,8 +78,8 @@
 #define TIMER     (&TCCR1A)
 #endif /* MEGA_RF */
 /* ! @} */
-//! \name Configuration for SAMD20
-//! @{
+/* ! \name Configuration for SAMD20 */
+/* ! @{ */
 #if (SAMD20)
 #define TIMER     (TC0)
 #endif /* SAMD */
@@ -88,6 +88,6 @@
 #define TIMER                (TC3)
 #define TIMER_CHANNEL_ID     0
 #endif
-//! @}
+/* ! @} */
 
 #endif /* CONF_HW_TIMER_H_INCLUDED */

@@ -75,6 +75,6 @@ void usr_mcps_purge_conf(uint8_t msduHandle, uint8_t status)
 }
 
 #endif /* ((MAC_PURGE_REQUEST_CONFIRM == 1) && (MAC_INDIRECT_DATA_BASIC == 1))
-        **/
+       **/
 
 /* EOF */
