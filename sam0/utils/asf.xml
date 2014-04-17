@@ -65,7 +65,7 @@
 		</module>
 
 		<!-- SAMD10 //-->
-		<module type="driver" id="sam0.utils#2" caption="SAM D10 compiler driver">
+		<module type="driver" id="sam0.utils#3" caption="SAM D10 compiler driver">
 			<info type="description" value="summary">
 			Compiler abstraction layer and code utilities for SAMD10 devices. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
 			</info>
@@ -80,7 +80,7 @@
 		</module>
 
 		<!-- SAMD11 //-->
-		<module type="driver" id="sam0.utils#3" caption="SAM D11 compiler driver">
+		<module type="driver" id="sam0.utils#4" caption="SAM D11 compiler driver">
 			<info type="description" value="summary">
 			Compiler abstraction layer and code utilities for SAMD11 devices. This module provides various abstraction layers and utilities to make code compatible between different compilers. It also contains utilities typically used while pre-processing code.
 			</info>

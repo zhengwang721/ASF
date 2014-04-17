@@ -256,14 +256,14 @@ extern "C" {
  */
 
 #include <compiler.h>
-#include <gclk.h>
+#include "gclk.h"
 
 /**
  * \name Driver feature definition
  * Define system clock features set according to different device family.
  * @{
  */
-#if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10)|| defined(__DOXYGEN__)
+#if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || defined(__DOXYGEN__)
 /** Digital Phase Locked Loop (DPLL) feature support */
 #  define FEATURE_SYSTEM_CLOCK_DPLL
 #endif

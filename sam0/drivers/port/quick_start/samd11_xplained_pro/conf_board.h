@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21/D10/D11 GPIO Port Driver Quick Start
+ * \brief SAM D11 Xplained Pro board configuration.
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,54 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-void configure_port_pins(void);
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [setup]
-void configure_port_pins(void)
-{
-//! [setup_1]
-	struct port_config config_port_pin;
-//! [setup_1]
-//! [setup_2]
-	port_get_config_defaults(&config_port_pin);
-//! [setup_2]
-
-//! [setup_3]
-	config_port_pin.direction  = PORT_PIN_DIR_INPUT;
-	config_port_pin.input_pull = PORT_PIN_PULL_UP;
-//! [setup_3]
-//! [setup_4]
-	port_pin_set_config(BUTTON_0_PIN, &config_port_pin);
-//! [setup_4]
-
-//! [setup_5]
-	config_port_pin.direction = PORT_PIN_DIR_OUTPUT;
-//! [setup_5]
-//! [setup_6]
-	port_pin_set_config(LED_0_PIN, &config_port_pin);
-//! [setup_6]
-}
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-	//! [setup_init]
-	configure_port_pins();
-	//! [setup_init]
-
-	//! [main]
-	while (true) {
-		//! [main_1]
-		bool pin_state = port_pin_get_input_level(BUTTON_0_PIN);
-		//! [main_1]
-
-		//! [main_2]
-		port_pin_set_output_level(LED_0_PIN, !pin_state);
-		//! [main_2]
-	}
-	//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */
