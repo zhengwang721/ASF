@@ -1,11 +1,13 @@
 /**
- * \file commands.h
+ * \file conf_sio2host.h
  *
- * \brief WSNDemo command handler interface
+ * \brief Serial Input & Output configuration
  *
- * Copyright (C) 2014, Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,21 +38,18 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
 
-#ifndef _COMMANDS_H_
-#define _COMMANDS_H_
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
+ #define SERIAL_RX_BUF_SIZE_HOST    156
 
-/*- Types ------------------------------------------------------------------*/
-enum {
-	APP_COMMAND_ID_NETWORK_INFO = 0x01,
-	APP_COMMAND_ID_IDENTIFY     = 0x10,
-};
+#define USART_HOST                 EDBG_CDC_MODULE
 
-/*- Prototypes -------------------------------------------------------------*/
-void APP_CommandsInit(void);
-bool APP_CommandsPending(uint16_t addr);
-void APP_CommandsByteReceived(uint8_t byte);
+/** Baudrate setting */
+#define USART_HOST_BAUDRATE        9600
 
-#endif /* _COMMANDS_H_ */
+#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(0, USART_HOST_ISR_VECT); \
+	USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC; \
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM0);
+#endif /* CONF_SIO2HOST_H_INCLUDED */

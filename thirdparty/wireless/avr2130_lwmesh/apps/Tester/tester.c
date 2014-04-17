@@ -246,9 +246,18 @@ static void APP_TaskHandler(void)
 *****************************************************************************/
 int main(void)
 {
+	irq_initialize_vectors();
+	#if SAMD || SAMR21
+	system_init();
+	delay_init();
+	#else
+	sysclk_init();
+	board_init();
+	#endif
 	SYS_Init();
 	appTimeInit();
 	sio2host_init();
+	cpu_irq_enable();
 	LED_On(LED0);
 	while (1) {
 		SYS_TaskHandler();

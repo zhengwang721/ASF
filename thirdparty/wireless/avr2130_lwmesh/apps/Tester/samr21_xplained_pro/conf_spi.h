@@ -1,11 +1,13 @@
 /**
- * \file commands.h
+ * \file
  *
- * \brief WSNDemo command handler interface
+ * \brief SAM D2x SPI configuration
  *
- * Copyright (C) 2014, Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -39,18 +41,11 @@
  *
  */
 
-#ifndef _COMMANDS_H_
-#define _COMMANDS_H_
+#ifndef CONF_SPI_H_INCLUDED
+#  define CONF_SPI_H_INCLUDED
 
-/*- Types ------------------------------------------------------------------*/
-enum {
-	APP_COMMAND_ID_NETWORK_INFO = 0x01,
-	APP_COMMAND_ID_IDENTIFY     = 0x10,
-};
+#  define CONF_SPI_MASTER_ENABLE     true
+#  define CONF_SPI_SLAVE_ENABLE      false
+#  define CONF_SPI_TIMEOUT           10000
 
-/*- Prototypes -------------------------------------------------------------*/
-void APP_CommandsInit(void);
-bool APP_CommandsPending(uint16_t addr);
-void APP_CommandsByteReceived(uint8_t byte);
-
-#endif /* _COMMANDS_H_ */
+#endif /* CONF_SPI_H_INCLUDED */

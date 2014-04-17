@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="LWMesh-Peer2Peer Application SAMR21 Xplained Pro" id="thirdparty.wireless.avr2130_lwmesh.apps.peer2peer.samr21_xplained_pro" force-caption="true" force-description="true">
+	<project caption="LWMesh-EDDemo Application:SAMR21  Xplained Pro" id="thirdparty.wireless.avr2130_lwmesh.apps.eddemo.samr21_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		The LWMesh Peer2Peer application performs a Wireless UART functionality using two nodes with preconfigured addresses.
+		The LWMesh EDDemo application performs periodic Energy measurement on all channels and prints them to the terminal.Only one device is required for this app and no data communication is performed.
 		</info>		
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
@@ -17,10 +17,9 @@
 		<require idref="board.samr21_xplained_pro"/>
 		<config name="config.thirdparty.wireless.avr2130_lwmesh.source.phy.ext" value="at86rf233"/>		
 
-		<require idref="thirdparty.wireless.avr2130_lwmesh.apps.peer2peer"/>
+		<require idref="thirdparty.wireless.avr2130_lwmesh.apps.eddemo"/>
 
 		<config name="config.compiler.armgcc.optimization" value="high" />
-
 		
 		<generator value="armgcc" />
 		<generator value="as5_arm" />

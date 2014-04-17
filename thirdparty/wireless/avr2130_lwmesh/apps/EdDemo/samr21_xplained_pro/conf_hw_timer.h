@@ -1,11 +1,13 @@
 /**
- * \file commands.h
+ * \file *********************************************************************
  *
- * \brief WSNDemo command handler interface
+ * \brief USART Serial configuration
  *
- * Copyright (C) 2014, Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -36,21 +38,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
 
-#ifndef _COMMANDS_H_
-#define _COMMANDS_H_
+#ifndef CONF_HW_TIMER_H_INCLUDED
+#define CONF_HW_TIMER_H_INCLUDED
 
-/*- Types ------------------------------------------------------------------*/
-enum {
-	APP_COMMAND_ID_NETWORK_INFO = 0x01,
-	APP_COMMAND_ID_IDENTIFY     = 0x10,
-};
+/*! \name Configuration
+ */
+/* ! @{ */
+#define TIMER                (TC3)
+#define TIMER_CHANNEL_ID     0
+/* ! @} */
 
-/*- Prototypes -------------------------------------------------------------*/
-void APP_CommandsInit(void);
-bool APP_CommandsPending(uint16_t addr);
-void APP_CommandsByteReceived(uint8_t byte);
-
-#endif /* _COMMANDS_H_ */
+#endif /* CONF_HW_TIMER_H_INCLUDED */
