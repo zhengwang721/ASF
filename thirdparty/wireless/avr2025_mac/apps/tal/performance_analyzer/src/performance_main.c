@@ -434,15 +434,15 @@ volatile node_ib_t node_info;
  */
 void performance_analyzer_main(void)
 {
-
 	sio2host_init();
+
 	/*
 	 * Power ON - so set the board to INIT state. All hardware, PAL, TAL and
 	 * stack level initialization must be done using this function
 	 */
 	set_main_state(INIT, NULL);
 
-	cpu_irq_enable();    
+	cpu_irq_enable();
 
 	/* INIT was a success - so change to WAIT_FOR_EVENT state */
 	set_main_state(WAIT_FOR_EVENT, NULL);
@@ -454,7 +454,6 @@ void performance_analyzer_main(void)
 		tal_task(); /* Handle transceiver specific tasks */
 		app_task(); /* Application task */
 		serial_data_handler();
-        
 	}
 }
 
@@ -683,16 +682,16 @@ retval_t transmit_frame(uint8_t dst_addr_mode,
 	/* Destination address */
 	if (FCF_SHORT_ADDR == dst_addr_mode) {
 		frame_ptr -= SHORT_ADDR_LEN;
-		//convert_16_bit_to_byte_array(*((uint16_t *)dst_addr),
-		//		frame_ptr);
-	memcpy(frame_ptr, (uint8_t *)dst_addr, sizeof(uint16_t));
+		/* convert_16_bit_to_byte_array(*((uint16_t *)dst_addr), */
+		/*		frame_ptr); */
+		memcpy(frame_ptr, (uint8_t *)dst_addr, sizeof(uint16_t));
 		fcf |= FCF_SET_DEST_ADDR_MODE(FCF_SHORT_ADDR);
 	} else {
 		frame_ptr -= EXT_ADDR_LEN;
 		frame_length += PL_POS_DST_ADDR_START;
 
-		//convert_64_bit_to_byte_array(*((uint64_t *)dst_addr),
-		//		frame_ptr);
+		/* convert_64_bit_to_byte_array(*((uint64_t *)dst_addr), */
+		/*		frame_ptr); */
 		memcpy(frame_ptr, (uint8_t *)dst_addr, sizeof(uint64_t));
 		fcf |= FCF_SET_DEST_ADDR_MODE(FCF_LONG_ADDR);
 	}
@@ -736,9 +735,9 @@ void app_alert()
 		#if LED_COUNT > 0
 		#ifdef LED0_ACTIVE_LEVEL
 		LED_Toggle(LED0);
-		#else		
+		#else
 		LED_Toggle(LED0_GPIO);
-		#endif		
+		#endif
 		#endif
 
 		#if LED_COUNT > 1

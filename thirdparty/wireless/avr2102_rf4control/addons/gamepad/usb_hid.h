@@ -44,8 +44,7 @@
 #ifndef _USB_HID_H_
 #define _USB_HID_H_
 
-
-//! @}
+/* ! @} */
 #define  HID_MPLAYER_OPEN          (0x0008)
 #define  HID_MPLAYER_PLAY          (0x0080)
 #define  HID_MPLAYER_PAUSE         (0x0100)
@@ -56,6 +55,6 @@
 #define  HID_VOLUME_DOWN           (0x0004)
 #define  HID_MUTE                  (0x0001)
 #define  HID_REPEAT                (0x0200)
-//! @}
+/* ! @} */
 
-#endif // _USB_PROTOCOL_HID_H_
+#endif /* _USB_PROTOCOL_HID_H_ */

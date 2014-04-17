@@ -45,10 +45,9 @@
 #define _COMMANDS_H_
 
 /*- Types ------------------------------------------------------------------*/
-enum
-{
-  APP_COMMAND_ID_NETWORK_INFO = 0x01,
-  APP_COMMAND_ID_IDENTIFY     = 0x10,
+enum {
+	APP_COMMAND_ID_NETWORK_INFO = 0x01,
+	APP_COMMAND_ID_IDENTIFY     = 0x10,
 };
 
 /*- Prototypes -------------------------------------------------------------*/
@@ -56,4 +55,4 @@ void APP_CommandsInit(void);
 bool APP_CommandsPending(uint16_t addr);
 void APP_CommandsByteReceived(uint8_t byte);
 
-#endif // _COMMANDS_H_
+#endif /* _COMMANDS_H_ */

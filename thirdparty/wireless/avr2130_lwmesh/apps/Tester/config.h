@@ -50,7 +50,6 @@
 
 #define APP_RX_BUF_SIZE 50
 
-
 #include "config_gen.h"
 
-#endif // _CONFIG_H_
+#endif /* _CONFIG_H_ */

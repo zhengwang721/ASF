@@ -88,28 +88,28 @@
 
 static inline void wakeup_handle(void)
 {
- /* Handle the wakeup sources, If the MCU is wakeup 
-  * from different sleep modes, the clock sources and 
-  * clock configuration needs to be modified on some MCU's
-  */  
-  return;
+	/* Handle the wakeup sources, If the MCU is wakeup
+	 * from different sleep modes, the clock sources and
+	 * clock configuration needs to be modified on some MCU's
+	 */
+	return;
 }
 
 static inline void config_wakeup_source(void)
 {
-  /* Configure the Wakeup source */
-  /* Set Interrupt CallBack Function **/
-    ext_int_set_interrupt_callback(BUTTON_INTERRUPT_SOURCE, wakeup_handle); 
+	/* Configure the Wakeup source */
+	/* Set Interrupt CallBack Function **/
+	ext_int_set_interrupt_callback(BUTTON_INTERRUPT_SOURCE, wakeup_handle);
 }
 
 static inline void enable_wakeup_source(void)
 {
- /* Enable the wakeup sources, which is configured already */
- 
- /* Enable the Ext Int */
+	/* Enable the wakeup sources, which is configured already */
+
+	/* Enable the Ext Int */
 	ext_int_init(BUTTON_INTERRUPT_SOURCE, BUTTON_INTERRUPT_MODE);
-	
- /* Enable Global interrupt */
+
+	/* Enable Global interrupt */
 	cpu_irq_enable();
 }
 

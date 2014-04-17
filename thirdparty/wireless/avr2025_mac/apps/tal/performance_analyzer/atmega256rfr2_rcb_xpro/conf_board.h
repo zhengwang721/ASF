@@ -44,5 +44,4 @@
 #define CONF_BOARD_H
 #define ZIGBIT_EXT
 
-
 #endif /* CONF_BOARD_H */

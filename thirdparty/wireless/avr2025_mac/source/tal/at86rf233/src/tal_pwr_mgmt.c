@@ -81,7 +81,7 @@
  * This function sets the transceiver to sleep state.
  *
  * \param mode Defines sleep mode of transceiver: SLEEP_MODE_1 or
- *DEEP_SLEEP_MODE)
+ * DEEP_SLEEP_MODE)
  *
  * \return   TAL_BUSY - The transceiver is busy in TX or RX
  *           MAC_SUCCESS - The transceiver is put to sleep
@@ -145,7 +145,6 @@ retval_t tal_trx_sleep(sleep_mode_t mode)
 	} else { /* deep sleep */
 		trx_status = set_trx_state(CMD_DEEP_SLEEP);
 	}
-
 #endif
 
 #ifdef ENABLE_FTN_PLL_CALIBRATION

@@ -44,10 +44,10 @@
 #ifndef _USB_HID_H_
 #define _USB_HID_H_
 
-//! @}
-//! \name HID KEYS values for Multimedia
-//! @{
-//! @}
+/* ! @} */
+/* ! \name HID KEYS values for Multimedia */
+/* ! @{ */
+/* ! @} */
 #define  HID_MPLAYER_OPEN          (0x0008)
 #define  HID_MPLAYER_PLAY          (0x0080)
 #define  HID_MPLAYER_PAUSE         (0x0100)
@@ -58,9 +58,9 @@
 #define  HID_VOLUME_DOWN           (0x0004)
 #define  HID_MUTE                  (0x0001)
 #define  HID_REPEAT                (0x0200)
-//! @}
-//! \name HID KEYS values
-//! @{
+/* ! @} */
+/* ! \name HID KEYS values */
+/* ! @{ */
 #define  HID_A                0x04
 #define  HID_B                0x05
 #define  HID_C                0x06
@@ -104,12 +104,12 @@
 #define  HID_SPACEBAR         44
 #define  HID_UNDERSCORE       45
 #define  HID_PLUS             46
-#define  HID_OPEN_BRACKET     47 // {
-#define  HID_CLOSE_BRACKET    48 // }
+#define  HID_OPEN_BRACKET     47 /* { */
+#define  HID_CLOSE_BRACKET    48 /* } */
 #define  HID_BACKSLASH        49
-#define  HID_ASH              50 // # ~
-#define  HID_COLON            51 // ; :
-#define  HID_QUOTE            52 // ' "
+#define  HID_ASH              50 /* # ~ */
+#define  HID_COLON            51 /* ; : */
+#define  HID_QUOTE            52 /* ' " */
 #define  HID_TILDE            53
 #define  HID_COMMA            54
 #define  HID_DOT              55
@@ -158,8 +158,8 @@
 #define  HID_KEYPAD_9         97
 #define  HID_KEYPAD_0         98
 
-   //! \name HID modifier values
-   //! @{
+/* ! \name HID modifier values */
+/* ! @{ */
 #define  HID_MODIFIER_NONE          0x00
 #define  HID_MODIFIER_LEFT_CTRL     0x01
 #define  HID_MODIFIER_LEFT_SHIFT    0x02
@@ -169,17 +169,16 @@
 #define  HID_MODIFIER_RIGHT_SHIFT   0x20
 #define  HID_MODIFIER_RIGHT_ALT     0x40
 #define  HID_MODIFIER_RIGHT_UI      0x80
-   //! @}
-//! @}
+/* ! @} */
+/* ! @} */
 
-//! \name HID KEYS values
-//! @{
-#define  HID_LED_NUM_LOCK           (1<<0)
-#define  HID_LED_CAPS_LOCK          (1<<1)
-#define  HID_LED_SCROLL_LOCK        (1<<2)
-#define  HID_LED_COMPOSE            (1<<3)
-#define  HID_LED_KANA               (1<<4)
-//! @}
+/* ! \name HID KEYS values */
+/* ! @{ */
+#define  HID_LED_NUM_LOCK           (1 << 0)
+#define  HID_LED_CAPS_LOCK          (1 << 1)
+#define  HID_LED_SCROLL_LOCK        (1 << 2)
+#define  HID_LED_COMPOSE            (1 << 3)
+#define  HID_LED_KANA               (1 << 4)
+/* ! @} */
 
-
-#endif // _USB_PROTOCOL_HID_H_
+#endif /* _USB_PROTOCOL_HID_H_ */

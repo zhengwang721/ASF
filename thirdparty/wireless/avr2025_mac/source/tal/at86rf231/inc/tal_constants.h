@@ -129,6 +129,7 @@
 #define TAL_PIB_PROMISCUOUS_MODE_DEFAULT    (false)
 
 #ifndef CUSTOM_DEFAULT_TX_PWR
+
 /*
  * Default value of transmit power of transceiver: Use highest tx power
  */

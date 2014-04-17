@@ -150,14 +150,14 @@ void board_init(void)
 
 	gpio_configure_pin(AT86RFX_SPI_MISO, SPI_MISO_FLAGS);
 	gpio_configure_pin(AT86RFX_SPI_MOSI, SPI_MOSI_FLAGS);
-	gpio_configure_pin(AT86RFX_SPI_SCK, SPI_SPCK_FLAGS);
-    gpio_configure_pin(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
+	gpio_configure_pin(AT86RFX_SPI_SCK,  SPI_SPCK_FLAGS);
+    gpio_configure_pin(AT86RFX_SPI_CS_PIN, AT86RFX_SPI_CS_FLAGS);
 
 /* Initialize TRX_RST and SLP_TR as GPIO. */
-ioport_set_pin_dir(AT86RFX_RST_PIN, IOPORT_DIR_OUTPUT);
-ioport_set_pin_level(AT86RFX_RST_PIN, IOPORT_PIN_LEVEL_HIGH);
-ioport_set_pin_dir(AT86RFX_SLP_PIN, IOPORT_DIR_OUTPUT);
-ioport_set_pin_level(AT86RFX_SLP_PIN, IOPORT_PIN_LEVEL_HIGH);
+	ioport_set_pin_dir(AT86RFX_RST_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(AT86RFX_RST_PIN, IOPORT_PIN_LEVEL_HIGH);
+	ioport_set_pin_dir(AT86RFX_SLP_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(AT86RFX_SLP_PIN, IOPORT_PIN_LEVEL_HIGH);
 
 #endif  
 

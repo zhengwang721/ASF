@@ -50,13 +50,12 @@
 #ifdef NWK_ENABLE_ADDRESS_FILTER
 
 /*- Types ------------------------------------------------------------------*/
-typedef struct
-{
-  uint16_t  addr;
-  uint8_t   allow    : 1;
-  uint8_t   setLqi   : 1;
-  uint8_t   reserved : 6;
-  uint8_t   lqi;
+typedef struct {
+	uint16_t addr;
+	uint8_t allow    : 1;
+	uint8_t setLqi   : 1;
+	uint8_t reserved : 6;
+	uint8_t lqi;
 } AppFilterTableEntry_t;
 
 /*- Variables --------------------------------------------------------------*/
@@ -69,74 +68,68 @@ static uint8_t appFilterSize;
 *****************************************************************************/
 void appFilterInit(void)
 {
-  appFilterSize = 0;
+	appFilterSize = 0;
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 bool appFilterAdd(uint16_t addr, uint8_t allow, uint8_t setLqi, uint8_t lqi)
 {
-  for (uint8_t i = 0; i < appFilterSize; i++)
-  {
-    if (addr == appFilterTable[i].addr)
-    {
-      appFilterTable[appFilterSize].allow = allow;
-      appFilterTable[appFilterSize].setLqi = setLqi;
-      appFilterTable[appFilterSize].lqi = lqi;
-      return true;
-    }
-  }
+	for (uint8_t i = 0; i < appFilterSize; i++) {
+		if (addr == appFilterTable[i].addr) {
+			appFilterTable[appFilterSize].allow = allow;
+			appFilterTable[appFilterSize].setLqi = setLqi;
+			appFilterTable[appFilterSize].lqi = lqi;
+			return true;
+		}
+	}
 
-  if (appFilterSize < APP_FILTER_TABLE_SIZE)
-  {
-    appFilterTable[appFilterSize].addr = addr;
-    appFilterTable[appFilterSize].allow = allow;
-    appFilterTable[appFilterSize].setLqi = setLqi;
-    appFilterTable[appFilterSize].lqi = lqi;
-    appFilterSize++;
-    return true;
-  }
+	if (appFilterSize < APP_FILTER_TABLE_SIZE) {
+		appFilterTable[appFilterSize].addr = addr;
+		appFilterTable[appFilterSize].allow = allow;
+		appFilterTable[appFilterSize].setLqi = setLqi;
+		appFilterTable[appFilterSize].lqi = lqi;
+		appFilterSize++;
+		return true;
+	}
 
-  return false;
+	return false;
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 bool appFilterRemove(uint16_t addr)
 {
-  for (uint8_t i = 0; i < appFilterSize; i++)
-  {
-    if (addr == appFilterTable[i].addr)
-    {
-      if (appFilterSize > 0)
-      {
-        appFilterSize--;
-        appFilterTable[i] = appFilterTable[appFilterSize];
-      }
+	for (uint8_t i = 0; i < appFilterSize; i++) {
+		if (addr == appFilterTable[i].addr) {
+			if (appFilterSize > 0) {
+				appFilterSize--;
+				appFilterTable[i]
+					= appFilterTable[appFilterSize];
+			}
 
-      return true;
-    }
-  }
+			return true;
+		}
+	}
 
-  return false;
+	return false;
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 bool NWK_FilterAddress(uint16_t addr, uint8_t *lqi)
 {
-  for (uint8_t i = 0; i < appFilterSize; i++)
-  {
-    if (addr == appFilterTable[i].addr)
-    {
-      if (appFilterTable[i].setLqi)
-        *lqi = appFilterTable[i].lqi;
+	for (uint8_t i = 0; i < appFilterSize; i++) {
+		if (addr == appFilterTable[i].addr) {
+			if (appFilterTable[i].setLqi) {
+				*lqi = appFilterTable[i].lqi;
+			}
 
-      return appFilterTable[i].allow;
-    }
-  }
+			return appFilterTable[i].allow;
+		}
+	}
 
-  return false;
+	return false;
 }
 
-#endif // NWK_ENABLE_ADDRESS_FILTER
+#endif /* NWK_ENABLE_ADDRESS_FILTER */

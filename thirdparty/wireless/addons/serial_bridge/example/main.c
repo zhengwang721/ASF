@@ -55,11 +55,11 @@
  * - main.c      Application main file.
  * \section intro Application Introduction
  * The serial Bridge Application is used in the host which acts as a bridge
- *between the Pc and the NCP device.
+ * between the Pc and the NCP device.
  * The serial Bridge application is used by Performance Analyzer application in
- *2p approach
+ * 2p approach
  * and for flashing image using Bootloader application,where it transfers data
- *from the Pc to the NCP and vice-versa.
+ * from the Pc to the NCP and vice-versa.
  */
 
 /* === INCLUDES ============================================================ */
@@ -70,6 +70,7 @@
 #if SAMD || SAMR21
 #include "system.h"
 #endif
+
 /* === PROTOTYPES
  *=============================================================== */
 
@@ -96,7 +97,7 @@ int main(void)
 	 * The board-specific conf_board.h file contains the configuration of
 	 * the board initialization.
 	 */
-	board_init();    
+	board_init();
 #endif
 
 	cpu_irq_enable();

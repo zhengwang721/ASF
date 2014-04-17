@@ -50,7 +50,8 @@
 
 /**
  * \ingroup udi_hid_keyboard_group
- * \defgroup udi_hid_keyboard_group_single_desc USB device descriptors for a single interface
+ * \defgroup udi_hid_keyboard_group_single_desc USB device descriptors for a
+ *single interface
  *
  * The following structures provide the USB device descriptors required
  * for USB Device with a single interface HID keyboard.
@@ -59,10 +60,10 @@
  * @{
  */
 
-//! Only one interface for this device
+/* ! Only one interface for this device */
 #define  USB_DEVICE_NB_INTERFACE       1
 
-//! USB Device Descriptor
+/* ! USB Device Descriptor */
 COMPILER_WORD_ALIGNED
 UDC_DESC_STORAGE usb_dev_desc_t udc_device_desc = {
 	.bLength                   = sizeof(usb_dev_desc_t),
@@ -75,28 +76,27 @@ UDC_DESC_STORAGE usb_dev_desc_t udc_device_desc = {
 	.idVendor                  = LE16(USB_DEVICE_VENDOR_ID),
 	.idProduct                 = LE16(USB_DEVICE_PRODUCT_ID),
 	.bcdDevice                 = LE16((USB_DEVICE_MAJOR_VERSION << 8)
-	| USB_DEVICE_MINOR_VERSION),
+			| USB_DEVICE_MINOR_VERSION),
 #ifdef USB_DEVICE_MANUFACTURE_NAME
 	.iManufacturer             = 1,
 #else
-	.iManufacturer             = 0,  // No manufacture string
+	.iManufacturer             = 0,  /* No manufacture string */
 #endif
 #ifdef USB_DEVICE_PRODUCT_NAME
 	.iProduct                  = 2,
 #else
-	.iProduct                  = 0,  // No product string
+	.iProduct                  = 0,  /* No product string */
 #endif
 #ifdef USB_DEVICE_SERIAL_NAME
 	.iSerialNumber             = 3,
 #else
-	.iSerialNumber             = 0,  // No serial string
+	.iSerialNumber             = 0,  /* No serial string */
 #endif
 	.bNumConfigurations        = 1
 };
 
-
 #ifdef USB_DEVICE_HS_SUPPORT
-//! USB Device Qualifier Descriptor for HS
+/* ! USB Device Qualifier Descriptor for HS */
 COMPILER_WORD_ALIGNED
 UDC_DESC_STORAGE usb_dev_qual_desc_t udc_device_qual = {
 	.bLength                   = sizeof(usb_dev_qual_desc_t),
@@ -110,7 +110,7 @@ UDC_DESC_STORAGE usb_dev_qual_desc_t udc_device_qual = {
 };
 #endif
 
-//! Structure for USB Device Configuration Descriptor
+/* ! Structure for USB Device Configuration Descriptor */
 COMPILER_PACK_SET(1)
 typedef struct {
 	usb_conf_desc_t conf;
@@ -118,7 +118,7 @@ typedef struct {
 } udc_desc_t;
 COMPILER_PACK_RESET()
 
-//! USB Device Configuration Descriptor filled for FS and HS
+/* ! USB Device Configuration Descriptor filled for FS and HS */
 COMPILER_WORD_ALIGNED
 UDC_DESC_STORAGE udc_desc_t udc_desc = {
 	.conf.bLength              = sizeof(usb_conf_desc_t),
@@ -132,24 +132,29 @@ UDC_DESC_STORAGE udc_desc_t udc_desc = {
 	.hid_kbd                   = UDI_HID_KBD_DESC,
 };
 
-
 /**
  * \name UDC structures which contains all USB Device definitions
  */
-//@{
+/* @{ */
 
-//! Associate an UDI for each USB interface
+/* ! Associate an UDI for each USB interface */
 UDC_DESC_STORAGE udi_api_t *udi_apis[USB_DEVICE_NB_INTERFACE] = {
 	&udi_api_hid_kbd,
 };
 
-//! Add UDI with USB Descriptors FS & HS
-UDC_DESC_STORAGE udc_config_speed_t   udc_config_fshs[1] = {{
-	.desc          = (usb_conf_desc_t UDC_DESC_STORAGE*)&udc_desc,
-	.udi_apis      = udi_apis,
-}};
+/* ! Add UDI with USB Descriptors FS & HS */
+UDC_DESC_STORAGE udc_config_speed_t udc_config_fshs[1] = {{
+								  .desc
+									  = (
+									  usb_conf_desc_t
+									  UDC_DESC_STORAGE
+				*)&udc_desc,
+								  .udi_apis
+									  =
+										  udi_apis,
+							  }};
 
-//! Add all information about USB Device in global structure for UDC
+/* ! Add all information about USB Device in global structure for UDC */
 UDC_DESC_STORAGE udc_config_t udc_config = {
 	.confdev_lsfs = &udc_device_desc,
 	.conf_lsfs = udc_config_fshs,
@@ -160,5 +165,5 @@ UDC_DESC_STORAGE udc_config_t udc_config = {
 #endif
 };
 
-//@}
-//@}
+/* @} */
+/* @} */

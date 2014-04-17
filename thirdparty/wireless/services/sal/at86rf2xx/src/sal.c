@@ -59,7 +59,7 @@
 #if (SAL_TYPE == AT86RF2xx)
 #include <string.h>
 #include "sal.h"
-# include "delay.h" 
+# include "delay.h"
 
 /* === Macros ============================================================== */
 
@@ -128,7 +128,7 @@ bool sal_aes_setup(uint8_t *key,
 		memcpy(enc_key, key, AES_KEYSIZE);
 
 		/* Set subregister AES_MODE (Bits 4:6 in AES_CON) to 1: KEY
-		 *SETUP. */
+		 * SETUP. */
 		aes_buf[0] = SR_MASK(SR_AES_MODE, AES_MODE_KEY);
 
 		/* Fill in key. */
@@ -167,7 +167,7 @@ bool sal_aes_setup(uint8_t *key,
 				uint8_t dummy[AES_BLOCKSIZE];
 
 				/* Compute decryption key and initialize unit
-				 *with it. */
+				 * with it. */
 
 				/* Dummy ECB encryption. */
 				aes_buf[0] = SR_MASK(SR_AES_MODE, AES_MODE_ECB);
@@ -177,7 +177,7 @@ bool sal_aes_setup(uint8_t *key,
 						AES_REQUEST);
 
 				setup_flag = true; /* Needed in sal_aes_wrrd().
-				                    **/
+				                   **/
 				sal_aes_wrrd(dummy, NULL);
 
 				/* Read last round key: */
@@ -289,7 +289,6 @@ void sal_aes_restart(void)
  */
 void _sal_aes_clean_up(void)
 {
-
 }
 
 /**
@@ -321,7 +320,7 @@ void sal_aes_wrrd(uint8_t *idata, uint8_t *odata)
 	memcpy(aes_buf + 1, idata, AES_BLOCKSIZE);
 
 	/* trx_aes_wrrd() overwrites aes_buf, the last byte must be saved.
-	 **/
+	**/
 	save_cmd = aes_buf[AES_BLOCKSIZE + 1];
 
 	if (setup_flag) {

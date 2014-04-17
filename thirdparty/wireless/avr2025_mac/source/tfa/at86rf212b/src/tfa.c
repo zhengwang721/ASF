@@ -195,15 +195,14 @@ retval_t tfa_pib_set(tfa_pib_t tfa_pib_attribute, void *value)
 			break;
 
 		case 18:        /* Chinese band, non-compliant mode 1 using
-				 *O-QPSK 500 */
+				 * O-QPSK 500 */
 			rssi_base_val = RSSI_BASE_VAL_OQPSK_1000_RC_DBM;
 			break;
 
 		case 19:        /* Chinese band, non-compliant mode 2 using
-				 *O-QPSK 1000 */
+				 * O-QPSK 1000 */
 			rssi_base_val = RSSI_BASE_VAL_OQPSK_1000_RC_DBM;
 			break;
-
 #endif /* #ifdef HIGH_DATA_RATE_SUPPORT */
 		default:
 
@@ -302,7 +301,7 @@ phy_enum_t tfa_cca_perform(void)
 
 	/* no interest in receiving frames while doing CCA */
 	trx_bit_write(SR_RX_PDT_DIS, RX_DISABLE); /* disable frame reception
-	                                               * indication */
+	                                           * indication */
 
 	/* Set trx to rx mode. */
 	do {
@@ -396,7 +395,6 @@ uint8_t tfa_ed_sample(void)
 			= (uint8_t)(((uint16_t)ed_value *
 				0xFF) / CLIP_VALUE_REG);
 	}
-
 #endif
 
 	return ed_value;
@@ -464,7 +462,7 @@ uint16_t tfa_get_batmon_voltage(void)
 		for (i = 0; i < 16; i++) {
 			trx_bit_write(SR_BATMON_VTH, i);
 			pal_timer_delay(2); /* Wait until Batmon has been
-			                     *settled. */
+			                     * settled. */
 			if (trx_bit_read(SR_BATMON_OK) ==
 					BATMON_NOT_VALID) {
 				if (i > 0) {
@@ -557,10 +555,12 @@ void tfa_continuous_tx_start(continuous_tx_mode_t tx_mode, bool random_content)
 		if (((tal_pib.CurrentPage == 0) || (tal_pib.CurrentPage == 2) || \
 				(tal_pib.CurrentPage == 16) ||
 				(tal_pib.CurrentPage == 17)) &&
-				(tal_pib.CurrentChannel == 0)) {                                          /* 868.3MHz */
+				(tal_pib.CurrentChannel == 0)) {                                          /*
+			                                                                                   *868.3MHz
+			                                                                                   **/
 			trx_reg_write(RG_TRX_CTRL_2, 0x0A); /* 400 kchip/s
-			                                         * mode, step 8
-			                                         * ,SUB_MODE = 0 */
+			                                     * mode, step 8
+			                                     * ,SUB_MODE = 0 */
 		} else {
 			trx_reg_write(RG_TRX_CTRL_2, 0x0E); /* 1000kchip/s */
 		}
@@ -570,7 +570,7 @@ void tfa_continuous_tx_start(continuous_tx_mode_t tx_mode, bool random_content)
 		/* step 9: Frame buffer access */
 		trx_frame_write(txcwdata, 2);
 	} else { /* PRBS mode */
-		/* step 8: */
+		 /* step 8: */
 
 		/*
 		 * Step 8 is not explicitly written here, because the proper

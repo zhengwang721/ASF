@@ -95,7 +95,7 @@ void trx_irq_handler_cb(void)
 		 *
 		 * In case Antenna diversity is used or the utilization of
 		 * the Timestamp IRQ is disabled, the timestamp needs to be read
-		 *now
+		 * now
 		 * the "old-fashioned" way.
 		 *
 		 * The timestamping is generally only done for
@@ -124,7 +124,7 @@ void trx_irq_handler_cb(void)
 				handle_tx_end_irq(false); /* see tal_tx.c */
 			}
 		} else { /* Other tal_state than TAL_TX_... */
-			/* Handle rx interrupt. */
+			 /* Handle rx interrupt. */
 			handle_received_frame_irq(); /* see tal_rx.c */
 
 #if (defined SW_CONTROLLED_CSMA) && (defined RX_WHILE_BACKOFF)
@@ -132,7 +132,6 @@ void trx_irq_handler_cb(void)
 				pal_timer_stop(TAL_T_BOFF);
 				tal_state = TAL_CSMA_CONTINUE;
 			}
-
 #endif
 		}
 	}
@@ -141,7 +140,7 @@ void trx_irq_handler_cb(void)
 	else if (trx_irq_cause & TRX_IRQ_RX_START) {
 		/*
 		 * The antenna that has been selected automatically for the
-		 *current frame
+		 * current frame
 		 * reception is set for the ACK transmission too.
 		 */
 		if (trx_bit_read(SR_ANT_SEL) == ANT_SEL_ANTENNA_0) {
@@ -192,7 +191,6 @@ void trx_irq_awake_handler_cb(void)
 	if (trx_irq_cause & (~(TRX_IRQ_PLL_LOCK | TRX_IRQ_CCA_ED_READY))) {
 		Assert("Unexpected interrupt" == 0);
 	}
-
 #endif
 }
 

@@ -50,9 +50,10 @@
 /* Sleep manager timer resolution is 16us per count */
 #define SLEEP_MGR_TIMER_RES (16)
 
-/** To use sleep manager and reduce the controller goes sleep and wakes-up immediately 
-   * it requires to have minimum sleep duration in us 
-   */
+/** To use sleep manager and reduce the controller goes sleep and wakes-up
+ * immediately
+ * it requires to have minimum sleep duration in us
+ */
 #define MIN_SLEEP_TIME (1000)
 
 #endif

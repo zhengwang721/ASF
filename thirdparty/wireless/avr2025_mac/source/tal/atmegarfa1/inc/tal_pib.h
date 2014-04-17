@@ -53,15 +53,11 @@
 
 /* === INCLUDES ============================================================ */
 
-
 /* === EXTERNALS =========================================================== */
-
 
 /* === TYPES =============================================================== */
 
-
 /* === MACROS ============================================================== */
-
 
 /* === PROTOTYPES ========================================================== */
 
@@ -69,33 +65,32 @@
 extern "C" {
 #endif
 
-    /**
-     * \addtogroup group_tal_pib_rfa1
-     * @{
-     */
+/**
+ * \addtogroup group_tal_pib_rfa1
+ * @{
+ */
 
-    /**
-     * \brief Initialize the TAL PIB
-     *
-     * This function initializes the TAL information base attributes
-     * to their default values.
-     */
-    void init_tal_pib(void);
+/**
+ * \brief Initialize the TAL PIB
+ *
+ * This function initializes the TAL information base attributes
+ * to their default values.
+ */
+void init_tal_pib(void);
 
-    /**
-     * \brief Write all shadow PIB variables to the transceiver
-     *
-     * This function writes all shadow PIB variables to the transceiver.
-     * It is assumed that the radio does not sleep.
-     */
-    void write_all_tal_pib_to_trx(void);
+/**
+ * \brief Write all shadow PIB variables to the transceiver
+ *
+ * This function writes all shadow PIB variables to the transceiver.
+ * It is assumed that the radio does not sleep.
+ */
+void write_all_tal_pib_to_trx(void);
 
-    //! @}
+/* ! @} */
 
 #ifdef __cplusplus
 } /* extern "C" */
 #endif
-
 
 #endif /* TAL_PIB_H */
 

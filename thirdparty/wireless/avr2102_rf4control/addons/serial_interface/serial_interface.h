@@ -63,7 +63,7 @@
 /**
  * \defgroup group_sif_rf4ce Serial Interface Module
  * This module is responsible for encoding and decoding the serial bytes to/from
- *Host into corresponding RF4Control APIs .
+ * Host into corresponding RF4Control APIs .
  * @{
  */
 

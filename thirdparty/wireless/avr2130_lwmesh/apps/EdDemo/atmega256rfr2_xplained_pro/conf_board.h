@@ -43,10 +43,8 @@
 #ifndef CONF_BOARD_H
 #define CONF_BOARD_H
 
+/* #define IC_TYPE             (0x01) */
 
-// #define IC_TYPE             (0x01)
-
-
-// #define CONF_BOARD_ENABLE_USARTA1
+/* #define CONF_BOARD_ENABLE_USARTA1 */
 
 #endif /* CONF_BOARD_H */

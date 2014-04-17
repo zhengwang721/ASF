@@ -107,10 +107,10 @@ static void start_backoff(void);
  * to be transmitted by the transceiver.
  *
  * \param tx_frame Pointer to the frame_info_t structure updated by the MAC
- *layer
+ * layer
  * \param csma_mode Indicates mode of csma-ca to be performed for this frame
  * \param perform_frame_retry Indicates whether to retries are to be performed
- *for
+ * for
  *                            this frame
  *
  * \return MAC_SUCCESS  if the TAL has accepted the data from the MAC for frame
@@ -132,7 +132,8 @@ retval_t tal_tx_frame(frame_info_t *tx_frame, csma_mode_t csma_mode,
 
 	/* Set pointer to actual mpdu to be downloaded to the transceiver. */
 	tal_frame_to_tx = tx_frame->mpdu;
-    last_frame_length = tal_frame_to_tx[0] - 1;
+	last_frame_length = tal_frame_to_tx[0] - 1;
+
 	/*
 	 * In case the frame is too large, return immediately indicating
 	 * invalid status.
@@ -152,16 +153,16 @@ retval_t tal_tx_frame(frame_info_t *tx_frame, csma_mode_t csma_mode,
 
 		/*
 		 * Check if frame is using indirect transmission, but do not use
-		 *the
+		 * the
 		 * indirect_in_transit flag. This flag is not set for null data
-		 *frames.
+		 * frames.
 		 */
 		if ((tal_pib.BeaconOrder < NON_BEACON_NWK) &&
 				(csma_mode == NO_CSMA_WITH_IFS) &&
 				(perform_frame_retry == false)) {
 			/*
 			 * Check if indirect transmission can be completed
-			 *before the next
+			 * before the next
 			 * beacon transmission.
 			 */
 			uint32_t time_between_beacons_sym;
@@ -172,12 +173,12 @@ retval_t tal_tx_frame(frame_info_t *tx_frame, csma_mode_t csma_mode,
 			/* Calculate the entire transaction duration. Re-use
 			 * function of slotted CSMA.
 			 * The additional two backoff periods used for CCA are
-			 *kept as a guard time.
+			 * kept as a guard time.
 			 */
 			calculate_transaction_duration();
 
 			/* Calculate the duration until the next beacon needs to
-			 *be transmitted. */
+			 * be transmitted. */
 			time_between_beacons_sym = TAL_GET_BEACON_INTERVAL_TIME(
 					tal_pib.BeaconOrder);
 			next_beacon_time_sym = tal_add_time_symbols(
@@ -189,20 +190,19 @@ retval_t tal_tx_frame(frame_info_t *tx_frame, csma_mode_t csma_mode,
 					next_beacon_time_sym, now_time_sym);
 
 			/* Check if transaction can be completed before next
-			 *beacon transmission. */
+			 * beacon transmission. */
 			if ((now_time_sym >= next_beacon_time_sym) ||
 					((transaction_duration_periods *
 					aUnitBackoffPeriod) >
 					duration_before_beacon_sym)) {
 				/*
 				 * Transaction will not be completed before next
-				 *beacon transmission.
+				 * beacon transmission.
 				 * Therefore the transmission is not executed.
 				 */
 				return MAC_CHANNEL_ACCESS_FAILURE;
 			}
 		}
-
 #endif  /* #if (MAC_INDIRECT_DATA_FFD == 1) */
 #ifdef SW_CONTROLLED_CSMA
 		sw_controlled_csma(csma_mode, perform_frame_retry);
@@ -235,7 +235,7 @@ void tx_done_handling(void)
 
 	/*
 	 * The entire timestamp calculation is only required for beaconing
-	 *networks
+	 * networks
 	 * or if timestamping is explicitly enabled.
 	 */
 
@@ -339,7 +339,7 @@ void send_frame(csma_mode_t csma_mode, bool tx_retries)
 	/* Configure tx according to csma usage */
 	if ((csma_mode == NO_CSMA_NO_IFS) || (csma_mode == NO_CSMA_WITH_IFS)) {
 		trx_bit_write(SR_MAX_CSMA_RETRIES, 7); /* immediate
-		                                            * transmission */
+		                                        * transmission */
 	} else {
 		trx_bit_write(SR_MAX_CSMA_RETRIES, tal_pib.MaxCSMABackoffs);
 	}
@@ -436,12 +436,13 @@ void handle_tx_end_irq(bool underrun_occured)
 
 #ifdef BEACON_SUPPORT
 		if (tal_csma_state == FRAME_SENDING) { /* Transmission was
-		                                        * issued by slotted CSMA */
+			                                * issued by slotted CSMA
+			                                **/
 			PIN_TX_END();
 			tal_state = TAL_SLOTTED_CSMA;
 
 			/* Map status message of transceiver to TAL constants.
-			 **/
+			**/
 			switch (trx_trac_status) {
 			case TRAC_SUCCESS_DATA_PENDING:
 				PIN_ACK_OK_START();
@@ -464,7 +465,7 @@ void handle_tx_end_irq(bool underrun_occured)
 				break;
 
 			case TRAC_INVALID: /* Handle this in the same way as
-				            *default. */
+				            * default. */
 			default:
 				Assert("not handled trac status" == 0);
 				tal_csma_state = CSMA_ACCESS_FAILURE;
@@ -505,7 +506,7 @@ void tal_tx_beacon(frame_info_t *tx_frame)
 	uint8_t *tal_beacon_to_tx = tx_frame->mpdu;
 
 	/* Avoid that the beacon is transmitted while other transmision is
-	 *on-going. */
+	 * on-going. */
 	if (tal_state == TAL_TX_AUTO) {
 		Assert(
 				"trying to transmit beacon while ongoing transmission" ==
@@ -520,7 +521,6 @@ void tal_tx_beacon(frame_info_t *tx_frame)
 		if (trx_status != PLL_ON) {
 			Assert("PLL_ON failed for beacon transmission" == 0);
 		}
-
 #endif
 	} while (trx_status != PLL_ON);
 
@@ -647,7 +647,8 @@ static void start_backoff(void)
 			set_trx_state(CMD_PLL_ON);
 			tal_rx_on_required = true;
 		} else {
-			set_trx_state(CMD_RX_AACK_ON); /* receive while backoff */
+			set_trx_state(CMD_RX_AACK_ON); /* receive while backoff
+			                                **/
 		}
 
 #else
@@ -701,17 +702,17 @@ static void cca_start(void *parameter)
 		tal_trx_status_t trx_state;
 		/* No interest in receiving frames while doing CCA */
 		trx_bit_write(SR_RX_PDT_DIS, RX_DISABLE); /* disable frame
-		                                               * reception
-		                                               * indication */
+		                                           * reception
+		                                           * indication */
 		do {
 			trx_state = set_trx_state(CMD_RX_ON);
 		} while (trx_state != RX_ON);
 		/* Setup interrupt handling for CCA IRQ */
 		trx_irq_init((FUNC_PTR)cca_done_irq_handler);
 		trx_reg_write(RG_IRQ_MASK, TRX_IRQ_4_CCA_ED_DONE); /* enable
-		                                                        *CCA
-		                                                        *interrupt
-		                                                        **/
+		                                                    * CCA
+		                                                    * interrupt
+		                                                    **/
 		/* Start CCA */
 		trx_bit_write(SR_CCA_REQUEST, CCA_START);
 	} else {
@@ -752,7 +753,7 @@ void cca_done_handling(void)
 	trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
 	trx_reg_write(RG_IRQ_MASK, TRX_IRQ_DEFAULT);
 	trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE); /* Enable frame reception.
-	                                              **/
+	                                         **/
 
 	/* Check if channel was idle or busy */
 	if (trx_bit_read(SR_CCA_STATUS) == CCA_CH_IDLE) {

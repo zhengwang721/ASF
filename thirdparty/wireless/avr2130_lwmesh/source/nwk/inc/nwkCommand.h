@@ -53,46 +53,41 @@
 #include <stdint.h>
 
 /*- Types ------------------------------------------------------------------*/
-enum
-{
-  NWK_COMMAND_ACK                 = 0x00,
-  NWK_COMMAND_ROUTE_ERROR         = 0x01,
-  NWK_COMMAND_ROUTE_REQUEST       = 0x02,
-  NWK_COMMAND_ROUTE_REPLY         = 0x03,
+enum {
+	NWK_COMMAND_ACK                 = 0x00,
+	NWK_COMMAND_ROUTE_ERROR         = 0x01,
+	NWK_COMMAND_ROUTE_REQUEST       = 0x02,
+	NWK_COMMAND_ROUTE_REPLY         = 0x03,
 };
 COMPILER_PACK_SET(1)
-typedef struct  NwkCommandAck_t
-{
-  uint8_t    id;
-  uint8_t    seq;
-  uint8_t    control;
+typedef struct  NwkCommandAck_t {
+	uint8_t id;
+	uint8_t seq;
+	uint8_t control;
 } NwkCommandAck_t;
 
-typedef struct  NwkCommandRouteError_t
-{
-  uint8_t    id;
-  uint16_t   srcAddr;
-  uint16_t   dstAddr;
-  uint8_t    multicast;
+typedef struct  NwkCommandRouteError_t {
+	uint8_t id;
+	uint16_t srcAddr;
+	uint16_t dstAddr;
+	uint8_t multicast;
 } NwkCommandRouteError_t;
 
-typedef struct  NwkCommandRouteRequest_t
-{
-  uint8_t    id;
-  uint16_t   srcAddr;
-  uint16_t   dstAddr;
-  uint8_t    multicast;
-  uint8_t    linkQuality;
+typedef struct  NwkCommandRouteRequest_t {
+	uint8_t id;
+	uint16_t srcAddr;
+	uint16_t dstAddr;
+	uint8_t multicast;
+	uint8_t linkQuality;
 } NwkCommandRouteRequest_t;
 
-typedef struct  NwkCommandRouteReply_t
-{
-  uint8_t    id;
-  uint16_t   srcAddr;
-  uint16_t   dstAddr;
-  uint8_t    multicast;
-  uint8_t    forwardLinkQuality;
-  uint8_t    reverseLinkQuality;
+typedef struct  NwkCommandRouteReply_t {
+	uint8_t id;
+	uint16_t srcAddr;
+	uint16_t dstAddr;
+	uint8_t multicast;
+	uint8_t forwardLinkQuality;
+	uint8_t reverseLinkQuality;
 } NwkCommandRouteReply_t;
 COMPILER_PACK_RESET()
-#endif // _NWK_COMMAND_H_
+#endif /* _NWK_COMMAND_H_ */

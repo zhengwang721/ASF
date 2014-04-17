@@ -416,19 +416,19 @@ void system_board_init(void);
 #define EDBG_CDC_SERCOM_DMAC_ID_RX   SERCOM0_DMAC_ID_RX
 /** @} */
 
-#define EXT_SPI_MODULE              SERCOM4
-#define EXT_SPI_SERCOM_MUX_SETTING  SPI_SIGNAL_MUX_SETTING_E
-#define EXT_SPI_SERCOM_PINMUX_PAD0  PINMUX_PC19F_SERCOM4_PAD0
-#define EXT_SPI_SERCOM_PINMUX_PAD1  PINMUX_PB31D_SERCOM5_PAD1
-#define EXT_SPI_SERCOM_PINMUX_PAD2  PINMUX_PB30F_SERCOM4_PAD2
-#define EXT_SPI_SERCOM_PINMUX_PAD3  PINMUX_PC18F_SERCOM4_PAD3
+#define RF_SPI_MODULE              SERCOM4
+#define RF_SPI_SERCOM_MUX_SETTING  SPI_SIGNAL_MUX_SETTING_E
+#define RF_SPI_SERCOM_PINMUX_PAD0  PINMUX_PC19F_SERCOM4_PAD0
+#define RF_SPI_SERCOM_PINMUX_PAD1  PINMUX_PB31D_SERCOM5_PAD1
+#define RF_SPI_SERCOM_PINMUX_PAD2  PINMUX_PB30F_SERCOM4_PAD2
+#define RF_SPI_SERCOM_PINMUX_PAD3  PINMUX_PC18F_SERCOM4_PAD3
 
 
-#define EXT_IRQ_MODULE           EIC
-#define EXT_IRQ_INPUT            0
-#define EXT_IRQ_PIN              PIN_PB00A_EIC_EXTINT0
-#define EXT_IRQ_MUX              MUX_PB00A_EIC_EXTINT0
-#define EXT_IRQ_PINMUX           PINMUX_PB00A_EIC_EXTINT0
+#define RF_IRQ_MODULE           EIC
+#define RF_IRQ_INPUT            0
+#define RF_IRQ_PIN              PIN_PB00A_EIC_EXTINT0
+#define RF_IRQ_MUX              MUX_PB00A_EIC_EXTINT0
+#define RF_IRQ_PINMUX           PINMUX_PB00A_EIC_EXTINT0
 
 /** \name 802.15.4 TRX Interface definitions
  * @{
@@ -448,18 +448,18 @@ void system_board_init(void);
 
 
 #define AT86RFX_SPI_CONFIG(config) \
-config.mux_setting = EXT_SPI_SERCOM_MUX_SETTING; \
+config.mux_setting = RF_SPI_SERCOM_MUX_SETTING; \
 config.mode_specific.master.baudrate = AT86RFX_SPI_BAUDRATE; \
-config.pinmux_pad0 = EXT_SPI_SERCOM_PINMUX_PAD0; \
+config.pinmux_pad0 = RF_SPI_SERCOM_PINMUX_PAD0; \
 config.pinmux_pad1 = PINMUX_UNUSED; \
-config.pinmux_pad2 = EXT_SPI_SERCOM_PINMUX_PAD2; \
-config.pinmux_pad3 = EXT_SPI_SERCOM_PINMUX_PAD3;
+config.pinmux_pad2 = RF_SPI_SERCOM_PINMUX_PAD2; \
+config.pinmux_pad3 = RF_SPI_SERCOM_PINMUX_PAD3;
 
-#define AT86RFX_IRQ_CHAN             EXT_IRQ_INPUT
+#define AT86RFX_IRQ_CHAN             RF_IRQ_INPUT
 #define AT86RFX_INTC_INIT()            			struct extint_chan_conf eint_chan_conf; \
 extint_chan_get_config_defaults(&eint_chan_conf); \
 eint_chan_conf.gpio_pin = AT86RFX_IRQ_PIN; \
-eint_chan_conf.gpio_pin_mux = EXT_IRQ_PINMUX; \
+eint_chan_conf.gpio_pin_mux = RF_IRQ_PINMUX; \
 eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_NONE; \
 eint_chan_conf.wake_if_sleeping    = true; \
 eint_chan_conf.filter_input_signal = false; \

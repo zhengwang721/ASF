@@ -59,7 +59,6 @@
 #include "sal.h"
 #include <string.h>
 
-
 /* === Macros ============================================================== */
 
 /* values for SR_AES_DIR */
@@ -93,32 +92,39 @@ static uint8_t dec_key[AES_KEYSIZE];
 #define SR_AES_IM                       0x13C, 0x04, 2
 /** Access parameters for sub-register AES_DIR in register @ref RG_AES_CTRL */
 #define SR_AES_DIR                      0x13C, 0x08, 3
+
 /** Constant AES_DIR_DECRYPT for sub-register @ref SR_AES_DIR in register
- *AES_CTRL */
+ * AES_CTRL */
 #define AES_DIR_DECRYPT                 (1)
+
 /** Constant AES_DIR_ENCRYPT for sub-register @ref SR_AES_DIR in register
- *AES_CTRL */
+ * AES_CTRL */
 #define AES_DIR_ENCRYPT                 (0)
 /** Access parameters for sub-register AES_MODE in register @ref RG_AES_CTRL */
 #define SR_AES_MODE                     0x13C, 0x20, 5
+
 /** Access parameters for sub-register AES_REQUEST in register @ref RG_AES_CTRL
- **/
+**/
 #define SR_AES_REQUEST                  0x13C, 0x80, 7
+
 /** Constant AES_START for sub-register @ref SR_AES_REQUEST in register AES_CTRL
- **/
+**/
 #define AES_START                       (1)
 
 /** Offset for register AES_STATUS */
 #define RG_AES_STATUS                   (0x13D)
 /** Sub-registers of Register @ref RG_AES_STATUS */
+
 /** Access parameters for sub-register AES_DONE in register @ref RG_AES_STATUS
- **/
+**/
 #define SR_AES_DONE                     0x13D, 0x01, 0
+
 /** Constant AES_COMPLETED for sub-register @ref SR_AES_DONE in register
- *AES_STATUS */
+ * AES_STATUS */
 #define AES_COMPLETED                   (1)
+
 /** Constant AES_NOT_COMPLETED for sub-register @ref SR_AES_DONE in register
- *AES_STATUS */
+ * AES_STATUS */
 #define AES_NOT_COMPLETED               (0)
 /** Access parameters for sub-register AES_ER in register @ref RG_AES_STATUS */
 #define SR_AES_ER                       0x13D, 0x80, 7
@@ -133,6 +139,7 @@ static uint8_t dec_key[AES_KEYSIZE];
 #define RG_TRX_STATUS                   (0x141)
 
 /* State of trx before AES use; use to re-store trx state. */
+
 /**
  * \brief Writes data into a transceiver register
  *
@@ -145,10 +152,8 @@ static uint8_t dec_key[AES_KEYSIZE];
 #define trx_reg_write(addr, data) \
 	(*(volatile uint8_t *)(addr)) = (data)
 
-
 #define _trx_bit_read(addr, mask, pos) \
 	(((*(volatile uint8_t *)(addr)) & (mask)) >> (pos))
-
 
 /**
  * \brief Subregister read
@@ -160,7 +165,7 @@ static uint8_t dec_key[AES_KEYSIZE];
  */
 #define trx_bit_read(arg) \
 	_trx_bit_read(arg)
-	
+
 /**
  * \brief Reads current value from a transceiver register
  *
@@ -173,7 +178,6 @@ static uint8_t dec_key[AES_KEYSIZE];
  */
 #define trx_reg_read(addr) \
 	(*(volatile uint8_t *)(addr))
-	
 
 /* === Implementation ====================================================== */
 
@@ -244,7 +248,7 @@ bool sal_aes_setup(uint8_t *key,
 				uint8_t dummy[AES_BLOCKSIZE];
 
 				/* Compute decryption key and initialize unit
-				 *with it. */
+				 * with it. */
 
 				/* Dummy ECB encryption. */
 				mode_byte = SR_MASK(SR_AES_MODE, AES_MODE_ECB) |
@@ -310,7 +314,6 @@ void sal_aes_restart(void)
 	uint8_t i;
 	uint8_t *keyp;
 
-
 	if (last_dir == AES_DIR_ENCRYPT) {
 		keyp = enc_key;
 	} else {
@@ -330,8 +333,8 @@ void sal_aes_restart(void)
  */
 void _sal_aes_clean_up(void)
 {
-
 }
+
 /**
  * @brief En/decrypt one AES block.
  *

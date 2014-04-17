@@ -52,6 +52,7 @@
 #define STACK_CONFIG_H
 
 #include "compiler.h"
+
 /**
  * \ingroup group_inc
  * \defgroup group_stack Common Stack Definitions
@@ -93,7 +94,7 @@
  +          +
  +   PAL    +
  +          +
- ++----------+
+ +++----------+
  */
 /* Reduce the header file dependency by using hard-coded values */
 #define LARGE_BUFFER_SIZE               (160)
@@ -106,11 +107,11 @@
  +          +
  +   TAL    +
  +          +
- ++----------+
+ +++----------+
  +          +
  +   PAL    +
  +          +
- ++----------+
+ +++----------+
  */
 
 /**
@@ -148,7 +149,6 @@
 	aMaxPHYPacketSize + \
 	LENGTH_FIELD_LEN + LQI_LEN + ED_VAL_LEN) / 4 + 1) * 4)
 
-
 /**
  * The following macro holds the size of a small buffer.
  * Additional octets for the length of the frame, the LQI
@@ -168,15 +168,15 @@
  +          +    +          +
  +   MAC    +    +   RTB    +
  +          +    +          +
- ++----------+    +----------+
+ +++----------+    +----------+
  +          +    +          +
  +   TAL    + or +   TAL    +
  +          +    +          +
- ++----------+    +----------+
+ +++----------+    +----------+
  +          +    +          +
  +   PAL    +    +   PAL    +
  +          +    +          +
- ++----------+    +----------+
+ +++----------+    +----------+
  */
 
 /**

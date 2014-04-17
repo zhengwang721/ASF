@@ -142,7 +142,7 @@ typedef struct {
 
 /**
  * \brief Antenna Diversity set request frame structure to change the peer
- *node's
+ * node's
  * antenna diversity settings
  *
  */

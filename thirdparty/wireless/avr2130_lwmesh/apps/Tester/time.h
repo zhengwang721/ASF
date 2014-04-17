@@ -50,4 +50,4 @@
 void appTimeInit(void);
 uint32_t appTimeGet(void);
 
-#endif // _TIME_H_
+#endif /* _TIME_H_ */

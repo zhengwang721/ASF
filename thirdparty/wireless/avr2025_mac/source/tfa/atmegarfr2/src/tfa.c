@@ -251,7 +251,7 @@ phy_enum_t tfa_cca_perform(void)
 
 	/* no interest in receiving frames while doing CCA */
 	trx_bit_write(SR_RX_PDT_DIS, RX_DISABLE); /* disable frame reception
-	                                               * indication */
+	                                           * indication */
 
 	/* Set trx to rx mode. */
 	do {
@@ -279,7 +279,7 @@ phy_enum_t tfa_cca_perform(void)
 
 	/* Enable frame reception again. */
 	trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE);
-	
+
 	return (phy_enum_t)cca_status;
 }
 
@@ -338,7 +338,6 @@ uint8_t tfa_ed_sample(void)
 			= (uint8_t)(((uint16_t)ed_value *
 				0xFF) / CLIP_VALUE_REG);
 	}
-
 #endif
 
 	/* Clear IRQ register */
@@ -414,7 +413,7 @@ uint16_t tfa_get_batmon_voltage(void)
 		for (i = 0; i < 16; i++) {
 			trx_bit_write(SR_BATMON_VTH, i);
 			pal_timer_delay(2); /* Wait until Batmon has been
-			                     *settled. */
+			                     * settled. */
 			if (trx_bit_read(SR_BATMON_OK) ==
 					BATMON_BELOW_THRES) {
 				if (i > 0) {
@@ -518,7 +517,7 @@ double tfa_get_temperature(void)
 	 * Analog channel and gain selection
 	 * The MUX5 bit has to written first followed by a
 	 * write access to the MUX4:0 bits which triggers the update of the
-	 *internal buffer.
+	 * internal buffer.
 	 */
 	ADCSRB = (1 << MUX5);
 

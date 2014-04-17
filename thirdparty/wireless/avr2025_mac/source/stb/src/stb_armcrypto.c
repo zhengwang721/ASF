@@ -251,7 +251,7 @@ stb_ccm_t stb_ccm_secure(uint8_t *buffer,
 	if (firstcall) {
 		if (key == NULL) {
 			return (STB_CCM_KEYMISS); /* Initial call, but no key
-			                           *given. */
+			                           * given. */
 		}
 
 		/* Key must be non-NULL because of test above */

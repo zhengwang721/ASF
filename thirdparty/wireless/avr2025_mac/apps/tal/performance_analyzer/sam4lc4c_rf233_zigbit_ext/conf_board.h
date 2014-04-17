@@ -47,11 +47,13 @@
 /** Enable Com Port. */
 #define CONF_BOARD_COM_PORT
 #define CONF_BOARD_AT86RFX
-/*Board Has an External PA Connected to the Radio ,Following are the constatnts related to the Exxt PA */
+/*Board Has an External PA Connected to the Radio ,Following are the constatnts
+ *related to the Exxt PA */
 
 #ifdef EXT_RF_FRONT_END_CTRL /*For External PA for 233FEM*/
 
 #define EXT_PA_SE2431L
+
 /*
  * Value of an external LNA gain.
  * If no external LNA is available, the value is 0.
@@ -61,6 +63,7 @@
 #endif
 
 #ifdef CUSTOM_DEFAULT_TX_PWR /*For External PA for 233FEM*/
+
 /*
  * Default value of transmit power of transceiver: Preset
  *    - definition acct. IEEE802.15.4 PHY PIB attribute phyTransmitPower

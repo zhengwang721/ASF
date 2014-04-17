@@ -63,21 +63,19 @@
 *****************************************************************************/
 void SYS_Init(void)
 {
-  SYS_TimerInit(); 
+	SYS_TimerInit();
 #if SYS_SECURITY_MODE == 0
-sal_init();
-#endif  
-  PHY_Init();
-  NWK_Init();
+	sal_init();
+#endif
+	PHY_Init();
+	NWK_Init();
 }
 
 /*************************************************************************//**
 *****************************************************************************/
 void SYS_TaskHandler(void)
 {
-  PHY_TaskHandler();
-  NWK_TaskHandler();
-  SYS_TimerTaskHandler();
-  
+	PHY_TaskHandler();
+	NWK_TaskHandler();
+	SYS_TimerTaskHandler();
 }
-

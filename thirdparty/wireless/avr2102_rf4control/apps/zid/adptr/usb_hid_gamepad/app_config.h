@@ -9,6 +9,7 @@
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
  */
+
 /*
  * Copyright (c) 2014, Atmel Corporation All rights reserved.
  *
@@ -32,13 +33,9 @@
 
 /* === Macros =============================================================== */
 
-
-
 /* === Types ================================================================ */
 
-
 #define NUMBER_OF_APP_TIMERS        (1)
-
 
 #define TOTAL_NUMBER_OF_TIMERS      (NUMBER_OF_APP_TIMERS + TOTAL_STACK_TIMERS)
 
@@ -52,15 +49,18 @@
  *  Defines the total number of large buffers used by the application and the
  *  layers below.
  */
-#define TOTAL_NUMBER_OF_LARGE_BUFS  (NUMBER_OF_LARGE_APP_BUFS + NUMBER_OF_LARGE_STACK_BUFS)
+#define TOTAL_NUMBER_OF_LARGE_BUFS  (NUMBER_OF_LARGE_APP_BUFS +	\
+	NUMBER_OF_LARGE_STACK_BUFS)
 
 /**
  *  Defines the total number of small buffers used by the application and the
  *  layers below.
  */
-#define TOTAL_NUMBER_OF_SMALL_BUFS  (NUMBER_OF_SMALL_APP_BUFS + NUMBER_OF_SMALL_STACK_BUFS)
+#define TOTAL_NUMBER_OF_SMALL_BUFS  (NUMBER_OF_SMALL_APP_BUFS +	\
+	NUMBER_OF_SMALL_STACK_BUFS)
 
-#define TOTAL_NUMBER_OF_BUFS        (TOTAL_NUMBER_OF_LARGE_BUFS + TOTAL_NUMBER_OF_SMALL_BUFS)
+#define TOTAL_NUMBER_OF_BUFS        (TOTAL_NUMBER_OF_LARGE_BUFS + \
+	TOTAL_NUMBER_OF_SMALL_BUFS)
 bool main_kbd_enable(void);
 void main_kbd_disable(void);
 bool main_mouse_enable(void);
@@ -71,10 +71,8 @@ void main_sof_action(void);
 void main_resume_action(void);
 void main_suspend_action(void);
 
-
-
-
-#define APP_USER_STRING                 "My Target      "    /* 15 characters ! */
+#define APP_USER_STRING                 "My Target      "    /* 15 characters !
+	                                                      **/
 #define USER_STRING_AVAILABLE           true
 #define NUM_SUPPORTED_DEV_TYPES         (1)
 #define NUM_SUPPORTED_PROFILES          (1)
@@ -89,17 +87,15 @@ void main_suspend_action(void);
 #define SUPPORTED_PROFILE_ID_5          PROFILE_ID_ZID
 #define SUPPORTED_PROFILE_ID_6          PROFILE_ID_ZID
 #if (USER_STRING_AVAILABLE == true)
-#define APP_CAPABILITIES                (0x01 | (NUM_SUPPORTED_DEV_TYPES << 1) | (NUM_SUPPORTED_PROFILES << 4))
+#define APP_CAPABILITIES                (0x01 |	\
+	(NUM_SUPPORTED_DEV_TYPES << \
+	1) | (NUM_SUPPORTED_PROFILES << 4))
 #else
-#define APP_CAPABILITIES                ((NUM_SUPPORTED_DEV_TYPES << 1) | (NUM_SUPPORTED_PROFILES << 4))
+#define APP_CAPABILITIES                ((NUM_SUPPORTED_DEV_TYPES << \
+	1) | (NUM_SUPPORTED_PROFILES << 4))
 #endif
 
-
-
-
-
 /* === Externals ============================================================ */
-
 
 /* === Prototypes =========================================================== */
 

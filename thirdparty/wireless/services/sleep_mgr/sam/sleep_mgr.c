@@ -1,7 +1,7 @@
 /**
  * @file sleep_mgr.c
  *
- * @brief 
+ * @brief
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -45,7 +45,7 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
- 
+
 #include "sleep_mgr.h"
 #include "sleepmgr.h"
 #include "conf_sleepmgr.h"
@@ -56,19 +56,15 @@
 
 void RTT_Handler(void)
 {
-
-rtt_get_status(RTT);
-//rtt_write_alarm_time(RTT, rtt_read_timer_value(RTT) + 2);
-
-
+	rtt_get_status(RTT);
+	/* rtt_write_alarm_time(RTT, rtt_read_timer_value(RTT) + 2); */
 }
 
-
 /**
- * \brief This function Initializes the Sleep functions 
-*/
+ * \brief This function Initializes the Sleep functions
+ */
 void sm_init(void)
-{	
+{
 	rtt_init(RTT, 32768);
 
 	/* Enable RTT interrupt */
@@ -86,22 +82,18 @@ void sm_init(void)
 	/* Initialize the sleep manager, lock initial mode. */
 	sleepmgr_init();
 	sleepmgr_lock_mode(SLEEPMGR_WAIT);
-
-
 }
 
 /**
  * \brief This function puts the  device to sleep
  */
 void sm_sleep(uint32_t interval)
-{	
-	
+{
+	rtt_write_alarm_time(RTT, rtt_read_timer_value(RTT) + interval);
 
-		rtt_write_alarm_time(RTT, rtt_read_timer_value(RTT) +interval);
-
-		/*
-		 * Go to sleep in the deepest allowed sleep mode (i.e. no
-		 * deeper than the currently locked sleep mode).
-		 */
-		sleepmgr_enter_sleep();
+	/*
+	 * Go to sleep in the deepest allowed sleep mode (i.e. no
+	 * deeper than the currently locked sleep mode).
+	 */
+	sleepmgr_enter_sleep();
 }

@@ -53,7 +53,7 @@ static inline uint32_t gettime(void);
 
 void appTimeInit(void)
 {
-  set_common_tc_overflow_callback(hw_overflow_cb);
+	set_common_tc_overflow_callback(hw_overflow_cb);
 }
 
 /*************************************************************************//**
@@ -68,7 +68,6 @@ uint32_t appTimeGet(void)
 		current_time = current_sys_time;
 		current_time = current_time << 16;
 		current_time = current_time | common_tc_read_count();
-
 	} while (current_sys_time != sys_time);
 
 	return current_time;
@@ -76,5 +75,5 @@ uint32_t appTimeGet(void)
 
 void hw_overflow_cb(void)
 {
-	sys_time++;	
+	sys_time++;
 }

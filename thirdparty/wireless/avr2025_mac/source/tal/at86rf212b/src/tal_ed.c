@@ -140,7 +140,7 @@ retval_t tal_ed_start(uint8_t scan_duration)
 	trx_bit_write(SR_RX_PDT_DIS, RX_DISABLE);
 	trx_irq_init((FUNC_PTR)trx_ed_irq_handler_cb);
 	trx_bit_write(SR_IRQ_MASK, TRX_IRQ_4_CCA_ED_DONE); /* Enable
-	                                                        *interrupt */
+	                                                    * interrupt */
 	pal_trx_irq_en(); /* Enable main transceiver interrupt. */
 
 	/* Make sure that receiver is switched on. */
@@ -149,8 +149,8 @@ retval_t tal_ed_start(uint8_t scan_duration)
 		trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE);
 		trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
 		trx_reg_write(RG_IRQ_MASK, TRX_IRQ_DEFAULT); /* enable
-		                                                  *TRX_END
-		                                                  *interrupt */
+		                                              * TRX_END
+		                                              * interrupt */
 		pal_trx_irq_en(); /* Enable main transceiver interrupt. */
 
 		return FAILURE;
@@ -188,7 +188,7 @@ static void trx_ed_irq_handler_cb(void)
 
 		/*
 		 * Update the peak ED value received, if greater than the
-		 *previously
+		 * previously
 		 * read ED value.
 		 */
 		if (ed_value > max_ed_level) {
@@ -208,7 +208,6 @@ static void trx_ed_irq_handler_cb(void)
 	if (trx_irq_cause & (~(TRX_IRQ_0_PLL_LOCK | TRX_IRQ_4_CCA_ED_DONE))) {
 		Assert("Unexpected interrupt" == 0);
 	}
-
 #endif
 }
 
@@ -225,7 +224,7 @@ void ed_scan_done(void)
 	trx_bit_write(SR_RX_PDT_DIS, RX_ENABLE);
 	trx_irq_init((FUNC_PTR)trx_irq_handler_cb);
 	trx_reg_write(RG_IRQ_MASK, TRX_IRQ_DEFAULT); /* enable TRX_END
-	                                                  *interrupt */
+	                                              * interrupt */
 	pal_trx_irq_en(); /* Enable transceiver main interrupt. */
 
 	tal_state = TAL_IDLE; /* ed scan is done */
@@ -244,7 +243,6 @@ void ed_scan_done(void)
 			= (uint8_t)(((uint16_t)max_ed_level *
 				0xFF) / CLIP_VALUE_REG);
 	}
-
 #endif
 	tal_ed_end_cb(max_ed_level);
 }

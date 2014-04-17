@@ -49,20 +49,16 @@
 
  #include "wsndemo.h"
  #include "asf.h"
- 
- int main(void)
- {
-	#if SAMD ||SAMR21
+
+int main(void)
+{
+	#if SAMD || SAMR21
 	system_init();
 	delay_init();
 	#else
 	sysclk_init();
 	board_init();
-	#endif	
+	#endif
 	irq_initialize_vectors();
 	wsndemo_main();
- }
- 
- 
- 
- 
+}

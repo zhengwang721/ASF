@@ -72,29 +72,29 @@
 
 #ifdef CUSTOM_PWR_TABLE /*Power Table For External PA for 231FEM-EK*/
 #ifdef EXT_PA_SE2431L
+
 /*
  * Mapping table for FEM TX Pout (dBm).
  *     based on board characterization
  */
-FLASH_DECLARE(int8_t tx_pwr_table[16]) =
-{
-    /*PA*/ /* RF231 */  /* TX_PWR */ /* EVDD 3V0 */
-    21,  /*  3.0  */  /*  0x00  */
-    22,  /*  2.8  */  /*  0x01  */
-    22,  /*  2.3  */  /*  0x02  */
-    21,  /*  1.8  */  /*  0x03  */
-    21,  /*  1.3  */  /*  0x04  */
-    21,  /*  0.7  */  /*  0x05  */
-    21,  /*  0.0  */  /*  0x06  */
-    21,  /*  -1   */  /*  0x07  */
-    20,  /*  -2   */  /*  0x08  */
-    20,  /*  -3   */  /*  0x09  */
-    19,  /*  -4   */  /*  0x0A  */
-    17,  /*  -5   */  /*  0x0B  */
-    16,  /*  -7   */  /*  0x0C  */
-    13,  /*  -9   */  /*  0x0D  */
-    9,  /*  -12  */  /*  0x0E  */
-    4,  /*  -17  */  /*  0x0F  */
+FLASH_DECLARE(int8_t tx_pwr_table[16]) = {
+	/*PA*/ /* RF231 */  /* TX_PWR */ /* EVDD 3V0 */
+	21, /*  3.0  */  /*  0x00  */
+	22, /*  2.8  */  /*  0x01  */
+	22, /*  2.3  */  /*  0x02  */
+	21, /*  1.8  */  /*  0x03  */
+	21, /*  1.3  */  /*  0x04  */
+	21, /*  0.7  */  /*  0x05  */
+	21, /*  0.0  */  /*  0x06  */
+	21, /*  -1   */  /*  0x07  */
+	20, /*  -2   */  /*  0x08  */
+	20, /*  -3   */  /*  0x09  */
+	19, /*  -4   */  /*  0x0A  */
+	17, /*  -5   */  /*  0x0B  */
+	16, /*  -7   */  /*  0x0C  */
+	13, /*  -9   */  /*  0x0D  */
+	9, /*  -12  */  /*  0x0E  */
+	4, /*  -17  */  /*  0x0F  */
 };
 
 #endif
@@ -242,7 +242,6 @@ void write_all_tal_pib_to_trx(void)
 	if (tal_pib.PromiscuousMode) {
 		set_trx_state(CMD_RX_ON);
 	}
-
 #endif
 }
 
@@ -278,7 +277,6 @@ retval_t tal_pib_get(uint8_t attribute, uint8_t *value)
 	case macPromiscuousMode:
 		*(uint16_t *)value = tal_pib.PromiscuousMode;
 		break;
-
 #endif
 	case macShortAddress:
 		*(uint16_t *)value = tal_pib.ShortAddress;
@@ -344,7 +342,6 @@ retval_t tal_pib_get(uint8_t attribute, uint8_t *value)
 	case macBeaconTxTime:
 		*(uint32_t *)value = tal_pib.BeaconTxTime;
 		break;
-
 #endif  /* BEACON_SUPPORT */
 	case mac_i_pan_coordinator:
 		*(bool *)value = tal_pib.PrivatePanCoordinator;
@@ -395,7 +392,6 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 		Assert("TAL is busy" == 0);
 		return TAL_BUSY;
 	}
-
 #endif /* (MAC_SCAN_ED_REQUEST_CONFIRM == 1) */
 
 	/*
@@ -440,7 +436,6 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 	case macBeaconTxTime:
 		tal_pib.BeaconTxTime = value->pib_value_32bit;
 		break;
-
 #endif  /* BEACON_SUPPORT */
 #ifdef PROMISCUOUS_MODE
 	case macPromiscuousMode:
@@ -449,7 +444,7 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 			tal_trx_wakeup();
 
 			/* Check if receive buffer is available or queue is not
-			 *full. */
+			 * full. */
 			if (NULL == tal_rx_buffer) {
 				set_trx_state(CMD_PLL_ON);
 				tal_rx_on_required = true;
@@ -472,7 +467,7 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 
 		if (tal_trx_status == TRX_SLEEP) {
 			/* While trx is in SLEEP, register cannot be accessed.
-			 **/
+			**/
 			return TAL_TRX_ASLEEP;
 		}
 
@@ -483,13 +478,12 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 
 			/*
 			 * macMinBE must not be larger than macMaxBE or
-			 *calculation
+			 * calculation
 			 * of macMaxFrameWaitTotalTime will fail.
 			 */
 			if (tal_pib.MinBE > tal_pib.MaxBE) {
 				tal_pib.MinBE = tal_pib.MaxBE;
 			}
-
 #endif  /* REDUCED_PARAM_CHECK */
 #ifndef SW_CONTROLLED_CSMA
 			trx_bit_write(SR_MIN_BE, tal_pib.MinBE);
@@ -533,9 +527,13 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 				 */
 				if (tal_trx_status != TRX_OFF) {
 					previous_trx_status = RX_AACK_ON; /* any
+					                                   *
 					                                   *other
+					                                   *
 					                                   *than
+					                                   *
 					                                   *TRX_OFF
+					                                   *
 					                                   *state
 					                                   **/
 					do {
@@ -571,17 +569,21 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 
 				/*
 				 * Changing the channel, channel page or
-				 *modulation
+				 * modulation
 				 * requires that TRX is in TRX_OFF.
 				 * Store current trx state and return to default
-				 *state
+				 * state
 				 * after channel page has been set.
 				 */
 				if (tal_trx_status != TRX_OFF) {
 					previous_trx_status = RX_AACK_ON; /* any
+					                                   *
 					                                   *other
+					                                   *
 					                                   *than
+					                                   *
 					                                   *TRX_OFF
+					                                   *
 					                                   *state
 					                                   **/
 					do {
@@ -620,7 +622,6 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 					return MAC_INVALID_PARAMETER;
 				}
 			}
-
 #endif  /* #ifdef HIGH_DATA_RATE_SUPPORT */
 			break;
 
@@ -630,13 +631,12 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 
 			/*
 			 * macMinBE must not be larger than macMaxBE or
-			 *calculation
+			 * calculation
 			 * of macMaxFrameWaitTotalTime will fail.
 			 */
 			if (tal_pib.MaxBE < tal_pib.MinBE) {
 				tal_pib.MinBE = tal_pib.MaxBE;
 			}
-
 #endif  /* REDUCED_PARAM_CHECK */
 #ifndef SW_CONTROLLED_CSMA
 			trx_bit_write(SR_MAX_BE, tal_pib.MaxBE);
@@ -687,7 +687,7 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 			 * AT86RF231 does not support changing this value w.r.t.
 			 * compliance operation.
 			 * The ACK timing can be reduced to 2 symbols using TFA
-			 *function.
+			 * function.
 			 */
 			return MAC_UNSUPPORTED_ATTRIBUTE;
 
