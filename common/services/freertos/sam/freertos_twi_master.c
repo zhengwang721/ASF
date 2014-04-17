@@ -59,6 +59,19 @@
 #define IER_ERROR_INTERRUPTS    (TWI_IER_NACK | TWI_IER_ARBLST | TWI_IER_OVRE)
 
 /* Work out how many TWI ports with PDC supported are present. */
+#if (SAMG)
+#if defined(PDC_TWI4)
+	#define MAX_TWIS                                (4)
+#elif defined(PDC_TWI3)
+	#define MAX_TWIS                                (3)
+#elif defined(PDC_TWI2)
+	#define MAX_TWIS                                (2)
+#elif defined(PDC_TWI1)
+	#define MAX_TWIS                                (1)
+#else
+	#error No TWI peripherals with PDC support defined
+#endif
+#else
 #if defined(PDC_TWI4)
 	#define MAX_TWIS                                (5)
 #elif defined(PDC_TWI3)
@@ -73,6 +86,7 @@
 	#define MAX_TWIS                                (1)
 #else
 	#error No TWI peripherals with PDC support defined
+#endif
 #endif
 
 /* A common interrupt handler definition used by all the TWI peripherals. */
@@ -101,6 +115,20 @@ static const freertos_dma_event_control_t null_dma_control = {NULL, NULL};
 static const freertos_pdc_peripheral_parameters_t all_twi_definitions[MAX_TWIS] = {
 	/* Chips with a single TWI port might define TWI only.  Chips with multiple
 	TWI	ports defined the first TWI peripheral as TWI0. */
+#if (SAMG)
+#if MAX_TWIS > 0
+	{TWI1, PDC_TWI1, ID_TWI1, TWI1_IRQn},
+#endif
+#if MAX_TWIS > 1
+	{TWI2, PDC_TWI2, ID_TWI2, TWI2_IRQn},
+#endif
+#if MAX_TWIS > 2
+	{TWI3, PDC_TWI3, ID_TWI3, TWI3_IRQn},
+#endif
+#if MAX_TWIS > 3
+	{TWI4, PDC_TWI4, ID_TWI4, TWI4_IRQn},
+#endif
+#else
 #if defined(TWI)
 	{TWI, PDC_TWI, ID_TWI, TWI_IRQn},
 #else
@@ -118,6 +146,7 @@ static const freertos_pdc_peripheral_parameters_t all_twi_definitions[MAX_TWIS] 
 #endif
 #if MAX_TWIS > 4
 	{TWI4, PDC_TWI4, ID_TWI4, TWI4_IRQn},
+#endif
 #endif
 };
 
@@ -824,6 +853,7 @@ static void local_twi_handler(const portBASE_TYPE twi_index)
  * Individual interrupt handlers follow from here.  Each individual interrupt
  * handler calls the common interrupt handler.
  */
+#if (!SAMG)
 #ifdef TWI
 
 void TWI_Handler(void)
@@ -841,6 +871,7 @@ void TWI0_Handler(void)
 }
 
 #endif /* TWI0 */
+#endif
 
 #ifdef TWI1
 

@@ -3,7 +3,7 @@
  *
  * \brief AT30TSE75x Temperature Sensor Example.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -50,7 +50,7 @@
  *
  * \section Requirements
  *
- * This package can be used with SAM4N Xplained Pro with I01 Xplained Pro
+ * This package can be used with SAM Xplained Pro with I01 Xplained Pro
  * attached on EXT1.
  *
  * \section Description
