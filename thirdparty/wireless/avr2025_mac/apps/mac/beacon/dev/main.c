@@ -296,10 +296,6 @@ int main(void)
 	LED_On(LED_START);     /* indicating application is started */
 	LED_Off(LED_NWK_SETUP); /* indicating network is started */
 	LED_Off(LED_DATA);     /* indicating data transmission */
-#ifdef SIO_HUB
-	printf("\nBeacon_Application\r\n\n");
-	printf("\nDevice\r\n\n");
-#endif
 	cpu_irq_enable();
 #ifdef SIO_HUB
 
@@ -1349,8 +1345,8 @@ static void print_stack_app_build_features(void)
 #endif
 
 #ifdef GTS_SUPPORT
-	printf("\r\n MAC GTS Support : Enabled");
+	printf("\r\n MAC GTS Support : Enabled\r\n\r\n");
 #else
-	printf("\r\n MAC GTS Support : Disabled");
+	printf("\r\n MAC GTS Support : Disabled\r\n\r\n");
 #endif
 }
