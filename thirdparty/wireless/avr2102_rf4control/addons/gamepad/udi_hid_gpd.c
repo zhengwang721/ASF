@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USB Device Human Interface Device (HID) keyboard interface.
+ * \brief USB Device Human Interface Device (HID) gamepad interface.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -46,12 +46,12 @@
 #include "udd.h"
 #include "udc.h"
 #include "udi_hid.h"
-#include "udi_hid_kbd.h"
+#include "udi_hid_gpd.h"
 #include <string.h>
 
 /**
- * \ingroup udi_hid_keyboard_group
- * \defgroup udi_hid_keyboard_group_udc Interface with USB Device Core (UDC)
+ * \ingroup udi_hid_gamepad_group
+ * \defgroup udi_hid_gamepad_group_udc Interface with USB Device Core (UDC)
  *
  * Structures and functions required by UDC.
  * 
@@ -75,25 +75,25 @@ UDC_DESC_STORAGE udi_api_t udi_api_hid_gpd = {
 
 
 /**
- * \ingroup udi_hid_keyboard_group
- * \defgroup udi_hid_keyboard_group_internal Implementation of UDI HID keyboard
+ * \ingroup udi_hid_gamepad_group
+ * \defgroup udi_hid_gamepad_group_internal Implementation of UDI HID gamepad
  *
  * Class internal implementation
  * @{
  */
 
 /**
- * \name Internal defines and variables to manage HID keyboard
+ * \name Internal defines and variables to manage HID gamepad
  */
 //@{
 
-//! Size of report for standard HID keyboard
+//! Size of report for standard HID gamepad
 #define UDI_HID_GPD_REPORT_SIZE  4
 
 
-//! To store current rate of HID keyboard
+//! To store current rate of HID gamepad
 static uint8_t udi_hid_gpd_rate;
-//! To store current protocol of HID keyboard
+//! To store current protocol of HID gamepad
 static uint8_t udi_hid_gpd_protocol;
 //! To store report feedback from USB host
 static uint8_t udi_hid_gpd_report_set;
@@ -110,7 +110,7 @@ COMPILER_WORD_ALIGNED
 
 //@}
 
-//! HID report descriptor for standard HID keyboard
+//! HID report descriptor for standard HID gamepad
 UDC_DESC_STORAGE udi_hid_gpd_report_desc_t udi_hid_gpd_report_desc = {
 	{
 				0x05,0x01, /*UsagePage(Generic Desktop)*/
@@ -161,7 +161,7 @@ UDC_DESC_STORAGE udi_hid_gpd_report_desc_t udi_hid_gpd_report_desc = {
 //@{
 
 /**
- * \brief Changes keyboard report states (like LEDs)
+ * \brief Changes gamepad report states (like LEDs)
  *
  * \param rate       New rate value
  *
@@ -189,7 +189,7 @@ static void udi_hid_gpd_report_sent(udd_ep_status_t status, iram_size_t nb_sent,
 
 /**
  * \brief Callback called to update report from USB host
- * udi_hid_kbd_report_set is updated before callback execution
+ * udi_hid_gpd_report_set is updated before callback execution
  */
 static void udi_hid_gpd_setreport_valid(void);
 
@@ -247,179 +247,7 @@ static bool udi_hid_gpd_setreport(void)
 }
 
 
-/*
-//--------------------------------------------
-//------ Interface for application
 
-bool udi_hid_gpd_modifier_up(uint8_t modifier_id)
-{
-	irqflags_t flags = cpu_irq_save();
-
-	// Fill report
-	udi_hid_gpd_report[0] &= ~(unsigned)modifier_id;
-	udi_hid_gpd_b_report_valid = true;
-
-	// Send report
-	udi_hid_gpd_send_report();
-
-	cpu_irq_restore(flags);
-	return true;
-}
-
-
-bool udi_hid_gpd_modifier_down(uint8_t modifier_id)
-{
-	irqflags_t flags = cpu_irq_save();
-
-	// Fill report
-	udi_hid_gpd_report[0] |= modifier_id;
-	udi_hid_gpd_b_report_valid = true;
-
-	// Send report
-	udi_hid_gpd_send_report();
-
-	cpu_irq_restore(flags);
-	return true;
-}
-
-
-bool udi_hid_gpd_up(uint8_t key_id)
-{
-	uint8_t i;
-
-	irqflags_t flags = cpu_irq_save();
-
-	// Fill report
-	for (i = 2; i < UDI_HID_GPD_REPORT_SIZE; i++) {
-		if (0 == udi_hid_gpd_report[i]) {
-			// Already removed
-			cpu_irq_restore(flags);
-			return true;
-		}
-		if (key_id == udi_hid_gpd_report[i])
-			break;
-	}
-	if (UDI_HID_GPD_REPORT_SIZE == i) {
-		// Already removed
-		cpu_irq_restore(flags);
-		return true;
-	}
-	// Remove key and shift
-	while (i < (UDI_HID_GPD_REPORT_SIZE - 1)) {
-		udi_hid_gpd_report[i] = udi_hid_gpd_report[i + 1];
-		i++;
-	}
-	udi_hid_gpd_report[UDI_HID_GPD_REPORT_SIZE - 1] = 0x00;
-	udi_hid_gpd_b_report_valid = true;
-
-	// Send report
-	udi_hid_gpd_send_report();
-
-	cpu_irq_restore(flags);
-	return true;
-}
-
-
-bool udi_hid_gpd_down(uint8_t key_id)
-{
-	uint8_t i;
-
-	irqflags_t flags = cpu_irq_save();
-
-	// Fill report
-	for (i = 2; i < UDI_HID_GPD_REPORT_SIZE; i++) {
-		if (0 == udi_hid_gpd_report[i])
-			break;
-		if (key_id == udi_hid_gpd_report[i]) {
-			// Already in array
-			cpu_irq_restore(flags);
-			return true;
-		}
-	}
-
-	if (UDI_HID_GPD_REPORT_SIZE == i) {
-		// Array full
-		// TODO manage more than UDI_HID_KBD_REPORT_SIZE key pressed in same time
-		cpu_irq_restore(flags);
-		return false;
-	}
-	// Add key at the end of array
-	udi_hid_gpd_report[i] = key_id;
-	udi_hid_gpd_b_report_valid = true;
-
-	// Send report
-	udi_hid_gpd_send_report();
-
-	// Enable IT
-	cpu_irq_restore(flags);
-	return true;
-}
-bool udi_hid_throttle_move(int8_t pos)
-{
-	int16_t s16_newpos;
-
-	irqflags_t flags = cpu_irq_save();
-
-	// Add position in HID mouse report
-	s16_newpos = (int8_t) udi_hid_gpd_report[0];
-	s16_newpos += pos;
-	if ((-127 > s16_newpos) || (127 < s16_newpos)) {
-		cpu_irq_restore(flags);
-		return false;	// Overflow of report
-	}
-	udi_hid_gpd_report[0] = (uint8_t) s16_newpos;
-
-	// Valid and send report
-	udi_hid_gpd_b_report_valid = true;
-	udi_hid_gpd_send_report();
-
-	cpu_irq_restore(flags);
-	return true;
-}
-bool udi_hid_moveX(int8_t pos)
-{
-	int16_t s16_newpos;
-
-	irqflags_t flags = cpu_irq_save();
-
-	// Add position in HID mouse report
-	s16_newpos = (int8_t) udi_hid_gpd_report[1];
-	s16_newpos += pos;
-	if ((-127 > s16_newpos) || (127 < s16_newpos)) {
-		cpu_irq_restore(flags);
-		return false;	// Overflow of report
-	}
-	udi_hid_gpd_report[1] = (uint8_t) s16_newpos;
-
-	// Valid and send report
-	udi_hid_gpd_b_report_valid = true;
-	udi_hid_gpd_send_report();
-
-	cpu_irq_restore(flags);
-	return true;
-}
-bool udi_hid_moveY(int8_t pos)
-{
-	int16_t s16_newpos;
-
-	irqflags_t flags = cpu_irq_save();
-
-	// Add position in HID mouse report
-	s16_newpos = (int8_t) udi_hid_gpd_report[2];
-	s16_newpos += pos;
-	if ((-127 > s16_newpos) || (127 < s16_newpos)) {
-		cpu_irq_restore(flags);
-		return false;	// Overflow of report
-	}
-	udi_hid_gpd_report[2] = (uint8_t) s16_newpos;
-
-	// Valid and send report
-	udi_hid_gpd_b_report_valid = true;
-	udi_hid_gpd_send_report();
-
-	cpu_irq_restore(flags);
-	return true;
-}*/
 bool udi_hid_gpd_throttle_move(int8_t pos)
 {
 	int16_t s16_newpos;
@@ -434,9 +262,6 @@ bool udi_hid_gpd_throttle_move(int8_t pos)
 		return false;	// Overflow of report
 	}
 	udi_hid_gpd_report[0] = (uint8_t) s16_newpos;
-	//udi_hid_gpd_report[1] = 0x00;
-	//udi_hid_gpd_report[2] =0x00;
-	//udi_hid_gpd_report[3] = 0x00;
 	// Valid and send report
 	udi_hid_gpd_b_report_valid = true;
 	udi_hid_gpd_send_report();
@@ -457,11 +282,8 @@ bool udi_hid_gpd_moveX(int8_t pos)
 		cpu_irq_restore(flags);
 		return false;	// Overflow of report
 	}
-	//udi_hid_gpd_report[0] = 0x00;
 	udi_hid_gpd_report[1] = (uint8_t)s16_newpos;
-    //udi_hid_gpd_report[2] =0x00;
-    //udi_hid_gpd_report[3] = 0x00;
-	// Valid and send report
+  	// Valid and send report
 	udi_hid_gpd_b_report_valid = true;
 	udi_hid_gpd_send_report();
 
@@ -481,10 +303,7 @@ bool udi_hid_gpd_moveY(int8_t pos)
 	  cpu_irq_restore(flags);
 	  return false;	// Overflow of report
   }
- // udi_hid_gpd_report[0] = 0x00;
- // udi_hid_gpd_report[1] =0x00;
-  udi_hid_gpd_report[2] = (uint8_t) s16_newpos;
- // udi_hid_gpd_report[3] = 0x00;
+   udi_hid_gpd_report[2] = (uint8_t) s16_newpos;
   // Valid and send report
   udi_hid_gpd_b_report_valid = true;
   udi_hid_gpd_send_report();
@@ -494,9 +313,6 @@ bool udi_hid_gpd_moveY(int8_t pos)
 }
 bool udi_hid_gpd_buttons(bool b_state,uint8_t key_id)
 { 
-	//udi_hid_gpd_report[0] = 0x00;
-	//udi_hid_gpd_report[1] = 0x00;
-	//udi_hid_gpd_report[2] = 0x00;
 	if(b_state)
 	{
 		udi_hid_gpd_report[3] |= key_id;

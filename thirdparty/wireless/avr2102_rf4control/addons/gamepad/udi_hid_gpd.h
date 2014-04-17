@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USB Device Human Interface Device (HID) keyboard interface.
+ * \brief USB Device Human Interface Device (HID) gamepad interface.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -55,7 +55,7 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup udi_hid_keyboard_group_udc
+ * \addtogroup udi_hid_gamepad_group_udc
  * @{
  */
 /* ! Global structure which contains standard UDI API for UDC */
@@ -63,22 +63,22 @@ extern UDC_DESC_STORAGE udi_api_t udi_api_hid_gpd;
 /* @} */
 
 /**
- * \ingroup udi_hid_keyboard_group
- * \defgroup udi_hid_keyboard_group_desc USB interface descriptors
+ * \ingroup udi_hid_gamepad_group
+ * \defgroup udi_hid_gamepad_group_desc USB interface descriptors
  *
  * The following structures provide predefined USB interface descriptors.
  * It must be used to define the final USB descriptors.
  */
 /* @{ */
 
-/* ! Interface descriptor structure for HID keyboard */
+/* ! Interface descriptor structure for HID gamepad */
 typedef struct {
 	usb_iface_desc_t iface;
 	usb_hid_descriptor_t hid;
 	usb_ep_desc_t ep;
 } udi_hid_gpd_desc_t;
 
-/* ! Report descriptor for HID keyboard */
+/* ! Report descriptor for HID gamepad */
 typedef struct {
 	uint8_t array[75];
 } udi_hid_gpd_report_desc_t;
@@ -88,10 +88,10 @@ typedef struct {
 #define UDI_HID_GPD_STRING_ID 0
 #endif
 
-/* ! HID keyboard endpoints size */
+/* ! HID gamepad endpoints size */
 #define UDI_HID_GPD_EP_SIZE  8
 
-/* ! Content of HID keyboard interface descriptor for all speed */
+/* ! Content of HID gamepad interface descriptor for all speed */
 #define UDI_HID_GPD_DESC    { \
 		.iface.bLength             = sizeof(usb_iface_desc_t), \
 		.iface.bDescriptorType     = USB_DT_INTERFACE, \
@@ -121,12 +121,12 @@ typedef struct {
 
 /**
  * \ingroup udi_hid_group
- * \defgroup udi_hid_keyboard_group USB Device Interface (UDI) for Human
- *Interface Device (HID) Keyboard Class
+ * \defgroup udi_hid_gamepad_group USB Device Interface (UDI) for Human
+ *Interface Device (HID) gamepad Class
  *
  * Common APIs used by high level application to use this USB class.
  *
- * See \ref udi_hid_keyboard_quickstart.
+ * See \ref udi_hid_gamepad_quickstart.
  * @{
  */
 
@@ -175,11 +175,11 @@ bool udi_hid_gpd_moveY(int8_t pos);
 #endif
 
 /**
- * \page udi_hid_keyboard_quickstart Quick start guide for USB device keyboard
- *module (UDI keyboard)
+ * \page udi_hid_gamepad_quickstart Quick start guide for USB device gamepad
+ *module (UDI gamepad)
  *
- * This is the quick start guide for the \ref udi_hid_keyboard_group
- * "USB device keyboard module (UDI keyboard)" with step-by-step instructions on
+ * This is the quick start guide for the \ref udi_hid_gamepad_group
+ * "USB device gamepad module (UDI gamepad)" with step-by-step instructions on
  * how to configure and use the modules in a selection of use cases.
  *
  * The use cases contain several code fragments. The code fragments in the
@@ -188,94 +188,94 @@ bool udi_hid_gpd_moveY(int8_t pos);
  *
  * Also, you can refer to application note
  * <A href="http://www.atmel.com/dyn/resources/prod_documents/doc8446.pdf">
- * AVR4904: ASF - USB Device HID Keyboard Application</A>.
+ * AVR4904: ASF - USB Device HID gamepad Application</A>.
  *
- * \section udi_hid_keyboard_basic_use_case Basic use case
- * In this basic use case, the "USB HID Keyboard (Single Interface Device)"
+ * \section udi_hid_gamepad_basic_use_case Basic use case
+ * In this basic use case, the "USB HID gamepad (Single Interface Device)"
  *module is used.
- * The "USB HID Keyboard (Composite Device)" module usage is described in \ref
- *udi_hid_keyboard_use_cases
+ * The "USB HID gamepad (Composite Device)" module usage is described in \ref
+ *udi_hid_gamepad_use_cases
  * "Advanced use cases".
  *
- * \section udi_hid_keyboard_basic_use_case_setup Setup steps
- * \subsection udi_hid_keyboard_basic_use_case_setup_prereq Prerequisites
+ * \section udi_hid_gamepad_basic_use_case_setup Setup steps
+ * \subsection udi_hid_gamepad_basic_use_case_setup_prereq Prerequisites
  * \copydetails udc_basic_use_case_setup_prereq
- * \subsection udi_hid_keyboard_basic_use_case_setup_code Example code
+ * \subsection udi_hid_gamepad_basic_use_case_setup_code Example code
  * \copydetails udc_basic_use_case_setup_code
- * \subsection udi_hid_keyboard_basic_use_case_setup_flow Workflow
+ * \subsection udi_hid_gamepad_basic_use_case_setup_flow Workflow
  * \copydetails udc_basic_use_case_setup_flow
  *
- * \section udi_hid_keyboard_basic_use_case_usage Usage steps
+ * \section udi_hid_gamepad_basic_use_case_usage Usage steps
  *
- * \subsection udi_hid_keyboard_basic_use_case_usage_code Example code
+ * \subsection udi_hid_gamepad_basic_use_case_usage_code Example code
  * Content of conf_usb.h:
  * \code
- * #define UDI_HID_KBD_ENABLE_EXT() my_callback_keyboard_enable()
- * extern bool my_callback_keyboard_enable(void);
- * #define UDI_HID_KBD_DISABLE_EXT() my_callback_keyboard_disable()
- * extern void my_callback_keyboard_disable(void);
- * #include "udi_hid_keyboard_conf.h" // At the end of conf_usb.h file
+ * #define UDI_HID_gpd_ENABLE_EXT() my_callback_gamepad_enable()
+ * extern bool my_callback_gamepad_enable(void);
+ * #define UDI_HID_gpd_DISABLE_EXT() my_callback_gamepad_disable()
+ * extern void my_callback_gamepad_disable(void);
+ * #include "udi_hid_gamepad_conf.h" // At the end of conf_usb.h file
  * \endcode
  *
  * Add to application C-file:
  * \code
- * static bool my_flag_autorize_keyboard_events = false;
- * bool my_callback_keyboard_enable(void)
+ * static bool my_flag_autorize_gamepad_events = false;
+ * bool my_callback_gamepad_enable(void)
  * {
- *    my_flag_autorize_keyboard_events = true;
+ *    my_flag_autorize_gamepad_events = true;
  *    return true;
  * }
- * void my_callback_keyboard_disable(void)
+ * void my_callback_gamepad_disable(void)
  * {
- *    my_flag_autorize_keyboard_events = false;
+ *    my_flag_autorize_gamepad_events = false;
  * }
  *
  * void my_key_A_press_event(void)
  * {
- *    if (!my_flag_autorize_keyboard_events) {
+ *    if (!my_flag_autorize_gamepad_events) {
  *       return;
  *    }
- *    udi_hid_kbd_up(HID_A);
+ *    udi_hid_gpd_up(HID_A);
  * }
  * \endcode
  *
- * \subsection udi_hid_keyboard_basic_use_case_setup_flow Workflow
+ * \subsection udi_hid_gamepad_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following
  *configuration
- * which is the USB device keyboard configuration:
- *   - \code #define UDI_HID_KBD_ENABLE_EXT() my_callback_keyboard_enable()
- * extern bool my_callback_keyboard_enable(void); \endcode
+ * which is the USB device gamepad configuration:
+ *   - \code #define UDI_HID_gpd_ENABLE_EXT() my_callback_gamepad_enable()
+ * extern bool my_callback_gamepad_enable(void); \endcode
  *     \note After the device enumeration (detecting and identifying USB
  *devices),
- *     the USB host starts the device configuration. When the USB keyboard
+ *     the USB host starts the device configuration. When the USB gamepad
  *interface
  *     from the device is accepted by the host, the USB host enables this
  *interface and the
- *     UDI_HID_KBD_ENABLE_EXT() callback function is called and return true.
- *     Thus, it is recommended to enable sensors used by the keyboard in this
+ *     UDI_HID_gpd_ENABLE_EXT() callback function is called and return true.
+ *     Thus, it is recommended to enable sensors used by the gamepad in this
  *function.
- *   - \code #define UDI_HID_KBD_DISABLE_EXT() my_callback_keyboard_disable()
- * extern void my_callback_keyboard_disable(void); \endcode
+ *   - \code #define UDI_HID_gpd_DISABLE_EXT() my_callback_gamepad_disable()
+ * extern void my_callback_gamepad_disable(void); \endcode
  *     \note When the USB device is unplugged or is reset by the USB host, the
  *USB
- *     interface is disabled and the UDI_HID_KBD_DISABLE_EXT() callback function
+ *     interface is disabled and the UDI_HID_gpd_DISABLE_EXT() callback function
  *     is called. Thus, it is recommended to disable sensors used by the
- *keyboard
+ *gamepad
  *     in this function.
- * -# send keyboard events:
+ * -# send gamepad events:
  *   - \code // Send events key modifier released
- * udi_hid_kbd_modifier_up(uint8_t modifier_id);
+ * udi_hid_gpd_modifier_up(uint8_t modifier_id);
  * // Send events key modifier pressed
- * udi_hid_kbd_modifier_down(uint8_t modifier_id);
+ * udi_hid_gpd_modifier_down(uint8_t modifier_id);
  * // Send events key released
- * udi_hid_kbd_up(uint8_t key_id);
+ * udi_hid_gpd_up(uint8_t key_id);
  * // Send events key pressed
- * udi_hid_kbd_down(uint8_t key_id); \endcode
+ * udi_hid_gpd_down(uint8_t key_id); \endcode
  *
- * \section udi_hid_keyboard_use_cases Advanced use cases
- * For more advanced use of the UDI HID keyboard module, see the following use
+ * \section udi_hid_gamepad_use_cases Advanced use cases
+ * For more advanced use of the UDI HID gamepad module, see the following use
  *cases:
- * - \subpage udi_hid_keyboard_use_case_composite
+ * - \subpage udi_hid_gamepad_use_case_composite
  * - \subpage udc_use_case_1
  * - \subpage udc_use_case_2
  * - \subpage udc_use_case_3
@@ -284,10 +284,10 @@ bool udi_hid_gpd_moveY(int8_t pos);
  */
 
 /**
- * \page udi_hid_keyboard_use_case_composite HID keyboard in a composite device
+ * \page udi_hid_gamepad_use_case_composite HID gamepad in a composite device
  *
  * A USB Composite Device is a USB Device which uses more than one USB class.
- * In this use case, the "USB HID Keyboard (Composite Device)" module is used to
+ * In this use case, the "USB HID gamepad (Composite Device)" module is used to
  * create a USB composite device. Thus, this USB module can be associated with
  * another "Composite Device" module, like "USB MSC (Composite Device)".
  *
@@ -295,37 +295,37 @@ bool udi_hid_gpd_moveY(int8_t pos);
  * <A href="http://www.atmel.com/dyn/resources/prod_documents/doc8445.pdf">
  * AVR4902 ASF - USB Composite Device</A>.
  *
- * \section udi_hid_keyboard_use_case_composite_setup Setup steps
+ * \section udi_hid_gamepad_use_case_composite_setup Setup steps
  * For the setup code of this use case to work, the
- * \ref udi_hid_keyboard_basic_use_case "basic use case" must be followed.
+ * \ref udi_hid_gamepad_basic_use_case "basic use case" must be followed.
  *
- * \section udi_hid_keyboard_use_case_composite_usage Usage steps
+ * \section udi_hid_gamepad_use_case_composite_usage Usage steps
  *
- * \subsection udi_hid_keyboard_use_case_composite_usage_code Example code
+ * \subsection udi_hid_gamepad_use_case_composite_usage_code Example code
  * Content of conf_usb.h:
  * \code
  * #define USB_DEVICE_EP_CTRL_SIZE  64
  * #define USB_DEVICE_NB_INTERFACE (X+1)
  * #define USB_DEVICE_MAX_EP (X+1)
  *
- * #define UDI_HID_KBD_EP_IN  (X | USB_EP_DIR_IN)
- * #define UDI_HID_KBD_IFACE_NUMBER  X
+ * #define UDI_HID_gpd_EP_IN  (X | USB_EP_DIR_IN)
+ * #define UDI_HID_gpd_IFACE_NUMBER  X
  *
  * #define UDI_COMPOSITE_DESC_T \
- *    udi_hid_kbd_desc_t udi_hid_kbd; \
+ *    udi_hid_gpd_desc_t udi_hid_gpd; \
  *    ...
  * #define UDI_COMPOSITE_DESC_FS \
- *    .udi_hid_kbd = UDI_HID_KBD_DESC, \
+ *    .udi_hid_gpd = UDI_HID_gpd_DESC, \
  *    ...
  * #define UDI_COMPOSITE_DESC_HS \
- *    .udi_hid_kbd = UDI_HID_KBD_DESC, \
+ *    .udi_hid_gpd = UDI_HID_gpd_DESC, \
  *    ...
  * #define UDI_COMPOSITE_API \
- *    &udi_api_hid_kbd, \
+ *    &udi_api_hid_gpd, \
  *    ...
  * \endcode
  *
- * \subsection udi_hid_keyboard_use_case_composite_usage_flow Workflow
+ * \subsection udi_hid_gamepad_use_case_composite_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
  * required for a USB composite device configuration:
  *   - \code // Endpoint control size, This must be:
@@ -334,44 +334,44 @@ bool udi_hid_gpd_moveY(int8_t pos);
  * // - 64 for a high speed device
  * #define USB_DEVICE_EP_CTRL_SIZE  64
  * // Total Number of interfaces on this USB device.
- * // Add 1 for HID keyboard.
+ * // Add 1 for HID gamepad.
  * #define USB_DEVICE_NB_INTERFACE (X+1)
  * // Total number of endpoints on this USB device.
  * // This must include each endpoint for each interface.
- * // Add 1 for HID keyboard.
+ * // Add 1 for HID gamepad.
  * #define USB_DEVICE_MAX_EP (X+1) \endcode
  * -# Ensure that conf_usb.h contains the description of
  * composite device:
- *   - \code // The endpoint number chosen by you for the keyboard.
+ *   - \code // The endpoint number chosen by you for the gamepad.
  * // The endpoint number starting from 1.
- * #define UDI_HID_KBD_EP_IN  (X | USB_EP_DIR_IN)
+ * #define UDI_HID_gpd_EP_IN  (X | USB_EP_DIR_IN)
  * // The interface index of an interface starting from 0
- * #define UDI_HID_KBD_IFACE_NUMBER  X \endcode
+ * #define UDI_HID_gpd_IFACE_NUMBER  X \endcode
  * -# Ensure that conf_usb.h contains the following parameters
  * required for a USB composite device configuration:
  *   - \code // USB Interfaces descriptor structure
  * #define UDI_COMPOSITE_DESC_T \
  *    ...
- *    udi_hid_kbd_desc_t udi_hid_kbd; \
+ *    udi_hid_gpd_desc_t udi_hid_gpd; \
  *    ...
  * // USB Interfaces descriptor value for Full Speed
  * #define UDI_COMPOSITE_DESC_FS \
  *    ...
- *    .udi_hid_kbd = UDI_HID_KBD_DESC, \
+ *    .udi_hid_gpd = UDI_HID_gpd_DESC, \
  *    ...
  * // USB Interfaces descriptor value for High Speed
  * #define UDI_COMPOSITE_DESC_HS \
  *    ...
- *    .udi_hid_kbd = UDI_HID_KBD_DESC, \
+ *    .udi_hid_gpd = UDI_HID_gpd_DESC, \
  *    ...
  * // USB Interface APIs
  * #define UDI_COMPOSITE_API \
  *    ...
- *    &udi_api_hid_kbd, \
+ *    &udi_api_hid_gpd, \
  *    ... \endcode
  *   - \note The descriptors order given in the four lists above must be the
  *     same as the order defined by all interface indexes. The interface index
  *     orders are defined through UDI_X_IFACE_NUMBER defines.
  */
 
-#endif /* _UDC_HID_KBD_H_ */
+#endif /* _UDC_HID_gpd_H_ */

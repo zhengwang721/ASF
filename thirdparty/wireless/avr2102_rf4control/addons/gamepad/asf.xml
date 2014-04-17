@@ -9,8 +9,8 @@
 				<keyword value="Communication" />
 			</info>
 			<info type="gui-flag" value="hidden"/>
-			<build type="header-file" subtype="api" value="udi_hid_kbd.h"/>
-			<build type="c-source" value="udi_hid_kbd.c"/>
+			<build type="header-file" subtype="api" value="udi_hid_gpd.h"/>
+			<build type="c-source" value="udi_hid_gpd.c"/>
 			<build type="include-path" value="."/>
 			<build type="doxygen-entry-point" value="udi_hid_keyboard_group"/>
 			<build type="doxygen-quick-start" value="udi_hid_keyboard_use_case_composite"/>

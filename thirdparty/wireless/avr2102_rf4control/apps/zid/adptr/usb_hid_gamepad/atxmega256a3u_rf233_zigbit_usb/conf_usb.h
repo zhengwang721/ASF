@@ -201,7 +201,7 @@
 /* #include "udi_cdc.h" */
 /* #include "udi_msc.h" */
 /* #include "udi_hid_mouse.h" */
-#include "udi_hid_kbd.h"
+#include "udi_hid_gpd.h"
 #include "app_config.h"
 
 #endif /* _CONF_USB_H_ */
