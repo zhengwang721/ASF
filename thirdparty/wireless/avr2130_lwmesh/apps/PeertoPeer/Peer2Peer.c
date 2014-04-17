@@ -3,7 +3,7 @@
  *
  * \brief Peer2Peer application implementation
  *
- * Copyright (C) 2012-2014, Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014, Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -214,6 +214,7 @@ int main(void)
 	#endif
 	SYS_Init();
 	sio2host_init();
+	cpu_irq_enable();
 	LED_On(LED0);
 	while (1) {
 		SYS_TaskHandler();

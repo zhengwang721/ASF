@@ -3,7 +3,7 @@
  *
  * \brief WSNDemo command handler interface
  *
- * Copyright (C) 2012-2014, Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014, Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -36,8 +36,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
- * $Id: commands.h 9244 2014-03-11 22:38:51Z ataradov $
  *
  */
 

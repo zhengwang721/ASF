@@ -1,7 +1,7 @@
 /**
- * \file *********************************************************************
+ * \file
  *
- * \brief Common TRX Access Configuration
+ * \brief Board configuration
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -38,9 +38,14 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
 
-#ifndef CONF_TRX_ACCESS_H_INCLUDED
-#define CONF_TRX_ACCESS_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#endif /* CONF_TRX_ACCESS_H_INCLUDED */
+#define CONF_BOARD_AT86RFX
+
+#define AT86RFX_SPI_BAUDRATE             5000000UL
+
+#endif /* CONF_BOARD_H_INCLUDED */

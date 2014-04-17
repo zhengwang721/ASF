@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
-	<project caption="LWMesh-Peer2Peer Application SAMR21 Xplained Pro" id="thirdparty.wireless.avr2130_lwmesh.apps.peer2peer.samr21_xplained_pro" force-caption="true" force-description="true">
+	<project caption="LWMesh-Tester Application:SAMR21 Xplained Pro" id="thirdparty.wireless.avr2130_lwmesh.apps.tester.samr21_xplained_pro" force-caption="true" force-description="true">
 		<info type="description" value="summary">
-		The LWMesh Peer2Peer application performs a Wireless UART functionality using two nodes with preconfigured addresses.
+		The LWMesh Tester app is designed to be used as a generic network processor and also performs automated testing for the stack.
 		</info>		
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_sleepmgr.h"/>
@@ -17,10 +17,9 @@
 		<require idref="board.samr21_xplained_pro"/>
 		<config name="config.thirdparty.wireless.avr2130_lwmesh.source.phy.ext" value="at86rf233"/>		
 
-		<require idref="thirdparty.wireless.avr2130_lwmesh.apps.peer2peer"/>
+		<require idref="thirdparty.wireless.avr2130_lwmesh.apps.tester"/>
 
 		<config name="config.compiler.armgcc.optimization" value="high" />
-
 		
 		<generator value="armgcc" />
 		<generator value="as5_arm" />
