@@ -34,8 +34,7 @@
 			<build type="doxygen-entry-point" value="sam_drivers_adc2_group"/>
 			<build type="doxygen-quick-start" value="sam_adc2_quickstart"/>
 			<device-support value="sam4n"/>
-			<device-support value="samg51"/>
-			<device-support value="samg53"/>
+			<device-support value="samg"/>
 			<require idref="sam.utils"/>
 			<require idref="common.services.basic.sleepmgr"/>
 			<require idref="common.services.basic.clock"/>

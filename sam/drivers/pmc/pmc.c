@@ -61,6 +61,8 @@
 # define MAX_PERIPH_ID    47
 #elif (SAMG53)
 # define MAX_PERIPH_ID    47
+#elif (SAMG54)
+# define MAX_PERIPH_ID    47
 #endif
 
 /// @cond 0
@@ -316,20 +318,15 @@ uint32_t pmc_osc_is_ready_32kxtal(void)
  */
 void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
 {
-	uint32_t ul_needXTEN = 0;
-
 	/* Enable Fast RC oscillator but DO NOT switch to RC now */
-	if (PMC->CKGR_MOR & CKGR_MOR_MOSCXTEN) {
-		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
-				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN |
-				ul_moscrcf;
-	} else {
-		ul_needXTEN = 1;
-		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
-				CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN |
-				CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCXTST_Msk |
-				ul_moscrcf;
-	}
+	PMC->CKGR_MOR |= (CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN);
+
+	/* Wait the Fast RC to stabilize */
+	while (!(PMC->PMC_SR & PMC_SR_MOSCRCS));
+
+	/* Change Fast RC oscillator frequency */
+	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
+			CKGR_MOR_KEY_PASSWD | ul_moscrcf;
 
 	/* Wait the Fast RC to stabilize */
 	while (!(PMC->PMC_SR & PMC_SR_MOSCRCS));
@@ -339,7 +336,7 @@ void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
 			CKGR_MOR_KEY_PASSWD;
 
 	/* Disable xtal oscillator */
-	if (ul_needXTEN) {
+	if (PMC->CKGR_MOR & CKGR_MOR_MOSCXTEN) {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
 				CKGR_MOR_KEY_PASSWD;
 	}
@@ -352,10 +349,14 @@ void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
  */
 void pmc_osc_enable_fastrc(uint32_t ul_rc)
 {
-	/* Enable Fast RC oscillator but DO NOT switch to RC now.
-	 * Keep MOSCSEL to 1 */
-	PMC->CKGR_MOR = CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCSEL |
-			CKGR_MOR_MOSCXTEN | CKGR_MOR_MOSCRCEN | ul_rc;
+	/* Enable Fast RC oscillator but DO NOT switch to RC */
+	PMC->CKGR_MOR |= (CKGR_MOR_KEY_PASSWD | CKGR_MOR_MOSCRCEN);
+	/* Wait the Fast RC to stabilize */
+	while (!(PMC->PMC_SR & PMC_SR_MOSCRCS));
+
+	/* Change Fast RC oscillator frequency */
+	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCRCF_Msk) |
+			CKGR_MOR_KEY_PASSWD | ul_rc;
 	/* Wait the Fast RC to stabilize */
 	while (!(PMC->PMC_SR & PMC_SR_MOSCRCS));
 }
@@ -1411,7 +1412,7 @@ uint32_t pmc_get_writeprotect_status(void)
 	return PMC->PMC_WPMR & PMC_WPMR_WPEN;
 }
 
-#if (SAMG53)
+#if (SAMG53 || SAMG54)
 /**
  * \brief Enable the specified peripheral clock.
  *
@@ -1431,7 +1432,7 @@ uint32_t pmc_enable_sleepwalking(uint32_t ul_id)
 		if (temp & (1 << ul_id)) {
 			return 1;
 		}
-		PMC->PMC_SLPWK_ER = 1 << ul_id;
+		PMC->PMC_SLPWK_ER0 = 1 << ul_id;
 		temp = pmc_get_active_status();
 		if (temp & (1 << ul_id)) {
 			pmc_disable_sleepwalking(ul_id);
@@ -1456,7 +1457,7 @@ uint32_t pmc_enable_sleepwalking(uint32_t ul_id)
 uint32_t pmc_disable_sleepwalking(uint32_t ul_id)
 {
 	if ((8 <= ul_id) && (ul_id<= 29)) {
-		PMC->PMC_SLPWK_DR = 1 << ul_id;
+		PMC->PMC_SLPWK_DR0 = 1 << ul_id;
 		return 0;
 	} else {
 		return 1;
@@ -1470,7 +1471,7 @@ uint32_t pmc_disable_sleepwalking(uint32_t ul_id)
  */
 uint32_t pmc_get_sleepwalking_status(void)
 {
-	return PMC->PMC_SLPWK_SR;
+	return PMC->PMC_SLPWK_SR0;
 }
 
 /**
@@ -1480,7 +1481,7 @@ uint32_t pmc_get_sleepwalking_status(void)
  */
 uint32_t pmc_get_active_status(void)
 {
-	return PMC->PMC_SLPWK_ASR;
+	return PMC->PMC_SLPWK_ASR0;
 }
 
 #endif
