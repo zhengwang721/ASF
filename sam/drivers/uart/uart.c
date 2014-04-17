@@ -3,7 +3,7 @@
  *
  * \brief Universal Asynchronous Receiver Transceiver (UART) driver for SAM.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -73,13 +73,6 @@ extern "C" {
  *
  * @{
  */
-
-/* UART internal div factor for sampling */
-#define UART_MCK_DIV             16
-/* Div factor to get the maximum baud rate */
-#define UART_MCK_DIV_MIN_FACTOR  1
-/* Div factor to get the minimum baud rate */
-#define UART_MCK_DIV_MAX_FACTOR  65535
 
 /**
  * \brief Configure UART with the specified parameters.
@@ -263,6 +256,16 @@ uint32_t uart_get_status(Uart *p_uart)
 }
 
 /**
+ * \brief Reset status bits.
+ *
+ * \param p_uart Pointer to a UART instance.
+ */
+void uart_reset_status(Uart *p_uart)
+{
+	p_uart->UART_CR = UART_CR_RSTSTA;
+}
+
+/**
  * \brief Check if Transmit is Ready.
  * Check if data has been loaded in UART_THR and is waiting to be loaded in the
  * Transmit Shift Register (TSR).
@@ -356,6 +359,18 @@ uint32_t uart_is_rx_buf_full(Uart *p_uart)
 uint32_t uart_is_tx_buf_empty(Uart *p_uart)
 {
 	return (p_uart->UART_SR & UART_SR_TXEMPTY) > 0;
+}
+
+/**
+ * \brief Set UART clock divisor value
+ *
+ * \param p_uart Pointer to a UART instance.
+ * \param us_divisor Value to be set.
+ *
+ */
+void uart_set_clock_divisor(Uart *p_uart, uint16_t us_divisor)
+{
+	p_uart->UART_BRGR = us_divisor;
 }
 
 /**
@@ -481,7 +496,7 @@ void uart_config_optical_interface(Uart *p_uart,
 }
 #endif
 
-#if (SAMG53)
+#if (SAMG53 || SAMG54)
 /**
  * \brief Set sleepwalking match mode.
  *

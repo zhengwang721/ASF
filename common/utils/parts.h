@@ -1085,6 +1085,12 @@
 		SAM_PART_IS_DEFINED(SAMG53G19) ||\
 		SAM_PART_IS_DEFINED(SAMG53N19) \
 		)
+
+#define SAMG54 ( \
+		SAM_PART_IS_DEFINED(SAMG54G19) ||\
+		SAM_PART_IS_DEFINED(SAMG54J19) ||\
+		SAM_PART_IS_DEFINED(SAMG54N19) \
+)
 /** @} */
 /**
  * \name SAM families
@@ -1143,7 +1149,7 @@
 #define SAM4CP   (SAM4CP16)
 
 /** SAMG Family */
-#define SAMG (SAMG51 || SAMG53)
+#define SAMG (SAMG51 || SAMG53 || SAMG54)
 
 /** @} */
 
