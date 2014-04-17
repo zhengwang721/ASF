@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project id="common.applications.user_application.xmega_rf212b_zigbit_ext" caption="XMEGA-A3U RF212B template project" type="template">
+	<project id="common.applications.user_application.xmega_rf212b_zigbit_ext" caption="XMEGA-A3U RF212B Zigbit Carrier Board template project" type="template">
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="config"/>
 		<build type="header-file" value="config/conf_board.h"/>

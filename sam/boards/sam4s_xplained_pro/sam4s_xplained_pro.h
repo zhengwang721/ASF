@@ -91,7 +91,7 @@
 
 //! Name string macro
 #define BOARD_NAME                "SAM4S_XPLAINED_PRO"
-#define BOARD_NUM_OF_LED 1
+
 //! \name Resonator definitions
 //@{
 #define BOARD_FREQ_SLCK_XTAL      (32768U)
@@ -552,15 +552,17 @@
 #define SD_MMC_0_CD_TYPE PIO_INPUT
 #define SD_MMC_0_CD_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_EDGE)
 
-#ifdef CONF_BOARD_AT86RFX
+
 /*! \name Connections of the AT86RFX transceiver
  */
-//! @{
+/** @{ */
 #define AT86RFX_SPI                  SPI
 #define AT86RFX_RST_PIN              EXT1_PIN_7
 #define AT86RFX_IRQ_PIN              EXT1_PIN_9
 #define AT86RFX_SLP_PIN              EXT1_PIN_10
 #define AT86RFX_SPI_CS               0
+#define AT86RFX_SPI_CS_PIN           SPI_NPCS0_GPIO
+#define AT86RFX_SPI_CS_FLAGS         SPI_NPCS0_FLAGS
 #define AT86RFX_SPI_MOSI             EXT1_PIN_16
 #define AT86RFX_SPI_MISO             EXT1_PIN_17
 #define AT86RFX_SPI_SCK              EXT1_PIN_18
@@ -598,9 +600,9 @@ void at86rfx_isr(void);
  */
 #define LEAVE_TRX_REGION()         pio_enable_pin_interrupt(AT86RFX_IRQ_PIN)
 
-#endif
 
-//@}
+
+/** @} */
 
 /** @} */
 

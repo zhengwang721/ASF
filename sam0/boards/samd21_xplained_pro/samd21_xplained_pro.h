@@ -111,6 +111,7 @@ void system_board_init(void);
 #define LED_0_ACTIVE              LED0_ACTIVE
 #define LED_0_INACTIVE            LED0_INACTIVE
 #define LED0_GPIO 				  LED0_PIN
+#define LED0 					  LED0_PIN
 
 #define LED_0_PWM4CTRL_MODULE     TCC0
 #define LED_0_PWM4CTRL_CHANNEL    0
@@ -631,7 +632,7 @@ void system_board_init(void);
 #define AT86RFX_SPI_SCK              EXT1_PIN_18
 #define AT86RFX_CSD     		     EXT1_PIN_5
 #define AT86RFX_CPS 	             EXT1_PIN_8
-#define LED0 LED0_PIN
+
 
 #define AT86RFX_SPI_CONFIG(config) \
         config.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING; \
