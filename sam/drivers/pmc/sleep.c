@@ -150,6 +150,11 @@ __always_inline static void pmc_save_clock_settings(
 	EFC1->EEFC_FMR = fmr1 & (~EEFC_FMR_FWS_Msk);
 #endif
 
+#if SAMG
+	/* Change SAMG RC to 24M, so wait state need to be 1. */
+	EFC0->EEFC_FMR |= EEFC_FMR_FWS(1);
+#endif
+
 	/* Disable XTALs */
 	if (disable_xtal) {
 		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
