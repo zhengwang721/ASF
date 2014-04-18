@@ -1074,9 +1074,6 @@
 /** SAMR21 Family */
 #define SAMR21 (SAMR21G || SAMR21E)
 
-/** SAM0 Family */
-#define SAM0 (SAMD20 || SAMD21 || SAMR21)
-
 /** SAM4E Family */
 #define SAM4E (SAM4E8 || SAM4E16)
 
@@ -1095,6 +1092,9 @@
 
 /** SAMG Family */
 #define SAMG (SAMG51 || SAMG53)
+
+/** SAM0 product line (cortex-m0+) */
+#define SAM0 (SAMD20 || SAMD21 || SAMR21)
 
 /** @} */
 
