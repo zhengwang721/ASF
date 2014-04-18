@@ -106,10 +106,10 @@ static void start_application(void)
 	void (*application_code_entry)(void);
 
 	/* Rebase the Stack Pointer */
-	__set_MSP(*(uint32_t *) APP_START_ADDRESS);
+	__set_MSP(*(uint32_t *)APP_START_ADDRESS);
 
 	/* Rebase the vector table base address */
-	SCB->VTOR = ((uint32_t) APP_START_ADDRESS & SCB_VTOR_TBLOFF_Msk);
+	SCB->VTOR = ((uint32_t)APP_START_ADDRESS & SCB_VTOR_TBLOFF_Msk);
 
 	/* Load the Reset Handler address of the application */
 	application_code_entry = (void (*)(void))(unsigned *)(*(unsigned *)
@@ -127,8 +127,6 @@ static void start_application_with_wdt(void)
 {
 	/* Enable the Watchdog module */
 	WDT->CTRL.reg = WDT_CTRL_ENABLE;
-
-//	NVIC_SystemReset();
 
 	while (1) {
 		/* Wait indefinitely for a WDT reset */
@@ -193,7 +191,6 @@ static bool integrity_check_in_disk(void)
 	/* Start the DMA CRC with I/O mode */
 	dma_crc_get_config_defaults(&crc_config);
 	crc_config.type = APP_CRC_POLYNOMIAL_TYPE;
-//	crc_config.size = CRC_BEAT_SIZE_WORD;
 	dma_crc_io_enable(&crc_config);
 
 	/* Verify the CRC of the entire file before programming */
@@ -678,10 +675,10 @@ void main_usb_connection_event(uhc_device_t * dev, bool b_present)
  *
  * \section startup Startup
  * After loading firmware, connect a FAT formatted mass storage device to the
- * SAM D20 Xplained Pro with a firmware file called firmware.bin.
+ * SAM D21 Xplained Pro with a firmware file called firmware.bin.
  *
  * If the device is blank (never been bootloaded), the bootloader will always
- * start
+ * start.
  * If the device have been programmed already you need to press the SW0 button
  * on the SAM D21 Xplained Pro after reset to enter the bootloader.
  * When running, the bootloader will search for a file called firmware.bin .

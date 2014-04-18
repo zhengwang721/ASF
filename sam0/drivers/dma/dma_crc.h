@@ -166,6 +166,10 @@ static inline enum status_code dma_crc_io_enable(
 		return STATUS_BUSY;
 	}
 
+	if (DMAC->CTRL.reg & DMAC_CTRL_CRCENABLE) {
+		return STATUS_BUSY;
+	}
+
 	DMAC->CRCCTRL.reg = DMAC_CRCCTRL_CRCBEATSIZE(config->size) |
 		DMAC_CRCCTRL_CRCPOLY(config->type) |
 		DMAC_CRCCTRL_CRCSRC_IO;
