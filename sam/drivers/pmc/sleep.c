@@ -145,14 +145,15 @@ __always_inline static void pmc_save_clock_settings(
 	while (!(PMC->PMC_SR & PMC_SR_MOSCSELS));
 
 	/* FWS update */
-	EFC0->EEFC_FMR = fmr & (~EEFC_FMR_FWS_Msk);
-#if defined(EFC1)
-	EFC1->EEFC_FMR = fmr1 & (~EEFC_FMR_FWS_Msk);
-#endif
-
 #if SAMG
 	/* Change SAMG RC to 24M, so wait state need to be 1. */
-	EFC0->EEFC_FMR |= EEFC_FMR_FWS(1);
+	EFC0->EEFC_FMR = (fmr & (~EEFC_FMR_FWS_Msk)) | EEFC_FMR_FWS(1);
+#else
+	EFC0->EEFC_FMR = fmr & (~EEFC_FMR_FWS_Msk);
+#endif
+
+#if defined(EFC1)
+	EFC1->EEFC_FMR = fmr1 & (~EEFC_FMR_FWS_Msk);
 #endif
 
 	/* Disable XTALs */
