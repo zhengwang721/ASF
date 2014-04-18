@@ -41,7 +41,7 @@
  *
  */
 
-#include "../gclk.h"
+#include <gclk.h>
 #include <clock.h>
 #include <system_interrupt.h>
 

@@ -502,7 +502,7 @@ static inline void port_pin_toggle_output_level(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21</td>
+ *		<td>Added support for SAMD21/R21/D10/D11</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
@@ -528,6 +528,11 @@ static inline void port_pin_toggle_output_level(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>04/2014</td>
+ *		<td>Added support for SAMD10/D11.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

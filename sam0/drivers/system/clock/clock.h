@@ -256,7 +256,7 @@ extern "C" {
  */
 
 #include <compiler.h>
-#include "gclk.h"
+#include <gclk.h>
 
 /**
  * \name Driver feature definition
