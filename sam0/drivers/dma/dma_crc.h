@@ -212,6 +212,7 @@ static inline void dma_crc_io_calculation(void *buffer,
 			buffer_32 = buffer;
 			DMAC->CRCDATAIN.reg = buffer_32[counter];
 		}
+		/* Wait several cycle to make sure CRC complete */
 		nop();
 		nop();
 		nop();
