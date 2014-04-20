@@ -3,7 +3,7 @@
  *
  * @brief Processes the TAL tx frame status received on the frame transmission.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

@@ -5,7 +5,7 @@
  *  appending a buffer into the queue, removing a buffer from the queue and
  *  reading a buffer from the queue as per the search criteria.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

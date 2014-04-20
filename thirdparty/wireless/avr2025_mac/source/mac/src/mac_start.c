@@ -4,7 +4,7 @@
  * @brief This file implements the MLME-START.request
  * (MAC layer management entity) entry points.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

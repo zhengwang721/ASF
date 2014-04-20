@@ -4,7 +4,7 @@
  * @brief This header holds all IEEE 802.15.4-2006 constants and attribute
  * identifiers
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

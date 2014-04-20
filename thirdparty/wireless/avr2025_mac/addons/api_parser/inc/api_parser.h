@@ -4,7 +4,7 @@
  * @brief This header defines protoypes and definitions for api parser
  * functionalities
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

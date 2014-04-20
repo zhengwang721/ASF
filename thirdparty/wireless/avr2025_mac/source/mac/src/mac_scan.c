@@ -6,7 +6,7 @@
  * scan. All required timers and frames (beacon request and orphan
  * notification frames) are assembled and their transmission is initiated.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
