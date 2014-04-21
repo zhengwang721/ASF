@@ -1,7 +1,10 @@
 /**
  * \file
  *
- * \brief SAM4CP16BMB Board configuration.
+ * \brief PLC USART Buffered configuration file.
+ *
+ * This file contains basic functions for the SAM BUFFERED USART, with support for all
+ * modes, settings and clock speeds.
  *
  * Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,59 +44,20 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_BUSART_IF_H_INCLUDED
+#define CONF_BUSART_IF_H_INCLUDED
 
-/* Configure Board Revision */
-//#define BOARD_REV	BOARD_REV_2
+/** Timers Configuration */
+#define ID_TC_USART              ID_TC4
+#define TC_USART                 TC1
+#define TC_USART_CHN             1
+#define TC_USART_Handler         TC4_Handler
 
-/* Enable Watchdog */
-//#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+/** Configuration Size Buffers */
+#define RX_USART_BUF0_SIZE       1024
+#define TX_USART_BUF0_SIZE       1024
 
-/* Configure Slow Clock as External Crystal */
-//#define CONF_BOARD_32K_XTAL 
+#define RX_USART_BUF1_SIZE       1024
+#define TX_USART_BUF1_SIZE       1024
 
-/* Configure UART0 pins */
-//#define CONF_BOARD_UART0
-
-/* Configure UART1 pins */
-//#define CONF_BOARD_UART1
-
-/* Configure SPI0 pins */
-//#define CONF_BOARD_SPI0
-/* Configure SPI1 pins */
-//#define CONF_BOARD_SPI1
-
-/* Configure TWI0 pins */
-//#define CONF_BOARD_TWI0
-
-/* Configure USART0 RXD pin */
-//#define CONF_BOARD_USART0_RXD
-/* Configure USART0 TXD pin */
-//#define CONF_BOARD_USART0_TXD
-/* Configure USART0 CTS pin */
-//#define CONF_BOARD_USART0_CTS
-/* Configure USART0 RTS pin */
-//#define CONF_BOARD_USART0_RTS
-
-/* Configure USART1 RXD pin */
-//#define CONF_BOARD_USART1_RXD
-/* Configure USART1 TXD pin */
-//#define CONF_BOARD_USART1_TXD
-/* Configure USART1 CTS pin */
-//#define CONF_BOARD_USART1_CTS
-/* Configure USART1 RTS pin */
-//#define CONF_BOARD_USART1_RTS
-
-/* Configure LCD Enable pins */
-//#define CONF_BOARD_LCD_EN
-
-/* Configure PPLC reset pins */
-//#define CONF_BOARD_PPLC_ARST
-//#define CONF_BOARD_PPLC_SRST
-
-/* Configure Xplain PRO pins */
-//#define CONF_BOARD_XP_ADC
-//#define CONF_BOARD_XP_SLP
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif  /* CONF_BUSART_IF_H_INCLUDED */

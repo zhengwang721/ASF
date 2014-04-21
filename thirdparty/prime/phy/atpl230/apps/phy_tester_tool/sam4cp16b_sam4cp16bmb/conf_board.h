@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4CP16BMB Board configuration.
+ * \brief Board configuration.
  *
  * Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
  *
@@ -44,56 +44,54 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/* Configure Board Revision */
-//#define BOARD_REV	BOARD_REV_2
+/* BOARD Rev. */
+#define BOARD_REV BOARD_REV_2
 
-/* Enable Watchdog */
+/** Enable watchdog */
 //#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
 
-/* Configure Slow Clock as External Crystal */
-//#define CONF_BOARD_32K_XTAL 
+/** Configure Slow Clock as External Crystal */
+#define CONF_BOARD_32K_XTAL
 
-/* Configure UART0 pins */
-//#define CONF_BOARD_UART0
+/** Enable UART 0 */
+#define CONF_BOARD_UART0
 
-/* Configure UART1 pins */
+/** Enable UART 1 */
 //#define CONF_BOARD_UART1
 
-/* Configure SPI0 pins */
-//#define CONF_BOARD_SPI0
-/* Configure SPI1 pins */
-//#define CONF_BOARD_SPI1
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-/* Configure TWI0 pins */
-//#define CONF_BOARD_TWI0
-
-/* Configure USART0 RXD pin */
+/** Enable USART 0 */
 //#define CONF_BOARD_USART0_RXD
-/* Configure USART0 TXD pin */
 //#define CONF_BOARD_USART0_TXD
-/* Configure USART0 CTS pin */
 //#define CONF_BOARD_USART0_CTS
-/* Configure USART0 RTS pin */
 //#define CONF_BOARD_USART0_RTS
 
-/* Configure USART1 RXD pin */
+/** Enable USART 1 */
 //#define CONF_BOARD_USART1_RXD
-/* Configure USART1 TXD pin */
 //#define CONF_BOARD_USART1_TXD
-/* Configure USART1 CTS pin */
 //#define CONF_BOARD_USART1_CTS
-/* Configure USART1 RTS pin */
 //#define CONF_BOARD_USART1_RTS
 
-/* Configure LCD Enable pins */
-//#define CONF_BOARD_LCD_EN
+/** Enable PLC SPI_0 */
+#define CONF_BOARD_SPI0
+
+/** Enable PLC SPI_1 */
+//#define CONF_BOARD_SPI1
+
+/** Enable PLC TWI_0 */
+//#define CONF_BOARD_TWI0
 
 /* Configure PPLC reset pins */
-//#define CONF_BOARD_PPLC_ARST
-//#define CONF_BOARD_PPLC_SRST
+#define CONF_BOARD_PPLC_ARST
+#define CONF_BOARD_PPLC_SRST
 
-/* Configure Xplain PRO pins */
-//#define CONF_BOARD_XP_ADC
+/** Enable LCD */
+#define CONF_BOARD_LCD_EN
+
+/** Enable Xplain PRO SLP pin */
 //#define CONF_BOARD_XP_SLP
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_BOARD_H */
+

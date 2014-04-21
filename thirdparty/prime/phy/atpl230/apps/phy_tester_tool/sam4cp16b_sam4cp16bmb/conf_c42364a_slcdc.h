@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4CP16BMB Board configuration.
+ * \brief C42364A configuration.
  *
  * Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,59 +41,27 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+/** Configuration of the C42364A LCD glass driver */
 
-/* Configure Board Revision */
-//#define BOARD_REV	BOARD_REV_2
+#ifndef CONF_C42364A_SLCDC_H_INCLUDED
+#define CONF_C42364A_SLCDC_H_INCLUDED
 
-/* Enable Watchdog */
-//#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+/** LCD buffer on-time */
+#define CONF_C42364A_BUF_TIME          SLCDC_BUFTIME_X64_SCLK
 
-/* Configure Slow Clock as External Crystal */
-//#define CONF_BOARD_32K_XTAL 
+/** LCD frame rate value */
+#define CONF_C42364A_FRAME_RATE        64
 
-/* Configure UART0 pins */
-//#define CONF_BOARD_UART0
+/** LCD display mode */
+#define CONF_C42364A_DISP_MODE         SLCDC_DISPMODE_NORMAL
 
-/* Configure UART1 pins */
-//#define CONF_BOARD_UART1
+/** LCD power mode */
+#define CONF_C42364A_POWER_MODE        SLCDC_POWER_MODE_LCDON_INVR
 
-/* Configure SPI0 pins */
-//#define CONF_BOARD_SPI0
-/* Configure SPI1 pins */
-//#define CONF_BOARD_SPI1
+/** LCD blinking frequency */
+#define CONF_C42364A_BLINK_FREQ        2
 
-/* Configure TWI0 pins */
-//#define CONF_BOARD_TWI0
-
-/* Configure USART0 RXD pin */
-//#define CONF_BOARD_USART0_RXD
-/* Configure USART0 TXD pin */
-//#define CONF_BOARD_USART0_TXD
-/* Configure USART0 CTS pin */
-//#define CONF_BOARD_USART0_CTS
-/* Configure USART0 RTS pin */
-//#define CONF_BOARD_USART0_RTS
-
-/* Configure USART1 RXD pin */
-//#define CONF_BOARD_USART1_RXD
-/* Configure USART1 TXD pin */
-//#define CONF_BOARD_USART1_TXD
-/* Configure USART1 CTS pin */
-//#define CONF_BOARD_USART1_CTS
-/* Configure USART1 RTS pin */
-//#define CONF_BOARD_USART1_RTS
-
-/* Configure LCD Enable pins */
-//#define CONF_BOARD_LCD_EN
-
-/* Configure PPLC reset pins */
-//#define CONF_BOARD_PPLC_ARST
-//#define CONF_BOARD_PPLC_SRST
-
-/* Configure Xplain PRO pins */
-//#define CONF_BOARD_XP_ADC
-//#define CONF_BOARD_XP_SLP
-
-#endif /* CONF_BOARD_H_INCLUDED */
+/** LCD Contrast value */
+#define CONF_C4236A_CONTRAST           8
+ 
+#endif /* CONF_C42364A_SLCDC_H_INCLUDED */

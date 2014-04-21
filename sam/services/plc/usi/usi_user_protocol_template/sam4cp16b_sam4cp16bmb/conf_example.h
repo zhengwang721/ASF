@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4CP16BMB Board configuration.
+ * \brief Configuration of the USI example application
  *
  * Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,59 +41,31 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_EXAMPLE_INCLUDED
+#define CONF_EXAMPLE_INCLUDED
 
-/* Configure Board Revision */
-//#define BOARD_REV	BOARD_REV_2
+//! Maximum length of the input command
+#define MAX_COMMAND_LENGTH  20
 
-/* Enable Watchdog */
-//#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+//! LED blinking rate in msec
+#define COUNT_MS_SWAP_LED   500
 
-/* Configure Slow Clock as External Crystal */
-//#define CONF_BOARD_32K_XTAL 
+//! \name TC configuration for msec timer
+// @{
+#define ID_TC_1MS		    ID_TC3
+#define TC_1MS			    TC1
+#define TC_1MS_CHN		  0
+#define TC_1MS_IRQn		  TC3_IRQn
+#define TC_1MS_Handler	TC3_Handler
+// @}
 
-/* Configure UART0 pins */
-//#define CONF_BOARD_UART0
+#define STRING_EOL    "\r"
+#define STRING_HEADER "-- ATMEL PLC USI Example Application --\r\n" \
+		" -- "BOARD_NAME" --\r\n" \
+		" -- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
-/* Configure UART1 pins */
-//#define CONF_BOARD_UART1
+#define PROGRAM_MAIN_MENU "Introduce command:\n"STRING_EOL
 
-/* Configure SPI0 pins */
-//#define CONF_BOARD_SPI0
-/* Configure SPI1 pins */
-//#define CONF_BOARD_SPI1
 
-/* Configure TWI0 pins */
-//#define CONF_BOARD_TWI0
 
-/* Configure USART0 RXD pin */
-//#define CONF_BOARD_USART0_RXD
-/* Configure USART0 TXD pin */
-//#define CONF_BOARD_USART0_TXD
-/* Configure USART0 CTS pin */
-//#define CONF_BOARD_USART0_CTS
-/* Configure USART0 RTS pin */
-//#define CONF_BOARD_USART0_RTS
-
-/* Configure USART1 RXD pin */
-//#define CONF_BOARD_USART1_RXD
-/* Configure USART1 TXD pin */
-//#define CONF_BOARD_USART1_TXD
-/* Configure USART1 CTS pin */
-//#define CONF_BOARD_USART1_CTS
-/* Configure USART1 RTS pin */
-//#define CONF_BOARD_USART1_RTS
-
-/* Configure LCD Enable pins */
-//#define CONF_BOARD_LCD_EN
-
-/* Configure PPLC reset pins */
-//#define CONF_BOARD_PPLC_ARST
-//#define CONF_BOARD_PPLC_SRST
-
-/* Configure Xplain PRO pins */
-//#define CONF_BOARD_XP_ADC
-//#define CONF_BOARD_XP_SLP
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_EXAMPLE_INCLUDED */

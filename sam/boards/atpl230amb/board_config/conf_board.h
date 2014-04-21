@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM4CP16BMB Board configuration.
+ * \brief ATPL230AMB Board configuration.
  *
- * Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -50,19 +50,11 @@
 /* Enable Watchdog */
 //#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
 
-/* Configure Slow Clock as External Crystal */
-//#define CONF_BOARD_32K_XTAL 
-
 /* Configure UART0 pins */
 //#define CONF_BOARD_UART0
 
 /* Configure UART1 pins */
 //#define CONF_BOARD_UART1
-
-/* Configure SPI0 pins */
-//#define CONF_BOARD_SPI0
-/* Configure SPI1 pins */
-//#define CONF_BOARD_SPI1
 
 /* Configure TWI0 pins */
 //#define CONF_BOARD_TWI0
@@ -71,29 +63,24 @@
 //#define CONF_BOARD_USART0_RXD
 /* Configure USART0 TXD pin */
 //#define CONF_BOARD_USART0_TXD
-/* Configure USART0 CTS pin */
-//#define CONF_BOARD_USART0_CTS
-/* Configure USART0 RTS pin */
-//#define CONF_BOARD_USART0_RTS
 
 /* Configure USART1 RXD pin */
 //#define CONF_BOARD_USART1_RXD
 /* Configure USART1 TXD pin */
 //#define CONF_BOARD_USART1_TXD
-/* Configure USART1 CTS pin */
-//#define CONF_BOARD_USART1_CTS
+/* Configure USART1 SCK pin */
+//#define CONF_BOARD_USART1_SCK
 /* Configure USART1 RTS pin */
 //#define CONF_BOARD_USART1_RTS
-
-/* Configure LCD Enable pins */
-//#define CONF_BOARD_LCD_EN
-
-/* Configure PPLC reset pins */
-//#define CONF_BOARD_PPLC_ARST
-//#define CONF_BOARD_PPLC_SRST
 
 /* Configure Xplain PRO pins */
 //#define CONF_BOARD_XP_ADC
 //#define CONF_BOARD_XP_SLP
+
+/* Configure USB Detect pins */
+//#define CONF_BOARD_USB_DETECT
+
+/* Configure Shutdown pin */
+//#define CONF_SHUTDOWN_DETECT
 
 #endif /* CONF_BOARD_H_INCLUDED */

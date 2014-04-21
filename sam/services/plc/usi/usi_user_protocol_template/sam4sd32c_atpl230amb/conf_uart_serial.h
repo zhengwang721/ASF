@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM4CP16BMB Board configuration.
+ * \brief Serial USART service configuration.
  *
- * Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,59 +41,16 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_USART_SERIAL_H_INCLUDED
+#define CONF_USART_SERIAL_H_INCLUDED
 
-/* Configure Board Revision */
-//#define BOARD_REV	BOARD_REV_2
+//! Console Interface
+#define CONF_UART            UART0
+#define CONF_UART_ID         ID_UART0
 
-/* Enable Watchdog */
-//#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT
+//! Baudrate setting
+#define CONF_UART_BAUDRATE   115200UL
+//! Parity setting
+#define CONF_UART_PARITY     UART_MR_PAR_NO
 
-/* Configure Slow Clock as External Crystal */
-//#define CONF_BOARD_32K_XTAL 
-
-/* Configure UART0 pins */
-//#define CONF_BOARD_UART0
-
-/* Configure UART1 pins */
-//#define CONF_BOARD_UART1
-
-/* Configure SPI0 pins */
-//#define CONF_BOARD_SPI0
-/* Configure SPI1 pins */
-//#define CONF_BOARD_SPI1
-
-/* Configure TWI0 pins */
-//#define CONF_BOARD_TWI0
-
-/* Configure USART0 RXD pin */
-//#define CONF_BOARD_USART0_RXD
-/* Configure USART0 TXD pin */
-//#define CONF_BOARD_USART0_TXD
-/* Configure USART0 CTS pin */
-//#define CONF_BOARD_USART0_CTS
-/* Configure USART0 RTS pin */
-//#define CONF_BOARD_USART0_RTS
-
-/* Configure USART1 RXD pin */
-//#define CONF_BOARD_USART1_RXD
-/* Configure USART1 TXD pin */
-//#define CONF_BOARD_USART1_TXD
-/* Configure USART1 CTS pin */
-//#define CONF_BOARD_USART1_CTS
-/* Configure USART1 RTS pin */
-//#define CONF_BOARD_USART1_RTS
-
-/* Configure LCD Enable pins */
-//#define CONF_BOARD_LCD_EN
-
-/* Configure PPLC reset pins */
-//#define CONF_BOARD_PPLC_ARST
-//#define CONF_BOARD_PPLC_SRST
-
-/* Configure Xplain PRO pins */
-//#define CONF_BOARD_XP_ADC
-//#define CONF_BOARD_XP_SLP
-
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_USART_SERIAL_H_INCLUDED */

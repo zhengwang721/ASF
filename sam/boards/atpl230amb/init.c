@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM4CP16BMB board init.
+ * \brief ATPL230AMB board init.
  *
- * Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,7 +48,7 @@
 #include "asf.h"
 
 /**
- * \addtogroup sam4cp16bmb_group
+ * \addtogroup atpl230amb_group
  * @{
  */
 
@@ -98,10 +98,10 @@ void board_init(void)
 	WDT->WDT_MR = WDT_MR_WDDIS;
 #endif
   
-#ifdef CONF_BOARD_32K_XTAL  
 	/* Select the crystal oscillator to be the source of the slow clock, 
 	 * as it provides a more accurate frequency 
-	*/
+	 */
+#ifdef CONF_BOARD_32K_XTAL
 	supc_switch_sclk_to_32kxtal(SUPC, 0);
 #endif
           
@@ -111,7 +111,6 @@ void board_init(void)
 	 */
 	ioport_init();
 
-#ifdef CONFIG_CPCLK_ENABLE
 	/* Configure the pins connected to LEDs as output and set their
 	 * default initial state to high (LEDs off).
 	 */
@@ -119,55 +118,35 @@ void board_init(void)
 	ioport_set_pin_level(LED0_GPIO, LED0_INACTIVE_LEVEL);
 	ioport_set_pin_dir(LED1_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(LED1_GPIO, LED0_INACTIVE_LEVEL);
-#else
-#warning Please enable CONFIG_CPCLK_ENABLE in conf_clock.h to use LEDs (PIOC).
-#endif
-
-	/* Configure UART0 pins */
-#ifdef CONF_BOARD_UART0  
-        ioport_set_port_peripheral_mode(PINS_UART0_PORT, PINS_UART0, PINS_UART0_FLAGS);
-#endif
+	
+	/* Configure PPLC reset pins */
+	ioport_set_pin_dir(PPLC_ARST_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(PPLC_ARST_GPIO, PPLC_ARST_INACTIVE_LEVEL);
         
-	/* Configure UART1 pins (CONSOLE) */
-#if defined(CONF_BOARD_UART1) || defined(CONF_BOARD_UART_CONSOLE)
-	ioport_set_port_peripheral_mode(PINS_UART1_PORT, PINS_UART1, PINS_UART1_FLAGS);
-#endif     
-
-	/* Configure LCD enable */
-#ifdef CONF_BOARD_LCD_EN
-	ioport_set_pin_dir(LCD_EN_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LCD_EN_GPIO, LCD_EN_ACTIVE_LEVEL);
-	ioport_set_pin_dir(LCD_BL_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LCD_BL_GPIO, LCD_BL_ACTIVE_LEVEL);
-#else
-        ioport_set_pin_dir(LCD_EN_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LCD_EN_GPIO, LCD_EN_INACTIVE_LEVEL);
-        ioport_set_pin_dir(LCD_BL_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(LCD_BL_GPIO, LCD_BL_INACTIVE_LEVEL);
-#endif
-
+	ioport_set_pin_dir(PPLC_SRST_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(PPLC_SRST_GPIO, PPLC_SRST_INACTIVE_LEVEL);
+	
 	/* Configure SPI pins */
-#ifdef CONF_BOARD_SPI0
 	ioport_set_pin_peripheral_mode(SPI0_MISO_GPIO, SPI0_MISO_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI0_MOSI_GPIO, SPI0_MOSI_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI0_SPCK_GPIO, SPI0_SPCK_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI0_NPCS0_GPIO, SPI0_NPCS0_FLAGS);
+
+	/* Configure UART0 pins */
+#ifdef CONF_BOARD_UART0 
+        ioport_set_port_peripheral_mode(PINS_UART0_PORT, PINS_UART0, PINS_UART0_FLAGS);
 #endif
+        
+	/* Configure UART1 pins */
+#if defined(CONF_BOARD_UART1) || defined(CONF_BOARD_UART_CONSOLE)
+	ioport_set_port_peripheral_mode(PINS_UART1_PORT, PINS_UART1, PINS_UART1_FLAGS);
+#endif        
 
 #ifdef CONF_BOARD_SPI1
 	ioport_set_pin_peripheral_mode(SPI1_MISO_GPIO, SPI1_MISO_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI1_MOSI_GPIO, SPI1_MOSI_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI1_SPCK_GPIO, SPI1_SPCK_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI1_NPCS0_GPIO, SPI1_NPCS0_FLAGS);
-#else
-        ioport_set_pin_dir(SPI1_MISO_GPIO, IOPORT_DIR_OUTPUT);
-        ioport_set_pin_level(SPI1_MISO_GPIO, IOPORT_PIN_LEVEL_LOW);
-        ioport_set_pin_dir(SPI1_MOSI_GPIO, IOPORT_DIR_OUTPUT);
-        ioport_set_pin_level(SPI1_MOSI_GPIO, IOPORT_PIN_LEVEL_LOW);
-        ioport_set_pin_dir(SPI1_SPCK_GPIO, IOPORT_DIR_OUTPUT);
-        ioport_set_pin_level(SPI1_SPCK_GPIO, IOPORT_PIN_LEVEL_LOW);
-        ioport_set_pin_dir(SPI1_NPCS0_GPIO, IOPORT_DIR_OUTPUT);
-        ioport_set_pin_level(SPI1_NPCS0_GPIO, IOPORT_PIN_LEVEL_LOW);
 #endif
 
 	/* Configure TWI pins */
@@ -188,20 +167,8 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_USART0_TXD_IDX,
 			PIN_USART0_TXD_FLAGS);
 #endif
-
-#ifdef CONF_BOARD_USART0_CTS
-	/* Configure USART0 CTS pin */
-	ioport_set_pin_peripheral_mode(PIN_USART0_CTS_IDX,
-			PIN_USART0_CTS_FLAGS);
-#endif
-
-#ifdef CONF_BOARD_USART0_RTS
-	/* Configure USART0 RTS pin */
-	ioport_set_pin_peripheral_mode(PIN_USART0_RTS_IDX,
-			PIN_USART0_RTS_FLAGS);
-#endif
         
-        /* Configure USART1 pins */
+	/* Configure USART1 pins */
 #ifdef CONF_BOARD_USART1_RXD
 	/* Configure USART1 RXD pin */
 	ioport_set_pin_peripheral_mode(PIN_USART1_RXD_IDX,
@@ -214,10 +181,10 @@ void board_init(void)
 			PIN_USART1_TXD_FLAGS);
 #endif
 
-#ifdef CONF_BOARD_USART1_CTS
-	/* Configure USART1 CTS pin */
-	ioport_set_pin_peripheral_mode(PIN_USART1_CTS_IDX,
-			PIN_USART1_CTS_FLAGS);
+#ifdef CONF_BOARD_USART1_SCK
+	/* Configure USART1 SCK pin */
+	ioport_set_pin_peripheral_mode(PIN_USART1_SCK_IDX,
+			PIN_USART1_SCK_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_USART1_RTS
@@ -225,27 +192,23 @@ void board_init(void)
 	ioport_set_pin_peripheral_mode(PIN_USART1_RTS_IDX,
 			PIN_USART1_RTS_FLAGS);
 #endif
-
-	/* Configure PPLC reset pins */
-#ifdef CONF_BOARD_PPLC_ARST
-	ioport_set_pin_dir(PPLC_ARST_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(PPLC_ARST_GPIO, PPLC_ARST_INACTIVE_LEVEL);
-#endif 
-        
-#ifdef CONF_BOARD_PPLC_SRST
-	ioport_set_pin_dir(PPLC_SRST_GPIO, IOPORT_DIR_OUTPUT);
-	ioport_set_pin_level(PPLC_SRST_GPIO, PPLC_SRST_INACTIVE_LEVEL);
-#endif   
-        /* Configure PPLC interruption pin */
-        ioport_set_pin_dir(PPLC_INT_GPIO, IOPORT_DIR_INPUT);
         
 	/* Configure Xplain PRO SLP pin */
 #ifdef CONF_BOARD_XP_SLP
 	ioport_set_pin_dir(XP_SLP_GPIO, IOPORT_DIR_OUTPUT);
 	ioport_set_pin_level(XP_SLP_GPIO, XP_SLP_INACTIVE_LEVEL);
-#else
-        ioport_set_pin_dir(XP_SLP_GPIO, IOPORT_DIR_OUTPUT);
-        ioport_set_pin_level(XP_SLP_GPIO, IOPORT_PIN_LEVEL_LOW);        
+#endif 
+
+	/* Configure USB Detect pin */
+#ifdef CONF_BOARD_USB_DETECT	
+	ioport_set_pin_input_mode(GPIO_USB_DETECT, GPIO_USB_DETECT_FLAGS,
+			GPIO_USB_DETECT_SENSE);
+#endif  
+
+	/* Configure Shutdown Detect pin */
+#ifdef CONF_SHUTDOWN_DETECT	
+	ioport_set_pin_dir(SHUTDOWN_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(SHUTDOWN_GPIO, SHUTDOWN_INACTIVE_LEVEL);
 #endif 
 
 }
