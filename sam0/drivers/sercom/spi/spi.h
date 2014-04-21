@@ -1401,13 +1401,25 @@ enum status_code spi_select_slave(
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
- *	 <tr>
- *		<td>Add SAM D21/R21/D10/D11 support and added new features as below:
+ *	<tr>
+ *		<td>Add SAM D10/D11 support and added new features as below:
  *             \li Slave select low detect
  *             \li Hardware slave select
  *             \li DMA support </td>
  *	</tr>
- *	 <tr>
+ *	<tr>
+ *		<td>Add SAMR21 support and added new features as below:
+ *             \li Slave select low detect
+ *             \li Hardware slave select
+ *             \li DMA support </td>
+ *	</tr>
+ *	<tr>
+ *		<td>Add SAMD21 support and added new features as below:
+ *             \li Slave select low detect
+ *             \li Hardware slave select
+ *             \li DMA support </td>
+ *	</tr>
+ *	<tr>
  *		<td>Edited slave part of write and transceive buffer functions to ensure
  *		that second character is sent at the right time.</td>
  *	</tr>
@@ -1718,6 +1730,11 @@ enum status_code spi_select_slave(
   *		<th>Date</td>
   *		<th>Comments</td>
   *	</tr>
+  *	<tr>
+  *		<td>E</td>
+  *		<td>04/2014</td>
+  *		<td>Add SAM D10/D11 support.</td>
+  *	</tr>  
   *	<tr>
   *		<td>D</td>
   *		<td>03/2014</td>

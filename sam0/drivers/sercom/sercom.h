@@ -54,12 +54,29 @@
 extern "C" {
 #endif
 
+#if (SAMD10) || (SAMD11)
+
+#define SERCOM0_GCLK_ID_SLOW 12
+#define SERCOM1_GCLK_ID_SLOW 12
+#define SERCOM2_GCLK_ID_SLOW 12
+
+#if (SERCOM0_GCLK_ID_SLOW == SERCOM1_GCLK_ID_SLOW && \
+     SERCOM0_GCLK_ID_SLOW == SERCOM2_GCLK_ID_SLOW)
+#  define SERCOM_GCLK_ID SERCOM0_GCLK_ID_SLOW
+#else
+#  error "SERCOM modules must share the same slow GCLK channel ID."
+#endif
+
+#else
+
 #if (SERCOM0_GCLK_ID_SLOW == SERCOM1_GCLK_ID_SLOW && \
      SERCOM0_GCLK_ID_SLOW == SERCOM2_GCLK_ID_SLOW && \
      SERCOM0_GCLK_ID_SLOW == SERCOM3_GCLK_ID_SLOW)
 #  define SERCOM_GCLK_ID SERCOM0_GCLK_ID_SLOW
 #else
 #  error "SERCOM modules must share the same slow GCLK channel ID."
+#endif
+
 #endif
 
 #if (0x1ff >= REV_SERCOM)
