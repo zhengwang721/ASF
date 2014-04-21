@@ -1553,10 +1553,18 @@ Pdc *usart_get_pdc_base(Usart *p_usart)
 
 	p_pdc_base = (Pdc *)NULL;
 
+#ifdef PDC_USART
+	if (p_usart == USART) {
+		p_pdc_base = PDC_USART;
+		return p_pdc_base;
+	}
+#endif
+#ifdef PDC_USART0
 	if (p_usart == USART0) {
 		p_pdc_base = PDC_USART0;
 		return p_pdc_base;
 	}
+#endif
 #ifdef PDC_USART1
 	else if (p_usart == USART1) {
 		p_pdc_base = PDC_USART1;

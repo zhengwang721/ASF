@@ -3,7 +3,7 @@
  *
  * \brief AT30TS(E)75x Temperature Sensor Example.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,7 +51,7 @@
  * \section Requirements
  *
  * This package can be used with:
- * - SAM4N Xplained Pro with I01 Xplained Pro attached on EXT1.
+ * - SAM Xplained Pro with I01 Xplained Pro attached on EXT1.
  * - SAM4C_EK
  * - SAM4CMP-DB and SAM4CMS-DB
  *

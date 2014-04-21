@@ -175,7 +175,9 @@
 			</info>
 			<build type="include-path" value="."/>
 			<build type="header-file" subtype="api" value="twihs_slave.h"/>
+			<build type="header-file" subtype="api" value="twihs_master.h"/>
 			<build type="header-file" subtype="api" value="sam_twihs/twihs_slave.h"/>
+			<build type="header-file" subtype="api" value="sam_twihs/twihs_master.h"/>
 			<build type="doxygen-entry-point" value="twihs_group"/>
 			<build type="doxygen-quick-start" value="twihs_quickstart"/>
 			<require idref="common.services.basic.clock"/>
