@@ -88,6 +88,8 @@
  * - sam4e16e_sam4e_ek
  * - sam4n16c_sam4n_xplained_pro
  * - samr21g18a_samr21_xplained_pro
+ * - 4cmp16c-sam4cmp-db
+ * - 4cms16c-sam4cms-db
  *
  * \section connection_note Connection
  * \subsection SAM4N Xplained Pro extra connection

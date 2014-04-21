@@ -97,6 +97,11 @@
 #  include "sam4c.h"
 #endif
 
+/* SAM4CM series */
+#if (SAM4CM)
+#  include "sam4cm.h"
+#endif
+
 /* SAM4CP series */
 #if (SAM4CP)
 #  include "sam4cp.h"

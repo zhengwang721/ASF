@@ -72,6 +72,8 @@
  *  - SAM4C evaluation kit
  *  - SAM4CP16BMB evaluation board (no button version)
  *  - SAMG53 Xplained Pro kit
+ *  - SAM4CMP16C demo board
+ *  - SAM4CMS16C demo board
  *
  * \section example_description Description of the example
  * This example flashes a group of LEDs present on a port with flash speed of
