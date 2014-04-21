@@ -374,16 +374,20 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * \defgroup uhc_basic_use_case_setup_prereq USB Host Controller (UHC) - Prerequisites
  * Common prerequisites for all USB hosts.
  *
- * This module is based on USB host stack full interrupt driven, and supporting
- * \ref sleepmgr_group sleepmgr and \ref clk_group clock services.
+ * This module is based on USB host stack full interrupt driven and supporting
+ * \ref sleepmgr_group sleepmgr. For AVR and SAM3/4 devices the
+ * \ref clk_group clock services is supported. For SAMD devices the
+ * \ref asfdoc_sam0_system_clock_group clock driver is supported.
  *
  * The following procedure must be executed to setup the project correctly:
  * - Specify the clock configuration:
- *   - UC3 and SAM devices without USB high speed support need 48MHz clock input.\n
+ *   - UC3 and SAM3/4 devices without USB high speed support need 48MHz clock input.\n
  *     You must use a PLL and an external OSC.
- *   - UC3 and SAM devices with USB high speed support need 12MHz clock input.\n
+ *   - UC3 and SAM3/4 devices with USB high speed support need 12MHz clock input.\n
  *     You must use an external OSC.
  *   - UC3 devices with USBC hardware need CPU frequency higher than 25MHz.
+ *   - SAMD devices without USB high speed support need 48MHz clock input.\n
+ *     You must use a DFLL and an external OSC.
  * - In conf_board.h, the define CONF_BOARD_USB_PORT must be added to enable USB lines.
  * (Not mandatory for all boards)
  * - Enable interrupts
@@ -396,7 +400,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \subpage uhc_conf_clock.
  *
- * Add to the initialization code:
+ * For AVR and SAM3/4 devices, add to the initialization code:
  * \code
 	sysclk_init();
 	irq_initialize_vectors();
@@ -404,6 +408,14 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
 	board_init();
 	sleepmgr_init(); // Optional
 \endcode
+ *
+ * For SAMD devices, add to the initialization code:
+   \code
+   system_init();
+   irq_initialize_vectors();
+   cpu_irq_enable();
+   sleepmgr_init(); // Optional
+ \endcode
  * Add to the main IDLE loop:
  * \code
 	sleepmgr_enter_sleep(); // Optional
@@ -474,13 +486,58 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
 	// CPU clock need of clock > 25MHz to run with USBC
 	#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL1
 \endcode
- * 
+ *
  * Content of conf_clock.h for SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed):
  * \code
 	// USB Clock Source fixed at UPLL.
 	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_UPLL
 	#define CONFIG_USBCLK_DIV           1
 \endcode
+ *
+ * Content of conf_clocks.h for SAMD devices (USB):
+ * \code
+  // USB Clock Source fixed at DFLL.
+  // SYSTEM_CLOCK_SOURCE_XOSC32K configuration - External 32KHz crystal/clock oscillator
+  #  define CONF_CLOCK_XOSC32K_ENABLE               true
+  #  define CONF_CLOCK_XOSC32K_EXTERNAL_CRYSTAL     SYSTEM_CLOCK_EXTERNAL_CRYSTAL
+  #  define CONF_CLOCK_XOSC32K_STARTUP_TIME         SYSTEM_XOSC32K_STARTUP_65536
+  #  define CONF_CLOCK_XOSC32K_AUTO_AMPLITUDE_CONTROL  false
+  #  define CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT    false
+  #  define CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT  true
+  #  define CONF_CLOCK_XOSC32K_ON_DEMAND            false
+  #  define CONF_CLOCK_XOSC32K_RUN_IN_STANDBY       true
+  // SYSTEM_CLOCK_SOURCE_DFLL configuration - Digital Frequency Locked Loop
+  #  define CONF_CLOCK_DFLL_ENABLE                  true
+  #  define CONF_CLOCK_DFLL_LOOP_MODE               SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED
+  #  define CONF_CLOCK_DFLL_ON_DEMAND               true
+
+  // DFLL closed loop mode configuration
+  #  define CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR   GCLK_GENERATOR_1
+  #  define CONF_CLOCK_DFLL_MULTIPLY_FACTOR         (48000000/32768)
+  #  define CONF_CLOCK_DFLL_QUICK_LOCK              true
+  #  define CONF_CLOCK_DFLL_TRACK_AFTER_FINE_LOCK   true
+  #  define CONF_CLOCK_DFLL_KEEP_LOCK_ON_WAKEUP     true
+  #  define CONF_CLOCK_DFLL_ENABLE_CHILL_CYCLE      true
+  #  define CONF_CLOCK_DFLL_MAX_COARSE_STEP_SIZE    (0x1f / 8)
+  #  define CONF_CLOCK_DFLL_MAX_FINE_STEP_SIZE      (0xff / 8)
+
+  #  define CONF_CLOCK_CONFIGURE_GCLK               true
+
+  // Configure GCLK generator 0 (Main Clock)
+  #  define CONF_CLOCK_GCLK_0_ENABLE                true
+  #  define CONF_CLOCK_GCLK_0_RUN_IN_STANDBY        true
+  #  define CONF_CLOCK_GCLK_0_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_DFLL
+  #  define CONF_CLOCK_GCLK_0_PRESCALER             1
+  #  define CONF_CLOCK_GCLK_0_OUTPUT_ENABLE         false
+
+  // Configure GCLK generator 1
+  #  define CONF_CLOCK_GCLK_1_ENABLE                true
+  #  define CONF_CLOCK_GCLK_1_RUN_IN_STANDBY        false
+  #  define CONF_CLOCK_GCLK_1_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_XOSC32K
+  #  define CONF_CLOCK_GCLK_1_PRESCALER             1
+  #  define CONF_CLOCK_GCLK_1_OUTPUT_ENABLE         true
+
+  \endcode
  */
 
 /**
@@ -490,7 +547,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \section uhc_use_case_1_setup Setup steps
  *
- * Prior to implement this use case, be sure to have already 
+ * Prior to implement this use case, be sure to have already
  * apply the UDI module "basic use case".
  *
  * \section uhc_use_case_1_usage Usage steps
@@ -514,7 +571,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \section uhc_use_case_2_setup Setup steps
  *
- * Prior to implement this use case, be sure to have already 
+ * Prior to implement this use case, be sure to have already
  * apply the UDI module "basic use case".
  *
  * \section uhc_use_case_2_usage Usage steps
@@ -544,7 +601,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \section uhc_use_case_3_setup Setup steps
  *
- * Prior to implement this use case, be sure to have already 
+ * Prior to implement this use case, be sure to have already
  * apply the UDI module "basic use case".
  *
  * \section uhc_use_case_3_usage Usage steps
@@ -569,7 +626,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
 	 {
 	   my_host_mode = b_host_mode;
 	 }
- 
+
 	 void my_usb_task(void)
 	 {
 	   if (my_host_mode) {

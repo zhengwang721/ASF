@@ -3,7 +3,7 @@
  *
  * \brief SAMG53 Xplained Pro board initialization
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -123,7 +123,7 @@ void system_board_init(void)
 			IOPORT_MODE_MUX_B);
 #endif
 
-#if defined(CONF_BOARD_SPI)
+#if defined(CONF_BOARD_SPI) || defined(CONF_BOARD_SD_MMC_SPI)
 	ioport_set_pin_peripheral_mode(SPI_MISO_GPIO, SPI_MISO_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
@@ -147,7 +147,7 @@ void system_board_init(void)
 	ioport_set_pin_peripheral_mode(TWI1_CLK_GPIO, TWI1_CLK_FLAGS);
 #endif
 
-#ifdef CONF_BOARD_TWI2
+#if defined(CONF_BOARD_TWI2) || defined(CONF_BOARD_AT30TSE)
 	ioport_set_pin_peripheral_mode(TWI2_DATA_GPIO, TWI2_DATA_FLAGS);
 	ioport_set_pin_peripheral_mode(TWI2_CLK_GPIO, TWI2_CLK_FLAGS);
 #endif
@@ -166,6 +166,11 @@ void system_board_init(void)
 	ioport_set_pin_peripheral_mode(I2S1_SDI_GPIO, I2S1_SDI_FLAGS);
 	ioport_set_pin_peripheral_mode(I2S1_SDO_GPIO, I2S1_SDO_FLAGS);
 	ioport_set_pin_peripheral_mode(I2S1_WS_GPIO, I2S1_WS_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_PDM
+ioport_set_pin_peripheral_mode(PDM_CLK_GPIO, PDM_CLK_FLAGS);
+ioport_set_pin_peripheral_mode(PDM_DAT_GPIO, PDM_DAT_FLAGS);
 #endif
 }
 

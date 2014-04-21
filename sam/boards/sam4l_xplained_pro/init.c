@@ -3,7 +3,7 @@
  *
  * \brief SAM4L Xplained Pro board initialization
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -89,6 +89,12 @@ void board_init(void)
 			BUTTON_0_EIC_PIN_MUX | IOPORT_MODE_PULLUP);
 #else
 	/* Push button as input: already done, it's the default pin state */
+#endif
+
+#if (defined CONF_BOARD_BL)
+	// Configure LCD backlight
+	ioport_set_pin_dir(LCD_BL_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(LCD_BL_GPIO, LCD_BL_INACTIVE_LEVEL);
 #endif
 
 #if defined (CONF_BOARD_COM_PORT)

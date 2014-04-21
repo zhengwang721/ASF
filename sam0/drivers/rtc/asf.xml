@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.rtc" name="config.sam0.drivers.rtc" caption="RTC - Real Time Counter Driver" default="count_callback">
 		<info type="description" value="summary">
-			Driver for the SAM D20/D21 RTC. Provides a unified interface
+			Driver for the SAM D20/D21/R21 RTC. Provides a unified interface
 			for the configuration and management of the RTC module.
 		</info>
 
@@ -25,7 +25,8 @@
 
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
-
+			<device-support value="samr21"/>
+			
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
 
@@ -47,7 +48,7 @@
 
 			<info type="description" value="pdf">
 				This document describes how to use the Real Time Counter in
-				Count mode on the SAM D20/D21, both the ASF driver and the
+				Count mode on the SAM D20/D21/R21, both the ASF driver and the
 				peripheral itself.
 			</info>
 
@@ -71,7 +72,8 @@
 
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
-
+			<device-support value="samr21"/>
+			
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
 
@@ -94,7 +96,8 @@
 
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
-
+			<device-support value="samr21"/>
+			
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
 
@@ -112,7 +115,7 @@
 
 			<info type="description" value="pdf">
 				This document describes how to use the Real Time Counter in
-				Calendar mode on the SAM D20/D21, both the ASF driver and the
+				Calendar mode on the SAM D20/D21/R21, both the ASF driver and the
 				peripheral itself.
 			</info>
 
@@ -136,11 +139,41 @@
 
 			<device-support value="samd20"/>
 			<device-support value="samd21"/>
-
+			<device-support value="samr21"/>
+			
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 	</select-by-config>
+	<module type="driver" id="sam0.drivers.rtc.calendar_appnote" caption="RTC - Real Time Counter in Calendar Mode (Callback APIs)">
+			<info type="description" value="pdf">
+				Here is for ASF manual due to rtc calendar is missing
+			</info>
+			<build type="include-path" value="." />
+			<build type="header-file" subtype="api" value="rtc_calendar.h"/>
+			<build type="header-file" subtype="api" value="rtc_calendar_interrupt.h"/>
+			<build type="c-source" value="rtc_calendar.c"/>
+			<build type="c-source" value="rtc_calendar_interrupt.c"/>
+
+			<build type="header-file" value="quick_start_calendar/qs_rtc_calendar_basic.h"/>
+			<build type="header-file" value="quick_start_calendar_callback/qs_rtc_calendar_callback.h"/>
+
+			<build type="define" name="RTC_CALENDAR_ASYNC" value="true"/>
+			<build type="doxygen-enable-section" value="RTC_CALENDAR_CALLBACK_MODE"/>
+
+			<build type="doxygen-entry-point" value="asfdoc_sam0_rtc_calendar_group"/>
+			<build type="doxygen-example-path" value="quick_start_calendar"/>
+			<build type="doxygen-example-path" value="quick_start_calendar_callback"/>
+			<build type="doxygen-example-path" value="quick_start_calendar_callback/samd20_xplained_pro"/>
+			<build type="doxygen-quick-start" value="asfdoc_sam0_rtc_calendar_exqsg"/>
+
+			<device-support value="samd20"/>
+			<device-support value="samd21"/>
+			<device-support value="samr21"/>
+
+			<require idref="sam0.utils"/>
+			<require idref="sam0.drivers.system"/>
+		</module>
 </asf>

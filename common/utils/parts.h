@@ -920,10 +920,27 @@
 #define SAMD21E ( \
 		SAM_PART_IS_DEFINED(SAMD21E15A) || \
 		SAM_PART_IS_DEFINED(SAMD21E16A) || \
-		SAM_PART_IS_DEFINED(SAMD21E17A) \
+		SAM_PART_IS_DEFINED(SAMD21E17A) || \
+		SAM_PART_IS_DEFINED(SAMD21E18A) \
 	)
 /** @} */
 
+/**
+ * \name SAMR21 series
+ * @{
+ */
+#define SAMR21G ( \
+		SAM_PART_IS_DEFINED(SAMR21G16A) || \
+		SAM_PART_IS_DEFINED(SAMR21G17A) || \
+		SAM_PART_IS_DEFINED(SAMR21G18A) \
+	)
+
+#define SAMR21E ( \
+		SAM_PART_IS_DEFINED(SAMR21E16A) || \
+		SAM_PART_IS_DEFINED(SAMR21E17A) || \
+		SAM_PART_IS_DEFINED(SAMR21E18A) \
+	)
+/** @} */
 
 /**
  * \name SAM4E series
@@ -991,7 +1008,53 @@
 		)
 
 
-#define SAM4C32 (SAM4C32_0 || SAM4C32_1) 
+#define SAM4C32 (SAM4C32_0 || SAM4C32_1)
+
+/** @} */
+
+/**
+ * \name SAM4CM series
+ * @{
+ */
+#define SAM4CMP8_0 ( \
+		SAM_PART_IS_DEFINED(SAM4CMP8C_0) \
+		)
+
+#define SAM4CMP8_1 ( \
+		SAM_PART_IS_DEFINED(SAM4CMP8C_1) \
+		)
+
+#define SAM4CMP8 (SAM4CMP8_0 || SAM4CMP8_1)
+
+#define SAM4CMP16_0 ( \
+		SAM_PART_IS_DEFINED(SAM4CMP16C_0) \
+		)
+
+#define SAM4CMP16_1 ( \
+		SAM_PART_IS_DEFINED(SAM4CMP16C_1) \
+		)
+
+#define SAM4CMP16 (SAM4CMP16_0 || SAM4CMP16_1)
+
+#define SAM4CMS8_0 ( \
+		SAM_PART_IS_DEFINED(SAM4CMS8C_0) \
+		)
+
+#define SAM4CMS8_1 ( \
+		SAM_PART_IS_DEFINED(SAM4CMS8C_1) \
+		)
+
+#define SAM4CMS8 (SAM4CMS8_0 || SAM4CMS8_1)
+
+#define SAM4CMS16_0 ( \
+		SAM_PART_IS_DEFINED(SAM4CMS16C_0) \
+		)
+
+#define SAM4CMS16_1 ( \
+		SAM_PART_IS_DEFINED(SAM4CMS16C_1) \
+		)
+
+#define SAM4CMS16 (SAM4CMS16_0 || SAM4CMS16_1)
 
 /** @} */
 
@@ -1022,6 +1085,12 @@
 		SAM_PART_IS_DEFINED(SAMG53G19) ||\
 		SAM_PART_IS_DEFINED(SAMG53N19) \
 		)
+
+#define SAMG54 ( \
+		SAM_PART_IS_DEFINED(SAMG54G19) ||\
+		SAM_PART_IS_DEFINED(SAMG54J19) ||\
+		SAM_PART_IS_DEFINED(SAMG54N19) \
+)
 /** @} */
 /**
  * \name SAM families
@@ -1051,6 +1120,12 @@
 /** SAMD21 Family */
 #define SAMD21 (SAMD21J || SAMD21G || SAMD21E)
 
+/** SAMD Family */
+#define SAMD   (SAMD20 || SAMD21)
+
+/** SAMR21 Family */
+#define SAMR21 (SAMR21G || SAMR21E)
+
 /** SAM4E Family */
 #define SAM4E (SAM4E8 || SAM4E16)
 
@@ -1062,19 +1137,24 @@
 #define SAM4C_1 (SAM4C8_1 || SAM4C16_1 || SAM4C32_1)
 #define SAM4C   (SAM4C8 || SAM4C16 || SAM4C32)
 
+/** SAM4CM Family */
+#define SAM4CM_0 (SAM4CMP8_0 || SAM4CMP16_0 || SAM4CMS8_0 || SAM4CMS16_0)
+#define SAM4CM_1 (SAM4CMP8_1 || SAM4CMP16_1 || SAM4CMS8_1 || SAM4CMS16_1)
+#define SAM4CM   (SAM4CMP8 || SAM4CMP16 || SAM4CMS8 || SAM4CMS16)
+
 /** SAM4CP Family */
 #define SAM4CP_0 (SAM4CP16_0)
 #define SAM4CP_1 (SAM4CP16_1)
 #define SAM4CP   (SAM4CP16)
 
 /** SAMG Family */
-#define SAMG (SAMG51 || SAMG53)
+#define SAMG (SAMG51 || SAMG53 || SAMG54)
 
 /** @} */
 
 /** SAM product line */
 #define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || \
-		SAMD20 || SAMD21 || SAM4N || SAM4C || SAM4CP || SAMG)
+		SAMD20 || SAMD21 || SAMR21 || SAM4N || SAM4C || SAM4CM || SAM4CP || SAMG)
 
 /** @} */
 

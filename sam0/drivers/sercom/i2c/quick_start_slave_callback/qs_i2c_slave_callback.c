@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21 I2C Slave Quick Start Guide with Callbacks
+ * \brief SAM SERCOM I2C Slave Quick Start Guide with Callbacks
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -51,7 +51,7 @@ void configure_i2c_slave(void);
 void configure_i2c_slave_callbacks(void);
 
 //! [packet]
-static struct i2c_packet packet;
+static struct i2c_slave_packet packet;
 //! [packet]
 
 //! [packet_data]

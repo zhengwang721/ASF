@@ -52,9 +52,9 @@
 #include <conf_spi_master_vec.h>
 
 /**
- * \defgroup asfdoc_sam0_sercom_spi_master_vec_group SAM D20/D21 Serial Peripheral Interface Master Driver w/ Vectored I/O (SERCOM SPI)
+ * \defgroup asfdoc_sam0_sercom_spi_master_vec_group SAM D20/D21/R21 Serial Peripheral Interface Master Driver w/ Vectored I/O (SERCOM SPI)
  *
- * This driver for SAM D20/D21 devices provides an interface for the configuration
+ * This driver for SAM D20/D21/R21 devices provides an interface for the configuration
  * and operation of the SERCOM module in SPI master mode and uses vectored I/O
  * for data transfers.
  *
@@ -134,13 +134,13 @@ digraph bufptr_to_spiord {
 	bufptrs:bf1 -> bufs:b1 -> spiord:s1;
 	bufptrs:bf2 -> bufs:b2 -> spiord:s2;
 	bufptrs:bf3 -> bufs:b3 -> spiord:s3;
-	bufptrs:bf4 -> "NULL";
+	bufptrs:bf4 -> "none";
 }
  * \enddot
  *
- * Note that the last descriptor \e must have a NULL-pointer in order for the
- * driver to detect that the end of the buffer list has been reached. This means
- * that for \c N buffers, \c N+1 buffer descriptors are needed.
+ * Note that the last descriptor \e must indicate no next buffer in order for
+ * the driver to detect that the end of the buffer list has been reached. This
+ * means that for \c N buffers, \c N+1 buffer descriptors are needed.
  *
  * Bidirectional transfers are supported without any restrictions on the buffer
  * descriptors, so the number of bytes and buffers to receive and transmit do

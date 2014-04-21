@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21 Non Volatile Memory driver
+ * \brief SAM D20/D21/R21 Non Volatile Memory driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -427,6 +427,13 @@ enum status_code nvm_write_buffer(
 
 		/* Store next 16-bit chunk to the NVM memory space */
 		NVM_MEMORY[nvm_address++] = data;
+	}
+
+	/* Perform a manual NVM write when the length of data to be programmed is
+	 * less than page size */
+	if (length < NVMCTRL_PAGE_SIZE) {
+		return nvm_execute_command(NVM_COMMAND_WRITE_PAGE,
+				destination_address, 0);
 	}
 
 	return STATUS_OK;

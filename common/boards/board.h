@@ -120,7 +120,7 @@ extern "C" {
 #define XMEGA_RF233_ZIGBIT         56  //!< ATxmega256A3U with AT86RF233 Zigbit
 #define XMEGA_RF212B_ZIGBIT        57  //!< ATxmega256A3U with AT86RF212B Zigbit
 #define SAM4S_WPIR_RD              58  //!< SAM4S-WPIR-RD board.
-#define SAMD20_XPLAINED_PRO        59  //!< SAMD20 Xplained Pro board
+#define SAMD20_XPLAINED_PRO        59  //!< SAM D20 Xplained Pro board
 #define SAM4L8_XPLAINED_PRO        60  //!< SAM4L8 Xplained Pro board.
 #define SAM4N_XPLAINED_PRO         61  //!< SAM4N Xplained Pro board.
 #define XMEGA_A3_REB_CBB           62  //!< XMEGA REB Controller Base board.
@@ -130,7 +130,10 @@ extern "C" {
 #define SAMG53_XPLAINED_PRO        66  //!< SAMG53 Xplained Pro board.
 #define SAM4CP16BMB                67  //!< SAM4CP16BMB board.
 #define SAM4E_XPLAINED_PRO         68  //!< SAM4E Xplained Pro board.
-#define SAMD21_XPLAINED_PRO        69  //!< SAMD21 Xplained Pro board.
+#define SAMD21_XPLAINED_PRO        69  //!< SAM D21 Xplained Pro board.
+#define SAMR21_XPLAINED_PRO        70  //!< SAM R21 Xplained Pro board.
+#define SAM4CMP_DB                 71  //!< SAM4CMP demo board.
+#define SAM4CMS_DB                 72  //!< SAM4CMS demo board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< Simulator for the AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -251,6 +254,8 @@ extern "C" {
 #  include "samd20_xplained_pro/samd20_xplained_pro.h"
 #elif BOARD == SAMD21_XPLAINED_PRO
 #  include "samd21_xplained_pro/samd21_xplained_pro.h"
+#elif BOARD == SAMR21_XPLAINED_PRO
+#  include "samr21_xplained_pro/samr21_xplained_pro.h"
 #elif BOARD == SAM4N_XPLAINED_PRO
 #  include "sam4n_xplained_pro/sam4n_xplained_pro.h"
 #elif BOARD == MEGA1284P_XPLAINED_BC
@@ -279,6 +284,10 @@ extern "C" {
 #  include "sam4l8_xplained_pro/sam4l8_xplained_pro.h"
 #elif BOARD == SAM4C_EK
 #  include "sam4c_ek/sam4c_ek.h"
+#elif BOARD == SAM4CMP_DB
+#  include "sam4cmp_db/sam4cmp_db.h"
+#elif BOARD == SAM4CMS_DB
+#  include "sam4cms_db/sam4cms_db.h"
 #elif BOARD == SAM4CP16BMB
 #  include "sam4cp16bmb/sam4cp16bmb.h"
 #elif BOARD == SIMULATOR_XMEGA_A1

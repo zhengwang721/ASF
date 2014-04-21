@@ -298,7 +298,7 @@ static enum status_code _i2c_slave_wait_for_bus(
  */
 enum status_code i2c_slave_write_packet_wait(
 		struct i2c_slave_module *const module,
-		struct i2c_packet *const packet)
+		struct i2c_slave_packet *const packet)
 {
 	/* Sanity check arguments. */
 	Assert(module);
@@ -416,7 +416,7 @@ enum status_code i2c_slave_write_packet_wait(
  */
 enum status_code i2c_slave_read_packet_wait(
 		struct i2c_slave_module *const module,
-		struct i2c_packet *const packet)
+		struct i2c_slave_packet *const packet)
 {
 	/* Sanity check arguments. */
 	Assert(module);

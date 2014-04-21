@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21 Serial Peripheral Interface Driver
+ * \brief SAM D20/D21/R21 Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -60,6 +60,14 @@ extern "C" {
 #  define SERCOM_GCLK_ID SERCOM0_GCLK_ID_SLOW
 #else
 #  error "SERCOM modules must share the same slow GCLK channel ID."
+#endif
+
+#if (0x1ff >= REV_SERCOM)
+#  define FEATURE_SERCOM_SYNCBUSY_SCHEME_VERSION_1
+#elif (0x2ff >= REV_SERCOM)
+#  define FEATURE_SERCOM_SYNCBUSY_SCHEME_VERSION_2
+#else
+#  error "Unknown SYNCBUSY scheme for this SERCOM revision"
 #endif
 
 /**

@@ -66,7 +66,7 @@ extern "C" {
 # define READ_BUFF_ADDR1    IFLASH1_ADDR
 #elif (SAM3S || SAM3N || SAM4E || SAM4N || SAMG)
 # define READ_BUFF_ADDR     IFLASH_ADDR
-#elif (SAM4C || SAM4CP)
+#elif (SAM4C || SAM4CP || SAM4CM)
 #if SAM4C32
 # define READ_BUFF_ADDR0    IFLASH0_CNC_ADDR
 # define READ_BUFF_ADDR1    IFLASH1_CNC_ADDR
@@ -82,7 +82,7 @@ extern "C" {
 /* Flash Writing Protection Key */
 #define FWP_KEY    0x5Au
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 #define EEFC_FCR_FCMD(value) \
 	((EEFC_FCR_FCMD_Msk & ((value) << EEFC_FCR_FCMD_Pos)))
 #define EEFC_ERROR_FLAGS  (EEFC_FSR_FLOCKE | EEFC_FSR_FCMDE | EEFC_FSR_FLERR)
@@ -112,7 +112,7 @@ extern uint32_t efc_perform_fcr(Efc *p_efc, uint32_t ul_fcr);
  */
 uint32_t efc_init(Efc *p_efc, uint32_t ul_access_mode, uint32_t ul_fws)
 {
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 	efc_write_fmr(p_efc, ul_access_mode | EEFC_FMR_FWS(ul_fws) | EEFC_FMR_CLOE);
 #else
 	efc_write_fmr(p_efc, ul_access_mode | EEFC_FMR_FWS(ul_fws));
@@ -120,7 +120,7 @@ uint32_t efc_init(Efc *p_efc, uint32_t ul_access_mode, uint32_t ul_fws)
 	return EFC_RC_OK;
 }
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 /**
  * \brief Enable code loop optimization.
  *
@@ -297,7 +297,7 @@ uint32_t efc_perform_read_sequence(Efc *p_efc,
 	uint32_t *p_ul_data =
 			(uint32_t *) ((p_efc == EFC0) ?
 			READ_BUFF_ADDR0 : READ_BUFF_ADDR1);
-#elif (SAM3S || SAM4S || SAM3N || SAM3U || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+#elif (SAM3S || SAM4S || SAM3N || SAM3U || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 	uint32_t *p_ul_data = (uint32_t *) READ_BUFF_ADDR;
 #else
 	return EFC_RC_NOT_SUPPORT;
@@ -310,7 +310,7 @@ uint32_t efc_perform_read_sequence(Efc *p_efc,
 	p_efc->EEFC_FMR |= (0x1u << 16);
 
 	/* Send the Start Read command */
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 	p_efc->EEFC_FCR = EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(0)
 			| EEFC_FCR_FCMD(ul_cmd_st);
 #else
@@ -333,7 +333,7 @@ uint32_t efc_perform_read_sequence(Efc *p_efc,
 
 	/* To stop the read mode */
 	p_efc->EEFC_FCR =
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 			EEFC_FCR_FKEY_PASSWD | EEFC_FCR_FARG(0) |
 			EEFC_FCR_FCMD(ul_cmd_sp);
 #else

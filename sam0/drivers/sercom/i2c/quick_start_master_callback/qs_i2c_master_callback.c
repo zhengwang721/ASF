@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21 I2C Master Quick Start Guide with Callbacks
+ * \brief SAM SERCOM I2C Master Quick Start Guide with Callbacks
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -64,7 +64,7 @@ static uint8_t buffer_reversed[DATA_LENGTH] = {
 //! [address]
 
 //! [packet_glob]
-struct i2c_packet packet;
+struct i2c_master_packet packet;
 //! [packet_glob]
 
 /* Init software module instance. */

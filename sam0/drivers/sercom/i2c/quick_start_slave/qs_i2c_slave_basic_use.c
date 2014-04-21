@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21 I2C Slave Quick Start Guide with Callbacks
+ * \brief SAM SERCOM I2C Slave Quick Start Guide with Callbacks
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -102,8 +102,7 @@ int main(void)
 	enum i2c_slave_direction dir;
 	//! [dir]
 	//! [pack]
-	struct i2c_packet packet = {
-		.address     = SLAVE_ADDRESS,
+	struct i2c_slave_packet packet = {
 		.data_length = DATA_LENGTH,
 		.data        = write_buffer,
 	};

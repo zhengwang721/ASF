@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21 USART Quick Start
+ * \brief SAM D20/D21/R21 USART Quick Start
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -49,7 +49,7 @@
  * - Asynchronous mode
  * - 9600 Baudrate
  * - 8-bits, No Parity and 1 Stop Bit
- * - TX and RX enabled and connected to the Xplained PRO Embedded Debugger virtual COM port
+ * - TX and RX enabled and connected to the Xplained Pro Embedded Debugger virtual COM port
  *
  * \section asfdoc_sam0_sercom_usart_basic_use_case_setup Setup
  *
