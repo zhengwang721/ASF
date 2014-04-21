@@ -55,7 +55,7 @@
 #include "nwk_build_config.h"
 
 /**
- * \defgroup group_rf4control RF4Control v2.0.0
+ * \defgroup group_rf4control RF4Control v2.0.1
  * The RF4Control stack is a ZigBee® RF4CE Certified Platform implementing the
  * ZigBee
  * RF4CE standard.
