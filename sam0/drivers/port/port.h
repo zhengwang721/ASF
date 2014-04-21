@@ -502,7 +502,7 @@ static inline void port_pin_toggle_output_level(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21/R21/D10/D11</td>
+ *		<td>Added support for SAMD21</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
