@@ -1,11 +1,7 @@
 /**
  * \file
  *
- * \brief Arch file for SAM.
- *
- * This file defines common SAM series.
- *
- * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,87 +39,20 @@
  *
  */
 
-#ifndef _SAM_IO_
-#define _SAM_IO_
+#ifndef _SAM4CM_EFC0_INSTANCE_
+#define _SAM4CM_EFC0_INSTANCE_
 
-/* SAM3 family */
+/* ========== Register definition for EFC0 peripheral ========== */
+#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+  #define REG_EFC0_FMR                  (0x400E0A00U) /**< \brief (EFC0) EEFC Flash Mode Register */
+  #define REG_EFC0_FCR                  (0x400E0A04U) /**< \brief (EFC0) EEFC Flash Command Register */
+  #define REG_EFC0_FSR                  (0x400E0A08U) /**< \brief (EFC0) EEFC Flash Status Register */
+  #define REG_EFC0_FRR                  (0x400E0A0CU) /**< \brief (EFC0) EEFC Flash Result Register */
+#else
+  #define REG_EFC0_FMR (*(__IO uint32_t*)0x400E0A00U) /**< \brief (EFC0) EEFC Flash Mode Register */
+  #define REG_EFC0_FCR (*(__O  uint32_t*)0x400E0A04U) /**< \brief (EFC0) EEFC Flash Command Register */
+  #define REG_EFC0_FSR (*(__I  uint32_t*)0x400E0A08U) /**< \brief (EFC0) EEFC Flash Status Register */
+  #define REG_EFC0_FRR (*(__I  uint32_t*)0x400E0A0CU) /**< \brief (EFC0) EEFC Flash Result Register */
+#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-/* SAM3S series */
-#if (SAM3S)
-# if (SAM3S8 || SAM3SD8)
-#  include "sam3s8.h"
-# else
-#  include "sam3s.h"
-# endif
-#endif
-
-/* SAM3U series */
-#if (SAM3U)
-#  include "sam3u.h"
-#endif
-
-/* SAM3N series */
-#if (SAM3N)
-#  include "sam3n.h"
-#endif
-
-/* SAM3XA series */
-#if (SAM3XA)
-#  include "sam3xa.h"
-#endif
-
-/* SAM4S series */
-#if (SAM4S)
-#  include "sam4s.h"
-#endif
-
-/* SAM4L series */
-#if (SAM4L)
-#  include "sam4l.h"
-#endif
-
-/* SAM4E series */
-#if (SAM4E)
-#  include "sam4e.h"
-#endif
-
-/* SAM4N series */
-#if (SAM4N)
-#  include "sam4n.h"
-#endif
-
-/* SAM4C series */
-#if (SAM4C)
-#  include "sam4c.h"
-#endif
-
-/* SAM4CM series */
-#if (SAM4CM)
-#  if (SAM4CMP32 || SAM4CMS32)
-#    include "sam4cm32.h"
-#  else
-#    include "sam4cm.h"
-#  endif
-#endif
-
-/* SAM4CP series */
-#if (SAM4CP)
-#  include "sam4cp.h"
-#endif
-
-/* SAMG51 series */
-#if (SAMG51)
-#  include "samg51.h"
-#endif
-
-/* SAMG53 series */
-#if (SAMG53)
-#  include "samg53.h"
-#endif
-
-/* SAMG54 series */
-#if (SAMG54)
-#  include "samg54.h"
-#endif
-
-#endif /* _SAM_IO_ */
+#endif /* _SAM4CM_EFC0_INSTANCE_ */

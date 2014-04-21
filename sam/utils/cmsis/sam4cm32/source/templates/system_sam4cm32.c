@@ -39,7 +39,7 @@
  *
  */
 
-#include "sam4cm.h"
+#include "sam4cm32.h"
 
 /* @cond 0 */
 /**INDENT-OFF**/
@@ -78,7 +78,8 @@ void SystemInit( void )
    */
 
   /* Set FWS according to default clock configuration */
-  EFC->EEFC_FMR = EEFC_FMR_FWS(1);
+  EFC0->EEFC_FMR = EEFC_FMR_FWS(1)|EEFC_FMR_CLOE;
+  EFC1->EEFC_FMR = EEFC_FMR_FWS(1)|EEFC_FMR_CLOE;
 }
 
 /**
@@ -191,35 +192,41 @@ void system_init_flash( uint32_t ul_clk )
   /* Set FWS for embedded Flash access according to operating frequency */
   if ( ul_clk < CHIP_FREQ_FWS_0 )
   {
-    EFC->EEFC_FMR = EEFC_FMR_FWS(0);
+    EFC0->EEFC_FMR = EEFC_FMR_FWS(0)|EEFC_FMR_CLOE;
+    EFC1->EEFC_FMR = EEFC_FMR_FWS(0)|EEFC_FMR_CLOE;
   }
   else
   {
     if ( ul_clk < CHIP_FREQ_FWS_1 )
     {
-      EFC->EEFC_FMR = EEFC_FMR_FWS(1);
+      EFC0->EEFC_FMR = EEFC_FMR_FWS(1)|EEFC_FMR_CLOE;
+      EFC1->EEFC_FMR = EEFC_FMR_FWS(1)|EEFC_FMR_CLOE;
     }
     else
     {
       if ( ul_clk < CHIP_FREQ_FWS_2 )
       {
-        EFC->EEFC_FMR = EEFC_FMR_FWS(2);
+        EFC0->EEFC_FMR = EEFC_FMR_FWS(2)|EEFC_FMR_CLOE;
+        EFC1->EEFC_FMR = EEFC_FMR_FWS(2)|EEFC_FMR_CLOE;
       }
       else
       {
         if ( ul_clk < CHIP_FREQ_FWS_3 )
         {
-          EFC->EEFC_FMR = EEFC_FMR_FWS(3);
+          EFC0->EEFC_FMR = EEFC_FMR_FWS(3)|EEFC_FMR_CLOE;
+          EFC1->EEFC_FMR = EEFC_FMR_FWS(3)|EEFC_FMR_CLOE;
         }
         else
         {
           if ( ul_clk < CHIP_FREQ_FWS_4 )
           {
-            EFC->EEFC_FMR = EEFC_FMR_FWS(4);
+            EFC0->EEFC_FMR = EEFC_FMR_FWS(4)|EEFC_FMR_CLOE;
+            EFC1->EEFC_FMR = EEFC_FMR_FWS(4)|EEFC_FMR_CLOE;
           }
           else
           {
-            EFC->EEFC_FMR = EEFC_FMR_FWS(5);
+            EFC0->EEFC_FMR = EEFC_FMR_FWS(5)|EEFC_FMR_CLOE;
+            EFC1->EEFC_FMR = EEFC_FMR_FWS(5)|EEFC_FMR_CLOE;
           }
         }
       }

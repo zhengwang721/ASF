@@ -1,11 +1,7 @@
 /**
  * \file
  *
- * \brief Arch file for SAM.
- *
- * This file defines common SAM series.
- *
- * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,87 +39,24 @@
  *
  */
 
-#ifndef _SAM_IO_
-#define _SAM_IO_
+#ifndef _SAM4CM_TRNG_INSTANCE_
+#define _SAM4CM_TRNG_INSTANCE_
 
-/* SAM3 family */
+/* ========== Register definition for TRNG peripheral ========== */
+#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+  #define REG_TRNG_CR                    (0x40048000U) /**< \brief (TRNG) Control Register */
+  #define REG_TRNG_IER                   (0x40048010U) /**< \brief (TRNG) Interrupt Enable Register */
+  #define REG_TRNG_IDR                   (0x40048014U) /**< \brief (TRNG) Interrupt Disable Register */
+  #define REG_TRNG_IMR                   (0x40048018U) /**< \brief (TRNG) Interrupt Mask Register */
+  #define REG_TRNG_ISR                   (0x4004801CU) /**< \brief (TRNG) Interrupt Status Register */
+  #define REG_TRNG_ODATA                 (0x40048050U) /**< \brief (TRNG) Output Data Register */
+#else
+  #define REG_TRNG_CR    (*(__O uint32_t*)0x40048000U) /**< \brief (TRNG) Control Register */
+  #define REG_TRNG_IER   (*(__O uint32_t*)0x40048010U) /**< \brief (TRNG) Interrupt Enable Register */
+  #define REG_TRNG_IDR   (*(__O uint32_t*)0x40048014U) /**< \brief (TRNG) Interrupt Disable Register */
+  #define REG_TRNG_IMR   (*(__I uint32_t*)0x40048018U) /**< \brief (TRNG) Interrupt Mask Register */
+  #define REG_TRNG_ISR   (*(__I uint32_t*)0x4004801CU) /**< \brief (TRNG) Interrupt Status Register */
+  #define REG_TRNG_ODATA (*(__I uint32_t*)0x40048050U) /**< \brief (TRNG) Output Data Register */
+#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-/* SAM3S series */
-#if (SAM3S)
-# if (SAM3S8 || SAM3SD8)
-#  include "sam3s8.h"
-# else
-#  include "sam3s.h"
-# endif
-#endif
-
-/* SAM3U series */
-#if (SAM3U)
-#  include "sam3u.h"
-#endif
-
-/* SAM3N series */
-#if (SAM3N)
-#  include "sam3n.h"
-#endif
-
-/* SAM3XA series */
-#if (SAM3XA)
-#  include "sam3xa.h"
-#endif
-
-/* SAM4S series */
-#if (SAM4S)
-#  include "sam4s.h"
-#endif
-
-/* SAM4L series */
-#if (SAM4L)
-#  include "sam4l.h"
-#endif
-
-/* SAM4E series */
-#if (SAM4E)
-#  include "sam4e.h"
-#endif
-
-/* SAM4N series */
-#if (SAM4N)
-#  include "sam4n.h"
-#endif
-
-/* SAM4C series */
-#if (SAM4C)
-#  include "sam4c.h"
-#endif
-
-/* SAM4CM series */
-#if (SAM4CM)
-#  if (SAM4CMP32 || SAM4CMS32)
-#    include "sam4cm32.h"
-#  else
-#    include "sam4cm.h"
-#  endif
-#endif
-
-/* SAM4CP series */
-#if (SAM4CP)
-#  include "sam4cp.h"
-#endif
-
-/* SAMG51 series */
-#if (SAMG51)
-#  include "samg51.h"
-#endif
-
-/* SAMG53 series */
-#if (SAMG53)
-#  include "samg53.h"
-#endif
-
-/* SAMG54 series */
-#if (SAMG54)
-#  include "samg54.h"
-#endif
-
-#endif /* _SAM_IO_ */
+#endif /* _SAM4CM_TRNG_INSTANCE_ */
