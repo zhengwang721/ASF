@@ -133,6 +133,9 @@ static enum status_code _adc_set_config(
 	uint8_t adjres = 0;
 	uint32_t resolution = ADC_RESOLUTION_16BIT;
 	enum adc_accumulate_samples accumulate = ADC_ACCUMULATE_DISABLE;
+#if SAMD20
+	uint8_t revision_num = ((REG_DSU_DID & DSU_DID_DIE_Msk) >> DSU_DID_DIE_Pos);
+#endif
 
 	/* Get the hardware module pointer */
 	Adc *const adc_module = module_inst->hw;
@@ -196,7 +199,33 @@ static enum status_code _adc_set_config(
 		/* 16-bit result register */
 		resolution = ADC_RESOLUTION_16BIT;
 		break;
+		/* Please see $35.1.8 for ADC errata. the before revision D SAM D20 chip
+		    has errata 10530 issue. */
+#if SAMD20
+	case ADC_RESOLUTION_15BIT:
+		/* Increase resolution by 3 bit */
+		if(revision_num < REVISON_D_NUM) {	
+			adjres = ADC_DIVIDE_RESULT_8;
+		} else {	
+			adjres = ADC_DIVIDE_RESULT_2;
+		}
+		accumulate = ADC_ACCUMULATE_SAMPLES_64;
+		/* 16-bit result register */
+		resolution = ADC_RESOLUTION_16BIT;
+		break;
 
+	case ADC_RESOLUTION_16BIT:
+		if(revision_num < REVISON_D_NUM) {	
+			/* Increase resolution by 4 bit */
+			adjres = ADC_DIVIDE_RESULT_16;
+		} else {
+			adjres = ADC_DIVIDE_RESULT_DISABLE;
+		}
+		accumulate = ADC_ACCUMULATE_SAMPLES_256;
+		/* 16-bit result register */
+		resolution = ADC_RESOLUTION_16BIT;
+		break;
+#else
 	case ADC_RESOLUTION_15BIT:
 		/* Increase resolution by 3 bit */
 		adjres = ADC_DIVIDE_RESULT_2;
@@ -212,7 +241,7 @@ static enum status_code _adc_set_config(
 		/* 16-bit result register */
 		resolution = ADC_RESOLUTION_16BIT;		
 		break;
-
+#endif
 	case ADC_RESOLUTION_8BIT:
 		/* 8-bit result register */
 		resolution = ADC_RESOLUTION_8BIT;

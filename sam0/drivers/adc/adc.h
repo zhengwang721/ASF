@@ -451,6 +451,11 @@ enum adc_callback {
 
 /** @} */
 
+#if SAMD20
+/* The Die revision D number */
+#define REVISON_D_NUM    3
+#endif
+
 /**
  * \brief ADC reference voltage enum
  *
