@@ -63,7 +63,8 @@
  * device, e.g., the file system can be created in the internal RAM, NAND Flash 
  * and DataFlash (an AT45DBX needs to be connected) on SAM3X-EK/SAM3N-EK/
  * SAM3S-EK/SAM3U-EK/SAM4E-EK/SAM4S-EK/SAM4S-Xplained/ATxmega128A1-Xplained/
- * ATxmegaA3BU-Xplained/SAM4N-Xplained-Pro, the file system is created in the
+ * ATxmegaA3BU-Xplained/SAM4N-Xplained-Pro/SAM4CMP16C-SAM4CMP-DB/
+ * SAM4CMS16C-SAM4CMS-DB. The file system is created in the
  * Micro SD/MMC on IO1 extension board connected to SAM D/R Xplained Pro.
  *
  *  \section Description
