@@ -1731,7 +1731,7 @@ enum status_code spi_select_slave(
   *	<tr>
   *		<td>C</td>
   *		<td>01/2014</td>
-  *		<td>Add SAM D21/R21/D10/D11 support.</td>
+  *		<td>Add SAM D21 support.</td>
   *	</tr>
   *	<tr>
   *		<td>B</td>
