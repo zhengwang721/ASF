@@ -83,24 +83,6 @@ extern void sniffer_if_init (uint8_t uc_enable_led);
 #pragma weak sniffer_if_init=Dummy_sniffer_if_init
 #endif
 
-static uint32_t ul_int_counter = 0;	// only for phy debug
-static uint32_t ul_bad_int_counter = 0;	// only for phy debug
-static uint32_t ul_bad_rx_int_counter = 0;	// only for phy debug
-static uint32_t ul_tx_int_counter = 0;	// only for phy debug
-static uint32_t ul_rx_int_counter = 0;	// only for phy debug
-static uint32_t ul_buf_busy_counter = 0;	// only for phy debug
-static uint32_t ul_cb_counter = 0;	// only for phy debug
-
-// Internal Rx struct to manage RX indication
-//typedef struct
-//{
-//  uint8_t uc_buff_id;      ///< Buffer identifier
-//  uint8_t scheme;          ///< Modulation scheme of the last received message
-//  uint8_t mode;            ///< Mode PRIME v1.3, PRIME v1.4 or Noise Capture
-//  uint8_t noise_result;    ///< Noise result in case of noise capture mode
-//  uint16_t data_len;       ///< Length of the data buffer.
-//} atpl230QueueRx_t;
-
 // Internal Rx buf struct to manage RX indication
 static uint8_t puc_phy_rx_buffer_event[4]; // 4(rx)
 // Internal Tx buf struct to manage TX result cfm
@@ -1224,7 +1206,6 @@ static void _phy_tx_result_task(void)
     uc_tx_result_ind>>=1;
     uc_buf_idx++;
     if(uc_buf_idx > 4){
-      printf("_phy_tx_result_task ERROR tx_int(%u) tx_ind(%u)\r\n", uc_reg_tx_int, uc_tx_result_ind);
       return;
     }
   }
@@ -1254,8 +1235,6 @@ static void _phy_rx_task(void)
     if(ATPL230_GET_RXINT_PRX0(uc_rx_payload_ind)){
       // set buff rx event
       puc_phy_rx_buffer_event[uc_buf_idx] = true;
-
-      ul_buf_busy_counter++; // only for phy debug
     }
 
     // check next buffer
@@ -1263,7 +1242,6 @@ static void _phy_rx_task(void)
     uc_rx_payload_ind = (uc_rx_payload_ind>>1) & 0xF0;
     uc_buf_idx++;
     if(uc_buf_idx > 4){
-      printf("_phy_rx_task ERROR rx_int(%u) h_ind(%u) p_ind(%u) \r\n", uc_reg_rx_int, uc_rx_header_ind, uc_rx_payload_ind);
       return;
     }
   }
@@ -1869,18 +1847,18 @@ static void _reset_rx_flag_interrupt(uint8_t uc_buf_idx){
  */
 void phy_rx_frame_cb (xPhyMsgRx_t *px_msg)
 {
-  uint8_t uc_buf_idx;
+  uint8_t uc_buf_idx = 0;
   uint8_t uc_event_flag;
   uint8_t uc_reg_robo_mode;
   uint8_t *puc_phy_header_buf;
   uint8_t uc_mac_enable;
   uint8_t uc_crc_type;
-  uint32_t ul_data_buf_address;
   uint8_t uc_idx;
   uint8_t uc_rx_padlen = 0;
   uint8_t uc_noise_conf;
   uint16_t us_read_phy_header_address;
   uint16_t us_rx_symbol_len = 0;
+  uint32_t ul_data_buf_address;
 
   // check RX event
   uc_event_flag = false;
@@ -1890,7 +1868,6 @@ void phy_rx_frame_cb (xPhyMsgRx_t *px_msg)
       // get buffer idx of the current event
       uc_buf_idx = uc_last_rx_buf;
       uc_event_flag = true;
-      ul_buf_busy_counter--; // only for phy debug
       break;
     }
 
@@ -1994,7 +1971,6 @@ void phy_rx_frame_cb (xPhyMsgRx_t *px_msg)
     // update stats values
     atpl230.rxTotalErrors++;
     atpl230.rxBadLen++;
-    ul_bad_rx_int_counter++;  // only for phy debug
     px_msg->data_len = 0;
     // reset phy interrupt flag
     _reset_rx_flag_interrupt(uc_buf_idx);
@@ -2003,8 +1979,6 @@ void phy_rx_frame_cb (xPhyMsgRx_t *px_msg)
 
   // send message notification to rx queue
   px_msg->uc_buff_id = uc_buf_idx;
-
-  ul_cb_counter++; // only for phy debug
 
   // get message from atpl230 internal buffers
   ul_data_buf_address = REG_ATPL230_PHY_RX_INIT_ADDRESS + (uc_buf_idx * PHY_MAX_PPDU_SIZE);
@@ -2092,9 +2066,6 @@ void phy_rx_frame_cb (xPhyMsgRx_t *px_msg)
   // reset phy interrupt flag
   _reset_rx_flag_interrupt(uc_buf_idx);
 
-  printf("phy int(%u) tx(%u) rx(%u) er(%u) buf(%u) rx_bad(%u) cb(%u) \r\n", ul_int_counter,
-	 ul_tx_int_counter, ul_rx_int_counter, ul_bad_int_counter, ul_buf_busy_counter,
-	 ul_bad_rx_int_counter, ul_cb_counter);	// only for phy debug
 }
 
 /**
@@ -2105,8 +2076,6 @@ void phy_interrupt (void)
 {
   volatile uint8_t vuc_int_tx;
   volatile uint8_t vuc_int_rx;
-
-  ul_int_counter++;  // only for phy debug
 
   if(phy_get_sfr_err()){
       // read only rx payload interrupts
@@ -2119,7 +2088,6 @@ void phy_interrupt (void)
       phy_clear_sfr_err();
       // clear INT
       phy_clear_global_interrupt();
-      ul_bad_int_counter++;  // only for phy debug
   }else{
       // read interrupts status
       vuc_int_tx = pplc_if_read8(REG_ATPL230_TXRXBUF_TX_INT);
@@ -2134,13 +2102,11 @@ void phy_interrupt (void)
       // enable rx task
       if(uc_reg_rx_int || uc_reg_ns_int){
         _phy_rx_task();
-	ul_rx_int_counter++;  // only for phy debug
       }
 
       // enable tx task(confirm)
       if(uc_reg_tx_int){
         _phy_tx_result_task();
-	ul_tx_int_counter++;  // only for phy debug
       }
   }
 }
