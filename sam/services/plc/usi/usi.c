@@ -244,6 +244,11 @@ enum
 static USI_param_t usi_cfg_param[NUM_PORTS];
 // @}
 
+//! \name USI message boundary control flag
+// @{
+static uint8_t uc_message_status;
+// @}
+
 //! \name USI flow control internal protocol
 // @{
 cmd_params_t internal_command;
@@ -1031,7 +1036,6 @@ void usi_Process(void)
   int      nr_ch = 0;
   uint8_t  uc_delimiter = MSGMARK;
   uint8_t *puc_next_token;
-  uint8_t  uc_message_status = MSG_END;
   uint8_t *puc_rx_aux;
   uint16_t us_token_size;
 
@@ -1234,6 +1238,9 @@ void usi_Init(void)
   /* USI internal command structure initialization */
   internal_command.us_len = INTERNAL_MSG_LEN;
   internal_command.uc_p_type = PROTOCOL_INTERNAL;
+
+  /* USI message boundary control flag initialization */
+  uc_message_status = MSG_END;
 }
 
 /** @brief  Function to transmit data through USI
