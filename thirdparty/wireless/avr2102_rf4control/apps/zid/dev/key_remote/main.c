@@ -419,7 +419,7 @@ int main(void)
      */
      cpu_irq_enable();
 	 sw_timer_get_id(&APP_TIMER_ACC_READ);
-    if (get_zid_keyrc_button(pal_button_scan()) == ZID_COLD_START)
+    if (get_zid_keyrc_button(button_scan()) == ZID_COLD_START)
     {        
         /* Cold start */
         LED_On(ZID_APP_LED);
@@ -829,7 +829,7 @@ static void app_task(void)
 					
 				}
 				/* Scan the button events */
-                button = pal_button_scan();
+                button = button_scan();
 				/* Check if any valid vents occurred */
                 if ((button != BUTTON_UNKNOWN) && (button == previous_button))
                 {
@@ -894,7 +894,7 @@ static void app_task(void)
                        LED_Off(LED_3);
                        LED_On(LED_4);
                        LED_Off(LED_5);
-					   pal_read_acc(&x_val,&y_val,&z_val,&ADC_val);
+					   read_acc(&x_val,&y_val,&z_val,&ADC_val);
 					   app_calculate_offset();
 					   Correct_x_offset(&x_val,x_offset);
 					   Correct_y_offset(&y_val,y_offset);
@@ -1487,8 +1487,7 @@ static void correct_negative_offset(uint16_t *temp_val, uint16_t temp_offset)
 
 static void acc_read_cb(void *parameter)
 {   
-	 //app_calculate_offset();
-	 pal_read_acc(&x_val,&y_val,&z_val,&ADC_val);
+	 read_acc(&x_val,&y_val,&z_val,&ADC_val);
 	 Correct_x_offset(&x_val,x_offset);
 	 Correct_y_offset(&y_val,y_offset);
 	 sw_timer_start(APP_TIMER_ACC_READ,ACCELEROMETER_SAMPLE_TIME,SW_TIMEOUT_RELATIVE,
