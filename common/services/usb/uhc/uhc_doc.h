@@ -58,29 +58,12 @@
  *
  * This documentation describes common USB Host usage based on UHC, as follow:
  * - \ref asfdoc_uhc_api_overview
- * - \ref asfdoc_asfdoc_uhc_basic_use_case_setup
+ * - \ref asfdoc_uhc_basic_use_case_setup
  * - \ref asfdoc_uhc_use_cases
  *
  * \section asfdoc_uhc_api_overview API Overview
  * @{
  */
-/**
- * \name Descriptor storage in internal RAM
- * @{
- */
-#if (defined UHC_DATA_USE_HRAM_SUPPORT)
-#  if defined(__GNUC__)
-#    define UHC_DATA(x) COMPILER_WORD_ALIGNED __attribute__((__section__(".data_hram0")))
-#    define UHC_BSS(x)  COMPILER_ALIGNED(x)   __attribute__((__section__(".bss_hram0")))
-#  elif defined(__ICCAVR32__)
-#    define UHC_DATA(x) COMPILER_ALIGNED(x)   __data32
-#    define UHC_BSS(x)  COMPILER_ALIGNED(x)   __data32
-#  endif
-#else
-#  define UHC_DATA(x) COMPILER_ALIGNED(x)
-#  define UHC_BSS(x)  COMPILER_ALIGNED(x)
-#endif
-/**@}*/
 
 /**
  * \brief Structure to store device information
@@ -181,9 +164,8 @@ bool uhc_is_suspend(void);
  */
 void uhc_resume(void);
 
-#ifdef USB_HOST_LPM_SUPPORT
 /**
- * \brief Suspends a USB line through LPM feature
+ * \brief Suspends a USB line through LPM feature(SAM D21/R21)
  *
  * \param[in] b_remotewakeup Authorize the remote wakeup features, if true
  * \param[in] besl Best effort service latency value
@@ -191,7 +173,6 @@ void uhc_resume(void);
  * \return flase if the LPM is not supported by USB Device
  */
 bool uhc_suspend_lpm(bool b_remotewakeup, uint8_t besl);
-#endif // USB_HOST_LPM_SUPPORT
 
 /**@}*/
 
@@ -305,7 +286,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  */
 
 /**
- * \page asfdoc_asfdoc_uhc_basic_use_case_setup USB Host Basic Setup
+ * \page asfdoc_uhc_basic_use_case_setup USB Host Basic Setup
  *
  * \section USB_HOST_CONF USB host user configuration
  * The following USB host configuration must be included in the conf_usb_host.h
@@ -370,7 +351,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * Called when a USB device enumeration is completed or fail.
  *
- * \section asfdoc_asfdoc_uhc_basic_use_case_setup USB Host Setup Steps
+ * \section asfdoc_uhc_basic_use_case_setup_steps USB Host Setup Steps
  *
  * \subsection asfdoc_uhc_basic_use_case_setup_prereq USB Host Controller (UHC) - Prerequisites
  * Common prerequisites for all USB hosts.

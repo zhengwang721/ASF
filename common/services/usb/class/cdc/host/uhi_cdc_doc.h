@@ -84,19 +84,44 @@
 	.uninstall = uhi_cdc_uninstall, \
 	.sof_notify = uhi_cdc_sof, \
 }
+/**@}*/
 
 /**
  * \name Functions required by UHC
- * See \ref uhi_api_t for the function descriptions
  * @{
  */
-uhc_enum_status_t uhi_cdc_install(uhc_device_t* dev);
-void uhi_cdc_enable(uhc_device_t* dev);
-void uhi_cdc_uninstall(uhc_device_t* dev);
-void uhi_cdc_sof(bool b_micro);
-//@}
 
-//@}
+/**
+ * \brief Install interface
+ * Allocate interface endpoints if supported.
+ *
+ * \param[in] uhc_device_t	  Device to request
+ *
+ * \return status of the install
+ */
+uhc_enum_status_t uhi_cdc_install(uhc_device_t* dev);
+
+/**
+ * \brief Enable the interface.
+ *
+ * Enable a USB interface corresponding to UHI.
+ *
+ * \param[in] uhc_device_t	  Device to request
+ */
+void uhi_cdc_enable(uhc_device_t* dev);
+
+/**
+ * \brief Uninstall the interface (if installed)
+ *
+ * \param[in] uhc_device_t	  Device to request
+ */
+void uhi_cdc_uninstall(uhc_device_t* dev);
+
+/**
+ * \brief Signal that a SOF has occurred
+ */
+void uhi_cdc_sof(bool b_micro);
+/**@}*/
 
 /**
  * \name UHI for Communication Device Class
@@ -105,7 +130,6 @@ void uhi_cdc_sof(bool b_micro);
  * These routines are used by memory to transfer its data
  * to/from USB CDC endpoint.
  *
- * See \ref asfdoc_uhi_cdc_exqsg.
  * @{
  */
 
@@ -195,7 +219,7 @@ int uhi_cdc_putc(uint8_t port, int value);
  * \return the number of data remaining
  */
 iram_size_t uhi_cdc_write_buf(uint8_t port, const void* buf, iram_size_t size);
-//@}
+/**@}*/
 
 /**@}*/
 
@@ -303,7 +327,7 @@ iram_size_t uhi_cdc_write_buf(uint8_t port, const void* buf, iram_size_t size);
 	 extern void my_callback_cdc_rx_notify(void); \endcode
  *     \note This callback is called when a new data are received.
  *     This can be used to manage data reception through interrupt and avoid pooling.
- * -# The CDC data access functions are described in \ref uhi_cdc_group.
+ * -# The CDC data access functions are described in \ref asfdoc_uhi_cdc_api_overview "UHI CDC API overview".
  *
  * \section uhi_cdc_use_cases Advanced use cases
  * \ifnot ASF_MANUAL

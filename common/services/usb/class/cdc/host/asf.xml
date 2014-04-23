@@ -79,11 +79,13 @@
 		<build type="header-file" value="uhi_cdc_doc.h"/>
 
 		<build type="doxygen-example-path" value="."/>
-		<build type="doxygen-entry-point" value="asfdoc_uhi_cdc_group" />
+		<build type="doxygen-entry-point" value="asfdoc_uhi_cdc_group"/>
+
+		<require idref="common.services.usb.uhc.appnote"/>
 
 		<device-support value="sam"/>
 		<device-support value="sam0"/>
 		<device-support value="avr"/>
-		<generator default-mcu="unspecified-samd21" value="doxygen-module-v2" />
+		<generator default-mcu="unspecified-samd21" value="doxygen-module-v2"/>
 	</module>
 </asf>
