@@ -52,7 +52,7 @@
  */
 
 /* ! Device definition (mandatory) */
-#define  USB_PID_ATMEL_ASF_HIDKEYBOARD_MOUSE_MID       0x2436
+
 #define  USB_DEVICE_VENDOR_ID             USB_VID_ATMEL
 #define  USB_DEVICE_PRODUCT_ID            0x2437
 #define  USB_DEVICE_MAJOR_VERSION         1

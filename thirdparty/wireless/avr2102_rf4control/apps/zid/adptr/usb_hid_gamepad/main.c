@@ -103,6 +103,8 @@
 
 /* === Macros ============================================================== */
 #define PAIR_WAIT_PERIOD    500000
+#define JOYSTICK_POSITIVE_DISPLACEMENT  (10)
+#define JOYSTICK_NEGATIVE_DISPLACEMENT  (-10)
 #if (LED_COUNT >= 3)
 #define LED_START                       (LED0)
 #define LED_NWK_SETUP                   (LED1)
@@ -440,29 +442,29 @@ static void zid_report_data_indication(uint8_t PairingRef, uint8_t num_report_re
 			   udi_hid_gpd_buttons(true,keyboard_desc->key_code[0]);
 			   if(keyboard_desc->key_code[1]==0x01)
 			   {
-				    udi_hid_gpd_throttle_move(10);
+				    udi_hid_gpd_throttle_move(JOYSTICK_POSITIVE_DISPLACEMENT);
 					//pos =pos+10;
 			   }
 			   else if(keyboard_desc->key_code[1]==0x02)
 			   {
-				     udi_hid_gpd_throttle_move(-10);
+				     udi_hid_gpd_throttle_move(JOYSTICK_NEGATIVE_DISPLACEMENT);
 					 
 		       }
 			   else if(keyboard_desc->key_code[2]==0x01)
 			   {
-				   udi_hid_gpd_moveY(-10);
+				   udi_hid_gpd_moveY(JOYSTICK_NEGATIVE_DISPLACEMENT);
 			   }
 			   else if(keyboard_desc->key_code[2]==0x02)
 			   {
-				   udi_hid_gpd_moveY(10);
+				   udi_hid_gpd_moveY(JOYSTICK_POSITIVE_DISPLACEMENT);
 			   }
 			   else if(keyboard_desc->key_code[2] ==0x03)
 			   {
-				   udi_hid_gpd_moveX(-10);
+				   udi_hid_gpd_moveX(JOYSTICK_NEGATIVE_DISPLACEMENT);
 			   }
 			   else if(keyboard_desc->key_code[2]==0x04)
 			   {
-				   udi_hid_gpd_moveX(10);
+				   udi_hid_gpd_moveX(JOYSTICK_POSITIVE_DISPLACEMENT);
 			   }
 			   else
 			   {

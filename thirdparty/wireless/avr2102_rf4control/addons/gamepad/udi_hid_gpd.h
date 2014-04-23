@@ -131,41 +131,35 @@ typedef struct {
  */
 
 /**
- * \brief Send events key modifier released
- *
- * \param modifier_id   ID of key modifier
- *
- * \return \c 1 if function was successfully done, otherwise \c 0.
- */
-bool udi_hid_gpd_modifier_up(uint8_t modifier_id);
-
-/**
- * \brief Send events key modifier pressed
- *
- * \param modifier_id   ID of key modifier
- *
- * \return \c 1 if function was successfully done, otherwise \c 0.
- */
-bool udi_hid_gpd_modifier_down(uint8_t modifier_id);
-
-/**
- * \brief Send events key released
+ * \brief Send events key pressed or released
  *
  * \param key_id   ID of key
- *
+ * \param b_state  Key Pressed or released
  * \return \c 1 if function was successfully done, otherwise \c 0.
- */
-bool udi_hid_gpd_up(uint8_t key_id);
-
-/**
- * \brief Send events key pressed
- *
- * \param key_id   ID of key
  *
  */
 bool udi_hid_gpd_buttons(bool b_state, uint8_t key_id);
+/**
+ * \brief Move the throttle
+ *
+ * \param pos   Signed value to move
+ *
+ * \return \c 1 if function was successfully done, otherwise \c 0.
+ */
 bool udi_hid_gpd_throttle_move(int8_t pos);
+/**
+ * \brief Move the x axe
+ * \param pos   Signed value to move
+ *
+ * \return \c 1 if function was successfully done, otherwise \c 0.
+ */
 bool udi_hid_gpd_moveX(int8_t pos);
+/**
+ * \brief Move the y axe
+ * \param pos   Signed value to move
+ *
+ * \return \c 1 if function was successfully done, otherwise \c 0.
+ */
 bool udi_hid_gpd_moveY(int8_t pos);
 
 /* @} */
