@@ -78,14 +78,14 @@ void pulse_latch(void);
 void set_button_pins_for_normal_mode(void);
 void led_ctrl(led_id_t led_no, led_action_t led_setting);
 #ifdef ADC_ACCELEROMETER
-void pal_ADC_init(void);
-void pal_acc_init(void);
-void pal_acc_disable(void);
-uint16_t pal_ADC_read(adc_channel_t channel);
-void pal_read_acc(uint16_t *x, uint16_t *y, uint16_t *z, uint16_t *ref);
+void adc_init(void);
+void acc_init(void);
+void acc_disable(void);
+uint16_t adc_read(adc_channel_t channel);
+void read_acc(uint16_t *x, uint16_t *y, uint16_t *z, uint16_t *ref);
 
 #endif
-button_id_t pal_button_scan(void);
+button_id_t button_scan(void);
 void update_latch_status(void);
 #else /* KEY_RC_BOARD */
 

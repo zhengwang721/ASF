@@ -67,7 +67,7 @@ static uint16_t ADC_ref_val;
 
 
 
-static void pal_acc_enable(acc_status_t status);
+static void acc_enable(acc_status_t status);
 
 #endif /* ADC_ACCELEROMETER */
  
@@ -87,7 +87,7 @@ void set_button_pins_for_normal_mode(void)
 /**
  * @brief Initialize ADC for Accelerometer
  */
-void pal_ADC_init(void)
+void adc_init(void)
 {
     /* power up ADC */
     PRR0 &= ~(1 << PRADC);
@@ -107,7 +107,7 @@ void pal_ADC_init(void)
 /**
  * @brief Initialize the Accelerometer
  */
-void pal_acc_init(void)
+void acc_init(void)
 {
     /* Reset all the previous values */
     x_axis_val = 0;
@@ -118,7 +118,7 @@ void pal_acc_init(void)
     /* Leave the Accelerometer ON always other wise it
      * takes 10 to 20 milli sec for conversion
      */
-    pal_acc_enable( ACC_ON );
+    acc_enable( ACC_ON );
 }
 /**
  * @brief Enable or disable the Accelerometer
@@ -126,7 +126,7 @@ void pal_acc_init(void)
  * @param status Enable or disable the accelerometer
  *
  */
-static void pal_acc_enable(acc_status_t status)
+static void acc_enable(acc_status_t status)
 {
     if (status)
     {
@@ -146,9 +146,9 @@ static void pal_acc_enable(acc_status_t status)
  * @brief disable the Accelerometer
  *
  */
-void pal_acc_disable(void)
+void acc_disable(void)
 {
-    pal_acc_enable( ACC_OFF );
+    acc_enable( ACC_OFF );
 }
 /**
  * @brief Read the ADC for Accelerometer
@@ -158,7 +158,7 @@ void pal_acc_disable(void)
  * @return uint16_t Value read from ADC
  *
  */
-uint16_t pal_ADC_read(adc_channel_t channel)
+uint16_t adc_read(adc_channel_t channel)
 {
     uint16_t result;
 
@@ -201,7 +201,7 @@ uint16_t pal_ADC_read(adc_channel_t channel)
  * @param ref ref value is read and stored in this parameter
  *
  */
-void pal_read_acc(uint16_t *x, uint16_t *y, uint16_t *z, uint16_t *ref)
+void read_acc(uint16_t *x, uint16_t *y, uint16_t *z, uint16_t *ref)
 {
     static adc_channel_t select_adc = X_AXIS;
 
@@ -219,21 +219,21 @@ void pal_read_acc(uint16_t *x, uint16_t *y, uint16_t *z, uint16_t *ref)
     {
         case X_AXIS:
             {
-                x_axis_val = pal_ADC_read(X_AXIS);
+                x_axis_val = adc_read(X_AXIS);
                 x_axis_val = ((accX_old + x_axis_val) >> 2);
                 select_adc = Y_AXIS;
                 break;
             }
         case Y_AXIS:
             {
-                y_axis_val = pal_ADC_read(Y_AXIS);
+                y_axis_val = adc_read(Y_AXIS);
                 y_axis_val = ((accY_old + y_axis_val) >> 2);
                 select_adc = Z_AXIS;
                 break;
             }
         case Z_AXIS:
             {
-                z_axis_val = pal_ADC_read(Z_AXIS);
+                z_axis_val = adc_read(Z_AXIS);
                 z_axis_val = ((accZ_old + z_axis_val) >> 2);
                 select_adc = ADC_REF;
                 break;
@@ -245,7 +245,7 @@ void pal_read_acc(uint16_t *x, uint16_t *y, uint16_t *z, uint16_t *ref)
                  * substracted by a ratio of voltage at PF3 divided by 10. Please refer to the Remote control
                  * schematics for more details
                  */
-                ADC_ref_val  = pal_ADC_read(ADC_REF);
+                ADC_ref_val  = adc_read(ADC_REF);
                 ADC_ref_val -= (ADC_ref_val / 10);
                 ADC_ref_val = ((accR_old + ADC_ref_val) >> 2);
                 select_adc = X_AXIS;
@@ -334,7 +334,7 @@ void led_ctrl(led_id_t led_no, led_action_t led_setting)
  *
  * @param button_no
  */
-button_id_t pal_button_scan(void)
+button_id_t button_scan(void)
 {
     uint32_t ret_val = 0;
     uint8_t i, k, r;
