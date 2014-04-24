@@ -53,7 +53,7 @@
  *
  * \section intro Introduction
  * This an example of how to use \ref usi.h "PLC Universal Serial
- * Interface service" to communicate with the target through a 
+ * Interface service" to communicate with the target through a
  * user-defined protocol.
  *
  * In this file, a template for the serialization of a user-defined
@@ -66,7 +66,7 @@
  * - \ref conf_board.h
  * - \ref conf_clock.h
  * - \ref conf_buart_if.h
- * - \ref conf_busart_if.h 
+ * - \ref conf_busart_if.h
  * - \ref conf_uart_serial.h
  * - \ref conf_example.h
  *
@@ -75,15 +75,15 @@
  *
  * \section description Description
  * This template can be used as basis to implement USI support
- * for any user-defined protocol. This is done through the function: 
+ * for any user-defined protocol. This is done through the function:
  *
  *   uint8_t serial_if_user_def_api_parser(uint8_t *puc_rx_msg, uint16_t us_len);
  *
  *   This function is used as a callback by USI whenever a message with:
  *        TYPE_PROTOCOL = PROTOCOL_USER_DEFINED
- *   is received, in order to process it. By extending the capabilities of that function 
+ *   is received, in order to process it. By extending the capabilities of that function
  *   to the user-defined protocol, the USI is provided with the intelligence to support it.
- *   
+ *
  *   This function receives two parameters:
  *
  *                uint8_t *puc_rx_msg  Pointer to the message payload.
@@ -98,23 +98,23 @@
  *
  *   Respectively, the target will respond to them with:
  *
- *               SERIAL_IF_USER_DEF_GET_CMD_RSP: this primitive contains the value stored 
+ *               SERIAL_IF_USER_DEF_GET_CMD_RSP: this primitive contains the value stored
  *                                               in the requested memory address of the target.
  *               SERIAL_IF_USER_DEF_SET_CMD_RSP: this primitive simply acknowledges the execution
  *                                               of the set command.
  *
  *   The message format of this protocol template is defined as:
  *
- *   Read command:            
- *   
+ *   Read command:
+ *
  * [ COMMAND ][ ADDRESS ]
- * 
+ *
  * <--1Byte--><--4 Bytes-->
  *
- *   Write command:           
- *  
+ *   Write command:
+ *
  * [ COMMAND ][ ADDRESS ][ VALUE ]
- * 
+ *
  * <--1Byte--><--4 Bytes--><--4 Bytes-->
  *
  *   The list of supported primitives can be extended in the function serial_if_user_def_api_parser() and
@@ -137,7 +137,7 @@ uint8_t serial_if_user_def_api_parser(uint8_t *puc_rx_msg, uint16_t us_len);
 
 static bool b_led_swap = false;
 
-/** 
+/**
  * \name Response buffer
  */
 //@{
@@ -230,18 +230,18 @@ uint8_t serial_if_user_def_api_parser(uint8_t *puc_rx_msg, uint16_t us_len)
   {
     // GET command
     case SERIAL_IF_USER_DEF_GET_CMD:
-      ul_address = ((uint32_t)*puc_rx++)<<8;
-      ul_address = ((uint32_t)*puc_rx++)<<8;
-      ul_address = ((uint32_t)*puc_rx++)<<8;
-      ul_address = ((uint32_t)*puc_rx);
+      ul_address = ((uint32_t)*puc_rx++)<<24;
+      ul_address |= ((uint32_t)*puc_rx++)<<16;
+      ul_address |= ((uint32_t)*puc_rx++)<<8;
+      ul_address |= ((uint32_t)*puc_rx);
 
       // Read the requested data
       uc_value = *((uint32_t *)ul_address);
-      
+
       // Build response
       uc_serial_rsp_buf[us_serial_response_len++] = SERIAL_IF_USER_DEF_GET_CMD_RSP;
-      uc_serial_rsp_buf[us_serial_response_len++] = (uint8_t)(uc_value>>8);
-      uc_serial_rsp_buf[us_serial_response_len++] = (uint8_t)(uc_value>>8);
+      uc_serial_rsp_buf[us_serial_response_len++] = (uint8_t)(uc_value>>24);
+      uc_serial_rsp_buf[us_serial_response_len++] = (uint8_t)(uc_value>>16);
       uc_serial_rsp_buf[us_serial_response_len++] = (uint8_t)(uc_value>>8);
       uc_serial_rsp_buf[us_serial_response_len++] = (uint8_t)(uc_value);
 
@@ -253,15 +253,15 @@ uint8_t serial_if_user_def_api_parser(uint8_t *puc_rx_msg, uint16_t us_len)
 
     // SET command
     case SERIAL_IF_USER_DEF_SET_CMD:
-      ul_address = ((uint32_t)*puc_rx++)<<8;
-      ul_address = ((uint32_t)*puc_rx++)<<8;
-      ul_address = ((uint32_t)*puc_rx++)<<8;
-      ul_address = ((uint32_t)*puc_rx++);
+      ul_address = ((uint32_t)*puc_rx++)<<24;
+      ul_address |= ((uint32_t)*puc_rx++)<<16;
+      ul_address |= ((uint32_t)*puc_rx++)<<8;
+      ul_address |= ((uint32_t)*puc_rx++);
 
-      uc_value = ((uint32_t)*puc_rx++)<<8;
-      uc_value = ((uint32_t)*puc_rx++)<<8;
-      uc_value = ((uint32_t)*puc_rx++)<<8;
-      uc_value = ((uint32_t)*puc_rx);
+      uc_value = ((uint32_t)*puc_rx++)<<24;
+      uc_value |= ((uint32_t)*puc_rx++)<<16;
+      uc_value |= ((uint32_t)*puc_rx++)<<8;
+      uc_value |= ((uint32_t)*puc_rx);
 
       // Write the data in the requested address
       pul_address = (uint32_t *)ul_address;
