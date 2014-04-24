@@ -79,6 +79,9 @@ __no_inline enum status_code system_peripheral_lock(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_PAC2);
+
 	switch (register_pos) {
 #ifdef PAC0
 		case 0:
@@ -138,6 +141,9 @@ __no_inline enum status_code system_peripheral_unlock(
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}
+
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_PAC2);
 
 	switch (register_pos) {
 #ifdef PAC0
