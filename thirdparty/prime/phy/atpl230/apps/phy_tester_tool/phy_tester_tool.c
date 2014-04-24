@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Example application for ATMEL PLC Phy Tester Tool
+ * \brief ATMEL PLC Phy Tester Example
  *
- * Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
  /**
- *  \mainpage ATMEL PLC Phy Tester Tool Example
+ *  \mainpage ATMEL PLC Phy Tester Example
  *
  *  \section Purpose
  *

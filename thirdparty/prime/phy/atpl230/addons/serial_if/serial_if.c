@@ -3,7 +3,7 @@
 *
 * \brief ATPL230 Serial Interface for Physical layer
 *
-* Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
+* Copyright (c) 2014 Atmel Corporation. All rights reserved.
 *
 * \asf_license_start
 *
@@ -65,7 +65,7 @@ extern "C" {
 /// @endcond
 
 /**
- * \weakgroup prime_group
+ * \weakgroup serial_plc_group
  * @{
  */
 
@@ -135,7 +135,7 @@ static void _memcpy_rev (uint8_t *puc_dst, uint8_t *puc_buf, uint16_t us_len)
  * \internal
  * \brief Task to manage the serialization of the result of transmission through USI.
  *
- * \param * pvParameters Pointer that will be used as the parameter for the task being created.
+ * \param pvParameters Pointer that will be used as the parameter for the task being created.
  */
 static void _serial_if_get_tx_result_task(void * pvParameters)
 {
@@ -177,7 +177,7 @@ static void _serial_if_get_tx_result_task(void * pvParameters)
  * \internal
  * \brief Task to manage the serialization of the reception message through USI.
  *
- * \param * pvParameters Pointer that will be used as the parameter for the task being created.
+ * \param pvParameters Pointer that will be used as the parameter for the task being created.
  */
 static void _serial_if_get_rx_task(void * pvParameters)
 {
@@ -260,9 +260,10 @@ static void _serial_if_get_rx_task(void * pvParameters)
 }
 
 /**
- * \brief Task to manage the serialization of the reception message through USI.
+ * \brief Received message
  *
- * \param * pvParameters Pointer that will be used as the parameter for the task being created.
+* \param puc_rx_msg  Pointer to the data attached to the connection request
+* \param us_len      Data length of the data attached to the request
  *
  * \retval true if there is no error
  * \retval false if length is invalid or serial command is wrong
@@ -464,6 +465,19 @@ uint8_t serial_if_api_parser (uint8_t *puc_rx_msg, uint16_t us_len)
         x_phy_serial_msg.ptr_buf = &uc_serial_rsp_buf[0];
         x_phy_serial_msg.us_len = puc_serial_rsp_buf - &uc_serial_rsp_buf[0];
         usi_send_cmd (&x_phy_serial_msg);
+      }
+      break;
+
+    // Reset phy layer
+    case SERIAL_IF_PHY_COMMAND_RESET_PHY_LAYER:
+      {
+	if(*puc_rx){
+	  /* Reset PHY layer SOFT*/
+	  phy_reset (PHY_RESET_SOFT_TYPE);
+	}else{
+	  /* Reset PHY layer HARD */
+	  phy_reset (PHY_RESET_HARD_TYPE);
+	}
       }
       break;
 

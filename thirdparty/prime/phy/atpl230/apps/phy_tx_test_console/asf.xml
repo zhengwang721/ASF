@@ -1,8 +1,11 @@
 <asf xmlversion="1.0">
-	<select-by-device id="thirdparty.prime.phy.atpl230.apps.phy_tx_test_console" caption="PRIME Phy TX Test Console">
-		<module type="application" id="thirdparty.prime.phy.atpl230.apps.phy_tx_test_console#0" caption="PRIME Phy TX Test Console - SAM4CP16B implementation">
+	<select-by-device id="thirdparty.prime.phy.atpl230.apps.phy_tx_test_console" caption="PLC Phy TX Test Console">
+		<module type="application" id="thirdparty.prime.phy.atpl230.apps.phy_tx_test_console#0" caption="PLC Phy TX Test Console - SAM4CP16B implementation">
 			<info type="description" value="summary">
-				Demostrate how to manage PRIME PHY layer using serial console. It configures several parameters on PHY layer and launches transmission test.
+				Demostrate how to manage the PLC PHY layer using a serial console. It configures several parameters on PHY layer and launches transmission test.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="PLC"/>
 			</info>
 			<build type="include-path" value="."/>
 			<build type="c-source" value="phy_tx_test_console.c"/>
@@ -21,15 +24,18 @@
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<info type="gui-flag" value="move-to-root"/>
 		</module>
-		<module type="application" id="thirdparty.prime.phy.atpl230.apps.phy_tx_test_console#1" caption="PRIME Phy TX Test Console - SAM4S implementation">
+		<module type="application" id="thirdparty.prime.phy.atpl230.apps.phy_tx_test_console#1" caption="PLC Phy TX Test Console - SAM4S implementation">
 			<info type="description" value="summary">
-				Demostrate how to manage PRIME PHY layer using serial console. It configures several parameters on PHY layer and launches transmission test.
+				Demostrate how to manage the PLC PHY layer using a serial console. It configures several parameters on PHY layer and launches transmission test.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="PLC"/>
 			</info>
 			<build type="include-path" value="."/>
 			<build type="c-source" value="phy_tx_test_console.c"/>
 			<build type="c-source" value="phy_embedded_app.c"/>
 			<build type="header-file" value="phy_embedded_app.h"/>
-			<device-support value="sam4s"/>
+			<device-support value="atsam4sd32c"/>
 			<require idref="sam.drivers.wdt"/>
 			<require idref="sam.drivers.uart"/>
 			<require idref="sam.drivers.gpbr"/>

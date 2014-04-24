@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="PRIME Phy Tester Tool Firmware for ATPL230AMB" id="thirdparty.prime.phy.atpl230.apps.phy_tester_tool.atpl230amb">
+	<project caption="PLC Phy Tester Example on ATPL230AMB" id="thirdparty.prime.phy.atpl230.apps.phy_tester_tool.atpl230amb">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>

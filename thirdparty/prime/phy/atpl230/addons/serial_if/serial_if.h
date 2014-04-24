@@ -3,7 +3,7 @@
 *
 * \brief ATPL230 Serial Interface for Physical layer
 *
-* Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
+* Copyright (c) 2014 Atmel Corporation. All rights reserved.
 *
 * \asf_license_start
 *
@@ -56,7 +56,11 @@ extern "C" {
 /// @endcond
 
 /**
- * \weakgroup prime_phy_group
+ * \ingroup phy_plc_group
+ * \defgroup serial_plc_group PLC PHY Serial Interface
+ *
+ * This module provides configuration and utils to serialize the PLC PHY layer.
+ *
  * @{
  */
 
@@ -70,8 +74,8 @@ extern "C" {
 //@{
 #define TASK_SERIAL_IF_GET_TX_RESULT_PRIO    (tskIDLE_PRIORITY + 1)
 #define TASK_SERIAL_IF_GET_RX_PRIO           (tskIDLE_PRIORITY + 1)
-#define TASK_SERIAL_IF_GET_TX_RESULT_STACK   (configMINIMAL_STACK_SIZE * 1)		
-#define TASK_SERIAL_IF_GET_RX_STACK          (configMINIMAL_STACK_SIZE * 1)      
+#define TASK_SERIAL_IF_GET_TX_RESULT_STACK   (configMINIMAL_STACK_SIZE * 1)
+#define TASK_SERIAL_IF_GET_RX_STACK          (configMINIMAL_STACK_SIZE * 1)
 //@}
 
 //! \name Serial interface commands identifiers
@@ -89,6 +93,7 @@ extern "C" {
 #define SERIAL_IF_PHY_COMMAND_NOISE_RSP             10  //!< Get noise capture
 #define SERIAL_IF_PHY_COMMAND_GET_CFG_LIST          11  //!< Get parameter list
 #define SERIAL_IF_PHY_COMMAND_GET_CFG_LIST_RSP      12  //!< Parameter list response
+#define SERIAL_IF_PHY_COMMAND_RESET_PHY_LAYER       13  //!< Reset phy layer
 //@}
 
 //! \name Message Structure to communicate with USI layer
@@ -108,6 +113,8 @@ uint8_t serial_if_api_parser (uint8_t *puc_rx_msg, uint16_t us_len);
 void serial_if_check_tx_result(void);
 void serial_if_check_rx_msg(void);
 //@}
+
+//! @}
 
 /// @cond 0
 /**INDENT-OFF**/

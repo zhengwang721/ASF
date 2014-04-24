@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief PRIME PHY TX Test Console Application
+ * \brief ATMEL PLC PHY TX Test Console Application
  *
- * Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,12 +42,12 @@
  */
 
  /**
- *  \mainpage ATMEL PRIME PHY TX Test Console Application
+ *  \mainpage ATMEL PLC PHY TX Test Console Application
  *
  *  \section Purpose
  *
  *  The PHY TX Test Console Application demonstrates how to configure some
- * parameters from the PRIME PHY layer on PLC boards.
+ * parameters from the PHY layer on PLC boards.
  *
  *  \section Requirements
  *
@@ -55,7 +55,7 @@
  *
  *  \section Description
  *
- *  This application can configure the PRIME PHY with a serial interface and test
+ *  This application can configure the PHY with a serial interface and test
  * PLC transmission/reception processes.
  *
  *  \section Usage

@@ -1,6 +1,8 @@
 /**
 * \file
 *
+* \brief ATPL230 Physical layer - IIR Filter
+*
 * Copyright (c) 2014 Atmel Corporation. All rights reserved.
 *
 * \asf_license_start
@@ -43,6 +45,13 @@
 
 #include "compiler.h"
 
+/**
+ * \weakgroup phy_plc_group
+ * @{
+ */
+ 
+//! \name IIR Filter definitions
+//@{
 #define LENGTH_ROW_DATA_FILTER_IIR	2
 #define NUM_ROWS_DATA_FILTER_IIR	40
 #define LENGTH_DATA_FILTER_IIR (NUM_ROWS_DATA_FILTER_IIR * LENGTH_ROW_DATA_FILTER_IIR)
@@ -54,6 +63,9 @@
 #define LENGTH_ROW_DATA_ANGLE_REAL_IMAG_COMP	2
 #define NUM_ROWS_DATA_ANGLE_REAL_IMAG_COMP	97
 #define LENGTH_DATA_ANGLE_REAL_IMAG_COMP (NUM_ROWS_DATA_ANGLE_REAL_IMAG_COMP * LENGTH_ROW_DATA_ANGLE_REAL_IMAG_COMP)
+//@}
+
+//! @}
 
 #endif  /* ATPL230IIRFILTER_H_INCLUDE */
 

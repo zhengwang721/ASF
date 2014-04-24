@@ -1,9 +1,9 @@
 /**
 * \file
 *
-* \brief PHY Layer Configuration Header for ATPL230.
+* \brief PHY Layer Configuration for ATPL230
 *
-* Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
+* Copyright (c) 2014 Atmel Corporation. All rights reserved.
 *
 * \asf_license_start
 *

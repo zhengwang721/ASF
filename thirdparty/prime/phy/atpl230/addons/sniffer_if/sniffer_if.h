@@ -3,7 +3,7 @@
 *
 * \brief ATPL230 Sniffer Interface for Physical layer
 *
-* Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
+* Copyright (c) 2014 Atmel Corporation. All rights reserved.
 *
 * \asf_license_start
 *
@@ -56,7 +56,11 @@ extern "C" {
 /// @endcond
 
 /**
- * \weakgroup prime_phy_group
+ * \ingroup phy_plc_group
+ * \defgroup sniffer_plc_group PLC PHY Sniffer
+ *
+ * This module provides configuration and utils for the sniffer in the PLC PHY layer.
+ *
  * @{
  */
 
@@ -108,12 +112,17 @@ typedef struct
 void sniffer_if_Init (uint8_t uc_enable_led);
 uint8_t serial_if_sniffer_api_parser (uint8_t *puc_rx_msg, uint16_t us_len);
 void sniffer_if_Process(void);
-
 //@}
 
+//! @}
+
+/// @cond 0
+/**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
+/**INDENT-ON**/
+/// @endcond
 
 #endif /* SNIFFER_IF_H_INCLUDED */
 

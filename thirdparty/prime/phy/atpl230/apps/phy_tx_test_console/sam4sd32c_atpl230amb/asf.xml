@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="PRIME Phy TX Test Console for ATPL230AMB" id="thirdparty.prime.phy.atpl230.apps.phy_tx_test_console.atpl230amb">
+	<project caption="PLC Phy TX Test Console on ATPL230AMB" id="thirdparty.prime.phy.atpl230.apps.phy_tx_test_console.atpl230amb">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>

@@ -1,9 +1,9 @@
 /**
 * \file
 *
-* \brief ATPL230 FreeRTOS Embedded APP
+* \brief ATMEL PLC PHY TX Test Console Application
 *
-* Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
+* Copyright (c) 2014 Atmel Corporation. All rights reserved.
 *
 * \asf_license_start
 *

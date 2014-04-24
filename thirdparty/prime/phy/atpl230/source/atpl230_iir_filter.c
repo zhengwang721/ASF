@@ -1,6 +1,8 @@
 /**
 * \file
 *
+* \brief ATPL230 Physical layer - IIR Filter
+*
 * Copyright (c) 2014 Atmel Corporation. All rights reserved.
 *
 * \asf_license_start
@@ -41,7 +43,12 @@
 #include "atpl230_reg.h"
 #include "atpl230_iir_filter.h"
 
-// Filter IIR initialization
+/**
+ * \weakgroup phy_plc_group
+ * @{
+ */
+ 
+//! Filter IIR initialization
 const uint8_t uc_data_filter_IIR [LENGTH_DATA_FILTER_IIR] = {
   0x12, 0x5A,
   0x0D, 0x40,
@@ -85,7 +92,7 @@ const uint8_t uc_data_filter_IIR [LENGTH_DATA_FILTER_IIR] = {
   0x00, 0x00
 };
 
-// Chirp initialization
+//! Chirp initialization
 const uint8_t uc_data_chirp [LENGTH_DATA_CHIRP] = {
   0x09, 0x6B, 0x7F, 0xA7,
   0x9D, 0xA6, 0xAE, 0x15,
@@ -154,7 +161,7 @@ const uint8_t uc_data_chirp [LENGTH_DATA_CHIRP] = {
   0x00, 0x01, 0x7F, 0xFF
 };
 
-// AngleRealImagComp initialization
+//! AngleRealImagComp initialization
 const uint8_t uc_data_angle_real_imag_comp [LENGTH_DATA_ANGLE_REAL_IMAG_COMP] = {
   0x6F, 0x6E,
   0x68, 0xA1,
@@ -255,5 +262,6 @@ const uint8_t uc_data_angle_real_imag_comp [LENGTH_DATA_ANGLE_REAL_IMAG_COMP] = 
   0x6F, 0x82
 };
 
+//! @}
 
 

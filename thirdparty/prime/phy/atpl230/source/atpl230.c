@@ -64,6 +64,11 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+/**
+ * \weakgroup phy_plc_group
+ * @{
+ */
+
 /* Management Function PHY interrupt */
 void phy_interrupt(void);
 
@@ -83,11 +88,11 @@ extern void sniffer_if_init (uint8_t uc_enable_led);
 #pragma weak sniffer_if_init=Dummy_sniffer_if_init
 #endif
 
-// Internal Rx buf struct to manage RX indication
+//! Internal Rx buf struct to manage RX indication
 static uint8_t puc_phy_rx_buffer_event[4]; // 4(rx)
-// Internal Tx buf struct to manage TX result cfm
+//! Internal Tx buf struct to manage TX result cfm
 static uint8_t puc_phy_tx_buffer_event[4]; // 4(tx)
-// Internal Rx noise buf struct to manage Noise capture
+//! Internal Rx noise buf struct to manage Noise capture
 static uint8_t puc_phy_noise_buffer_event;
 
 //static uint8_t uc_event_tx_result;
@@ -95,20 +100,25 @@ static uint8_t puc_phy_noise_buffer_event;
 static uint8_t uc_last_rx_buf;
 static uint8_t uc_last_tx_buf;
 
-/* Configuration of serial interfaces */
+//! Configuration of serial interfaces
 static uint8_t uc_serial_ifaces_cfg;
 
-// Reset values for the initial addresses data frames
+//! \name Reset values for the initial addresses data frames
+//@{
 #define REG_ATPL230_PHY_TX_INIT_ADDRESS      0x0000
 #define REG_ATPL230_PHY_RX_INIT_ADDRESS     (REG_ATPL230_PHY_TX_INIT_ADDRESS + PHY_MAX_PPDU_SIZE*PHY_NUM_TX_BUFFERS)
 #define REG_ATPL230_PHY_NOISE_INIT_ADDRESS   0x0000
+//@}
 
-// Max mac pdu size
+//! \name Max mac pdu size
+//@{
 #define MAC_GEN_HEADER_SIZE     9
 #define MAC_HEADER_SIZE         7
 #define PHY_DMA_OFFSET          16
+//@}
 
-// Attenuation values
+//! \name Attenuation values
+//@{
 #define ATT_0dB       0xFF
 #define ATT_1dB       0xE3
 #define ATT_2dB       0xCA
@@ -131,20 +141,24 @@ static uint8_t uc_serial_ifaces_cfg;
 #define ATT_19dB      0x1C
 #define ATT_20dB      0x19
 #define ATT_21dB      0x16
+//@}
 
-// Minimum Output Level
+//! Minimum Output Level
 #define MOL_MINIMUM                        21
 
-// Transmission timeout in miliseconds
+//! \name Transmission timeout in miliseconds
+//@{
 #define PHY_TX_TIMEOUT_IMMEDIATE           750   // 750 ms
 #define PHY_TX_TIMEOUT_IMMEDIATE_10US      PHY_TX_TIMEOUT_IMMEDIATE * 100  // 750 ms
 #define PHY_TX_TIMEOUT_DELAYED             1500  // 1.5 second
 #define PHY_TX_TIMEOUT_DELAYED_10US        PHY_TX_TIMEOUT_DELAYED * 100  // 1.5 second
+//@}
 
-// Minimum delay for atpl230 internal timer (in 10 us)
+//! Minimum delay for atpl230 internal timer (in 10 us)
 #define PHY_TX_MIN_DELAY        10      // 100 us.
 
-// Maximum symbol length for every modulation scheme
+//! \name Maximum symbol length for every modulation scheme
+//@{
 #define MAX_LEN_DBPSK            39
 #define MAX_LEN_DBPSK_VTB        63
 #define MAX_LEN_DQPSK            18
@@ -153,6 +167,7 @@ static uint8_t uc_serial_ifaces_cfg;
 #define MAX_LEN_D8PSK_VTB        25
 #define MAX_LEN_DBPSK_ROBO       (MAX_LEN_DBPSK_VTB<<2)
 #define MAX_LEN_DQPSK_ROBO       (MAX_LEN_DQPSK_VTB<<2)
+//@}
 
 //! Number of CRC types
 #define VCRC_TYPES_NUMBER  4
@@ -187,11 +202,13 @@ static uint8_t uc_serial_ifaces_cfg;
 
 
 
-// configuration structures
+//! \name configuration structures
+//@{
 atpl230ChnCfg_t atpl230ChnCfg;
 atpl230Cfg_t atpl230Cfg;
+//@}
 
-// internal status
+//! internal status
 static atpl230_t atpl230;
 
 // Filter data
@@ -204,7 +221,8 @@ extern const float f_escalado_a23;
 extern const float f_escalado_b22;
 extern const float f_escalado_b23;
 
-// Attenuation variables
+//! \name Attenuation variables
+//@{
 static uint8_t phyTxAttChirpHighZ;     ///< Attenuation chirp in High impedance
 static uint8_t phyTxAttSignalHighZ;    ///< Attenuation signal in High impedance
 static uint8_t phyTxAttChirpLowZ;      ///< Attenuation chirp in low impedance
@@ -215,20 +233,24 @@ static uint16_t phyTxLoadThreshold1;   ///< Threshold for RMS calculated to dete
 static uint16_t phyTxLoadThreshold2;   ///< Threshold for RMS calculated to detect load type
 static uint16_t phyTxLoadThreshold3;   ///< Threshold for RMS calculated to detect load type
 static uint16_t phyTxLoadThreshold4;   ///< Threshold for RMS calculated to detect load type
+//@}
 
-// interrupt buffer flags
+//! \name interrupt buffer flags
+//@{
 //static uint8_t uc_reg_sfr;  // pendiente de verificar con R&D
 static uint8_t uc_reg_rx_int;
 static uint8_t uc_reg_tx_int;
 static uint8_t uc_reg_ns_int;
+//@}
 
-// internal buffers to store headers
+//! internal buffers to store headers
 static uint8_t uc_phy_headers_buffer[PHY_NUM_RX_BUFFERS][PHY_DMA_OFFSET];
 
-// vars to store values to update statistic values
+//! vars to store values to update statistic values
 static uint16_t us_phy_last_tx_lengths[PHY_NUM_TX_BUFFERS];
 
-// Table to manage emit frequency
+
+//! Table to manage emit frequency
 static uint8_t const uc_emit_freq_tab[PHY_NUM_CHANNELS] = {
   MODE_EF10,  /* Channel 1 */
   MODE_EF10,  /* Channel 2 */
@@ -240,42 +262,42 @@ static uint8_t const uc_emit_freq_tab[PHY_NUM_CHANNELS] = {
   MODE_EF40   /* Channel 8 */
 };
 
-// Table to manage soft stop timeH
+//! Table to manage soft stop timeH
 static uint16_t const uc_stop_time[MODE_NUM_EF] = {
   0x0200,  /* MODE_EF10 */
   0x0200,  /* MODE_EF20 */
   0x0400   /* MODE_EF40 */
 };
 
-// Table to manage soft stop timeH
+//! Table to manage soft stop timeH
 static uint16_t const uc_time_X1[MODE_NUM_EF] = {
   0x1010,  /* MODE_EF10 */
   0x1010,  /* MODE_EF20 */
   0x8080   /* MODE_EF40 */
 };
 
-// Table to manage soft stop timeH
+//! Table to manage soft stop timeH
 static uint16_t const uc_time_X2[MODE_NUM_EF] = {
   0x1010,  /* MODE_EF10 */
   0x1010,  /* MODE_EF20 */
   0x8080   /* MODE_EF40 */
 };
 
-// Table to manage soft stop timeH
+//! Table to manage soft stop timeH
 static uint8_t const uc_time_Y1[MODE_NUM_EF] = {
   0x77,  /* MODE_EF10 */
   0x77,  /* MODE_EF20 */
   0x77   /* MODE_EF40 */
 };
 
-// Table to manage soft stop timeH
+//! Table to manage soft stop timeH
 static uint8_t const uc_time_Y2[MODE_NUM_EF] = {
   0x77,  /* MODE_EF10 */
   0x77,  /* MODE_EF20 */
   0x77   /* MODE_EF40 */
 };
 
-// Table to manage attenuation values
+//! Table to manage attenuation values
 static uint8_t const uc_att_value_tab[MOL_MINIMUM+1] = {
   ATT_0dB,
   ATT_1dB,
@@ -301,7 +323,7 @@ static uint8_t const uc_att_value_tab[MOL_MINIMUM+1] = {
   ATT_21dB
 };
 
-// Identifier for channel Configuration
+//! Identifier for channel Configuration
 static uint32_t const ul_channel_tx_tab[PHY_NUM_CHANNELS] = {
   PHY_ID_TX_CHN1,
   PHY_ID_TX_CHN2,
@@ -313,14 +335,15 @@ static uint32_t const ul_channel_tx_tab[PHY_NUM_CHANNELS] = {
   PHY_ID_TX_CHN8
 };
 
-// Identifier for crc type in function of header type
+//! Identifier for crc type in function of header type
 static uint8_t const uc_crc_type_tab[3] = {
   CRC_TYPE_32,
   CRC_TYPE_8,
   CRC_TYPE_32
 };
 
-// Peak Cut definition
+//! \name Peak Cut definition
+//@{
 #define PEAK_CFG_ENABLE       0x80
 #define PEAK_CFG_DISABLE      0
 #define NOT_ALLOWED           0
@@ -343,8 +366,9 @@ static uint8_t const uc_peak_cut_on_enable_tab[16] =
   NOT_ALLOWED,       // 14 - not permitted
   NOT_ALLOWED        // 15 - not permitted
 };
+//@}
 
-// Peak Cut gain definition
+//! Peak Cut gain definition
 static uint8_t const uc_peak_cut_gain_tab[16] =
 {
   0xFF,              // 0 - BPSK
@@ -365,7 +389,8 @@ static uint8_t const uc_peak_cut_gain_tab[16] =
   NOT_ALLOWED        // 15 - not permitted
 };
 
-// Emit gain definition
+//! \name Emit gain definition
+//@{
 #define EMIT_GAIN_CHIRP		0x24
 #define EMIT_GAIN_SIGNAL	0x1C
 static uint8_t const uc_emit_gain_tab[16] =
@@ -387,8 +412,9 @@ static uint8_t const uc_emit_gain_tab[16] =
   NOT_ALLOWED,       // 14 - not permitted
   NOT_ALLOWED        // 15 - not permitted
 };
+//@}
 
-// Number of bytes per symbol depending on Modulation scheme
+//! Number of bytes per symbol depending on Modulation scheme
 static uint8_t const uc_num_bytes_per_symbol_tab[16] = {
   12,                // 0 - BPSK
   24,                // 1 - QPSK
@@ -524,7 +550,7 @@ static void _upd_sna_crc (uint8_t *puc_sna)
  * \param puc_fir_data      Pointer to filter table data (start pointer)
  * \param uc_cmd            Internal Memory CMD
  * \param uc_num_rows       Number of rows in the filter table
- * \param uc_address_mode   Mode to read filter table [0: normal mode, 1: inverse mode]
+ * \param uc_way_mode       Mode to read filter table [0: normal mode, 1: inverse mode]
  * \param uc_start_mem_byte Byte to start write operation in internal memory
  * \param uc_inv_mode       Select inverse data mode
  *
@@ -721,7 +747,7 @@ static void _update_txrx2_polarity (uint8_t uc_pol)
 * \brief Update emit 1 mode in atpl230 device.
 * Update Emit mode register configuration.
 *
-* \param uc_pol    Emit Mode [INTERNAL DRIVER, EXTERNAL DRIVER]
+* \param uc_emode    Emit Mode [INTERNAL DRIVER, EXTERNAL DRIVER]
 */
 static void _update_emit1_mode (uint8_t uc_emode)
 {
@@ -747,7 +773,7 @@ static void _update_emit1_mode (uint8_t uc_emode)
 * \brief Update emit 2 mode in atpl230 device.
 * Update Emit mode register configuration.
 *
-* \param uc_pol    Emit Mode [INTERNAL DRIVER, EXTERNAL DRIVER]
+* \param uc_emode    Emit Mode [INTERNAL DRIVER, EXTERNAL DRIVER]
 */
 static void _update_emit2_mode (uint8_t uc_emode)
 {
@@ -1011,7 +1037,7 @@ static void _init_phy_layer (uint8_t uc_rst_type)
 }
 
 /**
-* \brief Task to wait xQueueTxResPLC to manage tx result callback function
+* \brief Task to process TX PLC
 *
 */
 void phy_tx_frame_result_cb (xPhyMsgTxResult_t *px_tx_result)
@@ -1823,9 +1849,9 @@ uint8_t phy_tx_frame (xPhyMsgTx_t *px_msg)
 }
 
 /**
- * \brief Read the received data with ATPL230 device.
+ * \brief Reset reception interrupt
  *
- * \param px_msg	Pointer to message structure data.
+ * \param uc_buf_idx	Buffer index
  *
  */
 static void _reset_rx_flag_interrupt(uint8_t uc_buf_idx){
@@ -1853,12 +1879,12 @@ void phy_rx_frame_cb (xPhyMsgRx_t *px_msg)
   uint8_t *puc_phy_header_buf;
   uint8_t uc_mac_enable;
   uint8_t uc_crc_type;
+  uint32_t ul_data_buf_address;
   uint8_t uc_idx;
   uint8_t uc_rx_padlen = 0;
   uint8_t uc_noise_conf;
   uint16_t us_read_phy_header_address;
   uint16_t us_rx_symbol_len = 0;
-  uint32_t ul_data_buf_address;
 
   // check RX event
   uc_event_flag = false;
@@ -2065,7 +2091,6 @@ void phy_rx_frame_cb (xPhyMsgRx_t *px_msg)
 
   // reset phy interrupt flag
   _reset_rx_flag_interrupt(uc_buf_idx);
-
 }
 
 /**
@@ -2164,8 +2189,7 @@ void Dummy_sniffer_if_init(uint8_t uc_enable_led)
 {
   UNUSED(uc_enable_led);
 }
-
-
+//! @}
 
 /// @cond 0
 /**INDENT-OFF**/

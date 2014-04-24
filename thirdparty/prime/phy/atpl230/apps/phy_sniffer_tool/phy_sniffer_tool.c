@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Example application for ATMEL PLC Phy Sniffer
+ * \brief ATMEL PLC Phy Sniffer Example
  *
- * Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

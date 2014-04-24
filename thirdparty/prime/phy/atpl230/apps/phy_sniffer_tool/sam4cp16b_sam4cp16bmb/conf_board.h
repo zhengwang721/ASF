@@ -3,7 +3,7 @@
  *
  * \brief Board configuration.
  *
- * Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,7 +45,7 @@
 #define CONF_BOARD_H_INCLUDED
 
 /* BOARD Rev. */
-#define BOARD_REV BOARD_REV_2
+#define BOARD_REV BOARD_REV_3
 
 /** Enable watchdog */
 //#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT

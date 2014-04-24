@@ -3,7 +3,7 @@
 *
 * \brief ATPL230 Sniffer Interface for Physical layer
 *
-* Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
+* Copyright (c) 2014 Atmel Corporation. All rights reserved.
 *
 * \asf_license_start
 *
@@ -69,7 +69,7 @@ extern "C" {
 /// @endcond
 
 /**
- * \weakgroup prime_group
+ * \weakgroup sniffer_plc_group
  * @{
  */
 
@@ -107,7 +107,6 @@ static uint8_t uc_sniffer_rsp_buf[800];     //!<  Response working buffer
  * \internal
  * \brief Task to manage the serialization of the reception message through USI.
  *
- * \param * pvParameters Pointer that will be used as the parameter for the task being created.
  */
 void sniffer_if_Process(void)
 {
@@ -231,9 +230,10 @@ void sniffer_if_Process(void)
 
 
 /**
- * \brief Task to manage the serialization of the reception message through USI.
+ * \brief Received message
  *
- * \param * pvParameters Pointer that will be used as the parameter for the task being created.
+* \param puc_rx_msg  Pointer to the received data
+* \param us_len      Data length of the received data
  *
  * \retval true if there is no error
  * \retval false if length is invalid or sniffer command is wrong
@@ -275,6 +275,7 @@ uint8_t serial_if_sniffer_api_parser (uint8_t *puc_rx_msg, uint16_t us_len)
 /**
  * \brief Initialize sniffer interface.
  *
+ * \param  uc_enable_led Enable led
  */
 void sniffer_if_Init (uint8_t uc_enable_led)
 {

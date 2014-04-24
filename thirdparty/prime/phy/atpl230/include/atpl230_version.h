@@ -1,7 +1,7 @@
 /**
 * \file
 *
-* \brief ATPL230 Physical layer Version
+* \brief ATPL230 Physical layer - Version
 *
 * Copyright (c) 2014 Atmel Corporation. All rights reserved.
 *
@@ -46,18 +46,27 @@
 
 #include "parts.h"
 
-#define ATPL230_COPYMSG            "Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved."
+/**
+ * \weakgroup phy_plc_group
+ * @{
+ */
+
+//! \name Version information for ATPL230
+//@{
+#define ATPL230_COPYMSG            "Copyright (c) 2014 Atmel Corporation. All rights reserved."
 #define ATPL230_VERSION_STR        "23.00.01.01"
 #define ATPL230_VERSION_NUM        0x23000101
 
-#if SAM4CP16_0 
+#if SAM4CP16_0
 #define ATPL230_PRODID             "SAM4CP16B "
 #elif SAM4S
 #define ATPL230_PRODID             "ATPL230   "
 #else
 # error Unsupported chip type
 #endif
+//@}
 
+//! @}
 
 #endif	/* ATPL230VERSION_H_INCLUDE */
 
