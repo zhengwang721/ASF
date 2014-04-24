@@ -428,7 +428,6 @@ static void setup_adc_average_mode_test(const struct test_case *test)
 	config.reference          = ADC_REFERENCE_INT1V;
 	config.clock_source       = GCLK_GENERATOR_3;
 	config.gain_factor        = ADC_GAIN_FACTOR_1X;
-	config.accumulate_samples = ADC_ACCUMULATE_SAMPLES_16;
 
 	/* Re-initialize & enable ADC */
 	status = adc_init(&adc_inst, ADC, &config);
