@@ -45,7 +45,7 @@
 #define CONF_BOARD_H_INCLUDED
 
 /* BOARD Rev. */
-#define BOARD_REV BOARD_REV_3
+#define BOARD_REV BOARD_REV_2
 
 /** Enable watchdog */
 //#define CONF_BOARD_KEEP_WATCHDOG_AT_INIT

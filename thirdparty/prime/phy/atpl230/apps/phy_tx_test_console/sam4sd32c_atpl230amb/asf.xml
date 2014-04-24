@@ -6,6 +6,7 @@
 		<build type="header-file" value="conf_uart_serial.h"/>		
 		<build type="header-file" value="FreeRTOSConfig.h"/>
 		<build type="header-file" value="conf_phy.h"/>
+		<build type="header-file" value="conf_example.h"/>
 		<require idref="thirdparty.prime.phy.atpl230.apps.phy_tx_test_console"/>
 		<require idref="board.atpl230amb"/>
 		<generator value="iarewarm"/>
