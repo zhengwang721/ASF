@@ -57,7 +57,11 @@ extern "C" {
 /// @endcond
 
 /**
- * \weakgroup plc_group
+ * \ingroup plc_group
+ * \defgroup busart_plc_group PLC Buffered PDC USART
+ *
+ * This module provides configuration and utils for PLC Buffered USART service interface.
+ *
  * @{
  */
 
@@ -74,7 +78,7 @@ extern "C" {
 #define USART1_PRIO              10
 //@}
 
-//! \name USART difinitions
+//! \name USART definitions
 //@{
 #define SERIAL_USART_0           0
 #define SERIAL_USART_1           1

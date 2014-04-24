@@ -71,7 +71,7 @@ extern void phy_interrupt(void);
 #endif
 
 /**
- * \weakgroup plc_group
+ * \weakgroup pplc_plc_group
  * @{
  */
 
@@ -261,7 +261,7 @@ static int8_t _pplc_cmd_op (uint8_t uc_cmd, uint16_t us_addr, uint16_t us_len, u
  * \brief Write 8 bits to PPLC
  *
  * \param us_addr    Address to destination
- * \param dat        Data to write
+ * \param uc_dat     Data to write
  *
  * \retval true if there is no error
  * \retval false if there is an error

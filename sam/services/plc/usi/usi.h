@@ -55,7 +55,12 @@ extern "C" {
 /// @endcond
 
 /**
- * \weakgroup plc_group
+ * \ingroup plc_group
+ * \defgroup usi_plc_group PLC Universal Serial Interface
+ *
+ * This module provides configuration and utils for the serialization of
+ * protocols in PLC.
+ *
  * @{
  */
 
@@ -121,10 +126,8 @@ typedef enum{
 #define CMD_PRIME_PROTOCOL(A)        ((A)&CMD_PRIME_PROTOCOL_MSK)
 //@}
 
-  /**
- *  \name USI operation results
- */
-// @{
+
+//! USI operation results
 typedef enum{
   USI_STATUS_PROTOCOL_NOT_FOUND = 0xFF,
   USI_STATUS_TX_BUFFER_OVERFLOW,
@@ -137,37 +140,35 @@ typedef enum{
   USI_STATUS_OK,
   USI_STATUS_INVALID
 } usi_status_t;
-// @}
 
-//! \name Message Structure to communicate with USI layer
-//@{
+//! Message Structure to communicate with USI layer
 typedef struct
 {
   uint8_t uc_protocol_type;    //!<  Protocol Type
   uint8_t *ptr_buf;            //!<  Pointer to data buffer
   uint16_t us_len;             //!<  Length of data
 }x_usi_serial_cmd_params_t;
-//@}
 
 //! Type for callback function pointers
 typedef uint8_t (* pf_usi_decode_cmd)(uint8_t*, uint16_t);
 
 //! \name Types to manage commands
-// @{
+//@{
 typedef uint8_t (* pf_usi_get_cmd)(void);
 typedef void (* pf_usi_set_cmd)(uint8_t);
-// @}
+//@}
 
 /**
  *  \name Universal Serial Interface API functions
  */
-// @{
+//@{
 void usi_Init(void);
 void usi_Process(void);
 
 usi_status_t usi_send_cmd (void *msg);
 void usi_txrx_block_timer(void);
-// @}
+//@}
+
 //! @}
 
 /// @cond 0

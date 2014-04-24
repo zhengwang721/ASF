@@ -61,15 +61,23 @@
  * a given desired functionality.
  *
  * \section files Main Files
+ * - \ref usi_user_protocol_template.c
  * - \ref conf_usi.h
+ * - \ref conf_board.h
+ * - \ref conf_clock.h
+ * - \ref conf_buart_if.h
+ * - \ref conf_busart_if.h 
+ * - \ref conf_uart_serial.h
+ * - \ref conf_example.h
  *
  * \section device_info Device Info
  * SAM4CP and SAM4S devices can be used.
  *
- * \section description This template can be used as basis to implement USI support
- *                      for any user-defined protocol. This is done through the function: 
+ * \section description Description
+ * This template can be used as basis to implement USI support
+ * for any user-defined protocol. This is done through the function: 
  *
- *   uint8_t   serial_if_user_def_api_parser(uint8_t *puc_rx_msg, uint16_t us_len);
+ *   uint8_t serial_if_user_def_api_parser(uint8_t *puc_rx_msg, uint16_t us_len);
  *
  *   This function is used as a callback by USI whenever a message with:
  *        TYPE_PROTOCOL = PROTOCOL_USER_DEFINED
@@ -97,11 +105,17 @@
  *
  *   The message format of this protocol template is defined as:
  *
- *   Read command:            [ COMMAND ][           ADDRESS            ]
- *                            <--1Byte--><-----------4 Bytes------------>
+ *   Read command:            
+ *   
+ * [ COMMAND ][ ADDRESS ]
+ * 
+ * <--1Byte--><--4 Bytes-->
  *
- *   Write command:           [ COMMAND ][           ADDRESS            ][           VALUE            ]
- *                            <--1Byte--><-----------4 Bytes------------><----------4 Bytes----------->
+ *   Write command:           
+ *  
+ * [ COMMAND ][ ADDRESS ][ VALUE ]
+ * 
+ * <--1Byte--><--4 Bytes--><--4 Bytes-->
  *
  *   The list of supported primitives can be extended in the function serial_if_user_def_api_parser() and
  *   in the typedef serial_if_user_def_cmd_t as needed by the user-defined protocol.
@@ -110,7 +124,7 @@
  * This template depends on the following modules:
  * - \ref usi.h "PLC Universal Serial Interface service"
  *
- * \section compinfo Compilation info
+ * \section compinfo Compilation information
  * This software was written for the IAR for ARM. Other compilers
  * may or may not work.
  *
@@ -121,7 +135,6 @@
 
 uint8_t serial_if_user_def_api_parser(uint8_t *puc_rx_msg, uint16_t us_len);
 
-static uint32_t ul_count_ms = COUNT_MS_SWAP_LED;
 static bool b_led_swap = false;
 
 /** 
@@ -170,12 +183,13 @@ int main( void )
   prvSetupHardware();
 
   /* Usi initialization */
-  vUsiInitTask();
+  usi_Init();
 
   /* Initialize USI communication structure */
   x_phy_serial_msg.uc_protocol_type = PROTOCOL_USER_DEFINED;
 
   while (1) {
+      usi_Process();
       // blink led 0
       if(b_led_swap){
         b_led_swap = false;
@@ -188,8 +202,8 @@ int main( void )
 /**
  * \brief Task to manage the serialization of the user defined protocol.
  *
- * \param   uint8_t *puc_rx_msg  pointer to the message received through USI
- *          uint16_t us_len      length of the received message
+ * \param   puc_rx_msg  Pointer to the message received through USI
+ * \param   us_len      Length of the received message
  *
  * \retval true if there is no error
  * \retval false if length is invalid or serial command is wrong
@@ -202,6 +216,7 @@ uint8_t serial_if_user_def_api_parser(uint8_t *puc_rx_msg, uint16_t us_len)
 
   uint8_t *puc_rx;
   uint32_t ul_address;
+  uint32_t *pul_address;
 
   // Protection for invalid us_length
   if (!us_len) return false;
@@ -249,7 +264,8 @@ uint8_t serial_if_user_def_api_parser(uint8_t *puc_rx_msg, uint16_t us_len)
       uc_value = ((uint32_t)*puc_rx);
 
       // Write the data in the requested address
-      *((uint32_t *)ul_address) = uc_value;
+      pul_address = (uint32_t *)ul_address;
+      *pul_address = uc_value;
 
       // Build response
       uc_serial_rsp_buf[us_serial_response_len++] = SERIAL_IF_USER_DEF_SET_CMD_RSP;

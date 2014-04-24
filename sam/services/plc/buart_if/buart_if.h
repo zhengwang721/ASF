@@ -57,9 +57,14 @@ extern "C" {
 /// @endcond
 
 /**
- * \weakgroup plc_group
+ * \ingroup plc_group
+ * \defgroup buart_plc_group PLC Buffered PDC UART
+ *
+ * This module provides configuration and utils for PLC Buffered UART service interface.
+ *
  * @{
  */
+
 
 //! \name Frequency to poll internal uart buffer (Hz)
 //@{
@@ -74,7 +79,7 @@ extern "C" {
 #define UART1_PRIO              10
 //@}
 
-//! \name UART difinitions
+//! \name UART definitions
 //@{
 #define SERIAL_UART_0           0
 #define SERIAL_UART_1           1

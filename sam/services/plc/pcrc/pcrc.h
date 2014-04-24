@@ -44,6 +44,24 @@
 #ifndef PCRC_H_INCLUDED
 #define PCRC_H_INCLUDED
 
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+extern "C" {
+#endif
+/**INDENT-ON**/
+/// @endcond
+
+/**
+ * \ingroup plc_group
+ * \defgroup pcrc_plc_group PLC PRIME CRC Calculation
+ *
+ * This module provides configuration and utils to calculate the CRC
+ * for PRIME messages in a PLC network.
+ *
+ * @{
+ */
+
 //! \name CRC types
 /*** WARNING: duplicated definitions ***
  *   Keep numerically consistent with those in atpl230.h
@@ -60,6 +78,7 @@ enum PCRC_CRC_types
 /*** WARNING: duplicated definitions ***
  *   Keep numerically consistent with those in atpl230.h
  */
+// @{
 //! Header type: GENERIC PACKET
 #define PCRC_HT_GENERIC               0
 //! Header type: PROMOTION PACKET
@@ -68,14 +87,28 @@ enum PCRC_CRC_types
 #define PCRC_HT_BEACON                2
 //! Header type: USI message
 #define PCRC_HT_USI                   3
+//@}
 
 //! Invalid CRC
 #define PCRC_CRC_INVALID 0xFFFFFFFF
 
 //! CRC length for the promotion needed PDUs
 #define PCRC_PROMOTION_CRC_LENGTH 13
-
+  
+//! \name PLC PRIME CRC Calculation interface
+//@{
 uint32_t pcrc_calculate_prime_crc (uint8_t *puc_buf, uint32_t ul_len, uint8_t uc_header_type, uint8_t uc_crc_type);
 void pcrc_configure_sna(uint8_t *sna);
+//@}
+
+//! @}
+
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+}
+#endif
+/**INDENT-ON**/
+/// @endcond
 
 #endif /* PCRC_H_INCLUDED */

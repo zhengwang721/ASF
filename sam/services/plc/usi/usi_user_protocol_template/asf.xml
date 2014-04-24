@@ -3,6 +3,9 @@
 		<info type="description" value="summary">
 		Illustrates how to provide USI with support for a user-defined protocol.
 		</info>
+		<info type="keyword" value="technology">
+			<keyword value="PLC"/>
+		</info>
 		<build type="c-source" value="usi_user_protocol_template.c"/>
 		<device-support value="sam4cp"/>
 		<device-support value="sam4s"/>

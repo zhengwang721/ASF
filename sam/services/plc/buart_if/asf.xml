@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="service" id="sam.services.plc.buart_if" caption="PLC Buffered PDC Uart PLC Service Node Interface">
+	<module type="service" id="sam.services.plc.buart_if" caption="PLC Buffered PDC Uart Service Interface">
 		<info type="description" value="summary">
 		Driver for PDC uart control. Provides functions for buffering and use PDC for UART communication.
 		</info>
@@ -7,13 +7,11 @@
 			<keyword value="PLC"/>
 		</info>
 		<build type="header-file" subtype="api" value="buart_if.h"/>
-		<build type="header-file" value="buart_if.h"/>
 		<build type="c-source" value="buart_if.c"/>
 		<build type="module-config" subtype="required-header-file" value="conf_buart_if.h"/>
 		<build type="module-config" subtype="path" value="module_config"/>
 		<build type="include-path" value="."/>
-		<build type="doxygen-entry-point" value="plc_group"/>
-		<build type="doxygen-quick-start" value="plc_quickstart"/>
+		<build type="doxygen-entry-point" value="buart_plc_group"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="sam.drivers.uart"/>
 		<require idref="sam.drivers.tc"/>

@@ -53,7 +53,12 @@ extern "C" {
 /// @endcond
 
 /**
- * \weakgroup plc_group
+ * \ingroup plc_group
+ * \defgroup pplc_plc_group Proxy PLC Controller
+ *
+ * This module provides configuration and utils to control the PLC interface 
+ * with the ATPL230 PHY layer.
+ *
  * @{
  */
 

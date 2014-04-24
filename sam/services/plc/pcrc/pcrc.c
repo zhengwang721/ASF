@@ -44,6 +44,19 @@
 #include "asf.h"
 #include "string.h"
 
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+extern "C" {
+#endif
+/**INDENT-ON**/
+/// @endcond
+
+/**
+ * \weakgroup pcrc_plc_group
+ * @{
+ */
+  
 //! \name PCRC SNA configuration and pre-calculated CRCs
 // @{
 #define SNA_SIZE 6
@@ -282,7 +295,7 @@ static uint8_t _eval_crc_8_usi(const uint8_t *puc_buf_ptr, uint32_t ul_len, uint
 /**
  * \brief  Through this function, the SNA is configured for the PCRC service.
  *
- * \param  uint8_t *sna Pointer to the SNA
+ * \param  puc_sna   Pointer to the SNA
  *
  */
 void pcrc_configure_sna(uint8_t *puc_sna)
@@ -360,3 +373,13 @@ uint32_t pcrc_calculate_prime_crc (uint8_t *puc_buf, uint32_t ul_len, uint8_t uc
 
   return ul_crc_val;
 }
+
+//! @}
+
+/// @cond 0
+/**INDENT-OFF**/
+#ifdef __cplusplus
+}
+#endif
+/**INDENT-ON**/
+/// @endcond

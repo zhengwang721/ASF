@@ -61,10 +61,11 @@ extern "C" {
 /// @endcond
 
 /**
- * \weakgroup plc_group
+ * \weakgroup buart_plc_group
  * @{
  */
-#ifdef CONF_BOARD_UART0
+  
+#ifdef CONF_BOARD_UART0  
 //! Reception Buffer 0
 static uint8_t rx_uart_buf0[RX_UART_BUF0_SIZE];
 //! Transmission Buffer 0
@@ -89,15 +90,15 @@ uint8_t * const ptr_tx_uart_buf1 = &tx_uart_buf1[0];
 /*! \brief Communications Queue Info */
 typedef struct{
 	/** Pointer to transmission queue. Buffer */
-	uint8_t *puc_tq_buf;
-	/** Pointer to reception queue. Buffer */
-	uint8_t *puc_rq_buf;
-	/** Reception queue. Read index */
-	uint16_t us_rq_idx;
-	/** Reception queue. Write index */
-	uint16_t us_wq_idx;
-	/** Reception queue. Occupation count */
-	uint16_t us_rq_count;
+	uint8_t *puc_tq_buf;	
+	/** Pointer to reception queue. Buffer */	
+	uint8_t *puc_rq_buf;				
+	/** Reception queue. Read index */	
+	uint16_t us_rq_idx;			
+	/** Reception queue. Write index */	
+	uint16_t us_wq_idx;			
+	/** Reception queue. Occupation count */	
+	uint16_t us_rq_count;				
 } buart_comm_data_t;
 
 //! \name Size of the receive buffer used by the PDC, in bytes
@@ -155,7 +156,7 @@ static void _configure_TC_uart(void)
 	uint32_t ul_div;
 	uint32_t ul_tcclks;
 	uint32_t ul_sysclk;
-	uint32_t ul_frec_hz = (uint32_t)FREQ_TIMER_POLL_UART;
+	uint32_t ul_frec_hz = (uint32_t)FREQ_TIMER_POLL_UART;	
 
 	/* Get system clock. */
 	ul_sysclk = sysclk_get_cpu_hz();
@@ -163,7 +164,7 @@ static void _configure_TC_uart(void)
 	/* Configure PMC. */
 	pmc_enable_periph_clk(ID_TC_UART);
 
-	/* Configure TC for a TC_FREQ frequency and trigger on RC compare. */
+	/* Configure TC for a TC_FREQ frequency and trigger on RC compare. */ 
 	tc_find_mck_divisor(ul_frec_hz, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk);
 	tc_init(TC_UART, TC_UART_CHN, ul_tcclks | TC_CMR_CPCTRG);
 	tc_write_rc(TC_UART, TC_UART_CHN, (ul_sysclk / ul_div) / ul_frec_hz);
@@ -182,10 +183,10 @@ void TC_UART_Handler(void)
 {
 	uint32_t ul_status;
 	uint32_t ul_byte_total = 0;
-
+	
 	/* Read TC_UART Status. */
 	ul_status = tc_get_status(TC_UART, TC_UART_CHN);
-
+	
 	/* RC compare. */
 	if ((ul_status & TC_SR_CPCS) == TC_SR_CPCS)
 	{
@@ -200,7 +201,7 @@ void TC_UART_Handler(void)
 				{
 					/* Disable timer. */
 					tc_stop(TC_UART, TC_UART_CHN);
-
+				
 					/* Log current size */
 					gs_ul_size_uart_buf0 = ul_byte_total;
 
@@ -218,7 +219,7 @@ void TC_UART_Handler(void)
 				num_bytes_rx_uart0 = 0;
 			}
 		}
-#endif
+#endif          
 #ifdef CONF_BOARD_UART1
 		if (buart_chn_open[1])
 		{
@@ -230,7 +231,7 @@ void TC_UART_Handler(void)
 				{
 					/* Disable timer. */
 					tc_stop(TC_UART, TC_UART_CHN);
-
+					
 					/* Log current size */
 					gs_ul_size_uart_buf1 = ul_byte_total;
 
@@ -248,7 +249,7 @@ void TC_UART_Handler(void)
 				num_bytes_rx_uart1 = 0;
 			}
 		}
-#endif
+#endif		
 	}
 }
 
@@ -266,7 +267,7 @@ void UART0_Handler(void)
 	ul_status = uart_get_status(UART0);
 
 	/* Receive buffer is full. */
-	if (ul_status & US_CSR_ENDRX)
+	if (ul_status & US_CSR_ENDRX) 
 	{
 		/* manage data .......*/
 		us_wr_idx = buart_comm_data_0.us_wq_idx;
@@ -291,12 +292,12 @@ void UART0_Handler(void)
 				buart_comm_data_0.us_rq_count += gs_ul_size_uart_buf0;
 				buart_comm_data_0.us_wq_idx = us_part_size;
 			}
-		}
+		}	
 		else
 		{ /* there is not enough space to write all data */
 			tc_start(TC_UART, TC_UART_CHN);
 		}
-
+		
 		/* change RX buffer */
 		gs_ul_size_uart_buf0 = UART_BUFFER_SIZE;
 
@@ -325,7 +326,7 @@ void UART0_Handler(void)
 	ul_status = uart_get_status(UART1);
 
 	/* Receive buffer is full. */
-	if (ul_status & US_CSR_ENDRX)
+	if (ul_status & US_CSR_ENDRX) 
 	{
 		/* manage data .......*/
 		us_wr_idx = buart_comm_data_1.us_wq_idx;
@@ -350,12 +351,12 @@ void UART0_Handler(void)
 				buart_comm_data_1.us_rq_count += gs_ul_size_uart_buf1;
 				buart_comm_data_1.us_wq_idx = us_part_size;
 			}
-		}
+		}	
 		else
 		{ /* there is not enough space to write all data */
 			tc_start(TC_UART, TC_UART_CHN);
 		}
-
+		
 		/* change RX buffer */
 		gs_ul_size_uart_buf1 = UART_BUFFER_SIZE;
 
@@ -371,9 +372,9 @@ void UART0_Handler(void)
  #endif
 #endif  // #if defined(CONF_BOARD_UART0) || defined(CONF_BOARD_UART1)
 /**
- * \brief This function opens an UART
+ * \brief This function opens an UART 
  *
- * \note Opening of the specified UART implies initializing local variables and
+ * \note Opening of the specified UART implies initializing local variables and 
  * opening required hardware with the following configuration:
  * - bauds as specified
  * - 8 bits, no parity, 1 stop bit
@@ -389,9 +390,9 @@ int8_t buart_if_open (uint8_t chn, uint32_t bauds)
 {
 #if defined(CONF_BOARD_UART0) || defined(CONF_BOARD_UART1)
 	sam_uart_opt_t uart_console_settings;
-
+				
 	uart_console_settings.ul_mck = sysclk_get_cpu_hz();			// MCK for UART
-	uart_console_settings.ul_baudrate = bauds;					// Expected baud rate.
+	uart_console_settings.ul_baudrate = bauds;					// Expected baud rate. 
 	uart_console_settings.ul_mode = UART_MR_PAR_NO;				// Initialize value for UART mode register
 #else
         UNUSED(bauds);
@@ -400,7 +401,7 @@ int8_t buart_if_open (uint8_t chn, uint32_t bauds)
 	// check uart and it is close
 	if(chn >= 2) return false;
 	if (buart_chn_open[chn]) return false;
-
+	
 	switch(chn)
 	{
 #ifdef CONF_BOARD_UART0
@@ -410,34 +411,34 @@ int8_t buart_if_open (uint8_t chn, uint32_t bauds)
 			pmc_enable_periph_clk(ID_UART0);
 			/* Configure UART. */
 			uart_init(UART0, &uart_console_settings);
-
+			
 			/* Assign buffers to pointers */
 			buart_comm_data_0.puc_tq_buf = ptr_tx_uart_buf0;
 			buart_comm_data_0.puc_rq_buf = ptr_rx_uart_buf0;
 			buart_comm_data_0.us_rq_count = 0;
 			buart_comm_data_0.us_rq_idx = 0;
 			buart_comm_data_0.us_wq_idx = 0;
-
+			
 			/* Get board UART0 PDC base address and enable receiver and transmitter. */
 			g_p_uart_pdc0 = uart_get_pdc_base(UART0);
 			pdc_enable_transfer(g_p_uart_pdc0, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
-
+			
 			/* Start receiving data and start timer. */
 			g_st_uart_rx_packet0.ul_addr = (uint32_t)gs_puc_uart_buf0;
 			g_st_uart_rx_packet0.ul_size = UART_BUFFER_SIZE;
 			pdc_rx_init(g_p_uart_pdc0, &g_st_uart_rx_packet0, NULL);
-
+						
 			/* Stop transmitting data */
 			g_st_uart_tx_packet0.ul_addr = (uint32_t)buart_comm_data_0.puc_tq_buf;
 			g_st_uart_tx_packet0.ul_size = 0;
 			pdc_tx_init(g_p_uart_pdc0, &g_st_uart_tx_packet0, NULL);
-
+			
 			gs_ul_size_uart_buf0 = UART_BUFFER_SIZE;
-
+			
 			/* Transfer to PDC communication mode, disable RXRDY interrupt and enable RXBUFF interrupt. */
 			uart_disable_interrupt(UART0, UART_IDR_RXRDY);
 			uart_enable_interrupt(UART0, UART_IER_RXBUFF);
-
+			
 			/* Enable the receiver and transmitter. */
 			uart_enable_tx(UART0);
 			uart_enable_rx(UART0);
@@ -445,19 +446,19 @@ int8_t buart_if_open (uint8_t chn, uint32_t bauds)
 			/* Configure and enable interrupt of USART. */
 			NVIC_SetPriority((IRQn_Type) UART0_IRQn, UART0_PRIO);
 			NVIC_EnableIRQ(UART0_IRQn);
-
+			
 			buart_chn_open[chn] = true;
 			num_bytes_rx_uart0 = 0;
 
 			/* Configure TC uart */
-			_configure_TC_uart();
+			_configure_TC_uart();	
 			tc_start(TC_UART, TC_UART_CHN);
 			return true;
 
 		}
 		break;
 #endif
-
+                
 #ifdef CONF_BOARD_UART1
 		case 1:
 		{
@@ -465,34 +466,34 @@ int8_t buart_if_open (uint8_t chn, uint32_t bauds)
 			pmc_enable_periph_clk(ID_UART1);
 			/* Configure UART. */
 			uart_init(UART1, &uart_console_settings);
-
+			
 			/* Assign buffers to pointers */
 			buart_comm_data_1.puc_tq_buf = ptr_tx_uart_buf1;
 			buart_comm_data_1.puc_rq_buf = ptr_rx_uart_buf1;
 			buart_comm_data_1.us_rq_count = 0;
 			buart_comm_data_1.us_rq_idx = 0;
 			buart_comm_data_1.us_wq_idx = 0;
-
+			
 			/* Get board UART1 PDC base address and enable receiver and transmitter. */
 			g_p_uart_pdc1 = uart_get_pdc_base(UART1);
 			pdc_enable_transfer(g_p_uart_pdc1, PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
-
+			
 			/* Start receiving data and start timer. */
 			g_st_uart_rx_packet1.ul_addr = (uint32_t)gs_puc_uart_buf1;
 			g_st_uart_rx_packet1.ul_size = UART_BUFFER_SIZE;
 			pdc_rx_init(g_p_uart_pdc1, &g_st_uart_rx_packet1, NULL);
-
+						
 			/* Stop transmitting data */
 			g_st_uart_tx_packet1.ul_addr = (uint32_t)buart_comm_data_1.puc_tq_buf;
 			g_st_uart_tx_packet1.ul_size = 0;
 			pdc_tx_init(g_p_uart_pdc1, &g_st_uart_tx_packet1, NULL);
-
+			
 			gs_ul_size_uart_buf1 = UART_BUFFER_SIZE;
-
+			
 			/* Transfer to PDC communication mode, disable RXRDY interrupt and enable RXBUFF interrupt. */
 			uart_disable_interrupt(UART1, UART_IDR_RXRDY);
 			uart_enable_interrupt(UART1, UART_IER_RXBUFF);
-
+			
 			/* Enable the receiver and transmitter. */
 			uart_enable_tx(UART1);
 			uart_enable_rx(UART1);
@@ -500,17 +501,17 @@ int8_t buart_if_open (uint8_t chn, uint32_t bauds)
 			/* Configure and enable interrupt of USART. */
 			NVIC_SetPriority((IRQn_Type) UART1_IRQn, UART1_PRIO);
 			NVIC_EnableIRQ(UART1_IRQn);
-
+			
 			buart_chn_open[chn] = true;
 			num_bytes_rx_uart1 = 0;
 
 			/* Configure TC uart */
-			_configure_TC_uart();
+			_configure_TC_uart();	
 			tc_start(TC_UART, TC_UART_CHN);
 			return true;
 		}
 		break;
-#endif
+#endif		
 		default:
 			return false;
 	}
@@ -518,7 +519,7 @@ int8_t buart_if_open (uint8_t chn, uint32_t bauds)
 }
 
 /**
- * \brief This function closes and disables communication in the specified UART.
+ * \brief This function closes and disables communication in the specified UART. 
  *
  * \param chn  Communication channel [0, 1]
  *
@@ -531,7 +532,7 @@ int8_t buart_if_close (uint8_t chn)
 
 	switch(chn)
 	{
-#ifdef CONF_BOARD_UART0
+#ifdef CONF_BOARD_UART0          
 		case 0:
 		{
 			uart_disable(UART0);
@@ -541,12 +542,12 @@ int8_t buart_if_close (uint8_t chn)
 			/* Stop TC */
 			if (!buart_chn_open[1])
 				tc_stop(TC_UART, TC_UART_CHN);
-
+		
 			return true;
 		}
 		break;
 #endif
-
+                
 #ifdef CONF_BOARD_UART1
 		case 1:
 		{
@@ -557,11 +558,11 @@ int8_t buart_if_close (uint8_t chn)
 			/* Stop TC */
 			if (!buart_chn_open[0])
 				tc_stop(TC_UART, TC_UART_CHN);
-
+		
 			return true;
 		}
 		break;
-#endif
+#endif	
 		default:
 			return false;
 	}
@@ -592,13 +593,13 @@ uint16_t buart_if_read (uint8_t chn, void *buffer, uint16_t len)
 #else
         UNUSED(buffer);
         UNUSED(len);
-#endif
+#endif  
 
 	// check uart is open
 	if (!buart_chn_open[chn]) return false;
 
 	switch (chn)
-	{
+	{	
 #ifdef CONF_BOARD_UART0
 		case 0:
 			us_buf_size = RX_UART_BUF0_SIZE;
@@ -615,7 +616,7 @@ uint16_t buart_if_read (uint8_t chn, void *buffer, uint16_t len)
 			us_total_pos = us_rd_idx + us_num_bytes_read;
 			if(us_total_pos <= us_buf_size)
 			{	/* copy data to buffer */
-				memcpy(msg, &buart_comm_data_0.puc_rq_buf[us_rd_idx], us_num_bytes_read);
+				memcpy(msg, &buart_comm_data_0.puc_rq_buf[us_rd_idx], us_num_bytes_read);	
 				/* update counters */
 				buart_comm_data_0.us_rq_count -= us_num_bytes_read;
 				buart_comm_data_0.us_rq_idx += us_num_bytes_read;
@@ -630,11 +631,11 @@ uint16_t buart_if_read (uint8_t chn, void *buffer, uint16_t len)
 				/* update counters */
 				buart_comm_data_0.us_rq_count -= us_num_bytes_read;
 				buart_comm_data_0.us_rq_idx = us_num_bytes_to_start;
-			}
+			}				
 			return us_num_bytes_read;
 			break;
 #endif
-
+			
 #ifdef CONF_BOARD_UART1
 		case 1:
 			us_buf_size = RX_UART_BUF1_SIZE;
@@ -651,7 +652,7 @@ uint16_t buart_if_read (uint8_t chn, void *buffer, uint16_t len)
 			us_total_pos = us_rd_idx + us_num_bytes_read;
 			if(us_total_pos <= us_buf_size)
 			{	/* copy data to buffer */
-				memcpy(msg, &buart_comm_data_1.puc_rq_buf[us_rd_idx], us_num_bytes_read);
+				memcpy(msg, &buart_comm_data_1.puc_rq_buf[us_rd_idx], us_num_bytes_read);	
 				/* update counters */
 				buart_comm_data_1.us_rq_count -= us_num_bytes_read;
 				buart_comm_data_1.us_rq_idx += us_num_bytes_read;
@@ -666,22 +667,22 @@ uint16_t buart_if_read (uint8_t chn, void *buffer, uint16_t len)
 				/* update counters */
 				buart_comm_data_1.us_rq_count -= us_num_bytes_read;
 				buart_comm_data_1.us_rq_idx = us_num_bytes_to_start;
-			}
+			}			
 			return us_num_bytes_read;
 			break;
 #endif
 		default:
                   return false;
-        }
-
-}
+        }	
+	
+}			
 
 /**
  * \brief This function transmits a message.
  *
  * \note This function transmits characters via the specified UART.
  * If so configured, the function waits until all characters are inserted
- * in the transmission queue. In this case, the watchdog timer must be
+ * in the transmission queue. In this case, the watchdog timer must be 
  * reloaded to avoid a program reset.
  *
  * \param  chn     Communication channel [0, 1]
@@ -699,10 +700,10 @@ uint16_t buart_if_write (uint8_t chn, const void* buffer, uint16_t len)
 
 	// check uart is open
 	if (!buart_chn_open[chn]) return false;
-
+	
 	switch (chn)
 	{
-#ifdef CONF_BOARD_UART0
+#ifdef CONF_BOARD_UART0          
 		case 0:
 			if(len > TX_UART_BUF0_SIZE) return false;
 			while(pdc_read_tx_counter(g_p_uart_pdc0) > 0);
@@ -712,8 +713,8 @@ uint16_t buart_if_write (uint8_t chn, const void* buffer, uint16_t len)
 			pdc_tx_init(g_p_uart_pdc0, &g_st_uart_tx_packet0, NULL);
                         return len;
 			break;
-#endif
-
+#endif			
+                        
 #ifdef CONF_BOARD_UART1
 		case 1:
 			if(len > TX_UART_BUF1_SIZE) return false;
@@ -725,7 +726,7 @@ uint16_t buart_if_write (uint8_t chn, const void* buffer, uint16_t len)
                         return len;
 			break;
 #endif
-
+		
 		default:
 			return false;
 	}
@@ -759,6 +760,7 @@ uint16_t buart_if_tx_char (uint8_t chn, char data)
 {
 	return (buart_if_write (chn, &data, 1));
 }
+
 //! @}
 
 /// @cond 0

@@ -56,14 +56,11 @@ extern "C" {
 /// @endcond
 
 /**
- * \weakgroup plc_group
+ * \weakgroup usi_plc_group
  * @{
  */
 
-/**
- *
- * Default empty PHY serialization function
- */
+/* Default empty PHY serialization function */
 uint8_t Dummy_serial_parser(uint8_t *puc_rx_msg, uint16_t us_len);
 
 #ifdef __GNUC__
@@ -110,14 +107,12 @@ extern uint8_t phySerial_receivedCmd (uint8_t *puc_rx_msg, uint16_t us_len);
   pf_usi_decode_cmd cbFnPhySerial  = NULL;
 #endif
 
-/**
- *  Minimum overhead introduced by the USI protocol
- *  \note (1 Start Byte, 2 Bytes (Len+Protocol), 1 End Byte, 1 CRC Byte)
- */
+//! \name Minimum overhead introduced by the USI protocol
+//! \note (1 Start Byte, 2 Bytes (Len+Protocol), 1 End Byte, 1 CRC Byte)
 #define MIN_OVERHEAD    5
 
 //! \name Special characters used by USI
-// @{
+//@{
 //! Start/end mark in message
 #define MSGMARK       0x7e
 //! Escaped start/end mark
@@ -126,29 +121,29 @@ extern uint8_t phySerial_receivedCmd (uint8_t *puc_rx_msg, uint16_t us_len);
 #define ESCMARK       0x7d
 //! Escaped escape mark
 #define ESC_ESCMARK   0x5d
-// @}
+//@}
 
 //! \name MSG started and ended flags
-// @{
+//@{
 #define MSG_START 1
 #define MSG_END   0
-// @}
+//@}
 
 //! \name USI header and CRC lengths
-// @{
+//@{
 #define HEADER_LEN  2
 #define CRC8_LEN    1
 #define CRC16_LEN   2
 #define CRC32_LEN   4
-// @}
+//@}
 
 /** \name USI flow control internal protocol
  *  \note This internal protocol has no effect on NUM_PROTOCOLS and NUM_PORTS
  *  constants defined in conf_usi.h because it has no interaction with other
  *  modules messages. It aims to provide flow control between the embedded USI
  *  and the USI Host.
- * @{
  */
+//@{
 //! Internal protocol ID
 #define PROTOCOL_INTERNAL  0x3F
 //! Commands for internal protocol messages
@@ -161,10 +156,10 @@ extern uint8_t phySerial_receivedCmd (uint8_t *puc_rx_msg, uint16_t us_len);
 #define TX_BLOCK_TIMEOUT   50
 #define RX_BLOCK_TIMEOUT   50
 #define TXRX_BLOCK_UPDATE   1
-//! @}
+//@}
 
 //! \name USI protocol header format
-// @{
+//@{
 #define TYPE_PROTOCOL_OFFSET       1
 #define TYPE_PROTOCOL_MSK       0x3F
 #define LEN_PROTOCOL_HI_OFFSET     0
@@ -180,9 +175,12 @@ extern uint8_t phySerial_receivedCmd (uint8_t *puc_rx_msg, uint16_t us_len);
 #define PAYLOAD_OFFSET             2
 #define CMD_PROTOCOL_OFFSET        2
 #define CMD_PROTOCOL_MSK        0x3F
-/** Macro operators
+//@}
+
+/** \name Macro operators
  * \note A: HI, B: LO, C:Xlen
  */
+//@{
 #define TYPE_PROTOCOL(A)      ((A)&TYPE_PROTOCOL_MSK)
 #define LEN_PROTOCOL(A,B)     ((((uint16_t)(A))<<LEN_PROTOCOL_HI_SHIFT)+((B)>>LEN_PROTOCOL_LO_SHIFT))
 #define XLEN_PROTOCOL(A,B,C)  ((((uint16_t)(A))<<LEN_PROTOCOL_HI_SHIFT)+((B)>>LEN_PROTOCOL_LO_SHIFT)+(((uint16_t)(C)&XLEN_PROTOCOL_MSK)<<XLEN_PROTOCOL_SHIFT_L))
@@ -190,10 +188,8 @@ extern uint8_t phySerial_receivedCmd (uint8_t *puc_rx_msg, uint16_t us_len);
 #define LEN_LO_PROTOCOL(A)    (((uint16_t)(A)<<LEN_PROTOCOL_LO_SHIFT)&LEN_PROTOCOL_LO_MSK)
 #define LEN_EX_PROTOCOL(A)    (((uint16_t)(A & 0x0c00)) >> 4)
 #define CMD_PROTOCOL(A)       ((A)&CMD_PROTOCOL_MSK)
-// @}
+//@}
 
-//! \name Protocol Structures
-// @{
 //! USI command structure
 typedef struct
 {
@@ -237,37 +233,26 @@ enum
   //! Transmitting message
   TX_MSG
 };
-// @}
 
-//! \name USI communication control parameters (one entry per port)
-// @{
+//! USI communication control parameters (one entry per port)
 static USI_param_t usi_cfg_param[NUM_PORTS];
-// @}
 
 //! \name USI message boundary control flag
-// @{
+//@{
 static uint8_t uc_message_status;
 // @}
 
-//! \name USI flow control internal protocol
-// @{
+//! \name USI flow control internal protocol variables
+//@{
 cmd_params_t internal_command;
 uint8_t uc_int_cmd_lock = CMD_LOCK_PORT;
 uint8_t uc_int_cmd_unlock = CMD_UNLOCK_PORT;
-// @}
-
-/** \name USI configuration
- * The following section provides support for different
- * PRIME protocols and configuration of tx/rx buffers.
- */
+//@}
 
 //! \name Types of serial port
-// @{
 #define UART_TYPE   0
 #define USART_TYPE  1
 
-//! USI port related structures
-// @{
 //! Protocol port mapping
 typedef struct
 {
@@ -301,12 +286,12 @@ typedef struct
   uint8_t * const puc_buf;
 }map_buffers_t;
 
-  //! Function Pointers for USI protocols
+//! Function Pointers for USI protocols
 #undef CONF_PORT
 #define CONF_PORT(type, channel, speed, tx_size, rx_size) {type, channel, speed, tx_size, rx_size}
 
 /**
- * Port Mapping. Configured with the values provided in conf_usi.h:
+ * \name Port Mapping. Configured with the values provided in conf_usi.h:
  * MapPorts[PORT TYPE, PORT CHANNEL, PORT SPEED, TX BUFFER SIZE, RX BUFFER SIZE]
  */
 static const map_ports_t usiMapPorts[NUM_PORTS + 1] =
@@ -327,9 +312,10 @@ static const map_ports_t usiMapPorts[NUM_PORTS + 1] =
 };
 
 /**
- * Protocol Mapping. Configured with the values provided in conf_usi.h:
+ * \name Protocol Mapping. Configured with the values provided in conf_usi.h:
  * MapProtocols[PROTOCOL TYPE, PORT INDEX]
  */
+//@{
 static const map_protocols_t usi_map_protocols[NUM_PROTOCOLS + 1] =
 {
 #ifdef USE_MNGP_PRIME_PORT
@@ -408,11 +394,16 @@ static const map_protocols_t usi_map_protocols[NUM_PROTOCOLS + 1] =
 #endif
   {0xff, 0xff}
 };
+//@}
 
-//! Reception Buffers Mapping
+//! \name Por configuration for buffers
+//@{
 #undef CONF_PORT
 #define CONF_PORT(type, channel, speed, tx_size, rx_size) rx_size
+//@}
 
+//! \name Reception buffers
+//@{
 #ifdef PORT_0
 static uint8_t puc_rxbuf0[PORT_0];
 #endif
@@ -428,7 +419,10 @@ static uint8_t puc_rxbuf2[PORT_2];
 #ifdef PORT_3
 static uint8_t puc_rxbuf3[PORT_3];
 #endif
+//@}
 
+//! \name Reception Buffers mapping
+//@{
 static map_buffers_t usi_rx_buf[NUM_PORTS + 1] =
 {
 #ifdef PORT_0
@@ -445,11 +439,16 @@ static map_buffers_t usi_rx_buf[NUM_PORTS + 1] =
 #endif
     {0xFF , NULL}
 };
+//@}
 
-//! Transmission Buffers Mapping
+//! \name Port configuration for buffers
+//@{
 #undef CONF_PORT
 #define CONF_PORT(type, channel, speed, tx_size, rx_size) tx_size
+//@}
 
+//! \name Transmission Buffers
+//@{
 #ifdef PORT_0
 static uint8_t puc_txbuf0[PORT_0];
 #endif
@@ -462,7 +461,10 @@ static uint8_t puc_txbuf2[PORT_2];
 #ifdef PORT_3
 static uint8_t puc_txbuf3[PORT_3];
 #endif
+//@}
 
+//! \name Transmission Buffers mapping
+//@{
 static const map_buffers_t usi_tx_buf[NUM_PORTS + 1] =
 {
 #ifdef PORT_0
@@ -479,8 +481,10 @@ static const map_buffers_t usi_tx_buf[NUM_PORTS + 1] =
 #endif
     {0xFF , NULL}
 };
+//@}
 
-//! Transmission buffers size configuration
+//! \name Transmission buffers size configuration
+//@{
 #define TXAUX_SIZE 0
 #ifdef PORT_0
   #if (PORT_0 > TXAUX_SIZE)
@@ -506,6 +510,7 @@ static const map_buffers_t usi_tx_buf[NUM_PORTS + 1] =
     #define TXAUX_SIZE     PORT_3
   #endif
 #endif
+//@}
 
 static uint8_t puc_tx_aux_buf[TXAUX_SIZE + 2];
 static const map_buffers_t usi_aux_tx_buf = {TXAUX_SIZE + 2, &puc_tx_aux_buf[0]};
@@ -518,7 +523,7 @@ const map_buffers_t * const usi_cfg_tx_buf = &usi_tx_buf[0];
 const map_buffers_t * const usi_cfg_aux_rx_buf = &usi_aux_rx_buf;
 const map_buffers_t * const usi_cfg_aux_tx_buf = &usi_aux_tx_buf;
 map_buffers_t * const usi_cfg_rx_buf = &usi_rx_buf[0];
-// @}
+
 
 /**
  * \brief  This function extracts the port where the protocol is mapped to.
@@ -568,7 +573,7 @@ static void _cbInternalProtocol(uint8_t uc_port_idx, uint8_t uc_cmd)
 /**
  * \brief  This function processes the complete received message.
  *
- * \param    port  Port where message is received
+ * \param    uc_port  Port where message is received
  */
 static uint8_t _process_msg (uint8_t uc_port)
 {
@@ -1033,8 +1038,8 @@ void usi_txrx_block_timer(void)
 void usi_Process(void)
 {
   uint8_t  i;
-  int      nr_ch = 0;
-  uint8_t  uc_delimiter = MSGMARK;
+  int nr_ch = 0;
+  uint8_t uc_delimiter = MSGMARK;
   uint8_t *puc_next_token;
   uint8_t *puc_rx_aux;
   uint16_t us_token_size;
@@ -1247,8 +1252,7 @@ void usi_Init(void)
  *
  *  @param    msg    Pointer to message to be transmitted.
  *
- *  @return   Result:   USI_OK:    Sent
- *                      USI_ERROR: Not sent
+ *  @return   USI operation result
  */
 usi_status_t usi_send_cmd (void *msg)
 {
@@ -1294,6 +1298,7 @@ uint8_t Dummy_serial_parser(uint8_t *puc_rx_msg, uint16_t us_len)
 
   return(0);
 }
+
 //! @}
 
 /// @cond 0

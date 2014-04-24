@@ -60,7 +60,7 @@ extern "C" {
 /// @endcond
 
 /**
- * \weakgroup plc_group
+ * \weakgroup busart_plc_group
  * @{
  */
 
