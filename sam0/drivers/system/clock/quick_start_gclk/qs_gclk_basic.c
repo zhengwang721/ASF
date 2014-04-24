@@ -80,6 +80,15 @@ void configure_gclock_channel(void)
 //! [setup_8]
 	gclk_chan_conf.source_generator = GCLK_GENERATOR_1;
 //! [setup_8]
+#if (SAMD10) || (SAMD11)
+//! [setup_9]
+	system_gclk_chan_set_config(TC1_GCLK_ID, &gclk_chan_conf);
+//! [setup_9]
+
+//! [setup_10]
+	system_gclk_chan_enable(TC1_GCLK_ID);
+//! [setup_10]
+#else
 //! [setup_9]
 	system_gclk_chan_set_config(TC3_GCLK_ID, &gclk_chan_conf);
 //! [setup_9]
@@ -87,6 +96,7 @@ void configure_gclock_channel(void)
 //! [setup_10]
 	system_gclk_chan_enable(TC3_GCLK_ID);
 //! [setup_10]
+#endif
 }
 //! [setup]
 
