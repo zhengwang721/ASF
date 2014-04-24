@@ -43,6 +43,11 @@
 
 #include "adc.h"
 
+#if SAMD20
+/* The Die revision D number */
+#define REVISON_D_NUM    3
+#endif
+
 /**
 * \internal Configure MUX settings for the analog pins
 *
@@ -221,14 +226,14 @@ static enum status_code _adc_set_config(
 		/* 16-bit result register */
 		resolution = ADC_RESOLUTION_16BIT;
 		break;
-		/* Please see $35.1.8 for ADC errata. the before revision D SAM D20 chip
-		    has errata 10530 issue. */
 #if SAMD20
+	/* Please see $35.1.8 for ADC errata of SAM D20.
+	   The revisions before D have this issue.*/
 	case ADC_RESOLUTION_15BIT:
 		/* Increase resolution by 3 bit */
-		if(revision_num < REVISON_D_NUM) {	
+		if(revision_num < REVISON_D_NUM) {
 			adjres = ADC_DIVIDE_RESULT_8;
-		} else {	
+		} else {
 			adjres = ADC_DIVIDE_RESULT_2;
 		}
 		accumulate = ADC_ACCUMULATE_SAMPLES_64;
@@ -237,7 +242,7 @@ static enum status_code _adc_set_config(
 		break;
 
 	case ADC_RESOLUTION_16BIT:
-		if(revision_num < REVISON_D_NUM) {	
+		if(revision_num < REVISON_D_NUM) {
 			/* Increase resolution by 4 bit */
 			adjres = ADC_DIVIDE_RESULT_16;
 		} else {
@@ -261,7 +266,7 @@ static enum status_code _adc_set_config(
 		adjres = ADC_DIVIDE_RESULT_DISABLE;
 		accumulate = ADC_ACCUMULATE_SAMPLES_256;
 		/* 16-bit result register */
-		resolution = ADC_RESOLUTION_16BIT;		
+		resolution = ADC_RESOLUTION_16BIT;
 		break;
 #endif
 	case ADC_RESOLUTION_8BIT:
