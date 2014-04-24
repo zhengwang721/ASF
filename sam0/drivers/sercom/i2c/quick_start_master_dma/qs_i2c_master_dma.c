@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 I2C Master with DMA Quick Start Guide
+ * \brief SAM SERCOM I2C Master with DMA Quick Start Guide
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -121,7 +121,6 @@ static void configure_dma_resource(struct dma_resource *resource)
 	//! [dma_setup_2]
 
 	//! [dma_setup_3]
-	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
 	config.peripheral_trigger = SERCOM2_DMAC_ID_TX;
 	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 	//! [dma_setup_3]
