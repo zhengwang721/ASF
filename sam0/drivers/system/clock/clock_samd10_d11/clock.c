@@ -633,7 +633,7 @@ enum status_code system_clock_source_disable(
 bool system_clock_source_is_ready(
 		const enum system_clock_source clock_source)
 {
-	uint32_t mask;
+	uint32_t mask = 0;
 
 	switch (clock_source) {
 	case SYSTEM_CLOCK_SOURCE_OSC8M:
@@ -653,7 +653,12 @@ bool system_clock_source_is_ready(
 		break;
 
 	case SYSTEM_CLOCK_SOURCE_DFLL:
-		mask = SYSCTRL_PCLKSR_DFLLRDY;
+		if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
+			mask = (SYSCTRL_PCLKSR_DFLLRDY |
+			        SYSCTRL_PCLKSR_DFLLLCKF | SYSCTRL_PCLKSR_DFLLLCKC);
+		} else {
+			mask = SYSCTRL_PCLKSR_DFLLRDY;
+		}
 		break;
 
 #ifdef FEATURE_SYSTEM_CLOCK_DPLL
@@ -671,7 +676,7 @@ bool system_clock_source_is_ready(
 		return false;
 	}
 
-	return ((SYSCTRL->PCLKSR.reg & mask) != 0);
+	return ((SYSCTRL->PCLKSR.reg & mask) == mask);
 }
 
 /* Include some checks for conf_clocks.h validation */

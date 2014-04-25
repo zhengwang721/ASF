@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21/D10/D11 System Interrupt Driver Quick Start
+ * \brief SAM D11 Xplained Pro board configuration.
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,42 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-volatile bool is_ready;
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-int main(void)
-{
-	system_init();
-
-//! [main_1]
-//! [critical_section_start]
-	system_interrupt_enter_critical_section();
-//! [critical_section_start]
-
-//! [do_critical_code]
-	if (is_ready == true) {
-		/* Do something in response to the global shared flag */
-		is_ready = false;
-	}
-//! [do_critical_code]
-
-//! [critical_section_end]
-	system_interrupt_leave_critical_section();
-//! [critical_section_end]
-//! [main_1]
-
-//! [main_2]
-//! [module_int_enable]
-	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_RTC);
-//! [module_int_enable]
-
-//! [global_int_enable]
-	system_interrupt_enable_global();
-//! [global_int_enable]
-//! [main_2]
-
-	while (true) {
-		/* Infinite loop */
-	}
-}
+#endif /* CONF_BOARD_H_INCLUDED */
