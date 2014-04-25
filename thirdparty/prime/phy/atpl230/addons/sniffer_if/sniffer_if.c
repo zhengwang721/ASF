@@ -50,7 +50,9 @@
 
 // Board config
 #include "conf_board.h"
+#ifdef LED0_GPIO
 #include "led.h"
+#endif
 
 // Phy includes
 #include "atpl230.h"
@@ -139,11 +141,11 @@ void sniffer_if_Process(void)
       //update SNA configuration
       phy_set_cfg_param(REG_ATPL230_SNA0, uc_sna, sizeof(uc_sna));
     }
-
+#ifdef LED0_GPIO
     //Toogle rx led
     if(uc_sniffer_led_enable)
       LED_Toggle(LED0);
-
+#endif
     us_sniffer_response_len = 0;
 
     if (x_read_msg.mode == MODE_PRIME_V1_3){

@@ -1855,14 +1855,18 @@ uint8_t phy_tx_frame (xPhyMsgTx_t *px_msg)
  *
  */
 static void _reset_rx_flag_interrupt(uint8_t uc_buf_idx){
+#ifdef PPLC_INT_IRQn
   // enter in critical region
   NVIC_DisableIRQ(PPLC_INT_IRQn);
+#endif
   // clear interrupt flag -> it must execute after read all information trhough spi to avoid overwrite data
   pplc_if_and8 (REG_ATPL230_TXRXBUF_RX_INT, (uint8_t)~(ATPL230_TXRXBUF_RX_INT_PRX0_Msk<<uc_buf_idx));
   // reset interrupt sw global flag
   uc_reg_rx_int &= (uint8_t)~(ATPL230_TXRXBUF_RX_INT_PRX0_Msk<<uc_buf_idx);
+#ifdef PPLC_INT_IRQn
   // exit in critical region
   NVIC_EnableIRQ(PPLC_INT_IRQn);
+#endif
 }
 
 /**
