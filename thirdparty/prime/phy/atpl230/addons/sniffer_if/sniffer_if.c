@@ -50,8 +50,13 @@
 
 // Board config
 #include "conf_board.h"
-#ifdef LED0_GPIO
+#include "board.h"
+#if BOARD == ATPL230AMB
 #include "led.h"
+#define BSP_LED_SUPPORT
+#elif BOARD == SAM4CP16BMB
+#include "led.h"
+#define BSP_LED_SUPPORT
 #endif
 
 // Phy includes
@@ -141,7 +146,7 @@ void sniffer_if_Process(void)
       //update SNA configuration
       phy_set_cfg_param(REG_ATPL230_SNA0, uc_sna, sizeof(uc_sna));
     }
-#ifdef LED0_GPIO
+#ifdef BSP_LED_SUPPORT
     //Toogle rx led
     if(uc_sniffer_led_enable)
       LED_Toggle(LED0);
