@@ -542,7 +542,7 @@ void system_init(void);
  *		<td>E</td>
  *		<td>04/2014</td>
  *		<td>Added support for SAMD10/D11.</td>
- *	</tr> 
+ *	</tr>
  *	<tr>
  *		<td>D</td>
  *		<td>02/2014</td>
