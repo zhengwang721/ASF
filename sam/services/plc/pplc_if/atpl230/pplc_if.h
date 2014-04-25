@@ -52,6 +52,13 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+
+#ifndef PPLC_SPI_MODULE
+#define PPLC_SPI_MODULE     SPI
+/* Chip select used by PPLC internal peripheral  */
+#define PPLC_CS             0
+#endif
+
 /**
  * \ingroup plc_group
  * \defgroup pplc_plc_group Proxy PLC Controller

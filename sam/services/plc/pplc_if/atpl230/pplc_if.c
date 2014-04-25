@@ -455,6 +455,7 @@ void pplc_if_init (void)
   // pplc free
   uc_pplc_is_busy = false;
 
+#ifdef PPLC_INT_ID
   // Configure PPLC Interruption
   pmc_enable_periph_clk(PPLC_INT_ID);
   pio_handler_set(PPLC_INT_PIO, PPLC_INT_ID, PPLC_INT_MASK, \
@@ -464,6 +465,7 @@ void pplc_if_init (void)
   NVIC_ClearPendingIRQ(PPLC_INT_IRQn);
   NVIC_EnableIRQ(PPLC_INT_IRQn);
   pio_enable_interrupt(PPLC_INT_PIO, PPLC_INT_MASK);
+#endif
 }
 
 /**

@@ -742,7 +742,7 @@ uint16_t buart_if_write (uint8_t chn, const void* buffer, uint16_t len)
  */
 int buart_if_rx_char (uint8_t chn)
 {
-	uint8_t buf[4];
+	uint8_t buf[4] = {0, 0, 0, 0};
 
 	if (buart_if_read (chn, buf, 1) <= 0) return (-1);
 	return buf[0];
