@@ -44,12 +44,6 @@
 /**
  * \defgroup asfdoc_udi_cdc_group USB Device Interface (UDI) for Communication Class Device (CDC)
  *
- * \if ASF_MANUAL
- * \note  This version is for ASF USB Manual.
- * \else
- * \note  This version is for UDI CDC Application Note.
- * \endif
-
  * USB Device Interface (UDI) for Communication Class Device (CDC) provides an
  * interface for the configuration and management of USB CDC serial device.
  *

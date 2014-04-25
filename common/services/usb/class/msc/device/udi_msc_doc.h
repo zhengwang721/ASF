@@ -44,12 +44,6 @@
 /**
  * \defgroup asfdoc_udi_msc_group USB Device Interface (UDI) for Mass Storage Class (MSC)
  *
- * \if ASF_MANUAL
- * \note  This version is for ASF USB Manual.
- * \else
- * \note  This version is for UDI MSC Application Note.
- * \endif
-
  * USB Device Interface (UDI) for Mass Storage Class (MSC) provides an
  * interface for the configuration and management of USB MSC storage device.
  *

@@ -44,12 +44,6 @@
 /**
  * \defgroup asfdoc_uhi_cdc_group USB Host Interface (UHI) for Communication Class Device (CDC)
  *
- * \if ASF_MANUAL
- * \note  This version is for ASF USB Manual.
- * \else
- * \note  This version is for UHI CDC Application Note.
- * \endif
-
  * USB Host Interface (UHI) for Communication Class Device (CDC) provides an
  * interface for the configuration and management of USB CDC serial host.
  *
@@ -349,16 +343,16 @@ iram_size_t uhi_cdc_write_buf(uint8_t port, const void* buf, iram_size_t size);
  *
  * \section asfdoc_uhi_cdc_config_examples_2 conf_clock.h
  *
- * \subsection asfdoc_uhi_cdc_config_examples_2_2 AT32UC3A0, AT32UC3A1, AT32UC3B devices (USBB)
+ * \subsection asfdoc_uhi_cdc_config_examples_2_1 AT32UC3A0, AT32UC3A1, AT32UC3B devices (USBB)
  * \include example\at32uc3a0512_evk1100\conf_clock.h
  *
- * \subsection asfdoc_uhi_cdc_config_examples_2_3 AT32UC3A3, AT32UC3A4 devices (USBB with high speed support)
+ * \subsection asfdoc_uhi_cdc_config_examples_2_2 AT32UC3A3, AT32UC3A4 devices (USBB with high speed support)
  * \include example\at32uc3a3256_evk1104\conf_clock.h
  *
- * \subsection asfdoc_uhi_cdc_config_examples_2_4 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U devices (USBC)
+ * \subsection asfdoc_uhi_cdc_config_examples_2_3 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U devices (USBC)
  * \include example\at32uc3c0512c_uc3c_ek\conf_clock.h
  *
- * \subsection asfdoc_uhi_cdc_config_examples_2_7 SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed)
+ * \subsection asfdoc_uhi_cdc_config_examples_2_4 SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed)
  * \include example\sam3x8h_sam3x_ek\conf_clock.h
  *
  * \section asfdoc_uhi_cdc_config_examples_3 conf_clocks.h

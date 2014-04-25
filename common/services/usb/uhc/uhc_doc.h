@@ -53,8 +53,10 @@
  * All USB Host Interface (UHI) in USB Host Stack is based on UHC to support
  * USB enumeration.
  *
- * Atmel provides the application note AVR4950 about USB Host Stack general
- * information.
+ * For more details for Atmel Software Framework (ASF) USB Host Stack, please
+ * refer to following Application Notes:
+ * - <a href="http://www.atmel.com/dyn/resources/prod_documents/doc8486.pdf">
+ *   AVR4950: ASF - USB Host Stack</a>
  *
  * This documentation describes common USB Host usage based on UHC, as follow:
  * - \ref asfdoc_uhc_api_overview
@@ -533,7 +535,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * \section uhc_use_case_1_setup Setup steps
  *
  * Prior to implement this use case, be sure to have already
- * apply the UDI module "basic use case".
+ * apply the UHI module "basic use case".
  *
  * \section uhc_use_case_1_usage Usage steps
  *
@@ -557,7 +559,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * \section uhc_use_case_2_setup Setup steps
  *
  * Prior to implement this use case, be sure to have already
- * apply the UDI module "basic use case".
+ * apply the UHI module "basic use case".
  *
  * \section uhc_use_case_2_usage Usage steps
  *
@@ -587,7 +589,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * \section uhc_use_case_3_setup Setup steps
  *
  * Prior to implement this use case, be sure to have already
- * apply the UDI module "basic use case".
+ * apply the UHI module "basic use case".
  *
  * \section uhc_use_case_3_usage Usage steps
  *
