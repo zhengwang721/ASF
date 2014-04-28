@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21/R21/D10/D11 Direct Memory Access Driver Configuration Header
+ * \brief SAM D11 Direct Memory Access Driver Configuration Header
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,6 +43,6 @@
 #ifndef CONF_DMA_H_INCLUDED
 #define CONF_DMA_H_INCLUDED
 
-#  define CONF_MAX_USED_CHANNEL_NUM     5
+#  define CONF_MAX_USED_CHANNEL_NUM     1
 
 #endif
