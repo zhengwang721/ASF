@@ -4,7 +4,7 @@
 
 		<generator value="doxygen-v2"/>
 
-		<info type="appnote" value="ATxxxxx"/>
+		<info type="appnote" value="AT_USB_MANUAL"/>
 
 		<info type="description" value="pdf">
 		This application note describes the USB Stack Usage for the Atmel SAM/AVR devices.
@@ -33,6 +33,9 @@
 
 		<require idref="common.services.usb.uhc.appnote"/>
 		<require idref="common.services.usb.class.cdc.host.appnote"/>
+		<require idref="common.services.usb.class.hid.host.mouse.appnote"/>
+		<require idref="common.services.usb.class.msc.host.appnote"/>
+		<require idref="common.services.usb.class.vendor.host.appnote"/>
 
 		<device-support value="unspecified-samd21"/>
 	</project>
