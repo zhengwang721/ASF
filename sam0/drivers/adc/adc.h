@@ -987,7 +987,7 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 	config->positive_input                = ADC_POSITIVE_INPUT_PIN6 ;
 #else
 	config->positive_input                = ADC_POSITIVE_INPUT_PIN0 ;
-#endif	
+#endif
 	config->negative_input                = ADC_NEGATIVE_INPUT_GND ;
 	config->accumulate_samples            = ADC_ACCUMULATE_DISABLE;
 	config->divide_result                 = ADC_DIVIDE_RESULT_DISABLE;
@@ -1154,7 +1154,7 @@ static inline enum status_code adc_enable(
 	}
 
 	/* Make sure bandgap is enabled if requested by the config */
-	if (module_inst == ADC_REFERENCE_INT1V) {
+	if (module_inst->reference == ADC_REFERENCE_INT1V) {
 		system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_BANDGAP);
 	}
 
