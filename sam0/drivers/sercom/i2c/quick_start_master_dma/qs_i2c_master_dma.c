@@ -78,11 +78,7 @@ static void configure_i2c_master(void)
 
 	/* Initialize and enable device with config. */
 	//! [init_module]
-#if (SAMD10) || (SAMD11)
-	i2c_master_init(&i2c_master_instance, SERCOM1, &config_i2c_master);
-#else
 	i2c_master_init(&i2c_master_instance, SERCOM2, &config_i2c_master);
-#endif
 	//! [init_module]
 
 	//! [enable_module]
@@ -125,11 +121,7 @@ static void configure_dma_resource(struct dma_resource *resource)
 	//! [dma_setup_2]
 
 	//! [dma_setup_3]
-#if (SAMD10) || (SAMD11)
-	config.peripheral_trigger = SERCOM1_DMAC_ID_TX;
-#else
 	config.peripheral_trigger = SERCOM2_DMAC_ID_TX;
-#endif
 	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 	//! [dma_setup_3]
 

@@ -108,11 +108,7 @@ void configure_i2c(void)
 
 	/* Initialize and enable device with config */
 	//! [init_module]
-#if (SAMD10) || (SAMD11)
-	while(i2c_master_init(&i2c_master_instance, SERCOM1, &config_i2c_master) != STATUS_OK);
-#else
 	while(i2c_master_init(&i2c_master_instance, SERCOM2, &config_i2c_master) != STATUS_OK);
-#endif	
 	//! [init_module]
 
 	//! [enable_module]
