@@ -1115,8 +1115,8 @@ static inline void adc_clear_status(
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true if the module has completed synchronization
- * \retval false if the module synchronization is ongoing
+ * \retval true if the module synchronization is ongoing
+ * \retval false if the module has completed synchronization
  */
 static inline bool adc_is_syncing(
 	struct adc_module *const module_inst)
