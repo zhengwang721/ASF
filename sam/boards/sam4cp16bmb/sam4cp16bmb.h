@@ -79,11 +79,6 @@
 #endif
 
 
-/** PLC Timers Configuration */
-#define ID_TC_BCN       ID_TC3
-#define TC_BCN          TC1
-#define TC_BCN_CHN      0
-#define TC_BCN_Handler  TC3_Handler
 
 /* @} */
 

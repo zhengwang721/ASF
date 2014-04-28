@@ -356,7 +356,7 @@ static uint8_t const uc_peak_cut_on_enable_tab[16] =
   PEAK_CFG_ENABLE,   // 4 - BPSK_VTB
   PEAK_CFG_ENABLE,   // 5 - QPSK_VTB
   PEAK_CFG_ENABLE,   // 6 - 8PSK_VTB
-  PEAK_CFG_ENABLE,   // 7 - not permitted
+  NOT_ALLOWED,       // 7 - not permitted
   NOT_ALLOWED,       // 8 - not permitted
   NOT_ALLOWED,       // 9 - not permitted
   NOT_ALLOWED,       // 10 - not permitted

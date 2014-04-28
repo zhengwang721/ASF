@@ -95,6 +95,7 @@ static void prvProcessMonitorTasks(xTimerHandle pxTimer);
 
 /* WDT configuration */
 #define WATCHDOG_1s                     1000000
+#define WATCHDOG_5s                     5000000
 
 /* FreeRTOS utils */
 void vApplicationIdleHook( void );
@@ -987,7 +988,7 @@ int main( void )
   prvSetupHardware();
 
   /* get value to init wdog from time in us. */
-  timeout_value = wdt_get_timeout_value(WATCHDOG_1s, BOARD_FREQ_SLCK_XTAL);
+  timeout_value = wdt_get_timeout_value(WATCHDOG_5s, BOARD_FREQ_SLCK_XTAL);
   /* Configure WDT to trigger a reset. */
   wdt_mode = WDT_MR_WDRSTEN |   /* Enable WDT reset. */
              WDT_MR_WDRPROC |   /* WDT fault resets processor only. */

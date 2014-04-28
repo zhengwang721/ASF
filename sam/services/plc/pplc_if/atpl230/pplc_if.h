@@ -52,6 +52,8 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+#include "board.h"
+
 
 #ifndef PPLC_SPI_MODULE
 #define PPLC_SPI_MODULE     SPI
@@ -63,7 +65,7 @@ extern "C" {
  * \ingroup plc_group
  * \defgroup pplc_plc_group Proxy PLC Controller
  *
- * This module provides configuration and utils to control the PLC interface 
+ * This module provides configuration and utils to control the PLC interface
  * with the ATPL230 PHY layer.
  *
  * @{
