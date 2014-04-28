@@ -191,6 +191,19 @@ void system_board_init(void);
 #define EXT1_SPI_SERCOM_DMAC_ID_RX   SERCOM0_DMAC_ID_RX
 /** @} */
 
+/** \name Embedded debugger CDC Gateway USART interface definitions
+ * @{
+ */
+#define EDBG_CDC_MODULE              SERCOM0
+#define EDBG_CDC_SERCOM_MUX_SETTING  USART_RX_3_TX_2_XCK_3
+#define EDBG_CDC_SERCOM_PINMUX_PAD0  PINMUX_UNUSED
+#define EDBG_CDC_SERCOM_PINMUX_PAD1  PINMUX_UNUSED
+#define EDBG_CDC_SERCOM_PINMUX_PAD2  PINMUX_PA10C_SERCOM0_PAD2
+#define EDBG_CDC_SERCOM_PINMUX_PAD3  PINMUX_PA11C_SERCOM0_PAD3
+#define EDBG_CDC_SERCOM_DMAC_ID_TX   SERCOM0_DMAC_ID_TX
+#define EDBG_CDC_SERCOM_DMAC_ID_RX   SERCOM0_DMAC_ID_RX
+/** @} */
+
 #ifdef __cplusplus
 }
 #endif
