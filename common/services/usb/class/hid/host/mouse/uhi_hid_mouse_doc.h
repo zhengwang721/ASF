@@ -281,3 +281,4 @@ extern void uhi_hid_mouse_uninstall(uhc_device_t* dev);
  * \subsection asfdoc_uhi_hid_mouse_config_examples_4_5 SAMD devices (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_board.h
  */
+

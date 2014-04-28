@@ -444,3 +444,4 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
  * \subsection asfdoc_uhi_msc_config_examples_4_5 SAMD devices (USB)
  * \include example2\samd21j18a_samd21_xplained_pro\conf_board.h
  */
+
