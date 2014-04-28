@@ -78,7 +78,11 @@ void configure_i2c_slave(void)
 
 	/* Initialize and enable device with config_i2c_slave */
 	//! [init_module]
+#if (SAMD10) || (SAMD11)
+	i2c_slave_init(&i2c_slave_instance, SERCOM1, &config_i2c_slave);
+#else
 	i2c_slave_init(&i2c_slave_instance, SERCOM2, &config_i2c_slave);
+#endif
 	//! [init_module]
 
 	//! [enable_module]
@@ -108,7 +112,11 @@ void configure_dma_resource(struct dma_resource *resource)
 	//! [dma_setup_2]
 
 	//! [dma_setup_3]
+#if (SAMD10) || (SAMD11)
+	config.peripheral_trigger = SERCOM1_DMAC_ID_RX;
+#else
 	config.peripheral_trigger = SERCOM2_DMAC_ID_RX;
+#endif
 	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 	//! [dma_setup_3]
 
