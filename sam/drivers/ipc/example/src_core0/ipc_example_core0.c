@@ -46,7 +46,7 @@
  *
  * \section Purpose
  *
- * This example demostrates how core 0 communicates with core 1 via IPC.
+ * This example demonstrates how core 0 communicates with core 1 via IPC.
  *
  * \section Requirements
  *
@@ -58,10 +58,10 @@
  * The program initializes the console with given parameters and configures IPC0
  * IRQ0 handler to deal with the interrupt command from core 0. Then it loads
  * the binary of core 1 example to SRAM1, resets core 1 and waits for the
- * interrupt triggerred by core 1. When the interrupt is triggerred, the
+ * interrupt triggered by core 1. When the interrupt is triggered, the
  * console will output the information and one LED will be toggled.
  * The variable in the SHARED_MEMORY_ADDR will be updated by core 1. The updated
- * value will be printed everytime the interrupt occurs.
+ * value will be printed every time the interrupt occurs.
  *
  * \section Usage
  *
@@ -78,7 +78,7 @@
  *    \endcode
  * -# When the IPC0 IRQ0 is set by core 1 x:
  *    \code
- *     Got IRQ signal from core1
+ *     Got IRQ signal from core1 nn
  *    \endcode
  */
 
