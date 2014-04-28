@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 Direct Memory Access Controller(DMAC) Driver Quick Start
+ * \brief SAM D21/R21 Direct Memory Access Controller(DMAC) Driver Quick Start
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -157,7 +157,11 @@ int main(void)
 	//! [main_1]
 	dma_start_transfer_job(&example_resource);
 	//! [main_1]
-	
+
+	//! [main_1_1]
+	dma_trigger_transfer(&example_resource);
+	//! [main_1_1]
+
 	//! [main_2]
 	while (!transfer_is_done) {
 		/* Wait for transfer done */

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 Timer/Counter Driver for Control Applications DMA Quickstart
+ * \brief SAM D21/R21 Timer/Counter Driver for Control Applications DMA Quickstart
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
 #include <asf.h>
 #include <conf_quick_start_dma.h>
 
-static void _configure_tcc(void);
+static void configure_tcc(void);
 
 //! [module_inst]
 struct tcc_module tcc_instance;
@@ -74,7 +74,7 @@ struct events_resource capture_event_resource;
 //! [capture_variables]
 
 //! [config_event_for_capture]
-static void _config_event_for_capture(void)
+static void config_event_for_capture(void)
 {
 	//! [event_setup_1]
 	struct events_config config;
@@ -102,7 +102,7 @@ static void _config_event_for_capture(void)
 //! [config_event_for_capture]
 
 //! [config_dma_for_capture]
-static void _config_dma_for_capture(void)
+static void config_dma_for_capture(void)
 {
 	//! [config_dma_resource_for_capture]
 	//! [dma_setup_1]
@@ -114,7 +114,6 @@ static void _config_dma_for_capture(void)
 	//! [dma_setup_2]
 
 	//! [dma_setup_3]
-	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
 	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 	config.peripheral_trigger = CONF_CAPTURE_TRIGGER;
 	//! [dma_setup_3]
@@ -162,12 +161,11 @@ static void _config_dma_for_capture(void)
 //! [config_dma_for_capture]
 
 //! [config_dma_for_wave]
-static void _config_dma_for_wave(void)
+static void config_dma_for_wave(void)
 {
 	//! [config_dma_resource_for_wave]
 	struct dma_resource_config config;
 	dma_get_config_defaults(&config);
-	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
 	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 	config.peripheral_trigger = CONF_COMPARE_TRIGGER;
 	dma_allocate(&compare_dma_resource, &config);
@@ -198,7 +196,7 @@ static void _config_dma_for_wave(void)
 //! [config_dma_for_wave]
 
 //! [setup]
-static void _configure_tcc(void)
+static void configure_tcc(void)
 {
 	//! [setup_config]
 	struct tcc_config config_tcc;
@@ -238,12 +236,12 @@ static void _configure_tcc(void)
 	//! [setup_events]
 
 	//! [setup_event_sys]
-	_config_event_for_capture();
+	config_event_for_capture();
 	//! [setup_event_sys]
 
 	//! [setup_dma]
-	_config_dma_for_capture();
-	_config_dma_for_wave();
+	config_dma_for_capture();
+	config_dma_for_wave();
 	//! [setup_dma]
 
 	//! [setup_enable]
@@ -257,7 +255,7 @@ int main(void)
 	system_init();
 
 	//! [setup_init]
-	_configure_tcc();
+	configure_tcc();
 	//! [setup_init]
 
 //! [main]
