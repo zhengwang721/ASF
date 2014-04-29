@@ -109,9 +109,9 @@ typedef struct
 
 //! \name PHY sniffer interface
 //@{
-void sniffer_if_Init (uint8_t uc_enable_led);
+void sniffer_if_init (uint8_t uc_enable_led);
 uint8_t serial_if_sniffer_api_parser (uint8_t *puc_rx_msg, uint16_t us_len);
-void sniffer_if_Process(void);
+void sniffer_if_process(void);
 //@}
 
 //! @}

@@ -115,7 +115,7 @@ static uint8_t uc_sniffer_rsp_buf[800];     //!<  Response working buffer
  * \brief Task to manage the serialization of the reception message through USI.
  *
  */
-void sniffer_if_Process(void)
+void sniffer_if_process(void)
 {
 	xPhyMsgRx_t x_read_msg;
 	uint16_t us_sniffer_response_len;
@@ -285,7 +285,7 @@ uint8_t serial_if_sniffer_api_parser (uint8_t *puc_rx_msg, uint16_t us_len)
  *
  * \param  uc_enable_led Enable led
  */
-void sniffer_if_Init (uint8_t uc_enable_led)
+void sniffer_if_init (uint8_t uc_enable_led)
 {
 	//default SNA
 	uint8_t uc_sna[6] = {0x00, 0x80, 0xE1, 0x00, 0x00, 0x6F};

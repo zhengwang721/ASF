@@ -196,7 +196,7 @@ int main( void )
 	vPhyInitTask(SNIFFER_IF_ENABLE);
 
 	/* Init sniffer */
-	sniffer_if_Init(true);
+	sniffer_if_init(true);
 
 	/* Init Usi Layer */
 	usi_init();
@@ -210,7 +210,7 @@ int main( void )
 		//updWatchDog ();
 
 		// sniffer serialization
-		sniffer_if_Process();
+		sniffer_if_process();
 
 		// USI
 		usi_process();
