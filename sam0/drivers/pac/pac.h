@@ -918,7 +918,7 @@ __no_inline enum status_code system_peripheral_unlock(
  *	<tr>
  *		<td>F</td>
  *		<td>04/2014</td>
- *		<td>Added support for SAMR21.</td>
+ *		<td>Added support for SAMD10/D11.</td>
  *	</tr>
  *	<tr>
  *		<td>E</td>
