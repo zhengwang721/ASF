@@ -114,12 +114,3 @@ uint16_t busart_if_tx_char (uint8_t chn, char data);
 /// @endcond
 
 #endif /* BUSART_IF_H_INCLUDED */
-
-
-
-
-
-
-
-
-

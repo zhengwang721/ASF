@@ -212,11 +212,11 @@
   #define LCD_EN_INACTIVE_LEVEL           IOPORT_PIN_LEVEL_HIGH
 #elif BOARD_REV == BOARD_REV_2
   #define LCD_EN_ACTIVE_LEVEL             IOPORT_PIN_LEVEL_HIGH
-  #define LCD_EN_INACTIVE_LEVEL           IOPORT_PIN_LEVEL_LOW   
+  #define LCD_EN_INACTIVE_LEVEL           IOPORT_PIN_LEVEL_LOW
 #else
   #error No known SAM4CP16BMB revision board defined
 #endif
-   
+
 /**
  * \name Console UART definitions
  * @{
@@ -309,7 +309,7 @@
 #define PPLC_INT_TYPE  PIO_INPUT
 #define PPLC_INT_ATTR  (PIO_DEBOUNCE | PIO_IT_FALL_EDGE)
 #define PPLC_INT_IRQn  PIOB_IRQn
- 
+
 /* Asynchronous PPLC Reset pin definition */ 
 #define PPLC_ARST_GPIO             (PIO_PC6_IDX)
 #define PPLC_ARST_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_LOW

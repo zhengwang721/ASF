@@ -188,17 +188,13 @@ void TC_UART_Handler(void)
 	ul_status = tc_get_status(TC_UART, TC_UART_CHN);
 	
 	/* RC compare. */
-	if ((ul_status & TC_SR_CPCS) == TC_SR_CPCS)
-	{
+	if ((ul_status & TC_SR_CPCS) == TC_SR_CPCS){
 #ifdef CONF_BOARD_UART0
-          if (buart_chn_open[0])
-		{
+		if (buart_chn_open[0]){
 			/* Flush PDC buffer. */
 			ul_byte_total = UART_BUFFER_SIZE - pdc_read_rx_counter(g_p_uart_pdc0);
-			if (ul_byte_total > 0)
-			{
-				if(ul_byte_total == num_bytes_rx_uart0)
-				{
+			if (ul_byte_total > 0){
+				if(ul_byte_total == num_bytes_rx_uart0){
 					/* Disable timer. */
 					tc_stop(TC_UART, TC_UART_CHN);
 				
@@ -208,27 +204,20 @@ void TC_UART_Handler(void)
 					/* Stop DMA UART_RX -> force Uart Handler*/
 					g_st_uart_rx_packet0.ul_size = 0;
 					pdc_rx_init(g_p_uart_pdc0, &g_st_uart_rx_packet0, NULL);
-				}
-				else
-				{
+				}else{
 					num_bytes_rx_uart0 = ul_byte_total;
 				}
-			}
-			else
-			{
+			}else{
 				num_bytes_rx_uart0 = 0;
 			}
 		}
-#endif          
+#endif
 #ifdef CONF_BOARD_UART1
-		if (buart_chn_open[1])
-		{
+		if (buart_chn_open[1]){
 			/* Flush PDC buffer. */
 			ul_byte_total = UART_BUFFER_SIZE - pdc_read_rx_counter(g_p_uart_pdc1);
-			if (ul_byte_total > 0)
-			{
-				if(ul_byte_total == num_bytes_rx_uart1)
-				{
+			if (ul_byte_total > 0){
+				if(ul_byte_total == num_bytes_rx_uart1){
 					/* Disable timer. */
 					tc_stop(TC_UART, TC_UART_CHN);
 					
@@ -238,14 +227,10 @@ void TC_UART_Handler(void)
 					/* Stop DMA UART_RX -> force Uart Handler*/
 					g_st_uart_rx_packet1.ul_size = 0;
 					pdc_rx_init(g_p_uart_pdc1, &g_st_uart_rx_packet1, NULL);
-				}
-				else
-				{
+				}else{
 					num_bytes_rx_uart1 = ul_byte_total;
 				}
-			}
-			else
-			{
+			}else{
 				num_bytes_rx_uart1 = 0;
 			}
 		}
@@ -269,22 +254,19 @@ void UART0_Handler(void)
 	/* Receive buffer is full. */
 	if (ul_status & US_CSR_ENDRX) 
 	{
-		/* manage data .......*/
+		/* manage data */
 		us_wr_idx = buart_comm_data_0.us_wq_idx;
 		us_data_count = buart_comm_data_0.us_rq_count;
 		us_free_size = RX_UART_BUF0_SIZE - us_data_count;
-		if(gs_ul_size_uart_buf0 <= us_free_size)
-		{   /* there is enough space to write all data */
+		if(gs_ul_size_uart_buf0 <= us_free_size){   
+			/* there is enough space to write all data */
 			us_end_size = RX_UART_BUF0_SIZE - us_wr_idx;
-			if(us_end_size >= gs_ul_size_uart_buf0)
-			{	/* there is no overflow of us_wq_idx */
+			if(us_end_size >= gs_ul_size_uart_buf0){	/* there is no overflow of us_wq_idx */
 				memcpy(&buart_comm_data_0.puc_rq_buf[us_wr_idx], gs_puc_uart_buf0, gs_ul_size_uart_buf0);
 				/* update counters */
 				buart_comm_data_0.us_rq_count += gs_ul_size_uart_buf0;
 				buart_comm_data_0.us_wq_idx += gs_ul_size_uart_buf0;
-			}
-			else
-			{	/* there is overflow of us_wq_idx -> write in 2 steps	*/
+			}else{	/* there is overflow of us_wq_idx -> write in 2 steps	*/
 				memcpy(&buart_comm_data_0.puc_rq_buf[us_wr_idx], gs_puc_uart_buf0, us_end_size);
 				us_part_size = gs_ul_size_uart_buf0 - us_end_size;
 				memcpy(&buart_comm_data_0.puc_rq_buf[0], &gs_puc_uart_buf0[us_end_size], us_part_size);
@@ -292,9 +274,7 @@ void UART0_Handler(void)
 				buart_comm_data_0.us_rq_count += gs_ul_size_uart_buf0;
 				buart_comm_data_0.us_wq_idx = us_part_size;
 			}
-		}	
-		else
-		{ /* there is not enough space to write all data */
+		}else{ /* there is not enough space to write all data */
 			tc_start(TC_UART, TC_UART_CHN);
 		}
 		
@@ -326,24 +306,22 @@ void UART0_Handler(void)
 	ul_status = uart_get_status(UART1);
 
 	/* Receive buffer is full. */
-	if (ul_status & US_CSR_ENDRX) 
-	{
-		/* manage data .......*/
+	if (ul_status & US_CSR_ENDRX){
+		/* manage data */
 		us_wr_idx = buart_comm_data_1.us_wq_idx;
 		us_data_count = buart_comm_data_1.us_rq_count;
 		us_free_size = RX_UART_BUF1_SIZE - us_data_count;
-		if(gs_ul_size_uart_buf1 <= us_free_size)
-		{   /* there is enough space to write all data */
+		if(gs_ul_size_uart_buf1 <= us_free_size){
+			/* there is enough space to write all data */
 			us_end_size = RX_UART_BUF1_SIZE - us_wr_idx;
-			if(us_end_size >= gs_ul_size_uart_buf1)
-			{	/* there is no overflow of us_wq_idx */
+			if(us_end_size >= gs_ul_size_uart_buf1){
+				/* there is no overflow of us_wq_idx */
 				memcpy(&buart_comm_data_1.puc_rq_buf[us_wr_idx], gs_puc_uart_buf1, gs_ul_size_uart_buf1);
 				/* update counters */
 				buart_comm_data_1.us_rq_count += gs_ul_size_uart_buf1;
 				buart_comm_data_1.us_wq_idx += gs_ul_size_uart_buf1;
-			}
-			else
-			{	/* there is overflow of us_wq_idx -> write in 2 steps	*/
+			}else{
+				/* there is overflow of us_wq_idx -> write in 2 steps	*/
 				memcpy(&buart_comm_data_1.puc_rq_buf[us_wr_idx], gs_puc_uart_buf1, us_end_size);
 				us_part_size = gs_ul_size_uart_buf1 - us_end_size;
 				memcpy(&buart_comm_data_1.puc_rq_buf[0], &gs_puc_uart_buf1[us_end_size], us_part_size);
@@ -351,9 +329,7 @@ void UART0_Handler(void)
 				buart_comm_data_1.us_rq_count += gs_ul_size_uart_buf1;
 				buart_comm_data_1.us_wq_idx = us_part_size;
 			}
-		}	
-		else
-		{ /* there is not enough space to write all data */
+		}else{ /* there is not enough space to write all data */
 			tc_start(TC_UART, TC_UART_CHN);
 		}
 		
@@ -390,7 +366,7 @@ int8_t buart_if_open (uint8_t chn, uint32_t bauds)
 {
 #if defined(CONF_BOARD_UART0) || defined(CONF_BOARD_UART1)
 	sam_uart_opt_t uart_console_settings;
-				
+
 	uart_console_settings.ul_mck = sysclk_get_cpu_hz();			// MCK for UART
 	uart_console_settings.ul_baudrate = bauds;					// Expected baud rate. 
 	uart_console_settings.ul_mode = UART_MR_PAR_NO;				// Initialize value for UART mode register
@@ -405,7 +381,7 @@ int8_t buart_if_open (uint8_t chn, uint32_t bauds)
 	switch(chn)
 	{
 #ifdef CONF_BOARD_UART0
-          case 0:
+		case 0:
 		{
 			/* Configure PMC. */
 			pmc_enable_periph_clk(ID_UART0);
@@ -532,7 +508,7 @@ int8_t buart_if_close (uint8_t chn)
 
 	switch(chn)
 	{
-#ifdef CONF_BOARD_UART0          
+#ifdef CONF_BOARD_UART0
 		case 0:
 		{
 			uart_disable(UART0);
@@ -540,8 +516,9 @@ int8_t buart_if_close (uint8_t chn)
 			uart_disable_interrupt(UART0, US_IER_ENDRX);
 
 			/* Stop TC */
-			if (!buart_chn_open[1])
+			if (!buart_chn_open[1]){
 				tc_stop(TC_UART, TC_UART_CHN);
+			}
 		
 			return true;
 		}
@@ -556,8 +533,9 @@ int8_t buart_if_close (uint8_t chn)
 			uart_disable_interrupt(UART1, US_IER_ENDRX);
 
 			/* Stop TC */
-			if (!buart_chn_open[0])
+			if (!buart_chn_open[0]){
 				tc_stop(TC_UART, TC_UART_CHN);
+			}
 		
 			return true;
 		}
@@ -591,12 +569,12 @@ uint16_t buart_if_read (uint8_t chn, void *buffer, uint16_t len)
 
 	uint8_t *msg = (uint8_t *)buffer;
 #else
-        UNUSED(buffer);
-        UNUSED(len);
+	UNUSED(buffer);
+	UNUSED(len);
 #endif  
 
 	// check uart is open
-	if (!buart_chn_open[chn]) return false;
+	if (!buart_chn_open[chn]) return 0;
 
 	switch (chn)
 	{	
@@ -604,7 +582,7 @@ uint16_t buart_if_read (uint8_t chn, void *buffer, uint16_t len)
 		case 0:
 			us_buf_size = RX_UART_BUF0_SIZE;
 			/* check if there is any byte in rx queue */
-			if (buart_comm_data_0.us_rq_count == 0) return false;
+			if (buart_comm_data_0.us_rq_count == 0) return 0;
 			/* get counters */
 			us_rd_idx = buart_comm_data_0.us_rq_idx;
 			/* get number of bytes to read */
@@ -614,15 +592,13 @@ uint16_t buart_if_read (uint8_t chn, void *buffer, uint16_t len)
 				us_num_bytes_read = buart_comm_data_0.us_rq_count;
 			/* check overflow us_rd_idx counter */
 			us_total_pos = us_rd_idx + us_num_bytes_read;
-			if(us_total_pos <= us_buf_size)
-			{	/* copy data to buffer */
+			if(us_total_pos <= us_buf_size){	/* copy data to buffer */
 				memcpy(msg, &buart_comm_data_0.puc_rq_buf[us_rd_idx], us_num_bytes_read);	
 				/* update counters */
 				buart_comm_data_0.us_rq_count -= us_num_bytes_read;
 				buart_comm_data_0.us_rq_idx += us_num_bytes_read;
-			}
-			else
-			{	/* copy data to buffer in fragments -> overflow us_rq_idx counter */
+			}else{
+				/* copy data to buffer in fragments -> overflow us_rq_idx counter */
 				us_num_bytes_to_start = us_total_pos - us_buf_size;
 				us_num_bytes_to_end = us_num_bytes_read - us_num_bytes_to_start;
 				memcpy(msg, &buart_comm_data_0.puc_rq_buf[us_rd_idx], us_num_bytes_to_end);
@@ -640,25 +616,25 @@ uint16_t buart_if_read (uint8_t chn, void *buffer, uint16_t len)
 		case 1:
 			us_buf_size = RX_UART_BUF1_SIZE;
 			/* check if there is any byte in rx queue */
-			if (buart_comm_data_1.us_rq_count == 0) return false;
+			if (buart_comm_data_1.us_rq_count == 0) return 0;
 			/* get counters */
 			us_rd_idx = buart_comm_data_1.us_rq_idx;
 			/* get number of bytes to read */
-			if(buart_comm_data_1.us_rq_count >= len)
+			if(buart_comm_data_1.us_rq_count >= len){
 				us_num_bytes_read = len;
-			else
+			}else{
 				us_num_bytes_read = buart_comm_data_1.us_rq_count;
+			}
 			/* check overflow us_rd_idx counter */
 			us_total_pos = us_rd_idx + us_num_bytes_read;
-			if(us_total_pos <= us_buf_size)
-			{	/* copy data to buffer */
+			if(us_total_pos <= us_buf_size){
+				/* copy data to buffer */
 				memcpy(msg, &buart_comm_data_1.puc_rq_buf[us_rd_idx], us_num_bytes_read);	
 				/* update counters */
 				buart_comm_data_1.us_rq_count -= us_num_bytes_read;
 				buart_comm_data_1.us_rq_idx += us_num_bytes_read;
-			}
-			else
-			{	/* copy data to buffer in fragments -> overflow us_rq_idx counter */
+			}else{
+				/* copy data to buffer in fragments -> overflow us_rq_idx counter */
 				us_num_bytes_to_start = us_total_pos - us_buf_size;
 				us_num_bytes_to_end = us_num_bytes_read - us_num_bytes_to_start;
 				memcpy(msg, &buart_comm_data_1.puc_rq_buf[us_rd_idx], us_num_bytes_to_end);
@@ -672,10 +648,9 @@ uint16_t buart_if_read (uint8_t chn, void *buffer, uint16_t len)
 			break;
 #endif
 		default:
-                  return false;
-        }	
-	
-}			
+			return 0;
+	}	
+}
 
 /**
  * \brief This function transmits a message.
@@ -694,41 +669,43 @@ uint16_t buart_if_read (uint8_t chn, void *buffer, uint16_t len)
 uint16_t buart_if_write (uint8_t chn, const void* buffer, uint16_t len)
 {
 #if !defined(CONF_BOARD_UART0) || !defined(CONF_BOARD_UART1)
-    UNUSED(buffer);
-    UNUSED(len);
+	UNUSED(buffer);
+	UNUSED(len);
 #endif
 
 	// check uart is open
-	if (!buart_chn_open[chn]) return false;
+	if (!buart_chn_open[chn]) return 0;
 	
 	switch (chn)
 	{
-#ifdef CONF_BOARD_UART0          
+#ifdef CONF_BOARD_UART0
 		case 0:
-			if(len > TX_UART_BUF0_SIZE) return false;
+			if(len > TX_UART_BUF0_SIZE){
+				return 0;
+			}
 			while(pdc_read_tx_counter(g_p_uart_pdc0) > 0);
 			memcpy(&buart_comm_data_0.puc_tq_buf[0], buffer, len);
 			g_st_uart_tx_packet0.ul_addr = (uint32_t)&buart_comm_data_0.puc_tq_buf[0];
 			g_st_uart_tx_packet0.ul_size = len;
 			pdc_tx_init(g_p_uart_pdc0, &g_st_uart_tx_packet0, NULL);
-                        return len;
-			break;
+			return len;
 #endif			
-                        
+
 #ifdef CONF_BOARD_UART1
 		case 1:
-			if(len > TX_UART_BUF1_SIZE) return false;
+			if(len > TX_UART_BUF1_SIZE){
+				return 0;
+			}
 			while(pdc_read_tx_counter(g_p_uart_pdc1) > 0);
 			memcpy(&buart_comm_data_1.puc_tq_buf[0], buffer, len);
 			g_st_uart_tx_packet1.ul_addr = (uint32_t)&buart_comm_data_1.puc_tq_buf[0];
 			g_st_uart_tx_packet1.ul_size = len;
 			pdc_tx_init(g_p_uart_pdc1, &g_st_uart_tx_packet1, NULL);
-                        return len;
-			break;
+			return len;
 #endif
 		
 		default:
-			return false;
+			return 0;
 	}
 }
 

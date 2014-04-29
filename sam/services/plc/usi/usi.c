@@ -539,10 +539,12 @@ static uint8_t _getPortFromProtocol (uint8_t uc_p_type)
 
   for (i = 0; i < NUM_PROTOCOLS; i++)
   {
-    if ((uc_p_type < 0x10) && (usi_cfg_map_protocols[i].uc_p_type == MNGP_PRIME_PROT))
+    if ((uc_p_type < 0x10) && (usi_cfg_map_protocols[i].uc_p_type == MNGP_PRIME_PROT)){
+		return usi_cfg_map_protocols[i].uc_port;
+	}
+    if (usi_cfg_map_protocols[i].uc_p_type == uc_p_type){
       return usi_cfg_map_protocols[i].uc_port;
-    if (usi_cfg_map_protocols[i].uc_p_type == uc_p_type)
-      return usi_cfg_map_protocols[i].uc_port;
+	}
   }
 
   return (uint8_t)USI_STATUS_PROTOCOL_NOT_FOUND;
@@ -1035,7 +1037,7 @@ void usi_txrx_block_timer(void)
 /**
  * \brief Function to perform the USI RX process.
  */
-void usi_Process(void)
+void usi_process(void)
 {
   uint8_t  i;
   int nr_ch = 0;
@@ -1215,7 +1217,7 @@ void usi_Process(void)
 /**
 * \brief Create RX and TX USI tasks, and timer to update internal counters.
 */
-void usi_Init(void)
+void usi_init(void)
 {
   uint8_t i;
 

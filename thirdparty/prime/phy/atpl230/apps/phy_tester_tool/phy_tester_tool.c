@@ -103,11 +103,11 @@ void TC_1MS_Handler(void)
 	/* Avoid compiler warning */
 	UNUSED(ul_dummy);
 
-        // update count ms
-        if(!ul_count_ms--) {
-          ul_count_ms = COUNT_MS_SWAP_LED;
-          b_led_swap = true;
-        }
+	// update count ms
+	if(!ul_count_ms--) {
+		ul_count_ms = COUNT_MS_SWAP_LED;
+		b_led_swap = true;
+	}
 }
 
 
@@ -161,60 +161,60 @@ static void configure_dbg_console(void)
 int main( void )
 {
 #ifdef CONF_BOARD_LCD_EN
-    status_code_t status;
+	status_code_t status;
 #endif
 
-    ul_count_ms = 500;      // count ms to blink led
+	ul_count_ms = 500; // count ms to blink led
 
-    /* Prepare the hardware */
-    prvSetupHardware();
+	/* Prepare the hardware */
+	prvSetupHardware();
 
-    /* UART debug */
-    configure_dbg_console();
-    puts(STRING_HEADER);
+	/* UART debug */
+	configure_dbg_console();
+	puts(STRING_HEADER);
 
 #ifdef CONF_BOARD_LCD_EN
-    /* Initialize the C42364A LCD glass component. */
-    status = c42364a_init();
-    if (status != STATUS_OK) {
-      puts("-- LCD Initialization fails! --\r\n");
-      while (1) {
-      }
-    }
-    c42364a_set_contrast(15);
-    c42364a_clear_all();
-    c42364a_show_icon(C42364A_ICON_ATMEL);
-    c42364a_show_icon(C42364A_ICON_USB);
-    c42364a_show_text((const uint8_t *)"PHYTST");
+	/* Initialize the C42364A LCD glass component. */
+	status = c42364a_init();
+	if (status != STATUS_OK) {
+	  puts("-- LCD Initialization fails! --\r\n");
+	  while (1) {
+	  }
+	}
+	c42364a_set_contrast(15);
+	c42364a_clear_all();
+	c42364a_show_icon(C42364A_ICON_ATMEL);
+	c42364a_show_icon(C42364A_ICON_USB);
+	c42364a_show_text((const uint8_t *)"PHYTST");
 #endif
 
-    /* Init process timers */
-    initTimer1ms();
+	/* Init process timers */
+	initTimer1ms();
 
-    /* Init Phy Layer */
-    vPhyInitTask(SERIAL_IF_ENABLE);
+	/* Init Phy Layer */
+	vPhyInitTask(SERIAL_IF_ENABLE);
 
-    /* Init Serial Add on */
-    serial_if_init();
+	/* Init Serial Add on */
+	serial_if_init();
 
-    /* Usi Layer uC mode */
-    usi_Init();
+	/* Usi Layer uC mode */
+	usi_init();
 
-    while (1) {
-        // blink led 0
-        if(b_led_swap){
-          b_led_swap = false;
-          LED_Toggle(LED0);
-        }
-        //updWatchDog ();
+	while (1) {
+		// blink led 0
+		if(b_led_swap){
+			b_led_swap = false;
+			LED_Toggle(LED0);
+		}
+		//updWatchDog ();
 
-        // phy serialization
-        serial_if_check_tx_result();
-        serial_if_check_rx_msg();
+		// phy serialization
+		serial_if_check_tx_result();
+		serial_if_check_rx_msg();
 
-        // USI
-        usi_Process();
-    }
+		// USI
+		usi_process();
+	}
 }
 
 /**

@@ -3,7 +3,7 @@
  *
  * \brief Low Power Application.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -227,7 +227,7 @@ static void reconfigure_console(uint32_t ul_mck, uint32_t ul_baudrate)
 
 	/* Configure PMC */
 	pmc_enable_periph_clk(CONSOLE_UART_ID);
-	
+
 	/* Configure PIO */
 	pio_configure_pin_group(PINS_UART_PIO, PINS_UART_PORT,
 			PINS_UART_FLAGS);
@@ -330,8 +330,7 @@ static void user_change_clock(uint8_t *p_uc_str)
  */
 static void button_handler(uint32_t ul_id, uint32_t ul_mask)
 {
-	if (PIN_PUSHBUTTON_WAKEUP_ID == ul_id &&
-			PIN_PUSHBUTTON_WAKEUP_MASK == ul_mask) {
+	if(PIN_PUSHBUTTON_WAKEUP_ID==ul_id && PIN_PUSHBUTTON_WAKEUP_MASK==ul_mask){
 		g_ul_button_pressed = 1;
 	}
 }
@@ -339,7 +338,7 @@ static void button_handler(uint32_t ul_id, uint32_t ul_mask)
 
 
 /**
- *  \brief Configure the push button. WAKEUP
+ *  \brief Configure the push button.
  *
  *  Configure the PIO as inputs and generate corresponding interrupt when
  *  pressed or released.
@@ -361,10 +360,10 @@ static void configure_button(void)
 	/* Enable PIO line interrupts. */
 	pio_enable_interrupt(PIN_PUSHBUTTON_WAKEUP_PIO,
 			PIN_PUSHBUTTON_WAKEUP_MASK);
-			
 
-	
-			
+
+
+
 }
 
 static inline void configure_button_FWUP(void)
@@ -463,7 +462,7 @@ static void test_wait_mode(void)
 	/* Wait for the transmission done before changing clock */
 	while (!uart_is_tx_empty(CONSOLE_UART)) {
 	}
-	
+
 	/* Configure 4Mhz fast RC oscillator */
 	pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
 	pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_4_MHz);
@@ -504,18 +503,18 @@ static void test_backup_mode(void)
 
 	/* GPBR0 is for recording times of entering into backup mode */
 	gpbr_write(GPBR0, gpbr_read(GPBR0) + 1);
-	
+
 	/* Enable the PIO for wake-up */
 	example_set_wakeup_from_backup_mode();
 	configure_button_FWUP();
 	/* Switch MCK to slow clock  */
 	pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
-	
+
 	/* ENABLE XTAL CLOCK */
 	pmc_osc_disable_xtal(0);
-	/*  disable PLL */ 
+	/*  disable PLL */
 	pmc_disable_pllack();
-	
+
 
 	/* Enter into backup mode */
 	pmc_enable_backupmode();
@@ -528,12 +527,12 @@ static void test_backup_mode(void)
  */
 static void display_menu_core(void)
 {
-	
-	
+
+
 	printf ("\n\r");
 	printf("===============================================\n\r");
 	printf("Menu: press a key to continue.\n\r");
-	printf("===============================================\n\r"); 
+	printf("===============================================\n\r");
 	printf("Configure:\n\r");
 	printf("  F : 128-bit flash access\n\r");
 	printf("  G : 64-bit flash access\n\r");
@@ -573,7 +572,7 @@ static void test_core(void)
 		/* Read a key from console */
 		while (uart_read(CONSOLE_UART, &uc_key)) {
 		}
-		
+
 		switch (uc_key) {
 		/* Configuration */
 		case 'f':
@@ -629,7 +628,7 @@ int main(void)
 	/* Initialize the SAM system */
 	sysclk_init();
 	g_ul_current_mck = sysclk_get_cpu_hz();
-	
+
 	board_init();
 
 	/* Initialize the console uart */
@@ -638,20 +637,10 @@ int main(void)
 	/* Output example information */
 	puts(STRING_HEADER);
 
-	/* Initialize the chip for the power consumption test */
-	// init_chip();
-
-	/* Set default clock and re-configure UART */
-	//set_default_working_clock();
-	//reconfigure_console(g_ul_current_mck, CONF_UART_BAUDRATE);
-
-	
 	/* Test core consumption */
 	test_core();
 
 	while (1) {
-		
-		
+
 	}
 }
-	

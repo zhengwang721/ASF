@@ -115,12 +115,3 @@ uint16_t buart_if_tx_char (uint8_t chn, char data);
 /// @endcond
 
 #endif /* BUART_IF_H_INCLUDED */
-
-
-
-
-
-
-
-
-

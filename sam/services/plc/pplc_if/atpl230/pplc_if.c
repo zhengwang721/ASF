@@ -234,7 +234,6 @@ static int8_t _pplc_cmd_op (uint8_t uc_cmd, uint16_t us_addr, uint16_t us_len, u
     return true;
 
   }else{
-//    printf("PPLC busy\r\n");
     Enable_global_interrupt();
     return false;
   }

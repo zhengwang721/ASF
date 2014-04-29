@@ -162,8 +162,8 @@ typedef void (* pf_usi_set_cmd)(uint8_t);
  *  \name Universal Serial Interface API functions
  */
 //@{
-void usi_Init(void);
-void usi_Process(void);
+void usi_init(void);
+void usi_process(void);
 
 usi_status_t usi_send_cmd (void *msg);
 void usi_txrx_block_timer(void);
@@ -180,10 +180,3 @@ void usi_txrx_block_timer(void);
 /// @endcond
 
 #endif /* USI_H_INCLUDED */
-
-
-
-
-
-
-

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM4CP16BMB Board configuration.
+ * \brief ATPL230AMB Board configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *

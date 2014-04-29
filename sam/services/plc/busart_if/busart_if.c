@@ -184,24 +184,20 @@ void TC_USART_Handler(void)
 {
 	uint32_t ul_status;
 #if defined(CONF_BOARD_USART0_RXD) || defined(CONF_BOARD_USART1_RXD)
-        uint32_t ul_byte_total = 0; 
+	uint32_t ul_byte_total = 0; 
 #endif	
 	
 	/* Read TC_USART Status. */
 	ul_status = tc_get_status(TC_USART, TC_USART_CHN);
 	
 	/* RC compare. */
-	if ((ul_status & TC_SR_CPCS) == TC_SR_CPCS)
-	{
+	if ((ul_status & TC_SR_CPCS) == TC_SR_CPCS){
 #ifdef CONF_BOARD_USART0_RXD 
-		if (busart_chn_open[0])
-		{
+		if (busart_chn_open[0]){
 			/* Flush PDC buffer. */
 			ul_byte_total = USART_BUFFER_SIZE - pdc_read_rx_counter(g_p_usart_pdc0);
-			if (ul_byte_total > 0)
-			{
-				if(ul_byte_total == num_bytes_rx_usart0)
-				{
+			if (ul_byte_total > 0){
+				if(ul_byte_total == num_bytes_rx_usart0){
 					/* Disable timer. */
 					tc_stop(TC_USART, TC_USART_CHN);
 				
@@ -211,28 +207,21 @@ void TC_USART_Handler(void)
 					/* Stop DMA USART_RX -> force Uart Handler*/
 					g_st_usart_rx_packet0.ul_size = 0;
 					pdc_rx_init(g_p_usart_pdc0, &g_st_usart_rx_packet0, NULL);
-				}
-				else
-				{
+				}else{
 					num_bytes_rx_usart0 = ul_byte_total;
 				}
-			}
-			else
-			{
+			}else{
 				num_bytes_rx_usart0 = 0;
 			}
 		}
-#endif                
-                
+#endif
+
 #ifdef CONF_BOARD_USART1_RXD
-		if (busart_chn_open[1])
-		{
+		if (busart_chn_open[1]){
 			/* Flush PDC buffer. */
 			ul_byte_total = USART_BUFFER_SIZE - pdc_read_rx_counter(g_p_usart_pdc1);
-			if (ul_byte_total > 0)
-			{
-				if(ul_byte_total == num_bytes_rx_usart1)
-				{
+			if (ul_byte_total > 0){
+				if(ul_byte_total == num_bytes_rx_usart1){
 					/* Disable timer. */
 					tc_stop(TC_USART, TC_USART_CHN);
 					
@@ -242,18 +231,14 @@ void TC_USART_Handler(void)
 					/* Stop DMA USART_RX -> force Uart Handler*/
 					g_st_usart_rx_packet1.ul_size = 0;
 					pdc_rx_init(g_p_usart_pdc1, &g_st_usart_rx_packet1, NULL);
-				}
-				else
-				{
+				}else{
 					num_bytes_rx_usart1 = ul_byte_total;
 				}
-			}
-			else
-			{
+			}else{
 				num_bytes_rx_usart1 = 0;
 			}
 		}
-#endif		
+#endif
 	}
 }
 
@@ -271,24 +256,22 @@ void USART0_Handler(void)
 	ul_status = usart_get_status(USART0);
 
 	/* Receive buffer is full. */
-	if (ul_status & US_CSR_ENDRX) 
-	{
-		/* manage data .......*/
+	if (ul_status & US_CSR_ENDRX){
+		/* manage data */
 		us_wr_idx = busart_comm_data_0.us_wq_idx;
 		us_data_count = busart_comm_data_0.us_rq_count;
 		us_free_size = RX_USART_BUF0_SIZE - us_data_count;
-		if(gs_ul_size_usart_buf0 <= us_free_size)
-		{   /* there is enough space to write all data */
+		if(gs_ul_size_usart_buf0 <= us_free_size){
+			/* there is enough space to write all data */
 			us_end_size = RX_USART_BUF0_SIZE - us_wr_idx;
-			if(us_end_size >= gs_ul_size_usart_buf0)
-			{	/* there is no overflow of us_wq_idx */
+			if(us_end_size >= gs_ul_size_usart_buf0){
+				/* there is no overflow of us_wq_idx */
 				memcpy(&busart_comm_data_0.puc_rq_buf[us_wr_idx], gs_puc_usart_buf0, gs_ul_size_usart_buf0);
 				/* update counters */
 				busart_comm_data_0.us_rq_count += gs_ul_size_usart_buf0;
 				busart_comm_data_0.us_wq_idx += gs_ul_size_usart_buf0;
-			}
-			else
-			{	/* there is overflow of us_wq_idx -> write in 2 steps	*/
+			}else{
+				/* there is overflow of us_wq_idx -> write in 2 steps	*/
 				memcpy(&busart_comm_data_0.puc_rq_buf[us_wr_idx], gs_puc_usart_buf0, us_end_size);
 				us_part_size = gs_ul_size_usart_buf0 - us_end_size;
 				memcpy(&busart_comm_data_0.puc_rq_buf[0], &gs_puc_usart_buf0[us_end_size], us_part_size);
@@ -296,9 +279,8 @@ void USART0_Handler(void)
 				busart_comm_data_0.us_rq_count += gs_ul_size_usart_buf0;
 				busart_comm_data_0.us_wq_idx = us_part_size;
 			}
-		}	
-		else
-		{ /* there is not enough space to write all data */
+		}else{
+			/* there is not enough space to write all data */
 			tc_start(TC_USART, TC_USART_CHN);
 		}
 		
@@ -330,24 +312,22 @@ void USART0_Handler(void)
 	ul_status = usart_get_status(USART1);
 
 	/* Receive buffer is full. */
-	if (ul_status & US_CSR_ENDRX) 
-	{
-		/* manage data .......*/
+	if (ul_status & US_CSR_ENDRX){
+		/* manage data */
 		us_wr_idx = busart_comm_data_1.us_wq_idx;
 		us_data_count = busart_comm_data_1.us_rq_count;
 		us_free_size = RX_USART_BUF1_SIZE - us_data_count;
-		if(gs_ul_size_usart_buf1 <= us_free_size)
-		{   /* there is enough space to write all data */
+		if(gs_ul_size_usart_buf1 <= us_free_size){
+			/* there is enough space to write all data */
 			us_end_size = RX_USART_BUF1_SIZE - us_wr_idx;
-			if(us_end_size >= gs_ul_size_usart_buf1)
-			{	/* there is no overflow of us_wq_idx */
+			if(us_end_size >= gs_ul_size_usart_buf1){
+				/* there is no overflow of us_wq_idx */
 				memcpy(&busart_comm_data_1.puc_rq_buf[us_wr_idx], gs_puc_usart_buf1, gs_ul_size_usart_buf1);
 				/* update counters */
 				busart_comm_data_1.us_rq_count += gs_ul_size_usart_buf1;
 				busart_comm_data_1.us_wq_idx += gs_ul_size_usart_buf1;
-			}
-			else
-			{	/* there is overflow of us_wq_idx -> write in 2 steps	*/
+			}else{
+				/* there is overflow of us_wq_idx -> write in 2 steps	*/
 				memcpy(&busart_comm_data_1.puc_rq_buf[us_wr_idx], gs_puc_usart_buf1, us_end_size);
 				us_part_size = gs_ul_size_usart_buf1 - us_end_size;
 				memcpy(&busart_comm_data_1.puc_rq_buf[0], &gs_puc_usart_buf1[us_end_size], us_part_size);
@@ -355,9 +335,8 @@ void USART0_Handler(void)
 				busart_comm_data_1.us_rq_count += gs_ul_size_usart_buf1;
 				busart_comm_data_1.us_wq_idx = us_part_size;
 			}
-		}	
-		else
-		{ /* there is not enough space to write all data */
+		}else{
+			/* there is not enough space to write all data */
 			tc_start(TC_USART, TC_USART_CHN);
 		}
 		
@@ -393,7 +372,7 @@ void USART0_Handler(void)
 int8_t busart_if_open (uint8_t chn, uint32_t bauds)
 {
 #if defined(CONF_BOARD_USART0_RXD) || defined(CONF_BOARD_USART1_RXD)
-        sam_usart_opt_t usart_console_settings;
+	sam_usart_opt_t usart_console_settings;
 				
 	usart_console_settings.baudrate = bauds;					// Expected baud rate.
 	usart_console_settings.channel_mode = US_MR_CHMODE_NORMAL;	// Configure channel mode (Normal, Automatic, Local_loopback or Remote_loopback)
@@ -409,7 +388,7 @@ int8_t busart_if_open (uint8_t chn, uint32_t bauds)
 	
 	switch(chn)
 	{
-#ifdef CONF_BOARD_USART0_RXD          
+#ifdef CONF_BOARD_USART0_RXD
 		case 0:
 		{
 			/* Configure PMC. */
@@ -454,12 +433,12 @@ int8_t busart_if_open (uint8_t chn, uint32_t bauds)
 			
 			busart_chn_open[chn] = true;
 			num_bytes_rx_usart0 = 0;
-                        
-                        /* Configure TC usart */
-                        _configure_TC_usart();	
-                        tc_start(TC_USART, TC_USART_CHN);
-                        
-                        return true;
+			
+			/* Configure TC usart */
+			_configure_TC_usart();	
+			tc_start(TC_USART, TC_USART_CHN);
+			
+			return true;
 
 		}
 		break;
@@ -509,12 +488,12 @@ int8_t busart_if_open (uint8_t chn, uint32_t bauds)
 			
 			busart_chn_open[chn] = true;
 			num_bytes_rx_usart1 = 0;
-                        
-                        /* Configure TC usart */
-                        _configure_TC_usart();	
-                        tc_start(TC_USART, TC_USART_CHN);
-                        
-                        return true;
+			
+			/* Configure TC usart */
+			_configure_TC_usart();
+			tc_start(TC_USART, TC_USART_CHN);
+			
+			return true;
 		}
 		break;
 #endif		
@@ -533,11 +512,13 @@ int8_t busart_if_open (uint8_t chn, uint32_t bauds)
  */
 int8_t busart_if_close (uint8_t chn)
 {
-	if (!busart_chn_open[chn]) return false;
+	if (!busart_chn_open[chn]){
+		return false;
+	}
 
 	switch(chn)
 	{
-#ifdef CONF_BOARD_USART0_RXD          
+#ifdef CONF_BOARD_USART0_RXD
 		case 0:
 		{
 			usart_disable_tx(USART0);
@@ -546,15 +527,16 @@ int8_t busart_if_close (uint8_t chn)
 			usart_disable_interrupt(USART0, US_IDR_RXRDY);
 			usart_disable_interrupt(USART0, US_IER_ENDRX);
 
-                        /* Stop TC */
-                        if (!busart_chn_open[1])
-                          tc_stop(TC_USART, TC_USART_CHN);
+			/* Stop TC */
+			if (!busart_chn_open[1]){
+				tc_stop(TC_USART, TC_USART_CHN);
+			}
 
-                        return true;
+			return true;
 		}
 		break;
 #endif		
-                
+
 #ifdef CONF_BOARD_USART1_RXD
 		case 1:
 		{
@@ -564,11 +546,12 @@ int8_t busart_if_close (uint8_t chn)
 			usart_disable_interrupt(USART1, US_IDR_RXRDY);
 			usart_disable_interrupt(USART1, US_IER_ENDRX);
 
-                        /* Stop TC */
-                        if (!busart_chn_open[0])
-                          tc_stop(TC_USART, TC_USART_CHN);
+			/* Stop TC */
+			if (!busart_chn_open[0]){
+				tc_stop(TC_USART, TC_USART_CHN);
+			}
 
-                        return true;
+			return true;
 		}
 		break;
 #endif	
@@ -593,45 +576,47 @@ int8_t busart_if_close (uint8_t chn)
 uint16_t busart_if_read (uint8_t chn, void *buffer, uint16_t len)
 {
 #if defined(CONF_BOARD_USART0_RXD) || defined(CONF_BOARD_USART1_RXD)
-        uint16_t us_rd_idx = 0;
+	uint16_t us_rd_idx = 0;
 	uint16_t us_num_bytes_read, us_num_bytes_to_end, us_num_bytes_to_start;
 	uint16_t us_total_pos;
 	uint16_t us_buf_size;
 
 	uint8_t *msg = (uint8_t *)buffer;
 #else
-        UNUSED(buffer);
-        UNUSED(len);
-#endif        
+	UNUSED(buffer);
+	UNUSED(len);
+#endif
 
 	// check usart is open
-	if (!busart_chn_open[chn]) return false;
+	if (!busart_chn_open[chn]){
+		return 0;
+	}
 
 	switch (chn)
 	{
-#ifdef CONF_BOARD_USART0_RXD          
+#ifdef CONF_BOARD_USART0_RXD
 		case 0:
 			us_buf_size = RX_USART_BUF0_SIZE;
 			/* check if there is any byte in rx queue */
-			if (busart_comm_data_0.us_rq_count == 0) return false;
+			if (busart_comm_data_0.us_rq_count == 0) return 0;
 			/* get counters */
 			us_rd_idx = busart_comm_data_0.us_rq_idx;
 			/* get number of bytes to read */
-			if(busart_comm_data_0.us_rq_count >= len)
+			if(busart_comm_data_0.us_rq_count >= len){
 				us_num_bytes_read = len;
-			else
+			}else{
 				us_num_bytes_read = busart_comm_data_0.us_rq_count;
+			}
 			/* check overflow us_rd_idx counter */
 			us_total_pos = us_rd_idx + us_num_bytes_read;
-			if(us_total_pos <= us_buf_size)
-			{	/* copy data to buffer */
-				memcpy(msg, &busart_comm_data_0.puc_rq_buf[us_rd_idx], us_num_bytes_read);	
+			if(us_total_pos <= us_buf_size){
+				/* copy data to buffer */
+				memcpy(msg, &busart_comm_data_0.puc_rq_buf[us_rd_idx], us_num_bytes_read);
 				/* update counters */
 				busart_comm_data_0.us_rq_count -= us_num_bytes_read;
 				busart_comm_data_0.us_rq_idx += us_num_bytes_read;
-			}
-			else
-			{	/* copy data to buffer in fragments -> overflow us_rq_idx counter */
+			}else{
+				/* copy data to buffer in fragments -> overflow us_rq_idx counter */
 				us_num_bytes_to_start = us_total_pos - us_buf_size;
 				us_num_bytes_to_end = us_num_bytes_read - us_num_bytes_to_start;
 				memcpy(msg, &busart_comm_data_0.puc_rq_buf[us_rd_idx], us_num_bytes_to_end);
@@ -641,34 +626,35 @@ uint16_t busart_if_read (uint8_t chn, void *buffer, uint16_t len)
 				busart_comm_data_0.us_rq_count -= us_num_bytes_read;
 				busart_comm_data_0.us_rq_idx = us_num_bytes_to_start;
 			}	
-                        
-                        return us_num_bytes_read;
-			break;
+			
+			return us_num_bytes_read;
 #endif
 			
 #ifdef CONF_BOARD_USART1_RXD
 		case 1:
 			us_buf_size = RX_USART_BUF1_SIZE;
 			/* check if there is any byte in rx queue */
-			if (busart_comm_data_1.us_rq_count == 0) return false;
+			if (busart_comm_data_1.us_rq_count == 0){
+				return 0;
+			}
 			/* get counters */
 			us_rd_idx = busart_comm_data_1.us_rq_idx;
 			/* get number of bytes to read */
-			if(busart_comm_data_1.us_rq_count >= len)
+			if(busart_comm_data_1.us_rq_count >= len){
 				us_num_bytes_read = len;
-			else
+			}else{
 				us_num_bytes_read = busart_comm_data_1.us_rq_count;
+			}
 			/* check overflow us_rd_idx counter */
 			us_total_pos = us_rd_idx + us_num_bytes_read;
-			if(us_total_pos <= us_buf_size)
-			{	/* copy data to buffer */
-				memcpy(msg, &busart_comm_data_1.puc_rq_buf[us_rd_idx], us_num_bytes_read);	
+			if(us_total_pos <= us_buf_size){
+				/* copy data to buffer */
+				memcpy(msg, &busart_comm_data_1.puc_rq_buf[us_rd_idx], us_num_bytes_read);
 				/* update counters */
 				busart_comm_data_1.us_rq_count -= us_num_bytes_read;
 				busart_comm_data_1.us_rq_idx += us_num_bytes_read;
-			}
-			else
-			{	/* copy data to buffer in fragments -> overflow us_rq_idx counter */
+			}else{
+				/* copy data to buffer in fragments -> overflow us_rq_idx counter */
 				us_num_bytes_to_start = us_total_pos - us_buf_size;
 				us_num_bytes_to_end = us_num_bytes_read - us_num_bytes_to_start;
 				memcpy(msg, &busart_comm_data_1.puc_rq_buf[us_rd_idx], us_num_bytes_to_end);
@@ -678,13 +664,12 @@ uint16_t busart_if_read (uint8_t chn, void *buffer, uint16_t len)
 				busart_comm_data_1.us_rq_count -= us_num_bytes_read;
 				busart_comm_data_1.us_rq_idx = us_num_bytes_to_start;
 			}	
-                        return us_num_bytes_read;
-			break;
+			return us_num_bytes_read;
 #endif
 		default:
-                  return false;
-        }	
-}			
+			return 0;
+	}
+}
 
 /**
  * \brief This function transmits a message.
@@ -703,40 +688,44 @@ uint16_t busart_if_read (uint8_t chn, void *buffer, uint16_t len)
 uint16_t busart_if_write (uint8_t chn, const void* buffer, uint16_t len)
 {
 #if !defined(CONF_BOARD_USART0_RXD) || !defined(CONF_BOARD_USART1_RXD)
-    UNUSED(buffer);
-    UNUSED(len);
+	UNUSED(buffer);
+	UNUSED(len);
 #endif
-        // check usart is open
-	if (!busart_chn_open[chn]) return false;
+	// check usart is open
+	if (!busart_chn_open[chn]){
+		return 0;
+	ç
 	
 	switch (chn)
 	{
-#ifdef CONF_BOARD_USART0_RXD          
+#ifdef CONF_BOARD_USART0_RXD
 		case 0:
-			if(len > TX_USART_BUF0_SIZE) return false;
+			if(len > TX_USART_BUF0_SIZE){
+				return 0;
+			}
 			while(pdc_read_tx_counter(g_p_usart_pdc0) > 0);
 			memcpy(&busart_comm_data_0.puc_tq_buf[0], buffer, len);
 			g_st_usart_tx_packet0.ul_addr = (uint32_t)&busart_comm_data_0.puc_tq_buf[0];
 			g_st_usart_tx_packet0.ul_size = len;
 			pdc_tx_init(g_p_usart_pdc0, &g_st_usart_tx_packet0, NULL);
-                        return len;
-			break;
+			return len;
 #endif
-                        
+
 #ifdef CONF_BOARD_USART1_RXD
 		case 1:
-			if(len > TX_USART_BUF1_SIZE) return false;
+			if(len > TX_USART_BUF1_SIZE){
+				return 0;
+			}
 			while(pdc_read_tx_counter(g_p_usart_pdc1) > 0);
 			memcpy(&busart_comm_data_1.puc_tq_buf[0], buffer, len);
 			g_st_usart_tx_packet1.ul_addr = (uint32_t)&busart_comm_data_1.puc_tq_buf[0];
 			g_st_usart_tx_packet1.ul_size = len;
-			pdc_tx_init(g_p_usart_pdc1, &g_st_usart_tx_packet1, NULL);	
-                        return len;
-			break;
+			pdc_tx_init(g_p_usart_pdc1, &g_st_usart_tx_packet1, NULL);
+			return len;
 #endif
 		
 		default:
-			return false;
+			return 0;
 	}
 
 }
@@ -753,7 +742,9 @@ int busart_if_rx_char (uint8_t chn)
 {
 	uint8_t buf[4] = {0,0,0,0};
 
-	if (busart_if_read (chn, buf, 1) <= 0) return (-1);
+	if (busart_if_read (chn, buf, 1) <= 0){
+		return (-1);
+	}
 	return buf[0];
 }
 
