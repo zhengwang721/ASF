@@ -1117,7 +1117,7 @@ void phy_tx_frame_result_cb (xPhyMsgTxResult_t *px_tx_result)
 						}
 					}else if(atpl230Cfg.impedance == LO_STATE_PK){
 						if (us_rms_calc < phyTxLoadThreshold4){
-						a	tpl230Cfg.impedance = VLO_STATE;
+							atpl230Cfg.impedance = VLO_STATE;
 						}
 					}else if(atpl230Cfg.impedance == VLO_STATE){
 						if (us_rms_calc > phyTxLoadThreshold3){
@@ -1373,7 +1373,7 @@ uint8_t phy_set_cfg_param (uint16_t us_id, void *p_val, uint16_t uc_len)
 			phy_init_channel_cfg();
 			_update_channel(atpl230Cfg.txrxChannel);
 		}else if(us_id == PHY_ID_CFG_TXRX_CHANNEL){
-			if(!_update_channel(*((uint8_t *)p_val)))}
+			if(!_update_channel(*((uint8_t *)p_val))){
 				return(PHY_CFG_INVALID_CHANNEL);
 			}
 		}
