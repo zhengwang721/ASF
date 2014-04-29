@@ -68,7 +68,3 @@
 //! @}
 
 #endif  /* ATPL230IIRFILTER_H_INCLUDE */
-
-
-
-

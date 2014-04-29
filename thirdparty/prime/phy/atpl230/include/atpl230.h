@@ -166,10 +166,10 @@ extern "C" {
 //! \name CRC types
 enum VCRCTypes
 {
-  CRC_TYPE_8       = 0,
-  CRC_TYPE_16      = 1,
-  CRC_TYPE_24      = 2,
-  CRC_TYPE_32      = 3,
+	CRC_TYPE_8       = 0,
+	CRC_TYPE_16      = 1,
+	CRC_TYPE_24      = 2,
+	CRC_TYPE_32      = 3,
 };
 
 //! \name Protocol values 
@@ -575,180 +575,180 @@ enum VCRCTypes
 
 typedef struct
 {
-  char prodId[10];          ///< (r) Product identifier
-  uint16_t model;           ///< (r) Model number
-  uint32_t version;         ///< (r) Version number
-  
-  uint8_t reserved0;        ///< Reserved
-  
-  uint8_t rxIdBuff;         ///< (r) Buffer identifier of received message
-  uint8_t rxQRMode;         ///< (w/r) Flag to enable / disable Rx Quality Report Mode
-  uint8_t rxScheme;         ///< (r) Modulation Scheme of last received message
-  uint8_t rxHdrRcv;         ///< (r) Flag to indicate if header has already been received
-  uint8_t rxMode;           ///< (w/r) Mode PRIME v1.3 or PRIME v1.4 
-  uint8_t reserved1;        ///< Reserved
-          
-  uint8_t txIdBuff;         ///< (w/r) Buffer identifier of transmitted message
-  uint8_t txLevel;          ///< (w/r) Level parameter of last transmitted message
-  uint8_t txScheme;         ///< (w/r) Modulation scheme of last transmitted message
-  uint8_t txQRMode;         ///< (w/r) Flag to enable / disable Tx Quality Report Mode 
-  uint8_t txMode;           ///< (w/r) Mode PRIME v1.3 or PRIME v1.4
-  uint8_t txDisableRx;      ///< (w/r) Flag to enable / disable reception at transmission start
-  uint8_t reserved2;        ///< Reserved
-  
-  uint16_t rxPayloadLen;    ///< (r) RX: Payload length in bytes
-  uint16_t rxPayloadLenSym; ///< (r) RX: Payload length in OFDM symbols
-  uint16_t txPayloadLenSym; ///< (r) TX: Payload length in OFDM symbols
-  uint16_t reserved3;       ///< Reserved
-  
-  uint32_t txTdelay;        ///< (w/r) Delay for transmission in 10's of us
-          
-  uint32_t txTotal;         ///< (r) Transmitted correctly messages count
-  uint32_t txTotalBytes;    ///< (r) Transmitted bytes count
-  uint32_t txTotalErrors;   ///< (r) Transmission errors count
-  uint32_t txBadBusyTx;     ///< (r) Already in transmission
-  uint32_t txBadBusyChannel;///< (r) Transmission failure owing to busy channel
-  uint32_t txBadLen;        ///< (r) Bad len in message (too short - too long)
-  uint32_t txBadFormat;     ///< (r) Message to transmit in bad format
-  uint32_t txTimeout;       ///< (r) Timeout error in transmission
-  uint32_t rxTotal;         ///< (r) Received correctly messages count
-  uint32_t rxTotalBytes;    ///< (r) Received bytes count
-  uint32_t rxTotalErrors;   ///< (r) Reception errors count
-  uint32_t rxBadLen;        ///< (r) Bad len in message (too short - too long)
-  uint32_t rxBadCrc;        ///< (r) Bad CRC in received message (only in Prime v1.3)
+	char prodId[10];          ///< (r) Product identifier
+	uint16_t model;           ///< (r) Model number
+	uint32_t version;         ///< (r) Version number
+
+	uint8_t reserved0;        ///< Reserved
+
+	uint8_t rxIdBuff;         ///< (r) Buffer identifier of received message
+	uint8_t rxQRMode;         ///< (w/r) Flag to enable / disable Rx Quality Report Mode
+	uint8_t rxScheme;         ///< (r) Modulation Scheme of last received message
+	uint8_t rxHdrRcv;         ///< (r) Flag to indicate if header has already been received
+	uint8_t rxMode;           ///< (w/r) Mode PRIME v1.3 or PRIME v1.4 
+	uint8_t reserved1;        ///< Reserved
+		  
+	uint8_t txIdBuff;         ///< (w/r) Buffer identifier of transmitted message
+	uint8_t txLevel;          ///< (w/r) Level parameter of last transmitted message
+	uint8_t txScheme;         ///< (w/r) Modulation scheme of last transmitted message
+	uint8_t txQRMode;         ///< (w/r) Flag to enable / disable Tx Quality Report Mode 
+	uint8_t txMode;           ///< (w/r) Mode PRIME v1.3 or PRIME v1.4
+	uint8_t txDisableRx;      ///< (w/r) Flag to enable / disable reception at transmission start
+	uint8_t reserved2;        ///< Reserved
+
+	uint16_t rxPayloadLen;    ///< (r) RX: Payload length in bytes
+	uint16_t rxPayloadLenSym; ///< (r) RX: Payload length in OFDM symbols
+	uint16_t txPayloadLenSym; ///< (r) TX: Payload length in OFDM symbols
+	uint16_t reserved3;       ///< Reserved
+
+	uint32_t txTdelay;        ///< (w/r) Delay for transmission in 10's of us
+		  
+	uint32_t txTotal;         ///< (r) Transmitted correctly messages count
+	uint32_t txTotalBytes;    ///< (r) Transmitted bytes count
+	uint32_t txTotalErrors;   ///< (r) Transmission errors count
+	uint32_t txBadBusyTx;     ///< (r) Already in transmission
+	uint32_t txBadBusyChannel;///< (r) Transmission failure owing to busy channel
+	uint32_t txBadLen;        ///< (r) Bad len in message (too short - too long)
+	uint32_t txBadFormat;     ///< (r) Message to transmit in bad format
+	uint32_t txTimeout;       ///< (r) Timeout error in transmission
+	uint32_t rxTotal;         ///< (r) Received correctly messages count
+	uint32_t rxTotalBytes;    ///< (r) Received bytes count
+	uint32_t rxTotalErrors;   ///< (r) Reception errors count
+	uint32_t rxBadLen;        ///< (r) Bad len in message (too short - too long)
+	uint32_t rxBadCrc;        ///< (r) Bad CRC in received message (only in Prime v1.3)
 } atpl230_t;
 
 typedef struct
 {
-  uint8_t txAttGlobal;					///< (w/r)	Global attenuation
-  uint8_t reserved;						///<		Reserved
-  
-  uint8_t tx1AttChirpHighZ; 				///< (w/r)	Channel 1 Attenuation chirp in High impedance
-  uint8_t tx1AttSignalHighZ; 				///< (w/r)	Channel 1 Attenuation signal in High impedance
-  uint8_t tx1AttChirpLowZ; 				///< (w/r)	Channel 1 Attenuation chirp in low impedance
-  uint8_t tx1AttSignalLowZ; 				///< (w/r)	Channel 1 Attenuation signal in low impedance
-  uint8_t tx1AttChirpVLowZ; 				///< (w/r)	Channel 1 Attenuation chirp in very low impedance
-  uint8_t tx1AttSignalVLowZ;				///< (w/r)	Channel 1 Attenuation signal in very low impedance
-  uint16_t tx1LoadThreshold1;				///< (w/r)	Channel 1 Threshold for RMS calculated to detect load type
-  uint16_t tx1LoadThreshold2;				///< (w/r)	Channel 1 Threshold for RMS calculated to detect load type
-  uint16_t tx1LoadThreshold3;				///< (w/r)	Channel 1 Threshold for RMS calculated to detect load type
-  uint16_t tx1LoadThreshold4;				///< (w/r)	Channel 1 Threshold for RMS calculated to detect load type
-  
-  uint8_t tx2AttChirpHighZ; 				///< (w/r)	Channel 2 Attenuation chirp in High impedance
-  uint8_t tx2AttSignalHighZ; 				///< (w/r)	Channel 2 Attenuation signal in High impedance
-  uint8_t tx2AttChirpLowZ; 				///< (w/r)	Channel 2 Attenuation chirp in low impedance
-  uint8_t tx2AttSignalLowZ; 				///< (w/r)	Channel 2 Attenuation signal in low impedance
-  uint8_t tx2AttChirpVLowZ; 				///< (w/r)	Channel 2 Attenuation chirp in very low impedance
-  uint8_t tx2AttSignalVLowZ;				///< (w/r)	Channel 2 Attenuation signal in very low impedance
-  uint16_t tx2LoadThreshold1;				///< (w/r)	Channel 2 Threshold for RMS calculated to detect load type
-  uint16_t tx2LoadThreshold2;				///< (w/r)	Channel 2 Threshold for RMS calculated to detect load type
-  uint16_t tx2LoadThreshold3;				///< (w/r)	Channel 2 Threshold for RMS calculated to detect load type
-  uint16_t tx2LoadThreshold4;				///< (w/r)	Channel 2 Threshold for RMS calculated to detect load type
-  
-  uint8_t tx3AttChirpHighZ; 				///< (w/r)	Channel 3 Attenuation chirp in High impedance
-  uint8_t tx3AttSignalHighZ; 				///< (w/r)	Channel 3 Attenuation signal in High impedance
-  uint8_t tx3AttChirpLowZ; 				///< (w/r)	Channel 3 Attenuation chirp in low impedance
-  uint8_t tx3AttSignalLowZ; 				///< (w/r)	Channel 3 Attenuation signal in low impedance
-  uint8_t tx3AttChirpVLowZ; 				///< (w/r)	Channel 3 Attenuation chirp in very low impedance
-  uint8_t tx3AttSignalVLowZ;				///< (w/r)	Channel 3 Attenuation signal in very low impedance
-  uint16_t tx3LoadThreshold1;				///< (w/r)	Channel 3 Threshold for RMS calculated to detect load type
-  uint16_t tx3LoadThreshold2;				///< (w/r)	Channel 3 Threshold for RMS calculated to detect load type
-  uint16_t tx3LoadThreshold3;				///< (w/r)	Channel 3 Threshold for RMS calculated to detect load type
-  uint16_t tx3LoadThreshold4;				///< (w/r)	Channel 3 Threshold for RMS calculated to detect load type
-  
-  uint8_t tx4AttChirpHighZ; 				///< (w/r)	Channel 4 Attenuation chirp in High impedance
-  uint8_t tx4AttSignalHighZ; 				///< (w/r)	Channel 4 Attenuation signal in High impedance
-  uint8_t tx4AttChirpLowZ; 				///< (w/r)	Channel 4 Attenuation chirp in low impedance
-  uint8_t tx4AttSignalLowZ; 				///< (w/r)	Channel 4 Attenuation signal in low impedance
-  uint8_t tx4AttChirpVLowZ; 				///< (w/r)	Channel 4 Attenuation chirp in very low impedance
-  uint8_t tx4AttSignalVLowZ;				///< (w/r)	Channel 4 Attenuation signal in very low impedance
-  uint16_t tx4LoadThreshold1;				///< (w/r)	Channel 4 Threshold for RMS calculated to detect load type
-  uint16_t tx4LoadThreshold2;				///< (w/r)	Channel 4 Threshold for RMS calculated to detect load type
-  uint16_t tx4LoadThreshold3;				///< (w/r)	Channel 4 Threshold for RMS calculated to detect load type
-  uint16_t tx4LoadThreshold4;				///< (w/r)	Channel 4 Threshold for RMS calculated to detect load type
-  
-  uint8_t tx5AttChirpHighZ; 				///< (w/r)	Channel 5 Attenuation chirp in High impedance
-  uint8_t tx5AttSignalHighZ; 				///< (w/r)	Channel 5 Attenuation signal in High impedance
-  uint8_t tx5AttChirpLowZ; 				///< (w/r)	Channel 5 Attenuation chirp in low impedance
-  uint8_t tx5AttSignalLowZ; 				///< (w/r)	Channel 5 Attenuation signal in low impedance
-  uint8_t tx5AttChirpVLowZ; 				///< (w/r)	Channel 5 Attenuation chirp in very low impedance
-  uint8_t tx5AttSignalVLowZ;				///< (w/r)	Channel 5 Attenuation signal in very low impedance
-  uint16_t tx5LoadThreshold1;				///< (w/r)	Channel 5 Threshold for RMS calculated to detect load type
-  uint16_t tx5LoadThreshold2;				///< (w/r)	Channel 5 Threshold for RMS calculated to detect load type
-  uint16_t tx5LoadThreshold3;				///< (w/r)	Channel 5 Threshold for RMS calculated to detect load type
-  uint16_t tx5LoadThreshold4;				///< (w/r)	Channel 5 Threshold for RMS calculated to detect load type
-  
-  uint8_t tx6AttChirpHighZ; 				///< (w/r)	Channel 6 Attenuation chirp in High impedance
-  uint8_t tx6AttSignalHighZ; 				///< (w/r)	Channel 6 Attenuation signal in High impedance
-  uint8_t tx6AttChirpLowZ; 				///< (w/r)	Channel 6 Attenuation chirp in low impedance
-  uint8_t tx6AttSignalLowZ; 				///< (w/r)	Channel 6 Attenuation signal in low impedance
-  uint8_t tx6AttChirpVLowZ; 				///< (w/r)	Channel 6 Attenuation chirp in very low impedance
-  uint8_t tx6AttSignalVLowZ;				///< (w/r)	Channel 6 Attenuation signal in very low impedance
-  uint16_t tx6LoadThreshold1;				///< (w/r)	Channel 6 Threshold for RMS calculated to detect load type
-  uint16_t tx6LoadThreshold2;				///< (w/r)	Channel 6 Threshold for RMS calculated to detect load type
-  uint16_t tx6LoadThreshold3;				///< (w/r)	Channel 6 Threshold for RMS calculated to detect load type
-  uint16_t tx6LoadThreshold4;				///< (w/r)	Channel 6 Threshold for RMS calculated to detect load type
-  
-  uint8_t tx7AttChirpHighZ; 				///< (w/r)	Channel 7 Attenuation chirp in High impedance
-  uint8_t tx7AttSignalHighZ; 				///< (w/r)	Channel 7 Attenuation signal in High impedance
-  uint8_t tx7AttChirpLowZ; 				///< (w/r)	Channel 7 Attenuation chirp in low impedance
-  uint8_t tx7AttSignalLowZ; 				///< (w/r)	Channel 7 Attenuation signal in low impedance
-  uint8_t tx7AttChirpVLowZ; 				///< (w/r)	Channel 7 Attenuation chirp in very low impedance
-  uint8_t tx7AttSignalVLowZ;				///< (w/r)	Channel 7 Attenuation signal in very low impedance
-  uint16_t tx7LoadThreshold1;				///< (w/r)	Channel 7 Threshold for RMS calculated to detect load type
-  uint16_t tx7LoadThreshold2;				///< (w/r)	Channel 7 Threshold for RMS calculated to detect load type
-  uint16_t tx7LoadThreshold3;				///< (w/r)	Channel 7 Threshold for RMS calculated to detect load type
-  uint16_t tx7LoadThreshold4;				///< (w/r)	Channel 7 Threshold for RMS calculated to detect load type
-  
-  uint8_t tx8AttChirpHighZ; 				///< (w/r)	Channel 8 Attenuation chirp in High impedance
-  uint8_t tx8AttSignalHighZ; 				///< (w/r)	Channel 8 Attenuation signal in High impedance
-  uint8_t tx8AttChirpLowZ; 				///< (w/r)	Channel 8 Attenuation chirp in low impedance
-  uint8_t tx8AttSignalLowZ; 				///< (w/r)	Channel 8 Attenuation signal in low impedance
-  uint8_t tx8AttChirpVLowZ; 				///< (w/r)	Channel 8 Attenuation chirp in very low impedance
-  uint8_t tx8AttSignalVLowZ;				///< (w/r)	Channel 8 Attenuation signal in very low impedance
-  uint16_t tx8LoadThreshold1;				///< (w/r)	Channel 8 Threshold for RMS calculated to detect load type
-  uint16_t tx8LoadThreshold2;				///< (w/r)	Channel 8 Threshold for RMS calculated to detect load type
-  uint16_t tx8LoadThreshold3;				///< (w/r)	Channel 8 Threshold for RMS calculated to detect load type
-  uint16_t tx8LoadThreshold4;				///< (w/r)	Channel 8 Threshold for RMS calculated to detect load type
+	uint8_t txAttGlobal;					///< (w/r)	Global attenuation
+	uint8_t reserved;						///<		Reserved
+
+	uint8_t tx1AttChirpHighZ; 				///< (w/r)	Channel 1 Attenuation chirp in High impedance
+	uint8_t tx1AttSignalHighZ; 				///< (w/r)	Channel 1 Attenuation signal in High impedance
+	uint8_t tx1AttChirpLowZ; 				///< (w/r)	Channel 1 Attenuation chirp in low impedance
+	uint8_t tx1AttSignalLowZ; 				///< (w/r)	Channel 1 Attenuation signal in low impedance
+	uint8_t tx1AttChirpVLowZ; 				///< (w/r)	Channel 1 Attenuation chirp in very low impedance
+	uint8_t tx1AttSignalVLowZ;				///< (w/r)	Channel 1 Attenuation signal in very low impedance
+	uint16_t tx1LoadThreshold1;				///< (w/r)	Channel 1 Threshold for RMS calculated to detect load type
+	uint16_t tx1LoadThreshold2;				///< (w/r)	Channel 1 Threshold for RMS calculated to detect load type
+	uint16_t tx1LoadThreshold3;				///< (w/r)	Channel 1 Threshold for RMS calculated to detect load type
+	uint16_t tx1LoadThreshold4;				///< (w/r)	Channel 1 Threshold for RMS calculated to detect load type
+
+	uint8_t tx2AttChirpHighZ; 				///< (w/r)	Channel 2 Attenuation chirp in High impedance
+	uint8_t tx2AttSignalHighZ; 				///< (w/r)	Channel 2 Attenuation signal in High impedance
+	uint8_t tx2AttChirpLowZ; 				///< (w/r)	Channel 2 Attenuation chirp in low impedance
+	uint8_t tx2AttSignalLowZ; 				///< (w/r)	Channel 2 Attenuation signal in low impedance
+	uint8_t tx2AttChirpVLowZ; 				///< (w/r)	Channel 2 Attenuation chirp in very low impedance
+	uint8_t tx2AttSignalVLowZ;				///< (w/r)	Channel 2 Attenuation signal in very low impedance
+	uint16_t tx2LoadThreshold1;				///< (w/r)	Channel 2 Threshold for RMS calculated to detect load type
+	uint16_t tx2LoadThreshold2;				///< (w/r)	Channel 2 Threshold for RMS calculated to detect load type
+	uint16_t tx2LoadThreshold3;				///< (w/r)	Channel 2 Threshold for RMS calculated to detect load type
+	uint16_t tx2LoadThreshold4;				///< (w/r)	Channel 2 Threshold for RMS calculated to detect load type
+
+	uint8_t tx3AttChirpHighZ; 				///< (w/r)	Channel 3 Attenuation chirp in High impedance
+	uint8_t tx3AttSignalHighZ; 				///< (w/r)	Channel 3 Attenuation signal in High impedance
+	uint8_t tx3AttChirpLowZ; 				///< (w/r)	Channel 3 Attenuation chirp in low impedance
+	uint8_t tx3AttSignalLowZ; 				///< (w/r)	Channel 3 Attenuation signal in low impedance
+	uint8_t tx3AttChirpVLowZ; 				///< (w/r)	Channel 3 Attenuation chirp in very low impedance
+	uint8_t tx3AttSignalVLowZ;				///< (w/r)	Channel 3 Attenuation signal in very low impedance
+	uint16_t tx3LoadThreshold1;				///< (w/r)	Channel 3 Threshold for RMS calculated to detect load type
+	uint16_t tx3LoadThreshold2;				///< (w/r)	Channel 3 Threshold for RMS calculated to detect load type
+	uint16_t tx3LoadThreshold3;				///< (w/r)	Channel 3 Threshold for RMS calculated to detect load type
+	uint16_t tx3LoadThreshold4;				///< (w/r)	Channel 3 Threshold for RMS calculated to detect load type
+
+	uint8_t tx4AttChirpHighZ; 				///< (w/r)	Channel 4 Attenuation chirp in High impedance
+	uint8_t tx4AttSignalHighZ; 				///< (w/r)	Channel 4 Attenuation signal in High impedance
+	uint8_t tx4AttChirpLowZ; 				///< (w/r)	Channel 4 Attenuation chirp in low impedance
+	uint8_t tx4AttSignalLowZ; 				///< (w/r)	Channel 4 Attenuation signal in low impedance
+	uint8_t tx4AttChirpVLowZ; 				///< (w/r)	Channel 4 Attenuation chirp in very low impedance
+	uint8_t tx4AttSignalVLowZ;				///< (w/r)	Channel 4 Attenuation signal in very low impedance
+	uint16_t tx4LoadThreshold1;				///< (w/r)	Channel 4 Threshold for RMS calculated to detect load type
+	uint16_t tx4LoadThreshold2;				///< (w/r)	Channel 4 Threshold for RMS calculated to detect load type
+	uint16_t tx4LoadThreshold3;				///< (w/r)	Channel 4 Threshold for RMS calculated to detect load type
+	uint16_t tx4LoadThreshold4;				///< (w/r)	Channel 4 Threshold for RMS calculated to detect load type
+
+	uint8_t tx5AttChirpHighZ; 				///< (w/r)	Channel 5 Attenuation chirp in High impedance
+	uint8_t tx5AttSignalHighZ; 				///< (w/r)	Channel 5 Attenuation signal in High impedance
+	uint8_t tx5AttChirpLowZ; 				///< (w/r)	Channel 5 Attenuation chirp in low impedance
+	uint8_t tx5AttSignalLowZ; 				///< (w/r)	Channel 5 Attenuation signal in low impedance
+	uint8_t tx5AttChirpVLowZ; 				///< (w/r)	Channel 5 Attenuation chirp in very low impedance
+	uint8_t tx5AttSignalVLowZ;				///< (w/r)	Channel 5 Attenuation signal in very low impedance
+	uint16_t tx5LoadThreshold1;				///< (w/r)	Channel 5 Threshold for RMS calculated to detect load type
+	uint16_t tx5LoadThreshold2;				///< (w/r)	Channel 5 Threshold for RMS calculated to detect load type
+	uint16_t tx5LoadThreshold3;				///< (w/r)	Channel 5 Threshold for RMS calculated to detect load type
+	uint16_t tx5LoadThreshold4;				///< (w/r)	Channel 5 Threshold for RMS calculated to detect load type
+
+	uint8_t tx6AttChirpHighZ; 				///< (w/r)	Channel 6 Attenuation chirp in High impedance
+	uint8_t tx6AttSignalHighZ; 				///< (w/r)	Channel 6 Attenuation signal in High impedance
+	uint8_t tx6AttChirpLowZ; 				///< (w/r)	Channel 6 Attenuation chirp in low impedance
+	uint8_t tx6AttSignalLowZ; 				///< (w/r)	Channel 6 Attenuation signal in low impedance
+	uint8_t tx6AttChirpVLowZ; 				///< (w/r)	Channel 6 Attenuation chirp in very low impedance
+	uint8_t tx6AttSignalVLowZ;				///< (w/r)	Channel 6 Attenuation signal in very low impedance
+	uint16_t tx6LoadThreshold1;				///< (w/r)	Channel 6 Threshold for RMS calculated to detect load type
+	uint16_t tx6LoadThreshold2;				///< (w/r)	Channel 6 Threshold for RMS calculated to detect load type
+	uint16_t tx6LoadThreshold3;				///< (w/r)	Channel 6 Threshold for RMS calculated to detect load type
+	uint16_t tx6LoadThreshold4;				///< (w/r)	Channel 6 Threshold for RMS calculated to detect load type
+
+	uint8_t tx7AttChirpHighZ; 				///< (w/r)	Channel 7 Attenuation chirp in High impedance
+	uint8_t tx7AttSignalHighZ; 				///< (w/r)	Channel 7 Attenuation signal in High impedance
+	uint8_t tx7AttChirpLowZ; 				///< (w/r)	Channel 7 Attenuation chirp in low impedance
+	uint8_t tx7AttSignalLowZ; 				///< (w/r)	Channel 7 Attenuation signal in low impedance
+	uint8_t tx7AttChirpVLowZ; 				///< (w/r)	Channel 7 Attenuation chirp in very low impedance
+	uint8_t tx7AttSignalVLowZ;				///< (w/r)	Channel 7 Attenuation signal in very low impedance
+	uint16_t tx7LoadThreshold1;				///< (w/r)	Channel 7 Threshold for RMS calculated to detect load type
+	uint16_t tx7LoadThreshold2;				///< (w/r)	Channel 7 Threshold for RMS calculated to detect load type
+	uint16_t tx7LoadThreshold3;				///< (w/r)	Channel 7 Threshold for RMS calculated to detect load type
+	uint16_t tx7LoadThreshold4;				///< (w/r)	Channel 7 Threshold for RMS calculated to detect load type
+
+	uint8_t tx8AttChirpHighZ; 				///< (w/r)	Channel 8 Attenuation chirp in High impedance
+	uint8_t tx8AttSignalHighZ; 				///< (w/r)	Channel 8 Attenuation signal in High impedance
+	uint8_t tx8AttChirpLowZ; 				///< (w/r)	Channel 8 Attenuation chirp in low impedance
+	uint8_t tx8AttSignalLowZ; 				///< (w/r)	Channel 8 Attenuation signal in low impedance
+	uint8_t tx8AttChirpVLowZ; 				///< (w/r)	Channel 8 Attenuation chirp in very low impedance
+	uint8_t tx8AttSignalVLowZ;				///< (w/r)	Channel 8 Attenuation signal in very low impedance
+	uint16_t tx8LoadThreshold1;				///< (w/r)	Channel 8 Threshold for RMS calculated to detect load type
+	uint16_t tx8LoadThreshold2;				///< (w/r)	Channel 8 Threshold for RMS calculated to detect load type
+	uint16_t tx8LoadThreshold3;				///< (w/r)	Channel 8 Threshold for RMS calculated to detect load type
+	uint16_t tx8LoadThreshold4;				///< (w/r)	Channel 8 Threshold for RMS calculated to detect load type
   
 } atpl230ChnCfg_t;
 
 typedef struct
 {
-  uint8_t uc_buff_id;					///<	Buffer identifier
-  uint8_t att_level;					///<	Attenuation level with which the message must be transmitted
-  uint8_t scheme;						///<	Modulation scheme of last transmitted message
-  uint8_t disable_rx;					///<	TX Forced  
-  uint8_t mode;						///<	Mode PRIME v1.3 or PRIME PLUS
-  uint16_t data_len;					///<	Length of the data buffer.
-  uint8_t *data_buf;					///<	Pointer to data buffer
-  uint32_t tdelay;					///<	Delay for transmission in 10's of us
-  uint8_t tmode;						///<	Time mode: 0: Absolute mode, 1: Differential mode
+	uint8_t uc_buff_id;					///<	Buffer identifier
+	uint8_t att_level;					///<	Attenuation level with which the message must be transmitted
+	uint8_t scheme;						///<	Modulation scheme of last transmitted message
+	uint8_t disable_rx;					///<	TX Forced  
+	uint8_t mode;						///<	Mode PRIME v1.3 or PRIME PLUS
+	uint16_t data_len;					///<	Length of the data buffer.
+	uint8_t *data_buf;					///<	Pointer to data buffer
+	uint32_t tdelay;					///<	Delay for transmission in 10's of us
+	uint8_t tmode;						///<	Time mode: 0: Absolute mode, 1: Differential mode
 } xPhyMsgTx_t;
 
 typedef struct
 {
-  uint8_t uc_buff_id;           ///< Buffer identifier
-  uint8_t scheme;               ///< Modulation scheme of the last received message
-  uint8_t mode;                 ///< Mode PRIME v1.3, PRIME PLUS or Noise Capture
-  uint8_t header_type;          ///< Header Type of the last received message
-  uint8_t noise_result;         ///< Noise result in case of noise capture mode
-  uint8_t rssi_avg;             ///< Average RSSI (Received Signal Strength Indication) (valid only when rxQRMode is enable)
-  uint8_t cinr_avg;             ///< Average CNIR (Carrier to Interference + Noise ratio) (valid only when rxQRMode is enable)
-  uint16_t evm_header;          ///< Error Vector Magnitude for header (valid only when rxQRMode is enable)
-  uint16_t evm_payload;         ///< Error Vector Magnitude for payload (valid only when rxQRMode is enable)
-  uint16_t data_len;            ///< Length of the data buffer.
-  uint32_t evm_header_acum;     ///< Accumulated Error Vector Magnitude for header (valid only when rxQRMode is enable)
-  uint32_t evm_payload_acum;    ///< Accumulated Error Vector Magnitude for payload (valid only when rxQRMode is enable)
-  uint8_t *data_buf;            ///< Pointer to data buffer
-  uint32_t rx_time;             ///< Reception time in 10us
+	uint8_t uc_buff_id;           ///< Buffer identifier
+	uint8_t scheme;               ///< Modulation scheme of the last received message
+	uint8_t mode;                 ///< Mode PRIME v1.3, PRIME PLUS or Noise Capture
+	uint8_t header_type;          ///< Header Type of the last received message
+	uint8_t noise_result;         ///< Noise result in case of noise capture mode
+	uint8_t rssi_avg;             ///< Average RSSI (Received Signal Strength Indication) (valid only when rxQRMode is enable)
+	uint8_t cinr_avg;             ///< Average CNIR (Carrier to Interference + Noise ratio) (valid only when rxQRMode is enable)
+	uint16_t evm_header;          ///< Error Vector Magnitude for header (valid only when rxQRMode is enable)
+	uint16_t evm_payload;         ///< Error Vector Magnitude for payload (valid only when rxQRMode is enable)
+	uint16_t data_len;            ///< Length of the data buffer.
+	uint32_t evm_header_acum;     ///< Accumulated Error Vector Magnitude for header (valid only when rxQRMode is enable)
+	uint32_t evm_payload_acum;    ///< Accumulated Error Vector Magnitude for payload (valid only when rxQRMode is enable)
+	uint8_t *data_buf;            ///< Pointer to data buffer
+	uint32_t rx_time;             ///< Reception time in 10us
 } xPhyMsgRx_t;
 
 typedef struct
 {
-  uint8_t uc_id_buffer;				///<	Number of the buffer used to tx
-  uint8_t uc_result;					///<	Result (see atpl230reg.h "Values of TXRXBUF_RESULT_TX register" )
-  uint16_t rms_calc;					///<	RMS value emitted (valid only when txQRMode is enable)
+	uint8_t uc_id_buffer;				///<	Number of the buffer used to tx
+	uint8_t uc_result;					///<	Result (see atpl230reg.h "Values of TXRXBUF_RESULT_TX register" )
+	uint16_t rms_calc;					///<	RMS value emitted (valid only when txQRMode is enable)
 } xPhyMsgTxResult_t;
 
 
@@ -813,7 +813,7 @@ typedef struct
  */
 static inline void phy_clear_global_interrupt(void)
 {
-  pplc_if_or8(REG_ATPL230_PHY_SFR, ATPL230_SFR_PHY_INT_Msk);
+	pplc_if_or8(REG_ATPL230_PHY_SFR, ATPL230_SFR_PHY_INT_Msk);
 }
 
 /**
@@ -822,7 +822,7 @@ static inline void phy_clear_global_interrupt(void)
  */
 static inline uint8_t phy_get_mac_en(void)
 {
-  return (pplc_if_read8(REG_ATPL230_PHY_CONFIG) & ATPL230_MAC_EN_Msk);
+	return (pplc_if_read8(REG_ATPL230_PHY_CONFIG) & ATPL230_MAC_EN_Msk);
 }
 
 /**
@@ -831,7 +831,7 @@ static inline uint8_t phy_get_mac_en(void)
  */
 static inline uint8_t phy_get_sfr_err(void)
 {
-  return (pplc_if_read8(REG_ATPL230_PHY_SFR) & ATPL230_SFR_ERR_PYL_Msk);
+	return (pplc_if_read8(REG_ATPL230_PHY_SFR) & ATPL230_SFR_ERR_PYL_Msk);
 }
 
 /**
@@ -840,7 +840,7 @@ static inline uint8_t phy_get_sfr_err(void)
  */
 static inline void phy_clear_sfr_err(void)
 {
-  pplc_if_and8(REG_ATPL230_PHY_SFR, (uint8_t)~ATPL230_SFR_ERR_PYL_Msk);
+	pplc_if_and8(REG_ATPL230_PHY_SFR, (uint8_t)~ATPL230_SFR_ERR_PYL_Msk);
 }
 
 /**
@@ -849,7 +849,7 @@ static inline void phy_clear_sfr_err(void)
  */
 static inline void phy_mac_crc_enable(void)
 {
-  pplc_if_or8(REG_ATPL230_PHY_CONFIG, (uint8_t)ATPL230_MAC_EN_Msk);
+	pplc_if_or8(REG_ATPL230_PHY_CONFIG, (uint8_t)ATPL230_MAC_EN_Msk);
 }
 
 /**
@@ -858,7 +858,7 @@ static inline void phy_mac_crc_enable(void)
  */
 static inline void phy_mac_crc_disable(void)
 {
-  pplc_if_and8(REG_ATPL230_PHY_CONFIG, (uint8_t)~ATPL230_MAC_EN_Msk);
+	pplc_if_and8(REG_ATPL230_PHY_CONFIG, (uint8_t)~ATPL230_MAC_EN_Msk);
 }
 
 /**
@@ -867,7 +867,7 @@ static inline void phy_mac_crc_disable(void)
  */
 static inline uint8_t phy_get_carrier_detect(void)
 {
-  return (pplc_if_read8(REG_ATPL230_PHY_SFR) & ATPL230_SFR_CD_Msk);
+	return (pplc_if_read8(REG_ATPL230_PHY_SFR) & ATPL230_SFR_CD_Msk);
 }
 
 /**
@@ -885,7 +885,7 @@ static inline void phy_carrier_detect_enable(void)
  */
 static inline void phy_carrier_detect_disable(void)
 {
-  pplc_if_and8(REG_ATPL230_PHY_SFR, (uint8_t)~ATPL230_SFR_CD_Msk);
+	pplc_if_and8(REG_ATPL230_PHY_SFR, (uint8_t)~ATPL230_SFR_CD_Msk);
 }
 
 /**
@@ -894,7 +894,7 @@ static inline void phy_carrier_detect_disable(void)
  */
 static inline void phy_force_tx_buff_enable(uint8_t idBuf)
 {
-  pplc_if_or8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + idBuf, (uint8_t) ATPL230_TXRXBUF_TXCONF_FE_Msk);
+	pplc_if_or8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + idBuf, (uint8_t) ATPL230_TXRXBUF_TXCONF_FE_Msk);
 }
 
 /**
@@ -903,7 +903,7 @@ static inline void phy_force_tx_buff_enable(uint8_t idBuf)
  */
 static inline void phy_force_tx_buff_disable(uint8_t idBuf)
 {
-  pplc_if_and8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + idBuf, (uint8_t)~ATPL230_TXRXBUF_TXCONF_FE_Msk);
+	pplc_if_and8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + idBuf, (uint8_t)~ATPL230_TXRXBUF_TXCONF_FE_Msk);
 }
 
 /**
@@ -912,7 +912,7 @@ static inline void phy_force_tx_buff_disable(uint8_t idBuf)
  */
 static inline void phy_carrier_detect_buff_disable(uint8_t idBuf)
 {
-  pplc_if_or8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + idBuf, (uint8_t) ATPL230_TXRXBUF_TXCONF_DC_Msk);
+	pplc_if_or8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + idBuf, (uint8_t) ATPL230_TXRXBUF_TXCONF_DC_Msk);
 }
 
 /**
@@ -921,7 +921,7 @@ static inline void phy_carrier_detect_buff_disable(uint8_t idBuf)
  */
 static inline void phy_carrier_detect_buff_enable(uint8_t idBuf)
 {	
-  pplc_if_and8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + idBuf, (uint8_t)~ATPL230_TXRXBUF_TXCONF_DC_Msk);
+	pplc_if_and8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + idBuf, (uint8_t)~ATPL230_TXRXBUF_TXCONF_DC_Msk);
 }
 
 
@@ -931,8 +931,8 @@ static inline void phy_carrier_detect_buff_enable(uint8_t idBuf)
  */
 static inline void phy_reception_buff_disable(uint8_t idBuf)
 {
-  pplc_if_or8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + idBuf, (uint8_t) ATPL230_TXRXBUF_TXCONF_DR_Msk);
-}
+	  pplc_if_or8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + idBuf, (uint8_t) ATPL230_TXRXBUF_TXCONF_DR_Msk);
+	}
 
 /**
  * \brief Enable reception in specific buffer
@@ -940,7 +940,7 @@ static inline void phy_reception_buff_disable(uint8_t idBuf)
  */
 static inline void phy_reception_buff_enable(uint8_t idBuf)
 {
-  pplc_if_and8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + idBuf, (uint8_t)~ATPL230_TXRXBUF_TXCONF_DR_Msk);
+	pplc_if_and8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + idBuf, (uint8_t)~ATPL230_TXRXBUF_TXCONF_DR_Msk);
 }
 
 /**
@@ -949,7 +949,7 @@ static inline void phy_reception_buff_enable(uint8_t idBuf)
  */
 static inline void phy_transmission_buff_disable(uint8_t idBuf)
 {
-  pplc_if_and8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + idBuf, (uint8_t)~ATPL230_TXRXBUF_TXCONF_EB_Msk);
+	pplc_if_and8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + idBuf, (uint8_t)~ATPL230_TXRXBUF_TXCONF_EB_Msk);
 }
 
 
@@ -962,13 +962,13 @@ static inline void phy_transmission_buff_disable(uint8_t idBuf)
  */
 static inline uint8_t phy_transmission_buff_is_enable(uint8_t idBuf)
 {
-  uint8_t uc_enable;
-  
-  uc_enable = pplc_if_read8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + idBuf);
-  uc_enable &= ATPL230_TXRXBUF_TXCONF_EB_Msk;
-  uc_enable >>= ATPL230_TXRXBUF_TXCONF_EB_Pos;
-  
-  return uc_enable;
+	uint8_t uc_enable;
+
+	uc_enable = pplc_if_read8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + idBuf);
+	uc_enable &= ATPL230_TXRXBUF_TXCONF_EB_Msk;
+	uc_enable >>= ATPL230_TXRXBUF_TXCONF_EB_Pos;
+
+	return uc_enable;
 }
 
 //! \name ATPL230 Physical Layer Interface
@@ -995,53 +995,3 @@ void phy_reset (uint8_t uc_reset_type);
 /// @endcond
 
 #endif /* ATPL230_H_INCLUDED */
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
