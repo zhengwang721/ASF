@@ -178,6 +178,16 @@ void system_board_init(void);
 #define EXT1_PIN_SPI_SCK          EXT1_PIN_18
 /** @} */
 
+/** \name Extension header #1 I2C definitions
+ *  @{
+ */
+#define EXT1_I2C_MODULE              SERCOM2
+#define EXT1_I2C_SERCOM_PINMUX_PAD0  PINMUX_PA22D_SERCOM2_PAD0
+#define EXT1_I2C_SERCOM_PINMUX_PAD1  PINMUX_PA23D_SERCOM2_PAD1
+#define EXT1_I2C_SERCOM_DMAC_ID_TX   SERCOM2_DMAC_ID_TX
+#define EXT1_I2C_SERCOM_DMAC_ID_RX   SERCOM2_DMAC_ID_RX
+/** @} */
+
 /** \name Extension header #1 SPI definitions
  *  @{
  */
