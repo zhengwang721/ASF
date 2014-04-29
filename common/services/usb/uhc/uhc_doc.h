@@ -245,7 +245,7 @@ char* uhc_dev_get_string_serial(uhc_device_t* dev);
  * This function allocates a buffer which must be free by user application.
  *
  * \param[in] dev    Device to request
- * \param str_id[in] String ID requested
+ * \param[in] str_id String ID requested
  *
  * \return Pointer on unicode string, or NULL if function fails.
  */
