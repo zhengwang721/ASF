@@ -792,8 +792,8 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  *        <th>Date</td>
  *        <th>Comments</td>
  *    </tr>
-  *    <tr>
- *        <td>B</td>
+ *    <tr>
+ *        <td>C</td>
  *        <td>04/2014</td>
  *        <td>Add SAMD10/D11 support</td>
  *    </tr>
