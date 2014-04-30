@@ -106,7 +106,7 @@
 		</info>
 
 		<info type="description" value="pdf">
-			This document describes use cases for USB Device Stack HID Keyboard driver - UDI HID.
+			This document describes use cases for USB Device Stack HID Keyboard driver - UDI HID Keyboard.
 		</info>
 
 		<build type="include-path" value="."/>
