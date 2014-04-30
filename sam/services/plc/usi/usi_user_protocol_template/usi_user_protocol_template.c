@@ -183,13 +183,13 @@ int main( void )
   prvSetupHardware();
 
   /* Usi initialization */
-  usi_Init();
+  usi_init();
 
   /* Initialize USI communication structure */
   x_phy_serial_msg.uc_protocol_type = PROTOCOL_USER_DEFINED;
 
   while (1) {
-      usi_Process();
+      usi_process();
       // blink led 0
       if(b_led_swap){
         b_led_swap = false;
