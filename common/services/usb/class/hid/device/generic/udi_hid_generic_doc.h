@@ -108,8 +108,8 @@ typedef struct {
 
 
 /** By default no string associated to this interface */
-#ifndef UDI_HID_generic_STRING_ID
-#define UDI_HID_generic_STRING_ID 0
+#ifndef UDI_HID_GENERIC_STRING_ID
+#define UDI_HID_GENERIC_STRING_ID 0
 #endif
 
 /** Content of HID generic interface descriptor for all speed */
