@@ -987,7 +987,7 @@ static inline void adc_get_config_defaults(struct adc_config *const config)
 	config->positive_input                = ADC_POSITIVE_INPUT_PIN6 ;
 #else
 	config->positive_input                = ADC_POSITIVE_INPUT_PIN0 ;
-#endif	
+#endif
 	config->negative_input                = ADC_NEGATIVE_INPUT_GND ;
 	config->accumulate_samples            = ADC_ACCUMULATE_DISABLE;
 	config->divide_result                 = ADC_DIVIDE_RESULT_DISABLE;
