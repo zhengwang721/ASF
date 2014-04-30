@@ -142,8 +142,8 @@ static uint16_t num_bytes_rx_uart1;
 
 /* Uart channel open / closed */
 static uint8_t buart_chn_open[2] = {
+	false,
 	false
-	,false
 };
 
 #if defined(CONF_BOARD_UART0) || defined(CONF_BOARD_UART1)

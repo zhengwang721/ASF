@@ -141,8 +141,8 @@ static uint16_t num_bytes_rx_usart1;
 
 /* Uart channel open / closed */
 static uint8_t busart_chn_open[2] = {
+	false,
 	false
-	,false
 };
 
 
