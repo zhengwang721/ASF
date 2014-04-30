@@ -418,18 +418,12 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  *
  * \section asfdoc_udi_hid_generic_config_examples_4 conf_board.h
  *
- * \subsection asfdoc_udi_hid_generic_config_examples_4_1 AT32UC3A0, AT32UC3A1, AT32UC3B devices (USBB)
- * \include example\at32uc3a0512_evk1100\conf_board.h
- *
- * \subsection asfdoc_udi_hid_generic_config_examples_4_2 AT32UC3A3, AT32UC3A4 devices (USBB with high speed support)
- * \include example\at32uc3a3256_evk1104\conf_board.h
- *
- * \subsection asfdoc_udi_hid_generic_config_examples_4_3 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U devices (USBC)
+ * \subsection asfdoc_udi_hid_generic_config_examples_4_1 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U devices (USBC)
  * \include example\at32uc3c0512c_uc3c_ek\conf_board.h
  *
- * \subsection asfdoc_udi_hid_generic_config_examples_4_4 SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed)
+ * \subsection asfdoc_udi_hid_generic_config_examples_4_2 SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed)
  * \include example\sam3x8h_sam3x_ek\conf_board.h
  *
- * \subsection asfdoc_udi_hid_generic_config_examples_4_5 SAMD devices (USB)
+ * \subsection asfdoc_udi_hid_generic_config_examples_4_3 SAMD devices (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_board.h
  */
