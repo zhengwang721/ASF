@@ -334,12 +334,6 @@ void pmc_switch_mainck_to_fastrc(uint32_t ul_moscrcf)
 	/* Switch to Fast RC */
 	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCSEL) |
 			CKGR_MOR_KEY_PASSWD;
-
-	/* Disable xtal oscillator */
-	if (PMC->CKGR_MOR & CKGR_MOR_MOSCXTEN) {
-		PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCXTEN) |
-				CKGR_MOR_KEY_PASSWD;
-	}
 }
 
 /**

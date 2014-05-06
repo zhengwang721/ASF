@@ -311,10 +311,22 @@
 		<device-support value="atsamg53n19"/>
 	</board>
 
-	<board id="board.user_board.sam4cp16b" caption="User Board template">
+	<board id="board.user_board.sam4cp16b_0" caption="User Board template">
 		<require idref="common.boards.user_board.common"/>
 		<require idref="sam.utils.linker_scripts"/>
 		<device-support value="atsam4cp16b_0"/>
+	</board>
+	
+	<board id="board.user_board.sam4cp16b_1" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsam4cp16b_1"/>
+	</board>
+	
+	<board id="board.user_board.atpl230amb" caption="User Board template">
+		<require idref="common.boards.user_board.common"/>
+		<require idref="sam.utils.linker_scripts"/>
+		<device-support value="atsam4sd32c"/>
 	</board>
 
 	<board id="board.user_board.sam4c16c_0" caption="User Board template">
