@@ -66,7 +66,7 @@ void rtc_match_callback(void)
 	//! [alarm_mask]
 
 	//! [set_alarm]
-	alarm.time.second += 1;
+	alarm.time.second += 5;
 	alarm.time.second = alarm.time.second % 60;
 
 	rtc_calendar_set_alarm(&rtc_instance, &alarm, RTC_CALENDAR_ALARM_0);
