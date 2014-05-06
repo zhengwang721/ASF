@@ -117,6 +117,8 @@ uint16_t minimum_current;
 #ifdef CONF_KIT_DATA_EXIST
 /** Kit data structure*/
 uint8_t kit_data[256];
+/** Kit data MAC offset */
+#define EDBG_KIT_DATA_MAC_OFFSET     0xD0
 #endif
 
 /**
@@ -263,9 +265,9 @@ static void show_kit_data(void)
 	}
 
 	/** show kit data */
-	printf("\r\n The kit data: \r\n 0x");
+	printf("\r\n The kit data(MAC value): \r\n 0x");
 	for (i = 0; i < CONF_KIT_DATA_NUM; i++) {
-		printf("%02x", kit_data[i]);
+		printf("%02x", kit_data[i + EDBG_KIT_DATA_MAC_OFFSET]);
 	}
 	printf("\r\n");
 }
