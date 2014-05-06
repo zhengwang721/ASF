@@ -447,7 +447,7 @@ void wdt_reset_count(void);
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>D</td>
+ *		<td>E</td>
  *		<td>05/2014</td>
  *		<td>Add SAMD10/D11 support.</td>
  *	</tr>
