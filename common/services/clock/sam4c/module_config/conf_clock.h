@@ -92,6 +92,9 @@
 // Coprocessor System Clock Prescaler Options (CPCLK_PRES may be 1 to 16).
 #define CONFIG_CPCLK_PRES           1
 
+// ===== USB Clock Source Options   (Fusb = Fpllb / USB_div)
+//#define CONFIG_USBCLK_DIV           2
+
 // ===== Main processor frequency (MCK)
 // - XTAL frequency: 8MHz
 // - System clock source: PLLB
