@@ -76,7 +76,7 @@
  */
 
 /** Global structure which contains standard UDI API for UDC */
-extern UDC_DESC_STORAGE udi_api_t udi_api_hid_keyboard;
+extern UDC_DESC_STORAGE udi_api_t udi_api_hid_kbd;
 /**@}*/
 
 /**
@@ -96,46 +96,46 @@ typedef struct {
 	usb_hid_descriptor_t hid;
 	/** Standard USB endpoint descriptor structure */
 	usb_ep_desc_t ep;
-} udi_hid_keyboard_desc_t;
+} udi_hid_kbd_desc_t;
 
 /** Report descriptor for HID keyboard */
 typedef struct {
 	/** Array to put detailed report data */
 	uint8_t array[59];
-} udi_hid_keyboard_report_desc_t;
+} udi_hid_kbd_report_desc_t;
 
 
 /** By default no string associated to this interface */
-#ifndef UDI_HID_keyboard_STRING_ID
-#define UDI_HID_keyboard_STRING_ID 0
+#ifndef UDI_HID_KBD_STRING_ID
+#define UDI_HID_KBD_STRING_ID 0
 #endif
 
 /** HID keyboard endpoints size */
-#define UDI_HID_keyboard_EP_SIZE  8
+#define UDI_HID_KBD_EP_SIZE  8
 
 /** Content of HID keyboard interface descriptor for all speed */
-#define UDI_HID_keyboard_DESC    {\
+#define UDI_HID_KBD_DESC    {\
 	.iface.bLength             = sizeof(usb_iface_desc_t),\
 	.iface.bDescriptorType     = USB_DT_INTERFACE,\
-	.iface.bInterfaceNumber    = UDI_HID_keyboard_IFACE_NUMBER,\
+	.iface.bInterfaceNumber    = UDI_HID_KBD_IFACE_NUMBER,\
 	.iface.bAlternateSetting   = 0,\
 	.iface.bNumEndpoints       = 1,\
 	.iface.bInterfaceClass     = HID_CLASS,\
 	.iface.bInterfaceSubClass  = HID_SUB_CLASS_NOBOOT,\
 	.iface.bInterfaceProtocol  = HID_PROTOCOL_KEYBOARD,\
-	.iface.iInterface          = UDI_HID_keyboard_STRING_ID,\
+	.iface.iInterface          = UDI_HID_KBD_STRING_ID,\
 	.hid.bLength               = sizeof(usb_hid_descriptor_t),\
 	.hid.bDescriptorType       = USB_DT_HID,\
 	.hid.bcdHID                = LE16(USB_HID_BDC_V1_11),\
 	.hid.bCountryCode          = USB_HID_NO_COUNTRY_CODE,\
 	.hid.bNumDescriptors       = USB_HID_NUM_DESC,\
 	.hid.bRDescriptorType      = USB_DT_HID_REPORT,\
-	.hid.wDescriptorLength     = LE16(sizeof(udi_hid_keyboard_report_desc_t)),\
+	.hid.wDescriptorLength     = LE16(sizeof(udi_hid_kbd_report_desc_t)),\
 	.ep.bLength                = sizeof(usb_ep_desc_t),\
 	.ep.bDescriptorType        = USB_DT_ENDPOINT,\
-	.ep.bEndpointAddress       = UDI_HID_keyboard_EP_IN,\
+	.ep.bEndpointAddress       = UDI_HID_KBD_EP_IN,\
 	.ep.bmAttributes           = USB_EP_TYPE_INTERRUPT,\
-	.ep.wMaxPacketSize         = LE16(UDI_HID_keyboard_EP_SIZE),\
+	.ep.wMaxPacketSize         = LE16(UDI_HID_KBD_EP_SIZE),\
 	.ep.bInterval              = 2,\
 	}
 /**@}*/
