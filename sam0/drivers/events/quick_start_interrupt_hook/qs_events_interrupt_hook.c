@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 Event System Driver Quick Start
+ * \brief SAM D20/D21/R21/D10/D11 Event System Driver Quick Start
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,13 +41,9 @@
  *
  */
 #include <asf.h>
+#include "conf_example.h"
 
 	//! [setup]
-
-#define EXAMPLE_EVENT_GENERATOR    EVSYS_ID_GEN_TC4_OVF
-#define EXAMPLE_EVENT_USER         EVSYS_ID_USER_NONE
-
-#define TC_MODULE TC4
 
 static volatile uint32_t event_count = 0;
 
