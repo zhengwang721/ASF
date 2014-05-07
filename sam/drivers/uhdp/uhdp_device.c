@@ -676,7 +676,7 @@ void udd_enable(void)
 	NVIC_SetPriority((IRQn_Type) ID_UOTGHS, UDD_USB_INT_LEVEL);
 	NVIC_EnableIRQ((IRQn_Type) ID_UOTGHS);
 
-	// Always authorize asynchrone USB interrupts to exit of sleep mode
+	// Always authorize asynchrony USB interrupts to exit of sleep mode
 	// For SAM USB wake up device except BACKUP mode
 	pmc_set_fast_startup_input(PMC_FSMR_USBAL);
 
@@ -688,15 +688,10 @@ void udd_enable(void)
 	uhdp_enable_pad();
 	uhdp_enable();
 
-	// Unfreeze USB clock
-	uhdp_unfreeze_clock();
-
 	// Reset internal variables
 #if (0!=USB_DEVICE_MAX_EP)
 	udd_ep_job_table_reset();
 #endif
-
-	uhdp_freeze_clock();
 
 #ifndef UDD_NO_SLEEP_MGR
 	if (!udd_b_sleep_initialized) {
@@ -1614,7 +1609,7 @@ static bool udd_ctrl_interrupt(void)
 		udd_ctrl_underflow();
 		return true;
 	}
-	dbg_print("n%x ", UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], 0));
+	dbg_print("n%x ", (int)UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], 0));
 	return false;
 }
 
