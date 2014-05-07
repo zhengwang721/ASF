@@ -1202,12 +1202,14 @@
 /** SAMG Family */
 #define SAMG (SAMG51 || SAMG53 || SAMG54)
 
+/** SAM0 product line (cortex-m0+) */
+#define SAM0 (SAMD20 || SAMD21 || SAMR21 || SAMD10 || SAMD11)
+
 /** @} */
 
 /** SAM product line */
 #define SAM (SAM3S || SAM3U || SAM3N || SAM3XA || SAM4S || SAM4L || SAM4E || \
-		SAMD20 || SAMD21 || SAMR21 ||  SAMD10 || SAMD11 || SAM4N || SAM4C || \
-		SAM4CM || SAM4CP || SAMG)
+		SAM0 || SAM4N || SAM4C || SAM4CM || SAM4CP || SAMG)
 
 /** @} */
 
