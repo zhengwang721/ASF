@@ -93,10 +93,10 @@ void system_board_init(void);
 #define SW0_PIN                   PIN_PA14
 #define SW0_ACTIVE                false
 #define SW0_INACTIVE              !SW0_ACTIVE
-#define SW0_EIC_PIN               PIN_PA15A_EIC_EXTINT15
-#define SW0_EIC_MUX               MUX_PA15A_EIC_EXTINT15
-#define SW0_EIC_PINMUX            PINMUX_PA15A_EIC_EXTINT15
-#define SW0_EIC_LINE              15
+#define SW0_EIC_PIN               PIN_PA14A_EIC_NMI
+#define SW0_EIC_MUX               MUX_PA14A_EIC_NMI
+#define SW0_EIC_PINMUX            PINMUX_PA14A_EIC_NMI
+#define SW0_EIC_LINE              14
 /** @} */
 
 /**
