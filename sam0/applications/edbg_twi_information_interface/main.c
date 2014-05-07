@@ -118,7 +118,7 @@ uint16_t minimum_current;
 /** Kit data structure*/
 uint8_t kit_data[256];
 /** Kit data MAC offset */
-#define EDBG_KIT_DATA_MAC_OFFSET     0xD0
+#define EDBG_KIT_DATA_MAC_OFFSET     0x00
 #endif
 
 /**
