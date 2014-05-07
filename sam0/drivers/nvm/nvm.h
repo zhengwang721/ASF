@@ -756,8 +756,8 @@ static inline enum nvm_error nvm_get_error(void)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>D</td>
- *		<td>04/2014</td>
+ *		<td>E</td>
+ *		<td>05/2014</td>
  *		<td>Added support for SAMD10/D11.</td>
  *	</tr>
  *	<tr>
