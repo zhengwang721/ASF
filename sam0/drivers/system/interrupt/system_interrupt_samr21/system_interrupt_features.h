@@ -145,6 +145,7 @@ enum system_interrupt_vector {
 	SYSTEM_INTERRUPT_MODULE_TC3        = TC3_IRQn,
 	SYSTEM_INTERRUPT_MODULE_TC4        = TC4_IRQn,
 	SYSTEM_INTERRUPT_MODULE_TC5        = TC5_IRQn,
+	
 #endif
 
 	/** Interrupt vector index for an Analog Comparator peripheral interrupt. */
