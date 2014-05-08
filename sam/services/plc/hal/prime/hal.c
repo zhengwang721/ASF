@@ -60,33 +60,10 @@ extern "C" {
  * @{
  */
 
-#ifndef PRIME_FW_VENDOR
-#define PRIME_FW_VENDOR 0
-#endif
-
-#ifndef PRIME_FW_MODEL
-#define PRIME_FW_MODEL 0
-#endif
-
-#ifndef PRIME_FW_VERSION
-#define PRIME_FW_VERSION 0
-#endif
-
-#ifndef PRIME_PIB_VENDOR
-#define PRIME_PIB_VENDOR 0
-#endif
-
-#ifndef PRIME_PIB_MODEL
-#define PRIME_PIB_MODEL 0
-#endif
-
-#ifndef PRIME_PIB_VERSION_LEN
-#define PRIME_PIB_VERSION_LEN 0
-#endif
-
-#ifndef PRIME_PIB_VERSION
-#define PRIME_PIB_VERSION 0
-#endif
+extern const char FWVS_VERSION[32];
+extern const char FWVS_MODEL[16];
+extern const char FWVS_VENDOR[16];
+static const char FWVS_PIB_VERSION[PRIME_PIB_VERSION_LEN] = PRIME_PIB_VERSION;
 
 //! PRIME version
 hal_sw_version_info x_sw_version;
@@ -110,37 +87,33 @@ static uint8_t  PIO_WD_PIN;
 static void _init_fu_info_list (void)
 {
 	x_fw_info_list_t *px_info_list;
-	uint8_t *puc_prime_info;
 
 	px_info_list = &x_fw_info_list[0];
 	// InfoId = 0		Manufacturer / Vendor
 	px_info_list->uc_info_id = 0;
-	puc_prime_info = (uint8_t *)PRIME_FW_VENDOR;
-	px_info_list->uc_len_id = strlen ((const char *)puc_prime_info);
+	px_info_list->uc_len_id = strlen (FWVS_VENDOR);
 	if (px_info_list->uc_len_id > HAL_FW_INFO_ID_LIST_MAX_SIZE){
 		px_info_list->uc_len_id = HAL_FW_INFO_ID_LIST_MAX_SIZE;
 	}
-	memcpy (px_info_list->c_data_id, puc_prime_info, px_info_list->uc_len_id);
+	memcpy (px_info_list->c_data_id, FWVS_VENDOR, px_info_list->uc_len_id);
 
 	px_info_list++;
 	// InfoId = 1		Model / Product
 	px_info_list->uc_info_id = 1;
-	puc_prime_info = (uint8_t *)PRIME_FW_MODEL;
-	px_info_list->uc_len_id = strlen ((const char *)puc_prime_info);
+	px_info_list->uc_len_id = strlen (FWVS_MODEL);
 	if (px_info_list->uc_len_id > HAL_FW_INFO_ID_LIST_MAX_SIZE){
 		px_info_list->uc_len_id = HAL_FW_INFO_ID_LIST_MAX_SIZE;
 	}
-	memcpy (px_info_list->c_data_id, puc_prime_info, px_info_list->uc_len_id);
+	memcpy (px_info_list->c_data_id, FWVS_MODEL, px_info_list->uc_len_id);
 
 	px_info_list++;
 	// InfoId = 2		Version
 	px_info_list->uc_info_id = 2;
-	puc_prime_info = (uint8_t *)PRIME_FW_VERSION;
-	px_info_list->uc_len_id = strlen ((const char *)puc_prime_info);
+	px_info_list->uc_len_id = strlen (FWVS_VERSION);
 	if (px_info_list->uc_len_id > HAL_FW_INFO_ID_LIST_MAX_SIZE){
 		px_info_list->uc_len_id = HAL_FW_INFO_ID_LIST_MAX_SIZE;
 	}
-	memcpy (px_info_list->c_data_id, puc_prime_info, px_info_list->uc_len_id);
+	memcpy (px_info_list->c_data_id, FWVS_VERSION, px_info_list->uc_len_id);
 }
 
 /**
@@ -609,8 +582,6 @@ void hal_set_fu_info_list (uint8_t *puc_buf)
  */
 void hal_init (void)
 {
-	uint8_t *puc_prime_info;
-
 	// reset hardware MODEM
 	hal_reset_plc_modem();
 
@@ -621,8 +592,7 @@ void hal_init (void)
 	x_sw_version.us_vendor_id = PRIME_PIB_VENDOR;
 	x_sw_version.us_product_id = PRIME_PIB_MODEL;
 	x_sw_version.uc_version_len = PRIME_PIB_VERSION_LEN;
-	puc_prime_info = (uint8_t *)PRIME_PIB_VERSION;
-	memcpy(x_sw_version.c_fw_version, puc_prime_info, x_sw_version.uc_version_len);
+	memcpy(x_sw_version.c_fw_version, FWVS_PIB_VERSION, x_sw_version.uc_version_len);
 
 #ifdef PRIME_BASE
 	// init Flash pointer
