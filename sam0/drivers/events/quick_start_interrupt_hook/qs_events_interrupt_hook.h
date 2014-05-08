@@ -65,8 +65,16 @@
  * There are no special setup requirements for this use-case.
  *
  * \subsection asfdoc_sam0_events_interrupt_hook_setup_code Code
- * Add to the main application source file, before any functions:
- * \snippet conf_example.h definition_event
+ * Add to the main application source file, before any functions, according to
+ * the kit used:
+ * - SAM D20 Xplained Pro
+ *   \snippet samd20_xplained_pro/conf_example.h definition_event
+ * - SAM D21 Xplained Pro
+ *   \snippet samd21_xplained_pro/conf_example.h definition_event
+ * - SAM R21 Xplained Pro
+ *   \snippet samr21_xplained_pro/conf_example.h definition_event
+ * - SAM D11 Xplained Pro
+ *   \snippet samd11_xplained_pro/conf_example.h definition_event
  *
  * Copy-paste the following setup code to your user application:
  * \snippet qs_events_interrupt_hook.c setup
