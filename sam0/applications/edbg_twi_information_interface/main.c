@@ -185,11 +185,11 @@ static void show_extension_boards_information(void)
 	uint8_t i,j;
 
 	/** Send the request token */
-	master_packet.address	      = EDBG_ADDRESS;
+	master_packet.address         = EDBG_ADDRESS;
 	master_packet.data_length     = 1;
 	master_packet.data            = &request_token;
 	master_packet.ten_bit_address = false;
-	master_packet.high_speed 	  = false;
+	master_packet.high_speed      = false;
 	master_packet.hs_master_code  = 0x0;
 	while (i2c_master_write_packet_wait_no_stop(&i2c_master_instance, &master_packet) !=
 			STATUS_OK) {
@@ -239,11 +239,11 @@ static void show_kit_data(void)
 	uint8_t i;
 
 	/** Send the request token */
-	master_packet.address	      = EDBG_ADDRESS;
+	master_packet.address         = EDBG_ADDRESS;
 	master_packet.data_length     = 1;
 	master_packet.data            = &request_token;
 	master_packet.ten_bit_address = false;
-	master_packet.high_speed 	  = false;
+	master_packet.high_speed      = false;
 	master_packet.hs_master_code  = 0x0;
 	while (i2c_master_write_packet_wait_no_stop(&i2c_master_instance, &master_packet) !=
 			STATUS_OK) {
