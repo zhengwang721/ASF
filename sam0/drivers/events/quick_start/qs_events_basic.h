@@ -59,9 +59,11 @@
  * There are no special setup requirements for this use-case.
  *
  * \subsection asfdoc_sam0_events_basic_use_casesetup_code Code
+ * Add to the main application source file, before any functions:
+ * \snippet conf_example.h definition_event
+ *
  * Copy-paste the following setup code to your user application:
  * \snippet qs_events_basic.c setup
- *
  *
  * Create an event resource struct and add to user application (typically the start of \c main()):
  * \snippet qs_events_basic.c events_resource_struct

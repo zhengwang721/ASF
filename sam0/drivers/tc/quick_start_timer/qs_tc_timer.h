@@ -77,6 +77,9 @@
  *
  * \subsection asfdoc_sam0_tc_timer_use_case_setup_code Code
  *
+ * Add to the main application source file, before any functions:
+ * \snippet conf_example.h definition_tc
+ *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_timer.c module_inst
  *

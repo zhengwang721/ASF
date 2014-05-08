@@ -65,6 +65,9 @@
  * There are no special setup requirements for this use-case.
  *
  * \subsection asfdoc_sam0_events_interrupt_hook_setup_code Code
+ * Add to the main application source file, before any functions:
+ * \snippet conf_example.h definition_event
+ *
  * Copy-paste the following setup code to your user application:
  * \snippet qs_events_interrupt_hook.c setup
  *
