@@ -13,7 +13,7 @@
 		<build type="c-source" value="source/pal.c"/>
 		<build type="header-file" value="module_config/conf_pal.h"/>
 		<device-support value="atsam4cp16b_0"/>
-		<device-support value="sam4s"/>
+		<device-support value="atsam4sd32c"/>
 		<build type="doxygen-entry-point" value="pal_prime_group"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>
 	</module>

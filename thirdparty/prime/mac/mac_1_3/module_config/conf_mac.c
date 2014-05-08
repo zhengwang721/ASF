@@ -43,7 +43,6 @@
 
 #include "asf.h"
 #include "conf_mac.h"
-#include "conf_prime.h"
 
 
 /* Check MAC capabilities */

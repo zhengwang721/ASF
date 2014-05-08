@@ -13,7 +13,7 @@
 		<require idref="sam.services.plc.usi"/>
 		<build type="doxygen-entry-point" value="serial_mac_prime_group"/>
 		<device-support value="atsam4cp16b_0"/>
-		<device-support value="sam4s"/>
+		<device-support value="atsam4sd32c"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>
 	</module>
 	<module type ="service" caption="PRIME MLME Serial Interface Module" id="thirdparty.prime.mac_1_3.addons.mlme_serial_if">
@@ -30,7 +30,7 @@
 		<require idref="sam.services.plc.usi"/>
 		<build type="doxygen-entry-point" value="serial_mlme_prime_group"/>
 		<device-support value="atsam4cp16b_0"/>
-		<device-support value="sam4s"/>
+		<device-support value="atsam4sd32c"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>
 	</module>
 	<module type ="service" caption="PRIME PLME Serial Interface Module" id="thirdparty.prime.mac_1_3.addons.plme_serial_if">
@@ -47,7 +47,7 @@
 		<require idref="sam.services.plc.usi"/>
 		<build type="doxygen-entry-point" value="serial_plme_prime_group"/>
 		<device-support value="atsam4cp16b_0"/>
-		<device-support value="sam4s"/>
+		<device-support value="atsam4sd32c"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>
 	</module>
 	<module type ="service" caption="PRIME Embedded Sniffer Serial Interface Module" id="thirdparty.prime.mac_1_3.addons.snf_serial_if">
@@ -64,7 +64,7 @@
 		<require idref="sam.services.plc.usi"/>
 		<build type="doxygen-entry-point" value="serial_sniffer_prime_group"/>
 		<device-support value="atsam4cp16b_0"/>
-		<device-support value="sam4s"/>
+		<device-support value="atsam4sd32c"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>
 	</module>
 </asf>

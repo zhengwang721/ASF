@@ -46,7 +46,6 @@
 
 /* Configuration includes */
 #include "conf_oss.h"
-#include "conf_prime.h"
 
 /// @cond 0
 /**INDENT-OFF**/

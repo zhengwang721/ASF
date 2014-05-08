@@ -46,7 +46,14 @@
 
 #include "compiler.h"
 
+// Not Minimum SNR value
+//#define NOT_USE_MINIMUM_SNR_VALID
 #define MAC_MIN_SNR_VALID     2
+
+// MAC Capabilities
+#define NODE_CAPABLE_PRM
+#define NODE_CAPABLE_ARQ
+#define NODE_CAPABLE_DIR_SW
 
 
 #endif /* CONF_MAC_H_INCLUDE */

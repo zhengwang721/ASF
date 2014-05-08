@@ -19,7 +19,7 @@
 			<build type="library" subtype="user" value="libs/gcc/libsam4cp-sscs432-sn-gcc.a" toolchain="as5_arm" />
 			<build type="doxygen-entry-point" value="sscs_prime_group"/>
 			<device-support value="atsam4cp16b_0"/>
-			<device-support value="sam4s"/>
+			<device-support value="atsam4sd32c"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>
 		</module>
 		<module type="service" id="thirdparty.prime.sscs_4_32#base" caption="PRIME IEC 61334-4-32 Convergence Layer">
@@ -38,7 +38,7 @@
 			<build type="library" subtype="user" value="libs/gcc/libsam4cp-sscs432-bn-gcc.a" toolchain="as5_arm" />
 			<build type="doxygen-entry-point" value="sscs_prime_group"/>
 			<device-support value="atsam4cp16b_0"/>
-			<device-support value="sam4s"/>
+			<device-support value="atsam4sd32c"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>
 		</module>
 	</select-by-config>

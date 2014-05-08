@@ -16,6 +16,8 @@
 			<build type="header-file" subtype="api" value="hal.h"/>
 			<build type="c-source" value="hal.c"/>
 			<build type="include-path" value="."/>
+			<build type="module-config" subtype="required-header-file" value="conf_prime.h"/>
+			<build type="module-config" subtype="path" value="./module_config"/>
 			<build type="doxygen-entry-point" value="hal_prime_group"/>		
 			<require idref="sam.drivers.pio"/>
 			<require idref="sam.drivers.gpbr"/>
@@ -37,6 +39,8 @@
 			<build type="header-file" subtype="api" value="hal.h"/>
 			<build type="c-source" value="hal.c"/>
 			<build type="include-path" value="."/>
+			<build type="module-config" subtype="required-header-file" value="conf_prime.h"/>
+			<build type="module-config" subtype="path" value="./module_config"/>
 			<build type="doxygen-entry-point" value="hal_prime_group"/>			
 			<require idref="sam.drivers.pio"/>
 			<require idref="sam.drivers.gpbr"/>

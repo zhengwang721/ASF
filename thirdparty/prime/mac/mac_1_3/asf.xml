@@ -18,6 +18,7 @@
 
 			<build type="header-file" value="module_config/conf_mac.h"/>
 			<build type="c-source" value="module_config/conf_mac.c"/>
+			<build type="module-config" subtype="required-header-file" value="conf_prime.h"/>
 
 			<build type="header-file" subtype="api" value="./include/mngl.h"/>
 			<build type="header-file" subtype="api" value="./include/prime.h"/>
@@ -28,7 +29,7 @@
 
 			<build type="doxygen-entry-point" value="mac_prime_group"/>
 			<device-support value="atsam4cp16b_0"/>
-			<device-support value="sam4s"/>
+			<device-support value="atsam4sd32c"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>
 		</module>
 		<module type="service" id="thirdparty.prime.mac_1_3#base" caption="PRIME MAC Layer">
@@ -44,6 +45,7 @@
 
 			<build type="header-file" value="module_config/conf_mac.h"/>
 			<build type="c-source" value="module_config/conf_mac.c"/>
+			<build type="module-config" subtype="required-header-file" value="conf_prime.h"/>
 
 			<build type="header-file" subtype="api" value="./include/mngl.h"/>
 			<build type="header-file" subtype="api" value="./include/prime.h"/>
@@ -55,7 +57,7 @@
 
 			<build type="doxygen-entry-point" value="mac_prime_group"/>
 			<device-support value="atsam4cp16b_0"/>
-			<device-support value="sam4s"/>
+			<device-support value="atsam4sd32c"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>
 		</module>
 	</select-by-config>

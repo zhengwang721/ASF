@@ -44,7 +44,6 @@
 #include "asf.h"
 
 // Configuration
-#include "conf_prime.h"
 #include "conf_pal.h"
 
 // PHY layer
@@ -251,7 +250,7 @@ static void prvPALGetTxResultTask (void *pvParameters)
 	  // get tx time
 	  phy_get_cfg_param(REG_ATPL230_TXRXBUF_EMITIME1_TX0 + ((x_write_result.uc_id_buffer)<<2),
 			&ul_tx_time, 4);
-	  printf("\ttxRes GEN %u,%u [%u]\r\n", (unsigned int)x_write_result.uc_id_buffer, 
+	  printf("\ttxRes GEN %u,%u [%u]\r\n", (unsigned int)x_write_result.uc_id_buffer,
 			(unsigned int)x_write_result.uc_result, ul_tx_time);
 	//    }
 #endif
@@ -453,7 +452,7 @@ void pal_data_indication_ex(xPalMsgRx_t *px_msg)
 			x_pal_rx_msg.data_len = 0;
 #ifdef PAL_DBG_PRIME_MESSAGES
 			if(px_msg->header_type == PHY_HT_BEACON){
-				printf("\t\t<- BCN %u, [%u]\r\n", (unsigned int)((px_msg->data_buf[5])>>3), 
+				printf("\t\t<- BCN %u, [%u]\r\n", (unsigned int)((px_msg->data_buf[5])>>3),
 					(px_msg->rx_time - ul_last_rx_bcn_tics));
 				ul_last_rx_bcn_tics = px_msg->rx_time;
 			}else if(px_msg->header_type == PHY_HT_GENERIC){

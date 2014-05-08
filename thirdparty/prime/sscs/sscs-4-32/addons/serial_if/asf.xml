@@ -13,6 +13,6 @@
 		<require idref="sam.services.plc.usi"/>
 		<build type="doxygen-entry-point" value="serial_sscs_prime_group"/>
 		<device-support value="atsam4cp16b_0"/>
-		<device-support value="sam4s"/>
+		<device-support value="atsam4sd32c"/>
 	</module>
 </asf>
