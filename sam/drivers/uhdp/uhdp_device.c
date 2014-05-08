@@ -277,7 +277,7 @@
 #ifndef UDD_NO_SLEEP_MGR
 
 //! Definition of sleep levels
-#define UHDP_SLEEP_MODE_USB_SUSPEND  SLEEPMGR_WAIT_FAST
+#define UHDP_SLEEP_MODE_USB_SUSPEND  SLEEPMGR_SLEEP_WFI /* SLEEPMGR_WAIT_FAST */
 #define UHDP_SLEEP_MODE_USB_IDLE     SLEEPMGR_SLEEP_WFI
 
 //! State of USB line
@@ -352,11 +352,9 @@ static void udd_vbus_handler(uint32_t id, uint32_t mask)
 	/* PIO interrupt status has been cleared, just detect level */
 	bool b_vbus_high = Is_udd_vbus_high();
 	if (b_vbus_high) {
-		udd_ack_vbus_interrupt(true);
 		udd_vbus_monitor_sleep_mode(false);
 		udd_attach();
 	} else {
-		udd_ack_vbus_interrupt(false);
 		udd_vbus_monitor_sleep_mode(true);
 		udd_detach();
 	}

@@ -64,8 +64,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 {
 	// IOPORT must be initialized before by ioport_init(), \see ioport_group.
 	pio_handler_set_pin(pin, flags, handler);
-	ioport_set_pin_sense_mode(pin, ioport_get_pin_level(pin) ?
-	IOPORT_SENSE_LEVEL_LOW : IOPORT_SENSE_LEVEL_HIGH);
+	ioport_set_pin_sense_mode(pin, IOPORT_SENSE_BOTHEDGES);
 	NVIC_SetPriority(port_irqn, irq_level);
 	NVIC_EnableIRQ(port_irqn);
 	pio_enable_pin_interrupt(pin);
@@ -129,8 +128,6 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 #define Is_udd_vbus_low()            (!Is_udd_vbus_high())
 #define udd_enable_vbus_interrupt()  pio_enable_pin_interrupt(USB_VBUS_PIN)
 #define udd_disable_vbus_interrupt() pio_disable_pin_interrupt(USB_VBUS_PIN)
-#define udd_ack_vbus_interrupt(high) ioport_set_pin_sense_mode(USB_VBUS_PIN,\
-  high ? IOPORT_SENSE_LEVEL_LOW : IOPORT_SENSE_LEVEL_HIGH)
 //! @}
 
 
