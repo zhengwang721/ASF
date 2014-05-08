@@ -40,7 +40,7 @@
  */
 
 #include <asf.h>
-#include "conf_example.h"
+#include "conf_qs_tc_timer.h"
 
 void configure_tc(void);
 void configure_tc_callbacks(void);

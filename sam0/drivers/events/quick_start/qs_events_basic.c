@@ -41,7 +41,7 @@
  *
  */
 #include <asf.h>
-#include "conf_example.h"
+#include "conf_qs_events.h"
 
 //! [setup]
 
