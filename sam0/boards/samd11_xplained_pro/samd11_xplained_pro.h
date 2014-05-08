@@ -178,6 +178,20 @@ void system_board_init(void);
 #define EXT1_PIN_SPI_SCK          EXT1_PIN_18
 /** @} */
 
+/** \name Extension header #1 PWM definitions
+ *  @{
+ */
+#define EXT1_PWM_MODULE           TC1
+#define EXT1_PWM_0_CHANNEL        0
+#define EXT1_PWM_0_PIN            PIN_PA16E_TC1_WO0
+#define EXT1_PWM_0_MUX            MUX_PA16E_TC1_WO0
+#define EXT1_PWM_0_PINMUX         PINMUX_PA16E_TC1_WO0
+#define EXT1_PWM_1_CHANNEL        1
+#define EXT1_PWM_1_PIN            PIN_PA17E_TC1_WO1
+#define EXT1_PWM_1_MUX            MUX_PA17E_TC1_WO1
+#define EXT1_PWM_1_PINMUX         PINMUX_PA17E_TC1_WO1
+/** @} */
+
 /** \name Extension header #1 I2C definitions
  *  @{
  */
