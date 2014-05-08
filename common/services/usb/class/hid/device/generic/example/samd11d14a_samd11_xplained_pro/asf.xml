@@ -15,8 +15,11 @@
 		<generator value="doxygen"/>
 		<generator value="as5_arm"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
+		<config name="config.compiler.iarewarm.sys_stack_size" value="0x800"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<config name="config.compiler.armgcc.stack_size" value="0x800"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
+		<toolchain-config name="armgcc.linker.miscellaneous.LinkerFlags" value="-Wl,--defsym,STACK_SIZE=0x800" toolchain="armgcc"/>
 		<device-support value="atsamd11d14a"/>
 	</project>
 </asf>
