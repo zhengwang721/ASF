@@ -415,7 +415,7 @@ typedef struct
 	uint8_t mac[PRIME_MAC_LENGTH];               ///< MAC in format EUI48 of service node
 	uint16_t sid;                                ///< Switch of register
 	uint16_t lnid;                               ///< Local network Id
-	uint8_t lcid;                                ///< Local connection ID
+	uint16_t lcid;							///< Local connection ID
 	uint8_t type;                                ///< Connection Type
 } MlmeActiveConnEx;
 

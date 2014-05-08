@@ -63,7 +63,7 @@ enum ADDRESS_IND {
 	EUI48,
 	SNA_REQ
 };
-//@} 
+//@}
 
 //! \name Reception variables
 //@{
@@ -307,8 +307,8 @@ static int _serial_if_mlme_unpack_set_req (void)
 		return(prime_MLME_SET_BUF_request(us_pib_attr, (uint8_t *)puc_rx_buff,
 			uc_len));
 	}else{
-		ul_pib_attr_val = (((uint32_t)puc_rx_buff[0])<<24) + 
-			(((uint32_t)puc_rx_buff[1])<<16) + (((uint32_t)puc_rx_buff[2])<<8) + 
+		ul_pib_attr_val = (((uint32_t)puc_rx_buff[0])<<24) +
+			(((uint32_t)puc_rx_buff[1])<<16) + (((uint32_t)puc_rx_buff[2])<<8) +
 			(uint32_t)puc_rx_buff[3];
 		// Store the primitive in the circular buffer
 		return(prime_MLME_SET_request(us_pib_attr, ul_pib_attr_val));
@@ -327,9 +327,9 @@ static int _serial_if_mlme_unpack_set_req (void)
 static int _serial_if_mlme_pack_reg_devices (uint8_t *puc_buf_des, uint8_t *px_buf_org)
 {
 	uint8_t *puc_packet;
-	
+
 	puc_packet = puc_buf_des;
-	
+
 	memcpy(puc_packet, px_buf_org, PRIME_MAC_LENGTH + 4); //mac
 	puc_packet += PRIME_MAC_LENGTH + 4;
 	*puc_packet++ = px_buf_org[10]; // lnid
@@ -338,7 +338,7 @@ static int _serial_if_mlme_pack_reg_devices (uint8_t *puc_buf_des, uint8_t *px_b
 	*puc_packet++ = px_buf_org[13]; // lsid
 	*puc_packet++ = px_buf_org[14]; // sid
 	*puc_packet++ = px_buf_org[15]; // sid
-  
+
   return(puc_packet - puc_buf_des);
 }
 
@@ -527,7 +527,7 @@ static int _serial_if_mlme_pack_available_switch_table (uint8_t *puc_buf_des, ui
 	*puc_packet++ = px_buf_org[7]; // sid
 	*puc_packet++ = px_buf_org[8]; // level
 	*puc_packet++ = px_buf_org[9]; // rxLevel
-	*puc_packet++ = px_buf_org[10 	// rxSNR
+	*puc_packet++ = px_buf_org[10]; // rxSNR
 
 	return(puc_packet - puc_buf_des);
 }
@@ -798,19 +798,19 @@ uint8_t serial_if_mlme_api_parser (uint8_t *puc_rx_msg, uint16_t us_len)
 
 		case PRIME_MLME_PROMOTE_REQUEST_BASE:
 			c_result = _serial_if_mlme_unpack_promote_req_base();
-			break; 
+			break;
 
 		case PRIME_MLME_PROMOTE_REQUEST_SERVICE:
 			c_result = prime_MLME_PROMOTE_request_service();
-			break; 
+			break;
 
 		case PRIME_MLME_DEMOTE_REQUEST_BASE:
 			c_result = _serial_if_mlme_unpack_demote_req_base();
-			break; 
+			break;
 
 		case PRIME_MLME_DEMOTE_REQUEST_SERVICE:
 			c_result = prime_MLME_DEMOTE_request_service();
-			break; 
+			break;
 
 		case PRIME_MLME_RESET_REQUEST:
 			c_result = prime_MLME_RESET_request();
@@ -822,21 +822,21 @@ uint8_t serial_if_mlme_api_parser (uint8_t *puc_rx_msg, uint16_t us_len)
 
 		case PRIME_MLME_LIST_GET_REQUEST:
 			c_result = _serial_if_mlme_unpack_list_get_req();
-			break; 
+			break;
 
 		case PRIME_MLME_SET_REQUEST:
 			c_result = _serial_if_mlme_unpack_set_req();
 			break;
 
 		default:
-			c_result = 0;   // Primitive is ignored   
+			c_result = 0;   // Primitive is ignored
 	}
 
 	if (c_result == 0) {
 		return 1;
 	} else {
 		return 0;
-	}  
+	}
 }
 
 /**
