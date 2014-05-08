@@ -59,7 +59,7 @@
  * IRQ0 handler to deal with the interrupt command from core 0. Then it triggers
  * IPC0 IRQ0 interrupt to start the interprocessor communication. When the
  * interrupt is triggerred, the console will output the information and one LED
- * will be toggled.
+ * will be turned on.
  * Everytime the interrupt is triggerred, the variable in the SHARED_MEMORY_ADDR
  * will be updated.
  *

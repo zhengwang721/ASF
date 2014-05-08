@@ -56,10 +56,10 @@
  * \section Descriptions
  *
  * The program initializes the console with given parameters and configures IPC0
- * IRQ0 handler to deal with the interrupt command from core 0. Then it loads
+ * IRQ0 handler to deal with the interrupt command from core 1. Then it loads
  * the binary of core 1 example to SRAM1, resets core 1 and waits for the
  * interrupt triggered by core 1. When the interrupt is triggered, the
- * console will output the information and one LED will be toggled.
+ * console will output the information and one LED will be turned off.
  * The variable in the SHARED_MEMORY_ADDR will be updated by core 1. The updated
  * value will be printed every time the interrupt occurs.
  *
