@@ -50,7 +50,7 @@
 //[definition_event]
 
 //[definition_tc]
-#define TC_MODULE TC4
+#define CONF_TC_MODULE TC4
 //[definition_tc]
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */
