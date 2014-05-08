@@ -110,33 +110,37 @@ static uint8_t  PIO_WD_PIN;
 static void _init_fu_info_list (void)
 {
 	x_fw_info_list_t *px_info_list;
+	uint8_t *puc_prime_info;
 
 	px_info_list = &x_fw_info_list[0];
 	// InfoId = 0		Manufacturer / Vendor
 	px_info_list->uc_info_id = 0;
-	px_info_list->uc_len_id = strlen (PRIME_FW_VENDOR);
+	puc_prime_info = (uint8_t *)PRIME_FW_VENDOR;
+	px_info_list->uc_len_id = strlen ((const char *)puc_prime_info);
 	if (px_info_list->uc_len_id > HAL_FW_INFO_ID_LIST_MAX_SIZE){
 		px_info_list->uc_len_id = HAL_FW_INFO_ID_LIST_MAX_SIZE;
 	}
-	memcpy (px_info_list->c_data_id, (uint8_t *)(PRIME_FW_VENDOR), px_info_list->uc_len_id);
+	memcpy (px_info_list->c_data_id, puc_prime_info, px_info_list->uc_len_id);
 
 	px_info_list++;
 	// InfoId = 1		Model / Product
 	px_info_list->uc_info_id = 1;
-	px_info_list->uc_len_id = strlen (PRIME_FW_MODEL);
+	puc_prime_info = (uint8_t *)PRIME_FW_MODEL;
+	px_info_list->uc_len_id = strlen ((const char *)puc_prime_info);
 	if (px_info_list->uc_len_id > HAL_FW_INFO_ID_LIST_MAX_SIZE){
 		px_info_list->uc_len_id = HAL_FW_INFO_ID_LIST_MAX_SIZE;
 	}
-	memcpy (px_info_list->c_data_id, (uint8_t *)(PRIME_FW_MODEL), px_info_list->uc_len_id);
+	memcpy (px_info_list->c_data_id, puc_prime_info, px_info_list->uc_len_id);
 
 	px_info_list++;
 	// InfoId = 2		Version
 	px_info_list->uc_info_id = 2;
-	px_info_list->uc_len_id = strlen (PRIME_FW_VERSION);
+	puc_prime_info = (uint8_t *)PRIME_FW_VERSION;
+	px_info_list->uc_len_id = strlen ((const char *)puc_prime_info);
 	if (px_info_list->uc_len_id > HAL_FW_INFO_ID_LIST_MAX_SIZE){
 		px_info_list->uc_len_id = HAL_FW_INFO_ID_LIST_MAX_SIZE;
 	}
-	memcpy (px_info_list->c_data_id, (uint8_t *)(PRIME_FW_VERSION), px_info_list->uc_len_id);
+	memcpy (px_info_list->c_data_id, puc_prime_info, px_info_list->uc_len_id);
 }
 
 /**
@@ -605,6 +609,8 @@ void hal_set_fu_info_list (uint8_t *puc_buf)
  */
 void hal_init (void)
 {
+	uint8_t *puc_prime_info;
+
 	// reset hardware MODEM
 	hal_reset_plc_modem();
 
@@ -615,7 +621,8 @@ void hal_init (void)
 	x_sw_version.us_vendor_id = PRIME_PIB_VENDOR;
 	x_sw_version.us_product_id = PRIME_PIB_MODEL;
 	x_sw_version.uc_version_len = PRIME_PIB_VERSION_LEN;
-	memcpy(x_sw_version.c_fw_version, PRIME_PIB_VERSION, x_sw_version.uc_version_len);
+	puc_prime_info = (uint8_t *)PRIME_PIB_VERSION;
+	memcpy(x_sw_version.c_fw_version, puc_prime_info, x_sw_version.uc_version_len);
 
 #ifdef PRIME_BASE
 	// init Flash pointer
@@ -738,7 +745,7 @@ uint8_t hal_unlock_mem (void)
 	pul_sector_end = (uint32_t*)(ul_next_sector + HAL_FU_MAXIMUM_FIRMW_SIZE);
 
 	/* Unlock and erase used sectors */
-	for(i=1; i<HAL_FU_MAXIMUM_FIRMW_SECTORS; i++){ 
+	for(i=1; i<HAL_FU_MAXIMUM_FIRMW_SECTORS; i++){
 		Disable_global_interrupt();
 		flash_unlock(ul_next_sector, ul_next_sector + 0x10000 - 1, 0, 0);
 		flash_erase_sector(ul_next_sector);
