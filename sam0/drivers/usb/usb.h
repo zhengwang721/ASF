@@ -54,7 +54,7 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_usb_group SAM D21/R21 Universal Serial Bus (USB)
+ * \defgroup asfdoc_sam0_usb_group SAM D21/R21/D11 Universal Serial Bus (USB)
  *
  * The Universal Serial Bus (USB) module complies with the USB 2.1 specification.
  *
