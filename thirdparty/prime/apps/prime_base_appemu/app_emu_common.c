@@ -43,11 +43,10 @@
 #include <stdio.h>
 #include <string.h>
 
-// Port includes
-#include "StdTypes.h"
-
 // CS includes
 #include "app_emu_common.h"
+
+#include "compiler.h"
 
 //*** Declarations ************************************************************
 

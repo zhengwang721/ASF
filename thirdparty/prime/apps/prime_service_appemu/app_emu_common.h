@@ -39,10 +39,10 @@
 *
 
 */
-#include "StdTypes.h"
-
 #ifndef APP_EMU_COMMON_H
 #define APP_EMU_COMMON_H
+
+#include "compiler.h"
 
 #define PROVIDER                "ATM"
 #define PROVIDER2               "A"

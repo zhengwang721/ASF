@@ -44,9 +44,6 @@
 #include <stdio.h>
 #include <string.h>
 
-// Port includes
-#include "StdTypes.h"
-
 // Prime includes
 #include "asf.h"
 
@@ -553,7 +550,7 @@ static uint8_t _most_robust_scheme_mode(uint8_t uc_sch1, uint8_t uc_sch2)
   @return transmission length
 
 **************************************************************************/
-static uint16_t _get_length_transmission(uint16_t us_dut, 
+static uint16_t _get_length_transmission(uint16_t us_dut,
 		uint16_t *pus_num_test, uint16_t *pus_len_rx)
 {
 	uint16_t us_len_tx;
@@ -562,7 +559,7 @@ static uint16_t _get_length_transmission(uint16_t us_dut,
 		us_len_tx = p_conf_test[*pus_num_test].us_bytes_sent;
 		*pus_len_rx = p_conf_test[*pus_num_test].us_bytes_expected;
 	}else{  // Test Number == 5, adapt transmission and reception
-		if ((MOD(p_node[us_dut].uc_app_emu_coding) ==  PROTOCOL_D8PSK) && 
+		if ((MOD(p_node[us_dut].uc_app_emu_coding) ==  PROTOCOL_D8PSK) &&
 			(p_conf_test[*pus_num_test].us_bytes_expected == 17)){
 			*pus_num_test = *pus_num_test + 1;
 		}
@@ -650,7 +647,7 @@ void app_emu_start ()
 	uc_app_emu_st = APPEMU_WAIT_NEW_CONNECTIONS;
 	us__num_connections = 0;
 	us__num_nodes_registered = 0;
-	b_check_reg = FALSE;
+	b_check_reg = false;
 
 	for (i=0;i<MAX_TBL_NODE_NUM;i++){
 		p_node[i].us_handler = CON_HANDLER_INIT_VALUE;
@@ -673,7 +670,7 @@ void app_emu_start ()
 **************************************************************************/
 void app_emu_process()
 {
-	Bool b_new_command = FALSE;
+	Bool b_new_command = false;
 
 	static uint16_t us_length_transmission;
 	static uint16_t us_length_reception;
@@ -681,7 +678,7 @@ void app_emu_process()
 	// Reception of Mac primitives
 	if (prime_MAC_callback (&tmp_new_cmd, GENERIC_CALLBACK_HANDLER, GENERIC_CALLBACK_TYPE)){
 		p_counter_new_cmd = &tmp_new_cmd;
-		b_new_command = TRUE;
+		b_new_command = true;
 		// New connection checking if there is new nodw or not
 		switch (p_counter_new_cmd->command){
 			case PRIME_MACSAP_ESTABLISH_INDICATION:
@@ -689,8 +686,8 @@ void app_emu_process()
 				printf("<- ESTABLISH_indication()\n");
 #endif
 				_check_new_connections (p_counter_new_cmd);
-				b_check_reg = TRUE;
-				b_new_command = FALSE;
+				b_check_reg = true;
+				b_new_command = false;
 				break;
 
 			case PRIME_MACSAP_RELEASE_INDICATION:
@@ -720,7 +717,7 @@ void app_emu_process()
 
 	if (b_check_reg){
 		if (_get_registered_nodes ()) {
-			b_check_reg = FALSE;
+			b_check_reg = false;
 		}
 	}
 
@@ -786,7 +783,7 @@ void app_emu_process()
 
 		case APPEMU_WAIT_CONFIRM_MESSAGE_TEST:
 			if (b_new_command){
-				b_new_command = FALSE;
+				b_new_command = false;
 				if (p_counter_new_cmd->command == PRIME_MACSAP_DATA_CONFIRM){
 					if (p_counter_new_cmd->answer == PRIME_MACSAP_RESULT_SUCCESS){
 						uc_app_emu_st = APPEMU_WAIT_RECEIVE_MESSAGE_TEST;
@@ -837,14 +834,14 @@ void app_emu_process()
 
 		case APPEMU_WAIT_RECEIVE_MESSAGE_TEST:
 			if (b_new_command){
-				b_new_command = FALSE;
+				b_new_command = false;
 				if ((p_counter_new_cmd->command == PRIME_MACSAP_DATA_INDICATION) &&
 					(p_counter_new_cmd->handler == p_node[us__dut].us_handler)){
 
 					// It is the expected message
 					if (p_counter_new_cmd->bufLength == us_length_reception){
 						// Good message, Next Test
-						p_node[us__dut].pul_round_trip[us__numTest] = _get_round_trip (_getTimeMs(), 
+						p_node[us__dut].pul_round_trip[us__numTest] = _get_round_trip (_getTimeMs(),
 								p_node[us__dut].pul_round_trip[us__numTest]);
 						// check it is not the last test of the node
 #ifdef APPEMU_DEBUG

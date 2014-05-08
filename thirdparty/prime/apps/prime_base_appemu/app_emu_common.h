@@ -42,7 +42,7 @@
 #ifndef APP_EMU_COMMON_H
 #define APP_EMU_COMMON_H
 
-#include "StdTypes.h"
+#include "compiler.h"
 
 //*** Declarations ***********************************************************
 

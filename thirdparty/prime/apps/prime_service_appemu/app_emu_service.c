@@ -194,7 +194,7 @@ static int _get_serial (char *pc_sn)
 	if (_mlme_get_var (MLME_MACEUI48, puc_buf_mlme_get)){
 		p_get_array = &puc_buf_mlme_get[4]; // address of buf[0]
 		app_emu_init_random (&p_get_array[0]);
-		sprintf (pc_sn, "%s%02x%02x%02x", PROVIDER,(uint16_t) p_get_array[3], 
+		sprintf (pc_sn, "%s%02x%02x%02x", PROVIDER,(uint16_t) p_get_array[3],
 			(uint16_t) p_get_array[4], (uint16_t) p_get_array[5]);
 		l_result = 1;
 #ifdef APPEMU_DEBUG
@@ -250,7 +250,7 @@ static int _service_node_registered (void)
 	@return	length to send
 **************************************************************************/
 
-static uint16_t _get_len_answer_msg (MacSapCallBack* p_cmd, uint16_t *pus_rx_len, 
+static uint16_t _get_len_answer_msg (MacSapCallBack* p_cmd, uint16_t *pus_rx_len,
 		uint8_t *puc_num_test)
 {
 	uint16_t us_len_rcv, us_test;
@@ -264,7 +264,7 @@ static uint16_t _get_len_answer_msg (MacSapCallBack* p_cmd, uint16_t *pus_rx_len
 
   if (us_test < 5){
 		for (i = 0; (conf_test[i].uc_test_number != 0xff); i++){
-			 if ((conf_test[i].uc_test_number == us_test) && 
+			 if ((conf_test[i].uc_test_number == us_test) &&
 				(conf_test[i].us_bytes_sent == us_len_rcv)) {
 			 	 us_len_tx = conf_test[i].us_bytes_expected;
 				break;
@@ -331,12 +331,12 @@ void app_emu_process (void)
 	static uint16_t us_len_rcv;
 	static uint16_t us_len_tx;
 
-	Bool new_command = FALSE;
+	Bool new_command = false;
 
 	// Reception of Mac primitives
 	if (_node_connected() && prime_MAC_callback (&tmp_new_cmd, us_meter_handler, CON_TYPE)){
 		counter_new_cmd = &tmp_new_cmd;
-		new_command = TRUE;
+		new_command = true;
 		switch (counter_new_cmd->command){
 			case PRIME_MACSAP_RELEASE_INDICATION:
 				prime_MAC_RELEASE_response (us_meter_handler, PRIME_MACSAP_RESULT_ACCEPT);
@@ -344,11 +344,11 @@ void app_emu_process (void)
 				ul_time_app_emu = TIMETO_RECONNECT + (uint32_t)app_emu_random ();
 #ifdef APPEMU_DEBUG
 #ifdef __GNUC__
-				printf("Connection closed with Concentrator. Reconnecting in %lu milliseconds\n", 
+				printf("Connection closed with Concentrator. Reconnecting in %lu milliseconds\n",
 					ul_time_app_emu);
 #endif
 #ifdef __ICCARM__
-				printf("Connection closed with Concentrator. Reconnecting in %u milliseconds\n", 
+				printf("Connection closed with Concentrator. Reconnecting in %u milliseconds\n",
 					ul_time_app_emu);
 #endif
 #endif
@@ -393,7 +393,7 @@ void app_emu_process (void)
 
 		case APPEMU_WAIT_RESPONSE_CONNECT:
 			if (new_command){
-				new_command = FALSE;
+				new_command = false;
 				if (counter_new_cmd->command == PRIME_MACSAP_ESTABLISH_CONFIRM){
 					if (counter_new_cmd->answer == PRIME_MACSAP_RESULT_SUCCESS){
 						us_meter_handler = counter_new_cmd->handler;
@@ -426,7 +426,7 @@ void app_emu_process (void)
 		// a PRIME_MACSAP_RELEASE_INDICATION is received
 		case APPEMU_WAIT_MESSAGE:
 			if (new_command){
-				new_command = FALSE;
+				new_command = false;
 				if (counter_new_cmd->command == PRIME_MACSAP_DATA_INDICATION){
 					us_len_tx = _get_len_answer_msg (counter_new_cmd, &us_len_rcv, &uc_num_test);
 
