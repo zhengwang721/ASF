@@ -45,12 +45,12 @@
 #define CONF_EXAMPLE_H_INCLUDED
 
 //[definition_event]
-#define EXAMPLE_EVENT_GENERATOR    EVSYS_ID_GEN_TC4_OVF
-#define EXAMPLE_EVENT_USER         EVSYS_ID_USER_NONE
+#define CONF_EVENT_GENERATOR    EVSYS_ID_GEN_TC4_OVF
+#define CONF_EVENT_USER         EVSYS_ID_USER_NONE
 //[definition_event]
 
 //[definition_tc]
-#define TC_MODULE TC4
+#define CONF_TC_MODULE TC4
 //[definition_tc]
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */

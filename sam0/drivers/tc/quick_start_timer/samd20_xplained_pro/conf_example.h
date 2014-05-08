@@ -45,7 +45,7 @@
 #define CONF_EXAMPLE_H_INCLUDED
 
 //[definition_tc]
-#define TC_MODULE TC3
+#define CONF_TC_MODULE TC3
 //[definition_tc]
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */

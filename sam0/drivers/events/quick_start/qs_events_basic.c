@@ -56,7 +56,7 @@ static void configure_event_channel(struct events_resource *resource)
 //! [setup_2]
 
 //! [setup_3]
-	config.generator      = EXAMPLE_EVENT_GENERATOR;
+	config.generator      = CONF_EVENT_GENERATOR;
 	config.edge_detect    = EVENTS_EDGE_DETECT_RISING;
 	config.path           = EVENTS_PATH_SYNCHRONOUS;
 	config.clock_source   = GCLK_GENERATOR_0;
@@ -70,7 +70,7 @@ static void configure_event_channel(struct events_resource *resource)
 static void configure_event_user(struct events_resource *resource)
 {
 //! [setup_5]
-	events_attach_user(resource, EXAMPLE_EVENT_USER);
+	events_attach_user(resource, CONF_EVENT_USER);
 //! [setup_5]
 }
 
