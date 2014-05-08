@@ -43,13 +43,7 @@
 
 #include "asf.h"
 
-// Configuration
 #include "conf_pal.h"
-
-// PHY layer
-#include "atpl230_version.h"
-#include "conf_atpl230.h"
-
 
 /// @cond 0
 /**INDENT-OFF**/
