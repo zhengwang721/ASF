@@ -44,9 +44,13 @@
 #ifndef CONF_EXAMPLE_H_INCLUDED
 #define CONF_EXAMPLE_H_INCLUDED
 
+//[definition_event]
 #define EXAMPLE_EVENT_GENERATOR    EVSYS_ID_GEN_TC2_OVF
 #define EXAMPLE_EVENT_USER         EVSYS_ID_USER_NONE
+//[definition_event]
 
+//[definition_tc]
 #define TC_MODULE TC2
+//[definition_tc]
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */
