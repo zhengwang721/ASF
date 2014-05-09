@@ -315,8 +315,8 @@ typedef struct
 
 //! \name PAL process interface
 //@{
-void pal_Init(void);
-void pal_Process(void);
+void pal_init(void);
+void pal_process(void);
 //@}
 
 //! \name PAL standard interface

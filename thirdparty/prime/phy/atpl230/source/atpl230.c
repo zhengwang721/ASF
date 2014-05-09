@@ -2162,9 +2162,9 @@ void phy_interrupt (void)
 * Initialize physical parameters and configure ATPL230 device
 *
 */
-void vPhyInitTask (uint8_t uc_ifaceEnable)
+void phy_init (uint8_t uc_ifaceEnable)
 {
-  /* Store local ifaces configuration */
+	/* Store local ifaces configuration */
 	uc_serial_ifaces_cfg = uc_ifaceEnable;
 
 	/* Initialize PPLC driver */

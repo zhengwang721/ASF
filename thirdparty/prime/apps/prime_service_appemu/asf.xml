@@ -20,14 +20,7 @@
 		<require idref="common.utils.stdio.stdio_serial"/>
 		<require idref="sam.components.display.c42364a"/>	
 		<require idref="sam.services.flash"/>
-		<require idref="sam.services.plc.usi"/>
-		<require idref="sam.services.plc.hal.prime"/>
-		<require idref="thirdparty.prime.pal"/>
 		<require idref="thirdparty.prime.oss"/>
-		<require idref="thirdparty.prime.phy.atpl230"/>
-		<require idref="thirdparty.prime.mac_1_3"/>
-		<require idref="thirdparty.prime.sscs_4_32"/>
-		<require idref="thirdparty.os.freertos.version"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>
 </asf>

@@ -56,7 +56,7 @@ extern "C" {
  * \ingroup prime_group
  * \defgroup sscs_prime_group PRIME Service Specific Convergence Sublayer for IEC-432
  *
- * This module provides configuration and utils for the Convergence layer, 
+ * This module provides configuration and utils for the Convergence layer,
  * in particular the IEC 61334-4-32 Service Specific Convergence Sublayer.
  *
  * @{
@@ -112,11 +112,11 @@ extern "C" {
 //! \name Definitions to serialize 432 (USI)
 //@{
 #define PROTOCOL_432_PRIME              0x1A
-  
+
 #define SSCS432_DATA_SIZE               1024+11	// Buffer432 size + header Size
 #define DATA_TYPE                       0
 #define CTRL_TYPE                       1
-    
+
 #define CMD_432_PROTOCOL_MSK            0x1F
 #define TYPE_432_PROTOCOL_MSK           0x20
 #define TYPE_432_PROTOCOL_SHIFT         5
@@ -147,10 +147,10 @@ typedef struct {
 
 //! \name SSCS432 interface
 //@{
-void sscs432_Init (void);
-void sscs432_Start (void);
-void sscs432_Process (void);
-void sscs432_Upd1msInt (void);
+void sscs432_init (void);
+void sscs432_start (void);
+void sscs432_process (void);
+void sscs432_upd1ms (void);
 Bool sscs432_poll_joins_leaves(sscs432_NotBase_t *ptrNot);
 int8_t sscs432_establish_request(uint8_t* prSerialNumber, uint8_t lenSerialNumber);
 int8_t sscs432_release_request(uint16_t destinationAddress);

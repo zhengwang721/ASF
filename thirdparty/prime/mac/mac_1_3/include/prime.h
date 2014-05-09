@@ -93,11 +93,10 @@ enum MacLnidValues
 
 //! \name PRIME main control interface
 //@{
-void prime_Init (void);
-void prime_Start (void);
-void prime_Process (void);
-void prime_Upd1msInt (void);
-//void prime_Upd618msInt (void);
+void prime_init (void);
+void prime_start (void);
+void prime_process (void);
+void prime_upd1ms (void);
 //@}
 
 //! \name PLME Result values
@@ -121,7 +120,7 @@ void prime_Upd1msInt (void);
 #define PRIME_PLME_SET_CONFIRM                   6 ///< Command obtained from Callback when PLME has used Set.Confirm primitive
 //@}
 
-//! \name PLME Commands for request messages 
+//! \name PLME Commands for request messages
 //@{
 #define PRIME_PLME_RESET_REQUEST                 20
 #define PRIME_PLME_SLEEP_REQUEST                 21
@@ -131,7 +130,7 @@ void prime_Upd1msInt (void);
 #define PRIME_PLME_SET_REQUEST                   25
 //@}
 
-// Types for PLME information access 
+// Types for PLME information access
 
 //! Extract PLME command
 typedef struct
@@ -220,7 +219,7 @@ int prime_PLME_callback (uint8_t *buf);
 #define PRIME_MLME_SET_CONFIRM                   12 ///< Command obtained from Callback when MLME has used Set.Confirm primitive
 //@}
 
-//! \name MLME Commands for request messages 
+//! \name MLME Commands for request messages
 //@{
 #define PRIME_MLME_REGISTER_REQUEST              20
 #define PRIME_MLME_UNREGISTER_REQUEST_SERVICE    21
@@ -240,22 +239,22 @@ int prime_PLME_callback (uint8_t *buf);
 //! Buffer size needed to receive MLME data
 #define MLME_DATA_SIZE                           364
 
-//! Number of registered devices per message 
+//! Number of registered devices per message
 #define MLME_LIST_REGDEVNUM                      15
 
-//! Number of active connections per message 
+//! Number of active connections per message
 #define MLME_LIST_ACTCONNUM                      22
 
-//! Number of multicast entries per message 
+//! Number of multicast entries per message
 #define MLME_LIST_MCASTNUM                       83
 
-//! Number of Switch Nodes entries per message 
+//! Number of Switch Nodes entries per message
 #define MLME_LIST_SWNODENUM                      64
 
-//! Number of direct connections per message 
+//! Number of direct connections per message
 #define MLME_LIST_DIRCONNUM                      8
 
-//! Number of direct connections per message 
+//! Number of direct connections per message
 #define MLME_LIST_DIRSWNODENUM                   15
 
 //! Number of Available Switch Nodes entries per message
@@ -264,13 +263,13 @@ int prime_PLME_callback (uint8_t *buf);
 //! Number of Switch Nodes entries per message
 #define MLME_LIST_PHYCOMMNUM                     17
 
-//! Number of active connections per message 
+//! Number of active connections per message
 #define MLME_LIST_ACTCONNUM_EX                   20
 
-//! Number of 432 Nodes per message 
+//! Number of 432 Nodes per message
 #define MLME_LIST_432_NODES                      7
 
-//! Maximum number of extended SNR elements per message 
+//! Maximum number of extended SNR elements per message
 #define MLME_LIST_EXSNR_DEVNUM                   80
 
 //! Number of FU Nodes per message
@@ -288,7 +287,7 @@ enum MacPlcStateValues
 };
 
 
-// Types for MLME information access 
+// Types for MLME information access
 
 //! Extract MLME command
 typedef struct
@@ -578,7 +577,7 @@ typedef struct
 	ExSNRElementType exSnrDev[MLME_LIST_EXSNR_DEVNUM]; ///< extended SNR table info
 } MlmeListGetExSnrTable;
 
-//! Equal to LEN_432_SERIAL_NUMBER defined in 432 layer 
+//! Equal to LEN_432_SERIAL_NUMBER defined in 432 layer
 #define SERIAL_NUMBER_432_MAC                    16
 
 //! List of 432 Information Nodes if exists 432 (PIB 0x8250)
@@ -669,7 +668,7 @@ int prime_MLME_callback (uint8_t *buf);
 #define PRIME_MACSAP_ERROR_INVALID_EUI48         17 ///< Wrong EUI48 destination address
 //@}
 
-//! \name MAC_SAP Commands for callback messages 
+//! \name MAC_SAP Commands for callback messages
 //@{
 #define PRIME_MACSAP_ESTABLISH_CONFIRM           1 ///< Command obtained from Callback when MAC has used Establish.Confirm primitive
 #define PRIME_MACSAP_ESTABLISH_INDICATION        2 ///< Command obtained from Callback when MAC has used Establish.Indication primitive
@@ -685,7 +684,7 @@ int prime_MLME_callback (uint8_t *buf);
 #define PRIME_MACSAP_LEAVE_INDICATION_SERVICE    13 ///< Command obtained from Callback on Service Node when MAC has used Leave.Indication primitive
 //@}
 
-//! \name MAC_SAP Commands for callback messages (Request & Response) 
+//! \name MAC_SAP Commands for callback messages (Request & Response)
 //@{
 #define PRIME_MACSAP_ESTABLISH_REQUEST           20
 #define PRIME_MACSAP_ESTABLISH_RESPONSE          21
@@ -702,12 +701,12 @@ int prime_MLME_callback (uint8_t *buf);
 #define PRIME_MACSAP_JOIN_RESPONSE_SERVICE       32
 //@}
 
-//! \name MAX Buffer size to transmit or receive MAC data 
+//! \name MAX Buffer size to transmit or receive MAC data
 //@{
 #define PRIME_MACSAP_DATA_SIZE                   1024
 //@}
 
-//! \name Message Priorities 
+//! \name Message Priorities
 //@{
 #define MAX_PRIO                                 0
 #define PRIO_1                                   1
@@ -715,12 +714,12 @@ int prime_MLME_callback (uint8_t *buf);
 #define PRIO_3                                   3
 //@}
 
-//! \name Default Priority for Data Messages 
+//! \name Default Priority for Data Messages
 //@{
 #define DATA_PRIO                                2
 //@}
 
-//! \name Type values defined for different CS defined in PRIME Spec v1.3 
+//! \name Type values defined for different CS defined in PRIME Spec v1.3
 //@{
 #define TYPE_CL_IPv4_AR                          1
 #define TYPE_CL_IPv4_UNICAST                     2
@@ -729,19 +728,19 @@ int prime_MLME_callback (uint8_t *buf);
 #define TYPE_CL_APPEMU                           250
 //@}
 
-//! \name LCI values for broadcast connections defined in PRIME Spec v1.3 
+//! \name LCI values for broadcast connections defined in PRIME Spec v1.3
 //@{
 #define LCI_CL_IPv4_BROADCAST                    1
 #define LCI_CL_432_BROADCAST                     2
 //@}
 
-//! \name Generic Handler and Type values to use on MAC SAP Callback 
+//! \name Generic Handler and Type values to use on MAC SAP Callback
 //@{
 #define GENERIC_CALLBACK_TYPE                    0
 #define GENERIC_CALLBACK_HANDLER                 0xFFFF
 //@}
 
-//! Type for callback information 
+//! Type for callback information
 typedef struct
 {
 	uint8_t  command;                            ///< Message command
@@ -759,7 +758,7 @@ typedef struct
 	uint8_t  buf[PRIME_MACSAP_DATA_SIZE];        ///< Message data
 } MacSapCallBack;
 
-//! \name MAC Functions Interface 
+//! \name MAC Functions Interface
 //@{
 int prime_MAC_ESTABLISH_request (uint8_t* macAddr, uint8_t type, uint8_t* buf, uint16_t dataLength, uint8_t arq, uint16_t cfpBytes);
 int prime_MAC_ESTABLISH_response (uint16_t conHandle, uint8_t answer, uint8_t* buf, uint16_t dataLength);
@@ -781,20 +780,20 @@ int prime_MAC_callback (MacSapCallBack *info, uint16_t handler, uint8_t type);
 #define PRIME_TYPE_NUM                           255
 //@}
 
-//! \name Prime reserved Interface 
+//! \name Prime reserved Interface
 //@{
-int8_t macSapReserveType(uint8_t type);
-int8_t macSapFreeType(uint8_t type);
-int8_t macSapGetReserveType(uint8_t type);
+int8_t mac_sap_reserve_type(uint8_t type);
+int8_t mac_sap_free_type(uint8_t type);
+int8_t mac_sap_get_reserve_type(uint8_t type);
 
-int8_t macSapReserveHandler(uint16_t handler, uint16_t iNID, uint8_t type);
-int8_t macSapFreeHandler(uint16_t connHandler);
-int8_t macSapGetReserveHandler(uint16_t handler);
+int8_t mac_sap_reserve_handler(uint16_t handler, uint16_t iNID, uint8_t type);
+int8_t mac_sap_free_handler(uint16_t connHandler);
+int8_t mac_sap_get_reserve_handler(uint16_t handler);
 
 int prime_MAC_callback_reserved (MacSapCallBack *info, uint16_t handler, uint8_t type);
 //@}
 
-//! \name Types for 432 information access 
+//! \name Types for 432 information access
 //@{
 //! Extract 432 connections table
 typedef struct _Node432
@@ -815,7 +814,7 @@ typedef struct _Node432
 #define GET_ADDRESS_NODE_432(X)                  (X+2)
 //@}
 
-//! \name Embedded Sniffer Interface 
+//! \name Embedded Sniffer Interface
 //@{
 #define MASK_SNIFFER_EMBEDDED                    0x80
 //@}

@@ -213,7 +213,7 @@ static uint8_t _pal_get_ex_snr (void)
 *
 * \param pvParameters    Parameters
 */
-static void prvPALGetTxResultTask (void *pvParameters)
+static void pal_get_tx_result (void *pvParameters)
 {
 	xPhyMsgTxResult_t x_write_result;
 #ifdef PAL_DBG_PRIME_MESSAGES
@@ -264,7 +264,7 @@ static void prvPALGetTxResultTask (void *pvParameters)
 *
 * \param pvParameters    Parameters
 */
-static void prvPALGetRxTask (void *pvParameters)
+static void pal_get_rx (void *pvParameters)
 {
 	xPhyMsgRx_t x_read_msg;
 	uint32_t ul_crc_calc;
@@ -351,7 +351,7 @@ static void prvPALGetRxTask (void *pvParameters)
 * parameter in this file.
 *
 */
-void pal_Init (void)
+void pal_init (void)
 {
 	uint8_t uc_cfg_value;
 
@@ -382,13 +382,13 @@ void pal_Init (void)
 * It must be called periodically.
 *
 */
-void pal_Process (void)
+void pal_process (void)
 {
 	// Tx result
-	prvPALGetTxResultTask(NULL);
+	pal_get_tx_result(NULL);
 
 	// Rx
-	prvPALGetRxTask(NULL);
+	pal_get_rx(NULL);
 }
 
 /**

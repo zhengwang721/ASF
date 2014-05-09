@@ -254,11 +254,11 @@ extern "C" {
 
 //! \name Management Plane interface
 //@{
-void mngLay_Init (void);
-void mngLay_Start (void);
-void mngLay_Process (void);
-void mngLay_ExtractPkt (uint8_t commProf, uint8_t *rxBufPtr, uint16_t length);
-uint8_t mngLay_receivedCmd (uint8_t* rxBuff, uint16_t length);
+void mngl_init (void);
+void mngl_start (void);
+void mngl_process (void);
+void mngl_extract_pkt (uint8_t commProf, uint8_t *rxBufPtr, uint16_t length);
+uint8_t mngl_rcv_cmd (uint8_t* rxBuff, uint16_t length);
 //@}
 
 //! @}

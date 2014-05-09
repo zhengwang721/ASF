@@ -41,10 +41,39 @@
  *
  */
 
-/* asf includes */
-#include "asf.h"
 
-/* Configuration includes */
+// From module: FreeRTOS - Kernel 7.3.0
+#include <FreeRTOS.h>
+#include <FreeRTOS_CLI.h>
+#include <StackMacros.h>
+#include <croutine.h>
+#include <list.h>
+#include <mpu_wrappers.h>
+#include <portable.h>
+#include <projdefs.h>
+#include <queue.h>
+#include <semphr.h>
+#include <task.h>
+#include <timers.h>
+
+// From module: PLC Physical Layer Interface
+#include <atpl230.h>
+
+// From module: Physical Abstraction Layer (PAL) interface - ATPL230 and PRIME MAC 1.3
+#include <pal.h>
+
+// From module: PLC Universal Serial Interface
+#include <usi.h>
+
+// From module: PRIME IEC 61334-4-32 Convergence Layer
+#include <Sscs432.h>
+
+// From module: PRIME MAC Layer
+#include <mngl.h>
+#include <prime.h>
+
+// From module: PRIME Operative System Support (OSS)
+#include <oss_if.h>
 #include "conf_oss.h"
 
 /// @cond 0
@@ -77,9 +106,9 @@ static void _update_1ms_proc(xTimerHandle pxTimer)
 	UNUSED(pxTimer);
 	taskENTER_CRITICAL();
 
-	prime_Upd1msInt();
+	prime_upd1ms();
 
-	sscs432_Upd1msInt();
+	sscs432_upd1ms();
 
 	usi_txrx_block_timer();
 
@@ -98,19 +127,19 @@ static void _prime_stack_process(void * pvParameters)
 
 	UNUSED(pvParameters);
 
-	vPhyInitTask(DISABLE_SERIAL);
+	phy_init(DISABLE_SERIAL);
 
-	pal_Init();
+	pal_init();
 
-	prime_Init();
+	prime_init();
 
-	sscs432_Init();
+	sscs432_init();
 
 	usi_init();
 
-	prime_Start();
+	prime_start();
 
-	sscs432_Start();
+	sscs432_start();
 
 #ifdef OSS_PRIME_DISABLE_PRM
 	prime_MLME_SET_request(PIB_MAC_PRM_ACTIVATION, 0);
@@ -128,11 +157,11 @@ static void _prime_stack_process(void * pvParameters)
 		vTaskDelayUntil(&xLastWakeTime, xPeriod);
 		taskENTER_CRITICAL();
 
-		pal_Process();
+		pal_process();
 
-		prime_Process();
+		prime_process();
 
-		sscs432_Process();
+		sscs432_process();
 
 		usi_process();
 

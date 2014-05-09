@@ -69,10 +69,10 @@ extern "C" {
 
 //! \name PRIME Stack definition
 //@{
-#define TASK_PRIME_STACK                   (configMINIMAL_STACK_SIZE * 10)	
+#define TASK_PRIME_STACK                   (configMINIMAL_STACK_SIZE * 10)
 //@}
 
-//! \name Main PRIME Stack Update Period 
+//! \name Main PRIME Stack Update Period
 //! \note It must be 1 milliseconds in order to update the PRIME systick
 //@{
 #define PRIME_UPDATE_PROCESS_TIMER_RATE    (1 / portTICK_RATE_MS)
