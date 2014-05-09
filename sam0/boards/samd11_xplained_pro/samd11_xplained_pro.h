@@ -93,10 +93,10 @@ void system_board_init(void);
 #define SW0_PIN                   PIN_PA14
 #define SW0_ACTIVE                false
 #define SW0_INACTIVE              !SW0_ACTIVE
-#define SW0_EIC_PIN               PIN_PA15A_EIC_EXTINT15
-#define SW0_EIC_MUX               MUX_PA15A_EIC_EXTINT15
-#define SW0_EIC_PINMUX            PINMUX_PA15A_EIC_EXTINT15
-#define SW0_EIC_LINE              15
+#define SW0_EIC_PIN               PIN_PA14A_EIC_NMI
+#define SW0_EIC_MUX               MUX_PA14A_EIC_NMI
+#define SW0_EIC_PINMUX            PINMUX_PA14A_EIC_NMI
+#define SW0_EIC_LINE              14
 /** @} */
 
 /**
@@ -176,6 +176,30 @@ void system_board_init(void);
 #define EXT1_PIN_SPI_MOSI         EXT1_PIN_16
 #define EXT1_PIN_SPI_MISO         EXT1_PIN_17
 #define EXT1_PIN_SPI_SCK          EXT1_PIN_18
+/** @} */
+
+/** \name Extension header #1 PWM definitions
+ *  @{
+ */
+#define EXT1_PWM_MODULE           TC1
+#define EXT1_PWM_0_CHANNEL        0
+#define EXT1_PWM_0_PIN            PIN_PA16E_TC1_WO0
+#define EXT1_PWM_0_MUX            MUX_PA16E_TC1_WO0
+#define EXT1_PWM_0_PINMUX         PINMUX_PA16E_TC1_WO0
+#define EXT1_PWM_1_CHANNEL        1
+#define EXT1_PWM_1_PIN            PIN_PA17E_TC1_WO1
+#define EXT1_PWM_1_MUX            MUX_PA17E_TC1_WO1
+#define EXT1_PWM_1_PINMUX         PINMUX_PA17E_TC1_WO1
+/** @} */
+
+/** \name Extension header #1 I2C definitions
+ *  @{
+ */
+#define EXT1_I2C_MODULE              SERCOM2
+#define EXT1_I2C_SERCOM_PINMUX_PAD0  PINMUX_PA22D_SERCOM2_PAD0
+#define EXT1_I2C_SERCOM_PINMUX_PAD1  PINMUX_PA23D_SERCOM2_PAD1
+#define EXT1_I2C_SERCOM_DMAC_ID_TX   SERCOM2_DMAC_ID_TX
+#define EXT1_I2C_SERCOM_DMAC_ID_RX   SERCOM2_DMAC_ID_RX
 /** @} */
 
 /** \name Extension header #1 SPI definitions

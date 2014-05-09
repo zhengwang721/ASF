@@ -137,6 +137,13 @@ __always_inline static void pmc_save_clock_settings(
 
 	/* Switch mainck to FAST RC */
 #if SAMG
+	/**
+	 * For the sleepwalking feature, we need an accurate RC clock. Only 24M and
+	 * 16M are trimmed in production. Here we select the 24M.
+	 * And so wait state need to be 1.
+	 */
+	EFC0->EEFC_FMR = (fmr & (~EEFC_FMR_FWS_Msk)) | EEFC_FMR_FWS(1);
+
 	PMC->CKGR_MOR = (PMC->CKGR_MOR & ~CKGR_MOR_MOSCSEL) | CKGR_MOR_MOSCRCF_24_MHz |
 			CKGR_MOR_KEY_PASSWD;
 #else
@@ -145,10 +152,12 @@ __always_inline static void pmc_save_clock_settings(
 #endif
 	while (!(PMC->PMC_SR & PMC_SR_MOSCSELS));
 
+#if (!SAMG)
 	/* FWS update */
 	EFC0->EEFC_FMR = fmr & (~EEFC_FMR_FWS_Msk);
 #if defined(EFC1)
 	EFC1->EEFC_FMR = fmr1 & (~EEFC_FMR_FWS_Msk);
+#endif
 #endif
 
 	/* Disable XTALs */
