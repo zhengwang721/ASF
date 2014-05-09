@@ -33,8 +33,8 @@
 			<keyword value="Communication" />
 		</info>
 		<generator value="doxygen-module" default-mcu="unspecified-samd21"/>
-		</module>
-	<module type="driver" id="sam0.drivers.usb.udd" caption="SAM D21/R21 USB UDD interface">
+	</module>
+	<module type="driver" id="sam0.drivers.usb.udd" caption="SAM D21/R21/D11 USB UDD interface">
 		<build type="include-path" value="."/>
 		<build type="c-source" value="usb_device_udd.c"/>
 		<device-support value="samd21"/>
@@ -50,5 +50,5 @@
 			<keyword value="Communication" />
 		</info>
 		<generator value="doxygen-module" default-mcu="unspecified-samd21"/>
-		</module>
+	</module>
 </asf>
