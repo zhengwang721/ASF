@@ -19,6 +19,7 @@
 			<build type="header-file" value="module_config/conf_mac.h"/>
 			<build type="c-source" value="module_config/conf_mac.c"/>
 			<build type="module-config" subtype="required-header-file" value="conf_prime.h"/>
+			<build type="module-config" subtype="path" value="module_config"/>
 			
 			<build type="header-file" subtype="api" value="./include/mngl.h"/>
 			<build type="header-file" subtype="api" value="./include/prime.h"/>
@@ -48,6 +49,7 @@
 			<build type="header-file" value="module_config/conf_mac.h"/>
 			<build type="c-source" value="module_config/conf_mac.c"/>
 			<build type="module-config" subtype="required-header-file" value="conf_prime.h"/>
+			<build type="module-config" subtype="path" value="module_config"/>
 			
 			<build type="header-file" subtype="api" value="./include/mngl.h"/>
 			<build type="header-file" subtype="api" value="./include/prime.h"/>
