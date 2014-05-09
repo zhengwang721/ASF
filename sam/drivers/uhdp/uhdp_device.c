@@ -66,44 +66,6 @@
 
 #define UDD_EP_USED(ep)      (USB_DEVICE_MAX_EP >= ep)
 
-#if ( (UDD_EP_USED( 1) && Is_udd_endpoint_dma_supported( 1)) \
-	||(UDD_EP_USED( 2) && Is_udd_endpoint_dma_supported( 2)) \
-	||(UDD_EP_USED( 3) && Is_udd_endpoint_dma_supported( 3)) \
-	||(UDD_EP_USED( 4) && Is_udd_endpoint_dma_supported( 4)) \
-	||(UDD_EP_USED( 5) && Is_udd_endpoint_dma_supported( 5)) \
-	||(UDD_EP_USED( 6) && Is_udd_endpoint_dma_supported( 6)) \
-	||(UDD_EP_USED( 7) && Is_udd_endpoint_dma_supported( 7)) \
-	||(UDD_EP_USED( 8) && Is_udd_endpoint_dma_supported( 8)) \
-	||(UDD_EP_USED( 9) && Is_udd_endpoint_dma_supported( 9)) \
-	||(UDD_EP_USED(10) && Is_udd_endpoint_dma_supported(10)) \
-	||(UDD_EP_USED(11) && Is_udd_endpoint_dma_supported(11)) \
-	||(UDD_EP_USED(12) && Is_udd_endpoint_dma_supported(12)) \
-	||(UDD_EP_USED(13) && Is_udd_endpoint_dma_supported(13)) \
-	||(UDD_EP_USED(14) && Is_udd_endpoint_dma_supported(14)) \
-	||(UDD_EP_USED(15) && Is_udd_endpoint_dma_supported(15)) \
-	)
-# define UDD_EP_DMA_SUPPORTED
-#endif
-
-#if ( (UDD_EP_USED( 1) && !Is_udd_endpoint_dma_supported( 1)) \
-	||(UDD_EP_USED( 2) && !Is_udd_endpoint_dma_supported( 2)) \
-	||(UDD_EP_USED( 3) && !Is_udd_endpoint_dma_supported( 3)) \
-	||(UDD_EP_USED( 4) && !Is_udd_endpoint_dma_supported( 4)) \
-	||(UDD_EP_USED( 5) && !Is_udd_endpoint_dma_supported( 5)) \
-	||(UDD_EP_USED( 6) && !Is_udd_endpoint_dma_supported( 6)) \
-	||(UDD_EP_USED( 7) && !Is_udd_endpoint_dma_supported( 7)) \
-	||(UDD_EP_USED( 8) && !Is_udd_endpoint_dma_supported( 8)) \
-	||(UDD_EP_USED( 9) && !Is_udd_endpoint_dma_supported( 9)) \
-	||(UDD_EP_USED(10) && !Is_udd_endpoint_dma_supported(10)) \
-	||(UDD_EP_USED(11) && !Is_udd_endpoint_dma_supported(11)) \
-	||(UDD_EP_USED(12) && !Is_udd_endpoint_dma_supported(12)) \
-	||(UDD_EP_USED(13) && !Is_udd_endpoint_dma_supported(13)) \
-	||(UDD_EP_USED(14) && !Is_udd_endpoint_dma_supported(14)) \
-	||(UDD_EP_USED(15) && !Is_udd_endpoint_dma_supported(15)) \
-	)
-# define UDD_EP_FIFO_SUPPORTED
-#endif
-
 // for debug text
 //#define dbg_print printf
 #define dbg_print(...)
@@ -494,22 +456,6 @@ static void udd_ep_job_table_reset(void);
 //! \brief Abort all endpoint jobs on going
 static void udd_ep_job_table_kill(void);
 
-#ifdef UDD_EP_FIFO_SUPPORTED
-	/**
-	 * \brief Fill banks and send them
-	 *
-	 * \param ep endpoint number of job to abort
-	 */
-	static void udd_ep_in_sent(udd_ep_id_t ep);
-
-	/**
-	 * \brief Store received banks
-	 *
-	 * \param ep endpoint number of job to abort
-	 */
-	static void udd_ep_out_received(udd_ep_id_t ep);
-#endif
-
 /**
  * \brief Abort endpoint job on going
  *
@@ -525,14 +471,12 @@ static void udd_ep_abort_job(udd_ep_id_t ep);
  */
 static void udd_ep_finish_job(udd_ep_job_t * ptr_job, bool b_abort, uint8_t ep_num);
 
-#ifdef UDD_EP_DMA_SUPPORTED
-	/**
-	 * \brief Start the next transfer if necessary or complet the job associated.
-	 *
-	 * \param ep endpoint number without direction flag
-	 */
-	static void udd_ep_trans_done(udd_ep_id_t ep);
-#endif
+/**
+ * \brief Start the next transfer if necessary or complet the job associated.
+ *
+ * \param ep endpoint number without direction flag
+ */
+static void udd_ep_trans_done(udd_ep_id_t ep);
 
 /**
  * \brief Main interrupt routine for bulk/interrupt/isochronous endpoints
@@ -931,14 +875,7 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes,
 			udd_enable_endpoint_bank_autoswitch(i);
 			if (b_restart) {
 				// Re-run the job remaining part
-#  ifdef UDD_EP_FIFO_SUPPORTED
-				if (!Is_udd_endpoint_dma_supported(i)
-					&& !Is_udd_endpoint_in(i)) {
-					ptr_job->buf_cnt -= ptr_job->buf_load;
-				}
-#  else
 				ptr_job->buf_cnt -= ptr_job->buf_load;
-#  endif
 				b_restart = udd_ep_run(Is_udd_endpoint_in(i) ?
 							(i | USB_EP_DIR_IN) : i,
 						ptr_job->b_shortpacket,
@@ -1000,10 +937,6 @@ bool udd_ep_set_halt(udd_ep_id_t ep)
 	if ((ep & USB_EP_DIR_IN) && (0 != udd_nb_busy_bank(ep_index))) {
 		// Delay the stall after the end of IN transfer on USB line
 		ptr_job->stall_requested = true;
-#ifdef UDD_EP_FIFO_SUPPORTED
-		udd_disable_in_send_interrupt(ep_index);
-		udd_enable_endpoint_bank_autoswitch(ep_index);
-#endif
 		udd_enable_bank_interrupt(ep_index);
 		udd_enable_endpoint_interrupt(ep_index);
 		cpu_irq_restore(flags);
@@ -1063,9 +996,6 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket,
 		uint8_t * buf, iram_size_t buf_size,
 		udd_callback_trans_t callback)
 {
-#ifdef UDD_EP_FIFO_SUPPORTED
-	bool b_dir_in = Is_udd_endpoint_in(ep & USB_EP_ADDR_MASK);
-#endif
 	udd_ep_job_t *ptr_job;
 	irqflags_t flags;
 
@@ -1099,30 +1029,10 @@ bool udd_ep_run(udd_ep_id_t ep, bool b_shortpacket,
 	ptr_job->call_trans = callback;
 	ptr_job->b_shortpacket = b_shortpacket || (buf_size == 0);
 
-#ifdef UDD_EP_FIFO_SUPPORTED
-	// No DMA support
-	if (!Is_udd_endpoint_dma_supported(ep)) {
-		dbg_print("ex%x.%c%d\n\r", ep, b_dir_in ? 'i':'o', buf_size);
-		flags = cpu_irq_save();
-		udd_enable_endpoint_interrupt(ep);
-		if (b_dir_in) {
-			udd_disable_endpoint_bank_autoswitch(ep);
-			udd_enable_in_send_interrupt(ep);
-		} else {
-			udd_disable_endpoint_bank_autoswitch(ep);
-			udd_enable_out_received_interrupt(ep);
-		}
-		cpu_irq_restore(flags);
-		return true;
-	}
-#endif // UDD_EP_FIFO_SUPPORTED
-
-#ifdef UDD_EP_DMA_SUPPORTED
 	// Request first DMA transfer
 	dbg_print("(exDMA%x) ", ep);
 	udd_ep_trans_done(ep);
 	return true;
-#endif
 }
 
 
@@ -1130,19 +1040,9 @@ void udd_ep_abort(udd_ep_id_t ep)
 {
 	uint8_t ep_index = ep & USB_EP_ADDR_MASK;
 
-#ifdef UDD_EP_FIFO_SUPPORTED
-	if (!Is_udd_endpoint_dma_supported(ep_index)) {
-		// Disable interrupts
-		udd_disable_endpoint_interrupt(ep_index);
-		udd_disable_out_received_interrupt(ep_index);
-		udd_disable_in_send_interrupt(ep_index);
-	} else
-#endif
-	{
-		// Stop DMA transfer
-		udd_disable_endpoint_dma_interrupt(ep_index);
-		udd_endpoint_dma_set_control(ep_index, 0);
-	}
+	// Stop DMA transfer
+	udd_disable_endpoint_dma_interrupt(ep_index);
+	udd_endpoint_dma_set_control(ep_index, 0);
 	udd_disable_endpoint_interrupt(ep_index);
 	// Kill IN banks
 	if (ep & USB_EP_DIR_IN) {
@@ -1664,7 +1564,6 @@ static void udd_ep_finish_job(udd_ep_job_t * ptr_job, bool b_abort, uint8_t ep_n
 			UDD_EP_TRANSFER_OK, ptr_job->buf_size, ep_num);
 }
 
-#ifdef UDD_EP_DMA_SUPPORTED
 static void udd_ep_trans_done(udd_ep_id_t ep)
 {
 	uint32_t udd_dma_ctrl = 0;
@@ -1757,101 +1656,6 @@ static void udd_ep_trans_done(udd_ep_id_t ep)
 	// Call callback to signal end of transfer
 	udd_ep_finish_job(ptr_job, false, ep);
 }
-#endif
-
-#ifdef UDD_EP_FIFO_SUPPORTED
-static void udd_ep_in_sent(udd_ep_id_t ep)
-{
-	udd_ep_job_t *ptr_job = &udd_ep_job[ep - 1];
-	uint8_t *ptr_src = &ptr_job->buf[ptr_job->buf_cnt];
-	uint8_t *ptr_dst = (uint8_t *) & udd_get_endpoint_fifo_access(ep, 8);
-	uint32_t pkt_size = udd_get_endpoint_size(ep);
-	uint32_t nb_data = 0, i;
-	uint32_t nb_remain;
-	irqflags_t flags;
-
-	// All transfer done, including ZLP, Finish Job
-	if (ptr_job->buf_cnt >= ptr_job->buf_size && !ptr_job->b_shortpacket) {
-		flags = cpu_irq_save();
-		udd_disable_in_send_interrupt(ep);
-		udd_disable_endpoint_interrupt(ep);
-		cpu_irq_restore(flags);
-
-		ptr_job->buf_size = ptr_job->buf_cnt; // buf_size is passed to callback as XFR count
-		udd_ep_finish_job(ptr_job, false, ep);
-		return;
-	} else {
-		// ACK TXINI
-		udd_ack_in_send(ep);
-		// Fill FIFO
-		ptr_dst = (uint8_t *) & udd_get_endpoint_fifo_access(ep, 8);
-		ptr_src = &ptr_job->buf[ptr_job->buf_cnt];
-		nb_remain = ptr_job->buf_size - ptr_job->buf_cnt;
-		// Fill a bank even if no data (ZLP)
-		nb_data = min(nb_remain, pkt_size);
-		// Modify job information
-		ptr_job->buf_cnt += nb_data;
-		ptr_job->buf_load = nb_data;
-
-		// Copy buffer to FIFO
-		for (i = 0; i < nb_data; i++) {
-			*ptr_dst++ = *ptr_src++;
-		}
-		// Switch to next bank
-		udd_ack_fifocon(ep);
-		// ZLP?
-		if (nb_data < pkt_size) {
-			ptr_job->b_shortpacket = false;
-		}
-	}
-}
-
-static void udd_ep_out_received(udd_ep_id_t ep)
-{
-	udd_ep_job_t *ptr_job = &udd_ep_job[ep - 1];
-	uint32_t nb_data = 0, i;
-	uint32_t nb_remain = ptr_job->buf_size - ptr_job->buf_cnt;
-	uint32_t pkt_size = udd_get_endpoint_size(ep);
-	uint8_t *ptr_src = (uint8_t *) & udd_get_endpoint_fifo_access(ep, 8);
-	uint8_t *ptr_dst = &ptr_job->buf[ptr_job->buf_cnt];
-	bool b_full = false, b_short = false;
-
-	// Clear RX OUT
-	udd_ack_out_received(ep);
-
-	// Read byte count
-	nb_data = udd_byte_count(ep);
-	if (nb_data < pkt_size) {
-		b_short = true;
-	}
-	//dbg_print("o%d ", ep);
-	//dbg_print("%d ", nb_data);
-	// Copy data if there is
-	if (nb_data > 0) {
-		if (nb_data >= nb_remain) {
-			nb_data = nb_remain;
-			b_full = true;
-		}
-		// Modify job information
-		ptr_job->buf_cnt += nb_data;
-		ptr_job->buf_load = nb_data;
-		// Copy FIFO to buffer
-		for (i = 0; i < nb_data; i++) {
-			*ptr_dst++ = *ptr_src++;
-		}
-	}
-	// Clear FIFO Status
-	udd_ack_fifocon(ep);
-	// Finish job on error or short packet
-	if (b_full || b_short) {
-		//dbg_print("EoO%d\n\r", ep);
-		udd_disable_out_received_interrupt(ep);
-		udd_disable_endpoint_interrupt(ep);
-		ptr_job->buf_size = ptr_job->buf_cnt; // buf_size is passed to callback as XFR count
-		udd_ep_finish_job(ptr_job, false, ep);
-	}
-}
-#endif // #ifdef UDD_EP_FIFO_SUPPORTED
 
 static bool udd_ep_interrupt(void)
 {
@@ -1863,7 +1667,6 @@ static bool udd_ep_interrupt(void)
 		// Get job corresponding at endpoint
 		ptr_job = &udd_ep_job[ep - 1];
 
-#ifdef UDD_EP_DMA_SUPPORTED
 		// Check DMA event
 		if (Is_udd_endpoint_dma_interrupt_enabled(ep)
 				&& Is_udd_endpoint_dma_interrupt(ep)) {
@@ -1888,36 +1691,7 @@ static bool udd_ep_interrupt(void)
 			udd_ep_trans_done(ep);
 			return true;
 		}
-#endif
-#ifdef UDD_EP_FIFO_SUPPORTED
-		// Check RXRDY and TXEMPTY event for none DMA endpoints
-		if (!Is_udd_endpoint_dma_supported(ep)
-				&& Is_udd_endpoint_interrupt_enabled(ep)) {
-			dbg_print("ep%x: ", ep);
-			// RXOUT: Full packet received
-			if (Is_udd_out_received(ep)
-				&& Is_udd_out_received_interrupt_enabled(ep)) {
-				dbg_print("Out ");
-				udd_ep_out_received(ep);
-				return true;
-			}
-			// TXIN: packet sent
-			if (Is_udd_in_send(ep)
-					&& Is_udd_in_send_interrupt_enabled(ep)) {
-				dbg_print("In ");
-				udd_ep_in_sent(ep);
-				return true;
-			}
-			// Errors: Abort?
-			if (Is_udd_overflow(ep)
-					|| Is_udd_underflow(ep)
-					|| Is_udd_crc_error(ep)) {
-				dbg_print("Err ");
-				udd_ep_abort(ep);
-				return true;
-			}
-		}
-#endif // UDD_EP_FIFO_SUPPORTED
+
 		// Check empty bank interrupt event
 		if (Is_udd_endpoint_interrupt_enabled(ep)) {
 			dbg_print("bg%x: ", ep);
