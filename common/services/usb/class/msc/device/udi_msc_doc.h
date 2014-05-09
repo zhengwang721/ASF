@@ -162,14 +162,14 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
 /**
  * \page asfdoc_udi_msc_exqsg Quick start guide for USB device Mass Storage module (UDI MSC)
  *
- * This is the quick start guide for the \ref asfdoc_udi_msc_group 
- * "USB device interface MSC module (UDI MSC)" with step-by-step instructions on 
+ * This is the quick start guide for the \ref asfdoc_udi_msc_group
+ * "USB device interface MSC module (UDI MSC)" with step-by-step instructions on
  * how to configure and use the modules in a selection of use cases.
  *
  * The use cases contain several code fragments. The code fragments in the
  * steps for setup can be copied into a custom initialization function, while
  * the steps for usage can be copied into, e.g., the main application function.
- * 
+ *
  * \section udi_msc_basic_use_case Basic use case
  * In this basic use case, the "USB MSC (Single Interface Device)" module is used.
  * The "USB MSC (Composite Device)" module usage is described in \ref udi_msc_use_cases
@@ -179,6 +179,196 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  * As a USB device, it follows common USB device setup steps. Please refer to
  * \ref asfdoc_udc_basic_use_case_setup "USB Device Basic Setup".
  *
+ * Common abstraction layer is applied for memory interfaces. It provides interfaces between:
+ * Memory and USB, Memory and RAM, Memory and Memory.
+ *
+ *
+ /** \name Control Interface
+ */
+//@{
+/** \brief Initializes the LUN access locker.
+ *
+ * \return \c true if the locker was successfully initialized, else \c false.
+ */
+extern bool ctrl_access_init(void);
+
+/** \brief Returns the number of LUNs.
+ *
+ * \return Number of LUNs in the system.
+ */
+extern U8 get_nb_lun(void);
+
+/** \brief Returns the current LUN.
+ *
+ * \return Current LUN.
+ *
+ * \todo Implement.
+ */
+extern U8 get_cur_lun(void);
+
+/** \brief Tests the memory state and initializes the memory if required.
+ *
+ * The TEST UNIT READY SCSI primary command allows an application client to poll
+ * a LUN until it is ready without having to allocate memory for returned data.
+ *
+ * This command may be used to check the media status of LUNs with removable
+ * media.
+ *
+ * \param lun Logical Unit Number.
+ *
+ * \return Status.
+ */
+extern Ctrl_status mem_test_unit_ready(U8 lun);
+
+/** \brief Returns the address of the last valid sector (512 bytes) in the
+ *         memory.
+ *
+ * \param lun           Logical Unit Number.
+ * \param u32_nb_sector Pointer to the address of the last valid sector.
+ *
+ * \return Status.
+ */
+extern Ctrl_status mem_read_capacity(U8 lun, U32 *u32_nb_sector);
+
+/** \brief Returns the size of the physical sector.
+ *
+ * \param lun Logical Unit Number.
+ *
+ * \return Sector size (unit: 512 bytes).
+ */
+extern U8 mem_sector_size(U8 lun);
+
+/** \brief Unload/load the medium.
+ *
+ * \param lun Logical Unit Number.
+ * \param unload \c true to unload the medium, \c false to load the medium.
+ *
+ * \return \c true if unload/load success, else \c false.
+ */
+extern bool mem_unload(U8 lun, bool unload);
+
+/** \brief Returns the write-protection state of the memory.
+ *
+ * \param lun Logical Unit Number.
+ *
+ * \return \c true if the memory is write-protected, else \c false.
+ *
+ * \note Only used by removable memories with hardware-specific write
+ *       protection.
+ */
+extern bool mem_wr_protect(U8 lun);
+
+/** \brief Tells whether the memory is removable.
+ *
+ * \param lun Logical Unit Number.
+ *
+ * \return \c true if the memory is removable, else \c false.
+ */
+extern bool mem_removal(U8 lun);
+
+/** \brief Returns a pointer to the LUN name.
+ *
+ * \param lun Logical Unit Number.
+ *
+ * \return Pointer to the LUN name string.
+ */
+extern const char *mem_name(U8 lun);
+//@}
+
+ /**
+ * \name MEM <-> USB Interface
+ *
+ */
+//@{
+
+ /**
+ * \brief Transfers data from the memory to USB.
+ *
+ * \param[in] lun       Logical Unit Number.
+ * \param[in] addr      Address of first memory sector to read.
+ * \param[in] nb_sector Number of sectors to transfer.
+ *
+ * \return Status.
+ */
+extern Ctrl_status memory_2_usb(U8 lun, U32 addr, U16 nb_sector);
+
+/** \brief Transfers data from USB to the memory.
+ *
+ * \param[in] lun       Logical Unit Number.
+ * \param[in] addr      Address of first memory sector to write.
+ * \param[in] nb_sector Number of sectors to transfer.
+ *
+ * \return Status.
+ */
+extern Ctrl_status usb_2_memory(U8 lun, U32 addr, U16 nb_sector);
+//@}
+
+/** \name MEM <-> RAM Interface
+ */
+//@{
+
+/** \brief Copies 1 data sector from the memory to RAM.
+ *
+ * \param[in] lun   Logical Unit Number.
+ * \param[in] addr  Address of first memory sector to read.
+ * \param[in] ram   Pointer to RAM buffer to write.
+ *
+ * \return Status.
+ */
+extern Ctrl_status memory_2_ram(U8 lun, U32 addr, void *ram);
+
+/** \brief Copies 1 data sector from RAM to the memory.
+ *
+ * \param[in] lun   Logical Unit Number.
+ * \param[in] addr  Address of first memory sector to write.
+ * \param[in] ram   Pointer to RAM buffer to read.
+ *
+ * \return Status.
+ */
+extern Ctrl_status ram_2_memory(U8 lun, U32 addr, const void *ram);
+//@}
+
+/** \name Streaming MEM <-> MEM Interface
+ */
+//@{
+
+/** Erroneous streaming data transfer ID.*/
+#define ID_STREAM_ERR         0xFF
+
+/** \brief Copies data from one memory to another.
+ *
+ * \param[in] src_lun   Source Logical Unit Number.
+ * \param[in] src_addr  Source address of first memory sector to read.
+ * \param[in] dest_lun  Destination Logical Unit Number.
+ * \param[in] dest_addr Destination address of first memory sector to write.
+ * \param[in] nb_sector Number of sectors to copy.
+ *
+ * \return Status.
+ */
+extern Ctrl_status stream_mem_to_mem(U8 src_lun, U32 src_addr, U8 dest_lun, U32 dest_addr, U16 nb_sector);
+
+/** \brief Returns the state of a streaming data transfer.
+ *
+ * \param[in] id  Transfer ID.
+ *
+ * \return Status.
+ *
+ * \todo Implement.
+ */
+extern Ctrl_status stream_state(U8 id);
+
+/*! \brief Stops a streaming data transfer.
+ *
+ * \param[in] id  Transfer ID.
+ *
+ * \return Number of remaining sectors.
+ *
+ * \todo Implement.
+ */
+extern U16 stream_stop(U8 id);
+//@}
+
+/**
  * \section udi_msc_basic_use_case_usage Usage steps
  *
  * \subsection udi_msc_basic_use_case_usage_code Example code
@@ -230,7 +420,7 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  *   - \code #define UDI_MSC_ENABLE_EXT() my_callback_msc_enable()
 	extern bool my_callback_msc_enable(void); \endcode
  *     \note After the device enumeration (detecting and identifying USB devices),
- *     the USB host starts the device configuration. When the USB MSC interface 
+ *     the USB host starts the device configuration. When the USB MSC interface
  *     from the device is accepted by the host, the USB host enables this interface and the
  *     UDI_MSC_ENABLE_EXT() callback function is called and return true.
  *     Thus, when this event is received, the tasks which call
@@ -240,7 +430,7 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  *     \note When the USB device is unplugged or is reset by the USB host, the USB
  *     interface is disabled and the UDI_MSC_DISABLE_EXT() callback function
  *     is called. Thus, it is recommended to disable the task which is called udi_msc_process_trans().
- * -# The MSC is automatically linked with memory control access component 
+ * -# The MSC is automatically linked with memory control access component
  * which provides the memories interfaces. However, the memory data transfers
  * must be done outside USB interrupt routine. This is done in the MSC process
  * ("udi_msc_process_trans()") called by main loop:
@@ -282,7 +472,7 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  * In this use case, the "USB MSC (Composite Device)" module is used to
  * create a USB composite device. Thus, this USB module can be associated with
  * another "Composite Device" module, like "USB HID Mouse (Composite Device)".
- * 
+ *
  * Also, you can refer to application note
  * <A href="http://www.atmel.com/dyn/resources/prod_documents/doc8445.pdf">
  * AVR4902 ASF - USB Composite Device</A>.
@@ -400,5 +590,39 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  *
  * \subsection asfdoc_udi_msc_config_examples_3_1 SAMD devices (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_clocks.h
+ *
+ * \section asfdoc_udi_msc_config_examples_4 conf_board.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_4_1 AT32UC3A0, AT32UC3A1, AT32UC3B devices (USBB)
+ * \include example\at32uc3a0512_evk1100\conf_board.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_4_2 AT32UC3A3, AT32UC3A4 devices (USBB with high speed support)
+ * \include example\at32uc3a3256_evk1104\conf_board.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_4_3 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U devices (USBC)
+ * \include example\at32uc3c0512c_uc3c_ek\conf_board.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_4_4 SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed)
+ * \include example\sam3x8h_sam3x_ek\conf_board.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_4_5 SAMD devices (USB)
+ * \include example\samd21j18a_samd21_xplained_pro\conf_board.h
+ *
+ * \section asfdoc_udi_msc_config_examples_5 conf_access.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_5_1 AT32UC3A0, AT32UC3A1, AT32UC3B devices (USBB)
+ * \include example\at32uc3a0512_evk1100\conf_access.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_5_2 AT32UC3A3, AT32UC3A4 devices (USBB with high speed support)
+ * \include example\at32uc3a3256_evk1104\conf_access.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_5_3 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U devices (USBC)
+ * \include example\at32uc3c0512c_uc3c_ek\conf_access.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_5_4 SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed)
+ * \include example\sam3x8h_sam3x_ek\conf_access.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_5_5 SAMD devices (USB)
+ * \include example\samd21j18a_samd21_xplained_pro\conf_access.h
  */
 
