@@ -998,7 +998,7 @@ int main( void )
   wdt_init(WDT, wdt_mode, timeout_value, timeout_value);
 
   /* Init Phy Layer */
-  vPhyInitTask(false);
+  phy_init(false);
 
   /* Create timer to monitor tasks execution */
   xMonitorTimer = xTimerCreate((const signed char * const) "Monitor timer",/* A text name, purely to help debugging. */

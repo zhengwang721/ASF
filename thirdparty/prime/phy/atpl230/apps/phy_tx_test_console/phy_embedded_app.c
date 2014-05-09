@@ -48,6 +48,8 @@
 // ASF includes
 #include "asf.h"
 
+#include "conf_pplc_if.h"
+
 // App includes
 #include "conf_example.h"
 #include "phy_embedded_app.h"
@@ -251,7 +253,7 @@ static void prvGetRxTask(void * pvparameters)
   memset(&x_read_msg, 0, sizeof(xPhyMsgRx_t));
   /* set pointer to reception data buffer */
   x_read_msg.data_buf = uc_data_buf;
-    
+
   xPeriod = PRIME_APP_PHY_TIMER_RATE;
   xLastWakeTime = xTaskGetTickCount();
   for(;;){
@@ -276,7 +278,7 @@ static void prvGetRxTask(void * pvparameters)
 
 
 void vPhyEmbeddedAppTask (txPhyEmbeddedConfig_t *xAppPhyCfgTx)
-{    
+{
   phy_mac_crc_disable();
   phy_set_cfg_param(REG_ATPL230_SNA0, sna, sizeof(sna));
 

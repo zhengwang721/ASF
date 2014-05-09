@@ -193,7 +193,7 @@ int main( void )
 	initTimer1ms();
 
 	/* Init Phy Layer */
-	vPhyInitTask(SNIFFER_IF_ENABLE);
+	phy_init(SNIFFER_IF_ENABLE);
 
 	/* Init sniffer */
 	sniffer_if_init(true);

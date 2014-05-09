@@ -192,7 +192,7 @@ int main( void )
 	initTimer1ms();
 
 	/* Init Phy Layer */
-	vPhyInitTask(SERIAL_IF_ENABLE);
+	phy_init(SERIAL_IF_ENABLE);
 
 	/* Init Serial Add on */
 	serial_if_init();
