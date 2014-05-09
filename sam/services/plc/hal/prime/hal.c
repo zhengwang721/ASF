@@ -149,22 +149,23 @@ static void _init_fu_info_list (void)
 static uint8_t ul_time_swap = 100;
 void hal_mtp_signalling (void)
 {
-	if(!ul_time_swap--){
-		if(uc_mtp_enable){
-			uc_mtp_enable = 0;
-		}else{
-			uc_mtp_enable = 1;
-		}
-		ul_time_swap = 100;
-	}
+	// defined by user as the following example
+	// if(!ul_time_swap--){
+		// if(uc_mtp_enable){
+			// uc_mtp_enable = 0;
+		// }else{
+			// uc_mtp_enable = 1;
+		// }
+		// ul_time_swap = 100;
+	// }
 
-	if(uc_mtp_enable){
-		LED_Off(LED0);
-		LED_On(LED1);
-	}else{
-		LED_On(LED0);
-		LED_Off(LED1);
-	}
+	// if(uc_mtp_enable){
+		// LED_Off(LED0);
+		// LED_On(LED1);
+	// }else{
+		// LED_On(LED0);
+		// LED_Off(LED1);
+	// }
 }
 
  /**

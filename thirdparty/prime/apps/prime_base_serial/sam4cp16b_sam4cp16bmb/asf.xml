@@ -2,6 +2,7 @@
 	<project caption="Example application for ATMEL PRIME v1.3 Base Node on SAM4CP16BMB" id="thirdparty.prime.apps.prime_base_serial.sam4cp16bmb">
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_pplc_if.h"/>
 		<build type="header-file" value="conf_buart_if.h"/>
 		<build type="header-file" value="conf_busart_if.h"/>
 		<build type="header-file" value="conf_clock.h"/>
