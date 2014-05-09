@@ -44,6 +44,8 @@
 #ifndef CONF_PPLC_IF_H_INCLUDE
 #define CONF_PPLC_IF_H_INCLUDE
 
+#include "board.h"
+
 /* Select the SPI module that PPLC is connected to */
 #define PPLC_SPI_MODULE     SPI0
 
