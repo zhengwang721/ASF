@@ -46,6 +46,7 @@
 #include "asf.h"
 #include "parts.h"
 #include "conf_prime.h"
+#include "conf_pplc_if.h"
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -69,8 +70,6 @@ static const char FWVS_PIB_VERSION[PRIME_PIB_VERSION_LEN] = PRIME_PIB_VERSION;
 hal_sw_version_info x_sw_version;
 //! Pointer to address to store FU firmware
 static uint32_t ul_fw_mem_address;
-//! Manufacturing Test Procedure status indication
-static uint8_t uc_mtp_enable = 0;
 //! Firmware Information List
 static x_fw_info_list_t x_fw_info_list[HAL_FW_INFO_NUMBER_ID];
 
@@ -146,7 +145,9 @@ static void _init_fu_info_list (void)
  * \note if MAC configuration is not correct the system always enters in this mode
  * Customer should implement the final functionality depending on its needs.
  */
-static uint8_t ul_time_swap = 100;
+//! Manufacturing Test Procedure status indication
+//static uint8_t uc_mtp_enable = 0;
+//static uint8_t ul_time_swap = 100;
 void hal_mtp_signalling (void)
 {
 	// defined by user as the following example

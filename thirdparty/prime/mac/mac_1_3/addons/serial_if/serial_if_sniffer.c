@@ -42,9 +42,19 @@
 */
 
 #include <string.h>
-#include "asf.h"
-//#include "Phy1020.h"
-//#include "Phy1020Qt.h"
+#include "compiler.h"
+
+#include "serial_if_sniffer.h"
+
+// From module: PRIME MAC Layer
+#include <mngl.h>
+#include <prime.h>
+
+// From module: PLC Universal Serial Interface
+#include <usi.h>
+
+// From module: Physical Abstraction Layer (PAL) interface - ATPL230 and PRIME MAC 1.3
+#include <pal.h>
 
 /// @cond 0
 /**INDENT-OFF**/

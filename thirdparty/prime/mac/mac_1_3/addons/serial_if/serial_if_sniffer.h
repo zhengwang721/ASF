@@ -63,7 +63,7 @@ extern "C" {
  *
  * @{
  */
-  
+
 //! \name Serialization of Embedded Sniffer
 //@{
 uint8_t serial_if_sniffer_api_parser(uint8_t* puc_rx_msg, uint16_t len);

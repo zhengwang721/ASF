@@ -41,7 +41,16 @@
 *
 */
 #include <string.h>
-#include "asf.h"
+#include "compiler.h"
+
+#include "serial_if_mlme.h"
+
+// From module: PRIME MAC Layer
+#include <mngl.h>
+#include <prime.h>
+
+// From module: PLC Universal Serial Interface
+#include <usi.h>
 
 /// @cond 0
 /**INDENT-OFF**/

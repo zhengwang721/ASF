@@ -12,6 +12,7 @@
 		<build type="module-config" subtype="path" value="./module_config"/>
 		<build type="include-path" value="."/>
 		<build type="doxygen-entry-point" value="pplc_plc_group"/>
+		<require idref="common.services.ioport"/>		
 		<require idref="sam.drivers.spi"/>
 		<require idref="sam.drivers.pdc"/>
 		<require idref="sam.drivers.pio"/>

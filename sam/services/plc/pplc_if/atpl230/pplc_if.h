@@ -44,6 +44,9 @@
 #ifndef CHIP_PPLC_IF_H_INCLUDED
 #define CHIP_PPLC_IF_H_INCLUDED
 
+
+#include "compiler.h"
+
 /// @cond 0
 /**INDENT-OFF**/
 #ifdef __cplusplus
@@ -51,15 +54,6 @@ extern "C" {
 #endif
 /**INDENT-ON**/
 /// @endcond
-
-#include "board.h"
-
-
-#ifndef PPLC_SPI_MODULE
-#define PPLC_SPI_MODULE     SPI
-/* Chip select used by PPLC internal peripheral  */
-#define PPLC_CS             0
-#endif
 
 /**
  * \ingroup plc_group

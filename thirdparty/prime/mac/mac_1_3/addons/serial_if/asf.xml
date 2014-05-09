@@ -11,6 +11,7 @@
 		<build type="header-file" subtype="api" value="serial_if_mac.h"/>
 		<build type="include-path" value="."/>
 		<require idref="sam.services.plc.usi"/>
+		<require idref="thirdparty.prime.mac_1_3"/>
 		<build type="doxygen-entry-point" value="serial_mac_prime_group"/>
 		<device-support value="atsam4cp16b_0"/>
 		<device-support value="atsam4sd32c"/>
@@ -28,6 +29,7 @@
 		<build type="header-file" subtype="api" value="serial_if_mlme.h"/>
 		<build type="include-path" value="."/>
 		<require idref="sam.services.plc.usi"/>
+		<require idref="thirdparty.prime.mac_1_3"/>
 		<build type="doxygen-entry-point" value="serial_mlme_prime_group"/>
 		<device-support value="atsam4cp16b_0"/>
 		<device-support value="atsam4sd32c"/>
@@ -45,6 +47,7 @@
 		<build type="header-file" subtype="api" value="serial_if_plme.h"/>
 		<build type="include-path" value="."/>
 		<require idref="sam.services.plc.usi"/>
+		<require idref="thirdparty.prime.mac_1_3"/>
 		<build type="doxygen-entry-point" value="serial_plme_prime_group"/>
 		<device-support value="atsam4cp16b_0"/>
 		<device-support value="atsam4sd32c"/>
@@ -62,6 +65,8 @@
 		<build type="header-file" subtype="api" value="serial_if_sniffer.h"/>
 		<build type="include-path" value="."/>
 		<require idref="sam.services.plc.usi"/>
+		<require idref="thirdparty.prime.pal"/>
+		<require idref="thirdparty.prime.mac_1_3"/>
 		<build type="doxygen-entry-point" value="serial_sniffer_prime_group"/>
 		<device-support value="atsam4cp16b_0"/>
 		<device-support value="atsam4sd32c"/>

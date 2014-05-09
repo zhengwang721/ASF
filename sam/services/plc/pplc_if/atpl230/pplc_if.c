@@ -42,8 +42,10 @@
  */
 
 #include "string.h"
-#include "board.h"
+//#include "board.h"
 #include "pplc_if.h"
+#include "conf_pplc_if.h"
+#include "ioport.h"
 #include "sysclk.h"
 #include "spi.h"
 #include "pdc.h"
@@ -454,7 +456,16 @@ void pplc_if_init (void)
   // pplc free
   uc_pplc_is_busy = false;
 
-#ifdef PPLC_INT_ID
+  /* Configure PPLC reset pins */
+  ioport_set_pin_dir(PPLC_ARST_GPIO, IOPORT_DIR_OUTPUT);
+  ioport_set_pin_level(PPLC_ARST_GPIO, PPLC_ARST_INACTIVE_LEVEL);
+
+  ioport_set_pin_dir(PPLC_SRST_GPIO, IOPORT_DIR_OUTPUT);
+  ioport_set_pin_level(PPLC_SRST_GPIO, PPLC_SRST_INACTIVE_LEVEL);
+
+  /* Configure PPLC interruption pin */
+  ioport_set_pin_dir(PPLC_INT_GPIO, IOPORT_DIR_INPUT);
+
   // Configure PPLC Interruption
   pmc_enable_periph_clk(PPLC_INT_ID);
   pio_handler_set(PPLC_INT_PIO, PPLC_INT_ID, PPLC_INT_MASK, \
@@ -464,7 +475,6 @@ void pplc_if_init (void)
   NVIC_ClearPendingIRQ(PPLC_INT_IRQn);
   NVIC_EnableIRQ(PPLC_INT_IRQn);
   pio_enable_interrupt(PPLC_INT_PIO, PPLC_INT_MASK);
-#endif
 }
 
 /**

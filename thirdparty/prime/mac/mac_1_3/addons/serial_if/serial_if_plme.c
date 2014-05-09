@@ -41,9 +41,17 @@
 *
 */
 
- 
 #include <string.h>
-#include "asf.h"
+#include "compiler.h"
+
+#include "serial_if_plme.h"
+
+// From module: PRIME MAC Layer
+#include <mngl.h>
+#include <prime.h>
+
+// From module: PLC Universal Serial Interface
+#include <usi.h>
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -95,7 +103,7 @@ static int _serial_if_plme_unpack_testmode_req (void)
 	uc_pwr_level = (uint8_t)(*puc_rx_buff++);
 
 	// Store the primitive in the circular buffer
-	return(prime_PLME_TESTMODE_request(uc_enable, uc_mode, uc_modulation, 
+	return(prime_PLME_TESTMODE_request(uc_enable, uc_mode, uc_modulation,
 		uc_pwr_level));
 }
 
@@ -147,7 +155,7 @@ static int _serial_if_plme_unpack_set_req (void)
 	if (us_pib_attr == 0x8083) {   // PHY_AGC
 		// Store the primitive in the circular buffer
 		//2: mode, gain
-		return(prime_PLME_SET_BUF_request(us_pib_attr, (uint8_t *)puc_rx_buff, 2));   
+		return(prime_PLME_SET_BUF_request(us_pib_attr, (uint8_t *)puc_rx_buff, 2));
 	} else if (us_pib_attr == 0x8089) {  // PHY_TX_PARAMS
 		puc_rx_buff2 = puc_rx_buff;
 		//scheme = (uint8_t)(*puc_rx_buff2++);
@@ -163,12 +171,12 @@ static int _serial_if_plme_unpack_set_req (void)
 			us_len += puc_rx_buff2-puc_rx_buff;
 		}
 		// Store the primitive in the circular buffer
-		return(prime_PLME_SET_BUF_request(us_pib_attr, (uint8_t *)puc_rx_buff, 
+		return(prime_PLME_SET_BUF_request(us_pib_attr, (uint8_t *)puc_rx_buff,
 			us_len));
 	} else {
 		//ul_pib_attr_val = getUint32((uint8_t **)&puc_rx_buff);
-		ul_pib_attr_val = ((uint32_t)puc_rx_buff[0] << 24) | 
-			((uint32_t)puc_rx_buff[1] << 16) | ((uint32_t)puc_rx_buff[2] << 8) | 
+		ul_pib_attr_val = ((uint32_t)puc_rx_buff[0] << 24) |
+			((uint32_t)puc_rx_buff[1] << 16) | ((uint32_t)puc_rx_buff[2] << 8) |
 			(uint32_t)puc_rx_buff[3];
 		// Store the primitive in the circular buffer
 		return(prime_PLME_SET_request(us_pib_attr, ul_pib_attr_val));
@@ -184,7 +192,7 @@ static int _serial_if_plme_unpack_set_req (void)
 *
 * \retval length of the buffer packet
 */
-static int _serial_if_plme_pack_plme_callback (uint8_t *puc_plme_command, 
+static int _serial_if_plme_pack_plme_callback (uint8_t *puc_plme_command,
 		int l_len)
 {
 	uint8_t *puc_command;
@@ -193,14 +201,14 @@ static int _serial_if_plme_pack_plme_callback (uint8_t *puc_plme_command,
 	memcpy(commandPlmeToPack, puc_plme_command, l_len);
 	switch (((PlmeCommand*)puc_command)->cmd) {
 		case PRIME_PLME_RESET_CONFIRM:
-		case PRIME_PLME_SLEEP_CONFIRM: 
+		case PRIME_PLME_SLEEP_CONFIRM:
 		case PRIME_PLME_RESUME_CONFIRM:
-		case PRIME_PLME_TESTMODE_CONFIRM: 
+		case PRIME_PLME_TESTMODE_CONFIRM:
 			*puc_command++ = ((PlmeResult*)commandPlmeToPack)->cmd;
 			*puc_command++ = ((PlmeResult*)commandPlmeToPack)->result;
 			return(puc_command - puc_plme_command);
 
-		case PRIME_PLME_GET_CONFIRM:	
+		case PRIME_PLME_GET_CONFIRM:
 			if (l_len == sizeof(PlmeGetValue)) {
 				puc_command += 2;// (cmd + result)
 				*puc_command++ = commandPlmeToPack[2]; // pibAttrib - high part
@@ -252,7 +260,7 @@ uint8_t serial_if_plme_api_parser (uint8_t *puc_rx_msg, uint16_t us_len)
 	int8_t c_result = -1;
 
 	// Extract command
-	uc_cmd = CMD_PRIME_PROTOCOL(puc_rx_msg[0]);	
+	uc_cmd = CMD_PRIME_PROTOCOL(puc_rx_msg[0]);
 	UNUSED(us_len);
 
 	// Pointer to message data
@@ -268,13 +276,13 @@ uint8_t serial_if_plme_api_parser (uint8_t *puc_rx_msg, uint16_t us_len)
 			c_result = prime_PLME_SLEEP_request();
 			break;
 
-		case PRIME_PLME_RESUME_REQUEST:             
+		case PRIME_PLME_RESUME_REQUEST:
 			c_result = prime_PLME_RESUME_request();
-			break; 
+			break;
 
 		case PRIME_PLME_TESTMODE_REQUEST:
 			c_result = _serial_if_plme_unpack_testmode_req();
-			break; 
+			break;
 
 		case PRIME_PLME_GET_REQUEST:
 			c_result = _serial_if_plme_unpack_get_req();
@@ -292,14 +300,14 @@ uint8_t serial_if_plme_api_parser (uint8_t *puc_rx_msg, uint16_t us_len)
 		return 1;
 	} else {
 		return 0;
-	}  
+	}
 }
 
 //**************************************************************************
 /** @brief	Function to encapsulate PLME Tx Control Process
 
-	 @param		
-	@return		
+	 @param
+	@return
 
 This function will be called using a pointer
 **************************************************************************/
@@ -311,7 +319,7 @@ int8_t serial_if_plme_process (void)
 
 	l_len = prime_PLME_callback(NewPlmeCallBackCmd);
 	if (l_len > 0) {
-		l_packet_len = _serial_if_plme_pack_plme_callback(NewPlmeCallBackCmd, 
+		l_packet_len = _serial_if_plme_pack_plme_callback(NewPlmeCallBackCmd,
 			l_len);
 		// Pack and send the primitive
 		x_pkt_usi.uc_protocol_type = PROTOCOL_PLME_PRIME;
