@@ -11,7 +11,6 @@
 				<keyword value="PLC"/>
 				<keyword value="PRIME"/>
 			</info>
-			<require idref="sam.services.plc.hal.prime"/>
 			<require idref="sam.services.plc.pcrc"/>
 			<require idref="thirparty.prime.pal.atpl230_primemac13"/>
 			<device-support value="atsam4cp16b_0"/>
