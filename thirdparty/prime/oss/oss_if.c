@@ -66,7 +66,7 @@
 #include <usi.h>
 
 // From module: PRIME IEC 61334-4-32 Convergence Layer
-#include <Sscs432.h>
+#include <sscs432.h>
 
 // From module: PRIME MAC Layer
 #include <mngl.h>

@@ -68,7 +68,7 @@ extern "C" {
 #include "conf_board.h"
 
 //sscs432
-#include "Sscs432.h"
+#include "sscs432.h"
 #include "dl432.h"
 
 
