@@ -3,7 +3,7 @@
  *
  * \brief SAM4C clock configuration.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -93,6 +93,8 @@
 #define CONFIG_CPCLK_PRES           1
 
 // ===== USB Clock Source Options   (Fusb = Fpllb / USB_div)
+// Only available for SAM4C32E device, for example:
+// - Fpllb = 96MHZ and USB_div = 2, then Fusb = 96 / 2 = 48MHz
 //#define CONFIG_USBCLK_DIV           2
 
 // ===== Main processor frequency (MCK)
