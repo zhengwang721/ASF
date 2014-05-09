@@ -1083,7 +1083,10 @@ static inline void usart_disable_transceiver(
  *		<th>Changelog</th>
  *	</tr>
  *  <tr>
- *		<td>Add support for SAM R21/D10/D11 (same features as SAMD21).</td>
+ *		<td>Add support for SAMD10/D11 (same features as SAMD21).</td>
+ *  </tr>
+ *  <tr>
+ *		<td>Add support for SAMR21 (same features as SAMD21).</td>
  *  </tr>
  *	<tr>
  *		<td>Add support for SAMD21 and added new feature as below:
@@ -1216,8 +1219,8 @@ static inline void usart_disable_transceiver(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>E</td>
- *		<td>04/2014</td>
+ *		<td>F</td>
+ *		<td>05/2014</td>
  *		<td>Add support for SAMD10/D11.</td>
  *	</tr>
  *	<tr>
