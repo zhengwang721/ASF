@@ -10,7 +10,9 @@
 		<build type="c-source" value="serial_432_if.c"/>
 		<build type="header-file" subtype="api" value="serial_432_if.h"/>
 		<build type="include-path" value="."/>
+		<build type="include-path" value="../../include"/>
 		<require idref="sam.services.plc.usi"/>
+		<require idref="thirdparty.prime.sscs_4_32"/>
 		<build type="doxygen-entry-point" value="serial_sscs_prime_group"/>
 		<device-support value="atsam4cp16b_0"/>
 		<device-support value="atsam4sd32c"/>

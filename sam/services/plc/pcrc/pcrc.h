@@ -68,10 +68,10 @@ extern "C" {
  */
 enum PCRC_CRC_types
 {
-  PCRC_CRC_TYPE_8       = 0,
-  PCRC_CRC_TYPE_16      = 1,
-  PCRC_CRC_TYPE_24      = 2,
-  PCRC_CRC_TYPE_32      = 3,
+  PCRC_CRC_TYPE_8 = 0,
+  PCRC_CRC_TYPE_16 = 1,
+  PCRC_CRC_TYPE_24 = 2,
+  PCRC_CRC_TYPE_32 = 3,
 };
 
 //! \name Header type

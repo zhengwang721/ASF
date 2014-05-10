@@ -67,7 +67,7 @@ extern "C" {
 
 //! \name Frequency to poll internal usart buffer (Hz)
 //@{
-#define FREQ_TIMER_POLL_USART     100		
+#define FREQ_TIMER_POLL_USART     100
 //@}
 
 //! \name Manage interruption priorities

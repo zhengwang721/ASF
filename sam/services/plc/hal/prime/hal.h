@@ -106,12 +106,12 @@ extern "C" {
 
 //! \name Base node table space in flash
 //@{
-#define HAL_BASE_NODE_TABLE_INIT      0xF000
+#define HAL_BASE_NODE_TABLE_INIT          0xF000
 //@}
 
 //! \name Bootloader watchdog mode
 //@{
-#define HAL_BOOTLOADER_WD_MODE					0xA1   // Internal watchdog enabled
+#define HAL_BOOTLOADER_WD_MODE            0xA1   // Internal watchdog enabled
 //@}
 
 //! \name Flash memory states
@@ -132,7 +132,7 @@ typedef struct
 
 /*! \name Information of PRIME version */
 // @{
-#define HAL_PRIME_VERSION_SIZE		32
+#define HAL_PRIME_VERSION_SIZE           32
 typedef struct _hal_sw_version_info
 {
 	uint16_t us_vendor_id;
