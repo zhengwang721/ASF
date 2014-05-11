@@ -46,6 +46,8 @@
 
 #include "board.h"
 
+#if BOARD == SAM4CP16BMB
+
 /* Select the SPI module that PPLC is connected to */
 #define PPLC_SPI_MODULE     SPI0
 
@@ -91,6 +93,56 @@
 #define PPLC_SRST_ID     ID_PIOC
 #define PPLC_SRST_TYPE   PIO_OUTPUT_1
 #define PPLC_SRST_ATTR   PIO_DEFAULT
+
+#else
+
+/* Select the SPI module that PPLC is connected to */
+#define PPLC_SPI_MODULE     SPI
+
+/* Chip select used by PPLC internal peripheral  */
+#define PPLC_CS             0
+
+/* Interruption pin used by PPLC internal peripheral */
+#define PPLC_INT_GPIO   (PIO_PA15_IDX)
+#define PPLC_INT_FLAGS (IOPORT_MODE_DEBOUNCE)
+#define PPLC_INT_SENSE (IOPORT_SENSE_FALLING)
+
+#define PPLC_INT       {PIO_PA15, PIOA, ID_PIOA, PIO_INPUT, \
+		PIO_DEBOUNCE | PIO_IT_FALL_EDGE}
+#define PPLC_INT_MASK  PIO_PA15
+#define PPLC_INT_PIO   PIOA
+#define PPLC_INT_ID    ID_PIOA
+#define PPLC_INT_TYPE  PIO_INPUT
+#define PPLC_INT_ATTR  (PIO_DEBOUNCE | PIO_IT_FALL_EDGE)
+#define PPLC_INT_IRQn  PIOA_IRQn
+ 
+/* Asynchronous PPLC Reset pin definition */ 
+#define PPLC_ARST_GPIO             (PIO_PA27_IDX)
+#define PPLC_ARST_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_LOW
+#define PPLC_ARST_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
+
+/* Wrapper macros to ensure common naming across all boards */
+#define PPLC_ARST       {PIO_PA27, PIOA, ID_PIOA, PIO_OUTPUT_1, PIO_DEFAULT}
+#define PPLC_ARST_MASK   PIO_PA27
+#define PPLC_ARST_PIO    PIOA
+#define PPLC_ARST_ID     ID_PIOA
+#define PPLC_ARST_TYPE   PIO_OUTPUT_1
+#define PPLC_ARST_ATTR   PIO_DEFAULT
+
+/* Synchronous PPLC Reset pin definition */ 
+#define PPLC_SRST_GPIO             (PIO_PA28_IDX)
+#define PPLC_SRST_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_LOW
+#define PPLC_SRST_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
+
+/* Wrapper macros to ensure common naming across all boards */
+#define PPLC_SRST       {PIO_PA28, PIOA, ID_PIOA, PIO_OUTPUT_1, PIO_DEFAULT}
+#define PPLC_SRST_MASK   PIO_PA28
+#define PPLC_SRST_PIO    PIOA
+#define PPLC_SRST_ID     ID_PIOA
+#define PPLC_SRST_TYPE   PIO_OUTPUT_1
+#define PPLC_SRST_ATTR   PIO_DEFAULT
+
+#endif
 
 #endif  /* CONF_PPLC_IF_H_INCLUDE */
 

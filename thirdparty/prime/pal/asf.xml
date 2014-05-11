@@ -11,7 +11,7 @@
 				<keyword value="PLC"/>
 				<keyword value="PRIME"/>
 			</info>
-			<require idref="thirparty.prime.pal.atpl230_primemac13"/>
+			<require idref="thirdparty.prime.pal.atpl230_primemac13"/>
 			<device-support value="atsam4cp16b_0"/>
 			<device-support value="atsam4sd32c"/>
 			<build type="doxygen-entry-point" value="pal_prime_group"/>
