@@ -634,7 +634,7 @@ static int _serial_if_mac_unpack_establish_req (void)
 	}
 	newMacCallBackCmd->arq = (uint8_t)(*puc_rx_buff++);
 	newMacCallBackCmd->cfpBytes = (((uint16_t)puc_rx_buff[0])<<8) + 
-		uint16_t)puc_rx_buff[1];
+		(uint16_t)puc_rx_buff[1];
 
 	return(prime_MAC_ESTABLISH_request(newMacCallBackCmd->macAddr, 
 		newMacCallBackCmd->type, newMacCallBackCmd->buf, 
@@ -660,7 +660,7 @@ static int _serial_if_mac_unpack_establish_resp (void)
 	// Extract MAC primitive
 	puc_rx_buff = puc_rx;
 	newMacCallBackCmd->handler = (((uint16_t)puc_rx_buff[0])<<8) + 
-		uint16_t)puc_rx_buff[1];
+		(uint16_t)puc_rx_buff[1];
 	puc_rx_buff += 2;
 	newMacCallBackCmd->answer = (uint8_t)(*puc_rx_buff++);
 	newMacCallBackCmd->bufLength = (((uint16_t)puc_rx_buff[0])<<8) + 

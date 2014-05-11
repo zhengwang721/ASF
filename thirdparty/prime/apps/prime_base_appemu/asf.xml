@@ -20,6 +20,7 @@
 		<require idref="common.utils.stdio.stdio_serial"/>
 		<require idref="sam.components.display.c42364a"/>
 		<require idref="sam.services.flash"/>
+		<require idref="sam.services.plc.hal"/>
 		<require idref="thirdparty.prime.oss"/>
 		<info type="gui-flag" value="move-to-root"/>
 	</module>

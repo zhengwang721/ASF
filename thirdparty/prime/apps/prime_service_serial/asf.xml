@@ -16,6 +16,7 @@
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="sam.components.display.c42364a"/>
 			<require idref="sam.services.flash"/>
+			<require idref="sam.services.plc.hal"/>
 			<require idref="thirdparty.prime.oss"/>
 			<require idref="thirdparty.prime.mac_1_3.addons.mlme_serial_if"/>
 			<require idref="thirdparty.prime.mac_1_3.addons.plme_serial_if"/>
@@ -37,6 +38,7 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.utils.stdio.stdio_serial"/>
 			<require idref="sam.services.flash"/>
+			<require idref="sam.services.plc.hal"/>
 			<require idref="thirdparty.prime.oss"/>
 			<require idref="thirdparty.prime.mac_1_3.addons.mlme_serial_if"/>
 			<require idref="thirdparty.prime.mac_1_3.addons.plme_serial_if"/>
