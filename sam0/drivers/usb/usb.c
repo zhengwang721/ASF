@@ -1880,10 +1880,10 @@ void usb_disable(struct usb_module *module_inst)
 void USB_Handler(void)
 {
 	if (_usb_instances->hw->HOST.CTRLA.bit.MODE) {
-		#if !SAMD11
+#if !SAMD11
 		/*host mode ISR */
 		_usb_host_interrupt_handler();
-		#endif
+#endif
 	} else {
 		/*device mode ISR */
 		_usb_device_interrupt_handler();
@@ -1942,9 +1942,9 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 	struct system_pinmux_config pin_config;
 	struct system_gclk_chan_config gclk_chan_config;
 
-	#if !SAMD11
+#if !SAMD11
 	host_pipe_job_busy_status = 0;
-	#endif
+#endif
 
 	_usb_instances = module_inst;
 
@@ -2020,7 +2020,7 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 	memset((uint8_t *)(&usb_descriptor_table.usb_endpoint_table[0]), 0,
 			sizeof(usb_descriptor_table.usb_endpoint_table));
 
-	#if !SAMD11
+#if !SAMD11
 	/* callback related init */
 	for (i = 0; i < USB_HOST_CALLBACK_N; i++) {
 		module_inst->host_callback[i] = NULL;
@@ -2036,7 +2036,7 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 		module_inst->host_pipe_registered_callback_mask[i] = 0;
 		module_inst->host_pipe_enabled_callback_mask[i] = 0;
 	}
-	#endif
+#endif
 
 	/*  device callback related */
 	for (i = 0; i < USB_DEVICE_CALLBACK_N; i++) {
