@@ -7,7 +7,7 @@
  * This file defines a useful set of functions for the AES-GCM mode on SAM
  *devices.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
