@@ -42,7 +42,7 @@
 #include <stdio_serial.h>
 #include <conf_clock.h>
 #include <conf_board.h>
-#include <example1\rstc_example1.h>
+#include <rstc_example1.h>
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- RSTC Reset Controller Example --\r\n" \
