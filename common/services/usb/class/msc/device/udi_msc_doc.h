@@ -179,35 +179,46 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  * As a USB device, it follows common USB device setup steps. Please refer to
  * \ref asfdoc_udc_basic_use_case_setup "USB Device Basic Setup".
  *
- * \subsection udi_msc_basic_use_case_setup_ctrl_access Common abstraction layer for memory interfaces
- * Common abstraction layer provides interfaces between: Memory and USB, Memory and RAM, Memory and Memory.
+ * \section udi_msc_basic_use_case_setup_ctrl_access Common abstraction layer for memory interfaces
+ * Common abstraction layer provides interfaces between Memory and USB.
  *
  * -# MEM <-> USB Interface
  *   \code
       extern Ctrl_status memory_2_usb(U8 lun, U32 addr, U16 nb_sector);
       extern Ctrl_status usb_2_memory(U8 lun, U32 addr, U16 nb_sector);
  \endcode
- *
- * -# MEM <-> RAM Interface
+ * -# ctrl_access is configured through conf_access.h, following will be the configure to use one LUN:
  *   \code
-      extern Ctrl_status memory_2_ram(U8 lun, U32 addr, void *ram);
-      extern Ctrl_status ram_2_memory(U8 lun, U32 addr, const void *ram);
+      #define LUN_0                      ENABME
+      ...
+      #define VIRTUAL_MEM                LUN_0
+      #define LUN_ID_VIRTUAL_MEM         LUN_ID_0
+      #define LUN_0_INCLUDE              "virtual_mem.h"
+      #define Lun_0_test_unit_ready      virtual_test_unit_ready
+      #define Lun_0_read_capacity        virtual_read_capacity
+      #define Lun_0_wr_protect           virtual_wr_protect
+      #define Lun_0_removal              virtual_removal
+      #define Lun_0_usb_read_10          virtual_usb_read_10
+      #define Lun_0_usb_write_10         virtual_usb_write_10
+      #define LUN_0_NAME                 "\"On-Board Virtual Memory\""
+      ...
+      #define ACCESS_USB                true    //! USB interface.
+      ...
+      #define GLOBAL_WR_PROTECT         false   //!
+ \endcode
+ * Since LUN_0 is defined as a "On-Board Virtual Memory", an appropriate value for size of Virtual Memory
+ * on internal RAM should be provided in conf_virtual_mem.h:
+ *   \code
+     //! Size of Virtual Memory on internal RAM (unit 512B)
+     #define VMEM_NB_SECTOR 48 //Internal RAM 24KB (should > 20KB or PC can not format it)
  \endcode
  *
- * -# Streaming MEM <-> MEM Interface
- *   \code
-      extern Ctrl_status stream_mem_to_mem(U8 src_lun, U32 src_addr,
-                         U8 dest_lun, U32 dest_addr, U16 nb_sector);
-      extern Ctrl_status stream_state(U8 id);
-      extern U16 stream_stop(U8 id);
- \endcode
+ * Detailed Examples of the control access configuration, please refer to
+ * \ref asfdoc_udi_msc_config_examples_5 "conf_access.h"
  *
  * More Information about Memory Control Access, please refer to the document:
  * - <a href="http://asf.atmel.com/docs/latest/sam3a/html/group__group__common__services__storage__ctrl__access.html">
  *   Atmel Software Framework - Memory Control Access</a>
- *
- * Examples of the control access configuration, please refer to
- * \ref asfdoc_udi_msc_config_examples_5 "conf_access.h"
  *
  * \section udi_msc_basic_use_case_usage Usage steps
  *
@@ -464,5 +475,8 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  *
  * \subsection asfdoc_udi_msc_config_examples_5_5 SAMD devices (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_access.h
+ *
+ * \section asfdoc_udi_msc_config_examples_6 conf_virtual_mem.h
+ * \include example\samd21j18a_samd21_xplained_pro\conf_virtual_mem.h
  */
 
