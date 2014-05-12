@@ -111,6 +111,10 @@ __always_inline static Pio *arch_ioport_port_to_base(ioport_port_t port)
 #if (SAM4C || SAM4CM || SAM4CP)
 	if (port == IOPORT_PIOC) {
 		return (Pio *)(uintptr_t)PIOC;
+#  ifdef ID_PIOD
+	} else if (port == IOPORT_PIOD) {
+		return (Pio *)(uintptr_t)PIOD;
+#  endif
 	} else {
 		return (Pio *)((uintptr_t)IOPORT_BASE_ADDRESS +
 		       (IOPORT_PIO_OFFSET * port));
