@@ -3,7 +3,7 @@
  *
  * \brief SAM Asynchronous Timer (AST) example 2 alarm wakeup.
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 #include <asf.h>
-#include "example2\ast_example2.h"
+#include "ast_example2.h"
 
 volatile bool flag = false;
 

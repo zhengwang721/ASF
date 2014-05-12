@@ -42,7 +42,7 @@
  */
 
 #include <asf.h>
-#include "example1\ast_example1.h"
+#include "ast_example1.h"
 
 /**
  *  \brief Configure serial console.
