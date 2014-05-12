@@ -143,7 +143,14 @@ static void eic_setup(void)
 //! [enable_eic_module]
 	eic_enable(EIC);
 //! [enable_eic_module]
-	
+
+	struct eic_line_config eic_line_conf;
+	eic_line_conf.eic_mode = EIC_MODE_EDGE_TRIGGERED;
+	eic_line_conf.eic_edge = EIC_EDGE_FALLING_EDGE;
+	eic_line_conf.eic_level = EIC_LEVEL_LOW_LEVEL;
+	eic_line_conf.eic_filter = EIC_FILTER_DISABLED;
+	eic_line_conf.eic_async = EIC_ASYNCH_MODE;
+
 //! [configure_eic_mode]
 	eic_line_set_config(EIC, GPIO_PUSH_BUTTON_EIC_LINE,	&eic_line_conf);
 //! [configure_eic_mode]
@@ -167,8 +174,6 @@ static void eic_setup(void)
  */
 int main(void)
 {
-	struct eic_line_config eic_line_conf;
-
 	/* Initialize the SAM system. */
 	sysclk_init();
 	board_init();
@@ -178,12 +183,6 @@ int main(void)
 
 	/* Output example information. */
 	puts(STRING_HEADER);
-
-	eic_line_conf.eic_mode = EIC_MODE_EDGE_TRIGGERED;
-	eic_line_conf.eic_edge = EIC_EDGE_FALLING_EDGE;
-	eic_line_conf.eic_level = EIC_LEVEL_LOW_LEVEL;
-	eic_line_conf.eic_filter = EIC_FILTER_DISABLED;
-	eic_line_conf.eic_async = EIC_ASYNCH_MODE;
 
 	eic_setup();
 
