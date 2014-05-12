@@ -70,6 +70,9 @@ int main(void)
 	// because the USB management is done by interrupt
 	while (true) {
 		sleepmgr_enter_sleep();
+		if (udi_cdc_is_rx_ready()) {
+			udi_cdc_putc(udi_cdc_getc());
+		}
 	}
 }
 
@@ -87,10 +90,6 @@ void main_sof_action(void)
 {
 	if (!main_b_cdc_enable)
 		return;
-
-	if (udi_cdc_is_rx_ready()) {
-		udi_cdc_putc(udi_cdc_getc());
-	}
 
 	ui_process(udd_get_frame_number());
 }
