@@ -62,7 +62,7 @@
 #endif
 
 #if !(SAMD21) && !(SAMR21) && !(SAMD11)
-# error The current USB Device Driver supports only SAMD21/R21
+# error The current USB Device Driver supports only SAMD21/R21/D11
 #endif
 
 #ifndef UDC_REMOTEWAKEUP_LPM_ENABLE
