@@ -179,194 +179,31 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  * As a USB device, it follows common USB device setup steps. Please refer to
  * \ref asfdoc_udc_basic_use_case_setup "USB Device Basic Setup".
  *
+ * \subsection udi_msc_basic_use_case_setup_ctrl_access Common abstraction layer for memory interfaces
  * Common abstraction layer is applied for memory interfaces. It provides interfaces between:
  * Memory and USB, Memory and RAM, Memory and Memory.
  *
+ * -# MEM <-> USB Interface
+ *   \code
+      extern Ctrl_status memory_2_usb(U8 lun, U32 addr, U16 nb_sector);
+      extern Ctrl_status usb_2_memory(U8 lun, U32 addr, U16 nb_sector);
+ \endcode
  *
- /** \name Control Interface
- */
-//@{
-/** \brief Initializes the LUN access locker.
+ * -# MEM <-> RAM Interface
+ *   \code
+      extern Ctrl_status memory_2_ram(U8 lun, U32 addr, void *ram);
+      extern Ctrl_status ram_2_memory(U8 lun, U32 addr, const void *ram);
+ \endcode
  *
- * \return \c true if the locker was successfully initialized, else \c false.
- */
-extern bool ctrl_access_init(void);
-
-/** \brief Returns the number of LUNs.
- *
- * \return Number of LUNs in the system.
- */
-extern U8 get_nb_lun(void);
-
-/** \brief Returns the current LUN.
- *
- * \return Current LUN.
- *
- * \todo Implement.
- */
-extern U8 get_cur_lun(void);
-
-/** \brief Tests the memory state and initializes the memory if required.
- *
- * The TEST UNIT READY SCSI primary command allows an application client to poll
- * a LUN until it is ready without having to allocate memory for returned data.
- *
- * This command may be used to check the media status of LUNs with removable
- * media.
- *
- * \param lun Logical Unit Number.
- *
- * \return Status.
- */
-extern Ctrl_status mem_test_unit_ready(U8 lun);
-
-/** \brief Returns the address of the last valid sector (512 bytes) in the
- *         memory.
- *
- * \param lun           Logical Unit Number.
- * \param u32_nb_sector Pointer to the address of the last valid sector.
- *
- * \return Status.
- */
-extern Ctrl_status mem_read_capacity(U8 lun, U32 *u32_nb_sector);
-
-/** \brief Returns the size of the physical sector.
- *
- * \param lun Logical Unit Number.
- *
- * \return Sector size (unit: 512 bytes).
- */
-extern U8 mem_sector_size(U8 lun);
-
-/** \brief Unload/load the medium.
- *
- * \param lun Logical Unit Number.
- * \param unload \c true to unload the medium, \c false to load the medium.
- *
- * \return \c true if unload/load success, else \c false.
- */
-extern bool mem_unload(U8 lun, bool unload);
-
-/** \brief Returns the write-protection state of the memory.
- *
- * \param lun Logical Unit Number.
- *
- * \return \c true if the memory is write-protected, else \c false.
- *
- * \note Only used by removable memories with hardware-specific write
- *       protection.
- */
-extern bool mem_wr_protect(U8 lun);
-
-/** \brief Tells whether the memory is removable.
- *
- * \param lun Logical Unit Number.
- *
- * \return \c true if the memory is removable, else \c false.
- */
-extern bool mem_removal(U8 lun);
-
-/** \brief Returns a pointer to the LUN name.
- *
- * \param lun Logical Unit Number.
- *
- * \return Pointer to the LUN name string.
- */
-extern const char *mem_name(U8 lun);
-//@}
-
- /**
- * \name MEM <-> USB Interface
+ * -# Streaming MEM <-> MEM Interface
+ *   \code
+      extern Ctrl_status stream_mem_to_mem(U8 src_lun, U32 src_addr,
+                         U8 dest_lun, U32 dest_addr, U16 nb_sector);
+      extern Ctrl_status stream_state(U8 id);
+      extern U16 stream_stop(U8 id);
+ \encode
  *
  */
-//@{
-
- /**
- * \brief Transfers data from the memory to USB.
- *
- * \param[in] lun       Logical Unit Number.
- * \param[in] addr      Address of first memory sector to read.
- * \param[in] nb_sector Number of sectors to transfer.
- *
- * \return Status.
- */
-extern Ctrl_status memory_2_usb(U8 lun, U32 addr, U16 nb_sector);
-
-/** \brief Transfers data from USB to the memory.
- *
- * \param[in] lun       Logical Unit Number.
- * \param[in] addr      Address of first memory sector to write.
- * \param[in] nb_sector Number of sectors to transfer.
- *
- * \return Status.
- */
-extern Ctrl_status usb_2_memory(U8 lun, U32 addr, U16 nb_sector);
-//@}
-
-/** \name MEM <-> RAM Interface
- */
-//@{
-
-/** \brief Copies 1 data sector from the memory to RAM.
- *
- * \param[in] lun   Logical Unit Number.
- * \param[in] addr  Address of first memory sector to read.
- * \param[in] ram   Pointer to RAM buffer to write.
- *
- * \return Status.
- */
-extern Ctrl_status memory_2_ram(U8 lun, U32 addr, void *ram);
-
-/** \brief Copies 1 data sector from RAM to the memory.
- *
- * \param[in] lun   Logical Unit Number.
- * \param[in] addr  Address of first memory sector to write.
- * \param[in] ram   Pointer to RAM buffer to read.
- *
- * \return Status.
- */
-extern Ctrl_status ram_2_memory(U8 lun, U32 addr, const void *ram);
-//@}
-
-/** \name Streaming MEM <-> MEM Interface
- */
-//@{
-
-/** Erroneous streaming data transfer ID.*/
-#define ID_STREAM_ERR         0xFF
-
-/** \brief Copies data from one memory to another.
- *
- * \param[in] src_lun   Source Logical Unit Number.
- * \param[in] src_addr  Source address of first memory sector to read.
- * \param[in] dest_lun  Destination Logical Unit Number.
- * \param[in] dest_addr Destination address of first memory sector to write.
- * \param[in] nb_sector Number of sectors to copy.
- *
- * \return Status.
- */
-extern Ctrl_status stream_mem_to_mem(U8 src_lun, U32 src_addr, U8 dest_lun, U32 dest_addr, U16 nb_sector);
-
-/** \brief Returns the state of a streaming data transfer.
- *
- * \param[in] id  Transfer ID.
- *
- * \return Status.
- *
- * \todo Implement.
- */
-extern Ctrl_status stream_state(U8 id);
-
-/*! \brief Stops a streaming data transfer.
- *
- * \param[in] id  Transfer ID.
- *
- * \return Number of remaining sectors.
- *
- * \todo Implement.
- */
-extern U16 stream_stop(U8 id);
-//@}
 
 /**
  * \section udi_msc_basic_use_case_usage Usage steps
