@@ -215,11 +215,9 @@ extern "C" {
  * \def CONFIG_USBCLK_DIV
  * \brief Configuration symbol for the USB generic clock divider setting
  *
- * Sets the clock division for the USB generic clock. If a USB clock source is
- * selected with CONFIG_USBCLK_SOURCE, this configuration symbol must also be
- * defined.
+ * Sets the clock division for the USB generic clock.
  *
- * \note Only SAM4C32E supports USB feature.
+ * \note Only SAM4C32E supports USB feature and The USB clock source is PLLB.
  */
 #ifdef __DOXYGEN__
 # define CONFIG_USBCLK_DIV

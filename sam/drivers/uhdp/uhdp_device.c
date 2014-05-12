@@ -110,7 +110,7 @@
  * - UDC_RESUME_EVENT()<br>
  *   Called when USB bus is wakeup
  * - UDC_SOF_EVENT()<br>
- *   Called for each received SOF, Note: Each 1ms in HS/FS mode only.
+ *   Called for each received SOF, Note: Each 1ms in FS mode only.
  *
  * Dynamic callbacks, called "endpoint job" , are registered
  * in udd_ep_job_t structure via the following functions:

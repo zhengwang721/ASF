@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
-
+#include <compiler.h>
 #include <sysclk.h>
 
 /// @cond 0
@@ -124,10 +124,10 @@ void sysclk_set_source(uint32_t ul_src)
 void sysclk_enable_usb(void)
 {
 	Assert(CONFIG_USBCLK_DIV > 0);
-	Assert(pmc_is_locked_pllbck()); /* PLLB is the source of USB clock */
+	Assert(pmc_is_locked_pllbck()); /* PLLB must be the source of USB clock */
 
-	pmc_switch_udpck_to_upllck(CONFIG_USBCLK_DIV - 1);
-	pmc_enable_udpck();
+	PMC->PMC_USB = PMC_USB_ONE | PMC_USB_USBDIV(CONFIG_USBCLK_DIV - 1);
+	PMC->PMC_SCER = PMC_SCER_UHDP;
 	return;
 }
 
@@ -139,7 +139,7 @@ void sysclk_enable_usb(void)
  */
 void sysclk_disable_usb(void)
 {
-	pmc_disable_udpck();
+	PMC->PMC_SCDR = PMC_SCDR_UHDP;
 }
 #endif /* CONFIG_USBCLK_DIV */
 

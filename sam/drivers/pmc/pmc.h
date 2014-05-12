@@ -254,10 +254,10 @@ void pmc_switch_udpck_to_pllack(uint32_t ul_usbdiv);
 #if (SAM3S || SAM4S)
 void pmc_switch_udpck_to_pllbck(uint32_t ul_usbdiv);
 #endif
-#if (SAM3XA || SAM4C32)
+#if (SAM3XA)
 void pmc_switch_udpck_to_upllck(uint32_t ul_usbdiv);
 #endif
-#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C32)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E)
 void pmc_enable_udpck(void);
 void pmc_disable_udpck(void);
 #endif

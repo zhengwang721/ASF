@@ -79,9 +79,9 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 //!
 //! @{
 
-#ifndef UOTGHS_DEVEPTCFG_EPDIR_Pos
+#ifndef UHDP_DEVEPTCFG_EPDIR_Pos
 // Bit pos is not defined in SAM header file but we need it.
-# define UOTGHS_DEVEPTCFG_EPDIR_Pos 8
+# define UHDP_DEVEPTCFG_EPDIR_Pos 8
 #endif
 
 //! @name UHDP Device IP properties
@@ -242,7 +242,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 
 //! Generic macro for UHDP registers that can be arrayed
 //! @{
-#define UOTGHS_ARRAY(reg,index)                   ((&(UOTGHS->reg))[(index)])
+#define UHDP_ARRAY(reg,index)                   ((&(UOTGHS->reg))[(index)])
 //! @}
 
 //! @name UHDP Device endpoint configuration
@@ -263,59 +263,59 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 #define Is_udd_resetting_endpoint(ep)             (Tst_bits(UOTGHS->UOTGHS_DEVEPT, UOTGHS_DEVEPT_EPRST0 << (ep)))
 
   //! Configures the selected endpoint type
-#define udd_configure_endpoint_type(ep, type)     (Wr_bitfield(UOTGHS_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPTYPE_Msk, type))
+#define udd_configure_endpoint_type(ep, type)     (Wr_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPTYPE_Msk, type))
   //! Gets the configured selected endpoint type
-#define udd_get_endpoint_type(ep)                 (Rd_bitfield(UOTGHS_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPTYPE_Msk))
+#define udd_get_endpoint_type(ep)                 (Rd_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPTYPE_Msk))
   //! Enables the bank autoswitch for the selected endpoint
-#define udd_enable_endpoint_bank_autoswitch(ep)   (Set_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_AUTOSW))
+#define udd_enable_endpoint_bank_autoswitch(ep)   (Set_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_AUTOSW))
   //! Disables the bank autoswitch for the selected endpoint
-#define udd_disable_endpoint_bank_autoswitch(ep)    (Clr_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_AUTOSW))
-#define Is_udd_endpoint_bank_autoswitch_enabled(ep) (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_AUTOSW))
+#define udd_disable_endpoint_bank_autoswitch(ep)    (Clr_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_AUTOSW))
+#define Is_udd_endpoint_bank_autoswitch_enabled(ep) (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_AUTOSW))
   //! Configures the selected endpoint direction
-#define udd_configure_endpoint_direction(ep, dir) (Wr_bitfield(UOTGHS_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPDIR, dir))
+#define udd_configure_endpoint_direction(ep, dir) (Wr_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPDIR, dir))
   //! Gets the configured selected endpoint direction
-#define udd_get_endpoint_direction(ep)            (Rd_bitfield(UOTGHS_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPDIR))
-#define Is_udd_endpoint_in(ep)                    (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPDIR))
+#define udd_get_endpoint_direction(ep)            (Rd_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPDIR))
+#define Is_udd_endpoint_in(ep)                    (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPDIR))
   //! Bounds given integer size to allowed range and rounds it up to the nearest
   //! available greater size, then applies register format of UHDP controller
   //! for endpoint size bit-field.
 #define udd_format_endpoint_size(size)            (32 - clz(((uint32_t)min(max(size, 8), 1024) << 1) - 1) - 1 - 3)
   //! Configures the selected endpoint size
-#define udd_configure_endpoint_size(ep, size)     (Wr_bitfield(UOTGHS_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPSIZE_Msk, udd_format_endpoint_size(size)))
+#define udd_configure_endpoint_size(ep, size)     (Wr_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPSIZE_Msk, udd_format_endpoint_size(size)))
   //! Gets the configured selected endpoint size
-#define udd_get_endpoint_size(ep)                 (8 << Rd_bitfield(UOTGHS_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPSIZE_Msk))
+#define udd_get_endpoint_size(ep)                 (8 << Rd_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPSIZE_Msk))
   //! Configures the selected endpoint number of banks
-#define udd_configure_endpoint_bank(ep, bank)     (Wr_bitfield(UOTGHS_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPBK_Msk, bank))
+#define udd_configure_endpoint_bank(ep, bank)     (Wr_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPBK_Msk, bank))
   //! Gets the configured selected endpoint number of banks
-#define udd_get_endpoint_bank(ep)                 (Rd_bitfield(UOTGHS_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPBK_Msk)+1)
+#define udd_get_endpoint_bank(ep)                 (Rd_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPBK_Msk)+1)
   //! Allocates the configuration selected endpoint in DPRAM memory
-#define udd_allocate_memory(ep)                   (Set_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_ALLOC))
+#define udd_allocate_memory(ep)                   (Set_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_ALLOC))
   //! un-allocates the configuration selected endpoint in DPRAM memory
-#define udd_unallocate_memory(ep)                 (Clr_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_ALLOC))
-#define Is_udd_memory_allocated(ep)               (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_ALLOC))
+#define udd_unallocate_memory(ep)                 (Clr_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_ALLOC))
+#define Is_udd_memory_allocated(ep)               (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_ALLOC))
 
   //! Configures selected endpoint in one step
 #define udd_configure_endpoint(ep, type, dir, size, bank) (                               \
-	Wr_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPTYPE_Msk |            \
+	Wr_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPTYPE_Msk |            \
 			UOTGHS_DEVEPTCFG_EPDIR  |                                                           \
 			UOTGHS_DEVEPTCFG_EPSIZE_Msk |                                                       \
 			UOTGHS_DEVEPTCFG_EPBK_Msk ,                                                         \
 			(((uint32_t)(type) << UOTGHS_DEVEPTCFG_EPTYPE_Pos) & UOTGHS_DEVEPTCFG_EPTYPE_Msk) | \
-			(((uint32_t)(dir ) << UOTGHS_DEVEPTCFG_EPDIR_Pos ) & UOTGHS_DEVEPTCFG_EPDIR) |      \
+			(((uint32_t)(dir ) << UHDP_DEVEPTCFG_EPDIR_Pos ) & UOTGHS_DEVEPTCFG_EPDIR) |      \
 			( (uint32_t)udd_format_endpoint_size(size) << UOTGHS_DEVEPTCFG_EPSIZE_Pos) |        \
 			(((uint32_t)(bank) << UOTGHS_DEVEPTCFG_EPBK_Pos) & UOTGHS_DEVEPTCFG_EPBK_Msk))      \
 )
   //! Tests if current endpoint is configured
-#define Is_udd_endpoint_configured(ep)            (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_CFGOK))
+#define Is_udd_endpoint_configured(ep)            (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_CFGOK))
   //! Returns the control direction
-#define udd_control_direction()                   (Rd_bitfield(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], EP_CONTROL), UOTGHS_DEVEPTISR_CTRLDIR))
+#define udd_control_direction()                   (Rd_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], EP_CONTROL), UOTGHS_DEVEPTISR_CTRLDIR))
 
   //! Resets the data toggle sequence
-#define udd_reset_data_toggle(ep)                 (UOTGHS_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_RSTDTS)
+#define udd_reset_data_toggle(ep)                 (UHDP_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_RSTDTS)
   //! Tests if the data toggle sequence is being reset
-#define Is_udd_data_toggle_reset(ep)              (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_RSTDT))
+#define Is_udd_data_toggle_reset(ep)              (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_RSTDT))
   //! Returns data toggle
-#define udd_data_toggle(ep)                       (Rd_bitfield(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_DTSEQ_Msk))
+#define udd_data_toggle(ep)                       (Rd_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_DTSEQ_Msk))
 //! @}
 
 
@@ -338,96 +338,96 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 #define udd_get_interrupt_endpoint_number()       (ctz(((UOTGHS->UOTGHS_DEVISR >> UOTGHS_DEVISR_PEP_Pos) & \
                                                    (UOTGHS->UOTGHS_DEVIMR >> UOTGHS_DEVIMR_PEP_Pos)) |     \
                                                    (1 << MAX_PEP_NB)))
-#define UOTGHS_DEVISR_PEP_Pos   12
-#define UOTGHS_DEVIMR_PEP_Pos   12
+#define UHDP_DEVISR_PEP_Pos   12
+#define UHDP_DEVIMR_PEP_Pos   12
 //! @}
 
 //! @name UHDP Device control endpoint errors
 //! These macros control the endpoint errors.
 //! @{
   //! Enables the STALL handshake
-#define udd_enable_stall_handshake(ep)            (UOTGHS_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_STALLRQS)
+#define udd_enable_stall_handshake(ep)            (UHDP_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_STALLRQS)
   //! Disables the STALL handshake
-#define udd_disable_stall_handshake(ep)           (UOTGHS_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_STALLRQC)
+#define udd_disable_stall_handshake(ep)           (UHDP_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_STALLRQC)
   //! Tests if STALL handshake request is running
-#define Is_udd_endpoint_stall_requested(ep)       (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_STALLRQ))
+#define Is_udd_endpoint_stall_requested(ep)       (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_STALLRQ))
   //! Tests if STALL sent
-#define Is_udd_stall(ep)                          (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_STALLEDI))
+#define Is_udd_stall(ep)                          (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_STALLEDI))
   //! ACKs STALL sent
-#define udd_ack_stall(ep)                         (UOTGHS_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_STALLEDIC)
+#define udd_ack_stall(ep)                         (UHDP_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_STALLEDIC)
   //! Raises STALL sent
-#define udd_raise_stall(ep)                       (UOTGHS_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_STALLEDIS)
+#define udd_raise_stall(ep)                       (UHDP_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_STALLEDIS)
   //! Enables STALL sent interrupt
-#define udd_enable_stall_interrupt(ep)            (UOTGHS_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_STALLEDES)
+#define udd_enable_stall_interrupt(ep)            (UHDP_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_STALLEDES)
   //! Disables STALL sent interrupt
-#define udd_disable_stall_interrupt(ep)           (UOTGHS_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_STALLEDEC)
+#define udd_disable_stall_interrupt(ep)           (UHDP_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_STALLEDEC)
   //! Tests if STALL sent interrupt is enabled
-#define Is_udd_stall_interrupt_enabled(ep)        (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_STALLEDE))
+#define Is_udd_stall_interrupt_enabled(ep)        (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_STALLEDE))
 
   //! Tests if NAK OUT received
-#define Is_udd_nak_out(ep)                        (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_NAKOUTI))
+#define Is_udd_nak_out(ep)                        (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_NAKOUTI))
   //! ACKs NAK OUT received
-#define udd_ack_nak_out(ep)                       (UOTGHS_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_NAKOUTIC)
+#define udd_ack_nak_out(ep)                       (UHDP_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_NAKOUTIC)
   //! Raises NAK OUT received
-#define udd_raise_nak_out(ep)                     (UOTGHS_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_NAKOUTIS)
+#define udd_raise_nak_out(ep)                     (UHDP_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_NAKOUTIS)
   //! Enables NAK OUT interrupt
-#define udd_enable_nak_out_interrupt(ep)          (UOTGHS_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_NAKOUTES)
+#define udd_enable_nak_out_interrupt(ep)          (UHDP_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_NAKOUTES)
   //! Disables NAK OUT interrupt
-#define udd_disable_nak_out_interrupt(ep)         (UOTGHS_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_NAKOUTEC)
+#define udd_disable_nak_out_interrupt(ep)         (UHDP_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_NAKOUTEC)
   //! Tests if NAK OUT interrupt is enabled
-#define Is_udd_nak_out_interrupt_enabled(ep)      (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_NAKOUTE))
+#define Is_udd_nak_out_interrupt_enabled(ep)      (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_NAKOUTE))
 
   //! Tests if NAK IN received
-#define Is_udd_nak_in(ep)                         (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_NAKINI))
+#define Is_udd_nak_in(ep)                         (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_NAKINI))
   //! ACKs NAK IN received
-#define udd_ack_nak_in(ep)                        (UOTGHS_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_NAKINIC)
+#define udd_ack_nak_in(ep)                        (UHDP_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_NAKINIC)
   //! Raises NAK IN received
-#define udd_raise_nak_in(ep)                      (UOTGHS_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_NAKINIS)
+#define udd_raise_nak_in(ep)                      (UHDP_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_NAKINIS)
   //! Enables NAK IN interrupt
-#define udd_enable_nak_in_interrupt(ep)           (UOTGHS_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_NAKINES)
+#define udd_enable_nak_in_interrupt(ep)           (UHDP_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_NAKINES)
   //! Disables NAK IN interrupt
-#define udd_disable_nak_in_interrupt(ep)          (UOTGHS_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_NAKINEC)
+#define udd_disable_nak_in_interrupt(ep)          (UHDP_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_NAKINEC)
   //! Tests if NAK IN interrupt is enabled
-#define Is_udd_nak_in_interrupt_enabled(ep)       (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_NAKINE))
+#define Is_udd_nak_in_interrupt_enabled(ep)       (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_NAKINE))
 
   //! ACKs endpoint isochronous overflow interrupt
-#define udd_ack_overflow_interrupt(ep)            (UOTGHS_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_OVERFIC)
+#define udd_ack_overflow_interrupt(ep)            (UHDP_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_OVERFIC)
   //! Raises endpoint isochronous overflow interrupt
-#define udd_raise_overflow_interrupt(ep)          (UOTGHS_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_OVERFIS)
+#define udd_raise_overflow_interrupt(ep)          (UHDP_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_OVERFIS)
   //! Tests if an overflow occurs
-#define Is_udd_overflow(ep)                       (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_OVERFI))
+#define Is_udd_overflow(ep)                       (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_OVERFI))
   //! Enables overflow interrupt
-#define udd_enable_overflow_interrupt(ep)         (UOTGHS_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_OVERFES)
+#define udd_enable_overflow_interrupt(ep)         (UHDP_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_OVERFES)
   //! Disables overflow interrupt
-#define udd_disable_overflow_interrupt(ep)        (UOTGHS_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_OVERFEC)
+#define udd_disable_overflow_interrupt(ep)        (UHDP_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_OVERFEC)
   //! Tests if overflow interrupt is enabled
-#define Is_udd_overflow_interrupt_enabled(ep)     (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_OVERFE))
+#define Is_udd_overflow_interrupt_enabled(ep)     (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_OVERFE))
 
   //! ACKs endpoint isochronous underflow interrupt
-#define udd_ack_underflow_interrupt(ep)           (UOTGHS_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_UNDERFIC)
+#define udd_ack_underflow_interrupt(ep)           (UHDP_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_UNDERFIC)
   //! Raises endpoint isochronous underflow interrupt
-#define udd_raise_underflow_interrupt(ep)         (UOTGHS_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_UNDERFIS)
+#define udd_raise_underflow_interrupt(ep)         (UHDP_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_UNDERFIS)
   //! Tests if an underflow occurs
-#define Is_udd_underflow(ep)                      (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_UNDERFI))
+#define Is_udd_underflow(ep)                      (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_UNDERFI))
   //! Enables underflow interrupt
-#define udd_enable_underflow_interrupt(ep)        (UOTGHS_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_UNDERFES)
+#define udd_enable_underflow_interrupt(ep)        (UHDP_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_UNDERFES)
   //! Disables underflow interrupt
-#define udd_disable_underflow_interrupt(ep)       (UOTGHS_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_UNDERFEC)
+#define udd_disable_underflow_interrupt(ep)       (UHDP_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_UNDERFEC)
   //! Tests if underflow interrupt is enabled
-#define Is_udd_underflow_interrupt_enabled(ep)    (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_UNDERFE))
+#define Is_udd_underflow_interrupt_enabled(ep)    (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_UNDERFE))
 
   //! Tests if CRC ERROR ISO OUT detected
-#define Is_udd_crc_error(ep)                      (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_CRCERRI))
+#define Is_udd_crc_error(ep)                      (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_CRCERRI))
   //! ACKs CRC ERROR ISO OUT detected
-#define udd_ack_crc_error(ep)                     (UOTGHS_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_CRCERRIC)
+#define udd_ack_crc_error(ep)                     (UHDP_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_CRCERRIC)
   //! Raises CRC ERROR ISO OUT detected
-#define udd_raise_crc_error(ep)                   (UOTGHS_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_CRCERRIS)
+#define udd_raise_crc_error(ep)                   (UHDP_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_CRCERRIS)
   //! Enables CRC ERROR ISO OUT detected interrupt
-#define udd_enable_crc_error_interrupt(ep)        (UOTGHS_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_CRCERRES)
+#define udd_enable_crc_error_interrupt(ep)        (UHDP_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_CRCERRES)
   //! Disables CRC ERROR ISO OUT detected interrupt
-#define udd_disable_crc_error_interrupt(ep)       (UOTGHS_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_CRCERREC)
+#define udd_disable_crc_error_interrupt(ep)       (UHDP_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_CRCERREC)
   //! Tests if CRC ERROR ISO OUT detected interrupt is enabled
-#define Is_udd_crc_error_interrupt_enabled(ep)    (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_CRCERRE))
+#define Is_udd_crc_error_interrupt_enabled(ep)    (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_CRCERRE))
 //! @}
 
 //! @name UHDP Device control endpoint transfer
@@ -435,88 +435,88 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 //! @{
 
   //! Tests if endpoint read allowed
-#define Is_udd_read_enabled(ep)                   (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_RWALL))
+#define Is_udd_read_enabled(ep)                   (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_RWALL))
   //! Tests if endpoint write allowed
-#define Is_udd_write_enabled(ep)                  (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_RWALL))
+#define Is_udd_write_enabled(ep)                  (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_RWALL))
 
   //! Returns the byte count
-#define udd_byte_count(ep)                        (Rd_bitfield(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_BYCT_Msk))
+#define udd_byte_count(ep)                        (Rd_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_BYCT_Msk))
   //! Clears FIFOCON bit
-#define udd_ack_fifocon(ep)                       (UOTGHS_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_FIFOCONC)
+#define udd_ack_fifocon(ep)                       (UHDP_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_FIFOCONC)
   //! Tests if FIFOCON bit set
-#define Is_udd_fifocon(ep)                        (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_FIFOCON))
+#define Is_udd_fifocon(ep)                        (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_FIFOCON))
 
   //! Returns the number of busy banks
-#define udd_nb_busy_bank(ep)                      (Rd_bitfield(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_NBUSYBK_Msk))
+#define udd_nb_busy_bank(ep)                      (Rd_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_NBUSYBK_Msk))
   //! Returns the number of the current bank
-#define udd_current_bank(ep)                      (Rd_bitfield(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_CURRBK_Msk))
+#define udd_current_bank(ep)                      (Rd_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_CURRBK_Msk))
   //! Kills last bank
-#define udd_kill_last_in_bank(ep)                 (UOTGHS_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_KILLBKS)
-#define Is_udd_kill_last(ep)                      (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_KILLBK))
+#define udd_kill_last_in_bank(ep)                 (UHDP_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_KILLBKS)
+#define Is_udd_kill_last(ep)                      (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_KILLBK))
   //! Tests if last bank killed
-#define Is_udd_last_in_bank_killed(ep)            (!Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_KILLBK))
+#define Is_udd_last_in_bank_killed(ep)            (!Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_KILLBK))
   //! Forces all banks full (OUT) or free (IN) interrupt
-#define udd_force_bank_interrupt(ep)              (UOTGHS_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_NBUSYBKS)
+#define udd_force_bank_interrupt(ep)              (UHDP_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_NBUSYBKS)
   //! Unforces all banks full (OUT) or free (IN) interrupt
-#define udd_unforce_bank_interrupt(ep)            (UOTGHS_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_NBUSYBKS)
+#define udd_unforce_bank_interrupt(ep)            (UHDP_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_NBUSYBKS)
   //! Enables all banks full (OUT) or free (IN) interrupt
-#define udd_enable_bank_interrupt(ep)             (UOTGHS_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_NBUSYBKES)
+#define udd_enable_bank_interrupt(ep)             (UHDP_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_NBUSYBKES)
   //! Disables all banks full (OUT) or free (IN) interrupt
-#define udd_disable_bank_interrupt(ep)            (UOTGHS_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_NBUSYBKEC)
+#define udd_disable_bank_interrupt(ep)            (UHDP_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_NBUSYBKEC)
   //! Tests if all banks full (OUT) or free (IN) interrupt enabled
-#define Is_udd_bank_interrupt_enabled(ep)         (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_NBUSYBKE))
+#define Is_udd_bank_interrupt_enabled(ep)         (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_NBUSYBKE))
 
   //! Tests if SHORT PACKET received
-#define Is_udd_short_packet(ep)                   (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_SHORTPACKET))
+#define Is_udd_short_packet(ep)                   (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_SHORTPACKET))
   //! ACKs SHORT PACKET received
-#define udd_ack_short_packet(ep)                  (UOTGHS_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_SHORTPACKETC)
+#define udd_ack_short_packet(ep)                  (UHDP_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_SHORTPACKETC)
   //! Raises SHORT PACKET received
-#define udd_raise_short_packet(ep)                (UOTGHS_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_SHORTPACKETS)
+#define udd_raise_short_packet(ep)                (UHDP_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_SHORTPACKETS)
   //! Enables SHORT PACKET received interrupt
-#define udd_enable_short_packet_interrupt(ep)     (UOTGHS_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_SHORTPACKETES)
+#define udd_enable_short_packet_interrupt(ep)     (UHDP_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_SHORTPACKETES)
   //! Disables SHORT PACKET received interrupt
-#define udd_disable_short_packet_interrupt(ep)    (UOTGHS_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_SHORTPACKETEC)
+#define udd_disable_short_packet_interrupt(ep)    (UHDP_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_SHORTPACKETEC)
   //! Tests if SHORT PACKET received interrupt is enabled
-#define Is_udd_short_packet_interrupt_enabled(ep) (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_SHORTPACKETE))
+#define Is_udd_short_packet_interrupt_enabled(ep) (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_SHORTPACKETE))
 
   //! Tests if SETUP received
-#define Is_udd_setup_received(ep)                    (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_RXSTPI))
+#define Is_udd_setup_received(ep)                    (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_RXSTPI))
   //! ACKs SETUP received
-#define udd_ack_setup_received(ep)                   (UOTGHS_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_RXSTPIC)
+#define udd_ack_setup_received(ep)                   (UHDP_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_RXSTPIC)
   //! Raises SETUP received
-#define udd_raise_setup_received(ep)                 (UOTGHS_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_RXSTPIS)
+#define udd_raise_setup_received(ep)                 (UHDP_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_RXSTPIS)
   //! Enables SETUP received interrupt
-#define udd_enable_setup_received_interrupt(ep)      (UOTGHS_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_RXSTPES)
+#define udd_enable_setup_received_interrupt(ep)      (UHDP_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_RXSTPES)
   //! Disables SETUP received interrupt
-#define udd_disable_setup_received_interrupt(ep)     (UOTGHS_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_RXSTPEC)
+#define udd_disable_setup_received_interrupt(ep)     (UHDP_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_RXSTPEC)
   //! Tests if SETUP received interrupt is enabled
-#define Is_udd_setup_received_interrupt_enabled(ep)  (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_RXSTPE))
+#define Is_udd_setup_received_interrupt_enabled(ep)  (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_RXSTPE))
 
   //! Tests if OUT received
-#define Is_udd_out_received(ep)                   (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_RXOUTI))
+#define Is_udd_out_received(ep)                   (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_RXOUTI))
   //! ACKs OUT received
-#define udd_ack_out_received(ep)                  (UOTGHS_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_RXOUTIC)
+#define udd_ack_out_received(ep)                  (UHDP_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_RXOUTIC)
   //! Raises OUT received
-#define udd_raise_out_received(ep)                (UOTGHS_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_RXOUTIS)
+#define udd_raise_out_received(ep)                (UHDP_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_RXOUTIS)
   //! Enables OUT received interrupt
-#define udd_enable_out_received_interrupt(ep)     (UOTGHS_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_RXOUTES)
+#define udd_enable_out_received_interrupt(ep)     (UHDP_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_RXOUTES)
   //! Disables OUT received interrupt
-#define udd_disable_out_received_interrupt(ep)    (UOTGHS_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_RXOUTEC)
+#define udd_disable_out_received_interrupt(ep)    (UHDP_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_RXOUTEC)
   //! Tests if OUT received interrupt is enabled
-#define Is_udd_out_received_interrupt_enabled(ep) (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_RXOUTE))
+#define Is_udd_out_received_interrupt_enabled(ep) (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_RXOUTE))
 
   //! Tests if IN sending
-#define Is_udd_in_send(ep)                        (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_TXINI))
+#define Is_udd_in_send(ep)                        (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTISR[0], ep), UOTGHS_DEVEPTISR_TXINI))
   //! ACKs IN sending
-#define udd_ack_in_send(ep)                       (UOTGHS_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_TXINIC)
+#define udd_ack_in_send(ep)                       (UHDP_ARRAY(UOTGHS_DEVEPTICR[0], ep) = UOTGHS_DEVEPTICR_TXINIC)
   //! Raises IN sending
-#define udd_raise_in_send(ep)                     (UOTGHS_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_TXINIS)
+#define udd_raise_in_send(ep)                     (UHDP_ARRAY(UOTGHS_DEVEPTIFR[0], ep) = UOTGHS_DEVEPTIFR_TXINIS)
   //! Enables IN sending interrupt
-#define udd_enable_in_send_interrupt(ep)          (UOTGHS_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_TXINES)
+#define udd_enable_in_send_interrupt(ep)          (UHDP_ARRAY(UOTGHS_DEVEPTIER[0], ep) = UOTGHS_DEVEPTIER_TXINES)
   //! Disables IN sending interrupt
-#define udd_disable_in_send_interrupt(ep)         (UOTGHS_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_TXINEC)
+#define udd_disable_in_send_interrupt(ep)         (UHDP_ARRAY(UOTGHS_DEVEPTIDR[0], ep) = UOTGHS_DEVEPTIDR_TXINEC)
   //! Tests if IN sending interrupt is enabled
-#define Is_udd_in_send_interrupt_enabled(ep)      (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_TXINE))
+#define Is_udd_in_send_interrupt_enabled(ep)      (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0], ep), UOTGHS_DEVEPTIMR_TXINE))
 
 
   //! Get 64-, 32-, 16- or 8-bit access to FIFO data register of selected endpoint.
@@ -538,11 +538,11 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
   //! Maximum transfer size on USB DMA
 #define UDD_ENDPOINT_MAX_TRANS 0x10000 //Nash
   //! Enables the disabling of HDMA requests by endpoint interrupts
-#define udd_enable_endpoint_int_dis_hdma_req(ep)     (UOTGHS_ARRAY(UOTGHS_DEVEPTIER[0](ep) = UOTGHS_DEVEPTIER_EPDISHDMAS)
+#define udd_enable_endpoint_int_dis_hdma_req(ep)     (UHDP_ARRAY(UOTGHS_DEVEPTIER[0](ep) = UOTGHS_DEVEPTIER_EPDISHDMAS)
   //! Disables the disabling of HDMA requests by endpoint interrupts
-#define udd_disable_endpoint_int_dis_hdma_req(ep)    (UOTGHS_ARRAY(UOTGHS_DEVEPTIDR[0](ep) = UOTGHS_DEVEPTIDR_EPDISHDMAC)
+#define udd_disable_endpoint_int_dis_hdma_req(ep)    (UHDP_ARRAY(UOTGHS_DEVEPTIDR[0](ep) = UOTGHS_DEVEPTIDR_EPDISHDMAC)
   //! Tests if the disabling of HDMA requests by endpoint interrupts is enabled
-#define Is_udd_endpoint_int_dis_hdma_req_enabled(ep) (Tst_bits(UOTGHS_ARRAY(UOTGHS_DEVEPTIMR[0](ep), UOTGHS_DEVEPTIMR_EPDISHDMA))
+#define Is_udd_endpoint_int_dis_hdma_req_enabled(ep) (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTIMR[0](ep), UOTGHS_DEVEPTIMR_EPDISHDMA))
 
   //! Raises the selected endpoint DMA channel interrupt
 #define udd_raise_endpoint_dma_interrupt(ep)         (UOTGHS->UOTGHS_DEVIFR = UOTGHS_DEVIFR_DMA_1 << ((ep) - 1))
@@ -615,23 +615,23 @@ typedef struct {
 		unsigned long status;
 		uhdp_dma_status_t STATUS;
 	};
-} sam_uotghs_dmach_t, uotghs_dmach_t;
+} sam_uhdp_dmach_t, uhdp_dmach_t;
       //! DMA channel control command
 #define UDD_ENDPOINT_DMA_STOP_NOW                 (0)
 #define UDD_ENDPOINT_DMA_RUN_AND_STOP             (UOTGHS_DEVDMACONTROL_CHANN_ENB)
 #define UDD_ENDPOINT_DMA_LOAD_NEXT_DESC           (UOTGHS_DEVDMACONTROL_LDNXT_DSC)
 #define UDD_ENDPOINT_DMA_RUN_AND_LINK             (UOTGHS_DEVDMACONTROL_CHANN_ENB|UOTGHS_DEVDMACONTROL_LDNXT_DSC)
       //! Structure for DMA registers
-#define UOTGHS_UDDMA_ARRAY(ep)                    (((volatile uotghs_dmach_t *)UOTGHS->UOTGHS_DEVDMA)[(ep) - 1])
+#define UHDP_UDDMA_ARRAY(ep)                    (((volatile uhdp_dmach_t *)UOTGHS->UOTGHS_DEVDMA)[(ep) - 1])
 
       //! Set control desc to selected endpoint DMA channel
-#define udd_endpoint_dma_set_control(ep,desc)     (UOTGHS_UDDMA_ARRAY(ep).control = desc)
+#define udd_endpoint_dma_set_control(ep,desc)     (UHDP_UDDMA_ARRAY(ep).control = desc)
       //! Get control desc to selected endpoint DMA channel
-#define udd_endpoint_dma_get_control(ep)          (UOTGHS_UDDMA_ARRAY(ep).control)
+#define udd_endpoint_dma_get_control(ep)          (UHDP_UDDMA_ARRAY(ep).control)
       //! Set RAM address to selected endpoint DMA channel
-#define udd_endpoint_dma_set_addr(ep,add)         (UOTGHS_UDDMA_ARRAY(ep).addr = add)
+#define udd_endpoint_dma_set_addr(ep,add)         (UHDP_UDDMA_ARRAY(ep).addr = add)
       //! Get status to selected endpoint DMA channel
-#define udd_endpoint_dma_get_status(ep)           (UOTGHS_UDDMA_ARRAY(ep).status)
+#define udd_endpoint_dma_get_status(ep)           (UHDP_UDDMA_ARRAY(ep).status)
    //! @}
 //! @}
 
