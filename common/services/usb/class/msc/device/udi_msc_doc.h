@@ -180,8 +180,7 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  * \ref asfdoc_udc_basic_use_case_setup "USB Device Basic Setup".
  *
  * \subsection udi_msc_basic_use_case_setup_ctrl_access Common abstraction layer for memory interfaces
- * Common abstraction layer is applied for memory interfaces. It provides interfaces between:
- * Memory and USB, Memory and RAM, Memory and Memory.
+ * Common abstraction layer provides interfaces between: Memory and USB, Memory and RAM, Memory and Memory.
  *
  * -# MEM <-> USB Interface
  *   \code
@@ -201,11 +200,15 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
                          U8 dest_lun, U32 dest_addr, U16 nb_sector);
       extern Ctrl_status stream_state(U8 id);
       extern U16 stream_stop(U8 id);
- \encode
+ \endcode
  *
- */
-
-/**
+ * More Information about Memory Control Access, please refer to the document:
+ * - <a href="http://asf.atmel.com/docs/latest/sam3a/html/group__group__common__services__storage__ctrl__access.html">
+ *   Atmel Software Framework - Memory Control Access</a>
+ *
+ * Examples of the control access configuration, please refer to
+ * \ref asfdoc_udi_msc_config_examples_5 "conf_access.h"
+ *
  * \section udi_msc_basic_use_case_usage Usage steps
  *
  * \subsection udi_msc_basic_use_case_usage_code Example code
