@@ -43,7 +43,7 @@
 
 #include <asf.h>
 #include <conf_example.h>
-#include "example2\events_example2.h"
+#include <events_example2.h>
 
 uint8_t event_string[] = "GPIO event triggered PDCA!";
 

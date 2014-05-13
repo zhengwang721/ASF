@@ -43,7 +43,7 @@
 
 #include <asf.h>
 #include <conf_example.h>
-#include "example1\events_example.h"
+#include <events_example1.h>
 
 uint8_t event_string[] = "AST event triggered PDCA!";
 
