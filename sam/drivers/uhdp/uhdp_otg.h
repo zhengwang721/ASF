@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USB General Driver for UHDP.
+ * \brief USB OTG Driver for UHDP.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,8 +41,8 @@
  *
  */
 
-#ifndef UHDP_GENERAL_H_INCLUDED
-#define UHDP_GENERAL_H_INCLUDED
+#ifndef UHDP_OTG_H_INCLUDED
+#define UHDP_OTG_H_INCLUDED
 
 #include "compiler.h"
 
@@ -51,12 +51,27 @@ extern "C" {
 #endif
 
 //! \ingroup usb_group
-//! \defgroup uhdp_general_group UHDP General Driver
-//! UHDP low-level driver for general features
+//! \defgroup otg_group UHDP OTG Driver
+//! UHDP low-level driver for OTG features
 //!
 //! @{
 
-//! @name UHDP General ID pin management
+/**
+ * \brief Initialize the dual role
+ * This function is implemented in uotghs_host.c file.
+ *
+ * \return \c true if the ID pin management has been started, otherwise \c false.
+ */
+bool otg_dual_enable(void);
+
+/**
+ * \brief Uninitialize the dual role
+ * This function is implemented in uotghs_host.c file.
+ */
+void otg_dual_disable(void);
+
+
+//! @name UOTGHS OTG ID pin management
 //! The ID pin come from the USB OTG connector (A and B receptable) and
 //! allows to select the USB mode host or device.
 //!
@@ -74,21 +89,21 @@ extern "C" {
 //! These macros allows to enable/disable pad and UHDP hardware
 //! @{
   //! Enable USB macro
-#define uhdp_enable()                        (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_USBE))
+#define otg_enable()                        (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_USBE))
   //! Disable USB macro
-#define uhdp_disable()                       (Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_USBE))
-#define Is_uhdp_enabled()                    (Tst_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_USBE))
+#define otg_disable()                       (Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_USBE))
+#define Is_otg_enabled()                    (Tst_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_USBE))
 
   //! Enable UHDP pad
-#define uhdp_enable_pad()                    (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_OTGPADE))
+#define otg_enable_pad()                    (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_OTGPADE))
   //! Disable UHDP pad
-#define uhdp_disable_pad()                   (Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_OTGPADE))
-#define Is_uhdp_pad_enabled()                (Tst_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_OTGPADE))
+#define otg_disable_pad()                   (Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_OTGPADE))
+#define Is_otg_pad_enabled()                (Tst_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_OTGPADE))
 
   //! Stop (freeze) internal USB clock
-#define uhdp_freeze_clock()                  (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_FRZCLK))
-#define uhdp_unfreeze_clock()                (Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_FRZCLK))
-#define Is_uhdp_clock_frozen()               (Tst_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_FRZCLK))
+#define otg_freeze_clock()                  (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_FRZCLK))
+#define otg_unfreeze_clock()                (Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_FRZCLK))
+#define Is_otg_clock_frozen()               (Tst_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_FRZCLK))
 //! @}
 
 //! @}
@@ -97,5 +112,5 @@ extern "C" {
 }
 #endif
 
-#endif /* UHDP_GENERAL_H_INCLUDED */
+#endif /* UHDP_OTG_H_INCLUDED */
 

@@ -14,7 +14,7 @@
 			</info>
 			<build type="c-source" value="uhdp_device.c"/>
 			<build type="header-file" value="uhdp_device.h"/>
-			<build type="header-file" value="uhdp_general.h"/>
+			<build type="header-file" value="uhdp_otg.h"/>
 			<build type="include-path" value="."/>
 			<device-support value="sam4c32e"/>
 			<require idref="common.services.basic.clock"/>
@@ -36,7 +36,7 @@
 			</info>
 			<build type="c-source" value="uhdp_device.c"/>
 			<build type="header-file" value="uhdp_device.h"/>
-			<build type="header-file" value="uhdp_general.h"/>
+			<build type="header-file" value="uhdp_otg.h"/>
 			<build type="include-path" value="."/>
 			<build type="define" name="UDD_NO_SLEEP_MGR" value=""/>
 			<device-support value="sam4c32e"/>
@@ -63,7 +63,7 @@
 			</info>
 			<build type="c-source" value="uhdp_host.c"/>
 			<build type="header-file" value="uhdp_host.h"/>
-			<build type="header-file" value="uhdp_general.h"/>
+			<build type="header-file" value="uhdp_otg.h"/>
 			<build type="include-path" value="."/>
 			<device-support value="sam4c32e"/>
 			<require idref="common.services.basic.clock"/>
@@ -86,7 +86,7 @@
 			</info>
 			<build type="c-source" value="uhdp_host.c"/>
 			<build type="header-file" value="uhdp_host.h"/>
-			<build type="header-file" value="uhdp_general.h"/>
+			<build type="header-file" value="uhdp_otg.h"/>
 			<build type="include-path" value="."/>
 			<build type="define" name="UDD_NO_SLEEP_MGR" value=""/>
 			<device-support value="sam4c32e"/>

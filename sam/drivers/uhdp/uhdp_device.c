@@ -44,7 +44,7 @@
 #include "conf_usb.h"
 #include "sysclk.h"
 #include "udd.h"
-#include "uhdp_general.h"
+#include "uhdp_otg.h"
 #include "uhdp_device.h"
 #include <string.h>
 
@@ -561,11 +561,11 @@ ISR(UDD_USB_INT_FUN)
 	}
 
 	if (Is_udd_suspend_interrupt_enabled() && Is_udd_suspend()) {
-		uhdp_unfreeze_clock();
+		otg_unfreeze_clock();
 		// The suspend interrupt is automatic acked when a wakeup occur
 		udd_disable_suspend_interrupt();
 		udd_enable_wake_up_interrupt();
-		uhdp_freeze_clock();   // Mandatory to exit of sleep mode after a wakeup event
+		otg_freeze_clock();   // Mandatory to exit of sleep mode after a wakeup event
 		udd_sleep_mode(false); // Enter in SUSPEND mode
 #ifdef UDC_SUSPEND_EVENT
 		UDC_SUSPEND_EVENT();
@@ -575,7 +575,7 @@ ISR(UDD_USB_INT_FUN)
 
 	if (Is_udd_wake_up_interrupt_enabled() && Is_udd_wake_up()) {
 		// Ack wakeup interrupt and enable suspend interrupt
-		uhdp_unfreeze_clock();
+		otg_unfreeze_clock();
 
 		// The wakeup interrupt is automatic acked when a suspend occur
 		udd_disable_wake_up_interrupt();
@@ -627,8 +627,8 @@ void udd_enable(void)
 	uhdp_force_device_mode();
 
 	// Enable USB hardware
-	uhdp_enable_pad();
-	uhdp_enable();
+	otg_enable_pad();
+	otg_enable();
 
 	// Reset internal variables
 #if (0!=USB_DEVICE_MAX_EP)
@@ -671,7 +671,7 @@ void udd_disable(void)
 	irqflags_t flags;
 
 	flags = cpu_irq_save();
-	uhdp_unfreeze_clock();
+	otg_unfreeze_clock();
 	udd_detach();
 #ifndef UDD_NO_SLEEP_MGR
 	if (udd_b_sleep_initialized) {
@@ -680,8 +680,8 @@ void udd_disable(void)
 	}
 #endif
 
-	uhdp_disable();
-	uhdp_disable_pad();
+	otg_disable();
+	otg_disable_pad();
 	sysclk_disable_usb();
 	pmc_disable_periph_clk(ID_UOTGHS);
 	cpu_irq_restore(flags);
@@ -696,7 +696,7 @@ void udd_attach(void)
 	// At startup the USB bus state is unknown,
 	// therefore the state is considered IDLE to not miss any USB event
 	udd_sleep_mode(true);
-	uhdp_unfreeze_clock();
+	otg_unfreeze_clock();
 
 	// Authorize attach if Vbus is present
 	udd_attach_device();
@@ -716,18 +716,18 @@ void udd_attach(void)
 	udd_raise_suspend();
 
 	udd_ack_wake_up();
-	uhdp_freeze_clock();
+	otg_freeze_clock();
 	cpu_irq_restore(flags);
 }
 
 
 void udd_detach(void)
 {
-	uhdp_unfreeze_clock();
+	otg_unfreeze_clock();
 
 	// Detach device from the bus
 	udd_detach_device();
-	uhdp_freeze_clock();
+	otg_freeze_clock();
 	udd_sleep_mode(false);
 }
 
@@ -764,7 +764,7 @@ void udd_send_remotewakeup(void)
 #endif
 	{
 		udd_sleep_mode(true); // Enter in IDLE mode
-		uhdp_unfreeze_clock();
+		otg_unfreeze_clock();
 		udd_initiate_remote_wake_up();
 	}
 }
