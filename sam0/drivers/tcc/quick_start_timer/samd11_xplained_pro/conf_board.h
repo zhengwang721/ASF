@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21/R21/D10/D11 TCC - Timer Counter for Control Applications Callback Driver
+ * \brief SAM D11 Xplained Pro board configuration.
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,50 +41,7 @@
  *
  */
 
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#ifndef TCC_CALLBACK_H_INCLUDED
-#define TCC_CALLBACK_H_INCLUDED
-
-#include "tcc.h"
-#include <system_interrupt.h>
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#if !defined(__DOXYGEN__)
-extern void *_tcc_instances[TCC_INST_NUM];
-#endif
-
-
-/**
- * \name Callback Management
- * {@
- */
-
-enum status_code tcc_register_callback(
-		struct tcc_module *const module,
-		tcc_callback_t callback_func,
-		const enum tcc_callback callback_type);
-
-enum status_code tcc_unregister_callback(
-		struct tcc_module *const module,
-		const enum tcc_callback callback_type);
-
-void tcc_enable_callback(
-		struct tcc_module *const module,
-		const enum tcc_callback callback_type);
-
-void tcc_disable_callback(
-		struct tcc_module *const module,
-		const enum tcc_callback callback_type);
-
-/**
- * @}
- */
-
-#ifdef __cplusplus
-}
-#endif
-
-#endif /* TCC_CALLBACK_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
