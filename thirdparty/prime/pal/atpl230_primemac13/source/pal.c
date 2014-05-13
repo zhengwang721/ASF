@@ -549,20 +549,24 @@ uint8_t pal_data_request_ex (xPalMsgTx_t *px_msg)
 	uint8_t uc_crc_type;
 	uint32_t ul_crc_calc;
 	uint8_t *puc_crc_buf;
+	xPalMsgTx_t x_pal_tx_data;
 #ifdef PAL_DBG_PRIME_MESSAGES
 	unsigned int us_lnid;
 	unsigned int uc_rx_count;
 	unsigned int uc_tx_count;
 #endif
 
+	// copy message to local tx var
+	memcpy(&x_pal_tx_data, px_msg, sizeof(xPalMsgTx_t));
+
 #ifdef PAL_CRC_ENABLE
 	// Save parameters for later requests
-	uc_tx_head_type = ATPL230_GET_HEADER_TYPE(px_msg->data_buf[0]);
+	uc_tx_head_type = ATPL230_GET_HEADER_TYPE(x_pal_tx_data.data_buf[0]);
 
 	// add HCS in case of generic packet
 	if(uc_tx_head_type == PCRC_HT_GENERIC){
-		ul_crc_calc = pcrc_calculate_prime_crc (px_msg->data_buf, 2, uc_tx_head_type, CRC_TYPE_8);
-		px_msg->data_buf[2] = (uint8_t)ul_crc_calc;
+		ul_crc_calc = pcrc_calculate_prime_crc (x_pal_tx_data.data_buf, 2, uc_tx_head_type, CRC_TYPE_8);
+		x_pal_tx_data.data_buf[2] = (uint8_t)ul_crc_calc;
 	}
 
 	// add MAC crc
@@ -571,17 +575,17 @@ uint8_t pal_data_request_ex (xPalMsgTx_t *px_msg)
 	}else{
 		uc_crc_type = CRC_TYPE_32;
 	}
-	ul_crc_calc = pcrc_calculate_prime_crc (px_msg->data_buf, px_msg->data_len, uc_tx_head_type, uc_crc_type);
-	puc_crc_buf = &px_msg->data_buf[px_msg->data_len];
+	ul_crc_calc = pcrc_calculate_prime_crc (x_pal_tx_data.data_buf, x_pal_tx_data.data_len, uc_tx_head_type, uc_crc_type);
+	puc_crc_buf = &x_pal_tx_data.data_buf[x_pal_tx_data.data_len];
 	if(uc_crc_type == CRC_TYPE_8){
 		*puc_crc_buf = (uint8_t)ul_crc_calc;
-		px_msg->data_len++;
+		x_pal_tx_data.data_len++;
 	}else if(uc_crc_type == CRC_TYPE_32){
 		*puc_crc_buf = (uint8_t)(ul_crc_calc>>24);
 		*(puc_crc_buf+1) = (uint8_t)(ul_crc_calc>>16);
 		*(puc_crc_buf+2) = (uint8_t)(ul_crc_calc>>8);
 		*(puc_crc_buf+3) = (uint8_t)ul_crc_calc;
-		px_msg->data_len += 4;
+		x_pal_tx_data.data_len += 4;
 	}
 #endif
 
@@ -594,17 +598,17 @@ uint8_t pal_data_request_ex (xPalMsgTx_t *px_msg)
 		uc_tx_res_flag = false;
 	}
 
-	uc_res = phy_tx_frame((xPhyMsgTx_t *)px_msg);
+	uc_res = phy_tx_frame((xPhyMsgTx_t *)&x_pal_tx_data);
 
 #ifdef PAL_DBG_PRIME_MESSAGES
 	if(uc_tx_head_type == PHY_HT_BEACON){
-		printf("-> BCN %u, [%u]\r\n", (unsigned int)((px_msg->data_buf[5])>>3), (px_msg->tdelay - ul_last_tx_bcn_tics));
-		ul_last_tx_bcn_tics = px_msg->tdelay;
+		printf("-> BCN %u, [%u]\r\n", (unsigned int)((x_pal_tx_data.data_buf[5])>>3), (x_pal_tx_data.tdelay - ul_last_tx_bcn_tics));
+		ul_last_tx_bcn_tics = x_pal_tx_data.tdelay;
 	}else if(uc_tx_head_type == PHY_HT_GENERIC){
-		if(px_msg->data_buf[3] & 0x02){
-			switch(px_msg->data_buf[4]){
+		if(x_pal_tx_data.data_buf[3] & 0x02){
+			switch(x_pal_tx_data.data_buf[4]){
 				case 1:
-					us_lnid = ((unsigned int)(px_msg->data_buf[6])<<6) + ((unsigned int)(px_msg->data_buf[7])>>2);
+					us_lnid = ((unsigned int)(x_pal_tx_data.data_buf[6])<<6) + ((unsigned int)(x_pal_tx_data.data_buf[7])>>2);
 					printf("-> REG (%u)\r\n", us_lnid);
 					break;
 				case 2:
@@ -623,9 +627,9 @@ uint8_t pal_data_request_ex (xPalMsgTx_t *px_msg)
 					printf("-> CFP\r\n");
 					break;
 				case 7:
-					us_lnid = ((unsigned int)(px_msg->data_buf[6])<<6) + ((unsigned int)(px_msg->data_buf[7])>>2);
-					uc_rx_count = (px_msg->data_buf[9])>>5;
-					uc_tx_count = ((px_msg->data_buf[9])>>2)&0x07;;
+					us_lnid = ((unsigned int)(x_pal_tx_data.data_buf[6])<<6) + ((unsigned int)(x_pal_tx_data.data_buf[7])>>2);
+					uc_rx_count = (x_pal_tx_data.data_buf[9])>>5;
+					uc_tx_count = ((x_pal_tx_data.data_buf[9])>>2)&0x07;;
 					printf("-> ALV %u/%u (%u)\r\n", uc_tx_count, uc_rx_count, us_lnid);
 					break;
 				case 8:

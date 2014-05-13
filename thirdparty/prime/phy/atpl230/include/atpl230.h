@@ -93,13 +93,6 @@ extern "C" {
 #define PHY_RESET_SOFT_TYPE  1
 //@}
 
-
-//! \name Max physical pdu size
-//@{
-#define PHY_MAX_MPDU_SIZE_WITH_MAC_COP		364
-#define PHY_MAX_MPDU_SIZE_NO_MAC_COP		377
-//@}
-
 //! Maximum physical pdu size
 #define PHY_MAX_PPDU_SIZE			512
 

@@ -196,6 +196,9 @@ static void prvSetupHardware(void)
 	c42364a_show_icon(C42364A_ICON_WLESS);
 	c42364a_show_text((const uint8_t *)"SERV  ");
 #endif
+
+	// Init pin of APPEMU enable
+	ioport_set_pin_dir(PIN_APPEMU_GPIO, IOPORT_DIR_INPUT);
 }
 
 #if (defined(CONF_BOARD_LCD_EN) && defined(EXAMPLE_LCD_SIGNALLING_ENABLE))

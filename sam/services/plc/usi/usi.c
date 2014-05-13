@@ -64,7 +64,7 @@ extern "C" {
 uint8_t Dummy_serial_parser(uint8_t *puc_rx_msg, uint16_t us_len);
 
 #ifdef __GNUC__
-uint8_t mngLay_receivedCmd(uint8_t *puc_rx_msg, uint16_t us_len) __attribute__ ((weak, alias("Dummy_serial_parser")));
+uint8_t mngl_rcv_cmd(uint8_t *puc_rx_msg, uint16_t us_len) __attribute__ ((weak, alias("Dummy_serial_parser")));
 uint8_t serial_if_api_parser(uint8_t *puc_rx_msg, uint16_t us_len) __attribute__ ((weak, alias("Dummy_serial_parser")));
 uint8_t serial_if_sniffer_api_parser(uint8_t *puc_rx_msg, uint16_t us_len) __attribute__ ((weak, alias("Dummy_serial_parser")));
 uint8_t serial_if_mac_api_parser(uint8_t *puc_rx_msg, uint16_t us_len) __attribute__ ((weak, alias("Dummy_serial_parser")));
@@ -77,8 +77,8 @@ uint8_t phySerial_receivedCmd(uint8_t *puc_rx_msg, uint16_t us_len) __attribute_
 #endif
 
 #ifdef __ICCARM__
-extern uint8_t mngLay_receivedCmd (uint8_t *puc_rx_msg, uint16_t us_len);
-#pragma weak mngLay_receivedCmd=Dummy_serial_parser
+extern uint8_t mngl_rcv_cmd (uint8_t *puc_rx_msg, uint16_t us_len);
+#pragma weak mngl_rcv_cmd=Dummy_serial_parser
 extern uint8_t serial_if_api_parser (uint8_t *puc_rx_msg, uint16_t us_len);
 #pragma weak serial_if_api_parser=Dummy_serial_parser
 extern uint8_t serial_if_sniffer_api_parser (uint8_t *puc_rx_msg, uint16_t us_len);
@@ -614,7 +614,7 @@ static uint8_t _process_msg (uint8_t uc_port)
     case MNGP_PRIME_FU:
     case MNGP_PRIME_EN_PIBQRY:
     case MNGP_PRIME_EN_PIBRSP:
-      uc_result = mngLay_receivedCmd(puc_rx_buf, us_len+2); // MNGL spec. including header (2bytes)
+      uc_result = mngl_rcv_cmd(puc_rx_buf, us_len+2); // MNGL spec. including header (2bytes)
       break;
 
     // Atmel's serialized protocols

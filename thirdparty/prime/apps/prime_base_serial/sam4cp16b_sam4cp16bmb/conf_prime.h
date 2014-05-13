@@ -44,9 +44,6 @@
 #ifndef CONF_PRIME_H_INCLUDED
 #define CONF_PRIME_H_INCLUDED
 
-#include "compiler.h"
-#include "conf_usi.h"
-
 /* PRIME MODE */
 #define PRIME_BASE
 
@@ -56,47 +53,9 @@
 #define PRIME_FW_VERSION    "01.03.08.01"
 
 /* Prime PIB firmware information */
-#define PRIME_PIB_VENDOR        0x0000
-#define PRIME_PIB_MODEL         0x3430
-#define PRIME_PIB_VERSION_LEN   8
-#define PRIME_PIB_VERSION       "01030801"
-
-// Not Minimum SNR value
-//#define NOT_USE_MINIMUM_SNR_VALID
-
-// MAC Capabilities
-//#define NODE_CAPABLE_CFP
-#define NODE_CAPABLE_PRM
-#define NODE_CAPABLE_ARQ
-#define NODE_CAPABLE_DIR_SW
-
-// Firmware Upgrade Protocol
-#define CFG_BASEMNG     BASEMNG_DISABLE
-
-
-#ifdef USE_MNGP_PRIME_PORT
-	#define MNGLAYER_USE_SERIAL_PROFILE
-#endif
-
-#ifdef USE_PROTOCOL_MAC_PRIME_PORT
-	#define MAC_USI_SERIALIZATION
-#endif
-
-#ifdef USE_PROTOCOL_MLME_PRIME_PORT
-	#define MLME_USI_SERIALIZATION
-#endif
-
-#ifdef USE_PROTOCOL_PLME_PRIME_PORT
-	#define PLME_USI_SERIALIZATION
-#endif
-
-#ifdef USE_PROTOCOL_432_PRIME_PORT
-	#define SSCS432_USI_SERIALIZATION
-#endif
-
-#ifdef USE_PROTOCOL_SNIF_PRIME_PORT
-	#define SNIFFER_USI_SERIALIZATION
-#endif
-
+#define PRIME_PIB_VENDOR       0x0000
+#define PRIME_PIB_MODEL        0x3430
+#define PRIME_PIB_VERSION_LEN  8
+#define PRIME_PIB_VERSION      "01030801"
 
 #endif /* CONF_PRIME_H_INCLUDED */
