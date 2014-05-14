@@ -86,8 +86,8 @@
  *
  * The counter size of the TCC modules can be 16- or 24-bit depending on
  * the TCC instance.
- * Please refer \ref asfdoc_sam0_tcc_special_considerations_tcc_d21 for details
- * on TCC instances.
+ * Please refer \ref asfdoc_sam0_tcc_special_considerations_tcc_d21 and
+ * \ref asfdoc_sam0_tcc_special_considerations_tcc_d11 for details on TCC instances.
  *
  * The TCC module for the SAM D21/R21/D10/D11 includes the following functions:
  *
@@ -601,11 +601,11 @@
  * channels, number of outputs, are dependent on the TCC module instance being
  * used.
  *
- * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM D21/R21/D10/D11 TCC Feature List
- * For SAM D21/R21/D10/D11, the TCC features are as follow:
+ * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM D21/R21 TCC Feature List
+ * For SAM D21/R21, the TCC features are as follow:
  * \anchor asfdoc_sam0_tcc_features_d21
  * <table>
- *   <caption>TCC module features for SAM D21/R21/D10/D11</caption>
+ *   <caption>TCC module features for SAM D21/R21</caption>
  *   <tr>
  *     <th>TCC#</th>
  *     <th>Match/Capture Channels</th>
@@ -653,6 +653,37 @@
  *     <td></td>
  *     <td></td>
  *     <td></td>
+ *   </tr>
+ * </table>
+ *
+ * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d11 SAM D10/D11 TCC Feature List
+ * For SAM D10/D11, the TCC features are as follow:
+ * \anchor asfdoc_sam0_tcc_features_d11
+ * <table>
+ *   <caption>TCC module features for SAM D10/D11</caption>
+ *   <tr>
+ *     <th>TCC#</th>
+ *     <th>Match/Capture Channels</th>
+ *     <th>Wave outputs</th>
+ *     <th>Counter Size (bits)</th>
+ *     <th>Fault</th>
+ *     <th>Dithering</th>
+ *     <th>Output Matrix</th>
+ *     <th>Dead-Time Insertion</th>
+ *     <th>SWAP</th>
+ *     <th>Pattern</th>
+ *   </tr>
+ *   <tr>
+ *     <td>0</td>
+ *     <td>4</td>
+ *     <td>8</td>
+ *     <td>24</td>
+ *     <td>Y</td>
+ *     <td>Y</td>
+ *     <td>Y</td>
+ *     <td>Y</td>
+ *     <td>Y</td>
+ *     <td>Y</td>
  *   </tr>
  * </table>
  *
