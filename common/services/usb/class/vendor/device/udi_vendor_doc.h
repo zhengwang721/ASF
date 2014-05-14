@@ -445,25 +445,25 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  * \subsection udi_vendor_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following configuration
  * which is the USB device Vendor configuration:
- *   - \code #define UDI_VENDOR_ENABLE_EXT() my_callback_vendor_enable()
+ *   \code #define UDI_VENDOR_ENABLE_EXT() my_callback_vendor_enable()
 	 extern bool my_callback_vendor_enable(void); \endcode
  *     \note After the device enumeration (detecting and identifying USB devices),
  *     the USB host starts the device configuration. When the USB Vendor interface
  *     from the device is accepted by the host, the USB host enables this interface and the
  *     UDI_VENDOR_ENABLE_EXT() callback function is called and return true.
  *     Thus, when this event is received, the Vendor transfers can start.
- *   - \code #define UDI_VENDOR_DISABLE_EXT() my_callback_vendor_disable()
+ *   \code #define UDI_VENDOR_DISABLE_EXT() my_callback_vendor_disable()
 	 extern void my_callback_vendor_disable(void); \endcode
  *     \note When the USB device is unplugged or is reset by the USB host, the USB
  *     interface is disabled and the UDI_VENDOR_DISABLE_EXT() callback function
  *     is called. Thus, it is recommended to disable the data Vendor transfer.
- *   - \code #define  UDI_VENDOR_SETUP_OUT_RECEIVED()  my_vendor_setup_out_received()
+ *   \code #define  UDI_VENDOR_SETUP_OUT_RECEIVED()  my_vendor_setup_out_received()
 	extern bool my_vendor_setup_out_received(void);
 	#define  UDI_VENDOR_SETUP_IN_RECEIVED()   my_vendor_setup_in_received()
 	extern bool my_vendor_setup_in_received(void); \endcode
  *     \note The control requests for the interface Vendor will be processed
  *     through these both callbacks.
- *   - \code #define  UDI_VENDOR_EPS_SIZE_INT_FS    64
+ *   \code #define  UDI_VENDOR_EPS_SIZE_INT_FS    64
 	#define  UDI_VENDOR_EPS_SIZE_BULK_FS   64
 	#define  UDI_VENDOR_EPS_SIZE_ISO_FS   256
 	#define  UDI_VENDOR_EPS_SIZE_INT_HS    64
@@ -473,7 +473,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  *     disabled if the full speed size is zero.
  * -# The Vendor transfers on interrupt, bulk and isochronous endpoints are
  * done through these functions:
- *   - \code // Start a transfer on interrupt IN
+ *   \code // Start a transfer on interrupt IN
 	udi_vendor_interrupt_in_run();
 	// Start a transfer on interrupt OUT
 	udi_vendor_interrupt_out_run();
@@ -551,7 +551,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  * \subsection udi_vendor_use_case_composite_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
  * required for a USB composite device configuration:
- *   - \code // Endpoint control size, This must be:
+ *   \code // Endpoint control size, This must be:
 	// - 8, 16, 32 or 64 for full speed device (8 is recommended to save RAM)
 	// - 64 for a high speed device
 	#define USB_DEVICE_EP_CTRL_SIZE  64
@@ -565,7 +565,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
 	#define USB_DEVICE_MAX_EP (X) to (X+6) \endcode
  * -# Ensure that conf_usb.h contains the description of
  * composite device:
- *   - \code // The endpoint numbers chosen by you for the Vendor.
+ *   \code // The endpoint numbers chosen by you for the Vendor.
 	// The endpoint numbers starting from 1.
 	#define  UDI_VENDOR_EP_INTERRUPT_IN  (1 | USB_EP_DIR_IN)
 	#define  UDI_VENDOR_EP_INTERRUPT_OUT (2 | USB_EP_DIR_OUT)
@@ -577,7 +577,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
 	#define UDI_VENDOR_IFACE_NUMBER  X \endcode
  * -# Ensure that conf_usb.h contains the following parameters
  * required for a USB composite device configuration:
- *   - \code // USB Interfaces descriptor structure
+ *   \code // USB Interfaces descriptor structure
 	#define UDI_COMPOSITE_DESC_T \
 	   ...
 	   udi_vendor_desc_t udi_vendor; \
@@ -606,7 +606,10 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  * \page asfdoc_udi_vendor_config_examples Configuration File Examples
  *
  * \section asfdoc_udi_vendor_config_examples_1 conf_usb.h
+ * \subsection asfdoc_udi_vendor_config_examples_1_1  UDI Vendor Single
  * \include module_config\conf_usb.h
+ * \subsection asfdoc_udi_vendor_config_examples_1_2  UDI Vendor Multiple (composite)
+ * \include composite\device\module_config\conf_usb.h
  *
  * \section asfdoc_udi_vendor_config_examples_2 conf_clock.h
  *

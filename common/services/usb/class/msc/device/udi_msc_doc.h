@@ -275,16 +275,16 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  * \subsection udi_msc_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following configuration
  * which is the USB device MSC configuration:
- *   - \code #define USB_DEVICE_SERIAL_NAME  "12...EF" // Disk SN for MSC \endcode
+ *   \code #define USB_DEVICE_SERIAL_NAME  "12...EF" // Disk SN for MSC \endcode
  *     \note The USB serial number is mandatory when a MSC interface is used.
- *   - \code //! Vendor name and Product version of MSC interface
+ *   \code //! Vendor name and Product version of MSC interface
 	#define UDI_MSC_GLOBAL_VENDOR_ID \
 	   'A', 'T', 'M', 'E', 'L', ' ', ' ', ' '
 	#define UDI_MSC_GLOBAL_PRODUCT_VERSION \
 	   '1', '.', '0', '0' \endcode
  *     \note The USB MSC interface requires a vendor ID (8 ASCII characters)
  *     and a product version (4 ASCII characters).
- *   - \code #define UDI_MSC_ENABLE_EXT() my_callback_msc_enable()
+ *   \code #define UDI_MSC_ENABLE_EXT() my_callback_msc_enable()
 	extern bool my_callback_msc_enable(void); \endcode
  *     \note After the device enumeration (detecting and identifying USB devices),
  *     the USB host starts the device configuration. When the USB MSC interface
@@ -292,7 +292,7 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  *     UDI_MSC_ENABLE_EXT() callback function is called and return true.
  *     Thus, when this event is received, the tasks which call
  *     udi_msc_process_trans() must be enabled.
- *   - \code #define UDI_MSC_DISABLE_EXT() my_callback_msc_disable()
+ *   \code #define UDI_MSC_DISABLE_EXT() my_callback_msc_disable()
 	extern void my_callback_msc_disable(void); \endcode
  *     \note When the USB device is unplugged or is reset by the USB host, the USB
  *     interface is disabled and the UDI_MSC_DISABLE_EXT() callback function
@@ -301,13 +301,13 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  * which provides the memories interfaces. However, the memory data transfers
  * must be done outside USB interrupt routine. This is done in the MSC process
  * ("udi_msc_process_trans()") called by main loop:
- *   - \code  * void task(void) {
+ *   \code  * void task(void) {
 	udi_msc_process_trans();
 	} \endcode
  * -# The MSC speed depends on task periodicity. To get the best speed
  * the notification callback "UDI_MSC_NOTIFY_TRANS_EXT" can be used to wakeup
  * this task (Example, through a mutex):
- *   - \code #define  UDI_MSC_NOTIFY_TRANS_EXT()    msc_notify_trans()
+ *   \code #define  UDI_MSC_NOTIFY_TRANS_EXT()    msc_notify_trans()
 	void msc_notify_trans(void) {
 	wakeup_my_task();
 	} \endcode
@@ -378,7 +378,7 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  * \subsection udi_msc_use_case_composite_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
  * required for a USB composite device configuration:
- *   - \code // Endpoint control size, This must be:
+ *   \code // Endpoint control size, This must be:
 	// - 8, 16, 32 or 64 for full speed device (8 is recommended to save RAM)
 	// - 64 for a high speed device
 	#define USB_DEVICE_EP_CTRL_SIZE  64
@@ -391,7 +391,7 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
 	#define USB_DEVICE_MAX_EP (X+2) \endcode
  * -# Ensure that conf_usb.h contains the description of
  * composite device:
- *   - \code // The endpoint numbers chosen by you for the MSC.
+ *   \code // The endpoint numbers chosen by you for the MSC.
 	// The endpoint numbers starting from 1.
 	#define UDI_MSC_EP_IN  (X | USB_EP_DIR_IN)
 	#define UDI_MSC_EP_OUT (Y | USB_EP_DIR_OUT)
@@ -399,7 +399,7 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
 	#define UDI_MSC_IFACE_NUMBER  X \endcode
  * -# Ensure that conf_usb.h contains the following parameters
  * required for a USB composite device configuration:
- *   - \code // USB Interfaces descriptor structure
+ *   \code // USB Interfaces descriptor structure
 	#define UDI_COMPOSITE_DESC_T \
 	   ...
 	   udi_msc_desc_t udi_msc; \
@@ -428,7 +428,10 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  * \page asfdoc_udi_msc_config_examples Configuration File Examples
  *
  * \section asfdoc_udi_msc_config_examples_1 conf_usb.h
+ * \subsection asfdoc_udi_msc_config_examples_1_1  UDI MSC Single
  * \include module_config\conf_usb.h
+ * \subsection asfdoc_udi_msc_config_examples_1_2  UDI MSC Multiple (composite)
+ * \include composite\device\module_config\conf_usb.h
  *
  * \section asfdoc_udi_msc_config_examples_2 conf_clock.h
  *

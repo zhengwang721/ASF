@@ -256,34 +256,34 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  * \subsection udi_hid_generic_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following configuration
  * which is the USB device generic configuration:
- *   - \code #define UDI_HID_GENERIC_ENABLE_EXT() my_callback_generic_enable()
+ *   \code #define UDI_HID_GENERIC_ENABLE_EXT() my_callback_generic_enable()
 	 extern bool my_callback_generic_enable(void); \endcode
  *     \note After the device enumeration (detecting and identifying USB devices),
  *     the USB host starts the device configuration. When the USB generic interface
  *     from the device is accepted by the host, the USB host enables this interface and the
  *     UDI_HID_GENERIC_ENABLE_EXT() callback function is called and return true.
  *     Thus, it is recommended to enable sensors used by the generic in this function.
- *   - \code #define UDI_HID_GENERIC_DISABLE_EXT() my_callback_generic_disable()
+ *   \code #define UDI_HID_GENERIC_DISABLE_EXT() my_callback_generic_disable()
 	 extern void my_callback_generic_disable(void); \endcode
  *     \note When the USB device is unplugged or is reset by the USB host, the USB
  *     interface is disabled and the UDI_HID_GENERIC_DISABLE_EXT() callback function
  *     is called. Thus, it is recommended to disable sensors used by the HID generic
  *     interface in this function.
- *   - \code #define  UDI_HID_GENERIC_REPORT_OUT(ptr) my_callback_generic_report_out(ptr)
+ *   \code #define  UDI_HID_GENERIC_REPORT_OUT(ptr) my_callback_generic_report_out(ptr)
 	 extern void my_callback_generic_report_out(uint8_t *report); \endcode
  *     \note Callback used to receive the OUT report.
- *   - \code #define  UDI_HID_GENERIC_SET_FEATURE(f) my_callback_generic_set_feature(f)
+ *   \code #define  UDI_HID_GENERIC_SET_FEATURE(f) my_callback_generic_set_feature(f)
 	 extern void my_callback_generic_set_feature(uint8_t *report_feature); \endcode
  *     \note Callback used to receive the SET FEATURE report.
- *   - \code #define  UDI_HID_REPORT_IN_SIZE             64
+ *   \code #define  UDI_HID_REPORT_IN_SIZE             64
 	#define  UDI_HID_REPORT_OUT_SIZE            64
 	#define  UDI_HID_REPORT_FEATURE_SIZE        4 \endcode
  *     \note The report size are defined by the final application.
- *   - \code #define  UDI_HID_GENERIC_EP_SIZE 64 \endcode
+ *   \code #define  UDI_HID_GENERIC_EP_SIZE 64 \endcode
  *     \note The interrupt endpoint size is defined by the final application.
 
  * -# Send a IN report:
- *   - \code uint8_t report[] = {0x00,0x01,0x02...};
+ *   \code uint8_t report[] = {0x00,0x01,0x02...};
 	   udi_hid_generic_send_report_in(report); \endcode
  *
  * \section uhi_hid_generic_use_cases Advanced use cases
@@ -350,7 +350,7 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  * \subsection udi_hid_generic_use_case_composite_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
  * required for a USB composite device configuration:
- *   - \code // Endpoint control size, This must be:
+ *   \code // Endpoint control size, This must be:
 	// - 8 for low speed
 	// - 8, 16, 32 or 64 for full speed device (8 is recommended to save RAM)
 	// - 64 for a high speed device
@@ -364,7 +364,7 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
 	#define USB_DEVICE_MAX_EP (X+2) \endcode
  * -# Ensure that conf_usb.h contains the description of
  * composite device:
- *   - \code // The endpoint number chosen by you for the generic.
+ *   \code // The endpoint number chosen by you for the generic.
 	// The endpoint number starting from 1.
 	#define UDI_HID_GENERIC_EP_IN    (1 | USB_EP_DIR_IN)
 	#define UDI_HID_GENERIC_EP_OUT   (2 | USB_EP_DIR_OUT)
@@ -372,7 +372,7 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
 	#define UDI_HID_GENERIC_IFACE_NUMBER  X \endcode
  * -# Ensure that conf_usb.h contains the following parameters
  * required for a USB composite device configuration:
- *   - \code // USB Interfaces descriptor structure
+ *   \code // USB Interfaces descriptor structure
 	#define UDI_COMPOSITE_DESC_T \
 	   ...
 	   udi_hid_generic_desc_t udi_hid_generic; \
@@ -401,7 +401,10 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  * \page asfdoc_udi_hid_generic_config_examples Configuration File Examples
  *
  * \section asfdoc_udi_hid_generic_config_examples_1 conf_usb.h
+ * \subsection asfdoc_udi_hid_generic_config_examples_1_1  UDI HID GENERIC Single
  * \include module_config\conf_usb.h
+ * \subsection asfdoc_udi_hid_generic_config_examples_1_2  UDI HID GENERIC Multiple (composite)
+ * \include composite\device\module_config\conf_usb.h
  *
  * \section asfdoc_udi_hid_generic_config_examples_2 conf_clock.h
  *

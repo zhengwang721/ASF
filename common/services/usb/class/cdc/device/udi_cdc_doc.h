@@ -621,31 +621,31 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  * \subsubsection udi_cdc_basic_use_case_setup_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following configuration
  * which is the USB device CDC configuration:
- *   - \code #define USB_DEVICE_SERIAL_NAME  "12...EF" // Disk SN for CDC \endcode
+ *    \code #define USB_DEVICE_SERIAL_NAME  "12...EF" // Disk SN for CDC \endcode
  *     \note The USB serial number is mandatory when a CDC interface is used.
- *   - \code #define UDI_CDC_ENABLE_EXT(port) my_callback_cdc_enable()
+ *    \code #define UDI_CDC_ENABLE_EXT(port) my_callback_cdc_enable()
 	 extern bool my_callback_cdc_enable(void); \endcode
  *     \note After the device enumeration (detecting and identifying USB devices),
  *     the USB host starts the device configuration. When the USB CDC interface
  *     from the device is accepted by the host, the USB host enables this interface and the
  *     UDI_CDC_ENABLE_EXT() callback function is called and return true.
  *     Thus, when this event is received, the data transfer on CDC interface are authorized.
- *   - \code #define UDI_CDC_DISABLE_EXT(port) my_callback_cdc_disable()
+ *    \code #define UDI_CDC_DISABLE_EXT(port) my_callback_cdc_disable()
 	 extern void my_callback_cdc_disable(void); \endcode
  *     \note When the USB device is unplugged or is reset by the USB host, the USB
  *     interface is disabled and the UDI_CDC_DISABLE_EXT() callback function
  *     is called. Thus, the data transfer must be stopped on CDC interface.
- *   - \code #define  UDI_CDC_LOW_RATE \endcode
+ *    \code #define  UDI_CDC_LOW_RATE \endcode
  *     \note  Define it when the transfer CDC Device to Host is a low rate
  *     (<512000 bauds) to reduce CDC buffers size.
- *   - \code
+ *    \code
 	#define  UDI_CDC_DEFAULT_RATE             115200
 	#define  UDI_CDC_DEFAULT_STOPBITS         CDC_STOP_BITS_1
 	#define  UDI_CDC_DEFAULT_PARITY           CDC_PAR_NONE
 	#define  UDI_CDC_DEFAULT_DATABITS         8 \endcode
  *     \note Default configuration of communication port at startup.
  * -# Send or wait data on CDC line:
- *   - \code // Waits and gets a value on CDC line
+ *    \code // Waits and gets a value on CDC line
 	int udi_cdc_getc(void);
 	// Reads a RAM buffer on CDC line
 	iram_size_t udi_cdc_read_buf(int* buf, iram_size_t size);
@@ -729,7 +729,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  * \subsection udi_cdc_use_case_composite_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
  * required for a USB composite device configuration:
- *   - \code // Endpoint control size, This must be:
+ *     \code // Endpoint control size, This must be:
 	// - 8, 16, 32 or 64 for full speed device (8 is recommended to save RAM)
 	// - 64 for a high speed device
 	#define USB_DEVICE_EP_CTRL_SIZE  64
@@ -742,7 +742,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
 	#define USB_DEVICE_MAX_EP (X+3) \endcode
  * -# Ensure that conf_usb.h contains the description of
  * composite device:
- *   - \code // The endpoint numbers chosen by you for the CDC.
+ *    \code // The endpoint numbers chosen by you for the CDC.
 	// The endpoint numbers starting from 1.
 	#define  UDI_CDC_DATA_EP_IN_0            (1 | USB_EP_DIR_IN)  // TX
 	#define  UDI_CDC_DATA_EP_OUT_0           (2 | USB_EP_DIR_OUT) // RX
@@ -752,7 +752,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
 	#define  UDI_CDC_DATA_IFACE_NUMBER_0     X+1 \endcode
  * -# Ensure that conf_usb.h contains the following parameters
  * required for a USB composite device configuration:
- *   - \code // USB Interfaces descriptor structure
+ *    \code // USB Interfaces descriptor structure
 	#define UDI_COMPOSITE_DESC_T \
 	   ...
 	   usb_iad_desc_t udi_cdc_iad; \
@@ -790,7 +790,10 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  * \page asfdoc_udi_cdc_config_examples Configuration File Examples
  *
  * \section asfdoc_udi_cdc_config_examples_1 conf_usb.h
+ * \subsection asfdoc_udi_cdc_config_examples_1_1  UDI CDC Single
  * \include module_config\conf_usb.h
+ * \subsection asfdoc_udi_cdc_config_examples_1_2  UDI CDC Multiple (composite)
+ * \include composite\device\module_config\conf_usb.h
  *
  * \section asfdoc_udi_cdc_config_examples_2 conf_clock.h
  *
