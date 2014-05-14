@@ -162,14 +162,14 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
 /**
  * \page asfdoc_udi_msc_exqsg Quick start guide for USB device Mass Storage module (UDI MSC)
  *
- * This is the quick start guide for the \ref asfdoc_udi_msc_group 
- * "USB device interface MSC module (UDI MSC)" with step-by-step instructions on 
+ * This is the quick start guide for the \ref asfdoc_udi_msc_group
+ * "USB device interface MSC module (UDI MSC)" with step-by-step instructions on
  * how to configure and use the modules in a selection of use cases.
  *
  * The use cases contain several code fragments. The code fragments in the
  * steps for setup can be copied into a custom initialization function, while
  * the steps for usage can be copied into, e.g., the main application function.
- * 
+ *
  * \section udi_msc_basic_use_case Basic use case
  * In this basic use case, the "USB MSC (Single Interface Device)" module is used.
  * The "USB MSC (Composite Device)" module usage is described in \ref udi_msc_use_cases
@@ -178,6 +178,63 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  * \section udi_msc_basic_use_case_setup Setup steps
  * As a USB device, it follows common USB device setup steps. Please refer to
  * \ref asfdoc_udc_basic_use_case_setup "USB Device Basic Setup".
+ *
+ * The USB MSC interface accesses Memory through Common Abstraction Layer
+ * (ctrl_access) in ASF. See \ref udi_msc_basic_use_case_setup_ctrl_access.
+ *
+ * \subsection udi_msc_basic_use_case_setup_ctrl_access Common abstraction layer for memory interfaces
+ * Common abstraction layer (ctrl_access) can provide interfaces between Memory
+ * and USB. In USB MSC UDI the read/write invokes following ctrl_access
+ * functions:
+ * \code
+	extern Ctrl_status memory_2_usb(U8 lun, U32 addr, U16 nb_sector);
+	extern Ctrl_status usb_2_memory(U8 lun, U32 addr, U16 nb_sector);
+ * \endcode
+ * Then the ctrl_access dispatch the read/write operation to different LUNs.
+ *
+ * The memory access in ctrl_access is configured through conf_access.h.
+ * E.g., to use LUN0 to access virtual memory disk, the configuration should
+ * include:
+ * \code
+	#define LUN_0                 ENABLE // Enable LUN0 access
+	//...
+
+	#define VIRTUAL_MEM           LUN_0
+	#define LUN_ID_VIRTUAL_MEM    LUN_ID_0
+	#define LUN_0_INCLUDE         "virtual_mem.h"         // APIs (complied to ctrl_access)
+	#define Lun_0_test_unit_ready virtual_test_unit_ready // check disk ready
+	#define Lun_0_read_capacity   virtual_read_capacity   // get disk size
+	#define Lun_0_wr_protect      virtual_wr_protect      // check protection
+	#define Lun_0_removal         virtual_removal         // check if disk is removable
+	#define Lun_0_usb_read_10     virtual_usb_read_10     // Disk to USB transfer
+	#define Lun_0_usb_write_10    virtual_usb_write_10    // USB to Disk transfer
+	#define LUN_0_NAME            "\"On-Chip Virtual Memory\""
+	//...
+
+	#define ACCESS_USB                true    // USB interface.
+	//...
+
+	#define GLOBAL_WR_PROTECT         false
+ * \endcode
+ *
+ * Since LUN_0 is defined as a "Virtual Memory", the module to encapsulate the
+ * internal or on-board memory to access as a disk is included.
+ * The configuration of such a virtual memory disk is in conf_virtual_mem.h.
+ * E.g., to use internal RAM to build such a memory disk, the configuration
+ * should include:
+ * \code
+	//! Size of Virtual Memory on internal RAM (unit 512B)
+	#define VMEM_NB_SECTOR 48 //Internal RAM 24KB (should > 20KB or PC can not format it)
+ * \endcode
+ *
+ * For more examples of the control access or disk configuration, please refer
+ * to \ref asfdoc_udi_msc_config_examples_5 "conf_access.h" and
+ * \ref asfdoc_udi_msc_config_examples_6 "conf_virtual_mem.h".
+ *
+ * For more Information about Memory Control Access, please refer to the online
+ * document:
+ * - <a href="http://asf.atmel.com/docs/latest/sam3a/html/group__group__common__services__storage__ctrl__access.html">
+ *   Atmel Software Framework - Memory Control Access</a>
  *
  * \section udi_msc_basic_use_case_usage Usage steps
  *
@@ -230,7 +287,7 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  *   - \code #define UDI_MSC_ENABLE_EXT() my_callback_msc_enable()
 	extern bool my_callback_msc_enable(void); \endcode
  *     \note After the device enumeration (detecting and identifying USB devices),
- *     the USB host starts the device configuration. When the USB MSC interface 
+ *     the USB host starts the device configuration. When the USB MSC interface
  *     from the device is accepted by the host, the USB host enables this interface and the
  *     UDI_MSC_ENABLE_EXT() callback function is called and return true.
  *     Thus, when this event is received, the tasks which call
@@ -240,7 +297,7 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  *     \note When the USB device is unplugged or is reset by the USB host, the USB
  *     interface is disabled and the UDI_MSC_DISABLE_EXT() callback function
  *     is called. Thus, it is recommended to disable the task which is called udi_msc_process_trans().
- * -# The MSC is automatically linked with memory control access component 
+ * -# The MSC is automatically linked with memory control access component
  * which provides the memories interfaces. However, the memory data transfers
  * must be done outside USB interrupt routine. This is done in the MSC process
  * ("udi_msc_process_trans()") called by main loop:
@@ -282,7 +339,7 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  * In this use case, the "USB MSC (Composite Device)" module is used to
  * create a USB composite device. Thus, this USB module can be associated with
  * another "Composite Device" module, like "USB HID Mouse (Composite Device)".
- * 
+ *
  * Also, you can refer to application note
  * <A href="http://www.atmel.com/dyn/resources/prod_documents/doc8445.pdf">
  * AVR4902 ASF - USB Composite Device</A>.
@@ -400,5 +457,51 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  *
  * \subsection asfdoc_udi_msc_config_examples_3_1 SAMD devices (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_clocks.h
+ *
+ * \section asfdoc_udi_msc_config_examples_4 conf_board.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_4_1 AT32UC3A0, AT32UC3A1, AT32UC3B devices (USBB)
+ * \include example\at32uc3a0512_evk1100\conf_board.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_4_2 AT32UC3A3, AT32UC3A4 devices (USBB with high speed support)
+ * \include example\at32uc3a3256_evk1104\conf_board.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_4_3 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U devices (USBC)
+ * \include example\at32uc3c0512c_uc3c_ek\conf_board.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_4_4 SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed)
+ * \include example\sam3x8h_sam3x_ek\conf_board.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_4_5 SAMD devices (USB)
+ * \include example\samd21j18a_samd21_xplained_pro\conf_board.h
+ *
+ * \section asfdoc_udi_msc_config_examples_5 conf_access.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_5_1 AT32UC3A0, AT32UC3A1, AT32UC3B devices (USBB)
+ * On EVK1100, the AT45DBx and one SD/MMC are for MSC.
+ * \include example\at32uc3a0512_evk1100\conf_access.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_5_2 AT32UC3A3, AT32UC3A4 devices (USBB with high speed support)
+ * On EVK1104, the AT45DBx and two SD/MMC slots are for MSC.
+ * \include example\at32uc3a3256_evk1104\conf_access.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_5_3 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U devices (USBC)
+ * On EVK1100, the AT45DBx and one SD/MMC are for MSC.
+ * \include example\at32uc3c0512c_uc3c_ek\conf_access.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_5_4 SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed)
+ * On SAM3X-EK, the SD/MMC and on-board nand are for MSC.
+ * \include example\sam3x8h_sam3x_ek\conf_access.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_5_5 SAMD devices (USB)
+ * \include example\samd21j18a_samd21_xplained_pro\conf_access.h
+ *
+ * \section asfdoc_udi_msc_config_examples_6 conf_virtual_mem.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_6_1 On-chip virtual memory disk
+ * \include example\samd21j18a_samd21_xplained_pro\conf_virtual_mem.h
+ *
+ * \subsection asfdoc_udi_msc_config_examples_6_2 On-board virtual meory disk
+ * \include example\sam3u4e_sam3u_ek\conf_virtual_mem.h
  */
 

@@ -107,7 +107,7 @@
 
 		<require idref="common.services.usb.class.msc.protocol"/>
 
-		<info type="appnote" value="ATxxxxx"/>
+		<info type="appnote" value="AT_MSC_DEVICE"/>
 		<info type="keyword" value="pdf">
 			<keyword value="USB"/>
 			<keyword value="Universal Serial Bus"/>
