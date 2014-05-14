@@ -297,7 +297,7 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  * - \subpage udc_use_case_6
  * \else
  * For multiple interface use of UDI HID module, see the following:
- * - \subpage udi_hid_use_case_composite
+ * - \subpage udi_hid_generic_use_case_composite
  *
  * For more advanced use of the UDI HID generic module, see the following:
  * - \ref asfdoc_udc_use_cases

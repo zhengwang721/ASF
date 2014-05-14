@@ -276,7 +276,7 @@ bool udi_hid_kbd_down(uint8_t key_id);
  * - \subpage udc_use_case_6
  * \else
  * For multiple interface use of UDI HID module, see the following:
- * - \subpage udi_hid_use_case_composite
+ * - \subpage udi_hid_keyboard_use_case_composite
  *
  * For more advanced use of the UDI HID keyboard module, see the following:
  * - \ref asfdoc_udc_use_cases

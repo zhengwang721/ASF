@@ -495,8 +495,11 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  * - \subpage udc_use_case_3
  * - \subpage udc_use_case_5
  * - \subpage udc_use_case_6
-* \else
- * For more advanced use of the udi vendor module, see the following:
+ * \else
+ * For multiple interface use of UDI Vendor module, see the following:
+ * - \subpage udi_vendor_use_case_composite
+ *
+ * For more advanced use of the UDI Vendor module, see the following:
  * - \ref asfdoc_udc_use_cases
  * \endif
  */
