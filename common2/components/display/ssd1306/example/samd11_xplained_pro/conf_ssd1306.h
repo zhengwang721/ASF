@@ -45,7 +45,7 @@
 
 #include <board.h>
 
-// Interface configuration for SAM D21 Xplained Pro
+// Interface configuration for SAM D11 Xplained Pro
 #  define SSD1306_SPI                 EXT1_SPI_MODULE
 #  define CONFIG_SSD1306_FRAMEBUFFER
 
