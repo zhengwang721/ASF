@@ -179,7 +179,7 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  * As a USB device, it follows common USB device setup steps. Please refer to
  * \ref asfdoc_udc_basic_use_case_setup "USB Device Basic Setup".
  *
- * \section udi_msc_basic_use_case_setup_ctrl_access Common abstraction layer for memory interfaces
+ * \subsection udi_msc_basic_use_case_setup_ctrl_access Common abstraction layer for memory interfaces
  * Common abstraction layer provides interfaces between Memory and USB.
  *
  * -# MEM <-> USB Interface
