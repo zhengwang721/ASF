@@ -44,7 +44,6 @@
 #include "conf_usb.h"
 #include "sysclk.h"
 #include "udd.h"
-#include "uhdp_otg.h"
 #include "uhdp_device.h"
 #include <string.h>
 
@@ -623,8 +622,7 @@ void udd_enable(void)
 	pmc_set_fast_startup_input(PMC_FSMR_USBAL);
 
 	// ID pin not used and force device mode
-	uhdp_disable_id_pin();
-	uhdp_force_device_mode();
+	otg_force_device_mode();
 
 	// Enable USB hardware
 	otg_enable_pad();

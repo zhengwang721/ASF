@@ -46,32 +46,11 @@
 
 #include "compiler.h"
 #include "preprocessor.h"
+#include "uhdp_otg.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
-
-/* Get USB VBus pin configuration in board configuration */
-#include "conf_board.h"
-#include "board.h"
-#include "ioport.h"
-#include "pio.h"
-#include "pio_handler.h"
-
-__always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
-    IRQn_Type port_irqn, uint8_t irq_level,
-    void (*handler)(uint32_t,uint32_t), uint32_t wkup)
-{
-	// IOPORT must be initialized before by ioport_init(), \see ioport_group.
-	pio_handler_set_pin(pin, flags, handler);
-	ioport_set_pin_sense_mode(pin, IOPORT_SENSE_BOTHEDGES);
-	NVIC_SetPriority(port_irqn, irq_level);
-	NVIC_EnableIRQ(port_irqn);
-	pio_enable_pin_interrupt(pin);
-	if (wkup) {
-		pmc_set_fast_startup_input(wkup);
-	}
-}
 
 //! \ingroup udd_group
 //! \defgroup udd_uhdp_group Full Speed USB Host and Device Port for device mode (UHDP)
@@ -122,7 +101,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 #  define USB_VBUS_WKUP 0
 #endif
 
-#define udd_vbus_init(handler) io_pin_init(USB_VBUS_PIN, USB_VBUS_FLAGS, \
+#define udd_vbus_init(handler) otg_io_pin_init(USB_VBUS_PIN, USB_VBUS_FLAGS, \
   USB_VBUS_PIN_IRQn, UDD_USB_INT_LEVEL, handler, USB_VBUS_WKUP)
 #define Is_udd_vbus_high()           ioport_get_pin_level(USB_VBUS_PIN)
 #define Is_udd_vbus_low()            (!Is_udd_vbus_high())
