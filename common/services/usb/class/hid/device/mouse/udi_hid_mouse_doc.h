@@ -299,7 +299,7 @@ bool udi_hid_mouse_btnleft(bool b_state);
 	// Sends a left click event
 	udi_hid_mouse_btnleft(bool b_state); \endcode
  *
- * \section uhi_hid_mouse_use_cases Advanced use cases
+ * \section udi_hid_mouse_use_cases Advanced use cases
 * \ifnot ASF_MANUAL
  * For more advanced use of the UHI HID mouse module, see the following use cases:
  * - \subpage udi_hid_mouse_use_case_composite

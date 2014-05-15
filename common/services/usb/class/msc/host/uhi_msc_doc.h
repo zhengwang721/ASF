@@ -408,7 +408,7 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
  * \section asfdoc_uhi_msc_config_examples_1 conf_usb_host.h
  * \subsection asfdoc_uhi_msc_config_examples_1_1  UHI MSC Single
  * \include module_config\conf_usb_host.h
- * \subsection asfdoc_uhi_cdc_config_examples_1_2  UHI MSC Multiple (composite)
+ * \subsection asfdoc_uhi_msc_config_examples_1_2  UHI MSC Multiple (composite)
  * \include composite\host\module_config\conf_usb_host.h
  *
  * \section asfdoc_uhi_msc_config_examples_2 conf_clock.h
