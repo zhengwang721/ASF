@@ -195,6 +195,8 @@ static void uhd_sleep_mode(enum uhd_uhdp_state_enum new_state)
 		SLEEPMGR_SLEEP_WFI, // UHD_STATE_IDLE
 	};
 
+	dbg_print("sleep%d ", new_state);
+
 	static enum uhd_uhdp_state_enum uhd_state = UHD_STATE_OFF;
 
 	if (uhd_state == new_state) {
@@ -257,7 +259,7 @@ static void uhd_vbus_handler(uint32_t id, uint32_t mask)
 
 	if (Is_otg_vbus_high()) {
 		otg_unfreeze_clock();
-		uhd_enable_vbus();
+		uhd_enable_vbus_request();
 		/* Freeze USB clock to use wakeup interrupt
 		 * to detect connection.
 		 * After detection of wakeup interrupt,
@@ -270,7 +272,7 @@ static void uhd_vbus_handler(uint32_t id, uint32_t mask)
 		UHC_VBUS_CHANGE(true);
 	} else {
 		otg_unfreeze_clock();
-		uhd_disable_vbus();
+		uhd_disable_vbus_request();
 		otg_freeze_clock();
 		uhd_sleep_mode(UHD_STATE_NO_VBUS);
 		UHC_VBUS_CHANGE(false);
@@ -428,10 +430,6 @@ static void uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
  */
 ISR(UHD_USB_INT_FUN)
 {
-	bool b_mode_device;
-
-	pmc_enable_periph_clk(ID_UOTGHS);
-
 	/*
 	 * For fast wakeup clocks restore
 	 * In WAIT mode, clocks are switched to FASTRC.
@@ -443,29 +441,8 @@ ISR(UHD_USB_INT_FUN)
 		return;
 	}
 
-#ifdef USB_ID_GPIO
-	if (Is_otg_id_transition()) {
-		otg_unfreeze_clock();
-		otg_ack_id_transition();
-		otg_freeze_clock();
-		if (Is_otg_id_device()) {
-			uhc_stop(false);
-			UHC_MODE_CHANGE(false);
-			udc_start();
-		} else {
-			udc_stop();
-			UHC_MODE_CHANGE(true);
-			uhc_start();
-		}
-		return;
-	}
-	b_mode_device = Is_otg_id_device();
-#else
-	b_mode_device = Is_otg_device_mode_forced();
-#endif
-
 	// Redirection to host or device interrupt
-	if (b_mode_device) {
+	if (Is_otg_device_mode_forced()) {
 		udd_interrupt();
 	} else {
 		uhd_interrupt();
@@ -526,8 +503,8 @@ void otg_dual_disable(void)
 	pmc_clr_fast_startup_input(PMC_FSMR_USBAL);
 
 	otg_unfreeze_clock();
-# ifdef USB_ID_GPIO
-	otg_disable_id_interrupt();
+# if OTG_ID_IO
+	otg_id_interrupt_disable();
 # endif
 	otg_freeze_clock();
 	otg_disable();
@@ -536,7 +513,6 @@ void otg_dual_disable(void)
 	pmc_disable_periph_clk(ID_UOTGHS);
 	uhd_sleep_mode(UHD_STATE_OFF);
 }
-
 
 
 void uhd_enable(void)
@@ -596,7 +572,7 @@ void uhd_enable(void)
 	}
 # else
 	/* No VBus detect, assume always high */
-	uhd_enable_vbus();
+	uhd_enable_vbus_request();
 
 	/* Freeze USB clock to use wakeup interrupt to detect connection.
 	 *
@@ -610,16 +586,12 @@ void uhd_enable(void)
 
 	/* Enable VBus */
 	pad_vbus_enable();
-	uhd_enable_vbus();
-
+	uhd_enable_vbus_request();
 
 	// Enable main control interrupt
 	// Connection, SOF and reset
 	UOTGHS->UOTGHS_HSTIER = UOTGHS_HSTICR_DCONNIC | UOTGHS_HSTICR_HSOFIC
 				| UOTGHS_HSTICR_RSTIC;
-
-	//otg_freeze_clock();
-	uhd_sleep_mode(UHD_STATE_NO_VBUS);
 
 	cpu_irq_restore(flags);
 }
@@ -642,11 +614,11 @@ void uhd_disable(bool b_id_stop)
 			| UOTGHS_HSTIDR_HWUPIEC;
 
 	uhd_disable_sof();
-	uhd_disable_vbus();
+	uhd_disable_vbus_request();
 	uhc_notify_connection(false);
 	otg_freeze_clock();
 
-#ifdef USB_ID_GPIO
+#if OTG_ID_IO
 	if (!b_id_stop) {
 		// Freeze clock to switch mode
 		otg_freeze_clock();
@@ -1074,21 +1046,7 @@ static void uhd_interrupt(void)
 		uhd_sleep_mode(UHD_STATE_IDLE);
 		goto uhd_interrupt_exit;
 	}
-#if 0
-	// Manage VBus state change
-	if (Is_otg_vbus_transition()) {
-		otg_ack_vbus_transition();
-		if (Is_otg_vbus_high()) {
-			uhd_sleep_mode(UHD_STATE_DISCONNECT);
-			UHC_VBUS_CHANGE(true);
-		} else {
-			uhd_sleep_mode(UHD_STATE_NO_VBUS);
-			otg_freeze_clock();
-			UHC_VBUS_CHANGE(false);
-		}
-		goto uhd_interrupt_exit;
-	}
-#endif
+
 	// Other errors
 	if (Is_uhd_errors_interrupt_enabled() && Is_uhd_errors_interrupt()) {
 		uhd_ack_errors_interrupt();

@@ -117,8 +117,8 @@ void otg_dual_disable(void);
 #if OTG_ID_IO
 #define otg_id_init(handler)         otg_io_pin_init(USB_ID_PIN, USB_ID_FLAGS, \
 			USB_ID_PIN_IRQn, USB_INT_LEVEL, handler, false)
-# define otg_id_interrupt_enable()   pio_enable_pin_interrupt(USB_VBUS_PIN)
-# define otg_id_interrupt_disable()  pio_disable_pin_interrupt(USB_VBUS_PIN)
+# define otg_id_interrupt_enable()   pio_enable_pin_interrupt(USB_ID_PIN)
+# define otg_id_interrupt_disable()  pio_disable_pin_interrupt(USB_ID_PIN)
 # define Is_otg_id_device()          ioport_get_pin_level(USB_ID_PIN)
 #endif
 
@@ -163,11 +163,11 @@ void otg_dual_disable(void);
 //! Disables VBUS hardware control (Must be disabled as no VBUS pin controlled by UHDP)
 #define uhd_disable_vbus_hw_control()         (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBUSHWC))
 //! Requests VBus activation in UHDP
-#define uhd_enable_vbus()                     (UOTGHS->UOTGHS_SFR = UOTGHS_SR_VBUSRQ)
+#define uhd_enable_vbus_request()             (UOTGHS->UOTGHS_SFR = UOTGHS_SR_VBUSRQ)
 //! Requests VBus deactivation in UHDP
-#define uhd_disable_vbus()                    (UOTGHS->UOTGHS_SCR = UOTGHS_SR_VBUSRQ)
+#define uhd_disable_vbus_request()            (UOTGHS->UOTGHS_SCR = UOTGHS_SR_VBUSRQ)
 //! Tests if VBus activation has been requested in UHDP
-#define Is_uhd_vbus_enabled()                 (Tst_bits(UOTGHS->UOTGHS_SR, UOTGHS_SR_VBUSRQ))
+#define Is_uhd_vbus_request_enabled()         (Tst_bits(UOTGHS->UOTGHS_SR, UOTGHS_SR_VBUSRQ))
 //! @}
 
 

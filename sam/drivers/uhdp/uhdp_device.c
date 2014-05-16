@@ -608,7 +608,7 @@ void udd_enable(void)
 	flags = cpu_irq_save();
 
 #ifdef UHD_ENABLE
-	// Dual ROLE INITIALIZATION
+	// DUAL ROLE INITIALIZATION
 	if (otg_dual_enable()) {
 		// The current mode has been started by otg_dual_enable()
 		cpu_irq_restore(flags);
@@ -628,7 +628,7 @@ void udd_enable(void)
 	pmc_set_fast_startup_input(PMC_FSMR_USBAL);
 #endif
 
-#if (defined USB_ID_PIN) && (defined UHD_ENABLE)
+#if (OTG_ID_IO) && (defined UHD_ENABLE)
 	// Check that the device mode is selected by ID pin
 	if (!Is_otg_id_device()) {
 		cpu_irq_restore(flags);
@@ -683,7 +683,7 @@ void udd_disable(void)
 	irqflags_t flags;
 
 #ifdef UHD_ENABLE
-# ifdef USB_ID_PIN
+# if OTG_ID_IO
 	if (Is_otg_id_host()) {
 		// Freeze clock to switch mode
 		otg_freeze_clock();
