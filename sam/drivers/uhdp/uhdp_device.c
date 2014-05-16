@@ -96,14 +96,14 @@
  * Default value 1.
  *
  * \section Callbacks management
- * The USB driver is fully managed by interrupt and does not request periodique
+ * The USB driver is fully managed by interrupt and does not request periodic
  * task. Thereby, the USB events use callbacks to transfer the information.
  * The callbacks are declared in static during compilation or in variable during
  * code execution.
  *
  * Static declarations defined in conf_usb.h:
  * - UDC_VBUS_EVENT(bool b_present)<br>
- *   To signal Vbus level change
+ *   To signal VBus level change
  * - UDC_SUSPEND_EVENT()<br>
  *   Called when USB bus enter in suspend mode
  * - UDC_RESUME_EVENT()<br>
@@ -247,7 +247,7 @@ static bool udd_b_idle = false;
 static bool udd_b_sleep_initialized = false;
 
 
-/*! \brief Authorize or not the CPU powerdown mode
+/*! \brief Authorize or not the CPU power down mode
  *
  * \param b_idle true to authorize idle mode
  */
@@ -327,7 +327,7 @@ static void udd_vbus_handler(uint32_t id, uint32_t mask)
 /**
  * \name Control endpoint low level management routine.
  *
- * This function performs control endpoint mangement.
+ * This function performs control endpoint management.
  * It handle the SETUP/DATA/HANDSHAKE phases of a control transaction.
  */
 //@{
@@ -399,9 +399,9 @@ static void udd_ctrl_endofrequest(void);
 /**
  * \brief Main interrupt routine for control endpoint
  *
- * This switchs control endpoint events to correct sub function.
+ * This switches control endpoint events to correct sub function.
  *
- * \return \c 1 if an event about control endpoint is occured, otherwise \c 0.
+ * \return \c 1 if an event about control endpoint is occurred, otherwise \c 0.
  */
 static bool udd_ctrl_interrupt(void);
 
@@ -412,7 +412,7 @@ static bool udd_ctrl_interrupt(void);
  * \name Management of bulk/interrupt/isochronous endpoints
  *
  * The UDD manages the data transfer on endpoints:
- * - Start data tranfer on endpoint with USB Device DMA
+ * - Start data transfer on endpoint with USB Device DMA
  * - Send a ZLP packet if requested
  * - Call callback registered to signal end of transfer
  * The transfer abort and stall feature are supported.
@@ -471,7 +471,7 @@ static void udd_ep_abort_job(udd_ep_id_t ep);
 static void udd_ep_finish_job(udd_ep_job_t * ptr_job, bool b_abort, uint8_t ep_num);
 
 /**
- * \brief Start the next transfer if necessary or complet the job associated.
+ * \brief Start the next transfer if necessary or complete the job associated.
  *
  * \param ep endpoint number without direction flag
  */
@@ -480,9 +480,9 @@ static void udd_ep_trans_done(udd_ep_id_t ep);
 /**
  * \brief Main interrupt routine for bulk/interrupt/isochronous endpoints
  *
- * This switchs endpoint events to correct sub function.
+ * This switches endpoint events to correct sub function.
  *
- * \return \c 1 if an event about bulk/interrupt/isochronous endpoints has occured, otherwise \c 0.
+ * \return \c 1 if an event about bulk/interrupt/isochronous endpoints has occurred, otherwise \c 0.
  */
 static bool udd_ep_interrupt(void);
 
@@ -497,14 +497,14 @@ static bool udd_ep_interrupt(void);
  * \internal
  * \brief Function called by UHDP interrupt to manage USB Device interrupts
  *
- * USB Device interrupt events are splited in three parts:
+ * USB Device interrupt events are split in three parts:
  * - USB line events (SOF, reset, suspend, resume, wakeup)
  * - control endpoint events (setup reception, end of data transfer, underflow, overflow, stall)
  * - bulk/interrupt/isochronous endpoints events (end of data transfer)
  *
  * Note:
  * Here, the global interrupt mask is not clear when an USB interrupt is enabled
- * because this one can not be occured during the USB ISR (=during INTX is masked).
+ * because this one can not be occurred during the USB ISR (=during INTX is masked).
  */
 #ifdef UHD_ENABLE
 void udd_interrupt(void);
@@ -648,7 +648,7 @@ void udd_enable(void)
 	/* Initialize VBus monitor */
 	udd_vbus_init(udd_vbus_handler);
 	udd_vbus_monitor_sleep_mode(true);
-	/* Force Vbus interrupt when Vbus is always high
+	/* Force VBus interrupt when VBus is always high
 	 * This is possible due to a short timing between a Host mode stop/start.
 	 */
 	if (Is_udd_vbus_high()) {
@@ -696,7 +696,7 @@ void udd_attach(void)
 	udd_sleep_mode(true);
 	otg_unfreeze_clock();
 
-	// Authorize attach if Vbus is present
+	// Authorize attach if VBus is present
 	udd_attach_device();
 
 	// Enable USB line events
@@ -794,7 +794,7 @@ bool udd_ep_alloc(udd_ep_id_t ep, uint8_t bmAttributes,
 	}
 	dbg_print("alloc(%x, %d) ", ep, MaxEndpointSize);
 
-	// Bank choise
+	// Bank choice
 	switch (bmAttributes & USB_EP_TYPE_MASK) {
 	case USB_EP_TYPE_ISOCHRONOUS:
 		nb_bank = UDD_ISOCHRONOUS_NB_BANK(ep);
@@ -1076,7 +1076,7 @@ bool udd_ep_wait_stall_clear(udd_ep_id_t ep,
 
 	if (Is_udd_endpoint_stall_requested(ep)
 			|| ptr_job->stall_requested) {
-		// Endpoint halted then registes the callback
+		// Endpoint halted then registers the callback
 		ptr_job->busy = true;
 		ptr_job->call_nohalt = callback;
 	} else {
@@ -1099,7 +1099,7 @@ static void udd_reset_ep_ctrl(void)
 	udd_configure_address(0);
 	udd_enable_address();
 
-	// Alloc and configure control endpoint
+	// Allocate and configure control endpoint
 	udd_configure_endpoint(0,
 		USB_EP_TYPE_CONTROL,
 		0,
@@ -1167,7 +1167,7 @@ static void udd_ctrl_setup_received(void)
 
 	// Decode setup request
 	if (udc_process_setup() == false) {
-		// Setup request unknow then stall it
+		// Setup request unknown then stall it
 		udd_ctrl_stall_data();
 		udd_ack_setup_received(0);
 		return;
@@ -1191,7 +1191,7 @@ static void udd_ctrl_setup_received(void)
 		udd_ctrl_prev_payload_buf_cnt = 0;
 		udd_ctrl_payload_buf_cnt = 0;
 		udd_ep_control_state = UDD_EPCTRL_DATA_OUT;
-		// To detect a protocol error, enable nak interrupt on data IN phase
+		// To detect a protocol error, enable NAK interrupt on data IN phase
 		udd_ack_nak_in(0);
 		flags = cpu_irq_save();
 		udd_enable_nak_in_interrupt(0);
@@ -1224,7 +1224,7 @@ static void udd_ctrl_in_sent(void)
 	nb_remain = udd_g_ctrlreq.payload_size - udd_ctrl_payload_buf_cnt;
 	if (0 == nb_remain) {
 		// All content of current buffer payload are sent
-		// Update number of total data sending by previous playlaod buffer
+		// Update number of total data sending by previous payload buffer
 		udd_ctrl_prev_payload_buf_cnt += udd_ctrl_payload_buf_cnt;
 		if ((udd_g_ctrlreq.req.wLength == udd_ctrl_prev_payload_buf_cnt)
 					|| b_shortpacket) {
@@ -1237,7 +1237,7 @@ static void udd_ctrl_in_sent(void)
 		// Need of new buffer because the data phase is not complete
 		if ((!udd_g_ctrlreq.over_under_run)
 				|| (!udd_g_ctrlreq.over_under_run())) {
-			// Underrun then send zlp on IN
+			// Underrun then send ZLP on IN
 			// Here nb_remain=0 and allows to send a IN ZLP
 		} else {
 			// A new payload buffer is given
@@ -1260,7 +1260,7 @@ static void udd_ctrl_in_sent(void)
 	// The IN data don't must be written in endpoint 0 DPRAM during
 	// a next setup reception in same endpoint 0 DPRAM.
 	// Thereby, an OUT ZLP reception must check before IN data write
-	// and if no OUT ZLP is recevied the data must be written quickly (800us)
+	// and if no OUT ZLP is received the data must be written quickly (800 us)
 	// before an eventually ZLP OUT and SETUP reception
 	flags = cpu_irq_save();
 	if (Is_udd_out_received(0)) {
@@ -1278,7 +1278,7 @@ static void udd_ctrl_in_sent(void)
 	// Validate and send the data available in the control endpoint buffer
 	udd_ack_in_send(0);
 	udd_enable_in_send_interrupt(0);
-	// In case of abort of DATA IN phase, no need to enable nak OUT interrupt
+	// In case of abort of DATA IN phase, no need to enable NAK OUT interrupt
 	// because OUT endpoint is already free and ZLP OUT accepted.
 	cpu_irq_restore(flags);
 }
@@ -1296,8 +1296,8 @@ static void udd_ctrl_out_received(void)
 						udd_ep_control_state)) {
 			// End of SETUP request:
 			// - Data IN Phase aborted,
-			// - or last Data IN Phase hidden by ZLP OUT sending quiclky,
-			// - or ZLP OUT received normaly.
+			// - or last Data IN Phase hidden by ZLP OUT sending quickly,
+			// - or ZLP OUT received normally.
 			udd_ctrl_endofrequest();
 		} else {
 			// Protocol error during SETUP request
@@ -1325,8 +1325,8 @@ static void udd_ctrl_out_received(void)
 					(udd_ctrl_prev_payload_buf_cnt +
 							udd_ctrl_payload_buf_cnt))) {
 		// End of reception because it is a short packet
-		// Before send ZLP, call intermediat calback
-		// in case of data receiv generate a stall
+		// Before send ZLP, call intermediate callback
+		// in case of data receive generate a stall
 		udd_g_ctrlreq.payload_size = udd_ctrl_payload_buf_cnt;
 		if (NULL != udd_g_ctrlreq.over_under_run) {
 			if (!udd_g_ctrlreq.over_under_run()) {
@@ -1346,7 +1346,7 @@ static void udd_ctrl_out_received(void)
 	if (udd_g_ctrlreq.payload_size == udd_ctrl_payload_buf_cnt) {
 		// Overrun then request a new payload buffer
 		if (!udd_g_ctrlreq.over_under_run) {
-			// No callback availabled to request a new payload buffer
+			// No callback available to request a new payload buffer
 			udd_ctrl_stall_data();
 			// Ack reception of OUT to replace NAK by a STALL
 			udd_ack_out_received(0);
@@ -1362,12 +1362,12 @@ static void udd_ctrl_out_received(void)
 		// New payload buffer available
 		// Update number of total data received
 		udd_ctrl_prev_payload_buf_cnt += udd_ctrl_payload_buf_cnt;
-		// Reinit reception on payload buffer
+		// Re-initialize reception on payload buffer
 		udd_ctrl_payload_buf_cnt = 0;
 	}
 	// Free buffer of control endpoint to authorize next reception
 	udd_ack_out_received(0);
-	// To detect a protocol error, enable nak interrupt on data IN phase
+	// To detect a protocol error, enable NAK interrupt on data IN phase
 	udd_ack_nak_in(0);
 	flags = cpu_irq_save();
 	udd_enable_nak_in_interrupt(0);
@@ -1427,7 +1427,7 @@ static void udd_ctrl_send_zlp_in(void)
 	// Send ZLP on IN endpoint
 	udd_ack_in_send(0);
 	udd_enable_in_send_interrupt(0);
-	// To detect a protocol error, enable nak interrupt on data OUT phase
+	// To detect a protocol error, enable NAK interrupt on data OUT phase
 	udd_ack_nak_out(0);
 	udd_enable_nak_out_interrupt(0);
 	cpu_irq_restore(flags);
@@ -1442,7 +1442,7 @@ static void udd_ctrl_send_zlp_out(void)
 	// No action is necessary to accept OUT ZLP
 	// because the buffer of control endpoint is already free
 
-	// To detect a protocol error, enable nak interrupt on data IN phase
+	// To detect a protocol error, enable NAK interrupt on data IN phase
 	flags = cpu_irq_save();
 	udd_ack_nak_in(0);
 	udd_enable_nak_in_interrupt(0);
@@ -1577,7 +1577,7 @@ static void udd_ep_trans_done(udd_ep_id_t ep)
 	}
 
 	if (ptr_job->buf_cnt != ptr_job->buf_size) {
-		// Need to send or receiv other data
+		// Need to send or receive other data
 		next_trans = ptr_job->buf_size - ptr_job->buf_cnt;
 
 		if (UDD_ENDPOINT_MAX_TRANS < next_trans) {
@@ -1585,7 +1585,7 @@ static void udd_ep_trans_done(udd_ep_id_t ep)
 			// transfer size of UDD_ENDPOINT_MAX_TRANS Bytes
 			next_trans = UDD_ENDPOINT_MAX_TRANS;
 
-			// Set 0 to tranfer the maximum
+			// Set 0 to transfer the maximum
 			udd_dma_ctrl = UOTGHS_DEVDMACONTROL_BUFF_LENGTH(0);
 		} else {
 			udd_dma_ctrl = UOTGHS_DEVDMACONTROL_BUFF_LENGTH(next_trans);
@@ -1609,7 +1609,7 @@ static void udd_ep_trans_done(udd_ep_id_t ep)
 			}
 		}
 
-		// Start USB DMA to fill or read fifo of the selected endpoint
+		// Start USB DMA to fill or read FIFO of the selected endpoint
 		udd_endpoint_dma_set_addr(ep, (uint32_t) & ptr_job->buf[ptr_job->buf_cnt]);
 		udd_dma_ctrl |= UOTGHS_DEVDMACONTROL_END_BUFFIT |
 				UOTGHS_DEVDMACONTROL_CHANN_ENB;
@@ -1630,7 +1630,7 @@ static void udd_ep_trans_done(udd_ep_id_t ep)
 		}
 		cpu_irq_restore(flags);
 
-		// Here a ZLP has been recieved
+		// Here a ZLP has been received
 		// and the DMA transfer must be not started.
 		// It is the end of transfer
 		ptr_job->buf_size = ptr_job->buf_cnt;
@@ -1711,7 +1711,7 @@ static bool udd_ep_interrupt(void)
 				udd_disable_endpoint_interrupt(ep);
 
 				Assert(ptr_job->stall_requested);
-				// A stall has been requested during backgound transfer
+				// A stall has been requested during background transfer
 				ptr_job->stall_requested = false;
 				udd_disable_endpoint_bank_autoswitch(ep);
 				udd_enable_stall_handshake(ep);

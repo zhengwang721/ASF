@@ -74,7 +74,7 @@ extern "C" {
 #define Is_uhd_pipe_high_bw_supported(ep)     (((ep) >= 3) ? true : false)
 //! @}
 
-//! @name Host Vbus line control
+//! @name Host VBus line control
 //!
 //! VBOF is an optional output pin which allows to enable or disable
 //! the external VBus generator. VBOF is managed through PIO driver.
@@ -488,9 +488,9 @@ typedef struct {
 //! Structure for DMA registers
 #define  UOTGHS_UHDMA_ARRAY(ep)                (((volatile uhdp_uhdmach_t *)UOTGHS->UOTGHS_HSTDMA)[(ep) - 1])
 
-//! Set control desc to selected endpoint DMA channel
+//! Set control descriptor to selected endpoint DMA channel
 #define  uhd_pipe_dma_set_control(p,desc)     (UOTGHS_UHDMA_ARRAY(p).control=desc)
-//! Get control desc to selected endpoint DMA channel
+//! Get control descriptor to selected endpoint DMA channel
 #define  uhd_pipe_dma_get_control(p)          (UOTGHS_UHDMA_ARRAY(p).control)
 //! Set RAM address to selected endpoint DMA channel
 #define  uhd_pipe_dma_set_addr(p,add)         (UOTGHS_UHDMA_ARRAY(p).addr=add)

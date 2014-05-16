@@ -582,24 +582,20 @@ void uhd_enable(void)
 
 	otg_unfreeze_clock();
 
+	// Disable VBUS hardware control
+	uhd_disable_vbus_hw_control();
+
 	// Clear all interrupts that may have been set by a previous host mode
 	UOTGHS->UOTGHS_HSTICR = UOTGHS_HSTICR_DCONNIC | UOTGHS_HSTICR_DDISCIC
 			| UOTGHS_HSTICR_HSOFIC  | UOTGHS_HSTICR_HWUPIC
 			| UOTGHS_HSTICR_RSMEDIC | UOTGHS_HSTICR_RSTIC
 			| UOTGHS_HSTICR_RXRSMIC;
 
-	//otg_ack_vbus_transition();
-
-	// Enable Vbus change and error interrupts
-	// Disable automatic Vbus control after Vbus error
-//	Set_bits(UOTGHS->UOTGHS_CTRL,
-//		UOTGHS_CTRL_VBUSHWC | UOTGHS_CTRL_VBUSTE | UOTGHS_CTRL_VBERRE);
-
 //Nash: to be check
 	/* Enable VBus monitoring */
 # if OTG_VBUS_IO
 	pad_vbus_init(UHD_USB_INT_LEVEL);
-	/* Force Vbus interrupt when Vbus is always high
+	/* Force VBus interrupt when VBus is always high
 	 * This is possible due to a short timing between a Host mode stop/start.
 	 */
 	if (Is_pad_vbus_high()) {
@@ -625,7 +621,7 @@ void uhd_enable(void)
 	uhd_enable_vbus();
 
 #if 0
-	// Force Vbus interrupt when Vbus is always high
+	// Force VBus interrupt when VBus is always high
 	// This is possible due to a short timing between a Host mode stop/start.
 	if (Is_otg_vbus_high()) {
 		otg_raise_vbus_transition();
@@ -649,7 +645,7 @@ void uhd_disable(bool b_id_stop)
 
 	otg_unfreeze_clock();
 
-	// Disable Vbus change and error interrupts
+	// Disable VBus change and error interrupts
 	Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBUSTE | UOTGHS_CTRL_VBERRE);
 
 	// Disable main control interrupt
@@ -1111,13 +1107,13 @@ static void uhd_interrupt(void)
 				| UOTGHS_HSTIDR_RXRSMIEC;
 		uhd_enable_sof();
 
-		// Wait 50ms before restarting transfer
+		// Wait 50 ms before restarting transfer
 		uhd_resume_start = 50;
 		uhd_sleep_mode(UHD_STATE_IDLE);
 		goto uhd_interrupt_exit;
 	}
 #if 0
-	// Manage Vbus state change
+	// Manage VBus state change
 	if (Is_otg_vbus_transition()) {
 		otg_ack_vbus_transition();
 		if (Is_otg_vbus_high()) {
@@ -1898,7 +1894,7 @@ static void uhd_ep_abort_pipe(uint8_t pipe, uhd_trans_status_t status)
 	// Stop transfer
 	uhd_reset_pipe(pipe);
 
-	// Autoswitch bank and interrupts has been reseted, then re-enable it
+	// Auto switch bank and interrupts has been reseted, then re-enable it
 	uhd_enable_pipe_bank_autoswitch(pipe);
 	uhd_enable_stall_interrupt(pipe);
 	uhd_enable_pipe_error_interrupt(pipe);

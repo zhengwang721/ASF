@@ -127,10 +127,10 @@ void otg_dual_disable(void);
 
 //! @}
 
-//! @name Host Vbus line control
+//! @name Host VBus line control
 //!
 //! The VBus line can be monitored through a PIO pin and
-//! a basic resitor voltage divider.
+//! a basic resistor voltage divider.
 //! This feature is optional, and it is enabled if USB_VBUS_PIN
 //! is defined in board.h and CONF_BOARD_USB_VBUS_DETECT defined in
 //! conf_board.h.
@@ -148,6 +148,8 @@ void otg_dual_disable(void);
 # define Is_pad_vbus_high()           ioport_get_pin_level(USB_VBUS_PIN)
 #endif
 
+//! Disables VBUS hardware control (Must be disabled as no VBUS pin controlled by UHDP)
+#define uhd_disable_vbus_hw_control()         (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBUSHWC))
 //! Requests VBus activation
 #define uhd_enable_vbus()                     (UOTGHS->UOTGHS_SFR = UOTGHS_SR_VBUSRQ)
 //! Requests VBus deactivation
@@ -162,7 +164,7 @@ void otg_dual_disable(void);
   //! Reset USB macro
 #define otg_reset()                         \
 	do {                                    \
-		UOTGHS->UOTGHS_CTRL = 0;            \
+		UOTGHS->UOTGHS_CTRL = UOTGHS_CTRL_FRZCLK; \
 		UOTGHS->UOTGHS_SCR = 0xFFFFFFFF;    \
 	} while (0)
 

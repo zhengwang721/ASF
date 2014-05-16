@@ -59,7 +59,7 @@ extern "C" {
 //! @{
 
 #ifndef UHDP_DEVEPTCFG_EPDIR_Pos
-// Bit pos is not defined in SAM header file but we need it.
+// Bit position is not defined in SAM header file but we need it.
 # define UHDP_DEVEPTCFG_EPDIR_Pos 8
 #endif
 
@@ -90,7 +90,7 @@ extern "C" {
 //! This feature is optional, and it is enabled if USB_VBUS_PIN is defined in
 //! board.h and CONF_BOARD_USB_VBUS_DETECT defined in conf_board.h.
 //!
-//! @note ioport_init() must be invoked before using vbus pin functions since
+//! @note ioport_init() must be invoked before using VBus pin functions since
 //!       they use IOPORT API, \see ioport_group.
 //!
 //! @{
@@ -154,7 +154,7 @@ extern "C" {
 #define Is_udd_resume()                           (Tst_bits(UOTGHS->UOTGHS_DEVISR, UOTGHS_DEVISR_EORSM))
 //! @}
 
-//! Manage wake-up event (=usb line activity)
+//! Manage wake-up event (= USB line activity)
 //! The USB controller is reactivated by a filtered non-idle signal from the lines
 //! @{
 #define udd_enable_wake_up_interrupt()            (UOTGHS->UOTGHS_DEVIER = UOTGHS_DEVIER_WAKEUPES)
@@ -245,9 +245,9 @@ extern "C" {
 #define udd_configure_endpoint_type(ep, type)     (Wr_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPTYPE_Msk, type))
   //! Gets the configured selected endpoint type
 #define udd_get_endpoint_type(ep)                 (Rd_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPTYPE_Msk))
-  //! Enables the bank autoswitch for the selected endpoint
+  //! Enables the bank auto switch for the selected endpoint
 #define udd_enable_endpoint_bank_autoswitch(ep)   (Set_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_AUTOSW))
-  //! Disables the bank autoswitch for the selected endpoint
+  //! Disables the bank auto switch for the selected endpoint
 #define udd_disable_endpoint_bank_autoswitch(ep)    (Clr_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_AUTOSW))
 #define Is_udd_endpoint_bank_autoswitch_enabled(ep) (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_AUTOSW))
   //! Configures the selected endpoint direction
@@ -499,7 +499,7 @@ extern "C" {
 
 
   //! Get 64-, 32-, 16- or 8-bit access to FIFO data register of selected endpoint.
-  //! @param ep Endpoint of which to access FIFO data register
+  //! @param ep    Endpoint of which to access FIFO data register
   //! @param scale Data scale in bits: 64, 32, 16 or 8
   //! @return Volatile 64-, 32-, 16- or 8-bit data pointer to FIFO data register
   //! @warning It is up to the user of this macro to make sure that all accesses
@@ -603,9 +603,9 @@ typedef struct {
       //! Structure for DMA registers
 #define UHDP_UDDMA_ARRAY(ep)                    (((volatile uhdp_dmach_t *)UOTGHS->UOTGHS_DEVDMA)[(ep) - 1])
 
-      //! Set control desc to selected endpoint DMA channel
+      //! Set control description to selected endpoint DMA channel
 #define udd_endpoint_dma_set_control(ep,desc)     (UHDP_UDDMA_ARRAY(ep).control = desc)
-      //! Get control desc to selected endpoint DMA channel
+      //! Get control description to selected endpoint DMA channel
 #define udd_endpoint_dma_get_control(ep)          (UHDP_UDDMA_ARRAY(ep).control)
       //! Set RAM address to selected endpoint DMA channel
 #define udd_endpoint_dma_set_addr(ep,add)         (UHDP_UDDMA_ARRAY(ep).addr = add)
