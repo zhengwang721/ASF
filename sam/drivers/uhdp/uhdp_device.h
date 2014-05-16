@@ -46,7 +46,6 @@
 
 #include "compiler.h"
 #include "preprocessor.h"
-#include "uhdp_otg.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -83,32 +82,6 @@ extern "C" {
 //! UHDP only supports Full speed.
 //! @{
 //! @}
-
-//! @name UHDP Device VBUS pin management
-//! UHDP peripheral does not support VBUS management and it's monitored by a PIO
-//! pin.
-//! This feature is optional, and it is enabled if USB_VBUS_PIN is defined in
-//! board.h and CONF_BOARD_USB_VBUS_DETECT defined in conf_board.h.
-//!
-//! @note ioport_init() must be invoked before using VBus pin functions since
-//!       they use IOPORT API, \see ioport_group.
-//!
-//! @{
-#define UDD_VBUS_DETECT (defined(CONF_BOARD_USB_PORT) && \
-    defined(CONF_BOARD_USB_VBUS_DETECT))
-#define UDD_VBUS_IO     (defined(USB_VBUS_PIN) && UDD_VBUS_DETECT)
-#ifndef USB_VBUS_WKUP
-#  define USB_VBUS_WKUP 0
-#endif
-
-#define udd_vbus_init(handler) otg_io_pin_init(USB_VBUS_PIN, USB_VBUS_FLAGS, \
-  USB_VBUS_PIN_IRQn, UDD_USB_INT_LEVEL, handler, USB_VBUS_WKUP)
-#define Is_udd_vbus_high()           ioport_get_pin_level(USB_VBUS_PIN)
-#define Is_udd_vbus_low()            (!Is_udd_vbus_high())
-#define udd_enable_vbus_interrupt()  pio_enable_pin_interrupt(USB_VBUS_PIN)
-#define udd_disable_vbus_interrupt() pio_disable_pin_interrupt(USB_VBUS_PIN)
-//! @}
-
 
 //! @name UHDP device attach control
 //! These macros manage the UHDP Device attach.
@@ -515,7 +488,7 @@ extern "C" {
 //! @{
 
   //! Maximum transfer size on USB DMA
-#define UDD_ENDPOINT_MAX_TRANS 0x10000 //Nash
+#define UDD_ENDPOINT_MAX_TRANS 0x10000
   //! Enables the disabling of HDMA requests by endpoint interrupts
 #define udd_enable_endpoint_int_dis_hdma_req(ep)     (UHDP_ARRAY(UOTGHS_DEVEPTIER[0](ep) = UOTGHS_DEVEPTIER_EPDISHDMAS)
   //! Disables the disabling of HDMA requests by endpoint interrupts

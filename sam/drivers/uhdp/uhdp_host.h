@@ -46,7 +46,6 @@
 
 #include "compiler.h"
 #include "preprocessor.h"
-#include "uhdp_otg.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -420,7 +419,7 @@ static inline uint8_t uhd_get_pipe_dma_interrupt_number(void)
 	return (ctz(((status & mask) >> 25) | (1 << (UHDP_EPT_NUM-1))) + 1);
 }
 
-  //! Access points to the UOTGHS host DMA memory map with arrayed registers
+  //! Access points to the UHDP host DMA memory map with arrayed registers
   //! @{
       //! Structure for DMA next descriptor register
 typedef struct {

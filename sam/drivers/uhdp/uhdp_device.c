@@ -44,6 +44,7 @@
 #include "conf_usb.h"
 #include "sysclk.h"
 #include "udd.h"
+#include "uhdp_otg.h"
 #include "uhdp_device.h"
 #include <string.h>
 
@@ -57,10 +58,6 @@
 #endif
 #ifndef UDD_USB_INT_FUN
 # define UDD_USB_INT_FUN UOTGHS_Handler
-#endif
-
-#ifndef UDD_USB_INT_LEVEL
-# define UDD_USB_INT_LEVEL 5 // By default USB interrupt have low priority
 #endif
 
 #define UDD_EP_USED(ep)      (USB_DEVICE_MAX_EP >= ep)
@@ -77,7 +74,7 @@
  * The following UHDP driver configuration must be included in the conf_usb.h
  * file of the application.
  *
- * UDD_USB_INT_LEVEL<br>
+ * USB_INT_LEVEL<br>
  * Option to change the interrupt priority (0 to 15) by default 5 (recommended).
  *
  * UDD_USB_INT_FUN<br>
@@ -279,7 +276,7 @@ static void udd_sleep_mode(bool b_idle)
  */
 //@{
 
-#if UDD_VBUS_IO
+#if OTG_VBUS_IO
 
 # if !defined(UDD_NO_SLEEP_MGR) && !defined(USB_VBUS_WKUP)
 /* Lock to SLEEPMGR_SLEEP_WFI if VBus not connected */
@@ -310,8 +307,9 @@ static void udd_vbus_handler(uint32_t id, uint32_t mask)
 	if (USB_VBUS_PIO_ID != id || USB_VBUS_PIO_MASK != mask) {
 		return;
 	}
+
 	/* PIO interrupt status has been cleared, just detect level */
-	bool b_vbus_high = Is_udd_vbus_high();
+	bool b_vbus_high = Is_otg_vbus_high();
 	if (b_vbus_high) {
 		udd_vbus_monitor_sleep_mode(false);
 		udd_attach();
@@ -595,7 +593,7 @@ udd_interrupt_sof_end:
 
 bool udd_include_vbus_monitoring(void)
 {
-#if UDD_VBUS_IO
+#if OTG_VBUS_IO
 	return true;
 #else
 	return false;
@@ -609,21 +607,37 @@ void udd_enable(void)
 
 	flags = cpu_irq_save();
 
+#ifdef UHD_ENABLE
+	// Dual ROLE INITIALIZATION
+	if (otg_dual_enable()) {
+		// The current mode has been started by otg_dual_enable()
+		cpu_irq_restore(flags);
+		return;
+	}
+#else
 	// SINGLE DEVICE MODE INITIALIZATION
 	sysclk_enable_usb();
 	pmc_enable_periph_clk(ID_UOTGHS);
 
 	// Here, only the device mode is possible, then link UHDP interrupt to UDD interrupt
-	NVIC_SetPriority((IRQn_Type) ID_UOTGHS, UDD_USB_INT_LEVEL);
+	NVIC_SetPriority((IRQn_Type) ID_UOTGHS, USB_INT_LEVEL);
 	NVIC_EnableIRQ((IRQn_Type) ID_UOTGHS);
 
 	// Always authorize asynchrony USB interrupts to exit of sleep mode
 	// For SAM USB wake up device except BACKUP mode
 	pmc_set_fast_startup_input(PMC_FSMR_USBAL);
+#endif
 
+#if (defined USB_ID_PIN) && (defined UHD_ENABLE)
+	// Check that the device mode is selected by ID pin
+	if (!Is_otg_id_device()) {
+		cpu_irq_restore(flags);
+		return; // Device is not the current mode
+	}
+#else
 	// ID pin not used and force device mode
 	otg_force_device_mode();
-
+#endif
 	// Enable USB hardware
 	otg_enable_pad();
 	otg_enable();
@@ -644,14 +658,14 @@ void udd_enable(void)
 	}
 #endif
 
-#if UDD_VBUS_IO
+#if OTG_VBUS_IO
 	/* Initialize VBus monitor */
-	udd_vbus_init(udd_vbus_handler);
+	otg_vbus_init(udd_vbus_handler);
 	udd_vbus_monitor_sleep_mode(true);
 	/* Force VBus interrupt when VBus is always high
 	 * This is possible due to a short timing between a Host mode stop/start.
 	 */
-	if (Is_udd_vbus_high()) {
+	if (Is_otg_vbus_high()) {
 		udd_vbus_handler(USB_VBUS_PIO_ID, USB_VBUS_PIO_MASK);
 	}
 #else
@@ -668,6 +682,22 @@ void udd_disable(void)
 {
 	irqflags_t flags;
 
+#ifdef UHD_ENABLE
+# ifdef USB_ID_PIN
+	if (Is_otg_id_host()) {
+		// Freeze clock to switch mode
+		otg_freeze_clock();
+		udd_detach();
+		otg_disable();
+		return; // Host mode running, ignore UDD disable
+	}
+# else
+	if (Is_otg_host_mode_forced()) {
+		return; // Host mode running, ignore UDD disable
+	}
+# endif
+#endif
+
 	flags = cpu_irq_save();
 	otg_unfreeze_clock();
 	udd_detach();
@@ -678,10 +708,12 @@ void udd_disable(void)
 	}
 #endif
 
+#ifndef UHD_ENABLE
 	otg_disable();
 	otg_disable_pad();
 	sysclk_disable_usb();
 	pmc_disable_periph_clk(ID_UOTGHS);
+#endif
 	cpu_irq_restore(flags);
 }
 

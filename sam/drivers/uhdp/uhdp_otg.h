@@ -79,6 +79,14 @@ __always_inline static void otg_io_pin_init(uint32_t pin, uint32_t flags,
 //! @{
 
 /**
+ * \brief USB interrupt level
+ * By default USB interrupt have low priority.
+ */
+#ifndef USB_INT_LEVEL
+# define USB_INT_LEVEL 5
+#endif
+
+/**
  * \brief Initialize the dual role
  * This function is implemented in uhdp_host.c file.
  *
@@ -102,61 +110,66 @@ void otg_dual_disable(void);
 //! is defined in board.h and CONF_BOARD_USB_ID_DETECT defined in
 //! conf_board.h.
 //! @{
-#define OTG_ID_DETECT       (defined(CONF_BOARD_USB_ID_DETECT))
+#define OTG_ID_DETECT       (defined(CONF_BOARD_USB_PORT) && \
+    defined(CONF_BOARD_USB_ID_DETECT))
 #define OTG_ID_IO           (defined(USB_ID_PIN) && OTG_ID_DETECT)
 
-// TODO
 #if OTG_ID_IO
-# define pad_id_init() \
-	io_pad_init(USB_ID_PIN, USB_ID_FLAGS, otg_id_handler, UHD_USB_INT_LEVEL);
-# define pad_id_interrupt_disable() gpio_disable_pin_interrupt(USB_ID_PIN)
-# define pad_ack_id_interrupt()     gpio_clear_pin_interrupt_flag(USB_ID_PIN)
-# define Is_pad_id_device()         ioport_get_pin_level(USB_ID_PIN)
+#define otg_id_init(handler)         otg_io_pin_init(USB_ID_PIN, USB_ID_FLAGS, \
+			USB_ID_PIN_IRQn, USB_INT_LEVEL, handler, false)
+# define otg_id_interrupt_enable()   pio_enable_pin_interrupt(USB_VBUS_PIN)
+# define otg_id_interrupt_disable()  pio_disable_pin_interrupt(USB_VBUS_PIN)
+# define Is_otg_id_device()          ioport_get_pin_level(USB_ID_PIN)
 #endif
 
    //! Force device mode
 #define otg_force_device_mode()             (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_UIMOD), \
-											 Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_UIDE))
+			Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_UIDE))
    //! Test if device mode is forced
 #define Is_otg_device_mode_forced()         (Tst_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_UIMOD))
    //! Force host mode
 #define otg_force_host_mode()               (Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_UIMOD), \
-											 Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_UIDE))
+			Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_UIDE))
    //! Test if host mode is forced
 #define Is_otg_host_mode_forced()           (!Tst_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_UIMOD))
 
 //! @}
 
-//! @name Host VBus line control
+
+//! @name UHDP OTG VBUS pin management
+//! UHDP peripheral does not support VBUS management and it's monitored by a PIO
+//! pin.
+//! This feature is optional, and it is enabled if USB_VBUS_PIN is defined in
+//! board.h and CONF_BOARD_USB_VBUS_DETECT defined in conf_board.h.
 //!
-//! The VBus line can be monitored through a PIO pin and
-//! a basic resistor voltage divider.
-//! This feature is optional, and it is enabled if USB_VBUS_PIN
-//! is defined in board.h and CONF_BOARD_USB_VBUS_DETECT defined in
-//! conf_board.h.
+//! @note ioport_init() must be invoked before using VBus pin functions since
+//!       they use IOPORT API, \see ioport_group.
 //!
 //! @{
-#define OTG_VBUS_DETECT     (defined(CONF_BOARD_USB_VBUS_DETECT))
-#define OTG_VBUS_IO         (defined(USB_VBUS_PIN) && OTG_VBUS_DETECT)
-
-//TODO
-#if OTG_VBUS_IO
-# define pad_vbus_init(level) \
-	io_pad_init(USB_VBUS_PIN, USB_VBUS_FLAGS, uhd_vbus_handler, level);
-# define pad_vbus_interrupt_disable() gpio_disable_pin_interrupt(USB_VBUS_PIN)
-# define pad_ack_vbus_interrupt()     gpio_clear_pin_interrupt_flag(USB_VBUS_PIN)
-# define Is_pad_vbus_high()           ioport_get_pin_level(USB_VBUS_PIN)
+#define OTG_VBUS_DETECT (defined(CONF_BOARD_USB_PORT) && \
+    defined(CONF_BOARD_USB_VBUS_DETECT))
+#define OTG_VBUS_IO     (defined(USB_VBUS_PIN) && OTG_VBUS_DETECT)
+#ifndef USB_VBUS_WKUP
+#  define USB_VBUS_WKUP 0
 #endif
+
+#define otg_vbus_init(handler)       otg_io_pin_init(USB_VBUS_PIN, USB_VBUS_FLAGS, \
+  USB_VBUS_PIN_IRQn, USB_INT_LEVEL, handler, USB_VBUS_WKUP)
+#define Is_otg_vbus_high()           ioport_get_pin_level(USB_VBUS_PIN)
+#define Is_otg_vbus_low()            (!Is_otg_vbus_high())
+#define otg_enable_vbus_interrupt()  pio_enable_pin_interrupt(USB_VBUS_PIN)
+#define otg_disable_vbus_interrupt() pio_disable_pin_interrupt(USB_VBUS_PIN)
 
 //! Disables VBUS hardware control (Must be disabled as no VBUS pin controlled by UHDP)
 #define uhd_disable_vbus_hw_control()         (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBUSHWC))
-//! Requests VBus activation
+//! Requests VBus activation in UHDP
 #define uhd_enable_vbus()                     (UOTGHS->UOTGHS_SFR = UOTGHS_SR_VBUSRQ)
-//! Requests VBus deactivation
+//! Requests VBus deactivation in UHDP
 #define uhd_disable_vbus()                    (UOTGHS->UOTGHS_SCR = UOTGHS_SR_VBUSRQ)
-//! Tests if VBus activation has been requested
+//! Tests if VBus activation has been requested in UHDP
 #define Is_uhd_vbus_enabled()                 (Tst_bits(UOTGHS->UOTGHS_SR, UOTGHS_SR_VBUSRQ))
 //! @}
+
 
 //! @name UHDP OTG main management
 //! These macros allows to enable/disable pad and UHDP hardware
@@ -197,7 +210,7 @@ void otg_dual_disable(void);
 		Rd_bitfield(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_TIMVALUE_Msk))
 
 
-  //! Get the dual-role device state of the internal USB finite state machine of the UOTGHS controller
+  //! Get the dual-role device state of the internal USB finite state machine of the UHDP controller
 #define otg_get_fsm_drd_state()             (Rd_bitfield(UOTGHS->UOTGHS_FSM, UOTGHS_FSM_DRDSTATE_Msk))
 #define Is_otg_a_suspend()                  (4==otg_get_fsm_drd_state())
 #define Is_otg_a_wait_vrise()               (1==otg_get_fsm_drd_state())
