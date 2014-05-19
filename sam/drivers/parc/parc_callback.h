@@ -120,6 +120,6 @@ static inline enum status_code parc_disable_callback(
 /**INDENT-ON**/
 /// @endcond
 
-/** @} */		
+/** @} */
 
 #endif  /* PARC_CALLBACK_H_INCLUDED */

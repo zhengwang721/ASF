@@ -68,7 +68,7 @@
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_sam_drivers_parc_module_overview Module Overview 
+ * \section asfdoc_sam_drivers_parc_module_overview Module Overview
  *
  * The Parallel Capture (PARC) module samples an external 8-bit bus with an external
  * input clock. It can be connected to a CMOS digital image sensor, an ADC, a DSP
@@ -76,22 +76,22 @@
  *
  * \subsection asfdoc_sam_drivers_parc_module_overview_features Features
  * The PARC module offers the following features:
- * - Captures 8-bit data with an external input clock.
- * - Data captures can be concatenated to form 16-bit and 32-bit values.
- * - Two external data enables PCEN1 and PCEN2.
+ * - Captures 8-bit data with an external input clock
+ * - Data captures can be concatenated to form 16-bit and 32-bit values
+ * - Two external data enables PCEN1 and PCEN2
  * - Four data sample conditions:
- *    - When PCEN1 is high.
- *    - When PCEN1 and PCEN2 are both high.
- *    - When PCEN1 or PCEN2 are high.
- *    - PC1EN1 and PCEN2 are both inactive i.e. data is sampled without condition.
- * - Peripheral DMA is supported.
- * - Peripheral events are supported.
+ *    - When PCEN1 is high
+ *    - When PCEN1 and PCEN2 are both high
+ *    - When PCEN1 or PCEN2 are high
+ *    - PC1EN1 and PCEN2 are both inactive i.e. data is sampled without condition
+ * - Peripheral DMA is supported
+ * - Peripheral events are supported
  *
- * \subsection asfdoc_sam_drivers_parc_module_overview_width Concatenated data capture
+ * \subsection asfdoc_sam_drivers_parc_module_overview_width Concatenated Data Capture
  * Captured data bytes are stored in the module's Receive Holding Register (RHR).
  * Concatenated data can also be stored in the RHR to make 16-bit or 32-bit
  * values, with the first byte received in the Least Significant Byte (LSB) position.
- * Please refer to the diagram entitled "Parallel Capture Waveforms" in the PARC
+ * Refer to the diagram entitled "parallel capture waveforms" in the parc
  * chapter of the device-specific datasheet for more information.
  *
  *
@@ -137,7 +137,7 @@
  * \ref asfdoc_sam_drivers_parc_exqsg.
  *
  *
- * \section asfdoc_sam_drivers_parc_api_overview API Overview 
+ * \section asfdoc_sam_drivers_parc_api_overview API Overview
  * @{
  */
 
@@ -288,10 +288,10 @@ enum status_code parc_set_config(
  * configuration structure before being further modified by the user application.
  *
  * The default configurations are:
- * - Capture every byte.
- * - Sample the data bus on the rising edge of the PCCK input clock.
- * - Sample data regardless of the levels of PCEN1 and PCEN2.
- * - 8-bit data width.
+ * - Capture every byte
+ * - Sample the data bus on the rising edge of the PCCK input clock
+ * - Sample data regardless of the levels of PCEN1 and PCEN2
+ * - 8-bit data width
  *
  * \param[out] config Pointer to a PARC configuration structure.
  */
@@ -614,7 +614,7 @@ static inline uint32_t parc_get_version(
  *  <tr>
  *      <td>ADC</td>
  *      <td>Analog to Digital Converter</td>
- * </tr> 
+ * </tr>
  *  <tr>
  *      <td>CMOS</td>
  *      <td>Complementary Metal–Oxide–Semiconductor</td>
@@ -634,11 +634,11 @@ static inline uint32_t parc_get_version(
  *  <tr>
  *      <td>LSB</td>
  *      <td>Least Significant Byte</td>
- * </tr> 
+ * </tr>
  *  <tr>
  *      <td>NVIC</td>
  *      <td>Nested Vectored Interrupt Controller</td>
- * </tr> 
+ * </tr>
  *  <tr>
  *      <td>PCCK</td>
  *      <td>Parallel Capture Clock</td>
@@ -679,7 +679,7 @@ static inline uint32_t parc_get_version(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Initial Release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
@@ -705,9 +705,9 @@ static inline uint32_t parc_get_version(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42297A</td>
  *		<td>03/2014</td>
- *		<td>Initial release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  *
@@ -747,13 +747,13 @@ static inline uint32_t parc_get_version(
  *
  * Add the following to the main loop or a setup function:
  * \snippet parc_example.c parc_variables
- * \snippet parc_example.c parc_get_defaults 
+ * \snippet parc_example.c parc_get_defaults
  * \snippet parc_example.c parc_init_enable_and_start
  *
  * \subsection asfdoc_sam_drivers_parc_qsg_basic_setup_workflow Basic Setup Workflow
  *
  * -# Initialize and configure PARC:
- * \snippet parc_example.c parc_get_defaults 
+ * \snippet parc_example.c parc_get_defaults
  * \snippet parc_example.c parc_init_enable_and_start_1
  * -# Enable the PARC module and start capture:
  * \snippet parc_example.c parc_init_enable_and_start_2
@@ -765,7 +765,7 @@ static inline uint32_t parc_get_version(
  * We can poll the data ready status and then read it once capture has finished:
  * \verbatim
     uint32_t captured_data;
-	
+
     while (!parc_is_data_ready(&module_inst)) {
 	    }
     parc_read(&module_inst, &captured_data); \endverbatim
@@ -778,7 +778,7 @@ static inline uint32_t parc_get_version(
     parc_enable_interrupts(&module_inst, PARC_INTERRUPT_DRDY);
     parc_enable_callback(&module_inst, PARC_CALLBACK_DATA_READY);
     parc_start_capture(&module_inst);
-  
+
     // The callback function example.
     static void parc_complete_callback(
 	    struct parc_module *const module)

@@ -94,7 +94,7 @@ void TC00_Handler(void)
 	/* Read TC0 Status. */
 	tc_get_status(TC0, 0);
 
-	/* Toggel IO pin to simulate the PCCK */
+	/* Toggel I/O pin to simulate the PCCK */
 	ioport_toggle_pin_level(PIN_PCCK_INPUT);
 
 	/* PCDATA changes every two PCCK level change*/

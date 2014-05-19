@@ -107,7 +107,7 @@
  *   gpio:s7 -> parc:s7;
  *   gpio:s8 -> parc:s8;
  *   gpio:s9 -> parc:s9;
- * } 
+ * }
  * \enddot
  *
  * \note The PCDATA5 signal is only connected to the LCD connector (EXT5) which
@@ -116,29 +116,29 @@
  *
  *
  * \section asfdoc_sam_drivers_parc_example_files Main Files
- * - parc.c: Parallel Capture driver;
- * - parc.h: Parallel Capture driver header file;
- * - parc_example.c: Parallel Capture example application.
+ * - parc.c: Parallel Capture driver
+ * - parc.h: Parallel Capture driver header file
+ * - parc_example.c: Parallel Capture example application
  *
  *
  * \section asfdoc_sam_drivers_parc_example_compilinfo Compilation Information
- * This software is written for GNU GCC and IAR Embedded Workbench
- * for Atmel. Other compilers may or may not work.
+ * This software is written for GNU GCC and IAR Embedded Workbench&reg;
+ * for Atmel&reg;. Other compilers may or may not work.
  *
  *
  * \section asfdoc_sam_drivers_parc_example_usage Usage
  *
  * -# Connect the GPIO pins and PARC port according to the above connection
  * list.
- * -# Build the program and download it into the evaluation kit.
+ * -# Build the program and download it into the evaluation kit
  * -# On the computer, open and configure a terminal application
- *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
+ *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
  *   - 115200 baud
  *   - 8 bits of data
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Start the application.
+ * -# Start the application
  * -# In the terminal window, the following text should appear:
  * \verbatim
        -- SAM PARC Example --
@@ -149,10 +149,10 @@
  * \verbatim
      Press y to sample the data when both data enable pins are enabled.
      Press n to sample the data, don't care the status of the data enable pins.
- 
+
      Press y to sample all the data.
      Press n to sample the data only one out of two. \endverbatim
- * -# PARC captures data and sends the captured data to the terminal.
+ * -# PARC captures data and sends the captured data to the terminal
  */
 
 #endif /* PARC_EXAMPLE_H_INCLUDED */
