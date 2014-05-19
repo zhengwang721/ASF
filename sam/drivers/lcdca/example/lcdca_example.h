@@ -53,7 +53,7 @@
  *
  *
  * \section asfdoc_sam_drivers_lcdca_example_requirements Requirements
- * This example can be used with the SAM4L EK evaluation kit. 
+ * This example can be used with the SAM4L EK evaluation kit.
  *
  *
  * \section asfdoc_sam_drivers_lcdca_example_description Description
@@ -73,35 +73,35 @@
  * consumption. In order to show the LCD Controller's capability of running in
  * a power-saving mode, sleep mode is entered whenever possible.
  *
- * 
+ *
  * \section asfdoc_sam_drivers_lcdca_example_files Main Files
- *  - lcdca.c: Liquid Crystal Display Controller driver;
- *  - lcdca.h: Liquid Crystal Display Controller driver header file;
- *  - lcdca_example.c: Liquid Crystal Display Controller example application;
- *  - conf_example.h: Liquid Crystal Display Controller example configuration header file.
+ *  - lcdca.c: Liquid Crystal Display Controller driver
+ *  - lcdca.h: Liquid Crystal Display Controller driver header file
+ *  - lcdca_example.c: Liquid Crystal Display Controller example application
+ *  - conf_example.h: Liquid Crystal Display Controller example configuration header file
  *
  *
  * \section asfdoc_sam_drivers_lcdca_example_compilinfo Compilation Information
- * This software is written for GNU GCC and IAR Embedded Workbench
- * for Atmel. Other compilers may or may not work.
+ * This software is written for GNU GCC and IAR Embedded Workbench&reg;
+ * for Atmel&reg;. Other compilers may or may not work.
  *
  *
  * \section asfdoc_sam_drivers_lcdca_example_usage Usage
- * -# Build the program, and download it onto the evaluation board.
- * -# On the computer, open and configure a terminal application
- *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
+ * -# Build the program, and download it onto the evaluation board
+ * -# On the computer, open, and configure a terminal application
+ *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
  *   - 115200 baud
  *   - 8 bits of data
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Start the application.
+ * -# Start the application
  * -# In the terminal window, the following text should appear:
  * \verbatim
    -- LCDCA Controller Example --
    -- xxxxxx-xx
    -- Compiled: xxx xx xxxx xx:xx:xx --
-   
+
    Press PB0 to stop automated sequential mode and continue. \endverbatim
  */
 

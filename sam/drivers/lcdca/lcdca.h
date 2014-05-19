@@ -66,9 +66,9 @@
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_sam_drivers_lcdca_module_overview Module Overview 
+ * \section asfdoc_sam_drivers_lcdca_module_overview Module Overview
  *
- * \subsection asfdoc_sam_drivers_lcdca_module_overview_internal Display physiology
+ * \subsection asfdoc_sam_drivers_lcdca_module_overview_internal Display Physiology
  *
  * An LCD is made up of several segments (or complete symbols), which can be
  * visible or invisible. Any single segment has two electrodes, with liquid
@@ -78,12 +78,12 @@
  * the segment becomes visible. The voltage must alternate, to avoid an
  * electrophoresis effect in the liquid crystal, which degrades the display.
  *
- * \subsection asfdoc_sam_drivers_lcdca_module_overview_supported Supported display types
+ * \subsection asfdoc_sam_drivers_lcdca_module_overview_supported Supported Display Types
  * The LCD Controller is intended for use with monochrome passive Liquid
  * Crystal Displays (LCDs) with up to 4 common terminals and up to 40 segment
  * terminals.
  *
- * \subsection asfdoc_sam_drivers_lcdca_module_overview_functional Functional description 
+ * \subsection asfdoc_sam_drivers_lcdca_module_overview_functional Functional Description
  * The LCDCA display memory stores the values of all segments to display and
  * should be filled before the next frame starts.
  *
@@ -159,7 +159,7 @@
  * \ref asfdoc_sam_drivers_lcdca_exqsg.
  *
  *
- * \section asfdoc_sam_drivers_lcdca_api_overview API Overview 
+ * \section asfdoc_sam_drivers_lcdca_api_overview API Overview
  * @{
  */
 
@@ -548,7 +548,7 @@ static inline void lcdca_disable_interrupt(void)
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Initial Release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
@@ -574,9 +574,9 @@ static inline void lcdca_disable_interrupt(void)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42296A</td>
  *		<td>03/2014</td>
- *		<td>Initial release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  *
@@ -584,7 +584,7 @@ static inline void lcdca_disable_interrupt(void)
 
 /**
  * \page asfdoc_sam_drivers_lcdca_qsg Quick Start Guide for the LCDCA driver
- *       
+ *
  * This is the quick start guide for the \ref asfdoc_sam_drivers_lcdca_group, with
  * step-by-step instructions on how to configure and use the driver for
  * a specific use case.
@@ -594,15 +594,15 @@ static inline void lcdca_disable_interrupt(void)
  * the steps for usage can be copied into, for example, the main application
  * function.
  *
- * \section lcdca_qs_use_cases Use cases
+ * \section lcdca_qs_use_cases Use Cases
  * - \ref lcdca_basic
  *
- * \section lcdca_basic LCDCA basic usage
+ * \section lcdca_basic LCDCA Basic Usage
  *
  * This use case will demonstrate how to configure and use the LCDCA module
  * to address an external LCD segment (C42048A).
  *
- * \section lcdca_basic_setup Setup steps
+ * \section lcdca_basic_setup Setup Steps
  *
  * \subsection lcdca_basic_prereq Prerequisites
  *
@@ -619,7 +619,7 @@ static inline void lcdca_disable_interrupt(void)
    #define PORT_MASK  40
    #define LCD_DUTY   LCDCA_DUTY_1_4
    #define LCD_CONTRAST_LEVEL 30
- 
+
    struct lcdca_config lcdca_cfg; \endverbatim
  *
  * \snippet lcdca_example.c lcd_example_init
@@ -637,7 +637,7 @@ static inline void lcdca_disable_interrupt(void)
  * -# Turn on the LCD backlight:
  * \snippet lcdca_example.c lcd_example_backlight_on
  *
- * \section lcdca_basic_usage Usage steps
+ * \section lcdca_basic_usage Usage Steps
  *
  * \subsection lcdca_basic_usage_normal Normal Usage
  *
@@ -648,23 +648,23 @@ static inline void lcdca_disable_interrupt(void)
  *
  * The function \ref lcdca_write_packet() can be used to display ASCII
  * characters:
- * \snippet lcdca_example.c lcd_example_write_alphanumeric 
- * \snippet lcdca_example.c lcd_example_write_numeric 
+ * \snippet lcdca_example.c lcd_example_write_alphanumeric
+ * \snippet lcdca_example.c lcd_example_write_numeric
  *
  * The LCD contrast can be changed using:
  * \code lcdca_set_contrast(contrast_value); \endcode
  *
  * \subsection lcdca_basic_usage_blink Using Hardware Blinking
  * To use hardware blinking:
- * \snippet lcdca_example.c lcd_example_blink_init 
+ * \snippet lcdca_example.c lcd_example_blink_init
  *
  * \subsection lcdca_basic_usage_autonomous Using Hardware Autonomous Animation
  * To use the hardware's autonomous segment animation:
- * \snippet lcdca_example.c lcd_example_shift_enable 
+ * \snippet lcdca_example.c lcd_example_shift_enable
  *
  * \subsection lcdca_basic_usage_automated_char Using Hardware Automated Character
  * To use hardware automated character (e.g., scrolling here):
- * \snippet lcdca_example.c lcd_example_scroll_config_1 
+ * \snippet lcdca_example.c lcd_example_scroll_config_1
  * \snippet lcdca_example.c lcd_example_scroll_config_2
  * \snippet lcdca_example.c lcd_example_scrolling_enable
  */
