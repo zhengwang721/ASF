@@ -63,7 +63,7 @@ extern "C" {
  * \param[in] ul_channel Channel to configure.
  * \param[in] ul_mode    Control mode register bitmask value to set.
  *
- * \note For more information regarding <i>ul_mode</i> configuration please refer to
+ * \note For more information regarding <i>ul_mode</i> configuration refer to
  * the section  entitled "Channel Mode Register: Capture Mode" and.or section
  * "Waveform Operating Mode" in the device-specific datasheet.
  *
@@ -124,7 +124,7 @@ void tc_sync_trigger(
  * \param[out] p_tc        Module hardware register base address pointer.
  * \param[in] ul_blockmode Block mode register value to set.
  *
- * \note For more information regarding <i>ul_blockmode</i> configuration please refer to
+ * \note For more information regarding <i>ul_blockmode</i> configuration refer to
  * the section  entitled "TC Block Mode Register" in the device-specific datasheet.
  */
 void tc_set_block_mode(
@@ -353,17 +353,17 @@ void tc_write_rc(
  * Where the input parameter <i>ul_sources</i> can be one or more of the following:
  * <table>
  * <tr>
- *    <th>Parameter value</th>
+ *    <th>Parameter Value</th>
  *    <th>Description</th>
  * </tr>
- *     <tr><td>TC_IER_COVFS</td><td>Enables the Counter Overflow Interrupt.</td></tr>
- *     <tr><td>TC_IER_LOVRS</td><td>Enables the Load Overrun Interrupt.</td></tr>
- *     <tr><td>TC_IER_CPAS</td><td>Enables the RA Compare Interrupt.</td></tr>
- *     <tr><td>TC_IER_CPBS</td><td>Enables the RB Compare Interrupt.</td></tr>
- *     <tr><td>TC_IER_CPCS</td><td>Enables the RC Compare Interrupt.</td></tr>
- *     <tr><td>TC_IER_LDRAS</td><td>Enables the RA Load Interrupt.</td></tr>
- *     <tr><td>TC_IER_LDRBS</td><td>Enables the RB Load Interrupt.</td></tr>
- *     <tr><td>TC_IER_ETRGS</td><td>Enables the External Trigger Interrupt.</td></tr>
+ *     <tr><td>TC_IER_COVFS</td><td>Enables the Counter Overflow Interrupt</td></tr>
+ *     <tr><td>TC_IER_LOVRS</td><td>Enables the Load Overrun Interrupt</td></tr>
+ *     <tr><td>TC_IER_CPAS</td><td>Enables the RA Compare Interrupt</td></tr>
+ *     <tr><td>TC_IER_CPBS</td><td>Enables the RB Compare Interrupt</td></tr>
+ *     <tr><td>TC_IER_CPCS</td><td>Enables the RC Compare Interrupt</td></tr>
+ *     <tr><td>TC_IER_LDRAS</td><td>Enables the RA Load Interrupt</td></tr>
+ *     <tr><td>TC_IER_LDRBS</td><td>Enables the RB Load Interrupt</td></tr>
+ *     <tr><td>TC_IER_ETRGS</td><td>Enables the External Trigger Interrupt</td></tr>
  * </table>
  */
 void tc_enable_interrupt(
@@ -391,17 +391,17 @@ void tc_enable_interrupt(
  * Where the input parameter <i>ul_sources</i> can be one or more of the following:
  * <table>
  * <tr>
- *    <th>Parameter value</th>
+ *    <th>Parameter Value</th>
  *    <th>Description</th>
  * </tr>
- *     <tr><td>TC_IDR_COVFS</td><td>Disables the Counter Overflow Interrupt.</td></tr>
- *     <tr><td>TC_IDR_LOVRS</td><td>Disables the Load Overrun Interrupt.</td></tr>
- *     <tr><td>TC_IDR_CPAS</td><td>Disables the RA Compare Interrupt.</td></tr>
- *     <tr><td>TC_IDR_CPBS</td><td>Disables the RB Compare Interrupt.</td></tr>
- *     <tr><td>TC_IDR_CPCS</td><td>Disables the RC Compare Interrupt.</td></tr>
- *     <tr><td>TC_IDR_LDRAS</td><td>Disables the RA Load Interrupt.</td></tr>
- *     <tr><td>TC_IDR_LDRBS</td><td>Disables the RB Load Interrupt.</td></tr>
- *     <tr><td>TC_IDR_ETRGS</td><td>Disables the External Trigger Interrupt.</td></tr>
+ *     <tr><td>TC_IDR_COVFS</td><td>Disables the Counter Overflow Interrupt</td></tr>
+ *     <tr><td>TC_IDR_LOVRS</td><td>Disables the Load Overrun Interrupt</td></tr>
+ *     <tr><td>TC_IDR_CPAS</td><td>Disables the RA Compare Interrupt</td></tr>
+ *     <tr><td>TC_IDR_CPBS</td><td>Disables the RB Compare Interrupt</td></tr>
+ *     <tr><td>TC_IDR_CPCS</td><td>Disables the RC Compare Interrupt</td></tr>
+ *     <tr><td>TC_IDR_LDRAS</td><td>Disables the RA Load Interrupt</td></tr>
+ *     <tr><td>TC_IDR_LDRBS</td><td>Disables the RB Load Interrupt</td></tr>
+ *     <tr><td>TC_IDR_ETRGS</td><td>Disables the External Trigger Interrupt</td></tr>
  * </table>
  */
 void tc_disable_interrupt(
@@ -613,12 +613,12 @@ uint32_t tc_find_mck_divisor(
  * Where the input parameter <i>ul_sources</i> can be one or more of the following:
  * <table>
  * <tr>
- *    <th>Parameter value</th>
+ *    <th>Parameter Value</th>
  *    <th>Description</th>
  * </tr>
- *     <tr><td>TC_QIER_IDX</td><td>Enable the rising edge detected on IDX input interrupt.</td></tr>
- *     <tr><td>TC_QIER_DIRCHG</td><td>Enable the change in rotation direction detected interrupt.</td></tr>
- *     <tr><td>TC_QIER_QERR</td><td>Enable the quadrature error detected on PHA/PHB interrupt.</td></tr>
+ *     <tr><td>TC_QIER_IDX</td><td>Enable the rising edge detected on IDX input interrupt</td></tr>
+ *     <tr><td>TC_QIER_DIRCHG</td><td>Enable the change in rotation direction detected interrupt</td></tr>
+ *     <tr><td>TC_QIER_QERR</td><td>Enable the quadrature error detected on PHA/PHB interrupt</td></tr>
  * </table>
  */
 void tc_enable_qdec_interrupt(
@@ -642,12 +642,12 @@ void tc_enable_qdec_interrupt(
  * Where the input parameter <i>ul_sources</i> can be one or more of the following:
  * <table>
  * <tr>
- *    <th>Parameter value</th>
+ *    <th>Parameter Value</th>
  *    <th>Description</th>
  * </tr>
- *     <tr><td>TC_QIDR_IDX</td><td>Disable the rising edge detected on IDX input interrupt.</td></tr>
- *     <tr><td>TC_QIDR_DIRCHG</td><td>Disable the change in rotation direction detected interrupt.</td></tr>
- *     <tr><td>TC_QIDR_QERR</td><td>Disable the quadrature error detected on PHA/PHB interrupt.</td></tr>
+ *     <tr><td>TC_QIDR_IDX</td><td>Disable the rising edge detected on IDX input interrupt</td></tr>
+ *     <tr><td>TC_QIDR_DIRCHG</td><td>Disable the change in rotation direction detected interrupt</td></tr>
+ *     <tr><td>TC_QIDR_QERR</td><td>Disable the quadrature error detected on PHA/PHB interrupt</td></tr>
  * </table>
  */
 void tc_disable_qdec_interrupt(

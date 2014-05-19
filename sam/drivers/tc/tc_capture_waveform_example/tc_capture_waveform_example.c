@@ -243,14 +243,14 @@ int main(void)
 	//! [tc_waveform_gpio]
 	/** Configure PIO Pins for TC */
 	ioport_set_pin_mode(PIN_TC_WAVEFORM, PIN_TC_WAVEFORM_MUX);
-	/** Disable IO to enable peripheral mode) */
+	/** Disable I/O to enable peripheral mode) */
 	ioport_disable_pin(PIN_TC_WAVEFORM);
 	//! [tc_waveform_gpio]
 	
 	//! [tc_capture_gpio]
 	/** Configure PIO Pins for TC */
 	ioport_set_pin_mode(PIN_TC_CAPTURE, PIN_TC_CAPTURE_MUX);
-	/** Disable IO to enable peripheral mode) */
+	/** Disable I/O to enable peripheral mode) */
 	ioport_disable_pin(PIN_TC_CAPTURE);
 	//! [tc_capture_gpio]
 

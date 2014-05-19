@@ -57,11 +57,11 @@
  * \section asfdoc_sam_drivers_tc_example_requirements Requirements
  *
  * This package can be used with SAM4 evaluation kits such as the SAM4L EK,
- * the SAM4L Xplained Pro and other evaluation kits. Please refer to the list of
+ * the SAM4L Xplained Pro and other evaluation kits. Refer to the list of
  * kits available for the actual device on http://www.atmel.com.
  *
  * It generates a waveform on the Timer Counter pin PIN_TC_WAVEFORM,
- * and it captures a waveform from pin PIN_TC_CAPTURE. Please refer to the
+ * and it captures a waveform from pin PIN_TC_CAPTURE. Refer to the
  * respective device evaluation kit's board file (conf_board.h) in order
  * to examine these #defines.
  *
@@ -82,41 +82,41 @@
  *
  * The code can be roughly broken down as follows:
  * <ul>
- * <li>Select pre-defined waveform frequency and duty cycle to be generated.
- * <li>Configure TC_CHANNEL_WAVEFORM as waveform output.
- * <li>Configure TC_CHANNEL_CAPTURE as a capture input.
- * <li>Configure capture Register A (RA) to be loaded when a rising edge on TIOA occurs.
- * <li>Configure capture Register B (RB) to be loaded when a falling edge on TIOA occurs.
- * <li>Configure a Timer Counter interrupt and enable the RB load interrupt.
- * <li>Pressing 'c' in the terminal window, starts capture.
- * <li>Pressing 's' in the terminal window, stops capture and dumps the information captured so far.
+ * <li>Select pre-defined waveform frequency and duty cycle to be generated
+ * <li>Configure TC_CHANNEL_WAVEFORM as waveform output
+ * <li>Configure TC_CHANNEL_CAPTURE as a capture input
+ * <li>Configure capture Register A (RA) to be loaded when a rising edge on TIOA occurs
+ * <li>Configure capture Register B (RB) to be loaded when a falling edge on TIOA occurs
+ * <li>Configure a Timer Counter interrupt and enable the RB load interrupt
+ * <li>Pressing 'c' in the terminal window, starts capture
+ * <li>Pressing 's' in the terminal window, stops capture and dumps the information captured so far
  * </ul>
  *
  *
  * \section asfdoc_sam_drivers_tc_example_files Main Files
  *
- * - tc.c: Timer Counter driver;
- * - tc.h: Timer Counter driver header file;
- * - tc_capture_waveform_example.c: Timer Counter example application.
+ * - tc.c: Timer Counter driver
+ * - tc.h: Timer Counter driver header file
+ * - tc_capture_waveform_example.c: Timer Counter example application
  *
  *
  * \section asfdoc_sam_drivers_tc_example_compilinfo Compilation Information
  *
- * This software is written for GNU GCC and IAR Embedded Workbench
+ * This software is written for GNU GCC and IAR Embedded Workbench&reg;
  * for Atmel. Other compilers may or may not work.
- * 
- * 
+ *
+ *
  * \section asfdoc_sam_drivers_tc_example_usage Usage
  *
- * -# Build the program and download it into the evaluation board.
- * -# On the computer, open and configure a terminal application
- *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
+ * -# Build the program and download it into the evaluation board
+ * -# On the computer, open, and configure a terminal application
+ *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
  *   - 115200 baud
  *   - 8 bits of data
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Start the application.
+ * -# Start the application
  * -# In the terminal window, the following text should appear:
  *    \code
  *     -- TC capture waveform example  xxx --

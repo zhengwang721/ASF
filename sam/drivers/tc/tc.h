@@ -71,9 +71,9 @@
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_sam_drivers_tc_module_overview Module Overview 
+ * \section asfdoc_sam_drivers_tc_module_overview Module Overview
  * The Timer Counter (TC) includes several identical 16-bit or 32-bit Timer
- * Counter channels. The number of TC channels is device specific, please refer
+ * Counter channels. The number of TC channels is device specific, refer
  * to the device-specific datasheet for more information.
  *
  * Each channel can be independently programmed to perform a wide range of
@@ -92,12 +92,12 @@
  *
  *
  * \section asfdoc_sam_drivers_tc_special_considerations Special Considerations
- * \subsection asfdoc_sam_drivers_tc_special_considerations_clock External clock
+ * \subsection asfdoc_sam_drivers_tc_special_considerations_clock External Clock
  * In all cases, if an external clock is used, the duration of each of its levels
  * must be longer than the master clock (MCLK) period. The external clock frequency
  * must be at least 2.5 times lower than the master clock.
  *
- * \subsection asfdoc_sam_drivers_tc_special_considerations_trigger External trigger
+ * \subsection asfdoc_sam_drivers_tc_special_considerations_trigger External Trigger
  * If an external trigger is used, the duration of its pulses must be longer than
  * the master clock (MCLK) period in order to be detected.
  *
@@ -116,7 +116,7 @@
  * \ref asfdoc_sam_drivers_tc_exqsg.
  *
  *
- * \section asfdoc_sam_drivers_tc_api_overview API Overview 
+ * \section asfdoc_sam_drivers_tc_api_overview API Overview
  * @{
  */
 
@@ -266,7 +266,7 @@ uint32_t tc_get_version(Tc *p_tc);
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Initial Release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
@@ -292,9 +292,9 @@ uint32_t tc_get_version(Tc *p_tc);
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42301A</td>
  *		<td>03/2014</td>
- *		<td>Initial release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  *
@@ -309,19 +309,19 @@ uint32_t tc_get_version(Tc *p_tc);
  * application loop or any other function that will need to control the
  * AST module.
  *
- * \section asfdoc_sam_drivers_tc_qsg_use_cases Use cases
+ * \section asfdoc_sam_drivers_tc_qsg_use_cases Use Cases
  * - \ref asfdoc_sam_drivers_tc_qsg_basic_capture
  * - \ref asfdoc_sam_drivers_tc_qsg_basic_waveform
  *
- * \section asfdoc_sam_drivers_tc_qsg_basic_capture TC capture mode basic usage
+ * \section asfdoc_sam_drivers_tc_qsg_basic_capture TC Capture Mode Basic Usage
  *
  * This use case will demonstrate how to initialize the TC module to
- * operate in capture mode using interrupts. Please note, that the macros
- * used to select the TC channel are device specific. Please refer to the
+ * operate in capture mode using interrupts. Note, that the macros
+ * used to select the TC channel are device specific. Refer to the
  * appropriate device-specific datasheet for more information.
  *
  *
- * \section asfdoc_sam_drivers_tc_qsg_basic_capture_setup Setup steps
+ * \section asfdoc_sam_drivers_tc_qsg_basic_capture_setup Setup Steps
  *
  * \subsection asfdoc_sam_tc_qsg_basic_capture_prereq Prerequisites
  *
@@ -329,7 +329,7 @@ uint32_t tc_get_version(Tc *p_tc);
  * - \ref clk_group "System Clock Management (sysclock)"
  * - \ref asfdoc_sam_drivers_gpio_group "General Purpose I/O (GPIO) driver"
  *
- * \subsection asfdoc_sam_drivers_tc_qsg_basic_capture_setup_code Setup code
+ * \subsection asfdoc_sam_drivers_tc_qsg_basic_capture_setup_code Setup Code
  *
  * Add these macros to the top of your main application C-file:
  * \snippet conf_board.h tc_define_peripheral
@@ -369,15 +369,15 @@ uint32_t tc_get_version(Tc *p_tc);
  * \code uint32_t gs_ul_captured_rb; \endcode
  * \snippet tc_capture_waveform_example.c tc_capture_irq_handler_read_rb
  *
- * \section asfdoc_sam_drivers_tc_qsg_basic_waveform TC waveform mode basic usage
+ * \section asfdoc_sam_drivers_tc_qsg_basic_waveform TC Waveform Mode Basic Usage
  *
  * This use case will demonstrate how to initialize the TC module to
- * operate in waveform mode. Please note, that the macros used to select
- * the TC channel are device specific. Please refer to the appropriate
+ * operate in waveform mode. Note, that the macros used to select
+ * the TC channel are device specific. Refer to the appropriate
  * device-specific datasheet for more information.
  *
  *
- * \section asfdoc_sam_drivers_tc_qsg_basic_waveform_setup Setup steps
+ * \section asfdoc_sam_drivers_tc_qsg_basic_waveform_setup Setup Steps
  *
  * \subsection asfdoc_sam_tc_qsg_basic_waveform_prereq Prerequisites
  *
@@ -385,7 +385,7 @@ uint32_t tc_get_version(Tc *p_tc);
  * - \ref clk_group "System Clock Management (sysclock)"
  * - \ref asfdoc_sam_drivers_gpio_group "General Purpose I/O (GPIO) driver"
  *
- * \subsection asfdoc_sam_drivers_tc_qsg_basic_waveform_setup_code Setup code
+ * \subsection asfdoc_sam_drivers_tc_qsg_basic_waveform_setup_code Setup Code
  *
  * Add these macros to the top of your main application C-file:
  * \snippet conf_board.h tc_define_peripheral
@@ -405,7 +405,7 @@ uint32_t tc_get_version(Tc *p_tc);
  *	sysclk_enable_peripheral_clock(ID_TC_WAVEFORM);
  *
  *	// Init TC to waveform mode.
- *	tc_init(TC, TC_CHANNEL_WAVEFORM,			
+ *	tc_init(TC, TC_CHANNEL_WAVEFORM,
  *			TC_WAVEFORM_TIMER_SELECTION // Waveform Clock Selection
  *			| TC_CMR_WAVE       // Waveform mode is enabled
  *			| TC_CMR_ACPA_SET   // RA Compare Effect: set
