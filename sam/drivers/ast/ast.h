@@ -68,7 +68,7 @@
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_sam_drivers_ast_module_overview Module Overview 
+ * \section asfdoc_sam_drivers_ast_module_overview Module Overview
  * The AST module in the SAM4L devices is a 32-bit counter, with a 32-bit
  * programmable prescaler. Typically, the AST clock is run continuously,
  * including in the device's low-power sleep modes, to track the current time
@@ -83,9 +83,9 @@
  * to track the passing of time and/or perform scheduled tasks.
  *
  * Whilst operating in Calendar Mode, the AST features:
- *  - Time tracking in seconds, minutes and hours in 24 hour format.
- *  - Date tracking in day, month and year.
- *  - Automatic leap year correction.
+ *  - Time tracking in seconds, minutes, and hours in 24 hour format
+ *  - Date tracking in day, month, and year
+ *  - Automatic leap year correction
  *
  * \subsection asfdoc_sam_drivers_ast_overview_alarms Alarm Interrupt
  * The AST has a device dependent number of independent hardware alarms that can
@@ -94,7 +94,7 @@
  * interrupt, event, or both. The AST can also be configured to clear the clock
  * value on alarm match which will generate an overflow interrupt.
  *
- * \note Please refer to Module Configuration at the end of the AST section of the device
+ * \note Refer to module configuration at the end of the ast section of the device
  * datasheet for the number of alarms supported.
  *
  * Whilst in Calendar Mode and using a nominal 1 Hz input clock frequency, a register
@@ -125,13 +125,13 @@
  *
  * \section asfdoc_sam_drivers_ast_special_considerations Special Considerations
  *
- * \subsection asfdoc_sam_drivers_ast_special_considerations_crystal Crystal selection
+ * \subsection asfdoc_sam_drivers_ast_special_considerations_crystal Crystal Selection
  * The external crystal selection used by the AST module in the final system design must take
  * into account:
- * - Current consumption to achieve the best power savings in low power operating modes.
- * - Frequency drift (due to temperature effects on the circuit) for the best time accuracy.
+ * - Current consumption to achieve the best power savings in low power operating modes
+ * - Frequency drift (due to temperature effects on the circuit) for the best time accuracy
  *
- * \subsection asfdoc_sam_drivers_ast_special_considerations_year Year limit
+ * \subsection asfdoc_sam_drivers_ast_special_considerations_year Year Limit
  * The AST module has a year range of 63 years from the starting year configured
  * when the module is initialized. Dates outside the start to end year range
  * described below will need software adjustment:
@@ -152,7 +152,7 @@
  * For a list of examples related to this driver, see
  * \ref asfdoc_sam_drivers_ast_exqsg.
  *
- * \section asfdoc_sam_drivers_ast_api_overview API Overview 
+ * \section asfdoc_sam_drivers_ast_api_overview API Overview
  * @{
  */
  
@@ -477,7 +477,7 @@ void ast_disable_event(Ast *ast, ast_event_source_t source);
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Initial Release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
@@ -504,9 +504,9 @@ void ast_disable_event(Ast *ast, ast_event_source_t source);
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42283A</td>
  *		<td>03/2014</td>
- *		<td>Initial release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  *
@@ -521,23 +521,23 @@ void ast_disable_event(Ast *ast, ast_event_source_t source);
  * application loop or any other function that will need to control the
  * AST module.
  *
- * \section asfdoc_sam_drivers_ast_qsg_use_cases Use cases
+ * \section asfdoc_sam_drivers_ast_qsg_use_cases Use Cases
  * - \ref asfdoc_sam_drivers_ast_qsg_basic
  *
- * \section asfdoc_sam_drivers_ast_qsg_basic AST basic usage
+ * \section asfdoc_sam_drivers_ast_qsg_basic AST Basic Usage
  *
  * This use case will demonstrate how to initialize the AST module to
  * calendar or counter mode.
  *
  *
- * \section asfdoc_sam_drivers_ast_qsg_basic_setup Setup steps
+ * \section asfdoc_sam_drivers_ast_qsg_basic_setup Setup Steps
  *
  * \subsection asfdoc_sam_ast_qsg_basic_prereq Prerequisites
  *
  * This module requires the following service
  * - \ref clk_group "System Clock Management (sysclock)"
  *
- * \subsection asfdoc_sam_drivers_ast_qsg_basic_setup_code Setup code
+ * \subsection asfdoc_sam_drivers_ast_qsg_basic_setup_code Setup Code
  *
  * Add this to the main loop or a setup function:
  * \code osc_priv_enable_osc32(); \endcode
@@ -574,7 +574,7 @@ void ast_disable_event(Ast *ast, ast_event_source_t source);
  * \note We need to set the clock after prescaler to 1Hz.
  *
  *
- * \section asfdoc_sam_drivers_ast_qsg_basic_usage Usage steps
+ * \section asfdoc_sam_drivers_ast_qsg_basic_usage Usage Steps
  *
  * \subsection asfdoc_sam_drivers_ast_qsg_basic_usage_code Usage Code
  *

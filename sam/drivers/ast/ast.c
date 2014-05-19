@@ -212,7 +212,7 @@ uint32_t ast_set_config(
 /**
  * \brief Tune the AST prescaler frequency to the desired frequency.
  *
- * \note Please refer to the section entitled "Digital Tuner" in the AST chapter of the
+ * \note Refer to the section entitled "digital tuner" in the ast chapter of the
  * device-specific datasheet for more information.
  *
  * \param[in,out] ast     Module hardware register base address pointer.

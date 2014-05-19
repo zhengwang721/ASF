@@ -60,24 +60,24 @@
  * The display is triggered by the interrupt controller module.
  *
  * \section asfdoc_sam_drivers_ast_example1_files Main Files
- * - ast.c: Asynchronous Timer driver;
- * - ast.h: Asynchronous Timer driver header file;
- * - ast_example1.c: Asynchronous Timer example application.
+ * - ast.c: Asynchronous Timer driver
+ * - ast.h: Asynchronous Timer driver header file
+ * - ast_example1.c: Asynchronous Timer example application
  *
  * \section asfdoc_sam_drivers_ast_example1_compilinfo Compilation Information
  * This software is written for GNU GCC and IAR Embedded Workbench
  * for Atmel. Other compilers may or may not work.
  *
  * \section asfdoc_sam_drivers_ast_example1_configinfo Usage
- * -# Build the program and download it into the evaluation board.
- * -# On the computer, open and configure a terminal application
+ * -# Build the program and download it into the evaluation board
+ * -# On the computer, open, and configure a terminal application
  *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
  *   - 115200 baud
  *   - 8 bits of data
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Start the application.
+ * -# Start the application
  * -# In the terminal window, the following text should appear:
  *     \code
  *     -- AST Example 1 in Calendar Mode --
@@ -87,7 +87,7 @@
  *     Config AST with 32 KHz oscillator.
  *
  *     Calendar: Year:XX Month:XX Day:XX, XXhXXmXXs \endcode
- * -# Approximately every second the time should increment.
+ * -# Approximately every second the time should increment
  *
  */
 

@@ -61,25 +61,25 @@
  * the AST Alarm triggers.
  *
  * \section asfdoc_sam_drivers_ast_example2_files Main Files
- * - ast.c: Asynchronous Timer driver;
- * - ast.h: Asynchronous Timer driver header file;
+ * - ast.c: Asynchronous Timer driver
+ * - ast.h: Asynchronous Timer driver header file
  * - ast_example2.c: Asynchronous Timer example application using AST wakeup
  *                   and BPM sleep function.
  *
  * \section asfdoc_sam_drivers_ast_example2_compilinfo Compilation Information
- * This software is written for GNU GCC and IAR Embedded Workbench
- * for Atmel. Other compilers may or may not work.
+ * This software is written for GNU GCC and IAR Embedded Workbench&reg;
+ * for Atmel&reg;. Other compilers may or may not work.
  *
  * \section asfdoc_sam_drivers_ast_example2_configinfo Usage
- * -# Build the program and download it into the evaluation board.
- * -# On the computer, open and configure a terminal application
- *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
+ * -# Build the program and download it into the evaluation board
+ * -# On the computer, open, and configure a terminal application
+ *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
  *   - 115200 baud
  *   - 8 bits of data
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Start the application.
+ * -# Start the application
  * -# In the terminal window, the following text should appear:
  *     \code
  *     -- -- AST Example 2 in Counter Mode --
@@ -97,7 +97,7 @@
  *			  4: Sleep mode 3
  *			  5: Wait mode
  *			  6: Retention mode
- *			  7: Backup mode \endcode 
+ *			  7: Backup mode \endcode
  */
  
 #endif /* AST_EXAMPLE2_H_INCLUDED */
