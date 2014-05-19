@@ -57,8 +57,8 @@
  *
  * \section asfdoc_sam_drivers_rstc_example1_requirements Requirements
  *
- * - This example can be used with SAM evaluation kits.
- * - Optional: An oscilloscope connected to the evaluation kit's NRST signal.
+ * - This example can be used with SAM evaluation kits
+ * - Optional: An oscilloscope connected to the evaluation kit's NRST signal
  *
  *
  * \section asfdoc_sam_drivers_rstc_example1_description Description
@@ -82,28 +82,28 @@
  *
  * \section asfdoc_sam_drivers_rstc_example1_files Main Files
  *
- * - rstc.c: Reset Controller driver;
- * - rstc.h: Reset Controller driver header file;
- * - rstc_example1.c: Reset Controller example application.
+ * - rstc.c: Reset Controller driver
+ * - rstc.h: Reset Controller driver header file
+ * - rstc_example1.c: Reset Controller example application
  *
  *
  * \section asfdoc_sam_drivers_astc_example1_compilinfo Compilation Information
  *
- * This software is written for GNU GCC and IAR Embedded Workbench
- * for Atmel. Other compilers may or may not work.
+ * This software is written for GNU GCC and IAR Embedded Workbench&reg;
+ * for Atmel&reg;. Other compilers may or may not work.
  *
  *
  * \section asfdoc_sam_drivers_rstc_example1_usage Usage
  *
- * -# Build the program and download it into the evaluation board.
+ * -# Build the program and download it into the evaluation board
  * -# On the computer, open and configure a terminal application
- *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
+ *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
  *   - 115200 baud
  *   - 8 bits of data
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Start the application.
+ * -# Start the application
  * -# In the terminal window, the following text should appear:
  *    \code
  *     -- RSTC Reset Controller Example --
@@ -151,7 +151,7 @@
   * \note The "NRST assert" menu option requires an oscilloscope connected to the
  * evaluation kit's NRST signal. To avoid a hardware conflict during the test do not
  * use the evaluation kit's manual RESET button.
- * 
+ *
  */
  
  #endif /* RSTC_EXAMPLE1_H_INCLUDED */

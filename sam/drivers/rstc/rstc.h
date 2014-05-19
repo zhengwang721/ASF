@@ -74,10 +74,10 @@
  * The Reset Controller contains an NRST Manager and a Reset State Manager. It runs at
  * Slow Clock (SCLK) and generates the following:
  *
- * - Processor and Watchdog Timer reset.
- * - Embedded peripheral reset.
- * - Co-processor and Co-processor peripheral reset (SAM4C devices only).
- * - External device reset (via the NRST pin).
+ * - Processor and Watchdog Timer reset
+ * - Embedded peripheral reset
+ * - Co-processor and Co-processor peripheral reset (SAM4C devices only)
+ * - External device reset (via the NRST pin)
  *
  * These reset signals are asserted by the Reset Controller acting on external events
  * or as the result of an action performed by software. The Reset State Manager controls
@@ -127,11 +127,11 @@
  *
  * \subsubsection asfdoc_sam_drivers_rstc_module_overview_reset_state_software Software Reset
  * The Reset Controller allows software to assert the the following reset signals:
- * - Reset the processor and the Watchdog Timer.
- * - Reset all the embedded peripherals.
- * - Reset the Co-processor (SAM4C devices only).
- * - Reset all the embedded peripherals associated with the Co-processor (SAM4C devices only).
- * - Assert NRST for a programmable time period.
+ * - Reset the processor and the Watchdog Timer
+ * - Reset all the embedded peripherals
+ * - Reset the Co-processor (SAM4C devices only)
+ * - Reset all the embedded peripherals associated with the Co-processor (SAM4C devices only)
+ * - Assert NRST for a programmable time period
  *
  * \note The embedded peripheral reset also includes the memory system and the Remap Command
  * and is generally used for debugging purposes.
@@ -140,7 +140,7 @@
  * associated with the Co-processor. The processor's peripherals are not reset.
  *
  * \subsubsection asfdoc_sam_drivers_rstc_module_overview_reset_state_watchdog Watchdog Reset
- * The Watchdog Reset is entered when a watchdog fault occurs. 
+ * The Watchdog Reset is entered when a watchdog fault occurs.
  *
  * \subsubsection asfdoc_sam_drivers_rstc_module_overview_reset_state_priorities Reset State Priorities
  * The Reset State Manager manages the following priorities between the different reset sources,
@@ -153,18 +153,18 @@
  *
  * Particular cases are listed below:
  * - When in User Reset:
- *  - A watchdog event is impossible because the Watchdog Timer is being reset.
- *  - A software reset is impossible because the processor reset is being activated.
+ *  - A watchdog event is impossible because the Watchdog Timer is being reset
+ *  - A software reset is impossible because the processor reset is being activated
  * - When in Software Reset:
- *  - A watchdog event has priority over the current state.
- *  - The NRST has no effect.
+ *  - A watchdog event has priority over the current state
+ *  - The NRST has no effect
  * - When in Watchdog Reset:
- *  - The processor reset is active and so a Software Reset cannot be programmed.
- *  - A User Reset cannot be entered.
+ *  - The processor reset is active and so a Software Reset cannot be programmed
+ *  - A User Reset cannot be entered
  *
  * \section asfdoc_sam_drivers_rstc_special_considerations Special Considerations
  * System designs using any external devices that require a software controllable
- * reset signal assertion longer than two seconds should use a dedicated IO output
+ * reset signal assertion longer than two seconds should use a dedicated I/O output
  * of the microcontroller.
  *
  * \section asfdoc_sam_drivers_rstc_extra_info Extra Information
@@ -283,7 +283,7 @@ static inline void rstc_assert_reset_of_coprocessor(
  *      <td>Ground</td>
  *  </tr>
  *  <tr>
- *      <td>IO</td>
+ *      <td>I/O</td>
  *      <td>Input Output</td>
  *  </tr>
  *  <tr>
@@ -322,7 +322,7 @@ static inline void rstc_assert_reset_of_coprocessor(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Initial Release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
@@ -348,9 +348,9 @@ static inline void rstc_assert_reset_of_coprocessor(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42279A</td>
  *		<td>03/2014</td>
- *		<td>Initial release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
@@ -367,7 +367,7 @@ static inline void rstc_assert_reset_of_coprocessor(
  * steps for setup can be copied into a custom initialization function, while
  * the steps for usage can be copied into, e.g., the main application function.
  *
- * \section asfdoc_sam_drivers_rstc_quick_start_basic_use_case Basic use case
+ * \section asfdoc_sam_drivers_rstc_quick_start_basic_use_case Basic Use Case
  * In this basic use case, the User Reset interrupt is enabled and the main
  * application notified about NRST signal assertion events.
  *
@@ -375,8 +375,8 @@ static inline void rstc_assert_reset_of_coprocessor(
  * - \ref sysclk_group "System Clock Management"
  * - \ref asfdoc_sam_drivers_wdt_group "Watchdog Timer"
  *
- * \section asfdoc_sam_drivers_rstc_quick_start_setup Setup steps
- * \subsection asfdoc_sam_drivers_rstc_quick_start_setup_code Example code
+ * \section asfdoc_sam_drivers_rstc_quick_start_setup Setup Steps
+ * \subsection asfdoc_sam_drivers_rstc_quick_start_setup_code Example Code
  * Add the following to the application C-file:
  * \snippet rstc_example1.c reset_irq_variable
  * \snippet rstc_example1.c reset_irq_handler
@@ -386,7 +386,7 @@ static inline void rstc_assert_reset_of_coprocessor(
  * -# Enable the User Reset interrupt:
  *   \snippet rstc_example1.c reset_enable_user_reset_interrupt
  *
- * \section rtc_basic_use_case_usage Usage steps
+ * \section rtc_basic_use_case_usage Usage Steps
  * \subsection rtc_basic_use_case_usage_flow Workflow
  * Add to, e.g., main loop in application C-file:
  * \snippet rstc_example1.c reset_irq_has_triggered
