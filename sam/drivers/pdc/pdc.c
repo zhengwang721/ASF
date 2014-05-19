@@ -165,7 +165,7 @@ void pdc_disable_transfer(
  * \param[in] p_pdc Device structure pointer.
  *
  * \return PDC status register bit map.
- * 
+ *
  * <table>
  * <tr>
  * <th>Name</th>
@@ -175,15 +175,15 @@ void pdc_disable_transfer(
  * <tr>
  *   <td>RXTEN</td>
  *   <td>Receiver Transfer Enabled</td>
- *   <td>8</td>            
+ *   <td>8</td>
  * </tr>
  * <tr>
  *   <td>TXTEN</td>
- *   <td>Transmitter Transfer Enabled</td>  
- *   <td>1</td>    
+ *   <td>Transmitter Transfer Enabled</td>
+ *   <td>1</td>
  * </tr>
  * </table>
- * 
+ *
  */
 uint32_t pdc_read_status(
 		Pdc *p_pdc)
