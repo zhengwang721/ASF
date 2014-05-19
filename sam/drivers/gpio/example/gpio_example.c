@@ -55,28 +55,28 @@
  * the PDCA to send a character to the USART without CPU usage.
  *
  * \section files Main Files
- * - gpio.c: GPIO driver implementation;
- * - gpio.h: GPIO driver header file;
- * - gpio_example.c: GPIO example application.
+ * - gpio.c: GPIO driver implementation
+ * - gpio.h: GPIO driver header file
+ * - gpio_example.c: GPIO example application
  *
  * \section compilinfo Compilation Information
- * This software is written for GNU GCC and IAR Embedded Workbench
- * for Atmel. Other compilers may or may not work.
+ * This software is written for GNU GCC and IAR Embedded Workbench&reg;
+ * for Atmel&reg;. Other compilers may or may not work.
  *
  * \section deviceinfo Device Information
  * SAM4L device can be used.
  *
  * \section configinfo Configuration Information
  * This example has been tested with the following configuration:
- * - SAM4L evaluation kit;
- * - SAM4L Xplained Pro;
- * - SAM4L8 Xplained Pro;
+ * - SAM4L evaluation kit
+ * - SAM4L Xplained Pro
+ * - SAM4L8 Xplained Pro
  * - PC terminal settings:
- *   - 115200 bps,
- *   - 8 data bits,
- *   - no parity bit,
- *   - 1 stop bit,
- *   - no flow control.
+ *   - 115200 bps
+ *   - 8 data bits
+ *   - no parity bit
+ *   - 1 stop bit
+ *   - no flow control
  *
  * \section contactinfo Contact Information
  * For further information, visit
