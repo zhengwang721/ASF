@@ -76,7 +76,7 @@
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_sam_drivers_aes_module_overview Module Overview 
+ * \section asfdoc_sam_drivers_aes_module_overview Module Overview
  *
  * The Advanced Encryption Standard (AES) module is compliant with the American FIPS
  * (Federal Information Processing Standard) Publication 197 specification.
@@ -127,7 +127,7 @@
  * \ref asfdoc_sam_drivers_aes_exqsg.
  *
  *
- * \section asfdoc_sam_drivers_aes_api_overview API Overview 
+ * \section asfdoc_sam_drivers_aes_api_overview API Overview
  * @{
  */
 
@@ -332,7 +332,7 @@ Pdc *aes_get_pdc_base(Aes *p_aes);
  * \brief Get the AES Additional Authenticated Data (AAD) length in bytes.
  *
  * \note This function is only available on SAM4C devices.
- * 
+ *
  * \param[in]  p_aes Module hardware register base address pointer.
  *
  * \return The Additional Authenticated Data (AAD) length in bytes.
@@ -567,7 +567,7 @@ static inline void aes_write_gcmh(Aes *const p_aes, uint32_t id, uint32_t hword)
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Initial Release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
@@ -593,9 +593,9 @@ static inline void aes_write_gcmh(Aes *const p_aes, uint32_t id, uint32_t hword)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42295A</td>
  *		<td>03/2014</td>
- *		<td>Initial release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  *
@@ -609,23 +609,23 @@ static inline void aes_write_gcmh(Aes *const p_aes, uint32_t id, uint32_t hword)
  * a specific use case. The code examples can be copied into any function that
  * needs to control the AES module, such as the main application loop, for example.
  *
- * \section aes_qs_use_cases Use cases
+ * \section aes_qs_use_cases Use Cases
  * - \ref aes_basic
  *
- * \section aes_basic AES basic usage
+ * \section aes_basic AES Basic Usage
  *
  * This use case will demonstrate how to initialize the AES module to
  * perform encryption or decryption of data.
  *
  *
- * \section aes_basic_setup Setup steps
+ * \section aes_basic_setup Setup Steps
  *
  * \subsection aes_basic_prereq Prerequisites
  *
  * This module requires the following service:
  * - \ref clk_group "System clock (sysclk)"
  *
- * \subsection aes_basic_setup_code Setup code
+ * \subsection aes_basic_setup_code Setup Code
  *
  * Add this to the main loop or a setup function:
  * \verbatim
@@ -654,9 +654,9 @@ static inline void aes_write_gcmh(Aes *const p_aes, uint32_t id, uint32_t hword)
    g_aes_cfg.lod = false;
    aes_set_config(AES, &g_aes_cfg);  \endverbatim
  *
- * \section aes_basic_usage Usage steps
+ * \section aes_basic_usage Usage Steps
  *
- * \subsection aes_basic_usage_code Usage code
+ * \subsection aes_basic_usage_code Usage Code
  *
  * Plain text can be encrypted by:
  * \verbatim

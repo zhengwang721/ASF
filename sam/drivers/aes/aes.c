@@ -65,13 +65,13 @@ aes_callback_t aes_callback_pointer[AES_INTERRUPT_SOURCE_NUM];
  * application.
  *
  *  The default configuration is as follows:
- *  - Data encryption.
- *  - 128-bit AES key size.
- *  - 128-bit cipher feedback size.
- *  - Manual start mode.
- *  - Electronic Codebook (ECB) mode.
- *  - Last output data mode is disabled.
- *  - No extra delay.
+ *  - Data encryption
+ *  - 128-bit AES key size
+ *  - 128-bit cipher feedback size
+ *  - Manual start mode
+ *  - Electronic Codebook (ECB) mode
+ *  - Last output data mode is disabled
+ *  - No extra delay
  *
  *  \param[out] p_cfg Pointer to an AES configuration structure.
  */

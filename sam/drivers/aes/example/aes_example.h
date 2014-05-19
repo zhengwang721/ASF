@@ -72,9 +72,9 @@
  *
  *
  * \section asfdoc_sam_drivers_aes_example1_files Main Files
- * - aes.c : AES driver;
- * - aes.h : AES header file;
- * - aes_example.c : AES code example.
+ * - aes.c : AES driver
+ * - aes.h : AES header file
+ * - aes_example.c : AES code example
  *
  *
  * \section asfdoc_sam_drivers_aes_example1_compinfo Compilation Info
@@ -83,21 +83,21 @@
  *
  *
  * \section asfdoc_sam_drivers_aes_example1_setupinfo Usage
- * -# Build the program and download it into the evaluation board.
+ * -# Build the program and download it into the evaluation board
  * -# On the computer, open and configure a terminal application
- *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
+ *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
  *   - 115200 baud
  *   - 8 bits of data
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Start the application.
- * -# In the terminal window, the following text should appear: 
+ * -# Start the application
+ * -# In the terminal window, the following text should appear:
  * \verbatim
        -- AES Example --
        -- xxxxxx-xx
        -- Compiled: xxx xx xxxx xx:xx:xx --
-  
+
        Menu :
          -- Select operation:
          h: Display menu
