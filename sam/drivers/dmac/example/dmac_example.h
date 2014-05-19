@@ -58,30 +58,30 @@
  * \section asfdoc_sam_drivers_dmac_example_description Description
  * This example transfers data in one RAM buffer to another RAM buffer.
  * Two transfer modes will be used:
- * -# It uses single buffer transfer with polling mode.
+ * -# It uses single buffer transfer with polling mode
  *    After transfer is done, the transferred data will be verified.
- * -# It uses multiple buffer transfer with interrupt mode.
+ * -# It uses multiple buffer transfer with interrupt mode
  *    After transfer is done, the transferred data will be verified.
  *
  * \section asfdoc_sam_drivers_dmac_example_files Main Files
- * - dmac.c: Direct Memory Access Controller driver;
- * - dmac.h: Direct Memory Access Controller driver header file;
- * - dmac_example1.c: Direct Memory Access Controller example application.
- * 
+ * - dmac.c: Direct Memory Access Controller driver
+ * - dmac.h: Direct Memory Access Controller driver header file
+ * - dmac_example1.c: Direct Memory Access Controller example application
+ *
  * \section asfdoc_sam_drivers_dmac_example_compilinfo Compilation Information
- * This software is written for GNU GCC and IAR Embedded Workbench
- * for Atmel. Other compilers may or may not work.
- * 
+ * This software is written for GNU GCC and IAR Embedded Workbench&reg;
+ * for Atmel&reg;. Other compilers may or may not work.
+ *
  * \section asfdoc_sam_drivers_dmac_example_usage Usage
- * -# Build the program and download it into the evaluation board.
+ * -# Build the program and download it into the evaluation board
  * -# On the computer, open and configure a terminal application
- *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
+ *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
  *   - 115200 baud
  *   - 8 bits of data
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Start the application.
+ * -# Start the application
  * -# In the terminal window, the following text should appear
  *    (values depend on the board and the chip used):
  *    \code

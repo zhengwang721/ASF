@@ -108,22 +108,22 @@ void dmac_disable(
  * of the following:
  * <table>
  * <tr>
- *    <th>Parameter value</th>
+ *    <th>Parameter Value</th>
  *    <th>Description</th>
  * </tr>
- *    <tr><td>DMAC_EBCIER_BTC0</td><td>Channel 0 Buffer Transfer Completed.</td></tr>
- *    <tr><td>DMAC_EBCIER_BTC1</td><td>Channel 1 Buffer Transfer Completed.</td></tr>
- *    <tr><td>DMAC_EBCIER_BTC2</td><td>Channel 2 Buffer Transfer Completed.</td></tr>
- *    <tr><td>DMAC_EBCIER_BTC3</td><td>Channel 3 Buffer Transfer Completed.</td></tr>
- *    <tr><td>DMAC_EBCIER_CBTC0</td><td>Channel 0 Chained Buffer Transfer Completed.</td></tr>
- *    <tr><td>DMAC_EBCIER_CBTC1</td><td>Channel 1 Chained Buffer Transfer Completed.</td></tr>
- *    <tr><td>DMAC_EBCIER_CBTC2</td><td>Channel 2 Chained Buffer Transfer Completed.</td></tr>
- *    <tr><td>DMAC_EBCIER_CBTC3</td><td>Channel 3 Chained Buffer Transfer Completed.</td></tr>
- *    <tr><td>DMAC_EBCIER_ERR0</td><td>Channel 0 Access Error.</td></tr>
- *    <tr><td>DMAC_EBCIER_ERR1</td><td>Channel 1 Access Error.</td></tr>
- *    <tr><td>DMAC_EBCIER_ERR2</td><td>Channel 2 Access Error.</td></tr>
- *    <tr><td>DMAC_EBCIER_ERR3</td><td>Channel 3 Access Error.</td></tr>
- * </table> 
+ *    <tr><td>DMAC_EBCIER_BTC0</td><td>Channel 0 Buffer Transfer Completed</td></tr>
+ *    <tr><td>DMAC_EBCIER_BTC1</td><td>Channel 1 Buffer Transfer Completed</td></tr>
+ *    <tr><td>DMAC_EBCIER_BTC2</td><td>Channel 2 Buffer Transfer Completed</td></tr>
+ *    <tr><td>DMAC_EBCIER_BTC3</td><td>Channel 3 Buffer Transfer Completed</td></tr>
+ *    <tr><td>DMAC_EBCIER_CBTC0</td><td>Channel 0 Chained Buffer Transfer Completed</td></tr>
+ *    <tr><td>DMAC_EBCIER_CBTC1</td><td>Channel 1 Chained Buffer Transfer Completed</td></tr>
+ *    <tr><td>DMAC_EBCIER_CBTC2</td><td>Channel 2 Chained Buffer Transfer Completed</td></tr>
+ *    <tr><td>DMAC_EBCIER_CBTC3</td><td>Channel 3 Chained Buffer Transfer Completed</td></tr>
+ *    <tr><td>DMAC_EBCIER_ERR0</td><td>Channel 0 Access Error</td></tr>
+ *    <tr><td>DMAC_EBCIER_ERR1</td><td>Channel 1 Access Error</td></tr>
+ *    <tr><td>DMAC_EBCIER_ERR2</td><td>Channel 2 Access Error</td></tr>
+ *    <tr><td>DMAC_EBCIER_ERR3</td><td>Channel 3 Access Error</td></tr>
+ * </table>
  */
 void dmac_enable_interrupt(
 		Dmac *p_dmac,
@@ -145,22 +145,22 @@ void dmac_enable_interrupt(
  * of the following:
  * <table>
  * <tr>
- *    <th>Parameter value</th>
+ *    <th>Parameter Value</th>
  *    <th>Description</th>
  * </tr>
- *    <tr><td>DMAC_EBCIDR_BTC0</td><td>Channel 0 Buffer Transfer Completed.</td></tr>
- *    <tr><td>DMAC_EBCIDR_BTC1</td><td>Channel 1 Buffer Transfer Completed.</td></tr>
- *    <tr><td>DMAC_EBCIDR_BTC2</td><td>Channel 2 Buffer Transfer Completed.</td></tr>
- *    <tr><td>DMAC_EBCIDR_BTC3</td><td>Channel 3 Buffer Transfer Completed.</td></tr>
- *    <tr><td>DMAC_EBCIDR_CBTC0</td><td>Channel 0 Chained Buffer Transfer Completed.</td></tr>
- *    <tr><td>DMAC_EBCIDR_CBTC1</td><td>Channel 1 Chained Buffer Transfer Completed.</td></tr>
- *    <tr><td>DMAC_EBCIDR_CBTC2</td><td>Channel 2 Chained Buffer Transfer Completed.</td></tr>
- *    <tr><td>DMAC_EBCIDR_CBTC3</td><td>Channel 3 Chained Buffer Transfer Completed.</td></tr>
- *    <tr><td>DMAC_EBCIDR_ERR0</td><td>Channel 0 Access Error.</td></tr>
- *    <tr><td>DMAC_EBCIDR_ERR1</td><td>Channel 1 Access Error.</td></tr>
- *    <tr><td>DMAC_EBCIDR_ERR2</td><td>Channel 2 Access Error.</td></tr>
- *    <tr><td>DMAC_EBCIDR_ERR3</td><td>Channel 3 Access Error.</td></tr>
- * </table> 
+ *    <tr><td>DMAC_EBCIDR_BTC0</td><td>Channel 0 Buffer Transfer Completed</td></tr>
+ *    <tr><td>DMAC_EBCIDR_BTC1</td><td>Channel 1 Buffer Transfer Completed</td></tr>
+ *    <tr><td>DMAC_EBCIDR_BTC2</td><td>Channel 2 Buffer Transfer Completed</td></tr>
+ *    <tr><td>DMAC_EBCIDR_BTC3</td><td>Channel 3 Buffer Transfer Completed</td></tr>
+ *    <tr><td>DMAC_EBCIDR_CBTC0</td><td>Channel 0 Chained Buffer Transfer Completed</td></tr>
+ *    <tr><td>DMAC_EBCIDR_CBTC1</td><td>Channel 1 Chained Buffer Transfer Completed</td></tr>
+ *    <tr><td>DMAC_EBCIDR_CBTC2</td><td>Channel 2 Chained Buffer Transfer Completed</td></tr>
+ *    <tr><td>DMAC_EBCIDR_CBTC3</td><td>Channel 3 Chained Buffer Transfer Completed</td></tr>
+ *    <tr><td>DMAC_EBCIDR_ERR0</td><td>Channel 0 Access Error</td></tr>
+ *    <tr><td>DMAC_EBCIDR_ERR1</td><td>Channel 1 Access Error</td></tr>
+ *    <tr><td>DMAC_EBCIDR_ERR2</td><td>Channel 2 Access Error</td></tr>
+ *    <tr><td>DMAC_EBCIDR_ERR3</td><td>Channel 3 Access Error</td></tr>
+ * </table>
  */
 void dmac_disable_interrupt(
 		Dmac *p_dmac,
@@ -193,7 +193,7 @@ uint32_t dmac_get_interrupt_mask(
  *
  * \param[in] p_dmac Module hardware register base address pointer.
  *
- * \return DMAC transfer status. Please refer to section called "DMAC Error,
+ * \return DMAC transfer status. Refer to section called "DMAC Error,
  * Buffer Transfer and Chained Buffer Transfer Status Register" in the
  * device-specific datasheet for more information.
  */
@@ -321,7 +321,7 @@ void dmac_channel_keep(
  *
  * \param[in] p_dmac Module hardware register base address pointer.
  *
- * \return DMAC Channel handler status register. Please refer to the section called
+ * \return DMAC Channel handler status register. Refer to the section called
  * "DMAC Channel Handler Status Register" in the device-specific datasheet for more
  * information.
  */

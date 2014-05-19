@@ -50,7 +50,7 @@
  * The DMA Controller (DMAC) is an AHB-central DMA controller core that
  * transfers data from a source peripheral to a destination peripheral
  * over one or more AMBA buses. This is a driver for the configuration,
- * enabling, disabling and use of the DMAC peripheral.
+ * enabling, disabling, and use of the DMAC peripheral.
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_dmac_prerequisites
@@ -66,7 +66,7 @@
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_sam_drivers_dmac_module_overview Module Overview 
+ * \section asfdoc_sam_drivers_dmac_module_overview Module Overview
  * The DMA Controller (DMAC) is an AHB-central DMA controller core that transfers
  * data from a source peripheral to a destination peripheral over one or more AMBA
  * buses. One channel is required for each source/destination pair. In the
@@ -94,7 +94,7 @@
  * \ref asfdoc_sam_drivers_dmac_exqsg.
  *
  *
- * \section asfdoc_sam_drivers_dmac_api_overview API Overview 
+ * \section asfdoc_sam_drivers_dmac_api_overview API Overview
  * @{
  */
 
@@ -248,7 +248,7 @@ uint32_t dmac_get_writeprotect_status(Dmac *p_dmac);
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Initial Release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
@@ -274,9 +274,9 @@ uint32_t dmac_get_writeprotect_status(Dmac *p_dmac);
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42291A</td>
  *		<td>03/2014</td>
- *		<td>Initial release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  *
@@ -291,23 +291,23 @@ uint32_t dmac_get_writeprotect_status(Dmac *p_dmac);
  * application loop or any other function that will need to control the
  * DMAC module.
  *
- * \section asfdoc_sam_drivers_dmac_qsg_use_cases Use cases
+ * \section asfdoc_sam_drivers_dmac_qsg_use_cases Use Cases
  * - \ref asfdoc_sam_drivers_dmac_qsg_basic
  *
- * \section asfdoc_sam_drivers_dmac_qsg_basic DMAC basic usage
+ * \section asfdoc_sam_drivers_dmac_qsg_basic DMAC Basic Usage
  *
  * This use case will demonstrate how to initialize the DMAC module to
  * perform a single memory to memory transfer.
  *
  *
- * \section asfdoc_sam_drivers_dmac_qsg_basic_setup Setup steps
+ * \section asfdoc_sam_drivers_dmac_qsg_basic_setup Setup Steps
  *
  * \subsection asfdoc_sam_drivers_dmac_qsg_basic_prereq Prerequisites
  *
  * This module requires the following service
  * - \ref clk_group "System Clock Management (sysclock)"
  *
- * \subsection asfdoc_sam_drivers_dmac_qsg_basic_setup_code Setup code
+ * \subsection asfdoc_sam_drivers_dmac_qsg_basic_setup_code Setup Code
  *
  * Add these macros and global variable to the top of your application's C-file:
  * \snippet dmac_example.c dmac_define_channel
@@ -327,14 +327,14 @@ uint32_t dmac_get_writeprotect_status(Dmac *p_dmac);
  * -# Set the priority to round-robin:
  * \snippet dmac_example.c dmac_set_priority
  * -# Enable the DMAC module:
- * \snippet dmac_example.c dmac_enable_module 
+ * \snippet dmac_example.c dmac_enable_module
  * -# Configure the channel for:
  *    - Enable stop on done
  *    - Enable AHB protection
- *    - Set the FIFO so that largest defined length AHB burst is performed.
+ *    - Set the FIFO so that largest defined length AHB burst is performed
  * \snippet dmac_example.c dmac_configure_channel
  *
- * \section asfdoc_sam_drivers_dmac_qsg_basic_usage Usage steps
+ * \section asfdoc_sam_drivers_dmac_qsg_basic_usage Usage Steps
  *
  * \subsection asfdoc_sam_drivers_dmac_qsg_basic_usage_code Usage Code
  * Configure the DMA source and destination buffer addresses:
