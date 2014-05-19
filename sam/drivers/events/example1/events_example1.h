@@ -55,13 +55,13 @@
  * delay 500ms and toggle a LED continuously to show CPU activity.
  *
  * \section asfdoc_sam_events_ex1_files Main Files
- * - events.c: Events driver;
- * - events.h: Events driver header file;
- * - events_example1.c: Events example 1 application.
+ * - events.c: Events driver
+ * - events.h: Events driver header file
+ * - events_example1.c: Events example 1 application
  *
  * \section asfdoc_sam_events_ex1_compilinfo Compilation Information
- * This software is written for GNU GCC and IAR Embedded Workbench
- * for Atmel. Other compilers may or may not work.
+ * This software is written for GNU GCC and IAR Embedded Workbench&reg;
+ * for Atmel&reg;. Other compilers may or may not work.
  *
  * \section asfdoc_sam_events_ex1_deviceinfo Device Information
  * SAM4L device can be used.

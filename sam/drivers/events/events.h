@@ -71,7 +71,7 @@
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_sam_drivers_events_module_overview Module Overview 
+ * \section asfdoc_sam_drivers_events_module_overview Module Overview
  *
  * Peripherals within the SAM4L device are capable of generating two types of
  * actions in response to a given stimulus; they can set a register flag for later
@@ -142,7 +142,7 @@
  * Each Event Shaper is responsible for shaping one generator input prior to
  * it going through an Event Channel.
  *
- * Please refer to the Module Configuration section at the end
+ * Refer to the module configuration section at the end
  * of the Peripheral Event Controller (PEVC) section in the device datasheet for the
  * specific configuration of Event Shapers and Input Glitch Filters.
  *
@@ -218,7 +218,7 @@
  * \ref asfdoc_sam_drivers_events_exqsg.
 
  *
- * \section asfdoc_sam_drivers_events_api_overview API Overview 
+ * \section asfdoc_sam_drivers_events_api_overview API Overview
  * @{
  */
 
@@ -250,17 +250,17 @@ enum events_igf_divider {
 	EVENT_IGF_DIVIDER_2       = 1,
 	/** Select a prescaler division ratio of 4. */
 	EVENT_IGF_DIVIDER_4       = 2,
-	/** Select a prescaler division ratio of 8. */	
+	/** Select a prescaler division ratio of 8. */
 	EVENT_IGF_DIVIDER_8       = 3,
-	/** Select a prescaler division ratio of 16. */	
+	/** Select a prescaler division ratio of 16. */
 	EVENT_IGF_DIVIDER_16      = 4,
 	/** Select a prescaler division ratio of 32. */
 	EVENT_IGF_DIVIDER_32      = 5,
 	/** Select a prescaler division ratio of 64. */
 	EVENT_IGF_DIVIDER_64      = 6,
-	/** Select a prescaler division ratio of 128. */	
+	/** Select a prescaler division ratio of 128. */
 	EVENT_IGF_DIVIDER_128     = 7,
-	/** Select a prescaler division ratio of 256. */	
+	/** Select a prescaler division ratio of 256. */
 	EVENT_IGF_DIVIDER_256     = 8,
 	/** Select a prescaler division ratio of 512. */
 	EVENT_IGF_DIVIDER_512     = 9,
@@ -272,7 +272,7 @@ enum events_igf_divider {
 	EVENT_IGF_DIVIDER_4096    = 12,
 	/** Select a prescaler division ratio of 8192. */
 	EVENT_IGF_DIVIDER_8192    = 13,
-	/** Select a prescaler division ratio of 16384. */	
+	/** Select a prescaler division ratio of 16384. */
 	EVENT_IGF_DIVIDER_16384   = 14,
 	/** Select a prescaler division ratio of 32768. */
 	EVENT_IGF_DIVIDER_32768   = 15
@@ -556,7 +556,7 @@ static inline void events_ch_clear_overrun_status(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Initial Release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
@@ -583,9 +583,9 @@ static inline void events_ch_clear_overrun_status(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42312A</td>
  *		<td>03/2014</td>
- *		<td>Initial release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  *
@@ -608,9 +608,9 @@ static inline void events_ch_clear_overrun_status(
  *
  * This use case will demonstrate how to use the Peripheral Event Controller
  * on SAM4L_EK. In this use case, one event channel is configured as:
- * - Configure AST periodic event 0 as a generator.
- * - Configure PDCA channel 0 as a user to transfer one word.
- * - Enable the event shaper for the generator.
+ * - Configure AST periodic event 0 as a generator
+ * - Configure PDCA channel 0 as a user to transfer one word
+ * - Enable the event shaper for the generator
  *
  * \section asfdoc_sam_events_qsg_setup Setup Steps
  *
@@ -629,14 +629,14 @@ static inline void events_ch_clear_overrun_status(
  *
  * \subsection asfdoc_sam_events_qsg_setup_workflow Workflow
  *
- * -# Initialize AST to generate periodic event 0,
+ * -# Initialize AST to generate periodic event 0
  *  see sam/drivers/events/example1 for more detail:
  *  \snippet events_example1.c quick_start_init_ast_basic_use
  *
  * -# Initialize the event module and enable it:
  * \snippet events_example1.c quick_start_init_events_basic_use
  *
- * -# Initialize PDCA channel 0 to transfer data to USART,
+ * -# Initialize PDCA channel 0 to transfer data to USART
  *  see sam/drivers/events/example1 for more detail:
  *  \snippet events_example1.c quick_start_init_pdca_basic_use
  *

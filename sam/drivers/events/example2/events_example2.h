@@ -54,9 +54,9 @@
  * will trigger the PDCA to send a character to the USART without CPU usage.
  *
  * \section asfdoc_sam_events_ex2_files Main Files
- * - events.c: Events driver;
- * - events.h: Events driver header file;
- * - events_example2.c: Events example 2 application.
+ * - events.c: Events driver
+ * - events.h: Events driver header file
+ * - events_example2.c: Events example 2 application
  *
  * \section asfdoc_sam_events_ex2_compilinfo Compilation Information
  * This software is written for GNU GCC and IAR Embedded Workbench

@@ -102,10 +102,10 @@ void events_disable(void)
  * \brief Initialize an event channel configuration structure to defaults.
  *
  *  The default configuration is as follows:
- *  - Channel ID is initialized to invalid number.
- *  - Generator ID is initialized to invalid number.
- *  - Event shaper is disabled.
- *  - Event Input Glitch Filter is disabled.
+ *  - Channel ID is initialized to invalid number
+ *  - Generator ID is initialized to invalid number
+ *  - Event shaper is disabled
+ *  - Event Input Glitch Filter is disabled
  *
  *  \param[out] config    Configuration structure to initialize to default values.
  */
