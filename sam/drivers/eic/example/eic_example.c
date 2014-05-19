@@ -54,14 +54,14 @@
  *
  * \section Description
  *
- * The SAM4L controller waits for button press to generate external interrupt 
+ * The SAM4L controller waits for button press to generate external interrupt
  * and will toggle LED.
  *
  * \section Usage
  *
- * - Build the program and download it to the board.
- * -# On the computer, open and configure a terminal application
- *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
+ * - Build the program and download it to the board
+ * -# On the computer, open, and configure a terminal application
+ *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
  *   - 115200 bauds
  *   - 8 bits of data
  *   - No parity
@@ -74,7 +74,7 @@
  *     -- xxxxxx-xx
  *     -- Compiled: xxx xx xxxx xx:xx:xx --
  *    \endcode
- * -# the sent text should appear.
+ * -# the sent text should appear
  */
 
 #include "asf.h"
