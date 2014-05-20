@@ -169,7 +169,7 @@
  *
  * \section asfdoc_sam_drivers_rstc_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam_drivers_rstc_extra. This includes:
+ * For extra information, see \ref asfdoc_sam_drivers_rstc_extra. This includes:
  *  - \ref asfdoc_sam_drivers_rstc_extra_acronyms
  *  - \ref asfdoc_sam_drivers_rstc_extra_dependencies
  *  - \ref asfdoc_sam_drivers_rstc_extra_errata
@@ -229,7 +229,7 @@ uint32_t rstc_get_reset_cause(Rstc* p_rstc);
  *
  * \note This function is for SAM4C devices only.
  *
- * \param[in,out] p_rstc Module hardware register base address pointer.
+ * \param[in,out] p_rstc Module hardware register base address pointer
  * \param[in] reset  The reset to be deasserted as a bitmask, which could be RSTC_CPMR_CPEREN
  * (peripheral reset) and/or RSTC_CPMR_CPROCEN (core reset).
  */
@@ -245,7 +245,7 @@ static inline void rstc_deassert_reset_of_coprocessor(
  *
  * \note This function is for SAM4C devices only.
  *
- * \param[in,out] p_rstc Module hardware register base address pointer.
+ * \param[in,out] p_rstc Module hardware register base address pointer
  * \param[in] reset  The reset to be asserted as a bitmask, which could be RSTC_CPMR_CPEREN
  * (peripheral reset) and/or RSTC_CPMR_CPROCEN (core reset).
  */

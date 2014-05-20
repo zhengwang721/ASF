@@ -56,8 +56,8 @@ extern "C" {
 /**
  * \brief Set the external reset length.
  *
- * \param[in,out] p_rstc Module hardware register base address pointer.
- * \param[in] ul_length The length of external reset.
+ * \param[in,out] p_rstc Module hardware register base address pointer
+ * \param[in] ul_length The length of external reset
  */
 void rstc_set_external_reset(
 		Rstc *p_rstc,
@@ -77,7 +77,7 @@ void rstc_set_external_reset(
 /**
  * \brief Enable User Reset.
  *
- * \param[in,out] p_rstc Module hardware register base address pointer.
+ * \param[in,out] p_rstc Module hardware register base address pointer
  */
 void rstc_enable_user_reset(
 		Rstc *p_rstc)
@@ -96,7 +96,7 @@ void rstc_enable_user_reset(
 /**
  * \brief Disable User Reset.
  *
- * \param[in,out] p_rstc Module hardware register base address pointer.
+ * \param[in,out] p_rstc Module hardware register base address pointer
  */
 void rstc_disable_user_reset(
 		Rstc *p_rstc)
@@ -115,7 +115,7 @@ void rstc_disable_user_reset(
 /**
  * \brief Enable the User Reset interrupt.
  *
- * \param[in,out] p_rstc Module hardware register base address pointer.
+ * \param[in,out] p_rstc Module hardware register base address pointer
  */
 void rstc_enable_user_reset_interrupt(
 		Rstc *p_rstc)
@@ -134,7 +134,7 @@ void rstc_enable_user_reset_interrupt(
 /**
  * \brief Disable the User Reset interrupt.
  *
- * \param[in,out] p_rstc Module hardware register base address pointer.
+ * \param[in,out] p_rstc Module hardware register base address pointer
  */
 void rstc_disable_user_reset_interrupt(
 		Rstc *p_rstc)
@@ -153,7 +153,7 @@ void rstc_disable_user_reset_interrupt(
 /**
  * \brief Perform a Software Reset.
  *
- * \param[out] p_rstc Module hardware register base address pointer.
+ * \param[out] p_rstc Module hardware register base address pointer
  */
 void rstc_start_software_reset(
 		Rstc *p_rstc)
@@ -164,7 +164,7 @@ void rstc_start_software_reset(
 /**
  * \brief Asserts the NRST pin for external resets.
  *
- * \param[out] p_rstc Module hardware register base address pointer.
+ * \param[out] p_rstc Module hardware register base address pointer
  */
 void rstc_reset_extern(
 		Rstc *p_rstc)
@@ -175,7 +175,7 @@ void rstc_reset_extern(
 /**
  * \brief Get the RSTC status.
  *
- * \param[in] p_rstc Module hardware register base address pointer.
+ * \param[in] p_rstc Module hardware register base address pointer
  *
  * \return RSTC status.
  */
@@ -188,7 +188,7 @@ uint32_t rstc_get_status(
 /**
  * \brief Get the reset cause.
  *
- * \param[in] p_rstc Module hardware register base address pointer.
+ * \param[in] p_rstc Module hardware register base address pointer
  *
  * \return The last reset cause.
  */
