@@ -71,36 +71,36 @@
  * no longer equal.
  *
  * \section asfdoc_sam_drivers_acc_example_irq_files Main Files
- * - acc.c: Analog Comparator Controller driver;
- * - acc.h: Analog Comparator Controller driver header file;
- * - acc_example.c: Analog Comparator Controller example application.
+ * - acc.c: Analog Comparator Controller driver
+ * - acc.h: Analog Comparator Controller driver header file
+ * - acc_example.c: Analog Comparator Controller example application
  *
  * \section asfdoc_sam_drivers_acc_example_irq_compilinfo Compilation Information
- * This software is written for GNU GCC and IAR Embedded Workbench
- * for Atmel. Other compilers may or may not work.
- 
+ * This software is written for GNU GCC and IAR Embedded Workbench&reg;
+ * for Atmel&reg;. Other compilers may or may not work.
+
  * \section asfdoc_sam_drivers_acc_example_irq_usage Usage
  *
- * -# Build the program and download it into the evaluation board.
- * -# On the computer, open and configure a terminal application
- *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
+ * -# Build the program and download it into the evaluation board
+ * -# On the computer, open, and configure a terminal application
+ *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
  *   - 115200 baud
  *   - 8 bits of data
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Start the application.
+ * -# Start the application
  * -# In the terminal window, the following text should appear:
  * \verbatim
    -- ACC IRQ Example xxx --
    -- xxxxxx-xx
    -- Compiled: xxx xx xxxx xx:xx:xx --
-   
+
    -- Menu Choices for this example--
    -- s: Set new DAC0 output voltage.--
    -- v: Get voltage on potentiometer.--
    -- m: Display this menu again.-- \endverbatim
- * -# Enter a character on the terminal to select a menu option.
+ * -# Enter a character on the terminal to select a menu option
  * -# Change the voltage on AD5 by adjusting VR1 on the evaluation kit in order
  * to see what comparison events occur.
  */

@@ -69,7 +69,7 @@
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_sam_drivers_acc_module_overview Module Overview 
+ * \section asfdoc_sam_drivers_acc_module_overview Module Overview
  *
  * The Analog Comparator Controller configures the Analog Comparator, and
  * generates an interrupt according to the user application's settings. The
@@ -81,12 +81,12 @@
  * application can select a high-speed or low-power option, the hysteresis level,
  * edge detection and polarity.
  *
- * The ACC can also generate a comparison event that can be used by the PWM. 
+ * The ACC can also generate a comparison event that can be used by the PWM.
  *
  *
  * \section asfdoc_sam_drivers_acc_special_considerations Special Considerations
  *
- * \subsection asfdoc_sam_drivers_acc_special_considerations_config Configuration changes
+ * \subsection asfdoc_sam_drivers_acc_special_considerations_config Configuration Changes
  *
  * As soon as the analog comparator settings are modified, the output of the
  * analog comparator is masked for the time that its output may be invalid.
@@ -102,14 +102,14 @@
  * while ((acc_get_interrupt_status(ACC) & ACC_ISR_MASK) == ACC_ISR_MASK) {
  * } \endcode
  *
- * \subsection asfdoc_sam_drivers_acc_special_considerations_io I/O lines
+ * \subsection asfdoc_sam_drivers_acc_special_considerations_io I/O Lines
  *
  * The analog input pins (AD0-AD7 and DAC0-1) are multiplexed with GPIO lines.
- * The assignment of these pins to ACC module inputs is automatically done 
+ * The assignment of these pins to ACC module inputs is automatically done
  * when the corresponding input is assigned to the comparator's plus/minus inputs
  * by the user application performing a write to the module's Mode Register.
  *
- * \subsection asfdoc_sam_drivers_acc_special_considerations_power Power management
+ * \subsection asfdoc_sam_drivers_acc_special_considerations_power Power Management
  * The ACC module is clocked through the Power Management Controller (PMC),
  * thus the user application must first configure the PMC, in order to enable the
  * Analog Comparator Controller clock.
@@ -123,16 +123,16 @@
  * Controller (NVIC). Handling the ACC interrupt requires that the NVIC is configured
  * before configuring the ACC.
  *
- * \subsection asfdoc_sam_drivers_acc_special_considerations_fault Fault output
+ * \subsection asfdoc_sam_drivers_acc_special_considerations_fault Fault Output
  *
  * The ACC module has a FAULT output that is connected to the FAULT input of the
- * PWM module . Please refer to "Fault Mode”, and the implementation of the PWM in
+ * PWM module. Refer to "fault mode”, and the implementation of the pwm in
  * the device-specific datasheet.
  *
  *
  * \section asfdoc_sam_drivers_acc_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam_drivers_acc_extra. This includes:
+ * For extra information, see \ref asfdoc_sam_drivers_acc_extra. This includes:
  *  - \ref asfdoc_sam_drivers_acc_extra_acronyms
  *  - \ref asfdoc_sam_drivers_acc_extra_dependencies
  *  - \ref asfdoc_sam_drivers_acc_extra_errata
@@ -144,7 +144,7 @@
  * \ref asfdoc_sam_drivers_acc_exqsg.
  *
  *
- * \section asfdoc_sam_drivers_acc_api_overview API Overview 
+ * \section asfdoc_sam_drivers_acc_api_overview API Overview
  * @{
  */
  
@@ -159,7 +159,7 @@ extern "C" {
 /// @endcond
 
 /** \name Hysteresis levels
- * Please refer to the "Analog Comparator Characteristics" table in the 
+ * Refer to the "Analog Comparator Characteristics" table in the
  * "Electrical Characteristics" chapter of the device-specific datasheet.
  * @{
  */
@@ -221,7 +221,7 @@ uint32_t acc_get_writeprotect_status(Acc *p_acc);
  *  <tr>
  *      <td>NVIC</td>
  *      <td>Nested Vectored Interrupt Controller</td>
- * </tr> 
+ * </tr>
  *  <tr>
  *      <td>PMC</td>
  *      <td>Power Management Controller</td>
@@ -258,7 +258,7 @@ uint32_t acc_get_writeprotect_status(Acc *p_acc);
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Initial Release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  */
@@ -286,7 +286,7 @@ uint32_t acc_get_writeprotect_status(Acc *p_acc);
  *	<tr>
  *		<td>A</td>
  *		<td>03/2014</td>
- *		<td>Initial release</td>
+ *		<td>Initial document release</td>
  *	</tr>
  * </table>
  *
@@ -301,23 +301,23 @@ uint32_t acc_get_writeprotect_status(Acc *p_acc);
  * application loop or any other function that will need to control the
  * ACC module.
  *
- * \section asfdoc_sam_drivers_acc_qsg_use_cases Use cases
+ * \section asfdoc_sam_drivers_acc_qsg_use_cases Use Cases
  * - \ref asfdoc_sam_drivers_acc_qsg_basic
  *
- * \section asfdoc_sam_drivers_acc_qsg_basic ACC basic usage
+ * \section asfdoc_sam_drivers_acc_qsg_basic ACC Basic Usage
  *
  * This use case will demonstrate how to initialize the ACC module in
  * interrupt mode.
  *
  *
- * \section asfdoc_sam_drivers_acc_qsg_basic_setup Setup steps
+ * \section asfdoc_sam_drivers_acc_qsg_basic_setup Setup Steps
  *
  * \subsection asfdoc_sam_acc_qsg_basic_prereq Prerequisites
  *
  * This module requires the following service:
  * - \ref clk_group "System Clock Management (sysclock)"
  *
- * \subsection asfdoc_sam_drivers_acc_qsg_basic_setup_code Setup code
+ * \subsection asfdoc_sam_drivers_acc_qsg_basic_setup_code Setup Code
  *
  * Add this to your main application C-file:
  * \verbatim
@@ -338,7 +338,7 @@ uint32_t acc_get_writeprotect_status(Acc *p_acc);
  * -# Enable the ACC module interrupt:
  * \snippet acc_example.c acc_irq_enable
  *
- * \section asfdoc_sam_drivers_acc_qsg_basic_usage Usage steps
+ * \section asfdoc_sam_drivers_acc_qsg_basic_usage Usage Steps
  *
  * \subsection asfdoc_sam_drivers_acc_qsg_basic_usage_code Usage Code
  *

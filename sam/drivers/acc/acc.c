@@ -58,67 +58,67 @@ extern "C" {
 /**
  * \brief Initialize the ACC module.
  *
- * \note This function performs a \ref acc_reset() "software reset" on the 
+ * \note This function performs a \ref acc_reset() "software reset" on the
  * ACC module prior to its initialization.
  *
- * \param[in,out] p_acc       Module hardware register base address pointer.
- * \param[in] ul_select_plus  Selection for the plus comparator input (inp).
- * \param[in] ul_select_minus Selection for the minus comparator input (inn).
- * \param[in] ul_edge_type    Comparison flag triggering mode.
- * \param[in] ul_invert       Invert the comparator output mode.
+ * \param[in,out] p_acc       Module hardware register base address pointer
+ * \param[in] ul_select_plus  Selection for the plus comparator input (inp)
+ * \param[in] ul_select_minus Selection for the minus comparator input (inn)
+ * \param[in] ul_edge_type    Comparison flag triggering mode
+ * \param[in] ul_invert       Invert the comparator output mode
  *
  * Where the input parameter <i>ul_select_plus</i> is one of the following:
  * <table>
  * <tr>
- *    <th>Parameter value</th>
+ *    <th>Parameter Value</th>
  *    <th>Description</th>
  * </tr>
- *    <tr><td>ACC_MR_SELPLUS_AD0</td><td>Select AD0 as the plus input.</td></tr>
- *    <tr><td>ACC_MR_SELPLUS_AD1</td><td>Select AD1 as the plus input.</td></tr>
- *    <tr><td>ACC_MR_SELPLUS_AD2</td><td>Select AD2 as the plus input.</td></tr>
- *    <tr><td>ACC_MR_SELPLUS_AD3</td><td>Select AD3 as the plus input.</td></tr>
- *    <tr><td>ACC_MR_SELPLUS_AD4</td><td>Select AD4 as the plus input.</td></tr>
- *    <tr><td>ACC_MR_SELPLUS_AD5</td><td>Select AD5 as the plus input.</td></tr>
- *    <tr><td>ACC_MR_SELPLUS_AD6</td><td>Select AD6 as the plus input.</td></tr>
- *    <tr><td>ACC_MR_SELPLUS_AD7</td><td>Select AD7 as the plus input.</td></tr>
- *</table> 
+ *    <tr><td>ACC_MR_SELPLUS_AD0</td><td>Select AD0 as the plus input</td></tr>
+ *    <tr><td>ACC_MR_SELPLUS_AD1</td><td>Select AD1 as the plus input</td></tr>
+ *    <tr><td>ACC_MR_SELPLUS_AD2</td><td>Select AD2 as the plus input</td></tr>
+ *    <tr><td>ACC_MR_SELPLUS_AD3</td><td>Select AD3 as the plus input</td></tr>
+ *    <tr><td>ACC_MR_SELPLUS_AD4</td><td>Select AD4 as the plus input</td></tr>
+ *    <tr><td>ACC_MR_SELPLUS_AD5</td><td>Select AD5 as the plus input</td></tr>
+ *    <tr><td>ACC_MR_SELPLUS_AD6</td><td>Select AD6 as the plus input</td></tr>
+ *    <tr><td>ACC_MR_SELPLUS_AD7</td><td>Select AD7 as the plus input</td></tr>
+ *</table>
  *
  * Where the input parameter <i>ul_select_minus</i> is one of the following:
  * <table>
  * <tr>
- *    <th>Parameter value</th>
+ *    <th>Parameter Value</th>
  *    <th>Description</th>
  * </tr>
- *    <tr><td>ACC_MR_SELMINUS_TS</td><td>Select TS as the minus input.</td></tr>
- *    <tr><td>ACC_MR_SELMINUS_ADVREF</td><td>Select ADVREF as the minus input.</td></tr>
- *    <tr><td>ACC_MR_SELMINUS_DAC0</td><td>Select DAC0 as the minus input.</td></tr>
- *    <tr><td>ACC_MR_SELMINUS_DAC1</td><td>Select DAC1 as the minus input.</td></tr>
- *    <tr><td>ACC_MR_SELMINUS_AD0</td><td>Select AD0 as the minus input.</td></tr>
- *    <tr><td>ACC_MR_SELMINUS_AD1</td><td>Select AD1 as the minus input.</td></tr>
- *    <tr><td>ACC_MR_SELMINUS_AD2</td><td>Select AD2 as the minus input.</td></tr>
- *    <tr><td>ACC_MR_SELMINUS_AD3</td><td>Select AD3 as the minus input.</td></tr>
- *</table> 
+ *    <tr><td>ACC_MR_SELMINUS_TS</td><td>Select TS as the minus input</td></tr>
+ *    <tr><td>ACC_MR_SELMINUS_ADVREF</td><td>Select ADVREF as the minus input</td></tr>
+ *    <tr><td>ACC_MR_SELMINUS_DAC0</td><td>Select DAC0 as the minus input</td></tr>
+ *    <tr><td>ACC_MR_SELMINUS_DAC1</td><td>Select DAC1 as the minus input</td></tr>
+ *    <tr><td>ACC_MR_SELMINUS_AD0</td><td>Select AD0 as the minus input</td></tr>
+ *    <tr><td>ACC_MR_SELMINUS_AD1</td><td>Select AD1 as the minus input</td></tr>
+ *    <tr><td>ACC_MR_SELMINUS_AD2</td><td>Select AD2 as the minus input</td></tr>
+ *    <tr><td>ACC_MR_SELMINUS_AD3</td><td>Select AD3 as the minus input</td></tr>
+ *</table>
  *
  * Where the input parameter <i>ul_edge_type</i> is one of the following:
  * <table>
  * <tr>
- *    <th>Parameter value</th>
+ *    <th>Parameter Value</th>
  *    <th>Description</th>
  * </tr>
- *    <tr><td>ACC_MR_EDGETYP_RISING</td><td>Rising edge of comparator output.</td></tr>
- *    <tr><td>ACC_MR_EDGETYP_FALLING</td><td>Falling edge of comparator output.</td></tr>
- *    <tr><td>ACC_MR_EDGETYP_ANY</td><td>Any edge of comparator output.</td></tr>
- * </table> 
+ *    <tr><td>ACC_MR_EDGETYP_RISING</td><td>Rising edge of comparator output</td></tr>
+ *    <tr><td>ACC_MR_EDGETYP_FALLING</td><td>Falling edge of comparator output</td></tr>
+ *    <tr><td>ACC_MR_EDGETYP_ANY</td><td>Any edge of comparator output</td></tr>
+ * </table>
  *
  * Where the input parameter <i>ul_invert</i> is one of the following:
  * <table>
  * <tr>
- *    <th>Parameter value</th>
+ *    <th>Parameter Value</th>
  *    <th>Description</th>
  * </tr>
- *    <tr><td>ACC_MR_INV_DIS</td><td>Comparator output is directly processed.</td></tr>
- *    <tr><td>ACC_MR_INV_EN</td><td>Comparator output is inverted prior to being processed.</td></tr>
- * </table> 
+ *    <tr><td>ACC_MR_INV_DIS</td><td>Comparator output is directly processed</td></tr>
+ *    <tr><td>ACC_MR_INV_EN</td><td>Comparator output is inverted prior to being processed</td></tr>
+ * </table>
  */
 void acc_init(
 		Acc *p_acc,
@@ -150,7 +150,7 @@ void acc_init(
 /**
  * \brief Enable the ACC module.
  *
- * \param[in,out] p_acc Module hardware register base address pointer.
+ * \param[in,out] p_acc Module hardware register base address pointer
  */
 void acc_enable(
 		Acc *p_acc)
@@ -164,7 +164,7 @@ void acc_enable(
 /**
  * \brief Disable the ACC module.
  *
- * \param[in,out] p_acc Module hardware register base address pointer.
+ * \param[in,out] p_acc Module hardware register base address pointer
  */
 void acc_disable(
 		Acc *p_acc)
@@ -178,7 +178,7 @@ void acc_disable(
 /**
  * \brief Software reset the ACC module.
  *
- * \param[out] p_acc Module hardware register base address pointer.
+ * \param[out] p_acc Module hardware register base address pointer
  */
 void acc_reset(
 		Acc *p_acc)
@@ -192,41 +192,41 @@ void acc_reset(
 /**
  * \brief Set the ACC comparator plus/minus input sources.
  *
- * \param[in,out] p_acc       Module hardware register base address pointer.
- * \param[in] ul_select_minus Selection for the minus comparator input (inn).
- * \param[in] ul_select_plus  Selection for the plus comparator input (inp).
+ * \param[in,out] p_acc       Module hardware register base address pointer
+ * \param[in] ul_select_minus Selection for the minus comparator input (inn)
+ * \param[in] ul_select_plus  Selection for the plus comparator input (inp)
  *
  * Where the input parameter <i>ul_select_minus</i> is one of the following:
  * <table>
  * <tr>
- *    <th>Parameter value</th>
+ *    <th>Parameter Value</th>
  *    <th>Description</th>
  * </tr>
- *    <tr><td>ACC_MR_SELMINUS_TS</td><td>Select TS as the minus input.</td></tr>
- *    <tr><td>ACC_MR_SELMINUS_ADVREF</td><td>Select ADVREF as the minus input.</td></tr>
- *    <tr><td>ACC_MR_SELMINUS_DAC0</td><td>Select DAC0 as the minus input.</td></tr>
- *    <tr><td>ACC_MR_SELMINUS_DAC1</td><td>Select DAC1 as the minus input.</td></tr>
- *    <tr><td>ACC_MR_SELMINUS_AD0</td><td>Select AD0 as the minus input.</td></tr>
- *    <tr><td>ACC_MR_SELMINUS_AD1</td><td>Select AD1 as the minus input.</td></tr>
- *    <tr><td>ACC_MR_SELMINUS_AD2</td><td>Select AD2 as the minus input.</td></tr>
- *    <tr><td>ACC_MR_SELMINUS_AD3</td><td>Select AD3 as the minus input.</td></tr>
- *</table> 
+ *    <tr><td>ACC_MR_SELMINUS_TS</td><td>Select TS as the minus input</td></tr>
+ *    <tr><td>ACC_MR_SELMINUS_ADVREF</td><td>Select ADVREF as the minus input</td></tr>
+ *    <tr><td>ACC_MR_SELMINUS_DAC0</td><td>Select DAC0 as the minus input</td></tr>
+ *    <tr><td>ACC_MR_SELMINUS_DAC1</td><td>Select DAC1 as the minus input</td></tr>
+ *    <tr><td>ACC_MR_SELMINUS_AD0</td><td>Select AD0 as the minus input</td></tr>
+ *    <tr><td>ACC_MR_SELMINUS_AD1</td><td>Select AD1 as the minus input</td></tr>
+ *    <tr><td>ACC_MR_SELMINUS_AD2</td><td>Select AD2 as the minus input</td></tr>
+ *    <tr><td>ACC_MR_SELMINUS_AD3</td><td>Select AD3 as the minus input</td></tr>
+ *</table>
  *
  * Where the input parameter <i>ul_select_plus</i> is one of the following:
  * <table>
  * <tr>
- *    <th>Parameter value</th>
+ *    <th>Parameter Value</th>
  *    <th>Description</th>
  * </tr>
- *    <tr><td>ACC_MR_SELPLUS_AD0</td><td>Select AD0 as the plus input.</td></tr>
- *    <tr><td>ACC_MR_SELPLUS_AD1</td><td>Select AD1 as the plus input.</td></tr>
- *    <tr><td>ACC_MR_SELPLUS_AD2</td><td>Select AD2 as the plus input.</td></tr>
- *    <tr><td>ACC_MR_SELPLUS_AD3</td><td>Select AD3 as the plus input.</td></tr>
- *    <tr><td>ACC_MR_SELPLUS_AD4</td><td>Select AD4 as the plus input.</td></tr>
- *    <tr><td>ACC_MR_SELPLUS_AD5</td><td>Select AD5 as the plus input.</td></tr>
- *    <tr><td>ACC_MR_SELPLUS_AD6</td><td>Select AD6 as the plus input.</td></tr>
- *    <tr><td>ACC_MR_SELPLUS_AD7</td><td>Select AD7 as the plus input.</td></tr>
- *</table> 
+ *    <tr><td>ACC_MR_SELPLUS_AD0</td><td>Select AD0 as the plus input</td></tr>
+ *    <tr><td>ACC_MR_SELPLUS_AD1</td><td>Select AD1 as the plus input</td></tr>
+ *    <tr><td>ACC_MR_SELPLUS_AD2</td><td>Select AD2 as the plus input</td></tr>
+ *    <tr><td>ACC_MR_SELPLUS_AD3</td><td>Select AD3 as the plus input</td></tr>
+ *    <tr><td>ACC_MR_SELPLUS_AD4</td><td>Select AD4 as the plus input</td></tr>
+ *    <tr><td>ACC_MR_SELPLUS_AD5</td><td>Select AD5 as the plus input</td></tr>
+ *    <tr><td>ACC_MR_SELPLUS_AD6</td><td>Select AD6 as the plus input</td></tr>
+ *    <tr><td>ACC_MR_SELPLUS_AD7</td><td>Select AD7 as the plus input</td></tr>
+ *</table>
  */
 void acc_set_input(
 		Acc *p_acc,
@@ -243,39 +243,39 @@ void acc_set_input(
 /**
  * \brief Set the ACC output.
  *
- * \param[in,out] p_acc       Module hardware register base address pointer.
- * \param[in] ul_invert       Invert comparator output.
- * \param[in] ul_fault_enable Fault enable.
- * \param[in] ul_fault_source Selection of fault source.
+ * \param[in,out] p_acc       Module hardware register base address pointer
+ * \param[in] ul_invert       Invert comparator output
+ * \param[in] ul_fault_enable Fault enable
+ * \param[in] ul_fault_source Selection of fault source
  *
  * Where the input parameter <i>ul_invert</i> is one of the following:
  * <table>
  * <tr>
- *    <th>Parameter value</th>
+ *    <th>Parameter Value</th>
  *    <th>Description</th>
  * </tr>
- *    <tr><td>ACC_MR_INV_DIS</td><td>Comparator output is directly processed.</td></tr>
- *    <tr><td>ACC_MR_INV_EN</td><td>Comparator output is inverted prior to being processed.</td></tr>
+ *    <tr><td>ACC_MR_INV_DIS</td><td>Comparator output is directly processed</td></tr>
+ *    <tr><td>ACC_MR_INV_EN</td><td>Comparator output is inverted prior to being processed</td></tr>
  * </table>
  *
  * Where the input parameter <i>ul_fault_enable</i> is one of the following:
  * <table>
  * <tr>
- *    <th>Parameter value</th>
+ *    <th>Parameter Value</th>
  *    <th>Description</th>
  * </tr>
- *    <tr><td>ACC_MR_FE_DIS</td><td>The FAULT output is tied to 0.</td></tr>
+ *    <tr><td>ACC_MR_FE_DIS</td><td>The FAULT output is tied to 0</td></tr>
  *    <tr><td>ACC_MR_FE_EN</td><td>The FAULT output is driven by <i>ul_fault_source</i></td></tr>
  * </table>
  *
  * Where the input parameter <i>ul_fault_source</i> is one of the following:
  * <table>
  * <tr>
- *    <th>Parameter value</th>
+ *    <th>Parameter Value</th>
  *    <th>Description</th>
  * </tr>
- *    <tr><td>ACC_MR_SELFS_CF</td><td>The CF flag is used to drive the FAULT output.</td></tr>
- *    <tr><td>ACC_MR_SELFS_OUTPUT</td><td>The output of the Analog Comparator flag is used to drive the FAULT output.</td></tr>
+ *    <tr><td>ACC_MR_SELFS_CF</td><td>The CF flag is used to drive the FAULT output</td></tr>
+ *    <tr><td>ACC_MR_SELFS_OUTPUT</td><td>The output of the Analog Comparator flag is used to drive the FAULT output</td></tr>
  * </table>
  */
 void acc_set_output(
@@ -295,11 +295,11 @@ void acc_set_output(
 /**
  * \brief Get the ACC comparison result.
  *
- * \param[in] p_acc Module hardware register base address pointer.
+ * \param[in] p_acc Module hardware register base address pointer
  *
  * \return The ACC comparison result.
- * \retval 0 Comparator minus input is greater than its plus input (inn>inp).
- * \retval 1 Comparator plus input is greater than its minus input (inp>inn).
+ * \retval 0 Comparator minus input is greater than its plus input (inn>inp)
+ * \retval 1 Comparator plus input is greater than its minus input (inp>inn)
  */
 uint32_t acc_get_comparison_result(
 		Acc *p_acc)
@@ -328,7 +328,7 @@ uint32_t acc_get_comparison_result(
 /**
  * \brief Enable the ACC comparison edge interrupt.
  *
- * \param[out] p_acc Module hardware register base address pointer.
+ * \param[out] p_acc Module hardware register base address pointer
  */
 void acc_enable_interrupt(
 		Acc *p_acc)
@@ -342,7 +342,7 @@ void acc_enable_interrupt(
 /**
  * \brief Disable the ACC comparison edge interrupt.
  *
- * \param[out] p_acc Module hardware register base address pointer.
+ * \param[out] p_acc Module hardware register base address pointer
  */
 void acc_disable_interrupt(
 		Acc *p_acc)
@@ -356,7 +356,7 @@ void acc_disable_interrupt(
 /**
  * \brief Get the ACC comparison edge interrupt status.
  *
- * \param[in] p_acc Module hardware register base address pointer.
+ * \param[in] p_acc Module hardware register base address pointer
  *
  * \return The ACC comparison edge interrupt status.
  */
@@ -372,8 +372,8 @@ uint32_t acc_get_interrupt_status(
 /**
  * \brief Set the ACC register write-protection.
  *
- * \param[out] p_acc    Module hardware register base address pointer.
- * \param[in] ul_enable 1 to enable, 0 to disable.
+ * \param[out] p_acc    Module hardware register base address pointer
+ * \param[in] ul_enable 1 to enable, 0 to disable
  */
 void acc_set_writeprotect(
 		Acc *p_acc,
@@ -388,14 +388,14 @@ void acc_set_writeprotect(
 		p_acc->ACC_WPMR = ACC_WPMR_WPKEY_PASSWD;
 }
 
-/** 
+/**
  * \brief Get the ACC register write-protection status.
  *
- * \param[in] p_acc Module hardware register base address pointer.
+ * \param[in] p_acc Module hardware register base address pointer
  *
  * \return The ACC register write-protection status.
- * \retval 0                 No write-protection error.
- * \retval ACC_WPSR_WPROTERR Write-protection error.
+ * \retval 0                 No write-protection error
+ * \retval ACC_WPSR_WPROTERR Write-protection error
  */
 uint32_t acc_get_writeprotect_status(
 		Acc *p_acc)
