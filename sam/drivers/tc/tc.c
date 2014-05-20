@@ -59,9 +59,9 @@ extern "C" {
 /**
  * \brief Configure TC for timer, waveform generation, or capture.
  *
- * \param[in,out] p_tc   Module hardware register base address pointer.
- * \param[in] ul_channel Channel to configure.
- * \param[in] ul_mode    Control mode register bitmask value to set.
+ * \param[in,out] p_tc   Module hardware register base address pointer
+ * \param[in] ul_channel Channel to configure
+ * \param[in] ul_mode    Control mode register bitmask value to set
  *
  * \note For more information regarding <i>ul_mode</i> configuration refer to
  * the section  entitled "Channel Mode Register: Capture Mode" and.or section
@@ -104,7 +104,7 @@ void tc_init(
  * \brief Asserts a SYNC signal to generate a software trigger on
  * all channels.
  *
- * \param[out] p_tc Module hardware register base address pointer.
+ * \param[out] p_tc Module hardware register base address pointer
  *
  */
 void tc_sync_trigger(
@@ -121,8 +121,8 @@ void tc_sync_trigger(
  *
  * \note The function tc_init() must be called prior to this one.
  *
- * \param[out] p_tc        Module hardware register base address pointer.
- * \param[in] ul_blockmode Block mode register value to set.
+ * \param[out] p_tc        Module hardware register base address pointer
+ * \param[in] ul_blockmode Block mode register value to set
  *
  * \note For more information regarding <i>ul_blockmode</i> configuration refer to
  * the section  entitled "TC Block Mode Register" in the device-specific datasheet.
@@ -145,9 +145,9 @@ void tc_set_block_mode(
  *
  * \note This function is not available on SAM3U devices.
  *
- * \param[out] p_tc          Module hardware register base address pointer.
- * \param[in] ul_channel     Channel to configure.
- * \param[in] ul_steppermode Stepper motor mode register value to set.
+ * \param[out] p_tc          Module hardware register base address pointer
+ * \param[in] ul_channel     Channel to configure
+ * \param[in] ul_steppermode Stepper motor mode register value to set
  *
  * \return 0 for OK.
  */
@@ -170,8 +170,8 @@ uint32_t tc_init_2bit_gray(
 /**
  * \brief Start the TC clock on the specified channel.
  *
- * \param[out] p_tc      Module hardware register base address pointer.
- * \param[in] ul_channel Channel to configure.
+ * \param[out] p_tc      Module hardware register base address pointer
+ * \param[in] ul_channel Channel to configure
  */
 void tc_start(
 		Tc *p_tc,
@@ -188,8 +188,8 @@ void tc_start(
 /**
  * \brief Stop the TC clock on the specified channel.
  *
- * \param[out] p_tc      Module hardware register base address pointer.
- * \param[in] ul_channel Channel to configure.
+ * \param[out] p_tc      Module hardware register base address pointer
+ * \param[in] ul_channel Channel to configure
  */
 void tc_stop(
 		Tc *p_tc,
@@ -206,8 +206,8 @@ void tc_stop(
 /**
  * \brief Read the counter value on the specified channel.
  *
- * \param[in] p_tc       Module hardware register base address pointer.
- * \param[in] ul_channel Channel to read.
+ * \param[in] p_tc       Module hardware register base address pointer
+ * \param[in] ul_channel Channel to read
  *
  * \return The counter value.
  */
@@ -226,8 +226,8 @@ uint32_t tc_read_cv(
 /**
  * \brief Read TC Register A (RA) on the specified channel.
  *
- * \param[in] p_tc       Module hardware register base address pointer.
- * \param[in] ul_channel Channel to read.
+ * \param[in] p_tc       Module hardware register base address pointer
+ * \param[in] ul_channel Channel to read
  *
  * \return The TC Register A (RA) value.
  */
@@ -246,8 +246,8 @@ uint32_t tc_read_ra(
 /**
  * \brief Read TC Register B (RB) on the specified channel.
  *
- * \param[in] p_tc       Module hardware register base address pointer.
- * \param[in] ul_channel Channel to read.
+ * \param[in] p_tc       Module hardware register base address pointer
+ * \param[in] ul_channel Channel to read
  *
  * \return The TC Register B (RB) value.
  */
@@ -266,8 +266,8 @@ uint32_t tc_read_rb(
 /**
  * \brief Read TC Register C (RC) on the specified channel.
  *
- * \param[in] p_tc       Module hardware register base address pointer.
- * \param[in] ul_channel Channel to read.
+ * \param[in] p_tc       Module hardware register base address pointer
+ * \param[in] ul_channel Channel to read
  *
  * \return The Register C (RC) value.
  */
@@ -286,9 +286,9 @@ uint32_t tc_read_rc(
 /**
  * \brief Write to TC Register A (RA) on the specified channel.
  *
- * \param[out] p_tc      Module hardware register base address pointer.
- * \param[in] ul_channel Channel to write.
- * \param[in] ul_value   Value to write.
+ * \param[out] p_tc      Module hardware register base address pointer
+ * \param[in] ul_channel Channel to write
+ * \param[in] ul_value   Value to write
  */
 void tc_write_ra(
 		Tc *p_tc,
@@ -306,9 +306,9 @@ void tc_write_ra(
 /**
  * \brief Write to TC Register B (RB) on the specified channel.
  *
- * \param[out] p_tc      Module hardware register base address pointer.
- * \param[in] ul_channel Channel to write.
- * \param[in] ul_value   Value to write.
+ * \param[out] p_tc      Module hardware register base address pointer
+ * \param[in] ul_channel Channel to write
+ * \param[in] ul_value   Value to write
  */
 void tc_write_rb(
 		Tc *p_tc,
@@ -326,9 +326,9 @@ void tc_write_rb(
 /**
  * \brief Write to TC Register C (RC) on the selected channel.
  *
- * \param[out] p_tc      Module hardware register base address pointer.
- * \param[in] ul_channel Channel to write.
- * \param[in] ul_value   Value to write.
+ * \param[out] p_tc      Module hardware register base address pointer
+ * \param[in] ul_channel Channel to write
+ * \param[in] ul_value   Value to write
  */
 void tc_write_rc(
 		Tc *p_tc,
@@ -346,9 +346,9 @@ void tc_write_rc(
 /**
  * \brief Enable the TC interrupts on the specified channel.
  *
- * \param[in,out] p_tc   Module hardware register base address pointer.
- * \param[in] ul_channel Channel to configure.
- * \param[in] ul_sources Bitmask of interrupt sources.
+ * \param[in,out] p_tc   Module hardware register base address pointer
+ * \param[in] ul_channel Channel to configure
+ * \param[in] ul_sources Bitmask of interrupt sources
  *
  * Where the input parameter <i>ul_sources</i> can be one or more of the following:
  * <table>
@@ -384,9 +384,9 @@ void tc_enable_interrupt(
 /**
  * \brief Disable TC interrupts on the specified channel.
  *
- * \param[in,out] p_tc   Module hardware register base address pointer.
- * \param[in] ul_channel Channel to configure.
- * \param[in] ul_sources A bitmask of Interrupt sources.
+ * \param[in,out] p_tc   Module hardware register base address pointer
+ * \param[in] ul_channel Channel to configure
+ * \param[in] ul_sources A bitmask of Interrupt sources
  *
  * Where the input parameter <i>ul_sources</i> can be one or more of the following:
  * <table>
@@ -422,8 +422,8 @@ void tc_disable_interrupt(
 /**
  * \brief Read the TC interrupt mask for the specified channel.
  *
- * \param[in] p_tc       Module hardware register base address pointer.
- * \param[in] ul_channel Channel to read.
+ * \param[in] p_tc       Module hardware register base address pointer
+ * \param[in] ul_channel Channel to read
  *
  * \return The TC interrupt mask value.
  */
@@ -444,8 +444,8 @@ uint32_t tc_get_interrupt_mask(
 /**
  * \brief Get the current status for the specified TC channel.
  *
- * \param[in] p_tc       Module hardware register base address pointer.
- * \param[in] ul_channel Channel number.
+ * \param[in] p_tc       Module hardware register base address pointer
+ * \param[in] ul_channel Channel number
  *
  * \return The current TC status.
  */
@@ -481,15 +481,15 @@ uint32_t tc_get_status(
  * \code (MCK / (DIV * 65536)) <= freq <= (MCK / DIV) \endcode
  * with DIV being the lowest possible value, to maximize timing adjust resolution.
  *
- * \param[in] ul_freq     Desired timer frequency.
- * \param[in] ul_mck      Master clock frequency.
- * \param[out] p_uldiv    Divisor value.
- * \param[out] p_ultcclks TCCLKS field value for divisor.
- * \param[in] ul_boardmck Board clock frequency.
+ * \param[in] ul_freq     Desired timer frequency
+ * \param[in] ul_mck      Master clock frequency
+ * \param[out] p_uldiv    Divisor value
+ * \param[out] p_ultcclks TCCLKS field value for divisor
+ * \param[in] ul_boardmck Board clock frequency
  *
  * \return The divisor found status.
- * \retval 0 No suitable divisor was found.
- * \retval 1 A divisor was found.
+ * \retval 0 No suitable divisor was found
+ * \retval 1 A divisor was found
  */
 uint32_t tc_find_mck_divisor(
 		uint32_t ul_freq,
@@ -547,15 +547,15 @@ uint32_t tc_find_mck_divisor(
  * \code (MCK / (DIV * 65536)) <= freq <= (MCK / DIV) \endcode
  * with DIV being the lowest possible value, to maximize timing adjust resolution.
  *
- * \param[in] ul_freq     Desired timer frequency.
- * \param[in] ul_mck      PBA clock frequency.
- * \param[out] p_uldiv    Divisor value.
- * \param[out] p_ultcclks TCCLKS field value for divisor.
- * \param[in] ul_boardmck Board clock frequency (set to 0 for SAM4L devices).
+ * \param[in] ul_freq     Desired timer frequency
+ * \param[in] ul_mck      PBA clock frequency
+ * \param[out] p_uldiv    Divisor value
+ * \param[out] p_ultcclks TCCLKS field value for divisor
+ * \param[in] ul_boardmck Board clock frequency (set to 0 for SAM4L devices)
  *
  * \return The divisor found status.
- * \retval 0 No suitable divisor was found.
- * \retval 1 A divisor was found.
+ * \retval 0 No suitable divisor was found
+ * \retval 1 A divisor was found
  */
 uint32_t tc_find_mck_divisor(
 		uint32_t ul_freq,
@@ -607,8 +607,8 @@ uint32_t tc_find_mck_divisor(
  *
  * \note This function is not available on SAM4L or SAMG devices.
  *
- * \param[out] p_tc      Module hardware register base address pointer.
- * \param[in] ul_sources A bitmask of QDEC interrupts to be enabled.
+ * \param[out] p_tc      Module hardware register base address pointer
+ * \param[in] ul_sources A bitmask of QDEC interrupts to be enabled
  *
  * Where the input parameter <i>ul_sources</i> can be one or more of the following:
  * <table>
@@ -636,8 +636,8 @@ void tc_enable_qdec_interrupt(
  *
  * \note This function is not available on SAM4L or SAMG devices.
  *
- * \param[out] p_tc      Module hardware register base address pointer.
- * \param[in] ul_sources A bitmask of QDEC interrupts to be disabled.
+ * \param[out] p_tc      Module hardware register base address pointer
+ * \param[in] ul_sources A bitmask of QDEC interrupts to be disabled
  *
  * Where the input parameter <i>ul_sources</i> can be one or more of the following:
  * <table>
@@ -665,7 +665,7 @@ void tc_disable_qdec_interrupt(
  *
  * \note This function is not available on SAM4L or SAMG devices.
  *
- * \param[in] p_tc Module hardware register base address pointer.
+ * \param[in] p_tc Module hardware register base address pointer
  *
  * \return The QDEC interrupt mask value.
  */
@@ -683,7 +683,7 @@ uint32_t tc_get_qdec_interrupt_mask(
  *
  * \note This function is not available on SAM4L or SAMG devices.
  *
- * \param[in] p_tc Module hardware register base address pointer.
+ * \param[in] p_tc Module hardware register base address pointer
  *
  * \return The TC QDEC interrupt status.
  */
@@ -705,8 +705,8 @@ uint32_t tc_get_qdec_interrupt_status(
  *
  * \note This function is not available on SAM3U devices.
  *
- * \param[out] p_tc     Module hardware register base address pointer.
- * \param[in] ul_enable 1 to enable, 0 to disable.
+ * \param[out] p_tc     Module hardware register base address pointer
+ * \param[in] ul_enable 1 to enable, 0 to disable
  */
 void tc_set_writeprotect(
 		Tc *p_tc,
@@ -731,7 +731,7 @@ void tc_set_writeprotect(
  *
  * \note This function is only available on SAM4L devices.
  *
- * \param[in] p_tc Module hardware register base address pointer.
+ * \param[in] p_tc Module hardware register base address pointer
  *
  * \return The TC FEATURES register contents.
  */
@@ -749,7 +749,7 @@ uint32_t tc_get_feature(
  *
  * \note This function is only available on SAM4L devices.
  *
- * \param[in] p_tc Module hardware register base address pointer.
+ * \param[in] p_tc Module hardware register base address pointer
  *
  * \return The TC VERSION register contents.
  */

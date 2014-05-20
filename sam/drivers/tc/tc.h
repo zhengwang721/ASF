@@ -104,7 +104,7 @@
  *
  * \section asfdoc_sam_drivers_tc_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam_drivers_tc_extra. This includes:
+ * For extra information, see \ref asfdoc_sam_drivers_tc_extra. This includes:
  *  - \ref asfdoc_sam_drivers_tc_extra_acronyms
  *  - \ref asfdoc_sam_drivers_tc_extra_dependencies
  *  - \ref asfdoc_sam_drivers_tc_extra_errata
