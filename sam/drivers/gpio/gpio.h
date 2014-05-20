@@ -76,12 +76,12 @@
  *
  *
  * \section asfdoc_sam_drivers_gpiox_special_considerations Special Considerations
- * None
+ * None.
  *
  *
  * \section asfdoc_sam_drivers_gpiox_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam_drivers_gpiox_extra. This includes:
+ * For extra information, see \ref asfdoc_sam_drivers_gpiox_extra. This includes:
  *  - \ref asfdoc_sam_drivers_gpiox_extra_acronyms
  *  - \ref asfdoc_sam_drivers_gpiox_extra_dependencies
  *  - \ref asfdoc_sam_drivers_gpiox_extra_errata
@@ -128,7 +128,7 @@ bool gpio_set_pin_callback(ioport_pin_t pin, gpio_pin_callback_t callback,
 /**
  * \brief Enable the interrupt of a pin.
  *
- * \param [in] pin The pin number.
+ * \param [in] pin The pin number
  */
 static inline void gpio_enable_pin_interrupt(ioport_pin_t pin)
 {
@@ -139,7 +139,7 @@ static inline void gpio_enable_pin_interrupt(ioport_pin_t pin)
 /**
  * \brief Disable the interrupt of a pin.
  *
- * \param [in] pin The pin number.
+ * \param [in] pin The pin number
  */
 static inline void gpio_disable_pin_interrupt(ioport_pin_t pin)
 {
@@ -150,9 +150,9 @@ static inline void gpio_disable_pin_interrupt(ioport_pin_t pin)
 /**
  * \brief Get the interrupt flag of a pin.
  *
- * \param [in] pin The pin number.
+ * \param [in] pin The pin number
  *
- * \retval uint32_t The pin interrupt flag (0/1).
+ * \retval uint32_t The pin interrupt flag (0/1)
  */
 static inline uint32_t gpio_get_pin_interrupt_flag(ioport_pin_t pin)
 {
@@ -163,7 +163,7 @@ static inline uint32_t gpio_get_pin_interrupt_flag(ioport_pin_t pin)
 /**
  * \brief Clear the interrupt flag of a pin.
  *
- * \param [in] pin The pin number.
+ * \param [in] pin The pin number
  */
 static inline void gpio_clear_pin_interrupt_flag(ioport_pin_t pin)
 {
@@ -186,7 +186,7 @@ static inline void gpio_clear_pin_interrupt_flag(ioport_pin_t pin)
 /**
  * \brief Enable the peripheral event generation of a pin.
  *
- * \param [in] pin The pin number.
+ * \param [in] pin The pin number
  */
 static inline void gpio_enable_pin_periph_event(ioport_pin_t pin)
 {
@@ -197,7 +197,7 @@ static inline void gpio_enable_pin_periph_event(ioport_pin_t pin)
 /**
  * \brief Disable the peripheral event generation of a pin.
  *
- * \param [in] pin The pin number.
+ * \param [in] pin The pin number
  *
  */
 static inline void gpio_disable_pin_periph_event(ioport_pin_t pin)
@@ -353,7 +353,7 @@ static inline void gpio_disable_pin_periph_event(ioport_pin_t pin)
  *
  * -# Initialize a pin to trigger an interrupt. Here, we initialize PC03 as an
  * input pin with pull up and glitch filter and to generate an interrupt on a
- * falling edge.
+ * falling edge
  * \snippet example/gpio_example.c config_button_0_trig_fall_1
  * -# Set a callback for the pin interrupt
  * \snippet example/gpio_example.c config_button_0_trig_fall_2

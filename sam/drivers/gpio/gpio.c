@@ -72,11 +72,11 @@ static uint32_t gpio_nb_sources = 0;
 /**
  * \brief Set callback for given GPIO pin
  *
- * \param [in] pin The pin number.
- * \param [in] callback callback function pointer.
- * \param [in] irq_level interrupt level.
+ * \param [in] pin The pin number
+ * \param [in] callback callback function pointer
+ * \param [in] irq_level interrupt level
  *
- * \retval true Set successfully.
+ * \retval true Set successfully
  * \retval false Wrong parameters or maximum number of interrupt
  *                  sources has been exceeding.
  */
