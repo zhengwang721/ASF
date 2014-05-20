@@ -46,7 +46,7 @@
 /**
  * \brief Initialize the DMA controller and disable it.
  *
- * \param[in,out] p_dmac Module hardware register base address pointer.
+ * \param[in,out] p_dmac Module hardware register base address pointer
  */
 void dmac_init(
 		Dmac *p_dmac)
@@ -57,8 +57,8 @@ void dmac_init(
 /**
  * \brief Set the DMA priority mode.
  *
- * \param[in,out] p_dmac Module hardware register base address pointer.
- * \param[in] mode       \ref dmac_priority_mode_t "Priority mode".
+ * \param[in,out] p_dmac Module hardware register base address pointer
+ * \param[in] mode       \ref dmac_priority_mode_t "Priority mode"
  */
 void dmac_set_priority_mode(
 		Dmac *p_dmac,
@@ -73,7 +73,7 @@ void dmac_set_priority_mode(
 /**
  * \brief Enable the DMA Controller.
  *
- * \param[out] p_dmac Module hardware register base address pointer.
+ * \param[out] p_dmac Module hardware register base address pointer
  */
 void dmac_enable(
 		Dmac *p_dmac)
@@ -87,7 +87,7 @@ void dmac_enable(
 /**
  * \brief Disable the DMA Controller.
  *
- * \param[in,out] p_dmac Module hardware register base address pointer.
+ * \param[in,out] p_dmac Module hardware register base address pointer
  */
 void dmac_disable(
 		Dmac *p_dmac)
@@ -101,8 +101,8 @@ void dmac_disable(
 /**
  * \brief Enable DMAC interrupts.
  *
- * \param[out] p_dmac Module hardware register base address pointer.
- * \param[in] ul_mask A bitmask of interrupts to be enabled.
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_mask A bitmask of interrupts to be enabled
  *
  * Where input parameter <i>ul_mask</i> is a bitmask containing one or more
  * of the following:
@@ -138,8 +138,8 @@ void dmac_enable_interrupt(
 /**
  * \brief Disable DMAC interrupts.
  *
- * \param[out] p_dmac Module hardware register base address pointer.
- * \param[in] ul_mask A bitmask of interrupts to be disabled.
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_mask A bitmask of interrupts to be disabled
  *
  * Where input parameter <i>ul_mask</i> is a bitmask containing one or more
  * of the following:
@@ -175,7 +175,7 @@ void dmac_disable_interrupt(
 /**
  * \brief Get the DMAC Interrupt Mask.
  *
- * \param[in] p_dmac Module hardware register base address pointer.
+ * \param[in] p_dmac Module hardware register base address pointer
  *
  * \return DMAC Interrupt mask.
  */
@@ -191,7 +191,7 @@ uint32_t dmac_get_interrupt_mask(
 /**
  * \brief Get the DMAC transfer status.
  *
- * \param[in] p_dmac Module hardware register base address pointer.
+ * \param[in] p_dmac Module hardware register base address pointer
  *
  * \return DMAC transfer status. Refer to section called "DMAC Error,
  * Buffer Transfer and Chained Buffer Transfer Status Register" in the
@@ -209,8 +209,8 @@ uint32_t dmac_get_status(
 /**
  * \brief Enable the specified DMA Channel.
  *
- * \param[out] p_dmac Module hardware register base address pointer.
- * \param[in] ul_num  DMA Channel number (range 0 to 3).
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  DMA Channel number (range 0 to 3)
  */
 void dmac_channel_enable(
 		Dmac *p_dmac,
@@ -226,8 +226,8 @@ void dmac_channel_enable(
 /**
  * \brief Disable the specified DMA Channel.
  *
- * \param[out] p_dmac Module hardware register base address pointer.
- * \param[in] ul_num  DMA Channel number (range 0 to 3).
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  DMA Channel number (range 0 to 3)
  */
 void dmac_channel_disable(
 		Dmac *p_dmac,
@@ -243,12 +243,12 @@ void dmac_channel_disable(
 /**
  * \brief Check if the specified DMA Channel is enabled.
  *
- * \param[in] p_dmac Module hardware register base address pointer.
- * \param[in] ul_num DMA Channel number (range 0 to 3).
+ * \param[in] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num DMA Channel number (range 0 to 3)
  *
  * \return The DMA Channel's enable/disable status.
- * \retval 0 DMA Channel is disabled.
- * \retval 1 DMA Channel is enabled.
+ * \retval 0 DMA Channel is disabled
+ * \retval 1 DMA Channel is enabled
  */
 uint32_t dmac_channel_is_enable(
 		Dmac *p_dmac,
@@ -268,8 +268,8 @@ uint32_t dmac_channel_is_enable(
 /**
  * \brief Suspend the specified DMA Channel and its current context.
  *
- * \param[out] p_dmac Module hardware register base address pointer.
- * \param[in] ul_num  DMA Channel number (range 0 to 3).
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  DMA Channel number (range 0 to 3)
  */
 void dmac_channel_suspend(
 		Dmac *p_dmac,
@@ -285,8 +285,8 @@ void dmac_channel_suspend(
 /**
  * \brief Resume the specified DMA Channel transfer (restoring its context).
  *
- * \param[out] p_dmac Module hardware register base address pointer.
- * \param[in] ul_num  DMA Channel number (range 0 to 3).
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  DMA Channel number (range 0 to 3)
  */
 void dmac_channel_resume(
 		Dmac *p_dmac, 
@@ -302,8 +302,8 @@ void dmac_channel_resume(
 /**
  * \brief Resume the specified DMA Channel from an automatic stall state.
  *
- * \param[out] p_dmac Module hardware register base address pointer.
- * \param[in] ul_num  DMA Channel number (range 0 to 3).
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  DMA Channel number (range 0 to 3)
  */
 void dmac_channel_keep(
 		Dmac *p_dmac,
@@ -319,7 +319,7 @@ void dmac_channel_keep(
 /**
  * \brief Get the DMAC Channel handler status.
  *
- * \param[in] p_dmac Module hardware register base address pointer.
+ * \param[in] p_dmac Module hardware register base address pointer
  *
  * \return DMAC Channel handler status register. Refer to the section called
  * "DMAC Channel Handler Status Register" in the device-specific datasheet for more
@@ -337,9 +337,9 @@ uint32_t dmac_channel_get_status(
 /**
  * \brief Set the DMA source address of the specified DMA Channel.
  *
- * \param[out] p_dmac Module hardware register base address pointer.
- * \param[in] ul_num  DMA Channel number (range 0 to 3).
- * \param[in] ul_addr Source address.
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  DMA Channel number (range 0 to 3)
+ * \param[in] ul_addr Source address
  *
  * \note This register must be aligned with the source transfer width.
  */
@@ -358,9 +358,9 @@ void dmac_channel_set_source_addr(
 /**
  * \brief Set the DMA destination address of the specified DMA Channel.
  *
- * \param[out] p_dmac Module hardware register base address pointer.
- * \param[in] ul_num  DMA Channel number (range 0 to 3).
- * \param[in] ul_addr Destination address.
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  DMA Channel number (range 0 to 3)
+ * \param[in] ul_addr Destination address
  *
  * \note This register must be aligned with the source transfer width.
  */
@@ -379,9 +379,9 @@ void dmac_channel_set_destination_addr(
 /**
  * \brief Set the DMA descriptor address of the specified DMA Channel.
  *
- * \param[out] p_dmac Module hardware register base address pointer.
- * \param[in] ul_num  DMA Channel number (range 0 to 3).
- * \param[in] ul_desc Descriptor address.
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  DMA Channel number (range 0 to 3)
+ * \param[in] ul_desc Descriptor address
  */
 void dmac_channel_set_descriptor_addr(
 		Dmac *p_dmac,
@@ -398,9 +398,9 @@ void dmac_channel_set_descriptor_addr(
 /**
  * \brief Set the DMA control A of the specified DMA Channel.
  *
- * \param[out] p_dmac  Module hardware register base address pointer.
- * \param[in] ul_num   DMA Channel number (range 0 to 3).
- * \param[in] ul_ctrlA Configuration of control A register.
+ * \param[out] p_dmac  Module hardware register base address pointer
+ * \param[in] ul_num   DMA Channel number (range 0 to 3)
+ * \param[in] ul_ctrlA Configuration of control A register
  */
 void dmac_channel_set_ctrlA(
 		Dmac *p_dmac, 
@@ -417,9 +417,9 @@ void dmac_channel_set_ctrlA(
 /**
  * \brief Set the DMA control B of the specified DMA Channel.
  *
- * \param[out] p_dmac  Module hardware register base address pointer.
- * \param[in] ul_num   DMA Channel number (range 0 to 3).
- * \param[in] ul_ctrlB Configuration of control B register.
+ * \param[out] p_dmac  Module hardware register base address pointer
+ * \param[in] ul_num   DMA Channel number (range 0 to 3)
+ * \param[in] ul_ctrlB Configuration of control B register
  */
 void dmac_channel_set_ctrlB(
 		Dmac *p_dmac,
@@ -436,9 +436,9 @@ void dmac_channel_set_ctrlB(
 /**
  * \brief Set the DMAC configuration register of the specified DMA Channel.
  *
- * \param[out] p_dmac Module hardware register base address pointer.
- * \param[in] ul_num  DMA Channel number (range 0 to 3).
- * \param[in] ul_cfg  Configuration of CFG register.
+ * \param[out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num  DMA Channel number (range 0 to 3)
+ * \param[in] ul_cfg  Configuration of CFG register
  */
 void dmac_channel_set_configuration(
 		Dmac *p_dmac,
@@ -455,9 +455,9 @@ void dmac_channel_set_configuration(
 /**
  * \brief Initialize the DMA Channel for a single buffer transfer.
  *
- * \param[in,out] p_dmac Module hardware register base address pointer.
- * \param[in] ul_num     DMA Channel number (range 0 to 3).
- * \param[in] p_desc     Pointer to a \ref dma_transfer_descriptor_t "transfer descriptor".
+ * \param[in,out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num     DMA Channel number (range 0 to 3)
+ * \param[in] p_desc     Pointer to a \ref dma_transfer_descriptor_t "transfer descriptor"
  */
 void dmac_channel_single_buf_transfer_init(
 		Dmac *p_dmac,
@@ -483,9 +483,9 @@ void dmac_channel_single_buf_transfer_init(
 /**
  * \brief Initialize the DMA Channel for a multiple buffer transfer.
  *
- * \param[in,out] p_dmac Module hardware register base address pointer.
- * \param[in] ul_num     DMA Channel number (range 0 to 3).
- * \param[in] p_desc     Pointer to a \ref dma_transfer_descriptor_t "transfer descriptor".
+ * \param[in,out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num     DMA Channel number (range 0 to 3)
+ * \param[in] p_desc     Pointer to a \ref dma_transfer_descriptor_t "transfer descriptor"
  */
 void dmac_channel_multi_buf_transfer_init(
 		Dmac *p_dmac,
@@ -513,8 +513,8 @@ void dmac_channel_multi_buf_transfer_init(
  * is to use the SUSPx bit in conjunction with the EMPTx bit in the Channel
  * Handler Status Register.
  *
- * \param[in,out] p_dmac Module hardware register base address pointer.
- * \param[in] ul_num     DMA Channel number (range 0 to 3).
+ * \param[in,out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num     DMA Channel number (range 0 to 3)
  */
 void dmac_channel_stop_transfer(
 		Dmac *p_dmac,
@@ -553,12 +553,12 @@ void dmac_channel_stop_transfer(
  * \brief Check if the data transfer occurring on the specified DMA Channel is complete.
  * \note This function is used in polling mode.
  *
- * \param[in] p_dmac Module hardware register base address pointer.
- * \param[in] ul_num DMA Channel number (range 0 to 3).
+ * \param[in] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num DMA Channel number (range 0 to 3)
  *
  * \return The data transfer status.
- * \retval 0 Data is transferring.
- * \retval 1 Data transfer complete.
+ * \retval 0 Data is transferring
+ * \retval 1 Data transfer complete
  */
 uint32_t dmac_channel_is_transfer_done(
 		Dmac *p_dmac,
@@ -581,10 +581,10 @@ uint32_t dmac_channel_is_transfer_done(
 /**
  * \brief DMA Channel software single request.
  *
- * \param[in,out] p_dmac Module hardware register base address pointer.
- * \param[in] ul_num     DMA Channel number (range 0 to 3).
- * \param[in] ul_src_req Request a source transfer.
- * \param[in] ul_dst_req Request a destination transfer.
+ * \param[in,out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num     DMA Channel number (range 0 to 3)
+ * \param[in] ul_src_req Request a source transfer
+ * \param[in] ul_dst_req Request a destination transfer
  */
 void dmac_soft_single_transfer_request(
 		Dmac *p_dmac,
@@ -606,10 +606,10 @@ void dmac_soft_single_transfer_request(
 /**
  * \brief DMA Channel software chunk request.
  *
- * \param[in,out] p_dmac Module hardware register base address pointer.
- * \param[in] ul_num     DMA Channel number (range 0 to 3).
- * \param[in] ul_src_req Request a source transfer.
- * \param[in] ul_dst_req Request a destination transfer.
+ * \param[in,out] p_dmac Module hardware register base address pointer
+ * \param[in] ul_num     DMA Channel number (range 0 to 3)
+ * \param[in] ul_src_req Request a source transfer
+ * \param[in] ul_dst_req Request a destination transfer
  */
 void dmac_soft_chunk_transfer_request(
 		Dmac *p_dmac,
@@ -631,10 +631,10 @@ void dmac_soft_chunk_transfer_request(
 /**
  * \brief Set the DMA Channel's last transfer flag.
  *
- * \param[in,out] p_dmac  Module hardware register base address pointer.
- * \param[in] ul_num      Channel number.
- * \param[in] ul_src_flag Last source transfer flag.
- * \param[in] ul_dst_flag Last destination transfer flag.
+ * \param[in,out] p_dmac  Module hardware register base address pointer
+ * \param[in] ul_num      Channel number
+ * \param[in] ul_src_flag Last source transfer flag
+ * \param[in] ul_dst_flag Last destination transfer flag
  */
 void dmac_soft_set_last_transfer_flag(
 		Dmac *p_dmac,
@@ -663,8 +663,8 @@ void dmac_soft_set_last_transfer_flag(
 /**
  * \brief Enable/Disable the write protect of DMAC registers.
  *
- * \param[out] p_dmac   Module hardware register base address pointer.
- * \param[in] ul_enable 1 to enable, 0 to disable.
+ * \param[out] p_dmac   Module hardware register base address pointer
+ * \param[in] ul_enable 1 to enable, 0 to disable
  */
 void dmac_set_writeprotect(
 		Dmac *p_dmac,
@@ -684,7 +684,7 @@ void dmac_set_writeprotect(
 /**
  * \brief Get the DMAC register's write protect status.
  *
- * \param[in] p_dmac Module hardware register base address pointer.
+ * \param[in] p_dmac Module hardware register base address pointer
  *
  * \return Write protect status.
  */
