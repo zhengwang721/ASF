@@ -304,7 +304,7 @@ static inline void gpio_disable_pin_periph_event(ioport_pin_t pin)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42280A</td>
  *		<td>01/2014</td>
  *		<td>Initial document release</td>
  *	</tr>
