@@ -73,7 +73,7 @@
  * programmable prescaler. Typically, the AST clock is run continuously,
  * including in the device's low-power sleep modes, to track the current time
  * and date information.The AST can also wake up the system from backup mode
- * using either the alarm wakeup, periodic wakeup, or overflow wakeup mechanisms.
+ * using either the alarm wakeup, periodic wakeup, or overflow wake-up mechanisms.
  *
  * The AST has been designed to meet the system tick and Real-Time Clock
  * requirements of most embedded operating systems.
@@ -97,7 +97,7 @@
  * \note Refer to module configuration at the end of the ast section of the device
  * datasheet for the number of alarms supported.
  *
- * Whilst in Calendar Mode and using a nominal 1 Hz input clock frequency, a register
+ * Whilst in Calendar Mode and using a nominal 1Hz input clock frequency, a register
  * overflow will occur after 64 years.
  *
  * \subsection asfdoc_sam_drivers_ast_overview_periodic Periodic Events
@@ -120,7 +120,7 @@
  *
  * \subsection asfdoc_sam_drivers_ast_overview_correction Digital Tuner
  * The AST module contains Digital Tuner logic to compensate for inaccurate source clock
- * frequencies which would otherwise result in skewed time measurements.
+ * frequencies, which would otherwise result in skewed time measurements.
  *
  *
  * \section asfdoc_sam_drivers_ast_special_considerations Special Considerations
@@ -141,7 +141,7 @@
  *
  * \section asfdoc_sam_drivers_ast_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam_drivers_ast_extra. This includes:
+ * For extra information, see \ref asfdoc_sam_drivers_ast_extra. This includes:
  *  - \ref asfdoc_sam_drivers_ast_extra_acronyms
  *  - \ref asfdoc_sam_drivers_ast_extra_dependencies
  *  - \ref asfdoc_sam_drivers_ast_extra_errata
@@ -174,14 +174,14 @@ extern "C" {
 /* @{ */
 
 /**
- * \brief The PSEL value to set the AST source clock (after the prescaler) to 1 Hz,
+ * \brief The PSEL value to set the AST source clock (after the prescaler) to 1Hz,
  * when using an external 32-kHz crystal.
  */
 #define AST_PSEL_32KHZ_1HZ    14
 
 /**
  * \brief The PSEL value to set the AST source clock (after the prescaler)
- * to 1.76 Hz when using the internal RC oscillator (~ 115 kHz)
+ * to 1.76Hz when using the internal RC oscillator (~ 115kHz)
  */
 #define AST_PSEL_RC_1_76HZ    15
 
@@ -255,13 +255,13 @@ typedef enum ast_interrupt_source {
 	AST_INTERRUPT_CLKREADY,
 } ast_interrupt_source_t;
 
-/** \ref ast_wakeup_source "AST wakeup source". */
+/** \ref ast_wakeup_source "AST wake-up source". */
 typedef enum ast_wakeup_source {
-	/** Alarm wakeup source. */
+	/** Alarm wake-up source. */
 	AST_WAKEUP_ALARM = 0,
-	/** Peripheral interrupt wakeup source. */
+	/** Peripheral interrupt wake-up source. */
 	AST_WAKEUP_PER,
-	/** Counter overflow wakeup source. */
+	/** Counter overflow wake-up source. */
 	AST_WAKEUP_OVF,
 } ast_wakeup_source_t;
 
@@ -319,7 +319,7 @@ void ast_clear_prescalar(Ast *ast);
 /**
  * \brief Get the AST current counter value.
  *
- * \param[in] ast Module hardware register base address pointer.
+ * \param[in] ast Module hardware register base address pointer
  *
  * \return AST current counter value.
  */
@@ -332,11 +332,11 @@ static inline uint32_t ast_read_counter_value(
 /**
  * \brief Check the busy status of the AST clock
  *
- * \param[in] ast Module hardware register base address pointer.
+ * \param[in] ast Module hardware register base address pointer
  *
  * \return AST clock busy status.
- * \retval false AST clock is not busy.
- * \retval true  AST clock is busy.
+ * \retval false AST clock is not busy
+ * \retval true  AST clock is busy
  */
 static inline bool ast_is_clkbusy(
 		Ast *ast)
@@ -347,11 +347,11 @@ static inline bool ast_is_clkbusy(
 /**
  * \brief Check the busy status of AST.
  *
- * \param[in] ast Module hardware register base address pointer.
+ * \param[in] ast Module hardware register base address pointer
  *
  * \return AST busy status.
- * \retval false AST is not busy.
- * \retval true AST is busy.
+ * \retval false AST is not busy
+ * \retval true AST is busy
  */
 static inline bool ast_is_busy(
 		Ast *ast)
@@ -362,7 +362,7 @@ static inline bool ast_is_busy(
 /**
  * \brief Get the status of AST.
  *
- * \param[in] ast Module hardware register base address pointer.
+ * \param[in] ast Module hardware register base address pointer
  *
  * \return AST status.
  */
@@ -375,7 +375,7 @@ static inline uint32_t ast_read_status(
 /**
  * \brief Get the AST interrupt mask value.
  *
- * \param[in] ast Module hardware register base address pointer.
+ * \param[in] ast Module hardware register base address pointer
  *
  * \return AST Interrupt mask value.
  */
@@ -387,7 +387,7 @@ static inline uint32_t ast_read_interrupt_mask(Ast *ast)
 /**
  * \brief Start the AST counter.
  *
- * \param[in,out] ast  Module hardware register base address pointer.
+ * \param[in,out] ast  Module hardware register base address pointer
  */
 static inline void ast_start(Ast *ast)
 {
@@ -400,7 +400,7 @@ static inline void ast_start(Ast *ast)
 /**
  * \brief Stop the AST counter.
  *
- * \param[in,out] ast  Module hardware register base address pointer.
+ * \param[in,out] ast  Module hardware register base address pointer
  */
 static inline void ast_stop(Ast *ast)
 {
@@ -517,7 +517,7 @@ void ast_disable_event(Ast *ast, ast_event_source_t source);
  *
  * This is the quick start guide for the \ref asfdoc_sam_drivers_ast_group, with
  * step-by-step instructions on how to configure and use the driver for
- * a specific use case.The code examples can be copied into e.g the main
+ * a specific use case.The code examples can be copied into e.g. the main
  * application loop or any other function that will need to control the
  * AST module.
  *
@@ -534,7 +534,7 @@ void ast_disable_event(Ast *ast, ast_event_source_t source);
  *
  * \subsection asfdoc_sam_ast_qsg_basic_prereq Prerequisites
  *
- * This module requires the following service
+ * This module requires the following service:
  * - \ref clk_group "System Clock Management (sysclock)"
  *
  * \subsection asfdoc_sam_drivers_ast_qsg_basic_setup_code Setup Code

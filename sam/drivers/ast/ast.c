@@ -54,10 +54,10 @@ ast_callback_t ast_callback_pointer[AST_INTERRUPT_SOURCE_NUM];
 /**
  * \brief Check the status of the AST module.
  *
- * \param[in,out] ast Module hardware register base address pointer.
+ * \param[in,out] ast Module hardware register base address pointer
  *
- * \retval false AST is not enabled.
- * \retval true  AST is enabled.
+ * \retval false AST is not enabled
+ * \retval true  AST is enabled
  */
 bool ast_is_enabled(
 		Ast *ast)
@@ -70,7 +70,7 @@ bool ast_is_enabled(
 /**
  * \brief Enable the AST module.
  *
- * \param[in] ast Module hardware register base address pointer.
+ * \param[in] ast Module hardware register base address pointer
  */
 void ast_enable(
 		Ast *ast)
@@ -82,7 +82,7 @@ void ast_enable(
 /**
  * \brief Disable the AST counter and module.
  *
- * \param[in,out] ast Module hardware register base address pointer.
+ * \param[in,out] ast Module hardware register base address pointer
  */
 void ast_disable(
 		Ast *ast)
@@ -103,8 +103,8 @@ void ast_disable(
 /**
  * \brief Enable the option to clear the counter on an AST alarm.
  *
- * \param[in,out] ast        Module hardware register base address pointer.
- * \param[in] alarm_channel  AST Alarm Channel.
+ * \param[in,out] ast        Module hardware register base address pointer
+ * \param[in] alarm_channel  AST Alarm Channel
  */
 void ast_enable_counter_clear_on_alarm(
 		Ast *ast,
@@ -124,7 +124,7 @@ void ast_enable_counter_clear_on_alarm(
 /**
  * \brief Clear the AST periodic prescaler counter to zero.
  *
- * \param[in,out] ast Module hardware register base address pointer.
+ * \param[in,out] ast Module hardware register base address pointer
  */
 void ast_clear_prescalar(
 		Ast *ast)
@@ -144,12 +144,12 @@ void ast_clear_prescalar(
  *
  * \note  If you use the 32kHz oscillator it will be enabled by this function.
  *
- * \param[in,out] ast  Module hardware register base address pointer.
- * \param[in] ast_conf AST configuration structure pointer.
+ * \param[in,out] ast  Module hardware register base address pointer
+ * \param[in] ast_conf AST configuration structure pointer
  *
  * \return Initialization result.
- * \retval 0 Initialization failed due to a software timeout.
- * \retval 1 Initialization succeeded.
+ * \retval 0 Initialization failed due to a software timeout
+ * \retval 1 Initialization succeeded
 */
 uint32_t ast_set_config(
 		Ast *ast,
@@ -215,9 +215,9 @@ uint32_t ast_set_config(
  * \note Refer to the section entitled "digital tuner" in the ast chapter of the
  * device-specific datasheet for more information.
  *
- * \param[in,out] ast     Module hardware register base address pointer.
- * \param[in] input_freq  Prescaled AST Clock Frequency.
- * \param[in] tuned_freq  Desired AST frequency.
+ * \param[in,out] ast     Module hardware register base address pointer
+ * \param[in] input_freq  Prescaled AST Clock Frequency
+ * \param[in] tuned_freq  Desired AST frequency
  */
 uint32_t ast_configure_digital_tuner(
 		Ast *ast,
@@ -297,7 +297,7 @@ uint32_t ast_configure_digital_tuner(
 /**
  * \brief Initialize the AST digital tuner.
  *
- * \param[in,out] ast Module hardware register base address pointer.
+ * \param[in,out] ast Module hardware register base address pointer
  * \param[in] add     Set to true if the frequency needs to be increased, false if it
  *                    has to be decreased.
  * \param[in] value   Parameter used in the formula
@@ -328,7 +328,7 @@ void ast_init_digital_tuner(
 /**
  * \brief Disable the AST digital tuner.
  *
- * \param[in,out] ast Module hardware register base address pointer.
+ * \param[in,out] ast Module hardware register base address pointer
  */
 void ast_disable_digital_tuner(
 		Ast *ast)
@@ -345,8 +345,8 @@ void ast_disable_digital_tuner(
 /**
  * \brief Set the AST current calendar value.
  *
- * \param[in,out] ast  Module hardware register base address pointer.
- * \param[in] calendar Startup date structure.
+ * \param[in,out] ast  Module hardware register base address pointer
+ * \param[in] calendar Startup date structure
  */
 void ast_write_calendar_value(
 		Ast *ast,
@@ -365,8 +365,8 @@ void ast_write_calendar_value(
 /**
  * \brief Set the AST current counter value.
  *
- * \param[in,out] ast     Module hardware register base address pointer.
- * \param[in] ast_counter Startup counter value.
+ * \param[in,out] ast     Module hardware register base address pointer
+ * \param[in] ast_counter Startup counter value
  */
 void ast_write_counter_value(
 		Ast *ast,
@@ -388,7 +388,7 @@ void ast_write_counter_value(
  * \note There maybe a compiler warning about returning a structure type
  * value, however it is safe because ast_calendar is actually uint32_t type.
  *
- * \param[in] ast Module hardware register base address pointer.
+ * \param[in] ast Module hardware register base address pointer
  *
  * \return The AST current calendar value.
  */
@@ -403,8 +403,8 @@ struct ast_calendar ast_read_calendar_value(
 /**
  * \brief Set the AST alarm0 value.
  *
- * \param[in,out] ast     Module hardware register base address pointer.
- * \param[in] alarm_value AST alarm0 value.
+ * \param[in,out] ast     Module hardware register base address pointer
+ * \param[in] alarm_value AST alarm0 value
  */
 void ast_write_alarm0_value(
 		Ast *ast,
@@ -423,8 +423,8 @@ void ast_write_alarm0_value(
 /**
  * \brief Set the AST periodic0 value.
  *
- * \param[in,out] ast Module hardware register base address pointer.
- * \param[in] pir     AST periodic0.
+ * \param[in,out] ast Module hardware register base address pointer
+ * \param[in] pir     AST periodic0
  */
 void ast_write_periodic0_value(
 		Ast *ast,
@@ -443,8 +443,8 @@ void ast_write_periodic0_value(
 /**
  * \brief Enable an AST interrupt.
  *
- * \param[in,out] ast Module hardware register base address pointer.
- * \param[in] source  AST interrupt source to be enabled.
+ * \param[in,out] ast Module hardware register base address pointer
+ * \param[in] source  AST interrupt source to be enabled
  */
 void ast_enable_interrupt(
 		Ast *ast,
@@ -487,8 +487,8 @@ void ast_enable_interrupt(
 /**
  * \brief Disable an AST interrupt.
  *
- * \param[in,out] ast Module hardware register base address pointer.
- * \param[in] source  AST interrupt source to be disabled.
+ * \param[in,out] ast Module hardware register base address pointer
+ * \param[in] source  AST interrupt source to be disabled
  */
 void ast_disable_interrupt(
 		Ast *ast,
@@ -531,8 +531,8 @@ void ast_disable_interrupt(
 /**
  * \brief Clear an AST interrupt status flag.
  *
- * \param[in,out] ast Module hardware register base address pointer.
- * \param[in] source  AST interrupt source for which the status is to be cleared.
+ * \param[in,out] ast Module hardware register base address pointer
+ * \param[in] source  AST interrupt source for which the status is to be cleared
  */
 void ast_clear_interrupt_flag(
 		Ast *ast,
@@ -575,11 +575,11 @@ void ast_clear_interrupt_flag(
 /**
  * \brief Set callback for AST interrupts.
  *
- * \param[in,out] ast   Module hardware register base address pointer.
- * \param[in] source    AST interrupt source.
- * \param[in] callback  Callback function pointer.
- * \param[in] irq_line  Interrupt line.
- * \param[in] irq_level Interrupt level.
+ * \param[in,out] ast   Module hardware register base address pointer
+ * \param[in] source    AST interrupt source
+ * \param[in] callback  Callback function pointer
+ * \param[in] irq_line  Interrupt line
+ * \param[in] irq_level Interrupt level
  */
 void ast_set_callback(
 		Ast *ast,
@@ -646,10 +646,10 @@ void AST_CLKREADY_Handler(void)
 #endif /* AST_CLKREADY_ENABLE  || defined(__DOXYGEN__) */
 
 /**
- * \brief Enable an AST asynchronous wakeup source.
+ * \brief Enable an AST asynchronous wake-up source.
  *
- * \param[in,out] ast Module hardware register base address pointer.
- * \param[in] source  AST wakeup source to be enabled.
+ * \param[in,out] ast Module hardware register base address pointer
+ * \param[in] source  AST wake-up source to be enabled
  */
 void ast_enable_wakeup(
 		Ast *ast,
@@ -682,10 +682,10 @@ void ast_enable_wakeup(
 }
 
 /**
- * \brief Disable an AST asynchronous wakeup source.
+ * \brief Disable an AST asynchronous wake-up source.
  *
- * \param[in,out] ast Module hardware register base address pointer.
- * \param[in] source  AST wakeup source to be disabled.
+ * \param[in,out] ast Module hardware register base address pointer
+ * \param[in] source  AST wake-up source to be disabled
  */
 void ast_disable_wakeup(
 		Ast *ast,
@@ -720,8 +720,8 @@ void ast_disable_wakeup(
 /**
  * \brief Enable an AST event.
  *
- * \param[in,out] ast Module hardware register base address pointer.
- * \param[in] source  AST event source to be enabled.
+ * \param[in,out] ast Module hardware register base address pointer
+ * \param[in] source  AST event source to be enabled
  */
 void ast_enable_event(
 		Ast *ast,
@@ -756,8 +756,8 @@ void ast_enable_event(
 /**
  * \brief Disable an AST event.
  *
- * \param[in,out] ast Module hardware register base address pointer.
- * \param[in] source  AST event source to be disabled.
+ * \param[in,out] ast Module hardware register base address pointer
+ * \param[in] source  AST event source to be disabled
  */
 void ast_disable_event(
 		Ast *ast,
