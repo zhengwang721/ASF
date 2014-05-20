@@ -251,11 +251,11 @@ static bool udd_b_sleep_initialized = false;
 static void udd_sleep_mode(bool b_idle)
 {
 	if (!b_idle && udd_b_idle) {
-		dbg_print("_S ");
+		dbg_print("_W ");
 		sleepmgr_unlock_mode(UHDP_SLEEP_MODE_USB_IDLE);
 	}
 	if (b_idle && !udd_b_idle) {
-		dbg_print("_W ");
+		dbg_print("_S ");
 		sleepmgr_lock_mode(UHDP_SLEEP_MODE_USB_IDLE);
 	}
 	udd_b_idle = b_idle;
@@ -1537,7 +1537,7 @@ static bool udd_ctrl_interrupt(void)
 		udd_ctrl_underflow();
 		return true;
 	}
-	dbg_print("n%x ", (int)UOTGHS_ARRAY(UOTGHS_DEVEPTISR[0], 0));
+	dbg_print("n%x ", (int)UHDP_ARRAY(UOTGHS_DEVEPTISR[0], 0));
 	return false;
 }
 

@@ -120,6 +120,7 @@ void otg_dual_disable(void);
 # define otg_id_interrupt_enable()   pio_enable_pin_interrupt(USB_ID_PIN)
 # define otg_id_interrupt_disable()  pio_disable_pin_interrupt(USB_ID_PIN)
 # define Is_otg_id_device()          ioport_get_pin_level(USB_ID_PIN)
+# define Is_otg_id_host()            (!Is_otg_id_device())
 #endif
 
    //! Force device mode

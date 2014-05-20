@@ -195,8 +195,6 @@ static void uhd_sleep_mode(enum uhd_uhdp_state_enum new_state)
 		SLEEPMGR_SLEEP_WFI, // UHD_STATE_IDLE
 	};
 
-	dbg_print("sleep%d ", new_state);
-
 	static enum uhd_uhdp_state_enum uhd_state = UHD_STATE_OFF;
 
 	if (uhd_state == new_state) {
@@ -238,11 +236,13 @@ static void otg_id_handler(uint32_t id, uint32_t mask)
 		UHC_MODE_CHANGE(false);
 		otg_force_device_mode();
 		udc_start();
+		dbg_print("\r\nudc_start ");
 	} else {
 		udc_stop();
 		UHC_MODE_CHANGE(true);
 		otg_force_host_mode();
 		uhc_start();
+		dbg_print("\r\nuhc_start ");
 	}
 }
 #endif
@@ -615,6 +615,7 @@ void uhd_disable(bool b_id_stop)
 
 	uhd_disable_sof();
 	uhd_disable_vbus_request();
+	pad_vbus_disable();
 	uhc_notify_connection(false);
 	otg_freeze_clock();
 
