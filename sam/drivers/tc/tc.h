@@ -55,7 +55,7 @@
  * Timer Counter channels. Each channel can be independently programmed
  * to perform a wide range of functions that includes frequency
  * measurement, event counting, interval measurement, pulse generation,
- * delay timing and pulse width modulation.
+ * delay timing, and pulse width modulation.
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_tc_prerequisites
@@ -305,7 +305,7 @@ uint32_t tc_get_version(Tc *p_tc);
  *
  * This is the quick start guide for the \ref asfdoc_sam_drivers_ast_group, with
  * step-by-step instructions on how to configure and use the driver for
- * a specific use case.The code examples can be copied into e.g the main
+ * a specific use case. The code examples can be copied into e.g. the main
  * application loop or any other function that will need to control the
  * AST module.
  *

@@ -57,7 +57,7 @@ extern "C" {
 #endif
 
 /**
- * \brief Configure TC for timer, waveform generation or capture.
+ * \brief Configure TC for timer, waveform generation, or capture.
  *
  * \param[in,out] p_tc   Module hardware register base address pointer.
  * \param[in] ul_channel Channel to configure.
@@ -553,7 +553,7 @@ uint32_t tc_find_mck_divisor(
  * \param[out] p_ultcclks TCCLKS field value for divisor.
  * \param[in] ul_boardmck Board clock frequency (set to 0 for SAM4L devices).
  *
- * \return divisor found status.
+ * \return The divisor found status.
  * \retval 0 No suitable divisor was found.
  * \retval 1 A divisor was found.
  */

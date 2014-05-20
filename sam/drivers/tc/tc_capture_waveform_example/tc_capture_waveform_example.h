@@ -57,7 +57,7 @@
  * \section asfdoc_sam_drivers_tc_example_requirements Requirements
  *
  * This package can be used with SAM4 evaluation kits such as the SAM4L EK,
- * the SAM4L Xplained Pro and other evaluation kits. Refer to the list of
+ * the SAM4L Xplained Pro, and other evaluation kits. Refer to the list of
  * kits available for the actual device on http://www.atmel.com.
  *
  * It generates a waveform on the Timer Counter pin PIN_TC_WAVEFORM,
@@ -103,7 +103,7 @@
  * \section asfdoc_sam_drivers_tc_example_compilinfo Compilation Information
  *
  * This software is written for GNU GCC and IAR Embedded Workbench&reg;
- * for Atmel. Other compilers may or may not work.
+ * for Atmel&reg;. Other compilers may or may not work.
  *
  *
  * \section asfdoc_sam_drivers_tc_example_usage Usage
