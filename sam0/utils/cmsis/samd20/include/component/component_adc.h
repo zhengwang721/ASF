@@ -3,7 +3,7 @@
  *
  * \brief Component description for ADC
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -50,7 +50,8 @@
 /** \addtogroup SAMD20_ADC Analog Digital Converter */
 /*@{*/
 
-#define REV_ADC                     0x110
+#define ADC_U2204
+#define REV_ADC                     0x111
 
 /* -------- ADC_CTRLA : (ADC Offset: 0x00) (R/W  8) Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -58,7 +59,7 @@ typedef union {
   struct {
     uint8_t  SWRST:1;          /*!< bit:      0  Software Reset                     */
     uint8_t  ENABLE:1;         /*!< bit:      1  Enable                             */
-    uint8_t  RUNSTDBY:1;       /*!< bit:      2  Run during Standby                 */
+    uint8_t  RUNSTDBY:1;       /*!< bit:      2  Run in Standby                     */
     uint8_t  :5;               /*!< bit:  3.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -72,7 +73,7 @@ typedef union {
 #define ADC_CTRLA_SWRST             (0x1u << ADC_CTRLA_SWRST_Pos)
 #define ADC_CTRLA_ENABLE_Pos        1            /**< \brief (ADC_CTRLA) Enable */
 #define ADC_CTRLA_ENABLE            (0x1u << ADC_CTRLA_ENABLE_Pos)
-#define ADC_CTRLA_RUNSTDBY_Pos      2            /**< \brief (ADC_CTRLA) Run during Standby */
+#define ADC_CTRLA_RUNSTDBY_Pos      2            /**< \brief (ADC_CTRLA) Run in Standby */
 #define ADC_CTRLA_RUNSTDBY          (0x1u << ADC_CTRLA_RUNSTDBY_Pos)
 #define ADC_CTRLA_MASK              0x07u        /**< \brief (ADC_CTRLA) MASK Register */
 
@@ -94,11 +95,11 @@ typedef union {
 #define ADC_REFCTRL_REFSEL_Pos      0            /**< \brief (ADC_REFCTRL) Reference Selection */
 #define ADC_REFCTRL_REFSEL_Msk      (0xFu << ADC_REFCTRL_REFSEL_Pos)
 #define ADC_REFCTRL_REFSEL(value)   ((ADC_REFCTRL_REFSEL_Msk & ((value) << ADC_REFCTRL_REFSEL_Pos)))
-#define   ADC_REFCTRL_REFSEL_INT1V_Val    0x0u   /**< \brief (ADC_REFCTRL)  */
-#define   ADC_REFCTRL_REFSEL_INTVCC0_Val  0x1u   /**< \brief (ADC_REFCTRL)  */
-#define   ADC_REFCTRL_REFSEL_INTVCC1_Val  0x2u   /**< \brief (ADC_REFCTRL)  */
-#define   ADC_REFCTRL_REFSEL_AREFA_Val    0x3u   /**< \brief (ADC_REFCTRL)  */
-#define   ADC_REFCTRL_REFSEL_AREFB_Val    0x4u   /**< \brief (ADC_REFCTRL)  */
+#define   ADC_REFCTRL_REFSEL_INT1V_Val    0x0u   /**< \brief (ADC_REFCTRL) 1.0V voltage reference */
+#define   ADC_REFCTRL_REFSEL_INTVCC0_Val  0x1u   /**< \brief (ADC_REFCTRL) 1/1.48 VDDANA */
+#define   ADC_REFCTRL_REFSEL_INTVCC1_Val  0x2u   /**< \brief (ADC_REFCTRL) 1/2 VDDANA (only for VDDANA > 2.0V) */
+#define   ADC_REFCTRL_REFSEL_AREFA_Val    0x3u   /**< \brief (ADC_REFCTRL) External reference */
+#define   ADC_REFCTRL_REFSEL_AREFB_Val    0x4u   /**< \brief (ADC_REFCTRL) External reference */
 #define ADC_REFCTRL_REFSEL_INT1V    (ADC_REFCTRL_REFSEL_INT1V_Val  << ADC_REFCTRL_REFSEL_Pos)
 #define ADC_REFCTRL_REFSEL_INTVCC0  (ADC_REFCTRL_REFSEL_INTVCC0_Val << ADC_REFCTRL_REFSEL_Pos)
 #define ADC_REFCTRL_REFSEL_INTVCC1  (ADC_REFCTRL_REFSEL_INTVCC1_Val << ADC_REFCTRL_REFSEL_Pos)
@@ -126,17 +127,17 @@ typedef union {
 #define ADC_AVGCTRL_SAMPLENUM_Pos   0            /**< \brief (ADC_AVGCTRL) Number of Samples to be Collected */
 #define ADC_AVGCTRL_SAMPLENUM_Msk   (0xFu << ADC_AVGCTRL_SAMPLENUM_Pos)
 #define ADC_AVGCTRL_SAMPLENUM(value) ((ADC_AVGCTRL_SAMPLENUM_Msk & ((value) << ADC_AVGCTRL_SAMPLENUM_Pos)))
-#define   ADC_AVGCTRL_SAMPLENUM_1_Val     0x0u   /**< \brief (ADC_AVGCTRL)  */
-#define   ADC_AVGCTRL_SAMPLENUM_2_Val     0x1u   /**< \brief (ADC_AVGCTRL)  */
-#define   ADC_AVGCTRL_SAMPLENUM_4_Val     0x2u   /**< \brief (ADC_AVGCTRL)  */
-#define   ADC_AVGCTRL_SAMPLENUM_8_Val     0x3u   /**< \brief (ADC_AVGCTRL)  */
-#define   ADC_AVGCTRL_SAMPLENUM_16_Val    0x4u   /**< \brief (ADC_AVGCTRL)  */
-#define   ADC_AVGCTRL_SAMPLENUM_32_Val    0x5u   /**< \brief (ADC_AVGCTRL)  */
-#define   ADC_AVGCTRL_SAMPLENUM_64_Val    0x6u   /**< \brief (ADC_AVGCTRL)  */
-#define   ADC_AVGCTRL_SAMPLENUM_128_Val   0x7u   /**< \brief (ADC_AVGCTRL)  */
-#define   ADC_AVGCTRL_SAMPLENUM_256_Val   0x8u   /**< \brief (ADC_AVGCTRL)  */
-#define   ADC_AVGCTRL_SAMPLENUM_512_Val   0x9u   /**< \brief (ADC_AVGCTRL)  */
-#define   ADC_AVGCTRL_SAMPLENUM_1024_Val  0xAu   /**< \brief (ADC_AVGCTRL)  */
+#define   ADC_AVGCTRL_SAMPLENUM_1_Val     0x0u   /**< \brief (ADC_AVGCTRL) 1 sample */
+#define   ADC_AVGCTRL_SAMPLENUM_2_Val     0x1u   /**< \brief (ADC_AVGCTRL) 2 samples */
+#define   ADC_AVGCTRL_SAMPLENUM_4_Val     0x2u   /**< \brief (ADC_AVGCTRL) 4 samples */
+#define   ADC_AVGCTRL_SAMPLENUM_8_Val     0x3u   /**< \brief (ADC_AVGCTRL) 8 samples */
+#define   ADC_AVGCTRL_SAMPLENUM_16_Val    0x4u   /**< \brief (ADC_AVGCTRL) 16 samples */
+#define   ADC_AVGCTRL_SAMPLENUM_32_Val    0x5u   /**< \brief (ADC_AVGCTRL) 32 samples */
+#define   ADC_AVGCTRL_SAMPLENUM_64_Val    0x6u   /**< \brief (ADC_AVGCTRL) 64 samples */
+#define   ADC_AVGCTRL_SAMPLENUM_128_Val   0x7u   /**< \brief (ADC_AVGCTRL) 128 samples */
+#define   ADC_AVGCTRL_SAMPLENUM_256_Val   0x8u   /**< \brief (ADC_AVGCTRL) 256 samples */
+#define   ADC_AVGCTRL_SAMPLENUM_512_Val   0x9u   /**< \brief (ADC_AVGCTRL) 512 samples */
+#define   ADC_AVGCTRL_SAMPLENUM_1024_Val  0xAu   /**< \brief (ADC_AVGCTRL) 1024 samples */
 #define ADC_AVGCTRL_SAMPLENUM_1     (ADC_AVGCTRL_SAMPLENUM_1_Val   << ADC_AVGCTRL_SAMPLENUM_Pos)
 #define ADC_AVGCTRL_SAMPLENUM_2     (ADC_AVGCTRL_SAMPLENUM_2_Val   << ADC_AVGCTRL_SAMPLENUM_Pos)
 #define ADC_AVGCTRL_SAMPLENUM_4     (ADC_AVGCTRL_SAMPLENUM_4_Val   << ADC_AVGCTRL_SAMPLENUM_Pos)
@@ -153,7 +154,7 @@ typedef union {
 #define ADC_AVGCTRL_ADJRES(value)   ((ADC_AVGCTRL_ADJRES_Msk & ((value) << ADC_AVGCTRL_ADJRES_Pos)))
 #define ADC_AVGCTRL_MASK            0x7Fu        /**< \brief (ADC_AVGCTRL) MASK Register */
 
-/* -------- ADC_SAMPCTRL : (ADC Offset: 0x03) (R/W  8) Sample Time Control -------- */
+/* -------- ADC_SAMPCTRL : (ADC Offset: 0x03) (R/W  8) Sampling Time Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
@@ -164,8 +165,8 @@ typedef union {
 } ADC_SAMPCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define ADC_SAMPCTRL_OFFSET         0x03         /**< \brief (ADC_SAMPCTRL offset) Sample Time Control */
-#define ADC_SAMPCTRL_RESETVALUE     0x00         /**< \brief (ADC_SAMPCTRL reset_value) Sample Time Control */
+#define ADC_SAMPCTRL_OFFSET         0x03         /**< \brief (ADC_SAMPCTRL offset) Sampling Time Control */
+#define ADC_SAMPCTRL_RESETVALUE     0x00         /**< \brief (ADC_SAMPCTRL reset_value) Sampling Time Control */
 
 #define ADC_SAMPCTRL_SAMPLEN_Pos    0            /**< \brief (ADC_SAMPCTRL) Sampling Time Length */
 #define ADC_SAMPCTRL_SAMPLEN_Msk    (0x3Fu << ADC_SAMPCTRL_SAMPLEN_Pos)
@@ -177,9 +178,9 @@ typedef union {
 typedef union {
   struct {
     uint16_t DIFFMODE:1;       /*!< bit:      0  Differential Mode                  */
-    uint16_t LEFTADJ:1;        /*!< bit:      1  Left-Adjusted Result               */
+    uint16_t LEFTADJ:1;        /*!< bit:      1  Left Adjusted Result               */
     uint16_t FREERUN:1;        /*!< bit:      2  Free Running Mode                  */
-    uint16_t CORREN:1;         /*!< bit:      3  Digital Correction Logic Enable    */
+    uint16_t CORREN:1;         /*!< bit:      3  Digital Correction Logic Enabled   */
     uint16_t RESSEL:2;         /*!< bit:  4.. 5  Conversion Result Resolution       */
     uint16_t :2;               /*!< bit:  6.. 7  Reserved                           */
     uint16_t PRESCALER:3;      /*!< bit:  8..10  Prescaler Configuration            */
@@ -194,19 +195,19 @@ typedef union {
 
 #define ADC_CTRLB_DIFFMODE_Pos      0            /**< \brief (ADC_CTRLB) Differential Mode */
 #define ADC_CTRLB_DIFFMODE          (0x1u << ADC_CTRLB_DIFFMODE_Pos)
-#define ADC_CTRLB_LEFTADJ_Pos       1            /**< \brief (ADC_CTRLB) Left-Adjusted Result */
+#define ADC_CTRLB_LEFTADJ_Pos       1            /**< \brief (ADC_CTRLB) Left Adjusted Result */
 #define ADC_CTRLB_LEFTADJ           (0x1u << ADC_CTRLB_LEFTADJ_Pos)
 #define ADC_CTRLB_FREERUN_Pos       2            /**< \brief (ADC_CTRLB) Free Running Mode */
 #define ADC_CTRLB_FREERUN           (0x1u << ADC_CTRLB_FREERUN_Pos)
-#define ADC_CTRLB_CORREN_Pos        3            /**< \brief (ADC_CTRLB) Digital Correction Logic Enable */
+#define ADC_CTRLB_CORREN_Pos        3            /**< \brief (ADC_CTRLB) Digital Correction Logic Enabled */
 #define ADC_CTRLB_CORREN            (0x1u << ADC_CTRLB_CORREN_Pos)
 #define ADC_CTRLB_RESSEL_Pos        4            /**< \brief (ADC_CTRLB) Conversion Result Resolution */
 #define ADC_CTRLB_RESSEL_Msk        (0x3u << ADC_CTRLB_RESSEL_Pos)
 #define ADC_CTRLB_RESSEL(value)     ((ADC_CTRLB_RESSEL_Msk & ((value) << ADC_CTRLB_RESSEL_Pos)))
-#define   ADC_CTRLB_RESSEL_12BIT_Val      0x0u   /**< \brief (ADC_CTRLB)  */
-#define   ADC_CTRLB_RESSEL_16BIT_Val      0x1u   /**< \brief (ADC_CTRLB)  */
-#define   ADC_CTRLB_RESSEL_10BIT_Val      0x2u   /**< \brief (ADC_CTRLB)  */
-#define   ADC_CTRLB_RESSEL_8BIT_Val       0x3u   /**< \brief (ADC_CTRLB)  */
+#define   ADC_CTRLB_RESSEL_12BIT_Val      0x0u   /**< \brief (ADC_CTRLB) 12-bit result */
+#define   ADC_CTRLB_RESSEL_16BIT_Val      0x1u   /**< \brief (ADC_CTRLB) For averaging mode output */
+#define   ADC_CTRLB_RESSEL_10BIT_Val      0x2u   /**< \brief (ADC_CTRLB) 10-bit result */
+#define   ADC_CTRLB_RESSEL_8BIT_Val       0x3u   /**< \brief (ADC_CTRLB) 8-bit result */
 #define ADC_CTRLB_RESSEL_12BIT      (ADC_CTRLB_RESSEL_12BIT_Val    << ADC_CTRLB_RESSEL_Pos)
 #define ADC_CTRLB_RESSEL_16BIT      (ADC_CTRLB_RESSEL_16BIT_Val    << ADC_CTRLB_RESSEL_Pos)
 #define ADC_CTRLB_RESSEL_10BIT      (ADC_CTRLB_RESSEL_10BIT_Val    << ADC_CTRLB_RESSEL_Pos)
@@ -214,14 +215,14 @@ typedef union {
 #define ADC_CTRLB_PRESCALER_Pos     8            /**< \brief (ADC_CTRLB) Prescaler Configuration */
 #define ADC_CTRLB_PRESCALER_Msk     (0x7u << ADC_CTRLB_PRESCALER_Pos)
 #define ADC_CTRLB_PRESCALER(value)  ((ADC_CTRLB_PRESCALER_Msk & ((value) << ADC_CTRLB_PRESCALER_Pos)))
-#define   ADC_CTRLB_PRESCALER_DIV4_Val    0x0u   /**< \brief (ADC_CTRLB)  */
-#define   ADC_CTRLB_PRESCALER_DIV8_Val    0x1u   /**< \brief (ADC_CTRLB)  */
-#define   ADC_CTRLB_PRESCALER_DIV16_Val   0x2u   /**< \brief (ADC_CTRLB)  */
-#define   ADC_CTRLB_PRESCALER_DIV32_Val   0x3u   /**< \brief (ADC_CTRLB)  */
-#define   ADC_CTRLB_PRESCALER_DIV64_Val   0x4u   /**< \brief (ADC_CTRLB)  */
-#define   ADC_CTRLB_PRESCALER_DIV128_Val  0x5u   /**< \brief (ADC_CTRLB)  */
-#define   ADC_CTRLB_PRESCALER_DIV256_Val  0x6u   /**< \brief (ADC_CTRLB)  */
-#define   ADC_CTRLB_PRESCALER_DIV512_Val  0x7u   /**< \brief (ADC_CTRLB)  */
+#define   ADC_CTRLB_PRESCALER_DIV4_Val    0x0u   /**< \brief (ADC_CTRLB) Peripheral clock divided by 4 */
+#define   ADC_CTRLB_PRESCALER_DIV8_Val    0x1u   /**< \brief (ADC_CTRLB) Peripheral clock divided by 8 */
+#define   ADC_CTRLB_PRESCALER_DIV16_Val   0x2u   /**< \brief (ADC_CTRLB) Peripheral clock divided by 16 */
+#define   ADC_CTRLB_PRESCALER_DIV32_Val   0x3u   /**< \brief (ADC_CTRLB) Peripheral clock divided by 32 */
+#define   ADC_CTRLB_PRESCALER_DIV64_Val   0x4u   /**< \brief (ADC_CTRLB) Peripheral clock divided by 64 */
+#define   ADC_CTRLB_PRESCALER_DIV128_Val  0x5u   /**< \brief (ADC_CTRLB) Peripheral clock divided by 128 */
+#define   ADC_CTRLB_PRESCALER_DIV256_Val  0x6u   /**< \brief (ADC_CTRLB) Peripheral clock divided by 256 */
+#define   ADC_CTRLB_PRESCALER_DIV512_Val  0x7u   /**< \brief (ADC_CTRLB) Peripheral clock divided by 512 */
 #define ADC_CTRLB_PRESCALER_DIV4    (ADC_CTRLB_PRESCALER_DIV4_Val  << ADC_CTRLB_PRESCALER_Pos)
 #define ADC_CTRLB_PRESCALER_DIV8    (ADC_CTRLB_PRESCALER_DIV8_Val  << ADC_CTRLB_PRESCALER_Pos)
 #define ADC_CTRLB_PRESCALER_DIV16   (ADC_CTRLB_PRESCALER_DIV16_Val << ADC_CTRLB_PRESCALER_Pos)
@@ -249,11 +250,11 @@ typedef union {
 #define ADC_WINCTRL_WINMODE_Pos     0            /**< \brief (ADC_WINCTRL) Window Monitor Mode */
 #define ADC_WINCTRL_WINMODE_Msk     (0x7u << ADC_WINCTRL_WINMODE_Pos)
 #define ADC_WINCTRL_WINMODE(value)  ((ADC_WINCTRL_WINMODE_Msk & ((value) << ADC_WINCTRL_WINMODE_Pos)))
-#define   ADC_WINCTRL_WINMODE_DISABLE_Val 0x0u   /**< \brief (ADC_WINCTRL)  */
-#define   ADC_WINCTRL_WINMODE_MODE1_Val   0x1u   /**< \brief (ADC_WINCTRL)  */
-#define   ADC_WINCTRL_WINMODE_MODE2_Val   0x2u   /**< \brief (ADC_WINCTRL)  */
-#define   ADC_WINCTRL_WINMODE_MODE3_Val   0x3u   /**< \brief (ADC_WINCTRL)  */
-#define   ADC_WINCTRL_WINMODE_MODE4_Val   0x4u   /**< \brief (ADC_WINCTRL)  */
+#define   ADC_WINCTRL_WINMODE_DISABLE_Val 0x0u   /**< \brief (ADC_WINCTRL) No window mode (default) */
+#define   ADC_WINCTRL_WINMODE_MODE1_Val   0x1u   /**< \brief (ADC_WINCTRL) Mode 1: RESULT > WINLT */
+#define   ADC_WINCTRL_WINMODE_MODE2_Val   0x2u   /**< \brief (ADC_WINCTRL) Mode 2: RESULT < WINUT */
+#define   ADC_WINCTRL_WINMODE_MODE3_Val   0x3u   /**< \brief (ADC_WINCTRL) Mode 3: WINLT < RESULT < WINUT */
+#define   ADC_WINCTRL_WINMODE_MODE4_Val   0x4u   /**< \brief (ADC_WINCTRL) Mode 4: !(WINLT < RESULT < WINUT) */
 #define ADC_WINCTRL_WINMODE_DISABLE (ADC_WINCTRL_WINMODE_DISABLE_Val << ADC_WINCTRL_WINMODE_Pos)
 #define ADC_WINCTRL_WINMODE_MODE1   (ADC_WINCTRL_WINMODE_MODE1_Val << ADC_WINCTRL_WINMODE_Pos)
 #define ADC_WINCTRL_WINMODE_MODE2   (ADC_WINCTRL_WINMODE_MODE2_Val << ADC_WINCTRL_WINMODE_Pos)
@@ -261,79 +262,75 @@ typedef union {
 #define ADC_WINCTRL_WINMODE_MODE4   (ADC_WINCTRL_WINMODE_MODE4_Val << ADC_WINCTRL_WINMODE_Pos)
 #define ADC_WINCTRL_MASK            0x07u        /**< \brief (ADC_WINCTRL) MASK Register */
 
-/* -------- ADC_SWTRIG : (ADC Offset: 0x0C) (R/W  8) Control B -------- */
+/* -------- ADC_SWTRIG : (ADC Offset: 0x0C) (R/W  8) Software Trigger -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  FLUSH:1;          /*!< bit:      0  ADC Flush                          */
-    uint8_t  START:1;          /*!< bit:      1  Start ADC Conversion               */
+    uint8_t  FLUSH:1;          /*!< bit:      0  ADC Conversion Flush               */
+    uint8_t  START:1;          /*!< bit:      1  ADC Start Conversion               */
     uint8_t  :6;               /*!< bit:  2.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } ADC_SWTRIG_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define ADC_SWTRIG_OFFSET           0x0C         /**< \brief (ADC_SWTRIG offset) Control B */
-#define ADC_SWTRIG_RESETVALUE       0x00         /**< \brief (ADC_SWTRIG reset_value) Control B */
+#define ADC_SWTRIG_OFFSET           0x0C         /**< \brief (ADC_SWTRIG offset) Software Trigger */
+#define ADC_SWTRIG_RESETVALUE       0x00         /**< \brief (ADC_SWTRIG reset_value) Software Trigger */
 
-#define ADC_SWTRIG_FLUSH_Pos        0            /**< \brief (ADC_SWTRIG) ADC Flush */
+#define ADC_SWTRIG_FLUSH_Pos        0            /**< \brief (ADC_SWTRIG) ADC Conversion Flush */
 #define ADC_SWTRIG_FLUSH            (0x1u << ADC_SWTRIG_FLUSH_Pos)
-#define ADC_SWTRIG_START_Pos        1            /**< \brief (ADC_SWTRIG) Start ADC Conversion */
+#define ADC_SWTRIG_START_Pos        1            /**< \brief (ADC_SWTRIG) ADC Start Conversion */
 #define ADC_SWTRIG_START            (0x1u << ADC_SWTRIG_START_Pos)
 #define ADC_SWTRIG_MASK             0x03u        /**< \brief (ADC_SWTRIG) MASK Register */
 
-/* -------- ADC_INPUTCTRL : (ADC Offset: 0x10) (R/W 32) Input Control -------- */
+/* -------- ADC_INPUTCTRL : (ADC Offset: 0x10) (R/W 32) Inputs Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t MUXPOS:5;         /*!< bit:  0.. 4  Positive Mux Input Selection       */
+    uint32_t MUXPOS:5;         /*!< bit:  0.. 4  Positive MUX Input Selection       */
     uint32_t :3;               /*!< bit:  5.. 7  Reserved                           */
-    uint32_t MUXNEG:5;         /*!< bit:  8..12  Negative Mux Input Selection       */
+    uint32_t MUXNEG:5;         /*!< bit:  8..12  Negative MUX Input Selection       */
     uint32_t :3;               /*!< bit: 13..15  Reserved                           */
     uint32_t INPUTSCAN:4;      /*!< bit: 16..19  Number of Input Channels Included in Scan */
-    uint32_t INPUTOFFSET:4;    /*!< bit: 20..23  Positive Mux Setting Offset        */
-    uint32_t GAIN:4;           /*!< bit: 24..27  Gain Value                         */
+    uint32_t INPUTOFFSET:4;    /*!< bit: 20..23  Positive MUX Setting Offset        */
+    uint32_t GAIN:4;           /*!< bit: 24..27  Gain Factor Selection              */
     uint32_t :4;               /*!< bit: 28..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } ADC_INPUTCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define ADC_INPUTCTRL_OFFSET        0x10         /**< \brief (ADC_INPUTCTRL offset) Input Control */
-#define ADC_INPUTCTRL_RESETVALUE    0x00000000   /**< \brief (ADC_INPUTCTRL reset_value) Input Control */
+#define ADC_INPUTCTRL_OFFSET        0x10         /**< \brief (ADC_INPUTCTRL offset) Inputs Control */
+#define ADC_INPUTCTRL_RESETVALUE    0x00000000   /**< \brief (ADC_INPUTCTRL reset_value) Inputs Control */
 
-#define ADC_INPUTCTRL_MUXPOS_Pos    0            /**< \brief (ADC_INPUTCTRL) Positive Mux Input Selection */
+#define ADC_INPUTCTRL_MUXPOS_Pos    0            /**< \brief (ADC_INPUTCTRL) Positive MUX Input Selection */
 #define ADC_INPUTCTRL_MUXPOS_Msk    (0x1Fu << ADC_INPUTCTRL_MUXPOS_Pos)
 #define ADC_INPUTCTRL_MUXPOS(value) ((ADC_INPUTCTRL_MUXPOS_Msk & ((value) << ADC_INPUTCTRL_MUXPOS_Pos)))
-#define   ADC_INPUTCTRL_MUXPOS_PIN0_Val   0x0u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN1_Val   0x1u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN2_Val   0x2u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN3_Val   0x3u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN4_Val   0x4u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN5_Val   0x5u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN6_Val   0x6u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN7_Val   0x7u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN8_Val   0x8u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN9_Val   0x9u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN10_Val  0xAu   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN11_Val  0xBu   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN12_Val  0xCu   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN13_Val  0xDu   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN14_Val  0xEu   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN15_Val  0xFu   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN16_Val  0x10u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN17_Val  0x11u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN18_Val  0x12u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN19_Val  0x13u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN20_Val  0x14u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN21_Val  0x15u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN22_Val  0x16u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_PIN23_Val  0x17u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_TEMP_Val   0x18u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_BANDGAP_Val 0x19u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC_Val 0x1Au   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC_Val 0x1Bu   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXPOS_DAC_Val    0x1Cu   /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXPOS_PIN0_Val   0x0u   /**< \brief (ADC_INPUTCTRL) ADC AIN0 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN1_Val   0x1u   /**< \brief (ADC_INPUTCTRL) ADC AIN1 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN2_Val   0x2u   /**< \brief (ADC_INPUTCTRL) ADC AIN2 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN3_Val   0x3u   /**< \brief (ADC_INPUTCTRL) ADC AIN3 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN4_Val   0x4u   /**< \brief (ADC_INPUTCTRL) ADC AIN4 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN5_Val   0x5u   /**< \brief (ADC_INPUTCTRL) ADC AIN5 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN6_Val   0x6u   /**< \brief (ADC_INPUTCTRL) ADC AIN6 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN7_Val   0x7u   /**< \brief (ADC_INPUTCTRL) ADC AIN7 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN8_Val   0x8u   /**< \brief (ADC_INPUTCTRL) ADC AIN8 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN9_Val   0x9u   /**< \brief (ADC_INPUTCTRL) ADC AIN9 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN10_Val  0xAu   /**< \brief (ADC_INPUTCTRL) ADC AIN10 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN11_Val  0xBu   /**< \brief (ADC_INPUTCTRL) ADC AIN11 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN12_Val  0xCu   /**< \brief (ADC_INPUTCTRL) ADC AIN12 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN13_Val  0xDu   /**< \brief (ADC_INPUTCTRL) ADC AIN13 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN14_Val  0xEu   /**< \brief (ADC_INPUTCTRL) ADC AIN14 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN15_Val  0xFu   /**< \brief (ADC_INPUTCTRL) ADC AIN15 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN16_Val  0x10u   /**< \brief (ADC_INPUTCTRL) ADC AIN16 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN17_Val  0x11u   /**< \brief (ADC_INPUTCTRL) ADC AIN17 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN18_Val  0x12u   /**< \brief (ADC_INPUTCTRL) ADC AIN18 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_PIN19_Val  0x13u   /**< \brief (ADC_INPUTCTRL) ADC AIN19 Pin */
+#define   ADC_INPUTCTRL_MUXPOS_TEMP_Val   0x18u   /**< \brief (ADC_INPUTCTRL) Temperature Reference */
+#define   ADC_INPUTCTRL_MUXPOS_BANDGAP_Val 0x19u   /**< \brief (ADC_INPUTCTRL) Bandgap Voltage */
+#define   ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC_Val 0x1Au   /**< \brief (ADC_INPUTCTRL) 1/4  Scaled Core Supply */
+#define   ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC_Val 0x1Bu   /**< \brief (ADC_INPUTCTRL) 1/4  Scaled I/O Supply */
+#define   ADC_INPUTCTRL_MUXPOS_DAC_Val    0x1Cu   /**< \brief (ADC_INPUTCTRL) DAC Output */
 #define ADC_INPUTCTRL_MUXPOS_PIN0   (ADC_INPUTCTRL_MUXPOS_PIN0_Val << ADC_INPUTCTRL_MUXPOS_Pos)
 #define ADC_INPUTCTRL_MUXPOS_PIN1   (ADC_INPUTCTRL_MUXPOS_PIN1_Val << ADC_INPUTCTRL_MUXPOS_Pos)
 #define ADC_INPUTCTRL_MUXPOS_PIN2   (ADC_INPUTCTRL_MUXPOS_PIN2_Val << ADC_INPUTCTRL_MUXPOS_Pos)
@@ -354,44 +351,24 @@ typedef union {
 #define ADC_INPUTCTRL_MUXPOS_PIN17  (ADC_INPUTCTRL_MUXPOS_PIN17_Val << ADC_INPUTCTRL_MUXPOS_Pos)
 #define ADC_INPUTCTRL_MUXPOS_PIN18  (ADC_INPUTCTRL_MUXPOS_PIN18_Val << ADC_INPUTCTRL_MUXPOS_Pos)
 #define ADC_INPUTCTRL_MUXPOS_PIN19  (ADC_INPUTCTRL_MUXPOS_PIN19_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_PIN20  (ADC_INPUTCTRL_MUXPOS_PIN20_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_PIN21  (ADC_INPUTCTRL_MUXPOS_PIN21_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_PIN22  (ADC_INPUTCTRL_MUXPOS_PIN22_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_PIN23  (ADC_INPUTCTRL_MUXPOS_PIN23_Val << ADC_INPUTCTRL_MUXPOS_Pos)
 #define ADC_INPUTCTRL_MUXPOS_TEMP   (ADC_INPUTCTRL_MUXPOS_TEMP_Val << ADC_INPUTCTRL_MUXPOS_Pos)
 #define ADC_INPUTCTRL_MUXPOS_BANDGAP (ADC_INPUTCTRL_MUXPOS_BANDGAP_Val << ADC_INPUTCTRL_MUXPOS_Pos)
 #define ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC (ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC_Val << ADC_INPUTCTRL_MUXPOS_Pos)
 #define ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC (ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC_Val << ADC_INPUTCTRL_MUXPOS_Pos)
 #define ADC_INPUTCTRL_MUXPOS_DAC    (ADC_INPUTCTRL_MUXPOS_DAC_Val  << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXNEG_Pos    8            /**< \brief (ADC_INPUTCTRL) Negative Mux Input Selection */
+#define ADC_INPUTCTRL_MUXNEG_Pos    8            /**< \brief (ADC_INPUTCTRL) Negative MUX Input Selection */
 #define ADC_INPUTCTRL_MUXNEG_Msk    (0x1Fu << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_MUXNEG(value) ((ADC_INPUTCTRL_MUXNEG_Msk & ((value) << ADC_INPUTCTRL_MUXNEG_Pos)))
-#define   ADC_INPUTCTRL_MUXNEG_PIN0_Val   0x0u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN1_Val   0x1u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN2_Val   0x2u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN3_Val   0x3u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN4_Val   0x4u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN5_Val   0x5u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN6_Val   0x6u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN7_Val   0x7u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN8_Val   0x8u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN9_Val   0x9u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN10_Val  0xAu   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN11_Val  0xBu   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN12_Val  0xCu   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN13_Val  0xDu   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN14_Val  0xEu   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN15_Val  0xFu   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN16_Val  0x10u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN17_Val  0x11u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN18_Val  0x12u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN19_Val  0x13u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN20_Val  0x14u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN21_Val  0x15u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN22_Val  0x16u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_PIN23_Val  0x17u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_GND_Val    0x18u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_MUXNEG_IOGND_Val  0x19u   /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_MUXNEG_PIN0_Val   0x0u   /**< \brief (ADC_INPUTCTRL) ADC AIN0 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_PIN1_Val   0x1u   /**< \brief (ADC_INPUTCTRL) ADC AIN1 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_PIN2_Val   0x2u   /**< \brief (ADC_INPUTCTRL) ADC AIN2 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_PIN3_Val   0x3u   /**< \brief (ADC_INPUTCTRL) ADC AIN3 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_PIN4_Val   0x4u   /**< \brief (ADC_INPUTCTRL) ADC AIN4 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_PIN5_Val   0x5u   /**< \brief (ADC_INPUTCTRL) ADC AIN5 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_PIN6_Val   0x6u   /**< \brief (ADC_INPUTCTRL) ADC AIN6 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_PIN7_Val   0x7u   /**< \brief (ADC_INPUTCTRL) ADC AIN7 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_GND_Val    0x18u   /**< \brief (ADC_INPUTCTRL) Internal ground */
+#define   ADC_INPUTCTRL_MUXNEG_IOGND_Val  0x19u   /**< \brief (ADC_INPUTCTRL) IO ground */
 #define ADC_INPUTCTRL_MUXNEG_PIN0   (ADC_INPUTCTRL_MUXNEG_PIN0_Val << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_MUXNEG_PIN1   (ADC_INPUTCTRL_MUXNEG_PIN1_Val << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_MUXNEG_PIN2   (ADC_INPUTCTRL_MUXNEG_PIN2_Val << ADC_INPUTCTRL_MUXNEG_Pos)
@@ -400,39 +377,23 @@ typedef union {
 #define ADC_INPUTCTRL_MUXNEG_PIN5   (ADC_INPUTCTRL_MUXNEG_PIN5_Val << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_MUXNEG_PIN6   (ADC_INPUTCTRL_MUXNEG_PIN6_Val << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_MUXNEG_PIN7   (ADC_INPUTCTRL_MUXNEG_PIN7_Val << ADC_INPUTCTRL_MUXNEG_Pos)
-#define ADC_INPUTCTRL_MUXNEG_PIN8   (ADC_INPUTCTRL_MUXNEG_PIN8_Val << ADC_INPUTCTRL_MUXNEG_Pos)
-#define ADC_INPUTCTRL_MUXNEG_PIN9   (ADC_INPUTCTRL_MUXNEG_PIN9_Val << ADC_INPUTCTRL_MUXNEG_Pos)
-#define ADC_INPUTCTRL_MUXNEG_PIN10  (ADC_INPUTCTRL_MUXNEG_PIN10_Val << ADC_INPUTCTRL_MUXNEG_Pos)
-#define ADC_INPUTCTRL_MUXNEG_PIN11  (ADC_INPUTCTRL_MUXNEG_PIN11_Val << ADC_INPUTCTRL_MUXNEG_Pos)
-#define ADC_INPUTCTRL_MUXNEG_PIN12  (ADC_INPUTCTRL_MUXNEG_PIN12_Val << ADC_INPUTCTRL_MUXNEG_Pos)
-#define ADC_INPUTCTRL_MUXNEG_PIN13  (ADC_INPUTCTRL_MUXNEG_PIN13_Val << ADC_INPUTCTRL_MUXNEG_Pos)
-#define ADC_INPUTCTRL_MUXNEG_PIN14  (ADC_INPUTCTRL_MUXNEG_PIN14_Val << ADC_INPUTCTRL_MUXNEG_Pos)
-#define ADC_INPUTCTRL_MUXNEG_PIN15  (ADC_INPUTCTRL_MUXNEG_PIN15_Val << ADC_INPUTCTRL_MUXNEG_Pos)
-#define ADC_INPUTCTRL_MUXNEG_PIN16  (ADC_INPUTCTRL_MUXNEG_PIN16_Val << ADC_INPUTCTRL_MUXNEG_Pos)
-#define ADC_INPUTCTRL_MUXNEG_PIN17  (ADC_INPUTCTRL_MUXNEG_PIN17_Val << ADC_INPUTCTRL_MUXNEG_Pos)
-#define ADC_INPUTCTRL_MUXNEG_PIN18  (ADC_INPUTCTRL_MUXNEG_PIN18_Val << ADC_INPUTCTRL_MUXNEG_Pos)
-#define ADC_INPUTCTRL_MUXNEG_PIN19  (ADC_INPUTCTRL_MUXNEG_PIN19_Val << ADC_INPUTCTRL_MUXNEG_Pos)
-#define ADC_INPUTCTRL_MUXNEG_PIN20  (ADC_INPUTCTRL_MUXNEG_PIN20_Val << ADC_INPUTCTRL_MUXNEG_Pos)
-#define ADC_INPUTCTRL_MUXNEG_PIN21  (ADC_INPUTCTRL_MUXNEG_PIN21_Val << ADC_INPUTCTRL_MUXNEG_Pos)
-#define ADC_INPUTCTRL_MUXNEG_PIN22  (ADC_INPUTCTRL_MUXNEG_PIN22_Val << ADC_INPUTCTRL_MUXNEG_Pos)
-#define ADC_INPUTCTRL_MUXNEG_PIN23  (ADC_INPUTCTRL_MUXNEG_PIN23_Val << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_MUXNEG_GND    (ADC_INPUTCTRL_MUXNEG_GND_Val  << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_MUXNEG_IOGND  (ADC_INPUTCTRL_MUXNEG_IOGND_Val << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_INPUTSCAN_Pos 16           /**< \brief (ADC_INPUTCTRL) Number of Input Channels Included in Scan */
 #define ADC_INPUTCTRL_INPUTSCAN_Msk (0xFu << ADC_INPUTCTRL_INPUTSCAN_Pos)
 #define ADC_INPUTCTRL_INPUTSCAN(value) ((ADC_INPUTCTRL_INPUTSCAN_Msk & ((value) << ADC_INPUTCTRL_INPUTSCAN_Pos)))
-#define ADC_INPUTCTRL_INPUTOFFSET_Pos 20           /**< \brief (ADC_INPUTCTRL) Positive Mux Setting Offset */
+#define ADC_INPUTCTRL_INPUTOFFSET_Pos 20           /**< \brief (ADC_INPUTCTRL) Positive MUX Setting Offset */
 #define ADC_INPUTCTRL_INPUTOFFSET_Msk (0xFu << ADC_INPUTCTRL_INPUTOFFSET_Pos)
 #define ADC_INPUTCTRL_INPUTOFFSET(value) ((ADC_INPUTCTRL_INPUTOFFSET_Msk & ((value) << ADC_INPUTCTRL_INPUTOFFSET_Pos)))
-#define ADC_INPUTCTRL_GAIN_Pos      24           /**< \brief (ADC_INPUTCTRL) Gain Value */
+#define ADC_INPUTCTRL_GAIN_Pos      24           /**< \brief (ADC_INPUTCTRL) Gain Factor Selection */
 #define ADC_INPUTCTRL_GAIN_Msk      (0xFu << ADC_INPUTCTRL_GAIN_Pos)
 #define ADC_INPUTCTRL_GAIN(value)   ((ADC_INPUTCTRL_GAIN_Msk & ((value) << ADC_INPUTCTRL_GAIN_Pos)))
-#define   ADC_INPUTCTRL_GAIN_1X_Val       0x0u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_GAIN_2X_Val       0x1u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_GAIN_4X_Val       0x2u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_GAIN_8X_Val       0x3u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_GAIN_16X_Val      0x4u   /**< \brief (ADC_INPUTCTRL)  */
-#define   ADC_INPUTCTRL_GAIN_DIV2_Val     0xFu   /**< \brief (ADC_INPUTCTRL)  */
+#define   ADC_INPUTCTRL_GAIN_1X_Val       0x0u   /**< \brief (ADC_INPUTCTRL) 1x */
+#define   ADC_INPUTCTRL_GAIN_2X_Val       0x1u   /**< \brief (ADC_INPUTCTRL) 2x */
+#define   ADC_INPUTCTRL_GAIN_4X_Val       0x2u   /**< \brief (ADC_INPUTCTRL) 4x */
+#define   ADC_INPUTCTRL_GAIN_8X_Val       0x3u   /**< \brief (ADC_INPUTCTRL) 8x */
+#define   ADC_INPUTCTRL_GAIN_16X_Val      0x4u   /**< \brief (ADC_INPUTCTRL) 16x */
+#define   ADC_INPUTCTRL_GAIN_DIV2_Val     0xFu   /**< \brief (ADC_INPUTCTRL) 1/2x */
 #define ADC_INPUTCTRL_GAIN_1X       (ADC_INPUTCTRL_GAIN_1X_Val     << ADC_INPUTCTRL_GAIN_Pos)
 #define ADC_INPUTCTRL_GAIN_2X       (ADC_INPUTCTRL_GAIN_2X_Val     << ADC_INPUTCTRL_GAIN_Pos)
 #define ADC_INPUTCTRL_GAIN_4X       (ADC_INPUTCTRL_GAIN_4X_Val     << ADC_INPUTCTRL_GAIN_Pos)
@@ -446,7 +407,7 @@ typedef union {
 typedef union {
   struct {
     uint8_t  STARTEI:1;        /*!< bit:      0  Start Conversion Event In          */
-    uint8_t  SYNCEI:1;         /*!< bit:      1  Sync Event In                      */
+    uint8_t  SYNCEI:1;         /*!< bit:      1  Synchronization Event In           */
     uint8_t  :2;               /*!< bit:  2.. 3  Reserved                           */
     uint8_t  RESRDYEO:1;       /*!< bit:      4  Result Ready Event Out             */
     uint8_t  WINMONEO:1;       /*!< bit:      5  Window Monitor Event Out           */
@@ -461,7 +422,7 @@ typedef union {
 
 #define ADC_EVCTRL_STARTEI_Pos      0            /**< \brief (ADC_EVCTRL) Start Conversion Event In */
 #define ADC_EVCTRL_STARTEI          (0x1u << ADC_EVCTRL_STARTEI_Pos)
-#define ADC_EVCTRL_SYNCEI_Pos       1            /**< \brief (ADC_EVCTRL) Sync Event In */
+#define ADC_EVCTRL_SYNCEI_Pos       1            /**< \brief (ADC_EVCTRL) Synchronization Event In */
 #define ADC_EVCTRL_SYNCEI           (0x1u << ADC_EVCTRL_SYNCEI_Pos)
 #define ADC_EVCTRL_RESRDYEO_Pos     4            /**< \brief (ADC_EVCTRL) Result Ready Event Out */
 #define ADC_EVCTRL_RESRDYEO         (0x1u << ADC_EVCTRL_RESRDYEO_Pos)
@@ -473,10 +434,10 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  RESRDY:1;         /*!< bit:      0  Result Ready Interrupt Disable     */
-    uint8_t  OVERRUN:1;        /*!< bit:      1  Overrun Interrupt Disable          */
-    uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor Interrupt Disable   */
-    uint8_t  SYNCRDY:1;        /*!< bit:      3  Synchronisation Ready Interrupt Disable */
+    uint8_t  RESRDY:1;         /*!< bit:      0  Result Ready Interrupt Enable      */
+    uint8_t  OVERRUN:1;        /*!< bit:      1  Overrun Interrupt Enable           */
+    uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor Interrupt Enable    */
+    uint8_t  SYNCRDY:1;        /*!< bit:      3  Synchronization Ready Interrupt Enable */
     uint8_t  :4;               /*!< bit:  4.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -486,13 +447,13 @@ typedef union {
 #define ADC_INTENCLR_OFFSET         0x16         /**< \brief (ADC_INTENCLR offset) Interrupt Enable Clear */
 #define ADC_INTENCLR_RESETVALUE     0x00         /**< \brief (ADC_INTENCLR reset_value) Interrupt Enable Clear */
 
-#define ADC_INTENCLR_RESRDY_Pos     0            /**< \brief (ADC_INTENCLR) Result Ready Interrupt Disable */
+#define ADC_INTENCLR_RESRDY_Pos     0            /**< \brief (ADC_INTENCLR) Result Ready Interrupt Enable */
 #define ADC_INTENCLR_RESRDY         (0x1u << ADC_INTENCLR_RESRDY_Pos)
-#define ADC_INTENCLR_OVERRUN_Pos    1            /**< \brief (ADC_INTENCLR) Overrun Interrupt Disable */
+#define ADC_INTENCLR_OVERRUN_Pos    1            /**< \brief (ADC_INTENCLR) Overrun Interrupt Enable */
 #define ADC_INTENCLR_OVERRUN        (0x1u << ADC_INTENCLR_OVERRUN_Pos)
-#define ADC_INTENCLR_WINMON_Pos     2            /**< \brief (ADC_INTENCLR) Window Monitor Interrupt Disable */
+#define ADC_INTENCLR_WINMON_Pos     2            /**< \brief (ADC_INTENCLR) Window Monitor Interrupt Enable */
 #define ADC_INTENCLR_WINMON         (0x1u << ADC_INTENCLR_WINMON_Pos)
-#define ADC_INTENCLR_SYNCRDY_Pos    3            /**< \brief (ADC_INTENCLR) Synchronisation Ready Interrupt Disable */
+#define ADC_INTENCLR_SYNCRDY_Pos    3            /**< \brief (ADC_INTENCLR) Synchronization Ready Interrupt Enable */
 #define ADC_INTENCLR_SYNCRDY        (0x1u << ADC_INTENCLR_SYNCRDY_Pos)
 #define ADC_INTENCLR_MASK           0x0Fu        /**< \brief (ADC_INTENCLR) MASK Register */
 
@@ -503,7 +464,7 @@ typedef union {
     uint8_t  RESRDY:1;         /*!< bit:      0  Result Ready Interrupt Enable      */
     uint8_t  OVERRUN:1;        /*!< bit:      1  Overrun Interrupt Enable           */
     uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor Interrupt Enable    */
-    uint8_t  SYNCRDY:1;        /*!< bit:      3  Synchronisation Ready Interrupt Enable */
+    uint8_t  SYNCRDY:1;        /*!< bit:      3  Synchronization Ready Interrupt Enable */
     uint8_t  :4;               /*!< bit:  4.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -519,7 +480,7 @@ typedef union {
 #define ADC_INTENSET_OVERRUN        (0x1u << ADC_INTENSET_OVERRUN_Pos)
 #define ADC_INTENSET_WINMON_Pos     2            /**< \brief (ADC_INTENSET) Window Monitor Interrupt Enable */
 #define ADC_INTENSET_WINMON         (0x1u << ADC_INTENSET_WINMON_Pos)
-#define ADC_INTENSET_SYNCRDY_Pos    3            /**< \brief (ADC_INTENSET) Synchronisation Ready Interrupt Enable */
+#define ADC_INTENSET_SYNCRDY_Pos    3            /**< \brief (ADC_INTENSET) Synchronization Ready Interrupt Enable */
 #define ADC_INTENSET_SYNCRDY        (0x1u << ADC_INTENSET_SYNCRDY_Pos)
 #define ADC_INTENSET_MASK           0x0Fu        /**< \brief (ADC_INTENSET) MASK Register */
 
@@ -527,10 +488,10 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint8_t  RESRDY:1;         /*!< bit:      0  Result Ready Interrupt Flag        */
-    uint8_t  OVERRUN:1;        /*!< bit:      1  Overrun Interrupt Flag             */
-    uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor Interrupt Flag      */
-    uint8_t  SYNCRDY:1;        /*!< bit:      3  Synchronisation Ready Interrupt Flag */
+    uint8_t  RESRDY:1;         /*!< bit:      0  Result Ready                       */
+    uint8_t  OVERRUN:1;        /*!< bit:      1  Overrun                            */
+    uint8_t  WINMON:1;         /*!< bit:      2  Window Monitor                     */
+    uint8_t  SYNCRDY:1;        /*!< bit:      3  Synchronization Ready              */
     uint8_t  :4;               /*!< bit:  4.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
@@ -540,13 +501,13 @@ typedef union {
 #define ADC_INTFLAG_OFFSET          0x18         /**< \brief (ADC_INTFLAG offset) Interrupt Flag Status and Clear */
 #define ADC_INTFLAG_RESETVALUE      0x00         /**< \brief (ADC_INTFLAG reset_value) Interrupt Flag Status and Clear */
 
-#define ADC_INTFLAG_RESRDY_Pos      0            /**< \brief (ADC_INTFLAG) Result Ready Interrupt Flag */
+#define ADC_INTFLAG_RESRDY_Pos      0            /**< \brief (ADC_INTFLAG) Result Ready */
 #define ADC_INTFLAG_RESRDY          (0x1u << ADC_INTFLAG_RESRDY_Pos)
-#define ADC_INTFLAG_OVERRUN_Pos     1            /**< \brief (ADC_INTFLAG) Overrun Interrupt Flag */
+#define ADC_INTFLAG_OVERRUN_Pos     1            /**< \brief (ADC_INTFLAG) Overrun */
 #define ADC_INTFLAG_OVERRUN         (0x1u << ADC_INTFLAG_OVERRUN_Pos)
-#define ADC_INTFLAG_WINMON_Pos      2            /**< \brief (ADC_INTFLAG) Window Monitor Interrupt Flag */
+#define ADC_INTFLAG_WINMON_Pos      2            /**< \brief (ADC_INTFLAG) Window Monitor */
 #define ADC_INTFLAG_WINMON          (0x1u << ADC_INTFLAG_WINMON_Pos)
-#define ADC_INTFLAG_SYNCRDY_Pos     3            /**< \brief (ADC_INTFLAG) Synchronisation Ready Interrupt Flag */
+#define ADC_INTFLAG_SYNCRDY_Pos     3            /**< \brief (ADC_INTFLAG) Synchronization Ready */
 #define ADC_INTFLAG_SYNCRDY         (0x1u << ADC_INTFLAG_SYNCRDY_Pos)
 #define ADC_INTFLAG_MASK            0x0Fu        /**< \brief (ADC_INTFLAG) MASK Register */
 
@@ -555,7 +516,7 @@ typedef union {
 typedef union {
   struct {
     uint8_t  :7;               /*!< bit:  0.. 6  Reserved                           */
-    uint8_t  SYNCBUSY:1;       /*!< bit:      7  Synchronisation Busy Status        */
+    uint8_t  SYNCBUSY:1;       /*!< bit:      7  Synchronization Busy               */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } ADC_STATUS_Type;
@@ -564,7 +525,7 @@ typedef union {
 #define ADC_STATUS_OFFSET           0x19         /**< \brief (ADC_STATUS offset) Status */
 #define ADC_STATUS_RESETVALUE       0x00         /**< \brief (ADC_STATUS reset_value) Status */
 
-#define ADC_STATUS_SYNCBUSY_Pos     7            /**< \brief (ADC_STATUS) Synchronisation Busy Status */
+#define ADC_STATUS_SYNCBUSY_Pos     7            /**< \brief (ADC_STATUS) Synchronization Busy */
 #define ADC_STATUS_SYNCBUSY         (0x1u << ADC_STATUS_SYNCBUSY_Pos)
 #define ADC_STATUS_MASK             0x80u        /**< \brief (ADC_STATUS) MASK Register */
 
@@ -572,7 +533,7 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint16_t RESULT:16;        /*!< bit:  0..15  Result Value                       */
+    uint16_t RESULT:16;        /*!< bit:  0..15  Result Conversion Value            */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } ADC_RESULT_Type;
@@ -581,7 +542,7 @@ typedef union {
 #define ADC_RESULT_OFFSET           0x1A         /**< \brief (ADC_RESULT offset) Result */
 #define ADC_RESULT_RESETVALUE       0x0000       /**< \brief (ADC_RESULT reset_value) Result */
 
-#define ADC_RESULT_RESULT_Pos       0            /**< \brief (ADC_RESULT) Result Value */
+#define ADC_RESULT_RESULT_Pos       0            /**< \brief (ADC_RESULT) Result Conversion Value */
 #define ADC_RESULT_RESULT_Msk       (0xFFFFu << ADC_RESULT_RESULT_Pos)
 #define ADC_RESULT_RESULT(value)    ((ADC_RESULT_RESULT_Msk & ((value) << ADC_RESULT_RESULT_Pos)))
 #define ADC_RESULT_MASK             0xFFFFu      /**< \brief (ADC_RESULT) MASK Register */
@@ -664,8 +625,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint16_t LINEARITY_CAL:8;  /*!< bit:  0.. 7  Linearity Calibration              */
-    uint16_t BIAS_CAL:3;       /*!< bit:  8..10  Bias Configuration                 */
+    uint16_t LINEARITY_CAL:8;  /*!< bit:  0.. 7  Linearity Calibration Value        */
+    uint16_t BIAS_CAL:3;       /*!< bit:  8..10  Bias Calibration Value             */
     uint16_t :5;               /*!< bit: 11..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
@@ -675,10 +636,10 @@ typedef union {
 #define ADC_CALIB_OFFSET            0x28         /**< \brief (ADC_CALIB offset) Calibration */
 #define ADC_CALIB_RESETVALUE        0x0000       /**< \brief (ADC_CALIB reset_value) Calibration */
 
-#define ADC_CALIB_LINEARITY_CAL_Pos 0            /**< \brief (ADC_CALIB) Linearity Calibration */
+#define ADC_CALIB_LINEARITY_CAL_Pos 0            /**< \brief (ADC_CALIB) Linearity Calibration Value */
 #define ADC_CALIB_LINEARITY_CAL_Msk (0xFFu << ADC_CALIB_LINEARITY_CAL_Pos)
 #define ADC_CALIB_LINEARITY_CAL(value) ((ADC_CALIB_LINEARITY_CAL_Msk & ((value) << ADC_CALIB_LINEARITY_CAL_Pos)))
-#define ADC_CALIB_BIAS_CAL_Pos      8            /**< \brief (ADC_CALIB) Bias Configuration */
+#define ADC_CALIB_BIAS_CAL_Pos      8            /**< \brief (ADC_CALIB) Bias Calibration Value */
 #define ADC_CALIB_BIAS_CAL_Msk      (0x7u << ADC_CALIB_BIAS_CAL_Pos)
 #define ADC_CALIB_BIAS_CAL(value)   ((ADC_CALIB_BIAS_CAL_Msk & ((value) << ADC_CALIB_BIAS_CAL_Pos)))
 #define ADC_CALIB_MASK              0x07FFu      /**< \brief (ADC_CALIB) MASK Register */
@@ -707,14 +668,14 @@ typedef struct {
   __IO ADC_CTRLA_Type            CTRLA;       /**< \brief Offset: 0x00 (R/W  8) Control A */
   __IO ADC_REFCTRL_Type          REFCTRL;     /**< \brief Offset: 0x01 (R/W  8) Reference Control */
   __IO ADC_AVGCTRL_Type          AVGCTRL;     /**< \brief Offset: 0x02 (R/W  8) Average Control */
-  __IO ADC_SAMPCTRL_Type         SAMPCTRL;    /**< \brief Offset: 0x03 (R/W  8) Sample Time Control */
+  __IO ADC_SAMPCTRL_Type         SAMPCTRL;    /**< \brief Offset: 0x03 (R/W  8) Sampling Time Control */
   __IO ADC_CTRLB_Type            CTRLB;       /**< \brief Offset: 0x04 (R/W 16) Control B */
        RoReg8                    Reserved1[0x2];
   __IO ADC_WINCTRL_Type          WINCTRL;     /**< \brief Offset: 0x08 (R/W  8) Window Monitor Control */
        RoReg8                    Reserved2[0x3];
-  __IO ADC_SWTRIG_Type           SWTRIG;      /**< \brief Offset: 0x0C (R/W  8) Control B */
+  __IO ADC_SWTRIG_Type           SWTRIG;      /**< \brief Offset: 0x0C (R/W  8) Software Trigger */
        RoReg8                    Reserved3[0x3];
-  __IO ADC_INPUTCTRL_Type        INPUTCTRL;   /**< \brief Offset: 0x10 (R/W 32) Input Control */
+  __IO ADC_INPUTCTRL_Type        INPUTCTRL;   /**< \brief Offset: 0x10 (R/W 32) Inputs Control */
   __IO ADC_EVCTRL_Type           EVCTRL;      /**< \brief Offset: 0x14 (R/W  8) Event Control */
        RoReg8                    Reserved4[0x1];
   __IO ADC_INTENCLR_Type         INTENCLR;    /**< \brief Offset: 0x16 (R/W  8) Interrupt Enable Clear */

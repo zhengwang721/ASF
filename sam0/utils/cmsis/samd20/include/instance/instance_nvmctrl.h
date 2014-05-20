@@ -3,7 +3,7 @@
  *
  * \brief Instance description for NVMCTRL
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,25 +46,25 @@
 
 /* ========== Register definition for NVMCTRL peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_NVMCTRL_CTRLA          (0x41004000U) /**< \brief (NVMCTRL) NVM Control A */
-#define REG_NVMCTRL_CTRLB          (0x41004004U) /**< \brief (NVMCTRL) NVM Control B */
-#define REG_NVMCTRL_PARAM          (0x41004008U) /**< \brief (NVMCTRL) Parameter */
+#define REG_NVMCTRL_CTRLA          (0x41004000U) /**< \brief (NVMCTRL) Control A */
+#define REG_NVMCTRL_CTRLB          (0x41004004U) /**< \brief (NVMCTRL) Control B */
+#define REG_NVMCTRL_PARAM          (0x41004008U) /**< \brief (NVMCTRL) NVM Parameter */
 #define REG_NVMCTRL_INTENCLR       (0x4100400CU) /**< \brief (NVMCTRL) Interrupt Enable Clear */
 #define REG_NVMCTRL_INTENSET       (0x41004010U) /**< \brief (NVMCTRL) Interrupt Enable Set */
 #define REG_NVMCTRL_INTFLAG        (0x41004014U) /**< \brief (NVMCTRL) Interrupt Flag Status and Clear */
 #define REG_NVMCTRL_STATUS         (0x41004018U) /**< \brief (NVMCTRL) Status */
 #define REG_NVMCTRL_ADDR           (0x4100401CU) /**< \brief (NVMCTRL) Address */
-#define REG_NVMCTRL_LOCK           (0x41004020U) /**< \brief (NVMCTRL) Lock */
+#define REG_NVMCTRL_LOCK           (0x41004020U) /**< \brief (NVMCTRL) Lock Section */
 #else
-#define REG_NVMCTRL_CTRLA          (*(RwReg16*)0x41004000U) /**< \brief (NVMCTRL) NVM Control A */
-#define REG_NVMCTRL_CTRLB          (*(RwReg  *)0x41004004U) /**< \brief (NVMCTRL) NVM Control B */
-#define REG_NVMCTRL_PARAM          (*(RwReg  *)0x41004008U) /**< \brief (NVMCTRL) Parameter */
+#define REG_NVMCTRL_CTRLA          (*(RwReg16*)0x41004000U) /**< \brief (NVMCTRL) Control A */
+#define REG_NVMCTRL_CTRLB          (*(RwReg  *)0x41004004U) /**< \brief (NVMCTRL) Control B */
+#define REG_NVMCTRL_PARAM          (*(RwReg  *)0x41004008U) /**< \brief (NVMCTRL) NVM Parameter */
 #define REG_NVMCTRL_INTENCLR       (*(RwReg8 *)0x4100400CU) /**< \brief (NVMCTRL) Interrupt Enable Clear */
 #define REG_NVMCTRL_INTENSET       (*(RwReg8 *)0x41004010U) /**< \brief (NVMCTRL) Interrupt Enable Set */
 #define REG_NVMCTRL_INTFLAG        (*(RwReg8 *)0x41004014U) /**< \brief (NVMCTRL) Interrupt Flag Status and Clear */
 #define REG_NVMCTRL_STATUS         (*(RwReg16*)0x41004018U) /**< \brief (NVMCTRL) Status */
 #define REG_NVMCTRL_ADDR           (*(RwReg  *)0x4100401CU) /**< \brief (NVMCTRL) Address */
-#define REG_NVMCTRL_LOCK           (*(RwReg16*)0x41004020U) /**< \brief (NVMCTRL) Lock */
+#define REG_NVMCTRL_LOCK           (*(RwReg16*)0x41004020U) /**< \brief (NVMCTRL) Lock Section */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for NVMCTRL peripheral ========== */
@@ -73,11 +73,8 @@
 #define NVMCTRL_AUX2_ADDRESS        (NVMCTRL_USER_PAGE_ADDRESS + 0x00008000)
 #define NVMCTRL_AUX3_ADDRESS        (NVMCTRL_USER_PAGE_ADDRESS + 0x0000A000)
 #define NVMCTRL_CLK_AHB_ID          4
-#define NVMCTRL_FACTORY_WORD_IMPLEMENTED_MASK 0XC0000007FFFFFFFF
+#define NVMCTRL_FACTORY_WORD_IMPLEMENTED_MASK 0xC0000007FFFFFFFF
 #define NVMCTRL_FLASH_SIZE          (NVMCTRL_PAGES*NVMCTRL_PAGE_SIZE)
-#define NVMCTRL_FUSES_SECURE_NVM    
-#define NVMCTRL_FUSES_SECURE_RAM    
-#define NVMCTRL_FUSES_SECURE_STATE  
 #define NVMCTRL_LOCKBIT_ADDRESS     (NVMCTRL_USER_PAGE_ADDRESS + 0x00002000)
 #define NVMCTRL_PAGES               4096
 #define NVMCTRL_PAGE_HW             (NVMCTRL_PAGE_SIZE/2)
@@ -85,10 +82,11 @@
 #define NVMCTRL_PAGE_W              (NVMCTRL_PAGE_SIZE/4)
 #define NVMCTRL_PMSB                3
 #define NVMCTRL_PSZ_BITS            6
-#define NVMCTRL_ROW_PAGES           (NVMCTRL_ROW_SIZE/NVMCTRL_PAGE_SIZE)
-#define NVMCTRL_ROW_SIZE            (NVMCTRL_PAGE_SIZE*4)
+#define NVMCTRL_ROW_PAGES           4
+#define NVMCTRL_ROW_SIZE            (NVMCTRL_PAGE_SIZE*NVMCTRL_ROW_PAGES)
+#define NVMCTRL_TEMP_LOG_ADDRESS    (NVMCTRL_USER_PAGE_ADDRESS + 0x00006030)
 #define NVMCTRL_USER_PAGE_ADDRESS   (FLASH_ADDR + NVMCTRL_USER_PAGE_OFFSET)
 #define NVMCTRL_USER_PAGE_OFFSET    0x00800000
-#define NVMCTRL_USER_WORD_IMPLEMENTED_MASK 0XC01FFFFFFFFFFFFF
+#define NVMCTRL_USER_WORD_IMPLEMENTED_MASK 0xC01FFFFFFFFFFFFF
 
 #endif /* _SAMD20_NVMCTRL_INSTANCE_ */

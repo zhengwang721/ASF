@@ -3,7 +3,7 @@
  *
  * \brief Instance description for GCLK
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -60,13 +60,16 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for GCLK peripheral ========== */
+#define GCLK_GENDIV_BITS            16
+#define GCLK_GEN_NUM                8
 #define GCLK_GEN_NUM_MSB            7
 #define GCLK_GEN_SOURCE_NUM_MSB     7
-#define GCLK_MAX_DIV_BITS           16
 #define GCLK_NUM                    28
 #define GCLK_SOURCE_DFLL48M         7
+#define GCLK_SOURCE_FDPLL           
 #define GCLK_SOURCE_GCLKGEN1        2
 #define GCLK_SOURCE_GCLKIN          1
+#define GCLK_SOURCE_NUM             8
 #define GCLK_SOURCE_OSCULP32K       3
 #define GCLK_SOURCE_OSC8M           6
 #define GCLK_SOURCE_OSC32K          4

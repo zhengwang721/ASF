@@ -3,7 +3,7 @@
  *
  * \brief Instance description for TC7
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -57,17 +57,16 @@
 #define REG_TC7_INTENSET           (0x42003C0DU) /**< \brief (TC7) Interrupt Enable Set */
 #define REG_TC7_INTFLAG            (0x42003C0EU) /**< \brief (TC7) Interrupt Flag Status and Clear */
 #define REG_TC7_STATUS             (0x42003C0FU) /**< \brief (TC7) Status */
-#define REG_TC7_COUNT16_COUNT      (0x42003C10U) /**< \brief (TC7) COUNT16 Count */
-#define REG_TC7_COUNT32_COUNT      (0x42003C10U) /**< \brief (TC7) COUNT32 Count */
-#define REG_TC7_COUNT8_COUNT       (0x42003C10U) /**< \brief (TC7) COUNT8 Count */
-#define REG_TC7_COUNT32_PER        (0x42003C14U) /**< \brief (TC7) COUNT32 Period */
-#define REG_TC7_COUNT8_PER         (0x42003C14U) /**< \brief (TC7) COUNT8 Period */
-#define REG_TC7_COUNT16_CC0        (0x42003C18U) /**< \brief (TC7) COUNT16 Compare and Capture 0 */
-#define REG_TC7_COUNT16_CC1        (0x42003C1AU) /**< \brief (TC7) COUNT16 Compare and Capture 1 */
-#define REG_TC7_COUNT32_CC0        (0x42003C18U) /**< \brief (TC7) COUNT32 Compare and Capture 0 */
-#define REG_TC7_COUNT32_CC1        (0x42003C1CU) /**< \brief (TC7) COUNT32 Compare and Capture 1 */
-#define REG_TC7_COUNT8_CC0         (0x42003C18U) /**< \brief (TC7) COUNT8 Compare and Capture 0 */
-#define REG_TC7_COUNT8_CC1         (0x42003C19U) /**< \brief (TC7) COUNT8 Compare and Capture 1 */
+#define REG_TC7_COUNT16_COUNT      (0x42003C10U) /**< \brief (TC7) COUNT16 Counter Value */
+#define REG_TC7_COUNT16_CC0        (0x42003C18U) /**< \brief (TC7) COUNT16 Compare/Capture 0 */
+#define REG_TC7_COUNT16_CC1        (0x42003C1AU) /**< \brief (TC7) COUNT16 Compare/Capture 1 */
+#define REG_TC7_COUNT32_COUNT      (0x42003C10U) /**< \brief (TC7) COUNT32 Counter Value */
+#define REG_TC7_COUNT32_CC0        (0x42003C18U) /**< \brief (TC7) COUNT32 Compare/Capture 0 */
+#define REG_TC7_COUNT32_CC1        (0x42003C1CU) /**< \brief (TC7) COUNT32 Compare/Capture 1 */
+#define REG_TC7_COUNT8_COUNT       (0x42003C10U) /**< \brief (TC7) COUNT8 Counter Value */
+#define REG_TC7_COUNT8_PER         (0x42003C14U) /**< \brief (TC7) COUNT8 Period Value */
+#define REG_TC7_COUNT8_CC0         (0x42003C18U) /**< \brief (TC7) COUNT8 Compare/Capture 0 */
+#define REG_TC7_COUNT8_CC1         (0x42003C19U) /**< \brief (TC7) COUNT8 Compare/Capture 1 */
 #else
 #define REG_TC7_CTRLA              (*(RwReg16*)0x42003C00U) /**< \brief (TC7) Control A */
 #define REG_TC7_READREQ            (*(RwReg16*)0x42003C02U) /**< \brief (TC7) Read Request */
@@ -80,17 +79,16 @@
 #define REG_TC7_INTENSET           (*(RwReg8 *)0x42003C0DU) /**< \brief (TC7) Interrupt Enable Set */
 #define REG_TC7_INTFLAG            (*(RwReg8 *)0x42003C0EU) /**< \brief (TC7) Interrupt Flag Status and Clear */
 #define REG_TC7_STATUS             (*(RoReg8 *)0x42003C0FU) /**< \brief (TC7) Status */
-#define REG_TC7_COUNT16_COUNT      (*(RwReg16*)0x42003C10U) /**< \brief (TC7) COUNT16 Count */
-#define REG_TC7_COUNT32_COUNT      (*(RwReg  *)0x42003C10U) /**< \brief (TC7) COUNT32 Count */
-#define REG_TC7_COUNT8_COUNT       (*(RwReg8 *)0x42003C10U) /**< \brief (TC7) COUNT8 Count */
-#define REG_TC7_COUNT32_PER        (*(RwReg  *)0x42003C14U) /**< \brief (TC7) COUNT32 Period */
-#define REG_TC7_COUNT8_PER         (*(RwReg8 *)0x42003C14U) /**< \brief (TC7) COUNT8 Period */
-#define REG_TC7_COUNT16_CC0        (*(RwReg16*)0x42003C18U) /**< \brief (TC7) COUNT16 Compare and Capture 0 */
-#define REG_TC7_COUNT16_CC1        (*(RwReg16*)0x42003C1AU) /**< \brief (TC7) COUNT16 Compare and Capture 1 */
-#define REG_TC7_COUNT32_CC0        (*(RwReg  *)0x42003C18U) /**< \brief (TC7) COUNT32 Compare and Capture 0 */
-#define REG_TC7_COUNT32_CC1        (*(RwReg  *)0x42003C1CU) /**< \brief (TC7) COUNT32 Compare and Capture 1 */
-#define REG_TC7_COUNT8_CC0         (*(RwReg8 *)0x42003C18U) /**< \brief (TC7) COUNT8 Compare and Capture 0 */
-#define REG_TC7_COUNT8_CC1         (*(RwReg8 *)0x42003C19U) /**< \brief (TC7) COUNT8 Compare and Capture 1 */
+#define REG_TC7_COUNT16_COUNT      (*(RwReg16*)0x42003C10U) /**< \brief (TC7) COUNT16 Counter Value */
+#define REG_TC7_COUNT16_CC0        (*(RwReg16*)0x42003C18U) /**< \brief (TC7) COUNT16 Compare/Capture 0 */
+#define REG_TC7_COUNT16_CC1        (*(RwReg16*)0x42003C1AU) /**< \brief (TC7) COUNT16 Compare/Capture 1 */
+#define REG_TC7_COUNT32_COUNT      (*(RwReg  *)0x42003C10U) /**< \brief (TC7) COUNT32 Counter Value */
+#define REG_TC7_COUNT32_CC0        (*(RwReg  *)0x42003C18U) /**< \brief (TC7) COUNT32 Compare/Capture 0 */
+#define REG_TC7_COUNT32_CC1        (*(RwReg  *)0x42003C1CU) /**< \brief (TC7) COUNT32 Compare/Capture 1 */
+#define REG_TC7_COUNT8_COUNT       (*(RwReg8 *)0x42003C10U) /**< \brief (TC7) COUNT8 Counter Value */
+#define REG_TC7_COUNT8_PER         (*(RwReg8 *)0x42003C14U) /**< \brief (TC7) COUNT8 Period Value */
+#define REG_TC7_COUNT8_CC0         (*(RwReg8 *)0x42003C18U) /**< \brief (TC7) COUNT8 Compare/Capture 0 */
+#define REG_TC7_COUNT8_CC1         (*(RwReg8 *)0x42003C19U) /**< \brief (TC7) COUNT8 Compare/Capture 1 */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for TC7 peripheral ========== */
@@ -99,6 +97,7 @@
 #define TC7_CC32_NUM                2
 #define TC7_DITHERING_EXT           0
 #define TC7_GCLK_ID                 22
+#define TC7_MASTER                  0
 #define TC7_OW_NUM                  2
 #define TC7_PERIOD_EXT              0
 #define TC7_SHADOW_EXT              0

@@ -3,7 +3,7 @@
  *
  * \brief Instance description for PORT
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -105,11 +105,13 @@
 #define PORT_BITS                   64
 #define PORT_DIR_DEFAULT_VAL        { 0x00000000, 0x00000000 }
 #define PORT_DIR_IMPLEMENTED        { 0xDBFFFFFF, 0xC0C3FFFF }
-#define PORT_DRVSTR_DEFAULT_VAL     { 0x00000000, 0x00000000 }
-#define PORT_DRVSTR_IMPLEMENTED     { 0x00000000, 0x00000000 }
-#define PORT_GROUPS                 2
+#define PORT_DRVSTR                 1
+#define PORT_DRVSTR_DEFAULT_VAL     { 0xDBFFFFFF, 0xC0C3FFFF }
+#define PORT_DRVSTR_IMPLEMENTED     { 0xDBFFFFFF, 0xC0C3FFFF }
+#define PORT_EVENT_IMPLEMENTED      { 0x00000000, 0x00000000 }
 #define PORT_INEN_DEFAULT_VAL       { 0x00000000, 0x00000000 }
 #define PORT_INEN_IMPLEMENTED       { 0xDBFFFFFF, 0xC0C3FFFF }
+#define PORT_ODRAIN                 0
 #define PORT_ODRAIN_DEFAULT_VAL     { 0x00000000, 0x00000000 }
 #define PORT_ODRAIN_IMPLEMENTED     { 0x00000000, 0x00000000 }
 #define PORT_OUT_DEFAULT_VAL        { 0x00000000, 0x00000000 }
@@ -127,6 +129,7 @@
 #define PORT_PMUXEN_IMPLEMENTED     { 0xDBFFFFFF, 0xC0C3FFFF }
 #define PORT_PULLEN_DEFAULT_VAL     { 0x00000000, 0x00000000 }
 #define PORT_PULLEN_IMPLEMENTED     { 0xDBFFFFFF, 0xC0C3FFFF }
+#define PORT_SLEWLIM                0
 #define PORT_SLEWLIM_DEFAULT_VAL    { 0x00000000, 0x00000000 }
 #define PORT_SLEWLIM_IMPLEMENTED    { 0x00000000, 0x00000000 }
 

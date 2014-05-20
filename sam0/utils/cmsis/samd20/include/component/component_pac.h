@@ -3,7 +3,7 @@
  *
  * \brief Component description for PAC
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -50,6 +50,7 @@
 /** \addtogroup SAMD20_PAC Peripheral Access Controller */
 /*@{*/
 
+#define PAC_U2211
 #define REV_PAC                     0x101
 
 /* -------- PAC_WPCLR : (PAC Offset: 0x0) (R/W 32) Write Protection Clear -------- */

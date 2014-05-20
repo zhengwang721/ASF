@@ -3,7 +3,7 @@
  *
  * \brief Instance description for EVSYS
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,7 +48,7 @@
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 #define REG_EVSYS_CTRL             (0x42000400U) /**< \brief (EVSYS) Control */
 #define REG_EVSYS_CHANNEL          (0x42000404U) /**< \brief (EVSYS) Channel */
-#define REG_EVSYS_USER             (0x42000408U) /**< \brief (EVSYS) User Mux */
+#define REG_EVSYS_USER             (0x42000408U) /**< \brief (EVSYS) User Multiplexer */
 #define REG_EVSYS_CHSTATUS         (0x4200040CU) /**< \brief (EVSYS) Channel Status */
 #define REG_EVSYS_INTENCLR         (0x42000410U) /**< \brief (EVSYS) Interrupt Enable Clear */
 #define REG_EVSYS_INTENSET         (0x42000414U) /**< \brief (EVSYS) Interrupt Enable Set */
@@ -56,7 +56,7 @@
 #else
 #define REG_EVSYS_CTRL             (*(WoReg8 *)0x42000400U) /**< \brief (EVSYS) Control */
 #define REG_EVSYS_CHANNEL          (*(RwReg  *)0x42000404U) /**< \brief (EVSYS) Channel */
-#define REG_EVSYS_USER             (*(RwReg16*)0x42000408U) /**< \brief (EVSYS) User Mux */
+#define REG_EVSYS_USER             (*(RwReg16*)0x42000408U) /**< \brief (EVSYS) User Multiplexer */
 #define REG_EVSYS_CHSTATUS         (*(RoReg  *)0x4200040CU) /**< \brief (EVSYS) Channel Status */
 #define REG_EVSYS_INTENCLR         (*(RwReg  *)0x42000410U) /**< \brief (EVSYS) Interrupt Enable Clear */
 #define REG_EVSYS_INTENSET         (*(RwReg  *)0x42000414U) /**< \brief (EVSYS) Interrupt Enable Set */
@@ -65,7 +65,9 @@
 
 /* ========== Instance parameters for EVSYS peripheral ========== */
 #define EVSYS_CHANNELS              8
+#define EVSYS_CHANNELS_BITS         (len(bin(EVSYS_CHANNELS-1))-2)
 #define EVSYS_CHANNELS_MSB          7
+#define EVSYS_EXTEVT_NUM            
 #define EVSYS_EXT_EVT_MSB           0
 #define EVSYS_GCLK_ID_0             4
 #define EVSYS_GCLK_ID_1             5
@@ -79,7 +81,9 @@
 #define EVSYS_GCLK_ID_MSB           11
 #define EVSYS_GCLK_ID_SIZE          8
 #define EVSYS_GENERATORS            59
+#define EVSYS_GENERATORS_BITS       (len(bin(EVSYS_GENERATORS-1))-2)
 #define EVSYS_USERS                 14
+#define EVSYS_USERS_BITS            (len(bin(EVSYS_USERS-1))-2)
 
 // GENERATORS
 #define EVSYS_ID_GEN_RTC_CMP_0      1
@@ -137,7 +141,7 @@
 #define EVSYS_ID_GEN_ADC_WINMON     53
 #define EVSYS_ID_GEN_AC_COMP_0      54
 #define EVSYS_ID_GEN_AC_COMP_1      55
-#define EVSYS_ID_GEN_AC_WIN         56
+#define EVSYS_ID_GEN_AC_WIN_0       56
 #define EVSYS_ID_GEN_DAC_EMPTY      57
 #define EVSYS_ID_GEN_PTC_EOC        58
 #define EVSYS_ID_GEN_PTC_WCOMP      59

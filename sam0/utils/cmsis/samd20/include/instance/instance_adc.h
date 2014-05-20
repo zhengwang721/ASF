@@ -3,7 +3,7 @@
  *
  * \brief Instance description for ADC
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,11 +49,11 @@
 #define REG_ADC_CTRLA              (0x42004000U) /**< \brief (ADC) Control A */
 #define REG_ADC_REFCTRL            (0x42004001U) /**< \brief (ADC) Reference Control */
 #define REG_ADC_AVGCTRL            (0x42004002U) /**< \brief (ADC) Average Control */
-#define REG_ADC_SAMPCTRL           (0x42004003U) /**< \brief (ADC) Sample Time Control */
+#define REG_ADC_SAMPCTRL           (0x42004003U) /**< \brief (ADC) Sampling Time Control */
 #define REG_ADC_CTRLB              (0x42004004U) /**< \brief (ADC) Control B */
 #define REG_ADC_WINCTRL            (0x42004008U) /**< \brief (ADC) Window Monitor Control */
-#define REG_ADC_SWTRIG             (0x4200400CU) /**< \brief (ADC) Control B */
-#define REG_ADC_INPUTCTRL          (0x42004010U) /**< \brief (ADC) Input Control */
+#define REG_ADC_SWTRIG             (0x4200400CU) /**< \brief (ADC) Software Trigger */
+#define REG_ADC_INPUTCTRL          (0x42004010U) /**< \brief (ADC) Inputs Control */
 #define REG_ADC_EVCTRL             (0x42004014U) /**< \brief (ADC) Event Control */
 #define REG_ADC_INTENCLR           (0x42004016U) /**< \brief (ADC) Interrupt Enable Clear */
 #define REG_ADC_INTENSET           (0x42004017U) /**< \brief (ADC) Interrupt Enable Set */
@@ -70,11 +70,11 @@
 #define REG_ADC_CTRLA              (*(RwReg8 *)0x42004000U) /**< \brief (ADC) Control A */
 #define REG_ADC_REFCTRL            (*(RwReg8 *)0x42004001U) /**< \brief (ADC) Reference Control */
 #define REG_ADC_AVGCTRL            (*(RwReg8 *)0x42004002U) /**< \brief (ADC) Average Control */
-#define REG_ADC_SAMPCTRL           (*(RwReg8 *)0x42004003U) /**< \brief (ADC) Sample Time Control */
+#define REG_ADC_SAMPCTRL           (*(RwReg8 *)0x42004003U) /**< \brief (ADC) Sampling Time Control */
 #define REG_ADC_CTRLB              (*(RwReg16*)0x42004004U) /**< \brief (ADC) Control B */
 #define REG_ADC_WINCTRL            (*(RwReg8 *)0x42004008U) /**< \brief (ADC) Window Monitor Control */
-#define REG_ADC_SWTRIG             (*(RwReg8 *)0x4200400CU) /**< \brief (ADC) Control B */
-#define REG_ADC_INPUTCTRL          (*(RwReg  *)0x42004010U) /**< \brief (ADC) Input Control */
+#define REG_ADC_SWTRIG             (*(RwReg8 *)0x4200400CU) /**< \brief (ADC) Software Trigger */
+#define REG_ADC_INPUTCTRL          (*(RwReg  *)0x42004010U) /**< \brief (ADC) Inputs Control */
 #define REG_ADC_EVCTRL             (*(RwReg8 *)0x42004014U) /**< \brief (ADC) Event Control */
 #define REG_ADC_INTENCLR           (*(RwReg8 *)0x42004016U) /**< \brief (ADC) Interrupt Enable Clear */
 #define REG_ADC_INTENSET           (*(RwReg8 *)0x42004017U) /**< \brief (ADC) Interrupt Enable Set */
@@ -92,6 +92,7 @@
 /* ========== Instance parameters for ADC peripheral ========== */
 #define ADC_EXTCHANNEL_MSB          19
 #define ADC_GCLK_ID                 23
-#define ADC_RESULT_MSB              15
+#define ADC_RESULT_BITS             16
+#define ADC_RESULT_MSB              (ADC_RESULT_BITS-1)
 
 #endif /* _SAMD20_ADC_INSTANCE_ */

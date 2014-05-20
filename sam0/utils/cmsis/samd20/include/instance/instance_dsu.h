@@ -3,7 +3,7 @@
  *
  * \brief Instance description for DSU
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,7 +49,6 @@
 #define REG_DSU_CTRL               (0x41002000U) /**< \brief (DSU) Control */
 #define REG_DSU_STATUSA            (0x41002001U) /**< \brief (DSU) Status A */
 #define REG_DSU_STATUSB            (0x41002002U) /**< \brief (DSU) Status B */
-#define REG_DSU_STATUSC            (0x41002003U) /**< \brief (DSU) Status C */
 #define REG_DSU_ADDR               (0x41002004U) /**< \brief (DSU) Address */
 #define REG_DSU_LENGTH             (0x41002008U) /**< \brief (DSU) Length */
 #define REG_DSU_DATA               (0x4100200CU) /**< \brief (DSU) Data */
@@ -58,10 +57,10 @@
 #define REG_DSU_DID                (0x41002018U) /**< \brief (DSU) Device Identification */
 #define REG_DSU_DCFG0              (0x410020F0U) /**< \brief (DSU) Device Configuration 0 */
 #define REG_DSU_DCFG1              (0x410020F4U) /**< \brief (DSU) Device Configuration 1 */
-#define REG_DSU_ENTRY0             (0x41003000U) /**< \brief (DSU) CoreSight ROM Table Entry 0 */
-#define REG_DSU_ENTRY1             (0x41003004U) /**< \brief (DSU) CoreSight ROM Table Entry 1 */
-#define REG_DSU_END                (0x41003008U) /**< \brief (DSU) CoreSight ROM Table End */
-#define REG_DSU_MEMTYPE            (0x41003FCCU) /**< \brief (DSU) CoreSight ROM Table Memory Type */
+#define REG_DSU_ENTRY0             (0x41003000U) /**< \brief (DSU) Coresight ROM Table Entry 0 */
+#define REG_DSU_ENTRY1             (0x41003004U) /**< \brief (DSU) Coresight ROM Table Entry 1 */
+#define REG_DSU_END                (0x41003008U) /**< \brief (DSU) Coresight ROM Table End */
+#define REG_DSU_MEMTYPE            (0x41003FCCU) /**< \brief (DSU) Coresight ROM Table Memory Type */
 #define REG_DSU_PID4               (0x41003FD0U) /**< \brief (DSU) Peripheral Identification 4 */
 #define REG_DSU_PID5               (0x41003FD4U) /**< \brief (DSU) Peripheral Identification 5 */
 #define REG_DSU_PID6               (0x41003FD8U) /**< \brief (DSU) Peripheral Identification 6 */
@@ -78,7 +77,6 @@
 #define REG_DSU_CTRL               (*(WoReg8 *)0x41002000U) /**< \brief (DSU) Control */
 #define REG_DSU_STATUSA            (*(RwReg8 *)0x41002001U) /**< \brief (DSU) Status A */
 #define REG_DSU_STATUSB            (*(RoReg8 *)0x41002002U) /**< \brief (DSU) Status B */
-#define REG_DSU_STATUSC            (*(RoReg8 *)0x41002003U) /**< \brief (DSU) Status C */
 #define REG_DSU_ADDR               (*(RwReg  *)0x41002004U) /**< \brief (DSU) Address */
 #define REG_DSU_LENGTH             (*(RwReg  *)0x41002008U) /**< \brief (DSU) Length */
 #define REG_DSU_DATA               (*(RwReg  *)0x4100200CU) /**< \brief (DSU) Data */
@@ -87,10 +85,10 @@
 #define REG_DSU_DID                (*(RoReg  *)0x41002018U) /**< \brief (DSU) Device Identification */
 #define REG_DSU_DCFG0              (*(RwReg  *)0x410020F0U) /**< \brief (DSU) Device Configuration 0 */
 #define REG_DSU_DCFG1              (*(RwReg  *)0x410020F4U) /**< \brief (DSU) Device Configuration 1 */
-#define REG_DSU_ENTRY0             (*(RoReg  *)0x41003000U) /**< \brief (DSU) CoreSight ROM Table Entry 0 */
-#define REG_DSU_ENTRY1             (*(RoReg  *)0x41003004U) /**< \brief (DSU) CoreSight ROM Table Entry 1 */
-#define REG_DSU_END                (*(RoReg  *)0x41003008U) /**< \brief (DSU) CoreSight ROM Table End */
-#define REG_DSU_MEMTYPE            (*(RoReg  *)0x41003FCCU) /**< \brief (DSU) CoreSight ROM Table Memory Type */
+#define REG_DSU_ENTRY0             (*(RoReg  *)0x41003000U) /**< \brief (DSU) Coresight ROM Table Entry 0 */
+#define REG_DSU_ENTRY1             (*(RoReg  *)0x41003004U) /**< \brief (DSU) Coresight ROM Table Entry 1 */
+#define REG_DSU_END                (*(RoReg  *)0x41003008U) /**< \brief (DSU) Coresight ROM Table End */
+#define REG_DSU_MEMTYPE            (*(RoReg  *)0x41003FCCU) /**< \brief (DSU) Coresight ROM Table Memory Type */
 #define REG_DSU_PID4               (*(RoReg  *)0x41003FD0U) /**< \brief (DSU) Peripheral Identification 4 */
 #define REG_DSU_PID5               (*(RoReg  *)0x41003FD4U) /**< \brief (DSU) Peripheral Identification 5 */
 #define REG_DSU_PID6               (*(RoReg  *)0x41003FD8U) /**< \brief (DSU) Peripheral Identification 6 */

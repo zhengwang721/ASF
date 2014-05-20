@@ -3,7 +3,7 @@
  *
  * \brief Instance description for EIC
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,33 +48,34 @@
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 #define REG_EIC_CTRL               (0x40001800U) /**< \brief (EIC) Control */
 #define REG_EIC_STATUS             (0x40001801U) /**< \brief (EIC) Status */
-#define REG_EIC_NMICTRL            (0x40001802U) /**< \brief (EIC) NMI Control */
-#define REG_EIC_NMIFLAG            (0x40001803U) /**< \brief (EIC) NMI Interrupt Flag */
+#define REG_EIC_NMICTRL            (0x40001802U) /**< \brief (EIC) Non-Maskable Interrupt Control */
+#define REG_EIC_NMIFLAG            (0x40001803U) /**< \brief (EIC) Non-Maskable Interrupt Flag Status and Clear */
 #define REG_EIC_EVCTRL             (0x40001804U) /**< \brief (EIC) Event Control */
 #define REG_EIC_INTENCLR           (0x40001808U) /**< \brief (EIC) Interrupt Enable Clear */
 #define REG_EIC_INTENSET           (0x4000180CU) /**< \brief (EIC) Interrupt Enable Set */
 #define REG_EIC_INTFLAG            (0x40001810U) /**< \brief (EIC) Interrupt Flag Status and Clear */
-#define REG_EIC_WAKEUP             (0x40001814U) /**< \brief (EIC) Wake-up Enable */
-#define REG_EIC_CONFIG0            (0x40001818U) /**< \brief (EIC) Config 0 */
-#define REG_EIC_CONFIG1            (0x4000181CU) /**< \brief (EIC) Config 1 */
+#define REG_EIC_WAKEUP             (0x40001814U) /**< \brief (EIC) Wake-Up Enable */
+#define REG_EIC_CONFIG0            (0x40001818U) /**< \brief (EIC) Configuration 0 */
+#define REG_EIC_CONFIG1            (0x4000181CU) /**< \brief (EIC) Configuration 1 */
 #else
 #define REG_EIC_CTRL               (*(RwReg8 *)0x40001800U) /**< \brief (EIC) Control */
 #define REG_EIC_STATUS             (*(RoReg8 *)0x40001801U) /**< \brief (EIC) Status */
-#define REG_EIC_NMICTRL            (*(RwReg8 *)0x40001802U) /**< \brief (EIC) NMI Control */
-#define REG_EIC_NMIFLAG            (*(RwReg8 *)0x40001803U) /**< \brief (EIC) NMI Interrupt Flag */
+#define REG_EIC_NMICTRL            (*(RwReg8 *)0x40001802U) /**< \brief (EIC) Non-Maskable Interrupt Control */
+#define REG_EIC_NMIFLAG            (*(RwReg8 *)0x40001803U) /**< \brief (EIC) Non-Maskable Interrupt Flag Status and Clear */
 #define REG_EIC_EVCTRL             (*(RwReg  *)0x40001804U) /**< \brief (EIC) Event Control */
 #define REG_EIC_INTENCLR           (*(RwReg  *)0x40001808U) /**< \brief (EIC) Interrupt Enable Clear */
 #define REG_EIC_INTENSET           (*(RwReg  *)0x4000180CU) /**< \brief (EIC) Interrupt Enable Set */
 #define REG_EIC_INTFLAG            (*(RwReg  *)0x40001810U) /**< \brief (EIC) Interrupt Flag Status and Clear */
-#define REG_EIC_WAKEUP             (*(RwReg  *)0x40001814U) /**< \brief (EIC) Wake-up Enable */
-#define REG_EIC_CONFIG0            (*(RwReg  *)0x40001818U) /**< \brief (EIC) Config 0 */
-#define REG_EIC_CONFIG1            (*(RwReg  *)0x4000181CU) /**< \brief (EIC) Config 1 */
+#define REG_EIC_WAKEUP             (*(RwReg  *)0x40001814U) /**< \brief (EIC) Wake-Up Enable */
+#define REG_EIC_CONFIG0            (*(RwReg  *)0x40001818U) /**< \brief (EIC) Configuration 0 */
+#define REG_EIC_CONFIG1            (*(RwReg  *)0x4000181CU) /**< \brief (EIC) Configuration 1 */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for EIC peripheral ========== */
+#define EIC_CONFIG_NUM              ((EIC_EXTINT_NUM+7)/8)
+#define EIC_EXTINT_NUM              16
 #define EIC_GCLK_ID                 3
-#define EIC_NMI_NO_DETECT_ALLOWED   0
-#define EIC_NUMBER_OF_CONFIG_REGS   2
-#define EIC_NUMBER_OF_INTERRUPTS    16
+#define EIC_NUMBER_OF_CONFIG_REGS   EIC_CONFIG_NUM
+#define EIC_NUMBER_OF_INTERRUPTS    EIC_EXTINT_NUM
 
 #endif /* _SAMD20_EIC_INSTANCE_ */
