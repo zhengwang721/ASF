@@ -73,7 +73,7 @@ aes_callback_t aes_callback_pointer[AES_INTERRUPT_SOURCE_NUM];
  *  - Last output data mode is disabled
  *  - No extra delay
  *
- *  \param[out] p_cfg Pointer to an AES configuration structure.
+ *  \param[out] p_cfg Pointer to an AES configuration structure
  */
 void aes_get_config_defaults(
 		struct aes_config *const p_cfg)
@@ -95,8 +95,8 @@ void aes_get_config_defaults(
 /**
  * \brief Initialize the AES module.
  *
- * \param[out] p_aes Module hardware register base address pointer.
- * \param[in] p_cfg  Pointer to an AES configuration structure.
+ * \param[out] p_aes Module hardware register base address pointer
+ * \param[in] p_cfg  Pointer to an AES configuration structure
  */
 void aes_init(
 		Aes *const p_aes,
@@ -140,8 +140,8 @@ void aes_disable(void)
 /**
  * \brief Configure the AES module.
  *
- * \param[out] p_aes Module hardware register base address pointer.
- * \param[in] p_cfg  Pointer to an AES configuration structure.
+ * \param[out] p_aes Module hardware register base address pointer
+ * \param[in] p_cfg  Pointer to an AES configuration structure
  */
 void aes_set_config(
 		Aes *const p_aes,
@@ -199,8 +199,8 @@ void aes_set_config(
 /**
  * \brief Write the 128/192/256bit cryptographic key.
  *
- * \param[out] p_aes Module hardware register base address pointer.
- * \param[in]  p_key Pointer to 4/6/8 contiguous 32-bit words.
+ * \param[out] p_aes Module hardware register base address pointer
+ * \param[in]  p_key Pointer to 4/6/8 contiguous 32-bit words
  *
  * \note The key size depends on the current AES configuration.
  */
@@ -242,8 +242,8 @@ void aes_write_key(
  * \brief Write the initialization vector (for the CBC, CFB, OFB, CTR & GCM
  * cipher modes).
  *
- * \param[out] p_aes   Module hardware register base address pointer.
- * \param[in] p_vector Pointer to 4 contiguous 32-bit words.
+ * \param[out] p_aes   Module hardware register base address pointer
+ * \param[in] p_vector Pointer to four contiguous 32-bit words
  */
 void aes_write_initvector(
 		Aes *const p_aes,
@@ -263,8 +263,8 @@ void aes_write_initvector(
 /**
  * \brief Write the input data (four consecutive 32-bit words).
  *
- * \param[out] p_aes              Module hardware register base address pointer.
- * \param[in] p_input_data_buffer Pointer to an input data buffer.
+ * \param[out] p_aes              Module hardware register base address pointer
+ * \param[in] p_input_data_buffer Pointer to an input data buffer
  */
 void aes_write_input_data(
 		Aes *const p_aes,
@@ -286,10 +286,10 @@ void aes_write_input_data(
  * \brief Read the output data.
  *
  * \note The data buffer that holds the processed data must be large enough to hold
- * 4 consecutive 32-bit words.
+ * four consecutive 32-bit words.
  *
- * \param[in] p_aes                 Module hardware register base address pointer.
- * \param[in] *p_output_data_buffer Pointer to an output buffer.
+ * \param[in] p_aes                 Module hardware register base address pointer
+ * \param[in] *p_output_data_buffer Pointer to an output buffer
  */
 void aes_read_output_data(
 		Aes *const p_aes,
@@ -314,7 +314,7 @@ void aes_read_output_data(
  *
  * \note This function is only available on SAM4C devices.
  *
- * \param[in] p_aes Module hardware register base address pointer.
+ * \param[in] p_aes Module hardware register base address pointer
  *
  * \return The PDC registers base address for the AES module.
  */
@@ -339,10 +339,10 @@ Pdc *aes_get_pdc_base(
 /**
  * \brief Set the AES interrupt callback.
  *
- * \param[out] p_aes    Module hardware register base address pointer.
- * \param[in] source    Interrupt source.
- * \param[in] callback  Interrupt callback function pointer.
- * \param[in] irq_level Interrupt priority level.
+ * \param[out] p_aes    Module hardware register base address pointer
+ * \param[in] source    Interrupt source
+ * \param[in] callback  Interrupt callback function pointer
+ * \param[in] irq_level Interrupt priority level
  */
 void aes_set_callback(
 		Aes *const p_aes,

@@ -115,7 +115,7 @@
  *
  * \section asfdoc_sam_drivers_aes_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam_drivers_aes_extra. This includes:
+ * For extra information, see \ref asfdoc_sam_drivers_aes_extra. This includes:
  *  - \ref asfdoc_sam_drivers_aes_extra_acronyms
  *  - \ref asfdoc_sam_drivers_aes_extra_dependencies
  *  - \ref asfdoc_sam_drivers_aes_extra_errata
@@ -240,7 +240,7 @@ void aes_init(Aes *const p_aes, struct aes_config *const p_cfg);
 /**
  * \brief Perform an AES software reset.
  *
- * \param[out] p_aes Module hardware register base address pointer.
+ * \param[out] p_aes Module hardware register base address pointer
  */
 static inline void aes_reset(Aes *const p_aes)
 {
@@ -250,7 +250,7 @@ static inline void aes_reset(Aes *const p_aes)
 /**
  * \brief Start a manual encryption/decryption process.
  *
- * \param[out] p_aes Module hardware register base address pointer.
+ * \param[out] p_aes Module hardware register base address pointer
  */
 static inline void aes_start(Aes *const p_aes)
 {
@@ -266,7 +266,7 @@ void aes_set_config(Aes *const p_aes, struct aes_config *const p_cfg);
 /**
  * \brief Get the AES interrupt status.
  *
- * \param[in]  p_aes Module hardware register base address pointer.
+ * \param[in]  p_aes Module hardware register base address pointer
  *
  * \return The AES interrupt status register contents.
  */
@@ -282,8 +282,8 @@ void aes_set_callback(Aes *const p_aes,
 /**
  * \brief Enable an AES interrupt.
  *
- * \param[out]  p_aes Module hardware register base address pointer.
- * \param[in] source \ref aes_interrupt_source "Interrupt source".
+ * \param[out]  p_aes Module hardware register base address pointer
+ * \param[in] source \ref aes_interrupt_source "Interrupt source"
  */
 static inline void aes_enable_interrupt(Aes *const p_aes,
 		aes_interrupt_source_t source)
@@ -294,8 +294,8 @@ static inline void aes_enable_interrupt(Aes *const p_aes,
 /**
  * \brief Disable an AES interrupt.
  *
- * \param[out]  p_aes Module hardware register base address pointer.
- * \param[in]  source \ref aes_interrupt_source "Interrupt source".
+ * \param[out]  p_aes Module hardware register base address pointer
+ * \param[in]  source \ref aes_interrupt_source "Interrupt source"
  */
 static inline void aes_disable_interrupt(
 		Aes *const p_aes, aes_interrupt_source_t source)
@@ -306,7 +306,7 @@ static inline void aes_disable_interrupt(
 /**
  * \brief Get the AES interrupt mask status.
  *
- * \param[in]  p_aes Module hardware register base address pointer.
+ * \param[in]  p_aes Module hardware register base address pointer
  *
  * \return The AES interrupt mask contents.
  */
@@ -333,7 +333,7 @@ Pdc *aes_get_pdc_base(Aes *p_aes);
  *
  * \note This function is only available on SAM4C devices.
  *
- * \param[in]  p_aes Module hardware register base address pointer.
+ * \param[in]  p_aes Module hardware register base address pointer
  *
  * \return The Additional Authenticated Data (AAD) length in bytes.
  */
@@ -347,8 +347,8 @@ static inline uint32_t aes_read_authen_datalength(Aes *const p_aes)
  *
  * \note This function is only available on SAM4C devices.
  *
- * \param[out]  p_aes Module hardware register base address pointer.
- * \param[in]  length length in bytes of the AAD data to be processed.
+ * \param[out]  p_aes Module hardware register base address pointer
+ * \param[in]  length length in bytes of the AAD data to be processed
  */
 static inline void aes_write_authen_datalength(Aes *const p_aes,
 		uint32_t length)
@@ -361,7 +361,7 @@ static inline void aes_write_authen_datalength(Aes *const p_aes,
  *
  * \note This function is only available on SAM4C devices.
  *
- * \param[in]  p_aes Module hardware register base address pointer.
+ * \param[in]  p_aes Module hardware register base address pointer
  *
  * \return The plaintext/ciphertext length in bytes.
  */
@@ -375,8 +375,8 @@ static inline uint32_t aes_read_pctext_length(Aes *const p_aes)
  *
  * \note This function is only available on SAM4C devices.
  *
- * \param[out] p_aes Module hardware register base address pointer.
- * \param[in] length Length in bytes of the plaintext/ciphertext data.
+ * \param[out] p_aes Module hardware register base address pointer
+ * \param[in] length Length in bytes of the plaintext/ciphertext data
  */
 static inline void aes_write_pctext_length(Aes *const p_aes, uint32_t length)
 {
@@ -388,7 +388,7 @@ static inline void aes_write_pctext_length(Aes *const p_aes, uint32_t length)
  *
  * \note This function is only available on SAM4C devices.
  *
- * \param[in]  p_aes Module hardware register base address pointer.
+ * \param[in]  p_aes Module hardware register base address pointer
  *
  * \return The AES GCM encryption counter.
  */
@@ -402,8 +402,8 @@ static inline uint32_t aes_read_gcm_counter(Aes *const p_aes)
  *
  * \note This function is only available on SAM4C devices.
  *
- * \param[in]  p_aes Module hardware register base address pointer.
- * \param[in]  id    Index into the GHASH array (range 0 to 3).
+ * \param[in]  p_aes Module hardware register base address pointer
+ * \param[in]  id    Index into the GHASH array (range 0 to 3)
  *
  * \return The content of the AES_GHASHRx[x = 0...3] register.
  */
@@ -417,8 +417,8 @@ static inline uint32_t aes_read_ghash(Aes *const p_aes, uint32_t id)
  *
  * \note This function is only available on SAM4C devices.
  *
- * \param[out] p_aes Module hardware register base address pointer.
- * \param[in] id     Index into the GHASHx array (range 0 to 3).
+ * \param[out] p_aes Module hardware register base address pointer
+ * \param[in] id     Index into the GHASHx array (range 0 to 3)
  * \param[in] ghash  Intermediate GCM Hash Word x
  */
 static inline void aes_write_ghash(Aes *const p_aes, uint32_t id,
@@ -432,8 +432,8 @@ static inline void aes_write_ghash(Aes *const p_aes, uint32_t id,
  *
  * \note This function is only available on SAM4C devices.
  *
- * \param[in]  p_aes Module hardware register base address pointer.
- * \param[in]  id    Index into the TAGR array (range 0 to 3).
+ * \param[in]  p_aes Module hardware register base address pointer
+ * \param[in]  id    Index into the TAGR array (range 0 to 3)
  *
  * \return the contents of the AES_TAGRx[x = 0...3] register specified.
  */
@@ -447,8 +447,8 @@ static inline uint32_t aes_read_tag(Aes *const p_aes, uint32_t id)
  *
  * \note This function is only available on SAM4C devices.
  *
- * \param[in]  p_aes Module hardware register base address pointer.
- * \param[in]  id    Index into the GCMHR array (range 0 to 3).
+ * \param[in]  p_aes Module hardware register base address pointer
+ * \param[in]  id    Index into the GCMHR array (range 0 to 3)
  *
  * \return the contents of the AES_GCMHRx[x = 0...3] register specified.
  */
@@ -462,9 +462,9 @@ static inline uint32_t aes_read_gcmh(Aes *const p_aes, uint32_t id)
  *
  * \note This function is only available on SAM4C devices.
  *
- * \param[out]  p_aes Module hardware register base address pointer.
- * \param[in]  id    Index into the GCMHR array (range 0 to 3).
- * \param[in]  hword GCM H Word.
+ * \param[out]  p_aes Module hardware register base address pointer
+ * \param[in]  id    Index into the GCMHR array (range 0 to 3)
+ * \param[in]  hword GCM H Word
  */
 static inline void aes_write_gcmh(Aes *const p_aes, uint32_t id, uint32_t hword)
 {
