@@ -100,7 +100,7 @@
  * a reset.
  *
  * \subsubsection asfdoc_sam_drivers_rstc_module_overview_nrst_external NRST External Reset Control
- * The NRST Manager can assert NRST for a programmable time period of between 60us and 2s
+ * The NRST Manager can assert NRST for a programmable time period of between 60&mu;s and 2s
  * (approximately). This allows the Reset Controller to shape the NRST pin level and thus to
  * guarantee that the NRST line is low for a time that is compliant with any external devices
  * also connected to the system reset.
@@ -197,14 +197,14 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-/** Definitions of Reset Controller Status */
+/** Definitions of Reset Controller Status. */
 /** Reset cause */
 #define RSTC_GENERAL_RESET   (0 << RSTC_SR_RSTTYP_Pos)
 #define RSTC_BACKUP_RESET    (1 << RSTC_SR_RSTTYP_Pos)
 #define RSTC_WATCHDOG_RESET  (2 << RSTC_SR_RSTTYP_Pos)
 #define RSTC_SOFTWARE_RESET  (3 << RSTC_SR_RSTTYP_Pos)
 #define RSTC_USER_RESET      (4 << RSTC_SR_RSTTYP_Pos)
-/** NRST Pin Level */
+/** NRST Pin Level. */
 #define RSTC_NRST_LOW   (LOW << 16)
 #define RSTC_NRST_HIGH  (HIGH << 16)
 
@@ -383,7 +383,7 @@ static inline void rstc_assert_reset_of_coprocessor(
  *
  * \subsection asfdoc_sam_drivers_rstc_quick_start_setup_flow Workflow
  *
- * -# Enable the User Reset interrupt:
+ * Enable the User Reset interrupt:
  *   \snippet rstc_example1.c reset_enable_user_reset_interrupt
  *
  * \section rtc_basic_use_case_usage Usage Steps
