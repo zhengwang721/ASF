@@ -50,7 +50,7 @@
  * and management of the device's Liquid Crystal Display Controller functionality.
  *
  * The LCD controller is intended for monochrome passive Liquid Crystal Displays
- * (LCDs) with up to 4 common terminals and up to 40 segment terminals.
+ * (LCDs) with up to four common terminals and up to 40 segment terminals.
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam_drivers_lcdca_prerequisites
@@ -80,7 +80,7 @@
  *
  * \subsection asfdoc_sam_drivers_lcdca_module_overview_supported Supported Display Types
  * The LCD Controller is intended for use with monochrome passive Liquid
- * Crystal Displays (LCDs) with up to 4 common terminals and up to 40 segment
+ * Crystal Displays (LCDs) with up to four common terminals and up to 40 segment
  * terminals.
  *
  * \subsection asfdoc_sam_drivers_lcdca_module_overview_functional Functional Description
@@ -147,7 +147,7 @@
  *
  * \section asfdoc_sam_drivers_lcdca_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam_drivers_lcdca_extra. This includes:
+ * For extra information, see \ref asfdoc_sam_drivers_lcdca_extra. This includes:
  *  - \ref asfdoc_sam_drivers_lcdca_extra_acronyms
  *  - \ref asfdoc_sam_drivers_lcdca_extra_dependencies
  *  - \ref asfdoc_sam_drivers_lcdca_extra_errata
@@ -182,13 +182,13 @@ extern "C" {
 
 /** \name LCDCA display digit.*/
 /* @{ */
-/** 7-segment display with 3 common terminals. */
+/** 7-segment display with three common terminals. */
 #define LCDCA_TDG_7SEG3COM        0
-/** 7-segment display with 4 common terminals. */
+/** 7-segment display with four common terminals. */
 #define LCDCA_TDG_7SEG4COM        1
-/** 14-segment display with 4 common terminals. */
+/** 14-segment display with four common terminals. */
 #define LCDCA_TDG_14SEG4COM       2
-/** 16-segment display with 3 common terminals. */
+/** 16-segment display with three common terminals. */
 #define LCDCA_TDG_16SEG3COM       3
 /* @} */
 
