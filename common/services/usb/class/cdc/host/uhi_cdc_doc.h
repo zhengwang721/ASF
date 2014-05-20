@@ -242,6 +242,7 @@ iram_size_t uhi_cdc_write_buf(uint8_t port, const void* buf, iram_size_t size);
  *
  * \subsubsection uhi_cdc_basic_use_case_usage_code Example code
  * Content of conf_usb_host.h:
+ {code}
  * \code
 	#define USB_HOST_UHI        UHI_CDC
 	#define UHI_CDC_CHANGE(dev, b_plug) my_callback_cdc_change(dev, b_plug)
@@ -250,8 +251,10 @@ iram_size_t uhi_cdc_write_buf(uint8_t port, const void* buf, iram_size_t size);
 	extern void my_callback_cdc_rx_notify(void);
 	#include "uhi_cdc.h" // At the end of conf_usb_host.h file
 \endcode
+ {code}
  *
  * Add to application C-file:
+ {code}
  * \code
 	 static bool my_flag_cdc_available = false;
 	 bool my_callback_cdc_change(uhc_device_t* dev, bool b_plug)
@@ -307,18 +310,25 @@ iram_size_t uhi_cdc_write_buf(uint8_t port, const void* buf, iram_size_t size);
 	    }
 	 }
 \endcode
+{code}
  *
  * \subsubsection uhi_cdc_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb_host.h is available and contains the following configuration
  * which is the USB host CDC configuration:
+ {code}
  *   \code #define USB_HOST_UHI   UHI_CDC \endcode
+ {code}
  *     \note It defines the list of UHI supported by USB host.
+ {code}
  *   \code #define UHI_CDC_CHANGE(dev, b_plug) my_callback_cdc_change(dev, b_plug)
 	 extern bool my_callback_cdc_change(uhc_device_t* dev, bool b_plug); \endcode
+ {code}
  *     \note This callback is called when a USB device CDC is plugged or unplugged.
  *     The communication port can be opened and configured here.
+ {code}
  *   \code #define UHI_CDC_RX_NOTIFY() my_callback_cdc_rx_notify()
 	 extern void my_callback_cdc_rx_notify(void); \endcode
+ {code}
  *     \note This callback is called when a new data are received.
  *     This can be used to manage data reception through interrupt and avoid pooling.
  * -# The CDC data access functions are described in \ref asfdoc_uhi_cdc_api_overview "UHI CDC API overview".

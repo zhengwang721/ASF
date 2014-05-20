@@ -209,6 +209,7 @@ bool udi_hid_kbd_down(uint8_t key_id);
  *
  * \subsection udi_hid_keyboard_basic_use_case_usage_code Example code
  * Content of conf_usb.h:
+ {code}
  * \code
 	#define UDI_HID_KBD_ENABLE_EXT() my_callback_keyboard_enable()
 	extern bool my_callback_keyboard_enable(void);
@@ -216,8 +217,10 @@ bool udi_hid_kbd_down(uint8_t key_id);
 	extern void my_callback_keyboard_disable(void);
 	#include "udi_hid_keyboard_conf.h" // At the end of conf_usb.h file
 \endcode
+{code}
  *
  * Add to application C-file:
+ {code}
  * \code
 	 static bool my_flag_autorize_keyboard_events = false;
 	 bool my_callback_keyboard_enable(void)
@@ -238,6 +241,7 @@ bool udi_hid_kbd_down(uint8_t key_id);
 	    udi_hid_kbd_up(HID_A);
 	 }
 \endcode
+{code}
  *
  * \subsection udi_hid_keyboard_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following configuration

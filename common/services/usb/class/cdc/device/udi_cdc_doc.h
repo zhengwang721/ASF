@@ -581,6 +581,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  *
  * \subsubsection udi_cdc_basic_use_case_usage_code Example code
  * Content of conf_usb.h:
+ {code}
  * \code
 	 #define UDI_CDC_ENABLE_EXT(port) my_callback_cdc_enable()
 	 extern bool my_callback_cdc_enable(void);
@@ -595,8 +596,10 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
 
 	 #include "udi_cdc_conf.h" // At the end of conf_usb.h file
 \endcode
+{code}
  *
  * Add to application C-file:
+ {code}
  * \code
 	 static bool my_flag_autorize_cdc_transfert = false;
 	 bool my_callback_cdc_enable(void)
@@ -617,34 +620,46 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
 	    }
 	 }
 \endcode
+{code}
  *
  * \subsubsection udi_cdc_basic_use_case_setup_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following configuration
  * which is the USB device CDC configuration:
+ {code}
  *    \code #define USB_DEVICE_SERIAL_NAME  "12...EF" // Disk SN for CDC \endcode
+ {code}
  *     \note The USB serial number is mandatory when a CDC interface is used.
+ {code}
  *    \code #define UDI_CDC_ENABLE_EXT(port) my_callback_cdc_enable()
 	 extern bool my_callback_cdc_enable(void); \endcode
+ {code}
  *     \note After the device enumeration (detecting and identifying USB devices),
  *     the USB host starts the device configuration. When the USB CDC interface
  *     from the device is accepted by the host, the USB host enables this interface and the
  *     UDI_CDC_ENABLE_EXT() callback function is called and return true.
  *     Thus, when this event is received, the data transfer on CDC interface are authorized.
+ {code}
  *    \code #define UDI_CDC_DISABLE_EXT(port) my_callback_cdc_disable()
 	 extern void my_callback_cdc_disable(void); \endcode
+ {code}
  *     \note When the USB device is unplugged or is reset by the USB host, the USB
  *     interface is disabled and the UDI_CDC_DISABLE_EXT() callback function
  *     is called. Thus, the data transfer must be stopped on CDC interface.
+ {code}
  *    \code #define  UDI_CDC_LOW_RATE \endcode
+ {code}
  *     \note  Define it when the transfer CDC Device to Host is a low rate
  *     (<512000 bauds) to reduce CDC buffers size.
+ {code}
  *    \code
 	#define  UDI_CDC_DEFAULT_RATE             115200
 	#define  UDI_CDC_DEFAULT_STOPBITS         CDC_STOP_BITS_1
 	#define  UDI_CDC_DEFAULT_PARITY           CDC_PAR_NONE
 	#define  UDI_CDC_DEFAULT_DATABITS         8 \endcode
+{code}
  *     \note Default configuration of communication port at startup.
  * -# Send or wait data on CDC line:
+ {code}
  *    \code // Waits and gets a value on CDC line
 	int udi_cdc_getc(void);
 	// Reads a RAM buffer on CDC line
@@ -653,6 +668,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
 	int udi_cdc_putc(int value);
 	// Writes a RAM buffer on CDC line
 	iram_size_t udi_cdc_write_buf(const int* buf, iram_size_t size); \endcode
+ {code}
  *
  * \section udi_cdc_use_cases Advanced use cases
  * \ifnot ASF_MANUAL
@@ -694,6 +710,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  *
  * \subsection udi_cdc_use_case_composite_usage_code Example code
  * Content of conf_usb.h:
+ {code}
  * \code
 	 #define USB_DEVICE_EP_CTRL_SIZE  64
 	 #define USB_DEVICE_NB_INTERFACE (X+2)
@@ -725,10 +742,12 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
 	    &udi_api_cdc_data,       \
 	    ...
 \endcode
+{code}
  *
  * \subsection udi_cdc_use_case_composite_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
  * required for a USB composite device configuration:
+ {code}
  *     \code // Endpoint control size, This must be:
 	// - 8, 16, 32 or 64 for full speed device (8 is recommended to save RAM)
 	// - 64 for a high speed device
@@ -740,8 +759,10 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
 	// This must include each endpoint for each interface.
 	// Add 3 for CDC.
 	#define USB_DEVICE_MAX_EP (X+3) \endcode
+ {code}
  * -# Ensure that conf_usb.h contains the description of
  * composite device:
+ {code}
  *    \code // The endpoint numbers chosen by you for the CDC.
 	// The endpoint numbers starting from 1.
 	#define  UDI_CDC_DATA_EP_IN_0            (1 | USB_EP_DIR_IN)  // TX
@@ -750,8 +771,10 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
 	// The interface index of an interface starting from 0
 	#define  UDI_CDC_COMM_IFACE_NUMBER_0     X+0
 	#define  UDI_CDC_DATA_IFACE_NUMBER_0     X+1 \endcode
+ {code}
  * -# Ensure that conf_usb.h contains the following parameters
  * required for a USB composite device configuration:
+ {code}
  *    \code // USB Interfaces descriptor structure
 	#define UDI_COMPOSITE_DESC_T \
 	   ...
@@ -779,9 +802,10 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
 	   &udi_api_cdc_comm,       \
 	   &udi_api_cdc_data,       \
 	   ... \endcode
+ {code}
  *   - \note The descriptors order given in the four lists above must be the
  *     same as the order defined by all interface indexes. The interface index
- *     orders are defined through UDI_X_IFACE_NUMBER defines.\n
+ *     orders are defined through UDI_X_IFACE_NUMBER defines.
  *     Also, the CDC requires a USB Interface Association Descriptor (IAD) for
  *     composite device.
  */

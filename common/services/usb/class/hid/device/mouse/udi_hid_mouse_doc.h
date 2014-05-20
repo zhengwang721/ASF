@@ -272,20 +272,25 @@ bool udi_hid_mouse_btnleft(bool b_state);
  * \subsection udi_hid_mouse_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following configuration
  * which is the USB device mouse configuration:
+ {code}
  *   \code #define UDI_HID_MOUSE_ENABLE_EXT() my_callback_mouse_enable()
 	 extern bool my_callback_mouse_enable(void); \endcode
+ {code}
  *     \note After the device enumeration (detecting and identifying USB devices),
  *     the USB host starts the device configuration. When the USB mouse interface
  *     from the device is accepted by the host, the USB host enables this interface and the
  *     UDI_HID_MOUSE_ENABLE_EXT() callback function is called and return true.
  *     Thus, it is recommended to enable sensors used by the mouse in this function.
+ {code}
  *   \code #define UDI_HID_MOUSE_DISABLE_EXT() my_callback_mouse_disable()
 	 extern void my_callback_mouse_disable(void); \endcode
+ {code}
  *     \note When the USB device is unplugged or is reset by the USB host, the USB
  *     interface is disabled and the UDI_HID_MOUSE_DISABLE_EXT() callback function
  *     is called. Thus, it is recommended to disable sensors used by the mouse
  *     in this function.
  * -# send mouse events:
+ {code}
  *   \code // Sends a value at scroll wheel
 	udi_hid_mouse_moveScroll(int8_t pos);
 	// Sends an Y axis value at mouse pointer
@@ -298,6 +303,7 @@ bool udi_hid_mouse_btnleft(bool b_state);
 	udi_hid_mouse_btnright(bool b_state);
 	// Sends a left click event
 	udi_hid_mouse_btnleft(bool b_state); \endcode
+ {code}
  *
  * \section udi_hid_mouse_use_cases Advanced use cases
 * \ifnot ASF_MANUAL
@@ -337,6 +343,7 @@ bool udi_hid_mouse_btnleft(bool b_state);
  *
  * \subsection udi_hid_mouse_use_case_composite_usage_code Example code
  * Content of conf_usb.h:
+ {code}
  * \code
 	 #define USB_DEVICE_EP_CTRL_SIZE  64
 	 #define USB_DEVICE_NB_INTERFACE (X+1)
@@ -358,10 +365,12 @@ bool udi_hid_mouse_btnleft(bool b_state);
 	    &udi_api_hid_mouse, \
 	    ...
 \endcode
+{code}
  *
  * \subsection udi_hid_mouse_use_case_composite_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
  * required for a USB composite device configuration:
+ {code}
  *   \code // Endpoint control size, This must be:
 	// - 8 for low speed
 	// - 8, 16, 32 or 64 for full speed device (8 is recommended to save RAM)
@@ -374,15 +383,19 @@ bool udi_hid_mouse_btnleft(bool b_state);
 	// This must include each endpoint for each interface.
 	// Add 1 for HID mouse.
 	#define USB_DEVICE_MAX_EP (X+1) \endcode
+ {code}
  * -# Ensure that conf_usb.h contains the description of
  * composite device:
+ {code}
  *   \code // The endpoint number chosen by you for the mouse.
 	// The endpoint number starting from 1.
 	#define UDI_HID_MOUSE_EP_IN  (X | USB_EP_DIR_IN)
 	// The interface index of an interface starting from 0
 	#define UDI_HID_MOUSE_IFACE_NUMBER  X \endcode
+ {code}
  * -# Ensure that conf_usb.h contains the following parameters
  * required for a USB composite device configuration:
+ {code}
  *   \code // USB Interfaces descriptor structure
 	#define UDI_COMPOSITE_DESC_T \
 	   ...
@@ -403,6 +416,7 @@ bool udi_hid_mouse_btnleft(bool b_state);
 	   ...
 	   &udi_api_hid_mouse, \
 	   ... \endcode
+ {code}
  *   - \note The descriptors order given in the four lists above must be the
  *     same as the order defined by all interface indexes. The interface index
  *     orders are defined through UDI_X_IFACE_NUMBER defines.
