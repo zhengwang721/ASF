@@ -52,7 +52,7 @@
  *
  * The Analog Comparator compares two voltages, and the result of this comparison
  * gives a compare output. The user application can select whether to use a high-speed
- * or a low-power option as well as selecting the hysteresis level, edge detection
+ * or a low-power option as well as selecting the hysteresis level, edge detection,
  * and polarity.
  *
  * The outline of this documentation is as follows:
@@ -79,7 +79,7 @@
  * The Analog Comparator compares two voltages, and the result of this comparison
  * gives a compare output and an interrupt can be generated accordingly. The user
  * application can select a high-speed or low-power option, the hysteresis level,
- * edge detection and polarity.
+ * edge detection, and polarity.
  *
  * The ACC can also generate a comparison event that can be used by the PWM.
  *
@@ -284,7 +284,7 @@ uint32_t acc_get_writeprotect_status(Acc *p_acc);
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42292A</td>
  *		<td>03/2014</td>
  *		<td>Initial document release</td>
  *	</tr>
@@ -297,7 +297,7 @@ uint32_t acc_get_writeprotect_status(Acc *p_acc);
  *
  * This is the quick start guide for the \ref asfdoc_sam_drivers_acc_group, with
  * step-by-step instructions on how to configure and use the driver for
- * a specific use case.The code examples can be copied into e.g. the main
+ * a specific use case. The code examples can be copied into e.g. the main
  * application loop or any other function that will need to control the
  * ACC module.
  *
