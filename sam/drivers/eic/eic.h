@@ -107,7 +107,7 @@
  *
  * \section asfdoc_sam_drivers_eic_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam_drivers_eic_extra. This includes:
+ * For extra information, see \ref asfdoc_sam_drivers_eic_extra. This includes:
  *  - \ref asfdoc_sam_drivers_eic_extra_acronyms
  *  - \ref asfdoc_sam_drivers_eic_extra_dependencies
  *  - \ref asfdoc_sam_drivers_eic_extra_errata
@@ -144,21 +144,21 @@ extern "C" {
 /* @{ */
 /** Non-Maskable Interrupt */
 #define EXT_NMI     0
-/** External Interrupt 1 */
+/** External Interrupt 1. */
 #define EXT_INT1    1
-/** External Interrupt 2 */
+/** External Interrupt 2. */
 #define EXT_INT2    2
-/** External Interrupt 3 */
+/** External Interrupt 3. */
 #define EXT_INT3    3
-/** External Interrupt 4 */
+/** External Interrupt 4. */
 #define EXT_INT4    4
-/** External Interrupt 5 */
+/** External Interrupt 5. */
 #define EXT_INT5    5
-/** External Interrupt 6 */
+/** External Interrupt 6. */
 #define EXT_INT6    6
-/** External Interrupt 7 */
+/** External Interrupt 7. */
 #define EXT_INT7    7
-/** External Interrupt 8 */
+/** External Interrupt 8. */
 #define EXT_INT8    8
 /* @} */
 
@@ -233,8 +233,8 @@ void eic_line_set_callback(Eic *eic, uint8_t line_number,
 /**
  * \brief Enable the external interrupt on specified line.
  *
- * \param [in]  eic Base address of the EIC module.
- * \param [in]  line_number The line number to enable.
+ * \param [in]  eic Base address of the EIC module
+ * \param [in]  line_number The line number to enable
  */
 static inline void eic_line_enable(Eic *eic, uint8_t line_number)
 {
@@ -258,8 +258,8 @@ static inline void eic_line_disable(Eic *eic, uint8_t line_number)
  * \param [in]  eic Base address of the EIC module
  * \param [in]  line_number Line number to test
  *
- * \retval true EIC line is enabled.
- * \retval false EIC line is not enabled.
+ * \retval true EIC line is enabled
+ * \retval false EIC line is not enabled
  */
 static inline bool eic_line_is_enabled(Eic *eic, uint8_t line_number)
 {
@@ -270,7 +270,7 @@ static inline bool eic_line_is_enabled(Eic *eic, uint8_t line_number)
  * \brief Enables the propagation from the EIC to the interrupt
  * controller of the external interrupt on a specified line.
  *
- * \param [in]  eic Base address of the EIC module.
+ * \param [in]  eic Base address of the EIC module
  * \param [in]  line_number Line number of interrupt to enable
  */
 static inline void eic_line_enable_interrupt(Eic *eic,
@@ -283,7 +283,7 @@ static inline void eic_line_enable_interrupt(Eic *eic,
  * \brief Disables the propagation from the EIC to the interrupt
  * controller of the external interrupt on a specified line.
  *
- * \param [in]  eic Base address of the EIC (i.e. EIC).
+ * \param [in]  eic Base address of the EIC (i.e. EIC)
  * \param [in]  line_number Line number of interrupt to disable
  */
 static inline void eic_line_disable_interrupt(Eic *eic,
@@ -299,8 +299,8 @@ static inline void eic_line_disable_interrupt(Eic *eic,
  * \param [in]  eic Base address of the EIC module
  * \param [in]  line_number Line number to test
  *
- * \retval true EIC interrupt line is enabled.
- * \retval false EIC interrupt line is not enabled.
+ * \retval true EIC interrupt line is enabled
+ * \retval false EIC interrupt line is not enabled
  */
 static inline bool eic_line_interrupt_is_enabled(Eic *eic,
 		uint8_t line_number)
@@ -312,8 +312,8 @@ static inline bool eic_line_interrupt_is_enabled(Eic *eic,
  * \brief Clear the interrupt flag of specified pin.
  *          Call this function once you have handled the interrupt.
  *
- * \param [in]  eic Base address of the EIC (i.e. EIC).
- * \param [in]  line_number Line number to clear.
+ * \param [in]  eic Base address of the EIC (i.e. EIC)
+ * \param [in]  line_number Line number to clear
  */
 static inline void eic_line_clear_interrupt(Eic *eic,
 		uint8_t line_number)
@@ -328,8 +328,8 @@ static inline void eic_line_clear_interrupt(Eic *eic,
  * \param [in]  eic Base address of the EIC module
  * \param [in]  line_number Line number to test
  *
- * \retval true EIC interrupt line is pending.
- * \retval false EIC interrupt line is not pending.
+ * \retval true EIC interrupt line is pending
+ * \retval false EIC interrupt line is not pending
  */
 static inline bool eic_line_interrupt_is_pending(Eic *eic,
 		uint8_t line_number)
@@ -427,7 +427,7 @@ static inline bool eic_line_interrupt_is_pending(Eic *eic,
  * - GPIO_PUSH_BUTTON_EIC_IRQ as input
  *
  * \subsection sam_eic_quickstart_prereq Prerequisites
- * \ref sysclk_group "System Clock Management (Sysclock)"
+ * \ref sysclk_group "System Clock Management (Sysclock)."
  *
  * \section eic_basic_use_case_setup Setup Steps
  * \subsection eic_basic_use_case_setup_code Example Code
