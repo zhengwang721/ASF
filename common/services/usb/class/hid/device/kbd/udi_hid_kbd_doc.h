@@ -209,7 +209,6 @@ bool udi_hid_kbd_down(uint8_t key_id);
  *
  * \subsection udi_hid_keyboard_basic_use_case_usage_code Example code
  * Content of conf_usb.h:
- {code}
  * \code
 	#define UDI_HID_KBD_ENABLE_EXT() my_callback_keyboard_enable()
 	extern bool my_callback_keyboard_enable(void);
@@ -217,10 +216,8 @@ bool udi_hid_kbd_down(uint8_t key_id);
 	extern void my_callback_keyboard_disable(void);
 	#include "udi_hid_keyboard_conf.h" // At the end of conf_usb.h file
 \endcode
-{code}
  *
  * Add to application C-file:
- {code}
  * \code
 	 static bool my_flag_autorize_keyboard_events = false;
 	 bool my_callback_keyboard_enable(void)
@@ -241,36 +238,41 @@ bool udi_hid_kbd_down(uint8_t key_id);
 	    udi_hid_kbd_up(HID_A);
 	 }
 \endcode
-{code}
  *
  * \subsection udi_hid_keyboard_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following configuration
  * which is the USB device keyboard configuration:
- *   \code #define UDI_HID_KBD_ENABLE_EXT() my_callback_keyboard_enable()
-	 extern bool my_callback_keyboard_enable(void); \endcode
+ * \code
+ #define UDI_HID_KBD_ENABLE_EXT() my_callback_keyboard_enable()
+ extern bool my_callback_keyboard_enable(void);
+ \endcode
  *     \note After the device enumeration (detecting and identifying USB devices),
  *     the USB host starts the device configuration. When the USB keyboard interface
  *     from the device is accepted by the host, the USB host enables this interface and the
  *     UDI_HID_KBD_ENABLE_EXT() callback function is called and return true.
  *     Thus, it is recommended to enable sensors used by the keyboard in this function.
- *   \code #define UDI_HID_KBD_DISABLE_EXT() my_callback_keyboard_disable()
-	 extern void my_callback_keyboard_disable(void); \endcode
+ * \code
+ #define UDI_HID_KBD_DISABLE_EXT() my_callback_keyboard_disable()
+ extern void my_callback_keyboard_disable(void);
+ \endcode
  *     \note When the USB device is unplugged or is reset by the USB host, the USB
  *     interface is disabled and the UDI_HID_KBD_DISABLE_EXT() callback function
  *     is called. Thus, it is recommended to disable sensors used by the keyboard
  *     in this function.
  * -# send keyboard events:
- *   \code // Send events key modifier released
-	udi_hid_kbd_modifier_up(uint8_t modifier_id);
-	// Send events key modifier pressed
-	udi_hid_kbd_modifier_down(uint8_t modifier_id);
-	// Send events key released
-	udi_hid_kbd_up(uint8_t key_id);
-	// Send events key pressed
-	udi_hid_kbd_down(uint8_t key_id); \endcode
+ *  \code
+ // Send events key modifier released
+ udi_hid_kbd_modifier_up(uint8_t modifier_id);
+ // Send events key modifier pressed
+ udi_hid_kbd_modifier_down(uint8_t modifier_id);
+ // Send events key released
+ udi_hid_kbd_up(uint8_t key_id);
+ // Send events key pressed
+ udi_hid_kbd_down(uint8_t key_id);
+ \endcode
  *
  * \section uhi_hid_keyboard_use_cases Advanced use cases
-* \ifnot ASF_MANUAL
+ * \ifnot ASF_MANUAL
  * For more advanced use of the UHI HID keyboard module, see the following use cases:
  * - \subpage udi_hid_keyboard_use_case_composite
  * - \subpage udc_use_case_1
@@ -308,71 +310,80 @@ bool udi_hid_kbd_down(uint8_t key_id);
  * \subsection udi_hid_keyboard_use_case_composite_usage_code Example code
  * Content of conf_usb.h:
  * \code
-	 #define USB_DEVICE_EP_CTRL_SIZE  64
-	 #define USB_DEVICE_NB_INTERFACE (X+1)
-	 #define USB_DEVICE_MAX_EP (X+1)
+ #define USB_DEVICE_EP_CTRL_SIZE  64
+ #define USB_DEVICE_NB_INTERFACE (X+1)
+ #define USB_DEVICE_MAX_EP (X+1)
 
-	 #define UDI_HID_KBD_EP_IN  (X | USB_EP_DIR_IN)
-	 #define UDI_HID_KBD_IFACE_NUMBER  X
+ #define UDI_HID_KBD_EP_IN  (X | USB_EP_DIR_IN)
+ #define UDI_HID_KBD_IFACE_NUMBER  X
 
-	 #define UDI_COMPOSITE_DESC_T \
-	    udi_hid_kbd_desc_t udi_hid_kbd; \
-	    ...
-	 #define UDI_COMPOSITE_DESC_FS \
-	    .udi_hid_kbd = UDI_HID_KBD_DESC, \
-	    ...
-	 #define UDI_COMPOSITE_DESC_HS \
-	    .udi_hid_kbd = UDI_HID_KBD_DESC, \
-	    ...
-	 #define UDI_COMPOSITE_API \
-	    &udi_api_hid_kbd, \
-	    ...
+ #define UDI_COMPOSITE_DESC_T \
+    udi_hid_kbd_desc_t udi_hid_kbd; \
+    ...
+ #define UDI_COMPOSITE_DESC_FS \
+    .udi_hid_kbd = UDI_HID_KBD_DESC, \
+    ...
+ #define UDI_COMPOSITE_DESC_HS \
+    .udi_hid_kbd = UDI_HID_KBD_DESC, \
+    ...
+ #define UDI_COMPOSITE_API \
+    &udi_api_hid_kbd, \
+    ...
 \endcode
  *
  * \subsection udi_hid_keyboard_use_case_composite_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
  * required for a USB composite device configuration:
- *   \code // Endpoint control size, This must be:
-	// - 8 for low speed
-	// - 8, 16, 32 or 64 for full speed device (8 is recommended to save RAM)
-	// - 64 for a high speed device
-	#define USB_DEVICE_EP_CTRL_SIZE  64
-	// Total Number of interfaces on this USB device.
-	// Add 1 for HID keyboard.
-	#define USB_DEVICE_NB_INTERFACE (X+1)
-	// Total number of endpoints on this USB device.
-	// This must include each endpoint for each interface.
-	// Add 1 for HID keyboard.
-	#define USB_DEVICE_MAX_EP (X+1) \endcode
+ * \code
+ // Endpoint control size, This must be:
+ // - 8 for low speed
+ // - 8, 16, 32 or 64 for full speed device (8 is recommended to save RAM)
+ // - 64 for a high speed device
+ #define USB_DEVICE_EP_CTRL_SIZE  64
+ // Total Number of interfaces on this USB device.
+ // Add 1 for HID keyboard.
+ #define USB_DEVICE_NB_INTERFACE (X+1)
+ // Total number of endpoints on this USB device.
+ // This must include each endpoint for each interface.
+ // Add 1 for HID keyboard.
+ #define USB_DEVICE_MAX_EP (X+1)
+ \endcode
+ *
  * -# Ensure that conf_usb.h contains the description of
  * composite device:
- *   \code // The endpoint number chosen by you for the keyboard.
-	// The endpoint number starting from 1.
-	#define UDI_HID_KBD_EP_IN  (X | USB_EP_DIR_IN)
-	// The interface index of an interface starting from 0
-	#define UDI_HID_KBD_IFACE_NUMBER  X \endcode
+ * \code
+ // The endpoint number chosen by you for the keyboard.
+ // The endpoint number starting from 1.
+ #define UDI_HID_KBD_EP_IN  (X | USB_EP_DIR_IN)
+ // The interface index of an interface starting from 0
+ #define UDI_HID_KBD_IFACE_NUMBER  X
+ \endcode
+ *
  * -# Ensure that conf_usb.h contains the following parameters
  * required for a USB composite device configuration:
- *   \code // USB Interfaces descriptor structure
-	#define UDI_COMPOSITE_DESC_T \
+ * \code
+ // USB Interfaces descriptor structure
+ #define UDI_COMPOSITE_DESC_T \
+    ...
+    udi_hid_kbd_desc_t udi_hid_kbd; \
+    ...
+ // USB Interfaces descriptor value for Full Speed
+ #define UDI_COMPOSITE_DESC_FS \
+    ...
+    .udi_hid_kbd = UDI_HID_KBD_DESC, \
+    ...
+ // USB Interfaces descriptor value for High Speed
+ #define UDI_COMPOSITE_DESC_HS \
+    ...
+    .udi_hid_kbd = UDI_HID_KBD_DESC, \
+    ...
+ // USB Interface APIs
+ #define UDI_COMPOSITE_API \
+    ...
+    &udi_api_hid_kbd, \
 	   ...
-	   udi_hid_kbd_desc_t udi_hid_kbd; \
-	   ...
-	// USB Interfaces descriptor value for Full Speed
-	#define UDI_COMPOSITE_DESC_FS \
-	   ...
-	   .udi_hid_kbd = UDI_HID_KBD_DESC, \
-	   ...
-	// USB Interfaces descriptor value for High Speed
-	#define UDI_COMPOSITE_DESC_HS \
-	   ...
-	   .udi_hid_kbd = UDI_HID_KBD_DESC, \
-	   ...
-	// USB Interface APIs
-	#define UDI_COMPOSITE_API \
-	   ...
-	   &udi_api_hid_kbd, \
-	   ... \endcode
+ \endcode
+ *
  *   - \note The descriptors order given in the four lists above must be the
  *     same as the order defined by all interface indexes. The interface index
  *     orders are defined through UDI_X_IFACE_NUMBER defines.

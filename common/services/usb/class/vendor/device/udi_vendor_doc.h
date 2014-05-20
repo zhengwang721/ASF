@@ -389,8 +389,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  *
  * \subsubsection udi_vendor_basic_use_case_usage_code Example code
  * Content of conf_usb.h:
- {code}
- *\code
+ * \code
 	 * #define UDI_VENDOR_ENABLE_EXT() my_callback_vendor_enable()
 	 * extern bool my_callback_vendor_enable(void);
 	 * #define UDI_VENDOR_DISABLE_EXT() my_callback_vendor_disable()
@@ -410,10 +409,8 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
 
 	 * #include "udi_vendor_conf.h" // At the end of conf_usb.h file
 \endcode
-{code}
  *
  * Add to application C-file:
- {code}
  * \code
 	 static bool my_flag_autorize_vendor_transfert = false;
 	 bool my_callback_vendor_enable(void)
@@ -444,61 +441,60 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
 	    }
 	 }
 \endcode
-{code}
  *
  * \subsection udi_vendor_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following configuration
  * which is the USB device Vendor configuration:
- {code}
- *   \code #define UDI_VENDOR_ENABLE_EXT() my_callback_vendor_enable()
-	 extern bool my_callback_vendor_enable(void); \endcode
- {code}
+ * \code
+ #define UDI_VENDOR_ENABLE_EXT() my_callback_vendor_enable()
+ extern bool my_callback_vendor_enable(void);
+ \endcode
  *     \note After the device enumeration (detecting and identifying USB devices),
  *     the USB host starts the device configuration. When the USB Vendor interface
  *     from the device is accepted by the host, the USB host enables this interface and the
  *     UDI_VENDOR_ENABLE_EXT() callback function is called and return true.
  *     Thus, when this event is received, the Vendor transfers can start.
- {code}
- *   \code #define UDI_VENDOR_DISABLE_EXT() my_callback_vendor_disable()
-	 extern void my_callback_vendor_disable(void); \endcode
- {code}
+ * \code
+ #define UDI_VENDOR_DISABLE_EXT() my_callback_vendor_disable()
+ extern void my_callback_vendor_disable(void);
+ \endcode
  *     \note When the USB device is unplugged or is reset by the USB host, the USB
  *     interface is disabled and the UDI_VENDOR_DISABLE_EXT() callback function
  *     is called. Thus, it is recommended to disable the data Vendor transfer.
- {code}
- *   \code #define  UDI_VENDOR_SETUP_OUT_RECEIVED()  my_vendor_setup_out_received()
-	extern bool my_vendor_setup_out_received(void);
-	#define  UDI_VENDOR_SETUP_IN_RECEIVED()   my_vendor_setup_in_received()
-	extern bool my_vendor_setup_in_received(void); \endcode
- {code}
+ * \code
+ #define  UDI_VENDOR_SETUP_OUT_RECEIVED()  my_vendor_setup_out_received()
+ extern bool my_vendor_setup_out_received(void);
+ #define  UDI_VENDOR_SETUP_IN_RECEIVED()   my_vendor_setup_in_received()
+ extern bool my_vendor_setup_in_received(void);
+ \endcode
  *     \note The control requests for the interface Vendor will be processed
  *     through these both callbacks.
- {code}
- *   \code #define  UDI_VENDOR_EPS_SIZE_INT_FS    64
-	#define  UDI_VENDOR_EPS_SIZE_BULK_FS   64
-	#define  UDI_VENDOR_EPS_SIZE_ISO_FS   256
-	#define  UDI_VENDOR_EPS_SIZE_INT_HS    64
-	#define  UDI_VENDOR_EPS_SIZE_BULK_HS  512
-	#define  UDI_VENDOR_EPS_SIZE_ISO_HS    64 \endcode
- {code}
+ * \code
+ #define  UDI_VENDOR_EPS_SIZE_INT_FS    64
+ #define  UDI_VENDOR_EPS_SIZE_BULK_FS   64
+ #define  UDI_VENDOR_EPS_SIZE_ISO_FS   256
+ #define  UDI_VENDOR_EPS_SIZE_INT_HS    64
+ #define  UDI_VENDOR_EPS_SIZE_BULK_HS  512
+ #define  UDI_VENDOR_EPS_SIZE_ISO_HS    64
+ \endcode
  *     \note The endpoint size is defined by the final application, and can be
  *     disabled if the full speed size is zero.
  * -# The Vendor transfers on interrupt, bulk and isochronous endpoints are
  * done through these functions:
- {code}
- *   \code // Start a transfer on interrupt IN
-	udi_vendor_interrupt_in_run();
-	// Start a transfer on interrupt OUT
-	udi_vendor_interrupt_out_run();
-	// Start a transfer on bulk IN
-	udi_vendor_bulk_in_run();
-	// Start a transfer on bulk OUT
-	udi_vendor_bulk_out_run();
-	// Start a transfer on isochronous IN
-	udi_vendor_iso_in_run();
-	// Start a transfer on isochronous OUT
-	udi_vendor_iso_out_run(); \endcode
- {code}
+ * \code
+ // Start a transfer on interrupt IN
+ udi_vendor_interrupt_in_run();
+ // Start a transfer on interrupt OUT
+ udi_vendor_interrupt_out_run();
+ // Start a transfer on bulk IN
+ udi_vendor_bulk_in_run();
+ // Start a transfer on bulk OUT
+ udi_vendor_bulk_out_run();
+ // Start a transfer on isochronous IN
+ udi_vendor_iso_in_run();
+ // Start a transfer on isochronous OUT
+ udi_vendor_iso_out_run();
+ \endcode
  *
  * \section udi_vendor_use_cases Advanced use cases
  * \ifnot ASF_MANUAL
@@ -537,91 +533,90 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  *
  * \subsection udi_vendor_use_case_composite_usage_code Example code
  * Content of conf_usb.h:
- {code}
  * \code
-	 #define USB_DEVICE_EP_CTRL_SIZE  64
-	 #define USB_DEVICE_NB_INTERFACE (X+1)
-	 #define USB_DEVICE_MAX_EP (X) to (X+6)
+ #define USB_DEVICE_EP_CTRL_SIZE  64
+ #define USB_DEVICE_NB_INTERFACE (X+1)
+ #define USB_DEVICE_MAX_EP (X) to (X+6)
 
-	 #define  UDI_VENDOR_EP_INTERRUPT_IN  (1 | USB_EP_DIR_IN)
-	 #define  UDI_VENDOR_EP_INTERRUPT_OUT (2 | USB_EP_DIR_OUT)
-	 #define  UDI_VENDOR_EP_BULK_IN       (3 | USB_EP_DIR_IN)
-	 #define  UDI_VENDOR_EP_BULK_OUT      (4 | USB_EP_DIR_OUT)
-	 #define  UDI_VENDOR_EP_ISO_IN        (5 | USB_EP_DIR_IN)
-	 #define  UDI_VENDOR_EP_ISO_OUT       (6 | USB_EP_DIR_OUT)
+ #define  UDI_VENDOR_EP_INTERRUPT_IN  (1 | USB_EP_DIR_IN)
+ #define  UDI_VENDOR_EP_INTERRUPT_OUT (2 | USB_EP_DIR_OUT)
+ #define  UDI_VENDOR_EP_BULK_IN       (3 | USB_EP_DIR_IN)
+ #define  UDI_VENDOR_EP_BULK_OUT      (4 | USB_EP_DIR_OUT)
+ #define  UDI_VENDOR_EP_ISO_IN        (5 | USB_EP_DIR_IN)
+ #define  UDI_VENDOR_EP_ISO_OUT       (6 | USB_EP_DIR_OUT)
 
-	 #define UDI_VENDOR_IFACE_NUMBER  X
+ #define UDI_VENDOR_IFACE_NUMBER  X
 
-	 #define UDI_COMPOSITE_DESC_T \
-	    udi_vendor_desc_t udi_vendor; \
-	    ...
-	 #define UDI_COMPOSITE_DESC_FS \
-	    .udi_vendor = UDI_VENDOR_DESC, \
-	    ...
-	 #define UDI_COMPOSITE_DESC_HS \
-	    .udi_vendor = UDI_VENDOR_DESC, \
-	    ...
-	 #define UDI_COMPOSITE_API \
-	    &udi_api_vendor, \
-	    ...
+ #define UDI_COMPOSITE_DESC_T \
+    udi_vendor_desc_t udi_vendor; \
+    ...
+ #define UDI_COMPOSITE_DESC_FS \
+    .udi_vendor = UDI_VENDOR_DESC, \
+    ...
+ #define UDI_COMPOSITE_DESC_HS \
+    .udi_vendor = UDI_VENDOR_DESC, \
+    ...
+ #define UDI_COMPOSITE_API \
+    &udi_api_vendor, \
+    ...
 \endcode
-{code}
+
  *
  * \subsection udi_vendor_use_case_composite_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
  * required for a USB composite device configuration:
- {code}
- *   \code // Endpoint control size, This must be:
-	// - 8, 16, 32 or 64 for full speed device (8 is recommended to save RAM)
-	// - 64 for a high speed device
-	#define USB_DEVICE_EP_CTRL_SIZE  64
-	// Total Number of interfaces on this USB device.
-	// Add 1 for Vendor.
-	#define USB_DEVICE_NB_INTERFACE (X+1)
-	// Total number of endpoints on this USB device.
-	// This must include each endpoint for each interface.
-	// Add 0 to 6 for Vendor interface.
-	// The number depends on UDI_VENDOR_EPS_SIZE_..._FS defines.
-	#define USB_DEVICE_MAX_EP (X) to (X+6) \endcode
- {code}
+ * \code
+ // Endpoint control size, This must be:
+ // - 8, 16, 32 or 64 for full speed device (8 is recommended to save RAM)
+ // - 64 for a high speed device
+ #define USB_DEVICE_EP_CTRL_SIZE  64
+ // Total Number of interfaces on this USB device.
+ // Add 1 for Vendor.
+ #define USB_DEVICE_NB_INTERFACE (X+1)
+ // Total number of endpoints on this USB device.
+ // This must include each endpoint for each interface.
+ // Add 0 to 6 for Vendor interface.
+ // The number depends on UDI_VENDOR_EPS_SIZE_..._FS defines.
+ #define USB_DEVICE_MAX_EP (X) to (X+6)
+\endcode
  * -# Ensure that conf_usb.h contains the description of
  * composite device:
- {code}
- *   \code // The endpoint numbers chosen by you for the Vendor.
-	// The endpoint numbers starting from 1.
-	#define  UDI_VENDOR_EP_INTERRUPT_IN  (1 | USB_EP_DIR_IN)
-	#define  UDI_VENDOR_EP_INTERRUPT_OUT (2 | USB_EP_DIR_OUT)
-	#define  UDI_VENDOR_EP_BULK_IN       (3 | USB_EP_DIR_IN)
-	#define  UDI_VENDOR_EP_BULK_OUT      (4 | USB_EP_DIR_OUT)
-	#define  UDI_VENDOR_EP_ISO_IN        (5 | USB_EP_DIR_IN)
-	#define  UDI_VENDOR_EP_ISO_OUT       (6 | USB_EP_DIR_OUT)
-	// The interface index of an interface starting from 0
-	#define UDI_VENDOR_IFACE_NUMBER  X \endcode
- {code}
+ * \code
+ // The endpoint numbers chosen by you for the Vendor.
+ // The endpoint numbers starting from 1.
+ #define  UDI_VENDOR_EP_INTERRUPT_IN  (1 | USB_EP_DIR_IN)
+ #define  UDI_VENDOR_EP_INTERRUPT_OUT (2 | USB_EP_DIR_OUT)
+ #define  UDI_VENDOR_EP_BULK_IN       (3 | USB_EP_DIR_IN)
+ #define  UDI_VENDOR_EP_BULK_OUT      (4 | USB_EP_DIR_OUT)
+ #define  UDI_VENDOR_EP_ISO_IN        (5 | USB_EP_DIR_IN)
+ #define  UDI_VENDOR_EP_ISO_OUT       (6 | USB_EP_DIR_OUT)
+ // The interface index of an interface starting from 0
+ #define UDI_VENDOR_IFACE_NUMBER  X
+\endcode
  * -# Ensure that conf_usb.h contains the following parameters
  * required for a USB composite device configuration:
- {code}
- *   \code // USB Interfaces descriptor structure
-	#define UDI_COMPOSITE_DESC_T \
-	   ...
-	   udi_vendor_desc_t udi_vendor; \
-	   ...
-	// USB Interfaces descriptor value for Full Speed
-	#define UDI_COMPOSITE_DESC_FS \
-	   ...
-	   .udi_vendor = UDI_VENDOR_DESC_FS, \
-	   ...
-	// USB Interfaces descriptor value for High Speed
-	#define UDI_COMPOSITE_DESC_HS \
-	   ...
-	   .udi_vendor = UDI_VENDOR_DESC_HS, \
-	   ...
-	// USB Interface APIs
-	#define UDI_COMPOSITE_API \
-	   ...
-	   &udi_api_vendor, \
-	   ... \endcode
- {code}
+ * \code
+ // USB Interfaces descriptor structure
+ #define UDI_COMPOSITE_DESC_T \
+    ...
+    udi_vendor_desc_t udi_vendor; \
+    ...
+ // USB Interfaces descriptor value for Full Speed
+ #define UDI_COMPOSITE_DESC_FS \
+    ...
+    .udi_vendor = UDI_VENDOR_DESC_FS, \
+    ...
+ // USB Interfaces descriptor value for High Speed
+ #define UDI_COMPOSITE_DESC_HS \
+    ...
+    .udi_vendor = UDI_VENDOR_DESC_HS, \
+    ...
+ // USB Interface APIs
+ #define UDI_COMPOSITE_API \
+    ...
+    &udi_api_vendor, \
+    ...
+\endcode
  *   - \note The descriptors order given in the four lists above must be the
  *     same as the order defined by all interface indexes. The interface index
  *     orders are defined through UDI_X_IFACE_NUMBER defines.
