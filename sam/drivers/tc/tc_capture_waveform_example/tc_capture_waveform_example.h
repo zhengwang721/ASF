@@ -108,15 +108,15 @@
  *
  * \section asfdoc_sam_drivers_tc_example_usage Usage
  *
- * -# Build the program and download it into the evaluation board
- * -# On the computer, open, and configure a terminal application
+ * -# Build the program and download it into the evaluation board.
+ * -# On the computer, open, and configure a terminal application.
  *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
  *   - 115200 baud
  *   - 8 bits of data
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Start the application
+ * -# Start the application.
  * -# In the terminal window, the following text should appear:
  *    \code
  *     -- TC capture waveform example  xxx --

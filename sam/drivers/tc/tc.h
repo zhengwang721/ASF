@@ -356,15 +356,15 @@ uint32_t tc_get_version(Tc *p_tc);
  * \snippet tc_capture_waveform_example.c tc_capture_init_irq
  * -# Enable the capture channel interrupt:
  * \snippet tc_capture_waveform_example.c tc_capture_init_module_irq
- * -# In the \ref TC_Handler_null "TC_Handler()" function, the load
+ * -# In the \ref TC_Handler_null "TC_Handler()" function, the load.
  * RB interrupt can be checked by:
  * \snippet tc_capture_waveform_example.c tc_capture_irq_handler_status
  * \code } \endcode
- * -# In the \ref TC_Handler_null "TC_Handler()" function, the RA value
+ * -# In the \ref TC_Handler_null "TC_Handler()" function, the RA value.
  * can be read by:
  * \code uint32_t gs_ul_captured_ra; \endcode
  * \snippet tc_capture_waveform_example.c tc_capture_irq_handler_read_ra
- * -# In the \ref TC_Handler_null "TC_Handler()" function, the RB value
+ * -# In the \ref TC_Handler_null "TC_Handler()" function, the RB value.
  * can be read by:
  * \code uint32_t gs_ul_captured_rb; \endcode
  * \snippet tc_capture_waveform_example.c tc_capture_irq_handler_read_rb
