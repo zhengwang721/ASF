@@ -262,7 +262,7 @@ int main(void)
 	/* Set callback for LCDCA interrupt */
 	lcdca_set_callback(lcdca_callback, LCDCA_IRQn, 1);
 
-	/* Enable LCDCA wakeup */
+	/* Enable LCDCA wake-up */
 	lcdca_enable_wakeup();
 
 	printf("Enter power save mode.\n\r");
