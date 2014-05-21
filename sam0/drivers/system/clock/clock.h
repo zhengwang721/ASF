@@ -440,10 +440,13 @@ enum system_clock_dfll_loop_mode {
 	 *  a low frequency reference clock
 	 */
 	SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED = SYSCTRL_DFLLCTRL_MODE,
+
+#ifdef SYSCTRL_DFLLCTRL_USBCRM
 	/** The DFLL is operating in USB recovery mode with frequency feedback
 	 *  from USB SOF
 	 */
 	SYSTEM_CLOCK_DFLL_LOOP_MODE_USB_RECOVERY = SYSCTRL_DFLLCTRL_USBCRM,
+#endif
 };
 
 /**

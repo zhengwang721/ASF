@@ -3,7 +3,6 @@
 		<info type="description" value="summary">
 		SAMD20 component definitions.
 		</info>
-		<build type="include-path" value="."/>
 		<build type="header-file" value="ac.h"/>
 		<build type="header-file" value="adc.h"/>
 		<build type="header-file" value="dac.h"/>

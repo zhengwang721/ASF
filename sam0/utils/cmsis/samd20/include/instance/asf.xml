@@ -3,15 +3,15 @@
 		<info type="description" value="summary">
 		SAMD20 PIO instance definitions.
 		</info>
-		<build type="header-file" value="instance_ac.h"/>
-		<build type="header-file" value="instance_adc.h"/>
-		<build type="header-file" value="instance_dac.h"/>
-		<build type="header-file" value="instance_dsu.h"/>
-		<build type="header-file" value="instance_eic.h"/>
-		<build type="header-file" value="instance_evsys.h"/>
-		<build type="header-file" value="instance_gclk.h"/>
-		<build type="header-file" value="instance_nvmctrl.h"/>
-		<build type="header-file" value="instance_pac0.h"/>
+		<build type="header-file" value="ac.h"/>
+		<build type="header-file" value="adc.h"/>
+		<build type="header-file" value="dac.h"/>
+		<build type="header-file" value="dsu.h"/>
+		<build type="header-file" value="eic.h"/>
+		<build type="header-file" value="evsys.h"/>
+		<build type="header-file" value="gclk.h"/>
+		<build type="header-file" value="nvmctrl.h"/>
+		<build type="header-file" value="pac0.h"/>
 		<build type="header-file" value="pac1.h"/>
 		<build type="header-file" value="pac2.h"/>
 		<build type="header-file" value="pm.h"/>
