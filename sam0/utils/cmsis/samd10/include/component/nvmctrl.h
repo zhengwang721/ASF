@@ -349,15 +349,12 @@ typedef struct {
   __IO NVMCTRL_LOCK_Type         LOCK;        /**< \brief Offset: 0x20 (R/W 16) Lock Section */
 } Nvmctrl;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#ifdef __GNUC__
- #define SECTION_NVMCTRL_CAL          
- #define SECTION_NVMCTRL_LOCKBIT      
- #define SECTION_NVMCTRL_OTP1         
- #define SECTION_NVMCTRL_OTP2         
- #define SECTION_NVMCTRL_OTP4         
- #define SECTION_NVMCTRL_USER         
-#endif
+#define SECTION_NVMCTRL_CAL
+#define SECTION_NVMCTRL_LOCKBIT
+#define SECTION_NVMCTRL_OTP1
+#define SECTION_NVMCTRL_OTP2
+#define SECTION_NVMCTRL_OTP4
+#define SECTION_NVMCTRL_USER
 
 /*@}*/
 

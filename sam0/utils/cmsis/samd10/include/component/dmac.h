@@ -946,10 +946,7 @@ typedef struct {
 #endif
 ;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#ifdef __GNUC__
- #define SECTION_DMAC_DESCRIPTOR      
-#endif
+#define SECTION_DMAC_DESCRIPTOR
 
 /*@}*/
 

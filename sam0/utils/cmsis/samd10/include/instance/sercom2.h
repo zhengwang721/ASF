@@ -134,9 +134,10 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for SERCOM2 peripheral ========== */
-#define SERCOM2_DMAC_ID_RX          5
-#define SERCOM2_DMAC_ID_TX          6
-#define SERCOM2_GCLK_ID_CORE        16
-#define SERCOM2_INT_MSB             6
+#define SERCOM2_DMAC_ID_RX          5        // Index of DMA RX trigger
+#define SERCOM2_DMAC_ID_TX          6        // Index of DMA TX trigger
+#define SERCOM2_GCLK_ID_CORE        16       // Index of Generic Clock for Core
+#define SERCOM2_GCLK_ID_SLOW        13       // Index of Generic Clock for SMbus Timeout
+#define SERCOM2_INT_MSB             6       
 
 #endif /* _SAMD10_SERCOM2_INSTANCE_ */

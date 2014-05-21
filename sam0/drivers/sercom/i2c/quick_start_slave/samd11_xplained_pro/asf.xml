@@ -9,7 +9,7 @@
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
-		<device-support value="atsamd11d14a"/>
+		<device-support value="atsamd11d14am"/>
 		<config name="config.sam0.drivers.sercom.i2c.slave" value="polled"/>
 	</project>
 </asf>

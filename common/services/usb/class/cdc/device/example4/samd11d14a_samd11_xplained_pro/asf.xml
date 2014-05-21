@@ -19,6 +19,6 @@
 		<config name="config.compiler.armgcc.stack_size" value="0x4CC"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
 		<toolchain-config name="armgcc.linker.miscellaneous.LinkerFlags" value="-Wl,--defsym,STACK_SIZE=0x4CC" toolchain="armgcc"/>
-		<device-support value="atsamd11d14a"/>
+		<device-support value="atsamd11d14am"/>
 	</project>
 </asf>

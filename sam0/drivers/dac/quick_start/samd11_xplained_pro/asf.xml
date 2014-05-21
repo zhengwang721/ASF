@@ -13,6 +13,6 @@
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
 		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
-		<device-support value="atsamd11d14a"/>
+		<device-support value="atsamd11d14am"/>
 	</project>
 </asf>

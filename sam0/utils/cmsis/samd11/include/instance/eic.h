@@ -70,8 +70,8 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for EIC peripheral ========== */
-#define EIC_CONFIG_NUM              ((EIC_EXTINT_NUM+7)/8)
-#define EIC_EXTINT_NUM              8
-#define EIC_GCLK_ID                 5
+#define EIC_CONFIG_NUM              1        // Number of CONFIG registers
+#define EIC_EXTINT_NUM              8        // Number of External Interrupts
+#define EIC_GCLK_ID                 5        // Index of Generic Clock
 
 #endif /* _SAMD11_EIC_INSTANCE_ */

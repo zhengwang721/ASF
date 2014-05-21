@@ -68,7 +68,7 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for DAC peripheral ========== */
-#define DAC_DMAC_ID_EMPTY           19
-#define DAC_GCLK_ID                 22
+#define DAC_DMAC_ID_EMPTY           19       // Index of DMAC EMPTY trigger
+#define DAC_GCLK_ID                 22       // Index of Generic Clock
 
 #endif /* _SAMD11_DAC_INSTANCE_ */
