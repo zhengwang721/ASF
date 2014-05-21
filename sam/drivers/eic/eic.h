@@ -64,7 +64,7 @@
  * external interrupt has its own interrupt request and can be individually masked. Each external
  * interrupt can generate an interrupt on rising or falling edge, or high or low level. Every interrupt
  * input has a configurable filter to remove spikes from the interrupt source. Every interrupt pin can
- * also be configured to be asynchronous, in order to wake up the part from sleep modes where the
+ * also be configured to be asynchronous, in order to wake-up the part from sleep modes where the
  * CLK_SYNC clock has been disabled.
  *
  * An additional Non-Maskable Interrupt (NMI) pin is also supported. This has the same properties as the

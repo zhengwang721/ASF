@@ -74,7 +74,7 @@
  *     -- xxxxxx-xx
  *     -- Compiled: xxx xx xxxx xx:xx:xx --
  *    \endcode
- * -# the sent text should appear
+ * -# the sent text should appear.
  */
 
 #include "asf.h"
