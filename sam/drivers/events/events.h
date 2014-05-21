@@ -119,7 +119,7 @@
  * channels, which can be freely linked to an Event Generator (i.e. a peripheral
  * within the device that is capable of generating events). Each channel can be
  * individually configured to select the generator peripheral, signal path,
- * Event Shaper (EVS) and Input Glitch Filter (IGF) applied to the input event
+ * Event Shaper (EVS), and Input Glitch Filter (IGF) applied to the input event
  * signal, before being passed to any event user(s).
  *
  * Event Channels can support multiple users within the device in a standardized
@@ -188,7 +188,7 @@
  *     event enabled.
  *
  * \subsubsection asfdoc_sam_drivers_events_overview_config_evsys Event System
- *  -# The event system channel must be configured and enabled, with the
+ *  -# The event system channel must be configured and enabled, with the.
  *     correct source peripheral selected as the channel's Event Generator.
  *  -# The event system user must be configured and enabled, with the
  *     correct source Event Channel selected as the source.
@@ -206,7 +206,7 @@
  *
  * \section asfdoc_sam_drivers_events_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam_drivers_events_extra. This includes:
+ * For extra information, see \ref asfdoc_sam_drivers_events_extra. This includes:
  *  - \ref asfdoc_sam_drivers_events_extra_acronyms
  *  - \ref asfdoc_sam_drivers_events_extra_dependencies
  *  - \ref asfdoc_sam_drivers_events_extra_errata
@@ -329,7 +329,7 @@ void events_disable(void);
 /**
  * \brief Set the Input Glitch Filter Divider.
  *
- * \param[in]  divider Input Glitch Filter divider.
+ * \param[in]  divider Input Glitch Filter divider
  *
  * \note As stated in the datasheet, there is one divider value for
  * all Event Shaper (EVS) instances.
@@ -347,7 +347,7 @@ void events_ch_configure(struct events_ch_conf *const config);
 /**
  * \brief Enable an Event Channel.
  *
- * \param[in] channel_id  Event Channel ID.
+ * \param[in] channel_id  Event Channel ID
  */
 static inline void events_ch_enable(
 		uint32_t channel_id)
@@ -358,7 +358,7 @@ static inline void events_ch_enable(
 /**
  * \brief Disable an Event Channel.
  *
- * \param[in] channel_id  Event Channel ID.
+ * \param[in] channel_id  Event Channel ID
  */
 static inline void events_ch_disable(
 		uint32_t channel_id)
@@ -369,11 +369,11 @@ static inline void events_ch_disable(
 /**
  * \brief Get the status (enabled or disabled) of an Event Channel.
  *
- * \param[in] channel_id  Event Channel ID.
+ * \param[in] channel_id  Event Channel ID
  *
  * \return The Event Channel enabled/disabled status.
- * \retval true  Event Channel is enabled.
- * \retval false Event Channel is disabled.
+ * \retval true  Event Channel is enabled
+ * \retval false Event Channel is disabled
  */
 static inline bool events_ch_is_enabled(
 		uint32_t channel_id)
@@ -388,11 +388,11 @@ static inline bool events_ch_is_enabled(
 /**
  * \brief Get the busy status of an Event Channel.
  *
- * \param[in] channel_id  Event Channel ID.
+ * \param[in] channel_id  Event Channel ID
  *
  * \return The Event Channel busy status.
- * \retval true  If the Event Channel is ready to be used.
- * \retval false If the Event Channel is currently busy.
+ * \retval true  If the Event Channel is ready to be used
+ * \retval false If the Event Channel is currently busy
  */
 static inline bool events_ch_is_ready(
 		uint32_t channel_id)
@@ -407,7 +407,7 @@ static inline bool events_ch_is_ready(
 /**
  * \brief Enable the software trigger for an Event Channel.
  *
- * \param[in] channel_id  Event Channel ID.
+ * \param[in] channel_id  Event Channel ID
  */
 static inline void events_ch_enable_software_trigger(
 		uint32_t channel_id)
@@ -418,7 +418,7 @@ static inline void events_ch_enable_software_trigger(
 /**
  * \brief Disable the software trigger for an Event Channel.
  *
- * \param[in] channel_id  Event Channel ID.
+ * \param[in] channel_id  Event Channel ID
  */
 static inline void events_ch_disable_software_trigger(
 		uint32_t channel_id)
@@ -429,7 +429,7 @@ static inline void events_ch_disable_software_trigger(
 /**
  * \brief Trigger a Software Event for the corresponding Event Channel.
  *
- * \param[in] channel_id  Event Channel ID.
+ * \param[in] channel_id  Event Channel ID
  */
 static inline void events_ch_software_trigger(
 		uint32_t channel_id)
@@ -440,11 +440,11 @@ static inline void events_ch_software_trigger(
 /**
  * \brief Get the trigger status of an Event Channel.
  *
- * \param[in] channel_id  Event Channel ID.
+ * \param[in] channel_id  Event Channel ID
  *
  * \return The Event Channel trigger status.
- * \retval true  A channel event has occurred.
- * \retval false A channel event has not occurred.
+ * \retval true  A channel event has occurred
+ * \retval false A channel event has not occurred
  */
 static inline bool events_ch_is_triggered(
 		uint32_t channel_id)
@@ -459,7 +459,7 @@ static inline bool events_ch_is_triggered(
 /**
  * \brief Clear the trigger status of an Event Channel.
  *
- * \param[in] channel_id  Event Channel ID.
+ * \param[in] channel_id  Event Channel ID
  */
 static inline void events_ch_clear_trigger_status(
 		uint32_t channel_id)
@@ -470,11 +470,11 @@ static inline void events_ch_clear_trigger_status(
 /**
  * \brief Get the overrun status of an Event Channel.
  *
- * \param[in] channel_id  Event Channel ID.
+ * \param[in] channel_id  Event Channel ID
  *
  * \return The Event Channel overrun status.
- * \retval true  A channel overrun event has occurred.
- * \retval false A channel overrun event has not occurred.
+ * \retval true  A channel overrun event has occurred
+ * \retval false A channel overrun event has not occurred
  */
 static inline bool events_ch_is_overrun(
 		uint32_t channel_id)
@@ -489,7 +489,7 @@ static inline bool events_ch_is_overrun(
 /**
  * \brief Clear the overrun status of an Event Channel.
  *
- * \param[in] channel_id  Event Channel ID.
+ * \param[in] channel_id  Event Channel ID
  */
 static inline void events_ch_clear_overrun_status(
 		uint32_t channel_id)
@@ -629,14 +629,14 @@ static inline void events_ch_clear_overrun_status(
  *
  * \subsection asfdoc_sam_events_qsg_setup_workflow Workflow
  *
- * -# Initialize AST to generate periodic event 0
+ * -# Initialize AST to generate periodic event 0.
  *  see sam/drivers/events/example1 for more detail:
  *  \snippet events_example1.c quick_start_init_ast_basic_use
  *
  * -# Initialize the event module and enable it:
  * \snippet events_example1.c quick_start_init_events_basic_use
  *
- * -# Initialize PDCA channel 0 to transfer data to USART
+ * -# Initialize PDCA channel 0 to transfer data to USART.
  *  see sam/drivers/events/example1 for more detail:
  *  \snippet events_example1.c quick_start_init_pdca_basic_use
  *

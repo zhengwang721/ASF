@@ -51,7 +51,7 @@
  *  The default configuration is as follows:
  *  - Input Glitch Filter Divider is set to \ref EVENT_IGF_DIVIDER_1024
  *
- *  \param[out] config    Configuration structure to initialize to default values.
+ *  \param[out] config    Configuration structure to initialize to default values
  */
 void events_get_config_defaults(
 		struct events_conf *const config)
@@ -65,7 +65,7 @@ void events_get_config_defaults(
 /**
  * \brief Initialize the events module.
  *
- *  \param[in] config    Configuration structure to initialize to default values.
+ *  \param[in] config    Configuration structure to initialize to default values
  */
 void events_init(
 		struct events_conf *const config)
@@ -107,7 +107,7 @@ void events_disable(void)
  *  - Event shaper is disabled
  *  - Event Input Glitch Filter is disabled
  *
- *  \param[out] config    Configuration structure to initialize to default values.
+ *  \param[out] config    Configuration structure to initialize to default values
  */
 void events_ch_get_config_defaults(
 		struct events_ch_conf *const config)
@@ -125,7 +125,7 @@ void events_ch_get_config_defaults(
 /**
  * \brief Configure an Event Channel.
  *
- * \param[in,out] config      Configuration settings for the Event Channel.
+ * \param[in,out] config      Configuration settings for the Event Channel
  */
 void events_ch_configure(
 		struct events_ch_conf *const config)
