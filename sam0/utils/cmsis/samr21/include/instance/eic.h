@@ -72,8 +72,7 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for EIC peripheral ========== */
-#define EIC_CONFIG_NUM              ((EIC_USABLE_EXTINT_NUM+7)/8)
-#define EIC_EXTINT_NUM              18
+#define EIC_CONFIG_NUM              ((EIC_EXTINT_NUM+7)/8)
 #define EIC_GCLK_ID                 5
 
 #endif /* _SAMR21_EIC_INSTANCE_ */

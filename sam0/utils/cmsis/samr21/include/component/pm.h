@@ -234,13 +234,13 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t HPB0:1;           /*!< bit:      0  HPB0 AHB Clock Enable              */
-    uint32_t HPB1:1;           /*!< bit:      1  HPB1 AHB Clock Enable              */
-    uint32_t HPB2:1;           /*!< bit:      2  HPB2 AHB Clock Enable              */
-    uint32_t DSU:1;            /*!< bit:      3  DSU AHB Clock Enable               */
-    uint32_t NVMCTRL:1;        /*!< bit:      4  NVMCTRL AHB Clock Enable           */
-    uint32_t DMAC:1;           /*!< bit:      5  DMAC AHB Clock Enable              */
-    uint32_t USB:1;            /*!< bit:      6  USB AHB Clock Enable               */
+    uint32_t HPB0:1;           /*!< bit:      0  HPB0 AHB Clock Mask                */
+    uint32_t HPB1:1;           /*!< bit:      1  HPB1 AHB Clock Mask                */
+    uint32_t HPB2:1;           /*!< bit:      2  HPB2 AHB Clock Mask                */
+    uint32_t DSU:1;            /*!< bit:      3  DSU AHB Clock Mask                 */
+    uint32_t NVMCTRL:1;        /*!< bit:      4  NVMCTRL AHB Clock Mask             */
+    uint32_t DMAC:1;           /*!< bit:      5  DMAC AHB Clock Mask                */
+    uint32_t USB:1;            /*!< bit:      6  USB AHB Clock Mask                 */
     uint32_t :25;              /*!< bit:  7..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
@@ -250,19 +250,19 @@ typedef union {
 #define PM_AHBMASK_OFFSET           0x14         /**< \brief (PM_AHBMASK offset) AHB Mask */
 #define PM_AHBMASK_RESETVALUE       0x0000007F   /**< \brief (PM_AHBMASK reset_value) AHB Mask */
 
-#define PM_AHBMASK_HPB0_Pos         0            /**< \brief (PM_AHBMASK) HPB0 AHB Clock Enable */
+#define PM_AHBMASK_HPB0_Pos         0            /**< \brief (PM_AHBMASK) HPB0 AHB Clock Mask */
 #define PM_AHBMASK_HPB0             (0x1u << PM_AHBMASK_HPB0_Pos)
-#define PM_AHBMASK_HPB1_Pos         1            /**< \brief (PM_AHBMASK) HPB1 AHB Clock Enable */
+#define PM_AHBMASK_HPB1_Pos         1            /**< \brief (PM_AHBMASK) HPB1 AHB Clock Mask */
 #define PM_AHBMASK_HPB1             (0x1u << PM_AHBMASK_HPB1_Pos)
-#define PM_AHBMASK_HPB2_Pos         2            /**< \brief (PM_AHBMASK) HPB2 AHB Clock Enable */
+#define PM_AHBMASK_HPB2_Pos         2            /**< \brief (PM_AHBMASK) HPB2 AHB Clock Mask */
 #define PM_AHBMASK_HPB2             (0x1u << PM_AHBMASK_HPB2_Pos)
-#define PM_AHBMASK_DSU_Pos          3            /**< \brief (PM_AHBMASK) DSU AHB Clock Enable */
+#define PM_AHBMASK_DSU_Pos          3            /**< \brief (PM_AHBMASK) DSU AHB Clock Mask */
 #define PM_AHBMASK_DSU              (0x1u << PM_AHBMASK_DSU_Pos)
-#define PM_AHBMASK_NVMCTRL_Pos      4            /**< \brief (PM_AHBMASK) NVMCTRL AHB Clock Enable */
+#define PM_AHBMASK_NVMCTRL_Pos      4            /**< \brief (PM_AHBMASK) NVMCTRL AHB Clock Mask */
 #define PM_AHBMASK_NVMCTRL          (0x1u << PM_AHBMASK_NVMCTRL_Pos)
-#define PM_AHBMASK_DMAC_Pos         5            /**< \brief (PM_AHBMASK) DMAC AHB Clock Enable */
+#define PM_AHBMASK_DMAC_Pos         5            /**< \brief (PM_AHBMASK) DMAC AHB Clock Mask */
 #define PM_AHBMASK_DMAC             (0x1u << PM_AHBMASK_DMAC_Pos)
-#define PM_AHBMASK_USB_Pos          6            /**< \brief (PM_AHBMASK) USB AHB Clock Enable */
+#define PM_AHBMASK_USB_Pos          6            /**< \brief (PM_AHBMASK) USB AHB Clock Mask */
 #define PM_AHBMASK_USB              (0x1u << PM_AHBMASK_USB_Pos)
 #define PM_AHBMASK_MASK             0x0000007Fu  /**< \brief (PM_AHBMASK) MASK Register */
 

@@ -722,7 +722,9 @@ typedef union {
   struct {
     uint16_t :6;               /*!< bit:  0.. 5  Reserved                           */
     uint16_t RUNSTDBY:1;       /*!< bit:      6  Run in Standby                     */
-    uint16_t :9;               /*!< bit:  7..15  Reserved                           */
+    uint16_t :6;               /*!< bit:  7..12  Reserved                           */
+    uint16_t FORCELDO:1;       /*!< bit:     13  Force LDO Voltage Regulator        */
+    uint16_t :2;               /*!< bit: 14..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } SYSCTRL_VREG_Type;
@@ -733,7 +735,9 @@ typedef union {
 
 #define SYSCTRL_VREG_RUNSTDBY_Pos   6            /**< \brief (SYSCTRL_VREG) Run in Standby */
 #define SYSCTRL_VREG_RUNSTDBY       (0x1u << SYSCTRL_VREG_RUNSTDBY_Pos)
-#define SYSCTRL_VREG_MASK           0x0040u      /**< \brief (SYSCTRL_VREG) MASK Register */
+#define SYSCTRL_VREG_FORCELDO_Pos   13           /**< \brief (SYSCTRL_VREG) Force LDO Voltage Regulator */
+#define SYSCTRL_VREG_FORCELDO       (0x1u << SYSCTRL_VREG_FORCELDO_Pos)
+#define SYSCTRL_VREG_MASK           0x2040u      /**< \brief (SYSCTRL_VREG) MASK Register */
 
 /* -------- SYSCTRL_VREF : (SYSCTRL Offset: 0x40) (R/W 32) Voltage References System (VREF) Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
