@@ -64,7 +64,7 @@
  *
  * \section asfdoc_sam_drivers_pdc_example_usage Usage
  *
- * -# Build the program and download it into the evaluation board
+ * -# Build the program and download it into the evaluation board.
  * -# On the computer, open, and configure a terminal application
  *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
  *   - 115200 baud
@@ -79,7 +79,7 @@
       -- xxxxxx-xx
       -- Compiled: xxx xx xxxx xx:xx:xx --
      \endverbatim
- * -# The sent text should appear
+ * -# The sent text should appear.
  */
 
  #endif /* PDC_UART_EXAMPLE_H_INCLUDED */

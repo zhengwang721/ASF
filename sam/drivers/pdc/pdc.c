@@ -54,7 +54,7 @@ extern "C" {
 /**
  * \brief Configure PDC for data transmit.
  *
- * \param[out] p_pdc        Device structure pointer.
+ * \param[out] p_pdc        Device structure pointer
  * \param[in] p_packet      Pointer to packet information for current buffer register
  *                          set, NULL to let them as is.
  * \param[in] p_next_packet Pointer to packet information for next buffer register
@@ -81,7 +81,7 @@ void pdc_tx_init(
 /**
  * \brief Configure PDC for data receive.
  *
- * \param[out] p_pdc        Device structure pointer.
+ * \param[out] p_pdc        Device structure pointer
  * \param[in] p_packet      Pointer to packet information for current buffer register
  *                          set, NULL to let them as is.
  * \param[in] p_next_packet Pointer to packet information for next buffer register
@@ -108,7 +108,7 @@ void pdc_rx_init(
 /**
  * \brief Clear PDC buffer receive counter.
  *
- * \param[out] p_pdc Device structure pointer.
+ * \param[out] p_pdc Device structure pointer
  */
 void pdc_rx_clear_cnt(
 		Pdc *p_pdc)
@@ -126,8 +126,8 @@ void pdc_rx_clear_cnt(
  * \note It is forbidden to set both TXTEN and RXTEN for a half duplex
  * peripheral.
  *
- * \param[out] p_pdc 	  Device structure pointer.
- * \param[in] ul_controls Transfer directions.
+ * \param[out] p_pdc 	  Device structure pointer
+ * \param[in] ul_controls Transfer directions
  *                        (bit PERIPH_PTCR_RXTEN and bit PERIPH_PTCR_TXTEN)
  */
 void pdc_enable_transfer(
@@ -144,8 +144,8 @@ void pdc_enable_transfer(
 /**
  * \brief Disable PDC transfers (TX and/or RX).
  *
- * \param[out] p_pdc      Device structure pointer.
- * \param[in] ul_controls Transfer directions.
+ * \param[out] p_pdc      Device structure pointer
+ * \param[in] ul_controls Transfer directions
  *                        (bit PERIPH_PTCR_TXTDIS, bit PERIPH_PTCR_TXTDIS)
  */
 void pdc_disable_transfer(
@@ -162,7 +162,7 @@ void pdc_disable_transfer(
 /**
  * \brief Read PDC status.
  *
- * \param[in] p_pdc Device structure pointer.
+ * \param[in] p_pdc Device structure pointer
  *
  * \return PDC status register bit map.
  *
@@ -197,7 +197,7 @@ uint32_t pdc_read_status(
 /**
  * \brief Return Receive Pointer Register (RPR) value.
  *
- * \param[in] p_pdc Device structure pointer.
+ * \param[in] p_pdc Device structure pointer
  *
  * \return Receive Pointer Register value.
  */
@@ -213,7 +213,7 @@ uint32_t pdc_read_rx_ptr(
 /**
  * \brief Return Receive Counter Register (RCR) value.
  *
- * \param[in] p_pdc Device structure pointer.
+ * \param[in] p_pdc Device structure pointer
  *
  * \return Receive Counter Register value.
  */
@@ -229,7 +229,7 @@ uint32_t pdc_read_rx_counter(
 /**
  * \brief Return Transmit Pointer Register (TPR) value.
  *
- * \param[in] p_pdc Device structure pointer.
+ * \param[in] p_pdc Device structure pointer
  *
  * \return Transmit Pointer Register value.
  */
@@ -245,7 +245,7 @@ uint32_t pdc_read_tx_ptr(
 /**
  * \brief Return Transmit Counter Register (TCR) value.
  *
- * \param[in] p_pdc Device structure pointer.
+ * \param[in] p_pdc Device structure pointer
  *
  * \return Transmit Counter Register value.
  */
@@ -261,7 +261,7 @@ uint32_t pdc_read_tx_counter(
 /**
  * \brief Return Receive Next Pointer Register (RNPR) value.
  *
- * \param[in] p_pdc Device structure pointer.
+ * \param[in] p_pdc Device structure pointer
  *
  * \return Receive Next Pointer Register value.
  */
@@ -277,7 +277,7 @@ uint32_t pdc_read_rx_next_ptr(
 /**
  * \brief Return Receive Next Counter Register (RNCR) value.
  *
- * \param[in] p_pdc Device structure pointer.
+ * \param[in] p_pdc Device structure pointer
  *
  * \return Receive Next Counter Register value.
  */
@@ -293,7 +293,7 @@ uint32_t pdc_read_rx_next_counter(
 /**
  * \brief Return Transmit Next Pointer Register (TNPR) value.
  *
- * \param[in] p_pdc Device structure pointer.
+ * \param[in] p_pdc Device structure pointer
  *
  * \return Transmit Next Pointer Register value.
  */
@@ -309,7 +309,7 @@ uint32_t pdc_read_tx_next_ptr(
 /**
  * \brief Return Transmit Next Counter Register (TNCR) value.
  *
- * \param[in] p_pdc Device structure pointer.
+ * \param[in] p_pdc Device structure pointer
  *
  * \return Transmit Next Counter Register value.
  */

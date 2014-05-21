@@ -92,7 +92,7 @@
  *
  * \section asfdoc_sam_drivers_pdc_extra_info Extra Information
 
- * For extra information see \ref asfdoc_sam_drivers_pdc_extra. This includes:
+ * For extra information, see \ref asfdoc_sam_drivers_pdc_extra. This includes:
  *  - \ref asfdoc_sam_drivers_pdc_extra_acronyms
  *  - \ref asfdoc_sam_drivers_pdc_extra_dependencies
  *  - \ref asfdoc_sam_drivers_pdc_extra_errata
