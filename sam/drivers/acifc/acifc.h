@@ -593,7 +593,7 @@ static inline uint32_t ac_get_status(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>A</td>
+ *		<td>42323A</td>
  *		<td>03/2014</td>
  *		<td>Initial document release</td>
  *	</tr>
