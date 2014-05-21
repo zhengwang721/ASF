@@ -355,9 +355,9 @@ static inline void gpio_disable_pin_periph_event(ioport_pin_t pin)
  * input pin with pull up and glitch filter and to generate an interrupt on a
  * falling edge
  * \snippet example/gpio_example.c config_button_0_trig_fall_1
- * -# Set a callback for the pin interrupt
+ * -# Set a callback for the pin interrupt.
  * \snippet example/gpio_example.c config_button_0_trig_fall_2
- * -# Enable pin interrupt
+ * -# Enable pin interrupt.
  * \snippet example/gpio_example.c enable_pin_interrupt
  *
  * \section gpio_int_usage Interrupt Usage
