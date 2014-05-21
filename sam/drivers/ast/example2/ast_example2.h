@@ -57,7 +57,7 @@
  *
  * \section asfdoc_sam_drivers_ast_example2_description Description
  * Upon startup, the program uses the USART driver to display a menu that lets
- * the user select the low power mode from which the device will wake up when
+ * the user select the low power mode from which the device will wake-up when
  * the AST Alarm triggers.
  *
  * \section asfdoc_sam_drivers_ast_example2_files Main Files
@@ -71,7 +71,7 @@
  * for Atmel. Other compilers may or may not work.
  *
  * \section asfdoc_sam_drivers_ast_example2_configinfo Usage
- * -# Build the program and download it into the evaluation board
+ * -# Build the program and download it into the evaluation board.
  * -# On the computer, open, and configure a terminal application
  *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
  *   - 115200 baud
@@ -79,7 +79,7 @@
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Start the application
+ * -# Start the application.
  * -# In the terminal window, the following text should appear:
  *     \code
  *     -- -- AST Example 2 in Counter Mode --

@@ -72,7 +72,7 @@
  * The AST module in the SAM4L devices is a 32-bit counter, with a 32-bit
  * programmable prescaler. Typically, the AST clock is run continuously,
  * including in the device's low-power sleep modes, to track the current time
- * and date information.The AST can also wake up the system from backup mode
+ * and date information. The AST can also wake-up the system from backup mode
  * using either the alarm wakeup, periodic wakeup, or overflow wake-up mechanisms.
  *
  * The AST has been designed to meet the system tick and Real-Time Clock
