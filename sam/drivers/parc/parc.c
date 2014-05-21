@@ -50,12 +50,12 @@
  * Initialize the PARC driver structure and the hardware module based on the
  * given configuration structure's contents.
  *
- * \param[in,out] module_inst Pointer to the PARC driver structure.
- * \param[in]  hw             Pointer to the PARC module hardware register structure.
- * \param[in]  config         Pointer to the PARC configuration structure.
+ * \param[in,out] module_inst Pointer to the PARC driver structure
+ * \param[in]  hw             Pointer to the PARC module hardware register structure
+ * \param[in]  config         Pointer to the PARC configuration structure
  *
  * \return The initialization status.
- * \retval STATUS_OK The initialization was successful.
+ * \retval STATUS_OK The initialization was successful
  */
 enum status_code parc_init(
 	struct parc_module *const module_inst,
@@ -86,11 +86,11 @@ enum status_code parc_init(
  *
  * Configure the PARC module from the supplied configuration structure.
  *
- * \param[in] module_inst Pointer to the PARC driver structure.
- * \param[in] config      Pointer to the PARC configuration structure.
+ * \param[in] module_inst Pointer to the PARC driver structure
+ * \param[in] config      Pointer to the PARC configuration structure
  *
  * \return The configuration status.
- * \retval STATUS_OK The configuration was successful.
+ * \retval STATUS_OK The configuration was successful
  */
 enum status_code parc_set_config(
 	struct parc_module *const module_inst,

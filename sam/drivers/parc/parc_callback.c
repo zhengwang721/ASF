@@ -86,12 +86,12 @@ void _parc_interrupt_handler(void)
  *
  * \note The callback must be enabled by using \ref parc_enable_callback.
  *
- * \param[in,out] module    Driver structure pointer.
- * \param[in] callback_func Pointer to a callback function.
- * \param[in] callback_type \ref parc_callback_type "Interrupt callback" type.
+ * \param[in,out] module    Driver structure pointer
+ * \param[in] callback_func Pointer to a callback function
+ * \param[in] callback_type \ref parc_callback_type "Interrupt callback" type
  *
  * \return The status of the interrupt callback register operation.
- * \retval STATUS_OK PARC interrupt callback was registered successfully.
+ * \retval STATUS_OK PARC interrupt callback was registered successfully
  */
 enum status_code parc_register_callback(
 		struct parc_module *const module,
@@ -114,11 +114,11 @@ enum status_code parc_register_callback(
 /**
  * \brief Unregister a PARC interrupt callback.
  *
- * \param[in,out] module    Driver structure pointer.
- * \param[in] callback_type \ref parc_callback_type "Interrupt callback" type.
+ * \param[in,out] module    Driver structure pointer
+ * \param[in] callback_type \ref parc_callback_type "Interrupt callback" type
  *
  * \return The status of the interrupt callback unregister operation.
- * \retval STATUS_OK PARC interrupt callback was unregistered successfully.
+ * \retval STATUS_OK PARC interrupt callback was unregistered successfully
  */
 enum status_code  parc_unregister_callback(
 		struct parc_module *const module,

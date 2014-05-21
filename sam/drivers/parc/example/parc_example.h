@@ -130,7 +130,7 @@
  *
  * -# Connect the GPIO pins and PARC port according to the above connection
  * list.
- * -# Build the program and download it into the evaluation kit
+ * -# Build the program and download it into the evaluation kit.
  * -# On the computer, open and configure a terminal application
  *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
  *   - 115200 baud
@@ -138,7 +138,7 @@
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Start the application
+ * -# Start the application.
  * -# In the terminal window, the following text should appear:
  * \verbatim
        -- SAM PARC Example --
@@ -152,7 +152,7 @@
 
      Press y to sample all the data.
      Press n to sample the data only one out of two. \endverbatim
- * -# PARC captures data and sends the captured data to the terminal
+ * -# PARC captures data and sends the captured data to the terminal.
  */
 
 #endif /* PARC_EXAMPLE_H_INCLUDED */

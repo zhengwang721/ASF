@@ -125,7 +125,7 @@
  *
  * \section asfdoc_sam_drivers_parc_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam_drivers_parc_extra. This includes:
+ * For extra information, see \ref asfdoc_sam_drivers_parc_extra. This includes:
  *  - \ref asfdoc_sam_drivers_parc_extra_acronyms
  *  - \ref asfdoc_sam_drivers_parc_extra_dependencies
  *  - \ref asfdoc_sam_drivers_parc_extra_errata
@@ -293,7 +293,7 @@ enum status_code parc_set_config(
  * - Sample data regardless of the levels of PCEN1 and PCEN2
  * - 8-bit data width
  *
- * \param[out] config Pointer to a PARC configuration structure.
+ * \param[out] config Pointer to a PARC configuration structure
  */
 static inline void parc_get_config_defaults(
 		struct parc_config *const config)
@@ -310,10 +310,10 @@ static inline void parc_get_config_defaults(
 /**
  * \brief Enable the PARC module.
  *
- * \param[in] module_inst Driver structure pointer.
+ * \param[in] module_inst Driver structure pointer
  *
  * \return The enable procedure status.
- * \retval STATUS_OK The enable procedure was successful.
+ * \retval STATUS_OK The enable procedure was successful
  */
 static inline enum status_code parc_enable(
 		struct parc_module *const module_inst)
@@ -334,10 +334,10 @@ static inline enum status_code parc_enable(
 /**
  * \brief Disable the PARC module.
  *
- * \param[in] module_inst Driver structure pointer.
+ * \param[in] module_inst Driver structure pointer
  *
  * \return The disable procedure status.
- * \retval STATUS_OK The disable procedure was successful.
+ * \retval STATUS_OK The disable procedure was successful
  */
 static inline enum status_code parc_disable(
 		struct parc_module *const module_inst)
@@ -358,7 +358,7 @@ static inline enum status_code parc_disable(
 /**
  * \brief Start a PARC conversion
  *
- * \param[in] module_inst Driver structure pointer.
+ * \param[in] module_inst Driver structure pointer
  */
 static inline void parc_start_capture(
 		struct parc_module *const module_inst)
@@ -374,7 +374,7 @@ static inline void parc_start_capture(
 /**
  * \brief Stop a PARC conversion.
  *
- * \param[in] module_inst Driver structure pointer.
+ * \param[in] module_inst Driver structure pointer
  */
 static inline void parc_stop_capture(
 		struct parc_module *const module_inst)
@@ -390,13 +390,13 @@ static inline void parc_stop_capture(
 /**
  * \brief Get the PARC module's current status.
  *
- * \param[in] module_inst Driver structure pointer.
+ * \param[in] module_inst Driver structure pointer
  *
  * \return The PARC module's current status as a \ref parc_status "bitmask".
- * \retval PARC_STATUS_EN   PARC is enabled.
- * \retval PARC_STATUS_CS   PARC capture status.
- * \retval PARC_STATUS_DRDY PARC data ready.
- * \retval PARC_STATUS_OVR  PARC overrun.
+ * \retval PARC_STATUS_EN   PARC is enabled
+ * \retval PARC_STATUS_CS   PARC capture status
+ * \retval PARC_STATUS_DRDY PARC data ready
+ * \retval PARC_STATUS_OVR  PARC overrun
  */
 static inline uint32_t parc_get_status(
 		struct parc_module *const module_inst)
@@ -408,11 +408,11 @@ static inline uint32_t parc_get_status(
 /**
  * \brief Check the data ready status of PARC.
  *
- * \param[in] module_inst Driver structure pointer.
+ * \param[in] module_inst Driver structure pointer
  *
  * \return The PARC data ready status.
- * \retval false Captured data is not ready.
- * \retval true  Captured data is ready.
+ * \retval false Captured data is not ready
+ * \retval true  Captured data is ready
  */
 static inline bool parc_is_data_ready(
 		struct parc_module *const module_inst)
@@ -424,11 +424,11 @@ static inline bool parc_is_data_ready(
 /**
  * \brief Clear PARC interrupt(s) status flag.
  *
- * \param[in] module_inst Driver structure pointer.
- * \param[in] status      A bitmask of \ref parc_status "interrupt sources" to clear.
+ * \param[in] module_inst Driver structure pointer
+ * \param[in] status      A bitmask of \ref parc_status "interrupt sources" to clear
  *
  * \return The clear interrupt operation status.
- * \retval STATUS_OK The interrupt was cleared successfully.
+ * \retval STATUS_OK The interrupt was cleared successfully
  */
 static inline enum status_code parc_clear_status(
 		struct parc_module *const module_inst,
@@ -460,12 +460,12 @@ static inline enum status_code parc_clear_status(
 /**
  * \brief Get PARC data.
  *
- * \param[in]  module_inst Driver structure pointer.
- * \param[out] data        Pointer to store the captured data in.
+ * \param[in]  module_inst Driver structure pointer
+ * \param[out] data        Pointer to store the captured data in
  *
  * \return The status of the PARC read data request.
- * \retval STATUS_OK        Captured data was read successfully.
- * \retval STATUS_ERR_BUSY  Captured data is not ready.
+ * \retval STATUS_OK        Captured data was read successfully
+ * \retval STATUS_ERR_BUSY  Captured data is not ready
  */
 static inline enum status_code parc_read(
 		struct parc_module *const module_inst,
@@ -491,8 +491,8 @@ static inline enum status_code parc_read(
 /**
  * \brief Enable PARC interrupt(s).
  *
- * \param[in] module_inst Driver structure pointer.
- * \param[in] source      Bitmask of \ref parc_interrupt_source "interrupt sources" to enable.
+ * \param[in] module_inst Driver structure pointer
+ * \param[in] source      Bitmask of \ref parc_interrupt_source "interrupt sources" to enable
  */
 static inline void parc_enable_interrupts(
 		struct parc_module *const module_inst,
@@ -510,8 +510,8 @@ static inline void parc_enable_interrupts(
 /**
  * \brief Disable PARC interrupt(s).
  *
- * \param[in] module_inst Driver structure pointer.
- * \param[in] source      Bitmask of \ref parc_interrupt_source "interrupt sources" to disable.
+ * \param[in] module_inst Driver structure pointer
+ * \param[in] source      Bitmask of \ref parc_interrupt_source "interrupt sources" to disable
  */
 static inline void parc_disable_interrupts(
 		struct parc_module *const module_inst,
@@ -529,7 +529,7 @@ static inline void parc_disable_interrupts(
 /**
  * \brief Get the PARC interrupt mask.
  *
- * \param[in] module_inst Driver structure pointer.
+ * \param[in] module_inst Driver structure pointer
  *
  * \return The PARC interrupt mask.
  */
@@ -544,10 +544,10 @@ static inline uint32_t parc_read_interrupt_mask(
 /**
  * \brief Enable the PARC events mode.
  *
- * \param[in] module_inst Driver structure pointer.
+ * \param[in] module_inst Driver structure pointer
  *
  * \return The status of the event enable operation.
- * \retval STATUS_OK The event was enabled successfully.
+ * \retval STATUS_OK The event was enabled successfully
  */
 static inline enum status_code parc_enable_events(
 	struct parc_module *const module_inst)
@@ -561,10 +561,10 @@ static inline enum status_code parc_enable_events(
 /**
  * \brief Disable the PARC events mode.
  *
- * \param[in] module_inst Driver structure pointer.
+ * \param[in] module_inst Driver structure pointer
  *
  * \return The status of the event disable operation.
- * \retval STATUS_OK The event was disabled successfully.
+ * \retval STATUS_OK The event was disabled successfully
  */
 static inline enum status_code parc_disable_events(
 	struct parc_module *const module_inst)
@@ -578,7 +578,7 @@ static inline enum status_code parc_disable_events(
 /**
  * \brief Get the PARC module version.
  *
- * \param[in] module_inst Driver structure pointer.
+ * \param[in] module_inst Driver structure pointer
  *
  * \return The PARC module version.
  */

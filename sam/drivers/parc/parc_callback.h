@@ -71,11 +71,11 @@ enum status_code parc_unregister_callback(struct parc_module *const module,
  * \note The callback function will be called from the PARC interrupt handler
  * when the callback's corresponding interrupt is asserted.
  *
- * \param[in,out] module_inst Driver structure pointer.
- * \param[in]  type           \ref parc_callback_type "Interrupt callback" to enable.
+ * \param[in,out] module_inst Driver structure pointer
+ * \param[in]  type           \ref parc_callback_type "Interrupt callback" to enable
  *
  * \return The status of the interrupt callback enable operation.
- * \retval STATUS_OK Interrupt callback enabled successfully.
+ * \retval STATUS_OK Interrupt callback enabled successfully
  */
 static inline enum status_code parc_enable_callback(
 	struct parc_module *const module_inst,
@@ -93,11 +93,11 @@ static inline enum status_code parc_enable_callback(
 /**
  * \brief Disable a PARC interrupt callback function.
  *
- * \param[in,out] module_inst Driver structure pointer.
- * \param[in]  type           \ref parc_callback_type "Interrupt callback" to disable.
+ * \param[in,out] module_inst Driver structure pointer
+ * \param[in]  type           \ref parc_callback_type "Interrupt callback" to disable
  *
  * \return The status of the interrupt callback disable operation.
- * \retval STATUS_OK Interrupt callback disabled successfully.
+ * \retval STATUS_OK Interrupt callback disabled successfully
  */
 static inline enum status_code parc_disable_callback(
 	struct parc_module *const module_inst,
