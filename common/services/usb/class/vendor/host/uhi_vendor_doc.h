@@ -330,7 +330,7 @@ bool uhi_vendor_iso_is_available(void);
 	extern void my_callback_vendor_change(uhc_device_t* dev, bool b_plug);
 	#define UHI_VENDOR_VID_PID_LIST {USB_VID_ATMEL, USB_PID_ATMEL_ASF_VENDOR_CLASS}
 	#include "uhi_vendor.h" // At the end of conf_usb_host.h file
-\endcode
+ * \endcode
  *
  * Add to application C-file:
  * \code
@@ -375,28 +375,31 @@ bool uhi_vendor_iso_is_available(void);
               my_callback_bulk_in_done);
     }
  }
-\endcode
+ * \endcode
  *
  * \subsubsection uhi_vendor_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb_host.h is available and contains the following
  * configuration which is the USB host vendor configuration:
  * \code
  #define USB_HOST_UHI   UHI_HID_VENDOR
- \endcode
- *     \note It defines the list of UHI supported by USB host.
+ * \endcode
+ * \note It defines the list of UHI supported by USB host.
+ *
  * \code
  #define UHI_VENDOR_CHANGE(dev, b_plug) my_callback_vendor_change(dev, b_plug)
  extern bool my_callback_vendor_change(uhc_device_t* dev, bool b_plug);
-\endcode
- *     \note This callback is called when a USB device vendor is plugged or unplugged.
+ * \endcode
+ * \note This callback is called when a USB device vendor is plugged or unplugged.
+ *
  * \code
  #define UHI_VENDOR_VID_PID_LIST {USB_VID_ATMEL, USB_PID_ATMEL_ASF_VENDOR_CLASS}
-\endcode
- *     \note It defines the list of devices supported by USB host (defined by VID and PID).
+ * \endcode
+ * \note It defines the list of devices supported by USB host (defined by VID and PID).
+ *
  * -# The Vendor data transfert functions are described in \ref uhi_vendor_group.
  * \code
  uhi_vendor_control_out_run(), uhi_vendor_bulk_out_run(),...
- \endcode
+ * \endcode
  *
  * \section uhi_vendor_use_cases Advanced use cases
  * \ifnot ASF_MANUAL

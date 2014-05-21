@@ -344,7 +344,7 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
 	#define UHI_MSC_CHANGE(dev, b_plug) my_callback_msc_change(dev, b_plug)
 	extern bool my_callback_msc_change(uhc_device_t* dev, bool b_plug);
 	#include "uhi_msc_mem.h" // At the end of conf_usb_host.h file
-\endcode
+ * \endcode
  *
  * Add to application C-file:
  * \code
@@ -378,20 +378,22 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
 	       uhi_msc_mem_read_capacity(lun, &max_lba);
 	    }
 	 }
-\endcode
+ * \endcode
  *
  * \subsubsection uhi_msc_mem_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb_host.h is available and contains the following configuration
  * which is the USB host MSC configuration:
  * \code
  #define USB_HOST_UHI   UHI_MSC
- \endcode
- *   \note It defines the list of UHI supported by USB host.
- *   \code
+ * \endcode
+ * \note It defines the list of UHI supported by USB host.
+ *
+ * \code
  #define UHI_MSC_CHANGE(dev, b_plug) my_callback_msc_change(dev, b_plug)
  extern bool my_callback_msc_change(uhc_device_t* dev, bool b_plug);
- \endcode
- *     \note This callback is called when a USB device MSC is plugged or unplugged.
+ * \endcode
+ * \note This callback is called when a USB device MSC is plugged or unplugged.
+ *
  * -# The access of the USB memories is allowed through functions described in \ref asfdoc_uhi_msc_api_overview.
  *
  * \section uhi_msc_mem_use_cases Advanced use cases

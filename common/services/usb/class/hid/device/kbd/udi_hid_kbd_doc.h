@@ -215,7 +215,7 @@ bool udi_hid_kbd_down(uint8_t key_id);
 	#define UDI_HID_KBD_DISABLE_EXT() my_callback_keyboard_disable()
 	extern void my_callback_keyboard_disable(void);
 	#include "udi_hid_keyboard_conf.h" // At the end of conf_usb.h file
-\endcode
+ * \endcode
  *
  * Add to application C-file:
  * \code
@@ -237,7 +237,7 @@ bool udi_hid_kbd_down(uint8_t key_id);
 	    }
 	    udi_hid_kbd_up(HID_A);
 	 }
-\endcode
+ * \endcode
  *
  * \subsection udi_hid_keyboard_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following configuration
@@ -245,20 +245,22 @@ bool udi_hid_kbd_down(uint8_t key_id);
  * \code
  #define UDI_HID_KBD_ENABLE_EXT() my_callback_keyboard_enable()
  extern bool my_callback_keyboard_enable(void);
- \endcode
- *     \note After the device enumeration (detecting and identifying USB devices),
- *     the USB host starts the device configuration. When the USB keyboard interface
- *     from the device is accepted by the host, the USB host enables this interface and the
- *     UDI_HID_KBD_ENABLE_EXT() callback function is called and return true.
- *     Thus, it is recommended to enable sensors used by the keyboard in this function.
+ * \endcode
+ * \note After the device enumeration (detecting and identifying USB devices),
+ *       the USB host starts the device configuration. When the USB keyboard interface
+ *       from the device is accepted by the host, the USB host enables this interface and the
+ *       UDI_HID_KBD_ENABLE_EXT() callback function is called and return true.
+ *       Thus, it is recommended to enable sensors used by the keyboard in this function.
+ *
  * \code
  #define UDI_HID_KBD_DISABLE_EXT() my_callback_keyboard_disable()
  extern void my_callback_keyboard_disable(void);
- \endcode
- *     \note When the USB device is unplugged or is reset by the USB host, the USB
- *     interface is disabled and the UDI_HID_KBD_DISABLE_EXT() callback function
- *     is called. Thus, it is recommended to disable sensors used by the keyboard
- *     in this function.
+ * \endcode
+ * \note When the USB device is unplugged or is reset by the USB host, the USB
+ *       interface is disabled and the UDI_HID_KBD_DISABLE_EXT() callback function
+ *       is called. Thus, it is recommended to disable sensors used by the keyboard
+ *       in this function.
+ *
  * -# send keyboard events:
  *  \code
  // Send events key modifier released
@@ -269,7 +271,7 @@ bool udi_hid_kbd_down(uint8_t key_id);
  udi_hid_kbd_up(uint8_t key_id);
  // Send events key pressed
  udi_hid_kbd_down(uint8_t key_id);
- \endcode
+ * \endcode
  *
  * \section uhi_hid_keyboard_use_cases Advanced use cases
  * \ifnot ASF_MANUAL
@@ -329,7 +331,7 @@ bool udi_hid_kbd_down(uint8_t key_id);
  #define UDI_COMPOSITE_API \
     &udi_api_hid_kbd, \
     ...
-\endcode
+ * \endcode
  *
  * \subsection udi_hid_keyboard_use_case_composite_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
@@ -347,7 +349,7 @@ bool udi_hid_kbd_down(uint8_t key_id);
  // This must include each endpoint for each interface.
  // Add 1 for HID keyboard.
  #define USB_DEVICE_MAX_EP (X+1)
- \endcode
+ * \endcode
  *
  * -# Ensure that conf_usb.h contains the description of
  * composite device:
@@ -357,7 +359,7 @@ bool udi_hid_kbd_down(uint8_t key_id);
  #define UDI_HID_KBD_EP_IN  (X | USB_EP_DIR_IN)
  // The interface index of an interface starting from 0
  #define UDI_HID_KBD_IFACE_NUMBER  X
- \endcode
+ * \endcode
  *
  * -# Ensure that conf_usb.h contains the following parameters
  * required for a USB composite device configuration:
@@ -382,11 +384,10 @@ bool udi_hid_kbd_down(uint8_t key_id);
     ...
     &udi_api_hid_kbd, \
 	   ...
- \endcode
- *
- *   - \note The descriptors order given in the four lists above must be the
- *     same as the order defined by all interface indexes. The interface index
- *     orders are defined through UDI_X_IFACE_NUMBER defines.
+ * \endcode
+ * \note The descriptors order given in the four lists above must be the
+ *       same as the order defined by all interface indexes. The interface index
+ *       orders are defined through UDI_X_IFACE_NUMBER defines.
  */
 
 /**

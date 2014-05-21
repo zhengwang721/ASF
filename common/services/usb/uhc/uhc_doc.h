@@ -394,19 +394,19 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
 	cpu_irq_enable();
 	board_init();
 	sleepmgr_init(); // Optional
-\endcode
+ * \endcode
  *
  * For SAMD devices, add to the initialization code:
  * \code
- system_init();
- irq_initialize_vectors();
- cpu_irq_enable();
- sleepmgr_init(); // Optional
-\endcode
+	system_init();
+	irq_initialize_vectors();
+	cpu_irq_enable();
+	sleepmgr_init(); // Optional
+ * \endcode
  * Add to the main IDLE loop:
  * \code
- sleepmgr_enter_sleep(); // Optional
-\endcode
+	sleepmgr_enter_sleep(); // Optional
+ * \endcode
  *
  * \subsection asfdoc_uhc_basic_use_case_setup_code USB Host Controller (UHC) - Example code
  * Common example code for all USB hosts.
@@ -414,15 +414,15 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * Content of conf_usb_host.h:
  * \code
  #define USB_HOST_POWER_MAX  500
-\endcode
+ * \endcode
  *
  * Add to application C-file:
  * \code
- void usb_init(void)
- {
- uhc_start();
- }
-\endcode
+void usb_init(void)
+{
+	uhc_start();
+}
+ * \endcode
  *
  * \subsection asfdoc_uhc_basic_use_case_setup_flow USB Device Controller (UHC) - Workflow
  * Common workflow for all USB devices.
@@ -430,14 +430,14 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * -# Ensure that conf_usb_host.h is available and contains the following configuration
  * which is the main USB device configuration:
  * \code
- // Maximum current allowed on Vbus (mA) which depends of 5V generator
- #define USB_HOST_POWER_MAX  500 // (500mA)
-\endcode
+	// Maximum current allowed on Vbus (mA) which depends of 5V generator
+	#define USB_HOST_POWER_MAX  500 // (500mA)
+ * \endcode
 
  * -# Call the USB host stack start function to enable USB Host stack:
  *   \code
- uhc_start();
-\endcode
+	uhc_start();
+ * \endcode
  *
  * \section uhc_conf_clock conf_clock.h examples
  *
@@ -449,14 +449,14 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
 	#define CONFIG_PLL1_DIV             2
 	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL1
 	#define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
-\endcode
+ * \endcode
  *
  * Content of conf_clock.h for AT32UC3A3, AT32UC3A4 devices (USBB with high speed support):
  * \code
 	// Configuration based on 12MHz external OSC:
 	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_OSC0
 	#define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
-\endcode
+ * \endcode
  *
  * Content of conf_clock.h for AT32UC3C device (USBC):
  * \code
@@ -468,14 +468,14 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
 	#define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
 	// CPU clock need of clock > 25MHz to run with USBC
 	#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL1
-\endcode
+ * \endcode
  *
  * Content of conf_clock.h for SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed):
  * \code
 	// USB Clock Source fixed at UPLL.
 	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_UPLL
 	#define CONFIG_USBCLK_DIV           1
-\endcode
+ * \endcode
  *
  * Content of conf_clocks.h for SAMD devices (USB):
  * \code
@@ -520,7 +520,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
   #  define CONF_CLOCK_GCLK_1_PRESCALER             1
   #  define CONF_CLOCK_GCLK_1_OUTPUT_ENABLE         true
 
-  \endcode
+ * \endcode
  */
 
 /**
@@ -547,16 +547,15 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * \subsection uhc_use_case_1_usage_code Example code
  * Content of conf_usb_host.h:
  * \code
- #define USB_HOST_HS_SUPPORT
-\endcode
-
+	#define USB_HOST_HS_SUPPORT
+ * \endcode
  *
  * \subsection uhc_use_case_1_usage_flow Workflow
  * -# Ensure that conf_usb_host.h is available and contains the following parameters
  * required for a USB device high speed (480Mbit/s):
  *  \code
- #define  USB_HOST_HS_SUPPORT
-\endcode
+	#define  USB_HOST_HS_SUPPORT
+ * \endcode
  */
 
 /**
@@ -574,17 +573,17 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * \subsection uhc_use_case_2_usage_code Example code
  * Content of conf_usb_host.h:
  * \code
- #define USB_HOST_UHI   UHI_HID_MOUSE, UHI_MSC, UHI_CDC
-\endcode
+	#define USB_HOST_UHI   UHI_HID_MOUSE, UHI_MSC, UHI_CDC
+ * \endcode
 
  *
  * \subsection uhc_use_case_2_usage_flow Workflow
  * -# Ensure that conf_usb_host.h is available and contains the following parameters:
  * \code
- #define USB_HOST_UHI   UHI_HID_MOUSE, UHI_MSC, UHI_CDC
- \endcode
- *     \note USB_HOST_UHI defines the list of UHI supported by USB host.
- *     Here, you must add all classes that you want to support.
+	#define USB_HOST_UHI   UHI_HID_MOUSE, UHI_MSC, UHI_CDC
+ * \endcode
+ * \note USB_HOST_UHI defines the list of UHI supported by USB host.
+ *       Here, you must add all classes that you want to support.
  */
 
 /**
@@ -609,7 +608,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * \code
  #define UHC_MODE_CHANGE(b_host_mode)   my_callback_mode_change(b_host_mode)
  extern void my_callback_mode_change(bool b_host_mode);
-\endcode
+ * \endcode
  *
  * Add to application C-file:
  * \code
@@ -633,22 +632,22 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
      // CALL USB Device task
    }
  }
-\endcode
+ * \endcode
  *
  * \subsection uhc_use_case_3_usage_flow Workflow
  * -# In case of USB dual roles (Device and Host), the USB stack must be enabled
  * by uhc_start() and the udc_start() must not be called.
  * \code
- //udc_start();
- uhc_start();
-\endcode
+	//udc_start();
+	uhc_start();
+ * \endcode
  * -# In dual role, to known the current USB mode, the callback to notify the
  * mode changes can be used.
  *   - Ensure that conf_usb_host.h contains the following parameters.
  * \code
- #define UHC_MODE_CHANGE(b_host_mode)   my_callback_mode_change(b_host_mode)
- extern void my_callback_mode_change(bool b_host_mode);
-\endcode
+	#define UHC_MODE_CHANGE(b_host_mode)   my_callback_mode_change(b_host_mode)
+	extern void my_callback_mode_change(bool b_host_mode);
+ * \endcode
  *   - Ensure that application contains the following code:
  * \code
  bool my_host_mode;
@@ -665,6 +664,6 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
      // CALL USB Device task
    }
  }
-\endcode
+ * \endcode
  */
 
