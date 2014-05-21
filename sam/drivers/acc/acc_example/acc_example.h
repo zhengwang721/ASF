@@ -81,7 +81,7 @@
 
  * \section asfdoc_sam_drivers_acc_example_irq_usage Usage
  *
- * -# Build the program and download it into the evaluation board
+ * -# Build the program and download it into the evaluation board.
  * -# On the computer, open, and configure a terminal application
  *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
  *   - 115200 baud
@@ -89,7 +89,7 @@
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Start the application
+ * -# Start the application.
  * -# In the terminal window, the following text should appear:
  * \verbatim
    -- ACC IRQ Example xxx --
@@ -100,8 +100,8 @@
    -- s: Set new DAC0 output voltage.--
    -- v: Get voltage on potentiometer.--
    -- m: Display this menu again.-- \endverbatim
- * -# Enter a character on the terminal to select a menu option
- * -# Change the voltage on AD5 by adjusting VR1 on the evaluation kit in order
+ * -# Enter a character on the terminal to select a menu option.
+ * -# Change the voltage on AD5 by adjusting VR1 on the evaluation kit in order.
  * to see what comparison events occur.
  */
 

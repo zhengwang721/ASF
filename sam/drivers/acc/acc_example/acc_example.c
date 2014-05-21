@@ -231,7 +231,7 @@ int main(void)
 	dacc_set_transfer_mode(DACC, 0);
 	/* Power save:
 	 * sleep mode  - 0 (disabled)
-	 * fast wakeup - 0 (disabled)
+	 * fast wake-up - 0 (disabled)
 	 */
 	dacc_set_power_save(DACC, 0, 0);
 	/* Timing:
