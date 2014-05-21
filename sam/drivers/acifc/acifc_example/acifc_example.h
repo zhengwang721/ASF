@@ -73,7 +73,7 @@
  *
  * - PA06(J100.2) -- ADC SENSOR VBAT(J105.1)
  * - PA07(J4.4) -- GND(J4.9)
- * 
+ *
  * <b>For SAM4L/SAM4L8 Xplained Pro:</b>
  * - PA06(EXT3/PIN9) -- GND(EXT3/PIN19)
  * - PA07(EXT2/PIN3) -- VCC(EXT2/PIN20)
@@ -82,28 +82,28 @@
  *
  * - PA06(EXT3/PIN9) -- VCC(EXT3/PIN20)
  * - PA07(EXT2/PIN3) -- GND(EXT2/PIN19)
- 
+
  *
  * \section asfdoc_sam_drivers_acifc_example_files Main Files
- * - acifc.c: Analog Comparator Interface Controller driver;
- * - acifc.h: Analog Comparator Interface Controller driver header file;
- * - acifc_example.c: Analog Comparator Interface Controller example application.
+ * - acifc.c: Analog Comparator Interface Controller driver
+ * - acifc.h: Analog Comparator Interface Controller driver header file
+ * - acifc_example.c: Analog Comparator Interface Controller example application
  *
  * \section asfdoc_sam_drivers_acigc_example_compilinfo Compilation Information
- * This software is written for GNU GCC and IAR Embedded Workbench
- * for Atmel. Other compilers may or may not work. 
+ * This software is written for GNU GCC and IAR Embedded Workbench&reg;
+ * for Atmel&reg;. Other compilers may or may not work.
  *
  * \section asfdoc_sam_drivers_acifc_example_usage Usage
  *
- * -# Build the program and download it into the evaluation board.
- * -# On the computer, open and configure a terminal application
- *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
+ * -# Build the program and download it into the evaluation board
+ * -# On the computer, open, and configure a terminal application
+ *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
  *   - 115200 baud
  *   - 8 bits of data
  *   - No parity
  *   - 1 stop bit
  *   - No flow control
- * -# Start the application.
+ * -# Start the application
  * -# In the terminal window, the following text should appear:
  * \code
  * -- ACIFC IRQ Example xxx --

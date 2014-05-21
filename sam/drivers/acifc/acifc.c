@@ -59,8 +59,8 @@ ac_callback_t ac_callback_pointer[AC_INTERRUPT_NUM];
 /**
  * \internal Configure the ACIFC module.
  *
- * \param[in] dev_inst Driver structure pointer.
- * \param[in] cfg      Module configuration structure pointer.
+ * \param[in] dev_inst Driver structure pointer
+ * \param[in] cfg      Module configuration structure pointer
  */
 static inline void _ac_set_config(
 		struct ac_dev_inst *const dev_inst,
@@ -80,14 +80,14 @@ static inline void _ac_set_config(
  *
  * \note Enables the ACIFC module's source clock.
  *
- * \param[out] dev_inst Driver structure pointer.
- * \param[in] ac        Module hardware register base address pointer.
- * \param[in] cfg       Module configuration structure pointer.
+ * \param[out] dev_inst Driver structure pointer
+ * \param[in] ac        Module hardware register base address pointer
+ * \param[in] cfg       Module configuration structure pointer
  *
  * \return Status of initialization.
- * \retval STATUS_OK         Module initiated correctly.
- * \retval STATUS_ERR_DENIED Module has already been enabled.
- * \retval STATUS_ERR_BUSY   Module is busy performing a comparison.
+ * \retval STATUS_OK         Module initiated correctly
+ * \retval STATUS_ERR_DENIED Module has already been enabled
+ * \retval STATUS_ERR_BUSY   Module is busy performing a comparison
  */
 enum status_code ac_init(
 		struct ac_dev_inst *const dev_inst,
@@ -123,9 +123,9 @@ enum status_code ac_init(
 /**
  * \brief Configure the specified ACIFC channel.
  *
- * \param[in] dev_inst Driver structure pointer.
- * \param[in] channel  ACIFC channel number (range 0 to 7 inclusive).
- * \param[in] cfg      ACIFC channel configuration structure pointer.
+ * \param[in] dev_inst Driver structure pointer
+ * \param[in] channel  ACIFC channel number (range 0 to 7 inclusive)
+ * \param[in] cfg      ACIFC channel configuration structure pointer
  */
 void ac_ch_set_config(
 		struct ac_dev_inst *const dev_inst,
@@ -154,9 +154,9 @@ void ac_ch_set_config(
 /**
  * \brief Configure the specified ACIFC window.
  *
- * \param[in] dev_inst Driver structure pointer.
- * \param[in] window   ACIFC window number (range 0 to 3 inclusive).
- * \param[in] cfg      ACIFC window configuration structure.
+ * \param[in] dev_inst Driver structure pointer
+ * \param[in] window   ACIFC window number (range 0 to 3 inclusive)
+ * \param[in] cfg      ACIFC window configuration structure
  */
 void ac_win_set_config(
 		struct ac_dev_inst *const dev_inst,
@@ -181,10 +181,10 @@ void ac_win_set_config(
 /**
  * \brief Set the ACIFC interrupt callback.
  *
- * \param[in] dev_inst  Driver structure pointer.
- * \param[in] source    \ref ac_interrupt_source "ACIFC interrupt source".
- * \param[in] callback  Interrupt callback function pointer.
- * \param[in] irq_level Interrupt priority level.
+ * \param[in] dev_inst  Driver structure pointer
+ * \param[in] source    \ref ac_interrupt_source "ACIFC interrupt source"
+ * \param[in] callback  Interrupt callback function pointer
+ * \param[in] irq_level Interrupt priority level
  */
 void ac_set_callback(struct ac_dev_inst *const dev_inst,
 		ac_interrupt_source_t source,
@@ -199,8 +199,8 @@ void ac_set_callback(struct ac_dev_inst *const dev_inst,
 /**
  * \brief Enable the specified ACIFC interrupt source.
  *
- * \param[out] dev_inst Driver structure pointer.
- * \param[in] source    \ref ac_interrupt_source "Interrupt source" to enable.
+ * \param[out] dev_inst Driver structure pointer
+ * \param[in] source    \ref ac_interrupt_source "Interrupt source" to enable
  */
 void ac_enable_interrupt(
 		struct ac_dev_inst *const dev_inst,
@@ -243,8 +243,8 @@ void ac_enable_interrupt(
 /**
  * \brief Disable the specified ACIFC interrupt source.
  *
- * \param[in] dev_inst Driver structure pointer.
- * \param[in] source   \ref ac_interrupt_source "Interrupt source" to disable.
+ * \param[in] dev_inst Driver structure pointer
+ * \param[in] source   \ref ac_interrupt_source "Interrupt source" to disable
  *
  */
 void ac_disable_interrupt(
@@ -288,7 +288,7 @@ void ac_disable_interrupt(
 /**
  * \brief Enable the ACIFC module.
  *
- * \param[in] dev_inst Driver structure pointer.
+ * \param[in] dev_inst Driver structure pointer
  */
 void ac_enable(
 		struct ac_dev_inst *const dev_inst)
