@@ -358,7 +358,7 @@ enum status_code ac_init(
  * configuration structures before they are further modified by the user application.
  *
  * The default configuration is as follows:
- *  - Hysteresis voltage = 0 mV
+ *  - Hysteresis voltage = 0mV
  *  - ACIFC is disabled between measurements
  *  - Fast mode is disabled
  *  - No output peripheral event when ACOUT is zero or one
