@@ -67,8 +67,8 @@
  *                   and BPM sleep function.
  *
  * \section asfdoc_sam_drivers_ast_example2_compilinfo Compilation Information
- * This software is written for GNU GCC and IAR Embedded Workbench&reg;
- * for Atmel&reg;. Other compilers may or may not work.
+ * This software is written for GNU GCC and IAR Embedded Workbench
+ * for Atmel. Other compilers may or may not work.
  *
  * \section asfdoc_sam_drivers_ast_example2_configinfo Usage
  * -# Build the program and download it into the evaluation board

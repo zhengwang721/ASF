@@ -65,13 +65,13 @@
  * - ast_example1.c: Asynchronous Timer example application
  *
  * \section asfdoc_sam_drivers_ast_example1_compilinfo Compilation Information
- * This software is written for GNU GCC and IAR Embedded Workbench
- * for Atmel. Other compilers may or may not work.
+ * This software is written for GNU GCC and IAR Embedded Workbench&reg;
+ * for Atmel&reg;. Other compilers may or may not work.
  *
  * \section asfdoc_sam_drivers_ast_example1_configinfo Usage
  * -# Build the program and download it into the evaluation board
  * -# On the computer, open, and configure a terminal application
- *    (e.g., HyperTerminal on Microsoft Windows) with these settings:
+ *    (e.g., HyperTerminal on Microsoft&reg; Windows&reg;) with these settings:
  *   - 115200 baud
  *   - 8 bits of data
  *   - No parity
