@@ -34,10 +34,10 @@
 		<build type="header-file" value="tc6.h"/>
 		<build type="header-file" value="tc7.h"/>
 		<build type="header-file" value="tcc0.h"/>
-		<build type="header-file" value="instance_tcc1.h"/>
-		<build type="header-file" value="instance_tcc2.h"/>
-		<build type="header-file" value="instance_usb.h"/>
-		<build type="header-file" value="instance_wdt.h"/>
+		<build type="header-file" value="tcc1.h"/>
+		<build type="header-file" value="tcc2.h"/>
+		<build type="header-file" value="usb.h"/>
+		<build type="header-file" value="wdt.h"/>
 		<info type="gui-flag" value="hidden"/>
 		<device-support value="samr21"/>
 	</module>

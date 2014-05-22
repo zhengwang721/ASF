@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Header file for SAMD20J18
+ * \brief Header file for SAMD20
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
