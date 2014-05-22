@@ -248,12 +248,12 @@ extern "C" {
 
   //! Configures selected endpoint in one step
 #define udd_configure_endpoint(ep, type, dir, size, bank) (                               \
-	Wr_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPTYPE_Msk |            \
+	Wr_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPTYPE_Msk |              \
 			UOTGHS_DEVEPTCFG_EPDIR  |                                                           \
 			UOTGHS_DEVEPTCFG_EPSIZE_Msk |                                                       \
 			UOTGHS_DEVEPTCFG_EPBK_Msk ,                                                         \
 			(((uint32_t)(type) << UOTGHS_DEVEPTCFG_EPTYPE_Pos) & UOTGHS_DEVEPTCFG_EPTYPE_Msk) | \
-			(((uint32_t)(dir ) << UHDP_DEVEPTCFG_EPDIR_Pos ) & UOTGHS_DEVEPTCFG_EPDIR) |      \
+			(((uint32_t)(dir ) << UHDP_DEVEPTCFG_EPDIR_Pos ) & UOTGHS_DEVEPTCFG_EPDIR) |        \
 			( (uint32_t)udd_format_endpoint_size(size) << UOTGHS_DEVEPTCFG_EPSIZE_Pos) |        \
 			(((uint32_t)(bank) << UOTGHS_DEVEPTCFG_EPBK_Pos) & UOTGHS_DEVEPTCFG_EPBK_Msk))      \
 )
