@@ -28,8 +28,12 @@
 		<build type="header-file" value="revhistory.h"/>
 
 		<require idref="common.services.usb.udc.appnote"/>
+		<require idref="common.services.usb.class.hid.device.generic.appnote"/>
+		<require idref="common.services.usb.class.hid.device.kbd.appnote"/>
+		<require idref="common.services.usb.class.hid.device.mouse.appnote"/>
 		<require idref="common.services.usb.class.cdc.device.appnote"/>
 		<require idref="common.services.usb.class.msc.device.appnote"/>
+		<require idref="common.services.usb.class.vendor.device.appnote"/>
 
 		<require idref="common.services.usb.uhc.appnote"/>
 		<require idref="common.services.usb.class.cdc.host.appnote"/>

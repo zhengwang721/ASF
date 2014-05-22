@@ -66,7 +66,7 @@
  * \name Interface with USB Host Core (UHC)
  *
  * Define and functions required by UHC.
- * 
+ *
  * @{
  */
 
@@ -314,14 +314,14 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
 /**
  * \page asfdoc_uhi_msc_exqsg Quick start guide for USB host mass-storage module (UHI MSC)
  *
- * This is the quick start guide for the \ref asfdoc_uhi_msc_group 
- * "USB host mass-storage module (UHI MSC)" with step-by-step instructions on 
+ * This is the quick start guide for the \ref asfdoc_uhi_msc_group
+ * "USB host mass-storage module (UHI MSC)" with step-by-step instructions on
  * how to configure and use the modules in a selection of use cases.
  *
  * The use cases highlights several code fragments. The code fragments in the
  * steps for setup can be copied into a custom initialization function, while
  * the steps for usage can be copied into, e.g., the main application function.
- * 
+ *
  * \section uhi_msc_mem_basic_use_case Basic use case
  * In this basic use case, the "USB Host MSC (Single Class support)" module is used.
  *
@@ -329,7 +329,7 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
  * in \ref uhi_msc_mem_use_cases "Advanced use cases".
  *
  * This example do a simple physical memory access, but a File System module
- * can be added to decode the USB memory file system, see FatFS examples. 
+ * can be added to decode the USB memory file system, see FatFS examples.
  *
  * \subsection uhi_msc_mem_basic_use_case_setup Setup steps
  * As a USB host, it follows common USB host setup steps. Please refer to
@@ -344,7 +344,7 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
 	#define UHI_MSC_CHANGE(dev, b_plug) my_callback_msc_change(dev, b_plug)
 	extern bool my_callback_msc_change(uhc_device_t* dev, bool b_plug);
 	#include "uhi_msc_mem.h" // At the end of conf_usb_host.h file
-\endcode
+ * \endcode
  *
  * Add to application C-file:
  * \code
@@ -378,16 +378,22 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
 	       uhi_msc_mem_read_capacity(lun, &max_lba);
 	    }
 	 }
-\endcode
+ * \endcode
  *
  * \subsubsection uhi_msc_mem_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb_host.h is available and contains the following configuration
  * which is the USB host MSC configuration:
- *   - \code #define USB_HOST_UHI   UHI_MSC \endcode
- *     \note It defines the list of UHI supported by USB host.
- *   - \code #define UHI_MSC_CHANGE(dev, b_plug) my_callback_msc_change(dev, b_plug)
-	 extern bool my_callback_msc_change(uhc_device_t* dev, bool b_plug); \endcode
- *     \note This callback is called when a USB device MSC is plugged or unplugged.
+ * \code
+ #define USB_HOST_UHI   UHI_MSC
+ * \endcode
+ * \note It defines the list of UHI supported by USB host.
+ *
+ * \code
+ #define UHI_MSC_CHANGE(dev, b_plug) my_callback_msc_change(dev, b_plug)
+ extern bool my_callback_msc_change(uhc_device_t* dev, bool b_plug);
+ * \endcode
+ * \note This callback is called when a USB device MSC is plugged or unplugged.
+ *
  * -# The access of the USB memories is allowed through functions described in \ref asfdoc_uhi_msc_api_overview.
  *
  * \section uhi_msc_mem_use_cases Advanced use cases
@@ -406,7 +412,10 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
  * \page asfdoc_uhi_msc_config_examples Configuration File Examples
  *
  * \section asfdoc_uhi_msc_config_examples_1 conf_usb_host.h
+ * \subsection asfdoc_uhi_msc_config_examples_1_1  UHI MSC Single
  * \include module_config\conf_usb_host.h
+ * \subsection asfdoc_uhi_msc_config_examples_1_2  UHI MSC Multiple (composite)
+ * \include composite\host\module_config\conf_usb_host.h
  *
  * \section asfdoc_uhi_msc_config_examples_2 conf_clock.h
  *

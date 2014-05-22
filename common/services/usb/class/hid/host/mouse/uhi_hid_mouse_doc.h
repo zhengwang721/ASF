@@ -116,7 +116,7 @@ extern void uhi_hid_mouse_uninstall(uhc_device_t* dev);
  * \name UHI for Human Interface Device Mouse Class
  *
  * Common APIs used by high level application to use this USB host class.
- * 
+ *
  * These APIs require only callback definitions in conf_usb_host.h file
  * through following defines:
   * @{
@@ -134,14 +134,14 @@ extern void uhi_hid_mouse_uninstall(uhc_device_t* dev);
 /**
  * \page asfdoc_uhi_hid_mouse_exqsg Quick start guide for USB host mouse module (UHI mouse)
  *
- * This is the quick start guide for the \ref asfdoc_uhi_hid_mouse_group 
- * "USB host mouse module (UHI mouse)" with step-by-step instructions on 
+ * This is the quick start guide for the \ref asfdoc_uhi_hid_mouse_group
+ * "USB host mouse module (UHI mouse)" with step-by-step instructions on
  * how to configure and use the modules in a selection of use cases.
  *
  * The use cases highlights several code fragments. The code fragments in the
  * steps for setup can be copied into a custom initialization function, while
  * the steps for usage can be copied into, e.g., the main application function.
- * 
+ *
  * \section uhi_hid_mouse_basic_use_case Basic use case
  * In this basic use case, the "USB Host HID Mouse (Single Class support)" module is used.
  * The "USB Host HID Mouse (Multiple Classes support)" module usage is described
@@ -156,6 +156,7 @@ extern void uhi_hid_mouse_uninstall(uhc_device_t* dev);
  *
  * \subsubsection uhi_hid_mouse_basic_use_case_usage_code Example code
  * Content of conf_usb_host.h:
+
  * \code
 	#define USB_HOST_UHI        UHI_HID_MOUSE
 	#define UHI_HID_MOUSE_CHANGE(dev, b_plug) my_callback_mouse_change(dev, b_plug)
@@ -169,7 +170,8 @@ extern void uhi_hid_mouse_uninstall(uhc_device_t* dev);
 	#define UHI_HID_MOUSE_EVENT_MOUVE(x, y, scroll) my_callback_event_mouse(x, y, scroll)
 	extern void my_callback_event_mouse(int8_t x, int8_t y, int8_t scroll);
 	#include "uhi_hid_mouse.h" // At the end of conf_usb_host.h file
-\endcode
+ * \endcode
+
  *
  * Add to application C-file:
  * \code
@@ -206,28 +208,38 @@ extern void uhi_hid_mouse_uninstall(uhc_device_t* dev);
 	       wheel += scroll;
 	    }
 	 }
-\endcode
+ * \endcode
+ *
  *
  * \subsubsection uhi_hid_mouse_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb_host.h is available and contains the following configuration
  * which is the USB host mouse configuration:
- *   - \code #define USB_HOST_UHI   UHI_HID_MOUSE \endcode
- *     \note It defines the list of UHI supported by USB host.
- *   - \code #define UHI_HID_MOUSE_CHANGE(dev, b_plug) my_callback_mouse_change(dev, b_plug)
-	 extern bool my_callback_mouse_change(uhc_device_t* dev, bool b_plug); \endcode
- *     \note This callback is called when a USB device mouse is plugged or unplugged.
- *   - \code #define UHI_HID_MOUSE_EVENT_BTN_LEFT(b_state) my_callback_event_btn_left(b_state)
-	extern void my_callback_event_btn_left(bool b_state);
-	#define UHI_HID_MOUSE_EVENT_BTN_RIGHT(b_state) my_callback_event_btn_right(b_state)
-	extern void my_callback_event_btn_right(bool b_state);
-	#define UHI_HID_MOUSE_EVENT_BTN_MIDDLE(b_state) my_callback_event_btn_middle(b_state)
-	extern void my_callback_event_btn_middle(bool b_state);
-	#define UHI_HID_MOUSE_EVENT_MOUVE(x, y, scroll) my_callback_event_mouse(x, y, scroll)
-	extern void my_callback_event_mouse(int8_t x, int8_t y, int8_t scroll) \endcode
- *     \note These callbacks are called when a USB device mouse event is received.
+ *
+ * \code
+ #define USB_HOST_UHI   UHI_HID_MOUSE
+ * \endcode
+ * \note It defines the list of UHI supported by USB host.
+ *
+ * \code
+ #define UHI_HID_MOUSE_CHANGE(dev, b_plug) my_callback_mouse_change(dev, b_plug)
+ extern bool my_callback_mouse_change(uhc_device_t* dev, bool b_plug);
+ * \endcode
+ * \note This callback is called when a USB device mouse is plugged or unplugged.
+ *
+ * \code
+ #define UHI_HID_MOUSE_EVENT_BTN_LEFT(b_state) my_callback_event_btn_left(b_state)
+ extern void my_callback_event_btn_left(bool b_state);
+ #define UHI_HID_MOUSE_EVENT_BTN_RIGHT(b_state) my_callback_event_btn_right(b_state)
+ extern void my_callback_event_btn_right(bool b_state);
+ #define UHI_HID_MOUSE_EVENT_BTN_MIDDLE(b_state) my_callback_event_btn_middle(b_state)
+ extern void my_callback_event_btn_middle(bool b_state);
+ #define UHI_HID_MOUSE_EVENT_MOUVE(x, y, scroll) my_callback_event_mouse(x, y, scroll)
+ extern void my_callback_event_mouse(int8_t x, int8_t y, int8_t scroll)
+ * \endcode
+ * \note These callbacks are called when a USB device mouse event is received.
  *
  * \section uhi_hid_mouse_use_cases Advanced use cases
-* \ifnot ASF_MANUAL
+ * \ifnot ASF_MANUAL
  * For more advanced use of the UHI HID mouse module, see the following use cases:
  * - \subpage uhc_use_case_1
  * - \subpage uhc_use_case_2
@@ -243,7 +255,10 @@ extern void uhi_hid_mouse_uninstall(uhc_device_t* dev);
  * \page asfdoc_uhi_hid_mouse_config_examples Configuration File Examples
  *
  * \section asfdoc_uhi_hid_mouse_config_examples_1 conf_usb_host.h
+ * \subsection asfdoc_uhi_hid_mouse_config_examples_1_1  UHI HID MOUSE Single
  * \include module_config\conf_usb_host.h
+ * \subsection asfdoc_uhi_hid_mouse_config_examples_1_2  UHI HID MOUSE Multiple (composite)
+ * \include composite\host\module_config\conf_usb_host.h
  *
  * \section asfdoc_uhi_hid_mouse_config_examples_2 conf_clock.h
  *

@@ -116,7 +116,7 @@ extern void uhi_vendor_uninstall(uhc_device_t* dev);
  * \name UHI for Vendor Class
  *
  * Common APIs used by high level application to use this USB host class.
- * 
+ *
  * This Vendor Class implementation supports one endpoint for all endpoint
  * types on all directions: Control IN, control OUT, interrupt IN,
  * interrupt OUT, bulk IN, bulk OUT, isochronous IN, isochronous OUT.
@@ -300,8 +300,8 @@ bool uhi_vendor_iso_is_available(void);
 /**
  * \page asfdoc_uhi_vendor_exqsg Quick start guide for USB host vendor module (UHI vendor)
  *
- * This is the quick start guide for the \ref asfdoc_uhi_vendor_group 
- * "USB host vendor module (UHI vendor)" with step-by-step instructions on 
+ * This is the quick start guide for the \ref asfdoc_uhi_vendor_group
+ * "USB host vendor module (UHI vendor)" with step-by-step instructions on
  * how to configure and use the modules in a selection of use cases.
  *
  * The use cases highlights several code fragments. The code fragments in the
@@ -330,65 +330,76 @@ bool uhi_vendor_iso_is_available(void);
 	extern void my_callback_vendor_change(uhc_device_t* dev, bool b_plug);
 	#define UHI_VENDOR_VID_PID_LIST {USB_VID_ATMEL, USB_PID_ATMEL_ASF_VENDOR_CLASS}
 	#include "uhi_vendor.h" // At the end of conf_usb_host.h file
-\endcode
+ * \endcode
  *
  * Add to application C-file:
  * \code
-	 static bool my_flag_vendor_test_start = false;
-	 void my_callback_vendor_change(uhc_device_t* dev, bool b_plug)
-	 {
-	    // USB Device Vendor connected
-	    my_flag_vendor_test_start = b_plug;
-	 }
+ static bool my_flag_vendor_test_start = false;
+ void my_callback_vendor_change(uhc_device_t* dev, bool b_plug)
+ {
+    // USB Device Vendor connected
+    my_flag_vendor_test_start = b_plug;
+ }
 
-	 static void my_callback_bulk_in_done (usb_add_t add,
-	         usb_ep_t ep, uhd_trans_status_t status, iram_size_t nb_transfered)
-	 {
-	   if (status != UHD_TRANS_NOERROR) {
-	     return; // Error during transfer
-	   }
-	   // Data received then restart test
-	   my_flag_vendor_test_start = true;
-	 }
+ static void my_callback_bulk_in_done (usb_add_t add,
+         usb_ep_t ep, uhd_trans_status_t status, iram_size_t nb_transfered)
+ {
+   if (status != UHD_TRANS_NOERROR) {
+     return; // Error during transfer
+   }
+   // Data received then restart test
+   my_flag_vendor_test_start = true;
+ }
 
-	 #define MESSAGE "Hello bulk"
-	 #define HELLO_SIZE 5
-	 #define HELLO_BULK_SIZE 10
-	 uint8_t my_out_buffer[MESSAGE_SIZE+1] = MESSAGE;
-	 uint8_t my_in_buffer[MESSAGE_SIZE+1];
-	 void my_task(void)
-	 {
-	    if (!my_flag_vendor_test_start) {
-	      return;
-	    }
-	    my_flag_vendor_test_start = false;
+ #define MESSAGE "Hello bulk"
+ #define HELLO_SIZE 5
+ #define HELLO_BULK_SIZE 10
+ uint8_t my_out_buffer[MESSAGE_SIZE+1] = MESSAGE;
+ uint8_t my_in_buffer[MESSAGE_SIZE+1];
+ void my_task(void)
+ {
+    if (!my_flag_vendor_test_start) {
+      return;
+    }
+    my_flag_vendor_test_start = false;
 
-	    // Send data through control endpoint
-	    uhi_vendor_control_out_run(my_out_buffer, HELLO_SIZE, NULL);
+    // Send data through control endpoint
+    uhi_vendor_control_out_run(my_out_buffer, HELLO_SIZE, NULL);
 
-	    // Check if bulk endpoints are available
-	    if (uhi_vendor_bulk_is_available()) {
-	      // Send data through bulk OUT endpoint
-	      uhi_vendor_bulk_out_run(my_out_buffer, HELLO_BULK_SIZE, NULL);
-	      // Receive data through bulk IN endpoint
-	      uhi_vendor_bulk_in_run(my_in_buffer, sizeof(my_in_buffer),
-	              my_callback_bulk_in_done);
-	    }
-	 }
-\endcode
+    // Check if bulk endpoints are available
+    if (uhi_vendor_bulk_is_available()) {
+      // Send data through bulk OUT endpoint
+      uhi_vendor_bulk_out_run(my_out_buffer, HELLO_BULK_SIZE, NULL);
+      // Receive data through bulk IN endpoint
+      uhi_vendor_bulk_in_run(my_in_buffer, sizeof(my_in_buffer),
+              my_callback_bulk_in_done);
+    }
+ }
+ * \endcode
  *
  * \subsubsection uhi_vendor_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb_host.h is available and contains the following
  * configuration which is the USB host vendor configuration:
- *   - \code #define USB_HOST_UHI   UHI_HID_VENDOR \endcode
- *     \note It defines the list of UHI supported by USB host.
- *   - \code #define UHI_VENDOR_CHANGE(dev, b_plug) my_callback_vendor_change(dev, b_plug)
-	 extern bool my_callback_vendor_change(uhc_device_t* dev, bool b_plug); \endcode
- *     \note This callback is called when a USB device vendor is plugged or unplugged.
- *   - \code #define UHI_VENDOR_VID_PID_LIST {USB_VID_ATMEL, USB_PID_ATMEL_ASF_VENDOR_CLASS} \endcode
- *     \note It defines the list of devices supported by USB host (defined by VID and PID).
+ * \code
+ #define USB_HOST_UHI   UHI_HID_VENDOR
+ * \endcode
+ * \note It defines the list of UHI supported by USB host.
+ *
+ * \code
+ #define UHI_VENDOR_CHANGE(dev, b_plug) my_callback_vendor_change(dev, b_plug)
+ extern bool my_callback_vendor_change(uhc_device_t* dev, bool b_plug);
+ * \endcode
+ * \note This callback is called when a USB device vendor is plugged or unplugged.
+ *
+ * \code
+ #define UHI_VENDOR_VID_PID_LIST {USB_VID_ATMEL, USB_PID_ATMEL_ASF_VENDOR_CLASS}
+ * \endcode
+ * \note It defines the list of devices supported by USB host (defined by VID and PID).
+ *
  * -# The Vendor data transfert functions are described in \ref uhi_vendor_group.
- *   - \code uhi_vendor_control_out_run(), uhi_vendor_bulk_out_run(),... \endcode
+ * \code
+ uhi_vendor_control_out_run(), uhi_vendor_bulk_out_run(),...
+ * \endcode
  *
  * \section uhi_vendor_use_cases Advanced use cases
  * \ifnot ASF_MANUAL
@@ -406,7 +417,10 @@ bool uhi_vendor_iso_is_available(void);
  * \page asfdoc_uhi_vendor_config_examples Configuration File Examples
  *
  * \section asfdoc_uhi_vendor_config_examples_1 conf_usb_host.h
+ * \subsection asfdoc_uhi_vendor_config_examples_1_1  UHI Vendor Single
  * \include module_config\conf_usb_host.h
+ * \subsection asfdoc_uhi_vendor_config_examples_1_2  UHI Vendor Multiple (composite)
+ * \include composite\host\module_config\conf_usb_host.h
  *
  * \section asfdoc_uhi_vendor_config_examples_2 conf_clock.h
  *
