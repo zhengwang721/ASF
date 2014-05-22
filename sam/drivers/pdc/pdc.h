@@ -292,7 +292,7 @@ uint32_t pdc_read_tx_next_counter(Pdc *p_pdc);
  *	</tr>
  *	<tr>
  *		<td>42316A</td>
- *		<td>01/2014</td>
+ *		<td>05/2014</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>
