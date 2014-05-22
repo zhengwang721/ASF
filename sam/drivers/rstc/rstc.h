@@ -349,7 +349,7 @@ static inline void rstc_assert_reset_of_coprocessor(
  *	</tr>
  *	<tr>
  *		<td>42279A</td>
- *		<td>03/2014</td>
+ *		<td>05/2014</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>
