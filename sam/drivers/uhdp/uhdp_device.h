@@ -51,28 +51,6 @@
 extern "C" {
 #endif
 
-/* Get USB VBus pin configuration in board configuration */
-#include "conf_board.h"
-#include "board.h"
-#include "ioport.h"
-#include "pio.h"
-#include "pio_handler.h"
-
-__always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
-    IRQn_Type port_irqn, uint8_t irq_level,
-    void (*handler)(uint32_t,uint32_t), uint32_t wkup)
-{
-	// IOPORT must be initialized before by ioport_init(), \see ioport_group.
-	pio_handler_set_pin(pin, flags, handler);
-	ioport_set_pin_sense_mode(pin, IOPORT_SENSE_BOTHEDGES);
-	NVIC_SetPriority(port_irqn, irq_level);
-	NVIC_EnableIRQ(port_irqn);
-	pio_enable_pin_interrupt(pin);
-	if (wkup) {
-		pmc_set_fast_startup_input(wkup);
-	}
-}
-
 //! \ingroup udd_group
 //! \defgroup udd_uhdp_group Full Speed USB Host and Device Port for device mode (UHDP)
 //! UHDP low-level driver for USB device mode
@@ -80,7 +58,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 //! @{
 
 #ifndef UHDP_DEVEPTCFG_EPDIR_Pos
-// Bit pos is not defined in SAM header file but we need it.
+// Bit position is not defined in SAM header file but we need it.
 # define UHDP_DEVEPTCFG_EPDIR_Pos 8
 #endif
 
@@ -104,32 +82,6 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 //! UHDP only supports Full speed.
 //! @{
 //! @}
-
-//! @name UHDP Device VBUS pin management
-//! UHDP peripheral does not support VBUS management and it's monitored by a PIO
-//! pin.
-//! This feature is optional, and it is enabled if USB_VBUS_PIN is defined in
-//! board.h and CONF_BOARD_USB_VBUS_DETECT defined in conf_board.h.
-//!
-//! @note ioport_init() must be invoked before using vbus pin functions since
-//!       they use IOPORT API, \see ioport_group.
-//!
-//! @{
-#define UDD_VBUS_DETECT (defined(CONF_BOARD_USB_PORT) && \
-    defined(CONF_BOARD_USB_VBUS_DETECT))
-#define UDD_VBUS_IO     (defined(USB_VBUS_PIN) && UDD_VBUS_DETECT)
-#ifndef USB_VBUS_WKUP
-#  define USB_VBUS_WKUP 0
-#endif
-
-#define udd_vbus_init(handler) io_pin_init(USB_VBUS_PIN, USB_VBUS_FLAGS, \
-  USB_VBUS_PIN_IRQn, UDD_USB_INT_LEVEL, handler, USB_VBUS_WKUP)
-#define Is_udd_vbus_high()           ioport_get_pin_level(USB_VBUS_PIN)
-#define Is_udd_vbus_low()            (!Is_udd_vbus_high())
-#define udd_enable_vbus_interrupt()  pio_enable_pin_interrupt(USB_VBUS_PIN)
-#define udd_disable_vbus_interrupt() pio_disable_pin_interrupt(USB_VBUS_PIN)
-//! @}
-
 
 //! @name UHDP device attach control
 //! These macros manage the UHDP Device attach.
@@ -175,7 +127,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 #define Is_udd_resume()                           (Tst_bits(UOTGHS->UOTGHS_DEVISR, UOTGHS_DEVISR_EORSM))
 //! @}
 
-//! Manage wake-up event (=usb line activity)
+//! Manage wake-up event (= USB line activity)
 //! The USB controller is reactivated by a filtered non-idle signal from the lines
 //! @{
 #define udd_enable_wake_up_interrupt()            (UOTGHS->UOTGHS_DEVIER = UOTGHS_DEVIER_WAKEUPES)
@@ -266,9 +218,9 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 #define udd_configure_endpoint_type(ep, type)     (Wr_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPTYPE_Msk, type))
   //! Gets the configured selected endpoint type
 #define udd_get_endpoint_type(ep)                 (Rd_bitfield(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPTYPE_Msk))
-  //! Enables the bank autoswitch for the selected endpoint
+  //! Enables the bank auto switch for the selected endpoint
 #define udd_enable_endpoint_bank_autoswitch(ep)   (Set_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_AUTOSW))
-  //! Disables the bank autoswitch for the selected endpoint
+  //! Disables the bank auto switch for the selected endpoint
 #define udd_disable_endpoint_bank_autoswitch(ep)    (Clr_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_AUTOSW))
 #define Is_udd_endpoint_bank_autoswitch_enabled(ep) (Tst_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_AUTOSW))
   //! Configures the selected endpoint direction
@@ -296,12 +248,12 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 
   //! Configures selected endpoint in one step
 #define udd_configure_endpoint(ep, type, dir, size, bank) (                               \
-	Wr_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPTYPE_Msk |            \
+	Wr_bits(UHDP_ARRAY(UOTGHS_DEVEPTCFG[0], ep), UOTGHS_DEVEPTCFG_EPTYPE_Msk |              \
 			UOTGHS_DEVEPTCFG_EPDIR  |                                                           \
 			UOTGHS_DEVEPTCFG_EPSIZE_Msk |                                                       \
 			UOTGHS_DEVEPTCFG_EPBK_Msk ,                                                         \
 			(((uint32_t)(type) << UOTGHS_DEVEPTCFG_EPTYPE_Pos) & UOTGHS_DEVEPTCFG_EPTYPE_Msk) | \
-			(((uint32_t)(dir ) << UHDP_DEVEPTCFG_EPDIR_Pos ) & UOTGHS_DEVEPTCFG_EPDIR) |      \
+			(((uint32_t)(dir ) << UHDP_DEVEPTCFG_EPDIR_Pos ) & UOTGHS_DEVEPTCFG_EPDIR) |        \
 			( (uint32_t)udd_format_endpoint_size(size) << UOTGHS_DEVEPTCFG_EPSIZE_Pos) |        \
 			(((uint32_t)(bank) << UOTGHS_DEVEPTCFG_EPBK_Pos) & UOTGHS_DEVEPTCFG_EPBK_Msk))      \
 )
@@ -520,7 +472,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 
 
   //! Get 64-, 32-, 16- or 8-bit access to FIFO data register of selected endpoint.
-  //! @param ep Endpoint of which to access FIFO data register
+  //! @param ep    Endpoint of which to access FIFO data register
   //! @param scale Data scale in bits: 64, 32, 16 or 8
   //! @return Volatile 64-, 32-, 16- or 8-bit data pointer to FIFO data register
   //! @warning It is up to the user of this macro to make sure that all accesses
@@ -536,7 +488,7 @@ __always_inline static void io_pin_init(uint32_t pin, uint32_t flags,
 //! @{
 
   //! Maximum transfer size on USB DMA
-#define UDD_ENDPOINT_MAX_TRANS 0x10000 //Nash
+#define UDD_ENDPOINT_MAX_TRANS 0x10000
   //! Enables the disabling of HDMA requests by endpoint interrupts
 #define udd_enable_endpoint_int_dis_hdma_req(ep)     (UHDP_ARRAY(UOTGHS_DEVEPTIER[0](ep) = UOTGHS_DEVEPTIER_EPDISHDMAS)
   //! Disables the disabling of HDMA requests by endpoint interrupts
@@ -624,9 +576,9 @@ typedef struct {
       //! Structure for DMA registers
 #define UHDP_UDDMA_ARRAY(ep)                    (((volatile uhdp_dmach_t *)UOTGHS->UOTGHS_DEVDMA)[(ep) - 1])
 
-      //! Set control desc to selected endpoint DMA channel
+      //! Set control description to selected endpoint DMA channel
 #define udd_endpoint_dma_set_control(ep,desc)     (UHDP_UDDMA_ARRAY(ep).control = desc)
-      //! Get control desc to selected endpoint DMA channel
+      //! Get control description to selected endpoint DMA channel
 #define udd_endpoint_dma_get_control(ep)          (UHDP_UDDMA_ARRAY(ep).control)
       //! Set RAM address to selected endpoint DMA channel
 #define udd_endpoint_dma_set_addr(ep,add)         (UHDP_UDDMA_ARRAY(ep).addr = add)

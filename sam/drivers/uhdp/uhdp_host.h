@@ -1,10 +1,9 @@
-#error TODO
 /**
  * \file
  *
- * \brief USB Host Driver header file for UOTGHS.
+ * \brief USB Host Driver header file for UHDP.
  *
- * Copyright (C) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,13 +41,11 @@
  *
  */
 
-#ifndef UOTGHS_HOST_H_INCLUDED
-#define UOTGHS_HOST_H_INCLUDED
+#ifndef UHDP_HOST_H_INCLUDED
+#define UHDP_HOST_H_INCLUDED
 
 #include "compiler.h"
 #include "preprocessor.h"
-#include "uotghs_otg.h"
-#include "gpio.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -56,63 +53,62 @@ extern "C" {
 
 //! \ingroup usb_host_group
 //! \defgroup uhd_group USB Host Driver (UHD)
-//! UOTGHS low-level driver for USB host mode
+//! UHDP low-level driver for USB host mode
 //!
 //! @{
 
-//! @name UOTGHS Host IP properties
+//! @name UHDP Host IP properties
 //!
 //! @{
 //! Get maximal number of endpoints
-#define uhd_get_pipe_max_nbr()                (9)
-#define UOTGHS_EPT_NUM                        (uhd_get_pipe_max_nbr()+1)
+#define uhd_get_pipe_max_nbr()                (4)
+#define UHDP_EPT_NUM                          (uhd_get_pipe_max_nbr()+1)
   //! Get maximal number of banks of endpoints
 #define uhd_get_pipe_bank_max_nbr(ep)         ((ep == 0) ? 1 : (( ep <= 2) ? 3 : 2))
   //! Get maximal size of endpoint (3X, 1024/64)
-#define uhd_get_pipe_size_max(ep)             (((ep) == 0) ? 64 : 1024)
+#define uhd_get_pipe_size_max(ep)             (64)
   //! Get DMA support of endpoints
-#define Is_uhd_pipe_dma_supported(ep)         ((((ep) >= 1) && ((ep) <= 6)) ? true : false)
+#define Is_uhd_pipe_dma_supported(ep)         ((((ep) >= 1) && ((ep) <= 4)) ? true : false)
   //! Get High Band Width support of endpoints
-#define Is_uhd_pipe_high_bw_supported(ep)     (((ep) >= 2) ? true : false)
+#define Is_uhd_pipe_high_bw_supported(ep)     (((ep) >= 3) ? true : false)
 //! @}
 
-//! @name Host Vbus line control
+//! @name Host VBus line control
 //!
 //! VBOF is an optional output pin which allows to enable or disable
-//! the external VBus generator.
+//! the external VBus generator. VBOF is managed through PIO driver.
+//! This feature is optional, and it is enabled if USB_VBOF_PIN
+//! is defined in board.h and (CONF_BOARD_USB_VBUS_CONTROL) defined in
+//! conf_board.h.
 //!
 //! @{
-//! Enables hardware control of USB_VBOF output pin when a Vbus error occur
-#define uhd_enable_vbus_error_hw_control()    (Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBUSHWC))
-//! Disables hardware control of USB_VBOF output pin when a Vbus error occur
-#define uhd_disable_vbus_error_hw_control()   (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBUSHWC))
-//! Set USB VBOF output pin polarity
-#define uhd_set_vbof_active_high()            (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBUSPO))
-#define uhd_set_vbof_active_low()             (Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBUSPO))
-//! Requests VBus activation
-#define uhd_enable_vbus()                     (UOTGHS->UOTGHS_SFR = UOTGHS_SR_VBUSRQ)
-//! Requests VBus deactivation
-#define uhd_disable_vbus()                    (UOTGHS->UOTGHS_SCR = UOTGHS_SR_VBUSRQ)
-//! Tests if VBus activation has been requested
-#define Is_uhd_vbus_enabled()                 (Tst_bits(UOTGHS->UOTGHS_SR, UOTGHS_SR_VBUSRQ))
+#define UHD_VBUS_CTRL       (defined(CONF_BOARD_USB_VBUS_CONTROL))
+#define UHD_VBOF_IO         (defined(USB_VBOF_PIN) && UHD_VBUS_CTRL)
+
+#if UHD_VBOF_IO
+# define pad_vbus_enable()                                               \
+		do {                                                             \
+			ioport_set_pin_level(USB_VBOF_PIN, USB_VBOF_ACTIVE_LEVEL);   \
+			UOTGHS->UOTGHS_SFR = UOTGHS_SR_VBUSRQ;                       \
+		} while (0)
+# define pad_vbus_disable()                                              \
+		do {                                                             \
+			ioport_set_pin_level(USB_VBOF_PIN, USB_VBOF_INACTIVE_LEVEL); \
+			UOTGHS->UOTGHS_SCR = UOTGHS_SR_VBUSRQ;                       \
+		} while (0)
+#else
+# define pad_vbus_enable()
+# define pad_vbus_disable()
+#endif
 //! @}
 
-//! @name Host Vbus line monitoring
-//!
-//! The VBus level is always checked by UOTGHS hardware.
-//!
+//! @name UHDP general errors interrupt management
 //! @{
-#define uhd_enable_vbus_error_interrupt()     (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBERRE))
-#define uhd_disable_vbus_error_interrupt()    (Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBERRE))
-#define Is_uhd_vbus_error_interrupt_enabled() (Tst_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBERRE))
-#define uhd_ack_vbus_error_interrupt()        (UOTGHS->UOTGHS_SCR = UOTGHS_SCR_VBERRIC)
-#define Is_uhd_vbus_error_interrupt()         (Tst_bits(UOTGHS->UOTGHS_SR, UOTGHS_SR_VBERRI))
+#define uhd_enable_errors_interrupt()         (Set_bits(UOTGHS->UOTGHS_CTRL, (UOTGHS_CTRL_BCERRE | UOTGHS_CTRL_HNPERRE | UOTGHS_CTRL_STOE)))
+#define uhd_ack_errors_interrupt()            (UOTGHS->UOTGHS_SCR = (UOTGHS_SCR_BCERRIC | UOTGHS_SCR_HNPERRIC | UOTGHS_SCR_STOIC))
+#define Is_uhd_errors_interrupt_enabled()     (Tst_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_BCERRE | UOTGHS_CTRL_HNPERRE | UOTGHS_CTRL_STOE))
+#define Is_uhd_errors_interrupt()             (Tst_bits(UOTGHS->UOTGHS_SR, UOTGHS_SR_BCERRI | UOTGHS_SR_HNPERRI | UOTGHS_SR_STOI))
 //! @}
-
-#define uhd_enable_errors_interrupt()         (Set_bits(UOTGHS->UOTGHS_CTRL, (UOTGHS_SCR_VBERRIC|UOTGHS_SCR_BCERRIC|UOTGHS_SCR_HNPERRIC|UOTGHS_SCR_STOIC)))
-#define uhd_ack_errors_interrupt()            (UOTGHS->UOTGHS_SCR = (UOTGHS_SCR_VBERRIC|UOTGHS_SCR_BCERRIC|UOTGHS_SCR_HNPERRIC|UOTGHS_SCR_STOIC))
-#define Is_uhd_errors_interrupt_enabled()     (Tst_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBERRE|UOTGHS_CTRL_BCERRE|UOTGHS_CTRL_HNPERRE|UOTGHS_CTRL_STOE))
-#define Is_uhd_errors_interrupt()             (Tst_bits(UOTGHS->UOTGHS_SR, UOTGHS_SR_VBERRI|UOTGHS_SR_BCERRI|UOTGHS_SR_HNPERRI|UOTGHS_SR_STOI))
 
 //! @name USB device connection/disconnection monitoring
 //! @{
@@ -137,10 +133,6 @@ extern "C" {
 #define Is_uhd_low_speed_mode()                 (uhd_get_speed_mode() == UOTGHS_SR_SPEED_LOW_SPEED)
 #define Is_uhd_full_speed_mode()                (uhd_get_speed_mode() == UOTGHS_SR_SPEED_FULL_SPEED)
 #define Is_uhd_high_speed_mode()                (uhd_get_speed_mode() == UOTGHS_SR_SPEED_HIGH_SPEED)
-//! Enable high speed mode
-# define uhd_enable_high_speed_mode()        (Wr_bits(UOTGHS->UOTGHS_HSTCTRL, UOTGHS_HSTCTRL_SPDCONF_Msk, UOTGHS_HSTCTRL_SPDCONF_HIGH_SPEED))
-//! Disable high speed mode
-# define uhd_disable_high_speed_mode()       (Wr_bits(UOTGHS->UOTGHS_HSTCTRL, UOTGHS_HSTCTRL_SPDCONF_Msk, UOTGHS_HSTCTRL_SPDCONF_FORCED_FS))
 //! @}
 
 //! @name Bus events control
@@ -166,8 +158,6 @@ extern "C" {
 #define uhd_disable_sof()                            (Clr_bits(UOTGHS->UOTGHS_HSTCTRL, UOTGHS_HSTCTRL_SOFE))
 #define Is_uhd_sof_enabled()                         (Tst_bits(UOTGHS->UOTGHS_HSTCTRL, UOTGHS_HSTCTRL_SOFE))
 #define uhd_get_sof_number()                         ((UOTGHS->UOTGHS_HSTFNUM & UOTGHS_HSTFNUM_FNUM_Msk) >> UOTGHS_HSTFNUM_FNUM_Pos)
-#define uhd_get_microsof_number()                    ((UOTGHS->UOTGHS_HSTFNUM & \
-		(UOTGHS_HSTFNUM_FNUM_Msk|UOTGHS_HSTFNUM_MFNUM_Msk)) >> UOTGHS_HSTFNUM_FNUM_Pos)
 #define uhd_get_frame_position()                     (Rd_bitfield(UOTGHS->UOTGHS_HSTFNUM, UOTGHS_HSTFNUM_FLENHIGH_Msk))
 #define uhd_enable_sof_interrupt()                   (UOTGHS->UOTGHS_HSTIER = UOTGHS_HSTIER_HSOFIES)
 #define uhd_disable_sof_interrupt()                  (UOTGHS->UOTGHS_HSTIDR = UOTGHS_HSTIDR_HSOFIEC)
@@ -280,9 +270,6 @@ extern "C" {
 #define uhd_unallocate_memory(p)                 (Clr_bits(UOTGHS->UOTGHS_HSTPIPCFG[p], UOTGHS_HSTPIPCFG_ALLOC))
 #define Is_uhd_memory_allocated(p)               (Tst_bits(UOTGHS->UOTGHS_HSTPIPCFG[p], UOTGHS_HSTPIPCFG_ALLOC))
 
-//! Enable PING management only available in HS mode
-#  define uhd_enable_ping(p)                     (Set_bits(UOTGHS->UOTGHS_HSTPIPCFG[p], UOTGHS_HSTPIPCFG_PINGEN))
-
 #define uhd_configure_pipe(p, freq, ep_num, type, token, size, bank, bank_switch) \
 	(Set_bits(UOTGHS->UOTGHS_HSTPIPCFG[p],\
 		(bank)|\
@@ -302,12 +289,12 @@ extern "C" {
 #define uhd_disable_pipe_interrupt(p)      (UOTGHS->UOTGHS_HSTIDR = (UOTGHS_HSTIDR_PEP_0 << (p)))
 #define Is_uhd_pipe_interrupt_enabled(p)   (Tst_bits(UOTGHS->UOTGHS_HSTIMR, UOTGHS_HSTIMR_PEP_0 << (p)))
 #define Is_uhd_pipe_interrupt(p)           (Tst_bits(UOTGHS->UOTGHS_HSTISR, UOTGHS_HSTISR_PEP_0 << (p)))
-//! returns the lowest pipe number generating a pipe interrupt or UOTGHS_EPT_NUM if none
+//! returns the lowest pipe number generating a pipe interrupt or UHDP_EPT_NUM if none
 static inline uint8_t uhd_get_interrupt_pipe_number(void)
 {
 	uint32_t status = UOTGHS->UOTGHS_HSTISR;
 	uint32_t mask = UOTGHS->UOTGHS_HSTIMR;
-	return ctz(((status & mask) >> 8) | (1 << UOTGHS_EPT_NUM));
+	return ctz(((status & mask) >> 8) | (1 << UHDP_EPT_NUM));
 }
 //! @}
 
@@ -435,15 +422,15 @@ static inline uint8_t uhd_get_pipe_dma_interrupt_number(void)
 {
 	uint32_t status = UOTGHS->UOTGHS_HSTISR;
 	uint32_t mask = UOTGHS->UOTGHS_HSTIMR;
-	return (ctz(((status & mask) >> 25) | (1 << (UOTGHS_EPT_NUM-1))) + 1);
+	return (ctz(((status & mask) >> 25) | (1 << (UHDP_EPT_NUM-1))) + 1);
 }
 
-  //! Access points to the UOTGHS host DMA memory map with arrayed registers
+  //! Access points to the UHDP host DMA memory map with arrayed registers
   //! @{
       //! Structure for DMA next descriptor register
 typedef struct {
 	uint32_t *NXT_DSC_ADD;
-} uotghs_uhdma_nextdesc_t;
+} uhdp_uhdma_nextdesc_t;
 
       //! Structure for DMA control register
 typedef struct {
@@ -457,7 +444,7 @@ typedef struct {
 		BUST_LCK:1,
 		reserved:8,
 		BUFF_LENGTH:16;
-} uotghs_uhdma_control_t;
+} uhdp_uhdma_control_t;
       //! Structure for DMA status register
 typedef struct {
 	uint32_t CHANN_ENB:1,
@@ -468,47 +455,47 @@ typedef struct {
 		DESC_LDST:1,
 		reserved1:9,
 		BUFF_COUNT:16;
-} uotghs_uhdma_status_t;
+} uhdp_uhdma_status_t;
       //! Structure for DMA descriptor
 typedef struct {
 	union {
 		uint32_t nextdesc;
-		uotghs_uhdma_nextdesc_t NEXTDESC;
+		uhdp_uhdma_nextdesc_t NEXTDESC;
 	};
 	uint32_t addr;
 	union {
 		uint32_t control;
-		uotghs_uhdma_control_t CONTROL;
+		uhdp_uhdma_control_t CONTROL;
 	};
 	uint32_t reserved;
-} sam_uotghs_uhdmadesc_t, uotghs_uhdmadesc_t;
+} sam_uhdp_uhdmadesc_t, uhdp_uhdmadesc_t;
       //! Structure for DMA registers in a channel
 typedef struct {
 	union {
 		uint32_t nextdesc;
-		uotghs_uhdma_nextdesc_t NEXTDESC;
+		uhdp_uhdma_nextdesc_t NEXTDESC;
 	};
 	uint32_t addr;
 	union {
 		uint32_t control;
-		uotghs_uhdma_control_t CONTROL;
+		uhdp_uhdma_control_t CONTROL;
 	};
 	union {
 		unsigned long status;
-		uotghs_uhdma_status_t STATUS;
+		uhdp_uhdma_status_t STATUS;
 	};
-} sam_uotghs_uhdmach_t, uotghs_uhdmach_t;
+} sam_uhdp_uhdmach_t, uhdp_uhdmach_t;
       //! DMA channel control command
 #define  UHD_ENDPOINT_DMA_STOP_NOW             (0)
 #define  UHD_ENDPOINT_DMA_RUN_AND_STOP         (UOTGHS_HSTDMACONTROL_CHANN_ENB)
 #define  UHD_ENDPOINT_DMA_LOAD_NEXT_DESC       (UOTGHS_HSTDMACONTROL_LDNXT_DSC)
 #define  UHD_ENDPOINT_DMA_RUN_AND_LINK         (UOTGHS_HSTDMACONTROL_CHANN_ENB|UOTGHS_HSTDMACONTROL_LDNXT_DSC)
 //! Structure for DMA registers
-#define  UOTGHS_UHDMA_ARRAY(ep)                (((volatile uotghs_uhdmach_t *)UOTGHS->UOTGHS_HSTDMA)[(ep) - 1])
+#define  UOTGHS_UHDMA_ARRAY(ep)                (((volatile uhdp_uhdmach_t *)UOTGHS->UOTGHS_HSTDMA)[(ep) - 1])
 
-//! Set control desc to selected endpoint DMA channel
+//! Set control descriptor to selected endpoint DMA channel
 #define  uhd_pipe_dma_set_control(p,desc)     (UOTGHS_UHDMA_ARRAY(p).control=desc)
-//! Get control desc to selected endpoint DMA channel
+//! Get control descriptor to selected endpoint DMA channel
 #define  uhd_pipe_dma_get_control(p)          (UOTGHS_UHDMA_ARRAY(p).control)
 //! Set RAM address to selected endpoint DMA channel
 #define  uhd_pipe_dma_set_addr(p,add)         (UOTGHS_UHDMA_ARRAY(p).addr=add)
@@ -525,5 +512,5 @@ typedef struct {
 }
 #endif
 
+#endif // UHDP_HOST_H_INCLUDED
 
-#endif // UOTGHS_HOST_H_INCLUDED

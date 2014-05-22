@@ -1,11 +1,10 @@
-#error TODO
 /**
  * \file
  *
  * \brief USB host driver
  * Compliance with common driver UHD
  *
- * Copyright (C) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,63 +45,18 @@
 #include "conf_usb_host.h"
 #include "sysclk.h"
 #include "uhd.h"
-#include "uotghs_otg.h"
-#include "uotghs_host.h"
+#include "uhdp_otg.h"
+#include "uhdp_host.h"
 #include <string.h>
 #include <stdlib.h>
 
 
-#if !(SAM3XA)
-# error The current UOTGHS Host Driver supports only SAM3X and SAM3A.
+#if !(SAM4C32)
+# error The current UHDP Device Driver supports only SAM4C32E.
 #endif
 
 #ifndef UHD_USB_INT_FUN
 # define UHD_USB_INT_FUN UOTGHS_Handler
-#endif
-
-#ifndef UHD_USB_INT_LEVEL
-# define UHD_USB_INT_LEVEL 5 // By default USB interrupt have low priority
-#endif
-
-#define USB_HOST_MAX_EP  9
-#define UHD_PIPE_USED(pipe)      (USB_HOST_MAX_EP >= pipe)
-
-#if (     (UHD_PIPE_USED( 1) && Is_uhd_pipe_dma_supported( 1)) \
-	||(UHD_PIPE_USED( 2) && Is_uhd_pipe_dma_supported( 2)) \
-	||(UHD_PIPE_USED( 3) && Is_uhd_pipe_dma_supported( 3)) \
-	||(UHD_PIPE_USED( 4) && Is_uhd_pipe_dma_supported( 4)) \
-	||(UHD_PIPE_USED( 5) && Is_uhd_pipe_dma_supported( 5)) \
-	||(UHD_PIPE_USED( 6) && Is_uhd_pipe_dma_supported( 6)) \
-	||(UHD_PIPE_USED( 7) && Is_uhd_pipe_dma_supported( 7)) \
-	||(UHD_PIPE_USED( 8) && Is_uhd_pipe_dma_supported( 8)) \
-	||(UHD_PIPE_USED( 9) && Is_uhd_pipe_dma_supported( 9)) \
-	||(UHD_PIPE_USED(10) && Is_uhd_pipe_dma_supported(10)) \
-	||(UHD_PIPE_USED(11) && Is_uhd_pipe_dma_supported(11)) \
-	||(UHD_PIPE_USED(12) && Is_uhd_pipe_dma_supported(12)) \
-	||(UHD_PIPE_USED(13) && Is_uhd_pipe_dma_supported(13)) \
-	||(UHD_PIPE_USED(14) && Is_uhd_pipe_dma_supported(14)) \
-	||(UHD_PIPE_USED(15) && Is_uhd_pipe_dma_supported(15)) \
-	)
-# define UHD_PIPE_DMA_SUPPORTED
-#endif
-
-#if (     (UHD_PIPE_USED( 1) && !Is_uhd_pipe_dma_supported( 1)) \
-	||(UHD_PIPE_USED( 2) && !Is_uhd_pipe_dma_supported( 2)) \
-	||(UHD_PIPE_USED( 3) && !Is_uhd_pipe_dma_supported( 3)) \
-	||(UHD_PIPE_USED( 4) && !Is_uhd_pipe_dma_supported( 4)) \
-	||(UHD_PIPE_USED( 5) && !Is_uhd_pipe_dma_supported( 5)) \
-	||(UHD_PIPE_USED( 6) && !Is_uhd_pipe_dma_supported( 6)) \
-	||(UHD_PIPE_USED( 7) && !Is_uhd_pipe_dma_supported( 7)) \
-	||(UHD_PIPE_USED( 8) && !Is_uhd_pipe_dma_supported( 8)) \
-	||(UHD_PIPE_USED( 9) && !Is_uhd_pipe_dma_supported( 9)) \
-	||(UHD_PIPE_USED(10) && !Is_uhd_pipe_dma_supported(10)) \
-	||(UHD_PIPE_USED(11) && !Is_uhd_pipe_dma_supported(11)) \
-	||(UHD_PIPE_USED(12) && !Is_uhd_pipe_dma_supported(12)) \
-	||(UHD_PIPE_USED(13) && !Is_uhd_pipe_dma_supported(13)) \
-	||(UHD_PIPE_USED(14) && !Is_uhd_pipe_dma_supported(14)) \
-	||(UHD_PIPE_USED(15) && !Is_uhd_pipe_dma_supported(15)) \
-	)
-# define UHD_PIPE_FIFO_SUPPORTED
 #endif
 
 #ifdef UDD_ENABLE
@@ -138,6 +92,10 @@ extern void udc_start(void);
 # define UHC_VBUS_ERROR()
 #endif
 
+// for debug text
+//#define dbg_print printf
+#define dbg_print(...)
+
 /**
  * \ingroup usb_host_group
  * \defgroup uhd_group USB Host Driver (UHD)
@@ -146,11 +104,11 @@ extern void udc_start(void);
  * The defines UHD_ENABLE and UDD_ENABLE must be added in project to allow
  * the USB low level (UHD) to manage or not the dual role (device and host).
  *
- * \section UOTGHS_CONF UOTGHS Custom configuration
- * The following UOTGHS driver configuration must be defined in conf_usb_host.h
+ * \section uhdp_conf UHDP Custom configuration
+ * The following UHDP driver configuration must be defined in conf_usb_host.h
  * file of the application.
  *
- * UHD_USB_INT_LEVEL<br>
+ * USB_INT_LEVEL<br>
  * Option to change the interrupt priority (0 to 15) by default 5 (recommended).
  *
  * UHD_USB_INT_FUN<br>
@@ -176,7 +134,7 @@ extern void udc_start(void);
  *
  * \section Power mode management
  * The driver uses the sleepmgr service to manage the different sleep modes.
- * The sleep mode depends on USB driver state (uhd_uotghs_state_enum).
+ * The sleep mode depends on USB driver state (uhd_uhdp_state_enum).
  * @{
  */
 
@@ -212,8 +170,8 @@ extern void udc_start(void);
 #ifndef UHD_NO_SLEEP_MGR
 
 #include "sleepmgr.h"
-//! States of UOTGHS interface
-enum uhd_uotghs_state_enum {
+//! States of UHDP interface
+enum uhd_uhdp_state_enum {
 	UHD_STATE_OFF = 0,
 	UHD_STATE_WAIT_ID_HOST = 1,
 	UHD_STATE_NO_VBUS = 2,
@@ -222,11 +180,11 @@ enum uhd_uotghs_state_enum {
 	UHD_STATE_IDLE = 5,
 };
 
-/*! \brief Manages the sleep mode following the UOTGHS state
+/*! \brief Manages the sleep mode following the UHDP state
  *
- * \param new_state  New UOTGHS state
+ * \param new_state  New UHDP state
  */
-static void uhd_sleep_mode(enum uhd_uotghs_state_enum new_state)
+static void uhd_sleep_mode(enum uhd_uhdp_state_enum new_state)
 {
 	enum sleepmgr_mode sleep_mode[] = {
 		SLEEPMGR_BACKUP,    // UHD_STATE_OFF (not used)
@@ -237,7 +195,7 @@ static void uhd_sleep_mode(enum uhd_uotghs_state_enum new_state)
 		SLEEPMGR_SLEEP_WFI, // UHD_STATE_IDLE
 	};
 
-	static enum uhd_uotghs_state_enum uhd_state = UHD_STATE_OFF;
+	static enum uhd_uhdp_state_enum uhd_state = UHD_STATE_OFF;
 
 	if (uhd_state == new_state) {
 		return; // No change
@@ -258,8 +216,69 @@ static void uhd_sleep_mode(enum uhd_uotghs_state_enum new_state)
 #endif // UHD_NO_SLEEP_MGR
 //@}
 
+/**
+ * \name USB IO PADs handlers
+ */
+//@{
 
-//! State of UOTGHS OTG initialization
+#if OTG_ID_IO
+/**
+ * USB ID pin change handler
+ */
+static void otg_id_handler(uint32_t id, uint32_t mask)
+{
+	if (USB_ID_PIO_ID != id || USB_ID_PIO_MASK != mask) {
+		return;
+	}
+
+	if (Is_otg_id_device()) {
+		uhc_stop(false);
+		UHC_MODE_CHANGE(false);
+		otg_force_device_mode();
+		udc_start();
+		dbg_print("\r\nudc_start ");
+	} else {
+		udc_stop();
+		UHC_MODE_CHANGE(true);
+		otg_force_host_mode();
+		uhc_start();
+		dbg_print("\r\nuhc_start ");
+	}
+}
+#endif
+
+#if OTG_VBUS_IO
+/**
+ * USB VBus pin change handler
+ */
+static void uhd_vbus_handler(uint32_t id, uint32_t mask)
+{
+	if (USB_VBUS_PIO_ID != id || USB_VBUS_PIO_MASK != mask) {
+		return;
+	}
+
+	if (Is_otg_vbus_high()) {
+		otg_unfreeze_clock();
+		/* Freeze USB clock to use wakeup interrupt
+		 * to detect connection.
+		 * After detection of wakeup interrupt,
+		 * the clock is unfreeze to have the true
+		 * connection interrupt.
+		 */
+		uhd_enable_wakeup_interrupt();
+		otg_freeze_clock();
+		uhd_sleep_mode(UHD_STATE_DISCONNECT);
+		UHC_VBUS_CHANGE(true);
+	} else {
+		otg_unfreeze_clock();
+		otg_freeze_clock();
+		uhd_sleep_mode(UHD_STATE_NO_VBUS);
+		UHC_VBUS_CHANGE(false);
+	}
+}
+#endif
+
+//! State of UHDP OTG initialization
 static bool otg_initialized = false;
 
 //! Store the callback to be call at the end of reset signal
@@ -364,7 +383,7 @@ typedef struct {
 } uhd_pipe_job_t;
 
 //! Array to register a job on bulk/interrupt/isochronous endpoint
-static uhd_pipe_job_t uhd_pipe_job[UOTGHS_EPT_NUM - 1];
+static uhd_pipe_job_t uhd_pipe_job[UHDP_EPT_NUM - 1];
 
 //! Variables to manage the suspend/resume sequence
 static uint8_t uhd_suspend_start;
@@ -385,16 +404,8 @@ static void uhd_ctrl_phase_zlp_out(void);
 static void uhd_ctrl_request_end(uhd_trans_status_t status);
 static uhd_trans_status_t uhd_pipe_get_error(uint8_t pipe);
 static uint8_t uhd_get_pipe(usb_add_t add, usb_ep_t endp);
-
-#ifdef UHD_PIPE_FIFO_SUPPORTED
-static void uhd_pipe_out_ready(uint8_t pipe);
-static void uhd_pipe_in_received(uint8_t pipe);
-#endif
-#ifdef UHD_PIPE_DMA_SUPPORTED
 static void uhd_pipe_trans_complet(uint8_t pipe);
 static void uhd_pipe_interrupt_dma(uint8_t pipe);
-#endif
-
 static void uhd_pipe_interrupt(uint8_t pipe);
 static void uhd_ep_abort_pipe(uint8_t pipe, uhd_trans_status_t status);
 static void uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
@@ -405,7 +416,7 @@ static void uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
 
 /**
  * \internal
- * \brief Function called by UOTGHS interrupt handler to manage USB interrupts
+ * \brief Function called by UHDP interrupt handler to manage USB interrupts
  *
  * It manages the interrupt redirection between host or device interrupt.
  * It answers to OTG events (ID pin change).
@@ -414,16 +425,11 @@ static void uhd_pipe_finish_job(uint8_t pipe, uhd_trans_status_t status);
  * Here, the global interrupt mask is not cleared when an USB interrupt
  * is enabled because this one can not occurred during the USB ISR
  * (=during INTX is masked).
- * See Technical reference $3.8.3 Masking interrupt requests
- * in peripheral modules.
  */
 ISR(UHD_USB_INT_FUN)
 {
-	bool b_mode_device;
-
-	pmc_enable_periph_clk(ID_UOTGHS);
-
-	/* For fast wakeup clocks restore
+	/*
+	 * For fast wakeup clocks restore
 	 * In WAIT mode, clocks are switched to FASTRC.
 	 * After wakeup clocks should be restored, before that ISR should not
 	 * be served.
@@ -433,30 +439,8 @@ ISR(UHD_USB_INT_FUN)
 		return;
 	}
 
-#ifdef USB_ID_GPIO
-	if (Is_otg_id_transition()) {
-		while (!Is_otg_clock_usable());
-		otg_unfreeze_clock();
-		otg_ack_id_transition();
-		otg_freeze_clock();
-		if (Is_otg_id_device()) {
-			uhc_stop(false);
-			UHC_MODE_CHANGE(false);
-			udc_start();
-		} else {
-			udc_stop();
-			UHC_MODE_CHANGE(true);
-			uhc_start();
-		}
-		return;
-	}
-	b_mode_device = Is_otg_id_device();
-#else
-	b_mode_device = Is_otg_device_mode_forced();
-#endif
-
 	// Redirection to host or device interrupt
-	if (b_mode_device) {
+	if (Is_otg_device_mode_forced()) {
 		udd_interrupt();
 	} else {
 		uhd_interrupt();
@@ -470,29 +454,28 @@ bool otg_dual_enable(void)
 	}
 	otg_initialized = true;
 
-	//* Enable USB hardware clock
+	// Enable USB hardware clock
 	sysclk_enable_usb();
 	pmc_enable_periph_clk(ID_UOTGHS);
 
+	// Reset USB hardware
+	otg_reset();
+
 	// Always authorize asynchronous USB interrupts to exit of sleep mode
 	// For SAM3 USB wake up device except BACKUP mode
-	NVIC_SetPriority((IRQn_Type) ID_UOTGHS, UHD_USB_INT_LEVEL);
+	NVIC_SetPriority((IRQn_Type) ID_UOTGHS, USB_INT_LEVEL);
 	NVIC_EnableIRQ((IRQn_Type) ID_UOTGHS);
 	pmc_set_fast_startup_input(PMC_FSMR_USBAL);
 
-# ifdef USB_ID_GPIO
-	// By default the ID pin is enabled
-	// The UOTGHS hardware must be enabled to provide ID pin interrupt
-	otg_enable();
-	otg_unfreeze_clock();
-	otg_enable_id_interrupt();
-	otg_ack_id_transition();
-	otg_freeze_clock();
+#if OTG_ID_IO
+	otg_id_init(otg_id_handler);
 	if (Is_otg_id_device()) {
+		otg_force_device_mode();
 		uhd_sleep_mode(UHD_STATE_WAIT_ID_HOST);
 		UHC_MODE_CHANGE(false);
 		udc_start();
 	} else {
+		otg_force_host_mode();
 		UHC_MODE_CHANGE(true);
 		uhc_start();
 	}
@@ -500,10 +483,10 @@ bool otg_dual_enable(void)
 	// End of host or device startup,
 	// the current mode selected is already started now
 	return true; // ID pin management has been enabled
-# else
+#else
 	uhd_sleep_mode(UHD_STATE_OFF);
 	return false; // ID pin management has not been enabled
-# endif
+#endif
 }
 
 
@@ -518,8 +501,8 @@ void otg_dual_disable(void)
 	pmc_clr_fast_startup_input(PMC_FSMR_USBAL);
 
 	otg_unfreeze_clock();
-# ifdef USB_ID_GPIO
-	otg_disable_id_interrupt();
+# if OTG_ID_IO
+	otg_id_interrupt_disable();
 # endif
 	otg_freeze_clock();
 	otg_disable();
@@ -528,7 +511,6 @@ void otg_dual_disable(void)
 	pmc_disable_periph_clk(ID_UOTGHS);
 	uhd_sleep_mode(UHD_STATE_OFF);
 }
-
 
 
 void uhd_enable(void)
@@ -544,35 +526,19 @@ void uhd_enable(void)
 		return;
 	}
 
-	sysclk_enable_usb();
-	pmc_enable_periph_clk(ID_UOTGHS);
-
-#ifdef USB_ID_GPIO // ID pin available in board.h
+#if OTG_ID_IO
 	// Check that the host mode is selected by ID pin
-	if (!Is_otg_id_host()) {
+	if (Is_otg_id_device()) {
 		cpu_irq_restore(flags);
 		return; // Host is not the current mode
 	}
 #else
 	// ID pin not used then force host mode
-	otg_disable_id_pin();
 	otg_force_host_mode();
 #endif
 
-	// Enable USB hardware
-#ifdef USB_VBOF_GPIO // VBOF pin available in board.h
-# if USB_VBOF_ACTIVE_LEVEL == HIGH
-	uhd_set_vbof_active_high();
-# else // USB_VBOF_ACTIVE_LEVEL == LOW
-	uhd_set_vbof_active_low();
-# endif
-#endif
 	otg_enable_pad();
 	otg_enable();
-
-#ifndef USB_HOST_HS_SUPPORT
-	uhd_disable_high_speed_mode();
-#endif
 
 	uhd_ctrl_request_first = NULL;
 	uhd_ctrl_request_last = NULL;
@@ -581,9 +547,10 @@ void uhd_enable(void)
 	uhd_resume_start = 0;
 	uhd_b_suspend_requested = false;
 
-	// Check USB clock
 	otg_unfreeze_clock();
-	while (!Is_otg_clock_usable());
+
+	// Disable VBUS hardware control
+	uhd_disable_vbus_hw_control();
 
 	// Clear all interrupts that may have been set by a previous host mode
 	UOTGHS->UOTGHS_HSTICR = UOTGHS_HSTICR_DCONNIC | UOTGHS_HSTICR_DDISCIC
@@ -591,28 +558,36 @@ void uhd_enable(void)
 			| UOTGHS_HSTICR_RSMEDIC | UOTGHS_HSTICR_RSTIC
 			| UOTGHS_HSTICR_RXRSMIC;
 
-	otg_ack_vbus_transition();
-
-	// Enable Vbus change and error interrupts
-	// Disable automatic Vbus control after Vbus error
-	Set_bits(UOTGHS->UOTGHS_CTRL,
-		UOTGHS_CTRL_VBUSHWC | UOTGHS_CTRL_VBUSTE | UOTGHS_CTRL_VBERRE);
-
-	uhd_enable_vbus();
-
-	// Force Vbus interrupt when Vbus is always high
-	// This is possible due to a short timing between a Host mode stop/start.
+	/* Enable VBus monitoring */
+# if OTG_VBUS_IO
+	otg_vbus_init(uhd_vbus_handler);
+	/* Force VBus interrupt when VBus is always high
+	 * This is possible due to a short timing between a Host mode stop/start.
+	 */
 	if (Is_otg_vbus_high()) {
-		otg_raise_vbus_transition();
+		uhd_vbus_handler(USB_VBUS_PIO_ID, USB_VBUS_PIO_MASK);
+		otg_unfreeze_clock();
 	}
+# else
+	/* No VBus detect, assume always high */
+
+	/* Freeze USB clock to use wakeup interrupt to detect connection.
+	 *
+	 * After detection of wakeup interrupt, the clock is unfreeze to have
+	 * the true connection interrupt.
+	 */
+	uhd_enable_wakeup_interrupt();
+	uhd_sleep_mode(UHD_STATE_DISCONNECT);
+	UHC_VBUS_CHANGE(true); /* Changed to HIGH */
+# endif
+
+	/* Enable VBus */
+	pad_vbus_enable();
 
 	// Enable main control interrupt
 	// Connection, SOF and reset
 	UOTGHS->UOTGHS_HSTIER = UOTGHS_HSTICR_DCONNIC | UOTGHS_HSTICR_HSOFIC
 				| UOTGHS_HSTICR_RSTIC;
-
-	otg_freeze_clock();
-	uhd_sleep_mode(UHD_STATE_NO_VBUS);
 
 	cpu_irq_restore(flags);
 }
@@ -622,11 +597,9 @@ void uhd_disable(bool b_id_stop)
 {
 	irqflags_t flags;
 
-	// Check USB clock ready after a potential sleep mode < IDLE
-	while (!Is_otg_clock_usable());
 	otg_unfreeze_clock();
 
-	// Disable Vbus change and error interrupts
+	// Disable VBus change and error interrupts
 	Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBUSTE | UOTGHS_CTRL_VBERRE);
 
 	// Disable main control interrupt
@@ -637,11 +610,11 @@ void uhd_disable(bool b_id_stop)
 			| UOTGHS_HSTIDR_HWUPIEC;
 
 	uhd_disable_sof();
-	uhd_disable_vbus();
+	pad_vbus_disable();
 	uhc_notify_connection(false);
 	otg_freeze_clock();
 
-#ifdef USB_ID_GPIO
+#if OTG_ID_IO
 	if (!b_id_stop) {
 		// Freeze clock to switch mode
 		otg_freeze_clock();
@@ -661,9 +634,6 @@ uhd_speed_t uhd_get_speed(void)
 {
 	switch (uhd_get_speed_mode()) {
 
-	case UOTGHS_SR_SPEED_HIGH_SPEED:
-		return UHD_SPEED_HIGH;
-
 	case UOTGHS_SR_SPEED_FULL_SPEED:
 		return UHD_SPEED_FULL;
 
@@ -681,11 +651,6 @@ uint16_t uhd_get_frame_number(void)
 	return uhd_get_sof_number();
 }
 
-uint16_t uhd_get_microframe_number(void)
-{
-	return uhd_get_microsof_number();
-}
-
 void uhd_send_reset(uhd_callback_reset_t callback)
 {
 	uhd_reset_callback = callback;
@@ -701,7 +666,7 @@ void uhd_suspend(void)
 	}
 	// Save pipe freeze states and freeze pipes
 	uhd_pipes_unfreeze = 0;
-	for (uint8_t pipe = 1; pipe < UOTGHS_EPT_NUM; pipe++) {
+	for (uint8_t pipe = 1; pipe < UHDP_EPT_NUM; pipe++) {
 		uhd_pipes_unfreeze |= (!Is_uhd_pipe_frozen(pipe)) << pipe;
 		uhd_freeze_pipe(pipe);
 	}
@@ -726,8 +691,6 @@ void uhd_resume(void)
 		}
 		return;
 	}
-	// Check USB clock ready after a potential sleep mode < IDLE
-	while (!Is_otg_clock_usable());
 	otg_unfreeze_clock();
 	uhd_enable_sof();
 	uhd_send_resume();
@@ -739,13 +702,6 @@ bool uhd_ep0_alloc(usb_add_t add, uint8_t ep_size)
 	if (ep_size < 8) {
 		return false;
 	}
-#ifdef USB_HOST_HUB_SUPPORT
-	if (Is_uhd_pipe_enabled(0)) {
-		// Already allocated
-#error TODO Add USB address in a list
-		return true;
-	}
-#endif
 
 	uhd_enable_pipe(0);
 	uhd_configure_pipe(0, // Pipe 0
@@ -753,11 +709,7 @@ bool uhd_ep0_alloc(usb_add_t add, uint8_t ep_size)
 			0, // endpoint 0
 			UOTGHS_HSTPIPCFG_PTYPE_CTRL,
 			UOTGHS_HSTPIPCFG_PTOKEN_SETUP,
-#ifdef USB_HOST_HUB_SUPPORT
-			64, // Max size for control endpoint
-#else
 			ep_size,
-#endif
 			UOTGHS_HSTPIPCFG_PBK_1_BANK, 0);
 
 	uhd_allocate_memory(0);
@@ -782,7 +734,7 @@ bool uhd_ep_alloc(usb_add_t add, usb_ep_desc_t * ep_desc)
 	uint8_t ep_interval;
 	uint8_t bank;
 
-	for (uint8_t pipe = 1; pipe < UOTGHS_EPT_NUM; pipe++) {
+	for (uint8_t pipe = 1; pipe < UHDP_EPT_NUM; pipe++) {
 		if (Is_uhd_pipe_enabled(pipe)) {
 			continue;
 		}
@@ -804,7 +756,7 @@ bool uhd_ep_alloc(usb_add_t add, usb_ep_desc_t * ep_desc)
 			break;
 		case USB_EP_TYPE_BULK:
 			bank = UHD_BULK_NB_BANK;
-			// 0 is required by UOTGHS hardware for bulk
+			// 0 is required by UHDP hardware for bulk
 			ep_interval = 0;
 			break;
 		default:
@@ -851,20 +803,8 @@ bool uhd_ep_alloc(usb_add_t add, usb_ep_desc_t * ep_desc)
 
 void uhd_ep_free(usb_add_t add, usb_ep_t endp)
 {
-#ifdef USB_HOST_HUB_SUPPORT
-	if (endp == 0) {
-		// Control endpoint does not be unallocated
-#error TODO the list address must be updated
-		if (uhd_ctrl_request_timeout
-				&& (uhd_ctrl_request_first->add == add)) {
-			// Disable setup request if on this device
-			uhd_ctrl_request_end(UHD_TRANS_DISCONNECT);
-		}
-		return;
-	}
-#endif
 	// Search endpoint(s) in all pipes
-	for (uint8_t pipe = 0; pipe < UOTGHS_EPT_NUM; pipe++) {
+	for (uint8_t pipe = 0; pipe < UHDP_EPT_NUM; pipe++) {
 		if (!Is_uhd_pipe_enabled(pipe)) {
 			continue;
 		}
@@ -882,7 +822,6 @@ void uhd_ep_free(usb_add_t add, usb_ep_t endp)
 		uhd_unallocate_memory(pipe);
 
 		// Stop transfer on this pipe
-#ifndef USB_HOST_HUB_SUPPORT
 		if (pipe == 0) {
 			// Endpoint control
 			if (uhd_ctrl_request_timeout) {
@@ -890,7 +829,7 @@ void uhd_ep_free(usb_add_t add, usb_ep_t endp)
 			}
 			continue;
 		}
-#endif
+
 		// Endpoint interrupt, bulk or isochronous
 		uhd_ep_abort_pipe(pipe, UHD_TRANS_DISCONNECT);
 	}
@@ -954,12 +893,9 @@ bool uhd_ep_run(usb_add_t add,
 	uhd_pipe_job_t *ptr_job;
 
 	pipe = uhd_get_pipe(add,endp);
-	if (pipe == UOTGHS_EPT_NUM) {
+	if (pipe == UHDP_EPT_NUM) {
 		return false; // pipe not found
 	}
-#ifdef UHD_PIPE_FIFO_SUPPORTED
-	bool b_pipe_in = uhd_is_pipe_in(pipe);
-#endif
 
 	// Get job about pipe
 	ptr_job = &uhd_pipe_job[pipe-1];
@@ -983,32 +919,9 @@ bool uhd_ep_run(usb_add_t add,
 	}
 	cpu_irq_restore(flags);
 
-#ifdef UHD_PIPE_FIFO_SUPPORTED
-	// No DMA support
-	if (!Is_uhd_pipe_dma_supported(pipe)) {
-		flags = cpu_irq_save();
-		uhd_disable_pipe_bank_autoswitch(pipe);
-		uhd_unfreeze_pipe(pipe);
-		if (b_pipe_in) {
-			uhd_enable_continuous_in_mode(pipe);
-			uhd_enable_in_received_interrupt(pipe);
-			if (b_shortpacket) {
-				uhd_enable_short_packet_interrupt(pipe);
-			}
-		} else {
-			uhd_disable_bank_interrupt(pipe);
-			uhd_enable_out_ready_interrupt(pipe);
-		}
-		uhd_enable_pipe_interrupt(pipe);
-		cpu_irq_restore(flags);
-		return true;
-	}
-#endif // UHD_PIPE_FIFO_SUPPORTED
-
-#ifdef UHD_PIPE_DMA_SUPPORTED
 	// Request first transfer
 	uhd_pipe_trans_complet(pipe);
-#endif
+
 	return true;
 }
 
@@ -1017,41 +930,15 @@ void uhd_ep_abort(usb_add_t add, usb_ep_t endp)
 	uint8_t pipe;
 
 	pipe = uhd_get_pipe(add,endp);
-	if (pipe == UOTGHS_EPT_NUM) {
+	if (pipe == UHDP_EPT_NUM) {
 		return; // pipe not found
 	}
 	uhd_ep_abort_pipe(pipe,UHD_TRANS_ABORTED);
 }
 
-#ifdef USB_HOST_HS_SUPPORT
-
-void uhd_test_mode_j(void)
-{
-	// Not available
-	Assert(false);
-}
-void uhd_test_mode_k(void)
-{
-	// Not available
-	Assert(false);
-}
-void uhd_test_mode_se0_nak(void)
-{
-	// Not available
-	Assert(false);
-}
-void uhd_test_mode_packet(void)
-{
-	// Not available
-	Assert(false);
-}
-
-#endif // USB_HOST_HS_SUPPORT
-
-
 /**
  * \internal
- * \brief Function called by UOTGHS interrupt to manage USB host interrupts
+ * \brief Function called by UHDP interrupt to manage USB host interrupts
  *
  * USB host interrupt events are split into four sections:
  * - USB line events
@@ -1068,42 +955,45 @@ static void uhd_interrupt(void)
 	// Manage SOF interrupt
 	if (Is_uhd_sof()) {
 		uhd_sof_interrupt();
-		return;
+		goto uhd_interrupt_exit_sof;
 	}
 
 	// Manage pipe interrupts
 	pipe_int = uhd_get_interrupt_pipe_number();
 	if (pipe_int == 0) {
+		dbg_print("0: ");
 		// Interrupt acked by control endpoint managed
 		uhd_ctrl_interrupt();
-		return;
+		goto uhd_interrupt_exit;
 	}
-	if (pipe_int != UOTGHS_EPT_NUM) {
+	if (pipe_int != UHDP_EPT_NUM) {
+		dbg_print("p%d: ", (int)pipe_int);
 		// Interrupt acked by bulk/interrupt/isochronous endpoint
 		uhd_pipe_interrupt(pipe_int);
-		return;
+		goto uhd_interrupt_exit;
 	}
-#ifdef UHD_PIPE_DMA_SUPPORTED
 	pipe_int = uhd_get_pipe_dma_interrupt_number();
-	if (pipe_int != UOTGHS_EPT_NUM) {
+	if (pipe_int != UHDP_EPT_NUM) {
+		dbg_print("dma%d: ", (int)pipe_int);
 		// Interrupt DMA acked by bulk/interrupt/isochronous endpoint
 		uhd_pipe_interrupt_dma(pipe_int);
-		return;
+		goto uhd_interrupt_exit;
 	}
-#endif
 	// USB bus reset detection
 	if (Is_uhd_reset_sent()) {
 		uhd_ack_reset_sent();
+		dbg_print("RST ");
 		if (uhd_reset_callback != NULL) {
 			uhd_reset_callback();
 		}
-		return;
+		goto uhd_interrupt_exit;
 	}
 
 	// Manage dis/connection event
 	if (Is_uhd_disconnection() && Is_uhd_disconnection_int_enabled()) {
 		uhd_ack_disconnection();
 		uhd_disable_disconnection_int();
+		dbg_print("DISC ");
 		// Stop reset signal, in case of disconnection during reset
 		uhd_stop_reset();
 		// Disable wakeup/resumes interrupts,
@@ -1117,84 +1007,56 @@ static void uhd_interrupt(void)
 		uhd_suspend_start = 0;
 		uhd_resume_start = 0;
 		uhc_notify_connection(false);
-		return;
+		goto uhd_interrupt_exit;
 	}
 	if (Is_uhd_connection() && Is_uhd_connection_int_enabled()) {
 		uhd_ack_connection();
 		uhd_disable_connection_int();
 		uhd_ack_disconnection();
+		dbg_print("CONN ");
 		uhd_enable_disconnection_int();
 		uhd_enable_sof();
 		uhd_sleep_mode(UHD_STATE_IDLE);
 		uhd_suspend_start = 0;
 		uhd_resume_start = 0;
 		uhc_notify_connection(true);
-		return;
+		goto uhd_interrupt_exit;
 	}
 
-	// Manage Vbus error
-	if (Is_uhd_vbus_error_interrupt()) {
-		uhd_ack_vbus_error_interrupt();
-		UHC_VBUS_ERROR();
-		return;
-	}
-
-	// Check USB clock ready after asynchronous interrupt
-	while (!Is_otg_clock_usable());
+	// Enable USB clock after asynchronous interrupt
 	otg_unfreeze_clock();
+
 
 	if (Is_uhd_wakeup_interrupt_enabled() && (Is_uhd_wakeup() ||
 			Is_uhd_downstream_resume() || Is_uhd_upstream_resume())) {
+		dbg_print("WKUP ");
+		//uhd_ack_wakeup();
 		// Disable wakeup/resumes interrupts
 		UOTGHS->UOTGHS_HSTIDR = UOTGHS_HSTIDR_HWUPIEC
 				| UOTGHS_HSTIDR_RSMEDIEC
 				| UOTGHS_HSTIDR_RXRSMIEC;
 		uhd_enable_sof();
-		if ((!Is_uhd_downstream_resume())
-				&&(!Is_uhd_disconnection())) {
-			// It is a upstream resume
-			// Note: When the CPU exits from a deep sleep mode, the event
-			// Is_uhd_upstream_resume() can be not detected
-			// because the USB clock are not available.
 
-			// In High speed mode a downstream resume must be sent
-			// after a upstream to avoid a disconnection.
-			if (Is_uhd_high_speed_mode()) {
-				uhd_send_resume();
-			}
-		}
-		// Wait 50ms before restarting transfer
+		// Wait 50 ms before restarting transfer
 		uhd_resume_start = 50;
 		uhd_sleep_mode(UHD_STATE_IDLE);
-		return;
-	}
-
-	// Manage Vbus state change
-	if (Is_otg_vbus_transition()) {
-		otg_ack_vbus_transition();
-		if (Is_otg_vbus_high()) {
-			uhd_sleep_mode(UHD_STATE_DISCONNECT);
-			UHC_VBUS_CHANGE(true);
-		} else {
-			uhd_sleep_mode(UHD_STATE_NO_VBUS);
-			otg_freeze_clock();
-			UHC_VBUS_CHANGE(false);
-		}
-		return;
+		goto uhd_interrupt_exit;
 	}
 
 	// Other errors
 	if (Is_uhd_errors_interrupt_enabled() && Is_uhd_errors_interrupt()) {
 		uhd_ack_errors_interrupt();
-		return;
-	}
-	// Still waiting VBus, ignore errors
-	if (Is_uhd_vbus_enabled() && !Is_otg_vbus_high()) {
-		uhd_ack_errors_interrupt();
-		return;
+		dbg_print("OtherErr ");
+		goto uhd_interrupt_exit;
 	}
 
-	Assert(false); // Interrupt event no managed
+	dbg_print("Interrupt event not managed! ");
+	Assert(false);
+
+uhd_interrupt_exit:
+	dbg_print("\n\r");
+uhd_interrupt_exit_sof:
+	return;
 }
 
 static void uhd_delayed_suspend(void)
@@ -1204,9 +1066,8 @@ static void uhd_delayed_suspend(void)
 		// the current Keep-Alive/SOF can be always on-going
 		// then wait end of SOF generation
 		// to be sure that disable SOF has been accepted
-		uint8_t pos =
-			(uhd_get_speed_mode() == UOTGHS_SR_SPEED_HIGH_SPEED) ?
-				13 : 114;
+		uint8_t pos = 114;
+
 		while (pos < uhd_get_frame_position()) {
 			if (Is_uhd_disconnection()) {
 				break;
@@ -1243,7 +1104,7 @@ static void uhd_delayed_resume(void)
 {
 	if (--uhd_resume_start == 0) {
 		// Restore pipes unfreezed
-		for (uint8_t pipe = 1; pipe < UOTGHS_EPT_NUM; pipe++) {
+		for (uint8_t pipe = 1; pipe < UHDP_EPT_NUM; pipe++) {
 			if ((uhd_pipes_unfreeze >> pipe) & 0x01) {
 				uhd_unfreeze_pipe(pipe);
 			}
@@ -1278,20 +1139,6 @@ static void uhd_sof_interrupt(void)
 {
 	uhd_ack_sof();
 
-	// Manage the micro SOF
-	if (Is_uhd_high_speed_mode()) {
-		static uint8_t msof_cpt = 0;
-		if (++msof_cpt % 8) {
-			// It is a micro SOF
-			if (!uhd_suspend_start && !uhd_resume_start) {
-				// If no resume and no suspend on going
-				// then send Micro start of frame event (each 125µs)
-				uhc_notify_sof(true);
-			}
-			return;
-		}
-	}
-
 	// Manage a delay to enter in suspend
 	if (uhd_suspend_start) {
 		uhd_delayed_suspend();
@@ -1307,7 +1154,7 @@ static void uhd_sof_interrupt(void)
 
 	// Manage the timeouts on endpoint transfer
 	uhd_pipe_job_t *ptr_job;
-	for (uint8_t pipe = 1; pipe < UOTGHS_EPT_NUM; pipe++) {
+	for (uint8_t pipe = 1; pipe < UHDP_EPT_NUM; pipe++) {
 		ptr_job = &uhd_pipe_job[pipe-1];
 		if (ptr_job->busy == true) {
 			if (ptr_job->timeout) {
@@ -1439,21 +1286,11 @@ static void uhd_ctrl_phase_setup(void)
 	uhd_ctrl_nb_trans = 0;
 
 	// Check pipe
-#ifdef USB_HOST_HUB_SUPPORT
-	if (!Is_uhd_pipe_enabled(0)) {
-		uhd_ctrl_request_end(UHD_TRANS_DISCONNECT);
-		return; // Endpoint not valid
-	}
-#error TODO check address in list
-	// Reconfigure USB address of pipe 0 used for all control endpoints
-	uhd_configure_address(0, uhd_ctrl_request_first->add);
-#else
 	if (!Is_uhd_pipe_enabled(0) ||
 			(uhd_ctrl_request_first->add != uhd_get_configured_address(0))) {
 		uhd_ctrl_request_end(UHD_TRANS_DISCONNECT);
 		return; // Endpoint not valid
 	}
-#endif
 
 	// Fill pipe
 	uhd_configure_pipe_token(0, UOTGHS_HSTPIPCFG_PTOKEN_SETUP);
@@ -1496,14 +1333,7 @@ static void uhd_ctrl_phase_data_in(void)
 
 	// Get information to read data
 	nb_byte_received = uhd_byte_count(0);
-#ifdef USB_HOST_HUB_SUPPORT
-	//! In HUB mode, the control pipe is always configured to 64B
-	//! thus the short packet flag must be computed
-	b_short_packet = (nb_byte_received != uhd_get_pipe_size(0));
-	uhd_ack_short_packet(0);
-#else
 	b_short_packet = Is_uhd_short_packet(0);
-#endif
 
 	ptr_ep_data = (uint8_t *) & uhd_get_pipe_fifo_access(0, 8);
 uhd_ctrl_receiv_in_read_data:
@@ -1590,11 +1420,7 @@ static void uhd_ctrl_phase_data_out(void)
 		}
 	}
 
-#ifdef USB_HOST_HUB_SUPPORT
-	// TODO
-#else
 	ep_ctrl_size = uhd_get_pipe_size(0);
-#endif
 
 	// Fill pipe
 	uhd_configure_pipe_token(0, UOTGHS_HSTPIPCFG_PTOKEN_OUT);
@@ -1667,7 +1493,7 @@ static void uhd_ctrl_request_end(uhd_trans_status_t status)
 
 /**
  * \internal
- * \brief Translates the UOTGHS pipe error to UHD error
+ * \brief Translates the UHDP pipe error to UHD error
  *
  * \param pipe  Pipe number to use
  *
@@ -1707,7 +1533,7 @@ static uint8_t uhd_get_pipe(usb_add_t add, usb_ep_t endp)
 	uint8_t pipe;
 
 	// Search pipe
-	for (pipe = 0; pipe < UOTGHS_EPT_NUM; pipe++) {
+	for (pipe = 0; pipe < UHDP_EPT_NUM; pipe++) {
 
 		if (!Is_uhd_pipe_enabled(pipe)) {
 			continue;
@@ -1723,108 +1549,6 @@ static uint8_t uhd_get_pipe(usb_add_t add, usb_ep_t endp)
 	return pipe;
 }
 
-#ifdef UHD_PIPE_FIFO_SUPPORTED
-/**
- * \internal
- */
-static void uhd_pipe_in_received(uint8_t pipe)
-{
-	uhd_pipe_job_t *ptr_job = &uhd_pipe_job[pipe - 1];
-	uint32_t nb_data = 0, i;
-	uint32_t nb_remain = ptr_job->buf_size - ptr_job->nb_trans;
-	uint32_t pkt_size = uhd_get_pipe_size(pipe);
-	uint8_t *ptr_src = (uint8_t *) & uhd_get_pipe_fifo_access(pipe, 8);
-	uint8_t *ptr_dst = &ptr_job->buf[ptr_job->nb_trans];
-	bool b_full = false, b_short = false;
-
-	if (!ptr_job->busy) {
-		return; // No job is running, then ignore it (system error)
-	}
-
-	// Read byte count
-	nb_data = uhd_byte_count(pipe);
-	if (nb_data < pkt_size) {
-		b_short = true;
-	}
-	// Copy data if there is
-	if (nb_data > 0) {
-		if (nb_data >= nb_remain) {
-			nb_data = nb_remain;
-			b_full = true;
-		}
-		// Modify job information
-		ptr_job->nb_trans += nb_data;
-		// Copy FIFO to buffer
-		for (i = 0; i < nb_data; i++) {
-			*ptr_dst++ = *ptr_src++;
-		}
-	}
-	// Clear FIFO Status
-	uhd_ack_fifocon(pipe);
-	// Finish job on error or short packet
-	if (b_full || b_short) {
-		uhd_freeze_pipe(pipe);
-		uhd_disable_short_packet_interrupt(pipe);
-		uhd_disable_in_received_interrupt(pipe);
-		uhd_disable_pipe_interrupt(pipe);
-		uhd_disable_continuous_in_mode(pipe);
-		uhd_pipe_finish_job(pipe, UHD_TRANS_NOERROR);
-	}
-}
-
-/**
- * \internal
- */
-static void uhd_pipe_out_ready(uint8_t pipe)
-{
-	uhd_pipe_job_t *ptr_job = &uhd_pipe_job[pipe - 1];
-	uint32_t pkt_size = uhd_get_pipe_size(pipe);
-	uint32_t nb_data = 0, i;
-	uint32_t nb_remain;
-	uint8_t *ptr_src;
-	uint8_t *ptr_dst;
-
-	if (!ptr_job->busy) {
-		return; // No job is running, then ignore it (system error)
-	}
-
-	// Transfer data
-	uhd_ack_out_ready(pipe);
-
-	nb_remain = ptr_job->buf_size - ptr_job->nb_trans;
-	nb_data = min(nb_remain, pkt_size);
-
-	// If not ZLP, fill FIFO
-	if (nb_data) {
-		// Fill FIFO
-		ptr_dst = (uint8_t *) & uhd_get_pipe_fifo_access(pipe, 8);
-		ptr_src = &ptr_job->buf[ptr_job->nb_trans];
-		// Modify job information
-		ptr_job->nb_trans += nb_data;
-
-		// Copy buffer to FIFO
-		for (i = 0; i < nb_data; i++) {
-			*ptr_dst++ = *ptr_src++;
-		}
-	}
-	// Switch to next bank
-	uhd_ack_fifocon(pipe);
-	// ZLP is cleared if last packet is short
-	if (nb_data < pkt_size) {
-		ptr_job->b_shortpacket = false;
-	}
-	// All transfer done, including ZLP, Finish Job
-	if (ptr_job->nb_trans >= ptr_job->buf_size && !ptr_job->b_shortpacket) {
-		// At least one bank there, wait to freeze pipe
-		uhd_disable_out_ready_interrupt(pipe);
-		uhd_enable_bank_interrupt(pipe);
-		return;
-	}
-}
-
-#endif // #ifdef UHD_PIPE_FIFO_SUPPORTED
-
-#ifdef UHD_PIPE_DMA_SUPPORTED
 /**
  * \internal
  * \brief Computes and starts the next transfer on a pipe
@@ -2002,7 +1726,6 @@ static void uhd_pipe_interrupt_dma(uint8_t pipe)
 		uhd_pipe_trans_complet(pipe);
 	}
 }
-#endif // ifdef UHD_PIPE_DMA_SUPPORTED
 
 /**
  * \internal
@@ -2016,56 +1739,6 @@ static void uhd_pipe_interrupt_dma(uint8_t pipe)
  */
 static void uhd_pipe_interrupt(uint8_t pipe)
 {
-#ifdef UHD_PIPE_FIFO_SUPPORTED
-	// for none DMA endpoints
-	if (!Is_uhd_pipe_dma_supported(pipe)) {
-		// SHORTPACKETI: Short received
-		if (Is_uhd_short_packet_interrupt_enabled(pipe)
-				&& Is_uhd_short_packet(pipe)) {
-			uhd_ack_short_packet(pipe);
-			uhd_pipe_in_received(pipe);
-			return;
-		}
-		// RXIN: Full packet received
-		if (Is_uhd_in_received_interrupt_enabled(pipe)
-				&& Is_uhd_in_received(pipe)) {
-			uhd_ack_in_received(pipe);
-			uhd_pipe_in_received(pipe);
-			return;
-		}
-		// TXOUT: packet sent
-		if (Is_uhd_out_ready_interrupt_enabled(pipe)
-				&& Is_uhd_out_ready(pipe)) {
-			uhd_pipe_out_ready(pipe);
-			return;
-		}
-		// OUT: all banks sent
-		if (Is_uhd_bank_interrupt_enabled(pipe)
-				&& (0==uhd_nb_busy_bank(pipe))) {
-			uhd_freeze_pipe(pipe);
-			uhd_disable_bank_interrupt(pipe);
-			uhd_disable_pipe_interrupt(pipe);
-			uhd_enable_pipe_bank_autoswitch(pipe);
-			uhd_pipe_finish_job(pipe, UHD_TRANS_NOERROR);
-			return;
-		}
-		if (Is_uhd_stall(pipe)) {
-			uhd_ack_stall(pipe);
-			uhd_reset_data_toggle(pipe);
-			uhd_ep_abort_pipe(pipe, UHD_TRANS_STALL);
-			return;
-		}
-		if (Is_uhd_pipe_error(pipe)) {
-			// Get and ack error
-			uhd_ep_abort_pipe(pipe, uhd_pipe_get_error(pipe));
-			return;
-		}
-		Assert(false); // Error system
-		return;
-	}
-#endif // UDD_EP_FIFO_SUPPORTED
-
-#ifdef UHD_PIPE_DMA_SUPPORTED
 	// for DMA endpoints
 	if (Is_uhd_bank_interrupt_enabled(pipe) && (0==uhd_nb_busy_bank(pipe))) {
 		uhd_freeze_pipe(pipe);
@@ -2097,7 +1770,6 @@ static void uhd_pipe_interrupt(uint8_t pipe)
 		return;
 	}
 	Assert(false); // Error system
-#endif // UHD_PIPE_DMA_SUPPORTED
 }
 
 /**
@@ -2112,16 +1784,14 @@ static void uhd_ep_abort_pipe(uint8_t pipe, uhd_trans_status_t status)
 	// Stop transfer
 	uhd_reset_pipe(pipe);
 
-	// Autoswitch bank and interrupts has been reseted, then re-enable it
+	// Auto switch bank and interrupts has been reseted, then re-enable it
 	uhd_enable_pipe_bank_autoswitch(pipe);
 	uhd_enable_stall_interrupt(pipe);
 	uhd_enable_pipe_error_interrupt(pipe);
 	uhd_disable_out_ready_interrupt(pipe);
-#ifdef UHD_PIPE_DMA_SUPPORTED
 	if (Is_uhd_pipe_dma_supported(pipe)) {
 		uhd_pipe_dma_set_control(pipe, 0);
 	}
-#endif
 	uhd_pipe_finish_job(pipe, status);
 }
 
