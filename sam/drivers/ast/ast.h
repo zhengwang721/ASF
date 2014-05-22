@@ -505,7 +505,7 @@ void ast_disable_event(Ast *ast, ast_event_source_t source);
  *	</tr>
  *	<tr>
  *		<td>42283A</td>
- *		<td>03/2014</td>
+ *		<td>05/2014</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>
