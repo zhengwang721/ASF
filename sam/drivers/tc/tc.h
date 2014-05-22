@@ -293,7 +293,7 @@ uint32_t tc_get_version(Tc *p_tc);
  *	</tr>
  *	<tr>
  *		<td>42301A</td>
- *		<td>03/2014</td>
+ *		<td>05/2014</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>
