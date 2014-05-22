@@ -275,7 +275,7 @@ uint32_t dmac_get_writeprotect_status(Dmac *p_dmac);
  *	</tr>
  *	<tr>
  *		<td>42291A</td>
- *		<td>03/2014</td>
+ *		<td>05/2014</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>
