@@ -594,7 +594,7 @@ static inline uint32_t ac_get_status(
  *	</tr>
  *	<tr>
  *		<td>42323A</td>
- *		<td>03/2014</td>
+ *		<td>05/2014</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>
