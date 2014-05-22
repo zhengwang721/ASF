@@ -259,7 +259,6 @@ static void uhd_vbus_handler(uint32_t id, uint32_t mask)
 
 	if (Is_otg_vbus_high()) {
 		otg_unfreeze_clock();
-		uhd_enable_vbus_request();
 		/* Freeze USB clock to use wakeup interrupt
 		 * to detect connection.
 		 * After detection of wakeup interrupt,
@@ -272,7 +271,6 @@ static void uhd_vbus_handler(uint32_t id, uint32_t mask)
 		UHC_VBUS_CHANGE(true);
 	} else {
 		otg_unfreeze_clock();
-		uhd_disable_vbus_request();
 		otg_freeze_clock();
 		uhd_sleep_mode(UHD_STATE_NO_VBUS);
 		UHC_VBUS_CHANGE(false);
@@ -572,7 +570,6 @@ void uhd_enable(void)
 	}
 # else
 	/* No VBus detect, assume always high */
-	uhd_enable_vbus_request();
 
 	/* Freeze USB clock to use wakeup interrupt to detect connection.
 	 *
@@ -586,7 +583,6 @@ void uhd_enable(void)
 
 	/* Enable VBus */
 	pad_vbus_enable();
-	uhd_enable_vbus_request();
 
 	// Enable main control interrupt
 	// Connection, SOF and reset
@@ -614,7 +610,6 @@ void uhd_disable(bool b_id_stop)
 			| UOTGHS_HSTIDR_HWUPIEC;
 
 	uhd_disable_sof();
-	uhd_disable_vbus_request();
 	pad_vbus_disable();
 	uhc_notify_connection(false);
 	otg_freeze_clock();

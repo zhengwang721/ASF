@@ -163,12 +163,6 @@ void otg_dual_disable(void);
 
 //! Disables VBUS hardware control (Must be disabled as no VBUS pin controlled by UHDP)
 #define uhd_disable_vbus_hw_control()         (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_VBUSHWC))
-//! Requests VBus activation in UHDP
-#define uhd_enable_vbus_request()             (UOTGHS->UOTGHS_SFR = UOTGHS_SR_VBUSRQ)
-//! Requests VBus deactivation in UHDP
-#define uhd_disable_vbus_request()            (UOTGHS->UOTGHS_SCR = UOTGHS_SR_VBUSRQ)
-//! Tests if VBus activation has been requested in UHDP
-#define Is_uhd_vbus_request_enabled()         (Tst_bits(UOTGHS->UOTGHS_SR, UOTGHS_SR_VBUSRQ))
 //! @}
 
 

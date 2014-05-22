@@ -86,8 +86,10 @@ extern "C" {
 #define UHD_VBOF_IO         (defined(USB_VBOF_PIN) && UHD_VBUS_CTRL)
 
 #if UHD_VBOF_IO
-# define pad_vbus_enable()  ioport_set_pin_level(USB_VBOF_PIN, USB_VBOF_ACTIVE_LEVEL)
-# define pad_vbus_disable() ioport_set_pin_level(USB_VBOF_PIN, USB_VBOF_INACTIVE_LEVEL)
+# define pad_vbus_enable()  (ioport_set_pin_level(USB_VBOF_PIN, USB_VBOF_ACTIVE_LEVEL), \
+			(UOTGHS->UOTGHS_SFR = UOTGHS_SR_VBUSRQ))
+# define pad_vbus_disable() (ioport_set_pin_level(USB_VBOF_PIN, USB_VBOF_INACTIVE_LEVEL), \
+			(UOTGHS->UOTGHS_SCR = UOTGHS_SR_VBUSRQ))
 #else
 # define pad_vbus_enable()
 # define pad_vbus_disable()
