@@ -285,7 +285,7 @@ uint32_t acc_get_writeprotect_status(Acc *p_acc);
  *	</tr>
  *	<tr>
  *		<td>42292A</td>
- *		<td>03/2014</td>
+ *		<td>05/2014</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>
