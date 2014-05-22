@@ -12,6 +12,6 @@
 		<generator value="as5_arm"/>
 		<generator value="iarewarm"/>
 		<generator value="doxygen-v2"/>
-		<device-support value="atsamd11d14a"/>
+		<device-support value="atsamd11d14am"/>
 	</project>
 </asf>
