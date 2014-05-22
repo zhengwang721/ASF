@@ -5,12 +5,17 @@
 			configuration and management of the PARC module.
 		</info>
 		<info type="keyword" value="technology">
-			<keyword value="Communication"/>
+			<keyword value="Parallel capture"/>
+			<keyword value="PARC"/>
 		</info>
 		
 		<info type="description" value="pdf">
 			This application note describes how to use the ASF driver for
 			interfacing to the Parallel Capture on SAM4L.
+		</info>
+		<info type="keyword" value="pdf">
+			<keyword value="Parallel capture"/>
+			<keyword value="PARC"/>
 		</info>
 					
 		<module type="driver" id="sam.drivers.parc#polled" caption="PARC - Parallel Capture (Polled Mode)">

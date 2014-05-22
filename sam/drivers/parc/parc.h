@@ -706,7 +706,7 @@ static inline uint32_t parc_get_version(
  *	</tr>
  *	<tr>
  *		<td>42297A</td>
- *		<td>03/2014</td>
+ *		<td>05/2014</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>
