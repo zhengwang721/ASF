@@ -594,7 +594,7 @@ static inline void aes_write_gcmh(Aes *const p_aes, uint32_t id, uint32_t hword)
  *	</tr>
  *	<tr>
  *		<td>42295A</td>
- *		<td>03/2014</td>
+ *		<td>05/2014</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>

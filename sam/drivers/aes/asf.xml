@@ -13,6 +13,10 @@
 			<keyword value="Encryption" />
 			<keyword value="Decryption"/>
 		</info>
+		<info type="description" value="pdf">
+			This application note describes how to use the ASF driver for
+			interfacing to the AES module on SAM.
+		</info>		
 		
 		<build type="c-source" value="aes.c"/>
 		<build type="header-file" subtype="api" value="aes.h"/>
