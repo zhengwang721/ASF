@@ -9,11 +9,11 @@
 		<config name="common2.services.gfx_mono.display" value="ug_2832hsweg04"/>
 		<require idref="common2.services.gfx_mono.example.sysfont"/>
 		<require idref="board.samd11_xplained_pro"/>
-		<config name="config.compiler.iarewarm.create_aux" value="yes"/>
+		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<build type="define" name="GFX_MONO_LCD_HEIGHT" value="64"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
-		<device-support value="atsamd11d14a"/>
+		<device-support value="atsamd11d14am"/>
 	</project>
 </asf>

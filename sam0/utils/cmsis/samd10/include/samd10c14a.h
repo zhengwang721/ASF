@@ -339,7 +339,6 @@ void PTC_Handler                 ( void );
 #define PM                            (0x40000400U) /**< \brief (PM) APB Base Address */
 #define PORT                          (0x41004400U) /**< \brief (PORT) APB Base Address */
 #define PORT_IOBUS                    (0x60000000U) /**< \brief (PORT) IOBUS Base Address */
-#define PTC                           (0x42002C00U) /**< \brief (PTC) APB Base Address */
 #define RTC                           (0x40001400U) /**< \brief (RTC) APB Base Address */
 #define SERCOM0                       (0x42000800U) /**< \brief (SERCOM0) APB Base Address */
 #define SERCOM1                       (0x42000C00U) /**< \brief (SERCOM1) APB Base Address */
@@ -410,7 +409,6 @@ void PTC_Handler                 ( void );
 #define PORT_INST_NUM     1                         /**< \brief (PORT) Number of instances */
 #define PORT_INSTS        { PORT }                  /**< \brief (PORT) Instances List */
 
-#define PTC               ((Ptc      *)0x42002C00U) /**< \brief (PTC) APB Base Address */
 #define PTC_GCLK_ID       23
 #define PTC_INST_NUM      1                         /**< \brief (PTC) Number of instances */
 #define PTC_INSTS         { PTC }                   /**< \brief (PTC) Instances List */
@@ -465,6 +463,8 @@ void PTC_Handler                 ( void );
 #define FLASH_ADDR            (0x00000000U) /**< FLASH base address */
 #define FLASH_USER_PAGE_ADDR  (0x00800000U) /**< FLASH_USER_PAGE base address */
 #define HMCRAMC0_ADDR         (0x20000000U) /**< HMCRAMC0 base address */
+
+#define DSU_DID_RESETVALUE    0x10020006
 
 /* ************************************************************************** */
 /**  ELECTRICAL DEFINITIONS FOR SAMD10C14A */

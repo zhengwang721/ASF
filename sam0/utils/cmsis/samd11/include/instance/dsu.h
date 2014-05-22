@@ -106,7 +106,7 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for DSU peripheral ========== */
-#define DSU_CLK_AHB_DOMAIN          
-#define DSU_CLK_AHB_ID              3
+#define DSU_CLK_AHB_DOMAIN                   // Clock domain of AHB clock
+#define DSU_CLK_AHB_ID              3        // Index of AHB clock in PM.AHBMASK register
 
 #endif /* _SAMD11_DSU_INSTANCE_ */

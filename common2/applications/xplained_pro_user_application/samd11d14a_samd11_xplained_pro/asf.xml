@@ -1,6 +1,6 @@
 <asf xmlversion="1.0">
 	<project id="common.applications.user_application.xplained_pro2.samd11_xplained_pro" caption="SAM D11 Xplained Pro template project" type="template">
-		<device-support value="atsamd11d14a"/>
+		<device-support value="atsamd11d14am"/>
 		<require idref="common.applications.user_application.xplained_pro2"/>
 		<require idref="board.samd11_xplained_pro"/>
 		<info type="gui-flag" value="move-to-root"/>

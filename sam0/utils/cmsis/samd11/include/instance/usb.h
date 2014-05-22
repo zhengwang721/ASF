@@ -334,9 +334,9 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for USB peripheral ========== */
-#define USB_EPT_NBR                 USB_EPT_NUM
-#define USB_EPT_NUM                 8
-#define USB_GCLK_ID                 6
-#define USB_PIPE_NUM                8
+#define USB_EPT_NBR                 8        // Number of USB end points (obsolete)
+#define USB_EPT_NUM                 8        // Number of USB end points
+#define USB_GCLK_ID                 6        // Index of Generic Clock
+#define USB_PIPE_NUM                8        // Number of USB pipes
 
 #endif /* _SAMD11_USB_INSTANCE_ */

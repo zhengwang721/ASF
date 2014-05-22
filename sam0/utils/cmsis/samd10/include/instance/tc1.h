@@ -92,20 +92,20 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for TC1 peripheral ========== */
-#define TC1_CC8_NUM                 2
-#define TC1_CC16_NUM                2
-#define TC1_CC32_NUM                2
-#define TC1_DITHERING_EXT           0
+#define TC1_CC8_NUM                 2        // Number of 8-bit Counters
+#define TC1_CC16_NUM                2        // Number of 16-bit Counters
+#define TC1_CC32_NUM                2        // Number of 32-bit Counters
+#define TC1_DITHERING_EXT           0        // Dithering feature implemented
 #define TC1_DMAC_ID_MC_0            13
 #define TC1_DMAC_ID_MC_1            14
 #define TC1_DMAC_ID_MC_LSB          13
 #define TC1_DMAC_ID_MC_MSB          14
 #define TC1_DMAC_ID_MC_SIZE         2
-#define TC1_DMAC_ID_OVF             12
-#define TC1_GCLK_ID                 18
-#define TC1_MASTER                  1
-#define TC1_OW_NUM                  2
-#define TC1_PERIOD_EXT              0
-#define TC1_SHADOW_EXT              0
+#define TC1_DMAC_ID_OVF             12       // Indexes of DMA Overflow trigger
+#define TC1_GCLK_ID                 18       // Index of Generic Clock
+#define TC1_MASTER                  1       
+#define TC1_OW_NUM                  2        // Number of Output Waveforms
+#define TC1_PERIOD_EXT              0        // Period feature implemented
+#define TC1_SHADOW_EXT              0        // Shadow feature implemented
 
 #endif /* _SAMD10_TC1_INSTANCE_ */
