@@ -584,7 +584,7 @@ static inline void events_ch_clear_overrun_status(
  *	</tr>
  *	<tr>
  *		<td>42312A</td>
- *		<td>03/2014</td>
+ *		<td>05/2014</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>

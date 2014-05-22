@@ -15,7 +15,10 @@
 			<keyword value="Event Filter"/>
 			<keyword value="Event Glitch Filter"/>
 		</info>
-		
+		<info type="description" value="pdf">
+			This application note describes how to use the ASF driver for
+			interfacing to the Peripheral Event Controller for SAM.
+		</info>	
 		<build type="c-source" value="events.c"/>
 		<build type="header-file" subtype="api" value="events.h"/>
 		<build type="include-path" value="."/>
