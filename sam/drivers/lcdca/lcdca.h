@@ -575,7 +575,7 @@ static inline void lcdca_disable_interrupt(void)
  *	</tr>
  *	<tr>
  *		<td>42296A</td>
- *		<td>03/2014</td>
+ *		<td>05/2014</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>
