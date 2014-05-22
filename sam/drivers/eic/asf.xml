@@ -18,6 +18,17 @@
 		<require idref="common.services.basic.sleepmgr"/>
 		<require idref="sam.utils"/>
 		<info type="appnote" value="AT07901"/>
+		<info type="keyword" value="pdf">
+			<keyword value="EIC" />
+			<keyword value="Interrupt"/>
+			<keyword value="Controller"/>
+			<keyword value="External"/>
+		</info>
+
+		<info type="description" value="pdf">
+			This application note describes how to use the ASF driver to
+			interface to the EIC on SAM.
+		</info>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-sam4l"/>
 	</module>
 </asf>

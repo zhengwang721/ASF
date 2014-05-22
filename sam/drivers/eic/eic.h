@@ -459,7 +459,7 @@ static inline bool eic_line_interrupt_is_pending(Eic *eic,
  *	</tr>
  *	<tr>
  *		<td>42278A</td>
- *		<td>03/2014</td>
+ *		<td>05/2014</td>
  *		<td>Initial document release</td>
  *	</tr>
  * </table>
