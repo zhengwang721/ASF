@@ -216,10 +216,6 @@
 #include <pinmux.h>
 #include <conf_extint.h>
 
-#if EXTINT_CALLBACK_MODE == true
-#  include "extint_callback.h"
-#endif
-
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -329,6 +325,15 @@ struct extint_nmi_conf {
 	 */
 	enum extint_detect detection_criteria;
 };
+
+#if EXTINT_CALLBACK_MODE == true
+/** Type definition for an EXTINT module callback function. */
+typedef void (*extint_callback_t)(void);
+
+#ifndef EIC_NUMBER_OF_INTERRUPTS
+#  define EIC_NUMBER_OF_INTERRUPTS 16
+#endif
+#endif
 
 #if !defined(__DOXYGEN__)
 /** \internal
@@ -613,6 +618,10 @@ static inline void extint_nmi_clear_detected(
 #endif
 
 /** @} */
+
+#if EXTINT_CALLBACK_MODE == true
+#  include "extint_callback.h"
+#endif
 
 /**
  * \page asfdoc_sam0_extint_extra Extra Information for EXTINT Driver

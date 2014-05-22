@@ -590,7 +590,7 @@ static void configure_rx_dma(uint32_t uart_index,
 			rx_buffer_definition->past_rx_buffer_end_address - rx_buffer_definition->rx_pdc_parameters.ul_addr;
 	}
 
-	configASSERT((rx_buffer_definition->rx_pdc_parameters.ul_size +
+	configASSERT((rx_buffer_definition->rx_pdc_parameters.ul_addr+
 			rx_buffer_definition->rx_pdc_parameters.ul_size) <=
 			rx_buffer_definition->past_rx_buffer_end_address);
 

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM R21 Xplained PRO test configuration.
+ * \brief SAM R21 Xplained Pro test configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
