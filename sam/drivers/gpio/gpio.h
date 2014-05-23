@@ -44,8 +44,8 @@
 #define GPIO_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam_drivers_gpio_group SAM4 GPIO - General-Purpose
- * Input/Output (GPIO)
+ * \defgroup asfdoc_sam_drivers_gpio_group SAM4 GPIO - General-Purpose Input/Output (GPIO)
+ * 
  *
  * This is a driver for advanced GPIO functions of the on-chip GPIO controller:
  * interrupt and event support.
