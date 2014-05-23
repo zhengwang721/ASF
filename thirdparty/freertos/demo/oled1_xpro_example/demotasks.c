@@ -46,7 +46,7 @@
 #include "demotasks.h"
 
 /**
- * \addtogroup freertos-v7_4_2_sam_d20_demotasks_group
+ * \addtogroup freertos_sam0_demo_tasks_group
  *
  * @{
  */
@@ -128,7 +128,7 @@ static const char menu_items_text[MENU_NUM_ITEMS][6] = {
 
 //! Text to display on about screen
 static const char about_text[] =
-	"FreeRTOS v7.4.2 demo."
+	"FreeRTOS OLED demo.  "
 	"                     "
 	"Use CDC at 9.6 kBaud.";
 

@@ -46,7 +46,7 @@
 #include "demotasks.h"
 
 /**
- * \addtogroup freertos-v7_4_2_sam_d20_demotasks_group
+ * \addtogroup freertos_sam0_demo_tasks_group
  *
  * @{
  */
