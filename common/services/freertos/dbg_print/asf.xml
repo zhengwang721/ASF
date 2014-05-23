@@ -22,6 +22,7 @@
 		<require idref="sam0.drivers.sercom.usart"/>
 		<require idref="sam0.drivers.system"/>
 		<require idref="sam0.utils"/>
+		<require idref="thirdparty.os.freertos.version"/>
 		<device-support value="samd20"/>
 		<device-support value="samd21"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
