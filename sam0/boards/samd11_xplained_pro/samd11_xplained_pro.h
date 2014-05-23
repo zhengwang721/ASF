@@ -86,6 +86,7 @@ void system_board_init(void);
 #define LED0_PIN                  PIN_PA16
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
+#define LED0_GPIO                 LED0_PIN
 /** @} */
 
 /** \name SW0 definitions
@@ -110,7 +111,6 @@ void system_board_init(void);
 #define LED_0_PIN                 LED0_PIN
 #define LED_0_ACTIVE              LED0_ACTIVE
 #define LED_0_INACTIVE            LED0_INACTIVE
-
 /** @} */
 
 /** Number of on-board LEDs */
@@ -214,6 +214,63 @@ void system_board_init(void);
 #define EXT1_SPI_SERCOM_DMAC_ID_TX   SERCOM0_DMAC_ID_TX
 #define EXT1_SPI_SERCOM_DMAC_ID_RX   SERCOM0_DMAC_ID_RX
 
+/** \name Extension header #2 pin definitions (not used, defined to avoid compiling errors)
+ *  @{
+ */
+#define EXT2_PIN_3                   -1 /* Not available on this board */
+#define EXT2_PIN_4                   -1 /* Not available on this board */
+#define EXT2_PIN_5                   -1 /* Not available on this board */
+#define EXT2_PIN_6                   -1 /* Not available on this board */
+#define EXT2_PIN_7                   -1 /* Not available on this board */
+#define EXT2_PIN_8                   -1 /* Not available on this board */
+#define EXT2_PIN_9                   -1 /* Not available on this board */
+#define EXT2_PIN_10                  -1 /* Not available on this board */
+#define EXT2_PIN_11                  -1 /* Not available on this board */
+#define EXT2_PIN_12                  -1 /* Not available on this board */
+#define EXT2_PIN_13                  -1 /* Not available on this board */
+#define EXT2_PIN_14                  -1 /* Not available on this board */
+#define EXT2_PIN_15                  -1 /* Not available on this board */
+#define EXT2_PIN_16                  -1 /* Not available on this board */
+#define EXT2_PIN_17                  -1 /* Not available on this board */
+#define EXT2_PIN_18                  -1 /* Not available on this board */
+/** @} */
+
+
+/** \name Extension header #3 pin definitions
+ *  @{
+ */
+#define EXT3_PIN_3                   -1 /* Not available on this board */
+#define EXT3_PIN_4                   -1 /* Not available on this board */
+#define EXT3_PIN_5                   -1 /* Not available on this board */
+#define EXT3_PIN_6                   -1 /* Not available on this board */
+#define EXT3_PIN_7                   -1 /* Not available on this board */
+#define EXT3_PIN_8                   -1 /* Not available on this board */
+#define EXT3_PIN_9                   -1 /* Not available on this board */
+#define EXT3_PIN_10                  -1 /* Not available on this board */
+#define EXT3_PIN_11                  -1 /* Not available on this board */
+#define EXT3_PIN_12                  -1 /* Not available on this board */
+#define EXT3_PIN_13                  -1 /* Not available on this board */
+#define EXT3_PIN_14                  -1 /* Not available on this board */
+#define EXT3_PIN_15                  -1 /* Not available on this board */
+#define EXT3_PIN_16                  -1 /* Not available on this board */
+#define EXT3_PIN_17                  -1 /* Not available on this board */
+#define EXT3_PIN_18                  -1 /* Not available on this board */
+/** @} */
+
+/** \name Extension header #3 SPI definitions
+ *  @{
+ */
+#define EXT3_SPI_SLAVE_SELECT_PIN    -1 /* Not available on this board */
+#define EXT3_SPI_MODULE              -1 /* Not available on this board */
+#define EXT3_SPI_SERCOM_MUX_SETTING  -1 /* Not available on this board */
+#define EXT3_SPI_SERCOM_PINMUX_PAD0  -1 /* Not available on this board */
+#define EXT3_SPI_SERCOM_PINMUX_PAD1  -1 /* Not available on this board */
+#define EXT3_SPI_SERCOM_PINMUX_PAD2  -1 /* Not available on this board */
+#define EXT3_SPI_SERCOM_PINMUX_PAD3  -1 /* Not available on this board */
+#define EXT3_SPI_SERCOM_DMAC_ID_TX   -1 /* Not available on this board */
+#define EXT3_SPI_SERCOM_DMAC_ID_RX   -1 /* Not available on this board */
+/** @} */
+
 /**
  * \brief Turns off the specified LEDs.
  *
@@ -245,6 +302,35 @@ void system_board_init(void);
 #define EDBG_CDC_SERCOM_DMAC_ID_TX   SERCOM0_DMAC_ID_TX
 #define EDBG_CDC_SERCOM_DMAC_ID_RX   SERCOM0_DMAC_ID_RX
 /** @} */
+
+
+/**
+ * \brief Turns off the specified LEDs.
+ *
+ * \param led_gpio LED to turn off (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Off(led_gpio)     port_pin_set_output_level(led_gpio,true)
+
+/**
+ * \brief Turns on the specified LEDs.
+ *
+ * \param led_gpio LED to turn on (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_On(led_gpio)      port_pin_set_output_level(led_gpio,false)
+
+/**
+ * \brief Toggles the specified LEDs.
+ *
+ * \param led_gpio LED to toggle (LEDx_GPIO).
+ *
+ * \note The pins of the specified LEDs are set to GPIO output mode.
+ */
+#define LED_Toggle(led_gpio)  port_pin_toggle_output_level(led_gpio)
+
 
 #ifdef __cplusplus
 }
