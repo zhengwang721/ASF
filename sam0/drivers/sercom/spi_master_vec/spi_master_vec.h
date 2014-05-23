@@ -52,9 +52,9 @@
 #include <conf_spi_master_vec.h>
 
 /**
- * \defgroup asfdoc_sam0_sercom_spi_master_vec_group SAM D20/D21/R21 Serial Peripheral Interface Master Driver w/ Vectored I/O (SERCOM SPI)
+ * \defgroup asfdoc_sam0_sercom_spi_master_vec_group SAM D20/D21/R21/D10/D11 Serial Peripheral Interface Master Driver w/ Vectored I/O (SERCOM SPI)
  *
- * This driver for SAM D20/D21/R21 devices provides an interface for the configuration
+ * This driver for SAM D20/D21/R21/D10/D11 devices provides an interface for the configuration
  * and operation of the SERCOM module in SPI master mode and uses vectored I/O
  * for data transfers.
  *
@@ -654,6 +654,16 @@ static inline enum status_code spi_master_vec_transceive_buffer_wait(
   *         <th>Doc. Rev.</td>
   *         <th>Date</td>
   *         <th>Comments</td>
+  *	    </tr>
+  *	     <tr>
+  *		      <td>C</td>
+  *		      <td>04/2014</td>
+  *		      <td>Add SAM D10/D11 support.</td>
+  *	    </tr>  
+  *	    <tr>
+  *		      <td>B</td>
+  *		      <td>03/2014</td>
+  *		      <td>Add SAMR21 support.</td>
   *	    </tr>
   *	    <tr>
   *         <td>A</td>

@@ -528,7 +528,7 @@ enum i2c_transfer_direction {
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>E</td>
+ *		<td>F</td>
  *		<td>04/2014</td>
  *		<td>Added SAM D10/D11 support.</td>
  *	</tr>

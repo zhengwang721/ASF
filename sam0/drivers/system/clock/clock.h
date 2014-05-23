@@ -1479,7 +1479,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>D</td>
+ *		<td>E</td>
  *		<td>04/2014</td>
  *		<td>Added support for SAMD10/D11.</td>
  *	</tr>
