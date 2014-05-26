@@ -1,10 +1,11 @@
 <asf xmlversion="1.0">
-	<select-by-config id="thirdparty.os.freertos.version" name="config.thirdparty.os.freertos.version" caption="FreeRTOS mini Real-Time Kernel" default="7.3.0">
+	<select-by-config id="thirdparty.os.freertos.version" name="config.thirdparty.os.freertos.version" caption="FreeRTOS mini Real-Time Kernel" default="8.0.1">
 		<info type="description" value="summary">
 				FreeRTOS is a popular, portable, open source, royalty free, mini Real Time Kernel.
 				For complete information on FreeRTOS, see www.freertos.org.
 		</info>
 		<module type="service" id="thirdparty.os.freertos.version#7.0.0" caption="FreeRTOS - Kernel 7.0.0">
+			<info type="gui-flag" value="hidden"/>
 			<device-support value="uc3a"/>
 			<device-support value="uc3a3_a4"/>
 			<device-support value="uc3b"/>
