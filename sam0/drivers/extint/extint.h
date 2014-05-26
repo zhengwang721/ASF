@@ -702,7 +702,7 @@ static inline void extint_nmi_clear_detected(
  * \page asfdoc_sam0_extint_exqsg Examples for EXTINT Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for SAM D20/D21/R21 External Interrupt Driver (EXTINT). 
+ * applications for \ref asfdoc_sam0_extint_group. 
  * QSGs are simple examples with step-by-step instructions to configure and
  * use this driver in a selection of use cases. Note that QSGs can be compiled
  * as a standalone application or be added to the user application.
