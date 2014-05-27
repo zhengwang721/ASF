@@ -506,7 +506,6 @@ void otg_dual_disable(void)
 # endif
 	otg_freeze_clock();
 	otg_disable();
-	otg_disable_pad();
 	sysclk_disable_usb();
 	pmc_disable_periph_clk(ID_UOTGHS);
 	uhd_sleep_mode(UHD_STATE_OFF);
@@ -537,7 +536,6 @@ void uhd_enable(void)
 	otg_force_host_mode();
 #endif
 
-	otg_enable_pad();
 	otg_enable();
 
 	uhd_ctrl_request_first = NULL;
