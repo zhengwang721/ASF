@@ -4,7 +4,7 @@
 
 		<generator value="doxygen-v2"/>
 
-		<info type="appnote" value="AT_USB_MANUAL"/>
+		<info type="appnote" value="AT09331"/>
 
 		<info type="description" value="pdf">
 		This application note describes the USB Stack Usage for the Atmel SAM/AVR devices.

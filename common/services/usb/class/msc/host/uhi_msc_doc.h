@@ -42,9 +42,9 @@
  */
 
 /**
- * \defgroup asfdoc_uhi_msc_group USB Host Interface (UHI) for Mass Storage Device (MSC)
+ * \defgroup asfdoc_uhi_msc_group USB Host Interface (UHI) for Mass Storage Class (MSC)
  *
- * USB Host Interface (UHI) for Mass Storage Device (MSC) provides an
+ * USB Host Interface (UHI) for Mass Storage Class (MSC) provides an
  * interface for the configuration and management of USB MSC host.
  *
  * The outline of this documentation is as follows:

@@ -132,7 +132,7 @@
 
 		<require idref="common.services.usb.class.cdc.protocol"/>
 
-		<info type="appnote" value="AT_CDC_DEVICE"/>
+		<info type="appnote" value="AT09332"/>
 		<info type="keyword" value="pdf">
 			<keyword value="USB"/>
 			<keyword value="Universal Serial Bus"/>

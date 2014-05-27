@@ -64,7 +64,7 @@
 		</info>
 		<info type="gui-flag" value="hidden"/>
 
-		<info type="appnote" value="AT_VENDOR_HOST"/>
+		<info type="appnote" value="AT09341"/>
 		<info type="keyword" value="pdf">
 			<keyword value="USB"/>
 			<keyword value="Universal Serial Bus"/>

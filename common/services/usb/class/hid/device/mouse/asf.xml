@@ -99,7 +99,7 @@
 		</info>
 		<info type="gui-flag" value="hidden"/>
 
-		<info type="appnote" value="AT_HID_MOUSE_DEVICE"/>
+		<info type="appnote" value="AT09336"/>
 		<info type="keyword" value="pdf">
 			<keyword value="USB"/>
 			<keyword value="Universal Serial Bus"/>
