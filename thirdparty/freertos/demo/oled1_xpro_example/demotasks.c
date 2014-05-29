@@ -128,7 +128,7 @@ static const char menu_items_text[MENU_NUM_ITEMS][6] = {
 
 //! Text to display on about screen
 static const char about_text[] =
-	"FreeRTOS OLED demo.  "
+	"FreeRTOS "tskKERNEL_VERSION_NUMBER" demo."
 	"                     "
 	"Use CDC at 9.6 kBaud.";
 

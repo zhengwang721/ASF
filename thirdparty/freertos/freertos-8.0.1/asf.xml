@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="service" id="thirdparty.os.freertos-8_0_1" caption="FreeRTOS - kernel 7.5.2">
+	<module type="service" id="thirdparty.os.freertos-8_0_1" caption="FreeRTOS - kernel 8.0.1">
 		<info type="description" value="summary">
 			FreeRTOS is a popular, portable, open source, royalty free, mini Real Time Kernel.
 			For complete information on FreeRTOS, see www.freertos.org.
@@ -54,7 +54,7 @@
 			<build type="header-file" value="Source/portable/IAR/ARM_CM0/portmacro.h" toolchain="iarewarm"/>
 			<build type="include-path" value="Source/portable/GCC/ARM_CM0/" toolchain="armgcc"/>
 			<build type="include-path" value="Source/portable/IAR/ARM_CM0/" toolchain="iarewarm"/>
-			<device-support value="cortex-m0plus"/>
+			<device-support value="sam0"/>
 			<require idref="thirdparty.os.freertos-8_0_1.portable.common"/>
 		</module>
 	</select-by-device>
