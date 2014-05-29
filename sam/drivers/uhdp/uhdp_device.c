@@ -785,6 +785,11 @@ uint16_t udd_get_frame_number(void)
 	return udd_frame_number();
 }
 
+uint16_t udd_get_micro_frame_number(void)
+{
+	return 0; // Not supported
+}
+
 void udd_send_remotewakeup(void)
 {
 #ifndef UDD_NO_SLEEP_MGR

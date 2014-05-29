@@ -649,6 +649,11 @@ uint16_t uhd_get_frame_number(void)
 	return uhd_get_sof_number();
 }
 
+uint16_t uhd_get_microframe_number(void)
+{
+	return 0; // Not supported
+}
+
 void uhd_send_reset(uhd_callback_reset_t callback)
 {
 	uhd_reset_callback = callback;
