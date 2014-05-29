@@ -96,7 +96,7 @@
 				</info>
 				<build type="doxygen-entry-point" value="nvm_group"/>
 				<build type="doxygen-quick-start" value="common_nvm_quickstart"/>
-				<require idref="thirdparty.wireless.services.nvm"/>
+				<require idref="thirdparty.wireless.avr2025_mac.source.pal.common.drivers.nvm"/>
 				<require idref="sam.drivers.flashcalw"/>
 				<device-support value="sam4l"/>
 				<generator value="doxygen-module" default-mcu="unspecified-sam4l"/>
@@ -110,7 +110,7 @@
 				</info>
 				<build type="doxygen-entry-point" value="nvm_group"/>
 				<build type="doxygen-quick-start" value="common_nvm_quickstart"/>
-				<require idref="thirdparty.wireless.services.nvm"/>
+				<require idref="thirdparty.wireless.avr2025_mac.source.pal.common.drivers.nvm"/>
 				<require idref="thirdparty.wireless.services.mega.drivers.flash"/>
 				<device-support value="megarf"/>
 			</module>
@@ -123,7 +123,7 @@
 				</info>
 				<build type="doxygen-entry-point" value="nvm_group"/>
 				<build type="doxygen-quick-start" value="common_nvm_quickstart"/>
-				<require idref="thirdparty.wireless.services.nvm"/>
+				<require idref="thirdparty.wireless.avr2025_mac.source.pal.common.drivers.nvm"/>
 				<require idref="sam0.drivers.nvm"/>
 				<device-support value="samr21"/>
 				

@@ -488,15 +488,9 @@ int wsndemo_main(void)
 #if APP_COORDINATOR
 	sio2host_init();
 #endif
-#if OTAU_ENABLED
-	OtauCli_Init();
-#endif	
 	cpu_irq_enable();
 	while (1) {
 		SYS_TaskHandler();
 		APP_TaskHandler();
-#if OTAU_ENABLED
-        OtauCli_TaskHndlr();
-#endif		
 	}
 }
