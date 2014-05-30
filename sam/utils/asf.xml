@@ -312,6 +312,7 @@
 			<device-support value="sam4cms8"/>
 			<device-support value="sam4cmp16"/>
 			<device-support value="sam4cms16"/>
+			<device-support value="unspecified-sam4cm"/>   <!-- A workaround for Jenkin doxygen-module check -->
 		</module>
 		<!-- SAM4CM32 //-->
 		<module type="driver" id="sam.utils#15" caption="SAM4CM32 compiler driver">
@@ -327,6 +328,7 @@
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="sam4cmp32"/>
 			<device-support value="sam4cms32"/>
+			<device-support value="unspecified-sam4cm"/>   <!-- A workaround for Jenkin doxygen-module check -->
 		</module>
 	</select-by-device>
 </asf>
