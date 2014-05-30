@@ -512,6 +512,11 @@ void _usart_interrupt_handler(
 			/* Read out the status code and mask away all but the 4 LSBs*/
 			error_code = (uint8_t)(usart_hw->STATUS.reg & SERCOM_USART_STATUS_MASK);
 
+			/* CTS status should not be considered as an error */
+			if(error_code & SERCOM_USART_STATUS_CTS) {
+				error_code &= ~SERCOM_USART_STATUS_CTS;
+			}
+
 			/* Check if an error has occurred during the receiving */
 			if (error_code) {
 				/* Check which error occurred */
