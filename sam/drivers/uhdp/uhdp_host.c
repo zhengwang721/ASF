@@ -506,7 +506,6 @@ void otg_dual_disable(void)
 # endif
 	otg_freeze_clock();
 	otg_disable();
-	otg_disable_pad();
 	sysclk_disable_usb();
 	pmc_disable_periph_clk(ID_UOTGHS);
 	uhd_sleep_mode(UHD_STATE_OFF);
@@ -537,7 +536,6 @@ void uhd_enable(void)
 	otg_force_host_mode();
 #endif
 
-	otg_enable_pad();
 	otg_enable();
 
 	uhd_ctrl_request_first = NULL;
@@ -649,6 +647,11 @@ uhd_speed_t uhd_get_speed(void)
 uint16_t uhd_get_frame_number(void)
 {
 	return uhd_get_sof_number();
+}
+
+uint16_t uhd_get_microframe_number(void)
+{
+	return 0; // Not supported
 }
 
 void uhd_send_reset(uhd_callback_reset_t callback)

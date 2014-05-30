@@ -639,7 +639,6 @@ void udd_enable(void)
 	otg_force_device_mode();
 #endif
 	// Enable USB hardware
-	otg_enable_pad();
 	otg_enable();
 
 	// Reset internal variables
@@ -710,7 +709,6 @@ void udd_disable(void)
 
 #ifndef UHD_ENABLE
 	otg_disable();
-	otg_disable_pad();
 	sysclk_disable_usb();
 	pmc_disable_periph_clk(ID_UOTGHS);
 #endif
@@ -785,6 +783,11 @@ uint8_t udd_getaddress(void)
 uint16_t udd_get_frame_number(void)
 {
 	return udd_frame_number();
+}
+
+uint16_t udd_get_micro_frame_number(void)
+{
+	return 0; // Not supported
 }
 
 void udd_send_remotewakeup(void)

@@ -177,16 +177,18 @@ void otg_dual_disable(void);
 	} while (0)
 
   //! Enable USB macro
-#define otg_enable()                        (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_USBE))
+#define otg_enable()                                        \
+	do {                                                    \
+		Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_OTGPADE); \
+    	Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_USBE);    \
+	} while (0)
   //! Disable USB macro
-#define otg_disable()                       (Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_USBE))
+#define otg_disable()                                        \
+	do {                                                     \
+		Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_OTGPADE);  \
+		Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_USBE);     \
+	} while (0)
 #define Is_otg_enabled()                    (Tst_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_USBE))
-
-  //! Enable UHDP pad
-#define otg_enable_pad()                    (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_OTGPADE))
-  //! Disable UHDP pad
-#define otg_disable_pad()                   (Clr_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_OTGPADE))
-#define Is_otg_pad_enabled()                (Tst_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_OTGPADE))
 
   //! Stop (freeze) internal USB clock
 #define otg_freeze_clock()                  (Set_bits(UOTGHS->UOTGHS_CTRL, UOTGHS_CTRL_FRZCLK))
