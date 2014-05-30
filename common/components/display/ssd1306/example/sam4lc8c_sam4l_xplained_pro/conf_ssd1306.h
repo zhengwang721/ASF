@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief ASF Programmers Manual Revision History
+ * \brief SSD1306 display controller driver configuration file.
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,29 +40,20 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SSD1306_H_INCLUDED
+#define CONF_SSD1306_H_INCLUDED
 
+// Interface configuration for SAM4L8 Xplained Pro
+#define SSD1306_SPI_INTERFACE
+#define SSD1306_SPI SPI
 
-/**
- * \page appdoc_samd20_asf_prog_manual_samd20_revision_history Document Revision History
- *
- * <table>
- *  <tr>
- *    <th>Doc. Rev.</td>
- *    <th>Date</td>
- *    <th>Comments</td>
- *  </tr>
- *  <tr>
- *    <td>B</td>
- *    <td>05/2014</td>
- *    <td>
- *      - Updated documentation to match SAM D20 drivers ASF version 3.17.0.
- *      - Added SAM D20 EEPROM Emulator module. Corrected documentation typos.
- *    </td>
- *  </tr>
- *  <tr>
- *    <td>A</td>
- *    <td>06/2013</td>
- *    <td>Initial release</td>
- *  </tr>
- * </table>
- */
+#define SSD1306_DC_PIN       UG_2832HSWEG04_DATA_CMD_GPIO
+#define SSD1306_RES_PIN      UG_2832HSWEG04_RESET_GPIO
+#define SSD1306_CS_PIN       UG_2832HSWEG04_SS
+
+// Minimum clock period is 50ns@3.3V -> max frequency is 20MHz
+#define SSD1306_CLOCK_SPEED          UG_2832HSWEG04_BAUDRATE
+#define SSD1306_DISPLAY_CONTRAST_MAX 40
+#define SSD1306_DISPLAY_CONTRAST_MIN 30
+
+#endif /* CONF_SSD1306_H_INCLUDED */

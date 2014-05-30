@@ -1,28 +1,30 @@
 /**
  * \file
  *
- * \brief ASF Programmers Manual Revision History
+ * \brief SAM4L8 Xplained Pro board configuration
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
+ * \page License
+ * 
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *
+ * 
  * 1. Redistributions of source code must retain the above copyright notice,
  *    this list of conditions and the following disclaimer.
- *
+ * 
  * 2. Redistributions in binary form must reproduce the above copyright notice,
  *    this list of conditions and the following disclaimer in the documentation
  *    and/or other materials provided with the distribution.
- *
+ * 
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
- *
+ * 
  * 4. This software may only be redistributed and used in connection with an
  *    Atmel microcontroller product.
- *
+ * 
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -36,31 +38,15 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
 
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/**
- * \page appdoc_samd20_asf_prog_manual_samd20_revision_history Document Revision History
- *
- * <table>
- *  <tr>
- *    <th>Doc. Rev.</td>
- *    <th>Date</td>
- *    <th>Comments</td>
- *  </tr>
- *  <tr>
- *    <td>B</td>
- *    <td>05/2014</td>
- *    <td>
- *      - Updated documentation to match SAM D20 drivers ASF version 3.17.0.
- *      - Added SAM D20 EEPROM Emulator module. Corrected documentation typos.
- *    </td>
- *  </tr>
- *  <tr>
- *    <td>A</td>
- *    <td>06/2013</td>
- *    <td>Initial release</td>
- *  </tr>
- * </table>
- */
+/** Enable the OLED screen. */
+#define CONF_BOARD_SPI
+#define CONF_BOARD_SPI_NPCS2
+
+#define CONF_BOARD_OLED_UG_2832HSWEG04
+
+#endif /* CONF_BOARD_H_INCLUDED */

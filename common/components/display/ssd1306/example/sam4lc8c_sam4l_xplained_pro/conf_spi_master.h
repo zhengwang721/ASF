@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief ASF Programmers Manual Revision History
+ * \brief Spi Master configuration.
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,29 +40,25 @@
  * \asf_license_stop
  *
  */
+ 
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
+/* Possibility to change low-level configurations here. */
 
-/**
- * \page appdoc_samd20_asf_prog_manual_samd20_revision_history Document Revision History
- *
- * <table>
- *  <tr>
- *    <th>Doc. Rev.</td>
- *    <th>Date</td>
- *    <th>Comments</td>
- *  </tr>
- *  <tr>
- *    <td>B</td>
- *    <td>05/2014</td>
- *    <td>
- *      - Updated documentation to match SAM D20 drivers ASF version 3.17.0.
- *      - Added SAM D20 EEPROM Emulator module. Corrected documentation typos.
- *    </td>
- *  </tr>
- *  <tr>
- *    <td>A</td>
- *    <td>06/2013</td>
- *    <td>Initial release</td>
- *  </tr>
- * </table>
- */
+//! Default Configuration of SPI Master Delay BCS
+#define CONFIG_SPI_MASTER_DELAY_BCS            0x00
+
+//! Default Configuration of SPI Master Bits per Transfer Definition
+#define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8
+
+//! Default Configuration of SPI Master Delay BCT
+#define CONFIG_SPI_MASTER_DELAY_BCT            0x00
+
+//! Default Configuration of SPI Master Delay BS
+#define CONFIG_SPI_MASTER_DELAY_BS             0x00
+
+//! Default Configuration of SPI Master Dummy Field
+// #define CONFIG_SPI_MASTER_DUMMY                0xFF
+
+#endif /* CONF_SPI_MASTER_H_INCLUDED */
