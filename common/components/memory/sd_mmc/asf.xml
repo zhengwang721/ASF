@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="meta" id="common.components.memory.sd_mmc.ctrl_access" caption="SD/MMC stack + Memory Control Access (aka ctrl_access, required for file system or USB)">
+	<module type="component" id="common.components.memory.sd_mmc.ctrl_access" caption="SD/MMC stack + Memory Control Access">
 		<info type="description" value="summary">
 			SD/MMC stack for ctrl_access module.
 			This module is required to use the SD/MMC card stack with the ASF File System or the ASF USB Device Mass Storage.
