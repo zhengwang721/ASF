@@ -112,6 +112,8 @@
  *
  *  -# Change the ADC module configuration to suit the application.
  *     \snippet qs_adc_callback.c setup_modify_conf
+ *  -# Set ADC configurations
+ *     \snippet qs_adc_callback.c setup_set_config
  *  -# Enable the ADC module so that conversions can be made.
  *     \snippet qs_adc_callback.c setup_enable
  * -# Register and enable the ADC Read Buffer Complete callback handler
