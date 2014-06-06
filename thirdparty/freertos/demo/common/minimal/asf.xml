@@ -56,6 +56,5 @@
 		<build type="header-file" subtype="api" value="../include/serial.h"/>
 		<build type="include-path" value="../include"/>
 		<require idref="common.services.os.freertos"/>
-		<generator value="doxygen-module" default-mcu="unspecified-uc3b"/>
 	</module>
 </asf>
