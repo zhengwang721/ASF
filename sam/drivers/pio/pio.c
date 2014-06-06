@@ -299,7 +299,7 @@ void pio_set_input(Pio *p_pio, const uint32_t ul_mask,
 		p_pio->PIO_SCIFSR = ul_mask;
 	} else {
 		if (ul_attribute & PIO_DEBOUNCE) {
-			p_pio->PIO_SCIFSR = ul_mask;
+			p_pio->PIO_DIFSR = ul_mask;
 		}
 	}
 #else
