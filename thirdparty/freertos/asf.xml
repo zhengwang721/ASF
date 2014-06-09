@@ -24,11 +24,8 @@
 			<device-support value="sam4cm"/>
 			<device-support value="sam4cp"/>
 			<device-support value="sam4e"/>
-			<device-support value="atsam4c16c_1"/>
-			<device-support value="atsam4cp16b_1"/>
 			<device-support value="samg"/>
 			<require idref="common.services.os.freertos.v7_3_0"/>
-			<generator value="doxygen-module" default-mcu="unspecified-sam4e"/>
 		</module>
 		<module type="service" id="thirdparty.os.freertos.version#7.4.2" caption="FreeRTOS - Kernel 7.4.2">
 			<info type="gui-flag" value="hidden"/>
