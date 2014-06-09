@@ -190,11 +190,11 @@ int main(void)
 		.baudrate = CONF_TEST_BAUDRATE,
 		.paritytype = CONF_TEST_PARITY
 	};
-	/* DEMCR.VC_CORERESET is set after atprogram download,
-	    so when RSTC test perform reset the system halt after core reset.
-	    This is workaround to fix this issue. */
-	CoreDebug->DEMCR = 0x01000000;
-	
+	/* Clear DEMCR.VC_CORERESET bit in case of external tool set it.
+	   When RSTC unit test performs reset in the code with VC_CORERESET bit set,
+	   the program will halt at Reset_Handler() after reset. */
+	CoreDebug->DEMCR &= (~CoreDebug_DEMCR_VC_CORERESET_Msk);
+
 	sysclk_init();
 	board_init();
 
