@@ -19,7 +19,7 @@
 		</module>
 		<module type="service" id="thirdparty.os.freertos.version#7.3.0" caption="FreeRTOS - Kernel 7.3.0">
 			<build type="include-path" value="."/>
-			<build type="header-file" value="freertos.h"/>
+			<build type="header-file" value="freertos_doxygen.h"/>
 			<device-support value="sam3"/>
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
@@ -47,7 +47,7 @@
 		</module>
 		<module type="service" id="thirdparty.os.freertos.version#8.0.1" caption="FreeRTOS - Kernel 8.0.1">
 			<build type="include-path" value="."/>
-			<build type="header-file" value="freertos.h"/>
+			<build type="header-file" value="freertos_doxygen.h"/>
 			<device-support value="sam0"/>
 			<require idref="thirdparty.os.freertos-8_0_1"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samd21"/>
