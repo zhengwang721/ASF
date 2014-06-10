@@ -44,15 +44,19 @@
 #define CONF_TRX_ACCESS_H_INCLUDED
 
 #include <parts.h>
-
+#include "board.h"
 #warning \
 	"Using default values. Edit this conf_trx_access.h file to modify define value according to the current board."
+#warning \
+    "Enable CONF_BOARD_AT86RFX Macro in conf_board.h for spi init routine in case of Atmel Board."
+	 
 
 #if (UC3)
 #include "gpio.h"
 
 /* ! \name SPI Configuration for AT86RFX transceiver in UC3 */
 /* ! @{ */
+#ifndef AT86RFX_SPI	
 #define AT86RFX_SPI                  (&AVR32_SPI0)
 #define AT86RFX_SPI_NPCS             0
 #define AT86RFX_SPI_SCK_PIN          AVR32_SPI0_SCK_0_0_PIN
@@ -97,12 +101,14 @@
 #define LEAVE_TRX_REGION()           ENABLE_TRX_IRQ()
 
 #define AT86RFX_SPI_BAUDRATE         (3000000)
+#endif
 /* ! @} */
 #endif /* UC3 */
 
 #if (XMEGA)
 /* ! \name SPI Configuration for AT86RFX transceiver in XMEGA */
 /* ! @{ */
+#ifndef AT86RFX_SPI
 #define AT86RFX_SPI                  &SPIC
 #define AT86RFX_RST_PIN              IOPORT_CREATE_PIN(PORTC, 0)
 #define AT86RFX_MISC_PIN             IOPORT_CREATE_PIN(PORTC, 1)
@@ -136,11 +142,13 @@
 #define LEAVE_TRX_REGION()   PORTC.INTCTRL = irq_mask; }
 
 #define AT86RFX_SPI_BAUDRATE         (3000000)
+#endif
 /* ! @} */
 #endif /* XMEGA */
 
 #if SAM4L
 
+#ifndef AT86RFX_SPI
 #define AT86RFX_SPI                  SPI
 #define AT86RFX_RST_PIN              PIN_PA04
 #define AT86RFX_IRQ_PIN              PIN_PA04
@@ -184,6 +192,7 @@
 #define LEAVE_TRX_REGION()         NVIC_EnableIRQ(GPIO_11_IRQn)
 
 #define AT86RFX_SPI_BAUDRATE         (3000000)
+#endif
 
 #endif /* SAM4L */
 
@@ -191,6 +200,7 @@
 #include <pio.h>
 # include "pio_handler.h"
 
+#ifndef AT86RFX_SPI
 #define AT86RFX_SPI                  SPI
 #define AT86RFX_RST_PIN              IOPORT_CREATE_PIN(PIOA, 23)
 #define AT86RFX_IRQ_PIN              IOPORT_CREATE_PIN(PIOA, 1)
@@ -233,11 +243,11 @@
 #define LEAVE_TRX_REGION()         pio_enable_pin_interrupt(AT86RFX_IRQ_PIN)
 
 #define AT86RFX_SPI_BAUDRATE         (3000000)
-
+#endif
 #endif
 
 #if (SAMD || SAMR21)
-
+#ifndef AT86RFX_SPI
 #define AT86RFX_SPI                  SERCOM0
 #define AT86RFX_RST_PIN              PIN_PA23
 #define AT86RFX_MISC_PIN             PIN_PA23
@@ -298,6 +308,6 @@
 	}
 
 #define AT86RFX_SPI_BAUDRATE         (4000000)
-
+#endif
 #endif /* SAMD || SAMR21 */
 #endif /* CONF_TRX_ACCESS_H_INCLUDED */
