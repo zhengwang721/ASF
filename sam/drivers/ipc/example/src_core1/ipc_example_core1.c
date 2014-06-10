@@ -161,7 +161,7 @@ int main(void)
 	while (1) {
 		if (is_core0_signal == true) {
 			is_core0_signal = false;
-			LED_Toggle(LED0);
+			LED_On(LED0);
 			usart_write_line(CONF_UART, "Got IRQ signal from core0\r\n\0");
 			delay_s(2);
 			ipc_set_command(IPC0, IPC_INTERRUPT_SRC_IRQ0);

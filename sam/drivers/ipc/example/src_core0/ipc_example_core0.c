@@ -177,7 +177,7 @@ int main(void)
 	while (1) {
 		if (is_core1_signal == true) {
 			is_core1_signal = false;
-			LED_Toggle(LED0);
+			LED_Off(LED0);
 			printf("Got IRQ signal from core1 %d\r\n", (int)*cnt);
 			delay_s(1);
 			ipc_set_command(IPC1, IPC_INTERRUPT_SRC_IRQ0);
