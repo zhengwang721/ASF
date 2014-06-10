@@ -49,8 +49,10 @@
 	"Using default values. Edit this conf_trx_access.h file to modify define value according to the current board."
 #warning \
     "Enable CONF_BOARD_AT86RFX Macro in conf_board.h for spi init routine in case of Atmel Board."
-	 
-
+	
+#ifndef AT86RFX_SPI_BAUDRATE	 
+#define AT86RFX_SPI_BAUDRATE         (4000000)
+#endif
 #if (UC3)
 #include "gpio.h"
 
@@ -100,7 +102,6 @@
 /** This macro restores the transceiver interrupt status. */
 #define LEAVE_TRX_REGION()           ENABLE_TRX_IRQ()
 
-#define AT86RFX_SPI_BAUDRATE         (3000000)
 #endif
 /* ! @} */
 #endif /* UC3 */
@@ -141,7 +142,6 @@
 /** This macro restores the transceiver interrupt status. */
 #define LEAVE_TRX_REGION()   PORTC.INTCTRL = irq_mask; }
 
-#define AT86RFX_SPI_BAUDRATE         (3000000)
 #endif
 /* ! @} */
 #endif /* XMEGA */
@@ -191,7 +191,7 @@
  */
 #define LEAVE_TRX_REGION()         NVIC_EnableIRQ(GPIO_11_IRQn)
 
-#define AT86RFX_SPI_BAUDRATE         (3000000)
+
 #endif
 
 #endif /* SAM4L */
@@ -242,7 +242,7 @@
  */
 #define LEAVE_TRX_REGION()         pio_enable_pin_interrupt(AT86RFX_IRQ_PIN)
 
-#define AT86RFX_SPI_BAUDRATE         (3000000)
+
 #endif
 #endif
 
@@ -307,7 +307,6 @@
 		EXTINT_CALLBACK_TYPE_DETECT); \
 	}
 
-#define AT86RFX_SPI_BAUDRATE         (4000000)
 #endif
 #endif /* SAMD || SAMR21 */
 #endif /* CONF_TRX_ACCESS_H_INCLUDED */
