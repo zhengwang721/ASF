@@ -53,9 +53,9 @@
 
 //*** Declarations ************************************************************
 
-#define TIMETO_RECONNECT                        5000L // Time in miliseconds
-#define TIME_OUT_CONNECTION                     10000L // Time in miliseconds
-#define TIME_OUT_TEST                           1000000L // Time in miliseconds
+#define TIMETO_RECONNECT                        500L // Time in 10 miliseconds
+#define TIME_OUT_CONNECTION                     1000L // Time in 10 miliseconds
+#define TIME_OUT_TEST                           100000L // Time in 10 miliseconds
 
 #define MLME_MACEUI48                           0x8100
 #define MLME_MACSTATE                           0x0024

@@ -77,11 +77,6 @@ extern "C" {
 #define PAL_LO_STATE_PK              LO_STATE_PK
 //@}
 
-//! \name CRC functionality
-//@{
-#define PAL_CRC_ENABLE
-//@}
-
 //! \name QT null value
 //@{
 #define PAL_QT_UNKNOW                0xFF
@@ -179,6 +174,7 @@ enum pal_ids {
 	PAL_ID_CHECK_CFG = 7,
 	PAL_ID_RESET_CFG = 8,
 	PAL_ID_DISABLE_BCN_TX = 9,
+	PAL_ID_ENABLE_CRC = 10,
 	PAL_ID_INFO_VERSION = PHY_ID_INFO_VERSION,
 	PAL_ID_IMPEDANCE = PHY_ID_CFG_IMPEDANCE,
 	PAL_ID_AUTODETECT_LOAD = PHY_ID_CFG_AUTODETECT_BRANCH,

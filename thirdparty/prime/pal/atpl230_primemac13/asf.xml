@@ -15,6 +15,9 @@
 		<require idref="sam.services.plc.pcrc"/>
 		<require idref="thirdparty.prime.phy.atpl230"/>
 		<device-support value="atsam4cp16b_0"/>
+		<device-support value="atsam4cmp16c_0"/>
+		<device-support value="atsam4cms16c_0"/>
+		<device-support value="atsam4c16c_0"/>
 		<device-support value="atsam4sd32c"/>
 		<build type="doxygen-entry-point" value="pal_prime_group"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>

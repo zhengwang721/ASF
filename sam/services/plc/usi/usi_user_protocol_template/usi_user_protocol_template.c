@@ -193,7 +193,11 @@ int main( void )
       // blink led 0
       if(b_led_swap){
         b_led_swap = false;
+#if (BOARD == SAM4CMP_DB || BOARD == SAM4CMS_DB)
+        LED_Toggle(LED4);
+#else
         LED_Toggle(LED0);
+#endif
       }
 
   }

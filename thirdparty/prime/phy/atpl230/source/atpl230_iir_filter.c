@@ -47,7 +47,7 @@
  * \weakgroup phy_plc_group
  * @{
  */
- 
+
 //! Filter IIR initialization
 const uint8_t uc_data_filter_IIR [LENGTH_DATA_FILTER_IIR] = {
 	0x12, 0x5A,
@@ -260,6 +260,25 @@ const uint8_t uc_data_angle_real_imag_comp [LENGTH_DATA_ANGLE_REAL_IMAG_COMP] = 
 	0x63, 0x7C,
 	0x68, 0x58,
 	0x6F, 0x82
+};
+
+const uint32_t ul_data_offset_correction [NUM_ROWS_DATA_OFFSET_CORRECTION] = {
+	0xC15319F6,
+	0x2FF8D008,
+	0xE60A3EAD,
+	0x0000BC29,
+	0x19F63EAD,
+	0xD008D008,
+	0x3EAD19F6,
+	0xBC290000,
+	0x3EADE60A,
+	0xD0082FF8,
+	0x19F6C153,
+	0x000043D7,
+	0xE60AC153,
+	0x2FF82FF8,
+	0xC153E60A,
+	0x43D70000,
 };
 
 //! @}

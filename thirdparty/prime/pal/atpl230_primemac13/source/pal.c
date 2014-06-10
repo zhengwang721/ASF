@@ -88,6 +88,11 @@ static xPhyMsgRx_t x_pal_rx_msg;
 static uint8_t uc_pal_data_buf_rx[PHY_MAX_PPDU_SIZE];
 //@}
 
+//! \name CRC capablity
+//@{
+static uint8_t uc_pal_crc_enable;
+//@}
+
 //! \name Error counters
 //@{
 static uint16_t ul_rx_false_positive;
@@ -246,7 +251,6 @@ static void pal_get_tx_result (void *pvParameters)
 			&ul_tx_time, 4);
 	  printf("\ttxRes GEN %u,%u [%u]\r\n", (unsigned int)x_write_result.uc_id_buffer,
 			(unsigned int)x_write_result.uc_result, ul_tx_time);
-	//    }
 #endif
 
 #ifdef PAL_TX_LED0_SWITCH_OFF
@@ -271,6 +275,9 @@ static void pal_get_rx (void *pvParameters)
 	uint8_t uc_crc_type;
 	uint8_t uc_crc_valid;
 	uint8_t *puc_crc_buf;
+#ifdef PAL_DBG_PRIME_MESSAGES
+	uint16_t idx;
+#endif
 
 	UNUSED(pvParameters);
 
@@ -285,46 +292,53 @@ static void pal_get_rx (void *pvParameters)
 
 	// build response
 	if (x_read_msg.data_len){
-#ifdef PAL_CRC_ENABLE
-	// crc invalid by default
-	uc_crc_valid = 0;
-	// check CRC
-	if(x_read_msg.header_type == PCRC_HT_PROMOTION){
-		uc_crc_type = CRC_TYPE_8;
-	}else{
-		uc_crc_type = CRC_TYPE_32;
-	}
-	ul_crc_calc = pcrc_calculate_prime_crc (x_read_msg.data_buf, x_read_msg.data_len - (uc_crc_type + 1), x_read_msg.header_type, uc_crc_type);
-	puc_crc_buf = &x_read_msg.data_buf[x_read_msg.data_len - (uc_crc_type + 1)];
-	if(uc_crc_type == CRC_TYPE_8){
-		if(*puc_crc_buf == (uint8_t)ul_crc_calc){
-			uc_crc_valid = 1;
-		}
-	}else if(uc_crc_type == CRC_TYPE_32){
-		if((*puc_crc_buf++ == (uint8_t)(ul_crc_calc>>24))&&
-			(*puc_crc_buf++ == (uint8_t)(ul_crc_calc>>16))&&
-			(*puc_crc_buf++ == (uint8_t)(ul_crc_calc>>8))&&
-			(*puc_crc_buf++ == (uint8_t)ul_crc_calc)){
-				uc_crc_valid = 1;
+		if(uc_pal_crc_enable){
+			// crc invalid by default
+			uc_crc_valid = 0;
+			// check CRC
+			if(x_read_msg.header_type == PCRC_HT_PROMOTION){
+				uc_crc_type = CRC_TYPE_8;
+			}else{
+				uc_crc_type = CRC_TYPE_32;
 			}
-	}
+			ul_crc_calc = pcrc_calculate_prime_crc (x_read_msg.data_buf, x_read_msg.data_len - (uc_crc_type + 1), x_read_msg.header_type, uc_crc_type);
+			puc_crc_buf = &x_read_msg.data_buf[x_read_msg.data_len - (uc_crc_type + 1)];
+			if(uc_crc_type == CRC_TYPE_8){
+				if(*puc_crc_buf == (uint8_t)ul_crc_calc){
+					uc_crc_valid = 1;
+				}
+			}else if(uc_crc_type == CRC_TYPE_32){
+				if((*puc_crc_buf++ == (uint8_t)(ul_crc_calc>>24))&&
+				   	(*puc_crc_buf++ == (uint8_t)(ul_crc_calc>>16))&&
+					(*puc_crc_buf++ == (uint8_t)(ul_crc_calc>>8))&&
+					(*puc_crc_buf++ == (uint8_t)ul_crc_calc)){
+				      	uc_crc_valid = 1;
+			      	}
+			}
 
-	if(uc_crc_valid){
-		x_read_msg.data_len -= (uc_crc_type + 1);
+			if(uc_crc_valid){
+				x_read_msg.data_len -= (uc_crc_type + 1);
+				// fill info to pass to mac layer
+				memcpy(&x_pal_rx_msg, &x_read_msg, sizeof(xPhyMsgRx_t));
+				// enable flag
+				uc_rx_msg_flag = true;
+				// reset x_read_msg
+				x_read_msg.data_len = 0;
+			}else{
+				ul_rx_bad_crc++;
+#ifdef PAL_DBG_PRIME_MESSAGES
+				printf(" PAL CRC error...\n");  // only for debug
 #endif
-		// fill info to pass to mac layer
-		memcpy(&x_pal_rx_msg, &x_read_msg, sizeof(xPhyMsgRx_t));
-		// enable flag
-		uc_rx_msg_flag = true;
-		// reset x_read_msg
-		x_read_msg.data_len = 0;
-#ifdef PAL_CRC_ENABLE
-	}else{
-		ul_rx_bad_crc++;
-		printf(" PAL CRC error... \r\n");  // only for debug
-		memset(&x_pal_rx_msg, 0, sizeof(x_pal_rx_msg));
-	}
-#endif
+				memset(&x_pal_rx_msg, 0, sizeof(x_pal_rx_msg));
+			}
+		}else{
+			// fill info to pass to mac layer
+			memcpy(&x_pal_rx_msg, &x_read_msg, sizeof(xPhyMsgRx_t));
+			// enable flag
+			uc_rx_msg_flag = true;
+			// reset x_read_msg
+			x_read_msg.data_len = 0;
+		}
 
 #ifdef PAL_RX_LED0_SWITCH_OFF
 	LED_Off(LED0);
@@ -374,6 +388,9 @@ void pal_init (void)
 
 	// disable MAC coproc by default
 	phy_mac_crc_disable();
+
+	// enable CRC in PAL
+	uc_pal_crc_enable = true;
 
 }
 
@@ -433,6 +450,7 @@ void pal_data_indication_ex(xPalMsgRx_t *px_msg)
 #ifdef PAL_DBG_PRIME_MESSAGES
 	unsigned int us_lnid;
 	unsigned int uc_level;
+	unsigned int uc_down;
 	unsigned int uc_rx_count;
 	unsigned int uc_tx_count;
 #endif
@@ -451,6 +469,8 @@ void pal_data_indication_ex(xPalMsgRx_t *px_msg)
 				ul_last_rx_bcn_tics = px_msg->rx_time;
 			}else if(px_msg->header_type == PHY_HT_GENERIC){
 				uc_level = (unsigned int)(px_msg->data_buf[1] & 0x3F);
+				uc_down = (unsigned int)(px_msg->data_buf[1] & 0x40);
+				us_lnid = ((unsigned int)(px_msg->data_buf[6])<<6) + ((unsigned int)(px_msg->data_buf[7])>>2);
 				if(px_msg->data_buf[3] & 0x02){
 					switch(px_msg->data_buf[4]){
 						case 1:
@@ -473,10 +493,13 @@ void pal_data_indication_ex(xPalMsgRx_t *px_msg)
 							printf("\t\t<- CFP (%u)\r\n" , uc_level);
 							break;
 						case 7:
-							us_lnid = ((unsigned int)(px_msg->data_buf[6])<<6) + ((unsigned int)(px_msg->data_buf[7])>>2);
 							uc_rx_count = (px_msg->data_buf[9])>>5;
-							uc_tx_count = ((px_msg->data_buf[9])>>2)&0x07;;
-							printf("\t\t<- ALV %u/%u (%u) (%u)\r\n", uc_tx_count, uc_rx_count, us_lnid, uc_level);
+							uc_tx_count = ((px_msg->data_buf[9])>>2)&0x07;
+							if(uc_down){
+								printf("\t\t<- ALV D (%u) (%u) [%u]\r\n" , us_lnid, uc_level, px_msg->uc_buff_id);
+							}else{
+								printf("\t\t<- ALV U (%u) (%u) [%u]\r\n" , us_lnid, uc_level, px_msg->uc_buff_id);
+							}
 							break;
 						case 8:
 							printf("\t\t<- MUL (%u)\r\n" , uc_level);
@@ -489,12 +512,16 @@ void pal_data_indication_ex(xPalMsgRx_t *px_msg)
 							break;
 						default:
 							printf("\t\t<- ERROR (%u)\r\n" , uc_level);
+					}
+				}else{
+					if(uc_down){
+						printf("\t\t<- DATA D (%u) (%u) d[%02x][%u]\r\n" , us_lnid, uc_level, px_msg->data_buf[9], px_msg->uc_buff_id);
+					}else{
+						printf("\t\t<- DATA U (%u) (%u) d[%02x][%u]\r\n" , us_lnid, uc_level, px_msg->data_buf[9], px_msg->uc_buff_id);
+					}
 				}
 			}else{
-			  printf("\t\t<- DATA (%u) \t\t buf(%u)\r\n" , uc_level, px_msg->uc_buff_id);
-			}
-			}else{
-			printf("\t\t<- PNPDU \t\t buf(%u)\r\n" , px_msg->uc_buff_id);
+				printf("\t\t<- PNPDU \t\t buf(%u)\r\n" , px_msg->uc_buff_id);
 			}
 #endif
 		}else{
@@ -552,6 +579,7 @@ uint8_t pal_data_request_ex (xPalMsgTx_t *px_msg)
 	xPalMsgTx_t x_pal_tx_data;
 #ifdef PAL_DBG_PRIME_MESSAGES
 	unsigned int us_lnid;
+	unsigned int uc_down;
 	unsigned int uc_rx_count;
 	unsigned int uc_tx_count;
 #endif
@@ -559,35 +587,33 @@ uint8_t pal_data_request_ex (xPalMsgTx_t *px_msg)
 	// copy message to local tx var
 	memcpy(&x_pal_tx_data, px_msg, sizeof(xPalMsgTx_t));
 
-#ifdef PAL_CRC_ENABLE
-	// Save parameters for later requests
-	uc_tx_head_type = ATPL230_GET_HEADER_TYPE(x_pal_tx_data.data_buf[0]);
-
-	// add HCS in case of generic packet
-	if(uc_tx_head_type == PCRC_HT_GENERIC){
-		ul_crc_calc = pcrc_calculate_prime_crc (x_pal_tx_data.data_buf, 2, uc_tx_head_type, CRC_TYPE_8);
-		x_pal_tx_data.data_buf[2] = (uint8_t)ul_crc_calc;
+	if(uc_pal_crc_enable){
+		// Save parameters for later requests
+		uc_tx_head_type = ATPL230_GET_HEADER_TYPE(x_pal_tx_data.data_buf[0]);
+		// add HCS in case of generic packet
+		if(uc_tx_head_type == PCRC_HT_GENERIC){
+			ul_crc_calc = pcrc_calculate_prime_crc (x_pal_tx_data.data_buf, 2, uc_tx_head_type, CRC_TYPE_8);
+			x_pal_tx_data.data_buf[2] = (uint8_t)ul_crc_calc;
+		}
+		// add MAC crc
+		if(uc_tx_head_type == PCRC_HT_PROMOTION){
+			uc_crc_type = CRC_TYPE_8;
+		}else{
+			uc_crc_type = CRC_TYPE_32;
+		}
+		ul_crc_calc = pcrc_calculate_prime_crc (x_pal_tx_data.data_buf, x_pal_tx_data.data_len, uc_tx_head_type, uc_crc_type);
+		puc_crc_buf = &x_pal_tx_data.data_buf[x_pal_tx_data.data_len];
+		if(uc_crc_type == CRC_TYPE_8){
+			*puc_crc_buf = (uint8_t)ul_crc_calc;
+			x_pal_tx_data.data_len++;
+		}else if(uc_crc_type == CRC_TYPE_32){
+			*puc_crc_buf = (uint8_t)(ul_crc_calc>>24);
+			*(puc_crc_buf+1) = (uint8_t)(ul_crc_calc>>16);
+			*(puc_crc_buf+2) = (uint8_t)(ul_crc_calc>>8);
+			*(puc_crc_buf+3) = (uint8_t)ul_crc_calc;
+			x_pal_tx_data.data_len += 4;
+		}
 	}
-
-	// add MAC crc
-	if(uc_tx_head_type == PCRC_HT_PROMOTION){
-		uc_crc_type = CRC_TYPE_8;
-	}else{
-		uc_crc_type = CRC_TYPE_32;
-	}
-	ul_crc_calc = pcrc_calculate_prime_crc (x_pal_tx_data.data_buf, x_pal_tx_data.data_len, uc_tx_head_type, uc_crc_type);
-	puc_crc_buf = &x_pal_tx_data.data_buf[x_pal_tx_data.data_len];
-	if(uc_crc_type == CRC_TYPE_8){
-		*puc_crc_buf = (uint8_t)ul_crc_calc;
-		x_pal_tx_data.data_len++;
-	}else if(uc_crc_type == CRC_TYPE_32){
-		*puc_crc_buf = (uint8_t)(ul_crc_calc>>24);
-		*(puc_crc_buf+1) = (uint8_t)(ul_crc_calc>>16);
-		*(puc_crc_buf+2) = (uint8_t)(ul_crc_calc>>8);
-		*(puc_crc_buf+3) = (uint8_t)ul_crc_calc;
-		x_pal_tx_data.data_len += 4;
-	}
-#endif
 
 	// update tx result data to "in process"
 	if(uc_tx_head_type == PCRC_HT_BEACON){
@@ -605,6 +631,8 @@ uint8_t pal_data_request_ex (xPalMsgTx_t *px_msg)
 		printf("-> BCN %u, [%u]\r\n", (unsigned int)((x_pal_tx_data.data_buf[5])>>3), (x_pal_tx_data.tdelay - ul_last_tx_bcn_tics));
 		ul_last_tx_bcn_tics = x_pal_tx_data.tdelay;
 	}else if(uc_tx_head_type == PHY_HT_GENERIC){
+		uc_down = (unsigned int)(x_pal_tx_data.data_buf[1] & 0x40);
+		us_lnid = ((unsigned int)(x_pal_tx_data.data_buf[6])<<6) + ((unsigned int)(x_pal_tx_data.data_buf[7])>>2);
 		if(x_pal_tx_data.data_buf[3] & 0x02){
 			switch(x_pal_tx_data.data_buf[4]){
 				case 1:
@@ -627,10 +655,13 @@ uint8_t pal_data_request_ex (xPalMsgTx_t *px_msg)
 					printf("-> CFP\r\n");
 					break;
 				case 7:
-					us_lnid = ((unsigned int)(x_pal_tx_data.data_buf[6])<<6) + ((unsigned int)(x_pal_tx_data.data_buf[7])>>2);
 					uc_rx_count = (x_pal_tx_data.data_buf[9])>>5;
 					uc_tx_count = ((x_pal_tx_data.data_buf[9])>>2)&0x07;;
-					printf("-> ALV %u/%u (%u)\r\n", uc_tx_count, uc_rx_count, us_lnid);
+					if(uc_down){
+						printf("-> ALV D (%u) [%u]\r\n", us_lnid, x_pal_tx_data.uc_buff_id);
+					}else{
+						printf("-> ALV U (%u) [%u]\r\n", us_lnid, x_pal_tx_data.uc_buff_id);
+					}
 					break;
 				case 8:
 					printf("-> MUL\r\n");
@@ -645,7 +676,11 @@ uint8_t pal_data_request_ex (xPalMsgTx_t *px_msg)
 					printf("-> ERROR\r\n");
 			}
 		}else{
-			printf("-> DATA\r\n");
+			if(uc_down){
+				printf("\t\t-> DATA D (%u) d[%02x] [%u]\r\n" , us_lnid, x_pal_tx_data.data_buf[9], x_pal_tx_data.uc_buff_id);
+			}else{
+				printf("\t\t-> DATA U (%u) d[%02x] [%u]\r\n" , us_lnid, x_pal_tx_data.data_buf[9], x_pal_tx_data.uc_buff_id);
+			}
 		}
 	}else{
 		printf("-> PNPDU\r\n");
@@ -821,6 +856,8 @@ uint8_t pal_get_cfg_ex (uint16_t us_id, void *p_val, uint16_t uc_len)
 				((x_pal_tx_res.uc_id_buffer)<<1), p_val, 2);
 	}else if(us_id == PAL_ID_CHECK_CFG){
 		phy_get_cfg_param(REG_ATPL230_AES_DATA0, p_val, 1);
+	}else if(us_id == PAL_ID_ENABLE_CRC){
+		*((uint8_t *)p_val) = uc_pal_crc_enable;
 	}else{
 		return phy_get_cfg_param(us_id, p_val, uc_len);
 	}
@@ -864,6 +901,8 @@ uint8_t pal_set_cfg_ex (uint16_t us_id, void *p_val, uint16_t uc_len)
 		// disable tx of buffer id
 		phy_transmission_buff_disable(0);
 		return phy_set_cfg_param(us_id, p_val, uc_len);
+	}else if(us_id == PAL_ID_ENABLE_CRC){
+		uc_pal_crc_enable = *((uint8_t*)p_val);
 	}else{
 		return phy_set_cfg_param(us_id, p_val, uc_len);
 	}

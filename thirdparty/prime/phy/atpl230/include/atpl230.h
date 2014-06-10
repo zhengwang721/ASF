@@ -70,6 +70,13 @@ extern "C" {
  *
  * @{
  */
+//#define PHY_OFFSET_SYMBOL_CONTROL
+
+#define ID_TC_PHY_TX_OFFSET_SYM             ID_TC0
+#define TC_PHY_TX_OFFSET_SYM                TC0
+#define TC_PHY_TX_OFFSET_SYM_CHN            0
+#define TC_PHY_TX_OFFSET_SYM_IRQn           TC0_IRQn
+#define TC_PHY_TX_OFFSET_SYM_Handler        TC0_Handler
 
 //! Coupling Boards Identifiers
 #define ATPLCOUPXXX_NUM	 9
@@ -188,48 +195,50 @@ enum VCRCTypes
 //! Emitter Frecuencies Modes
 #define MODE_NUM_EF                             3
 //! 10 MHz
-#define MODE_EF10				0
+#define MODE_EF10                               0
 //! 20 MHz
-#define MODE_EF20				1
+#define MODE_EF20                               1
 //! 40 MHz
-#define MODE_EF40				2
+#define MODE_EF40                               2
 
 //! \name Emitter Driver Mode
 //@{
 //! INTERNAL DRIVER
-#define INTERNAL_DRV_MODE			1
+#define INTERNAL_DRV_MODE                       1
 //! EXTERNAL DRIVER
-#define EXTERNAL_DRV_MODE			2
+#define EXTERNAL_DRV_MODE                       2
 //@}
 
 //!  \name Driver Identification
 //@{
 //! DRIVER 1
-#define DRIVER_1        			1
+#define DRIVER_1                                1
 //! DRIVER 2
-#define DRIVER_2        			2
+#define DRIVER_2                                2
 //! DRIVER 1 + 2
-#define DRIVER_1_2        			3
+#define DRIVER_1_2                              3
 //@}
 
 //! \name Driver Polarity
 //@{
 //! 0 in emission and 1 in reception
-#define DRV_POL_TX_0_RX_1       		0
+#define DRV_POL_TX_0_RX_1                       0
 //! 1 in emission and 0 in reception
-#define DRV_POL_TX_1_RX_0       		1
+#define DRV_POL_TX_1_RX_0                       1
 //@}
 
 //! \name Mode values
 //@{
-//! PRIME v1.3
-#define MODE_PRIME_V1_3				0x00
-//! PRIME PLUS
-#define MODE_PRIME_PLUS				0x02
+//! TYPE A FRAME
+#define MODE_TYPE_A                             0x00
+//! TYPE B FRAME
+#define MODE_TYPE_B                             0x02
+//! TYPE BACKWARDS COMPATIBILTY FRAME
+#define MODE_TYPE_BC                            0x03
 //! Noise
-#define MODE_NOISE				0xFE
+#define MODE_NOISE                              0xFE
 //! Test
-#define MODE_TEST				0xFF
+#define MODE_TEST                               0xFF
 //@}
 
 //! \name TX scheduling mode values

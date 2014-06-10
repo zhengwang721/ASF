@@ -95,6 +95,8 @@ static uint8_t sna[6] = {0x00, 0x80, 0xE1, 0x00, 0x00, 0x6F};
   ioport_set_pin_level(PPLC_ARST_GPIO, PPLC_ARST_ACTIVE_LEVEL);
   // Clear ARST of modem PLC
   ioport_set_pin_level(PPLC_ARST_GPIO, PPLC_ARST_INACTIVE_LEVEL);
+#elif SAM4CM
+  ;
 #else
   // Reset on ARST of modem PLC
   gpio_set_pin_low(PPLC_ARST_GPIO);
@@ -267,10 +269,14 @@ static void prvGetRxTask(void * pvparameters)
     if(x_read_msg.data_len)
     {
       /* blink Reception LED */
+#if (BOARD != SAM4CMP_DB && BOARD != SAM4CMS_DB)
       LED_Toggle(LED1);
+#endif
       ul_wait_counter = 0xFFFF;
       while(ul_wait_counter--);
+#if (BOARD != SAM4CMP_DB && BOARD != SAM4CMS_DB)
       LED_Toggle(LED1);
+#endif
     }
 
   }

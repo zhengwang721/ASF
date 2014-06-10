@@ -213,10 +213,18 @@ static void prvProcessMonitorTasks(xTimerHandle pxTimer)
 	if (ledStatus)
 	{
 		ledStatus = false;
-		LED_Off(LED0);
+#if (BOARD == SAM4CMP_DB || BOARD == SAM4CMS_DB)
+          	LED_Off(LED4);
+#else
+          	LED_Off(LED0);
+#endif
 	} else {
 		ledStatus = true;
-		LED_On(LED0);
+#if (BOARD == SAM4CMP_DB || BOARD == SAM4CMS_DB)
+          	LED_On(LED4);
+#else
+          	LED_On(LED0);
+#endif
 	}
 }
 

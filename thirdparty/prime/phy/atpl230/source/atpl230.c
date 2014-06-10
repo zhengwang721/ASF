@@ -70,7 +70,7 @@ extern "C" {
  */
 
 /* Management Function PHY interrupt */
-void phy_interrupt(void);
+void phy_handler(void);
 
 /* Default empty services */
 void Dummy_serial_if_init(void);
@@ -216,6 +216,7 @@ static atpl230_t atpl230;
 extern uint8_t uc_data_filter_IIR [LENGTH_DATA_FILTER_IIR];
 extern uint8_t uc_data_chirp [LENGTH_DATA_CHIRP];
 extern uint8_t uc_data_angle_real_imag_comp [LENGTH_DATA_ANGLE_REAL_IMAG_COMP];
+extern uint32_t ul_data_offset_correction [NUM_ROWS_DATA_OFFSET_CORRECTION];
 extern const float f_escalado_a22;
 extern const float f_escalado_a23;
 extern const float f_escalado_b22;
@@ -248,6 +249,17 @@ static uint8_t uc_phy_headers_buffer[PHY_NUM_RX_BUFFERS][PHY_DMA_OFFSET];
 
 //! vars to store values to update statistic values
 static uint16_t us_phy_last_tx_lengths[PHY_NUM_TX_BUFFERS];
+
+#ifdef PHY_OFFSET_SYMBOL_CONTROL
+//! \name PHY Timer management
+//@{
+#define LENGTH_DATA_CORRECT_OFFSET_FILTER  (NUM_ROWS_DATA_ANGLE_REAL_IMAG_COMP * 8 )
+static uint16_t us_symb_tx_count = 0;
+static bool uc_first_symbol = true;
+static uint8_t puc_offset_buf[LENGTH_DATA_CORRECT_OFFSET_FILTER];
+static bool uc_correct_psk_flag = false;
+//@}
+#endif
 
 
 //! Table to manage emit frequency
@@ -466,6 +478,11 @@ static uint32_t v_crc_rst_sna[VCRC_TYPES_NUMBER] =
 	VCRC32_RST
 };
 
+//! Table to manage soft stop timeH
+static uint8_t const uc_bc_mode_config_value[8] = {
+	0x41, 0x1A, 0x7A, 0x2B, 0xCB, 0xCF, 0xAB, 0xAA
+};
+
 /**
  * \internal
  * \brief Get CRC value from the buffer content
@@ -545,7 +562,7 @@ static void _upd_sna_crc (uint8_t *puc_sna)
 
 /**
  * \internal
- * \brief Store Filter secuence
+* \brief Store Filter secuence
  *
  * \param puc_fir_data      Pointer to filter table data (start pointer)
  * \param uc_cmd            Internal Memory CMD
@@ -582,7 +599,7 @@ static void _store_filter_sec (uint8_t *puc_fir_data, uint8_t uc_cmd, uint8_t uc
 		uc_write_fir_data[0] = uc_start_mem_byte + uc_idx;
 		uc_write_fir_data[3] = *puc_data++;
 		uc_write_fir_data[4] = *puc_data++;
-		if(uc_cmd == 0x11){  // only for chirp filter
+		if(uc_cmd == 0x11){  // chirp filter(0x11)
 		  uc_write_fir_data[5] = *puc_data++;
 		  uc_write_fir_data[6] = *puc_data++;
 		}
@@ -640,6 +657,178 @@ static void _store_filter_sec (uint8_t *puc_fir_data, uint8_t uc_cmd, uint8_t uc
 		}
 	}
 }
+
+
+
+#ifdef PHY_OFFSET_SYMBOL_CONTROL
+/**
+ * \internal
+ * \brief Init Timer to correct offset each tx symbol
+ *
+ */
+static void _init_timer_tx_offset_symb (void)
+{
+	uint8_t uc_row;
+	uint8_t *puc_ptr;
+
+	/* Configure PMC */
+	pmc_enable_periph_clk(ID_TC_PHY_TX_OFFSET_SYM);
+
+	/* Configure and enable interrupt on RC compare */
+	NVIC_SetPriority((IRQn_Type) TC_PHY_TX_OFFSET_SYM_IRQn, 0);
+	NVIC_EnableIRQ((IRQn_Type) TC_PHY_TX_OFFSET_SYM_IRQn);
+
+	/* Init phy symbol counter */
+	memset(puc_offset_buf, 0, sizeof(puc_offset_buf));
+	puc_ptr = puc_offset_buf;
+	/* init filter in case of use offset correction */
+	for(uc_row=0; uc_row<NUM_ROWS_DATA_ANGLE_REAL_IMAG_COMP; uc_row++){
+		*(puc_ptr++) = uc_row;
+		*(puc_ptr++) = 0x04;
+		*(puc_ptr++) = 0x24;
+		*(puc_ptr++) = (uint8_t)(ul_data_offset_correction[0]>>24);
+		*(puc_ptr++) = (uint8_t)(ul_data_offset_correction[0]>>16);
+		*(puc_ptr++) = (uint8_t)(ul_data_offset_correction[0]>>8);
+		*(puc_ptr++) = (uint8_t)(ul_data_offset_correction[0]);
+		*(puc_ptr++) = 0xA1;
+	}
+
+	// adjust filter: initial offset
+	pplc_if_write_rep( REG_ATPL230_LOAD_ADDRL, 7, puc_offset_buf, sizeof(puc_offset_buf));
+	pplc_if_and8(REG_ATPL230_LOAD_CTL, 0xDF);
+
+}
+
+
+/**
+ * \internal
+ * \brief Start Timer to correct offset each tx symbol
+ *
+ */
+static void _start_timer_tx_offset_symb (uint32_t uc_time_us, bool uc_8psk_en)
+{
+	uint32_t ul_div, ul_tcclks;
+
+	uc_correct_psk_flag = uc_8psk_en;
+
+	/* Disable Int */
+	tc_disable_interrupt(TC_PHY_TX_OFFSET_SYM, TC_PHY_TX_OFFSET_SYM_CHN, TC_IER_CPCS);
+
+	// MCK = 120000000 -> tcclks = 2 : TCLK3 = MCK/32 = 3750000 = 0.266us -> ul_div = 1ms/0.2666us = 3750
+	ul_tcclks = 2;
+	ul_div = (3750 * uc_time_us) / 1000;
+	tc_init(TC_PHY_TX_OFFSET_SYM, TC_PHY_TX_OFFSET_SYM_CHN, ul_tcclks | TC_CMR_CPCTRG);
+
+	tc_write_rc(TC_PHY_TX_OFFSET_SYM, TC_PHY_TX_OFFSET_SYM_CHN, ul_div);
+
+	/** Start the timer. */
+	tc_start(TC_PHY_TX_OFFSET_SYM, TC_PHY_TX_OFFSET_SYM_CHN);
+
+	/* Enable Int */
+	tc_enable_interrupt(TC_PHY_TX_OFFSET_SYM, TC_PHY_TX_OFFSET_SYM_CHN, TC_IER_CPCS);
+}
+
+
+/**
+ * \internal
+ * \brief Stop Timer to correct offset each tx symbol
+ *
+ */
+static void _stop_timer_tx_offset_symb (void)
+{
+	/* Disable Int */
+	tc_disable_interrupt(TC_PHY_TX_OFFSET_SYM, TC_PHY_TX_OFFSET_SYM_CHN, TC_IER_CPCS);
+
+	/** Stop the PHY timer */
+	tc_stop(TC_PHY_TX_OFFSET_SYM, TC_PHY_TX_OFFSET_SYM_CHN);
+}
+
+/**
+ * \internal
+ * \brief Correct offset for next symbol
+ *
+ */
+static void _correct_offset_symbol(void)
+{
+	uint8_t uc_row;
+	uint16_t us_idx;
+	uint32_t ul_offset_value;
+	bool uc_correct_filter;
+
+	us_symb_tx_count++;
+
+	if((us_symb_tx_count) == (atpl230.txPayloadLenSym + 2)){
+		// it is the last symbol. Rewrite the initial offset config
+		ul_offset_value = ul_data_offset_correction[0];
+		uc_correct_filter = true;
+		// stop timer
+		_stop_timer_tx_offset_symb();
+		// reset tx symb counter
+		us_symb_tx_count = 0;
+		// next symbol is new tx
+		uc_first_symbol = true;
+	}else{
+		// correct symbol offset for next tx
+		if(uc_first_symbol){
+			uc_first_symbol = false;
+			uc_correct_filter = true;
+			ul_offset_value = ul_data_offset_correction[us_symb_tx_count & 0x0F];
+		}else{
+			if(uc_correct_psk_flag){
+//				if(us_symb_tx_count < 3){
+//					uc_correct_filter = true;
+//					ul_offset_value = ul_data_offset_correction[NUM_ROWS_DATA_OFFSET_CORRECTION - 1];
+//				}else{
+					uc_correct_filter = true;
+					if(us_symb_tx_count & 0x01){
+						ul_offset_value = ul_data_offset_correction[15];
+					}else{
+						ul_offset_value = ul_data_offset_correction[6];
+					}
+//				}
+			}else{
+				uc_correct_filter = true;
+				ul_offset_value = ul_data_offset_correction[us_symb_tx_count & 0x0F];
+			}
+		}
+	}
+
+	if(uc_correct_filter){
+	    for(uc_row=0, us_idx=3; uc_row<NUM_ROWS_DATA_ANGLE_REAL_IMAG_COMP; uc_row++){
+		    *(puc_offset_buf + us_idx++) = (uint8_t)(ul_offset_value>>24);
+		    *(puc_offset_buf + us_idx++) = (uint8_t)(ul_offset_value>>16);
+		    *(puc_offset_buf + us_idx++) = (uint8_t)(ul_offset_value>>8);
+		    *(puc_offset_buf + us_idx++) = (uint8_t)(ul_offset_value);
+		    us_idx += 4;
+	    }
+	    // Correct offset
+	    pplc_if_write_rep( REG_ATPL230_LOAD_ADDRL, 7, puc_offset_buf, sizeof(puc_offset_buf));
+	    pplc_if_and8(REG_ATPL230_LOAD_CTL, 0xDF);
+	}
+}
+
+/**
+ * \internal
+ * \brief PHY Timer handler
+ *
+ */
+
+void TC_PHY_TX_OFFSET_SYM_Handler(void)
+{
+	volatile uint32_t ul_dummy;
+
+	/* Clear status bit to acknowledge interrupt */
+	ul_dummy = tc_get_status(TC_PHY_TX_OFFSET_SYM, TC_PHY_TX_OFFSET_SYM_CHN);
+	/* Avoid compiler warning */
+	UNUSED(ul_dummy);
+
+	/* restart timer */
+	_start_timer_tx_offset_symb(2240, uc_correct_psk_flag);
+	_correct_offset_symbol();
+}
+
+#endif // PHY_OFFSET_SYMBOL_CONTROL
+
 
 /**
 * \brief Filter IIR initialization
@@ -809,7 +998,7 @@ static void _init_phy_layer (uint8_t uc_rst_type)
 	// Store old configuration
 	if(uc_rst_type == PHY_RESET_HARD_TYPE){
 		/* init sw strcut values */
-		memset(&atpl230.txTotal, 0, sizeof(atpl230));
+		memset(&atpl230, 0, sizeof(atpl230));
 
 		/* configure atpl230 version information */
 		memcpy(atpl230.prodId, ATPL230_PRODID, 10);
@@ -908,6 +1097,9 @@ static void _init_phy_layer (uint8_t uc_rst_type)
 	// EQUALIZATION
 	pplc_if_write8 (REG_ATPL230_EQUALIZE_H, 0x00);
 	pplc_if_write8 (REG_ATPL230_EQUALIZE_L, 0x00);
+
+	// BC configuration value
+	pplc_if_write_buf(0xFF00, (uint8_t*)uc_bc_mode_config_value, sizeof(uc_bc_mode_config_value));
 
 	// Chirp Prime & ROBO
 	// Prime Chirp initial RAM address Register
@@ -1260,7 +1452,7 @@ static void _phy_rx_task(void)
 			puc_phy_rx_buffer_event[uc_buf_idx] = true;
 		}
 
-	// check next buffer
+		// check next buffer
 		uc_rx_header_ind >>= 1;
 		uc_rx_payload_ind = (uc_rx_payload_ind>>1) & 0xF0;
 		uc_buf_idx++;
@@ -1438,7 +1630,6 @@ uint8_t phy_tx_frame (xPhyMsgTx_t *px_msg)
 	uint8_t uc_head_type;
 	uint8_t uc_pad_len;
 	uint8_t uc_phy_buffer[PHY_MAX_PPDU_SIZE];
-	uint8_t uc_tmp;
 	uint8_t uc_tx_driver_mode;
 	uint8_t uc_tx_driver;
 	uint8_t uc_crc_type;
@@ -1570,7 +1761,7 @@ uint8_t phy_tx_frame (xPhyMsgTx_t *px_msg)
 			break;
 		case PROTOCOL_DBPSK_ROBO:
 		case PROTOCOL_DQPSK_ROBO:
-			if(px_msg->mode == MODE_PRIME_V1_3){
+			if(px_msg->mode == MODE_TYPE_A){
 				// update stats values
 				atpl230.txBadFormat++;
 				return PHY_TX_RESULT_INV_SCHEME;
@@ -1599,7 +1790,7 @@ uint8_t phy_tx_frame (xPhyMsgTx_t *px_msg)
 	// Configuration OK
 	// Adjust total length depending on CRC and PRIME mode
 	us_total_len = us_data_len;
-	if(px_msg->mode == MODE_PRIME_V1_3){
+	if(px_msg->mode == MODE_TYPE_A){
 		us_total_len -= MAC_HEADER_SIZE;  // bytes 8, 9 are in phy header, but they are transmitted in payload
 
 		uc_head_type = ATPL230_GET_HEADER_TYPE(px_msg->data_buf[0]);
@@ -1634,17 +1825,21 @@ uint8_t phy_tx_frame (xPhyMsgTx_t *px_msg)
 	atpl230.txPayloadLenSym = us_payload_len;
 
 	// adjust timeout for current msg and buffer
-	if(px_msg->mode == MODE_PRIME_V1_3){
+	if(px_msg->mode == MODE_TYPE_A){
 		ul_tx_timeout = (7 + atpl230.txPayloadLenSym *3 )*100;
 		pplc_if_write32(REG_ATPL230_TXRXBUF_TIMEOUT1_TX0 + (px_msg->uc_buff_id<<2), ul_tx_timeout);
-	}else if (px_msg->mode == MODE_PRIME_PLUS){
+	}else if (px_msg->mode == MODE_TYPE_B){
 		ul_tx_timeout = (18 + atpl230.txPayloadLenSym *3 )*100;
+		pplc_if_write32(REG_ATPL230_TXRXBUF_TIMEOUT1_TX0 + (px_msg->uc_buff_id<<2), ul_tx_timeout);
+	}else if (px_msg->mode == MODE_TYPE_BC){
+		ul_tx_timeout = (25 + atpl230.txPayloadLenSym *3 )*100;
 		pplc_if_write32(REG_ATPL230_TXRXBUF_TIMEOUT1_TX0 + (px_msg->uc_buff_id<<2), ul_tx_timeout);
 	}
 
 	// Get total len to transmit and build PHY headers in each prime mode
+	memset(uc_phy_buffer, 0 , sizeof(uc_phy_buffer));
 	switch (px_msg->mode){
-		case MODE_PRIME_V1_3:
+		case MODE_TYPE_A:
 			// MAC header is included in both PHY header and payload
 			us_total_phy_len = PHY_DMA_OFFSET + (us_data_len - MAC_GEN_HEADER_SIZE);
 			// First two bytes corresponds to physical header
@@ -1668,7 +1863,7 @@ uint8_t phy_tx_frame (xPhyMsgTx_t *px_msg)
 			}
 			break;
 
-		case MODE_PRIME_PLUS:
+		case MODE_TYPE_B:
 			// MAC header is included in PHY payload
 			us_total_phy_len = PHY_DMA_OFFSET + us_data_len;
 			// First three bytes corresponds to physical header
@@ -1679,8 +1874,36 @@ uint8_t phy_tx_frame (xPhyMsgTx_t *px_msg)
 			uc_phy_buffer[3] = 0xAA;
 			uc_phy_buffer[4] = 0xA0;
 			uc_phy_buffer[5] = 0x00;
-			// Add MAC header and payload
+			// Add type B payload
 			memcpy (&uc_phy_buffer[PHY_DMA_OFFSET], px_msg->data_buf, us_data_len);
+			break;
+
+		case MODE_TYPE_BC:
+			// MAC header is included in PHY payload
+			us_total_phy_len = (PHY_DMA_OFFSET<<1) + us_data_len;
+			// Build Type A header
+			uc_phy_buffer[0] = 0x40 | (((us_payload_len+8) >> 2) & 0x0f);
+			uc_phy_buffer[1] = (((us_payload_len+8) << 6) & 0xc0) | 0x04;
+			uc_phy_buffer[2] = 0x1A;
+			uc_phy_buffer[3] = uc_bc_mode_config_value[2];
+			uc_phy_buffer[4] = uc_bc_mode_config_value[3];
+			uc_phy_buffer[5] = uc_bc_mode_config_value[4];
+			uc_phy_buffer[6] = uc_bc_mode_config_value[5];
+			uc_phy_buffer[7] = uc_bc_mode_config_value[6];
+			uc_phy_buffer[8] = uc_bc_mode_config_value[7];
+			// Last bytes in header corresponds to CRC8(hardware) and flushing byte
+			uc_phy_buffer[9] = 0xAA;
+			uc_phy_buffer[10] = 0;
+			// Build Type B header
+			uc_phy_buffer[PHY_DMA_OFFSET] = ((uc_scheme << 4) & 0xf0) | ((us_payload_len >> 4) & 0x0f);
+			uc_phy_buffer[PHY_DMA_OFFSET+1] = ((us_payload_len << 4) & 0xf0) | ((uc_pad_len >> 5) & 0x0f);
+			uc_phy_buffer[PHY_DMA_OFFSET+2] = ((uc_pad_len << 3) & 0xf8);
+			// Last bytes in header corresponds to CRC12 and flushing byte
+			uc_phy_buffer[PHY_DMA_OFFSET+3] = 0xAA;
+			uc_phy_buffer[PHY_DMA_OFFSET+4] = 0xA0;
+			uc_phy_buffer[PHY_DMA_OFFSET+5] = 0x00;
+			// Add type B payload
+			memcpy (&uc_phy_buffer[PHY_DMA_OFFSET<<1], px_msg->data_buf, us_data_len);
 			break;
 
 		default:
@@ -1706,21 +1929,23 @@ uint8_t phy_tx_frame (xPhyMsgTx_t *px_msg)
 	// Transfer data to physical transmission buffer
 	pplc_if_write_buf (REG_ATPL230_PHY_TX_INIT_ADDRESS + (uc_buff_id * PHY_MAX_PPDU_SIZE), uc_phy_buffer, us_total_phy_len);
 
-	// get robo ctl position offset
-	uc_tmp = uc_buff_id << 1;
-	pplc_if_and8(REG_ATPL230_TXRXBUF_TXCONF_ROBO_CTL, ~(0x03 << uc_tmp));
+	// reset robo ctl value
+	pplc_if_and8(REG_ATPL230_TXRXBUF_TXCONF_ROBO_CTL, ~(0x03 << (uc_buff_id << 1)));
 
 	// Configure transmission mode: ROBO_CTL
 	switch (px_msg->mode){
-		case MODE_PRIME_V1_3:
-			// Tx PRIME
+		case MODE_TYPE_A:
 			uc_robo_ctl = 0x00;
 			break;
 
-		case MODE_PRIME_PLUS:
-			// Tx Robusto
+		case MODE_TYPE_B:
 			uc_robo_ctl = 0x02;
-			pplc_if_or8(REG_ATPL230_TXRXBUF_TXCONF_ROBO_CTL, uc_robo_ctl << uc_tmp);
+			pplc_if_or8(REG_ATPL230_TXRXBUF_TXCONF_ROBO_CTL, uc_robo_ctl << (uc_buff_id << 1));
+			break;
+
+		case MODE_TYPE_BC:
+			uc_robo_ctl = 0x03;
+			pplc_if_or8(REG_ATPL230_TXRXBUF_TXCONF_ROBO_CTL, uc_robo_ctl << (uc_buff_id << 1));
 			break;
 
 		default:
@@ -1856,6 +2081,15 @@ uint8_t phy_tx_frame (xPhyMsgTx_t *px_msg)
 		pplc_if_or8 (REG_ATPL230_TXRXBUF_TXCONF_TX0 + uc_buff_id, ATPL230_TXRXBUF_TXCONF_EB_Msk);
 		// force tx immediately (must be after enable flag set)
 		phy_force_tx_buff_enable(uc_buff_id);
+
+#ifdef PHY_OFFSET_SYMBOL_CONTROL
+		/* launch phy tx timer */
+		if(uc_scheme == PROTOCOL_D8PSK){
+			_start_timer_tx_offset_symb(2240, true);
+		}else{
+			_start_timer_tx_offset_symb(2240, false);
+	}
+#endif
 	}
 
 	return PHY_TX_RESULT_PROCESS;
@@ -1909,15 +2143,11 @@ void phy_rx_frame_cb (xPhyMsgRx_t *px_msg)
 		if(puc_phy_rx_buffer_event[uc_last_rx_buf]){
 			puc_phy_rx_buffer_event[uc_last_rx_buf] = false;
 			// get buffer idx of the current event
-			uc_buf_idx = uc_last_rx_buf;
+			uc_buf_idx = uc_last_rx_buf++;
+			uc_last_rx_buf &= 0x03;
 			uc_event_flag = true;
 			break;
 		}
-
-		if(++uc_last_rx_buf == 4){
-			uc_last_rx_buf = 0;
-		}
-
 	}
 
 	if(!uc_event_flag){
@@ -1950,7 +2180,7 @@ void phy_rx_frame_cb (xPhyMsgRx_t *px_msg)
 	}
 
 	switch(px_msg->mode){
-		case MODE_PRIME_V1_3:
+		case MODE_TYPE_A:
 			// Get received modulation scheme from PHY 1.3 header
 			px_msg->scheme = 0x0F & (*puc_phy_header_buf >> 4);
 			// Get payload length in symbols
@@ -1963,7 +2193,8 @@ void phy_rx_frame_cb (xPhyMsgRx_t *px_msg)
 			atpl230.rxPayloadLenSym = us_rx_symbol_len;
 			break;
 
-		case MODE_PRIME_PLUS:
+		case MODE_TYPE_BC:
+		case MODE_TYPE_B:
 			// Get received modulation scheme from PHY 1.4 header
 			px_msg->scheme = 0x0F & (*puc_phy_header_buf >> 4);
 			// Get payload length in symbols
@@ -2030,7 +2261,7 @@ void phy_rx_frame_cb (xPhyMsgRx_t *px_msg)
 	ul_data_buf_address = REG_ATPL230_PHY_RX_INIT_ADDRESS + (uc_buf_idx * PHY_MAX_PPDU_SIZE);
 	switch(px_msg->mode)
 	{
-		case MODE_PRIME_V1_3:
+		case MODE_TYPE_A:
 			// get mac enable status
 			uc_mac_enable = phy_get_mac_en();
 			// Update bytes in phy header in case of PRIME v1.3
@@ -2058,7 +2289,8 @@ void phy_rx_frame_cb (xPhyMsgRx_t *px_msg)
 			pplc_if_read_buf(ul_data_buf_address  + PHY_DMA_OFFSET, &px_msg->data_buf[MAC_GEN_HEADER_SIZE], px_msg->data_len - MAC_GEN_HEADER_SIZE);
 			break;
 
-		case MODE_PRIME_PLUS:
+		case MODE_TYPE_BC:
+		case MODE_TYPE_B:
 			// Read received Data
 			pplc_if_read_buf(ul_data_buf_address  + PHY_DMA_OFFSET, px_msg->data_buf, px_msg->data_len);
 			break;
@@ -2107,7 +2339,14 @@ void phy_rx_frame_cb (xPhyMsgRx_t *px_msg)
 		px_msg->evm_payload_acum = 0;
 	}
 	// get rx time
-	px_msg->rx_time = pplc_if_read32(REG_ATPL230_TXRXBUF_RECTIME1_RX0 + (uc_buf_idx<<2));
+//	if(px_msg->scheme & 0x08){
+//		// robo mode = TIMER_BEACON_REF +PREAMBLE_ROBUST +SYNCHRO_DETECTION+ ROBO_RX_TIME_OFFSET
+//		//           = TIMER_BEACON_REF +       819.2    +       43.2      + ROBO_RX_TIME_OFFSET
+//		px_msg->rx_time = pplc_if_read32(REG_ATPL230_ROBO_RX_TIME_OFFSET + (uc_buf_idx<<2));
+//	}else{
+		px_msg->rx_time = pplc_if_read32(REG_ATPL230_TXRXBUF_RECTIME1_RX0 + (uc_buf_idx<<2));
+//	}
+
 
 	// reset phy interrupt flag
 	_reset_rx_flag_interrupt(uc_buf_idx);
@@ -2117,7 +2356,7 @@ void phy_rx_frame_cb (xPhyMsgRx_t *px_msg)
 * \brief PHY interrupt management
 *
 */
-void phy_interrupt (void)
+void phy_handler (void)
 {
 	volatile uint8_t vuc_int_tx;
 	volatile uint8_t vuc_int_rx;
@@ -2170,8 +2409,16 @@ void phy_init (uint8_t uc_ifaceEnable)
 	/* Initialize PPLC driver */
 	pplc_if_init();
 
+	/* Set handler */
+	pplc_set_handler(phy_handler);
+
 	/* Reset PHY layer */
 	phy_reset (PHY_RESET_HARD_TYPE);
+
+#ifdef PHY_OFFSET_SYMBOL_CONTROL
+	/* Init phy timer */
+	_init_timer_tx_offset_symb();
+#endif
 
 }
 

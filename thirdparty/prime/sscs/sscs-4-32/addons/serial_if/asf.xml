@@ -15,6 +15,9 @@
 		<require idref="thirdparty.prime.sscs_4_32"/>
 		<build type="doxygen-entry-point" value="serial_sscs_prime_group"/>
 		<device-support value="atsam4cp16b_0"/>
+		<device-support value="atsam4cmp16c_0"/>
+		<device-support value="atsam4cms16c_0"/>
+		<device-support value="atsam4c16c_0"/>
 		<device-support value="atsam4sd32c"/>
 	</module>
 </asf>

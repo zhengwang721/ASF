@@ -195,9 +195,6 @@ int main( void )
 	/* Init Phy Layer */
 	phy_init(SNIFFER_IF_ENABLE);
 
-	/* Init sniffer */
-	sniffer_if_init(true);
-
 	/* Init Usi Layer */
 	usi_init();
 
@@ -205,7 +202,11 @@ int main( void )
 		// blink led 0
 		if(b_led_swap){
 			b_led_swap = false;
-			LED_Toggle(LED0);
+#if (BOARD == SAM4CMP_DB || BOARD == SAM4CMS_DB)
+          		LED_Toggle(LED4);
+#else
+          		LED_Toggle(LED0);
+#endif
 		}
 		//updWatchDog ();
 

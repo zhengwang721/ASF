@@ -92,7 +92,6 @@ extern "C" {
 #define PPLC_DLYBCT        0  //!< Delay between consecutive transfers
 //@}
 
-
 //! \name Proxy PLC Controller interface
 //@{
 void pplc_if_init(void);
@@ -108,7 +107,7 @@ uint8_t pplc_if_write_rep (uint16_t us_addr, uint8_t uc_bytes_rep, uint8_t *ptr_
 void pplc_if_and8 (uint16_t us_addr, uint8_t uc_mask);
 void pplc_if_or8 (uint16_t us_addr, uint8_t uc_mask);
 void pplc_if_xor8 (uint16_t us_addr, uint8_t uc_mask);
-void pplc_if_int_handler (uint32_t ul_id, uint32_t uc_mask);
+void pplc_set_handler(void (*p_handler) (void));
 //@}
 //! @}
 

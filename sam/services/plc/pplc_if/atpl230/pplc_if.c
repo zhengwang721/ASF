@@ -60,18 +60,6 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-/* Default empty Phy layer Interrupt handler */
-void Dummy_phy_interrupt(void);
-
-#ifdef __GNUC__
-void phy_interrupt ( void ) __attribute__ ((weak, alias("Dummy_phy_interrupt")));
-#endif
-
-#ifdef __ICCARM__
-extern void phy_interrupt(void);
-#pragma weak phy_interrupt=Dummy_phy_interrupt
-#endif
-
 /**
  * \weakgroup pplc_plc_group
  * @{
@@ -81,7 +69,7 @@ extern void phy_interrupt(void);
 static uint32_t gs_ul_pplc_clock = PPLC_CLOCK;
 
 //! PDC buffer us_size.
-#define PDC_PPLC_BUFFER_SIZE       512
+#define PDC_PPLC_BUFFER_SIZE       800
 
 //! Max number of folowing reads.
 #define MAX_NUM_READ_RX_COUNTER    10
@@ -103,6 +91,20 @@ static uint8_t uc_pplc_is_busy;
 //! PPLC chip select config value
 #define PPLC_PCS    spi_get_pcs(PPLC_CS)
 
+/**
+ * Describes an PPLC interrupt handler
+ */
+static void (*pplc_handler) (void);
+
+
+static void pplc_if_int_handler (uint32_t ul_id, uint32_t ul_mask)
+{
+  UNUSED(ul_id);
+  UNUSED(ul_mask);
+  if(pplc_handler != NULL){
+  	pplc_handler();
+  }
+}
 /**
  * \internal
  * \brief Initialize Proxy PLC controller.
@@ -431,18 +433,7 @@ void pplc_if_xor8 (uint16_t us_addr, uint8_t uc_mask)
   _pplc_cmd_op (PPLC_CMD_XOR, us_addr, 1, &uc_mask, 0);
 }
 
-/**
- * \brief PPLC Interrupt Handler
- *
- * \param ul_id 	PIO ID.
- * \param ul_mask 	Interrupt source bit map.
- */
-void pplc_if_int_handler (uint32_t ul_id, uint32_t ul_mask)
-{
-  UNUSED(ul_id);
-  UNUSED(ul_mask);
-  phy_interrupt ();
-}
+
 
 /**
  * \brief Initialize PPLC interface
@@ -457,11 +448,15 @@ void pplc_if_init (void)
   uc_pplc_is_busy = false;
 
   /* Configure PPLC reset pins */
+#if SAM4C || SAM4CM
+  ;
+#else
   ioport_set_pin_dir(PPLC_ARST_GPIO, IOPORT_DIR_OUTPUT);
   ioport_set_pin_level(PPLC_ARST_GPIO, PPLC_ARST_INACTIVE_LEVEL);
 
   ioport_set_pin_dir(PPLC_SRST_GPIO, IOPORT_DIR_OUTPUT);
   ioport_set_pin_level(PPLC_SRST_GPIO, PPLC_SRST_INACTIVE_LEVEL);
+#endif
 
   /* Configure PPLC interruption pin */
   ioport_set_pin_dir(PPLC_INT_GPIO, IOPORT_DIR_INPUT);
@@ -475,15 +470,19 @@ void pplc_if_init (void)
   NVIC_ClearPendingIRQ(PPLC_INT_IRQn);
   NVIC_EnableIRQ(PPLC_INT_IRQn);
   pio_enable_interrupt(PPLC_INT_PIO, PPLC_INT_MASK);
+
+  /* Init PPLC handler */
+  pplc_handler = NULL;
 }
 
 /**
- * \brief Default PHY Layer interrupt handler for unused PRIME stack.
+ * \brief Set an interrupt handler for the specified interrput source.
  */
-void Dummy_phy_interrupt(void)
+void pplc_set_handler(void (*p_handler) (void))
 {
-  while(1);
+	pplc_handler = p_handler;
 }
+
 
 
 //! @}

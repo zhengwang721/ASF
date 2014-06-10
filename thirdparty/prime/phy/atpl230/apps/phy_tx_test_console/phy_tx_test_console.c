@@ -146,8 +146,9 @@ void vApplicationTickHook( void );
           "8: ATPLCOUP006_v1\n\r"
 
 #define MENU_MODE "\n\r-- PRIME Mode --------------\r\n" \
-          "0: MODE_PRIME_V1_3\n\r" \
-          "1: MODE_ENHANCED_PRIME_V1_3\n\r"
+          "0: MODE_TYPE_A\n\r" \
+          "2: MODE_TYPE_B\n\r" \
+          "3: MODE_TYPE_BC\n\r"
 
 #if (SAM4C)
 #define MENU_DATA_MODE "\n\r-- Select Data Mode --------------\r\n" \
@@ -385,11 +386,14 @@ static void display_config(void)
   }
   printf("-I- Disable Rx: %u\n\r", (uint32_t)xAppPhyCfgTx.xPhyMsg.disable_rx);
   switch(xAppPhyCfgTx.xPhyMsg.mode){
-    case MODE_PRIME_V1_3:
-      printf("-I- PRIME mode: MODE_PRIME_V1_3\n\r");
+    case MODE_TYPE_A:
+      printf("-I- PRIME mode: MODE_TYPE_A\n\r");
       break;
-    case MODE_PRIME_PLUS:
-      printf("-I- PRIME mode: MODE_ENHANCED_PRIME_V1_3\n\r");
+    case MODE_TYPE_B:
+      printf("-I- PRIME mode: MODE_TYPE_B\n\r");
+      break;
+    case MODE_TYPE_BC:
+      printf("-I- PRIME mode: MODE_TYPE_BC\n\r");
       break;
     default:
       printf("-I- PRIME mode: ERROR CFG\n\r");
@@ -579,12 +583,16 @@ static void get_transmission_mode(void)
     }
     switch (uc_char) {
       case '0':
-        uc_mode = MODE_PRIME_V1_3;
-        printf("MODE_PRIME_V1_3\r\n");
+        uc_mode = MODE_TYPE_A;
+        printf("MODE_TYPE_A\r\n");
         break;
-    case '1':
-        uc_mode = MODE_PRIME_PLUS;
-        printf("MODE_ENHANCED_PRIME_V1_3\r\n");
+      case '2':
+        uc_mode = MODE_TYPE_B;
+        printf("MODE_TYPE_B\r\n");
+        break;
+      case '3':
+        uc_mode = MODE_TYPE_BC;
+        printf("MODE_TYPE_BC\r\n");
         break;
     default:
         continue;
@@ -1024,7 +1032,7 @@ int main( void )
     xAppPhyCfgTx.ul_tx_period = 1000;
     xAppPhyCfgTx.xPhyMsg.att_level = 0;
     xAppPhyCfgTx.xPhyMsg.disable_rx = false;
-    xAppPhyCfgTx.xPhyMsg.mode = MODE_PRIME_V1_3;
+    xAppPhyCfgTx.xPhyMsg.mode = MODE_TYPE_A;
     xAppPhyCfgTx.xPhyMsg.scheme = PROTOCOL_DBPSK_VTB;
     xAppPhyCfgTx.xPhyMsg.tdelay = 0;
     xAppPhyCfgTx.xPhyMsg.tmode = PHY_TX_SCHEDULING_MODE_RELATIVE;
@@ -1138,8 +1146,10 @@ static void prvSetupHardware(void)
   for(uc_num_blinks = 0; uc_num_blinks < 30; uc_num_blinks++){
     ul_wait_counter = 0xFFFFF;
     while(ul_wait_counter--);
+#if (BOARD != SAM4CMP_DB && BOARD != SAM4CMS_DB)
     LED_Toggle(LED0);
     LED_Toggle(LED1);
+#endif
   }
 }
 
@@ -1149,7 +1159,9 @@ static void prvSetupHardware(void)
 static void prvProcessMonitorTasks( xTimerHandle pxTimer )
 {
   UNUSED(pxTimer);
+#if (BOARD != SAM4CMP_DB && BOARD != SAM4CMS_DB)
   LED_Toggle(LED0);
+#endif
 }
 
 /*-----------------------------------------------------------*/

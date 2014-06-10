@@ -50,18 +50,18 @@
 /* Enable LCD signalling */
 #define EXAMPLE_LCD_SIGNALLING_ENABLE
 /* Signalling Indication Period */
-#define SIGNALLING_TIMER_RATE          (250 / portTICK_RATE_MS) 
+#define SIGNALLING_TIMER_RATE          (250 / portTICK_RATE_MS)
 /* Signalling block time */
 #define SIGNALLING_BLOCK_TIME          (1000 / portTICK_RATE_MS)
 
 /* APPEMU: ON/OFF JUMPER CONFIG */
-#define PIN_APPEMU_GPIO                (PIO_PA21_IDX)
-#define PIN_APPEMU_FLAGS               (PIO_INPUT)
-#define PIN_APPEMU                     {PIO_PA21, PIOA, ID_PIOA, PIO_INPUT, PIO_DEBOUNCE | PIO_PULLUP}
-#define PIN_APPEMU_MASK                PIO_PA21
-#define PIN_APPEMU_PIO                 PIOA
-#define PIN_APPEMU_ID                  ID_PIOA
-#define PIN_APPEMU_TYPE                PIO_INPUT
-#define PIN_APPEMU_ATTR                PIO_DEBOUNCE | PIO_PULLUP
+#define PIN_APPEMU_GPIO      (PIO_PC3_IDX)
+#define PIN_APPEMU_FLAGS     (PIO_INPUT)
+#define PIN_APPEMU           {PIO_PC3, PIOC, ID_PIOC, PIO_INPUT, PIO_DEBOUNCE | PIO_PULLUP}
+#define PIN_APPEMU_MASK      PIO_PC3
+#define PIN_APPEMU_PIO       PIOC
+#define PIN_APPEMU_ID        ID_PIOC
+#define PIN_APPEMU_TYPE      PIO_INPUT
+#define PIN_APPEMU_ATTR      PIO_DEBOUNCE | PIO_PULLUP
 
 #endif/* CONF_EXAMPLE_H_INCLUDED */

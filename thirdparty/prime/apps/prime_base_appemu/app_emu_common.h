@@ -52,8 +52,8 @@
 #define APP_ID                  "APPLICATION EMULATION"
 #define APP_VERSION_STR         "5.0"
 
-#define TIME_STEP               300
-#define TIME_REPEAT             2000
+#define TIME_STEP               30  // in 10ms.
+#define TIME_REPEAT             200 // in 10ms.
 
 #define MAX_COUNTER_DATA_SIZE   PPDU_LENGTH_6_SIZE
 #define TIMESTAMP_OFFSET        6
@@ -175,7 +175,7 @@ struct _tm {
 void app_emu_build_timestamp(char * pc_timestamp);
 void app_emu_fill_string(char * c_string, uint16_t us_size, uint8_t uc_down_up,
 							uint16_t us_step, char * c_timestamp);
-void app_emu_update_1ms(void);
+void app_emu_update_10ms(void);
 
 void app_emu_start(void);
 void app_emu_process(void);

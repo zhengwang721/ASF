@@ -51,6 +51,8 @@
 #include "app_emu_common.h"
 #include "conf_app_emu.h"
 
+extern uint32_t ul_tens_of_ms;
+
 //*** Declarations ************************************************************
 /* Tasks priorities */
 #define TASK_APPEMU_LAYER_PRIO             (tskIDLE_PRIORITY + 1)
@@ -85,8 +87,8 @@
 #define PROTOCOL_D8PSK_VTB                 0x06
 
 /// Time from the last connection detected to start test
-#define TIMETO_START_TEST          5000L // 75 seconds
-#define TIMETO_REG_CHEK            1000  // 1 second
+#define TIMETO_START_TEST          500L // 75 seconds in 10ms.
+#define TIMETO_REG_CHEK            100  // 1 second in 10ms.
 
 /// Value of the Register Devices list
 #define MLME_LIST_REG_DEVICES    0x50
@@ -100,7 +102,7 @@
 #define VTB(A)                   (A & 0x04)
 #define MOD(A)                   (A & 0x03)
 
-#define _getTimeMs()             ul_mili_seconds
+#define _getTimeMs()             (ul_tens_of_ms*10)
 
 /// State of machine state _get_registered_nodes
 enum {

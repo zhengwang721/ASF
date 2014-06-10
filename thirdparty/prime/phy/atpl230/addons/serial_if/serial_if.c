@@ -229,7 +229,7 @@ static void _serial_if_get_rx_task(void * pvParameters)
 		uc_serial_rsp_buf[us_serial_response_len++] = (uint8_t)(x_read_msg.evm_payload_acum>>8);
 		uc_serial_rsp_buf[us_serial_response_len++] = (uint8_t)(x_read_msg.evm_payload_acum);
 
-		if(x_read_msg.mode==MODE_PRIME_V1_3){
+		if(x_read_msg.mode==MODE_TYPE_A){
 			uc_serial_rsp_buf[us_serial_response_len++] = (uint8_t)((x_read_msg.data_len - 3)>>8);
 			uc_serial_rsp_buf[us_serial_response_len++] = (uint8_t)(x_read_msg.data_len - 3);
 
@@ -364,11 +364,11 @@ uint8_t serial_if_api_parser (uint8_t *puc_rx_msg, uint16_t us_len)
 			x_phy_tx_msg.data_len = ((uint16_t)*puc_rx++)<<8;
 			x_phy_tx_msg.data_len += (uint16_t)*puc_rx++;
 			x_phy_tx_msg.data_buf = uc_serial_data_buf;
-			if(x_phy_tx_msg.mode==MODE_PRIME_V1_3){
+			if(x_phy_tx_msg.mode==MODE_TYPE_A){
 				//Generic Data Frame
-				uc_serial_data_buf[0]=0x00;
-				uc_serial_data_buf[1]=0x00;
-				uc_serial_data_buf[2]=0x00;
+				uc_serial_data_buf[0]=0xAA;
+				uc_serial_data_buf[1]=0xAA;
+				uc_serial_data_buf[2]=0xAA;
 				x_phy_tx_msg.data_len +=3;
 				/* copy data */
 				memcpy(uc_serial_data_buf+3, puc_rx, x_phy_tx_msg.data_len);

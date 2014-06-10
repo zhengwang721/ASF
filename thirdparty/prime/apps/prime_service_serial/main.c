@@ -207,7 +207,7 @@ static void prvSetupHardware(void)
 #endif
 }
 
-#ifdef EXAMPLE_LCD_SIGNALLING_ENABLE
+#if (defined(CONF_BOARD_LCD_EN) && defined(EXAMPLE_LCD_SIGNALLING_ENABLE))
 /**
  * \internal
  * \brief Function to blink a symbol or led.
@@ -268,42 +268,7 @@ static void _prime_signalling(xTimerHandle pxTimer)
 					//LED_Toggle(LED0);
 	}
 }
-#endif  // defined(CONF_BOARD_LCD_EN)
-
-#ifdef EXAMPLE_LED_SIGNALLING_ENABLE
-/**
- * \internal
- * \brief Periodic task to provide visual feedback that the system status.
- * \note Please see conf_oss file in order to configure the signalling.
- *
- */
-extern uint8_t macPLCState;
-static void _prime_signalling(xTimerHandle pxTimer)
-{
-	UNUSED(pxTimer);
-	LED_Toggle(LED0);
-
-	switch(macPLCState)
-	{
-		case 0:	 	//DISCONNECTED
-
-		break;
-
-		case 1:		//DETECTION
-
-		break;
-
-		case 2:		//REGISTERING
-
-		break;
-
-		case 3:		//OPERATIVE
-			LED_Toggle(LED1);
-		break;
-
-	}
-}
-#endif  // defined(EXAMPLE_LED_SIGNALLING_ENABLE)
+#endif //(defined(CONF_BOARD_LCD_EN) && defined(EXAMPLE_LCD_SIGNALLING_ENABLE))
 
 /**
  *  Configure UART console.

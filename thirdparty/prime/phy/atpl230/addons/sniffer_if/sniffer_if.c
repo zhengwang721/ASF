@@ -137,9 +137,11 @@ void sniffer_if_process(void)
 		// check if header type is beacon
 		if (x_read_msg.header_type == 0x2){
 			// Update SNA for CRC calculations
-			if (x_read_msg.mode == MODE_PRIME_V1_3){
+			if (x_read_msg.mode == MODE_TYPE_A){
 				memcpy(uc_sna, x_read_msg.data_buf+6, 6);
-			}else if (x_read_msg.mode == MODE_PRIME_PLUS){
+			}else if (x_read_msg.mode == MODE_TYPE_B){
+				memcpy(uc_sna, x_read_msg.data_buf+7, 6);
+			}else if (x_read_msg.mode == MODE_TYPE_BC){
 				memcpy(uc_sna, x_read_msg.data_buf+7, 6);
 			}
 		//update SNA configuration
@@ -153,9 +155,11 @@ void sniffer_if_process(void)
 #endif
 		us_sniffer_response_len = 0;
 
-		if (x_read_msg.mode == MODE_PRIME_V1_3){
+		if (x_read_msg.mode == MODE_TYPE_A){
 			uc_sniffer_rsp_buf[us_sniffer_response_len++] = SNIFFER_IF_PHY_MESSAGE_PRIME_1_3;
-		}else if (x_read_msg.mode == MODE_PRIME_PLUS){
+		}else if (x_read_msg.mode == MODE_TYPE_B){
+			uc_sniffer_rsp_buf[us_sniffer_response_len++] = SNIFFER_IF_PHY_MESSAGE_PRIME_PLUS;
+		}else if (x_read_msg.mode == MODE_TYPE_BC){
 			uc_sniffer_rsp_buf[us_sniffer_response_len++] = SNIFFER_IF_PHY_MESSAGE_PRIME_PLUS;
 		}else{
 			x_read_msg.data_len = 0;
@@ -196,10 +200,15 @@ void sniffer_if_process(void)
 		phy_get_cfg_param(REG_ATPL230_TXRXBUF_RECTIME1_RX0 + (x_read_msg.uc_buff_id*4), &ul_timeEnd, 4);
 
 		// Get length in microsec.
-		if (x_read_msg.mode == MODE_PRIME_V1_3){
+		if (x_read_msg.mode == MODE_TYPE_A){
 			ul_len = TIME_PRIME_1_3_PREAMBLE_US + TIME_PRIME_1_3_HEADER_US + (uc_symbols *  TIME_OFDM_SYMBOL_US);
-		}else{
+		}else if (x_read_msg.mode == MODE_TYPE_B){
 			ul_len = TIME_PRIME_PLUS_PREAMBLE_US + TIME_PRIME_PLUS_HEADER_US + ((x_read_msg.scheme > 6? uc_symbols *4 : uc_symbols)* TIME_OFDM_SYMBOL_US);
+		}else if (x_read_msg.mode == MODE_TYPE_BC){
+			ul_len = TIME_PRIME_1_3_PREAMBLE_US + TIME_PRIME_1_3_HEADER_US + TIME_PRIME_PLUS_PREAMBLE_US + TIME_PRIME_PLUS_HEADER_US +
+				((x_read_msg.scheme > 6? uc_symbols *4 : uc_symbols)* TIME_OFDM_SYMBOL_US);
+		}else{
+			ul_len = 0;
 		}
 
 		ul_timeIni = (ul_timeEnd - TIME_IN_TICS(ul_len));

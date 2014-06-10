@@ -56,11 +56,10 @@
 //*** Static Variables ********************************************************
 
 static long l_app_emu_seed; ///< Randomize seed
+static uint32_t ul_hundreds_of_ms = 0;
+uint32_t ul_tens_of_ms = 0;
 
-
-static uint32_t  ul_hundreds_of_ms;
-       uint32_t  ul_mili_seconds;
-       uint32_t  ul_time_app_emu;
+uint32_t  ul_time_app_emu;
 
 //*** Public Variables ********************************************************
 
@@ -138,18 +137,14 @@ void app_emu_fill_string(char * pc_str, uint16_t us_size, uint8_t uc_down_up,
 This function update application timers
 **************************************************************************/
 
-void app_emu_update_1ms(void)
+void app_emu_update_10ms(void)
 {
 	if (ul_time_app_emu){
 		ul_time_app_emu--;
 	}
 
-	ul_mili_seconds++;
-	if ((ul_mili_seconds % 100) == 0) {
+	if(ul_tens_of_ms++ == 10){
 		ul_hundreds_of_ms++;
-		if (ul_hundreds_of_ms == 864000) {		//24 hours
-			ul_hundreds_of_ms = 0;
-		}
 	}
 }
 

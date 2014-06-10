@@ -54,11 +54,17 @@
 //! \name Version information for ATPL230
 //@{
 #define ATPL230_COPYMSG            "Copyright (c) 2014 Atmel Corporation. All rights reserved."
-#define ATPL230_VERSION_STR        "23.00.01.01"
-#define ATPL230_VERSION_NUM        0x23000101
+#define ATPL230_VERSION_STR        "23.00.01.02"
+#define ATPL230_VERSION_NUM        0x23000102
 
 #if SAM4CP16_0
 #define ATPL230_PRODID             "SAM4CP16B "
+#elif SAM4CMP16_0
+#define ATPL230_PRODID             "SAM4CMP16C"
+#elif SAM4CMS16_0
+#define ATPL230_PRODID             "SAM4CMS16C"
+#elif SAM4C16_0
+#define ATPL230_PRODID             "SAM4C16C  "
 #elif SAM4S
 #define ATPL230_PRODID             "ATPL230   "
 #else

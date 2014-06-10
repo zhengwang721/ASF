@@ -56,10 +56,7 @@
 #define TASK_APPEMU_LAYER_STACK                   (configMINIMAL_STACK_SIZE * 4)
 
 /* Main Task Period */
-#define APPEMU_TIMER_RATE                         (5 / portTICK_RATE_MS)
-
-/* Update Timer Period */
-#define UPDATE_APPEMU_TIMER_RATE                  (1/ portTICK_RATE_MS)
+#define APPEMU_TIMER_RATE                         (10 / portTICK_RATE_MS)
 
 void vAppEmuInitTask(void);
 

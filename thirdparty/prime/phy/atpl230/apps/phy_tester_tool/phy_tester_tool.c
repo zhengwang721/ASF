@@ -194,19 +194,20 @@ int main( void )
 	/* Init Phy Layer */
 	phy_init(SERIAL_IF_ENABLE);
 
-	/* Init Serial Add on */
-	serial_if_init();
-
 	/* Usi Layer uC mode */
 	usi_init();
 
-	while (1) {
-		// blink led 0
-		if(b_led_swap){
-			b_led_swap = false;
-			LED_Toggle(LED0);
-		}
-		//updWatchDog ();
+    while (1) {
+        // blink led 0
+        if(b_led_swap){
+          b_led_swap = false;
+#if (BOARD == SAM4CMP_DB || BOARD == SAM4CMS_DB)
+          LED_Toggle(LED4);
+#else
+          LED_Toggle(LED0);
+#endif
+        }
+        //updWatchDog ();
 
 		// phy serialization
 		serial_if_check_tx_result();

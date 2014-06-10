@@ -128,6 +128,8 @@ static void _init_fu_info_list (void)
 	ioport_set_pin_level(PPLC_ARST_GPIO, PPLC_ARST_ACTIVE_LEVEL);
 	// Clear ARST of modem PLC
 	ioport_set_pin_level(PPLC_ARST_GPIO, PPLC_ARST_INACTIVE_LEVEL);
+#elif SAM4C || SAM4CM
+	;
 #else
 	// Reset on ARST of modem PLC
 	gpio_set_pin_low(PPLC_ARST_GPIO);

@@ -227,36 +227,41 @@ static uint8_t _blink_symbol(uint8_t icon_com, uint8_t icon_seg, uint8_t status)
  */
 extern uint8_t macPLCState;
 extern uint8_t connection432State;
+extern uint8_t certificationState;
 static uint8_t uc_blink_status;
 static void _prime_signalling(xTimerHandle pxTimer)
 {
 	UNUSED(pxTimer);
 	LED_Toggle(LED0);
 
-	switch(macPLCState){
-		case 0:  //DISCONNECTED
-			uc_blink_status = _blink_symbol(C42364A_ICON_WLESS, uc_blink_status);
-			c42364a_show_text((const uint8_t *)"SN DIS");
-			break;
+	if(certificationState == 1){
+		c42364a_show_text((const uint8_t *)"PHYCER");
+	}else{
+		switch(macPLCState){
+			case 0:  //DISCONNECTED
+				uc_blink_status = _blink_symbol(C42364A_ICON_WLESS, uc_blink_status);
+				c42364a_show_text((const uint8_t *)"SN DIS");
+				break;
 
-		case 1:  //DETECTION
-			uc_blink_status = _blink_symbol(C42364A_ICON_WLESS, uc_blink_status);
-			c42364a_show_text((const uint8_t *)"SN BCN");
-			break;
+			case 1:  //DETECTION
+				uc_blink_status = _blink_symbol(C42364A_ICON_WLESS, uc_blink_status);
+				c42364a_show_text((const uint8_t *)"SN BCN");
+				break;
 
-		case 2:  //REGISTERING
-			uc_blink_status = _blink_symbol(C42364A_ICON_WLESS, uc_blink_status);
-			c42364a_show_text((const uint8_t *)"SN REQ");
-			break;
+			case 2:  //REGISTERING
+				uc_blink_status = _blink_symbol(C42364A_ICON_WLESS, uc_blink_status);
+				c42364a_show_text((const uint8_t *)"SN REQ");
+				break;
 
-		case 3:  //OPERATIVE
-			c42364a_show_icon(C42364A_ICON_WLESS);
-			if(connection432State){
-				c42364a_show_text((const uint8_t *)"SN CON");
-			}else{
-				c42364a_show_text((const uint8_t *)"SN REG");
-			}
-			break;
+			case 3:  //OPERATIVE
+				c42364a_show_icon(C42364A_ICON_WLESS);
+				if(connection432State){
+					c42364a_show_text((const uint8_t *)"SN CON");
+				}else{
+					c42364a_show_text((const uint8_t *)"SN REG");
+				}
+				break;
+		}
 	}
 }
 #endif  // (defined(CONF_BOARD_LCD_EN) && defined(EXAMPLE_LCD_SIGNALLING_ENABLE))
@@ -282,7 +287,9 @@ static void configure_dbg_console(void)
  */
 int main( void )
 {
+#if (defined(CONF_BOARD_LCD_EN) && defined(EXAMPLE_LCD_SIGNALLING_ENABLE))
 	xTimerHandle xMonitorTimer;
+#endif
 
 	/* Prepare the hardware */
 	prvSetupHardware();
@@ -300,6 +307,7 @@ int main( void )
 		vAppEmuInitTask();
 	}
 
+#if (defined(CONF_BOARD_LCD_EN) && defined(EXAMPLE_LCD_SIGNALLING_ENABLE))
 	/* Create timer to monitor tasks execution */
 	xMonitorTimer = xTimerCreate(
 			(const signed char * const) "Monitor timer",/* Text name for debugging. */
@@ -310,6 +318,7 @@ int main( void )
 			);
 	configASSERT(xMonitorTimer);
 	xTimerStart(xMonitorTimer, SIGNALLING_TIMER_RATE);
+#endif
 
 	/* Start the tasks and timer running. */
 	vTaskStartScheduler();

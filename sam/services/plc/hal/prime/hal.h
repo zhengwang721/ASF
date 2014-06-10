@@ -65,6 +65,12 @@ extern "C" {
 
 #if SAM4CP
 #include "boot_regions_sam4cp16b_0.h"
+#elif SAM4CMP16_0
+#include "boot_regions_sam4cmp16c_0.h"
+#elif SAM4CMS16_0
+#include "boot_regions_sam4cms16c_0.h"
+#elif SAM4C
+#include "boot_regions_sam4c16c_0.h"
 #else
 #include "boot_regions_sam4sd32c.h"
 #endif

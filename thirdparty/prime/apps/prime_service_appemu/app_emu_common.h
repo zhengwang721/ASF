@@ -172,7 +172,7 @@ struct _tm {
 void app_emu_copy_timestamp (char * pc_timestamp, uint8_t * pc_base_cmd);
 void app_emu_fill_string(char * c_string, uint16_t us_size, uint8_t uc_down_up,
 							uint16_t us_step, char * c_timestamp);
-void app_emu_update_1ms(void);
+void app_emu_update_10ms(void);
 
 void app_emu_start(void);
 void app_emu_process(void);

@@ -15,6 +15,9 @@
 		<require idref="thirdparty.prime.mac_1_3"/>
 		<build type="doxygen-entry-point" value="serial_mac_prime_group"/>
 		<device-support value="atsam4cp16b_0"/>
+		<device-support value="atsam4cmp16c_0"/>
+		<device-support value="atsam4cms16c_0"/>
+		<device-support value="atsam4c16c_0"/>
 		<device-support value="atsam4sd32c"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>
 	</module>
@@ -34,6 +37,9 @@
 		<require idref="thirdparty.prime.mac_1_3"/>
 		<build type="doxygen-entry-point" value="serial_mlme_prime_group"/>
 		<device-support value="atsam4cp16b_0"/>
+		<device-support value="atsam4cmp16c_0"/>
+		<device-support value="atsam4cms16c_0"/>
+		<device-support value="atsam4c16c_0"/>
 		<device-support value="atsam4sd32c"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>
 	</module>
@@ -53,6 +59,9 @@
 		<require idref="thirdparty.prime.mac_1_3"/>
 		<build type="doxygen-entry-point" value="serial_plme_prime_group"/>
 		<device-support value="atsam4cp16b_0"/>
+		<device-support value="atsam4cmp16c_0"/>
+		<device-support value="atsam4cms16c_0"/>
+		<device-support value="atsam4c16c_0"/>
 		<device-support value="atsam4sd32c"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>
 	</module>
@@ -73,6 +82,9 @@
 		<require idref="thirdparty.prime.mac_1_3"/>
 		<build type="doxygen-entry-point" value="serial_sniffer_prime_group"/>
 		<device-support value="atsam4cp16b_0"/>
+		<device-support value="atsam4cmp16c_0"/>
+		<device-support value="atsam4cms16c_0"/>
+		<device-support value="atsam4c16c_0"/>
 		<device-support value="atsam4sd32c"/>
 		<generator value="doxygen-module" default-mcu="unspecified-sam4cp"/>
 	</module>

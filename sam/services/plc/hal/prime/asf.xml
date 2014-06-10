@@ -51,5 +51,68 @@
 			<device-support value="atsam4sd32c"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam4s"/>
 		</module>
+		<module type="service" id="sam.services.plc.hal.prime#2" caption="PRIME Hardware Abstraction Layer">			
+			<info type="description" value="summary">
+			Hardware Abstraction Layer for PRIME to use in SAM4CMP16C.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="PLC"/>
+				<keyword value="PRIME"/>
+			</info>
+			<build type="header-file" value="../../../../../thirdparty/prime/mac/mac_1_3/addons/bootloader/boot_regions_sam4cmp16c_0.h"/>
+			<build type="include-path" value="../../../../../thirdparty/prime/mac/mac_1_3/addons/bootloader/"/>
+			<build type="header-file" subtype="api" value="hal.h"/>
+			<build type="c-source" value="hal.c"/>
+			<build type="include-path" value="."/>
+			<build type="doxygen-entry-point" value="hal_prime_group"/>			
+			<require idref="sam.drivers.pio"/>
+			<require idref="sam.drivers.gpbr"/>
+			<require idref="sam.services.flash"/>
+			<require idref="sam.drivers.wdt"/>
+			<device-support value="atsam4cmp16c_0"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam4cm"/>
+		</module>
+		<module type="service" id="sam.services.plc.hal.prime#3" caption="PRIME Hardware Abstraction Layer">			
+			<info type="description" value="summary">
+			Hardware Abstraction Layer for PRIME to use in SAM4CMS16C.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="PLC"/>
+				<keyword value="PRIME"/>
+			</info>
+			<build type="header-file" value="../../../../../thirdparty/prime/mac/mac_1_3/addons/bootloader/boot_regions_sam4cms16c_0.h"/>
+			<build type="include-path" value="../../../../../thirdparty/prime/mac/mac_1_3/addons/bootloader/"/>
+			<build type="header-file" subtype="api" value="hal.h"/>
+			<build type="c-source" value="hal.c"/>
+			<build type="include-path" value="."/>
+			<build type="doxygen-entry-point" value="hal_prime_group"/>			
+			<require idref="sam.drivers.pio"/>
+			<require idref="sam.drivers.gpbr"/>
+			<require idref="sam.services.flash"/>
+			<require idref="sam.drivers.wdt"/>
+			<device-support value="atsam4cms16c_0"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam4cm"/>
+		</module>
+		<module type="service" id="sam.services.plc.hal.prime#4" caption="PRIME Hardware Abstraction Layer">			
+			<info type="description" value="summary">
+			Hardware Abstraction Layer for PRIME to use in SAM4C16C.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="PLC"/>
+				<keyword value="PRIME"/>
+			</info>
+			<build type="header-file" value="../../../../../thirdparty/prime/mac/mac_1_3/addons/bootloader/boot_regions_sam4c16c_0.h"/>
+			<build type="include-path" value="../../../../../thirdparty/prime/mac/mac_1_3/addons/bootloader/"/>
+			<build type="header-file" subtype="api" value="hal.h"/>
+			<build type="c-source" value="hal.c"/>
+			<build type="include-path" value="."/>
+			<build type="doxygen-entry-point" value="hal_prime_group"/>			
+			<require idref="sam.drivers.pio"/>
+			<require idref="sam.drivers.gpbr"/>
+			<require idref="sam.services.flash"/>
+			<require idref="sam.drivers.wdt"/>
+			<device-support value="atsam4c16c_0"/>
+			<generator value="doxygen-module" default-mcu="unspecified-sam4c"/>
+		</module>
 	</select-by-device>
 </asf>

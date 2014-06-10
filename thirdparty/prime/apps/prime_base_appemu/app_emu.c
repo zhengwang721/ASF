@@ -50,44 +50,15 @@
 
 #include "asf.h"
 
-/* Internal Function declarations */
-static void _prv_process_app_emu(void * pvParameters);
-static void _prv_update_app_emu(xTimerHandle pxTimer);
-
-/* Timers handlers */
-xTimerHandle xUpdateAppEmuTimer;
 /* Tasks handlers */
 xTaskHandle xAppEmuHnd;
 
-void vAppEmuInitTask(void)
-{
-	/* Create new task to AppEmu Application */
-	xTaskCreate(_prv_process_app_emu, (const signed char * const)"AppEmuTask",
-	TASK_APPEMU_LAYER_STACK, NULL, TASK_APPEMU_LAYER_PRIO, &xAppEmuHnd);
-
-	/* Create timer to update AppEmu*/
-	xUpdateAppEmuTimer = xTimerCreate((const signed char * const) "UpdAppEmu timer",/* A text name, purely to help debugging. */
-			UPDATE_APPEMU_TIMER_RATE, /* The timer period. */
-			pdTRUE, /* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-			NULL, /* The timer does not use its ID, so the ID is just set to NULL. */
-			_prv_update_app_emu /* The function that is called each time the timer expires. */
-			);
-
-	configASSERT(xUpdateAppEmuTimer);
-}
-
-void _prv_update_app_emu(xTimerHandle pxTimer)
-{
-	UNUSED(pxTimer);
-	app_emu_update_1ms();
-}
 
 /**
-* \brief Periodic task to process USI. Initialize and start USI layer and launch timer
-* to update internal counters.
+* \brief Periodic task to process App EMU.
 *
 */
-void _prv_process_app_emu(void * pvParameters)
+static void _prv_process_app_emu(void * pvParameters)
 {
 	static portTickType xLastWakeTime;
 	static portTickType xPeriod;
@@ -96,13 +67,27 @@ void _prv_process_app_emu(void * pvParameters)
 	/* Start AppEmu */
 	app_emu_start();
 
-	/* Start timer to update counters in phy layer */
-	xTimerStart(xUpdateAppEmuTimer, UPDATE_APPEMU_TIMER_RATE);
-
 	xPeriod = APPEMU_TIMER_RATE;
 	xLastWakeTime = xTaskGetTickCount();
 	for(;;){
 		vTaskDelayUntil(&xLastWakeTime, xPeriod);
+
+		taskENTER_CRITICAL();
 		app_emu_process();
+		app_emu_update_10ms();
+		taskEXIT_CRITICAL();
 	}
 }
+
+/**
+* \brief Initialization task to process App EMU.
+*
+*/
+void vAppEmuInitTask(void)
+{
+	/* Create new task to AppEmu Application */
+	xTaskCreate(_prv_process_app_emu, (const signed char * const)"AppEmuTask",
+	TASK_APPEMU_LAYER_STACK, NULL, TASK_APPEMU_LAYER_PRIO, &xAppEmuHnd);
+
+}
+
