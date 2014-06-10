@@ -7,7 +7,7 @@
 		<module type="service" id="thirdparty.os.freertos.version#7.0.0" caption="FreeRTOS - Kernel 7.0.0">
 			<info type="gui-flag" value="hidden"/>
 			<build type="include-path" value="."/>
-			<build type="header-file" value="freertos.h"/>
+			<build type="header-file" value="freertos_doxygen.h"/>
 			<device-support value="uc3a"/>
 			<device-support value="uc3a3_a4"/>
 			<device-support value="uc3b"/>
