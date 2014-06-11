@@ -205,27 +205,15 @@ static void prvSetupHardware(void)
 /**
  * \brief Display scheduler activity led.
  */
-static bool ledStatus = false;
 static void prvProcessMonitorTasks(xTimerHandle pxTimer)
 {
 	UNUSED(pxTimer);
 
-	if (ledStatus)
-	{
-		ledStatus = false;
 #if (BOARD == SAM4CMP_DB || BOARD == SAM4CMS_DB)
-          	LED_Off(LED4);
+	LED_Toggle(LED4);
 #else
-          	LED_Off(LED0);
+	LED_Toggle(LED0);
 #endif
-	} else {
-		ledStatus = true;
-#if (BOARD == SAM4CMP_DB || BOARD == SAM4CMS_DB)
-          	LED_On(LED4);
-#else
-          	LED_On(LED0);
-#endif
-	}
 }
 
 /**
@@ -264,11 +252,11 @@ int main( void )
 	/* Create timer to monitor tasks execution */
 	xMonitorTimer = xTimerCreate(
 		(const signed char * const) "Monitor timer",/* Text name for debugging. */
-			MONITOR_TIMER_RATE, /* The timer period. */
-			pdTRUE,/* This is an auto-reload timer, so xAutoReload is set to pdTRUE.*/
-			NULL, /* The timer does not use its ID, so the ID is just set to NULL. */
-			prvProcessMonitorTasks /* Function called each time the timer expires. */
-			);
+		MONITOR_TIMER_RATE, /* The timer period. */
+		pdTRUE,/* This is an auto-reload timer, so xAutoReload is set to pdTRUE.*/
+		NULL, /* The timer does not use its ID, so the ID is just set to NULL. */
+		prvProcessMonitorTasks /* Function called each time the timer expires. */
+	);
 	configASSERT(xMonitorTimer);
 	xTimerStart(xMonitorTimer, MONITOR_BLOCK_TIME);
 

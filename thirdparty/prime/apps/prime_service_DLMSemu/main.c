@@ -78,17 +78,11 @@
  *
  */
 
-/* Kernel includes. */
-#include "FreeRTOS.h"
-#include "task.h"
-
-/* Atmel boards includes. */
-#include "board.h"
 
 /* Atmel library includes. */
 #include "asf.h"
-#include "led.h"
-
+/* Atmel boards includes. */
+#include "board.h"
 /* Configuration includes. */
 #include "conf_board.h"
 #include "conf_example.h"
@@ -101,9 +95,7 @@
 						"-- "BOARD_NAME" --\r\n" \
 						"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
-#if (defined(CONF_BOARD_LCD_EN) && defined(EXAMPLE_LCD_SIGNALLING_ENABLE))
 static xTimerHandle xSignallingTimer = NULL;
-#endif
 
 /* FreeRTOS utils */
 void vApplicationIdleHook(void);
@@ -177,7 +169,7 @@ void vApplicationTickHook (void)
  */
 static void prvSetupHardware(void)
 {
-#ifdef CONF_BOARD_LCD_EN
+#ifdef EXAMPLE_LCD_SIGNALLING_ENABLE
 	status_code_t status;
 #endif
 
@@ -194,7 +186,7 @@ static void prvSetupHardware(void)
 	hal_init();
 	hal_start();
 
-#ifdef CONF_BOARD_LCD_EN
+#ifdef EXAMPLE_LCD_SIGNALLING_ENABLE
 	/* Initialize the C42364A LCD glass component. */
 	status = c42364a_init();
 	if (status != STATUS_OK) {
@@ -211,7 +203,7 @@ static void prvSetupHardware(void)
 #endif
 }
 
-#if (defined(CONF_BOARD_LCD_EN) && defined(EXAMPLE_LCD_SIGNALLING_ENABLE))
+#ifdef EXAMPLE_LCD_SIGNALLING_ENABLE
 /**
  * \internal
  * \brief Function to blink a symbol or led.
@@ -228,6 +220,7 @@ static uint8_t _blink_symbol(uint8_t icon_com, uint8_t icon_seg, uint8_t status)
 		return false;
 	}
 }
+#endif
 
 /**
  * \internal
@@ -236,12 +229,24 @@ static uint8_t _blink_symbol(uint8_t icon_com, uint8_t icon_seg, uint8_t status)
  *
  */
 extern uint8_t macPLCState;
+#ifdef EXAMPLE_LCD_SIGNALLING_ENABLE
 static uint8_t uc_blink_status;
+#endif
 static void _prime_signalling(xTimerHandle pxTimer)
 {
 	UNUSED(pxTimer);
 
+#if BOARD == SAM4CMP_DB
+	LED_Toggle(LED4);
+#elif BOARD == SAM4CMS_DB
+	LED_Toggle(LED4);
+#elif BOARD == SAM4C_EK
 	LED_Toggle(LED0);
+#else
+	LED_Toggle(LED0);
+#endif
+
+#ifdef EXAMPLE_LCD_SIGNALLING_ENABLE
 	switch (macPLCState) {
 		case 0:  //DISCONNECTED
 			uc_blink_status = _blink_symbol(C42364A_ICON_WLESS, uc_blink_status);
@@ -263,8 +268,8 @@ static void _prime_signalling(xTimerHandle pxTimer)
 			c42364a_show_text((const uint8_t *)"SN REG");
 			break;
 	}
+#endif
 }
-#endif //(defined(CONF_BOARD_LCD_EN) && defined(EXAMPLE_LCD_SIGNALLING_ENABLE))
 
 /**
  *  Configure UART console.
@@ -300,7 +305,6 @@ int main( void )
 	/* Start the DLMS lite task. */
 	vDLMSemuTask();
 
-	#if (defined(CONF_BOARD_LCD_EN) && defined(EXAMPLE_LCD_SIGNALLING_ENABLE))
 	/* Create timer to update counters in phy layer */
 	xSignallingTimer = xTimerCreate(
 		(const signed char * const) "Signal T",/* Text name for debugging. */
@@ -308,10 +312,9 @@ int main( void )
 		pdTRUE,/* This is an auto-reload timer, so xAutoReload is set to pdTRUE.*/
 		NULL, /* The timer does not use its ID, so the ID is just set to NULL. */
 		_prime_signalling  /* Function called each time the timer expires. */
-		);
+	);
 	configASSERT(xSignallingTimer);
 	xTimerStart(xSignallingTimer, SIGNALLING_BLOCK_TIME);
-	#endif
 
 	/* Start the tasks and timer running. */
 	vTaskStartScheduler();

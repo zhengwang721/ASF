@@ -66,6 +66,7 @@
 			<require idref="sam.drivers.uart"/>
 			<require idref="sam.drivers.gpbr"/>
 			<require idref="sam.drivers.rstc"/>
+			<require idref="sam.drivers.trng"/>
 			<require idref="sam.services.flash"/>
 			<require idref="thirdparty.prime.phy.atpl230"/>
 			<require idref="thirdparty.os.freertos.version"/>
@@ -90,6 +91,7 @@
 			<require idref="sam.drivers.uart"/>
 			<require idref="sam.drivers.gpbr"/>
 			<require idref="sam.drivers.rstc"/>
+			<require idref="sam.drivers.trng"/>
 			<require idref="sam.services.flash"/>
 			<require idref="thirdparty.prime.phy.atpl230"/>
 			<require idref="thirdparty.os.freertos.version"/>
@@ -114,6 +116,7 @@
 			<require idref="sam.drivers.uart"/>
 			<require idref="sam.drivers.gpbr"/>
 			<require idref="sam.drivers.rstc"/>
+			<require idref="sam.drivers.trng"/>
 			<require idref="sam.services.flash"/>
 			<require idref="thirdparty.prime.phy.atpl230"/>
 			<require idref="thirdparty.os.freertos.version"/>

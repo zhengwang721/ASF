@@ -15,6 +15,7 @@
 		<build type="header-file" value="conf_oss.h"/>
 		<build type="header-file" value="conf_prime.h"/>
 		<build type="header-file" value="conf_phy.h"/>
+		<build type="header-file" value="conf_example.h"/>
 		<build type="header-file" value="FreeRTOSConfig.h"/>
 		<config name="thirdparty.prime.mac_1_3" value="base"/>
 		<config name="thirdparty.prime.sscs_4_32" value="base"/>

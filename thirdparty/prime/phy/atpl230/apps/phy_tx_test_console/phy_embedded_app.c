@@ -90,18 +90,17 @@ static uint8_t sna[6] = {0x00, 0x80, 0xE1, 0x00, 0x00, 0x6F};
  {
   uint32_t ul_delay = 0x00FFFFFF;
 
-#if SAM4CP
+#if BOARD == SAM4CP16BMB
   // Reset on ARST of modem PLC
   ioport_set_pin_level(PPLC_ARST_GPIO, PPLC_ARST_ACTIVE_LEVEL);
   // Clear ARST of modem PLC
   ioport_set_pin_level(PPLC_ARST_GPIO, PPLC_ARST_INACTIVE_LEVEL);
-#elif SAM4CM
-  ;
-#else
-  // Reset on ARST of modem PLC
+#elif  BOARD == ATPL230AMB// Reset on ARST of modem PLC
   gpio_set_pin_low(PPLC_ARST_GPIO);
   // Clear ARST of modem PLC
   gpio_set_pin_high(PPLC_ARST_GPIO);
+#else
+  ;
 #endif
 
   // Wait to initialize system

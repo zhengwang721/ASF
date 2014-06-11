@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Chip-specific sleep manager configuration
+ * \brief Example configuration for ATMEL PRIME v1.3 Service Node
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,10 +40,15 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_SLEEPMGR_H
-#define CONF_SLEEPMGR_H
 
-// Sleep manager options
-#define CONFIG_SLEEPMGR_ENABLE
+#ifndef CONF_EXAMPLE_H
+#define CONF_EXAMPLE_H
 
-#endif /* CONF_SLEEPMGR_H */
+
+/* Enable LCD signalling */
+//#define EXAMPLE_LCD_SIGNALLING_ENABLE
+/* Signalling Indication Period */
+#define SIGNALLING_TIMER_RATE          (250 / portTICK_RATE_MS)
+
+
+#endif/* CONF_EXAMPLE_H */

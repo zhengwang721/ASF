@@ -6,10 +6,8 @@
 		<build type="header-file" value="conf_buart_if.h"/>
 		<build type="header-file" value="conf_busart_if.h"/>
 		<build type="header-file" value="conf_clock.h"/>
-		<build type="header-file" value="conf_app_emu.h"/>
-		<build type="header-file" value="conf_slcdc.h"/>			
-		<build type="header-file" value="conf_c42364a_slcdc.h"/>			
-		<build type="header-file" value="conf_sleepmgr.h"/>		
+		<build type="header-file" value="conf_app_emu.h"/>		
+		<build type="header-file" value="conf_example.h"/>		
 		<build type="header-file" value="conf_uart_serial.h"/>
 		<build type="header-file" value="conf_usi.h"/>
 		<build type="header-file" value="conf_oss.h"/>

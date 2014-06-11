@@ -46,7 +46,7 @@
 
 
 /* Enable LCD signalling */
-#define EXAMPLE_LCD_SIGNALLING_ENABLE
+//#define EXAMPLE_LCD_SIGNALLING_ENABLE
 /* Signalling Indication Period */
 #define SIGNALLING_TIMER_RATE          (250 / portTICK_RATE_MS)
 

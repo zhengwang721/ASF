@@ -41,18 +41,11 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H
-#define CONF_EXAMPLE_H
+#ifndef CONF_APP_EMU_H
+#define CONF_APP_EMU_H
 
 /* Enable debug printouts */
 #define APPEMU_DEBUG
-
-/* Enable LCD signalling */
-#define EXAMPLE_LCD_SIGNALLING_ENABLE
-/* Signalling Indication Period */
-#define SIGNALLING_TIMER_RATE          (250 / portTICK_RATE_MS)
-/* Signalling block time */
-#define SIGNALLING_BLOCK_TIME          (1000 / portTICK_RATE_MS)
 
 /* APPEMU: ON/OFF JUMPER CONFIG */
 #define PIN_APPEMU_GPIO      (PIO_PC3_IDX)
@@ -64,4 +57,4 @@
 #define PIN_APPEMU_TYPE      PIO_INPUT
 #define PIN_APPEMU_ATTR      PIO_DEBOUNCE | PIO_PULLUP
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#endif /* CONF_APP_EMU_H */

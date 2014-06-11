@@ -96,10 +96,12 @@ usi_status_t usi_send_cmd(void *msg) __attribute__ ((weak, alias("Dummy_sniffer_
 static x_usi_sniffer_cmd_params x_phy_sniffer_msg;
 //@}
 
+#ifdef BSP_LED_SUPPORT
 //! \name Led indicator
 //@{
 static uint8_t uc_sniffer_led_enable;
 //@}
+#endif
 
 /*! \name Data buffers
     \note In noise mode: num symbols in rx noise mode is 8 and 97 bytes/symbol, so
@@ -302,7 +304,11 @@ void sniffer_if_init (uint8_t uc_enable_led)
 
 	x_phy_sniffer_msg.uc_protocol_type = 0x13;
 
+#ifdef BSP_LED_SUPPORT
 	uc_sniffer_led_enable = uc_enable_led;
+#else
+	UNUSED(uc_enable_led);
+#endif
 
 	phy_mac_crc_disable();
 	phy_set_cfg_param(REG_ATPL230_SNA0, uc_sna, sizeof(uc_sna));

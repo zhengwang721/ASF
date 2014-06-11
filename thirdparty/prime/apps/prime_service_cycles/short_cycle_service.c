@@ -51,7 +51,6 @@
 #include "asf.h"
 
 /* Internal Function declarations */
-static void prv_update_cycles(xTimerHandle pxTimer);
 static void prv_process_cycles_app(void * pvParameters);
 
 /* Tasks handlers */

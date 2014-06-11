@@ -87,6 +87,7 @@
 /* AppEmu includes */
 #include "app_emu.h"
 #include "conf_app_emu.h"
+#include "conf_example.h"
 
 #define STRING_EOL    "\r"
 #define STRING_HEADER "-- ATMEL Prime Service Node Metering Application Emulator --\r\n" \
@@ -165,7 +166,7 @@ void vApplicationTickHook( void )
  */
 static void prvSetupHardware(void)
 {
-#ifdef CONF_BOARD_LCD_EN
+#ifdef EXAMPLE_LCD_SIGNALLING_ENABLE
 	status_code_t status;
 #endif
 
@@ -182,7 +183,7 @@ static void prvSetupHardware(void)
 	hal_init();
 	hal_start();
 
-#ifdef CONF_BOARD_LCD_EN
+#ifdef EXAMPLE_LCD_SIGNALLING_ENABLE
 	/* Initialize the C42364A LCD glass component. */
 	status = c42364a_init();
 	if (status != STATUS_OK) {
@@ -201,7 +202,7 @@ static void prvSetupHardware(void)
 	ioport_set_pin_dir(PIN_APPEMU_GPIO, IOPORT_DIR_INPUT);
 }
 
-#if (defined(CONF_BOARD_LCD_EN) && defined(EXAMPLE_LCD_SIGNALLING_ENABLE))
+#ifdef EXAMPLE_LCD_SIGNALLING_ENABLE
 /**
  * \internal
  * \brief Function to blink a symbol or led.
@@ -218,22 +219,33 @@ static uint8_t _blink_symbol(uint8_t icon_com, uint8_t icon_seg, uint8_t status)
 		return false;
 	}
 }
-
+#endif
 /**
  * \internal
  * \brief Periodic task to provide visual feedback that the system status.
  * \note Please see conf_oss file in order to configure the signalling.
  *
  */
+#ifdef EXAMPLE_LCD_SIGNALLING_ENABLE
 extern uint8_t macPLCState;
 extern uint8_t connection432State;
 extern uint8_t certificationState;
 static uint8_t uc_blink_status;
+#endif
 static void _prime_signalling(xTimerHandle pxTimer)
 {
 	UNUSED(pxTimer);
+#if BOARD == SAM4CMP_DB
+	LED_Toggle(LED4);
+#elif BOARD == SAM4CMS_DB
+	LED_Toggle(LED4);
+#elif BOARD == SAM4C_EK
 	LED_Toggle(LED0);
+#else
+	LED_Toggle(LED0);
+#endif
 
+#ifdef EXAMPLE_LCD_SIGNALLING_ENABLE
 	if(certificationState == 1){
 		c42364a_show_text((const uint8_t *)"PHYCER");
 	}else{
@@ -263,8 +275,8 @@ static void _prime_signalling(xTimerHandle pxTimer)
 				break;
 		}
 	}
+#endif
 }
-#endif  // (defined(CONF_BOARD_LCD_EN) && defined(EXAMPLE_LCD_SIGNALLING_ENABLE))
 
 /**
  *  Configure UART console.
@@ -287,9 +299,7 @@ static void configure_dbg_console(void)
  */
 int main( void )
 {
-#if (defined(CONF_BOARD_LCD_EN) && defined(EXAMPLE_LCD_SIGNALLING_ENABLE))
 	xTimerHandle xMonitorTimer;
-#endif
 
 	/* Prepare the hardware */
 	prvSetupHardware();
@@ -307,7 +317,6 @@ int main( void )
 		vAppEmuInitTask();
 	}
 
-#if (defined(CONF_BOARD_LCD_EN) && defined(EXAMPLE_LCD_SIGNALLING_ENABLE))
 	/* Create timer to monitor tasks execution */
 	xMonitorTimer = xTimerCreate(
 			(const signed char * const) "Monitor timer",/* Text name for debugging. */
@@ -318,7 +327,6 @@ int main( void )
 			);
 	configASSERT(xMonitorTimer);
 	xTimerStart(xMonitorTimer, SIGNALLING_TIMER_RATE);
-#endif
 
 	/* Start the tasks and timer running. */
 	vTaskStartScheduler();
