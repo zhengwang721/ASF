@@ -96,6 +96,8 @@
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
+ *  -# Set ADC configurations
+ *     \snippet qs_adc_basic.c setup_set_config
  *  -# Enable the ADC module so that conversions can be made.
  *     \snippet qs_adc_basic.c setup_enable
  *
