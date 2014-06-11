@@ -3,21 +3,6 @@
     <info type="description" value="summary">
     Bootloader with FU management capability.
     </info>
-    <module type ="service" caption="Bootloader for ATPL230AMB" id="thirdparty.prime.mac_1_3.addons.bootloader#0">
-      <info type="description" value="summary">
-      Bootloader with FU management capability for ATPL230AMB.
-      </info>
-	  <info type="keyword" value="technology">
-		<keyword value="PLC"/>
-		<keyword value="PRIME"/>
-	  </info>
-	  <info type="gui-flag" value="hidden"/>
-      <build type="c-source" value="bootloader.c"/>
-	  <build type="header-file" subtype="api" value="./boot_regions_sam4sd32c.h"/>
-      <build type="include-path" value="."/>
-      <require idref="sam.services.flash"/>
-      <device-support value="atsam4sd32c"/>
-    </module>
     <module type ="service" caption="Bootloader for SAM4CP16BMB" id="thirdparty.prime.mac_1_3.addons.bootloader#1">
       <info type="description" value="summary">
       Bootloader with FU management capability for SAM4CP16BMB.
