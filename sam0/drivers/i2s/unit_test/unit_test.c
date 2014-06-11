@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 I2S Unit test
+ * \brief SAM I2S Unit test
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage SAM D21 I2S Unit Test
+ * \mainpage SAM I2S Unit Test
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *

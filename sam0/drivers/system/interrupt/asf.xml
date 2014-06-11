@@ -1,7 +1,7 @@
 ﻿<asf xmlversion="1.0">
 	<module type="meta" id="sam0.drivers.system.interrupt.appnote" caption="SYSTEM - Interrupt Driver Application Note">
 		<info type="description" value="summary">
-			Driver for the SAM D20/D21/R21/D10/D11 Interrupt System. Provides a unified
+			Driver for the SAM Interrupt System. Provides a unified
 			interface for the configuration and management interrupts within
 			the device, including the enabling, disabling and entering, leaving
 			of critical sections.

@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.sercom.i2c.master" name="config.sam0.drivers.sercom.i2c.master" caption="SERCOM I2C - Master Mode I2C" default="callback">
 		<info type="description" value="summary">
-			Driver for the SAM D20/D21/R21/D10/D11 SERCOM I2C module in Master Mode. Provides a
+			Driver for the SAM SERCOM I2C module in Master Mode. Provides a
 			unified interface for the configuration and management of the
 			SERCOM module in I2C mode.
 		</info>
@@ -48,7 +48,7 @@
 
 	<select-by-config id="sam0.drivers.sercom.i2c.slave" name="config.sam0.drivers.sercom.i2c.slave" caption="SERCOM I2C - Slave Mode I2C" default="callback">
 		<info type="description" value="summary">
-			Driver for the SAM D20/D21/R21/D10/D11 SERCOM I2C module in Slave Mode. Provides a
+			Driver for the SAM SERCOM I2C module in Slave Mode. Provides a
 			unified interface for the configuration and management of the
 			SERCOM module in I2C mode.
 		</info>
@@ -209,7 +209,7 @@
 
 		<info type="description" value="pdf">
 			This document describes how to use the I2C in master mode on the
-			SAM D20/D21/R21/D10/D11, both the ASF driver and the peripheral itself.
+			SAM, both the ASF driver and the peripheral itself.
 		</info>
 
 		<build type="include-path" value="." />
@@ -268,7 +268,7 @@
 
 		<info type="description" value="pdf">
 			This document describes how to use the I2C in slave mode on the
-			SAM D20/D21/R21/D10/D11, both the ASF driver and the peripheral itself.
+			SAM, both the ASF driver and the peripheral itself.
 		</info>
 
 		<build type="include-path" value="." />

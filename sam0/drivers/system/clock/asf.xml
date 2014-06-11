@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="meta" id="sam0.drivers.system.clock.appnote" caption="SYSTEM - Clock Management Application Note">
 		<info type="description" value="summary">
-			Driver for the SAM D20/D21/R21/D10/D11 Clock management units. Provides a unified
+			Driver for the SAM Clock management units. Provides a unified
 			interface for the configuration and management of the various clocks
 			in the device, including the bus and generic peripheral clocks.
 		</info>
@@ -20,7 +20,7 @@
 
 		<info type="description" value="pdf">
 			This document describes how to use the Clock and Generic Clock on
-			the SAM D20/D21/R21/D10/D11, both the ASF driver and the peripheral itself.
+			the SAM, both the ASF driver and the peripheral itself.
 		</info>
 
 		<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>

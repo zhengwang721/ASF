@@ -52,14 +52,19 @@
 #include <conf_spi_master_vec.h>
 
 /**
- * \defgroup asfdoc_sam0_sercom_spi_master_vec_group SAM D20/D21/R21/D10/D11 Serial Peripheral Interface Master Driver w/ Vectored I/O (SERCOM SPI)
+ * \defgroup asfdoc_sam0_sercom_spi_master_vec_group SAM Serial Peripheral Interface Master Driver w/ Vectored I/O (SERCOM SPI)
  *
- * This driver for SAM D20/D21/R21/D10/D11 devices provides an interface for the configuration
+ * This driver for SAM devices provides an interface for the configuration
  * and operation of the SERCOM module in SPI master mode and uses vectored I/O
  * for data transfers.
  *
  * The following peripherals are used by this driver:
  * - SERCOM (Serial Communication Interface)
+ *
+ * The following devices can use this driver:
+ *  - SAM D20/D21
+ *  - SAM R21
+ *  - SAM D10/D11
  *
  * The reader is assumed to be familiar with the regular SERCOM SPI driver, and
  * how it is configured and operated. Configuration of this driver is done a

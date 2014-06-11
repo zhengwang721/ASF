@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21/D10/D11 RTC Count Callback Quick Start
+ * \brief SAM RTC Count Callback Quick Start
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21/D10/D11 Serial Peripheral Interface Driver
+ * \brief SAM Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -45,9 +45,9 @@
 #define SPI_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_sercom_spi_group SAM D20/D21/R21/D10/D11 Serial Peripheral Interface Driver (SERCOM SPI)
+ * \defgroup asfdoc_sam0_sercom_spi_group SAM Serial Peripheral Interface Driver (SERCOM SPI)
  *
- * This driver for SAM D20/D21/R21/D10/D11 devices provides an interface for the configuration
+ * This driver for SAM devices provides an interface for the configuration
  * and management of the SERCOM module in its SPI mode to transfer SPI  data
  * frames. The following driver API modes are covered by this manual:
  *
@@ -57,8 +57,12 @@
  * \endif
  *
  * The following peripherals are used by this module:
- *
  * - SERCOM (Serial Communication Interface)
+ *
+ * The following devices can use this module:
+ *  - SAM D20/D21
+ *  - SAM R21
+ *  - SAM D10/D11
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_sercom_spi_prerequisites
