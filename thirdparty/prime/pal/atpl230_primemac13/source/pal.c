@@ -855,7 +855,7 @@ uint8_t pal_get_cfg_ex (uint16_t us_id, void *p_val, uint16_t uc_len)
 		phy_get_cfg_param(REG_ATPL230_TXRXBUF_RMSCALC1_TX0 +
 				((x_pal_tx_res.uc_id_buffer)<<1), p_val, 2);
 	}else if(us_id == PAL_ID_CHECK_CFG){
-		phy_get_cfg_param(REG_ATPL230_AES_DATA0, p_val, 1);
+		phy_get_cfg_param(0xFFBF, p_val, 1);
 	}else if(us_id == PAL_ID_ENABLE_CRC){
 		*((uint8_t *)p_val) = uc_pal_crc_enable;
 	}else{

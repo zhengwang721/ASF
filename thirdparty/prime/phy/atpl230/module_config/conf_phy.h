@@ -44,9 +44,6 @@
 #ifndef CONF_PHY_H_INCLUDE
 #define CONF_PHY_H_INCLUDE
 
-/* Use PHY in microcontroller mode */
-//#define ATPL230_USE_UC_MODE
-
 /* Select Coupling Board Configuration (see values in atpl230.h) */
 #define BOARD_COUPLING   ATPLCOUP000_v2
 

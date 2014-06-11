@@ -775,17 +775,12 @@ static void _correct_offset_symbol(void)
 			ul_offset_value = ul_data_offset_correction[us_symb_tx_count & 0x0F];
 		}else{
 			if(uc_correct_psk_flag){
-//				if(us_symb_tx_count < 3){
-//					uc_correct_filter = true;
-//					ul_offset_value = ul_data_offset_correction[NUM_ROWS_DATA_OFFSET_CORRECTION - 1];
-//				}else{
-					uc_correct_filter = true;
-					if(us_symb_tx_count & 0x01){
-						ul_offset_value = ul_data_offset_correction[15];
-					}else{
-						ul_offset_value = ul_data_offset_correction[6];
-					}
-//				}
+				uc_correct_filter = true;
+				if(us_symb_tx_count & 0x01){
+					ul_offset_value = ul_data_offset_correction[15];
+				}else{
+					ul_offset_value = ul_data_offset_correction[6];
+				}
 			}else{
 				uc_correct_filter = true;
 				ul_offset_value = ul_data_offset_correction[us_symb_tx_count & 0x0F];
@@ -794,16 +789,16 @@ static void _correct_offset_symbol(void)
 	}
 
 	if(uc_correct_filter){
-	    for(uc_row=0, us_idx=3; uc_row<NUM_ROWS_DATA_ANGLE_REAL_IMAG_COMP; uc_row++){
-		    *(puc_offset_buf + us_idx++) = (uint8_t)(ul_offset_value>>24);
-		    *(puc_offset_buf + us_idx++) = (uint8_t)(ul_offset_value>>16);
-		    *(puc_offset_buf + us_idx++) = (uint8_t)(ul_offset_value>>8);
-		    *(puc_offset_buf + us_idx++) = (uint8_t)(ul_offset_value);
-		    us_idx += 4;
-	    }
-	    // Correct offset
-	    pplc_if_write_rep( REG_ATPL230_LOAD_ADDRL, 7, puc_offset_buf, sizeof(puc_offset_buf));
-	    pplc_if_and8(REG_ATPL230_LOAD_CTL, 0xDF);
+		for(uc_row=0, us_idx=3; uc_row<NUM_ROWS_DATA_ANGLE_REAL_IMAG_COMP; uc_row++){
+			*(puc_offset_buf + us_idx++) = (uint8_t)(ul_offset_value>>24);
+			*(puc_offset_buf + us_idx++) = (uint8_t)(ul_offset_value>>16);
+			*(puc_offset_buf + us_idx++) = (uint8_t)(ul_offset_value>>8);
+			*(puc_offset_buf + us_idx++) = (uint8_t)(ul_offset_value);
+			us_idx += 4;
+		}
+		// Correct offset
+		pplc_if_write_rep( REG_ATPL230_LOAD_ADDRL, 7, puc_offset_buf, sizeof(puc_offset_buf));
+		pplc_if_and8(REG_ATPL230_LOAD_CTL, 0xDF);
 	}
 }
 
@@ -910,10 +905,11 @@ static uint8_t _update_channel (uint8_t uc_channel)
 */
 static void _update_txrx1_polarity (uint8_t uc_pol)
 {
-  if(uc_pol)
-    pplc_if_or8(REG_ATPL230_AFE_CTL, 0x01);
-  else
-    pplc_if_and8(REG_ATPL230_AFE_CTL, 0xFE);
+	if(uc_pol){
+		pplc_if_or8(REG_ATPL230_AFE_CTL, 0x01);
+	}else{
+		pplc_if_and8(REG_ATPL230_AFE_CTL, 0xFE);
+	}
 }
 
 /**
@@ -924,10 +920,11 @@ static void _update_txrx1_polarity (uint8_t uc_pol)
 */
 static void _update_txrx2_polarity (uint8_t uc_pol)
 {
-	if(uc_pol)
+	if(uc_pol){
 		pplc_if_or8(REG_ATPL230_AFE_CTL, 0x02);
-	else
+	}else{
 		pplc_if_and8(REG_ATPL230_AFE_CTL, 0xFD);
+	}
 }
 
 /**
@@ -1204,7 +1201,7 @@ static void _init_phy_layer (uint8_t uc_rst_type)
 	pplc_if_write8(REG_ATPL230_AGC_CTL_AUX, 0x28);
 
 	// Write valid chip configuration key
-	pplc_if_write8 (REG_ATPL230_AES_DATA0, ATPL230_VALID_CFG_KEY);
+	pplc_if_write8 (0xFFBF, ATPL230_VALID_CFG_KEY);
 
 	// Clear tx interrupt flags
 	pplc_if_write8 (REG_ATPL230_TXRXBUF_TX_INT, 0x00);
@@ -2339,15 +2336,7 @@ void phy_rx_frame_cb (xPhyMsgRx_t *px_msg)
 		px_msg->evm_payload_acum = 0;
 	}
 	// get rx time
-//	if(px_msg->scheme & 0x08){
-//		// robo mode = TIMER_BEACON_REF +PREAMBLE_ROBUST +SYNCHRO_DETECTION+ ROBO_RX_TIME_OFFSET
-//		//           = TIMER_BEACON_REF +       819.2    +       43.2      + ROBO_RX_TIME_OFFSET
-//		px_msg->rx_time = pplc_if_read32(REG_ATPL230_ROBO_RX_TIME_OFFSET + (uc_buf_idx<<2));
-//	}else{
 		px_msg->rx_time = pplc_if_read32(REG_ATPL230_TXRXBUF_RECTIME1_RX0 + (uc_buf_idx<<2));
-//	}
-
-
 	// reset phy interrupt flag
 	_reset_rx_flag_interrupt(uc_buf_idx);
 }

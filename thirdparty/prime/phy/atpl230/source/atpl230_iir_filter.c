@@ -282,5 +282,3 @@ const uint32_t ul_data_offset_correction [NUM_ROWS_DATA_OFFSET_CORRECTION] = {
 };
 
 //! @}
-
-
