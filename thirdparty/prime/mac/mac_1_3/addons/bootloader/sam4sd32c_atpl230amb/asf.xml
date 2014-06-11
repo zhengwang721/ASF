@@ -1,5 +1,8 @@
 <asf xmlversion="1.0">
 	<project caption="Bootloader for ATPL230AMB" id="thirdparty.prime.mac_1_3.addons.bootloader.atpl230amb">
+		<info type="description" value="summary">
+			Bootloader with FU management capability for ATPL230AMB.
+		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
