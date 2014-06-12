@@ -256,7 +256,6 @@ extern "C" {
  */
 
 #include <compiler.h>
-#include <gclk.h>
 
 /**
  * \name Driver feature definition
@@ -268,6 +267,8 @@ extern "C" {
 #  define FEATURE_SYSTEM_CLOCK_DPLL
 #endif
 /*@}*/
+
+#include <gclk.h>
 
 /**
  * \brief Available start-up times for the XOSC32K
@@ -498,32 +499,6 @@ enum system_clock_dfll_quick_lock {
 	SYSTEM_CLOCK_DFLL_QUICK_LOCK_ENABLE,
 	/** Disable the QuickLock feature for strict lock requirements on the DFLL */
 	SYSTEM_CLOCK_DFLL_QUICK_LOCK_DISABLE = SYSCTRL_DFLLCTRL_QLDIS,
-};
-
-/**
- * \brief Available clock sources in the system
- *
- * Clock sources available to the GCLK generators
- */
-enum system_clock_source {
-	/** Internal 8MHz RC oscillator */
-	SYSTEM_CLOCK_SOURCE_OSC8M    = GCLK_SOURCE_OSC8M,
-	/** Internal 32kHz RC oscillator */
-	SYSTEM_CLOCK_SOURCE_OSC32K   = GCLK_SOURCE_OSC32K,
-	/** External oscillator */
-	SYSTEM_CLOCK_SOURCE_XOSC     = GCLK_SOURCE_XOSC ,
-	/** External 32kHz oscillator */
-	SYSTEM_CLOCK_SOURCE_XOSC32K  = GCLK_SOURCE_XOSC32K,
-	/** Digital Frequency Locked Loop (DFLL) */
-	SYSTEM_CLOCK_SOURCE_DFLL     = GCLK_SOURCE_DFLL48M,
-	/** Internal Ultra Low Power 32kHz oscillator */
-	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
-#ifdef FEATURE_SYSTEM_CLOCK_DPLL
-	/** Digital Phase Locked Loop (DPLL).
-	 * Check \c FEATURE_SYSTEM_CLOCK_DPLL for which device support it.
-	 */
-	SYSTEM_CLOCK_SOURCE_DPLL     = GCLK_SOURCE_FDPLL,
-#endif
 };
 
 /**
