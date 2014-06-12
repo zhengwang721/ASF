@@ -105,7 +105,7 @@ static inline void usart_serial_getchar(
 		struct usart_module *const module,
 		uint8_t *c)
 {
-	uint16_t temp;
+	uint16_t temp = 0;
 
 	usart_read_wait(module, &temp);
 
