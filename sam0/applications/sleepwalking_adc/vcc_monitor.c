@@ -1,7 +1,7 @@
 /*
  * \file
  *
- * \brief SAM D20/D21/R21/D10/D11 ADC Sleepwalking Example
+ * \brief SAM ADC Sleepwalking Example
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage SAM D20/D21/R21/D10/D11 ADC Sleepwalking Example
+ * \mainpage SAM ADC Sleepwalking Example
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
@@ -55,7 +55,7 @@
  */
 
 /**
- * \page appdoc_main SAM D20/D21/R21/D10/D11 ADC Sleepwalking Example
+ * \page appdoc_main SAM ADC Sleepwalking Example
  *
  * Overview:
  * - \ref appdoc_sam0_adc_sleepwalking_intro
@@ -69,6 +69,9 @@
  * operation, where the input voltage is measured at a fixed interval,
  * but the device is not woken from sleep  until the measured value is below
  * a given threshold; in this application 0.5 Volts.
+ *
+ * This application has been tested on following boards:
+ * - SAM D20/D21/R21/D11 Xplained Pro
  *
  * \section appdoc_sam0_adc_sleepwalking_setup Hardware Setup
  * This application use AIN0 as ADC input channel.

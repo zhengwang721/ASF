@@ -605,7 +605,7 @@
  * channels, number of outputs, are dependent on the TCC module instance being
  * used.
  *
- * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM D21/R21 TCC Feature List
+ * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM TCC Feature List
  * For SAM D21/R21, the TCC features are as follow:
  * \anchor asfdoc_sam0_tcc_features_d21
  * <table>

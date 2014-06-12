@@ -50,8 +50,8 @@
  * \page appdoc_preface Overview
  * This unit test carries out tests for the I2S driver.
  * It consists of test cases for the following functionalities:
- *      - Test for polled mode transmit/receive of I2S.
- *      - Test for callback mode transmit/receive of I2S.
+ *  - Test for polled mode transmit/receive of I2S.
+ *  - Test for callback mode transmit/receive of I2S.
  */
 
 /**
@@ -70,7 +70,7 @@
  * Tests will be performed for data transmitting and receiving of I2S.
  *
  * The following kit is required for carrying out the test:
- *      - SAM D21 Xplained Pro board
+ *  - SAM D21 Xplained Pro board
  *
  * \section appdoc_sam0_i2s_unit_test_setup Setup
  * The following connections has to be made using wires:
