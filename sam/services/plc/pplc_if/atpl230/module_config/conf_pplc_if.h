@@ -286,4 +286,6 @@
 #define PPLC_SRST_TYPE   PIO_OUTPUT_1
 #define PPLC_SRST_ATTR   PIO_DEFAULT
 
+#endif /* BOARD */
+
 #endif  /* CONF_PPLC_IF_H_INCLUDE */
