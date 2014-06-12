@@ -44,6 +44,8 @@
 #ifndef BOOT_REGIONS_SAM4C_H_INCLUDED
 #define BOOT_REGIONS_SAM4C_H_INCLUDED
 
+#include "compiler.h"
+
 /* Bootloader regions */
 #define BOOT_REGIONS                        2
 

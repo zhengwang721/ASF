@@ -132,7 +132,7 @@ static void prvAppPhyTask(void * pvParameters)
 
   /* Init RESET check validation value */
   ul_check_reset_value = APP_CHECK_RESET_VALUE;
-  phy_set_cfg_param(REG_ATPL230_AES_KEY3, &ul_check_reset_value, sizeof(ul_check_reset_value));
+  phy_set_cfg_param(0xFFAC, &ul_check_reset_value, sizeof(ul_check_reset_value));
 
   xPeriod = xTxPhyCfg.ul_tx_period / portTICK_RATE_MS;
   xLastWakeTime = xTaskGetTickCount();
@@ -141,7 +141,7 @@ static void prvAppPhyTask(void * pvParameters)
     vTaskDelayUntil(&xLastWakeTime, xPeriod);
 
     /* Check Reset config value */
-    phy_get_cfg_param(REG_ATPL230_AES_KEY3, &ul_check_reset_value, sizeof(ul_check_reset_value));
+    phy_get_cfg_param(0xFFAC, &ul_check_reset_value, sizeof(ul_check_reset_value));
     if(ul_check_reset_value != APP_CHECK_RESET_VALUE){
       _reset_plc_modem();
       // reset phy layer
@@ -161,7 +161,7 @@ static void prvAppPhyTask(void * pvParameters)
       }
       // config reset detect value
       ul_check_reset_value = APP_CHECK_RESET_VALUE;
-      phy_set_cfg_param(REG_ATPL230_AES_KEY3, &ul_check_reset_value, sizeof(ul_check_reset_value));
+      phy_set_cfg_param(0xFFAC, &ul_check_reset_value, sizeof(ul_check_reset_value));
     }
 
     if(uart_read(CONSOLE_UART, &uc_choice)){

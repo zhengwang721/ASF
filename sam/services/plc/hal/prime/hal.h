@@ -72,7 +72,7 @@ extern "C" {
 #elif SAM4C
 #include "boot_regions_sam4c16c_0.h"
 #else
-#include "boot_regions_sam4sd32c.h"
+#  error No known Atmel PLC boot defined
 #endif
 
 //! \name Length of MAC Address
