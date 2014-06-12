@@ -56,36 +56,6 @@ extern "C" {
 #endif
 
 /**
- * \brief Available clock sources in the system
- *
- * Clock sources available to the GCLK generators
- */
-enum system_clock_source {
-	/** Internal 8MHz RC oscillator */
-	SYSTEM_CLOCK_SOURCE_OSC8M    = GCLK_SOURCE_OSC8M,
-	/** Internal 32kHz RC oscillator */
-	SYSTEM_CLOCK_SOURCE_OSC32K   = GCLK_SOURCE_OSC32K,
-	/** External oscillator */
-	SYSTEM_CLOCK_SOURCE_XOSC     = GCLK_SOURCE_XOSC ,
-	/** External 32kHz oscillator */
-	SYSTEM_CLOCK_SOURCE_XOSC32K  = GCLK_SOURCE_XOSC32K,
-	/** Digital Frequency Locked Loop (DFLL) */
-	SYSTEM_CLOCK_SOURCE_DFLL     = GCLK_SOURCE_DFLL48M,
-	/** Internal Ultra Low Power 32kHz oscillator */
-	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
-	/** Generator input pad */
-	SYSTEM_CLOCK_SOURCE_GCLKIN     = GCLK_SOURCE_GCLKIN,
-	/** Generic clock generator 1 output */
-	SYSTEM_CLOCK_SOURCE_GCLKGEN1   = GCLK_SOURCE_GCLKGEN1,
-#ifdef FEATURE_SYSTEM_CLOCK_DPLL
-	/** Digital Phase Locked Loop (DPLL).
-	 * Check \c FEATURE_SYSTEM_CLOCK_DPLL for which device support it.
-	 */
-	SYSTEM_CLOCK_SOURCE_DPLL     = GCLK_SOURCE_FDPLL,
-#endif
-};
-
-/**
  * \brief List of available GCLK generators.
  *
  * List of Available GCLK generators. This enum is used in the peripheral
@@ -171,8 +141,8 @@ enum gclk_generator {
  * the user application.
  */
 struct system_gclk_gen_config {
-	/** Source clock input channel index. */
-	enum system_clock_source source_clock;
+	/** Source clock input channel index, please see the \ref system_clock_source. */
+	uint8_t source_clock;
 	/** If \c true, the generator output level is high when disabled. */
 	bool high_when_disabled;
 	/** Integer division factor of the clock output compared to the input. */
@@ -258,7 +228,7 @@ static inline void system_gclk_gen_get_config_defaults(
 	/* Default configuration values */
 	config->division_factor    = 1;
 	config->high_when_disabled = false;
-	config->source_clock       = SYSTEM_CLOCK_SOURCE_OSC8M;
+	config->source_clock       = GCLK_SOURCE_OSC8M;
 	config->run_in_standby     = false;
 	config->output_enable      = false;
 }
