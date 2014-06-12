@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.sercom" caption="SERCOM">
 		<info type="description" value="summary">
-		Core common driver for the SAM D20/D21/R21/D10/D11 SERCOM module.
+		Core common driver for the SAM SERCOM module.
 		</info>
 
 		<info type="gui-flag" value="hidden"/>

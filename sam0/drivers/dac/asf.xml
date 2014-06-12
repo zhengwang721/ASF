@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.dac" name="config.sam0.drivers.dac" caption="DAC - Digital-to-Analog Converter" default="callback">
 		<info type="description" value="summary">
-			Driver for the SAM D20/D21/D10/D11 Digital to Analog Converter. Provides a unified
+			Driver for the SAM Digital to Analog Converter. Provides a unified
 			interface for the configuration and management of the DAC in the
 			device, including channel configuration and conversions.
 		</info>
@@ -37,7 +37,7 @@
 
 			<info type="description" value="pdf">
 				This document describes how to use the Digital-to-Analog
-				Converter on the SAM D20/D21/D10/D11, both the ASF driver and the
+				Converter on the SAM, both the ASF driver and the
 				peripheral itself.
 			</info>
 
@@ -69,7 +69,7 @@
 
 			<info type="description" value="pdf">
 				This document describes how to use the Digital-to-Analog
-				Converter on the SAM D20/D21/D10/D11, both the ASF driver and the
+				Converter on the SAM, both the ASF driver and the
 				peripheral itself.
 			</info>
 

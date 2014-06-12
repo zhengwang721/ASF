@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21/D10/D11 TC - Timer Counter Callback Driver Quick Start
+ * \brief SAM TC - Timer Counter Callback Driver Quick Start
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *

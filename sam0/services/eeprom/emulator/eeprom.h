@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21/D10/D11 EEPROM Emulator
+ * \brief SAM EEPROM Emulator
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -44,15 +44,19 @@
 #define EEPROM_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_eeprom_group SAM D20/D21/R21/D10/D11 EEPROM Emulator Service (EEPROM)
+ * \defgroup asfdoc_sam0_eeprom_group SAM EEPROM Emulator Service (EEPROM)
  *
- * This driver for SAM D20/D21/R21/D10/D11 devices provides an emulated EEPROM memory space in
+ * This driver for SAM devices provides an emulated EEPROM memory space in
  * the device's FLASH memory, for the storage and retrieval of user-application
  * configuration data into and out of non-volatile memory.
  *
  * The following peripherals are used by this module:
- *
  *  - NVM (Non-Volatile Memory Controller)
+ *
+ * The following devices can use this module:
+ *  - SAM D20/D21
+ *  - SAM R21
+ *  - SAM D10/D11
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_eeprom_prerequisites
@@ -65,7 +69,7 @@
  *
  * \section asfdoc_sam0_eeprom_prerequisites Prerequisites
  *
- * The SAM D20/D21/R21/D10/D11 device fuses must be configured via an external programmer or
+ * The SAM device fuses must be configured via an external programmer or
  * debugger, so that an EEPROM section is allocated in the main NVM flash
  * memory contents. If a NVM section is not allocated for the EEPROM emulator,
  * or if insufficient space for the emulator is reserved, the module will fail
@@ -74,7 +78,7 @@
  *
  * \section asfdoc_sam0_eeprom_module_overview Module Overview
  *
- * As the SAM D20/D21/R21/D10/D11 devices do not contain any physical EEPROM memory, the storage
+ * As the SAM devices do not contain any physical EEPROM memory, the storage
  * of non-volatile user data is instead emulated using a special section of the
  * device's main FLASH memory. The use of FLASH memory technology over EEPROM
  * presents several difficulties over true EEPROM memory; data must be written
@@ -119,7 +123,7 @@
  * entire emulated EEPROM space.
  *
  * \subsubsection asfdoc_sam0_eeprom_module_overview_implementation_pf Physical Memory
- * The SAM D20/D21/R21/D10/D11 non-volatile FLASH is divided into a number of physical rows, each
+ * The SAM non-volatile FLASH is divided into a number of physical rows, each
  * containing four identically sized flash pages. Pages may be read or written
  * to individually, however pages must be erased before being reprogrammed and
  * the smallest granularity available for erasure is one single row.

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21/D10/D11 LED Toggle Example
+ * \brief SAM LED Toggle Example
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage SAM D20/D21/R21/D10/D11 LED Toggle Example
+ * \mainpage SAM LED Toggle Example
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
@@ -53,7 +53,7 @@
  */
 
 /**
- * \page appdoc_main SAM D20/D21/R21/D10/D11 LED Toggle Example
+ * \page appdoc_main SAM LED Toggle Example
  *
  * Overview:
  * - \ref appdoc_sam0_led_toggle_app_intro
@@ -65,6 +65,9 @@
  * \section appdoc_sam0_led_toggle_app_intro Introduction
  * This application demonstrates a simple example to turn on the board LED when
  * a button is pressed, using a variety of methods and modules within the device.
+ *
+ * This application has been tested on following boards:
+ * - SAM D20/D21/R21/D11 Xplained Pro
  *
  * \section appdoc_sam0_led_toggle_app_usage Usage
  * When run, press the board button to turn on the board LED, release to turn

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/D10/D11 Peripheral Digital-to-Analog Converter Driver
+ * \brief SAM Peripheral Digital-to-Analog Converter Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define DAC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_dac_group SAM D20/D21/D10/D11 Digital-to-Analog Driver (DAC)
+ * \defgroup asfdoc_sam0_dac_group SAM Digital-to-Analog Driver (DAC)
  *
- * This driver for SAM D20/D21/D10/D11 devices provides an interface for the conversion of
+ * This driver for SAM devices provides an interface for the conversion of
  * digital values to analog voltage. The following driver API modes are covered
  * by this manual:
  *
@@ -56,8 +56,11 @@
  * \endif
  *
  * The following peripherals are used by this module:
- *
  *  - DAC (Digital to Analog Converter)
+ *
+ * The following devices can use this module:
+ *  - SAM D20/D21
+ *  - SAM D10/D11
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_dac_prerequisites
@@ -76,7 +79,7 @@
  * \section asfdoc_sam0_dac_module_overview Module Overview
  *
  * The Digital-to-Analog converter converts a digital value to analog voltage.
- * The SAM D20/D21/D10/D11 DAC module has one channel with 10-bit resolution,
+ * The SAM DAC module has one channel with 10-bit resolution,
  * and is capable of converting up to 350k samples per second (ksps).
  *
  * A common use of DAC is to generate audio signals by connecting the DAC

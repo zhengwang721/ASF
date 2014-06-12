@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21/D10/D11 RTC Driver (Calendar Mode)
+ * \brief SAM RTC Driver (Calendar Mode)
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
