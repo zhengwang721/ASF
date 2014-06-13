@@ -65,9 +65,9 @@
 #endif
 
 /** Definition of length of symbols */
-#define NUM_SYMBOLS_D     6
+#define NUM_SYMBOLS_D     4
 #define SYMBOL_D_LEN      7
-#define NUM_SYMBOLS_A     6
+#define NUM_SYMBOLS_A     5
 #define SYMBOL_A_LEN      14
 
 /* Symbol pixel array definition */
@@ -81,14 +81,13 @@ const enum c42364a_symbol_pixel symbol_d[NUM_SYMBOLS_D][SYMBOL_D_LEN] = {C42364A
                                                    C42364A_PATTERN_SYMBOL_D2, \
                                                    C42364A_PATTERN_SYMBOL_D3};
 
-const enum c42364a_symbol_pixel symbol_a1[SYMBOL_A_LEN] = C42364A_PATTERN_SYMBOL_A1;
 const enum c42364a_symbol_pixel symbol_a2[SYMBOL_A_LEN] = C42364A_PATTERN_SYMBOL_A2;
 const enum c42364a_symbol_pixel symbol_a3[SYMBOL_A_LEN] = C42364A_PATTERN_SYMBOL_A3;
 const enum c42364a_symbol_pixel symbol_a4[SYMBOL_A_LEN] = C42364A_PATTERN_SYMBOL_A4;
 const enum c42364a_symbol_pixel symbol_a5[SYMBOL_A_LEN] = C42364A_PATTERN_SYMBOL_A5;
 const enum c42364a_symbol_pixel symbol_a6[SYMBOL_A_LEN] = C42364A_PATTERN_SYMBOL_A6;
 
-const enum c42364a_symbol_pixel symbol_a[NUM_SYMBOLS_A][SYMBOL_A_LEN] = {C42364A_PATTERN_SYMBOL_A1, \
+const enum c42364a_symbol_pixel symbol_a[NUM_SYMBOLS_A][SYMBOL_A_LEN] = {
                                                    C42364A_PATTERN_SYMBOL_A2, \
                                                    C42364A_PATTERN_SYMBOL_A3, \
                                                    C42364A_PATTERN_SYMBOL_A4, \
