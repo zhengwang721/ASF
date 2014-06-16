@@ -17,7 +17,7 @@
 		<config name="config.compiler.as5_arm.create_aux" value="no"/>
 		<config name="config.compiler.iarewarm.input_image_file" value="$PROJ_DIR$\..\..\project_core1\iar\core1_image.bin"/>
 		<config name="config.compiler.iarewarm.input_image_symbol" value="core1_image"/>
-		<config name="config.build.studio.prebuild" value="mv -f $(SolutionDir)/core1_image.bin $(SolutionDir)/../../src_core0/core1_image.bin"/>
+		<config name="config.build.studio.prebuild" value="mv -f $(SolutionDir)/core1_image.bin $(MSBuildProjectDirectory)/src/core1_image.bin"/>
 		<device-support value="atsam4c16c_0"/>
 	</project>
 </asf>
