@@ -198,9 +198,9 @@ static struct usart_module usart_instance;
 /* Return Messages that can be sent to master by SPI slave or I2C slave */
 static uint8_t ret_msg[][RET_DATA_LENGTH] = {
 	{0},
-	{'W', 'e', 'l', 'c', 'o', 'm', 'e', '!'},
-	{'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!'},
-	{'A', 't', 'm', 'e', 'l', ' ', 'S', 'a', 'm', 'D', '1', 'x', '!'}
+	{'W', 'e', 'l', 'c', 'o', 'm', 'e', '!', 0},
+	{'H', 'e', 'l', 'l', 'o', ' ', 'W', 'o', 'r', 'l', 'd', '!', 0},
+	{'A', 't', 'm', 'e', 'l', ' ', 'S', 'a', 'm', 'D', '1', 'x', '!', 0}
 };
 
 /* Buffer size for USART receiver array */
@@ -246,7 +246,7 @@ static void usart_read_callback(const struct usart_module *const usart_module)
 	spi_write_buffer = temp;
 #endif
 	}
-	usart_read_buffer_job(usart_module, (uint8_t *)usart_read_buffer, USART_DATA_LENGTH);
+	usart_read_buffer_job((struct usart_module *const)usart_module, (uint8_t *)usart_read_buffer, USART_DATA_LENGTH);
 }
 #endif
 
