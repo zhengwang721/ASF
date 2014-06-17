@@ -45,17 +45,17 @@
 #define CONF_PRIME_H_INCLUDED
 
 /* PRIME MODE */
-#define PRIME_BASE
+#define PRIME_SERVICE_NODE
 
-/* Firmware Information */
-#define PRIME_FW_VENDOR     "ATMEL"
-#define PRIME_FW_MODEL      "SAM4CMPDB/000"
-#define PRIME_FW_VERSION    "01.03.08.01"
+/* Firmware Information	*/
+#define PRIME_FW_VENDOR             "ATMEL"
+#define PRIME_FW_MODEL              "SAM4CMPDB/000"
+#define PRIME_FW_VERSION            "01.03.08.01"
 
 /* Prime PIB firmware information */
-#define PRIME_PIB_VENDOR       0x0000
-#define PRIME_PIB_MODEL        0x3430
-#define PRIME_PIB_VERSION_LEN  8
-#define PRIME_PIB_VERSION      "01030801"
+#define PRIME_PIB_VENDOR            0x0000
+#define PRIME_PIB_MODEL             0x3430
+#define PRIME_PIB_VERSION_LEN       8
+#define PRIME_PIB_VERSION           "01030801"
 
 #endif /* CONF_PRIME_H_INCLUDED */
