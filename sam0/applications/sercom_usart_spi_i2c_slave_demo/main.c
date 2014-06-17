@@ -51,9 +51,14 @@
  * This demo can run three modes for communication between SERCOM SPI slave with USART
  * or I2C slave with USART.
  * It consists of three modes for the following functionalities:
- *      - Mode 0: Communication for USART and I2C slave (read & write with I2C master).
- *      - Mode 1: Communication for USART and SPI slave (read & write with SPI master).
- *      - Mode 2: Communication for USART and SPI/I2C slave (read only with SPI/I2C master).
+ * - Mode 0: I2C slave read & write with I2C master. In this mode, the message which received from
+ * I2C master will display on terminal by USART. And user can choose the specific message by key in
+ * related char and send them to I2C master.
+ * - Mode 1: SPI slave read & write with SPI master. In this mode, the message which received from
+ * SPI master will display on terminal by USART. And user can choose the specific message by key in
+ * related char and send them to SPI master.
+ * - Mode 2: SPI/I2C slave only read with SPI/I2C master. In this mode, the message both received from
+ * SPI master or I2C master will display on terminal by USART.
  */
 
 /**
@@ -69,8 +74,9 @@
  * \section appdoc_sam0_com_usart_spi_i2c_slave_demo_intro Introduction
  * \copydetails appdoc_preface
  *
- * The following kit is required for carrying out the test:
- *      - SAM D11 Xplained Pro board
+ * The following kit is required for running the application:
+ * - SAM D11 Xplained Pro board
+ * - other boards which can play as SPI master or I2C master for validation
  *
  * \section appdoc_sam0_com_usart_spi_i2c_slave_demo_setup Setup
  * The following connections should be made using wires in related mode:
@@ -82,6 +88,8 @@
  * - I2C module
  *  - \b SDA:   EXT2 PIN11 (PA08)
  *  - \b SCL:   EXT2 PIN12 (PA09)
+ * \note the wires should be connected correctly with master, otherwise the application will
+ * run unexpectedly.
  *
  * To run the test:
  *  - Connect the SAM D11 Xplained Pro board with SPI master board / I2C master board.
@@ -124,7 +132,7 @@ extern "C" {
 #define	I2C_RD_WR_MODE	0
 /* SPI slave read & write mode */
 #define	SPI_RD_WR_MODE	1
-/* I2C slave and SPI slave read only mode */
+/* I2C/SPI slave read only mode */
 #define SPI_I2C_RD_MODE	2
 
 /* Running mode selection */
