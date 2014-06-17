@@ -417,6 +417,8 @@ status_code_t freertos_twi_write_packet_async(freertos_twi_if p_twi,
 				twi_enable_interrupt(
 						all_twi_definitions[twi_index].peripheral_base_address,
 						IER_ERROR_INTERRUPTS);
+				/* Release semaphores */
+				xSemaphoreGive(tx_dma_control[twi_index].peripheral_access_mutex);
 			} else {
 
 				twis[twi_index].buffer = p_packet->buffer;
@@ -622,6 +624,8 @@ status_code_t freertos_twi_read_packet_async(freertos_twi_if p_twi,
 				twi_enable_interrupt(
 						all_twi_definitions[twi_index].peripheral_base_address,
 						IER_ERROR_INTERRUPTS);
+				/* Release semaphores */
+				xSemaphoreGive(tx_dma_control[twi_index].peripheral_access_mutex);
 			} else {
 				/* Start the PDC reception. */
 				twis[twi_index].buffer = p_packet->buffer;
