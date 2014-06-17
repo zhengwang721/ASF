@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21/D10/D11 Clock Driver
+ * \brief SAM Clock Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -48,9 +48,9 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_system_clock_group SAM D20/D21/R21/D10/D11 System Clock Management Driver (SYSTEM CLOCK)
+ * \defgroup asfdoc_sam0_system_clock_group SAM System Clock Management Driver (SYSTEM CLOCK)
  *
- * This driver for SAM D20/D21/R21/D10/D11 devices provides an interface for the configuration
+ * This driver for SAM devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection and
@@ -61,6 +61,11 @@ extern "C" {
  * - GCLK (Generic Clock Management)
  * - PM (Power Management)
  * - SYSCTRL (Clock Source Control)
+ *
+ * The following devices can use this module:
+ *  - SAM D20/D21
+ *  - SAM R21
+ *  - SAM D10/D11
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_system_clock_prerequisites
@@ -77,7 +82,7 @@ extern "C" {
  *
  *
  * \section asfdoc_sam0_system_clock_module_overview Module Overview
- * The SAM D20/D21/R21/D10/D11 devices contain a sophisticated clocking system, which is designed
+ * The SAM devices contain a sophisticated clocking system, which is designed
  * to give the maximum flexibility to the user application. This system allows
  * a system designer to tune the performance and power consumption of the device
  * in a dynamic manner, to achieve the best trade-off between the two for a
@@ -101,7 +106,7 @@ extern "C" {
  * selected device supports those features.
  *
  * \subsection asfdoc_sam0_system_clock_module_overview_clock_sources Clock Sources
- * The SAM D20/D21/R21/D10/D11 devices have a number of master clock source modules, each of
+ * The SAM devices have a number of master clock source modules, each of
  * which being capable of producing a stabilized output frequency which can then
  * be fed into the various peripherals and modules within the device.
  *
@@ -153,7 +158,7 @@ extern "C" {
  * module, but will reduce the overall device power consumption.
  *
  * \subsection asfdoc_sam0_system_clock_module_overview_gclk Generic Clocks
- * Within the SAM D20/D21/R21/D10/D11 devices are a number of Generic Clocks; these are used to
+ * Within the SAM devices are a number of Generic Clocks; these are used to
  * provide clocks to the various peripheral clock domains in the device in a
  * standardized manner. One or more master source clocks can be selected as the
  * input clock to a Generic Clock Generator, which can prescale down the input

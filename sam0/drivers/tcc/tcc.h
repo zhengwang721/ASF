@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21/R21/D10/D11 TCC - Timer Counter for Control Applications Driver
+ * \brief SAM TCC - Timer Counter for Control Applications Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -45,9 +45,9 @@
 #define TCC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_tcc_group SAM D21/R21/D10/D11 Timer Counter for Control Applications Driver (TCC)
+ * \defgroup asfdoc_sam0_tcc_group SAM Timer Counter for Control Applications Driver (TCC)
  *
- * This driver for SAM D21/R21/D10/D11 devices provides an interface for the configuration
+ * This driver for SAM devices provides an interface for the configuration
  * and management of the TCC module within the device, for waveform
  * generation and timing operations. It also provides extended options for
  * control applications.
@@ -61,8 +61,12 @@
  * \endif
  *
  * The following peripherals are used by this module:
- *
  *  - TCC (Timer/Counter for Control Applications)
+ *
+ * The following devices can use this module:
+ *  - SAM D21
+ *  - SAM R21
+ *  - SAM D10/D11
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_tcc_prerequisites
@@ -89,7 +93,7 @@
  * Please refer \ref asfdoc_sam0_tcc_special_considerations_tcc_d21 and
  * \ref asfdoc_sam0_tcc_special_considerations_tcc_d11 for details on TCC instances.
  *
- * The TCC module for the SAM D21/R21/D10/D11 includes the following functions:
+ * The TCC module for the SAM includes the following functions:
  *
  * - Generation of PWM signals
  * - Generation of timestamps for events
@@ -183,7 +187,7 @@
  * etc. - see the \ref asfdoc_sam0_system_clock_group "Generic Clock driver" for
  * more information.
  *
- * Each TCC module in the SAM D21/R21/D10/D11 has its own individual clock prescaler, which
+ * Each TCC module in the SAM has its own individual clock prescaler, which
  * can be used to divide the input clock frequency used by the counter. This
  * prescaler only scales the clock used to provide clock pulses for the counter
  * to count, and does not affect the digital register interface portion of
@@ -601,7 +605,7 @@
  * channels, number of outputs, are dependent on the TCC module instance being
  * used.
  *
- * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM D21/R21 TCC Feature List
+ * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM TCC Feature List
  * For SAM D21/R21, the TCC features are as follow:
  * \anchor asfdoc_sam0_tcc_features_d21
  * <table>

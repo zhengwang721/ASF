@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21/D10/D11 Non-Volatile Memory driver
+ * \brief SAM Non-Volatile Memory driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -44,15 +44,19 @@
 #define NVM_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_nvm_group SAM D20/D21/R21/D10/D11 Non-Volatile Memory Driver (NVM)
+ * \defgroup asfdoc_sam0_nvm_group SAM Non-Volatile Memory Driver (NVM)
  *
- * This driver for SAM D20/D21/R21/D10/D11 devices provides an interface for the configuration
+ * This driver for SAM devices provides an interface for the configuration
  * and management of non-volatile memories within the device, for partitioning,
  * erasing, reading and writing of data.
  *
  * The following peripherals are used by this module:
- *
  *  - NVM (Non-Volatile Memory)
+ *
+ * The following devices can use this module:
+ *  - SAM D20/D21
+ *  - SAM R21
+ *  - SAM D10/D11
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_nvm_prerequisites
@@ -75,7 +79,7 @@
  * erased and reconfigured in a standardized manner.
  *
  * \subsection asfdoc_sam0_nvm_module_overview_regions Memory Regions
- * The NVM memory space of the SAM D20/D21/R21/D10/D11 devices is divided into two sections:
+ * The NVM memory space of the SAM devices is divided into two sections:
  * a Main Array section, and an Auxiliary space section. The Main Array space
  * can be configured to have an (emulated) EEPROM and/or boot loader section.
  * The memory layout with the EEPROM and bootloader partitions is shown in
