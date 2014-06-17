@@ -64,7 +64,7 @@ extern "C" {
 
 //! \name PRIME Stack priority
 //@{
-#define TASK_PRIME_PRIO                    (tskIDLE_PRIORITY + 1)
+#define TASK_PRIME_PRIO                    (tskIDLE_PRIORITY + 3)
 //@}
 
 //! \name PRIME Stack definition
