@@ -288,7 +288,7 @@ static void spi_slave_finish_callback(const struct spi_module *const module)
 static void spi_slave_init(void)
 {
 	spi_register_callback(&spi_slave_instance, spi_slave_finish_callback,
-	SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE);
+		SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE);
 	spi_enable_callback(&spi_slave_instance, SPI_CALLBACK_SLAVE_TRANSMISSION_COMPLETE);
 #if DEMO_RUN_MODE == SPI_RD_WR_MODE
 	spi_transceive_buffer_job(&spi_slave_instance, spi_write_buffer,spi_read_buffer, SPI_DATA_LENGTH);
@@ -401,15 +401,15 @@ static void configure_i2c_slave_callbacks(void)
 {
 #if  DEMO_RUN_MODE == I2C_RD_WR_MODE
 	i2c_slave_register_callback(&i2c_slave_instance, i2c_read_request_callback,
-	I2C_SLAVE_CALLBACK_READ_REQUEST);
+		I2C_SLAVE_CALLBACK_READ_REQUEST);
 	i2c_slave_enable_callback(&i2c_slave_instance,
-	I2C_SLAVE_CALLBACK_READ_REQUEST);
+		I2C_SLAVE_CALLBACK_READ_REQUEST);
 #endif
 
 	i2c_slave_register_callback(&i2c_slave_instance, i2c_write_request_callback,
-	I2C_SLAVE_CALLBACK_WRITE_REQUEST);
+		I2C_SLAVE_CALLBACK_WRITE_REQUEST);
 	i2c_slave_enable_callback(&i2c_slave_instance,
-	I2C_SLAVE_CALLBACK_WRITE_REQUEST);
+		I2C_SLAVE_CALLBACK_WRITE_REQUEST);
 }
 #endif
 
@@ -442,7 +442,7 @@ static void show_menu(void)
 static void configure_usart_callbacks(void)
 {
 	usart_register_callback(&usart_instance,
-	usart_read_callback, USART_CALLBACK_BUFFER_RECEIVED);
+		usart_read_callback, USART_CALLBACK_BUFFER_RECEIVED);
 
 	usart_enable_callback(&usart_instance, USART_CALLBACK_BUFFER_RECEIVED);
 }
