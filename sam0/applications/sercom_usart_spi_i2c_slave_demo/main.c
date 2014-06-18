@@ -52,13 +52,13 @@
  * or I2C slave with USART.
  * It consists of three modes for the following functionalities:
  * - Mode 0: I2C slave read & write with I2C master. In this mode, the message which received from
- * I2C master will display on terminal by USART. And user can choose the specific message by key in
- * related char and send them to I2C master.
+ * I2C master will display on terminal by USART. Press the key according to the menu and I2C slave
+ * will send them to I2C master.
  * - Mode 1: SPI slave read & write with SPI master. In this mode, the message which received from
- * SPI master will display on terminal by USART. And user can choose the specific message by key in
- * related char and send them to SPI master.
+ * SPI master will display on terminal by USART. Press the key according to the menu and SPI slave
+ * will send them to SPI master.
  * - Mode 2: SPI/I2C slave only read with SPI/I2C master. In this mode, the message both received from
- * SPI master or I2C master will display on terminal by USART.
+ * SPI master and I2C master will display on terminal by USART.
  */
 
 /**
@@ -91,7 +91,7 @@
  * \note the wires should be connected correctly with master, otherwise the application will
  * run unexpectedly.
  *
- * To run the test:
+ * To run the application:
  *  - Connect the SAM D11 Xplained Pro board with SPI master board / I2C master board.
  *  - Connect the SAM D11 Xplained Pro board to the computer using a
  *    micro USB cable.
@@ -102,15 +102,18 @@
  *  - Build the project, program the target and run the application.
  *    The terminal shows related info according to the running mode.
  *
- * \section appdoc_sam0_spi_unit_test_usage Usage
- *  - In Mode 0, the message received from I2C master will be reported in terminal and
- *  I2C slave will send back related message to I2C master, depending on the char which
- *  is key in terminal.
- *  - In Mode 1, the message received from SPI master will be reported in terminal and
- *  SPI slave will send back related message to SPI master, depending on the char which
- *  is key in terminal.
- *  - In Mode 2, the message received from both SPI master and I2C master will be reported
+ * \section appdoc_sam0_com_usart_spi_i2c_slave_demo_usage
+ *  - In Mode 0, the message received from I2C master will display in terminal. User can press
+ *  the key according to menu, and I2C slave will send back message to I2C master.
+ *  - In Mode 1, the message received from SPI master will display in terminal. User can press
+ *  the key according to menu, and SPI slave will send back message to SPI master.
+ *  - In Mode 2, the message received from both SPI master and I2C master will display
  *  in terminal.
+ *
+ * Application Menu:
+ * - Press 'W': Return Welcome! to master.
+ * - Press 'H': Return Hello world! to master.
+ * - Press 'A': Return Atmel SamD1x! to master.
  *
  * \section appdoc_sam0_com_usart_spi_i2c_slave_demo_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for ARM.
@@ -128,20 +131,41 @@
 extern "C" {
 #endif
 
+/* Buffer size for SPI receiver array */
+#define SPI_DATA_LENGTH 20
+
+/* Buffer size for I2C receiver array */
+#define I2C_DATA_LENGTH 20
+
+/* Address for I2C slave */
+#define I2C_SLAVE_ADDRESS 0x12
+
+/* Baud rate for USART */
+#define CONF_USART_BAUDRATE 9600
+
+/* Buffer size for USART receiver array */
+#define USART_DATA_LENGTH 1
+
+/* Buffer size for Return Message array */
+#define RET_DATA_LENGTH 20
+
 /* I2C slave read & write mode */
-#define	I2C_RD_WR_MODE	0
+#define I2C_RD_WR_MODE 0
+
 /* SPI slave read & write mode */
-#define	SPI_RD_WR_MODE	1
+#define SPI_RD_WR_MODE 1
+
 /* I2C/SPI slave read only mode */
-#define SPI_I2C_RD_MODE	2
+#define SPI_I2C_RD_MODE 2
 
 /* Running mode selection */
-#define DEMO_RUN_MODE		SPI_I2C_RD_MODE
+#define DEMO_RUN_MODE SPI_I2C_RD_MODE
+
+/* Structures for USART instance */
+static struct usart_module usart_instance;
+
 
 #if DEMO_RUN_MODE == SPI_I2C_RD_MODE || DEMO_RUN_MODE == SPI_RD_WR_MODE
-/* Buffer size for SPI receiver array */
-#define SPI_DATA_LENGTH		20
-
 /* Flag whether SPI slave receive is done */
 static volatile bool spi_slave_rd_flag = false;
 
@@ -156,17 +180,12 @@ static uint8_t *spi_write_buffer;
 /* Structures for SPI slave instance selection */
 static struct spi_module spi_slave_instance;
 
-/* Declaration for SPI slave initialization  */
+/* Declaration for SPI slave initialization */
 static void spi_slave_init(void);
 #endif
 
+
 #if DEMO_RUN_MODE == SPI_I2C_RD_MODE || DEMO_RUN_MODE == I2C_RD_WR_MODE
-/* Buffer size for I2C receiver array */
-#define I2C_DATA_LENGTH		20
-
-/* Address for I2C slave */
-#define I2C_SLAVE_ADDRESS	0x12
-
 /* Flag whether I2C slave receive is done */
 static volatile bool i2c_slave_rd_flag = false;
 
@@ -185,16 +204,8 @@ static struct i2c_slave_packet wr_packet;
 #endif
 #endif
 
-/* Baud rate for USART */
-#define CONF_USART_BAUDRATE	9600
-
-/* Structures for USART instance */
-static struct usart_module usart_instance;
 
 #if DEMO_RUN_MODE == I2C_RD_WR_MODE ||  DEMO_RUN_MODE == SPI_RD_WR_MODE
-/* Buffer size for Return Message array */
-#define RET_DATA_LENGTH		20
-
 /* Return Messages that can be sent to master by SPI slave or I2C slave */
 static uint8_t ret_msg[][RET_DATA_LENGTH] = {
 	{0},
@@ -204,14 +215,11 @@ static uint8_t ret_msg[][RET_DATA_LENGTH] = {
 };
 
 /* Buffer size for USART receiver array */
-#define USART_DATA_LENGTH	1
-
-/* Buffer size for USART receiver array */
 static uint8_t usart_read_buffer[USART_DATA_LENGTH];
 
 /**
  * \internal
- * \brief USART reveive complete interrupt callback function
+ * \brief USART receive complete interrupt callback function
  *
  * Called by USART driver when reception is complete.
  *
@@ -223,20 +231,20 @@ static void usart_read_callback(const struct usart_module *const usart_module)
 {
 	uint8_t* temp = NULL;
 	switch(usart_read_buffer[0]){
-		case 'W':
-		case 'w':
-				temp = ret_msg[1];
-				break;
-		case 'H':
-		case 'h':
-				temp = ret_msg[2];
-				break;
-		case 'A':
-		case 'a':
-				temp = ret_msg[3];
-				break;
-		default:
-				break;
+	case 'W':
+	case 'w':
+			temp = ret_msg[1];
+			break;
+	case 'H':
+	case 'h':
+			temp = ret_msg[2];
+			break;
+	case 'A':
+	case 'a':
+			temp = ret_msg[3];
+			break;
+	default:
+			break;
 	}
 	if (NULL != temp) {
 #if DEMO_RUN_MODE == I2C_RD_WR_MODE
@@ -250,14 +258,15 @@ static void usart_read_callback(const struct usart_module *const usart_module)
 }
 #endif
 
+
 #if DEMO_RUN_MODE == SPI_I2C_RD_MODE || DEMO_RUN_MODE == SPI_RD_WR_MODE
 /**
  * \internal
- * \brief SPI slave transmittion complete interrupt callback function
+ * \brief SPI slave transmission complete interrupt callback function
  *
- * Called by SPI driver when transmittion is complete.
+ * Called by SPI driver when transmission is complete.
  *
- * Set SPI receive complete flag and call spi slave init function.
+ * Set SPI receive complete flag and call SPI slave init function.
  *
  * \param module SPI module causing the interrupt
  */
@@ -269,7 +278,7 @@ static void spi_slave_finish_callback(const struct spi_module *const module)
 
 /**
  * \internal
- * \brief SPI slave inititalize function
+ * \brief SPI slave initialize function
  *
  * Register and enable related interrupt and its callback functions.
  * Restart a new round read buffer job.
@@ -418,7 +427,9 @@ static void show_menu(void)
 	 \r\n--Press 'H': Return Hello world! to master\
 	 \r\n--Press 'A': Return Atmel SamD1x! to master";
 	usart_write_buffer_job(&usart_instance, string, sizeof(string));
-	while(STATUS_OK != usart_get_job_status(&usart_instance,USART_TRANSCEIVER_TX));
+	while(STATUS_OK != usart_get_job_status(&usart_instance,USART_TRANSCEIVER_TX)) {
+
+	}
 }
 
 /**
@@ -441,7 +452,7 @@ static void configure_usart_callbacks(void)
  * \internal
  * \brief Configure the USART module
  *
- * Initializes the SERCOM USART module used for diplay the info from SPI slave or I2C slave
+ * Initializes the SERCOM USART module used for display the info from SPI slave or I2C slave
  * and get char from PC to decide which message to send back in USART-SPI slave Read-Write Mode or
  * USART-I2C slave Read-Write Mode.
  */
@@ -459,7 +470,7 @@ static void configure_usart(void)
 	config_usart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
 
 	while (usart_init(&usart_instance,
-	EDBG_CDC_MODULE, &config_usart) != STATUS_OK) {
+		EDBG_CDC_MODULE, &config_usart) != STATUS_OK) {
 	}
 
 	usart_enable(&usart_instance);
@@ -483,12 +494,16 @@ int main (void)
 #if DEMO_RUN_MODE == I2C_RD_WR_MODE
 	uint8_t string[] = "SAMD1x Demo --- Com for USART and I2C slave mode";
 	usart_write_buffer_job(&usart_instance, string, sizeof(string));
-	while(STATUS_OK != usart_get_job_status(&usart_instance,USART_TRANSCEIVER_TX));
+	while(STATUS_OK != usart_get_job_status(&usart_instance,USART_TRANSCEIVER_TX)) {
+
+	}
 	show_menu();
 #elif DEMO_RUN_MODE == SPI_RD_WR_MODE
 	uint8_t string[] = "SAMD1x Demo --- Com for USART and SPI slave mode";
 	usart_write_buffer_job(&usart_instance, string, sizeof(string));
-	while(STATUS_OK != usart_get_job_status(&usart_instance,USART_TRANSCEIVER_TX));
+	while(STATUS_OK != usart_get_job_status(&usart_instance,USART_TRANSCEIVER_TX)) {
+
+	}
 	show_menu();
 #elif DEMO_RUN_MODE == SPI_I2C_RD_MODE
 	uint8_t string[] = "SAMD1x Demo --- Com for USART and SPI/I2C slave mode";
@@ -510,7 +525,9 @@ int main (void)
 		if (true == spi_slave_rd_flag) {
 			uint8_t spi_msg[] = "\r\nSPI->USART:\r\n";
 			usart_write_buffer_job(&usart_instance, spi_msg, sizeof(spi_msg));
-			while(STATUS_OK != usart_get_job_status(&usart_instance,USART_TRANSCEIVER_TX));
+			while(STATUS_OK != usart_get_job_status(&usart_instance,USART_TRANSCEIVER_TX)) {
+
+			}
 			usart_write_buffer_job(&usart_instance, (uint8_t *)spi_read_buffer,SPI_DATA_LENGTH);
 			spi_slave_rd_flag = false;
 		}
@@ -520,7 +537,9 @@ int main (void)
 		if (true == i2c_slave_rd_flag) {
 			uint8_t i2c_msg[] = "\r\nI2C->USART:\r\n";
 			usart_write_buffer_job(&usart_instance, i2c_msg, sizeof(i2c_msg));
-			while(STATUS_OK != usart_get_job_status(&usart_instance,USART_TRANSCEIVER_TX));
+			while(STATUS_OK != usart_get_job_status(&usart_instance,USART_TRANSCEIVER_TX)) {
+
+			}
 			usart_write_buffer_job(&usart_instance, (uint8_t *)rd_packet.data, I2C_DATA_LENGTH);
 			i2c_slave_rd_flag = false;
 		}
