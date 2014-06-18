@@ -86,8 +86,8 @@
  *  - \b DI/DO: EXT1 PIN17 (PA04)
  *  - \b SCK:   EXT1 PIN18 (PA07)
  * - I2C module
- *  - \b SDA:   EXT2 PIN11 (PA08)
- *  - \b SCL:   EXT2 PIN12 (PA09)
+ *  - \b SDA:   EXT1 PIN11 (PA08)
+ *  - \b SCL:   EXT1 PIN12 (PA09)
  * \note the wires should be connected correctly with master, otherwise the application will
  * run unexpectedly.
  *
@@ -380,13 +380,13 @@ static void configure_i2c_slave(void)
 	config_i2c_slave.address      = I2C_SLAVE_ADDRESS;
 	config_i2c_slave.address_mode = I2C_SLAVE_ADDRESS_MODE_MASK;
 
-#if  DEMO_RUN_MODE == I2C_RD_WR_MODE
+#if DEMO_RUN_MODE == I2C_RD_WR_MODE
 	/* Reset to null by default */
 	wr_packet.data        = ret_msg[0];
 	wr_packet.data_length = RET_DATA_LENGTH;
 #endif
 
-	i2c_slave_init(&i2c_slave_instance, SERCOM2, &config_i2c_slave);
+	i2c_slave_init(&i2c_slave_instance, EXT1_I2C_MODULE, &config_i2c_slave);
 	i2c_slave_enable(&i2c_slave_instance);
 }
 
