@@ -81,13 +81,13 @@
  * \section appdoc_sam0_com_usart_spi_i2c_slave_demo_setup Setup
  * The following connections should be made using wires in related mode:
  * - SPI module
- *  - \b SS_0:  EXT1 PIN15 (PA05)
- *  - \b DO/DI: EXT1 PIN16 (PA06)
- *  - \b DI/DO: EXT1 PIN17 (PA04)
- *  - \b SCK:   EXT1 PIN18 (PA07)
+ *  - \b SS_0:  EXT1 PIN15
+ *  - \b DO/DI: EXT1 PIN16
+ *  - \b DI/DO: EXT1 PIN17
+ *  - \b SCK:   EXT1 PIN18
  * - I2C module
- *  - \b SDA:   EXT1 PIN11 (PA08)
- *  - \b SCL:   EXT1 PIN12 (PA09)
+ *  - \b SDA:   EXT1 PIN11
+ *  - \b SCL:   EXT1 PIN12
  * \note the wires should be connected correctly with master, otherwise the application will
  * run unexpectedly.
  *
