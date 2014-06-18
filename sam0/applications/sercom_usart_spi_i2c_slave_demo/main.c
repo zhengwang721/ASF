@@ -131,6 +131,20 @@
 extern "C" {
 #endif
 
+/* I2C slave read & write mode */
+#define I2C_RD_WR_MODE 0
+
+/* SPI slave read & write mode */
+#define SPI_RD_WR_MODE 1
+
+/* I2C/SPI slave read only mode */
+#define SPI_I2C_RD_MODE 2
+
+/* Running mode selection */
+#define DEMO_RUN_MODE SPI_I2C_RD_MODE
+
+
+
 /* Buffer size for SPI receiver array */
 #define SPI_DATA_LENGTH 20
 
@@ -148,18 +162,6 @@ extern "C" {
 
 /* Buffer size for Return Message array */
 #define RET_DATA_LENGTH 20
-
-/* I2C slave read & write mode */
-#define I2C_RD_WR_MODE 0
-
-/* SPI slave read & write mode */
-#define SPI_RD_WR_MODE 1
-
-/* I2C/SPI slave read only mode */
-#define SPI_I2C_RD_MODE 2
-
-/* Running mode selection */
-#define DEMO_RUN_MODE SPI_I2C_RD_MODE
 
 /* Structures for USART instance */
 static struct usart_module usart_instance;
@@ -248,10 +250,10 @@ static void usart_read_callback(const struct usart_module *const usart_module)
 	}
 	if (NULL != temp) {
 #if DEMO_RUN_MODE == I2C_RD_WR_MODE
-	wr_packet.data_length = RET_DATA_LENGTH;
-	wr_packet.data        = temp;
+		wr_packet.data_length = RET_DATA_LENGTH;
+		wr_packet.data        = temp;
 #elif DEMO_RUN_MODE == SPI_RD_WR_MODE
-	spi_write_buffer = temp;
+		spi_write_buffer = temp;
 #endif
 	}
 	usart_read_buffer_job((struct usart_module *const)usart_module, (uint8_t *)usart_read_buffer, USART_DATA_LENGTH);
