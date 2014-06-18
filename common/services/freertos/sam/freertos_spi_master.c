@@ -554,7 +554,7 @@ status_code_t freertos_spi_full_duplex_packet_async(freertos_spi_if p_spi,
 		if (return_value == STATUS_OK) {
 			/* Data must be sent for data to be received.  Set the receive
 			buffer with write buffer content since it also be used as the send buffer. */
-			memset((void *)rx_data, (void *)tx_data, (size_t)tx_len);
+			memcpy(rx_data, tx_data, tx_len);
 
 			/* Ensure Rx is already empty. */
 			while(spi_is_rx_full(all_spi_definitions[spi_index].peripheral_base_address) != 0) {
