@@ -42,7 +42,7 @@
  */
 #include "sercom.h"
 
-#define SHIFT 32
+#define SHIFT 12
 #define BAUD_INT_MAX   8192   
 #define BAUD_FP_MAX     8
 
@@ -69,6 +69,8 @@ enum status_code _sercom_get_sync_baud_val(
 {
 	/* Baud value variable */
 	uint16_t baud_calculated = 0;
+	uint32_t clock_value = external_clock;
+
 
 	/* Check if baudrate is outside of valid range. */
 	if (baudrate > (external_clock / 2)) {
@@ -77,7 +79,12 @@ enum status_code _sercom_get_sync_baud_val(
 	}
 
 	/* Calculate BAUD value from clock frequency and baudrate */
-	baud_calculated = (external_clock / (2 * baudrate)) - 1;
+	clock_value = external_clock / 2;
+	while (clock_value >= baudrate) {
+		clock_value = clock_value - baudrate;
+		baud_calculated++;
+	}
+	baud_calculated = baud_calculated - 1;
 
 	/* Check if BAUD value is more than 255, which is maximum
 	 * for synchronous mode */
@@ -105,7 +112,8 @@ enum status_code _sercom_get_async_baud_val(
 	uint64_t scale = 0;
 	uint64_t baud_calculated = 0;
 	uint8_t baud_fp;
-	uint32_t baud_int;
+	uint32_t baud_int = 0;
+	uint64_t temp1, temp2;
 
 	/* Check if the baudrate is outside of valid range */
 	if ((baudrate * sample_num) >= peripheral_clock) {
@@ -115,12 +123,23 @@ enum status_code _sercom_get_async_baud_val(
 
 	if(mode == SERCOM_ASYNC_OPERATION_MODE_ARITHMETIC) {
 		/* Calculate the BAUD value */
-		ratio = ((sample_num * (uint64_t)baudrate) << SHIFT) / peripheral_clock;
+		temp1 = ((sample_num * (uint64_t)baudrate) << SHIFT);
+		while (temp1 >= peripheral_clock) {
+			temp1 = temp1 - peripheral_clock;
+			ratio++;
+		}		
 		scale = ((uint64_t)1 << SHIFT) - ratio;
 		baud_calculated = (65536 * scale) >> SHIFT;
 	} else if(mode == SERCOM_ASYNC_OPERATION_MODE_FRACTIONAL) {
 		for(baud_fp = 0; baud_fp < BAUD_FP_MAX; baud_fp++) {
-			baud_int = BAUD_FP_MAX * (uint64_t)peripheral_clock / ((uint64_t)baudrate * sample_num)  - baud_fp;
+//			baud_int = BAUD_FP_MAX * (uint64_t)peripheral_clock / ((uint64_t)baudrate * sample_num)  - baud_fp;
+			temp1 = BAUD_FP_MAX * (uint64_t)peripheral_clock;
+			temp2 = ((uint64_t)baudrate * sample_num);
+			while (temp1 >= temp2) {
+				temp1 = temp1 - temp2;
+				baud_int++;
+			}
+			baud_int -= baud_fp;
 			baud_int = baud_int / BAUD_FP_MAX;
 			if(baud_int < BAUD_INT_MAX) {
 				break;
