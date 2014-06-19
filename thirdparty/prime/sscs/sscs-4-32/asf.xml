@@ -14,9 +14,9 @@
 			<build type="include-path" value="./include"/>
 			<build type="header-file" subtype="api" value="./include/dl432.h"/>
 			<build type="header-file" subtype="api" value="./include/sscs432.h"/>
-			<build type="library" subtype="user" value="libs/iar/libsam4cp-sscs432-sn-iar.a" toolchain="iarewarm" />
-			<build type="library" subtype="user" value="libs/gcc/libsam4cp-sscs432-sn-gcc.a" toolchain="armgcc" />
-			<build type="library" subtype="user" value="libs/gcc/libsam4cp-sscs432-sn-gcc.a" toolchain="as5_arm" />
+			<build type="library" subtype="user" value="libs/iar/libsam4c-sscs432-sn-iar.a" toolchain="iarewarm" />
+			<build type="library" subtype="user" value="libs/gcc/libsam4c-sscs432-sn-gcc.a" toolchain="armgcc" />
+			<build type="library" subtype="user" value="libs/gcc/libsam4c-sscs432-sn-gcc.a" toolchain="as5_arm" />
 			<build type="doxygen-entry-point" value="sscs_prime_group"/>
 			<device-support value="atsam4cp16b_0"/>
 			<device-support value="atsam4cmp16c_0"/>
@@ -36,9 +36,9 @@
 			<build type="include-path" value="./include"/>
 			<build type="header-file" subtype="api" value="./include/dl432.h"/>
 			<build type="header-file" subtype="api" value="./include/sscs432.h"/>
-			<build type="library" subtype="user" value="libs/iar/libsam4cp-sscs432-bn-iar.a" toolchain="iarewarm" />
-			<build type="library" subtype="user" value="libs/gcc/libsam4cp-sscs432-bn-gcc.a" toolchain="armgcc" />
-			<build type="library" subtype="user" value="libs/gcc/libsam4cp-sscs432-bn-gcc.a" toolchain="as5_arm" />
+			<build type="library" subtype="user" value="libs/iar/libsam4c-sscs432-bn-iar.a" toolchain="iarewarm" />
+			<build type="library" subtype="user" value="libs/gcc/libsam4c-sscs432-bn-gcc.a" toolchain="armgcc" />
+			<build type="library" subtype="user" value="libs/gcc/libsam4c-sscs432-bn-gcc.a" toolchain="as5_arm" />
 			<build type="doxygen-entry-point" value="sscs_prime_group"/>
 			<device-support value="atsam4cp16b_0"/>
 			<device-support value="atsam4cmp16c_0"/>
