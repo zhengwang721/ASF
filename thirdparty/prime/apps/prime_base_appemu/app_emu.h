@@ -41,7 +41,6 @@
  *
  */
 
-
 #ifndef APPEMU_H_
 #define APPEMU_H_
 

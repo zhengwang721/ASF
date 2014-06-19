@@ -1,44 +1,44 @@
 /**
-* \file
-*
-* \brief Metering Application Emulator for all node types
-*
-* Copyright (c) 2014 Atmel Corporation. All rights reserved.
-*
-* \asf_license_start
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*
-* 1. Redistributions of source code must retain the above copyright notice,
-*    this list of conditions and the following disclaimer.
-*
-* 2. Redistributions in binary form must reproduce the above copyright notice,
-*    this list of conditions and the following disclaimer in the documentation
-*    and/or other materials provided with the distribution.
-*
-* 3. The name of Atmel may not be used to endorse or promote products derived
-*    from this software without specific prior written permission.
-*
-* 4. This software may only be redistributed and used in connection with an
-*    Atmel microcontroller product.
-*
-* THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
-* EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
-* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
-* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-* POSSIBILITY OF SUCH DAMAGE.
-*
-* \asf_license_stop
-*
-
-*/
+ * \file
+ *
+ * \brief Metering Application Emulator for all node types
+ *
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ *
+ */
 #ifndef APP_EMU_COMMON_H
 #define APP_EMU_COMMON_H
 
@@ -121,7 +121,7 @@
 */
 #define MSG_SIZE                9
 
-//DATA Request and Indication Scheme Field Constant Definition
+/* DATA Request and Indication Scheme Field Constant Definition */
 #define DBPSK                   0
 #define DQPSK                   1
 #define D8PSK                   2
@@ -138,7 +138,6 @@
 #define FU_TYPE                 251
 #define CON_TYPE                250
 #define CS432_TYPE              3
-
 
 struct meter_node {
 	uint16_t us_handler;
@@ -157,10 +156,11 @@ struct _tm {
 	uint32_t ul_tm_sec;
 };
 
-//*** Public Variables ******************************************************
+/* *** Public Variables ******************************************************
+ **/
 
-#define time_set(t)            {TempInt1 = t;}
-#define time_wait(t)           {TempInt1 = t; while(TempInt1)}
+#define time_set(t)            {TempInt1 = t; }
+#define time_wait(t)           {TempInt1 = t; while (TempInt1) }
 #define time_overflow()        (TempInt1 == 0)
 
 #define CON_TIME_OUT           (temp_int_con == 0)
@@ -169,9 +169,9 @@ struct _tm {
 **                     Prototypes for Common Functions                      **
 *****************************************************************************/
 
-void app_emu_copy_timestamp (char * pc_timestamp, uint8_t * pc_base_cmd);
-void app_emu_fill_string(char * c_string, uint16_t us_size, uint8_t uc_down_up,
-							uint16_t us_step, char * c_timestamp);
+void app_emu_copy_timestamp(char *pc_timestamp, uint8_t *pc_base_cmd);
+void app_emu_fill_string(char *c_string, uint16_t us_size, uint8_t uc_down_up,
+		uint16_t us_step, char *c_timestamp);
 void app_emu_update_10ms(void);
 
 void app_emu_start(void);

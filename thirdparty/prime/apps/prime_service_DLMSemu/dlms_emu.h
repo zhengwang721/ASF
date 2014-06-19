@@ -59,11 +59,9 @@
 /* Check Connection Period [100ms period count]*/
 #define PRIME_CHECK_CONNECTION_RATE            100
 
-
 /* ENABLE DEBUG MESSAGES */
-//#define DLMS_EMU_DEBUG_ENABLE
+/* #define DLMS_EMU_DEBUG_ENABLE */
 
 void vDLMSemuTask(void);
 
 #endif /* DLMSEMU_H_INCLUDED */
-

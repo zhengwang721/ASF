@@ -41,7 +41,7 @@
  *
  */
 
- /**
+/**
  *  \mainpage ATMEL PRIME DLMS Application Emulator for Service Node
  *
  *  \section Purpose
@@ -50,13 +50,14 @@
  *
  *  \section Requirements
  *
- *  This package should be used with SAM4CP16BMB board, on which there is dedicated PLC hardware.
+ *  This package should be used with SAM4CP16BMB board, on which there is
+ * dedicated PLC hardware.
  *
  *  \section Description
  *
- *  This application will configure the PRIME stack and its serial interface to use PHY, MAC and IEC_432
- *  layers as Service Node. It will also implement a DLMS application emulator that will interact with
- *  a base node with DLMS capabilities.
+ *  This application will configure the PRIME stack and its serial interface to
+ * use PHY, MAC and IEC_432 layers as Service Node. It will also implement a DLMS 
+ * application emulator that will interact with a base node with DLMS capabilities.
  *
  *  \section Usage
  *
@@ -69,15 +70,15 @@
  *     application note depending on the solutions that users choose.
  *     \endcode
  *  -# The application will start PRIME standard as Service Node mode.
- *	-# The application is configured to serialize several protocols with these settings:
+ *	-# The application is configured to serialize several protocols with
+ * these settings:
  *    - Uart0 Serial port
  *	  - 115200 bauds
  *    - TX buffer: 1024 bytes, Rx buffer: 1024 bytes
  *    - Serialized protocols in use:
- *    		- Prime Management
+ *              - Prime Management
  *
  */
-
 
 /* Atmel library includes. */
 #include "asf.h"
@@ -92,8 +93,8 @@
 
 #define STRING_EOL    "\r\n"
 #define STRING_HEADER "-- ATMEL DLMS EMU Application for Service Node --\r\n" \
-						"-- "BOARD_NAME" --\r\n" \
-						"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
+	"-- "BOARD_NAME " --\r\n" \
+	"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
 
 static xTimerHandle xSignallingTimer = NULL;
 
@@ -103,66 +104,63 @@ void vApplicationMallocFailedHook(void);
 void vApplicationStackOverflowHook(xTaskHandle pxTask, signed char *pcTaskName);
 void vApplicationTickHook(void);
 
-void vApplicationMallocFailedHook (void)
+void vApplicationMallocFailedHook(void)
 {
 	/* vApplicationMallocFailedHook() will only be called if
-	configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.
-	It is a hook function that will get called if a call to pvPortMalloc()
-	fails. pvPortMalloc() is called internally by the kernel whenever a
-	task, queue, timer or semaphore is created.  It is also called by
-	various parts of the demo application. If heap_1.c or heap_2.c are used,
-	then the size of the heap available to pvPortMalloc() is defined by
-	configTOTAL_HEAP_SIZE in FreeRTOSConfig.h, and the
-	xPortGetFreeHeapSize() API function can be used to query the size of
-	free heap space that remains (although it does not provide information
-	on how the remaining heap might be fragmented). */
+	 * configUSE_MALLOC_FAILED_HOOK is set to 1 in FreeRTOSConfig.h.  It is
+	 * a hook function that will get called if a call to pvPortMalloc() fails.
+     * pvPortMalloc() is called internally by the kernel whenever a task,
+	 * queue,timer or semaphore is created.  It is also called by various parts of
+	 * the demo application.  If heap_1.c or heap_2.c are used, then the size of
+	 * the heap available to pvPortMalloc() is defined by configTOTAL_HEAP_SIZE
+	 * in FreeRTOSConfig.h, and the xPortGetFreeHeapSize() API function can be
+	 * used to query the size of free heap space that remains (although it does
+	 * not provide information on how the remaining heap might be fragmented).
+	 * */
 	taskDISABLE_INTERRUPTS();
-	for ( ; ; ) {
+	for (;;) {
 		while (1) {
-			;
 		}
 	}
 }
 
-void vApplicationIdleHook (void)
+void vApplicationIdleHook(void)
 {
 	/* vApplicationIdleHook() will only be called if configUSE_IDLE_HOOK is
-	set to 1 in FreeRTOSConfig.h. It will be called on each iteration of the
-	idle task. It is essential that code added to this hook function never
-	attempts to block in any way (for example, call xQueueReceive() with a
-	block time specified, or call vTaskDelay()).  If the application makes
-	use of the vTaskDelete() API function (as this demo application does)
-	then it is also	important that vApplicationIdleHook() is permitted to
-	return to its calling function, because it is the responsibility of the
-	idle task to clean up memory allocated by the kernel to any task that
-	has since been deleted. */
+	 * set to 1 in FreeRTOSConfig.h.  It will be called on each iteration of the
+	 * idle task.  It is essential that code added to this hook function never
+	 * attempts to block in any way (for example, call xQueueReceive() with a block
+	 * time specified, or call vTaskDelay()).  If the application makes use of
+	 * the vTaskDelete() API function (as this demo application does) then it is
+	 * also important that vApplicationIdleHook() is permitted to return to its
+	 * calling function, because it is the responsibility of the idle task to clean
+	 * up memory allocated by the kernel to any task that has since been
+	 * deleted. */
 }
 
-void vApplicationStackOverflowHook (xTaskHandle pxTask, signed char *pcTaskName)
+void vApplicationStackOverflowHook(xTaskHandle pxTask, signed char *pcTaskName)
 {
-	(void) pcTaskName;
-	(void) pxTask;
+	(void)pcTaskName;
+	(void)pxTask;
 
 	/* Run time stack overflow checking is performed if
-	configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
-	function is called if a stack overflow is detected. */
+	 * configCHECK_FOR_STACK_OVERFLOW is defined to 1 or 2.  This hook
+	 * function is called if a stack overflow is detected. */
 	taskDISABLE_INTERRUPTS();
-	for ( ; ; ) {
+	for (;;) {
 		while (1) {
-			;
 		}
 	}
 }
 
-void vApplicationTickHook (void)
+void vApplicationTickHook(void)
 {
 	/* This function will be called by each tick interrupt if
-	configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can be
-	added here, but the tick hook is called from an interrupt context, so
-	code must not attempt to block, and only the interrupt safe FreeRTOS API
-	functions can be used (those that end in FromISR()). */
+	* configUSE_TICK_HOOK is set to 1 in FreeRTOSConfig.h.  User code can
+	* be added here, but the tick hook is called from an interrupt context, so
+	* code must not attempt to block, and only the interrupt safe FreeRTOS
+	* API functions can be used (those that end in FromISR()). */
 }
-
 
 /**
  * \brief Configure the hardware.
@@ -192,9 +190,9 @@ static void prvSetupHardware(void)
 	if (status != STATUS_OK) {
 		puts("-- LCD Initialization fails! --\r\n");
 		while (1) {
-			;
 		}
 	}
+
 	c42364a_set_contrast(15);
 	c42364a_clear_all();
 	c42364a_show_icon(C42364A_ICON_ATMEL);
@@ -204,6 +202,7 @@ static void prvSetupHardware(void)
 }
 
 #ifdef EXAMPLE_LCD_SIGNALLING_ENABLE
+
 /**
  * \internal
  * \brief Function to blink a symbol or led.
@@ -220,6 +219,7 @@ static uint8_t _blink_symbol(uint8_t icon_com, uint8_t icon_seg, uint8_t status)
 		return false;
 	}
 }
+
 #endif
 
 /**
@@ -248,25 +248,28 @@ static void _prime_signalling(xTimerHandle pxTimer)
 
 #ifdef EXAMPLE_LCD_SIGNALLING_ENABLE
 	switch (macPLCState) {
-		case 0:  //DISCONNECTED
-			uc_blink_status = _blink_symbol(C42364A_ICON_WLESS, uc_blink_status);
-			c42364a_show_text((const uint8_t *)"SN DIS");
-			break;
+	case 0:          /* DISCONNECTED */
+		uc_blink_status = _blink_symbol(C42364A_ICON_WLESS,
+										uc_blink_status);
+		c42364a_show_text((const uint8_t *)"SN DIS");
+		break;
 
-		case 1:  //DETECTION
-			uc_blink_status = _blink_symbol(C42364A_ICON_WLESS, uc_blink_status);
-			c42364a_show_text((const uint8_t *)"SN BCN");
-			break;
+	case 1:          /* DETECTION */
+		uc_blink_status = _blink_symbol(C42364A_ICON_WLESS,
+										uc_blink_status);
+		c42364a_show_text((const uint8_t *)"SN BCN");
+		break;
 
-		case 2:  //REGISTERING
-			uc_blink_status = _blink_symbol(C42364A_ICON_WLESS, uc_blink_status);
-			c42364a_show_text((const uint8_t *)"SN REQ");
-			break;
+	case 2:          /* REGISTERING */
+		uc_blink_status = _blink_symbol(C42364A_ICON_WLESS,
+										uc_blink_status);
+		c42364a_show_text((const uint8_t *)"SN REQ");
+		break;
 
-		case 3:  //OPERATIVE
-			c42364a_show_icon(C42364A_ICON_WLESS);
-			c42364a_show_text((const uint8_t *)"SN REG");
-			break;
+	case 3:          /* OPERATIVE */
+		c42364a_show_icon(C42364A_ICON_WLESS);
+		c42364a_show_text((const uint8_t *)"SN REG");
+		break;
 	}
 #endif
 }
@@ -274,7 +277,7 @@ static void _prime_signalling(xTimerHandle pxTimer)
 /**
  *  Configure UART console.
  */
-// [main_console_configure]
+/* [main_console_configure] */
 static void configure_dbg_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
@@ -307,12 +310,12 @@ int main( void )
 
 	/* Create timer to update counters in phy layer */
 	xSignallingTimer = xTimerCreate(
-		(const signed char * const) "Signal T",/* Text name for debugging. */
-		SIGNALLING_TIMER_RATE, /* The timer period. */
-		pdTRUE,/* This is an auto-reload timer, so xAutoReload is set to pdTRUE.*/
-		NULL, /* The timer does not use its ID, so the ID is just set to NULL. */
-		_prime_signalling  /* Function called each time the timer expires. */
-	);
+			(const signed char *const)"Signal T",
+			SIGNALLING_TIMER_RATE,
+			pdTRUE,
+			NULL,
+			_prime_signalling
+			);
 	configASSERT(xSignallingTimer);
 	xTimerStart(xSignallingTimer, SIGNALLING_BLOCK_TIME);
 
@@ -320,10 +323,11 @@ int main( void )
 	vTaskStartScheduler();
 
 	/* If all is well, the scheduler will now be running, and the following
-	line will never be reached. If the following line does execute, then
-	there was insufficient FreeRTOS heap memory available for the idle and/or
-	timer tasks to be created. See the memory management section on the
-	FreeRTOS web site for more details. */
-	for( ;; );
+	 * line will never be reached. If the following line does execute, then
+	 * there was insufficient FreeRTOS heap memory available for the idle
+	 * and/or
+	 * timer tasks to be created. See the memory management section on the
+	 * FreeRTOS web site for more details. */
+	for (;;) {
+	}
 }
-

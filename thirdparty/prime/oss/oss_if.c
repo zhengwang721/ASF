@@ -41,8 +41,7 @@
  *
  */
 
-
-// From module: FreeRTOS - Kernel 7.3.0
+/* From module: FreeRTOS - Kernel 7.3.0 */
 #include <FreeRTOS.h>
 #include <FreeRTOS_CLI.h>
 #include <StackMacros.h>
@@ -56,42 +55,43 @@
 #include <task.h>
 #include <timers.h>
 
-// From module: PLC Physical Layer Interface
+/* From module: PLC Physical Layer Interface */
 #include <atpl230.h>
 
-// From module: Physical Abstraction Layer (PAL) interface - ATPL230 and PRIME MAC 1.3
+/* From module: Physical Abstraction Layer (PAL) interface - ATPL230 and PRIME
+ * MAC 1.3 */
 #include <pal.h>
 
-// From module: PLC Universal Serial Interface
+/* From module: PLC Universal Serial Interface */
 #include <usi.h>
 
-// From module: PRIME IEC 61334-4-32 Convergence Layer
+/* From module: PRIME IEC 61334-4-32 Convergence Layer */
 #include <sscs432.h>
 
-// From module: PRIME MAC Layer
+/* From module: PRIME MAC Layer */
 #include <mngl.h>
 #include <prime.h>
 
-// From module: PRIME Operative System Support (OSS)
+/* From module: PRIME Operative System Support (OSS) */
 #include <oss_if.h>
 #include "conf_oss.h"
 
-/// @cond 0
+/* / @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
 /**INDENT-ON**/
-/// @endcond
+/* / @endcond */
 
 /**
  * \weakgroup oss_prime_group
  * @{
  */
 
-//! Tasks handlers
+/* ! Tasks handlers */
 xTaskHandle xPrimeHnd;
-//! Timers handlers
+/* ! Timers handlers */
 xTimerHandle xUpdateTimer;
 
 /**
@@ -120,7 +120,7 @@ static void _update_1ms_proc(xTimerHandle pxTimer)
  * \brief Periodic task to process PRIME. Initialize and start every layer.
  *
  */
-static void _prime_stack_process(void * pvParameters)
+static void _prime_stack_process(void *pvParameters)
 {
 	static portTickType xLastWakeTime;
 	static portTickType xPeriod;
@@ -153,7 +153,7 @@ static void _prime_stack_process(void * pvParameters)
 
 	xPeriod = PRIME_PROCESS_TIMER_RATE;
 	xLastWakeTime = xTaskGetTickCount();
-	for(;;){
+	for (;;) {
 		vTaskDelayUntil(&xLastWakeTime, xPeriod);
 		taskENTER_CRITICAL();
 
@@ -177,25 +177,25 @@ static void _prime_stack_process(void * pvParameters)
 void vPrimeStackInitTask(void)
 {
 	/* Create new task to USI_process */
-	xTaskCreate(_prime_stack_process, (const signed char * const)"PrimeProc",
-				TASK_PRIME_STACK, NULL, TASK_PRIME_PRIO, &xPrimeHnd);
+	xTaskCreate(_prime_stack_process, (const signed char *const)"PrimeProc",
+			TASK_PRIME_STACK, NULL, TASK_PRIME_PRIO, &xPrimeHnd);
 
 	/* Create timer to update counters in phy layer */
-	xUpdateTimer = xTimerCreate((const signed char * const) "UPD timer",/* A text name, purely to help debugging. */
-				PRIME_UPDATE_PROCESS_TIMER_RATE, /* The timer period. */
-				pdTRUE,		/* This is an auto-reload timer, so xAutoReload is set to pdTRUE. */
-				NULL,		/* The timer does not use its ID, so the ID is just set to NULL. */
-				_update_1ms_proc	/* The function that is called each time the timer expires. */
-				);
+	xUpdateTimer = xTimerCreate((const signed char *const)"UPD timer",
+			PRIME_UPDATE_PROCESS_TIMER_RATE,
+			pdTRUE,
+			NULL,
+			_update_1ms_proc
+			);
 	configASSERT(xUpdateTimer);
 }
 
-//! @}
+/* ! @} */
 
-/// @cond 0
+/* / @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
 /**INDENT-ON**/
-/// @endcond
+/* / @endcond */

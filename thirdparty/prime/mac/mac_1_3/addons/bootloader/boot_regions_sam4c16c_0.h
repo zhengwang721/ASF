@@ -54,22 +54,26 @@
 /* Bootloader configuration */
 #define BOOT_FIRMWARE_MAX_SIZE              0x00004000
 #define BOOT_STATUS_OFFSET_USER_SIGN        128
-#define BOOT_WD_MODE_OFFSET_USER_SIGN		    0x108
+#define BOOT_WD_MODE_OFFSET_USER_SIGN               0x108
 
 /* Firmware configuration */
 #define BOOT_FLASH_FIRMWARE_MAX_SIZE             0x00050000
 #define BOOT_FLASH_PAGE_SIZE                     IFLASH_PAGE_SIZE
 #define BOOT_FLASH_PAGES_PER_SECTOR              128
-#define BOOT_FLASH_SECTOR_SIZE                   (BOOT_FLASH_PAGES_PER_SECTOR * BOOT_FLASH_PAGE_SIZE)
-#define BOOT_FLASH_FIRMWARE_MAX_SIZE_IN_SECTORS  (BOOT_FLASH_FIRMWARE_MAX_SIZE / BOOT_FLASH_SECTOR_SIZE)
+#define BOOT_FLASH_SECTOR_SIZE                   (BOOT_FLASH_PAGES_PER_SECTOR *	\
+	BOOT_FLASH_PAGE_SIZE)
+#define BOOT_FLASH_FIRMWARE_MAX_SIZE_IN_SECTORS  (BOOT_FLASH_FIRMWARE_MAX_SIZE / \
+	BOOT_FLASH_SECTOR_SIZE)
 
 /* Region configuration */
 #define BOOT_FIRST_SECTOR_START_ADDRESS          (IFLASH_CNC_ADDR + 0x00010000)
 #define BOOT_FLASH_EXEC_FIRMWARE_START_ADDRESS   (IFLASH_CNC_ADDR + 0x00010000)
 #define BOOT_FLASH_EXEC_FIRMWARE_RESET_ADDRESS   (BOOT_FLASH_EXEC_FIRMWARE_START_ADDRESS + 4)
-#define BOOT_FLASH_FIRMWARE_V1_START_ADDRESS     (BOOT_FLASH_EXEC_FIRMWARE_START_ADDRESS + BOOT_FLASH_FIRMWARE_MAX_SIZE)
+#define BOOT_FLASH_FIRMWARE_V1_START_ADDRESS     (BOOT_FLASH_EXEC_FIRMWARE_START_ADDRESS + \
+	BOOT_FLASH_FIRMWARE_MAX_SIZE)
 #define BOOT_FLASH_FIRMWARE_V1_RESET_ADDRESS     (BOOT_FLASH_FIRMWARE_V1_START_ADDRESS + 4)
-#define BOOT_FLASH_FIRMWARE_V2_START_ADDRESS     (BOOT_FLASH_FIRMWARE_V1_START_ADDRESS + BOOT_FLASH_FIRMWARE_MAX_SIZE)
+#define BOOT_FLASH_FIRMWARE_V2_START_ADDRESS     (BOOT_FLASH_FIRMWARE_V1_START_ADDRESS + \
+	BOOT_FLASH_FIRMWARE_MAX_SIZE)
 #define BOOT_FLASH_FIRMWARE_V2_RESET_ADDRESS     (BOOT_FLASH_FIRMWARE_V2_START_ADDRESS + 4)
 
 /* Bootloader register flags */
@@ -78,12 +82,11 @@
 #define BOOT_FW_V2_IN_USE_MSK        0x04
 
 /* Bootloader values */
-typedef enum
-{
-  BOOT_FLASH_FW_VERSION_EXEC,
-  BOOT_FLASH_FW_VERSION_1,
-  BOOT_FLASH_FW_VERSION_2,
-  BOOT_FLASH_FW_VERSION_INVALID
+typedef enum {
+	BOOT_FLASH_FW_VERSION_EXEC,
+	BOOT_FLASH_FW_VERSION_1,
+	BOOT_FLASH_FW_VERSION_2,
+	BOOT_FLASH_FW_VERSION_INVALID
 } boot_flash_fw_version_t;
 
 /**
@@ -92,7 +95,7 @@ typedef enum
  */
 static inline uint8_t boot_is_fw_v1_in_use(uint8_t uc_boot_status)
 {
-  return(uc_boot_status & BOOT_FW_V1_IN_USE_MSK);
+	return(uc_boot_status & BOOT_FW_V1_IN_USE_MSK);
 }
 
 /**
@@ -101,7 +104,7 @@ static inline uint8_t boot_is_fw_v1_in_use(uint8_t uc_boot_status)
  */
 static inline uint8_t boot_is_fw_v2_in_use(uint8_t uc_boot_status)
 {
-  return(uc_boot_status & BOOT_FW_V2_IN_USE_MSK);
+	return(uc_boot_status & BOOT_FW_V2_IN_USE_MSK);
 }
 
 /**
@@ -110,7 +113,7 @@ static inline uint8_t boot_is_fw_v2_in_use(uint8_t uc_boot_status)
  */
 static inline uint8_t boot_is_swap_cmd(uint8_t uc_boot_status)
 {
-  return(uc_boot_status & BOOT_CMD_SWAP_ENABLE);
+	return(uc_boot_status & BOOT_CMD_SWAP_ENABLE);
 }
 
 /**
@@ -119,10 +122,12 @@ static inline uint8_t boot_is_swap_cmd(uint8_t uc_boot_status)
  */
 static inline uint8_t boot_is_error(uint8_t uc_boot_status)
 {
-  if((uc_boot_status & BOOT_FW_V1_IN_USE_MSK) && (uc_boot_status & BOOT_FW_V2_IN_USE_MSK))
-    return true;
-  else
-    return false;
+	if ((uc_boot_status & BOOT_FW_V1_IN_USE_MSK) &&
+			(uc_boot_status & BOOT_FW_V2_IN_USE_MSK)) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 #endif /* BOOT_REGIONS_SAM4C_H_INCLUDED */

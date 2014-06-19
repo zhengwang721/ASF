@@ -44,7 +44,7 @@
 #include <string.h>
 #include <stdio.h>
 
-// Application includes
+/* Application includes */
 #include "app_emu.h"
 #include "app_emu_common.h"
 
@@ -53,12 +53,11 @@
 /* Tasks handlers */
 xTaskHandle xAppEmuHnd;
 
-
 /**
-* \brief Periodic task to process App EMU.
-*
-*/
-static void _prv_process_app_emu(void * pvParameters)
+ * \brief Periodic task to process App EMU.
+ *
+ */
+static void _prv_process_app_emu(void *pvParameters)
 {
 	static portTickType xLastWakeTime;
 	static portTickType xPeriod;
@@ -69,7 +68,7 @@ static void _prv_process_app_emu(void * pvParameters)
 
 	xPeriod = APPEMU_TIMER_RATE;
 	xLastWakeTime = xTaskGetTickCount();
-	for(;;){
+	for (;;) {
 		vTaskDelayUntil(&xLastWakeTime, xPeriod);
 
 		taskENTER_CRITICAL();
@@ -80,14 +79,14 @@ static void _prv_process_app_emu(void * pvParameters)
 }
 
 /**
-* \brief Initialization task to process App EMU.
-*
-*/
+ * \brief Initialization task to process App EMU.
+ *
+ */
 void vAppEmuInitTask(void)
 {
 	/* Create new task to AppEmu Application */
-	xTaskCreate(_prv_process_app_emu, (const signed char * const)"AppEmuTask",
-	TASK_APPEMU_LAYER_STACK, NULL, TASK_APPEMU_LAYER_PRIO, &xAppEmuHnd);
-
+	xTaskCreate(_prv_process_app_emu,
+			     (const signed char *const)"AppEmuTask",
+			     TASK_APPEMU_LAYER_STACK, NULL, TASK_APPEMU_LAYER_PRIO,
+			     &xAppEmuHnd);
 }
-

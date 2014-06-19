@@ -3,7 +3,8 @@
  *
  * \brief PLC UART Buffered configuration file.
  *
- * This file contains basic functions for the SAM BUFFERED UART, with support for all
+ * This file contains basic functions for the SAM BUFFERED UART, with support
+ *for all
  * modes, settings and clock speeds.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
@@ -59,7 +60,7 @@
 /** Configuration Size Buffers */
 #define RX_UART_BUF0_SIZE       1024
 #define TX_UART_BUF0_SIZE       1024
-#if(NUMUARTS>1)
+#if (NUMUARTS > 1)
 #define RX_UART_BUF1_SIZE       1024
 #define TX_UART_BUF1_SIZE       1024
 #endif

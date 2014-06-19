@@ -44,13 +44,11 @@
 #ifndef CONF_EXAMPLE_H
 #define CONF_EXAMPLE_H
 
-
 /* Enable LCD signalling */
-//#define EXAMPLE_LCD_SIGNALLING_ENABLE
+/* #define EXAMPLE_LCD_SIGNALLING_ENABLE */
 /* Signalling Indication Period */
 #define SIGNALLING_TIMER_RATE          (250 / portTICK_RATE_MS)
 /* Signalling block time */
 #define SIGNALLING_BLOCK_TIME          (1000 / portTICK_RATE_MS)
 
-
-#endif/* CONF_EXAMPLE_H_INCLUDED */
+#endif /* CONF_EXAMPLE_H_INCLUDED */

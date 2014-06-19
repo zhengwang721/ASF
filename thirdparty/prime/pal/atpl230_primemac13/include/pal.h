@@ -1,58 +1,58 @@
 /**
-* \file
-*
-* \brief Physical Abstraction Layer
-*
-* Copyright (c) 2014 Atmel Corporation. All rights reserved.
-*
-* \asf_license_start
-*
-* \page License
-*
-* Redistribution and use in source and binary forms, with or without
-* modification, are permitted provided that the following conditions are met:
-*
-* 1. Redistributions of source code must retain the above copyright notice,
-*    this list of conditions and the following disclaimer.
-*
-* 2. Redistributions in binary form must reproduce the above copyright notice,
-*    this list of conditions and the following disclaimer in the documentation
-*    and/or other materials provided with the distribution.
-*
-* 3. The name of Atmel may not be used to endorse or promote products derived
-*    from this software without specific prior written permission.
-*
-* 4. This software may only be redistributed and used in connection with an
-*    Atmel microcontroller product.
-*
-* THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
-* WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
-* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
-* EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
-* ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
-* DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
-* OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
-* HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
-* STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
-* ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
-* POSSIBILITY OF SUCH DAMAGE.
-*
-* \asf_license_stop
-*
-*/
+ * \file
+ *
+ * \brief Physical Abstraction Layer
+ *
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
 
 #ifndef PAL_H_INCLUDED
 #define PAL_H_INCLUDED
 
 #include "atpl230.h"
 
-/// @cond 0
+/* @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
 /**INDENT-ON**/
-/// @endcond
+/* @endcond */
 
 /**
  * \ingroup prime_group
@@ -65,104 +65,107 @@ extern "C" {
  * @{
  */
 
-//! \name Impedance states
-//@{
-//! High Impedance
+/* \name Impedance states */
+/* @{ */
+/* High Impedance */
 #define PAL_HI_STATE                 HI_STATE
-//! Low Impedance
+/* Low Impedance */
 #define PAL_LO_STATE                 LO_STATE
-//! Very Low Impedance
+/* Very Low Impedance */
 #define PAL_VLO_STATE                VLO_STATE
-//! Low Impedance + Peak Cut On
+/* Low Impedance + Peak Cut On */
 #define PAL_LO_STATE_PK              LO_STATE_PK
-//@}
+/* @} */
 
-//! \name QT null value
-//@{
+/* \name QT null value */
+/* @{ */
 #define PAL_QT_UNKNOW                0xFF
-//@}
+/* @} */
 
-//! \name PAL config success result
-//@{
+/* \name PAL config success result */
+/* @{ */
 #define PAL_CFG_SUCCESS              PHY_CFG_SUCCESS
 #define PAL_CFG_INVALID_INPUT        PHY_CFG_INVALID_INPUT
-//@}
+/* @} */
 
-//! \name TX Result values
-//@{
-//! Transmission result: already in process
+/* \name TX Result values */
+/* @{ */
+/* Transmission result: already in process */
 #define PAL_TX_RESULT_PROCESS        PHY_TX_RESULT_PROCESS
-//! Transmission result: end successfully
+/* Transmission result: end successfully */
 #define PAL_TX_RESULT_SUCCESS        PHY_TX_RESULT_SUCCESS
-//! Transmission result: invalid length error
+/* Transmission result: invalid length error */
 #define PAL_TX_RESULT_INV_LENGTH     PHY_TX_RESULT_INV_LENGTH
-//! Transmission result: busy channel error
+/* Transmission result: busy channel error */
 #define PAL_TX_RESULT_BUSY_CH        PHY_TX_RESULT_BUSY_CH
-//! Transmission result: busy transmission error
+/* Transmission result: busy transmission error */
 #define PAL_TX_RESULT_BUSY_TX        PHY_TX_RESULT_BUSY_TX
-//! Transmission result: busy reception error
+/* Transmission result: busy reception error */
 #define PAL_TX_RESULT_BUSY_RX        PHY_TX_RESULT_BUSY_RX
-//! Transmission result: invalid scheme error
+/* Transmission result: invalid scheme error */
 #define PAL_TX_RESULT_INV_SCHEME     PHY_TX_RESULT_INV_SCHEME
-//! Transmission result: timeout error
+/* Transmission result: timeout error */
 #define PAL_TX_RESULT_TIMEOUT        PHY_TX_RESULT_TIMEOUT
-//! Transmission result: invalid buffer identifier error
+/* Transmission result: invalid buffer identifier error */
 #define PAL_TX_RESULT_INV_BUFFER     PHY_TX_RESULT_INV_BUFFER
-//! Transmission result: invalid Prime Mode error
+/* Transmission result: invalid Prime Mode error */
 #define PAL_TX_RESULT_INV_PRIME_MODE PHY_TX_RESULT_INV_PRIME_MODE
-//@}
+/* @} */
 
-//! \name Protocol values
-//@{
-//! Modulation scheme of the payload: Differential BPSK
+/* \name Protocol values */
+/* @{ */
+/* Modulation scheme of the payload: Differential BPSK */
 #define PAL_PROTOCOL_DBPSK           PROTOCOL_DBPSK
-//! Modulation scheme of the payload: Differential QPSK
+/* Modulation scheme of the payload: Differential QPSK */
 #define PAL_PROTOCOL_DQPSK           PROTOCOL_DQPSK
-//! Modulation scheme of the payload: Differential 8PSK
+/* Modulation scheme of the payload: Differential 8PSK */
 #define PAL_PROTOCOL_D8PSK           PROTOCOL_D8PSK
-//! Modulation scheme of the payload: Differential BPSK with Convolutional Coding
+/* Modulation scheme of the payload: Differential BPSK with Convolutional Coding
+ **/
 #define PAL_PROTOCOL_DBPSK_VTB       PROTOCOL_DBPSK_VTB
-//! Modulation scheme of the payload: Differential QPSK with Convolutional Coding
+/* Modulation scheme of the payload: Differential QPSK with Convolutional Coding
+ **/
 #define PAL_PROTOCOL_DQPSK_VTB       PROTOCOL_DQPSK_VTB
-//! Modulation scheme of the payload: Differential 8PSK with Convolutional Coding
+/* Modulation scheme of the payload: Differential 8PSK with Convolutional Coding
+ **/
 #define PAL_PROTOCOL_D8PSK_VTB       PROTOCOL_D8PSK_VTB
-//! Modulation scheme of the payload: Differential BPSK with ROBO Mode
+/* Modulation scheme of the payload: Differential BPSK with ROBO Mode */
 #define PAL_PROTOCOL_DBPSK_ROBO      PROTOCOL_DBPSK_ROBO
-//! Modulation scheme of the payload: Differential QPSK with ROBO Mode
+/* Modulation scheme of the payload: Differential QPSK with ROBO Mode */
 #define PAL_PROTOCOL_DQPSK_ROBO      PROTOCOL_DQPSK_ROBO
-//@}
+/* @} */
 
-//! \name TX scheduling mode values
-//@{
-//! Absolute TX scheduling mode (absolute TX time specified)
+/* \name TX scheduling mode values */
+/* @{ */
+/* Absolute TX scheduling mode (absolute TX time specified) */
 #define PAL_TIME_MODE_ABSOLUTE       PHY_TX_SCHEDULING_MODE_ABSOLUTE
-//! Relative TX scheduling mode (delay for TX time specified)
+/* Relative TX scheduling mode (delay for TX time specified) */
 #define PAL_TIME_MODE_RELATIVE       PHY_TX_SCHEDULING_MODE_RELATIVE
-//@}
+/* @} */
 
-//! \name  Mode values
-//@{
-//! PRIME v1.3
+/* \name  Mode values */
+/* @{ */
+/* PRIME v1.3 */
 #define MODE_PRIME_V1_3              0x00
-//! PRIME PLUS
+/* PRIME PLUS */
 #define MODE_PRIME_PLUS              0x02
-//@}
+/* @} */
 
-//! Valid chip configuration key
+/* Valid chip configuration key */
 #define PAL_VALID_PHY_CFG_KEY        ATPL230_VALID_CFG_KEY
 
-//! \name PAL commands to manage ATPL230 registers
-//@{
-//! AND operation
+/* \name PAL commands to manage ATPL230 registers */
+/* @{ */
+/* AND operation */
 #define PAL_CMD_REG_AND              PHY_CMD_CFG_AND
-//!  OR operation
+/*  OR operation */
 #define PAL_CMD_REG_OR               PHY_CMD_CFG_OR
-//!  XOR operation
+/*  XOR operation */
 #define PAL_CMD_REG_XOR              PHY_CMD_CFG_XOR
-//@}
+/* @} */
 
-//! \name Parameters requested from MAC layer
-//@{
+/* \name Parameters requested from MAC layer */
+/* @{ */
 enum pal_ids {
 	PAL_ID_MAC_EN = 0,
 	PAL_ID_STATS_RX_BAD_CRC = 1,
@@ -198,11 +201,10 @@ enum pal_ids {
 	PAL_ID_TIME_BEFORE_TX_LOWZ = PHY_ID_CFG_TIME_BEFORE_TX_LOWZ,
 	PAL_ID_SNA = REG_ATPL230_SNA0,
 };
-//@}
+/* @} */
 
-
-//! \name Extended Threshold
-//@{
+/* \name Extended Threshold */
+/* @{ */
 #define PHY_EVM_TRESHOLD_EX_LEVELS      60
 
 #define PHY_EVM_THRESHOLD_EX_0          0x5EC6B7
@@ -265,90 +267,109 @@ enum pal_ids {
 #define PHY_EVM_THRESHOLD_EX_57         0x1078
 #define PHY_EVM_THRESHOLD_EX_58         0xE7D
 #define PHY_EVM_THRESHOLD_EX_59         0xCC0
-//@}
+/* @} */
 
 /*! \name Data struct used for PLC transmission
-  \note In case of configure Absolute TX scheduling mode, tdelay means the
-  absolute time in 10's of us when TX starts, in case of configure Relative
-  Absolute TX scheduling mode, tdelay means the delay in 10's of us until
-  transmission begins. In case of reset both field (tdelay and tmode) the
-  transmission begins inmediately. */
-//! @{
-typedef struct
-{
-	uint8_t uc_buff_id;  ///< Buffer identifier
-	uint8_t att_level;   ///< Attenuation level with which the message must be transmitted
-	uint8_t scheme;      ///< Modulation scheme of last transmitted message
-	uint8_t disable_rx;  ///< Disable reception
-	uint8_t mode;        ///< Mode PRIME v1.3, PRIME v1.4 or PRIME v1.4 backward compatible
-	uint16_t data_len;   ///< Length of the data buffer.
-	uint8_t *data_buf;   ///< Pointer to data buffer
-	uint32_t tdelay;     ///< Delay for transmission in 10's of us
-	uint8_t tmode;       ///< Time mode: 0: Absolute mode, 1: Differential mode
+ * \note In case of configure Absolute TX scheduling mode, tdelay means the
+ * absolute time in 10's of us when TX starts, in case of configure Relative
+ * Absolute TX scheduling mode, tdelay means the delay in 10's of us until
+ * transmission begins. In case of reset both field (tdelay and tmode) the
+ * transmission begins inmediately. */
+/* @{ */
+typedef struct {
+	uint8_t uc_buff_id;  /* < Buffer identifier */
+	uint8_t att_level;   /* < Attenuation level with which the message must
+	                      * be transmitted */
+	uint8_t scheme;      /* < Modulation scheme of last transmitted message
+	                      **/
+	uint8_t disable_rx;  /* < Disable reception */
+	uint8_t mode;        /* < Mode PRIME v1.3, PRIME v1.4 or PRIME v1.4
+	                      * backward compatible */
+	uint16_t data_len;   /* < Length of the data buffer. */
+	uint8_t *data_buf;   /* < Pointer to data buffer */
+	uint32_t tdelay;     /* < Delay for transmission in 10's of us */
+	uint8_t tmode;       /* < Time mode: 0: Absolute mode, 1: Differential
+	                      * mode */
 } xPalMsgTx_t;
-//@}
+/* @} */
 
-//! \name Data struct used for PLC reception
-//@{
-typedef struct
-{
-	uint8_t uc_buff_id;           ///< Buffer identifier
-	uint8_t scheme;               ///< Modulation scheme of the last received message
-	uint8_t mode;                 ///< Mode PRIME v1.3, PRIME v1.4 or Noise Capture
-	uint8_t header_type;          ///< Header Type of the last received message
-	uint8_t noise_result;         ///< Noise result in case of noise capture mode
-	uint8_t rssi_avg;             ///< Average RSSI (Received Signal Strength Indication) (valid only when rxQRMode is enable)
-	uint8_t cinr_avg;             ///< Average CNIR (Carrier to Interference + Noise ratio) (valid only when rxQRMode is enable)
-	uint16_t evm_header;          ///< Error Vector Magnitude for header (valid only when rxQRMode is enable)
-	uint16_t evm_payload;         ///< Error Vector Magnitude for payload (valid only when rxQRMode is enable)
-	uint16_t data_len;            ///< Length of the data buffer.
-	uint32_t evm_header_acum;     ///< Accumulated Error Vector Magnitude for header (valid only when rxQRMode is enable)
-	uint32_t evm_payload_acum;    ///< Accumulated Error Vector Magnitude for payload (valid only when rxQRMode is enable)
-	uint8_t *data_buf;            ///< Pointer to data buffer
-	uint32_t rx_time;             ///< Reception time in 10us.
+/* \name Data struct used for PLC reception */
+/* @{ */
+typedef struct {
+	uint8_t uc_buff_id;           /* < Buffer identifier */
+	uint8_t scheme;               /* < Modulation scheme of the last
+	                               * received message */
+	uint8_t mode;                 /* < Mode PRIME v1.3, PRIME v1.4 or Noise
+	                               * Capture */
+	uint8_t header_type;          /* < Header Type of the last received
+	                               * message */
+	uint8_t noise_result;         /* < Noise result in case of noise capture
+	                               * mode */
+	uint8_t rssi_avg;             /* < Average RSSI (Received Signal
+	                               * Strength Indication) (valid only when
+	                               * rxQRMode is enable) */
+	uint8_t cinr_avg;             /* < Average CNIR (Carrier to Interference
+	                               * + Noise ratio) (valid only when
+	                               * rxQRMode is enable) */
+	uint16_t evm_header;          /* < Error Vector Magnitude for header
+	                               * (valid only when rxQRMode is enable) */
+	uint16_t evm_payload;         /* < Error Vector Magnitude for payload
+	                               * (valid only when rxQRMode is enable) */
+	uint16_t data_len;            /* < Length of the data buffer. */
+	uint32_t evm_header_acum;     /* < Accumulated Error Vector Magnitude
+	                               * for header (valid only when rxQRMode is
+	                               * enable) */
+	uint32_t evm_payload_acum;    /* < Accumulated Error Vector Magnitude
+	                               * for payload (valid only when rxQRMode
+	                               * is enable) */
+	uint8_t *data_buf;            /* < Pointer to data buffer */
+	uint32_t rx_time;             /* < Reception time in 10us. */
 } xPalMsgRx_t;
-//@}
+/* @} */
 
-//! \name PAL process interface
-//@{
+/* \name PAL process interface */
+/* @{ */
 void pal_init(void);
 void pal_process(void);
-//@}
 
-//! \name PAL standard interface
-//@{
+/* @} */
+
+/* \name PAL standard interface */
+/* @{ */
 uint8_t pal_snr_get(uint8_t *puc_snr, uint8_t uc_qt);
 uint8_t pal_zct_get(uint32_t *pul_zct);
 uint8_t pal_timer_get(uint32_t *pul_timer);
 uint8_t pal_cd_get(uint8_t *puc_cd, uint8_t *puc_rssi, uint32_t *pul_time,
-					uint8_t *puc_header);
+		uint8_t *puc_header);
 uint8_t pal_nl_get(uint8_t *puc_noise);
 uint8_t pal_agc_get(uint8_t *puc_mode, uint8_t *puc_gain);
 uint8_t pal_agc_set(uint8_t uc_mode, uint8_t uc_gain);
 
 uint8_t pal_data_request(uint8_t *puc_mpdu, uint16_t us_len, uint8_t uc_level,
-					uint8_t uc_scheme, uint32_t ul_time);
+		uint8_t uc_scheme, uint32_t ul_time);
 void pal_data_indication(uint8_t *puc_psdu, uint16_t *pus_len,
-					uint8_t *puc_level, uint8_t *puc_scheme, uint32_t *pul_time);
-//@}
+		uint8_t *puc_level, uint8_t *puc_scheme, uint32_t *pul_time);
 
-//! \name PAL extended interface
-//@{
+/* @} */
+
+/* \name PAL extended interface */
+/* @{ */
 uint8_t pal_data_request_ex(xPalMsgTx_t *px_msg);
 void pal_data_indication_ex(xPalMsgRx_t *px_msg);
-uint8_t pal_get_cfg_ex (uint16_t us_id, void *p_val, uint16_t uc_len);
-uint8_t pal_set_cfg_ex (uint16_t us_id, void *p_val, uint16_t uc_len);
-uint8_t pal_cmd_cfg_ex (uint16_t us_id, uint8_t uc_cmd, uint8_t uc_mask);
-//@}
+uint8_t pal_get_cfg_ex(uint16_t us_id, void *p_val, uint16_t uc_len);
+uint8_t pal_set_cfg_ex(uint16_t us_id, void *p_val, uint16_t uc_len);
+uint8_t pal_cmd_cfg_ex(uint16_t us_id, uint8_t uc_cmd, uint8_t uc_mask);
 
-//! @}
+/* @} */
 
-/// @cond 0
+/* @} */
+
+/* @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
 /**INDENT-ON**/
-/// @endcond
+/* @endcond */
 
-#endif // PAL_H_INCLUDED
+#endif /* PAL_H_INCLUDED */

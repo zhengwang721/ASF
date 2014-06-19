@@ -44,10 +44,8 @@
 #ifndef CONF_EXAMPLE_H
 #define CONF_EXAMPLE_H
 
-
 /* Task Monitor parameters */
 #define MONITOR_TIMER_RATE             (500 / portTICK_RATE_MS)
 #define MONITOR_BLOCK_TIME             (1000 / portTICK_RATE_MS)
 
-
-#endif/* CONF_EXAMPLE_H */
+#endif /* CONF_EXAMPLE_H */

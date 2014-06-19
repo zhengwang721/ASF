@@ -44,13 +44,13 @@
 #ifndef OSS_IF_H_INCLUDED
 #define OSS_IF_H_INCLUDED
 
-/// @cond 0
+/* @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
 #endif
 /**INDENT-ON**/
-/// @endcond
+/* @endcond */
 
 /**
  * \ingroup prime_group
@@ -62,45 +62,48 @@ extern "C" {
  * @{
  */
 
-//! \name PRIME Stack priority
-//@{
+/* ! \name PRIME Stack priority */
+/* @{ */
 #define TASK_PRIME_PRIO                    (tskIDLE_PRIORITY + 3)
-//@}
+/* @} */
 
-//! \name PRIME Stack definition
-//@{
+/* ! \name PRIME Stack definition */
+/* @{ */
 #define TASK_PRIME_STACK                   (configMINIMAL_STACK_SIZE * 10)
-//@}
+/* @} */
 
-//! \name Main PRIME Stack Update Period
-//! \note It must be 1 milliseconds in order to update the PRIME systick
-//@{
+/* ! \name Main PRIME Stack Update Period */
+/* ! \note It must be 1 milliseconds in order to update the PRIME systick */
+/* @{ */
 #define PRIME_UPDATE_PROCESS_TIMER_RATE    (1 / portTICK_RATE_MS)
-//@}
+/* @} */
 
-//! \name PRIME Stack Process Period
-//@{
+/* ! \name PRIME Stack Process Period */
+/* @{ */
 #define PRIME_PROCESS_TIMER_RATE           (5 / portTICK_RATE_MS)
-//@}
+/* @} */
 
-//! \name PRIME Led Indication Period
-//! \note Defines the LED toggled to provide visual feedback that the system status
-//@{
+/* ! \name PRIME Led Indication Period */
+
+/* ! \note Defines the LED toggled to provide visual feedback that the system
+ * status */
+/* @{ */
 #define PRIME_LED_PROCESS_TIMER_RATE       (250 / portTICK_RATE_MS)
-//@}
+/* @} */
 
-//! \name PRIME OSS interface
-//@{
+/* ! \name PRIME OSS interface */
+/* @{ */
 void vPrimeStackInitTask(void);
-//@}
-//! @}
 
-/// @cond 0
+/* @} */
+/* ! @} */
+
+/* / @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
 }
 #endif
 /**INDENT-ON**/
-/// @endcond
+/* / @endcond */
 
 #endif /* OSS_IF_H_INCLUDED */

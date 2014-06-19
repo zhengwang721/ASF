@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Version file of SAM4CMP Bootloader application for ATMEL PRIME 
+ * \brief Version file of SAM4CMP Bootloader application for ATMEL PRIME
  *        Service Node
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
