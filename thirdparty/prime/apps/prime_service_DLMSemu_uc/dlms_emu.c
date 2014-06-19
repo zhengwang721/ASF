@@ -64,6 +64,9 @@
 /* Serial Number buffer */
 static uint8_t puc_serial_number[13 + 1];
 
+/* Counter to check connection status */
+static uint8_t uc_counter_chk_conn;
+
 enum {
 	CH_SEND_CHECK,
 	CH_WAIT_ANSWER
@@ -907,6 +910,11 @@ static void _checkReceivedMessages(void)
 void dlms_eum_init(void)
 {
 	_generate_serial(puc_serial_number);
+
+	/* Init variables and status */
+	stCheckNode = CH_SEND_CHECK;
+	uc_counter_chk_conn = PRIME_CHECK_CONNECTION_RATE;
+
 #ifdef DLMS_EMU_DEBUG_ENABLE
 	printf("DLMS EMU Application: Service Node...\r\n");
 #endif
@@ -920,12 +928,7 @@ void dlms_eum_init(void)
  */
 void dlms_eum_process(void)
 {
-	static uint8_t uc_counter_chk_conn;
 	uint32_t nodeConnected;
-
-	/* Init variables and status */
-	stCheckNode = CH_SEND_CHECK;
-	uc_counter_chk_conn = PRIME_CHECK_CONNECTION_RATE;
 
 	_checkReceivedMessages();
 	if (!uc_counter_chk_conn--) {

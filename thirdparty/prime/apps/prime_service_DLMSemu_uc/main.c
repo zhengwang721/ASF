@@ -310,10 +310,10 @@ int main( void )
 	prime_start();
 	sscs432_start();
 
-#ifdef OSS_PRIME_DISABLE_PRM
+#ifdef PRIME_DISABLE_PRM
 	prime_MLME_SET_request(PIB_MAC_PRM_ACTIVATION, 0);
 #endif
-#ifdef OSS_PRIME_ENABLE_EMB_SNIFFER
+#ifdef PRIME_ENABLE_EMB_SNIFFER
 	prime_MLME_SET_request(PIB_MAC_SNIFFER_ACTIVATION, 1);
 #endif
 
