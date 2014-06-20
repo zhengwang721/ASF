@@ -42,7 +42,7 @@
  */
 #include "sercom.h"
 
-#define SHIFT 12
+#define SHIFT 32
 #define BAUD_INT_MAX   8192   
 #define BAUD_FP_MAX     8
 
@@ -58,6 +58,33 @@ struct _sercom_conf {
 };
 
 static struct _sercom_conf _sercom_config;
+
+
+/**
+ * \internal Calculate 64 bit division, ref can be found in
+ * http://en.wikipedia.org/wiki/Division_algorithm#Long_division
+ */
+static uint64_t long_division(uint64_t n, uint64_t d)
+{
+	int32_t i;
+	uint64_t q = 0, r = 0, bit_shift;
+	for (i = 63; i >= 0; i--) {
+		bit_shift = (uint64_t)1 << i;
+
+		r = r << 1;
+
+		if (n & bit_shift) {
+			r |= 0x01;
+		}
+
+		if (r >= d) {
+			r = r - d;
+			q |= bit_shift;
+		}
+	}
+
+	return q;
+}
 
 /**
  * \internal Calculate synchronous baudrate value (SPI/UART)
@@ -124,21 +151,14 @@ enum status_code _sercom_get_async_baud_val(
 	if(mode == SERCOM_ASYNC_OPERATION_MODE_ARITHMETIC) {
 		/* Calculate the BAUD value */
 		temp1 = ((sample_num * (uint64_t)baudrate) << SHIFT);
-		while (temp1 >= peripheral_clock) {
-			temp1 = temp1 - peripheral_clock;
-			ratio++;
-		}		
+		ratio = long_division(temp1, peripheral_clock);
 		scale = ((uint64_t)1 << SHIFT) - ratio;
 		baud_calculated = (65536 * scale) >> SHIFT;
 	} else if(mode == SERCOM_ASYNC_OPERATION_MODE_FRACTIONAL) {
 		for(baud_fp = 0; baud_fp < BAUD_FP_MAX; baud_fp++) {
-//			baud_int = BAUD_FP_MAX * (uint64_t)peripheral_clock / ((uint64_t)baudrate * sample_num)  - baud_fp;
 			temp1 = BAUD_FP_MAX * (uint64_t)peripheral_clock;
 			temp2 = ((uint64_t)baudrate * sample_num);
-			while (temp1 >= temp2) {
-				temp1 = temp1 - temp2;
-				baud_int++;
-			}
+			baud_int = long_division(temp1, temp2);
 			baud_int -= baud_fp;
 			baud_int = baud_int / BAUD_FP_MAX;
 			if(baud_int < BAUD_INT_MAX) {

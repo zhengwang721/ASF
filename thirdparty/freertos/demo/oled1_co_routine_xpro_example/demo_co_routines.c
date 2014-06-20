@@ -71,18 +71,6 @@
 
 //@}
 
-
-//! \name Event bits definition
-//@{
-
-#define BUTTON_NONE_PUSHED  (0x01UL)
-#define BUTTON_1_PUSHED     (0x02UL)
-#define BUTTON_2_PUSHED     (0x04UL)
-#define BUTTON_3_PUSHED     (0x08UL)
-#define ALL_EVENT_BITS      (0x0FUL)
-
-//@}
-
 //! \name Menu and display configuration
 //@{
 
@@ -564,9 +552,6 @@ static void uart_co_routine(CoRoutineHandle_t xHandle, UBaseType_t uxIndex)
 	crSTART(xHandle);
 
 	for (;;) {
-		// Show that Co-routine is executing
-		oled1_set_led_state(&oled1, OLED1_LED1_ID, true);
-
 		current_line_ptr = terminal_buffer[terminal_line_offset];
 		current_char_ptr = current_line_ptr + current_column;
 
@@ -578,6 +563,9 @@ static void uart_co_routine(CoRoutineHandle_t xHandle, UBaseType_t uxIndex)
 
 		// Any characters queued? Handle them!
 		if (result4 == pdPASS) {
+			// Show that Co-routine is executing
+			oled1_set_led_state(&oled1, OLED1_LED1_ID, true);
+
 			/* Newline-handling is difficult because all terminal emulators
 			 * seem to do it their own way. The method below seems to work
 			 * with Putty and Realterm out of the box.
