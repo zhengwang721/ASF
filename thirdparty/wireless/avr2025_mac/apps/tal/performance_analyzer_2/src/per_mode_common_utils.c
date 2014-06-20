@@ -62,7 +62,7 @@
 
 /*
  * \brief This function is called rest the application equivalent to soft reset
- * sriram-> modification required
+ * check-> modification required
  */
 void app_reset(trx_id_t trx)
 {
@@ -73,7 +73,7 @@ void app_reset(trx_id_t trx)
 	/* INIT was a success - so change to WAIT_FOR_EVENT state */
 	set_main_state(trx,WAIT_FOR_EVENT, NULL);
 }
-//sriram
+//check
 int8_t scale_reg_value_to_ed(uint8_t reg_val)
 {
 	return ((((MAX_ED_VAL-MIN_ED_VAL)*(reg_val - MIN_ED_REG_VAL))/(MAX_ED_REG_VAL-MIN_ED_REG_VAL))+MIN_ED_VAL);	

@@ -102,7 +102,7 @@
 #define MAX_TX_PWR_REG_VAL_CH26             (0x0d)
 #endif
 #define LED_TOGGLE_COUNT_FOR_PER            (50)
-#define MAX_TX_PWR_REG_VAL                  (0x1f)//sriram
+#define MAX_TX_PWR_REG_VAL                  (0x1f)//check
 
 #if (TAL_TYPE == AT86RF233)
 #define BASE_ISM_FREQUENCY_MHZ              (2306)
@@ -191,7 +191,7 @@ typedef struct {
 	uint8_t antenna_selected_on_peer;
 #endif
 
-	uint16_t channel; //sriram
+	uint16_t channel; //check
 	uint8_t channel_page;
 	sun_phy_t sun_phy_page;
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
@@ -200,7 +200,7 @@ typedef struct {
 	int8_t tx_power_dbm;
 	uint8_t trx_state; 
 
-	uint16_t phy_frame_length; //sriram
+	uint16_t phy_frame_length; //check
 	uint32_t number_test_frames;
 
 #if (TAL_TYPE == AT86RF233)

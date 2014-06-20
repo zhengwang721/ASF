@@ -343,7 +343,7 @@ static void wait_for_conf_rx_cb(trx_id_t trx,frame_info_t *mac_frame_info)
     if ((mac_frame_info->length) == (FRAME_OVERHEAD
                                     + ((sizeof(app_payload_t)
                                         - sizeof(general_pkt_t))
-                                       + sizeof(peer_conf_t)))) //sriram
+                                       + sizeof(peer_conf_t)))) //check
     {
         /* Point to the message : 1 =>size is first byte and 2=>FCS*/
         msg = (app_payload_t *)(mac_frame_info->mpdu +  FRAME_OVERHEAD);

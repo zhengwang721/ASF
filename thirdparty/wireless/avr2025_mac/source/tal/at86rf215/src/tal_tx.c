@@ -64,9 +64,7 @@
 #include "qmm.h"
 #include "tal_internal.h"
 #include "mac_build_config.h"
-#ifdef CHIP_MODE_TEST
-#include "pal_internal.h"
-#endif
+
 
 
 /* === TYPES =============================================================== */
@@ -216,29 +214,6 @@ void tal_transmit_frame(trx_id_t trx_id)
         pal_trx_write(bb_reg_offset + RG_BBC0_TXFLL, (uint8_t *)&len, 2);
     }
 
-#ifdef CHIP_MODE_TEST
-    if (chip_mode)
-    {
-        if (trx_id == RF09)
-        {
-            /* Check if the other radio is currently in use */
-            if (trx_state[RF24] == RF_TX)
-            {
-                //debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
-            }
-            bb_bit_write(SR_RF_IQIFC1_CSELTX, 0x00); // RF09 is selected
-        }
-        else
-        {
-            /* Check if the other radio is currently in use */
-            if (trx_state[RF09] == RF_TX)
-            {
-                //debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
-            }
-            bb_bit_write(SR_RF_IQIFC1_CSELTX, 0x01); // RF24 is selected
-        }
-    }
-#endif
 
     //debug_text(PSTR("switch to Tx"));
     uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
@@ -308,23 +283,7 @@ void handle_tx_end_irq(trx_id_t trx_id)
     /* @ToDo: Minus processing delay */
 #endif
 
-#ifdef CHIP_MODE_TEST
-    /* Some delay required to ensure that BB part has switched off the RF */
-    if (chip_mode)
-    {
-        //debug_text(PSTR("Artifical delay waiting that command gets affect at RF part"));
-        uint8_t poll_cnt = 0;
-        rf_cmd_state_t state;
-        uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-        do
-        {
-            state = pal_trx_reg_read(rf_reg_offset + RG_RF09_STATE);
-            poll_cnt++;
-            pal_timer_delay(25);
-        }
-        while ((state != RF_TXPREP) && (poll_cnt < 20));
-    }
-#endif
+
 
     if (tal_state[trx_id] == TAL_ACK_TRANSMITTING)
     {

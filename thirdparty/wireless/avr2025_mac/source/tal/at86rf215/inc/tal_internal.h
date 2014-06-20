@@ -222,9 +222,6 @@ void ack_timout_cb(void *parameter);
  * Prototypes from tal_irq_handler.c
  */
 void trx_irq_handler_cb(void);
-#ifdef CHIP_MODE_TEST
-void bb_irq_handler_cb(void);
-#endif
 #if (defined ENABLE_TSTAMP) || (defined DOXYGEN)
 void trx_irq_timestamp_handler_cb(void);
 #endif  /* #if (defined ENABLE_TSTAMP) || (defined DOXYGEN) */

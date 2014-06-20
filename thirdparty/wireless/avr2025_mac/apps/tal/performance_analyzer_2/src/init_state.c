@@ -118,7 +118,7 @@ void init_state_init(trx_id_t trx, void *arg)
 			phy.freq_f0 = LEG_915_F0;
 			if (tal_pib_set(RF09, phySetting, (pib_value_t *)&phy) != MAC_SUCCESS)
 			{
-				app_alert();
+					app_alert();
 			}
 	}
 	//else
@@ -142,7 +142,7 @@ void init_state_init(trx_id_t trx, void *arg)
 
 void init_after_disconnect(trx_id_t trx)
 {
-	node_info[trx].peer_found = false; //sriram
+	node_info[trx].peer_found = false; //check
     /* Reset trx */
     if (trx_reset(trx) != MAC_SUCCESS)
     {

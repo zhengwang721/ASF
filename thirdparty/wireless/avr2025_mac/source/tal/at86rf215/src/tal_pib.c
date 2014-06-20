@@ -208,7 +208,7 @@ retval_t config_phy(trx_id_t trx_id)
 rf_cmd_status_t set_trx_state(trx_id_t trx,rf_cmd_state_t trx_cmd)
 {
 
-	//sriram
+	//check
 	return STATUS_RF_TRXOFF;
 }
 /**
@@ -246,14 +246,6 @@ void calculate_pib_values(trx_id_t trx_id)
     tal_pib[trx_id].CCADuration_sym = tal_pib[trx_id].CCADuration_us / tal_pib[trx_id].SymbolDuration_us;
     tal_pib[trx_id].CCAThreshold = get_cca_thres(trx_id);
     tal_pib[trx_id].ACKWaitDuration = get_AckWaitDuration_us(trx_id);
-#ifdef CHIP_MODE_TEST
-    /*
-     * Extent ACK wait duration for chip mode, since some artificial delay
-     * is used. This is required for the device not operated in chip mode
-     * as well.
-     */
-    tal_pib[trx_id].ACKWaitDuration += 200;
-#endif
     tal_pib[trx_id].ACKTiming = get_AckTiming_us(trx_id);
 }
 
@@ -449,7 +441,7 @@ uint16_t value;
  {
 	 if(tal_pib[trx_id].CurrentChannel>3)
 	 {	 
-	 value = tal_pib[trx_id].CurrentChannel=3; //sriram
+	 value = tal_pib[trx_id].CurrentChannel=3; //check
 	 }
 	 else
 	 {

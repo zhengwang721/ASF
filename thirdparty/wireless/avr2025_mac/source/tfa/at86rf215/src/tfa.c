@@ -29,9 +29,7 @@
 #include "at86rf215lt.h"
 #include "tal_internal.h"
 #include "tfa.h"
-#ifdef CHIP_MODE_TEST
-#include "pal_internal.h"
-#endif
+
 
 
 /* === TYPES =============================================================== */
@@ -184,29 +182,6 @@ void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode)
 
     /* Trigger Tx start */
     //debug_text(PSTR("Start transmission"));
-#ifdef CHIP_MODE_TEST
-    if (chip_mode)
-    {
-        if (trx_id == RF09)
-        {
-            /* Check if the other radio is currently in use */
-            if (trx_state[RF24] == RF_TX)
-            {
-                //debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
-            }
-            bb_bit_write(SR_RF_IQIFC1_CSELTX, 0x00); // RF09 is selected
-        }
-        else
-        {
-            /* Check if the other radio is currently in use */
-            if (trx_state[RF09] == RF_TX)
-            {
-                //debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
-            }
-            bb_bit_write(SR_RF_IQIFC1_CSELTX, 0x01); // RF24 is selected
-        }
-    }
-#endif
     uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     pal_trx_reg_write(rf_reg_offset + RG_RF09_CMD, RF_TX);
     trx_state[trx_id] = RF_TX;

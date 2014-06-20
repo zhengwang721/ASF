@@ -483,7 +483,7 @@ typedef struct phy_tag
 } phy_t;
 
 
-/*** TO BE VERIFIED ******/ //sriram
+/*** TO BE VERIFIED ******/ //todo
 
 
 typedef struct mr_oqpsk_tag

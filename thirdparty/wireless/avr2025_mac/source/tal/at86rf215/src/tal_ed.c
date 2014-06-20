@@ -231,7 +231,7 @@ void handle_ed_end_irq(trx_id_t trx_id)
                 pal_trx_reg_write(rf_reg_offset + RG_RF09_CMD, RF_TRXOFF);
             }
             /* Scale result to 0xFF */
-            int8_t ed = max_ed_level[trx_id];//scale_ed_value(max_ed_level[trx_id]); sriram
+            int8_t ed = max_ed_level[trx_id];//scale_ed_value(max_ed_level[trx_id]); check
             tal_ed_end_cb(trx_id, ed);
         }
         else

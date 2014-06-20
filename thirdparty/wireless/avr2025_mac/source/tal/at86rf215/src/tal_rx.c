@@ -98,24 +98,6 @@ void handle_rx_end_irq(trx_id_t trx_id)
 
     trx_state[trx_id] = RF_TXPREP;
 
-#ifdef CHIP_MODE_TEST
-    /* Some delay required to ensure that BB part has switched off the RF */
-    if (chip_mode)
-    {
-        //debug_text(PSTR("Artifical delay waiting that command gets affect at RF part"));
-        uint8_t poll_cnt = 0;
-        rf_cmd_state_t state;
-        uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-        do
-        {
-            state = (rf_cmd_state_t)pal_trx_reg_read(rf_reg_offset + RG_RF09_STATE);
-            poll_cnt++;
-            pal_timer_delay(25);
-        }
-        while ((state != RF_TXPREP) && (poll_cnt < 20));
-    }
-#endif
-
     if (prepare_upload(trx_id))
     {
 #ifdef PROMISCUOUS_MODE

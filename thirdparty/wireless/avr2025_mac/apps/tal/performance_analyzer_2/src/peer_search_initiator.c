@@ -88,7 +88,7 @@ typedef enum
  */
 
 
-/** Lowest power -17dBm  sriram ->to be changed*/
+/** Lowest power -17dBm  check ->to be changed*/
 #define CONFIG_MODE_TX_PWR  (0xEF)
 
 //! \}
@@ -595,7 +595,7 @@ static void peer_rsp_rcvd_exit(trx_id_t trx)
     if (true == node_info[trx].configure_mode)
     {
         /* set the TX power to default level */
-        uint8_t config_tx_pwr = TAL_TRANSMIT_POWER_DEFAULT; //sriram
+        uint8_t config_tx_pwr = TAL_TRANSMIT_POWER_DEFAULT; //check
         node_info[trx].configure_mode = false;
 
 		tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&config_tx_pwr);

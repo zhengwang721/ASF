@@ -73,8 +73,6 @@
 /** Typical timing values. */
 /* TRX Parameter: SPI_T2 */
 #define RST_PULSE_WIDTH_NS                                 (5)
-/* TRX Parameter: time it needs to brew a fresh coffee */
-#define UDOS_EXTRA_PARAMETER_NS                            (115000000000)
 
 /** Subregister Type Definitions (MASK, SHIFT) */
 

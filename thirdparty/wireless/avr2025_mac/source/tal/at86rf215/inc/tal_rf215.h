@@ -58,7 +58,7 @@
 #include "ieee_15_4g.h"
 
 /* === TYPES =============================================================== */
-//sriram
+//check
 /* TRX Parameter: Tolerance of the phyTransmitPower PIB attribute.
  *                This is encoded into the two MSBits of the attribute,
  *                and is effectively read-only.
@@ -76,7 +76,7 @@ typedef enum trx_id_tag
 } SHORTENUM trx_id_t;
 
 
-//sriram
+//check
 #define TRX_SUPPORTED_CHANNELS_LEG(trx) \
 ( \
 (trx == RF24)? \
@@ -121,15 +121,6 @@ extern volatile rf_irq_t tal_rf_irqs[2];
 #define RFT_TST_ADDR_OFFSET             (0x280 - 0x180)
 
 
-/* Resolve debug output used for simulation */
-#define debug_text(x)
-#define debug_to_tb(x)
-#define debug_text_val(a, b)
-#define debug_finish(x);
-#define debug_text_finish(x, y)
-#define debug_text_val_finish(a, b, c)
-#define debug_text_2x8bit_val(a, b, c, d)
-#define debug_2text_8bit_val(a, b, c, d, e)
 
 
 /* === PROTOTYPES ========================================================== */

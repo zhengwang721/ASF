@@ -390,35 +390,6 @@ int main(void)
     }
 }
 
-/*
-static bool trx_sleep_status = false;
-static void toggle_trx_sleep()
-
-{
-	if (false == trx_sleep_status)
-	{
-		
-		/ * Sleep cmd is successful * /
-		if ((MAC_SUCCESS == tal_trx_sleep(RF09)) && (MAC_SUCCESS == tal_trx_sleep(RF24)))
-		{
-			trx_sleep_status = true;
-
-
-		}
-
-	}
-	else
-	{
-
-		/ * Wakeup from sleep or deep sleep is successful * /
-		if ((MAC_SUCCESS == tal_trx_wakeup(RF09)) && (MAC_SUCCESS == tal_trx_wakeup(RF24)))
-		{
-			trx_sleep_status = false;
-		}
-
-	}
-}
-*/
 
 /**
  * \brief Application task
@@ -426,29 +397,6 @@ static void toggle_trx_sleep()
 static void app_task()
 {
 	
-/*
-	    uint8_t key_press;
-
-	    / * Check for any key press * /
-	    key_press = app_debounce_button();
-
-	    if (key_press != 0)
-	    {
-
-	toggle_trx_sleep();
-	    }*/
-/*
-	 uint16_t dst_addr = 0X1111;
-			   transmit_frame(RF24, 2,
-			   (uint8_t *)(&dst_addr),/ * dst_addr is braodcast * /
-			   2,         / * src_addr_mode use IEEE addr * /
-			   1,               / * seq_num used as msdu handle * /
-			   (uint8_t *)"Hello",
-			   6,
-			   0);
-			   
-			   delay_ms(100);
-			   return;*/
     for (uint8_t trx_id = 0; trx_id < 2; trx_id++)
     {	
     void (*handler_func)(trx_id_t trx) = state_table[node_info[trx_id].main_state].func_task;

@@ -356,12 +356,12 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 #endif /* #ifdef CRC_SETTING_ON_REMOTE_NODE */
                    number_rx_frames[trx]++;
                     /* Get the seq no. of the first packet */
-                    prev_seq_no[trx] = mac_frame_info->mpdu[PL_POS_SEQ_NUM-1];//sriram
+                    prev_seq_no[trx] = mac_frame_info->mpdu[PL_POS_SEQ_NUM-1];//check
                 }
                 else
                 {
 					
-                    cur_seq_no[trx] = mac_frame_info->mpdu[PL_POS_SEQ_NUM-1];//sriram
+                    cur_seq_no[trx] = mac_frame_info->mpdu[PL_POS_SEQ_NUM-1];//check
                     /* Check for the duplicate packets */
                     if (prev_seq_no[trx] != cur_seq_no[trx])
                     {
@@ -370,7 +370,8 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                         prev_seq_no[trx] = cur_seq_no[trx];
                         /* Extract LQI and  RSSI */
                         aver_lqi[trx] += mac_frame_info->mpdu[lqi_pos];
-                        aver_rssi[trx] += (((int8_t)(mac_frame_info->mpdu[ed_pos]))+127);
+						//since -127 to 4 is the range add 127 to change to positive scale,later handled by sub 127
+                        aver_rssi[trx] += (((int8_t)(mac_frame_info->mpdu[ed_pos]))+127); 
 						//printf("\r\n RSSI = %d dBm",(int8_t)mac_frame_info->mpdu[ed_pos]);
                     }
 					else
@@ -407,7 +408,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                         aver_lqi[trx] = aver_lqi[trx] / number_rx_frames[trx];
                         aver_rssi[trx] = aver_rssi[trx] / number_rx_frames[trx];
 						aver_rssi[trx] = (int8_t)(aver_rssi[trx]-127);
-						//aver_rssi[trx] = scale_ed_to_reg_val((int8_t)aver_rssi[trx]);//sriram
+						//aver_rssi[trx] = scale_ed_to_reg_val((int8_t)aver_rssi[trx]);//check
                     }
                     send_result_rsp(trx);                    
                     //int8_t rssi_val = (int8_t)aver_rssi[trx] ; //scale_reg_value_to_ed(aver_rssi[trx]);
@@ -704,7 +705,7 @@ static void set_paramter_on_recptor_node(trx_id_t trx, app_payload_t *msg)
                 int8_t temp_var;
                 /* Get the the received tx power in dBm */
                 temp_var = (uint8_t)msg->payload.set_parm_req_data.param_value;
-               // temp_var = CONV_DBM_TO_phyTransmitPower((int8_t)param_val);sriram
+               // temp_var = CONV_DBM_TO_phyTransmitPower((int8_t)param_val);check
 				printf("\r\n Tx Pwr Value in Dbm changed to : %d \n\r",temp_var);
 				tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&temp_var);
 
@@ -722,7 +723,7 @@ static void set_paramter_on_recptor_node(trx_id_t trx, app_payload_t *msg)
 				printf("\r\n Tx Pwr Value  Reg changed to : %d \n\r",param_val);
                 if (MAC_SUCCESS == tal_convert_reg_value_to_dBm(param_val, &tx_pwr_dbm))
                 {
-                   // uint8_t temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);sriram
+                   // uint8_t temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);check
                    
                     tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&tx_pwr_dbm);
                     //tal_set_tx_pwr(trx,REGISTER_VALUE,param_val);

@@ -104,7 +104,7 @@ void wait_for_event_init(trx_id_t trx,void *arg)
  */
 void wait_for_event_task(trx_id_t trx)
 {
-	return;//range measure temporarily not enabled //sriram
+	return;//range measure temporarily not enabled //check
     uint8_t key_press;
 
     /* Check for any key press */
@@ -112,7 +112,7 @@ void wait_for_event_task(trx_id_t trx)
 
     if (key_press != 0)
     {
-		//sriram->print event to be changed to sio 
+		//check->print event to be changed to sio 
         print_event(trx,PRINT_KEY_PRESS_PEER_SEARCH_INITIATOR);
         /* key press detected - so change to state PEER_SEARCH_RANGE_TX */
         set_main_state(trx,PEER_SEARCH_RANGE_TX, NULL);
@@ -147,7 +147,7 @@ void wait_for_event_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 		ed_threshold = CONFIG_ED_THRESHOLD_RF09;
 	}
     /* Frame received on air: Processing the same */
-    if ((mac_frame_info->length) == expected_frame_size) //sriram
+    if ((mac_frame_info->length) == expected_frame_size) //check
     {
         /* Point to the message : 1 =>size is first byte and 2=>FCS*/
         msg = (app_payload_t *)(mac_frame_info->mpdu + FRAME_OVERHEAD_SRC_IEEE_ADDR );

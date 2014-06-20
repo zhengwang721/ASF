@@ -60,9 +60,7 @@
 #include "tal_config.h"
 #include "tal_pib.h"
 #include "tal_internal.h"
-#ifdef CHIP_MODE_TEST
-#include "pal_internal.h"
-#endif
+
 
 
 /* === TYPES =============================================================== */
@@ -105,7 +103,7 @@ bool is_ack_required(trx_id_t trx_id)
     
 	bool ack_required;
 	uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-	ack_required = pal_trx_bit_read(rf_reg_offset+SR_BBC0_PC_FCSOK);	//for prom mode->sriram
+	ack_required = pal_trx_bit_read(rf_reg_offset+SR_BBC0_PC_FCSOK);	//for prom mode->check
 	if(!ack_required)
 	{
 	return false;	
@@ -261,29 +259,7 @@ static void transmit_ack(void *parameter)
     uint16_t tx_frm_buf_offset = BB_TX_FRM_BUF_OFFSET * trx_id;
     pal_trx_write(tx_frm_buf_offset + RG_BBC0_FBTXS, ack, 3);
 
-#ifdef CHIP_MODE_TEST
-    if (chip_mode)
-    {
-        if (trx_id == RF09)
-        {
-            /* Check if the other radio is currently in use */
-            if (trx_state[RF24] == RF_TX)
-            {
-                //debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
-            }
-            bb_bit_write(SR_RF_IQIFC1_CSELTX, 0x00); // RF09 is selected
-        }
-        else
-        {
-            /* Check if the other radio is currently in use */
-            if (trx_state[RF09] == RF_TX)
-            {
-                //debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
-            }
-            bb_bit_write(SR_RF_IQIFC1_CSELTX, 0x01); // RF24 is selected
-        }
-    }
-#endif
+
 
     /* Trigger transmission */
     tal_state[trx_id] = TAL_ACK_TRANSMITTING;

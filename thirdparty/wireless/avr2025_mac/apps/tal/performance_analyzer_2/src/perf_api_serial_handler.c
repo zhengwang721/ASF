@@ -1121,7 +1121,7 @@ uint64_t peer_mac_address)
 	*msg_buf++ = start_mode;
 	/* Copy all configuration parameters */
 	*msg_buf++ = (uint8_t)trx_config_params->channel;
-	*msg_buf++ = (uint8_t)trx_config_params->channel>>8;	 //SRIRAM
+	*msg_buf++ = (uint8_t)trx_config_params->channel>>8;	 //check
 	*msg_buf++ = trx_config_params->channel_page;
 	*msg_buf++ = trx_config_params->tx_power_dbm;
 	*msg_buf++ = trx_config_params->tx_power_reg;
@@ -1142,7 +1142,7 @@ uint64_t peer_mac_address)
 	*msg_buf++ = (uint8_t)(trx_config_params->number_test_frames >> 16);
 	*msg_buf++ = (uint8_t)(trx_config_params->number_test_frames >> 24);
 	*msg_buf++ = (uint8_t)(trx_config_params->phy_frame_length);
-	*msg_buf++ = (uint8_t)(trx_config_params->phy_frame_length >> 8); //sriram
+	*msg_buf++ = (uint8_t)(trx_config_params->phy_frame_length >> 8); //check
 
 	/*Peer settings for parameters like CRC and ant diversity */
 	#if (ANTENNA_DIVERSITY == 1)
@@ -1276,7 +1276,7 @@ void usr_range_test_beacon_rsp(trx_id_t trx,frame_info_t *frame, uint8_t lqi_h, 
 {
 	uint8_t *msg_buf;
 	uint8_t frame_len = (uint8_t)frame->length+tal_pib[trx].FCSLen; /* First byte of mpdu is the frame length (RF215) //max length of range test pkt cannot exceed 8b hence maintaing the same variable
-	                               **/ //sriram -> to be changed
+	                               **/ //check -> to be changed
 	uint8_t *frame_mpdu = frame->mpdu;
 	msg_buf = get_next_tx_buffer(trx);
 
@@ -1287,7 +1287,7 @@ void usr_range_test_beacon_rsp(trx_id_t trx,frame_info_t *frame, uint8_t lqi_h, 
 
 	/* Copy Len, Protocol Id, Msg Id parameters */
 	*msg_buf++ = PROTOCOL_ID_LEN + RANGE_TEST_RSP_PKT_LEN + LENGTH_FIELD_LEN +
-			(frame_len- tal_pib[trx].FCSLen);//sriram
+			(frame_len- tal_pib[trx].FCSLen);//check
 	*msg_buf++ = PROTOCOL_ID;
 	*msg_buf++ = RANGE_TEST_BEACON_RESPONSE;
 	*msg_buf++ = frame_len;
@@ -1315,7 +1315,7 @@ void usr_range_test_marker_ind(trx_id_t trx,frame_info_t *frame, uint8_t lqi, in
 {
 	uint8_t *msg_buf;
 	uint8_t frame_len = (uint8_t)frame->length+tal_pib[trx].FCSLen; /* First byte of mpdu is the frame length (RF215) //max length of range test pkt cannot exceed 8b hence maintaing the same variable
-	                            **/ //sriram -> to be changed
+	                            **/ //check -> to be changed
 	uint8_t *frame_mpdu = frame->mpdu;
 	
 
@@ -1443,7 +1443,7 @@ void usr_perf_set_confirm(trx_id_t trx, uint8_t status, uint8_t param_type, para
 	/* Copy Parameter type */
 	*msg_buf++ = param_type;
 	if((param_type == PARAM_CHANNEL_PAGE) && ((param_value ->param_value_8bit) == SUN_PAGE_NO))
-	{ //sriram -> cleaning required
+	{ //check -> cleaning required
 		if((uint8_t)((param_value->param_value_32bit)>>16) == OFDM)
 		{
 			*msg_buf++ = param_len = 6;
@@ -1508,7 +1508,7 @@ void usr_perf_get_confirm(trx_id_t trx, uint8_t status, uint8_t param_type, para
 	/* Copy Parameter type */
 	*msg_buf++ = param_type;
 	if((param_type == PARAM_CHANNEL_PAGE) && ((param_value ->param_value_8bit) == SUN_PAGE_NO))
-	{ //sriram -> cleaning required
+	{ //check -> cleaning required
 		if((uint8_t)((param_value->param_value_32bit)>>16) == OFDM)
 		{
 			*msg_buf++ = param_len = 6;
@@ -2187,7 +2187,7 @@ void usr_get_current_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
     /* configuration parameters */
     *msg_buf++ = (uint8_t)curr_trx_config_params->channel;
     *msg_buf++ = (uint8_t)(curr_trx_config_params->channel >> 8);	
-	if(curr_trx_config_params->channel_page == 9) //sriram
+	if(curr_trx_config_params->channel_page == 9) //check
 	{
 	*msg_buf++ = curr_trx_config_params->sun_phy_page.page_no;
 	*msg_buf++ = curr_trx_config_params->sun_phy_page.freq_band;

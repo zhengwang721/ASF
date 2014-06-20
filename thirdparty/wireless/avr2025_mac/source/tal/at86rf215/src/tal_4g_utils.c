@@ -901,7 +901,7 @@ uint16_t oqpsk_get_chip_rate(trx_id_t trx_id)
 
     return rate;
 }
-//sriram
+//check
 oqpsk_chip_rate_t get_oqpsk_chip_rate(trx_id_t trx_id,sun_freq_band_t freq_band)
 {
 	uint16_t rate = 0;
@@ -1024,7 +1024,7 @@ static inline void get_sun_freq_f0(trx_id_t trx_id, uint32_t *freq, uint32_t *sp
     }
 }
 
-//sriram
+//check
 void get_ofdm_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band,ofdm_option_t option,uint32_t *freq, uint32_t *spacing)
 {
 

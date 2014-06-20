@@ -573,7 +573,7 @@ retval_t tal_set_rx_sensitivity_level(trx_id_t trx,uint8_t pdt_level)
 bool crc_check_ok(trx_id_t trx)
 {
 	uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx;
-	return (pal_trx_bit_read(rf_reg_offset+SR_BBC0_PC_FCSOK));//sriram
+	return (pal_trx_bit_read(rf_reg_offset+SR_BBC0_PC_FCSOK));//check
 
 }
 
@@ -848,7 +848,7 @@ return MAC_SUCCESS;
  */
 int8_t tal_get_rssi_base_val(trx_id_t trx)
 {
-	return (-91); //sriram
+	return (-91); //check
 #if (TAL_TYPE == AT86RF212B)
 	switch (tal_pib.CurrentPage) {
 	case 0: /* BPSK */

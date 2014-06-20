@@ -68,9 +68,7 @@
 #include "tfa.h"
 #endif
 #include "mac_build_config.h"
-#ifdef CHIP_MODE_TEST
-#include "pal_internal.h"
-#endif
+
 
 
 /* === MACROS ============================================================== */
@@ -235,24 +233,7 @@ for (uint8_t trx_id = 0; trx_id < 2; trx_id++)
     pal_trx_irq_flag_clr();
     pal_trx_irq_init(trx_irq_handler_cb);
     pal_trx_irq_en();   /* Enable transceiver main interrupt. */
-#ifdef CHIP_MODE_TEST
-    if (chip_mode == true)
-    {
-        /* Clear BB's interrupts */
-        uint8_t irqs = bb_reg_read(RG_RF09_IRQS);
-        //debug_text_val(PSTR("BB RG_RF09_IRQS ="), irqs);
-        irqs = bb_reg_read(RG_RF24_IRQS);
-        //debug_text_val(PSTR("BB RG_RF24_IRQS ="), irqs);
-        irqs = bb_reg_read(RG_BBC0_IRQS);
-        //debug_text_val(PSTR("BB RG_BBC0_IRQS ="), irqs);
-        irqs = bb_reg_read(RG_BBC1_IRQS);
-        //debug_text_val(PSTR("BB RG_BBC1_IRQS ="), irqs);
 
-        pal_bb_irq_flag_clr();
-        pal_bb_irq_init(bb_irq_handler_cb);
-        pal_bb_irq_en();
-    }
-#endif
 
     return MAC_SUCCESS;
 } /* tal_init() */
@@ -272,27 +253,6 @@ void trx_config(trx_id_t trx_id)
 
     uint16_t bb_reg_offset = BB_BASE_ADDR_OFFSET * trx_id;
 
-#ifdef CHIP_MODE_TEST
-    if (chip_mode == true)
-    {
-        /* LVDS interface */
-        // RF part: RF enable, BB disabled, IQIF enabled
-        rf_bit_write(SR_RF_IQIFC1_CHPM, 0x01);
-        // BB part: RF disable, BB enabled, IQIF enabled
-        bb_bit_write(SR_RF_IQIFC1_CHPM, 0x03);
-        // Change LVDS clock phase
-        bb_bit_write(SR_RF_IQIFC2_CPHADRV, 0);
-
-        /* Configure BB */
-        /* Setup IRQ mask: in chip mode, the baseband controls the RF's AGC */
-        pal_trx_reg_write(bb_reg_offset + RG_BBC0_IRQM,
-                          TAL_DEFAULT_BB_IRQ_MASK | BB_IRQ_AGCR | BB_IRQ_AGCH);
-        /* Configure RF */
-        uint8_t mask = TAL_DEFAULT_RF_IRQ_MASK;
-        bb_reg_write(bb_reg_offset + RG_RF09_IRQM, &mask);
-    }
-    else
-#endif
 
         /* Configure BB */
         /* Setup IRQ mask */
@@ -312,7 +272,7 @@ void trx_config(trx_id_t trx_id)
 	/* Commented for Errata#2*/
    // pal_trx_bit_write(rf_reg_offset + SR_RF09_AUXS_AVEN, 1);
 
-   pal_trx_bit_write(rf_reg_offset + SR_RF09_AUXS_PAVC, 2);  //setting to 2.4 sriram
+   pal_trx_bit_write(rf_reg_offset + SR_RF09_AUXS_PAVC, 2);  //setting to 2.4 check
 #endif
 }
 

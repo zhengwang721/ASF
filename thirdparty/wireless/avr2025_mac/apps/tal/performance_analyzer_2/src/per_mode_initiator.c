@@ -71,7 +71,7 @@
  */
 typedef struct {
 	uint8_t param_type;
-	uint16_t param_value; //size of max param length //sriram
+	uint16_t param_value; //size of max param length //check
 } set_param_cb_t;
 
 /*=====EXTERBNALS============================================================*/
@@ -269,7 +269,7 @@ static float reverse_float( const float float_val )
 
 /* Size constants for PERformance configuration parameters */
 FLASH_DECLARE(uint8_t perf_config_param_size[]) = {
-	sizeof(uint16_t),            /* channel */ //sriram
+	sizeof(uint16_t),            /* channel */ //check
 	sizeof(uint8_t),            /* channel page */
 	sizeof(uint8_t),            /* TX power_reg */
 	sizeof(int8_t),             /* TX_power_dBm */
@@ -282,7 +282,7 @@ FLASH_DECLARE(uint8_t perf_config_param_size[]) = {
 	sizeof(uint8_t),            /* Transceiver state */
 	sizeof(uint8_t),            /* CRC on remote node */
 	sizeof(uint32_t),           /* No. of test frames */
-	sizeof(uint16_t),            /* Physical frame length */ //sriram
+	sizeof(uint16_t),            /* Physical frame length */ //check
 	sizeof(uint8_t),            /* RPC */
 	sizeof(float),              /* ISM frequency */
 };
@@ -377,7 +377,7 @@ void per_mode_initiator_task(trx_id_t trx)
 
 			node_info[trx].transmitting = true;
 
-			node_info[trx].tx_frame_info->mpdu[PL_POS_SEQ_NUM-1]++; //sriram
+			node_info[trx].tx_frame_info->mpdu[PL_POS_SEQ_NUM-1]++; //check
 			/*	tal_tx_frame(trx,node_info[trx].tx_frame_info,
 				NO_CSMA_NO_IFS,
 				true );*/
@@ -632,7 +632,7 @@ void per_mode_initiator_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *f
 			{
 			if (((tal_pib_set(trx, phySetting, (pib_value_t *)&sun_phy_page_set[trx]) == MAC_SUCCESS)) && (status == MAC_SUCCESS))
 			{
-			tal_pib[trx].CurrentPage = 9; //sriram -> to be revisited
+			tal_pib[trx].CurrentPage = 9; //check -> to be revisited
 			curr_trx_config_params[trx].channel_page = 9;
 			tal_pib_get(trx,phyCurrentChannel, (uint8_t *)&channel);
 			curr_trx_config_params[trx].channel = channel;		
@@ -1026,7 +1026,7 @@ static void set_parameter_on_transmitter_node(trx_id_t trx,retval_t status)
 if((curr_trx_config_params[trx].phy_frame_length > aMaxPHYPacketSize) && (curr_trx_config_params[trx].channel_page !=9) )
 {
 
-	curr_trx_config_params[trx].phy_frame_length = aMaxPHYPacketSize; //sriram
+	curr_trx_config_params[trx].phy_frame_length = aMaxPHYPacketSize; //check
 	configure_frame_sending(trx);
 }
 					 tal_pib_get(trx,phyCurrentChannel, (uint8_t *)&channel);
@@ -1071,13 +1071,13 @@ if((curr_trx_config_params[trx].phy_frame_length > aMaxPHYPacketSize) && (curr_t
                 tx_pwr_reg = (uint8_t)set_param_cb[trx].param_value;
                 if (MAC_SUCCESS == tal_convert_reg_value_to_dBm(tx_pwr_reg, &tx_pwr_dbm))
                 {
-                    //temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);sriram
+                    //temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);check
                     tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&tx_pwr_dbm);
                     /* To make sure that TX_PWR register is updated with the
                      * value whatever user povided.Otherwise lowest dBm power
                      * (highest reg value will be taken)
                      */
-                  //  tal_set_tx_pwr(trx,REGISTER_VALUE,tx_pwr_reg);sriram
+                  //  tal_set_tx_pwr(trx,REGISTER_VALUE,tx_pwr_reg);check
                     
 					/* update the data base with this value */
                     curr_trx_config_params[trx].tx_power_reg = tx_pwr_reg;
@@ -1134,8 +1134,8 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 
                         uint32_t frames_with_wrong_crc;
 						sw_timer_stop(APP_TIMER_TO_TX);
-                        int8_t rssi_val =(int8_t)CCPU_ENDIAN_TO_LE32(msg->payload.test_result_rsp_data.rssi_avrg_rx);//sriram
-						//rssi_val = scale_reg_value_to_ed((uint8_t)rssi_val); sriram
+                        int8_t rssi_val =(int8_t)CCPU_ENDIAN_TO_LE32(msg->payload.test_result_rsp_data.rssi_avrg_rx);//check
+						//rssi_val = scale_reg_value_to_ed((uint8_t)rssi_val); check
                         
                         number_rx_frames = (msg->payload.test_result_rsp_data.num_of_frames_rx);
                         aver_lqi = CCPU_ENDIAN_TO_LE32(msg->payload.test_result_rsp_data.lqi_avrg_rx);
@@ -1288,7 +1288,7 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 			 * and
 			 * also derrive the LQI and ED values sent by the
 			 * receptor from the received payload */
-			uint8_t phy_frame_len = (uint8_t)mac_frame_info->length; //sriram - > range test pklt length not more than 127
+			uint8_t phy_frame_len = (uint8_t)mac_frame_info->length; //check - > range test pklt length not more than 127
 
 			app_led_event(LED_EVENT_RX_FRAME);
 
@@ -1345,7 +1345,7 @@ static void config_per_test_parameters(trx_id_t trx)
 
     /* Set the default values */
     curr_trx_config_params[trx].ack_request = default_trx_config_params[trx].ack_request = false;
-    curr_trx_config_params[trx].csma_enabled = default_trx_config_params[trx].csma_enabled = false; //sriram
+    curr_trx_config_params[trx].csma_enabled = default_trx_config_params[trx].csma_enabled = false; //check
     curr_trx_config_params[trx].retry_enabled = default_trx_config_params[trx].retry_enabled = false;
 
 #if (ANTENNA_DIVERSITY == 1)
@@ -1391,7 +1391,7 @@ static void config_per_test_parameters(trx_id_t trx)
 		
 		/* Make the ISM frequency as null as IEEE channel is set in default case */
 		curr_trx_config_params[trx].channel_page = default_trx_config_params[trx].channel_page = TAL_CURRENT_PAGE_DEFAULT_RF24; 
-		// sriram-> add code if default page is sun page,above assumption is legacy page is used
+		// check-> add code if default page is sun page,above assumption is legacy page is used
 		tal_pib_set(trx,phyCurrentPage, (pib_value_t *)&default_trx_config_params[trx].channel_page);
 		/* As tx power is already configure by TAL in tal_pib.c get it for application*/
 		temp = TAL_TRANSMIT_POWER_DEFAULT;
@@ -1400,7 +1400,7 @@ static void config_per_test_parameters(trx_id_t trx)
 	else
 	{
 		curr_trx_config_params[trx].channel = default_trx_config_params[trx].channel = DEFAULT_CHANNEL_RF09;
-		tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&default_trx_config_params[trx].channel);//sriram
+		tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&default_trx_config_params[trx].channel);//check
 		curr_trx_config_params[trx].channel_page = default_trx_config_params[trx].channel_page = TAL_CURRENT_PAGE_DEFAULT_RF09;
 		tal_pib_set(trx,phyCurrentPage, (pib_value_t *)&default_trx_config_params[trx].channel_page);
 		/* As tx power is already configure by TAL in tal_pib.c get it for application*/
@@ -1596,7 +1596,7 @@ static void toggle_trx_sleep(trx_id_t trx)
 			if (MAC_SUCCESS == tal_trx_wakeup(trx) )
 			{
 				trx_sleep_status[trx] = false;
-				/*Waking up one of the transceiver wakes wakes other one as well,put the other transceiver to sleep here*/ //sriram requires investingation
+				/*Waking up one of the transceiver wakes wakes other one as well,put the other transceiver to sleep here*/ //check requires investingation
 				if((trx==RF09) && (trx_sleep_status[RF24]))
 				{
 				 tal_trx_sleep(RF24);
@@ -1651,7 +1651,7 @@ if (true == curr_trx_config_params[trx].rx_desensitize)
 	tal_set_rx_sensitivity_level(trx,RX_DESENSITIZE_LEVEL);
 }
 #endif
-//sriram decide whther this can be removed
+//check decide whther this can be removed
 /*
 		if(last_tx_power_format_set[trx] == 0)
 		{
@@ -1980,7 +1980,7 @@ p_in = (int8_t)energy_level ;
 
 void perf_set_sun_page(trx_id_t trx,uint8_t *param_val)
 {
-	//sun_phy_t sun_page;//sriram //not used now but added for later ref and usage	
+	//sun_phy_t sun_page;//check //not used now but added for later ref and usage	
 	uint8_t *temp_param_val = param_val;
 	uint16_t channel;
 	sun_page[trx].page_no = *temp_param_val++;
@@ -2031,7 +2031,7 @@ void perf_set_sun_page(trx_id_t trx,uint8_t *param_val)
 
 			if (tal_pib_set(trx, phySetting, (pib_value_t *)&sun_phy_page_set[trx]) == MAC_SUCCESS)
 			{
-				tal_pib[trx].CurrentPage = 9; //sriram -> needs to be revisited
+				tal_pib[trx].CurrentPage = 9; //check -> needs to be revisited
 				curr_trx_config_params[trx].channel_page = 9;
 				tal_pib_get(trx,phyCurrentChannel, &channel);
 
@@ -2241,7 +2241,7 @@ void perf_get_req(trx_id_t trx, uint8_t param_type)
                 uint8_t ch_page = 0;
 
 				tal_pib_get(trx,phyCurrentPage, &ch_page);				
-				//sriram
+				//check
 				if(ch_page == 9)
 				{
 				uint8_t param_val[10];
@@ -2292,7 +2292,7 @@ void perf_get_req(trx_id_t trx, uint8_t param_type)
 
 				tal_pib_get(trx,phyTransmitPower, &tx_pwr_dbm);
 
-               // tx_pwr_dbm = CONV_phyTransmitPower_TO_DBM(tx_pwr);sriram
+               // tx_pwr_dbm = CONV_phyTransmitPower_TO_DBM(tx_pwr);check
 
                 /* Send Get confirmation with status SUCCESS */
                 usr_perf_get_confirm(trx, MAC_SUCCESS,
@@ -2431,7 +2431,7 @@ static void set_phy_frame_length(trx_id_t trx, uint16_t frame_len)
 	if(tal_pib[trx].phy.modulation == LEG_OQPSK)
 	{
     /* Check for maximum allowed IEEE 802.15.4 frame length. */
-    if (frame_len > aMaxPHYPacketSize) //sriram
+    if (frame_len > aMaxPHYPacketSize) //check
     {
         curr_trx_config_params[trx].phy_frame_length = aMaxPHYPacketSize;
     }
@@ -2446,7 +2446,7 @@ static void set_phy_frame_length(trx_id_t trx, uint16_t frame_len)
 	}
 	else 
 	{
-    if (frame_len > aMaxPHYPacketSize_4g) //sriram
+    if (frame_len > aMaxPHYPacketSize_4g) //check
     {
 	    curr_trx_config_params[trx].phy_frame_length = aMaxPHYPacketSize_4g;
     }	
@@ -2480,7 +2480,7 @@ static void set_channel(trx_id_t trx, uint16_t channel)
 {
     uint32_t supported_channels;
 //uint16_t channel_to_set = channel;
-if(tal_pib[trx].phy.modulation == LEG_OQPSK) //sriram cleanup required
+if(tal_pib[trx].phy.modulation == LEG_OQPSK) //check cleanup required
 {
 
 #ifdef SUPPORT_LEGACY_OQPSK
@@ -2598,7 +2598,7 @@ static void set_channel_page(trx_id_t trx, uint8_t channel_page)
 					if((curr_trx_config_params[trx].phy_frame_length > aMaxPHYPacketSize) && (channel_page!=9) )
 					{
 
-					curr_trx_config_params[trx].phy_frame_length = aMaxPHYPacketSize; //sriram
+					curr_trx_config_params[trx].phy_frame_length = aMaxPHYPacketSize; //check
 					configure_frame_sending(trx);
 					}
 
@@ -2652,7 +2652,7 @@ static void set_tx_power(trx_id_t trx, uint8_t tx_power_format, int8_t power_val
                         /* set the Tx power on source node in case of no peer */
                         if (MAC_SUCCESS == tal_convert_reg_value_to_dBm(tx_pwr_reg, &tx_pwr_dbm))
                         {
-                          //  temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);sriram
+                          //  temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);check
                             tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&tx_pwr_dbm);
                             /* To make sure that TX_PWR register is updated with the
                              * value whatever user povided.Otherwise lowest dBm power
@@ -2708,7 +2708,7 @@ static void set_tx_power(trx_id_t trx, uint8_t tx_power_format, int8_t power_val
 						else
 						{
 							/* set the Tx power on source node in case of no peer */
-							//temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);sriram
+							//temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);check
 							tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&tx_pwr_dbm);
 
 							/* update the data base with this value */
@@ -2890,7 +2890,7 @@ void get_current_configuration(trx_id_t trx)
 			/* Channel configuration */
 			tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&temp_channel);
 
-		//} sriram
+		//} check
 	
 
 		/* Channel page configuration */
@@ -2923,7 +2923,7 @@ void get_current_configuration(trx_id_t trx)
 
 		if (tal_pib_set(trx, phySetting, (pib_value_t *)&phy_to_set) == MAC_SUCCESS)
 		{
-			tal_pib[trx].CurrentPage = 9; //sriram -> needs to be revisited
+			tal_pib[trx].CurrentPage = 9; //check -> needs to be revisited
 
 		}
 
@@ -3476,10 +3476,10 @@ static void configure_frame_sending(trx_id_t trx)
     frame_ptr -= FCF_LEN;
     convert_16_bit_to_byte_array(CCPU_ENDIAN_TO_LE16(fcf), frame_ptr);
 
-    /* First element shall be length of PHY frame. */ //sriram
+    /* First element shall be length of PHY frame. */ //check
     //frame_ptr--;
     //*frame_ptr = curr_trx_config_params[trx].phy_frame_length;
-	node_info[trx].tx_frame_info->length = (curr_trx_config_params[trx].phy_frame_length )-tal_pib[trx].FCSLen ;//+ 1500; //sriram->fcs length added at the end in tal
+	node_info[trx].tx_frame_info->length = (curr_trx_config_params[trx].phy_frame_length )-tal_pib[trx].FCSLen ;//+ 1500; //check->fcs length added at the end in tal
     /* Finished building of frame. */
     node_info[trx].tx_frame_info->mpdu = frame_ptr;
 }
@@ -3992,7 +3992,7 @@ static float calculate_net_data_rate(trx_id_t trx,float per_test_duration_sec)
     float data_rate;
 
     /* Data volume i.e total no.of bits transmitted */
-    data_volume = curr_trx_config_params[trx].phy_frame_length  * curr_trx_config_params[trx].number_test_frames * 8; //1500 sriram
+    data_volume = curr_trx_config_params[trx].phy_frame_length  * curr_trx_config_params[trx].number_test_frames * 8; //1500 check
     /* Net data rate in Kbps*/
     data_rate = (data_volume / per_test_duration_sec) / 1000;
 
@@ -4287,7 +4287,7 @@ static void configure_range_test_frame_sending(trx_id_t trx)
 	 */
 
 	/* Get length of current frame. */
-	app_frame_length = RANGE_TEST_PAYLOAD_LENGTH; // sriram (RANGE_TEST_PKT_LENGTH - FRAME_OVERHEAD -tal_pib[trx].FCSLen ); /* to be   * changed///sriram 
+	app_frame_length = RANGE_TEST_PAYLOAD_LENGTH; // check (RANGE_TEST_PKT_LENGTH - FRAME_OVERHEAD -tal_pib[trx].FCSLen ); /* to be   * changed///check 
 
 	/* Set payload pointer. */
 	frame_ptr = temp_frame_ptr
@@ -4368,7 +4368,7 @@ static void configure_range_test_frame_sending(trx_id_t trx)
 	
 	convert_16_bit_to_byte_array(CCPU_ENDIAN_TO_LE16(fcf), frame_ptr);
 
-    /* First element shall be length of PHY frame. */ //sriram
+    /* First element shall be length of PHY frame. */ //check
     //frame_ptr--;
     //*frame_ptr = curr_trx_config_params[trx].phy_frame_length;
 	node_info[trx].tx_frame_info->length = (RANGE_TEST_PAYLOAD_LENGTH + FRAME_OVERHEAD ); // (RANGE_TEST_PKT_LENGTH -tal_pib[trx].FCSLen) ;
