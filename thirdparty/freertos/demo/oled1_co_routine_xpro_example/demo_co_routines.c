@@ -55,7 +55,6 @@
 //@{
 
 #define UART_CO_ROUTINE_PRIORITY      (configMAX_CO_ROUTINE_PRIORITIES - 1)
-#define UART_CO_ROUTINE_DELAY         (10 / portTICK_RATE_MS)
 
 #define MAIN_CO_ROUTINE_PRIORITY      (configMAX_CO_ROUTINE_PRIORITIES - 2)
 #define MAIN_CO_ROUTINE_DELAY         (100 / portTICK_RATE_MS)
@@ -64,10 +63,8 @@
 #define GRAPH_CO_ROUTINE_DELAY        (50 / portTICK_RATE_MS)
 
 #define TERMINAL_CO_ROUTINE_PRIORITY  (configMAX_CO_ROUTINE_PRIORITIES - 3)
-#define TERMINAL_CO_ROUTINE_DELAY     (1000 / portTICK_RATE_MS)
 
 #define ABOUT_CO_ROUTINE_PRIORITY     (configMAX_CO_ROUTINE_PRIORITIES - 3)
-#define ABOUT_CO_ROUTINE_DELAY        (33 / portTICK_RATE_MS)
 
 //@}
 
@@ -471,8 +468,6 @@ static void terminal_co_routine(CoRoutineHandle_t xHandle, UBaseType_t uxIndex)
 			}
 
 			oled1_set_led_state(&oled1, OLED1_LED2_ID, false);
-
-			//crDELAY(xHandle, TERMINAL_CO_ROUTINE_DELAY);
 		}
 	}
 
