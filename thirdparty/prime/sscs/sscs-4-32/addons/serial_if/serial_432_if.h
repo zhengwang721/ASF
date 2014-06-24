@@ -62,13 +62,13 @@ extern "C" {
  * @{
  */
 
-/* ! \name Serialization of SSCS 4-32 */
+/* \name Serialization of SSCS 4-32 */
 /* @{ */
 uint8_t serial_432_if_api_parser(uint8_t *puc_rx_msg, uint16_t us_len);
 int8_t serial_432_if_api_process(void);
 
 /* @} */
-/* ! @} */
+/* @} */
 
 /* / @cond 0 */
 /**INDENT-OFF**/

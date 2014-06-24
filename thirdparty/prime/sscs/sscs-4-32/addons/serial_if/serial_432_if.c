@@ -494,7 +494,7 @@ int8_t serial_432_if_api_process(void)
 	return (result);
 }
 
-/* ! @} */
+/* @} */
 
 /* / @cond 0 */
 /**INDENT-OFF**/

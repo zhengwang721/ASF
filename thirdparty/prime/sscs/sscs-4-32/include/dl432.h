@@ -57,25 +57,25 @@ extern "C" {
  * @{
  */
 
-/* ! \name Length of the LPDU */
+/* \name Length of the LPDU */
 /* @{ */
 #define LPDU_HEADER                    3
 /* @} */
 
-/* ! \name LSDU Data length */
-/* ! \note It must be smaller than PRIME_MACSAP_DATA_SIZE */
+/* \name LSDU Data length */
+/* \note It must be smaller than PRIME_MACSAP_DATA_SIZE */
 /* @{ */
 #define MAX_LENGTH_432_DATA            (1024 - LPDU_HEADER)
 /* @} */
 
-/* ! \name DL result values */
-/* ! \note Values translated from mac layer */
+/* \name DL result values */
+/* \note Values translated from mac layer */
 /* @{ */
 #define DL432_RESULT_SUCCESS           0
 #define DL432_RESULT_ERROR             0x80
 /* @} */
 
-/* ! \name DL commands */
+/* \name DL commands */
 /* @{ */
 #define DL432_NO_COMMAND               0
 #define DL432_DATA_CONFIRM             1
@@ -90,14 +90,14 @@ extern "C" {
 #define DL432_BROADCAST_REQUEST        14
 /* @} */
 
-/* ! \name Maximum lenght of the stored LSDU */
+/* \name Maximum lenght of the stored LSDU */
 /* @{ */
 #define MAX_LENGTH_STORED_LSDU         7
 /* @} */
 
 #define lsdu dl.buff
 
-/* ! Buffer defined for reception/ transmission */
+/* Buffer defined for reception/ transmission */
 typedef union {
 	uint8_t lpdu[MAX_LENGTH_432_DATA + LPDU_HEADER];
 
@@ -109,7 +109,7 @@ typedef union {
 	} dl;
 } dl432Buffer_t;
 
-/* ! Information of commands */
+/* Information of commands */
 typedef struct {
 	uint8_t cmd;
 	uint8_t dstLSAP;
@@ -121,7 +121,7 @@ typedef struct {
 	uint8_t linkClass;
 } dl432_LlcCallback_t;
 
-/* ! \name DL432 interface */
+/* \name DL432 interface */
 /* @{ */
 int dl432_dl_data_request(uint8_t dstLSAP, uint8_t locLSAP, uint16_t dstAddress, dl432Buffer_t *txBuff, uint16_t lenLsdu, uint8_t linkClass);
 int dl432_dl_update_reply_request(uint8_t locLSAP, uint8_t *prBuff, uint16_t length);
@@ -132,7 +132,7 @@ int dl432_dl_callback(dl432_LlcCallback_t *cmd, dl432Buffer_t *buf, uint16_t max
 
 /* @} */
 
-/* ! @} */
+/* @} */
 
 /* / @cond 0 */
 /**INDENT-OFF**/

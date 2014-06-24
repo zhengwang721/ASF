@@ -63,41 +63,41 @@ extern "C" {
  * @{
  */
 
-/* ! \name SSCS432 results */
+/* \name SSCS432 results */
 /* @{ */
 #define SSCS432_OK                  0
 #define SSCS432_ERROR               (-1)
 /* @} */
 
-/* ! MAC address length */
+/* MAC address length */
 #define MAC_LENGTH                  6
 
-/* ! Address base node */
+/* Address base node */
 #define BASE_NODE_432_ADDRESS       0
 
-/* ! Length serial number */
+/* Length serial number */
 #define LEN_432_SERIAL_NUMBER       16
 
-/* ! \name L_SAPs as defined in Iberdrola's Companion standard: */
+/* \name L_SAPs as defined in Iberdrola's Companion standard: */
 
-/* ! \note  4 associations within 1 logical device (mngt logical device): */
-/* ! \note - public client (client id 16) */
-/* ! \note - management client (client id 1) */
-/* ! \note - reading client (client id 2) */
-/* ! \note - update firmware client (client id 3) */
+/* \note  4 associations within 1 logical device (mngt logical device): */
+/* \note - public client (client id 16) */
+/* \note - management client (client id 1) */
+/* \note - reading client (client id 2) */
+/* \note - update firmware client (client id 3) */
 /* @{ */
 #define PUBLIC_CLIENT_ID            16
 #define MANAGEMENT_CLIENT_ID        1
 #define READING_CLIENT_ID           2
 #define UPDATE_FIRMWARE_CLIENT_ID   3
-/* ! Default L_SAPs. Use these values by default */
+/* Default L_SAPs. Use these values by default */
 #define CL_DEFAULT_BASE_SAP         MANAGEMENT_CLIENT_ID
 #define CL_DEFAULT_SERVICE_SAP      PUBLIC_CLIENT_ID
-/* ! Use this to update firmware: */
+/* Use this to update firmware: */
 #define CL_UPDATE_FIRMWARE_SSAP     UPDATE_FIRMWARE_CLIENT_ID
 /* @} */
 
-/* ! \name Convergence Layer Commands for the service node */
+/* \name Convergence Layer Commands for the service node */
 /* @{ */
 #define CL_432_ESTABLISH_CONFIRM        1
 #define CL_432_RELEASE_CONFIRM          2
@@ -105,13 +105,13 @@ extern "C" {
 #define CL_432_RELEASE_REQUEST          12
 /* @} */
 
-/* ! \name Convergence Layer Commands for the base node */
+/* \name Convergence Layer Commands for the base node */
 /* @{ */
 #define CL_432_JOIN_INDICATE            3
 #define CL_432_LEAVE_INDICATE           4
 /* @} */
 
-/* ! \name Definitions to serialize 432 (USI) */
+/* \name Definitions to serialize 432 (USI) */
 /* @{ */
 #define PROTOCOL_432_PRIME              0x1A
 /* Buffer432 size + header Size */
@@ -147,7 +147,7 @@ typedef struct {
 	uint8_t arq;
 } sscs432_NotService_t;
 
-/* ! \name SSCS432 interface */
+/* \name SSCS432 interface */
 /* @{ */
 void sscs432_init(void);
 void sscs432_start(void);
@@ -160,7 +160,7 @@ Bool sscs432_poll_establish_release(sscs432_NotService_t *ptrNot);
 
 /* @} */
 
-/* ! @} */
+/* @} */
 
 /* / @cond 0 */
 /**INDENT-OFF**/

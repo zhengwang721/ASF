@@ -48,59 +48,59 @@
 
 /* Declaration of Phy parameters structure */
 typedef struct {
-	uint8_t driver1Mode;         /* < Indicate if driver 1 is extern driver
+	uint8_t driver1Mode;         /*  Indicate if driver 1 is extern driver
 	                              * (1) or intern driver (0) */
-	uint8_t driver2Mode;         /* < Indicate if driver 2 is extern driver
+	uint8_t driver2Mode;         /*  Indicate if driver 2 is extern driver
 	                              * (1) or intern driver (0) */
-	uint8_t txrx1Polarity;       /* < Indicate if txrx1 polarity is high or
+	uint8_t txrx1Polarity;       /*  Indicate if txrx1 polarity is high or
 	                              * low active */
-	uint8_t txrx2Polarity;       /* < Indicate if txrx2 polarity is high or
+	uint8_t txrx2Polarity;       /*  Indicate if txrx2 polarity is high or
 	                              * low active */
-	uint8_t autoDetectBranch;    /* < Flag to enable branch auto detection
+	uint8_t autoDetectBranch;    /*  Flag to enable branch auto detection
 	                              **/
-	uint8_t impedance;           /* < When branch auto detection disabled,
+	uint8_t impedance;           /*  When branch auto detection disabled,
 	                              * indicate impedance to use */
-	uint8_t high_Z_driver;       /* < Select driver for high impedance */
-	uint8_t low_Z_driver;        /* < Select driver for low impedance */
-	uint8_t vlow_Z_driver;       /* < Select driver for very low impedance
+	uint8_t high_Z_driver;       /*  Select driver for high impedance */
+	uint8_t low_Z_driver;        /*  Select driver for low impedance */
+	uint8_t vlow_Z_driver;       /*  Select driver for very low impedance
 	                              **/
-	uint8_t agc0KrssiOffset;     /* < Offset for received signal strength
+	uint8_t agc0KrssiOffset;     /*  Offset for received signal strength
 	                              * (rssi) according to AGC 0 configuration
 	                              **/
-	uint8_t agc1KrssiOffset;     /* < Offset for received signal strength
+	uint8_t agc1KrssiOffset;     /*  Offset for received signal strength
 	                              * (rssi) according to AGC 1 configuration
 	                              **/
-	uint8_t agc2KrssiOffset;     /* < Offset for received signal strength
+	uint8_t agc2KrssiOffset;     /*  Offset for received signal strength
 	                              * (rssi) according to AGC 2 configuration
 	                              **/
-	uint8_t agc3KrssiOffset;     /* < Offset for received signal strength
+	uint8_t agc3KrssiOffset;     /*  Offset for received signal strength
 	                              * (rssi) according to AGC 3 configuration
 	                              **/
-	uint8_t n1Delay;             /* < N1 Delay */
-	uint8_t p1Delay;             /* < P1 Delay */
-	uint8_t n2Delay;             /* < N2 delay */
-	uint8_t p2Delay;             /* < P2 delay */
-	uint8_t emit1Active;         /* < Emit 1 Active */
-	uint8_t emit2Active;         /* < Emit 2 Active */
-	uint8_t emit3Active;         /* < Emit 3 Active */
-	uint8_t emit4Active;         /* < Emit 4 Active */
-	uint8_t txrxChannel;         /* < Transmission/Reception Channel */
-	uint8_t atplCoupling;        /* < Coupling board in use */
-	uint8_t primeMode;           /* < PRIME mode (see mode values in
+	uint8_t n1Delay;             /*  N1 Delay */
+	uint8_t p1Delay;             /*  P1 Delay */
+	uint8_t n2Delay;             /*  N2 delay */
+	uint8_t p2Delay;             /*  P2 delay */
+	uint8_t emit1Active;         /*  Emit 1 Active */
+	uint8_t emit2Active;         /*  Emit 2 Active */
+	uint8_t emit3Active;         /*  Emit 3 Active */
+	uint8_t emit4Active;         /*  Emit 4 Active */
+	uint8_t txrxChannel;         /*  Transmission/Reception Channel */
+	uint8_t atplCoupling;        /*  Coupling board in use */
+	uint8_t primeMode;           /*  PRIME mode (see mode values in
 	                              * atpl230.h) */
-	uint16_t timeBeforeTxHighZ;  /* < Time in 10's of us for HIMP pin before
+	uint16_t timeBeforeTxHighZ;  /*  Time in 10's of us for HIMP pin before
 	                              * transmission with high impedance */
-	uint16_t timeBeforeTxLowZ;   /* < Time in 10's of us for TXRX pin before
+	uint16_t timeBeforeTxLowZ;   /*  Time in 10's of us for TXRX pin before
 	                              * transmission with low impedance */
-	uint16_t timeAfterTxHighZ;   /* < Time (unit depends on platform) for
+	uint16_t timeAfterTxHighZ;   /*  Time (unit depends on platform) for
 	                              * HIMP pin after transmission with high
 	                              * impedance */
-	uint16_t timeAfterTxLowZ;    /* < Time (unit depends on platform) for
+	uint16_t timeAfterTxLowZ;    /*  Time (unit depends on platform) for
 	                              * TXRX pin after transmission with low
 	                              * impedance */
-	uint16_t rxCorrThreshold;    /* < Threshold for autocorrelation filter
+	uint16_t rxCorrThreshold;    /*  Threshold for autocorrelation filter
 	                              **/
-	uint8_t enable_vlow_pk;      /* < Flag to enable Peak Cut On in case of
+	uint8_t enable_vlow_pk;      /*  Flag to enable Peak Cut On in case of
 	                              * low impedance */
 } atpl230Cfg_t;
 

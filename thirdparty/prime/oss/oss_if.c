@@ -89,9 +89,9 @@ extern "C" {
  * @{
  */
 
-/* ! Tasks handlers */
+/* Tasks handlers */
 xTaskHandle xPrimeHnd;
-/* ! Timers handlers */
+/* Timers handlers */
 xTimerHandle xUpdateTimer;
 
 /**
@@ -190,7 +190,7 @@ void vPrimeStackInitTask(void)
 	configASSERT(xUpdateTimer);
 }
 
-/* ! @} */
+/* @} */
 
 /* / @cond 0 */
 /**INDENT-OFF**/

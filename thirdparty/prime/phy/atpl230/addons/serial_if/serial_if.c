@@ -92,14 +92,14 @@ static uint16_t us_tx_counter;
 /* @} */
 #endif
 
-/*! \name Data buffers
+/*  \name Data buffers
  * \note In noise mode: num symbols in rx noise mode is 8 and 97 bytes/symbol,
  * so 8 * 97 = 776 bytes. In addition to header size in worst case
  * Headers us_len = 2 * PHY_DMA_OFFSET = 2 * 16 = 32.	Total size is
  * 776 + 32 = 808 bytes */
 /* @{ */
-static uint8_t uc_serial_rsp_buf[808];   /* <  Response working buffer */
-static uint8_t uc_serial_data_buf[808];  /* <  Receive working buffer */
+static uint8_t uc_serial_rsp_buf[808];   /*   Response working buffer */
+static uint8_t uc_serial_data_buf[808];  /*   Receive working buffer */
 /* @} */
 
 /* \name Data structure to communicate with USI layer */

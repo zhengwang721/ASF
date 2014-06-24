@@ -64,14 +64,14 @@ extern "C" {
  * @{
  */
 
-/* ! \name Communication profiles */
+/* \name Communication profiles */
 /* @{ */
 #define MNGP_SERIAL_PROFILE                     0x00
 #define MNGP_PRIME_PROFILE                      0x01
 #define MNGP_IFACE_PROFILE                      0x02
 /* @} */
 
-/* ! \name Commands */
+/* \name Commands */
 /* @{ */
 #define MNGP_PRIME                              0x00
 #define MNGP_PRIME_GETQRY                       0x00
@@ -84,13 +84,13 @@ extern "C" {
 #define MNGP_PRIME_EN_PIBRSP                    0x07
 /* @} */
 
-/* ! \name Enhanced PIB query types */
+/* \name Enhanced PIB query types */
 /* @{ */
 #define MNGP_PRIME_LISTQRY                      0x0E
 #define MNGP_PRIME_LISTRSP                      0x0F
 /* @} */
 
-/* ! Length to be used */
+/* Length to be used */
 #define MAX_LEN_ANSWER                          400
 
 /* * \name PHY PIB attributes */
@@ -110,7 +110,7 @@ extern "C" {
 #define PIB_PHY_AGC_STEP_VALUE                  0x00B5
 #define PIB_PHY_AGC_STEP_NUMBER                 0x00B6
 /* @} */
-/* ! \name MAC variable PIB attributes */
+/* \name MAC variable PIB attributes */
 /* @{ */
 #define PIB_MAC_MIN_SWITCH_SEARCH_TIME          0x0010
 #define PIB_MAC_MAX_PROMOTION_PDU               0x0011
@@ -123,7 +123,7 @@ extern "C" {
 #define PIB_MAC_MAX_CTL_RE_TX                   0x0018
 #define PIB_MAC_EMA_SMOOTHING                   0x0019
 /* @} */
-/* ! \name MAC functional PIB attributes */
+/* \name MAC functional PIB attributes */
 /* @{ */
 #define PIB_MAC_LNID                            0x0020
 #define PIB_MAC_LSID                            0x0021
@@ -139,7 +139,7 @@ extern "C" {
 #define PIB_MAC_BEACON_TX_FRECUENCY             0x002B
 #define PIB_MAC_MAC_CAPABILITES                 0x002C
 /* @} */
-/* ! \name MAC statistical PIB attributes */
+/* \name MAC statistical PIB attributes */
 /* @{ */
 #define PIB_MAC_TX_DATAPKT_COUNT                0x0040
 #define PIB_MAC_RX_DATAPKT_COUNT                0x0041
@@ -148,7 +148,7 @@ extern "C" {
 #define PIB_MAC_CSMA_FAIL_COUNT                 0x0044
 #define PIB_MAC_CSMA_CH_BUSY_COUNT              0x0045
 /* @} */
-/* ! \name MAC list PIB attributes */
+/* \name MAC list PIB attributes */
 /* @{ */
 #define PIB_MAC_LIST_REGISTER_DEVICES           0x0050
 #define PIB_MAC_LIST_ACTIVE_CONN                0x0051
@@ -160,7 +160,7 @@ extern "C" {
 #define PIB_MAC_LIST_PHY_COMM                   0x0057
 #define PIB_MAC_LIST_ACTIVE_CONN_EX             0x0058
 /* @} */
-/* ! \name MAC action PIB attributes */
+/* \name MAC action PIB attributes */
 /* @{ */
 #define PIB_MAC_ACTION_TX_DATA                  0x0060
 #define PIB_MAC_ACTION_CONN_CLOSE               0x0061
@@ -168,7 +168,7 @@ extern "C" {
 #define PIB_MAC_ACTION_PRO_REJECT               0x0063
 #define PIB_MAC_ACTION_UNREGISTER               0x0064
 /* @} */
-/* ! \name Base Node certification PIB attributes */
+/* \name Base Node certification PIB attributes */
 /* @{ */
 #define PIB_MAC_ACTION_PROMOTE                  0x0065
 #define PIB_MAC_ACTION_DEMOTE                   0x0066
@@ -183,7 +183,7 @@ extern "C" {
 #define PIB_MAC_ACTION_SEGMENTED_432            0x006F
 #define PIB_MAC_ACTION_APPEMU_DATA_BURST        0x0080
 /* @} */
-/* ! \name MAC application PIB attributes */
+/* \name MAC application PIB attributes */
 /* @{ */
 #define PIB_MAC_APP_FWDL_RUNNING                0x0070
 #define PIB_MAC_APP_FWDL_RX_PHT_COUNT           0x0071
@@ -191,7 +191,7 @@ extern "C" {
 #define PIB_MAC_APP_VENDOR_ID                   0x0076
 #define PIB_MAC_APP_PRODUCT_ID                  0x0077
 /* @} */
-/* ! \name ATMEL PHY PIB attributes */
+/* \name ATMEL PHY PIB attributes */
 /* @{ */
 #define PIB_PHY_SW_VERSION                      0x8080
 #define PIB_PHY_ZCT                             0x8081
@@ -210,13 +210,13 @@ extern "C" {
 #define PIB_PHY_TX_CHANNEL                      0x8090
 #define PIB_PHY_RX_PDU                          0xC08F
 /* @} */
-/* ! \name ATPL230 PIB attributes */
+/* \name ATPL230 PIB attributes */
 /* @{ */
 #define PIB_PHY_DRV_AUTO                        0x8301
 #define PIB_PHY_DRV_IMPEDANCE                   0x8302
 #define PIB_PHY_PIOC_CTRL                       0x8303
 /* @} */
-/* ! \name ATMEL MAC PIB attributes */
+/* \name ATMEL MAC PIB attributes */
 /* @{ */
 #define PIB_MAC_EUI48                           0x8100
 #define PIB_MAC_PLC_STATE                       0x8101
@@ -245,12 +245,12 @@ extern "C" {
 #define PIB_432_LIST_NODES                      0x8250
 #define PIB_FU_LIST                             0x8350
 /* @} */
-/* ! \name BOOT PIB attributes */
+/* \name BOOT PIB attributes */
 /* @{ */
 #define PIB_BOOT_VERSION                        0x8400
 /* @} */
 
-/* ! \name Management Plane interface */
+/* \name Management Plane interface */
 /* @{ */
 void mngl_init(void);
 void mngl_start(void);
@@ -260,7 +260,7 @@ uint8_t mngl_rcv_cmd(uint8_t *rxBuff, uint16_t length);
 
 /* @} */
 
-/* ! @} */
+/* @} */
 
 /* @cond 0 */
 /**INDENT-OFF**/

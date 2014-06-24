@@ -66,7 +66,7 @@ extern "C" {
 #define FW_VERSION_SIZE            32
 #define MAX_BUFFER_RCV             500
 
-/* ! FUP request messages */
+/* FUP request messages */
 enum FupReqValues {
 	FUP_CLEARTARGETLIST_REQUEST             = 0x14,
 	FUP_ADDTARGET_REQUEST                   = 0x15,
@@ -82,7 +82,7 @@ enum FupReqValues {
 	FUP_STATE_REQUEST                       = 0x1F,
 };
 
-/* ! Base Management banned MAC list request messages */
+/* Base Management banned MAC list request messages */
 enum BaseMngBannedMacValues {
 	BASEMNG_ADDBANNEDMACLIST_REQUEST        = 0x28,
 	BASEMNG_REMOVEBANNEDMACLIST_REQUEST     = 0x29,
@@ -93,7 +93,7 @@ enum BaseMngBannedMacValues {
 	BASEMNG_GETBANNEDMACLIST_REQUEST        = 0x2E,
 };
 
-/* ! PRIME Profile request messages */
+/* PRIME Profile request messages */
 enum PrimeProfReqValues {
 	PPROF_GETPIB_REQUEST                    = 0x30,
 	PPROF_SETPIB_REQUEST                    = 0x31,
@@ -101,12 +101,12 @@ enum PrimeProfReqValues {
 	PPROF_REBOOTDEV_REQUEST                 = 0x33,
 };
 
-/* ! \name Base Management response */
+/* \name Base Management response */
 /* @{ */
 #define BASEMNG_ACK                         1
 /* @} */
 
-/* ! FUP indication messages */
+/* FUP indication messages */
 enum FupValues {
 	FUP_ACK                                 = 1,
 	FUP_STATUS_INDICATION                   = 3,
@@ -115,29 +115,29 @@ enum FupValues {
 	FUP_KILL_INDICATION                     = 6,
 };
 
-/* ! \name Base Mangement banned MAC list response */
+/* \name Base Mangement banned MAC list response */
 /* @{ */
 #define BASEMNG_GETBANNEDMACLIST_RESPONSE   0x10
 /* @} */
 
-/* ! \name PRIME Profile response */
+/* \name PRIME Profile response */
 /* @{ */
 #define PPROF_GETPIB_RESPONSE               0x20
 /* @} */
 
-/* ! \name Base Management event network */
+/* \name Base Management event network */
 /* @{ */
 #define BASEMNG_EVENT_NETWORK               0x28
 #define BASEMNG_EVENT_ALIVE_NETWORK         0x29
 /* @} */
 
-/* ! \name Base Management ACK response codes */
+/* \name Base Management ACK response codes */
 /* @{ */
 #define BASEMNG_ACK_OK                      0
 #define BASEMNG_ACK_ERROR                   1
 /* @} */
 
-/* ! FUP ACK response codes */
+/* FUP ACK response codes */
 enum FupAckValues {
 	FUP_ACK_OK                              = 0,
 	FUP_ACK_ERROR                           = 1,
@@ -151,7 +151,7 @@ enum FupAckValues {
 	FUP_ACK_FU_INPROCESS                    = 9,
 };
 
-/* ! FUP states */
+/* FUP states */
 enum FupStates {
 	FUP_STATE_IDLE                          = 0,
 	FUP_STATE_INIT                          = 1,
@@ -165,7 +165,7 @@ enum FupStates {
 	FUP_STATE_CNTDWN                        = 9,
 };
 
-/* ! FUP error type */
+/* FUP error type */
 enum FupErrorValues {
 	FU_ERROR_NODE_NOERROR                   = 0,
 	FU_ERROR_NODE_WRONGSTATE_EXEC           = 1,
@@ -189,7 +189,7 @@ enum FupErrorValues {
 	FU_ERROR_NODE_MODEL_NOTMATCH            = 19,
 };
 
-/* ! FUP warning type */
+/* FUP warning type */
 enum FupWarningValues {
 	FU_WARNING_NODE_ALREADY_UPDATE          = 128,
 	FU_WARNING_NODE_ALREADY_EXECUTED        = 129,
@@ -203,7 +203,7 @@ enum FupWarningValues {
 #define VERSIONIND_MAX_LENGTH      103
 #define KILLIND_LENGTH             7
 
-/* ! \name Definitions to serialize Base Management (USI) */
+/* \name Definitions to serialize Base Management (USI) */
 /* @{ */
 #define PROTOCOL_FUP               0x1D
 #define CMD_FUP_PROTOCOL_MSK       0x3F
@@ -212,7 +212,7 @@ enum FupWarningValues {
 
 #define MAC_SIZE                   6
 
-/* ! \name Firmware Information List */
+/* \name Firmware Information List */
 /* @{ */
 #define INFO_LIST_MAX_SIZE         32
 #define INFO_LIST_NUMBER_ID        3
@@ -224,46 +224,46 @@ typedef struct {
 	uint16_t len;
 } MsgPProfileParams;
 
-/* ! Status information */
+/* Status information */
 typedef struct {
 	uint8_t state;
 	uint32_t pages;
 	uint8_t macAddr[MAC_SIZE];
 } FupStatusInfo;
 
-/* ! Frame information */
+/* Frame information */
 typedef struct {
 	uint8_t *fwdata;
 	uint16_t *numfr;
 	uint16_t len;
 } FupFrameInfo;
 
-/* ! Error information */
+/* Error information */
 typedef struct {
 	uint8_t error;
 	uint8_t macAddr[MAC_SIZE];
 } FupErrorInfo;
 
-/* ! Firmware Information List */
+/* Firmware Information List */
 typedef struct _FupInfoIdList {
 	uint8_t infoId;
 	uint8_t idLen;
 	char idData[INFO_LIST_MAX_SIZE];
 } FupInfoIdList;
 
-/* ! Version information */
+/* Version information */
 typedef struct {
 	uint8_t macAddr[MAC_SIZE];
 	FupInfoIdList infoIdList[INFO_LIST_NUMBER_ID];
 } FupVersionInfo;
 
-/* ! Status command */
+/* Status command */
 typedef struct {
 	uint8_t cmd;
 	FupStatusInfo statusinfo;
 } FUStatusCmd;
 
-/* ! Information associated to message */
+/* Information associated to message */
 typedef union {
 	/* Info in crc at first */
 	struct {
@@ -278,7 +278,7 @@ typedef union {
 	} crcLast;
 } FupBufferCrc;
 
-/* ! Kill information */
+/* Kill information */
 typedef struct {
 	uint8_t macAddr[MAC_SIZE];
 } FupKillInfo;
@@ -335,7 +335,7 @@ typedef struct {
 	uint8_t alvTime;
 } NetworkEventAlive;
 
-/* ! \name Base Management interface */
+/* \name Base Management interface */
 /* @{ */
 void baseMng_Start(void);
 void baseMng_Process(void);
@@ -346,7 +346,7 @@ int8_t baseMng_SendEventNetwork(void *event);
 
 /* @} */
 
-/* ! \name Firmware Upgrade (FUP) interface */
+/* \name Firmware Upgrade (FUP) interface */
 /* @{ */
 int8_t fup_clearTargetList(void);
 int8_t fup_addNewTarget(uint8_t *macAddr);
@@ -373,7 +373,7 @@ void fup_Process(void);
 
 /* @} */
 
-/* ! \name Iface FUP interface */
+/* \name Iface FUP interface */
 /* @{ */
 int8_t ifaceFUP_send_ACK(uint8_t ackcmd, uint8_t ackerrcode);
 int8_t ifaceFUP_send_FrameACK(uint8_t ackerrcode, uint16_t numfr);
@@ -382,7 +382,7 @@ int ifaceFUP_Unpack_DataFrameRequest(uint8_t *dataPtr, uint16_t len,
 
 /* @} */
 
-/* ! @} */
+/* @} */
 
 /* @cond 0 */
 /**INDENT-OFF**/

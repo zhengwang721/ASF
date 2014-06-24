@@ -269,7 +269,7 @@ enum pal_ids {
 #define PHY_EVM_THRESHOLD_EX_59         0xCC0
 /* @} */
 
-/*! \name Data struct used for PLC transmission
+/*  \name Data struct used for PLC transmission
  * \note In case of configure Absolute TX scheduling mode, tdelay means the
  * absolute time in 10's of us when TX starts, in case of configure Relative
  * Absolute TX scheduling mode, tdelay means the delay in 10's of us until
@@ -277,18 +277,18 @@ enum pal_ids {
  * transmission begins inmediately. */
 /* @{ */
 typedef struct {
-	uint8_t uc_buff_id;  /* < Buffer identifier */
-	uint8_t att_level;   /* < Attenuation level with which the message must
+	uint8_t uc_buff_id;  /*  Buffer identifier */
+	uint8_t att_level;   /*  Attenuation level with which the message must
 	                      * be transmitted */
-	uint8_t scheme;      /* < Modulation scheme of last transmitted message
+	uint8_t scheme;      /*  Modulation scheme of last transmitted message
 	                      **/
-	uint8_t disable_rx;  /* < Disable reception */
-	uint8_t mode;        /* < Mode PRIME v1.3, PRIME v1.4 or PRIME v1.4
+	uint8_t disable_rx;  /*  Disable reception */
+	uint8_t mode;        /*  Mode PRIME v1.3, PRIME v1.4 or PRIME v1.4
 	                      * backward compatible */
-	uint16_t data_len;   /* < Length of the data buffer. */
-	uint8_t *data_buf;   /* < Pointer to data buffer */
-	uint32_t tdelay;     /* < Delay for transmission in 10's of us */
-	uint8_t tmode;       /* < Time mode: 0: Absolute mode, 1: Differential
+	uint16_t data_len;   /*  Length of the data buffer. */
+	uint8_t *data_buf;   /*  Pointer to data buffer */
+	uint32_t tdelay;     /*  Delay for transmission in 10's of us */
+	uint8_t tmode;       /*  Time mode: 0: Absolute mode, 1: Differential
 	                      * mode */
 } xPalMsgTx_t;
 /* @} */
@@ -296,34 +296,34 @@ typedef struct {
 /* \name Data struct used for PLC reception */
 /* @{ */
 typedef struct {
-	uint8_t uc_buff_id;           /* < Buffer identifier */
-	uint8_t scheme;               /* < Modulation scheme of the last
+	uint8_t uc_buff_id;           /*  Buffer identifier */
+	uint8_t scheme;               /*  Modulation scheme of the last
 	                               * received message */
-	uint8_t mode;                 /* < Mode PRIME v1.3, PRIME v1.4 or Noise
+	uint8_t mode;                 /*  Mode PRIME v1.3, PRIME v1.4 or Noise
 	                               * Capture */
-	uint8_t header_type;          /* < Header Type of the last received
+	uint8_t header_type;          /*  Header Type of the last received
 	                               * message */
-	uint8_t noise_result;         /* < Noise result in case of noise capture
+	uint8_t noise_result;         /*  Noise result in case of noise capture
 	                               * mode */
-	uint8_t rssi_avg;             /* < Average RSSI (Received Signal
+	uint8_t rssi_avg;             /*  Average RSSI (Received Signal
 	                               * Strength Indication) (valid only when
 	                               * rxQRMode is enable) */
-	uint8_t cinr_avg;             /* < Average CNIR (Carrier to Interference
+	uint8_t cinr_avg;             /*  Average CNIR (Carrier to Interference
 	                               * + Noise ratio) (valid only when
 	                               * rxQRMode is enable) */
-	uint16_t evm_header;          /* < Error Vector Magnitude for header
+	uint16_t evm_header;          /*  Error Vector Magnitude for header
 	                               * (valid only when rxQRMode is enable) */
-	uint16_t evm_payload;         /* < Error Vector Magnitude for payload
+	uint16_t evm_payload;         /*  Error Vector Magnitude for payload
 	                               * (valid only when rxQRMode is enable) */
-	uint16_t data_len;            /* < Length of the data buffer. */
-	uint32_t evm_header_acum;     /* < Accumulated Error Vector Magnitude
+	uint16_t data_len;            /*  Length of the data buffer. */
+	uint32_t evm_header_acum;     /*  Accumulated Error Vector Magnitude
 	                               * for header (valid only when rxQRMode is
 	                               * enable) */
-	uint32_t evm_payload_acum;    /* < Accumulated Error Vector Magnitude
+	uint32_t evm_payload_acum;    /*  Accumulated Error Vector Magnitude
 	                               * for payload (valid only when rxQRMode
 	                               * is enable) */
-	uint8_t *data_buf;            /* < Pointer to data buffer */
-	uint32_t rx_time;             /* < Reception time in 10us. */
+	uint8_t *data_buf;            /*  Pointer to data buffer */
+	uint32_t rx_time;             /*  Reception time in 10us. */
 } xPalMsgRx_t;
 /* @} */
 

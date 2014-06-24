@@ -67,7 +67,7 @@
 
 /* 776 = 8 * 97 -> In noise mode: num symbols in rx noise mode: 8 and 97
  * bytes/symbol */
-static uint8_t uc_data_buf[800];    /* < Receive working buffer */
+static uint8_t uc_data_buf[800];    /*  Receive working buffer */
 
 /* Tasks handlers */
 xTaskHandle xappPhyHand;
