@@ -82,8 +82,7 @@ extern "C" {
 
 /* \name Configuration parameters */
 /* @{ */
-#define HAL_USER_SIGNATURE_SIZE                (BOOT_FLASH_PAGE_SIZE / \
-	(sizeof(uint32_t)))
+#define HAL_USER_SIGNATURE_SIZE                (BOOT_FLASH_PAGE_SIZE / (sizeof(uint32_t)))
 #define HAL_MACCFG_OFFSET_USER_SIGN            0
 #define HAL_PHYCFG_OFFSET_USER_SIGN            16
 #define HAL_BOOT_STATUS_OFFSET_USER_SIGN       BOOT_STATUS_OFFSET_USER_SIGN

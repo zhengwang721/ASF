@@ -110,38 +110,37 @@ extern uint8_t phySerial_receivedCmd(uint8_t *puc_rx_msg, uint16_t us_len);
 #pragma weak phySerial_receivedCmd=Dummy_serial_parser
 #endif
 
-#if defined (USE_PROTOCOL_PRIME_SERIAL_PORT) && !defined(_C51_)
+#if defined (USE_PROTOCOL_PRIME_SERIAL_PORT)
   #pragma message("USI_CFG: USE_PROTOCOL_PRIME_SERIAL_PORT")
 uint8_t phySerial_receivedCmd(uint8_t *rxBuff, uint16_t length);
-
 pf_usi_decode_cmd cbFnPhySerial  = (pf_usi_decode_cmd)phySerial_receivedCmd;
 #else
 pf_usi_decode_cmd cbFnPhySerial  = NULL;
 #endif
 
-/* ! \name Minimum overhead introduced by the USI protocol */
-/* ! \note (1 Start Byte, 2 Bytes (Len+Protocol), 1 End Byte, 1 CRC Byte) */
+/* \name Minimum overhead introduced by the USI protocol */
+/* \note (1 Start Byte, 2 Bytes (Len+Protocol), 1 End Byte, 1 CRC Byte) */
 #define MIN_OVERHEAD    5
 
-/* ! \name Special characters used by USI */
+/* \name Special characters used by USI */
 /* @{ */
-/* ! Start/end mark in message */
+/* Start/end mark in message */
 #define MSGMARK       0x7e
-/* ! Escaped start/end mark */
+/* Escaped start/end mark */
 #define ESC_MSGMARK   0x5e
-/* ! Escape mark in message */
+/* Escape mark in message */
 #define ESCMARK       0x7d
-/* ! Escaped escape mark */
+/* Escaped escape mark */
 #define ESC_ESCMARK   0x5d
 /* @} */
 
-/* ! \name MSG started and ended flags */
+/* \name MSG started and ended flags */
 /* @{ */
 #define MSG_START 1
 #define MSG_END   0
 /* @} */
 
-/* ! \name USI header and CRC lengths */
+/* \name USI header and CRC lengths */
 /* @{ */
 #define HEADER_LEN  2
 #define CRC8_LEN    1
@@ -156,21 +155,21 @@ pf_usi_decode_cmd cbFnPhySerial  = NULL;
  *  and the USI Host.
  */
 /* @{ */
-/* ! Internal protocol ID */
+/* Internal protocol ID */
 #define PROTOCOL_INTERNAL  0x3F
-/* ! Commands for internal protocol messages */
+/* Commands for internal protocol messages */
 #define CMD_LOCK_PORT        0
 #define CMD_UNLOCK_PORT      1
-/* ! Lenght of internal messages */
+/* Lenght of internal messages */
 #define INTERNAL_MSG_LEN               1
 #define MAX_ESCAPED_INTERNAL_MSG_LEN  10
-/* ! Timeouts for port blocking (in ms) and update function callback */
+/* Timeouts for port blocking (in ms) and update function callback */
 #define TX_BLOCK_TIMEOUT   50
 #define RX_BLOCK_TIMEOUT   50
 #define TXRX_BLOCK_UPDATE   1
 /* @} */
 
-/* ! \name USI protocol header format */
+/* \name USI protocol header format */
 /* @{ */
 #define TYPE_PROTOCOL_OFFSET       1
 #define TYPE_PROTOCOL_MSK       0x3F
@@ -202,96 +201,96 @@ pf_usi_decode_cmd cbFnPhySerial  = NULL;
 #define CMD_PROTOCOL(A)       ((A)&CMD_PROTOCOL_MSK)
 /* @} */
 
-/* ! USI command structure */
+/* USI command structure */
 typedef struct {
-	/* ! Protocol Type */
+	/* Protocol Type */
 	uint8_t uc_p_type;
-	/* ! Pointer to data buffer */
+	/* Pointer to data buffer */
 	uint8_t *puc_buf;
-	/* ! Length of data */
+	/* Length of data */
 	uint16_t us_len;
 } cmd_params_t;
 
-/* ! USI communication control parameters structure */
+/* USI communication control parameters structure */
 typedef struct {
-	/* ! Reception index */
+	/* Reception index */
 	uint16_t us_idx_in;
-	/* ! Timer to unlock RX port by timeout */
+	/* Timer to unlock RX port by timeout */
 	uint16_t us_rx_block_timer;
-	/* ! Timer to unlock TX port by timeout */
+	/* Timer to unlock TX port by timeout */
 	uint16_t us_tx_block_timer;
 } USI_param_t;
 
-/* ! Reception states */
+/* Reception states */
 enum {
-	/* ! Inactive */
+	/* Inactive */
 	RX_IDLE,
-	/* ! Receiving message */
+	/* Receiving message */
 	RX_MSG,
-	/* ! Processing escape char */
+	/* Processing escape char */
 	RX_ESC,
-	/* ! Message received correctly */
+	/* Message received correctly */
 	RX_EORX
 };
 
-/* ! Transmission states */
+/* Transmission states */
 enum {
-	/* ! Inactive */
+	/* Inactive */
 	TX_IDLE,
-	/* ! Transmitting message */
+	/* Transmitting message */
 	TX_MSG
 };
 
-/* ! USI communication control parameters (one entry per port) */
+/* USI communication control parameters (one entry per port) */
 static USI_param_t usi_cfg_param[NUM_PORTS];
 
-/* ! \name USI message boundary control flag */
+/* \name USI message boundary control flag */
 /* @{ */
 static uint8_t uc_message_status;
 /* @} */
 
-/* ! \name USI flow control internal protocol variables */
+/* \name USI flow control internal protocol variables */
 /* @{ */
 cmd_params_t internal_command;
 uint8_t uc_int_cmd_lock = CMD_LOCK_PORT;
 uint8_t uc_int_cmd_unlock = CMD_UNLOCK_PORT;
 /* @} */
 
-/* ! \name Types of serial port */
+/* \name Types of serial port */
 #define UART_TYPE   0
 #define USART_TYPE  1
 
-/* ! Protocol port mapping */
+/* Protocol port mapping */
 typedef struct {
-	/* ! Protocol Type */
+	/* Protocol Type */
 	uint8_t uc_p_type;
-	/* ! Communication Port */
+	/* Communication Port */
 	uint8_t uc_port;
 } map_protocols_t;
 
-/* ! Port configuration */
+/* Port configuration */
 typedef struct {
-	/* ! Serial Communication Type */
+	/* Serial Communication Type */
 	uint8_t uc_s_type;
-	/* ! Port number */
+	/* Port number */
 	uint8_t uc_chn;
-	/* ! Port speed (bauds) */
+	/* Port speed (bauds) */
 	uint32_t ul_speed;
-	/* ! Port buffer size in transmission */
+	/* Port buffer size in transmission */
 	uint16_t us_tx_size;
-	/* ! Port buffer size in reception */
+	/* Port buffer size in reception */
 	uint16_t us_rx_size;
 } map_ports_t;
 
-/* ! Buffer handling structure */
+/* Buffer handling structure */
 typedef struct {
-	/* ! Current size of data in the buffer */
+	/* Current size of data in the buffer */
 	uint16_t us_size;
-	/* ! Pointer to the buffer */
+	/* Pointer to the buffer */
 	uint8_t *const puc_buf;
 } map_buffers_t;
 
-/* ! Function Pointers for USI protocols */
+/* Function Pointers for USI protocols */
 #undef CONF_PORT
 #define CONF_PORT(type, channel, speed, tx_size, rx_size) {type, channel, speed, tx_size, rx_size}
 
@@ -399,13 +398,13 @@ static const map_protocols_t usi_map_protocols[NUM_PROTOCOLS + 1] = {
 };
 /* @} */
 
-/* ! \name Por configuration for buffers */
+/* \name Por configuration for buffers */
 /* @{ */
 #undef CONF_PORT
 #define CONF_PORT(type, channel, speed, tx_size, rx_size) rx_size
 /* @} */
 
-/* ! \name Reception buffers */
+/* \name Reception buffers */
 /* @{ */
 #ifdef PORT_0
 static uint8_t puc_rxbuf0[PORT_0];
@@ -424,7 +423,7 @@ static uint8_t puc_rxbuf3[PORT_3];
 #endif
 /* @} */
 
-/* ! \name Reception Buffers mapping */
+/* \name Reception Buffers mapping */
 /* @{ */
 static map_buffers_t usi_rx_buf[NUM_PORTS + 1] = {
 #ifdef PORT_0
@@ -443,13 +442,13 @@ static map_buffers_t usi_rx_buf[NUM_PORTS + 1] = {
 };
 /* @} */
 
-/* ! \name Port configuration for buffers */
+/* \name Port configuration for buffers */
 /* @{ */
 #undef CONF_PORT
 #define CONF_PORT(type, channel, speed, tx_size, rx_size) tx_size
 /* @} */
 
-/* ! \name Transmission Buffers */
+/* \name Transmission Buffers */
 /* @{ */
 #ifdef PORT_0
 static uint8_t puc_txbuf0[PORT_0];
@@ -465,7 +464,7 @@ static uint8_t puc_txbuf3[PORT_3];
 #endif
 /* @} */
 
-/* ! \name Transmission Buffers mapping */
+/* \name Transmission Buffers mapping */
 /* @{ */
 static const map_buffers_t usi_tx_buf[NUM_PORTS + 1] = {
 #ifdef PORT_0
@@ -484,7 +483,7 @@ static const map_buffers_t usi_tx_buf[NUM_PORTS + 1] = {
 };
 /* @} */
 
-/* ! \name Transmission buffers size configuration */
+/* \name Transmission buffers size configuration */
 /* @{ */
 #define TXAUX_SIZE 0
 #ifdef PORT_0
@@ -894,7 +893,7 @@ static usi_status_t _usi_encode_and_send(uint8_t uc_port_idx, cmd_params_t *msg)
 
 			/* Copy the part without special bytes into the tx buf */
 			memcpy(&puc_tx_buf[usi_cfg_param[uc_port_idx].us_idx_in], &puc_aux_tx_buf[ul_idx_aux], us_len_token);
-			us_len     -= us_len_token + 1;
+			us_len -= us_len_token + 1;
 			ul_idx_aux += us_len_token + 1;
 			usi_cfg_param[uc_port_idx].us_idx_in += us_len_token;
 
@@ -919,8 +918,7 @@ static usi_status_t _usi_encode_and_send(uint8_t uc_port_idx, cmd_params_t *msg)
 	/* Check if there is something to transmit */
 	if (usi_cfg_param[uc_port_idx].us_tx_block_timer == 0) {
 		while (usi_cfg_param[uc_port_idx].us_idx_in) {
-			/* Send chars to device, checking how many have been
-			 * really processed by device */
+			/* Send chars to device, checking how many have been really processed by device */
 			if (usi_cfg_map_ports[uc_port_idx].uc_s_type == UART_TYPE) {
 				us_sent_chars = buart_if_write(usi_cfg_map_ports[uc_port_idx].uc_chn, usi_cfg_tx_buf[uc_port_idx].puc_buf, us_len);
 			} else if (usi_cfg_map_ports[uc_port_idx].uc_s_type == USART_TYPE) {
@@ -1019,12 +1017,10 @@ void usi_process(void)
 
 		/* Read all the data in the respective buffer (UART or USART) */
 		if (usi_cfg_map_ports[i].uc_s_type == UART_TYPE) {
-			nr_ch = buart_if_read(usi_cfg_map_ports[i].uc_chn,
-					puc_rx_aux,
+			nr_ch = buart_if_read(usi_cfg_map_ports[i].uc_chn, puc_rx_aux,
 					usi_cfg_map_ports[i].us_rx_size);
 		} else if (usi_cfg_map_ports[i].uc_s_type == USART_TYPE) {
-			nr_ch = busart_if_read(usi_cfg_map_ports[i].uc_chn,
-					puc_rx_aux,
+			nr_ch = busart_if_read(usi_cfg_map_ports[i].uc_chn, puc_rx_aux,
 					usi_cfg_map_ports[i].us_rx_size);
 		}
 
@@ -1084,8 +1080,7 @@ void usi_process(void)
 					/* If a message or part of an incomplete message is expected */
 					if (uc_message_status == MSG_START) {
 						/* Compose the whole message */
-						usi_cfg_rx_buf[i].us_size
-							+= _decode_copy(&usi_cfg_rx_buf[i].puc_buf[0] + usi_cfg_rx_buf[i].us_size,
+						usi_cfg_rx_buf[i].us_size += _decode_copy(&usi_cfg_rx_buf[i].puc_buf[0] + usi_cfg_rx_buf[i].us_size,
 								puc_rx_aux, us_token_size);
 
 						/* Calculate CRC */
@@ -1095,10 +1090,7 @@ void usi_process(void)
 								/* If port was previously blocked, send message to indicate 
 								 * that now it is open. */
 								if (usi_cfg_param[i].us_rx_block_timer != 0) {
-									/* Send
-									 * internal
-									 * command
-									 * CMD_UNLOCK_PORT */
+									/* Send  internal command CMD_UNLOCK_PORT */
 									internal_command.puc_buf = &uc_int_cmd_unlock;
 									if (_usi_encode_and_send(i, &internal_command)) {
 										/* If sent, change block status so message is not
@@ -1205,8 +1197,7 @@ usi_status_t usi_send_cmd(void *msg)
 	/* Get available length in buffer */
 	us_available_len = usi_cfg_tx_buf[uc_port_idx].us_size - usi_cfg_param[uc_port_idx].us_idx_in;
 
-	/* First checking, available length at least equal to minimum required
-	 * space */
+	/* First checking, available length at least equal to minimum required space */
 	if (us_available_len < (us_len + MIN_OVERHEAD)) {
 		return USI_STATUS_RX_BUFFER_OVERFLOW;
 	}
@@ -1225,7 +1216,7 @@ uint8_t Dummy_serial_parser(uint8_t *puc_rx_msg, uint16_t us_len)
 	return(0);
 }
 
-/* ! @} */
+/* @} */
 
 /* / @cond 0 */
 /**INDENT-OFF**/

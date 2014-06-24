@@ -286,8 +286,7 @@ uint8_t hal_write_boot_cfg(void *pv_src, uint16_t us_size)
 	uint16_t us_write_end_address;
 
 	/* The user signature should be no longer than 512 bytes */
-	us_write_end_address = us_size +
-			(uint8_t)HAL_BOOT_STATUS_OFFSET_USER_SIGN;
+	us_write_end_address = us_size + (uint8_t)HAL_BOOT_STATUS_OFFSET_USER_SIGN;
 	if (us_write_end_address > HAL_FLASH_PAGE_SIZE) {
 		return 0;
 	}
@@ -669,27 +668,19 @@ void hal_configure_bootloader_watchdog_mode(void)
 
 	/* check if wd_mode have to be reconfigured */
 	if (puc_wd_mode_config != HAL_BOOTLOADER_WD_MODE) {
-		uc_user_sign_buf[BOOT_WD_MODE_OFFSET_USER_SIGN]
-			= HAL_BOOTLOADER_WD_MODE;
-		uc_user_sign_buf[BOOT_WD_MODE_OFFSET_USER_SIGN +
-		1] = PIO_WD_IDX;
+		uc_user_sign_buf[BOOT_WD_MODE_OFFSET_USER_SIGN] = HAL_BOOTLOADER_WD_MODE;
+		uc_user_sign_buf[BOOT_WD_MODE_OFFSET_USER_SIGN + 1] = PIO_WD_IDX;
 		uc_user_sign_buf[BOOT_WD_MODE_OFFSET_USER_SIGN + 2] = PIO_WD_ID;
-		uc_user_sign_buf[BOOT_WD_MODE_OFFSET_USER_SIGN +
-		3] = PIO_WD_PIN;
-		uc_user_sign_buf[BOOT_WD_MODE_OFFSET_USER_SIGN +
-		4] = (PIO_WD >> 24) & (0xFF);
-		uc_user_sign_buf[BOOT_WD_MODE_OFFSET_USER_SIGN +
-		5] = (PIO_WD >> 16) & (0xFF);
-		uc_user_sign_buf[BOOT_WD_MODE_OFFSET_USER_SIGN +
-		6] = (PIO_WD >> 8) & (0xFF);
-		uc_user_sign_buf[BOOT_WD_MODE_OFFSET_USER_SIGN +
-		7] = (PIO_WD) & (0xFF);
+		uc_user_sign_buf[BOOT_WD_MODE_OFFSET_USER_SIGN + 3] = PIO_WD_PIN;
+		uc_user_sign_buf[BOOT_WD_MODE_OFFSET_USER_SIGN + 4] = (PIO_WD >> 24) & (0xFF);
+		uc_user_sign_buf[BOOT_WD_MODE_OFFSET_USER_SIGN + 5] = (PIO_WD >> 16) & (0xFF);
+		uc_user_sign_buf[BOOT_WD_MODE_OFFSET_USER_SIGN + 6] = (PIO_WD >> 8) & (0xFF);
+		uc_user_sign_buf[BOOT_WD_MODE_OFFSET_USER_SIGN + 7] = (PIO_WD) & (0xFF);
 		/* erase user signature */
 		flash_erase_user_signature();
 		/* write user signature */
 		flash_write_user_signature((void *)uc_user_sign_buf,
-				HAL_FLASH_PAGE_SIZE /
-				sizeof(uint32_t));
+				HAL_FLASH_PAGE_SIZE / sizeof(uint32_t));
 	}
 
 	Enable_global_interrupt();
@@ -735,15 +726,12 @@ uint8_t hal_unlock_mem(void)
 #endif
 
 	pul_sector_fw = (uint32_t *)ul_next_sector;
-	pul_sector_end
-		= (uint32_t *)(ul_next_sector +
-			HAL_FU_MAXIMUM_FIRMW_SIZE);
+	pul_sector_end = (uint32_t *)(ul_next_sector + HAL_FU_MAXIMUM_FIRMW_SIZE);
 
 	/* Unlock and erase used sectors */
 	for (i = 1; i < HAL_FU_MAXIMUM_FIRMW_SECTORS; i++) {
 		Disable_global_interrupt();
-		flash_unlock(ul_next_sector, ul_next_sector + 0x10000 - 1, 0,
-				0);
+		flash_unlock(ul_next_sector, ul_next_sector + 0x10000 - 1, 0, 0);
 		flash_erase_sector(ul_next_sector);
 		Enable_global_interrupt();
 
@@ -788,8 +776,7 @@ uint8_t hal_update_bootloader(void)
 		ul_new_boot_addr = BOOT_FLASH_FIRMWARE_V1_START_ADDRESS;
 	}
 
-	uc_copy_result = hal_copy_bootloader(ul_new_boot_addr,
-			BOOT_START_ADDRESS);
+	uc_copy_result = hal_copy_bootloader(ul_new_boot_addr, BOOT_START_ADDRESS);
 
 	Enable_global_interrupt();
 
@@ -818,8 +805,7 @@ uint8_t hal_copy_bootloader(uint32_t addr_new_bootloader,
 
 	for (i = 0; i < (BOOT_FIRMWARE_MAX_SIZE / BOOT_FLASH_PAGE_SIZE); i++) {
 		ul_page_offset = i * BOOT_FLASH_PAGE_SIZE;
-		memcpy(uc_page,
-				(uint8_t *)(addr_new_bootloader + ul_page_offset),
+		memcpy(uc_page, (uint8_t *)(addr_new_bootloader + ul_page_offset),
 				BOOT_FLASH_PAGE_SIZE);
 		ul_result = flash_write(addr_old_bootloader + ul_page_offset,
 				uc_page, BOOT_FLASH_PAGE_SIZE, 0);
@@ -845,8 +831,7 @@ uint8_t hal_erase_Bootloader(uint32_t bootloader_addr)
 	for (i = 0; i < (BOOT_FIRMWARE_MAX_SIZE / 0x1000); i++) {
 		wdt_restart(WDT);
 		pul_flash = (uint32_t *)(bootloader_addr + i * 0X1000);
-		ul_result = flash_erase_page((uint32_t)pul_flash,
-				IFLASH_ERASE_PAGES_8);
+		ul_result = flash_erase_page((uint32_t)pul_flash, IFLASH_ERASE_PAGES_8);
 		if (ul_result != FLASH_RC_OK) {
 			return 0;
 		}

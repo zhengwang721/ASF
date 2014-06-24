@@ -142,8 +142,7 @@ static void _pplc_if_config(void)
 			PPLC_DLYBCT);
 	spi_configure_cs_behavior(PPLC_SPI_MODULE, PPLC_CS, SPI_CS_RISE_NO_TX);
 
-	/* Get board PPLC PDC base address and enable receiver and transmitter.
-	**/
+	/* Get board PPLC PDC base address and enable receiver and transmitter */
 	g_pplc_pdc = spi_get_pdc_base(PPLC_SPI_MODULE);
 	spi_enable(PPLC_SPI_MODULE);
 }
@@ -201,8 +200,7 @@ static int8_t _pplc_cmd_op(uint8_t uc_cmd, uint16_t us_addr, uint16_t us_len,
 			if (uc_cmd == PPLC_CMD_READ) {
 				memset(&gs_pplc_tx_buffer[4], 0, us_data_len);
 			} else {
-				memcpy(&gs_pplc_tx_buffer[4], ptr_data_buf,
-						us_data_len);
+				memcpy(&gs_pplc_tx_buffer[4], ptr_data_buf, us_data_len);
 			}
 
 			/* Configure DMA channels */
@@ -216,8 +214,7 @@ static int8_t _pplc_cmd_op(uint8_t uc_cmd, uint16_t us_addr, uint16_t us_len,
 
 			/* Enable the RX and TX PDC transfer requests */
 			pdc_enable_transfer(g_pplc_pdc,
-					PERIPH_PTCR_RXTEN |
-					PERIPH_PTCR_TXTEN);
+					PERIPH_PTCR_RXTEN | PERIPH_PTCR_TXTEN);
 
 			/* Waiting transfer done*/
 			while ((spi_read_status(PPLC_SPI_MODULE) &
@@ -226,13 +223,11 @@ static int8_t _pplc_cmd_op(uint8_t uc_cmd, uint16_t us_addr, uint16_t us_len,
 
 			/* Disable the RX and TX PDC transfer requests */
 			pdc_disable_transfer(g_pplc_pdc,
-					PERIPH_PTCR_RXTDIS |
-					PERIPH_PTCR_TXTDIS);
+					PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS);
 
 			/* copy rcv data */
 			if (uc_cmd == PPLC_CMD_READ) {
-				memcpy(ptr_data_buf, &gs_pplc_rx_buffer[4],
-						us_data_len);
+				memcpy(ptr_data_buf, &gs_pplc_rx_buffer[4], us_data_len);
 			}
 
 			/* update buffer pointers */

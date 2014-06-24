@@ -246,10 +246,7 @@ static uint16_t _eval_crc_16(const uint8_t *puc_buf_ptr, uint32_t ul_len,
 
 	us_crc = ul_crc_init;
 	while (ul_len--) {
-		us_crc
-			= (uint16_t)(pus_crc16_table [(us_crc >>
-				8) &
-				0xff] ^
+		us_crc = (uint16_t)(pus_crc16_table [(us_crc >> 8) & 0xff] ^
 				(us_crc << 8) ^ (*puc_buf_ptr++ & 0x00ff));
 	}
 	return us_crc;
@@ -342,9 +339,7 @@ uint32_t pcrc_calculate_prime_crc(uint8_t *puc_buf, uint32_t ul_len,
 		if (uc_crc_type == PCRC_CRC_TYPE_8) {
 			ul_crc_val = _eval_crc_8(puc_buf, ul_len, uc_SNA_crc_8);
 		} else if (uc_crc_type == PCRC_CRC_TYPE_32) {
-			ul_crc_val
-				= _eval_crc_32(puc_buf, ul_len,
-					ul_SNA_crc_32);
+			ul_crc_val = _eval_crc_32(puc_buf, ul_len, ul_SNA_crc_32);
 		}
 
 		break;
