@@ -70,36 +70,36 @@ extern "C" {
  * @{
  */
 
-/* ! \name Commands received */
+/*  \name Commands received */
 /* @{ */
 #define SNIFFER_ACTIVATE_CRC                 0x01
 #define SNIFFER_SELECT_CHANNEL               0x02
 #define SNIFFER_ROBO_MODULATIONS             0x03
 /* @} */
 
-/* ! \name Response */
+/*  \name Response */
 /* @{ */
 #define SNIFFER_PDU_CMD                      0x20
 /* @} */
 
-/* ! \name Version format of header */
+/*  \name Version format of header */
 /* @{ */
 #define SNIFFER_PDU_VERSION_FORMAT           0x01
 /* @} */
 
-/* ! \name Length of the header */
+/*  \name Length of the header */
 /* @{ */
 #define SNIFFER_PDU_HEADER_LENGTH            32
 /* @} */
 
-/* ! \name Timer values */
+/*  \name Timer values */
 /* @{ */
-/* !< Timer is a 20-bit counter, so to complete 32 bits is shifted 12 bits to */
-/* !< the left */
+/*  Timer is a 20-bit counter, so to complete 32 bits is shifted 12 bits to */
+/*  the left */
 #define TIME_SHIFT_BITS                      12
-/* !< Time unit for phy timer is 10us */
+/*  Time unit for phy timer is 10us */
 #define TIME_PHY_UNIT_US                     10
-/* !< PREAMBLE + HEADER + PAYLOAD = 2048us  + 4480us + M*2240us */
+/*  PREAMBLE + HEADER + PAYLOAD = 2048us  + 4480us + M*2240us */
 #define TIME_PREAMBLE_US                     2048L
 #define TIME_HEADER_US                       4480L
 #define TIME_OFDM_SYMBOL_US                  2240L
@@ -108,7 +108,7 @@ extern "C" {
 #define TIME_PHY_OFDM_SYMBOL ((TIME_OFDM_SYMBOL_US / TIME_PHY_UNIT_US) << TIME_SHIFT_BITS)
 /* @} */
 
-/* ! \name Mac header size */
+/*  \name Mac header size */
 /* @{ */
 #define MAC_HEADER_SIZE              7
 /* @} */
@@ -119,9 +119,9 @@ extern uint8_t cfgSnifferType;
 /* Serial Buffer */
 static uint8_t frameMacToPack[512];
 
-/* ! \name Include a long of 32 bits in a vector */
+/*  \name Include a long of 32 bits in a vector */
 /* @{ */
-/* !< Includes highest significative byte at first position in vector */
+/*  Includes highest significative byte at first position in vector */
 #define _pack_ul(ul_data) \
 	{ \
 		*puc_tx++ = (uint8_t)(ul_data >> 24); \
@@ -131,9 +131,9 @@ static uint8_t frameMacToPack[512];
 	}
 /* @} */
 
-/* ! \name Include a long of 32 bits in a vector */
+/*  \name Include a long of 32 bits in a vector */
 /* @{ */
-/* !< Includes highest significative byte at first position in vector */
+/*  Includes highest significative byte at first position in vector */
 #define _pack_us(us_data) \
 	{ \
 		*puc_tx++ = (uint8_t)(us_data >> 8); \
@@ -273,29 +273,23 @@ void serial_if_sniffer_pack_pdu(SnifferParam *px_snif, uint8_t *puc_buf,
 
 	if ((cfgSnifferType & MASK_SNIFFER_EMBEDDED) == 0) {
 		pal_get_cfg_ex(PAL_ID_RX_SCHEME, &uc_rx_scheme, 1);
-		pal_get_cfg_ex(PAL_ID_RX_BUFFER_ID, &uc_buff_id,
-				sizeof(uc_buff_id));
-		pal_get_cfg_ex(PAL_ID_RX_RSSI_AVG_RX0 + uc_buff_id, &uc_rx_rssi,
-				sizeof(uc_rx_rssi));
+		pal_get_cfg_ex(PAL_ID_RX_BUFFER_ID, &uc_buff_id, sizeof(uc_buff_id));
+		pal_get_cfg_ex(PAL_ID_RX_RSSI_AVG_RX0 + uc_buff_id, &uc_rx_rssi, sizeof(uc_rx_rssi));
 		pal_get_cfg_ex(PAL_ID_TXRX_CHANNEL, &uc_chn, 1);
 		pal_get_cfg_ex(PAL_ID_RX_PAYLOAD_LEN, &uc_rx_payload_len, 1);
 		/* Reception quality */
 		pal_snr_get(&uc_snr, PAL_QT_UNKNOW);
 		pal_get_cfg_ex(PAL_ID_EX_SNR, &uc_snr_ex, 1);
-	} else if ((px_snif->type == SNIFFER_RX) ||
-			(px_snif->type == SNIFFER_TX)) {
+	} else if ((px_snif->type == SNIFFER_RX) || (px_snif->type == SNIFFER_TX)) {
 		uc_rx_scheme = px_snif->scheme;
-		uc_rx_payload_len = _serial_if_sniffer_get_num_symbols(us_len,
-				uc_rx_scheme,
+		uc_rx_payload_len = _serial_if_sniffer_get_num_symbols(us_len, uc_rx_scheme,
 				((puc_buf[2] >> 4) & 0x03));
 		l_rx_time = px_snif->time;
 		pal_get_cfg_ex(PAL_ID_TXRX_CHANNEL, &uc_chn, 1);
 		if (px_snif->type == SNIFFER_RX) {
 			pal_get_cfg_ex(PAL_ID_RX_SCHEME, &uc_rx_scheme, 1);
-			pal_get_cfg_ex(PAL_ID_RX_BUFFER_ID, &uc_buff_id,
-					sizeof(uc_buff_id));
-			pal_get_cfg_ex(PAL_ID_RX_RSSI_AVG_RX0 + uc_buff_id,
-					&uc_rx_rssi, sizeof(uc_rx_rssi));
+			pal_get_cfg_ex(PAL_ID_RX_BUFFER_ID, &uc_buff_id, sizeof(uc_buff_id));
+			pal_get_cfg_ex(PAL_ID_RX_RSSI_AVG_RX0 + uc_buff_id, &uc_rx_rssi, sizeof(uc_rx_rssi));
 			/* Reception quality */
 			pal_snr_get(&uc_snr, PAL_QT_UNKNOW);
 			pal_get_cfg_ex(PAL_ID_EX_SNR, &uc_snr_ex, 1);
@@ -307,8 +301,7 @@ void serial_if_sniffer_pack_pdu(SnifferParam *px_snif, uint8_t *puc_buf,
 	} else { /* Sniffer Serial */
 		pal_timer_get(&l_rx_time);
 		uc_rx_scheme = 0x02;
-		uc_rx_payload_len = _serial_if_sniffer_get_num_symbols(us_len,
-				uc_rx_scheme,
+		uc_rx_payload_len = _serial_if_sniffer_get_num_symbols(us_len, uc_rx_scheme,
 				((puc_buf[2] >> 4) & 0x03));
 		uc_rx_rssi = 136;
 		uc_snr_ex = 59;
@@ -366,7 +359,7 @@ void serial_if_sniffer_pack_pdu(SnifferParam *px_snif, uint8_t *puc_buf,
 	return;
 }
 
-/* ! @} */
+/*  @} */
 
 /* @cond 0 */
 /**INDENT-OFF**/

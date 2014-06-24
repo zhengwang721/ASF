@@ -224,27 +224,20 @@ extern const float f_escalado_b23;
 
 /* \name Attenuation variables */
 /* @{ */
-static uint8_t phyTxAttChirpHighZ;     /* < Attenuation chirp in High impedance */
-static uint8_t phyTxAttSignalHighZ;    /* < Attenuation signal in High impedance */
-static uint8_t phyTxAttChirpLowZ;      /* < Attenuation chirp in low impedance */
-static uint8_t phyTxAttSignalLowZ;     /* < Attenuation signal in low impedance */
-static uint8_t phyTxAttChirpVLowZ;     /* < Attenuation chirp in very low
-                                        * impedance */
-static uint8_t phyTxAttSignalVLowZ;    /* < Attenuation signal in very low
-                                        * impedance */
-static uint16_t phyTxLoadThreshold1;   /* < Threshold for RMS calculated to
-                                        * detect load type */
-static uint16_t phyTxLoadThreshold2;   /* < Threshold for RMS calculated to
-                                        * detect load type */
-static uint16_t phyTxLoadThreshold3;   /* < Threshold for RMS calculated to
-                                        * detect load type */
-static uint16_t phyTxLoadThreshold4;   /* < Threshold for RMS calculated to
-                                        * detect load type */
+static uint8_t phyTxAttChirpHighZ;     /* Attenuation chirp in High impedance */
+static uint8_t phyTxAttSignalHighZ;    /* Attenuation signal in High impedance */
+static uint8_t phyTxAttChirpLowZ;      /* Attenuation chirp in low impedance */
+static uint8_t phyTxAttSignalLowZ;     /* Attenuation signal in low impedance */
+static uint8_t phyTxAttChirpVLowZ;     /* Attenuation chirp in very low impedance */
+static uint8_t phyTxAttSignalVLowZ;    /* Attenuation signal in very low impedance */
+static uint16_t phyTxLoadThreshold1;   /* Threshold for RMS calculated to detect load type */
+static uint16_t phyTxLoadThreshold2;   /* Threshold for RMS calculated to detect load type */
+static uint16_t phyTxLoadThreshold3;   /* Threshold for RMS calculated to detect load type */
+static uint16_t phyTxLoadThreshold4;   /* Threshold for RMS calculated to detect load type */
 /* @} */
 
 /* \name interrupt buffer flags */
 /* @{ */
-/* static uint8_t uc_reg_sfr;  // pendiente de verificar con R&D */
 static uint8_t uc_reg_rx_int;
 static uint8_t uc_reg_tx_int;
 static uint8_t uc_reg_ns_int;
@@ -1862,12 +1855,10 @@ uint8_t phy_tx_frame(xPhyMsgTx_t *px_msg)
 		uc_phy_buffer[1] = ((us_payload_len << 6) & 0xc0) | (uc_pad_len & 0x3f);
 		/* Move 7 first bytes from MAC header (54 bits) */
 		memcpy(&uc_phy_buffer[2], &px_msg->data_buf[0], MAC_HEADER_SIZE);
-		/* Last bytes in header corresponds to CRC8(hardware) and
-		 * flushing byte */
+		/* Last bytes in header corresponds to CRC8(hardware) and flushing byte */
 		uc_phy_buffer[9] = 0xAA;
 		uc_phy_buffer[10] = 0;
-		/* Add last two bytes from MAC header: bytes 8, 9 are in phy
-		 * header, but they transmit as payload */
+		/* Add last two bytes from MAC header: bytes 8, 9 are in phy header, but they transmit as payload */
 		if (us_data_len > MAC_HEADER_SIZE) {
 			uc_phy_buffer[11] = px_msg->data_buf[7];
 		}
@@ -1911,8 +1902,7 @@ uint8_t phy_tx_frame(xPhyMsgTx_t *px_msg)
 		uc_phy_buffer[6] = uc_bc_mode_config_value[5];
 		uc_phy_buffer[7] = uc_bc_mode_config_value[6];
 		uc_phy_buffer[8] = uc_bc_mode_config_value[7];
-		/* Last bytes in header corresponds to CRC8(hardware) and
-		 * flushing byte */
+		/* Last bytes in header corresponds to CRC8(hardware) and flushing byte */
 		uc_phy_buffer[9] = 0xAA;
 		uc_phy_buffer[10] = 0;
 		/* Build Type B header */
@@ -2089,19 +2079,19 @@ uint8_t phy_tx_frame(xPhyMsgTx_t *px_msg)
 			}
 
 			ul_time_ref = pplc_if_read32(REG_ATPL230_VHIGH_TIMER_BEACON_REF);
-			pplc_if_write32(REG_ATPL230_TXRXBUF_EMITIME1_TX0 +  (uc_buff_id << 2), ul_time_ref + px_msg->tdelay);
+			pplc_if_write32(REG_ATPL230_TXRXBUF_EMITIME1_TX0 + (uc_buff_id << 2), ul_time_ref + px_msg->tdelay);
 			/* Enable buffer to transmit */
 			pplc_if_or8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + uc_buff_id, ATPL230_TXRXBUF_TXCONF_EB_Msk);
 		} else {
 			/* Absolute time mode */
-			pplc_if_write32(REG_ATPL230_TXRXBUF_EMITIME1_TX0 +  (uc_buff_id << 2), px_msg->tdelay);
+			pplc_if_write32(REG_ATPL230_TXRXBUF_EMITIME1_TX0 + (uc_buff_id << 2), px_msg->tdelay);
 			/* Enable buffer to transmit */
 			pplc_if_or8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + uc_buff_id, ATPL230_TXRXBUF_TXCONF_EB_Msk);
 		}
 	} else { 
 		/* use forced mode: avoid false tx in case of forced tx */
 		ul_time_ref = pplc_if_read32(REG_ATPL230_VHIGH_TIMER_BEACON_REF);
-		pplc_if_write32(REG_ATPL230_TXRXBUF_EMITIME1_TX0 +  (uc_buff_id << 2), ul_time_ref - 10);
+		pplc_if_write32(REG_ATPL230_TXRXBUF_EMITIME1_TX0 + (uc_buff_id << 2), ul_time_ref - 10);
 		/* Enable buffer to transmit */
 		pplc_if_or8(REG_ATPL230_TXRXBUF_TXCONF_TX0 + uc_buff_id, ATPL230_TXRXBUF_TXCONF_EB_Msk);
 		/* force tx immediately (must be after enable flag set) */

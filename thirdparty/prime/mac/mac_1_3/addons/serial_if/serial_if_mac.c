@@ -66,21 +66,21 @@ extern "C" {
  * @{
  */
 
-/* ! \name Validity indications */
+/*  \name Validity indications */
 /* @{ */
 #define VALID        1
 #define NOTVALID     0
 /* @} */
 
-/* ! \name Reception variables */
+/*  \name Reception variables */
 /* @{ */
-static uint8_t *puc_rx;             /* !< Pointer to received message */
-static uint16_t us_rx_len;          /* !< Data length of received message */
+static uint8_t *puc_rx;             /*  Pointer to received message */
+static uint16_t us_rx_len;          /*  Data length of received message */
 /* @} */
 
-/* ! \name Transmission variables */
+/*  \name Transmission variables */
 /* @{ */
-static uint16_t us_tx_len;          /* !< Data length in transmitted message */
+static uint16_t us_tx_len;          /*  Data length in transmitted message */
 /* @} */
 
 static MacSapCallBack cmd;
@@ -633,8 +633,7 @@ static int _serial_if_mac_unpack_establish_req(void)
 	uc_eui48_addr_valid = *puc_rx_buff++;
 	if (uc_eui48_addr_valid == VALID) {
 		for (us_idx = 0; us_idx < PRIME_MAC_LENGTH; us_idx++) {
-			newMacCallBackCmd->macAddr[us_idx]
-				= (uint8_t)(*puc_rx_buff++);
+			newMacCallBackCmd->macAddr[us_idx] = (uint8_t)(*puc_rx_buff++);
 		}
 	} else {
 		for (us_idx = 0; us_idx < PRIME_MAC_LENGTH; us_idx++) {
@@ -1263,7 +1262,7 @@ int8_t serial_if_mac_process(void)
 	return(c_result);
 }
 
-/* ! @} */
+/*  @} */
 
 /* / @cond 0 */
 /**INDENT-OFF**/

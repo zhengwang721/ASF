@@ -62,14 +62,14 @@ extern "C" {
  * @{
  */
 
-/* ! \name Serialization of PLME protocol */
+/*  \name Serialization of PLME protocol */
 /* @{ */
 uint8_t serial_if_plme_api_parser(uint8_t *puc_rx_msg, uint16_t us_len);
 int8_t serial_if_plme_process(void);
 
 /* @} */
 
-/* ! @} */
+/*  @} */
 
 /* @cond 0 */
 /**INDENT-OFF**/

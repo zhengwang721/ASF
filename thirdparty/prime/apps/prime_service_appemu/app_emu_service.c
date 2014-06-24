@@ -50,13 +50,9 @@
 
 #include "asf.h"
 
-/* *** Declarations ************************************************************
- **/
-
 #define TIMETO_RECONNECT                        500L /* Time in 10 miliseconds **/
 #define TIME_OUT_CONNECTION                     1000L /* Time in 10 miliseconds **/
-#define TIME_OUT_TEST                           100000L /* Time in 10
-	                                                     * miliseconds */
+#define TIME_OUT_TEST                           100000L /* Time in 10 miliseconds */
 
 #define MLME_MACEUI48                           0x8100
 #define MLME_MACSTATE                           0x0024
@@ -67,7 +63,7 @@
 
 #define NUM_TEST                                11
 
-/* / States of appemu_proccess */
+/*  States of appemu_proccess */
 enum {
 	APPEMU_GET_SERIAL,
 	APPEMU_WAIT_REGISTER,
@@ -78,14 +74,12 @@ enum {
 	APPEMU_TIMETO_RECONNECT
 };
 
-/* / States of _mlme_get_var */
+/*  States of _mlme_get_var */
 enum {
 	MLMEGET_SEND_REQUEST,
 	MLMEGET_WAIT_ANSWER
 };
 
-/* *** Static Variables ********************************************************
- **/
 /* Definition of the test */
 typedef struct {
 	uint8_t uc_test_number; /* Step of the test, to fill up the message **/
@@ -135,7 +129,6 @@ extern uint32_t ul_time_app_emu;
 
 const char *prime_get_app_identification_str(void);
 
-/* ************************************************************************** */
 
 /** @brief	Gets values through the MLME interface
  *
@@ -144,7 +137,7 @@ const char *prime_get_app_identification_str(void);
  *
  *      @return	1	if OK
  *                                0	In other case
- **************************************************************************/
+ **/
 
 static int _mlme_get_var(uint16_t us_var, uint8_t *puc_result)
 {
@@ -162,16 +155,14 @@ static int _mlme_get_var(uint16_t us_var, uint8_t *puc_result)
 	case MLMEGET_WAIT_ANSWER:
 		if (prime_MLME_callback(puc_result)) {
 			/* Check cmd and result */
-			if ((puc_result[0] == PRIME_MLME_GET_CONFIRM) &&
-					(puc_result[1] == PRIME_MLME_RESULT_SUCCESS)) {
+			if ((puc_result[0] == PRIME_MLME_GET_CONFIRM) && (puc_result[1] == PRIME_MLME_RESULT_SUCCESS)) {
 				pibAttrib = (uint16_t)(puc_result[2] << 8) + (uint16_t)puc_result[3];
 				if (pibAttrib == us_var) {
 					l_result = 1;
 				}
 			}
 
-			/* Next time we start again in MLMEGET_SEND_REQUEST or
-			 * retry now */
+			/* Next time we start again in MLMEGET_SEND_REQUEST or retry now */
 			uc_mlme_get_var_st = MLMEGET_SEND_REQUEST;
 		}
 
@@ -180,8 +171,6 @@ static int _mlme_get_var(uint16_t us_var, uint8_t *puc_result)
 	return l_result;
 }
 
-/* ************************************************************************** */
-
 /** @brief	This function updates the Serial string
  *
  *      @param pc_sn    Pointer to the serial number
@@ -189,7 +178,7 @@ static int _mlme_get_var(uint16_t us_var, uint8_t *puc_result)
  *      @return	1	if OK
  *                                0	In other case
  * This function updates the Serial string with the Serial of the Meter
- **************************************************************************/
+ **/
 
 static int _get_serial(char *pc_sn)
 {
@@ -213,20 +202,18 @@ static int _get_serial(char *pc_sn)
 	return l_result;
 }
 
-/* ************************************************************************** */
 
 /** @brief	Return the last value of uc_node_state updated by
  * _service_node_registered
  *
  *      @return	uc_node_state
- **************************************************************************/
+ **/
 
 static int _node_connected(void)
 {
 	return uc_node_state;
 }
 
-/* ************************************************************************** */
 
 /** @brief	It tells us when a node is already connected to a base node
  *
@@ -234,7 +221,7 @@ static int _node_connected(void)
  *                                0 Non contected, pooling
  *
  * This function also updates uc_node_state
- **************************************************************************/
+ **/
 
 static int _service_node_registered(void)
 {
@@ -242,8 +229,7 @@ static int _service_node_registered(void)
 
 	if (_mlme_get_var(MLME_MACSTATE, puc_buf_mlme_get)) {
 		uc_node_state = puc_buf_mlme_get[7]; /* LSB of pibValue */
-		if ((uc_node_state == MACSTATE_TERMINAL) ||
-				(uc_node_state  == MACSTATE_SWITCH)) {
+		if ((uc_node_state == MACSTATE_TERMINAL) || (uc_node_state  == MACSTATE_SWITCH)) {
 			l_result = 1;
 #ifdef APPEMU_DEBUG
 			printf("Node Connected\n");
@@ -254,7 +240,6 @@ static int _service_node_registered(void)
 	return l_result;
 }
 
-/* ************************************************************************** */
 
 /** @brief	Checks the received message to correspond with the programmed
  * test
@@ -264,7 +249,7 @@ static int _service_node_registered(void)
  *      @param puc_num_test Pointer to return the test number
  *
  *      @return	length to send
- **************************************************************************/
+ **/
 
 static uint16_t _get_len_answer_msg(MacSapCallBack *p_cmd, uint16_t *pus_rx_len,
 		uint8_t *puc_num_test)
@@ -280,8 +265,7 @@ static uint16_t _get_len_answer_msg(MacSapCallBack *p_cmd, uint16_t *pus_rx_len,
 
 	if (us_test < 5) {
 		for (i = 0; (conf_test[i].uc_test_number != 0xff); i++) {
-			if ((conf_test[i].uc_test_number == us_test) &&
-					(conf_test[i].us_bytes_sent == us_len_rcv)) {
+			if ((conf_test[i].uc_test_number == us_test) && (conf_test[i].us_bytes_sent == us_len_rcv)) {
 				us_len_tx = conf_test[i].us_bytes_expected;
 				break;
 			}
@@ -295,10 +279,6 @@ static uint16_t _get_len_answer_msg(MacSapCallBack *p_cmd, uint16_t *pus_rx_len,
 	return us_len_tx;
 }
 
-/* *** Public Functions ******************************************************
- **/
-/* ************************************************************************** */
-
 /** @brief	Get App identification string
  *
  *      @return		Application identification
@@ -307,21 +287,20 @@ static uint16_t _get_len_answer_msg(MacSapCallBack *p_cmd, uint16_t *pus_rx_len,
  *      - Product name
  *      - Version
  *      - Copyright advice
- **************************************************************************/
+ **/
 
 const char *prime_get_app_identification_str(void)
 {
 	return (APP_ID " Rev." APP_VERSION_STR);
 }
 
-/* ************************************************************************** */
 
 /** @brief	Start		application emulation
  *
  *      @param	bauds		Speed of transmission
  *
  * This function initializes variables for application
- **************************************************************************/
+ **/
 
 void app_emu_start(void)
 {
@@ -334,7 +313,6 @@ void app_emu_start(void)
 	uc_mlme_get_var_st = MLMEGET_SEND_REQUEST;
 }
 
-/* ************************************************************************** */
 
 /** @brief	This function implements the Meter
  *
@@ -352,26 +330,21 @@ void app_emu_process(void)
 	Bool new_command = false;
 
 	/* Reception of Mac primitives */
-	if (_node_connected() &&
-			prime_MAC_callback(&tmp_new_cmd, us_meter_handler,
-			CON_TYPE)) {
+	if (_node_connected() && prime_MAC_callback(&tmp_new_cmd, us_meter_handler, CON_TYPE)) {
 		counter_new_cmd = &tmp_new_cmd;
 		new_command = true;
 		switch (counter_new_cmd->command) {
 		case PRIME_MACSAP_RELEASE_INDICATION:
-			prime_MAC_RELEASE_response(us_meter_handler,
-										PRIME_MACSAP_RESULT_ACCEPT);
+			prime_MAC_RELEASE_response(us_meter_handler, PRIME_MACSAP_RESULT_ACCEPT);
 			uc_app_emu_st = APPEMU_TIMETO_RECONNECT;
 			ul_time_app_emu = TIMETO_RECONNECT + (uint32_t)app_emu_random();
 #ifdef APPEMU_DEBUG
 #ifdef __GNUC__
-			printf(
-					"Connection closed with Concentrator. Reconnecting in %lu milliseconds\n",
+			printf("Connection closed with Concentrator. Reconnecting in %lu milliseconds\n",
 					ul_time_app_emu);
 #endif
 #ifdef __ICCARM__
-			printf(
-					"Connection closed with Concentrator. Reconnecting in %u milliseconds\n",
+			printf("Connection closed with Concentrator. Reconnecting in %u milliseconds\n",
 					ul_time_app_emu);
 #endif
 #endif
@@ -411,9 +384,7 @@ void app_emu_process(void)
 #ifdef APPEMU_DEBUG
 		printf("Serial: %s\n", pc_serial);
 #endif
-		prime_MAC_ESTABLISH_request(NULL, CON_TYPE,
-									(unsigned char *)pc_serial,
-									SERIAL_SIZE, 0, 0);
+		prime_MAC_ESTABLISH_request(NULL, CON_TYPE, (unsigned char *)pc_serial, SERIAL_SIZE, 0, 0);
 		uc_app_emu_st = APPEMU_WAIT_RESPONSE_CONNECT;
 		ul_time_app_emu = TIME_OUT_CONNECTION;
 		break;
@@ -425,15 +396,12 @@ void app_emu_process(void)
 				if (counter_new_cmd->answer == PRIME_MACSAP_RESULT_SUCCESS) {
 					us_meter_handler = counter_new_cmd->handler;
 #ifdef APPEMU_DEBUG
-					printf(
-							"Connection opened with Concentrator (handler: %i)\n",
+					printf("Connection opened with Concentrator (handler: %i)\n",
 							us_meter_handler);
 #endif
-					counter_new_cmd->buf[counter_new_cmd->
-					bufLength] = '\0';
+					counter_new_cmd->buf[counter_new_cmd->bufLength] = '\0';
 #ifdef APPEMU_DEBUG
-					printf("Connection data : %s\n",
-							&counter_new_cmd->buf[0]);
+					printf("Connection data : %s\n", &counter_new_cmd->buf[0]);
 #endif
 					/* Start Test */
 					uc_app_emu_st = APPEMU_WAIT_MESSAGE;
@@ -441,20 +409,17 @@ void app_emu_process(void)
 					uc_app_emu_st = APPEMU_TIMETO_RECONNECT;
 #ifdef APPEMU_DEBUG
 #ifdef __GNUC__
-					printf(
-							"Connection rejected. Reconnecting in %lu milliseconds\n",
+					printf("Connection rejected. Reconnecting in %lu milliseconds\n",
 							ul_time_app_emu);
 #endif
 #ifdef __ICCARM__
-					printf(
-							"Connection rejected. Reconnecting in %u milliseconds\n",
+					printf("Connection rejected. Reconnecting in %u milliseconds\n",
 							ul_time_app_emu);
 #endif
 #endif
 				}
 
-				ul_time_app_emu = TIME_OUT_TEST +
-						(uint32_t)app_emu_random();
+				ul_time_app_emu = TIME_OUT_TEST + (uint32_t)app_emu_random();
 			}
 		}
 
@@ -466,22 +431,14 @@ void app_emu_process(void)
 		if (new_command) {
 			new_command = false;
 			if (counter_new_cmd->command == PRIME_MACSAP_DATA_INDICATION) {
-				us_len_tx = _get_len_answer_msg(counter_new_cmd,
-												&us_len_rcv,
-												&uc_num_test);
+				us_len_tx = _get_len_answer_msg(counter_new_cmd, &us_len_rcv, &uc_num_test);
 
 				if (us_len_tx) {
 #ifdef APPEMU_DEBUG
-					printf(
-							"Received %i bytes\t Test:%i\t\n", us_len_rcv,
-							(uint16_t)uc_num_test);
+					printf("Received %i bytes\t Test:%i\t\n", us_len_rcv, (uint16_t)uc_num_test);
 #endif
-					app_emu_copy_timestamp(pc_timestamp,
-											counter_new_cmd->buf);
-					app_emu_fill_string((char *)pc_request,
-										us_len_tx, UP_MSG,
-										uc_num_test,
-										pc_timestamp);
+					app_emu_copy_timestamp(pc_timestamp, counter_new_cmd->buf);
+					app_emu_fill_string((char *)pc_request, us_len_tx, UP_MSG, uc_num_test, pc_timestamp);
 					uc_app_emu_st = APPEMU_SEND_RESPONSE;
 				} else {
 #ifdef APPEMU_DEBUG

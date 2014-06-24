@@ -100,60 +100,42 @@ const uint8_t puc_headerdlms2[] =  {0xC4, 0x02, 0x00, 0x00};
 
 const uint8_t puc_obis0000010000FF[] = {0x00, 0x00, 0x01, 0x00, 0x00, 0xff};
 const uint8_t puc_msg_obis0000010000FF[] = {0xC5, 0x01, 0xC1, 0x00};
-uint8_t puc_msg_obis0000010000ff[]
-	= {0x09, 0x0C, 0x07, 0xDE, 0x08, 0x06, 0x02, 0x12,
+const uint8_t puc_msg_obis0000010000ff[] = {0x09, 0x0C, 0x07, 0xDE, 0x08, 0x06, 0x02, 0x12,
 	   0x01, 0x1B, 0xFF, 0x80, 0x00, 0x80};
 
 const uint8_t puc_obis0100000200FF[] = {0x01, 0x00, 0x00, 0x02, 0x00, 0xFF};
-const uint8_t puc_msg_obis0100000200FF[]
-	= {0x09, 0x05, 0x56, 0x39, 0x33, 0x30, 0x30};
+const uint8_t puc_msg_obis0100000200FF[] = {0x09, 0x05, 0x56, 0x39, 0x33, 0x30, 0x30};
 
 const uint8_t puc_obis00001C0700FF[] = {0x00, 0x00, 0x1C, 0x07, 0x00, 0xFF};
-uint8_t puc_msg_obis00001C0700FF[]
-	= {0x09, 0x10, 0x30, 0x31, 0x30, 0x33, 0x30, 0x38,
-	   0x30, 0x31, 0x44, 0x42, 0x55, 0x00, 0x00,
-	   0x00, 0x00, 0x00};
+const uint8_t puc_msg_obis00001C0700FF[] = {0x09, 0x10, 0x30, 0x31, 0x30, 0x33, 0x30, 0x38,
+	   0x30, 0x31, 0x44, 0x42, 0x55, 0x00, 0x00, 0x00, 0x00, 0x00};
 
 const uint8_t puc_obis0000150005FF[] = {0x00, 0x00, 0x15, 0x00, 0x05, 0xff};
-const uint8_t puc_msg_obis0000150005FF[]
-	= {0x01, 0x01, 0x02, 0x0D, 0x09, 0x0C, 0x07, 0xDE,
-	   0x04, 0x08, 0x02, 0x11, 0x0D, 0x05,
-	   0xFF, 0x00, 0x78, 0x80, 0x12, 0x00, 0xFD, 0x12, 0x00,
-	   0x00,
-	   0x12, 0x00, 0x00, 0x12, 0x00, 0x00,
-	   0x12, 0x00, 0x00, 0x12, 0x00, 0x00, 0x12, 0x00, 0x00,
-	   0x06,
-	   0x00, 0x00, 0x00, 0x00, 0x06, 0x00,
-	   0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x06,
-	   0x00,
-	   0x00, 0x00, 0x00, 0x12, 0x00, 0x00};
+const uint8_t puc_msg_obis0000150005FF[] = {0x01, 0x01, 0x02, 0x0D, 0x09, 0x0C, 0x07, 
+	   0xDE, 0x04, 0x08, 0x02, 0x11, 0x0D, 0x05, 0xFF, 0x00, 0x78, 0x80, 0x12, 0x00, 
+	   0xFD, 0x12, 0x00, 0x00, 0x12, 0x00, 0x00, 0x12, 0x00, 0x00, 0x12, 0x00, 0x00, 
+	   0x12, 0x00, 0x00, 0x12, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 
+	   0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 
+	   0x12, 0x00, 0x00};
 const uint8_t puc_obis0000150006FF[] = {0X00, 0X00, 0X15, 0X00, 0X06, 0XFF};
-const uint8_t puc_msg_obis0000150006FF[]
-	= {0x01, 0x01, 0x02, 0x07, 0x09, 0x0C, 0x07, 0xDE,
-	   0x04, 0x08, 0x02, 0x10, 0x0A, 0x32,
-	   0xFF, 0x00, 0x78, 0x80, 0x06, 0x00, 0x00, 0x00, 0x00,
-	   0x06,
-	   0x00, 0x00, 0x00, 0x00, 0x06, 0x00,
-	   0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x06,
-	   0x00,
-	   0x00, 0x00, 0x00, 0x06, 0x00, 0x00,
+const uint8_t puc_msg_obis0000150006FF[] = {0x01, 0x01, 0x02, 0x07, 0x09, 0x0C, 0x07, 
+	   0xDE, 0x04, 0x08, 0x02, 0x10, 0x0A, 0x32, 0xFF, 0x00, 0x78, 0x80, 0x06, 0x00, 
+	   0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 
+	   0x06, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 
 	   0x00, 0x00};
 
 const uint8_t puc_obis0000600100FF[] = {0X00, 0X00, 0X60, 0X01, 0X00, 0XFF};
-uint8_t puc_msg_obis0000600100FF[] = {0x09, 0x0A};
+const uint8_t puc_msg_obis0000600100FF[] = {0x09, 0x0A};
 
 const uint8_t puc_obis0000600101FF[] = {0X00, 0X00, 0X60, 0X01, 0X01, 0XFF};
-uint8_t puc_msg_obis0000600101FF[]
-	= {0x09, 0x06, 0x20, 0x48, 0x41, 0x42, 0x31, 0x32};
+const uint8_t puc_msg_obis0000600101FF[] = {0x09, 0x06, 0x20, 0x48, 0x41, 0x42, 0x31, 0x32};
 
 const uint8_t puc_obis0000600102FF[] = {0X00, 0X00, 0X60, 0X01, 0X02, 0XFF};
-const uint8_t puc_msg_obis0000600102FF[]
-	= {0x09, 0x12, 0x63, 0x6F, 0x6E, 0x74, 0x61, 0x64,
-	   0x6F, 0x72, 0x20, 0x20, 0x44, 0x4C,
-	   0x4D, 0x53, 0x30, 0x31, 0x30, 0x35};
+const uint8_t puc_msg_obis0000600102FF[] = {0x09, 0x12, 0x63, 0x6F, 0x6E, 0x74, 0x61, 
+	   0x64,0x6F, 0x72, 0x20, 0x20, 0x44, 0x4C, 0x4D, 0x53, 0x30, 0x31, 0x30, 0x35};
 
 const uint8_t puc_obis010001080AFF[] = {0x01, 0x00, 0x01, 0x08, 0x0A, 0xFF};
-uint8_t puc_msg_obis010001080AFF[]   = {0x06, 0x00, 0x00, 0x00, 0x00};
+const uint8_t puc_msg_obis010001080AFF[]   = {0x06, 0x00, 0x00, 0x00, 0x00};
 
 const uint8_t puc_obis01015e2264ff[] = {0x01, 0x01, 0x5e, 0x22, 0x64, 0xff};
 const uint8_t puc_msg_obis01015e2264ff[]   = {0x11, 0x00};
@@ -173,69 +155,39 @@ const uint8_t puc_obis000060030AFF[] = {0x00, 0x00, 0x60, 0x03, 0x0A, 0xFF};
 const uint8_t puc_msg_obis000060030AFF [] = {0x16, 0x01};
 /* disconector */
 const uint8_t puc_obis00000F0001FF[]  = {0x00, 0x00, 0x0F, 0x00, 0x01, 0xFF};
-uint8_t puc_msg_obis00000F0001FF_02[]
-	= {0x02, 0x02, 0x09, 0x06, 0x00, 0x00, 0x0A, 0x00,
+const uint8_t puc_msg_obis00000F0001FF_02[] = {0x02, 0x02, 0x09, 0x06, 0x00, 0x00, 0x0A, 0x00,
 	   0x6A, 0xFF, 0x12, 0x00, 0x00};
-uint8_t puc_msg_obis00000F0001FF_04[]
-	= {0x01, 0x01, 0x02, 0x02, 0x09, 0x04, 0xFF, 0xFF,
-	   0xFF, 0xFF, 0x09, 0x05, 0xFF, 0xFF,
-	   0xFF, 0xFF, 0xFF};
+const uint8_t puc_msg_obis00000F0001FF_04[] = {0x01, 0x01, 0x02, 0x02, 0x09, 0x04, 0xFF, 0xFF,
+	   0xFF, 0xFF, 0x09, 0x05, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF};
 
 /* puc_obis request and answers */
 
 const uint8_t puc_obis0100630100FF[] = {0x01, 0x00, 0x63, 0x01, 0x00, 0xFF};
-const uint8_t puc_msg_obis0100630100FF[]
-	= {0x00, 0x00, 0x00, 0x01, 0x00, 0x81, 0xF2};
-uint8_t puc_msg_obis0100630100FF_data[]
-	= {0x02, 0x08, 0x09, 0x0C, 0x07, 0xDE, 0x05, 0x0C,
-	   0x01, 0x10, 0x00, 0x00, 0xFF, 0x80,
-	   0x00, 0x80, 0x11, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00,
-	   0x06,
-	   0x00, 0x00, 0x00, 0x00, 0x06, 0x00,
-	   0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x06,
-	   0x00,
-	   0x00, 0x00, 0x00, 0x06, 0x00, 0x00,
-	   0x00, 0x00};
+const uint8_t puc_msg_obis0100630100FF[] = {0x00, 0x00, 0x00, 0x01, 0x00, 0x81, 0xF2};
+const uint8_t puc_msg_obis0100630100FF_data[] = {0x02, 0x08, 0x09, 0x0C, 0x07, 0xDE, 0x05, 0x0C,
+	   0x01, 0x10, 0x00, 0x00, 0xFF, 0x80, 0x00, 0x80, 0x11, 0x00, 0x06, 0x00, 0x00, 0x00,
+	   0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 
+	   0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00, 0x06, 0x00, 0x00, 0x00, 0x00};
 
 /* current control threshold */
 const uint8_t puc_obis00015E221FFF[] = {0x00, 0x01, 0x5E, 0x22, 0x1F, 0xFF};
-uint8_t puc_msg_obis00015E221FFF[] = {0x06, 0x00, 0x00, 0x3A, 0x98};
+const uint8_t puc_msg_obis00015E221FFF[] = {0x06, 0x00, 0x00, 0x3A, 0x98};
 /* % of demand to close */
 const uint8_t puc_obi00005E2246FF[] = { 0x00, 0x00, 0x5E, 0x22, 0x46, 0xFF};
-uint8_t puc_msg_obis00005E2246FF[] = {0x12, 0x25, 0x1C};
+const uint8_t puc_msg_obis00005E2246FF[] = {0x12, 0x25, 0x1C};
 
 /* power meter configuration */
 const uint8_t puc_obis00015E220XFF[] = {0x00, 0x01, 0x5E, 0x22, 0x00, 0xFF};
 const uint8_t puc_msg_obis00015E220XFF[] = {0x06, 0x00, 0x00, 0x3A, 0x98};
 
 #define LEN_ASSOCIATION_RSP    43
-static const uint8_t puc_association_rsp[LEN_ASSOCIATION_RSP] = {0x61, 0x29,
-								 0xA1, 0x09,
-								 0x06, 0x07,
-								 0x60, 0x85,
-								 0x74, 0x05,
-								 0x08, 0x01,
-								 0x01,
-								 0xA2, 0x03,
-								 0x02, 0x01,
-								 0x00, 0xA3,
-								 0x05, 0xA1,
-								 0x03, 0x02,
-								 0x01, 0x00,
-								 0xBE,
-								 0x10, 0x04,
-								 0x0E, 0x08,
-								 0x00, 0x06,
-								 0x5F, 0x1F,
-								 0x04, 0x00,
-								 0x00, 0x10,
-								 0x14,
-								 0x00, 0x00,
-								 0x00, 0x07};
+static const uint8_t puc_association_rsp[LEN_ASSOCIATION_RSP] = {0x61, 0x29, 0xA1, 0x09, 
+	   0x06, 0x07, 0x60, 0x85, 0x74, 0x05, 0x08, 0x01, 0x01, 0xA2, 0x03, 0x02, 0x01, 0x00, 
+	   0xA3, 0x05, 0xA1, 0x03, 0x02, 0x01, 0x00, 0xBE, 0x10, 0x04, 0x0E, 0x08, 0x00, 0x06, 
+	   0x5F, 0x1F, 0x04, 0x00, 0x00, 0x10, 0x14, 0x00, 0x00, 0x00, 0x07};
 
 #define LEN_RELEASE_RSP        5
-static const uint8_t puc_release_rsp[LEN_RELEASE_RSP] = { 0x63, 0x03, 0x80,
-							  0x01, 0x00};
+static const uint8_t puc_release_rsp[LEN_RELEASE_RSP] = { 0x63, 0x03, 0x80, 0x01, 0x00};
 
 uint8_t S02_block_counter;
 uint8_t S02_block_send;
@@ -244,9 +196,9 @@ uint8_t x_ini_S02[12];
 uint8_t x_end_S02[12];
 uint16_t max_fields_s02;
 
-/***************************************************************************
+/**
 * Convert functions
-***************************************************************************/
+**/
 static uint8_t _convertHEX2STR(uint8_t num)
 {
 	if (num > 9) {
@@ -277,10 +229,10 @@ static void _generate_serial(uint8_t *stringSerialBoard)
 	*(stringSerialBoard + 13) = 0x00;
 }
 
-/**********************************************************************************
+/**
 * Read date in the reception buffer and get how many fields have to be send in
 * the S02 profile
-**********************************************************************************/
+**/
 static uint16_t getNumberoffield_S02(void)
 {
 	uint32_t iniday, endday;
@@ -290,13 +242,9 @@ static uint16_t getNumberoffield_S02(void)
 
 	/* calculation have know accuracy errors ... assume all months
 	 * are 30 days and leap year is not corrected*/
-	endday
-		= (x_end_S02[0] * 256 +
-			x_end_S02[1]) * 365 * 24 + x_end_S02[2] * 30 * 24 +
+	endday = (x_end_S02[0] * 256 + x_end_S02[1]) * 365 * 24 + x_end_S02[2] * 30 * 24 +
 			x_end_S02[3] * 24 + x_end_S02[5];
-	iniday
-		= (x_ini_S02[0] * 256 +
-			x_ini_S02[1]) * 365 * 24 + x_ini_S02[2] * 30 * 24 +
+	iniday = (x_ini_S02[0] * 256 + x_ini_S02[1]) * 365 * 24 + x_ini_S02[2] * 30 * 24 +
 			x_ini_S02[3] * 24 + x_ini_S02[5];
 	/* update msg puc_obis */
 	puc_msg_obis0100630100FF_data [10] = 0;
@@ -315,10 +263,10 @@ static uint16_t getNumberoffield_S02(void)
 	return (uint16_t)(endday - iniday);
 }
 
-/**********************************************************************************
+/**
 * timestamp field increment 1 hour
 * a single calendar implementation..
-**********************************************************************************/
+**/
 
 static void updateDate(void)
 {
@@ -337,8 +285,7 @@ static void updateDate(void)
 		/* new day */
 		puc_msg_obis0100630100FF_data[7]++;
 		/* change month	*/
-		if (puc_msg_obis0100630100FF_data [7] >
-				md[puc_msg_obis0100630100FF_data[6] - 1]) {
+		if (puc_msg_obis0100630100FF_data [7] > md[puc_msg_obis0100630100FF_data[6] - 1]) {
 			puc_msg_obis0100630100FF_data [7] = 1;
 			puc_msg_obis0100630100FF_data [6]++;
 			/* change year */
@@ -350,7 +297,7 @@ static void updateDate(void)
 	}
 }
 
-/*************************************************************************
+/**
 **  build associate resquest with low security response/
 *      associate response
 * ack ="00" association accepted
@@ -358,11 +305,9 @@ static void updateDate(void)
 * conformance = 0x01 must handshake security protocol.
 * ACSEserviceUserValue =0
 * pduVaule
-***************************************************************************/
+**/
 static uint16_t MSG_AssociationResponse( uint8_t *msg, uint8_t ack,
-		uint8_t ACSEserviceUserValue,
-		uint8_t NegotiateConformance,
-		uint16_t maxPDU)
+		uint8_t ACSEserviceUserValue, uint8_t NegotiateConformance, uint16_t maxPDU)
 {
 	uint8_t *puc_msg_aux = msg;
 
@@ -399,16 +344,16 @@ static uint16_t MSG_AssociationResponse( uint8_t *msg, uint8_t ack,
 	return (LEN_ASSOCIATION_RSP);
 }
 
-/*********************************************************************************************************
+/**
 *  build DLMS answer using parameters
-*               InvokeIDandPriority   message number in dlms dialog
-*               puc_obis   obis string
-*               classid    object class  of the obis object
-*               dlmsATTR   object attribute of the object.
+*  InvokeIDandPriority   message number in dlms dialog
+*  puc_obis   obis string
+*  classid    object class  of the obis object
+*  dlmsATTR   object attribute of the object.
 *
-*       function return lenght of the dlms answer
-*       if 0... object not found
-*********************************************************************************************************/
+*  function return lenght of the dlms answer
+*  if 0... object not found
+**/
 
 static uint16_t MSG_GetResponse( uint8_t *msg, int8_t InvokeIDandPriority,
 		uint8_t *puc_obis, uint16_t classID, uint8_t dlmsATTR)
@@ -419,8 +364,7 @@ static uint16_t MSG_GetResponse( uint8_t *msg, int8_t InvokeIDandPriority,
 	/* puc_obis 0100000200 version dlms */
 	if (memcmp(puc_obis, puc_obis0100000200FF, 6) == 0) {
 		blocklenght = 4 + sizeof(puc_msg_obis0100000200FF);
-		memcpy(msg + 4, puc_msg_obis0100000200FF,
-				sizeof(puc_msg_obis0100000200FF));
+		memcpy(msg + 4, puc_msg_obis0100000200FF, sizeof(puc_msg_obis0100000200FF));
 		*(msg + 2) = InvokeIDandPriority;
 		return (blocklenght);
 	}
@@ -428,8 +372,7 @@ static uint16_t MSG_GetResponse( uint8_t *msg, int8_t InvokeIDandPriority,
 	/* puc_obis 00001C0700 version prime */
 	if (memcmp(puc_obis, puc_obis00001C0700FF, 6) == 0) {
 		blocklenght = 4 + sizeof(puc_msg_obis00001C0700FF);
-		memcpy(msg + 4, puc_msg_obis00001C0700FF,
-				sizeof(puc_msg_obis00001C0700FF));
+		memcpy(msg + 4, puc_msg_obis00001C0700FF, sizeof(puc_msg_obis00001C0700FF));
 		*(msg + 2) = InvokeIDandPriority;
 		return (blocklenght);
 	}
@@ -437,8 +380,7 @@ static uint16_t MSG_GetResponse( uint8_t *msg, int8_t InvokeIDandPriority,
 	/* puc_obis 0000150005FF meter details */
 	if (memcmp(puc_obis, puc_obis0000150005FF, 6) == 0) {
 		blocklenght = 4 + sizeof(puc_msg_obis0000150005FF);
-		memcpy(msg + 4, puc_msg_obis0000150005FF,
-				sizeof(puc_msg_obis0000150005FF));
+		memcpy(msg + 4, puc_msg_obis0000150005FF, sizeof(puc_msg_obis0000150005FF));
 		*(msg + 2) = InvokeIDandPriority;
 		return (blocklenght);
 	}
@@ -446,8 +388,7 @@ static uint16_t MSG_GetResponse( uint8_t *msg, int8_t InvokeIDandPriority,
 	/* puc_obis 0000150006FF meter details */
 	if (memcmp(puc_obis, puc_obis0000150006FF, 6) == 0) {
 		blocklenght = 4 + sizeof(puc_msg_obis0000150006FF);
-		memcpy(msg + 4, puc_msg_obis0000150006FF,
-				sizeof(puc_msg_obis0000150006FF));
+		memcpy(msg + 4, puc_msg_obis0000150006FF, sizeof(puc_msg_obis0000150006FF));
 		*(msg + 2) = InvokeIDandPriority;
 		return (blocklenght);
 	}
@@ -455,18 +396,15 @@ static uint16_t MSG_GetResponse( uint8_t *msg, int8_t InvokeIDandPriority,
 	/* METER SERIAL NUMBER */
 	if (memcmp(puc_obis, puc_obis0000600100FF, 6) == 0) {
 		blocklenght     = 4 + sizeof(puc_msg_obis0000600100FF) + 10;
-		memcpy(msg + 4, puc_msg_obis0000600100FF,
-				sizeof(puc_msg_obis0000600100FF));
-		memcpy(msg + 4 + sizeof(puc_msg_obis0000600100FF),
-				puc_serial_number + 3, 10);
+		memcpy(msg + 4, puc_msg_obis0000600100FF, sizeof(puc_msg_obis0000600100FF));
+		memcpy(msg + 4 + sizeof(puc_msg_obis0000600100FF), puc_serial_number + 3, 10);
 		*(msg + 2) = InvokeIDandPriority;
 		return (blocklenght);
 	}
 
 	if (memcmp(puc_obis, puc_obis0000600101FF, 6) == 0) {
 		blocklenght = 4 + sizeof(puc_msg_obis0000600101FF);
-		memcpy(msg + 4, puc_msg_obis0000600101FF,
-				sizeof(puc_msg_obis0000600101FF));
+		memcpy(msg + 4, puc_msg_obis0000600101FF, sizeof(puc_msg_obis0000600101FF));
 		*(msg + 2) = InvokeIDandPriority;
 		return (blocklenght);
 	}
@@ -474,8 +412,7 @@ static uint16_t MSG_GetResponse( uint8_t *msg, int8_t InvokeIDandPriority,
 	if (memcmp(puc_obis, puc_obis0000600102FF, 6) == 0) {
 		/* puc_obis 0000600102FF */
 		blocklenght = 4 + sizeof(puc_msg_obis0000600102FF);
-		memcpy(msg + 4, puc_msg_obis0000600102FF,
-				sizeof(puc_msg_obis0000600102FF));
+		memcpy(msg + 4, puc_msg_obis0000600102FF, sizeof(puc_msg_obis0000600102FF));
 		*(msg + 2) = InvokeIDandPriority;
 		return (blocklenght);
 	}
@@ -483,8 +420,7 @@ static uint16_t MSG_GetResponse( uint8_t *msg, int8_t InvokeIDandPriority,
 	/* puc_obis 010001080A */
 	if (memcmp(puc_obis, puc_obis010001080AFF, 6) == 0) {
 		blocklenght = 4 + sizeof(puc_msg_obis010001080AFF);
-		memcpy(msg + 4, puc_msg_obis010001080AFF,
-				sizeof(puc_msg_obis010001080AFF));
+		memcpy(msg + 4, puc_msg_obis010001080AFF, sizeof(puc_msg_obis010001080AFF));
 		*(msg + 2) = InvokeIDandPriority;
 		return (blocklenght);
 	}
@@ -496,8 +432,7 @@ static uint16_t MSG_GetResponse( uint8_t *msg, int8_t InvokeIDandPriority,
 			memcpy(msg, puc_headerdlms2, 4);
 			/* number of hour to ask cycles... load curve lenght */
 			max_fields_s02 = getNumberoffield_S02();
-			memcpy(msg + 4, puc_msg_obis0100630100FF,
-					sizeof(puc_msg_obis0100630100FF));
+			memcpy(msg + 4, puc_msg_obis0100630100FF, sizeof(puc_msg_obis0100630100FF));
 			*(msg + 2) = InvokeIDandPriority;
 			/* number of block 1 */
 			*(msg + 7) = 0x01;
@@ -515,9 +450,7 @@ static uint16_t MSG_GetResponse( uint8_t *msg, int8_t InvokeIDandPriority,
 			/* number of data fields in the load curve */
 			uint8_t i = 0;
 			while ((i < 5) && (S02_block_send <= max_fields_s02)) {
-				memcpy(msg + position,
-						puc_msg_obis0100630100FF_data,
-						48);
+				memcpy(msg + position, puc_msg_obis0100630100FF_data, 48);
 				updateDate();
 				position += 48;
 				i++;
@@ -533,8 +466,7 @@ static uint16_t MSG_GetResponse( uint8_t *msg, int8_t InvokeIDandPriority,
 	if (memcmp(puc_obis, puc_obis0000010000FF, 6) == 0) {
 		if (classID == 0x08) {
 			blocklenght = 4 + sizeof(puc_msg_obis0000010000ff);
-			memcpy(msg + 4, puc_msg_obis0000010000ff,
-					sizeof(puc_msg_obis0000010000ff));
+			memcpy(msg + 4, puc_msg_obis0000010000ff, sizeof(puc_msg_obis0000010000ff));
 			*(msg + 2) = InvokeIDandPriority;
 			return (blocklenght);
 		} else {
@@ -545,24 +477,21 @@ static uint16_t MSG_GetResponse( uint8_t *msg, int8_t InvokeIDandPriority,
 	/* instant power */
 	if (memcmp(puc_obis, puc_obis01015e2264ff, 6) == 0) {
 		blocklenght = 4 + sizeof(puc_msg_obis01015e2264ff);
-		memcpy(msg + 4, puc_msg_obis01015e2264ff,
-				sizeof(puc_msg_obis01015e2264ff));
+		memcpy(msg + 4, puc_msg_obis01015e2264ff, sizeof(puc_msg_obis01015e2264ff));
 		*(msg + 2) = InvokeIDandPriority;
 		return (blocklenght);
 	}
 
 	if (memcmp(puc_obis, puc_obis01015e2268ff, 6) == 0) {
 		blocklenght = 4 + sizeof(puc_msg_obis01015e2268ff);
-		memcpy(msg + 4, puc_msg_obis01015e2268ff,
-				sizeof(puc_msg_obis01015e2268ff));
+		memcpy(msg + 4, puc_msg_obis01015e2268ff, sizeof(puc_msg_obis01015e2268ff));
 		*(msg + 2) = InvokeIDandPriority;
 		return (blocklenght);
 	}
 
 	if (memcmp(puc_obis, puc_obis00015e2214ff, 6) == 0) {
 		blocklenght = 4 + sizeof(puc_msg_obis00015e2214ff);
-		memcpy(msg + 4, puc_msg_obis00015e2214ff,
-				sizeof(puc_msg_obis00015e2214ff));
+		memcpy(msg + 4, puc_msg_obis00015e2214ff, sizeof(puc_msg_obis00015e2214ff));
 		*(msg + 2) = InvokeIDandPriority;
 		return (blocklenght);
 	}
@@ -570,8 +499,7 @@ static uint16_t MSG_GetResponse( uint8_t *msg, int8_t InvokeIDandPriority,
 	/* demand threshold */
 	if (memcmp(puc_obis, puc_obis00015E220XFF, 4) == 0) {
 		blocklenght = 4 + sizeof(puc_msg_obis00015E220XFF);
-		memcpy(msg + 4, puc_msg_obis00015E220XFF,
-				sizeof(puc_msg_obis00015E220XFF));
+		memcpy(msg + 4, puc_msg_obis00015E220XFF, sizeof(puc_msg_obis00015E220XFF));
 		*(msg + 2) = InvokeIDandPriority;
 		return (blocklenght);
 	}
@@ -602,15 +530,13 @@ static uint16_t MSG_GetResponse( uint8_t *msg, int8_t InvokeIDandPriority,
 		switch (dlmsATTR) {
 		case 0x02:
 			blocklenght = 4 + sizeof(puc_msg_obis00000F0001FF_02);
-			memcpy(msg + 4, puc_msg_obis00000F0001FF_02,
-					blocklenght);
+			memcpy(msg + 4, puc_msg_obis00000F0001FF_02, blocklenght);
 			*(msg + 2) = InvokeIDandPriority;
 			return (blocklenght);
 
 		case 0x04:
 			blocklenght = 4 + sizeof(puc_msg_obis00000F0001FF_04);
-			memcpy(msg + 4, puc_msg_obis00000F0001FF_04,
-					blocklenght);
+			memcpy(msg + 4, puc_msg_obis00000F0001FF_04, blocklenght);
 			*(msg + 2) = InvokeIDandPriority;
 			return (blocklenght);
 
@@ -641,9 +567,9 @@ static uint16_t MSG_GetResponse( uint8_t *msg, int8_t InvokeIDandPriority,
 	return (blocklenght);
 }
 
-/***********************************************************************************
+/**
 **  build release response
-*************************************************************************************/
+**/
 static uint16_t MSG_ReleaseResponse(uint8_t *msg, uint8_t value)
 {
 	memcpy(msg, puc_release_rsp, LEN_RELEASE_RSP);
@@ -656,14 +582,12 @@ static uint16_t MSG_ReleaseResponse(uint8_t *msg, uint8_t value)
 	return LEN_RELEASE_RSP;
 }
 
-/***********************************************************************************
+/**
 **  send DLMS answer
-*************************************************************************************/
+**/
 static void DLMSMessageSend( uint16_t lengthmsg)
 {
-	if (dl432_dl_data_request(x_cmd_rx_432.dl.lsap, x_cmd_rx_432.dl.dsap,
-							  us_base_node_address,
-							  &x_cmd_tx_432, lengthmsg, 0) == -1) {
+	if (dl432_dl_data_request(x_cmd_rx_432.dl.lsap, x_cmd_rx_432.dl.dsap, us_base_node_address, &x_cmd_tx_432, lengthmsg, 0) == -1) {
 #ifdef DLMS_EMU_DEBUG_ENABLE
 		printf("Error. Indication Not response\r\n");
 	} else {
@@ -672,9 +596,6 @@ static void DLMSMessageSend( uint16_t lengthmsg)
 	}
 }
 
-/***********************************************************************************
-**
-*************************************************************************************/
 static uint16_t _checkReceivedData(uint8_t *data)
 {
 	uint16_t DLMSrequest = 0x0000;
@@ -700,8 +621,7 @@ static uint16_t _checkReceivedData(uint8_t *data)
 #ifdef DLMS_EMU_DEBUG_ENABLE
 		printf("association request received>> %X", DLMSrequest);
 #endif
-		blocklenght = MSG_AssociationResponse( x_cmd_tx_432.dl.buff, 0,
-												0, 1, 0x0100);
+		blocklenght = MSG_AssociationResponse( x_cmd_tx_432.dl.buff, 0, 0, 1, 0x0100);
 		DLMSMessageSend(blocklenght);
 		break;
 
@@ -709,8 +629,7 @@ static uint16_t _checkReceivedData(uint8_t *data)
 #ifdef DLMS_EMU_DEBUG_ENABLE
 		printf("registration association request>>  %X", DLMSrequest);
 #endif
-		blocklenght = MSG_AssociationResponse( x_cmd_tx_432.dl.buff, 0,
-												1, 1, 0x01F4);
+		blocklenght = MSG_AssociationResponse( x_cmd_tx_432.dl.buff, 0, 1, 1, 0x01F4);
 		DLMSMessageSend(blocklenght);
 		break;
 
@@ -718,8 +637,7 @@ static uint16_t _checkReceivedData(uint8_t *data)
 #ifdef DLMS_EMU_DEBUG_ENABLE
 		printf("registration association request>>  %X", DLMSrequest);
 #endif
-		blocklenght = MSG_AssociationResponse( x_cmd_tx_432.dl.buff, 0,
-												1, 0, 0x0100);
+		blocklenght = MSG_AssociationResponse( x_cmd_tx_432.dl.buff, 0, 1, 0, 0x0100);
 		DLMSMessageSend(blocklenght);
 		break;
 
@@ -738,7 +656,7 @@ static uint16_t _checkReceivedData(uint8_t *data)
 #ifdef DLMS_EMU_DEBUG_ENABLE
 		printf("get request >> %X", DLMSrequest);
 #endif
-		/*dlms protocol answer with same invoke number */
+		/* dlms protocol answer with same invoke number */
 		InvokeAndPriority = *(data + 2);
 		/* obis class id identifier */
 		classID = (*(data + 3) << 0xf) + *(data + 4);
@@ -746,8 +664,7 @@ static uint16_t _checkReceivedData(uint8_t *data)
 		pinstanceID = (data + 5);
 		/* obis object attribute */
 		obisattribute = *(data + 11);
-		blocklenght = MSG_GetResponse(x_cmd_tx_432.dl.buff,
-										InvokeAndPriority,
+		blocklenght = MSG_GetResponse(x_cmd_tx_432.dl.buff, InvokeAndPriority,
 										pinstanceID, classID, obisattribute);
 		if (blocklenght) {
 			DLMSMessageSend(blocklenght);
@@ -772,8 +689,7 @@ static uint16_t _checkReceivedData(uint8_t *data)
 		/*dlms protocol answer with same invoke number */
 		InvokeAndPriority = *(data + 2);
 		memcpy(x_cmd_tx_432.dl.buff, puc_headerdlms2, 4);
-		memcpy(x_cmd_tx_432.dl.buff + 4, puc_msg_obis0100630100FF,
-				sizeof(puc_msg_obis0100630100FF));
+		memcpy(x_cmd_tx_432.dl.buff + 4, puc_msg_obis0100630100FF, sizeof(puc_msg_obis0100630100FF));
 		*(x_cmd_tx_432.dl.buff + 2) = InvokeAndPriority;
 		*(x_cmd_tx_432.dl.buff + 7) = uc_nextblock;
 		if (uc_nextblock >= S02_block_counter) {
@@ -785,8 +701,7 @@ static uint16_t _checkReceivedData(uint8_t *data)
 
 		/* number of data fields in the load curve */
 		while ((i < 5) && (S02_block_send <= max_fields_s02)) {
-			memcpy(x_cmd_tx_432.dl.buff + position,
-					puc_msg_obis0100630100FF_data,
+			memcpy(x_cmd_tx_432.dl.buff + position, puc_msg_obis0100630100FF_data,
 					sizeof(puc_msg_obis0100630100FF_data));
 			updateDate();
 			position += 48;
@@ -813,8 +728,7 @@ static uint16_t _checkReceivedData(uint8_t *data)
 			/* Sync CCT date */
 			memcpy(&puc_msg_obis0000010000ff[2], data + 15, 12);
 			blocklenght = sizeof(puc_msg_obis0000010000FF);
-			memcpy(x_cmd_tx_432.dl.buff, puc_msg_obis0000010000FF,
-					blocklenght);
+			memcpy(x_cmd_tx_432.dl.buff, puc_msg_obis0000010000FF, blocklenght);
 			DLMSMessageSend(blocklenght);
 		}
 
@@ -834,9 +748,6 @@ static uint16_t _checkReceivedData(uint8_t *data)
 	return DLMSrequest;
 }
 
-/***********************************************************************************
-**
-*************************************************************************************/
 static Bool _checkNodestatus(uint32_t *status)
 {
 	uint16_t pibAttrib;
@@ -852,18 +763,13 @@ static Bool _checkNodestatus(uint32_t *status)
 		if (prime_MLME_callback(uc_mlme_cmd)) {
 			pibAttrib
 				= (uint16_t)(uc_mlme_cmd[2] << 8) + (uint16_t)uc_mlme_cmd[3];
-			if ((uc_mlme_cmd[0] == PRIME_MLME_GET_CONFIRM) &&
-					(pibAttrib == STATUS_432_CONNECTION)) {
+			if ((uc_mlme_cmd[0] == PRIME_MLME_GET_CONFIRM) && (pibAttrib == STATUS_432_CONNECTION)) {
 				if (uc_mlme_cmd[1] == PRIME_MLME_RESULT_SUCCESS) {
 					/* Get pibValue*/
-					*status
-						= (uint16_t)(uc_mlme_cmd[4] << 24) +
-							(uint16_t)(uc_mlme_cmd[5] << 16) +
-							(uint16_t)(uc_mlme_cmd[6] << 8) +
-							(uint16_t)uc_mlme_cmd[7];
+					*status = (uint16_t)(uc_mlme_cmd[4] << 24) + (uint16_t)(uc_mlme_cmd[5] << 16) +
+							(uint16_t)(uc_mlme_cmd[6] << 8) + (uint16_t)uc_mlme_cmd[7];
 				} else {
-					*status = 0;         /* node
-					                      * disconnected */
+					*status = 0;         /* node disconnected */
 				}
 
 				stCheckNode = CH_SEND_CHECK;
@@ -880,9 +786,6 @@ static Bool _checkNodestatus(uint32_t *status)
 	return end;
 }
 
-/***********************************************************************************
-**
-*************************************************************************************/
 static void _checkReceivedMessages(void)
 {
 	sscs432_NotService_t newNot;
@@ -892,14 +795,12 @@ static void _checkReceivedMessages(void)
 		taskEXIT_CRITICAL();
 		if (newNot.cmd == CL_432_RELEASE_CONFIRM) {
 #ifdef DLMS_EMU_DEBUG_ENABLE
-			printf("4-32 Connection CLOSED %s \n",
-					str_Serial_Number);
+			printf("4-32 Connection CLOSED %s \n", str_Serial_Number);
 #endif
 		} else {
 			us_base_node_address = newNot.baseAddress;
 #ifdef DLMS_EMU_DEBUG_ENABLE
-			printf("4-32 Connection Opened %s\n",
-					str_Serial_Number);
+			printf("4-32 Connection Opened %s\n", str_Serial_Number);
 #endif
 		}
 	} else {
@@ -962,9 +863,7 @@ static void prvProcessDLMSemuApp(void *pvParameters)
 			if (_checkNodestatus(&nodeConnected)) {
 				if (!nodeConnected) { /* launch connection-  */
 					taskENTER_CRITICAL();
-					sscs432_establish_request((uint8_t *)puc_serial_number,
-												strlen((const char *)
-												puc_serial_number));
+					sscs432_establish_request((uint8_t *)puc_serial_number, strlen((const char *) puc_serial_number));
 					taskEXIT_CRITICAL();
 				}
 			}

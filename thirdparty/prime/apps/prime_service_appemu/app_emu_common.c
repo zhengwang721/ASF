@@ -49,20 +49,9 @@
 #define MULTIPLIER      0x015a4e35L
 #define INCREMENT       1
 
-static long l_app_emu_seed; /* /< Randomize seed */
+static long l_app_emu_seed; /* Randomize seed */
 
 uint32_t ul_time_app_emu;
-
-/* *** Public Variables ********************************************************
- **/
-
-/* *** Static Functions ********************************************************
- **/
-
-/* *** Public Functions ********************************************************
- **/
-
-/* ************************************************************************** */
 
 /** @brief	Copies the time stamp in the buffer requested
  *
@@ -70,7 +59,7 @@ uint32_t ul_time_app_emu;
  *
  * This function builds the time stamp included in requests as the number
  * of seconds passed since the 00:00 PM.
- **************************************************************************/
+ **/
 
 void app_emu_copy_timestamp(char *pc_timestamp, uint8_t *pc_base_cmd)
 {
@@ -84,8 +73,6 @@ void app_emu_copy_timestamp(char *pc_timestamp, uint8_t *pc_base_cmd)
 	return;
 }
 
-/* ************************************************************************** */
-
 /** @brief	Fill a string with data
  *
  *      @param String			Pointer to the buffer to write data
@@ -97,7 +84,7 @@ void app_emu_copy_timestamp(char *pc_timestamp, uint8_t *pc_base_cmd)
  *
  * This function prepares the data for the packet to be sent and fills it
  * with ascii characters
- **************************************************************************/
+ **/
 
 void app_emu_fill_string(char *pc_str, uint16_t us_size, uint8_t uc_down_up,
 		uint16_t us_step, char *pc_timestamp)
@@ -129,12 +116,10 @@ void app_emu_fill_string(char *pc_str, uint16_t us_size, uint8_t uc_down_up,
 	pc_str[us_size] = '\0';
 }
 
-/* ************************************************************************** */
-
 /** @brief	Update timers 1 ms
  *
  * This function update application timers
- **************************************************************************/
+ **/
 
 void app_emu_update_10ms(void)
 {
@@ -143,13 +128,12 @@ void app_emu_update_10ms(void)
 	}
 }
 
-/* ************************************************************************** */
 
 /** @brief	initializes random number generator
  *
  *       @param	puc_mac		Pointer to the MAC address
  *
- **************************************************************************/
+ **/
 
 void app_emu_init_random(const uint8_t *puc_mac)
 {
@@ -163,7 +147,6 @@ void app_emu_init_random(const uint8_t *puc_mac)
 	l_app_emu_seed <<= 2;
 }
 
-/* ************************************************************************** */
 
 /** @brief	random number generator
  *
@@ -175,7 +158,7 @@ void app_emu_init_random(const uint8_t *puc_mac)
  * The generator is reinitialized by calling srand with an argument value of 1.
  * It can be set to a new starting point by
  * calling srand with a given seed number.
- **************************************************************************/
+ **/
 
 int app_emu_random(void)
 {

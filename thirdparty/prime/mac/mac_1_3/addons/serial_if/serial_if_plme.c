@@ -66,9 +66,9 @@ extern "C" {
  * @{
  */
 
-/* ! \name Reception variables */
+/*  \name Reception variables */
 /* @{ */
-static uint8_t *puc_rx;             /* !< Pointer to received message */
+static uint8_t *puc_rx;             /*  Pointer to received message */
 /* @} */
 
 static uint8_t NewPlmeCallBackCmd[PRIME_PLME_DATA_SIZE];
@@ -123,9 +123,7 @@ static int _serial_if_plme_unpack_get_req(void)
 
 	/* Extract PLME primitive */
 	puc_rx_buff = puc_rx;
-	us_pib_attr
-		= (((uint16_t)puc_rx_buff[0]) <<
-			8) + (uint16_t)puc_rx_buff[1];
+	us_pib_attr = (((uint16_t)puc_rx_buff[0]) << 8) + (uint16_t)puc_rx_buff[1];
 
 	/* Store the primitive in the circular buffer */
 	return(prime_PLME_GET_request(us_pib_attr));
@@ -150,21 +148,18 @@ static int _serial_if_plme_unpack_set_req(void)
 
 	/* Extract PLME primitive */
 	puc_rx_buff = puc_rx;
-	us_pib_attr = (((uint16_t)puc_rx_buff[0]) << 8)
-			+ (uint16_t)puc_rx_buff[1];
+	us_pib_attr = (((uint16_t)puc_rx_buff[0]) << 8) + (uint16_t)puc_rx_buff[1];
 	puc_rx_buff += 2;
 
 	if (us_pib_attr == 0x8083) {   /* PHY_AGC */
 		/* Store the primitive in the circular buffer */
 		/* 2: mode, gain */
-		return(prime_PLME_SET_BUF_request(us_pib_attr,
-				(uint8_t *)puc_rx_buff, 2));
+		return(prime_PLME_SET_BUF_request(us_pib_attr, (uint8_t *)puc_rx_buff, 2));
 	} else if (us_pib_attr == 0x8089) {  /* PHY_TX_PARAMS */
 		puc_rx_buff2 = puc_rx_buff;
 		puc_rx_buff2++;
 		puc_rx_buff2++;
-		us_len = (((uint16_t)puc_rx_buff2[0]) << 8)
-				+ (uint16_t)puc_rx_buff2[1];
+		us_len = (((uint16_t)puc_rx_buff2[0]) << 8) + (uint16_t)puc_rx_buff2[1];
 		puc_rx_buff2 += 2;
 		uc_use_random = (uint8_t)(*puc_rx_buff2++);
 		if (uc_use_random) {
@@ -174,9 +169,7 @@ static int _serial_if_plme_unpack_set_req(void)
 		}
 
 		/* Store the primitive in the circular buffer */
-		return(prime_PLME_SET_BUF_request(us_pib_attr,
-		       (uint8_t *)puc_rx_buff,
-		       us_len));
+		return(prime_PLME_SET_BUF_request(us_pib_attr, (uint8_t *)puc_rx_buff, us_len));
 	} else {
 		/* ul_pib_attr_val = getUint32((uint8_t **)&puc_rx_buff); */
 		ul_pib_attr_val = ((uint32_t)puc_rx_buff[0] << 24) |
@@ -227,8 +220,7 @@ static int _serial_if_plme_pack_plme_callback(uint8_t *puc_plme_command,
 			puc_command += 2;        /* (cmd + result) */
 			*puc_command++ = commandPlmeToPack[2];
 			*puc_command++ = commandPlmeToPack[3];
-			memcpy(puc_command, &commandPlmeToPack[4],
-					l_len - (sizeof(PlmeGetArray) - 1));
+			memcpy(puc_command, &commandPlmeToPack[4], l_len - (sizeof(PlmeGetArray) - 1));
 			puc_command += l_len - (sizeof(PlmeGetArray) - 1);
 			return(puc_command - puc_plme_command);
 		}
@@ -307,7 +299,6 @@ uint8_t serial_if_plme_api_parser(uint8_t *puc_rx_msg, uint16_t us_len)
 	}
 }
 
-/* ************************************************************************** */
 
 /** @brief	Function to encapsulate PLME Tx Control Process
  *
@@ -315,7 +306,7 @@ uint8_t serial_if_plme_api_parser(uint8_t *puc_rx_msg, uint16_t us_len)
  *      @return
  *
  * This function will be called using a pointer
- **************************************************************************/
+ **/
 int8_t serial_if_plme_process(void)
 {
 	int l_len, l_packet_len;
@@ -324,8 +315,7 @@ int8_t serial_if_plme_process(void)
 
 	l_len = prime_PLME_callback(NewPlmeCallBackCmd);
 	if (l_len > 0) {
-		l_packet_len = _serial_if_plme_pack_plme_callback(NewPlmeCallBackCmd,
-				l_len);
+		l_packet_len = _serial_if_plme_pack_plme_callback(NewPlmeCallBackCmd, l_len);
 		/* Pack and send the primitive */
 		x_pkt_usi.uc_protocol_type = PROTOCOL_PLME_PRIME;
 		x_pkt_usi.ptr_buf = &NewPlmeCallBackCmd[0];
@@ -336,7 +326,7 @@ int8_t serial_if_plme_process(void)
 	return(c_result);
 }
 
-/* ! @} */
+/*  @} */
 
 /* / @cond 0 */
 /**INDENT-OFF**/

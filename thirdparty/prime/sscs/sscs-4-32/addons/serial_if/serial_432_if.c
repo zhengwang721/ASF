@@ -84,7 +84,6 @@ static uint8_t puc_sscs432_cmd_to_pack[SSCS432_DATA_SIZE];
 static sscs432_NotBase_t x_base_not;
 static sscs432_NotService_t x_service_not;
 
-/* ************************************************************************** */
 
 /** @brief	This function extracts the 432 SAP Establish.Request.
  *
@@ -96,7 +95,7 @@ static sscs432_NotService_t x_service_not;
  *
  * This function extracts the 432 SAP Establish.Request from the
  * received packet
- **************************************************************************/
+ */
 
 static int _sscs432_Unpack_Cl432EstablishRequest(void)
 {
@@ -111,7 +110,6 @@ static int _sscs432_Unpack_Cl432EstablishRequest(void)
 	return (sscs432_establish_request((uint8_t *)rxBufferPtr, lenSerialNumber));
 }
 
-/* ************************************************************************** */
 
 /** @brief	This function extracts the 432 SAP Release.Request.
  *
@@ -123,7 +121,7 @@ static int _sscs432_Unpack_Cl432EstablishRequest(void)
  *
  * This function extracts the 432 SAP Release.Request from the
  * received packet
- **************************************************************************/
+ */
 
 static int _sscs432_Unpack_Cl432ReleaseRequest(void)
 {
@@ -138,7 +136,6 @@ static int _sscs432_Unpack_Cl432ReleaseRequest(void)
 	return (sscs432_release_request(dstAddress));
 }
 
-/* ************************************************************************** */
 
 /** @brief	This function extracts the 432 SAP Data.Request.
  *
@@ -150,7 +147,7 @@ static int _sscs432_Unpack_Cl432ReleaseRequest(void)
  *
  * This function extracts the 432 SAP Data.Request from the
  * received packet
- **************************************************************************/
+ */
 
 static int _sscs432_Unpack_Dl432DataRequest(void)
 {
@@ -176,7 +173,6 @@ static int _sscs432_Unpack_Dl432DataRequest(void)
 	       (dl432Buffer_t *)rxBufferPtr, lenMsg, linkClass));
 }
 
-/* ************************************************************************** */
 
 /** @brief	This function extracts the 432 SAP Update Reply.Request.
  *
@@ -188,7 +184,7 @@ static int _sscs432_Unpack_Dl432DataRequest(void)
  *
  * This function extracts the 432 SAP  Update Reply.Request from the
  * received packet
- **************************************************************************/
+ */
 
 static int _sscs432_Unpack_Dl432UpdateReplyRequest(void)
 {
@@ -203,11 +199,9 @@ static int _sscs432_Unpack_Dl432UpdateReplyRequest(void)
 	rxBufferPtr++;
 
 	/* Store the primitive in the circular buffer */
-	return (dl432_dl_update_reply_request(srcLSAP, (uint8_t *)rxBufferPtr,
-	       lenMsg));
+	return (dl432_dl_update_reply_request(srcLSAP, (uint8_t *)rxBufferPtr, lenMsg));
 }
 
-/* ************************************************************************** */
 
 /** @brief	This function extracts the 432 SAP Reply.Request.
  *
@@ -219,7 +213,7 @@ static int _sscs432_Unpack_Dl432UpdateReplyRequest(void)
  *
  * This function extracts the 432 SAP Reply.Request from the
  * received packet
- **************************************************************************/
+ */
 
 static int _sscs432_Unpack_Dl432ReplyRequest(void)
 {
@@ -241,7 +235,6 @@ static int _sscs432_Unpack_Dl432ReplyRequest(void)
 	return (dl432_dl_reply_request(dstLSAP, srcLSAP, dstAddress, maxLenAnswer));
 }
 
-/* ************************************************************************** */
 
 /** @brief	This function extracts the 432 SAP Broadcast.Request.
  *
@@ -253,7 +246,7 @@ static int _sscs432_Unpack_Dl432ReplyRequest(void)
  *
  * This function extracts the 432 SAP Broadcast.Request from the
  * received packet
- **************************************************************************/
+ */
 
 static int _sscs432_Unpack_Dl432BroadcastRequest(void)
 {
@@ -274,7 +267,6 @@ static int _sscs432_Unpack_Dl432BroadcastRequest(void)
 	       lenMsg, linkClass));
 }
 
-/* ************************************************************************** */
 
 /** @brief	Packs a 432 message
  *
@@ -282,7 +274,7 @@ static int _sscs432_Unpack_Dl432BroadcastRequest(void)
  * @return	SSCS432_OK
  *
  * Packs a 432 message
- **************************************************************************/
+ */
 static int8_t _sscs432_Pack_432Msg(dl432_LlcCallback_t *callCmd)
 {
 	uint8_t *txBufferPtr;
@@ -315,7 +307,6 @@ static int8_t _sscs432_Pack_432Msg(dl432_LlcCallback_t *callCmd)
 	return (SSCS432_OK);
 }
 
-/* ************************************************************************** */
 
 /** @brief	Packs a 432 message
  *
@@ -324,7 +315,7 @@ static int8_t _sscs432_Pack_432Msg(dl432_LlcCallback_t *callCmd)
  * @return	SSCS432_OK
  *
  * Packs a 432 message
- **************************************************************************/
+ */
 
 static int8_t _sscs432_Pack_432NotService(sscs432_NotService_t *ptrNotService)
 {
@@ -351,7 +342,6 @@ static int8_t _sscs432_Pack_432NotService(sscs432_NotService_t *ptrNotService)
 	return (SSCS432_OK);
 }
 
-/* ************************************************************************** */
 
 /** @brief	Packs a 432 message
  *
@@ -360,7 +350,7 @@ static int8_t _sscs432_Pack_432NotService(sscs432_NotService_t *ptrNotService)
  * @return	SSCS432_OK
  *
  * Packs a 432 message
- **************************************************************************/
+ */
 static int8_t _sscs432_Pack_432NotBase(sscs432_NotBase_t *ptrNotBase)
 {
 	uint8_t *txBufferPtr;
@@ -480,8 +470,7 @@ int8_t serial_432_if_api_process(void)
 	x_usi_serial_cmd_params_t pktUsi;
 
 	/* Check data message */
-	if (dl432_dl_callback(&callBackCmd,
-			(dl432Buffer_t *)puc_sscs432_cmd_to_pack,
+	if (dl432_dl_callback(&callBackCmd, (dl432Buffer_t *)puc_sscs432_cmd_to_pack,
 			MAX_LENGTH_432_DATA)) {
 		result = _sscs432_Pack_432Msg(&callBackCmd);
 	}

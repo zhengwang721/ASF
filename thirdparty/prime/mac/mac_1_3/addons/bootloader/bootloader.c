@@ -154,8 +154,7 @@ static uint8_t erase_fw_version(boot_flash_fw_version_t fw_to_erase)
 	ul_base_address = ul_fw_version_to_address[fw_to_erase];
 
 	for (i = 0; i < BOOT_FLASH_FIRMWARE_MAX_SIZE_IN_SECTORS; i++) {
-		pul_flash
-			= (uint32_t *)(ul_base_address + i * BOOT_FLASH_SECTOR_SIZE);
+		pul_flash = (uint32_t *)(ul_base_address + i * BOOT_FLASH_SECTOR_SIZE);
 		ul_result = flash_erase_sector((uint32_t)pul_flash);
 		if (ul_result != FLASH_RC_OK) {
 			return 0;
@@ -195,22 +194,16 @@ static uint8_t copy_fw_version(boot_flash_fw_version_t orig_version,
 		/* Copy sector, page by page */
 		for (j = 0; j < BOOT_FLASH_PAGES_PER_SECTOR; j++) {
 			ul_page_offset = ul_sector_offset + j * BOOT_FLASH_PAGE_SIZE;
-			memcpy(uc_page,
-					(uint8_t *)(ul_orig_base_address +
-					ul_page_offset),
-					sizeof(uc_page));
-			ul_result = flash_write(ul_dest_base_address + ul_page_offset,
-					uc_page, sizeof(uc_page), 0);
+			memcpy(uc_page, (uint8_t *)(ul_orig_base_address + ul_page_offset), sizeof(uc_page));
+			ul_result = flash_write(ul_dest_base_address + ul_page_offset, uc_page, sizeof(uc_page), 0);
 			if (ul_result != FLASH_RC_OK) {
 				return 0;
 			}
 
 			/* Verify the written data */
 
-			/* If not successfully verified, repeat the page writing
-			 * process */
-			if (!verify_page(uc_page,
-					(uint8_t *)(ul_dest_base_address + ul_page_offset))) {
+			/* If not successfully verified, repeat the page writing process */
+			if (!verify_page(uc_page, (uint8_t *)(ul_dest_base_address + ul_page_offset))) {
 				j--;
 			}
 		}
@@ -245,13 +238,11 @@ int main(void)
 	puc_boot_config = uc_user_sign_buf + BOOT_STATUS_OFFSET_USER_SIGN;
 	uc_boot_status = (uint8_t)(*puc_boot_config);
 
-	/* check validity boot status. In case of error, FW V1 is loaded by
-	 * default */
+	/* check validity boot status. In case of error, FW V1 is loaded by default */
 	if (!boot_is_error(uc_boot_status)) {
 		/* Check if it is needed to change firmware */
 		if (boot_is_swap_cmd(uc_boot_status)) {
-			/* Update "FW in use" information and clear the "FU
-			 * done" flag */
+			/* Update "FW in use" information and clear the "FU done" flag */
 			if (boot_is_fw_v1_in_use(uc_boot_status)) {
 				uc_value = BOOT_FW_V2_IN_USE_MSK;
 				uc_fw_to_use = BOOT_FLASH_FW_VERSION_2;
@@ -273,8 +264,7 @@ int main(void)
 		/* Erase the user signature */
 		flash_erase_user_signature();
 		/* Update user signature */
-		flash_write_user_signature((void *)uc_user_sign_buf,
-				BOOT_USER_SIGNATURE_SIZE_32);
+		flash_write_user_signature((void *)uc_user_sign_buf, BOOT_USER_SIGNATURE_SIZE_32);
 		if (uc_fw_to_use) {
 			/* Erase the execution zone */
 			(void)erase_fw_version(BOOT_FLASH_FW_VERSION_EXEC);
@@ -309,8 +299,7 @@ int main(void)
 	/* offset the start of the vector table (first 6 bits must be zero) */
 	/* The register containing the offset, from 0x00000000, is at 0xE000ED08
 	 **/
-	SCB->VTOR = ((uint32_t)BOOT_FLASH_EXEC_FIRMWARE_START_ADDRESS &
-			SCB_VTOR_TBLOFF_Msk);
+	SCB->VTOR = ((uint32_t)BOOT_FLASH_EXEC_FIRMWARE_START_ADDRESS & SCB_VTOR_TBLOFF_Msk);
 	__DSB();
 	__ISB();
 	__enable_irq();

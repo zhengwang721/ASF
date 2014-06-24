@@ -81,16 +81,13 @@ extern uint32_t ul_tens_of_ms;
 /* Modulation scheme of the payload: Differential 8PSK */
 #define PROTOCOL_D8PSK                     0x02
 
-/* Modulation scheme of the payload: Differential BPSK with Convolutional
- * Coding */
+/* Modulation scheme of the payload: Differential BPSK with Convolutional Coding */
 #define PROTOCOL_DBPSK_VTB                 0x04
 
-/* Modulation scheme of the payload: Differential QPSK with Convolutional
- * Coding */
+/* Modulation scheme of the payload: Differential QPSK with Convolutional Coding */
 #define PROTOCOL_DQPSK_VTB                 0x05
 
-/* Modulation scheme of the payload: Differential 8PSK with Convolutional
- * Coding */
+/* Modulation scheme of the payload: Differential 8PSK with Convolutional Coding */
 #define PROTOCOL_D8PSK_VTB                 0x06
 
 /* Time from the last connection detected to start test */
@@ -141,25 +138,13 @@ enum {
 
 /* Definition of the stored fields required by appEmu */
 typedef struct {
-	uint16_t us_handler;                           /* Handler of the
-	                                                * connection */
-	uint8_t puc_mac_addr[PRIME_MAC_LENGTH];        /* Mac address of the
-	                                                * connected node */
+	uint16_t us_handler;                           /* Handler of the connection */
+	uint8_t puc_mac_addr[PRIME_MAC_LENGTH];        /* Mac address of the connected node */
 	uint32_t ul_nid;                               /* NID of the node */
-	uint8_t puc_serial[SERIAL_SIZE + 1];           /* String with the
-	                                                * serial number */
-	uint32_t ul_start_time_test;                   /* Ini of the test in
-	                                                * Hundred of
-	                                                * miliseconds, since
-	                                                * base node is started
-	                                                **/
-	uint32_t pul_round_trip[NUM_TEST];             /* Time from a
-	                                                * petition is done until
-	                                                * the answer is received
-	                                                **/
-	uint8_t puc_success_attempt[NUM_TEST];         /* Number of
-	                                                * successfully attempt
-	                                                **/
+	uint8_t puc_serial[SERIAL_SIZE + 1];           /* String with the serial number */
+	uint32_t ul_start_time_test;                   /* Ini of the test in Hundred of miliseconds, since base node is started */
+	uint32_t pul_round_trip[NUM_TEST];             /* Time from a petition is done until the answer is received */
+	uint8_t puc_success_attempt[NUM_TEST];         /* Number of successfully attempt */
 	uint8_t uc_rx_coding;                          /* Reception scheme */
 	uint8_t uc_tx_coding;                          /* Transmission scheme */
 	uint8_t uc_app_emu_coding;                     /* Transmission mode */
@@ -167,8 +152,7 @@ typedef struct {
 
 /* Definition of the test */
 typedef    struct {
-	uint8_t uc_test_number;         /* Step of the test, to fill up the
-	                                 * message */
+	uint8_t uc_test_number;         /* Step of the test, to fill up the message */
 	uint16_t us_bytes_sent;         /* Bytes sent by the Base Node */
 	uint16_t us_bytes_expected;     /* Bytes expected in the answer */
 } test_info;
@@ -393,8 +377,7 @@ static int _get_registered_nodes(void)
 			if ((list.cmd == PRIME_MLME_LIST_GET_CONFIRM) &&
 					(list.pibAttrib == MLME_LIST_REG_DEVICES)) {
 				for (i = 0; i < list.numItems; i++) {
-					/* Updates the NID for the connected
-					 *nodes */
+					/* Updates the NID for the connected nodes */
 					_update_nid(&list.dev[i]);
 				}
 				us__num_nodes_registered += list.numItems;
@@ -454,8 +437,7 @@ static int _info_tx_coding(void)
 			if ((list.cmd == PRIME_MLME_LIST_GET_CONFIRM) &&
 					(list.pibAttrib == MLME_LIST_PHY_COMM)) {
 				for (i = 0; i < list.numItems; i++) {
-					/* Updates the NID for the connected
-					 * nodes */
+					/* Updates the NID for the connected nodes */
 					_update_tx_rx_coding(&list.dev[i]);
 				}
 				us__num_nodes_registered += list.numItems;
@@ -468,8 +450,8 @@ static int _info_tx_coding(void)
 				printf("End list get MLME_LIST_PHY_COMM\n");
 #endif
 				uc_info_tx_coding_st = MLME_SEND_REQUEST;
-				_fill_tx_rx_coding_undirect_nodes(); /* Fill up the
-				                                      * rest of nodes */
+				/* Fill up the rest of nodes */
+				_fill_tx_rx_coding_undirect_nodes(); 
 				_choose_app_emu_coding();
 #ifdef _CS_DEBUG_
 				_print_all_schemes();
@@ -501,9 +483,7 @@ static void _check_new_connections(MacSapCallBack *p_cmd)
 	uint16_t i;
 
 	for (i = 0; i < us__num_connections; i++) {
-		if (memcmp(&p_node[i].puc_mac_addr[0],
-				   &p_cmd->macAddr[0],
-				   PRIME_MAC_LENGTH) == 0) {
+		if (memcmp(&p_node[i].puc_mac_addr[0], &p_cmd->macAddr[0], PRIME_MAC_LENGTH) == 0) {
 			break;
 		}
 	}
@@ -520,23 +500,15 @@ static void _check_new_connections(MacSapCallBack *p_cmd)
 #ifdef APPEMU_DEBUG
 		printf("Rejecting connection with node %hu\n", i + 1);
 #endif
-		prime_MAC_ESTABLISH_response(p_cmd->handler,
-									 PRIME_MACSAP_RESULT_REJECT, NULL,
-									 0);
+		prime_MAC_ESTABLISH_response(p_cmd->handler, PRIME_MACSAP_RESULT_REJECT, NULL, 0);
 	} else {
 #ifdef APPEMU_DEBUG
 		printf("Accepting connection with node %hu\n", i + 1);
 #endif
-		prime_MAC_ESTABLISH_response(p_cmd->handler,
-									 PRIME_MACSAP_RESULT_ACCEPT, NULL,
-									 0);
+		prime_MAC_ESTABLISH_response(p_cmd->handler, PRIME_MACSAP_RESULT_ACCEPT, NULL, 0);
 		p_node[i].us_handler = p_cmd->handler;
-		memcpy(&p_node[i].puc_serial[0],
-				&p_cmd->buf[0],
-				p_cmd->bufLength);
-		memcpy(&p_node[i].puc_mac_addr[0],
-				&p_cmd->macAddr[0],
-				PRIME_MAC_LENGTH);
+		memcpy(&p_node[i].puc_serial[0], &p_cmd->buf[0], p_cmd->bufLength);
+		memcpy(&p_node[i].puc_mac_addr[0], &p_cmd->macAddr[0], PRIME_MAC_LENGTH);
 		/* Only increment connections if it is a new connection */
 		if (i == us__num_connections) {
 			us__num_connections++;
@@ -643,9 +615,7 @@ static uint16_t _get_length_transmission(uint16_t us_dut,
 		if (VTB(p_node[us_dut].uc_app_emu_coding)) {
 			us_len_tx = p_conf_test[*pus_num_test].us_bytes_sent;
 		} else {
-			us_len_tx
-				= (p_conf_test[*pus_num_test].us_bytes_sent +
-					1);
+			us_len_tx = (p_conf_test[*pus_num_test].us_bytes_sent + 1);
 		}
 
 		*pus_len_rx = us_len_tx;
@@ -743,9 +713,7 @@ void app_emu_process()
 	static uint16_t us_length_reception;
 
 	/* Reception of Mac primitives */
-	if (prime_MAC_callback(&tmp_new_cmd,
-						   GENERIC_CALLBACK_HANDLER,
-			 			   GENERIC_CALLBACK_TYPE)) {
+	if (prime_MAC_callback(&tmp_new_cmd, GENERIC_CALLBACK_HANDLER, GENERIC_CALLBACK_TYPE)) {
 		p_counter_new_cmd = &tmp_new_cmd;
 		b_new_command = true;
 		/* New connection checking if there is new nodw or not */
@@ -760,17 +728,13 @@ void app_emu_process()
 			break;
 
 		case PRIME_MACSAP_RELEASE_INDICATION:
-			if (p_counter_new_cmd->answer ==
-					PRIME_MACSAP_RESULT_ERROR) {
+			if (p_counter_new_cmd->answer == PRIME_MACSAP_RESULT_ERROR) {
 #ifdef APPEMU_DEBUG
-				printf(
-						"APPEMU abnormally aborted with node %hu\n",
-						us__dut);
+				printf( "APPEMU abnormally aborted with node %hu\n", us__dut);
 #endif
 				_end_dut();
 			} else {
-				prime_MAC_RELEASE_response(p_counter_new_cmd->handler,
-										   PRIME_MACSAP_RESULT_ACCEPT);
+				prime_MAC_RELEASE_response(p_counter_new_cmd->handler, PRIME_MACSAP_RESULT_ACCEPT);
 			}
 
 			break;
@@ -816,8 +780,7 @@ void app_emu_process()
 
 	case APPEMU_START_TEST:
 #ifdef APPEMU_DEBUG
-		printf("---INIT TEST : %i nodes connected---\n",
-				us__num_connections);
+		printf("---INIT TEST : %i nodes connected---\n", us__num_connections);
 		printf("Getting information for transmission Schemes\n");
 #endif
 		uc_app_emu_st = APPEMU_WAIT_RECEIVED_TXCODING;
@@ -835,14 +798,9 @@ void app_emu_process()
 	case APPEMU_BUILD_MESSAGE_TEST:
 		uc__num_attempt = 1;
 		app_emu_build_timestamp(pc_time_stamp);
-		us_length_transmission = _get_length_transmission(us__dut,
-  														  &us__numTest,
-														  &us_length_reception);
-		app_emu_fill_string((char *)puc_request,
-							us_length_transmission,
-							DW_MSG,
-							p_conf_test[us__numTest].uc_test_number,
-							pc_time_stamp);
+		us_length_transmission = _get_length_transmission(us__dut, &us__numTest, &us_length_reception);
+		app_emu_fill_string((char *)puc_request, us_length_transmission, DW_MSG,
+							p_conf_test[us__numTest].uc_test_number, pc_time_stamp);
 		uc_app_emu_st = APPEMU_SEND_MESSAGE_TEST;
 		ul_time_app_emu = 0;
 		break;
@@ -854,10 +812,7 @@ void app_emu_process()
 #ifdef APPEMU_DEBUG
 			printf("-> Sending data to node %hu...\n", us__dut + 1);
 #endif
-
-			prime_MAC_DATA_request(p_node[us__dut].us_handler,
-									puc_request,
-									us_length_transmission, 1);
+			prime_MAC_DATA_request(p_node[us__dut].us_handler, puc_request, us_length_transmission, 1);
 #ifdef APPEMU_DEBUG
 			printf("%s: Test:%i\tAttempt:%i\tSent:%i\t\n",
 					p_node[us__dut].puc_serial,
@@ -900,8 +855,7 @@ void app_emu_process()
 					case PRIME_MACSAP_ERROR_INVALID_HANDLER:
 #ifdef APPEMU_DEBUG
 						printf("Warning: Invalid Handler %hu %hu\n",
-								p_counter_new_cmd->handler,
-								(uint16_t)p_counter_new_cmd->type);
+								p_counter_new_cmd->handler, (uint16_t)p_counter_new_cmd->type);
 #endif
 						if (p_counter_new_cmd->handler == p_node[us__dut].us_handler) {
 							_end_dut();
@@ -936,20 +890,14 @@ void app_emu_process()
 			if ((p_counter_new_cmd->command == PRIME_MACSAP_DATA_INDICATION) &&
 				(p_counter_new_cmd->handler == p_node[us__dut].us_handler)) {
 				/* It is the expected message */
-				if (p_counter_new_cmd->bufLength ==
-						us_length_reception) {
+				if (p_counter_new_cmd->bufLength == us_length_reception) {
 					/* Good message, Next Test */
-					p_node[us__dut].pul_round_trip[us__numTest]	= _get_round_trip(_getTimeMs(),
-																				  p_node[us__dut].pul_round_trip[
-																				  us__numTest]);
+					p_node[us__dut].pul_round_trip[us__numTest]	= _get_round_trip(_getTimeMs(), p_node[us__dut].pul_round_trip[us__numTest]);
 
-					/* check it is not the last test of the
-					 * node */
+					/* check it is not the last test of the node */
 #ifdef APPEMU_DEBUG
-					printf(
-							"<- Received data from node %hu ... OK\n", us__dut + 1);
-					printf("Received:%i\n",
-							p_conf_test[us__numTest].us_bytes_expected);
+					printf( "<- Received data from node %hu ... OK\n", us__dut + 1);
+					printf("Received:%i\n", p_conf_test[us__numTest].us_bytes_expected);
 #endif
 					if (p_conf_test[++us__numTest].uc_test_number != 0xFF) {
 						uc_app_emu_st = APPEMU_BUILD_MESSAGE_TEST;
@@ -960,9 +908,7 @@ void app_emu_process()
 					/* Bad message, Retry */
 					uc_app_emu_st = APPEMU_RETRY_MESSAGE_TEST;
 #ifdef APPEMU_DEBUG
-					printf(
-							"<- Received data from node %hu ... FAIL\n", us__dut +
-							1);
+					printf( "<- Received data from node %hu ... FAIL\n", us__dut + 1);
 #endif
 				}
 			}

@@ -64,14 +64,14 @@ extern "C" {
  * @{
  */
 
-/* ! \name Serialization of Embedded Sniffer */
+/*  \name Serialization of Embedded Sniffer */
 /* @{ */
 uint8_t serial_if_sniffer_api_parser(uint8_t *puc_rx_msg, uint16_t len);
 void serial_if_sniffer_pack_pdu(SnifferParam *snif, uint8_t *buf, uint16_t len);
 
 /* @} */
 
-/* ! @} */
+/*  @} */
 
 /* @cond 0 */
 /**INDENT-OFF**/

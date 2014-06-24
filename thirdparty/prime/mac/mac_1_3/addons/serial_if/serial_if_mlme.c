@@ -65,7 +65,7 @@ extern "C" {
  * @{
  */
 
-/* ! \name Address indication for the MLME primitive Register.Request */
+/*  \name Address indication for the MLME primitive Register.Request */
 /* @{ */
 enum ADDRESS_IND {
 	NOADDRESS,
@@ -74,9 +74,9 @@ enum ADDRESS_IND {
 };
 /* @} */
 
-/* ! \name Reception variables */
+/*  \name Reception variables */
 /* @{ */
-static uint8_t *puc_rx;             /* !< Pointer to received message */
+static uint8_t *puc_rx;             /*  Pointer to received message */
 /* @} */
 
 static uint8_t NewMlmeCallBackCmd[MLME_DATA_SIZE];
@@ -216,8 +216,7 @@ static int _serial_if_mlme_unpack_get_req(void)
 
 	/* Extract MLME primitive */
 	puc_rx_buff = puc_rx;
-	us_pib_attr
-		= (((uint16_t)puc_rx_buff[0]) << 8) + (uint16_t)puc_rx_buff[1];
+	us_pib_attr = (((uint16_t)puc_rx_buff[0]) << 8) + (uint16_t)puc_rx_buff[1];
 
 	/* Store the primitive in the circular buffer */
 	return(prime_MLME_GET_request(us_pib_attr));
@@ -240,8 +239,7 @@ static int _serial_if_mlme_unpack_list_get_req(void)
 
 	/* Extract MLME primitive */
 	puc_rx_buff = puc_rx;
-	us_pib_attr
-		= (((uint16_t)puc_rx_buff[0]) << 8) + (uint16_t)puc_rx_buff[1];
+	us_pib_attr = (((uint16_t)puc_rx_buff[0]) << 8) + (uint16_t)puc_rx_buff[1];
 
 	/* Store the primitive in the circular buffer */
 	return(prime_MLME_LIST_GET_request(us_pib_attr));
@@ -266,8 +264,7 @@ static int _serial_if_mlme_unpack_set_req(void)
 
 	/* Extract MLME primitive */
 	puc_rx_buff = puc_rx;
-	us_pib_attr
-		= (((uint16_t)puc_rx_buff[0]) << 8) + (uint16_t)puc_rx_buff[1];
+	us_pib_attr = (((uint16_t)puc_rx_buff[0]) << 8) + (uint16_t)puc_rx_buff[1];
 	puc_rx_buff += 2;
 	uc_len = 0;
 
@@ -514,10 +511,7 @@ static int _serial_if_mlme_pack_node_432_table(uint8_t *puc_buf_des,
 
 	*puc_packet++ = px_buf_org[0]; /* address */
 	*puc_packet++ = px_buf_org[1]; /* address */
-	memcpy(puc_packet, &px_buf_org[2], SERIAL_NUMBER_432_MAC);  /*
-	                                                             *
-	                                                             *serialNumber
-	                                                             **/
+	memcpy(puc_packet, &px_buf_org[2], SERIAL_NUMBER_432_MAC);
 	puc_packet += SERIAL_NUMBER_432_MAC;
 	*puc_packet++ = px_buf_org[18]; /* lenSerial */
 	memcpy(puc_packet, &px_buf_org[19], PRIME_MAC_LENGTH);  /* mac */
@@ -667,10 +661,8 @@ static int _serial_if_mlme_pack_mlme_callback(uint8_t *puc_mlme_command,
 
 	case PRIME_MLME_SET_CONFIRM:
 		puc_command += 2 * sizeof(uint8_t);         /* (cmd + result) */
-		*puc_command++ = commandMlmeToPack[2];         /* pibAttrib -
-		                                               * high part */
-		*puc_command++ = commandMlmeToPack[3];         /* pibAttrib -
-		                                                * low part */
+		*puc_command++ = commandMlmeToPack[2];      /* pibAttrib high part */
+		*puc_command++ = commandMlmeToPack[3];      /* pibAttrib low part */
 		return(puc_command - puc_mlme_command);
 
 	case PRIME_MLME_UNREGISTER_INDICATION:
@@ -680,30 +672,19 @@ static int _serial_if_mlme_pack_mlme_callback(uint8_t *puc_mlme_command,
 		return(puc_command - puc_mlme_command);
 
 	case PRIME_MLME_REGISTER_CONFIRM:
-		*puc_command++
-			= ((MlmeRegisterConfirm *)commandMlmeToPack)->cmd;
-		*puc_command++
-			= ((MlmeRegisterConfirm *)commandMlmeToPack)->result;
-		memcpy(puc_command,
-				((MlmeRegisterConfirm *)commandMlmeToPack)->sna,
-				PRIME_MAC_LENGTH);
+		*puc_command++ = ((MlmeRegisterConfirm *)commandMlmeToPack)->cmd;
+		*puc_command++ = ((MlmeRegisterConfirm *)commandMlmeToPack)->result;
+		memcpy(puc_command, ((MlmeRegisterConfirm *)commandMlmeToPack)->sna, PRIME_MAC_LENGTH);
 		puc_command += PRIME_MAC_LENGTH;
-		memcpy(puc_command,
-				((MlmeRegisterConfirm *)commandMlmeToPack)->mac,
-				PRIME_MAC_LENGTH);
+		memcpy(puc_command, ((MlmeRegisterConfirm *)commandMlmeToPack)->mac, PRIME_MAC_LENGTH);
 		puc_command += PRIME_MAC_LENGTH;
 		return(puc_command - puc_mlme_command);
 
 	case PRIME_MLME_REGISTER_INDICATION:
-		*puc_command++
-			= ((MlmeRegisterConfirm *)commandMlmeToPack)->cmd;
-		memcpy(puc_command,
-				((MlmeRegisterConfirm *)commandMlmeToPack)->sna,
-				PRIME_MAC_LENGTH);
+		*puc_command++ = ((MlmeRegisterConfirm *)commandMlmeToPack)->cmd;
+		memcpy(puc_command, ((MlmeRegisterConfirm *)commandMlmeToPack)->sna, PRIME_MAC_LENGTH);
 		puc_command += PRIME_MAC_LENGTH;
-		memcpy(puc_command,
-				((MlmeRegisterConfirm *)commandMlmeToPack)->mac,
-				PRIME_MAC_LENGTH);
+		memcpy(puc_command, ((MlmeRegisterConfirm *)commandMlmeToPack)->mac, PRIME_MAC_LENGTH);
 		puc_command += PRIME_MAC_LENGTH;
 		return(puc_command - puc_mlme_command);
 
@@ -721,8 +702,7 @@ static int _serial_if_mlme_pack_mlme_callback(uint8_t *puc_mlme_command,
 			puc_command += 2 * sizeof(uint8_t);
 			*puc_command++ = commandMlmeToPack[2];
 			*puc_command++ = commandMlmeToPack[3];
-			memcpy(puc_command, &commandMlmeToPack[4], l_len -
-					(sizeof(MlmeGetArray) - 1));
+			memcpy(puc_command, &commandMlmeToPack[4], l_len - (sizeof(MlmeGetArray) - 1));
 			puc_command += l_len - (sizeof(MlmeGetArray) - 1);
 			return(puc_command - puc_mlme_command);
 		}
@@ -737,97 +717,72 @@ static int _serial_if_mlme_pack_mlme_callback(uint8_t *puc_mlme_command,
 			return(puc_command - puc_mlme_command);
 		}
 
-		uc_list_idx = 6;                 /* commandMlmeToPack[6]
-		                                  * corresponds to the first
-		                                  * list item */
+		uc_list_idx = 6;   /* commandMlmeToPack[6] corresponds to the first list item */
 		for (uc_idx = 0; uc_idx < commandMlmeToPack[5]; uc_idx++) {
-			us_pibAttrib
-				= (uint16_t)(commandMlmeToPack[2] <<
-					8) + (uint16_t)commandMlmeToPack[3];
+			us_pibAttrib = (uint16_t)(commandMlmeToPack[2] << 8) + (uint16_t)commandMlmeToPack[3];
 			switch (us_pibAttrib) {
 			case PIB_MAC_LIST_REGISTER_DEVICES:
-				puc_command += _serial_if_mlme_pack_reg_devices(
-						puc_command,
+				puc_command += _serial_if_mlme_pack_reg_devices(puc_command,
 						&commandMlmeToPack[uc_list_idx]);
 				uc_list_idx += sizeof(MlmeRegDevice);
 				break;
 
 			case PIB_MAC_LIST_ACTIVE_CONN:
-				puc_command += _serial_if_mlme_pack_active_conn(
-						puc_command,
+				puc_command += _serial_if_mlme_pack_active_conn(puc_command,
 						&commandMlmeToPack[uc_list_idx]);
 				uc_list_idx += sizeof(MlmeActiveConn);
 				break;
 
 			case PIB_MAC_LIST_MCAST_ENTRIES:
-				puc_command
-					+= _serial_if_mlme_pack_mcast_entries(
-						puc_command,
+				puc_command += _serial_if_mlme_pack_mcast_entries(puc_command,
 						&commandMlmeToPack[uc_list_idx]);
 				uc_list_idx += sizeof(MlmeMcastEntrie);
 				break;
 
 			case PIB_MAC_LIST_SWITCH_TABLE:
-				puc_command
-					+= _serial_if_mlme_pack_switch_table(
-						puc_command,
+				puc_command += _serial_if_mlme_pack_switch_table(puc_command,
 						&commandMlmeToPack[uc_list_idx]);
 				uc_list_idx += sizeof(MlmeSwitchNode);
 				break;
 
 			case PIB_MAC_LIST_DIRECT_CONN:
-				puc_command += _serial_if_mlme_pack_direct_conn(
-						puc_command,
+				puc_command += _serial_if_mlme_pack_direct_conn(puc_command,
 						&commandMlmeToPack[uc_list_idx]);
 				uc_list_idx += sizeof(MlmeDirectConn);
 				break;
 
 			case PIB_MAC_LIST_DIRECT_TABLE:
-				puc_command
-					+=
-						_serial_if_mlme_pack_direct_switch_table(
-						puc_command,
+				puc_command += _serial_if_mlme_pack_direct_switch_table(puc_command,
 						&commandMlmeToPack[uc_list_idx]);
 				uc_list_idx += sizeof(MlmeDirectSwitchNode);
 				break;
 
 			case PIB_MAC_LIST_AVAILABLE_SWITCHES:
-				puc_command
-					+=
-						_serial_if_mlme_pack_available_switch_table(
-						puc_command,
+				puc_command += _serial_if_mlme_pack_available_switch_table(puc_command,
 						&commandMlmeToPack[uc_list_idx]);
 				uc_list_idx += sizeof(MlmeAvailableSwitchNode);
 				break;
 
 			case PIB_MAC_LIST_PHY_COMM:
-				puc_command
-					+= _serial_if_mlme_pack_list_phy_comm(
-						puc_command,
+				puc_command += _serial_if_mlme_pack_list_phy_comm(puc_command,
 						&commandMlmeToPack[uc_list_idx]);
 				uc_list_idx += sizeof(MlmePhyCommDevice);
 				break;
 
 			case PIB_MAC_LIST_ACTIVE_CONN_EX:
-				puc_command
-					+= _serial_if_mlme_pack_active_conn_ex(
-						puc_command,
+				puc_command += _serial_if_mlme_pack_active_conn_ex(puc_command,
 						&commandMlmeToPack[uc_list_idx]);
 				uc_list_idx += sizeof(MlmeActiveConnEx);
 				break;
 
 			case PIB_MAC_LIST_EX_SNR:
-				puc_command
-					+= _serial_if_mlme_pack_ex_snr_table(
-						puc_command,
+				puc_command += _serial_if_mlme_pack_ex_snr_table(puc_command,
 						&commandMlmeToPack[uc_list_idx]);
 				uc_list_idx += sizeof(ExSNRElementType);
 				break;
 
 			case PIB_432_LIST_NODES:
-				puc_command
-					+= _serial_if_mlme_pack_node_432_table(
-						puc_command,
+				puc_command += _serial_if_mlme_pack_node_432_table(puc_command,
 						&commandMlmeToPack[uc_list_idx]);
 				uc_list_idx += sizeof(Node432Type);
 				break;
@@ -942,8 +897,7 @@ int8_t serial_if_mlme_process(void)
 
 	l_len = prime_MLME_callback(NewMlmeCallBackCmd);
 	if (l_len > 0) {
-		l_packet_len = _serial_if_mlme_pack_mlme_callback(
-				NewMlmeCallBackCmd, l_len);
+		l_packet_len = _serial_if_mlme_pack_mlme_callback(NewMlmeCallBackCmd, l_len);
 		/* pack and send the primitive */
 		x_pkt_usi.uc_protocol_type = PROTOCOL_MLME_PRIME;
 		x_pkt_usi.ptr_buf = &NewMlmeCallBackCmd[0];
@@ -954,7 +908,7 @@ int8_t serial_if_mlme_process(void)
 	return(c_result);
 }
 
-/* ! @} */
+/*  @} */
 
 /* / @cond 0 */
 /**INDENT-OFF**/

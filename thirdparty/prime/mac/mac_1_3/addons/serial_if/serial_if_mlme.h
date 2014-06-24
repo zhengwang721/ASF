@@ -62,14 +62,14 @@ extern "C" {
  * @{
  */
 
-/* ! \name Serialization of MLME protocol */
+/*  \name Serialization of MLME protocol */
 /* @{ */
 uint8_t serial_if_mlme_api_parser(uint8_t *puc_rx_msg, uint16_t us_len);
 int8_t serial_if_mlme_process(void);
 
 /* @} */
 
-/* ! @} */
+/*  @} */
 
 /* / @cond 0 */
 /**INDENT-OFF**/
