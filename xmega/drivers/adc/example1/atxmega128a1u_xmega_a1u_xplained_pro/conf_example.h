@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific example configuration
  *
- * Copyright (c) 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

@@ -3,7 +3,7 @@
  *
  * \brief Clock system example 3
  *
- * Copyright (c) 2010 - 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -138,7 +138,7 @@
 #include <delay.h>
 #include <conf_example3.h>
 
-static void wait_for_switches(void)
+static void wait_for_btn_press(void)
 {
 	do { } while (ioport_pin_is_high(NEXT_BUTTON));
 	delay_ms(5);
@@ -177,13 +177,13 @@ int main(void)
 		 * prescaling of CLKsys, 2x prescaling for CLKper2 and 2x
 		 * prescaling for CLKper.
 		 */
-		wait_for_switches();
+		wait_for_btn_press();
 
 		/*
 		 * Prescale CLKsys by 128x, prescale all peripheral clocks by 1.
 		 */
 		sysclk_set_prescalers(SYSCLK_PSADIV_128, SYSCLK_PSBCDIV_1_1);
-		wait_for_switches();
+		wait_for_btn_press();
 
 		/*
 		 * Switch to RC2M with 4x prescaling of CLKsys, 4x prescaling
@@ -194,7 +194,7 @@ int main(void)
 		sysclk_set_source(SYSCLK_SRC_RC2MHZ);
 		sysclk_set_prescalers(SYSCLK_PSADIV_4, SYSCLK_PSBCDIV_4_1);
 		osc_disable(OSC_ID_RC32MHZ);
-		wait_for_switches();
+		wait_for_btn_press();
 
 		/*
 		 * Switch to PLL with RC2M as reference and 4x multiplier.
@@ -205,7 +205,7 @@ int main(void)
 		do {} while (!pll_is_locked(0));
 		sysclk_set_prescalers(SYSCLK_PSADIV_128, SYSCLK_PSBCDIV_1_1);
 		sysclk_set_source(SYSCLK_SRC_PLL);
-		wait_for_switches();
+		wait_for_btn_press();
 
 		/*
 		 * Go back to the initial state and start over.

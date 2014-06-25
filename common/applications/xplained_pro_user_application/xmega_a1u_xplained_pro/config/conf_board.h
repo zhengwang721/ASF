@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Chip-specific system clock manager configuration
+ * \brief XMEGA-A1U Xplained Pro board configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,24 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_CLOCK_H_INCLUDED
-#define CONF_CLOCK_H_INCLUDED
 
-// ===== System Clock Source Options
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RC2MHZ
-#define CONFIG_SYSCLK_SOURCE          SYSCLK_SRC_RC32MHZ
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RC32KHZ
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_XOSC
-//#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-// ===== PLL Options
-//#define CONFIG_PLL0_SOURCE          PLL_SRC_XOSC
-//#define CONFIG_PLL0_MUL             4 /* Fpll = (Fclk * PLL_mul) / PLL_div */
-//#define CONFIG_PLL0_DIV             1 /* Fpll = (Fclk * PLL_mul) / PLL_div */
-
-// ===== System Clock Bus Division Options
-#define CONFIG_SYSCLK_PSADIV          SYSCLK_PSADIV_16
-#define CONFIG_SYSCLK_PSBCDIV         SYSCLK_PSBCDIV_2_2
-
-#endif /* CONF_CLOCK_H_INCLUDED */
-
+#endif /* CONF_BOARD_H_INCLUDED */
