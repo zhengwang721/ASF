@@ -85,15 +85,12 @@ void board_init(void);
 #define SW0_INACTIVE              !SW0_ACTIVE
 /** @} */
 
-/**
- * \name External oscillator
- *
- */
-//@{
+/** \name external osc definitions
+ *  @{ */
 #define BOARD_XOSC_HZ                   32768
 #define BOARD_XOSC_TYPE                 XOSC_TYPE_32KHZ
 #define BOARD_XOSC_STARTUP_US           1000000
-//@}
+/** @} */
 
 /**
  * \name LED #0 definitions

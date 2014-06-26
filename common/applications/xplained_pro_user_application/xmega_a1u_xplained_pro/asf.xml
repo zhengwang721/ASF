@@ -1,6 +1,7 @@
 <asf xmlversion="1.0">
 	<project id="common.applications.user_application.xplained_pro.xmega_a1u_xplained_pro" caption="XMEGA-A1U Xplained Pro template project" type="template">
 		<device-support value="atxmega128a1u"/>
+		<require idref="common.applications.user_application.xplained_pro"/>
 		<require idref="board.xmega_a1u_xplained_pro"/>
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="config"/>
