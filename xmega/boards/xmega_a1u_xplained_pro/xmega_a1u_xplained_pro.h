@@ -86,6 +86,16 @@ void board_init(void);
 /** @} */
 
 /**
+ * \name External oscillator
+ *
+ */
+//@{
+#define BOARD_XOSC_HZ                   32768
+#define BOARD_XOSC_TYPE                 XOSC_TYPE_32KHZ
+#define BOARD_XOSC_STARTUP_US           1000000
+//@}
+
+/**
  * \name LED #0 definitions
  *
  * Wrapper macros for LED0, to ensure common naming across all Xplained Pro
@@ -412,6 +422,21 @@ void board_init(void);
 #define LCD_SPI_CS 				  IOPORT_CREATE_PIN(PORTB,1) 
 /** @} */ 
 
+/** \name AT86RFX definitions
+ * @{
+ */
+#define AT86RFX_SPI                  EXT1_SPI_MODULE
+#define AT86RFX_RST_PIN              EXT1_PIN_7
+#define AT86RFX_MISC_PIN             EXT1_PIN_12
+#define AT86RFX_IRQ_PIN              EXT1_PIN_9
+#define AT86RFX_SLP_PIN              EXT1_PIN_10
+#define AT86RFX_SPI_CS               EXT1_PIN_15
+#define AT86RFX_SPI_MOSI             EXT1_PIN_16
+#define AT86RFX_SPI_MISO             EXT1_PIN_17
+#define AT86RFX_SPI_SCK              EXT1_PIN_18
+#define AT86RFX_CSD                  EXT1_PIN_5
+#define AT86RFX_CPS                  EXT1_PIN_8
+/** @} */ 
 
 #ifdef __cplusplus
 }

@@ -46,47 +46,47 @@
 
 void ui_init(void)
 {
-	//ioport_set_pin_level(LED0_PIN,LED0_ACTIVE);
+
 }
 
 void ui_powerdown(void)
 {
-	//ioport_set_pin_level(LED0_PIN,LED0_INACTIVE);
+
 }
 
 void ui_wakeup(void)
 {
-	//ioport_set_pin_level(LED0_PIN,LED0_ACTIVE);
+
 }
 
 void ui_com_open(uint8_t port)
 {
-	//ioport_set_pin_level(LED0_PIN,LED0_ACTIVE);
+
 }
 
 void ui_com_close(uint8_t port)
 {
-	//ioport_set_pin_level(LED0_PIN,LED0_INACTIVE);
+
 }
 
 void ui_com_rx_start(void)
 {
-	//ioport_set_pin_level(LED0_PIN,LED0_ACTIVE);
+
 }
 
 void ui_com_rx_stop(void)
 {
-	//ioport_set_pin_level(LED0_PIN,LED0_INACTIVE);
+
 }
 
 void ui_com_tx_start(void)
 {
-	//ioport_set_pin_level(LED0_PIN,LED0_ACTIVE);
+
 }
 
 void ui_com_tx_stop(void)
 {
-	//ioport_set_pin_level(LED0_PIN,LED0_INACTIVE);
+
 }
 
 void ui_com_error(void)
@@ -112,10 +112,5 @@ void ui_process(uint16_t framenumber)
 /**
  * \defgroup UI User Interface
  *
- * Human interface on XMEGA-A3BU Xplained:
- * - XMEGA USART used USARTC0 on J1 connector
- * - Led 0 blinks when USB host has checked and enabled CDC interface
- * - Led 1 is on when CDC port is open
- * - Green LED close to USB connector is on during data transfer from CDC to UART
- * - Red LED close to USB connector is on during data transfer from UART to CDC
+ * Human interface on XMEGA-A1U Xplained:
  */
