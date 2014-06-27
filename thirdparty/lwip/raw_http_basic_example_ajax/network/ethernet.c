@@ -56,7 +56,7 @@
 # include "ksz8851snl.h"
 # include "ksz8851snl_reg.h"
 # include "netif/sam_spi_ksz8851snl.h"
-#elif SAMD20
+#elif (SAMD20 || SAMD21 || SAMR21)
 # include "ksz8851snl.h"
 # include "ksz8851snl_reg.h"
 # include "netif/sam0_spi_ksz8851snl.h"
