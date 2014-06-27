@@ -47,7 +47,7 @@
 #define TXE0				IOPORT_CREATE_PIN(PORTE,3) 
 
 //! Definition of USART connection for this example
-#define  USART               EDBG_UART_MODULE
+#define  USART               USARTE0
 #define  USART_RX_Vect       USARTE0_RXC_vect
 #define  USART_DRE_Vect      USARTE0_DRE_vect
 #define  USART_SYSCLK        SYSCLK_USART0
