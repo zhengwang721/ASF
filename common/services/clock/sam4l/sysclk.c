@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -902,7 +902,11 @@ void sysclk_init(void)
 	ps_value = BPM_PS_2;
 	is_fwu_enabled = false;
 #else
-	if (sysclk_get_cpu_hz() <= FLASH_FREQ_PS1_FWS_1_MAX_FREQ) {
+	if (CONFIG_PLL0_MUL || CONFIG_DFLL0_MUL || CONFIG_USBCLK_DIV) {
+		/* USB/DFLL/PLL are not available in PS0 (PS1 also) */
+		ps_value = BPM_PS_2;
+		is_fwu_enabled = false;
+	} else if (sysclk_get_cpu_hz() <= FLASH_FREQ_PS1_FWS_1_MAX_FREQ) {
 		ps_value = BPM_PS_1;
 		if (sysclk_get_cpu_hz() > FLASH_FREQ_PS1_FWS_0_MAX_FREQ) {
 			bpm_enable_fast_wakeup(BPM);
