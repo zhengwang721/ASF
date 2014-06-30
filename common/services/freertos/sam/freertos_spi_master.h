@@ -89,7 +89,7 @@ status_code_t freertos_spi_read_packet_async(freertos_spi_if p_spi,
 		xSemaphoreHandle notification_semaphore);
 
 status_code_t freertos_spi_full_duplex_packet_async(freertos_spi_if p_spi,
-		uint8_t *rx_data, uint8_t *tx_data, uint32_t rx_len, uint32_t tx_len,
+		uint8_t *rx_data, uint8_t *tx_data, uint32_t len,
 		portTickType block_time_ticks, xSemaphoreHandle notification_semaphore);
 
 /**

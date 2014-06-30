@@ -469,20 +469,20 @@ status_code_t freertos_spi_read_packet_async(freertos_spi_if p_spi,
 
 /**
  * \ingroup freertos_spi_peripheral_control_group
- * \brief Initiate a completely asynchronous multi-byte read/write operation on an SPI
+ * \brief Initiate a completely asynchronous multi-byte full duplex operation on an SPI
  * peripheral.
  *
  * freertos_spi_full_duplex_packet_async() is an ASF specific FreeRTOS driver function.
  * It configures the SPI peripheral DMA controller (PDC) to read/write data from the
  * SPI port, then returns.  freertos_spi_full_duplex_packet_async() does not wait for
- * the reception/transmission to complete before returning.
+ * the reception and transmission to complete before returning.
  *
  * The FreeRTOS ASF SPI driver is initialized using a call to
  * freertos_spi_master_init().  The freertos_driver_parameters.options_flags
  * parameter passed into the initialization function defines the driver behavior.
  * freertos_spi_full_duplex_packet_async() can only be used if the
  * freertos_driver_parameters.options_flags parameter passed to the initialization
- * function had the WAIT_RX_COMPLETE/WAIT_TX_COMPLETE bit clear.
+ * function had the WAIT_RX_COMPLETE and WAIT_TX_COMPLETE bit clear.
  *
  * freertos_spi_full_duplex_packet_async() is an advanced function and readers are
  * recommended to also reference the application note and examples that
@@ -497,8 +497,7 @@ status_code_t freertos_spi_read_packet_async(freertos_spi_if p_spi,
  * \param rx_data    A pointer to the buffer into which received data is to be
  *     written.
  * \param tx_data    A pointer to the data to be transmitted.
- * \param rx_len    The number of bytes to receive.
- * \param tx_len    The number of bytes to transmit.
+ * \param len    The number of bytes to receive/transmit.
  * \param block_time_ticks    The FreeRTOS ASF SPI driver is initialized using a
  *     call to freertos_spi_master_init().  The
  *     freertos_driver_parameters.options_flags parameter passed to the
@@ -531,7 +530,7 @@ status_code_t freertos_spi_read_packet_async(freertos_spi_if p_spi,
  *     the PDC was successfully configured to perform the SPI read operation.
  */
 status_code_t freertos_spi_full_duplex_packet_async(freertos_spi_if p_spi,
-		uint8_t *rx_data, uint8_t *tx_data, uint32_t rx_len, uint32_t tx_len,
+		uint8_t *rx_data, uint8_t *tx_data, uint32_t len,
 		portTickType block_time_ticks, xSemaphoreHandle notification_semaphore)
 {
 	status_code_t return_value;
@@ -554,7 +553,7 @@ status_code_t freertos_spi_full_duplex_packet_async(freertos_spi_if p_spi,
 		if (return_value == STATUS_OK) {
 			/* Data must be sent for data to be received.  Set the receive
 			buffer with write buffer content since it also be used as the send buffer. */
-			memcpy(rx_data, tx_data, tx_len);
+			memcpy(rx_data, tx_data, len);
 
 			/* Ensure Rx is already empty. */
 			while(spi_is_rx_full(all_spi_definitions[spi_index].peripheral_base_address) != 0) {
@@ -565,13 +564,13 @@ status_code_t freertos_spi_full_duplex_packet_async(freertos_spi_if p_spi,
 			/* Start the PDC reception, although nothing is received until the
 			SPI is also transmitting. */
 			freertos_start_pdc_rx(&(rx_dma_control[spi_index]),
-					rx_data, rx_len,
+					rx_data, len,
 					all_spi_definitions[spi_index].pdc_base_address,
 					notification_semaphore);
 
 			/* Start the transmit so data is also received. */
 			pdc_tx_packet.ul_addr = (uint32_t)rx_data;
-			pdc_tx_packet.ul_size = (uint32_t)rx_len;
+			pdc_tx_packet.ul_size = (uint32_t)len;
 			pdc_disable_transfer(
 					all_spi_definitions[spi_index].pdc_base_address,
 					PERIPH_PTCR_TXTDIS);
