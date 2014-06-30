@@ -126,58 +126,6 @@ static void setup_usart_channel(void)
 	usart_enable(&usart_instance);
 }
 
-/** 
- *  \brief Callback function for the EXTINT driver, called when an external interrupt
- *  detection occurs.
- */
-static void extint_callback(void)
-{
-	port_pin_toggle_output_level(LED_0_PIN);
-}
-
-/** 
- *  \brief Configures and registers the External Interrupt callback function with the
- *  driver.
- */
-static void configure_eic_callback(void)
-{
-	extint_register_callback(extint_callback,
-			BUTTON_0_EIC_LINE,
-			EXTINT_CALLBACK_TYPE_DETECT);
-	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
-			EXTINT_CALLBACK_TYPE_DETECT);
-}
-
-/**
-*  \brief Configures the External Interrupt Controller to detect changes in the board
- *  button state.
- */
-static void configure_buttons(void)
-{
-	struct extint_chan_conf eint_chan_conf;
-	extint_chan_get_config_defaults(&eint_chan_conf);
-
-	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
-	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_MUX;
-	eint_chan_conf.detection_criteria = EXTINT_DETECT_LOW;
-	eint_chan_conf.filter_input_signal = true;
-	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
-	
-	configure_eic_callback();
-}
-
-/** 
-  *  \brief Configures led
- */
-static void configure_led(void)
-{
-	struct port_config pin;
-	port_get_config_defaults(&pin);
-	pin.direction = PORT_PIN_DIR_OUTPUT;
-	port_pin_set_config(LED0_PIN, &pin);
-	port_pin_set_output_level(LED_0_PIN, LED0_INACTIVE);
-}
-
 /**
  * \brief Main program function. Configure the hardware, initialize lwIP
  * TCP/IP stack, and start HTTP service.
@@ -191,12 +139,6 @@ int main(void)
 	/* Setup USART module to output results */
 	setup_usart_channel();
 
-	/*Configures  led*/
-	configure_led();
-
-	/*Configures  buttons*/
-	configure_buttons();
-	
 	/* Print example information. */
 	puts(STRING_HEADER);
 
