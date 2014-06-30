@@ -531,8 +531,8 @@ iram_size_t udi_cdc_multi_get_free_tx_buffer(uint8_t port);
 bool udi_cdc_multi_is_tx_ready(uint8_t port);
 
 /**
- * \brief Puts a byte on CDC line
- * The type int is used to support printf redirection from compiler LIB.
+ * \brief Puts a byte on CDC line, and the type int is used to support
+ * printf redirection from compiler LIB.
  *
  * \param[in] port       Communication port number to manage
  * \param[in] value      Value to put
@@ -844,7 +844,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  *
  * \section asfdoc_udi_cdc_config_examples_3 conf_clocks.h
  *
- * \subsection asfdoc_udi_cdc_config_examples_3_1 SAMD devices (USB)
+ * \subsection asfdoc_udi_cdc_config_examples_3_1 SAMD21 device (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_clocks.h
  *
  * \section asfdoc_udi_cdc_config_examples_4 conf_board.h
@@ -861,7 +861,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  * \subsection asfdoc_udi_cdc_config_examples_4_4 SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed)
  * \include example\sam3x8h_sam3x_ek\conf_board.h
  *
- * \subsection asfdoc_udi_cdc_config_examples_4_5 SAMD devices (USB)
+ * \subsection asfdoc_udi_cdc_config_examples_4_5 SAMD21 device (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_board.h
  */
 

@@ -204,8 +204,8 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  * The VBus monitoring is used only for USB SELF Power application.
  *
  * - By default the USB device is automatically attached when Vbus is high
- *   or when USB is start for devices without internal Vbus monitoring.
- *   conf_usb.h file does not contains define USB_DEVICE_ATTACH_AUTO_DISABLE.
+ *   or when USB starts for devices without internal Vbus monitoring.
+ *   conf_usb.h file does not contains definition USB_DEVICE_ATTACH_AUTO_DISABLE.
  * \code
  //#define USB_DEVICE_ATTACH_AUTO_DISABLE
  * \endcode
@@ -458,8 +458,6 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  * - \subpage udc_use_case_3
  * - \subpage udc_use_case_5
  * - \subpage udc_use_case_6
- * - \subpage asfdoc_udc_device_cfg
- * - \subpage asfdoc_udc_vbus_monitoring
  * \endif
  */
 
@@ -516,7 +514,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
 /**
  * \page udc_use_case_2 Use USB strings
  *
- * In this use case, the usual USB strings is added in the USB device.
+ * In this use case, the usual USB strings are added in the USB device.
  *
  * \section udc_use_case_2_setup Setup steps
  * Prior to implement this use case, be sure to have already
@@ -583,7 +581,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
 
  void my_interrupt_event(void)
  {
- udc_remotewakeup();
+    udc_remotewakeup();
  }
  * \endcode
 
@@ -614,7 +612,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
 /**
  * \page udc_use_case_5 Bus power application recommendations
  *
- * In this use case, the USB device BUS power feature is enabled.
+ * In this use case, the USB device bus power feature is enabled.
  * This feature requires a correct power consumption management.
  *
  * \section udc_use_case_5_setup Setup steps
@@ -665,7 +663,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  * \code
  void user_callback_suspend_action(void)
  {
- turn_off_components();
+    turn_off_components();
  }
  * \endcode
  */

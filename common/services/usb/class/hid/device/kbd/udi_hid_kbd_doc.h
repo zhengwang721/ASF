@@ -70,7 +70,7 @@
 /**
  * \name Interface with USB Device Core (UDC)
  *
- * Structure required by UDC.
+ * Variable required by UDC.
  *
  * @{
  */
@@ -180,6 +180,7 @@ bool udi_hid_kbd_up(uint8_t key_id);
  *
  * \param[in] key_id   ID of key
  *
+ * \return \c 1 if function was successfully done, otherwise \c 0.
  */
 bool udi_hid_kbd_down(uint8_t key_id);
 /**@}*/
@@ -415,7 +416,7 @@ bool udi_hid_kbd_down(uint8_t key_id);
  *
  * \section asfdoc_udi_hid_keyboard_config_examples_3 conf_clocks.h
  *
- * \subsection asfdoc_udi_hid_keyboard_config_examples_3_1 SAMD devices (USB)
+ * \subsection asfdoc_udi_hid_keyboard_config_examples_3_1 SAMD21 device (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_clocks.h
  *
  * \section asfdoc_udi_hid_keyboard_config_examples_4 conf_board.h
@@ -432,6 +433,6 @@ bool udi_hid_kbd_down(uint8_t key_id);
  * \subsection asfdoc_udi_hid_keyboard_config_examples_4_4 SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed)
  * \include example\sam3x8h_sam3x_ek\conf_board.h
  *
- * \subsection asfdoc_udi_hid_keyboard_config_examples_4_5 SAMD devices (USB)
+ * \subsection asfdoc_udi_hid_keyboard_config_examples_4_5 SAMD21 device (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_board.h
  */

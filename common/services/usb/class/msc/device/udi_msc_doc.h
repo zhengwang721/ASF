@@ -83,8 +83,11 @@ extern UDC_DESC_STORAGE udi_api_t udi_api_msc;
 
 /** Interface descriptor structure for MSC */
 typedef struct {
+	/** Standard USB interface descriptor structure */
 	usb_iface_desc_t iface;
+	/** Data IN endpoint descriptors */
 	usb_ep_desc_t ep_in;
+	/** Data OUT endpoint descriptors */
 	usb_ep_desc_t ep_out;
 } udi_msc_desc_t;
 
@@ -488,7 +491,7 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  *
  * \section asfdoc_udi_msc_config_examples_3 conf_clocks.h
  *
- * \subsection asfdoc_udi_msc_config_examples_3_1 SAMD devices (USB)
+ * \subsection asfdoc_udi_msc_config_examples_3_1 SAMD21 device (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_clocks.h
  *
  * \section asfdoc_udi_msc_config_examples_4 conf_board.h
@@ -505,7 +508,7 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  * \subsection asfdoc_udi_msc_config_examples_4_4 SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed)
  * \include example\sam3x8h_sam3x_ek\conf_board.h
  *
- * \subsection asfdoc_udi_msc_config_examples_4_5 SAMD devices (USB)
+ * \subsection asfdoc_udi_msc_config_examples_4_5 SAMD21 device (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_board.h
  *
  * \section asfdoc_udi_msc_config_examples_5 conf_access.h
@@ -526,7 +529,7 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  * On SAM3X-EK, the SD/MMC and on-board nand are for MSC.
  * \include example\sam3x8h_sam3x_ek\conf_access.h
  *
- * \subsection asfdoc_udi_msc_config_examples_5_5 SAMD devices (USB)
+ * \subsection asfdoc_udi_msc_config_examples_5_5 SAMD21 device (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_access.h
  *
  * \section asfdoc_udi_msc_config_examples_6 conf_virtual_mem.h

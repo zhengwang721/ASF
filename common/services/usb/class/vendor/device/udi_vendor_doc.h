@@ -70,7 +70,7 @@
 /**
  * \name Interface with USB Device Core (UDC)
  *
- * Define and functions required by UDC.
+ * Variable required by UDC.
  *
  * @{
  */
@@ -644,7 +644,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
   *
  * \section asfdoc_udi_vendor_config_examples_3 conf_clocks.h
  *
- * \subsection asfdoc_udi_vendor_config_examples_3_1 SAMD devices (USB)
+ * \subsection asfdoc_udi_vendor_config_examples_3_1 SAMD21 device (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_clocks.h
  *
  * \section asfdoc_udi_vendor_config_examples_4 conf_board.h
@@ -655,7 +655,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  * \subsection asfdoc_udi_vendor_config_examples_4_2 SAM4L device(USBC)
  * \include example\sam4lc4c_sam4l_ek\conf_board.h
  *
- * \subsection asfdoc_udi_vendor_config_examples_4_3 SAMD devices (USB)
+ * \subsection asfdoc_udi_vendor_config_examples_4_3 SAMD21 device (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_board.h
  */
 
