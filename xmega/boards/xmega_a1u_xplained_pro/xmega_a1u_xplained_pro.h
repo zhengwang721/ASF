@@ -435,6 +435,22 @@ void board_init(void);
 #define AT86RFX_CPS                  EXT1_PIN_8
 /** @} */ 
 
+/*! \name SPI Connections of external AT45DBX Data Flash Memory
+ *
+ * This is mainly used for proper board compilation
+ *
+ */
+
+//! @{
+#define AT45DBX_SPI           &SPIC
+#define AT45DBX_CS            EXT1_PIN_GPIO_0
+#define AT45DBX_MASTER_SCK    EXT1_PIN_SPI_SCK // SCK as output
+#define AT45DBX_MASTER_SS     EXT1_PIN_SPI_SS_1  // SS as output
+#define AT45DBX_MASTER_MOSI   EXT1_PIN_SPI_MOSI // MOSI as output
+#define AT45DBX_MASTER_MISO   EXT1_PIN_SPI_MISO // MISO as input
+#define AT45DBX_SPI_CLK_MASK  SYSCLK_PORT_C
+//! @}
+
 #ifdef __cplusplus
 }
 #endif
