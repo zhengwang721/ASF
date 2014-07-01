@@ -901,12 +901,12 @@ void sysclk_init(void)
 #ifdef CONFIG_FLASH_READ_MODE_HIGH_SPEED_ENABLE
 	ps_value = BPM_PS_2;
 	is_fwu_enabled = false;
+#elif (defined(CONFIG_PLL0_MUL) || defined(CONFIG_DFLL0_MUL) ||	defined(CONFIG_USBCLK_DIV))
+	/* USB/DFLL/PLL are not available in PS0 (PS1 also) */
+	ps_value = BPM_PS_2;
+	is_fwu_enabled = false;
 #else
-	if (CONFIG_PLL0_MUL || CONFIG_DFLL0_MUL || CONFIG_USBCLK_DIV) {
-		/* USB/DFLL/PLL are not available in PS0 (PS1 also) */
-		ps_value = BPM_PS_2;
-		is_fwu_enabled = false;
-	} else if (sysclk_get_cpu_hz() <= FLASH_FREQ_PS1_FWS_1_MAX_FREQ) {
+	if (sysclk_get_cpu_hz() <= FLASH_FREQ_PS1_FWS_1_MAX_FREQ) {
 		ps_value = BPM_PS_1;
 		if (sysclk_get_cpu_hz() > FLASH_FREQ_PS1_FWS_0_MAX_FREQ) {
 			bpm_enable_fast_wakeup(BPM);
