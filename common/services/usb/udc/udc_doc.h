@@ -254,7 +254,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  * This module is based on USB device stack full interrupt driven, and supporting
  * \ref sleepmgr_group "sleepmgr".
  * For AVR and SAM3/4 devices the \ref clk_group "clock services" is supported.
- * For SAMD devices the \ref asfdoc_sam0_system_clock_group "clock driver"" is supported.
+ * For SAMD21 devices the \ref asfdoc_sam0_system_clock_group "clock driver"" is supported.
  *
  * The following procedure must be executed to setup the project correctly:
  * - Specify the clock configuration:
@@ -271,7 +271,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  *     You must use an external OSC.
  *   - UC3 devices with USBC hardware need CPU frequency higher than 25MHz.
- *   - SAMD devices without USB high speed support need 48MHz clock input.
+ *   - SAMD21 devices without USB high speed support need 48MHz clock input.
  *
  *     You should use DFLL with USBCRM.
  * - In conf_board.h, the define CONF_BOARD_USB_PORT must be added to enable USB lines.
@@ -295,7 +295,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  sleepmgr_init(); // Optional
  * \endcode
  *
- * For SAMD devices, add to the initialization code:
+ * For SAMD21 devices, add to the initialization code:
  * \code
  system_init();
  irq_initialize_vectors();
@@ -424,7 +424,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  #define CONFIG_USBCLK_DIV           1
  * \endcode
  *
- * Content of conf_clocks.h for SAMD devices (USB):
+ * Content of conf_clocks.h for SAMD21 devices (USB):
  * \code
  // System clock bus configuration
  #  define CONF_CLOCK_FLASH_WAIT_STATES            2

@@ -87,6 +87,7 @@
 
 /**
  * \brief Install interface
+ *
  * Allocate interface endpoints if supported.
  *
  * \param[in] uhc_device_t	  Device to request
@@ -433,7 +434,7 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
  *
  * \section asfdoc_uhi_msc_config_examples_3 conf_clocks.h
  *
- * \subsection asfdoc_uhi_msc_config_examples_3_1 SAMD devices (USB)
+ * \subsection asfdoc_uhi_msc_config_examples_3_1 SAMD21 devices (USB)
  * \include example2\samd21j18a_samd21_xplained_pro\conf_clocks.h
  *
  * \section asfdoc_uhi_msc_config_examples_4 conf_board.h
@@ -450,7 +451,7 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
  * \subsection asfdoc_uhi_msc_config_examples_4_4 SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed)
  * \include example2\sam3x8h_sam3x_ek\conf_board.h
  *
- * \subsection asfdoc_uhi_msc_config_examples_4_5 SAMD devices (USB)
+ * \subsection asfdoc_uhi_msc_config_examples_4_5 SAMD21 devices (USB)
  * \include example2\samd21j18a_samd21_xplained_pro\conf_board.h
  */
 

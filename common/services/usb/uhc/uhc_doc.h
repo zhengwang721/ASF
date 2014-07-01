@@ -167,7 +167,7 @@ bool uhc_is_suspend(void);
 void uhc_resume(void);
 
 /**
- * \brief Suspends a USB line through LPM feature(SAM D21/R21)
+ * \brief Suspends a USB line through LPM feature(SAM D21)
  *
  * \param[in] b_remotewakeup Authorize the remote wakeup features, if true
  * \param[in] besl Best effort service latency value
@@ -294,19 +294,19 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * The following USB host configuration must be included in the conf_usb_host.h
  * file of the application.
  *
- * \b USB_HOST_UHI (List of UHI APIs)
+ * \b 1. USB_HOST_UHI (List of UHI APIs)
  *
  * Define the list of UHI supported by USB host. (Ex.: UHI_MSC,UHI_HID_MOUSE).
  *
- * \b USB_HOST_POWER_MAX (mA)
+ * \b 2. USB_HOST_POWER_MAX (mA)
  *
  * Maximum current allowed on Vbus.
  *
- * \b USB_HOST_HS_SUPPORT (Only defined)
+ * \b 3. USB_HOST_HS_SUPPORT (Only defined)
  *
  * Authorize the USB host to run in High Speed.
  *
- * \b USB_HOST_HUB_SUPPORT (Only defined)
+ * \b 4. USB_HOST_HUB_SUPPORT (Only defined)
  *
  * Authorize the USB HUB support.
  *
@@ -314,42 +314,42 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * The following optional USB host callback can be defined in the conf_usb_host.h
  * file of the application.
  *
- * <b> void UHC_MODE_CHANGE(bool b_host_mode) </b>
+ * <b> 1. void UHC_MODE_CHANGE(bool b_host_mode) </b>
  *
  * To notify that the USB mode are switched automatically.
  * This is possible only when ID pin is available.
  *
- * <b> void UHC_VBUS_CHANGE(bool b_present) </b>
+ * <b> 2. void UHC_VBUS_CHANGE(bool b_present) </b>
  *
  * To notify that the Vbus level has changed
  * (Available only in USB hardware with Vbus monitoring).
  *
- * <b> void UHC_VBUS_ERROR(void) </b>
+ * <b> 3. void UHC_VBUS_ERROR(void) </b>
  *
  * To notify that a Vbus error has occurred
  * (Available only in USB hardware with Vbus monitoring).
  *
- * <b> void UHC_CONNECTION_EVENT(uhc_device_t* dev,bool b_present) </b>
+ * <b> 4. void UHC_CONNECTION_EVENT(uhc_device_t* dev,bool b_present) </b>
  *
  * To notify that a device has been connected or disconnected.
  *
- * <b> void UHC_WAKEUP_EVENT(void) </b>
+ * <b> 5. void UHC_WAKEUP_EVENT(void) </b>
  *
  * Called when a USB device or the host have wake up the USB line.
  *
- * <b> void UHC_SOF_EVENT(void) </b>
+ * <b> 6. void UHC_SOF_EVENT(void) </b>
  *
  * Called for each received SOF each 1 ms.
  * Available in High and Full speed mode.
  *
- * <b> uint8_t UHC_DEVICE_CONF(uhc_device_t* dev) </b>
+ * <b> 7. uint8_t UHC_DEVICE_CONF(uhc_device_t* dev) </b>
  *
  * Called when a USB device configuration must be chosen.
  * Thus, the application can choose either a configuration number
  * for this device or a configuration number 0 to reject it.
  * If callback not defined the configuration 1 is chosen.
  *
- * <b> void UHC_ENUM_EVENT(uhc_device_t* dev, uint8_t b_status) </b>
+ * <b> 8. void UHC_ENUM_EVENT(uhc_device_t* dev, uint8_t b_status) </b>
  *
  * Called when a USB device enumeration is completed or fail.
  *
@@ -360,7 +360,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * This module is based on USB host stack full interrupt driven and supporting
  * \ref sleepmgr_group "sleepmgr". For AVR and SAM3/4 devices the
- * \ref clk_group "clock services" is supported. For SAMD devices the
+ * \ref clk_group "clock services" is supported. For SAMD21 devices the
  * \ref asfdoc_sam0_system_clock_group "clock driver" is supported.
  *
  * The following procedure must be executed to setup the project correctly:
@@ -372,7 +372,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  *     You must use an external OSC.
  *   - UC3 devices with USBC hardware need CPU frequency higher than 25MHz.
- *   - SAMD devices without USB high speed support need 48MHz clock input.
+ *   - SAMD21 devices without USB high speed support need 48MHz clock input.
  *
  *     You must use a DFLL and an external OSC.
  * - In conf_board.h, the define CONF_BOARD_USB_PORT must be added to enable USB lines.
@@ -396,7 +396,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
 	sleepmgr_init(); // Optional
  * \endcode
  *
- * For SAMD devices, add to the initialization code:
+ * For SAMD21 devices, add to the initialization code:
  * \code
 	system_init();
 	irq_initialize_vectors();
@@ -477,7 +477,7 @@ void usb_init(void)
 	#define CONFIG_USBCLK_DIV           1
  * \endcode
  *
- * Content of conf_clocks.h for SAMD devices (USB):
+ * Content of conf_clocks.h for SAMD21 devices (USB):
  * \code
   // USB Clock Source fixed at DFLL.
   // SYSTEM_CLOCK_SOURCE_XOSC32K configuration - External 32KHz crystal/clock oscillator

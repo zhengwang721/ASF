@@ -64,12 +64,12 @@
 /**
  * \name Interface with USB Host Core (UHC)
  *
- * Define and functions required by UHC.
+ * Definition and functions required by UHC.
  *
  * @{
  */
 
-/** Global define which contains standard UHI API for UHC
+/** Global definition which contains standard UHI API for UHC
  *  It must be added in USB_HOST_UHI define from conf_usb_host.h file. */
 #define UHI_VENDOR { \
 	.install = uhi_vendor_install, \
@@ -432,7 +432,7 @@ bool uhi_vendor_iso_is_available(void);
   *
  * \section asfdoc_uhi_vendor_config_examples_3 conf_clocks.h
  *
- * \subsection asfdoc_uhi_vendor_config_examples_3_1 SAMD devices (USB)
+ * \subsection asfdoc_uhi_vendor_config_examples_3_1 SAMD21 devices (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_clocks.h
  *
  * \section asfdoc_uhi_vendor_config_examples_4 conf_board.h
@@ -443,7 +443,7 @@ bool uhi_vendor_iso_is_available(void);
  * \subsection asfdoc_uhi_vendor_config_examples_4_2 SAM4L device(USBC)
  * \include example\sam4lc4c_sam4l_ek\conf_board.h
  *
- * \subsection asfdoc_uhi_vendor_config_examples_4_3 SAMD devices (USB)
+ * \subsection asfdoc_uhi_vendor_config_examples_4_3 SAMD21 devices (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_board.h
  */
 

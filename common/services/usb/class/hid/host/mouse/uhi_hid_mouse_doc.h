@@ -276,7 +276,7 @@ extern void uhi_hid_mouse_uninstall(uhc_device_t* dev);
  *
  * \section asfdoc_uhi_hid_mouse_config_examples_3 conf_clocks.h
  *
- * \subsection asfdoc_uhi_hid_mouse_config_examples_3_1 SAMD devices (USB)
+ * \subsection asfdoc_uhi_hid_mouse_config_examples_3_1 SAMD21 devices (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_clocks.h
  *
  * \section asfdoc_uhi_hid_mouse_config_examples_4 conf_board.h
@@ -293,7 +293,7 @@ extern void uhi_hid_mouse_uninstall(uhc_device_t* dev);
  * \subsection asfdoc_uhi_hid_mouse_config_examples_4_4 SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed)
  * \include example\sam3x8h_sam3x_ek\conf_board.h
  *
- * \subsection asfdoc_uhi_hid_mouse_config_examples_4_5 SAMD devices (USB)
+ * \subsection asfdoc_uhi_hid_mouse_config_examples_4_5 SAMD21 devices (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_board.h
  */
 
