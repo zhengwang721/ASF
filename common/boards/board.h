@@ -6,7 +6,7 @@
  * This file includes the appropriate board header file according to the
  * defined board (parameter BOARD).
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -82,7 +82,7 @@ extern "C" {
 #define STK600_RCUC3C0             17  //!< STK600 RCUC3C board.
 #define XMEGA_B1_XPLAINED          18  //!< ATxmega128B1 Xplained board.
 #define XMEGA_A1_XPLAINED          19  //!< ATxmega128A1 Xplain-A1 board.
-#define XMEGA_A1U_XPLAINED_PRO     20  //!< ATxmega128A1 Xplain-A1 board.
+#define XMEGA_A1U_XPLAINED_PRO     20  //!< ATxmega128A1U XMEGA-A1U Xplained Pro board.
 #define STK600_RCUC3L4             21  //!< ATUCL4 STK600 board
 #define UC3_L0_XPLAINED_BC         22  //!< ATUC3L0 UC3-L0 Xplained board controller board
 #define MEGA1284P_XPLAINED_BC      23  //!< ATmega1284P-Xplained board controller board
