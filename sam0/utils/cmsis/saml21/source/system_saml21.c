@@ -1,11 +1,9 @@
 /**
  * \file
  *
- * \brief Arch file for SAM0.
+ * \brief Low-level initialization functions called upon chip startup.
  *
- * This file defines common SAM0 series.
- *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,36 +41,38 @@
  *
  */
 
-#ifndef _SAM_IO_
-#define _SAM_IO_
+#include "saml21.h"
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
+/**
+ * Initial system clock frequency. The System RC Oscillator (RCSYS) provides
+ *  the source for the main clock at chip startup.
+ */
+#define __SYSTEM_CLOCK    (1000000)
 
-/* SAM D20 family */
-#if (SAMD20)
-#  include "samd20.h"
-#endif
+uint32_t SystemCoreClock = __SYSTEM_CLOCK;/*!< System Clock Frequency (Core Clock)*/
 
-#if (SAMD21)
-#  include "samd21.h"
-#endif
+/**
+ * Initialize the system
+ *
+ * @brief  Setup the microcontroller system.
+ *         Initialize the System and update the SystemCoreClock variable.
+ */
+void SystemInit(void)
+{
+	// Keep the default device state after reset
+	SystemCoreClock = __SYSTEM_CLOCK;
+	return;
+}
 
-#if (SAMR21)
-#  include "samr21.h"
-#endif
-
-#if (SAMD10)
-#  include "samd10.h"
-#endif
-
-#if (SAMD11)
-#  include "samd11.h"
-#endif
-
-#if (SAML21)
-#  include "saml21.h"
-#endif
-
-#endif /* _SAM_IO_ */
+/**
+ * Update SystemCoreClock variable
+ *
+ * @brief  Updates the SystemCoreClock with current core Clock
+ *         retrieved from cpu registers.
+ */
+void SystemCoreClockUpdate(void)
+{
+	// Not implemented
+	SystemCoreClock = __SYSTEM_CLOCK;
+	return;
+}

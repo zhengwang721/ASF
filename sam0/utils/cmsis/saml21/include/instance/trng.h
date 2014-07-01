@@ -1,11 +1,9 @@
 /**
  * \file
  *
- * \brief Arch file for SAM0.
+ * \brief Instance description for TRNG
  *
- * This file defines common SAM0 series.
- *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,36 +41,25 @@
  *
  */
 
-#ifndef _SAM_IO_
-#define _SAM_IO_
+#ifndef _SAML21_TRNG_INSTANCE_
+#define _SAML21_TRNG_INSTANCE_
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
+/* ========== Register definition for TRNG peripheral ========== */
+#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+#define REG_TRNG_CTRLA             (0x42003800U) /**< \brief (TRNG) Control A */
+#define REG_TRNG_EVCTRL            (0x42003804U) /**< \brief (TRNG) Event Control */
+#define REG_TRNG_INTENCLR          (0x42003808U) /**< \brief (TRNG) Interrupt Enable Clear */
+#define REG_TRNG_INTENSET          (0x42003809U) /**< \brief (TRNG) Interrupt Enable Set */
+#define REG_TRNG_INTFLAG           (0x4200380AU) /**< \brief (TRNG) Interrupt Flag Status and Clear */
+#define REG_TRNG_DATA              (0x42003820U) /**< \brief (TRNG) Output Data */
+#else
+#define REG_TRNG_CTRLA             (*(RwReg8 *)0x42003800U) /**< \brief (TRNG) Control A */
+#define REG_TRNG_EVCTRL            (*(RwReg8 *)0x42003804U) /**< \brief (TRNG) Event Control */
+#define REG_TRNG_INTENCLR          (*(RwReg8 *)0x42003808U) /**< \brief (TRNG) Interrupt Enable Clear */
+#define REG_TRNG_INTENSET          (*(RwReg8 *)0x42003809U) /**< \brief (TRNG) Interrupt Enable Set */
+#define REG_TRNG_INTFLAG           (*(RwReg8 *)0x4200380AU) /**< \brief (TRNG) Interrupt Flag Status and Clear */
+#define REG_TRNG_DATA              (*(RoReg  *)0x42003820U) /**< \brief (TRNG) Output Data */
+#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-/* SAM D20 family */
-#if (SAMD20)
-#  include "samd20.h"
-#endif
 
-#if (SAMD21)
-#  include "samd21.h"
-#endif
-
-#if (SAMR21)
-#  include "samr21.h"
-#endif
-
-#if (SAMD10)
-#  include "samd10.h"
-#endif
-
-#if (SAMD11)
-#  include "samd11.h"
-#endif
-
-#if (SAML21)
-#  include "saml21.h"
-#endif
-
-#endif /* _SAM_IO_ */
+#endif /* _SAML21_TRNG_INSTANCE_ */

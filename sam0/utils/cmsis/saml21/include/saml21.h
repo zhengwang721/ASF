@@ -1,11 +1,9 @@
 /**
  * \file
  *
- * \brief Arch file for SAM0.
+ * \brief Top header file for SAML21
  *
- * This file defines common SAM0 series.
- *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,36 +41,36 @@
  *
  */
 
-#ifndef _SAM_IO_
-#define _SAM_IO_
+#ifndef _SAML21_
+#define _SAML21_
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
+/**
+ * \defgroup SAML21_definitions SAML21 Device Definitions
+ * \brief SAML21 CMSIS Definitions.
+ */
 
-/* SAM D20 family */
-#if (SAMD20)
-#  include "samd20.h"
+#if   defined(__SAML21E15A__) || defined(__ATSAML21E15A__)
+  #include "saml21e15a.h"
+#elif defined(__SAML21E16A__) || defined(__ATSAML21E16A__)
+  #include "saml21e16a.h"
+#elif defined(__SAML21E17A__) || defined(__ATSAML21E17A__)
+  #include "saml21e17a.h"
+#elif defined(__SAML21E18A__) || defined(__ATSAML21E18A__)
+  #include "saml21e18a.h"
+#elif defined(__SAML21G16A__) || defined(__ATSAML21G16A__)
+  #include "saml21g16a.h"
+#elif defined(__SAML21G17A__) || defined(__ATSAML21G17A__)
+  #include "saml21g17a.h"
+#elif defined(__SAML21G18A__) || defined(__ATSAML21G18A__)
+  #include "saml21g18a.h"
+#elif defined(__SAML21J16A__) || defined(__ATSAML21J16A__)
+  #include "saml21j16a.h"
+#elif defined(__SAML21J17A__) || defined(__ATSAML21J17A__)
+  #include "saml21j17a.h"
+#elif defined(__SAML21J18A__) || defined(__ATSAML21J18A__)
+  #include "saml21j18a.h"
+#else
+  #error Library does not support the specified device.
 #endif
 
-#if (SAMD21)
-#  include "samd21.h"
-#endif
-
-#if (SAMR21)
-#  include "samr21.h"
-#endif
-
-#if (SAMD10)
-#  include "samd10.h"
-#endif
-
-#if (SAMD11)
-#  include "samd11.h"
-#endif
-
-#if (SAML21)
-#  include "saml21.h"
-#endif
-
-#endif /* _SAM_IO_ */
+#endif /* _SAML21_ */
