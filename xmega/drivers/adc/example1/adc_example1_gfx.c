@@ -3,7 +3,7 @@
  *
  * \brief AVR XMEGA Analog to Digital Converter Driver Example 1
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
