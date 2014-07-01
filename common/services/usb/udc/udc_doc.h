@@ -138,39 +138,39 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  * The following USB Device configuration must be included in the conf_usb.h
  * file of the application.
  *
- * \b USB_DEVICE_VENDOR_ID (Word)
+ * \b 1. USB_DEVICE_VENDOR_ID (Word)
  *
  * Vendor ID provided by USB org (ATMEL 0x03EB).
  *
- * \b USB_DEVICE_PRODUCT_ID (Word)
+ * \b 2. USB_DEVICE_PRODUCT_ID (Word)
  *
  * Product ID (Referenced in usb_atmel.h).
  *
- * \b USB_DEVICE_MAJOR_VERSION (Byte)
+ * \b 3. USB_DEVICE_MAJOR_VERSION (Byte)
  *
  * Major version of the device
  *
- * \b USB_DEVICE_MINOR_VERSION (Byte)
+ * \b 4. USB_DEVICE_MINOR_VERSION (Byte)
  *
  * Minor version of the device
  *
- * \b USB_DEVICE_MANUFACTURE_NAME (string)
+ * \b 5. USB_DEVICE_MANUFACTURE_NAME (string)
  *
  * ASCII name for the manufacture
  *
- * \b USB_DEVICE_PRODUCT_NAME (string)
+ * \b 6. USB_DEVICE_PRODUCT_NAME (string)
  *
  * ASCII name for the product
  *
- * \b USB_DEVICE_SERIAL_NAME (string)
+ * \b 7. USB_DEVICE_SERIAL_NAME (string)
  *
  * ASCII name to enable and set a serial number
  *
- * \b USB_DEVICE_POWER (Numeric)
+ * \b 8. USB_DEVICE_POWER (Numeric)
  *
  * (unit mA) Maximum device power
  *
- * \b USB_DEVICE_ATTR (Byte)
+ * \b 9. USB_DEVICE_ATTR (Byte)
  *
  * USB attributes available:
  *  - USB_CONFIG_ATTR_SELF_POWERED
@@ -179,15 +179,15 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  *  Note: if remote wake enabled then defines remotewakeup callbacks,
  * see Table 5-2. External API from UDC - Callback
  *
- * \b USB_DEVICE_LOW_SPEED (Only defined)
+ * \b 10. USB_DEVICE_LOW_SPEED (Only defined)
  *
  * Force the USB Device to run in low speed
  *
- * \b USB_DEVICE_HS_SUPPORT (Only defined)
+ * \b 11. USB_DEVICE_HS_SUPPORT (Only defined)
  *
  * Authorize the USB Device to run in high speed
  *
- * \b USB_DEVICE_MAX_EP (Byte)
+ * \b 12. USB_DEVICE_MAX_EP (Byte)
  *
  * Define the maximum endpoint number used by the USB Device.
  *
