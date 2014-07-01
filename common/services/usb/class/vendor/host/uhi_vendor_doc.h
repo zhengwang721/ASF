@@ -86,6 +86,7 @@
 
 /**
  * \brief Install interface
+ *
  * Allocate interface endpoints if supported.
  *
  * \param[in] uhc_device_t	  Device to request
