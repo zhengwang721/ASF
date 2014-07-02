@@ -314,42 +314,42 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * The following optional USB host callback can be defined in the conf_usb_host.h
  * file of the application.
  *
- * <b> 1. void UHC_MODE_CHANGE(bool b_host_mode) </b>
+ * \b 1. void UHC_MODE_CHANGE(bool b_host_mode) </b>
  *
  * To notify that the USB mode are switched automatically.
  * This is possible only when ID pin is available.
  *
- * <b> 2. void UHC_VBUS_CHANGE(bool b_present) </b>
+ * \b 2. void UHC_VBUS_CHANGE(bool b_present) </b>
  *
  * To notify that the Vbus level has changed
  * (Available only in USB hardware with Vbus monitoring).
  *
- * <b> 3. void UHC_VBUS_ERROR(void) </b>
+ * \b 3. void UHC_VBUS_ERROR(void) </b>
  *
  * To notify that a Vbus error has occurred
  * (Available only in USB hardware with Vbus monitoring).
  *
- * <b> 4. void UHC_CONNECTION_EVENT(uhc_device_t* dev,bool b_present) </b>
+ * \b 4. void UHC_CONNECTION_EVENT(uhc_device_t* dev,bool b_present) </b>
  *
  * To notify that a device has been connected or disconnected.
  *
- * <b> 5. void UHC_WAKEUP_EVENT(void) </b>
+ * \b 5. void UHC_WAKEUP_EVENT(void) </b>
  *
  * Called when a USB device or the host have wake up the USB line.
  *
- * <b> 6. void UHC_SOF_EVENT(void) </b>
+ * \b 6. void UHC_SOF_EVENT(void) </b>
  *
  * Called for each received SOF each 1 ms.
  * Available in High and Full speed mode.
  *
- * <b> 7. uint8_t UHC_DEVICE_CONF(uhc_device_t* dev) </b>
+ * \b 7. uint8_t UHC_DEVICE_CONF(uhc_device_t* dev) </b>
  *
  * Called when a USB device configuration must be chosen.
  * Thus, the application can choose either a configuration number
  * for this device or a configuration number 0 to reject it.
  * If callback not defined the configuration 1 is chosen.
  *
- * <b> 8. void UHC_ENUM_EVENT(uhc_device_t* dev, uint8_t b_status) </b>
+ * \b 8. void UHC_ENUM_EVENT(uhc_device_t* dev, uint8_t b_status) </b>
  *
  * Called when a USB device enumeration is completed or fail.
  *

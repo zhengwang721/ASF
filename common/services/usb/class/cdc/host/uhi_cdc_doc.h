@@ -184,6 +184,7 @@ iram_size_t uhi_cdc_read_buf(uint8_t port, void* buf, iram_size_t size);
 
 /**
  * \brief This function checks if a new character sent is possible
+ *
  * The type int is used to support scanf redirection from compiler LIB.
  *
  * \param[in] port       Communication port number

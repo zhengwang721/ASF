@@ -412,6 +412,7 @@ bool udi_cdc_is_tx_ready(void);
 
 /**
  * \brief Puts a byte on CDC line
+ *
  * The type int is used to support printf redirection from compiler LIB.
  *
  * \param[in] value      Value to put
@@ -522,6 +523,7 @@ iram_size_t udi_cdc_multi_get_free_tx_buffer(uint8_t port);
 
 /**
  * \brief This function checks if a new character sent is possible
+ *
  * The type int is used to support scanf redirection from compiler LIB.
  *
  * \param[in] port       Communication port number to manage

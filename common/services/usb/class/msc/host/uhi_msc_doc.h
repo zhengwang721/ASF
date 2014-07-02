@@ -153,6 +153,7 @@ typedef struct {
 
 /**
  * \brief Tests if the interface UHI Mass Storage is available
+ *
  * The UHI Mass Storage can be busy during the enumeration of a USB Device MSC.
  *
  * \return true, if UHI Mass Storage is available
