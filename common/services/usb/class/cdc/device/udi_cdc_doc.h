@@ -594,7 +594,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  #define  UDI_CDC_DEFAULT_DATABITS         8
 
  #include "udi_cdc_conf.h" // At the end of conf_usb.h file
- * \endcode
+ \endcode
  *
  * Add to application C-file:
  * \code
@@ -617,20 +617,20 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
    udi_cdc_getc();
   }
  }
- * \endcode
+ \endcode
  *
  * \subsubsection udi_cdc_basic_use_case_setup_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following configuration
  * which is the USB device CDC configuration:
  * \code
  #define USB_DEVICE_SERIAL_NAME  "12...EF" // Disk SN for CDC
- * \endcode
+ \endcode
  * \note The USB serial number is mandatory when a CDC interface is used.
  *
  * \code
  #define UDI_CDC_ENABLE_EXT(port) my_callback_cdc_enable()
  extern bool my_callback_cdc_enable(void);
- * \endcode
+ \endcode
  * \note After the device enumeration (detecting and identifying USB devices),
  *       the USB host starts the device configuration. When the USB CDC interface
  *       from the device is accepted by the host, the USB host enables this interface and the
@@ -640,14 +640,14 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  * \code
  #define UDI_CDC_DISABLE_EXT(port) my_callback_cdc_disable()
  extern void my_callback_cdc_disable(void);
- * \endcode
+ \endcode
  * \note When the USB device is unplugged or is reset by the USB host, the USB
  *       interface is disabled and the UDI_CDC_DISABLE_EXT() callback function
  *       is called. Thus, the data transfer must be stopped on CDC interface.
  *
  * \code
  #define  UDI_CDC_LOW_RATE
- * \endcode
+ \endcode
  * \note  Define it when the transfer CDC Device to Host is a low rate
  *        (<512000 bauds) to reduce CDC buffers size.
  *
@@ -656,7 +656,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  #define  UDI_CDC_DEFAULT_STOPBITS         CDC_STOP_BITS_1
  #define  UDI_CDC_DEFAULT_PARITY           CDC_PAR_NONE
  #define  UDI_CDC_DEFAULT_DATABITS         8
- * \endcode
+ \endcode
  * \note Default configuration of communication port at startup.
  *
  * -# Send or wait data on CDC line:
@@ -669,7 +669,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  int udi_cdc_putc(int value);
  // Writes a RAM buffer on CDC line
  iram_size_t udi_cdc_write_buf(const int* buf, iram_size_t size);
- * \endcode
+ \endcode
  *
  * \section udi_cdc_use_cases Advanced use cases
  * \ifnot ASF_MANUAL
@@ -741,7 +741,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
     &udi_api_cdc_comm,       \
     &udi_api_cdc_data,       \
     ...
- * \endcode
+ \endcode
  *
  * \subsection udi_cdc_use_case_composite_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
@@ -758,7 +758,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  // This must include each endpoint for each interface.
  // Add 3 for CDC.
  #define USB_DEVICE_MAX_EP (X+3)
- * \endcode
+ \endcode
  * -# Ensure that conf_usb.h contains the description of
  * composite device:
  * \code
@@ -770,7 +770,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  // The interface index of an interface starting from 0
  #define  UDI_CDC_COMM_IFACE_NUMBER_0     X+0
  #define  UDI_CDC_DATA_IFACE_NUMBER_0     X+1
- * \endcode
+ \endcode
  *
  * -# Ensure that conf_usb.h contains the following parameters
  * required for a USB composite device configuration:
@@ -802,7 +802,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
     &udi_api_cdc_comm,       \
     &udi_api_cdc_data,       \
     ...
- * \endcode
+ \endcode
  * \note The descriptors order given in the four lists above must be the
  *       same as the order defined by all interface indexes. The interface index
  *       orders are defined through UDI_X_IFACE_NUMBER defines.

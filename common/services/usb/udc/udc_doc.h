@@ -131,7 +131,6 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
 
 /**
  * \page asfdoc_udc_basic_use_case_setup USB Device Basic Setup
- * @{
  *
  * \section asfdoc_udc_device_cfg Custom Configuration
  *
@@ -208,13 +207,13 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  *   conf_usb.h file does not contains definition USB_DEVICE_ATTACH_AUTO_DISABLE.
  * \code
  //#define USB_DEVICE_ATTACH_AUTO_DISABLE
- * \endcode
+ \endcode
  *
  * - Add custom VBUS monitoring. conf_usb.h file contains define
  *   USB_DEVICE_ATTACH_AUTO_DISABLE:
  * \code
 #define USB_DEVICE_ATTACH_AUTO_DISABLE
- * \endcode
+ \endcode
  * User C file contains:
  * \code
 // Authorize VBUS monitoring
@@ -226,7 +225,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
   // Attach USB Device
   udc_attach();
 }
- * \endcode
+ \endcode
  *
  * - Case of battery charging. conf_usb.h file contains define
  *   USB_DEVICE_ATTACH_AUTO_DISABLE:
@@ -243,7 +242,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
    // Start USB
    udc_attach();
  }
- * \endcode
+ \endcode
  *
  * \section asfdoc_udc_basic_use_case_setup USB Device Setup Steps
  *
@@ -293,7 +292,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  cpu_irq_enable();
  board_init();
  sleepmgr_init(); // Optional
- * \endcode
+ \endcode
  *
  * For SAMD21 devices, add to the initialization code:
  * \code
@@ -301,12 +300,12 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  irq_initialize_vectors();
  cpu_irq_enable();
  sleepmgr_init(); // Optional
- * \endcode
+ \endcode
  *
  * Add to the main IDLE loop:
  * \code
  sleepmgr_enter_sleep(); // Optional
- * \endcode
+ \endcode
  *
  * \subsection asfdoc_udc_basic_use_case_setup_code USB Device Controller (UDC) - Example code
  * Common example code for all USB devices.
@@ -319,7 +318,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  #define USB_DEVICE_MINOR_VERSION 0
  #define USB_DEVICE_POWER 100
  #define USB_DEVICE_ATTR USB_CONFIG_ATTR_BUS_POWERED
- * \endcode
+ \endcode
  *
  * Add to application C-file:
  * \code
@@ -327,7 +326,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  {
    udc_start();
  }
- * \endcode
+ \endcode
  *
  * \subsection asfdoc_udc_basic_use_case_setup_flow USB Device Controller (UDC) - Workflow
  * Common workflow for all USB devices.
@@ -347,12 +346,12 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  #define USB_DEVICE_POWER 100 // Type 9-bits
  // USB attributes to enable features
  #define USB_DEVICE_ATTR USB_CONFIG_ATTR_BUS_POWERED // Flags
- * \endcode
+ \endcode
  *
  * -# Call the USB device stack start function to enable stack and start USB:
  * \code
  udc_start();
- * \endcode
+ \endcode
  *   \note In case of USB dual roles (Device and Host) managed through USB OTG connector
  * (USB ID pin), the call of udc_start() must be removed and replaced by uhc_start().
  * Refer to "AVR4950 section 6.1 Dual roles" for further information about dual roles.
@@ -370,7 +369,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  #define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_RC32MHZ
  #define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_2
  #define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_1
- * \endcode
+ \endcode
  *
  * Content of conf_clock.h for AT32UC3A0, AT32UC3A1, AT32UC3B devices (USBB):
  * \code
@@ -380,14 +379,14 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  #define CONFIG_PLL1_DIV             2
  #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL1
  #define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
- * \endcode
+ \endcode
  *
  * Content of conf_clock.h for AT32UC3A3, AT32UC3A4 devices (USBB with high speed support):
  * \code
  // Configuration based on 12MHz external OSC:
  #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_OSC0
  #define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
- * \endcode
+ \endcode
  *
  * Content of conf_clock.h for AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U devices (USBC):
  * \code
@@ -399,7 +398,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  #define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
  // CPU clock need of clock > 25MHz to run with USBC
  #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL1
- * \endcode
+ \endcode
  *
  * Content of conf_clock.h for SAM3S, SAM3SD, SAM4S devices (UPD: USB Peripheral Device):
  * \code
@@ -410,19 +409,19 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  // USB Clock Source Options   (Fusb = FpllX / USB_div)
  #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL1
  #define CONFIG_USBCLK_DIV           2
- * \endcode
+ \endcode
  *
  * Content of conf_clock.h for SAM3U device (UPDHS: USB Peripheral Device High Speed):
  * \code
  // USB Clock Source fixed at UPLL.
- * \endcode
+ \endcode
  *
  * Content of conf_clock.h for SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed):
  * \code
  // USB Clock Source fixed at UPLL.
  #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_UPLL
  #define CONFIG_USBCLK_DIV           1
- * \endcode
+ \endcode
  *
  * Content of conf_clocks.h for SAMD21 devices (USB):
  * \code
@@ -445,9 +444,8 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  #  define CONF_CLOCK_GCLK_0_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_DFLL
  #  define CONF_CLOCK_GCLK_0_PRESCALER             1
  #  define CONF_CLOCK_GCLK_0_OUTPUT_ENABLE         false
- * \endcode
+ \endcode
  *
- * @}
  */
 
 /**
@@ -488,7 +486,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  #define USB_DEVICE_HS_SUPPORT
 
  #endif
- * \endcode
+ \endcode
  *
  * \subsection udc_use_case_1_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
@@ -496,19 +494,19 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  * \code
   #define USB_DEVICE_LOW_SPEED
  //#define  USB_DEVICE_HS_SUPPORT
- * \endcode
+ \endcode
  * -# Ensure that conf_usb.h contains the following parameters
  * required for a USB device full speed (12Mbit/s):
  * \code
  //#define USB_DEVICE_LOW_SPEED
  //#define  USB_DEVICE_HS_SUPPORT
- * \endcode
+ \endcode
  * -# Ensure that conf_usb.h contains the following parameters
  * required for a USB device high speed (480Mbit/s):
  * \code
  //#define USB_DEVICE_LOW_SPEED
  #define  USB_DEVICE_HS_SUPPORT
- * \endcode
+ \endcode
  */
 
 /**
@@ -528,7 +526,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
 	#define  USB_DEVICE_MANUFACTURE_NAME      "Manufacture name"
 	#define  USB_DEVICE_PRODUCT_NAME          "Product name"
 	#define  USB_DEVICE_SERIAL_NAME           "12...EF"
- * \endcode
+ \endcode
  *
  * \subsection udc_use_case_2_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
@@ -536,11 +534,11 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  * \code
  // Static ASCII name for the manufacture
  #define  USB_DEVICE_MANUFACTURE_NAME "Manufacture name"
- * \endcode
+ \endcode
  * \code
  // Static ASCII name for the product
  #define  USB_DEVICE_PRODUCT_NAME "Product name"
- * \endcode
+ \endcode
  * \code
  // Static ASCII name to enable and set a serial number
  #define  USB_DEVICE_SERIAL_NAME "12...EF" \endcode
@@ -566,7 +564,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  extern void my_callback_remotewakeup_enable(void);
  #define UDC_REMOTEWAKEUP_DISABLE() my_callback_remotewakeup_disable()
  extern void my_callback_remotewakeup_disable(void);
- * \endcode
+ \endcode
  *
  * Add to application C-file:
  * \code
@@ -583,7 +581,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  {
     udc_remotewakeup();
  }
- * \endcode
+ \endcode
 
  *
  * \subsection udc_use_case_3_usage_flow Workflow
@@ -592,21 +590,21 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  * \code
  // Authorizes the remote wakeup feature
  #define  USB_DEVICE_ATTR (USB_CONFIG_ATTR_REMOTE_WAKEUP | USB_CONFIG_ATTR_..._POWERED)
- * \endcode
+ \endcode
  * \code
  // Define callback called when the host enables the remotewakeup feature
  #define UDC_REMOTEWAKEUP_ENABLE() my_callback_remotewakeup_enable()
  extern void my_callback_remotewakeup_enable(void);
- * \endcode
+ \endcode
  * \code
  // Define callback called when the host disables the remotewakeup feature
  #define UDC_REMOTEWAKEUP_DISABLE() my_callback_remotewakeup_disable()
  extern void my_callback_remotewakeup_disable(void);
- * \endcode
+ \endcode
  * -# Send a remote wakeup (USB upstream):
  * \code
  udc_remotewakeup();
- * \endcode
+ \endcode
  */
 
 /**
@@ -629,7 +627,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  extern void user_callback_suspend_action(void)
  #define  UDC_RESUME_EVENT()          user_callback_resume_action()
  extern void user_callback_resume_action(void)
- * \endcode
+ \endcode
  *
  * Add to application C-file:
  * \code
@@ -641,31 +639,31 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  {
     // Re-enable hardware component
  }
- * \endcode
+ \endcode
  *
  * \subsection udc_use_case_5_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters:
  * \code
  // Authorizes the BUS power feature
  #define  USB_DEVICE_ATTR (USB_CONFIG_ATTR_BUS_POWERED)
- * \endcode
+ \endcode
  * \code
  // Define callback called when the host suspend the USB line
  #define UDC_SUSPEND_EVENT() user_callback_suspend_action()
  extern void user_callback_suspend_action(void);
- * \endcode
+ \endcode
  * \code
  // Define callback called when the host or device resume the USB line
  #define UDC_RESUME_EVENT() user_callback_resume_action()
  extern void user_callback_resume_action(void);
- * \endcode
+ \endcode
  * -# Reduce power consumption in suspend mode (max. 2.5mA on Vbus):
  * \code
  void user_callback_suspend_action(void)
  {
     turn_off_components();
  }
- * \endcode
+ \endcode
  */
 
 /**
@@ -687,7 +685,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  #define  USB_DEVICE_GET_SERIAL_NAME_POINTER serial_number
  #define  USB_DEVICE_GET_SERIAL_NAME_LENGTH  12
  extern uint8_t serial_number[];
- * \endcode
+ \endcode
  *
  * Add to application C-file:
  * \code
@@ -699,7 +697,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  ...
  serial_number[USB_DEVICE_GET_SERIAL_NAME_LENGTH-1] = 'C';
  }
- * \endcode
+ \endcode
  *
  * \subsection udc_use_case_6_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
@@ -709,7 +707,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  #define  USB_DEVICE_GET_SERIAL_NAME_POINTER serial_number // Give serial array pointer
  #define  USB_DEVICE_GET_SERIAL_NAME_LENGTH  12 // Give size of serial array
  extern uint8_t serial_number[]; // Declare external serial array
- * \endcode
+ \endcode
  * -# Before start USB stack, initialize the serial array
  * \code
  uint8_t serial_number[USB_DEVICE_GET_SERIAL_NAME_LENGTH];
@@ -720,5 +718,5 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  ...
  serial_number[USB_DEVICE_GET_SERIAL_NAME_LENGTH-1] = 'C';
  }
- * \endcode
+ \endcode
  */

@@ -408,7 +408,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
 	 * #define  UDI_VENDOR_EPS_SIZE_ISO_HS    64
 
 	 * #include "udi_vendor_conf.h" // At the end of conf_usb.h file
- * \endcode
+ \endcode
  *
  * Add to application C-file:
  * \code
@@ -440,7 +440,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
 	      ...
 	    }
 	 }
- * \endcode
+ \endcode
  *
  * \subsection udi_vendor_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following configuration
@@ -448,7 +448,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  * \code
  #define UDI_VENDOR_ENABLE_EXT() my_callback_vendor_enable()
  extern bool my_callback_vendor_enable(void);
- * \endcode
+ \endcode
  * \note After the device enumeration (detecting and identifying USB devices),
  *       the USB host starts the device configuration. When the USB Vendor interface
  *       from the device is accepted by the host, the USB host enables this interface and the
@@ -458,7 +458,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  * \code
  #define UDI_VENDOR_DISABLE_EXT() my_callback_vendor_disable()
  extern void my_callback_vendor_disable(void);
- * \endcode
+ \endcode
  * \note When the USB device is unplugged or is reset by the USB host, the USB
  *       interface is disabled and the UDI_VENDOR_DISABLE_EXT() callback function
  *       is called. Thus, it is recommended to disable the data Vendor transfer.
@@ -468,7 +468,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  extern bool my_vendor_setup_out_received(void);
  #define  UDI_VENDOR_SETUP_IN_RECEIVED()   my_vendor_setup_in_received()
  extern bool my_vendor_setup_in_received(void);
- * \endcode
+ \endcode
  * \note The control requests for the interface Vendor will be processed
  *       through these both callbacks.
  *
@@ -479,7 +479,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  #define  UDI_VENDOR_EPS_SIZE_INT_HS    64
  #define  UDI_VENDOR_EPS_SIZE_BULK_HS  512
  #define  UDI_VENDOR_EPS_SIZE_ISO_HS    64
- * \endcode
+ \endcode
  * \note The endpoint size is defined by the final application, and can be
  *       disabled if the full speed size is zero.
  *
@@ -498,7 +498,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  udi_vendor_iso_in_run();
  // Start a transfer on isochronous OUT
  udi_vendor_iso_out_run();
- * \endcode
+ \endcode
  *
  * \section udi_vendor_use_cases Advanced use cases
  * \ifnot ASF_MANUAL
@@ -563,7 +563,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  #define UDI_COMPOSITE_API \
     &udi_api_vendor, \
     ...
- * \endcode
+ \endcode
  *
  * \subsection udi_vendor_use_case_composite_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
@@ -581,7 +581,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  // Add 0 to 6 for Vendor interface.
  // The number depends on UDI_VENDOR_EPS_SIZE_..._FS defines.
  #define USB_DEVICE_MAX_EP (X) to (X+6)
- * \endcode
+ \endcode
  * -# Ensure that conf_usb.h contains the description of
  * composite device:
  * \code
@@ -595,7 +595,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  #define  UDI_VENDOR_EP_ISO_OUT       (6 | USB_EP_DIR_OUT)
  // The interface index of an interface starting from 0
  #define UDI_VENDOR_IFACE_NUMBER  X
- * \endcode
+ \endcode
  * -# Ensure that conf_usb.h contains the following parameters
  * required for a USB composite device configuration:
  * \code
@@ -619,7 +619,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
     ...
     &udi_api_vendor, \
     ...
- * \endcode
+ \endcode
  * \note The descriptors order given in the four lists above must be the
  *       same as the order defined by all interface indexes. The interface index
  *       orders are defined through UDI_X_IFACE_NUMBER defines.

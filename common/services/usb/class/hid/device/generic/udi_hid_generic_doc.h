@@ -193,7 +193,7 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  #define UDI_HID_generic_DISABLE_EXT() my_callback_generic_disable()
  extern void my_callback_generic_disable(void);
  #include "udi_hid_generic_conf.h" // At the end of conf_usb.h file
- * \endcode
+ \endcode
  *
  * Add to application C-file:
  * \code
@@ -212,7 +212,7 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  #define  UDI_HID_GENERIC_EP_SIZE            64
 
  #include "udi_hid_generic_conf.h" // At the end of conf_usb.h file
- * \endcode
+ \endcode
  *
  * Add to application C-file:
  * \code
@@ -251,7 +251,7 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
        // The report feature is correct
     }
  }
- * \endcode
+ \endcode
  *
  * \subsection udi_hid_generic_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following configuration
@@ -259,7 +259,7 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  * \code
  #define UDI_HID_GENERIC_ENABLE_EXT() my_callback_generic_enable()
  extern bool my_callback_generic_enable(void);
- * \endcode
+ \endcode
  * \note After the device enumeration (detecting and identifying USB devices),
  *       the USB host starts the device configuration. When the USB generic interface
  *       from the device is accepted by the host, the USB host enables this interface and the
@@ -269,7 +269,7 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  * \code
  #define UDI_HID_GENERIC_DISABLE_EXT() my_callback_generic_disable()
  extern void my_callback_generic_disable(void);
- * \endcode
+ \endcode
  * \note When the USB device is unplugged or is reset by the USB host, the USB
  *       interface is disabled and the UDI_HID_GENERIC_DISABLE_EXT() callback function
  *       is called. Thus, it is recommended to disable sensors used by the HID generic
@@ -278,32 +278,32 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  * \code
  #define  UDI_HID_GENERIC_REPORT_OUT(ptr) my_callback_generic_report_out(ptr)
  extern void my_callback_generic_report_out(uint8_t *report);
- * \endcode
+ \endcode
  * \note Callback used to receive the OUT report.
  *
  * \code
  #define  UDI_HID_GENERIC_SET_FEATURE(f) my_callback_generic_set_feature(f)
  extern void my_callback_generic_set_feature(uint8_t *report_feature);
- * \endcode
+ \endcode
  * \note Callback used to receive the SET FEATURE report.
  *
  * \code
  #define  UDI_HID_REPORT_IN_SIZE             64
  #define  UDI_HID_REPORT_OUT_SIZE            64
  #define  UDI_HID_REPORT_FEATURE_SIZE        4
- * \endcode
+ \endcode
  * \note The report size are defined by the final application.
  *
  * \code
  #define  UDI_HID_GENERIC_EP_SIZE 64
- * \endcode
+ \endcode
  * \note The interrupt endpoint size is defined by the final application.
 
  * -# Send a IN report:
  * \code
  uint8_t report[] = {0x00,0x01,0x02...};
  udi_hid_generic_send_report_in(report);
- * \endcode
+ \endcode
  *
  * \section uhi_hid_generic_use_cases Advanced use cases
  * \ifnot ASF_MANUAL
@@ -364,7 +364,7 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  #define UDI_COMPOSITE_API \
     &udi_api_hid_generic, \
     ...
- * \endcode
+ \endcode
  *
  * \subsection udi_hid_generic_use_case_composite_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
@@ -382,7 +382,7 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  // This must include each endpoint for each interface.
  // Add 1 for HID generic.
  #define USB_DEVICE_MAX_EP (X+2)
- * \endcode
+ \endcode
  * -# Ensure that conf_usb.h contains the description of
  * composite device:
  * \code
@@ -392,7 +392,7 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  #define UDI_HID_GENERIC_EP_OUT   (2 | USB_EP_DIR_OUT)
  // The interface index of an interface starting from 0
  #define UDI_HID_GENERIC_IFACE_NUMBER  X
- * \endcode
+ \endcode
  * -# Ensure that conf_usb.h contains the following parameters
  * required for a USB composite device configuration:
  * \code
@@ -416,7 +416,7 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
 	   ...
 	   &udi_api_hid_generic, \
 	   ...
- * \endcode
+ \endcode
  * \note The descriptors order given in the four lists above must be the
  *       same as the order defined by all interface indexes. The interface index
  *       orders are defined through UDI_X_IFACE_NUMBER defines.
