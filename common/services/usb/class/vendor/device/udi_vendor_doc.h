@@ -255,7 +255,7 @@ typedef struct {
  *
  * These routines are used to transfer data to/from USB VENDOR endpoints.
  *
- * See \ref asfdoc_udi_vendor_exqsg.
+ * See Quick start guide for USB Device vendor module
  * @{
  */
 
