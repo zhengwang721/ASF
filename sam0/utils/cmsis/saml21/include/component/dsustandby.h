@@ -1,11 +1,9 @@
 /**
  * \file
  *
- * \brief Arch file for SAM0.
+ * \brief Component description for DSUSTANDBY
  *
- * This file defines common SAM0 series.
- *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,36 +41,38 @@
  *
  */
 
-#ifndef _SAM_IO_
-#define _SAM_IO_
+#ifndef _SAML21_DSUSTANDBY_COMPONENT_
+#define _SAML21_DSUSTANDBY_COMPONENT_
 
-#include <stddef.h>
-#include <stdint.h>
-#include <stdbool.h>
+/* ========================================================================== */
+/**  SOFTWARE API DEFINITION FOR DSUSTANDBY */
+/* ========================================================================== */
+/** \addtogroup SAML21_DSUSTANDBY Device Service Unit */
+/*@{*/
 
-/* SAM D20 family */
-#if (SAMD20)
-#  include "samd20.h"
-#endif
+#define DSUSTANDBY_U2209
+#define REV_DSUSTANDBY              0x100
 
-#if (SAMD21)
-#  include "samd21.h"
-#endif
+/* -------- DSUSTANDBY_DCFG : (DSUSTANDBY Offset: 0xF0) (R/W 32) Device Configuration -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  uint32_t reg;                /*!< Type      used for register access              */
+} DSUSTANDBY_DCFG_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#if (SAMR21)
-#  include "samr21.h"
-#endif
+#define DSUSTANDBY_DCFG_OFFSET      0xF0         /**< \brief (DSUSTANDBY_DCFG offset) Device Configuration */
+#define DSUSTANDBY_DCFG_RESETVALUE  0x00000000   /**< \brief (DSUSTANDBY_DCFG reset_value) Device Configuration */
 
-#if (SAMD10)
-#  include "samd10.h"
-#endif
+#define DSUSTANDBY_DCFG_MASK        0x00000000u  /**< \brief (DSUSTANDBY_DCFG) MASK Register */
 
-#if (SAMD11)
-#  include "samd11.h"
-#endif
+/** \brief DSUSTANDBY hardware registers */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef struct {
+       RoReg8                    Reserved1[0xF0];
+  __IO DSUSTANDBY_DCFG_Type      DCFG[2];     /**< \brief Offset: 0xF0 (R/W 32) Device Configuration */
+} Dsustandby;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#if (SAML21)
-#  include "saml21.h"
-#endif
+/*@}*/
 
-#endif /* _SAM_IO_ */
+#endif /* _SAML21_DSUSTANDBY_COMPONENT_ */
