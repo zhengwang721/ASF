@@ -3,7 +3,7 @@
  *
  * \brief lwIP Raw HTTP basic example.
  *
- * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,8 +52,8 @@
  *
  *  \section Requirements
  *
- *  This package can be used on SAMD20 Xplained Pro with the Ethernet1
- *  Xplained Pro extention board on EXT1.
+ *  This package can be used on SAMD21 Xplained Pro and SAMR21 Xplained Pro 
+ *  with the Ethernet1 Xplained Pro extention board on EXT1.
  *
  *  \section Description
  *
@@ -99,9 +99,10 @@
 #include "delay.h"
 #include "ethernet.h"
 #include "httpd.h"
+#include <asf.h>
 
 #define STRING_EOL    "\r"
-#define STRING_HEADER "-- Raw HTTP Basic Example -- \r\n" \
+#define STRING_HEADER "-- Raw HTTP Basic Example --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 

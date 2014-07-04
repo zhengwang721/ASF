@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief KSZ8851SNL SAMD20 driver for lwIP.
+ * \brief KSZ8851SNL SAM0 driver for lwIP.
  *
  * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -56,7 +56,7 @@
 #include <string.h>
 #include "ksz8851snl.h"
 #include "ksz8851snl_reg.h"
-#include "netif/samd20_spi_ksz8851snl.h"
+#include "netif/sam0_spi_ksz8851snl.h"
 #include "conf_eth.h"
 
 /** Network interface identifier. */

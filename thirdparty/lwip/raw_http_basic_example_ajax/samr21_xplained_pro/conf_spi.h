@@ -1,10 +1,9 @@
 /**
- *
  * \file
  *
- * \brief KSZ8851SNL SAMD20 driver for lwIP.
+ * \brief SAM D20/D21/R21 SPI configuration
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,16 +41,13 @@
  *
  */
 
-#ifndef SAMD20_SPI_KSZ8851SNL_H_INCLUDED
-#define SAMD20_SPI_KSZ8851SNL_H_INCLUDED
 
-#include "lwip/netif.h"
-#include "lwip/ip_addr.h"
-#include "lwip/err.h"
-#include "netif/etharp.h"
+#ifndef CONF_SPI_H_INCLUDED
+#  define CONF_SPI_H_INCLUDED
 
-err_t ethernetif_init(struct netif *netif);
+#  define CONF_SPI_MASTER_ENABLE     true
+#  define CONF_SPI_SLAVE_ENABLE     false
+#  define CONF_SPI_TIMEOUT           10000
 
-void ethernetif_input(struct netif *netif);
+#endif /* CONF_SPI_H_INCLUDED */
 
-#endif /* SAMD20_SPI_KSZ8851SNL_H_INCLUDED */

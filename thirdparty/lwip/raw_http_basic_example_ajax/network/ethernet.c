@@ -3,7 +3,7 @@
  *
  * \brief Ethernet management for the lwIP Raw HTTP basic example.
  *
- * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -56,7 +56,7 @@
 # include "ksz8851snl.h"
 # include "ksz8851snl_reg.h"
 # include "netif/sam_spi_ksz8851snl.h"
-#elif SAMD20
+#elif (SAMD20 || SAMD21 || SAMR21)
 # include "ksz8851snl.h"
 # include "ksz8851snl_reg.h"
 # include "netif/sam0_spi_ksz8851snl.h"
