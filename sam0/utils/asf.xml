@@ -14,6 +14,7 @@
 		<require idref="sam0.utils.syscalls"/>
 		<require idref="common.utils.interrupt" />
 		<require idref="common.utils.part_macros" />
+		<build type="linker-config" subtype="flags" value="--entry=Reset_Handler --specs=nano.specs" toolchain="armgcc"/>
 		<info type="gui-flag" value="hidden"/>
 		<device-support value="sam0"/>
 	</module>
