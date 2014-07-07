@@ -902,8 +902,8 @@ void sysclk_init(void)
 	ps_value = BPM_PS_2;
 	is_fwu_enabled = false;
 #elif (defined(CONFIG_PLL0_MUL) || defined(CONFIG_DFLL0_MUL) ||	defined(CONFIG_USBCLK_DIV))
-	/* USB/DFLL/PLL are not available in PS0 (PS1 also) */
-	ps_value = BPM_PS_2;
+	/* USB/DFLL/PLL are not available in PS1 (BPM.PMCON.PS=1) mode */
+	ps_value = BPM_PS_0;
 	is_fwu_enabled = false;
 #else
 	if (sysclk_get_cpu_hz() <= FLASH_FREQ_PS1_FWS_1_MAX_FREQ) {
