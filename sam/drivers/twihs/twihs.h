@@ -55,7 +55,7 @@ extern "C" {
 /// @endcond
 
 /** Time-out value (number of attempts). */
-#define TWIHS_TIMEOUT       15000
+#define TWIHS_TIMEOUT              15000
 
 /**
  * \brief Return codes for TWIHS APIs.
@@ -70,7 +70,7 @@ extern "C" {
 #define TWIHS_SEND_OVERRUN         6
 #define TWIHS_SEND_NACK            7
 #define TWIHS_BUSY                 8
-#define TWIHS_ERROR_TIMEOUT    9
+#define TWIHS_ERROR_TIMEOUT        9
 /**
  * @}
  */
