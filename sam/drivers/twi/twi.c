@@ -258,7 +258,7 @@ uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
 	uint32_t cnt = p_packet->length;
 	uint8_t *buffer = p_packet->buffer;
 	uint8_t stop_sent = 0;
-	uint32_t timeout;
+	uint32_t timeout = TWI_TIMEOUT;;
 	
 	/* Check argument */
 	if (cnt == 0) {
@@ -285,8 +285,6 @@ uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
 	}
 
 	while (cnt > 0) {
-		timeout = TWI_TIMEOUT;
-
 		status = p_twi->TWI_SR;
 		if (status & TWI_SR_NACK) {
 			return TWI_RECEIVE_NACK;
@@ -308,6 +306,7 @@ uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
 		*buffer++ = p_twi->TWI_RHR;
 
 		cnt--;
+		timeout = TWI_TIMEOUT;
 	}
 
 	while (!(p_twi->TWI_SR & TWI_SR_TXCOMP)) {
