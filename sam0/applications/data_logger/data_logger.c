@@ -41,6 +41,188 @@
  *
  */
 
+  /**
+ * \mainpage SAM D21 Data Logger Application
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails appdoc_preface
+ *
+ *
+ * \page appdoc_preface Overview
+ * This application demonstrates a data logger. A data logger
+ * measures the given input periodically and stores them in a non-volatile
+ * media.
+ * It records data over time either with a built in instrument or
+ * sensor or via external instruments and sensors. It can be used to interface
+ * with a personal computer and utilize software to view the data. 
+ * In this application, the RTC inside
+ * SAM D21 is configured to trigger ADC conversions at regular intervals.
+ * This application also demonstrates the use of the Direct Memory Access
+ * Controller (DMAC)in the SAM D21 microcontroller. 
+ */
+
+/**
+ * \page appdoc_main SAM D21 Data Logger Application
+ *
+ * Overview:
+ * - \ref appdoc_sam0_datalogger_intro
+ * - \ref appdoc_sam0_datalogger_setup
+ * - \ref appdoc_sam0_datalogger_usage
+ * - \ref appdoc_sam0_datalogger_compinfo
+ * - \ref appdoc_sam0_datalogger_contactinfo
+ * - \ref asfdoc_sam0_datalogger_api
+ * - \ref asfdoc_sam0_datalogger_references
+ *
+ * \section appdoc_sam0_datalogger_intro Introduction
+ *
+ * This example uses the SAM D21 Xplained Pro.
+ * In this application, the environment temperature is
+ * read using a 103 AP-2 thermistor from Semitec. This should be connected to
+ * one of the ADC pins of the SAM D21 device as shown in
+ * \ref appdoc_sam0_datalogger_setup "Hardware Setup"
+ * The readings are then stored in the serial flash AT25FD081A on the
+ * SAM D21 Xplained Pro. The user can access the logs via a serial port.
+ * This application also demonstrates the use of Direct Memory Access
+ * Controller (DMAC).
+ * 
+ * The DMAC, when used with Event System or peripheral triggers, provides a
+ * considerable advantage by reducing the power consumption and performing
+ * data transfer in the background.
+ * The DMAC in SAM D21 devices enables high data transfer rates with minimal
+ * CPU intervention. This enables the CPU to either do other tasks, or go in
+ * a lower power mode while the transfer is in progress.
+ * With access to all peripherals,
+ * the DMAC can handle automatic transfer of data to/from modules.
+ * It supports static and incremental addressing for both source and
+ * destination.
+ *
+ * \section appdoc_sam0_datalogger_setup Hardware Setup
+ * We may connect the thermistor to any of the ADC pins available on
+ * the extension connectors on the SAM D21 Xplained Pro. This example uses
+ * PA04 to connect the thermistor.
+ * The SAMD21 Xplained Pro board has an AT25DFX 1MB Serial Flash,
+ * which is used to store the temperature readings from the thermistor.  
+ * Serial communication happens via the Virtual COM port provided by the
+ * Embedded Debugger (EDBG) available on the SAM D21 Xplained Pro.
+ * The user can access the logs via a terminal application on a PC,
+ * configured at 115200 kbps, no parity, 8 data bits and one stop bit.
+ * The COM port number should be chosen depending
+ * on the port number assigned to the EDBG virtual COM port.
+ * Connect the thermistor as shown in
+ * \ref appdoc_sam0_datalogger_thermistor_conn "the diagram below"
+ *
+ * \anchor appdoc_sam0_datalogger_thermistor_conn
+ *
+ * \image html therm_conn.svg "Thermistor connection"
+ *
+ * \section appdoc_sam0_datalogger_usage Usage
+ *
+ * This application uses an NTC (Negative Temperature Coefficient) thermistor,
+ * whose resistance decreases as temperature increases.
+ * Two bytes are used for storing a temperature reading and we do not intend to
+ * directly test this application at negative temperatures.
+ * For the thermistor used in this application, the Steinhart–Hart
+ * coefficients are found using three reference points as shown below.
+ * The 'Temperature Vs Resistance' characteristics of the thermistor
+ * can be obtained from the manufacturer. The values in the below table are
+ * taken from the 'Temperature Vs Resistance' characteristics of the thermistor
+ * which is provided by the thermistor manufacturer. The contact address can be
+ * be obtained from the website of the website www.semitec-usa.com
+ *
+ *   <table border="0" cellborder="1" cellspacing="0" >
+ *    <tr>
+ *        <th> Temperature (Deg C) </th> <th> Resistance of the Thermistor  (Ohms)</th>
+ *    </tr>
+ *    <tr>
+ *     <td > 0 </td>
+ *     <td > 27250 </td>
+ *    </tr>
+ *    <tr>
+ *     <td > 25 </td>
+ *     <td > 10000 </td>
+ *    </tr>
+ *    <tr>
+ *     <td > 50 </td>
+ *     <td > 4162 </td>
+ *    </tr>
+ *   </table>
+ * 
+ * The Steinhart-Hart equation is used to find temperature in degrees Kelvin.
+ *
+ * 1/T = A + B ln(R) + C (ln(R))^3
+ *
+ * The coefficients are defined in the code as below
+ *
+\code{.cpp}
+ #define SHH_COEFF_A 0.0008913055475
+ #define SHH_COEFF_B 0.0002507779917
+ #define SHH_COEFF_C 0.0000001957724056
+\endcode
+ *
+ * 
+ * As shown in hardware setup, a voltage divider is made using the
+ * thermistor and a 10 k Ohm series resistor. When the room temperature is
+ * 25 Deg C, the thermistor resistance is 10 k Ohm and the ADC input voltage
+ * will be close to VCC/2. 
+ * This voltage has dependency on the tolerance of the series
+ * resistor.
+ *
+ * Reference for the ADC is chosen as VCC/1.48, which is one of the options
+ * available in the SAM D21 device and can meet the application needs.
+ * By using oversampling and decimation, the ADC resolution is increased from
+ * 12 bits to 16 bits. To increase the resolution by n bits, 4^n samples must
+ * be accumulated. The result must then be shifted right by n bits.
+ * In this example the ADC is configured for averaging mode and the number
+ * of samples accumulated is chosen as 256. In this case, the number of
+ * automatic right shifts will be four, which results in 16-bit resolution.
+ * More details on the ADC configuration is available in the device datasheet.
+ *
+ * The CPU is kept in Idle sleep and the RTC time-out event triggers ADC
+ * conversion. The DMAC module is used for data transfer from the ADC result
+ * register into an array in SRAM. Once a predefined number of conversions
+ * are done, the data is transferred into the Serial Flash for non-volatile
+ * storage.
+ *
+ * When a read request is received via the serial port, the logs are read from
+ * the serial flash and are send to the serial port.
+ * This SRAM to USART data transfer also makes use of the DMAC.
+ * SERCOM3 is configured as USART, through which the user can read the logs.
+ * This is the same port used as virtual COM port, by the Embedded debugger
+ * on the SAM D21 Xplained Pro.
+ *
+ * \section appdoc_sam0_datalogger_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
+ *
+ * \section asfdoc_sam0_datalogger_references References
+ * - ASF Programmer's Manual for DMAC
+ * <a href="http://www.atmel.com/Images/Atmel-42257-SAM-D21-Direct-Memory-Access-Controller-Driver-DMAC_AP-Note_AT07683.pdf">
+ * http://www.atmel.com/Images/Atmel-42257-SAM-D21-Direct-Memory-Access-Controller-Driver-DMAC_AP-Note_AT07683.pdf</a>
+ * 
+ * - Thermistor 103 AP-2 datasheet
+ * <a href="http://www.semitec.co.jp/english2/products/pdf/AP_Thermistor.pdf">
+ * http://www.semitec.co.jp/english2/products/pdf/AP_Thermistor.pdf</a>
+ *
+ * - Thermistor calculator
+ * <a href="http://www.thinksrs.com/downloads/programs/Therm%20Calc/NTCCalibrator/NTCcalculator.htm">
+ * http://www.thinksrs.com/downloads/programs/Therm%20Calc/NTCCalibrator/NTCcalculator.htm</a>
+ *
+ * - The SAM D series of devices
+ * <a href="http://www.atmel.com/products/microcontrollers/arm/sam-d.aspx">
+ * http://www.atmel.com/products/microcontrollers/arm/sam-d.aspx</a>
+ *
+ * - SAM D21 Xplained Pro documentation
+ * <a href="http://www.atmel.com/tools/ATSAMD21-XPRO.aspx?tab=documents">
+ * http://www.atmel.com/tools/ATSAMD21-XPRO.aspx?tab=documents</a>
+ *
+ * - AT25DF081A Datasheet:
+ * <a href="http://www.adestotech.com/sites/default/files/datasheets/doc8715.pdf">
+ * http://www.adestotech.com/sites/default/files/datasheets/doc8715.pdf</a>
+ *
+ * \section appdoc_sam0_datalogger_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
+ */
+  
 #include "data_logger.h"
 
 /** Structure for managing Serial Flash */
@@ -75,21 +257,21 @@ struct sf_status sf_access_status;
 /**
  * Flag to check successful initialization. Used for deubg purpose
  */
-volatile bool init_success;
+volatile bool init_success = false;
 
 /**
  * Indicates whether the number of bytes defined by SF_TRANSFER_SIZE is
  * transferred to SRAM
  */
-volatile bool adc_sram_dma_transfer_done;
+volatile bool adc_sram_dma_transfer_done = false;
 /** This flag will be made 'true' in USART receive interrupt */
-volatile bool sf_read_request_received;
+volatile bool sf_read_request_received = false;
 
 /**
  * Flag which indicates whether the request received is to read all logs
  * from the serial flash
  */
-volatile bool read_entire_logs;
+volatile bool read_entire_logs = false;
 /** This flag is used to check if a DMA transfer to USART is in progress */
 volatile bool usart_dma_transfer_triggered = false;
 
@@ -97,18 +279,18 @@ volatile bool usart_dma_transfer_triggered = false;
  * The number of times the RTC is overflown
  * Used to keep track of the number of ADC to SRAM transfers
  */
-static uint8_t rtc_ticks;
+static uint8_t rtc_ticks = 0;
 /** The DMAC will transfer ADC results into this array */
-static uint16_t adc_results_array[NUM_OF_BEATS_IN_ADC_SRAM_TRANSFER];
+static uint16_t adc_results_array[NUM_OF_BEATS_IN_ADC_SRAM_TRANSFER] = {0};
 
 /**
  * Holds the count of readings stored into the Serial Flash
  */
-uint32_t sf_write_count;
+uint32_t sf_write_count = 0;
 /** Array used for transferring the logs to USART */
-char serial_transfer_array[SF_TRANSFER_SIZE * 2][10];
+char serial_transfer_array[SF_TRANSFER_SIZE * 2][10] = {{0,0}};;
 /** Array used for receiving commands via USART */
-volatile uint8_t rx_buffer[CMD_RX_BUFFER_LENGTH];
+volatile uint8_t rx_buffer[CMD_RX_BUFFER_LENGTH] = {0};
 /** Storage for  message that will be send via USART */
 static char transfer_message[INFO_BUFFER_SIZE] = {"Module ready \r\n"};
 
@@ -126,7 +308,7 @@ void rtc_overflow_callback(void)
 	 * modify the flag to indicate that the values can be written to the
 	 * non-volatile media.
 	 */
-	if (rtc_ticks > SF_TRANSFER_SIZE) {
+	if (rtc_ticks >= SF_TRANSFER_SIZE) {
 		rtc_ticks = 0;
 		adc_sram_dma_transfer_done = true;
 	}
@@ -145,7 +327,7 @@ void usart_read_callback(const struct usart_module *const usart_module)
 {
 	sf_read_request_received = true;
 
-	if (rx_buffer[0] == '1') {
+	if (rx_buffer[0] == CMD_GET_ALL_LOGS) {
 		read_entire_logs = true;
 	}
 }
@@ -296,7 +478,7 @@ void init_rtc(void)
  * Configures the event system and RTC to trigger ADC conversions
  * on RTC overflow.
  */
-void configure_transfer_event(void)
+void configure_rtc_event_to_trigger_adc(void)
 {
 	init_success = true;
 	struct rtc_count_events rtc_event_config;
@@ -327,7 +509,7 @@ void configure_transfer_event(void)
  */
 void enable_transfer_trigger(void)
 {
-	rtc_count_set_period(&rtc_inst, 1);
+	rtc_count_set_period(&rtc_inst, 32767);
 	rtc_count_enable(&rtc_inst);
 }
 
@@ -349,31 +531,6 @@ static void configure_dma_resource_usart_tx(struct dma_resource *resource)
 	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 
 	dma_allocate(resource, &config);
-}
-
-/**
- * \brief Configures the given DMA resource for serial transfer
- *
- * Configures the DMA resource to use transmission via SERCOM3 as the
- * trigger. A beat transfer is performed on each trigger.
- *
- * \param descriptor Pointer to the DMA descriptor
- */
-static void setup_transfer_descriptor_adc_usart_tx(DmacDescriptor *descriptor)
-{
-	struct dma_descriptor_config descriptor_config;
-
-	dma_descriptor_get_config_defaults(&descriptor_config);
-
-	descriptor_config.beat_size = DMA_BEAT_SIZE_BYTE;
-	descriptor_config.dst_increment_enable = false;
-	descriptor_config.block_transfer_count = sizeof(transfer_message);
-	descriptor_config.source_address = (uint32_t)transfer_message +
-		sizeof(transfer_message);
-	descriptor_config.destination_address
-		= (uint32_t)(&usart_instance.hw->USART.DATA.reg);
-
-	dma_descriptor_create(descriptor, &descriptor_config);
 }
 
 /**
@@ -519,9 +676,10 @@ void sf_store_logs(float *envir_temp_sf_buff)
 	if (STATUS_OK != status) {
 		init_success = false;
 	}
-
+	else {
 	/* Indicate that we've stored n readings into the serial flash */
 	sf_write_count += SF_TRANSFER_SIZE;
+	}
 }
 
 /**
@@ -568,7 +726,7 @@ void sf_access_get_status(void)
  * the last address written and a flag which indicates whether the serial
  * flash is empty.
  */
-void sf_access_set_status()
+void sf_access_set_status(void)
 {
 	/*
 	 * Erase the first 4K block where the serial flash management data
@@ -586,7 +744,7 @@ void sf_access_set_status()
  *
  * Read all temperature readings from the serial flash.
  */
-void sf_read_all_logs()
+void sf_read_all_logs(void)
 {
 	uint8_t j = 0;
 	uint8_t k = 0;
@@ -596,6 +754,7 @@ void sf_read_all_logs()
 	/* Clear the flag before sending the data */
 	read_entire_logs = false;
 
+	memset(transfer_message,0,sizeof(transfer_message));
 	sprintf(transfer_message, "\r\n%lu logs will be read\r\n",
 		sf_access_status.start_addr_last_written + SF_TRANSFER_SIZE);
 	/* Wait for the ongoing DMA transfer to complete */
@@ -604,7 +763,7 @@ void sf_read_all_logs()
 	/* Make the flag true and initiate an SRAM to USART transfer */
 	usart_dma_transfer_triggered = true;
 	configure_sram_usart_dma_transfer(&uart_tx_dma_descriptor,
-		&transfer_message[0], sizeof(transfer_message));
+		&transfer_message[0], strlen(transfer_message));
 	dma_start_transfer_job(&dma_resource_usart_tx);
 
 	/*
@@ -647,16 +806,27 @@ void sf_read_all_logs()
 
 /**
  * \brief Main application routine
+ * This application demonstrates a data logger based on SAM D21 Xplained Pro.
+ * The environment temperature is read using 103 AP-2 thermistor from Semitec.
+ * The readings are then stored in the serial flash AT25FD081A on the
+ * SAM D21 Xplained Pro.
+ * Serial communication happens via the Virtual COM Port provided by the
+ * Embedded Debugger (EDBG) available on the SAM D21 Xplained Pro.
+ * The user can access the logs via a terminal application on a PC,
+ * configured at 115200-N-8-1. The COM port number should be chosen depending
+ * on the port number assigned to the virtual COM port.
  */
 int main(void)
 {
+	bool adc_sram_dma_flag = 0;
+
 	system_init();
 	configure_adc();
 	configure_usart();
 	configure_usart_callbacks();
 	init_rtc();
 	configure_rtc_callbacks();
-	configure_transfer_event();
+	configure_rtc_event_to_trigger_adc();
 	serial_flash_at25dfx_init();
 	at25dfx_chip_set_global_sector_protect(&at25dfx_chip, false);
 	sf_access_get_status();
@@ -666,6 +836,7 @@ int main(void)
 	 * the logs. If the first byte is not zero, we haven't written anything yet.
 	 */
 	if (sf_access_status.sf_is_clean) {
+		sf_write_count = 0;
 		sf_access_status.sf_is_clean = false;
 		sf_access_status.start_addr_last_written = 0;
 		at25dfx_chip_erase_block(&at25dfx_chip, SF_4K_BLOCK1_START,
@@ -680,18 +851,32 @@ int main(void)
 	configure_dma_resource_adc(&dma_resource_adc_to_sram);
 	configure_dma_resource_usart_tx(&dma_resource_usart_tx);
 	setup_transfer_descriptor_adc(&adc_to_sram_dma_descriptor);
-	setup_transfer_descriptor_adc_usart_tx(&uart_tx_dma_descriptor);
+	configure_sram_usart_dma_transfer(&uart_tx_dma_descriptor,
+		&transfer_message[0], strlen(transfer_message));
+		
 	dma_add_descriptor(&dma_resource_adc_to_sram,
 		&adc_to_sram_dma_descriptor);
 	dma_add_descriptor(&dma_resource_usart_tx, &uart_tx_dma_descriptor);
+	/*
+	 * Register the callback function to be invoked
+	 * when an SRAM to UART DMA transfer is complete
+	 */
 	dma_register_callback(&dma_resource_usart_tx,
 		transfer_done_usart_tx_dma,
-		DMA_CALLBACK_TRANSFER_DONE);
-	dma_enable_callback(&dma_resource_adc_to_sram,
 		DMA_CALLBACK_TRANSFER_DONE);
 	dma_enable_callback(&dma_resource_usart_tx,
 		DMA_CALLBACK_TRANSFER_DONE);
 
+	sprintf(transfer_message,
+		"\r\nPress 1 to read all logs. Press any other key to read recent\r\n"
+		);
+	/* Make the flag true and initiate an SRAM to
+		* USART transfer
+		*/
+	usart_dma_transfer_triggered = true;
+	configure_sram_usart_dma_transfer(
+		&uart_tx_dma_descriptor,
+		&transfer_message[0], sizeof(transfer_message));
 	/* Send the init message via USART */
 	dma_start_transfer_job(&dma_resource_usart_tx);
 
@@ -707,6 +892,7 @@ int main(void)
 	/* Listen to USART for read command */
 	usart_read_buffer_job(&usart_instance,
 	(uint8_t *)rx_buffer, CMD_RX_BUFFER_LENGTH);
+
 	/* Select the sleep mode as Idle sleep */
 	system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_0);
 
@@ -723,6 +909,11 @@ int main(void)
 		 * The CPU is waken up by an Interrupt
 		 * Check who needs a service
 		 */
+		/* Disable interrupts to just before reading the flag */
+		system_interrupt_enter_critical_section();
+		adc_sram_dma_flag = adc_sram_dma_transfer_done;
+		system_interrupt_leave_critical_section();
+		
 		if (adc_sram_dma_transfer_done) {
 			uint8_t j = 0;
 
@@ -781,7 +972,10 @@ int main(void)
 
 			sf_access_set_status();
 			sf_store_logs(envir_temp_sf);
-			adc_sram_dma_transfer_done = false;
+			
+			system_interrupt_enter_critical_section();
+			adc_sram_dma_transfer_done = adc_sram_dma_flag;
+			system_interrupt_leave_critical_section();
 		}
 
 		/*
@@ -794,8 +988,10 @@ int main(void)
 			} else {
 				uint8_t j = 0;
 				uint8_t k = 0;
-				char envir_temp_sf_readback[SF_TRANSFER_SIZE *2]= {0};
+				char envir_temp_sf_readback[SF_TRANSFER_SIZE *
+					BYTES_USED_FOR_A_READING]= {0};
 
+				memset(transfer_message,0,sizeof(transfer_message));
 				sprintf(transfer_message,
 					"\r\nRecent %d readings\r\n",
 					SF_TRANSFER_SIZE);
@@ -808,7 +1004,7 @@ int main(void)
 				usart_dma_transfer_triggered = true;
 				configure_sram_usart_dma_transfer(
 					&uart_tx_dma_descriptor,
-					&transfer_message[0], sizeof(transfer_message));
+					&transfer_message[0], strlen(transfer_message));
 				dma_start_transfer_job(&dma_resource_usart_tx);
 
 				sf_get_recent_logs(&envir_temp_sf_readback[0]);
@@ -833,6 +1029,22 @@ int main(void)
 					&uart_tx_dma_descriptor,
 					&serial_transfer_array[0][0],
 				sizeof(serial_transfer_array));
+				dma_start_transfer_job(&dma_resource_usart_tx);
+				
+				memset(transfer_message,0,sizeof(transfer_message));
+				sprintf(transfer_message,
+					"\r\nPress 1 to read all logs. Press any other key to read recent \r\n"
+					);
+				/* Wait for the ongoing DMA transfer to complete*/
+				while (usart_dma_transfer_triggered) {
+				};
+				/* Make the flag true and initiate an SRAM to
+				 * USART transfer
+				 */
+				usart_dma_transfer_triggered = true;
+				configure_sram_usart_dma_transfer(
+					&uart_tx_dma_descriptor,
+					&transfer_message[0], sizeof(transfer_message));
 				dma_start_transfer_job(&dma_resource_usart_tx);
 
 				sf_read_request_received = false;
