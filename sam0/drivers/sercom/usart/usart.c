@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21 SERCOM USART Driver
+ * \brief SAM D20/D21/R21 SERCOM USART Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -311,6 +311,7 @@ enum status_code usart_init(
 	struct system_pinmux_config pin_conf;
 	system_pinmux_get_config_defaults(&pin_conf);
 	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	pin_conf.input_pull = SYSTEM_PINMUX_PIN_PULL_NONE;
 
 	uint32_t pad_pinmuxes[] = {
 			config->pinmux_pad0, config->pinmux_pad1,

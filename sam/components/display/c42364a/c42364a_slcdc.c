@@ -3,7 +3,7 @@
  *
  * \brief Management of C42364A LCD Glass component.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -65,9 +65,13 @@
 #endif
 
 /** Definition of length of symbols */
-#define NUM_SYMBOLS_D     6
+#define NUM_SYMBOLS_D     4
 #define SYMBOL_D_LEN      7
+#if SAM4CP
 #define NUM_SYMBOLS_A     6
+#else
+#define NUM_SYMBOLS_A     5
+#endif
 #define SYMBOL_A_LEN      14
 
 /* Symbol pixel array definition */
@@ -76,24 +80,30 @@ const enum c42364a_symbol_pixel symbol_d1[SYMBOL_D_LEN] = C42364A_PATTERN_SYMBOL
 const enum c42364a_symbol_pixel symbol_d2[SYMBOL_D_LEN] = C42364A_PATTERN_SYMBOL_D2;
 const enum c42364a_symbol_pixel symbol_d3[SYMBOL_D_LEN] = C42364A_PATTERN_SYMBOL_D3;
 
-const enum c42364a_symbol_pixel symbol_d[NUM_SYMBOLS_D][SYMBOL_D_LEN] = {C42364A_PATTERN_SYMBOL_D0, \
-                                                   C42364A_PATTERN_SYMBOL_D1, \
-                                                   C42364A_PATTERN_SYMBOL_D2, \
-                                                   C42364A_PATTERN_SYMBOL_D3};
-
+const enum c42364a_symbol_pixel symbol_d[NUM_SYMBOLS_D][SYMBOL_D_LEN] = {
+		C42364A_PATTERN_SYMBOL_D0,
+		C42364A_PATTERN_SYMBOL_D1,
+		C42364A_PATTERN_SYMBOL_D2,
+		C42364A_PATTERN_SYMBOL_D3};
+#if SAM4CP
 const enum c42364a_symbol_pixel symbol_a1[SYMBOL_A_LEN] = C42364A_PATTERN_SYMBOL_A1;
+#endif
 const enum c42364a_symbol_pixel symbol_a2[SYMBOL_A_LEN] = C42364A_PATTERN_SYMBOL_A2;
 const enum c42364a_symbol_pixel symbol_a3[SYMBOL_A_LEN] = C42364A_PATTERN_SYMBOL_A3;
 const enum c42364a_symbol_pixel symbol_a4[SYMBOL_A_LEN] = C42364A_PATTERN_SYMBOL_A4;
 const enum c42364a_symbol_pixel symbol_a5[SYMBOL_A_LEN] = C42364A_PATTERN_SYMBOL_A5;
 const enum c42364a_symbol_pixel symbol_a6[SYMBOL_A_LEN] = C42364A_PATTERN_SYMBOL_A6;
 
-const enum c42364a_symbol_pixel symbol_a[NUM_SYMBOLS_A][SYMBOL_A_LEN] = {C42364A_PATTERN_SYMBOL_A1, \
-                                                   C42364A_PATTERN_SYMBOL_A2, \
-                                                   C42364A_PATTERN_SYMBOL_A3, \
-                                                   C42364A_PATTERN_SYMBOL_A4, \
-                                                   C42364A_PATTERN_SYMBOL_A5, \
-                                                   C42364A_PATTERN_SYMBOL_A6};
+
+const enum c42364a_symbol_pixel symbol_a[NUM_SYMBOLS_A][SYMBOL_A_LEN] = {
+#if SAM4CP
+		C42364A_PATTERN_SYMBOL_A1,
+#endif
+		C42364A_PATTERN_SYMBOL_A2,
+		C42364A_PATTERN_SYMBOL_A3,
+		C42364A_PATTERN_SYMBOL_A4,
+		C42364A_PATTERN_SYMBOL_A5,
+		C42364A_PATTERN_SYMBOL_A6};
 
 /* Symbol plot value definition */
 const uint8_t plot_number[10] = {C42364A_PLOT_NUMBER_0, C42364A_PLOT_NUMBER_1,
@@ -300,7 +310,7 @@ void c42364a_show_text(const uint8_t *data)
 
 void c42364a_clear_text(void)
 {
-	c42364a_write_alphanum_packet("     ");
+	c42364a_write_alphanum_packet((const uint8_t*)"     ");
 }
 
 void c42364a_clear_icon(uint8_t icon_com, uint8_t icon_seg)
@@ -396,7 +406,7 @@ void c42364a_show_numeric_dec(int32_t value)
 
 void c42364a_clear_numeric_dec(void)
 {
-	c42364a_write_num_packet("    ");
+	c42364a_write_num_packet((const uint8_t*)"    ");
 }
 
 void c42364a_show_battery(enum c42364a_battery_value val)

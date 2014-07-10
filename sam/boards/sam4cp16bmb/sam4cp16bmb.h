@@ -3,7 +3,7 @@
  *
  * \brief SAM4CP16BMB Board Definition.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -79,11 +79,6 @@
 #endif
 
 
-/** PLC Timers Configuration */
-#define ID_TC_BCN       ID_TC3
-#define TC_BCN          TC1
-#define TC_BCN_CHN      0
-#define TC_BCN_Handler  TC3_Handler
 
 /* @} */
 
@@ -154,6 +149,35 @@
 #define PIN_LED_1_TYPE   PIO_OUTPUT_1
 #define PIN_LED_1_ATTR   PIO_DEFAULT
 /* @} */
+
+/** Push button #0 definition. Attributes = pull-up + debounce + interrupt on rising edge. */
+#define PUSHBUTTON_1_NAME    "WAKEUP"
+#define GPIO_PUSH_BUTTON_1   (PIO_PB3_IDX)
+#define GPIO_PUSH_BUTTON_1_FLAGS    (PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE)
+
+#define PIN_PUSHBUTTON_1    {PIO_PB3, PIOB, ID_PIOB, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE}	
+#define PIN_PUSHBUTTON_1_MASK PIO_PB3
+#define PIN_PUSHBUTTON_1_PIO PIOB
+#define PIN_PUSHBUTTON_1_ID ID_PIOB
+#define PIN_PUSHBUTTON_1_TYPE PIO_INPUT
+#define PIN_PUSHBUTTON_1_ATTR PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE
+
+/** Push button #1 definition. Attributes = pull-up + debounce + interrupt on falling edge. */
+#define PUSHBUTTON_2_NAME    "TMP0"
+#define GPIO_PUSH_BUTTON_2   (PIO_PC12_IDX)
+#define GPIO_PUSH_BUTTON_2_FLAGS    (PIO_INPUT | PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE)
+
+#define PIN_PUSHBUTTON_2    {PIO_PC12, PIOC, ID_PIOC, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE}
+#define PIN_PUSHBUTTON_2_MASK PIO_PC12
+#define PIN_PUSHBUTTON_2_PIO PIOC
+#define PIN_PUSHBUTTON_2_ID ID_PIOC
+#define PIN_PUSHBUTTON_2_TYPE PIO_INPUT
+#define PIN_PUSHBUTTON_2_ATTR PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE
+
+/** List of all push button definitions. */
+#define PINS_PUSHBUTTONS    PIN_PUSHBUTTON_1, PIN_PUSHBUTTON_2
+
+
 
 /**
  * \name Voltage Monitor pins definition
@@ -263,58 +287,6 @@
 /* @} */
 
 /**
-* \name PPLC control pins definition
-* @{
-*/
-/* Select the SPI module that PPLC is connected to */
-#define PPLC_SPI_MODULE     SPI0
-
-/* Chip select used by PPLC internal peripheral  */
-#define PPLC_CS             0
-
-/* Interruption pin used by PPLC internal peripheral */
-#define PPLC_INT_GPIO   (PIO_PB30_IDX)
-#define PPLC_INT_FLAGS (IOPORT_MODE_DEBOUNCE)
-#define PPLC_INT_SENSE (IOPORT_SENSE_FALLING)
-
-#define PPLC_INT       {PIO_PB30, PIOB, ID_PIOB, PIO_INPUT, \
-		PIO_DEBOUNCE | PIO_IT_FALL_EDGE}
-#define PPLC_INT_MASK  PIO_PB30
-#define PPLC_INT_PIO   PIOB
-#define PPLC_INT_ID    ID_PIOB
-#define PPLC_INT_TYPE  PIO_INPUT
-#define PPLC_INT_ATTR  (PIO_DEBOUNCE | PIO_IT_FALL_EDGE)
-#define PPLC_INT_IRQn  PIOB_IRQn
-
-/* Asynchronous PPLC Reset pin definition */
-#define PPLC_ARST_GPIO             (PIO_PC6_IDX)
-#define PPLC_ARST_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_LOW
-#define PPLC_ARST_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
-
-/* Wrapper macros to ensure common naming across all boards */
-#define PPLC_ARST       {PIO_PC6, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
-#define PPLC_ARST_MASK   PIO_PC6
-#define PPLC_ARST_PIO    PIOC
-#define PPLC_ARST_ID     ID_PIOC
-#define PPLC_ARST_TYPE   PIO_OUTPUT_1
-#define PPLC_ARST_ATTR   PIO_DEFAULT
-
-/* Synchronous PPLC Reset pin definition */
-#define PPLC_SRST_GPIO             (PIO_PC7_IDX)
-#define PPLC_SRST_ACTIVE_LEVEL    IOPORT_PIN_LEVEL_LOW
-#define PPLC_SRST_INACTIVE_LEVEL  IOPORT_PIN_LEVEL_HIGH
-
-/* Wrapper macros to ensure common naming across all boards */
-#define PPLC_SRST       {PIO_PC7, PIOC, ID_PIOC, PIO_OUTPUT_1, PIO_DEFAULT}
-#define PPLC_SRST_MASK   PIO_PC7
-#define PPLC_SRST_PIO    PIOC
-#define PPLC_SRST_ID     ID_PIOC
-#define PPLC_SRST_TYPE   PIO_OUTPUT_1
-#define PPLC_SRST_ATTR   PIO_DEFAULT
-
-/* @} */
-
-/**
  * \name TWIx pin definitions
  * @{
  */
@@ -366,7 +338,7 @@
  */
 #define XP_ADC_GPIO   PIO_PA4_IDX
 /* @} */
-
+   
 /**
  * \name SLP Xplain PRO pin definition
  * @{

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAMD21 USB Driver.
+ * \brief SAM USB Driver.
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -67,6 +67,7 @@
  */
 #define  USB_EP_DIR_OUT       0x00
 
+#if SAMD21
 /**
  * \name Macros for USB device those are not realized in head file
  *
@@ -98,6 +99,7 @@
 #define USB_DEVICE_EPSTATUSCLR_STALLRQ0     USB_DEVICE_EPSTATUSCLR_STALLRQ(1)
 #define USB_DEVICE_EPSTATUSCLR_STALLRQ1     USB_DEVICE_EPSTATUSCLR_STALLRQ(2)
 /** @} */
+#endif
 
 /**
  * \name USB SRAM data containing pipe descriptor table
@@ -1444,14 +1446,14 @@ enum status_code usb_device_endpoint_set_config(struct usb_module *module_inst,
 		case USB_DEVICE_ENDPOINT_TYPE_ISOCHRONOUS:
 			if (ep_bank) {
 				if ((module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg & USB_DEVICE_EPCFG_EPTYPE1_Msk) == 0){
-					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg = USB_DEVICE_EPCFG_EPTYPE1(2);
+					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg |= USB_DEVICE_EPCFG_EPTYPE1(2);
 					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSCLR.reg = USB_DEVICE_EPSTATUSCLR_BK1RDY;
 				} else {
 					return STATUS_ERR_DENIED;
 				}
 			} else {
 				if ((module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg & USB_DEVICE_EPCFG_EPTYPE0_Msk) == 0){
-					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg = USB_DEVICE_EPCFG_EPTYPE0(2);
+					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg |= USB_DEVICE_EPCFG_EPTYPE0(2);
 					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSSET.reg = USB_DEVICE_EPSTATUSSET_BK0RDY;
 				} else {
 					return STATUS_ERR_DENIED;
@@ -1462,14 +1464,14 @@ enum status_code usb_device_endpoint_set_config(struct usb_module *module_inst,
 		case USB_DEVICE_ENDPOINT_TYPE_BULK:
 			if (ep_bank) {
 				if ((module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg & USB_DEVICE_EPCFG_EPTYPE1_Msk) == 0){
-					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg = USB_DEVICE_EPCFG_EPTYPE1(3);
+					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg |= USB_DEVICE_EPCFG_EPTYPE1(3);
 					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSCLR.reg = USB_DEVICE_EPSTATUSCLR_BK1RDY;
 				} else {
 					return STATUS_ERR_DENIED;
 				}
 			} else {
 				if ((module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg & USB_DEVICE_EPCFG_EPTYPE0_Msk) == 0){
-					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg = USB_DEVICE_EPCFG_EPTYPE0(3);
+					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg |= USB_DEVICE_EPCFG_EPTYPE0(3);
 					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSSET.reg = USB_DEVICE_EPSTATUSSET_BK0RDY;
 				} else {
 					return STATUS_ERR_DENIED;
@@ -1480,14 +1482,14 @@ enum status_code usb_device_endpoint_set_config(struct usb_module *module_inst,
 		case USB_DEVICE_ENDPOINT_TYPE_INTERRUPT:
 			if (ep_bank) {
 				if ((module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg & USB_DEVICE_EPCFG_EPTYPE1_Msk) == 0){
-					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg = USB_DEVICE_EPCFG_EPTYPE1(4);
+					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg |= USB_DEVICE_EPCFG_EPTYPE1(4);
 					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSCLR.reg = USB_DEVICE_EPSTATUSCLR_BK1RDY;
 				} else {
 					return STATUS_ERR_DENIED;
 				}
 			} else {
 				if ((module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg & USB_DEVICE_EPCFG_EPTYPE0_Msk) == 0){
-					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg = USB_DEVICE_EPCFG_EPTYPE0(4);
+					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg |= USB_DEVICE_EPCFG_EPTYPE0(4);
 					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSSET.reg = USB_DEVICE_EPSTATUSSET_BK0RDY;
 				} else {
 					return STATUS_ERR_DENIED;

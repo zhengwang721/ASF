@@ -77,6 +77,9 @@ extern "C" {
 #elif defined(CONF_GFX_ILI9325_FTM280C34D)
 # include "gfx_ili9325_ftm280c34d.h"
 # include "gfx_generic.h"
+#elif defined(CONF_GFX_ILI93XX)
+# include "gfx_ili93xx.h"
+# include "gfx_generic.h"
 #else
 #  error "Configuration for display controller/panel not selected"
 #endif

@@ -3,7 +3,7 @@
  *
  * \brief Default configuration of C42364A LCD Segment Map.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -139,13 +139,6 @@
 #define C42364A_B3_SEG_NUM            30
 #define C42364A_A2A_SEG_NUM           29
 #define C42364A_A2G_SEG_NUM           28
-#define C42364A_A1H_SEG_NUM           27
-#define C42364A_B2_SEG_NUM            26
-#define C42364A_A1A_SEG_NUM           25
-#define C42364A_A1G_SEG_NUM           24
-#define C42364A_A0H_SEG_NUM           22
-#define C42364A_B0_SEG_NUM            21
-#define C42364A_A0A_SEG_NUM           20
 
 /* The LCD segment map number */
 #define C42364A_SEGMAP_NUM_0     0xff720000
@@ -165,6 +158,10 @@
 #define C42364A_ICON_ERROR          1, 4
 #define C42364A_ICON_CHINESE        2, 4
 #define C42364A_ICON_ARM            3, 4
+#define C42364A_ICON_DOT_1          0, 46
+#define C42364A_ICON_DOT_2          3, 17
+#define C42364A_ICON_DOT_3          3, 15
+#define C42364A_ICON_DOT_4          3, 9
 #define C42364A_ICON_BAT_LEVEL_1    0, 37
 #define C42364A_ICON_BAT_LEVEL_2    0, 27
 #define C42364A_ICON_BAT_LEVEL_3    0, 42
@@ -215,6 +212,7 @@
 #define C42364A_A0H_SEG_NUM           14
 #define C42364A_B0_SEG_NUM            34
 #define C42364A_A0A_SEG_NUM           35
+
 /* The LCD segment map number */
 #define C42364A_SEGMAP_NUM_0     0x9F73FFF8
 #define C42364A_SEGMAP_NUM_1     0x0FDFC

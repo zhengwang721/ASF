@@ -78,7 +78,7 @@ typedef enum _pio_type {
 	PIO_NOT_A_PIN   = PIO_TYPE_NOT_A_PIN,
 	PIO_PERIPH_A    = PIO_TYPE_PIO_PERIPH_A,
 	PIO_PERIPH_B    = PIO_TYPE_PIO_PERIPH_B,
-#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
+#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM)
 	PIO_PERIPH_C    = PIO_TYPE_PIO_PERIPH_C,
 	PIO_PERIPH_D    = PIO_TYPE_PIO_PERIPH_D,
 #endif
@@ -152,7 +152,7 @@ void pio_set_multi_driver(Pio *p_pio, const uint32_t ul_mask,
 		const uint32_t ul_multi_driver_enable);
 uint32_t pio_get_multi_driver_status(const Pio *p_pio);
 
-#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 void pio_pull_down(Pio *p_pio, const uint32_t ul_mask,
 		const uint32_t ul_pull_down_enable);
 #endif
@@ -162,12 +162,12 @@ void pio_disable_output_write(Pio *p_pio, const uint32_t ul_mask);
 uint32_t pio_get_output_write_status(const Pio *p_pio);
 void pio_sync_output_write(Pio *p_pio, const uint32_t ul_mask);
 
-#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 void pio_set_schmitt_trigger(Pio *p_pio, const uint32_t ul_mask);
 uint32_t pio_get_schmitt_trigger(const Pio *p_pio);
 #endif
 
-void pio_configure_interrupt(Pio *p_pio, const uint32_t ul_mask, 
+void pio_configure_interrupt(Pio *p_pio, const uint32_t ul_mask,
 		const uint32_t ul_attr);
 void pio_enable_interrupt(Pio *p_pio, const uint32_t ul_mask);
 void pio_disable_interrupt(Pio *p_pio, const uint32_t ul_mask);
@@ -204,10 +204,10 @@ uint32_t pio_configure_pin(uint32_t ul_pin, const uint32_t ul_flags);
 void pio_set_pin_group_high(Pio *p_pio, uint32_t ul_mask);
 void pio_set_pin_group_low(Pio *p_pio, uint32_t ul_mask);
 void pio_toggle_pin_group(Pio *p_pio, uint32_t ul_mask);
-uint32_t pio_configure_pin_group(Pio *p_pio, uint32_t ul_mask, 
+uint32_t pio_configure_pin_group(Pio *p_pio, uint32_t ul_mask,
 		const uint32_t ul_flags);
 
-#if (SAM4C || SAM4CP)
+#if (SAM4C || SAM4CP || SAM4CM)
 enum pio_io_drive_mode {
 	PIO_IO_DRIVE_HIGH = 0,
 	PIO_IO_DRIVE_MEDIUM,

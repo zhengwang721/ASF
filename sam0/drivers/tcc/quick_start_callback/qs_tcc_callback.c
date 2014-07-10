@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 TCC - Timer Counter for Control Applications Callback Driver Quick Start
+ * \brief SAM D21/R21 TCC - Timer Counter for Control Applications Callback Driver Quick Start
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -42,9 +42,9 @@
 #include <asf.h>
 #include <conf_quick_start_callback.h>
 
-static void _configure_tcc(void);
-static void _configure_tcc_callbacks(void);
-static void _tcc_callback_to_change_duty_cycle(
+static void configure_tcc(void);
+static void configure_tcc_callbacks(void);
+static void tcc_callback_to_change_duty_cycle(
 		struct tcc_module *const module_inst);
 
 
@@ -53,7 +53,7 @@ struct tcc_module tcc_instance;
 //! [module_inst]
 
 //! [callback_funcs]
-static void _tcc_callback_to_change_duty_cycle(
+static void tcc_callback_to_change_duty_cycle(
 		struct tcc_module *const module_inst)
 {
 	static uint32_t delay = 10;
@@ -65,12 +65,14 @@ static void _tcc_callback_to_change_duty_cycle(
 	delay = 10;
 	i = (i + 0x0800) & 0xFFFF;
 	tcc_set_compare_value(module_inst,
-			TCC_MATCH_CAPTURE_CHANNEL_0 + CONF_PWM_CHANNEL, i + 1);
+			(enum tcc_match_capture_channel)
+					(TCC_MATCH_CAPTURE_CHANNEL_0 + CONF_PWM_CHANNEL),
+			i + 1);
 }
 //! [callback_funcs]
 
 //! [setup]
-static void _configure_tcc(void)
+static void configure_tcc(void)
 {
 	//! [setup_config]
 	struct tcc_config config_tcc;
@@ -100,18 +102,18 @@ static void _configure_tcc(void)
 	//! [setup_enable]
 }
 
-static void _configure_tcc_callbacks(void)
+static void configure_tcc_callbacks(void)
 {
 	//! [setup_register_callback]
 	tcc_register_callback(
 			&tcc_instance,
-			_tcc_callback_to_change_duty_cycle,
-			TCC_CALLBACK_CHANNEL_0 + CONF_PWM_CHANNEL);
+			tcc_callback_to_change_duty_cycle,
+			(enum tcc_callback)(TCC_CALLBACK_CHANNEL_0 + CONF_PWM_CHANNEL));
 	//! [setup_register_callback]
 
 	//! [setup_enable_callback]
 	tcc_enable_callback(&tcc_instance,
-			TCC_CALLBACK_CHANNEL_0 + CONF_PWM_CHANNEL);
+			(enum tcc_callback)(TCC_CALLBACK_CHANNEL_0 + CONF_PWM_CHANNEL));
 	//! [setup_enable_callback]
 }
 //! [setup]
@@ -121,8 +123,8 @@ int main(void)
 	system_init();
 
 //! [setup_init]
-	_configure_tcc();
-	_configure_tcc_callbacks();
+	configure_tcc();
+	configure_tcc_callbacks();
 //! [setup_init]
 
 //! [main]
