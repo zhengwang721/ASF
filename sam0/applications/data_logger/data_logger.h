@@ -60,7 +60,7 @@ extern "C" {
 
 /** We expect a single byte command through USART */
 #define CMD_RX_BUFFER_LENGTH                 1
-#define CMD_GET_ALL_LOGS					 '1'
+#define CMD_GET_ALL_LOGS                     '1'
 
 /**
  * Define the number of bytes transferred into the serial flash at a time.
@@ -68,11 +68,13 @@ extern "C" {
  * on the transfer size
  */
 #define SF_TRANSFER_SIZE                     10
+
 /** Beat count for the DMA resource which transfers data from ADC to SRAM.
  * This number should be the same as SF_TRANSFER_SIZE, but putting it
  * as a macro for readability.
  */
 #define NUM_OF_BEATS_IN_ADC_SRAM_TRANSFER    10
+
 /**
  * The number of locations written, before we start again from address 0
  * in a 4K block of the serial flash
@@ -99,7 +101,7 @@ extern "C" {
 #define THERM_ADC_RESOLUTION                 16
 #define THERM_ADC_REF_VOLT                   (float)(3.3 / 1.48)
 #define THERM_ADC_VOLTS_PER_BIT              ((float)THERM_ADC_REF_VOLT / \
-												(pow(2, THERM_ADC_RESOLUTION)))
+	(pow(2, THERM_ADC_RESOLUTION)))
 /** Series resistor from VCC to thermistor */
 #define THERM_SERIES_RESISTOR                10000
 /** VCC is used for exciting the thermistor */
