@@ -411,7 +411,6 @@ void configure_dma_resource_adc(struct dma_resource *resource)
 
 	dma_get_config_defaults(&config);
 
-	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
 	config.peripheral_trigger = ADC_DMAC_ID_RESRDY;
 	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 
@@ -505,11 +504,11 @@ void configure_rtc_event_to_trigger_adc(void)
  * \brief Enables the timer which triggers ADC conversion
  *
  * Set the period and enable the RTC to trigger ADC conversion
- * periodically..
+ * periodically.
  */
 void enable_transfer_trigger(void)
 {
-	rtc_count_set_period(&rtc_inst, 32767);
+	rtc_count_set_period(&rtc_inst, 1024);
 	rtc_count_enable(&rtc_inst);
 }
 
@@ -526,7 +525,6 @@ static void configure_dma_resource_usart_tx(struct dma_resource *resource)
 	struct dma_resource_config config;
 
 	dma_get_config_defaults(&config);
-	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
 	config.peripheral_trigger = SERCOM3_DMAC_ID_TX;
 	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 
