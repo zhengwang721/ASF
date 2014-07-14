@@ -437,8 +437,8 @@ void system_gclk_chan_lock(
 	/* Select the requested generator channel */
 	*((uint8_t*)&GCLK->CLKCTRL.reg) = channel;
 
-	/* Enable the generic clock */
-	GCLK->CLKCTRL.reg |= GCLK_CLKCTRL_CLKEN;
+	/* Lock the generic clock */
+	GCLK->CLKCTRL.reg |= GCLK_CLKCTRL_WRTLOCK;
 
 	system_interrupt_leave_critical_section();
 }
