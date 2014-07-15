@@ -314,7 +314,7 @@ void system_gclk_chan_set_config(
 	system_gclk_chan_disable(channel);
 	
 	/* Select the correct generator */
-	*((uint8_t*)&GCLK->PCHCTRL[channel].reg) = GCLK_PCHCTRL_GEN[config->source_generator];
+	*((uint8_t*)&GCLK->PCHCTRL[channel].reg) = GCLK_PCHCTRL_GEN(config->source_generator);
 
 	
 }

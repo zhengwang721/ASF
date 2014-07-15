@@ -506,9 +506,9 @@ enum system_clock_apb_bus {
 	SYSTEM_CLOCK_APB_APBB,
 	/** Peripheral bus C on the APB bus. */
 	SYSTEM_CLOCK_APB_APBC,
-	/** Peripheral bus C on the APB bus. */
+	/** Peripheral bus D on the APB bus. */
 	SYSTEM_CLOCK_APB_APBD,
-	/** Peripheral bus C on the APB bus. */
+	/** Peripheral bus E on the APB bus. */
 	SYSTEM_CLOCK_APB_APBE,
 };
 
@@ -543,8 +543,6 @@ struct system_clock_source_xosc32k_config {
 	enum system_clock_external external_clock;
 	/** Crystal oscillator start-up time */
 	enum system_xosc32k_startup startup_time;
-	/** Enable automatic amplitude control */
-	bool auto_gain_control;
 	/** Enable 1kHz output */
 	bool enable_1khz_output;
 	/** Enable 32kHz output */
@@ -715,7 +713,6 @@ static inline void system_clock_source_xosc32k_get_config_defaults(
 
 	config->external_clock      = SYSTEM_CLOCK_EXTERNAL_CRYSTAL;
 	config->startup_time        = SYSTEM_XOSC32K_STARTUP_16384;
-	config->auto_gain_control   = false;
 	config->frequency           = 32768UL;
 	config->enable_1khz_output  = false;
 	config->enable_32khz_output = true;
@@ -1032,7 +1029,7 @@ static inline uint32_t system_low_power_clock_get_hz(void)
  *
  * \return Current CPU frequency in Hz.
  */
-static inline uint32_t system_cpu_clock_get_hz(void)
+static inline uint32_t system_backup_clock_get_hz(void)
 {
 	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) >> MCLK->BUPDIV.reg);
 

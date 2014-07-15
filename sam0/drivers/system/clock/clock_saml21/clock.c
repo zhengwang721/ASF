@@ -158,7 +158,7 @@ uint32_t system_clock_source_get_hz(
 		return _system_clock_inst.xosc.frequency;
 		
 	case SYSTEM_CLOCK_SOURCE_OSC16M:
-		return OSCCTRL->OSC16M.bit.FSEL;
+		return OSCCTRL->OSC16MCTRL.bit.FSEL;
 		
 	case SYSTEM_CLOCK_SOURCE_OSC32K:
 		return 32768UL;
@@ -209,14 +209,14 @@ uint32_t system_clock_source_get_hz(
 void system_clock_source_osc16m_set_config(
 		struct system_clock_source_osc16m_config *const config)
 {
-	OSCCTRL_OSC16MCTRL_Type temp = OSCCTRL->OSC16M;
+	OSCCTRL_OSC16MCTRL_Type temp = OSCCTRL->OSC16MCTRL;
 	
 	/* Use temporary struct to reduce register access */
 	temp.bit.FSEL    = config->fsel;
 	temp.bit.ONDEMAND = config->on_demand;
 	temp.bit.RUNSTDBY = config->run_in_standby;
 
-	OSCCTRL->OSC16M = temp;
+	OSCCTRL->OSC16MCTRL = temp;
 }
 
 /**
@@ -275,7 +275,7 @@ void system_clock_source_osculp32k_set_config(
 void system_clock_source_xosc_set_config(
 		struct system_clock_source_xosc_config *const config)
 {
-	OSCCTRL_XOSCCTRL_Type temp = OSCCTRL->XOSC;
+	OSCCTRL_XOSCCTRL_Type temp = OSCCTRL->XOSCCTRL;
 
 	temp.bit.STARTUP = config->startup_time;
 
@@ -309,7 +309,7 @@ void system_clock_source_xosc_set_config(
 	/* Store XOSC frequency for internal use */
 	_system_clock_inst.xosc.frequency = config->frequency;
 
-	OSCCTRL->XOSC = temp;
+	OSCCTRL->XOSCCTRL = temp;
 }
 
 /**
@@ -333,7 +333,6 @@ void system_clock_source_xosc32k_set_config(
 		temp.bit.XTALEN = 0;
 	}
 
-	temp.bit.AAMPEN = config->auto_gain_control;
 	temp.bit.EN1K = config->enable_1khz_output;
 	temp.bit.EN32K = config->enable_32khz_output;
 
@@ -433,7 +432,7 @@ void system_clock_source_dpll_set_config(
 			OSCCTRL_DPLLRATIO_LDRFRAC(tmpldrfrac) |
 			OSCCTRL_DPLLRATIO_LDR(tmpldr);
 
-	while(OSCCTRL->DPLLSYNCBUSY & OSCCTRL_DPLLSYNCBUSY_DPLLRATIO){
+	while(OSCCTRL->DPLLSYNCBUSY.reg & OSCCTRL_DPLLSYNCBUSY_DPLLRATIO){
 		}
 	
 	OSCCTRL->DPLLCTRLB.reg =
@@ -446,7 +445,7 @@ void system_clock_source_dpll_set_config(
 			OSCCTRL_DPLLCTRLB_FILTER(config->filter);
 	
 	OSCCTRL->DPLLPRESC.reg  = OSCCTRL_DPLLPRESC_PRESC(config->prescaler);
-	while(OSCCTRL->DPLLSYNCBUSY & OSCCTRL_DPLLSYNCBUSY_DPLLPRESC){
+	while(OSCCTRL->DPLLSYNCBUSY.reg & OSCCTRL_DPLLSYNCBUSY_DPLLPRESC){
 		}
 	/*
 	 * Fck = Fckrx * (LDR + 1 + LDRFRAC / 16)
@@ -537,7 +536,7 @@ enum status_code system_clock_source_enable(
 {
 	switch (clock_source) {
 	case SYSTEM_CLOCK_SOURCE_OSC16M:
-		OSCCTRL->OSC16M.reg |= OSCCTRL_OSC16MCTRL_ENABLE;
+		OSCCTRL->OSC16MCTRL.reg |= OSCCTRL_OSC16MCTRL_ENABLE;
 		return STATUS_OK;
 
 	case SYSTEM_CLOCK_SOURCE_OSC32K:
@@ -545,7 +544,7 @@ enum status_code system_clock_source_enable(
 		break;
 
 	case SYSTEM_CLOCK_SOURCE_XOSC:
-		OSCCTRL->XOSC.reg |= OSCCTRL_XOSCCTRL_ENABLE;
+		OSCCTRL->XOSCCTRL.reg |= OSCCTRL_XOSCCTRL_ENABLE;
 		break;
 
 	case SYSTEM_CLOCK_SOURCE_XOSC32K:
@@ -559,7 +558,7 @@ enum status_code system_clock_source_enable(
 
 	case SYSTEM_CLOCK_SOURCE_DPLL:
 		OSCCTRL->DPLLCTRLA.reg |= OSCCTRL_DPLLCTRLA_ENABLE;
-		while(OSCCTRL->DPLLSYNCBUSY & OSCCTRL_DPLLSYNCBUSY_ENABLE){
+		while(OSCCTRL->DPLLSYNCBUSY.reg & OSCCTRL_DPLLSYNCBUSY_ENABLE){
 		}
 		break;
 
@@ -591,7 +590,7 @@ enum status_code system_clock_source_disable(
 {
 	switch (clock_source) {
 	case SYSTEM_CLOCK_SOURCE_OSC16M:
-		OSCCTRL->OSC16M.reg &= ~OSCCTRL_OSC16MCTRL_ENABLE;
+		OSCCTRL->OSC16MCTRL.reg &= ~OSCCTRL_OSC16MCTRL_ENABLE;
 		break;
 
 	case SYSTEM_CLOCK_SOURCE_OSC32K:
@@ -599,7 +598,7 @@ enum status_code system_clock_source_disable(
 		break;
 
 	case SYSTEM_CLOCK_SOURCE_XOSC:
-		OSCCTRL->XOSC.reg &= ~OSCCTRL_XOSCCTRL_ENABLE;
+		OSCCTRL->XOSCCTRL.reg &= ~OSCCTRL_XOSCCTRL_ENABLE;
 		break;
 
 	case SYSTEM_CLOCK_SOURCE_XOSC32K:
@@ -838,14 +837,14 @@ void system_clock_init(void)
 #define NVM_DFLL_COARSE_SIZE   6
 #define NVM_DFLL_FINE_POS      64
 #define NVM_DFLL_FINE_SIZE     10
-		uint32_t coarse =( *((uint32_t *)(NVMCTRL_OTP4)
+		uint32_t coarse =( *((uint32_t *)(NVMCTRL_OTP5)
 				+ (NVM_DFLL_COARSE_POS / 32))
 			>> (NVM_DFLL_COARSE_POS % 32))
 			& ((1 << NVM_DFLL_COARSE_SIZE) - 1);
 		if (coarse == 0x3f) {
 			coarse = 0x1f;
 		}
-		uint32_t fine =( *((uint32_t *)(NVMCTRL_OTP4)
+		uint32_t fine =( *((uint32_t *)(NVMCTRL_OTP5)
 				+ (NVM_DFLL_FINE_POS / 32))
 			>> (NVM_DFLL_FINE_POS % 32))
 			& ((1 << NVM_DFLL_FINE_SIZE) - 1);
@@ -951,8 +950,8 @@ void system_clock_init(void)
 
 	system_main_clock_set_failure_detect(CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT);
 
-	system_low_power_clock_set_divider(SYSTEM_CLOCK_APB_APBA, CONF_CLOCK_LOW_POWER_DIVIDER);
-	system_backup_clock_set_divider(SYSTEM_CLOCK_APB_APBB, CONF_CLOCK_BACKUP_DIVIDER);
+	system_low_power_clock_set_divider(CONF_CLOCK_LOW_POWER_DIVIDER);
+	system_backup_clock_set_divider(CONF_CLOCK_BACKUP_DIVIDER);
 
 	/* GCLK 0 */
 #if CONF_CLOCK_CONFIGURE_GCLK == true

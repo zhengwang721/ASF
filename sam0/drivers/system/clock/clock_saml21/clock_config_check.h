@@ -116,10 +116,6 @@
 #  error CONF_CLOCK_XOSC32K_STARTUP_TIME not defined in conf_clock.h
 #endif
 
-#if !defined(CONF_CLOCK_XOSC32K_AUTO_AMPLITUDE_CONTROL)
-#  error CONF_CLOCK_XOSC32K_AUTO_AMPLITUDE_CONTROL not defined in conf_clock.h
-#endif
-
 #if !defined(CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT)
 #  error CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT not defined in conf_clock.h
 #endif
