@@ -158,6 +158,7 @@
 /* MACROS to set the specific features supported */
 #define MULTI_CHANNEL_SELECT              ((uint32_t)(1) << 0)
 #define PER_RANGE_TEST_MODE               ((uint32_t)(1) << 1)
+#define PER_REMOTE_CONFIG_MODE               ((uint32_t)(1) << 2)
 
 /* ! \} */
 

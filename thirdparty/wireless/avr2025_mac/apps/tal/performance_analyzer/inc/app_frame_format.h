@@ -54,7 +54,7 @@
 /* === Includes ============================================================= */
 
 /* === Macros =============================================================== */
-
+#define SIO_BUF_SIZE                 (116)
 /* === Types ================================================================ */
 COMPILER_PACK_SET(1)
 
@@ -165,9 +165,17 @@ typedef struct {
  * node's CRC settings
  *
  */
-typedef struct {
-	uint8_t status;
-} crc_stat_req_t;
+ typedef struct {
+ uint8_t status;
+ } crc_stat_req_t;
+ 
+ /**
+ * \brief Remote Test Start Request Structure
+ *
+ */
+ typedef struct {
+ uint8_t remote_serial_data[SIO_BUF_SIZE];
+ } remote_test_req_t;
 
 /**
  * \brief CRC status response frame structure to send the peer
@@ -234,6 +242,7 @@ typedef union {
 	range_tx_t range_tx_data;
 	result_req_t result_req_data;
 	crc_stat_req_t crc_stat_req_data;
+	remote_test_req_t remote_test_req_data;
 } general_pkt_t;
 
 /**

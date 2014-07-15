@@ -59,6 +59,7 @@
 #include "app_frame_format.h"
 #include "app_per_mode.h"
 #include "conf_board.h"
+#include "perf_api.h"
 #if !(SAMD || SAMR21)
 #include "led.h"
 #endif
@@ -228,6 +229,37 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
 	frame = frame;
 	/* Allow the next transmission to happen */
 	node_info.transmitting = false;
+}
+
+bool send_remote_reply_cmd(uint8_t* serial_buf,uint8_t len)
+{
+	
+	uint8_t payload_length;
+	app_payload_t msg;
+
+	/* Create the payload */
+	msg.cmd_id = REMOTE_TEST_REPLY_CMD;
+	seq_num_receptor++;
+	msg.seq_num = seq_num_receptor;
+
+	payload_length = ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-SIO_BUF_SIZE+len));
+	memcpy(&msg.payload.remote_test_req_data.remote_serial_data,serial_buf,len);
+	/* Send the frame to Peer node */
+	if(MAC_SUCCESS == transmit_frame(FCF_SHORT_ADDR,(uint8_t *)&(node_info.peer_short_addr),FCF_SHORT_ADDR,
+	seq_num_receptor,
+	(uint8_t *)&msg,
+	payload_length,
+	true))
+	{
+		return true;
+	}
+	
+	else
+	{
+		return false;
+	}
+	
+	
 }
 
 /*
@@ -529,7 +561,13 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
 		set_default_configuration_peer_node();
 	}
 	break;
-
+	case REMOTE_TEST_CMD:
+	{
+		uint8_t payload_len,serial_data_len;
+		payload_len  = *(mac_frame_info->mpdu);		
+		serial_data_len = payload_len - ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-SIO_BUF_SIZE));
+		convert_ota_serial_frame_rx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);
+	}
 	case RANGE_TEST_START_PKT:
 	{
 		/* set the flag to indicate that the receptor node is in range

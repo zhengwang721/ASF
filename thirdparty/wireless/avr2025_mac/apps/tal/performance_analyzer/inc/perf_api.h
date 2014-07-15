@@ -143,6 +143,9 @@ void usr_range_test_marker_ind(uint8_t *mpdu, uint8_t lqi, int8_t ed_value);
  */
 void identify_peer_node(void);
 
+
+void send_remote_cmd(uint8_t* serial_buf,uint8_t len);
+
 #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
 	(defined CW_SUPPORTED)))
 
@@ -165,6 +168,7 @@ void stop_cw_transmission(uint8_t tx_mode);
 
 #endif /*#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined
         * CW_SUPPORTED))) */
+
 
 /**
  * \brief Read transceiver register
@@ -274,6 +278,9 @@ void usr_per_test_start_confirm(uint8_t status);
  * \return void
  */
 void usr_range_test_start_confirm(uint8_t status);
+
+void convert_ota_serial_frame_tx(uint8_t *buf,uint8_t len);
+void convert_ota_serial_frame_rx(uint8_t *buf,uint8_t len);
 
 /**
  * Function to generate Range Test Stop confirmation frame that must be sent to

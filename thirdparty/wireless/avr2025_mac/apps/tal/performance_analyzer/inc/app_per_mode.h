@@ -155,10 +155,12 @@
 #define RANGE_TEST_PKT                      (0x12)
 #define RANGE_TEST_RSP                      (0x13)
 #define RANGE_TEST_STOP_PKT                 (0x14)
-#define RANGE_TEST_MARKER_CMD                (0x15)
-#define RANGE_TEST_MARKER_RSP                (0x16)
-#define RANGE_TEST_PKT_LENGTH                (19)
-#define LED_BLINK_RATE_IN_MICRO_SEC           (50000)
+#define RANGE_TEST_MARKER_CMD               (0x15)
+#define RANGE_TEST_MARKER_RSP               (0x16)
+#define REMOTE_TEST_CMD		                (0x17)
+#define  REMOTE_TEST_REPLY_CMD              (0x18)
+#define RANGE_TEST_PKT_LENGTH               (19)
+#define LED_BLINK_RATE_IN_MICRO_SEC         (50000)
 /* \} */
 
 /* === Types ================================================================ */
@@ -271,6 +273,7 @@ void per_mode_initiator_rx_cb(frame_info_t *frame);
  */
 void per_mode_initiator_ed_end_cb(uint8_t energy_level);
 
+bool send_remote_reply_cmd(uint8_t* serial_buf,uint8_t len);
 /* ! \} */
 
 /**

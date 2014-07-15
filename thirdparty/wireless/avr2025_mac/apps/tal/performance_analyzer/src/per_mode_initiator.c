@@ -105,6 +105,7 @@ typedef struct {
 #define RANGE_TEST_START                        (0x0F)
 #define RANGE_TEST_TX                           (0x10)
 #define RANGE_TEST_STOP                         (0x11)
+#define REMOTE_TEST_MODE                        (0X12)
 
 #define RANGE_TST_PKT_SEQ_POS                    (11)
 
@@ -1198,6 +1199,14 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
 			LENGTH_FIELD_LEN + FRAME_OVERHEAD - FCS_LEN);
 
 	switch ((msg->cmd_id)) {
+		
+	case REMOTE_TEST_REPLY_CMD:
+	{
+		uint8_t payload_len,serial_data_len;
+		payload_len  = *(mac_frame_info->mpdu);
+		serial_data_len = payload_len - ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-SIO_BUF_SIZE));
+		convert_ota_serial_frame_tx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);
+	}
 	case RESULT_RSP:
 	{
 		if (op_mode == WAIT_FOR_TEST_RES) {
@@ -1665,6 +1674,7 @@ void get_board_details(void)
 	 */
 	fw_feature_mask |= MULTI_CHANNEL_SELECT;
 	fw_feature_mask |= PER_RANGE_TEST_MODE;
+	fw_feature_mask |= PER_REMOTE_CONFIG_MODE;
 
 	/* Send the Confirmation with the status as SUCCESS */
 	usr_identify_board_confirm(MAC_SUCCESS,
@@ -4383,6 +4393,7 @@ static bool send_identify_command(void)
 	return(false);
 }
 
+
 /**
  * \brief Function used to send disconnect peer node command
  *
@@ -4447,6 +4458,34 @@ static bool send_peer_info_req(void)
 	}
 
 	return(false);
+}
+
+void send_remote_cmd(uint8_t* serial_buf,uint8_t len)
+{
+	
+	uint8_t payload_length;
+	app_payload_t msg;
+
+	/* Create the payload */
+	msg.cmd_id = REMOTE_TEST_CMD;
+	seq_num_initiator++;
+	msg.seq_num = seq_num_initiator;
+
+	payload_length = ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-SIO_BUF_SIZE+len));
+	memcpy(&msg.payload.remote_test_req_data.remote_serial_data,serial_buf,len);		
+	/* Send the frame to Peer node */
+	if (MAC_SUCCESS == transmit_frame(FCF_SHORT_ADDR,
+	(uint8_t *)&(node_info.peer_short_addr),
+	FCF_SHORT_ADDR,
+	seq_num_initiator,
+	(uint8_t *)&msg,
+	payload_length,
+	true)
+	) {			
+		op_mode = REMOTE_TEST_MODE;
+		} else {
+		op_mode = TX_OP_MODE;
+	}
 }
 
 /**

@@ -161,6 +161,7 @@ static uint8_t head = 0;
  */
 static uint8_t buf_count = 0;
 
+static bool remote_cmd_rcvd = false;
 /* === Prototypes ========================================================== */
 
 static inline void process_incoming_sio_data(void);
@@ -189,6 +190,17 @@ void serial_data_handler(void)
 	/* Serial data handler is to handle only PER mode msg commands */
 	if ((RANGE_TEST_TX_ON == node_info.main_state) ||
 			(RANGE_TEST_TX_OFF == node_info.main_state)) {
+		return;
+	}
+	
+	if ((PER_TEST_RECEPTOR == node_info.main_state)&& remote_cmd_rcvd && buf_count)
+	
+	{
+		remote_cmd_rcvd = false;
+		
+		// write code to transmit the serial data over the air
+		if(send_remote_reply_cmd(&sio_tx_buf[head][curr_tx_buffer_index],(sio_tx_buf[head][1] +3) - curr_tx_buffer_index))
+		buf_count--;
 		return;
 	}
 
@@ -319,6 +331,12 @@ static uint8_t *get_next_tx_buffer(void)
 	return NULL;
 }
 
+void convert_ota_serial_frame_rx(uint8_t *buf,uint8_t len)
+{
+	memcpy(sio_rx_buf,&len,1);
+	memcpy(sio_rx_buf+1,buf,len);
+	handle_incoming_msg();
+}
 /**
  * \brief Parses the Received Data in the Buffer and Process the Commands
  * accordingly.
@@ -328,15 +346,14 @@ static inline void handle_incoming_msg(void)
 	uint8_t error_code = MAC_SUCCESS;
 	param_value_t param_value_temp;
 
-	/* Check for protocol id is Perofomance Analyzer */
+	/* Check for protocol id is Performance Analyzer */
 	if (PROTOCOL_ID != sio_rx_buf[1]) { /* protocol id */
 		return;
 	}
 
 	/* If the node is in any of these state dont respond to any serial
 	 * commands */
-	if ((PEER_SEARCH_PER_RX == node_info.main_state) ||
-			(PEER_SEARCH_RANGE_RX == node_info.main_state) ||
+	if ((PEER_SEARCH_RANGE_RX == node_info.main_state) ||
 			(PEER_SEARCH_RANGE_TX == node_info.main_state) ||
 			(node_info.main_state == PER_TEST_RECEPTOR) ||
 			(RANGE_TEST_TX_ON == node_info.main_state) ||
@@ -347,6 +364,17 @@ static inline void handle_incoming_msg(void)
 	/* Check for the error conditions */
 	error_code = check_error_conditions();
 
+    if((sio_rx_buf[MESSAGE_ID_POS] && 0X80) && (PER_TEST_INITIATOR == node_info.main_state))
+	{
+		send_remote_cmd(sio_rx_buf,*sio_rx_buf);
+		return;
+	}
+	else if((sio_rx_buf[MESSAGE_ID_POS] && 0X80) && (PER_TEST_RECEPTOR == node_info.main_state))
+	{
+		sio_rx_buf[MESSAGE_ID_POS] &=  0X7F;
+		remote_cmd_rcvd = true;
+		
+	}
 	/* Process the commands */
 	switch (sio_rx_buf[MESSAGE_ID_POS]) { /* message id */
 	/* Process Board identification command to get the board details */
@@ -1494,6 +1522,18 @@ void usr_range_test_start_confirm(uint8_t status)
 	*msg_buf = EOT;
 }
 
+void convert_ota_serial_frame_tx(uint8_t *buf,uint8_t len)
+{
+		uint8_t *msg_buf;
+
+		msg_buf = get_next_tx_buffer();
+
+		/* Check if buffer could not be allocated */
+		if (NULL == msg_buf) {
+			return;
+		}
+		memcpy(msg_buf,buf,len);
+}
 /*
  * Function to  Range Test stop confirmation frame that must be sent to
  * host application via serial interface.
