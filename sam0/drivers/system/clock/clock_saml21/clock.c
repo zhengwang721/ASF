@@ -245,6 +245,25 @@ void system_clock_source_osc32k_set_config(
 }
 
 /**
+ * \brief Configure the internal OSCULP32K oscillator clock source
+ *
+ * Configures the Ultra Low Power 32KHz internal RC oscillator with the given
+ * configuration settings.
+ *
+ * \param[in] config  OSCULP32K configuration structure containing the new config
+ */
+void system_clock_source_osculp32k_set_config(
+		struct system_clock_source_osculp32k_config *const config)
+{
+	OSC32KCTRL_OSCULP32K_Type temp = OSC32KCTRL->OSCULP32K;
+	/* Update settings via a temporary struct to reduce register access */
+	temp.bit.EN1K     = config->enable_1khz_output;
+	temp.bit.EN32K    = config->enable_32khz_output;
+	temp.bit.WRTLOCK  = config->write_once;
+	OSC32KCTRL->OSCULP32K  = temp;
+}	
+
+/**
  * \brief Configure the external oscillator clock source
  *
  * Configures the external oscillator clock source with the given configuration
@@ -415,7 +434,7 @@ void system_clock_source_dpll_set_config(
 			OSCCTRL_DPLLRATIO_LDR(tmpldr);
 
 	while(OSCCTRL->DPLLSYNCBUSY & OSCCTRL_DPLLSYNCBUSY_DPLLRATIO){
-	}
+		}
 	
 	OSCCTRL->DPLLCTRLB.reg =
 			OSCCTRL_DPLLCTRLB_DIV(config->reference_divider) |
@@ -428,7 +447,7 @@ void system_clock_source_dpll_set_config(
 	
 	OSCCTRL->DPLLPRESC.reg  = OSCCTRL_DPLLPRESC_PRESC(config->prescaler);
 	while(OSCCTRL->DPLLSYNCBUSY & OSCCTRL_DPLLSYNCBUSY_DPLLPRESC){
-	}
+		}
 	/*
 	 * Fck = Fckrx * (LDR + 1 + LDRFRAC / 16)
 	 */
@@ -470,6 +489,7 @@ enum status_code system_clock_source_write_calibration(
 {
 	switch (clock_source) {
 	case SYSTEM_CLOCK_SOURCE_OSC16M:
+		//to enable DSU test mode and add calibration value
 		return STATUS_OK;
 
 	case SYSTEM_CLOCK_SOURCE_OSC32K:
@@ -750,7 +770,8 @@ void system_clock_init(void)
 
 	/* OSCK32K */
 #if CONF_CLOCK_OSC32K_ENABLE == true
-	OSC32KCTRL->OSC32K.bit.CALIB = OSC32KCTRL_OSC32K_CALIB(??);
+
+	//OSC32KCTRL->OSC32K.bit.CALIB = OSC32KCTRL_OSC32K_CALIB(16);
 		
 
 
@@ -864,7 +885,7 @@ void system_clock_init(void)
 
 	/* Configure all GCLK generators except for the main generator, which
 	 * is configured later after all other clock systems are set up */
-	MREPEAT(9, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);//have conflict in GCLK
+	MREPEAT(9, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
 #  if CONF_CLOCK_DFLL_ENABLE == true
 	/* Enable DFLL reference clock if in closed loop mode */
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
@@ -892,11 +913,13 @@ void system_clock_init(void)
 #  if (CONF_CLOCK_DPLL_ENABLE == true)
 
 	/* Enable DPLL reference clock */
-	if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0) {
-		/* XOSC32K should have been enabled for DPLL_REF0 */
+	if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC32K) {
+		/* XOSC32K should have been enabled for GCLK_XOSC32 */
 		Assert(CONF_CLOCK_XOSC32K_ENABLE);
+	}else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC) {
+		/* XOSC should have been enabled for GCLK_XOSC */
+		Assert(CONF_CLOCK_XOSC_ENABLE);
 	}
-
 	struct system_clock_source_dpll_config dpll_config;
 	system_clock_source_dpll_get_config_defaults(&dpll_config);
 

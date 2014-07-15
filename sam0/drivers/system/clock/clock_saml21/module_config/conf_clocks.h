@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21/R21 Clock configuration
+ * \brief SAM L21 Clock configuration
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -84,6 +84,10 @@
 #  define CONF_CLOCK_OSC32K_ON_DEMAND             true
 #  define CONF_CLOCK_OSC32K_RUN_IN_STANDBY        false
 
+/* SYSTEM_CLOCK_SOURCE_OSCULP32K configuration - Internal Ultra Low Power 32KHz oscillator */
+#  define CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT    true
+#  define CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT   true
+
 /* SYSTEM_CLOCK_SOURCE_DFLL configuration - Digital Frequency Locked Loop */
 #  define CONF_CLOCK_DFLL_ENABLE                  false
 #  define CONF_CLOCK_DFLL_LOOP_MODE               SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN
@@ -112,7 +116,7 @@
 #  define CONF_CLOCK_DPLL_LOW_POWER_ENABLE        false
 
 #  define CONF_CLOCK_DPLL_LOCK_TIME               SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT
-#  define CONF_CLOCK_DPLL_REFERENCE_CLOCK         SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC
+#  define CONF_CLOCK_DPLL_REFERENCE_CLOCK         SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK
 #  define CONF_CLOCK_DPLL_FILTER                  SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT
 #  define CONF_CLOCK_DPLL_PRESCALER               SYSTEM_CLOCK_SOURCE_DPLL_DIV_1
 
@@ -187,14 +191,5 @@
 #  define CONF_CLOCK_GCLK_8_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_OSC16M
 #  define CONF_CLOCK_GCLK_8_PRESCALER             1
 #  define CONF_CLOCK_GCLK_8_OUTPUT_ENABLE         false
-
-/* Configure GCLK generator 9 */
-#  define CONF_CLOCK_GCLK_9_ENABLE                false
-#  define CONF_CLOCK_GCLK_9_RUN_IN_STANDBY        false
-#  define CONF_CLOCK_GCLK_9_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_OSC16M
-#  define CONF_CLOCK_GCLK_9_PRESCALER             1
-#  define CONF_CLOCK_GCLK_9_OUTPUT_ENABLE         false
-
-
 #endif /* CONF_CLOCKS_H_INCLUDED */
 

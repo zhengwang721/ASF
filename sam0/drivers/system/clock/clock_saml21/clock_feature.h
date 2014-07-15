@@ -578,9 +578,24 @@ struct system_clock_source_osc16m_config {
 
 
 /**
- * \brief Configuration structure for OSC32K
+ * \brief Configuration structure for OSCULP32K
  *
- * Internal 32KHz (nominal) oscillator configuration structure.
+ * Internal 32KHz Ultra Low Power oscillator configuration structure.
+ */
+struct system_clock_source_osculp32k_config {
+	/** Enable 1kHz output */
+	bool enable_1khz_output;
+	/** Enable 32kHz output */
+	bool enable_32khz_output;
+	/** Lock configuration after it has been written,
+	 *  a device reset will release the lock */
+	bool write_once;
+};
+
+/**
+ * \brief Configuration structure for OSCULP32K
+ *
+ * Internal 32KHz  oscillator configuration structure.
  */
 struct system_clock_source_osc32k_config {
 	/** Startup time */
@@ -598,6 +613,7 @@ struct system_clock_source_osc32k_config {
 	 *  a device reset will release the lock */
 	bool write_once;
 };
+
 
 /**
  * \brief Configuration structure for DFLL
@@ -749,6 +765,38 @@ static inline void system_clock_source_osc32k_get_config_defaults(
 
 void system_clock_source_osc32k_set_config(
 		struct system_clock_source_osc32k_config *const config);
+
+/**
+ * @}
+ */
+
+/**
+ * \name Internal Ultra Low Power 32KHz Oscillator management
+ * @{
+ */
+
+/**
+ * \brief Retrieve the default configuration for OSCULP32K
+ *
+ * Fills a configuration structure with the default configuration for an
+ * internal Ultra Low Power 32KHz oscillator module:
+ *   - 1KHz clock output enabled
+ *   - 32KHz clock output enabled
+ *
+ * \param[out] config  Configuration structure to fill with default values
+ */
+static inline void system_clock_source_osculp32k_get_config_defaults(
+		struct system_clock_source_osculp32k_config *const config)
+{
+	Assert(config);
+
+	config->enable_1khz_output  = true;
+	config->enable_32khz_output = true;
+	config->write_once          = false;
+}
+
+void system_clock_source_osculp32k_set_config(
+		struct system_clock_source_osculp32k_config *const config);
 
 /**
  * @}
@@ -1253,7 +1301,7 @@ static inline void system_clock_source_dpll_get_config_defaults(
 	config->output_frequency    = 48000000;
 	config->reference_frequency = 32768;
 	config->reference_divider   = 1;
-	config->reference_clock     = SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC32K;
+	config->reference_clock     = SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK;
 	config->prescaler           = SYSTEM_CLOCK_SOURCE_DPLL_DIV_1;
 		
 	config->lock_time           = SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT;

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21/R21 Clock Driver
+ * \brief SAM L21 Clock Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -158,6 +158,14 @@
 
 #if !defined(CONF_CLOCK_OSC32K_RUN_IN_STANDBY)
 #  error CONF_CLOCK_OSC32K_RUN_IN_STANDBY not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT)
+#  error CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT)
+#  error CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT not defined in conf_clock.h
 #endif
 
 #if !defined(CONF_CLOCK_DFLL_ENABLE)
@@ -448,26 +456,5 @@
 #if !defined(CONF_CLOCK_GCLK_8_OUTPUT_ENABLE)
 #  error CONF_CLOCK_GCLK_8_OUTPUT_ENABLE not defined in conf_clock.h
 #endif
-
-#if !defined(CONF_CLOCK_GCLK_9_ENABLE)
-#  error CONF_CLOCK_GCLK_9_ENABLE not defined in conf_clock.h
-#endif
-
-#if !defined(CONF_CLOCK_GCLK_9_RUN_IN_STANDBY)
-#  error CONF_CLOCK_GCLK_9_RUN_IN_STANDBY not defined in conf_clock.h
-#endif
-
-#if !defined(CONF_CLOCK_GCLK_9_CLOCK_SOURCE)
-#  error CONF_CLOCK_GCLK_9_CLOCK_SOURCE not defined in conf_clock.h
-#endif
-
-#if !defined(CONF_CLOCK_GCLK_9_PRESCALER)
-#  error CONF_CLOCK_GCLK_9_PRESCALER not defined in conf_clock.h
-#endif
-
-#if !defined(CONF_CLOCK_GCLK_7_OUTPUT_ENABLE)
-#  error CONF_CLOCK_GCLK_7_OUTPUT_ENABLE not defined in conf_clock.h
-#endif
-
 
 #endif /* CLOCK_CONFIG_CHECK_H */
