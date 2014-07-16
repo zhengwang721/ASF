@@ -46,7 +46,6 @@
 #include <compiler.h>
 #include <clock.h>
 #include <gclk.h>
-#include <pinmux.h>
 
 #ifdef __cplusplus
 extern "C" {
