@@ -63,6 +63,8 @@
 # define MAX_PERIPH_ID    47
 #elif (SAMG54)
 # define MAX_PERIPH_ID    47
+#elif (SAMG55)
+# define MAX_PERIPH_ID    50
 #endif
 
 /// @cond 0
