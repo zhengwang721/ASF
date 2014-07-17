@@ -72,6 +72,7 @@
  *  - SAM4C evaluation kit
  *  - SAM4CP16BMB evaluation board (no button version)
  *  - SAMG53 Xplained Pro kit
+ *  - SAMG55 Xplained Pro kit
  *  - SAM4CMP16C demo board
  *  - SAM4CMS16C demo board
  *
