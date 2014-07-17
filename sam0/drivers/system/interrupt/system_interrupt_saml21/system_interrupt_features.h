@@ -139,10 +139,13 @@ enum system_interrupt_vector {
 	_SYSTEM_INTERRUPT_MODULES(SERCOM)
 
 	_SYSTEM_INTERRUPT_MODULES(TCC)
+#if	(SAML21J)
+	_SYSTEM_INTERRUPT_MODULES(TC)
+#else
 	SYSTEM_INTERRUPT_MODULE_TC0        = TC0_IRQn,
 	SYSTEM_INTERRUPT_MODULE_TC1        = TC1_IRQn,
 	SYSTEM_INTERRUPT_MODULE_TC4        = TC4_IRQn,
-
+#endif
 #endif
 
 	/** Interrupt vector index for an Analog Comparator peripheral interrupt. */
