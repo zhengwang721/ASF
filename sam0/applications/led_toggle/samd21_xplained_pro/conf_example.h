@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D11 Xplained Pro board configuration.
+ * \brief SAM D21 Xplained Pro example configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,7 +41,9 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#  define EXTINT_NMI               false
+
+#endif /* CONF_TEST_H_INCLUDED */
