@@ -168,59 +168,6 @@ struct system_gclk_chan_config {
 /** \name Generic Clock management
  * @{
  */
-
-#if SAML21
- /**
-  * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
-  *
-  * Checks to see if the underlying hardware peripheral module(s) are currently
-  * synchronizing across multiple clock domains to the hardware bus, This
-  * function can be used to delay further operations on a module until such time
-  * that it is ready, to prevent blocking delays for synchronization in the
-  * user application.
-  * \param[in] generator  Generic Clock Generator index to sync
-  *
-  * \return Synchronization status of the underlying hardware module(s).
-  *
-  * \retval true if the module has completed synchronization
-  * \retval false if the module synchronization is ongoing
-  */
-static inline bool system_gclk_is_syncing(const uint8_t generator)
-{
-
-	 if (GCLK->SYNCBUSY.reg & ((generator ) << GCLK_SYNCBUSY_GENCTRL_Pos)){
-		 return true;
-	}
-	 
-	 return false;
-}
-
-#else
-/**
- * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
- *
- * Checks to see if the underlying hardware peripheral module(s) are currently
- * synchronizing across multiple clock domains to the hardware bus, This
- * function can be used to delay further operations on a module until such time
- * that it is ready, to prevent blocking delays for synchronization in the
- * user application.
- *
- * \return Synchronization status of the underlying hardware module(s).
- *
- * \retval true if the module has completed synchronization
- * \retval false if the module synchronization is ongoing
- */
-static inline bool system_gclk_is_syncing(void)
-{
-	if (GCLK->STATUS.reg & GCLK_STATUS_SYNCBUSY){
-		return true;
-	}
-	
-	return false;
-}
-
-#endif
-
 void system_gclk_init(void);
 
 /** @} */
