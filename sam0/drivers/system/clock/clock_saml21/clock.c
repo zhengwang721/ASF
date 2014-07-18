@@ -158,7 +158,7 @@ uint32_t system_clock_source_get_hz(
 		return _system_clock_inst.xosc.frequency;
 		
 	case SYSTEM_CLOCK_SOURCE_OSC16M:
-		return (OSCCTRL->OSC16MCTRL.bit.FSEL+1)*4000000;
+		return (OSCCTRL->OSC16MCTRL.bit.FSEL+1)*4000000UL;
 		
 	case SYSTEM_CLOCK_SOURCE_OSC32K:
 		return 32768UL;

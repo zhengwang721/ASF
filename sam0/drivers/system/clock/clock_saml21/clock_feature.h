@@ -62,7 +62,7 @@ extern "C" {
  * - PM (Power Management)
  * - OSCCTRL (Oscillators Controller)
  * - OSC32KCTRL (32K Oscillators Controller)
- * - MCK (Main Clock)
+ * - MCLK (Main Clock)
  *
  * The following devices can use this module:
  *  - SAM L21
@@ -875,7 +875,7 @@ static inline void system_clock_source_dfll_get_config_defaults(
 	/* Closed loop mode */
 	config->coarse_max_step = 1;
 	config->fine_max_step   = 1;
-	config->multiply_factor = 12; /* Multiply 4MHz by 3 to get 48MHz */
+	config->multiply_factor = 12; /* Multiply 4MHz by 12 to get 48MHz */
 }
 
 void system_clock_source_dfll_set_config(

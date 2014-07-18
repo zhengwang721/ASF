@@ -319,7 +319,7 @@ void system_gclk_chan_set_config(
 	/* Disable generic clock channel */
 	system_gclk_chan_disable(channel);
 	
-	/* Select the correct generator */
+	/* Configure the peripheral channel */
 	GCLK->PCHCTRL[channel].reg = GCLK_PCHCTRL_GEN(config->source_generator);
 
 	
@@ -338,7 +338,7 @@ void system_gclk_chan_enable(
 {
 	system_interrupt_enter_critical_section();
 	
-	/* Select the correct generator */
+	/* Enable the peripheral channel */
 	GCLK->PCHCTRL[channel].reg |= GCLK_PCHCTRL_CHEN;
 	
 	system_interrupt_leave_critical_section();
