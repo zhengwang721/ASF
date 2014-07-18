@@ -23,8 +23,8 @@
 		<build type="define" name="BOARD" value="SAMG55_XPLAINED_PRO"/>
 
 		<!-- Device support -->
-		<build type="define" name="__SAMG55G19__" value=""/>
-		<device-support value="atsamg55g19"/>
+		<build type="define" name="__SAMG55J19__" value=""/>
+		<device-support value="atsamg55j19"/>
 		
 		<!-- Source code -->
 		<build type="include-path" value="."/>
