@@ -157,6 +157,9 @@ enum system_interrupt_vector {
 	/** Interrupt vector index for a Peripheral Touch Controller peripheral
 	 *  interrupt. */
 	SYSTEM_INTERRUPT_MODULE_PTC        = PTC_IRQn,
+	 /** Interrupt vector index for a Inter-IC Sound Interface peripheral
+	 *  interrupt. */
+	SYSTEM_INTERRUPT_MODULE_I2S        = I2S_IRQn,
 	/** Interrupt vector index for a AES peripheral
 	 *  interrupt. */
 	SYSTEM_INTERRUPT_MODULE_AES        = AES_IRQn,

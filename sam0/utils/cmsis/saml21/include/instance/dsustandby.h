@@ -54,6 +54,6 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for DSUSTANDBY peripheral ========== */
-#define DSUSTANDBY_CLK_AHB_DOMAIN            // Clock domain of AHB clock
+#define DSUSTANDBY_CLK_AHB_DOMAIN   
 
 #endif /* _SAML21_DSUSTANDBY_INSTANCE_ */

@@ -74,6 +74,20 @@
 #define REG_PORT_EVCTRL1           (0x400028ACU) /**< \brief (PORT) Event Input Control 1 */
 #define REG_PORT_PMUX1             (0x400028B0U) /**< \brief (PORT) Peripheral Multiplexing 1 */
 #define REG_PORT_PINCFG1           (0x400028C0U) /**< \brief (PORT) Pin Configuration 1 */
+#define REG_PORT_DIR2              (0x40002900U) /**< \brief (PORT) Data Direction 2 */
+#define REG_PORT_DIRCLR2           (0x40002904U) /**< \brief (PORT) Data Direction Clear 2 */
+#define REG_PORT_DIRSET2           (0x40002908U) /**< \brief (PORT) Data Direction Set 2 */
+#define REG_PORT_DIRTGL2           (0x4000290CU) /**< \brief (PORT) Data Direction Toggle 2 */
+#define REG_PORT_OUT2              (0x40002910U) /**< \brief (PORT) Data Output Value 2 */
+#define REG_PORT_OUTCLR2           (0x40002914U) /**< \brief (PORT) Data Output Value Clear 2 */
+#define REG_PORT_OUTSET2           (0x40002918U) /**< \brief (PORT) Data Output Value Set 2 */
+#define REG_PORT_OUTTGL2           (0x4000291CU) /**< \brief (PORT) Data Output Value Toggle 2 */
+#define REG_PORT_IN2               (0x40002920U) /**< \brief (PORT) Data Input Value 2 */
+#define REG_PORT_CTRL2             (0x40002924U) /**< \brief (PORT) Control 2 */
+#define REG_PORT_WRCONFIG2         (0x40002928U) /**< \brief (PORT) Write Configuration 2 */
+#define REG_PORT_EVCTRL2           (0x4000292CU) /**< \brief (PORT) Event Input Control 2 */
+#define REG_PORT_PMUX2             (0x40002930U) /**< \brief (PORT) Peripheral Multiplexing 2 */
+#define REG_PORT_PINCFG2           (0x40002940U) /**< \brief (PORT) Pin Configuration 2 */
 #else
 #define REG_PORT_DIR0              (*(RwReg  *)0x40002800U) /**< \brief (PORT) Data Direction 0 */
 #define REG_PORT_DIRCLR0           (*(RwReg  *)0x40002804U) /**< \brief (PORT) Data Direction Clear 0 */
@@ -103,20 +117,34 @@
 #define REG_PORT_EVCTRL1           (*(RwReg  *)0x400028ACU) /**< \brief (PORT) Event Input Control 1 */
 #define REG_PORT_PMUX1             (*(RwReg  *)0x400028B0U) /**< \brief (PORT) Peripheral Multiplexing 1 */
 #define REG_PORT_PINCFG1           (*(RwReg  *)0x400028C0U) /**< \brief (PORT) Pin Configuration 1 */
+#define REG_PORT_DIR2              (*(RwReg  *)0x40002900U) /**< \brief (PORT) Data Direction 2 */
+#define REG_PORT_DIRCLR2           (*(RwReg  *)0x40002904U) /**< \brief (PORT) Data Direction Clear 2 */
+#define REG_PORT_DIRSET2           (*(RwReg  *)0x40002908U) /**< \brief (PORT) Data Direction Set 2 */
+#define REG_PORT_DIRTGL2           (*(RwReg  *)0x4000290CU) /**< \brief (PORT) Data Direction Toggle 2 */
+#define REG_PORT_OUT2              (*(RwReg  *)0x40002910U) /**< \brief (PORT) Data Output Value 2 */
+#define REG_PORT_OUTCLR2           (*(RwReg  *)0x40002914U) /**< \brief (PORT) Data Output Value Clear 2 */
+#define REG_PORT_OUTSET2           (*(RwReg  *)0x40002918U) /**< \brief (PORT) Data Output Value Set 2 */
+#define REG_PORT_OUTTGL2           (*(RwReg  *)0x4000291CU) /**< \brief (PORT) Data Output Value Toggle 2 */
+#define REG_PORT_IN2               (*(RoReg  *)0x40002920U) /**< \brief (PORT) Data Input Value 2 */
+#define REG_PORT_CTRL2             (*(RwReg  *)0x40002924U) /**< \brief (PORT) Control 2 */
+#define REG_PORT_WRCONFIG2         (*(WoReg  *)0x40002928U) /**< \brief (PORT) Write Configuration 2 */
+#define REG_PORT_EVCTRL2           (*(RwReg  *)0x4000292CU) /**< \brief (PORT) Event Input Control 2 */
+#define REG_PORT_PMUX2             (*(RwReg  *)0x40002930U) /**< \brief (PORT) Peripheral Multiplexing 2 */
+#define REG_PORT_PINCFG2           (*(RwReg  *)0x40002940U) /**< \brief (PORT) Pin Configuration 2 */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for PORT peripheral ========== */
-#define PORT_BITS                   84      
+#define PORT_BITS                   84
 #define PORT_DIR_DEFAULT_VAL        { 0x00000000, 0x00000000, 0x00000000 }
 #define PORT_DIR_IMPLEMENTED        { 0xDBFFFFFF, 0xC0C3FFFF, 0x000D0000 }
-#define PORT_DRVSTR                 1        // DRVSTR supported
+#define PORT_DRVSTR                 1
 #define PORT_DRVSTR_DEFAULT_VAL     { 0x00000000, 0x00000000, 0x00000000 }
 #define PORT_DRVSTR_IMPLEMENTED     { 0xD8FFFFFF, 0xC0C3FFFF, 0x000D0000 }
 #define PORT_EVENT_IMPLEMENTED      { 0xCBFFFFFF, 0xC0C3FFFF, 0x00000000 }
-#define PORT_EV_NUM                 4       
+#define PORT_EV_NUM                 4
 #define PORT_INEN_DEFAULT_VAL       { 0x00000000, 0x00000000, 0x00000000 }
 #define PORT_INEN_IMPLEMENTED       { 0xDBFFFFFF, 0xC0C3FFFF, 0x000D0000 }
-#define PORT_ODRAIN                 0        // ODRAIN supported
+#define PORT_ODRAIN                 0
 #define PORT_ODRAIN_DEFAULT_VAL     { 0x00000000, 0x00000000, 0x00000000 }
 #define PORT_ODRAIN_IMPLEMENTED     { 0x00000000, 0x00000000, 0x00000000 }
 #define PORT_OUT_DEFAULT_VAL        { 0x00000000, 0x00000000, 0x00000000 }
@@ -130,11 +158,11 @@
 #define PORT_PMUXBIT2_IMPLEMENTED   { 0xDBFFFFF3, 0xC0C3FF0F, 0x00000000 }
 #define PORT_PMUXBIT3_DEFAULT_VAL   { 0x00000000, 0x00000000, 0x00000000 }
 #define PORT_PMUXBIT3_IMPLEMENTED   { 0xC3CF0FF0, 0x00C3CFC7, 0x00000000 }
-#define PORT_PMUXEN_DEFAULT_VAL     { 0x40000000, 0x00000000, 0x00000000 }
+#define PORT_PMUXEN_DEFAULT_VAL     { 0x64000000, 0x3F3C0000, 0x0002FFFF }
 #define PORT_PMUXEN_IMPLEMENTED     { 0xDBFFFFFF, 0xC0C3FFFF, 0x000D0000 }
 #define PORT_PULLEN_DEFAULT_VAL     { 0x00000000, 0x00000000, 0x00000000 }
 #define PORT_PULLEN_IMPLEMENTED     { 0xDBFFFFFF, 0xC0C3FFFF, 0x000D0000 }
-#define PORT_SLEWLIM                0        // SLEWLIM supported
+#define PORT_SLEWLIM                0
 #define PORT_SLEWLIM_DEFAULT_VAL    { 0x00000000, 0x00000000, 0x00000000 }
 #define PORT_SLEWLIM_IMPLEMENTED    { 0x00000000, 0x00000000, 0x00000000 }
 

@@ -97,6 +97,7 @@ void ADC_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler
 void AC_Handler              ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void DAC_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void PTC_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void I2S_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void AES_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void TRNG_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void PICOP_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
@@ -151,9 +152,10 @@ const DeviceVectors exception_table = {
         (void*) AC_Handler,             /* 23 Analog Comparators */
         (void*) DAC_Handler,            /* 24 Digital-to-Analog Converter */
         (void*) PTC_Handler,            /* 25 Peripheral Touch Controller */
-        (void*) AES_Handler,            /* 26 Advanced Encryption Standard */
-        (void*) TRNG_Handler,           /* 27 True Random Generator */
-        (void*) PICOP_Handler           /* 28 PicoProcessor */
+        (void*) I2S_Handler,            /* 26 Inter-IC Sound Interface */
+        (void*) AES_Handler,            /* 27 Advanced Encryption Standard */
+        (void*) TRNG_Handler,           /* 28 True Random Generator */
+        (void*) PICOP_Handler           /* 29 PicoProcessor */
 };
 
 /**

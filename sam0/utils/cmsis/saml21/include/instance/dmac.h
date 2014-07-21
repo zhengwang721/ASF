@@ -94,18 +94,18 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for DMAC peripheral ========== */
-#define DMAC_CH_BITS                4        // Number of bits to select channel
-#define DMAC_CH_NUM                 16       // Number of channels
-#define DMAC_CLK_AHB_DOMAIN                  // Clock domain of AHB clock
-#define DMAC_CLK_AHB_ID             11       // AHB clock index
-#define DMAC_EVIN_NUM               8        // Number of input events
-#define DMAC_EVOUT_NUM              8        // Number of output events
-#define DMAC_LVL_BITS               2        // Number of bit to select level priority
-#define DMAC_LVL_NUM                4        // Enable priority level number
-#define DMAC_QOSCTRL_D_RESETVALUE   2        // QOS dmac ahb interface reset value
-#define DMAC_QOSCTRL_F_RESETVALUE   2        // QOS dmac fetch interface reset value
-#define DMAC_QOSCTRL_WRB_RESETVALUE 2        // QOS dmac write back interface reset value
-#define DMAC_TRIG_BITS              6        // Number of bits to select trigger source
-#define DMAC_TRIG_NUM               46       // Number of peripheral triggers
+#define DMAC_CH_BITS                len(bin(DMAC_CH_NUM - 1))-2
+#define DMAC_CH_NUM                 16
+#define DMAC_CLK_AHB_DOMAIN         
+#define DMAC_CLK_AHB_ID             11
+#define DMAC_EVIN_NUM               8
+#define DMAC_EVOUT_NUM              8
+#define DMAC_LVL_BITS               len(bin(DMAC_LVL_NUM - 1))-2
+#define DMAC_LVL_NUM                4
+#define DMAC_QOSCTRL_D_RESETVALUE   2
+#define DMAC_QOSCTRL_F_RESETVALUE   2
+#define DMAC_QOSCTRL_WRB_RESETVALUE 2
+#define DMAC_TRIG_BITS              len(bin(DMAC_TRIG_NUM - 1))-2
+#define DMAC_TRIG_NUM               46
 
 #endif /* _SAML21_DMAC_INSTANCE_ */

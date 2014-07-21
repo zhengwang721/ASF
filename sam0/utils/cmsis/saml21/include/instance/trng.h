@@ -46,19 +46,19 @@
 
 /* ========== Register definition for TRNG peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_TRNG_CTRLA             (0x42003800U) /**< \brief (TRNG) Control A */
-#define REG_TRNG_EVCTRL            (0x42003804U) /**< \brief (TRNG) Event Control */
-#define REG_TRNG_INTENCLR          (0x42003808U) /**< \brief (TRNG) Interrupt Enable Clear */
-#define REG_TRNG_INTENSET          (0x42003809U) /**< \brief (TRNG) Interrupt Enable Set */
-#define REG_TRNG_INTFLAG           (0x4200380AU) /**< \brief (TRNG) Interrupt Flag Status and Clear */
-#define REG_TRNG_DATA              (0x42003820U) /**< \brief (TRNG) Output Data */
+#define REG_TRNG_CTRLA             (0x42003C00U) /**< \brief (TRNG) Control A */
+#define REG_TRNG_EVCTRL            (0x42003C04U) /**< \brief (TRNG) Event Control */
+#define REG_TRNG_INTENCLR          (0x42003C08U) /**< \brief (TRNG) Interrupt Enable Clear */
+#define REG_TRNG_INTENSET          (0x42003C09U) /**< \brief (TRNG) Interrupt Enable Set */
+#define REG_TRNG_INTFLAG           (0x42003C0AU) /**< \brief (TRNG) Interrupt Flag Status and Clear */
+#define REG_TRNG_DATA              (0x42003C20U) /**< \brief (TRNG) Output Data */
 #else
-#define REG_TRNG_CTRLA             (*(RwReg8 *)0x42003800U) /**< \brief (TRNG) Control A */
-#define REG_TRNG_EVCTRL            (*(RwReg8 *)0x42003804U) /**< \brief (TRNG) Event Control */
-#define REG_TRNG_INTENCLR          (*(RwReg8 *)0x42003808U) /**< \brief (TRNG) Interrupt Enable Clear */
-#define REG_TRNG_INTENSET          (*(RwReg8 *)0x42003809U) /**< \brief (TRNG) Interrupt Enable Set */
-#define REG_TRNG_INTFLAG           (*(RwReg8 *)0x4200380AU) /**< \brief (TRNG) Interrupt Flag Status and Clear */
-#define REG_TRNG_DATA              (*(RoReg  *)0x42003820U) /**< \brief (TRNG) Output Data */
+#define REG_TRNG_CTRLA             (*(RwReg8 *)0x42003C00U) /**< \brief (TRNG) Control A */
+#define REG_TRNG_EVCTRL            (*(RwReg8 *)0x42003C04U) /**< \brief (TRNG) Event Control */
+#define REG_TRNG_INTENCLR          (*(RwReg8 *)0x42003C08U) /**< \brief (TRNG) Interrupt Enable Clear */
+#define REG_TRNG_INTENSET          (*(RwReg8 *)0x42003C09U) /**< \brief (TRNG) Interrupt Enable Set */
+#define REG_TRNG_INTFLAG           (*(RwReg8 *)0x42003C0AU) /**< \brief (TRNG) Interrupt Flag Status and Clear */
+#define REG_TRNG_DATA              (*(RoReg  *)0x42003C20U) /**< \brief (TRNG) Output Data */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 

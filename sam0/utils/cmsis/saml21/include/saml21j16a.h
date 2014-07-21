@@ -131,11 +131,12 @@ typedef enum IRQn
   AC_IRQn                  = 23, /**< 23 SAML21J16A Analog Comparators (AC) */
   DAC_IRQn                 = 24, /**< 24 SAML21J16A Digital-to-Analog Converter (DAC) */
   PTC_IRQn                 = 25, /**< 25 SAML21J16A Peripheral Touch Controller (PTC) */
-  AES_IRQn                 = 26, /**< 26 SAML21J16A Advanced Encryption Standard (AES) */
-  TRNG_IRQn                = 27, /**< 27 SAML21J16A True Random Generator (TRNG) */
-  PICOP_IRQn               = 28, /**< 28 SAML21J16A PicoProcessor (PICOP) */
+  I2S_IRQn                 = 26, /**< 26 SAML21J16A Inter-IC Sound Interface (I2S) */
+  AES_IRQn                 = 27, /**< 27 SAML21J16A Advanced Encryption Standard (AES) */
+  TRNG_IRQn                = 28, /**< 28 SAML21J16A True Random Generator (TRNG) */
+  PICOP_IRQn               = 29, /**< 29 SAML21J16A PicoProcessor (PICOP) */
 
-  PERIPH_COUNT_IRQn        = 29  /**< Number of peripheral IDs */
+  PERIPH_COUNT_IRQn        = 30  /**< Number of peripheral IDs */
 } IRQn_Type;
 
 typedef struct _DeviceVectors
@@ -187,9 +188,10 @@ typedef struct _DeviceVectors
   void* pfnAC_Handler;                    /* 23 Analog Comparators */
   void* pfnDAC_Handler;                   /* 24 Digital-to-Analog Converter */
   void* pfnPTC_Handler;                   /* 25 Peripheral Touch Controller */
-  void* pfnAES_Handler;                   /* 26 Advanced Encryption Standard */
-  void* pfnTRNG_Handler;                  /* 27 True Random Generator */
-  void* pfnPICOP_Handler;                 /* 28 PicoProcessor */
+  void* pfnI2S_Handler;                   /* 26 Inter-IC Sound Interface */
+  void* pfnAES_Handler;                   /* 27 Advanced Encryption Standard */
+  void* pfnTRNG_Handler;                  /* 28 True Random Generator */
+  void* pfnPICOP_Handler;                 /* 29 PicoProcessor */
 } DeviceVectors;
 
 /* Cortex-M0+ processor handlers */
@@ -233,6 +235,7 @@ void ADC_Handler                 ( void );
 void AC_Handler                  ( void );
 void DAC_Handler                 ( void );
 void PTC_Handler                 ( void );
+void I2S_Handler                 ( void );
 void AES_Handler                 ( void );
 void TRNG_Handler                ( void );
 void PICOP_Handler               ( void );
@@ -276,6 +279,7 @@ void PICOP_Handler               ( void );
 #include "component/eic.h"
 #include "component/evsys.h"
 #include "component/gclk.h"
+#include "component/i2s.h"
 #include "component/mclk.h"
 #include "component/mtb.h"
 #include "component/nvmctrl.h"
@@ -315,6 +319,7 @@ void PICOP_Handler               ( void );
 #include "instance/eic.h"
 #include "instance/evsys.h"
 #include "instance/gclk.h"
+#include "instance/i2s.h"
 #include "instance/mclk.h"
 #include "instance/mtb.h"
 #include "instance/nvmctrl.h"
@@ -389,8 +394,9 @@ void PICOP_Handler               ( void );
 #define ID_TC2           74 /**< \brief Basic Timer Counter TC (TC2) */
 #define ID_TC3           75 /**< \brief Basic Timer Counter TC (TC3) */
 #define ID_DAC           76 /**< \brief Digital-to-Analog Converter (DAC) */
-#define ID_AES           77 /**< \brief Advanced Encryption Standard (AES) */
-#define ID_TRNG          78 /**< \brief True Random Generator (TRNG) */
+#define ID_I2S           77 /**< \brief Inter-IC Sound Interface (I2S) */
+#define ID_AES           78 /**< \brief Advanced Encryption Standard (AES) */
+#define ID_TRNG          79 /**< \brief True Random Generator (TRNG) */
 
 // Peripheral instances on HPB3 bridge
 #define ID_EVSYS         96 /**< \brief Event System Interface (EVSYS) */
@@ -419,7 +425,7 @@ void PICOP_Handler               ( void );
 #if defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)
 #define AC                            (0x43001000U) /**< \brief (AC) APB Base Address */
 #define ADC                           (0x43000C00U) /**< \brief (ADC) APB Base Address */
-#define AES                           (0x42003400U) /**< \brief (AES) APB Base Address */
+#define AES                           (0x42003800U) /**< \brief (AES) APB Base Address */
 #define CCL                           (0x43001C00U) /**< \brief (CCL) APB Base Address */
 #define DAC                           (0x42003000U) /**< \brief (DAC) APB Base Address */
 #define DMAC                          (0x44000400U) /**< \brief (DMAC) APB Base Address */
@@ -428,6 +434,7 @@ void PICOP_Handler               ( void );
 #define EIC                           (0x40002400U) /**< \brief (EIC) APB Base Address */
 #define EVSYS                         (0x43000000U) /**< \brief (EVSYS) APB Base Address */
 #define GCLK                          (0x40001800U) /**< \brief (GCLK) APB Base Address */
+#define I2S                           (0x42003400U) /**< \brief (I2S) APB Base Address */
 #define MCLK                          (0x40000400U) /**< \brief (MCLK) APB Base Address */
 #define MTB                           (0x41006000U) /**< \brief (MTB) APB Base Address */
 #define NVMCTRL                       (0x41004000U) /**< \brief (NVMCTRL) APB Base Address */
@@ -465,7 +472,7 @@ void PICOP_Handler               ( void );
 #define TCC0                          (0x42001400U) /**< \brief (TCC0) APB Base Address */
 #define TCC1                          (0x42001800U) /**< \brief (TCC1) APB Base Address */
 #define TCC2                          (0x42001C00U) /**< \brief (TCC2) APB Base Address */
-#define TRNG                          (0x42003800U) /**< \brief (TRNG) APB Base Address */
+#define TRNG                          (0x42003C00U) /**< \brief (TRNG) APB Base Address */
 #define USB                           (0x41000000U) /**< \brief (USB) APB Base Address */
 #define WDT                           (0x40001C00U) /**< \brief (WDT) APB Base Address */
 #else
@@ -477,7 +484,7 @@ void PICOP_Handler               ( void );
 #define ADC_INST_NUM      1                         /**< \brief (ADC) Number of instances */
 #define ADC_INSTS         { ADC }                   /**< \brief (ADC) Instances List */
 
-#define AES               ((Aes      *)0x42003400U) /**< \brief (AES) APB Base Address */
+#define AES               ((Aes      *)0x42003800U) /**< \brief (AES) APB Base Address */
 #define AES_INST_NUM      1                         /**< \brief (AES) Number of instances */
 #define AES_INSTS         { AES }                   /**< \brief (AES) Instances List */
 
@@ -512,6 +519,10 @@ void PICOP_Handler               ( void );
 #define GCLK              ((Gclk     *)0x40001800U) /**< \brief (GCLK) APB Base Address */
 #define GCLK_INST_NUM     1                         /**< \brief (GCLK) Number of instances */
 #define GCLK_INSTS        { GCLK }                  /**< \brief (GCLK) Instances List */
+
+#define I2S               ((I2s      *)0x42003400U) /**< \brief (I2S) APB Base Address */
+#define I2S_INST_NUM      1                         /**< \brief (I2S) Number of instances */
+#define I2S_INSTS         { I2S }                   /**< \brief (I2S) Instances List */
 
 #define MCLK              ((Mclk     *)0x40000400U) /**< \brief (MCLK) APB Base Address */
 #define MCLK_INST_NUM     1                         /**< \brief (MCLK) Number of instances */
@@ -605,7 +616,7 @@ void PICOP_Handler               ( void );
 #define TCC_INST_NUM      3                         /**< \brief (TCC) Number of instances */
 #define TCC_INSTS         { TCC0, TCC1, TCC2 }      /**< \brief (TCC) Instances List */
 
-#define TRNG              ((Trng     *)0x42003800U) /**< \brief (TRNG) APB Base Address */
+#define TRNG              ((Trng     *)0x42003C00U) /**< \brief (TRNG) APB Base Address */
 #define TRNG_INST_NUM     1                         /**< \brief (TRNG) Number of instances */
 #define TRNG_INSTS        { TRNG }                  /**< \brief (TRNG) Instances List */
 
@@ -646,7 +657,7 @@ void PICOP_Handler               ( void );
 #define LPRAM_ADDR            (0x30000000U) /**< LPRAM base address */
 #define PICOPRAM_ADDR         (0x50000000U) /**< PICOPRAM base address */
 
-#define DSU_DID_RESETVALUE    0x10810002
+#define DSU_DID_RESETVALUE    0x11010002
 #define PORT_GROUPS           2
 #define WWR_SIZE              0x800 /* 2 kB */
 

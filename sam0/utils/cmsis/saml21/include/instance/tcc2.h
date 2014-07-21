@@ -94,22 +94,22 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for TCC2 peripheral ========== */
-#define TCC2_CC_NUM                 2        // Number of Compare/Capture units
-#define TCC2_DITHERING              0        // Dithering feature implemented
+#define TCC2_CC_NUM                 2
+#define TCC2_DITHERING              0
 #define TCC2_DMAC_ID_MC_0           20
 #define TCC2_DMAC_ID_MC_1           21
 #define TCC2_DMAC_ID_MC_LSB         20
 #define TCC2_DMAC_ID_MC_MSB         21
 #define TCC2_DMAC_ID_MC_SIZE        2
-#define TCC2_DMAC_ID_OVF            19       // DMA overflow/underflow/retrigger trigger
-#define TCC2_DTI                    0        // Dead-Time-Insertion feature implemented
-#define TCC2_EXT                    0        // Coding of implemented extended features
-#define TCC2_GCLK_ID                26       // Index of Generic Clock
-#define TCC2_OTMX                   0        // Output Matrix feature implemented
-#define TCC2_OW_NUM                 2        // Number of Output Waveforms
-#define TCC2_PG                     0        // Pattern Generation feature implemented
-#define TCC2_SIZE                   16      
-#define TCC2_SWAP                   0        // DTI outputs swap feature implemented
-#define TCC2_TYPE                   0        // TCC type 0 : NA, 1 : Master, 2 : Slave
+#define TCC2_DMAC_ID_OVF            19
+#define TCC2_DTI                    0
+#define TCC2_EXT                    (TCC2_DITHERING*16+TCC2_PG*8+TCC2_SWAP*4+TCC2_DTI*2+TCC2_OTMX*1)
+#define TCC2_GCLK_ID                26
+#define TCC2_OTMX                   0
+#define TCC2_OW_NUM                 2
+#define TCC2_PG                     0
+#define TCC2_SIZE                   16
+#define TCC2_SWAP                   0
+#define TCC2_TYPE                   0
 
 #endif /* _SAML21_TCC2_INSTANCE_ */

@@ -80,9 +80,9 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for PAC peripheral ========== */
-#define PAC_CLK_AHB_DOMAIN                   // Clock domain of AHB clock
-#define PAC_CLK_AHB_ID              14       // AHB clock index
-#define PAC_HPB_NUM                 5        // Number of bridges AHB/APB
-#define PAC_INTFLAG_NUM             6        // Number of intflag registers
+#define PAC_CLK_AHB_DOMAIN          
+#define PAC_CLK_AHB_ID              14
+#define PAC_HPB_NUM                 5
+#define PAC_INTFLAG_NUM             6
 
 #endif /* _SAML21_PAC_INSTANCE_ */

@@ -754,12 +754,14 @@ typedef union {
     uint32_t :1;               /*!< bit:     17  Reserved                           */
     uint32_t PTC:1;            /*!< bit:     18  PTC Interrupt CPU Select           */
     uint32_t :1;               /*!< bit:     19  Reserved                           */
-    uint32_t AES:1;            /*!< bit:     20  AES Interrupt CPU Select           */
+    uint32_t I2S:1;            /*!< bit:     20  I2S Interrupt CPU Select           */
     uint32_t :1;               /*!< bit:     21  Reserved                           */
-    uint32_t TRNG:1;           /*!< bit:     22  TRNG Interrupt CPU Select          */
+    uint32_t AES:1;            /*!< bit:     22  AES Interrupt CPU Select           */
     uint32_t :1;               /*!< bit:     23  Reserved                           */
-    uint32_t PICOP:1;          /*!< bit:     24  PICOP Interrupt CPU Select         */
-    uint32_t :7;               /*!< bit: 25..31  Reserved                           */
+    uint32_t TRNG:1;           /*!< bit:     24  TRNG Interrupt CPU Select          */
+    uint32_t :1;               /*!< bit:     25  Reserved                           */
+    uint32_t PICOP:1;          /*!< bit:     26  PICOP Interrupt CPU Select         */
+    uint32_t :5;               /*!< bit: 27..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } TAL_INTCPUSEL1_Type;
@@ -798,16 +800,19 @@ typedef union {
 #define TAL_INTCPUSEL1_PTC_Pos      18           /**< \brief (TAL_INTCPUSEL1) PTC Interrupt CPU Select */
 #define TAL_INTCPUSEL1_PTC_Msk      (0x1u << TAL_INTCPUSEL1_PTC_Pos)
 #define TAL_INTCPUSEL1_PTC(value)   ((TAL_INTCPUSEL1_PTC_Msk & ((value) << TAL_INTCPUSEL1_PTC_Pos)))
-#define TAL_INTCPUSEL1_AES_Pos      20           /**< \brief (TAL_INTCPUSEL1) AES Interrupt CPU Select */
+#define TAL_INTCPUSEL1_I2S_Pos      20           /**< \brief (TAL_INTCPUSEL1) I2S Interrupt CPU Select */
+#define TAL_INTCPUSEL1_I2S_Msk      (0x1u << TAL_INTCPUSEL1_I2S_Pos)
+#define TAL_INTCPUSEL1_I2S(value)   ((TAL_INTCPUSEL1_I2S_Msk & ((value) << TAL_INTCPUSEL1_I2S_Pos)))
+#define TAL_INTCPUSEL1_AES_Pos      22           /**< \brief (TAL_INTCPUSEL1) AES Interrupt CPU Select */
 #define TAL_INTCPUSEL1_AES_Msk      (0x1u << TAL_INTCPUSEL1_AES_Pos)
 #define TAL_INTCPUSEL1_AES(value)   ((TAL_INTCPUSEL1_AES_Msk & ((value) << TAL_INTCPUSEL1_AES_Pos)))
-#define TAL_INTCPUSEL1_TRNG_Pos     22           /**< \brief (TAL_INTCPUSEL1) TRNG Interrupt CPU Select */
+#define TAL_INTCPUSEL1_TRNG_Pos     24           /**< \brief (TAL_INTCPUSEL1) TRNG Interrupt CPU Select */
 #define TAL_INTCPUSEL1_TRNG_Msk     (0x1u << TAL_INTCPUSEL1_TRNG_Pos)
 #define TAL_INTCPUSEL1_TRNG(value)  ((TAL_INTCPUSEL1_TRNG_Msk & ((value) << TAL_INTCPUSEL1_TRNG_Pos)))
-#define TAL_INTCPUSEL1_PICOP_Pos    24           /**< \brief (TAL_INTCPUSEL1) PICOP Interrupt CPU Select */
+#define TAL_INTCPUSEL1_PICOP_Pos    26           /**< \brief (TAL_INTCPUSEL1) PICOP Interrupt CPU Select */
 #define TAL_INTCPUSEL1_PICOP_Msk    (0x1u << TAL_INTCPUSEL1_PICOP_Pos)
 #define TAL_INTCPUSEL1_PICOP(value) ((TAL_INTCPUSEL1_PICOP_Msk & ((value) << TAL_INTCPUSEL1_PICOP_Pos)))
-#define TAL_INTCPUSEL1_MASK         0x01555555u  /**< \brief (TAL_INTCPUSEL1) MASK Register */
+#define TAL_INTCPUSEL1_MASK         0x05555555u  /**< \brief (TAL_INTCPUSEL1) MASK Register */
 
 /* -------- TAL_IRQTRIG : (TAL Offset: 0x60) (R/W 16) Interrupt Trigger -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -861,8 +866,8 @@ typedef struct {
   __I  TAL_BRKSTATUS_Type        BRKSTATUS;   /**< \brief Offset: 0x0E (R/  16) Break Request Status */
        TalCtis                   Ctis[4];     /**< \brief Offset: 0x10 TalCtis groups [CTI_NUM] */
        RoReg8                    Reserved3[0x8];
-  __I  TAL_INTSTATUS_Type        INTSTATUS[29]; /**< \brief Offset: 0x20 (R/   8) Interrupt n Status */
-       RoReg8                    Reserved4[0x3];
+  __I  TAL_INTSTATUS_Type        INTSTATUS[30]; /**< \brief Offset: 0x20 (R/   8) Interrupt n Status */
+       RoReg8                    Reserved4[0x2];
   __IO TAL_DMACPUSEL0_Type       DMACPUSEL0;  /**< \brief Offset: 0x40 (R/W 32) DMA Channel Interrupts CPU Select 0 */
        RoReg8                    Reserved5[0x4];
   __IO TAL_EVCPUSEL0_Type        EVCPUSEL0;   /**< \brief Offset: 0x48 (R/W 32) EVSYS Channel Interrupts CPU Select 0 */

@@ -90,6 +90,7 @@ void ADC_Handler              ( void );
 void AC_Handler               ( void );
 void DAC_Handler              ( void );
 void PTC_Handler              ( void );
+void I2S_Handler              ( void );
 void AES_Handler              ( void );
 void TRNG_Handler             ( void );
 void PICOP_Handler            ( void );
@@ -128,6 +129,7 @@ void PICOP_Handler            ( void );
 #pragma weak AC_Handler               = Dummy_Handler
 #pragma weak DAC_Handler              = Dummy_Handler
 #pragma weak PTC_Handler              = Dummy_Handler
+#pragma weak I2S_Handler              = Dummy_Handler
 #pragma weak AES_Handler              = Dummy_Handler
 #pragma weak TRNG_Handler             = Dummy_Handler
 #pragma weak PICOP_Handler            = Dummy_Handler
@@ -187,9 +189,10 @@ const DeviceVectors __vector_table[] = {
         (void*) AC_Handler,             /* 23 Analog Comparators */
         (void*) DAC_Handler,            /* 24 Digital-to-Analog Converter */
         (void*) PTC_Handler,            /* 25 Peripheral Touch Controller */
-        (void*) AES_Handler,            /* 26 Advanced Encryption Standard */
-        (void*) TRNG_Handler,           /* 27 True Random Generator */
-        (void*) PICOP_Handler           /* 28 PicoProcessor */
+        (void*) I2S_Handler,            /* 26 Inter-IC Sound Interface */
+        (void*) AES_Handler,            /* 27 Advanced Encryption Standard */
+        (void*) TRNG_Handler,           /* 28 True Random Generator */
+        (void*) PICOP_Handler           /* 29 PicoProcessor */
 };
 
 /**------------------------------------------------------------------------------
