@@ -84,6 +84,7 @@ typedef struct {
 	usb_setup_req_t req;
 
 	//! Point to buffer to send or fill with data following SETUP packet
+	//! This buffer must be word align for DATA IN phase (use prefix COMPILER_WORD_ALIGNED for buffer)
 	uint8_t *payload;
 
 	//! Size of buffer to send or fill, and content the number of byte transfered
