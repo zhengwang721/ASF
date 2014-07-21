@@ -165,7 +165,7 @@ void create_peripheral_control_semaphores(const uint8_t options_flags,
 void configure_interrupt_controller(const enum IRQn peripheral_irq,
 		uint32_t interrupt_priority)
 {
-	configASSERT(interrupt_priority <=
+	configASSERT(interrupt_priority >=
 			configLIBRARY_MAX_SYSCALL_INTERRUPT_PRIORITY);
 
 	NVIC_ClearPendingIRQ(peripheral_irq);
