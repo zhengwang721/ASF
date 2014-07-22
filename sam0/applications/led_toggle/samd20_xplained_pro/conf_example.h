@@ -44,6 +44,9 @@
 #ifndef CONF_TEST_H_INCLUDED
 #define CONF_TEST_H_INCLUDED
 
-#  define EXTINT_NMI               false
+/** If \true, the non-maskable pin is used to check when the
+ *   button state changes, when \false the external pins is used.
+ */
+#define   USE_EIC_NMI               false
 
 #endif /* CONF_TEST_H_INCLUDED */

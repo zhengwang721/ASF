@@ -139,7 +139,7 @@ static void update_led_state(void)
 
 #if USE_INTERRUPTS == true
 #  if USE_EIC == true
-#if EXTINT_NMI == false
+#    if USE_EIC_NMI == false
 /** Callback function for the EXTINT driver, called when an external interrupt
  *  detection occurs.
  */
@@ -200,7 +200,7 @@ static void configure_systick_handler(void)
 /** Configures the External Interrupt Controller to detect changes in the board
  *  button state.
  */
- #if EXTINT_NMI == false
+# if USE_EIC_NMI == false
 static void configure_extint(void)
 {
 	struct extint_chan_conf eint_chan_conf;
@@ -235,7 +235,7 @@ int main(void)
 	system_init();
 
 #if USE_EIC == true
-#if EXTINT_NMI == false
+# if USE_EIC_NMI == false
 	configure_extint();
 #else
 	configure_nmi();
@@ -246,7 +246,7 @@ int main(void)
 #  if USE_EIC == false
 	configure_systick_handler();
 #  else
-#if EXTINT_NMI == false
+#    if USE_EIC_NMI == false
 	configure_eic_callback();
 #endif
 #endif
@@ -263,7 +263,7 @@ int main(void)
 	}
 #  else
 	while (true) {
-#if EXTINT_NMI == false
+#   if USE_EIC_NMI == false
 		if (extint_chan_is_detected(BUTTON_0_EIC_LINE)) {
 			extint_chan_clear_detected(BUTTON_0_EIC_LINE);
 
