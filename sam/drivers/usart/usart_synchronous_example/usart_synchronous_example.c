@@ -244,11 +244,13 @@ static void configure_usart(uint32_t ul_ismaster, uint32_t ul_baudrate)
 
 	usart_console_settings.baudrate = ul_baudrate;
 
+#if (SAMG55)
+	/* Enable the peripheral and set USART mode. */
+	flexcom_enable(BOARD_FLEXCOM);
+	flexcom_set_opmode(BOARD_FLEXCOM, FLEXCOM_MR_OPMODE_USART);
+#else
 	/* Enable the peripheral clock in the PMC. */
 	sysclk_enable_peripheral_clock(BOARD_ID_USART);
-
-#if (SAMG55)
-	flexcom_set_opmode(BOARD_FLEXCOM, FLEXCOM_MR_OPMODE_USART);
 #endif
 
 	/* Configure USART in SYNC. master or slave mode. */
