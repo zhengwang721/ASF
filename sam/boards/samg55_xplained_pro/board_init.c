@@ -119,7 +119,7 @@ void system_board_init(void)
 
 #ifdef CONF_BOARD_USART_SCK
 	/* Configure USART synchronous communication SCK pin */
-	ioport_set_pin_peripheral_mode(EXT3_PIN_10,
+	ioport_set_pin_peripheral_mode(EXT3_PIN_8,
 			IOPORT_MODE_MUX_B);
 #endif
 
