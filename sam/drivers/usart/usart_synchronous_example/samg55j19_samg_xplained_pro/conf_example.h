@@ -44,9 +44,9 @@
 /**
  * \defgroup usart_sync_example_pin_defs
  *   - <b> master  --  slave</b>
- *   - TXD(PA10)  --  RXD(PA9)
- *   - RXD(PA9)  --  TXD(PA10)
- *   - SCK(PA15)  --  SCK(PA15)
+ *   - TXD(PB0)  --  RXD(PB1)
+ *   - RXD(PB1)  --  TXD(PB0)
+ *   - SCK(PB13)  --  SCK(PB13)
  *   - GND  --  GND
  */
 
@@ -56,14 +56,14 @@
 #include "conf_board.h"
 #include "conf_clock.h"
 
-#define BOARD_FLEXCOM              FLEXCOM0
+#define BOARD_FLEXCOM              FLEXCOM6
 
-#define BOARD_ID_USART             ID_USART0
+#define BOARD_ID_USART             ID_USART6
 
-#define BOARD_USART                USART0
+#define BOARD_USART                USART6
 
-#define USART_Handler              USART0_Handler
+#define USART_Handler              USART6_Handler
 
-#define USART_IRQn                 USART0_IRQn
+#define USART_IRQn                 USART6_IRQn
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */

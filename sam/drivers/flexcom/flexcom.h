@@ -127,7 +127,7 @@ void flexcom_read(Flexcom *p_flexcom, uint32_t *data);
  * -# Use write/read function to access the data
  * \code
 	 flexcom_write(FLEXCOM0, data);
-	 flexcom_write(FLEXCOM0, &data);
+	 flexcom_read(FLEXCOM0, &data);
  \endcode
  */
 
