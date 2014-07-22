@@ -107,14 +107,14 @@ void system_board_init(void)
 
 #ifdef CONF_BOARD_USART_RXD
 	/* Configure USART RXD pin */
-	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_RX,
-			IOPORT_MODE_MUX_A);
+	ioport_set_pin_peripheral_mode(EXT3_PIN_UART_RX,
+			IOPORT_MODE_MUX_B);
 #endif
 
 #ifdef CONF_BOARD_USART_TXD
 	/* Configure USART TXD pin */
-	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_TX,
-			IOPORT_MODE_MUX_A);
+	ioport_set_pin_peripheral_mode(EXT3_PIN_UART_TX,
+			IOPORT_MODE_MUX_B);
 #endif
 
 #ifdef CONF_BOARD_USART_SCK
