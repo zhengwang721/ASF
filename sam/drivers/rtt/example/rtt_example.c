@@ -246,7 +246,7 @@ int main(void)
 	/* User input loop */
 	while (1) {
 		/* Wait for user input */
-		while (uart_read(CONSOLE_UART, &c));
+		scanf("%c", (char *)&c);
 
 		/* Main menu mode */
 		if (g_uc_state == STATE_MAIN_MENU) {
@@ -270,7 +270,7 @@ int main(void)
 				g_ul_new_alarm = g_ul_new_alarm * 10 + c - '0';
 				refresh_display();
 			} else if (c == ASCII_BS) {
-				uart_write(CONSOLE_UART, c);
+				printf("%c", c);
 				g_ul_new_alarm /= 10;
 				refresh_display();
 			} else if (c == ASCII_CR) {
