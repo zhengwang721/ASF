@@ -204,7 +204,7 @@ const chipidtype_t chipid_sramsize[CHIPID_SRAMSIZE_SIZE] = {
 };
 
 //! Number of architectures Supported
-#define CHIPID_ARCH_SIZE    40
+#define CHIPID_ARCH_SIZE    43
 //! Architectures support list
 const chipidtype_t chipid_archsize[CHIPID_ARCH_SIZE] = {
 
@@ -219,6 +219,9 @@ const chipidtype_t chipid_archsize[CHIPID_ARCH_SIZE] = {
 	{0x40,              "AT91x40 Series"},
 	{0x42,              "AT91x42 Series"},
 	{0x43,              "AT91SAMG51 Series"},
+	{0x44,              "AT91SAMG55 Series(49-lead version)"},
+	{0x45,              "AT91SAMG55 Series(64-lead version)"},
+	{0x46,              "AT91SAMG55 Series(100-lead version)"},
 	{0x47,              "AT91SAMG53/SAMG54 Series"},
 	{0x55,              "AT91x55 Series"},
 	{0x60,              "AT91SAM7Axx Series"},
