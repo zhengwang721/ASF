@@ -517,6 +517,7 @@ uint32_t usart_init_rs485(Usart *p_usart,
 	return 0;
 }
 
+#if (!SAMG55)
 /**
  * \brief Configure USART to work in IrDA mode.
  *
@@ -546,6 +547,7 @@ uint32_t usart_init_irda(Usart *p_usart,
 
 	return 0;
 }
+#endif
 
 /**
  * \brief Configure USART to work in ISO7816 mode.
@@ -748,7 +750,7 @@ uint32_t usart_init_spi_slave(Usart *p_usart,
 	return 0;
 }
 
-#if (SAM3XA || SAM4L)
+#if (SAM3XA || SAM4L || SAMG55)
 
 /**
  * \brief Configure USART to work in LIN mode and act as a LIN master.
@@ -1580,6 +1582,30 @@ Pdc *usart_get_pdc_base(Usart *p_usart)
 #ifdef PDC_USART3
 	else if (p_usart == USART3) {
 		p_pdc_base = PDC_USART3;
+		return p_pdc_base;
+	}
+#endif
+#ifdef PDC_USART4
+	else if (p_usart == USART4) {
+		p_pdc_base = PDC_USART4;
+		return p_pdc_base;
+	}
+#endif
+#ifdef PDC_USART5
+	else if (p_usart == USART5) {
+		p_pdc_base = PDC_USART5;
+		return p_pdc_base;
+	}
+#endif
+#ifdef PDC_USART6
+	else if (p_usart == USART6) {
+		p_pdc_base = PDC_USART6;
+		return p_pdc_base;
+	}
+#endif
+#ifdef PDC_USART7
+	else if (p_usart == USART7) {
+		p_pdc_base = PDC_USART7;
 		return p_pdc_base;
 	}
 #endif

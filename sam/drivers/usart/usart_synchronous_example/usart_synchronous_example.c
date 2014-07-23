@@ -107,6 +107,9 @@
 #include "conf_board.h"
 #include "conf_clock.h"
 #include "conf_example.h"
+#if (SAMG55)
+#include "flexcom.h"
+#endif
 
 /** size of the receive buffer used by the PDC, in bytes.*/
 #define BUFFER_SIZE         2000
@@ -241,8 +244,14 @@ static void configure_usart(uint32_t ul_ismaster, uint32_t ul_baudrate)
 
 	usart_console_settings.baudrate = ul_baudrate;
 
+#if (SAMG55)
+	/* Enable the peripheral and set USART mode. */
+	flexcom_enable(BOARD_FLEXCOM);
+	flexcom_set_opmode(BOARD_FLEXCOM, FLEXCOM_MR_OPMODE_USART);
+#else
 	/* Enable the peripheral clock in the PMC. */
 	sysclk_enable_peripheral_clock(BOARD_ID_USART);
+#endif
 
 	/* Configure USART in SYNC. master or slave mode. */
 	if (ul_ismaster) {
@@ -328,7 +337,7 @@ int main(void)
 
 	while (1) {
 		uc_char = 0;
-		uart_read(CONSOLE_UART, &uc_char);
+		scanf("%c", (char *)&uc_char);
 		switch (uc_char) {
 		case '0':
 		case '1':

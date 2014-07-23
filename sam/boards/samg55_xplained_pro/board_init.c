@@ -101,25 +101,25 @@ void system_board_init(void)
 
 #if defined (CONF_BOARD_UART_CONSOLE)
 	/* Configure UART pins */
-	ioport_set_port_peripheral_mode(PINS_UART0_PORT, PINS_UART0,
-			PINS_UART0_MASK);
+	ioport_set_port_peripheral_mode(PINS_USART7_PORT, PINS_USART7,
+			PINS_USART7_MASK);
 #endif
 
 #ifdef CONF_BOARD_USART_RXD
 	/* Configure USART RXD pin */
-	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_RX,
-			IOPORT_MODE_MUX_A);
+	ioport_set_pin_peripheral_mode(EXT3_PIN_UART_RX,
+			IOPORT_MODE_MUX_B);
 #endif
 
 #ifdef CONF_BOARD_USART_TXD
 	/* Configure USART TXD pin */
-	ioport_set_pin_peripheral_mode(EXT1_PIN_UART_TX,
-			IOPORT_MODE_MUX_A);
+	ioport_set_pin_peripheral_mode(EXT3_PIN_UART_TX,
+			IOPORT_MODE_MUX_B);
 #endif
 
 #ifdef CONF_BOARD_USART_SCK
 	/* Configure USART synchronous communication SCK pin */
-	ioport_set_pin_peripheral_mode(EXT3_PIN_10,
+	ioport_set_pin_peripheral_mode(EXT3_PIN_8,
 			IOPORT_MODE_MUX_B);
 #endif
 
