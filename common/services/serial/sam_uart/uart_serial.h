@@ -173,7 +173,9 @@ static inline void usart_serial_init(usart_if p_usart,
 	if (USART0 == p_usart) {
 #if (!SAM4L)
 		sysclk_enable_peripheral_clock(ID_USART0);
+#if (SAMG55)
 		flexcom_set_opmode(FLEXCOM0, FLEXCOM_MR_OPMODE_USART);
+#endif
 		/* Configure USART */
 		usart_init_rs232(p_usart, &usart_settings,
 				sysclk_get_peripheral_hz());

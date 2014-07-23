@@ -61,6 +61,7 @@ typedef struct {
 /* -------- MATRIX_MCFG[3] : (MATRIX Offset: 0x0000) Master Configuration Register -------- */
 #define MATRIX_MCFG_ULBT_Pos 0
 #define MATRIX_MCFG_ULBT_Msk (0x7u << MATRIX_MCFG_ULBT_Pos) /**< \brief (MATRIX_MCFG[3]) Undefined Length Burst Type */
+#define MATRIX_MCFG_ULBT(value) ((MATRIX_MCFG_ULBT_Msk & ((value) << MATRIX_MCFG_ULBT_Pos)))
 #define   MATRIX_MCFG_ULBT_INFINITE (0x0u << 0) /**< \brief (MATRIX_MCFG[3]) No predicted end of burst is generated and therefore INCR bursts coming from this master cannot be broken. */
 #define   MATRIX_MCFG_ULBT_SINGLE (0x1u << 0) /**< \brief (MATRIX_MCFG[3]) The undefined length burst is treated as a succession of single access allowing rearbitration at each beat of the INCR burst. */
 #define   MATRIX_MCFG_ULBT_FOUR_BEAT (0x2u << 0) /**< \brief (MATRIX_MCFG[3]) The undefined length burst is split into a 4-beat bursts allowing rearbitration at each 4-beat burst end. */
@@ -72,6 +73,7 @@ typedef struct {
 #define MATRIX_SCFG_SLOT_CYCLE(value) ((MATRIX_SCFG_SLOT_CYCLE_Msk & ((value) << MATRIX_SCFG_SLOT_CYCLE_Pos)))
 #define MATRIX_SCFG_DEFMSTR_TYPE_Pos 16
 #define MATRIX_SCFG_DEFMSTR_TYPE_Msk (0x3u << MATRIX_SCFG_DEFMSTR_TYPE_Pos) /**< \brief (MATRIX_SCFG[4]) Default Master Type */
+#define MATRIX_SCFG_DEFMSTR_TYPE(value) ((MATRIX_SCFG_DEFMSTR_TYPE_Msk & ((value) << MATRIX_SCFG_DEFMSTR_TYPE_Pos)))
 #define   MATRIX_SCFG_DEFMSTR_TYPE_NO_DEFAULT (0x0u << 16) /**< \brief (MATRIX_SCFG[4]) At the end of current slave access, if no other master request is pending, the slave is disconnected from all masters.This results in having a one cycle latency for the first access of a burst transfer or for a single access. */
 #define   MATRIX_SCFG_DEFMSTR_TYPE_LAST (0x1u << 16) /**< \brief (MATRIX_SCFG[4]) At the end of current slave access, if no other master request is pending, the slave stays connected to the last master having accessed it.This results in not having the one cycle latency when the last master tries to access the slave again. */
 #define   MATRIX_SCFG_DEFMSTR_TYPE_FIXED (0x2u << 16) /**< \brief (MATRIX_SCFG[4]) At the end of the current slave access, if no other master request is pending, the slave connects to the fixed master the number that has been written in the FIXED_DEFMSTR field.This results in not having the one cycle latency when the fixed master tries to access the slave again. */
@@ -80,6 +82,7 @@ typedef struct {
 #define MATRIX_SCFG_FIXED_DEFMSTR(value) ((MATRIX_SCFG_FIXED_DEFMSTR_Msk & ((value) << MATRIX_SCFG_FIXED_DEFMSTR_Pos)))
 #define MATRIX_SCFG_ARBT_Pos 24
 #define MATRIX_SCFG_ARBT_Msk (0x3u << MATRIX_SCFG_ARBT_Pos) /**< \brief (MATRIX_SCFG[4]) Arbitration Type */
+#define MATRIX_SCFG_ARBT(value) ((MATRIX_SCFG_ARBT_Msk & ((value) << MATRIX_SCFG_ARBT_Pos)))
 #define   MATRIX_SCFG_ARBT_ROUND_ROBIN (0x0u << 24) /**< \brief (MATRIX_SCFG[4]) Round-robin arbitration */
 #define   MATRIX_SCFG_ARBT_FIXED_PRIORITY (0x1u << 24) /**< \brief (MATRIX_SCFG[4]) Fixed priority arbitration */
 /* -------- MATRIX_PRAS0 : (MATRIX Offset: 0x0080) Priority Register A for Slave 0 -------- */
