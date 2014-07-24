@@ -94,7 +94,6 @@
 #define REG_TAL_INTSTATUS26        (0x40002C3AU) /**< \brief (TAL) Interrupt 26 Status */
 #define REG_TAL_INTSTATUS27        (0x40002C3BU) /**< \brief (TAL) Interrupt 27 Status */
 #define REG_TAL_INTSTATUS28        (0x40002C3CU) /**< \brief (TAL) Interrupt 28 Status */
-#define REG_TAL_INTSTATUS29        (0x40002C3DU) /**< \brief (TAL) Interrupt 29 Status */
 #define REG_TAL_DMACPUSEL0         (0x40002C40U) /**< \brief (TAL) DMA Channel Interrupts CPU Select 0 */
 #define REG_TAL_EVCPUSEL0          (0x40002C48U) /**< \brief (TAL) EVSYS Channel Interrupts CPU Select 0 */
 #define REG_TAL_EICCPUSEL0         (0x40002C50U) /**< \brief (TAL) EIC External Interrupts CPU Select 0 */
@@ -150,7 +149,6 @@
 #define REG_TAL_INTSTATUS26        (*(RoReg8 *)0x40002C3AU) /**< \brief (TAL) Interrupt 26 Status */
 #define REG_TAL_INTSTATUS27        (*(RoReg8 *)0x40002C3BU) /**< \brief (TAL) Interrupt 27 Status */
 #define REG_TAL_INTSTATUS28        (*(RoReg8 *)0x40002C3CU) /**< \brief (TAL) Interrupt 28 Status */
-#define REG_TAL_INTSTATUS29        (*(RoReg8 *)0x40002C3DU) /**< \brief (TAL) Interrupt 29 Status */
 #define REG_TAL_DMACPUSEL0         (*(RwReg  *)0x40002C40U) /**< \brief (TAL) DMA Channel Interrupts CPU Select 0 */
 #define REG_TAL_EVCPUSEL0          (*(RwReg  *)0x40002C48U) /**< \brief (TAL) EVSYS Channel Interrupts CPU Select 0 */
 #define REG_TAL_EICCPUSEL0         (*(RwReg  *)0x40002C50U) /**< \brief (TAL) EIC External Interrupts CPU Select 0 */
@@ -160,11 +158,11 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for TAL peripheral ========== */
-#define TAL_CPU_NUM                 2
-#define TAL_CTI_NUM                 TAL_CPU_NUM+2
-#define TAL_DMA_CH_NUM              16
-#define TAL_EV_CH_NUM               12
-#define TAL_EXTINT_NUM              16
-#define TAL_INT_NUM                 30
+#define TAL_CPU_NUM                 2        // Number of CPUs
+#define TAL_CTI_NUM                 4        // Number of Cross-Trigger Interfaces
+#define TAL_DMA_CH_NUM              16       // Number of DMAC Channels
+#define TAL_EV_CH_NUM               12       // Number of EVSYS Channels
+#define TAL_EXTINT_NUM              16       // Number of EIC External Interrrupts
+#define TAL_INT_NUM                 29       // Number of Interrupt Requests
 
 #endif /* _SAML21_TAL_INSTANCE_ */

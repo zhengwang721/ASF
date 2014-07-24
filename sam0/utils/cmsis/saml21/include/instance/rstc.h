@@ -62,6 +62,6 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for RSTC peripheral ========== */
-#define RSTC_NUMBER_OF_EXTWAKE      16
+#define RSTC_NUMBER_OF_EXTWAKE      16       // number of external wakeup line
 
 #endif /* _SAML21_RSTC_INSTANCE_ */

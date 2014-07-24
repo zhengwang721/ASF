@@ -14,7 +14,6 @@
 		<build type="header-file" value="eic.h"/>
 		<build type="header-file" value="evsys.h"/>
 		<build type="header-file" value="gclk.h"/>
-		<build type="header-file" value="i2s.h"/>
 		<build type="header-file" value="mclk.h"/>
 		<build type="header-file" value="mtb.h"/>
 		<build type="header-file" value="nvmctrl.h"/>
@@ -22,7 +21,6 @@
 		<build type="header-file" value="osc32kctrl.h"/>
 		<build type="header-file" value="oscctrl.h"/>
 		<build type="header-file" value="pac.h"/>
-		<build type="header-file" value="picop.h"/>
 		<build type="header-file" value="pm.h"/>
 		<build type="header-file" value="port.h"/>
 		<build type="header-file" value="rstc.h"/>
@@ -34,7 +32,6 @@
 		<build type="header-file" value="sercom4.h"/>
 		<build type="header-file" value="sercom5.h"/>
 		<build type="header-file" value="supc.h"/>
-		<build type="header-file" value="sysctrl.h"/>
 		<build type="header-file" value="tal.h"/>
 		<build type="header-file" value="tc0.h"/>
 		<build type="header-file" value="tc1.h"/>

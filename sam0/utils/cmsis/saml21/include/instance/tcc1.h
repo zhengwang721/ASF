@@ -98,22 +98,22 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for TCC1 peripheral ========== */
-#define TCC1_CC_NUM                 2
-#define TCC1_DITHERING              1
+#define TCC1_CC_NUM                 2        // Number of Compare/Capture units
+#define TCC1_DITHERING              1        // Dithering feature implemented
 #define TCC1_DMAC_ID_MC_0           17
 #define TCC1_DMAC_ID_MC_1           18
 #define TCC1_DMAC_ID_MC_LSB         17
 #define TCC1_DMAC_ID_MC_MSB         18
 #define TCC1_DMAC_ID_MC_SIZE        2
-#define TCC1_DMAC_ID_OVF            16
-#define TCC1_DTI                    0
-#define TCC1_EXT                    (TCC1_DITHERING*16+TCC1_PG*8+TCC1_SWAP*4+TCC1_DTI*2+TCC1_OTMX*1)
-#define TCC1_GCLK_ID                25
-#define TCC1_OTMX                   0
-#define TCC1_OW_NUM                 4
-#define TCC1_PG                     1
-#define TCC1_SIZE                   24
-#define TCC1_SWAP                   0
-#define TCC1_TYPE                   2
+#define TCC1_DMAC_ID_OVF            16       // DMA overflow/underflow/retrigger trigger
+#define TCC1_DTI                    0        // Dead-Time-Insertion feature implemented
+#define TCC1_EXT                    24       // Coding of implemented extended features
+#define TCC1_GCLK_ID                25       // Index of Generic Clock
+#define TCC1_OTMX                   0        // Output Matrix feature implemented
+#define TCC1_OW_NUM                 4        // Number of Output Waveforms
+#define TCC1_PG                     1        // Pattern Generation feature implemented
+#define TCC1_SIZE                   24      
+#define TCC1_SWAP                   0        // DTI outputs swap feature implemented
+#define TCC1_TYPE                   2        // TCC type 0 : NA, 1 : Master, 2 : Slave
 
 #endif /* _SAML21_TCC1_INSTANCE_ */

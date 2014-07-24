@@ -33,7 +33,7 @@ execUserFlashInit()
     __message "------------------------------ execUserFlashInit ---------------------------------";
 
    //Watch dog disable
-   __writeMemory32(0x000000000,0x40001000,"Memory");
+   __writeMemory32(0x000000000,0x40001C00,"Memory");
 
 }
 

@@ -41,59 +41,14 @@
 
 #include "saml21.h"
 
+typedef void (*intfunc) (void);
+typedef union { intfunc __fun; void * __ptr; } intvec_elem;
+
 void __iar_program_start(void);
 int __low_level_init(void);
 
+/* Default empty handler */
 void Dummy_Handler(void);
-void Reset_Handler(void);
-
-/**
- * \brief Default interrupt handler for unused IRQs.
- */
-void Dummy_Handler(void)
-{
-        while (1) {
-        }
-}
-
-/* Cortex-M0+ core handlers */
-void NMI_Handler              ( void );
-void HardFault_Handler        ( void );
-void SVC_Handler              ( void );
-void PendSV_Handler           ( void );
-void SysTick_Handler          ( void );
-
-/* Peripherals handlers */
-void SYSTEM_Handler           ( void ); /* MCLK, OSCCTRL, OSC32KCTRL, PAC, PM, SUPC, TAL */
-void WDT_Handler              ( void );
-void RTC_Handler              ( void );
-void EIC_Handler              ( void );
-void NVMCTRL_Handler          ( void );
-void DMAC_Handler             ( void );
-void USB_Handler              ( void );
-void EVSYS_Handler            ( void );
-void SERCOM0_Handler          ( void );
-void SERCOM1_Handler          ( void );
-void SERCOM2_Handler          ( void );
-void SERCOM3_Handler          ( void );
-void SERCOM4_Handler          ( void );
-void SERCOM5_Handler          ( void );
-void TCC0_Handler             ( void );
-void TCC1_Handler             ( void );
-void TCC2_Handler             ( void );
-void TC0_Handler              ( void );
-void TC1_Handler              ( void );
-void TC2_Handler              ( void );
-void TC3_Handler              ( void );
-void TC4_Handler              ( void );
-void ADC_Handler              ( void );
-void AC_Handler               ( void );
-void DAC_Handler              ( void );
-void PTC_Handler              ( void );
-void I2S_Handler              ( void );
-void AES_Handler              ( void );
-void TRNG_Handler             ( void );
-void PICOP_Handler            ( void );
 
 /* Cortex-M0+ core handlers */
 #pragma weak NMI_Handler              = Dummy_Handler
@@ -109,40 +64,63 @@ void PICOP_Handler            ( void );
 #pragma weak EIC_Handler              = Dummy_Handler
 #pragma weak NVMCTRL_Handler          = Dummy_Handler
 #pragma weak DMAC_Handler             = Dummy_Handler
+#ifdef       USB_IRQn
 #pragma weak USB_Handler              = Dummy_Handler
+#endif
 #pragma weak EVSYS_Handler            = Dummy_Handler
 #pragma weak SERCOM0_Handler          = Dummy_Handler
 #pragma weak SERCOM1_Handler          = Dummy_Handler
 #pragma weak SERCOM2_Handler          = Dummy_Handler
 #pragma weak SERCOM3_Handler          = Dummy_Handler
+#ifdef       SERCOM4_IRQn
 #pragma weak SERCOM4_Handler          = Dummy_Handler
+#endif
+#ifdef       SERCOM5_IRQn
 #pragma weak SERCOM5_Handler          = Dummy_Handler
+#endif
 #pragma weak TCC0_Handler             = Dummy_Handler
 #pragma weak TCC1_Handler             = Dummy_Handler
 #pragma weak TCC2_Handler             = Dummy_Handler
 #pragma weak TC0_Handler              = Dummy_Handler
 #pragma weak TC1_Handler              = Dummy_Handler
+#ifdef       TC2_IRQn
 #pragma weak TC2_Handler              = Dummy_Handler
+#endif
+#ifdef       TC3_IRQn
 #pragma weak TC3_Handler              = Dummy_Handler
+#endif
 #pragma weak TC4_Handler              = Dummy_Handler
+#ifdef       ADC_IRQn
 #pragma weak ADC_Handler              = Dummy_Handler
+#endif
+#ifdef       AC_IRQn
 #pragma weak AC_Handler               = Dummy_Handler
+#endif
+#ifdef       DAC_IRQn
 #pragma weak DAC_Handler              = Dummy_Handler
+#endif
+#ifdef       PTC_IRQn
 #pragma weak PTC_Handler              = Dummy_Handler
-#pragma weak I2S_Handler              = Dummy_Handler
+#endif
+#ifdef       AES_IRQn
 #pragma weak AES_Handler              = Dummy_Handler
+#endif
+#ifdef       TRNG_IRQn
 #pragma weak TRNG_Handler             = Dummy_Handler
+#endif
+#ifdef       PICOP_IRQn
 #pragma weak PICOP_Handler            = Dummy_Handler
+#endif
 
 /* Exception Table */
-#pragma language=extended
-#pragma segment="CSTACK"
+#pragma language = extended
+#pragma segment  = "CSTACK"
 
 /* The name "__vector_table" has special meaning for C-SPY: */
 /* it is where the SP start value is found, and the NVIC vector */
 /* table register (VTOR) is initialized to this address if != 0 */
 
-#pragma section = ".intvec"
+#pragma section  = ".intvec"
 #pragma location = ".intvec"
 const DeviceVectors __vector_table[] = {
         __sfe("CSTACK"),
@@ -169,30 +147,77 @@ const DeviceVectors __vector_table[] = {
         (void*) EIC_Handler,            /*  3 External Interrupt Controller */
         (void*) NVMCTRL_Handler,        /*  4 Non-Volatile Memory Controller */
         (void*) DMAC_Handler,           /*  5 Direct Memory Access Controller */
+#ifdef USB_IRQn
         (void*) USB_Handler,            /*  6 Universal Serial Bus */
+#else
+        (void*) (0UL), /* Reserved*/
+#endif
         (void*) EVSYS_Handler,          /*  7 Event System Interface */
         (void*) SERCOM0_Handler,        /*  8 Serial Communication Interface 0 */
         (void*) SERCOM1_Handler,        /*  9 Serial Communication Interface 1 */
         (void*) SERCOM2_Handler,        /* 10 Serial Communication Interface 2 */
         (void*) SERCOM3_Handler,        /* 11 Serial Communication Interface 3 */
+#ifdef SERCOM4_IRQn
         (void*) SERCOM4_Handler,        /* 12 Serial Communication Interface 4 */
+#else
+        (void*) (0UL), /* Reserved*/
+#endif
+#ifdef SERCOM5_IRQn
         (void*) SERCOM5_Handler,        /* 13 Serial Communication Interface 5 */
+#else
+        (void*) (0UL), /* Reserved*/
+#endif
         (void*) TCC0_Handler,           /* 14 Timer Counter Control 0 */
         (void*) TCC1_Handler,           /* 15 Timer Counter Control 1 */
         (void*) TCC2_Handler,           /* 16 Timer Counter Control 2 */
         (void*) TC0_Handler,            /* 17 Basic Timer Counter 0 */
         (void*) TC1_Handler,            /* 18 Basic Timer Counter 1 */
+#ifdef TC2_IRQn
         (void*) TC2_Handler,            /* 19 Basic Timer Counter 2 */
+#else
+        (void*) (0UL), /* Reserved*/
+#endif
+#ifdef TC3_IRQn
         (void*) TC3_Handler,            /* 20 Basic Timer Counter 3 */
+#else
+        (void*) (0UL), /* Reserved*/
+#endif
         (void*) TC4_Handler,            /* 21 Basic Timer Counter 4 */
+#ifdef ADC_IRQn
         (void*) ADC_Handler,            /* 22 Analog Digital Converter */
+#else
+        (void*) (0UL), /* Reserved*/
+#endif
+#ifdef AC_IRQn
         (void*) AC_Handler,             /* 23 Analog Comparators */
+#else
+        (void*) (0UL), /* Reserved*/
+#endif
+#ifdef DAC_IRQn
         (void*) DAC_Handler,            /* 24 Digital-to-Analog Converter */
+#else
+        (void*) (0UL), /* Reserved*/
+#endif
+#ifdef PTC_IRQn
         (void*) PTC_Handler,            /* 25 Peripheral Touch Controller */
-        (void*) I2S_Handler,            /* 26 Inter-IC Sound Interface */
-        (void*) AES_Handler,            /* 27 Advanced Encryption Standard */
-        (void*) TRNG_Handler,           /* 28 True Random Generator */
-        (void*) PICOP_Handler           /* 29 PicoProcessor */
+#else
+        (void*) (0UL), /* Reserved*/
+#endif
+#ifdef AES_IRQn
+        (void*) AES_Handler,            /* 26 Advanced Encryption Standard */
+#else
+        (void*) (0UL), /* Reserved*/
+#endif
+#ifdef TRNG_IRQn
+        (void*) TRNG_Handler,           /* 27 True Random Generator */
+#else
+        (void*) (0UL), /* Reserved*/
+#endif
+#ifdef PICOP_IRQn
+        (void*) PICOP_Handler           /* 28 PicoProcessor */
+#else
+        (void*) (0UL)  /* Reserved*/
+#endif
 };
 
 /**------------------------------------------------------------------------------
@@ -215,4 +240,13 @@ int __low_level_init(void)
 void Reset_Handler(void)
 {
         __iar_program_start();
+}
+
+/**
+ * \brief Default interrupt handler for unused IRQs.
+ */
+void Dummy_Handler(void)
+{
+        while (1) {
+        }
 }

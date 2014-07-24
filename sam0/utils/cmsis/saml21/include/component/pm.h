@@ -190,13 +190,12 @@ typedef union {
     uint16_t :2;               /*!< bit:  2.. 3  Reserved                           */
     uint16_t DPGPD0:1;         /*!< bit:      4  Dynamic Power Gating for PD0       */
     uint16_t DPGPD1:1;         /*!< bit:      5  Dynamic Power Gating for PD1       */
-    uint16_t :2;               /*!< bit:  6.. 7  Reserved                           */
+    uint16_t :1;               /*!< bit:      6  Reserved                           */
+    uint16_t AVREGSD:1;        /*!< bit:      7  Automatic VREG Switching Disable   */
     uint16_t LINKPD:2;         /*!< bit:  8.. 9  Linked Power Domain                */
-    uint16_t :2;               /*!< bit: 10..11  Reserved                           */
-    uint16_t AVREGSD:1;        /*!< bit:     12  Automatic VREG Switching Disable   */
-    uint16_t BBIASHS:1;        /*!< bit:     13  Back Bias for HMCRAMCHS            */
-    uint16_t BBIASLP:1;        /*!< bit:     14  Back Bias for HMCRAMCLP            */
-    uint16_t BBIASPP:1;        /*!< bit:     15  Back Bias for PicoPram             */
+    uint16_t BBIASHS:2;        /*!< bit: 10..11  Back Bias for HMCRAMCHS            */
+    uint16_t BBIASLP:2;        /*!< bit: 12..13  Back Bias for HMCRAMCLP            */
+    uint16_t BBIASPP:2;        /*!< bit: 14..15  Back Bias for PicoPram             */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } PM_STDBYCFG_Type;
@@ -220,6 +219,8 @@ typedef union {
 #define PM_STDBYCFG_DPGPD0          (0x1u << PM_STDBYCFG_DPGPD0_Pos)
 #define PM_STDBYCFG_DPGPD1_Pos      5            /**< \brief (PM_STDBYCFG) Dynamic Power Gating for PD1 */
 #define PM_STDBYCFG_DPGPD1          (0x1u << PM_STDBYCFG_DPGPD1_Pos)
+#define PM_STDBYCFG_AVREGSD_Pos     7            /**< \brief (PM_STDBYCFG) Automatic VREG Switching Disable */
+#define PM_STDBYCFG_AVREGSD         (0x1u << PM_STDBYCFG_AVREGSD_Pos)
 #define PM_STDBYCFG_LINKPD_Pos      8            /**< \brief (PM_STDBYCFG) Linked Power Domain */
 #define PM_STDBYCFG_LINKPD_Msk      (0x3u << PM_STDBYCFG_LINKPD_Pos)
 #define PM_STDBYCFG_LINKPD(value)   ((PM_STDBYCFG_LINKPD_Msk & ((value) << PM_STDBYCFG_LINKPD_Pos)))
@@ -231,15 +232,16 @@ typedef union {
 #define PM_STDBYCFG_LINKPD_PD01     (PM_STDBYCFG_LINKPD_PD01_Val   << PM_STDBYCFG_LINKPD_Pos)
 #define PM_STDBYCFG_LINKPD_PD12     (PM_STDBYCFG_LINKPD_PD12_Val   << PM_STDBYCFG_LINKPD_Pos)
 #define PM_STDBYCFG_LINKPD_PD012    (PM_STDBYCFG_LINKPD_PD012_Val  << PM_STDBYCFG_LINKPD_Pos)
-#define PM_STDBYCFG_AVREGSD_Pos     12           /**< \brief (PM_STDBYCFG) Automatic VREG Switching Disable */
-#define PM_STDBYCFG_AVREGSD         (0x1u << PM_STDBYCFG_AVREGSD_Pos)
-#define PM_STDBYCFG_BBIASHS_Pos     13           /**< \brief (PM_STDBYCFG) Back Bias for HMCRAMCHS */
-#define PM_STDBYCFG_BBIASHS         (0x1u << PM_STDBYCFG_BBIASHS_Pos)
-#define PM_STDBYCFG_BBIASLP_Pos     14           /**< \brief (PM_STDBYCFG) Back Bias for HMCRAMCLP */
-#define PM_STDBYCFG_BBIASLP         (0x1u << PM_STDBYCFG_BBIASLP_Pos)
-#define PM_STDBYCFG_BBIASPP_Pos     15           /**< \brief (PM_STDBYCFG) Back Bias for PicoPram */
-#define PM_STDBYCFG_BBIASPP         (0x1u << PM_STDBYCFG_BBIASPP_Pos)
-#define PM_STDBYCFG_MASK            0xF333u      /**< \brief (PM_STDBYCFG) MASK Register */
+#define PM_STDBYCFG_BBIASHS_Pos     10           /**< \brief (PM_STDBYCFG) Back Bias for HMCRAMCHS */
+#define PM_STDBYCFG_BBIASHS_Msk     (0x3u << PM_STDBYCFG_BBIASHS_Pos)
+#define PM_STDBYCFG_BBIASHS(value)  ((PM_STDBYCFG_BBIASHS_Msk & ((value) << PM_STDBYCFG_BBIASHS_Pos)))
+#define PM_STDBYCFG_BBIASLP_Pos     12           /**< \brief (PM_STDBYCFG) Back Bias for HMCRAMCLP */
+#define PM_STDBYCFG_BBIASLP_Msk     (0x3u << PM_STDBYCFG_BBIASLP_Pos)
+#define PM_STDBYCFG_BBIASLP(value)  ((PM_STDBYCFG_BBIASLP_Msk & ((value) << PM_STDBYCFG_BBIASLP_Pos)))
+#define PM_STDBYCFG_BBIASPP_Pos     14           /**< \brief (PM_STDBYCFG) Back Bias for PicoPram */
+#define PM_STDBYCFG_BBIASPP_Msk     (0x3u << PM_STDBYCFG_BBIASPP_Pos)
+#define PM_STDBYCFG_BBIASPP(value)  ((PM_STDBYCFG_BBIASPP_Msk & ((value) << PM_STDBYCFG_BBIASPP_Pos)))
+#define PM_STDBYCFG_MASK            0xFFB3u      /**< \brief (PM_STDBYCFG) MASK Register */
 
 /* -------- PM_PWSAKDLY : (PM Offset: 0x0C) (R/W  8) Power Switch Acknowledge Delay -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

@@ -10,11 +10,9 @@
 		<build type="header-file" value="dac.h"/>
 		<build type="header-file" value="dmac.h"/>
 		<build type="header-file" value="dsu.h"/>
-		<build type="header-file" value="dsustandby.h"/>
 		<build type="header-file" value="eic.h"/>
 		<build type="header-file" value="evsys.h"/>
 		<build type="header-file" value="gclk.h"/>
-		<build type="header-file" value="i2s.h"/>
 		<build type="header-file" value="mclk.h"/>
 		<build type="header-file" value="mtb.h"/>
 		<build type="header-file" value="nvmctrl.h"/>
@@ -22,7 +20,6 @@
 		<build type="header-file" value="osc32kctrl.h"/>
 		<build type="header-file" value="oscctrl.h"/>
 		<build type="header-file" value="pac.h"/>
-		<build type="header-file" value="picop.h"/>
 		<build type="header-file" value="pm.h"/>
 		<build type="header-file" value="port.h"/>
 		<build type="header-file" value="rstc.h"/>

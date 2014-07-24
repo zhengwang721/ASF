@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Header file for SAML21E16A
+ * \brief Header file for SAML21E18A
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,13 +41,13 @@
  *
  */
 
-#ifndef _SAML21E16A_
-#define _SAML21E16A_
+#ifndef _SAML21E18A_
+#define _SAML21E18A_
 
 /**
  * \ingroup SAML21_definitions
- * \addtogroup SAML21E16A_definitions SAML21E16A definitions
- * This file defines all structures and symbols for SAML21E16A:
+ * \addtogroup SAML21E18A_definitions SAML21E18A definitions
+ * This file defines all structures and symbols for SAML21E18A:
  *   - registers and bitfields
  *   - peripheral base address
  *   - peripheral ID
@@ -84,9 +84,9 @@ typedef volatile       uint8_t  RwReg8;  /**< Read-Write  8-bit register (volati
 #endif
 
 /* ************************************************************************** */
-/**  CMSIS DEFINITIONS FOR SAML21E16A */
+/**  CMSIS DEFINITIONS FOR SAML21E18A */
 /* ************************************************************************** */
-/** \defgroup SAML21E16A_cmsis CMSIS Definitions */
+/** \defgroup SAML21E18A_cmsis CMSIS Definitions */
 /*@{*/
 
 /** Interrupt Number Definition */
@@ -98,39 +98,39 @@ typedef enum IRQn
   SVCall_IRQn              = -5, /**< 11 Cortex-M0+ SV Call Interrupt           */
   PendSV_IRQn              = -2, /**< 14 Cortex-M0+ Pend SV Interrupt           */
   SysTick_IRQn             = -1, /**< 15 Cortex-M0+ System Tick Interrupt       */
-  /******  SAML21E16A-specific Interrupt Numbers ***********************/
-  SYSTEM_IRQn              =  0, /**<  0 SAML21E16A System Interrupts */
-  MCLK_IRQn                =  0, /**<  0 SAML21E16A Main Clock (MCLK) */
-  OSCCTRL_IRQn             =  0, /**<  0 SAML21E16A Oscillators Control (OSCCTRL) */
-  OSC32KCTRL_IRQn          =  0, /**<  0 SAML21E16A 32k Oscillators Control (OSC32KCTRL) */
-  PAC_IRQn                 =  0, /**<  0 SAML21E16A Peripheral Access Controller (PAC) */
-  PM_IRQn                  =  0, /**<  0 SAML21E16A Power Manager (PM) */
-  SUPC_IRQn                =  0, /**<  0 SAML21E16A Supply Controller (SUPC) */
-  TAL_IRQn                 =  0, /**<  0 SAML21E16A Trigger Allocator (TAL) */
-  WDT_IRQn                 =  1, /**<  1 SAML21E16A Watchdog Timer (WDT) */
-  RTC_IRQn                 =  2, /**<  2 SAML21E16A Real-Time Counter (RTC) */
-  EIC_IRQn                 =  3, /**<  3 SAML21E16A External Interrupt Controller (EIC) */
-  NVMCTRL_IRQn             =  4, /**<  4 SAML21E16A Non-Volatile Memory Controller (NVMCTRL) */
-  DMAC_IRQn                =  5, /**<  5 SAML21E16A Direct Memory Access Controller (DMAC) */
-  USB_IRQn                 =  6, /**<  6 SAML21E16A Universal Serial Bus (USB) */
-  EVSYS_IRQn               =  7, /**<  7 SAML21E16A Event System Interface (EVSYS) */
-  SERCOM0_IRQn             =  8, /**<  8 SAML21E16A Serial Communication Interface 0 (SERCOM0) */
-  SERCOM1_IRQn             =  9, /**<  9 SAML21E16A Serial Communication Interface 1 (SERCOM1) */
-  SERCOM2_IRQn             = 10, /**< 10 SAML21E16A Serial Communication Interface 2 (SERCOM2) */
-  SERCOM3_IRQn             = 11, /**< 11 SAML21E16A Serial Communication Interface 3 (SERCOM3) */
-  TCC0_IRQn                = 14, /**< 14 SAML21E16A Timer Counter Control 0 (TCC0) */
-  TCC1_IRQn                = 15, /**< 15 SAML21E16A Timer Counter Control 1 (TCC1) */
-  TCC2_IRQn                = 16, /**< 16 SAML21E16A Timer Counter Control 2 (TCC2) */
-  TC0_IRQn                 = 17, /**< 17 SAML21E16A Basic Timer Counter 0 (TC0) */
-  TC1_IRQn                 = 18, /**< 18 SAML21E16A Basic Timer Counter 1 (TC1) */
-  TC4_IRQn                 = 21, /**< 21 SAML21E16A Basic Timer Counter 4 (TC4) */
-  ADC_IRQn                 = 22, /**< 22 SAML21E16A Analog Digital Converter (ADC) */
-  AC_IRQn                  = 23, /**< 23 SAML21E16A Analog Comparators (AC) */
-  DAC_IRQn                 = 24, /**< 24 SAML21E16A Digital-to-Analog Converter (DAC) */
-  PTC_IRQn                 = 25, /**< 25 SAML21E16A Peripheral Touch Controller (PTC) */
-  AES_IRQn                 = 26, /**< 26 SAML21E16A Advanced Encryption Standard (AES) */
-  TRNG_IRQn                = 27, /**< 27 SAML21E16A True Random Generator (TRNG) */
-  PICOP_IRQn               = 28, /**< 28 SAML21E16A PicoProcessor (PICOP) */
+  /******  SAML21E18A-specific Interrupt Numbers ***********************/
+  SYSTEM_IRQn              =  0, /**<  0 SAML21E18A System Interrupts */
+  MCLK_IRQn                =  0, /**<  0 SAML21E18A Main Clock (MCLK) */
+  OSCCTRL_IRQn             =  0, /**<  0 SAML21E18A Oscillators Control (OSCCTRL) */
+  OSC32KCTRL_IRQn          =  0, /**<  0 SAML21E18A 32k Oscillators Control (OSC32KCTRL) */
+  PAC_IRQn                 =  0, /**<  0 SAML21E18A Peripheral Access Controller (PAC) */
+  PM_IRQn                  =  0, /**<  0 SAML21E18A Power Manager (PM) */
+  SUPC_IRQn                =  0, /**<  0 SAML21E18A Supply Controller (SUPC) */
+  TAL_IRQn                 =  0, /**<  0 SAML21E18A Trigger Allocator (TAL) */
+  WDT_IRQn                 =  1, /**<  1 SAML21E18A Watchdog Timer (WDT) */
+  RTC_IRQn                 =  2, /**<  2 SAML21E18A Real-Time Counter (RTC) */
+  EIC_IRQn                 =  3, /**<  3 SAML21E18A External Interrupt Controller (EIC) */
+  NVMCTRL_IRQn             =  4, /**<  4 SAML21E18A Non-Volatile Memory Controller (NVMCTRL) */
+  DMAC_IRQn                =  5, /**<  5 SAML21E18A Direct Memory Access Controller (DMAC) */
+  USB_IRQn                 =  6, /**<  6 SAML21E18A Universal Serial Bus (USB) */
+  EVSYS_IRQn               =  7, /**<  7 SAML21E18A Event System Interface (EVSYS) */
+  SERCOM0_IRQn             =  8, /**<  8 SAML21E18A Serial Communication Interface 0 (SERCOM0) */
+  SERCOM1_IRQn             =  9, /**<  9 SAML21E18A Serial Communication Interface 1 (SERCOM1) */
+  SERCOM2_IRQn             = 10, /**< 10 SAML21E18A Serial Communication Interface 2 (SERCOM2) */
+  SERCOM3_IRQn             = 11, /**< 11 SAML21E18A Serial Communication Interface 3 (SERCOM3) */
+  TCC0_IRQn                = 14, /**< 14 SAML21E18A Timer Counter Control 0 (TCC0) */
+  TCC1_IRQn                = 15, /**< 15 SAML21E18A Timer Counter Control 1 (TCC1) */
+  TCC2_IRQn                = 16, /**< 16 SAML21E18A Timer Counter Control 2 (TCC2) */
+  TC0_IRQn                 = 17, /**< 17 SAML21E18A Basic Timer Counter 0 (TC0) */
+  TC1_IRQn                 = 18, /**< 18 SAML21E18A Basic Timer Counter 1 (TC1) */
+  TC4_IRQn                 = 21, /**< 21 SAML21E18A Basic Timer Counter 4 (TC4) */
+  ADC_IRQn                 = 22, /**< 22 SAML21E18A Analog Digital Converter (ADC) */
+  AC_IRQn                  = 23, /**< 23 SAML21E18A Analog Comparators (AC) */
+  DAC_IRQn                 = 24, /**< 24 SAML21E18A Digital-to-Analog Converter (DAC) */
+  PTC_IRQn                 = 25, /**< 25 SAML21E18A Peripheral Touch Controller (PTC) */
+  AES_IRQn                 = 26, /**< 26 SAML21E18A Advanced Encryption Standard (AES) */
+  TRNG_IRQn                = 27, /**< 27 SAML21E18A True Random Generator (TRNG) */
+  PICOP_IRQn               = 28, /**< 28 SAML21E18A PicoProcessor (PICOP) */
 
   PERIPH_COUNT_IRQn        = 29  /**< Number of peripheral IDs */
 } IRQn_Type;
@@ -247,9 +247,9 @@ void PICOP_Handler               ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  SOFTWARE PERIPHERAL API DEFINITION FOR SAML21E16A */
+/**  SOFTWARE PERIPHERAL API DEFINITION FOR SAML21E18A */
 /* ************************************************************************** */
-/** \defgroup SAML21E16A_api Peripheral Software API */
+/** \defgroup SAML21E18A_api Peripheral Software API */
 /*@{*/
 
 #include "component/ac.h"
@@ -284,9 +284,9 @@ void PICOP_Handler               ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  REGISTERS ACCESS DEFINITIONS FOR SAML21E16A */
+/**  REGISTERS ACCESS DEFINITIONS FOR SAML21E18A */
 /* ************************************************************************** */
-/** \defgroup SAML21E16A_reg Registers Access Definitions */
+/** \defgroup SAML21E18A_reg Registers Access Definitions */
 /*@{*/
 
 #include "instance/ac.h"
@@ -328,9 +328,9 @@ void PICOP_Handler               ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  PERIPHERAL ID DEFINITIONS FOR SAML21E16A */
+/**  PERIPHERAL ID DEFINITIONS FOR SAML21E18A */
 /* ************************************************************************** */
-/** \defgroup SAML21E16A_id Peripheral Ids Definitions */
+/** \defgroup SAML21E18A_id Peripheral Ids Definitions */
 /*@{*/
 
 // Peripheral instances on HPB0 bridge
@@ -384,9 +384,9 @@ void PICOP_Handler               ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  BASE ADDRESS DEFINITIONS FOR SAML21E16A */
+/**  BASE ADDRESS DEFINITIONS FOR SAML21E18A */
 /* ************************************************************************** */
-/** \defgroup SAML21E16A_base Peripheral Base Address Definitions */
+/** \defgroup SAML21E18A_base Peripheral Base Address Definitions */
 /*@{*/
 
 #if defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)
@@ -576,37 +576,37 @@ void PICOP_Handler               ( void );
 /*@}*/
 
 /* ************************************************************************** */
-/**  PORT DEFINITIONS FOR SAML21E16A */
+/**  PORT DEFINITIONS FOR SAML21E18A */
 /* ************************************************************************** */
-/** \defgroup SAML21E16A_port PORT Definitions */
+/** \defgroup SAML21E18A_port PORT Definitions */
 /*@{*/
 
-#include "pio/saml21e16a.h"
+#include "pio/saml21e18a.h"
 /*@}*/
 
 /* ************************************************************************** */
-/**  MEMORY MAPPING DEFINITIONS FOR SAML21E16A */
+/**  MEMORY MAPPING DEFINITIONS FOR SAML21E18A */
 /* ************************************************************************** */
 
-#define FLASH_SIZE            0x10000 /* 64 kB */
+#define FLASH_SIZE            0x40000 /* 256 kB */
 #define FLASH_PAGE_SIZE       64
-#define FLASH_NB_OF_PAGES     1024
+#define FLASH_NB_OF_PAGES     4096
 #define FLASH_USER_PAGE_SIZE  64
-#define HSRAM_SIZE            0x2000 /* 8 kB */
-#define LPRAM_SIZE            0x1000 /* 4 kB */
-#define PICOPRAM_SIZE         0x400 /* 1 kB */
+#define HSRAM_SIZE            0x8000 /* 32 kB */
+#define LPRAM_SIZE            0x2000 /* 8 kB */
+#define PICOPRAM_SIZE         0x800 /* 2 kB */
 #define FLASH_ADDR            (0x00000000U) /**< FLASH base address */
 #define FLASH_USER_PAGE_ADDR  (0x00800000U) /**< FLASH_USER_PAGE base address */
 #define HSRAM_ADDR            (0x20000000U) /**< HSRAM base address */
 #define LPRAM_ADDR            (0x30000000U) /**< LPRAM base address */
 #define PICOPRAM_ADDR         (0x50000000U) /**< PICOPRAM base address */
 
-#define DSU_DID_RESETVALUE    0x1081000C
+#define DSU_DID_RESETVALUE    0x1081000A
 #define PORT_GROUPS           1
-#define WWR_SIZE              0x800 /* 2 kB */
+#define WWR_SIZE              0x2000 /* 8 kB */
 
 /* ************************************************************************** */
-/**  ELECTRICAL DEFINITIONS FOR SAML21E16A */
+/**  ELECTRICAL DEFINITIONS FOR SAML21E18A */
 /* ************************************************************************** */
 
 
@@ -616,4 +616,4 @@ void PICOP_Handler               ( void );
 
 /*@}*/
 
-#endif /* SAML21E16A_H */
+#endif /* SAML21E18A_H */

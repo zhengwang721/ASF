@@ -245,25 +245,25 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t HPB0:1;           /*!< bit:      0  HPB0 AHB Clock Mask                */
-    uint32_t HPB1:1;           /*!< bit:      1  HPB1 AHB Clock Mask                */
-    uint32_t HPB2:1;           /*!< bit:      2  HPB2 AHB Clock Mask                */
-    uint32_t HPB3:1;           /*!< bit:      3  HPB3 AHB Clock Mask                */
-    uint32_t HPB4:1;           /*!< bit:      4  HPB4 AHB Clock Mask                */
-    uint32_t DSU:1;            /*!< bit:      5  DSU AHB Clock Mask                 */
+    uint32_t HPB0_:1;          /*!< bit:      0  HPB0 AHB Clock Mask                */
+    uint32_t HPB1_:1;          /*!< bit:      1  HPB1 AHB Clock Mask                */
+    uint32_t HPB2_:1;          /*!< bit:      2  HPB2 AHB Clock Mask                */
+    uint32_t HPB3_:1;          /*!< bit:      3  HPB3 AHB Clock Mask                */
+    uint32_t HPB4_:1;          /*!< bit:      4  HPB4 AHB Clock Mask                */
+    uint32_t DSU_:1;           /*!< bit:      5  DSU AHB Clock Mask                 */
     uint32_t :2;               /*!< bit:  6.. 7  Reserved                           */
-    uint32_t NVMCTRL:1;        /*!< bit:      8  NVMCTRL AHB Clock Mask             */
-    uint32_t HMCRAMCHS:1;      /*!< bit:      9  HMCRAMCHS AHB Clock Mask           */
-    uint32_t HMCRAMCLP:1;      /*!< bit:     10  HMCRAMCLP AHB Clock Mask           */
-    uint32_t DMAC:1;           /*!< bit:     11  DMAC AHB Clock Mask                */
-    uint32_t USB:1;            /*!< bit:     12  USB AHB Clock Mask                 */
-    uint32_t PICOPRAM:1;       /*!< bit:     13  PICOPRAM AHB Clock Mask            */
-    uint32_t PAC:1;            /*!< bit:     14  PAC AHB Clock Mask                 */
-    uint32_t NVMCTRL_PICACHU:1; /*!< bit:     15  NVMCTRL_PICACHU AHB Clock Mask     */
-    uint32_t L2HBRIDGES_H:1;   /*!< bit:     16  L2HBRIDGES_H AHB Clock Mask        */
-    uint32_t H2LBRIDGES_H:1;   /*!< bit:     17  H2LBRIDGES_H AHB Clock Mask        */
-    uint32_t HMCRAMCHS_AHBSETUPKEEPER:1; /*!< bit:     18  HMCRAMCHS_AHBSETUPKEEPER AHB Clock Mask */
-    uint32_t HMCRAMCHS_HMATRIXLP2HMCRAMCHSBRIDGE:1; /*!< bit:     19  HMCRAMCHS_HMATRIXLP2HMCRAMCHSBRIDGE AHB Clock Mask */
+    uint32_t NVMCTRL_:1;       /*!< bit:      8  NVMCTRL AHB Clock Mask             */
+    uint32_t HMCRAMCHS_:1;     /*!< bit:      9  HMCRAMCHS AHB Clock Mask           */
+    uint32_t HMCRAMCLP_:1;     /*!< bit:     10  HMCRAMCLP AHB Clock Mask           */
+    uint32_t DMAC_:1;          /*!< bit:     11  DMAC AHB Clock Mask                */
+    uint32_t USB_:1;           /*!< bit:     12  USB AHB Clock Mask                 */
+    uint32_t PICOPRAM_:1;      /*!< bit:     13  PICOPRAM AHB Clock Mask            */
+    uint32_t PAC_:1;           /*!< bit:     14  PAC AHB Clock Mask                 */
+    uint32_t NVMCTRL_PICACHU_:1; /*!< bit:     15  NVMCTRL_PICACHU AHB Clock Mask     */
+    uint32_t L2HBRIDGES_H_:1;  /*!< bit:     16  L2HBRIDGES_H AHB Clock Mask        */
+    uint32_t H2LBRIDGES_H_:1;  /*!< bit:     17  H2LBRIDGES_H AHB Clock Mask        */
+    uint32_t HMCRAMCHS_AHBSETUPKEEPER_:1; /*!< bit:     18  HMCRAMCHS_AHBSETUPKEEPER AHB Clock Mask */
+    uint32_t HMCRAMCHS_HMATRIXLP2HMCRAMCHSBRIDGE_:1; /*!< bit:     19  HMCRAMCHS_HMATRIXLP2HMCRAMCHSBRIDGE AHB Clock Mask */
     uint32_t :12;              /*!< bit: 20..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
@@ -315,20 +315,19 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t PM:1;             /*!< bit:      0  PM APB Clock Enable                */
-    uint32_t MCLK:1;           /*!< bit:      1  MCLK APB Clock Enable              */
-    uint32_t RSTC:1;           /*!< bit:      2  RSTC APB Clock Enable              */
-    uint32_t OSCCTRL:1;        /*!< bit:      3  OSCCTRL APB Clock Enable           */
-    uint32_t OSC32KCTRL:1;     /*!< bit:      4  OSC32KCTRL APB Clock Enable        */
-    uint32_t SUPC:1;           /*!< bit:      5  SUPC APB Clock Enable              */
-    uint32_t GCLK:1;           /*!< bit:      6  GCLK APB Clock Enable              */
-    uint32_t WDT:1;            /*!< bit:      7  WDT APB Clock Enable               */
-    uint32_t RTC:1;            /*!< bit:      8  RTC APB Clock Enable               */
-    uint32_t EIC:1;            /*!< bit:      9  EIC APB Clock Enable               */
-    uint32_t PORT:1;           /*!< bit:     10  PORT APB Clock Enable              */
-    uint32_t TAL:1;            /*!< bit:     11  TAL APB Clock Enable               */
-    uint32_t DSUSTANDBY:1;     /*!< bit:     12  DSUSTANDBY APB Clock Enable        */
-    uint32_t :19;              /*!< bit: 13..31  Reserved                           */
+    uint32_t PM_:1;            /*!< bit:      0  PM APB Clock Enable                */
+    uint32_t MCLK_:1;          /*!< bit:      1  MCLK APB Clock Enable              */
+    uint32_t RSTC_:1;          /*!< bit:      2  RSTC APB Clock Enable              */
+    uint32_t OSCCTRL_:1;       /*!< bit:      3  OSCCTRL APB Clock Enable           */
+    uint32_t OSC32KCTRL_:1;    /*!< bit:      4  OSC32KCTRL APB Clock Enable        */
+    uint32_t SUPC_:1;          /*!< bit:      5  SUPC APB Clock Enable              */
+    uint32_t GCLK_:1;          /*!< bit:      6  GCLK APB Clock Enable              */
+    uint32_t WDT_:1;           /*!< bit:      7  WDT APB Clock Enable               */
+    uint32_t RTC_:1;           /*!< bit:      8  RTC APB Clock Enable               */
+    uint32_t EIC_:1;           /*!< bit:      9  EIC APB Clock Enable               */
+    uint32_t PORT_:1;          /*!< bit:     10  PORT APB Clock Enable              */
+    uint32_t TAL_:1;           /*!< bit:     11  TAL APB Clock Enable               */
+    uint32_t :20;              /*!< bit: 12..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } MCLK_APBAMASK_Type;
@@ -361,17 +360,15 @@ typedef union {
 #define MCLK_APBAMASK_PORT          (0x1u << MCLK_APBAMASK_PORT_Pos)
 #define MCLK_APBAMASK_TAL_Pos       11           /**< \brief (MCLK_APBAMASK) TAL APB Clock Enable */
 #define MCLK_APBAMASK_TAL           (0x1u << MCLK_APBAMASK_TAL_Pos)
-#define MCLK_APBAMASK_DSUSTANDBY_Pos 12           /**< \brief (MCLK_APBAMASK) DSUSTANDBY APB Clock Enable */
-#define MCLK_APBAMASK_DSUSTANDBY    (0x1u << MCLK_APBAMASK_DSUSTANDBY_Pos)
-#define MCLK_APBAMASK_MASK          0x00001FFFu  /**< \brief (MCLK_APBAMASK) MASK Register */
+#define MCLK_APBAMASK_MASK          0x00000FFFu  /**< \brief (MCLK_APBAMASK) MASK Register */
 
 /* -------- MCLK_APBBMASK : (MCLK Offset: 0x18) (R/W 32) APBB Mask -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t USB:1;            /*!< bit:      0  USB APB Clock Enable               */
-    uint32_t DSU:1;            /*!< bit:      1  DSU APB Clock Enable               */
-    uint32_t NVMCTRL:1;        /*!< bit:      2  NVMCTRL APB Clock Enable           */
+    uint32_t USB_:1;           /*!< bit:      0  USB APB Clock Enable               */
+    uint32_t DSU_:1;           /*!< bit:      1  DSU APB Clock Enable               */
+    uint32_t NVMCTRL_:1;       /*!< bit:      2  NVMCTRL APB Clock Enable           */
     uint32_t :29;              /*!< bit:  3..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
@@ -393,30 +390,29 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t SERCOM0:1;        /*!< bit:      0  SERCOM0 APB Clock Enable           */
-    uint32_t SERCOM1:1;        /*!< bit:      1  SERCOM1 APB Clock Enable           */
-    uint32_t SERCOM2:1;        /*!< bit:      2  SERCOM2 APB Clock Enable           */
-    uint32_t SERCOM3:1;        /*!< bit:      3  SERCOM3 APB Clock Enable           */
-    uint32_t SERCOM4:1;        /*!< bit:      4  SERCOM4 APB Clock Enable           */
-    uint32_t TCC0:1;           /*!< bit:      5  TCC0 APB Clock Enable              */
-    uint32_t TCC1:1;           /*!< bit:      6  TCC1 APB Clock Enable              */
-    uint32_t TCC2:1;           /*!< bit:      7  TCC2 APB Clock Enable              */
-    uint32_t TC0:1;            /*!< bit:      8  TC0 APB Clock Enable               */
-    uint32_t TC1:1;            /*!< bit:      9  TC1 APB Clock Enable               */
-    uint32_t TC2:1;            /*!< bit:     10  TC2 APB Clock Enable               */
-    uint32_t TC3:1;            /*!< bit:     11  TC3 APB Clock Enable               */
-    uint32_t DAC:1;            /*!< bit:     12  DAC APB Clock Enable               */
-    uint32_t I2S:1;            /*!< bit:     13  I2S APB Clock Enable               */
-    uint32_t AES:1;            /*!< bit:     14  AES APB Clock Enable               */
-    uint32_t TRNG:1;           /*!< bit:     15  TRNG APB Clock Enable              */
-    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
+    uint32_t SERCOM0_:1;       /*!< bit:      0  SERCOM0 APB Clock Enable           */
+    uint32_t SERCOM1_:1;       /*!< bit:      1  SERCOM1 APB Clock Enable           */
+    uint32_t SERCOM2_:1;       /*!< bit:      2  SERCOM2 APB Clock Enable           */
+    uint32_t SERCOM3_:1;       /*!< bit:      3  SERCOM3 APB Clock Enable           */
+    uint32_t SERCOM4_:1;       /*!< bit:      4  SERCOM4 APB Clock Enable           */
+    uint32_t TCC0_:1;          /*!< bit:      5  TCC0 APB Clock Enable              */
+    uint32_t TCC1_:1;          /*!< bit:      6  TCC1 APB Clock Enable              */
+    uint32_t TCC2_:1;          /*!< bit:      7  TCC2 APB Clock Enable              */
+    uint32_t TC0_:1;           /*!< bit:      8  TC0 APB Clock Enable               */
+    uint32_t TC1_:1;           /*!< bit:      9  TC1 APB Clock Enable               */
+    uint32_t TC2_:1;           /*!< bit:     10  TC2 APB Clock Enable               */
+    uint32_t TC3_:1;           /*!< bit:     11  TC3 APB Clock Enable               */
+    uint32_t DAC_:1;           /*!< bit:     12  DAC APB Clock Enable               */
+    uint32_t AES_:1;           /*!< bit:     13  AES APB Clock Enable               */
+    uint32_t TRNG_:1;          /*!< bit:     14  TRNG APB Clock Enable              */
+    uint32_t :17;              /*!< bit: 15..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } MCLK_APBCMASK_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define MCLK_APBCMASK_OFFSET        0x1C         /**< \brief (MCLK_APBCMASK offset) APBC Mask */
-#define MCLK_APBCMASK_RESETVALUE    0x0000FFFF   /**< \brief (MCLK_APBCMASK reset_value) APBC Mask */
+#define MCLK_APBCMASK_RESETVALUE    0x00007FFF   /**< \brief (MCLK_APBCMASK reset_value) APBC Mask */
 
 #define MCLK_APBCMASK_SERCOM0_Pos   0            /**< \brief (MCLK_APBCMASK) SERCOM0 APB Clock Enable */
 #define MCLK_APBCMASK_SERCOM0       (0x1u << MCLK_APBCMASK_SERCOM0_Pos)
@@ -444,26 +440,24 @@ typedef union {
 #define MCLK_APBCMASK_TC3           (0x1u << MCLK_APBCMASK_TC3_Pos)
 #define MCLK_APBCMASK_DAC_Pos       12           /**< \brief (MCLK_APBCMASK) DAC APB Clock Enable */
 #define MCLK_APBCMASK_DAC           (0x1u << MCLK_APBCMASK_DAC_Pos)
-#define MCLK_APBCMASK_I2S_Pos       13           /**< \brief (MCLK_APBCMASK) I2S APB Clock Enable */
-#define MCLK_APBCMASK_I2S           (0x1u << MCLK_APBCMASK_I2S_Pos)
-#define MCLK_APBCMASK_AES_Pos       14           /**< \brief (MCLK_APBCMASK) AES APB Clock Enable */
+#define MCLK_APBCMASK_AES_Pos       13           /**< \brief (MCLK_APBCMASK) AES APB Clock Enable */
 #define MCLK_APBCMASK_AES           (0x1u << MCLK_APBCMASK_AES_Pos)
-#define MCLK_APBCMASK_TRNG_Pos      15           /**< \brief (MCLK_APBCMASK) TRNG APB Clock Enable */
+#define MCLK_APBCMASK_TRNG_Pos      14           /**< \brief (MCLK_APBCMASK) TRNG APB Clock Enable */
 #define MCLK_APBCMASK_TRNG          (0x1u << MCLK_APBCMASK_TRNG_Pos)
-#define MCLK_APBCMASK_MASK          0x0000FFFFu  /**< \brief (MCLK_APBCMASK) MASK Register */
+#define MCLK_APBCMASK_MASK          0x00007FFFu  /**< \brief (MCLK_APBCMASK) MASK Register */
 
 /* -------- MCLK_APBDMASK : (MCLK Offset: 0x20) (R/W 32) APBD Mask -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t EVSYS:1;          /*!< bit:      0  EVSYS APB Clock Enable             */
-    uint32_t SERCOM5:1;        /*!< bit:      1  SERCOM5 APB Clock Enable           */
-    uint32_t TC4:1;            /*!< bit:      2  TC4 APB Clock Enable               */
-    uint32_t ADC:1;            /*!< bit:      3  ADC APB Clock Enable               */
-    uint32_t AC:1;             /*!< bit:      4  AC APB Clock Enable                */
-    uint32_t PTC:1;            /*!< bit:      5  PTC APB Clock Enable               */
-    uint32_t OPAMP:1;          /*!< bit:      6  OPAMP APB Clock Enable             */
-    uint32_t CCL:1;            /*!< bit:      7  CCL APB Clock Enable               */
+    uint32_t EVSYS_:1;         /*!< bit:      0  EVSYS APB Clock Enable             */
+    uint32_t SERCOM5_:1;       /*!< bit:      1  SERCOM5 APB Clock Enable           */
+    uint32_t TC4_:1;           /*!< bit:      2  TC4 APB Clock Enable               */
+    uint32_t ADC_:1;           /*!< bit:      3  ADC APB Clock Enable               */
+    uint32_t AC_:1;            /*!< bit:      4  AC APB Clock Enable                */
+    uint32_t PTC_:1;           /*!< bit:      5  PTC APB Clock Enable               */
+    uint32_t OPAMP_:1;         /*!< bit:      6  OPAMP APB Clock Enable             */
+    uint32_t CCL_:1;           /*!< bit:      7  CCL APB Clock Enable               */
     uint32_t :24;              /*!< bit:  8..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
@@ -495,10 +489,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t PAC:1;            /*!< bit:      0  PAC APB Clock Enable               */
-    uint32_t :2;               /*!< bit:  1.. 2  Reserved                           */
-    uint32_t PICOP:1;          /*!< bit:      3  PICOP APB Clock Enable             */
-    uint32_t :28;              /*!< bit:  4..31  Reserved                           */
+    uint32_t PAC_:1;           /*!< bit:      0  PAC APB Clock Enable               */
+    uint32_t :31;              /*!< bit:  1..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } MCLK_APBEMASK_Type;
@@ -509,9 +501,7 @@ typedef union {
 
 #define MCLK_APBEMASK_PAC_Pos       0            /**< \brief (MCLK_APBEMASK) PAC APB Clock Enable */
 #define MCLK_APBEMASK_PAC           (0x1u << MCLK_APBEMASK_PAC_Pos)
-#define MCLK_APBEMASK_PICOP_Pos     3            /**< \brief (MCLK_APBEMASK) PICOP APB Clock Enable */
-#define MCLK_APBEMASK_PICOP         (0x1u << MCLK_APBEMASK_PICOP_Pos)
-#define MCLK_APBEMASK_MASK          0x00000009u  /**< \brief (MCLK_APBEMASK) MASK Register */
+#define MCLK_APBEMASK_MASK          0x00000001u  /**< \brief (MCLK_APBEMASK) MASK Register */
 
 /** \brief MCLK hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

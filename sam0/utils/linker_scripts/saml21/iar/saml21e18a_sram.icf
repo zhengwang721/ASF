@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Linker script for running in internal SRAM on the SAML21E17A
+ * \brief Linker script for running in internal SRAM on the SAML21E18A
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -48,9 +48,9 @@
 define symbol __ICFEDIT_intvec_start__        = 0x20000000;
 /*-Memory Regions-*/
 define symbol __ICFEDIT_region_RAM_start__    = 0x20000000;
-define symbol __ICFEDIT_region_RAM_end__      = 0x20003FFF;
+define symbol __ICFEDIT_region_RAM_end__      = 0x20007FFF;
 define symbol __ICFEDIT_region_LPRAM_start__  = 0x30000000;
-define symbol __ICFEDIT_region_LPRAM_end__    = 0x300017FF;
+define symbol __ICFEDIT_region_LPRAM_end__    = 0x30001FFF;
 define symbol __ICFEDIT_region_PICOPRAM_start__ = 0x50000000;
 define symbol __ICFEDIT_region_PICOPRAM_end__ = 0x500007FF;
 /*-Sizes-*/

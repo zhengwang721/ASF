@@ -176,10 +176,10 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for EVSYS peripheral ========== */
-#define EVSYS_CHANNELS              12
-#define EVSYS_CHANNELS_BITS         (len(bin(EVSYS_CHANNELS-1))-2)
-#define EVSYS_CHANNELS_MSB          (EVSYS_CHANNELS-1)
-#define EVSYS_EXTEVT_NUM            0
+#define EVSYS_CHANNELS              12       // Number of Channels
+#define EVSYS_CHANNELS_BITS         4        // Number of bits to select Channel
+#define EVSYS_CHANNELS_MSB          11       // Number of Channels - 1
+#define EVSYS_EXTEVT_NUM            0        // Number of External Event Generators
 #define EVSYS_GCLK_ID_0             5
 #define EVSYS_GCLK_ID_1             6
 #define EVSYS_GCLK_ID_2             7
@@ -195,10 +195,10 @@
 #define EVSYS_GCLK_ID_LSB           5
 #define EVSYS_GCLK_ID_MSB           16
 #define EVSYS_GCLK_ID_SIZE          12
-#define EVSYS_GENERATORS            83
-#define EVSYS_GENERATORS_BITS       (len(bin(EVSYS_GENERATORS-1))-2)
-#define EVSYS_USERS                 45
-#define EVSYS_USERS_BITS            (len(bin(EVSYS_USERS-1))-2)
+#define EVSYS_GENERATORS            83       // Total Number of Event Generators
+#define EVSYS_GENERATORS_BITS       7        // Number of bits to select Event Generator
+#define EVSYS_USERS                 45       // Total Number of Event Users
+#define EVSYS_USERS_BITS            6        // Number of bits to select Event User
 
 // GENERATORS
 #define EVSYS_ID_GEN_RTC_CMP_0      1

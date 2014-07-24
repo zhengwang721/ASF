@@ -8,6 +8,7 @@
 		<build type="header-file" value="saml21e15a.h"/>
 		<build type="header-file" value="saml21e16a.h"/>
 		<build type="header-file" value="saml21e17a.h"/>
+		<build type="header-file" value="saml21e18a.h"/>
 		<build type="header-file" value="saml21g16a.h"/>
 		<build type="header-file" value="saml21g17a.h"/>
 		<build type="header-file" value="saml21g18a.h"/>

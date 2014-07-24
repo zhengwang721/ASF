@@ -116,10 +116,10 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for RTC peripheral ========== */
-#define RTC_ALARM_NUM               1
-#define RTC_COMP16_NUM              2
-#define RTC_COMP32_NUM              1
-#define RTC_GPR_NUM                 4
-#define RTC_PER_NUM                 8
+#define RTC_ALARM_NUM               1        // Number of Alarms
+#define RTC_COMP16_NUM              2        // Number of 16-bit Comparators
+#define RTC_COMP32_NUM              1        // Number of 32-bit Comparators
+#define RTC_GPR_NUM                 4        // Number of General-Purpose Registers
+#define RTC_PER_NUM                 8        // Number of Periodic Intervals
 
 #endif /* _SAML21_RTC_INSTANCE_ */

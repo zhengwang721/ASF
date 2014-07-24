@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Linker script for running in internal FLASH on the SAML21J17A
+ * \brief Linker script for running in internal FLASH on the SAML21E18A
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -49,9 +49,9 @@ SEARCH_DIR(.)
 /* Memory Spaces Definitions */
 MEMORY
 {
-  rom    (rx)  : ORIGIN = 0x00000000, LENGTH = 0x00020000
-  ram    (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00004000
-  lpram  (rwx) : ORIGIN = 0x30000000, LENGTH = 0x00001800
+  rom    (rx)  : ORIGIN = 0x00000000, LENGTH = 0x00040000
+  ram    (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00008000
+  lpram  (rwx) : ORIGIN = 0x30000000, LENGTH = 0x00002000
   picopram (rwx) : ORIGIN = 0x50000000, LENGTH = 0x00000800
 }
 

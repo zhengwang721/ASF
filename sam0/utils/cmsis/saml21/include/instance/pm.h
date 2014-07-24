@@ -66,6 +66,6 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for PM peripheral ========== */
-#define PM_PD_NUM                   3
+#define PM_PD_NUM                   3        // Number of switchable Power Domain
 
 #endif /* _SAML21_PM_INSTANCE_ */

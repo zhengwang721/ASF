@@ -80,13 +80,13 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for DAC peripheral ========== */
-#define DAC_DAC_NUM                 2
-#define DAC_DATA_SIZE               12
+#define DAC_DAC_NUM                 2        // Number of DACs
+#define DAC_DATA_SIZE               12       // Number of bits in data
 #define DAC_DMAC_ID_EMPTY_0         38
 #define DAC_DMAC_ID_EMPTY_1         39
 #define DAC_DMAC_ID_EMPTY_LSB       38
 #define DAC_DMAC_ID_EMPTY_MSB       39
 #define DAC_DMAC_ID_EMPTY_SIZE      2
-#define DAC_GCLK_ID                 32
+#define DAC_GCLK_ID                 32       // Index of Generic Clock
 
 #endif /* _SAML21_DAC_INSTANCE_ */

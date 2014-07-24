@@ -92,13 +92,14 @@ typedef volatile       uint8_t  RwReg8;  /**< Read-Write  8-bit register (volati
 /** Interrupt Number Definition */
 typedef enum IRQn
 {
-  /******  Cortex-M0+ Processor Exceptions Numbers *******************************/
-  NonMaskableInt_IRQn      = -14, /**<  2 Non Maskable Interrupt                 */
-  HardFault_IRQn           = -13, /**<  3 Cortex-M0+ Hard Fault Interrupt        */
-  SVCall_IRQn              = -5,  /**< 11 Cortex-M0+ SV Call Interrupt           */
-  PendSV_IRQn              = -2,  /**< 14 Cortex-M0+ Pend SV Interrupt           */
-  SysTick_IRQn             = -1,  /**< 15 Cortex-M0+ System Tick Interrupt       */
+  /******  Cortex-M0+ Processor Exceptions Numbers ******************************/
+  NonMaskableInt_IRQn      = -14,/**<  2 Non Maskable Interrupt                 */
+  HardFault_IRQn           = -13,/**<  3 Cortex-M0+ Hard Fault Interrupt        */
+  SVCall_IRQn              = -5, /**< 11 Cortex-M0+ SV Call Interrupt           */
+  PendSV_IRQn              = -2, /**< 14 Cortex-M0+ Pend SV Interrupt           */
+  SysTick_IRQn             = -1, /**< 15 Cortex-M0+ System Tick Interrupt       */
   /******  SAML21G17A-specific Interrupt Numbers ***********************/
+  SYSTEM_IRQn              =  0, /**<  0 SAML21G17A System Interrupts */
   MCLK_IRQn                =  0, /**<  0 SAML21G17A Main Clock (MCLK) */
   OSCCTRL_IRQn             =  0, /**<  0 SAML21G17A Oscillators Control (OSCCTRL) */
   OSC32KCTRL_IRQn          =  0, /**<  0 SAML21G17A 32k Oscillators Control (OSC32KCTRL) */
@@ -129,12 +130,11 @@ typedef enum IRQn
   AC_IRQn                  = 23, /**< 23 SAML21G17A Analog Comparators (AC) */
   DAC_IRQn                 = 24, /**< 24 SAML21G17A Digital-to-Analog Converter (DAC) */
   PTC_IRQn                 = 25, /**< 25 SAML21G17A Peripheral Touch Controller (PTC) */
-  I2S_IRQn                 = 26, /**< 26 SAML21G17A Inter-IC Sound Interface (I2S) */
-  AES_IRQn                 = 27, /**< 27 SAML21G17A Advanced Encryption Standard (AES) */
-  TRNG_IRQn                = 28, /**< 28 SAML21G17A True Random Generator (TRNG) */
-  PICOP_IRQn               = 29, /**< 29 SAML21G17A PicoProcessor (PICOP) */
+  AES_IRQn                 = 26, /**< 26 SAML21G17A Advanced Encryption Standard (AES) */
+  TRNG_IRQn                = 27, /**< 27 SAML21G17A True Random Generator (TRNG) */
+  PICOP_IRQn               = 28, /**< 28 SAML21G17A PicoProcessor (PICOP) */
 
-  PERIPH_COUNT_IRQn        = 30  /**< Number of peripheral IDs */
+  PERIPH_COUNT_IRQn        = 29  /**< Number of peripheral IDs */
 } IRQn_Type;
 
 typedef struct _DeviceVectors
@@ -186,10 +186,9 @@ typedef struct _DeviceVectors
   void* pfnAC_Handler;                    /* 23 Analog Comparators */
   void* pfnDAC_Handler;                   /* 24 Digital-to-Analog Converter */
   void* pfnPTC_Handler;                   /* 25 Peripheral Touch Controller */
-  void* pfnI2S_Handler;                   /* 26 Inter-IC Sound Interface */
-  void* pfnAES_Handler;                   /* 27 Advanced Encryption Standard */
-  void* pfnTRNG_Handler;                  /* 28 True Random Generator */
-  void* pfnPICOP_Handler;                 /* 29 PicoProcessor */
+  void* pfnAES_Handler;                   /* 26 Advanced Encryption Standard */
+  void* pfnTRNG_Handler;                  /* 27 True Random Generator */
+  void* pfnPICOP_Handler;                 /* 28 PicoProcessor */
 } DeviceVectors;
 
 /* Cortex-M0+ processor handlers */
@@ -201,13 +200,7 @@ void PendSV_Handler              ( void );
 void SysTick_Handler             ( void );
 
 /* Peripherals handlers */
-void MCLK_Handler                ( void );
-void OSCCTRL_Handler             ( void );
-void OSC32KCTRL_Handler          ( void );
-void PAC_Handler                 ( void );
-void PM_Handler                  ( void );
-void SUPC_Handler                ( void );
-void TAL_Handler                 ( void );
+void SYSTEM_Handler              ( void );
 void WDT_Handler                 ( void );
 void RTC_Handler                 ( void );
 void EIC_Handler                 ( void );
@@ -231,7 +224,6 @@ void ADC_Handler                 ( void );
 void AC_Handler                  ( void );
 void DAC_Handler                 ( void );
 void PTC_Handler                 ( void );
-void I2S_Handler                 ( void );
 void AES_Handler                 ( void );
 void TRNG_Handler                ( void );
 void PICOP_Handler               ( void );
@@ -271,11 +263,9 @@ void PICOP_Handler               ( void );
 #include "component/dac.h"
 #include "component/dmac.h"
 #include "component/dsu.h"
-#include "component/dsustandby.h"
 #include "component/eic.h"
 #include "component/evsys.h"
 #include "component/gclk.h"
-#include "component/i2s.h"
 #include "component/mclk.h"
 #include "component/mtb.h"
 #include "component/nvmctrl.h"
@@ -283,7 +273,6 @@ void PICOP_Handler               ( void );
 #include "component/oscctrl.h"
 #include "component/osc32kctrl.h"
 #include "component/pac.h"
-#include "component/picop.h"
 #include "component/pm.h"
 #include "component/port.h"
 #include "component/rstc.h"
@@ -311,11 +300,9 @@ void PICOP_Handler               ( void );
 #include "instance/dac.h"
 #include "instance/dmac.h"
 #include "instance/dsu.h"
-#include "instance/dsustandby.h"
 #include "instance/eic.h"
 #include "instance/evsys.h"
 #include "instance/gclk.h"
-#include "instance/i2s.h"
 #include "instance/mclk.h"
 #include "instance/mtb.h"
 #include "instance/nvmctrl.h"
@@ -323,7 +310,6 @@ void PICOP_Handler               ( void );
 #include "instance/oscctrl.h"
 #include "instance/osc32kctrl.h"
 #include "instance/pac.h"
-#include "instance/picop.h"
 #include "instance/pm.h"
 #include "instance/port.h"
 #include "instance/rstc.h"
@@ -366,7 +352,6 @@ void PICOP_Handler               ( void );
 #define ID_EIC            9 /**< \brief External Interrupt Controller (EIC) */
 #define ID_PORT          10 /**< \brief Port Module (PORT) */
 #define ID_TAL           11 /**< \brief Trigger Allocator (TAL) */
-#define ID_DSUSTANDBY    12 /**< \brief Device Service Unit (DSUSTANDBY) */
 
 // Peripheral instances on HPB1 bridge
 #define ID_USB           32 /**< \brief Universal Serial Bus (USB) */
@@ -386,9 +371,8 @@ void PICOP_Handler               ( void );
 #define ID_TC0           72 /**< \brief Basic Timer Counter TC (TC0) */
 #define ID_TC1           73 /**< \brief Basic Timer Counter TC (TC1) */
 #define ID_DAC           76 /**< \brief Digital-to-Analog Converter (DAC) */
-#define ID_I2S           77 /**< \brief Inter-IC Sound Interface (I2S) */
-#define ID_AES           78 /**< \brief Advanced Encryption Standard (AES) */
-#define ID_TRNG          79 /**< \brief True Random Generator (TRNG) */
+#define ID_AES           77 /**< \brief Advanced Encryption Standard (AES) */
+#define ID_TRNG          78 /**< \brief True Random Generator (TRNG) */
 
 // Peripheral instances on HPB3 bridge
 #define ID_EVSYS         96 /**< \brief Event System Interface (EVSYS) */
@@ -403,9 +387,8 @@ void PICOP_Handler               ( void );
 // Peripheral instances on HPB4 bridge
 #define ID_PAC          128 /**< \brief Peripheral Access Controller (PAC) */
 #define ID_DMAC         129 /**< \brief Direct Memory Access Controller (DMAC) */
-#define ID_PICOP        131 /**< \brief PicoProcessor (PICOP) */
 
-#define ID_PERIPH_COUNT 132 /**< \brief Number of peripheral IDs */
+#define ID_PERIPH_COUNT 130 /**< \brief Number of peripheral IDs */
 /*@}*/
 
 /* ************************************************************************** */
@@ -417,16 +400,14 @@ void PICOP_Handler               ( void );
 #if defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)
 #define AC                            (0x43001000U) /**< \brief (AC) APB Base Address */
 #define ADC                           (0x43000C00U) /**< \brief (ADC) APB Base Address */
-#define AES                           (0x42003800U) /**< \brief (AES) APB Base Address */
+#define AES                           (0x42003400U) /**< \brief (AES) APB Base Address */
 #define CCL                           (0x43001C00U) /**< \brief (CCL) APB Base Address */
 #define DAC                           (0x42003000U) /**< \brief (DAC) APB Base Address */
 #define DMAC                          (0x44000400U) /**< \brief (DMAC) APB Base Address */
 #define DSU                           (0x41002000U) /**< \brief (DSU) APB Base Address */
-#define DSUSTANDBY                    (0x40003000U) /**< \brief (DSUSTANDBY) APB Base Address */
 #define EIC                           (0x40002400U) /**< \brief (EIC) APB Base Address */
 #define EVSYS                         (0x43000000U) /**< \brief (EVSYS) APB Base Address */
 #define GCLK                          (0x40001800U) /**< \brief (GCLK) APB Base Address */
-#define I2S                           (0x42003400U) /**< \brief (I2S) APB Base Address */
 #define MCLK                          (0x40000400U) /**< \brief (MCLK) APB Base Address */
 #define MTB                           (0x41006000U) /**< \brief (MTB) APB Base Address */
 #define NVMCTRL                       (0x41004000U) /**< \brief (NVMCTRL) APB Base Address */
@@ -442,7 +423,6 @@ void PICOP_Handler               ( void );
 #define OSCCTRL                       (0x40000C00U) /**< \brief (OSCCTRL) APB Base Address */
 #define OSC32KCTRL                    (0x40001000U) /**< \brief (OSC32KCTRL) APB Base Address */
 #define PAC                           (0x44000000U) /**< \brief (PAC) APB Base Address */
-#define PICOP                         (0x44000C00U) /**< \brief (PICOP) APB Base Address */
 #define PM                            (0x40000000U) /**< \brief (PM) APB Base Address */
 #define PORT                          (0x40002800U) /**< \brief (PORT) APB Base Address */
 #define PORT_IOBUS                    (0x60000000U) /**< \brief (PORT) IOBUS Base Address */
@@ -462,7 +442,7 @@ void PICOP_Handler               ( void );
 #define TCC0                          (0x42001400U) /**< \brief (TCC0) APB Base Address */
 #define TCC1                          (0x42001800U) /**< \brief (TCC1) APB Base Address */
 #define TCC2                          (0x42001C00U) /**< \brief (TCC2) APB Base Address */
-#define TRNG                          (0x42003C00U) /**< \brief (TRNG) APB Base Address */
+#define TRNG                          (0x42003800U) /**< \brief (TRNG) APB Base Address */
 #define USB                           (0x41000000U) /**< \brief (USB) APB Base Address */
 #define WDT                           (0x40001C00U) /**< \brief (WDT) APB Base Address */
 #else
@@ -474,7 +454,7 @@ void PICOP_Handler               ( void );
 #define ADC_INST_NUM      1                         /**< \brief (ADC) Number of instances */
 #define ADC_INSTS         { ADC }                   /**< \brief (ADC) Instances List */
 
-#define AES               ((Aes      *)0x42003800U) /**< \brief (AES) APB Base Address */
+#define AES               ((Aes      *)0x42003400U) /**< \brief (AES) APB Base Address */
 #define AES_INST_NUM      1                         /**< \brief (AES) Number of instances */
 #define AES_INSTS         { AES }                   /**< \brief (AES) Instances List */
 
@@ -494,10 +474,6 @@ void PICOP_Handler               ( void );
 #define DSU_INST_NUM      1                         /**< \brief (DSU) Number of instances */
 #define DSU_INSTS         { DSU }                   /**< \brief (DSU) Instances List */
 
-#define DSUSTANDBY        ((Dsustandby *)0x40003000U) /**< \brief (DSUSTANDBY) APB Base Address */
-#define DSUSTANDBY_INST_NUM 1                         /**< \brief (DSUSTANDBY) Number of instances */
-#define DSUSTANDBY_INSTS  { DSUSTANDBY }            /**< \brief (DSUSTANDBY) Instances List */
-
 #define EIC               ((Eic      *)0x40002400U) /**< \brief (EIC) APB Base Address */
 #define EIC_INST_NUM      1                         /**< \brief (EIC) Number of instances */
 #define EIC_INSTS         { EIC }                   /**< \brief (EIC) Instances List */
@@ -509,10 +485,6 @@ void PICOP_Handler               ( void );
 #define GCLK              ((Gclk     *)0x40001800U) /**< \brief (GCLK) APB Base Address */
 #define GCLK_INST_NUM     1                         /**< \brief (GCLK) Number of instances */
 #define GCLK_INSTS        { GCLK }                  /**< \brief (GCLK) Instances List */
-
-#define I2S               ((I2s      *)0x42003400U) /**< \brief (I2S) APB Base Address */
-#define I2S_INST_NUM      1                         /**< \brief (I2S) Number of instances */
-#define I2S_INSTS         { I2S }                   /**< \brief (I2S) Instances List */
 
 #define MCLK              ((Mclk     *)0x40000400U) /**< \brief (MCLK) APB Base Address */
 #define MCLK_INST_NUM     1                         /**< \brief (MCLK) Number of instances */
@@ -549,10 +521,6 @@ void PICOP_Handler               ( void );
 #define PAC               ((Pac      *)0x44000000U) /**< \brief (PAC) APB Base Address */
 #define PAC_INST_NUM      1                         /**< \brief (PAC) Number of instances */
 #define PAC_INSTS         { PAC }                   /**< \brief (PAC) Instances List */
-
-#define PICOP             ((Picop    *)0x44000C00U) /**< \brief (PICOP) APB Base Address */
-#define PICOP_INST_NUM    1                         /**< \brief (PICOP) Number of instances */
-#define PICOP_INSTS       { PICOP }                 /**< \brief (PICOP) Instances List */
 
 #define PM                ((Pm       *)0x40000000U) /**< \brief (PM) APB Base Address */
 #define PM_INST_NUM       1                         /**< \brief (PM) Number of instances */
@@ -604,7 +572,7 @@ void PICOP_Handler               ( void );
 #define TCC_INST_NUM      3                         /**< \brief (TCC) Number of instances */
 #define TCC_INSTS         { TCC0, TCC1, TCC2 }      /**< \brief (TCC) Instances List */
 
-#define TRNG              ((Trng     *)0x42003C00U) /**< \brief (TRNG) APB Base Address */
+#define TRNG              ((Trng     *)0x42003800U) /**< \brief (TRNG) APB Base Address */
 #define TRNG_INST_NUM     1                         /**< \brief (TRNG) Number of instances */
 #define TRNG_INSTS        { TRNG }                  /**< \brief (TRNG) Instances List */
 
@@ -645,7 +613,7 @@ void PICOP_Handler               ( void );
 #define LPRAM_ADDR            (0x30000000U) /**< LPRAM base address */
 #define PICOPRAM_ADDR         (0x50000000U) /**< PICOPRAM base address */
 
-#define DSU_DID_RESETVALUE    0x11010006
+#define DSU_DID_RESETVALUE    0x10810006
 #define PORT_GROUPS           2
 #define WWR_SIZE              0x1000 /* 4 kB */
 

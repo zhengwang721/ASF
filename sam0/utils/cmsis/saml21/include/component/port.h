@@ -345,10 +345,10 @@ typedef struct {
 } PortGroup;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-/** \brief PORT APB hardware registers */
+/** \brief PORT hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef struct {
-       PortGroup                 Group[3];    /**< \brief Offset: 0x00 PortGroup groups [GROUPS] */
+       PortGroup                 Group[2];    /**< \brief Offset: 0x00 PortGroup groups [GROUPS] */
 } Port;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 #define SECTION_PORT_IOBUS

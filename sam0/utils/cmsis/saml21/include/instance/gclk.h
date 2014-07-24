@@ -93,8 +93,6 @@
 #define REG_GCLK_PCHCTRL33         (0x40001904U) /**< \brief (GCLK) Peripheral Clock Control 33 */
 #define REG_GCLK_PCHCTRL34         (0x40001908U) /**< \brief (GCLK) Peripheral Clock Control 34 */
 #define REG_GCLK_PCHCTRL35         (0x4000190CU) /**< \brief (GCLK) Peripheral Clock Control 35 */
-#define REG_GCLK_PCHCTRL36         (0x40001910U) /**< \brief (GCLK) Peripheral Clock Control 36 */
-#define REG_GCLK_PCHCTRL37         (0x40001914U) /**< \brief (GCLK) Peripheral Clock Control 37 */
 #else
 #define REG_GCLK_CTRLA             (*(RwReg8 *)0x40001800U) /**< \brief (GCLK) Control */
 #define REG_GCLK_SYNCBUSY          (*(RoReg  *)0x40001804U) /**< \brief (GCLK) Synchronization Busy */
@@ -143,25 +141,23 @@
 #define REG_GCLK_PCHCTRL33         (*(RwReg  *)0x40001904U) /**< \brief (GCLK) Peripheral Clock Control 33 */
 #define REG_GCLK_PCHCTRL34         (*(RwReg  *)0x40001908U) /**< \brief (GCLK) Peripheral Clock Control 34 */
 #define REG_GCLK_PCHCTRL35         (*(RwReg  *)0x4000190CU) /**< \brief (GCLK) Peripheral Clock Control 35 */
-#define REG_GCLK_PCHCTRL36         (*(RwReg  *)0x40001910U) /**< \brief (GCLK) Peripheral Clock Control 36 */
-#define REG_GCLK_PCHCTRL37         (*(RwReg  *)0x40001914U) /**< \brief (GCLK) Peripheral Clock Control 37 */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for GCLK peripheral ========== */
-#define GCLK_GENDIV_BITS            16
-#define GCLK_GEN_NUM                9
-#define GCLK_GEN_NUM_MSB            (GCLK_GEN_NUM-1)
-#define GCLK_GEN_SOURCE_NUM_MSB     (GCLK_SOURCE_NUM-1)
-#define GCLK_NUM                    38
-#define GCLK_SOURCE_DFLL48M         7
-#define GCLK_SOURCE_FDPLL           8
-#define GCLK_SOURCE_GCLKGEN1        2
-#define GCLK_SOURCE_GCLKIN          1
-#define GCLK_SOURCE_NUM             9
-#define GCLK_SOURCE_OSCULP32K       3
-#define GCLK_SOURCE_OSC16M          6
-#define GCLK_SOURCE_OSC32K          4
-#define GCLK_SOURCE_XOSC            0
-#define GCLK_SOURCE_XOSC32K         5
+#define GCLK_GENDIV_BITS            16      
+#define GCLK_GEN_NUM                9        // Number of Generic Clock Generators
+#define GCLK_GEN_NUM_MSB            8        // Number of Generic Clock Generators - 1
+#define GCLK_GEN_SOURCE_NUM_MSB     8        // Number of Generic Clock Sources - 1
+#define GCLK_NUM                    36       // Number of Generic Clock Users
+#define GCLK_SOURCE_DFLL48M         7       
+#define GCLK_SOURCE_FDPLL           8       
+#define GCLK_SOURCE_GCLKGEN1        2       
+#define GCLK_SOURCE_GCLKIN          1       
+#define GCLK_SOURCE_NUM             9        // Number of Generic Clock Sources
+#define GCLK_SOURCE_OSCULP32K       3       
+#define GCLK_SOURCE_OSC16M          6       
+#define GCLK_SOURCE_OSC32K          4       
+#define GCLK_SOURCE_XOSC            0       
+#define GCLK_SOURCE_XOSC32K         5       
 
 #endif /* _SAML21_GCLK_INSTANCE_ */

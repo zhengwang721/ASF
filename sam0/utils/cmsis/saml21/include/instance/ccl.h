@@ -64,9 +64,9 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for CCL peripheral ========== */
-#define CCL_GCLK_ID                 36
-#define CCL_IO_NUM                  12
-#define CCL_LUT_NUM                 4
-#define CCL_SEQ_NUM                 2
+#define CCL_GCLK_ID                 34       // GCLK index for CCL
+#define CCL_IO_NUM                  12       // Numer of input pins
+#define CCL_LUT_NUM                 4        // Number of LUT in a CCL
+#define CCL_SEQ_NUM                 2        // Number of SEQ in a CCL
 
 #endif /* _SAML21_CCL_INSTANCE_ */

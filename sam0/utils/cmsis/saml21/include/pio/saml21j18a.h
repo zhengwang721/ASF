@@ -1038,59 +1038,6 @@
 #define MUX_PA03B_DAC_VREFP                1
 #define PINMUX_PA03B_DAC_VREFP     ((PIN_PA03B_DAC_VREFP << 16) | MUX_PA03B_DAC_VREFP)
 #define PORT_PA03B_DAC_VREFP       (1u <<  3)
-/* ========== PORT definition for I2S peripheral ========== */
-#define PIN_PA11G_I2S_FS0                 11  /**< \brief I2S signal: FS0 on PA11 mux G */
-#define MUX_PA11G_I2S_FS0                  6
-#define PINMUX_PA11G_I2S_FS0       ((PIN_PA11G_I2S_FS0 << 16) | MUX_PA11G_I2S_FS0)
-#define PORT_PA11G_I2S_FS0         (1u << 11)
-#define PIN_PA21G_I2S_FS0                 21  /**< \brief I2S signal: FS0 on PA21 mux G */
-#define MUX_PA21G_I2S_FS0                  6
-#define PINMUX_PA21G_I2S_FS0       ((PIN_PA21G_I2S_FS0 << 16) | MUX_PA21G_I2S_FS0)
-#define PORT_PA21G_I2S_FS0         (1u << 21)
-#define PIN_PB12G_I2S_FS1                 44  /**< \brief I2S signal: FS1 on PB12 mux G */
-#define MUX_PB12G_I2S_FS1                  6
-#define PINMUX_PB12G_I2S_FS1       ((PIN_PB12G_I2S_FS1 << 16) | MUX_PB12G_I2S_FS1)
-#define PORT_PB12G_I2S_FS1         (1u << 12)
-#define PIN_PA09G_I2S_MCK0                 9  /**< \brief I2S signal: MCK0 on PA09 mux G */
-#define MUX_PA09G_I2S_MCK0                 6
-#define PINMUX_PA09G_I2S_MCK0      ((PIN_PA09G_I2S_MCK0 << 16) | MUX_PA09G_I2S_MCK0)
-#define PORT_PA09G_I2S_MCK0        (1u <<  9)
-#define PIN_PB17G_I2S_MCK0                49  /**< \brief I2S signal: MCK0 on PB17 mux G */
-#define MUX_PB17G_I2S_MCK0                 6
-#define PINMUX_PB17G_I2S_MCK0      ((PIN_PB17G_I2S_MCK0 << 16) | MUX_PB17G_I2S_MCK0)
-#define PORT_PB17G_I2S_MCK0        (1u << 17)
-#define PIN_PB10G_I2S_MCK1                42  /**< \brief I2S signal: MCK1 on PB10 mux G */
-#define MUX_PB10G_I2S_MCK1                 6
-#define PINMUX_PB10G_I2S_MCK1      ((PIN_PB10G_I2S_MCK1 << 16) | MUX_PB10G_I2S_MCK1)
-#define PORT_PB10G_I2S_MCK1        (1u << 10)
-#define PIN_PA10G_I2S_SCK0                10  /**< \brief I2S signal: SCK0 on PA10 mux G */
-#define MUX_PA10G_I2S_SCK0                 6
-#define PINMUX_PA10G_I2S_SCK0      ((PIN_PA10G_I2S_SCK0 << 16) | MUX_PA10G_I2S_SCK0)
-#define PORT_PA10G_I2S_SCK0        (1u << 10)
-#define PIN_PA20G_I2S_SCK0                20  /**< \brief I2S signal: SCK0 on PA20 mux G */
-#define MUX_PA20G_I2S_SCK0                 6
-#define PINMUX_PA20G_I2S_SCK0      ((PIN_PA20G_I2S_SCK0 << 16) | MUX_PA20G_I2S_SCK0)
-#define PORT_PA20G_I2S_SCK0        (1u << 20)
-#define PIN_PB11G_I2S_SCK1                43  /**< \brief I2S signal: SCK1 on PB11 mux G */
-#define MUX_PB11G_I2S_SCK1                 6
-#define PINMUX_PB11G_I2S_SCK1      ((PIN_PB11G_I2S_SCK1 << 16) | MUX_PB11G_I2S_SCK1)
-#define PORT_PB11G_I2S_SCK1        (1u << 11)
-#define PIN_PA07G_I2S_SD0                  7  /**< \brief I2S signal: SD0 on PA07 mux G */
-#define MUX_PA07G_I2S_SD0                  6
-#define PINMUX_PA07G_I2S_SD0       ((PIN_PA07G_I2S_SD0 << 16) | MUX_PA07G_I2S_SD0)
-#define PORT_PA07G_I2S_SD0         (1u <<  7)
-#define PIN_PA19G_I2S_SD0                 19  /**< \brief I2S signal: SD0 on PA19 mux G */
-#define MUX_PA19G_I2S_SD0                  6
-#define PINMUX_PA19G_I2S_SD0       ((PIN_PA19G_I2S_SD0 << 16) | MUX_PA19G_I2S_SD0)
-#define PORT_PA19G_I2S_SD0         (1u << 19)
-#define PIN_PA08G_I2S_SD1                  8  /**< \brief I2S signal: SD1 on PA08 mux G */
-#define MUX_PA08G_I2S_SD1                  6
-#define PINMUX_PA08G_I2S_SD1       ((PIN_PA08G_I2S_SD1 << 16) | MUX_PA08G_I2S_SD1)
-#define PORT_PA08G_I2S_SD1         (1u <<  8)
-#define PIN_PB16G_I2S_SD1                 48  /**< \brief I2S signal: SD1 on PB16 mux G */
-#define MUX_PB16G_I2S_SD1                  6
-#define PINMUX_PB16G_I2S_SD1       ((PIN_PB16G_I2S_SD1 << 16) | MUX_PB16G_I2S_SD1)
-#define PORT_PB16G_I2S_SD1         (1u << 16)
 /* ========== PORT definition for SERCOM5 peripheral ========== */
 #define PIN_PA22D_SERCOM5_PAD0            22  /**< \brief SERCOM5 signal: PAD0 on PA22 mux D */
 #define MUX_PA22D_SERCOM5_PAD0             3

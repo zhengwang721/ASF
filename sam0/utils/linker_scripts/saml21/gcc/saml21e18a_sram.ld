@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Linker script for running in internal FLASH on the SAML21J17A
+ * \brief Linker script for running in internal SRAM on the SAML21E18A
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -49,9 +49,8 @@ SEARCH_DIR(.)
 /* Memory Spaces Definitions */
 MEMORY
 {
-  rom    (rx)  : ORIGIN = 0x00000000, LENGTH = 0x00020000
-  ram    (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00004000
-  lpram  (rwx) : ORIGIN = 0x30000000, LENGTH = 0x00001800
+  ram    (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00008000
+  lpram  (rwx) : ORIGIN = 0x30000000, LENGTH = 0x00002000
   picopram (rwx) : ORIGIN = 0x50000000, LENGTH = 0x00000800
 }
 
@@ -108,15 +107,7 @@ SECTIONS
 
         . = ALIGN(4);
         _efixed = .;            /* End of text section */
-    } > rom
-
-    /* .ARM.exidx is sorted, so has to go in its own output section.  */
-    PROVIDE_HIDDEN (__exidx_start = .);
-    .ARM.exidx :
-    {
-      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-    } > rom
-    PROVIDE_HIDDEN (__exidx_end = .);
+    } > ram
 
     . = ALIGN(4);
     _etext = .;
@@ -153,6 +144,14 @@ SECTIONS
         . = ALIGN(8);
         _estack = .;
     } > ram
+
+    /* .ARM.exidx is sorted, so has to go in its own output section.  */
+    PROVIDE_HIDDEN (__exidx_start = .);
+    .ARM.exidx :
+    {
+      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+    } > ram
+    PROVIDE_HIDDEN (__exidx_end = .);
 
     . = ALIGN(4);
     _end = . ;

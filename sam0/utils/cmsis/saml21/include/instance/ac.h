@@ -80,9 +80,9 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for AC peripheral ========== */
-#define AC_COMPCTRL_MUXNEG_OPAMP    7
-#define AC_GCLK_ID                  31
-#define AC_NUM_CMP                  2
-#define AC_PAIRS                    1
+#define AC_COMPCTRL_MUXNEG_OPAMP    7        // OPAMP selection for MUXNEG
+#define AC_GCLK_ID                  31       // Index of Generic Clock
+#define AC_NUM_CMP                  2        // Number of comparators
+#define AC_PAIRS                    1        // Number of pairs of comparators
 
 #endif /* _SAML21_AC_INSTANCE_ */

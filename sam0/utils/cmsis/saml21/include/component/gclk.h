@@ -223,7 +223,7 @@ typedef struct {
        RoReg8                    Reserved2[0x18];
   __IO GCLK_GENCTRL_Type         GENCTRL[9];  /**< \brief Offset: 0x20 (R/W 32) Generic Clock Generator Control */
        RoReg8                    Reserved3[0x3C];
-  __IO GCLK_PCHCTRL_Type         PCHCTRL[38]; /**< \brief Offset: 0x80 (R/W 32) Peripheral Clock Control */
+  __IO GCLK_PCHCTRL_Type         PCHCTRL[36]; /**< \brief Offset: 0x80 (R/W 32) Peripheral Clock Control */
 } Gclk;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 

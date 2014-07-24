@@ -134,11 +134,11 @@
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for SERCOM5 peripheral ========== */
-#define SERCOM5_DMAC_ID_RX          
-#define SERCOM5_DMAC_ID_TX          
-#define SERCOM5_GCLK_ID_CORE        24
-#define SERCOM5_GCLK_ID_SLOW        23
-#define SERCOM5_INT_MSB             3
-#define SERCOM5_PMSB                3
+#define SERCOM5_DMAC_ID_RX                   // Index of DMA RX trigger
+#define SERCOM5_DMAC_ID_TX                   // Index of DMA TX trigger
+#define SERCOM5_GCLK_ID_CORE        24      
+#define SERCOM5_GCLK_ID_SLOW        23      
+#define SERCOM5_INT_MSB             3       
+#define SERCOM5_PMSB                3       
 
 #endif /* _SAML21_SERCOM5_INSTANCE_ */
