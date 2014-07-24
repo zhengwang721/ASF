@@ -35,7 +35,7 @@
 			<build type="include-path" value="reset_sam_l"/>
 
 			<build type="header-file" subtype="api" value="reset_sam_l/reset.h"/>
-			<build type="c-source" value="reset_sam_l/reset.c"/>
+			<require idref="sam0.drivers.system.clock"/>
 			<require idref="thirdparty.cmsis"/>
 			<require idref="sam0.utils"/>
 			<device-support value="saml21"/>

@@ -67,7 +67,6 @@
 		<build type="header-file" value="power/power_sam_l/power.h"/>
 		<build type="header-file" value="reset/reset_sam_l/reset.h"/>
 		<build type="c-source" value="power/power_sam_l/power.c"/>
-		<build type="c-source" value="reset/reset_sam_l/reset.c"/>
 		<build type="c-source" value="system.c"/>
 		<build type="doxygen-entry-point" value="asfdoc_sam0_system_group"/>
 		
