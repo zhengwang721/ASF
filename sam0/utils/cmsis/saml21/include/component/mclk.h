@@ -327,8 +327,7 @@ typedef union {
     uint32_t EIC_:1;           /*!< bit:      9  EIC APB Clock Enable               */
     uint32_t PORT_:1;          /*!< bit:     10  PORT APB Clock Enable              */
     uint32_t TAL_:1;           /*!< bit:     11  TAL APB Clock Enable               */
-    uint32_t DSUSTANDBY_:1;    /*!< bit:     12  DSUSTANDBY APB Clock Enable        */
-    uint32_t :19;              /*!< bit: 13..31  Reserved                           */
+    uint32_t :20;              /*!< bit: 12..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } MCLK_APBAMASK_Type;
@@ -361,9 +360,7 @@ typedef union {
 #define MCLK_APBAMASK_PORT          (0x1u << MCLK_APBAMASK_PORT_Pos)
 #define MCLK_APBAMASK_TAL_Pos       11           /**< \brief (MCLK_APBAMASK) TAL APB Clock Enable */
 #define MCLK_APBAMASK_TAL           (0x1u << MCLK_APBAMASK_TAL_Pos)
-#define MCLK_APBAMASK_DSUSTANDBY_Pos 12           /**< \brief (MCLK_APBAMASK) DSUSTANDBY APB Clock Enable */
-#define MCLK_APBAMASK_DSUSTANDBY    (0x1u << MCLK_APBAMASK_DSUSTANDBY_Pos)
-#define MCLK_APBAMASK_MASK          0x00001FFFu  /**< \brief (MCLK_APBAMASK) MASK Register */
+#define MCLK_APBAMASK_MASK          0x00000FFFu  /**< \brief (MCLK_APBAMASK) MASK Register */
 
 /* -------- MCLK_APBBMASK : (MCLK Offset: 0x18) (R/W 32) APBB Mask -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -493,9 +490,7 @@ typedef union {
 typedef union {
   struct {
     uint32_t PAC_:1;           /*!< bit:      0  PAC APB Clock Enable               */
-    uint32_t :2;               /*!< bit:  1.. 2  Reserved                           */
-    uint32_t PICOP_:1;         /*!< bit:      3  PICOP APB Clock Enable             */
-    uint32_t :28;              /*!< bit:  4..31  Reserved                           */
+    uint32_t :31;              /*!< bit:  1..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } MCLK_APBEMASK_Type;
@@ -506,9 +501,7 @@ typedef union {
 
 #define MCLK_APBEMASK_PAC_Pos       0            /**< \brief (MCLK_APBEMASK) PAC APB Clock Enable */
 #define MCLK_APBEMASK_PAC           (0x1u << MCLK_APBEMASK_PAC_Pos)
-#define MCLK_APBEMASK_PICOP_Pos     3            /**< \brief (MCLK_APBEMASK) PICOP APB Clock Enable */
-#define MCLK_APBEMASK_PICOP         (0x1u << MCLK_APBEMASK_PICOP_Pos)
-#define MCLK_APBEMASK_MASK          0x00000009u  /**< \brief (MCLK_APBEMASK) MASK Register */
+#define MCLK_APBEMASK_MASK          0x00000001u  /**< \brief (MCLK_APBEMASK) MASK Register */
 
 /** \brief MCLK hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

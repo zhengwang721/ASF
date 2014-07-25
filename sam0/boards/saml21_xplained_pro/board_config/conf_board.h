@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D11 Xplained Pro example configuration.
+ * \brief SAM L21 Xplained Pro board configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,21 +41,7 @@
  *
  */
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/** Timer configured to source from the XOSC32K crystal generator */
-#define CONF_TC_XOSC32K               TC1
-/** Timer configured to source from the OSC32K oscillator generator */
-#define CONF_TC_OSC32K                TC2
-#define CONF_CLOCK_PIN_OUT            PIN_PA08H_GCLK_IO0
-#define CONF_CLOCK_PIN_MUX            MUX_PA08H_GCLK_IO0
-#define CONF_EVENT_GENERATOR_ID       EVSYS_ID_GEN_TC1_OVF
-#define CONF_EVENT_USED_ID            EVSYS_ID_USER_TC2_EVU
-/** The value should be 0 or 1 */
-#define CONF_FRANGE_CAL               0
-#define CONF_TEMP_CAL                 1
-/** The suggested value is 13 to 15 */
-#define CONF_CALIBRATION_RESOLUTION   13
-
-#endif /* CONF_TEST_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

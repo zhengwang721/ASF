@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Component description for DSUSTANDBY
+ * \brief User board configuration template
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,38 +41,7 @@
  *
  */
 
-#ifndef _SAML21_DSUSTANDBY_COMPONENT_
-#define _SAML21_DSUSTANDBY_COMPONENT_
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-/* ========================================================================== */
-/**  SOFTWARE API DEFINITION FOR DSUSTANDBY */
-/* ========================================================================== */
-/** \addtogroup SAML21_DSUSTANDBY Device Service Unit */
-/*@{*/
-
-#define DSUSTANDBY_U2209
-#define REV_DSUSTANDBY              0x100
-
-/* -------- DSUSTANDBY_DCFG : (DSUSTANDBY Offset: 0xF0) (R/W 32) Device Configuration -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  uint32_t reg;                /*!< Type      used for register access              */
-} DSUSTANDBY_DCFG_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define DSUSTANDBY_DCFG_OFFSET      0xF0         /**< \brief (DSUSTANDBY_DCFG offset) Device Configuration */
-#define DSUSTANDBY_DCFG_RESETVALUE  0x00000000   /**< \brief (DSUSTANDBY_DCFG reset_value) Device Configuration */
-
-#define DSUSTANDBY_DCFG_MASK        0x00000000u  /**< \brief (DSUSTANDBY_DCFG) MASK Register */
-
-/** \brief DSUSTANDBY hardware registers */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef struct {
-       RoReg8                    Reserved1[0xF0];
-  __IO DSUSTANDBY_DCFG_Type      DCFG[2];     /**< \brief Offset: 0xF0 (R/W 32) Device Configuration */
-} Dsustandby;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-/*@}*/
-
-#endif /* _SAML21_DSUSTANDBY_COMPONENT_ */
+#endif // CONF_BOARD_H

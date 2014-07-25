@@ -108,6 +108,9 @@
  * 	</tr>
  * </table>
  *
+ * \note When the button is connected to the non-maskable pin, the USE_EIC_NMI
+ *       in conf_example.h should be defined to true, else be false.
+ *
  * \section appdoc_sam0_led_toggle_app_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for ARM.
  * Other compilers may or may not work.
@@ -139,6 +142,7 @@ static void update_led_state(void)
 
 #if USE_INTERRUPTS == true
 #  if USE_EIC == true
+#    if USE_EIC_NMI == false
 /** Callback function for the EXTINT driver, called when an external interrupt
  *  detection occurs.
  */
@@ -158,6 +162,17 @@ static void configure_eic_callback(void)
 	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
 }
+#    else
+/** Handler for the NMI module interrupt. */
+void NMI_Handler(void)
+{
+	if (extint_nmi_is_detected(BUTTON_0_EIC_LINE)) {
+		/* Clear flag */
+		extint_nmi_clear_detected(BUTTON_0_EIC_LINE);
+		update_led_state();
+	}
+}
+#    endif
 #  else
 /** Handler for the device SysTick module, called when the SysTick counter
  *  reaches the set period.
@@ -188,6 +203,7 @@ static void configure_systick_handler(void)
 /** Configures the External Interrupt Controller to detect changes in the board
  *  button state.
  */
+#  if USE_EIC_NMI == false
 static void configure_extint(void)
 {
 	struct extint_chan_conf eint_chan_conf;
@@ -199,6 +215,22 @@ static void configure_extint(void)
 	eint_chan_conf.filter_input_signal = true;
 	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
 }
+#  else
+ /** Configures the NMI to detect changes in the board
+ *  button state.
+ */
+static void configure_nmi(void)
+{
+	struct extint_nmi_conf eint_nmi_conf;
+	extint_nmi_get_config_defaults(&eint_nmi_conf);
+
+	eint_nmi_conf.gpio_pin           = BUTTON_0_EIC_PIN;
+	eint_nmi_conf.gpio_pin_mux       = BUTTON_0_EIC_MUX;
+	eint_nmi_conf.detection_criteria = EXTINT_DETECT_BOTH;
+	eint_nmi_conf.filter_input_signal = true;
+	extint_nmi_set_config(BUTTON_0_EIC_LINE, &eint_nmi_conf);
+}
+#  endif
 #endif
 
 int main(void)
@@ -206,14 +238,20 @@ int main(void)
 	system_init();
 
 #if USE_EIC == true
+#  if USE_EIC_NMI == false
 	configure_extint();
+#  else
+	configure_nmi();
+#  endif
 #endif
 
 #if USE_INTERRUPTS == true
 #  if USE_EIC == false
 	configure_systick_handler();
 #  else
+#    if USE_EIC_NMI == false
 	configure_eic_callback();
+#    endif
 #  endif
 
 	system_interrupt_enable_global();
@@ -228,11 +266,13 @@ int main(void)
 	}
 #  else
 	while (true) {
+#    if USE_EIC_NMI == false
 		if (extint_chan_is_detected(BUTTON_0_EIC_LINE)) {
 			extint_chan_clear_detected(BUTTON_0_EIC_LINE);
 
 			update_led_state();
 		}
+#    endif
 	}
 #  endif
 #endif

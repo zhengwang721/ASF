@@ -142,22 +142,22 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t FLASH:1;          /*!< bit:      0  FLASH                              */
-    uint32_t HSRAMCM0P:1;      /*!< bit:      1  HSRAMCM0P                          */
-    uint32_t HSRAMDSU:1;       /*!< bit:      2  HSRAMDSU                           */
-    uint32_t HPB1:1;           /*!< bit:      3  HPB1                               */
-    uint32_t H2LBRIDGES:1;     /*!< bit:      4  H2LBRIDGES                         */
+    uint32_t FLASH_:1;         /*!< bit:      0  FLASH                              */
+    uint32_t HSRAMCM0P_:1;     /*!< bit:      1  HSRAMCM0P                          */
+    uint32_t HSRAMDSU_:1;      /*!< bit:      2  HSRAMDSU                           */
+    uint32_t HPB1_:1;          /*!< bit:      3  HPB1                               */
+    uint32_t H2LBRIDGES_:1;    /*!< bit:      4  H2LBRIDGES                         */
     uint32_t :11;              /*!< bit:  5..15  Reserved                           */
-    uint32_t HPB0:1;           /*!< bit:     16  HPB0                               */
-    uint32_t HPB2:1;           /*!< bit:     17  HPB2                               */
-    uint32_t HPB3:1;           /*!< bit:     18  HPB3                               */
-    uint32_t HPB4:1;           /*!< bit:     19  HPB4                               */
-    uint32_t PICOPRAM:1;       /*!< bit:     20  PICOPRAM                           */
-    uint32_t LPRAMHS:1;        /*!< bit:     21  LPRAMHS                            */
-    uint32_t LPRAMPICOP:1;     /*!< bit:     22  LPRAMPICOP                         */
-    uint32_t LPRAMDMAC:1;      /*!< bit:     23  LPRAMDMAC                          */
-    uint32_t L2HBRIDGES:1;     /*!< bit:     24  L2HBRIDGES                         */
-    uint32_t HSRAMLP:1;        /*!< bit:     25  HSRAMLP                            */
+    uint32_t HPB0_:1;          /*!< bit:     16  HPB0                               */
+    uint32_t HPB2_:1;          /*!< bit:     17  HPB2                               */
+    uint32_t HPB3_:1;          /*!< bit:     18  HPB3                               */
+    uint32_t HPB4_:1;          /*!< bit:     19  HPB4                               */
+    uint32_t PICOPRAM_:1;      /*!< bit:     20  PICOPRAM                           */
+    uint32_t LPRAMHS_:1;       /*!< bit:     21  LPRAMHS                            */
+    uint32_t LPRAMPICOP_:1;    /*!< bit:     22  LPRAMPICOP                         */
+    uint32_t LPRAMDMAC_:1;     /*!< bit:     23  LPRAMDMAC                          */
+    uint32_t L2HBRIDGES_:1;    /*!< bit:     24  L2HBRIDGES                         */
+    uint32_t HSRAMLP_:1;       /*!< bit:     25  HSRAMLP                            */
     uint32_t :6;               /*!< bit: 26..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
@@ -203,20 +203,19 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t PM:1;             /*!< bit:      0  PM                                 */
-    uint32_t MCLK:1;           /*!< bit:      1  MCLK                               */
-    uint32_t RSTC:1;           /*!< bit:      2  RSTC                               */
-    uint32_t OSCCTRL:1;        /*!< bit:      3  OSCCTRL                            */
-    uint32_t OSC32KCTRL:1;     /*!< bit:      4  OSC32KCTRL                         */
-    uint32_t SUPC:1;           /*!< bit:      5  SUPC                               */
-    uint32_t GCLK:1;           /*!< bit:      6  GCLK                               */
-    uint32_t WDT:1;            /*!< bit:      7  WDT                                */
-    uint32_t RTC:1;            /*!< bit:      8  RTC                                */
-    uint32_t EIC:1;            /*!< bit:      9  EIC                                */
-    uint32_t PORT:1;           /*!< bit:     10  PORT                               */
-    uint32_t TAL:1;            /*!< bit:     11  TAL                                */
-    uint32_t DSUSTANDBY:1;     /*!< bit:     12  DSUSTANDBY                         */
-    uint32_t :19;              /*!< bit: 13..31  Reserved                           */
+    uint32_t PM_:1;            /*!< bit:      0  PM                                 */
+    uint32_t MCLK_:1;          /*!< bit:      1  MCLK                               */
+    uint32_t RSTC_:1;          /*!< bit:      2  RSTC                               */
+    uint32_t OSCCTRL_:1;       /*!< bit:      3  OSCCTRL                            */
+    uint32_t OSC32KCTRL_:1;    /*!< bit:      4  OSC32KCTRL                         */
+    uint32_t SUPC_:1;          /*!< bit:      5  SUPC                               */
+    uint32_t GCLK_:1;          /*!< bit:      6  GCLK                               */
+    uint32_t WDT_:1;           /*!< bit:      7  WDT                                */
+    uint32_t RTC_:1;           /*!< bit:      8  RTC                                */
+    uint32_t EIC_:1;           /*!< bit:      9  EIC                                */
+    uint32_t PORT_:1;          /*!< bit:     10  PORT                               */
+    uint32_t TAL_:1;           /*!< bit:     11  TAL                                */
+    uint32_t :20;              /*!< bit: 12..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PAC_INTFLAGA_Type;
@@ -249,21 +248,17 @@ typedef union {
 #define PAC_INTFLAGA_PORT           (0x1u << PAC_INTFLAGA_PORT_Pos)
 #define PAC_INTFLAGA_TAL_Pos        11           /**< \brief (PAC_INTFLAGA) TAL */
 #define PAC_INTFLAGA_TAL            (0x1u << PAC_INTFLAGA_TAL_Pos)
-#define PAC_INTFLAGA_DSUSTANDBY_Pos 12           /**< \brief (PAC_INTFLAGA) DSUSTANDBY */
-#define PAC_INTFLAGA_DSUSTANDBY     (0x1u << PAC_INTFLAGA_DSUSTANDBY_Pos)
-#define PAC_INTFLAGA_MASK           0x00001FFFu  /**< \brief (PAC_INTFLAGA) MASK Register */
+#define PAC_INTFLAGA_MASK           0x00000FFFu  /**< \brief (PAC_INTFLAGA) MASK Register */
 
 /* -------- PAC_INTFLAGB : (PAC Offset: 0x18) (R/W 32) Peripheral interrupt flag status - Bridge B -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t USB:1;            /*!< bit:      0  USB                                */
-    uint32_t DSU:1;            /*!< bit:      1  DSU                                */
-    uint32_t NVMCTRL:1;        /*!< bit:      2  NVMCTRL                            */
-    uint32_t MTB:1;            /*!< bit:      3  MTB                                */
-    uint32_t HMATRIXHS:1;      /*!< bit:      4  HMATRIXHS                          */
-    uint32_t ATW:1;            /*!< bit:      5  ATW                                */
-    uint32_t :26;              /*!< bit:  6..31  Reserved                           */
+    uint32_t USB_:1;           /*!< bit:      0  USB                                */
+    uint32_t DSU_:1;           /*!< bit:      1  DSU                                */
+    uint32_t NVMCTRL_:1;       /*!< bit:      2  NVMCTRL                            */
+    uint32_t MTB_:1;           /*!< bit:      3  MTB                                */
+    uint32_t :28;              /*!< bit:  4..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PAC_INTFLAGB_Type;
@@ -280,33 +275,28 @@ typedef union {
 #define PAC_INTFLAGB_NVMCTRL        (0x1u << PAC_INTFLAGB_NVMCTRL_Pos)
 #define PAC_INTFLAGB_MTB_Pos        3            /**< \brief (PAC_INTFLAGB) MTB */
 #define PAC_INTFLAGB_MTB            (0x1u << PAC_INTFLAGB_MTB_Pos)
-#define PAC_INTFLAGB_HMATRIXHS_Pos  4            /**< \brief (PAC_INTFLAGB) HMATRIXHS */
-#define PAC_INTFLAGB_HMATRIXHS      (0x1u << PAC_INTFLAGB_HMATRIXHS_Pos)
-#define PAC_INTFLAGB_ATW_Pos        5            /**< \brief (PAC_INTFLAGB) ATW */
-#define PAC_INTFLAGB_ATW            (0x1u << PAC_INTFLAGB_ATW_Pos)
-#define PAC_INTFLAGB_MASK           0x0000003Fu  /**< \brief (PAC_INTFLAGB) MASK Register */
+#define PAC_INTFLAGB_MASK           0x0000000Fu  /**< \brief (PAC_INTFLAGB) MASK Register */
 
 /* -------- PAC_INTFLAGC : (PAC Offset: 0x1C) (R/W 32) Peripheral interrupt flag status - Bridge C -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t SERCOM0:1;        /*!< bit:      0  SERCOM0                            */
-    uint32_t SERCOM1:1;        /*!< bit:      1  SERCOM1                            */
-    uint32_t SERCOM2:1;        /*!< bit:      2  SERCOM2                            */
-    uint32_t SERCOM3:1;        /*!< bit:      3  SERCOM3                            */
-    uint32_t SERCOM4:1;        /*!< bit:      4  SERCOM4                            */
-    uint32_t TCC0:1;           /*!< bit:      5  TCC0                               */
-    uint32_t TCC1:1;           /*!< bit:      6  TCC1                               */
-    uint32_t TCC2:1;           /*!< bit:      7  TCC2                               */
-    uint32_t TC0:1;            /*!< bit:      8  TC0                                */
-    uint32_t TC1:1;            /*!< bit:      9  TC1                                */
-    uint32_t TC2:1;            /*!< bit:     10  TC2                                */
-    uint32_t TC3:1;            /*!< bit:     11  TC3                                */
-    uint32_t DAC:1;            /*!< bit:     12  DAC                                */
-    uint32_t AES:1;            /*!< bit:     13  AES                                */
-    uint32_t TRNG:1;           /*!< bit:     14  TRNG                               */
-    uint32_t RFCTRL:1;         /*!< bit:     15  RFCTRL                             */
-    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
+    uint32_t SERCOM0_:1;       /*!< bit:      0  SERCOM0                            */
+    uint32_t SERCOM1_:1;       /*!< bit:      1  SERCOM1                            */
+    uint32_t SERCOM2_:1;       /*!< bit:      2  SERCOM2                            */
+    uint32_t SERCOM3_:1;       /*!< bit:      3  SERCOM3                            */
+    uint32_t SERCOM4_:1;       /*!< bit:      4  SERCOM4                            */
+    uint32_t TCC0_:1;          /*!< bit:      5  TCC0                               */
+    uint32_t TCC1_:1;          /*!< bit:      6  TCC1                               */
+    uint32_t TCC2_:1;          /*!< bit:      7  TCC2                               */
+    uint32_t TC0_:1;           /*!< bit:      8  TC0                                */
+    uint32_t TC1_:1;           /*!< bit:      9  TC1                                */
+    uint32_t TC2_:1;           /*!< bit:     10  TC2                                */
+    uint32_t TC3_:1;           /*!< bit:     11  TC3                                */
+    uint32_t DAC_:1;           /*!< bit:     12  DAC                                */
+    uint32_t AES_:1;           /*!< bit:     13  AES                                */
+    uint32_t TRNG_:1;          /*!< bit:     14  TRNG                               */
+    uint32_t :17;              /*!< bit: 15..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PAC_INTFLAGC_Type;
@@ -345,22 +335,20 @@ typedef union {
 #define PAC_INTFLAGC_AES            (0x1u << PAC_INTFLAGC_AES_Pos)
 #define PAC_INTFLAGC_TRNG_Pos       14           /**< \brief (PAC_INTFLAGC) TRNG */
 #define PAC_INTFLAGC_TRNG           (0x1u << PAC_INTFLAGC_TRNG_Pos)
-#define PAC_INTFLAGC_RFCTRL_Pos     15           /**< \brief (PAC_INTFLAGC) RFCTRL */
-#define PAC_INTFLAGC_RFCTRL         (0x1u << PAC_INTFLAGC_RFCTRL_Pos)
-#define PAC_INTFLAGC_MASK           0x0000FFFFu  /**< \brief (PAC_INTFLAGC) MASK Register */
+#define PAC_INTFLAGC_MASK           0x00007FFFu  /**< \brief (PAC_INTFLAGC) MASK Register */
 
 /* -------- PAC_INTFLAGD : (PAC Offset: 0x20) (R/W 32) Peripheral interrupt flag status - Bridge D -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t EVSYS:1;          /*!< bit:      0  EVSYS                              */
-    uint32_t SERCOM5:1;        /*!< bit:      1  SERCOM5                            */
-    uint32_t TC4:1;            /*!< bit:      2  TC4                                */
-    uint32_t ADC:1;            /*!< bit:      3  ADC                                */
-    uint32_t AC:1;             /*!< bit:      4  AC                                 */
-    uint32_t PTC:1;            /*!< bit:      5  PTC                                */
-    uint32_t OPAMP:1;          /*!< bit:      6  OPAMP                              */
-    uint32_t CCL:1;            /*!< bit:      7  CCL                                */
+    uint32_t EVSYS_:1;         /*!< bit:      0  EVSYS                              */
+    uint32_t SERCOM5_:1;       /*!< bit:      1  SERCOM5                            */
+    uint32_t TC4_:1;           /*!< bit:      2  TC4                                */
+    uint32_t ADC_:1;           /*!< bit:      3  ADC                                */
+    uint32_t AC_:1;            /*!< bit:      4  AC                                 */
+    uint32_t PTC_:1;           /*!< bit:      5  PTC                                */
+    uint32_t OPAMP_:1;         /*!< bit:      6  OPAMP                              */
+    uint32_t CCL_:1;           /*!< bit:      7  CCL                                */
     uint32_t :24;              /*!< bit:  8..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
@@ -392,11 +380,9 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t PAC:1;            /*!< bit:      0  PAC                                */
-    uint32_t DMAC:1;           /*!< bit:      1  DMAC                               */
-    uint32_t HMATRIXLP:1;      /*!< bit:      2  HMATRIXLP                          */
-    uint32_t PICOP:1;          /*!< bit:      3  PICOP                              */
-    uint32_t :28;              /*!< bit:  4..31  Reserved                           */
+    uint32_t PAC_:1;           /*!< bit:      0  PAC                                */
+    uint32_t DMAC_:1;          /*!< bit:      1  DMAC                               */
+    uint32_t :30;              /*!< bit:  2..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PAC_INTFLAGE_Type;
@@ -409,30 +395,25 @@ typedef union {
 #define PAC_INTFLAGE_PAC            (0x1u << PAC_INTFLAGE_PAC_Pos)
 #define PAC_INTFLAGE_DMAC_Pos       1            /**< \brief (PAC_INTFLAGE) DMAC */
 #define PAC_INTFLAGE_DMAC           (0x1u << PAC_INTFLAGE_DMAC_Pos)
-#define PAC_INTFLAGE_HMATRIXLP_Pos  2            /**< \brief (PAC_INTFLAGE) HMATRIXLP */
-#define PAC_INTFLAGE_HMATRIXLP      (0x1u << PAC_INTFLAGE_HMATRIXLP_Pos)
-#define PAC_INTFLAGE_PICOP_Pos      3            /**< \brief (PAC_INTFLAGE) PICOP */
-#define PAC_INTFLAGE_PICOP          (0x1u << PAC_INTFLAGE_PICOP_Pos)
-#define PAC_INTFLAGE_MASK           0x0000000Fu  /**< \brief (PAC_INTFLAGE) MASK Register */
+#define PAC_INTFLAGE_MASK           0x00000003u  /**< \brief (PAC_INTFLAGE) MASK Register */
 
 /* -------- PAC_STATUSA : (PAC Offset: 0x34) (R/  32) Peripheral write protection status - Bridge A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t PM:1;             /*!< bit:      0  PM APB Protect Enable              */
-    uint32_t MCLK:1;           /*!< bit:      1  MCLK APB Protect Enable            */
-    uint32_t RSTC:1;           /*!< bit:      2  RSTC APB Protect Enable            */
-    uint32_t OSCCTRL:1;        /*!< bit:      3  OSCCTRL APB Protect Enable         */
-    uint32_t OSC32KCTRL:1;     /*!< bit:      4  OSC32KCTRL APB Protect Enable      */
-    uint32_t SUPC:1;           /*!< bit:      5  SUPC APB Protect Enable            */
-    uint32_t GCLK:1;           /*!< bit:      6  GCLK APB Protect Enable            */
-    uint32_t WDT:1;            /*!< bit:      7  WDT APB Protect Enable             */
-    uint32_t RTC:1;            /*!< bit:      8  RTC APB Protect Enable             */
-    uint32_t EIC:1;            /*!< bit:      9  EIC APB Protect Enable             */
-    uint32_t PORT:1;           /*!< bit:     10  PORT APB Protect Enable            */
-    uint32_t TAL:1;            /*!< bit:     11  TAL APB Protect Enable             */
-    uint32_t DSUSTANDBY:1;     /*!< bit:     12  DSUSTANDBY APB Protect Enable      */
-    uint32_t :19;              /*!< bit: 13..31  Reserved                           */
+    uint32_t PM_:1;            /*!< bit:      0  PM APB Protect Enable              */
+    uint32_t MCLK_:1;          /*!< bit:      1  MCLK APB Protect Enable            */
+    uint32_t RSTC_:1;          /*!< bit:      2  RSTC APB Protect Enable            */
+    uint32_t OSCCTRL_:1;       /*!< bit:      3  OSCCTRL APB Protect Enable         */
+    uint32_t OSC32KCTRL_:1;    /*!< bit:      4  OSC32KCTRL APB Protect Enable      */
+    uint32_t SUPC_:1;          /*!< bit:      5  SUPC APB Protect Enable            */
+    uint32_t GCLK_:1;          /*!< bit:      6  GCLK APB Protect Enable            */
+    uint32_t WDT_:1;           /*!< bit:      7  WDT APB Protect Enable             */
+    uint32_t RTC_:1;           /*!< bit:      8  RTC APB Protect Enable             */
+    uint32_t EIC_:1;           /*!< bit:      9  EIC APB Protect Enable             */
+    uint32_t PORT_:1;          /*!< bit:     10  PORT APB Protect Enable            */
+    uint32_t TAL_:1;           /*!< bit:     11  TAL APB Protect Enable             */
+    uint32_t :20;              /*!< bit: 12..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PAC_STATUSA_Type;
@@ -465,28 +446,24 @@ typedef union {
 #define PAC_STATUSA_PORT            (0x1u << PAC_STATUSA_PORT_Pos)
 #define PAC_STATUSA_TAL_Pos         11           /**< \brief (PAC_STATUSA) TAL APB Protect Enable */
 #define PAC_STATUSA_TAL             (0x1u << PAC_STATUSA_TAL_Pos)
-#define PAC_STATUSA_DSUSTANDBY_Pos  12           /**< \brief (PAC_STATUSA) DSUSTANDBY APB Protect Enable */
-#define PAC_STATUSA_DSUSTANDBY      (0x1u << PAC_STATUSA_DSUSTANDBY_Pos)
-#define PAC_STATUSA_MASK            0x00001FFFu  /**< \brief (PAC_STATUSA) MASK Register */
+#define PAC_STATUSA_MASK            0x00000FFFu  /**< \brief (PAC_STATUSA) MASK Register */
 
 /* -------- PAC_STATUSB : (PAC Offset: 0x38) (R/  32) Peripheral write protection status - Bridge B -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t USB:1;            /*!< bit:      0  USB APB Protect Enable             */
-    uint32_t DSU:1;            /*!< bit:      1  DSU APB Protect Enable             */
-    uint32_t NVMCTRL:1;        /*!< bit:      2  NVMCTRL APB Protect Enable         */
-    uint32_t MTB:1;            /*!< bit:      3  MTB APB Protect Enable             */
-    uint32_t HMATRIXHS:1;      /*!< bit:      4  HMATRIXHS APB Protect Enable       */
-    uint32_t ATW:1;            /*!< bit:      5  ATW APB Protect Enable             */
-    uint32_t :26;              /*!< bit:  6..31  Reserved                           */
+    uint32_t USB_:1;           /*!< bit:      0  USB APB Protect Enable             */
+    uint32_t DSU_:1;           /*!< bit:      1  DSU APB Protect Enable             */
+    uint32_t NVMCTRL_:1;       /*!< bit:      2  NVMCTRL APB Protect Enable         */
+    uint32_t MTB_:1;           /*!< bit:      3  MTB APB Protect Enable             */
+    uint32_t :28;              /*!< bit:  4..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PAC_STATUSB_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define PAC_STATUSB_OFFSET          0x38         /**< \brief (PAC_STATUSB offset) Peripheral write protection status - Bridge B */
-#define PAC_STATUSB_RESETVALUE      0x00000022   /**< \brief (PAC_STATUSB reset_value) Peripheral write protection status - Bridge B */
+#define PAC_STATUSB_RESETVALUE      0x00000002   /**< \brief (PAC_STATUSB reset_value) Peripheral write protection status - Bridge B */
 
 #define PAC_STATUSB_USB_Pos         0            /**< \brief (PAC_STATUSB) USB APB Protect Enable */
 #define PAC_STATUSB_USB             (0x1u << PAC_STATUSB_USB_Pos)
@@ -496,33 +473,28 @@ typedef union {
 #define PAC_STATUSB_NVMCTRL         (0x1u << PAC_STATUSB_NVMCTRL_Pos)
 #define PAC_STATUSB_MTB_Pos         3            /**< \brief (PAC_STATUSB) MTB APB Protect Enable */
 #define PAC_STATUSB_MTB             (0x1u << PAC_STATUSB_MTB_Pos)
-#define PAC_STATUSB_HMATRIXHS_Pos   4            /**< \brief (PAC_STATUSB) HMATRIXHS APB Protect Enable */
-#define PAC_STATUSB_HMATRIXHS       (0x1u << PAC_STATUSB_HMATRIXHS_Pos)
-#define PAC_STATUSB_ATW_Pos         5            /**< \brief (PAC_STATUSB) ATW APB Protect Enable */
-#define PAC_STATUSB_ATW             (0x1u << PAC_STATUSB_ATW_Pos)
-#define PAC_STATUSB_MASK            0x0000003Fu  /**< \brief (PAC_STATUSB) MASK Register */
+#define PAC_STATUSB_MASK            0x0000000Fu  /**< \brief (PAC_STATUSB) MASK Register */
 
 /* -------- PAC_STATUSC : (PAC Offset: 0x3C) (R/  32) Peripheral write protection status - Bridge C -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t SERCOM0:1;        /*!< bit:      0  SERCOM0 APB Protect Enable         */
-    uint32_t SERCOM1:1;        /*!< bit:      1  SERCOM1 APB Protect Enable         */
-    uint32_t SERCOM2:1;        /*!< bit:      2  SERCOM2 APB Protect Enable         */
-    uint32_t SERCOM3:1;        /*!< bit:      3  SERCOM3 APB Protect Enable         */
-    uint32_t SERCOM4:1;        /*!< bit:      4  SERCOM4 APB Protect Enable         */
-    uint32_t TCC0:1;           /*!< bit:      5  TCC0 APB Protect Enable            */
-    uint32_t TCC1:1;           /*!< bit:      6  TCC1 APB Protect Enable            */
-    uint32_t TCC2:1;           /*!< bit:      7  TCC2 APB Protect Enable            */
-    uint32_t TC0:1;            /*!< bit:      8  TC0 APB Protect Enable             */
-    uint32_t TC1:1;            /*!< bit:      9  TC1 APB Protect Enable             */
-    uint32_t TC2:1;            /*!< bit:     10  TC2 APB Protect Enable             */
-    uint32_t TC3:1;            /*!< bit:     11  TC3 APB Protect Enable             */
-    uint32_t DAC:1;            /*!< bit:     12  DAC APB Protect Enable             */
-    uint32_t AES:1;            /*!< bit:     13  AES APB Protect Enable             */
-    uint32_t TRNG:1;           /*!< bit:     14  TRNG APB Protect Enable            */
-    uint32_t RFCTRL:1;         /*!< bit:     15  RFCTRL APB Protect Enable          */
-    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
+    uint32_t SERCOM0_:1;       /*!< bit:      0  SERCOM0 APB Protect Enable         */
+    uint32_t SERCOM1_:1;       /*!< bit:      1  SERCOM1 APB Protect Enable         */
+    uint32_t SERCOM2_:1;       /*!< bit:      2  SERCOM2 APB Protect Enable         */
+    uint32_t SERCOM3_:1;       /*!< bit:      3  SERCOM3 APB Protect Enable         */
+    uint32_t SERCOM4_:1;       /*!< bit:      4  SERCOM4 APB Protect Enable         */
+    uint32_t TCC0_:1;          /*!< bit:      5  TCC0 APB Protect Enable            */
+    uint32_t TCC1_:1;          /*!< bit:      6  TCC1 APB Protect Enable            */
+    uint32_t TCC2_:1;          /*!< bit:      7  TCC2 APB Protect Enable            */
+    uint32_t TC0_:1;           /*!< bit:      8  TC0 APB Protect Enable             */
+    uint32_t TC1_:1;           /*!< bit:      9  TC1 APB Protect Enable             */
+    uint32_t TC2_:1;           /*!< bit:     10  TC2 APB Protect Enable             */
+    uint32_t TC3_:1;           /*!< bit:     11  TC3 APB Protect Enable             */
+    uint32_t DAC_:1;           /*!< bit:     12  DAC APB Protect Enable             */
+    uint32_t AES_:1;           /*!< bit:     13  AES APB Protect Enable             */
+    uint32_t TRNG_:1;          /*!< bit:     14  TRNG APB Protect Enable            */
+    uint32_t :17;              /*!< bit: 15..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PAC_STATUSC_Type;
@@ -561,22 +533,20 @@ typedef union {
 #define PAC_STATUSC_AES             (0x1u << PAC_STATUSC_AES_Pos)
 #define PAC_STATUSC_TRNG_Pos        14           /**< \brief (PAC_STATUSC) TRNG APB Protect Enable */
 #define PAC_STATUSC_TRNG            (0x1u << PAC_STATUSC_TRNG_Pos)
-#define PAC_STATUSC_RFCTRL_Pos      15           /**< \brief (PAC_STATUSC) RFCTRL APB Protect Enable */
-#define PAC_STATUSC_RFCTRL          (0x1u << PAC_STATUSC_RFCTRL_Pos)
-#define PAC_STATUSC_MASK            0x0000FFFFu  /**< \brief (PAC_STATUSC) MASK Register */
+#define PAC_STATUSC_MASK            0x00007FFFu  /**< \brief (PAC_STATUSC) MASK Register */
 
 /* -------- PAC_STATUSD : (PAC Offset: 0x40) (R/  32) Peripheral write protection status - Bridge D -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t EVSYS:1;          /*!< bit:      0  EVSYS APB Protect Enable           */
-    uint32_t SERCOM5:1;        /*!< bit:      1  SERCOM5 APB Protect Enable         */
-    uint32_t TC4:1;            /*!< bit:      2  TC4 APB Protect Enable             */
-    uint32_t ADC:1;            /*!< bit:      3  ADC APB Protect Enable             */
-    uint32_t AC:1;             /*!< bit:      4  AC APB Protect Enable              */
-    uint32_t PTC:1;            /*!< bit:      5  PTC APB Protect Enable             */
-    uint32_t OPAMP:1;          /*!< bit:      6  OPAMP APB Protect Enable           */
-    uint32_t CCL:1;            /*!< bit:      7  CCL APB Protect Enable             */
+    uint32_t EVSYS_:1;         /*!< bit:      0  EVSYS APB Protect Enable           */
+    uint32_t SERCOM5_:1;       /*!< bit:      1  SERCOM5 APB Protect Enable         */
+    uint32_t TC4_:1;           /*!< bit:      2  TC4 APB Protect Enable             */
+    uint32_t ADC_:1;           /*!< bit:      3  ADC APB Protect Enable             */
+    uint32_t AC_:1;            /*!< bit:      4  AC APB Protect Enable              */
+    uint32_t PTC_:1;           /*!< bit:      5  PTC APB Protect Enable             */
+    uint32_t OPAMP_:1;         /*!< bit:      6  OPAMP APB Protect Enable           */
+    uint32_t CCL_:1;           /*!< bit:      7  CCL APB Protect Enable             */
     uint32_t :24;              /*!< bit:  8..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
@@ -608,11 +578,9 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t PAC:1;            /*!< bit:      0  PAC APB Protect Enable             */
-    uint32_t DMAC:1;           /*!< bit:      1  DMAC APB Protect Enable            */
-    uint32_t HMATRIXLP:1;      /*!< bit:      2  HMATRIXLP APB Protect Enable       */
-    uint32_t PICOP:1;          /*!< bit:      3  PICOP APB Protect Enable           */
-    uint32_t :28;              /*!< bit:  4..31  Reserved                           */
+    uint32_t PAC_:1;           /*!< bit:      0  PAC APB Protect Enable             */
+    uint32_t DMAC_:1;          /*!< bit:      1  DMAC APB Protect Enable            */
+    uint32_t :30;              /*!< bit:  2..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PAC_STATUSE_Type;
@@ -625,11 +593,7 @@ typedef union {
 #define PAC_STATUSE_PAC             (0x1u << PAC_STATUSE_PAC_Pos)
 #define PAC_STATUSE_DMAC_Pos        1            /**< \brief (PAC_STATUSE) DMAC APB Protect Enable */
 #define PAC_STATUSE_DMAC            (0x1u << PAC_STATUSE_DMAC_Pos)
-#define PAC_STATUSE_HMATRIXLP_Pos   2            /**< \brief (PAC_STATUSE) HMATRIXLP APB Protect Enable */
-#define PAC_STATUSE_HMATRIXLP       (0x1u << PAC_STATUSE_HMATRIXLP_Pos)
-#define PAC_STATUSE_PICOP_Pos       3            /**< \brief (PAC_STATUSE) PICOP APB Protect Enable */
-#define PAC_STATUSE_PICOP           (0x1u << PAC_STATUSE_PICOP_Pos)
-#define PAC_STATUSE_MASK            0x0000000Fu  /**< \brief (PAC_STATUSE) MASK Register */
+#define PAC_STATUSE_MASK            0x00000003u  /**< \brief (PAC_STATUSE) MASK Register */
 
 /** \brief PAC hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

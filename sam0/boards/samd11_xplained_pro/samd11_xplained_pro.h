@@ -97,7 +97,7 @@ void system_board_init(void);
 #define SW0_EIC_PIN               PIN_PA14A_EIC_NMI
 #define SW0_EIC_MUX               MUX_PA14A_EIC_NMI
 #define SW0_EIC_PINMUX            PINMUX_PA14A_EIC_NMI
-#define SW0_EIC_LINE              14
+#define SW0_EIC_LINE              0
 /** @} */
 
 /**
@@ -206,7 +206,7 @@ void system_board_init(void);
  *  @{
  */
 #define EXT1_SPI_MODULE              SERCOM0
-#define EXT1_SPI_SERCOM_MUX_SETTING  SPI_SIGNAL_MUX_SETTING_E
+#define EXT1_SPI_SERCOM_MUX_SETTING  SPI_SIGNAL_MUX_SETTING_D
 #define EXT1_SPI_SERCOM_PINMUX_PAD0  PINMUX_PA06C_SERCOM0_PAD0
 #define EXT1_SPI_SERCOM_PINMUX_PAD1  PINMUX_PA07C_SERCOM0_PAD1
 #define EXT1_SPI_SERCOM_PINMUX_PAD2  PINMUX_PA08D_SERCOM0_PAD2
