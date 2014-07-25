@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<project caption="Peripheral DMA Controller Example on SAMG55 Xplained Pro" id="sam.drivers.pdc.pdc_usart_example.samg55_xplained_pro">
 		<info type="description" value="summary">
-			This example shows how to configure PDC for receiving data from UART.
+			This example shows how to configure PDC for receiving data from USART.
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
