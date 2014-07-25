@@ -135,14 +135,14 @@ typedef union {
 #define USB_DEVICE_CTRLB_SPDCONF_Pos 2            /**< \brief (USB_DEVICE_CTRLB) Speed Configuration */
 #define USB_DEVICE_CTRLB_SPDCONF_Msk (0x3u << USB_DEVICE_CTRLB_SPDCONF_Pos)
 #define USB_DEVICE_CTRLB_SPDCONF(value) ((USB_DEVICE_CTRLB_SPDCONF_Msk & ((value) << USB_DEVICE_CTRLB_SPDCONF_Pos)))
-#define   USB_DEVICE_CTRLB_SPDCONF_0_Val  0x0u   /**< \brief (USB_DEVICE_CTRLB) FS : Full Speed */
-#define   USB_DEVICE_CTRLB_SPDCONF_1_Val  0x1u   /**< \brief (USB_DEVICE_CTRLB) LS : Low Speed */
-#define   USB_DEVICE_CTRLB_SPDCONF_2_Val  0x2u   /**< \brief (USB_DEVICE_CTRLB) HS : High Speed capable */
-#define   USB_DEVICE_CTRLB_SPDCONF_3_Val  0x3u   /**< \brief (USB_DEVICE_CTRLB) HSTM: High Speed Test Mode (force high-speed mode for test mode) */
-#define USB_DEVICE_CTRLB_SPDCONF_0  (USB_DEVICE_CTRLB_SPDCONF_0_Val << USB_DEVICE_CTRLB_SPDCONF_Pos)
-#define USB_DEVICE_CTRLB_SPDCONF_1  (USB_DEVICE_CTRLB_SPDCONF_1_Val << USB_DEVICE_CTRLB_SPDCONF_Pos)
-#define USB_DEVICE_CTRLB_SPDCONF_2  (USB_DEVICE_CTRLB_SPDCONF_2_Val << USB_DEVICE_CTRLB_SPDCONF_Pos)
-#define USB_DEVICE_CTRLB_SPDCONF_3  (USB_DEVICE_CTRLB_SPDCONF_3_Val << USB_DEVICE_CTRLB_SPDCONF_Pos)
+#define   USB_DEVICE_CTRLB_SPDCONF_FS_Val 0x0u   /**< \brief (USB_DEVICE_CTRLB) FS : Full Speed */
+#define   USB_DEVICE_CTRLB_SPDCONF_LS_Val 0x1u   /**< \brief (USB_DEVICE_CTRLB) LS : Low Speed */
+#define   USB_DEVICE_CTRLB_SPDCONF_HS_Val 0x2u   /**< \brief (USB_DEVICE_CTRLB) HS : High Speed capable */
+#define   USB_DEVICE_CTRLB_SPDCONF_HSTM_Val 0x3u   /**< \brief (USB_DEVICE_CTRLB) HSTM: High Speed Test Mode (force high-speed mode for test mode) */
+#define USB_DEVICE_CTRLB_SPDCONF_FS (USB_DEVICE_CTRLB_SPDCONF_FS_Val << USB_DEVICE_CTRLB_SPDCONF_Pos)
+#define USB_DEVICE_CTRLB_SPDCONF_LS (USB_DEVICE_CTRLB_SPDCONF_LS_Val << USB_DEVICE_CTRLB_SPDCONF_Pos)
+#define USB_DEVICE_CTRLB_SPDCONF_HS (USB_DEVICE_CTRLB_SPDCONF_HS_Val << USB_DEVICE_CTRLB_SPDCONF_Pos)
+#define USB_DEVICE_CTRLB_SPDCONF_HSTM (USB_DEVICE_CTRLB_SPDCONF_HSTM_Val << USB_DEVICE_CTRLB_SPDCONF_Pos)
 #define USB_DEVICE_CTRLB_NREPLY_Pos 4            /**< \brief (USB_DEVICE_CTRLB) No Reply */
 #define USB_DEVICE_CTRLB_NREPLY     (0x1u << USB_DEVICE_CTRLB_NREPLY_Pos)
 #define USB_DEVICE_CTRLB_TSTJ_Pos   5            /**< \brief (USB_DEVICE_CTRLB) Test mode J */
@@ -197,14 +197,10 @@ typedef union {
 #define USB_HOST_CTRLB_SPDCONF_Pos  2            /**< \brief (USB_HOST_CTRLB) Speed Configuration for Host */
 #define USB_HOST_CTRLB_SPDCONF_Msk  (0x3u << USB_HOST_CTRLB_SPDCONF_Pos)
 #define USB_HOST_CTRLB_SPDCONF(value) ((USB_HOST_CTRLB_SPDCONF_Msk & ((value) << USB_HOST_CTRLB_SPDCONF_Pos)))
-#define   USB_HOST_CTRLB_SPDCONF_0_Val    0x0u   /**< \brief (USB_HOST_CTRLB) Normal mode:the host starts in full-speed mode and performs a high-speed reset to switch to the high speed mode if the downstream peripheralis high-speed capable. */
-#define   USB_HOST_CTRLB_SPDCONF_1_Val    0x1u   /**< \brief (USB_HOST_CTRLB) reserved */
-#define   USB_HOST_CTRLB_SPDCONF_2_Val    0x2u   /**< \brief (USB_HOST_CTRLB) reserved */
-#define   USB_HOST_CTRLB_SPDCONF_3_Val    0x3u   /**< \brief (USB_HOST_CTRLB) Full-speed:the host remains in full-speed mode whatever is the peripheral speed capability. Releveant in UTMI mode only. */
-#define USB_HOST_CTRLB_SPDCONF_0    (USB_HOST_CTRLB_SPDCONF_0_Val  << USB_HOST_CTRLB_SPDCONF_Pos)
-#define USB_HOST_CTRLB_SPDCONF_1    (USB_HOST_CTRLB_SPDCONF_1_Val  << USB_HOST_CTRLB_SPDCONF_Pos)
-#define USB_HOST_CTRLB_SPDCONF_2    (USB_HOST_CTRLB_SPDCONF_2_Val  << USB_HOST_CTRLB_SPDCONF_Pos)
-#define USB_HOST_CTRLB_SPDCONF_3    (USB_HOST_CTRLB_SPDCONF_3_Val  << USB_HOST_CTRLB_SPDCONF_Pos)
+#define   USB_HOST_CTRLB_SPDCONF_NORMAL_Val 0x0u   /**< \brief (USB_HOST_CTRLB) Normal mode:the host starts in full-speed mode and performs a high-speed reset to switch to the high speed mode if the downstream peripheralis high-speed capable. */
+#define   USB_HOST_CTRLB_SPDCONF_FS_Val   0x3u   /**< \brief (USB_HOST_CTRLB) Full-speed:the host remains in full-speed mode whatever is the peripheral speed capability. Releveant in UTMI mode only. */
+#define USB_HOST_CTRLB_SPDCONF_NORMAL (USB_HOST_CTRLB_SPDCONF_NORMAL_Val << USB_HOST_CTRLB_SPDCONF_Pos)
+#define USB_HOST_CTRLB_SPDCONF_FS   (USB_HOST_CTRLB_SPDCONF_FS_Val << USB_HOST_CTRLB_SPDCONF_Pos)
 #define USB_HOST_CTRLB_AUTORESUME_Pos 4            /**< \brief (USB_HOST_CTRLB) Auto Resume Enable */
 #define USB_HOST_CTRLB_AUTORESUME   (0x1u << USB_HOST_CTRLB_AUTORESUME_Pos)
 #define USB_HOST_CTRLB_TSTJ_Pos     5            /**< \brief (USB_HOST_CTRLB) Test mode J */
@@ -283,12 +279,12 @@ typedef union {
 #define USB_DEVICE_STATUS_SPEED_Pos 2            /**< \brief (USB_DEVICE_STATUS) Speed Status */
 #define USB_DEVICE_STATUS_SPEED_Msk (0x3u << USB_DEVICE_STATUS_SPEED_Pos)
 #define USB_DEVICE_STATUS_SPEED(value) ((USB_DEVICE_STATUS_SPEED_Msk & ((value) << USB_DEVICE_STATUS_SPEED_Pos)))
-#define   USB_DEVICE_STATUS_SPEED_0_Val   0x0u   /**< \brief (USB_DEVICE_STATUS) Full-speed mode */
-#define   USB_DEVICE_STATUS_SPEED_1_Val   0x1u   /**< \brief (USB_DEVICE_STATUS) High-speed mode */
-#define   USB_DEVICE_STATUS_SPEED_2_Val   0x2u   /**< \brief (USB_DEVICE_STATUS) Low-speed mode */
-#define USB_DEVICE_STATUS_SPEED_0   (USB_DEVICE_STATUS_SPEED_0_Val << USB_DEVICE_STATUS_SPEED_Pos)
-#define USB_DEVICE_STATUS_SPEED_1   (USB_DEVICE_STATUS_SPEED_1_Val << USB_DEVICE_STATUS_SPEED_Pos)
-#define USB_DEVICE_STATUS_SPEED_2   (USB_DEVICE_STATUS_SPEED_2_Val << USB_DEVICE_STATUS_SPEED_Pos)
+#define   USB_DEVICE_STATUS_SPEED_FS_Val  0x0u   /**< \brief (USB_DEVICE_STATUS) Full-speed mode */
+#define   USB_DEVICE_STATUS_SPEED_HS_Val  0x1u   /**< \brief (USB_DEVICE_STATUS) High-speed mode */
+#define   USB_DEVICE_STATUS_SPEED_LS_Val  0x2u   /**< \brief (USB_DEVICE_STATUS) Low-speed mode */
+#define USB_DEVICE_STATUS_SPEED_FS  (USB_DEVICE_STATUS_SPEED_FS_Val << USB_DEVICE_STATUS_SPEED_Pos)
+#define USB_DEVICE_STATUS_SPEED_HS  (USB_DEVICE_STATUS_SPEED_HS_Val << USB_DEVICE_STATUS_SPEED_Pos)
+#define USB_DEVICE_STATUS_SPEED_LS  (USB_DEVICE_STATUS_SPEED_LS_Val << USB_DEVICE_STATUS_SPEED_Pos)
 #define USB_DEVICE_STATUS_LINESTATE_Pos 6            /**< \brief (USB_DEVICE_STATUS) USB Line State Status */
 #define USB_DEVICE_STATUS_LINESTATE_Msk (0x3u << USB_DEVICE_STATUS_LINESTATE_Pos)
 #define USB_DEVICE_STATUS_LINESTATE(value) ((USB_DEVICE_STATUS_LINESTATE_Msk & ((value) << USB_DEVICE_STATUS_LINESTATE_Pos)))
@@ -341,20 +337,20 @@ typedef union {
 #define USB_FSMSTATUS_FSMSTATE_Pos  0            /**< \brief (USB_FSMSTATUS) Fine State Machine Status */
 #define USB_FSMSTATUS_FSMSTATE_Msk  (0x3Fu << USB_FSMSTATUS_FSMSTATE_Pos)
 #define USB_FSMSTATUS_FSMSTATE(value) ((USB_FSMSTATUS_FSMSTATE_Msk & ((value) << USB_FSMSTATUS_FSMSTATE_Pos)))
-#define   USB_FSMSTATUS_FSMSTATE_1_Val    0x1u   /**< \brief (USB_FSMSTATUS) OFF (L3). It corresponds to the powered-off, disconnected, and disabled state */
-#define   USB_FSMSTATUS_FSMSTATE_2_Val    0x2u   /**< \brief (USB_FSMSTATUS) ON (L0). It corresponds to the Idle and Active states */
-#define   USB_FSMSTATUS_FSMSTATE_4_Val    0x4u   /**< \brief (USB_FSMSTATUS) SUSPEND (L2) */
-#define   USB_FSMSTATUS_FSMSTATE_8_Val    0x8u   /**< \brief (USB_FSMSTATUS) SLEEP (L1) */
-#define   USB_FSMSTATUS_FSMSTATE_16_Val   0x10u   /**< \brief (USB_FSMSTATUS) DNRESUME. Down Stream Resume. */
-#define   USB_FSMSTATUS_FSMSTATE_32_Val   0x20u   /**< \brief (USB_FSMSTATUS) UPRESUME. Up Stream Resume. */
-#define   USB_FSMSTATUS_FSMSTATE_64_Val   0x40u   /**< \brief (USB_FSMSTATUS) RESET. USB lines Reset. */
-#define USB_FSMSTATUS_FSMSTATE_1    (USB_FSMSTATUS_FSMSTATE_1_Val  << USB_FSMSTATUS_FSMSTATE_Pos)
-#define USB_FSMSTATUS_FSMSTATE_2    (USB_FSMSTATUS_FSMSTATE_2_Val  << USB_FSMSTATUS_FSMSTATE_Pos)
-#define USB_FSMSTATUS_FSMSTATE_4    (USB_FSMSTATUS_FSMSTATE_4_Val  << USB_FSMSTATUS_FSMSTATE_Pos)
-#define USB_FSMSTATUS_FSMSTATE_8    (USB_FSMSTATUS_FSMSTATE_8_Val  << USB_FSMSTATUS_FSMSTATE_Pos)
-#define USB_FSMSTATUS_FSMSTATE_16   (USB_FSMSTATUS_FSMSTATE_16_Val << USB_FSMSTATUS_FSMSTATE_Pos)
-#define USB_FSMSTATUS_FSMSTATE_32   (USB_FSMSTATUS_FSMSTATE_32_Val << USB_FSMSTATUS_FSMSTATE_Pos)
-#define USB_FSMSTATUS_FSMSTATE_64   (USB_FSMSTATUS_FSMSTATE_64_Val << USB_FSMSTATUS_FSMSTATE_Pos)
+#define   USB_FSMSTATUS_FSMSTATE_OFF_Val  0x1u   /**< \brief (USB_FSMSTATUS) OFF (L3). It corresponds to the powered-off, disconnected, and disabled state */
+#define   USB_FSMSTATUS_FSMSTATE_ON_Val   0x2u   /**< \brief (USB_FSMSTATUS) ON (L0). It corresponds to the Idle and Active states */
+#define   USB_FSMSTATUS_FSMSTATE_SUSPEND_Val 0x4u   /**< \brief (USB_FSMSTATUS) SUSPEND (L2) */
+#define   USB_FSMSTATUS_FSMSTATE_SLEEP_Val 0x8u   /**< \brief (USB_FSMSTATUS) SLEEP (L1) */
+#define   USB_FSMSTATUS_FSMSTATE_DNRESUME_Val 0x10u   /**< \brief (USB_FSMSTATUS) DNRESUME. Down Stream Resume. */
+#define   USB_FSMSTATUS_FSMSTATE_UPRESUME_Val 0x20u   /**< \brief (USB_FSMSTATUS) UPRESUME. Up Stream Resume. */
+#define   USB_FSMSTATUS_FSMSTATE_RESET_Val 0x40u   /**< \brief (USB_FSMSTATUS) RESET. USB lines Reset. */
+#define USB_FSMSTATUS_FSMSTATE_OFF  (USB_FSMSTATUS_FSMSTATE_OFF_Val << USB_FSMSTATUS_FSMSTATE_Pos)
+#define USB_FSMSTATUS_FSMSTATE_ON   (USB_FSMSTATUS_FSMSTATE_ON_Val << USB_FSMSTATUS_FSMSTATE_Pos)
+#define USB_FSMSTATUS_FSMSTATE_SUSPEND (USB_FSMSTATUS_FSMSTATE_SUSPEND_Val << USB_FSMSTATUS_FSMSTATE_Pos)
+#define USB_FSMSTATUS_FSMSTATE_SLEEP (USB_FSMSTATUS_FSMSTATE_SLEEP_Val << USB_FSMSTATUS_FSMSTATE_Pos)
+#define USB_FSMSTATUS_FSMSTATE_DNRESUME (USB_FSMSTATUS_FSMSTATE_DNRESUME_Val << USB_FSMSTATUS_FSMSTATE_Pos)
+#define USB_FSMSTATUS_FSMSTATE_UPRESUME (USB_FSMSTATUS_FSMSTATE_UPRESUME_Val << USB_FSMSTATUS_FSMSTATE_Pos)
+#define USB_FSMSTATUS_FSMSTATE_RESET (USB_FSMSTATUS_FSMSTATE_RESET_Val << USB_FSMSTATUS_FSMSTATE_Pos)
 #define USB_FSMSTATUS_MASK          0x3Fu        /**< \brief (USB_FSMSTATUS) MASK Register */
 
 /* -------- USB_DEVICE_FNUM : (USB Offset: 0x010) (R/  16) DEVICE DEVICE Device Frame Number -------- */

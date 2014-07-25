@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Instance description for DSUSTANDBY
+ * \brief SAM L21 Xplained Pro board configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,19 +41,7 @@
  *
  */
 
-#ifndef _SAML21_DSUSTANDBY_INSTANCE_
-#define _SAML21_DSUSTANDBY_INSTANCE_
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/* ========== Register definition for DSUSTANDBY peripheral ========== */
-#if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-#define REG_DSUSTANDBY_DCFG0       (0x400030F0U) /**< \brief (DSUSTANDBY) Device Configuration 0 */
-#define REG_DSUSTANDBY_DCFG1       (0x400030F4U) /**< \brief (DSUSTANDBY) Device Configuration 1 */
-#else
-#define REG_DSUSTANDBY_DCFG0       (*(RwReg  *)0x400030F0U) /**< \brief (DSUSTANDBY) Device Configuration 0 */
-#define REG_DSUSTANDBY_DCFG1       (*(RwReg  *)0x400030F4U) /**< \brief (DSUSTANDBY) Device Configuration 1 */
-#endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-/* ========== Instance parameters for DSUSTANDBY peripheral ========== */
-#define DSUSTANDBY_CLK_AHB_DOMAIN            // Clock domain of AHB clock
-
-#endif /* _SAML21_DSUSTANDBY_INSTANCE_ */
+#endif /* CONF_BOARD_H_INCLUDED */

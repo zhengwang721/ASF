@@ -77,29 +77,53 @@ void RTC_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler
 void EIC_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void NVMCTRL_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void DMAC_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#ifdef USB_IRQn
 void USB_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
 void EVSYS_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void SERCOM0_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void SERCOM1_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void SERCOM2_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void SERCOM3_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#ifdef SERCOM4_IRQn
 void SERCOM4_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
+#ifdef SERCOM5_IRQn
 void SERCOM5_Handler         ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
 void TCC0_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void TCC1_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void TCC2_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void TC0_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void TC1_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#ifdef TC2_IRQn
 void TC2_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
+#ifdef TC3_IRQn
 void TC3_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
 void TC4_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#ifdef ADC_IRQn
 void ADC_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
+#ifdef AC_IRQn
 void AC_Handler              ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
+#ifdef DAC_IRQn
 void DAC_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
+#ifdef PTC_IRQn
 void PTC_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
+#ifdef AES_IRQn
 void AES_Handler             ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
+#ifdef TRNG_IRQn
 void TRNG_Handler            ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
+#ifdef PICOP_IRQn
 void PICOP_Handler           ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+#endif
 
 /* Exception Table */
 __attribute__ ((section(".vectors")))
@@ -131,29 +155,77 @@ const DeviceVectors exception_table = {
         (void*) EIC_Handler,            /*  3 External Interrupt Controller */
         (void*) NVMCTRL_Handler,        /*  4 Non-Volatile Memory Controller */
         (void*) DMAC_Handler,           /*  5 Direct Memory Access Controller */
+#ifdef USB_IRQn
         (void*) USB_Handler,            /*  6 Universal Serial Bus */
+#else
+        (void*) (0UL), /* Reserved */
+#endif
         (void*) EVSYS_Handler,          /*  7 Event System Interface */
         (void*) SERCOM0_Handler,        /*  8 Serial Communication Interface 0 */
         (void*) SERCOM1_Handler,        /*  9 Serial Communication Interface 1 */
         (void*) SERCOM2_Handler,        /* 10 Serial Communication Interface 2 */
         (void*) SERCOM3_Handler,        /* 11 Serial Communication Interface 3 */
+#ifdef SERCOM4_IRQn
         (void*) SERCOM4_Handler,        /* 12 Serial Communication Interface 4 */
+#else
+        (void*) (0UL), /* Reserved */
+#endif
+#ifdef SERCOM5_IRQn
         (void*) SERCOM5_Handler,        /* 13 Serial Communication Interface 5 */
+#else
+        (void*) (0UL), /* Reserved */
+#endif
         (void*) TCC0_Handler,           /* 14 Timer Counter Control 0 */
         (void*) TCC1_Handler,           /* 15 Timer Counter Control 1 */
         (void*) TCC2_Handler,           /* 16 Timer Counter Control 2 */
         (void*) TC0_Handler,            /* 17 Basic Timer Counter 0 */
         (void*) TC1_Handler,            /* 18 Basic Timer Counter 1 */
+#ifdef TC2_IRQn
         (void*) TC2_Handler,            /* 19 Basic Timer Counter 2 */
+#else
+        (void*) (0UL), /* Reserved */
+#endif
+#ifdef TC3_IRQn
         (void*) TC3_Handler,            /* 20 Basic Timer Counter 3 */
+#else
+        (void*) (0UL), /* Reserved */
+#endif
         (void*) TC4_Handler,            /* 21 Basic Timer Counter 4 */
+#ifdef ADC_IRQn
         (void*) ADC_Handler,            /* 22 Analog Digital Converter */
+#else
+        (void*) (0UL), /* Reserved */
+#endif
+#ifdef AC_IRQn
         (void*) AC_Handler,             /* 23 Analog Comparators */
+#else
+        (void*) (0UL), /* Reserved */
+#endif
+#ifdef DAC_IRQn
         (void*) DAC_Handler,            /* 24 Digital-to-Analog Converter */
+#else
+        (void*) (0UL), /* Reserved */
+#endif
+#ifdef PTC_IRQn
         (void*) PTC_Handler,            /* 25 Peripheral Touch Controller */
+#else
+        (void*) (0UL), /* Reserved */
+#endif
+#ifdef AES_IRQn
         (void*) AES_Handler,            /* 26 Advanced Encryption Standard */
+#else
+        (void*) (0UL), /* Reserved */
+#endif
+#ifdef TRNG_IRQn
         (void*) TRNG_Handler,           /* 27 True Random Generator */
+#else
+        (void*) (0UL), /* Reserved */
+#endif
+#ifdef PICOP_IRQn
         (void*) PICOP_Handler           /* 28 PicoProcessor */
+#else
+        (void*) (0UL)  /* Reserved */
+#endif
 };
 
 /**

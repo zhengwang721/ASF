@@ -92,13 +92,14 @@ typedef volatile       uint8_t  RwReg8;  /**< Read-Write  8-bit register (volati
 /** Interrupt Number Definition */
 typedef enum IRQn
 {
-  /******  Cortex-M0+ Processor Exceptions Numbers *******************************/
-  NonMaskableInt_IRQn      = -14, /**<  2 Non Maskable Interrupt                 */
-  HardFault_IRQn           = -13, /**<  3 Cortex-M0+ Hard Fault Interrupt        */
-  SVCall_IRQn              = -5,  /**< 11 Cortex-M0+ SV Call Interrupt           */
-  PendSV_IRQn              = -2,  /**< 14 Cortex-M0+ Pend SV Interrupt           */
-  SysTick_IRQn             = -1,  /**< 15 Cortex-M0+ System Tick Interrupt       */
+  /******  Cortex-M0+ Processor Exceptions Numbers ******************************/
+  NonMaskableInt_IRQn      = -14,/**<  2 Non Maskable Interrupt                 */
+  HardFault_IRQn           = -13,/**<  3 Cortex-M0+ Hard Fault Interrupt        */
+  SVCall_IRQn              = -5, /**< 11 Cortex-M0+ SV Call Interrupt           */
+  PendSV_IRQn              = -2, /**< 14 Cortex-M0+ Pend SV Interrupt           */
+  SysTick_IRQn             = -1, /**< 15 Cortex-M0+ System Tick Interrupt       */
   /******  SAML21J17A-specific Interrupt Numbers ***********************/
+  SYSTEM_IRQn              =  0, /**<  0 SAML21J17A System Interrupts */
   MCLK_IRQn                =  0, /**<  0 SAML21J17A Main Clock (MCLK) */
   OSCCTRL_IRQn             =  0, /**<  0 SAML21J17A Oscillators Control (OSCCTRL) */
   OSC32KCTRL_IRQn          =  0, /**<  0 SAML21J17A 32k Oscillators Control (OSC32KCTRL) */
@@ -201,13 +202,7 @@ void PendSV_Handler              ( void );
 void SysTick_Handler             ( void );
 
 /* Peripherals handlers */
-void MCLK_Handler                ( void );
-void OSCCTRL_Handler             ( void );
-void OSC32KCTRL_Handler          ( void );
-void PAC_Handler                 ( void );
-void PM_Handler                  ( void );
-void SUPC_Handler                ( void );
-void TAL_Handler                 ( void );
+void SYSTEM_Handler              ( void );
 void WDT_Handler                 ( void );
 void RTC_Handler                 ( void );
 void EIC_Handler                 ( void );
@@ -272,7 +267,6 @@ void PICOP_Handler               ( void );
 #include "component/dac.h"
 #include "component/dmac.h"
 #include "component/dsu.h"
-#include "component/dsustandby.h"
 #include "component/eic.h"
 #include "component/evsys.h"
 #include "component/gclk.h"
@@ -283,7 +277,6 @@ void PICOP_Handler               ( void );
 #include "component/oscctrl.h"
 #include "component/osc32kctrl.h"
 #include "component/pac.h"
-#include "component/picop.h"
 #include "component/pm.h"
 #include "component/port.h"
 #include "component/rstc.h"
@@ -311,7 +304,6 @@ void PICOP_Handler               ( void );
 #include "instance/dac.h"
 #include "instance/dmac.h"
 #include "instance/dsu.h"
-#include "instance/dsustandby.h"
 #include "instance/eic.h"
 #include "instance/evsys.h"
 #include "instance/gclk.h"
@@ -322,7 +314,6 @@ void PICOP_Handler               ( void );
 #include "instance/oscctrl.h"
 #include "instance/osc32kctrl.h"
 #include "instance/pac.h"
-#include "instance/picop.h"
 #include "instance/pm.h"
 #include "instance/port.h"
 #include "instance/rstc.h"
@@ -367,7 +358,6 @@ void PICOP_Handler               ( void );
 #define ID_EIC            9 /**< \brief External Interrupt Controller (EIC) */
 #define ID_PORT          10 /**< \brief Port Module (PORT) */
 #define ID_TAL           11 /**< \brief Trigger Allocator (TAL) */
-#define ID_DSUSTANDBY    12 /**< \brief Device Service Unit (DSUSTANDBY) */
 
 // Peripheral instances on HPB1 bridge
 #define ID_USB           32 /**< \brief Universal Serial Bus (USB) */
@@ -405,9 +395,8 @@ void PICOP_Handler               ( void );
 // Peripheral instances on HPB4 bridge
 #define ID_PAC          128 /**< \brief Peripheral Access Controller (PAC) */
 #define ID_DMAC         129 /**< \brief Direct Memory Access Controller (DMAC) */
-#define ID_PICOP        131 /**< \brief PicoProcessor (PICOP) */
 
-#define ID_PERIPH_COUNT 132 /**< \brief Number of peripheral IDs */
+#define ID_PERIPH_COUNT 130 /**< \brief Number of peripheral IDs */
 /*@}*/
 
 /* ************************************************************************** */
@@ -424,7 +413,6 @@ void PICOP_Handler               ( void );
 #define DAC                           (0x42003000U) /**< \brief (DAC) APB Base Address */
 #define DMAC                          (0x44000400U) /**< \brief (DMAC) APB Base Address */
 #define DSU                           (0x41002000U) /**< \brief (DSU) APB Base Address */
-#define DSUSTANDBY                    (0x40003000U) /**< \brief (DSUSTANDBY) APB Base Address */
 #define EIC                           (0x40002400U) /**< \brief (EIC) APB Base Address */
 #define EVSYS                         (0x43000000U) /**< \brief (EVSYS) APB Base Address */
 #define GCLK                          (0x40001800U) /**< \brief (GCLK) APB Base Address */
@@ -443,7 +431,6 @@ void PICOP_Handler               ( void );
 #define OSCCTRL                       (0x40000C00U) /**< \brief (OSCCTRL) APB Base Address */
 #define OSC32KCTRL                    (0x40001000U) /**< \brief (OSC32KCTRL) APB Base Address */
 #define PAC                           (0x44000000U) /**< \brief (PAC) APB Base Address */
-#define PICOP                         (0x44000C00U) /**< \brief (PICOP) APB Base Address */
 #define PM                            (0x40000000U) /**< \brief (PM) APB Base Address */
 #define PORT                          (0x40002800U) /**< \brief (PORT) APB Base Address */
 #define PORT_IOBUS                    (0x60000000U) /**< \brief (PORT) IOBUS Base Address */
@@ -497,10 +484,6 @@ void PICOP_Handler               ( void );
 #define DSU_INST_NUM      1                         /**< \brief (DSU) Number of instances */
 #define DSU_INSTS         { DSU }                   /**< \brief (DSU) Instances List */
 
-#define DSUSTANDBY        ((Dsustandby *)0x40003000U) /**< \brief (DSUSTANDBY) APB Base Address */
-#define DSUSTANDBY_INST_NUM 1                         /**< \brief (DSUSTANDBY) Number of instances */
-#define DSUSTANDBY_INSTS  { DSUSTANDBY }            /**< \brief (DSUSTANDBY) Instances List */
-
 #define EIC               ((Eic      *)0x40002400U) /**< \brief (EIC) APB Base Address */
 #define EIC_INST_NUM      1                         /**< \brief (EIC) Number of instances */
 #define EIC_INSTS         { EIC }                   /**< \brief (EIC) Instances List */
@@ -548,10 +531,6 @@ void PICOP_Handler               ( void );
 #define PAC               ((Pac      *)0x44000000U) /**< \brief (PAC) APB Base Address */
 #define PAC_INST_NUM      1                         /**< \brief (PAC) Number of instances */
 #define PAC_INSTS         { PAC }                   /**< \brief (PAC) Instances List */
-
-#define PICOP             ((Picop    *)0x44000C00U) /**< \brief (PICOP) APB Base Address */
-#define PICOP_INST_NUM    1                         /**< \brief (PICOP) Number of instances */
-#define PICOP_INSTS       { PICOP }                 /**< \brief (PICOP) Instances List */
 
 #define PM                ((Pm       *)0x40000000U) /**< \brief (PM) APB Base Address */
 #define PM_INST_NUM       1                         /**< \brief (PM) Number of instances */

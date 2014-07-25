@@ -93,7 +93,7 @@ enum system_interrupt_vector {
 	SYSTEM_INTERRUPT_SYSTICK           = SysTick_IRQn,
 
 	/** Interrupt vector index for MCLK, OSCCTRL, OSC32KCTRL, PAC, PM, SUPC, TAL peripheral interrupt. */
-	SYSTEM_INTERRUPT_MODULE_SYSTEM     = MCLK_IRQn,
+	SYSTEM_INTERRUPT_MODULE_SYSTEM     = SYSTEM_IRQn,
 	/** Interrupt vector index for a Watch Dog peripheral interrupt. */
 	SYSTEM_INTERRUPT_MODULE_WDT        = WDT_IRQn,
 	/** Interrupt vector index for a Real Time Clock peripheral interrupt. */
