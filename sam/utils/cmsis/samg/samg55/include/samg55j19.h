@@ -86,6 +86,9 @@ typedef enum IRQn
   WDT_IRQn             =  4, /**<  4 SAMG55J19 Watchdog Timer (WDT) */
   PMC_IRQn             =  5, /**<  5 SAMG55J19 Power Management Controller (PMC) */
   EFC_IRQn             =  6, /**<  6 SAMG55J19 Enhanced Flash Controller (EFC) */
+  	USART7_IRQn = 7, /**< 7 SAMG55J18 FLEXCOM 7 (USART7) */
+	SPI7_IRQn =  7, /**<  7 SAMG55J18 FLEXCOM 7 (SPI7) */
+	TWI7_IRQn = 7, /**<  7 SAMG55J18 FLEXCOM 7 (TWI7) */
 	USART0_IRQn					 = 8, /**<  8 SAMG55G18 FLEXCOM0  (USART0) */
 	SPI0_IRQn				   	 = 8, /**<  8 SAMG55G18 FLEXCOM0  (SPI0) */
 	TWI0_IRQn						 = 8, /**<  8 SAMG55G18 FLEXCOM0  (TWI0) */

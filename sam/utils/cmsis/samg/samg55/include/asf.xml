@@ -9,6 +9,7 @@
 		<build type="header-file" value="samg55j18.h"/>
 		<build type="header-file" value="samg55j19.h"/>
 		<build type="header-file" value="samg55n19.h"/>
+		<build type="header-file" value="system_samg55.h"/>
 		<info type="gui-flag" value="hidden"/>
 		<device-support value="samg55"/>
 	</module>
