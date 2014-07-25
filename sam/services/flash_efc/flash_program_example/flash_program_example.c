@@ -251,12 +251,12 @@ int main(void)
 	printf("-I- Read memory at address 0x%08lx to check contents\n\r",
 			(UL)ul_test_page_addr);
 	printf("-I- Press any key to continue...\n\r");
-	while (0 != uart_read(CONSOLE_UART, &uc_key));
+	scanf("%c", (char *)&uc_key);
 
 	printf("-I- Good job!\n\r"
 			"-I- Now set the security bit \n\r"
 			"-I- Press any key to continue to see what happened...\n\r");
-	while (0 != uart_read(CONSOLE_UART, &uc_key));
+	scanf("%c", (char *)&uc_key);
 
 	/* Set security bit */
 	printf("-I- Setting security bit \n\r");

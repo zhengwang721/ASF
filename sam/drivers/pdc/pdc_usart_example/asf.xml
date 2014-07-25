@@ -1,17 +1,14 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam.drivers.pdc.pdc_uart_example" caption="Peripheral DMA Controller Example">
+	<module type="application" id="sam.drivers.pdc.pdc_usart_example" caption="Peripheral DMA Controller Example">
 		<info type="description" value="summary">
-			This example shows how to configure PDC for receiving data from UART.
+			This example shows how to configure PDC for receiving data from USART.
 			</info>
 		<info type="keyword" value="technology">
 			<keyword value="DMA Controller"/>
 		</info>
-		<build type="c-source" value="pdc_uart_example.c"/>
+		<build type="c-source" value="pdc_usart_example.c"/>
 		<build type="include-path" value="."/>
-		<device-support value="sam"/>
-		<require idref="sam.drivers.pio"/>
-		<require idref="sam.drivers.pmc"/>
-		<require idref="sam.drivers.uart"/>
+		<device-support value="samg55"/>
 		<require idref="sam.drivers.pdc"/>
 		<require idref="common.services.basic.clock"/>
 		<require idref="common.utils.stdio.stdio_serial"/>
