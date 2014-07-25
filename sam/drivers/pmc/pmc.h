@@ -335,7 +335,7 @@ uint32_t pmc_get_writeprotect_status(void);
 
 //@}
 
-#if (SAMG53 || SAMG54)
+#if (SAMG53 || SAMG54 || SAMG55)
 /**
  * \name Sleepwalking configuration
  *

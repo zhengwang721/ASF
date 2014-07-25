@@ -1408,7 +1408,7 @@ uint32_t pmc_get_writeprotect_status(void)
 	return PMC->PMC_WPMR & PMC_WPMR_WPEN;
 }
 
-#if (SAMG53 || SAMG54)
+#if (SAMG53 || SAMG54 || SAMG55)
 /**
  * \brief Enable the specified peripheral clock.
  *

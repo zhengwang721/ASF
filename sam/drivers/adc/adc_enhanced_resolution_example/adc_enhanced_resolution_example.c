@@ -53,6 +53,7 @@
  * This example can be used on boards:
  * - sam4n16c_sam4n_xplained_pro
  * - samg53n19_samg_xplained_pro
+ * - samg55j19_samg_xplained_pro
  *
  * \section Description
  *
@@ -180,8 +181,7 @@ static void set_adc_resolution(void)
 	display_menu();
 
 	while (!uc_done) {
-		while (uart_read(CONF_UART, &uc_key)) {
-		}
+		scanf("%c", (char *)&uc_key);
 
 		switch (uc_key) {
 		case 'a':
