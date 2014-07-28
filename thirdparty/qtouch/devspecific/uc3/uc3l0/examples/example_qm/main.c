@@ -10,7 +10,7 @@
  * QT600 UC3L board.
  *
  * - Userguide:          QTouch Library User Guide - doc8207.pdf.
- * - Support email:      touch@atmel.com
+ * - Support: http://www.atmel.com/design-support/
  *
  *
  * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.

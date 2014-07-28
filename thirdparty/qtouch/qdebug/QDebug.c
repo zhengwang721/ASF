@@ -10,7 +10,7 @@
  * - Compiler:           IAR EWAVR/EWAVR32 and GNU GCC for AVR/AVR32
  * - Supported devices:  ATXMEGA128A1,AT32UC3A0/A1 Series, AT32UC3B0/B1 Series, AT32UC3C0/C1 Series AND AT32UC3LO series
  * - Userguide:          QTouch Library User Guide - doc8207.pdf.
- * - Support email:      touch@atmel.com
+ * - Support: http://www.atmel.com/design-support/
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
  *                       Support and FAQ: http://support.atmel.no/

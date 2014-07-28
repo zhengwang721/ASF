@@ -16,7 +16,7 @@
  * board to the QTouch Studio.
  *
  * - Userguide:          QTouch Library User Guide - doc8207.pdf.
- * - Support email:      touch@atmel.com
+ * - Support: http://www.atmel.com/design-support/
  *
  *
  * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.

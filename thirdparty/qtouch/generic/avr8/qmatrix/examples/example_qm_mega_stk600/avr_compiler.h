@@ -9,7 +9,7 @@
  *
  * \author
  *      Atmel Corporation: http://www.atmel.com \n
- *      Support email: avr@atmel.com
+ *      Support: http://www.atmel.com/design-support/
  *
  * $Revision: 613 $
  * $Date: 2006-04-07 14:40:07 +0200 (fr, 07 apr 2006) $  \n

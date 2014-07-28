@@ -1,7 +1,7 @@
 /*******************************************************************************
 *   $FILE:  qdebug_transport.c
 *   Atmel Corporation:  http://www.atmel.com \n
-*   Support email:  touch@atmel.com
+*   Support: http://www.atmel.com/design-support/
 ******************************************************************************/
 
 /*  License

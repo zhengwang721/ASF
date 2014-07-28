@@ -6,7 +6,7 @@
  * \brief  This file contains the QDebug Configuration settings.
  *
  * - Userguide:          QTouch Library User Guide - doc8207.pdf.
- * - Support email:      touch@atmel.com
+ * - Support: http://www.atmel.com/design-support/
  *
  *
  * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.

@@ -1,6 +1,6 @@
 /*******************************************************************************
 *   Atmel Corporation:  http://www.atmel.com
-*   Support email:  touch@atmel.com
+*   Support: http://www.atmel.com/design-support/
 ******************************************************************************/
 /**
  *

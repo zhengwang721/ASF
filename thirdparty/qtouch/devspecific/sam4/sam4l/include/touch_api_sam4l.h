@@ -7,7 +7,7 @@
  *         QMatrix, QTouch and Autonomous Touch method using the Capacitive
  *         Touch (CATB) module.
  * - Userguide:          QTouch Library User Guide - doc8207.pdf.
- * - Support email:      touch@atmel.com
+ * - Support: http://www.atmel.com/design-support/
  *
  * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
  *

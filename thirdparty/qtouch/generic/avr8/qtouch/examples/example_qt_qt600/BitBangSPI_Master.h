@@ -6,7 +6,7 @@
  * - Compiler:           IAR EWAVR and GNU GCC for AVR8
  * - Supported devices:  ATXMEGA128A1
  * - Userguide:          QTouch Library User Guide - doc8207.pdf.
- * - Support email:      touch@atmel.com
+ * - Support: http://www.atmel.com/design-support/
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
  *                       Support and FAQ: http://support.atmel.no/
