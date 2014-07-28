@@ -318,7 +318,7 @@ main (void)
      - Capacitive Touch Sensor Tuning
      - Capacitive Touch Schematic design
      - Capacitive Touch Sensor design
-   email touch@atmel.com
+   refer to http://www.atmel.com/design-support/
 
 2. For more QTouch Library documentation,
    refer Atmel QTouch Library User Guide doc8207.pdf.

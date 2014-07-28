@@ -683,7 +683,7 @@ void power_save_measures_init()
  *  - Capacitive Touch Sensor Tuning
  *  - Capacitive Touch Schematic design
  *  - Capacitive Touch Sensor design
- *  email touch@atmel.com
+ *  refer to http://www.atmel.com/design-support/
  *
  * \section referenceinfo QTouch Library Documentation
  *  - Refer doc8207: Atmel QTouch Library User Guide.
