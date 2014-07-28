@@ -45,6 +45,6 @@
 #define CONF_DEMO_H
 
 //! Extension header for the OLED1 Xplained Pro
-#define OLED1_EXT_HEADER  EXT3
+#define OLED1_EXT_HEADER  EXT1
 
 #endif // CONF_DEMO_H
