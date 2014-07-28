@@ -110,7 +110,7 @@ if err == 0 then
   mputstr(" *" + EOL, fd);
   mputstr(" ******************************************************************************/" + EOL, fd);
   mputstr("" + EOL, fd);
-  mputstr("/* Copyright (c) 2010 Atmel Corporation. All rights reserved." + EOL, fd);
+  mputstr("/* Copyright (c) 2010-2014 Atmel Corporation. All rights reserved." + EOL, fd);
   mputstr(" *" + EOL, fd);
   mputstr(" * Redistribution and use in source and binary forms, with or without" + EOL, fd);
   mputstr(" * modification, are permitted provided that the following conditions are met:" + EOL, fd);

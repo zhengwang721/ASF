@@ -3,7 +3,7 @@
  *
  * \brief ADCIFB example driver for AVR32 UC3.
  *
- * Copyright (C) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2009-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

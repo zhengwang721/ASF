@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for QTouch component driver with I2C interface.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

@@ -7,7 +7,7 @@
  * - Userguide:          QTouch Library User Guide - doc8207.pdf.
  * - Support: http://www.atmel.com/design-support/
  *
- * Copyright (C) 2011-2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

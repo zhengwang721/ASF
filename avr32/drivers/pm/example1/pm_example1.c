@@ -4,7 +4,7 @@
  *
  * \brief Osc0 as Main clock source and Generic clock configuration and sleep mode example.
  *
- * Copyright (c) 2009 - 2011 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

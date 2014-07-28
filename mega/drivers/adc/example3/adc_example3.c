@@ -3,7 +3,7 @@
  *
  * \brief megaAVR ADC example 3, measure bandgap voltage
  *
- * Copyright (C) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

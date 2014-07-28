@@ -3,7 +3,7 @@
  *
  * \brief Example of usage of the Software Framework SAU driver in AVR UC3
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

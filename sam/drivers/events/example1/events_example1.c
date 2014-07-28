@@ -3,7 +3,7 @@
  *
  * \brief Peripheral Event Controller (PEVC) example 1 for SAM.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
