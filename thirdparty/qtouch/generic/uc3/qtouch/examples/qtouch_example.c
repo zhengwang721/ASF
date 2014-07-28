@@ -714,8 +714,7 @@ void init_timer_isr( void )
  * For further information, visit : 
  * <A href="http://www.atmel.com/products/AVR32/"> Atmel AVR32 </A>.\n
  * Technical support & faq, visit : 
- * <A href="http://www.atmel.com/design-support/"> Support and FAQ </A>.\n
- * For Technical Support: http://www.atmel.com/design-support/
+ * <A href="http://www.atmel.com/design-support/"> Support and FAQ </A>.
  *
  * \author 
  * Atmel Corporation : http://www.atmel.com \n
