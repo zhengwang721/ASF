@@ -3,7 +3,7 @@
  *
  * \brief SAM Liquid Crystal Display driver (LCDCA).
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -68,12 +68,13 @@ void lcdca_clk_init(void)
 		osc_enable(OSC_ID_OSC32);
 		osc_wait_ready(OSC_ID_OSC32);
 	}
-
+	bpm_set_clk32_source(BPM, BPM_CLK32_SOURCE_OSC32K);
 #else
 	if (!osc_is_ready(OSC_ID_RC32K)) {
 		osc_enable(OSC_ID_RC32K);
 		osc_wait_ready(OSC_ID_RC32K);
 	}
+	bpm_set_clk32_source(BPM, BPM_CLK32_SOURCE_RC32K);
 #endif
 }
 
