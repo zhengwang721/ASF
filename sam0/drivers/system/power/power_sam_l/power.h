@@ -103,7 +103,7 @@ enum system_back_biasing_mode {
  */
 enum system_linked_power_domain {
 	/** Power domains PD0/PD1/PD2 are not linked. */
-	SYSTEM_LINKED_POWER_DOMAIN_DEFAULT	= PM_STDBYCFG_LINKPD_DEFAULT_Val,
+	SYSTEM_LINKED_POWER_DOMAIN_DEFAULT	 = PM_STDBYCFG_LINKPD_DEFAULT_Val,
 	/** Power domains PD0 and PD1 are linked. */
 	SYSTEM_LINKED_POWER_DOMAIN_PD01      = PM_STDBYCFG_LINKPD_PD01_Val,
 	/** Power domains PD1 and PD2 are linked. */
@@ -120,12 +120,61 @@ enum system_linked_power_domain {
 enum system_power_domain {
 	/** All power domains switching are handled by hardware. */
 	SYSTEM_POWER_DOMAIN_DEFAULT	= PM_STDBYCFG_PDCFG_DEFAULT_Val,
-	/** Power domain 0 (PD0) is forced ACTIVE.. */
+	/** Power domain 0 (PD0) is forced ACTIVE. */
 	SYSTEM_POWER_DOMAIN_PD0		= PM_STDBYCFG_PDCFG_PD0_Val,
 	/** Power domain 0 and 1 (PD0 and PD1) are forced ACTIVE. */
 	SYSTEM_POWER_DOMAIN_PD01	= PM_STDBYCFG_PDCFG_PD01_Val,
 	/** All power domains are forced ACTIVE. */
 	SYSTEM_POWER_DOMAIN_PD012	= PM_STDBYCFG_PDCFG_PD012_Val,
+};
+
+/**
+ * \brief Voltage regulator .
+ *
+ * Voltage Regulator Selection .
+ */
+enum system_voltage_regulator_sel {
+	/** The voltage regulator in active mode is a LDO voltage regulator. */
+	SYSTEM_VOLTAGE_REGULATOR_LDO	= SUPC_VREG_SEL_LDO_Val,
+	/** The voltage regulator in active mode is a buck converter. */
+	SYSTEM_VOLTAGE_REGULATOR_BUCK	= SUPC_VREG_SEL_BUCK_Val,
+};
+
+/**
+ * \brief Voltage References .
+ *
+ * Voltage References Selection .
+ */
+enum system_voltage_references_sel {
+	/** 1.0V voltage reference typical value . */
+	SYSTEM_VOLTAGE_REFERENCE_1V0	= SUPC_VREF_SEL_1V0_Val,
+	/** 1.1V voltage reference typical value . */
+	SYSTEM_VOLTAGE_REFERENCE_1V1	= SUPC_VREF_SEL_1V1_Val,
+	/** 1.2V voltage reference typical value . */
+	SYSTEM_VOLTAGE_REFERENCE_1V2	= SUPC_VREF_SEL_1V2_Val,
+	/** 1.25V voltage reference typical value . */
+	SYSTEM_VOLTAGE_REFERENCE_1V25	= SUPC_VREF_SEL_1V25_Val,
+	/** 2.0V voltage reference typical value . */
+	SYSTEM_VOLTAGE_REFERENCE_2V0	= SUPC_VREF_SEL_2V0_Val,
+	/** 2.2V voltage reference typical value . */
+	SYSTEM_VOLTAGE_REFERENCE_2V2	= SUPC_VREF_SEL_2V2_Val,
+	/** 2.4V voltage reference typical value . */
+	SYSTEM_VOLTAGE_REFERENCE_2V4	= SUPC_VREF_SEL_2V4_Val,
+	/** 2.5V voltage reference typical value . */
+	SYSTEM_VOLTAGE_REFERENCE_2V5	= SUPC_VREF_SEL_2V5_Val,
+};
+
+/**
+ * \brief Voltage references.
+ *
+ * List of available voltage references (VREF) that may be used within the
+ * device.
+ */
+enum system_voltage_reference {
+	/** Temperature sensor voltage reference. */
+	SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE,
+	/** Voltage reference output. */
+	SYSTEM_VOLTAGE_REFERENCE_OUTPUT,
 };
 
 /**
@@ -151,6 +200,187 @@ struct system_standby_config {
 	/** Back bias for PICOPRAM */
 	enum system_back_biasing_mode bbiaspp;
 };
+
+/**
+ * \brief Voltage Regulator System (VREG) Control configuration 
+ *
+ * Configuration structure for VREG.
+ */
+struct system_voltage_regulator_config {
+	/** Voltage scaling period */
+	uint8_t  voltage_scale_period;
+	/** Voltage scaling voltage step */
+	uint8_t voltage_scale_step;
+	/** Run in standby in standby sleep mode*/
+	bool run_in_standby;
+	/** Voltage Regulator Selection */
+	enum system_voltage_regulator_sel  sel;
+};
+
+/**
+ * \brief Voltage References System (VREF) Control configuration 
+ *
+ * Configuration structure for VREF.
+ */
+struct system_voltage_references_config {
+	/** Voltage References Selection */
+	enum system_voltage_references_sel  sel;
+	/** On Demand Control */
+	bool on_demand;
+	/** run in standby */
+	bool run_in_standby;
+	
+};
+
+/**
+ * \brief Retrieve the default configuration for voltage regulator
+ *
+ * Fills a configuration structure with the default configuration
+ *   - Voltage scaling period is 1us
+ *   - Voltage scaling voltage step is 2*min_step
+ *   - The voltage regulator is in low power mode in Standby sleep mode
+ *   - The voltage regulator in active mode is a LDO voltage regulator
+ *
+ * \param[out] config  Configuration structure to fill with default values
+ */
+static inline void system_voltage_regulator_get_config(
+		struct system_voltage_regulator_config *const config)
+{
+	Assert(config);
+	config->voltage_scale_period     = 0;
+	config->voltage_scale_step       = 0;
+	config->run_in_standby 	   		 = false;
+	config->sel    					 = SYSTEM_VOLTAGE_REGULATOR_LDO;
+}
+
+/**
+ * \brief Configure voltage regulator
+ *
+ * Configures voltage regulator with the given configuration
+ *
+ * \param[in] config  voltage regulator configuration structure containing
+ *                    the new config
+ */	
+static inline void system_voltage_regulator_set_config(
+		struct system_voltage_regulator_config *const config)
+{
+	Assert(config);
+	SUPC->VREG.bit.VSPER    = config->voltage_scale_period;
+	SUPC->VREG.bit.VSVSTEP  = config->voltage_scale_step;
+	SUPC->VREG.bit.RUNSTDBY = config->run_in_standby;
+	SUPC->VREG.bit.SEL      = config->sel;
+}
+
+/**
+* \brief Enable the selected voltage regulator
+ *
+ * Enables the selected voltage regulator source
+ *
+ */
+static inline void system_voltage_regulator_enable(void)
+{
+
+	SUPC->VREG.reg |= SUPC_VREG_ENABLE;
+}
+
+/**
+ * \brief Disable the selected voltage regulator
+ *
+ * Disables the selected voltage regulator.
+ *
+ */
+static inline void system_voltage_regulator_disable(void)
+{
+	SUPC->VREG.reg &= ~SUPC_VREG_ENABLE;
+}
+
+/**
+ * \brief Retrieve the default configuration for voltage reference
+ *
+ * Fills a configuration structure with the default configuration
+ *   - 1.0V voltage reference typical value
+ *   - On demand control:disabled
+ *   - The voltage reference and the temperature sensor are halted during standby sleep mode
+ *
+ * \param[out] config  Configuration structure to fill with default values
+ */
+static inline void system_voltage_reference_get_config(
+		struct system_voltage_references_config *const config)
+{
+	Assert(config);
+
+	config->sel   			  = SYSTEM_VOLTAGE_REFERENCE_1V0;
+	config->on_demand         = false;
+	config->run_in_standby 	  = false;
+}
+
+/**
+ * \brief Configure voltage reference
+ *
+ * Configures voltage reference with the given configuration
+ *
+ * \param[in] config  voltage reference configuration structure containing
+ *                    the new config
+ */	
+static inline void system_voltage_reference_set_config(
+		struct system_voltage_references_config *const config)
+{
+	Assert(config);
+	SUPC->VREF.bit.SEL 		= config->sel;
+	SUPC->VREF.bit.ONDEMAND = config->on_demand;
+	SUPC->VREF.bit.RUNSTDBY = config->run_in_standby;
+}
+
+/**
+ * \brief Enable the selected voltage reference
+ *
+ * Enables the selected voltage reference source, making the voltage reference
+ * available on a pin as well as an input source to the analog peripherals.
+ *
+ * \param[in] vref  Voltage reference to enable
+ */
+static inline void system_voltage_reference_enable(
+		const enum system_voltage_reference vref)
+{
+	switch (vref) {
+		case SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE:
+			SUPC->VREF.reg |= SUPC_VREF_TSEN;
+			break;
+
+		case SYSTEM_VOLTAGE_REFERENCE_OUTPUT:
+			SUPC->VREF.reg |= SUPC_VREF_VREFOE;
+			break;
+
+		default:
+			Assert(false);
+			return;
+	}
+}
+
+/**
+ * \brief Disable the selected voltage reference
+ *
+ * Disables the selected voltage reference source.
+ *
+ * \param[in] vref  Voltage reference to disable
+ */
+static inline void system_voltage_reference_disable(
+		const enum system_voltage_reference vref)
+{
+	switch (vref) {
+		case SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE:
+			SUPC->VREF.reg &= ~SUPC_VREF_TSEN;
+			break;
+
+		case SYSTEM_VOLTAGE_REFERENCE_OUTPUT:
+			SUPC->VREF.reg &= ~SUPC_VREF_VREFOE;
+			break;
+
+		default:
+			Assert(false);
+			return;
+	}
+}
 
 /**
  * \brief Set the sleep mode of the device
@@ -430,7 +660,6 @@ static inline void system_backup_ioret_clear(void)
 {
 	PM->CTRLA.reg = PM_CTRLA_MASK & (~PM_CTRLA_IORET);
 }
-
 
 #ifdef __cplusplus
 }
