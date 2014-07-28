@@ -6,7 +6,7 @@
  * - Supported devices:  AVR32 AT32UC3A0512
  *
  * - author              Atmel Corporation: http://www.atmel.com \n
- *                       Support and FAQ: http://support.atmel.no/
+ *                       Support and FAQ: http://www.atmel.com/design-support/
  *
  ******************************************************************************/
 

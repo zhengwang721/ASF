@@ -90,7 +90,7 @@
  * \section contactinfo Contact Information
  * For further information, visit
  * <A href="http://www.atmel.com/products/AVR32/">Atmel AVR32</A>.\n
- * Support and FAQ: http://support.atmel.no/
+ * Support and FAQ: http://www.atmel.com/design-support/
  */
 #include <asf.h>
 #include "conf_example.h"

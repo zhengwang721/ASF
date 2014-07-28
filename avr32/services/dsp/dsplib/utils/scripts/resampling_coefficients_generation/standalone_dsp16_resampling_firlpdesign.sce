@@ -106,7 +106,7 @@ if err == 0 then
   mputstr(" * - Supported devices:  All AVR32 devices with a USART module can be used." + EOL, fd);
   mputstr(" *" + EOL, fd);
   mputstr(" * \author               Atmel Corporation: http://www.atmel.com \n" + EOL, fd);
-  mputstr(" *                       Support and FAQ: http://support.atmel.no/" + EOL, fd);
+  mputstr(" *                       Support and FAQ: http://www.atmel.com/design-support/" + EOL, fd);
   mputstr(" *" + EOL, fd);
   mputstr(" ******************************************************************************/" + EOL, fd);
   mputstr("" + EOL, fd);

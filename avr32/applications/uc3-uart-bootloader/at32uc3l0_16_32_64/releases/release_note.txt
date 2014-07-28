@@ -97,7 +97,7 @@ Version 1.0.0 - 2010/03/31
 ______________________
 
 Atmel Corporation: http://www.atmel.com.
-Support and FAQ: http://support.atmel.no.
+Support and FAQ: http://www.atmel.com/design-support/.
 
 
 3. Legal Information

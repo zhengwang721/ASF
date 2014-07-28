@@ -13,7 +13,7 @@
  * - Support: http://www.atmel.com/design-support/
  *
  * \author               Atmel Corporation: http://www.atmel.com \n
- *                       Support and FAQ: http://support.atmel.no/
+ *                       Support and FAQ: http://www.atmel.com/design-support/
  * 
  * Copyright (c) 2010 - 2013, Atmel Corporation All rights reserved.
  * 

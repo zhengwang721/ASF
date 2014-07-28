@@ -75,7 +75,7 @@
 * \section contactinfo Contact Info
 * For more info about Atmel AVR32 visit
 * <A href="http://www.atmel.com/products/AVR32/" >Atmel AVR32</A>\n
-* Support and FAQ: http://support.atmel.no/
+* Support and FAQ: http://www.atmel.com/design-support/
 */
 
 
