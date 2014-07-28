@@ -680,7 +680,7 @@ ISR(TIMER1_COMPA_vect)
  * For further information, visit :
  * <A href="http://www.atmel.com/products/AVR32/"> Atmel AVR32 </A>.\n
  * Technical support & faq, visit :
- * <A href="http://support.atmel.no/"> Support and FAQ </A>.\n
+ * <A href="http://www.atmel.com/design-support/"> Support and FAQ </A>.\n
  * For Technical Support: http://www.atmel.com/design-support/
  *
  * \author  Atmel Corporation: http://www.atmel.com \n
