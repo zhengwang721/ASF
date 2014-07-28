@@ -53,11 +53,6 @@ extern "C" {
 #include <conf_at25dfx.h>
 #include "math.h"
 
-/**
- * \section asfdoc_sam0_datalogger_api API Overview
- * @{
- */
-
 /** We expect a single byte command through USART */
 #define CMD_RX_BUFFER_LENGTH                 1
 #define CMD_GET_ALL_LOGS					 '1'
@@ -114,24 +109,6 @@ extern "C" {
 #define SHH_COEFF_A                          0.0008913055475
 #define SHH_COEFF_B                          0.0002507779917
 #define SHH_COEFF_C                          0.0000001957724056
-
-void configure_dma_resource_adc(struct dma_resource *);
-void setup_transfer_descriptor_adc(DmacDescriptor *);
-void configure_adc(void);
-void init_rtc(void);
-void rtc_overflow_callback(void);
-void configure_rtc_callbacks(void);
-void configure_rtc_event_to_trigger_adc(void);
-void enable_transfer_trigger(void);
-void usart_read_callback(const struct usart_module *);
-void configure_usart_callbacks(void);
-void transfer_done_usart_tx_dma( const struct dma_resource *);
-void sf_store_logs(float *);
-void sf_get_recent_logs(char *);
-void sf_access_get_status(void);
-void sf_access_set_status(void);
-void sf_read_all_logs(void);
-void sf_sendout_all_logs(void);
 
 /** @} */
 #ifdef __cplusplus

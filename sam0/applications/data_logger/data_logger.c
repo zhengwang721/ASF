@@ -68,16 +68,16 @@
  * - \ref appdoc_sam0_datalogger_setup
  * - \ref appdoc_sam0_datalogger_usage
  * - \ref appdoc_sam0_datalogger_compinfo
- * - \ref appdoc_sam0_datalogger_contactinfo
- * - \ref asfdoc_sam0_datalogger_api
  * - \ref asfdoc_sam0_datalogger_references
+ * - \ref appdoc_sam0_datalogger_contactinfo
  *
  * \section appdoc_sam0_datalogger_intro Introduction
  *
  * This example uses the SAM D21 Xplained Pro and the code will be available
  * as ASF example project which can be accessed in Atmel Studio.
  * In this application, the environment temperature is
- * read using a 103 AP-2 thermistor from Semitec. This should be connected to
+ * read using a 103 AP-2 thermistor from Semitec. This should be connected
+ * with a 10 kOhm series resistor to
  * one of the ADC pins of the SAM D21 device as shown in
  * \ref appdoc_sam0_datalogger_setup "Hardware Setup".
  * The readings are then stored in the serial flash AT25FD081A on the
@@ -127,7 +127,7 @@
  * can be obtained from the manufacturer. The values in the below table are
  * taken from the 'Temperature Vs Resistance' characteristics of the thermistor
  * which is provided by the thermistor manufacturer. The contact address can be
- * be obtained from the website of the website www.semitec-usa.com
+ * be obtained from the website www.semitec-usa.com
  *
  *   <table border="0" cellborder="1" cellspacing="0" >
  *    <tr>
@@ -154,11 +154,11 @@
  *
  * The coefficients are defined in the code as below
  *
- * \code{.cpp}
- *#define SHH_COEFF_A 0.0008913055475
- *#define SHH_COEFF_B 0.0002507779917
- *#define SHH_COEFF_C 0.0000001957724056
- * \endcode
+ \code{.cpp}
+ #define SHH_COEFF_A 0.0008913055475
+ #define SHH_COEFF_B 0.0002507779917
+ #define SHH_COEFF_C 0.0000001957724056
+ \endcode
  *
  *
  * As shown in hardware setup, a voltage divider is made using the
@@ -222,7 +222,7 @@
  *
  * - AT25DF081A Datasheet:
  * <a
- *href="http://www.adestotech.com/sites/default/files/datasheets/doc8715.pdf">
+ * href="http://www.adestotech.com/sites/default/files/datasheets/doc8715.pdf">
  * http://www.adestotech.com/sites/default/files/datasheets/doc8715.pdf</a>
  *
  * \section appdoc_sam0_datalogger_contactinfo Contact Information
@@ -278,7 +278,7 @@ volatile bool sf_read_request_received = false;
  * Flag which indicates whether the request received is to read all logs
  * from the serial flash
  */
-volatile bool read_entire_logs = false;
+volatile bool request_total_logs = false;
 /** This flag is used to check if a DMA transfer to USART is in progress */
 volatile bool usart_dma_transfer_triggered = false;
 
@@ -299,14 +299,19 @@ char serial_transfer_array[SF_TRANSFER_SIZE * 2][10] = {{0, 0}};
 /** Array used for receiving commands via USART */
 volatile uint8_t rx_buffer[CMD_RX_BUFFER_LENGTH] = {0};
 /** Storage for  message that will be send via USART */
-static char transfer_message[INFO_BUFFER_SIZE] = {"Module ready \r\n"};
+static char transfer_message[INFO_BUFFER_SIZE] = {0};
 
+/**
+ * \name Callback functions
+ * @{
+ */
+ 
 /**
  * \brief Callback function for RTC overflow
  *
  * This function is invoked from the RTC_Handler.
  */
-void rtc_overflow_callback(void)
+static void rtc_overflow_callback(void)
 {
 	port_pin_toggle_output_level(LED_0_PIN);
 
@@ -330,12 +335,13 @@ void rtc_overflow_callback(void)
  *
  * \param usart_module Pointer to the USART module software instance
  */
-void usart_read_callback(const struct usart_module *const usart_module)
+static void usart_read_callback(
+		const struct usart_module *const usart_module)
 {
 	sf_read_request_received = true;
 
 	if (rx_buffer[0] == CMD_GET_ALL_LOGS) {
-		read_entire_logs = true;
+		request_total_logs = true;
 	}
 }
 
@@ -346,10 +352,11 @@ void usart_read_callback(const struct usart_module *const usart_module)
  * callback registered for the RTC. More details are in available in the
  * driver documentation for RTC.
  */
-void configure_rtc_callbacks(void)
+static void configure_rtc_callbacks(void)
 {
 	rtc_count_register_callback(
-		&rtc_inst, rtc_overflow_callback, RTC_COUNT_CALLBACK_OVERFLOW);
+			&rtc_inst, rtc_overflow_callback,
+			RTC_COUNT_CALLBACK_OVERFLOW);
 	rtc_count_enable_callback(&rtc_inst, RTC_COUNT_CALLBACK_OVERFLOW);
 }
 
@@ -361,7 +368,7 @@ void configure_rtc_callbacks(void)
  *
  * \param resource DMA resource which handles SRAM to USART transfer
  */
-void transfer_done_usart_tx_dma( const struct dma_resource *const resource )
+static void transfer_done_usart_tx_dma(const struct dma_resource *const resource)
 {
 	/*
 	 * Update the flag to indicate that there is no SRAM to USART
@@ -371,12 +378,17 @@ void transfer_done_usart_tx_dma( const struct dma_resource *const resource )
 }
 
 /**
+ * \name Peripheral Configuration Functions
+ * @{
+ */
+ 
+/**
  * \brief Configures the ADC
  *
  * This function configures the ADC to get periodic readings from
  * the thermistor connected to PA04 on the SAM D21 Xplained Pro.
  */
-void configure_adc(void)
+static void configure_adc(void)
 {
 	struct adc_config config_adc;
 
@@ -412,7 +424,8 @@ void configure_adc(void)
  *
  * \param resource Pointer to the DMA resource
  */
-void configure_dma_resource_adc(struct dma_resource *resource)
+static void configure_dma_resource_adc(
+		struct dma_resource *resource)
 {
 	struct dma_resource_config config;
 
@@ -432,7 +445,8 @@ void configure_dma_resource_adc(struct dma_resource *resource)
  *
  * \param descriptor Pointer to the DMA descriptor
  */
-void setup_transfer_descriptor_adc(DmacDescriptor *descriptor)
+static void setup_transfer_descriptor_adc(
+		DmacDescriptor *descriptor)
 {
 	struct dma_descriptor_config descriptor_config;
 
@@ -441,13 +455,14 @@ void setup_transfer_descriptor_adc(DmacDescriptor *descriptor)
 	descriptor_config.beat_size = DMA_BEAT_SIZE_HWORD;
 	descriptor_config.dst_increment_enable = true;
 	descriptor_config.src_increment_enable = false;
-	descriptor_config.block_transfer_count
-		= NUM_OF_BEATS_IN_ADC_SRAM_TRANSFER;
-	descriptor_config.source_address
-		= (uint32_t)(&adc_instance.hw->RESULT.reg);
-	descriptor_config.destination_address
-		= ((uint32_t)adc_results_array +
-	(NUM_OF_BEATS_IN_ADC_SRAM_TRANSFER << DMA_BEAT_SIZE_HWORD));
+	descriptor_config.block_transfer_count =
+			NUM_OF_BEATS_IN_ADC_SRAM_TRANSFER;
+	descriptor_config.source_address =
+			(uint32_t)(&adc_instance.hw->RESULT.reg);
+	descriptor_config.destination_address =
+			((uint32_t)adc_results_array +
+			(NUM_OF_BEATS_IN_ADC_SRAM_TRANSFER <<
+			DMA_BEAT_SIZE_HWORD));
 	/*Configure it for linked transfer */
 	descriptor_config.next_descriptor_address = (uint32_t)descriptor;
 
@@ -459,7 +474,7 @@ void setup_transfer_descriptor_adc(DmacDescriptor *descriptor)
  *
  * The RTC will be configured to operate at 1Hz.
  */
-void init_rtc(void)
+static void init_rtc(void)
 {
 	enum status_code status;
 	struct rtc_count_config config_rtc_count;
@@ -484,7 +499,7 @@ void init_rtc(void)
  * Configures the event system and RTC to trigger ADC conversions
  * on RTC overflow.
  */
-void configure_rtc_event_to_trigger_adc(void)
+static void configure_rtc_event_to_trigger_adc(void)
 {
 	init_success = true;
 	struct rtc_count_events rtc_event_config;
@@ -513,7 +528,7 @@ void configure_rtc_event_to_trigger_adc(void)
  * Set the period and enable the RTC to trigger ADC conversion
  * periodically.
  */
-void enable_transfer_trigger(void)
+static void enable_rtc_transfer_trigger(void)
 {
 	rtc_count_set_period(&rtc_inst, 1024);
 	rtc_count_enable(&rtc_inst);
@@ -527,7 +542,8 @@ void enable_transfer_trigger(void)
  * \param resource Pointer to the DMA resource
  */
 
-static void configure_dma_resource_usart_tx(struct dma_resource *resource)
+static void configure_dma_resource_usart_tx(
+		struct dma_resource *resource)
 {
 	struct dma_resource_config config;
 
@@ -555,9 +571,10 @@ static void configure_usart(void)
 	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
 	config_usart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
 	config_usart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
-
+	
+	/* Try till USART get initialized */
 	while (usart_init(&usart_instance,
-		EDBG_CDC_MODULE, &config_usart) != STATUS_OK) {
+			EDBG_CDC_MODULE, &config_usart) != STATUS_OK) {
 	}
 	usart_enable(&usart_instance);
 }
@@ -568,10 +585,10 @@ static void configure_usart(void)
  * Registers a callback which is invoked when data is received
  * via the USART.
  */
-void configure_usart_callbacks(void)
+static void configure_usart_callbacks(void)
 {
 	usart_register_callback(&usart_instance,
-		usart_read_callback, USART_CALLBACK_BUFFER_RECEIVED);
+			usart_read_callback, USART_CALLBACK_BUFFER_RECEIVED);
 	usart_enable_callback(&usart_instance, USART_CALLBACK_BUFFER_RECEIVED);
 }
 
@@ -584,8 +601,9 @@ void configure_usart_callbacks(void)
  * \param buf Pointer to the source array
  * \param len Size of the source array
  */
-static void configure_sram_usart_dma_transfer(DmacDescriptor *descriptor,
-	char *buf, uint32_t len)
+static void configure_sram_usart_dma_transfer(
+		DmacDescriptor *descriptor,
+		char *buf, uint32_t len)
 {
 	struct dma_descriptor_config descriptor_config;
 
@@ -595,12 +613,17 @@ static void configure_sram_usart_dma_transfer(DmacDescriptor *descriptor,
 	descriptor_config.dst_increment_enable = false;
 	descriptor_config.block_transfer_count = len;
 	descriptor_config.source_address = (uint32_t)buf + len;
-	descriptor_config.destination_address
-		= (uint32_t)(&usart_instance.hw->USART.DATA.reg);
+	descriptor_config.destination_address =
+			(uint32_t)(&usart_instance.hw->USART.DATA.reg);
 
 	dma_descriptor_create(descriptor, &descriptor_config);
 }
 
+/**
+ * \name Non Volatile Storage Management Functions
+ * @{
+ */
+ 
 /**
  * \brief Initialize the serial flash
  *
@@ -650,7 +673,7 @@ static void serial_flash_at25dfx_init(void)
  *
  * \param envir_temp_sf_buff The buffer which holds temperature readings
  */
-void sf_store_logs(float *envir_temp_sf_buff)
+static void sf_store_logs(float *envir_temp_sf_buff)
 {
 	char envir_temp_decim[SF_TRANSFER_SIZE * BYTES_USED_FOR_A_READING];
 	enum status_code status;
@@ -666,7 +689,7 @@ void sf_store_logs(float *envir_temp_sf_buff)
 		integer_part = (char)envir_temp_sf_buff[i];
 		fract_part = ((int)(envir_temp_sf_buff[i] * 100)) % 100;
 		sprintf(&envir_temp_decim[i * BYTES_USED_FOR_A_READING], "%c%c",
-			integer_part, fract_part);
+				integer_part, fract_part);
 		i++;
 	}
 
@@ -681,8 +704,7 @@ void sf_store_logs(float *envir_temp_sf_buff)
 	if (STATUS_OK != status) {
 		init_success = false;
 	} else {
-		/* Indicate that we've stored n readings into the serial flash
-		 **/
+		/* Indicate that we've stored n readings into the serial flash */
 		sf_write_count += SF_TRANSFER_SIZE;
 	}
 }
@@ -692,10 +714,10 @@ void sf_store_logs(float *envir_temp_sf_buff)
  *
  * Read the recent logs from the serial flash.
  *
- ***\param sf_readback_buff Pointer to the buffer into which the logs
+ * \param sf_readback_buff Pointer to the buffer into which the logs
  * are loaded
  */
-void sf_get_recent_logs(char *sf_readback_buff)
+static void sf_get_recent_logs(char *sf_readback_buff)
 {
 	enum status_code status;
 
@@ -717,11 +739,12 @@ void sf_get_recent_logs(char *sf_readback_buff)
  * the last address written and a flag which indicates whether the serial
  * flash is empty.
  */
-void sf_access_get_status(void)
+static void sf_access_get_status(void)
 {
 	/* We store data for Serial Flash management, in the first 4K block */
 	at25dfx_chip_read_buffer(&at25dfx_chip,
-		SF_4K_BLOCK0_START, &sf_access_status, sizeof(sf_access_status));
+			SF_4K_BLOCK0_START, &sf_access_status,
+			sizeof(sf_access_status));
 }
 
 /**
@@ -731,17 +754,34 @@ void sf_access_get_status(void)
  * the last address written and a flag which indicates whether the serial
  * flash is empty.
  */
-void sf_access_set_status(void)
+static void sf_access_set_status(void)
 {
 	/*
 	 * Erase the first 4K block where the serial flash management data
 	 * resides
 	 */
 	at25dfx_chip_erase_block(&at25dfx_chip, SF_4K_BLOCK0_START,
-		AT25DFX_BLOCK_SIZE_4KB);
+			AT25DFX_BLOCK_SIZE_4KB);
 	at25dfx_chip_write_buffer(&at25dfx_chip,
-		SF_4K_BLOCK0_START, (void *)&sf_access_status,
-	sizeof(sf_access_status));
+			SF_4K_BLOCK0_START, (void *)&sf_access_status,
+			sizeof(sf_access_status));
+}
+
+/**
+ * \brief Initiate the transfer of the message through USART
+ *
+ * This function configures a DMA descriptor and initiates the
+ * transfer of the given string to USART.
+ * See the function call 'configure_dma_resource_usart_tx' for
+ * details on configuring a DMA resource.
+ */
+static inline void send_message_usart(uint8_t len)
+{
+	usart_dma_transfer_triggered = true;
+	configure_sram_usart_dma_transfer(
+			&uart_tx_dma_descriptor,
+			&transfer_message[0], len);
+	dma_start_transfer_job(&dma_resource_usart_tx);
 }
 
 /**
@@ -749,7 +789,7 @@ void sf_access_set_status(void)
  *
  * Read all temperature readings from the serial flash.
  */
-void sf_read_all_logs(void)
+static void sf_read_all_logs(void)
 {
 	uint8_t j = 0;
 	uint8_t k = 0;
@@ -757,19 +797,16 @@ void sf_read_all_logs(void)
 	char sf_log_buff[SF_TRANSFER_SIZE * BYTES_USED_FOR_A_READING] = {0};
 
 	/* Clear the flag before sending the data */
-	read_entire_logs = false;
+	request_total_logs = false;
 
 	memset(transfer_message, 0, sizeof(transfer_message));
 	sprintf(transfer_message, "\r\n%lu logs will be read\r\n",
-		sf_access_status.start_addr_last_written + SF_TRANSFER_SIZE);
+			sf_access_status.start_addr_last_written +
+			SF_TRANSFER_SIZE);
 	/* Wait for the ongoing DMA transfer to complete */
 	while (usart_dma_transfer_triggered) {
 	}
-	/* Make the flag true and initiate an SRAM to USART transfer */
-	usart_dma_transfer_triggered = true;
-	configure_sram_usart_dma_transfer(&uart_tx_dma_descriptor,
-		&transfer_message[0], strlen(transfer_message));
-	dma_start_transfer_job(&dma_resource_usart_tx);
+	send_message_usart(strlen(transfer_message));
 
 	/*
 	 * Get a defined number readings at a time and send them to USART.
@@ -780,13 +817,14 @@ void sf_read_all_logs(void)
 		k = 0;
 
 		at25dfx_chip_read_buffer(&at25dfx_chip,
-			SF_4K_BLOCK1_START + (num_of_readings * BYTES_USED_FOR_A_READING),
-			&sf_log_buff[0],
-			(SF_TRANSFER_SIZE * BYTES_USED_FOR_A_READING));
+				SF_4K_BLOCK1_START +
+				(num_of_readings * BYTES_USED_FOR_A_READING),
+				&sf_log_buff[0],
+				(SF_TRANSFER_SIZE * BYTES_USED_FOR_A_READING));
 
 		while (j < SF_TRANSFER_SIZE) {
 			sprintf(&serial_transfer_array[j][0], "%2d.%d\r\n",
-			sf_log_buff[k], sf_log_buff[k + 1]);
+					sf_log_buff[k], sf_log_buff[k + 1]);
 			j++;
 
 			/* Two bytes are used for representing a temperature
@@ -796,22 +834,203 @@ void sf_read_all_logs(void)
 		num_of_readings += SF_TRANSFER_SIZE;
 		/* Wait for the ongoing DMA transfer to complete */
 		while (usart_dma_transfer_triggered) {
-		};
+			};
 		/* Make the flag true and initiate an SRAM to USART transfer */
 		usart_dma_transfer_triggered = true;
 		configure_sram_usart_dma_transfer(&uart_tx_dma_descriptor,
-			&serial_transfer_array[0][0], sizeof(serial_transfer_array));
+				&serial_transfer_array[0][0],
+				sizeof(serial_transfer_array));
 		dma_start_transfer_job(&dma_resource_usart_tx);
 	}
 
 	sf_read_request_received = false;
 	/* Check for further read requests */
 	usart_read_buffer_job(&usart_instance,
-	(uint8_t *)rx_buffer, CMD_RX_BUFFER_LENGTH);
+			(uint8_t *)rx_buffer, CMD_RX_BUFFER_LENGTH);
 }
 
 /**
+ * \name Main Data Processing Functions
+ * @{
+ */
+ 
+/**
+ * \brief Process the ADC reading and store them in Serial Flash
+ *
+ * Once the specified number of samples are ready, convert them
+ * into temperature readings and store them into the Serial Flash
+ * available on the SAM D21 Xplained Pro.
+ */
+static void process_adc_readings(void)
+{
+	bool adc_sram_dma_flag = 0;
+	
+	/*
+	 * The CPU is waken up by an Interrupt
+	 * Check who needs a service
+	 */
+	
+	/* Disable interrupts to just before reading the flag */
+	system_interrupt_enter_critical_section();
+	adc_sram_dma_flag = adc_sram_dma_transfer_done;
+	system_interrupt_leave_critical_section();
+
+	if (adc_sram_dma_flag) {
+		uint8_t j = 0;
+
+		/*
+		 * Initialize the Steinhart-Hart coefficients
+		 * Reference points taken for this example are 0, 25 and
+		 * 50 Deg C
+		 */
+		float shh_a = SHH_COEFF_A;
+		float shh_b = SHH_COEFF_B;
+		float shh_c = SHH_COEFF_C;
+		float thermistor_res;
+		float input_voltage;
+		float envir_temp;
+		float envir_temp_sf[SF_TRANSFER_SIZE] = {0};
+		volatile uint16_t adc_results_conv_array[
+			SF_TRANSFER_SIZE] = {0};
+
+		/*
+			* Copy the contents from adc_results_array into a local
+			* array, right after the wakeup from sleep.
+			*/
+		while (j < SF_TRANSFER_SIZE) {
+			adc_results_conv_array[j] =
+					adc_results_array[j];
+			j++;
+		}
+		j = 0;
+
+		while (j < SF_TRANSFER_SIZE) {
+			input_voltage =
+					adc_results_conv_array[j] *
+					THERM_ADC_VOLTS_PER_BIT;
+			thermistor_res =
+					(float)(input_voltage *
+					THERM_SERIES_RESISTOR) /
+					(THERM_EXCITATION_VOLT -
+					input_voltage);
+			envir_temp =
+					(float)(1 /
+					(shh_a + shh_b *
+					log(thermistor_res) +
+					shh_c *
+					(pow(log(thermistor_res),3)))) - 273;
+			envir_temp_sf[j] = envir_temp;
+			j++;
+		}
+
+		if (sf_write_count >= SF_ADDRESS_LIMIT) {
+			sf_write_count = 0;
+			sf_access_status.sf_is_clean = true;
+			sf_access_status.start_addr_last_written = 0;
+			at25dfx_chip_erase_block(&at25dfx_chip,
+					SF_4K_BLOCK0_START,
+					AT25DFX_BLOCK_SIZE_4KB);
+			at25dfx_chip_erase_block(&at25dfx_chip,
+					SF_4K_BLOCK1_START,
+					AT25DFX_BLOCK_SIZE_4KB);
+		} else {
+			//sf_access_status.sf_is_clean = false;
+			sf_access_status.start_addr_last_written =
+					sf_write_count;
+		}
+
+		sf_access_set_status();
+		sf_store_logs(envir_temp_sf);
+
+		system_interrupt_enter_critical_section();
+		adc_sram_dma_transfer_done = false;
+		system_interrupt_leave_critical_section();
+	}
+}
+
+/**
+ * \brief Process the request for reading the logs
+ *
+ * Read back the temperature readings from the Serial Flash
+ * and send them through USART based on the user request.
+ */
+static void process_log_read_requests(void)
+{
+	/*
+	 * When a read request is received, check if the
+	 * write count is non-zero
+	 */
+	if (sf_read_request_received && sf_write_count) {
+		if (true == request_total_logs) {
+			sf_read_all_logs();
+		} else {
+			uint8_t j = 0;
+			uint8_t k = 0;
+			char envir_temp_sf_readback[SF_TRANSFER_SIZE *
+					BYTES_USED_FOR_A_READING] = {0};
+
+			memset(transfer_message, 0,
+					sizeof(transfer_message));
+			sprintf(transfer_message,
+					"\r\nRecent %d readings\r\n",
+					SF_TRANSFER_SIZE);
+
+			/* Wait for the ongoing DMA transfer to complete */
+			while (usart_dma_transfer_triggered) {
+			}
+			send_message_usart(strlen(transfer_message));
+
+			sf_get_recent_logs(&envir_temp_sf_readback[0]);
+
+			while (j < SF_TRANSFER_SIZE) {
+				sprintf(&serial_transfer_array[j][0],
+						"%2d.%d\r\n",
+						envir_temp_sf_readback[k],
+						envir_temp_sf_readback[k + 1]);
+				j++;
+				k += 2;
+			}
+
+			/* Wait for the ongoing DMA transfer to
+				* complete*/
+			while (usart_dma_transfer_triggered) {
+			}
+
+			/* Make the flag true and initiate an SRAM to
+				* USART transfer
+				*/
+			usart_dma_transfer_triggered = true;
+			configure_sram_usart_dma_transfer(
+					&uart_tx_dma_descriptor,
+					&serial_transfer_array[0][0],
+					sizeof(serial_transfer_array));
+			dma_start_transfer_job(&dma_resource_usart_tx);
+
+			memset(transfer_message, 0,
+					sizeof(transfer_message));
+			sprintf(transfer_message,
+					"\r\nPress 1 to read all logs. Press any other key to read recent \r\n"
+					);
+
+			/* Wait for the ongoing DMA transfer to
+				* complete*/
+			while (usart_dma_transfer_triggered) {
+			}
+			send_message_usart(strlen(transfer_message));
+
+			sf_read_request_received = false;
+			/* Check for further requests */
+			usart_read_buffer_job(&usart_instance,
+					(uint8_t *)rx_buffer,
+					CMD_RX_BUFFER_LENGTH);
+		}
+	}
+}
+
+
+/**
  * \brief Main application routine
+ *
  * This application demonstrates a data logger based on SAM D21 Xplained Pro.
  * The environment temperature is read using 103 AP-2 thermistor from Semitec.
  * The readings are then stored in the serial flash AT25FD081A on the
@@ -824,8 +1043,6 @@ void sf_read_all_logs(void)
  */
 int main(void)
 {
-	bool adc_sram_dma_flag = 0;
-
 	system_init();
 	configure_adc();
 	configure_usart();
@@ -847,22 +1064,22 @@ int main(void)
 		sf_access_status.sf_is_clean = false;
 		sf_access_status.start_addr_last_written = 0;
 		at25dfx_chip_erase_block(&at25dfx_chip, SF_4K_BLOCK1_START,
-			AT25DFX_BLOCK_SIZE_4KB);
+				AT25DFX_BLOCK_SIZE_4KB);
 		/* Write the status into the serial flash */
 		sf_access_set_status();
 	} else {
 		sf_write_count = sf_access_status.start_addr_last_written +
-			SF_TRANSFER_SIZE;
+				SF_TRANSFER_SIZE;
 	}
 
 	configure_dma_resource_adc(&dma_resource_adc_to_sram);
 	configure_dma_resource_usart_tx(&dma_resource_usart_tx);
 	setup_transfer_descriptor_adc(&adc_to_sram_dma_descriptor);
 	configure_sram_usart_dma_transfer(&uart_tx_dma_descriptor,
-		&transfer_message[0], strlen(transfer_message));
+			&transfer_message[0], strlen(transfer_message));
 
 	dma_add_descriptor(&dma_resource_adc_to_sram,
-		&adc_to_sram_dma_descriptor);
+			&adc_to_sram_dma_descriptor);
 	dma_add_descriptor(&dma_resource_usart_tx, &uart_tx_dma_descriptor);
 
 	/*
@@ -870,22 +1087,22 @@ int main(void)
 	 * when an SRAM to UART DMA transfer is complete
 	 */
 	dma_register_callback(&dma_resource_usart_tx,
-		transfer_done_usart_tx_dma,
-		DMA_CALLBACK_TRANSFER_DONE);
+			transfer_done_usart_tx_dma,
+			DMA_CALLBACK_TRANSFER_DONE);
 	dma_enable_callback(&dma_resource_usart_tx,
-		DMA_CALLBACK_TRANSFER_DONE);
+			DMA_CALLBACK_TRANSFER_DONE);
 
 	sprintf(transfer_message,
-		"\r\nPress 1 to read all logs. Press any other key to read recent\r\n"
-		);
+			"\r\nPress 1 to read all logs. Press any other key to read recent\r\n"
+			);
 
 	/* Make the flag true and initiate an SRAM to
 	 * USART transfer
 	 */
 	usart_dma_transfer_triggered = true;
 	configure_sram_usart_dma_transfer(
-		&uart_tx_dma_descriptor,
-		&transfer_message[0], sizeof(transfer_message));
+			&uart_tx_dma_descriptor,
+			&transfer_message[0], sizeof(transfer_message));
 	/* Send the init message via USART */
 	dma_start_transfer_job(&dma_resource_usart_tx);
 
@@ -895,13 +1112,12 @@ int main(void)
 	 */
 	dma_start_transfer_job(&dma_resource_adc_to_sram);
 
-	/* Enable the RTC, which generates the event to trigger ADC conversions
-	**/
-	enable_transfer_trigger();
+	/* Enable the RTC, which generates the event to trigger ADC conversions */
+	enable_rtc_transfer_trigger();
 
 	/* Listen to USART for read command */
 	usart_read_buffer_job(&usart_instance,
-	(uint8_t *)rx_buffer, CMD_RX_BUFFER_LENGTH);
+			(uint8_t *)rx_buffer, CMD_RX_BUFFER_LENGTH);
 
 	/* Select the sleep mode as Idle sleep */
 	system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE_0);
@@ -911,164 +1127,8 @@ int main(void)
 		 * Let the CPU sleep till an RTC overflow interrupt or USART
 		 * receive interrupt wake the CPU.
 		 */
-
 		system_sleep();
-
-		/*
-		 * The CPU is waken up by an Interrupt
-		 * Check who needs a service
-		 */
-		/* Disable interrupts to just before reading the flag */
-		system_interrupt_enter_critical_section();
-		adc_sram_dma_flag = adc_sram_dma_transfer_done;
-		system_interrupt_leave_critical_section();
-
-		if (adc_sram_dma_transfer_done) {
-			uint8_t j = 0;
-
-			/*
-			 * Initialize the Steinhart-Hart coefficients
-			 * Reference points taken for this example are 0, 25 and
-			 * 50 Deg C
-			 */
-			float shh_a = SHH_COEFF_A;
-			float shh_b = SHH_COEFF_B;
-			float shh_c = SHH_COEFF_C;
-			float thermistor_res;
-			float input_voltage;
-			float envir_temp;
-			float envir_temp_sf[SF_TRANSFER_SIZE] = {0};
-			volatile uint16_t adc_results_conv_array[
-				SF_TRANSFER_SIZE] = {0};
-
-			/*
-			 * Copy the contents from adc_results_array into a local
-			 * array, right after the wakeup from sleep.
-			 */
-			while (j < SF_TRANSFER_SIZE) {
-				adc_results_conv_array[j]
-					= adc_results_array[j];
-				j++;
-			}
-			j = 0;
-
-			while (j < SF_TRANSFER_SIZE) {
-				input_voltage = adc_results_conv_array[j] *
-					THERM_ADC_VOLTS_PER_BIT;
-				thermistor_res = (float)(input_voltage *
-					THERM_SERIES_RESISTOR) /
-					(THERM_EXCITATION_VOLT - input_voltage);
-				envir_temp
-					= (float)(1 /
-					(shh_a + shh_b * log(thermistor_res) +
-					shh_c * (pow(log(thermistor_res), 3)))) - 273;
-				envir_temp_sf[j] = envir_temp;
-				j++;
-			}
-
-			if (sf_write_count >= SF_ADDRESS_LIMIT) {
-				sf_write_count = 0;
-				sf_access_status.sf_is_clean = true;
-				sf_access_status.start_addr_last_written = 0;
-				at25dfx_chip_erase_block(&at25dfx_chip,
-					SF_4K_BLOCK1_START,
-					AT25DFX_BLOCK_SIZE_4KB);
-			} else {
-				sf_access_status.sf_is_clean = false;
-				sf_access_status.start_addr_last_written
-					= sf_write_count;
-			}
-
-			sf_access_set_status();
-			sf_store_logs(envir_temp_sf);
-
-			system_interrupt_enter_critical_section();
-			adc_sram_dma_transfer_done = adc_sram_dma_flag;
-			system_interrupt_leave_critical_section();
-		}
-
-		/*
-		 * When a read request is received, check if the
-		 * write count is non-zero
-		 */
-		if (sf_read_request_received && sf_write_count) {
-			if (true == read_entire_logs) {
-				sf_read_all_logs();
-			} else {
-				uint8_t j = 0;
-				uint8_t k = 0;
-				char envir_temp_sf_readback[SF_TRANSFER_SIZE *
-					BYTES_USED_FOR_A_READING] = {0};
-
-				memset(transfer_message, 0,
-					sizeof(transfer_message));
-				sprintf(transfer_message,
-					"\r\nRecent %d readings\r\n",
-					SF_TRANSFER_SIZE);
-				/* Wait for the ongoing DMA transfer to
-				 * complete*/
-				while (usart_dma_transfer_triggered) {
-				}
-
-				/* Make the flag true and initiate an SRAM to
-				 * USART transfer
-				 */
-				usart_dma_transfer_triggered = true;
-				configure_sram_usart_dma_transfer(
-					&uart_tx_dma_descriptor,
-					&transfer_message[0], strlen(transfer_message));
-				dma_start_transfer_job(&dma_resource_usart_tx);
-
-				sf_get_recent_logs(&envir_temp_sf_readback[0]);
-
-				while (j < SF_TRANSFER_SIZE) {
-					sprintf(&serial_transfer_array[j][0],
-					"%2d.%d\r\n",
-					envir_temp_sf_readback[k],
-					envir_temp_sf_readback[k + 1]);
-					j++;
-					k += 2;
-				}
-
-				/* Wait for the ongoing DMA transfer to
-				 * complete*/
-				while (usart_dma_transfer_triggered) {
-				}
-
-				/* Make the flag true and initiate an SRAM to
-				 * USART transfer
-				 */
-				usart_dma_transfer_triggered = true;
-				configure_sram_usart_dma_transfer(
-					&uart_tx_dma_descriptor,
-					&serial_transfer_array[0][0],
-					sizeof(serial_transfer_array));
-				dma_start_transfer_job(&dma_resource_usart_tx);
-
-				memset(transfer_message, 0,
-					sizeof(transfer_message));
-				sprintf(transfer_message,
-					"\r\nPress 1 to read all logs. Press any other key to read recent \r\n"
-					);
-				/* Wait for the ongoing DMA transfer to
-				 * complete*/
-				while (usart_dma_transfer_triggered) {
-				}
-
-				/* Make the flag true and initiate an SRAM to
-				 * USART transfer
-				 */
-				usart_dma_transfer_triggered = true;
-				configure_sram_usart_dma_transfer(
-					&uart_tx_dma_descriptor,
-					&transfer_message[0], sizeof(transfer_message));
-				dma_start_transfer_job(&dma_resource_usart_tx);
-
-				sf_read_request_received = false;
-				/* Check for further requests */
-				usart_read_buffer_job(&usart_instance,
-					(uint8_t *)rx_buffer, CMD_RX_BUFFER_LENGTH);
-			}
-		}
+		process_adc_readings();
+		process_log_read_requests();
 	}
 }
