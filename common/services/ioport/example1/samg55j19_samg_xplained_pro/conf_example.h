@@ -48,7 +48,7 @@
 #define EXAMPLE_LED_MASK ((1 << 6))
 
 /* Using button SW0 on SAMG55-XPLAINED-PRO (PA02) */
-##define EXAMPLE_BUTTON_PORT (0)
+#define EXAMPLE_BUTTON_PORT (0)
 #define EXAMPLE_BUTTON_MASK ((1 << 2))
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */

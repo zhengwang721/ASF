@@ -48,6 +48,9 @@
 #include "serial.h"
 #include "freertos_usart_serial.h"
 #include "freertos_peripheral_control_private.h"
+#if (SAMG55)
+#include "flexcom.h"
+#endif
 
 /* Every bit in the interrupt mask. */
 #define MASK_ALL_INTERRUPTS         (0xffffffffUL)
@@ -209,9 +212,15 @@ freertos_usart_if freertos_usart_serial_init(Usart *p_usart,
 		pdc_disable_transfer(all_usart_definitions[usart_index].pdc_base_address,
 				(PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS));
 
+#if (SAMG55)
+		/* Enable the peripheral and set USART mode. */
+		flexcom_enable(all_usart_definitions[usart_index].peripheral_base_address - 0x200);
+		flexcom_set_opmode(all_usart_definitions[usart_index].peripheral_base_address - 0x200, FLEXCOM_MR_OPMODE_USART);
+#else
 		/* Enable the peripheral clock in the PMC. */
 		pmc_enable_periph_clk(
 				all_usart_definitions[usart_index].peripheral_id);
+#endif
 
 		switch (freertos_driver_parameters->operation_mode) {
 		case USART_RS232:

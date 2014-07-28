@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Task configurations.
+ * \brief Sleep manager configuration
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,22 +40,9 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-#ifndef CONF_EXAMPLE_H
-#define CONF_EXAMPLE_H
+#define CONFIG_SLEEPMGR_ENABLE
 
-#define BOARD_USART_CLI  USART2
-#define BOARD_SPI    SPI0
-
-#define CONF_EXAMPLE_CS  0
-
-/* Comment/Uncomment the following definitions to enable/disable to corresponding tasks. */
-/* Note: only the listed tasks have hardware support. */
-
-//#define confINCLUDE_USART_ECHO_TASKS
-#define confINCLUDE_USART_CLI
-//#define confINCLUDE_CDC_CLI
-#define confINCLUDE_TWI_EEPROM_TASK
-#define confINCLUDE_SPI_FLASH_TASK
-
-#endif/* CONF_EXAMPLE_H */
+#endif /* CONF_SLEEPMGR_H */

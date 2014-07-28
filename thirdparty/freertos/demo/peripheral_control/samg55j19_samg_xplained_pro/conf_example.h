@@ -3,7 +3,7 @@
  *
  * \brief Task configurations.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,18 +44,26 @@
 #ifndef CONF_EXAMPLE_H
 #define CONF_EXAMPLE_H
 
-#define BOARD_USART_CLI  USART2
-#define BOARD_SPI    SPI0
-
-#define CONF_EXAMPLE_CS  0
+#define BOARD_USART_CLI  USART7
+#define BOARD_USART      USART0
 
 /* Comment/Uncomment the following definitions to enable/disable to corresponding tasks. */
 /* Note: only the listed tasks have hardware support. */
 
-//#define confINCLUDE_USART_ECHO_TASKS
+//#define confINCLUDE_UART_CLI
+#define confINCLUDE_USART_ECHO_TASKS
 #define confINCLUDE_USART_CLI
 //#define confINCLUDE_CDC_CLI
-#define confINCLUDE_TWI_EEPROM_TASK
-#define confINCLUDE_SPI_FLASH_TASK
+//#define confINCLUDE_TWI_EEPROM_TASK
+//#define confINCLUDE_SPI_FLASH_TASK
+
+/* Less user LEDS are available on this kit, so redefine the corresponding define. */
+#define partestNUM_LEDS                 (1UL)
+
+/* No LED1 and LED2 available for this board. Junk values. */
+#define LED1_GPIO						(0UL)
+#define LED1_ACTIVE_LEVEL				(0UL)
+#define LED2_GPIO						(0UL)
+#define LED2_ACTIVE_LEVEL				(0UL)
 
 #endif/* CONF_EXAMPLE_H */
