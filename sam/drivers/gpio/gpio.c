@@ -131,7 +131,6 @@ static void gpio_common_handler(uint32_t port_id, uint32_t port_mask)
 	ioport_pin_t pin;
 
 	int_flags = gpio_port->GPIO_IFR;
-	gpio_port->GPIO_IFRC = (int_flags & port_mask);
 
 	for (i = 0; i < gpio_nb_sources; i++) {
 		pin = gpio_int_sources[i].pin;
@@ -144,6 +143,8 @@ static void gpio_common_handler(uint32_t port_id, uint32_t port_mask)
 			}
 		}
 	}
+
+	gpio_port->GPIO_IFRC = (int_flags & port_mask);
 }
 
 /**
