@@ -229,7 +229,6 @@ struct system_voltage_references_config {
 	bool on_demand;
 	/** run in standby */
 	bool run_in_standby;
-	
 };
 
 /**
@@ -279,7 +278,6 @@ static inline void system_voltage_regulator_set_config(
  */
 static inline void system_voltage_regulator_enable(void)
 {
-
 	SUPC->VREG.reg |= SUPC_VREG_ENABLE;
 }
 
@@ -308,7 +306,6 @@ static inline void system_voltage_reference_get_config(
 		struct system_voltage_references_config *const config)
 {
 	Assert(config);
-
 	config->sel   			  = SYSTEM_VOLTAGE_REFERENCE_1V0;
 	config->on_demand         = false;
 	config->run_in_standby 	  = false;
@@ -346,11 +343,11 @@ static inline void system_voltage_reference_enable(
 		case SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE:
 			SUPC->VREF.reg |= SUPC_VREF_TSEN;
 			break;
-
+			
 		case SYSTEM_VOLTAGE_REFERENCE_OUTPUT:
 			SUPC->VREF.reg |= SUPC_VREF_VREFOE;
 			break;
-
+			
 		default:
 			Assert(false);
 			return;
@@ -424,7 +421,7 @@ static inline void system_sleep(void)
  * \param[in] performance_level  Performance level.
  */
 static inline void system_set_performance_level(
-					const enum system_performance_level performance_level )
+					const enum system_performance_level performance_level)
 {	
 	PM->PLCFG.reg = performance_level;
 }
@@ -440,7 +437,6 @@ static inline enum system_performance_level system_get_performance_level(void)
 {	
 	return (enum system_performance_level)PM->PLCFG.reg;
 }
-
 
 /**
  * \brief Retrieve the default configuration for standby
@@ -461,7 +457,6 @@ static inline void system_standby_get_config_defaults(
 		struct system_standby_config *const config)
 {
 	Assert(config);
-
 	config->power_domain       		= SYSTEM_POWER_DOMAIN_DEFAULT;
 	config->enable_dpgpd0      		= false;
 	config->enable_dpgpd1 	   		= false;
@@ -597,7 +592,6 @@ static inline void system_standby_set_bbiaspp(
 {
 	PM->STDBYCFG.bit.BBIASPP = PM_STDBYCFG_BBIASPP(bbiaspp);					
 }
-
 
 /**
  * \brief Enable interrupt
