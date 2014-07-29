@@ -84,7 +84,6 @@ enum system_reset_backup_exit_source {
 	SYSTEM_RESET_BACKKUP_EXIT_RTC        = RSTC_BKUPEXIT_RTC,
 	/** The backup exit source was battery backup power switch. */
 	SYSTEM_RESET_BACKKUP_EXIT_BBPS       = RSTC_BKUPEXIT_BBPS,
-
 };
 
 /**
@@ -107,8 +106,6 @@ enum system_wakeup_debounce_count {
 	SYSTEM_WAKEUP_DEBOUNCE_4096CK32    = RSTC_WKDBCONF_WKDBCNT_4096CK32,
 	/** Input pin shall be active for at least 32768 32kHz clock period. */
 	SYSTEM_WAKEUP_DEBOUNCE_32768CK32   = RSTC_WKDBCONF_WKDBCNT_32768CK32,
-	
-
 };
 
 /**
@@ -148,81 +145,78 @@ static inline enum system_reset_backup_exit_source system_get_backup_exit_source
 }
 
 /**
- * \brief Wakeup debounce configuration
+ * \brief Set wakeup debounce counter
  *
- * Configures the wakeup debounce counter value with the given count.
+ * Set the wakeup debounce counter value with the given count.
  *
  * \param[in] wakeup_debounce_count Wakeup debounce counter value.
  */
-static inline void system_wakeup_debounce_counter_config(
-					const enum system_wakeup_debounce_count  wakeup_debounce_count)
+static inline void system_set_wakeup_debounce_counter(
+					const enum system_wakeup_debounce_count wakeup_debounce_count)
 {
 	RSTC->WKDBCONF.reg = wakeup_debounce_count;
 }
 
 /**
- * \brief Set low polarity of wakeup input pin 
+ * \brief Set low polarity of wakeup input pin
  *
- * Set low polarity with the given wakeup input pin.
+ * Set low polarity with the given wakeup input pin mask.
  *
- * \param[in] pin Input pin.
+ * \param[in] pin_mask Input pin mask.
  */
-static inline void system_set_wakeup_polarity_low(const uint8_t pin)
+static inline void system_set_wakeup_polarity_low(const uint16_t pin_mask)
 {
-	RSTC->WKPOL.reg &= ~(RSTC_WKPOL_WKPOL(1) << pin);
+	RSTC->WKPOL.reg &= ~(RSTC_WKPOL_WKPOL(pin_mask));
 }
 
 /**
  * \brief Set high polarity of wakeup input pin 
  *
- * Set high polarity with the given wakeup input pin.
+ * Set high polarity with the given wakeup input pin mask.
  *
- * \param[in] pin Input pin.
+ * \param[in] pin_mask Input pin mask.
  */
-static inline void system_set_wakeup_polarity_high(const uint8_t pin)
+static inline void system_set_wakeup_polarity_high(const uint16_t pin_mask)
 {
-	RSTC->WKPOL.reg |= RSTC_WKPOL_WKPOL(1) << pin;
+	RSTC->WKPOL.reg |= RSTC_WKPOL_WKPOL(pin_mask);
 }
 
 /**
  * \brief Enable wakeup of input pin from the backup mode.
  *
- * Enable the given pin wakeup from the backup mode.
+ * Enable pin wakeup from the backup mode with the given pin mask.
  *
- * \param[in] pin Input pin.
+ * \param[in] pin Input pin mask.
  */
-static inline void system_wakeup_enable(const uint8_t pin)
+static inline void system_wakeup_enable(const uint16_t pin_mask)
 {
-	RSTC->WKPOL.reg |= RSTC_WKEN_WKEN(true) << pin ;
+	RSTC->WKPOL.reg |= RSTC_WKEN_WKEN(pin_mask);
 }
 
 /**
  * \brief Disable wakeup of input pin from the backup mode.
  *
- * Disable the given pin wakeup from the backup mode.
+ * Disable pin wakeup from the backup mode with the given pin mask.
  *
- * \param[in] pin Input pin.
+ * \param[in] pin Input pin mask.
  */
-static inline void system_wakeup_disable(const uint8_t pin)
+static inline void system_wakeup_disable(const uint16_t pin_mask)
 {
-	RSTC->WKPOL.reg &= ~(RSTC_WKEN_WKEN(true) << pin);
+	RSTC->WKPOL.reg &= ~(RSTC_WKEN_WKEN(pin_mask));
 }
 
 
 /**
- * \brief Check whether the input pin is active and causes the wakeup.
+ * \brief Check whether  pin is active and causes the wakeup.
  *
- * Check whether the input pin is active that causes the wakeup
+ * Check whether pin is active that causes the wakeup
  * when exiting backup mode.
  *
- * \param[in] pin Input pin.
- *
- * \return >0:The wakeup is caused by the input pin, 0:Input pin is not active.
+ * \return Pin mask.
  */
-static inline uint16_t system_wakeup_cause_get(const uint8_t pin)
+static inline uint16_t system_get_wakeup_cause_pin_mask(void)
 {
-	return (RSTC->WKCAUSE.reg & (RSTC_WKCAUSE_WKCAUSE(1) << pin));
-	
+	return (RSTC_WKCAUSE_MASK & (RSTC->WKCAUSE.reg >> RSTC_WKCAUSE_WKCAUSE_Pos));
 }
 
 /**

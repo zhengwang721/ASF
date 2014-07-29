@@ -33,7 +33,6 @@
 		<build type="doxygen-entry-point" value="asfdoc_sam0_system_group"/>
 		
 		<device-support value="sam0"/>
-		
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 	<module type="meta" id="sam0.drivers.system.appnote_2" caption="SYSTEM - Core System Driver For SAM L21">
@@ -71,7 +70,6 @@
 		<build type="doxygen-entry-point" value="asfdoc_sam0_system_group"/>
 		
 		<device-support value="saml21"/>
-		
 		<generator value="doxygen-module-v2" default-mcu="unspecified-saml21"/>	
 	</module>
 	<module type="driver" id="sam0.drivers.system" caption="SYSTEM - Core System Driver">
