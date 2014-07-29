@@ -151,7 +151,7 @@ static inline enum system_reset_backup_exit_source system_get_backup_exit_source
  *
  * \param[in] wakeup_debounce_count Wakeup debounce counter value.
  */
-static inline void system_set_wakeup_debounce_counter(
+static inline void system_set_pin_wakeup_debounce_counter(
 					const enum system_wakeup_debounce_count wakeup_debounce_count)
 {
 	RSTC->WKDBCONF.reg = wakeup_debounce_count;
@@ -164,19 +164,19 @@ static inline void system_set_wakeup_debounce_counter(
  *
  * \param[in] pin_mask Input pin mask.
  */
-static inline void system_set_wakeup_polarity_low(const uint16_t pin_mask)
+static inline void system_set_pin_wakeup_polarity_low(const uint16_t pin_mask)
 {
 	RSTC->WKPOL.reg &= ~(RSTC_WKPOL_WKPOL(pin_mask));
 }
 
 /**
- * \brief Set high polarity of wakeup input pin 
+ * \brief Set high polarity of wakeup input pin
  *
  * Set high polarity with the given wakeup input pin mask.
  *
  * \param[in] pin_mask Input pin mask.
  */
-static inline void system_set_wakeup_polarity_high(const uint16_t pin_mask)
+static inline void system_set_pin_wakeup_polarity_high(const uint16_t pin_mask)
 {
 	RSTC->WKPOL.reg |= RSTC_WKPOL_WKPOL(pin_mask);
 }
@@ -188,7 +188,7 @@ static inline void system_set_wakeup_polarity_high(const uint16_t pin_mask)
  *
  * \param[in] pin Input pin mask.
  */
-static inline void system_wakeup_enable(const uint16_t pin_mask)
+static inline void system_enable_pin_wakeup(const uint16_t pin_mask)
 {
 	RSTC->WKPOL.reg |= RSTC_WKEN_WKEN(pin_mask);
 }
@@ -200,7 +200,7 @@ static inline void system_wakeup_enable(const uint16_t pin_mask)
  *
  * \param[in] pin Input pin mask.
  */
-static inline void system_wakeup_disable(const uint16_t pin_mask)
+static inline void system_disable_pin_wakeup(const uint16_t pin_mask)
 {
 	RSTC->WKPOL.reg &= ~(RSTC_WKEN_WKEN(pin_mask));
 }
@@ -213,7 +213,7 @@ static inline void system_wakeup_disable(const uint16_t pin_mask)
  *
  * \return Pin mask,the corresponding pin is active when its pin mask is 1.
  */
-static inline uint16_t system_get_wakeup_cause_pin_mask(void)
+static inline uint16_t system_get_pin_wakeup_cause(void)
 {
 	return (RSTC_WKCAUSE_MASK & (RSTC->WKCAUSE.reg >> RSTC_WKCAUSE_WKCAUSE_Pos));
 }
@@ -221,17 +221,17 @@ static inline uint16_t system_get_wakeup_cause_pin_mask(void)
 /**
  * \brief Set external wakeup detector clock.
  *
- * A 32kHz clock is required to clock the RSTC if the debounce counter of the external 
- * wakeup detector is used. 
+ * A 32kHz clock is required to clock the RSTC if the debounce counter of the external
+ * wakeup detector is used.
  */
-static inline void system_set_wakeup_clock(void)
+static inline void system_set_pin_wakeup_clock(void)
 {
-	// to do:check the wakeup clock and APB clock 
+	// to do:check the wakeup clock and APB clock
 	struct system_clock_source_osculp32k_config config_osculp32k;
 
 	system_clock_source_osculp32k_get_config_defaults(&config_osculp32k);
 	system_clock_source_osculp32k_set_config(&config_osculp32k);
-	
+
 	/*ULP32K is always enabled*/
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_ULP32K);
 }
