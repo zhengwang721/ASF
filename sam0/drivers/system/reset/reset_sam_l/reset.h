@@ -205,7 +205,6 @@ static inline void system_wakeup_disable(const uint16_t pin_mask)
 	RSTC->WKPOL.reg &= ~(RSTC_WKEN_WKEN(pin_mask));
 }
 
-
 /**
  * \brief Check whether  pin is active and causes the wakeup.
  *
@@ -236,7 +235,6 @@ static inline void system_set_wakeup_clock(void)
 	/*ULP32K is always enabled*/
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_ULP32K);
 }
-
 
 #ifdef __cplusplus
 }
