@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Task configurations.
+ * \brief Board configuration.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,21 +41,10 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H
-#define CONF_EXAMPLE_H
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#define BOARD_USART_CLI  USART2
-#define BOARD_SPI    SPI0
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-#define CONF_EXAMPLE_CS  0
-
-/* Comment/Uncomment the following definitions to enable/disable to corresponding tasks. */
-/* Note: only the listed tasks have hardware support. */
-
-//#define confINCLUDE_USART_ECHO_TASKS
-#define confINCLUDE_USART_CLI
-//#define confINCLUDE_CDC_CLI
-#define confINCLUDE_TWI_EEPROM_TASK
-#define confINCLUDE_SPI_FLASH_TASK
-
-#endif/* CONF_EXAMPLE_H */
+#endif /* CONF_BOARD_H_INCLUDED */
