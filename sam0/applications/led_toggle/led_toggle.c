@@ -121,6 +121,7 @@
  */
 
 #include <asf.h>
+#include "conf_example.h"
 
 /** If \true, interrupts are used to alter the board state, when \false polling
  *  is used.
