@@ -274,7 +274,6 @@ static inline void system_voltage_regulator_set_config(
 * \brief Enable the selected voltage regulator
  *
  * Enables the selected voltage regulator source
- *
  */
 static inline void system_voltage_regulator_enable(void)
 {
@@ -285,7 +284,6 @@ static inline void system_voltage_regulator_enable(void)
  * \brief Disable the selected voltage regulator
  *
  * Disables the selected voltage regulator.
- *
  */
 static inline void system_voltage_regulator_disable(void)
 {
