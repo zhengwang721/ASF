@@ -31,9 +31,8 @@
 		<build type="header-file" value="reset/reset_sam_d_r/reset.h"/>
 		<build type="c-source" value="system.c"/>
 		<build type="doxygen-entry-point" value="asfdoc_sam0_system_group"/>
-		
+
 		<device-support value="sam0"/>
-		
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 	<module type="meta" id="sam0.drivers.system.appnote_2" caption="SYSTEM - Core System Driver For SAM L21">
@@ -67,13 +66,11 @@
 		<build type="header-file" value="power/power_sam_l/power.h"/>
 		<build type="header-file" value="reset/reset_sam_l/reset.h"/>
 		<build type="c-source" value="power/power_sam_l/power.c"/>
-		<build type="c-source" value="reset/reset_sam_l/reset.c"/>
 		<build type="c-source" value="system.c"/>
 		<build type="doxygen-entry-point" value="asfdoc_sam0_system_group"/>
-		
+
 		<device-support value="saml21"/>
-		
-		<generator value="doxygen-module-v2" default-mcu="unspecified-saml21"/>	
+		<generator value="doxygen-module-v2" default-mcu="unspecified-saml21"/>
 	</module>
 	<module type="driver" id="sam0.drivers.system" caption="SYSTEM - Core System Driver">
 		<info type="description" value="summary">
@@ -91,7 +88,7 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" subtype="api" value="system.h"/>
 		<build type="c-source" value="system.c"/>
-		
+
 		<require idref="sam0.drivers.system.clock"/>
 		<require idref="sam0.drivers.system.pinmux"/>
 		<require idref="sam0.drivers.system.interrupt"/>
