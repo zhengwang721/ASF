@@ -3,7 +3,7 @@
  *
  * \brief USB Device Communication Device Class (CDC) interface.
  *
- * Copyright (c) 2009 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -214,7 +214,8 @@ static void udi_cdc_tx_send(uint8_t port);
  * \name Information about configuration of communication line
  */
 //@{
-static usb_cdc_line_coding_t udi_cdc_line_coding[UDI_CDC_PORT_NB];
+COMPILER_WORD_ALIGNED
+		static usb_cdc_line_coding_t udi_cdc_line_coding[UDI_CDC_PORT_NB];
 static bool udi_cdc_serial_state_msg_ongoing[UDI_CDC_PORT_NB];
 static volatile le16_t udi_cdc_state[UDI_CDC_PORT_NB];
 COMPILER_WORD_ALIGNED static usb_cdc_notify_serial_state_t uid_cdc_state_msg[UDI_CDC_PORT_NB];

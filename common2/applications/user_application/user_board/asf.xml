@@ -102,6 +102,17 @@
 		<device-support value="atsamd20j14"/>
 	</project>
 
+	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd20g18u" caption="User board project template for SAMD20G18U" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMD20G18U devices.
+		</info>
+		<require idref="common.applications.user_application.sam0_system.user_board.common_samd20"/>
+		<require idref="board.user_board.samd20g"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamd20g18u"/>
+	</project>
+
 	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd20g18" caption="User board project template for SAMD20G18" type="template">
 		<info type="description" value="summary">
 		User board project template for SAMD20G18 devices.
@@ -111,6 +122,17 @@
 		<generator value="as5_arm_template"/>
 		<generator value="doxygen"/>
 		<device-support value="atsamd20g18"/>
+	</project>
+
+	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd20g17u" caption="User board project template for SAMD20G17U" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMD20G17U devices.
+		</info>
+		<require idref="common.applications.user_application.sam0_system.user_board.common_samd20"/>
+		<require idref="board.user_board.samd20g"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamd20g17u"/>
 	</project>
 
 	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd20g17" caption="User board project template for SAMD20G17" type="template">
