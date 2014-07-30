@@ -376,6 +376,7 @@ static void transfer_done_usart_tx_dma(const struct dma_resource *const resource
 	 */
 	usart_dma_transfer_triggered = false;
 }
+/** @} */
 
 /**
  * \name Peripheral Configuration Functions
@@ -618,6 +619,7 @@ static void configure_sram_usart_dma_transfer(
 
 	dma_descriptor_create(descriptor, &descriptor_config);
 }
+/** @} */
 
 /**
  * \name Non Volatile Storage Management Functions
@@ -848,9 +850,10 @@ static void sf_read_all_logs(void)
 	usart_read_buffer_job(&usart_instance,
 			(uint8_t *)rx_buffer, CMD_RX_BUFFER_LENGTH);
 }
+/** @} */
 
 /**
- * \name Main Data Processing Functions
+ * \name Data Processing and User Request Handling Functions
  * @{
  */
  
@@ -1026,13 +1029,13 @@ static void process_log_read_requests(void)
 		}
 	}
 }
-
+/** @} */
 
 /**
  * \brief Main application routine
  *
  * This application demonstrates a data logger based on SAM D21 Xplained Pro.
- * The environment temperature is read using 103 AP-2 thermistor from Semitec.
+ * The environment temperature is read using a 103 AP-2 thermistor from Semitec.
  * The readings are then stored in the serial flash AT25FD081A on the
  * SAM D21 Xplained Pro.
  * Serial communication happens via the Virtual COM Port provided by the
