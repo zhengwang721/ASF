@@ -69,7 +69,7 @@ enum system_sleepmode {
 /**
  * \brief Performance level.
  *
- * List of performance level.
+ * List of performance levels.
  */
 enum system_performance_level {
 	/** Performance level 0. */
@@ -83,7 +83,7 @@ enum system_performance_level {
 /**
  * \brief RAM back bias mode.
  *
- * List of ram back bias mode.
+ * List of RAM back bias modes.
  */
 enum system_ram_back_bias_mode {
 	/** Retention Back biasing mode. */
@@ -131,7 +131,7 @@ enum system_power_domain {
 /**
  * \brief Voltage regulator.
  *
- * Voltage Regulator Selection.
+ * Voltage regulators selection.
  */
 enum system_voltage_regulator_sel {
 	/** The voltage regulator in active mode is a LDO voltage regulator. */
@@ -141,9 +141,9 @@ enum system_voltage_regulator_sel {
 };
 
 /**
- * \brief Voltage References.
+ * \brief Voltage reference value.
  *
- * Voltage References Selection.
+ * Voltage references selection.
  */
 enum system_voltage_references_sel {
 	/** 1.0V voltage reference typical value . */
@@ -165,7 +165,7 @@ enum system_voltage_references_sel {
 };
 
 /**
- * \brief Voltage references.
+ * \brief Voltage reference.
  *
  * List of available voltage references (VREF) that may be used within the
  * device.
@@ -231,6 +231,13 @@ struct system_voltage_references_config {
 	bool run_in_standby;
 };
 
+/** Performance level 0 maximum frequency. */
+#define	SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ 15000000UL
+/** Performance level 1 maximum frequency. */
+#define	SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ 30000000UL
+/** Performance level 2 maximum frequency. */
+#define	SYSTEM_PERFORMANCE_LEVEL_2_MAX_FREQ 60000000UL
+
 /**
  * \brief Retrieve the default configuration for voltage regulator.
  *
@@ -242,7 +249,7 @@ struct system_voltage_references_config {
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_voltage_regulator_get_config(
+static inline void system_voltage_regulator_get_config_defaults(
 		struct system_voltage_regulator_config *const config)
 {
 	Assert(config);
@@ -259,7 +266,7 @@ static inline void system_voltage_regulator_get_config(
  *
  * \param[in] config  voltage regulator configuration structure containing
  *                    the new config
- */	
+ */
 static inline void system_voltage_regulator_set_config(
 		struct system_voltage_regulator_config *const config)
 {
@@ -300,7 +307,7 @@ static inline void system_voltage_regulator_disable(void)
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void system_voltage_reference_get_config(
+static inline void system_voltage_reference_get_config_defaults(
 		struct system_voltage_references_config *const config)
 {
 	Assert(config);
@@ -316,7 +323,7 @@ static inline void system_voltage_reference_get_config(
  *
  * \param[in] config  voltage reference configuration structure containing
  *                    the new config
- */	
+ */
 static inline void system_voltage_reference_set_config(
 		struct system_voltage_references_config *const config)
 {
@@ -341,11 +348,9 @@ static inline void system_voltage_reference_enable(
 		case SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE:
 			SUPC->VREF.reg |= SUPC_VREF_TSEN;
 			break;
-			
 		case SYSTEM_VOLTAGE_REFERENCE_OUTPUT:
 			SUPC->VREF.reg |= SUPC_VREF_VREFOE;
 			break;
-			
 		default:
 			Assert(false);
 			return;
@@ -366,11 +371,9 @@ static inline void system_voltage_reference_disable(
 		case SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE:
 			SUPC->VREF.reg &= ~SUPC_VREF_TSEN;
 			break;
-
 		case SYSTEM_VOLTAGE_REFERENCE_OUTPUT:
 			SUPC->VREF.reg &= ~SUPC_VREF_VREFOE;
 			break;
-
 		default:
 			Assert(false);
 			return;
@@ -409,31 +412,52 @@ static inline void system_sleep(void)
 }
 
 /**
- * \brief Performance Level Configuration.
+ * \brief Switch performance level.
  *
  *  When scaling down the performance level,the bus frequency should be first
  *  scaled down in order to not exceed the maximum frequency allowed for the low performance level.
- *  When scaling up the performance level (for example from PL0 to PL2), the bus 
+ *  When scaling up the performance level (for example from PL0 to PL2), the bus
  *  frequency can be increased only once the performance level transition is completed,check the
  *  performance level status.
  *
- * \param[in] performance_level  Performance level.
+ * \param[in] performance_level  Performance level to switch.
+ *
+ * \retval STATUS_ERR_INVALID_ARG  Invalid parameter
+ * \retval STATUS_OK               Successfully
  */
-static inline void system_set_performance_level(
+static inline enum status_code system_switch_performance_level(
 					const enum system_performance_level performance_level)
-{	
+{
+	/* Check the maximum frequency */
+	uint32_t system_performance_level_max_freq[3] = {SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ
+													,SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ
+													,SYSTEM_PERFORMANCE_LEVEL_2_MAX_FREQ};
+	if(system_cpu_clock_get_hz() > system_performance_level_max_freq[performance_level]){
+		return STATUS_ERR_INVALID_ARG;
+	}
+
+	/* Clear performance level status */
+	PM->INTFLAG.reg = PM_INTFLAG_PLRDY;
+
+	/*Switch performance level*/
 	PM->PLCFG.reg = performance_level;
+
+	/* Waiting performance level ready */
+	while(!PM->INTFLAG.reg){
+		;
+	}
+	return STATUS_OK;
 }
 
 /**
  * \brief Get performance level.
  *
- * Get performance level. 
+ * Get performance level.
  *
  * \return Current performance level.
  */
 static inline enum system_performance_level system_get_performance_level(void)
-{	
+{
 	return (enum system_performance_level)PM->PLCFG.reg;
 }
 
@@ -445,7 +469,7 @@ static inline enum system_performance_level system_get_performance_level(void)
  *   - Standby back biasing mode for HMCRAMCLP
  *   - Retention back biasing mode for HMCRAMCHS
  *   - Power domains PD0/PD1/PD2 are not linked
- *   - Automatic VREG switching is used 
+ *   - Automatic VREG switching is used
  *   - Dynamic groovyBaby_0 for power domain 1 is disable
  *   - Dynamic groovyBaby_0 for power domain 0 is disable
  *   - All power domains switching are handled by hardware
@@ -473,7 +497,7 @@ static inline void system_standby_get_config_defaults(
  *
  * \param[in] config  standby configuration structure containing
  *                    the new config
- */	
+ */
 static inline void system_standby_set_config(
 		struct system_standby_config *const config)
 {
@@ -512,7 +536,7 @@ static inline void system_clear_performance_level_status(void)
 /**
  * \brief Enable I/O retention.
  *
- *  Enable I/O retentio. After waking up from Backup mode, I/O lines are held until
+ *  Enable I/O retention. After waking up from Backup mode, I/O lines are held until
  *  the bit is written to 0.
  */
 static inline void system_enable_io_retension(void)

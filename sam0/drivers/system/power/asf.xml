@@ -33,6 +33,7 @@
 			<build type="include-path" value="."/>
 			<build type="include-path" value="power_sam_l"/>
 			<build type="header-file" subtype="api" value="power_sam_l/power.h"/>
+			<require idref="sam0.drivers.system.clock"/>
 			<require idref="thirdparty.cmsis"/>
 			<require idref="sam0.utils"/>
 
