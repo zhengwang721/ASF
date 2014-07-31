@@ -65,6 +65,7 @@
  * - SAM4E evaluation kit.
  * - SAM4C evaluation kit.
  * - SAM4CMP and SAM4CMS demo board
+ * - SAMG55 Xplained Pro board
  *
  * \section setupinfo Setup Information
  * <BR>CPU speed: <i> 120 MHz </i>

@@ -53,7 +53,7 @@
  *
  * \par Requirements
  *
- * This package can be used with SAM3S and SAM4S evaluation kits
+ * This package can be used with SAM3S, SAM4S evaluation kits and SAMG55 Xplained Pro.
  *
  * \par Description
  *
@@ -259,7 +259,7 @@ int main(void)
 		g_uc_data_buf[ul_counter] = ul_counter;
 	}
 
-#if SAM4S
+#if SAM4S || SAMG55
 	/* Fill data buffer in Flash, the data is same as in SRAM */
 	flash_erase_page(FLASH_BUFFER_ADDRESS,
 			IFLASH_ERASE_PAGES_8);

@@ -68,6 +68,7 @@ void cmcc_get_config_defaults(struct cmcc_config *const cfg)
 	/* Default configuration values */
 	cfg->cmcc_monitor_enable = true;
 	cfg->cmcc_mcfg_mode = CMCC_DHIT_COUNT_MODE;
+	cfg->cmcc_cfg_cache_size = CMCC_PROG_CSIZE_1KB;
 }
 
 /**
