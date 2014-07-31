@@ -1,4 +1,14 @@
 <asf xmlversion="1.0">
+	<device-alias-map name="sam0_unlimited">
+		<device-support value="samd20"/>
+		<device-support value="samd21"/>
+		<device-support value="samr21"/>
+	</device-alias-map>
+	<device-alias-map name="sam0_limited">
+		<device-support value="samd10"/>
+		<device-support value="samd11"/>
+	</device-alias-map>
+
 	<select-by-device id="common.utils" caption="Compiler abstraction and code utilities">
 		<info type="description" value="summary">
 		Compiler abstraction layer and code utilities.  This module
@@ -181,7 +191,7 @@
 			<info type="description" value="summary">
 			Core functions for the unit test framework.
 			</info>
-			<device-support value="sam0"/>
+			<device-support-alias value="sam0_unlimited"/>
 			<build type="doxygen-entry-point" value="test_suite_group"/>
 			<build type="include-path" value="."/>
 			<build type="header-file" subtype="api" value="unit_test/suite.h"/>

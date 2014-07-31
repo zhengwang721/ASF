@@ -135,6 +135,7 @@ extern "C" {
 #define SAM4CMP_DB                 71  //!< SAM4CMP demo board.
 #define SAM4CMS_DB                 72  //!< SAM4CMS demo board.
 #define ATPL230AMB                 73  //!< ATPL230AMB board.
+#define SAMD11_XPLAINED_PRO        74  //!< SAM D11 Xplained Pro board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< Simulator for the AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -257,6 +258,8 @@ extern "C" {
 #  include "samd21_xplained_pro/samd21_xplained_pro.h"
 #elif BOARD == SAMR21_XPLAINED_PRO
 #  include "samr21_xplained_pro/samr21_xplained_pro.h"
+#elif BOARD == SAMD11_XPLAINED_PRO
+#  include "samd11_xplained_pro/samd11_xplained_pro.h"
 #elif BOARD == SAM4N_XPLAINED_PRO
 #  include "sam4n_xplained_pro/sam4n_xplained_pro.h"
 #elif BOARD == MEGA1284P_XPLAINED_BC
