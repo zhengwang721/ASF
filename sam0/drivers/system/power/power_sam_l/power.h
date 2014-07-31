@@ -44,6 +44,7 @@
 #define POWER_H_INCLUDED
 
 #include <compiler.h>
+#include <clock.h>
 
 #ifdef __cplusplus
 extern "C" {
