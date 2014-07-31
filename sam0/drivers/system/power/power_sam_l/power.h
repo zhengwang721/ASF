@@ -81,25 +81,25 @@ enum system_performance_level {
 };
 
 /**
- * \brief Back biasing mode.
+ * \brief RAM back bias mode.
  *
- * List of back biasing mode.
+ * List of ram back bias mode.
  */
-enum system_back_biasing_mode {
+enum system_ram_back_bias_mode {
 	/** Retention Back biasing mode. */
-	SYSTEM_BACK_BIASING_RETENTION	= 0,
+	SYSTEM_RAM_BACK_BIAS_RETENTION	= 0,
 	/** Standby Back Biasing mode. */
-	SYSTEM_BACK_BIASING_STANDBY,
+	SYSTEM_RAM_BACK_BIAS_STANDBY,
 	/** Standby OFF mode. */
-	SYSTEM_BACK_BIASING_STANDBY_OFF,
+	SYSTEM_RAM_BACK_BIAS_STANDBY_OFF,
 	/** Always OFF mode. */
-	SYSTEM_BACK_BIASING_OFF,
+	SYSTEM_RAM_BACK_BIAS_OFF,
 };
 
 /**
- * \brief Power domain .
+ * \brief Linked power domain.
  *
- * List of power domain.
+ * List of linked power domains.
  */
 enum system_linked_power_domain {
 	/** Power domains PD0/PD1/PD2 are not linked. */
@@ -113,9 +113,9 @@ enum system_linked_power_domain {
 };
 
 /**
- * \brief Power domain .
+ * \brief Power domain.
  *
- * List of power domain .
+ * List of power domains.
  */
 enum system_power_domain {
 	/** All power domains switching are handled by hardware. */
@@ -129,9 +129,9 @@ enum system_power_domain {
 };
 
 /**
- * \brief Voltage regulator .
+ * \brief Voltage regulator.
  *
- * Voltage Regulator Selection .
+ * Voltage Regulator Selection.
  */
 enum system_voltage_regulator_sel {
 	/** The voltage regulator in active mode is a LDO voltage regulator. */
@@ -141,9 +141,9 @@ enum system_voltage_regulator_sel {
 };
 
 /**
- * \brief Voltage References .
+ * \brief Voltage References.
  *
- * Voltage References Selection .
+ * Voltage References Selection.
  */
 enum system_voltage_references_sel {
 	/** 1.0V voltage reference typical value . */
@@ -178,7 +178,7 @@ enum system_voltage_reference {
 };
 
 /**
- * \brief Standby configuration 
+ * \brief Standby configuration.
  *
  * Configuration structure for standby mode.
  */
@@ -194,15 +194,15 @@ struct system_standby_config {
 	/** Linked power domain */
 	enum system_linked_power_domain linked_power_domain;
 	/** Back bias for HMCRAMCHS */
-	enum system_back_biasing_mode bbiashs;
+	enum system_ram_back_bias_mode hmcramchs_back_bias;
 	/** Back bias for HMCRAMCLP */
-	enum system_back_biasing_mode bbiaslp;
+	enum system_ram_back_bias_mode hmcramclp_back_bias;
 	/** Back bias for PICOPRAM */
-	enum system_back_biasing_mode bbiaspp;
+	enum system_ram_back_bias_mode picopram_back_bias;
 };
 
 /**
- * \brief Voltage Regulator System (VREG) Control configuration 
+ * \brief Voltage Regulator System (VREG) Control configuration.
  *
  * Configuration structure for VREG.
  */
@@ -214,11 +214,11 @@ struct system_voltage_regulator_config {
 	/** Run in standby in standby sleep mode*/
 	bool run_in_standby;
 	/** Voltage Regulator Selection */
-	enum system_voltage_regulator_sel  sel;
+	enum system_voltage_regulator_sel  regulator_sel;
 };
 
 /**
- * \brief Voltage References System (VREF) Control configuration 
+ * \brief Voltage References System (VREF) Control configuration.
  *
  * Configuration structure for VREF.
  */
@@ -232,9 +232,9 @@ struct system_voltage_references_config {
 };
 
 /**
- * \brief Retrieve the default configuration for voltage regulator
+ * \brief Retrieve the default configuration for voltage regulator.
  *
- * Fills a configuration structure with the default configuration
+ * Fills a configuration structure with the default configuration:
  *   - Voltage scaling period is 1us
  *   - Voltage scaling voltage step is 2*min_step
  *   - The voltage regulator is in low power mode in Standby sleep mode
@@ -249,13 +249,13 @@ static inline void system_voltage_regulator_get_config(
 	config->voltage_scale_period     = 0;
 	config->voltage_scale_step       = 0;
 	config->run_in_standby 	   		 = false;
-	config->sel    					 = SYSTEM_VOLTAGE_REGULATOR_LDO;
+	config->regulator_sel			 = SYSTEM_VOLTAGE_REGULATOR_LDO;
 }
 
 /**
- * \brief Configure voltage regulator
+ * \brief Configure voltage regulator.
  *
- * Configures voltage regulator with the given configuration
+ * Configures voltage regulator with the given configuration.
  *
  * \param[in] config  voltage regulator configuration structure containing
  *                    the new config
@@ -267,7 +267,7 @@ static inline void system_voltage_regulator_set_config(
 	SUPC->VREG.bit.VSPER    = config->voltage_scale_period;
 	SUPC->VREG.bit.VSVSTEP  = config->voltage_scale_step;
 	SUPC->VREG.bit.RUNSTDBY = config->run_in_standby;
-	SUPC->VREG.bit.SEL      = config->sel;
+	SUPC->VREG.bit.SEL      = config->regulator_sel;
 }
 
 /**
@@ -281,7 +281,7 @@ static inline void system_voltage_regulator_enable(void)
 }
 
 /**
- * \brief Disable the selected voltage regulator
+ * \brief Disable the selected voltage regulator.
  *
  * Disables the selected voltage regulator.
  */
@@ -291,9 +291,9 @@ static inline void system_voltage_regulator_disable(void)
 }
 
 /**
- * \brief Retrieve the default configuration for voltage reference
+ * \brief Retrieve the default configuration for voltage reference.
  *
- * Fills a configuration structure with the default configuration
+ * Fills a configuration structure with the default configuration:
  *   - 1.0V voltage reference typical value
  *   - On demand control:disabled
  *   - The voltage reference and the temperature sensor are halted during standby sleep mode
@@ -310,9 +310,9 @@ static inline void system_voltage_reference_get_config(
 }
 
 /**
- * \brief Configure voltage reference
+ * \brief Configure voltage reference.
  *
- * Configures voltage reference with the given configuration
+ * Configures voltage reference with the given configuration.
  *
  * \param[in] config  voltage reference configuration structure containing
  *                    the new config
@@ -327,7 +327,7 @@ static inline void system_voltage_reference_set_config(
 }
 
 /**
- * \brief Enable the selected voltage reference
+ * \brief Enable the selected voltage reference.
  *
  * Enables the selected voltage reference source, making the voltage reference
  * available on a pin as well as an input source to the analog peripherals.
@@ -353,7 +353,7 @@ static inline void system_voltage_reference_enable(
 }
 
 /**
- * \brief Disable the selected voltage reference
+ * \brief Disable the selected voltage reference.
  *
  * Disables the selected voltage reference source.
  *
@@ -378,7 +378,7 @@ static inline void system_voltage_reference_disable(
 }
 
 /**
- * \brief Set the sleep mode of the device
+ * \brief Set the sleep mode of the device.
  *
  * Sets the sleep mode of the device; the configured sleep mode will be entered
  * upon the next call of the \ref system_sleep() function.
@@ -395,7 +395,7 @@ static inline void system_set_sleepmode(
 }
 
 /**
- * \brief Put the system to sleep waiting for interrupt
+ * \brief Put the system to sleep waiting for interrupt.
  *
  * Executes a device DSB (Data Synchronization Barrier) instruction to ensure
  * all ongoing memory accesses have completed, then a WFI (Wait For Interrupt)
@@ -409,12 +409,13 @@ static inline void system_sleep(void)
 }
 
 /**
- * \brief Performance Level Configuration
+ * \brief Performance Level Configuration.
  *
  *  When scaling down the performance level,the bus frequency should be first
  *  scaled down in order to not exceed the maximum frequency allowed for the low performance level.
  *  When scaling up the performance level (for example from PL0 to PL2), the bus 
- *  frequency can be increased only once the performance level transition is completed.
+ *  frequency can be increased only once the performance level transition is completed,check the
+ *  performance level status.
  *
  * \param[in] performance_level  Performance level.
  */
@@ -425,7 +426,7 @@ static inline void system_set_performance_level(
 }
 
 /**
- * \brief Get performance level 
+ * \brief Get performance level.
  *
  * Get performance level. 
  *
@@ -437,7 +438,7 @@ static inline enum system_performance_level system_get_performance_level(void)
 }
 
 /**
- * \brief Retrieve the default configuration for standby
+ * \brief Retrieve the default configuration for standby.
  *
  * Fills a configuration structure with the default configuration for standby
  *   - Standby back biasing mode for PICOPRAM
@@ -460,15 +461,15 @@ static inline void system_standby_get_config_defaults(
 	config->enable_dpgpd1 	   		= false;
 	config->disable_avregsd    		= false;
 	config->linked_power_domain     = SYSTEM_LINKED_POWER_DOMAIN_DEFAULT;
-	config->bbiashs         		= SYSTEM_BACK_BIASING_RETENTION;
-	config->bbiaslp         		= SYSTEM_BACK_BIASING_STANDBY;
-	config->bbiaspp         		= SYSTEM_BACK_BIASING_STANDBY;
+	config->hmcramchs_back_bias     = SYSTEM_RAM_BACK_BIAS_RETENTION;
+	config->hmcramclp_back_bias     = SYSTEM_RAM_BACK_BIAS_STANDBY;
+	config->picopram_back_bias      = SYSTEM_RAM_BACK_BIAS_STANDBY;
 }
 
 /**
- * \brief Configure standby
+ * \brief Configure standby.
  *
- * Configures standby with the given configuration
+ * Configures standby with the given configuration.
  *
  * \param[in] config  standby configuration structure containing
  *                    the new config
@@ -476,179 +477,55 @@ static inline void system_standby_get_config_defaults(
 static inline void system_standby_set_config(
 		struct system_standby_config *const config)
 {
-	PM->STDBYCFG.reg = 0;
+	Assert(config);
 	PM->STDBYCFG.reg = PM_STDBYCFG_PDCFG(config->power_domain)
 					 | (config->enable_dpgpd0 ? PM_STDBYCFG_DPGPD0 :(~PM_STDBYCFG_DPGPD0))
 					 | (config->enable_dpgpd1 ? PM_STDBYCFG_DPGPD1 :(~PM_STDBYCFG_DPGPD1))
 					 | (config->disable_avregsd ? PM_STDBYCFG_AVREGSD :(~PM_STDBYCFG_AVREGSD))
 					 | PM_STDBYCFG_LINKPD(config->linked_power_domain)
-					 | PM_STDBYCFG_BBIASHS(config->bbiashs)
-					 | PM_STDBYCFG_BBIASLP(config->bbiaslp)
-					 | PM_STDBYCFG_BBIASPP(config->bbiaspp);
+					 | PM_STDBYCFG_BBIASHS(config->hmcramchs_back_bias)
+					 | PM_STDBYCFG_BBIASLP(config->hmcramclp_back_bias)
+					 | PM_STDBYCFG_BBIASPP(config->picopram_back_bias);
 }
 
 /**
- * \brief Power domain configuration
+ * \brief Get performance level status.
  *
- * Set power domain in standby mode
- *
- * \param[in] power_domain  power domain value
- */	
-static inline void system_standby_set_power_domain(
-		const enum system_power_domain  power_domain)
-{
-	PM->STDBYCFG.bit.PDCFG = PM_STDBYCFG_PDCFG(power_domain);					
-}
-
-/**
- * \brief Enabe/disable power domain 0
- *
- * Enabe/disable dynamic power gating for power domain 0
- *
-  * \param[in] enable_dpgpd0  true:enable,false:disable
- */	
-static inline void system_standby_set_dpgpd0(
-		const bool  enable_dpgpd0)
-{
-	PM->STDBYCFG.bit.DPGPD0 = enable_dpgpd0;					
-}
-
-/**
- * \brief Enabe/disable power domain 1
- *
- * Enabe/disable dynamic power gating for power domain 1
- *
-  * \param[in] enable_dpgpd1  true:enable,false:disable
- */	
-static inline void system_standby_set_dpgpd1(
-		const bool  enable_dpgpd1)
-{
-	PM->STDBYCFG.bit.DPGPD1 = enable_dpgpd1;					
-}
-
-/**
- * \brief Automatic VREG switching disable
- *
- * Automatic VREG switching disable
- *
-  * \param[in] disable_avregsd true:disable,false:not disable
- */	
-static inline void system_standby_set_avregsd(
-		const bool  disable_avregsd)
-{
-	PM->STDBYCFG.bit.AVREGSD = disable_avregsd;					
-}
-
-/**
- * \brief Linked power domain configuration
- *
- * Set linked power domain in standby mode
- *
- * \param[in] power_domain  power domain value
- */	
-static inline void system_standby_set_linked_power_domain(
-		const enum system_linked_power_domain  power_domain)
-{
-	PM->STDBYCFG.bit.LINKPD = PM_STDBYCFG_LINKPD(power_domain);					
-}
-
-/**
- * \brief Back bias for HMCRAMCHS
- *
- * Set back bias for HMCRAMCHS in standby mode
- *
- * \param[in] bbiashs  Back-biasing mode
- */	
-static inline void system_standby_set_bbiashs(
-		const enum system_back_biasing_mode  bbiashs)
-{
-	PM->STDBYCFG.bit.BBIASHS = PM_STDBYCFG_BBIASHS(bbiashs);					
-}
-
-/**
- * \brief Back bias for HMCRAMCLP
- *
- * Set back bias for HMCRAMCLP in standby mode
- *
- * \param[in] bbiaslp  Back-biasing mode
- */	
-static inline void system_standby_set_bbiaslp(
-		const enum system_back_biasing_mode  bbiaslp)
-{
-	PM->STDBYCFG.bit.BBIASLP = PM_STDBYCFG_BBIASLP(bbiaslp);					
-}
-
-/**
- * \brief Back bias for PICOPRAM
- *
- * Set back bias for PICOPRAM in standby mode
- *
- * \param[in] bbiaspp  Back-biasing mode
- */	
-static inline void system_standby_set_bbiaspp(
-		const enum system_back_biasing_mode  bbiaspp)
-{
-	PM->STDBYCFG.bit.BBIASPP = PM_STDBYCFG_BBIASPP(bbiaspp);					
-}
-
-/**
- * \brief Enable interrupt
- *
- * Enable performance level ready interrupt.
- */
-static inline void system_pm_enable_interrupt(void)
-{
-	PM->INTENSET.reg = PM_INTENSET_PLRDY;
-}
-
-/**
- * \brief Disable interrupt
- *
- * Disable performance level ready interrupt.
- */
-static inline void system_pm_disable_interrupt(void)
-{
-	PM->INTENCLR.reg = PM_INTENCLR_PLRDY;
-}
-
-/**
- * \brief Get interrupt flag
- *
- * Get performance level ready interrupt status.
+ * Get performance level status.
  * \return Performance level status: 1 Performance level is ready,0 others.
  */
-static inline uint8_t system_pm_get_interrupt_status(void)
+static inline uint8_t system_get_performance_level_status(void)
 {
 	return PM->INTFLAG.reg;
 }
 
 /**
- * \brief Clears interrupt status flag
+ * \brief Clear performance level status.
  *
- * Clear performance level ready interrupt flag.
+ * Clear performance level status.
  */
-static inline void system_pm_clear_interrupt_status(void)
+static inline void system_clear_performance_level_status(void)
 {
 	PM->INTFLAG.reg = PM_INTFLAG_PLRDY;
 }
 
 /**
- * \brief Set IO retention
+ * \brief Enable I/O retention.
  *
- *  Set IO retentio. After waking up from Backup mode, I/O lines are held until
- *  IORET is written to 0.
+ *  Enable I/O retentio. After waking up from Backup mode, I/O lines are held until
+ *  the bit is written to 0.
  */
-static inline void system_backup_ioret_set(void)
+static inline void system_enable_io_retension(void)
 {
 	PM->CTRLA.reg = PM_CTRLA_IORET;
 }
 
 /**
- * \brief Clears IO retention
+ * \brief Disable I/O retention.
  *
- * Clear IO retention. After waking up from Backup mode, I/O lines are not held.
+ * Disable IO retention. After waking up from Backup mode, I/O lines are not held.
  */
-static inline void system_backup_ioret_clear(void)
+static inline void system_disable_io_retension(void)
 {
 	PM->CTRLA.reg = PM_CTRLA_MASK & (~PM_CTRLA_IORET);
 }

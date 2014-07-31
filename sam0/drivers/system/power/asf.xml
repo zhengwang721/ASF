@@ -12,7 +12,6 @@
 			<build type="include-path" value="."/>
 			<build type="include-path" value="power_sam_d_r"/>
 			<build type="header-file" subtype="api" value="power_sam_d_r/power.h"/>
-			
 			<require idref="thirdparty.cmsis"/>
 			<require idref="sam0.utils"/>
 
@@ -34,9 +33,9 @@
 			<build type="include-path" value="."/>
 			<build type="include-path" value="power_sam_l"/>
 			<build type="header-file" subtype="api" value="power_sam_l/power.h"/>
-			
 			<require idref="thirdparty.cmsis"/>
 			<require idref="sam0.utils"/>
+
 			<device-support value="saml21"/>
 		</module>
 	</select-by-device>
