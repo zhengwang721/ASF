@@ -207,6 +207,52 @@ enum port_pin_pull {
 	PORT_PIN_PULL_DOWN = SYSTEM_PINMUX_PIN_PULL_DOWN,
 };
 
+#if (SAML21)
+/**
+ *  \brief Port input event action .
+ *
+ *  List of port input event action on pin.
+ */
+enum port_input_event_action {
+	/** Event out to pin. */
+	PORT_INPUT_EVENT_ACTION_OUT	= 0,
+	/** Set output register of pin on event. */
+	PORT_INPUT_EVENT_ACTION_SET,
+	/** Clear output register pin on event. */
+	PORT_INPUT_EVENT_ACTION_CLR,
+	/** Toggle output register pin on event. */
+	PORT_INPUT_EVENT_ACTION_TGL,
+};
+
+/**
+ *  \brief Port input event.
+ *
+ *  List of port input event.
+ */
+enum port_input_event{
+	/** Port input event 0. */
+	PORT_INPUT_EVENT_0	= 0,
+	/** Port input event 1. */
+	PORT_INPUT_EVENT_1	= 1,
+	/** Port input event 2. */
+	PORT_INPUT_EVENT_2	= 2,
+	/** Port input event 3. */
+	PORT_INPUT_EVENT_3	= 3,
+};
+
+/**
+ *  \brief Port input event configuration structure.
+ *
+ *  Configuration structure for a port input event.
+ */
+struct port_input_event_config {
+	/** PPort input event action. */
+	enum port_input_event_action  action;
+	/** GPIO pin. */
+	uint8_t gpio_pin;
+};
+#endif
+
 /**
  *  \brief Port pin configuration structure.
  *
@@ -455,6 +501,140 @@ static inline void port_pin_toggle_output_level(
 }
 
 /** @} */
+
+#if (SAML21)
+/**
+ *  \brief Enable the port event input.
+ *
+ *  Enable the port event input with the given pin and event.
+ *
+ *  \param[in] gpio_pin  Index of the GPIO pin.
+ *  \param[in] gpio_pin  Port input event.
+ *
+ * \retval STATUS_ERR_INVALID_ARG  Invalid parameter
+ * \retval STATUS_OK               Successfully
+ */
+static inline enum status_code port_enable_input_event(
+		const uint8_t gpio_pin,
+		const enum port_input_event n)
+{
+	PortGroup *const port_base = port_get_group_from_gpio_pin(gpio_pin);
+	switch (n) {
+		case PORT_INPUT_EVENT_0:
+			port_base->EVCTRL.reg |= PORT_EVCTRL_PORTEI0;
+			break;
+		case PORT_INPUT_EVENT_1:
+			port_base->EVCTRL.reg |= PORT_EVCTRL_PORTEI1;
+			break;
+		case PORT_INPUT_EVENT_2:
+			port_base->EVCTRL.reg |= PORT_EVCTRL_PORTEI2;
+			break;
+		case PORT_INPUT_EVENT_3:
+			port_base->EVCTRL.reg |= PORT_EVCTRL_PORTEI3;
+			break;
+		default:
+			Assert(false);
+			return STATUS_ERR_INVALID_ARG;
+	}
+	return STATUS_OK;
+}
+
+/**
+ *  \brief Disable the port event input.
+ *
+ *  Disable the port event input with the given pin and event.
+ *
+ *  \param[in] gpio_pin  Index of the GPIO pin.
+ *  \param[in] gpio_pin  Port input event.
+ *
+ * \retval STATUS_ERR_INVALID_ARG  Invalid parameter
+ * \retval STATUS_OK               Successfully
+ */
+static inline enum status_code port_disable_input_event(
+		const uint8_t gpio_pin,
+		const enum port_input_event n)
+{
+	PortGroup *const port_base = port_get_group_from_gpio_pin(gpio_pin);
+	switch (n) {
+		case PORT_INPUT_EVENT_0:
+			port_base->EVCTRL.reg &= ~PORT_EVCTRL_PORTEI0;
+			break;
+		case PORT_INPUT_EVENT_1:
+			port_base->EVCTRL.reg &= ~PORT_EVCTRL_PORTEI1;
+			break;
+		case PORT_INPUT_EVENT_2:
+			port_base->EVCTRL.reg &= ~PORT_EVCTRL_PORTEI2;
+			break;
+		case PORT_INPUT_EVENT_3:
+			port_base->EVCTRL.reg &= ~PORT_EVCTRL_PORTEI3;
+			break;
+		default:
+			Assert(false);
+			return STATUS_ERR_INVALID_ARG;
+	}
+	return STATUS_OK;
+}
+
+/**
+ * \brief Retrieve the default configuration for port input event
+ *
+ * Fills a configuration structure with the default configuration for port input event:
+ *   - Event output to pin
+ *   - Event action to be executed on PIN 0
+ *
+ * \param[out] config  Configuration structure to fill with default values
+ */
+static inline void port_input_event_get_config(
+		struct port_input_event_config *const config)
+{
+	Assert(config);
+	config->action   = PORT_INPUT_EVENT_ACTION_OUT;
+	config->gpio_pin = 0;
+}
+
+/**
+ * \brief Configure port input event
+ *
+ * Configures port input event with the given configuration settings.
+ *
+ * \param[in] config  Port input even configuration structure containing the new config
+ *
+ * \retval STATUS_ERR_INVALID_ARG  Invalid parameter
+ * \retval STATUS_OK               Successfully
+ */
+
+static inline enum status_code port_input_event_set_config(
+		const enum port_input_event n,
+		struct port_input_event_config *const config)
+{
+	Assert(config);
+	PortGroup *const port_base = port_get_group_from_gpio_pin(config->gpio_pin);
+	uint8_t pin_index = config->gpio_pin % 32;
+	
+	switch (n) {
+		case PORT_INPUT_EVENT_0:
+			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
+						   		   | PORT_EVCTRL_PID0(pin_index);
+			break;
+		case PORT_INPUT_EVENT_1:
+			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
+						   		   | PORT_EVCTRL_PID0(pin_index);
+			break;
+		case PORT_INPUT_EVENT_2:
+			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
+						   		   | PORT_EVCTRL_PID0(pin_index);
+			break;
+		case PORT_INPUT_EVENT_3:
+			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
+						   		   | PORT_EVCTRL_PID0(pin_index);
+			break;
+		default:
+			Assert(false);
+			return STATUS_ERR_INVALID_ARG;
+	}
+	return STATUS_OK;
+}
+#endif
 
 #ifdef __cplusplus
 }
