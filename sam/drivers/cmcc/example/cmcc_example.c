@@ -68,7 +68,6 @@
  * - SAMG55 Xplained Pro board
  *
  * \section setupinfo Setup Information
- * <BR>CPU speed: <i> 120 MHz </i>
  * - Please connect the DBGU port com to a PC
  * - PC terminal settings:
  *     - 115200 bps,

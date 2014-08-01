@@ -115,7 +115,7 @@ static inline void cmcc_set_config(Cmcc *const p_cmcc,
 {
 	p_cmcc->CMCC_MCFG = cfg->cmcc_mcfg_mode;
 #if SAMG55	
-	p_cmcc->CMCC_CFG = cfg->cmcc_cfg_cache_size;
+	p_cmcc->CMCC_CFG |= cfg->cmcc_cfg_cache_size;
 #endif
 }
 
