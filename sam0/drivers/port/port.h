@@ -209,9 +209,9 @@ enum port_pin_pull {
 
 #if (SAML21)
 /**
- *  \brief Port input event action .
+ *  \brief Port input event action.
  *
- *  List of port input event action on pin.
+ *  List of port input events action on pin.
  */
 enum port_input_event_action {
 	/** Event out to pin. */
@@ -227,7 +227,7 @@ enum port_input_event_action {
 /**
  *  \brief Port input event.
  *
- *  List of port input event.
+ *  List of port input events.
  */
 enum port_input_event{
 	/** Port input event 0. */
@@ -245,7 +245,7 @@ enum port_input_event{
  *
  *  Configuration structure for a port input event.
  */
-struct port_input_event_config {
+struct port_input_event_config{
 	/** PPort input event action. */
 	enum port_input_event_action  action;
 	/** GPIO pin. */
@@ -584,7 +584,7 @@ static inline enum status_code port_disable_input_event(
  *
  * \param[out] config  Configuration structure to fill with default values
  */
-static inline void port_input_event_get_config(
+static inline void port_input_event_get_config_defaults(
 		struct port_input_event_config *const config)
 {
 	Assert(config);
@@ -610,7 +610,7 @@ static inline enum status_code port_input_event_set_config(
 	Assert(config);
 	PortGroup *const port_base = port_get_group_from_gpio_pin(config->gpio_pin);
 	uint8_t pin_index = config->gpio_pin % 32;
-	
+
 	switch (n) {
 		case PORT_INPUT_EVENT_0:
 			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
