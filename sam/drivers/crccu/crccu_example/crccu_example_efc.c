@@ -53,7 +53,10 @@
  *
  * \par Requirements
  *
- * This package can be used with SAM3S, SAM4S evaluation kits and SAMG55 Xplained Pro.
+ * This package can be used with the following setup:
+ * - SAM3S evaluation kits
+ * - SAM4S evaluation kits
+ * - SAMG55 Xplained Pro
  *
  * \par Description
  *
