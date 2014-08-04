@@ -3,7 +3,7 @@
  *
  * \brief SAM External Interrupt Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -66,6 +66,37 @@ struct _extint_module _extint_dev;
 static void _extint_enable(void);
 static void _extint_disable(void);
 
+
+/**
+ * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
+ *
+ * Checks to see if the underlying hardware peripheral module(s) are currently
+ * synchronizing across multiple clock domains to the hardware bus, This
+ * function can be used to delay further operations on a module until such time
+ * that it is ready, to prevent blocking delays for synchronization in the
+ * user application.
+ *
+ *  \param[in] mode  External Interrupt synchronization busy modes.
+ *
+ * \return Synchronization status of the underlying hardware module(s).
+ *
+ * \retval true  If the module has completed synchronization
+ * \retval false If the module synchronization is ongoing
+ */
+static inline bool extint_is_syncing(
+					enum extint_syncing_busy_mode mode)
+{
+	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
+
+	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
+		if((mode == EXTINT_SYNC_BUSY_ENABLE	&& (eics[i]->SYNCBUSY.reg & EIC_SYNCBUSY_ENABLE))
+		 || (mode == EXTINT_SYNC_BUSY_SOFTWARE_RESET && (eics[i]->SYNCBUSY.reg & EIC_SYNCBUSY_SWRST))){
+			return true;
+		}
+	}
+	return false;
+}
+
 /**
  * \internal
  * \brief Initializes and enables the External Interrupt driver.
@@ -89,7 +120,7 @@ void _system_extint_init(void)
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
 	/* Turn on the digital interface clock */
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, PM_APBAMASK_EIC);
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, MCLK_APBAMASK_EIC);
 
 	/* Configure the generic clock for the module and enable it */
 	struct system_gclk_chan_config gclk_chan_conf;
@@ -103,10 +134,10 @@ void _system_extint_init(void)
 
 	/* Reset all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
-		eics[i]->CTRL.reg |= EIC_CTRL_SWRST;
+		eics[i]->CTRLA.reg |= EIC_CTRLA_SWRST;
 	}
 
-	while (extint_is_syncing()) {
+	while (extint_is_syncing(EXTINT_SYNC_BUSY_SOFTWARE_RESET)) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 
@@ -136,10 +167,10 @@ void _extint_enable(void)
 
 	/* Enable all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
-		eics[i]->CTRL.reg |= EIC_CTRL_ENABLE;
+		eics[i]->CTRLA.reg |= EIC_CTRLA_ENABLE;
 	}
 
-	while (extint_is_syncing()) {
+	while (extint_is_syncing(EXTINT_SYNC_BUSY_ENABLE)) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 }
@@ -158,12 +189,43 @@ void _extint_disable(void)
 
 	/* Disable all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
-		eics[i]->CTRL.reg &= ~EIC_CTRL_ENABLE;
+		eics[i]->CTRLA.reg &= ~EIC_CTRLA_ENABLE;
 	}
 
-	while (extint_is_syncing()) {
+	while (extint_is_syncing(EXTINT_SYNC_BUSY_ENABLE)) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
+}
+
+/**
+ * \brief Initializes an External Interrupt channel configuration structure to defaults.
+ *
+ * Initializes a given External Interrupt channel configuration structure to a
+ * set of known default values. This function should be called on all new
+ * instances of these configuration structures before being modified by the
+ * user application.
+ *
+ * The default configuration is as follows:
+ * \li The EIC is clocked by GCLK
+ * \li Input filtering disabled
+ * \li Internal pull-up enabled
+ * \li Detect falling edges of a signal
+ *
+ * \param[out] config  Configuration structure to initialize to default values
+ */
+void extint_chan_get_config_defaults(
+		struct extint_chan_conf *const config)
+{
+	/* Sanity check arguments */
+	Assert(config);
+
+	/* Default configuration values */
+	config->gpio_pin            = 0;
+	config->gpio_pin_mux        = 0;
+	config->gpio_pin_pull       = EXTINT_PULL_UP;
+	config->extint_clk          = EXTINT_CLK_GCLK;
+	config->filter_input_signal = false;
+	config->detection_criteria  = EXTINT_DETECT_FALLING;
 }
 
 /**
@@ -181,13 +243,33 @@ void extint_chan_set_config(
 		const uint8_t channel,
 		const struct extint_chan_conf *const config)
 {
+
 	/* Sanity check arguments */
 	Assert(config);
-	/* Sanity check clock requirements */
-	Assert(!(!system_gclk_gen_is_enabled(EXTINT_CLOCK_SOURCE) &&
-		_extint_is_gclk_required(config->filter_input_signal,
-			config->detection_criteria)));
-
+	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
+	bool is_eic_enabled[EIC_INST_NUM] = {false};
+	
+	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
+		/*Check if need to switch EIC clock*/
+		if(config->extint_clk == eics[i]->CTRLA.bit.CKSEL){
+			if(config->extint_clk == EXTINT_CLK_GCLK){
+				/* Sanity check clock requirements */
+				Assert(!(!system_gclk_gen_is_enabled(EXTINT_CLOCK_SOURCE) &&
+				_extint_is_gclk_required(config->filter_input_signal,
+					config->detection_criteria)));
+			}
+		}else{/*Switch EIC clock*/
+			if(eics[i]->CTRLA.reg & EIC_CTRLA_ENABLE)
+			{
+				_extint_disable();
+				is_eic_enabled[i] = true;
+				eics[i]->CTRLA.bit.CKSEL = config->extint_clk;
+			}else{
+				eics[i]->CTRLA.bit.CKSEL = config->extint_clk;
+			}
+		}
+	}
+	
 	struct system_pinmux_config pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
 
@@ -215,12 +297,11 @@ void extint_chan_set_config(
 		= (EIC_module->CONFIG[channel / 8].reg &
 			~((EIC_CONFIG_SENSE0_Msk | EIC_CONFIG_FILTEN0) << config_pos)) |
 			(new_config << config_pos);
-
-	/* Set the channel's new wake up mode setting */
-	if (config->wake_if_sleeping) {
-		EIC_module->WAKEUP.reg |=  (1UL << channel);
-	} else {
-		EIC_module->WAKEUP.reg &= ~(1UL << channel);
+	
+	for (uint32_t i = 0; i < EIC_INST_NUM; i++){
+		if(is_eic_enabled[i]){
+			_extint_enable();
+		}
 	}
 }
 
@@ -300,7 +381,7 @@ void extint_enable_events(
 {
 	/* Sanity check arguments */
 	Assert(events);
-
+	
 	/* Array of available EICs. */
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
@@ -314,9 +395,15 @@ void extint_enable_events(
 				event_mask |= (1UL << j);
 			}
 		}
-
-		/* Enable the masked events */
-		eics[i]->EVCTRL.reg |= event_mask;
+		if(eics[i]->CTRLA.reg & EIC_CTRLA_ENABLE){
+			_extint_disable();
+			/* Enable the masked events */
+			eics[i]->EVCTRL.reg |= event_mask;
+			_extint_enable();
+		}else{
+			/* Enable the masked events */
+			eics[i]->EVCTRL.reg |= event_mask;
+		}
 	}
 }
 
@@ -349,8 +436,14 @@ void extint_disable_events(
 				event_mask |= (1UL << j);
 			}
 		}
-
-		/* Disable the masked events */
-		eics[i]->EVCTRL.reg &= ~event_mask;
+		if(eics[i]->CTRLA.reg & EIC_CTRLA_ENABLE){
+			_extint_disable();
+			/* Disable the masked events */
+			eics[i]->EVCTRL.reg &= ~event_mask;
+			_extint_enable();
+		}else{
+			/* Disable the masked events */
+			eics[i]->EVCTRL.reg &= ~event_mask;
+		}	
 	}
 }
