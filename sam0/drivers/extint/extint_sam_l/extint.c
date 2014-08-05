@@ -44,7 +44,18 @@
 #include <system.h>
 #include <system_interrupt.h>
 
-
+/**
+ * \brief External interrupt synchronization busy enum.
+ *
+ * Enum for the possible synchronization busy modes of the External
+ * Interrupt Controller module.
+ */
+enum extint_syncing_busy_mode{
+	/**Enable synchronization busy mode. */
+	EXTINT_SYNC_BUSY_ENABLE    = 0,
+	/** Software reset synchronization busy mode. */
+	EXTINT_SYNC_BUSY_SOFTWARE_RESET  = 1,
+};
 /**
  * \internal
  * Internal driver device instance struct.

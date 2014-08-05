@@ -43,7 +43,6 @@
 				<build type="include-path" value="." />
 				<build type="include-path" value="extint_sam_d_r"/>
 				<build type="c-source" value="extint_sam_d_r/extint.c"/>
-				<build type="header-file" value="extint_sam_d_r/extint_features.h"/>
 
 				<device-support value="samd20"/>
 				<device-support value="samd21"/>
@@ -55,7 +54,6 @@
 				<build type="include-path" value="." />
 				<build type="include-path" value="extint_sam_l"/>
 				<build type="c-source" value="extint_sam_l/extint.c"/>
-				<build type="header-file" value="extint_sam_l/extint_features.h"/>
 
 				<device-support value="saml21"/>
 			</module>

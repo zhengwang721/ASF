@@ -219,7 +219,6 @@
 #include <compiler.h>
 #include <pinmux.h>
 #include <conf_extint.h>
-#include <extint_features.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -234,6 +233,85 @@ extern "C" {
  */
 #  define EXTINT_CLOCK_SOURCE GCLK_GENERATOR_0
 #endif
+
+/**
+ * \brief External interrupt edge detection configuration enum.
+ *
+ * Enum for the possible signal edge detection modes of the External
+ * Interrupt Controller module.
+ */
+enum extint_detect {
+	/** No edge detection. Not allowed as a NMI detection mode on some
+	 *  devices. */
+	EXTINT_DETECT_NONE    = 0,
+	/** Detect rising signal edges. */
+	EXTINT_DETECT_RISING  = 1,
+	/** Detect falling signal edges. */
+	EXTINT_DETECT_FALLING = 2,
+	/** Detect both signal edges. */
+	EXTINT_DETECT_BOTH    = 3,
+	/** Detect high signal levels. */
+	EXTINT_DETECT_HIGH    = 4,
+	/** Detect low signal levels. */
+	EXTINT_DETECT_LOW     = 5,
+};
+
+/**
+ * \brief External interrupt internal pull configuration enum.
+ *
+ * Enum for the possible pin internal pull configurations.
+ *
+ * \note Disabling the internal pull resistor is not recommended if the driver
+ *       is used in interrupt (callback) mode, due the possibility of floating
+ *       inputs generating continuous interrupts.
+ */
+enum extint_pull {
+	/** Internal pull-up resistor is enabled on the pin. */
+	EXTINT_PULL_UP        = SYSTEM_PINMUX_PIN_PULL_UP,
+	/** Internal pull-down resistor is enabled on the pin. */
+	EXTINT_PULL_DOWN      = SYSTEM_PINMUX_PIN_PULL_DOWN,
+	/** Internal pull resistor is disconnected from the pin. */
+	EXTINT_PULL_NONE      = SYSTEM_PINMUX_PIN_PULL_NONE,
+};
+
+/**
+ * \brief External interrupt clock selection.
+ *  List of external interrupt clocks.
+ *  The specific feature is only available for SAM L21.
+ */
+enum extint_clock_source {
+	/**The EIC is clocked by GCLK_EIC. */
+	EXTINT_CLK_GCLK    = 0,
+	/** The EIC is clocked by CLK_ULP32K. */
+	EXTINT_CLK_ULP32K  = 1,
+};
+
+/**
+ * \brief External Interrupt Controller channel configuration structure.
+ *
+ *  Configuration structure for the edge detection mode of an external
+ *  interrupt channel.
+ */
+struct extint_chan_conf {
+	/** GPIO pin the NMI should be connected to. */
+	uint32_t gpio_pin;
+	/** MUX position the GPIO pin should be configured to. */
+	uint32_t gpio_pin_mux;
+	/** Internal pull to enable on the input pin. */
+	enum extint_pull gpio_pin_pull;
+#if (SAML21)
+	/**EIC clock selection*/
+	enum extint_clock_source extint_clk;
+#else	
+	/** Wake up the device if the channel interrupt fires during sleep mode. */
+	bool wake_if_sleeping;
+#endif	
+	/** Filter the raw input signal to prevent noise from triggering an
+	 *  interrupt accidentally, using a 3 sample majority filter. */
+	bool filter_input_signal;
+	/** Edge detection mode to use. */
+	enum extint_detect detection_criteria;
+};
 
 /**
  * \brief External Interrupt event enable/disable structure.
