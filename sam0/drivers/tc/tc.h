@@ -192,6 +192,10 @@
  *   </tr>
  * </table>
  *
+ * \note In SAMD10/D11, odd numbered TC modules (e.g. TC1) can be
+ *         configured as 32-bit counters. The even numbered(e.g. TC2) counters
+ *         will act as slaves to the odd numbered masters.
+ *
  * \subsection asfdoc_sam0_tc_module_overview_clock Clock Settings
  *
  * \subsubsection asfdoc_sam0_tc_module_overview_clock_selection Clock Selection
