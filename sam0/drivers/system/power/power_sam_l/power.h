@@ -51,6 +51,11 @@ extern "C" {
 #endif
 
 /**
+ * \addtogroup asfdoc_sam0_system_group
+ * @{
+ */
+
+/**
  * \brief Device sleep modes.
  *
  * List of available sleep modes in the device. A table of clocks available in
@@ -270,6 +275,11 @@ struct system_battery_backup_power_switch_config {
 #define	SYSTEM_PERFORMANCE_LEVEL_2_MAX_FREQ 60000000UL
 
 /**
+ * \name Voltage regulator
+ * @{
+ */
+
+/**
  * \brief Retrieve the default configuration for voltage regulator.
  *
  * Fills a configuration structure with the default configuration:
@@ -330,6 +340,15 @@ static inline void system_voltage_regulator_disable(void)
 {
 	SUPC->VREG.reg &= ~SUPC_VREG_ENABLE;
 }
+
+/**
+ * @}
+ */
+
+/**
+ * \name Voltage references
+ * @{
+ */
 
 /**
  * \brief Retrieve the default configuration for voltage reference.
@@ -415,6 +434,15 @@ static inline void system_voltage_reference_disable(
 }
 
 /**
+ * @}
+ */
+
+/**
+ * \name Battery backup power switch
+ * @{
+ */
+
+/**
  * \brief Retrieve the default configuration for battery backup power switch control.
  *
  * Fills a configuration structure with the default configuration:
@@ -465,6 +493,15 @@ static inline void system_battery_backup_power_switch_set_config(
 		}
 	}
 }
+
+/**
+ * @}
+ */
+
+/**
+ * \name Output pins
+ * @{
+ */
 
 /**
  *  \brief Enable the backup output.
@@ -596,6 +633,15 @@ static inline uint8_t system_get_backup_io_input_value(void)
 }
 
 /**
+ * @}
+ */
+
+/**
+ * \name Device sleep
+ * @{
+ */
+
+/**
  * \brief Set the sleep mode of the device.
  *
  * Sets the sleep mode of the device; the configured sleep mode will be entered
@@ -625,6 +671,15 @@ static inline void system_sleep(void)
 	__DSB();
 	__WFI();
 }
+
+/**
+ * @}
+ */
+
+/**
+ * \name Performance level
+ * @{
+ */
 
 /**
  * \brief Switch performance level.
@@ -675,6 +730,36 @@ static inline enum system_performance_level system_get_performance_level(void)
 {
 	return (enum system_performance_level)PM->PLCFG.reg;
 }
+
+/**
+ * \brief Get performance level status.
+ *
+ * Get performance level status.
+ * \return Performance level status: 1 Performance level is ready,0 others.
+ */
+static inline uint8_t system_get_performance_level_status(void)
+{
+	return PM->INTFLAG.reg;
+}
+
+/**
+ * \brief Clear performance level status.
+ *
+ * Clear performance level status.
+ */
+static inline void system_clear_performance_level_status(void)
+{
+	PM->INTFLAG.reg = PM_INTFLAG_PLRDY;
+}
+
+/**
+ * @}
+ */
+
+/**
+ * \name Standby configuration
+ * @{
+ */
 
 /**
  * \brief Retrieve the default configuration for standby.
@@ -728,25 +813,13 @@ static inline void system_standby_set_config(
 }
 
 /**
- * \brief Get performance level status.
- *
- * Get performance level status.
- * \return Performance level status: 1 Performance level is ready,0 others.
+ * @}
  */
-static inline uint8_t system_get_performance_level_status(void)
-{
-	return PM->INTFLAG.reg;
-}
 
 /**
- * \brief Clear performance level status.
- *
- * Clear performance level status.
+ * \name I/O retention
+ * @{
  */
-static inline void system_clear_performance_level_status(void)
-{
-	PM->INTFLAG.reg = PM_INTFLAG_PLRDY;
-}
 
 /**
  * \brief Enable I/O retention.
@@ -768,6 +841,12 @@ static inline void system_disable_io_retension(void)
 {
 	PM->CTRLA.reg = PM_CTRLA_MASK & (~PM_CTRLA_IORET);
 }
+
+/**
+ * @}
+ */
+
+/** @} */
 
 #ifdef __cplusplus
 }

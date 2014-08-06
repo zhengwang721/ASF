@@ -51,6 +51,11 @@ extern "C" {
 #endif
 
 /**
+ * \addtogroup asfdoc_sam0_system_group
+ * @{
+ */
+
+/**
  * \brief Reset causes of the system.
  *
  * List of possible reset causes of the system.
@@ -109,6 +114,11 @@ enum system_wakeup_debounce_count {
 };
 
 /**
+ * \name Reset control
+ * @{
+ */
+
+/**
  * \brief Reset the MCU
  *
  * Resets the MCU and all associated peripherals and registers, except RTC,OSC32KCTRL,RSTC,
@@ -131,6 +141,15 @@ static inline enum system_reset_cause system_get_reset_cause(void)
 {
 	return (enum system_reset_cause)RSTC->RCAUSE.reg;
 }
+
+/**
+ * @}
+ */
+
+/**
+ * \name Backup exit reset control
+ * @{
+ */
 
 /**
  * \brief Get the backup exit source.
@@ -235,6 +254,12 @@ static inline void system_set_pin_wakeup_clock(void)
 	/*ULP32K is always enabled*/
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_ULP32K);
 }
+
+/**
+ * @}
+ */
+
+/** @} */
 
 #ifdef __cplusplus
 }

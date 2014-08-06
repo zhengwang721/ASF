@@ -220,6 +220,11 @@ extern "C" {
  */
 
 /**
+ * \name System debugger
+ * @{
+ */
+
+/**
  * \brief Check if debugger is present
  *
  * Check if debugger is connected to the onboard debug system (DAP)
@@ -234,6 +239,10 @@ static inline bool system_is_debugger_present(void)
 {
 	return DSU->STATUSB.reg & DSU_STATUSB_DBGPRES;
 }
+
+/**
+ * @}
+ */
  
 /**
  * \name System identification

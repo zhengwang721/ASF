@@ -50,6 +50,11 @@ extern "C" {
 #endif
 
 /**
+ * \addtogroup asfdoc_sam0_system_group
+ * @{
+ */
+
+/**
  * \brief Reset causes of the system.
  *
  * List of possible reset causes of the system.
@@ -103,6 +108,7 @@ static inline enum system_reset_cause system_get_reset_cause(void)
  * @}
  */
 
+/** @} */
 #ifdef __cplusplus
 }
 #endif
