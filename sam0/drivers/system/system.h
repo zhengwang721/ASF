@@ -134,6 +134,63 @@ extern "C" {
  * \anchor asfdoc_sam0_system_module_sleep_mode_table
  * <table>
  *  <caption>SAM Device Sleep Modes</caption>
+ * \if DEVICE_SAML21_SUPPORT
+ * 	<tr>
+ * 		<th>Sleep mode</th>
+ * 		<th>System clock</th>
+ * 		<th>CPU clock</th>
+ * 		<th>AHB/AHB clock</th>
+ * 		<th>GCLK clocks</th>
+ * 		<th>Oscillators (ONDEMAND  = 0)</th>
+ * 		<th>Oscillators (ONDEMAND  = 1)</th>
+ * 		<th>Regulator mode</th>
+ * 		<th>RAM mode</th>
+ * 	</tr>
+ * 	<tr>
+ * 		<td>IDLE</td>
+ * 		<td>Run</td>
+ * 		<td>Stop</td>
+ * 		<td>Run if requested</td>
+ * 		<td>Run</td>
+ * 		<td>Run</td>
+ * 		<td>Run if requested</td>
+ * 		<td>Normal</td>
+ * 		<td>Normal</td>
+ * 	</tr>
+ * 	<tr>
+ * 		<td>Standby</td>
+ * 		<td>Stop</td>
+ * 		<td>Stop</td>
+ * 		<td>Run if requested</td>
+ * 		<td>Run if requested</td>
+ * 		<td>Run if requested or RUNSTDBY  = 1</td>
+ * 		<td>Run if requested</td>
+ * 		<td>Low pwer</td>
+ * 		<td>Low pwer</td>
+ *	</tr>
+ * 	<tr>
+ * 		<td>Backup</td>
+ * 		<td>Stop</td>
+ * 		<td>Stop</td>
+ * 		<td>Stop</td>
+ * 		<td>Stop</td>
+ * 		<td>Stop</td>
+ * 		<td>Stop</td>
+ * 		<td>Backup</td>
+ * 		<td>OFF</td>
+ *	</tr>
+ * 	<tr>
+ * 		<td>Off</td>
+ * 		<td>OFF</td>
+ * 		<td>OFF</td>
+ * 		<td>OFF</td>
+ * 		<td>OFF</td>
+ * 		<td>OFF</td>
+ * 		<td>OFF</td>
+ * 		<td>OFF</td>
+ * 		<td>OFF</td>
+ * 	</tr>
+ *	\else
  * 	<tr>
  * 		<th>Sleep mode</th>
  * 		<th>CPU clock</th>
@@ -189,6 +246,7 @@ extern "C" {
  * 		<td>Low Power</td>
  * 		<td>Source/Drain biasing</td>
  * 	</tr>
+ * \endif 
  * </table>
  *
  * To enter device sleep, one of the available sleep modes must be set, and the
