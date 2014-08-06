@@ -148,27 +148,27 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  *
  * \b 3. USB_DEVICE_MAJOR_VERSION (Byte)
  *
- * Major version of the device
+ * Major version of the device.
  *
  * \b 4. USB_DEVICE_MINOR_VERSION (Byte)
  *
- * Minor version of the device
+ * Minor version of the device.
  *
  * \b 5. USB_DEVICE_MANUFACTURE_NAME (string)
  *
- * ASCII name for the manufacture
+ * ASCII name for the manufacture.
  *
  * \b 6. USB_DEVICE_PRODUCT_NAME (string)
  *
- * ASCII name for the product
+ * ASCII name for the product.
  *
  * \b 7. USB_DEVICE_SERIAL_NAME (string)
  *
- * ASCII name to enable and set a serial number
+ * ASCII name to enable and set a serial number.
  *
  * \b 8. USB_DEVICE_POWER (Numeric)
  *
- * (unit mA) Maximum device power
+ * (unit mA) Maximum device power.
  *
  * \b 9. USB_DEVICE_ATTR (Byte)
  *
@@ -176,16 +176,15 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  *  - USB_CONFIG_ATTR_SELF_POWERED
  *  - USB_CONFIG_ATTR_REMOTE_WAKEUP
  *
- *  Note: if remote wake enabled then defines remotewakeup callbacks,
- * see Table 5-2. External API from UDC - Callback
+ * \note If remote wake enabled then defines remotewakeup callbacks.
  *
  * \b 10. USB_DEVICE_LOW_SPEED (Only defined)
  *
- * Force the USB Device to run in low speed
+ * Force the USB Device to run in low speed.
  *
  * \b 11. USB_DEVICE_HS_SUPPORT (Only defined)
  *
- * Authorize the USB Device to run in high speed
+ * Authorize the USB Device to run in high speed.
  *
  * \b 12. USB_DEVICE_MAX_EP (Byte)
  *
@@ -199,7 +198,7 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  * - When endpoint 0x01 and endpoint 0x81 is used then USB_DEVICE_MAX_EP=1
  *   (configuration not possible on USBB interface)
  *
- * \section asfdoc_udc_vbus_monitoring VBus monitoring
+ * \section asfdoc_udc_vbus_monitoring VBus Monitoring
  *
  * The VBus monitoring is used only for USB SELF Power application.
  *
@@ -286,7 +285,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * \subpage udc_conf_clock.
  *
- * for AVR and SAM3/4 devices, add to the initialization code:
+ * For AVR and SAM3/4 devices, add to the initialization code:
  * \code
  sysclk_init();
  irq_initialize_vectors();
@@ -308,7 +307,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  sleepmgr_enter_sleep(); // Optional
  \endcode
  *
- * \subsection asfdoc_udc_basic_use_case_setup_code USB Device Controller (UDC) - Example code
+ * \subsection asfdoc_udc_basic_use_case_setup_code USB Device Controller (UDC) - Example Code
  * Common example code for all USB devices.
  *
  * Content of conf_usb.h:
@@ -355,14 +354,14 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  \endcode
  *   \note In case of USB dual roles (Device and Host) managed through USB OTG connector
  * (USB ID pin), the call of udc_start() must be removed and replaced by uhc_start().
- * Refer to "AVR4950 section 6.1 Dual roles" for further information about dual roles.
+ * Refer to "AVR4950 Section 6.1 Dual roles" for further information about dual roles.
  *
- * \section udc_conf_clock conf_clock.h examples
+ * \section udc_conf_clock conf_clock.h Examples
  *
  * Content of XMEGA conf_clock.h:
  * \code
  // Configuration based on internal RC:
- // USB clock need of 48Mhz
+ // USB clock need of 48MHZ
  #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_RCOSC
  #define CONFIG_OSC_RC32_CAL         48000000UL
  #define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC  OSC_ID_USBSOF
@@ -461,18 +460,18 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  */
 
 /**
- * \page udc_use_case_1 Change USB speed
+ * \page udc_use_case_1 Change USB Speed
  *
  * In this use case, the USB device is used with different USB speeds.
  *
- * \section udc_use_case_1_setup Setup steps
+ * \section udc_use_case_1_setup Setup Steps
  *
  * Prior to implement this use case, be sure to have already
  * apply the UDI module "basic use case".
  *
- * \section udc_use_case_1_usage Usage steps
+ * \section udc_use_case_1_usage Usage Steps
  *
- * \subsection udc_use_case_1_usage_code Example code
+ * \subsection udc_use_case_1_usage_code Example Code
  * Content of conf_usb.h:
  * \code
  #if // Low speed
@@ -511,17 +510,17 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  */
 
 /**
- * \page udc_use_case_2 Use USB strings
+ * \page udc_use_case_2 Use USB Strings
  *
  * In this use case, the usual USB strings are added in the USB device.
  *
- * \section udc_use_case_2_setup Setup steps
+ * \section udc_use_case_2_setup Setup Steps
  * Prior to implement this use case, be sure to have already
  * apply the UDI module "basic use case".
  *
- * \section udc_use_case_2_usage Usage steps
+ * \section udc_use_case_2_usage Usage Steps
  *
- * \subsection udc_use_case_2_usage_code Example code
+ * \subsection udc_use_case_2_usage_code Example Code
  * Content of conf_usb.h:
  * \code
 	#define  USB_DEVICE_MANUFACTURE_NAME      "Manufacture name"
@@ -546,17 +545,17 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  */
 
 /**
- * \page udc_use_case_3 Use USB remote wakeup feature
+ * \page udc_use_case_3 Use USB Remote Wakeup Feature
  *
  * In this use case, the USB remote wakeup feature is enabled.
  *
- * \section udc_use_case_3_setup Setup steps
+ * \section udc_use_case_3_setup Setup Steps
  * Prior to implement this use case, be sure to have already
  * apply the UDI module "basic use case".
  *
- * \section udc_use_case_3_usage Usage steps
+ * \section udc_use_case_3_usage Usage Steps
  *
- * \subsection udc_use_case_3_usage_code Example code
+ * \subsection udc_use_case_3_usage_code Example Code
  * Content of conf_usb.h:
  * \code
  #define  USB_DEVICE_ATTR \
@@ -609,18 +608,18 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  */
 
 /**
- * \page udc_use_case_5 Bus power application recommendations
+ * \page udc_use_case_5 Bus Power Application Recommendations
  *
  * In this use case, the USB device bus power feature is enabled.
  * This feature requires a correct power consumption management.
  *
- * \section udc_use_case_5_setup Setup steps
+ * \section udc_use_case_5_setup Setup Steps
  * Prior to implement this use case, be sure to have already
  * apply the UDI module "basic use case".
  *
- * \section udc_use_case_5_usage Usage steps
+ * \section udc_use_case_5_usage Usage Steps
  *
- * \subsection udc_use_case_5_usage_code Example code
+ * \subsection udc_use_case_5_usage_code Example Code
  * Content of conf_usb.h:
  * \code
  #define  USB_DEVICE_ATTR (USB_CONFIG_ATTR_BUS_POWERED)
@@ -668,18 +667,18 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  */
 
 /**
- * \page udc_use_case_6 USB dynamic serial number
+ * \page udc_use_case_6 USB Dynamic Serial Number
  *
  * In this use case, the USB serial strings is dynamic.
  * For a static serial string refer to \ref udc_use_case_2.
  *
- * \section udc_use_case_6_setup Setup steps
+ * \section udc_use_case_6_setup Setup Steps
  * Prior to implement this use case, be sure to have already
  * apply the UDI module "basic use case".
  *
- * \section udc_use_case_6_usage Usage steps
+ * \section udc_use_case_6_usage Usage Steps
  *
- * \subsection udc_use_case_6_usage_code Example code
+ * \subsection udc_use_case_6_usage_code Example Code
  * Content of conf_usb.h:
  * \code
  #define  USB_DEVICE_SERIAL_NAME
@@ -709,7 +708,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  #define  USB_DEVICE_GET_SERIAL_NAME_LENGTH  12 // Give size of serial array
  extern uint8_t serial_number[]; // Declare external serial array
  \endcode
- * -# Before start USB stack, initialize the serial array
+ * -# Before start USB stack, initialize the serial array:
  * \code
  uint8_t serial_number[USB_DEVICE_GET_SERIAL_NAME_LENGTH];
  void init_build_usb_serial_number(void)
