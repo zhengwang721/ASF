@@ -80,6 +80,20 @@
  * the physical pin input samplers and output drivers, so that pins can be read
  * from or written to for general purpose external hardware control.
  *
+ * \subsection asfdoc_sam0_port_features Driver Feature Macro Definition
+ * <table>
+ *  <tr>
+ *    <th>Driver Feature Macro</th>
+ *    <th>Supported devices</th>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_PORT_INPUT_EVENT</td>
+ *    <td>SAML21</td>
+ *  </tr>
+ * </table>
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
+ *
  * \subsection asfdoc_sam0_port_module_overview_pin_numbering Physical and Logical GPIO Pins
  * SAM devices use two naming conventions for the I/O pins in the device; one
  * physical, and one logical. Each physical pin on a device package is assigned
@@ -144,6 +158,16 @@
 extern "C" {
 #endif
 
+/**
+ * Define port features set according to different device family
+ * @{
+*/
+#if (SAML21) || defined(__DOXYGEN__)
+/** Event input control feature support for PORT group */
+#  define FEATURE_PORT_INPUT_EVENT
+#endif
+/*@}*/
+
 /** \name PORT Alias Macros
  * @{
  */
@@ -207,7 +231,7 @@ enum port_pin_pull {
 	PORT_PIN_PULL_DOWN = SYSTEM_PINMUX_PIN_PULL_DOWN,
 };
 
-#if (SAML21)
+#ifdef FEATURE_PORT_INPUT_EVENT
 /**
  *  \brief Port input event action.
  *
@@ -502,14 +526,19 @@ static inline void port_pin_toggle_output_level(
 
 /** @} */
 
-#if (SAML21)
+#ifdef FEATURE_PORT_INPUT_EVENT
+
+/** \name Port input event
+ * @{
+ */
+ 
 /**
  *  \brief Enable the port event input.
  *
  *  Enable the port event input with the given pin and event.
  *
  *  \param[in] gpio_pin  Index of the GPIO pin.
- *  \param[in] gpio_pin  Port input event.
+ *  \param[in] n  Port input event.
  *
  * \retval STATUS_ERR_INVALID_ARG  Invalid parameter
  * \retval STATUS_OK               Successfully
@@ -610,6 +639,12 @@ static inline enum status_code port_input_event_set_config(
 	Assert(config);
 	PortGroup *const port_base = port_get_group_from_gpio_pin(config->gpio_pin);
 	uint8_t pin_index = config->gpio_pin % 32;
+	struct port_config pin_conf;
+
+	port_get_config_defaults(&pin_conf);
+	/* Configure the GPIO pin as outputs*/
+	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(config->gpio_pin, &pin_conf);
 
 	switch (n) {
 		case PORT_INPUT_EVENT_0:
@@ -634,6 +669,9 @@ static inline enum status_code port_input_event_set_config(
 	}
 	return STATUS_OK;
 }
+
+/** @} */
+
 #endif
 
 #ifdef __cplusplus
