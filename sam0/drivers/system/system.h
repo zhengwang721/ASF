@@ -105,6 +105,23 @@ extern "C" {
  * - \ref asfdoc_sam0_system_pinmux_group "System Pin Multiplexer Control" (sub-module)
  *
  *
+ * \if DEVICE_SAML21_SUPPORT
+ * \subsection asfdoc_sam0_system_module_overview_vreg Voltage Regulator
+ * The SAML21 device controls the voltage regulators for the core (VDDCORE) and
+ * backup (VDDBU) domains. It sets the voltage regulators according to the sleep modes, 
+ * the performance level, or the user configuration. 
+ *
+ * In active mode, the voltage regulator can be chosen on the fly between a LDO or a 
+ * Buck converter.In standby mode, the low power voltage regulator is used to supply 
+ * VDDCORE.
+ *
+ * \subsection asfdoc_sam0_system_module_overview_bbps Battery Backup Power Switch
+ * The SAML21 device supports connection of a battery backup to the VBAT power pin. 
+ * It includes functionality that enables automatic power switching between main power 
+ * and battery backup power. This will ensure power to the backup domain, when the main 
+ * battery or power source is unavailable.
+ * \endif 
+ * 
  * \subsection asfdoc_sam0_system_module_overview_vref Voltage References
  * The various analog modules within the SAM devices (such as AC, ADC and
  * DAC) require a voltage reference to be configured to act as a reference point
@@ -123,6 +140,41 @@ extern "C" {
  *
  * For this reason, an API is provided to retrieve the cause of the last system
  * reset, so that appropriate action can be taken.
+ *
+ * \if DEVICE_SAML21_SUPPORT
+ * For SAM L21,There are three groups of reset sources:
+ *
+ * Power supply reset: Resets caused by an electrical issue. It covers POR and BODs reset.
+ *
+ * User reset: Resets caused by the application. It covers external reset, system reset 
+ * request and watchdog reset.
+ *
+ *Backup reset: Resets caused by a backup mode exit condition.
+ *
+ * \subsection asfdoc_sam0_system_module_overview_performance_level Performance Level
+ * Performance level allows use to adjust the regulator output voltage to reduce power consumption. 
+ * The user can select on the fly the performance level configuration which best suits its application.
+ *
+ * The SAM L21 device embeds up to three performance level (PL0, PL1 and PL2).Each performance level
+ * defines a maximum frequency and a corresponding consumption in μA/MHz,when the application selects a new
+ * performance level, the voltage applied on the full logic area moves from a value to another, it can reduce
+ * the active consumption while decreasing the maximum frequency of the device 
+ *
+ * \subsection asfdoc_sam0_system_module_overview_power_domain Power Domain
+ * Power domain gating  can  turn on or off power domain voltage to save power while keeping other
+ * domain powered up. It can be used in standby sleep mode,in standby mode, when power-gated, the internal
+ * state of the logic can be retained  allowing the application context to be kept.
+ *
+ * The SAM L21 device has five power domains.
+ *
+ * Switchable power domains (PD0, PD1 and PD2): these power domains uses the power domain gating
+ * technique and can then be set to either active, retention or off state. 
+ *
+ * Always-on power domain: this power domain is either in active or off state
+ *
+ * Backup power domain: this power domain is always in active state (except in off sleep mode).
+ *  
+ * \endif 
  *
  * \subsection asfdoc_sam0_system_module_overview_sleep_mode Sleep Modes
  * The SAM devices have several sleep modes, where the sleep mode controls
