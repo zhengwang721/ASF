@@ -166,6 +166,22 @@ enum system_voltage_references_sel {
 };
 
 /**
+ * \brief Battery power switch configuration enum.
+ *
+ * Enum for Battery power switch modes.
+ */
+enum system_battery_power_switch{
+	/** The backup domain is always supplied by main power. */
+	SYSTEM_BATTERY_POWER_SWITCH_NONE	= SUPC_BBPS_CONF_NONE_Val,
+	/** The power switch is handled by the automatic power switch. */
+	SYSTEM_BATTERY_POWER_SWITCH_APWS	= SUPC_BBPS_CONF_APWS_Val,
+	/** The backup domain is always supplied by battery backup power. */
+	SYSTEM_BATTERY_POWER_SWITCH_FORCED	= SUPC_BBPS_CONF_FORCED_Val,
+	/** The power switch is handled by the BOD33. */
+	SYSTEM_BATTERY_POWER_SWITCH_BOD33	= SUPC_BBPS_CONF_BOD33_Val,
+};
+
+/**
  * \brief Voltage reference.
  *
  * List of available voltage references (VREF) that may be used within the
@@ -232,6 +248,20 @@ struct system_voltage_references_config {
 	bool run_in_standby;
 };
 
+/**
+ * \brief Battery Backup Power Switch (BBPS) Control configuration.
+ *
+ * Configuration structure for BBPS.
+ */
+struct system_battery_backup_power_switch_config {
+	/** Power supply OK enable. */
+	bool power_supply_ok_enabled;
+	/** Whether the device is woken up when switched
+		from battery backup power to main power. */
+	bool wake_enabled;
+	/**Battery backup power switch configuration. */
+	enum system_battery_power_switch battery_power_switch;
+};
 /** Performance level 0 maximum frequency. */
 #define	SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ 15000000UL
 /** Performance level 1 maximum frequency. */
@@ -276,6 +306,9 @@ static inline void system_voltage_regulator_set_config(
 	SUPC->VREG.bit.VSVSTEP  = config->voltage_scale_step;
 	SUPC->VREG.bit.RUNSTDBY = config->run_in_standby;
 	SUPC->VREG.bit.SEL      = config->regulator_sel;
+	while(!(SUPC->STATUS.reg & SUPC_STATUS_VREGRDY)){
+		;
+	}
 }
 
 /**
@@ -379,6 +412,187 @@ static inline void system_voltage_reference_disable(
 			Assert(false);
 			return;
 	}
+}
+
+/**
+ * \brief Retrieve the default configuration for battery backup power switch control.
+ *
+ * Fills a configuration structure with the default configuration:
+ *   - The main Power Supply OK status is not available on the PSOK pin
+ *   - The device is not woken up when switched from battery backup power to main power
+ *   - The backup domain is always supplied by main power
+ *
+ * \param[out] config  Configuration structure to fill with default values
+ */
+static inline void system_battery_backup_power_switch_get_config_defaults(
+		struct system_battery_backup_power_switch_config *const config)
+{
+	Assert(config);
+	config->power_supply_ok_enabled   = false;
+	config->wake_enabled       		  = false;
+	config->battery_power_switch 	  = SYSTEM_BATTERY_POWER_SWITCH_NONE;
+}
+
+/**
+ * \brief Configure battery backup power switch.
+ *
+ * Configures battery backup power switch with the given configuration.
+ *
+ * \param[in] config  Battery backup power switch configuration structure containing
+ *                    the new config
+ */
+static inline void system_battery_backup_power_switch_set_config(
+		struct system_battery_backup_power_switch_config *const config)
+{
+	Assert(config);
+	uint32_t new_config = 0;
+	
+	if(config->power_supply_ok_enable){
+		new_config |= SUPC_BBPS_PSOKEN;
+	}
+	
+	if(config->wake_enabled){
+		new_config |= SUPC_BBPS_WAKEEN;
+	}
+	
+	new_config |=SUPC_BBPS_CONF(config->battery_power_switch);
+	
+	SUPC->BBPS.reg = new_config;
+	
+	if(config->battery_power_switch == SYSTEM_BATTERY_POWER_SWITCH_APWS){
+		while(!(SUPC->STATUS.reg & SUPC_STATUS_APWSRDY)){
+			;
+		}
+	}
+}
+
+/**
+ *  \brief Enable the backup output.
+ *
+ *  The output is enabled and driven by the SUPC.
+ *
+ *  \param[in] pin_mask Pin mask.
+ */
+static inline void system_enable_backup_output(
+		const uint8_t pin_mask)
+{
+	Assert(pin_mask <= 0x7u);
+
+	/*Bit 0 in pin mask is for PSOK pin,so we should right shrift one bit first for output pin*/
+	SUPC->BKOUT.reg |= SUPC_BKOUT_EN(pin_mask >> 1);
+}
+
+/**
+ *  \brief Disable the backup output.
+ *
+ *  The output is not enabled.
+ *
+ *  \param[in] pin_mask Input pin mask.
+ */
+static inline void system_disable_backup_output(
+		const uint8_t pin_mask)
+{
+	Assert(pin_mask <= 0x7u);
+
+	/*Bit 0 in pin mask is for PSOK pin,so we should right shrift one bit first for output pin*/
+	SUPC->BKOUT.reg &= ~(SUPC_BKOUT_EN(pin_mask >> 1));
+}
+
+/**
+ * \brief Determins if one output is enabled
+ *
+ *  \param[in] pin_mask One output pin mask,.
+ *
+ * \return The enabled status.
+ * \retval true The output is enabled;
+ * \retval false The output is not enabled.
+ */
+static inline bool system_backup_output_is_enabled(
+		const uint8_t pin_mask)
+{
+	Assert(pin_mask <= 0x7u);
+
+	/*Bit 0 in pin mask is for PSOK pin,so we should right shrift one bit first for output pin*/
+	if(SUPC->BKOUT.reg & SUPC_BKOUT_EN(pin_mask >> 1)){
+		return true;
+	}
+	return false;
+}
+
+/**
+ * \brief Determins if the power supply OK is enabled
+ *
+ * \return The enabled status.
+ * \retval true enabled;
+ * \retval false not enabled.
+ */
+static inline bool system_power_supply_ok_is_enabled(void)
+{
+	if(SUPC->BBPS.reg & SUPC_BBPS_PSOKEN){
+		return true;
+	}
+	return false;
+}
+
+/**
+ *  \brief Set the backup output.
+ *
+ *  Set the corresponding output.
+ *
+ *  \param[in] pin_mask Pin mask.
+ */
+static inline void system_set_backup_output(
+		const uint8_t pin_mask)
+{
+	Assert(pin_mask <= 0x7u);
+
+	/*Bit 0 in pin mask is for PSOK pin,so we should right shrift one bit first for output pin*/
+	SUPC->BKOUT.reg |= SUPC_BKOUT_SET(pin_mask >> 1);
+}
+
+/**
+ *  \brief Clear the backup output.
+ *
+ *  Clear the corresponding output.
+ *
+ *  \param[in] pin_mask Pin mask.
+ */
+static inline void system_clear_backup_output(
+		const uint8_t pin_mask)
+{
+	Assert(pin_mask <= 0x7u);
+
+	/*Bit 0 in pin mask is for PSOK pin,so we should right shrift one bit first for output pin*/
+	SUPC->BKOUT.reg |= SUPC_BKOUT_CLR(pin_mask >> 1);
+}
+
+/**
+ *  \brief Toggle output on RTC event.
+ *
+ *  Toggle output on RTC event.
+ *
+ *  \param[in] pin_mask Pin mask.
+ */
+static inline void system_toggle_backup_output(
+		const uint8_t pin_mask)
+{
+	Assert(pin_mask <= 0x7u);
+
+	/*Bit 0 in pin mask is for PSOK pin,so we should right shrift one bit first for output pin*/
+	SUPC->BKOUT.reg |= SUPC_BKOUT_RTCTGL(pin_mask >> 1);
+}
+
+/**
+ *  \brief Get the backup I/O input values.
+ *
+ *  Get the backup I/O data input values,if the corresponding pin is enabled, 
+ *  the I/O input value is given on the pin.
+ *
+ * \return The backup I/O input mask values
+ */
+static inline uint8_t system_get_backup_io_input_value(void)
+{
+	return (SUPC->BKIN.reg & SUPC_BKIN_BKIN_Msk);
 }
 
 /**
