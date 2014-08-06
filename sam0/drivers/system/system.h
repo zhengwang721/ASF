@@ -63,13 +63,20 @@ extern "C" {
  * extends across multiple hardware peripherals,
  *
  * The following peripherals are used by this module:
+ * \if DEVICE_SAML21_SUPPORT
+ *	- PM (Power Manager)
+ *  - RSTC(Reset Controller)
+ *  - SUPC(Supply Controller)
+ *	\else
  * - SYSCTRL (System Control)
  * - PM (Power Manager)
+ * \endif 
  *
  * The following devices can use this module:
  *  - SAM D20/D21
  *  - SAM R21
  *  - SAM D10/D11
+ *  - SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_system_prerequisites

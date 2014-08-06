@@ -515,7 +515,7 @@ static inline void system_enable_backup_output(
 {
 	Assert(pin_mask <= 0x7u);
 
-	/*Bit 0 in pin mask is for PSOK pin,so we should right shrift one bit first for output pin*/
+	/*Bit 0 in pin mask is for PSOK pin,so we should right shift one bit first for output pin*/
 	SUPC->BKOUT.reg |= SUPC_BKOUT_EN(pin_mask >> 1);
 }
 
@@ -531,7 +531,7 @@ static inline void system_disable_backup_output(
 {
 	Assert(pin_mask <= 0x7u);
 
-	/*Bit 0 in pin mask is for PSOK pin,so we should right shrift one bit first for output pin*/
+	/*Bit 0 in pin mask is for PSOK pin,so we should right shift one bit first for output pin*/
 	SUPC->BKOUT.reg &= ~(SUPC_BKOUT_EN(pin_mask >> 1));
 }
 
@@ -549,7 +549,7 @@ static inline bool system_backup_output_is_enabled(
 {
 	Assert(pin_mask <= 0x7u);
 
-	/*Bit 0 in pin mask is for PSOK pin,so we should right shrift one bit first for output pin*/
+	/*Bit 0 in pin mask is for PSOK pin,so we should right shift one bit first for output pin*/
 	if(SUPC->BKOUT.reg & SUPC_BKOUT_EN(pin_mask >> 1)){
 		return true;
 	}
@@ -583,7 +583,7 @@ static inline void system_set_backup_output(
 {
 	Assert(pin_mask <= 0x7u);
 
-	/*Bit 0 in pin mask is for PSOK pin,so we should right shrift one bit first for output pin*/
+	/*Bit 0 in pin mask is for PSOK pin,so we should right shift one bit first for output pin*/
 	SUPC->BKOUT.reg |= SUPC_BKOUT_SET(pin_mask >> 1);
 }
 
@@ -599,7 +599,7 @@ static inline void system_clear_backup_output(
 {
 	Assert(pin_mask <= 0x7u);
 
-	/*Bit 0 in pin mask is for PSOK pin,so we should right shrift one bit first for output pin*/
+	/*Bit 0 in pin mask is for PSOK pin,so we should right shift one bit first for output pin*/
 	SUPC->BKOUT.reg |= SUPC_BKOUT_CLR(pin_mask >> 1);
 }
 
@@ -615,7 +615,7 @@ static inline void system_toggle_backup_output(
 {
 	Assert(pin_mask <= 0x7u);
 
-	/*Bit 0 in pin mask is for PSOK pin,so we should right shrift one bit first for output pin*/
+	/*Bit 0 in pin mask is for PSOK pin,so we should right shift one bit first for output pin*/
 	SUPC->BKOUT.reg |= SUPC_BKOUT_RTCTGL(pin_mask >> 1);
 }
 
