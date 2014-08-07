@@ -161,11 +161,12 @@
  * generation match mode.
  *
  * When using 32-bit counter size, two 16-bit counters are chained together
- * in a cascade formation. Even numbered TC modules (e.g. TC0, TC2) can be
- * configured as 32-bit counters. The odd numbered counters will act as slaves
- * to the even numbered masters, and will not be reconfigurable until the
- * master timer is disabled. The pairing of timer modules for 32-bit mode is
- * shown in \ref asfdoc_sam0_tc_module_ms_pairs "the table below".
+ * in a cascade formation. Except in SAM D10/D11, Even numbered TC modules
+ * (e.g. TC0, TC2) can be configured as 32-bit counters. The odd numbered
+ * counters will act as slaves to the even numbered masters, and will not
+ * be reconfigurable until the master timer is disabled. The pairing of timer
+ * modules for 32-bit mode is shown in \ref asfdoc_sam0_tc_module_ms_pairs
+ * "the table below".
  *
  * \anchor asfdoc_sam0_tc_module_ms_pairs
  * <table>
@@ -192,9 +193,9 @@
  *   </tr>
  * </table>
  *
- * \note In SAMD10/D11, odd numbered TC modules (e.g. TC1) can be
- *         configured as 32-bit counters. The even numbered(e.g. TC2) counters
- *         will act as slaves to the odd numbered masters.
+ * In SAMD10/D11, odd numbered TC modules (e.g. TC1) can be configured as 32-bit
+ * counters. The even numbered(e.g. TC2) counters will act as slaves to the odd
+ * numbered masters.
  *
  * \subsection asfdoc_sam0_tc_module_overview_clock Clock Settings
  *
