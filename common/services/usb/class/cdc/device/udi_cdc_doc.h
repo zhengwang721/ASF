@@ -52,7 +52,7 @@
  * - \ref asfdoc_udi_cdc_exqsg
  * - \ref asfdoc_udi_cdc_config_examples
  *
- * For more details for Atmel Software Framework (ASF) USB Device Stack and
+ * For more details for Atmel® Software Framework (ASF) USB Device Stack and
  * USB Device CDC, refer to following application notes:
  * - <a href="http://www.atmel.com/dyn/resources/prod_documents/doc8360.pdf">
  *   AVR4900: ASF - USB Device Stack</a>
@@ -865,5 +865,22 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  *
  * \subsection asfdoc_udi_cdc_config_examples_4_5 SAMD21 Device (USB)
  * \include example\samd21j18a_samd21_xplained_pro\conf_board.h
+ */
+
+/**
+ * \page asfdoc_udi_cdc_document_revision_history Document Revision History
+ *
+ * <table>
+ * <tr>
+ *    <th>Doc. Rev.</td>
+ *    <th>Date</td>
+ *    <th>Comments</td>
+ * </tr>
+ * <tr>
+ *    <td>A</td>
+ *    <td>08/2014</td>
+ *    <td>Initial release</td>
+ * </tr>
+ * </table>
  */
 
