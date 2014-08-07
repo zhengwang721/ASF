@@ -573,7 +573,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  * In this basic use case, the "USB CDC (Single Interface Device)" module is used
  * with only one communication port.
  * The "USB CDC (Composite Device)" module usage is described in \ref udi_cdc_use_cases
- * "Advanced use cases".
+ * "Advanced Use Cases".
  *
  * \subsection udi_cdc_basic_use_case_setup Setup Steps
  * As a USB device, it follows common USB device setup steps. Refer to
@@ -673,7 +673,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  iram_size_t udi_cdc_write_buf(const int* buf, iram_size_t size);
  \endcode
  *
- * \section udi_cdc_use_cases Advanced use cases
+ * \section udi_cdc_use_cases Advanced Use Cases
  * \ifnot ASF_MANUAL
  * For more advanced use of the UDI CDC module, see the following use cases:
  * - \subpage udi_cdc_use_case_composite
