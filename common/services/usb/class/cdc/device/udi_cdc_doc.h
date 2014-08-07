@@ -817,54 +817,54 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  *
  * \section asfdoc_udi_cdc_config_examples_1 conf_usb.h
  * \subsection asfdoc_udi_cdc_config_examples_1_1  UDI CDC Single
- * \include module_config\conf_usb.h
+ * \include module_config/conf_usb.h
  * \subsection asfdoc_udi_cdc_config_examples_1_2  UDI CDC Multiple (Composite)
- * \include composite\device\module_config\conf_usb.h
+ * \include composite/device/module_config/conf_usb.h
  *
  * \section asfdoc_udi_cdc_config_examples_2 conf_clock.h
  *
  * \subsection asfdoc_udi_cdc_config_examples_2_1 XMEGA (USB)
- * \include example\atxmega128b1_xmega_b1_xplained\conf_clock.h
+ * \include example/atxmega128b1_xmega_b1_xplained/conf_clock.h
  *
  * \subsection asfdoc_udi_cdc_config_examples_2_2 AT32UC3A0, AT32UC3A1, AT32UC3B Devices (USBB)
- * \include example\at32uc3a0512_evk1100\conf_clock.h
+ * \include example/at32uc3a0512_evk1100/conf_clock.h
  *
  * \subsection asfdoc_udi_cdc_config_examples_2_3 AT32UC3A3, AT32UC3A4 Devices (USBB with High Speed Support)
- * \include example\at32uc3a3256_evk1104\conf_clock.h
+ * \include example/at32uc3a3256_evk1104/conf_clock.h
  *
  * \subsection asfdoc_udi_cdc_config_examples_2_4 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U Devices (USBC)
- * \include example\at32uc3c0512c_uc3c_ek\conf_clock.h
+ * \include example/at32uc3c0512c_uc3c_ek/conf_clock.h
  *
  * \subsection asfdoc_udi_cdc_config_examples_2_5 SAM3S, SAM3SD, SAM4S Devices (UPD: USB Peripheral Device)
- * \include example\sam3s4c_sam3s_ek\conf_clock.h
+ * \include example/sam3s4c_sam3s_ek/conf_clock.h
  *
  * \subsection asfdoc_udi_cdc_config_examples_2_6 SAM3U Device (UPDHS: USB Peripheral Device High Speed)
- * \include example\sam3u4e_sam3u_ek\conf_clock.h
+ * \include example/sam3u4e_sam3u_ek/conf_clock.h
  *
  * \subsection asfdoc_udi_cdc_config_examples_2_7 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
- * \include example\sam3x8h_sam3x_ek\conf_clock.h
+ * \include example/sam3x8h_sam3x_ek/conf_clock.h
  *
  * \section asfdoc_udi_cdc_config_examples_3 conf_clocks.h
  *
  * \subsection asfdoc_udi_cdc_config_examples_3_1 SAMD21 Device (USB)
- * \include example\samd21j18a_samd21_xplained_pro\conf_clocks.h
+ * \include example/samd21j18a_samd21_xplained_pro/conf_clocks.h
  *
  * \section asfdoc_udi_cdc_config_examples_4 conf_board.h
  *
  * \subsection asfdoc_udi_cdc_config_examples_4_1 AT32UC3A0, AT32UC3A1, AT32UC3B Devices (USBB)
- * \include example\at32uc3a0512_evk1100\conf_board.h
+ * \include example/at32uc3a0512_evk1100/conf_board.h
  *
  * \subsection asfdoc_udi_cdc_config_examples_4_2 AT32UC3A3, AT32UC3A4 Devices (USBB with High Speed Support)
- * \include example\at32uc3a3256_evk1104\conf_board.h
+ * \include example/at32uc3a3256_evk1104/conf_board.h
  *
  * \subsection asfdoc_udi_cdc_config_examples_4_3 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U Devices (USBC)
- * \include example\at32uc3c0512c_uc3c_ek\conf_board.h
+ * \include example/at32uc3c0512c_uc3c_ek/conf_board.h
  *
  * \subsection asfdoc_udi_cdc_config_examples_4_4 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
- * \include example\sam3x8h_sam3x_ek\conf_board.h
+ * \include example/sam3x8h_sam3x_ek/conf_board.h
  *
  * \subsection asfdoc_udi_cdc_config_examples_4_5 SAMD21 Device (USB)
- * \include example\samd21j18a_samd21_xplained_pro\conf_board.h
+ * \include example/samd21j18a_samd21_xplained_pro/conf_board.h
  */
 
 /**
