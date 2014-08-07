@@ -77,9 +77,10 @@
 		</info>
 
 		<build type="include-path" value="."/>
+		<build type="include-path" value="extint_sam_d_r"/>
 		<build type="header-file" subtype="api" value="extint.h"/>
 		<build type="header-file" subtype="api" value="extint_callback.h"/>
-		<build type="c-source" value="extint.c"/>
+		<build type="c-source" value="extint_sam_d_r/extint.c"/>
 		<build type="c-source" value="extint_callback.c"/>
 
 		<build type="module-config" subtype="required-header-file" value="conf_extint.h"/>
@@ -96,11 +97,7 @@
 		<build type="doxygen-example-path" value="quick_start_callback"/>
 		<build type="doxygen-quick-start" value="asfdoc_samd0_extint_exqsg"/>
 
-		<device-support value="samd20"/>
-		<device-support value="samd21"/>
-		<device-support value="samr21"/>
-		<device-support value="samd10"/>
-		<device-support value="samd11"/>
+		<device-support value="sam0"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>

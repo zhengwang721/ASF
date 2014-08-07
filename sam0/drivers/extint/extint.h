@@ -63,6 +63,7 @@
  *  - SAM D20/D21
  *  - SAM R21
  *  - SAM D10/D11
+ *  - SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_extint_prerequisites
@@ -628,6 +629,9 @@ static inline void extint_nmi_clear_detected(
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Add SAML21 support</td>
  *	</tr>
  *	<tr>
  *		<td>Add SAMR21 support</td>

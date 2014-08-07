@@ -57,6 +57,7 @@
  *  - SAM D20/D21
  *  - SAM R21
  *  - SAM D10/D11
+ *  - SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_port_prerequisites
@@ -722,6 +723,9 @@ static inline enum status_code port_input_event_set_config(
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Added input event feature for port and support for SAML21</td>
  *	</tr>
  *	<tr>
  *		<td>Added support for SAMD21</td>
