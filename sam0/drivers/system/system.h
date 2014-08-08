@@ -149,7 +149,7 @@ extern "C" {
  * User reset: Resets caused by the application. It covers external reset, system reset 
  * request and watchdog reset.
  *
- *Backup reset: Resets caused by a backup mode exit condition.
+ * Backup reset: Resets caused by a backup mode exit condition.
  *
  * \subsection asfdoc_sam0_system_module_overview_performance_level Performance Level
  * Performance level allows use to adjust the regulator output voltage to reduce power consumption. 
@@ -160,6 +160,14 @@ extern "C" {
  * performance level, the voltage applied on the full logic area moves from a value to another, it can reduce
  * the active consumption while decreasing the maximum frequency of the device 
  *
+ * Performance level transition is possible only when the device is in active mode,after a reset, the device starts
+ * in the lowest performance level (lowest power consumption and lowest max frequency). The application can then 
+ * switch to another performance level at anytime without any stop in the code execution. As shown in
+ * \ref asfdoc_sam0_system_performance_level_transition_figure 
+ *
+ * \anchor asfdoc_sam0_system_performance_level_transition_figure
+ * \image html performance_level_transition.gif "The performance level  transition"
+ 
  * \subsection asfdoc_sam0_system_module_overview_power_domain Power Domain
  * Power domain gating  can  turn on or off power domain voltage to save power while keeping other
  * domain powered up. It can be used in standby sleep mode,in standby mode, when power-gated, the internal
@@ -170,10 +178,99 @@ extern "C" {
  * Switchable power domains (PD0, PD1 and PD2): these power domains uses the power domain gating
  * technique and can then be set to either active, retention or off state. 
  *
- * Always-on power domain: this power domain is either in active or off state
+ * Always-on power domain(PDTOP): this power domain is either in active or off state
  *
- * Backup power domain: this power domain is always in active state (except in off sleep mode).
- *  
+ * Backup power domain(PDBACKUP): this power domain is always in active state (except in off sleep mode).
+ * There are four cases to consider in standby mode:
+ *
+ * Case 1:PD0, PD1 and PD2  are running.
+ *
+ * Case 2:PD0 and PD1  are running while PD2 is in retention.
+ *
+ * Case 3:PD0 is running while PD1 and PD2 are in retention state.
+ *
+ * Case 4:PD0, PD1 and PD2  are in retention state
+ *
+ * Here is an overview of sleep mode versus power domain state.As shown in
+ * \ref asfdoc_sam0_system_power_domain_overview_table
+ *
+ * \anchor asfdoc_sam0_system_power_domain_overview_table
+ * <table>
+ *  <caption>Sleep Mode versus Power Domain State Overview</caption>
+ * 	<tr>
+ * 		<th>Sleep mode</th>
+ * 		<th></th>
+ * 		<th>PD0</th>
+ * 		<th>PD1</th>
+ * 		<th>PD2</th>
+ * 		<th>PDTOP</th>
+ * 		<th>PDBACKUP</th>
+ * 	</tr>
+ * 	<tr>
+ * 		<td>IDLE</td>
+ * 		<td></td>
+ * 		<td>active</td>
+ * 		<td>active</td>
+ * 		<td>active</td>
+ * 		<td>active</td>
+ * 		<td>active</td>
+ * 	</tr>
+ * 	<tr>
+ * 		<td>Standby</td>
+ * 		<td>Case 1</td>
+ * 		<td>active</td>
+ * 		<td>active</td>
+ * 		<td>active</td>
+ * 		<td>active</td>
+ * 		<td>active</td>
+ *	</tr>
+ * 	<tr>
+ * 		<td>Standby</td>
+ * 		<td>Case 2</td>
+ * 		<td>active</td>
+ * 		<td>active</td>
+ * 		<td>retention</td>
+ * 		<td>active</td>
+ * 		<td>active</td>
+ *	</tr>
+ * 	<tr>
+ * 		<td>Standby</td>
+ * 		<td>Case 3</td>
+ * 		<td>active</td>
+ * 		<td>retention</td>
+ * 		<td>retention</td>
+ * 		<td>active</td>
+ * 		<td>active</td>
+ *	</tr>
+ * 	<tr>
+ * 		<td>Standby</td>
+ * 		<td>Case 4</td>
+ * 		<td>retention</td>
+ * 		<td>retention</td>
+ * 		<td>retention</td>
+ * 		<td>active</td>
+ * 		<td>active</td>
+ *	</tr>
+ * 	<tr>
+ * 		<td>Backup</td>
+ * 		<td></td>
+ * 		<td>OFF</td>
+ * 		<td>OFF</td>
+ * 		<td>OFF</td>
+ * 		<td>OFF</td>
+ * 		<td>active</td>
+ *	</tr>
+ * 	<tr>
+ * 		<td>Off</td>
+ * 		<td></td>
+ * 		<td>OFF</td>
+ * 		<td>OFF</td>
+ * 		<td>OFF</td>
+ * 		<td>OFF</td>
+ * 		<td>OFF</td>
+ * 	</tr>
+ * </table>
+ *
  * \endif 
  *
  * \subsection asfdoc_sam0_system_module_overview_sleep_mode Sleep Modes
@@ -440,6 +537,9 @@ void system_init(void);
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Added low power features and  support for SAML21</td>
  *	</tr>
  *	<tr>
  *		<td>Added support for SAMD21</td>

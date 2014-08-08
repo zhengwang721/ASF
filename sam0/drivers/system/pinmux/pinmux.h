@@ -58,6 +58,7 @@
  *  - SAM D20/D21
  *  - SAM R21
  *  - SAM D10/D11
+ *  - SAM L21
  *
  * Physically, the modules are interconnected within the device as shown in the
  * following diagram:
@@ -603,6 +604,9 @@ void system_pinmux_group_set_output_drive(
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Add SAML21 support.</td>
  *	</tr>
  *	<tr>
  *		<td>Removed code of open drain, slew limit and drive strength
