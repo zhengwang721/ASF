@@ -43,7 +43,17 @@
 #include "extint.h"
 #include <system.h>
 #include <system_interrupt.h>
+#include "conf_extint.h"
 
+#if !defined(EXTINT_CLOCK_SOURCE) || defined(__DOXYGEN__)
+#  warning  EXTINT_CLOCK_SOURCE is not defined, assuming GCLK_GENERATOR_0.
+
+/** Configuration option, setting the EIC clock source which can be used for
+ *  EIC edge detection or filtering. This option may be overridden in the module
+ *  configuration header file \c conf_extint.h.
+ */
+#  define EXTINT_CLOCK_SOURCE GCLK_GENERATOR_0
+#endif
 
 /**
  * \internal
@@ -77,8 +87,8 @@ static void _extint_disable(void);
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true  If the module has completed synchronization
- * \retval false If the module synchronization is ongoing
+ * \retval true  If the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
  */
 static inline bool extint_is_syncing(void)
 {
@@ -89,7 +99,6 @@ static inline bool extint_is_syncing(void)
 			return true;
 		}
 	}
-
 	return false;
 }
 /**

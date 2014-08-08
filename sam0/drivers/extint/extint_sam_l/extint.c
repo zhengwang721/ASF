@@ -40,22 +40,33 @@
  * \asf_license_stop
  *
  */
-#include "extint.h"
 #include <system.h>
 #include <system_interrupt.h>
+#include "extint.h"
+#include "conf_extint.h"
 
-/**
- * \brief External interrupt synchronization busy enum.
- *
- * Enum for the possible synchronization busy modes of the External
- * Interrupt Controller module.
+#if !defined(EXTINT_CLOCK_SELECTION) || defined(__DOXYGEN__)
+#  warning  EXTINT_CLOCK_SELECTION is not defined, assuming EXTINT_CLK_GCLK.
+
+/** Configuration option, setting the EIC clock source which can be used for
+ *  EIC edge detection or filtering. This option may be overridden in the module
+ *  configuration header file \c conf_extint.h.
  */
-enum extint_syncing_busy_mode{
-	/**Enable synchronization busy mode. */
-	EXTINT_SYNC_BUSY_ENABLE    = 0,
-	/** Software reset synchronization busy mode. */
-	EXTINT_SYNC_BUSY_SOFTWARE_RESET  = 1,
-};
+#  define EXTINT_CLOCK_SELECTION EXTINT_CLK_GCLK
+#endif
+
+#if (EXTINT_CLOCK_SELECTION == EXTINT_CLK_GCLK)
+#if !defined(EXTINT_CLOCK_SOURCE) || defined(__DOXYGEN__)
+#  warning  EXTINT_CLOCK_SOURCE is not defined, assuming GCLK_GENERATOR_0.
+
+/** Configuration option, setting the EIC clock source which can be used for
+ *  EIC edge detection or filtering. This option may be overridden in the module
+ *  configuration header file \c conf_extint.h.
+ */
+#  define EXTINT_CLOCK_SOURCE GCLK_GENERATOR_0
+#endif
+#endif
+
 /**
  * \internal
  * Internal driver device instance struct.
@@ -77,7 +88,6 @@ struct _extint_module _extint_dev;
 static void _extint_enable(void);
 static void _extint_disable(void);
 
-
 /**
  * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
  *
@@ -87,21 +97,18 @@ static void _extint_disable(void);
  * that it is ready, to prevent blocking delays for synchronization in the
  * user application.
  *
- *  \param[in] mode  External Interrupt synchronization busy modes.
- *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true  If the module has completed synchronization
- * \retval false If the module synchronization is ongoing
+ * \retval true  If the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
  */
-static inline bool extint_is_syncing(
-					enum extint_syncing_busy_mode mode)
+static inline bool extint_is_syncing(void)
 {
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
-		if((mode == EXTINT_SYNC_BUSY_ENABLE	&& (eics[i]->SYNCBUSY.reg & EIC_SYNCBUSY_ENABLE))
-		 || (mode == EXTINT_SYNC_BUSY_SOFTWARE_RESET && (eics[i]->SYNCBUSY.reg & EIC_SYNCBUSY_SWRST))){
+		if((eics[i]->SYNCBUSY.reg & EIC_SYNCBUSY_ENABLE)
+		 || (eics[i]->SYNCBUSY.reg & EIC_SYNCBUSY_SWRST)){
 			return true;
 		}
 	}
@@ -133,6 +140,7 @@ void _system_extint_init(void)
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, MCLK_APBAMASK_EIC);
 
+#if (EXTINT_CLOCK_SELECTION == EXTINT_CLK_GCLK)
 	/* Configure the generic clock for the module and enable it */
 	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
@@ -142,13 +150,21 @@ void _system_extint_init(void)
 	/* Enable the clock anyway, since when needed it will be requested
 	 * by External Interrupt driver */
 	system_gclk_chan_enable(EIC_GCLK_ID);
+	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
+		eics[i]->CTRLA.bit.CKSEL = EXTINT_CLK_GCLK;
+	}
+#else
+	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
+		eics[i]->CTRLA.bit.CKSEL = EXTINT_CLK_ULP32K;
+	}
+#endif
 
 	/* Reset all EIC hardware modules. */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
 		eics[i]->CTRLA.reg |= EIC_CTRLA_SWRST;
 	}
 
-	while (extint_is_syncing(EXTINT_SYNC_BUSY_SOFTWARE_RESET)) {
+	while (extint_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 
@@ -181,7 +197,7 @@ void _extint_enable(void)
 		eics[i]->CTRLA.reg |= EIC_CTRLA_ENABLE;
 	}
 
-	while (extint_is_syncing(EXTINT_SYNC_BUSY_ENABLE)) {
+	while (extint_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 }
@@ -203,7 +219,7 @@ void _extint_disable(void)
 		eics[i]->CTRLA.reg &= ~EIC_CTRLA_ENABLE;
 	}
 
-	while (extint_is_syncing(EXTINT_SYNC_BUSY_ENABLE)) {
+	while (extint_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
 }
@@ -217,7 +233,6 @@ void _extint_disable(void)
  * user application.
  *
  * The default configuration is as follows:
- * \li The EIC is clocked by GCLK
  * \li Input filtering disabled
  * \li Internal pull-up enabled
  * \li Detect falling edges of a signal
@@ -234,7 +249,6 @@ void extint_chan_get_config_defaults(
 	config->gpio_pin            = 0;
 	config->gpio_pin_mux        = 0;
 	config->gpio_pin_pull       = EXTINT_PULL_UP;
-	config->extint_clk          = EXTINT_CLK_GCLK;
 	config->filter_input_signal = false;
 	config->detection_criteria  = EXTINT_DETECT_FALLING;
 }
@@ -257,30 +271,13 @@ void extint_chan_set_config(
 
 	/* Sanity check arguments */
 	Assert(config);
-	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
-	bool is_eic_enabled[EIC_INST_NUM] = {false};
-	
-	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
-		/*Check if need to switch EIC clock*/
-		if(config->extint_clk == eics[i]->CTRLA.bit.CKSEL){
-			if(config->extint_clk == EXTINT_CLK_GCLK){
-				/* Sanity check clock requirements */
-				Assert(!(!system_gclk_gen_is_enabled(EXTINT_CLOCK_SOURCE) &&
-				_extint_is_gclk_required(config->filter_input_signal,
-					config->detection_criteria)));
-			}
-		}else{/*Switch EIC clock*/
-			if(eics[i]->CTRLA.reg & EIC_CTRLA_ENABLE)
-			{
-				_extint_disable();
-				is_eic_enabled[i] = true;
-				eics[i]->CTRLA.bit.CKSEL = config->extint_clk;
-			}else{
-				eics[i]->CTRLA.bit.CKSEL = config->extint_clk;
-			}
-		}
-	}
-	
+	_extint_disable();
+#if(EXTINT_CLOCK_SELECTION == EXTINT_CLK_GCLK)
+	/* Sanity check clock requirements */
+	Assert(!(!system_gclk_gen_is_enabled(EXTINT_CLOCK_SOURCE) &&
+	_extint_is_gclk_required(config->filter_input_signal,
+		config->detection_criteria)));
+#endif
 	struct system_pinmux_config pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
 
@@ -308,12 +305,8 @@ void extint_chan_set_config(
 		= (EIC_module->CONFIG[channel / 8].reg &
 			~((EIC_CONFIG_SENSE0_Msk | EIC_CONFIG_FILTEN0) << config_pos)) |
 			(new_config << config_pos);
-	
-	for (uint32_t i = 0; i < EIC_INST_NUM; i++){
-		if(is_eic_enabled[i]){
-			_extint_enable();
-		}
-	}
+
+	_extint_enable();
 }
 
 /**
@@ -337,6 +330,7 @@ enum status_code extint_nmi_set_config(
 {
 	/* Sanity check arguments */
 	Assert(config);
+
 	/* Sanity check clock requirements */
 	Assert(!(!system_gclk_gen_is_enabled(EXTINT_CLOCK_SOURCE) &&
 		_extint_is_gclk_required(config->filter_input_signal,
@@ -366,12 +360,27 @@ enum status_code extint_nmi_set_config(
 
 	/* Disable EIC and general clock to configure NMI */
 	_extint_disable();
+#if(EXTINT_CLOCK_SELECTION == EXTINT_CLK_GCLK)
 	system_gclk_chan_disable(EIC_GCLK_ID);
+#else
+	
+	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
+	for (uint32_t i = 0; i < EIC_INST_NUM; i++){
+		eics[i]->CTRLA.bit.CKSEL = EXTINT_CLK_GCLK;
+		system_gclk_chan_disable(EIC_GCLK_ID);
+	}
+#endif
 
 	EIC_module->NMICTRL.reg = new_config;
 
-	/* Enable the general clock and EIC after configure NMI */
+	/* Enable the EIC clock and EIC after configure NMI */
+#if(EXTINT_CLOCK_SELECTION == EXTINT_CLK_GCLK)
 	system_gclk_chan_enable(EIC_GCLK_ID);
+#else
+	for (uint32_t i = 0; i < EIC_INST_NUM; i++){
+		eics[i]->CTRLA.bit.CKSEL = EXTINT_CLK_ULP32K;
+	}
+#endif
 	_extint_enable();
 
 	return STATUS_OK;
@@ -392,9 +401,11 @@ void extint_enable_events(
 {
 	/* Sanity check arguments */
 	Assert(events);
-	
+
 	/* Array of available EICs. */
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
+
+	_extint_disable();
 
 	/* Update the event control register for each physical EIC instance */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
@@ -406,16 +417,11 @@ void extint_enable_events(
 				event_mask |= (1UL << j);
 			}
 		}
-		if(eics[i]->CTRLA.reg & EIC_CTRLA_ENABLE){
-			_extint_disable();
-			/* Enable the masked events */
-			eics[i]->EVCTRL.reg |= event_mask;
-			_extint_enable();
-		}else{
-			/* Enable the masked events */
-			eics[i]->EVCTRL.reg |= event_mask;
-		}
+
+		/* Enable the masked events */
+		eics[i]->EVCTRL.reg |= event_mask;
 	}
+		_extint_enable();
 }
 
 /**
@@ -437,6 +443,8 @@ void extint_disable_events(
 	/* Array of available EICs. */
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 
+	_extint_disable();
+
 	/* Update the event control register for each physical EIC instance */
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
 		uint32_t event_mask = 0;
@@ -447,14 +455,9 @@ void extint_disable_events(
 				event_mask |= (1UL << j);
 			}
 		}
-		if(eics[i]->CTRLA.reg & EIC_CTRLA_ENABLE){
-			_extint_disable();
-			/* Disable the masked events */
-			eics[i]->EVCTRL.reg &= ~event_mask;
-			_extint_enable();
-		}else{
-			/* Disable the masked events */
-			eics[i]->EVCTRL.reg &= ~event_mask;
-		}	
+
+		/* Disable the masked events */
+		eics[i]->EVCTRL.reg &= ~event_mask;
 	}
+	_extint_enable();
 }

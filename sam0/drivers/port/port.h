@@ -725,7 +725,7 @@ static inline enum status_code port_input_event_set_config(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added input event feature for port and support for SAML21</td>
+ *		<td>Added input event feature and support for SAML21</td>
  *	</tr>
  *	<tr>
  *		<td>Added support for SAMD21</td>

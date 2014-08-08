@@ -219,20 +219,9 @@
 
 #include <compiler.h>
 #include <pinmux.h>
-#include <conf_extint.h>
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#if !defined(EXTINT_CLOCK_SOURCE) || defined(__DOXYGEN__)
-#  warning  EXTINT_CLOCK_SOURCE is not defined, assuming GCLK_GENERATOR_0.
-
-/** Configuration option, setting the EIC clock source which can be used for
- *  EIC edge detection or filtering. This option may be overridden in the module
- *  configuration header file \c conf_extint.h.
- */
-#  define EXTINT_CLOCK_SOURCE GCLK_GENERATOR_0
 #endif
 
 /**
@@ -275,17 +264,10 @@ enum extint_pull {
 	EXTINT_PULL_NONE      = SYSTEM_PINMUX_PIN_PULL_NONE,
 };
 
-/**
- * \brief External interrupt clock selection.
- *  List of external interrupt clocks.
- *  The specific feature is only available for SAM L21.
- */
-enum extint_clock_source {
-	/**The EIC is clocked by GCLK_EIC. */
-	EXTINT_CLK_GCLK    = 0,
-	/** The EIC is clocked by CLK_ULP32K. */
-	EXTINT_CLK_ULP32K  = 1,
-};
+/**The EIC is clocked by GCLK_EIC. */
+#define EXTINT_CLK_GCLK 0
+/** The EIC is clocked by CLK_ULP32K. */
+#define EXTINT_CLK_ULP32K 1 
 
 /**
  * \brief External Interrupt Controller channel configuration structure.
@@ -300,10 +282,7 @@ struct extint_chan_conf {
 	uint32_t gpio_pin_mux;
 	/** Internal pull to enable on the input pin. */
 	enum extint_pull gpio_pin_pull;
-#if (SAML21)
-	/**EIC clock selection*/
-	enum extint_clock_source extint_clk;
-#else	
+#if (!SAML21)
 	/** Wake up the device if the channel interrupt fires during sleep mode. */
 	bool wake_if_sleeping;
 #endif	
