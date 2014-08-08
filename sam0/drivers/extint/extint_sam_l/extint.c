@@ -268,15 +268,14 @@ void extint_chan_set_config(
 		const uint8_t channel,
 		const struct extint_chan_conf *const config)
 {
-
 	/* Sanity check arguments */
 	Assert(config);
 	_extint_disable();
 #if(EXTINT_CLOCK_SELECTION == EXTINT_CLK_GCLK)
 	/* Sanity check clock requirements */
 	Assert(!(!system_gclk_gen_is_enabled(EXTINT_CLOCK_SOURCE) &&
-	_extint_is_gclk_required(config->filter_input_signal,
-		config->detection_criteria)));
+		_extint_is_gclk_required(config->filter_input_signal,
+			config->detection_criteria)));
 #endif
 	struct system_pinmux_config pinmux_config;
 	system_pinmux_get_config_defaults(&pinmux_config);
@@ -363,7 +362,6 @@ enum status_code extint_nmi_set_config(
 #if(EXTINT_CLOCK_SELECTION == EXTINT_CLK_GCLK)
 	system_gclk_chan_disable(EIC_GCLK_ID);
 #else
-	
 	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
 	for (uint32_t i = 0; i < EIC_INST_NUM; i++){
 		eics[i]->CTRLA.bit.CKSEL = EXTINT_CLK_GCLK;
@@ -421,7 +419,7 @@ void extint_enable_events(
 		/* Enable the masked events */
 		eics[i]->EVCTRL.reg |= event_mask;
 	}
-		_extint_enable();
+	_extint_enable();
 }
 
 /**
