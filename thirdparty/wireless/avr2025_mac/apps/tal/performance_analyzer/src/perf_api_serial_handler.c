@@ -192,15 +192,16 @@ void serial_data_handler(void)
 			(RANGE_TEST_TX_OFF == node_info.main_state)) {
 		return;
 	}
-	
+	/*Remote Node Tests*/
 	if ((PER_TEST_RECEPTOR == node_info.main_state)&& remote_cmd_rcvd && buf_count)
 	
 	{
-		remote_cmd_rcvd = false;
-		
-		// write code to transmit the serial data over the air
-		if(send_remote_reply_cmd(&sio_tx_buf[head][curr_tx_buffer_index],(sio_tx_buf[head][1] +3) - curr_tx_buffer_index))
-		buf_count--;
+		remote_cmd_rcvd = false;		
+		if(send_remote_reply_cmd(&sio_tx_buf[head][curr_tx_buffer_index],(sio_tx_buf[head][1])))
+		{
+			
+			buf_count--;
+		}
 		return;
 	}
 
@@ -333,8 +334,8 @@ static uint8_t *get_next_tx_buffer(void)
 
 void convert_ota_serial_frame_rx(uint8_t *buf,uint8_t len)
 {
-	memcpy(sio_rx_buf,&len,1);
-	memcpy(sio_rx_buf+1,buf,len);
+
+	memcpy(sio_rx_buf,buf,len+1);
 	handle_incoming_msg();
 }
 /**
@@ -355,7 +356,6 @@ static inline void handle_incoming_msg(void)
 	 * commands */
 	if ((PEER_SEARCH_RANGE_RX == node_info.main_state) ||
 			(PEER_SEARCH_RANGE_TX == node_info.main_state) ||
-			(node_info.main_state == PER_TEST_RECEPTOR) ||
 			(RANGE_TEST_TX_ON == node_info.main_state) ||
 			(RANGE_TEST_TX_OFF == node_info.main_state)) {
 		return;
@@ -363,12 +363,13 @@ static inline void handle_incoming_msg(void)
 
 	/* Check for the error conditions */
 	error_code = check_error_conditions();
-
-    if((sio_rx_buf[MESSAGE_ID_POS] && 0X80) && (PER_TEST_INITIATOR == node_info.main_state))
+//check unsupported tests
+    if((sio_rx_buf[MESSAGE_ID_POS] & 0X80) && (PER_TEST_INITIATOR == node_info.main_state))
 	{
 		send_remote_cmd(sio_rx_buf,*sio_rx_buf);
 		return;
 	}
+	// to be moved to convert_ota_serial_frame_rx
 	else if((sio_rx_buf[MESSAGE_ID_POS] && 0X80) && (PER_TEST_RECEPTOR == node_info.main_state))
 	{
 		sio_rx_buf[MESSAGE_ID_POS] &=  0X7F;
@@ -500,7 +501,7 @@ static inline void handle_incoming_msg(void)
 		/* The node should be in the PER_TEST_INITIATOR
 		 * or SINGLE_NODE_TESTS state to allow this req
 		 */
-		if ((PER_TEST_INITIATOR == node_info.main_state) ||
+		if ((PER_TEST_INITIATOR == node_info.main_state) || (PER_TEST_RECEPTOR == node_info.main_state) ||
 				(SINGLE_NODE_TESTS == node_info.main_state)
 				) {
 			MEMCPY_ENDIAN(&param_value_temp,
@@ -562,7 +563,7 @@ static inline void handle_incoming_msg(void)
 		/* The node should be in the PER_TEST_INITIATOR
 		 * or SINGLE_NODE_TESTS state to allow this req
 		 */
-		if ((PER_TEST_INITIATOR == node_info.main_state) ||
+		if ((PER_TEST_INITIATOR == node_info.main_state) || (PER_TEST_RECEPTOR == node_info.main_state) ||
 				(SINGLE_NODE_TESTS == node_info.main_state)
 				) {
 			perf_get_req(sio_rx_buf[PARAM_TYPE_POS]); /* parameter
@@ -693,7 +694,7 @@ static inline void handle_incoming_msg(void)
 		/* The node should be in the PER_TEST_INITIATOR
 		 * or SINGLE_NODE_TESTS state to allow this req
 		 */
-		if ((PER_TEST_INITIATOR == node_info.main_state) ||
+		if ((PER_TEST_INITIATOR == node_info.main_state) || (PER_TEST_RECEPTOR == node_info.main_state) ||
 				(SINGLE_NODE_TESTS == node_info.main_state)
 				) {
 			if (START_CWT == sio_rx_buf[START_STOP_POS]) { /*
@@ -804,7 +805,7 @@ static inline void handle_incoming_msg(void)
 		/* The node should be in the PER_TEST_INITIATOR
 		 * or SINGLE_NODE_TESTS state to allow this req
 		 */
-		if ((PER_TEST_INITIATOR == node_info.main_state) ||
+		if ((PER_TEST_INITIATOR == node_info.main_state) || (PER_TEST_RECEPTOR == node_info.main_state) ||
 				(SINGLE_NODE_TESTS == node_info.main_state)
 				) {
 			read_trx_registers(((uint16_t)(sio_rx_buf[
@@ -853,7 +854,7 @@ static inline void handle_incoming_msg(void)
 		/* The node should be in the PER_TEST_INITIATOR
 		 * or SINGLE_NODE_TESTS state to allow this req
 		 */
-		if ((PER_TEST_INITIATOR == node_info.main_state) ||
+		if ((PER_TEST_INITIATOR == node_info.main_state) || (PER_TEST_RECEPTOR == node_info.main_state) ||
 				(SINGLE_NODE_TESTS == node_info.main_state)
 				) {
 			write_trx_registers(((uint16_t)(sio_rx_buf[
@@ -908,7 +909,7 @@ static inline void handle_incoming_msg(void)
 		/* The node should be in the PER_TEST_INITIATOR
 		 * or SINGLE_NODE_TESTS state to allow this req
 		 */
-		if ((PER_TEST_INITIATOR == node_info.main_state) ||
+		if ((PER_TEST_INITIATOR == node_info.main_state) || (PER_TEST_RECEPTOR == node_info.main_state) ||
 				(SINGLE_NODE_TESTS == node_info.main_state)
 				) {
 			dump_trx_register_values(((uint16_t)(sio_rx_buf[
@@ -1031,8 +1032,8 @@ static inline void handle_incoming_msg(void)
 		/* The node should be in the PER_TEST_INITIATOR
 		 * or SINGLE_NODE_TESTS state to allow this req
 		 */
-		if ((PER_TEST_INITIATOR == node_info.main_state) ||
-				(SINGLE_NODE_TESTS == node_info.main_state)
+		if ((PER_TEST_INITIATOR == node_info.main_state) || (PER_TEST_RECEPTOR == node_info.main_state) || 
+				(SINGLE_NODE_TESTS == node_info.main_state) 
 				) {
 			get_sensor_data();
 		} else {
@@ -1154,7 +1155,7 @@ static inline void handle_incoming_msg(void)
 		/* The node should be in the PER_TEST_INITIATOR
 		 * or SINGLE_NODE_TESTS state to allow this req
 		 */
-		if ((PER_TEST_INITIATOR == node_info.main_state) ||
+		if ((PER_TEST_INITIATOR == node_info.main_state) || (PER_TEST_RECEPTOR == node_info.main_state) ||
 				(SINGLE_NODE_TESTS == node_info.main_state)
 				) {
 			set_default_configuration();
@@ -1191,7 +1192,7 @@ static inline void handle_incoming_msg(void)
 		/* The node should be in the PER_TEST_INITIATOR
 		 * or SINGLE_NODE_TESTS state to allow this req
 		 */
-		if ((PER_TEST_INITIATOR == node_info.main_state) ||
+		if ((PER_TEST_INITIATOR == node_info.main_state) || (PER_TEST_RECEPTOR == node_info.main_state) ||
 				(SINGLE_NODE_TESTS == node_info.main_state)
 				) {
 			get_current_configuration();
@@ -1205,7 +1206,10 @@ static inline void handle_incoming_msg(void)
 	break;
 
 	default:
-
+{
+	
+	//make remterevd false
+}
 		break;
 	}
 }
@@ -1532,7 +1536,8 @@ void convert_ota_serial_frame_tx(uint8_t *buf,uint8_t len)
 		if (NULL == msg_buf) {
 			return;
 		}
-		memcpy(msg_buf,buf,len);
+		memcpy(msg_buf,buf,len+1);
+		* (msg_buf+len+1) = EOT;
 }
 /*
  * Function to  Range Test stop confirmation frame that must be sent to

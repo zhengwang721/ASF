@@ -242,8 +242,8 @@ bool send_remote_reply_cmd(uint8_t* serial_buf,uint8_t len)
 	seq_num_receptor++;
 	msg.seq_num = seq_num_receptor;
 
-	payload_length = ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-SIO_BUF_SIZE+len));
-	memcpy(&msg.payload.remote_test_req_data.remote_serial_data,serial_buf,len);
+	payload_length = ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-SIO_BUF_SIZE+len+1));
+	memcpy(&msg.payload.remote_test_req_data.remote_serial_data,serial_buf+1,len+1); // from length to be copied
 	/* Send the frame to Peer node */
 	if(MAC_SUCCESS == transmit_frame(FCF_SHORT_ADDR,(uint8_t *)&(node_info.peer_short_addr),FCF_SHORT_ADDR,
 	seq_num_receptor,
@@ -563,9 +563,10 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
 	break;
 	case REMOTE_TEST_CMD:
 	{
+		/*Command received by the receptor to start a test ,from the initiator node*/
 		uint8_t payload_len,serial_data_len;
 		payload_len  = *(mac_frame_info->mpdu);		
-		serial_data_len = payload_len - ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-SIO_BUF_SIZE));
+		serial_data_len = *(mac_frame_info->mpdu + 12);//;payload_len - ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-SIO_BUF_SIZE));
 		convert_ota_serial_frame_rx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);
 	}
 	case RANGE_TEST_START_PKT:

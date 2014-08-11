@@ -1204,7 +1204,7 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
 	{
 		uint8_t payload_len,serial_data_len;
 		payload_len  = *(mac_frame_info->mpdu);
-		serial_data_len = payload_len - ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-SIO_BUF_SIZE));
+		serial_data_len = *(mac_frame_info->mpdu + 12);
 		convert_ota_serial_frame_tx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);
 	}
 	case RESULT_RSP:
@@ -2065,6 +2065,11 @@ void start_cw_transmission(uint8_t tx_mode)
 	}
 
 #endif
+
+	op_mode = CONTINUOUS_TX_MODE;
+	/* Send Set confirmation with status SUCCESS */
+	usr_cont_wave_tx_confirm(MAC_SUCCESS, START_CWT, tx_mode);
+
 	switch (tx_mode) {
 	case CW_MODE: /* CW mode*/
 	{
@@ -2087,9 +2092,7 @@ void start_cw_transmission(uint8_t tx_mode)
 	}
 	}
 
-	op_mode = CONTINUOUS_TX_MODE;
-	/* Send Set confirmation with status SUCCESS */
-	usr_cont_wave_tx_confirm(MAC_SUCCESS, START_CWT, tx_mode);
+
 }
 
 /*
@@ -4471,8 +4474,8 @@ void send_remote_cmd(uint8_t* serial_buf,uint8_t len)
 	seq_num_initiator++;
 	msg.seq_num = seq_num_initiator;
 
-	payload_length = ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-SIO_BUF_SIZE+len));
-	memcpy(&msg.payload.remote_test_req_data.remote_serial_data,serial_buf,len);		
+	payload_length = ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-SIO_BUF_SIZE+len+1));
+	memcpy(&msg.payload.remote_test_req_data.remote_serial_data,serial_buf,len+1);		 //len+1 including length to be copied
 	/* Send the frame to Peer node */
 	if (MAC_SUCCESS == transmit_frame(FCF_SHORT_ADDR,
 	(uint8_t *)&(node_info.peer_short_addr),
@@ -4491,7 +4494,7 @@ void send_remote_cmd(uint8_t* serial_buf,uint8_t len)
 /**
  * \brief Function used to send set default config peer command
  *
- * \return    Trasmission status - success/failure
+ * \return    Transmission status - success/failure
  */
 static bool send_set_default_config_command(void)
 {
