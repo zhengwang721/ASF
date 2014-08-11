@@ -50,6 +50,11 @@ extern "C" {
 #endif
 
 /**
+ * \addtogroup asfdoc_sam0_system_group
+ * @{
+ */
+
+/**
  * \brief Voltage references within the device.
  *
  * List of available voltage references (VREF) that may be used within the
@@ -82,7 +87,7 @@ enum system_sleepmode {
 
 
 /**
- * \name Voltage references
+ * \name Voltage References
  * @{
  */
 
@@ -143,7 +148,7 @@ static inline void system_voltage_reference_disable(
 
 
 /**
- * \name Device sleep
+ * \name Device Sleep Control
  * @{
  */
 
@@ -202,6 +207,7 @@ static inline void system_sleep(void)
  * @}
  */
 
+/** @} */
 #ifdef __cplusplus
 }
 #endif

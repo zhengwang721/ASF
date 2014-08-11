@@ -66,7 +66,9 @@
 		<build type="header-file" value="power/power_sam_l/power.h"/>
 		<build type="header-file" value="reset/reset_sam_l/reset.h"/>
 		<build type="c-source" value="system.c"/>
+		<build type="doxygen-enable-section" value="DEVICE_SAML21_SUPPORT"/>
 		<build type="doxygen-entry-point" value="asfdoc_sam0_system_group"/>
+		<build type="doxygen-image-path" value="docimg"/>
 
 		<device-support value="saml21"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-saml21"/>

@@ -88,7 +88,7 @@
 		<build type="header-file" value="clock_saml21/clock_config_check.h" />
 		<build type="c-source" value="clock_saml21/clock.c"/>
 		<build type="c-source" value="clock_saml21/gclk.c"/>
-		
+
 		<build type="header-file" value="quick_start_gclk/qs_gclk_basic.h"/>
 		<build type="header-file" value="quick_start_clock/qs_clock_source.h"/>
 
@@ -155,7 +155,7 @@
 
 			<build type="module-config" subtype="path" value="clock_samd21_r21/module_config"/>
 			<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
-		
+
 
 			<require idref="sam0.drivers.system.interrupt"/>
 			<require idref="sam0.utils"/>

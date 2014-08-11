@@ -50,6 +50,11 @@ extern "C" {
 #endif
 
 /**
+ * \addtogroup asfdoc_sam0_system_group
+ * @{
+ */
+
+/**
  * \brief Reset causes of the system.
  *
  * List of possible reset causes of the system.
@@ -71,12 +76,12 @@ enum system_reset_cause {
 
 
 /**
- * \name Reset control
+ * \name Reset Control
  * @{
  */
 
 /**
- * \brief Reset the MCU
+ * \brief Reset the MCU.
  *
  * Resets the MCU and all associated peripherals and registers, except RTC, all 32kHz sources,
  * WDT (if ALWAYSON is set) and GCLK (if WRTLOCK is set).
@@ -88,7 +93,7 @@ static inline void system_reset(void)
 }
 
 /**
- * \brief Return the reset cause
+ * \brief Return the reset cause.
  *
  * Retrieves the cause of the last system reset.
  *
@@ -103,6 +108,7 @@ static inline enum system_reset_cause system_get_reset_cause(void)
  * @}
  */
 
+/** @} */
 #ifdef __cplusplus
 }
 #endif

@@ -102,9 +102,22 @@ extern "C" {
  *
  * \subsection asfdoc_sam0_system_clock_module_overview_cpu_clock CPU / Bus Clocks
  * The CPU and AHB/APBx buses are clocked by the same physical clock source
- * (referred in this module as the Main Clock), however the APBx buses may
- * have additional prescaler division ratios set to give each peripheral bus a
- * different clock speed.
+ * (referred in this module as the Main Clock).
+ * The CPU and bus clocks are divided into a number of clock domains. Each clock domain can
+ * run at different frequencies.
+ *
+ * There are three clock domains:
+ *
+ * CPU Clock Domain.
+ *
+ * Low Power Clock Domain(LP Clock Domain).
+ *
+ * Backup Clock Domain(BUP Clock Domain).
+ *
+ * Each clock domain (CPU, LP, BUP) can be changed on the fly.To ensure
+ * correct operation, frequencies must be selected so that BUPDIV ≥ LPDIV ≥ HSDIV.
+ * Also, frequencies must never exceed the specified maximum frequency for each clock domain.
+ * A module may be connected to several clock domains (for instance, AHB and APB).
  *
  * The general main clock tree for the CPU and associated buses is shown in
  * \ref asfdoc_sam0_system_clock_module_clock_tree "the figure below".
@@ -116,25 +129,23 @@ extern "C" {
  *   clk_src [label="Clock Sources", shape=none, height=0];
  *   node [label="CPU Bus" shape=ellipse] cpu_bus;
  *   node [label="AHB Bus" shape=ellipse] ahb_bus;
- *   node [label="APBA Bus" shape=ellipse] apb_a_bus;
- *   node [label="APBB Bus" shape=ellipse] apb_b_bus;
- *   node [label="APBC Bus" shape=ellipse] apb_c_bus;
+ *   node [label="APBx Bus" shape=ellipse] apb_bus;
  *   node [label="Main Bus\nPrescaler" shape=square] main_prescaler;
- *   node [label="APBA Bus\nPrescaler" shape=square] apb_a_prescaler;
- *   node [label="APBB Bus\nPrescaler" shape=square] apb_b_prescaler;
- *   node [label="APBC Bus\nPrescaler" shape=square] apb_c_prescaler;
+ *   node [label="CPU Clock\nPrescaler" shape=square] cpu_prescaler;
+ *   node [label="Low Power Clock\nPrescaler" shape=square] low_power_prescaler;
+ *   node [label="Backup clock\nPrescaler" shape=square] backup_prescaler;
  *   node [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2] main_clock_mux;
  *
  *   clk_src         -> main_clock_mux;
  *   main_clock_mux  -> main_prescaler;
- *   main_prescaler  -> cpu_bus;
- *   main_prescaler  -> ahb_bus;
- *   main_prescaler  -> apb_a_prescaler;
- *   main_prescaler  -> apb_b_prescaler;
- *   main_prescaler  -> apb_c_prescaler;
- *   apb_a_prescaler -> apb_a_bus;
- *   apb_b_prescaler -> apb_b_bus;
- *   apb_c_prescaler -> apb_c_bus;
+ *   main_prescaler  -> cpu_prescaler;
+ *   main_prescaler  -> low_power_prescaler;
+ *   main_prescaler  -> backup_prescaler;
+ *   cpu_prescaler -> cpu_bus;
+ *   cpu_prescaler -> ahb_bus;
+ *   low_power_prescaler -> ahb_bus;
+ *   low_power_prescaler -> apb_bus;
+ *   backup_prescaler -> apb_bus;
  * }
  * \enddot
  *
@@ -192,7 +203,7 @@ extern "C" {
  *   system_clock_source0 -> clock_gen0;
  *   clock_gen0    -> clock_chan0;
  *   clock_chan0   -> peripheral0;
- *   node [label="8MHz R/C\nOscillator (OSC8M)" shape=square fillcolor=white] system_clock_source1;
+ *   node [label="16MHz R/C\nOscillator (OSC16M)" shape=square fillcolor=white] system_clock_source1;
  *   node [label="Generator 1" shape=square] clock_gen1;
  *   node [label="Channel y" shape=square] clock_chan1;
  *   node [label="Channel z" shape=square] clock_chan2;
@@ -1024,7 +1035,7 @@ static inline uint32_t system_low_power_clock_get_hz(void)
 /**
  * \brief Retrieves the current frequency of backup clock.
  *
- * Retrieves the operating frequency of backup clock, obtained from  backup 
+ * Retrieves the operating frequency of backup clock, obtained from  backup
  * clock and the set backup clock divider.
  *
  * \return Current CPU frequency in Hz.
@@ -1300,7 +1311,7 @@ static inline void system_clock_source_dpll_get_config_defaults(
 	config->reference_divider   = 1;
 	config->reference_clock     = SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK;
 	config->prescaler           = SYSTEM_CLOCK_SOURCE_DPLL_DIV_1;
-		
+
 	config->lock_time           = SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT;
 	config->filter              = SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT;
 };
@@ -1373,12 +1384,16 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<td>Multiplexer</td>
  *	</tr>
  *	<tr>
+ *		<td>MCLK</td>
+ *		<td>Main Clock</td>
+ *	</tr>
+ *	<tr>
  *		<td>OSC32K</td>
  *		<td>Internal 32KHz Oscillator</td>
  *	</tr>
  *	<tr>
- *		<td>OSC8M</td>
- *		<td>Internal 8MHz Oscillator</td>
+ *		<td>OSC16M</td>
+ *		<td>Internal 16MHz Oscillator</td>
  *	</tr>
  *	<tr>
  *		<td>PLL</td>
@@ -1442,54 +1457,6 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>
- *			\li Corrected OSC32K startup time definitions.
- *			\li Support locking of OSC32K and XOSC32K config register (default: false).
- *			\li Added DPLL support, functions added:
- *			    \c system_clock_source_dpll_get_config_defaults() and
- *		        \c system_clock_source_dpll_set_config().
- *			\li Moved gclk channel locking feature out of the config struct,
- *			    functions added:
- *			    \c system_gclk_chan_lock(),
- *			    \c system_gclk_chan_is_locked(),
- *			    \c system_gclk_chan_is_enabled() and
- *			    \c system_gclk_gen_is_enabled().
- *		</td>
- *	</tr>
- *  <tr>
- *		<td>Fixed \c system_gclk_chan_disable() deadlocking if a channel is enabled
- *		    and configured to a failed/not running clock generator.</td>
- *  </tr>
- *	<tr>
- *		<td>
- *			\li Changed default value for CONF_CLOCK_DFLL_ON_DEMAND from \c true to \c false.
- *			\li Fixed system_flash_set_waitstates() failing with an assertion
- *			    if an odd number of wait states provided.
- *		</td>
- *	</tr>
- *	<tr>
- *		<td>
- *			\li Updated dfll configuration function to implement workaround for
- *			    errata 9905 in the DFLL module.
- *			\li Updated \c system_clock_init() to reset interrupt flags before
- *			    they are used, errata 10558.
- *			\li Fixed \c system_clock_source_get_hz() to return correcy DFLL
- *			    frequency number.
- *		</td>
- *	</tr>
- *	<tr>
- *		<td>\li Fixed \c system_clock_source_is_ready not returning the correct
- *              state for \c SYSTEM_CLOCK_SOURCE_OSC8M.
- *          \li Renamed the various \c system_clock_source_*_get_default_config()
- *              functions to \c system_clock_source_*_get_config_defaults() to
- *              match the remainder of ASF.
- *          \li Added OSC8M calibration constant loading from the device signature
- *              row when the oscillator is initialized.
- *          \li Updated default configuration of the XOSC32 to disable Automatic
- *              Gain Control due to silicon errata.
- *      </td>
- *	</tr>
- *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
@@ -1516,29 +1483,8 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>E</td>
- *		<td>04/2014</td>
- *		<td>Added support for SAMD10/D11.</td>
- *	</tr>
- *	<tr>
- *		<td>D</td>
- *		<td>02/2014</td>
- *		<td>Added support for SAMR21.</td>
- *	</tr>
- *	<tr>
- *		<td>C</td>
- *		<td>01/2014</td>
- *		<td>Added support for SAMD21.</td>
- *	</tr>
- *	<tr>
- *		<td>B</td>
- *		<td>06/2013</td>
- *		<td>Corrected documentation typos. Fixed missing steps in the Basic
- *          Use Case Quick Start Guide.</td>
- *	</tr>
- *	<tr>
  *		<td>A</td>
- *		<td>06/2013</td>
+ *		<td>08/2014</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
