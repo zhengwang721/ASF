@@ -87,7 +87,7 @@ enum system_sleepmode {
 
 
 /**
- * \name Voltage references
+ * \name Voltage References
  * @{
  */
 
@@ -148,7 +148,7 @@ static inline void system_voltage_reference_disable(
 
 
 /**
- * \name Device sleep
+ * \name Device Sleep Control
  * @{
  */
 

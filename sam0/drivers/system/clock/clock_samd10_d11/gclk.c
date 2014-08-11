@@ -64,7 +64,7 @@ static inline bool system_gclk_is_syncing(void)
 	if (GCLK->STATUS.reg & GCLK_STATUS_SYNCBUSY){
 		return true;
 	}
-	
+
 	return false;
 }
 

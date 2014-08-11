@@ -114,15 +114,15 @@ enum system_wakeup_debounce_count {
 };
 
 /**
- * \name Reset control
+ * \name Reset Control
  * @{
  */
 
 /**
- * \brief Reset the MCU
+ * \brief Reset the MCU.
  *
- * Resets the MCU and all associated peripherals and registers, except RTC,OSC32KCTRL,RSTC,
- * GCLK(if WRTLOCK is set) and I/O retention state of PM.
+ * Resets the MCU and all associated peripherals and registers, except RTC,
+ * OSC32KCTRL, RSTC, GCLK(if WRTLOCK is set) and I/O retention state of PM.
  *
  */
 static inline void system_reset(void)
@@ -131,7 +131,7 @@ static inline void system_reset(void)
 }
 
 /**
- * \brief Get the reset cause
+ * \brief Get the reset cause.
  *
  * Retrieves the cause of the last system reset.
  *
@@ -147,7 +147,7 @@ static inline enum system_reset_cause system_get_reset_cause(void)
  */
 
 /**
- * \name Backup exit reset control
+ * \name Backup Exit Control
  * @{
  */
 
@@ -164,7 +164,7 @@ static inline enum system_reset_backup_exit_source system_get_backup_exit_source
 }
 
 /**
- * \brief Set wakeup debounce counter
+ * \brief Set wakeup debounce counter.
  *
  * Set the wakeup debounce counter value with the given count.
  *
@@ -177,7 +177,7 @@ static inline void system_set_pin_wakeup_debounce_counter(
 }
 
 /**
- * \brief Set low polarity of wakeup input pin
+ * \brief Set low polarity of wakeup input pin.
  *
  * Set low polarity with the given wakeup input pin mask.
  *
@@ -189,7 +189,7 @@ static inline void system_set_pin_wakeup_polarity_low(const uint16_t pin_mask)
 }
 
 /**
- * \brief Set high polarity of wakeup input pin
+ * \brief Set high polarity of wakeup input pin.
  *
  * Set high polarity with the given wakeup input pin mask.
  *
@@ -235,24 +235,6 @@ static inline void system_disable_pin_wakeup(const uint16_t pin_mask)
 static inline uint16_t system_get_pin_wakeup_cause(void)
 {
 	return (RSTC_WKCAUSE_MASK & (RSTC->WKCAUSE.reg >> RSTC_WKCAUSE_WKCAUSE_Pos));
-}
-
-/**
- * \brief Set external wakeup detector clock.
- *
- * A 32kHz clock is required to clock the RSTC if the debounce counter of the external
- * wakeup detector is used.
- */
-static inline void system_set_pin_wakeup_clock(void)
-{
-	// to do:check the wakeup clock and APB clock
-	struct system_clock_source_osculp32k_config config_osculp32k;
-
-	system_clock_source_osculp32k_get_config_defaults(&config_osculp32k);
-	system_clock_source_osculp32k_set_config(&config_osculp32k);
-
-	/*ULP32K is always enabled*/
-	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_ULP32K);
 }
 
 /**

@@ -63,37 +63,41 @@ extern "C" {
  */
 enum system_sleepmode {
 	/** IDLE sleep mode. */
-	SYSTEM_SLEEPMODE_IDLE		= PM_SLEEPCFG_SLEEPMODE(0x2),//need update here
+	SYSTEM_SLEEPMODE_IDLE       = PM_SLEEPCFG_SLEEPMODE(0x2),
 	/** STANDBY sleep mode. */
-	SYSTEM_SLEEPMODE_STANDBY	= PM_SLEEPCFG_SLEEPMODE_STANDBY,
+	SYSTEM_SLEEPMODE_STANDBY    = PM_SLEEPCFG_SLEEPMODE_STANDBY,
 	/** BACKUP sleep mode. */
-	SYSTEM_SLEEPMODE_BACKUP		= PM_SLEEPCFG_SLEEPMODE_BACKUP,
+	SYSTEM_SLEEPMODE_BACKUP     = PM_SLEEPCFG_SLEEPMODE_BACKUP,
 	/** OFF sleep mode. */
-	SYSTEM_SLEEPMODE_OFF		= PM_SLEEPCFG_SLEEPMODE_OFF,
+	SYSTEM_SLEEPMODE_OFF        = PM_SLEEPCFG_SLEEPMODE_OFF,
 };
 
 /**
  * \brief Performance level.
  *
- * List of performance levels.
+ * List of performance levels. Performance level technique consists of
+ * adjusting the regulator output voltage to reduce power consumption.
  */
 enum system_performance_level {
 	/** Performance level 0. */
-	SYSTEM_PERFORMANCE_LEVEL_0		= PM_PLCFG_PLSEL_PL0,
+	SYSTEM_PERFORMANCE_LEVEL_0  = PM_PLCFG_PLSEL_PL0,
 	/** Performance level 1. */
-	SYSTEM_PERFORMANCE_LEVEL_1		= PM_PLCFG_PLSEL_PL1,
+	SYSTEM_PERFORMANCE_LEVEL_1  = PM_PLCFG_PLSEL_PL1,
 	/** Performance level 2. */
-	SYSTEM_PERFORMANCE_LEVEL_2		= PM_PLCFG_PLSEL_PL2,
+	SYSTEM_PERFORMANCE_LEVEL_2  = PM_PLCFG_PLSEL_PL2,
 };
 
 /**
- * \brief RAM back bias mode.
+ * \brief RAM Back-biasing mode.
  *
- * List of RAM back bias modes.
+ * List of RAM back bias modes. By default, in standby sleep mode,
+ * RAM is in low power mode (back biased) if its power domain is in
+ * retention state. This behavior can be changed by configuring the Back Bias
+ * bit groups in STDBYCFG(STDBYCFG.BBIASxx).
  */
 enum system_ram_back_bias_mode {
 	/** Retention Back biasing mode. */
-	SYSTEM_RAM_BACK_BIAS_RETENTION	= 0,
+	SYSTEM_RAM_BACK_BIAS_RETENTION = 0,
 	/** Standby Back Biasing mode. */
 	SYSTEM_RAM_BACK_BIAS_STANDBY,
 	/** Standby OFF mode. */
@@ -105,15 +109,17 @@ enum system_ram_back_bias_mode {
 /**
  * \brief Linked power domain.
  *
- * List of linked power domains.
+ * List of linked power domains. Power domains can be linked each other.
+ * It allows a power domain (PDn) to be kept in active state if the inferior
+ * power domain (PDn-1) is in active state too.
  */
 enum system_linked_power_domain {
 	/** Power domains PD0/PD1/PD2 are not linked. */
-	SYSTEM_LINKED_POWER_DOMAIN_DEFAULT	 = PM_STDBYCFG_LINKPD_DEFAULT_Val,
+	SYSTEM_LINKED_POWER_DOMAIN_DEFAULT   = PM_STDBYCFG_LINKPD_DEFAULT_Val,
 	/** Power domains PD0 and PD1 are linked. */
 	SYSTEM_LINKED_POWER_DOMAIN_PD01      = PM_STDBYCFG_LINKPD_PD01_Val,
 	/** Power domains PD1 and PD2 are linked. */
-	SYSTEM_LINKED_POWER_DOMAIN_PD12		 = PM_STDBYCFG_LINKPD_PD12_Val,
+	SYSTEM_LINKED_POWER_DOMAIN_PD12      = PM_STDBYCFG_LINKPD_PD12_Val,
 	/** All Power domains are linked.*/
 	SYSTEM_LINKED_POWER_DOMAIN_PD012     = PM_STDBYCFG_LINKPD_PD012_Val,
 };
@@ -121,29 +127,32 @@ enum system_linked_power_domain {
 /**
  * \brief Power domain.
  *
- * List of power domains.
+ * List of power domains. Power domain gating technique consists of turning
+ * on or off power domain voltage to save power while keeping other domain
+ * powered up.
  */
 enum system_power_domain {
 	/** All power domains switching are handled by hardware. */
-	SYSTEM_POWER_DOMAIN_DEFAULT	= PM_STDBYCFG_PDCFG_DEFAULT_Val,
+	SYSTEM_POWER_DOMAIN_DEFAULT = PM_STDBYCFG_PDCFG_DEFAULT_Val,
 	/** Power domain 0 (PD0) is forced ACTIVE. */
-	SYSTEM_POWER_DOMAIN_PD0		= PM_STDBYCFG_PDCFG_PD0_Val,
+	SYSTEM_POWER_DOMAIN_PD0     = PM_STDBYCFG_PDCFG_PD0_Val,
 	/** Power domain 0 and 1 (PD0 and PD1) are forced ACTIVE. */
-	SYSTEM_POWER_DOMAIN_PD01	= PM_STDBYCFG_PDCFG_PD01_Val,
+	SYSTEM_POWER_DOMAIN_PD01    = PM_STDBYCFG_PDCFG_PD01_Val,
 	/** All power domains are forced ACTIVE. */
-	SYSTEM_POWER_DOMAIN_PD012	= PM_STDBYCFG_PDCFG_PD012_Val,
+	SYSTEM_POWER_DOMAIN_PD012   = PM_STDBYCFG_PDCFG_PD012_Val,
 };
 
 /**
  * \brief Voltage regulator.
  *
- * Voltage regulators selection.
+ * Voltage regulators selection. In active mode, the voltage regulator
+ * can be chosen on the fly between a LDO or a Buck converter.
  */
 enum system_voltage_regulator_sel {
 	/** The voltage regulator in active mode is a LDO voltage regulator. */
-	SYSTEM_VOLTAGE_REGULATOR_LDO	= SUPC_VREG_SEL_LDO_Val,
+	SYSTEM_VOLTAGE_REGULATOR_LDO    = SUPC_VREG_SEL_LDO_Val,
 	/** The voltage regulator in active mode is a buck converter. */
-	SYSTEM_VOLTAGE_REGULATOR_BUCK	= SUPC_VREG_SEL_BUCK_Val,
+	SYSTEM_VOLTAGE_REGULATOR_BUCK   = SUPC_VREG_SEL_BUCK_Val,
 };
 
 /**
@@ -152,22 +161,22 @@ enum system_voltage_regulator_sel {
  * Voltage references selection.
  */
 enum system_voltage_references_sel {
-	/** 1.0V voltage reference typical value . */
-	SYSTEM_VOLTAGE_REFERENCE_1V0	= SUPC_VREF_SEL_1V0_Val,
-	/** 1.1V voltage reference typical value . */
-	SYSTEM_VOLTAGE_REFERENCE_1V1	= SUPC_VREF_SEL_1V1_Val,
-	/** 1.2V voltage reference typical value . */
-	SYSTEM_VOLTAGE_REFERENCE_1V2	= SUPC_VREF_SEL_1V2_Val,
-	/** 1.25V voltage reference typical value . */
-	SYSTEM_VOLTAGE_REFERENCE_1V25	= SUPC_VREF_SEL_1V25_Val,
-	/** 2.0V voltage reference typical value . */
-	SYSTEM_VOLTAGE_REFERENCE_2V0	= SUPC_VREF_SEL_2V0_Val,
-	/** 2.2V voltage reference typical value . */
-	SYSTEM_VOLTAGE_REFERENCE_2V2	= SUPC_VREF_SEL_2V2_Val,
-	/** 2.4V voltage reference typical value . */
-	SYSTEM_VOLTAGE_REFERENCE_2V4	= SUPC_VREF_SEL_2V4_Val,
-	/** 2.5V voltage reference typical value . */
-	SYSTEM_VOLTAGE_REFERENCE_2V5	= SUPC_VREF_SEL_2V5_Val,
+	/** 1.0V voltage reference typical value. */
+	SYSTEM_VOLTAGE_REFERENCE_1V0    = SUPC_VREF_SEL_1V0_Val,
+	/** 1.1V voltage reference typical value. */
+	SYSTEM_VOLTAGE_REFERENCE_1V1    = SUPC_VREF_SEL_1V1_Val,
+	/** 1.2V voltage reference typical value. */
+	SYSTEM_VOLTAGE_REFERENCE_1V2    = SUPC_VREF_SEL_1V2_Val,
+	/** 1.25V voltage reference typical value. */
+	SYSTEM_VOLTAGE_REFERENCE_1V25   = SUPC_VREF_SEL_1V25_Val,
+	/** 2.0V voltage reference typical value. */
+	SYSTEM_VOLTAGE_REFERENCE_2V0    = SUPC_VREF_SEL_2V0_Val,
+	/** 2.2V voltage reference typical value. */
+	SYSTEM_VOLTAGE_REFERENCE_2V2    = SUPC_VREF_SEL_2V2_Val,
+	/** 2.4V voltage reference typical value. */
+	SYSTEM_VOLTAGE_REFERENCE_2V4    = SUPC_VREF_SEL_2V4_Val,
+	/** 2.5V voltage reference typical value. */
+	SYSTEM_VOLTAGE_REFERENCE_2V5    = SUPC_VREF_SEL_2V5_Val,
 };
 
 /**
@@ -175,15 +184,15 @@ enum system_voltage_references_sel {
  *
  * Enum for Battery power switch modes.
  */
-enum system_battery_power_switch{
+enum system_battery_power_switch {
 	/** The backup domain is always supplied by main power. */
-	SYSTEM_BATTERY_POWER_SWITCH_NONE	= SUPC_BBPS_CONF_NONE_Val,
+	SYSTEM_BATTERY_POWER_SWITCH_NONE      = SUPC_BBPS_CONF_NONE_Val,
 	/** The power switch is handled by the automatic power switch. */
-	SYSTEM_BATTERY_POWER_SWITCH_APWS	= SUPC_BBPS_CONF_APWS_Val,
+	SYSTEM_BATTERY_POWER_SWITCH_AUTOMATIC = SUPC_BBPS_CONF_APWS_Val,
 	/** The backup domain is always supplied by battery backup power. */
-	SYSTEM_BATTERY_POWER_SWITCH_FORCED	= SUPC_BBPS_CONF_FORCED_Val,
+	SYSTEM_BATTERY_POWER_SWITCH_FORCED    = SUPC_BBPS_CONF_FORCED_Val,
 	/** The power switch is handled by the BOD33. */
-	SYSTEM_BATTERY_POWER_SWITCH_BOD33	= SUPC_BBPS_CONF_BOD33_Val,
+	SYSTEM_BATTERY_POWER_SWITCH_BOD33     = SUPC_BBPS_CONF_BOD33_Val,
 };
 
 /**
@@ -197,6 +206,22 @@ enum system_voltage_reference {
 	SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE,
 	/** Voltage reference output. */
 	SYSTEM_VOLTAGE_REFERENCE_OUTPUT,
+};
+
+/**
+ * \brief Backup IO enum.
+ *
+ * List of Backup input and output pins.
+ * If enabled(\ref system_backup_pin_output_enable), those pin can be driven
+ * by the SUPC.
+ */
+enum system_backup_pin {
+	/** Power Supply OK status pin */
+	SYSTEM_BACKUP_PIN_PSOK  = (0x1 << 0),
+	/** Backup output pin 0  */
+	SYSTEM_BACKUP_PIN_OUT_0 = (0x1 << 1),
+	/** Backup output pin 1  */
+	SYSTEM_BACKUP_PIN_OUT_1 = (0x1 << 2)
 };
 
 /**
@@ -233,7 +258,7 @@ struct system_voltage_regulator_config {
 	uint8_t  voltage_scale_period;
 	/** Voltage scaling voltage step */
 	uint8_t voltage_scale_step;
-	/** Run in standby in standby sleep mode*/
+	/** Run in standby in standby sleep mode */
 	bool run_in_standby;
 	/** Voltage Regulator Selection */
 	enum system_voltage_regulator_sel  regulator_sel;
@@ -256,26 +281,25 @@ struct system_voltage_references_config {
 /**
  * \brief Battery Backup Power Switch (BBPS) Control configuration.
  *
- * Configuration structure for BBPS.
+ * Configuration structure for Battery Backup Power Switch (BBPS).
  */
 struct system_battery_backup_power_switch_config {
-	/** Power supply OK enable. */
-	bool power_supply_ok_enabled;
 	/** Whether the device is woken up when switched
 		from battery backup power to main power. */
 	bool wake_enabled;
-	/**Battery backup power switch configuration. */
+	/** Battery backup power switch configuration. */
 	enum system_battery_power_switch battery_power_switch;
 };
+
 /** Performance level 0 maximum frequency. */
-#define	SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ 15000000UL
+#define	SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ    15000000UL
 /** Performance level 1 maximum frequency. */
-#define	SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ 30000000UL
+#define	SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ    30000000UL
 /** Performance level 2 maximum frequency. */
-#define	SYSTEM_PERFORMANCE_LEVEL_2_MAX_FREQ 60000000UL
+#define	SYSTEM_PERFORMANCE_LEVEL_2_MAX_FREQ    60000000UL
 
 /**
- * \name Voltage regulator
+ * \name Voltage Regulator
  * @{
  */
 
@@ -294,10 +318,10 @@ static inline void system_voltage_regulator_get_config_defaults(
 		struct system_voltage_regulator_config *const config)
 {
 	Assert(config);
-	config->voltage_scale_period     = 0;
-	config->voltage_scale_step       = 0;
-	config->run_in_standby 	   		 = false;
-	config->regulator_sel			 = SYSTEM_VOLTAGE_REGULATOR_LDO;
+	config->voltage_scale_period = 0;
+	config->voltage_scale_step   = 0;
+	config->run_in_standby       = false;
+	config->regulator_sel        = SYSTEM_VOLTAGE_REGULATOR_LDO;
 }
 
 /**
@@ -316,7 +340,7 @@ static inline void system_voltage_regulator_set_config(
 	SUPC->VREG.bit.VSVSTEP  = config->voltage_scale_step;
 	SUPC->VREG.bit.RUNSTDBY = config->run_in_standby;
 	SUPC->VREG.bit.SEL      = config->regulator_sel;
-	while(!(SUPC->STATUS.reg & SUPC_STATUS_VREGRDY)){
+	while(!(SUPC->STATUS.reg & SUPC_STATUS_VREGRDY)) {
 		;
 	}
 }
@@ -346,14 +370,14 @@ static inline void system_voltage_regulator_disable(void)
  */
 
 /**
- * \name Voltage references
+ * \name Voltage References
  * @{
  */
 
 /**
  * \brief Retrieve the default configuration for voltage reference.
  *
- * Fills a configuration structure with the default configuration:
+ * Fill a configuration structure with the default configuration:
  *   - 1.0V voltage reference typical value
  *   - On demand control:disabled
  *   - The voltage reference and the temperature sensor are halted during standby sleep mode
@@ -364,9 +388,9 @@ static inline void system_voltage_reference_get_config_defaults(
 		struct system_voltage_references_config *const config)
 {
 	Assert(config);
-	config->sel   			  = SYSTEM_VOLTAGE_REFERENCE_1V0;
-	config->on_demand         = false;
-	config->run_in_standby 	  = false;
+	config->sel            = SYSTEM_VOLTAGE_REFERENCE_1V0;
+	config->on_demand      = false;
+	config->run_in_standby = false;
 }
 
 /**
@@ -381,7 +405,7 @@ static inline void system_voltage_reference_set_config(
 		struct system_voltage_references_config *const config)
 {
 	Assert(config);
-	SUPC->VREF.bit.SEL 		= config->sel;
+	SUPC->VREF.bit.SEL      = config->sel;
 	SUPC->VREF.bit.ONDEMAND = config->on_demand;
 	SUPC->VREF.bit.RUNSTDBY = config->run_in_standby;
 }
@@ -438,7 +462,7 @@ static inline void system_voltage_reference_disable(
  */
 
 /**
- * \name Battery backup power switch
+ * \name Battery Backup Power Switch
  * @{
  */
 
@@ -456,9 +480,8 @@ static inline void system_battery_backup_power_switch_get_config_defaults(
 		struct system_battery_backup_power_switch_config *const config)
 {
 	Assert(config);
-	config->power_supply_ok_enabled   = false;
-	config->wake_enabled       		  = false;
-	config->battery_power_switch 	  = SYSTEM_BATTERY_POWER_SWITCH_NONE;
+	config->wake_enabled         = false;
+	config->battery_power_switch = SYSTEM_BATTERY_POWER_SWITCH_NONE;
 }
 
 /**
@@ -473,22 +496,18 @@ static inline void system_battery_backup_power_switch_set_config(
 		struct system_battery_backup_power_switch_config *const config)
 {
 	Assert(config);
-	uint32_t new_config = 0;
-	
-	if(config->power_supply_ok_enable){
-		new_config |= SUPC_BBPS_PSOKEN;
-	}
-	
-	if(config->wake_enabled){
+	uint32_t new_config = SUPC->BBPS.reg & SUPC_BBPS_PSOKEN;
+
+	if(config->wake_enabled) {
 		new_config |= SUPC_BBPS_WAKEEN;
 	}
-	
-	new_config |=SUPC_BBPS_CONF(config->battery_power_switch);
-	
+
+	new_config |= SUPC_BBPS_CONF(config->battery_power_switch);
+
 	SUPC->BBPS.reg = new_config;
-	
-	if(config->battery_power_switch == SYSTEM_BATTERY_POWER_SWITCH_APWS){
-		while(!(SUPC->STATUS.reg & SUPC_STATUS_APWSRDY)){
+
+	if (config->battery_power_switch == SYSTEM_BATTERY_POWER_SWITCH_AUTOMATIC) {
+		while (!(SUPC->STATUS.reg & SUPC_STATUS_APWSRDY)) {
 			;
 		}
 	}
@@ -499,137 +518,145 @@ static inline void system_battery_backup_power_switch_set_config(
  */
 
 /**
- * \name Output pins
+ * \name Output Pins in Backup Mode
  * @{
  */
 
 /**
- *  \brief Enable the backup output.
+ *  \brief Enable the backup pin output.
  *
  *  The output is enabled and driven by the SUPC.
  *
- *  \param[in] pin_mask Pin mask.
+ *  \param[in] pin Backup pin index.
  */
-static inline void system_enable_backup_output(
-		const uint8_t pin_mask)
+static inline void system_backup_pin_output_enable(
+		enum system_backup_pin pin)
 {
-	Assert(pin_mask <= 0x7u);
-
-	/*Bit 0 in pin mask is for PSOK pin,so we should right shift one bit first for output pin*/
-	SUPC->BKOUT.reg |= SUPC_BKOUT_EN(pin_mask >> 1);
+	if (pin == SYSTEM_BACKUP_PIN_PSOK) {
+		SUPC->BBPS.reg |= SUPC_BBPS_PSOKEN;
+	} else {
+		SUPC->BKOUT.reg |= SUPC_BKOUT_EN(pin >> 1);
+	}
 }
 
 /**
- *  \brief Disable the backup output.
+ *  \brief Disable the backup pin output.
  *
  *  The output is not enabled.
  *
- *  \param[in] pin_mask Input pin mask.
+ *  \param[in] pin Backup pin index.
  */
-static inline void system_disable_backup_output(
-		const uint8_t pin_mask)
+static inline void system_backup_pin_output_disable(
+		enum system_backup_pin pin)
 {
-	Assert(pin_mask <= 0x7u);
-
-	/*Bit 0 in pin mask is for PSOK pin,so we should right shift one bit first for output pin*/
-	SUPC->BKOUT.reg &= ~(SUPC_BKOUT_EN(pin_mask >> 1));
+	if (pin == SYSTEM_BACKUP_PIN_PSOK) {
+		SUPC->BBPS.reg &= ~SUPC_BBPS_PSOKEN;
+	} else {
+		SUPC->BKOUT.reg &= ~SUPC_BKOUT_EN(pin >> 1);
+	}
 }
 
 /**
- * \brief Determins if one output is enabled
+ * \brief Check if backup pin output is enabled.
  *
- *  \param[in] pin_mask One output pin mask,.
+ *  \param[in] pin Backup pin index.
  *
  * \return The enabled status.
  * \retval true The output is enabled;
  * \retval false The output is not enabled.
  */
-static inline bool system_backup_output_is_enabled(
-		const uint8_t pin_mask)
+static inline bool system_backup_pin_output_is_enabled(
+		enum system_backup_pin pin)
 {
-	Assert(pin_mask <= 0x7u);
+	bool enabled = false; 
 
-	/*Bit 0 in pin mask is for PSOK pin,so we should right shift one bit first for output pin*/
-	if(SUPC->BKOUT.reg & SUPC_BKOUT_EN(pin_mask >> 1)){
-		return true;
+	if (pin == SYSTEM_BACKUP_PIN_PSOK) {
+		if (SUPC->BBPS.reg & SUPC_BBPS_PSOKEN) {
+			enabled = true;
+		}
+	} else {
+		if (SUPC->BKOUT.reg & SUPC_BKOUT_EN(pin >> 1)) {
+			enabled = true;
+		}
 	}
-	return false;
+	return enabled;
 }
 
 /**
- * \brief Determins if the power supply OK is enabled
+ *  \brief Enable the backup pin toggle on RTC event.
  *
- * \return The enabled status.
- * \retval true enabled;
- * \retval false not enabled.
+ *  Toggle output on RTC event is enabled.
+ *
+ *  \param[in] pin Backup pin index.
  */
-static inline bool system_power_supply_ok_is_enabled(void)
+static inline void system_backup_pin_output_enable_rtc_toggle(
+		enum system_backup_pin pin)
 {
-	if(SUPC->BBPS.reg & SUPC_BBPS_PSOKEN){
-		return true;
-	}
-	return false;
+	Assert(pin != SYSTEM_BACKUP_PIN_PSOK);
+
+	SUPC->BKOUT.reg |= SUPC_BKOUT_RTCTGL(pin >> 1);
 }
 
 /**
- *  \brief Set the backup output.
+ *  \brief Disable the backup pin toggle on RTC event.
  *
- *  Set the corresponding output.
+ *  Toggle output on RTC event is disabled.
  *
- *  \param[in] pin_mask Pin mask.
+ *  \param[in] pin Backup pin index.
  */
-static inline void system_set_backup_output(
-		const uint8_t pin_mask)
+static inline void system_backup_pin_output_disable_rtc_toggle(
+		enum system_backup_pin pin)
 {
-	Assert(pin_mask <= 0x7u);
+	Assert(pin != SYSTEM_BACKUP_PIN_PSOK);
 
-	/*Bit 0 in pin mask is for PSOK pin,so we should right shift one bit first for output pin*/
-	SUPC->BKOUT.reg |= SUPC_BKOUT_SET(pin_mask >> 1);
+	SUPC->BKOUT.reg &= ~SUPC_BKOUT_RTCTGL(pin >> 1);
 }
 
 /**
- *  \brief Clear the backup output.
+ *  \brief Set the backup pin.
+ *
+ *  Set the corresponding output pin.
+ *
+ *  \param[in] pin Backup pin index.
+ */
+static inline void system_backup_pin_output_set(
+		enum system_backup_pin pin)
+{
+	Assert(pin != SYSTEM_BACKUP_PIN_PSOK);
+
+	SUPC->BKOUT.reg |= SUPC_BKOUT_SET(pin >> 1);
+}
+
+/**
+ *  \brief Clear the backup pin.
  *
  *  Clear the corresponding output.
  *
- *  \param[in] pin_mask Pin mask.
+ *  \param[in] pin Backup pin index.
  */
-static inline void system_clear_backup_output(
-		const uint8_t pin_mask)
+static inline void system_backup_pin_output_clear(
+		enum system_backup_pin pin)
 {
-	Assert(pin_mask <= 0x7u);
+	Assert(pin != SYSTEM_BACKUP_PIN_PSOK);
 
-	/*Bit 0 in pin mask is for PSOK pin,so we should right shift one bit first for output pin*/
-	SUPC->BKOUT.reg |= SUPC_BKOUT_CLR(pin_mask >> 1);
-}
-
-/**
- *  \brief Toggle output on RTC event.
- *
- *  Toggle output on RTC event.
- *
- *  \param[in] pin_mask Pin mask.
- */
-static inline void system_toggle_backup_output(
-		const uint8_t pin_mask)
-{
-	Assert(pin_mask <= 0x7u);
-
-	/*Bit 0 in pin mask is for PSOK pin,so we should right shift one bit first for output pin*/
-	SUPC->BKOUT.reg |= SUPC_BKOUT_RTCTGL(pin_mask >> 1);
+	SUPC->BKOUT.reg |= SUPC_BKOUT_CLR(pin >> 1);
 }
 
 /**
  *  \brief Get the backup I/O input values.
  *
- *  Get the backup I/O data input values,if the corresponding pin is enabled, 
+ *  Get the backup I/O data input values, if the corresponding pin is enabled,
  *  the I/O input value is given on the pin.
  *
- * \return The backup I/O input mask values
+ *  \param[in] pin Backup pin index.
+ *
+ * \return The backup I/O input level value.
  */
-static inline uint8_t system_get_backup_io_input_value(void)
+static inline bool system_backup_pin_output_get(enum system_backup_pin pin)
 {
-	return (SUPC->BKIN.reg & SUPC_BKIN_BKIN_Msk);
+	Assert(pin != SYSTEM_BACKUP_PIN_PSOK);
+
+	return (SUPC->BKIN.reg & SUPC_BKIN_BKIN(pin >> 1));
 }
 
 /**
@@ -637,7 +664,7 @@ static inline uint8_t system_get_backup_io_input_value(void)
  */
 
 /**
- * \name Device sleep
+ * \name Device Sleep Control
  * @{
  */
 
@@ -677,7 +704,7 @@ static inline void system_sleep(void)
  */
 
 /**
- * \name Performance level
+ * \name Performance Level Control
  * @{
  */
 
@@ -685,10 +712,12 @@ static inline void system_sleep(void)
  * \brief Switch performance level.
  *
  *  When scaling down the performance level,the bus frequency should be first
- *  scaled down in order to not exceed the maximum frequency allowed for the low performance level.
+ *  scaled down in order to not exceed the maximum frequency allowed for the
+ *  low performance level.
+ *
  *  When scaling up the performance level (for example from PL0 to PL2), the bus
- *  frequency can be increased only once the performance level transition is completed,check the
- *  performance level status.
+ *  frequency can be increased only once the performance level transition is
+ *  completed,check the performance level status.
  *
  * \param[in] performance_level  Performance level to switch.
  *
@@ -699,21 +728,25 @@ static inline enum status_code system_switch_performance_level(
 					const enum system_performance_level performance_level)
 {
 	/* Check the maximum frequency */
-	uint32_t system_performance_level_max_freq[3] = {SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ
-													,SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ
-													,SYSTEM_PERFORMANCE_LEVEL_2_MAX_FREQ};
-	if(system_cpu_clock_get_hz() > system_performance_level_max_freq[performance_level]){
+	uint32_t system_performance_level_max_freq[3] = {
+		SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ,
+		SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ,
+		SYSTEM_PERFORMANCE_LEVEL_2_MAX_FREQ
+	};
+
+	if (system_cpu_clock_get_hz() >
+			system_performance_level_max_freq[performance_level]) {
 		return STATUS_ERR_INVALID_ARG;
 	}
 
 	/* Clear performance level status */
 	PM->INTFLAG.reg = PM_INTFLAG_PLRDY;
 
-	/*Switch performance level*/
+	/* Switch performance level */
 	PM->PLCFG.reg = performance_level;
 
 	/* Waiting performance level ready */
-	while(!PM->INTFLAG.reg){
+	while (!PM->INTFLAG.reg) {
 		;
 	}
 	return STATUS_OK;
@@ -757,7 +790,7 @@ static inline void system_clear_performance_level_status(void)
  */
 
 /**
- * \name Standby configuration
+ * \name Standby Configuration
  * @{
  */
 
@@ -780,18 +813,18 @@ static inline void system_standby_get_config_defaults(
 		struct system_standby_config *const config)
 {
 	Assert(config);
-	config->power_domain       		= SYSTEM_POWER_DOMAIN_DEFAULT;
-	config->enable_dpgpd0      		= false;
-	config->enable_dpgpd1 	   		= false;
-	config->disable_avregsd    		= false;
-	config->linked_power_domain     = SYSTEM_LINKED_POWER_DOMAIN_DEFAULT;
-	config->hmcramchs_back_bias     = SYSTEM_RAM_BACK_BIAS_RETENTION;
-	config->hmcramclp_back_bias     = SYSTEM_RAM_BACK_BIAS_STANDBY;
-	config->picopram_back_bias      = SYSTEM_RAM_BACK_BIAS_STANDBY;
+	config->power_domain        = SYSTEM_POWER_DOMAIN_DEFAULT;
+	config->enable_dpgpd0       = false;
+	config->enable_dpgpd1       = false;
+	config->disable_avregsd     = false;
+	config->linked_power_domain = SYSTEM_LINKED_POWER_DOMAIN_DEFAULT;
+	config->hmcramchs_back_bias = SYSTEM_RAM_BACK_BIAS_RETENTION;
+	config->hmcramclp_back_bias = SYSTEM_RAM_BACK_BIAS_STANDBY;
+	config->picopram_back_bias  = SYSTEM_RAM_BACK_BIAS_STANDBY;
 }
 
 /**
- * \brief Configure standby.
+ * \brief Configure standby mode.
  *
  * Configures standby with the given configuration.
  *
@@ -803,9 +836,9 @@ static inline void system_standby_set_config(
 {
 	Assert(config);
 	PM->STDBYCFG.reg = PM_STDBYCFG_PDCFG(config->power_domain)
-					 | (config->enable_dpgpd0 ? PM_STDBYCFG_DPGPD0 :(~PM_STDBYCFG_DPGPD0))
-					 | (config->enable_dpgpd1 ? PM_STDBYCFG_DPGPD1 :(~PM_STDBYCFG_DPGPD1))
-					 | (config->disable_avregsd ? PM_STDBYCFG_AVREGSD :(~PM_STDBYCFG_AVREGSD))
+					 | (config->enable_dpgpd0 ? PM_STDBYCFG_DPGPD0 : (~PM_STDBYCFG_DPGPD0))
+					 | (config->enable_dpgpd1 ? PM_STDBYCFG_DPGPD1 : (~PM_STDBYCFG_DPGPD1))
+					 | (config->disable_avregsd ? PM_STDBYCFG_AVREGSD : (~PM_STDBYCFG_AVREGSD))
 					 | PM_STDBYCFG_LINKPD(config->linked_power_domain)
 					 | PM_STDBYCFG_BBIASHS(config->hmcramchs_back_bias)
 					 | PM_STDBYCFG_BBIASLP(config->hmcramclp_back_bias)
@@ -817,17 +850,17 @@ static inline void system_standby_set_config(
  */
 
 /**
- * \name I/O retention
+ * \name I/O Retention
  * @{
  */
 
 /**
  * \brief Enable I/O retention.
  *
- *  Enable I/O retention. After waking up from Backup mode, I/O lines are held until
- *  the bit is written to 0.
+ *  Enable I/O retention. After waking up from Backup mode, I/O lines are held
+ *  until the bit is written to 0.
  */
-static inline void system_enable_io_retension(void)
+static inline void system_io_retension_enable(void)
 {
 	PM->CTRLA.reg = PM_CTRLA_IORET;
 }
@@ -837,7 +870,7 @@ static inline void system_enable_io_retension(void)
  *
  * Disable IO retention. After waking up from Backup mode, I/O lines are not held.
  */
-static inline void system_disable_io_retension(void)
+static inline void system_io_retension_disable(void)
 {
 	PM->CTRLA.reg = PM_CTRLA_MASK & (~PM_CTRLA_IORET);
 }

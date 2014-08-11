@@ -103,7 +103,7 @@ extern "C" {
  * \subsection asfdoc_sam0_system_clock_module_overview_cpu_clock CPU / Bus Clocks
  * The CPU and AHB/APBx buses are clocked by the same physical clock source
  * (referred in this module as the Main Clock).
- * The CPU and bus clocks are divided into a number of clock domains. Each clock domain can 
+ * The CPU and bus clocks are divided into a number of clock domains. Each clock domain can
  * run at different frequencies.
  *
  * There are three clock domains:
@@ -113,9 +113,9 @@ extern "C" {
  * Low Power Clock Domain(LP Clock Domain).
  *
  * Backup Clock Domain(BUP Clock Domain).
- 
+ *
  * Each clock domain (CPU, LP, BUP) can be changed on the fly.To ensure
- * correct operation, frequencies must be selected so that BUPDIV ≥ LPDIV ≥ HSDIV. 
+ * correct operation, frequencies must be selected so that BUPDIV ≥ LPDIV ≥ HSDIV.
  * Also, frequencies must never exceed the specified maximum frequency for each clock domain.
  * A module may be connected to several clock domains (for instance, AHB and APB).
  *
@@ -1035,7 +1035,7 @@ static inline uint32_t system_low_power_clock_get_hz(void)
 /**
  * \brief Retrieves the current frequency of backup clock.
  *
- * Retrieves the operating frequency of backup clock, obtained from  backup 
+ * Retrieves the operating frequency of backup clock, obtained from  backup
  * clock and the set backup clock divider.
  *
  * \return Current CPU frequency in Hz.
@@ -1311,7 +1311,7 @@ static inline void system_clock_source_dpll_get_config_defaults(
 	config->reference_divider   = 1;
 	config->reference_clock     = SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK;
 	config->prescaler           = SYSTEM_CLOCK_SOURCE_DPLL_DIV_1;
-		
+
 	config->lock_time           = SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT;
 	config->filter              = SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT;
 };
