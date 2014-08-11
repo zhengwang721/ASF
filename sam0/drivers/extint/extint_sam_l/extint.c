@@ -150,13 +150,6 @@ void _system_extint_init(void)
 	/* Enable the clock anyway, since when needed it will be requested
 	 * by External Interrupt driver */
 	system_gclk_chan_enable(EIC_GCLK_ID);
-	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
-		eics[i]->CTRLA.bit.CKSEL = EXTINT_CLK_GCLK;
-	}
-#else
-	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
-		eics[i]->CTRLA.bit.CKSEL = EXTINT_CLK_ULP32K;
-	}
 #endif
 
 	/* Reset all EIC hardware modules. */
@@ -167,6 +160,16 @@ void _system_extint_init(void)
 	while (extint_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
+
+#if (EXTINT_CLOCK_SELECTION == EXTINT_CLK_GCLK)
+	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
+		eics[i]->CTRLA.bit.CKSEL = EXTINT_CLK_GCLK;
+	}
+#else
+	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
+		eics[i]->CTRLA.bit.CKSEL = EXTINT_CLK_ULP32K;
+	}
+#endif
 
 	/* Reset the software module */
 #if EXTINT_CALLBACK_MODE == true

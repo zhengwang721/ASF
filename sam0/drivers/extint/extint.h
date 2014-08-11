@@ -264,10 +264,10 @@ enum extint_pull {
 	EXTINT_PULL_NONE      = SYSTEM_PINMUX_PIN_PULL_NONE,
 };
 
-/**The EIC is clocked by GCLK_EIC. */
-#define EXTINT_CLK_GCLK 0
+/** The EIC is clocked by GCLK_EIC. */
+#define EXTINT_CLK_GCLK   0
 /** The EIC is clocked by CLK_ULP32K. */
-#define EXTINT_CLK_ULP32K 1 
+#define EXTINT_CLK_ULP32K 1
 
 /**
  * \brief External Interrupt Controller channel configuration structure.
