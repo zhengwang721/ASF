@@ -43,7 +43,17 @@
 #include "extint.h"
 #include <system.h>
 #include <system_interrupt.h>
+#include "conf_extint.h"
 
+#if !defined(EXTINT_CLOCK_SOURCE) || defined(__DOXYGEN__)
+#  warning  EXTINT_CLOCK_SOURCE is not defined, assuming GCLK_GENERATOR_0.
+
+/** Configuration option, setting the EIC clock source which can be used for
+ *  EIC edge detection or filtering. This option may be overridden in the module
+ *  configuration header file \c conf_extint.h.
+ */
+#  define EXTINT_CLOCK_SOURCE GCLK_GENERATOR_0
+#endif
 
 /**
  * \internal
@@ -66,6 +76,31 @@ struct _extint_module _extint_dev;
 static void _extint_enable(void);
 static void _extint_disable(void);
 
+/**
+ * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
+ *
+ * Checks to see if the underlying hardware peripheral module(s) are currently
+ * synchronizing across multiple clock domains to the hardware bus, This
+ * function can be used to delay further operations on a module until such time
+ * that it is ready, to prevent blocking delays for synchronization in the
+ * user application.
+ *
+ * \return Synchronization status of the underlying hardware module(s).
+ *
+ * \retval true  If the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
+ */
+static inline bool extint_is_syncing(void)
+{
+	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
+
+	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
+		if (eics[i]->STATUS.reg & EIC_STATUS_SYNCBUSY) {
+			return true;
+		}
+	}
+	return false;
+}
 /**
  * \internal
  * \brief Initializes and enables the External Interrupt driver.
@@ -164,6 +199,37 @@ void _extint_disable(void)
 	while (extint_is_syncing()) {
 		/* Wait for all hardware modules to complete synchronization */
 	}
+}
+
+/**
+ * \brief Initializes an External Interrupt channel configuration structure to defaults.
+ *
+ * Initializes a given External Interrupt channel configuration structure to a
+ * set of known default values. This function should be called on all new
+ * instances of these configuration structures before being modified by the
+ * user application.
+ *
+ * The default configuration is as follows:
+ * \li Wake the device if an edge detection occurs whilst in sleep
+ * \li Input filtering disabled
+ * \li Internal pull-up enabled
+ * \li Detect falling edges of a signal
+ *
+ * \param[out] config  Configuration structure to initialize to default values
+ */
+void extint_chan_get_config_defaults(
+		struct extint_chan_conf *const config)
+{
+	/* Sanity check arguments */
+	Assert(config);
+
+	/* Default configuration values */
+	config->gpio_pin            = 0;
+	config->gpio_pin_mux        = 0;
+	config->gpio_pin_pull       = EXTINT_PULL_UP;
+	config->wake_if_sleeping    = true;
+	config->filter_input_signal = false;
+	config->detection_criteria  = EXTINT_DETECT_FALLING;
 }
 
 /**

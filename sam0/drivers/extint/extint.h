@@ -63,6 +63,7 @@
  *  - SAM D20/D21
  *  - SAM R21
  *  - SAM D10/D11
+ *  - SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_extint_prerequisites
@@ -218,20 +219,9 @@
 
 #include <compiler.h>
 #include <pinmux.h>
-#include <conf_extint.h>
 
 #ifdef __cplusplus
 extern "C" {
-#endif
-
-#if !defined(EXTINT_CLOCK_SOURCE) || defined(__DOXYGEN__)
-#  warning  EXTINT_CLOCK_SOURCE is not defined, assuming GCLK_GENERATOR_0.
-
-/** Configuration option, setting the EIC clock source which can be used for
- *  EIC edge detection or filtering. This option may be overridden in the module
- *  configuration header file \c conf_extint.h.
- */
-#  define EXTINT_CLOCK_SOURCE GCLK_GENERATOR_0
 #endif
 
 /**
@@ -274,6 +264,11 @@ enum extint_pull {
 	EXTINT_PULL_NONE      = SYSTEM_PINMUX_PIN_PULL_NONE,
 };
 
+/** The EIC is clocked by GCLK_EIC. */
+#define EXTINT_CLK_GCLK   0
+/** The EIC is clocked by CLK_ULP32K. */
+#define EXTINT_CLK_ULP32K 1
+
 /**
  * \brief External Interrupt Controller channel configuration structure.
  *
@@ -287,8 +282,10 @@ struct extint_chan_conf {
 	uint32_t gpio_pin_mux;
 	/** Internal pull to enable on the input pin. */
 	enum extint_pull gpio_pin_pull;
+#if (!SAML21)
 	/** Wake up the device if the channel interrupt fires during sleep mode. */
 	bool wake_if_sleeping;
+#endif	
 	/** Filter the raw input signal to prevent noise from triggering an
 	 *  interrupt accidentally, using a 3 sample majority filter. */
 	bool filter_input_signal;
@@ -407,39 +404,6 @@ static inline Eic * _extint_get_eic_from_nmi(
 }
 #endif
 
-/** \name Configuration and initialization
- * @{
- */
-
-/**
- * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
- *
- * Checks to see if the underlying hardware peripheral module(s) are currently
- * synchronizing across multiple clock domains to the hardware bus, This
- * function can be used to delay further operations on a module until such time
- * that it is ready, to prevent blocking delays for synchronization in the
- * user application.
- *
- * \return Synchronization status of the underlying hardware module(s).
- *
- * \retval true  If the module has completed synchronization
- * \retval false If the module synchronization is ongoing
- */
-static inline bool extint_is_syncing(void)
-{
-	Eic *const eics[EIC_INST_NUM] = EIC_INSTS;
-
-	for (uint32_t i = 0; i < EIC_INST_NUM; i++) {
-		if (eics[i]->STATUS.reg & EIC_STATUS_SYNCBUSY) {
-			return true;
-		}
-	}
-
-	return false;
-}
-
-/** @} */
-
 /** \name Event management
  * @{
  */
@@ -456,36 +420,8 @@ void extint_disable_events(
  * @{
  */
 
-/**
- * \brief Initializes an External Interrupt channel configuration structure to defaults.
- *
- * Initializes a given External Interrupt channel configuration structure to a
- * set of known default values. This function should be called on all new
- * instances of these configuration structures before being modified by the
- * user application.
- *
- * The default configuration is as follows:
- * \li Wake the device if an edge detection occurs whilst in sleep
- * \li Input filtering disabled
- * \li Internal pull-up enabled
- * \li Detect falling edges of a signal
- *
- * \param[out] config  Configuration structure to initialize to default values
- */
-static inline void extint_chan_get_config_defaults(
-		struct extint_chan_conf *const config)
-{
-	/* Sanity check arguments */
-	Assert(config);
-
-	/* Default configuration values */
-	config->gpio_pin            = 0;
-	config->gpio_pin_mux        = 0;
-	config->gpio_pin_pull       = EXTINT_PULL_UP;
-	config->wake_if_sleeping    = true;
-	config->filter_input_signal = false;
-	config->detection_criteria  = EXTINT_DETECT_FALLING;
-}
+void extint_chan_get_config_defaults(
+		struct extint_chan_conf *const config);
 
 void extint_chan_set_config(
 		const uint8_t channel,
@@ -672,6 +608,9 @@ static inline void extint_nmi_clear_detected(
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Add SAML21 support</td>
  *	</tr>
  *	<tr>
  *		<td>Add SAMR21 support</td>

@@ -12,12 +12,12 @@
 			</info>
 			<build type="include-path" value="."/>
 			<build type="header-file" subtype="api" value="extint.h"/>
-			<build type="c-source" value="extint.c"/>
 			<build type="module-config" subtype="required-header-file" value="conf_extint.h"/>
 			<build type="module-config" subtype="path" value="module_config"/>
 			<build type="define" name="EXTINT_CALLBACK_MODE" value="false"/>
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
+			<require idref="sam0.drivers.extint.polled"/>
 			<device-support value="sam0"/>
 		</module>
 
@@ -28,17 +28,36 @@
 			<build type="include-path" value="."/>
 			<build type="header-file" subtype="api" value="extint.h"/>
 			<build type="header-file" subtype="api" value="extint_callback.h"/>
-			<build type="c-source" value="extint.c"/>
 			<build type="c-source" value="extint_callback.c"/>
 			<build type="module-config" subtype="required-header-file" value="conf_extint.h"/>
 			<build type="module-config" subtype="path" value="module_config"/>
 			<build type="define" name="EXTINT_CALLBACK_MODE" value="true"/>
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
+			<require idref="sam0.drivers.extint.polled"/>
 			<device-support value="sam0"/>
 		</module>
 	</select-by-config>
+	<select-by-device id="sam0.drivers.extint.polled" caption="EXTINT - External Interrupt">
+			<module type="driver" id="sam0.drivers.extint.polled#sam_d_r" caption="EXTINT - External Interrupt">
+				<build type="include-path" value="." />
+				<build type="include-path" value="extint_sam_d_r"/>
+				<build type="c-source" value="extint_sam_d_r/extint.c"/>
 
+				<device-support value="samd20"/>
+				<device-support value="samd21"/>
+				<device-support value="samr21"/>
+				<device-support value="samd10"/>
+				<device-support value="samd11"/>
+			</module>
+			<module type="driver" id="sam0.drivers.extint.polled#sam_l" caption="EXTINT - External Interrupt">
+				<build type="include-path" value="." />
+				<build type="include-path" value="extint_sam_l"/>
+				<build type="c-source" value="extint_sam_l/extint.c"/>
+
+				<device-support value="saml21"/>
+			</module>
+	</select-by-device>
 	<module type="driver" id="sam0.drivers.extint.appnote" caption="EXTINT - External Interrupt (Callback APIs)">
 		<info type="keyword" value="technology">
 			<keyword value="Interrupt" />
@@ -58,9 +77,10 @@
 		</info>
 
 		<build type="include-path" value="."/>
+		<build type="include-path" value="extint_sam_d_r"/>
 		<build type="header-file" subtype="api" value="extint.h"/>
 		<build type="header-file" subtype="api" value="extint_callback.h"/>
-		<build type="c-source" value="extint.c"/>
+		<build type="c-source" value="extint_sam_d_r/extint.c"/>
 		<build type="c-source" value="extint_callback.c"/>
 
 		<build type="module-config" subtype="required-header-file" value="conf_extint.h"/>
@@ -77,11 +97,7 @@
 		<build type="doxygen-example-path" value="quick_start_callback"/>
 		<build type="doxygen-quick-start" value="asfdoc_samd0_extint_exqsg"/>
 
-		<device-support value="samd20"/>
-		<device-support value="samd21"/>
-		<device-support value="samr21"/>
-		<device-support value="samd10"/>
-		<device-support value="samd11"/>
+		<device-support value="sam0"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 	</module>
 </asf>
