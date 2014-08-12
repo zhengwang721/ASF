@@ -12,8 +12,8 @@
 			</info>
 			<build type="include-path" value="."/>
 			<build type="header-file" subtype="api" value="extint.h"/>
-			<build type="module-config" subtype="required-header-file" value="conf_extint.h"/>
 			<build type="module-config" subtype="path" value="module_config"/>
+			<build type="module-config" subtype="required-header-file" value="conf_extint.h"/>
 			<build type="define" name="EXTINT_CALLBACK_MODE" value="false"/>
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
@@ -29,8 +29,8 @@
 			<build type="header-file" subtype="api" value="extint.h"/>
 			<build type="header-file" subtype="api" value="extint_callback.h"/>
 			<build type="c-source" value="extint_callback.c"/>
-			<build type="module-config" subtype="required-header-file" value="conf_extint.h"/>
 			<build type="module-config" subtype="path" value="module_config"/>
+			<build type="module-config" subtype="required-header-file" value="conf_extint.h"/>
 			<build type="define" name="EXTINT_CALLBACK_MODE" value="true"/>
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
