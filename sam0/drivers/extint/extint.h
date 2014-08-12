@@ -124,36 +124,36 @@
  * \anchor asfdoc_sam0_extint_filter_table
  * <table>
  *  <caption>Sampled input and resulting filtered output</caption>
- *	<tr>
- *		<th>Input Sample 1</th>
- *		<th>Input Sample 2</th>
- *		<th>Input Sample 3</th>
- *		<th>Filtered Output</th>
- *	</tr>
- *	<tr>
- *		<td>0</td> <td>0</td> <td>0</td> <td>0</td>
- *	</tr>
- *	<tr>
- *		<td>0</td> <td>0</td> <td>1</td> <td>0</td>
- *	</tr>
- *	<tr>
- *		<td>0</td> <td>1</td> <td>0</td> <td>0</td>
- *	</tr>
- *	<tr>
- *		<td>0</td> <td>1</td> <td>1</td> <td>1</td>
- *	</tr>
- *	<tr>
- *		<td>1</td> <td>0</td> <td>0</td> <td>0</td>
- *	</tr>
- *	<tr>
- *		<td>1</td> <td>0</td> <td>1</td> <td>1</td>
- *	</tr>
- *	<tr>
- *		<td>1</td> <td>1</td> <td>0</td> <td>1</td>
- *	</tr>
- *	<tr>
- *		<td>1</td> <td>1</td> <td>1</td> <td>1</td>
- *	</tr>
+ *  <tr>
+ *      <th>Input Sample 1</th>
+ *      <th>Input Sample 2</th>
+ *      <th>Input Sample 3</th>
+ *      <th>Filtered Output</th>
+ *  </tr>
+ *  <tr>
+ *      <td>0</td> <td>0</td> <td>0</td> <td>0</td>
+ *  </tr>
+ *  <tr>
+ *      <td>0</td> <td>0</td> <td>1</td> <td>0</td>
+ *  </tr>
+ *  <tr>
+ *      <td>0</td> <td>1</td> <td>0</td> <td>0</td>
+ *  </tr>
+ *  <tr>
+ *      <td>0</td> <td>1</td> <td>1</td> <td>1</td>
+ *  </tr>
+ *  <tr>
+ *      <td>1</td> <td>0</td> <td>0</td> <td>0</td>
+ *  </tr>
+ *  <tr>
+ *      <td>1</td> <td>0</td> <td>1</td> <td>1</td>
+ *  </tr>
+ *  <tr>
+ *      <td>1</td> <td>1</td> <td>0</td> <td>1</td>
+ *  </tr>
+ *  <tr>
+ *      <td>1</td> <td>1</td> <td>1</td> <td>1</td>
+ *  </tr>
  * </table>
  *
  * \subsection asfdoc_sam0_extint_module_overview_events Events and Interrupts
@@ -219,6 +219,7 @@
 
 #include <compiler.h>
 #include <pinmux.h>
+#include "conf_extint.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -285,7 +286,7 @@ struct extint_chan_conf {
 #if (!SAML21)
 	/** Wake up the device if the channel interrupt fires during sleep mode. */
 	bool wake_if_sleeping;
-#endif	
+#endif
 	/** Filter the raw input signal to prevent noise from triggering an
 	 *  interrupt accidentally, using a 3 sample majority filter. */
 	bool filter_input_signal;
@@ -570,22 +571,22 @@ static inline void extint_nmi_clear_detected(
  * The table below presents the acronyms used in this module:
  *
  * <table>
- *	<tr>
- *		<th>Acronym</th>
- *		<th>Description</th>
- *	</tr>
- *	<tr>
- *		<td>EIC</td>
- *		<td>External Interrupt Controller</td>
- *	</tr>
- *	<tr>
- *		<td>MUX</td>
- *		<td>Multiplexer</td>
- *	</tr>
- *	<tr>
- *		<td>NMI</td>
- *		<td>Non-Maskable Interrupt</td>
- *	</tr>
+ *  <tr>
+ *      <th>Acronym</th>
+ *      <th>Description</th>
+ *  </tr>
+ *  <tr>
+ *      <td>EIC</td>
+ *      <td>External Interrupt Controller</td>
+ *  </tr>
+ *  <tr>
+ *      <td>MUX</td>
+ *      <td>Multiplexer</td>
+ *  </tr>
+ *  <tr>
+ *      <td>NMI</td>
+ *      <td>Non-Maskable Interrupt</td>
+ *  </tr>
  * </table>
  *
  *
@@ -606,38 +607,38 @@ static inline void extint_nmi_clear_detected(
  * the table.
  *
  * <table>
- *	<tr>
- *		<th>Changelog</th>
- *	</tr>
- *	<tr>
- *		<td>Add SAML21 support</td>
- *	</tr>
- *	<tr>
- *		<td>Add SAMR21 support</td>
- *	</tr>
- *	<tr>
- *		<td>
- *		\li Driver updated to follow driver type convention.
- *		\li Removed \c %extint_reset(), \c %extint_disable() and
- *		    \c extint_enable() functions. Added internal function
- *		    \c %_system_extint_init().
- *		\li Added configuration EXTINT_CLOCK_SOURCE in conf_extint.h.
- *		\li Removed configuration EXTINT_CALLBACKS_MAX in conf_extint.h, and
- *		    added channel parameter in the register functions
- *		    \c %extint_register_callback() and \c %extint_unregister_callback().
- *		</td>
- *	</tr>
- *	<tr>
- *		<td>Updated interrupt handler to clear interrupt flag before calling
+ *  <tr>
+ *      <th>Changelog</th>
+ *  </tr>
+ *  <tr>
+ *      <td>Add SAML21 support</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Add SAMR21 support</td>
+ *  </tr>
+ *  <tr>
+ *      <td>
+ *      \li Driver updated to follow driver type convention.
+ *      \li Removed \c %extint_reset(), \c %extint_disable() and
+ *          \c extint_enable() functions. Added internal function
+ *          \c %_system_extint_init().
+ *      \li Added configuration EXTINT_CLOCK_SOURCE in conf_extint.h.
+ *      \li Removed configuration EXTINT_CALLBACKS_MAX in conf_extint.h, and
+ *          added channel parameter in the register functions
+ *         \c %extint_register_callback() and \c %extint_unregister_callback().
+ *      </td>
+ *  </tr>
+ *  <tr>
+ *      <td>Updated interrupt handler to clear interrupt flag before calling
  *          callback function.</td>
- *	</tr>
- *	<tr>
- *		<td>Updated initialization function to also enable the digital interface
+ *  </tr>
+ *  <tr>
+ *      <td>Updated initialization function to also enable the digital interface
  *          clock to the module if it is disabled.</td>
- *	</tr>
- *	<tr>
- *		<td>Initial Release</td>
- *	</tr>
+ *  </tr>
+ *  <tr>
+ *      <td>Initial Release</td>
+ *  </tr>
  * </table>
  */
 
@@ -645,7 +646,7 @@ static inline void extint_nmi_clear_detected(
  * \page asfdoc_sam0_extint_exqsg Examples for EXTINT Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_sam0_extint_group. 
+ * applications for \ref asfdoc_sam0_extint_group.
  * QSGs are simple examples with step-by-step instructions to configure and
  * use this driver in a selection of use cases. Note that QSGs can be compiled
  * as a standalone application or be added to the user application.
@@ -658,37 +659,37 @@ static inline void extint_nmi_clear_detected(
  * \page asfdoc_sam0_extint_document_revision_history Document Revision History
  *
  * <table>
- *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
- *	</tr>
- *	<tr>
- *		<td>E</td>
- *		<td>05/2014</td>
- *		<td>Added support for SAMD10/D11.</td>
- *	</tr>
- *	<tr>
- *		<td>D</td>
- *		<td>03/2014</td>
- *		<td>Added support for SAMR21.</td>
- *	</tr>
- *	<tr>
- *		<td>C</td>
- *		<td>01/2014</td>
- *		<td>Added support for SAMD21.</td>
- *	</tr>
- *	<tr>
- *		<td>B</td>
- *		<td>06/2013</td>
- *		<td>Added additional documentation on the event system. Corrected
+ *  <tr>
+ *      <th>Doc. Rev.</td>
+ *      <th>Date</td>
+ *      <th>Comments</td>
+ *  </tr>
+ *  <tr>
+ *      <td>E</td>
+ *      <td>05/2014</td>
+ *      <td>Added support for SAMD10/D11.</td>
+ *  </tr>
+ *  <tr>
+ *      <td>D</td>
+ *      <td>03/2014</td>
+ *      <td>Added support for SAMR21.</td>
+ *  </tr>
+ *  <tr>
+ *      <td>C</td>
+ *      <td>01/2014</td>
+ *      <td>Added support for SAMD21.</td>
+ *  </tr>
+ *  <tr>
+ *      <td>B</td>
+ *      <td>06/2013</td>
+ *      <td>Added additional documentation on the event system. Corrected
  *          documentation typos.</td>
- *	</tr>
- *	<tr>
- *		<td>A</td>
- *		<td>06/2013</td>
- *		<td>Initial release</td>
- *	</tr>
+ *  </tr>
+ *  <tr>
+ *      <td>A</td>
+ *      <td>06/2013</td>
+ *      <td>Initial release</td>
+ *  </tr>
  * </table>
  */
 
