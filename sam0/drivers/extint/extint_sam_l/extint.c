@@ -42,7 +42,8 @@
  */
 #include <system.h>
 #include <system_interrupt.h>
-#include "extint.h"
+#include <extint.h>
+#include <conf_extint.h>
 
 #if !defined(EXTINT_CLOCK_SELECTION) || defined(__DOXYGEN__)
 #  warning  EXTINT_CLOCK_SELECTION is not defined, assuming EXTINT_CLK_GCLK.

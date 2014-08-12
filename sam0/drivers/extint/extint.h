@@ -219,7 +219,6 @@
 
 #include <compiler.h>
 #include <pinmux.h>
-#include "conf_extint.h"
 
 #ifdef __cplusplus
 extern "C" {
