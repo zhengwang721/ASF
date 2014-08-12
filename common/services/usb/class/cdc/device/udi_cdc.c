@@ -960,7 +960,7 @@ iram_size_t udi_cdc_read_buf(void* buf, iram_size_t size)
 iram_size_t udi_cdc_multi_get_free_tx_buffer(uint8_t port)
 {
 	irqflags_t flags;
-	iram_size_t buf_sel_nb, buf_nosel_nb;
+	iram_size_t buf_sel_nb, buf_nosel_nb, retval;
 	uint8_t buf_sel;
 
 #if UDI_CDC_PORT_NB == 1 // To optimize code
@@ -983,9 +983,9 @@ iram_size_t udi_cdc_multi_get_free_tx_buffer(uint8_t port)
 			buf_nosel_nb = UDI_CDC_TX_BUFFERS;
 		}
 	}
+	retval = UDI_CDC_TX_BUFFERS - buf_sel_nb;  
 	cpu_irq_restore(flags);
-
-	return (UDI_CDC_TX_BUFFERS - buf_sel_nb) + (UDI_CDC_TX_BUFFERS - buf_nosel_nb);
+	return retval;
 }
 
 iram_size_t udi_cdc_get_free_tx_buffer(void)
