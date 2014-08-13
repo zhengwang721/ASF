@@ -116,6 +116,14 @@
  *    <td>FEATURE_RTC_CLOCK_SELECTION</td>
  *    <td>SAML21</td>
  *  </tr>
+ *  <tr>
+ *    <td>FEATURE_RTC_GENERAL_PURPOSE_REG</td>
+ *    <td>SAML21</td>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
+ *    <td>SAMD20,SAMD21,SAMR21,SAMD10,SAMD11</td>
+ *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
  * selected device supports those features.
@@ -368,6 +376,8 @@ extern "C" {
 #  define FEATURE_RTC_PRESCALER_OFF
 /** RTC clock selection */
 #  define FEATURE_RTC_CLOCK_SELECTION
+/** General purpose registers*/
+#  define FEATURE_RTC_GENERAL_PURPOSE_REG
 #else
 /** RTC continuously updated  */
 #  define FEATURE_RTC_CONTINUOUSLY_UPDATED
@@ -393,6 +403,23 @@ enum rtc_clock_sel {
 	/** 32.768kHz from 32.768kHz external crystal oscillator. */
 	RTC_CLOCK_SELECTION_XOSC32K = OSC32KCTRL_RTCCTRL_RTCSEL_XOSC32K_Val,
 };
+#endif
+
+#ifdef FEATURE_RTC_GENERAL_PURPOSE_REG
+/**
+ * \brief RTC general purpose type
+ * RTC general purpose type
+ */
+enum rtc_general_purpose_type {
+	/** RTC general purpose type 0. */
+	RTC_GENERAL_PURPOSE_TYPE_0 = 0,
+	/** RTC general purpose type 1. */
+	RTC_GENERAL_PURPOSE_TYPE_1 ,
+	/** RTC general purpose type 2. */
+	RTC_GENERAL_PURPOSE_TYPE_2 ,
+	/** RTC general purpose type 3. */
+	RTC_GENERAL_PURPOSE_TYPE_3 ,
+} 
 #endif
 
 #if !defined (RTC_NUM_OF_ALARMS) && defined(RTC_ALARM_NUM)
@@ -1060,6 +1087,58 @@ static inline void rtc_calendar_disable_events(
 }
 
 /** @} */
+
+#ifdef FEATURE_RTC_GENERAL_PURPOSE_REG
+/**
+ * \name RTC General Purpose Registers
+ * @{
+ */
+
+/**
+ * \brief Write a value into general purpose register.
+ *
+ * \param[in] module  Pointer to the software instance struct
+ * \param[in] n  General purpose type
+ * \param[in] value Value to for general purpose
+ *
+ */
+static inline void rtc_write_general_purpose_reg(
+	struct rtc_module *const module,
+	const enum rtc_general_purpose_type n,
+	uint32_t value)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
+
+	rtc_module->MODE0.GP[n].reg = value;
+}
+
+/**
+ * \brief Get the value from general purpose register.
+ *
+ * \param[in] module  Pointer to the software instance struct
+ * \param[in] n  General purpose type
+ *
+ * \retval Value of general purpose register
+ */
+static inline uint32_t rtc_get_general_purpose_value(
+	struct rtc_module *const module,
+	const enum rtc_general_purpose_type n)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
+
+	return rtc_module->MODE0.GP[n].reg;
+}
+
+/** @} */
+#endif
 
 /** @} */
 
