@@ -137,7 +137,7 @@ void per_mode_receptor_init(void *parameter)
 	seq_num_receptor = rand();
 
 	printf("\r\n Starting PER Measurement mode as Reflector");
-
+	config_per_test_parameters();
 #ifdef EXT_RF_FRONT_END_CTRL
 	/* Enable RF front end control in PER Measurement mode*/
 	trx_bit_write(SR_PA_EXT_EN, PA_EXT_ENABLE);
@@ -558,15 +558,16 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
 
 	case SET_DEFAULT_REQ:
 	{
-		set_default_configuration_peer_node();
+		//set_default_configuration_peer_node();
+		config_per_test_parameters();
+		
 	}
 	break;
 	case REMOTE_TEST_CMD:
 	{
 		/*Command received by the receptor to start a test ,from the initiator node*/
-		uint8_t payload_len,serial_data_len;
-		payload_len  = *(mac_frame_info->mpdu);		
-		serial_data_len = *(mac_frame_info->mpdu + 12);//;payload_len - ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-SIO_BUF_SIZE));
+		uint8_t serial_data_len;	
+		serial_data_len = *(mac_frame_info->mpdu + 12);
 		convert_ota_serial_frame_rx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);
 	}
 	case RANGE_TEST_START_PKT:
@@ -1190,6 +1191,9 @@ static void get_node_info(peer_info_rsp_t *data)
 	strcpy(data->board_name, BOARD_NAME);
 	/* Get the MAC address of the node */
 	data->mac_address = tal_pib.IeeeAddress;
+	data->fw_version = reverse_float(FIRMWARE_VERSION);
+	data->feature_mask = (MULTI_CHANNEL_SELECT)|(PER_RANGE_TEST_MODE)|(PER_REMOTE_CONFIG_MODE);
+	
 }
 
 #if (ANTENNA_DIVERSITY == 1)

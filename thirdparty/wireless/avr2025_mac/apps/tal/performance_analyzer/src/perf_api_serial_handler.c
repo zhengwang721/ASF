@@ -196,7 +196,8 @@ void serial_data_handler(void)
 	if ((PER_TEST_RECEPTOR == node_info.main_state)&& remote_cmd_rcvd && buf_count)
 	
 	{
-		remote_cmd_rcvd = false;		
+		remote_cmd_rcvd = false;	
+		sio_tx_buf[head][3] |= 0X80;	
 		if(send_remote_reply_cmd(&sio_tx_buf[head][curr_tx_buffer_index],(sio_tx_buf[head][1])))
 		{
 			
@@ -438,7 +439,7 @@ static inline void handle_incoming_msg(void)
 						NULL,
 						NULL,
 						NULL,
-						(uint64_t)NUL_VAL);
+						(uint64_t)NUL_VAL,NUL_VAL,NUL_VAL);
 			}
 		} else {
 			/* Send the confirmation with status as INVALID_CMD as
@@ -452,7 +453,7 @@ static inline void handle_incoming_msg(void)
 					NULL,
 					NULL,
 					NULL,
-					(uint64_t)NUL_VAL);
+					(uint64_t)NUL_VAL,NUL_VAL,NUL_VAL);
 		}
 	}
 	break;
@@ -1236,7 +1237,8 @@ void usr_perf_start_confirm(uint8_t status,
 		char *peer_soc_mcu_name,
 		char *peer_trx_name,
 		char *peer_board_name,
-		uint64_t peer_mac_address)
+		uint64_t peer_mac_address,
+		float fw_version,uint32_t feature_mask)
 {
 	uint8_t byte_cnt;
 	uint8_t *msg_buf;
@@ -1340,6 +1342,12 @@ void usr_perf_start_confirm(uint8_t status,
 		memcpy(msg_buf, &peer_mac_address, EXT_ADDR_LEN);
 		*ptr_to_msg_size += EXT_ADDR_LEN;
 		msg_buf += EXT_ADDR_LEN;
+		memcpy(msg_buf, &fw_version, sizeof(float));
+		*ptr_to_msg_size += sizeof(float);
+		msg_buf += sizeof(float);
+		memcpy(msg_buf, &feature_mask, sizeof(uint32_t));
+		*ptr_to_msg_size += sizeof(uint32_t);
+		msg_buf += sizeof(uint32_t);
 	} else {
 		/* IC type */
 		*msg_buf++ = 0x00; /* Length byte 0 as no string present */
@@ -1357,6 +1365,12 @@ void usr_perf_start_confirm(uint8_t status,
 			*msg_buf++ = FIELD_DOES_NOT_EXIST;
 		}
 		*ptr_to_msg_size += EXT_ADDR_LEN;
+		memset(msg_buf, 0X00, sizeof(float));
+		*ptr_to_msg_size += sizeof(float);
+		msg_buf += sizeof(float);
+		memset(msg_buf, 0X00, sizeof(uint32_t));
+		*ptr_to_msg_size += sizeof(uint32_t);
+		msg_buf += sizeof(uint32_t);		
 	}
 
 	*msg_buf = EOT;

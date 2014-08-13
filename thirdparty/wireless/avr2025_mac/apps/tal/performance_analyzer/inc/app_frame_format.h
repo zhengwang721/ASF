@@ -215,6 +215,8 @@ typedef struct {
 	char trx_name[16];
 	char board_name[25];
 	uint64_t mac_address;
+	float fw_version;
+	uint32_t feature_mask;
 } peer_info_rsp_t;
 
 typedef struct {

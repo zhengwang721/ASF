@@ -124,4 +124,29 @@ void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl)
 
 #endif /* End of EXT_RF_FRONT_END_CTRL */
 
+/**
+ * \brief The reverse_float is used for reversing a float variable for
+ * supporting BIG ENDIAN systems
+ * \param float_val Float variable to be reversed
+ */
+float reverse_float( const float float_val )
+{
+	float retuVal;
+	char *floatToConvert = (char *)&float_val;
+	char *returnFloat = (char *)&retuVal;
+#if UC3
+	/* swap the bytes into a temporary buffer */
+	returnFloat[0] = floatToConvert[3];
+	returnFloat[1] = floatToConvert[2];
+	returnFloat[2] = floatToConvert[1];
+	returnFloat[3] = floatToConvert[0];
+#else
+	returnFloat[0] = floatToConvert[0];
+	returnFloat[1] = floatToConvert[1];
+	returnFloat[2] = floatToConvert[2];
+	returnFloat[3] = floatToConvert[3];
+#endif
+	return retuVal;
+}
+
 /* EOF */

@@ -204,7 +204,7 @@ static bool validate_tx_power(int8_t dbm_value);
 #endif
 static float calculate_time_duration(void);
 static float calculate_net_data_rate(float per_test_duration_sec);
-static void config_per_test_parameters(void);
+
 static void set_channel(uint8_t channel);
 static void set_channel_page(uint8_t channel_page);
 static void set_tx_power(uint8_t tx_power_format, int8_t power_value);
@@ -229,7 +229,7 @@ static bool send_per_test_start_cmd(void);
 static bool send_range_test_start_cmd(void);
 static bool send_range_test_stop_cmd(void);
 
-static float reverse_float( const float float_val );
+
 
 /* === GLOBALS ============================================================= */
 static bool scanning = false;
@@ -280,30 +280,7 @@ static uint8_t last_tx_power_format_set;
 
 static uint32_t range_test_frame_cnt = 0;
 
-/**
- * \brief The reverse_float is used for reversing a float variable for
- * supporting BIG ENDIAN systems
- * \param float_val Float variable to be reversed
- */
-static float reverse_float( const float float_val )
-{
-	float retuVal;
-	char *floatToConvert = (char *)&float_val;
-	char *returnFloat = (char *)&retuVal;
-#if UC3
-	/* swap the bytes into a temporary buffer */
-	returnFloat[0] = floatToConvert[3];
-	returnFloat[1] = floatToConvert[2];
-	returnFloat[2] = floatToConvert[1];
-	returnFloat[3] = floatToConvert[0];
-#else
-	returnFloat[0] = floatToConvert[0];
-	returnFloat[1] = floatToConvert[1];
-	returnFloat[2] = floatToConvert[2];
-	returnFloat[3] = floatToConvert[3];
-#endif
-	return retuVal;
-}
+
 
 /* Size constants for PERformance configuration parameters */
 FLASH_DECLARE(uint8_t perf_config_param_size[]) = {
@@ -379,7 +356,7 @@ void per_mode_initiator_init(void *parameter)
 				NULL,
 				NULL,
 				NULL,
-				NUL_VAL);
+				NUL_VAL,NUL_VAL,NUL_VAL);
 	}
 
 #ifdef EXT_RF_FRONT_END_CTRL
@@ -578,7 +555,7 @@ static void wait_for_reply_timer_handler_cb(void *parameter)
 				NULL,
 				NULL,
 				NULL,
-				NUL_VAL );
+				NUL_VAL,NUL_VAL,NUL_VAL );
 	}
 		/* As the peer did not responds with its details */
 		app_reset();
@@ -1432,7 +1409,9 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
 						msg->payload.peer_info_rsp_data.soc_mcu_name,
 						msg->payload.peer_info_rsp_data.trx_name,
 						msg->payload.peer_info_rsp_data.board_name,
-						msg->payload.peer_info_rsp_data.mac_address );
+						msg->payload.peer_info_rsp_data.mac_address,
+						msg->payload.peer_info_rsp_data.fw_version,
+						msg->payload.peer_info_rsp_data.feature_mask );
 			}
 
 			op_mode = TX_OP_MODE;
@@ -1518,7 +1497,7 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
  * \brief Function to set trx configure parameters
  *
  */
-static void config_per_test_parameters(void)
+void config_per_test_parameters(void)
 {
 	uint8_t temp;
 	pib_value_t pib_value;

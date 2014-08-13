@@ -202,6 +202,7 @@ void disconnect_peer_node(void);
  */
 void set_default_configuration(void);
 
+void config_per_test_parameters(void);
 /**
  * \brief Function to get the current values of the all configurabel patameters
  *
@@ -255,7 +256,8 @@ void usr_perf_start_confirm(uint8_t status,
 		char *peer_soc_mcu_name,
 		char *peer_trx_name,
 		char *peer_board_name,
-		uint64_t peer_mac_address );
+		uint64_t peer_mac_address,
+		float fw_version,uint32_t feature_mask);
 
 /**
  * Function to generate Per Test Start confirmation frame that must be sent to

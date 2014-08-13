@@ -352,6 +352,7 @@ void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl);
 
 #endif
 
+float reverse_float( const float float_val );
 /* ! \} */
 #ifdef __cplusplus
 extern "C" {
