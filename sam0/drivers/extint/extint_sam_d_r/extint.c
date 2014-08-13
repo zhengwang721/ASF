@@ -40,10 +40,10 @@
  * \asf_license_stop
  *
  */
-#include "extint.h"
 #include <system.h>
 #include <system_interrupt.h>
-#include "conf_extint.h"
+#include <extint.h>
+#include <conf_extint.h>
 
 #if !defined(EXTINT_CLOCK_SOURCE) || defined(__DOXYGEN__)
 #  warning  EXTINT_CLOCK_SOURCE is not defined, assuming GCLK_GENERATOR_0.

@@ -139,7 +139,7 @@
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 	</select-by-config>
-	<module type="driver" id="sam0.drivers.rtc.calendar_appnote" caption="RTC - Real Time Counter in Calendar Mode (Callback APIs)">
+	<module type="meta" id="sam0.drivers.rtc.calendar_appnote" caption="RTC - Real Time Counter in Calendar Mode (Callback APIs)">
 			<info type="description" value="pdf">
 				Here is for ASF manual due to rtc calendar is missing
 			</info>
@@ -165,5 +165,5 @@
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
-		</module>
+	</module>
 </asf>
