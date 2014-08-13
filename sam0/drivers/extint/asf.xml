@@ -39,7 +39,7 @@
 		</module>
 	</select-by-config>
 	<select-by-device id="sam0.drivers.extint.polled" caption="EXTINT - External Interrupt">
-		<module type="driver" id="sam0.drivers.extint.polled#sam_d_r" caption="EXTINT - External Interrupt">
+		<module type="meta" id="sam0.drivers.extint.polled#sam_d_r" caption="EXTINT - External Interrupt">
 			<build type="include-path" value="." />
 			<build type="include-path" value="extint_sam_d_r"/>
 			<build type="c-source" value="extint_sam_d_r/extint.c"/>
@@ -50,7 +50,7 @@
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 		</module>
-		<module type="driver" id="sam0.drivers.extint.polled#sam_l" caption="EXTINT - External Interrupt">
+		<module type="meta" id="sam0.drivers.extint.polled#sam_l" caption="EXTINT - External Interrupt">
 			<build type="include-path" value="." />
 			<build type="include-path" value="extint_sam_l"/>
 			<build type="c-source" value="extint_sam_l/extint.c"/>
