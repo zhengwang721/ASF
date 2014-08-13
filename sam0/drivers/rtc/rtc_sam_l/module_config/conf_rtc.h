@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM RTC Basic Usage Example
+ * \brief SAM RTC Driver Configuration Header
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,75 +40,9 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
+#ifndef CONF_RTC_H_INCLUDED
+#define CONF_RTC_H_INCLUDED
 
-void configure_rtc_count(void);
+#  define RTC_CLOCK_SOURCE    RTC_CLOCK_SELECTION_ULP1K
 
-//! [rtc_module_instance]
-struct rtc_module rtc_instance;
-//! [rtc_module_instance]
-
-//! [initiate]
-void configure_rtc_count(void)
-{
-//! [set_conf]
-	struct rtc_count_config config_rtc_count;
-//! [set_conf]
-
-//! [get_default]
-	rtc_count_get_config_defaults(&config_rtc_count);
-//! [get_default]
-
-//! [set_config]
-	config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
-	config_rtc_count.mode                = RTC_COUNT_MODE_16BIT;
-#ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
-	config_rtc_count.continuously_update = true;
 #endif
-	config_rtc_count.compare_values[0]   = 1000;
-//! [set_config]
-//! [init_rtc]
-	rtc_count_init(&rtc_instance, RTC, &config_rtc_count);
-//! [init_rtc]
-
-//! [enable]
-	rtc_count_enable(&rtc_instance);
-//! [enable]
-}
-//! [initiate]
-
-int main(void)
-{
-	/* Initialize system. Must configure conf_clocks.h first. */
-//! [system]
-	system_init();
-//! [system]
-
-//! [add_main]
-	configure_rtc_count();
-//! [add_main]
-
-//! [implementation_code]
-//! [period]
-	rtc_count_set_period(&rtc_instance, 2000);
-//! [period]
-
-//! [main_loop]
-	while (true) {
-//! [main_loop]
-//! [check_match]
-		if (rtc_count_is_compare_match(&rtc_instance, RTC_COUNT_COMPARE_0)) {
-//! [check_match]
-//! [compare_match_action]
-			/* Do something on RTC count match here */
-			port_pin_toggle_output_level(LED_0_PIN);
-//! [compare_match_action]
-
-//! [clear_compare_match]
-			rtc_count_clear_compare_match(&rtc_instance, RTC_COUNT_COMPARE_0);
-//! [clear_compare_match]
-		}
-	}
-//! [implementation_code]
-
-}

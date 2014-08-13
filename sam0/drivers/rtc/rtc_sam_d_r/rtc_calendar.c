@@ -48,6 +48,92 @@ struct rtc_module *_rtc_instance[RTC_INST_NUM];
 #endif
 
 /**
+ * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
+ *
+ * Checks to see if the underlying hardware peripheral module(s) are currently
+ * synchronizing across multiple clock domains to the hardware bus, This
+ * function can be used to delay further operations on a module until such time
+ * that it is ready, to prevent blocking delays for synchronization in the
+ * user application.
+ *
+ * \param[in]  module  RTC hardware module
+ *
+ * \return Synchronization status of the underlying hardware module(s).
+ *
+ * \retval true  if the module has completed synchronization
+ * \retval false if the module synchronization is ongoing
+ */
+static inline bool rtc_calendar_is_syncing(struct rtc_module *const module)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
+
+        if (rtc_module->MODE2.STATUS.reg & RTC_STATUS_SYNCBUSY) {
+                return true;
+        }
+
+        return false;
+}
+
+/**
+ * \brief Enables the RTC module.
+ *
+ * Enables the RTC module once it has been configured, ready for use. Most
+ * module configuration parameters cannot be altered while the module is enabled.
+ *
+ * \param[in,out] module  Pointer to the software instance struct
+ */
+void rtc_calendar_enable(struct rtc_module *const module)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
+
+#if RTC_CALENDAR_ASYNC == true
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_RTC);
+#endif
+
+	while (rtc_calendar_is_syncing(module)) {
+		/* Wait for synchronization */
+	}
+
+	/* Enable RTC module. */
+	rtc_module->MODE2.CTRL.reg |= RTC_MODE2_CTRL_ENABLE;
+}
+
+/**
+ * \brief Disables the RTC module.
+ *
+ * Disables the RTC module.
+ *
+ * \param[in,out] module  Pointer to the software instance struct
+ */
+void rtc_calendar_disable(struct rtc_module *const module)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
+
+#if RTC_CALENDAR_ASYNC == true
+	system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_RTC);
+#endif
+
+	while (rtc_calendar_is_syncing(module)) {
+		/* Wait for synchronization */
+	}
+
+	/* Disable RTC module. */
+	rtc_module->MODE2.CTRL.reg &= ~RTC_MODE2_CTRL_ENABLE;
+}
+
+/**
  * \brief Resets the RTC module
  * Resets the RTC module to hardware defaults.
  *
