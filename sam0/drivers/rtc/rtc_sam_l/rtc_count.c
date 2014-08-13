@@ -111,6 +111,10 @@ void rtc_count_enable(struct rtc_module *const module)
 
 	/* Enable RTC module. */
 	rtc_module->MODE0.CTRLA.reg |= RTC_MODE0_CTRLA_ENABLE;
+
+	while (rtc_count_is_syncing(module)) {
+		/* Wait for synchronization */
+	}
 }
 
 /**
@@ -138,6 +142,10 @@ void rtc_count_disable(struct rtc_module *const module)
 
 	/* Disable RTC module. */
 	rtc_module->MODE0.CTRLA.reg &= ~RTC_MODE0_CTRLA_ENABLE;
+
+	while (rtc_count_is_syncing(module)) {
+		/* Wait for synchronization */
+	}
 }
 
 /**
@@ -212,10 +220,6 @@ static enum status_code _rtc_count_set_config(
 			}
 			/* Set compare values. */
 			for (uint8_t i = 0; i < RTC_COMP32_NUM; i++) {
-				while (rtc_count_is_syncing(module)) {
-					/* Wait for synchronization */
-				}
-
 				rtc_count_set_compare(module, config->compare_values[i],
 						(enum rtc_count_compare)i);
 			}
@@ -233,10 +237,6 @@ static enum status_code _rtc_count_set_config(
 			}
 			/* Set compare values. */
 			for (uint8_t i = 0; i < RTC_NUM_OF_COMP16; i++) {
-				while (rtc_count_is_syncing(module)) {
-					/* Wait for synchronization */
-				}
-
 				rtc_count_set_compare(module, config->compare_values[i],
 						(enum rtc_count_compare)i);
 			}
@@ -829,6 +829,10 @@ enum status_code rtc_count_frequency_correction(
 
 	/* Set value. */
 	rtc_module->MODE0.FREQCORR.reg = new_correction_value;
+
+	while (rtc_count_is_syncing(module)) {
+		/* Wait for synchronization */
+	}
 
 	return STATUS_OK;
 }
