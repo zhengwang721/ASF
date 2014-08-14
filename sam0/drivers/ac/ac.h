@@ -63,6 +63,7 @@
  *  - SAM D20/D21
  *  - SAM R21
  *  - SAM D10/D11
+ *  - SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_ac_prerequisites
@@ -269,6 +270,19 @@
 extern "C" {
 #endif
 
+/**
+ * \name Driver feature definition
+ * Define AC driver feature set according to different device family.
+ * @{
+ */
+#if (SAML21) || defined(__DOXYGEN__)
+   /** Setting of hysteresis level */
+#  define FEATURE_AC_HYSTERESIS_LEVEL
+   /** SYNCBUSY scheme version 2 */
+#  define FEATURE_AC_SYNCBUSY_SCHEME_VERSION_2
+#endif
+/* @} */
+
 #if !defined(__DOXYGEN__)
 /* Forward declaration of struct */
 struct ac_module;
@@ -349,6 +363,20 @@ enum ac_callback {
 	AC_CALLBACK_N,
 #endif /* !defined(__DOXYGEN__) */
 };
+
+#ifdef FEATURE_AC_HYSTERESIS_LEVEL
+/** Enum for possible hysteresis level types for AC module */
+enum ac_hysteresis_level {
+	/** Hysteresis level of 50mV */
+	AC_HYSTERESIS_LEVEL_50 = 0,
+	/** Hysteresis level of 70mV */
+	AC_HYSTERESIS_LEVEL_70,
+	/** Hysteresis level of 90mV */
+	AC_HYSTERESIS_LEVEL_90,
+	/** Hysteresis level of 110mV */
+	AC_HYSTERESIS_LEVEL_110
+};
+#endif
 
 /**
  * \brief AC comparator channel selection enum.
@@ -588,6 +616,10 @@ struct ac_chan_config {
 	enum ac_chan_filter filter;
 	/** When \c true, hysteresis mode is enabled on the comparator inputs. */
 	bool enable_hysteresis;
+	/** Hysteresis level of the comparator channel. */
+#ifdef FEATURE_AC_HYSTERESIS_LEVEL
+	enum ac_hysteresis_level hysteresis_level;
+#endif
 	/** Output mode of the comparator, whether it should be available for
 	 *  internal use, or asynchronously/synchronously linked to a GPIO pin. */
 	enum ac_chan_output output_mode;
@@ -668,22 +700,30 @@ uint8_t _ac_get_inst_index(
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true if the module has completed synchronization
- * \retval false if the module synchronization is ongoing
+ * \retval false if the module has completed synchronization
+ * \retval ture if the module synchronization is ongoing
  */
 static inline bool ac_is_syncing(
         struct ac_module *const module_inst)
 {
-        /* Sanity check arguments */
-        Assert(module_inst);
+	/* Sanity check arguments */
+	Assert(module_inst);
 
-        Ac *const ac_module = module_inst->hw;
+	Ac *const ac_module = module_inst->hw;
 
-        if (ac_module->STATUSB.reg & AC_STATUSB_SYNCBUSY) {
-                return true;
-        }
+#ifdef FEATURE_AC_SYNCBUSY_SCHEME_VERSION_2
+	if (ac_module->SYNCBUSY.reg & AC_SYNCBUSY_MASK) {
+		return true;
+	}
 
-        return false;
+	return false;
+#else
+	if (ac_module->STATUSB.reg & AC_STATUSB_SYNCBUSY) {
+		return true;
+	}
+
+	return false;
+#endif
 }
 
 /**
@@ -877,6 +917,7 @@ static inline void ac_disable_events(
  *   \li Continuous sampling mode
  *   \li Majority of 5 sample output filter
  *   \li Hysteresis enabled on the input pins
+ *   \li Hysteresis level of 50mV if having this feature.
  *   \li Internal comparator output mode
  *   \li Comparator pin multiplexer 0 selected as the positive input
  *   \li Scaled VCC voltage selected as the negative input
@@ -896,6 +937,9 @@ static inline void ac_chan_get_config_defaults(
 	config->sample_mode         = AC_CHAN_MODE_CONTINUOUS;
 	config->filter              = AC_CHAN_FILTER_MAJORITY_5;
 	config->enable_hysteresis   = true;
+#ifdef FEATURE_AC_HYSTERESIS_LEVEL
+	config->hysteresis_level    = AC_HYSTERESIS_LEVEL_50;
+#endif
 	config->output_mode         = AC_CHAN_OUTPUT_INTERNAL;
 	config->positive_input      = AC_CHAN_POS_MUX_PIN0;
 	config->negative_input      = AC_CHAN_NEG_MUX_SCALED_VCC;
@@ -1265,6 +1309,11 @@ static inline void ac_win_clear_status(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>F</td>
+ *		<td>08/2014</td>
+ *		<td>Added support for SAML21.</td>
  *	</tr>
  *	<tr>
  *		<td>E</td>
