@@ -229,6 +229,8 @@ static bool send_per_test_start_cmd(void);
 static bool send_range_test_start_cmd(void);
 static bool send_range_test_stop_cmd(void);
 
+extern bool cw_ack_sent,remote_cw_start;
+extern uint8_t cw_start_mode;
 
 
 /* === GLOBALS ============================================================= */
@@ -2032,6 +2034,26 @@ static void stop_pulse_cb(void *callback_parameter)
 	(defined CW_SUPPORTED)))
 void start_cw_transmission(uint8_t tx_mode)
 {
+if(node_info.main_state == PER_TEST_RECEPTOR && !cw_ack_sent)
+{
+	
+	if(tx_mode !=CW_MODE && tx_mode != PRBS_MODE)
+	{
+		usr_cont_wave_tx_confirm(INVALID_ARGUMENT, 0x01, tx_mode);
+		return;
+	}
+	else
+	{
+	   /* Send Set confirmation with status SUCCESS and start cw trx on successful trx of the */
+	   usr_cont_wave_tx_confirm(MAC_SUCCESS, START_CWT, tx_mode); 
+	   remote_cw_start = true;
+	   cw_start_mode = tx_mode;
+	   return;
+	}
+	
+}
+else if(node_info.main_state == PER_TEST_INITIATOR || ((node_info.main_state == PER_TEST_RECEPTOR) && cw_ack_sent))
+{
 	/* Save all user settings before continuous tx */
 	save_all_settings();
 
@@ -2046,8 +2068,6 @@ void start_cw_transmission(uint8_t tx_mode)
 #endif
 
 	op_mode = CONTINUOUS_TX_MODE;
-	/* Send Set confirmation with status SUCCESS */
-	usr_cont_wave_tx_confirm(MAC_SUCCESS, START_CWT, tx_mode);
 
 	switch (tx_mode) {
 	case CW_MODE: /* CW mode*/
@@ -2071,7 +2091,18 @@ void start_cw_transmission(uint8_t tx_mode)
 	}
 	}
 
-
+	
+	if(node_info.main_state == PER_TEST_RECEPTOR )
+	{
+		cw_ack_sent=false;
+	}
+	else
+	{
+	
+	/* Send Set confirmation with status SUCCESS */
+	usr_cont_wave_tx_confirm(MAC_SUCCESS, START_CWT, tx_mode);
+	}
+}
 }
 
 /*
