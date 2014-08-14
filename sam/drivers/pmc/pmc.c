@@ -1054,7 +1054,7 @@ void pmc_cpck_set_source(uint32_t ul_source)
 }
 #endif
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAMG55)
 /**
  * \brief Switch UDP (USB) clock source selection to PLLA clock.
  *
@@ -1090,13 +1090,13 @@ void pmc_switch_udpck_to_upllck(uint32_t ul_usbdiv)
 }
 #endif
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAMG55)
 /**
  * \brief Enable UDP (USB) clock.
  */
 void pmc_enable_udpck(void)
 {
-# if (SAM3S || SAM4S || SAM4E)
+# if (SAM3S || SAM4S || SAM4E || SAMG55)
 	PMC->PMC_SCER = PMC_SCER_UDP;
 # else
 	PMC->PMC_SCER = PMC_SCER_UOTGCLK;
@@ -1108,7 +1108,7 @@ void pmc_enable_udpck(void)
  */
 void pmc_disable_udpck(void)
 {
-# if (SAM3S || SAM4S || SAM4E)
+# if (SAM3S || SAM4S || SAM4E || SAMG55)
 	PMC->PMC_SCDR = PMC_SCDR_UDP;
 # else
 	PMC->PMC_SCDR = PMC_SCDR_UOTGCLK;

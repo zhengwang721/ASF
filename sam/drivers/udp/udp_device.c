@@ -52,8 +52,8 @@
 #  include "sleepmgr.h"
 #endif
 
-#if !(SAM3S || SAM4S || SAM4E)
-#  error The current UDP Device Driver supports only SAM3S and SAM4S devices.
+#if !(SAM3S || SAM4S || SAM4E || SAMG55)
+#  error The current UDP Device Driver supports only SAM3S, SAM4S, SAM4E and SAMG55 devices.
 #endif
 
 #ifndef UDD_USB_INT_LEVEL
@@ -138,7 +138,7 @@
 
 //! Definition of sleep levels
 #define UDP_SLEEP_MODE_USB_SUSPEND  SLEEPMGR_WAIT_FAST
-#define UDP_SLEEP_MODE_USB_IDLE     SLEEPMGR_SLEEP_WFI
+#define UDP_SLEEP_MODE_USB_IDLE     SLEEPMGR_WAIT_FAST
 
 //! State of USB line
 static bool udd_b_idle;

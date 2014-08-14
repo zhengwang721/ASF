@@ -112,6 +112,48 @@ void sysclk_set_source(uint32_t ul_src)
 	SystemCoreClockUpdate();
 }
 
+#if SAMG55
+#if defined(CONFIG_USBCLK_SOURCE) || defined(__DOXYGEN__)
+/**
+ * \brief Enable USB clock.
+ *
+ * \note The SAM3S UDP hardware interprets div as div+1. For readability the hardware div+1
+ * is hidden in this implementation. Use div as div effective value.
+ *
+ * \param pll_id Source of the USB clock.
+ * \param div Actual clock divisor. Must be superior to 0.
+ */
+void sysclk_enable_usb(void)
+{
+	Assert(CONFIG_USBCLK_DIV > 0);
+
+#ifdef CONFIG_PLL0_SOURCE
+	if (CONFIG_USBCLK_SOURCE == USBCLK_SRC_PLL0) {
+		struct pll_config pllcfg;
+
+		pll_enable_source(CONFIG_PLL0_SOURCE);
+		pll_config_defaults(&pllcfg, 0);
+		pll_enable(&pllcfg, 0);
+		pll_wait_for_lock(0);
+		pmc_switch_udpck_to_pllack(CONFIG_USBCLK_DIV - 1);
+		pmc_enable_udpck();
+		return;
+	}
+#endif
+}
+
+/**
+ * \brief Disable the USB clock.
+ *
+ * \note This implementation does not switch off the PLL, it just turns off the USB clock.
+ */
+void sysclk_disable_usb(void)
+{
+	pmc_disable_udpck();
+}
+#endif // CONFIG_USBCLK_SOURCE
+#endif
+
 void sysclk_init(void)
 {
 #if SAMG54
