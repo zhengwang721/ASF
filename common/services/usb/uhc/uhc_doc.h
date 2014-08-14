@@ -533,18 +533,18 @@ void usb_init(void)
  */
 
 /**
- * \page uhc_use_case_1 Enable USB high speed support
+ * \page uhc_use_case_1 Enable USB High Speed Support
  *
  * In this use case, the USB host is used to support USB high speed.
  *
- * \section uhc_use_case_1_setup Setup steps
+ * \section uhc_use_case_1_setup Setup Steps
  *
  * Prior to implement this use case, be sure to have already
  * apply the UHI module "basic use case".
  *
- * \section uhc_use_case_1_usage Usage steps
+ * \section uhc_use_case_1_usage Usage Steps
  *
- * \subsection uhc_use_case_1_usage_code Example code
+ * \subsection uhc_use_case_1_usage_code Example Code
  * Content of conf_usb_host.h:
  * \code
 	#define USB_HOST_HS_SUPPORT
@@ -559,18 +559,18 @@ void usb_init(void)
  */
 
 /**
- * \page uhc_use_case_2 Multiple classes support
+ * \page uhc_use_case_2 Multiple Classes Support
  *
  * In this use case, the USB host is used to support several USB classes.
  *
- * \section uhc_use_case_2_setup Setup steps
+ * \section uhc_use_case_2_setup Setup Steps
  *
  * Prior to implement this use case, be sure to have already
  * apply the UHI module "basic use case".
  *
- * \section uhc_use_case_2_usage Usage steps
+ * \section uhc_use_case_2_usage Usage Steps
  *
- * \subsection uhc_use_case_2_usage_code Example code
+ * \subsection uhc_use_case_2_usage_code Example Code
  * Content of conf_usb_host.h:
  * \code
 	#define USB_HOST_UHI   UHI_HID_MOUSE, UHI_MSC, UHI_CDC
@@ -587,23 +587,23 @@ void usb_init(void)
  */
 
 /**
- * \page uhc_use_case_3 Dual roles support
+ * \page uhc_use_case_3 Dual Roles Support
  *
  * In this use case, the USB host and USB device are enabled, it is the dual role.
  *
- * Note: On the Atmel boards, the switch of USB role is managed automatically by the
+ * \note On the Atmel boards, the switch of USB role is managed automatically by the
  * USB stack thank to a USB OTG connector and its USB ID pin.
- * For a dual role management without OTG connector, please refer to
+ * For a dual role management without OTG connector, refer to
  * "AVR4950 section 6.1 Dual roles".
  *
- * \section uhc_use_case_3_setup Setup steps
+ * \section uhc_use_case_3_setup Setup Steps
  *
  * Prior to implement this use case, be sure to have already
  * apply the UHI module "basic use case".
  *
- * \section uhc_use_case_3_usage Usage steps
+ * \section uhc_use_case_3_usage Usage Steps
  *
- * \subsection uhc_use_case_3_usage_code Example code
+ * \subsection uhc_use_case_3_usage_code Example Code
  * Content of conf_usb_host.h:
  * \code
  #define UHC_MODE_CHANGE(b_host_mode)   my_callback_mode_change(b_host_mode)
