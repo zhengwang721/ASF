@@ -709,7 +709,9 @@ static inline void handle_incoming_msg(void)
 					                                * Stop =
 					                                * 0x00
 					                                **/
-				start_cw_transmission(sio_rx_buf[TX_MODE_POS]); /*
+				start_cw_transmission(sio_rx_buf[TX_MODE_POS],
+				               ((uint16_t)(sio_rx_buf[TMR_VAL_2] << 8) | 
+							   (sio_rx_buf[TMR_VAL_1]))); /*
 					                                         *
 					                                         *
 					                                         *tx_mode,

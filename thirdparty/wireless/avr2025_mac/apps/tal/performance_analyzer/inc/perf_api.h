@@ -158,7 +158,7 @@ void pulse_cw_transmission(void);
  * \brief Start CW transmission on current channel page
  * \param tx_mode  Continuous transmission mode
  */
-void start_cw_transmission(uint8_t tx_mode);
+void start_cw_transmission(uint8_t tx_mode,uint16_t tmr_val);
 
 /**
  * \brief Stop CW transmission on current channel page

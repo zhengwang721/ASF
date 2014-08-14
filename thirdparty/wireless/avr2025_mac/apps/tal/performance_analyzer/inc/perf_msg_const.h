@@ -194,6 +194,8 @@
 /* Field positions - CONT_WAVE_TX_REQ frame */
 #define START_STOP_POS                    (3)
 #define TX_MODE_POS                       (4)
+#define TMR_VAL_1                         (5)
+#define TMR_VAL_2                         (6)
 
 /* Field positions - REGISTER_READ, WRITE */
 #define REGISTER_ADDR_POS                 (3)
