@@ -161,7 +161,7 @@ static uint8_t head = 0;
  */
 static uint8_t buf_count = 0;
 
-static bool remote_cmd_rcvd = false;
+bool remote_cmd_rcvd = false;
 /* === Prototypes ========================================================== */
 
 static inline void process_incoming_sio_data(void);
@@ -193,7 +193,7 @@ void serial_data_handler(void)
 		return;
 	}
 	/*Remote Node Tests*/
-	if ((PER_TEST_RECEPTOR == node_info.main_state)&& remote_cmd_rcvd && buf_count)
+	if ((PER_TEST_RECEPTOR == node_info.main_state)&&  buf_count)
 	
 	{
 		remote_cmd_rcvd = false;	

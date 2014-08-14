@@ -120,6 +120,8 @@ bool manual_crc = false;
 #endif
 static uint8_t marker_seq_num = 0;
 
+bool cw_ack_sent=false,remote_cw_start=false;
+uint8_t cw_start_mode;
 /* ! \} */
 
 /* === IMPLEMENTATION ====================================================== */
@@ -159,13 +161,15 @@ void per_mode_receptor_task(void)
 {
 	/* For Range Test  in PER Mode the receptor has to poll for a button
 	 * press to initiate marker transmission */
-	if (range_test_in_progress) {
+	if (range_test_in_progress || remote_cw_start) {
 		static uint8_t key_press;
 		/* Check for any key press */
 		key_press = app_debounce_button();
 
 		if (key_press != 0) {
 			printf("\r\n\nButton Pressed...");
+			if(range_test_in_progress)
+			{
 			if (send_range_test_marker_cmd()) {
 				printf("\r\nInitiating Marker Transmission...");
 				/* Timer for LED Blink for Marker Transmission*/
@@ -174,6 +178,12 @@ void per_mode_receptor_task(void)
 						SW_TIMEOUT_RELATIVE,
 						(FUNC_PTR)marker_tx_timer_handler_cb,
 						NULL);
+			}
+			}
+			else
+			{
+				remote_cw_start=false;
+				stop_cw_transmission(cw_start_mode);
 			}
 		}
 	}
@@ -227,6 +237,13 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
 {
 	status = status;
 	frame = frame;
+	
+	if(remote_cw_start)
+	{
+		
+		cw_ack_sent = true;
+		start_cw_transmission(cw_start_mode);
+	}
 	/* Allow the next transmission to happen */
 	node_info.transmitting = false;
 }
@@ -569,6 +586,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
 		uint8_t serial_data_len;	
 		serial_data_len = *(mac_frame_info->mpdu + 12);
 		convert_ota_serial_frame_rx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);
+		break;
 	}
 	case RANGE_TEST_START_PKT:
 	{
