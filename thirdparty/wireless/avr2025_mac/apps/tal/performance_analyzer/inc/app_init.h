@@ -243,6 +243,7 @@ extern uint8_t T_APP_TIMER_RANGE;
 extern uint8_t APP_TIMER_TO_TX;
 extern uint8_t APP_TIMER_TO_TX_LED_OFF;
 extern uint8_t APP_TIMER_TO_RX_LED_OFF;
+extern uint8_t CW_TX_TIMER;
 
 /* === Externals ============================================================ */
 

@@ -183,7 +183,7 @@ void per_mode_receptor_task(void)
 			else
 			{
 				remote_cw_start=false;
-				stop_cw_transmission(cw_start_mode);
+				stop_cw_transmission(&(cw_start_mode));
 			}
 		}
 	}
@@ -242,7 +242,7 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
 	{
 		
 		cw_ack_sent = true;
-		start_cw_transmission(cw_start_mode);
+		start_cw_transmission(cw_start_mode, 0);
 	}
 	/* Allow the next transmission to happen */
 	node_info.transmitting = false;

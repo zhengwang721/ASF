@@ -731,7 +731,7 @@ static inline void handle_incoming_msg(void)
 					                                         *0x01
 					                                         **/
 			} else if (STOP_CWT == sio_rx_buf[START_STOP_POS]) {
-				stop_cw_transmission(sio_rx_buf[TX_MODE_POS]); /*
+				stop_cw_transmission(&(sio_rx_buf[TX_MODE_POS])); /*
 					                                        *
 					                                        *
 					                                        *tx_mode,

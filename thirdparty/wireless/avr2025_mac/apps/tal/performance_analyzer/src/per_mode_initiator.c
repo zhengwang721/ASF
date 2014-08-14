@@ -2037,7 +2037,7 @@ void start_cw_transmission(uint8_t tx_mode,uint16_t tmr_val)
 if(node_info.main_state == PER_TEST_RECEPTOR && !cw_ack_sent)
 {
 	
-	if(tx_mode !=CW_MODE && tx_mode != PRBS_MODE)
+	if((tx_mode !=CW_MODE && tx_mode != PRBS_MODE) || (3600 < tmr_val)) /* timer value should not exceed 3600 seconds */
 	{
 		usr_cont_wave_tx_confirm(INVALID_ARGUMENT, 0x01, tx_mode);
 		return;
@@ -2067,8 +2067,15 @@ else if(node_info.main_state == PER_TEST_INITIATOR || ((node_info.main_state == 
 
 #endif
 
+if((node_info.main_state == PER_TEST_RECEPTOR) && 1 <= tmr_val )
+{
+	sw_timer_start(CW_TX_TIMER,
+	(uint32_t)tmr_val,
+	SW_TIMEOUT_RELATIVE,
+	(FUNC_PTR)stop_cw_transmission,
+	&(tx_mode));
 	op_mode = CONTINUOUS_TX_MODE;
-
+}
 	switch (tx_mode) {
 	case CW_MODE: /* CW mode*/
 	{
@@ -2109,14 +2116,14 @@ else if(node_info.main_state == PER_TEST_INITIATOR || ((node_info.main_state == 
  * \brief Stop CW transmission on current channel page
  * \param tx_mode  Continuous transmission mode
  */
-void stop_cw_transmission(uint8_t tx_mode)
+void stop_cw_transmission(uint8_t *tx_mode)
 {
 	/* Stop CW transmission again */
 	tfa_continuous_tx_stop();
 	/* recover all user setting which were set before continuous tx */
 	recover_all_settings();
 	op_mode = TX_OP_MODE;
-	usr_cont_wave_tx_confirm(MAC_SUCCESS, STOP_CWT /*stop*/, tx_mode);
+	usr_cont_wave_tx_confirm(MAC_SUCCESS, STOP_CWT /*stop*/, *tx_mode);
 }
 
 #endif
