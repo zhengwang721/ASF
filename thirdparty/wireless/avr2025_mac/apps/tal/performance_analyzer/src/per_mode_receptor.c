@@ -122,6 +122,7 @@ static uint8_t marker_seq_num = 0;
 
 bool cw_ack_sent=false,remote_cw_start=false;
 uint8_t cw_start_mode;
+uint8_t cw_tmr_val = 0;
 /* ! \} */
 
 /* === IMPLEMENTATION ====================================================== */
@@ -183,6 +184,7 @@ void per_mode_receptor_task(void)
 			else
 			{
 				remote_cw_start=false;
+				sw_timer_stop(CW_TX_TIMER);
 				stop_cw_transmission(&(cw_start_mode));
 			}
 		}
@@ -242,7 +244,7 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
 	{
 		
 		cw_ack_sent = true;
-		start_cw_transmission(cw_start_mode, 0);
+		start_cw_transmission(cw_start_mode, cw_tmr_val);
 	}
 	/* Allow the next transmission to happen */
 	node_info.transmitting = false;

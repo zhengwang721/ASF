@@ -231,6 +231,7 @@ static bool send_range_test_stop_cmd(void);
 
 extern bool cw_ack_sent,remote_cw_start;
 extern uint8_t cw_start_mode;
+extern uint8_t cw_tmr_val;
 
 
 /* === GLOBALS ============================================================= */
@@ -2048,6 +2049,7 @@ if(node_info.main_state == PER_TEST_RECEPTOR && !cw_ack_sent)
 	   usr_cont_wave_tx_confirm(MAC_SUCCESS, START_CWT, tx_mode); 
 	   remote_cw_start = true;
 	   cw_start_mode = tx_mode;
+	   cw_tmr_val = tmr_val;
 	   return;
 	}
 	
@@ -2070,7 +2072,7 @@ else if(node_info.main_state == PER_TEST_INITIATOR || ((node_info.main_state == 
 if((node_info.main_state == PER_TEST_RECEPTOR) && 1 <= tmr_val )
 {
 	sw_timer_start(CW_TX_TIMER,
-	(uint32_t)tmr_val,
+	(uint32_t)tmr_val * 1E6,
 	SW_TIMEOUT_RELATIVE,
 	(FUNC_PTR)stop_cw_transmission,
 	&(tx_mode));
@@ -2124,6 +2126,7 @@ void stop_cw_transmission(uint8_t *tx_mode)
 	recover_all_settings();
 	op_mode = TX_OP_MODE;
 	usr_cont_wave_tx_confirm(MAC_SUCCESS, STOP_CWT /*stop*/, *tx_mode);
+	remote_cw_start = false;
 }
 
 #endif
