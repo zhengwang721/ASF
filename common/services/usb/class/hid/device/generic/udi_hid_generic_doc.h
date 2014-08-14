@@ -452,6 +452,6 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  * \subsection asfdoc_udi_hid_generic_config_examples_4_2 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
  * \include example/sam3x8h_sam3x_ek/conf_board.h
  *
- * \subsection asfdoc_udi_hid_generic_config_examples_4_3 SAMD21 device (USB)
+ * \subsection asfdoc_udi_hid_generic_config_examples_4_3 SAMD21 Device (USB)
  * \include example/samd21j18a_samd21_xplained_pro/conf_board.h
  */
