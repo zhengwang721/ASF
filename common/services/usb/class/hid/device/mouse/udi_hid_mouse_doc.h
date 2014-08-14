@@ -431,42 +431,42 @@ bool udi_hid_mouse_btnleft(bool b_state);
  * \section asfdoc_udi_hid_mouse_config_examples_1 conf_usb.h
  * \subsection asfdoc_udi_hid_mouse_config_examples_1_1  UDI HID MOUSE Single
  * \include module_config/conf_usb.h
- * \subsection asfdoc_udi_hid_mouse_config_examples_1_2  UDI HID MOUSE Multiple (composite)
+ * \subsection asfdoc_udi_hid_mouse_config_examples_1_2  UDI HID MOUSE Multiple (Composite)
  * \include composite/device/module_config/conf_usb.h
  *
  * \section asfdoc_udi_hid_mouse_config_examples_2 conf_clock.h
  *
- * \subsection asfdoc_udi_hid_mouse_config_examples_2_1 AT32UC3A0, AT32UC3A1, AT32UC3B devices (USBB)
+ * \subsection asfdoc_udi_hid_mouse_config_examples_2_1 AT32UC3A0, AT32UC3A1, AT32UC3B Devices (USBB)
  * \include example/at32uc3a0512_evk1100/conf_clock.h
  *
- * \subsection asfdoc_udi_hid_mouse_config_examples_2_2 AT32UC3A3, AT32UC3A4 devices (USBB with high speed support)
+ * \subsection asfdoc_udi_hid_mouse_config_examples_2_2 AT32UC3A3, AT32UC3A4 Devices (USBB with High Speed Support)
  * \include example/at32uc3a3256_evk1104/conf_clock.h
  *
- * \subsection asfdoc_udi_hid_mouse_config_examples_2_3 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U devices (USBC)
+ * \subsection asfdoc_udi_hid_mouse_config_examples_2_3 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U Devices (USBC)
  * \include example/at32uc3c0512c_uc3c_ek/conf_clock.h
  *
- * \subsection asfdoc_udi_hid_mouse_config_examples_2_4 SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed)
+ * \subsection asfdoc_udi_hid_mouse_config_examples_2_4 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
  * \include example/sam3x8h_sam3x_ek/conf_clock.h
  *
  * \section asfdoc_udi_hid_mouse_config_examples_3 conf_clocks.h
  *
- * \subsection asfdoc_udi_hid_mouse_config_examples_3_1 SAMD21 device (USB)
+ * \subsection asfdoc_udi_hid_mouse_config_examples_3_1 SAMD21 Device (USB)
  * \include example/samd21j18a_samd21_xplained_pro/conf_clocks.h
  *
  * \section asfdoc_udi_hid_mouse_config_examples_4 conf_board.h
  *
- * \subsection asfdoc_udi_hid_mouse_config_examples_4_1 AT32UC3A0, AT32UC3A1, AT32UC3B devices (USBB)
+ * \subsection asfdoc_udi_hid_mouse_config_examples_4_1 AT32UC3A0, AT32UC3A1, AT32UC3B Devices (USBB)
  * \include example/at32uc3a0512_evk1100/conf_board.h
  *
- * \subsection asfdoc_udi_hid_mouse_config_examples_4_2 AT32UC3A3, AT32UC3A4 devices (USBB with high speed support)
+ * \subsection asfdoc_udi_hid_mouse_config_examples_4_2 AT32UC3A3, AT32UC3A4 Devices (USBB with High Speed Support)
  * \include example/at32uc3a3256_evk1104/conf_board.h
  *
- * \subsection asfdoc_udi_hid_mouse_config_examples_4_3 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U devices (USBC)
+ * \subsection asfdoc_udi_hid_mouse_config_examples_4_3 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U Devices (USBC)
  * \include example/at32uc3c0512c_uc3c_ek/conf_board.h
  *
- * \subsection asfdoc_udi_hid_mouse_config_examples_4_4 SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed)
+ * \subsection asfdoc_udi_hid_mouse_config_examples_4_4 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
  * \include example/sam3x8h_sam3x_ek/conf_board.h
  *
- * \subsection asfdoc_udi_hid_mouse_config_examples_4_5 SAMD21 device (USB)
+ * \subsection asfdoc_udi_hid_mouse_config_examples_4_5 SAMD21 Device (USB)
  * \include example/samd21j18a_samd21_xplained_pro/conf_board.h
  */
