@@ -3,7 +3,7 @@
  *
  * \brief USB Device Driver for UDP. Compliant with common UDD driver.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -138,7 +138,11 @@
 
 //! Definition of sleep levels
 #define UDP_SLEEP_MODE_USB_SUSPEND  SLEEPMGR_WAIT_FAST
+#if SAMG55
 #define UDP_SLEEP_MODE_USB_IDLE     SLEEPMGR_WAIT_FAST
+#else
+#define UDP_SLEEP_MODE_USB_IDLE     SLEEPMGR_SLEEP_WFI
+#endif
 
 //! State of USB line
 static bool udd_b_idle;

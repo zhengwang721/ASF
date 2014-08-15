@@ -117,7 +117,7 @@ void sysclk_set_source(uint32_t ul_src)
 /**
  * \brief Enable USB clock.
  *
- * \note The SAM3S UDP hardware interprets div as div+1. For readability the hardware div+1
+ * \note The SAMG55 UDP hardware interprets div as div+1. For readability the hardware div+1
  * is hidden in this implementation. Use div as div effective value.
  *
  * \param pll_id Source of the USB clock.
