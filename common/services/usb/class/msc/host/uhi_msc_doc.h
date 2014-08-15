@@ -339,7 +339,7 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
  *
  * \subsection uhi_msc_mem_basic_use_case_usage Usage Steps
  *
- * \subsubsection uhi_msc_mem_basic_use_case_usage_code Example code
+ * \subsubsection uhi_msc_mem_basic_use_case_usage_code Example Code
  * Content of conf_usb_host.h:
  * \code
 	#define USB_HOST_UHI        UHI_MSC
