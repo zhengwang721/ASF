@@ -318,7 +318,7 @@ void system_board_init(void);
 /** \name Extension header #1 SPI definitions
  *  @{
  */
-#define EXT1_SPI_MODULE           SPI
+#define EXT1_SPI_MODULE           SPI5
 #define EXT1_SPI_MISO_MUX         IOPORT_MODE_MUX_A
 #define EXT1_SPI_MOSI_MUX         IOPORT_MODE_MUX_A
 #define EXT1_SPI_SPCK_MUX         IOPORT_MODE_MUX_A
@@ -407,7 +407,7 @@ void system_board_init(void);
 /** \name Extension header #3 SPI definitions
  *  @{
  */
-#define EXT3_SPI_MODULE           SPI
+#define EXT3_SPI_MODULE           SPI5
 #define EXT3_SPI_MISO_MUX         IOPORT_MODE_MUX_A
 #define EXT3_SPI_MOSI_MUX         IOPORT_MODE_MUX_A
 #define EXT3_SPI_SPCK_MUX         IOPORT_MODE_MUX_A
@@ -484,6 +484,22 @@ void system_board_init(void);
 #define EDBG_CDC_UART_TX_MUX      IOPORT_MODE_MUX_A
 /** @} */
 
+//! \name OLED
+//@{
+/** OLED command/data select pin */
+#define UG_2832HSWEG04_DATA_CMD_GPIO   (PIO_PA30_IDX)
+/** OLED reset pin */
+#define UG_2832HSWEG04_RESET_GPIO      (PIO_PA15_IDX)
+/** OLED SPI configuration */
+#define UG_2832HSWEG04_SS               2
+#define UG_2832HSWEG04_BAUDRATE         5000000
+//! \name OLED dimensions
+//@{
+#define LCD_WIDTH_PIXELS                (128)
+#define LCD_HEIGHT_PIXELS               (32)
+//@}
+//@}
+
 /** \name TWI
 * @{
 */
@@ -549,7 +565,7 @@ void system_board_init(void);
 #define SD_MMC_0_CD_DIR             (IOPORT_DIR_INPUT)
 #define SD_MMC_0_CD_MODE            (IOPORT_MODE_PULLUP)
 #define SD_MMC_0_CD_DETECT_VALUE    0
-#define SD_MMC_SPI                  SPI
+#define SD_MMC_SPI                  SPI5
 #define SD_MMC_SPI_0_CS             0
 #define SD_MMC_0_CD_PIO_ID          ID_PIOA
 /**

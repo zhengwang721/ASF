@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -474,8 +474,13 @@ static uint8_t _app_exec(void *addr)
 	osc_wait_ready(OSC_SLCK_32K_RC);
 	pmc_switch_mck_to_sclk(SYSCLK_PRES_1);
 	/* Switch clock to fast RC */
+#if SAMG55
+	osc_enable(OSC_MAINCK_24M_RC);
+	osc_wait_ready(OSC_MAINCK_24M_RC);
+#else
 	osc_enable(OSC_MAINCK_12M_RC);
 	osc_wait_ready(OSC_MAINCK_12M_RC);
+#endif	
 	pmc_switch_mck_to_mainck(SYSCLK_PRES_1);
 
 	/* Modify vector table location */

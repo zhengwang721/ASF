@@ -128,6 +128,12 @@ void system_board_init(void)
 	ioport_set_pin_peripheral_mode(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
 
+#ifdef CONF_BOARD_SD_MMC_SPI
+	/* Setting SD detection pin */
+	ioport_set_pin_dir(SD_MMC_0_CD_GPIO, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(SD_MMC_0_CD_GPIO, IOPORT_MODE_PULLUP);
+#endif
+
 #ifdef CONF_BOARD_SPI_NPCS0
 	ioport_set_pin_peripheral_mode(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
 #endif
@@ -135,6 +141,13 @@ void system_board_init(void)
 #ifdef CONF_BOARD_SPI_NPCS1
 	ioport_set_pin_peripheral_mode(SPI_NPCS1_GPIO, SPI_NPCS1_FLAGS);
 #endif
+#endif
+
+#ifdef CONF_BOARD_OLED_UG_2832HSWEG04
+	ioport_set_pin_dir(UG_2832HSWEG04_DATA_CMD_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_mode(UG_2832HSWEG04_DATA_CMD_GPIO, IOPORT_MODE_PULLUP);
+	ioport_set_pin_dir(UG_2832HSWEG04_RESET_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_mode(UG_2832HSWEG04_RESET_GPIO, IOPORT_MODE_PULLUP);
 #endif
 
 #ifdef CONF_BOARD_TWI0
