@@ -477,7 +477,7 @@ static enum status_code _adc_set_config(
 
 	/* Disable all interrupts */
 	adc_module->INTENCLR.reg =
-			(1 << ADC_INTENCLR_WINMON_Pos) |(1 << ADC_INTENCLR_OVERRUN_Pos) 
+			(1 << ADC_INTENCLR_WINMON_Pos) |(1 << ADC_INTENCLR_OVERRUN_Pos)
 			| (1 << ADC_INTENCLR_RESRDY_Pos);
 
 	if (config->correction.correction_enable){

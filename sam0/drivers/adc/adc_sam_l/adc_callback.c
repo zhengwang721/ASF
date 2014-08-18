@@ -71,6 +71,7 @@ static void _adc_interrupt_handler(const uint8_t instance)
 					 *and call callback */
 					module->job_status = STATUS_OK;
 					adc_disable_interrupt(module, ADC_INTERRUPT_RESULT_READY);
+					module->is_automatic_sequences = false;
 
 					(module->callback[ADC_CALLBACK_READ_BUFFER])(module);
 				}
@@ -244,6 +245,7 @@ void adc_abort_job(
 		/* Mark job as aborted */
 		module_inst->job_status = STATUS_ABORTED;
 		module_inst->remaining_conversions = 0;
+		module->is_automatic_sequences = false;
 	}
 }
 

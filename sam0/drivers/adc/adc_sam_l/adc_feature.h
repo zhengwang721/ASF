@@ -638,6 +638,7 @@ static inline void adc_enable_positive_input_sequence(
 
 	Adc *const adc_module = module_inst->hw;
 	adc_module->SEQCTRL.reg = positive_input_sequence_mask_enable;
+	module_inst->is_automatic_sequences = true;
 }
 
 /**
