@@ -405,23 +405,6 @@ enum rtc_clock_sel {
 };
 #endif
 
-#ifdef FEATURE_RTC_GENERAL_PURPOSE_REG
-/**
- * \brief RTC general purpose type
- * RTC general purpose type
- */
-enum rtc_general_purpose_type {
-	/** RTC general purpose type 0. */
-	RTC_GENERAL_PURPOSE_TYPE_0 = 0,
-	/** RTC general purpose type 1. */
-	RTC_GENERAL_PURPOSE_TYPE_1 ,
-	/** RTC general purpose type 2. */
-	RTC_GENERAL_PURPOSE_TYPE_2 ,
-	/** RTC general purpose type 3. */
-	RTC_GENERAL_PURPOSE_TYPE_3 ,
-} 
-#endif
-
 #if !defined (RTC_NUM_OF_ALARMS) && defined(RTC_ALARM_NUM)
 #define RTC_NUM_OF_ALARMS RTC_ALARM_NUM
 #endif
@@ -1099,42 +1082,44 @@ static inline void rtc_calendar_disable_events(
  *
  * \param[in] module  Pointer to the software instance struct
  * \param[in] n  General purpose type
- * \param[in] value Value to for general purpose
+ * \param[in] index General purpose register index (0..3)
  *
  */
 static inline void rtc_write_general_purpose_reg(
 	struct rtc_module *const module,
-	const enum rtc_general_purpose_type n,
+	const  uint8_t index,
 	uint32_t value)
 {
 	/* Sanity check arguments */
 	Assert(module);
 	Assert(module->hw);
+	Assert(index <= 3);
 
 	Rtc *const rtc_module = module->hw;
 
-	rtc_module->MODE0.GP[n].reg = value;
+	rtc_module->MODE0.GP[index].reg = value;
 }
 
 /**
- * \brief Get the value from general purpose register.
+ * \brief Read the value from general purpose register.
  *
  * \param[in] module  Pointer to the software instance struct
- * \param[in] n  General purpose type
+ * \param[in] index General purpose register index (0..3)
  *
  * \retval Value of general purpose register
  */
-static inline uint32_t rtc_get_general_purpose_value(
+static inline uint32_t rtc_read_general_purpose_reg(
 	struct rtc_module *const module,
-	const enum rtc_general_purpose_type n)
+	const  uint8_t index)
 {
 	/* Sanity check arguments */
 	Assert(module);
 	Assert(module->hw);
+	Assert(index <= 3);
 
 	Rtc *const rtc_module = module->hw;
 
-	return rtc_module->MODE0.GP[n].reg;
+	return rtc_module->MODE0.GP[index].reg;
 }
 
 /** @} */

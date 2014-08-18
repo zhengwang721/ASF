@@ -66,8 +66,8 @@ struct rtc_module *_rtc_instance[RTC_INST_NUM];
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true  if the module has completed synchronization
- * \retval false if the module synchronization is ongoing
+ * \retval true  if the module synchronization is ongoing
+ * \retval false if the module has completed synchronization
  */
 static inline bool rtc_calendar_is_syncing(struct rtc_module *const module)
 {
@@ -77,11 +77,11 @@ static inline bool rtc_calendar_is_syncing(struct rtc_module *const module)
 
 	Rtc *const rtc_module = module->hw;
 
-        if (rtc_module->MODE2.SYNCBUSY.reg) {
-                return true;
-        }
+    if (rtc_module->MODE2.SYNCBUSY.reg) {
+            return true;
+    }
 
-        return false;
+    return false;
 }
 
 /**
@@ -317,43 +317,110 @@ static void _rtc_set_clk(void)
 {
 	switch(RTC_CLOCK_SOURCE){
 		case RTC_CLOCK_SELECTION_ULP1K:
+		{
+			if (OSC32KCTRL->OSCULP32K.reg & OSC32KCTRL_OSCULP32K_EN1K) {
+				break;
+			}else {
+				struct system_clock_source_osculp32k_config config;
+				system_clock_source_osculp32k_get_config_defaults(&config);
+				config.enable_1khz_output = true;
+				system_clock_source_osculp32k_set_config(&config);
+				break;
+			}
+		}
 		case RTC_CLOCK_SELECTION_ULP32K:
 		{
-			struct system_clock_source_osculp32k_config config;
-			system_clock_source_osculp32k_get_config_defaults(&config);
-			config.enable_1khz_output = true;
-			config.enable_32khz_output = true;
-			system_clock_source_osculp32k_set_config(&config);
-			break;
+			if (OSC32KCTRL->OSCULP32K.reg & OSC32KCTRL_OSCULP32K_EN32K) {
+				break;
+			}else {
+				struct system_clock_source_osculp32k_config config;
+				system_clock_source_osculp32k_get_config_defaults(&config);
+				config.enable_32khz_output = true;
+				system_clock_source_osculp32k_set_config(&config);
+				break;
+			}
 		}
 		case RTC_CLOCK_SELECTION_OSC1K:
+		{
+			if (!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_OSC32K)) {
+				struct system_clock_source_osc32k_config config;
+				system_clock_source_osc32k_get_config_defaults(&config);
+				config.enable_1khz_output = true;
+				system_clock_source_osc32k_set_config(&config);
+				system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC32K);
+				while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_OSC32K));
+				break;
+			}else {
+				struct system_clock_source_osc32k_config config;
+				system_clock_source_osc32k_get_config_defaults(&config);
+				config.enable_1khz_output = true;
+				system_clock_source_osc32k_set_config(&config);
+				while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_OSC32K));
+				break;
+			}
+		}
 		case RTC_CLOCK_SELECTION_OSC32K:
 		{
-			struct system_clock_source_osc32k_config config;
-			system_clock_source_osc32k_get_config_defaults(&config);
-			system_clock_source_osc32k_set_config(&config);
-			system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC32K);
-			while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_OSC32K));
-			break;
+			if (!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_OSC32K)) {
+				struct system_clock_source_osc32k_config config;
+				system_clock_source_osc32k_get_config_defaults(&config);
+				config.enable_32khz_output = true;
+				system_clock_source_osc32k_set_config(&config);
+				system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC32K);
+				while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_OSC32K));
+				break;
+			}else {
+				struct system_clock_source_osc32k_config config;
+				system_clock_source_osc32k_get_config_defaults(&config);
+				config.enable_32khz_output = true;
+				system_clock_source_osc32k_set_config(&config);
+				while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_OSC32K));
+				break;
+			}
 		}
 		case RTC_CLOCK_SELECTION_XOSC1K:
+		{
+			if (!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_XOSC32K)) {
+				struct system_clock_source_xosc32k_config config;
+				system_clock_source_xosc32k_get_config_defaults(&config);
+				config.enable_1khz_output = true;
+				system_clock_source_xosc32k_set_config(&config);
+				system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
+				while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_XOSC32K));
+				break;
+			}else {
+				struct system_clock_source_xosc32k_config config;
+				system_clock_source_xosc32k_get_config_defaults(&config);
+				config.enable_1khz_output = true;
+				system_clock_source_xosc32k_set_config(&config);
+				while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_XOSC32K));
+				break;
+			}
+		}
 		case RTC_CLOCK_SELECTION_XOSC32K:
 		{
-			struct system_clock_source_xosc32k_config config;
-			system_clock_source_xosc32k_get_config_defaults(&config);
-			config.enable_1khz_output = true;
-			config.enable_32khz_output = true;
-			system_clock_source_xosc32k_set_config(&config);
-			system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
-			while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_XOSC32K));
-			break;
+			if (!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_XOSC32K)) {
+				struct system_clock_source_xosc32k_config config;
+				system_clock_source_xosc32k_get_config_defaults(&config);
+				config.enable_32khz_output = true;
+				system_clock_source_xosc32k_set_config(&config);
+				system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
+				while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_XOSC32K));
+				break;
+			}else {
+				struct system_clock_source_xosc32k_config config;
+				system_clock_source_xosc32k_get_config_defaults(&config);
+				config.enable_32khz_output = true;
+				system_clock_source_xosc32k_set_config(&config);
+				while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_XOSC32K));
+				break;
+			}
 		}
 		default:
 		{
 			struct system_clock_source_osculp32k_config config;
 			system_clock_source_osculp32k_get_config_defaults(&config);
 			config.enable_1khz_output = true;
-			config.enable_32khz_output = true;
 			system_clock_source_osculp32k_set_config(&config);
 			OSC32KCTRL->RTCCTRL.reg = RTC_CLOCK_SELECTION_ULP1K;
 			return ;
@@ -361,6 +428,7 @@ static void _rtc_set_clk(void)
 	}
 	OSC32KCTRL->RTCCTRL.reg  = RTC_CLOCK_SOURCE;
 }
+
 
 /**
  * \brief Initializes the RTC module with given configurations.

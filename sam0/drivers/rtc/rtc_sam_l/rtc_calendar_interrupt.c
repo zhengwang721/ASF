@@ -74,7 +74,7 @@ enum status_code rtc_calendar_register_callback(
 	  || (callback_type >= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_0
 			&& callback_type <= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_7)) {
 		status = STATUS_OK;
-	} else if (callback_type > RTC_NUM_OF_ALARMS + RTC_PER_NUM) {
+	} else if (callback_type > (RTC_NUM_OF_ALARMS + RTC_PER_NUM)) {
 		/* Make sure alarm callback can be registered */
 		status = STATUS_ERR_INVALID_ARG;
 	}
@@ -113,7 +113,7 @@ enum status_code rtc_calendar_unregister_callback(
 		|| (callback_type >= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_0
 			&& callback_type <= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_7)) {
 		status = STATUS_OK;
-	} else if (callback_type > RTC_NUM_OF_ALARMS + RTC_PER_NUM) {
+	} else if (callback_type > (RTC_NUM_OF_ALARMS + RTC_PER_NUM)) {
 		/* Make sure alarm callback can be unregistered */
 		status = STATUS_ERR_INVALID_ARG;
 	}
@@ -148,8 +148,8 @@ void rtc_calendar_enable_callback(
 
 	if (callback_type == RTC_CALENDAR_CALLBACK_OVERFLOW) {
 		rtc_module->MODE2.INTENSET.reg = RTC_MODE2_INTFLAG_OVF;
-	} else if(callback_type >= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_0
-			&& callback_type <= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_7){
+	} else if (callback_type >= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_0
+			&& callback_type <= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_7) {
 		rtc_module->MODE2.INTENSET.reg = RTC_MODE2_INTFLAG_PER((1 << callback_type));
 	}else {
 		rtc_module->MODE2.INTENSET.reg = RTC_MODE2_INTFLAG_ALARM(1 << (callback_type - RTC_PER_NUM));
@@ -179,8 +179,8 @@ void rtc_calendar_disable_callback(
 	/* Disable interrupt */
 	if (callback_type == RTC_CALENDAR_CALLBACK_OVERFLOW) {
 		rtc_module->MODE2.INTENCLR.reg = RTC_MODE2_INTFLAG_OVF;
-	} else if(callback_type >= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_0
-			&& callback_type <= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_7){
+	} else if (callback_type >= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_0
+			&& callback_type <= RTC_CALENDAR_CALLBACK_PERIODIC_INTERVAL_7) {
 		rtc_module->MODE2.INTENCLR.reg = RTC_MODE2_INTFLAG_PER((1 << callback_type));
 	}else {
 		rtc_module->MODE2.INTENCLR.reg = RTC_MODE2_INTFLAG_ALARM(1 << (callback_type - RTC_PER_NUM));
@@ -218,12 +218,11 @@ static void _rtc_interrupt_handler(const uint32_t instance_index)
 		/* Clear interrupt flag */
 		rtc_module->MODE2.INTFLAG.reg = RTC_MODE2_INTFLAG_OVF;
 
-	}else if(interrupt_status & RTC_MODE2_INTFLAG_PER(0xff)){
+	}else if (interrupt_status & RTC_MODE2_INTFLAG_PER(0xff)) {
 		uint8_t i  = 0;
-		for(i=0;i<RTC_PER_NUM;i++)
-		{
-			if((interrupt_status & RTC_MODE2_INTFLAG_PER(1 << i))
-			  && (callback_mask & (1 << i))){
+		for (i = 0;i < RTC_PER_NUM;i++) {
+			if ((interrupt_status & RTC_MODE2_INTFLAG_PER(1 << i))
+			  && (callback_mask & (1 << i))) {
 				module->callbacks[i]();
 			}
 

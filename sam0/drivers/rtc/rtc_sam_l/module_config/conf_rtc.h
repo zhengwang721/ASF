@@ -43,6 +43,7 @@
 #ifndef CONF_RTC_H_INCLUDED
 #define CONF_RTC_H_INCLUDED
 
+/** Use 1.024kHz from 32kHz internal ULP oscillator for RTC clock*/
 #  define RTC_CLOCK_SOURCE    RTC_CLOCK_SELECTION_ULP1K
 
 #endif
