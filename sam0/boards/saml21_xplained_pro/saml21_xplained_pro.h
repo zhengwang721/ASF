@@ -271,6 +271,19 @@ void system_board_init(void);
 #define EXT2_PIN_SPI_SCK          EXT2_PIN_18
 /** @} */
 
+/** \name Extension header #2 ADC definitions
+ *  @{
+ */
+#define EXT2_ADC_MODULE           ADC
+#define EXT2_ADC_0_CHANNEL        18
+#define EXT2_ADC_0_PIN            PIN_PA10B_ADC_AIN18
+#define EXT2_ADC_0_MUX            MUX_PA10B_ADC_AIN18
+#define EXT2_ADC_0_PINMUX         PINMUX_PA10B_ADC_AIN18
+#define EXT2_ADC_1_CHANNEL        19
+#define EXT2_ADC_1_PIN            PIN_PA11B_ADC_AIN19
+#define EXT2_ADC_1_MUX            MUX_PA11B_ADC_AIN19
+#define EXT2_ADC_1_PINMUX         PINMUX_PA11B_ADC_AIN19
+/** @} */
 /** \name Extension header #3 pin definitions
  *  @{
  */
@@ -313,6 +326,19 @@ void system_board_init(void);
 #define EXT3_PIN_SPI_SCK          EXT3_PIN_18
 /** @} */
 
+/** \name Extension header #3 ADC definitions
+ *  @{
+ */
+#define EXT3_ADC_MODULE           ADC
+#define EXT3_ADC_0_CHANNEL        8
+#define EXT3_ADC_0_PIN            PIN_PB00B_ADC_AIN8
+#define EXT3_ADC_0_MUX            MUX_PB00B_ADC_AIN8
+#define EXT3_ADC_0_PINMUX         PINMUX_PB00B_ADC_AIN8
+#define EXT3_ADC_1_CHANNEL        9
+#define EXT3_ADC_1_PIN            PIN_PB01B_ADC_AIN9
+#define EXT3_ADC_1_MUX            MUX_PB01B_ADC_AIN9
+#define EXT3_ADC_1_PINMUX         PINMUX_PB01B_ADC_AIN9
+/** @} */
 
 /**
  * \brief Turns off the specified LEDs.

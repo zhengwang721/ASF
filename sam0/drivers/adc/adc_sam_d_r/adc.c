@@ -49,6 +49,114 @@
 #endif
 
 /**
+ * \brief Initializes an ADC configuration structure to defaults
+ *
+ * Initializes a given ADC configuration struct to a set of known default
+ * values. This function should be called on any new instance of the
+ * configuration struct before being modified by the user application.
+ *
+ * The default configuration is as follows:
+ *  \li GCLK generator 0 (GCLK main) clock source
+ *  \li 1V from internal bandgap reference
+ *  \li Div 4 clock prescaler
+ *  \li 12 bit resolution
+ *  \li Window monitor disabled
+ *  \li No gain
+ *  \li Positive input on ADC PIN 0
+ *  \li Negative input on ADC PIN 1
+ *  \li Averaging disabled
+ *  \li Oversampling disabled
+ *  \li Right adjust data
+ *  \li Single-ended mode
+ *  \li Free running disabled
+ *  \li All events (input and generation) disabled
+ *  \li Sleep operation disabled
+ *  \li No reference compensation
+ *  \li No gain/offset correction
+ *  \li No added sampling time
+ *  \li Pin scan mode disabled
+ *
+ * \param[out] config  Pointer to configuration struct to initialize to
+ *                     default values
+ */
+void adc_get_config_defaults(struct adc_config *const config)
+{
+	Assert(config);
+	config->clock_source                  = GCLK_GENERATOR_0;
+	config->reference                     = ADC_REFERENCE_INT1V;
+	config->clock_prescaler               = ADC_CLOCK_PRESCALER_DIV4;
+	config->resolution                    = ADC_RESOLUTION_12BIT;
+	config->window.window_mode            = ADC_WINDOW_MODE_DISABLE;
+	config->window.window_upper_value     = 0;
+	config->window.window_lower_value     = 0;
+	config->gain_factor                   = ADC_GAIN_FACTOR_1X;
+#if SAMR21
+	config->positive_input                = ADC_POSITIVE_INPUT_PIN6 ;
+#else
+	config->positive_input                = ADC_POSITIVE_INPUT_PIN0 ;
+#endif
+	config->negative_input                = ADC_NEGATIVE_INPUT_GND ;
+	config->accumulate_samples            = ADC_ACCUMULATE_DISABLE;
+	config->divide_result                 = ADC_DIVIDE_RESULT_DISABLE;
+	config->left_adjust                   = false;
+	config->differential_mode             = false;
+	config->freerunning                   = false;
+	config->event_action                  = ADC_EVENT_ACTION_DISABLED;
+	config->run_in_standby                = false;
+	config->reference_compensation_enable = false;
+	config->correction.correction_enable  = false;
+	config->correction.gain_correction    = ADC_GAINCORR_RESETVALUE;
+	config->correction.offset_correction  = ADC_OFFSETCORR_RESETVALUE;
+	config->sample_length                 = 0;
+	config->pin_scan.offset_start_scan    = 0;
+	config->pin_scan.inputs_to_scan       = 0;
+}
+
+/**
+ * \brief Sets the ADC window mode
+ *
+ * Sets the ADC window mode to a given mode and value range.
+ *
+ * \param[in] module_inst         Pointer to the ADC software instance struct
+ * \param[in] window_mode         Window monitor mode to set
+ * \param[in] window_lower_value  Lower window monitor threshold value
+ * \param[in] window_upper_value  Upper window monitor threshold value
+  */
+void adc_set_window_mode(
+		struct adc_module *const module_inst,
+		const enum adc_window_mode window_mode,
+		const int16_t window_lower_value,
+		const int16_t window_upper_value)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	Adc *const adc_module = module_inst->hw;
+
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
+
+	/* Set window mode */
+	adc_module->WINCTRL.reg = window_mode << ADC_WINCTRL_WINMODE_Pos;
+
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
+
+	/* Set lower window monitor threshold value */
+	adc_module->WINLT.reg = window_lower_value << ADC_WINLT_WINLT_Pos;
+
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
+
+	/* Set upper window monitor threshold value */
+	adc_module->WINUT.reg = window_upper_value << ADC_WINUT_WINUT_Pos;
+}
+
+/**
 * \internal Configure MUX settings for the analog pins
 *
 * This function will set the given ADC input pins
@@ -542,6 +650,12 @@ enum status_code adc_init(
 
 	/* Store the selected reference for later use */
 	module_inst->reference = config->reference;
+
+	
+	/* Make sure bandgap is enabled if requested by the config */
+	if (module_inst->reference == ADC_REFERENCE_INT1V) {
+		system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_BANDGAP);
+	}
 
 #if ADC_CALLBACK_MODE == true
 	for (uint8_t i = 0; i < ADC_CALLBACK_N; i++) {
