@@ -64,6 +64,7 @@
  *  \li Single-ended mode
  *  \li Free running disabled
  *  \li All events (input and generation) disabled
+ *  \li Event input source is not inverted
  *  \li Sleep operation disabled
  *  \li No sampling time compensation
  *  \li Disable the positive input sequense
@@ -84,7 +85,7 @@ void adc_get_config_defaults(struct adc_config *const config)
 	config->window.window_mode            = ADC_WINDOW_MODE_DISABLE;
 	config->window.window_upper_value     = 0;
 	config->window.window_lower_value     = 0;
-	config->positive_input                = ADC_POSITIVE_INPUT_PIN0 ;//??????
+	config->positive_input                = ADC_POSITIVE_INPUT_PIN0 ;
 	config->negative_input                = ADC_NEGATIVE_INPUT_GND ;
 	config->accumulate_samples            = ADC_ACCUMULATE_DISABLE;
 	config->divide_result                 = ADC_DIVIDE_RESULT_DISABLE;
@@ -92,8 +93,9 @@ void adc_get_config_defaults(struct adc_config *const config)
 	config->differential_mode             = false;
 	config->freerunning                   = false;
 	config->event_action                  = ADC_EVENT_ACTION_DISABLED;
+	config->event_inverted                = ADC_EVENT_INPUT_SOURCE_INVERTED_DISABLED;
 	config->sleep_mode.run_in_standby     = false;
-	config->sleep_mode.on_demand		  = false;
+	config->sleep_mode.on_demand          = false;
 	config->sampling_time_compensation_enable  = false;
 	config->positive_input_sequence_mask_enable = 0;
 	config->reference_compensation_enable = false;
@@ -145,6 +147,10 @@ void adc_set_window_mode(
 
 	/* Set upper window monitor threshold value */
 	adc_module->WINUT.reg = window_upper_value;
+
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
 }
 
 /**
@@ -243,6 +249,7 @@ static enum status_code _adc_set_config(
 	uint8_t adjres = 0;
 	uint32_t resolution = ADC_RESOLUTION_16BIT;
 	enum adc_accumulate_samples accumulate = ADC_ACCUMULATE_DISABLE;
+	uint8_t j = 0;
 
 	/* Get the hardware module pointer */
 	Adc *const adc_module = module_inst->hw;
@@ -257,13 +264,18 @@ static enum status_code _adc_set_config(
 	/* Setup pinmuxing for analog inputs */
 	_adc_configure_ain_pin(config->positive_input);
 	_adc_configure_ain_pin(config->negative_input);
+
 	/*set pinmux for seq seq*/
   	for(uint8_t i=0;i <= ADC_EXTCHANNEL_MSB;i++){
 		if(config->positive_input_sequence_mask_enable & (1 << i)){
 			_adc_configure_ain_pin(i);
+			j++;
 		}
 	}
-  	
+	module_inst->is_automatic_sequences = false;
+  	if(j >= 2){
+		module_inst->is_automatic_sequences = true;
+	}
 	/* Configure run in standby */
 	adc_module->CTRLA.reg = ((config->sleep_mode.run_in_standby << ADC_CTRLA_RUNSTDBY_Pos)
 						    | (config->sleep_mode.on_demand << ADC_CTRLA_ONDEMAND_Pos)) ;
@@ -427,10 +439,6 @@ static enum status_code _adc_set_config(
 		}
 	}
 
-	while (adc_is_syncing(module_inst)) {
-		/* Wait for synchronization */
-	}
-
 	/* Configure window mode */
 	adc_module->CTRLC.reg |= config->window.window_mode;
 
@@ -464,7 +472,8 @@ static enum status_code _adc_set_config(
 	}
 
 	/* Configure events */
-	adc_module->EVCTRL.reg = config->event_action;
+	adc_module->EVCTRL.reg = config->event_action
+							| config->event_inverted;
 
 	/* Disable all interrupts */
 	adc_module->INTENCLR.reg =

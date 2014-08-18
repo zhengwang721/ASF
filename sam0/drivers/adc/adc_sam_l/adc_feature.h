@@ -198,6 +198,21 @@ enum adc_event_action {
 };
 
 /**
+ * \brief ADC event action enum
+ *
+ * Enum for the possible actions to take on an incoming event.
+ *
+ */
+enum adc_event_input_source_inverted{
+	/** Event input source is not inverted */
+	ADC_EVENT_INPUT_SOURCE_INVERTED_DISABLED    = 0,
+	/** Flush event input source is inverted */
+	ADC_FLUSH_EVENT_INPUT_SOURCE_INVERTED 		= ADC_EVCTRL_FLUSHINV,
+	/** Start event input source is inverted */
+	ADC_START_EVENT_INPUT_SOURCE_INVERTED       = ADC_EVCTRL_STARTINV,
+};
+
+/**
  * \brief ADC positive MUX input selection enum
  *
  * Enum for the possible positive MUX input selections for the ADC.
@@ -413,10 +428,6 @@ struct adc_window_config {
  * disable events via \ref adc_enable_events() and \ref adc_disable_events().
  */
 struct adc_events {
-	/** Start conversion event invert enable */
-	bool enable_start_conversion_event_invert;
-	/** Flush event invert enable */
-	bool enable_flush_event_invert;
 	/** Enable event generation on conversion done */
 	bool generate_event_on_conversion_done;
 	/** Enable event generation on window monitor */
@@ -529,6 +540,8 @@ struct adc_config {
 	struct adc_correction_config correction;
 	/** Event action to take on incoming event */
 	enum adc_event_action event_action;
+	/** Event input source is inverted */
+	enum adc_event_input_source_inverted event_inverted;
 };
 
 /**
@@ -561,6 +574,8 @@ struct adc_module {
 	volatile enum status_code job_status;
 	/** If software triggering is needed */
 	bool software_trigger;
+	/** If start a sequence of conversion automatically*/
+	bool is_automatic_sequences;
 #  endif
 #endif
 };
@@ -600,6 +615,11 @@ static inline bool adc_is_syncing(
 #endif
 
 /**
+ * \name  Positive input sequence
+ * @{
+ */
+
+/**
  * \brief Enable positive input sequence mask for conversion.
  *
  * The sequence start from the lowest input,and go to the next enabled input 
@@ -619,6 +639,34 @@ static inline void adc_enable_positive_input_sequence(
 	Adc *const adc_module = module_inst->hw;
 	adc_module->SEQCTRL.reg = positive_input_sequence_mask_enable;
 }
+
+/**
+ * \brief Get ADC sequence status.
+ *  
+ * Check if a sequence is done and get last conversion done in the sequence
+ *
+ * \param[in] module_inst  Pointer to the ADC software instance struct
+ * \param[out] is_sequence_busy  Sequence busy status
+ * \param[out] sequence_state This value identifies the last conversion
+ *             done in the sequence
+ */
+static inline void adc_get_sequence_status(
+		struct adc_module *const module_inst,
+		bool  * is_sequence_busy,
+		uint8_t *sequence_state)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	uint8_t temp = false;
+	Adc *const adc_module = module_inst->hw;
+	temp = adc_module->SEQSTATUS.reg;
+	if(temp & ADC_SEQSTATUS_SEQBUSY){
+		*is_sequence_busy = true;
+	}
+	*sequence_state = temp & ADC_SEQSTATUS_SEQSTATE_Msk;
+}
+
+/** @} */
 
 /** @} */
 

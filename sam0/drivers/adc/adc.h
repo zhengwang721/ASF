@@ -557,6 +557,10 @@ static inline enum status_code adc_enable(
 #endif
 
 	adc_module->CTRLA.reg |= ADC_CTRLA_ENABLE;
+
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
 	return STATUS_OK;
 }
 
@@ -584,6 +588,10 @@ static inline enum status_code adc_disable(
 	}
 
 	adc_module->CTRLA.reg &= ~ADC_CTRLA_ENABLE;
+
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
 	return STATUS_OK;
 }
 
@@ -607,12 +615,12 @@ static inline enum status_code adc_reset(
 	/* Disable to make sure the pipeline is flushed before reset */
 	adc_disable(module_inst);
 
+	/* Software reset the module */
+	adc_module->CTRLA.reg |= ADC_CTRLA_SWRST;
+
 	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
-
-	/* Software reset the module */
-	adc_module->CTRLA.reg |= ADC_CTRLA_SWRST;
 	return STATUS_OK;
 }
 
@@ -711,6 +719,10 @@ static inline void adc_start_conversion(
 	}
 
 	adc_module->SWTRIG.reg |= ADC_SWTRIG_START;
+
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
 }
 
 /**
@@ -789,6 +801,10 @@ static inline void adc_flush(
 	}
 
 	adc_module->SWTRIG.reg |= ADC_SWTRIG_FLUSH;
+
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
 }
 void adc_set_window_mode(
 		struct adc_module *const module_inst,
@@ -821,7 +837,11 @@ static inline void adc_set_positive_input(
 	/* Set positive input pin */
 	adc_module->INPUTCTRL.reg =
 			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_MUXPOS_Msk) |
-			(positive_input << ADC_INPUTCTRL_MUXPOS_Pos);
+			(positive_input);
+
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
 }
 
 
@@ -851,7 +871,11 @@ static inline void adc_set_negative_input(
 	/* Set negative input pin */
 	adc_module->INPUTCTRL.reg =
 			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_MUXNEG_Msk) |
-			(negative_input << ADC_INPUTCTRL_MUXNEG_Pos);
+			(negative_input);
+
+	while (adc_is_syncing(module_inst)) {
+		/* Wait for synchronization */
+	}
 }
 
 /** @} */

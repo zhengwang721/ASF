@@ -61,7 +61,8 @@ static void _adc_interrupt_handler(const uint8_t instance)
 			*(module->job_buffer++) = module->hw->RESULT.reg;
 
 			if (--module->remaining_conversions > 0) {
-				if (module->software_trigger == true) {
+				if (module->software_trigger == true
+					&& module->is_automatic_sequences == false) {
 					adc_start_conversion(module);
 				}
 			} else {
