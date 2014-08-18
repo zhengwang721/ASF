@@ -67,8 +67,8 @@ struct rtc_module *_rtc_instance[RTC_INST_NUM];
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true  if the module has completed synchronization
- * \retval false if the module synchronization is ongoing
+ * \retval true  if the module synchronization is ongoing
+ * \retval false if the module has completed synchronization
  */
 static bool rtc_count_is_syncing(struct rtc_module *const module)
 {
