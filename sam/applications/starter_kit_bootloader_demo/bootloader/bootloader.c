@@ -47,7 +47,7 @@
  * \section Introduction
  *
  * Bootloader of Starter Kit Bootloader Demo is a part of Starter Kit
- * Bootloader Demo for SAM4N Xplained Pro. It is to facilitate firmware
+ * Bootloader Demo for SAM Xplained Pro. It is to facilitate firmware
  * upgrade using microSD card. The bootloader checks the trigger flag in the
  * \ref regions_info first. The \ref region_info is normally at the end of
  * the Flash which size is defined by \ref MEM_ERASE_SIZE in the

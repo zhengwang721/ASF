@@ -3,7 +3,7 @@
  *
  * \brief SSD1306 display controller driver configuration file.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,7 +43,7 @@
 #ifndef CONF_SSD1306_H_INCLUDED
 #define CONF_SSD1306_H_INCLUDED
 
-// Interface configuration for SAM4N Xplained Pro
+// Interface configuration for SAMG55 Xplained Pro
 #define SSD1306_SPI_INTERFACE
 #define SSD1306_SPI SPI5
 

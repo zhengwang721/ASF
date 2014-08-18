@@ -47,12 +47,12 @@
  * \section Purpose
  *
  * The main application will help new users get familiar with Atmel's
- * SAM4N family of microcontrollers and the IO1 and OLED1 extension boards
- * with the SAM4N Xplained Pro board.
+ * SAM family of microcontrollers and the IO1 and OLED1 extension boards
+ * with the SAM Xplained Pro board.
  *
  * \section Requirements
  *
- * This package can be used with SAM4N Xplained Pro evaluation kits
+ * This package can be used with SAM Xplained Pro evaluation kits
  * with I/O1 and OLED Xplained Pro extension boards.
  *
  * \section Description
@@ -61,7 +61,7 @@
  * It's loaded by the Bootloader and run after it.
  *
  * The application features the IO1 and OLED1 extension boards with
- * the SAM4N Xplained Pro.
+ * the SAM Xplained Pro.
  *
  * The demonstration program will check if a valid firmware found on SD card
  * first. If a valid firmware found, it will display the firmware found
