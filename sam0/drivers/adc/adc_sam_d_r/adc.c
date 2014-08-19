@@ -650,7 +650,7 @@ enum status_code adc_init(
 
 	/* Store the selected reference for later use */
 	module_inst->reference = config->reference;
-	
+
 	/* Make sure bandgap is enabled if requested by the config */
 	if (module_inst->reference == ADC_REFERENCE_INT1V) {
 		system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_BANDGAP);

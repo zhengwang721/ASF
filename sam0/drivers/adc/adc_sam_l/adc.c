@@ -57,7 +57,7 @@
  *  \li 12 bit resolution
  *  \li Window monitor disabled
  *  \li Positive input on ADC PIN 0
- *  \li Negative input on Internal ground 
+ *  \li Negative input on Internal ground
  *  \li Averaging disabled
  *  \li Oversampling disabled
  *  \li Right adjust data
@@ -282,7 +282,7 @@ static enum status_code _adc_set_config(
 
 	/* Configure reference */
 	adc_module->REFCTRL.reg =
-			(config->reference_compensation_enable << ADC_REFCTRL_REFCOMP_Pos) 
+			(config->reference_compensation_enable << ADC_REFCTRL_REFCOMP_Pos)
 			| (config->reference);
 
 	/* Set adjusting result and number of samples */

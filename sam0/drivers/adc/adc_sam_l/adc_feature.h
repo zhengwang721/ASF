@@ -513,10 +513,10 @@ struct adc_config {
 	 * Enables sampling period offset compensation if true.
 	 */
 	bool sampling_time_compensation_enable;
-	/** 
+	/**
 	 * Positive input enabled mask for conversion sequence.
-	 * The sequence start from the lowest input,and go to the next enabled input 
-	 * automatically when the conversion is done. If no bits are set the 
+	 * The sequence start from the lowest input,and go to the next enabled input
+	 * automatically when the conversion is done. If no bits are set the
 	 * sequence is disabled
 	 */
 	uint32_t positive_input_sequence_mask_enable;
@@ -622,8 +622,8 @@ static inline bool adc_is_syncing(
 /**
  * \brief Enable positive input sequence mask for conversion.
  *
- * The sequence start from the lowest input,and go to the next enabled input 
- * automatically when the conversion is done. If no bits are set the 
+ * The sequence start from the lowest input,and go to the next enabled input
+ * automatically when the conversion is done. If no bits are set the
  * sequence is disabled
  *
  * \param[in] module_inst  Pointer to the ADC software instance struct
@@ -643,7 +643,7 @@ static inline void adc_enable_positive_input_sequence(
 
 /**
  * \brief Get ADC sequence status.
- *  
+ *
  * Check if a sequence is done and get last conversion done in the sequence
  *
  * \param[in] module_inst  Pointer to the ADC software instance struct
