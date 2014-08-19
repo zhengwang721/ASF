@@ -42,10 +42,110 @@
  */
 #include "rtc_calendar.h"
 #include <gclk.h>
+#include "conf_rtc.h"
 
 #if !defined(__DOXYGEN__)
 struct rtc_module *_rtc_instance[RTC_INST_NUM];
 #endif
+
+#if !defined(RTC_CLOCK_SOURCE)
+#  warning  RTC_CLOCK_SOURCE is not defined, assuming RTC_CLOCK_SELECTION_ULP1K.
+#  define RTC_CLOCK_SOURCE RTC_CLOCK_SELECTION_ULP1K
+#endif
+
+/**
+ * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
+ *
+ * Checks to see if the underlying hardware peripheral module(s) are currently
+ * synchronizing across multiple clock domains to the hardware bus, This
+ * function can be used to delay further operations on a module until such time
+ * that it is ready, to prevent blocking delays for synchronization in the
+ * user application.
+ *
+ * \param[in]  module  RTC hardware module
+ *
+ * \return Synchronization status of the underlying hardware module(s).
+ *
+ * \retval true  if the module synchronization is ongoing
+ * \retval false if the module has completed synchronization
+ */
+static inline bool rtc_calendar_is_syncing(struct rtc_module *const module)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
+
+	if (rtc_module->MODE2.SYNCBUSY.reg) {
+		return true;
+	}
+
+	return false;
+}
+
+/**
+ * \brief Enables the RTC module.
+ *
+ * Enables the RTC module once it has been configured, ready for use. Most
+ * module configuration parameters cannot be altered while the module is enabled.
+ *
+ * \param[in,out] module  Pointer to the software instance struct
+ */
+void rtc_calendar_enable(struct rtc_module *const module)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
+
+#if RTC_CALENDAR_ASYNC == true
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_RTC);
+#endif
+
+	while (rtc_calendar_is_syncing(module)) {
+		/* Wait for synchronization */
+	}
+
+	/* Enable RTC module. */
+	rtc_module->MODE2.CTRLA.reg |= RTC_MODE2_CTRLA_ENABLE;
+
+	while (rtc_calendar_is_syncing(module)) {
+		/* Wait for synchronization */
+	}
+}
+
+/**
+ * \brief Disables the RTC module.
+ *
+ * Disables the RTC module.
+ *
+ * \param[in,out] module  Pointer to the software instance struct
+ */
+void rtc_calendar_disable(struct rtc_module *const module)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
+
+#if RTC_CALENDAR_ASYNC == true
+	system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_RTC);
+#endif
+
+	while (rtc_calendar_is_syncing(module)) {
+		/* Wait for synchronization */
+	}
+
+	/* Disable RTC module. */
+	rtc_module->MODE2.CTRLA.reg &= ~RTC_MODE2_CTRLA_ENABLE;
+
+	while (rtc_calendar_is_syncing(module)) {
+		/* Wait for synchronization */
+	}
+}
 
 /**
  * \brief Resets the RTC module
@@ -74,7 +174,11 @@ void rtc_calendar_reset(struct rtc_module *const module)
 	}
 
 	/* Initiate software reset. */
-	rtc_module->MODE2.CTRL.reg |= RTC_MODE2_CTRL_SWRST;
+	rtc_module->MODE2.CTRLA.reg |= RTC_MODE2_CTRLA_SWRST;
+
+	while (rtc_calendar_is_syncing(module)) {
+		/* Wait for synchronization */
+	}
 }
 
 /**
@@ -103,7 +207,7 @@ static uint32_t _rtc_calendar_time_to_register_value(
 	/* Check if 24 h clock and set pm flag. */
 	if (!(module->clock_24h) && (time->pm)) {
 		/* Set pm flag. */
-		register_value |= RTC_MODE2_CLOCK_HOUR_PM;
+		register_value |= (0x10u << RTC_MODE2_CLOCK_HOUR_Pos);
 	}
 
 	/* Set minute value into register_value. */
@@ -142,11 +246,11 @@ static void _rtc_calendar_register_value_to_time(
 	} else {
 		/* Set hour in 12h mode. */
 		time->hour = ((register_value &
-				(RTC_MODE2_CLOCK_HOUR_Msk & ~RTC_MODE2_CLOCK_HOUR_PM)) >>
+				(RTC_MODE2_CLOCK_HOUR_Msk & ~(0x10u << RTC_MODE2_CLOCK_HOUR_Pos))) >>
 				RTC_MODE2_CLOCK_HOUR_Pos);
 
 		/* Set pm flag */
-		time->pm = ((register_value & RTC_MODE2_CLOCK_HOUR_PM) != 0);
+		time->pm = ((register_value & (0x10u << RTC_MODE2_CLOCK_HOUR_Pos)) != 0);
 	}
 
 	/* Set minute value into time struct. */
@@ -181,28 +285,22 @@ static void _rtc_calendar_set_config(
 	uint16_t tmp_reg;
 
 	/* Set to calendar mode and set the prescaler. */
-	tmp_reg = RTC_MODE2_CTRL_MODE(2) | config->prescaler;
+	tmp_reg = RTC_MODE2_CTRLA_MODE(2) | config->prescaler;
 
 	/* Check clock mode. */
 	if (!(config->clock_24h)) {
 		/* Set clock mode 12h. */
-		tmp_reg |= RTC_MODE2_CTRL_CLKREP;
+		tmp_reg |= RTC_MODE2_CTRLA_CLKREP;
 	}
 
 	/* Check for clear on compare match. */
 	if (config->clear_on_match) {
 		/* Set clear on compare match. */
-		tmp_reg |= RTC_MODE2_CTRL_MATCHCLR;
+		tmp_reg |= RTC_MODE2_CTRLA_MATCHCLR;
 	}
 
 	/* Set temporary value to register. */
-	rtc_module->MODE2.CTRL.reg = tmp_reg;
-
-	/* Check to set continuously clock read update mode. */
-	if (config->continuously_update) {
-		/* Set continuously mode. */
-		rtc_module->MODE2.READREQ.reg |= RTC_READREQ_RCONT;
-	}
+	rtc_module->MODE2.CTRLA.reg = tmp_reg;
 
 	/* Set alarm time registers. */
 	for (uint8_t i = 0; i < RTC_NUM_OF_ALARMS; i++) {
@@ -234,21 +332,16 @@ void rtc_calendar_init(
 	module->hw = hw;
 
 	/* Turn on the digital interface clock */
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, PM_APBAMASK_RTC);
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBA, MCLK_APBAMASK_RTC);
 
-	/* Set up GCLK */
-	struct system_gclk_chan_config gclk_chan_conf;
-	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	gclk_chan_conf.source_generator = GCLK_GENERATOR_2;
-	system_gclk_chan_set_config(RTC_GCLK_ID, &gclk_chan_conf);
-	system_gclk_chan_enable(RTC_GCLK_ID);
+	/* Select RTC clock */
+	OSC32KCTRL->RTCCTRL.reg = RTC_CLOCK_SOURCE;
 
 	/* Reset module to hardware defaults. */
 	rtc_calendar_reset(module);
 
 	/* Save conf_struct internally for continued use. */
 	module->clock_24h           = config->clock_24h;
-	module->continuously_update = config->continuously_update;
 	module->year_init_value     = config->year_init_value;
 
 #if (RTC_INST_NUM == 1)
@@ -346,7 +439,7 @@ void rtc_calendar_swap_time_mode(struct rtc_module *const module)
 	rtc_calendar_disable(module);
 
 	/* Toggle mode. */
-	rtc_module->MODE2.CTRL.reg ^= RTC_MODE2_CTRL_CLKREP;
+	rtc_module->MODE2.CTRLA.reg ^= RTC_MODE2_CTRLA_CLKREP;
 
 	/* Enable RTC. */
 	rtc_calendar_enable(module);
@@ -381,6 +474,10 @@ void rtc_calendar_set_time(
 
 	/* Write value to register. */
 	rtc_module->MODE2.CLOCK.reg = register_value;
+
+	while (rtc_calendar_is_syncing(module)) {
+		/* Wait for synchronization */
+	}
 }
 
 /**
@@ -401,15 +498,8 @@ void rtc_calendar_get_time(
 
 	Rtc *const rtc_module = module->hw;
 
-	/* Change of read method based on value of continuously_update value in
-	 * the configuration structure. */
-	if (!(module->continuously_update)) {
-		/* Request read on CLOCK register. */
-		rtc_module->MODE2.READREQ.reg = RTC_READREQ_RREQ;
-
-		while (rtc_calendar_is_syncing(module)) {
-			/* Wait for synchronization */
-		}
+	while (rtc_calendar_is_syncing(module)) {
+		/* Wait for synchronization */
 	}
 
 	/* Read value. */
@@ -458,8 +548,16 @@ enum status_code rtc_calendar_set_alarm(
 	/* Set alarm value. */
 	rtc_module->MODE2.Mode2Alarm[alarm_index].ALARM.reg = register_value;
 
+	while (rtc_calendar_is_syncing(module)) {
+			/* Wait for synchronization */
+	}
+
 	/* Set alarm mask */
 	rtc_module->MODE2.Mode2Alarm[alarm_index].MASK.reg = alarm->mask;
+
+	while (rtc_calendar_is_syncing(module)) {
+			/* Wait for synchronization */
+	}
 
 	return STATUS_OK;
 }
@@ -559,6 +657,10 @@ enum status_code rtc_calendar_frequency_correction(
 
 	/* Set value. */
 	rtc_module->MODE2.FREQCORR.reg = new_correction_value;
+
+	while (rtc_calendar_is_syncing(module)) {
+		/* Wait for synchronization */
+	}
 
 	return STATUS_OK;
 }

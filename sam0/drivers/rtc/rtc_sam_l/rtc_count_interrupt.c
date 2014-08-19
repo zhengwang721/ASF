@@ -70,21 +70,23 @@ enum status_code rtc_count_register_callback(
 	enum status_code status = STATUS_OK;
 
 	/* Overflow callback */
-	if (callback_type == RTC_COUNT_CALLBACK_OVERFLOW) {
+	if (callback_type == RTC_COUNT_CALLBACK_OVERFLOW
+	    || (callback_type >= RTC_COUNT_CALLBACK_PERIODIC_INTERVAL_0
+			&& callback_type <= RTC_COUNT_CALLBACK_PERIODIC_INTERVAL_7)) {
 		status = STATUS_OK;
 	} else {
 		/* Make sure callback type can be registered */
 		switch (module->mode) {
 		case RTC_COUNT_MODE_32BIT:
 			/* Check sanity for 32-bit mode. */
-			if (callback_type > RTC_NUM_OF_COMP32) {
+			if (callback_type > (RTC_COMP32_NUM + RTC_PER_NUM)) {
 				status = STATUS_ERR_INVALID_ARG;
 			}
 
 			break;
 		case RTC_COUNT_MODE_16BIT:
 			/* Check sanity for 16-bit mode. */
-			if (callback_type > RTC_NUM_OF_COMP16) {
+			if (callback_type > (RTC_NUM_OF_COMP16 + RTC_PER_NUM)) {
 				status = STATUS_ERR_INVALID_ARG;
 			}
 			break;
@@ -123,20 +125,22 @@ enum status_code rtc_count_unregister_callback(
 	enum status_code status = STATUS_OK;
 
 	/* Overflow callback */
-	if (callback_type == RTC_COUNT_CALLBACK_OVERFLOW) {
+	if (callback_type == RTC_COUNT_CALLBACK_OVERFLOW
+		|| (callback_type >= RTC_COUNT_CALLBACK_PERIODIC_INTERVAL_0
+			&& callback_type <= RTC_COUNT_CALLBACK_PERIODIC_INTERVAL_7)) {
 		status = STATUS_OK;
 	} else {
 		/* Make sure callback type can be unregistered */
 		switch (module->mode) {
 		case RTC_COUNT_MODE_32BIT:
 			/* Check sanity for 32-bit mode. */
-			if (callback_type > RTC_NUM_OF_COMP32) {
+			if (callback_type > (RTC_COMP32_NUM + RTC_PER_NUM)) {
 				status = STATUS_ERR_INVALID_ARG;
 			}
 			break;
 		case RTC_COUNT_MODE_16BIT:
 			/* Check sanity for 16-bit mode. */
-			if (callback_type > RTC_NUM_OF_COMP16) {
+			if (callback_type > (RTC_NUM_OF_COMP16 + RTC_PER_NUM)) {
 				status = STATUS_ERR_INVALID_ARG;
 			}
 			break;
@@ -174,8 +178,11 @@ void rtc_count_enable_callback(
 
 	if (callback_type == RTC_COUNT_CALLBACK_OVERFLOW) {
 		rtc_module->MODE0.INTENSET.reg = RTC_MODE0_INTFLAG_OVF;
-	} else {
-		rtc_module->MODE0.INTENSET.reg = RTC_MODE1_INTFLAG_CMP(1 << callback_type);
+	} else if (callback_type >= RTC_COUNT_CALLBACK_PERIODIC_INTERVAL_0
+			&& callback_type <= RTC_COUNT_CALLBACK_PERIODIC_INTERVAL_7) {
+		rtc_module->MODE0.INTENSET.reg = RTC_MODE1_INTFLAG_PER(1 << callback_type);
+	}else {
+		rtc_module->MODE0.INTENSET.reg = RTC_MODE1_INTFLAG_CMP(1 << (callback_type - RTC_PER_NUM));
 	}
 	/* Mark callback as enabled. */
 	module->enabled_callback |= (1 << callback_type);
@@ -202,8 +209,11 @@ void rtc_count_disable_callback(
 	/* Disable interrupt */
 	if (callback_type == RTC_COUNT_CALLBACK_OVERFLOW) {
 		rtc_module->MODE0.INTENCLR.reg = RTC_MODE0_INTFLAG_OVF;
-	} else {
-		rtc_module->MODE0.INTENCLR.reg = RTC_MODE1_INTFLAG_CMP(1 << callback_type);
+	} else if(callback_type >= RTC_COUNT_CALLBACK_PERIODIC_INTERVAL_0
+			&& callback_type <= RTC_COUNT_CALLBACK_PERIODIC_INTERVAL_7){
+		rtc_module->MODE0.INTENCLR.reg = RTC_MODE1_INTFLAG_PER(1 << callback_type);;
+	}else {
+		rtc_module->MODE0.INTENCLR.reg = RTC_MODE1_INTFLAG_CMP(1 << (callback_type - RTC_PER_NUM));
 	}
 
 	/* Mark callback as disabled. */
@@ -222,7 +232,7 @@ static void _rtc_interrupt_handler(const uint32_t instance_index)
 	Rtc *const rtc_module = module->hw;
 
 	/* Combine callback registered and enabled masks */
-	uint8_t callback_mask = module->enabled_callback;
+	uint16_t callback_mask = module->enabled_callback;
 	callback_mask &= module->registered_callback;
 
 	/* Read and mask interrupt flag register */
@@ -238,7 +248,18 @@ static void _rtc_interrupt_handler(const uint32_t instance_index)
 		/* Clear interrupt flag */
 		rtc_module->MODE0.INTFLAG.reg = RTC_MODE0_INTFLAG_OVF;
 
-	} else if (interrupt_status & RTC_MODE1_INTFLAG_CMP(1 << 0)) {
+	} else if (interrupt_status & RTC_MODE1_INTFLAG_PER(0xff)) {
+		uint8_t i  = 0;
+		for ( i = 0;i < RTC_PER_NUM;i++) {
+			if ((interrupt_status & RTC_MODE1_INTFLAG_PER(1 << i))
+			  && (callback_mask & (1 << i))) {
+				module->callbacks[i]();
+			}
+
+			/* Clear interrupt flag */
+			rtc_module->MODE0.INTFLAG.reg = RTC_MODE1_INTFLAG_PER(1<<i);
+		}
+	}else if (interrupt_status & RTC_MODE1_INTFLAG_CMP(1 << 0)) {
 		/* Compare 0 interrupt */
 		if (callback_mask & (1 << RTC_COUNT_CALLBACK_COMPARE_0)) {
 			module->callbacks[RTC_COUNT_CALLBACK_COMPARE_0]();

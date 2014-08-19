@@ -644,19 +644,19 @@ bool system_clock_source_is_ready(
 	switch (clock_source) {
 	case SYSTEM_CLOCK_SOURCE_OSC16M:
 		mask = OSCCTRL_STATUS_OSC16MRDY;
-		break;
+		return ((OSCCTRL->STATUS.reg & mask) == mask);
 
 	case SYSTEM_CLOCK_SOURCE_OSC32K:
 		mask = OSC32KCTRL_STATUS_OSC32KRDY;
-		break;
+		return ((OSC32KCTRL->STATUS.reg & mask) == mask);
 
 	case SYSTEM_CLOCK_SOURCE_XOSC:
 		mask = OSCCTRL_STATUS_XOSCRDY;
-		break;
+		return ((OSCCTRL->STATUS.reg & mask) == mask);
 
 	case SYSTEM_CLOCK_SOURCE_XOSC32K:
 		mask = OSC32KCTRL_STATUS_XOSC32KRDY;
-		break;
+		return ((OSC32KCTRL->STATUS.reg & mask) == mask);
 
 	case SYSTEM_CLOCK_SOURCE_DFLL:
 		if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
@@ -665,7 +665,7 @@ bool system_clock_source_is_ready(
 		} else {
 			mask = OSCCTRL_STATUS_DFLLRDY;
 		}
-		break;
+		return ((OSCCTRL->STATUS.reg & mask) == mask);
 
 	case SYSTEM_CLOCK_SOURCE_DPLL:
 		return ((OSCCTRL->DPLLSTATUS.reg &
@@ -679,7 +679,7 @@ bool system_clock_source_is_ready(
 		return false;
 	}
 
-	return ((OSCCTRL->STATUS.reg & mask) == mask);
+	return false;
 }
 
 /* Include some checks for conf_clocks.h validation */
