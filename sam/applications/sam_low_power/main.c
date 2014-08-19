@@ -201,6 +201,26 @@ static void configure_console(void)
 /**
  *  Reconfigure UART console for changed MCK and baudrate.
  */
+ #if SAMG55
+static void reconfigure_console(uint32_t ul_mck, uint32_t ul_baudrate)
+{
+	sam_usart_opt_t uart_serial_options;
+	
+	uart_serial_options.baudrate = ul_baudrate,
+	uart_serial_options.parity_type = US_MR_PAR_NO;
+
+	/* Configure PMC */
+	flexcom_enable(FLEXCOM7);
+	flexcom_set_opmode(FLEXCOM7, FLEXCOM_MR_OPMODE_USART);
+
+	/* Configure PIO */
+	pio_configure_pin_group(CONF_UART_PIO, CONF_PINS_UART,
+			CONF_PINS_UART_FLAGS);
+
+	/* Configure UART */
+	usart_init_rs232(CONF_UART, &uart_serial_options, ul_mck);
+}
+#else
 static void reconfigure_console(uint32_t ul_mck, uint32_t ul_baudrate)
 {
 	const sam_uart_opt_t uart_console_settings =
@@ -216,15 +236,22 @@ static void reconfigure_console(uint32_t ul_mck, uint32_t ul_baudrate)
 	/* Configure UART */
 	uart_init(CONF_UART, &uart_console_settings);
 }
+#endif
 
 /**
  * \brief Initialize the chip for low power test.
  */
 static void init_chip(void)
 {
+#if SAMG55
+	/* Wait for the transmission done before changing clock */
+	while (!usart_is_tx_empty(CONSOLE_UART)) {
+	}
+#else
 	/* Wait for the transmission done before changing clock */
 	while (!uart_is_tx_empty(CONSOLE_UART)) {
 	}
+#endif
 
 	/* Disable all the peripheral clocks */
 	pmc_disable_all_periph_clk();
@@ -249,15 +276,21 @@ static void user_change_clock(uint8_t *p_uc_str)
 	/* Print menu */
 	puts(CLOCK_LIST_MENU);
 
-	while (uart_read(CONSOLE_UART, &uc_key)) {
-	}
+	scanf("%c", (char *)&uc_key);
 	printf("Select option is: %c\n\r\n\r", uc_key);
 	if (p_uc_str) {
 		puts((char const *)p_uc_str);
 	}
 
+#if SAMG55
+	/* Wait for the transmission done before changing clock */
+	while (!usart_is_tx_empty(CONSOLE_UART)) {
+	}
+#else
+	/* Wait for the transmission done before changing clock */
 	while (!uart_is_tx_empty(CONSOLE_UART)) {
 	}
+#endif
 
 	if ((uc_key >= MIN_CLOCK_FAST_RC_ITEM) &&
 			(uc_key <= MAX_CLOCK_FAST_RC_ITEM)) {
@@ -422,9 +455,15 @@ static void test_wait_mode(void)
 {
 	puts(STRING_WAIT);
 
+#if SAMG55
+	/* Wait for the transmission done before changing clock */
+	while (!usart_is_tx_empty(CONSOLE_UART)) {
+	}
+#else
 	/* Wait for the transmission done before changing clock */
 	while (!uart_is_tx_empty(CONSOLE_UART)) {
 	}
+#endif
 
 	/* Configure fast RC oscillator */
 	pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
@@ -541,8 +580,7 @@ static void test_core(void)
 		display_menu_core();
 
 		/* Read a key from console */
-		while (uart_read(CONSOLE_UART, &uc_key)) {
-		}
+		scanf("%c", (char *)&uc_key);
 
 		switch (uc_key) {
 		/* Configuration */
