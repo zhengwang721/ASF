@@ -43,6 +43,10 @@
 #ifndef CONF_RTC_H_INCLUDED
 #define CONF_RTC_H_INCLUDED
 
+/** Select RTC clock. Use 1.024kHz from 32kHz internal ULP oscillator(OSCULP32K)
+ *  for RTC clock , before using the clock, OSCULP32K and its 1kHz output should
+ *  be enabled in the clock configuration file.
+ */
 #  define RTC_CLOCK_SOURCE    RTC_CLOCK_SELECTION_ULP1K
 
 #endif
