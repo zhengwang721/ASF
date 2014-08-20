@@ -166,14 +166,15 @@ enum status_code ac_chan_set_config(
 	Ac *const ac_module = module_inst->hw;
 
 	/* Use a temporary variable to compute the comparator configuration */
-	uint32_t compctrl_temp = ac_module->COMPCTRL[(uint8_t)channel].reg &
-			AC_COMPCTRL_RUNSTDBY;
+	uint32_t compctrl_temp = 0;
 
 	/* Enable output filter mode */
 	compctrl_temp |= config->filter;
 
 	/* Comparators should be enabled during sleep */
-	compctrl_temp |= AC_COMPCTRL_RUNSTDBY;
+	if (config->run_in_standby == true) {
+		compctrl_temp |= AC_COMPCTRL_RUNSTDBY;
+	}
 
 	/* Enable output hysteresis if required */
 	if (config->enable_hysteresis == true) {

@@ -14,14 +14,11 @@
 			<build type="include-path" value="." />
 			<build name="AC_CALLBACK_MODE" type="define" value="false" />
 			<build subtype="api" type="header-file" value="ac.h" />
-			<build type="header-file" value="quick_start/qs_ac_basic.h" />
 			<device-support value="sam0" />
 
 			<require idref="sam0.drivers.ac.common" />
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
-
-			<generator default-mcu="unspecified-samd20" value="doxygen-module-v2" />
 		</module>
 
 		<module caption="AC - Analog Comparator (Callback APIs)" id="sam0.drivers.ac#callback" type="driver">
@@ -36,16 +33,12 @@
 			<build subtype="api" type="header-file" value="ac.h" />
 			<build subtype="api" type="header-file" value="ac_callback.h" />
 			<build type="c-source" value="ac_callback.c" />
-			<build type="header-file" value="quick_start_callback/qs_ac_callback.h" />
-			<build type="header-file" value="quick_start/qs_ac_basic.h" />
 
 			<device-support value="sam0" />
 
 			<require idref="sam0.drivers.ac.common" />
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
-
-			<generator default-mcu="unspecified-samd20" value="doxygen-module-v2" />
 		</module>
 	</select-by-config>
 
