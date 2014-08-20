@@ -290,7 +290,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
 /**
  * \page asfdoc_uhc_basic_use_case_setup USB Host Basic Setup
  *
- * \section USB_HOST_CONF USB host user configuration
+ * \section USB_HOST_CONF USB Host User Configuration
  * The following USB host configuration must be included in the conf_usb_host.h
  * file of the application.
  *
