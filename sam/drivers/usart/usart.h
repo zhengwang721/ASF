@@ -312,6 +312,11 @@ void usart_man_disable_drift_compensation(Usart *p_usart);
 uint32_t usart_get_version(Usart *p_usart);
 #endif
 
+#if SAMG55
+void usart_set_sleepwalking(Usart *p_uart, uint8_t ul_low_value,
+		bool cmpmode, bool cmppar, uint8_t ul_high_value);
+#endif		
+
 /// @cond 0
 /**INDENT-OFF**/
 #ifdef __cplusplus

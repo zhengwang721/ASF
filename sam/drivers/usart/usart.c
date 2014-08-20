@@ -1787,6 +1787,39 @@ uint32_t usart_get_version(Usart *p_usart)
 
 #endif
 
+#if SAMG55
+/**
+ * \brief Set sleepwalking match mode.
+ *
+ * \param p_uart Pointer to a USART instance.
+ * \param ul_low_value First comparison value for received character.
+ * \param ul_high_value Second comparison value for received character.
+ * \param cmpmode ture for start condition, false for flag only.
+ * \param cmppar ture for parity check, false for no.
+ */
+void usart_set_sleepwalking(Usart *p_uart, uint8_t ul_low_value,
+		bool cmpmode, bool cmppar, uint8_t ul_high_value)
+{
+	Assert(ul_low_value <= ul_high_value);
+
+	uint32_t temp = 0;
+
+	if (cmpmode) {
+		temp |= US_CMPR_CMPMODE_START_CONDITION;
+	}
+
+	if (cmppar) {
+		temp |= US_CMPR_CMPPAR;
+	}
+
+	temp |= US_CMPR_VAL1(ul_low_value);
+
+	temp |= US_CMPR_VAL2(ul_high_value);
+
+	p_uart->US_CMPR= temp;
+}
+#endif
+
 //@}
 
 /// @cond 0
