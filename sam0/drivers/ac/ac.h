@@ -94,6 +94,33 @@
  * comparator's positive channel input is higher than the comparator's negative
  * input channel, and \c false if otherwise.
  *
+ *
+ * \subsection asfdoc_sam0_ac_module_features Driver Feature Macro Definition
+ * <table>
+ *	<tr>
+ *		<th>Driver Feature Macro</th>
+ *		<th>Supported devices</th>
+ *	</tr>
+ *	<tr>
+ *		<td>FEATURE_AC_HYSTERESIS_LEVEL</td>
+ *		<td>SAML21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>FEATURE_AC_SYNCBUSY_SCHEME_VERSION_2</td>
+ *		<td>SAML21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>FEATURE_AC_RUN_IN_STANDY_EACH_COMPARATOR</td>
+ *		<td>SAML21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>FEATURE_AC_RUN_IN_STANDY_PAIR_COMPARATOR</td>
+ *		<td>SAMD20/D21/D10/D11/R21</td>
+ *	</tr>
+ * </table>
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
+ *
  * \subsection asfdoc_sam0_ac_module_overview_pairs Window Comparators and Comparator Pairs
  * Each comparator module contains one or more comparator pairs, a set of two
  * distinct comparators which can be used independently or linked together for
@@ -281,6 +308,14 @@ extern "C" {
    /** SYNCBUSY scheme version 2 */
 #  define FEATURE_AC_SYNCBUSY_SCHEME_VERSION_2
 #endif
+
+#if (SAML21) || defined(__DOXYGEN__)
+ 	/** Run in standby feature for each comparator */
+#  define FEATURE_AC_RUN_IN_STANDY_EACH_COMPARATOR
+#else
+ 	/** Run in standby feature for comparator pair */
+#  define FEATURE_AC_RUN_IN_STANDY_PAIR_COMPARATOR
+#endif
 /* @} */
 
 #if !defined(__DOXYGEN__)
@@ -450,8 +485,14 @@ enum ac_chan_neg_mux {
 	/** Negative comparator input is connected to the internal band gap voltage
 	 *  reference. */
 	AC_CHAN_NEG_MUX_BANDGAP    = AC_COMPCTRL_MUXNEG_BANDGAP,
-	/** Negative comparator input is connected to the channel's internal DAC
-	 *  channel 0 output. */
+	/**
+	 * For SAMD20/D21/D10/D11/R21:
+	 *     Negative comparator input is connected to the channel's internal DAC
+	 *     channel 0 output.
+	 * For SAML21:
+	 *     Negative comparator input is connected to the channel's internal DAC
+	 *     channel 0 output for Comparator 0 or OPAMP output for Comparator 1.
+	 */
 	AC_CHAN_NEG_MUX_DAC0       = AC_COMPCTRL_MUXNEG_DAC,
 };
 
@@ -595,9 +636,11 @@ struct ac_events {
  *  output settings of the comparator.
  */
 struct ac_config {
+#ifdef FEATURE_AC_RUN_IN_STANDY_PAIR_COMPARATOR
 	/** If \c true, the comparator pairs will continue to sample during sleep
 	 *  mode when triggered. */
 	bool run_in_standby[AC_PAIRS];
+#endif
 	/** Source generator for AC GCLK. */
 	enum gclk_generator source_generator;
 };
@@ -616,8 +659,13 @@ struct ac_chan_config {
 	enum ac_chan_filter filter;
 	/** When \c true, hysteresis mode is enabled on the comparator inputs. */
 	bool enable_hysteresis;
-	/** Hysteresis level of the comparator channel. */
+#ifdef FEATURE_AC_RUN_IN_STANDY_EACH_COMPARATOR
+	/** If \c true, the comparator will continue to sample during sleep
+	 *  mode when triggered. */
+	bool run_in_standby;
+#endif
 #ifdef FEATURE_AC_HYSTERESIS_LEVEL
+	/** Hysteresis level of the comparator channel. */
 	enum ac_hysteresis_level hysteresis_level;
 #endif
 	/** Output mode of the comparator, whether it should be available for
@@ -625,10 +673,13 @@ struct ac_chan_config {
 	enum ac_chan_output output_mode;
 	/** Input multiplexer selection for the comparator's positive input pin. */
 	enum ac_chan_pos_mux positive_input;
-	/** Input multiplexer selection for the comparator's negative input pin. */
+	/** Input multiplexer selection for the comparator's negative input pin.
+	 *  Any internal reference source, such as a bandgap reference voltage or
+	 *  the DAC, must be configured and enabled prior to its use as a
+	 *  comparator input.*/
 	enum ac_chan_neg_mux negative_input;
 	/** Scaled VCC voltage division factor for the channel, when a comparator
-	 *  pin is connected to the VCC voltage scalar input. The formular is:
+	 *  pin is connected to the VCC voltage scalar input. The formula is:
 	 *      Vscale = Vdd * vcc_scale_factor / 64.
 	 *  If the VCC voltage scalar is not selected as a comparator
 	 *  channel pin's input, this value will be ignored. */
@@ -736,7 +787,7 @@ static inline bool ac_is_syncing(
  *  by the user application.
  *
  *  The default configuration is as follows:
- *   \li All comparator pairs disabled during sleep mode
+ *   \li All comparator pairs disabled during sleep mode (if has this feature)
  *   \li Generator 0 is the default GCLK generator
  *
  *  \param[out] config  Configuration structure to initialize to default values
@@ -746,11 +797,12 @@ static inline void ac_get_config_defaults(
 {
 	/* Sanity check arguments */
 	Assert(config);
-
+#ifdef FEATURE_AC_RUN_IN_STANDY_PAIR_COMPARATOR
 	/* Default configuration values */
 	for (uint32_t i = 0; i < AC_PAIRS; i++) {
 		config->run_in_standby[i] = false;
 	}
+#endif
 	config->source_generator = GCLK_GENERATOR_0;
 }
 
@@ -916,6 +968,7 @@ static inline void ac_disable_events(
  *  The default configuration is as follows:
  *   \li Continuous sampling mode
  *   \li Majority of 5 sample output filter
+ *   \li Comparator disabled during sleep mode (if has this feature)
  *   \li Hysteresis enabled on the input pins
  *   \li Hysteresis level of 50mV if having this feature.
  *   \li Internal comparator output mode
@@ -937,6 +990,9 @@ static inline void ac_chan_get_config_defaults(
 	config->sample_mode         = AC_CHAN_MODE_CONTINUOUS;
 	config->filter              = AC_CHAN_FILTER_MAJORITY_5;
 	config->enable_hysteresis   = true;
+#ifdef FEATURE_AC_RUN_IN_STANDY_EACH_COMPARATOR
+	config->run_in_standby      = false;
+#endif
 #ifdef FEATURE_AC_HYSTERESIS_LEVEL
 	config->hysteresis_level    = AC_HYSTERESIS_LEVEL_50;
 #endif
@@ -971,6 +1027,10 @@ static inline void ac_chan_enable(
 
 	Ac *const ac_module = module_inst->hw;
 
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
+
 	/* Write the new comparator module control configuration */
 	ac_module->COMPCTRL[(uint8_t)channel].reg |= AC_COMPCTRL_ENABLE;
 }
@@ -993,6 +1053,10 @@ static inline void ac_chan_disable(
 	Assert(module_inst->hw);
 
 	Ac *const ac_module = module_inst->hw;
+
+	while (ac_is_syncing(module_inst)) {
+		/* Wait until synchronization is complete */
+	}
 
 	/* Write the new comparator module control configuration */
 	ac_module->COMPCTRL[(uint8_t)channel].reg &= ~AC_COMPCTRL_ENABLE;

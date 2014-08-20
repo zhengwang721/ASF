@@ -51,7 +51,7 @@ static enum status_code _ac_set_config(
 	Assert(module_inst->hw);
 	Assert(config);
 
-	Ac *const ac_module = module_inst->hw;
+	UNUSED(module_inst);
 
 	/* Set up GCLK */
 	struct system_gclk_chan_config gclk_chan_conf;
@@ -59,14 +59,6 @@ static enum status_code _ac_set_config(
 	gclk_chan_conf.source_generator = config->source_generator;
 	system_gclk_chan_set_config(AC_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(AC_GCLK_ID);
-
-	/* Check if the comparators should be enabled during sleep */
-	for (uint32_t i = 0; i < AC_PAIRS; i++) {
-		if (config->run_in_standby[i] == true) {
-			ac_module->COMPCTRL[0].reg |= AC_COMPCTRL_RUNSTDBY;
-			ac_module->COMPCTRL[1].reg |= AC_COMPCTRL_RUNSTDBY;
-		}
-	}
 
 	return STATUS_OK;
 }
@@ -179,6 +171,9 @@ enum status_code ac_chan_set_config(
 
 	/* Enable output filter mode */
 	compctrl_temp |= config->filter;
+
+	/* Comparators should be enabled during sleep */
+	compctrl_temp |= AC_COMPCTRL_RUNSTDBY;
 
 	/* Enable output hysteresis if required */
 	if (config->enable_hysteresis == true) {

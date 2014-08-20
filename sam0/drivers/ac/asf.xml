@@ -12,17 +12,9 @@
 			</info>
 
 			<build type="include-path" value="." />
-
 			<build name="AC_CALLBACK_MODE" type="define" value="false" />
-
 			<build subtype="api" type="header-file" value="ac.h" />
-
 			<build type="header-file" value="quick_start/qs_ac_basic.h" />
-
-			<build type="doxygen-example-path" value="quick_start"/>
-			<build type="doxygen-entry-point" value="asfdoc_sam0_ac_group" />
-			<build type="doxygen-quick-start" value="asfdoc_sam0_ac_exqsg"/>
-
 			<device-support value="sam0" />
 
 			<require idref="sam0.drivers.ac.common" />
@@ -37,19 +29,7 @@
 				<keyword value="Analog Conversion"/>
 			</info>
 
-			<info type="appnote" value="AT03242"/>
-			<info type="keyword" value="pdf">
-				<keyword value="AC"/>
-				<keyword value="Analog Comparator"/>
-			</info>
-
-			<info type="description" value="pdf">
-				This document describes how to use the Analog Comparator on the
-				SAM, both the ASF driver and the peripheral itself.
-			</info>
-
 			<build type="include-path" value="." />
-
 			<build name="AC_CALLBACK_MODE" type="define" value="true" />
 			<build type="doxygen-enable-section" value="AC_CALLBACK_MODE"/>
 
@@ -58,11 +38,6 @@
 			<build type="c-source" value="ac_callback.c" />
 			<build type="header-file" value="quick_start_callback/qs_ac_callback.h" />
 			<build type="header-file" value="quick_start/qs_ac_basic.h" />
-
-			<build type="doxygen-example-path" value="quick_start"/>
-			<build type="doxygen-example-path" value="quick_start_callback"/>
-			<build type="doxygen-entry-point" value="asfdoc_sam0_ac_group" />
-			<build type="doxygen-quick-start" value="asfdoc_sam0_ac_exqsg"/>
 
 			<device-support value="sam0" />
 
