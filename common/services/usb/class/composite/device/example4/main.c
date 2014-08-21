@@ -47,7 +47,7 @@
 #include "uart.h"
 
 static volatile bool main_b_msc_enable = false;
-static bool main_b_cdc_enable = false;
+static volatile bool main_b_cdc_enable = false;
 
 /*! \brief Main function. Execution starts here.
  */
@@ -58,7 +58,7 @@ int main(void)
 
 	// Initialize the sleep manager
 	sleepmgr_init();
-#if !SAMD21
+#if !SAMD21 && !SAMR21
 	sysclk_init();
 	board_init();
 #else

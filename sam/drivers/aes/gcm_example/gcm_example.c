@@ -7,7 +7,7 @@
  * This file defines a useful set of functions for the AES-GCM mode on SAM
  *devices.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,43 +43,6 @@
  *
  * \asf_license_stop
  *
- */
-
-/** \mainpage
- * \section intro Introduction
- * This is the documentation for the data structures, functions, variables,
- * defines, enums, and typedefs for the AES driver. <BR>It also gives several
- * examples of usage of the AES-GCM mode: <BR>
- * - GCM ciphering and deciphering.
- *
- * \section files Main Files
- * - aes.c : AES driver
- * - aes.h : AES header file
- * - gcm_example.c : AES-GCM code example
- *
- * \section compinfo Compilation Info
- * This software was written for the GNU GCC and IAR Systems compiler.
- * Other compilers may or may not work.
- *
- * \section deviceinfo Device Info
- * All SAM devices with an AES-GCM feature can be used. This example has been
- * tested with the following setup:<BR>
- * - SAM4C evaluation kit.
- * - SAM4CP evaluation kit.
- *
- * \section setupinfo Setup Information
- * <BR>CPU speed: <i> 120 MHz </i>
- * - Connect the DBGU port com to a PC
- * - PC terminal settings:
- *     - 115200 bps,
- *     - 8 data bits,
- *     - no parity bit,
- *     - 1 stop bit,
- *     - no flow control.
- *
- * \section contactinfo Contact Information
- * For further information, visit
- * <A href="http://www.atmel.com">Atmel</A>.\n
  */
 
 #include <asf.h>

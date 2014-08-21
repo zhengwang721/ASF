@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21 TC - Timer Counter Driver
+ * \brief SAM TC - Timer Counter Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -155,6 +155,17 @@ enum status_code tc_init(
 	/* Associate the given device instance with the hardware module */
 	module_inst->hw = hw;
 
+#if SAMD10 || SAMD11
+	/* Check if even numbered TC modules are being configured in 32-bit
+	 * counter size. Only odd numbered counters are allowed to be
+	 * configured in 32-bit counter size.
+	 */
+	if ((config->counter_size == TC_COUNTER_SIZE_32BIT) &&
+			!((instance + TC_INSTANCE_OFFSET) & 0x01)) {
+		Assert(false);
+		return STATUS_ERR_INVALID_ARG;
+	}
+#else
 	/* Check if odd numbered TC modules are being configured in 32-bit
 	 * counter size. Only even numbered counters are allowed to be
 	 * configured in 32-bit counter size.
@@ -164,6 +175,7 @@ enum status_code tc_init(
 		Assert(false);
 		return STATUS_ERR_INVALID_ARG;
 	}
+#endif
 
 	/* Make the counter size variable in the module_inst struct reflect
 	 * the counter size in the module
@@ -303,14 +315,14 @@ enum status_code tc_init(
 				/* Wait for sync */
 			}
 
-			hw->COUNT8.CC[0].reg = 
+			hw->COUNT8.CC[0].reg =
 					config->counter_8_bit.compare_capture_channel[0];
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			hw->COUNT8.CC[1].reg = 
+			hw->COUNT8.CC[1].reg =
 					config->counter_8_bit.compare_capture_channel[1];
 
 			return STATUS_OK;
@@ -327,14 +339,14 @@ enum status_code tc_init(
 				/* Wait for sync */
 			}
 
-			hw->COUNT16.CC[0].reg = 
+			hw->COUNT16.CC[0].reg =
 					config->counter_16_bit.compare_capture_channel[0];
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			hw->COUNT16.CC[1].reg = 
+			hw->COUNT16.CC[1].reg =
 					config->counter_16_bit.compare_capture_channel[1];
 
 			return STATUS_OK;
@@ -351,14 +363,14 @@ enum status_code tc_init(
 				/* Wait for sync */
 			}
 
-			hw->COUNT32.CC[0].reg = 
+			hw->COUNT32.CC[0].reg =
 					config->counter_32_bit.compare_capture_channel[0];
 
 			while (tc_is_syncing(module_inst)) {
 				/* Wait for sync */
 			}
 
-			hw->COUNT32.CC[1].reg = 
+			hw->COUNT32.CC[1].reg =
 					config->counter_32_bit.compare_capture_channel[1];
 
 			return STATUS_OK;

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 Quick Start Guide for Using ADC/DAC driver with DMA
+ * \brief SAM D21/D10/D11 Quick Start Guide for Using ADC/DAC driver with DMA
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -44,10 +44,11 @@
 /**
  * \page asfdoc_sam0_adc_dma_use_case Quick Start Guide for Using DMA with ADC/DAC
  *
- * The supported device list:
- *    - SAMD21
+ * The supported board list:
+ *    - SAMD21 Xplained Pro
+ *    - SAMD11 Xplained Pro
  *
- * This quick start will convert an analog input signal from PA4 and output
+ * This quick start will convert an analog input signal from AIN4 and output
  * the converted value to DAC on PA2. The data between ADC and DAC with be
  * transferred through DMA instead of a CPU intervene.
  *
@@ -57,7 +58,7 @@
  * - 10 bit resolution
  * - Window monitor disabled
  * - No gain
- * - Positive input on ADC PIN 4
+ * - Positive input on ADC AIN4
  * - Averaging disabled
  * - Oversampling disabled
  * - Right adjust data
@@ -180,9 +181,8 @@
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- * -# Set extra configurations for the DMA resource. It is using peripheral
- *    trigger, SERCOM Tx empty trigger and trigger causes a beat transfer in
- *    this example.
+ * -# Set extra configurations for the DMA resource. ADC_DMAC_ID_RESRDY trigger
+ *    and trigger causes a beat transfer in this example.
  *    \snippet qs_adc_dma_use.c setup_dma_set_config_extra
  *
  * -# Allocate a DMA resource with the configurations.

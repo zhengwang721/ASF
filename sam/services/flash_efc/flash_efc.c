@@ -62,7 +62,7 @@ extern "C" {
  * @{
  */
 
-#if (SAM4E || SAM4N || SAM4S || SAM4C || SAMG || SAM4CP)
+#if (SAM4E || SAM4N || SAM4S || SAM4C || SAMG || SAM4CP || SAM4CM)
 /* User signature size */
 # define FLASH_USER_SIG_SIZE   (512)
 #endif
@@ -114,16 +114,16 @@ extern "C" {
 # define IFLASH_PAGE_SIZE     IFLASH0_PAGE_SIZE
 /* Internal flash lock region size. */
 # define IFLASH_LOCK_REGION_SIZE     IFLASH0_LOCK_REGION_SIZE
-#elif (SAM4C32)
-/* The max GPNVM number SAM4C32. */
+#elif (SAM4C32 || SAM4CMP32 || SAM4CMS32)
+/* The max GPNVM number SAM4C(M)32. */
 # define GPNVM_NUM_MAX        3
 #else
 /* The max GPNVM number. */
 # define GPNVM_NUM_MAX        2
 #endif
 
-#if (SAM4C || SAM4CP)
-#if SAM4C32
+#if (SAM4C || SAM4CP || SAM4CM)
+#if (SAM4C32 || SAM4CMP32 || SAM4CMS32)
 # define EFC     EFC0
 /* Internal Flash 0 base address. */
 # define IFLASH0_ADDR    IFLASH0_CNC_ADDR
@@ -168,7 +168,7 @@ static void translate_address(Efc **pp_efc, uint32_t ul_addr,
 		us_page = (ul_addr - IFLASH0_ADDR) / IFLASH0_PAGE_SIZE;
 		us_offset = (ul_addr - IFLASH0_ADDR) % IFLASH0_PAGE_SIZE;
 	}
-#elif (SAM4SD16 || SAM4SD32 || SAM4C32)
+#elif (SAM4SD16 || SAM4SD32 || SAM4C32 || SAM4CMP32 || SAM4CMS32)
 	uint32_t uc_gpnvm2;
 	uc_gpnvm2 = flash_is_gpnvm_set(2);
 	if (ul_addr >= IFLASH1_ADDR) {
@@ -231,7 +231,7 @@ static void compute_address(Efc *p_efc, uint16_t us_page, uint16_t us_offset,
 /* Dual bank flash */
 #ifdef EFC1
 	/* Compute address */
-#if (SAM4SD16 || SAM4SD32 || SAM4C32)
+#if (SAM4SD16 || SAM4SD32 || SAM4C32 || SAM4CMP32 || SAM4CMS32)
 	uint32_t uc_gpnvm2;
 	uc_gpnvm2 = flash_is_gpnvm_set(2);
 	if (p_efc == EFC0) {
@@ -357,7 +357,7 @@ uint32_t flash_set_wait_state_adaptively(uint32_t ul_address)
 	} else {
 		efc_set_wait_state(p_efc, 4);
 	}
-#elif (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP)
+#elif (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CP || SAM4CM)
 	} else if (clock < CHIP_FREQ_FWS_3) {
 		efc_set_wait_state(p_efc, 3);
 	} else if (clock < CHIP_FREQ_FWS_4) {
@@ -520,7 +520,7 @@ uint32_t flash_erase_plane(uint32_t ul_address)
 }
 #endif
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 /**
  * \brief Erase the specified pages of flash.
  *
@@ -971,7 +971,7 @@ uint32_t flash_read_unique_id(uint32_t *pul_data, uint32_t ul_size)
 	return FLASH_RC_OK;
 }
 
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 /**
  * \brief Read the flash user signature.
  *

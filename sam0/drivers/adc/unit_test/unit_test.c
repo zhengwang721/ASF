@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21 Analog to Digital Converter (ADC) Unit test
+ * \brief SAM Analog to Digital Converter (ADC) Unit test
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage SAM D20/D21 ADC Unit Test
+ * \mainpage SAM ADC Unit Test
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
@@ -58,7 +58,7 @@
  */
 
 /**
- * \page appdoc_main SAM D20/D21 ADC Unit Test
+ * \page appdoc_main SAM ADC Unit Test
  *
  * Overview:
  * - \ref asfdoc_sam0_adc_unit_test_intro
@@ -73,8 +73,8 @@
  * Input to the ADC is provided with the DAC module.
  *
  * The following kit is required for carrying out the test:
- *      - SAM D20 Xplained Pro board
- *      - SAM D21 Xplained Pro board
+ *  - SAM D20 Xplained Pro board
+ *  - SAM D21 Xplained Pro board
  *
  * \section asfdoc_sam0_adc_unit_test_setup Setup
  * The following connections has to be made using wires:
@@ -117,7 +117,7 @@
 /* Theoretical ADC result for DAC full-swing output */
 #define ADC_VAL_DAC_FULL_OUTPUT 4095
 /* Offset due to ADC & DAC errors */
-#define ADC_OFFSET              50
+#define ADC_OFFSET              100
 /* Theoretical DAC value for 0.5V output*/
 #define DAC_VAL_HALF_VOLT       512
 /* Theoretical DAC value for 1.0V output*/
@@ -271,7 +271,7 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 	/* Test result */
 	test_assert_true(test,
 			(adc_result > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET)) &&
-			(adc_result < (ADC_VAL_DAC_FULL_OUTPUT - ADC_OFFSET)),
+			(adc_result < (ADC_VAL_DAC_HALF_OUTPUT + ADC_OFFSET)),
 			"Error in ADC conversion at 0.5V input (Expected: ~%d, Result: %d)", ADC_VAL_DAC_HALF_OUTPUT, adc_result);
 
 	adc_flush(&adc_inst);
@@ -377,8 +377,8 @@ static void run_adc_callback_mode_test(const struct test_case *test)
 	for (uint8_t i = 0; i < ADC_SAMPLES; i++) {
 		test_assert_true(test,
 				(adc_buf[i] > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET)) &&
-				(adc_buf[i] < (ADC_VAL_DAC_FULL_OUTPUT - ADC_OFFSET)),
-				"Error in ADC conversion for 0.5V at index %d", i);
+				(adc_buf[i] < (ADC_VAL_DAC_HALF_OUTPUT + ADC_OFFSET)),
+				"Error in ADC conversion for 0.5V at index %d, Result: %d", i, adc_buf[i]);
 	}
 }
 
@@ -428,8 +428,6 @@ static void setup_adc_average_mode_test(const struct test_case *test)
 	config.reference          = ADC_REFERENCE_INT1V;
 	config.clock_source       = GCLK_GENERATOR_3;
 	config.gain_factor        = ADC_GAIN_FACTOR_1X;
-	config.resolution         = ADC_RESOLUTION_16BIT;
-	config.accumulate_samples = ADC_ACCUMULATE_SAMPLES_16;
 
 	/* Re-initialize & enable ADC */
 	status = adc_init(&adc_inst, ADC, &config);
@@ -462,18 +460,11 @@ static void run_adc_average_mode_test(const struct test_case *test)
 	adc_start_conversion(&adc_inst);
 	while (adc_read(&adc_inst, &adc_result) != STATUS_OK) {
 	}
-#if (SAMD20)
-	/*
-	 * Errata 10530 for SAMD20: The automatic right shift of the result
-	 * when accumulating/averaging ADC samples does not work.
-	 */
-	adc_result = adc_result >> 4;
-#endif
 
 	/* Test result */
 	test_assert_true(test,
 			(adc_result > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET)) &&
-			(adc_result < (ADC_VAL_DAC_FULL_OUTPUT - ADC_OFFSET)),
+			(adc_result < (ADC_VAL_DAC_HALF_OUTPUT + ADC_OFFSET)),
 			"Error in ADC average mode conversion at 0.5V input");
 }
 
@@ -630,7 +621,7 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(adc_test_suite, adc_tests,
-			"SAM D20/D21 ADC driver test suite");
+			"SAM ADC driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&adc_test_suite);

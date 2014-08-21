@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/21 Event System Driver Quick Start
+ * \brief SAM Event System Driver Quick Start
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -65,6 +65,21 @@
  * There are no special setup requirements for this use-case.
  *
  * \subsection asfdoc_sam0_events_interrupt_hook_setup_code Code
+ * Add to the main application source file, before any functions, according to
+ * the kit used:
+ * - SAM D20 Xplained Pro
+ *   \snippet samd20_xplained_pro/conf_qs_events_interrupt_hook.h definition_event
+ *   \snippet samd20_xplained_pro/conf_qs_events_interrupt_hook.h definition_tc
+ * - SAM D21 Xplained Pro
+ *   \snippet samd21_xplained_pro/conf_qs_events_interrupt_hook.h definition_event
+ *   \snippet samd21_xplained_pro/conf_qs_events_interrupt_hook.h definition_tc
+ * - SAM R21 Xplained Pro
+ *   \snippet samr21_xplained_pro/conf_qs_events_interrupt_hook.h definition_event
+ *   \snippet samr21_xplained_pro/conf_qs_events_interrupt_hook.h definition_tc
+ * - SAM D11 Xplained Pro
+ *   \snippet samd11_xplained_pro/conf_qs_events_interrupt_hook.h definition_event
+ *   \snippet samd11_xplained_pro/conf_qs_events_interrupt_hook.h definition_tc
+ *
  * Copy-paste the following setup code to your user application:
  * \snippet qs_events_interrupt_hook.c setup
  *
@@ -85,7 +100,7 @@
  *  \snippet qs_events_interrupt_hook.c setup_2
  *  \br
  *
- * -# Adjust the configuration structure 
+ * -# Adjust the configuration structure
  *      \li Use EXAMPLE_EVENT_GENRATOR as event generator
  *      \li Detect events on rising edge
  *      \li Use the synchronous event path
@@ -138,10 +153,10 @@
  * -# Add the newly created hook to the interrupt hook queue and enable the event detected interrupt
  * \snippet qs_events_interrupt_hook.c setup_13
  *
- * -# Example interrupt hook code. If the hook was triggered by a event detected interrupt on the 
- *    event channel this code will toggle the led on the Xplained PRO board and increase the value 
- *    of the event_count variable. The interrupt then acknowledged. 
- * 
+ * -# Example interrupt hook code. If the hook was triggered by a event detected interrupt on the
+ *    event channel this code will toggle the led on the Xplained PRO board and increase the value
+ *    of the event_count variable. The interrupt then acknowledged.
+ *
  * \snippet qs_events_interrupt_hook.c setup_14
  *
  * \section asfdoc_sam0_events_interrupt_hook_main Use Case

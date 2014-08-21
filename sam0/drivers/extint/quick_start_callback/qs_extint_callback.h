@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21 External Interrupt Driver Quick Start
+ * \brief SAM D20/D21/R21 External Interrupt Driver Quick Start
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -43,6 +43,11 @@
 
 /**
  * \page asfdoc_sam0_extint_callback_use_case Quick Start Guide for EXTINT - Callback
+ *
+ * The supported board list:
+ *    - SAMD20 Xplained Pro
+ *    - SAMD21 Xplained Pro
+ *    - SAMR21 Xplained Pro
  *
  * In this use case, the EXTINT module is configured for:
  *  - External interrupt channel connected to the board LED is used

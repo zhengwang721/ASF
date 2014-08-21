@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21 Generic Clock Driver
+ * \brief SAM Generic Clock Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -141,7 +141,7 @@ enum gclk_generator {
  * the user application.
  */
 struct system_gclk_gen_config {
-	/** Source clock input channel index. */
+	/** Source clock input channel index, please see the \ref system_clock_source. */
 	uint8_t source_clock;
 	/** If \c true, the generator output level is high when disabled. */
 	bool high_when_disabled;

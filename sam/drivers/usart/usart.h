@@ -295,7 +295,7 @@ void usart_enable_writeprotect(Usart *p_usart);
 void usart_disable_writeprotect(Usart *p_usart);
 uint32_t usart_get_writeprotect_status(Usart *p_usart);
 uint8_t usart_get_error_number(Usart *p_usart);
-#if (SAM3S || SAM4S || SAM3U || SAM3XA || SAM4L || SAM4E || SAM4C || SAM4CP)
+#if (SAM3S || SAM4S || SAM3U || SAM3XA || SAM4L || SAM4E || SAM4C || SAM4CP || SAM4CM)
 void usart_man_set_tx_pre_len(Usart *p_usart, uint8_t uc_len);
 void usart_man_set_tx_pre_pattern(Usart *p_usart, uint8_t uc_pattern);
 void usart_man_set_tx_polarity(Usart *p_usart, uint8_t uc_polarity);
@@ -384,9 +384,11 @@ uint32_t usart_get_version(Usart *p_usart);
 	        USART_SERIAL_STOP_BIT,
 	        US_MR_CHMODE_NORMAL
 	    };
-
+    #if SAM4L
+      sysclk_enable_peripheral_clock(USART_SERIAL);
+    #else  
 	    sysclk_enable_peripheral_clock(USART_SERIAL_ID);
-
+    #endif 
 	    usart_init_rs232(USART_SERIAL, &usart_console_settings,
 	            sysclk_get_main_hz());
 	    usart_enable_tx(USART_SERIAL);
@@ -415,7 +417,11 @@ uint32_t usart_get_version(Usart *p_usart);
 \endcode
  * -# Enable the clock to the USART module:
  *   \code
-	sysclk_enable_peripheral_clock(USART_SERIAL_ID);
+	  #if SAM4L
+      sysclk_enable_peripheral_clock(USART_SERIAL);
+    #else  
+	    sysclk_enable_peripheral_clock(USART_SERIAL_ID);
+    #endif 
 \endcode
  * -# Initialize the USART module in RS232 mode:
  *   \code
@@ -492,7 +498,11 @@ uint32_t usart_get_version(Usart *p_usart);
 	        US_MR_CHMODE_NORMAL
 	    };
 
+    #if SAM4L
+      sysclk_enable_peripheral_clock(USART_SERIAL);
+    #else  
 	    sysclk_enable_peripheral_clock(USART_SERIAL_ID);
+    #endif 
 
 	    usart_init_rs232(USART_SERIAL, &usart_console_settings,
 	            sysclk_get_main_hz());
@@ -521,7 +531,13 @@ uint32_t usart_get_version(Usart *p_usart);
 	};
 \endcode
  * -# Enable the clock to the USART module:
- *   \code sysclk_enable_peripheral_clock(USART_SERIAL_ID); \endcode
+ *   \code
+    #if SAM4L
+      sysclk_enable_peripheral_clock(USART_SERIAL);
+    #else  
+	    sysclk_enable_peripheral_clock(USART_SERIAL_ID);
+    #endif   
+\endcode
  * -# Initialize the USART module in RS232 mode:
  *   \code
 	usart_init_rs232(USART_SERIAL, &usart_console_settings,
@@ -604,7 +620,11 @@ uint32_t usart_get_version(Usart *p_usart);
 	        US_MR_CHMODE_NORMAL
 	    };
 
+    #if SAM4L
+      sysclk_enable_peripheral_clock(USART_SERIAL);
+    #else  
 	    sysclk_enable_peripheral_clock(USART_SERIAL_ID);
+    #endif 
 
 	    usart_init_rs232(USART_SERIAL, &usart_console_settings,
 	            sysclk_get_main_hz());
@@ -636,7 +656,13 @@ uint32_t usart_get_version(Usart *p_usart);
 	};
 \endcode
  * -# Enable the clock to the USART module:
- *   \code sysclk_enable_peripheral_clock(USART_SERIAL_ID); \endcode
+ *   \code
+    #if SAM4L
+      sysclk_enable_peripheral_clock(USART_SERIAL);
+    #else  
+	    sysclk_enable_peripheral_clock(USART_SERIAL_ID);
+    #endif 
+\endcode
  * -# Initialize the USART module in RS232 mode:
  *   \code
 	usart_init_rs232(USART_SERIAL, &usart_console_settings,

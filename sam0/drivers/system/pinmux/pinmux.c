@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21 Pin Multiplexer Driver
+ * \brief SAM Pin Multiplexer Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -97,6 +97,8 @@ static void _system_pinmux_config(
 			 * output state */
 			pin_cfg &= ~PORT_WRCONFIG_PULLEN;
 		}
+	} else {
+		port->DIRCLR.reg = pin_mask;
 	}
 
 	/* The Write Configuration register (WRCONFIG) requires the

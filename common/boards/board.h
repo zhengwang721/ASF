@@ -82,6 +82,7 @@ extern "C" {
 #define STK600_RCUC3C0             17  //!< STK600 RCUC3C board.
 #define XMEGA_B1_XPLAINED          18  //!< ATxmega128B1 Xplained board.
 #define XMEGA_A1_XPLAINED          19  //!< ATxmega128A1 Xplain-A1 board.
+#define XMEGA_A1U_XPLAINED_PRO     20  //!< ATxmega128A1U XMEGA-A1U Xplained Pro board.
 #define STK600_RCUC3L4             21  //!< ATUCL4 STK600 board
 #define UC3_L0_XPLAINED_BC         22  //!< ATUC3L0 UC3-L0 Xplained board controller board
 #define MEGA1284P_XPLAINED_BC      23  //!< ATmega1284P-Xplained board controller board
@@ -131,6 +132,11 @@ extern "C" {
 #define SAM4CP16BMB                67  //!< SAM4CP16BMB board.
 #define SAM4E_XPLAINED_PRO         68  //!< SAM4E Xplained Pro board.
 #define SAMD21_XPLAINED_PRO        69  //!< SAM D21 Xplained Pro board.
+#define SAMR21_XPLAINED_PRO        70  //!< SAM R21 Xplained Pro board.
+#define SAM4CMP_DB                 71  //!< SAM4CMP demo board.
+#define SAM4CMS_DB                 72  //!< SAM4CMS demo board.
+#define ATPL230AMB                 73  //!< ATPL230AMB board.
+#define SAMD11_XPLAINED_PRO        74  //!< SAM D11 Xplained Pro board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< Simulator for the AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -209,6 +215,8 @@ extern "C" {
 #  include "stk600/rc100x_lcdx/stk600_rc100x_lcdx.h"
 #elif BOARD == XMEGA_A1_XPLAINED
 #  include "xmega_a1_xplained/xmega_a1_xplained.h"
+#elif BOARD == XMEGA_A1U_XPLAINED_PRO
+#  include "xmega_a1u_xplained_pro/xmega_a1u_xplained_pro.h"
 #elif BOARD == UC3_L0_XPLAINED_BC
 #  include "uc3_l0_xplained_bc/uc3_l0_xplained_bc.h"
 #elif BOARD == SAM3S_EK
@@ -251,6 +259,10 @@ extern "C" {
 #  include "samd20_xplained_pro/samd20_xplained_pro.h"
 #elif BOARD == SAMD21_XPLAINED_PRO
 #  include "samd21_xplained_pro/samd21_xplained_pro.h"
+#elif BOARD == SAMR21_XPLAINED_PRO
+#  include "samr21_xplained_pro/samr21_xplained_pro.h"
+#elif BOARD == SAMD11_XPLAINED_PRO
+#  include "samd11_xplained_pro/samd11_xplained_pro.h"
 #elif BOARD == SAM4N_XPLAINED_PRO
 #  include "sam4n_xplained_pro/sam4n_xplained_pro.h"
 #elif BOARD == MEGA1284P_XPLAINED_BC
@@ -279,8 +291,14 @@ extern "C" {
 #  include "sam4l8_xplained_pro/sam4l8_xplained_pro.h"
 #elif BOARD == SAM4C_EK
 #  include "sam4c_ek/sam4c_ek.h"
+#elif BOARD == SAM4CMP_DB
+#  include "sam4cmp_db/sam4cmp_db.h"
+#elif BOARD == SAM4CMS_DB
+#  include "sam4cms_db/sam4cms_db.h"
 #elif BOARD == SAM4CP16BMB
 #  include "sam4cp16bmb/sam4cp16bmb.h"
+#elif BOARD == ATPL230AMB
+#  include "atpl230amb/atpl230amb.h"
 #elif BOARD == SIMULATOR_XMEGA_A1
 #  include "simulator/xmega_a1/simulator_xmega_a1.h"
 #elif BOARD == XMEGA_C3_XPLAINED

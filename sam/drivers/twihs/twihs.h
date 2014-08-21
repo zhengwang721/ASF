@@ -3,7 +3,7 @@
  *
  * \brief Two-Wire Interface High Speed (TWIHS) driver for SAM.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,6 +54,9 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
+/** Time-out value (number of attempts). */
+#define TWIHS_TIMEOUT              15000
+
 /**
  * \brief Return codes for TWIHS APIs.
  * @{
@@ -67,6 +70,7 @@ extern "C" {
 #define TWIHS_SEND_OVERRUN         6
 #define TWIHS_SEND_NACK            7
 #define TWIHS_BUSY                 8
+#define TWIHS_ERROR_TIMEOUT        9
 /**
  * @}
  */
@@ -81,6 +85,8 @@ typedef struct twihs_options {
 	uint32_t speed;
 	//! The desired address.
 	uint8_t chip;
+	//! SMBUS mode (set 1 to use SMBUS quick command, otherwise don't).
+	uint8_t smbus;
 } twihs_options_t;
 
 /**
@@ -289,7 +295,7 @@ static inline void twihs_clear_disable_clock_wait_state(Twihs *p_twihs)
 	p_twihs->TWIHS_SMR &= ~TWIHS_SMR_SCLWSDIS;
 }
 
-#if (SAMG53)
+#if (SAMG53 || SAMG54)
 /**
  * \brief Slave Address 1 matching disabled.
  *

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 ADC with DMA quick start
+ * \brief SAM D21/D10/D11 ADC with DMA quick start
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -156,7 +156,6 @@ void configure_dma_resource(struct dma_resource *resource)
 //! [setup_dma_set_config_default]
 
 //! [setup_dma_set_config_extra]
-	config.transfer_trigger = DMA_TRIGGER_PERIPHERAL;
 	config.peripheral_trigger = ADC_DMAC_ID_RESRDY;
 	config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
 //! [setup_dma_set_config_extra]

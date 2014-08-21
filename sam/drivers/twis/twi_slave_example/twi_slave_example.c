@@ -3,7 +3,7 @@
  *
  * \brief TWI SLAVE Example for SAM.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -89,7 +89,7 @@
  * \section contactinfo Contact Information
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
- * Support and FAQ: http://support.atmel.com/
+ * Support and FAQ: http://www.atmel.com/design-support/
  *
  */
 
@@ -207,7 +207,7 @@ static uint8_t twis_slave_tx(void)
  *
  * \remarks User defined operations on Stop condition
 */
-static void twis_slave_stop()
+static void twis_slave_stop(void)
 {
 	status_cmd = TWI_MEM_IDLE;
 }
@@ -217,7 +217,7 @@ static void twis_slave_stop()
  *
  * \remarks User defined operations on Error condition
 */
-static void twis_slave_error()
+static void twis_slave_error(void)
 {
 	puts("I2C bus error\r\n");
 }

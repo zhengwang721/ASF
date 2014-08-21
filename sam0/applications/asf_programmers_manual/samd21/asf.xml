@@ -29,10 +29,10 @@
 		<require idref="sam0.drivers.ac"/>
 		<require idref="sam0.drivers.adc"/>
 		<require idref="sam0.drivers.bod"/>
-		<require idref="sam0.drivers.dac"/>
+		<require idref="sam0.drivers.dac.appnote"/>
 		<require idref="sam0.drivers.dma"/>
 		<require idref="sam0.drivers.events"/>
-		<require idref="sam0.drivers.extint"/>
+		<require idref="sam0.drivers.extint.appnote"/>
 		<require idref="sam0.drivers.nvm"/>
 		<require idref="sam0.drivers.pac"/>
 		<require idref="sam0.drivers.port"/>
