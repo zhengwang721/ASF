@@ -67,6 +67,7 @@ extern "C" {
  *  - SAM D20/D21
  *  - SAM R21
  *  - SAM D10/D11
+ *  - SAM L21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_events_prerequisites
@@ -309,7 +310,6 @@ extern "C" {
 #include <compiler.h>
 #include "events_common.h"
 
-
 /**
  * \brief Edge detect enum
  *
@@ -357,12 +357,16 @@ struct events_config {
 	uint8_t                    generator;
 	/** Clock source for the event channel */
 	uint8_t                    clock_source;
+#if (SAML21)
+	/** Run in standby mode for the channel */
+	bool                       run_in_standby;
+#endif
 };
 
 /**
  * \brief No event generator definition
  *
- * Use this to disable any peripheral event input to a channel. This can be usefull
+ * Use this to disable any peripheral event input to a channel. This can be useful
  * if you only want to use a channel for software generated events.
  *
  */
@@ -374,10 +378,17 @@ struct events_config {
  *
  * @{
  */
-#define _EVENTS_START_OFFSET_BUSY_BITS           8
-#define _EVENTS_START_OFFSET_USER_READY_BIT      0
-#define _EVENTS_START_OFFSET_DETECTION_BIT       8
-#define _EVENTS_START_OFFSET_OVERRUN_BIT         0
+#if (SAML21)
+#  define _EVENTS_START_OFFSET_BUSY_BITS           8
+#  define _EVENTS_START_OFFSET_USER_READY_BIT      0
+#  define _EVENTS_START_OFFSET_DETECTION_BIT       8
+#  define _EVENTS_START_OFFSET_OVERRUN_BIT         0
+#else /* SAMD/R */
+#  define _EVENTS_START_OFFSET_BUSY_BITS           16
+#  define _EVENTS_START_OFFSET_USER_READY_BIT      0
+#  define _EVENTS_START_OFFSET_DETECTION_BIT       16
+#  define _EVENTS_START_OFFSET_OVERRUN_BIT         0
+#endif
 /** @} */
 ///@endcond
 
@@ -402,8 +413,6 @@ struct events_resource {
 
 #if EVENTS_INTERRUPT_HOOKS_MODE == true
 typedef void (*events_interrupt_hook)(struct events_resource *resource);
-
-//struct events_hook;
 
 struct events_hook {
 	struct events_resource *resource;
@@ -563,11 +572,12 @@ uint8_t events_get_free_channels(void);
 ///@cond INTERNAL
 /**
  * \internal
- * Function to find bit positons in the CHSTATUS and INTFLAG register
+ * Function to find bit position in the CHSTATUS and INTFLAG register,
+ * and return bit mask of this position.
  *
  * @{
  */
-uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset);
+uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset);
 /** @} */
 ///@endcond
 
@@ -618,6 +628,9 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset);
  *     <th>Changelog</th>
  *   </tr>
  *   <tr>
+ *     <td>Fix a bug in internal function _events_find_bit_position().</td>
+ *   </tr>
+ *   <tr>
  *     <td>Rewrite of events driver.</td>
  *   </tr>
  *   <tr>
@@ -648,6 +661,12 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset);
  *		<th>Date</td>
  *		<th>Comments</td>
  *	</tr>
+ *  <tr>
+ *		<td>G</td>
+ *		<td>08/2014</td>
+ *		<td>Added support for SAML21 and fix a bug in internal function
+ *          _events_find_bit_position(). </td>
+ *  </tr>
  *  <tr>
  *		<td>G</td>
  *		<td>05/2014</td>
