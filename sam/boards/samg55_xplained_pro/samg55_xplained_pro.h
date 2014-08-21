@@ -576,6 +576,22 @@ void system_board_init(void);
 #define LIGHT_SENSOR_FLAGS  PIO_INPUT
 //@}
 
+/** \name USB definitions
+ * @{
+ */
+#define PIN_USB_VBUS    {PIO_PB4, PIOB, ID_PIOB, PIO_INPUT, PIO_PULLUP}
+#define USB_VBUS_FLAGS    (PIO_INPUT | PIO_DEBOUNCE | PIO_IT_EDGE)
+#define USB_VBUS_PIN_IRQn (PIOB_IRQn)
+#define USB_VBUS_PIN      (PIO_PB4_IDX)
+#define USB_VBUS_PIO_ID   (ID_PIOB)
+#define USB_VBUS_PIO_MASK (PIO_PB4)
+
+/** USB D- pin (System function) */
+#define PIN_USB_DM      {PIO_PA21}
+/** USB D+ pin (System function) */
+#define PIN_USB_DP      {PIO_PA22}
+/** @} */
+
 //! \name IO1 SD card definitions */
 //@{
 #define SD_MMC_SPI_MEM_CNT          1

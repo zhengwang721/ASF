@@ -174,6 +174,37 @@ extern "C" {
 #define SYSCLK_PRES_3                   PMC_MCKR_PRES_CLK_3     //!< Set master clock prescaler to 3
 //@}
 
+//! \name USB Clock Sources
+//@{
+#define USBCLK_SRC_PLL0       0     //!< Use PLLA
+//@}
+
+/**
+ * \def CONFIG_USBCLK_SOURCE
+ * \brief Configuration symbol for the USB generic clock source
+ *
+ * Sets the clock source to use for the USB. The source must also be properly
+ * configured.
+ *
+ * Define this to one of the \c USBCLK_SRC_xxx settings. Leave it undefined if
+ * USB is not required.
+ */
+#ifdef __DOXYGEN__
+# define CONFIG_USBCLK_SOURCE
+#endif
+
+/**
+ * \def CONFIG_USBCLK_DIV
+ * \brief Configuration symbol for the USB generic clock divider setting
+ *
+ * Sets the clock division for the USB generic clock. If a USB clock source is
+ * selected with CONFIG_USBCLK_SOURCE, this configuration symbol must also be
+ * defined.
+ */
+#ifdef __DOXYGEN__
+# define CONFIG_USBCLK_DIV
+#endif
+
 /**
  * \name Querying the system clock
  *
@@ -317,6 +348,9 @@ extern void sysclk_set_prescalers(uint32_t ul_pres);
 extern void sysclk_set_source(uint32_t ul_src);
 
 //@}
+
+extern void sysclk_enable_usb(void);
+extern void sysclk_disable_usb(void);
 
 extern void sysclk_init(void);
 
