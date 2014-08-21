@@ -259,6 +259,7 @@ void DMAC_Handler( void )
  *  \li Only software/event trigger
  *  \li Requires a trigger for each transaction
  *  \li No event input /output
+ *  \li DMA channel is disabled during sleep mode (if has the feature)
  * \param[out] config Pointer to the configuration
  *
  */
@@ -275,6 +276,9 @@ void dma_get_config_defaults(struct dma_resource_config *config)
 	/* Event configurations, no event input/output */
 	config->event_config.input_action = DMA_EVENT_INPUT_NOACT;
 	config->event_config.event_output_enable = false;
+#ifdef FEATURE_DMA_CHANNEL_STANDBY
+	config->run_in_standby = false;
+#endif
 }
 
 /**
@@ -301,9 +305,16 @@ enum status_code dma_allocate(struct dma_resource *resource,
 
 	if (!_dma_inst._dma_init) {
 		/* Initialize clocks for DMA */
+#if (SAML21)
+		system_ahb_clock_set_mask(MCLK_AHBMASK_DMAC);
+		// TBD
+		//system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB,
+		//		MCLK_APBMASK_DMAC);
+#else
 		system_ahb_clock_set_mask(PM_AHBMASK_DMAC);
 		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB,
 				PM_APBBMASK_DMAC);
+#endif
 
 		/* Perform a software reset before enable DMA controller */
 		DMAC->CTRL.reg &= ~DMAC_CTRL_DMAENABLE;
@@ -337,6 +348,12 @@ enum status_code dma_allocate(struct dma_resource *resource,
 	DMAC->CHID.reg = DMAC_CHID_ID(resource->channel_id);
 	DMAC->CHCTRLA.reg &= ~DMAC_CHCTRLA_ENABLE;
 	DMAC->CHCTRLA.reg = DMAC_CHCTRLA_SWRST;
+
+#ifdef FEATURE_DMA_CHANNEL_STANDBY
+	if(config->run_in_standby){
+		DMAC->CHCTRLA.reg |= DMAC_CHCTRLA_RUNSTDBY;
+	}
+#endif
 
 	/** Configure the DMA control,channel registers and descriptors here */
 	_dma_set_config(resource, config);
@@ -458,7 +475,7 @@ enum status_code dma_start_transfer_job(struct dma_resource *resource)
  * resource structure.
  *
  * \note The DMA resource will not be freed after calling this function.
- *       The function \ref dma_free() can be used to free an allocated resource. 
+ *       The function \ref dma_free() can be used to free an allocated resource.
  *
  * \param[in,out] resource Pointer to the DMA resource
  *
