@@ -56,17 +56,29 @@
 
 /** Wakeup pin for wait mode: SW0 */
 #define WAKEUP_WAIT_INPUT_ID    (1u << 2)
+/** Wakeup pin for backup mode: Touchscreen controller IRQ pin */
+#define WAKEUP_BACKUP_INPUT_ID  (1u << 2)
 
 /** Hint message for active mode */
 #define STRING_ACTIVE \
 		"Entering active mode:\n\r" \
 		"- Press SW0 button to go out.\n\r"
 
+/** Hint message for sleep mode */
+#define STRING_SLEEP \
+		"Enter into sleep mode.\n\r" \
+		"- Press WAKU button to wake up.\n\r"
+
 /** Hint message for wait mode */
 #define STRING_WAIT \
 		"Entering wait mode:\n\r" \
 		"- Switching to 8MHz Fast RC oscillator and stop PLL.\n\r" \
 		"- Press SW0 button to wake up.\n\r"
+
+/** Hint message for backup mode */
+#define STRING_BACKUP \
+		"Enter into backup mode.\n\r" \
+		"- Touch the LCD screen to wake up.\n\r"
 
 #define CLOCK_LIST_MENU \
 		"\n\rSelect one of the following clock configurations:\n\r" \

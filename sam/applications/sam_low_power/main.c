@@ -422,7 +422,7 @@ static void test_active_mode(void)
 	puts("Exit from active mode.\r");
 }
 
-#if (!SAMG)
+#if (!(SAMG51 || SAMG53 || SAMG54))
 /**
  * \brief Test sleep Mode.
  */
@@ -496,7 +496,7 @@ static void test_wait_mode(void)
 	puts("Exit from wait Mode.\r");
 }
 
-#if (!SAMG)
+#if (!(SAMG51 || SAMG53 || SAMG54))
 /**
  * \brief Test backup mode.
  *
@@ -506,9 +506,15 @@ static void test_backup_mode(void)
 {
 	puts(STRING_BACKUP);
 
+#if SAMG55
+	/* Wait for the transmission done before changing clock */
+	while (!usart_is_tx_empty(CONSOLE_UART)) {
+	}
+#else
 	/* Wait for the transmission done before changing clock */
 	while (!uart_is_tx_empty(CONSOLE_UART)) {
 	}
+#endif
 
 	/* GPBR0 is for recording times of entering into backup mode */
 	gpbr_write(GPBR0, gpbr_read(GPBR0) + 1);
@@ -544,11 +550,11 @@ static void display_menu_core(void)
 	printf("  G : 64-bit flash access\n\r");
 	printf("Mode:\n\r");
 	printf("  A : Active Mode\n\r");
-#if (!SAMG)
+#if (!(SAMG51 || SAMG53 || SAMG54))
 	printf("  S : Sleep Mode\n\r");
 #endif
 	printf("  W : Wait Mode\n\r");
-#if (!SAMG)
+#if (!(SAMG51 || SAMG53 || SAMG54))
 	printf("  B : Backup Mode(Entered %d times).\n\r", (int)gpbr_read(GPBR0));
 #endif
 	printf("Quit:\n\r");
@@ -600,7 +606,7 @@ static void test_core(void)
 			test_active_mode();
 			break;
 
-#if (!SAMG)
+#if (!(SAMG51 || SAMG53 || SAMG54))
 		case 's':
 		case 'S':
 			test_sleep_mode();
@@ -612,7 +618,7 @@ static void test_core(void)
 			test_wait_mode();
 			break;
 
-#if (!SAMG)
+#if (!(SAMG51 || SAMG53 || SAMG54))
 		case 'b':
 		case 'B':
 			test_backup_mode();
