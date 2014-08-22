@@ -248,7 +248,7 @@ uint32_t pmc_is_pck_enabled(uint32_t ul_id);
  */
 //@{
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAMG55)
 void pmc_switch_udpck_to_pllack(uint32_t ul_usbdiv);
 #endif
 #if (SAM3S || SAM4S || SAMG55)

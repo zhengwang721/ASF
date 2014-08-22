@@ -1059,7 +1059,7 @@ void pmc_cpck_set_source(uint32_t ul_source)
 }
 #endif
 
-#if (SAM3S || SAM3XA || SAM4S || SAM4E)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAMG55)
 /**
  * \brief Switch UDP (USB) clock source selection to PLLA clock.
  *
