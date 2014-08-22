@@ -140,6 +140,20 @@ void sysclk_enable_usb(void)
 		return;
 	}
 #endif
+
+#ifdef CONFIG_PLL1_SOURCE
+	if (CONFIG_USBCLK_SOURCE == USBCLK_SRC_PLL1) {
+		struct pll_config pllcfg;
+
+		pll_enable_source(CONFIG_PLL1_SOURCE);
+		pll_config_defaults(&pllcfg, 1);
+		pll_enable(&pllcfg, 1);
+		pll_wait_for_lock(1);
+		pmc_switch_udpck_to_pllbck(CONFIG_USBCLK_DIV - 1);
+		pmc_enable_udpck();
+		return;
+	}
+#endif
 }
 
 /**
@@ -220,6 +234,18 @@ void sysclk_init(void)
 		pll_enable(&pllcfg, 0);
 		pll_wait_for_lock(0);
 		pmc_switch_mck_to_pllack(CONFIG_SYSCLK_PRES);
+	}
+#endif
+
+#ifdef CONFIG_PLL1_SOURCE
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_PLLBCK) {
+		struct pll_config pllcfg;
+
+		pll_enable_source(CONFIG_PLL1_SOURCE);
+		pll_config_defaults(&pllcfg, 1);
+		pll_enable(&pllcfg, 1);
+		pll_wait_for_lock(1);
+		pmc_switch_mck_to_pllbck(CONFIG_SYSCLK_PRES);
 	}
 #endif
 

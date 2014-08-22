@@ -208,7 +208,7 @@ uint32_t pmc_switch_mck_to_pllack(uint32_t ul_pres)
 	return 0;
 }
 
-#if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP)
+#if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP || SAMG55)
 /**
  * \brief Switch master clock source selection to PLLB clock.
  *
@@ -563,7 +563,7 @@ uint32_t pmc_is_locked_pllack(void)
 	return (PMC->PMC_SR & PMC_SR_LOCKA);
 }
 
-#if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP)
+#if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP || SAMG55)
 /**
  * \brief Enable PLLB clock.
  *
@@ -861,7 +861,7 @@ uint32_t pmc_switch_pck_to_pllack(uint32_t ul_id, uint32_t ul_pres)
 	return 0;
 }
 
-#if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP)
+#if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP || SAMG55)
 /**
  * \brief Switch programmable clock source selection to PLLB clock.
  *
@@ -1066,7 +1066,7 @@ void pmc_switch_udpck_to_pllack(uint32_t ul_usbdiv)
 }
 #endif
 
-#if (SAM3S || SAM4S)
+#if (SAM3S || SAM4S || SAMG55)
 /**
  * \brief Switch UDP (USB) clock source selection to PLLB clock.
  *

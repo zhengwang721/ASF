@@ -160,6 +160,7 @@ extern "C" {
 #define SYSCLK_SRC_MAINCK_XTAL          6       //!< External crystal oscillator as master source clock
 #define SYSCLK_SRC_MAINCK_BYPASS        7       //!< External bypass oscillator as master source clock
 #define SYSCLK_SRC_PLLACK               8       //!< Use PLLACK as master source clock
+#define SYSCLK_SRC_PLLBCK               9       //!< Use PLLBCK as master source clock
 //@}
 
 //! \name Master Clock Prescalers (MCK)
@@ -177,6 +178,7 @@ extern "C" {
 //! \name USB Clock Sources
 //@{
 #define USBCLK_SRC_PLL0       0     //!< Use PLLA
+#define USBCLK_SRC_PLL1       1     //!< Use PLLB
 //@}
 
 /**
