@@ -4,9 +4,9 @@
 		OHCI driver for the USB host mode. Provides functions for configuring and using the USB host functionality.
 		</info>
 		<info type="gui-flag" value="hidden"/>
-		<build type="header-file" value="uhp.h"/>
 		<build type="header-file" value="ohci.h"/>
-		<build type="c-source" value="ohci.c"/>
+		<build type="header-file" value="ohci_hcd.h"/>
+		<build type="c-source" value="ohci_hcd.c"/>
 		<device-support value="samg55"/>
 	</module>
 </asf>

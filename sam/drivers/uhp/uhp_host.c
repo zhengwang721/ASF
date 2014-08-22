@@ -44,7 +44,7 @@
 
 #include "conf_usb_host.h"
 #include "sysclk.h"
-#include "ohci\ohci.h"
+#include "ohci\ohci_hcd.h"
 #include <string.h>
 #include <stdlib.h>
 

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief OHCI header file and APIs for UHD interface.
+ * \brief OHCI registers and data structures definition header file.
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,26 +41,121 @@
  *
  */
 
-#include "compiler.h"
-#include "uhp.h"
+#ifndef _OHCI_COMPONENT_
+#define _OHCI_COMPONENT_
 
-#define BUS_CONNECT     0
-#define BUS_DISCONNECT  1
-#define BUS_RESET       2
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+/** \brief OHCI hardware registers */
+typedef struct {
+  __I  uint32_t HcRevision;   /**< \brief (Udp Offset: 0x000) Frame Number Register */
+  __IO uint32_t HcControl;  /**< \brief (Udp Offset: 0x004) Global State Register */
+  __IO uint32_t HcCommandStatus;     /**< \brief (Udp Offset: 0x008) Function Address Register */
+  __IO uint32_t HcInterruptStatus;
+  __IO uint32_t HcInterruptEnable;       /**< \brief (Udp Offset: 0x010) Interrupt Enable Register */
+  __IO uint32_t HcInterruptDisable;       /**< \brief (Udp Offset: 0x014) Interrupt Disable Register */
+  __IO uint32_t HcHCCA;       /**< \brief (Udp Offset: 0x018) Interrupt Mask Register */
+  __I  uint32_t HcPeriodCurrentED;       /**< \brief (Udp Offset: 0x01C) Interrupt Status Register */
+  __IO uint32_t HcControlHeadED;       /**< \brief (Udp Offset: 0x020) Interrupt Clear Register */
+  __IO uint32_t HcControlCurrentED;
+  __IO uint32_t HcBulkHeadED;    /**< \brief (Udp Offset: 0x028) Reset Endpoint Register */
+  __IO uint32_t HcBulkCurrentED;
+  __I  uint32_t HcDoneHead;    /**< \brief (Udp Offset: 0x030) Endpoint Control and Status Register */
+  __IO uint32_t HcFmInterval;
+  __I  uint32_t HcFmRemaining;    /**< \brief (Udp Offset: 0x050) Endpoint FIFO Data Register */
+  __I  uint32_t HcFmNumber;
+  __IO uint32_t HcPeriodicStart;      /**< \brief (Udp Offset: 0x074) Transceiver Control Register */
+  __IO uint32_t HcLSThreshold;
+  __IO uint32_t HcRhDescriptorA;  /**< \brief (Udp Offset: 0x0F8) USB FS Device Features Register */
+  __IO uint32_t HcRhDescriptorB;   /**< \brief (Udp Offset: 0x0FC) Version Register */
+  __IO uint32_t HcRhStatus;  /**< \brief (Udp Offset: 0x0F8) USB FS Device Features Register */
+  __IO uint32_t HcRhPortStatus;   /**< \brief (Udp Offset: 0x0FC) Version Register */
+} Uhp;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-enum ohci_interrupt_source {
-	OHCI_INTERRUPT_SO = 0,
-	OHCI_INTERRUPT_WDH,
-	OHCI_INTERRUPT_SF,
-	OHCI_INTERRUPT_RD,
-	OHCI_INTERRUPT_UE,
-	OHCI_INTERRUPT_FNO,
-	OHCI_INTERRUPT_RHSC,
-	OHCI_INTERRUPT_OC,
-	OHCI_NUM_OF_INTERRUPT_SOURCE,
-};
+//! \brief  HcControl register fields
+#define HC_CONTROL_PLE                  (1 << 2)
+#define HC_CONTROL_IE                   (1 << 3)
+#define HC_CONTROL_CLE                  (1 << 4)
+#define HC_CONTROL_BLE                  (1 << 5)
+#define HC_CONTROL_HCFS                 (3 << 6)
+#define HC_CONTROL_HCFS_USBRESET        (0 << 6)
+#define HC_CONTROL_HCFS_USBRESUME       (1 << 6)
+#define HC_CONTROL_HCFS_USBOPERATIONAL  (2 << 6)
+#define HC_CONTROL_HCFS_USBSUSPEND      (3 << 6)
+#define HC_CONTROL_IR	                (1 << 8)	/* interrupt routing */
+#define HC_CONTROL_RWC	                (1 << 9)	/* remote wakeup connected */
+#define HC_CONTROL_RWE	                (1 << 10)	/* remote wakeup enable */
 
-typedef void (*ohci_callback_t)(void *pointer);
+//! \brief  HcCommandStatus register fields
+#define HC_COMMANDSTATUS_HCR            (1 << 0)
+#define HC_COMMANDSTATUS_CLF            (1 << 1)
+#define HC_COMMANDSTATUS_BLF            (1 << 2)
+
+/*
+ * masks used with interrupt registers:
+ * HcInterruptStatus (intrstatus)
+ * HcInterruptEnable (intrenable)
+ * HcInterruptDisable (intrdisable)
+ */
+//! \brief  HcInterruptEnable/Disable/Status registers fields
+#define HC_INTERRUPT_SO                 (1 << 0)  /* scheduling overrun */
+#define HC_INTERRUPT_WDH                (1 << 1)  /* writeback of done_head */
+#define HC_INTERRUPT_SF                 (1 << 2)  /* start frame */
+#define HC_INTERRUPT_RD                 (1 << 3)  /* resume detect */
+#define HC_INTERRUPT_UE                 (1 << 4)  /* unrecoverable error */
+#define HC_INTERRUPT_FNO                (1 << 5)  /* frame number overflow */
+#define HC_INTERRUPT_RHSC               (1 << 6)  /* root hub status change */
+#define HC_INTERRUPT_OC                 (1 << 30) /* ownership change */ 
+#define HC_INTERRUPT_MIE                (1 << 31) /* master interrupt enable */
+
+//! \brief  HcFmInterval register fields
+#define HC_FMINTERVAL_FI                0x00003FFF
+
+//! \brief  HcRhDescriptorA register fields
+#define HC_RHDESCRIPTORA_NDP            0x000000FF
+
+//! \brief  HcRhPortStatus register fields
+#define HC_RHPORTSTATUS_CCS             (1 << 0)
+#define HC_RHPORTSTATUS_PRS             (1 << 4)
+#define HC_RHPORTSTATUS_LSDA            (1 << 9)
+
+
+/* OHCI ROOT HUB REGISTER MASKS */
+
+/* roothub.portstatus [i] bits */
+#define RH_PS_CCS            0x00000001		/* current connect status */
+#define RH_PS_PES            0x00000002		/* port enable status*/
+#define RH_PS_PSS            0x00000004		/* port suspend status */
+#define RH_PS_POCI           0x00000008		/* port over current indicator */
+#define RH_PS_PRS            0x00000010		/* port reset status */
+#define RH_PS_PPS            0x00000100		/* port power status */
+#define RH_PS_LSDA           0x00000200		/* low speed device attached */
+#define RH_PS_CSC            0x00010000		/* connect status change */
+#define RH_PS_PESC           0x00020000		/* port enable status change */
+#define RH_PS_PSSC           0x00040000		/* port suspend status change */
+#define RH_PS_OCIC           0x00080000		/* over current indicator change */
+#define RH_PS_PRSC           0x00100000		/* port reset status change */
+
+/* roothub.status bits */
+#define RH_HS_LPS	     0x00000001		/* local power status */
+#define RH_HS_OCI	     0x00000002		/* over current indicator */
+#define RH_HS_DRWE	     0x00008000		/* device remote wakeup enable */
+#define RH_HS_LPSC	     0x00010000		/* local power status change */
+#define RH_HS_OCIC	     0x00020000		/* over current indicator change */
+#define RH_HS_CRWE	     0x80000000		/* clear remote wakeup enable */
+
+/* roothub.b masks */
+#define RH_B_DR		0x0000ffff		/* device removable flags */
+#define RH_B_PPCM	0xffff0000		/* port power control mask */
+
+/* roothub.a masks */
+#define	RH_A_NDP	(0xff << 0)		/* number of downstream ports */
+#define	RH_A_PSM	(1 << 8)		/* power switching mode */
+#define	RH_A_NPS	(1 << 9)		/* no power switching */
+#define	RH_A_DT		(1 << 10)		/* device type (mbz) */
+#define	RH_A_OCPM	(1 << 11)		/* over current protection mode */
+#define	RH_A_NOCP	(1 << 12)		/* no over current protection */
+#define	RH_A_POTPGT	(0xff << 24)		/* power on to power good time */
 
 /*
  * OHCI Endpoint Descriptor (ED) ... holds TD queue
@@ -87,12 +182,6 @@ struct ohci_ed {
     struct ohci_ed  *p_next_ed;               //!< Pointer to next ED
 } __attribute__ ((aligned(16)));
 
-
-enum pid {
-	TD_PID_SETUP = 0,
-	TD_PID_OUT   = 1,
-	TD_PID_IN    = 2,
-};
 //! \brief  Transfer descriptor directions
 #define TD_DIRECTION_SETUP              0
 #define TD_DIRECTION_OUT                1
@@ -197,24 +286,5 @@ struct ohci_hcca {
 #define	FIT			(1 << 31)
 #define LSTHRESH		0x628		/* lowspeed bit threshold */
 
-void ohci_init(void);
-void ohci_deinit(void);
-uint32_t ohci_get_device_speed (void);
-uint16_t ohci_get_frame_number (void);
-void ohci_bus_reset(void);
-void ohci_bus_suspend(void);
-uint32_t ohci_is_suspend(void);
-void ohci_bus_resume(void);
-bool ohci_add_ed_control(ed_info_t * ed_info);
-bool ohci_add_ed_bulk(ed_info_t * ed_info);
-bool ohci_add_ed_period(ed_info_t * ed_info);
-void ohci_remove_ed(uint8_t ep_number);
-bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size);
-bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf, uint32_t buf_size);
 
-void ohci_remove_td(uint8_t ep_number);
-void ohci_enable_interrupt(enum ohci_interrupt_source int_source);
-void ohci_disable_interrupt(enum ohci_interrupt_source int_source);
-void ohci_register_callback(enum ohci_interrupt_source int_source, void *call_back);
-void ohci_unregister_callback(enum ohci_interrupt_source int_source);
-
+#endif /* _OHCI_COMPONENT_ */

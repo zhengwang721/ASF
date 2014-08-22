@@ -41,7 +41,7 @@
  *
  */
 
-#include "ohci.h"
+#include "ohci_hcd.h"
 #include <string.h>
 
 static struct ohci_hcca hcca;
@@ -252,13 +252,13 @@ void ohci_bus_resume(void)
 	UHP->HcRhPortStatus |= RH_PS_POCI;
 }
 
-bool ohci_add_ed_control(ed_info_t * ed_info)
+bool ohci_add_ed_control(ed_info_t *ed_info)
 {
 	control_ed.ed_info.ul_ed_info = ed_info->ul_ed_info;
 	return true;
 }
 
-bool ohci_add_ed_bulk(ed_info_t * ed_info)
+bool ohci_add_ed_bulk(ed_info_t *ed_info)
 {
 	struct ohci_ed *bulk_ed;
 
@@ -295,7 +295,7 @@ bool ohci_add_ed_bulk(ed_info_t * ed_info)
 }
 
 /* Simplify the management, only 32 interrupt ED support, no list on each entry. */
-bool ohci_add_ed_period(ed_info_t * ed_info)
+bool ohci_add_ed_period(ed_info_t *ed_info)
 {
 	uint32_t i;
 	struct ohci_ed *period_ed;
