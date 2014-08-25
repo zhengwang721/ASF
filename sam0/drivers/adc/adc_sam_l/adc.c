@@ -64,8 +64,8 @@
  *  \li Single-ended mode
  *  \li Free running disabled
  *  \li All events (input and generation) disabled
- *  \li Event input source is not inverted
- *  \li Sleep operation disabled
+ *  \li ADC run in standby disabled
+ *  \li ADC On demand disabled
  *  \li No sampling time compensation
  *  \li Disable the positive input sequense
  *  \li No reference compensation
@@ -93,9 +93,8 @@ void adc_get_config_defaults(struct adc_config *const config)
 	config->differential_mode             = false;
 	config->freerunning                   = false;
 	config->event_action                  = ADC_EVENT_ACTION_DISABLED;
-	config->event_inverted                = ADC_EVENT_INPUT_SOURCE_INVERTED_DISABLED;
-	config->sleep_mode.run_in_standby     = false;
-	config->sleep_mode.on_demand          = false;
+	config->run_in_standby                = false;
+	config->on_demand                     = false;
 	config->sampling_time_compensation_enable  = false;
 	config->positive_input_sequence_mask_enable = 0;
 	config->reference_compensation_enable = false;
@@ -265,20 +264,24 @@ static enum status_code _adc_set_config(
 	_adc_configure_ain_pin(config->positive_input);
 	_adc_configure_ain_pin(config->negative_input);
 
-	/*set pinmux for seq seq*/
+	/*set pinmux for seq*/
   	for(uint8_t i=0;i <= ADC_EXTCHANNEL_MSB;i++){
 		if(config->positive_input_sequence_mask_enable & (1 << i)){
 			_adc_configure_ain_pin(i);
 			j++;
 		}
 	}
+
+#if ADC_CALLBACK_MODE == true
 	module_inst->is_automatic_sequences = false;
   	if(j >= 2){
 		module_inst->is_automatic_sequences = true;
 	}
-	/* Configure run in standby */
-	adc_module->CTRLA.reg = ((config->sleep_mode.run_in_standby << ADC_CTRLA_RUNSTDBY_Pos)
-						    | (config->sleep_mode.on_demand << ADC_CTRLA_ONDEMAND_Pos)) ;
+#endif
+
+	/* Configure run in standby and on demand */
+	adc_module->CTRLA.reg = ((config->run_in_standby << ADC_CTRLA_RUNSTDBY_Pos)
+						    | (config->on_demand << ADC_CTRLA_ONDEMAND_Pos)) ;
 
 	/* Configure reference */
 	adc_module->REFCTRL.reg =
@@ -472,8 +475,7 @@ static enum status_code _adc_set_config(
 	}
 
 	/* Configure events */
-	adc_module->EVCTRL.reg = config->event_action
-							| config->event_inverted;
+	adc_module->EVCTRL.reg = config->event_action;
 
 	/* Disable all interrupts */
 	adc_module->INTENCLR.reg =
@@ -570,7 +572,7 @@ enum status_code adc_init(
 	/* Store the selected reference for later use */
 	module_inst->reference = config->reference;
 
-	/* Make sure bandgap is enabled if requested by the config */
+	/* Make sure the voltage reference is enabled if requested by the config */
 	if (module_inst->reference == ADC_REFERENCE_INTREF) {
 		system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_OUTPUT);
 	}

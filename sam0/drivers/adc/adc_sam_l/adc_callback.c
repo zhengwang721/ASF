@@ -245,7 +245,7 @@ void adc_abort_job(
 		/* Mark job as aborted */
 		module_inst->job_status = STATUS_ABORTED;
 		module_inst->remaining_conversions = 0;
-		module->is_automatic_sequences = false;
+		module_inst->is_automatic_sequences = false;
 	}
 }
 

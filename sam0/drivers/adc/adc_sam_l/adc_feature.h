@@ -198,21 +198,6 @@ enum adc_event_action {
 };
 
 /**
- * \brief ADC event action enum
- *
- * Enum for the possible actions to take on an incoming event.
- *
- */
-enum adc_event_input_source_inverted{
-	/** Event input source is not inverted */
-	ADC_EVENT_INPUT_SOURCE_INVERTED_DISABLED    = 0,
-	/** Flush event input source is inverted */
-	ADC_FLUSH_EVENT_INPUT_SOURCE_INVERTED 		= ADC_EVCTRL_FLUSHINV,
-	/** Start event input source is inverted */
-	ADC_START_EVENT_INPUT_SOURCE_INVERTED       = ADC_EVCTRL_STARTINV,
-};
-
-/**
  * \brief ADC positive MUX input selection enum
  *
  * Enum for the possible positive MUX input selections for the ADC.
@@ -464,18 +449,6 @@ struct adc_correction_config {
 };
 
 /**
- * \brief ADC sleep mode configuration.
- *
- * ADC sleep mode configuration.
- */
-struct adc_sleep_mode {
-	/** ADC run in standby control */
-	bool run_in_standby;
-	/** ADC On demand control */
-	bool on_demand;
-};
-
-/**
  * \brief ADC configuration structure
  *
  * Configuration structure for an ADC instance. This structure should be
@@ -507,8 +480,10 @@ struct adc_config {
 	bool differential_mode;
 	/** Enables free running mode if true */
 	bool freerunning;
-	/** ADC sleep mode */
-	struct adc_sleep_mode sleep_mode;
+	/** ADC run in standby control */
+	bool run_in_standby;
+	/** ADC On demand control */
+	bool on_demand;
 	/**
 	 * Enables sampling period offset compensation if true.
 	 */
@@ -540,8 +515,6 @@ struct adc_config {
 	struct adc_correction_config correction;
 	/** Event action to take on incoming event */
 	enum adc_event_action event_action;
-	/** Event input source is inverted */
-	enum adc_event_input_source_inverted event_inverted;
 };
 
 /**
@@ -638,7 +611,29 @@ static inline void adc_enable_positive_input_sequence(
 
 	Adc *const adc_module = module_inst->hw;
 	adc_module->SEQCTRL.reg = positive_input_sequence_mask_enable;
+#if ADC_CALLBACK_MODE == true
 	module_inst->is_automatic_sequences = true;
+#endif
+}
+
+/**
+ * \brief Disable positive input in the sequence.
+ *
+ * Disable positive input in the sequence
+ *
+ * \param[in] module_inst  Pointer to the ADC software instance struct
+ */
+static inline void adc_disable_positive_input_sequence(
+		struct adc_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+
+	Adc *const adc_module = module_inst->hw;
+	adc_module->SEQCTRL.reg = 0;
+#if ADC_CALLBACK_MODE == true
+	module_inst->is_automatic_sequences = false;
+#endif
 }
 
 /**

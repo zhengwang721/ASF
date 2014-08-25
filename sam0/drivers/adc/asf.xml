@@ -3,7 +3,7 @@
 		<info type="description" value="summary">
 			Driver for the SAM Analog to Digital Converter. Provides a unified
 			interface for the configuration and management of the ADC module,
-			including the channel input selections, windowd detections, channel
+			including the channel input selections, window monitor, channel
 			conversions and event generation.
 		</info>
 
@@ -15,6 +15,7 @@
 			<build type="header-file" subtype="api" value="adc.h"/>
 			<build type="include-path" value="."/>
 			<build type="define" name="ADC_CALLBACK_MODE" value="false"/>
+			<build type="doxygen-entry-point" value="asfdoc_sam0_adc_group"/>
 			<device-support value="sam0"/>
 
 			<require idref="sam0.utils"/>
@@ -31,6 +32,7 @@
 
 			<build type="include-path" value="."/>
 			<build type="define" name="ADC_CALLBACK_MODE" value="true"/>
+			<build type="doxygen-entry-point" value="asfdoc_sam0_adc_group"/>
 			<device-support value="sam0"/>
 
 			<require idref="sam0.utils"/>
@@ -180,6 +182,6 @@
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
 
-			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
+			<generator value="doxygen-module-v2" default-mcu="unspecified-saml21"/>
 	</module>
 </asf>
