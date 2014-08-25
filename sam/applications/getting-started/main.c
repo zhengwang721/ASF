@@ -364,7 +364,7 @@ int main(void)
 
 	puts("Configure TC.\r");
 //! [main_step_tc_init]
-	configure_tc();
+//	configure_tc();
 //! [main_step_tc_init]
 
 	puts("Configure buttons with debouncing.\r");
