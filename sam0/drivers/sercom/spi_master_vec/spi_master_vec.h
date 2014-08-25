@@ -665,7 +665,7 @@ static inline enum status_code spi_master_vec_transceive_buffer_wait(
   *		      <td>C</td>
   *		      <td>04/2014</td>
   *		      <td>Add SAM D10/D11 support.</td>
-  *	    </tr>  
+  *	    </tr>
   *	    <tr>
   *		      <td>B</td>
   *		      <td>03/2014</td>

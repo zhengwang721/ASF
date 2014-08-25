@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21/R21/D10/D11 I2C Master Driver
+ * \brief SAM I2C Master Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -236,7 +236,11 @@ enum status_code i2c_master_init(
 	SercomI2cm *const i2c_module = &(module->hw->I2CM);
 
 	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
+#if (SAML21)
+	uint32_t pm_index     = sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
+#else
 	uint32_t pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
+#endif
 	uint32_t gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
 
 	/* Turn on module in PM */
@@ -277,7 +281,7 @@ enum status_code i2c_master_init(
 #endif
 
 	/* Set sercom module to operate in I2C master mode. */
-	i2c_module->CTRLA.reg = SERCOM_I2CM_CTRLA_MODE_I2C_MASTER;
+	i2c_module->CTRLA.reg = SERCOM_SPI_CTRLA_MODE(0x5);
 
 	/* Set config and return status. */
 	return _i2c_master_set_config(module, config);
