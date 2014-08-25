@@ -65,6 +65,7 @@
  *  - SAM D20/D21
  *  - SAM R21
  *  - SAM D10/D11
+ *  - SAM L21
  *
  * The reader is assumed to be familiar with the regular SERCOM SPI driver, and
  * how it is configured and operated. Configuration of this driver is done a
