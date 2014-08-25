@@ -208,7 +208,7 @@ uint32_t pmc_switch_mck_to_pllack(uint32_t ul_pres)
 	return 0;
 }
 
-#if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP)
+#if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP || SAMG55)
 /**
  * \brief Switch master clock source selection to PLLB clock.
  *
@@ -563,7 +563,7 @@ uint32_t pmc_is_locked_pllack(void)
 	return (PMC->PMC_SR & PMC_SR_LOCKA);
 }
 
-#if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP)
+#if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP || SAMG55)
 /**
  * \brief Enable PLLB clock.
  *
@@ -576,9 +576,14 @@ void pmc_enable_pllbck(uint32_t mulb, uint32_t pllbcount, uint32_t divb)
 	/* first disable the PLL to unlock the lock */
 	pmc_disable_pllbck();
 
+#if SAMG55
+	PMC->CKGR_PLLAR = CKGR_PLLAR_PLLAEN(divb) |
+		CKGR_PLLAR_PLLACOUNT(pllbcount) | CKGR_PLLAR_MULA(mulb);
+#else
 	PMC->CKGR_PLLBR =
 			CKGR_PLLBR_DIVB(divb) | CKGR_PLLBR_PLLBCOUNT(pllbcount)
 			| CKGR_PLLBR_MULB(mulb);
+#endif
 	while ((PMC->PMC_SR & PMC_SR_LOCKB) == 0);
 }
 
@@ -654,7 +659,7 @@ uint32_t pmc_enable_periph_clk(uint32_t ul_id)
 		if ((PMC->PMC_PCSR0 & (1u << ul_id)) != (1u << ul_id)) {
 			PMC->PMC_PCER0 = 1 << ul_id;
 		}
-#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CM || SAM4CP)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CM || SAM4CP || SAMG55)
 	} else {
 		ul_id -= 32;
 		if ((PMC->PMC_PCSR1 & (1u << ul_id)) != (1u << ul_id)) {
@@ -686,7 +691,7 @@ uint32_t pmc_disable_periph_clk(uint32_t ul_id)
 		if ((PMC->PMC_PCSR0 & (1u << ul_id)) == (1u << ul_id)) {
 			PMC->PMC_PCDR0 = 1 << ul_id;
 		}
-#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CM || SAM4CP)
+#if (SAM3S || SAM3XA || SAM4S || SAM4E || SAM4C || SAM4CM || SAM4CP || SAMG55)
 	} else {
 		ul_id -= 32;
 		if ((PMC->PMC_PCSR1 & (1u << ul_id)) == (1u << ul_id)) {
@@ -1066,7 +1071,7 @@ void pmc_switch_udpck_to_pllack(uint32_t ul_usbdiv)
 }
 #endif
 
-#if (SAM3S || SAM4S)
+#if (SAM3S || SAM4S || SAMG55)
 /**
  * \brief Switch UDP (USB) clock source selection to PLLB clock.
  *
