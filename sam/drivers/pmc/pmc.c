@@ -208,7 +208,7 @@ uint32_t pmc_switch_mck_to_pllack(uint32_t ul_pres)
 	return 0;
 }
 
-#if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP)
+#if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP || SAMG55)
 /**
  * \brief Switch master clock source selection to PLLB clock.
  *

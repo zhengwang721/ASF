@@ -241,6 +241,20 @@ void sysclk_init(void)
 	}
 #endif
 
+#if SAMG55
+#ifdef CONFIG_PLL1_SOURCE
+	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_PLLBCK) {
+		struct pll_config pllcfg;
+
+		pll_enable_source(CONFIG_PLL1_SOURCE);
+		pll_config_defaults(&pllcfg, 1);
+		pll_enable(&pllcfg, 1);
+		pll_wait_for_lock(1);
+		pmc_switch_mck_to_pllbck(CONFIG_SYSCLK_PRES);
+	}
+#endif
+#endif
+
 	/* Update the SystemFrequency variable */
 	SystemCoreClockUpdate();
 

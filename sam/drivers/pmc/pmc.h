@@ -120,7 +120,7 @@ void pmc_mck_set_source(uint32_t ul_source);
 uint32_t pmc_switch_mck_to_sclk(uint32_t ul_pres);
 uint32_t pmc_switch_mck_to_mainck(uint32_t ul_pres);
 uint32_t pmc_switch_mck_to_pllack(uint32_t ul_pres);
-#if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP)
+#if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP || SAMG55)
 uint32_t pmc_switch_mck_to_pllbck(uint32_t ul_pres);
 #endif
 #if (SAM3XA || SAM3U)
