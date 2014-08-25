@@ -123,6 +123,11 @@ void matrix_set_writeprotect(uint32_t ul_enable);
 uint32_t matrix_get_writeprotect_status(void);
 #endif
 
+#if SAMG55
+void matrix_set_usb_device(void);
+void matrix_set_usb_host(void);
+#endif
+
 /* / @cond 0 */
 /**INDENT-OFF**/
 #ifdef __cplusplus
