@@ -94,6 +94,13 @@ extern "C" {
 #define PMC_PCK_0               0 /* PCK0 ID */
 #define PMC_PCK_1               1 /* PCK1 ID */
 #define PMC_PCK_2               2 /* PCK2 ID */
+#if SAMG55
+#define PMC_PCK_3               3 /* PCK3 ID */
+#define PMC_PCK_4               4 /* PCK4 ID */
+#define PMC_PCK_5               5 /* PCK5 ID */
+#define PMC_PCK_6               6 /* PCK6 ID */
+#define PMC_PCK_7               7 /* PCK7 ID */
+#endif
 
 #if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CM || SAMG || SAM4CP)
 /** Flash state in Wait Mode */
@@ -234,6 +241,7 @@ uint32_t pmc_switch_pck_to_pllbck(uint32_t ul_id, uint32_t ul_pres);
 #if (SAM3XA || SAM3U)
 uint32_t pmc_switch_pck_to_upllck(uint32_t ul_id, uint32_t ul_pres);
 #endif
+uint32_t pmc_switch_pck_to_mck(uint32_t ul_id, uint32_t ul_pres);
 void pmc_enable_pck(uint32_t ul_id);
 void pmc_disable_pck(uint32_t ul_id);
 void pmc_enable_all_pck(void);
