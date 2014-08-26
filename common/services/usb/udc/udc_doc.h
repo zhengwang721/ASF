@@ -138,39 +138,39 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  * The following USB Device configuration must be included in the conf_usb.h
  * file of the application.
  *
- * \b 1. USB_DEVICE_VENDOR_ID (Word)
+ * \b 1. USB_DEVICE_VENDOR_ID (Word).
  *
  * Vendor ID provided by USB org (ATMEL 0x03EB).
  *
- * \b 2. USB_DEVICE_PRODUCT_ID (Word)
+ * \b 2. USB_DEVICE_PRODUCT_ID (Word).
  *
  * Product ID (Referenced in usb_atmel.h).
  *
- * \b 3. USB_DEVICE_MAJOR_VERSION (Byte)
+ * \b 3. USB_DEVICE_MAJOR_VERSION (Byte).
  *
  * Major version of the device.
  *
- * \b 4. USB_DEVICE_MINOR_VERSION (Byte)
+ * \b 4. USB_DEVICE_MINOR_VERSION (Byte).
  *
  * Minor version of the device.
  *
- * \b 5. USB_DEVICE_MANUFACTURE_NAME (string)
+ * \b 5. USB_DEVICE_MANUFACTURE_NAME (string).
  *
  * ASCII name for the manufacture.
  *
- * \b 6. USB_DEVICE_PRODUCT_NAME (string)
+ * \b 6. USB_DEVICE_PRODUCT_NAME (string).
  *
  * ASCII name for the product.
  *
- * \b 7. USB_DEVICE_SERIAL_NAME (string)
+ * \b 7. USB_DEVICE_SERIAL_NAME (string).
  *
  * ASCII name to enable and set a serial number.
  *
- * \b 8. USB_DEVICE_POWER (Numeric)
+ * \b 8. USB_DEVICE_POWER (Numeric).
  *
  * (unit mA) Maximum device power.
  *
- * \b 9. USB_DEVICE_ATTR (Byte)
+ * \b 9. USB_DEVICE_ATTR (Byte).
  *
  * USB attributes available:
  *  - USB_CONFIG_ATTR_SELF_POWERED
@@ -178,15 +178,15 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  *
  * \note If remote wake enabled then defines remotewakeup callbacks.
  *
- * \b 10. USB_DEVICE_LOW_SPEED (Only defined)
+ * \b 10. USB_DEVICE_LOW_SPEED (Only defined).
  *
  * Force the USB Device to run in low speed.
  *
- * \b 11. USB_DEVICE_HS_SUPPORT (Only defined)
+ * \b 11. USB_DEVICE_HS_SUPPORT (Only defined).
  *
  * Authorize the USB Device to run in high speed.
  *
- * \b 12. USB_DEVICE_MAX_EP (Byte)
+ * \b 12. USB_DEVICE_MAX_EP (Byte).
  *
  * Define the maximum endpoint number used by the USB Device.
  *
@@ -252,25 +252,25 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * This module is based on USB device stack full interrupt driven, and supporting
  * \ref sleepmgr_group "sleepmgr".
- * For AVR® and SAM3/4 devices the \ref clk_group "clock services" is supported.
+ * For AVR® and Atmel® | SMART™ SAM3/4 devices the \ref clk_group "clock services" is supported.
  * For SAMD21 devices the \ref asfdoc_sam0_system_clock_group "clock driver"" is supported.
  *
  * The following procedure must be executed to setup the project correctly:
  * - Specify the clock configuration:
- *   - XMEGA USB devices need 48MHz clock input.
+ *   - XMEGA® USB devices need 48MHZ clock input.
  *
- *     XMEGA USB devices need CPU frequency higher than 12MHz.
+ *     XMEGA® USB devices need CPU frequency higher than 12MHZ.
  *
- *     You can use either an internal RC48MHz auto calibrated by Start of Frames
+ *     You can use either an internal RC48MHZ auto calibrated by Start of Frames
  *     or an external OSC.
- *   - UC3 and SAM3/4 devices without USB high speed support need 48MHz clock input.
+ *   - UC3® and Atmel® | SMART™ SAM3/4 devices without USB high speed support need 48MHZ clock input.
  *
  *     You must use a PLL and an external OSC.
- *   - UC3 and SAM3/4 devices with USB high speed support need 12MHz clock input.
+ *   - UC3® and Atmel® | SMART™ SAM3/4 devices with USB high speed support need 12MHZ clock input.
  *
  *     You must use an external OSC.
- *   - UC3 devices with USBC hardware need CPU frequency higher than 25MHz.
- *   - SAMD21 devices without USB high speed support need 48MHz clock input.
+ *   - UC3® devices with USBC hardware need CPU frequency higher than 25MHZ.
+ *   - SAMD21 devices without USB high speed support need 48MHZ clock input.
  *
  *     You should use DFLL with USBCRM.
  * - In conf_board.h, the define CONF_BOARD_USB_PORT must be added to enable USB lines.
@@ -285,7 +285,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * \subpage udc_conf_clock.
  *
- * For AVR® and SAM3/4 devices, add to the initialization code:
+ * For AVR® and Atmel® | SMART SAM3/4 devices, add to the initialization code:
  * \code
  sysclk_init();
  irq_initialize_vectors();
@@ -365,7 +365,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_RCOSC
  #define CONFIG_OSC_RC32_CAL         48000000UL
  #define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC  OSC_ID_USBSOF
- // CPU clock need of clock > 12MHz to run with USB (Here 24MHz)
+ // CPU clock need of clock > 12MHZ to run with USB (Here 24MHZ)
  #define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_RC32MHZ
  #define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_2
  #define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_1
@@ -373,7 +373,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * Content of conf_clock.h for AT32UC3A0, AT32UC3A1, AT32UC3B devices (USBB):
  * \code
- // Configuration based on 12MHz external OSC:
+ // Configuration based on 12MHZ external OSC:
  #define CONFIG_PLL1_SOURCE          PLL_SRC_OSC0
  #define CONFIG_PLL1_MUL             8
  #define CONFIG_PLL1_DIV             2
@@ -383,20 +383,20 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * Content of conf_clock.h for AT32UC3A3, AT32UC3A4 devices (USBB with high speed support):
  * \code
- // Configuration based on 12MHz external OSC:
+ // Configuration based on 12MHZ external OSC:
  #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_OSC0
  #define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
  \endcode
  *
  * Content of conf_clock.h for AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U devices (USBC):
  * \code
- // Configuration based on 12MHz external OSC:
+ // Configuration based on 12MHZ external OSC:
  #define CONFIG_PLL1_SOURCE          PLL_SRC_OSC0
  #define CONFIG_PLL1_MUL             8
  #define CONFIG_PLL1_DIV             2
  #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL1
  #define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
- // CPU clock need of clock > 25MHz to run with USBC
+ // CPU clock need of clock > 25MHZ to run with USBC
  #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL1
  \endcode
  *
