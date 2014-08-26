@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM L21 External Interrupt Driver Configuration Header
+ * \brief SERCOM SPI with DMA configurations for SAM L21 Xplained Pro
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,9 +40,32 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXTINT_H_INCLUDED
-#define CONF_EXTINT_H_INCLUDED
 
-#define EXTINT_CLOCK_SELECTION   EXTINT_CLK_GCLK
-#define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
-#endif
+#ifndef CONF_QUICK_START_DMA_H_INCLUDED
+#define CONF_QUICK_START_DMA_H_INCLUDED
+
+//[definition_master]
+#define CONF_MASTER_SPI_MODULE  EXT2_SPI_MODULE
+#define CONF_MASTER_SS_PIN      EXT2_PIN_SPI_SS_0
+#define CONF_MASTER_MUX_SETTING EXT2_SPI_SERCOM_MUX_SETTING
+#define CONF_MASTER_PINMUX_PAD0 EXT2_SPI_SERCOM_PINMUX_PAD0
+#define CONF_MASTER_PINMUX_PAD1 PINMUX_UNUSED
+#define CONF_MASTER_PINMUX_PAD2 EXT2_SPI_SERCOM_PINMUX_PAD2
+#define CONF_MASTER_PINMUX_PAD3 EXT2_SPI_SERCOM_PINMUX_PAD3
+//[definition_master]
+
+//[definition_slave]
+#define CONF_SLAVE_SPI_MODULE  EXT1_SPI_MODULE
+#define CONF_SLAVE_MUX_SETTING EXT1_SPI_SERCOM_MUX_SETTING
+#define CONF_SLAVE_PINMUX_PAD0 EXT1_SPI_SERCOM_PINMUX_PAD0
+#define CONF_SLAVE_PINMUX_PAD1 EXT1_SPI_SERCOM_PINMUX_PAD1
+#define CONF_SLAVE_PINMUX_PAD2 EXT1_SPI_SERCOM_PINMUX_PAD2
+#define CONF_SLAVE_PINMUX_PAD3 EXT1_SPI_SERCOM_PINMUX_PAD3
+//[definition_slave]
+
+//[definition_peripheral_trigger]
+#define CONF_PERIPHERAL_TRIGGER_TX   SERCOM1_DMAC_ID_TX
+#define CONF_PERIPHERAL_TRIGGER_RX   SERCOM0_DMAC_ID_RX
+//[definition_peripheral_trigger]
+
+#endif /* CONF_QUICK_START_DMA_H_INCLUDED */

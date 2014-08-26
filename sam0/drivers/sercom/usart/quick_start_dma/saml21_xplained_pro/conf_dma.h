@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM L21 External Interrupt Driver Configuration Header
+ * \brief SAM L21 Direct Memory Access Driver Configuration Header
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,9 +40,9 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXTINT_H_INCLUDED
-#define CONF_EXTINT_H_INCLUDED
+#ifndef CONF_DMA_H_INCLUDED
+#define CONF_DMA_H_INCLUDED
 
-#define EXTINT_CLOCK_SELECTION   EXTINT_CLK_GCLK
-#define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
+# define CONF_MAX_USED_CHANNEL_NUM     2
+
 #endif

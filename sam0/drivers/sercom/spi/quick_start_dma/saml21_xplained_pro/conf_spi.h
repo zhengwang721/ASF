@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM L21 External Interrupt Driver Configuration Header
+ * \brief SAM L21 SPI configuration
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,9 +40,14 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_EXTINT_H_INCLUDED
-#define CONF_EXTINT_H_INCLUDED
 
-#define EXTINT_CLOCK_SELECTION   EXTINT_CLK_GCLK
-#define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
-#endif
+
+#ifndef CONF_SPI_H_INCLUDED
+#  define CONF_SPI_H_INCLUDED
+
+#  define CONF_SPI_MASTER_ENABLE     true
+#  define CONF_SPI_SLAVE_ENABLE      true
+#  define CONF_SPI_TIMEOUT           10000
+
+#endif /* CONF_SPI_H_INCLUDED */
+
