@@ -152,6 +152,11 @@ void system_board_init(void)
 	ioport_set_pin_peripheral_mode(TWI2_CLK_GPIO, TWI2_CLK_FLAGS);
 #endif
 
+#ifdef CONF_BOARD_TWI4
+	ioport_set_pin_peripheral_mode(TWI4_DATA_GPIO, TWI4_DATA_FLAGS);
+	ioport_set_pin_peripheral_mode(TWI4_CLK_GPIO, TWI4_CLK_FLAGS);
+#endif
+
 #ifdef CONF_BOARD_I2S0
 	ioport_set_pin_peripheral_mode(I2S0_SCK_GPIO, I2S0_SCK_FLAGS);
 	ioport_set_pin_peripheral_mode(I2S0_MCK_GPIO, I2S0_MCK_FLAGS);
