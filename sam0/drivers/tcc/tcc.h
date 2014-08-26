@@ -2357,26 +2357,12 @@ enum status_code tcc_set_double_buffer_compare_values(
  *      <th>Comments</td>
  *  </tr>
  *  <tr>
- *      <td>E</td>
- *      <td>05/2014</td>
- *      <td>Added SAM D10/D11 support</td>
- *  </tr>
- *  <tr>
- *      <td>D</td>
- *      <td>03/2014</td>
- *      <td>Added SAM R21 support</td>
- *  </tr>
- *  <tr>
- *      <td>C</td>
- *      <td>03/2014</td>
- *      <td>Added double buffering functionality with use case; Added timer use
- *          case
- *      </td>
- *  </tr>
- *  <tr>
  *      <td>B</td>
- *      <td>02/2014</td>
- *      <td>Added fault handling functionality</td>
+ *      <td>05/2014</td>
+ *      <td>Added fault handling functionality;
+ *          Added double buffering functionality with use case;
+ *          Added timer use case;
+ *          Added SAM R21/D10/D11 support</td>
  *  </tr>
  *  <tr>
  *      <td>A</td>
