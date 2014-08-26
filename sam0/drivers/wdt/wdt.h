@@ -451,14 +451,9 @@ void wdt_reset_count(void);
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>E</td>
- *		<td>05/2014</td>
- *		<td>Add SAMD10/D11 support.</td>
- *	</tr>
- *	<tr>
  *		<td>D</td>
- *		<td>03/2014</td>
- *		<td>Add SAMR21 support.</td>
+ *		<td>05/2014</td>
+ *		<td>Added SAMR21 and SAMD10/D11 support.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>
