@@ -55,4 +55,7 @@
 /** TWI Base for TWIHS SLAVE application to use */
 #define BOARD_BASE_TWIHS_SLAVE        TWI4
 
+/** Flexcom SLAVE application to use */
+#define BOARD_FLEXCOM_TWIHS_SLAVE          FLEXCOM4
+
 #endif /* CONF_TWIHS_SLAVE_EXAMPLE_H_INCLUDED */
