@@ -248,7 +248,6 @@ static enum status_code _adc_set_config(
 	uint8_t adjres = 0;
 	uint32_t resolution = ADC_RESOLUTION_16BIT;
 	enum adc_accumulate_samples accumulate = ADC_ACCUMULATE_DISABLE;
-	uint8_t j = 0;
 
 	/* Get the hardware module pointer */
 	Adc *const adc_module = module_inst->hw;
@@ -268,7 +267,6 @@ static enum status_code _adc_set_config(
   	for(uint8_t i=0;i <= ADC_EXTCHANNEL_MSB;i++){
 		if(config->positive_input_sequence_mask_enable & (1 << i)){
 			_adc_configure_ain_pin(i);
-			j++;
 		}
 	}
 
