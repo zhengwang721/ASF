@@ -102,7 +102,7 @@ void system_board_init(void)
 #if defined (CONF_BOARD_UART_CONSOLE)
 	/* Configure UART pins */
 	ioport_set_port_peripheral_mode(PINS_USART7_PORT, PINS_USART7,
-			PINS_USART7_MASK);
+			PINS_USART7_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_USART_RXD
@@ -169,8 +169,14 @@ void system_board_init(void)
 #endif
 
 #ifdef CONF_BOARD_PDM
-ioport_set_pin_peripheral_mode(PDM_CLK_GPIO, PDM_CLK_FLAGS);
-ioport_set_pin_peripheral_mode(PDM_DAT_GPIO, PDM_DAT_FLAGS);
+	ioport_set_pin_peripheral_mode(PDM_CLK_GPIO, PDM_CLK_FLAGS);
+	ioport_set_pin_peripheral_mode(PDM_DAT_GPIO, PDM_DAT_FLAGS);
+#endif
+
+#if defined(CONF_BOARD_USB_PORT)
+#  if defined(CONF_BOARD_USB_VBUS_DETECT)
+	gpio_configure_pin(USB_VBUS_PIN, USB_VBUS_FLAGS);
+#  endif
 #endif
 }
 
