@@ -302,7 +302,7 @@ void system_board_init(void);
 /** \name Extension header #1 I2C definitions
  *  @{
  */
-#define EXT1_TWI_MODULE           TWI2
+#define EXT1_TWI_MODULE           TWI4
 #define EXT1_TWI_TWD_MUX          IOPORT_MODE_MUX_B
 #define EXT1_TWI_TWCK_MUX         IOPORT_MODE_MUX_B
 /** @} */
@@ -488,20 +488,25 @@ void system_board_init(void);
 * @{
 */
 /** TWI0 pin definitions */
-#define TWI0_DATA_GPIO   PIO_PA3_IDX
+#define TWI0_DATA_GPIO   PIO_PA9_IDX
 #define TWI0_DATA_FLAGS  IOPORT_MODE_MUX_A
-#define TWI0_CLK_GPIO    PIO_PA4_IDX
+#define TWI0_CLK_GPIO    PIO_PA10_IDX
 #define TWI0_CLK_FLAGS   IOPORT_MODE_MUX_A
 /** TWI1 pin definitions */
-#define TWI1_DATA_GPIO   EXT3_PIN_11
+#define TWI1_DATA_GPIO   PIO_PB2_IDX
 #define TWI1_DATA_FLAGS  IOPORT_MODE_MUX_A
-#define TWI1_CLK_GPIO    EXT3_PIN_12
+#define TWI1_CLK_GPIO    PIO_PB3_IDX
 #define TWI1_CLK_FLAGS   IOPORT_MODE_MUX_A
-/** TWI2 pin definitions */
-#define TWI2_DATA_GPIO   EXT1_PIN_11
-#define TWI2_DATA_FLAGS  IOPORT_MODE_MUX_B
-#define TWI2_CLK_GPIO    EXT1_PIN_12
-#define TWI2_CLK_FLAGS   IOPORT_MODE_MUX_B
+/** TWI4 pin definitions */
+#define TWI4_DATA_GPIO   EXT1_PIN_11
+#define TWI4_DATA_FLAGS  IOPORT_MODE_MUX_A
+#define TWI4_CLK_GPIO    EXT1_PIN_12
+#define TWI4_CLK_FLAGS   IOPORT_MODE_MUX_A
+/** TWI6 pin definitions */
+#define TWI6_DATA_GPIO   EXT3_PIN_11
+#define TWI6_DATA_FLAGS  IOPORT_MODE_MUX_B
+#define TWI6_CLK_GPIO    EXT3_PIN_12
+#define TWI6_CLK_FLAGS   IOPORT_MODE_MUX_B
 /** @} */
 
 //! \name I2S0

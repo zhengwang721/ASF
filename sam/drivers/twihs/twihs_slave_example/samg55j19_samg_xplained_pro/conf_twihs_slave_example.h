@@ -47,12 +47,12 @@
 #define CONF_TWIHS_SLAVE_EXAMPLE_H_INCLUDED
 
 /** Definition of TWIHS interrupt ID on board. */
-#define BOARD_TWIHS_IRQn          TWI0_IRQn
-#define BOARD_TWIHS_Handler       TWI0_Handler
+#define BOARD_TWIHS_IRQn          TWI4_IRQn
+#define BOARD_TWIHS_Handler       TWI4_Handler
 
 /** TWIHS ID for SLAVE application to use */
-#define BOARD_ID_TWIHS_SLAVE          ID_TWI0
+#define BOARD_ID_TWIHS_SLAVE          ID_TWI4
 /** TWI Base for TWIHS SLAVE application to use */
-#define BOARD_BASE_TWIHS_SLAVE        TWI0
+#define BOARD_BASE_TWIHS_SLAVE        TWI4
 
 #endif /* CONF_TWIHS_SLAVE_EXAMPLE_H_INCLUDED */
