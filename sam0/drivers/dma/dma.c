@@ -307,9 +307,6 @@ enum status_code dma_allocate(struct dma_resource *resource,
 		/* Initialize clocks for DMA */
 #if (SAML21)
 		system_ahb_clock_set_mask(MCLK_AHBMASK_DMAC);
-		// TBD
-		//system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB,
-		//		MCLK_APBMASK_DMAC);
 #else
 		system_ahb_clock_set_mask(PM_AHBMASK_DMAC);
 		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB,
