@@ -159,7 +159,7 @@ extern "C" {
  * }
  * \enddot
  *
- * \subsection asfdoc_sam0_rtc_features Driver Feature Macro Definition
+ * \subsection asfdoc_sam0_dma_features Driver Feature Macro Definition
  * <table>
  *  <tr>
  *    <th>Driver Feature Macro</th>
