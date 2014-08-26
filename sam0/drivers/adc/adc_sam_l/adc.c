@@ -264,20 +264,13 @@ static enum status_code _adc_set_config(
 	_adc_configure_ain_pin(config->positive_input);
 	_adc_configure_ain_pin(config->negative_input);
 
-	/*set pinmux for positive input sequence*/
+	/* Set pinmux for positive input sequence*/
   	for(uint8_t i=0;i <= ADC_EXTCHANNEL_MSB;i++){
 		if(config->positive_input_sequence_mask_enable & (1 << i)){
 			_adc_configure_ain_pin(i);
 			j++;
 		}
 	}
-
-#if ADC_CALLBACK_MODE == true
-	module_inst->is_automatic_sequences = false;
-  	if(j >= 2){
-		module_inst->is_automatic_sequences = true;
-	}
-#endif
 
 	/* Configure run in standby and on demand */
 	adc_module->CTRLA.reg = ((config->run_in_standby << ADC_CTRLA_RUNSTDBY_Pos)

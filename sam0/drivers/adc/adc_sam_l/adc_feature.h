@@ -547,8 +547,6 @@ struct adc_module {
 	volatile enum status_code job_status;
 	/** If software triggering is needed */
 	bool software_trigger;
-	/** If start a sequence of conversion automatically*/
-	bool is_automatic_sequences;
 #  endif
 #endif
 };
@@ -611,9 +609,6 @@ static inline void adc_enable_positive_input_sequence(
 
 	Adc *const adc_module = module_inst->hw;
 	adc_module->SEQCTRL.reg = positive_input_sequence_mask_enable;
-#if ADC_CALLBACK_MODE == true
-	module_inst->is_automatic_sequences = true;
-#endif
 }
 
 /**
@@ -631,9 +626,6 @@ static inline void adc_disable_positive_input_sequence(
 
 	Adc *const adc_module = module_inst->hw;
 	adc_module->SEQCTRL.reg = 0;
-#if ADC_CALLBACK_MODE == true
-	module_inst->is_automatic_sequences = false;
-#endif
 }
 
 /**

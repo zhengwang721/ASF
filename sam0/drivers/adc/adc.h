@@ -320,8 +320,10 @@
  * conversion is completed, the next conversion will start at the next positive
  * input channel and so on, until all requested pins to scan have been sampled
  * and converted.
- * SAM L21 dosen't support pin scan mode.
- * And L21 has "Automatic Sequences" feature.
+ * SAM L21 has automatic sequences feature instead of pin scan mode. In automatic 
+ * sequence mode, all of 32 positives inputs can be included in a sequence. The 
+ * sequence starts from the lowest input, and go to the next enabled input
+ * automatically.
  *
  * Pin scanning gives a simple mechanism to sample a large number of physical
  * input channel samples, using a single physical ADC channel.

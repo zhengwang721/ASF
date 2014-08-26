@@ -62,7 +62,7 @@ static void _adc_interrupt_handler(const uint8_t instance)
 
 			if (--module->remaining_conversions > 0) {
 				if (module->software_trigger == true
-					&& module->is_automatic_sequences == false) {
+					&& (!(module->hw->SEQSTATUS.reg & ADC_SEQSTATUS_SEQBUSY))) {
 					adc_start_conversion(module);
 				}
 			} else {
@@ -71,8 +71,6 @@ static void _adc_interrupt_handler(const uint8_t instance)
 					 *and call callback */
 					module->job_status = STATUS_OK;
 					adc_disable_interrupt(module, ADC_INTERRUPT_RESULT_READY);
-					module->is_automatic_sequences = false;
-
 					(module->callback[ADC_CALLBACK_READ_BUFFER])(module);
 				}
 			}
@@ -245,7 +243,6 @@ void adc_abort_job(
 		/* Mark job as aborted */
 		module_inst->job_status = STATUS_ABORTED;
 		module_inst->remaining_conversions = 0;
-		module_inst->is_automatic_sequences = false;
 	}
 }
 
