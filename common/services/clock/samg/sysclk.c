@@ -107,7 +107,13 @@ void sysclk_set_source(uint32_t ul_src)
 	case SYSCLK_SRC_PLLACK:
 		pmc_mck_set_source(PMC_MCKR_CSS_PLLA_CLK);
 		break;
+
+#if SAMG55
+	case SYSCLK_SRC_PLLBCK:
+		pmc_mck_set_source(PMC_MCKR_CSS_PLLB_CLK);
+		break;
 	}
+#endif
 
 	SystemCoreClockUpdate();
 }
@@ -117,8 +123,6 @@ void sysclk_set_source(uint32_t ul_src)
 /**
  * \brief Enable USB clock.
  *
- * \note The SAMG55 UDP hardware interprets div as div+1. For readability the hardware div+1
- * is hidden in this implementation. Use div as div effective value.
  *
  * \param pll_id Source of the USB clock.
  * \param div Actual clock divisor. Must be superior to 0.
@@ -237,6 +241,7 @@ void sysclk_init(void)
 	}
 #endif
 
+#if SAMG55
 #ifdef CONFIG_PLL1_SOURCE
 	else if (CONFIG_SYSCLK_SOURCE == SYSCLK_SRC_PLLBCK) {
 		struct pll_config pllcfg;
@@ -247,6 +252,7 @@ void sysclk_init(void)
 		pll_wait_for_lock(1);
 		pmc_switch_mck_to_pllbck(CONFIG_SYSCLK_PRES);
 	}
+#endif
 #endif
 
 	/* Update the SystemFrequency variable */
