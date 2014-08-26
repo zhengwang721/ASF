@@ -53,7 +53,10 @@ typedef struct {
   __I  uint32_t Reserved6[1];
   __I  uint32_t Reserved7[29];
   __IO uint32_t CCFG_SYSIO;     /**< \brief (Matrix Offset: 0x0114) System I/O Configuration Register */
-  __I  uint32_t Reserved8[51];
+  __IO uint32_t CCFG_DYNCKG;     /**< \brief (Matrix Offset: 0x0118) Dynamic clock gating Register */
+  __IO uint32_t CCFG_I2SCLKSEL;     /**< \brief (Matrix Offset: 0x011C) I2S clock source selection Register */
+  __IO uint32_t CCFG_USBMR;     /**< \brief (Matrix Offset: 0x0120) USB management Register */
+  __I  uint32_t Reserved8[48];
   __IO uint32_t MATRIX_WPMR;    /**< \brief (Matrix Offset: 0x1E4) Write Protection Mode Register */
   __I  uint32_t MATRIX_WPSR;    /**< \brief (Matrix Offset: 0x1E8) Write Protection Status Register */
 } Matrix;
@@ -142,7 +145,11 @@ typedef struct {
 #define CCFG_SYSIO_SYSIO5 (0x1u << 5) /**< \brief (CCFG_SYSIO) PB5 or TDO/TRACESWO Assignment */
 #define CCFG_SYSIO_SYSIO6 (0x1u << 6) /**< \brief (CCFG_SYSIO) PB6 or TMS/SWDIO Assignment */
 #define CCFG_SYSIO_SYSIO7 (0x1u << 7) /**< \brief (CCFG_SYSIO) PB7 or TCK/SWCLK Assignment */
+#define CCFG_SYSIO_SYSIO10 (0x1u << 10) /**< \brief (CCFG_SYSIO) PA21 or DM Assignment */
+#define CCFG_SYSIO_SYSIO11 (0x1u << 11) /**< \brief (CCFG_SYSIO) PA22 or DP Assignment */
 #define CCFG_SYSIO_SYSIO12 (0x1u << 12) /**< \brief (CCFG_SYSIO) PB12 or ERASE Assignment */
+/* -------- CCFG_USBMR : (MATRIX Offset: 0x0120) USB management Register -------- */
+#define CCFG_USBMR_DEVICE (0x1u << 0) /**< \brief (CCFG_USBMR) USB device mode */
 /* -------- MATRIX_WPMR : (MATRIX Offset: 0x1E4) Write Protection Mode Register -------- */
 #define MATRIX_WPMR_WPEN (0x1u << 0) /**< \brief (MATRIX_WPMR) Write Protection Enable */
 #define MATRIX_WPMR_WPKEY_Pos 8

@@ -194,16 +194,16 @@ void system_board_init(void);
 #define PINS_USART7_TYPE   PIO_PERIPH_B
 #define PINS_USART7_ATTR   PIO_DEFAULT
 
-/** PCK0 pin definition (PA6) */
-#define PIN_PCK0         (PIO_PA6_IDX)
-#define PIN_PCK0_MUX     (IOPORT_MODE_MUX_B)
-#define PIN_PCK0_FLAGS   (IOPORT_MODE_MUX_B)
-#define PIN_PCK0_PORT    IOPORT_PIOA
-#define PIN_PCK0_MASK    PIO_PA6B_PCK0
-#define PIN_PCK0_PIO     PIOA
-#define PIN_PCK0_ID      ID_PIOA
-#define PIN_PCK0_TYPE    PIO_PERIPH_B
-#define PIN_PCK0_ATTR    PIO_DEFAULT
+/** PCK1 pin definition (PA17) */
+#define PIN_PCK1         (PIO_PA17_IDX)
+#define PIN_PCK1_MUX     (IOPORT_MODE_MUX_B)
+#define PIN_PCK1_FLAGS   (IOPORT_MODE_MUX_B)
+#define PIN_PCK1_PORT    IOPORT_PIOA
+#define PIN_PCK1_MASK    PIO_PA17B_PCK1
+#define PIN_PCK1_PIO     PIOA
+#define PIN_PCK1_ID      ID_PIOA
+#define PIN_PCK1_TYPE    PIO_PERIPH_B
+#define PIN_PCK1_ATTR    PIO_DEFAULT
 
 #define PIN_TC0_TIOA0         (PIO_PA0_IDX)
 #define PIN_TC0_TIOA0_MUX     (IOPORT_MODE_MUX_B)
@@ -546,6 +546,22 @@ void system_board_init(void);
 #define I2S1_WS_GPIO         (PIO_PA20_IDX)
 #define I2S1_WS_FLAGS        (IOPORT_MODE_MUX_B)
 //@}
+
+/** \name USB definitions
+ * @{
+ */
+#define PIN_USB_VBUS    {PIO_PB4, PIOB, ID_PIOB, PIO_INPUT, PIO_PULLUP}
+#define USB_VBUS_FLAGS    (PIO_INPUT | PIO_DEBOUNCE | PIO_IT_EDGE)
+#define USB_VBUS_PIN_IRQn (PIOB_IRQn)
+#define USB_VBUS_PIN      (PIO_PB4_IDX)
+#define USB_VBUS_PIO_ID   (ID_PIOB)
+#define USB_VBUS_PIO_MASK (PIO_PB4)
+
+/** USB D- pin (System function) */
+#define PIN_USB_DM      {PIO_PA21}
+/** USB D+ pin (System function) */
+#define PIN_USB_DP      {PIO_PA22}
+/** @} */
 
 //! \name IO1 SD card definitions */
 //@{
