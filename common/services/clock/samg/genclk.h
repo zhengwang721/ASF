@@ -65,6 +65,13 @@ extern "C" {
 #define GENCLK_PCK_0      0  //!< PCK0 ID
 #define GENCLK_PCK_1      1  //!< PCK1 ID
 #define GENCLK_PCK_2      2  //!< PCK2 ID
+#if SAMG55
+#define GENCLK_PCK_3      3  //!< PCK3 ID
+#define GENCLK_PCK_4      4  //!< PCK4 ID
+#define GENCLK_PCK_5      5  //!< PCK5 ID
+#define GENCLK_PCK_6      6  //!< PCK6 ID
+#define GENCLK_PCK_7      7  //!< PCK7 ID
+#endif
 //@}
 
 //! \name Programmable Clock Sources (PCK)

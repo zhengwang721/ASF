@@ -43,6 +43,7 @@
 
 #include "conf_usb.h"
 #include "sysclk.h"
+#include "matrix.h"
 #include "udd.h"
 #include "udp_device.h"
 #include <string.h>
@@ -137,9 +138,9 @@
 #ifndef UDD_NO_SLEEP_MGR
 
 //! Definition of sleep levels
-#define UDP_SLEEP_MODE_USB_SUSPEND  SLEEPMGR_WAIT_FAST
+#define UDP_SLEEP_MODE_USB_SUSPEND  SLEEPMGR_ACTIVE
 #if SAMG55
-#define UDP_SLEEP_MODE_USB_IDLE     SLEEPMGR_WAIT_FAST
+#define UDP_SLEEP_MODE_USB_IDLE     SLEEPMGR_ACTIVE
 #else
 #define UDP_SLEEP_MODE_USB_IDLE     SLEEPMGR_SLEEP_WFI
 #endif
@@ -550,6 +551,10 @@ void udd_enable(void)
 	irqflags_t flags;
 
 	flags = cpu_irq_save();
+
+#if SAMG55
+	matrix_set_usb_device();
+#endif
 
 	// Enable USB hardware
 	udd_enable_periph_ck();
