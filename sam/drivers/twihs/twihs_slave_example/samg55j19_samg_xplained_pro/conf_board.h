@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWIHS Slave driver for SAM.
+ * \brief Board configuration.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,42 +41,13 @@
  *
  */
 
-#ifndef TWIHS_SLAVE_H_INCLUDED
-#define TWIHS_SLAVE_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#include "twihs.h"
-#include "sysclk.h"
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-typedef Twihs *twihs_slave_t;
+/** Configure TWI0 pins */
+#define CONF_BOARD_TWI4
 
-static inline void twihs_slave_setup(twihs_slave_t p_twihs, uint32_t dw_device_addr)
-{
-	if (p_twihs == TWI0) {
-		sysclk_enable_peripheral_clock(ID_TWI0);
-#if SAMG55		
-	} else if (p_twihs == TWI1) {
-		sysclk_enable_peripheral_clock(ID_TWI1);
-	} else if (p_twihs == TWI2) {
-		sysclk_enable_peripheral_clock(ID_TWI2);
-	} else if (p_twihs == TWI3) {
-		sysclk_enable_peripheral_clock(ID_TWI3);
-	} else if (p_twihs == TWI4) {
-		sysclk_enable_peripheral_clock(ID_TWI4);
-	} else if (p_twihs == TWI5) {
-		sysclk_enable_peripheral_clock(ID_TWI5);
-	} else if (p_twihs == TWI6) {
-		sysclk_enable_peripheral_clock(ID_TWI6);
-	} else if (p_twihs == TWI7) {
-		sysclk_enable_peripheral_clock(ID_TWI7);
-#endif	
-	} else {
-		/* Do Nothing */
-	}
-	twihs_slave_init(p_twihs, dw_device_addr);
-}
-
-#define twihs_slave_enable(p_twihs)  twihs_enable_slave_mode(p_twihs)
-
-#define twihs_slave_disable(p_twihs)  twihs_disable_slave_mode(p_twihs)
-
-#endif /* TWIHS_SLAVE_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
