@@ -13,6 +13,7 @@
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_count.h"/>
 			<build type="define" name="RTC_COUNT_ASYNC" value="false"/>
+			<build type="doxygen-entry-point" value="asfdoc_sam0_rtc_count_group"/>
 			<device-support value="sam0"/>
 
 			<require idref="sam0.utils"/>
@@ -29,7 +30,7 @@
 			<build type="header-file" subtype="api" value="rtc_count.h"/>
 			<build type="header-file" subtype="api" value="rtc_count_interrupt.h"/>
 			<build type="define" name="RTC_COUNT_ASYNC" value="true"/>
-
+			<build type="doxygen-entry-point" value="asfdoc_sam0_rtc_count_group"/>
 			<device-support value="sam0"/>
 
 			<require idref="sam0.utils"/>
@@ -41,6 +42,7 @@
 			<build type="include-path" value="." />
 			<build type="header-file" subtype="api" value="rtc_calendar.h"/>
 			<build type="define" name="RTC_CALENDAR_ASYNC" value="false"/>
+			<build type="doxygen-entry-point" value="asfdoc_sam0_rtc_calendar_group"/>
 			<device-support value="sam0"/>
 
 			<require idref="sam0.utils"/>
@@ -54,6 +56,7 @@
 			<build type="header-file" subtype="api" value="rtc_calendar_interrupt.h"/>
 			<build type="define" name="RTC_CALENDAR_ASYNC" value="true"/>
 			<build type="doxygen-enable-section" value="RTC_CALENDAR_CALLBACK_MODE"/>
+			<build type="doxygen-entry-point" value="asfdoc_sam0_rtc_calendar_group"/>
 			<device-support value="sam0"/>
 
 			<require idref="sam0.utils"/>
