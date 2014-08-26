@@ -102,7 +102,7 @@ void system_board_init(void)
 #if defined (CONF_BOARD_UART_CONSOLE)
 	/* Configure UART pins */
 	ioport_set_port_peripheral_mode(PINS_USART7_PORT, PINS_USART7,
-			PINS_USART7_MASK);
+			PINS_USART7_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_USART_RXD
