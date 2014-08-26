@@ -97,6 +97,8 @@
  */
 float m = 0.0;
 float c = 0.0;
+bool result_ready = false;
+volatile int16_t temperature = 0;
 
 /* Internal ADC functions */
 static void main_adc_init(void);
@@ -111,11 +113,8 @@ static void main_adc_averaging(void);
  */
 static void adc_handler(ADC_t *adc, uint8_t ch_mask, adc_result_t result)
 {
-	volatile uint16_t temperature;
-
-	temperature = (uint16_t)((m * result) + c);
-	/* Display values */
-	printf("The temperature is now %u Deg C\n\r", temperature);
+	temperature = (int16_t)((m * result) + c);
+	result_ready = true;
 }
 
 int main(void)
@@ -176,7 +175,7 @@ int main(void)
 
 	uint16_t i, j;
 	while (1) {
-		/* Allow a small delay to finish the previous printf from ISR */
+		/* Give time to finish the previous printf */
 		i = 0xFFFF;
 		j = 0x9;
 		while (j--) {
@@ -186,6 +185,11 @@ int main(void)
 
 		/* Start next conversion. */
 		adc_start_conversion(&ADCA, ADC_CH0);
+		if (result_ready) {
+			/* Display the temperature reading */
+			printf("The temperature is now %u Deg C\n\r", temperature);
+			result_ready = false;
+		}
 	}
 }
 
@@ -207,7 +211,7 @@ static void main_adc_init(void)
 	 */
 	adc_read_configuration(&ADCA, &adc_conf); /* Initialize structures. */
 	adc_set_conversion_parameters(&adc_conf, ADC_SIGN_ON, ADC_RES_MT12,
-		ADC_REF_BANDGAP);
+			ADC_REF_BANDGAP);
 	adc_set_clock_rate(&adc_conf, 125000UL);
 	adc_set_conversion_trigger(&adc_conf, ADC_TRIG_MANUAL, 1, 0);
 	adc_enable_internal_input(&adc_conf, ADC_INT_TEMPSENSE);
@@ -244,7 +248,7 @@ static void main_adc_averaging(void)
 	/* Change resolution parameter to accept averaging */
 	adc_read_configuration(&ADCA, &adc_conf);
 	adc_set_conversion_parameters(&adc_conf, ADC_SIGN_ON, ADC_RES_MT12,
-		ADC_REF_BANDGAP);
+			ADC_REF_BANDGAP);
 	adc_write_configuration(&ADCA, &adc_conf);
 
 	/* Enable averaging */
