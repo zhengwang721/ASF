@@ -52,12 +52,10 @@
 struct tcc_module tcc_instance;
 enum status_code stat_t = STATUS_OK;
 
-uint8_t i = 0;
-
-
 #ifdef TCC_MODE_PATTERN_GENERATION
 /* Generic Pattern for half size Bipolar Stepper Motor */
 uint8_t sm_pattern[4] = {8, 2, 4, 1};
+uint8_t i = 0;
 #endif
 
 
@@ -67,12 +65,12 @@ uint8_t sm_pattern[4] = {8, 2, 4, 1};
 	
 /* Configure the TCC module as per the application requirement */
 
-/* Example - 1. Circular Buffer 
-			 2. Oneshot Operation 
-			 3. Pattern Generation
-			 4. PWM with OTMX(Output Matrix) and DTI(Dead Time Insertion) 
-			 5. RAMP2 Operation
-			 6. SWAP Operation
+/* Example - 1. Circular Buffer
+             2. Oneshot Operation 
+             3. Pattern Generation
+             4. PWM with OTMX(Output Matrix) and DTI(Dead Time Insertion) 
+             5. RAMP2 Operation
+             6. SWAP Operation
 */
 
 void configure_tcc(void)
@@ -205,26 +203,26 @@ void configure_tcc(void)
 
 #ifdef TCC_MODE_RAMP2
 
-		/* Configure the TCC Waveform Output pins for waveform generation output */		
-		config_tcc.pins.enable_wave_out_pin[0] = true;
-		config_tcc.pins.enable_wave_out_pin[1] = true;
-		
-		config_tcc.pins.wave_out_pin[0] = PIN_PA04F_TCC0_WO0;
-		config_tcc.pins.wave_out_pin[1] = PIN_PA05F_TCC0_WO1;
+	/* Configure the TCC Waveform Output pins for waveform generation output */		
+	config_tcc.pins.enable_wave_out_pin[0] = true;
+	config_tcc.pins.enable_wave_out_pin[1] = true;
+	
+	config_tcc.pins.wave_out_pin[0] = PIN_PA04F_TCC0_WO0;
+	config_tcc.pins.wave_out_pin[1] = PIN_PA05F_TCC0_WO1;
 
-		/* Configure the Alternate function of GPIO pins for TCC functionality */
-		config_tcc.pins.wave_out_pin_mux[0] = MUX_PA04F_TCC0_WO0;
-		config_tcc.pins.wave_out_pin_mux[1] = MUX_PA05F_TCC0_WO1;
-		
-		/* Configure the RAMP mode operation as RAMP2 mode */
-		config_tcc.compare.wave_ramp = TCC_RAMP_RAMP2;
-		
-		/* Configure the compare channel values for the duty cycle control */
-		/* Load the 0xB333 value for 70% duty cycle */
-		config_tcc.compare.match[0] = 0xB333;
-		/* Load the 0x4CCC value for 30% duty cycle */
-		config_tcc.compare.match[1] = 0x4CCC;
-		
+	/* Configure the Alternate function of GPIO pins for TCC functionality */
+	config_tcc.pins.wave_out_pin_mux[0] = MUX_PA04F_TCC0_WO0;
+	config_tcc.pins.wave_out_pin_mux[1] = MUX_PA05F_TCC0_WO1;
+	
+	/* Configure the RAMP mode operation as RAMP2 mode */
+	config_tcc.compare.wave_ramp = TCC_RAMP_RAMP2;
+	
+	/* Configure the compare channel values for the duty cycle control */
+	/* Load the 0xB333 value for 70% duty cycle */
+	config_tcc.compare.match[0] = 0xB333;
+	/* Load the 0x4CCC value for 30% duty cycle */
+	config_tcc.compare.match[1] = 0x4CCC;
+	
 #endif
 
 	/* Initialize the TCC0 channel and define the its registers with configuration defined in the config_tcc */
@@ -254,7 +252,11 @@ void configure_tcc(void)
 	/* Enable the Pattern Generator Output for 4 Waveform Outputs and 
 	   Load the PATT and PATTB register values respectively for Stepper Motor Pattern Generation */
 	TCC0->PATT.reg = TCC_PATT_PGE(0x0F) | TCC_PATT_PGV(sm_pattern[i++]);
+	while (TCC0->SYNCBUSY.bit.PATT) {
+	}
 	TCC0->PATTB.reg = TCC_PATTB_PGEB(0x0F) | TCC_PATTB_PGVB(sm_pattern[i++]);
+	while (TCC0->SYNCBUSY.bit.PATTB) {
+	}
 #endif
 
 #ifdef TCC_MODE_SWAP
@@ -278,11 +280,15 @@ void configure_tcc(void)
 #ifdef TCC_MODE_PATTERN_GENERATION
 void pattern_generation(void)
 {
-			if(i == 4)
-			i = 0;
-			while(!TCC0->INTFLAG.bit.MC0);
-			TCC0->INTFLAG.bit.MC0 = 1;
-			TCC0->PATTB.reg = TCC_PATTB_PGEB(0x0F) | TCC_PATTB_PGVB(sm_pattern[i++]);
+	if (i == 4) {
+		i = 0;
+	}
+	while (!TCC0->INTFLAG.bit.MC0) {
+	}
+	TCC0->INTFLAG.bit.MC0 = 1;
+	TCC0->PATTB.reg = TCC_PATTB_PGEB(0x0F) | TCC_PATTB_PGVB(sm_pattern[i++]);
+	while (TCC0->SYNCBUSY.bit.PATTB) {
+	}
 }
 #endif
 
@@ -291,13 +297,13 @@ void pattern_generation(void)
 
 #ifdef TCC_MODE_ONESHOT
 void oneshot_operation(void)
-{
-	
-	while(port_pin_get_input_level(BUTTON_0_PIN));
-	while(!port_pin_get_input_level(BUTTON_0_PIN));
+{	
+	while (port_pin_get_input_level(BUTTON_0_PIN)) {
+	}
+	while (!port_pin_get_input_level(BUTTON_0_PIN)) {
+	}
 	tcc_set_count_value(&tcc_instance, 0);
 	tcc_restart_counter(&tcc_instance);
-
 }
 #endif
 
@@ -308,9 +314,13 @@ void oneshot_operation(void)
 #ifdef TCC_MODE_SWAP
 void swap_operation(void)
 {
-		while(port_pin_get_input_level(BUTTON_0_PIN));
-		while(!port_pin_get_input_level(BUTTON_0_PIN));
-		TCC0->WAVE.reg ^= TCC_WAVE_SWAP0;
+	while (port_pin_get_input_level(BUTTON_0_PIN)) {
+	}
+	while (!port_pin_get_input_level(BUTTON_0_PIN)) {
+	}
+	TCC0->WAVE.reg ^= TCC_WAVE_SWAP0;
+	while (TCC0->SYNCBUSY.bit.WAVE) {
+	}
 }
 #endif
 
@@ -322,16 +332,16 @@ int main (void)
 	
 	while (1)
 	{
-		#ifdef TCC_MODE_ONESHOT
+#ifdef TCC_MODE_ONESHOT
 		oneshot_operation();		
-		#endif	
+#endif	
 			
-		#ifdef TCC_MODE_PATTERN_GENERATION
+#ifdef TCC_MODE_PATTERN_GENERATION
 		pattern_generation();
-		#endif
+#endif
 		
-		#ifdef TCC_MODE_SWAP
+#ifdef TCC_MODE_SWAP
 		swap_operation();
-		#endif
+#endif
 	}
 }
