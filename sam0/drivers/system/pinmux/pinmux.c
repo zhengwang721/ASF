@@ -97,6 +97,8 @@ static void _system_pinmux_config(
 			 * output state */
 			pin_cfg &= ~PORT_WRCONFIG_PULLEN;
 		}
+	} else {
+		port->DIRCLR.reg = pin_mask;
 	}
 
 	/* The Write Configuration register (WRCONFIG) requires the

@@ -122,7 +122,7 @@
 			<build type="header-file" value="clock_samd20/clock_config_check.h" />
 			<build type="c-source" value="clock_samd20/clock.c"/>
 			<build type="c-source" value="clock_samd20/gclk.c"/>
-
+			<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
 
 			<build type="module-config" subtype="path" value="clock_samd20/module_config"/>
 			<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
@@ -155,7 +155,7 @@
 
 			<build type="module-config" subtype="path" value="clock_samd21_r21/module_config"/>
 			<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
-
+			<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
 
 			<require idref="sam0.drivers.system.interrupt"/>
 			<require idref="sam0.utils"/>
@@ -182,7 +182,7 @@
 			<build type="header-file" value="clock_samd21_r21/clock_config_check.h" />
 			<build type="c-source" value="clock_samd21_r21/clock.c"/>
 			<build type="c-source" value="clock_samd21_r21/gclk.c"/>
-
+			<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
 
 			<build type="module-config" subtype="path" value="clock_samd21_r21/module_config"/>
 			<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
@@ -212,6 +212,7 @@
 			<build type="header-file" value="clock_samd10_d11/clock_config_check.h" />
 			<build type="c-source" value="clock_samd10_d11/clock.c"/>
 			<build type="c-source" value="clock_samd10_d11/gclk.c"/>
+			<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
 
 			<build type="module-config" subtype="path" value="clock_samd10_d11/module_config"/>
 			<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
@@ -239,6 +240,7 @@
 			<build type="header-file" value="clock_samd10_d11/clock_config_check.h" />
 			<build type="c-source" value="clock_samd10_d11/clock.c"/>
 			<build type="c-source" value="clock_samd10_d11/gclk.c"/>
+			<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
 
 			<build type="module-config" subtype="path" value="clock_samd10_d11/module_config"/>
 			<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
@@ -266,6 +268,7 @@
 			<build type="header-file" value="clock_saml21/clock_config_check.h" />
 			<build type="c-source" value="clock_saml21/clock.c"/>
 			<build type="c-source" value="clock_saml21/gclk.c"/>
+			<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
 
 			<build type="module-config" subtype="path" value="clock_saml21/module_config"/>
 			<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>

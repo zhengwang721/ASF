@@ -656,53 +656,44 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset);
  * \page asfdoc_sam0_events_document_revision_history Document Revision History
  *
  * <table>
- *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
- *	</tr>
  *  <tr>
- *		<td>G</td>
- *		<td>08/2014</td>
- *		<td>Added support for SAML21 and fix a bug in internal function
+ *      <th>Doc. Rev.</td>
+ *      <th>Date</td>
+ *      <th>Comments</td>
+ *  </tr>
+ *  <tr>
+ *      <td>F</td>
+ *      <td>08/2014</td>
+ *      <td>Added support for SAML21 and fix a bug in internal function
  *          _events_find_bit_position(). </td>
  *  </tr>
  *  <tr>
- *		<td>G</td>
- *		<td>05/2014</td>
- *		<td>Added support for SAMD10/D11</td>
+ *      <td>E</td>
+ *      <td>05/2014</td>
+ *      <td>Added support for interrupt hook mode.
+ *         Added support for SAMR21 and SAMD10/D11</td>
  *  </tr>
  *  <tr>
- *		<td>F</td>
- *		<td>03/2014</td>
- *		<td>Added support for SAMR21</td>
+ *      <td>D</td>
+ *      <td>01/2014</td>
+ *      <td>Update to support SAMD21 and corrected documentation typos.</td>
  *  </tr>
  *  <tr>
- *		<td>E</td>
- *		<td>02/2014</td>
- *		<td>Added support for interrupt hook mode</td>
- *  </tr>
- *	<tr>
- *		<td>D</td>
- *		<td>01/2014</td>
- *		<td>Update to support SAMD21 and corrected documentation typos.</td>
- *	</tr>
- *	<tr>
- *		<td>C</td>
- *		<td>11/2013</td>
- *		<td>Fixed incorrect documentation for the event signal paths. Added
+ *      <td>C</td>
+ *      <td>11/2013</td>
+ *      <td>Fixed incorrect documentation for the event signal paths. Added
  *          configuration steps overview to the documentation.</td>
- *	</tr>
- *	<tr>
- *		<td>B</td>
- *		<td>06/2013</td>
- *		<td>Corrected documentation typos.</td>
- *	</tr>
- *	<tr>
- *		<td>A</td>
- *		<td>06/2013</td>
- *		<td>Initial release</td>
- *	</tr>
+ *  </tr>
+ *  <tr>
+ *      <td>B</td>
+ *      <td>06/2013</td>
+ *      <td>Corrected documentation typos.</td>
+ *  </tr>
+ *  <tr>
+ *      <td>A</td>
+ *      <td>06/2013</td>
+ *      <td>Initial release</td>
+ *  </tr>
  * </table>
  */
 
