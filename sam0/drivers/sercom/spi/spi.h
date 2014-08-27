@@ -1730,8 +1730,8 @@ enum status_code spi_select_slave(
   *	</tr>
   *	<tr>
   *		<td>D</td>
-  *		<td>03/2014</td>
-  *		<td>Add SAMR21 support.</td>
+  *		<td>04/2014</td>
+  *		<td>Add SAM R21/D10/D11 support.</td>
   *	</tr>
   *	<tr>
   *		<td>C</td>

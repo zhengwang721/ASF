@@ -29,6 +29,7 @@
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
 			<device-support value="sam4c32e"/>
+			<device-support value="samd11"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.cdc.device.composite#disable" caption="USB Device CDC disabled">
@@ -123,7 +124,6 @@
 		<device-support value="samd21"/>
 		<device-support value="samr21"/>
 		<device-support value="sam4c32e"/>
-		<device-support value="samd11"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>
 
@@ -153,7 +153,7 @@
 		<require idref="common.services.usb.udc.appnote"/>
 
 		<build type="doxygen-example-path" value="."/>
-		<build type="doxygen-example-path" value="..\..\"/>
+		<build type="doxygen-example-path" value="../../"/>
 		<build type="doxygen-entry-point" value="asfdoc_udi_cdc_group" />
 
 		<device-support value="samd21"/>

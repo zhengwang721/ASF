@@ -533,19 +533,10 @@ enum i2c_transfer_direction {
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>F</td>
- *		<td>04/2014</td>
- *		<td>Added SAM D10/D11 support.</td>
- *	</tr>
- *	<tr>
- *		<td>E</td>
- *		<td>03/2014</td>
- *		<td>Added SAM R21 support.</td>
- *	</tr>
- *	<tr>
  *		<td>D</td>
- *		<td>03/2014</td>
- *		<td>Added 10-bit addressing and high speed support in SAM D21.</td>
+ *		<td>04/2014</td>
+ *		<td>Added 10-bit addressing and high speed support in SAM D21.
+ *		    Added SAM R21/D10/D11 support.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>
