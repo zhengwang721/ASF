@@ -823,14 +823,9 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  *        <th>Comments</td>
  *    </tr>
  *    <tr>
- *        <td>C</td>
- *        <td>04/2014</td>
- *        <td>Add SAMD10/D11 support</td>
- *    </tr>
- *    <tr>
  *        <td>B</td>
- *        <td>03/2014</td>
- *        <td>Add SAMR21 support</td>
+ *        <td>04/2014</td>
+ *        <td>Added SAMR21 and SAMD10/D11 support</td>
  *    </tr>
  *    <tr>
  *        <td>A</td>

@@ -665,13 +665,13 @@ static inline void extint_nmi_clear_detected(
  *  </tr>
  *  <tr>
  *      <td>E</td>
- *      <td>05/2014</td>
- *      <td>Added support for SAMD10/D11.</td>
+ *      <td>08/2014</td>
+ *      <td>Added support for SAML21.</td>
  *  </tr>
  *  <tr>
  *      <td>D</td>
- *      <td>03/2014</td>
- *      <td>Added support for SAMR21.</td>
+ *      <td>05/2014</td>
+ *      <td>Added support for SAMR21 and SAMD10/D11.</td>
  *  </tr>
  *  <tr>
  *      <td>C</td>

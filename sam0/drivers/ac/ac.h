@@ -97,26 +97,26 @@
  *
  * \subsection asfdoc_sam0_ac_module_features Driver Feature Macro Definition
  * <table>
- *	<tr>
- *		<th>Driver Feature Macro</th>
- *		<th>Supported devices</th>
- *	</tr>
- *	<tr>
- *		<td>FEATURE_AC_HYSTERESIS_LEVEL</td>
- *		<td>SAML21</td>
- *	</tr>
- *	<tr>
- *		<td>FEATURE_AC_SYNCBUSY_SCHEME_VERSION_2</td>
- *		<td>SAML21</td>
- *	</tr>
- *	<tr>
- *		<td>FEATURE_AC_RUN_IN_STANDY_EACH_COMPARATOR</td>
- *		<td>SAML21</td>
- *	</tr>
- *	<tr>
- *		<td>FEATURE_AC_RUN_IN_STANDY_PAIR_COMPARATOR</td>
- *		<td>SAMD20/D21/D10/D11/R21</td>
- *	</tr>
+ *    <tr>
+ *      <th>Driver Feature Macro</th>
+ *      <th>Supported devices</th>
+ *    </tr>
+ *    <tr>
+ *      <td>FEATURE_AC_HYSTERESIS_LEVEL</td>
+ *      <td>SAML21</td>
+ *    </tr>
+ *    <tr>
+ *      <td>FEATURE_AC_SYNCBUSY_SCHEME_VERSION_2</td>
+ *      <td>SAML21</td>
+ *    </tr>
+ *    <tr>
+ *      <td>FEATURE_AC_RUN_IN_STANDY_EACH_COMPARATOR</td>
+ *      <td>SAML21</td>
+ *    </tr>
+ *    <tr>
+ *      <td>FEATURE_AC_RUN_IN_STANDY_PAIR_COMPARATOR</td>
+ *      <td>SAMD20/D21/D10/D11/R21</td>
+ *    </tr>
  * </table>
  * \note The specific features are only available in the driver when the
  * selected device supports those features.
@@ -1304,22 +1304,22 @@ static inline void ac_win_clear_status(
  * intended meanings.
  *
  * <table>
- *	<tr>
- *		<th>Acronym</th>
- *		<th>Description</th>
- *	</tr>
- *	<tr>
- *		<td>AC</td>
- *		<td>Analog Comparator</td>
- *	</tr>
- *	<tr>
- *		<td>DAC</td>
- *		<td>Digital-to-Analog Converter</td>
- *	</tr>
- *	<tr>
- *		<td>MUX</td>
- *		<td>Multiplexer</td>
- *	</tr>
+ *    <tr>
+ *      <th>Acronym</th>
+ *      <th>Description</th>
+ *    </tr>
+ *    <tr>
+ *      <td>AC</td>
+ *      <td>Analog Comparator</td>
+ *    </tr>
+ *    <tr>
+ *      <td>DAC</td>
+ *      <td>Digital-to-Analog Converter</td>
+ *    </tr>
+ *    <tr>
+ *      <td>MUX</td>
+ *      <td>Multiplexer</td>
+ *    </tr>
  * </table>
  *
  *
@@ -1340,15 +1340,15 @@ static inline void ac_win_clear_status(
  * the table.
  *
  * <table>
- *	<tr>
- *		<th>Changelog</th>
- *	</tr>
- *	<tr>
- *		<td>Added support for SAMD21</td>
- *	</tr>
- *	<tr>
- *		<td>Initial Release</td>
- *	</tr>
+ *    <tr>
+ *      <th>Changelog</th>
+ *    </tr>
+ *    <tr>
+ *      <td>Added support for SAMD21</td>
+ *    </tr>
+ *    <tr>
+ *      <td>Initial Release</td>
+ *    </tr>
  * </table>
  */
 
@@ -1369,42 +1369,37 @@ static inline void ac_win_clear_status(
  * \page asfdoc_sam0_ac_document_revision_history Document Revision History
  *
  * <table>
- *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
- *	</tr>
- *	<tr>
- *		<td>F</td>
- *		<td>08/2014</td>
- *		<td>Added support for SAML21.</td>
- *	</tr>
- *	<tr>
- *		<td>E</td>
- *		<td>05/2014</td>
- *		<td>Added support for SAMD10/D11.</td>
- *	</tr>
- *	<tr>
- *		<td>D</td>
- *		<td>03/2014</td>
- *		<td>Added support for SAMR21.</td>
- *	</tr>
- *	<tr>
- *		<td>C</td>
- *		<td>01/2014</td>
- *		<td>Added support for SAMD21.</td>
- *	</tr>
- *	<tr>
- *		<td>B</td>
- *		<td>06/2013</td>
- *		<td>Added additional documentation on the event system. Corrected
+ *    <tr>
+ *      <th>Doc. Rev.</td>
+ *      <th>Date</td>
+ *      <th>Comments</td>
+ *    </tr>
+ *    <tr>
+ *      <td>E</td>
+ *      <td>08/2014</td>
+ *      <td>Added support for SAML21.</td>
+ *    </tr>
+ *    <tr>
+ *      <td>D</td>
+ *      <td>05/2014</td>
+ *      <td>Added support for SAMR21 and SAMD10/D11.</td>
+ *    </tr>
+ *    <tr>
+ *      <td>C</td>
+ *      <td>01/2014</td>
+ *      <td>Added support for SAMD21.</td>
+ *    </tr>
+ *    <tr>
+ *      <td>B</td>
+ *      <td>06/2013</td>
+ *      <td>Added additional documentation on the event system. Corrected
  *          documentation typos.</td>
- *	</tr>
- *	<tr>
- *		<td>A</td>
- *		<td>06/2013</td>
- *		<td>Initial release</td>
- *	</tr>
+ *    </tr>
+ *    <tr>
+ *      <td>A</td>
+ *      <td>06/2013</td>
+ *      <td>Initial release</td>
+ *    </tr>
  * </table>
  */
 
