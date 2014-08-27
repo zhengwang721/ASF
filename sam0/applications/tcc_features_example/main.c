@@ -50,7 +50,7 @@
 #include "conf_example.h"
 
 struct tcc_module tcc_instance;
-enum status_code stat_t = STATUS_OK;
+enum status_code stat = STATUS_OK;
 
 #ifdef TCC_MODE_PATTERN_GENERATION
 /* Generic Pattern for half size Bipolar Stepper Motor */
@@ -226,15 +226,15 @@ void configure_tcc(void)
 #endif
 
 	/* Initialize the TCC0 channel and define the its registers with configuration defined in the config_tcc */
-	stat_t = tcc_init(&tcc_instance, TCC0, &config_tcc);	
+	stat = tcc_init(&tcc_instance, TCC0, &config_tcc);	
 
 	
 #ifdef TCC_MODE_CIRCULAR_BUFFER	
 	/* Load the CC0 and CCB0 values respectively for the circular buffer operation */	
-    stat_t = tcc_set_double_buffer_compare_values(&tcc_instance, TCC0_CC0_CHANNEL, CC0_Value, CCB0_Value);
+    stat = tcc_set_double_buffer_compare_values(&tcc_instance, TCC_MATCH_CAPTURE_CHANNEL_0, CC0_Value, CCB0_Value);
 	
 	/* Enable the Circular Buffer feature for the Compare Channel 0 */
-	stat_t = tcc_enable_circular_buffer_compare(&tcc_instance, TCC0_CC0_CHANNEL);	
+	stat = tcc_enable_circular_buffer_compare(&tcc_instance, TCC_MATCH_CAPTURE_CHANNEL_0);	
 #endif
 
 
