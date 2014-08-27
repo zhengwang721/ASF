@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21/R21/D10/D11 I2C Slave Driver
+ * \brief SAM I2C Slave Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -166,7 +166,11 @@ enum status_code i2c_slave_init(
 	}
 
 	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
+#if (SAML21)
+	uint32_t pm_index     = sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
+#else
 	uint32_t pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
+#endif
 	uint32_t gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
 
 	/* Turn on module in PM */
@@ -198,7 +202,7 @@ enum status_code i2c_slave_init(
 #endif
 
 	/* Set SERCOM module to operate in I2C slave mode. */
-	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE_I2C_SLAVE;
+	i2c_hw->CTRLA.reg = SERCOM_I2CS_CTRLA_MODE(0x4);
 
 	/* Set config and return status. */
 	return _i2c_slave_set_config(module, config);
