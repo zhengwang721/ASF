@@ -111,6 +111,8 @@ void console_uart_irq_handler(void)
  */
 static void usart_sleepwalking_test_active(void)
 {
+	uint32_t temp;
+
 	puts("Test in active mode, press 's' to continue.\r");
 
 	/* Wait for the puts operation to finish. */
@@ -131,6 +133,8 @@ static void usart_sleepwalking_test_active(void)
 	/* Wait for the match interrupt */
 	while (!cmp_flag) {
 	}
+
+	usart_read(CONSOLE_UART, &temp);
 	puts("'s' character is received.\r\n\r");
 
 }
@@ -149,16 +153,6 @@ static void usart_sleepwalking_test_wait(void)
 
 	/* The sleep manage will set the clock to 24MRC in wait mode,
 	 * reconfig the divisor */
-	const sam_usart_opt_t usart_serial_options = {
-		.baudrate = CONF_UART_BAUDRATE,
-#ifdef CONF_UART_CHAR_LENGTH
-		.char_length = CONF_UART_CHAR_LENGTH,
-#endif
-		.parity_type = CONF_UART_PARITY,
-#ifdef CONF_UART_STOP_BITS
-		.stop_bits = CONF_UART_STOP_BITS,
-#endif
-	};	 
 	usart_set_async_baudrate(CONSOLE_UART, CONF_UART_BAUDRATE, OSC_MAINCK_24M_RC_HZ);
 
 	/* Wait for the clock stable. */

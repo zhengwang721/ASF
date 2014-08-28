@@ -57,7 +57,7 @@ extern "C" {
  * \weakgroup sleepmgr_group
  * @{
  */
-#if (SAMG51 || SAMG53 || SAMG55)
+#if (SAMG51 || SAMG53 || SAMG54)
 enum sleepmgr_mode {
 	//! Active mode.
 	SLEEPMGR_ACTIVE = 0,
