@@ -403,15 +403,12 @@ bool udi_hid_kbd_down(uint8_t key_id);
  * \section asfdoc_udi_hid_keyboard_config_examples_2 conf_clock.h
  *
  * \subsection asfdoc_udi_hid_keyboard_config_examples_2_1 AT32UC3A0, AT32UC3A1, AT32UC3B Devices (USBB)
- * \include example/at32uc3a0512_evk1100/conf_clock.h
+ * \include example/at32uc3b0256_evk1101/conf_clock.h
  *
- * \subsection asfdoc_udi_hid_keyboard_config_examples_2_2 AT32UC3A3, AT32UC3A4 Devices (USBB with High Speed Support)
- * \include example/at32uc3a3256_evk1104/conf_clock.h
+ * \subsection asfdoc_udi_hid_keyboard_config_examples_2_2 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U Devices (USBC)
+ * \include example/atuc128d3_stk600_rcuc3d/conf_clock.h
  *
- * \subsection asfdoc_udi_hid_keyboard_config_examples_2_3 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U Devices (USBC)
- * \include example/at32uc3c0512c_uc3c_ek/conf_clock.h
- *
- * \subsection asfdoc_udi_hid_keyboard_config_examples_2_4 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
+ * \subsection asfdoc_udi_hid_keyboard_config_examples_2_3 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
  * \include example/sam3x8h_sam3x_ek/conf_clock.h
  *
  * \section asfdoc_udi_hid_keyboard_config_examples_3 conf_clocks.h
