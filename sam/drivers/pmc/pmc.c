@@ -1235,7 +1235,7 @@ void pmc_cp_clr_fast_startup_input(uint32_t ul_inputs)
 }
 #endif
 
-#if (!SAMG)
+#if (!(SAMG51 || SAMG53 || SAMG54))
 /**
  * \brief Enable Sleep Mode.
  * Enter condition: (WFE or WFI) + (SLEEPDEEP bit = 0) + (LPM bit = 0)
@@ -1347,7 +1347,7 @@ void pmc_enable_waitmode(void)
 }
 #endif
 
-#if (!SAMG)
+#if (!(SAMG51 || SAMG53 || SAMG54))
 /**
  * \brief Enable Backup Mode. Enter condition: WFE/(VROFF bit = 1) +
  * (SLEEPDEEP bit = 1)
