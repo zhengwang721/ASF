@@ -162,7 +162,7 @@
 #define RANGE_TEST_PKT_LENGTH               (19)
 #define LED_BLINK_RATE_IN_MICRO_SEC         (50000)
 /* \} */
-
+#define PULSE_CW_TX_TIME_IN_MICRO_SEC           (50000)
 /* === Types ================================================================ */
 
 /**

@@ -121,6 +121,7 @@
 #define TRANSMISSION_FAILURE              (0x30)
 #define RANGE_TEST_IN_PROGRESS            (0x31)
 
+
 /* ! \} */
 
 /**

@@ -122,7 +122,8 @@ static uint8_t marker_seq_num = 0;
 
 bool cw_ack_sent=false,remote_cw_start=false;
 uint8_t cw_start_mode;
-uint8_t cw_tmr_val = 0;
+uint16_t cw_tmr_val = 0;
+bool pulse_mode = false;
 /* ! \} */
 
 /* === IMPLEMENTATION ====================================================== */
@@ -137,7 +138,11 @@ void per_mode_receptor_init(void *parameter)
 	pib_value_t pib_value;
 #endif
 	/* PER TEST Receptor sequence number */
-	seq_num_receptor = rand();
+	do 
+	{
+		seq_num_receptor = rand();
+	} while (!seq_num_receptor);
+	
 
 	printf("\r\n Starting PER Measurement mode as Reflector");
 	config_per_test_parameters();
@@ -241,8 +246,7 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
 	frame = frame;
 	
 	if(remote_cw_start)
-	{
-		
+	{		
 		cw_ack_sent = true;
 		start_cw_transmission(cw_start_mode, cw_tmr_val);
 	}
@@ -697,6 +701,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 		uint8_t chn_before_set;
 		tal_pib_get(phyCurrentChannel, &chn_before_set);
 #endif
+		
 		param_val = msg->payload.set_parm_req_data.param_value;
 
 #if (TAL_TYPE == AT86RF233)
@@ -705,7 +710,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 		pib_value.pib_value_8bit = param_val;
 		/* set the channel on receptor with the received value */
 		tal_pib_set(phyCurrentChannel, &pib_value);
-
+		curr_trx_config_params.channel=param_val;
 		printf("\r\n Channel changed to %d", param_val);
 #ifdef EXT_RF_FRONT_END_CTRL
 

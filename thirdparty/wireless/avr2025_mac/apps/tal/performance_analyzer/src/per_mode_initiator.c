@@ -142,7 +142,6 @@ typedef struct {
 #define TIMEOUT_FOR_RESPONSE_IN_MICRO_SEC       (200000)
 #define RANGE_TX_BEACON_INTERVAL                (3000000)
 #define RANGE_TX_BEACON_START_INTERVAL          (100000)
-#define PULSE_CW_TX_TIME_IN_MICRO_SEC           (50000)
 #define MICRO_SEC_MULTIPLIER                    (1.0 / 1000000)
 #define MILLI_VOLT_MULTIPLIER                   (1.0 / 1000)
 
@@ -231,13 +230,15 @@ static bool send_range_test_stop_cmd(void);
 
 extern bool cw_ack_sent,remote_cw_start;
 extern uint8_t cw_start_mode;
-extern uint8_t cw_tmr_val;
-
+extern uint16_t cw_tmr_val;
+extern bool pulse_mode ;
+static uint8_t* cw_mode;
 
 /* === GLOBALS ============================================================= */
 static bool scanning = false;
 static bool trx_sleep_status = false;
 static bool range_test_in_progress = false;
+bool remote_serial_tx_failure = false;
 static bool peer_found = false;
 static uint8_t scan_duration;
 static uint8_t seq_num_initiator;
@@ -326,7 +327,10 @@ void per_mode_initiator_init(void *parameter)
 #endif
 
 	/* PER TEST Initiator sequence number */
-	seq_num_initiator = rand();
+		do
+		{
+			seq_num_initiator = rand();
+		} while (!seq_num_initiator);
 
 	/* Node connection status */
 	peer_found = node_info.peer_found;
@@ -592,7 +596,26 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 		op_mode = TX_OP_MODE;
 	}
 	break;
-
+	case REMOTE_TEST_MODE:
+	{
+	if(status!=MAC_SUCCESS)
+	{
+			
+		app_payload_t *msg;
+		uint8_t serial_data_len;
+		/* Point to the message : 1 =>size is first byte and 2=>FCS*/
+		msg	= (app_payload_t *)(frame->mpdu + LENGTH_FIELD_LEN +
+		FRAME_OVERHEAD - FCS_LEN);		
+		serial_data_len = *(frame->mpdu + 12);
+		remote_serial_tx_failure = true;
+		convert_ota_serial_frame_rx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);
+		
+	
+	}
+	op_mode = TX_OP_MODE;
+	break;
+	
+	}
 	case WAIT_FOR_TEST_RES:
 	{
 		/* If no ack received from remote for the send_result_req sent
@@ -1170,7 +1193,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
  */
 void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
 {
-	static uint8_t range_test_seq_num;
+	static uint8_t range_test_seq_num,remote_cmd_seq_num;
 	app_payload_t *msg;
 	param_value_t param_value;
 
@@ -1182,6 +1205,10 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
 		
 	case REMOTE_TEST_REPLY_CMD:
 	{
+		if (remote_cmd_seq_num == msg->seq_num) {
+			return;
+		}
+		remote_cmd_seq_num = msg->seq_num;
 		uint8_t payload_len,serial_data_len;
 		payload_len  = *(mac_frame_info->mpdu);
 		serial_data_len = *(mac_frame_info->mpdu + 12);
@@ -1974,6 +2001,11 @@ static void recover_all_settings(void)
 	(defined CW_SUPPORTED)))
 void pulse_cw_transmission(void)
 {
+	if(node_info.main_state == PER_TEST_RECEPTOR)
+	{
+		//give some time //sriram
+		delay_ms(10);
+	}
 	uint8_t channel;
 	op_mode = CONTINUOUS_TX_MODE;
 	tal_pib_get(phyCurrentChannel, &channel);
@@ -2037,7 +2069,7 @@ void start_cw_transmission(uint8_t tx_mode,uint16_t tmr_val)
 {
 if(node_info.main_state == PER_TEST_RECEPTOR && !cw_ack_sent)
 {
-	
+
 	if((tx_mode !=CW_MODE && tx_mode != PRBS_MODE) || (3600 < tmr_val)) /* timer value should not exceed 3600 seconds */
 	{
 		usr_cont_wave_tx_confirm(INVALID_ARGUMENT, 0x01, tx_mode);
@@ -2052,6 +2084,7 @@ if(node_info.main_state == PER_TEST_RECEPTOR && !cw_ack_sent)
 	   cw_tmr_val = tmr_val;
 	   return;
 	}
+	
 	
 }
 else if(node_info.main_state == PER_TEST_INITIATOR || ((node_info.main_state == PER_TEST_RECEPTOR) && cw_ack_sent))
@@ -2071,13 +2104,17 @@ else if(node_info.main_state == PER_TEST_INITIATOR || ((node_info.main_state == 
 
 if((node_info.main_state == PER_TEST_RECEPTOR) && 1 <= tmr_val )
 {
+	cw_mode=tx_mode;
+
 	sw_timer_start(CW_TX_TIMER,
 	(uint32_t)tmr_val * 1E6,
 	SW_TIMEOUT_RELATIVE,
 	(FUNC_PTR)stop_cw_transmission,
-	&(tx_mode));
-	op_mode = CONTINUOUS_TX_MODE;
+	&cw_mode);
+
+	
 }
+
 	switch (tx_mode) {
 	case CW_MODE: /* CW mode*/
 	{
@@ -2100,7 +2137,7 @@ if((node_info.main_state == PER_TEST_RECEPTOR) && 1 <= tmr_val )
 	}
 	}
 
-	
+	op_mode = CONTINUOUS_TX_MODE;
 	if(node_info.main_state == PER_TEST_RECEPTOR )
 	{
 		cw_ack_sent=false;
@@ -4631,7 +4668,11 @@ uint8_t check_error_conditions(void)
 	} else if (true == range_test_in_progress) { /* Check if Range Mode is
 		                                      * initiated */
 		error_code = RANGE_TEST_IN_PROGRESS;
-	} else {
+	}else if (true == remote_serial_tx_failure) 
+	{
+		error_code = UNABLE_TO_CONTACT_PEER ;
+	
+	}else {
 		error_code = MAC_SUCCESS;
 	}
 

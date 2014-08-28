@@ -169,7 +169,7 @@ static uint8_t *get_next_tx_buffer(void);
 static inline void handle_incoming_msg(void);
 
 static uint8_t curr_tx_buffer_index = 0;
-
+extern bool remote_serial_tx_failure;
 /* ! \} */
 /* === Implementation ====================================================== */
 
@@ -205,7 +205,12 @@ void serial_data_handler(void)
 		}
 		return;
 	}
-
+	if(remote_serial_tx_failure)
+	{
+	sio_tx_buf[head][3] |= 0X80;	
+	/*reset the flag*/
+	remote_serial_tx_failure = false;
+	}
 	/* Rx processing */
 	if (data_length == 0) {
 		/* No data to process, read the stream IO */
@@ -367,8 +372,20 @@ static inline void handle_incoming_msg(void)
 //check unsupported tests
     if((sio_rx_buf[MESSAGE_ID_POS] & 0X80) && (PER_TEST_INITIATOR == node_info.main_state))
 	{
+		
+		
+		
+		if(error_code ==  MAC_SUCCESS)
+		{		
+
 		send_remote_cmd(sio_rx_buf,*sio_rx_buf);
 		return;
+		}
+		else
+		{
+		sio_rx_buf[MESSAGE_ID_POS] &=  0X7F;
+		}		
+		
 	}
 	// to be moved to convert_ota_serial_frame_rx
 	else if((sio_rx_buf[MESSAGE_ID_POS] && 0X80) && (PER_TEST_RECEPTOR == node_info.main_state))
@@ -637,9 +654,9 @@ static inline void handle_incoming_msg(void)
 		 * or SINGLE_NODE_TESTS state to allow this req
 		 */
 		if ((PER_TEST_INITIATOR == node_info.main_state) ||
-				(SINGLE_NODE_TESTS == node_info.main_state)
+				(SINGLE_NODE_TESTS == node_info.main_state) || (PER_TEST_RECEPTOR == node_info.main_state)
 				) {
-			pulse_cw_transmission();
+			pulse_cw_transmission();	
 		} else {
 			/* Send the confirmation with status as INVALID_CMD as
 			 * this command is not allowed in this state
