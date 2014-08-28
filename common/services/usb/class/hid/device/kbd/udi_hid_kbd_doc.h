@@ -419,17 +419,14 @@ bool udi_hid_kbd_down(uint8_t key_id);
  * \section asfdoc_udi_hid_keyboard_config_examples_4 conf_board.h
  *
  * \subsection asfdoc_udi_hid_keyboard_config_examples_4_1 AT32UC3A0, AT32UC3A1, AT32UC3B Devices (USBB)
- * \include example/at32uc3a0512_evk1100/conf_board.h
+ * \include example/at32uc3b0256_evk1101/conf_board.h
  *
- * \subsection asfdoc_udi_hid_keyboard_config_examples_4_2 AT32UC3A3, AT32UC3A4 Devices (USBB with High Speed Support)
- * \include example/at32uc3a3256_evk1104/conf_board.h
+ * \subsection asfdoc_udi_hid_keyboard_config_examples_4_2 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U Devices (USBC)
+ * \include example/atuc128d3_stk600_rcuc3d/conf_board.h
  *
- * \subsection asfdoc_udi_hid_keyboard_config_examples_4_3 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U Devices (USBC)
- * \include example/at32uc3c0512c_uc3c_ek/conf_board.h
- *
- * \subsection asfdoc_udi_hid_keyboard_config_examples_4_4 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
+ * \subsection asfdoc_udi_hid_keyboard_config_examples_4_3 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
  * \include example/sam3x8h_sam3x_ek/conf_board.h
  *
- * \subsection asfdoc_udi_hid_keyboard_config_examples_4_5 SAMD21 Device (USB)
+ * \subsection asfdoc_udi_hid_keyboard_config_examples_4_4 SAMD21 Device (USB)
  * \include example/samd21j18a_samd21_xplained_pro/conf_board.h
  */
