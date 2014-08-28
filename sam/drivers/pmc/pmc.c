@@ -1451,8 +1451,11 @@ uint32_t pmc_get_writeprotect_status(void)
 uint32_t pmc_enable_sleepwalking(uint32_t ul_id)
 {
 	uint32_t temp;
-
+#if SAMG55
+	if ((7 <= ul_id) && (ul_id<= 29)) {
+#else
 	if ((8 <= ul_id) && (ul_id<= 29)) {
+#endif
 		temp = pmc_get_active_status();
 		if (temp & (1 << ul_id)) {
 			return 1;
@@ -1481,7 +1484,11 @@ uint32_t pmc_enable_sleepwalking(uint32_t ul_id)
  */
 uint32_t pmc_disable_sleepwalking(uint32_t ul_id)
 {
+#if SAMG55
+	if ((7 <= ul_id) && (ul_id<= 29)) {
+#else
 	if ((8 <= ul_id) && (ul_id<= 29)) {
+#endif		
 		PMC->PMC_SLPWK_DR0 = 1 << ul_id;
 		return 0;
 	} else {
