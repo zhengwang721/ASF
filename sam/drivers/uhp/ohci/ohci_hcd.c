@@ -51,6 +51,10 @@ static ohci_callback_t ohci_callback_pointer[OHCI_NUM_OF_INTERRUPT_SOURCE];
 static uint32_t callback_para;
 static uint32_t bus_reset_flag;
 
+/**
+ * \brief Initialize the OHCI module.
+ *
+ */
 void ohci_init(void)
 {
 	uint32_t i, temp_value;
@@ -62,8 +66,8 @@ void ohci_init(void)
 	memset((void *)&hcca, 0, sizeof(hcca));
 	memset((void *)&control_ed, 0, sizeof(control_ed));
 
-	UHP->HcHCCA = &hcca;
-	UHP->HcControlHeadED = &control_ed;
+	UHP->HcHCCA = (uint32_t)&hcca;
+	UHP->HcControlHeadED = (uint32_t)&control_ed;
 
 	// Setup Host Controller to issue a software reset
 	UHP->HcCommandStatus |= HC_COMMANDSTATUS_HCR;
@@ -96,6 +100,10 @@ void ohci_init(void)
 
 }
 
+/**
+ * \brief De-initialize the OHCI module.
+ *
+ */
 void ohci_deinit(void)
 {
 	uint32_t i;
@@ -171,17 +179,31 @@ void ohci_deinit(void)
 	}
 }
 
+/**
+ * \brief Gets the speed of connected device.
+ *
+ * \return Device speed
+ */
 uint32_t ohci_get_device_speed (void)
 {
 	return UHP->HcRhPortStatus & RH_PS_LSDA;
 }
 
+/**
+ * \brief Gets the current Start Of Frame (SOF) number
+ *
+ * \return current start of frame number.
+ */
 uint16_t ohci_get_frame_number (void)
 {
 	// not sure if need check the Pad1 status
 	return hcca.FrameNumber;
 }
 
+/**
+ * \brief Enables the Reset state on the USB line.
+ *
+ */
 void ohci_bus_reset(void)
 {
 	Assert(!(UHP->HcRhPortStatus & RH_PS_CCS));
@@ -190,6 +212,10 @@ void ohci_bus_reset(void)
 	bus_reset_flag = true;
 }
 
+/**
+ * \brief Enables the suspend state on the USB line.
+ *
+ */
 void ohci_bus_suspend(void)
 {
 	uint32_t temp_value;
@@ -214,11 +240,20 @@ void ohci_bus_suspend(void)
 //	UHP->HcInterruptDisable |= HC_INTERRUPT_RHSC;
 }
 
-uint32_t ohci_is_suspend(void)
+/**
+ * \brief Test if the suspend state is enabled on the USB line.
+ * \return USB line in SUSPEND state, if true
+ */
+bool ohci_is_suspend(void)
 {
 	return ((UHP->HcControl & HC_CONTROL_HCFS) == HC_CONTROL_HCFS_USBSUSPEND);
 }
 
+/**
+ * \brief Enables the IDLE state on the USB line.
+ * The IDLE state is enable when SOF are present on USB line.
+ * A Downstream Resume signal can be sent.
+ */
 void ohci_bus_resume(void)
 {
 	uint32_t temp_value;
@@ -232,7 +267,7 @@ void ohci_bus_resume(void)
 	UHP->HcControlCurrentED = 0;
 	UHP->HcBulkCurrentED = 0;
 
-	UHP->HcHCCA = &hcca;
+	UHP->HcHCCA = (uint32_t)&hcca;
 	/* interrupts might have been disabled */
 	UHP->HcInterruptEnable = HC_INTERRUPT_SO | HC_INTERRUPT_WDH | HC_INTERRUPT_SF
 			| HC_INTERRUPT_RD | HC_INTERRUPT_UE
@@ -252,12 +287,20 @@ void ohci_bus_resume(void)
 	UHP->HcRhPortStatus |= RH_PS_POCI;
 }
 
+/**
+ * \brief Add a control endpoint.
+ * \return true for success.
+ */
 bool ohci_add_ed_control(ed_info_t *ed_info)
 {
 	control_ed.ed_info.ul_ed_info = ed_info->ul_ed_info;
 	return true;
 }
 
+/**
+ * \brief Add a bulk endpoint.
+ * \return true for success.
+ */
 bool ohci_add_ed_bulk(ed_info_t *ed_info)
 {
 	struct ohci_ed *bulk_ed;
@@ -270,7 +313,7 @@ bool ohci_add_ed_bulk(ed_info_t *ed_info)
 			return false;
 		}
 		bulk_ed->ed_info.ul_ed_info = ed_info->ul_ed_info;
-		UHP->HcBulkHeadED = bulk_ed;
+		UHP->HcBulkHeadED = (uint32_t)bulk_ed;
 	} else {
 		/* Check if the endpoint has been allocated */
 		while (bulk_ed != NULL) {
@@ -294,7 +337,13 @@ bool ohci_add_ed_bulk(ed_info_t *ed_info)
 	return true;
 }
 
-/* Simplify the management, only 32 interrupt ED support, no list on each entry. */
+/**
+ * \brief Add a control endpoint.
+ *
+ * Simplify the management, only 32 interrupt ED support, no list on each entry.
+ *
+ * \return true for success.
+ */
 bool ohci_add_ed_period(ed_info_t *ed_info)
 {
 	uint32_t i;
@@ -311,7 +360,7 @@ bool ohci_add_ed_period(ed_info_t *ed_info)
 		for (i = 0; i < 32; i++) {
 			period_ed_header = (struct ohci_ed *)hcca.InterruptTable[i];
 			if (period_ed_header == NULL) {
-				hcca.InterruptTable[i] = period_ed;
+				hcca.InterruptTable[i] = (uint32_t)period_ed;
 			} else {
 				period_ed_header->p_next_ed = period_ed;
 			}
@@ -326,7 +375,7 @@ bool ohci_add_ed_period(ed_info_t *ed_info)
 					return false;
 				}
 				period_ed->ed_info.ul_ed_info = ed_info->ul_ed_info;
-				hcca.InterruptTable[i] = period_ed;
+				hcca.InterruptTable[i] = (uint32_t)period_ed;
 				return true;
 			} else {
 				if (period_ed_header->ed_info.ed_info_s.bEndpointNumber
@@ -339,6 +388,11 @@ bool ohci_add_ed_period(ed_info_t *ed_info)
 	return true;
 }
 
+/**
+ * \brief Remove an endpoint.
+ *
+ * \param ep_number endpoint number.
+ */
 void ohci_remove_ed(uint8_t ep_number)
 {
 	uint32_t i;
@@ -356,7 +410,7 @@ void ohci_remove_ed(uint8_t ep_number)
 		ed_header = (struct ohci_ed *)UHP->HcBulkHeadED;
 		if (ed_header != NULL) {
 			if (ed_header->ed_info.ed_info_s.bEndpointNumber == ep_number) {
-				UHP->HcBulkHeadED = ed_header->p_next_ed;
+				UHP->HcBulkHeadED = (uint32_t)ed_header->p_next_ed;
 				ed_free_header = ed_header;
 				free(ed_free_header);
 			} else {
@@ -414,6 +468,15 @@ void ohci_remove_ed(uint8_t ep_number)
 	};
 }
 
+/**
+ * \brief Add a transfer descriptor to control endpoint.
+ *
+ * \param pid PID type.
+ * \param buf Point to the data buffer.
+ * \param buf_size Length of the data buffer.
+ *
+ * \return true for success.
+ */
 bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
 {
 	struct ohci_td_general *control_td;
@@ -466,12 +529,21 @@ bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
 	return true;
 }
 
-
+/**
+ * \brief Add a transfer descriptor to non-control endpoint.
+ *
+ * \param ep_number endpoint number.
+ * \param buf Point to the data buffer.
+ * \param buf_size Length of the data buffer.
+ *
+ * \return true for success.
+ */
 bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf, uint32_t buf_size)
 {
 	struct ohci_td_general *general_td;
 	struct ohci_td_general *td_general_header;
 	struct ohci_td_iso *iso_td;
+	struct ohci_td_iso *iso_td_header;
 	struct ohci_ed *ed_header;
 	uint32_t i;
 
@@ -527,7 +599,7 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf, uint32_t buf_size)
 	for (i = 0; i < 32; i++) {
 		ed_header = (struct ohci_ed *)hcca.InterruptTable[i];
 		if (ed_header->ed_info.ed_info_s.bEndpointNumber == ep_number) {
-			if (ed_header->ed_info.ed_info_s.bFormat = 0) {
+			if (ed_header->ed_info.ed_info_s.bFormat == 0) {
 				general_td = malloc(sizeof(struct ohci_td_general));
 				if (general_td == NULL) {
 					return false;
@@ -593,16 +665,16 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf, uint32_t buf_size)
 					// set the skip
 					ed_header->ed_info.ed_info_s.bSkip = 1;
 
-					td_general_header = (struct ohci_td_iso *)ed_header->p_td_head;
+					iso_td_header = (struct ohci_td_iso *)ed_header->p_td_head;
 
-					if (td_general_header == NULL) {
-						ed_header->p_td_head = general_td;
+					if (iso_td_header == NULL) {
+						ed_header->p_td_head = iso_td;
 					}
 
-					while (td_general_header->p_next_td != NULL) {
-						td_general_header = td_general_header->p_next_td;
+					while (iso_td_header->p_next_td != NULL) {
+						iso_td_header = iso_td_header->p_next_td;
 					}
-					td_general_header->p_next_td = iso_td;
+					iso_td_header->p_next_td = iso_td;
 
 					// clear the skip
 					ed_header->ed_info.ed_info_s.bSkip = 0;
@@ -615,6 +687,11 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf, uint32_t buf_size)
 	return false;
 }
 
+/**
+ * \brief Remove an transfer descriptor.
+ *
+ * \param ep_number endpoint number.
+ */
 void ohci_remove_td(uint8_t ep_number)
 {
 	uint32_t i;
@@ -671,71 +748,96 @@ void ohci_remove_td(uint8_t ep_number)
 	}
 }
 
+/**
+ * \brief Enable interrupt.
+ *
+ * \param int_source interrupt source type.
+ */
 void ohci_enable_interrupt(enum ohci_interrupt_source int_source)
 {
-	if (int_source = OHCI_INTERRUPT_SO) {
+	if (int_source == OHCI_INTERRUPT_SO) {
 		UHP->HcInterruptEnable = HC_INTERRUPT_SO;
 	}
-	if (int_source = OHCI_INTERRUPT_WDH) {
+	if (int_source == OHCI_INTERRUPT_WDH) {
 		UHP->HcInterruptEnable = HC_INTERRUPT_WDH;
 	}
-	if (int_source = OHCI_INTERRUPT_SF) {
+	if (int_source == OHCI_INTERRUPT_SF) {
 		UHP->HcInterruptEnable = HC_INTERRUPT_SF;
 	}
-	if (int_source = OHCI_INTERRUPT_RD) {
+	if (int_source == OHCI_INTERRUPT_RD) {
 		UHP->HcInterruptEnable = HC_INTERRUPT_RD;
 	}
-	if (int_source = OHCI_INTERRUPT_UE) {
+	if (int_source == OHCI_INTERRUPT_UE) {
 		UHP->HcInterruptEnable = HC_INTERRUPT_UE;
 	}
-	if (int_source = OHCI_INTERRUPT_FNO) {
+	if (int_source == OHCI_INTERRUPT_FNO) {
 		UHP->HcInterruptEnable = HC_INTERRUPT_FNO;
 	}
-	if (int_source = OHCI_INTERRUPT_RHSC) {
+	if (int_source == OHCI_INTERRUPT_RHSC) {
 		UHP->HcInterruptEnable = HC_INTERRUPT_RHSC;
 	}
-	if (int_source = OHCI_INTERRUPT_OC) {
+	if (int_source == OHCI_INTERRUPT_OC) {
 		UHP->HcInterruptEnable = HC_INTERRUPT_OC;
 	}
 }
+
+/**
+ * \brief Disable interrupt.
+ *
+ * \param int_source interrupt source type.
+ */
 void ohci_disable_interrupt(enum ohci_interrupt_source int_source)
 {
-	if (int_source = OHCI_INTERRUPT_SO) {
+	if (int_source == OHCI_INTERRUPT_SO) {
 		UHP->HcInterruptDisable = HC_INTERRUPT_SO;
 	}
-	if (int_source = OHCI_INTERRUPT_WDH) {
+	if (int_source == OHCI_INTERRUPT_WDH) {
 		UHP->HcInterruptDisable = HC_INTERRUPT_WDH;
 	}
-	if (int_source = OHCI_INTERRUPT_SF) {
+	if (int_source == OHCI_INTERRUPT_SF) {
 		UHP->HcInterruptDisable = HC_INTERRUPT_SF;
 	}
-	if (int_source = OHCI_INTERRUPT_RD) {
+	if (int_source == OHCI_INTERRUPT_RD) {
 		UHP->HcInterruptDisable = HC_INTERRUPT_RD;
 	}
-	if (int_source = OHCI_INTERRUPT_UE) {
+	if (int_source == OHCI_INTERRUPT_UE) {
 		UHP->HcInterruptDisable = HC_INTERRUPT_UE;
 	}
-	if (int_source = OHCI_INTERRUPT_FNO) {
+	if (int_source == OHCI_INTERRUPT_FNO) {
 		UHP->HcInterruptDisable = HC_INTERRUPT_FNO;
 	}
-	if (int_source = OHCI_INTERRUPT_RHSC) {
+	if (int_source == OHCI_INTERRUPT_RHSC) {
 		UHP->HcInterruptDisable = HC_INTERRUPT_RHSC;
 	}
-	if (int_source = OHCI_INTERRUPT_OC) {
+	if (int_source == OHCI_INTERRUPT_OC) {
 		UHP->HcInterruptDisable = HC_INTERRUPT_OC;
 	}
 }
 
+/**
+ * \brief Register interrupt callback function.
+ *
+ * \param int_source interrupt source type.
+ * \param call_back Pointer to the callback function.
+ */
 void ohci_register_callback(enum ohci_interrupt_source int_source, void *call_back)
 {
-	ohci_callback_pointer[int_source] = call_back;
+	ohci_callback_pointer[int_source] = (ohci_callback_t)call_back;
 }
 
+/**
+ * \brief Unregister interrupt callback function.
+ *
+ * \param int_source interrupt source type.
+ */
 void ohci_unregister_callback(enum ohci_interrupt_source int_source)
 {
 	ohci_callback_pointer[int_source] = NULL;
 }
 
+/**
+ * \brief USB host interrupt handler.
+ */
 void UHP_Handler()
 {
 	uint32_t int_status;

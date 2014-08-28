@@ -152,8 +152,13 @@ void sysclk_enable_usb(void)
 		pll_config_defaults(&pllcfg, 1);
 		pll_enable(&pllcfg, 1);
 		pll_wait_for_lock(1);
+#ifdef UHD_ENABLE
+		pmc_switch_uhpck_to_pllbck(CONFIG_USBCLK_DIV - 1);
+		pmc_enable_uhpck();
+#else
 		pmc_switch_udpck_to_pllbck(CONFIG_USBCLK_DIV - 1);
 		pmc_enable_udpck();
+#endif
 		return;
 	}
 #endif

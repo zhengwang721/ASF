@@ -150,6 +150,7 @@ typedef struct {
 #define CCFG_SYSIO_SYSIO12 (0x1u << 12) /**< \brief (CCFG_SYSIO) PB12 or ERASE Assignment */
 /* -------- CCFG_USBMR : (MATRIX Offset: 0x0120) USB management Register -------- */
 #define CCFG_USBMR_DEVICE (0x1u << 0) /**< \brief (CCFG_USBMR) USB device mode */
+#define CCFG_USBMR_HTSC (0x1u << 2) /**< \brief (CCFG_USBMR) USB host transceiver suspend control mode */
 /* -------- MATRIX_WPMR : (MATRIX Offset: 0x1E4) Write Protection Mode Register -------- */
 #define MATRIX_WPMR_WPEN (0x1u << 0) /**< \brief (MATRIX_WPMR) Write Protection Enable */
 #define MATRIX_WPMR_WPKEY_Pos 8

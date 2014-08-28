@@ -269,6 +269,11 @@ void pmc_switch_udpck_to_upllck(uint32_t ul_usbdiv);
 void pmc_enable_udpck(void);
 void pmc_disable_udpck(void);
 #endif
+#if SAMG55
+void pmc_switch_uhpck_to_pllack(uint32_t ul_usbdiv);
+void pmc_switch_uhpck_to_pllbck(uint32_t ul_usbdiv);
+void pmc_enable_uhpck(void);
+#endif
 
 //@}
 

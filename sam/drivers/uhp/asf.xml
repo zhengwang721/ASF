@@ -20,6 +20,7 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="common.services.basic.sleepmgr"/>
 			<require idref="sam.drivers.pmc"/>
+			<require idref="sam.drivers.matrix"/>
 			<require idref="sam.drivers.pio"/>
 			<require idref="sam.utils"/>
 			<require idref="sam.utils.syscalls"/>
@@ -43,6 +44,7 @@
 			<require idref="sam.drivers.uhp.ohci"/>
 			<require idref="common.services.basic.clock"/>
 			<require idref="sam.drivers.pmc"/>
+			<require idref="sam.drivers.matrix"/>
 			<require idref="sam.drivers.pio"/>
 			<require idref="sam.utils"/>
 			<require idref="sam.utils.syscalls"/>

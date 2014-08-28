@@ -134,6 +134,7 @@ void ADC_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void ARM_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void UHP_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void UDP_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void CRCCU_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 
 /* Exception Table */
 __attribute__ ((section(".vectors")))
@@ -222,7 +223,7 @@ const DeviceVectors exception_table = {
         .pvReserved46       = (void*) (0UL),           /* 46 Reserved */
         .pfnUHP_Handler     = (void*) UHP_Handler,     /* 47 USB OHCI */
         .pfnUDP_Handler     = (void*) UDP_Handler,     /* 48 USB Device FS */
-        .pvReserved49       = (void*) (0UL)            /* 49 Reserved */
+        .pfnCRCCU_Handler   = (void*) (CRCCU_Handler)  /* 49 CRCCU */
 };
 
 /* TEMPORARY PATCH FOR SCB */

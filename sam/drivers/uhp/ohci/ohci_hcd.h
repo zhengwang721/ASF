@@ -44,16 +44,19 @@
 #include "compiler.h"
 #include "ohci.h"
 
+/* Bus status. */
 #define BUS_CONNECT     0
 #define BUS_DISCONNECT  1
 #define BUS_RESET       2
 
+/* PID type. */
 enum pid {
 	TD_PID_SETUP = 0,
 	TD_PID_OUT   = 1,
 	TD_PID_IN    = 2,
 };
 
+/* OHCI interrupt source. */
 enum ohci_interrupt_source {
 	OHCI_INTERRUPT_SO = 0,
 	OHCI_INTERRUPT_WDH,
@@ -74,7 +77,7 @@ uint32_t ohci_get_device_speed (void);
 uint16_t ohci_get_frame_number (void);
 void ohci_bus_reset(void);
 void ohci_bus_suspend(void);
-uint32_t ohci_is_suspend(void);
+bool ohci_is_suspend(void);
 void ohci_bus_resume(void);
 bool ohci_add_ed_control(ed_info_t *ed_info);
 bool ohci_add_ed_bulk(ed_info_t *ed_info);

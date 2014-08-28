@@ -44,6 +44,7 @@
 
 #include "conf_usb_host.h"
 #include "sysclk.h"
+#include "matrix.h"
 #include "ohci\ohci_hcd.h"
 #include <string.h>
 #include <stdlib.h>
@@ -121,12 +122,12 @@ enum uhd_uhp_state_enum {
 static void uhd_sleep_mode(enum uhd_uhp_state_enum new_state)
 {
 	enum sleepmgr_mode sleep_mode[] = {
-		SLEEPMGR_WAIT,    // UHD_STATE_OFF (not used)
-		SLEEPMGR_WAIT_FAST, // UHD_STATE_WAIT_ID_HOST
-		SLEEPMGR_WAIT, // UHD_STATE_NO_VBUS
-		SLEEPMGR_WAIT, // UHD_STATE_DISCONNECT
-		SLEEPMGR_WAIT_FAST, // UHD_STATE_SUSPEND
-		SLEEPMGR_WAIT, // UHD_STATE_IDLE
+		SLEEPMGR_ACTIVE,    // UHD_STATE_OFF (not used)
+		SLEEPMGR_ACTIVE, // UHD_STATE_WAIT_ID_HOST
+		SLEEPMGR_ACTIVE, // UHD_STATE_NO_VBUS
+		SLEEPMGR_ACTIVE, // UHD_STATE_DISCONNECT
+		SLEEPMGR_ACTIVE, // UHD_STATE_SUSPEND
+		SLEEPMGR_ACTIVE, // UHD_STATE_IDLE
 	};
 
 	static enum uhd_uhp_state_enum uhd_state = UHD_STATE_OFF;
@@ -239,9 +240,15 @@ void uhd_enable(void)
 {
 	irqflags_t flags;
 
+	uhd_sleep_mode(UHD_STATE_DISCONNECT);
+
+#if SAMG55
+	matrix_set_usb_host();
+#endif
+
 	//* Enable USB hardware clock
-//	sysclk_enable_usb();
 	pmc_enable_periph_clk(ID_UHP);
+	sysclk_enable_usb();
 
 	// Always authorize asynchronous USB interrupts to exit of sleep mode
 	// For SAMG55 USB wake up device except BACKUP mode
@@ -253,10 +260,10 @@ void uhd_enable(void)
 	flags = cpu_irq_save();
 
 	ohci_init();
-	ohci_register_callback(OHCI_INTERRUPT_WDH, uhd_transfer_end);
-	ohci_register_callback(OHCI_INTERRUPT_SF, uhd_sof_interrupt);
-	ohci_register_callback(OHCI_INTERRUPT_RD, uhd_remote_wakeup);
-	ohci_register_callback(OHCI_INTERRUPT_RHSC, uhd_status_change);
+	ohci_register_callback(OHCI_INTERRUPT_WDH, (void *)uhd_transfer_end);
+	ohci_register_callback(OHCI_INTERRUPT_SF, (void *)uhd_sof_interrupt);
+	ohci_register_callback(OHCI_INTERRUPT_RD, (void *)uhd_remote_wakeup);
+	ohci_register_callback(OHCI_INTERRUPT_RHSC, (void *)uhd_status_change);
 
 	cpu_irq_restore(flags);
 }
@@ -272,7 +279,7 @@ void uhd_disable(bool b_id_stop)
 
 	// Do not authorize asynchronous USB interrupts
 //	pmc_clr_fast_startup_input(PMC_FSMR_USBAL);
-//	sysclk_disable_usb();
+	sysclk_disable_usb();
 	pmc_disable_periph_clk(ID_UHP);
 	uhd_sleep_mode(UHD_STATE_OFF);
 
