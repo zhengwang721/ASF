@@ -115,7 +115,7 @@ extern "C" {
  * \retval 1 Baud rate set point is out of range for the given input clock
  * frequency.
  */
-static uint32_t usart_set_async_baudrate(Usart *p_usart,
+uint32_t usart_set_async_baudrate(Usart *p_usart,
 		uint32_t baudrate, uint32_t ul_mck)
 {
 	uint32_t over;

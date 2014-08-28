@@ -198,6 +198,8 @@ typedef struct {
 } usart_spi_opt_t;
 
 void usart_reset(Usart *p_usart);
+uint32_t usart_set_async_baudrate(Usart *p_usart,
+		uint32_t baudrate, uint32_t ul_mck);
 uint32_t usart_init_rs232(Usart *p_usart,
 		const sam_usart_opt_t *p_usart_opt, uint32_t ul_mck);
 uint32_t usart_init_hw_handshaking(Usart *p_usart,

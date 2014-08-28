@@ -131,7 +131,6 @@ static void usart_sleepwalking_test_active(void)
 	/* Wait for the match interrupt */
 	while (!cmp_flag) {
 	}
-
 	puts("'s' character is received.\r\n\r");
 
 }
@@ -152,8 +151,15 @@ static void usart_sleepwalking_test_wait(void)
 	 * reconfig the divisor */
 	const sam_usart_opt_t usart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
+#ifdef CONF_UART_CHAR_LENGTH
+		.char_length = CONF_UART_CHAR_LENGTH,
+#endif
+		.parity_type = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stop_bits = CONF_UART_STOP_BITS,
+#endif
 	};	 
-	usart_init_rs232(CONSOLE_UART, &usart_serial_options, OSC_MAINCK_24M_RC_HZ);
+	usart_set_async_baudrate(CONSOLE_UART, CONF_UART_BAUDRATE, OSC_MAINCK_24M_RC_HZ);
 
 	/* Wait for the clock stable. */
 	delay_ms(5);
@@ -170,7 +176,7 @@ static void usart_sleepwalking_test_wait(void)
 	sleepmgr_enter_sleep();
 
 	/* Config the divisor to the original setting */
-	usart_init_rs232(CONSOLE_UART, &usart_serial_options, sysclk_get_peripheral_hz());
+	usart_set_async_baudrate(CONSOLE_UART, CONF_UART_BAUDRATE, sysclk_get_peripheral_hz());
 
 	/* Wait for the clock stable. */
 	delay_ms(5);
