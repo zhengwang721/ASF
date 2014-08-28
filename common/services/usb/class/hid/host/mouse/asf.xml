@@ -81,6 +81,7 @@
 
 		<build type="doxygen-example-path" value="."/>
 		<build type="doxygen-example-path" value="../../"/>
+		<build type="doxygen-example-path" value="../../../"/>
 		<build type="doxygen-entry-point" value="asfdoc_uhi_hid_mouse_group"/>
 
 		<require idref="common.services.usb.uhc.appnote"/>
