@@ -112,9 +112,8 @@ void sysclk_set_source(uint32_t ul_src)
 	case SYSCLK_SRC_PLLBCK:
 		pmc_mck_set_source(PMC_MCKR_CSS_PLLB_CLK);
 		break;
-	}
 #endif
-
+	}
 	SystemCoreClockUpdate();
 }
 

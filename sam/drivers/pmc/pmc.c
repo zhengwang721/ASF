@@ -921,6 +921,30 @@ uint32_t pmc_switch_pck_to_upllck(uint32_t ul_id, uint32_t ul_pres)
 #endif
 
 /**
+ * \brief Switch programmable clock source selection to mck.
+ *
+ * \param ul_id Id of the programmable clock.
+ * \param ul_pres Programmable clock prescaler.
+ *
+ * \retval 0 Success.
+ * \retval 1 Timeout error.
+ */
+uint32_t pmc_switch_pck_to_mck(uint32_t ul_id, uint32_t ul_pres)
+{
+	uint32_t ul_timeout;
+
+	PMC->PMC_PCK[ul_id] = PMC_PCK_CSS_MCK | ul_pres;
+	for (ul_timeout = PMC_TIMEOUT;
+	!(PMC->PMC_SR & (PMC_SR_PCKRDY0 << ul_id)); --ul_timeout) {
+		if (ul_timeout == 0) {
+			return 1;
+		}
+	}
+
+	return 0;
+}
+
+/**
  * \brief Enable the specified programmable clock.
  *
  * \param ul_id Id of the programmable clock.

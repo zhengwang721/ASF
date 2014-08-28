@@ -90,6 +90,8 @@ typedef struct {
 #define TWIHS_CR_PECDIS (0x1u << 13) /**< \brief (TWIHS_CR) Packet Error Checking Disable */
 #define TWIHS_CR_PECRQ (0x1u << 14) /**< \brief (TWIHS_CR) PEC Request */
 #define TWIHS_CR_CLEAR (0x1u << 15) /**< \brief (TWIHS_CR) Bus CLEAR Command */
+#define TWIHS_CR_ACMEN (0x1u << 16) /**< \brief (TWIHS_CR) Alternative Command Mode Enable */
+#define TWIHS_CR_ACMDIS (0x1u << 17) /**< \brief (TWIHS_CR) Alternative Command Mode Disable */
 /* -------- TWIHS_MMR : (TWIHS Offset: 0x04) Master Mode Register -------- */
 #define TWIHS_MMR_IADRSZ_Pos 8
 #define TWIHS_MMR_IADRSZ_Msk (0x3u << TWIHS_MMR_IADRSZ_Pos) /**< \brief (TWIHS_MMR) Internal Device Address Size */
@@ -240,6 +242,17 @@ typedef struct {
 #define TWIHS_SMBTR_THMAX_Pos 24
 #define TWIHS_SMBTR_THMAX_Msk (0xffu << TWIHS_SMBTR_THMAX_Pos) /**< \brief (TWIHS_SMBTR) Clock High Maximum Cycles */
 #define TWIHS_SMBTR_THMAX(value) ((TWIHS_SMBTR_THMAX_Msk & ((value) << TWIHS_SMBTR_THMAX_Pos)))
+/* -------- TWIHS_ACR : (TWIHS Offset: 0x40) Alternative Command Register -------- */
+#define TWIHS_ACR_DATAL_Pos 0
+#define TWIHS_ACR_DATAL_Msk (0xffu << TWIHS_ACR_DATAL_Pos) /**< \brief (TWIHS_ACR) Data Length */
+#define TWIHS_ACR_DATAL(value) ((TWIHS_ACR_DATAL_Msk & ((value) << TWIHS_ACR_DATAL_Pos)))
+#define TWIHS_ACR_DIR (0x1u << 8) /**< \brief (TWIHS_ACR) Transfer Direction */
+#define TWIHS_ACR_PEC (0x1u << 9) /**< \brief (TWIHS_ACR) PEC Request (SMBus Mode only) */
+#define TWIHS_ACR_NDATAL_Pos 16
+#define TWIHS_ACR_NDATAL_Msk (0xffu << TWIHS_ACR_NDATAL_Pos) /**< \brief (TWIHS_ACR) Next Data Length */
+#define TWIHS_ACR_NDATAL(value) ((TWIHS_ACR_NDATAL_Msk & ((value) << TWIHS_ACR_NDATAL_Pos)))
+#define TWIHS_ACR_NDIR (0x1u << 24) /**< \brief (TWIHS_ACR) Next Transfer Direction */
+#define TWIHS_ACR_NPEC (0x1u << 25) /**< \brief (TWIHS_ACR) Next PEC Request (SMBus Mode only) */
 /* -------- TWIHS_FILTR : (TWIHS Offset: 0x44) Filter Register -------- */
 #define TWIHS_FILTR_FILT (0x1u << 0) /**< \brief (TWIHS_FILTR) RX Digital Filter */
 #define TWIHS_FILTR_PADFEN (0x1u << 1) /**< \brief (TWIHS_FILTR) PAD Filter Enable */

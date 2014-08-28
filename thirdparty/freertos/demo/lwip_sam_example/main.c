@@ -199,7 +199,7 @@ static void configure_console(void)
 
 	/* Configure UART pins */
 	ioport_set_port_peripheral_mode(PINS_UART0_PORT, PINS_UART0,
-			PINS_UART0_MASK);
+			PINS_UART0_FLAGS);
 
 	/* Configure console UART. */
 	sysclk_enable_peripheral_clock(CONSOLE_UART_ID);

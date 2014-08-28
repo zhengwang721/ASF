@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief USART Serial Configuration
+ * \brief TWIHS Slave Example configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,18 +41,21 @@
  *
  */
 
-#ifndef CONF_USART_SERIAL_H_INCLUDED
-#define CONF_USART_SERIAL_H_INCLUDED
+/* Configuration of TWIHS Slave Example */
 
-/** UART Interface */
-#define CONF_UART            CONSOLE_UART
-/** Baudrate setting */
-#define CONF_UART_BAUDRATE   (115200UL)
-/** Character length setting */
-#define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
-/** Parity setting */
-#define CONF_UART_PARITY     US_MR_PAR_NO
-/** Stop bits setting */
-#define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
+#ifndef CONF_TWIHS_SLAVE_EXAMPLE_H_INCLUDED
+#define CONF_TWIHS_SLAVE_EXAMPLE_H_INCLUDED
 
-#endif/* CONF_USART_SERIAL_H_INCLUDED */
+/** Definition of TWIHS interrupt ID on board. */
+#define BOARD_TWIHS_IRQn          TWI4_IRQn
+#define BOARD_TWIHS_Handler       TWI4_Handler
+
+/** TWIHS ID for SLAVE application to use */
+#define BOARD_ID_TWIHS_SLAVE          ID_TWI4
+/** TWI Base for TWIHS SLAVE application to use */
+#define BOARD_BASE_TWIHS_SLAVE        TWI4
+
+/** Flexcom SLAVE application to use */
+#define BOARD_FLEXCOM_TWIHS_SLAVE          FLEXCOM4
+
+#endif /* CONF_TWIHS_SLAVE_EXAMPLE_H_INCLUDED */
