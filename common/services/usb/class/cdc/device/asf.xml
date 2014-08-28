@@ -154,6 +154,7 @@
 
 		<build type="doxygen-example-path" value="."/>
 		<build type="doxygen-example-path" value="../../"/>
+		<build type="doxygen-example-path" value="../../../"/>
 		<build type="doxygen-entry-point" value="asfdoc_udi_cdc_group" />
 
 		<device-support value="samd21"/>
