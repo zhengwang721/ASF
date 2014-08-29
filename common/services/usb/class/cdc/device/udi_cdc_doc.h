@@ -561,7 +561,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  * \page asfdoc_udi_cdc_exqsg Quick Start Guide for USB device Communication Class Device Module (UDI CDC)
  *
  * This is the quick start guide for the \ref asfdoc_udi_cdc_group
- * "USB device interface CDC module (UDI CDC)" with step-by-step instructions on
+ * "USB Device Interface CDC Module (UDI CDC)" with step-by-step instructions on
  * how to configure and use the modules in a selection of use cases.
  *
  * The use cases contain or highlights several code fragments.
