@@ -81,7 +81,7 @@
 /**@}*/
 
 /**
- * \name Functions required by UHC.
+ * \name Functions Required by UHC.
  * @{
  */
 
