@@ -299,11 +299,11 @@ void pmc_clr_fast_startup_input(uint32_t ul_inputs);
 void pmc_cp_set_fast_startup_input(uint32_t ul_inputs);
 void pmc_cp_clr_fast_startup_input(uint32_t ul_inputs);
 #endif
-#if (!SAMG)
+#if (!(SAMG51 || SAMG53 || SAMG54))
 void pmc_enable_sleepmode(uint8_t uc_type);
 #endif
 void pmc_enable_waitmode(void);
-#if (!SAMG)
+#if (!(SAMG51 || SAMG53 || SAMG54))
 void pmc_enable_backupmode(void);
 #endif
 //@}

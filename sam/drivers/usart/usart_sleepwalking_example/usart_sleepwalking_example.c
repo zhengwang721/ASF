@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief UART Sleepwalking Example for SAM.
+ * \brief USART Sleepwalking Example for SAM.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,15 +42,15 @@
  */
 
 /**
- * \mainpage UART Sleepwalking Example
+ * \mainpage USART Sleepwalking Example
  *
  * \section Purpose
  *
- * The example demonstrates how to use sleepwalking function of the UART.
+ * The example demonstrates how to use sleepwalking function of the USART.
  *
  * \section Requirements
  *
- * This example can be used on SAMG53 device.
+ * This example can be used on SAMG55 device.
  *
  * \note The example use a loose match condition to wake up the system
  * from wait mode.
@@ -75,7 +75,7 @@
  * -# In the terminal window, the following text should appear (values depend
  *    on the board and chip used):
  *    \code
-	-- Uart Sleepwalking Example xxx --
+	-- Usart Sleepwalking Example xxx --
 	-- xxxxxx-xx
 	-- Compiled: xxx xx xxxx xx:xx:xx --
 \endcode
@@ -86,7 +86,7 @@
 #include "conf_example.h"
 
 #define STRING_EOL    "\r"
-#define STRING_HEADER "-- UART Sleepwalking Example --\r\n" \
+#define STRING_HEADER "-- USART Sleepwalking Example --\r\n" \
 		"-- "BOARD_NAME" --\r\n" \
 		"-- Compiled: "__DATE__" "__TIME__" --"STRING_EOL
 
@@ -94,24 +94,24 @@
 volatile uint32_t cmp_flag = 0;
 
 /**
- * \brief Interrupt handler for UART interrupt.
+ * \brief Interrupt handler for USART interrupt.
  */
 void console_uart_irq_handler(void)
 {
-	/* Get UART status and check if CMP is set */
-	if (uart_get_status(CONSOLE_UART) & UART_SR_CMP) {
+	/* Get USART status and check if CMP is set */
+	if (usart_get_status(CONSOLE_UART) & US_CSR_CMP) {
 		cmp_flag = 1;
-		/* Disable UART IRQ */
-		uart_disable_interrupt(CONSOLE_UART, UART_IDR_CMP);
+		/* Disable USART IRQ */
+		usart_disable_interrupt(CONSOLE_UART, US_IDR_CMP);
 	}
 }
 
 /**
- * \brief Test the uart sleepwalking in active mode.
+ * \brief Test the usart sleepwalking in active mode.
  */
-static void uart_sleepwalking_test_active(void)
+static void usart_sleepwalking_test_active(void)
 {
-	uint8_t temp;
+	uint32_t temp;
 
 	puts("Test in active mode, press 's' to continue.\r");
 
@@ -119,13 +119,13 @@ static void uart_sleepwalking_test_active(void)
 	delay_ms(50);
 
 	/* Enable UART IRQ */
-	uart_enable_interrupt(CONSOLE_UART, UART_IER_CMP);
+	usart_enable_interrupt(CONSOLE_UART, US_IER_CMP);
 
 	/* Enable UART interrupt */
 	NVIC_EnableIRQ(CONSOLE_UART_IRQn);
 
 	/* Set the match condition */
-	uart_set_sleepwalking(CONSOLE_UART, 's', true, true, 's');
+	usart_set_sleepwalking(CONSOLE_UART, 's', true, true, 's');
 
 	/* Enable the sleepwalking in PMC */
 	pmc_enable_sleepwalking(CONSOLE_UART_ID);
@@ -133,19 +133,17 @@ static void uart_sleepwalking_test_active(void)
 	/* Wait for the match interrupt */
 	while (!cmp_flag) {
 	}
-	uart_read(CONSOLE_UART, &temp);
 
+	usart_read(CONSOLE_UART, &temp);
 	puts("'s' character is received.\r\n\r");
 
 }
 
 /**
- * \brief Test the uart sleepwalking in wait mode.
+ * \brief Test the usart sleepwalking in wait mode.
  */
-static void uart_sleepwalking_test_wait(void)
+static void usart_sleepwalking_test_wait(void)
 {
-	uint16_t divisor = 0;
-
 	enum sleepmgr_mode current_sleep_mode = SLEEPMGR_WAIT;
 
 	puts("Test in wait mode, press number '0' to '9' to wake up.\r");
@@ -155,14 +153,13 @@ static void uart_sleepwalking_test_wait(void)
 
 	/* The sleep manage will set the clock to 24MRC in wait mode,
 	 * reconfig the divisor */
-	divisor = OSC_MAINCK_24M_RC_HZ / CONF_UART_BAUDRATE / UART_MCK_DIV;
-	uart_set_clock_divisor(CONSOLE_UART, divisor);
+	usart_set_async_baudrate(CONSOLE_UART, CONF_UART_BAUDRATE, OSC_MAINCK_24M_RC_HZ);
 
 	/* Wait for the clock stable. */
 	delay_ms(5);
 
 	/* Set the wakeup condition */
-	uart_set_sleepwalking(CONSOLE_UART, '0', true, true, '9');
+	usart_set_sleepwalking(CONSOLE_UART, '0', true, true, '9');
 
 	/* Enable the sleepwalking in PMC */
 	pmc_enable_sleepwalking(CONSOLE_UART_ID);
@@ -173,8 +170,7 @@ static void uart_sleepwalking_test_wait(void)
 	sleepmgr_enter_sleep();
 
 	/* Config the divisor to the original setting */
-	divisor = (sysclk_get_peripheral_hz() / CONF_UART_BAUDRATE) / UART_MCK_DIV;
-	uart_set_clock_divisor(CONSOLE_UART, divisor);
+	usart_set_async_baudrate(CONSOLE_UART, CONF_UART_BAUDRATE, sysclk_get_peripheral_hz());
 
 	/* Wait for the clock stable. */
 	delay_ms(5);
@@ -190,7 +186,13 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
 	};
 	
 	/* Configure console UART. */
@@ -216,12 +218,12 @@ int main(void)
 	puts(STRING_HEADER);
 
 	/* First test sleepwalking in active mode */
-	uart_sleepwalking_test_active();
+	usart_sleepwalking_test_active();
 
 	delay_s(1);
 
 	/* Then test sleepwalking in wait mode */
-	uart_sleepwalking_test_wait();
+	usart_sleepwalking_test_wait();
 
 	puts("All test are done.\r\n\r");
 
