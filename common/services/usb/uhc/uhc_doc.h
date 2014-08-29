@@ -312,7 +312,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \section USB_HOST_CALLBACK USB Host User Callback
  * The following optional USB host callback can be defined in the conf_usb_host.h
- * file of the application.
+ * file of the application:
  *
  * \b 1. void UHC_MODE_CHANGE(bool b_host_mode).
  *
