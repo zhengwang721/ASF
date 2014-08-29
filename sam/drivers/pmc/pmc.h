@@ -235,7 +235,7 @@ bool pmc_is_cpbmck_enabled(void);
 void pmc_cpck_set_prescaler(uint32_t ul_pres);
 void pmc_cpck_set_source(uint32_t ul_source);
 #endif
-#if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP)
+#if (SAM3S || SAM4S || SAM4C || SAM4CM || SAM4CP || SAMG55)
 uint32_t pmc_switch_pck_to_pllbck(uint32_t ul_id, uint32_t ul_pres);
 #endif
 #if (SAM3XA || SAM3U)
