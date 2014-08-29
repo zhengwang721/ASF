@@ -190,7 +190,7 @@ bool udi_hid_kbd_down(uint8_t key_id);
  * \page asfdoc_udi_hid_keyboard_exqsg Quick Start Guide for USB Device Keyboard Module (UDI Keyboard)
  *
  * This is the quick start guide for the \ref asfdoc_udi_hid_keyboard_group
- * "USB device keyboard module (UDI keyboard)" with step-by-step instructions on
+ * "USB Device Keyboard Module (UDI Keyboard)" with step-by-step instructions on
  * how to configure and use the modules in a selection of use cases.
  *
  * The use cases contain several code fragments. The code fragments in the
@@ -200,7 +200,7 @@ bool udi_hid_kbd_down(uint8_t key_id);
  * \section udi_hid_keyboard_basic_use_case Basic Use Case
  * In this basic use case, the "USB HID keyboard (Single Interface Device)" module is used.
  * The "USB HID keyboard (Composite Device)" module usage is described in \ref udi_hid_keyboard_use_cases
- * "Advanced use cases".
+ * "Advanced Use Cases".
  *
  * \section udi_hid_keyboard_basic_use_case_setup Setup Steps
  * As a USB device, it follows common USB device setup steps. Refer to
@@ -274,7 +274,7 @@ bool udi_hid_kbd_down(uint8_t key_id);
  udi_hid_kbd_down(uint8_t key_id);
  \endcode
  *
- * \section uhi_hid_keyboard_use_cases Advanced Use Cases
+ * \section udi_hid_keyboard_use_cases Advanced Use Cases
  * \ifnot ASF_MANUAL
  * For more advanced use of the UHI HID keyboard module, see the following use cases:
  * - \subpage udi_hid_keyboard_use_case_composite
