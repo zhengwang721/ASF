@@ -369,7 +369,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  * \page asfdoc_udi_vendor_exqsg Quick Start Guide for USB Device Vendor Module (UDI Vendor)
  *
  * This is the quick start guide for the \ref asfdoc_udi_vendor_group
- * "USB Device vendor module (udi vendor)" with step-by-step instructions on
+ * "USB Device Vendor Module (UDI Vendor)" with step-by-step instructions on
  * how to configure and use the modules in a selection of use cases.
  *
  * The use cases highlights several code fragments. The code fragments in the
