@@ -122,6 +122,7 @@
 		<device-support value="sam4l"/>
 		<device-support value="sam4e"/>
 		<device-support value="samd21"/>
+		<device-support value="samd11"/>
 		<device-support value="samr21"/>
 		<device-support value="sam4c32e"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
@@ -154,6 +155,7 @@
 
 		<build type="doxygen-example-path" value="."/>
 		<build type="doxygen-example-path" value="../../"/>
+		<build type="doxygen-example-path" value="../../../"/>
 		<build type="doxygen-entry-point" value="asfdoc_udi_cdc_group" />
 
 		<device-support value="samd21"/>
