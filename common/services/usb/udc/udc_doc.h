@@ -136,7 +136,7 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  * \section asfdoc_udc_device_cfg Custom Configuration
  *
  * The following USB Device configuration must be included in the conf_usb.h
- * file of the application.
+ * file of the application:
  *
  * \b 1. USB_DEVICE_VENDOR_ID (Word).
  *
