@@ -317,7 +317,7 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
  * \page asfdoc_uhi_msc_exqsg Quick Start Guide for USB Host Mass-Storage Module (UHI MSC)
  *
  * This is the quick start guide for the \ref asfdoc_uhi_msc_group
- * "USB host mass-storage module (UHI MSC)" with step-by-step instructions on
+ * "USB Host Mass-Storage Module (UHI MSC)" with step-by-step instructions on
  * how to configure and use the modules in a selection of use cases.
  *
  * The use cases highlights several code fragments. The code fragments in the
