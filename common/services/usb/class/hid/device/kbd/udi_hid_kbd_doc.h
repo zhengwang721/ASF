@@ -406,7 +406,7 @@ bool udi_hid_kbd_down(uint8_t key_id);
  * \include example/at32uc3b0256_evk1101/conf_clock.h
  *
  * \subsection asfdoc_udi_hid_keyboard_config_examples_2_2 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U Devices (USBC)
- * \include example/atuc128d3_stk600_rcuc3d/conf_clock.h
+ * \include example/atuc128d3_stk600-rcuc3d/conf_clock.h
  *
  * \subsection asfdoc_udi_hid_keyboard_config_examples_2_3 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
  * \include example/sam3x8h_sam3x_ek/conf_clock.h
@@ -422,7 +422,7 @@ bool udi_hid_kbd_down(uint8_t key_id);
  * \include example/at32uc3b0256_evk1101/conf_board.h
  *
  * \subsection asfdoc_udi_hid_keyboard_config_examples_4_2 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U Devices (USBC)
- * \include example/atuc128d3_stk600_rcuc3d/conf_board.h
+ * \include example/atuc128d3_stk600-rcuc3d/conf_board.h
  *
  * \subsection asfdoc_udi_hid_keyboard_config_examples_4_3 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
  * \include example/sam3x8h_sam3x_ek/conf_board.h
