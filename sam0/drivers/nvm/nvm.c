@@ -106,8 +106,13 @@ enum status_code nvm_set_config(
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
 
+#if (SAML21)
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, MCLK_APBBMASK_NVMCTRL);
+#else
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, PM_APBBMASK_NVMCTRL);
+#endif
 
 	/* Clear error flags */
 	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
@@ -124,6 +129,11 @@ enum status_code nvm_set_config(
 			NVMCTRL_CTRLB_RWS(config->wait_states) |
 			((config->disable_cache & 0x01) << NVMCTRL_CTRLB_CACHEDIS_Pos) |
 			NVMCTRL_CTRLB_READMODE(config->cache_readmode);
+#if (SAML21)
+	if(config->fast_wake_up){
+		nvm_module->CTRLB.reg |= NVMCTRL_CTRLB_FWUP;
+	}
+#endif
 
 
 	/* Initialize the internal device struct */
@@ -176,7 +186,14 @@ enum status_code nvm_execute_command(
 
 	/* Check that the address given is valid  */
 	if (address > ((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)){
+#ifdef FEATURE_NVM_WWREE
+		if (address >= ((uint32_t)NVMCTRL_WWR_EEPROM_SIZE + NVMCTRL_WWR_EEPROM_ADDR)
+			|| address < NVMCTRL_WWR_EEPROM_ADDR){
+			return STATUS_ERR_BAD_ADDRESS;
+		}
+#else
 		return STATUS_ERR_BAD_ADDRESS;
+#endif
 	}
 
 	/* Get a pointer to the module hardware instance */
@@ -214,6 +231,10 @@ enum status_code nvm_execute_command(
 		case NVM_COMMAND_WRITE_PAGE:
 		case NVM_COMMAND_LOCK_REGION:
 		case NVM_COMMAND_UNLOCK_REGION:
+#ifdef FEATURE_NVM_WWREE
+		case NVM_COMMAND_WWREE_ERASE_ROW:
+		case NVM_COMMAND_WWREE_WRITE_PAGE:
+#endif
 
 			/* Set address, command will be issued elsewhere */
 			nvm_module->ADDR.reg = (uintptr_t)&NVM_MEMORY[address / 4];
@@ -377,7 +398,14 @@ enum status_code nvm_write_buffer(
 	/* Check if the destination address is valid */
 	if (destination_address >
 			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
+#ifdef FEATURE_NVM_WWREE
+		if (destination_address >= ((uint32_t)NVMCTRL_WWR_EEPROM_SIZE + NVMCTRL_WWR_EEPROM_ADDR)
+			|| destination_address < NVMCTRL_WWR_EEPROM_ADDR){
+			return STATUS_ERR_BAD_ADDRESS;
+		}
+#else
 		return STATUS_ERR_BAD_ADDRESS;
+#endif
 	}
 
 	/* Check if the write address not aligned to the start of a page */
@@ -469,7 +497,14 @@ enum status_code nvm_read_buffer(
 	/* Check if the source address is valid */
 	if (source_address >
 			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
+#ifdef FEATURE_NVM_WWREE
+		if (source_address >= ((uint32_t)NVMCTRL_WWR_EEPROM_SIZE + NVMCTRL_WWR_EEPROM_ADDR)
+			|| source_address < NVMCTRL_WWR_EEPROM_ADDR){
+			return STATUS_ERR_BAD_ADDRESS;
+		}
+#else
 		return STATUS_ERR_BAD_ADDRESS;
+#endif
 	}
 
 	/* Check if the read address is not aligned to the start of a page */
@@ -537,7 +572,14 @@ enum status_code nvm_erase_row(
 	/* Check if the row address is valid */
 	if (row_address >
 			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
+#ifdef FEATURE_NVM_WWREE
+		if (row_address >= ((uint32_t)NVMCTRL_WWR_EEPROM_SIZE + NVMCTRL_WWR_EEPROM_ADDR)
+			|| row_address < NVMCTRL_WWR_EEPROM_ADDR){
+			return STATUS_ERR_BAD_ADDRESS;
+		}
+#else
 		return STATUS_ERR_BAD_ADDRESS;
+#endif
 	}
 
 	/* Check if the address to erase is not aligned to the start of a row */
@@ -595,6 +637,12 @@ void nvm_get_parameters(
 	parameters->nvm_number_of_pages =
 			(param_reg & NVMCTRL_PARAM_NVMP_Msk) >> NVMCTRL_PARAM_NVMP_Pos;
 
+#ifdef FEATURE_NVM_WWREE
+	/* Mask out wwree number of pages count */
+	parameters->wwree_number_of_pages =
+			(param_reg & NVMCTRL_PARAM_WWREEP_Msk) >> NVMCTRL_PARAM_WWREEP_Pos;
+#endif
+
 	/* Read the current EEPROM fuse value from the USER row */
 	uint16_t eeprom_fuse_value =
 			(NVM_USER_MEMORY[NVMCTRL_FUSES_EEPROM_SIZE_Pos / 16] &
@@ -643,6 +691,10 @@ bool nvm_is_page_locked(uint16_t page_number)
 	uint16_t pages_in_region;
 	uint16_t region_number;
 
+#ifdef FEATURE_NVM_WWREE
+	Assert(page_number < _nvm_dev.number_of_pages);
+#endif
+
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
 
@@ -676,9 +728,22 @@ static void _nvm_translate_raw_fusebits_to_struct (
 			((raw_user_row[0] & NVMCTRL_FUSES_EEPROM_SIZE_Msk)
 			>> NVMCTRL_FUSES_EEPROM_SIZE_Pos);
 
+#if (SAML21)
 	fusebits->bod33_level = (uint8_t)
-			((raw_user_row[0] & SYSCTRL_FUSES_BOD33USERLEVEL_Msk)
-			>> SYSCTRL_FUSES_BOD33USERLEVEL_Pos);
+			((raw_user_row[0] & SUPC_FUSES_BOD33USERLEVEL_Msk)
+			>> SUPC_FUSES_BOD33USERLEVEL_Pos);
+
+	fusebits->bod33_enable = (bool)
+			((raw_user_row[0] & SUPC_FUSES_BOD33_DIS_Msk)
+			>> SUPC_FUSES_BOD33_DIS_Pos);
+
+	fusebits->bod33_action = (enum nvm_bod33_action)
+			((raw_user_row[0] & SUPC_FUSES_BOD33_ACTION_Msk)
+			>> SUPC_FUSES_BOD33_ACTION_Pos);
+#else
+	fusebits->bod33_level = (uint8_t)
+				((raw_user_row[0] & SYSCTRL_FUSES_BOD33USERLEVEL_Msk)
+				>> SYSCTRL_FUSES_BOD33USERLEVEL_Pos);
 
 	fusebits->bod33_enable = (bool)
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_EN_Msk)
@@ -688,6 +753,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_ACTION_Msk)
 			>> SYSCTRL_FUSES_BOD33_ACTION_Pos);
 
+#endif
 	fusebits->wdt_enable = (bool)
 			((raw_user_row[0] & WDT_FUSES_ENABLE_Msk) >> WDT_FUSES_ENABLE_Pos);
 
@@ -699,10 +765,15 @@ static void _nvm_translate_raw_fusebits_to_struct (
 
 	/* WDT Windows timout lay between two 32-bit words in the user row. Because only one bit lays in word[0],
 	   bits in word[1] must be left sifted by one to make the correct number */
+#if (SAML21)
+	fusebits->wdt_window_timeout = (enum nvm_wdt_window_timeout)
+			(((raw_user_row[0] & (0x1u << 31)) >> 31) |
+			((raw_user_row[1] & WDT_FUSES_WINDOW_Msk) << 1));
+#else
 	fusebits->wdt_window_timeout = (enum nvm_wdt_window_timeout)
 			(((raw_user_row[0] & WDT_FUSES_WINDOW_0_Msk) >> WDT_FUSES_WINDOW_0_Pos) |
 			((raw_user_row[1] & WDT_FUSES_WINDOW_1_Msk) << 1));
-
+#endif
 	fusebits->wdt_early_warning_offset = (enum nvm_wdt_early_warning_offset)
 			((raw_user_row[1] & WDT_FUSES_EWOFFSET_Msk) >> WDT_FUSES_EWOFFSET_Pos);
 
