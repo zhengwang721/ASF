@@ -78,7 +78,7 @@ static void ui_wakeup_handler(uint32_t id, uint32_t mask)
 
 void ui_init(void)
 {
-	sleepmgr_lock_mode(SLEEPMGR_SLEEP_WFI);
+	sleepmgr_lock_mode(SLEEPMGR_ACTIVE);
 	/* Set handler for push button */
 	pio_handler_set(WAKEUP_PIO, WAKEUP_PIO_ID, WAKEUP_PIO_MASK,
 		WAKEUP_PIO_ATTR, ui_wakeup_handler);

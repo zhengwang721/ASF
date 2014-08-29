@@ -46,11 +46,11 @@
 #define USART_ENABLE()
 #define USART_DISABLE()
 #define BOARD_FLEXCOM    FLEXCOM7
-#define USART_BASE       ((Usart*)UART0)
-#define USART_ID         ID_UART0
+#define USART_BASE       ((Usart*)USART7)
+#define USART_ID         ID_USART7
 
-#define USART_HANDLER    UART0_Handler
-#define USART_INT_IRQn   UART0_IRQn
+#define USART_HANDLER    USART7_Handler
+#define USART_INT_IRQn   USART7_IRQn
 #define USART_INT_LEVEL  3
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */

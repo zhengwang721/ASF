@@ -46,6 +46,9 @@
 #include "uart.h"
 #include "main.h"
 #include "ui.h"
+#if (SAMG55)
+#include "flexcom.h"
+#endif
 
 #if SAMG55
 #   define USART_PERIPH_CLK_ENABLE() flexcom_enable(BOARD_FLEXCOM);      \

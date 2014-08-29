@@ -46,6 +46,9 @@
 #include "uart.h"
 #include "main.h"
 #include "ui.h"
+#if (SAMG55)
+#include "flexcom.h"
+#endif
 
 #if SAM4L
 #   define USART_PERIPH_CLK_ENABLE() sysclk_enable_peripheral_clock(USART_BASE)

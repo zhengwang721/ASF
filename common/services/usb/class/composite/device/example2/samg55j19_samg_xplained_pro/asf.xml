@@ -8,6 +8,7 @@
 		<build type="header-file" value="conf_sleepmgr.h"/>
 		<build type="c-source" value="ui.c"/>
 		<build type="include-path" value="."/>
+		<require idref="sam.drivers.flexcom"/>
 		<require idref="common.components.memory.virtual_mem"/>
 		<require idref="common.services.usb.class.composite.device.example.hids_cdc_msc"/>
 		<config name="config.common.services.usb.class.device" value="composite"/>
