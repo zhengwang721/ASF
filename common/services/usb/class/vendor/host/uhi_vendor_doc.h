@@ -302,7 +302,7 @@ bool uhi_vendor_iso_is_available(void);
  * \page asfdoc_uhi_vendor_exqsg Quick Start Guide for USB Host Vendor Module (UHI Vendor)
  *
  * This is the quick start guide for the \ref asfdoc_uhi_vendor_group
- * "USB host vendor module (UHI vendor)" with step-by-step instructions on
+ * "USB Host Vendor Module (UHI Vendor)" with step-by-step instructions on
  * how to configure and use the modules in a selection of use cases.
  *
  * The use cases highlights several code fragments. The code fragments in the
