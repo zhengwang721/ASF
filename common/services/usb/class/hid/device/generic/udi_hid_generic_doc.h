@@ -305,7 +305,7 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  udi_hid_generic_send_report_in(report);
  \endcode
  *
- * \section uhi_hid_generic_use_cases Advanced Use Cases
+ * \section udi_hid_generic_use_cases Advanced Use Cases
  * \ifnot ASF_MANUAL
  * For more advanced use of the UHI HID generic module, see the following use cases:
  * - \subpage udi_hid_generic_use_case_composite
