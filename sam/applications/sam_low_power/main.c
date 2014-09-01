@@ -178,7 +178,11 @@ static void set_default_working_clock(void)
 #endif
 
 	/* Save current clock */
+#if SAMG55
+	g_ul_current_mck = 48000000; /* 48MHz */
+#else
 	g_ul_current_mck = 24000000; /* 24MHz */
+#endif
 }
 
 /**
@@ -188,7 +192,13 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
 	};
 
 	/* Configure console UART. */
@@ -201,17 +211,21 @@ static void configure_console(void)
 /**
  *  Reconfigure UART console for changed MCK and baudrate.
  */
- #if SAMG55
+#if SAMG55
 static void reconfigure_console(uint32_t ul_mck, uint32_t ul_baudrate)
 {
 	sam_usart_opt_t uart_serial_options;
 	
 	uart_serial_options.baudrate = ul_baudrate,
+	uart_serial_options.char_length = CONF_UART_CHAR_LENGTH,
 	uart_serial_options.parity_type = US_MR_PAR_NO;
+	uart_serial_options.stop_bits = CONF_UART_STOP_BITS,
+	uart_serial_options.channel_mode= US_MR_CHMODE_NORMAL,
+	uart_serial_options.irda_filter = 0,
 
 	/* Configure PMC */
-	flexcom_enable(FLEXCOM7);
-	flexcom_set_opmode(FLEXCOM7, FLEXCOM_MR_OPMODE_USART);
+	flexcom_enable(CONF_FLEXCOM);
+	flexcom_set_opmode(CONF_FLEXCOM, FLEXCOM_MR_OPMODE_USART);
 
 	/* Configure PIO */
 	pio_configure_pin_group(CONF_UART_PIO, CONF_PINS_UART,
@@ -219,6 +233,9 @@ static void reconfigure_console(uint32_t ul_mck, uint32_t ul_baudrate)
 
 	/* Configure UART */
 	usart_init_rs232(CONF_UART, &uart_serial_options, ul_mck);
+	/* Enable the receiver and transmitter. */
+	usart_enable_tx(CONF_UART);
+	usart_enable_rx(CONF_UART);
 }
 #else
 static void reconfigure_console(uint32_t ul_mck, uint32_t ul_baudrate)

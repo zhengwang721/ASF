@@ -66,10 +66,10 @@ uint32_t g_fastrc_clock_list[][3] = {
 /** Clock list from PLL */
 uint32_t g_pll_clock_list[][4] = {
 	/* MCK, MUL, DIV, PRES */
-	/* MCK = 32000 * (999+1) / 1 / 1 = 32 MHz */
-	{32000000, 999, 1, PMC_MCKR_PRES_CLK_1},
-	/* MCK = 32000 * (1499+1) / 1 / 1 = 48 MHz */
-	{48000000, 1499, 1, PMC_MCKR_PRES_CLK_1},
+	/* MCK = 32768 * (1464+1) / 1 / 1 = 48 MHz */
+	{48000000, 1465, 1, PMC_MCKR_PRES_CLK_1},
+	/* MCK = 32000 * (2929+1) / 1 / 1 = 96 MHz */
+	{96000000, 2930, 1, PMC_MCKR_PRES_CLK_1},
 };
 
 /**

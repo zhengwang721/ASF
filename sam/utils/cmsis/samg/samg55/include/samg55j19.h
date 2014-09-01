@@ -235,7 +235,7 @@ typedef struct _DeviceVectors
   void* pvReserved46;
   void* pfnUHP_Handler;     /* 47 USB OHCI */
   void* pfnUDP_Handler;     /* 48 USB Device FS */
-  void* pvReserved49;       /*  */
+  void* pfnCRCCU_Handler;       /*  49 CRCCU*/
   void* pvReserved50;       /*  */
   void* pvReserved51;       /*  */
   void* pvReserved52;       /*  */
@@ -315,6 +315,7 @@ void USART5_Handler      ( void );
 void USART6_Handler      ( void );
 void USART7_Handler      ( void );
 void WDT_Handler        ( void );
+void CRCCU_Handler        ( void );
 
 /**
  * \brief Configuration of the Cortex-M4 Processor and Core Peripherals 

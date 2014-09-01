@@ -48,8 +48,15 @@
 #define CONF_UART            CONSOLE_UART
 /** Baudrate setting */
 #define CONF_UART_BAUDRATE   (115200UL)
+/** Character length setting */
+#define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
 /** Parity setting */
 #define CONF_UART_PARITY     US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
+
+/** Flexcom Interface */
+#define CONF_FLEXCOM            FLEXCOM7
 
 /* Configure UART pins PIO */
 #define CONF_UART_PIO PINS_USART7_PIO
@@ -58,6 +65,6 @@
 #define CONF_PINS_UART PINS_USART7
 
 /* Configure UART pins flags */
-#define CONF_PINS_UART_FLAGS (PIO_PERIPH_A | PIO_DEFAULT)
+#define CONF_PINS_UART_FLAGS (PIO_PERIPH_B | PIO_DEFAULT)
 
 #endif/* CONF_USART_SERIAL_H_INCLUDED */
