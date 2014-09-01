@@ -375,8 +375,8 @@ static inline enum status_code system_set_sleepmode(
 {
 #if (SAMD20 || SAMD21)
 	/* Errata: Make sure that the Flash does not power all the way down
-	 * when in STANDBY, IDLE1 and IDLE2. */
-	NVMCTRL->CTRLB.bit.SLEEPPRM = 3;
+	 * when in sleep mode. */
+	NVMCTRL->CTRLB.bit.SLEEPPRM = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val;
 #endif
 	switch (sleep_mode) {
 		case SYSTEM_SLEEPMODE_IDLE_0:
