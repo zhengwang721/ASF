@@ -734,7 +734,7 @@ static inline void system_pac_disable_event(void)
 	PAC->EVCTRL.reg &= (~PAC_EVCTRL_ERREO);
 }
 
- /** @}  */
+/** @}  */
 #endif
 
 #ifdef __cplusplus
