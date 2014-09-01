@@ -1360,7 +1360,7 @@ void pmc_enable_backupmode(void)
 	while (SUPC->SUPC_SR & SUPC_SR_BUPPORS);
 #endif
 	SCB->SCR |= SCB_SCR_SLEEPDEEP_Msk;
-#if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CM || SAM4CP)
+#if (SAM4S || SAM4E || SAM4N || SAM4C || SAM4CM || SAM4CP || SAMG55)
 	SUPC->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF_STOP_VREG;
 	__WFE();
 	__WFI();
