@@ -67,7 +67,7 @@
 /** Hint message for sleep mode */
 #define STRING_SLEEP \
 		"Enter into sleep mode.\n\r" \
-		"- Press WAKU button to wake up.\n\r"
+		"- Press SW0 button to wake up.\n\r"
 
 /** Hint message for wait mode */
 #define STRING_WAIT \
@@ -78,7 +78,7 @@
 /** Hint message for backup mode */
 #define STRING_BACKUP \
 		"Enter into backup mode.\n\r" \
-		"- Touch the LCD screen to wake up.\n\r"
+		"- Press SW0 button to wake up.\n\r"
 
 #define CLOCK_LIST_MENU \
 		"\n\rSelect one of the following clock configurations:\n\r" \
@@ -90,18 +90,22 @@
 		"  6: 8MHz from Fast RC\n\r"                       \
 		"  7: 16MHz from Fast RC\n\r"                      \
 		"  8: 24MHz from Fast RC\n\r"                      \
-		"  a: 32MHz from PLL clock\n\r"                    \
-		"  b: 48MHz from PLL clock\n\r"                    \
+		"  a: 48MHz from PLL clock\n\r"                    \
+		"  b: 96MHz from PLL clock\n\r"                    \
 
 #define MIN_CLOCK_FAST_RC_ITEM '1'
 #define MAX_CLOCK_FAST_RC_ITEM '8'
 #define MIN_CLOCK_PLL_ITEM     'a'
 #define MAX_CLOCK_PLL_ITEM     'b'
 
+#define example_set_wakeup_from_backup_mode() \
+	supc_set_wakeup_inputs(SUPC, WAKEUP_BACKUP_INPUT_ID, \
+			0)
+
 extern uint32_t g_fastrc_clock_list[][3];
 extern uint32_t g_pll_clock_list[][4];
 
-#define PLL_DEFAULT_MUL  732
+#define PLL_DEFAULT_MUL  1465
 #define PLL_DEFAULT_DIV  1
 #define MCK_DEFAULT_DIV  PMC_MCKR_PRES_CLK_1
 
