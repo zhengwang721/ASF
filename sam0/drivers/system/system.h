@@ -373,6 +373,11 @@ static inline void system_voltage_reference_disable(
 static inline enum status_code system_set_sleepmode(
 	const enum system_sleepmode sleep_mode)
 {
+#if (SAMD20 || SAMD21)
+	/* Errata: Make sure that the Flash does not power all the way down
+	 * when in STANDBY, IDLE1 and IDLE2. */
+	NVMCTRL->CTRLB.bit.SLEEPPRM = 3;
+#endif
 	switch (sleep_mode) {
 		case SYSTEM_SLEEPMODE_IDLE_0:
 		case SYSTEM_SLEEPMODE_IDLE_1:
