@@ -102,7 +102,7 @@ void system_board_init(void)
 #if defined (CONF_BOARD_UART_CONSOLE)
 	/* Configure UART pins */
 	ioport_set_port_peripheral_mode(PINS_USART7_PORT, PINS_USART7,
-			PINS_USART7_MASK);
+			PINS_USART7_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_USART_RXD
@@ -163,6 +163,11 @@ void system_board_init(void)
 #if defined(CONF_BOARD_TWI2) || defined(CONF_BOARD_AT30TSE)
 	ioport_set_pin_peripheral_mode(TWI2_DATA_GPIO, TWI2_DATA_FLAGS);
 	ioport_set_pin_peripheral_mode(TWI2_CLK_GPIO, TWI2_CLK_FLAGS);
+#endif
+
+#ifdef CONF_BOARD_TWI4
+	ioport_set_pin_peripheral_mode(TWI4_DATA_GPIO, TWI4_DATA_FLAGS);
+	ioport_set_pin_peripheral_mode(TWI4_CLK_GPIO, TWI4_CLK_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_I2S0

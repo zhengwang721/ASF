@@ -66,6 +66,7 @@ void __libc_init_array(void);
 
 /* Default empty handler */
 void Dummy_Handler(void);
+void Dummy_Handler2(void);
 
 /* Cortex-M4 core handlers */
 void NMI_Handler        ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
@@ -133,6 +134,7 @@ void ADC_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void ARM_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void UHP_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 void UDP_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
+void CRCCU_Handler     ( void ) __attribute__ ((weak, alias("Dummy_Handler")));
 
 /* Exception Table */
 __attribute__ ((section(".vectors")))
@@ -170,45 +172,31 @@ const DeviceVectors exception_table = {
 #else
         .pvReserved7        = (void*) (0UL),           /* 7  Reserved */
 #endif /* _SAMG55_USART7_INSTANCE_ */
-#ifdef _SAMG55_SPI7_INSTANCE_
-        .pfnSPI7_Handler    = (void*) SPI7_Handler,    /* 7  FLEXCOM 7 */
-#else
-        .pvReserved7        = (void*) (0UL),           /* 7  Reserved */
-#endif /* _SAMG55_SPI7_INSTANCE_ */
-#ifdef _SAMG55_TWI7_INSTANCE_
-        .pfnTWI7_Handler    = (void*) TWI7_Handler,    /* 7  FLEXCOM 7 */
-#else
-        .pvReserved7        = (void*) (0UL),           /* 7  Reserved */
-#endif /* _SAMG55_TWI7_INSTANCE_ */
         .pfnUSART0_Handler  = (void*) USART0_Handler,  /* 8  FLEXCOM 0 */
-        .pfnSPI0_Handler    = (void*) SPI0_Handler,    /* 8  FLEXCOM 0 */
-        .pfnTWI0_Handler    = (void*) TWI0_Handler,    /* 8  FLEXCOM 0 */
         .pfnUSART1_Handler  = (void*) USART1_Handler,  /* 9  FLEXCOM 1 */
-        .pfnSPI1_Handler    = (void*) SPI1_Handler,    /* 9  FLEXCOM 1 */
-        .pfnTWI1_Handler    = (void*) TWI1_Handler,    /* 9  FLEXCOM 1 */
         .pvReserved10       = (void*) (0UL),           /* 10 Reserved */
         .pfnPIOA_Handler    = (void*) PIOA_Handler,    /* 11 Parallel I/O Controller A */
         .pfnPIOB_Handler    = (void*) PIOB_Handler,    /* 12 Parallel I/O Controller B */
         .pfnPDMIC0_Handler  = (void*) PDMIC0_Handler,  /* 13 PDM 0 */
         .pfnUSART2_Handler  = (void*) USART2_Handler,  /* 14 FLEXCOM2 */
-        .pfnSPI2_Handler    = (void*) SPI2_Handler,    /* 14 FLEXCOM2 */
-        .pfnTWI2_Handler    = (void*) TWI2_Handler,    /* 14 FLEXCOM2 */
+//        .pfnSPI2_Handler    = (void*) SPI2_Handler,    /* 14 FLEXCOM2 */
+//        .pfnTWI2_Handler    = (void*) TWI2_Handler,    /* 14 FLEXCOM2 */
         .pfnMEM2MEM_Handler = (void*) MEM2MEM_Handler, /* 15 MEM2MEM */
         .pfnI2SC0_Handler   = (void*) I2SC0_Handler,   /* 16 I2SC0 */
         .pfnI2SC1_Handler   = (void*) I2SC1_Handler,   /* 17 I2SC1 */
         .pfnPDMIC1_Handler  = (void*) PDMIC1_Handler,  /* 18 PDM 1 */
         .pfnUSART3_Handler  = (void*) USART3_Handler,  /* 19 FLEXCOM3 */
-        .pfnSPI3_Handler    = (void*) SPI3_Handler,    /* 19 FLEXCOM3 */
-        .pfnTWI3_Handler    = (void*) TWI3_Handler,    /* 19 FLEXCOM3 */
-        .pfnUSART4_Handler  = (void*) USART4_Handler,  /* 20 FLEXCOM4 */
-        .pfnSPI4_Handler    = (void*) SPI4_Handler,    /* 20 FLEXCOM4 */
+//        .pfnSPI3_Handler    = (void*) SPI3_Handler,    /* 19 FLEXCOM3 */
+//        .pfnTWI3_Handler    = (void*) TWI3_Handler,    /* 19 FLEXCOM3 */
+       // .pfnUSART4_Handler  = (void*) USART4_Handler,  /* 20 FLEXCOM4 */
+       //.pfnSPI4_Handler    = (void*) SPI4_Handler,    /* 20 FLEXCOM4 */
         .pfnTWI4_Handler    = (void*) TWI4_Handler,    /* 20 FLEXCOM4 */
         .pfnUSART5_Handler  = (void*) USART5_Handler,  /* 21 FLEXCOM5 */
-        .pfnSPI5_Handler    = (void*) SPI5_Handler,    /* 21 FLEXCOM5 */
-        .pfnTWI5_Handler    = (void*) TWI5_Handler,    /* 21 FLEXCOM5 */
+//        .pfnSPI5_Handler    = (void*) SPI5_Handler,    /* 21 FLEXCOM5 */
+//        .pfnTWI5_Handler    = (void*) TWI5_Handler,    /* 21 FLEXCOM5 */
         .pfnUSART6_Handler  = (void*) USART6_Handler,  /* 22 FLEXCOM6 */
-        .pfnSPI6_Handler    = (void*) SPI6_Handler,    /* 22 FLEXCOM6 */
-        .pfnTWI6_Handler    = (void*) TWI6_Handler,    /* 22 FLEXCOM6 */
+//        .pfnSPI6_Handler    = (void*) SPI6_Handler,    /* 22 FLEXCOM6 */
+//        .pfnTWI6_Handler    = (void*) TWI6_Handler,    /* 22 FLEXCOM6 */
         .pfnTC0_Handler     = (void*) TC0_Handler,     /* 23 Timer/Counter 0 */
         .pfnTC1_Handler     = (void*) TC1_Handler,     /* 24 Timer/Counter 1 */
         .pfnTC2_Handler     = (void*) TC2_Handler,     /* 25 Timer/Counter 2 */
@@ -235,7 +223,7 @@ const DeviceVectors exception_table = {
         .pvReserved46       = (void*) (0UL),           /* 46 Reserved */
         .pfnUHP_Handler     = (void*) UHP_Handler,     /* 47 USB OHCI */
         .pfnUDP_Handler     = (void*) UDP_Handler,     /* 48 USB Device FS */
-        .pvReserved49       = (void*) (0UL)            /* 49 Reserved */
+        .pfnCRCCU_Handler   = (void*) (CRCCU_Handler)  /* 49 CRCCU */
 };
 
 /* TEMPORARY PATCH FOR SCB */
@@ -295,3 +283,10 @@ void Dummy_Handler(void)
         while (1) {
         }
 }
+
+void Dummy_Handler2(void)
+{
+        while (1) {
+        }
+}
+

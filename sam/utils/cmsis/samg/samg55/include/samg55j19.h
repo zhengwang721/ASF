@@ -178,37 +178,37 @@ typedef struct _DeviceVectors
   void* pfnPMC_Handler;     /*  5 Power Management Controller */
   void* pfnEFC_Handler;     /*  6 Enhanced Flash Controller */
   void* pfnUSART7_Handler;       /* USART7 */
-  void* pfnSPI7_Handler;       /* SPI7 */
-  void* pfnTWI7_Handler;       /* TWI7 */
+//  void* pfnSPI7_Handler;       /* SPI7 */
+//  void* pfnTWI7_Handler;       /* TWI7 */
   void* pfnUSART0_Handler;  /* 8  FLEXCOM 0 */
-  void* pfnSPI0_Handler;    /* 8  FLEXCOM 0 */
-  void* pfnTWI0_Handler;    /* 8  FLEXCOM 0 */
+//  void* pfnSPI0_Handler;    /* 8  FLEXCOM 0 */
+//  void* pfnTWI0_Handler;    /* 8  FLEXCOM 0 */
   void* pfnUSART1_Handler;  /* 9  FLEXCOM 1 */
-  void* pfnSPI1_Handler;    /* 9  FLEXCOM 1 */
-  void* pfnTWI1_Handler;    /* 9  FLEXCOM 1 */
+//  void* pfnSPI1_Handler;    /* 9  FLEXCOM 1 */
+//  void* pfnTWI1_Handler;    /* 9  FLEXCOM 1 */
   void* pvReserved10;
   void* pfnPIOA_Handler;    /* 11 Parallel I/O Controller A */
   void* pfnPIOB_Handler;    /* 12 Parallel I/O Controller B */
   void* pfnPDMIC0_Handler;  /* 13 PDM 0 */
   void* pfnUSART2_Handler;  /* 14  FLEXCOM 2 */
-  void* pfnSPI2_Handler;    /* 14  FLEXCOM 2 */
-  void* pfnTWI2_Handler;    /* 14  FLEXCOM 2 */
+//  void* pfnSPI2_Handler;    /* 14  FLEXCOM 2 */
+//  void* pfnTWI2_Handler;    /* 14  FLEXCOM 2 */
   void* pfnMEM2MEM_Handler; /* 15 MEM2MEM */
   void* pfnI2SC0_Handler;   /* 16 I2SC0 */
   void* pfnI2SC1_Handler;   /* 17 I2SC1 */
   void* pfnPDMIC1_Handler;  /* 18 PDM 1 */
   void* pfnUSART3_Handler;  /* 19  FLEXCOM 3 */
-  void* pfnSPI3_Handler;    /* 19  FLEXCOM 3 */
-  void* pfnTWI3_Handler;    /* 19  FLEXCOM 3 */
-  void* pfnUSART4_Handler;  /* 20  FLEXCOM 4 */
-  void* pfnSPI4_Handler;    /* 20  FLEXCOM 4 */
+//  void* pfnSPI3_Handler;    /* 19  FLEXCOM 3 */
+//  void* pfnTWI3_Handler;    /* 19  FLEXCOM 3 */
+ // void* pfnUSART4_Handler;  /* 20  FLEXCOM 4 */
+//  void* pfnSPI4_Handler;    /* 20  FLEXCOM 4 */
   void* pfnTWI4_Handler;    /* 20  FLEXCOM 4 */
   void* pfnUSART5_Handler;  /* 21  FLEXCOM 5 */
-  void* pfnSPI5_Handler;    /* 21  FLEXCOM 5 */
-  void* pfnTWI5_Handler;    /* 21  FLEXCOM 5 */
+//  void* pfnSPI5_Handler;    /* 21  FLEXCOM 5 */
+//  void* pfnTWI5_Handler;    /* 21  FLEXCOM 5 */
   void* pfnUSART6_Handler;  /* 22  FLEXCOM 6 */
-  void* pfnSPI6_Handler;    /* 22  FLEXCOM 6 */
-  void* pfnTWI6_Handler;    /* 22  FLEXCOM 6 */
+//  void* pfnSPI6_Handler;    /* 22  FLEXCOM 6 */
+//  void* pfnTWI6_Handler;    /* 22  FLEXCOM 6 */
   void* pfnTC0_Handler;     /* 23 Timer/Counter 0 */
   void* pfnTC1_Handler;     /* 24 Timer/Counter 1 */
   void* pfnTC2_Handler;     /* 25 Timer/Counter 2 */
@@ -235,7 +235,7 @@ typedef struct _DeviceVectors
   void* pvReserved46;
   void* pfnUHP_Handler;     /* 47 USB OHCI */
   void* pfnUDP_Handler;     /* 48 USB Device FS */
-  void* pvReserved49;       /*  */
+  void* pfnCRCCU_Handler;       /*  49 CRCCU*/
   void* pvReserved50;       /*  */
   void* pvReserved51;       /*  */
   void* pvReserved52;       /*  */
@@ -315,6 +315,7 @@ void USART5_Handler      ( void );
 void USART6_Handler      ( void );
 void USART7_Handler      ( void );
 void WDT_Handler        ( void );
+void CRCCU_Handler        ( void );
 
 /**
  * \brief Configuration of the Cortex-M4 Processor and Core Peripherals 
