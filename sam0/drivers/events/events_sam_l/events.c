@@ -149,6 +149,7 @@ void events_get_config_defaults(struct events_config *config)
 	config->generator    = EVSYS_ID_GEN_NONE;
 	config->clock_source = GCLK_GENERATOR_0;
 	config->run_in_standby = false;
+	config->on_demand    = false;
 }
 
 enum status_code events_allocate(
@@ -181,6 +182,7 @@ enum status_code events_allocate(
 	EVSYS->CHANNEL[new_channel].reg = EVSYS_CHANNEL_EVGEN(config->generator) |
 			EVSYS_CHANNEL_PATH(config->path)                                 |
 			((uint32_t)config->run_in_standby << EVSYS_CHANNEL_RUNSTDBY_Pos) |
+			((uint32_t)config->on_demand << EVSYS_CHANNEL_ONDEMAND_Pos) |
 			EVSYS_CHANNEL_EDGSEL(config->edge_detect);
 
 	return STATUS_OK;
@@ -289,7 +291,7 @@ enum status_code events_attach_user(struct events_resource *resource, uint8_t us
 	Assert(resource);
 
 	/* Channel number is n + 1 */
-	EVSYS->USER[resource->channel].reg = EVSYS_USER_CHANNEL(resource->channel + 1);
+	EVSYS->USER[user_id].reg = EVSYS_USER_CHANNEL(resource->channel + 1);
 
 	return STATUS_OK;
 }
@@ -300,7 +302,7 @@ enum status_code events_detach_user(struct events_resource *resource, uint8_t us
 	Assert(resource);
 
 	/* Write 0 to the channel bit field to select no input */
-	EVSYS->USER[resource->channel].reg = 0;
+	EVSYS->USER[user_id].reg = 0;
 
 	return STATUS_OK;
 }

@@ -46,8 +46,6 @@
 			<require idref="sam0.drivers.system"/>
 
 			<device-support value="sam0"/>
-
-			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 
 		<module type="driver" id="sam0.drivers.events#hook" caption="EVSYS - Event System with interupt hooks support">
@@ -73,8 +71,6 @@
 			<require idref="sam0.drivers.system"/>
 
 			<device-support value="sam0"/>
-
-			<generator value="doxygen-module-v2" default-mcu="unspecified-samd20"/>
 		</module>
 	</select-by-config>
 
