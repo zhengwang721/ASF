@@ -420,7 +420,7 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define PAC_STATUSA_OFFSET          0x34         /**< \brief (PAC_STATUSA offset) Peripheral write protection status - Bridge A */
-#define PAC_STATUSA_RESETVALUE      0x00001000   /**< \brief (PAC_STATUSA reset_value) Peripheral write protection status - Bridge A */
+#define PAC_STATUSA_RESETVALUE      0x00003000   /**< \brief (PAC_STATUSA reset_value) Peripheral write protection status - Bridge A */
 
 #define PAC_STATUSA_PM_Pos          0            /**< \brief (PAC_STATUSA) PM APB Protect Enable */
 #define PAC_STATUSA_PM              (0x1u << PAC_STATUSA_PM_Pos)

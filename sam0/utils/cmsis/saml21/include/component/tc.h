@@ -51,7 +51,7 @@
 /*@{*/
 
 #define TC_U2249
-#define REV_TC                      0x100
+#define REV_TC                      0x110
 
 /* -------- TC_CTRLA : (TC Offset: 0x00) (R/W 32) Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

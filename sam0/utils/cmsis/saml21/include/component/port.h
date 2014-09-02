@@ -51,7 +51,7 @@
 /*@{*/
 
 #define PORT_U2210
-#define REV_PORT                    0x200
+#define REV_PORT                    0x201
 
 /* -------- PORT_DIR : (PORT Offset: 0x00) (R/W 32) GROUP Data Direction -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
