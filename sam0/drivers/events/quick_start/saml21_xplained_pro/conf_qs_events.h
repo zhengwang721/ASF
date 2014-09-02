@@ -1,9 +1,9 @@
-/*
+/**
  * \file
  *
- * \brief SAM Event System Controller Driver
+ * \brief Events example configuration.
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,29 +40,13 @@
  * \asf_license_stop
  *
  */
-#ifndef _EVENTS_COMMON_H_INCLUDED_
-#define _EVENTS_COMMON_H_INCLUDED_
 
-/**
- * \internal Internal module structure to manage necessary globals
- *
- *
- */
-struct _events_module {
-	/* Allocated channels bitmask where 1 means allocated */
-	volatile uint32_t allocated_channels;
-	/* Free channels */
-	uint8_t           free_channels;
+#ifndef CONF_EXAMPLE_H_INCLUDED
+#define CONF_EXAMPLE_H_INCLUDED
 
-#if EVENTS_INTERRUPT_HOOKS_MODE == true
-	/* Buffer to store a copy of the current interrupt flags */
-	volatile uint32_t interrupt_flag_buffer;
-	/* Buffer to store acknowledged interrupt sources */
-	volatile uint32_t interrupt_flag_ack_buffer;
+//[definition_event]
+#define CONF_EVENT_GENERATOR    EVSYS_ID_GEN_TC4_MCX_0
+#define CONF_EVENT_USER         EVSYS_ID_USER_TC3_EVU
+//[definition_event]
 
-	/* Interrupt hook linked list start pointer */
-	struct events_hook *hook_list;
-#endif
-};
-
-#endif
+#endif /* CONF_EXAMPLE_H_INCLUDED */
