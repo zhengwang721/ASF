@@ -129,12 +129,6 @@ enum status_code nvm_set_config(
 			NVMCTRL_CTRLB_RWS(config->wait_states) |
 			((config->disable_cache & 0x01) << NVMCTRL_CTRLB_CACHEDIS_Pos) |
 			NVMCTRL_CTRLB_READMODE(config->cache_readmode);
-#if (SAML21)
-	if(config->fast_wake_up){
-		nvm_module->CTRLB.reg |= NVMCTRL_CTRLB_FWUP;
-	}
-#endif
-
 
 	/* Initialize the internal device struct */
 	_nvm_dev.page_size         = (8 << nvm_module->PARAM.bit.PSZ);
@@ -639,7 +633,7 @@ void nvm_get_parameters(
 
 #ifdef FEATURE_NVM_WWREE
 	/* Mask out wwree number of pages count */
-	parameters->wwree_number_of_pages =
+	parameters->wwr_eeprom_number_of_pages =
 			(param_reg & NVMCTRL_PARAM_WWREEP_Msk) >> NVMCTRL_PARAM_WWREEP_Pos;
 #endif
 
@@ -763,13 +757,12 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->wdt_timeout_period = (uint8_t)
 			((raw_user_row[0] & WDT_FUSES_PER_Msk) >> WDT_FUSES_PER_Pos);
 
-	/* WDT Windows timout lay between two 32-bit words in the user row. Because only one bit lays in word[0],
-	   bits in word[1] must be left sifted by one to make the correct number */
 #if (SAML21)
 	fusebits->wdt_window_timeout = (enum nvm_wdt_window_timeout)
-			(((raw_user_row[0] & (0x1u << 31)) >> 31) |
-			((raw_user_row[1] & WDT_FUSES_WINDOW_Msk) << 1));
+			((raw_user_row[1] & WDT_FUSES_WINDOW_Msk) >> WDT_FUSES_WINDOW_Pos);
 #else
+	/* WDT Windows timout lay between two 32-bit words in the user row. Because only one bit lays in word[0],
+	   bits in word[1] must be left sifted by one to make the correct number */
 	fusebits->wdt_window_timeout = (enum nvm_wdt_window_timeout)
 			(((raw_user_row[0] & WDT_FUSES_WINDOW_0_Msk) >> WDT_FUSES_WINDOW_0_Pos) |
 			((raw_user_row[1] & WDT_FUSES_WINDOW_1_Msk) << 1));

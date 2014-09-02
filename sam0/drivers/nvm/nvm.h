@@ -428,10 +428,6 @@ struct nvm_config {
 	 * Select the mode for  how the cache will pre-fetch data from the flash.
 	 */
 	enum nvm_cache_readmode cache_readmode;
-#if (SAML21)
-	/** Fast wake-up */
-	bool fast_wake_up;
-#endif
 };
 
 /**
@@ -452,7 +448,7 @@ struct nvm_parameters {
 	uint32_t bootloader_number_of_pages;
 #ifdef FEATURE_NVM_WWREE
 	/** Number of pages in read while write EEPROM(WWREE) emulation area. */
-	uint16_t wwree_number_of_pages;
+	uint16_t wwr_eeprom_number_of_pages;
 #endif
 };
 
@@ -611,9 +607,6 @@ static inline void nvm_get_config_defaults(
 	config->wait_states       = NVMCTRL->CTRLB.bit.RWS;
 	config->disable_cache     = false;
 	config->cache_readmode    = NVM_CACHE_READMODE_NO_MISS_PENALTY;
-#if (SAML21)
-	config->fast_wake_up      = false;
-#endif
 }
 
 enum status_code nvm_set_config(
