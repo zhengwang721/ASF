@@ -118,11 +118,6 @@
 #define PORT_PB22                  (1u << 22) /**< \brief PORT Mask  for PB22 */
 #define PIN_PB23                          55  /**< \brief Pin Number for PB23 */
 #define PORT_PB23                  (1u << 23) /**< \brief PORT Mask  for PB23 */
-/* ========== PORT definition for CM0P peripheral ========== */
-#define PIN_PA30G_CM0P_SWCLK              30  /**< \brief CM0P signal: SWCLK on PA30 mux G */
-#define MUX_PA30G_CM0P_SWCLK               6
-#define PINMUX_PA30G_CM0P_SWCLK    ((PIN_PA30G_CM0P_SWCLK << 16) | MUX_PA30G_CM0P_SWCLK)
-#define PORT_PA30G_CM0P_SWCLK      (1u << 30)
 /* ========== PORT definition for RSTC peripheral ========== */
 #define PIN_PA00A_RSTC_EXTWAKE0            0  /**< \brief RSTC signal: EXTWAKE0 on PA00 mux A */
 #define MUX_PA00A_RSTC_EXTWAKE0            0
