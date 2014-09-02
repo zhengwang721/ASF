@@ -43,7 +43,9 @@
 
 #include "conf_usb.h"
 #include "sysclk.h"
+#if SAMG55
 #include "matrix.h"
+#endif
 #include "udd.h"
 #include "udp_device.h"
 #include <string.h>
