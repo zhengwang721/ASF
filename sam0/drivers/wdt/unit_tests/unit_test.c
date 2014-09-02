@@ -199,7 +199,11 @@ static void cdc_uart_init(void)
 int main(void)
 {
 	/* Check whether reset cause was Watchdog */
+#if (SAML21)
+	wdr_flag = (system_get_reset_cause() & RSTC_RCAUSE_WDT);
+#else
 	wdr_flag = (system_get_reset_cause() & PM_RCAUSE_WDT);
+#endif
 	system_init();
 
 	/* Reset the Watchdog count */

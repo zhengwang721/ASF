@@ -91,7 +91,7 @@ enum status_code wdt_set_config(
 	}
 
 	/* Disable the Watchdog module */
-	WDT_module->CTRLA.reg &= ~WDT_CTRL_ENABLE;
+	WDT_module->CTRLA.reg &= ~WDT_CTRLA_ENABLE;
 
 	if(config->enable == false) {
 		return STATUS_OK;
@@ -108,13 +108,13 @@ enum status_code wdt_set_config(
 
 	/* Check if the user has requested a reset window period */
 	if (config->window_period != WDT_PERIOD_NONE) {
-		WDT_module->CTRLA.reg |= WDT_CTRL_WEN;
+		WDT_module->CTRLA.reg |= WDT_CTRLA_WEN;
 
 		/* Update and enable the timeout period value */
 		new_config |= (config->window_period - 1) << WDT_CONFIG_WINDOW_Pos;
 	} else {
 		/* Ensure the window enable control flag is cleared */
-		WDT_module->CTRLA.reg &= ~WDT_CTRL_WEN;
+		WDT_module->CTRLA.reg &= ~WDT_CTRLA_WEN;
 	}
 
 	/* Write the new Watchdog configuration */
@@ -134,9 +134,9 @@ enum status_code wdt_set_config(
 	/* Either enable or lock-enable the Watchdog timer depending on the user
 	 * settings */
 	if (config->always_on) {
-		WDT_module->CTRLA.reg |= WDT_CTRL_ALWAYSON;
+		WDT_module->CTRLA.reg |= WDT_CTRLA_ALWAYSON;
 	} else {
-		WDT_module->CTRLA.reg |= WDT_CTRL_ENABLE;
+		WDT_module->CTRLA.reg |= WDT_CTRLA_ENABLE;
 	}
 
 	return STATUS_OK;

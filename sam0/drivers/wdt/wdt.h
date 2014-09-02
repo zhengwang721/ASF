@@ -63,6 +63,7 @@
  *  - SAM D20/D21
  *  - SAM R21
  *  - SAM D10/D11
+ *  - SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_wdt_prerequisites
@@ -282,7 +283,7 @@ static inline bool wdt_is_syncing(void)
 	Wdt *const WDT_module = WDT;
 
 #if (SAML21)
-	if (WDT_module->STATUS.reg) {
+	if (WDT_module->SYNCBUSY.reg) {
 #else
 	if (WDT_module->STATUS.reg & WDT_STATUS_SYNCBUSY) {
 #endif
@@ -319,7 +320,9 @@ static inline void wdt_get_config_defaults(
 	/* Default configuration values */
 	config->always_on            = false;
 	config->enable               = true;
+#if !(SAML21)
 	config->clock_source         = GCLK_GENERATOR_4;
+#endif
 	config->timeout_period       = WDT_PERIOD_16384CLK;
 	config->window_period        = WDT_PERIOD_NONE;
 	config->early_warning_period = WDT_PERIOD_NONE;
@@ -340,7 +343,7 @@ static inline bool wdt_is_locked(void)
 	Wdt *const WDT_module = WDT;
 
 #if (SAML21)
-	return (WDT_module->CTRLA.reg & WDT_CTRL_ALWAYSON);
+	return (WDT_module->CTRLA.reg & WDT_CTRLA_ALWAYSON);
 #else
 	return (WDT_module->CTRL.reg & WDT_CTRL_ALWAYSON);
 #endif
@@ -461,6 +464,11 @@ void wdt_reset_count(void);
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>09/2014</td>
+ *		<td>Added SAML21 support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
