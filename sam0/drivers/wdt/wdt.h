@@ -244,8 +244,12 @@ struct wdt_conf {
 	bool always_on;
 	/** Enable/Disable the Watchdog Timer */
 	bool enable;
+#if (SAML21)
+	/** ULP1K enabled after POR */
+#else
 	/** GCLK generator used to clock the peripheral */
 	enum gclk_generator clock_source;
+#endif
 	/** Number of Watchdog timer clock ticks until the Watchdog expires. */
 	enum wdt_period timeout_period;
 	/** Number of Watchdog timer clock ticks until the reset window opens. */
@@ -277,7 +281,11 @@ static inline bool wdt_is_syncing(void)
 {
 	Wdt *const WDT_module = WDT;
 
+#if (SAML21)
+	if (WDT_module->STATUS.reg) {
+#else
 	if (WDT_module->STATUS.reg & WDT_STATUS_SYNCBUSY) {
+#endif
 		return true;
 	}
 
@@ -331,7 +339,11 @@ static inline bool wdt_is_locked(void)
 {
 	Wdt *const WDT_module = WDT;
 
+#if (SAML21)
+	return (WDT_module->CTRLA.reg & WDT_CTRL_ALWAYSON);
+#else
 	return (WDT_module->CTRL.reg & WDT_CTRL_ALWAYSON);
+#endif
 }
 
 /** @} */

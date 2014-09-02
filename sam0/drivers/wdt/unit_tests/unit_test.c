@@ -72,6 +72,7 @@
  *  - SAM D20 Xplained Pro board
  *  - SAM D21 Xplained Pro board
  *  - SAM R21 Xplained Pro board
+ *  - SAM L21 Xplained Pro board
  *
  * \section appdoc_sam0_wdt_unit_test_setup Setup
  * The following connections has to be made using wires:
@@ -211,7 +212,9 @@ int main(void)
 		config_wdt.enable = false;
 	}
 	/* Set the desired configuration */
+#if !(SAML21)
 	config_wdt.clock_source         = CONF_WDT_GCLK_GEN;
+#endif
 	config_wdt.timeout_period       = CONF_WDT_TIMEOUT_PERIOD;
 	config_wdt.early_warning_period = CONF_WDT_EARLY_WARNING_PERIOD;
 	wdt_set_config(&config_wdt);
