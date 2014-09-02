@@ -88,8 +88,8 @@ void udc_stop(void);
 /**
  * \brief Attach device to the bus when possible
  *
- * \warning If a VBus control is included in driver,
- * then it will attach device when an acceptable Vbus
+ * \warning If a VBUS control is included in driver,
+ * then it will attach device when an acceptable VBUS
  * level from the host is detected.
  */
 static inline void udc_attach(void)
@@ -176,7 +176,7 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  *  - USB_CONFIG_ATTR_SELF_POWERED
  *  - USB_CONFIG_ATTR_REMOTE_WAKEUP
  *
- * \note If remote wake enabled then defines remotewakeup callbacks.
+ * \note If remote wake is enabled, this defines remotewakeup callbacks.
  *
  * \b 10. USB_DEVICE_LOW_SPEED (Only defined).
  *
@@ -190,20 +190,20 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  *
  * Define the maximum endpoint number used by the USB Device.
  *
- * This one is already defined in UDI default configuration.
- * Ex:
- * - When endpoint control 0x00, endpoint 0x01 and
- *   endpoint 0x82 is used then USB_DEVICE_MAX_EP=2
- * - When only endpoint control 0x00 is used then USB_DEVICE_MAX_EP=0
- * - When endpoint 0x01 and endpoint 0x81 is used then USB_DEVICE_MAX_EP=1
+ * This one is already defined in the UDI default configuration.
+ * E.g.:
+ * - When endpoint control 0x00, endpoint 0x01, and
+ *   endpoint 0x82 is used, then USB_DEVICE_MAX_EP=2
+ * - When only endpoint control 0x00 is used, then USB_DEVICE_MAX_EP=0
+ * - When endpoint 0x01 and endpoint 0x81 is used, then USB_DEVICE_MAX_EP=1
  *   (configuration not possible on USBB interface)
  *
- * \section asfdoc_udc_vbus_monitoring VBus Monitoring
+ * \section asfdoc_udc_vbus_monitoring VBUS Monitoring
  *
- * The VBus monitoring is used only for USB SELF Power application.
+ * The VBUS monitoring is used only for USB SELF Power application.
  *
- * - By default the USB device is automatically attached when Vbus is high
- *   or when USB starts for devices without internal Vbus monitoring.
+ * - By default the USB device is automatically attached when VBUS is high
+ *   or when USB starts for devices without internal VBUS monitoring.
  *   conf_usb.h file does not contains definition USB_DEVICE_ATTACH_AUTO_DISABLE.
  * \code
  //#define USB_DEVICE_ATTACH_AUTO_DISABLE
@@ -214,7 +214,7 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  * \code
 #define USB_DEVICE_ATTACH_AUTO_DISABLE
  \endcode
- * User C file contains:
+ * User C-file contains:
  * \code
 // Authorize VBUS monitoring
 if (!udc_include_vbus_monitoring()) {
@@ -230,7 +230,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  * - Case of battery charging. conf_usb.h file contains define
  *   USB_DEVICE_ATTACH_AUTO_DISABLE:
  * \code #define USB_DEVICE_ATTACH_AUTO_DISABLE \endcode
- * User C file contains:
+ * User C-file contains:
  * \code
  Event VBUS present() // VBUS interrupt or GPIO interrupt or ..
  {
@@ -255,13 +255,13 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  * For AVR® and Atmel® | SMART™ SAM3/4 devices the \ref clk_group "clock services" is supported.
  * For SAMD21 devices the \ref asfdoc_sam0_system_clock_group "clock driver"" is supported.
  *
- * The following procedure must be executed to setup the project correctly:
+ * The following procedure must be executed to set up the project correctly:
  * - Specify the clock configuration:
  *   - XMEGA® USB devices need 48MHZ clock input.
  *
  *     XMEGA® USB devices need CPU frequency higher than 12MHZ.
  *
- *     You can use either an internal RC48MHZ auto calibrated by Start of Frames
+ *     You can use either an internal RC 48MHZ auto calibrated by Start of Frames
  *     or an external OSC.
  *   - UC3® and Atmel® | SMART™ SAM3/4 devices without USB high speed support need 48MHZ clock input.
  *
@@ -331,10 +331,10 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  * \subsection asfdoc_udc_basic_use_case_setup_flow USB Device Controller (UDC) - Workflow
  * Common workflow for all USB devices.
  *
- * -# Ensure that conf_usb.h is available and contains the following configuration
+ * -# Ensure that conf_usb.h is available and contains the following configuration,
  * which is the main USB device configuration:
  * \code
- // Vendor ID provided by USB org (ATMEL 0x03EB)
+ // Vendor ID provided by USB org (Atmel 0x03EB)
  #define USB_DEVICE_VENDOR_ID 0x03EB // Type Word
  // Product ID (Atmel PID referenced in usb_atmel.h)
  #define USB_DEVICE_PRODUCT_ID 0xXXXX // Type Word
@@ -354,7 +354,8 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  \endcode
  *   \note In case of USB dual roles (Device and Host) managed through USB OTG connector
  * (USB ID pin), the call of udc_start() must be removed and replaced by uhc_start().
- * Refer to "AVR4950 Section 6.1 Dual roles" for further information about dual roles.
+ * Refer to section "Dual roles" in the application note "Atmel AVR4950: ASF - USB Host Stack"
+ * for further information about dual roles.
  *
  * \section udc_conf_clock conf_clock.h Examples
  *
@@ -586,7 +587,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * \subsection udc_use_case_3_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
- * required to enable remote wakeup feature:
+ * required to enable the remote wakeup feature:
  * \code
  // Authorizes the remote wakeup feature
  #define  USB_DEVICE_ATTR (USB_CONFIG_ATTR_REMOTE_WAKEUP | USB_CONFIG_ATTR_..._POWERED)
@@ -615,7 +616,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * \section udc_use_case_5_setup Setup Steps
  * Prior to implement this use case, be sure to have already
- * apply the UDI module "basic use case".
+ * applied the UDI module "basic use case".
  *
  * \section udc_use_case_5_usage Usage Steps
  *
@@ -657,7 +658,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  #define UDC_RESUME_EVENT() user_callback_resume_action()
  extern void user_callback_resume_action(void);
  \endcode
- * -# Reduce power consumption in suspend mode (max. 2.5mA on Vbus):
+ * -# Reduce power consumption in suspend mode (max. 2.5mA on VBUS):
  * \code
  void user_callback_suspend_action(void)
  {
@@ -669,12 +670,12 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
 /**
  * \page udc_use_case_6 USB Dynamic Serial Number
  *
- * In this use case, the USB serial strings is dynamic.
+ * In this use case, the USB serial strings are dynamic.
  * For a static serial string refer to \ref udc_use_case_2.
  *
  * \section udc_use_case_6_setup Setup Steps
  * Prior to implement this use case, be sure to have already
- * apply the UDI module "basic use case".
+ * applied the UDI module "basic use case".
  *
  * \section udc_use_case_6_usage Usage Steps
  *
@@ -701,14 +702,14 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * \subsection udc_use_case_6_usage_flow Workflow
  * -# Ensure that conf_usb.h is available and contains the following parameters
- * required to enable a USB serial number strings dynamically:
+ * required to enable a USB serial number string dynamically:
  * \code
  #define  USB_DEVICE_SERIAL_NAME // Define this empty
  #define  USB_DEVICE_GET_SERIAL_NAME_POINTER serial_number // Give serial array pointer
  #define  USB_DEVICE_GET_SERIAL_NAME_LENGTH  12 // Give size of serial array
  extern uint8_t serial_number[]; // Declare external serial array
  \endcode
- * -# Before start USB stack, initialize the serial array:
+ * -# Before starting USB stack, initialize the serial array:
  * \code
  uint8_t serial_number[USB_DEVICE_GET_SERIAL_NAME_LENGTH];
  void init_build_usb_serial_number(void)
