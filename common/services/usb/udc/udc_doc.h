@@ -372,7 +372,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  #define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_1
  \endcode
  *
- * Content of conf_clock.h for AT32UC3A0, AT32UC3A1, AT32UC3B devices (USBB):
+ * Content of conf_clock.h for AT32UC3A0, AT32UC3A1, and AT32UC3B devices (USBB):
  * \code
  // Configuration based on 12MHZ external OSC:
  #define CONFIG_PLL1_SOURCE          PLL_SRC_OSC0
@@ -382,14 +382,14 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  #define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
  \endcode
  *
- * Content of conf_clock.h for AT32UC3A3, AT32UC3A4 devices (USBB with high speed support):
+ * Content of conf_clock.h for AT32UC3A3 and AT32UC3A4 devices (USBB with high speed support):
  * \code
  // Configuration based on 12MHZ external OSC:
  #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_OSC0
  #define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
  \endcode
  *
- * Content of conf_clock.h for AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U devices (USBC):
+ * Content of conf_clock.h for AT32UC3C, ATUCXXD, ATUCXXL3U, and ATUCXXL4U devices (USBC):
  * \code
  // Configuration based on 12MHZ external OSC:
  #define CONFIG_PLL1_SOURCE          PLL_SRC_OSC0
@@ -401,7 +401,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL1
  \endcode
  *
- * Content of conf_clock.h for SAM3S, SAM3SD, SAM4S devices (UPD: USB Peripheral Device):
+ * Content of conf_clock.h for SAM3S, SAM3SD, and SAM4S devices (UPD: USB Peripheral Device):
  * \code
  // PLL1 (B) Options   (Fpll = (Fclk * PLL_mul) / PLL_div)
  #define CONFIG_PLL1_SOURCE          PLL_SRC_MAINCK_XTAL
@@ -417,7 +417,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  // USB Clock Source fixed at UPLL.
  \endcode
  *
- * Content of conf_clock.h for SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed):
+ * Content of conf_clock.h for SAM3X and SAM3A devices (UOTGHS: USB OTG High Speed):
  * \code
  // USB Clock Source fixed at UPLL.
  #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_UPLL
