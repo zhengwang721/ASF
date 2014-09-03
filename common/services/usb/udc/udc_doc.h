@@ -140,7 +140,7 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  *
  * \b 1. USB_DEVICE_VENDOR_ID (Word).
  *
- * Vendor ID provided by USB org (ATMEL 0x03EB).
+ * Vendor ID provided by USB org (Atmel 0x03EB).
  *
  * \b 2. USB_DEVICE_PRODUCT_ID (Word).
  *
@@ -204,7 +204,7 @@ usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
  *
  * - By default the USB device is automatically attached when VBUS is high
  *   or when USB starts for devices without internal VBUS monitoring.
- *   conf_usb.h file does not contains definition USB_DEVICE_ATTACH_AUTO_DISABLE.
+ *   conf_usb.h file does not contain definition USB_DEVICE_ATTACH_AUTO_DISABLE.
  * \code
  //#define USB_DEVICE_ATTACH_AUTO_DISABLE
  \endcode
@@ -253,7 +253,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  * This module is based on USB device stack full interrupt driven, and supporting
  * \ref sleepmgr_group "sleepmgr".
  * For AVR® and Atmel® | SMART™ SAM3/4 devices the \ref clk_group "clock services" is supported.
- * For SAMD21 devices the \ref asfdoc_sam0_system_clock_group "clock driver"" is supported.
+ * For SAMD21 devices the \ref asfdoc_sam0_system_clock_group "clock driver" is supported.
  *
  * The following procedure must be executed to set up the project correctly:
  * - Specify the clock configuration:
@@ -468,7 +468,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  * \section udc_use_case_1_setup Setup Steps
  *
  * Prior to implement this use case, be sure to have already
- * apply the UDI module "basic use case".
+ * applied the UDI module "basic use case".
  *
  * \section udc_use_case_1_usage Usage Steps
  *
@@ -517,7 +517,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * \section udc_use_case_2_setup Setup Steps
  * Prior to implement this use case, be sure to have already
- * apply the UDI module "basic use case".
+ * applied the UDI module "basic use case".
  *
  * \section udc_use_case_2_usage Usage Steps
  *
@@ -552,7 +552,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * \section udc_use_case_3_setup Setup Steps
  * Prior to implement this use case, be sure to have already
- * apply the UDI module "basic use case".
+ * applied the UDI module "basic use case".
  *
  * \section udc_use_case_3_usage Usage Steps
  *
