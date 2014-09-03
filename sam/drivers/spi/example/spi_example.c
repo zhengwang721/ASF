@@ -394,7 +394,7 @@ static void spi_slave_initialize(void)
 #if (SAMG55)
 	/* Enable the peripheral and set SPI mode. */
 	flexcom_enable(BOARD_FLEXCOM_SPI);
-	flexcom_set_opmode(BOARD_FLEXCOM_SPI, FLEXCOM_MR_OPMODE_SPI);
+	flexcom_set_opmode(BOARD_FLEXCOM_SPI, FLEXCOM_SPI);
 #else
 	/* Configure an SPI peripheral. */
 	spi_enable_clock(SPI_SLAVE_BASE);
@@ -424,7 +424,7 @@ static void spi_master_initialize(void)
 #if (SAMG55)
 	/* Enable the peripheral and set SPI mode. */
 	flexcom_enable(BOARD_FLEXCOM_SPI);
-	flexcom_set_opmode(BOARD_FLEXCOM_SPI, FLEXCOM_MR_OPMODE_SPI);
+	flexcom_set_opmode(BOARD_FLEXCOM_SPI, FLEXCOM_SPI);
 #else
 	/* Configure an SPI peripheral. */
 	spi_enable_clock(SPI_MASTER_BASE);

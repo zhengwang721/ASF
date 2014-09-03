@@ -152,7 +152,7 @@ static inline void cmcc_disable_clock_gating(Cmcc *const p_cmcc)
  */
 static inline void cmcc_enable_instruction_caching(Cmcc *const p_cmcc)
 {
-
+	p_cmcc->CMCC_CFG &= ~CMCC_CFG_ICDIS;
 }
 
 /**
@@ -163,7 +163,7 @@ static inline void cmcc_enable_instruction_caching(Cmcc *const p_cmcc)
  */
 static inline void cmcc_disable_instruction_caching(Cmcc *const p_cmcc)
 {
-
+	p_cmcc->CMCC_CFG |= CMCC_CFG_ICDIS;
 }
 
 /**
@@ -174,7 +174,7 @@ static inline void cmcc_disable_instruction_caching(Cmcc *const p_cmcc)
  */
 static inline void cmcc_enable_data_caching(Cmcc *const p_cmcc)
 {
-
+	p_cmcc->CMCC_CFG &= ~CMCC_CFG_DCDIS;
 }
 
 /**
@@ -185,7 +185,7 @@ static inline void cmcc_enable_data_caching(Cmcc *const p_cmcc)
  */
 static inline void cmcc_disable_data_caching(Cmcc *const p_cmcc)
 {
-
+	p_cmcc->CMCC_CFG |= CMCC_CFG_DCDIS;
 }
 #endif
 

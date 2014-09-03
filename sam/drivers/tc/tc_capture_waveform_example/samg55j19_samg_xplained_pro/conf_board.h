@@ -49,7 +49,7 @@
 
 /**
  * \note For test the example on SAMG55 Xplained Pro, we need to connect pin7
- * in EXT1 and pin7 in EXT3.
+ * in EXT1 and pin8 in EXT1.
  */
 
 /** Use TC Peripheral 0 **/
@@ -63,13 +63,13 @@
 #define PIN_TC_WAVEFORM_MUX EXT1_PWM_0_MUX
 
 /** Configure TC0 channel 2 as capture input. **/
-#define TC_CHANNEL_CAPTURE 2
-#define ID_TC_CAPTURE ID_TC2
-#define PIN_TC_CAPTURE EXT3_PIN_PWM_0
-#define PIN_TC_CAPTURE_MUX EXT3_PWM_0_MUX
+#define TC_CHANNEL_CAPTURE 1
+#define ID_TC_CAPTURE ID_TC1
+#define PIN_TC_CAPTURE EXT1_PIN_PWM_1
+#define PIN_TC_CAPTURE_MUX EXT1_PWM_1_MUX
 
 /** Use TC2_Handler for TC capture interrupt**/
-#define TC_Handler  TC2_Handler
-#define TC_IRQn     TC2_IRQn
+#define TC_Handler  TC1_Handler
+#define TC_IRQn     TC1_IRQn
 
 #endif /* CONF_BOARD_H_INCLUDED */

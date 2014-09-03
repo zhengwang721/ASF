@@ -144,7 +144,7 @@ static inline void pll_config_write(const struct pll_config *p_cfg, uint32_t ul_
 		PMC->CKGR_PLLAR = p_cfg->ctrl;
 #if SAMG55
 	} else {
-		pmc_disable_pllack(); // Always stop PLL first!
+		pmc_disable_pllbck(); // Always stop PLL first!
 		PMC->CKGR_PLLBR = p_cfg->ctrl;
 #endif
 	}
@@ -198,14 +198,11 @@ static inline void pll_enable_source(enum pll_source e_src)
 {
 	switch (e_src) {
 	case PLL_SRC_SLCK_RC:
+	case PLL_SRC_SLCK_XTAL:
 		osc_enable(e_src);
 		osc_wait_ready(e_src);
 		break;
 
-	case PLL_SRC_SLCK_XTAL:
-		SUPC->SUPC_CR |= SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL;
-		break;
-                
 	default:
 		Assert(false);
 		break;

@@ -248,7 +248,7 @@ int main(void)
 #if SAMG55
 	/* Enable the peripheral and set TWI mode. */
 	flexcom_enable(BOARD_FLEXCOM_TWIHS_SLAVE);
-	flexcom_set_opmode(BOARD_FLEXCOM_TWIHS_SLAVE, FLEXCOM_MR_OPMODE_TWI);
+	flexcom_set_opmode(BOARD_FLEXCOM_TWIHS_SLAVE, FLEXCOM_TWI);
 #else
 	/* Enable the peripheral clock for TWIHS */
 	pmc_enable_periph_clk(BOARD_ID_TWIHS_SLAVE);
