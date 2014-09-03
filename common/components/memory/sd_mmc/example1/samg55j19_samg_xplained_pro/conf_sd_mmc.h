@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief SD/MMC stack configuration file.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,22 +41,17 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_SD_MMC_H_INCLUDED
+#define CONF_SD_MMC_H_INCLUDED
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+/* Define it to enable the SPI mode instead of Multimedia Card interface mode */
+#define SD_MMC_SPI_MODE
 
-/** No second push button */
-#define BOARD_NO_PUSHBUTTON_2
+/* Define it to enable the SDIO support */
+#define SDIO_SUPPORT_ENABLE
 
-/** Enable SD MMC interface pins through SPI */
-#define CONF_BOARD_SD_MMC_SPI
+/* Define it to enable the debug trace to the current standard output (stdio) */
+//#define SD_MMC_DEBUG
 
-/** SPI slave select MACRO definition */
-#define CONF_BOARD_SPI_NPCS0
+#endif /* CONF_SD_MMC_H_INCLUDED */
 
-/** FLEXCOM base address for SPI mode*/
-#define BOARD_FLEXCOM_SPI    FLEXCOM5
-
-#endif /* CONF_BOARD_H_INCLUDED */

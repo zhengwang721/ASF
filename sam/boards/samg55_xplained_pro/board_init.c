@@ -160,12 +160,12 @@ void system_board_init(void)
 	ioport_set_pin_peripheral_mode(TWI1_CLK_GPIO, TWI1_CLK_FLAGS);
 #endif
 
-#if defined(CONF_BOARD_TWI2) || defined(CONF_BOARD_AT30TSE)
+#ifdef CONF_BOARD_TWI2
 	ioport_set_pin_peripheral_mode(TWI2_DATA_GPIO, TWI2_DATA_FLAGS);
 	ioport_set_pin_peripheral_mode(TWI2_CLK_GPIO, TWI2_CLK_FLAGS);
 #endif
 
-#ifdef CONF_BOARD_TWI4
+#if defined(CONF_BOARD_TWI4) ||defined(CONF_BOARD_AT30TSE)
 	ioport_set_pin_peripheral_mode(TWI4_DATA_GPIO, TWI4_DATA_FLAGS);
 	ioport_set_pin_peripheral_mode(TWI4_CLK_GPIO, TWI4_CLK_FLAGS);
 #endif

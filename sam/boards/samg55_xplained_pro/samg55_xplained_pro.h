@@ -600,7 +600,7 @@ void system_board_init(void);
 //! \name IO1 SD card definitions */
 //@{
 #define SD_MMC_SPI_MEM_CNT          1
-#define SD_MMC_0_CD_GPIO            (PIO_PA20_IDX)
+#define SD_MMC_0_CD_GPIO            (PIO_PA29_IDX)
 #define SD_MMC_0_CD_DIR             (IOPORT_DIR_INPUT)
 #define SD_MMC_0_CD_MODE            (IOPORT_MODE_PULLUP)
 #define SD_MMC_0_CD_DETECT_VALUE    0

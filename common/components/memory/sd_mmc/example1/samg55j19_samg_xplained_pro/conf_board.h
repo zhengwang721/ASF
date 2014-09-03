@@ -47,9 +47,6 @@
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
-/** No second push button */
-#define BOARD_NO_PUSHBUTTON_2
-
 /** Enable SD MMC interface pins through SPI */
 #define CONF_BOARD_SD_MMC_SPI
 

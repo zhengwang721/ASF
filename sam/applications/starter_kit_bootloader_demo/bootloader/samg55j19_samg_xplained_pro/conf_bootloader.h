@@ -49,15 +49,15 @@
  * -> Debug console
  * -> Debug LED
  */
-//#define DBG_USE_USART           /**< Define to Use UART (optional) */
-#  define DBG_USART_NAME UART   /**< UART/USART */
-#  define DBG_USART_NB   3      /**< UART/USART number (Nothing or 0, 1...) */
+#define DBG_USE_USART           /**< Define to Use UART (optional) */
+#  define DBG_USART_NAME USART   /**< UART/USART */
+#  define DBG_USART_NB   7      /**< UART/USART number (Nothing or 0, 1...) */
 #  define DBG_USART_BAUDRATE    115200 /**< UART/USART baudrate */
 //#  define DBG_USART_PIN_EN
 //#    define DBG_USART_PIN_EN_LEVEL
-#  define DBG_USART_PIN_RX      PIO_PB10_IDX      /**< USART RX pin IO index */
+#  define DBG_USART_PIN_RX      PIO_PA27_IDX      /**< USART RX pin IO index */
 #  define DBG_USART_PIN_RX_MUX  IOPORT_MODE_MUX_B /**< USART RX periph Mux */
-#  define DBG_USART_PIN_TX      PIO_PB11_IDX      /**< USART TX pin IO index */
+#  define DBG_USART_PIN_TX      PIO_PA28_IDX      /**< USART TX pin IO index */
 #  define DBG_USART_PIN_TX_MUX  IOPORT_MODE_MUX_B /**< USART TX periph Mux */
 
 //#define DBG_USE_LED             /**< Define to use LED0 for information */
@@ -89,7 +89,7 @@
  * -> SW flag
  */
 //#define TRIGGER_USE_BUTTONS     /**< Define to use button trigger */
-//#  define TRIGGER_LOAD_BUTTON        (PIO_PA30_IDX)
+//#  define TRIGGER_LOAD_BUTTON        (PIO_PA2_IDX)
 //#  define TRIGGER_LOAD_BUTTON_ACTIVE (0)
 //#  define TRIGGER_SWITCH_BUTTON /* reserved for dual bank with more btn */
 //#  define TRIGGER_SWITCH_BUTTON_ACTIVE (0)
