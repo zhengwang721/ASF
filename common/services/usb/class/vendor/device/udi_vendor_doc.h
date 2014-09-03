@@ -195,7 +195,7 @@ typedef struct {
 #endif
 } udi_vendor_desc_t;
 
- /** By default no string associated to this interface. */
+ /** By default no string is associated to this interface. */
 #ifndef UDI_VENDOR_STRING_ID
 #define UDI_VENDOR_STRING_ID     0
 #endif
@@ -255,7 +255,7 @@ typedef struct {
  *
  * These routines are used to transfer data to/from USB VENDOR endpoints.
  *
- * See Quick start guide for USB Device vendor module
+ * See Quick start guide for USB Device vendor module.
  * @{
  */
 
@@ -382,8 +382,8 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  * "Advanced Use Cases".
  *
  * \subsection udi_vendor_basic_use_case_setup Setup Steps
- * As a USB Device, it follows common USB Device setup steps. Refer to
- * \ref asfdoc_uhc_basic_use_case_setup "USB Device Basic Setup".
+ * As a USB device, it follows common USB device setup steps. Refer to
+ * \ref asfdoc_udc_basic_use_case_setup "USB Device Basic Setup".
  *
  * \subsection udi_vendor_basic_use_case_usage Usage Steps
  *
@@ -443,7 +443,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  \endcode
  *
  * \subsection udi_vendor_basic_use_case_setup_flow Workflow
- * -# Ensure that conf_usb.h is available and contains the following configuration
+ * -# Ensure that conf_usb.h is available and contains the following configuration,
  * which is the USB device Vendor configuration:
  * \code
  #define UDI_VENDOR_ENABLE_EXT() my_callback_vendor_enable()
@@ -520,7 +520,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
 /**
  * \page udi_vendor_use_case_composite Vendor in a Composite Device
  *
- * A USB Composite Device is a USB Device which uses more than one USB class.
+ * A USB Composite Device is a USB Device, which uses more than one USB class.
  * In this use case, the "USB Vendor (Composite Device)" module is used to
  * create a USB composite device. Thus, this USB module can be associated with
  * another "Composite Device" module, like "USB HID Mouse (Composite Device)".
@@ -636,7 +636,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  *
  * \section asfdoc_udi_vendor_config_examples_2 conf_clock.h
  *
- * \subsection asfdoc_udi_vendor_config_examples_2_1 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
+ * \subsection asfdoc_udi_vendor_config_examples_2_1 SAM3X and SAM3A Devices (UOTGHS: USB OTG High Speed)
  * \include example/sam3x8h_sam3x_ek/conf_clock.h
  *
  * \subsection asfdoc_udi_vendor_config_examples_2_2 SAM4L Device(USBC)
@@ -649,7 +649,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  *
  * \section asfdoc_udi_vendor_config_examples_4 conf_board.h
  *
- * \subsection asfdoc_udi_vendor_config_examples_4_1 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
+ * \subsection asfdoc_udi_vendor_config_examples_4_1 SAM3X and SAM3A Devices (UOTGHS: USB OTG High Speed)
  * \include example/sam3x8h_sam3x_ek/conf_board.h
  *
  * \subsection asfdoc_udi_vendor_config_examples_4_2 SAM4L Device(USBC)
