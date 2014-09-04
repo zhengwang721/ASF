@@ -39,16 +39,16 @@
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief Efc hardware registers */
 typedef struct {
-  __IO uint32_t EEFC_FMR;     /**< \brief (Efc Offset: 0x00) EEFC Flash Mode Register */
-  __O  uint32_t EEFC_FCR;     /**< \brief (Efc Offset: 0x04) EEFC Flash Command Register */
-  __I  uint32_t EEFC_FSR;     /**< \brief (Efc Offset: 0x08) EEFC Flash Status Register */
-  __I  uint32_t EEFC_FRR;     /**< \brief (Efc Offset: 0x0C) EEFC Flash Result Register */
-  __I  uint32_t Reserved1[1];
-  __I  uint32_t EEFC_VERSION; /**< \brief (Efc Offset: 0x14) EEFC Version Register */
+  __IO uint32_t EEFC_FMR;      /**< \brief (Efc Offset: 0x00) EEFC Flash Mode Register */
+  __O  uint32_t EEFC_FCR;      /**< \brief (Efc Offset: 0x04) EEFC Flash Command Register */
+  __I  uint32_t EEFC_FSR;      /**< \brief (Efc Offset: 0x08) EEFC Flash Status Register */
+  __I  uint32_t EEFC_FRR;      /**< \brief (Efc Offset: 0x0C) EEFC Flash Result Register */
+  __I  uint32_t Reserved1[53];
+  __IO uint32_t EEFC_WPMR;     /**< \brief (Efc Offset: 0xE4) Write Protection Mode Register */
 } Efc;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- EEFC_FMR : (EFC Offset: 0x00) EEFC Flash Mode Register -------- */
-#define EEFC_FMR_FRDY (0x1u << 0) /**< \brief (EEFC_FMR) Ready Interrupt Enable */
+#define EEFC_FMR_FRDY (0x1u << 0) /**< \brief (EEFC_FMR) Flash Ready Interrupt Enable */
 #define EEFC_FMR_FWS_Pos 8
 #define EEFC_FMR_FWS_Msk (0xfu << EEFC_FMR_FWS_Pos) /**< \brief (EEFC_FMR) Flash Wait State */
 #define EEFC_FMR_FWS(value) ((EEFC_FMR_FWS_Msk & ((value) << EEFC_FMR_FWS_Pos)))
@@ -93,13 +93,12 @@ typedef struct {
 /* -------- EEFC_FRR : (EFC Offset: 0x0C) EEFC Flash Result Register -------- */
 #define EEFC_FRR_FVALUE_Pos 0
 #define EEFC_FRR_FVALUE_Msk (0xffffffffu << EEFC_FRR_FVALUE_Pos) /**< \brief (EEFC_FRR) Flash Result Value */
-/* -------- EEFC_VERSION : (EFC Offset: 0x14) EEFC Version Register -------- */
-#define EEFC_VERSION_VERSION_Pos 0
-#define EEFC_VERSION_VERSION_Msk (0xfffu << EEFC_VERSION_VERSION_Pos) /**< \brief (EEFC_VERSION) Version of the Hardware Module */
-#define EEFC_VERSION_MFN_Pos 16
-#define EEFC_VERSION_MFN_Msk (0x7u << EEFC_VERSION_MFN_Pos) /**< \brief (EEFC_VERSION) Metal Fix Number */
+/* -------- EEFC_WPMR : (EFC Offset: 0xE4) Write Protection Mode Register -------- */
+#define EEFC_WPMR_WPEN (0x1u << 0) /**< \brief (EEFC_WPMR) Write Protection Enable */
+#define EEFC_WPMR_WPKEY_Pos 8
+#define EEFC_WPMR_WPKEY_Msk (0xffffffu << EEFC_WPMR_WPKEY_Pos) /**< \brief (EEFC_WPMR) Write Protection Key */
+#define   EEFC_WPMR_WPKEY_PASSWD (0x454643u << 8) /**< \brief (EEFC_WPMR) Writing any other value in this field aborts the write operation.Always reads as 0. */
 
 /*@}*/
-
 
 #endif /* _SAMG55_EFC_COMPONENT_ */

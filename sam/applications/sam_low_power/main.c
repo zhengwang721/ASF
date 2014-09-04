@@ -225,7 +225,7 @@ static void reconfigure_console(uint32_t ul_mck, uint32_t ul_baudrate)
 
 	/* Configure PMC */
 	flexcom_enable(CONF_FLEXCOM);
-	flexcom_set_opmode(CONF_FLEXCOM, FLEXCOM_MR_OPMODE_USART);
+	flexcom_set_opmode(CONF_FLEXCOM, FLEXCOM_USART);
 
 	/* Configure PIO */
 	pio_configure_pin_group(CONF_UART_PIO, CONF_PINS_UART,

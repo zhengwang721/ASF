@@ -54,7 +54,7 @@
 #   define USART_PERIPH_CLK_ENABLE() sysclk_enable_peripheral_clock(USART_BASE)
 #elif SAMG55
 #   define USART_PERIPH_CLK_ENABLE() flexcom_enable(BOARD_FLEXCOM);      \
-	                                                        flexcom_set_opmode(BOARD_FLEXCOM, FLEXCOM_MR_OPMODE_USART);
+	                                                        flexcom_set_opmode(BOARD_FLEXCOM, FLEXCOM_USART);
 #else
 #   define USART_PERIPH_CLK_ENABLE() sysclk_enable_peripheral_clock(USART_ID)
 #endif
