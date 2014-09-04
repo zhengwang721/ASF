@@ -728,7 +728,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 			>> SUPC_FUSES_BOD33USERLEVEL_Pos);
 
 	fusebits->bod33_enable = (bool)
-			(~((raw_user_row[0] & SUPC_FUSES_BOD33_DIS_Msk)
+			(!((raw_user_row[0] & SUPC_FUSES_BOD33_DIS_Msk)
 			>> SUPC_FUSES_BOD33_DIS_Pos));
 
 	fusebits->bod33_action = (enum nvm_bod33_action)
