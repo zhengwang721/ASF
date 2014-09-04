@@ -63,7 +63,7 @@
 #if !(SAMD || SAMR21)
 #include "led.h"
 #endif
-
+extern frame_info_t *stream_pkt;
 /**
  * \addtogroup group_per_mode_receptor
  * \{
@@ -124,6 +124,12 @@ bool cw_ack_sent=false,remote_cw_start=false;
 uint8_t cw_start_mode;
 uint16_t cw_tmr_val = 0;
 bool pulse_mode = false;
+
+extern bool pkt_stream_stop;
+
+extern uint32_t pkt_stream_gap_time ;
+extern bool rdy_to_tx;
+
 /* ! \} */
 
 /* === IMPLEMENTATION ====================================================== */
@@ -194,6 +200,17 @@ void per_mode_receptor_task(void)
 			}
 		}
 	}
+	if(!pkt_stream_stop && rdy_to_tx && !node_info.transmitting)
+	{
+		tal_tx_frame(stream_pkt,NO_CSMA_NO_IFS,false);
+		node_info.transmitting=true;
+		if(pkt_stream_gap_time)
+		{
+			sw_timer_start(T_APP_TIMER,pkt_stream_gap_time*1E3,SW_TIMEOUT_RELATIVE,(FUNC_PTR)pkt_stream_gap_timer,NULL);
+			rdy_to_tx = false;
+		}
+	}
+	
 }
 
 /**

@@ -226,6 +226,8 @@ uint8_t check_error_conditions(void);
  */
 uint8_t get_param_length(uint8_t parameter_type);
 
+void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop);
+
 /* ! \} */
 
 /**
@@ -527,6 +529,8 @@ void usr_set_default_config_confirm(uint8_t status,
  */
 void usr_get_current_config_confirm(uint8_t status,
 		trx_config_params_t *curr_trx_conf_params);
+		
+void usr_pkt_stream_confirm(uint8_t status,bool start_stop);
 
 /* ! \} */
 /* ! \} */

@@ -369,12 +369,9 @@ static inline void handle_incoming_msg(void)
 
 	/* Check for the error conditions */
 	error_code = check_error_conditions();
-//check unsupported tests
+    //check unsupported tests
     if((sio_rx_buf[MESSAGE_ID_POS] & 0X80) && (PER_TEST_INITIATOR == node_info.main_state))
-	{
-		
-		
-		
+	{		
 		if(error_code ==  MAC_SUCCESS)
 		{		
 
@@ -959,7 +956,34 @@ static inline void handle_incoming_msg(void)
 		}
 	}
 	break;
+	
+    /* Process PacketStream test Start Request command */
+    case PKT_STREAM_REQ:
+    {
+	if ((PER_TEST_INITIATOR == node_info.main_state) || (PER_TEST_RECEPTOR == node_info.main_state) ||
+	(SINGLE_NODE_TESTS == node_info.main_state))
+		{
+				/* Check any ongoing transaction in place */
+			if ((error_code && (error_code == PKT_STREAM_IN_PROGRESS)&&(sio_rx_buf[3] == PKTSTREAM_STOP))||(error_code == MAC_SUCCESS)) {	
+					uint16_t gap_time = (uint16_t)(sio_rx_buf[4]  | sio_rx_buf[5]  << 8 );
+					uint16_t timeout  = (uint16_t)(sio_rx_buf[6]  | sio_rx_buf[7]  << 8 );
+					pktstream_test(gap_time,timeout,sio_rx_buf[3]);	
+			}
+			else
+			{
+				usr_pkt_stream_confirm(error_code,sio_rx_buf[3]);			    
+				return;
+			 }
+		}
+		else
+		{
+			usr_pkt_stream_confirm(INVALID_CMD,sio_rx_buf[3]);
+		}
 
+
+    }
+    break;
+	
 	/* Process ED Scan Start Request command */
 	case ED_SCAN_START_REQ:
 	{
@@ -2033,6 +2057,29 @@ void usr_ed_scan_start_confirm(uint8_t status, uint8_t scan_time_min,
 	*msg_buf++ = scan_time_min;
 	memcpy(msg_buf, &scan_time_sec, sizeof(float));
 	msg_buf +=  sizeof(float);
+
+	*msg_buf = EOT;
+}
+
+void usr_pkt_stream_confirm(uint8_t status,bool start_stop)
+{
+		uint8_t *msg_buf;
+
+	msg_buf = get_next_tx_buffer();
+
+	/* Check if buffer could not be allocated */
+	if (NULL == msg_buf) {
+		return;
+	}
+
+	/* Copy Len, Protocol Id, Msg Id parameters */
+	*msg_buf++ = PROTOCOL_ID_LEN + PKT_STREAM_CONFIRM_LEN;
+	*msg_buf++ = PROTOCOL_ID;
+	*msg_buf++ = PKT_STREAM_CONFIRM;
+
+	/* Copy confirmation payload */
+	*msg_buf++ = status;
+	*msg_buf++ = start_stop;
 
 	*msg_buf = EOT;
 }

@@ -106,6 +106,7 @@ typedef struct {
 #define RANGE_TEST_TX                           (0x10)
 #define RANGE_TEST_STOP                         (0x11)
 #define REMOTE_TEST_MODE                        (0X12)
+#define PKT_STREAM_MODE							(0X13)
 
 #define RANGE_TST_PKT_SEQ_POS                    (11)
 
@@ -244,6 +245,9 @@ static uint8_t scan_duration;
 static uint8_t seq_num_initiator;
 static uint8_t channel_before_scan;
 static uint8_t op_mode = TX_OP_MODE;
+bool pkt_stream_stop = true;
+uint32_t pkt_stream_gap_time ;
+bool rdy_to_tx = false;
 static uint16_t no_of_roll_overs;
 static uint32_t start_time;
 static uint32_t end_time;
@@ -314,6 +318,8 @@ trx_config_params_t default_trx_config_params;
 trx_config_params_t curr_trx_config_params;
 
 /* ! \} */
+
+extern frame_info_t *stream_pkt;
 /* === IMPLEMENTATION ====================================================== */
 
 /*
@@ -389,7 +395,7 @@ void per_mode_initiator_init(void *parameter)
 void per_mode_initiator_task(void)
 {
 	/* If any packets need to be transferred */
-	if (frames_to_transmit > 0) {
+	if (frames_to_transmit > 0 || ((op_mode==PKT_STREAM_MODE) && (rdy_to_tx))) {
 		/* PER measurement test is on as more frames has to
 		 * be transmitted. On completion of the test result also has to
 		 * be
@@ -397,14 +403,27 @@ void per_mode_initiator_task(void)
 		if (!node_info.transmitting) {
 			node_info.transmitting = true;
 			node_info.tx_frame_info->mpdu[PL_POS_SEQ_NUM]++;
-			if (curr_trx_config_params.csma_enabled) {
-				tal_tx_frame(node_info.tx_frame_info,
-						CSMA_UNSLOTTED,
-						curr_trx_config_params.retry_enabled );
-			} else {
-				tal_tx_frame(node_info.tx_frame_info,
-						NO_CSMA_NO_IFS,
-						curr_trx_config_params.retry_enabled );
+			if((op_mode==PKT_STREAM_MODE))
+			{
+				
+				tal_tx_frame(stream_pkt,NO_CSMA_NO_IFS,false);
+				if(pkt_stream_gap_time)				
+				{
+					sw_timer_start(T_APP_TIMER,pkt_stream_gap_time*1E3,SW_TIMEOUT_RELATIVE,(FUNC_PTR)pkt_stream_gap_timer,NULL);
+					rdy_to_tx = false;
+				}
+			}
+			else
+			{
+				if (curr_trx_config_params.csma_enabled) {
+					tal_tx_frame(node_info.tx_frame_info,
+					CSMA_UNSLOTTED,
+					curr_trx_config_params.retry_enabled );
+					} else {
+					tal_tx_frame(node_info.tx_frame_info,
+					NO_CSMA_NO_IFS,
+					curr_trx_config_params.retry_enabled );
+				}
 			}
 		}
 	} else {
@@ -908,7 +927,15 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 
 		break;
 	}
-
+	case PKT_STREAM_MODE:
+	{
+		if(pkt_stream_stop)
+		{
+			op_mode = TX_OP_MODE;
+		}
+	}
+	break;
+	
 	case TEST_FRAMES_SENT:
 	case CONTINUOUS_TX_MODE:
 		/* Do nothing */
@@ -2104,13 +2131,13 @@ else if(node_info.main_state == PER_TEST_INITIATOR || ((node_info.main_state == 
 
 if((node_info.main_state == PER_TEST_RECEPTOR) && 1 <= tmr_val )
 {
-	cw_mode=tx_mode;
+	cw_mode=&tx_mode;
 
 	sw_timer_start(CW_TX_TIMER,
 	(uint32_t)tmr_val * 1E6,
 	SW_TIMEOUT_RELATIVE,
 	(FUNC_PTR)stop_cw_transmission,
-	&cw_mode);
+	cw_mode);
 
 	
 }
@@ -3679,6 +3706,37 @@ void initiate_per_test(void)
 	}
 }
 
+/*Start Packet Streaming Test*/
+
+void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop)
+{
+	pkt_stream_gap_time = gap_time;
+	if(start_stop)
+	{	
+		configure_pkt_stream_frames();
+		op_mode=PKT_STREAM_MODE;
+		if(pkt_stream_gap_time)
+		{		
+		 sw_timer_start(T_APP_TIMER,pkt_stream_gap_time*1E3,SW_TIMEOUT_RELATIVE,(FUNC_PTR)pkt_stream_gap_timer,NULL);
+		}
+		else
+		{
+			rdy_to_tx = true;
+		}
+		pkt_stream_stop = false;
+	}
+	else
+	{
+		//stop packet streaming once the current packet transmission is completed
+		pkt_stream_stop = true;
+		sw_timer_stop(T_APP_TIMER);
+	}
+	usr_pkt_stream_confirm(MAC_SUCCESS,start_stop);
+	
+}
+
+
+
 /*
  * \brief To Initiate the Range  test
  */
@@ -3787,6 +3845,7 @@ void stop_range_test(void)
 	}
 }
 
+
 /**
  * \brief To Configure the frame sending
  */
@@ -3880,6 +3939,7 @@ static void configure_frame_sending(void)
 	/* Finished building of frame. */
 	node_info.tx_frame_info->mpdu = frame_ptr;
 }
+
 
 /**
  * \brief To Configure the frame sending
@@ -4662,6 +4722,11 @@ uint8_t check_error_conditions(void)
 	} else if (CONTINUOUS_TX_MODE == op_mode) { /* Check CW transmission is
 		                                     * going on */
 		error_code = CW_TRANSMISSION_UNDER_PROGRESS;
+	}
+	else if(pkt_stream_stop == false)
+	{		
+		error_code = PKT_STREAM_IN_PROGRESS;
+		
 	} else if (frames_to_transmit > 0) { /* Check currently Transmission is
 		                              * initiated */
 		error_code = TRANSMISSION_UNDER_PROGRESS;

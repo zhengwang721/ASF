@@ -54,6 +54,7 @@
 #include "tal_helper.h"
 #include "ieee_const.h"
 #include "app_per_mode.h"
+#include "app_frame_format.h"
 #include "app_init.h"
 /* === TYPES =============================================================== */
 
@@ -61,6 +62,9 @@
 #ifdef EXT_RF_FRONT_END_CTRL
 static uint8_t prev_non_26chn_tx_power;
 #endif
+extern bool rdy_to_tx;
+frame_info_t *stream_pkt;
+uint8_t pkt_buffer[LARGE_BUFFER_SIZE];
 /* === IMPLEMENTATION======================================================= */
 
 /*
@@ -125,6 +129,97 @@ void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl)
 #endif /* End of EXT_RF_FRONT_END_CTRL */
 
 /**
+ * \brief To Configure the frame sending
+ */
+void configure_pkt_stream_frames(void)
+{
+	uint8_t index;
+	uint8_t app_frame_length;
+	uint8_t *frame_ptr;
+	uint8_t *temp_frame_ptr;
+	uint16_t fcf = 0;
+	uint16_t temp_value;
+	app_payload_t *tmp;
+
+	stream_pkt = (frame_info_t *)pkt_buffer;	
+	/*
+	 * Fill in PHY frame.
+	 */
+
+	/* Get length of current frame. */
+	app_frame_length = 127 - 	FRAME_OVERHEAD;
+
+	/* Set payload pointer. */
+	frame_ptr = temp_frame_ptr
+				= (uint8_t *)stream_pkt +
+					LARGE_BUFFER_SIZE -
+					app_frame_length - FCS_LEN; /* Add 2
+	                                                             * octets
+	                                                             *for
+	                                                             * FCS. */
+
+	tmp = (app_payload_t *)temp_frame_ptr;
+
+	(tmp->cmd_id) = PER_TEST_PKT;
+
+	temp_frame_ptr++;
+
+	/*
+	 * Assign dummy payload values.
+	 * Payload is stored to the end of the buffer avoiding payload copying
+	 * by TAL.
+	 */
+	for (index = 0; index < (app_frame_length - 1); index++) { /* 1=> cmd ID
+		                                                   **/
+		*temp_frame_ptr++ = index; /* dummy values */
+	}
+
+	/* Source Address */
+	temp_value =  tal_pib.ShortAddress;
+	frame_ptr -= SHORT_ADDR_LEN;
+	convert_16_bit_to_byte_array(temp_value, frame_ptr);
+
+	/* Source PAN-Id */
+#if (DST_PAN_ID == SRC_PAN_ID)
+	/* No source PAN-Id included, but FCF updated. */
+	fcf |= FCF_PAN_ID_COMPRESSION;
+#else
+	frame_ptr -= PAN_ID_LEN;
+	temp_value = CCPU_ENDIAN_TO_LE16(SRC_PAN_ID);
+	convert_16_bit_to_byte_array(temp_value, frame_ptr);
+#endif
+
+	/* Destination Address */
+	temp_value = 0XFFFF;
+	frame_ptr -= SHORT_ADDR_LEN;
+	convert_16_bit_to_byte_array(temp_value, frame_ptr);
+
+	/* Destination PAN-Id */
+	temp_value = CCPU_ENDIAN_TO_LE16(DST_PAN_ID);
+	frame_ptr -= PAN_ID_LEN;
+	convert_16_bit_to_byte_array(temp_value, frame_ptr);
+
+	/* Set DSN. */
+	frame_ptr--;
+	*frame_ptr = (uint8_t)rand();
+
+	/* Set the FCF. */
+	fcf |= FCF_FRAMETYPE_DATA | FCF_SET_SOURCE_ADDR_MODE(FCF_SHORT_ADDR) |
+			FCF_SET_DEST_ADDR_MODE(FCF_SHORT_ADDR);
+
+
+	frame_ptr -= FCF_LEN;
+	convert_16_bit_to_byte_array(CCPU_ENDIAN_TO_LE16(fcf), frame_ptr);
+
+	/* First element shall be length of PHY frame. */
+	frame_ptr--;
+	*frame_ptr = 127; //sriram
+
+	/* Finished building of frame. */
+	stream_pkt->mpdu = frame_ptr;
+}
+
+/**
  * \brief The reverse_float is used for reversing a float variable for
  * supporting BIG ENDIAN systems
  * \param float_val Float variable to be reversed
@@ -147,6 +242,12 @@ float reverse_float( const float float_val )
 	returnFloat[3] = floatToConvert[3];
 #endif
 	return retuVal;
+}
+
+void pkt_stream_gap_timer(void *parameter)
+{
+	rdy_to_tx = true;
+	parameter=parameter;
 }
 
 /* EOF */
