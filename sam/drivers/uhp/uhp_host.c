@@ -247,8 +247,8 @@ void uhd_enable(void)
 #endif
 
 	//* Enable USB hardware clock
-	pmc_enable_periph_clk(ID_UHP);
 	sysclk_enable_usb();
+	pmc_enable_periph_clk(ID_UHP);
 
 	// Always authorize asynchronous USB interrupts to exit of sleep mode
 	// For SAMG55 USB wake up device except BACKUP mode
