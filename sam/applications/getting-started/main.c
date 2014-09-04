@@ -277,6 +277,12 @@ static void configure_tc(void)
 
 	/* Configure PMC */
 	pmc_enable_periph_clk(ID_TC0);
+#if SAMG55
+	/* Enable PCK output */
+	pmc_disable_pck(PMC_PCK_3);
+	pmc_switch_pck_to_sclk(PMC_PCK_3, PMC_PCK_PRES_CLK_1);
+	pmc_enable_pck(PMC_PCK_3);
+#endif
 
 	/** Configure TC for a 4Hz frequency and trigger on RC compare. */
 	tc_find_mck_divisor(4, ul_sysclk, &ul_div, &ul_tcclks, ul_sysclk);
@@ -371,7 +377,7 @@ int main(void)
 
 	puts("Configure TC.\r");
 //! [main_step_tc_init]
-//	configure_tc();
+	configure_tc();
 //! [main_step_tc_init]
 
 	puts("Configure buttons with debouncing.\r");
