@@ -540,6 +540,9 @@ static void configure_adc(void)
 
 	/* Configure ADC. */
 	adc_enable();
+#if SAMG55
+	adc_select_clock_source_mck(ADC);
+#endif
 	adc_get_config_defaults(&adc_cfg);
 	adc_init(ADC, &adc_cfg);
 	adc_channel_enable(ADC, ADC_CHANNEL_0);
@@ -906,7 +909,11 @@ int main(void)
 			/* Refresh graph. */
 			ssd1306_draw_graph(0, 2, BUFFER_SIZE, 2, temperature);
 		} else if (app_mode == 1) {
+		#if SAMG55	
+			light_value = 100 - (adc_value * 100 / 4096);
+		#else
 			light_value = 100 - (adc_value * 100 / 1024);
+		#endif
 			sprintf(value_disp, "%lu", light_value);
 			ssd1306_set_column_address(98);
 			ssd1306_write_command(SSD1306_CMD_SET_PAGE_START_ADDRESS(0));
