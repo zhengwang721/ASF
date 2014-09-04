@@ -117,7 +117,7 @@
 /** memory block size */
 #define MEM_BLOCK_SIZE (IFLASH_PAGE_SIZE)
 /** memory erase block size (4K) */
-#define MEM_ERASE_SIZE (IFLASH_PAGE_SIZE * 8)
+#define MEM_ERASE_SIZE (IFLASH_PAGE_SIZE * 16)
 /* memory aligned (8 pages to erase) */
 #define mem_align(addr) \
 	(((addr) % MEM_ERASE_SIZE) ? ((addr) - ((addr) % MEM_ERASE_SIZE)) : (addr))
