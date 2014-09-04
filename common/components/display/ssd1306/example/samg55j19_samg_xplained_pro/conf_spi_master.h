@@ -1,8 +1,9 @@
-/*! \file
+/**
+ * \file
  *
- * \brief Example configuration.
+ * \brief Spi Master configuration.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,20 +40,25 @@
  * \asf_license_stop
  *
  */
+ 
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+/* Possibility to change low-level configurations here. */
 
+//! Default Configuration of SPI Master Delay BCS
+#define CONFIG_SPI_MASTER_DELAY_BCS            0x00
 
-/** USART Interface  : Console UART */
-#define CONF_TEST_USART      CONSOLE_UART
-/** Baudrate setting : 115200 */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH US_MR_CHRL_8_BIT
-/** Parity setting   : No parity check */
-#define CONF_TEST_PARITY     US_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   US_MR_NBSTOP_1_BIT
+//! Default Configuration of SPI Master Bits per Transfer Definition
+#define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+//! Default Configuration of SPI Master Delay BCT
+#define CONFIG_SPI_MASTER_DELAY_BCT            0x00
+
+//! Default Configuration of SPI Master Delay BS
+#define CONFIG_SPI_MASTER_DELAY_BS             0x00
+
+//! Default Configuration of SPI Master Dummy Field
+// #define CONFIG_SPI_MASTER_DUMMY                0xFF
+
+#endif /* CONF_SPI_MASTER_H_INCLUDED */

@@ -612,8 +612,8 @@ void system_board_init(void);
  * boards.
  */
 #define SD_MMC_0_CD_FLAGS           (PIO_INPUT | PIO_PULLUP)
-#define SD_MMC_0_CD    {PIO_PA20, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
-#define SD_MMC_0_CD_MASK PIO_PA20
+#define SD_MMC_0_CD    {PIO_PA29, PIOA, ID_PIOA, PIO_INPUT, PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_RISE_EDGE}
+#define SD_MMC_0_CD_MASK PIO_PA29
 #define SD_MMC_0_CD_PIO PIOA
 #define SD_MMC_0_CD_ID ID_PIOA
 #define SD_MMC_0_CD_TYPE PIO_INPUT
@@ -622,8 +622,8 @@ void system_board_init(void);
 
 //! \name IO1 temperature sensor definitions */
 //@{
-#define BOARD_AT30TSE_TWI          TWI2
-#define BOARD_AT30TSE_TWI_ID       ID_TWI2
+#define BOARD_AT30TSE_TWI          TWI4
+#define BOARD_AT30TSE_TWI_ID       ID_TWI4
 #define BOARD_TWI_SPEED            (400000u)
 #define BOARD_USING_AT30TSE        AT30TSE758
 #define BOARD_AT30TSE_DEVICE_ADDR  0x07

@@ -59,4 +59,10 @@
 /** SPI slave select MACRO definition */
 #define CONF_BOARD_SPI_NPCS0
 
+/** FLEXCOM base address for SPI mode*/
+#define BOARD_FLEXCOM_SPI    FLEXCOM5
+
+/** Flexcom application to use */
+#define BOARD_FLEXCOM_TWI          FLEXCOM4
+
 #endif /* CONF_BOARD_H_INCLUDED */

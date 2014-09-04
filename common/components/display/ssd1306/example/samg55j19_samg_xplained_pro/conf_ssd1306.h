@@ -1,6 +1,7 @@
-/*! \file
+/**
+ * \file
  *
- * \brief Example configuration.
+ * \brief SSD1306 display controller driver configuration file.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -39,20 +40,20 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SSD1306_H_INCLUDED
+#define CONF_SSD1306_H_INCLUDED
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+// Interface configuration for SAMG55 Xplained Pro
+#define SSD1306_SPI_INTERFACE
+#define SSD1306_SPI SPI5
 
+#define SSD1306_DC_PIN       UG_2832HSWEG04_DATA_CMD_GPIO
+#define SSD1306_RES_PIN      UG_2832HSWEG04_RESET_GPIO
+#define SSD1306_CS_PIN       UG_2832HSWEG04_SS
 
-/** USART Interface  : Console UART */
-#define CONF_TEST_USART      CONSOLE_UART
-/** Baudrate setting : 115200 */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH US_MR_CHRL_8_BIT
-/** Parity setting   : No parity check */
-#define CONF_TEST_PARITY     US_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   US_MR_NBSTOP_1_BIT
+// Minimum clock period is 50ns@3.3V -> max frequency is 20MHz
+#define SSD1306_CLOCK_SPEED          UG_2832HSWEG04_BAUDRATE
+#define SSD1306_DISPLAY_CONTRAST_MAX 40
+#define SSD1306_DISPLAY_CONTRAST_MIN 30
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#endif /* CONF_SSD1306_H_INCLUDED */

@@ -18,6 +18,7 @@
 		<device-support value="samg51"/>
 		<device-support value="samg53"/>
 		<device-support value="samg54"/>
+		<device-support value="samg55"/>
 		<device-support value="sam4cp"/>
 		<device-support value="sam4cm"/>
 		<require idref="sam.utils"/>

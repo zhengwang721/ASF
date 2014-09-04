@@ -1,6 +1,7 @@
-/*! \file
+/**
+ * \file
  *
- * \brief Example configuration.
+ * \brief SD/MMC stack configuration file.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,19 +41,17 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#ifndef CONF_SD_MMC_H_INCLUDED
+#define CONF_SD_MMC_H_INCLUDED
 
+/* Define it to enable the SPI mode instead of Multimedia Card interface mode */
+#define SD_MMC_SPI_MODE
 
-/** USART Interface  : Console UART */
-#define CONF_TEST_USART      CONSOLE_UART
-/** Baudrate setting : 115200 */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH US_MR_CHRL_8_BIT
-/** Parity setting   : No parity check */
-#define CONF_TEST_PARITY     US_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   US_MR_NBSTOP_1_BIT
+/* Define it to enable the SDIO support */
+#define SDIO_SUPPORT_ENABLE
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+/* Define it to enable the debug trace to the current standard output (stdio) */
+//#define SD_MMC_DEBUG
+
+#endif /* CONF_SD_MMC_H_INCLUDED */
+

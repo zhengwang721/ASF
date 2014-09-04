@@ -1,6 +1,7 @@
-/*! \file
+/**
+ * \file
  *
- * \brief Example configuration.
+ * \brief Board configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,19 +41,19 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
+/** Enable Com Port. */
+#define CONF_BOARD_UART_CONSOLE
 
-/** USART Interface  : Console UART */
-#define CONF_TEST_USART      CONSOLE_UART
-/** Baudrate setting : 115200 */
-#define CONF_TEST_BAUDRATE   115200
-/** Char setting     : 8-bit character length (don't care for UART) */
-#define CONF_TEST_CHARLENGTH US_MR_CHRL_8_BIT
-/** Parity setting   : No parity check */
-#define CONF_TEST_PARITY     US_MR_PAR_NO
-/** Stopbit setting  : No extra stopbit, i.e., use 1 (don't care for UART) */
-#define CONF_TEST_STOPBITS   US_MR_NBSTOP_1_BIT
+/** Enable SD MMC interface pins through SPI */
+#define CONF_BOARD_SD_MMC_SPI
 
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+/** SPI slave select MACRO definition */
+#define CONF_BOARD_SPI_NPCS0
+
+/** FLEXCOM base address for SPI mode*/
+#define BOARD_FLEXCOM_SPI    FLEXCOM5
+
+#endif /* CONF_BOARD_H_INCLUDED */
