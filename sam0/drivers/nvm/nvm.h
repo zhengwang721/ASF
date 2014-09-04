@@ -57,6 +57,7 @@
  *  - SAM D20/D21
  *  - SAM R21
  *  - SAM D10/D11
+ *  - SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_nvm_prerequisites
@@ -77,6 +78,20 @@
  * The Non-Volatile Memory (NVM) module provides an interface to the device's
  * Non-Volatile Memory controller, so that memory pages can be written, read,
  * erased and reconfigured in a standardized manner.
+ *
+ * \subsection asfdoc_sam0_nvm_features Driver Feature Macro Definition
+ * <table>
+ *  <tr>
+ *    <th>Driver Feature Macro</th>
+ *    <th>Supported devices</th>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_NVM_WWREE</td>
+ *    <td>SAML21</td>
+ *  </tr>
+ * </table>
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
  *
  * \subsection asfdoc_sam0_nvm_module_overview_regions Memory Regions
  * The NVM memory space of the SAM devices is divided into two sections:
@@ -249,6 +264,16 @@
 extern "C" {
 #endif
 
+/**
+ * Define NVM features set according to different device family
+ * @{
+*/
+#if (SAML21) || defined(__DOXYGEN__)
+/** Write while read EEPROM emulation feature*/
+#  define FEATURE_NVM_WWREE
+#endif
+/*@}*/
+
 #if !defined(__DOXYGEN__)
 /**
  * \brief Mask for the error flags in the status register.
@@ -326,6 +351,12 @@ enum nvm_command {
 	 *  commands to be issued.
 	 */
 	NVM_COMMAND_EXIT_LOW_POWER_MODE        = NVMCTRL_CTRLA_CMD_CPRM,
+#ifdef FEATURE_NVM_WWREE
+	/** Write while read(WWR) EEPROM area erase row */
+	NVM_COMMAND_WWREE_ERASE_ROW            = NVMCTRL_CTRLA_CMD_WWREEER,
+	/** WWR EEPROM write page */
+	NVM_COMMAND_WWREE_WRITE_PAGE           = NVMCTRL_CTRLA_CMD_WWREEWP,
+#endif
 };
 
 /**
@@ -415,6 +446,10 @@ struct nvm_parameters {
 	/** Size of the Bootloader memory section configured in the NVM auxiliary
 	 *  memory space. */
 	uint32_t bootloader_number_of_pages;
+#ifdef FEATURE_NVM_WWREE
+	/** Number of pages in read while write EEPROM(WWREE) emulation area. */
+	uint16_t wwr_eeprom_number_of_pages;
+#endif
 };
 
 /**
@@ -719,6 +754,9 @@ static inline enum nvm_error nvm_get_error(void)
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for SAML21.</td>
  *	</tr>
  *	<tr>
  *		<td>Added support for SAMD21, removed BOD12 reference, removed
