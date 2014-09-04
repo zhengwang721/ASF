@@ -99,6 +99,14 @@ void system_board_init(void)
 	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
 
+	/* Initialize EXT3 LED0, LED1 & LED2, turned off */
+	ioport_set_pin_level(OLED1_LED1_PIN, !OLED1_LED1_ACTIVE);
+	ioport_set_pin_dir(OLED1_LED1_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(OLED1_LED2_PIN, !OLED1_LED2_ACTIVE);
+	ioport_set_pin_dir(OLED1_LED2_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(OLED1_LED3_PIN, !OLED1_LED3_ACTIVE);
+	ioport_set_pin_dir(OLED1_LED3_PIN, IOPORT_DIR_OUTPUT);
+
 #if defined (CONF_BOARD_UART_CONSOLE)
 	/* Configure UART pins */
 	ioport_set_port_peripheral_mode(PINS_USART7_PORT, PINS_USART7,
