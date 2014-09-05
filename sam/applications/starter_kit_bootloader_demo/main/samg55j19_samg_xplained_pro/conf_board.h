@@ -44,10 +44,25 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+/** Configure AT30TSE pins */
+#define CONF_BOARD_AT30TSE
 
-/** Configure TWI4 pins */
-#define CONF_BOARD_TWI4
+/** Enable the OLED screen. */
+#define CONF_BOARD_SPI
+#define CONF_BOARD_SPI_NPCS1
+
+#define CONF_BOARD_OLED_UG_2832HSWEG04
+
+/** Enable SD MMC interface pins through SPI */
+#define CONF_BOARD_SD_MMC_SPI
+
+/** SPI slave select MACRO definition */
+#define CONF_BOARD_SPI_NPCS0
+
+/** FLEXCOM base address for SPI mode*/
+#define BOARD_FLEXCOM_SPI    FLEXCOM5
+
+/** Flexcom application to use */
+#define BOARD_FLEXCOM_TWI          FLEXCOM4
 
 #endif /* CONF_BOARD_H_INCLUDED */

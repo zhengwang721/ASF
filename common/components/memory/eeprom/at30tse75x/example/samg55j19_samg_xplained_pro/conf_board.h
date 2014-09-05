@@ -44,10 +44,13 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
+/** Configure AT30TSE pins */
+#define CONF_BOARD_AT30TSE
+
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
-/** Configure TWI4 pins */
-#define CONF_BOARD_TWI4
+/** Flexcom application to use */
+#define BOARD_FLEXCOM_TWI          FLEXCOM4
 
 #endif /* CONF_BOARD_H_INCLUDED */

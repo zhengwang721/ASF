@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief SD/MMC stack configuration file.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,13 +41,35 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_SD_MMC_H_INCLUDED
+#define CONF_SD_MMC_H_INCLUDED
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+// Define to enable the SPI mode instead of Multimedia Card interface mode
+#define SD_MMC_SPI_MODE
 
-/** Configure TWI4 pins */
-#define CONF_BOARD_TWI4
+// Define to enable the SDIO support
+//#define SDIO_SUPPORT_ENABLE
 
-#endif /* CONF_BOARD_H_INCLUDED */
+// Define to enable the debug trace to the current standard output (stdio)
+//#define SD_MMC_DEBUG
+
+/*! \name board SPI SD/MMC slot template definition
+ *
+ * The GPIO and SPI Connections of the SD/MMC Connector must be added
+ * in board.h file.
+ * Also do not forget to add the initialization of this GPIO in the init.c
+ * from the board.
+ * See below an example:
+ */
+//! @{
+#define SD_MMC_SPI_MEM_CNT          1
+
+#ifdef  SPI
+# define SD_MMC_SPI                SPI
+#else
+# define SD_MMC_SPI                SPI5
+#endif
+//! @}
+
+#endif /* CONF_SD_MMC_H_INCLUDED */
+

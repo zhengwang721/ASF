@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief Spi Master configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,14 +40,25 @@
  * \asf_license_stop
  *
  */
+ 
+#ifndef CONF_SPI_MASTER_H_INCLUDED
+#define CONF_SPI_MASTER_H_INCLUDED
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+/* Possibility to change low-level configurations here. */
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+//! Default Configuration of SPI Master Delay BCS
+#define CONFIG_SPI_MASTER_DELAY_BCS            0x00
 
-/** Configure TWI4 pins */
-#define CONF_BOARD_TWI4
+//! Default Configuration of SPI Master Bits per Transfer Definition
+#define CONFIG_SPI_MASTER_BITS_PER_TRANSFER    8
 
-#endif /* CONF_BOARD_H_INCLUDED */
+//! Default Configuration of SPI Master Delay BCT
+#define CONFIG_SPI_MASTER_DELAY_BCT            0x00
+
+//! Default Configuration of SPI Master Delay BS
+#define CONFIG_SPI_MASTER_DELAY_BS             0x00
+
+//! Default Configuration of SPI Master Dummy Field
+// #define CONFIG_SPI_MASTER_DUMMY                0xFF
+
+#endif /* CONF_SPI_MASTER_H_INCLUDED */

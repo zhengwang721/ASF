@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief SD/MMC stack configuration file.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,13 +41,17 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_SD_MMC_H_INCLUDED
+#define CONF_SD_MMC_H_INCLUDED
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+/* Define it to enable the SPI mode instead of Multimedia Card interface mode */
+#define SD_MMC_SPI_MODE
 
-/** Configure TWI4 pins */
-#define CONF_BOARD_TWI4
+/* Define it to enable the SDIO support */
+#define SDIO_SUPPORT_ENABLE
 
-#endif /* CONF_BOARD_H_INCLUDED */
+/* Define it to enable the debug trace to the current standard output (stdio) */
+//#define SD_MMC_DEBUG
+
+#endif /* CONF_SD_MMC_H_INCLUDED */
+

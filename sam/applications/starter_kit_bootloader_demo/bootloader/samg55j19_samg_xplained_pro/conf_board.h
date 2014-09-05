@@ -47,7 +47,16 @@
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
-/** Configure TWI4 pins */
-#define CONF_BOARD_TWI4
+/** No second push button */
+#define BOARD_NO_PUSHBUTTON_2
+
+/** Enable SD MMC interface pins through SPI */
+#define CONF_BOARD_SD_MMC_SPI
+
+/** SPI slave select MACRO definition */
+#define CONF_BOARD_SPI_NPCS0
+
+/** FLEXCOM base address for SPI mode*/
+#define BOARD_FLEXCOM_SPI    FLEXCOM5
 
 #endif /* CONF_BOARD_H_INCLUDED */
