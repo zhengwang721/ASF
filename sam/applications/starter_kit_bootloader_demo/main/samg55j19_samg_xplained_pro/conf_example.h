@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief example configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,13 +41,17 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_EXAMPLE_H_INCLUDED
+#define CONF_EXAMPLE_H_INCLUDED
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+/* Choose different define to generate different application. */
+#define CONF_ENGLISH_LANGUAGE
+//#define CONF_CHINESE_LANGUAGE
+//#define CONF_JAPANESE_LANGUAGE
+//#define CONF_FRENCH_LANGUAGE
+//#define CONF_SPANISH_LANGUAGE
 
-/** Configure TWI4 pins */
-#define CONF_BOARD_TWI4
+/* Test page start address. */
+#define TEST_PAGE_ADDRESS (IFLASH_ADDR + IFLASH_SIZE - IFLASH_PAGE_SIZE * 16)
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_EXAMPLE_H_INCLUDED */

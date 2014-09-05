@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Board configuration.
+ * \brief SSD1306 display controller driver configuration file.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,14 +40,20 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_SSD1306_H_INCLUDED
+#define CONF_SSD1306_H_INCLUDED
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+// Interface configuration for SAMG55 Xplained Pro
+#define SSD1306_SPI_INTERFACE
+#define SSD1306_SPI SPI5
 
-/** Enable Com Port. */
-#define CONF_BOARD_UART_CONSOLE
+#define SSD1306_DC_PIN       UG_2832HSWEG04_DATA_CMD_GPIO
+#define SSD1306_RES_PIN      UG_2832HSWEG04_RESET_GPIO
+#define SSD1306_CS_PIN       UG_2832HSWEG04_SS
 
-/** Configure TWI4 pins */
-#define CONF_BOARD_TWI4
+// Minimum clock period is 50ns@3.3V -> max frequency is 20MHz
+#define SSD1306_CLOCK_SPEED          UG_2832HSWEG04_BAUDRATE
+#define SSD1306_DISPLAY_CONTRAST_MAX 40
+#define SSD1306_DISPLAY_CONTRAST_MIN 30
 
-#endif /* CONF_BOARD_H_INCLUDED */
+#endif /* CONF_SSD1306_H_INCLUDED */
