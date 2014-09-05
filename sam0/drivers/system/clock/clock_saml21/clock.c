@@ -727,6 +727,8 @@ void system_clock_init(void)
 	
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
 
+	OSC32KCTRL->OSCULP32K.reg = (CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN1K_Pos)
+								|(CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN32K_Pos);
 	/* XOSC */
 #if CONF_CLOCK_XOSC_ENABLE == true
 	struct system_clock_source_xosc_config xosc_conf;
@@ -742,7 +744,6 @@ void system_clock_init(void)
 	system_clock_source_xosc_set_config(&xosc_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC);
 #endif
-
 
 	/* XOSC32K */
 #if CONF_CLOCK_XOSC32K_ENABLE == true

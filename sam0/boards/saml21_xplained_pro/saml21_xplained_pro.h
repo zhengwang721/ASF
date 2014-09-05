@@ -195,6 +195,19 @@ void system_board_init(void);
 #define EXT1_ADC_1_PINMUX         PINMUX_PA03B_ADC_AIN1
 /** @} */
 
+/** \name Extension header #1 PWM definitions
+ *  @{
+ */
+#define EXT1_PWM_MODULE           TC2
+#define EXT1_PWM_0_CHANNEL        0
+#define EXT1_PWM_0_PIN            PIN_PB02E_TC2_WO0
+#define EXT1_PWM_0_MUX            MUX_PB02E_TC2_WO0
+#define EXT1_PWM_0_PINMUX         PINMUX_PB02E_TC2_WO0
+#define EXT1_PWM_1_CHANNEL        1
+#define EXT1_PWM_1_PIN            PIN_PB03E_TC2_WO1
+#define EXT1_PWM_1_MUX            MUX_PB03E_TC2_WO1
+#define EXT1_PWM_1_PINMUX         PINMUX_PB03E_TC2_WO1
+/** @} */
 
 /** \name Extension header #1 IRQ/External interrupt definitions
  *  @{
@@ -298,6 +311,19 @@ void system_board_init(void);
 #define EXT2_ADC_1_PINMUX         PINMUX_PA11B_ADC_AIN19
 /** @} */
 
+/** \name Extension header #2 PWM definitions
+ *  @{
+ */
+#define EXT2_PWM_MODULE           TC0
+#define EXT2_PWM_0_CHANNEL        0
+#define EXT2_PWM_0_PIN            PIN_PB12E_TC0_WO0
+#define EXT2_PWM_0_MUX            MUX_PB12E_TC0_WO0
+#define EXT2_PWM_0_PINMUX         PINMUX_PB12E_TC0_WO0
+#define EXT2_PWM_1_CHANNEL        1
+#define EXT2_PWM_1_PIN            PIN_PB13E_TC0_WO1
+#define EXT2_PWM_1_MUX            MUX_PB13E_TC0_WO1
+#define EXT2_PWM_1_PINMUX         PINMUX_PB13E_TC0_WO1
+/** @} */
 /** \name Extension header #2 IRQ/External interrupt definitions
  *  @{
  */
