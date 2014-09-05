@@ -49,7 +49,7 @@
  * -> Debug console
  * -> Debug LED
  */
-#define DBG_USE_USART           /**< Define to Use UART (optional) */
+//#define DBG_USE_USART           /**< Define to Use UART (optional) */
 #  define DBG_USART_NAME USART   /**< UART/USART */
 #  define DBG_USART_NB   7      /**< UART/USART number (Nothing or 0, 1...) */
 #  define DBG_USART_BAUDRATE    115200 /**< UART/USART baudrate */

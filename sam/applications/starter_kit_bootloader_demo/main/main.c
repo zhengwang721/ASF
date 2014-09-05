@@ -75,7 +75,7 @@
  *
  * \note
  * The size of generated "demo_cn.bin", "demo_fr.bin", "demo_jp.bin"and "demo_sp.bin"
- * is bigger than 512K Byte. So these bins can not used in SAMG55-Xpro.
+ * is bigger than 512K Byte. So these bins can not used in SAMG55 Xpro board.
  *
  * If SW0 button on the Xplain Pro board is not pressed, the demo operates
  * in 3 different modes: temperature information, light sensor information

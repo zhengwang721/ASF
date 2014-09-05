@@ -111,7 +111,7 @@ uint32_t mem_flash_erase(void *addr, uint32_t size)
 	uint32_t page_off  = page_addr % (IFLASH_PAGE_SIZE*16);
 	uint32_t rc, erased = 0;
 	if (page_off) {
-		dbg_print("flash: erase address must be 8 page aligned\r\n");
+		dbg_print("flash: erase address must be 16 page aligned\r\n");
 		page_addr = page_addr - page_off;
 		dbg_print("flash: erase from %x\r\n", (unsigned)page_addr);
 	}

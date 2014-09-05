@@ -73,9 +73,11 @@
  */
 void spi_master_init(Spi *p_spi)
 {
-	spi_enable_clock(p_spi);
 #if SAMG55
-	flexcom_set_opmode(BOARD_FLEXCOM_SPI, FLEXCOM_MR_OPMODE_SPI);
+	flexcom_enable(BOARD_FLEXCOM_SPI);
+	flexcom_set_opmode(BOARD_FLEXCOM_SPI, FLEXCOM_SPI);
+#else
+	spi_enable_clock(p_spi);
 #endif
 	spi_reset(p_spi);
 	spi_set_master_mode(p_spi);

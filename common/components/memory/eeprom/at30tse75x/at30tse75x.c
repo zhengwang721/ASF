@@ -113,9 +113,11 @@ void at30tse_init(void)
 		.smbus = 0
 	};
 
-	sysclk_enable_peripheral_clock(BOARD_AT30TSE_TWI_ID);
 #if SAMG55
-	flexcom_set_opmode(BOARD_FLEXCOM_TWI, FLEXCOM_MR_OPMODE_TWI);
+	flexcom_enable(BOARD_FLEXCOM_TWI);
+	flexcom_set_opmode(BOARD_FLEXCOM_TWI, FLEXCOM_TWI);
+#else
+	sysclk_enable_peripheral_clock(BOARD_AT30TSE_TWI_ID);
 #endif
 	twi_master_init(BOARD_AT30TSE_TWI, &opts);
 
