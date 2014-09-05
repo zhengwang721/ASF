@@ -203,8 +203,8 @@ typedef struct _DeviceVectors
  // void* pfnUSART4_Handler;  /* 20  FLEXCOM 4 */
 //  void* pfnSPI4_Handler;    /* 20  FLEXCOM 4 */
   void* pfnTWI4_Handler;    /* 20  FLEXCOM 4 */
-  void* pfnUSART5_Handler;  /* 21  FLEXCOM 5 */
-//  void* pfnSPI5_Handler;    /* 21  FLEXCOM 5 */
+ // void* pfnUSART5_Handler;  /* 21  FLEXCOM 5 */
+  void* pfnSPI5_Handler;    /* 21  FLEXCOM 5 */
 //  void* pfnTWI5_Handler;    /* 21  FLEXCOM 5 */
   void* pfnUSART6_Handler;  /* 22  FLEXCOM 6 */
 //  void* pfnSPI6_Handler;    /* 22  FLEXCOM 6 */
