@@ -47,7 +47,7 @@
 #include <compiler.h>
 #include <system.h>
 #include <clock.h>
-#include "sercom_interrupt.h"
+#include <system_interrupt.h>
 #include "sercom_pinout.h"
 
 #ifdef __cplusplus
