@@ -124,6 +124,8 @@ uint32_t _sercom_get_default_pad(
 		Sercom *const sercom_module,
 		const uint8_t pad);
 
+uint8_t _sercom_get_sercom_inst_index(
+		Sercom *const sercom_instance);
 #ifdef __cplusplus
 }
 #endif
