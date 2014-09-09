@@ -441,7 +441,7 @@ void usb_init(void)
  *
  * \section uhc_conf_clock conf_clock.h Examples
  *
- * Content of conf_clock.h for AT32UC3A0, AT32UC3A1, AT32UC3B devices (USBB):
+ * Content of conf_clock.h for AT32UC3A0, AT32UC3A1, and AT32UC3B devices (USBB):
  * \code
 	// Configuration based on 12MHz external OSC:
 	#define CONFIG_PLL1_SOURCE          PLL_SRC_OSC0
@@ -451,7 +451,7 @@ void usb_init(void)
 	#define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
  \endcode
  *
- * Content of conf_clock.h for AT32UC3A3, AT32UC3A4 devices (USBB with high speed support):
+ * Content of conf_clock.h for AT32UC3A3 and AT32UC3A4 devices (USBB with high speed support):
  * \code
 	// Configuration based on 12MHz external OSC:
 	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_OSC0
@@ -470,7 +470,7 @@ void usb_init(void)
 	#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL1
  \endcode
  *
- * Content of conf_clock.h for SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed):
+ * Content of conf_clock.h for SAM3X and SAM3A devices (UOTGHS: USB OTG High Speed):
  * \code
 	// USB Clock Source fixed at UPLL.
 	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_UPLL
@@ -540,7 +540,7 @@ void usb_init(void)
  * \section uhc_use_case_1_setup Setup Steps
  *
  * Prior to implement this use case, be sure to have already
- * apply the UHI module "basic use case".
+ * applied the UHI module "basic use case".
  *
  * \section uhc_use_case_1_usage Usage Steps
  *
@@ -566,7 +566,7 @@ void usb_init(void)
  * \section uhc_use_case_2_setup Setup Steps
  *
  * Prior to implement this use case, be sure to have already
- * apply the UHI module "basic use case".
+ * applied the UHI module "basic use case".
  *
  * \section uhc_use_case_2_usage Usage Steps
  *
@@ -593,13 +593,12 @@ void usb_init(void)
  *
  * \note On the Atmel boards, the switch of USB role is managed automatically by the
  * USB stack thank to a USB OTG connector and its USB ID pin.
- * For a dual role management without OTG connector, refer to
- * "AVR4950 section 6.1 Dual roles".
+ * Refer to "AVR4950 Section 6.1 Dual roles" for further information about dual roles.
  *
  * \section uhc_use_case_3_setup Setup Steps
  *
  * Prior to implement this use case, be sure to have already
- * apply the UHI module "basic use case".
+ * applied the UHI module "basic use case".
  *
  * \section uhc_use_case_3_usage Usage Steps
  *

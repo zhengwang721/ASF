@@ -71,7 +71,7 @@
  */
 
 /** Global definition which contains standard UHI API for UHC.
- *  It must be added in USB_HOST_UHI define from conf_usb_host.h file. */
+ *  It must be added in USB_HOST_UHI definition from conf_usb_host.h file. */
 #define UHI_MSC { \
 	.install = uhi_msc_install, \
 	.enable = uhi_msc_enable, \
@@ -113,7 +113,7 @@ void uhi_msc_enable(uhc_device_t* dev);
 void uhi_msc_uninstall(uhc_device_t* dev);
 /**@}*/
 
-/** Status of LUN */
+/** Status of LUN. */
 typedef enum
 {
 	/** Success, memory ready. */
@@ -330,7 +330,7 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
  * The "USB Host MSC (Multiple Classes support)" module usage is described
  * in \ref uhi_msc_mem_use_cases "Advanced Use Cases".
  *
- * This example do a simple physical memory access, but a File System module
+ * This example do a simple physical memory access, but a file system module
  * can be added to decode the USB memory file system, see FatFS examples.
  *
  * \subsection uhi_msc_mem_basic_use_case_setup Setup Steps
@@ -421,16 +421,16 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
  *
  * \section asfdoc_uhi_msc_config_examples_2 conf_clock.h
  *
- * \subsection asfdoc_uhi_msc_config_examples_2_1 AT32UC3A0, AT32UC3A1, AT32UC3B Devices (USBB)
+ * \subsection asfdoc_uhi_msc_config_examples_2_1 AT32UC3A0, AT32UC3A1, and AT32UC3B Devices (USBB)
  * \include example/at32uc3a0512_evk1100/conf_clock.h
  *
- * \subsection asfdoc_uhi_msc_config_examples_2_2 AT32UC3A3, AT32UC3A4 Devices (USBB with High Speed Support)
+ * \subsection asfdoc_uhi_msc_config_examples_2_2 AT32UC3A3 and AT32UC3A4 Devices (USBB with High Speed Support)
  * \include example/at32uc3a3256_evk1104/conf_clock.h
  *
- * \subsection asfdoc_uhi_msc_config_examples_2_3 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U Devices (USBC)
+ * \subsection asfdoc_uhi_msc_config_examples_2_3 AT32UC3C, ATUCXXD, ATUCXXL3U, and ATUCXXL4U Devices (USBC)
  * \include example/at32uc3c0512c_uc3c_ek/conf_clock.h
  *
- * \subsection asfdoc_uhi_msc_config_examples_2_4 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
+ * \subsection asfdoc_uhi_msc_config_examples_2_4 SAM3X and SAM3A Devices (UOTGHS: USB OTG High Speed)
  * \include example2/sam3x8h_sam3x_ek/conf_clock.h
  *
  * \section asfdoc_uhi_msc_config_examples_3 conf_clocks.h
@@ -440,16 +440,16 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
  *
  * \section asfdoc_uhi_msc_config_examples_4 conf_board.h
  *
- * \subsection asfdoc_uhi_msc_config_examples_4_1 AT32UC3A0, AT32UC3A1, AT32UC3B Devices (USBB)
+ * \subsection asfdoc_uhi_msc_config_examples_4_1 AT32UC3A0, AT32UC3A1, and AT32UC3B Devices (USBB)
  * \include example/at32uc3a0512_evk1100/conf_board.h
  *
- * \subsection asfdoc_uhi_msc_config_examples_4_2 AT32UC3A3, AT32UC3A4 Devices (USBB with High Speed Support)
+ * \subsection asfdoc_uhi_msc_config_examples_4_2 AT32UC3A3, and AT32UC3A4 Devices (USBB with High Speed Support)
  * \include example/at32uc3a3256_evk1104/conf_board.h
  *
- * \subsection asfdoc_uhi_msc_config_examples_42_3 AT32UC3C, ATUCXXD, ATUCXXL3U, ATUCXXL4U Devices (USBC)
+ * \subsection asfdoc_uhi_msc_config_examples_42_3 AT32UC3C, ATUCXXD, ATUCXXL3U, and ATUCXXL4U Devices (USBC)
  * \include example/at32uc3c0512c_uc3c_ek/conf_board.h
  *
- * \subsection asfdoc_uhi_msc_config_examples_4_4 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
+ * \subsection asfdoc_uhi_msc_config_examples_4_4 SAM3X and SAM3A Devices (UOTGHS: USB OTG High Speed)
  * \include example2/sam3x8h_sam3x_ek/conf_board.h
  *
  * \subsection asfdoc_uhi_msc_config_examples_4_5 SAMD21 Devices (USB)
