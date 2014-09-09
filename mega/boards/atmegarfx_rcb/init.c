@@ -102,7 +102,7 @@ void board_init(void)
 #ifdef BREAKOUT_BOARD
   //Enable RCB_BB RS232 level converter
 	ioport_set_port_dir(IOPORT_PORTD,BB_SIO_MASK,IOPORT_DIR_OUTPUT);
-	ioport_set_port_level(IOPORT_PORTD,BB_SIO_MASK,BB_SIO_VAL);
+	ioport_set_port_level(IOPORT_PORTD,BB_SIO_VAL,BB_SIO_VAL);
 #endif
 #endif
 

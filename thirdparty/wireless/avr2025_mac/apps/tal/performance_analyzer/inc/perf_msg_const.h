@@ -85,6 +85,7 @@
 #define REGISTER_WRITE_CONFIRM_LEN      (5)
 #define REGISTER_DUMP_CONFIRM_LEN       (6)
 #define PKT_STREAM_CONFIRM_LEN          (3)
+#define RX_ON_CONFIRM_LEN			    (3)
 #define ED_SCAN_START_CONFIRM_LEN       (7)
 #define ED_SCAN_END_INDICATION_LEN      (2)
 #define SENSOR_DATA_CONFIRM_LEN         (10)
@@ -122,6 +123,7 @@
 #define TRANSMISSION_FAILURE              (0x30)
 #define RANGE_TEST_IN_PROGRESS            (0x31)
 #define PKT_STREAM_IN_PROGRESS            (0x32)
+#define RX_ON_MODE_IN_PROGRESS            (0x33)
 
 
 /* ! \} */
@@ -204,6 +206,7 @@
 #define REGISTER_ADDR_POS                 (3)
 #define REGISTER_VAL_POS                  (5)
 #define PKTSTREAM_STOP					  (0)
+#define RX_ON_STOP					  (0)
 /* Field positions - REGISTER_DUMP_REQ */
 #define START_REG_ADDR_POS                (3)
 #define END_REG_ADDR_POS                  (5)
@@ -241,7 +244,8 @@ enum msg_code {
 	GET_CURRENT_CONFIG_REQ          =     (0x0f),
 	RANGE_TEST_START_REQ            =     (0X50),
 	RANGE_TEST_STOP_REQ             =     (0x52),
-	PKT_STREAM_REQ                   =     (0X53),
+	PKT_STREAM_REQ                  =     (0X22),
+	RX_ON_REQ						=     (0X24),
 
 	/* Confirms and Indications */
 
@@ -268,7 +272,8 @@ enum msg_code {
 	RANGE_TEST_BEACON_RESPONSE      =     (0x54),
 	RANGE_TEST_BEACON               =     (0x55),
 	RANGE_TEST_MARKER_INDICATION    =     (0x56),
-	PKT_STREAM_CONFIRM               =     (0x57)
+	PKT_STREAM_CONFIRM              =     (0x23),
+	RX_ON_CONFIRM					=     (0X25)
 }
 SHORTENUM;
 

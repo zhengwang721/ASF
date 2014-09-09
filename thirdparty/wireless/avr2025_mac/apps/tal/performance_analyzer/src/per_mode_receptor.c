@@ -54,6 +54,7 @@
 #include <ctype.h>
 #include "app_init.h"
 #include "tal_constants.h"
+#include "tal_internal.h"
 #include "tal_helper.h"
 #include "ieee_const.h"
 #include "app_frame_format.h"
@@ -129,7 +130,7 @@ extern bool pkt_stream_stop;
 
 extern uint32_t pkt_stream_gap_time ;
 extern bool rdy_to_tx;
-
+bool rx_on_mode = false;
 /* ! \} */
 
 /* === IMPLEMENTATION ====================================================== */
@@ -173,7 +174,7 @@ void per_mode_receptor_task(void)
 {
 	/* For Range Test  in PER Mode the receptor has to poll for a button
 	 * press to initiate marker transmission */
-	if (range_test_in_progress || remote_cw_start) {
+	if (range_test_in_progress || remote_cw_start || ((!pkt_stream_stop && rdy_to_tx && !node_info.transmitting))) {
 		static uint8_t key_press;
 		/* Check for any key press */
 		key_press = app_debounce_button();
@@ -192,11 +193,15 @@ void per_mode_receptor_task(void)
 						NULL);
 			}
 			}
-			else
+			else if(remote_cw_start)
 			{
 				remote_cw_start=false;
 				sw_timer_stop(CW_TX_TIMER);
 				stop_cw_transmission(&(cw_start_mode));
+			}
+			else //(!pkt_stream_stop && rdy_to_tx && !node_info.transmitting)
+			{
+				stop_pkt_streaming(NULL);
 			}
 		}
 	}
@@ -267,6 +272,11 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
 		cw_ack_sent = true;
 		start_cw_transmission(cw_start_mode, cw_tmr_val);
 	}
+	//enable rx on mode in receptor after sending rxon confirm to the initiator
+	if(rx_on_mode)
+	{
+		set_trx_state(CMD_RX_ON);
+	}
 	/* Allow the next transmission to happen */
 	node_info.transmitting = false;
 }
@@ -312,13 +322,26 @@ bool send_remote_reply_cmd(uint8_t* serial_buf,uint8_t len)
 void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
 {
 	app_payload_t *msg;
+	static uint8_t remote_cmd_seq_num;
 	static uint8_t rx_count;
 	uint8_t expected_frame_size;
+
 
 	/* Point to the message : 1 =>size is first byte and 2=>FCS*/
 	msg
 		= (app_payload_t *)(mac_frame_info->mpdu + LENGTH_FIELD_LEN +
 			FRAME_OVERHEAD - FCS_LEN);
+
+if(rx_on_mode)
+{
+	
+
+	if(!((msg->cmd_id == REMOTE_TEST_CMD) && (msg->payload.remote_test_req_data.remote_serial_data[MESSAGE_ID_POS])==(RX_ON_REQ|0X80)))
+	{
+
+		return;
+	}
+}
 
 #ifdef CRC_SETTING_ON_REMOTE_NODE
 	/* If counting of wrong CRC packets is enabled on receptor node */
@@ -605,6 +628,10 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
 	break;
 	case REMOTE_TEST_CMD:
 	{
+		if (remote_cmd_seq_num == msg->seq_num) {
+			return;
+		}
+		remote_cmd_seq_num = msg->seq_num;
 		/*Command received by the receptor to start a test ,from the initiator node*/
 		uint8_t serial_data_len;	
 		serial_data_len = *(mac_frame_info->mpdu + 12);

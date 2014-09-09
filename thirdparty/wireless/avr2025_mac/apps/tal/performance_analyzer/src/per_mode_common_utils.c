@@ -56,6 +56,7 @@
 #include "app_per_mode.h"
 #include "app_frame_format.h"
 #include "app_init.h"
+#include "perf_api.h"
 /* === TYPES =============================================================== */
 
 /* === GLOBALS============================================================== */
@@ -63,6 +64,7 @@
 static uint8_t prev_non_26chn_tx_power;
 #endif
 extern bool rdy_to_tx;
+extern bool pkt_stream_stop;
 frame_info_t *stream_pkt;
 uint8_t pkt_buffer[LARGE_BUFFER_SIZE];
 /* === IMPLEMENTATION======================================================= */
@@ -131,7 +133,7 @@ void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl)
 /**
  * \brief To Configure the frame sending
  */
-void configure_pkt_stream_frames(void)
+void configure_pkt_stream_frames(uint16_t frame_len)
 {
 	uint8_t index;
 	uint8_t app_frame_length;
@@ -147,7 +149,7 @@ void configure_pkt_stream_frames(void)
 	 */
 
 	/* Get length of current frame. */
-	app_frame_length = 127 - 	FRAME_OVERHEAD;
+	app_frame_length = frame_len - FRAME_OVERHEAD;
 
 	/* Set payload pointer. */
 	frame_ptr = temp_frame_ptr
@@ -213,7 +215,7 @@ void configure_pkt_stream_frames(void)
 
 	/* First element shall be length of PHY frame. */
 	frame_ptr--;
-	*frame_ptr = 127; //sriram
+	*frame_ptr = frame_len; //sriram
 
 	/* Finished building of frame. */
 	stream_pkt->mpdu = frame_ptr;
@@ -250,4 +252,10 @@ void pkt_stream_gap_timer(void *parameter)
 	parameter=parameter;
 }
 
+void stop_pkt_streaming(void * parameter)
+{
+	pkt_stream_stop = true;
+	sw_timer_stop(T_APP_TIMER);
+	usr_pkt_stream_confirm(MAC_SUCCESS,false);
+}
 /* EOF */

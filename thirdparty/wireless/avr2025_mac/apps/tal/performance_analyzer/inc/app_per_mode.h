@@ -223,7 +223,7 @@ FLASH_EXTERN(int8_t tx_pwr_table[16]);
 #endif
 
 extern trx_config_params_t curr_trx_config_params;
-void configure_pkt_stream_frames(void);
+void configure_pkt_stream_frames(uint16_t frame_len);
 
 /* ! \} */
 /* === Prototypes =========================================================== */
@@ -356,6 +356,9 @@ void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl);
 float reverse_float( const float float_val );
 
 void pkt_stream_gap_timer(void *parameter);
+
+void stop_pkt_streaming(void * parameter);
+
 /* ! \} */
 #ifdef __cplusplus
 extern "C" {

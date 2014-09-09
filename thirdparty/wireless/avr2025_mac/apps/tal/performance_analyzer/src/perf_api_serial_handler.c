@@ -170,6 +170,7 @@ static inline void handle_incoming_msg(void);
 
 static uint8_t curr_tx_buffer_index = 0;
 extern bool remote_serial_tx_failure;
+extern bool rx_on_mode;
 /* ! \} */
 /* === Implementation ====================================================== */
 
@@ -357,7 +358,11 @@ static inline void handle_incoming_msg(void)
 	if (PROTOCOL_ID != sio_rx_buf[1]) { /* protocol id */
 		return;
 	}
-
+/*
+	if(node_info.main_state == PER_TEST_RECEPTOR && rx_on_mode && ((sio_rx_buf[MESSAGE_ID_POS] & 0X7F) != RX_ON_REQ))
+	{
+		return;
+	}*/
 	/* If the node is in any of these state dont respond to any serial
 	 * commands */
 	if ((PEER_SEARCH_RANGE_RX == node_info.main_state) ||
@@ -374,14 +379,21 @@ static inline void handle_incoming_msg(void)
 	{		
 		if(error_code ==  MAC_SUCCESS)
 		{		
-
-		send_remote_cmd(sio_rx_buf,*sio_rx_buf);
-		return;
+		if(((sio_rx_buf[MESSAGE_ID_POS]&0X7F)==RX_ON_REQ) && (sio_rx_buf[3] == RX_ON_STOP))
+		{
+			//todo : perform sw retry when ack is disabled for reliability
+			send_remote_cmd(sio_rx_buf,*sio_rx_buf,false);
 		}
 		else
 		{
+			send_remote_cmd(sio_rx_buf,*sio_rx_buf,true);
+		}
+		return;
+		}
+	else
+{
 		sio_rx_buf[MESSAGE_ID_POS] &=  0X7F;
-		}		
+	}		
 		
 	}
 	// to be moved to convert_ota_serial_frame_rx
@@ -965,9 +977,10 @@ static inline void handle_incoming_msg(void)
 		{
 				/* Check any ongoing transaction in place */
 			if ((error_code && (error_code == PKT_STREAM_IN_PROGRESS)&&(sio_rx_buf[3] == PKTSTREAM_STOP))||(error_code == MAC_SUCCESS)) {	
-					uint16_t gap_time = (uint16_t)(sio_rx_buf[4]  | sio_rx_buf[5]  << 8 );
-					uint16_t timeout  = (uint16_t)(sio_rx_buf[6]  | sio_rx_buf[7]  << 8 );
-					pktstream_test(gap_time,timeout,sio_rx_buf[3]);	
+					uint16_t frame_len = (uint16_t)(sio_rx_buf[4]  | sio_rx_buf[5]  << 8 );
+					uint16_t gap_time = (uint16_t)(sio_rx_buf[6]  | sio_rx_buf[7]  << 8 );
+					uint16_t timeout  = (uint16_t)(sio_rx_buf[8]  | sio_rx_buf[9]  << 8 );
+					pktstream_test(gap_time,timeout,sio_rx_buf[3],frame_len);	
 			}
 			else
 			{
@@ -983,7 +996,27 @@ static inline void handle_incoming_msg(void)
 
     }
     break;
-	
+	case RX_ON_REQ :
+	{
+		if ((PER_TEST_INITIATOR == node_info.main_state) || (PER_TEST_RECEPTOR == node_info.main_state) ||
+		(SINGLE_NODE_TESTS == node_info.main_state))
+		{
+			/* Check any ongoing transaction in place */
+			if ((error_code && (error_code == RX_ON_MODE_IN_PROGRESS)&&(sio_rx_buf[3] == RX_ON_STOP))||(error_code == MAC_SUCCESS)) {
+				rx_on_test(sio_rx_buf[3]);
+			}
+			else
+			{
+				usr_rx_on_confirm(error_code,sio_rx_buf[3]);
+				return;
+			}
+		}
+		else
+		{
+			usr_rx_on_confirm(INVALID_CMD,sio_rx_buf[3]);
+		}
+	}
+	break;
 	/* Process ED Scan Start Request command */
 	case ED_SCAN_START_REQ:
 	{
@@ -2084,6 +2117,28 @@ void usr_pkt_stream_confirm(uint8_t status,bool start_stop)
 	*msg_buf = EOT;
 }
 
+void usr_rx_on_confirm(uint8_t status,bool start_stop)
+{
+	uint8_t *msg_buf;
+
+	msg_buf = get_next_tx_buffer();
+
+	/* Check if buffer could not be allocated */
+	if (NULL == msg_buf) {
+		return;
+	}
+
+	/* Copy Len, Protocol Id, Msg Id parameters */
+	*msg_buf++ = PROTOCOL_ID_LEN + RX_ON_CONFIRM_LEN;
+	*msg_buf++ = PROTOCOL_ID;
+	*msg_buf++ = RX_ON_CONFIRM;
+
+	/* Copy confirmation payload */
+	*msg_buf++ = status;
+	*msg_buf++ = start_stop;
+
+	*msg_buf = EOT;
+}
 /*
  * Function to generate ED scan Indication frame that must be sent to
  * host application via serial interface.

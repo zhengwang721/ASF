@@ -63,6 +63,7 @@
 /* # include "sio2host.h" //SAMD20 */
 #include "perf_api.h"
 #include "conf_board.h"
+#include "perf_api_serial_handler.h"
 /* === TYPES =============================================================== */
 
 /**
@@ -233,7 +234,6 @@ extern bool cw_ack_sent,remote_cw_start;
 extern uint8_t cw_start_mode;
 extern uint16_t cw_tmr_val;
 extern bool pulse_mode ;
-static uint8_t* cw_mode;
 
 /* === GLOBALS ============================================================= */
 static bool scanning = false;
@@ -287,7 +287,7 @@ static uint8_t last_tx_power_format_set;
 #endif /* #if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) ) */
 
 static uint32_t range_test_frame_cnt = 0;
-
+extern bool rx_on_mode;
 
 
 /* Size constants for PERformance configuration parameters */
@@ -523,6 +523,9 @@ static void  range_test_timer_handler_cb(void *parameter)
 	}
 }
 
+
+
+	
 /**
  * \brief Wait for reply timer handler is called if any command sent on air
  * times out before any response message is received.
@@ -544,7 +547,14 @@ static void wait_for_reply_timer_handler_cb(void *parameter)
 				NUL_VAL, NUL_VAL);
 		break;
 	}
-
+	case REMOTE_TEST_MODE:
+	{
+		uint8_t *sio_data ;
+		sio_data = (uint8_t *)parameter;
+		remote_serial_tx_failure=true;
+		convert_ota_serial_frame_rx(sio_data,*sio_data);
+		break;
+	}
 #if (ANTENNA_DIVERSITY == 1)
 	case DIVERSITY_STATUS_REQ:
 	{
@@ -618,8 +628,7 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 	case REMOTE_TEST_MODE:
 	{
 	if(status!=MAC_SUCCESS)
-	{
-			
+	{			
 		app_payload_t *msg;
 		uint8_t serial_data_len;
 		/* Point to the message : 1 =>size is first byte and 2=>FCS*/
@@ -627,10 +636,10 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 		FRAME_OVERHEAD - FCS_LEN);		
 		serial_data_len = *(frame->mpdu + 12);
 		remote_serial_tx_failure = true;
-		convert_ota_serial_frame_rx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);
-		
-	
+		sw_timer_stop(CW_TX_TIMER);
+		convert_ota_serial_frame_rx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);	
 	}
+	if(!(sw_timer_is_running(CW_TX_TIMER)))
 	op_mode = TX_OP_MODE;
 	break;
 	
@@ -1224,6 +1233,11 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
 	app_payload_t *msg;
 	param_value_t param_value;
 
+	if(rx_on_mode)
+	{
+		//do not handle requests in continuous rx on mode
+		return;
+	}
 	/* Point to the message : 1 =>size is first byte and 2=>FCS*/
 	msg = (app_payload_t *)(mac_frame_info->mpdu +
 			LENGTH_FIELD_LEN + FRAME_OVERHEAD - FCS_LEN);
@@ -1235,6 +1249,7 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
 		if (remote_cmd_seq_num == msg->seq_num) {
 			return;
 		}
+		sw_timer_stop(CW_TX_TIMER);
 		remote_cmd_seq_num = msg->seq_num;
 		uint8_t payload_len,serial_data_len;
 		payload_len  = *(mac_frame_info->mpdu);
@@ -2048,6 +2063,7 @@ void pulse_cw_transmission(void)
 		tal_set_frequency_regs(cc_band_ct, cc_number_ct);
 	}
 
+
 #endif /* End of (TAL_TYPE == AT86RF233) */
 
 	/* Start  the Continuous Wave transmission */
@@ -2131,13 +2147,11 @@ else if(node_info.main_state == PER_TEST_INITIATOR || ((node_info.main_state == 
 
 if((node_info.main_state == PER_TEST_RECEPTOR) && 1 <= tmr_val )
 {
-	cw_mode=&tx_mode;
-
 	sw_timer_start(CW_TX_TIMER,
 	(uint32_t)tmr_val * 1E6,
 	SW_TIMEOUT_RELATIVE,
 	(FUNC_PTR)stop_cw_transmission,
-	cw_mode);
+	tx_mode);
 
 	
 }
@@ -2182,14 +2196,16 @@ if((node_info.main_state == PER_TEST_RECEPTOR) && 1 <= tmr_val )
  * \brief Stop CW transmission on current channel page
  * \param tx_mode  Continuous transmission mode
  */
-void stop_cw_transmission(uint8_t *tx_mode)
+void stop_cw_transmission(void *parameter)
 {
+	uint8_t cw_mode;
+	cw_mode = (uint8_t *)parameter;
 	/* Stop CW transmission again */
 	tfa_continuous_tx_stop();
 	/* recover all user setting which were set before continuous tx */
 	recover_all_settings();
 	op_mode = TX_OP_MODE;
-	usr_cont_wave_tx_confirm(MAC_SUCCESS, STOP_CWT /*stop*/, *tx_mode);
+	usr_cont_wave_tx_confirm(MAC_SUCCESS, STOP_CWT /*stop*/, cw_mode);
 	remote_cw_start = false;
 }
 
@@ -2983,12 +2999,13 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 		if (tx_pwr_reg <= MIN_TX_PWR_REG_VAL)
 #endif
 		{
+/*
 			if (true == peer_found) {
-				/* send the tx power in Reg value to remote node
-				**/
+				/ * send the tx power in Reg value to remote node
+				** /
 				send_parameters_changed(TX_POWER_REG,
 						(uint8_t)tx_pwr_reg);
-			} else {
+			} else {*/ //sriram
 				/* set the Tx power on source node in case of no
 				 * peer */
 				if (MAC_SUCCESS ==
@@ -3029,7 +3046,7 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 							PARAM_TX_POWER_REG,
 							&param_value);
 				}
-			}
+			
 		} else {
 			/* Send confirmation as VALUE_OUT_OF_RANGE */
 			param_value.param_value_8bit = tx_pwr_reg;
@@ -3079,11 +3096,12 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 #endif /* End of EXT_RF_FRONT_END_CTRL */
 
 		{
+/*
 			if (true == peer_found) {
-				/*send the tx power in dBm to remote node */
+				/ *send the tx power in dBm to remote node * /
 				send_parameters_changed(TX_POWER_DBM,
 						(uint8_t)tx_pwr_dbm);
-			} else {
+			} else {*/ //sriram
 				/* set the Tx power on source node in case of no
 				 * peer */
 				temp_var = CONV_DBM_TO_phyTransmitPower(
@@ -3107,7 +3125,7 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 						PARAM_TX_POWER_DBM,
 						&param_value);
 			}
-		} else {
+		 else {
 			/* Send Set confirmation with status VALUE_OUT_OF_RANGE
 			**/
 			param_value.param_value_8bit = tx_pwr_dbm;
@@ -3708,12 +3726,25 @@ void initiate_per_test(void)
 
 /*Start Packet Streaming Test*/
 
-void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop)
+void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop,uint16_t frame_len)
 {
 	pkt_stream_gap_time = gap_time;
+	if(frame_len<=127)
+	{
+		usr_pkt_stream_confirm(MAC_SUCCESS,start_stop);
+	}
+	else
+	{
+		usr_pkt_stream_confirm(INVALID_ARGUMENT,start_stop);
+	}
+	
+	if((node_info.main_state == PER_TEST_RECEPTOR))
+	{		
+		serial_data_handler();
+	}
 	if(start_stop)
 	{	
-		configure_pkt_stream_frames();
+		configure_pkt_stream_frames(frame_len);
 		op_mode=PKT_STREAM_MODE;
 		if(pkt_stream_gap_time)
 		{		
@@ -3724,6 +3755,17 @@ void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop)
 			rdy_to_tx = true;
 		}
 		pkt_stream_stop = false;
+		
+		if((node_info.main_state == PER_TEST_RECEPTOR) && 1 <= timeout )
+		{
+
+			sw_timer_start(CW_TX_TIMER,
+			(uint32_t)timeout * 1E6,
+			SW_TIMEOUT_RELATIVE,
+			(FUNC_PTR)stop_pkt_streaming,
+			NULL);
+			
+		}
 	}
 	else
 	{
@@ -3731,11 +3773,32 @@ void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop)
 		pkt_stream_stop = true;
 		sw_timer_stop(T_APP_TIMER);
 	}
-	usr_pkt_stream_confirm(MAC_SUCCESS,start_stop);
+	
 	
 }
 
-
+void rx_on_test(bool start_stop_param)
+{
+	// Implementation for Rx on mode
+	if(start_stop_param)
+	{
+		if(node_info.main_state != PER_TEST_RECEPTOR)
+		{
+			
+			set_trx_state(CMD_RX_ON);
+			curr_trx_config_params.trx_state = RX_ON ;
+		}
+			// handle rx on mode in rcptor tx done cb
+			rx_on_mode = true;
+	}
+	else
+	{
+		set_trx_state(CMD_RX_AACK_ON);
+		curr_trx_config_params.trx_state = RX_AACK_ON ;
+		rx_on_mode = false;
+	}
+	usr_rx_on_confirm(MAC_SUCCESS,start_stop_param);
+}
 
 /*
  * \brief To Initiate the Range  test
@@ -4580,7 +4643,7 @@ static bool send_peer_info_req(void)
 	return(false);
 }
 
-void send_remote_cmd(uint8_t* serial_buf,uint8_t len)
+void send_remote_cmd(uint8_t* serial_buf,uint8_t len,bool ack_req)
 {
 	
 	uint8_t payload_length;
@@ -4600,9 +4663,17 @@ void send_remote_cmd(uint8_t* serial_buf,uint8_t len)
 	seq_num_initiator,
 	(uint8_t *)&msg,
 	payload_length,
-	true)
+	ack_req)
 	) {			
 		op_mode = REMOTE_TEST_MODE;
+		if(!ack_req)
+		{
+			sw_timer_start(CW_TX_TIMER,
+			TIMEOUT_FOR_RESPONSE_IN_MICRO_SEC,
+			SW_TIMEOUT_RELATIVE,
+			(FUNC_PTR)wait_for_reply_timer_handler_cb,
+			&msg.payload.remote_test_req_data.remote_serial_data);
+		}
 		} else {
 		op_mode = TX_OP_MODE;
 	}
@@ -4737,7 +4808,11 @@ uint8_t check_error_conditions(void)
 	{
 		error_code = UNABLE_TO_CONTACT_PEER ;
 	
-	}else {
+	}else if(true == rx_on_mode)
+	{
+		error_code = RX_ON_MODE_IN_PROGRESS;
+		
+	}else{
 		error_code = MAC_SUCCESS;
 	}
 

@@ -144,7 +144,7 @@ void usr_range_test_marker_ind(uint8_t *mpdu, uint8_t lqi, int8_t ed_value);
 void identify_peer_node(void);
 
 
-void send_remote_cmd(uint8_t* serial_buf,uint8_t len);
+void send_remote_cmd(uint8_t* serial_buf,uint8_t len,bool ack_req);
 
 #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
 	(defined CW_SUPPORTED)))
@@ -164,7 +164,7 @@ void start_cw_transmission(uint8_t tx_mode,uint16_t tmr_val);
  * \brief Stop CW transmission on current channel page
  * \param tx_mode  Continuous transmission mode
  */
-void stop_cw_transmission(uint8_t *tx_mode);
+void stop_cw_transmission(void *parameter);
 
 #endif /*#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && (defined
         * CW_SUPPORTED))) */
@@ -226,7 +226,9 @@ uint8_t check_error_conditions(void);
  */
 uint8_t get_param_length(uint8_t parameter_type);
 
-void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop);
+void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop,uint16_t frame_len);
+
+void rx_on_test(bool start_stop_param);
 
 /* ! \} */
 
@@ -531,6 +533,8 @@ void usr_get_current_config_confirm(uint8_t status,
 		trx_config_params_t *curr_trx_conf_params);
 		
 void usr_pkt_stream_confirm(uint8_t status,bool start_stop);
+
+void usr_rx_on_confirm(uint8_t status,bool start_stop);
 
 /* ! \} */
 /* ! \} */
