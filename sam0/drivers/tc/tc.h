@@ -849,6 +849,10 @@ struct tc_config {
 
 	/** When \c true the module is enabled during standby. */
 	bool run_in_standby;
+#if (SAML21)
+	/** Run on demand */
+	bool on_demand;
+#endif
 	/** Specifies either 8-, 16-, or 32-bit counter size. */
 	enum tc_counter_size counter_size;
 	/** Specifies the prescaler value for GCLK_TC. */
@@ -944,7 +948,6 @@ struct tc_module {
 	/** Set to \c true to enable double buffering write. */
 	bool double_buffering_enabled;
 #endif
-
 #endif
 };
 
@@ -1007,6 +1010,7 @@ static inline bool tc_is_syncing(
  *  \li Normal frequency wave generation
  *  \li GCLK reload action
  *  \li Don't run in standby
+ *  \li Don't run on demand for SAML21
  *  \li No inversion of waveform output
  *  \li No capture enabled
  *  \li No I/O capture enabled for SAML21
@@ -1038,7 +1042,9 @@ static inline void tc_get_config_defaults(
 	config->wave_generation            = TC_WAVE_GENERATION_NORMAL_FREQ;
 	config->reload_action              = TC_RELOAD_ACTION_GCLK;
 	config->run_in_standby             = false;
-
+#if (SAML21)
+	config->on_demand                  = false;
+#endif
 	config->waveform_invert_output     = TC_WAVEFORM_INVERT_OUTPUT_NONE;
 	config->enable_capture_on_channel[TC_COMPARE_CAPTURE_CHANNEL_0] = false;
 	config->enable_capture_on_channel[TC_COMPARE_CAPTURE_CHANNEL_1] = false;

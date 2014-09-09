@@ -237,9 +237,8 @@ enum status_code tc_init(
 		}
 	}
 
-	if (config->run_in_standby) {
-		ctrla_tmp |= TC_CTRLA_RUNSTDBY;
-	}
+	ctrla_tmp |= (config->run_in_standby << TC_CTRLA_RUNSTDBY_Pos)
+				|(config->on_demand << TC_CTRLA_ONDEMAND_Pos);
 
 	/* Write configuration to register */
 	while (tc_is_syncing(module_inst)) {
