@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TWI Slave driver for SAM.
+ * \brief USART Serial Configuration
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,47 +41,18 @@
  *
  */
 
-#ifndef _TWI_SLAVE_H_
-#define _TWI_SLAVE_H_
+#ifndef CONF_USART_SERIAL_H_INCLUDED
+#define CONF_USART_SERIAL_H_INCLUDED
 
-#include "twi.h"
-#include "sysclk.h"
+/** UART Interface */
+#define CONF_UART            CONSOLE_UART
+/** Baudrate setting */
+#define CONF_UART_BAUDRATE   (115200UL)
+/** Character length setting */
+#define CONF_UART_CHAR_LENGTH  US_MR_CHRL_8_BIT
+/** Parity setting */
+#define CONF_UART_PARITY     US_MR_PAR_NO
+/** Stop bits setting */
+#define CONF_UART_STOP_BITS    US_MR_NBSTOP_1_BIT
 
-typedef Twi *twi_slave_t;
-
-static inline void twi_slave_setup(twi_slave_t p_twi, uint32_t dw_device_addr)
-{
-#if (!(SAMG51 || SAMG53 || SAMG54))
-	if (p_twi == TWI0) {
-		sysclk_enable_peripheral_clock(ID_TWI0);
-	} else
-#endif
-	if (p_twi == TWI1) {
-		sysclk_enable_peripheral_clock(ID_TWI1);
-#if (SAM4N || SAMG)
-	} else if (p_twi == TWI2) {
-		sysclk_enable_peripheral_clock(ID_TWI2);
-#endif
-#if SAMG55
-	} else if (p_twi == TWI3) {
-		sysclk_enable_peripheral_clock(ID_TWI3);
-	} else if (p_twi == TWI4) {
-		sysclk_enable_peripheral_clock(ID_TWI4);
-	} else if (p_twi == TWI5) {
-		sysclk_enable_peripheral_clock(ID_TWI5);
-	} else if (p_twi == TWI6) {
-		sysclk_enable_peripheral_clock(ID_TWI6);
-	} else if (p_twi == TWI7) {
-		sysclk_enable_peripheral_clock(ID_TWI7);
-#endif
-	} else {
-		// Do Nothing
-	}
-	twi_slave_init(p_twi, dw_device_addr);
-}
-
-#define twi_slave_enable(p_twi)  twi_enable_slave_mode(p_twi)
-
-#define twi_slave_disable(p_twi)  twi_disable_slave_mode(p_twi)
-
-#endif // _TWI_SLAVE_H_
+#endif/* CONF_USART_SERIAL_H_INCLUDED */

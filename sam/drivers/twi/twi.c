@@ -673,7 +673,7 @@ void twi_smbus_set_timing(Twi *p_twi, uint32_t ul_timing)
  * \param p_twi   Base address of the TWI instance.
  * \param ul_alt_cmd Alternative command parameters.
  */
-void twi_set_alternative_command(Twihs *p_twi, uint32_t ul_alt_cmd)
+void twi_set_alternative_command(Twi *p_twi, uint32_t ul_alt_cmd)
 {
 	p_twi->TWI_ACR = ul_alt_cmd;;
 }

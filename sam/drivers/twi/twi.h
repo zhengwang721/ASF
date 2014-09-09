@@ -109,7 +109,7 @@ typedef struct twi_packet {
 enum twi_source_clock {
 	TWI_SOURCE_PERIPH_CLK = TWI_CWGR_BRSRCCLK_PERIPH_CLK,
 	TWI_SOURCE_PCK_CLK = TWI_CWGR_BRSRCCLK_PMC_PCK,	
-}
+};
 #endif
 
 void twi_enable_master_mode(Twi *p_twi);
@@ -139,6 +139,16 @@ void twi_read_write_protection_status(Twi *p_twi, uint32_t *p_status);
 #endif
 
 #if SAMG55
+void twi_smbus_set_timing(Twi *p_twi, uint32_t ul_timing);
+void twi_set_alternative_command(Twi *p_twi, uint32_t ul_alt_cmd);
+void twi_set_filter(Twi *p_twi, uint32_t ul_filter);
+void twi_mask_slave_addr(Twi *p_twi, uint32_t ul_mask);
+void twi_set_sleepwalking(Twi *p_twi,
+		uint32_t ul_matching_addr1, bool flag1,
+		uint32_t ul_matching_addr2, bool flag2,
+		uint32_t ul_matching_addr3, bool flag3,
+		uint32_t ul_matching_data, bool flag);
+
 /**
  * \brief Enable high speed mode.
  *
