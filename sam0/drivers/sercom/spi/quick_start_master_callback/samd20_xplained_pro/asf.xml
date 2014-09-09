@@ -12,5 +12,6 @@
 		<generator value="as5_arm"/>
 		<device-support value="atsamd20j18"/>
 		<config name="config.sam0.drivers.sercom.spi" value="callback"/>
+		<config name="config.sam0.drivers.sercom" value="callback"/>
 	</project>
 </asf>
