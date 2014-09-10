@@ -296,7 +296,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \b 1. USB_HOST_UHI (List of UHI APIs).
  *
- * Define the list of UHI supported by USB host. (Ex.: UHI_MSC,UHI_HID_MOUSE).
+ * Define the list of UHI supported by USB host. (E.g.: UHI_MSC,UHI_HID_MOUSE).
  *
  * \b 2. USB_HOST_POWER_MAX (mA).
  *
@@ -365,14 +365,14 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * The following procedure must be executed to setup the project correctly:
  * - Specify the clock configuration:
- *   - UC3 and SAM3/4 devices without USB high speed support need 48MHz clock input.
+ *   - UC3 and SAM3/4 devices without USB high speed support need 48MHZ clock input.
  *
  *     You must use a PLL and an external OSC.
- *   - UC3 and SAM3/4 devices with USB high speed support need 12MHz clock input.
+ *   - UC3 and SAM3/4 devices with USB high speed support need 12MHZ clock input.
  *
  *     You must use an external OSC.
- *   - UC3 devices with USBC hardware need CPU frequency higher than 25MHz.
- *   - SAMD21 devices without USB high speed support need 48MHz clock input.
+ *   - UC3 devices with USBC hardware need CPU frequency higher than 25MHZ.
+ *   - SAMD21 devices without USB high speed support need 48MHZ clock input.
  *
  *     You must use a DFLL and an external OSC.
  * - In conf_board.h, the define CONF_BOARD_USB_PORT must be added to enable USB lines.
@@ -642,7 +642,7 @@ void usb_init(void)
  \endcode
  * -# In dual role, to known the current USB mode, the callback to notify the
  * mode changes can be used.
- *   - Ensure that conf_usb_host.h contains the following parameters.
+ *   - Ensure that conf_usb_host.h contains the following parameters:
  * \code
 	#define UHC_MODE_CHANGE(b_host_mode)   my_callback_mode_change(b_host_mode)
 	extern void my_callback_mode_change(bool b_host_mode);
