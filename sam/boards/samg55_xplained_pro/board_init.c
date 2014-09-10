@@ -99,6 +99,14 @@ void system_board_init(void)
 	ioport_set_pin_dir(BUTTON_0_PIN, IOPORT_DIR_INPUT);
 	ioport_set_pin_mode(BUTTON_0_PIN, IOPORT_MODE_PULLUP);
 
+	/* Initialize EXT3 LED0, LED1 & LED2, turned off */
+	ioport_set_pin_level(OLED1_LED1_PIN, !OLED1_LED1_ACTIVE);
+	ioport_set_pin_dir(OLED1_LED1_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(OLED1_LED2_PIN, !OLED1_LED2_ACTIVE);
+	ioport_set_pin_dir(OLED1_LED2_PIN, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_level(OLED1_LED3_PIN, !OLED1_LED3_ACTIVE);
+	ioport_set_pin_dir(OLED1_LED3_PIN, IOPORT_DIR_OUTPUT);
+
 #if defined (CONF_BOARD_UART_CONSOLE)
 	/* Configure UART pins */
 	ioport_set_port_peripheral_mode(PINS_USART7_PORT, PINS_USART7,
@@ -128,6 +136,12 @@ void system_board_init(void)
 	ioport_set_pin_peripheral_mode(SPI_MOSI_GPIO, SPI_MOSI_FLAGS);
 	ioport_set_pin_peripheral_mode(SPI_SPCK_GPIO, SPI_SPCK_FLAGS);
 
+#ifdef CONF_BOARD_SD_MMC_SPI
+	/* Setting SD detection pin */
+	ioport_set_pin_dir(SD_MMC_0_CD_GPIO, IOPORT_DIR_INPUT);
+	ioport_set_pin_mode(SD_MMC_0_CD_GPIO, IOPORT_MODE_PULLUP);
+#endif
+
 #ifdef CONF_BOARD_SPI_NPCS0
 	ioport_set_pin_peripheral_mode(SPI_NPCS0_GPIO, SPI_NPCS0_FLAGS);
 #endif
@@ -135,6 +149,13 @@ void system_board_init(void)
 #ifdef CONF_BOARD_SPI_NPCS1
 	ioport_set_pin_peripheral_mode(SPI_NPCS1_GPIO, SPI_NPCS1_FLAGS);
 #endif
+#endif
+
+#ifdef CONF_BOARD_OLED_UG_2832HSWEG04
+	ioport_set_pin_dir(UG_2832HSWEG04_DATA_CMD_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_mode(UG_2832HSWEG04_DATA_CMD_GPIO, IOPORT_MODE_PULLUP);
+	ioport_set_pin_dir(UG_2832HSWEG04_RESET_GPIO, IOPORT_DIR_OUTPUT);
+	ioport_set_pin_mode(UG_2832HSWEG04_RESET_GPIO, IOPORT_MODE_PULLUP);
 #endif
 
 #ifdef CONF_BOARD_TWI0
@@ -147,12 +168,12 @@ void system_board_init(void)
 	ioport_set_pin_peripheral_mode(TWI1_CLK_GPIO, TWI1_CLK_FLAGS);
 #endif
 
-#if defined(CONF_BOARD_TWI2) || defined(CONF_BOARD_AT30TSE)
+#ifdef CONF_BOARD_TWI2
 	ioport_set_pin_peripheral_mode(TWI2_DATA_GPIO, TWI2_DATA_FLAGS);
 	ioport_set_pin_peripheral_mode(TWI2_CLK_GPIO, TWI2_CLK_FLAGS);
 #endif
 
-#ifdef CONF_BOARD_TWI4
+#if defined(CONF_BOARD_TWI4) ||defined(CONF_BOARD_AT30TSE)
 	ioport_set_pin_peripheral_mode(TWI4_DATA_GPIO, TWI4_DATA_FLAGS);
 	ioport_set_pin_peripheral_mode(TWI4_CLK_GPIO, TWI4_CLK_FLAGS);
 #endif

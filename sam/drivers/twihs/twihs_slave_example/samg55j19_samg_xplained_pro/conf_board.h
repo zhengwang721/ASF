@@ -47,7 +47,7 @@
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
-/** Configure TWI0 pins */
+/** Configure TWI4 pins */
 #define CONF_BOARD_TWI4
 
 #endif /* CONF_BOARD_H_INCLUDED */
