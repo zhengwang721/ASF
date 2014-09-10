@@ -48,7 +48,7 @@ void config_port_pins(void);
 void config_port_pins(void)
 {
 	struct port_config pin_conf;
-	
+
 	port_get_config_defaults(&pin_conf);
 
 	pin_conf.direction  = PORT_PIN_DIR_INPUT;
@@ -75,6 +75,9 @@ int main (void)
 //! [init_lock]
 
 //! [enable_interrupts]
+#if (SAML21) || defined(__DOXYGEN__)
+	system_pac_enable_interrupt();
+#endif
 	system_interrupt_enable_global();
 //! [enable_interrupts]
 

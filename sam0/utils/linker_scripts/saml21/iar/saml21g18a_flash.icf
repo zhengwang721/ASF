@@ -57,7 +57,7 @@ define symbol __ICFEDIT_region_ROM_start__    = 0x00000000;
 define symbol __ICFEDIT_region_ROM_end__      = 0x0003FFFF;
 /*-Sizes-*/
 if (!isdefinedsymbol(__ICFEDIT_size_cstack__)) {
-  define symbol __ICFEDIT_size_cstack__    = 0x50;
+  define symbol __ICFEDIT_size_cstack__    = 0x2000;
 }
 if (!isdefinedsymbol(__ICFEDIT_size_heap__)) {
   define symbol __ICFEDIT_size_heap__      = 0x0;

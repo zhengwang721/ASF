@@ -44,7 +44,7 @@
 #define _EVENTS_COMMON_H_INCLUDED_
 
 /**
- * \internal Internal module structure to manage necassery globals
+ * \internal Internal module structure to manage necessary globals
  *
  *
  */
@@ -60,7 +60,7 @@ struct _events_module {
 	/* Buffer to store acknowledged interrupt sources */
 	volatile uint32_t interrupt_flag_ack_buffer;
 
-	/* Interrup hook linked list start pointer */
+	/* Interrupt hook linked list start pointer */
 	struct events_hook *hook_list;
 #endif
 };

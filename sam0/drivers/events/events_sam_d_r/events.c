@@ -64,12 +64,15 @@ struct _events_module _events_inst = {
  * \internal
  *
  */
-uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset)
+uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset)
 {
-	uint8_t byte_ofset = channel >> 3;
 	uint32_t pos;
 
-	pos = (((channel % 8) + 1) << start_ofset) * ((0xffff * byte_ofset) + 1);
+	if (channel < _EVENTS_START_OFFSET_BUSY_BITS) {
+		pos = 0x01UL << (start_offset + channel);
+	} else {
+		pos = 0x01UL << (start_offset + channel + _EVENTS_START_OFFSET_BUSY_BITS);
+	}
 
 	return pos;
 }
@@ -111,14 +114,12 @@ static uint8_t _events_find_first_free_channel_and_allocate(void)
 
 static void _events_release_channel(uint8_t channel)
 {
-
 	system_interrupt_enter_critical_section();
 
 	_events_inst.allocated_channels &= ~(1 << channel);
 	_events_inst.free_channels++;
 
 	system_interrupt_leave_critical_section();
-
 }
 
 
@@ -248,21 +249,24 @@ bool events_is_busy(struct events_resource *resource)
 {
 	Assert(resource);
 
-	return EVSYS->CHSTATUS.reg & (_events_find_bit_position(resource->channel, _EVENTS_START_OFFSET_BUSY_BITS));
+	return EVSYS->CHSTATUS.reg & (_events_find_bit_position(resource->channel,
+			_EVENTS_START_OFFSET_BUSY_BITS));
 }
 
 bool events_is_users_ready(struct events_resource *resource)
 {
 	Assert(resource);
 
-	return EVSYS->CHSTATUS.reg & (_events_find_bit_position(resource->channel, _EVENTS_START_OFFSET_USER_READY_BIT));
+	return EVSYS->CHSTATUS.reg & (_events_find_bit_position(resource->channel,
+			_EVENTS_START_OFFSET_USER_READY_BIT));
 }
 
 bool events_is_detected(struct events_resource *resource)
 {
 	Assert(resource);
 
-	uint32_t flag = _events_find_bit_position(resource->channel, _EVENTS_START_OFFSET_DETECTION_BIT);
+	uint32_t flag = _events_find_bit_position(resource->channel,
+			_EVENTS_START_OFFSET_DETECTION_BIT);
 
 	/* Clear flag when read */
 	if (EVSYS->INTFLAG.reg & flag) {
@@ -277,7 +281,8 @@ bool events_is_overrun(struct events_resource *resource)
 {
 	Assert(resource);
 
-	uint32_t flag = _events_find_bit_position(resource->channel, _EVENTS_START_OFFSET_OVERRUN_BIT);
+	uint32_t flag = _events_find_bit_position(resource->channel,
+			_EVENTS_START_OFFSET_OVERRUN_BIT);
 
 	/* Clear flag when read */
 	if (EVSYS->INTFLAG.reg & flag) {

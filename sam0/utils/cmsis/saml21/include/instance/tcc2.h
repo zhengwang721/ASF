@@ -50,9 +50,9 @@
 #define REG_TCC2_CTRLBCLR          (0x42001C04U) /**< \brief (TCC2) Control B Clear */
 #define REG_TCC2_CTRLBSET          (0x42001C05U) /**< \brief (TCC2) Control B Set */
 #define REG_TCC2_SYNCBUSY          (0x42001C08U) /**< \brief (TCC2) Synchronization Busy */
-#define REG_TCC2_FCTRLA            (0x42001C0CU) /**< \brief (TCC2) Recoverable FaultA Configuration */
-#define REG_TCC2_FCTRLB            (0x42001C10U) /**< \brief (TCC2) Recoverable FaultB Configuration */
-#define REG_TCC2_DRVCTRL           (0x42001C18U) /**< \brief (TCC2) Driver Configuration */
+#define REG_TCC2_FCTRLA            (0x42001C0CU) /**< \brief (TCC2) Recoverable Fault A Configuration */
+#define REG_TCC2_FCTRLB            (0x42001C10U) /**< \brief (TCC2) Recoverable Fault B Configuration */
+#define REG_TCC2_DRVCTRL           (0x42001C18U) /**< \brief (TCC2) Driver Control */
 #define REG_TCC2_DBGCTRL           (0x42001C1EU) /**< \brief (TCC2) Debug Control */
 #define REG_TCC2_EVCTRL            (0x42001C20U) /**< \brief (TCC2) Event Control */
 #define REG_TCC2_INTENCLR          (0x42001C24U) /**< \brief (TCC2) Interrupt Enable Clear */
@@ -73,9 +73,9 @@
 #define REG_TCC2_CTRLBCLR          (*(RwReg8 *)0x42001C04U) /**< \brief (TCC2) Control B Clear */
 #define REG_TCC2_CTRLBSET          (*(RwReg8 *)0x42001C05U) /**< \brief (TCC2) Control B Set */
 #define REG_TCC2_SYNCBUSY          (*(RoReg  *)0x42001C08U) /**< \brief (TCC2) Synchronization Busy */
-#define REG_TCC2_FCTRLA            (*(RwReg  *)0x42001C0CU) /**< \brief (TCC2) Recoverable FaultA Configuration */
-#define REG_TCC2_FCTRLB            (*(RwReg  *)0x42001C10U) /**< \brief (TCC2) Recoverable FaultB Configuration */
-#define REG_TCC2_DRVCTRL           (*(RwReg  *)0x42001C18U) /**< \brief (TCC2) Driver Configuration */
+#define REG_TCC2_FCTRLA            (*(RwReg  *)0x42001C0CU) /**< \brief (TCC2) Recoverable Fault A Configuration */
+#define REG_TCC2_FCTRLB            (*(RwReg  *)0x42001C10U) /**< \brief (TCC2) Recoverable Fault B Configuration */
+#define REG_TCC2_DRVCTRL           (*(RwReg  *)0x42001C18U) /**< \brief (TCC2) Driver Control */
 #define REG_TCC2_DBGCTRL           (*(RwReg8 *)0x42001C1EU) /**< \brief (TCC2) Debug Control */
 #define REG_TCC2_EVCTRL            (*(RwReg  *)0x42001C20U) /**< \brief (TCC2) Event Control */
 #define REG_TCC2_INTENCLR          (*(RwReg  *)0x42001C24U) /**< \brief (TCC2) Interrupt Enable Clear */
