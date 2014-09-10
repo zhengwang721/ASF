@@ -145,7 +145,7 @@
  * \dot
  * digraph overview {
  *   rankdir=LR;
- *   node [label="GCLK\nGeneric Clock" shape=square] wdt_clock;
+ *   node [label="GCLK*\nGeneric Clock" shape=square] wdt_clock;
  *
  *   subgraph driver {
  *     node [label="<f0> WDT | <f1> Watchdog Counter" shape=record] wdt_module;
@@ -157,6 +157,9 @@
  * }
  * \enddot
  *
+ * \note SAM L21's Watchdog Counter is provided by OSCULP32K, \a not by GCLK. 
+ *       Internal 1KHz OSCULP32k output clock used when requested by the WTD module.
+ *       This clock is running all the time and is enabled by default after POR.
  *
  * \section asfdoc_sam0_wdt_special_considerations Special Considerations
  *
@@ -245,10 +248,8 @@ struct wdt_conf {
 	bool always_on;
 	/** Enable/Disable the Watchdog Timer */
 	bool enable;
-#if (SAML21)
-	/** ULP1K enabled after POR */
-#else
-	/** GCLK generator used to clock the peripheral */
+#if !(SAML21)
+	/** GCLK generator used to clock the peripheral except SAM L21*/
 	enum gclk_generator clock_source;
 #endif
 	/** Number of Watchdog timer clock ticks until the Watchdog expires. */
