@@ -296,7 +296,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \b 1. USB_HOST_UHI (List of UHI APIs).
  *
- * Define the list of UHI supported by USB host. (Ex.: UHI_MSC,UHI_HID_MOUSE).
+ * Define the list of UHI supported by USB host. (E.g.: UHI_MSC,UHI_HID_MOUSE).
  *
  * \b 2. USB_HOST_POWER_MAX (mA).
  *
@@ -365,14 +365,14 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * The following procedure must be executed to setup the project correctly:
  * - Specify the clock configuration:
- *   - UC3 and SAM3/4 devices without USB high speed support need 48MHz clock input.
+ *   - UC3 and SAM3/4 devices without USB high speed support need 48MHZ clock input.
  *
  *     You must use a PLL and an external OSC.
- *   - UC3 and SAM3/4 devices with USB high speed support need 12MHz clock input.
+ *   - UC3 and SAM3/4 devices with USB high speed support need 12MHZ clock input.
  *
  *     You must use an external OSC.
- *   - UC3 devices with USBC hardware need CPU frequency higher than 25MHz.
- *   - SAMD21 devices without USB high speed support need 48MHz clock input.
+ *   - UC3 devices with USBC hardware need CPU frequency higher than 25MHZ.
+ *   - SAMD21 devices without USB high speed support need 48MHZ clock input.
  *
  *     You must use a DFLL and an external OSC.
  * - In conf_board.h, the define CONF_BOARD_USB_PORT must be added to enable USB lines.
@@ -441,7 +441,7 @@ void usb_init(void)
  *
  * \section uhc_conf_clock conf_clock.h Examples
  *
- * Content of conf_clock.h for AT32UC3A0, AT32UC3A1, AT32UC3B devices (USBB):
+ * Content of conf_clock.h for AT32UC3A0, AT32UC3A1, and AT32UC3B devices (USBB):
  * \code
 	// Configuration based on 12MHz external OSC:
 	#define CONFIG_PLL1_SOURCE          PLL_SRC_OSC0
@@ -451,7 +451,7 @@ void usb_init(void)
 	#define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
  \endcode
  *
- * Content of conf_clock.h for AT32UC3A3, AT32UC3A4 devices (USBB with high speed support):
+ * Content of conf_clock.h for AT32UC3A3 and AT32UC3A4 devices (USBB with high speed support):
  * \code
 	// Configuration based on 12MHz external OSC:
 	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_OSC0
@@ -470,7 +470,7 @@ void usb_init(void)
 	#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL1
  \endcode
  *
- * Content of conf_clock.h for SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed):
+ * Content of conf_clock.h for SAM3X and SAM3A devices (UOTGHS: USB OTG High Speed):
  * \code
 	// USB Clock Source fixed at UPLL.
 	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_UPLL
@@ -540,7 +540,7 @@ void usb_init(void)
  * \section uhc_use_case_1_setup Setup Steps
  *
  * Prior to implement this use case, be sure to have already
- * apply the UHI module "basic use case".
+ * applied the UHI module "basic use case".
  *
  * \section uhc_use_case_1_usage Usage Steps
  *
@@ -566,7 +566,7 @@ void usb_init(void)
  * \section uhc_use_case_2_setup Setup Steps
  *
  * Prior to implement this use case, be sure to have already
- * apply the UHI module "basic use case".
+ * applied the UHI module "basic use case".
  *
  * \section uhc_use_case_2_usage Usage Steps
  *
@@ -593,13 +593,12 @@ void usb_init(void)
  *
  * \note On the Atmel boards, the switch of USB role is managed automatically by the
  * USB stack thank to a USB OTG connector and its USB ID pin.
- * For a dual role management without OTG connector, refer to
- * "AVR4950 section 6.1 Dual roles".
+ * Refer to "AVR4950 Section 6.1 Dual roles" for further information about dual roles.
  *
  * \section uhc_use_case_3_setup Setup Steps
  *
  * Prior to implement this use case, be sure to have already
- * apply the UHI module "basic use case".
+ * applied the UHI module "basic use case".
  *
  * \section uhc_use_case_3_usage Usage Steps
  *
@@ -643,7 +642,7 @@ void usb_init(void)
  \endcode
  * -# In dual role, to known the current USB mode, the callback to notify the
  * mode changes can be used.
- *   - Ensure that conf_usb_host.h contains the following parameters.
+ *   - Ensure that conf_usb_host.h contains the following parameters:
  * \code
 	#define UHC_MODE_CHANGE(b_host_mode)   my_callback_mode_change(b_host_mode)
 	extern void my_callback_mode_change(bool b_host_mode);
