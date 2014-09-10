@@ -72,6 +72,7 @@
  * - sam4c16c_sam4c_ek
  * - samg53n19_samg_xplained_pro
  * - sam4cp16b_sam4cp16bmb
+ * - samg55j19_samg_xplained_pro
  *
  * The code can be roughly broken down as follows:
  * <ul>
