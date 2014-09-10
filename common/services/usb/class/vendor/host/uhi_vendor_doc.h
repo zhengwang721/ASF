@@ -70,7 +70,7 @@
  */
 
 /** Global definition which contains standard UHI API for UHC
- *  It must be added in USB_HOST_UHI define from conf_usb_host.h file. */
+ *  It must be added in USB_HOST_UHI definition from conf_usb_host.h file. */
 #define UHI_VENDOR { \
 	.install = uhi_vendor_install, \
 	.enable = uhi_vendor_enable, \
@@ -123,7 +123,7 @@ extern void uhi_vendor_uninstall(uhc_device_t* dev);
  * interrupt OUT, bulk IN, bulk OUT, isochronous IN, isochronous OUT.
  *
  * This implementation is an example and can be a base to create another Vendor Class
- * which support more endpoint as two bulk IN endpoints.
+ * which supports more endpoint as two bulk IN endpoints.
  *
  * @{
  */
@@ -380,7 +380,7 @@ bool uhi_vendor_iso_is_available(void);
  *
  * \subsubsection uhi_vendor_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb_host.h is available and contains the following
- * configuration which is the USB host vendor configuration:
+ * configurations which is the USB host vendor configuration:
  * \code
  #define USB_HOST_UHI   UHI_HID_VENDOR
  \endcode
@@ -425,7 +425,7 @@ bool uhi_vendor_iso_is_available(void);
  *
  * \section asfdoc_uhi_vendor_config_examples_2 conf_clock.h
  *
- * \subsection asfdoc_uhi_vendor_config_examples_2_1 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
+ * \subsection asfdoc_uhi_vendor_config_examples_2_1 SAM3X, and SAM3A Devices (UOTGHS: USB OTG High Speed)
  * \include example/sam3x8h_sam3x_ek/conf_clock.h
  *
  * \subsection asfdoc_uhi_vendor_config_examples_2_2 SAM4L Device(USBC)
@@ -438,7 +438,7 @@ bool uhi_vendor_iso_is_available(void);
  *
  * \section asfdoc_uhi_vendor_config_examples_4 conf_board.h
  *
- * \subsection asfdoc_uhi_vendor_config_examples_4_1 SAM3X, SAM3A Devices (UOTGHS: USB OTG High Speed)
+ * \subsection asfdoc_uhi_vendor_config_examples_4_1 SAM3X, and SAM3A Devices (UOTGHS: USB OTG High Speed)
  * \include example/sam3x8h_sam3x_ek/conf_board.h
  *
  * \subsection asfdoc_uhi_vendor_config_examples_4_2 SAM4L Device(USBC)

@@ -640,7 +640,7 @@ void usb_init(void)
 	//udc_start();
 	uhc_start();
  \endcode
- * -# In dual role, to known the current USB mode, the callback to notify the
+ * -# In dual role, to know the current USB mode, the callback to notify the
  * mode changes can be used.
  *   - Ensure that conf_usb_host.h contains the following parameters:
  * \code
