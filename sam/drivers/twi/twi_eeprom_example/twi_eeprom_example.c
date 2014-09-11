@@ -249,7 +249,7 @@ int main(void)
 	}
 
 #if (SAMG55)
-	/* Enable the peripheral and set SPI mode. */
+	/* Enable the peripheral and set TWI mode. */
 	flexcom_enable(BOARD_FLEXCOM_TWI);
 	flexcom_set_opmode(BOARD_FLEXCOM_TWI, FLEXCOM_TWI);
 #else

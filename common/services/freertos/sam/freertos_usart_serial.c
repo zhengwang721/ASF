@@ -68,7 +68,9 @@ Equivalent to times 5 then divide by 1000. */
 #define BITS_PER_5_MS               (200UL)
 
 /* Work out how many USARTS are present. */
-#if defined(PDC_USART6)
+#if defined(PDC_USART7)
+	#define MAX_USARTS                              (8)
+#elif defined(PDC_USART6)
 	#define MAX_USARTS                              (7)
 #elif defined(PDC_USART5)
 	#define MAX_USARTS                              (6)
@@ -108,6 +110,19 @@ static freertos_dma_event_control_t tx_dma_control[MAX_USARTS];
 /* Create an array that holds the information required about each defined
 USART. */
 static const freertos_pdc_peripheral_parameters_t all_usart_definitions[MAX_USARTS] = {
+#if SAMG55
+	{USART0, PDC_USART0, ID_USART0, USART0_SPI0_TWI0_IRQn},
+	{USART1, PDC_USART1, ID_USART1, USART1_SPI1_TWI1_IRQn},
+	{USART2, PDC_USART2, ID_USART2, USART2_SPI2_TWI2_IRQn},
+	{USART3, PDC_USART3, ID_USART3, USART3_SPI3_TWI3_IRQn},
+	{USART4, PDC_USART4, ID_USART4, USART4_SPI4_TWI4_IRQn},
+	{USART5, PDC_USART5, ID_USART5, USART5_SPI5_TWI5_IRQn},
+	{USART6, PDC_USART6, ID_USART6, USART6_SPI6_TWI6_IRQn},
+#if (MAX_USARTS > 7)
+	{USART7, PDC_USART7, ID_USART7, USART7_SPI7_TWI7_IRQn},
+#endif
+
+#else
 #if	defined(PDC_USART0)
 	{USART0, PDC_USART0, ID_USART0, USART0_IRQn},
 #endif
@@ -133,11 +148,17 @@ static const freertos_pdc_peripheral_parameters_t all_usart_definitions[MAX_USAR
 #endif
 
 #if (MAX_USARTS > 5)
-	{USART4, PDC_USART5, ID_USART4, USART4_IRQn},
+	{USART5, PDC_USART5, ID_USART5, USART5_IRQn},
 #endif
 
 #if (MAX_USARTS > 6)
-	{USART4, PDC_USART6, ID_USART4, USART4_IRQn},
+	{USART6, PDC_USART6, ID_USART6, USART6_IRQn},
+#endif
+
+#if (MAX_USARTS > 7)
+	{USART7, PDC_USART7, ID_USART7, USART7_IRQn},
+#endif
+
 #endif
 };
 
@@ -214,8 +235,10 @@ freertos_usart_if freertos_usart_serial_init(Usart *p_usart,
 
 #if (SAMG55)
 		/* Enable the peripheral and set USART mode. */
-		flexcom_enable(all_usart_definitions[usart_index].peripheral_base_address - 0x200);
-		flexcom_set_opmode(all_usart_definitions[usart_index].peripheral_base_address - 0x200, FLEXCOM_MR_OPMODE_USART);
+		uint32_t temp = (uint32_t)all_usart_definitions[usart_index].peripheral_base_address - 0x200;
+		Flexcom *p_flexcom = (Flexcom *)temp;
+		flexcom_enable(p_flexcom);
+		flexcom_set_opmode(p_flexcom, FLEXCOM_USART);
 #else
 		/* Enable the peripheral clock in the PMC. */
 		pmc_enable_periph_clk(
@@ -775,6 +798,57 @@ static void local_usart_handler(const portBASE_TYPE usart_index)
  * Individual interrupt handlers follow from here.  Each individual interrupt
  * handler calls the common interrupt handler.
  */
+#if SAMG55
+#ifdef CONF_FREERTOS_USE_USART0
+void USART0_SPI0_TWI0_Handler(void)
+{
+	local_usart_handler(0);
+}
+#endif
+#ifdef CONF_FREERTOS_USE_USART1
+void USART1_SPI1_TWI1_Handler(void)
+{
+	local_usart_handler(1);
+}
+#endif
+#ifdef CONF_FREERTOS_USE_USART2
+void USART2_SPI2_TWI2_Handler(void)
+{
+	local_usart_handler(2);
+}
+#endif
+#ifdef CONF_FREERTOS_USE_USART3
+void USART3_SPI3_TWI3_Handler(void)
+{
+	local_usart_handler(3);
+}
+#endif
+#ifdef CONF_FREERTOS_USE_USART4
+void USART4_SPI4_TWI4_Handler(void)
+{
+	local_usart_handler(4);
+}
+#endif
+#ifdef CONF_FREERTOS_USE_USART5
+void USART5_SPI5_TWI5_Handler(void)
+{
+	local_usart_handler(5);
+}
+#endif
+#ifdef CONF_FREERTOS_USE_USART6
+void USART6_SPI6_TWI6_Handler(void)
+{
+	local_usart_handler(6);
+}
+#endif
+#ifdef CONF_FREERTOS_USE_USART7
+void USART7_SPI7_TWI7_Handler(void)
+{
+	local_usart_handler(7);
+}
+#endif
+	
+#else
 #ifdef USART
 
 void USART_Handler(void)
@@ -846,3 +920,4 @@ void USART6_Handler(void)
 }
 
 #endif /* USART6 */
+#endif

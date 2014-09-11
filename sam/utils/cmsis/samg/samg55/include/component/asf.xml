@@ -27,7 +27,6 @@
 		<build type="header-file" value="supc.h"/>
 		<build type="header-file" value="tc.h"/>
 		<build type="header-file" value="twi.h"/>
-		<build type="header-file" value="twihs.h"/>
 		<build type="header-file" value="udp.h"/>
 		<build type="header-file" value="usart.h"/>
 		<build type="header-file" value="wdt.h"/>

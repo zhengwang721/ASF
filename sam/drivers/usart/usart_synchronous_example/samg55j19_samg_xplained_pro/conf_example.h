@@ -62,8 +62,8 @@
 
 #define BOARD_USART                USART6
 
-#define USART_Handler              USART6_Handler
+#define USART_Handler              USART6_SPI6_TWI6_Handler
 
-#define USART_IRQn                 USART6_IRQn
+#define USART_IRQn                 USART6_SPI6_TWI6_IRQn
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */

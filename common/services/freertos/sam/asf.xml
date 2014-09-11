@@ -99,7 +99,9 @@
 
 			<build type="include-path" value="."/>
 			<build type="doxygen-entry-point" value="freertos_twihs_peripheral_control_group"/>
-			<device-support value="samg"/>
+			<device-support value="samg51"/>
+			<device-support value="samg53"/>
+			<device-support value="samg54"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samg51"/>
 		</module>
 	</select-by-device>

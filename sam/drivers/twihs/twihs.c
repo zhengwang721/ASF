@@ -661,7 +661,7 @@ void twihs_mask_slave_addr(Twihs *p_twihs, uint32_t ul_mask)
 	p_twihs->TWIHS_SMR |= TWIHS_SMR_MASK(ul_mask);
 }
 
-#if (SAMG53 || SAMG54 || SAMG55)
+#if (SAMG53 || SAMG54)
 /**
  * \brief Set sleepwalking match mode.
  *
