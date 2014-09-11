@@ -159,8 +159,8 @@
  *
  * \note SAM L21's Watchdog Counter is \a not provided by GCLK, but it uses an 
  *       internal 1kHz OSCULP32K output clock.\n
- *       This clock is running all the time and internally enabled when requested 
- *       by the WDT module.
+ *       This clock must be configured and enabled in the 32kHz Oscillator 
+ *       Controller(OSC32KCTRL) before using the WDT. 
  *
  * \section asfdoc_sam0_wdt_special_considerations Special Considerations
  *
