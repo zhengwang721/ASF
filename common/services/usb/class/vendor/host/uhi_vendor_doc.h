@@ -380,7 +380,7 @@ bool uhi_vendor_iso_is_available(void);
  *
  * \subsubsection uhi_vendor_basic_use_case_setup_flow Workflow
  * -# Ensure that conf_usb_host.h is available and contains the following
- * configurations which is the USB host vendor configuration:
+ * configurations, which is the USB host vendor configuration:
  * \code
  #define USB_HOST_UHI   UHI_HID_VENDOR
  \endcode
