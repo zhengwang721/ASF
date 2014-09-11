@@ -52,7 +52,6 @@
  *
  * This package can be used with the following setup:
  *  - SAMG53 Xplained Pro kit
- *  - SAMG55 Xplained Pro kit
  *
  * In addition, another device will be needed to act as the TWI master. The
  * twi_eeprom_example can be used for that, in which case a second kit
@@ -91,7 +90,7 @@
  * \section contactinfo Contact Information
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
- * Support and FAQ: http://support.atmel.com/
+ * Support and FAQ: http://www.atmel.com/design-support/
  *
  */
 
@@ -210,13 +209,7 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-#ifdef CONF_UART_CHAR_LENGTH
-		.charlength = CONF_UART_CHAR_LENGTH,
-#endif
-		.paritytype = CONF_UART_PARITY,
-#ifdef CONF_UART_STOP_BITS
-		.stopbits = CONF_UART_STOP_BITS,
-#endif
+		.paritytype = CONF_UART_PARITY
 	};
 
 	/* Configure console UART. */
@@ -245,14 +238,8 @@ int main(void)
 	/* Output example information */
 	puts(STRING_HEADER);
 
-#if SAMG55
-	/* Enable the peripheral and set TWI mode. */
-	flexcom_enable(BOARD_FLEXCOM_TWIHS_SLAVE);
-	flexcom_set_opmode(BOARD_FLEXCOM_TWIHS_SLAVE, FLEXCOM_TWI);
-#else
 	/* Enable the peripheral clock for TWIHS */
 	pmc_enable_periph_clk(BOARD_ID_TWIHS_SLAVE);
-#endif
 
 	for (i = 0; i < MEMORY_SIZE; i++) {
 		emulate_driver.uc_memory[i] = 0;

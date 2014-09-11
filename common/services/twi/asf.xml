@@ -120,10 +120,7 @@
 			<device-support value="sam4c"/>
 			<device-support value="sam4cm"/>
 			<device-support value="sam4cp"/>
-			<device-support value="samg51"/>
-			<device-support value="samg53"/>
-			<device-support value="samg54"/>
-			<device-support value="samg55"/>
+			<device-support value="samg"/>
 			<generator value="doxygen-module" default-mcu="unspecified-sam3s"/>
 		</module>
 		<module type="service" id="common.services.basic.twi#4" caption="TWI - Two-Wire Interface - SAM4L implementation">
@@ -186,7 +183,9 @@
 			<require idref="common.services.basic.clock"/>
 			<require idref="sam.drivers.twihs"/>
 			<require idref="sam.utils"/>
-			<device-support value="samg"/>
+			<device-support value="samg51"/>
+			<device-support value="samg53"/>
+			<device-support value="samg54"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samg53"/>
 		</module>			
 	</select-by-device>

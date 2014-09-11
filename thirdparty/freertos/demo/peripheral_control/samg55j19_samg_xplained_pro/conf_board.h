@@ -47,4 +47,8 @@
 /** Enable Com Port. */
 #define CONF_BOARD_UART_CONSOLE
 
+/** Define USART used. */
+#define CONF_FREERTOS_USE_USART0
+#define CONF_FREERTOS_USE_USART7
+
 #endif /* CONF_BOARD_H_INCLUDED */

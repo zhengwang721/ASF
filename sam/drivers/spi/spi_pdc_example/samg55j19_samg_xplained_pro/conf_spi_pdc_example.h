@@ -63,8 +63,8 @@ extern "C" {
 /**INDENT-ON**/
 /// @endcond
 
-#define SPI_Handler     SPI5_Handler
-#define SPI_IRQn        SPI5_IRQn
+#define SPI_Handler     USART5_SPI5_TWI5_Handler
+#define SPI_IRQn        USART5_SPI5_TWI5_IRQn
 
 /// @cond 0
 /**INDENT-OFF**/
