@@ -351,7 +351,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \b 8. void UHC_ENUM_EVENT(uhc_device_t* dev, uint8_t b_status).
  *
- * Called when a USB device enumeration is completed or fail.
+ * Called when a USB device enumeration is completed or failed.
  *
  * \section asfdoc_uhc_basic_use_case_setup_steps USB Host Setup Steps
  *

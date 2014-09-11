@@ -383,8 +383,8 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
  \endcode
  *
  * \subsubsection uhi_msc_mem_basic_use_case_setup_flow Workflow
- * -# Ensure that conf_usb_host.h is available and contains the following configuration
- * which is the USB host MSC configuration:
+ * -# Ensure that conf_usb_host.h is available and contains the following configuration,
+ *  which is the USB host MSC configuration:
  * \code
  #define USB_HOST_UHI   UHI_MSC
  \endcode
