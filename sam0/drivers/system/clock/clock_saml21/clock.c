@@ -122,7 +122,7 @@ static inline void _system_dfll_wait_for_sync(void)
  */
 static inline void _system_osc32k_wait_for_sync(void)
 {
-	while (!(OSC32KCTRL->STATUS.reg & OSC32KCTRL_STATUS_OSC32KRDY)) {		
+	while (!(OSC32KCTRL->STATUS.reg & OSC32KCTRL_STATUS_OSC32KRDY)) {
 		/* Wait for OSC32K sync */
 	}
 }
@@ -156,10 +156,10 @@ uint32_t system_clock_source_get_hz(
 	switch (clock_source) {
 	case SYSTEM_CLOCK_SOURCE_XOSC:
 		return _system_clock_inst.xosc.frequency;
-		
+
 	case SYSTEM_CLOCK_SOURCE_OSC16M:
 		return (OSCCTRL->OSC16MCTRL.bit.FSEL+1)*4000000UL;
-		
+
 	case SYSTEM_CLOCK_SOURCE_OSC32K:
 		return 32768UL;
 
@@ -210,7 +210,7 @@ void system_clock_source_osc16m_set_config(
 		struct system_clock_source_osc16m_config *const config)
 {
 	OSCCTRL_OSC16MCTRL_Type temp = OSCCTRL->OSC16MCTRL;
-	
+
 	/* Use temporary struct to reduce register access */
 	temp.bit.FSEL    = config->fsel;
 	temp.bit.ONDEMAND = config->on_demand;
@@ -231,7 +231,7 @@ void system_clock_source_osc32k_set_config(
 		struct system_clock_source_osc32k_config *const config)
 {
 	OSC32KCTRL_OSC32K_Type temp = OSC32KCTRL->OSC32K;
-	
+
 
 	/* Update settings via a temporary struct to reduce register access */
 	temp.bit.EN1K     = config->enable_1khz_output;
@@ -261,7 +261,7 @@ void system_clock_source_osculp32k_set_config(
 	temp.bit.EN32K    = config->enable_32khz_output;
 	temp.bit.WRTLOCK  = config->write_once;
 	OSC32KCTRL->OSCULP32K  = temp;
-}	
+}
 
 /**
  * \brief Configure the external oscillator clock source
@@ -324,7 +324,7 @@ void system_clock_source_xosc32k_set_config(
 		struct system_clock_source_xosc32k_config *const config)
 {
 	OSC32KCTRL_XOSC32K_Type temp = OSC32KCTRL->XOSC32K;
-	
+
 	temp.bit.STARTUP = config->startup_time;
 
 	if (config->external_clock == SYSTEM_CLOCK_EXTERNAL_CRYSTAL) {
@@ -434,7 +434,7 @@ void system_clock_source_dpll_set_config(
 
 	while(OSCCTRL->DPLLSYNCBUSY.reg & OSCCTRL_DPLLSYNCBUSY_DPLLRATIO){
 		}
-	
+
 	OSCCTRL->DPLLCTRLB.reg =
 			OSCCTRL_DPLLCTRLB_DIV(config->reference_divider) |
 			((uint32_t)config->lock_bypass << OSCCTRL_DPLLCTRLB_LBYPASS_Pos) |
@@ -443,7 +443,7 @@ void system_clock_source_dpll_set_config(
 			((uint32_t)config->wake_up_fast << OSCCTRL_DPLLCTRLB_WUF_Pos) |
 			((uint32_t)config->low_power_enable << OSCCTRL_DPLLCTRLB_LPEN_Pos) |
 			OSCCTRL_DPLLCTRLB_FILTER(config->filter);
-	
+
 	OSCCTRL->DPLLPRESC.reg  = OSCCTRL_DPLLPRESC_PRESC(config->prescaler);
 	while(OSCCTRL->DPLLSYNCBUSY.reg & OSCCTRL_DPLLSYNCBUSY_DPLLPRESC){
 		}
@@ -724,7 +724,7 @@ void system_clock_init(void)
 	   This will ensure that these bits are cleared */
 	OSCCTRL->INTFLAG.reg = OSCCTRL_INTFLAG_DFLLRDY;
 	SUPC->INTFLAG.reg = SUPC_INTFLAG_BOD33RDY | SUPC_INTFLAG_BOD33DET;
-	
+
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
 
 	OSC32KCTRL->OSCULP32K.reg = (CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN1K_Pos)
@@ -772,7 +772,7 @@ void system_clock_init(void)
 #if CONF_CLOCK_OSC32K_ENABLE == true
 
 	//OSC32KCTRL->OSC32K.bit.CALIB = OSC32KCTRL_OSC32K_CALIB(16);
-		
+
 
 
 	struct system_clock_source_osc32k_config osc32k_conf;
@@ -936,7 +936,7 @@ void system_clock_init(void)
 	dpll_config.reference_divider   = CONF_CLOCK_DPLL_REFEREMCE_DIVIDER;
 	dpll_config.output_frequency    = CONF_CLOCK_DPLL_OUTPUT_FREQUENCY;
 	dpll_config.prescaler           = CONF_CLOCK_DPLL_PRESCALER;
-	
+
 	system_clock_source_dpll_set_config(&dpll_config);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DPLL);
 	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_DPLL));
@@ -947,16 +947,28 @@ void system_clock_init(void)
 #  endif
 
 	/* CPU and BUS clocks */
-	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
-
+	system_cpu_clock_set_divider(SYSTEM_MAIN_CLOCK_DIV_4);
 	system_main_clock_set_failure_detect(CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT);
-
-	system_low_power_clock_set_divider(CONF_CLOCK_LOW_POWER_DIVIDER);
-	system_backup_clock_set_divider(CONF_CLOCK_BACKUP_DIVIDER);
+	system_low_power_clock_set_divider(SYSTEM_MAIN_CLOCK_DIV_4);
+	system_backup_clock_set_divider(SYSTEM_MAIN_CLOCK_DIV_4);
 
 	/* GCLK 0 */
 #if CONF_CLOCK_CONFIGURE_GCLK == true
 	/* Configure the main GCLK last as it might depend on other generators */
 	_CONF_CLOCK_GCLK_CONFIG(0, ~);
 #endif
+
+	/* PM bus clock is in backup clock domain*/
+	uint32_t backup_clk_freq = system_backup_clock_get_hz();
+	if ((SYSTEM_MAIN_CLOCK_DIV_4 / (CONF_CLOCK_BACKUP_DIVIDER +1)) * backup_clk_freq
+		> SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ) {
+		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_2);
+	} else if ((SYSTEM_MAIN_CLOCK_DIV_4 / (CONF_CLOCK_BACKUP_DIVIDER +1)) * backup_clk_freq
+		> SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ) {
+		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_1);
+	}
+
+	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
+	system_low_power_clock_set_divider(CONF_CLOCK_LOW_POWER_DIVIDER);
+	system_backup_clock_set_divider(CONF_CLOCK_BACKUP_DIVIDER);
 }
