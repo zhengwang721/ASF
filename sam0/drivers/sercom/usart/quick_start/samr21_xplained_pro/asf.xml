@@ -7,7 +7,6 @@
 		<require idref="board.samr21_xplained_pro"/>
 		<require idref="sam0.drivers.sercom.usart.quick_start"/>
 		<config name="config.sam0.drivers.sercom.usart" value="polled"/>
-		<config name="config.sam0.drivers.sercom" value="polled"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
