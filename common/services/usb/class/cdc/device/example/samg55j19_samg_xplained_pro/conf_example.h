@@ -49,8 +49,8 @@
 #define BOARD_FLEXCOM    FLEXCOM7
 #define USART_BASE       USART7
 #define USART_ID         ID_USART7
-#define USART_HANDLER    USART7_Handler
-#define USART_INT_IRQn   USART7_IRQn
+#define USART_HANDLER    USART7_SPI7_TWI7_Handler
+#define USART_INT_IRQn   USART7_SPI7_TWI7_IRQn
 #define USART_INT_LEVEL  3
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */

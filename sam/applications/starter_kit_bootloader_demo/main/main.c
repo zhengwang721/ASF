@@ -324,6 +324,9 @@ static void jump_to_bootloader(void)
 
 	ul_rc = flash_unlock(ul_test_page_addr,
 			ul_test_page_addr + IFLASH_PAGE_SIZE, NULL, NULL);
+	if (ul_rc != FLASH_RC_OK) {
+		return;
+	}
 
 #if SAMG55
 	ul_rc = flash_erase_page(ul_test_page_addr, IFLASH_ERASE_PAGES_16);
