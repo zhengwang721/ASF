@@ -767,13 +767,10 @@ void system_clock_init(void)
 	}
 #endif
 
-
 	/* OSCK32K */
 #if CONF_CLOCK_OSC32K_ENABLE == true
 
 	//OSC32KCTRL->OSC32K.bit.CALIB = OSC32KCTRL_OSC32K_CALIB(16);
-
-
 
 	struct system_clock_source_osc32k_config osc32k_conf;
 	system_clock_source_osc32k_get_config_defaults(&osc32k_conf);
@@ -787,7 +784,6 @@ void system_clock_init(void)
 	system_clock_source_osc32k_set_config(&osc32k_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC32K);
 #endif
-
 
 	/* DFLL Config (Open and Closed Loop) */
 #if CONF_CLOCK_DFLL_ENABLE == true
@@ -866,7 +862,6 @@ void system_clock_init(void)
 	system_clock_source_dfll_set_config(&dfll_conf);
 #endif
 
-
 	/* OSC16M */
 	struct system_clock_source_osc16m_config osc16m_conf;
 	system_clock_source_osc16m_get_config_defaults(&osc16m_conf);
@@ -898,7 +893,6 @@ void system_clock_init(void)
 	}
 #  endif
 #endif
-
 
 	/* DFLL Enable (Open and Closed Loop) */
 #if CONF_CLOCK_DFLL_ENABLE == true
@@ -958,7 +952,7 @@ void system_clock_init(void)
 	_CONF_CLOCK_GCLK_CONFIG(0, ~);
 #endif
 
-	/* PM bus clock is in backup clock domain*/
+	/* Set performance level according to frequency.PM bus clock is in backup clock domain*/
 	uint32_t backup_clk_freq = system_backup_clock_get_hz();
 	if ((SYSTEM_MAIN_CLOCK_DIV_4 / (CONF_CLOCK_BACKUP_DIVIDER +1)) * backup_clk_freq
 		> SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ) {
