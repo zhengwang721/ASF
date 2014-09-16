@@ -50,7 +50,7 @@
  * The TC module will be set up as follows:
  *
  * - GCLK generator 1 (GCLK 32K) clock source
- * - 16 bit resolution on the counter
+ * - 16-bit resolution on the counter
  * - Prescaler is divided by 64
  * - GCLK reload action
  * - Count upward
@@ -117,7 +117,7 @@
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- *  -# Alter the TC settings to configure the GCLK source, prescaler, period
+ *  -# Alter the TC settings to configure the GCLK source, prescaler, period,
  *     and compare channel values.
  *     \snippet qs_tc_timer.c setup_change_config
  *  -# Configure the TC module with the desired settings.

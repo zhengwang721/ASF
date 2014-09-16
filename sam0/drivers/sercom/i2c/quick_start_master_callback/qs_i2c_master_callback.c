@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM SERCOM I2C Master Quick Start Guide with Callbacks
+ * \brief SAM SERCOM I<SUP>2</SUP>C Master Quick Start Guide with Callbacks
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -102,7 +102,8 @@ void configure_i2c(void)
 
 	/* Initialize and enable device with config */
 	//! [init_module]
-	while(i2c_master_init(&i2c_master_instance, SERCOM2, &config_i2c_master) != STATUS_OK);
+	while(i2c_master_init(&i2c_master_instance, SERCOM2, &config_i2c_master)     \
+			!= STATUS_OK);
 	//! [init_module]
 
 	//! [enable_module]

@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_eeprom_group SAM EEPROM Emulator Service (EEPROM)
  *
- * This driver for SAM devices provides an emulated EEPROM memory space in
+ * This driver for Atmel® | SMART™ SAM devices provides an emulated EEPROM memory space in
  * the device's FLASH memory, for the storage and retrieval of user-application
  * configuration data into and out of non-volatile memory.
  *
@@ -54,9 +54,9 @@
  *  - NVM (Non-Volatile Memory Controller)
  *
  * The following devices can use this module:
- *  - SAM D20/D21
- *  - SAM R21
- *  - SAM D10/D11
+ *  - Atmel® | SMART™ SAM D20/D21
+ *  - Atmel® | SMART™ SAM R21
+ *  - Atmel® | SMART™ SAM D10/D11
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_eeprom_prerequisites
@@ -106,12 +106,12 @@
  * The following information is relevant for <b>EEPROM Emulator scheme 1,
  * version 1.0.0</b>, as implemented by this module. Other revisions or
  * emulation schemes may vary in their implementation details and may have
- * different wear-leveling, latency and other characteristics.
+ * different wear-leveling, latency, and other characteristics.
  *
  * \subsubsection asfdoc_sam0_eeprom_module_overview_implementation_ec Emulator Characteristics
  * This emulator is designed for <b>best reliability, with a good balance of
  * available storage and write-cycle limits</b>. It is designed to ensure that
- * page data is atomically updated so that in the event of a failed update the
+ * page data is automatically updated so that in the event of a failed update the
  * previous data is not lost (when used correctly). With the exception of a
  * system reset with data cached to the internal write-cache buffer, at most
  * only the latest write to physical non-volatile memory will be lost in the
@@ -171,7 +171,7 @@
  *     <td align="right" border="0"> </td>
  *    </tr>
  *    <tr>
- *     <td align="right" border="0"> Start of NVM Memory</td>
+ *     <td align="right" border="1"> Start of NVM Memory</td>
  *    </tr>
  *   </table>
  *  >]
@@ -230,7 +230,7 @@
  * \ref asfdoc_sam0_eeprom_page_layout "the following figure".
  *
  * \anchor asfdoc_sam0_eeprom_page_layout
- * \image html page_layout.svg "Internal layout of an emulated EEPROM page"
+ * \image html page_layout.svg "Internal Layout of An Emulated EEPROM Page"
  *
  * Within the EEPROM memory reservation section at the top of the NVM memory
  * space, this emulator will produce the layout as shown in
@@ -238,7 +238,7 @@
  * the first time.
  *
  * \anchor asfdoc_sam0_eeprom_init_layout
- * \image html init_layout.svg "Initial physical layout of the emulated EEPROM memory"
+ * \image html init_layout.svg "Initial Physical Layout of The Emulated EEPROM Mmemory"
  *
  * When an EEPROM page needs to be committed to physical memory, the next free
  * FLASH page in the same row will be chosen - this makes recovery simple, as the
@@ -250,13 +250,13 @@
  * the physical memory.
  *
  * \anchor asfdoc_sam0_eeprom_page_write1
- * \image html nm1_page_write.svg "First write to logical EEPROM page N-1"
+ * \image html nm1_page_write.svg "First Write To Logical EEPROM Page N-1"
  *
  * A second write of the same logical EEPROM page results in the layout shown
  * in \ref asfdoc_sam0_eeprom_page_write2 "the figure below".
  *
  * \anchor asfdoc_sam0_eeprom_page_write2
- * \image html nm1_page_write2.svg "Second write to logical EEPROM page N-1"
+ * \image html nm1_page_write2.svg "Second Write To Logical EEPROM Page N-1"
  *
  * A third write of the same logical page requires that the EEPROM emulator
  * erase the row, as it has become full. Prior to this, the contents of the
@@ -266,7 +266,7 @@
  * \ref asfdoc_sam0_eeprom_page_write3 "the figure below".
  *
  * \anchor asfdoc_sam0_eeprom_page_write3
- * \image html nm1_page_write3.svg "Third write to logical EEPROM page N-1"
+ * \image html nm1_page_write3.svg "Third Write To Logical EEPROM Page N-1"
  *
  *
  * \section asfdoc_sam0_eeprom_special_considerations Special Considerations
@@ -300,7 +300,7 @@
  *
  * \section asfdoc_sam0_eeprom_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_eeprom_extra. This includes:
+ * For extra information, see \ref asfdoc_sam0_eeprom_extra. This includes:
  *  - \ref asfdoc_sam0_eeprom_extra_acronyms
  *  - \ref asfdoc_sam0_eeprom_extra_dependencies
  *  - \ref asfdoc_sam0_eeprom_extra_errata
@@ -332,7 +332,7 @@ extern "C" {
 #endif
 
 
-/** \name EEPROM emulator information
+/** \name EEPROM Emulator Information
  * @{
  */
 
@@ -379,7 +379,7 @@ enum status_code eeprom_emulator_get_parameters(
 /** @} */
 
 
-/** \name Logical EEPROM page reading/writing
+/** \name Logical EEPROM Page Reading/Writing
  * @{
  */
 
@@ -395,7 +395,7 @@ enum status_code eeprom_emulator_read_page(
 
 /** @} */
 
-/** \name Buffer EEPROM reading/writing
+/** \name Buffer EEPROM Reading/Writing
  * @{
  */
 
@@ -461,16 +461,16 @@ enum status_code eeprom_emulator_read_buffer(
  *		<th>Changelog</th>
  *	</tr>
   *	<tr>
- *		<td>Fix warnings and document for SAM D21</td>
+ *		<td>Fix warnings and document for SAM D21.</td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release</td>
+ *		<td>Initial Release.</td>
  *	</tr>
  * </table>
  */
 
 /**
- * \page asfdoc_sam0_eeprom_exqsg Examples for Emulated EEPROM service
+ * \page asfdoc_sam0_eeprom_exqsg Examples for Emulated EEPROM Service
  *
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_eeprom_group. QSGs are simple examples with

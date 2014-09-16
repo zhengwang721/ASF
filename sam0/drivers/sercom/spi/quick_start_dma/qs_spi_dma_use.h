@@ -101,11 +101,11 @@
  * Add to the main application source file, before user definitions and
  * functions according to your board:
  *
- * For SAMD21 Xplained Pro
+ * For SAMD21 Xplained Pro:
  * \snippet samd21_xplained_pro/conf_quick_start.h definition_master
  * \snippet samd21_xplained_pro/conf_quick_start.h definition_slave
  * \snippet samd21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
- * For SAMR21 Xplained Pro
+ * For SAMR21 Xplained Pro:
  * \snippet samr21_xplained_pro/conf_quick_start.h definition_master
  * \snippet samr21_xplained_pro/conf_quick_start.h definition_slave
  * \snippet samr21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
@@ -139,11 +139,11 @@
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- * -# Create transfer done flag to indication DMA transfer done
+ * -# Create transfer done flag to indication DMA transfer done.
  *    \snippet qs_spi_dma_use.c dma_transfer_done_flag
- * -# Define the buffer length for tx/rx
+ * -# Define the buffer length for tx/rx.
  *    \snippet qs_spi_dma_use.c buf_length
- * -# Create buffer to store the data to be transferred
+ * -# Create buffer to store the data to be transferred.
  *    \snippet qs_spi_dma_use.c spi_buffer
  * -# Create SPI module configuration struct, which can be filled out to
  *     adjust the configuration of a physical SPI peripheral.
@@ -156,7 +156,7 @@
  *           struct to ensure that all values are initialized to known default
  *           settings.
  *
- * -# Alter the SPI settings to configure the physical pinout, baud rate and
+ * -# Alter the SPI settings to configure the physical pinout, baudrate and
  *     other relevant parameters.
  *     \snippet qs_spi_dma_use.c spi_master_mux_setting
  *     \snippet qs_spi_dma_use.c spi_slave_mux_setting
@@ -182,7 +182,7 @@
  *          settings.
  *
  * -# Set extra configurations for the DMA resource. It is using peripheral
- *    trigger, SERCOM Tx empty and RX complete trigger causes a beat transfer in
+ *    trigger, SERCOM TX empty, and RX complete trigger causes a beat transfer in
  *    this example.
  *    \snippet qs_spi_dma_use.c dma_tx_setup_3
  *    \snippet qs_spi_dma_use.c dma_rx_setup_3
@@ -205,7 +205,7 @@
  *          settings.
  *
  * -# Set the specific parameters for a DMA transfer with transfer size, source
- *    address, destination address.
+ *    address, and destination address.
  *    \snippet qs_spi_dma_use.c dma_tx_setup_7
  *    \snippet qs_spi_dma_use.c dma_rx_setup_7
  *
@@ -232,6 +232,6 @@
  * -# Deselect the slave.
  *    \snippet qs_spi_dma_use.c deselect_slave
  *
- * -# enter endless loop
+ * -# Enter endless loop.
  *    \snippet qs_spi_dma_use.c endless_loop
  */

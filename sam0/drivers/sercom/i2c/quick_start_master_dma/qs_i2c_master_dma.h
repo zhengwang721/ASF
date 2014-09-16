@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM SERCOM I2C Master Driver with DMA Quick Start Guide
+ * \brief SAM SERCOM I<SUP>2</SUP>C Master Driver with DMA Quick Start Guide
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -50,7 +50,7 @@
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Master mode
- *  - 100kHz operation speed
+ *  - 100KHz operation speed
  *  - Not operational in standby
  *  - 10000 packet timeout value
  *  - 65535 unknown bus state timeout value
@@ -121,7 +121,7 @@
  *          settings.
  *
  * -# Set extra configurations for the DMA resource. It is using peripheral
- *    trigger, SERCOM Tx trigger and trigger causes a transaction transfer in
+ *    trigger, SERCOM Tx trigger, and trigger causes a transaction transfer in
  *    this example.
  *    \snippet qs_i2c_master_dma.c dma_setup_3
  *
@@ -140,7 +140,7 @@
  *          settings.
  *
  * -# Set the specific parameters for a DMA transfer with transfer size, source
- *    address, destination address.
+ *    address, and destination address.
  *    \snippet qs_i2c_master_dma.c dma_setup_7
  *
  * -# Create the DMA transfer descriptor.

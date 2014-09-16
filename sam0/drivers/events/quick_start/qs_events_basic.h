@@ -115,7 +115,7 @@
  * \snippet qs_events_basic.c main
  *
  * \subsection events_basic_use_case_code_flow Workflow
- * -# Wait for the even channel to become ready to accept a new event trigger.
+ * -# Wait for the event channel to become ready to accept a new event trigger.
  *    \snippet qs_events_basic.c main_1
  * -# Perform a software event trigger on the configured event channel.
  *    \snippet qs_events_basic.c main_2

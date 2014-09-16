@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM SERCOM I2C Slave with DMA Quick Start Guide
+ * \brief SAM SERCOM I<SUP>2</SUP>C Slave with DMA Quick Start Guide
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -134,7 +134,8 @@ void setup_dma_descriptor(DmacDescriptor *descriptor)
 	descriptor_config.src_increment_enable = false;
 	descriptor_config.block_transfer_count = DATA_LENGTH;
 	descriptor_config.destination_address = (uint32_t)read_buffer + DATA_LENGTH;
-	descriptor_config.source_address = (uint32_t)(&i2c_slave_instance.hw->I2CS.DATA.reg);
+	descriptor_config.source_address =
+			(uint32_t)(&i2c_slave_instance.hw->I2CS.DATA.reg);
 	//! [dma_setup_7]
 
 	//! [dma_setup_8]

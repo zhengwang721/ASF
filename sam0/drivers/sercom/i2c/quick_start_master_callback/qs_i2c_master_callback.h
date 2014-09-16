@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM SERCOM I2C Master Interface Driver
+ * \brief SAM SERCOM I<SUP>2</SUP>C Master Interface Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -44,7 +44,7 @@
  *
  * In this use case, the I<SUP>2</SUP>C will used and set up as follows:
  *  - Master mode
- *  - 100kHz operation speed
+ *  - 100KHz operation speed
  *  - Not operational in standby
  *  - 65535 unknown bus state timeout value
  *
@@ -119,7 +119,7 @@
  *  -# Send every other packet in reversed order.
  *     \snippet qs_i2c_master_callback.c revert_order
  *  -# Write new packet to slave.
- *     \snippet qs_i2c_master_callback.c write_next
+ *     \snippet qs_i2c_master_callback.c write_packet
  *
  */
 

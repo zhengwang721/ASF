@@ -244,13 +244,13 @@ enum status_code sercom_set_gclk_generator(
 /**
  * \internal Gets the default PAD pinout for a given SERCOM.
  *
- * Returns the PINMUX settings for the given SERCOM and pad. This is used
+ * Returns the pinmux settings for the given SERCOM and pad. This is used
  * for default configuration of pins.
  *
  * \param[in]  sercom_module   Pointer to the SERCOM module
  * \param[in]  pad             PAD to get default pinout for
  *
- * \returns The default PINMUX for the given SERCOM instance and PAD
+ * \returns The default pinmux for the given SERCOM instance and PAD
  *
  */
 uint32_t _sercom_get_default_pad(

@@ -45,7 +45,7 @@
  * \page asfdoc_sam0_ac_basic_use_case Quick Start Guide for AC - Basic
  *
  * In this use case, the Analog Comparator module is configured for:
- *  \li Comparator peripheral in manually triggered (i.e. "Single Shot" mode)
+ *  \li Comparator peripheral in manually triggered (e.g. "Single Shot" mode)
  *  \li One comparator channel connected to input MUX pin 0 and compared to a
  *      scaled VCC/2 voltage
  *
