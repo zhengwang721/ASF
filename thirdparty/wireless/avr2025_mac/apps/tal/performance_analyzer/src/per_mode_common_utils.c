@@ -49,8 +49,10 @@
 
 /* === INCLUDES ============================================================ */
 #include <stdio.h>
+#include "tfa.h"
 #include "tal.h"
 #include "tal_internal.h"
+#include "tal_constants.h"
 #include "tal_helper.h"
 #include "ieee_const.h"
 #include "app_per_mode.h"
@@ -67,6 +69,42 @@ extern bool rdy_to_tx;
 extern bool pkt_stream_stop;
 frame_info_t *stream_pkt;
 uint8_t pkt_buffer[LARGE_BUFFER_SIZE];
+
+
+/* Database to maintain the default settings of the configurable parameter */
+trx_config_params_t default_trx_config_params;
+
+/* Database to maintain the updated/latest settings of the configurable
+ * parameters */
+trx_config_params_t curr_trx_config_params;
+
+extern bool peer_found;
+extern uint8_t last_tx_power_format_set;
+bool cw_ack_sent=false,remote_cw_start=false;
+uint8_t cw_start_mode;
+uint16_t cw_tmr_val = 0;
+bool pulse_mode = false;
+
+#if (ANTENNA_DIVERSITY == 1)
+extern uint8_t ant_sel_before_ct;
+extern uint8_t ant_div_before_ct;
+#endif /* End of #if (ANTENNA_DIVERSITY == 1) */
+
+extern uint8_t op_mode;
+
+/* === DEFINES============================================================== */
+#define DEFAULT_NO_OF_TEST_FRAMES               (100)
+#define DEFAULT_FRAME_LENGTH                    (20)
+
+/* === PROTOTYPES============================================================== */
+#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
+	(defined CW_SUPPORTED)))
+static void stop_pulse_cb(void *callback_parameter);
+
+
+#endif /* End of #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) &&
+        *(defined CW_SUPPORTED))) */
+
 /* === IMPLEMENTATION======================================================= */
 
 /*
@@ -257,5 +295,512 @@ void stop_pkt_streaming(void * parameter)
 	pkt_stream_stop = true;
 	sw_timer_stop(T_APP_TIMER);
 	usr_pkt_stream_confirm(MAC_SUCCESS,false);
+}
+
+/**
+ * \brief Function to set trx configure parameters
+ *
+ */
+void config_per_test_parameters(void)
+{
+	uint8_t temp;
+	pib_value_t pib_value;
+
+	/* Set the default values */
+	curr_trx_config_params.ack_request
+		= default_trx_config_params.ack_request = true;
+	curr_trx_config_params.csma_enabled
+		= default_trx_config_params.csma_enabled = true;
+	curr_trx_config_params.retry_enabled
+		= default_trx_config_params.retry_enabled = false;
+
+#if (ANTENNA_DIVERSITY == 1)
+#if (TAL_TYPE == AT86RF233)
+	/* Disable antenna diversity by default. */
+	curr_trx_config_params.antenna_diversity
+		= default_trx_config_params.antenna_diversity = false;
+	curr_trx_config_params.antenna_selected
+		= default_trx_config_params.antenna_selected
+				= ANT_CTRL_1;
+
+	/* This is required for set default config request command to set the
+	 * config parameters to their defaults */
+	/* Disable antenna diversity by default */
+	/* Enable A1/X2 */
+	tal_ant_div_config(ANT_DIVERSITY_DISABLE, ANT_CTRL_1); /* Enable A1/X2
+	                                                       **/
+
+#else
+	curr_trx_config_params.antenna_diversity
+		= default_trx_config_params.antenna_diversity = true;
+	curr_trx_config_params.antenna_selected
+		= default_trx_config_params.antenna_selected
+				= ANT_CTRL_0;
+
+	/* Enable Antenna Diversity*/
+	tal_ant_div_config(ANT_DIVERSITY_ENABLE, ANTENNA_DEFAULT);
+#endif /* end of (TAL_TYPE == AT86RF233) */
+#endif
+
+#if (TAL_TYPE != AT86RF230B)
+	/* Disable desensitization by default */
+	curr_trx_config_params.rx_desensitize
+		= default_trx_config_params.rx_desensitize = false;
+	/* Disable Rx desensitization */
+
+	tal_set_rx_sensitivity_level(NO_RX_DESENSITIZE_LEVEL);
+#endif /* End of #if(TAL_TYPE != AT86RF230B)*/
+
+#if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2))
+	curr_trx_config_params.rpc_enable
+		= default_trx_config_params.rpc_enable = true;
+
+	/* Enable RPC feature by default */
+	tal_rpc_mode_config(ENABLE_ALL_RPC_MODES);
+	/* Reset RX_SAFE Mode in TRX_CTRL_2 */
+	tal_trx_reg_write(RG_TRX_CTRL_2, DISABLE_RX_SAFE_MODE);
+#endif
+	if (peer_found == true) {
+		curr_trx_config_params.trx_state
+			= default_trx_config_params.trx_state
+					= RX_AACK_ON;
+	} else {
+		curr_trx_config_params.trx_state
+			= default_trx_config_params.trx_state = TRX_OFF;
+	}
+
+	curr_trx_config_params.number_test_frames
+		= default_trx_config_params.number_test_frames
+				= DEFAULT_NO_OF_TEST_FRAMES;
+	curr_trx_config_params.phy_frame_length
+		= default_trx_config_params.phy_frame_length
+				= DEFAULT_FRAME_LENGTH;
+
+	/* As channel & channel page are already configured during
+	 * the application initialization so get it
+	 */
+	curr_trx_config_params.channel = default_trx_config_params.channel
+				= DEFAULT_CHANNEL;
+	pib_value.pib_value_8bit = default_trx_config_params.channel;
+	tal_pib_set(phyCurrentChannel,
+			&pib_value);
+
+	/* Make the ISM frequency as null as IEEE channel is set in default case
+	**/
+#if (TAL_TYPE == AT86RF233)
+	curr_trx_config_params.ism_frequency
+		= default_trx_config_params.ism_frequency = 0.0;
+#endif
+
+	curr_trx_config_params.channel_page
+		= default_trx_config_params.channel_page
+				= TAL_CURRENT_PAGE_DEFAULT;
+	pib_value.pib_value_8bit = default_trx_config_params.channel_page;
+	tal_pib_set(phyCurrentPage, &pib_value);
+
+	/* As tx power is already configure by TAL in tal_pib.c get it for
+	 * application*/
+	temp = TAL_TRANSMIT_POWER_DEFAULT;
+	pib_value.pib_value_8bit = temp;
+	tal_pib_set(phyTransmitPower, &pib_value);
+
+	curr_trx_config_params.tx_power_dbm
+		= default_trx_config_params.tx_power_dbm
+				= CONV_phyTransmitPower_TO_DBM(
+			TAL_TRANSMIT_POWER_DEFAULT);
+#if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
+	tal_get_curr_trx_config(TX_PWR, &(curr_trx_config_params.tx_power_reg));
+	tal_get_curr_trx_config(TX_PWR,
+			&(default_trx_config_params.tx_power_reg));
+#endif
+
+	/* The following fields has no meaning if there is no peer */
+	if (true == peer_found) {
+#ifdef CRC_SETTING_ON_REMOTE_NODE
+		curr_trx_config_params.crc_settings_on_peer
+			= default_trx_config_params.crc_settings_on_peer
+					= false;
+#endif
+
+		/* Set the config parameters on peer node */
+#if (ANTENNA_DIVERSITY == 1)
+#if (TAL_TYPE == AT86RF233)
+		curr_trx_config_params.antenna_diversity_on_peer
+			= default_trx_config_params.
+				antenna_diversity_on_peer = false;
+		curr_trx_config_params.antenna_selected_on_peer
+			= default_trx_config_params.
+				antenna_selected_on_peer = ANT_CTRL_1;
+
+#else
+		curr_trx_config_params.antenna_diversity_on_peer
+			= default_trx_config_params.
+				antenna_diversity_on_peer = true;
+		curr_trx_config_params.antenna_selected_on_peer
+			= default_trx_config_params.
+				antenna_selected_on_peer = ANT_CTRL_0;
+#endif /* End of #if(TAL_TYPE == AT86RF233) */
+#endif /* End of #if (ANTENNA_DIVERSITY == 1) */
+	}
+}
+
+#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
+	(defined CW_SUPPORTED)))
+
+/**
+ * \brief Save all user settings before Start of CW transmission
+ */
+void save_all_settings(void)
+{
+#if (ANTENNA_DIVERSITY == 1)
+	tal_get_curr_trx_config(ANT_DIVERSITY, &ant_div_before_ct);
+
+	if (ANT_DIV_DISABLE == ant_div_before_ct) {
+		tal_get_curr_trx_config(ANT_CTRL, &ant_sel_before_ct);
+	}
+
+#endif
+
+#if (TAL_TYPE == AT86RF233)
+	cc_band_ct = trx_bit_read(SR_CC_BAND);
+	cc_number_ct = trx_bit_read(SR_CC_NUMBER);
+#endif /* End of #if(TAL_TYPE == AT86RF233) */
+}
+
+/**
+ * \brief Recover all user settings before Start of CW transmission
+ */
+void recover_all_settings(void)
+{
+	int8_t tx_pwr_dbm;
+	uint8_t temp_var;
+	pib_value_t pib_value;
+
+#if (ANTENNA_DIVERSITY == 1)
+	if (ANT_DIV_DISABLE == ant_div_before_ct) {
+		tal_ant_div_config(ANT_DIVERSITY_DISABLE, ant_sel_before_ct);
+	}
+
+#endif
+
+#if (TAL_TYPE == AT86RF233)
+	/* Set the ISM frequency back   */
+	if (CC_BAND_0 != cc_band_ct) {
+		tal_set_frequency_regs(cc_band_ct, cc_number_ct);
+	}
+
+#endif /* End of #if(TAL_TYPE == AT86RF233) */
+
+	/*RPC settings are resetted during tal_reset,hence reconfiguring based
+	 *on old config*/
+#if (TAL_TYPE == ATMEGARFR2)
+	if (true == curr_trx_config_params.rpc_enable) {
+		tal_rpc_mode_config(ENABLE_ALL_RPC_MODES); /* RPC feature
+		                                            * configuration. */
+	} else {
+		tal_rpc_mode_config(DISABLE_ALL_RPC_MODES);
+	}
+
+#endif
+
+#if (TAL_TYPE != AT86RF230B)
+	/* set the desensitization settings back */
+	if (true == curr_trx_config_params.rx_desensitize) {
+		tal_set_rx_sensitivity_level(RX_DESENSITIZE_LEVEL);
+	}
+
+#endif
+
+#if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
+	if (last_tx_power_format_set == 0) {
+		uint8_t tx_pwr_reg = curr_trx_config_params.tx_power_reg;
+		tal_set_tx_pwr(REGISTER_VALUE, tx_pwr_reg);
+	} else
+#endif
+	{
+		tx_pwr_dbm = curr_trx_config_params.tx_power_dbm;
+		temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
+		pib_value.pib_value_8bit = temp_var;
+		tal_pib_set(phyTransmitPower, &pib_value);
+	}
+}
+
+#endif /* End of #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) &&
+        *(defined CW_SUPPORTED))) */
+
+/*
+ * \brief Send an energy pulse on current channel page
+ */
+#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
+	(defined CW_SUPPORTED)))
+void pulse_cw_transmission(void)
+{
+	if(node_info.main_state == PER_TEST_RECEPTOR)
+	{
+		//give some time //sriram
+		delay_ms(10);
+	}
+	uint8_t channel;
+	op_mode = CONTINUOUS_TX_MODE;
+	tal_pib_get(phyCurrentChannel, &channel);
+
+	/* Save all user settings before continuous tx */
+	save_all_settings();
+
+	tal_reset(false);
+
+#if (TAL_TYPE == AT86RF233)
+	/* Set the frequency back to already set value after tal_reset */
+	if (CC_BAND_0 != cc_band_ct) {
+		tal_set_frequency_regs(cc_band_ct, cc_number_ct);
+	}
+
+
+#endif /* End of (TAL_TYPE == AT86RF233) */
+
+	/* Start  the Continuous Wave transmission */
+	tfa_continuous_tx_start(CW_MODE, false);
+	/* Start the timer to stop the Continuous transmission */
+	sw_timer_start(T_APP_TIMER,
+			PULSE_CW_TX_TIME_IN_MICRO_SEC,
+			SW_TIMEOUT_RELATIVE,
+			(FUNC_PTR)stop_pulse_cb,
+			NULL);
+}
+
+#endif
+
+/**
+ * \brief Stop sending a CW signal on current channel page
+ * \param callback_parameter Pointer to callback, not used here
+ */
+#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
+	(defined CW_SUPPORTED)))
+static void stop_pulse_cb(void *callback_parameter)
+{
+	/* Stop CW transmission again */
+	tfa_continuous_tx_stop();
+
+	op_mode = TX_OP_MODE;
+	/* recover all user setting set before continuous tx */
+	recover_all_settings();
+
+	/* Send the confirmation with status as SUCCESS */
+	usr_cont_pulse_tx_confirm(MAC_SUCCESS);
+
+	/* Keep compiler happy. */
+	callback_parameter = callback_parameter;
+}
+
+#endif
+
+/*
+ * \brief Start CW transmission on current channel page
+ * \param tx_mode  Continuous transmission mode
+ */
+#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
+	(defined CW_SUPPORTED)))
+void start_cw_transmission(uint8_t tx_mode,uint16_t tmr_val)
+{
+if(node_info.main_state == PER_TEST_RECEPTOR && !cw_ack_sent)
+{
+
+	if((tx_mode !=CW_MODE && tx_mode != PRBS_MODE) || (3600 < tmr_val)) /* timer value should not exceed 3600 seconds */
+	{
+		usr_cont_wave_tx_confirm(INVALID_ARGUMENT, 0x01, tx_mode);
+		return;
+	}
+	else
+	{
+	   /* Send Set confirmation with status SUCCESS and start cw trx on successful trx of the */
+	   usr_cont_wave_tx_confirm(MAC_SUCCESS, START_CWT, tx_mode); 
+	   remote_cw_start = true;
+	   cw_start_mode = tx_mode;
+	   cw_tmr_val = tmr_val;
+	   return;
+	}
+	
+	
+}
+else if(node_info.main_state == PER_TEST_INITIATOR || ((node_info.main_state == PER_TEST_RECEPTOR) && cw_ack_sent))
+{
+	/* Save all user settings before continuous tx */
+	save_all_settings();
+
+	/* Added to ensure CW transmission happen in every attempt */
+	tal_reset(false);
+
+#if (ANTENNA_DIVERSITY == 1)
+	if (ANT_DIV_DISABLE == ant_div_before_ct) {
+		tal_ant_div_config(ANT_DIVERSITY_DISABLE, ant_sel_before_ct);
+	}
+
+#endif
+
+if((node_info.main_state == PER_TEST_RECEPTOR) && 1 <= tmr_val )
+{
+	sw_timer_start(CW_TX_TIMER,
+	(uint32_t)tmr_val * 1E6,
+	SW_TIMEOUT_RELATIVE,
+	(FUNC_PTR)stop_cw_transmission,
+	(void *)&tx_mode);
+
+	
+}
+
+	switch (tx_mode) {
+	case CW_MODE: /* CW mode*/
+	{
+		/* In CW_MODE the parameter random_content is obsolete. */
+		tfa_continuous_tx_start(CW_MODE, false);
+	}
+	break;
+
+	case PRBS_MODE: /* PRBS mode*/
+	{
+		/* Start PRBS_MODE mode using random content. */
+		tfa_continuous_tx_start(PRBS_MODE, true);
+	}
+	break;
+
+	default:
+	{
+		usr_cont_wave_tx_confirm(INVALID_ARGUMENT, 0x01, tx_mode);
+		return;
+	}
+	}
+
+	op_mode = CONTINUOUS_TX_MODE;
+	if(node_info.main_state == PER_TEST_RECEPTOR )
+	{
+		cw_ack_sent=false;
+	}
+	else
+	{
+	
+	/* Send Set confirmation with status SUCCESS */
+	usr_cont_wave_tx_confirm(MAC_SUCCESS, START_CWT, tx_mode);
+	}
+}
+}
+
+/*
+ * \brief Stop CW transmission on current channel page
+ * \param tx_mode  Continuous transmission mode
+ */
+void stop_cw_transmission(void *parameter)
+{
+	uint8_t cw_mode;
+	cw_mode = *(uint8_t *)parameter;
+	/* Stop CW transmission again */
+	tfa_continuous_tx_stop();
+	/* recover all user setting which were set before continuous tx */
+	recover_all_settings();
+	op_mode = TX_OP_MODE;
+	usr_cont_wave_tx_confirm(MAC_SUCCESS, STOP_CWT /*stop*/, cw_mode);
+	remote_cw_start = false;
+}
+
+#endif
+
+/*
+ * \brief Read transceiver register
+ * \param reg_addr  The address of the register to be read
+ */
+void read_trx_registers(uint16_t reg_addr)
+{
+	uint8_t reg_val = INVALID_VALUE;
+
+#if (TAL_TYPE != ATMEGARFR2)
+	if (reg_addr > MAX_REG_ADDRESS)
+#else
+	if (reg_addr < MIN_REG_ADDRESS || reg_addr > MAX_REG_ADDRESS)
+#endif
+
+	{
+		/* Send the confirmation with status as OUT_OF_RANGE register
+		 * address */
+		usr_register_read_confirm(VALUE_OUT_OF_RANGE, reg_addr,
+				reg_val);
+		return;
+	}
+
+#if (TAL_TYPE != ATMEGARFR2)
+	tal_trx_reg_read((uint8_t)reg_addr, &reg_val);
+#else
+	tal_trx_reg_read(reg_addr, &reg_val);
+#endif
+
+	/* Send the confirmation with status as SUCCESS */
+	usr_register_read_confirm(MAC_SUCCESS, reg_addr, reg_val);
+}
+
+/*
+ * \brief Write Transceiver registers
+ * \param reg_addr  The address of the register to be written
+ * \param reg_val   The value of the register to be written
+ */
+void write_trx_registers(uint16_t reg_addr, uint8_t reg_val)
+{
+#if (TAL_TYPE != ATMEGARFR2)
+	if (reg_addr > MAX_REG_ADDRESS)
+#else
+	if (reg_addr < MIN_REG_ADDRESS || reg_addr > MAX_REG_ADDRESS)
+#endif
+	{
+		/* Send the confirmation with status as OUT_OF_RANGE register
+		 * address */
+		usr_register_write_confirm(VALUE_OUT_OF_RANGE, reg_addr,
+				reg_val);
+		return;
+	}
+
+	tal_trx_reg_write(reg_addr, reg_val);
+
+	/* Send the confirmation with status as SUCCESS */
+	usr_register_write_confirm(MAC_SUCCESS, reg_addr, reg_val);
+}
+
+/*
+ * \brief Read a set of registers
+ * \param start_reg_addr  The start address of the group of registers to be read
+ * \param end_reg_addr    The end register of the group of registers to be read
+ */
+void dump_trx_register_values(uint16_t start_reg_addr, uint16_t end_reg_addr)
+{
+	uint8_t status;
+	int8_t num_of_reg_to_read;
+
+	uint8_t reg_val[NO_OF_REGISTERS] = {NUL_VAL};
+	num_of_reg_to_read = ((end_reg_addr - start_reg_addr));
+	if (num_of_reg_to_read < 0) {
+		/* Send the confirmation with status as OUT_OF_RANGE register
+		 * address */
+		usr_register_dump_confirm(INVALID_REGISTER_ORDER,
+				start_reg_addr,
+				end_reg_addr,
+				reg_val);
+		return;
+	}
+
+	status
+		= tal_dump_registers(start_reg_addr, end_reg_addr,
+			(reg_val + 1));
+
+	reg_val[0] = num_of_reg_to_read + 1;
+
+	if (status == MAC_SUCCESS) {
+		/* Send the confirmation with status as MAC_SUCCESS register
+		 * address */
+		usr_register_dump_confirm(MAC_SUCCESS,
+				start_reg_addr,
+				end_reg_addr,
+				reg_val);
+	} else {
+		usr_register_dump_confirm(VALUE_OUT_OF_RANGE,
+				start_reg_addr,
+				end_reg_addr,
+				reg_val);
+	}
 }
 /* EOF */

@@ -163,9 +163,72 @@
 /* MACROS to set the specific features supported */
 #define MULTI_CHANNEL_SELECT              ((uint32_t)(1) << 0)
 #define PER_RANGE_TEST_MODE               ((uint32_t)(1) << 1)
-#define PER_REMOTE_CONFIG_MODE               ((uint32_t)(1) << 2)
+#define PER_REMOTE_CONFIG_MODE            ((uint32_t)(1) << 2)
+#define PKT_STREAMING_MODE                ((uint32_t)(1) << 3)
+#define CONTINUOUS_RX_ON_MODE             ((uint32_t)(1) << 4)
 
 /* ! \} */
+
+/* Defines used for transceiver operation mode */
+#define TX_OP_MODE                              (0x01)
+#define TEST_FRAMES_SENT                        (0x02)
+#define WAIT_FOR_TEST_RES                       (0x03)
+#define SET_PARAMETER                           (0x04)
+#if (ANTENNA_DIVERSITY == 1)
+#define DIVERSITY_STATUS_REQ                    (0x05)
+#define DIVERSITY_SET_REQ                       (0x06)
+#endif /* #if (ANTENNA_DIVERSITY == 1) */
+#define CONTINUOUS_TX_MODE                      (0x07)
+#define IDENTIFY_PEER                           (0x08)
+#ifdef CRC_SETTING_ON_REMOTE_NODE
+#define CRC_STATUS_REQ_WAIT                     (0x09)
+#define CRC_SET_REQ_WAIT                        (0x0A)
+#endif /* #ifdef CRC_SETTING_ON_REMOTE_NODE */
+#define PEER_INFO_RSP_WAIT                      (0x0B)
+#define DISCONNECT_PEER                         (0x0C)
+#define SET_DEFAULT_CONFIG_PEER                 (0x0D)
+#define PER_TEST_START                          (0x0E)
+#define RANGE_TEST_START                        (0x0F)
+#define RANGE_TEST_TX                           (0x10)
+#define RANGE_TEST_STOP                         (0x11)
+#define REMOTE_TEST_MODE                        (0X12)
+#define PKT_STREAM_MODE							(0X13)
+
+#define RANGE_TST_PKT_SEQ_POS                    (11)
+
+#if (TAL_TYPE == ATMEGARFR2)
+#define MAX_REG_ADDRESS                         (0x1ff)
+#define MIN_REG_ADDRESS                         (0x141)
+#else
+#define MAX_REG_ADDRESS                         (0x3f)
+#define MIN_REG_ADDRESS                         (0x00)
+#endif /* End of #if (TAL_TYPE == ATMEGARFR2) */
+
+#define RX_DESENSITIZE_LEVEL                    (0x08)
+#define NO_RX_DESENSITIZE_LEVEL                 (0x00)
+#define INVALID_VALUE                           (0xff)
+
+#if (TAL_TYPE == AT86RF233)
+#define FREQUENCY_MULTIPLIER                     (2)
+#endif /* End of (TAL_TYPE == AT86RF233) */
+
+#if (ANTENNA_DIVERSITY == 1)
+#define ENABLE_ANT_DIVERSITY                      (0)
+#define ENABLE_ANTENNA_1                          (1)
+#define ENABLE_ANTENNA_2                          (2)
+#endif /* End of ANETENNA_DIVERSITY */
+
+/* To handle Transceiver reset */
+#define TRX_RESET                               (0)
+#define BIT_COUNT                               (32)
+#define MAX_SCAN_DURATION                       (14)
+#define NO_OF_REGISTERS                         (65)
+
+#define TIMEOUT_FOR_RESPONSE_IN_MICRO_SEC       (200000)
+#define RANGE_TX_BEACON_INTERVAL                (3000000)
+#define RANGE_TX_BEACON_START_INTERVAL          (100000)
+#define MICRO_SEC_MULTIPLIER                    (1.0 / 1000000)
+#define MILLI_VOLT_MULTIPLIER                   (1.0 / 1000)
 
 /**
  * \name Generic

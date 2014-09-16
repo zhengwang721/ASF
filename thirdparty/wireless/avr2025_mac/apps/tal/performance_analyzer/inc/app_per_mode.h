@@ -295,6 +295,8 @@ void per_mode_receptor_init(void *parameter);
  *
  */
 void per_mode_receptor_task(void);
+void config_per_remote_test_parameters(void);
+
 
 /**
  * \brief Callback that is called once tx is done in PER_TEST_RECEPTOR state

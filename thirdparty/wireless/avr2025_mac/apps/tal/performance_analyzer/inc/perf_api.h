@@ -203,6 +203,8 @@ void disconnect_peer_node(void);
 void set_default_configuration(void);
 
 void config_per_test_parameters(void);
+
+
 /**
  * \brief Function to get the current values of the all configurabel patameters
  *

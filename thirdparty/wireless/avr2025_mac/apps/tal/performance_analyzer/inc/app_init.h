@@ -196,6 +196,9 @@ void set_main_state(main_state_t state, void *arg);
 
 void app_alert(void);
 
+void save_all_settings(void);
+void recover_all_settings(void);
+
 /* INIT state functions */
 
 /**

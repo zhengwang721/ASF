@@ -91,7 +91,6 @@ static void app_reset_cb(void *parameter);
 static void send_result_rsp(void);
 static void send_peer_info_rsp(void);
 static void set_paramter_on_recptor_node(app_payload_t *msg);
-static void set_default_configuration_peer_node(void);
 static void get_node_info(peer_info_rsp_t *data);
 
 #if (ANTENNA_DIVERSITY == 1)
@@ -121,10 +120,10 @@ bool manual_crc = false;
 #endif
 static uint8_t marker_seq_num = 0;
 
-bool cw_ack_sent=false,remote_cw_start=false;
-uint8_t cw_start_mode;
-uint16_t cw_tmr_val = 0;
-bool pulse_mode = false;
+extern bool cw_ack_sent,remote_cw_start;
+extern uint8_t cw_start_mode;
+extern uint16_t cw_tmr_val;
+extern bool pulse_mode ;
 
 extern bool pkt_stream_stop;
 
@@ -621,7 +620,6 @@ if(rx_on_mode)
 
 	case SET_DEFAULT_REQ:
 	{
-		//set_default_configuration_peer_node();
 		config_per_test_parameters();
 		
 	}
@@ -794,7 +792,9 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 		pib_value.pib_value_8bit = param_val;
 		retval_t status  = tal_pib_set(phyCurrentPage,
 				&pib_value);
+				
 		if (status == MAC_SUCCESS) {
+			curr_trx_config_params.channel_page=param_val;
 			printf("\r\n Channel page changed to %d", param_val);
 		} else {
 			printf("\r\n Channel page change failed");
@@ -839,16 +839,31 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 		if (((int8_t)param_val < min_dbm_val) ||
 				((int8_t)param_val > max_dbm_val)) {
 			int8_t temp_val;
+
 			tal_convert_reg_value_to_dBm(tx_pwr_reg, &temp_val);
 			printf("\r\n Tx Power value out of valid Range.");
 			printf(
 					"\r\n Tx Power set to %d dBm (TX_PWR=0x%x) on the node",
 					(int8_t)temp_val, tx_pwr_reg);
+								/* update the data base with this value
+					**/
+
+
+					/*Tx power in dBm also need to be
+					 * updated as it changes with reg value
+					 **/
+					curr_trx_config_params.tx_power_dbm
+						= temp_val;					
 		} else {
 			printf(
 					"\r\n Tx Power set to %d dBm (TX_PWR=0x%x) on the node",
 					(int8_t)param_val, tx_pwr_reg);
+					curr_trx_config_params.tx_power_dbm
+					= param_val;
+					
 		}
+							curr_trx_config_params.tx_power_reg
+							= tx_pwr_reg;
 #endif /* (TAL_TYPE != AT86RF233) */
 
 #else               /* In case of AT86Rf212 */
@@ -903,6 +918,16 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 			printf(
 					"\r\n Tx Power set to %d dBm (TX_PWR=0x%x) on the node",
 					tx_pwr_dbm, param_val);
+										/* update the data base with this value
+					**/
+					curr_trx_config_params.tx_power_reg
+						= param_val;
+
+					/*Tx power in dBm also need to be
+					 * updated as it changes with reg value
+					 **/
+					curr_trx_config_params.tx_power_dbm
+						= tx_pwr_dbm;
 #endif /* End of (TAL_TYPE != AT86RF233) */
 		}
 	}
@@ -1200,52 +1225,6 @@ static void send_range_test_rsp(uint8_t seq_num, uint32_t frame_count,
 			true);
 }
 
-/**
- * \brief Function used to set default configurations on peer node on reception
- * of
- * set_default req
- *
- */
-static void set_default_configuration_peer_node(void)
-{
-	uint8_t temp;
-	pib_value_t pib_value;
-
-	/* Channel default configuration  */
-	temp = DEFAULT_CHANNEL;
-	pib_value.pib_value_8bit = temp;
-	tal_pib_set(phyCurrentChannel, &pib_value);
-
-	/* Channel page default configuration*/
-	temp = TAL_CURRENT_PAGE_DEFAULT;
-	pib_value.pib_value_8bit = temp;
-	tal_pib_set(phyCurrentPage, &pib_value);
-
-	/* Tx power default configurations */
-	temp = TAL_TRANSMIT_POWER_DEFAULT;
-	pib_value.pib_value_8bit = temp;
-	tal_pib_set(phyTransmitPower, &pib_value);
-
-	/* antenna diversity default configurations */
-#if (ANTENNA_DIVERSITY == 1)
-#if (TAL_TYPE == AT86RF233)
-	/* Disable antenna diversity by default */
-	tal_ant_div_config(ANT_DIVERSITY_DISABLE, ANT_CTRL_1); /* Enable A1/X2
-	                                                       **/
-
-#else
-	/* Enable Antenna Diversity*/
-	tal_ant_div_config(ANT_DIVERSITY_ENABLE, ANTENNA_DEFAULT);
-#endif
-#endif
-
-	/* CRC default configuration */
-#ifdef CRC_SETTING_ON_REMOTE_NODE
-	manual_crc = false;
-	/* Disable the Promiscuous Mode */
-	tal_rxaack_prom_mode_ctrl(AACK_PROM_DISABLE);
-#endif
-}
 
 /**
  * \brief Function used to get the board details of peer node
@@ -1261,7 +1240,7 @@ static void get_node_info(peer_info_rsp_t *data)
 	/* Get the MAC address of the node */
 	data->mac_address = tal_pib.IeeeAddress;
 	data->fw_version = reverse_float(FIRMWARE_VERSION);
-	data->feature_mask = (MULTI_CHANNEL_SELECT)|(PER_RANGE_TEST_MODE)|(PER_REMOTE_CONFIG_MODE);
+	data->feature_mask = (MULTI_CHANNEL_SELECT)|(PER_RANGE_TEST_MODE)|(PER_REMOTE_CONFIG_MODE)|(PKT_STREAMING_MODE)|(CONTINUOUS_RX_ON_MODE);
 	
 }
 
