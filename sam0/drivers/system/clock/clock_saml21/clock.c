@@ -727,6 +727,9 @@ void system_clock_init(void)
 
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
 
+	/*  Switch to PL2 to be sure configuration of GCLK0 is safe */
+	system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_2);
+
 	OSC32KCTRL->OSCULP32K.reg = (CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN1K_Pos)
 								|(CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN32K_Pos);
 	/* XOSC */
@@ -941,10 +944,10 @@ void system_clock_init(void)
 #  endif
 
 	/* CPU and BUS clocks */
-	system_cpu_clock_set_divider(SYSTEM_MAIN_CLOCK_DIV_4);
+	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
 	system_main_clock_set_failure_detect(CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT);
-	system_low_power_clock_set_divider(SYSTEM_MAIN_CLOCK_DIV_4);
-	system_backup_clock_set_divider(SYSTEM_MAIN_CLOCK_DIV_4);
+	system_low_power_clock_set_divider(CONF_CLOCK_LOW_POWER_DIVIDER);
+	system_backup_clock_set_divider(CONF_CLOCK_BACKUP_DIVIDER);
 
 	/* GCLK 0 */
 #if CONF_CLOCK_CONFIGURE_GCLK == true
@@ -952,17 +955,11 @@ void system_clock_init(void)
 	_CONF_CLOCK_GCLK_CONFIG(0, ~);
 #endif
 
-	/* Set performance level according to frequency */
-	uint32_t backup_clk_freq = system_cpu_clock_get_hz();
-	if ((SYSTEM_MAIN_CLOCK_DIV_4 / (CONF_CLOCK_BACKUP_DIVIDER +1)) * backup_clk_freq
-		> SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ) {
-		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_2);
-	} else if ((SYSTEM_MAIN_CLOCK_DIV_4 / (CONF_CLOCK_BACKUP_DIVIDER +1)) * backup_clk_freq
-		> SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ) {
+	/* Set performance level according to CPU frequency */
+	uint32_t cpu_freq = system_cpu_clock_get_hz();
+	if (cpu_freq < SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ) {
+		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_0);
+	} else if (cpu_freq < SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ) {
 		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_1);
 	}
-
-	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
-	system_low_power_clock_set_divider(CONF_CLOCK_LOW_POWER_DIVIDER);
-	system_backup_clock_set_divider(CONF_CLOCK_BACKUP_DIVIDER);
 }
