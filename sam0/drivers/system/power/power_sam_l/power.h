@@ -296,7 +296,7 @@ struct system_battery_backup_power_switch_config {
 /** Performance level 1 maximum frequency. */
 #define	SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ    30000000UL
 /** Performance level 2 maximum frequency. */
-#define	SYSTEM_PERFORMANCE_LEVEL_2_MAX_FREQ    48000000UL
+#define	SYSTEM_PERFORMANCE_LEVEL_2_MAX_FREQ    60000000UL
 
 /**
  * \name Voltage Regulator
