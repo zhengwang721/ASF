@@ -952,8 +952,8 @@ void system_clock_init(void)
 	_CONF_CLOCK_GCLK_CONFIG(0, ~);
 #endif
 
-	/* Set performance level according to frequency.PM bus clock is in backup clock domain*/
-	uint32_t backup_clk_freq = system_backup_clock_get_hz();
+	/* Set performance level according to frequency */
+	uint32_t backup_clk_freq = system_cpu_clock_get_hz();
 	if ((SYSTEM_MAIN_CLOCK_DIV_4 / (CONF_CLOCK_BACKUP_DIVIDER +1)) * backup_clk_freq
 		> SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ) {
 		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_2);
