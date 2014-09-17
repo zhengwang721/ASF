@@ -51,7 +51,7 @@
 /*@{*/
 
 #define DMAC_U2223
-#define REV_DMAC                    0x220
+#define REV_DMAC                    0x221
 
 /* -------- DMAC_CTRL : (DMAC Offset: 0x00) (R/W 16) Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

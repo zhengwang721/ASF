@@ -61,14 +61,20 @@
 #define REG_TC2_COUNT16_COUNT      (0x42002814U) /**< \brief (TC2) COUNT16 Count */
 #define REG_TC2_COUNT16_CC0        (0x4200281CU) /**< \brief (TC2) COUNT16 Compare and Capture 0 */
 #define REG_TC2_COUNT16_CC1        (0x4200281EU) /**< \brief (TC2) COUNT16 Compare and Capture 1 */
+#define REG_TC2_COUNT16_CCBUF0     (0x42002830U) /**< \brief (TC2) COUNT16 Compare and Capture Buffer 0 */
+#define REG_TC2_COUNT16_CCBUF1     (0x42002832U) /**< \brief (TC2) COUNT16 Compare and Capture Buffer 1 */
 #define REG_TC2_COUNT32_COUNT      (0x42002814U) /**< \brief (TC2) COUNT32 Count */
-#define REG_TC2_COUNT32_PER        (0x42002818U) /**< \brief (TC2) COUNT32 Period */
 #define REG_TC2_COUNT32_CC0        (0x4200281CU) /**< \brief (TC2) COUNT32 Compare and Capture 0 */
 #define REG_TC2_COUNT32_CC1        (0x42002820U) /**< \brief (TC2) COUNT32 Compare and Capture 1 */
+#define REG_TC2_COUNT32_CCBUF0     (0x42002830U) /**< \brief (TC2) COUNT32 Compare and Capture Buffer 0 */
+#define REG_TC2_COUNT32_CCBUF1     (0x42002834U) /**< \brief (TC2) COUNT32 Compare and Capture Buffer 1 */
 #define REG_TC2_COUNT8_COUNT       (0x42002814U) /**< \brief (TC2) COUNT8 Count */
 #define REG_TC2_COUNT8_PER         (0x4200281BU) /**< \brief (TC2) COUNT8 Period */
 #define REG_TC2_COUNT8_CC0         (0x4200281CU) /**< \brief (TC2) COUNT8 Compare and Capture 0 */
 #define REG_TC2_COUNT8_CC1         (0x4200281DU) /**< \brief (TC2) COUNT8 Compare and Capture 1 */
+#define REG_TC2_COUNT8_PERBUF      (0x4200282FU) /**< \brief (TC2) COUNT8 Period Buffer */
+#define REG_TC2_COUNT8_CCBUF0      (0x42002830U) /**< \brief (TC2) COUNT8 Compare and Capture Buffer 0 */
+#define REG_TC2_COUNT8_CCBUF1      (0x42002831U) /**< \brief (TC2) COUNT8 Compare and Capture Buffer 1 */
 #else
 #define REG_TC2_CTRLA              (*(RwReg  *)0x42002800U) /**< \brief (TC2) Control A */
 #define REG_TC2_CTRLBCLR           (*(RwReg8 *)0x42002804U) /**< \brief (TC2) Control B Clear */
@@ -85,14 +91,20 @@
 #define REG_TC2_COUNT16_COUNT      (*(RwReg16*)0x42002814U) /**< \brief (TC2) COUNT16 Count */
 #define REG_TC2_COUNT16_CC0        (*(RwReg16*)0x4200281CU) /**< \brief (TC2) COUNT16 Compare and Capture 0 */
 #define REG_TC2_COUNT16_CC1        (*(RwReg16*)0x4200281EU) /**< \brief (TC2) COUNT16 Compare and Capture 1 */
+#define REG_TC2_COUNT16_CCBUF0     (*(RwReg16*)0x42002830U) /**< \brief (TC2) COUNT16 Compare and Capture Buffer 0 */
+#define REG_TC2_COUNT16_CCBUF1     (*(RwReg16*)0x42002832U) /**< \brief (TC2) COUNT16 Compare and Capture Buffer 1 */
 #define REG_TC2_COUNT32_COUNT      (*(RwReg  *)0x42002814U) /**< \brief (TC2) COUNT32 Count */
-#define REG_TC2_COUNT32_PER        (*(RwReg  *)0x42002818U) /**< \brief (TC2) COUNT32 Period */
 #define REG_TC2_COUNT32_CC0        (*(RwReg  *)0x4200281CU) /**< \brief (TC2) COUNT32 Compare and Capture 0 */
 #define REG_TC2_COUNT32_CC1        (*(RwReg  *)0x42002820U) /**< \brief (TC2) COUNT32 Compare and Capture 1 */
+#define REG_TC2_COUNT32_CCBUF0     (*(RwReg  *)0x42002830U) /**< \brief (TC2) COUNT32 Compare and Capture Buffer 0 */
+#define REG_TC2_COUNT32_CCBUF1     (*(RwReg  *)0x42002834U) /**< \brief (TC2) COUNT32 Compare and Capture Buffer 1 */
 #define REG_TC2_COUNT8_COUNT       (*(RwReg8 *)0x42002814U) /**< \brief (TC2) COUNT8 Count */
 #define REG_TC2_COUNT8_PER         (*(RwReg8 *)0x4200281BU) /**< \brief (TC2) COUNT8 Period */
 #define REG_TC2_COUNT8_CC0         (*(RwReg8 *)0x4200281CU) /**< \brief (TC2) COUNT8 Compare and Capture 0 */
 #define REG_TC2_COUNT8_CC1         (*(RwReg8 *)0x4200281DU) /**< \brief (TC2) COUNT8 Compare and Capture 1 */
+#define REG_TC2_COUNT8_PERBUF      (*(RwReg8 *)0x4200282FU) /**< \brief (TC2) COUNT8 Period Buffer */
+#define REG_TC2_COUNT8_CCBUF0      (*(RwReg8 *)0x42002830U) /**< \brief (TC2) COUNT8 Compare and Capture Buffer 0 */
+#define REG_TC2_COUNT8_CCBUF1      (*(RwReg8 *)0x42002831U) /**< \brief (TC2) COUNT8 Compare and Capture Buffer 1 */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for TC2 peripheral ========== */

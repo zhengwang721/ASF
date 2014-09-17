@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM Watchdog Driver Quick Start
+ * \brief SAM L21 Xplained Pro board configuration.
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,72 +40,8 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
 
-void configure_wdt(void);
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//! [setup]
-void configure_wdt(void)
-{
-	/* Create a new configuration structure for the Watchdog settings and fill
-	 * with the default module settings. */
-	//! [setup_1]
-	struct wdt_conf config_wdt;
-	//! [setup_1]
-	//! [setup_2]
-	wdt_get_config_defaults(&config_wdt);
-	//! [setup_2]
-
-	/* Set the Watchdog configuration settings */
-	//! [setup_3]
-	config_wdt.always_on      = false;
-#if !(SAML21)
-	config_wdt.clock_source   = GCLK_GENERATOR_4;
-#endif
-	config_wdt.timeout_period = WDT_PERIOD_2048CLK;
-	//! [setup_3]
-
-	/* Initialize and enable the Watchdog with the user settings */
-	//! [setup_4]
-	wdt_set_config(&config_wdt);
-	//! [setup_4]
-}
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-	//! [setup_init]
-	configure_wdt();
-	//! [setup_init]
-
-	//! [main]
-	//! [main_1]
-	enum system_reset_cause reset_cause = system_get_reset_cause();
-	//! [main_1]
-
-	//! [main_2]
-	if (reset_cause == SYSTEM_RESET_CAUSE_WDT) {
-		port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
-	}
-	else {
-		port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
-	}
-	//! [main_2]
-
-	//! [main_3]
-	while (true) {
-	//! [main_3]
-		//! [main_4]
-		if (port_pin_get_input_level(BUTTON_0_PIN) == false) {
-		//! [main_4]
-		//! [main_5]
-			port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
-
-			wdt_reset_count();
-		//! [main_5]
-		}
-	}
-	//! [main]
-}
+#endif /* CONF_BOARD_H_INCLUDED */
