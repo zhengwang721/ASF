@@ -546,7 +546,8 @@ enum status_code tc_set_compare_value(
 			if (channel_index <
 					NUMBER_OF_COMPARE_CAPTURE_CHANNELS) {
 				if (module_inst->double_buffering_enabled){
-					//to do
+					tc_module->COUNT8.CCBUF[channel_index].reg =
+							(uint8_t)compare;
 				} else {
 					tc_module->COUNT8.CC[channel_index].reg  =
 							(uint8_t)compare;
@@ -557,7 +558,8 @@ enum status_code tc_set_compare_value(
 			if (channel_index <
 					NUMBER_OF_COMPARE_CAPTURE_CHANNELS) {
 				if (module_inst->double_buffering_enabled){
-					//to do
+					tc_module->COUNT16.CCBUF[channel_index].reg =
+							(uint16_t)compare;
 				} else {
 					tc_module->COUNT16.CC[channel_index].reg =
 							(uint16_t)compare;
@@ -569,7 +571,8 @@ enum status_code tc_set_compare_value(
 			if (channel_index <
 					NUMBER_OF_COMPARE_CAPTURE_CHANNELS) {
 				if (module_inst->double_buffering_enabled){
-					//to do
+					tc_module->COUNT32.CCBUF[channel_index].reg =
+							(uint32_t)compare;
 				} else {
 					tc_module->COUNT32.CC[channel_index].reg =
 						(uint32_t)compare;
@@ -668,7 +671,7 @@ enum status_code tc_set_top_value (
 	switch (module_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
 			if (module_inst->double_buffering_enabled){
-					//TBD
+					tc_module->COUNT8.PERBUF.reg = (uint8_t)top_value;
 				} else {
 					tc_module->COUNT8.PER.reg = (uint8_t)top_value;
 			}
@@ -676,7 +679,7 @@ enum status_code tc_set_top_value (
 
 		case TC_COUNTER_SIZE_16BIT:
 			if (module_inst->double_buffering_enabled){
-					//to do
+					tc_module->COUNT16.CCBUF[0].reg = (uint16_t)top_value;
 				} else {
 					tc_module->COUNT16.CC[0].reg = (uint16_t)top_value;
 			}
@@ -684,7 +687,7 @@ enum status_code tc_set_top_value (
 
 		case TC_COUNTER_SIZE_32BIT:
 			if (module_inst->double_buffering_enabled){
-					//to do
+					tc_module->COUNT32.CCBUF[0].reg = (uint32_t)top_value;
 				} else {
 					tc_module->COUNT32.CC[0].reg = (uint32_t)top_value;
 			}
