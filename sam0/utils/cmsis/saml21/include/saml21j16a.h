@@ -366,26 +366,26 @@ void PICOP_Handler               ( void );
 #define ID_MTB           35 /**< \brief Cortex-M0+ Micro-Trace Buffer (MTB) */
 
 // Peripheral instances on HPB2 bridge
-#define ID_SERCOM0       64 /**< \brief Serial Communication Interface SERCOM (SERCOM0) */
-#define ID_SERCOM1       65 /**< \brief Serial Communication Interface SERCOM (SERCOM1) */
-#define ID_SERCOM2       66 /**< \brief Serial Communication Interface SERCOM (SERCOM2) */
-#define ID_SERCOM3       67 /**< \brief Serial Communication Interface SERCOM (SERCOM3) */
-#define ID_SERCOM4       68 /**< \brief Serial Communication Interface SERCOM (SERCOM4) */
-#define ID_TCC0          69 /**< \brief Timer Counter Control TCC (TCC0) */
-#define ID_TCC1          70 /**< \brief Timer Counter Control TCC (TCC1) */
-#define ID_TCC2          71 /**< \brief Timer Counter Control TCC (TCC2) */
-#define ID_TC0           72 /**< \brief Basic Timer Counter TC (TC0) */
-#define ID_TC1           73 /**< \brief Basic Timer Counter TC (TC1) */
-#define ID_TC2           74 /**< \brief Basic Timer Counter TC (TC2) */
-#define ID_TC3           75 /**< \brief Basic Timer Counter TC (TC3) */
+#define ID_SERCOM0       64 /**< \brief Serial Communication Interface 0 (SERCOM0) */
+#define ID_SERCOM1       65 /**< \brief Serial Communication Interface 1 (SERCOM1) */
+#define ID_SERCOM2       66 /**< \brief Serial Communication Interface 2 (SERCOM2) */
+#define ID_SERCOM3       67 /**< \brief Serial Communication Interface 3 (SERCOM3) */
+#define ID_SERCOM4       68 /**< \brief Serial Communication Interface 4 (SERCOM4) */
+#define ID_TCC0          69 /**< \brief Timer Counter Control 0 (TCC0) */
+#define ID_TCC1          70 /**< \brief Timer Counter Control 1 (TCC1) */
+#define ID_TCC2          71 /**< \brief Timer Counter Control 2 (TCC2) */
+#define ID_TC0           72 /**< \brief Basic Timer Counter 0 (TC0) */
+#define ID_TC1           73 /**< \brief Basic Timer Counter 1 (TC1) */
+#define ID_TC2           74 /**< \brief Basic Timer Counter 2 (TC2) */
+#define ID_TC3           75 /**< \brief Basic Timer Counter 3 (TC3) */
 #define ID_DAC           76 /**< \brief Digital-to-Analog Converter (DAC) */
 #define ID_AES           77 /**< \brief Advanced Encryption Standard (AES) */
 #define ID_TRNG          78 /**< \brief True Random Generator (TRNG) */
 
 // Peripheral instances on HPB3 bridge
 #define ID_EVSYS         96 /**< \brief Event System Interface (EVSYS) */
-#define ID_SERCOM5       97 /**< \brief Serial Communication Interface SERCOM (SERCOM5) */
-#define ID_TC4           98 /**< \brief Basic Timer Counter TC (TC4) */
+#define ID_SERCOM5       97 /**< \brief Serial Communication Interface 5 (SERCOM5) */
+#define ID_TC4           98 /**< \brief Basic Timer Counter 4 (TC4) */
 #define ID_ADC           99 /**< \brief Analog Digital Converter (ADC) */
 #define ID_AC           100 /**< \brief Analog Comparators (AC) */
 #define ID_PTC          101 /**< \brief Peripheral Touch Controller (PTC) */
@@ -426,6 +426,7 @@ void PICOP_Handler               ( void );
 #define NVMCTRL_OTP3                  (0x00806010U) /**< \brief (NVMCTRL) OTP3 Base Address */
 #define NVMCTRL_OTP4                  (0x00806018U) /**< \brief (NVMCTRL) OTP4 Base Address */
 #define NVMCTRL_OTP5                  (0x00806020U) /**< \brief (NVMCTRL) OTP5 Base Address */
+#define NVMCTRL_TEMP_LOG              (0x00806030U) /**< \brief (NVMCTRL) TEMP_LOG Base Address */
 #define NVMCTRL_USER                  (0x00804000U) /**< \brief (NVMCTRL) USER Base Address */
 #define OPAMP                         (0x43001800U) /**< \brief (OPAMP) APB Base Address */
 #define OSCCTRL                       (0x40000C00U) /**< \brief (OSCCTRL) APB Base Address */
@@ -512,6 +513,7 @@ void PICOP_Handler               ( void );
 #define NVMCTRL_OTP3                  (0x00806010U) /**< \brief (NVMCTRL) OTP3 Base Address */
 #define NVMCTRL_OTP4                  (0x00806018U) /**< \brief (NVMCTRL) OTP4 Base Address */
 #define NVMCTRL_OTP5                  (0x00806020U) /**< \brief (NVMCTRL) OTP5 Base Address */
+#define NVMCTRL_TEMP_LOG              (0x00806030U) /**< \brief (NVMCTRL) TEMP_LOG Base Address */
 #define NVMCTRL_USER                  (0x00804000U) /**< \brief (NVMCTRL) USER Base Address */
 #define NVMCTRL_INST_NUM  1                         /**< \brief (NVMCTRL) Number of instances */
 #define NVMCTRL_INSTS     { NVMCTRL }               /**< \brief (NVMCTRL) Instances List */

@@ -51,7 +51,7 @@
 /*@{*/
 
 #define DSU_U2209
-#define REV_DSU                     0x220
+#define REV_DSU                     0x240
 
 /* -------- DSU_CTRL : (DSU Offset: 0x0000) ( /W  8) Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -154,25 +154,6 @@ typedef union {
 #define DSU_STATUSB_HPE_Pos         4            /**< \brief (DSU_STATUSB) Hot-Plugging Enable */
 #define DSU_STATUSB_HPE             (0x1u << DSU_STATUSB_HPE_Pos)
 #define DSU_STATUSB_MASK            0x1Fu        /**< \brief (DSU_STATUSB) MASK Register */
-
-/* -------- DSU_STATUSC : (DSU Offset: 0x0003) (R/   8) Status C -------- */
-#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-typedef union {
-  struct {
-    uint8_t  STATE:3;          /*!< bit:  0.. 2  State                              */
-    uint8_t  :5;               /*!< bit:  3.. 7  Reserved                           */
-  } bit;                       /*!< Structure used for bit  access                  */
-  uint8_t reg;                 /*!< Type      used for register access              */
-} DSU_STATUSC_Type;
-#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
-
-#define DSU_STATUSC_OFFSET          0x0003       /**< \brief (DSU_STATUSC offset) Status C */
-#define DSU_STATUSC_RESETVALUE      0x00         /**< \brief (DSU_STATUSC reset_value) Status C */
-
-#define DSU_STATUSC_STATE_Pos       0            /**< \brief (DSU_STATUSC) State */
-#define DSU_STATUSC_STATE_Msk       (0x7u << DSU_STATUSC_STATE_Pos)
-#define DSU_STATUSC_STATE(value)    ((DSU_STATUSC_STATE_Msk & ((value) << DSU_STATUSC_STATE_Pos)))
-#define DSU_STATUSC_MASK            0x07u        /**< \brief (DSU_STATUSC) MASK Register */
 
 /* -------- DSU_ADDR : (DSU Offset: 0x0004) (R/W 32) Address -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -613,18 +594,18 @@ typedef struct {
   __O  DSU_CTRL_Type             CTRL;        /**< \brief Offset: 0x0000 ( /W  8) Control */
   __IO DSU_STATUSA_Type          STATUSA;     /**< \brief Offset: 0x0001 (R/W  8) Status A */
   __I  DSU_STATUSB_Type          STATUSB;     /**< \brief Offset: 0x0002 (R/   8) Status B */
-  __I  DSU_STATUSC_Type          STATUSC;     /**< \brief Offset: 0x0003 (R/   8) Status C */
+       RoReg8                    Reserved1[0x1];
   __IO DSU_ADDR_Type             ADDR;        /**< \brief Offset: 0x0004 (R/W 32) Address */
   __IO DSU_LENGTH_Type           LENGTH;      /**< \brief Offset: 0x0008 (R/W 32) Length */
   __IO DSU_DATA_Type             DATA;        /**< \brief Offset: 0x000C (R/W 32) Data */
   __IO DSU_DCC_Type              DCC[2];      /**< \brief Offset: 0x0010 (R/W 32) Debug Communication Channel n */
   __I  DSU_DID_Type              DID;         /**< \brief Offset: 0x0018 (R/  32) Device Identification */
-       RoReg8                    Reserved1[0xD4];
+       RoReg8                    Reserved2[0xD4];
   __IO DSU_DCFG_Type             DCFG[2];     /**< \brief Offset: 0x00F0 (R/W 32) Device Configuration */
-       RoReg8                    Reserved2[0xF08];
+       RoReg8                    Reserved3[0xF08];
   __I  DSU_ENTRY_Type            ENTRY[2];    /**< \brief Offset: 0x1000 (R/  32) Coresight ROM Table Entry n */
   __I  DSU_END_Type              END;         /**< \brief Offset: 0x1008 (R/  32) Coresight ROM Table End */
-       RoReg8                    Reserved3[0xFC0];
+       RoReg8                    Reserved4[0xFC0];
   __I  DSU_MEMTYPE_Type          MEMTYPE;     /**< \brief Offset: 0x1FCC (R/  32) Coresight ROM Table Memory Type */
   __I  DSU_PID4_Type             PID4;        /**< \brief Offset: 0x1FD0 (R/  32) Peripheral Identification 4 */
   __I  DSU_PID5_Type             PID5;        /**< \brief Offset: 0x1FD4 (R/  32) Peripheral Identification 5 */
