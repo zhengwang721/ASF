@@ -292,7 +292,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \section USB_HOST_CONF USB Host User Configuration
  * The following USB host configuration must be included in the conf_usb_host.h
- * file of the application.
+ * file of the application:
  *
  * \b 1. USB_HOST_UHI (List of UHI APIs).
  *
@@ -312,7 +312,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \section USB_HOST_CALLBACK USB Host User Callback
  * The following optional USB host callback can be defined in the conf_usb_host.h
- * file of the application.
+ * file of the application:
  *
  * \b 1. void UHC_MODE_CHANGE(bool b_host_mode).
  *
@@ -359,7 +359,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * Common prerequisites for all USB hosts.
  *
  * This module is based on USB host stack full interrupt driven and supporting
- * \ref sleepmgr_group "sleepmgr". For AVR and Atmel® | SMART™ SAM3/4 devices the
+ * \ref sleepmgr_group "sleepmgr". For AVR® and Atmel® | SMART™ SAM3/4 devices the
  * \ref clk_group "clock services" is supported. For SAMD21 devices the
  * \ref asfdoc_sam0_system_clock_group "clock driver" is supported.
  *
