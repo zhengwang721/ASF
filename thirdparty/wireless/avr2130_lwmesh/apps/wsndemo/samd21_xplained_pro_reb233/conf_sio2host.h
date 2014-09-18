@@ -1,7 +1,7 @@
 /**
- * \file *********************************************************************
+ * \file conf_sio2host.h
  *
- * \brief USART Serial configuration
+ * \brief Serial Input & Output configuration
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,14 +40,17 @@
  * \asf_license_stop
  */
 
-#ifndef CONF_HW_TIMER_H_INCLUDED
-#define CONF_HW_TIMER_H_INCLUDED
+#ifndef CONF_SIO2HOST_H_INCLUDED
+#define CONF_SIO2HOST_H_INCLUDED
+/** Since MCPS.DATA.indication requires max no of bytes of around 150 bytes than all other primitives,the Maximum Buffer size is kept as 156 bytes */
+ #define SERIAL_RX_BUF_SIZE_HOST    156
 
-/*! \name Configuration
- */
-/* ! @{ */
-#define TIMER                (TC3)
-#define TIMER_CHANNEL_ID     0
-/* ! @} */
+#define USART_HOST                 EDBG_CDC_MODULE
 
-#endif /* CONF_HW_TIMER_H_INCLUDED */
+/** Baudrate setting */
+#define USART_HOST_BAUDRATE        38400
+
+#define USART_HOST_RX_ISR_ENABLE()  _sercom_set_handler(3, USART_HOST_ISR_VECT); \
+	USART_HOST->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC; \
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM3);
+#endif /* CONF_SIO2HOST_H_INCLUDED */

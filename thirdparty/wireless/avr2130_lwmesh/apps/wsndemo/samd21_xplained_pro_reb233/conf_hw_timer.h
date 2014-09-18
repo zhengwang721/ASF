@@ -1,9 +1,9 @@
 /**
- * \file
+ * \file *********************************************************************
  *
- * \brief SAM D2x SPI configuration
+ * \brief HW Timer configuration
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -38,14 +38,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
 
-#ifndef CONF_SPI_H_INCLUDED
-#  define CONF_SPI_H_INCLUDED
+#ifndef CONF_HW_TIMER_H_INCLUDED
+#define CONF_HW_TIMER_H_INCLUDED
 
-#  define CONF_SPI_MASTER_ENABLE     true
-#  define CONF_SPI_SLAVE_ENABLE      true
-#  define CONF_SPI_TIMEOUT           20000
+/*! \name Configuration
+ */
+/* ! @{ */
+#define TIMER                (TC3)
+#define TIMER_CHANNEL_ID     0
+/* ! @} */
 
-#endif /* CONF_SPI_H_INCLUDED */
+#endif /* CONF_HW_TIMER_H_INCLUDED */
