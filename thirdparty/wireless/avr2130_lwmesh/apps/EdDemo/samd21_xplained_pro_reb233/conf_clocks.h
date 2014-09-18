@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 Clock configuration
+ * \brief SAM R21 Clock configuration
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -63,7 +63,7 @@
 #  define CONF_CLOCK_XOSC_EXTERNAL_FREQUENCY      12000000UL
 #  define CONF_CLOCK_XOSC_STARTUP_TIME            SYSTEM_XOSC_STARTUP_32768
 #  define CONF_CLOCK_XOSC_AUTO_GAIN_CONTROL       true
-#  define CONF_CLOCK_XOSC_ON_DEMAND               false
+#  define CONF_CLOCK_XOSC_ON_DEMAND               true
 #  define CONF_CLOCK_XOSC_RUN_IN_STANDBY          false
 
 /* SYSTEM_CLOCK_SOURCE_XOSC32K configuration - External 32KHz crystal/clock
@@ -74,7 +74,7 @@
 #  define CONF_CLOCK_XOSC32K_AUTO_AMPLITUDE_CONTROL  true
 #  define CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT    false
 #  define CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT  true
-#  define CONF_CLOCK_XOSC32K_ON_DEMAND            false
+#  define CONF_CLOCK_XOSC32K_ON_DEMAND            true
 #  define CONF_CLOCK_XOSC32K_RUN_IN_STANDBY       false
 
 /* SYSTEM_CLOCK_SOURCE_OSC32K configuration - Internal 32KHz oscillator */
@@ -82,7 +82,7 @@
 #  define CONF_CLOCK_OSC32K_STARTUP_TIME          SYSTEM_OSC32K_STARTUP_130
 #  define CONF_CLOCK_OSC32K_ENABLE_1KHZ_OUTPUT    true
 #  define CONF_CLOCK_OSC32K_ENABLE_32KHZ_OUTPUT   true
-#  define CONF_CLOCK_OSC32K_ON_DEMAND             false
+#  define CONF_CLOCK_OSC32K_ON_DEMAND             true
 #  define CONF_CLOCK_OSC32K_RUN_IN_STANDBY        true
 
 /* SYSTEM_CLOCK_SOURCE_DFLL configuration - Digital Frequency Locked Loop */
@@ -108,7 +108,7 @@
 
 /* SYSTEM_CLOCK_SOURCE_DPLL configuration - Digital Phase-Locked Loop */
 #  define CONF_CLOCK_DPLL_ENABLE                  false
-#  define CONF_CLOCK_DPLL_ON_DEMAND               false
+#  define CONF_CLOCK_DPLL_ON_DEMAND               true
 #  define CONF_CLOCK_DPLL_RUN_IN_STANDBY          false
 #  define CONF_CLOCK_DPLL_LOCK_BYPASS             false
 #  define CONF_CLOCK_DPLL_WAKE_UP_FAST            false
@@ -158,7 +158,7 @@
 #  define CONF_CLOCK_GCLK_3_OUTPUT_ENABLE         false
 
 /* Configure GCLK generator 4 */
-#  define CONF_CLOCK_GCLK_4_ENABLE                false
+#  define CONF_CLOCK_GCLK_4_ENABLE                true
 #  define CONF_CLOCK_GCLK_4_RUN_IN_STANDBY        false
 #  define CONF_CLOCK_GCLK_4_CLOCK_SOURCE          SYSTEM_CLOCK_SOURCE_ULP32K
 #  define CONF_CLOCK_GCLK_4_PRESCALER             32
