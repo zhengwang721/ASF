@@ -129,7 +129,7 @@ extern bool pkt_stream_stop;
 
 extern uint32_t pkt_stream_gap_time ;
 extern bool rdy_to_tx;
-bool rx_on_mode = false;
+extern bool rx_on_mode;
 /* ! \} */
 
 /* === IMPLEMENTATION ====================================================== */

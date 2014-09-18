@@ -24,7 +24,7 @@
  *    from this software without specific prior written permission.
  *
  * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
+ *    Atmel micro controller product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -54,53 +54,54 @@
 #include "tal_internal.h"
 #include "tal_constants.h"
 #include "tal_helper.h"
-#include "ieee_const.h"
-#include "app_per_mode.h"
 #include "app_frame_format.h"
 #include "app_init.h"
 #include "perf_api.h"
+#include "perf_api_serial_handler.h"
 /* === TYPES =============================================================== */
 
-/* === GLOBALS============================================================== */
-#ifdef EXT_RF_FRONT_END_CTRL
-static uint8_t prev_non_26chn_tx_power;
-#endif
+/* === EXTERNALS============================================================== */
+
 extern bool rdy_to_tx;
 extern bool pkt_stream_stop;
-frame_info_t *stream_pkt;
-uint8_t pkt_buffer[LARGE_BUFFER_SIZE];
-
-
-/* Database to maintain the default settings of the configurable parameter */
-trx_config_params_t default_trx_config_params;
-
-/* Database to maintain the updated/latest settings of the configurable
- * parameters */
-trx_config_params_t curr_trx_config_params;
-
 extern bool peer_found;
 extern uint8_t last_tx_power_format_set;
-bool cw_ack_sent=false,remote_cw_start=false;
-uint8_t cw_start_mode;
-uint16_t cw_tmr_val = 0;
-bool pulse_mode = false;
-
 #if (ANTENNA_DIVERSITY == 1)
 extern uint8_t ant_sel_before_ct;
 extern uint8_t ant_div_before_ct;
 #endif /* End of #if (ANTENNA_DIVERSITY == 1) */
-
 extern uint8_t op_mode;
 
+/* === GLOBALS============================================================== */
+
+#ifdef EXT_RF_FRONT_END_CTRL
+static uint8_t prev_non_26chn_tx_power;
+#endif
+frame_info_t *stream_pkt;
+uint8_t pkt_buffer[LARGE_BUFFER_SIZE];
+uint32_t pkt_stream_gap_time ;
+/* Database to maintain the default settings of the configurable parameter */
+trx_config_params_t default_trx_config_params;
+/* Database to maintain the updated/latest settings of the configurable
+ * parameters */
+trx_config_params_t curr_trx_config_params;
+uint16_t cw_tmr_val = 0;
+bool cw_ack_sent=false,remote_cw_start=false;
+uint8_t cw_start_mode;
+bool pulse_mode = false;
+bool rx_on_mode = false;
+
 /* === DEFINES============================================================== */
+
 #define DEFAULT_NO_OF_TEST_FRAMES               (100)
 #define DEFAULT_FRAME_LENGTH                    (20)
 
 /* === PROTOTYPES============================================================== */
+
 #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
 	(defined CW_SUPPORTED)))
+	
 static void stop_pulse_cb(void *callback_parameter);
-
 
 #endif /* End of #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) &&
         *(defined CW_SUPPORTED))) */
@@ -119,182 +120,6 @@ void app_reset(void)
 
 	/* INIT was a success - so change to WAIT_FOR_EVENT state */
 	set_main_state(WAIT_FOR_EVENT, NULL);
-}
-
-#ifdef EXT_RF_FRONT_END_CTRL
-
-/*
- * \brief handle the tx power settings in case of External PA enabled,
- * and the channel changes from or to 26.This is to meet the FCC compliance
- *
- * \param Current channel and Previous channel
- */
-void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl)
-{
-	pib_value_t pib_value;
-
-	/* If the cuurent channel set to 26*/
-	if (curr_chnl == CHANNEL_26) {
-		/* Get last previous non 26 channel tx power  */
-		if (prev_chnl != CHANNEL_26) {
-			tal_pib_get(phyTransmitPower, &prev_non_26chn_tx_power);
-		}
-
-		/* If the Tx power is more than 13dBm, i.e. TX_PWR < 0x0d */
-		if (trx_bit_read(SR_TX_PWR) <= MAX_TX_PWR_REG_VAL_CH26) {
-			pib_value.pib_value_8bit = DEFAULT_TX_POWER_CH26;
-			tal_pib_set(phyTransmitPower, &pib_value);
-			curr_trx_config_params.tx_power_reg = trx_bit_read(
-					SR_TX_PWR);
-			curr_trx_config_params.tx_power_dbm
-				= CONV_phyTransmitPower_TO_DBM(
-					pib_value.pib_value_8bit);
-		}
-	} else {
-		/* if the channel changed from 26 to other  */
-		if (prev_chnl == CHANNEL_26) {
-			/* Set back the tx power to default value i.e. 20dBm,
-			 *TX_PWR 0x09 */
-			pib_value.pib_value_8bit = prev_non_26chn_tx_power;
-			tal_pib_set(phyTransmitPower, &pib_value);
-			curr_trx_config_params.tx_power_reg = trx_bit_read(
-					SR_TX_PWR);
-			curr_trx_config_params.tx_power_dbm
-				= CONV_phyTransmitPower_TO_DBM(
-					pib_value.pib_value_8bit);
-		}
-	}
-}
-
-#endif /* End of EXT_RF_FRONT_END_CTRL */
-
-/**
- * \brief To Configure the frame sending
- */
-void configure_pkt_stream_frames(uint16_t frame_len)
-{
-	uint8_t index;
-	uint8_t app_frame_length;
-	uint8_t *frame_ptr;
-	uint8_t *temp_frame_ptr;
-	uint16_t fcf = 0;
-	uint16_t temp_value;
-	app_payload_t *tmp;
-
-	stream_pkt = (frame_info_t *)pkt_buffer;	
-	/*
-	 * Fill in PHY frame.
-	 */
-
-	/* Get length of current frame. */
-	app_frame_length = frame_len - FRAME_OVERHEAD;
-
-	/* Set payload pointer. */
-	frame_ptr = temp_frame_ptr
-				= (uint8_t *)stream_pkt +
-					LARGE_BUFFER_SIZE -
-					app_frame_length - FCS_LEN; /* Add 2
-	                                                             * octets
-	                                                             *for
-	                                                             * FCS. */
-
-	tmp = (app_payload_t *)temp_frame_ptr;
-
-	(tmp->cmd_id) = PER_TEST_PKT;
-
-	temp_frame_ptr++;
-
-	/*
-	 * Assign dummy payload values.
-	 * Payload is stored to the end of the buffer avoiding payload copying
-	 * by TAL.
-	 */
-	for (index = 0; index < (app_frame_length - 1); index++) { /* 1=> cmd ID
-		                                                   **/
-		*temp_frame_ptr++ = index; /* dummy values */
-	}
-
-	/* Source Address */
-	temp_value =  tal_pib.ShortAddress;
-	frame_ptr -= SHORT_ADDR_LEN;
-	convert_16_bit_to_byte_array(temp_value, frame_ptr);
-
-	/* Source PAN-Id */
-#if (DST_PAN_ID == SRC_PAN_ID)
-	/* No source PAN-Id included, but FCF updated. */
-	fcf |= FCF_PAN_ID_COMPRESSION;
-#else
-	frame_ptr -= PAN_ID_LEN;
-	temp_value = CCPU_ENDIAN_TO_LE16(SRC_PAN_ID);
-	convert_16_bit_to_byte_array(temp_value, frame_ptr);
-#endif
-
-	/* Destination Address */
-	temp_value = 0XFFFF;
-	frame_ptr -= SHORT_ADDR_LEN;
-	convert_16_bit_to_byte_array(temp_value, frame_ptr);
-
-	/* Destination PAN-Id */
-	temp_value = CCPU_ENDIAN_TO_LE16(DST_PAN_ID);
-	frame_ptr -= PAN_ID_LEN;
-	convert_16_bit_to_byte_array(temp_value, frame_ptr);
-
-	/* Set DSN. */
-	frame_ptr--;
-	*frame_ptr = (uint8_t)rand();
-
-	/* Set the FCF. */
-	fcf |= FCF_FRAMETYPE_DATA | FCF_SET_SOURCE_ADDR_MODE(FCF_SHORT_ADDR) |
-			FCF_SET_DEST_ADDR_MODE(FCF_SHORT_ADDR);
-
-
-	frame_ptr -= FCF_LEN;
-	convert_16_bit_to_byte_array(CCPU_ENDIAN_TO_LE16(fcf), frame_ptr);
-
-	/* First element shall be length of PHY frame. */
-	frame_ptr--;
-	*frame_ptr = frame_len; //sriram
-
-	/* Finished building of frame. */
-	stream_pkt->mpdu = frame_ptr;
-}
-
-/**
- * \brief The reverse_float is used for reversing a float variable for
- * supporting BIG ENDIAN systems
- * \param float_val Float variable to be reversed
- */
-float reverse_float( const float float_val )
-{
-	float retuVal;
-	char *floatToConvert = (char *)&float_val;
-	char *returnFloat = (char *)&retuVal;
-#if UC3
-	/* swap the bytes into a temporary buffer */
-	returnFloat[0] = floatToConvert[3];
-	returnFloat[1] = floatToConvert[2];
-	returnFloat[2] = floatToConvert[1];
-	returnFloat[3] = floatToConvert[0];
-#else
-	returnFloat[0] = floatToConvert[0];
-	returnFloat[1] = floatToConvert[1];
-	returnFloat[2] = floatToConvert[2];
-	returnFloat[3] = floatToConvert[3];
-#endif
-	return retuVal;
-}
-
-void pkt_stream_gap_timer(void *parameter)
-{
-	rdy_to_tx = true;
-	parameter=parameter;
-}
-
-void stop_pkt_streaming(void * parameter)
-{
-	pkt_stream_stop = true;
-	sw_timer_stop(T_APP_TIMER);
-	usr_pkt_stream_confirm(MAC_SUCCESS,false);
 }
 
 /**
@@ -444,89 +269,161 @@ void config_per_test_parameters(void)
 	}
 }
 
-#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
-	(defined CW_SUPPORTED)))
 
-/**
- * \brief Save all user settings before Start of CW transmission
- */
-void save_all_settings(void)
+/*Start Packet Streaming Test*/
+
+void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop,uint16_t frame_len)
 {
-#if (ANTENNA_DIVERSITY == 1)
-	tal_get_curr_trx_config(ANT_DIVERSITY, &ant_div_before_ct);
-
-	if (ANT_DIV_DISABLE == ant_div_before_ct) {
-		tal_get_curr_trx_config(ANT_CTRL, &ant_sel_before_ct);
-	}
-
-#endif
-
-#if (TAL_TYPE == AT86RF233)
-	cc_band_ct = trx_bit_read(SR_CC_BAND);
-	cc_number_ct = trx_bit_read(SR_CC_NUMBER);
-#endif /* End of #if(TAL_TYPE == AT86RF233) */
-}
-
-/**
- * \brief Recover all user settings before Start of CW transmission
- */
-void recover_all_settings(void)
-{
-	int8_t tx_pwr_dbm;
-	uint8_t temp_var;
-	pib_value_t pib_value;
-
-#if (ANTENNA_DIVERSITY == 1)
-	if (ANT_DIV_DISABLE == ant_div_before_ct) {
-		tal_ant_div_config(ANT_DIVERSITY_DISABLE, ant_sel_before_ct);
-	}
-
-#endif
-
-#if (TAL_TYPE == AT86RF233)
-	/* Set the ISM frequency back   */
-	if (CC_BAND_0 != cc_band_ct) {
-		tal_set_frequency_regs(cc_band_ct, cc_number_ct);
-	}
-
-#endif /* End of #if(TAL_TYPE == AT86RF233) */
-
-	/*RPC settings are resetted during tal_reset,hence reconfiguring based
-	 *on old config*/
-#if (TAL_TYPE == ATMEGARFR2)
-	if (true == curr_trx_config_params.rpc_enable) {
-		tal_rpc_mode_config(ENABLE_ALL_RPC_MODES); /* RPC feature
-		                                            * configuration. */
-	} else {
-		tal_rpc_mode_config(DISABLE_ALL_RPC_MODES);
-	}
-
-#endif
-
-#if (TAL_TYPE != AT86RF230B)
-	/* set the desensitization settings back */
-	if (true == curr_trx_config_params.rx_desensitize) {
-		tal_set_rx_sensitivity_level(RX_DESENSITIZE_LEVEL);
-	}
-
-#endif
-
-#if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
-	if (last_tx_power_format_set == 0) {
-		uint8_t tx_pwr_reg = curr_trx_config_params.tx_power_reg;
-		tal_set_tx_pwr(REGISTER_VALUE, tx_pwr_reg);
-	} else
-#endif
+	pkt_stream_gap_time = gap_time;
+	if(frame_len<=127)
 	{
-		tx_pwr_dbm = curr_trx_config_params.tx_power_dbm;
-		temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
-		pib_value.pib_value_8bit = temp_var;
-		tal_pib_set(phyTransmitPower, &pib_value);
+		usr_pkt_stream_confirm(MAC_SUCCESS,start_stop);
 	}
+	else
+	{
+		usr_pkt_stream_confirm(INVALID_ARGUMENT,start_stop);
+	}
+	
+	if((node_info.main_state == PER_TEST_RECEPTOR))
+	{
+		serial_data_handler();
+	}
+	if(start_stop)
+	{
+		configure_pkt_stream_frames(frame_len);
+		op_mode=PKT_STREAM_MODE;
+		if(pkt_stream_gap_time)
+		{
+			sw_timer_start(T_APP_TIMER,pkt_stream_gap_time*1E3,SW_TIMEOUT_RELATIVE,(FUNC_PTR)pkt_stream_gap_timer,NULL);
+		}
+		else
+		{
+			rdy_to_tx = true;
+		}
+		pkt_stream_stop = false;
+		
+		if((node_info.main_state == PER_TEST_RECEPTOR) && 1 <= timeout )
+		{
+			sw_timer_start(CW_TX_TIMER,
+			(uint32_t)timeout * 1E6,
+			SW_TIMEOUT_RELATIVE,
+			(FUNC_PTR)stop_pkt_streaming,
+			NULL);
+		}
+	}
+	else
+	{
+		//stop packet streaming once the current packet transmission is completed
+		pkt_stream_stop = true;
+		sw_timer_stop(T_APP_TIMER);
+	}
+	
+	
 }
 
-#endif /* End of #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) &&
-        *(defined CW_SUPPORTED))) */
+/**
+ * \brief To Configure the frame sending
+ */
+void configure_pkt_stream_frames(uint16_t frame_len)
+{
+	uint8_t index;
+	uint8_t app_frame_length;
+	uint8_t *frame_ptr;
+	uint8_t *temp_frame_ptr;
+	uint16_t fcf = 0;
+	uint16_t temp_value;
+	app_payload_t *tmp;
+
+	stream_pkt = (frame_info_t *)pkt_buffer;	
+	/*
+	 * Fill in PHY frame.
+	 */
+
+	/* Get length of current frame. */
+	app_frame_length = frame_len - FRAME_OVERHEAD;
+
+	/* Set payload pointer. */
+	/* Add 2 octets for FCS. */
+	frame_ptr = temp_frame_ptr
+				= (uint8_t *)stream_pkt +
+					LARGE_BUFFER_SIZE -
+					app_frame_length - FCS_LEN; 
+
+	tmp = (app_payload_t *)temp_frame_ptr;
+
+	(tmp->cmd_id) = PER_TEST_PKT;
+
+	temp_frame_ptr++;
+
+	/*
+	 * Assign dummy payload values.
+	 * Payload is stored to the end of the buffer avoiding payload copying
+	 * by TAL.
+	 */
+	/* 1=> cmd ID*/
+	for (index = 0; index < (app_frame_length - 1); index++) { 
+		*temp_frame_ptr++ = index; /* dummy values */
+	}
+
+	/* Source Address */
+	temp_value =  tal_pib.ShortAddress;
+	frame_ptr -= SHORT_ADDR_LEN;
+	convert_16_bit_to_byte_array(temp_value, frame_ptr);
+
+	/* Source PAN-Id */
+#if (DST_PAN_ID == SRC_PAN_ID)
+	/* No source PAN-Id included, but FCF updated. */
+	fcf |= FCF_PAN_ID_COMPRESSION;
+#else
+	frame_ptr -= PAN_ID_LEN;
+	temp_value = CCPU_ENDIAN_TO_LE16(SRC_PAN_ID);
+	convert_16_bit_to_byte_array(temp_value, frame_ptr);
+#endif
+
+	/* Destination Address */
+	temp_value = 0XFFFF;
+	frame_ptr -= SHORT_ADDR_LEN;
+	convert_16_bit_to_byte_array(temp_value, frame_ptr);
+
+	/* Destination PAN-Id */
+	temp_value = CCPU_ENDIAN_TO_LE16(DST_PAN_ID);
+	frame_ptr -= PAN_ID_LEN;
+	convert_16_bit_to_byte_array(temp_value, frame_ptr);
+
+	/* Set DSN. */
+	frame_ptr--;
+	*frame_ptr = (uint8_t)rand();
+
+	/* Set the FCF. */
+	fcf |= FCF_FRAMETYPE_DATA | FCF_SET_SOURCE_ADDR_MODE(FCF_SHORT_ADDR) |
+			FCF_SET_DEST_ADDR_MODE(FCF_SHORT_ADDR);
+
+
+	frame_ptr -= FCF_LEN;
+	convert_16_bit_to_byte_array(CCPU_ENDIAN_TO_LE16(fcf), frame_ptr);
+
+	/* First element shall be length of PHY frame. */
+	frame_ptr--;
+	*frame_ptr = frame_len; //sriram
+
+	/* Finished building of frame. */
+	stream_pkt->mpdu = frame_ptr;
+}
+
+
+
+void pkt_stream_gap_timer(void *parameter)
+{
+	rdy_to_tx = true;
+	parameter=parameter;
+}
+
+void stop_pkt_streaming(void * parameter)
+{
+	pkt_stream_stop = true;
+	sw_timer_stop(T_APP_TIMER);
+	usr_pkt_stream_confirm(MAC_SUCCESS,false);
+}
 
 /*
  * \brief Send an energy pulse on current channel page
@@ -802,5 +699,185 @@ void dump_trx_register_values(uint16_t start_reg_addr, uint16_t end_reg_addr)
 				end_reg_addr,
 				reg_val);
 	}
+}
+
+void rx_on_test(bool start_stop_param)
+{
+	// Implementation for Rx on mode
+	if(start_stop_param)
+	{
+		if(node_info.main_state != PER_TEST_RECEPTOR)
+		{
+			
+			set_trx_state(CMD_RX_ON);
+			curr_trx_config_params.trx_state = RX_ON ;
+		}
+		// handle rx on mode in rcptor tx done cb
+		rx_on_mode = true;
+	}
+	else
+	{
+		set_trx_state(CMD_RX_AACK_ON);
+		curr_trx_config_params.trx_state = RX_AACK_ON ;
+		rx_on_mode = false;
+	}
+	usr_rx_on_confirm(MAC_SUCCESS,start_stop_param);
+}
+
+#if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
+	(defined CW_SUPPORTED)))
+
+/**
+ * \brief Save all user settings before Start of CW transmission
+ */
+void save_all_settings(void)
+{
+#if (ANTENNA_DIVERSITY == 1)
+	tal_get_curr_trx_config(ANT_DIVERSITY, &ant_div_before_ct);
+
+	if (ANT_DIV_DISABLE == ant_div_before_ct) {
+		tal_get_curr_trx_config(ANT_CTRL, &ant_sel_before_ct);
+	}
+
+#endif
+
+#if (TAL_TYPE == AT86RF233)
+	cc_band_ct = trx_bit_read(SR_CC_BAND);
+	cc_number_ct = trx_bit_read(SR_CC_NUMBER);
+#endif /* End of #if(TAL_TYPE == AT86RF233) */
+}
+
+/**
+ * \brief Recover all user settings before Start of CW transmission
+ */
+void recover_all_settings(void)
+{
+	int8_t tx_pwr_dbm;
+	uint8_t temp_var;
+	pib_value_t pib_value;
+
+#if (ANTENNA_DIVERSITY == 1)
+	if (ANT_DIV_DISABLE == ant_div_before_ct) {
+		tal_ant_div_config(ANT_DIVERSITY_DISABLE, ant_sel_before_ct);
+	}
+
+#endif
+
+#if (TAL_TYPE == AT86RF233)
+	/* Set the ISM frequency back   */
+	if (CC_BAND_0 != cc_band_ct) {
+		tal_set_frequency_regs(cc_band_ct, cc_number_ct);
+	}
+
+#endif /* End of #if(TAL_TYPE == AT86RF233) */
+
+	/*RPC settings are reseted during tal_reset,hence reconfiguring based
+	 *on old config*/
+#if (TAL_TYPE == ATMEGARFR2)
+	if (true == curr_trx_config_params.rpc_enable) {
+		tal_rpc_mode_config(ENABLE_ALL_RPC_MODES); /* RPC feature
+		                                            * configuration. */
+	} else {
+		tal_rpc_mode_config(DISABLE_ALL_RPC_MODES);
+	}
+
+#endif
+
+#if (TAL_TYPE != AT86RF230B)
+	/* set the desensitization settings back */
+	if (true == curr_trx_config_params.rx_desensitize) {
+		tal_set_rx_sensitivity_level(RX_DESENSITIZE_LEVEL);
+	}
+
+#endif
+
+#if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
+	if (last_tx_power_format_set == 0) {
+		uint8_t tx_pwr_reg = curr_trx_config_params.tx_power_reg;
+		tal_set_tx_pwr(REGISTER_VALUE, tx_pwr_reg);
+	} else
+#endif
+	{
+		tx_pwr_dbm = curr_trx_config_params.tx_power_dbm;
+		temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
+		pib_value.pib_value_8bit = temp_var;
+		tal_pib_set(phyTransmitPower, &pib_value);
+	}
+}
+
+#endif /* End of #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) &&
+        *(defined CW_SUPPORTED))) */
+
+
+#ifdef EXT_RF_FRONT_END_CTRL
+
+/*
+ * \brief handle the tx power settings in case of External PA enabled,
+ * and the channel changes from or to 26.This is to meet the FCC compliance
+ *
+ * \param Current channel and Previous channel
+ */
+void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl)
+{
+	pib_value_t pib_value;
+
+	/* If the cuurent channel set to 26*/
+	if (curr_chnl == CHANNEL_26) {
+		/* Get last previous non 26 channel tx power  */
+		if (prev_chnl != CHANNEL_26) {
+			tal_pib_get(phyTransmitPower, &prev_non_26chn_tx_power);
+		}
+
+		/* If the Tx power is more than 13dBm, i.e. TX_PWR < 0x0d */
+		if (trx_bit_read(SR_TX_PWR) <= MAX_TX_PWR_REG_VAL_CH26) {
+			pib_value.pib_value_8bit = DEFAULT_TX_POWER_CH26;
+			tal_pib_set(phyTransmitPower, &pib_value);
+			curr_trx_config_params.tx_power_reg = trx_bit_read(
+					SR_TX_PWR);
+			curr_trx_config_params.tx_power_dbm
+				= CONV_phyTransmitPower_TO_DBM(
+					pib_value.pib_value_8bit);
+		}
+	} else {
+		/* if the channel changed from 26 to other  */
+		if (prev_chnl == CHANNEL_26) {
+			/* Set back the tx power to default value i.e. 20dBm,
+			 *TX_PWR 0x09 */
+			pib_value.pib_value_8bit = prev_non_26chn_tx_power;
+			tal_pib_set(phyTransmitPower, &pib_value);
+			curr_trx_config_params.tx_power_reg = trx_bit_read(
+					SR_TX_PWR);
+			curr_trx_config_params.tx_power_dbm
+				= CONV_phyTransmitPower_TO_DBM(
+					pib_value.pib_value_8bit);
+		}
+	}
+}
+
+#endif /* End of EXT_RF_FRONT_END_CTRL */
+
+/**
+ * \brief The reverse_float is used for reversing a float variable for
+ * supporting BIG ENDIAN systems
+ * \param float_val Float variable to be reversed
+ */
+float reverse_float( const float float_val )
+{
+	float retuVal;
+	char *floatToConvert = (char *)&float_val;
+	char *returnFloat = (char *)&retuVal;
+#if UC3
+	/* swap the bytes into a temporary buffer */
+	returnFloat[0] = floatToConvert[3];
+	returnFloat[1] = floatToConvert[2];
+	returnFloat[2] = floatToConvert[1];
+	returnFloat[3] = floatToConvert[0];
+#else
+	returnFloat[0] = floatToConvert[0];
+	returnFloat[1] = floatToConvert[1];
+	returnFloat[2] = floatToConvert[2];
+	returnFloat[3] = floatToConvert[3];
+#endif
+	return retuVal;
 }
 /* EOF */

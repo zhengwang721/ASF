@@ -60,10 +60,15 @@
 #include "tal_constants.h"
 #include "tal_pib.h"
 #include "app_frame_format.h"
-/* # include "sio2host.h" //SAMD20 */
 #include "perf_api.h"
 #include "conf_board.h"
 #include "perf_api_serial_handler.h"
+
+/**
+ * \addtogroup group_per_mode_init
+ * \{
+ */
+
 /* === TYPES =============================================================== */
 
 /**
@@ -75,16 +80,22 @@ typedef struct {
 	uint8_t param_value;
 } set_param_cb_t;
 
-/*=====EXTERBNALS============================================================*/
+/*=====EXTERNALS============================================================*/
+extern bool cw_ack_sent,remote_cw_start;
+extern uint8_t cw_start_mode;
+extern uint16_t cw_tmr_val;
+extern bool pulse_mode ;
+extern uint32_t pkt_stream_gap_time ;
+extern bool rx_on_mode;
+extern frame_info_t *stream_pkt;
 
+/* Database to maintain the default settings of the configurable parameter */
+extern trx_config_params_t default_trx_config_params;
+
+/* Database to maintain the updated/latest settings of the configurable
+ * parameters */
+extern trx_config_params_t curr_trx_config_params;
 /* === MACROS ============================================================== */
-
-/**
- * \addtogroup group_per_mode_init
- * \{
- */
-
-
 
 /* === PROTOTYPES ========================================================== */
 static void configure_frame_sending(void);
@@ -113,31 +124,26 @@ static void get_diversity_settings_peer_node(void);
 
 #endif /* End of #if (ANTENNA_DIVERSITY == 1) */
 
-
-
 #ifdef ENABLE_DEEP_SLEEP
 static void toggle_trx_sleep(uint8_t sleep_mode);
-
 #else  /* No DEEP_SLEEP */
 static void toggle_trx_sleep(void);
-
 #endif /* End of ENABLE_DEEP_SLEEP */
 
 #if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2))
 static void config_rpc_mode(bool config_value);
-
 #endif
+
 #if (TAL_TYPE == AT86RF233)
 static void config_frequency(float frequency);
-
 #endif /*End of #if (TAL_TYPE == AT86RF233) */
+
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 static bool validate_tx_power(int8_t dbm_value);
-
 #endif
+
 static float calculate_time_duration(void);
 static float calculate_net_data_rate(float per_test_duration_sec);
-
 static void set_channel(uint8_t channel);
 static void set_channel_page(uint8_t channel_page);
 static void set_tx_power(uint8_t tx_power_format, int8_t power_value);
@@ -148,25 +154,20 @@ static void config_frame_retry(bool config_value);
 #if (ANTENNA_DIVERSITY == 1)
 static void set_antenna_diversity_settings(uint8_t config_value);
 static void config_antenna_diversity_peer_node(uint8_t config_value);
-
 #endif /* #if (ANTENNA_DIVERSITY == 1) */
+
 #if (TAL_TYPE != AT86RF230B)
 static void config_rx_desensitization(bool config_value);
-
 #endif /* (TAL_TYPE != AT86RF230B) */
-static void set_transceiver_state(uint8_t trx_state);
 
+static void set_transceiver_state(uint8_t trx_state);
 static void set_phy_frame_length(uint8_t frame_len);
 static bool send_set_default_config_command(void);
 static bool send_per_test_start_cmd(void);
 static bool send_range_test_start_cmd(void);
 static bool send_range_test_stop_cmd(void);
-
-extern bool cw_ack_sent,remote_cw_start;
-extern uint8_t cw_start_mode;
-extern uint16_t cw_tmr_val;
-extern bool pulse_mode ;
-
+static void configure_range_test_frame_sending(void);
+static bool send_range_test_marker_rsp(void);
 
 /* === GLOBALS ============================================================= */
 static bool scanning = false;
@@ -179,7 +180,6 @@ static uint8_t seq_num_initiator;
 static uint8_t channel_before_scan;
 uint8_t op_mode = TX_OP_MODE;
 bool pkt_stream_stop = true;
-uint32_t pkt_stream_gap_time ;
 bool rdy_to_tx = false;
 static uint16_t no_of_roll_overs;
 static uint32_t start_time;
@@ -192,9 +192,6 @@ static uint32_t frame_failure;
 static uint32_t frames_to_transmit;
 static set_param_cb_t set_param_cb;
 static uint8_t num_channels;
-static void configure_range_test_frame_sending(void);
-static bool send_range_test_marker_rsp(void);
-
 /**
  * This is variable is to keep track of the specific features supported
  */
@@ -220,7 +217,7 @@ uint8_t last_tx_power_format_set;
 #endif /* #if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) ) */
 
 static uint32_t range_test_frame_cnt = 0;
-extern bool rx_on_mode;
+
 
 
 /* Size constants for PERformance configuration parameters */
@@ -243,17 +240,9 @@ FLASH_DECLARE(uint8_t perf_config_param_size[]) = {
 	sizeof(float),              /* ISM frequency */
 };
 
-
 /* ! \} */
 
-extern frame_info_t *stream_pkt;
 
-/* Database to maintain the default settings of the configurable parameter */
-extern trx_config_params_t default_trx_config_params;
-
-/* Database to maintain the updated/latest settings of the configurable
- * parameters */
-extern trx_config_params_t curr_trx_config_params;
 /* === IMPLEMENTATION ====================================================== */
 
 /*
@@ -266,11 +255,11 @@ void per_mode_initiator_init(void *parameter)
 	pib_value_t pib_value;
 #endif
 
-	/* PER TEST Initiator sequence number */
-		do
-		{
-			seq_num_initiator = rand();
-		} while (!seq_num_initiator);
+/* PER TEST Initiator sequence number */
+	do
+	{
+		seq_num_initiator = rand();
+	} while (!seq_num_initiator);
 
 	/* Node connection status */
 	peer_found = node_info.peer_found;
@@ -572,6 +561,7 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 		sw_timer_stop(CW_TX_TIMER);
 		convert_ota_serial_frame_rx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);	
 	}
+	//stop the timer if the transmission of RX_ON frame was sucessful and do not reach wait_for_reply_timer_handler_cb
 	if(!(sw_timer_is_running(CW_TX_TIMER)))
 	op_mode = TX_OP_MODE;
 	break;
@@ -1279,78 +1269,17 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
 							msg->payload.
 							div_stat_rsp_data
 							.ant_sel) {
-						ant_div_settings = ANT_CTRL_1; /*
-							                        *
-							                        *
-							                        *Antenna
-							                        *
-							                        *
-							                        *diversity
-							                        *
-							                        *
-							                        *Disabled
-							                        *
-							                        *
-							                        *on
-							                        *
-							                        *
-							                        *remote
-							                        *
-							                        *
-							                        *node,
-							                        *
-							                        *
-							                        *ant1
-							                        *
-							                        *
-							                        *is
-							                        *
-							                        *
-							                        *selected
-							                        **/
+						/*Antenna Diversity Disabled on Remote Node and ANT2 is selected*/
+						ant_div_settings = ANT_CTRL_1;
 					} else if (ENABLE_ANTENNA_2 ==
 							msg->payload.
 							div_stat_rsp_data
 							.ant_sel) {
-						ant_div_settings = ANT_CTRL_2; /*
-							                        *
-							                        *
-							                        *Antenna
-							                        *
-							                        *
-							                        *diversity
-							                        *
-							                        *
-							                        *Disabled
-							                        *
-							                        *
-							                        *on
-							                        *
-							                        *
-							                        *remote
-							                        *
-							                        *
-							                        *node,
-							                        *
-							                        *
-							                        *ant2
-							                        *
-							                        *
-							                        *is
-							                        *
-							                        *
-							                        *selected
-							                        **/
+						/*Antenna Diversity Disabled on Remote Node and ANT2 is selected*/
+						ant_div_settings = ANT_CTRL_2; 
 					} else {
 						ant_div_settings
-							= INVALID_VALUE; /*
-							                  *
-							                  *
-							                  *Invalid
-							                  *
-							                  *
-							                  *settings
-							                  **/
+							= INVALID_VALUE; 
 					}
 				}
 
@@ -3153,81 +3082,9 @@ void initiate_per_test(void)
 	}
 }
 
-/*Start Packet Streaming Test*/
 
-void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop,uint16_t frame_len)
-{
-	pkt_stream_gap_time = gap_time;
-	if(frame_len<=127)
-	{
-		usr_pkt_stream_confirm(MAC_SUCCESS,start_stop);
-	}
-	else
-	{
-		usr_pkt_stream_confirm(INVALID_ARGUMENT,start_stop);
-	}
-	
-	if((node_info.main_state == PER_TEST_RECEPTOR))
-	{		
-		serial_data_handler();
-	}
-	if(start_stop)
-	{	
-		configure_pkt_stream_frames(frame_len);
-		op_mode=PKT_STREAM_MODE;
-		if(pkt_stream_gap_time)
-		{		
-		 sw_timer_start(T_APP_TIMER,pkt_stream_gap_time*1E3,SW_TIMEOUT_RELATIVE,(FUNC_PTR)pkt_stream_gap_timer,NULL);
-		}
-		else
-		{
-			rdy_to_tx = true;
-		}
-		pkt_stream_stop = false;
-		
-		if((node_info.main_state == PER_TEST_RECEPTOR) && 1 <= timeout )
-		{
 
-			sw_timer_start(CW_TX_TIMER,
-			(uint32_t)timeout * 1E6,
-			SW_TIMEOUT_RELATIVE,
-			(FUNC_PTR)stop_pkt_streaming,
-			NULL);
-			
-		}
-	}
-	else
-	{
-		//stop packet streaming once the current packet transmission is completed
-		pkt_stream_stop = true;
-		sw_timer_stop(T_APP_TIMER);
-	}
-	
-	
-}
 
-void rx_on_test(bool start_stop_param)
-{
-	// Implementation for Rx on mode
-	if(start_stop_param)
-	{
-		if(node_info.main_state != PER_TEST_RECEPTOR)
-		{
-			
-			set_trx_state(CMD_RX_ON);
-			curr_trx_config_params.trx_state = RX_ON ;
-		}
-			// handle rx on mode in rcptor tx done cb
-			rx_on_mode = true;
-	}
-	else
-	{
-		set_trx_state(CMD_RX_AACK_ON);
-		curr_trx_config_params.trx_state = RX_AACK_ON ;
-		rx_on_mode = false;
-	}
-	usr_rx_on_confirm(MAC_SUCCESS,start_stop_param);
-}
 
 /*
  * \brief To Initiate the Range  test
