@@ -1,7 +1,7 @@
 /**
  * \file *********************************************************************
  *
- * \brief HW Timer Configuration.
+ * \brief Common TRX Access Configuration
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,14 +40,7 @@
  * \asf_license_stop
  */
 
-#ifndef CONF_HW_TIMER_H_INCLUDED
-#define CONF_HW_TIMER_H_INCLUDED
+#ifndef CONF_TRX_ACCESS_H_INCLUDED
+#define CONF_TRX_ACCESS_H_INCLUDED
 
-/*! \name Configuration
- */
-/* ! @{ */
-#define TIMER                (TC3)
-#define TIMER_CHANNEL_ID     0
-/* ! @} */
-
-#endif /* CONF_HW_TIMER_H_INCLUDED */
+#endif /* CONF_TRX_ACCESS_H_INCLUDED */

@@ -1,7 +1,7 @@
 /**
- * \file *********************************************************************
+ * \file
  *
- * \brief HW Timer Configuration.
+ * \brief Sleep manager configuration
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -38,16 +38,11 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
+#ifndef CONF_SLEEPMGR_H
+#define CONF_SLEEPMGR_H
 
-#ifndef CONF_HW_TIMER_H_INCLUDED
-#define CONF_HW_TIMER_H_INCLUDED
+#define CONFIG_SLEEPMGR_ENABLE
 
-/*! \name Configuration
- */
-/* ! @{ */
-#define TIMER                (TC3)
-#define TIMER_CHANNEL_ID     0
-/* ! @} */
-
-#endif /* CONF_HW_TIMER_H_INCLUDED */
+#endif /* CONF_SLEEPMGR_H */

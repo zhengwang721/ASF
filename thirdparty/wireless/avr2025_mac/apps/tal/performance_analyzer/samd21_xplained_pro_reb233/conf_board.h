@@ -1,7 +1,7 @@
 /**
- * \file *********************************************************************
+ * \file
  *
- * \brief HW Timer Configuration.
+ * \brief Board configuration
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -38,16 +38,16 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
+ *
  */
 
-#ifndef CONF_HW_TIMER_H_INCLUDED
-#define CONF_HW_TIMER_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/*! \name Configuration
- */
-/* ! @{ */
-#define TIMER                (TC3)
-#define TIMER_CHANNEL_ID     0
-/* ! @} */
+#define CONF_BOARD_AT86RFX
 
-#endif /* CONF_HW_TIMER_H_INCLUDED */
+#define MCU_SOC_NAME        "ATSAMD21J18A"
+
+#define AT86RFX_SPI_BAUDRATE             4000000UL
+
+#endif /* CONF_BOARD_H_INCLUDED */
