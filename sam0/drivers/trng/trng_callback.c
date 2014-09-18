@@ -153,7 +153,7 @@ void TRNG_Handler(void)
  * \param[in]  number       Number of random data to get
  * \param[out] buffer       Buffer to store the random data
  *
- * \return Status of the job start
+ * \return Status of the job start.
  * \retval STATUS_OK        The read job was started successfully and is
  *                          in progress
  * \retval STATUS_BUSY      The TRNG is already busy with another job
@@ -190,7 +190,7 @@ enum status_code trng_read_buffer_job(
  * \param [in]  module_inst Pointer to the TRNG software instance struct
  * \param [in]  type        Type of job to abort
  *
- * \return Status of the job
+ * \return Status of the job.
  */
 enum status_code trng_get_job_status(
 		struct trng_module *module_inst,

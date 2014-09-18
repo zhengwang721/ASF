@@ -102,12 +102,12 @@
 #include "conf_test.h"
 
 /* Structure for UART module connected to EDBG (used for unit test output) */
- struct usart_module cdc_uart_module;
+struct usart_module cdc_uart_module;
 /* Structure for TRNG module */
- struct trng_module trng_instance;
+struct trng_module trng_instance;
 
 /* Interrupt flag used during callback test */
- volatile bool interrupt_flag = false;
+volatile bool interrupt_flag = false;
 
 /**
  * \internal
@@ -117,11 +117,11 @@
  *
  * \param module Pointer to the TRNG module (not used)
  */
- static void trng_complete_callback(struct trng_module *const module_inst)
- {
- 	UNUSED(module_inst);
- 	interrupt_flag = true;
- }
+static void trng_complete_callback(struct trng_module *const module_inst)
+{
+	UNUSED(module_inst);
+	interrupt_flag = true;
+}
 
 /**
  * \brief Initialize the USART for unit test
@@ -129,22 +129,22 @@
  * Initializes the SERCOM USART used for sending the unit test status to the
  * computer via the EDBG CDC gateway.
  */
- static void cdc_uart_init(void)
- {
- 	struct usart_config usart_conf;
+static void cdc_uart_init(void)
+{
+	struct usart_config usart_conf;
 
 	/* Configure USART for unit test output */
- 	usart_get_config_defaults(&usart_conf);
- 	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
- 	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
- 	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
- 	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
- 	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
- 	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
+	usart_get_config_defaults(&usart_conf);
+	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
+	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
+	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
 
- 	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
- 	usart_enable(&cdc_uart_module);
- }
+	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
+	usart_enable(&cdc_uart_module);
+}
 
 /**
  * \internal
@@ -152,48 +152,47 @@
  *
  * This test reads three random data in polling mode and check the result.
  *
- * \param test Current test case.
+ * \param test Current test case
  */
- static void run_trng_polling_read_test(const struct test_case *test)
- {
- 	uint32_t i;
- 	uint32_t timeout;
- 	uint32_t random_result[3];
+static void run_trng_polling_read_test(const struct test_case *test)
+{
+	uint32_t i;
+	uint32_t timeout;
+	uint32_t random_result[3];
 
 	/* Structure for TRNG configuration */
- 	struct trng_config config;
+	struct trng_config config;
 
 	/* Initialize the TRNG */
- 	trng_get_config_defaults(&config);
- 	trng_init(&trng_instance, TRNG, &config);
+	trng_get_config_defaults(&config);
+	trng_init(&trng_instance, TRNG, &config);
 
- 	/* Read random data */
- 	for (i = 0; i < 3; i++) {
+	/* Read random data */
+	for (i = 0; i < 3; i++) {
 		/* A new 32-bits random data will be generated for every
 		 * 84 CLK_TRNG_APB clock cycles. */
- 		timeout = 84;
- 		if (trng_read(&trng_instance, &random_result[i]) != STATUS_OK) {
- 			timeout--;
- 			if (timeout == 0) {
+		timeout = 84;
+		if (trng_read(&trng_instance, &random_result[i]) != STATUS_OK) {
+			timeout--;
+			if (timeout == 0) {
 				/* Skip test if fail to read random data */
- 				test_assert_true(test, false,
- 					"Fail to read random data in polling mode.");
- 			}
- 		}
- 	}
+				test_assert_true(test, false,
+						"Fail to read random data in polling mode.");
+			}
+		}
+	}
 
- 	/* Assume there is no probability to read same three
- 	* consecutive random number */
- 	if ((random_result[0] == random_result[1]) &&
- 		(random_result[0] == random_result[2])) {
- 		test_assert_true(test, false,
- 			"Get same random data in polling mode.");
- 	}
+	/* Assume there is no probability to read same three
+	 * consecutive random number */
+	if ((random_result[0] == random_result[1]) &&
+			(random_result[0] == random_result[2])) {
+		test_assert_true(test, false,
+				"Get same random data in polling mode.");
+	}
 
- 	/* Test done, disable TRNG instance */
- 	trng_disable(&trng_instance);
+	/* Test done, disable TRNG instance */
+	trng_disable(&trng_instance);
 }
-
 
 /**
  * \internal
@@ -203,13 +202,13 @@
  *
  * \param test Current test case.
  */
- static void run_trng_callback_read_test(const struct test_case *test)
- {
- 	uint32_t timeout = 84 * 3;
- 	uint32_t random_result[3];
+static void run_trng_callback_read_test(const struct test_case *test)
+{
+	uint32_t timeout = 84 * 3;
+	uint32_t random_result[3];
 
- 	/* Register and enable TRNG read callback */
- 	trng_register_callback(&trng_instance, trng_complete_callback,
+	/* Register and enable TRNG read callback */
+	trng_register_callback(&trng_instance, trng_complete_callback,
 			TRNG_CALLBACK_READ_BUFFER);
 	trng_enable_callback(&trng_instance, TRNG_CALLBACK_READ_BUFFER);
 
@@ -225,17 +224,17 @@
 			"Fail to read random data in callback mode.");
 
 	/* Assume there is no probability to read same three
- 	* consecutive random number */
- 	if ((random_result[0] == random_result[1]) &&
- 		(random_result[0] == random_result[2])) {
- 		test_assert_true(test, false,
- 			"Get same random data in polling mode.");
- 	}
+	 * consecutive random number */
+	if ((random_result[0] == random_result[1]) &&
+			(random_result[0] == random_result[2])) {
+		test_assert_true(test, false,
+				"Get same random data in polling mode.");
+	}
 
- 	/* Test done, disable read callback and TRNG instance */
- 	trng_disable_callback(&trng_instance, TRNG_CALLBACK_READ_BUFFER);
- 	trng_disable(&trng_instance);
- }
+	/* Test done, disable read callback and TRNG instance */
+	trng_disable_callback(&trng_instance, TRNG_CALLBACK_READ_BUFFER);
+	trng_disable(&trng_instance);
+}
 
 /**
  * \brief Run TRNG unit tests
@@ -243,38 +242,38 @@
  * Initializes the system and serial output, then sets up the
  * TRNG unit test suite and runs it.
  */
- int main(void)
- {
- 	system_init();
- 	cdc_uart_init();
+int main(void)
+{
+	system_init();
+	cdc_uart_init();
 
 	/* Define Test Cases */
- 	DEFINE_TEST_CASE(trng_polling_read_test,
- 		NULL,
- 		run_trng_polling_read_test,
- 		NULL,
- 		"Testing TRNG polling read");
+	DEFINE_TEST_CASE(trng_polling_read_test,
+			NULL,
+			run_trng_polling_read_test,
+			NULL,
+			"Testing TRNG polling read");
 
- 	DEFINE_TEST_CASE(trng_callback_read_test,
- 		NULL,
- 		run_trng_callback_read_test,
- 		NULL,
- 		"Testing TRNG callback read");
+	DEFINE_TEST_CASE(trng_callback_read_test,
+			NULL,
+			run_trng_callback_read_test,
+			NULL,
+			"Testing TRNG callback read");
 
 	/* Put test case addresses in an array */
- 	DEFINE_TEST_ARRAY(trng_tests) = {
- 		&trng_polling_read_test,
- 		&trng_callback_read_test,
- 	};
+	DEFINE_TEST_ARRAY(trng_tests) = {
+		&trng_polling_read_test,
+		&trng_callback_read_test,
+	};
 
 	/* Define the test suite */
- 	DEFINE_TEST_SUITE(trng_test_suite, trng_tests,
- 		"SAM TRNG driver test suite");
+	DEFINE_TEST_SUITE(trng_test_suite, trng_tests,
+			"SAM TRNG driver test suite");
 
 	/* Run all tests in the suite*/
- 	test_suite_run(&trng_test_suite);
+	test_suite_run(&trng_test_suite);
 
- 	while (true) {
+	while (true) {
 		/* Intentionally left empty */
- 	}
- }
+	}
+}

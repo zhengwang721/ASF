@@ -124,11 +124,11 @@ extern struct trng_module *_trng_instance;
 /** Type definition for a TRNG module callback function. */
 typedef void (*trng_callback_t)(struct trng_module *const module_inst);
 
-/** Enum for possible callback types for the TRNG module */
+/** Enum for possible callback types for the TRNG module. */
 enum trng_callback {
-	/** Callback for specific number of random data ready */
+	/** Callback for specific number of random data ready. */
 	TRNG_CALLBACK_READ_BUFFER = 0,
-	/** Number of available callbacks */
+	/** Number of available callbacks. */
 #if !defined(__DOXYGEN__)
 	TRNG_CALLBACK_N,
 #endif
@@ -149,17 +149,17 @@ struct trng_module {
 	/** Hardware module pointer of the associated TRNG peripheral. */
 	Trng *hw;
 #  if TRNG_CALLBACK_MODE == true
-	/** Array of callbacks */
+	/** Array of callbacks. */
 	trng_callback_t callback[TRNG_CALLBACK_N];
-	/** Bit mask for callbacks registered */
+	/** Bit mask for callbacks registered. */
 	uint8_t register_callback_mask;
-	/** Bit mask for callbacks enabled */
+	/** Bit mask for callbacks enabled. */
 	uint8_t enable_callback_mask;
-	/** Holds the status of the ongoing or last read job */
+	/** Holds the status of the ongoing or last read job. */
 	volatile enum status_code job_status;
-	/** Pointer to buffer used for TRNG results */
+	/** Pointer to buffer used for TRNG results. */
 	volatile uint32_t *job_buffer;
-	/** Remaining number of TRNG results in current job */
+	/** Remaining number of TRNG results in current job. */
 	volatile uint32_t remaining_number;
 #  endif
 #endif
@@ -183,13 +183,13 @@ struct trng_config {
  * disable events via \ref trng_enable_events() and \ref trng_disable_events().
  */
 struct trng_events {
-	/** Enable event generation on random data ready */
+	/** Enable event generation on random data ready. */
 	bool generate_event_on_data_ready;
 };
 
 
 /**
- * \name Driver initialization and configuration
+ * \name Driver Initialization and Configuration
  * @{
  */
 enum status_code trng_init(
@@ -207,7 +207,7 @@ enum status_code trng_init(
  *  by the user application.
  *
  *  The default configuration is as follows:
- *   \li True Random Number Generator will not be stopped in standby sleep mode.
+ *   \li True Random Number Generator will not be stopped in standby sleep mode
  *
  *  \param[out] config  Configuration structure to initialize to default values
  */
