@@ -58,23 +58,24 @@
  * \snippet qs_bod_basic_use_saml.c setup
  *
  * Add to user application initialization (typically the start of \c main()):
- * \snippet qs_bod_basic_use_saml.c setup_init
+ * \snippet qs_bod_basic_use_saml.c setup_init_33
+ * \snippet qs_bod_basic_use_saml.c setup_init_12
  *
  * \subsection asfdoc_sam0_bod_basic_use_case_setup_flow Workflow
- * -# Create a BOD module configuration struct, which can be filled out to
+ * -# Create a BOD33 module configuration struct, which can be filled out to
  *    adjust the configuration of a physical BOD peripheral.
  *    \snippet qs_bod_basic_use_saml.c setup_config
- * -# Initialize the BOD configuration struct with the module's default values.
+ * -# Initialize the BOD33 configuration struct with the module's default values.
  *    \snippet qs_bod_basic_use_saml.c setup_config_defaults
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- * -# Configure the BOD module with the desired settings.
+ * -# Configure the BOD33 module with the desired settings.
  *    \snippet qs_bod_basic_use_saml.c setup_set_config
- * -# Enable the BOD module so that it will monitor the power supply voltage.
+ * -# Enable the BOD33 module so that it will monitor the power supply voltage.
  *    \snippet qs_bod_basic_use_saml.c setup_enable
- *
+ * \n The workflow of the BOD12 is same as the BOD33.
  *
  * \section asfdoc_sam0_bod_basic_use_case_main Use Case
  *

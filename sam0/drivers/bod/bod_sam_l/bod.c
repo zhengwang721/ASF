@@ -62,9 +62,14 @@ enum status_code bod33_set_config(
 
 	uint32_t temp = 0;
 
+	/* Check if module is enabled. */
+	if (SUPC->BOD33.reg & SUPC_BOD33_ENABLE) {
+		SUPC->BOD33.reg &= ~SUPC_BOD33_ENABLE;
+	}
+
 	/* Convert BOD prescaler, trigger action and mode to a bitmask */
 	temp |= (uint32_t)conf->prescaler | (uint32_t)conf->action | (uint32_t)conf->monitor |
-			(uint32_t)conf->activecfg | (uint32_t)conf->standbycfg;
+			(uint32_t)conf->mode_in_active | (uint32_t)conf->mode_in_standby;
 
 	if (conf->hysteresis == true) {
 		temp |= SUPC_BOD33_HYST;
@@ -83,8 +88,7 @@ enum status_code bod33_set_config(
 	}
 
 	SUPC->BOD33.reg = SUPC_BOD33_LEVEL(conf->level) |
-			SUPC_BOD33_BKUPLEVEL(conf->backuplevel) |
-			temp | SUPC_BOD33_ENABLE;
+			SUPC_BOD33_BKUPLEVEL(conf->backuplevel) | temp;
 
 	while (!(SUPC->STATUS.reg & SUPC_STATUS_B33SRDY)) {
 		/* Wait for BOD33 register sync ready */
@@ -113,9 +117,14 @@ enum status_code bod12_set_config(
 
 	uint32_t temp = 0;
 
-	/* Convert BOD prescaler, trigger action and mode to a bitmask */
+	/* Check if module is enabled. */
+	if (SUPC->BOD12.reg & SUPC_BOD12_ENABLE) {
+		SUPC->BOD12.reg &= ~SUPC_BOD12_ENABLE;
+	}
+
+/* Convert BOD prescaler, trigger action and mode to a bitmask */
 	temp |= (uint32_t)conf->prescaler | (uint32_t)conf->action |
-			(uint32_t)conf->activecfg | (uint32_t)conf->standbycfg;
+			(uint32_t)conf->mode_in_active | (uint32_t)conf->mode_in_standby;
 
 	if (conf->hysteresis == true) {
 		temp |= SUPC_BOD12_HYST;
@@ -129,8 +138,7 @@ enum status_code bod12_set_config(
 		return STATUS_ERR_INVALID_ARG;
 	}
 
-	SUPC->BOD12.reg = SUPC_BOD12_LEVEL(conf->level) |
-			temp | SUPC_BOD12_ENABLE;
+	SUPC->BOD12.reg = SUPC_BOD12_LEVEL(conf->level) | temp;
 
 	while (!(SUPC->STATUS.reg & SUPC_STATUS_B12SRDY)) {
 		/* Wait for BOD12 register sync ready */

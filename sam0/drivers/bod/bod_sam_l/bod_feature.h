@@ -44,16 +44,71 @@
 #define BOD_FEATURE_H_INCLUDED
 
 
-
 #ifdef __cplusplus
 extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_sam0_bod_group
+ * \defgroup asfdoc_sam0_bod_group SAM Brown Out Detector Driver (BOD)
+ *
+ * This driver for SAM devices provides an interface for the configuration
+ * and management of the device's Brown Out Detector (BOD) modules, to detect
+ * and respond to under-voltage events and take an appropriate action.
+ *
+ * The following peripherals are used by this module:
+ * - SYSCTRL (System Control)
+ *
+ * The following devices can use this module:
+ *  - SAM L21
+ *
+ * The outline of this documentation is as follows:
+ *  - \ref asfdoc_sam0_bod_prerequisites
+ *  - \ref asfdoc_sam0_bod_module_overview
+ *  - \ref asfdoc_sam0_bod_special_considerations
+ *  - \ref asfdoc_sam0_bod_extra_info
+ *  - \ref asfdoc_sam0_bod_examples
+ *  - \ref asfdoc_sam0_bod_api_overview
+ *
+ *
+ * \section asfdoc_sam0_bod_prerequisites Prerequisites
+ *
+ * There are no prerequisites for this module.
+ *
+ *
+ * \section asfdoc_sam0_bod_module_overview Module Overview
+ *
+ * The SAM devices contain a number of Brown Out Detector (BOD) modules.
+ * Each BOD monitors the supply voltage for any dips that go below the set
+ * threshold for the module. In case of a BOD detection the BOD will either reset
+ * the system or raise a hardware interrupt so that a safe power-down sequence can
+ * be attempted.
+ *
+ *
+ * \section asfdoc_sam0_bod_special_considerations Special Considerations
+ *
+ * The time between a BOD interrupt being raised and a failure of the processor
+ * to continue executing (in the case of a core power failure) is system
+ * specific; care must be taken that all critical BOD detection events can
+ * complete within the amount of time available.
+ *
+ * \section asfdoc_sam0_bod_extra_info Extra Information
+ *
+ * For extra information see \ref asfdoc_sam0_bod_extra. This includes:
+ *  - \ref asfdoc_sam0_bod_extra_acronyms
+ *  - \ref asfdoc_sam0_bod_extra_dependencies
+ *  - \ref asfdoc_sam0_bod_extra_errata
+ *  - \ref asfdoc_sam0_bod_extra_history
+ *
+ *
+ * \section asfdoc_sam0_bod_examples Examples
+ *
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_sam0_bod_exqsg.
+ *
+ *
+ * \section asfdoc_sam0_bod_api_overview API Overview
  * @{
  */
-
 
 /**
  * \brief Brown Out Detector input clock prescale values.
@@ -113,7 +168,7 @@ enum bod33_vol_monitor {
  *
  * List of possible BOD33 module voltage sampling modes in active sleep mode.
  */
-enum bod33_activecfg {
+enum bod33_mode_in_active {
 	/** BOD33 will sample the supply line continuously. */
 	BOD33_ACTCFG_CONTINUOUS = 0,
 	/** BOD33 will use the BOD33 sampling clock (1kHz) to sample the supply line. */
@@ -125,7 +180,7 @@ enum bod33_activecfg {
  *
  * List of possible BOD33 module voltage sampling modes in standby sleep mode.
  */
-enum bod33_standbycfg {
+enum bod33_mode_in_standby {
 	/** BOD33 will sample the supply line continuously. */
 	BOD33_STDBYCFG_CONTINUOUS = 0,
 	/** BOD33 will use the BOD33 sampling clock (1kHz) to sample the supply line. */
@@ -156,9 +211,9 @@ struct bod33_config {
 	/** Voltage monitored in active and standby mode. */
 	enum bod33_vol_monitor monitor;
 	/** BOD33 configuration in active mode. */
-	enum bod33_activecfg activecfg;
+	enum bod33_mode_in_active mode_in_active;
 	/** BOD33 configuration in backup sleep mode. */
-	enum bod33_standbycfg standbycfg;
+	enum bod33_mode_in_standby mode_in_standby;
 	/** Action to perform when a low power detection is made. */
 	enum bod33_action action;
 	/** BOD33 level to trigger at when monitors VBAT or in backup sleep mode. */
@@ -220,7 +275,7 @@ enum bod12_prescale {
  *
  * List of possible BOD12 module voltage sampling modes in active sleep mode.
  */
-enum bod12_activecfg {
+enum bod12_mode_in_active {
 	/** BOD12 will sample the supply line continuously. */
 	BOD12_ACTCFG_CONTINUOUS = 0,
 	/** BOD12 will use the BOD12 sampling clock (1kHz) to sample the supply line. */
@@ -232,7 +287,7 @@ enum bod12_activecfg {
  *
  * List of possible BOD12 module voltage sampling modes in standby sleep mode.
  */
-enum bod12_standbycfg {
+enum bod12_mode_in_standby {
 	/** BOD12 will sample the supply line continuously. */
 	BOD12_STDBYCFG_CONTINUOUS = 0,
 	/** BOD12 will use the BOD12 sampling clock (1kHz) to sample the supply line. */
@@ -259,9 +314,9 @@ struct bod12_config {
 	 *  ULP32K to lower the sampling rate of the BOD12. */
 	enum bod12_prescale prescaler;
 	/** BOD12 configuration in active mode. */
-	enum bod12_activecfg activecfg;
+	enum bod12_mode_in_active mode_in_active;
 	/** BOD12 configuration in backup sleep mode. */
-	enum bod12_standbycfg standbycfg;
+	enum bod12_mode_in_standby mode_in_standby;
 	/** Action to perform when a low power detection is made. */
 	enum bod12_action action;
 	/** BOD12 level to trigger at (see electrical section of device datasheet). */
@@ -301,16 +356,16 @@ static inline void bod33_get_config_defaults(
 	/* Sanity check arguments */
 	Assert(conf);
 
-	conf->prescaler      = BOD33_PRESCALE_DIV_2;
-	conf->monitor        = BOD33_VMON_VDD;
-	conf->activecfg      = BOD33_ACTCFG_CONTINUOUS;
-	conf->standbycfg     = BOD33_STDBYCFG_CONTINUOUS;
-	conf->action         = BOD33_ACTION_RESET;
-	conf->level          = 0x27;
-	conf->backuplevel    = 0x27;
-	conf->run_in_backup  = true;
-	conf->run_in_standby = true;
-	conf->hysteresis     = true;
+	conf->prescaler       = BOD33_PRESCALE_DIV_2;
+	conf->monitor         = BOD33_VMON_VDD;
+	conf->mode_in_active  = BOD33_ACTCFG_CONTINUOUS;
+	conf->mode_in_standby = BOD33_STDBYCFG_CONTINUOUS;
+	conf->action          = BOD33_ACTION_RESET;
+	conf->level           = 0x27;
+	conf->backuplevel     = 0x27;
+	conf->run_in_backup   = true;
+	conf->run_in_standby  = true;
+	conf->hysteresis      = true;
 }
 
 enum status_code bod33_set_config(
@@ -395,13 +450,13 @@ static inline void bod12_get_config_defaults(
 	/* Sanity check arguments */
 	Assert(conf);
 
-	conf->prescaler      = BOD12_PRESCALE_DIV_2;
-	conf->activecfg      = BOD12_ACTCFG_CONTINUOUS;
-	conf->standbycfg     = BOD12_STDBYCFG_CONTINUOUS;
-	conf->action         = BOD12_ACTION_RESET;
-	conf->level          = 0x12;
-	conf->run_in_standby = true;
-	conf->hysteresis     = true;
+	conf->prescaler       = BOD12_PRESCALE_DIV_2;
+	conf->mode_in_active  = BOD12_ACTCFG_CONTINUOUS;
+	conf->mode_in_standby = BOD12_STDBYCFG_CONTINUOUS;
+	conf->action          = BOD12_ACTION_RESET;
+	conf->level           = 0x12;
+	conf->run_in_standby  = true;
+	conf->hysteresis      = true;
 }
 
 enum status_code bod12_set_config(
@@ -466,10 +521,95 @@ static inline void bod12_clear_detected(void)
 	return;
 }
 
-/** @} */
-
 /**
  * @}
+ */
+/**
+ * @}
+ */
+
+/**
+ * \page asfdoc_sam0_bod_extra Extra Information for BOD Driver
+ *
+ * \section asfdoc_sam0_bod_extra_acronyms Acronyms
+ * Below is a table listing the acronyms used in this module, along with their
+ * intended meanings.
+ *
+ * <table>
+ *  <tr>
+ *      <th>Acronym</th>
+ *      <th>Definition</th>
+ *  </tr>
+ *  <tr>
+ *      <td>BOD</td>
+ *      <td>Brownout detector</td>
+ *  </tr>
+ * </table>
+ *
+ *
+ * \section asfdoc_sam0_bod_extra_dependencies Dependencies
+ * This driver has the following dependencies:
+ *
+ *  - None
+ *
+ *
+ * \section asfdoc_sam0_bod_extra_errata Errata
+ * There are no errata related to this driver.
+ *
+ *
+ * \section asfdoc_sam0_bod_extra_history Module History
+ * An overview of the module history is presented in the table below, with
+ * details on the enhancements and fixes made to the module since its first
+ * release. The current version of this corresponds to the newest version in
+ * the table.
+ *
+ * <table>
+ *	<tr>
+ *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Initial Release</td>
+ *	</tr>
+ * </table>
+ */
+
+/**
+ * \page asfdoc_sam0_bod_exqsg Examples for BOD Driver
+ *
+ * This is a list of the available Quick Start guides (QSGs) and example
+ * applications for \ref asfdoc_sam0_bod_group. QSGs are simple examples with
+ * step-by-step instructions to configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
+ *
+ *  - \subpage asfdoc_sam0_bod_basic_use_case
+ *
+ *  - \subpage asfdoc_sam0_bod_application_use_case
+ *
+ * \page asfdoc_sam0_bod_application_use_case Application Use Case for BOD - Application
+ * The preferred method of setting BOD33 levels and settings is trough the fuses.
+ * when it is desirable to set it in software, please see the below use case.
+ *
+ * In this use case, a new BOD33 level might be set in SW if the clock settings
+ * are adjusted up after a battery has charged to a higher level. When the battery
+ * discharges, the chip will reset when the battery level is below SW BOD33 level.
+ * Now the chip will run at a lower clock rate and the BOD33 level from fuse.
+ * The chip should always measure the voltage before adjusting the frequency up.
+ *
+ * \page asfdoc_sam0_bod_document_revision_history Document Revision History
+ *
+ * <table>
+ *	<tr>
+ *		<th>Doc. Rev.</td>
+ *		<th>Date</td>
+ *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>A</td>
+ *		<td>09/2014</td>
+ *		<td>Initial release</td>
+ *	</tr>
+ * </table>
  */
 
 

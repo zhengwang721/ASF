@@ -64,6 +64,11 @@ enum status_code bod_set_config(
 
 	uint32_t temp = 0;
 
+	/* Check if module is enabled. */
+	if (SYSCTRL->BOD33.reg & SYSCTRL_BOD33_ENABLE) {
+		SYSCTRL->BOD33.reg &= ~SYSCTRL_BOD33_ENABLE;
+	}
+
 	/* Convert BOD prescaler, trigger action and mode to a bitmask */
 	temp |= (uint32_t)conf->prescaler | (uint32_t)conf->action |
 			(uint32_t)conf->mode;
@@ -87,8 +92,7 @@ enum status_code bod_set_config(
 				return STATUS_ERR_INVALID_ARG;
 			}
 
-			SYSCTRL->BOD33.reg = SYSCTRL_BOD33_LEVEL(conf->level) |
-					temp | SYSCTRL_BOD33_ENABLE;
+			SYSCTRL->BOD33.reg = SYSCTRL_BOD33_LEVEL(conf->level) | temp;
 
 			while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_B33SRDY)) {
 				/* Wait for BOD33 register sync ready */
