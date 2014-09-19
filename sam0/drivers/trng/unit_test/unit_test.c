@@ -78,7 +78,7 @@
  *    micro USB cable.
  *  - Open the virtual COM port in a terminal application.
  *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
- *          will enumerate as debugger, virtual COM port and EDBG data
+ *          will enumerate as debugger, virtual COM port, and EDBG data
  *          gateway.
  *  - Build the project, program the target and run the application.
  *    The terminal shows the results of the unit test.
