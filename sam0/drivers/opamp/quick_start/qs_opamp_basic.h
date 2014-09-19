@@ -65,39 +65,36 @@
  * \snippet qs_opamp_basic.c setup_init
  *
  * \subsection asfdoc_sam0_opamp_basic_use_case_setup_flow Workflow
- * -# Create a OPAMP0 configuration struct, which can be filled out to
+ * -# Creates a OPAMP0 configuration struct, which can be filled out to
  *    adjust the configuration of OPAMP0.
  *    \snippet qs_port_basic.c setup_1
  *
- * -# Reset OPAMP module.
+ * -# Initializes OPAMP module.
  *    \snippet qs_port_basic.c setup_2
  *
- * -# Enable OPAMP module.
- *    \snippet qs_port_basic.c setup_3
- *
  * -# settings and fill the OPAMP0 configuration struct with the default settings.
- *    \snippet qs_port_basic.c setup_4
+ *    \snippet qs_port_basic.c setup_3
  *    \note This should always be performed before using the configuration
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
  * -# Adjust the configuration struct to Set the the OPAMP0 as "Inverting PGA" mode.
- *    \snippet qs_port_basic.c setup_5
+ *    \snippet qs_port_basic.c setup_4
  *    \note The existing configuration struct may be re-used, as long as any
  *          values that have been altered from the default settings are taken
  *          into account by the user application.
  *
  * -# Set up OA0NEG pin and OA0OUT pin.
- *    \snippet qs_port_basic.c setup_6
+ *    \snippet qs_port_basic.c setup_5
  *
  * -# Writes OPAMP0 configuration to the hardware module.
- *    \snippet qs_port_basic.c setup_7
+ *    \snippet qs_port_basic.c setup_6
  *
  * -# Enable OPAMP0.
- *    \snippet qs_port_basic.c setup_8
+ *    \snippet qs_port_basic.c setup_7
  *
  * -# Wait for the output ready.
- *    \snippet qs_port_basic.c setup_9
+ *    \snippet qs_port_basic.c setup_8
  *
  * \section asfdoc_sam0_port_basic_use_case_use_main Use Case
  *

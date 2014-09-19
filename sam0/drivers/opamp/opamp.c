@@ -43,6 +43,18 @@
 
 #include "opamp.h"
 
+void opamp_module_init(void)
+{
+	/* Turn on the digital interface clock. */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBD, MCLK_APBDMASK_OPAMP);
+
+	/* Reset module. */
+	opamp_module_reset();
+
+	/* Enable module. */
+	opamp_module_enable();
+}
+
 static inline void _opamp_get_config_common_defaults(
 		struct opamp_config_common *const config)
 {

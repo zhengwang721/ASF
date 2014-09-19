@@ -113,13 +113,13 @@ extern "C" {
  * \brief OPAMP number enum.
  */
 enum opamp_number {
-	/** OPAMP 0  */
+	/** OPAMP 0.  */
 	OPAMP_0 = 0,
-	/** OPAMP 1  */
+	/** OPAMP 1.  */
 	OPAMP_1 = 1,
-	/** OPAMP 2  */
+	/** OPAMP 2.  */
 	OPAMP_2 = 2,
-	/** OPAMP number  */
+	/** OPAMP number.  */
 	OPAMP_NUM,
 };
 
@@ -396,6 +396,14 @@ struct opamp2_config {
 };
 
 /**
+ * \brief Initializes OPAMP module.
+ *
+ * Resets all registers in the MODULE to their initial state,
+ * and then enable the module.
+ */
+void opamp_module_init(void);
+
+/**
  * \brief Resets OPAMP module.
  *
  * Resets all registers in the MODULE to their initial state,
@@ -403,7 +411,7 @@ struct opamp2_config {
  */
 static inline void opamp_module_reset(void)
 {
-	/* Reset OPAMP */
+	/* Reset OPAMP. */
 	OPAMP->CTRLA.reg |= OPAMP_CTRLA_SWRST;
 }
 
@@ -416,7 +424,7 @@ static inline void opamp_module_reset(void)
  */
 static inline void opamp_module_enable(void)
 {
-	/* Enable OPAMP */
+	/* Enable OPAMP. */
 	OPAMP->CTRLA.reg |= OPAMP_CTRLA_ENABLE;
 }
 
@@ -427,8 +435,33 @@ static inline void opamp_module_enable(void)
  */
 static inline void opamp_module_disable(void)
 {
-	/* Disable OPAMP */
+	/* Disable OPAMP. */
 	OPAMP->CTRLA.reg &= ~OPAMP_CTRLA_ENABLE;
+}
+
+/**
+ * \brief Enables OPAMP Voltage Doubler.
+ *
+ * The analog input muxes have low resistance, but consume more
+ * power at lower voltages(e.g., are driven by the voltage doubler).
+ *
+ */
+static inline void opamp_voltage_doubler_enable(void)
+{
+	/* Enable Voltage Doubler. */
+	OPAMP->CTRLA.reg &= ~ OPAMP_CTRLA_LPMUX;
+}
+
+/**
+ * \brief Disables OPAMP Voltage Doubler.
+ *
+ * The analog input muxes have high resistance, but consume less power
+ * at lower voltages (e.g., the voltage doubler is disabled).
+ */
+static inline void opamp_voltage_doubler_disable(void)
+{
+	/* Disable Voltage Doubler. */
+	OPAMP->CTRLA.reg |= OPAMP_CTRLA_LPMUX;
 }
 
 /**

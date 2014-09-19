@@ -47,37 +47,32 @@ void configure_inverting_pga_opamp0(void);
 //! [setup]
 void configure_inverting_pga_opamp0(void)
 {
-	/** Create a new configuration structure for the OPAMP0 */
+	/** Creates a new configuration structure for the OPAMP0. */
 	//! [setup_1]
 	struct opamp0_config conf;
 	//! [setup_1
 
-	/** Reset OPAMP module. */
+	/** Initializes OPAMP module. */
 	//! [setup_2]
-	opamp_module_reset();
+	opamp_module_init();
 	//! [setup_2]
 
-	/** Enable OPAMP module. */
+	/** Settings and fill with the default settings. */
 	//! [setup_3]
-	opamp_module_enable();
-	//! [setup_3]
-
-	/** settings and fill with the default settings. */
-	//! [setup_4]
 	opamp0_get_config_defaults(&conf);
-	//! [setup_4]
+	//! [setup_3]
 
 	/* Set the the OPAMP0 as "Inverting PGA" mode. */
-	//! [setup_5]
+	//! [setup_4]
 	conf.negative_input = OPAMP0_NEG_MUX_TAP0;
 	conf.positive_input = OPAMP0_POS_MUX_GND;
 	conf.r1_connection = OPAMP0_RES1_MUX_NEG_PIN0;
 	conf.config_common.r1_enable = true;
 	conf.config_common.r2_out = true;
-	//! [setup_5]
+	//! [setup_4]
 
 	/* Set up OA0NEG pin and OA0OUT pin. */
-	//! [setup_6]
+	//! [setup_5]
 	struct system_pinmux_config opamp0_neg_pin_conf;
 	system_pinmux_get_config_defaults(&opamp0_neg_pin_conf);
 	opamp0_neg_pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
@@ -88,20 +83,20 @@ void configure_inverting_pga_opamp0(void)
 	opamp0_out_pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
 	opamp0_out_pin_conf.mux_position = MUX_PA07B_OPAMP_OAOUT0;
 	system_pinmux_pin_set_config(PIN_PA07B_OPAMP_OAOUT0, &opamp0_out_pin_conf);
-	//! [setup_6]
+	//! [setup_5]
 
 	/** Initialize and enable the OPAMP0 with the user settings. */
-	//! [setup_7]
+	//! [setup_6]
 	opamp0_set_config(&conf);
+	//! [setup_6]
 	//! [setup_7]
-	//! [setup_8]
 	opamp_enable(OPAMP_0);
-	//! [setup_8]
+	//! [setup_7]
 
 	/* Wait for the output ready. */
-	//! [setup_9]
+	//! [setup_8]
 	while(!opamp_is_ready(OPAMP_0));
-	//! [setup_9]
+	//! [setup_8]
 }
 //! [setup]
 
