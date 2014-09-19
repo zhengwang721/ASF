@@ -127,6 +127,53 @@ static inline void _system_osc32k_wait_for_sync(void)
 	}
 }
 
+/**
+ * \internal
+ * \brief OSC16M frequency selection.
+ *  Frequency selection must be done when OSC16M is disabled,thus
+ *  DFLL is used as a new clocksource for mainclock temporarily.
+ */
+static inline void _system_clock_source_osc16m_freq_sel(void)
+{
+	struct system_clock_source_dfll_config dfll_conf;
+	struct system_gclk_gen_config gclk_conf;
+	struct system_clock_source_osc16m_config osc16m_conf;
+
+	/* Set up DFLL clock and enbale it */
+	system_clock_source_dfll_get_config_defaults(&dfll_conf);
+	system_clock_source_dfll_set_config(&dfll_conf);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
+	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_DFLL));
+
+	/* Select DFLL as  new clock source for mainclock */
+	system_gclk_gen_get_config_defaults(&gclk_conf);
+	gclk_conf.source_clock = SYSTEM_CLOCK_SOURCE_DFLL;
+	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclk_conf);
+
+	/* GCLK0 is already enabled,no need again */
+
+	/*Disable OSC16M clock*/
+	system_clock_source_disable(SYSTEM_CLOCK_SOURCE_OSC16M);
+
+	/* Switch to new frequency selection and enable OSC16M */
+	system_clock_source_osc16m_get_config_defaults(&osc16m_conf);
+	osc16m_conf.fsel      		= CONF_CLOCK_OSC16M_FREQ_SEL;
+	osc16m_conf.on_demand       = CONF_CLOCK_OSC16M_ON_DEMAND;
+	osc16m_conf.run_in_standby  = CONF_CLOCK_OSC16M_RUN_IN_STANDBY;
+	system_clock_source_osc16m_set_config(&osc16m_conf);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC16M);
+	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_OSC16M));
+
+	/* Select OSC16M for mainclock */
+	system_gclk_gen_get_config_defaults(&gclk_conf);
+	gclk_conf.source_clock = SYSTEM_CLOCK_SOURCE_OSC16M;
+	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclk_conf);
+
+	/* Disable DFLL clock source */
+	system_clock_source_disable(SYSTEM_CLOCK_SOURCE_DFLL);
+
+}
+
 static inline void _system_clock_source_dfll_set_config_errata_9905(void)
 {
 
@@ -203,6 +250,8 @@ uint32_t system_clock_source_get_hz(
  *
  * Configures the 16MHz (nominal) internal RC oscillator with the given
  * configuration settings.
+ *
+ * \note Frequency selection can be done only when OSC16M is disabled.
  *
  * \param[in] config  OSC16M configuration structure containing the new config
  */
@@ -788,6 +837,14 @@ void system_clock_init(void)
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC32K);
 #endif
 
+	/* OSC16M */
+	if (CONF_CLOCK_OSC16M_FREQ_SEL == SYSTEM_OSC16M_4M){
+		OSCCTRL->OSC16MCTRL |= (CONF_CLOCK_OSC16M_ON_DEMAND << OSCCTRL_OSC16MCTRL_ONDEMAND_Pos)
+								|(CONF_CLOCK_OSC16M_RUN_IN_STANDBY << OSCCTRL_OSC16MCTRL_RUNSTDBY_Pos);
+	} else {
+		_system_clock_source_osc16m_freq_sel();
+	}
+
 	/* DFLL Config (Open and Closed Loop) */
 #if CONF_CLOCK_DFLL_ENABLE == true
 	struct system_clock_source_dfll_config dfll_conf;
@@ -864,18 +921,6 @@ void system_clock_init(void)
 
 	system_clock_source_dfll_set_config(&dfll_conf);
 #endif
-
-	/* OSC16M */
-	struct system_clock_source_osc16m_config osc16m_conf;
-	system_clock_source_osc16m_get_config_defaults(&osc16m_conf);
-
-	osc16m_conf.fsel      		= CONF_CLOCK_OSC16M_FREQ_SEL;
-	osc16m_conf.on_demand       = CONF_CLOCK_OSC16M_ON_DEMAND;
-	osc16m_conf.run_in_standby  = CONF_CLOCK_OSC16M_RUN_IN_STANDBY;
-
-	system_clock_source_osc16m_set_config(&osc16m_conf);
-	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC16M);
-
 
 	/* GCLK */
 #if CONF_CLOCK_CONFIGURE_GCLK == true
