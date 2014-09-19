@@ -90,10 +90,11 @@
 			<build name="TC_ASYNC" type="define" value="true" />
 			<build type="doxygen-enable-section" value="TC_CALLBACK_MODE"/>
 
+			<build type="include-path" value="tc_sam_d_r"/>
 			<build subtype="api" type="header-file" value="tc.h" />
 			<build subtype="api" type="header-file" value="tc_interrupt.h" />
 			<build type="c-source" value="tc_interrupt.c" />
-			<build type="c-source" value="tc.c" />
+			<build type="c-source" value="tc_sam_d_r/tc.c" />
 			<build type="header-file" value="quick_start_callback/qs_tc_callback.h" />
 			<build type="header-file" value="quick_start/qs_tc_basic.h" />
 			<build type="header-file" value="quick_start_timer/qs_tc_timer.h" />
