@@ -51,6 +51,8 @@ static ohci_callback_t ohci_callback_pointer[OHCI_NUM_OF_INTERRUPT_SOURCE];
 static uint32_t callback_para;
 static uint32_t bus_reset_flag;
 
+volatile uint32_t watch;
+
 /**
  * \brief Initialize the OHCI module.
  *
@@ -58,6 +60,9 @@ static uint32_t bus_reset_flag;
 void ohci_init(void)
 {
 	uint32_t i, temp_value;
+
+	watch = UHP->HcFmInterval;
+	watch = UHP->HcRevision;
 
 	for (i = 0; i < OHCI_NUM_OF_INTERRUPT_SOURCE; i++) {
 		ohci_callback_pointer[i] = 0;
