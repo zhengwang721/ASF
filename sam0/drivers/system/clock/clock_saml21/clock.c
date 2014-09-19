@@ -131,29 +131,22 @@ static inline void _system_osc32k_wait_for_sync(void)
  * \internal
  * \brief OSC16M frequency selection.
  *  Frequency selection can be done only when OSC16M is disabled,thus,
- *  DFLL is temporarily used as a new clocksource for mainclock .
+ *  OSCULP32K is temporarily used as a new clocksource for mainclock .
  *
  */
 static inline void _system_clock_source_osc16m_freq_sel(void)
 {
-	struct system_clock_source_dfll_config dfll_conf;
 	struct system_gclk_gen_config gclk_conf;
 	struct system_clock_source_osc16m_config osc16m_conf;
 
-	/* Set up DFLL clock and enbale it */
-	system_clock_source_dfll_get_config_defaults(&dfll_conf);
-	system_clock_source_dfll_set_config(&dfll_conf);
-	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
-	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_DFLL));
-
-	/* Select DFLL as  new clock source for mainclock */
+	/* Select OSCULP32K as new clock source for mainclock temporarily */
 	system_gclk_gen_get_config_defaults(&gclk_conf);
-	gclk_conf.source_clock = SYSTEM_CLOCK_SOURCE_DFLL;
+	gclk_conf.source_clock = SYSTEM_CLOCK_SOURCE_ULP32K;
 	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclk_conf);
 
-	/* GCLK0 is already enabled,no need again */
+	/* GCLK0 is enabled after POR */
 
-	/*Disable OSC16M clock*/
+	/* Disable OSC16M clock*/
 	system_clock_source_disable(SYSTEM_CLOCK_SOURCE_OSC16M);
 
 	/* Switch to new frequency selection and enable OSC16M */
@@ -165,13 +158,10 @@ static inline void _system_clock_source_osc16m_freq_sel(void)
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC16M);
 	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_OSC16M));
 
-	/* Select OSC16M for mainclock */
+	/* Select OSC16M for mainclock again */
 	system_gclk_gen_get_config_defaults(&gclk_conf);
 	gclk_conf.source_clock = SYSTEM_CLOCK_SOURCE_OSC16M;
 	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclk_conf);
-
-	/* Disable DFLL clock source */
-	system_clock_source_disable(SYSTEM_CLOCK_SOURCE_DFLL);
 }
 
 static inline void _system_clock_source_dfll_set_config_errata_9905(void)
@@ -779,8 +769,6 @@ void system_clock_init(void)
 	/*  Switch to PL2 to be sure configuration of GCLK0 is safe */
 	system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_2);
 
-	OSC32KCTRL->OSCULP32K.reg = (CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN1K_Pos)
-								|(CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN32K_Pos);
 	/* XOSC */
 #if CONF_CLOCK_XOSC_ENABLE == true
 	struct system_clock_source_xosc_config xosc_conf;
@@ -839,11 +827,14 @@ void system_clock_init(void)
 
 	/* OSC16M */
 	if (CONF_CLOCK_OSC16M_FREQ_SEL == SYSTEM_OSC16M_4M){
-		OSCCTRL->OSC16MCTRL |= (CONF_CLOCK_OSC16M_ON_DEMAND << OSCCTRL_OSC16MCTRL_ONDEMAND_Pos)
+		OSCCTRL->OSC16MCTRL.reg |= (CONF_CLOCK_OSC16M_ON_DEMAND << OSCCTRL_OSC16MCTRL_ONDEMAND_Pos)
 								|(CONF_CLOCK_OSC16M_RUN_IN_STANDBY << OSCCTRL_OSC16MCTRL_RUNSTDBY_Pos);
 	} else {
 		_system_clock_source_osc16m_freq_sel();
 	}
+
+	OSC32KCTRL->OSCULP32K.reg = (CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN1K_Pos)
+									|(CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN32K_Pos);
 
 	/* DFLL Config (Open and Closed Loop) */
 #if CONF_CLOCK_DFLL_ENABLE == true
