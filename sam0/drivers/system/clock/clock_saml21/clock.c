@@ -130,8 +130,9 @@ static inline void _system_osc32k_wait_for_sync(void)
 /**
  * \internal
  * \brief OSC16M frequency selection.
- *  Frequency selection must be done when OSC16M is disabled,thus
- *  DFLL is used as a new clocksource for mainclock temporarily.
+ *  Frequency selection can be done only when OSC16M is disabled,thus,
+ *  DFLL is temporarily used as a new clocksource for mainclock .
+ *
  */
 static inline void _system_clock_source_osc16m_freq_sel(void)
 {
@@ -171,7 +172,6 @@ static inline void _system_clock_source_osc16m_freq_sel(void)
 
 	/* Disable DFLL clock source */
 	system_clock_source_disable(SYSTEM_CLOCK_SOURCE_DFLL);
-
 }
 
 static inline void _system_clock_source_dfll_set_config_errata_9905(void)
