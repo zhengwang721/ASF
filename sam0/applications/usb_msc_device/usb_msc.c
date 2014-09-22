@@ -1238,6 +1238,7 @@ void USB_Handler(void)
 						.EPSTATUSCLR.bit
 						.BK0RDY = 1;
 					}
+					memset(buffer,0,512);
 				}
 				USB_Write((uint8_t *)&CSW_failed,
 						sizeof(CSW_failed),

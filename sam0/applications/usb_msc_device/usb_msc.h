@@ -93,7 +93,6 @@
 #define MIN(a, b)                       (((a) < (b)) ? (a) : (b))
 #define COMPILER_PACK_SET(alignment)    COMPILER_PRAGMA(pack(alignment))
 #define COMPILER_PACK_RESET()           COMPILER_PRAGMA(pack())
-#define COMPILER_WORD_ALIGNED           __attribute__((__aligned__(4)))
 
 #if defined (USB_CALLBACK_SOF)
 typedef void (*callback_t)(void);
