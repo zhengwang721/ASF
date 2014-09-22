@@ -115,7 +115,7 @@ struct csw_signature {
 
 /* USB SOF callback */
 #if defined (USB_CALLBACK_SOF)
-void usb_set_callback(void *callback_func)
+void usb_set_callback(callback_t callback_func)
 {
 	callback_sof = (callback_t)callback_func;
 }

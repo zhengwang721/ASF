@@ -97,7 +97,7 @@
 #if defined (USB_CALLBACK_SOF)
 typedef void (*callback_t)(void);
 
-void usb_set_callback(void *callback_func);
+void usb_set_callback(callback_t callback_func);
 void main_callback_sof(void);
 
 #endif
