@@ -316,6 +316,7 @@ void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop,uint16_t 
 		//stop packet streaming once the current packet transmission is completed
 		pkt_stream_stop = true;
 		sw_timer_stop(T_APP_TIMER);
+		 op_mode=TX_OP_MODE;
 	}
 	
 	
@@ -351,7 +352,7 @@ void configure_pkt_stream_frames(uint16_t frame_len)
 
 	tmp = (app_payload_t *)temp_frame_ptr;
 
-	(tmp->cmd_id) = PER_TEST_PKT;
+	(tmp->cmd_id) = PKT_STREAM_PKT;
 
 	temp_frame_ptr++;
 
@@ -703,6 +704,7 @@ void dump_trx_register_values(uint16_t start_reg_addr, uint16_t end_reg_addr)
 
 void rx_on_test(bool start_stop_param)
 {
+
 	// Implementation for Rx on mode
 	if(start_stop_param)
 	{

@@ -561,8 +561,12 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 		sw_timer_stop(CW_TX_TIMER);
 		convert_ota_serial_frame_rx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);	
 	}
-	//stop the timer if the transmission of RX_ON frame was sucessful and do not reach wait_for_reply_timer_handler_cb
-	if(!(sw_timer_is_running(CW_TX_TIMER)))
+	//stop the timer if the transmission of RX_ON frame was successful and do not reach wait_for_reply_timer_handler_cb
+	if(sw_timer_is_running(CW_TX_TIMER))
+	{
+		sw_timer_stop(CW_TX_TIMER);
+	}
+	
 	op_mode = TX_OP_MODE;
 	break;
 	

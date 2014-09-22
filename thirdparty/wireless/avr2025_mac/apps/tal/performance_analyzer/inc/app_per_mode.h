@@ -159,6 +159,7 @@
 #define RANGE_TEST_MARKER_RSP               (0x16)
 #define REMOTE_TEST_CMD		                (0x17)
 #define  REMOTE_TEST_REPLY_CMD              (0x18)
+#define PKT_STREAM_PKT						(0x18)
 #define RANGE_TEST_PKT_LENGTH               (19)
 #define LED_BLINK_RATE_IN_MICRO_SEC         (50000)
 /* \} */
