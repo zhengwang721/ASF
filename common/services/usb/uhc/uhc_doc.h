@@ -292,11 +292,11 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \section USB_HOST_CONF USB Host User Configuration
  * The following USB host configuration must be included in the conf_usb_host.h
- * file of the application.
+ * file of the application:
  *
  * \b 1. USB_HOST_UHI (List of UHI APIs).
  *
- * Define the list of UHI supported by USB host. (Ex.: UHI_MSC,UHI_HID_MOUSE).
+ * Define the list of UHI supported by USB host. (E.g.: UHI_MSC,UHI_HID_MOUSE).
  *
  * \b 2. USB_HOST_POWER_MAX (mA).
  *
@@ -312,7 +312,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \section USB_HOST_CALLBACK USB Host User Callback
  * The following optional USB host callback can be defined in the conf_usb_host.h
- * file of the application.
+ * file of the application:
  *
  * \b 1. void UHC_MODE_CHANGE(bool b_host_mode).
  *
@@ -351,7 +351,7 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  *
  * \b 8. void UHC_ENUM_EVENT(uhc_device_t* dev, uint8_t b_status).
  *
- * Called when a USB device enumeration is completed or fail.
+ * Called when a USB device enumeration is completed or failed.
  *
  * \section asfdoc_uhc_basic_use_case_setup_steps USB Host Setup Steps
  *
@@ -359,20 +359,20 @@ bool uhc_dev_is_high_speed_support(uhc_device_t* dev);
  * Common prerequisites for all USB hosts.
  *
  * This module is based on USB host stack full interrupt driven and supporting
- * \ref sleepmgr_group "sleepmgr". For AVR and Atmel® | SMART™ SAM3/4 devices the
+ * \ref sleepmgr_group "sleepmgr". For AVR® and Atmel® | SMART™ SAM3/4 devices the
  * \ref clk_group "clock services" is supported. For SAMD21 devices the
  * \ref asfdoc_sam0_system_clock_group "clock driver" is supported.
  *
  * The following procedure must be executed to setup the project correctly:
  * - Specify the clock configuration:
- *   - UC3 and SAM3/4 devices without USB high speed support need 48MHz clock input.
+ *   - UC3 and SAM3/4 devices without USB high speed support need 48MHZ clock input.
  *
  *     You must use a PLL and an external OSC.
- *   - UC3 and SAM3/4 devices with USB high speed support need 12MHz clock input.
+ *   - UC3 and SAM3/4 devices with USB high speed support need 12MHZ clock input.
  *
  *     You must use an external OSC.
- *   - UC3 devices with USBC hardware need CPU frequency higher than 25MHz.
- *   - SAMD21 devices without USB high speed support need 48MHz clock input.
+ *   - UC3 devices with USBC hardware need CPU frequency higher than 25MHZ.
+ *   - SAMD21 devices without USB high speed support need 48MHZ clock input.
  *
  *     You must use a DFLL and an external OSC.
  * - In conf_board.h, the define CONF_BOARD_USB_PORT must be added to enable USB lines.
@@ -441,9 +441,9 @@ void usb_init(void)
  *
  * \section uhc_conf_clock conf_clock.h Examples
  *
- * Content of conf_clock.h for AT32UC3A0, AT32UC3A1, AT32UC3B devices (USBB):
+ * Content of conf_clock.h for AT32UC3A0, AT32UC3A1, and AT32UC3B devices (USBB):
  * \code
-	// Configuration based on 12MHz external OSC:
+	// Configuration based on 12MHZ external OSC:
 	#define CONFIG_PLL1_SOURCE          PLL_SRC_OSC0
 	#define CONFIG_PLL1_MUL             8
 	#define CONFIG_PLL1_DIV             2
@@ -451,26 +451,26 @@ void usb_init(void)
 	#define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
  \endcode
  *
- * Content of conf_clock.h for AT32UC3A3, AT32UC3A4 devices (USBB with high speed support):
+ * Content of conf_clock.h for AT32UC3A3 and AT32UC3A4 devices (USBB with high speed support):
  * \code
-	// Configuration based on 12MHz external OSC:
+	// Configuration based on 12MHZ external OSC:
 	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_OSC0
 	#define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
  \endcode
  *
  * Content of conf_clock.h for AT32UC3C device (USBC):
  * \code
-	// Configuration based on 12MHz external OSC:
+	// Configuration based on 12MHZ external OSC:
 	#define CONFIG_PLL1_SOURCE          PLL_SRC_OSC0
 	#define CONFIG_PLL1_MUL             8
 	#define CONFIG_PLL1_DIV             2
 	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL1
 	#define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
-	// CPU clock need of clock > 25MHz to run with USBC
+	// CPU clock need of clock > 25MHZ to run with USBC
 	#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL1
  \endcode
  *
- * Content of conf_clock.h for SAM3X, SAM3A devices (UOTGHS: USB OTG High Speed):
+ * Content of conf_clock.h for SAM3X and SAM3A devices (UOTGHS: USB OTG High Speed):
  * \code
 	// USB Clock Source fixed at UPLL.
 	#define CONFIG_USBCLK_SOURCE        USBCLK_SRC_UPLL
@@ -480,7 +480,7 @@ void usb_init(void)
  * Content of conf_clocks.h for SAMD21 devices (USB):
  * \code
   // USB Clock Source fixed at DFLL.
-  // SYSTEM_CLOCK_SOURCE_XOSC32K configuration - External 32KHz crystal/clock oscillator
+  // SYSTEM_CLOCK_SOURCE_XOSC32K configuration - External 32KHZ crystal/clock oscillator
   #  define CONF_CLOCK_XOSC32K_ENABLE               true
   #  define CONF_CLOCK_XOSC32K_EXTERNAL_CRYSTAL     SYSTEM_CLOCK_EXTERNAL_CRYSTAL
   #  define CONF_CLOCK_XOSC32K_STARTUP_TIME         SYSTEM_XOSC32K_STARTUP_65536
@@ -540,7 +540,7 @@ void usb_init(void)
  * \section uhc_use_case_1_setup Setup Steps
  *
  * Prior to implement this use case, be sure to have already
- * apply the UHI module "basic use case".
+ * applied the UHI module "basic use case".
  *
  * \section uhc_use_case_1_usage Usage Steps
  *
@@ -566,7 +566,7 @@ void usb_init(void)
  * \section uhc_use_case_2_setup Setup Steps
  *
  * Prior to implement this use case, be sure to have already
- * apply the UHI module "basic use case".
+ * applied the UHI module "basic use case".
  *
  * \section uhc_use_case_2_usage Usage Steps
  *
@@ -593,13 +593,13 @@ void usb_init(void)
  *
  * \note On the Atmel boards, the switch of USB role is managed automatically by the
  * USB stack thank to a USB OTG connector and its USB ID pin.
- * For a dual role management without OTG connector, refer to
- * "AVR4950 section 6.1 Dual roles".
+ * Refer to section "Dual roles" in the application note "Atmel AVR4950: ASF - USB Host Stack"
+ * for further information about dual roles.
  *
  * \section uhc_use_case_3_setup Setup Steps
  *
  * Prior to implement this use case, be sure to have already
- * apply the UHI module "basic use case".
+ * applied the UHI module "basic use case".
  *
  * \section uhc_use_case_3_usage Usage Steps
  *
@@ -641,9 +641,9 @@ void usb_init(void)
 	//udc_start();
 	uhc_start();
  \endcode
- * -# In dual role, to known the current USB mode, the callback to notify the
+ * -# In dual role, to know the current USB mode, the callback to notify the
  * mode changes can be used.
- *   - Ensure that conf_usb_host.h contains the following parameters.
+ *   - Ensure that conf_usb_host.h contains the following parameters:
  * \code
 	#define UHC_MODE_CHANGE(b_host_mode)   my_callback_mode_change(b_host_mode)
 	extern void my_callback_mode_change(bool b_host_mode);
