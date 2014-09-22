@@ -48,11 +48,6 @@
 
 #define EXT_PA_SE2431L
 
-/*
- * Value of an external LNA gain.
- * If no external LNA is available, the value is 0.
- */
-#define EXT_LNA_HIGH_GAIN    (14)
 
 /*
  * Value of an external LNA gain.
