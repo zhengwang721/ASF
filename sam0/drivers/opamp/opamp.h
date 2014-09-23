@@ -110,9 +110,9 @@ extern "C" {
 #endif
 
 /**
- * \brief OPAMP number enum.
+ * \brief OPAMP ID number enum.
  */
-enum opamp_number {
+enum opamp_id {
 	/** OPAMP 0.  */
 	OPAMP_0 = 0,
 	/** OPAMP 1.  */
@@ -547,7 +547,7 @@ void opamp2_set_config(struct opamp2_config *const config);
  *
  *  \param[in] number      OPAMP number to enable.
  */
-void opamp_enable(const enum opamp_number number);
+void opamp_enable(const enum opamp_id number);
 
 /**
  * \brief Disables an OPAMP that was previously enabled.
@@ -557,7 +557,7 @@ void opamp_enable(const enum opamp_number number);
  *
  *  \param[in] number      OPAMP number to enable.
  */
-void opamp_disable(const enum opamp_number number);
+void opamp_disable(const enum opamp_id number);
 
 /**
  * \brief Checks an OPAMP output ready status.
@@ -572,7 +572,7 @@ void opamp_disable(const enum opamp_number number);
  * \retval ture if the select OPAMP output is ready
 
  */
-bool opamp_is_ready(const enum opamp_number number);
+bool opamp_is_ready(const enum opamp_id number);
 
 
 #ifdef __cplusplus

@@ -219,7 +219,7 @@ void opamp2_set_config(struct opamp2_config *const config)
 		config->r1_connection;
 }
 
-void opamp_enable(const enum opamp_number number)
+void opamp_enable(const enum opamp_id number)
 {
 	/* Sanity check arguments */
 	Assert(number);
@@ -234,7 +234,7 @@ void opamp_enable(const enum opamp_number number)
 	}
 }
 
-void opamp_disable(const enum opamp_number number)
+void opamp_disable(const enum opamp_id number)
 {
 	/* Sanity check arguments */
 	Assert(number);
@@ -249,7 +249,7 @@ void opamp_disable(const enum opamp_number number)
 	}
 }
 
-bool opamp_is_ready(const enum opamp_number number)
+bool opamp_is_ready(const enum opamp_id number)
 {
 	/* Sanity check arguments */
 	Assert(number);
