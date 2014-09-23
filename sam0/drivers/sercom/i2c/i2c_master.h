@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM SERCOM I<SUP>2</SUP>C Master Driver
+ * \brief SAM SERCOM I2C Master Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -123,11 +123,11 @@ enum i2c_master_start_hold_time {
 enum i2c_master_inactive_timeout {
 	/** Inactive bus time-out disabled. */
 	I2C_MASTER_INACTIVE_TIMEOUT_DISABLED = SERCOM_I2CM_CTRLA_INACTOUT(0),
-	/** Inactive bus time-out 5-6 SCL cycle time-out (50-60¦Ìs). */
+	/** Inactive bus time-out 5-6 SCL cycle time-out. */
 	I2C_MASTER_INACTIVE_TIMEOUT_55US = SERCOM_I2CM_CTRLA_INACTOUT(1),
-	/** Inactive bus time-out 10-11 SCL cycle time-out (100-110¦Ìs). */
+	/** Inactive bus time-out 10-11 SCL cycle time-out. */
 	I2C_MASTER_INACTIVE_TIMEOUT_105US = SERCOM_I2CM_CTRLA_INACTOUT(2),
-	/** Inactive bus time-out 20-21 SCL cycle time-out (200-210¦Ìs). */
+	/** Inactive bus time-out 20-21 SCL cycle time-out. */
 	I2C_MASTER_INACTIVE_TIMEOUT_205US = SERCOM_I2CM_CTRLA_INACTOUT(3),
 };
 
@@ -562,7 +562,7 @@ void i2c_master_send_stop(struct i2c_master_module *const module);
 
 #ifdef FEATURE_I2C_DMA_SUPPORT
 /**
-* \name SERCOM I<SUP>2</SUP>C Master with DMA Interfaces
+* \name SERCOM I2C Master with DMA Interfaces
 * @{
 */
 

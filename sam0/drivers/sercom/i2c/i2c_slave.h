@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM SERCOM I<SUP>2</SUP>C Slave Driver
+ * \brief SAM SERCOM I2C Slave Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
