@@ -233,7 +233,7 @@ void aes_write_key(
  * \param[in] module  Pointer to the software instance struct
  * \param[in] vector Pointer to four contiguous 32-bit words
  */
-void aes_write_initvector(
+void aes_write_init_vector(
 		struct aes_module *const module,
 		const uint32_t *vector)
 {

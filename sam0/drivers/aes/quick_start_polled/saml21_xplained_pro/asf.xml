@@ -11,5 +11,6 @@
 		<generator value="as5_arm"/>
 		<device-support value="atsaml21j18a"/>
 		<config name="config.sam0.drivers.sercom.usart" value="polled"/>
+		<config name="config.sam0.drivers.aes" value="polled"/>
 	</project>
 </asf>

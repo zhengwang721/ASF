@@ -200,7 +200,7 @@ enum aes_start_mode {
 };
 
 /** AES operation mode. */
-enum aes_opmode {
+enum aes_operation_mode {
 	AES_ECB_MODE = 0,		/**< Electronic Codebook (ECB). */
 	AES_CBC_MODE,			/**< Cipher Block Chaining (CBC). */
 	AES_OFB_MODE,			/**< Output Feedback (OFB). */
@@ -247,12 +247,12 @@ struct aes_config {
 	/** Start mode. */
 	enum aes_start_mode start_mode;
 	/** AES cipher operation mode.*/
-	enum aes_opmode opmode;
+	enum aes_operation_mode opmode;
 	/** Cipher feedback data size. */
 	enum aes_cfb_size cfb_size;
 	/** Countermeasure type mask. */
 	uint8_t ctype_mask;
-	/** Enable XRO key. */
+	/** Enable XOR key. */
 	bool enable_xor_key;
 	/** Enable key generation. */
 	bool enable_key_gen;
@@ -268,7 +268,7 @@ struct aes_module {
 	/** AES hardware module. */
 	Aes *hw;
 	/** AES cipher operation mode.*/
-	enum aes_opmode opmode;
+	enum aes_operation_mode opmode;
 	/** AES key size. */
 	enum aes_key_size key_size;
 	/** Cipher feedback data size. */
@@ -293,7 +293,7 @@ void aes_init(struct aes_module *const module,
 /** @} */
 
 /**
- * \name Start ,Enable and Write
+ * \name Start, Enable and Write
  * @{
  */
 
@@ -322,7 +322,7 @@ void aes_disable(struct aes_module *const module);
 
 void aes_write_key(struct aes_module *const module, const uint32_t *key);
 
-void aes_write_initvector(struct aes_module *const module, const uint32_t *vector);
+void aes_write_init_vector(struct aes_module *const module, const uint32_t *vector);
 
 void aes_write_input_data(struct aes_module *const module,
 		const uint32_t *p_input_data_buffer);
@@ -375,7 +375,7 @@ static inline uint32_t aes_get_status(struct aes_module *const module)
  * \param[in] module   Pointer to the AES software instance struct
  * \param[in] status_flags  Bitmask flags to clear
  */
-static inline void tc_clear_status(
+static inline void aes_clear_status(
 		struct aes_module *const module,
 		const uint32_t status_flags)
 {
@@ -412,7 +412,7 @@ static inline void tc_clear_status(
  *
  * \return The content of the GHASHRx[x = 0...3] vlaue.
  */
-static inline uint32_t aes_read_ghash(struct aes_module *const module, uint32_t id)
+static inline uint32_t aes_gcm_read_ghash(struct aes_module *const module, uint32_t id)
 {
 	Assert(module);
 	Assert(module->hw);
@@ -427,7 +427,7 @@ static inline uint32_t aes_read_ghash(struct aes_module *const module, uint32_t 
  * \param[in] id     Index into the GHASHx array (range 0 to 3)
  * \param[in] ghash  GCM hash vlaue
  */
-static inline void aes_write_ghash(struct aes_module *const module,
+static inline void aes_gcm_write_ghash(struct aes_module *const module,
 									uint32_t id,uint32_t ghash)
 {
 	Assert(module);
@@ -445,7 +445,7 @@ static inline void aes_write_ghash(struct aes_module *const module,
  *
  * \return the contents of the HASHKEYx[x = 0...3] specified.
  */
-static inline uint32_t aes_read_hash_key(struct aes_module *const module,
+static inline uint32_t aes_gcm_read_hash_key(struct aes_module *const module,
 											uint32_t id)
 {
 	Assert(module);
@@ -461,7 +461,7 @@ static inline uint32_t aes_read_hash_key(struct aes_module *const module,
  * \param[in]  id    Index into the Hash key array (range 0 to 3)
  * \param[in]  key GCM Hash key
  */
-static inline void aes_write_hash_key(struct aes_module *const module,
+static inline void aes_gcm_write_hash_key(struct aes_module *const module,
 										uint32_t id, uint32_t key)
 {
 	Assert(module);
@@ -477,7 +477,7 @@ static inline void aes_write_hash_key(struct aes_module *const module,
  *
  * \return the contents of the HASHKEYx[x = 0...3] specified.
  */
-static inline uint32_t aes_read_cipher_len(struct aes_module *const module)
+static inline uint32_t aes_gcm_read_cipher_len(struct aes_module *const module)
 {
 	Assert(module);
 	Assert(module->hw);
@@ -491,7 +491,7 @@ static inline uint32_t aes_read_cipher_len(struct aes_module *const module)
  * \param[in] module Pointer to the AES software instance struct
  * \param[in]  len cipher length
  */
-static inline void aes_write_cipher_len(struct aes_module *const module,
+static inline void aes_gcm_write_cipher_len(struct aes_module *const module,
 										uint32_t len)
 {
 	Assert(module);
@@ -505,7 +505,7 @@ static inline void aes_write_cipher_len(struct aes_module *const module,
  *
  * \param[in] module Pointer to the AES software instance struct
  */
-static inline void aes_set_gcm_end_message_status(struct aes_module *const module)
+static inline void aes_gcm_set_end_message_status(struct aes_module *const module)
 {
 	Assert(module);
 	Assert(module->hw);
@@ -518,7 +518,7 @@ static inline void aes_set_gcm_end_message_status(struct aes_module *const modul
  *
  * \param[in] module Pointer to the AES software instance struct
  */
-static inline void aes_clear_gcm_end_message_status(struct aes_module *const module)
+static inline void aes_gcm_clear_end_message_status(struct aes_module *const module)
 {
 	Assert(module);
 	Assert(module->hw);

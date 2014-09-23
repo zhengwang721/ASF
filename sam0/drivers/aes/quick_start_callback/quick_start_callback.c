@@ -281,7 +281,7 @@ static void cbc_mode_test(void)
 	aes_write_key(&aes_instance, key128);
 
 	/* Set the initialization vector. */
-	aes_write_initvector(&aes_instance, init_vector);
+	aes_write_init_vector(&aes_instance, init_vector);
 
 	/* Write the data to be ciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_plain_text);
@@ -321,7 +321,7 @@ static void cbc_mode_test(void)
 	aes_write_key(&aes_instance, key128);
 
 	/* Set the initialization vector. */
-	aes_write_initvector(&aes_instance, init_vector);
+	aes_write_init_vector(&aes_instance, init_vector);
 
 	/* Write the data to be deciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_cipher_text_cbc);
@@ -367,7 +367,7 @@ static void cfb128_mode_test(void)
 	aes_write_key(&aes_instance, key128);
 
 	/* Set the initialization vector. */
-	aes_write_initvector(&aes_instance, init_vector);
+	aes_write_init_vector(&aes_instance, init_vector);
 
 	/* Write the data to be ciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_plain_text);
@@ -408,7 +408,7 @@ static void cfb128_mode_test(void)
 	aes_write_key(&aes_instance, key128);
 
 	/* Set the initialization vector. */
-	aes_write_initvector(&aes_instance, init_vector);
+	aes_write_init_vector(&aes_instance, init_vector);
 
 	/* Write the data to be deciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_cipher_text_cfb128);
@@ -455,7 +455,7 @@ static void ofb_mode_test(void)
 	aes_write_key(&aes_instance, key128);
 
 	/* Set the initialization vector. */
-	aes_write_initvector(&aes_instance, init_vector);
+	aes_write_init_vector(&aes_instance, init_vector);
 
 	/* Write the data to be ciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_plain_text);
@@ -496,7 +496,7 @@ static void ofb_mode_test(void)
 	aes_write_key(&aes_instance, key128);
 
 	/* Set the initialization vector. */
-	aes_write_initvector(&aes_instance, init_vector);
+	aes_write_init_vector(&aes_instance, init_vector);
 
 	/* Write the data to be deciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_cipher_text_ofb);
@@ -543,7 +543,7 @@ static void ctr_mode_test(void)
 	aes_write_key(&aes_instance, key128);
 
 	/* Set the initialization vector. */
-	aes_write_initvector(&aes_instance, init_vector_ctr);
+	aes_write_init_vector(&aes_instance, init_vector_ctr);
 
 	/* Write the data to be ciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_plain_text);
@@ -584,7 +584,7 @@ static void ctr_mode_test(void)
 	aes_write_key(&aes_instance, key128);
 
 	/* Set the initialization vector. */
-	aes_write_initvector(&aes_instance, init_vector_ctr);
+	aes_write_init_vector(&aes_instance, init_vector_ctr);
 
 	/* Write the data to be deciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_cipher_text_ctr);
