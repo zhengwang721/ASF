@@ -16,7 +16,7 @@
 		<build type="header-file" value="conf_trx_access.h"/>
 
 		<config name="config.sam0.drivers.sercom.spi" value="polled"/>
-		<config name="config.sam0.drivers.sercom.usart" value="polled"/>
+		<config name="config.sam0.drivers.sercom.usart" value="callback"/>
 		<require idref="board.samd21_xplained_pro"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tfa" value="at86rf212b"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf212b"/>
