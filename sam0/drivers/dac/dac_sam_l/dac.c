@@ -3,7 +3,7 @@
  *
  * \brief SAM Peripheral Digital-to-Analog Converter Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -64,46 +64,66 @@ static void _dac_set_config(
 
 	Dac *const dac_module = module_inst->hw;
 
-	/* Set selected DAC output to be enabled when enabling the module */
-	module_inst->output = config->output;
-	module_inst->start_on_event = false;
+	/* Set selected DAC start on event to be disable when enabling the module */
+	module_inst->start_on_event[0] = false;
+	module_inst->start_on_event[1] = false;
 
-	uint32_t new_ctrla = 0;
 	uint32_t new_ctrlb = 0;
 
-	/* Enable DAC in standby sleep mode if configured */
-	if (config->run_in_standby) {
-		new_ctrla |= DAC_CTRLA_RUNSTDBY;
+	/* Enable DAC in differential mode if configured */
+	if (config->differential_mode) {
+		new_ctrlb |= DAC_CTRLB_DIFF;
 	}
 
 	/* Set reference voltage */
 	new_ctrlb |= config->reference;
 
-	/* Left adjust data if configured */
-	if (config->left_adjust) {
-		new_ctrlb |= DAC_CTRLB_LEFTADJ;
-	}
-
-#ifdef FEATURE_DAC_DATABUF_WRITE_PROTECTION
-	/* Bypass DATABUF write protection if configured */
-	if (config->databuf_protection_bypass) {
-		new_ctrlb |= DAC_CTRLB_BDWP;
-	}
-#endif
-
-	/* Voltage pump disable if configured */
-	if (config->voltage_pump_disable) {
-		new_ctrlb |= DAC_CTRLB_VPD;
-	}
-
 	/* Apply the new configuration to the hardware module */
-	dac_module->CTRLA.reg = new_ctrla;
+	dac_module->CTRLB.reg = new_ctrlb;
+}
 
-	while (dac_is_syncing(module_inst)) {
-		/* Wait until the synchronization is complete */
+bool dac_is_syncing(
+		struct dac_module *const dev_inst)
+{
+	/* Sanity check arguments */
+	Assert(dev_inst);
+
+	Dac *const dac_module = dev_inst->hw;
+
+	if (dac_module->SYNCBUSY.reg) {
+		return true;
 	}
 
-	dac_module->CTRLB.reg = new_ctrlb;
+	return false;
+}
+
+/**
+ * \brief Initializes a DAC configuration structure to defaults.
+ *
+ *  Initializes a given DAC configuration structure to a set of
+ *  known default values. This function should be called on any new
+ *  instance of the configuration structures before being modified by the
+ *  user application.
+ *
+ *  The default configuration is as follows:
+ *   \li 1V from internal bandgap reference
+ *   \li Drive the DAC output to the VOUT pin
+ *   \li Right adjust data
+ *   \li GCLK generator 0 (GCLK main) clock source
+ *   \li The output buffer is disabled when the chip enters STANDBY sleep
+ *       mode
+ *
+ * \param[out] config  Configuration structure to initialize to default values
+ */
+void dac_get_config_defaults(
+		struct dac_config *const config)
+{
+	/* Sanity check arguments */
+	Assert(config);
+
+	/* Default configuration values */
+	config->reference      = DAC_REFERENCE_INTREF;
+	config->clock_source   = GCLK_GENERATOR_0;
 }
 
 /**
@@ -138,7 +158,7 @@ enum status_code dac_init(
 	module_inst->hw = module;
 
 	/* Turn on the digital interface clock */
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_DAC);
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_DAC);
 
 	/* Check if module is enabled. */
 	if (module->CTRLA.reg & DAC_CTRLA_ENABLE) {
@@ -161,11 +181,17 @@ enum status_code dac_init(
 	struct system_pinmux_config pin_conf;
 	system_pinmux_get_config_defaults(&pin_conf);
 
-	/* Set up the DAC VOUT pin */
-	pin_conf.mux_position = MUX_PA02B_DAC_VOUT;
-	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	/* Set up the DAC0 VOUT pin */
+	pin_conf.mux_position = MUX_PA02B_DAC_VOUT0;
+	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;//??SYSTEM_PINMUX_PIN_DIR_OUTPUT
 	pin_conf.input_pull   = SYSTEM_PINMUX_PIN_PULL_NONE;
-	system_pinmux_pin_set_config(PIN_PA02B_DAC_VOUT, &pin_conf);
+	system_pinmux_pin_set_config(PIN_PA02B_DAC_VOUT0, &pin_conf);
+
+	/* Set up the DAC1 VOUT pin */
+	pin_conf.mux_position = MUX_PA05B_DAC_VOUT1;
+	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;//???SYSTEM_PINMUX_PIN_DIR_OUTPUT
+	pin_conf.input_pull   = SYSTEM_PINMUX_PIN_PULL_NONE;
+	system_pinmux_pin_set_config(PIN_PA05B_DAC_VOUT1, &pin_conf);
 
 	/* Write configuration to module */
 	_dac_set_config(module_inst, config);
@@ -174,8 +200,10 @@ enum status_code dac_init(
 	module_inst->reference = config->reference;
 
 #if DAC_CALLBACK_MODE == true
-	for (uint8_t i = 0; i < DAC_CALLBACK_N; i++) {
-		module_inst->callback[i] = NULL;
+	for (uint8_t i = 0; i < DAC_CHANNEL_N; i++) {
+		for (uint8_t j = 0; j < DAC_CALLBACK_N; i++) {
+			module_inst->callback[i][j] = NULL;
+		}
 	};
 
 	_dac_instances[0] = module_inst;
@@ -234,12 +262,9 @@ void dac_enable(
 	/* Enable the module */
 	dac_module->CTRLA.reg |= DAC_CTRLA_ENABLE;
 
-	/* Enable selected output */
-	dac_module->CTRLB.reg |= module_inst->output;
-
 	/* Enable internal bandgap reference if selected in the configuration */
-	if (module_inst->reference == DAC_REFERENCE_INT1V) {
-		system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_BANDGAP);
+	if (module_inst->reference == DAC_REFERENCE_INTREF) {
+		system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_OUTPUT);
 	}
 }
 
@@ -260,13 +285,125 @@ void dac_disable(
 
 	Dac *const dac_module = module_inst->hw;
 
-	/* Wait until the synchronization is complete */
-	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY) {
-	};
+	while (dac_is_syncing(module_inst)) {
+		/* Wait until the synchronization is complete */
+	}
 
 	/* Disable DAC */
 	dac_module->CTRLA.reg &= ~DAC_CTRLA_ENABLE;
 }
+
+/**
+ * \brief Enables a DAC event input or output.
+ *
+ *  Enables one or more input or output events to or from the DAC module. See
+ *  \ref dac_events "here" for a list of events this module supports.
+ *
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] module_inst  Software instance for the DAC peripheral
+ *  \param[in] events       Struct containing flags of events to enable
+ */
+void dac_enable_events(
+		struct dac_module *const module_inst,
+		struct dac_events *const events)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(events);
+
+	Dac *const dac_module = module_inst->hw;
+
+	uint32_t event_mask = 0;
+
+	/* Configure Buffer Empty event */
+	if (events->on_event_chan0_start_conversion) {
+		event_mask |= DAC_EVCTRL_EMPTYEO0;
+	}
+
+	/* Configure Buffer Empty event */
+	if (events->on_event_chan1_start_conversion) {
+		event_mask |= DAC_EVCTRL_EMPTYEO1;
+	}
+
+	/* Configure Conversion Start event */
+	if (events->generate_event_on_chan0_buffer_empty) {
+		event_mask |= DAC_EVCTRL_STARTEI0;
+		module_inst->start_on_event[0] = true;
+	}
+
+	/* Configure Conversion Start event */
+	if (events->generate_event_on_chan0_buffer_empty) {
+		event_mask |= DAC_EVCTRL_STARTEI1;
+		module_inst->start_on_event[1] = true;
+	}
+
+	dac_module->EVCTRL.reg |= event_mask;
+}
+
+/**
+ * \brief Disables a DAC event input or output.
+ *
+ *  Disables one or more input or output events to or from the DAC module. See
+ *  \ref dac_events "here" for a list of events this module supports.
+ *
+ *  \note Events cannot be altered while the module is enabled.
+ *
+ *  \param[in] module_inst  Software instance for the DAC peripheral
+ *  \param[in] events       Struct containing flags of events to disable
+ */
+void dac_disable_events(
+		struct dac_module *const module_inst,
+		struct dac_events *const events)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(events);
+
+	Dac *const dac_module = module_inst->hw;
+
+	uint32_t event_mask = 0;
+
+	/* Configure Buffer Empty event */
+	if (events->on_event_chan0_start_conversion) {
+		event_mask |= DAC_EVCTRL_EMPTYEO0;
+	}
+
+	/* Configure Buffer Empty event */
+	if (events->on_event_chan1_start_conversion) {
+		event_mask |= DAC_EVCTRL_EMPTYEO1;
+	}
+
+	/* Configure Conversion Start event */
+	if (events->generate_event_on_chan0_buffer_empty) {
+		event_mask |= DAC_EVCTRL_STARTEI0;
+		module_inst->start_on_event[0] = false;
+	}
+
+	/* Configure Conversion Start event */
+	if (events->generate_event_on_chan0_buffer_empty) {
+		event_mask |= DAC_EVCTRL_STARTEI1;
+		module_inst->start_on_event[1] = false;
+	}
+
+	dac_module->EVCTRL.reg &= ~event_mask;
+}
+
+void dac_chan_get_config_defaults(
+		struct dac_chan_config *const config)
+{
+	/* Sanity check arguments */
+	Assert(config);
+
+	/* Dac channel default configuration values */
+	config->left_adjust    = false;
+	config->current        = DAC_CURRENT_12M;
+	config->run_in_standby = false;
+	config->dither_mode    = false;	
+}
+
 
 /**
  * \brief Writes a DAC channel configuration to the hardware module.
@@ -286,8 +423,42 @@ void dac_chan_set_config(
 		const enum dac_channel channel,
 		struct dac_chan_config *const config)
 {
-	/* No channel support yet */
-	UNUSED(channel);
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+	Assert(config);
+
+	Dac *const dac_module = module_inst->hw;
+	
+	/* Check if module is enabled. */
+	if (dac_module->CTRLA.reg & DAC_CTRLA_ENABLE) {
+		return;
+	}
+
+	uint32_t new_dacctrl = 0;
+	
+	/* Left adjust data if configured */
+	if (config->left_adjust) {
+		new_dacctrl |= DAC_DACCTRL_LEFTADJ;
+	}
+
+	/* Set current control */
+	new_dacctrl |= config->current;
+	
+	/* Enable DAC in standby sleep mode if configured */
+	if (config->run_in_standby) {
+		new_dacctrl |= DAC_DACCTRL_RUNSTDBY;
+	}
+
+	/* Voltage pump disable if configured */
+	if (config->dither_mode) {
+		new_dacctrl |= DAC_DACCTRL_DITHER;
+	}
+
+	new_dacctrl |= DAC_DACCTRL_REFRESH(config->refresh_period);
+	
+	/* Apply the new configuration to the hardware module */
+	dac_module->DACCTRL[channel].reg = new_dacctrl;
 }
 
 /**
@@ -303,8 +474,17 @@ void dac_chan_enable(
 		struct dac_module *const module_inst,
 		enum dac_channel channel)
 {
-	/* No channel support yet */
-	UNUSED(channel);
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	Dac *const dac_module = module_inst->hw;
+	
+	/* Enable the module */
+	dac_module->DACCTRL[channel].reg |= DAC_DACCTRL_ENABLE;
+
+	while(! (dac_module->STATUS.reg & (1 << channel))) {
+	};
 }
 
 /**
@@ -320,62 +500,15 @@ void dac_chan_disable(
 		struct dac_module *const module_inst,
 		enum dac_channel channel)
 {
-	/* No channel support yet */
-	UNUSED(channel);
-}
-
-/**
- * \brief Enable the output buffer.
- *
- * Enables the output buffer and drives the DAC output to the VOUT pin.
- *
- * \param[in] module_inst  Pointer to the DAC software instance struct
- * \param[in] channel      DAC channel to alter
- */
-void dac_chan_enable_output_buffer(
-		struct dac_module *const module_inst,
-		enum dac_channel channel)
-{
 	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw);
 
-	/* No channel support yet */
-	UNUSED(channel);
-
 	Dac *const dac_module = module_inst->hw;
+	
+	/* Enable the module */
+	dac_module->DACCTRL[channel].reg &= ~DAC_DACCTRL_ENABLE;
 
-	/* Enable output buffer */
-	dac_module->CTRLB.reg |= DAC_OUTPUT_EXTERNAL;
-}
-
-/**
- * \brief Disable the output buffer.
- *
- * Disables the output buffer.
- *
- * \note The output buffer(s) should be disabled when a channel's output is not
- *       currently needed, as it will draw current even if the system is in
- *       sleep mode.
- *
- * \param[in] module_inst  Pointer to the DAC software instance struct
- * \param[in] channel      DAC channel to alter
- */
-void dac_chan_disable_output_buffer(
-		struct dac_module *const module_inst,
-		enum dac_channel channel)
-{
-	/* Sanity check arguments*/
-	Assert(module_inst);
-	Assert(module_inst->hw);
-
-	/* No channel support yet */
-	UNUSED(channel);
-
-	Dac *const dac_module = module_inst->hw;
-
-	/* Disable output buffer */
-	dac_module->CTRLB.reg &= ~DAC_OUTPUT_EXTERNAL;
 }
 
 /**
@@ -408,21 +541,18 @@ enum status_code dac_chan_write(
 	Assert(module_inst);
 	Assert(module_inst->hw);
 
-	/* No channel support yet */
-	UNUSED(channel);
-
 	Dac *const dac_module = module_inst->hw;
 
-	/* Wait until the synchronization is complete */
-	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY) {
-	};
+	while (dac_is_syncing(module_inst)) {
+		/* Wait until the synchronization is complete */
+	}
 
 	if (module_inst->start_on_event) {
 		/* Write the new value to the buffered DAC data register */
-		dac_module->DATABUF.reg = data;
+		dac_module->DATABUF[channel].reg = data;
 	} else {
 		/* Write the new value to the DAC data register */
-		dac_module->DATA.reg = data;
+		dac_module->DATA[channel].reg = data;
 	}
 
 	return STATUS_OK;
@@ -461,14 +591,11 @@ enum status_code dac_chan_write_buffer_wait(
 	Assert(module_inst);
 	Assert(module_inst->hw);
 
-	/* No channel support yet */
-	UNUSED(channel);
-
 	Dac *const dac_module = module_inst->hw;
 
-	/* Wait until the synchronization is complete */
-	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY) {
-	};
+	while (dac_is_syncing(module_inst)) {
+		/* Wait until the synchronization is complete */
+	}
 
 	/* Zero length request */
 	if (length == 0) {
@@ -478,7 +605,7 @@ enum status_code dac_chan_write_buffer_wait(
 
 #if DAC_CALLBACK_MODE == true
 	/* Check if busy */
-	if (module_inst->job_status == STATUS_BUSY) {
+	if (module_inst->job_status[channel] == STATUS_BUSY) {
 		return STATUS_BUSY;
 	}
 #endif
@@ -495,10 +622,18 @@ enum status_code dac_chan_write_buffer_wait(
 		
 		/* Wait until Transmit is complete or timeout */
 		for (uint32_t i = 0; i <= DAC_TIMEOUT; i++) {
-			if (dac_module->INTFLAG.reg & DAC_INTFLAG_EMPTY) {
-				break;
-			} else if (i == DAC_TIMEOUT) {
-				return STATUS_ERR_TIMEOUT;
+			if(channel == DAC_CHANNEL_0) {
+				if (dac_module->INTFLAG.reg & DAC_INTFLAG_EMPTY0) {
+					break;
+				} else if (i == DAC_TIMEOUT) {
+					return STATUS_ERR_TIMEOUT;
+				}
+			} else if(channel == DAC_CHANNEL_1) {
+				if (dac_module->INTFLAG.reg & DAC_INTFLAG_EMPTY1) {
+					break;
+				} else if (i == DAC_TIMEOUT) {
+					return STATUS_ERR_TIMEOUT;
+				}
 			}
 		}
 	}
@@ -507,10 +642,39 @@ enum status_code dac_chan_write_buffer_wait(
 }
 
 /**
+ * \brief Retrieves the status of DAC channel end of conversion
+ *
+ * Checks the conversion is completed or not and returns boolean flag 
+ * of status.
+ *
+ * \param[in] module_inst  Pointer to the DAC software instance struct
+ * \param[in] channel      Channel to disable
+ *
+ * \retval true     conversion is complete, VOUT is stable.
+ * \retval false    No conversion completed since last load of DATA.
+ */
+bool dac_chan_is_end_of_conversion(
+		struct dac_module *const module_inst,
+		enum dac_channel channel)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	Dac *const dac_module = module_inst->hw;
+	
+	if(dac_module->STATUS.reg & (4 << channel)) {
+		return true;
+	} else {
+		return false;
+	}
+}
+
+/**
  * \brief Retrieves the current module status
  *
  * Checks the status of the module and returns it as a bitmask of status
- * flags
+ * flags.
  *
  * \param[in] module_inst      Pointer to the DAC software device struct
  *
@@ -535,12 +699,20 @@ uint32_t dac_get_status(
 	uint8_t intflags = dac_module->INTFLAG.reg;
 	uint32_t status_flags = 0;
 
-	if (intflags & DAC_INTFLAG_EMPTY) {
+	if (intflags & DAC_INTFLAG_EMPTY0) {
 		status_flags |= DAC_STATUS_CHANNEL_0_EMPTY;
 	}
 
-	if (intflags & DAC_INTFLAG_UNDERRUN) {
+	if (intflags & DAC_INTFLAG_EMPTY1) {
+		status_flags |= DAC_STATUS_CHANNEL_1_EMPTY;
+	}
+
+	if (intflags & DAC_INTFLAG_UNDERRUN0) {
 		status_flags |= DAC_STATUS_CHANNEL_0_UNDERRUN;
+	}
+
+	if (intflags & DAC_INTFLAG_UNDERRUN1) {
+		status_flags |= DAC_STATUS_CHANNEL_1_UNDERRUN;
 	}
 
 	return status_flags;
@@ -568,11 +740,19 @@ void dac_clear_status(
 	uint32_t intflags = 0;
 
 	if (status_flags & DAC_STATUS_CHANNEL_0_EMPTY) {
-		intflags |= DAC_INTFLAG_EMPTY;
+		intflags |= DAC_INTFLAG_EMPTY0;
+	}
+
+	if (status_flags & DAC_STATUS_CHANNEL_1_EMPTY) {
+		intflags |= DAC_INTFLAG_EMPTY1;
 	}
 
 	if (status_flags & DAC_STATUS_CHANNEL_0_UNDERRUN) {
-		intflags |= DAC_INTFLAG_UNDERRUN;
+		intflags |= DAC_INTFLAG_UNDERRUN0;
+	}
+
+	if (status_flags & DAC_STATUS_CHANNEL_1_UNDERRUN) {
+		intflags |= DAC_INTFLAG_UNDERRUN1;
 	}
 
 	dac_module->INTFLAG.reg = intflags;

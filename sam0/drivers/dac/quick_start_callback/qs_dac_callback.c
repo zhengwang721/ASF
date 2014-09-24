@@ -95,7 +95,11 @@ void configure_event_resource(void)
 //! [allocate_event_resource]
 
 //! [attach_event_to_dac]
+#ifdef DAC_CHANNEL_NUM_N
+	events_attach_user(&event_dac, EVSYS_ID_USER_DAC_START_0);
+#else
 	events_attach_user(&event_dac, EVSYS_ID_USER_DAC_START);
+#endif
 //! [attach_event_to_dac]
 }
 //! [setup_event_resource]
@@ -119,7 +123,9 @@ void configure_rtc_count(void)
 //! [setup_rtc_modify_conf]
 	config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
 	config_rtc_count.mode                = RTC_COUNT_MODE_16BIT;
+#ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
 	config_rtc_count.continuously_update = true;
+#endif
 //! [setup_rtc_modify_conf]
 
 //! [init_rtc_count]
@@ -163,7 +169,11 @@ void configure_dac(void)
 //! [setup_dac_config_default]
 
 //! [setup_dac_start_on_event]
+#ifdef DAC_CHANNEL_NUM_N
+	dac_instance.start_on_event[DAC_CHANNEL_0] = true;
+#else
 	dac_instance.start_on_event = true;
+#endif
 //! [setup_dac_start_on_event]
 
 //! [setup_dac_instance]
@@ -172,7 +182,11 @@ void configure_dac(void)
 
 //! [setup_dac_on_event_start_conversion]
 	struct dac_events events =
+#ifdef DAC_CHANNEL_NUM_N
+		{ .on_event_chan0_start_conversion = true };
+#else
 		{ .on_event_start_conversion = true };
+#endif
 //! [setup_dac_on_event_start_conversion]
 
 //! [enable_dac_event]
@@ -223,13 +237,13 @@ int main(void)
 	rtc_count_set_period(&rtc_instance, 1);
 //! [set_rtc_period]
 
-//! [init_dac]
-	configure_dac();
-//! [init_dac]
-
 //! [init_dac_chan]
 	configure_dac_channel();
 //! [init_dac_chan]
+
+//! [init_dac]
+	configure_dac();
+//! [init_dac]
 
 //! [init_event_resource]
 	configure_event_resource();

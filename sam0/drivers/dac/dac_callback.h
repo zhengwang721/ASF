@@ -97,8 +97,18 @@ enum status_code dac_chan_disable_callback(
 		const uint32_t channel,
 		const enum dac_callback type);
 
+#ifdef DAC_CHANNEL_NUM_N
+enum status_code dac_chan_get_job_status(
+		struct dac_module *module_inst, 
+		const uint32_t channel);
+
+void dac_chan_abort_job(
+		struct dac_module *module_inst,
+		const uint32_t channel);
+#else
 enum status_code dac_get_job_status(struct dac_module *module_inst);
 void dac_abort_job(struct dac_module *module_inst);
+#endif
 
 /** @} */
 

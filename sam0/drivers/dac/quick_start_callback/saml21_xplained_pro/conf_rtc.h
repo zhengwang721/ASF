@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM DAC Quick Start
+ * \brief SAM RTC Driver Configuration Header
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,79 +40,13 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
+#ifndef CONF_RTC_H_INCLUDED
+#define CONF_RTC_H_INCLUDED
 
-void configure_dac(void);
-void configure_dac_channel(void);
+/** Select RTC clock. Use 1.024kHz from 32kHz internal ULP oscillator(OSCULP32K)
+ *  for RTC clock , before using the clock, OSCULP32K and its 1kHz output should
+ *  be enabled in the clock configuration file.
+ */
+#  define RTC_CLOCK_SOURCE    RTC_CLOCK_SELECTION_ULP1K
 
-//! [module_inst]
-struct dac_module dac_instance;
-//! [module_inst]
-
-//! [setup]
-void configure_dac(void)
-{
-//! [setup_config]
-	struct dac_config config_dac;
-//! [setup_config]
-//! [setup_config_defaults]
-	dac_get_config_defaults(&config_dac);
-//! [setup_config_defaults]
-
-//! [setup_set_config]
-	dac_init(&dac_instance, DAC, &config_dac);
-//! [setup_set_config]
-
-//! [setup_enable]
-	dac_enable(&dac_instance);
-//! [setup_enable]
-}
-
-void configure_dac_channel(void)
-{
-//! [setup_ch_config]
-	struct dac_chan_config config_dac_chan;
-//! [setup_ch_config]
-//! [setup_ch_config_defaults]
-	dac_chan_get_config_defaults(&config_dac_chan);
-//! [setup_ch_config_defaults]
-
-//! [setup_ch_set_config]
-	dac_chan_set_config(&dac_instance, DAC_CHANNEL_0, &config_dac_chan);
-//! [setup_ch_set_config]
-
-//! [setup_ch_enable]
-	dac_chan_enable(&dac_instance, DAC_CHANNEL_0);
-//! [setup_ch_enable]
-}
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-//! [setup_init]
-	configure_dac_channel();
-	configure_dac();
-//! [setup_init]
-
-//! [main]
-//! [main_output_var]
-	uint16_t i = 0;
-//! [main_output_var]
-
-//! [main_loop]
-	while (1) {
-//! [main_loop]
-//! [main_write]
-		dac_chan_write(&dac_instance, DAC_CHANNEL_0, i);
-//! [main_write]
-
-//! [main_inc_val]
-		if (++i == 0x3FF) {
-			i = 0;
-		}
-//! [main_inc_val]
-	}
-//! [main]
-}
+#endif
