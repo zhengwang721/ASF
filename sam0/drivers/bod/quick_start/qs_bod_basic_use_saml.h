@@ -43,7 +43,8 @@
 /**
  * \page asfdoc_sam0_bod_basic_use_case Quick Start Guide for BOD - Basic
  *
- * In this use case, the BOD33 will be configured with the following settings:
+ * In this use case, the BOD33 and BOD12 will be configured with the following
+ * settings:
  * - Continuous sampling mode
  * - Prescaler setting of 2
  * - Reset action on low voltage detect
@@ -75,7 +76,9 @@
  *    \snippet qs_bod_basic_use_saml.c setup_set_config
  * -# Enable the BOD33 module so that it will monitor the power supply voltage.
  *    \snippet qs_bod_basic_use_saml.c setup_enable
- * \n The workflow of the BOD12 is same as the BOD33.
+ * 
+ *
+ * The workflow of the BOD12 is same as the BOD33.
  *
  * \section asfdoc_sam0_bod_basic_use_case_main Use Case
  *

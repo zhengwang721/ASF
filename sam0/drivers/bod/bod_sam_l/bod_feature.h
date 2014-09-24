@@ -56,7 +56,7 @@ extern "C" {
  * and respond to under-voltage events and take an appropriate action.
  *
  * The following peripherals are used by this module:
- * - SYSCTRL (System Control)
+ * - SUPC (Supply Controller)
  *
  * The following devices can use this module:
  *  - SAM L21
