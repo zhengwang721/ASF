@@ -307,13 +307,7 @@ static inline void aes_start(struct aes_module *const module)
 	Assert(module);
 	Assert(module->hw);
 
-	if (module->opmode == AES_GCM_MODE){
-		module->hw->CTRLB.reg |= AES_CTRLB_START
-								| AES_CTRLB_GFMUL;
-	}
-	else {
-		module->hw->CTRLB.reg |= AES_CTRLB_START;
-	}
+	module->hw->CTRLB.reg |= AES_CTRLB_START;
 }
 
 void aes_enable(struct aes_module *const module);
@@ -329,6 +323,22 @@ void aes_write_input_data(struct aes_module *const module,
 
 void aes_read_output_data(struct aes_module *const module,
 		uint32_t *p_output_data_buffer);
+
+/**
+ * \brief Write AES random seed.
+ *
+ * \param[in] module Pointer to the AES software instance struct
+ * \param[in] random_seed Seed for the random number generator
+ */
+static inline void aes_write_random_seed(struct aes_module *const module,
+										uint32_t seed)
+{
+	Assert(module);
+	Assert(module->hw);
+
+	module->hw->RANDSEED.reg = seed;
+}
+
 
 /** @} */
 
@@ -524,6 +534,19 @@ static inline void aes_gcm_clear_end_message_status(struct aes_module *const mod
 	Assert(module->hw);
 
 	module->hw->CTRLB.reg &= ~AES_CTRLB_EOM;
+}
+
+/**
+ * \brief  Set GF multiplication of GCM mode.
+ *
+ * \param[in] module Pointer to the AES software instance struct
+ */
+static inline void aes_gcm_set_gf_multiplication(struct aes_module *const module)
+{
+	Assert(module);
+	Assert(module->hw);
+
+	module->hw->CTRLB.reg |= AES_CTRLB_GFMUL;
 }
 
 /** @} */

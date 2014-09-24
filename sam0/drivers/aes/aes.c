@@ -177,10 +177,6 @@ void aes_set_config(
 			 | (config->enable_key_gen << AES_CTRLA_KEYGEN_Pos)
 			 | (config->lod << AES_CTRLA_LOD_Pos);
 
-	if (config->ctype_mask){
-		hw->RANDSEED.reg = (uint32_t)rand();
-	}
-
 	hw->CTRLA.reg = ul_mode;
 }
 
