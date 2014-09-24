@@ -219,6 +219,15 @@ enum aes_cfb_size {
 	AES_CFB_SIZE_8,			/**< Cipher feedback data size is 8-bit. */
 };
 
+/** AES CounterMeasure type */
+enum aes_countermeature_type {
+	AES_COUNTERMEASURE_TYPE_1 = 0x01,
+	AES_COUNTERMEASURE_TYPE_2 = 0x02,
+	AES_COUNTERMEASURE_TYPE_3 = 0x04,
+	AES_COUNTERMEASURE_TYPE_4 = 0x08,
+	AES_COUNTERMEASURE_TYPE_ALL = 0x0F,
+};
+
 /**
  * \name Module status flags
  *
@@ -250,8 +259,8 @@ struct aes_config {
 	enum aes_operation_mode opmode;
 	/** Cipher feedback data size. */
 	enum aes_cfb_size cfb_size;
-	/** Countermeasure type mask. */
-	uint8_t ctype_mask;
+	/** Countermeasure type. */
+	enum aes_countermeature_type ctype;
 	/** Enable XOR key. */
 	bool enable_xor_key;
 	/** Enable key generation. */

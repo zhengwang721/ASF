@@ -81,7 +81,7 @@ void aes_get_config_defaults(
 	config->start_mode = AES_MANUAL_START;
 	config->opmode= AES_ECB_MODE;
 	config->cfb_size = AES_CFB_SIZE_128;
-	config->ctype_mask = 0xff;
+	config->ctype = AES_COUNTERMEASURE_TYPE_ALL;
 	config->enable_xor_key = false;
 	config->enable_key_gen = false;
 	config->lod = false;
@@ -172,7 +172,7 @@ void aes_set_config(
 			 | (config->key_size << AES_CTRLA_KEYSIZE_Pos)
 			 | (config->opmode << AES_CTRLA_AESMODE_Pos)
 			 | (config->cfb_size << AES_CTRLA_CFBS_Pos)
-			 | (AES_CTRLA_CTYPE(config->ctype_mask))
+			 | (AES_CTRLA_CTYPE(config->ctype))
 			 | (config->enable_xor_key << AES_CTRLA_XORKEY_Pos)
 			 | (config->enable_key_gen << AES_CTRLA_KEYGEN_Pos)
 			 | (config->lod << AES_CTRLA_LOD_Pos);
@@ -265,16 +265,15 @@ void aes_write_input_data(
 	Assert(module->hw);;
 	Assert(input_data_buffer);
 
+	module->hw->DATABUFPTR.reg = 0;
 	if (module->opmode == AES_CFB_MODE
 		&& module->cfb_size == AES_CFB_SIZE_64){
 		for (i = 0; i < 2; i++) {
-			module->hw->DATABUFPTR.reg = i;
 			module->hw->INDATA.reg = *input_data_buffer;
 			input_data_buffer++;
 		}
 	} else if (module->opmode == AES_CFB_MODE
 		&& (module->cfb_size == AES_CFB_SIZE_32 || module->cfb_size == AES_CFB_SIZE_16)){
-		module->hw->DATABUFPTR.reg = 0;
 		module->hw->INDATA.reg = *input_data_buffer;
 	} else {
 		for (i = 0; i < 4; i++) {
@@ -304,20 +303,18 @@ void aes_read_output_data(
 	Assert(module->hw);
 	Assert(output_data_buffer);
 
+	module->hw->DATABUFPTR.reg = 0;
 	if (module->opmode == AES_CFB_MODE
 		&& module->cfb_size == AES_CFB_SIZE_64){
 		for (i = 0; i < 2; i++) {
-			module->hw->DATABUFPTR.reg = i;
 			*output_data_buffer = module->hw->INDATA.reg;
 			output_data_buffer++;
 		}
 	} else if (module->opmode == AES_CFB_MODE
 		&& (module->cfb_size == AES_CFB_SIZE_32 || module->cfb_size == AES_CFB_SIZE_16)){
-		module->hw->DATABUFPTR.reg = 0;
 		*output_data_buffer = module->hw->INDATA.reg;
 	} else {
 		for (i = 0; i < 4; i++) {
-			module->hw->DATABUFPTR.reg = i;
 			*output_data_buffer = module->hw->INDATA.reg;
 			output_data_buffer++;
 		}
