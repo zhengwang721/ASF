@@ -4,6 +4,7 @@
 		<build type="include-path" value="."/>
 		<build type="header-file" value="conf_board.h"/>
 		<build type="header-file" value="conf_clock.h"/>
+		<build type="doxygen-image-path" value="../docimg"/>
 		<require idref="board.sam4l8_xplained_pro"/>
 		<generator value="iarewarm"/>
 		<generator value="armgcc"/>
