@@ -73,8 +73,9 @@
 //#define ADC_NO_DMAC_USART
 
 /*
- * This demonstrates ADC data transfer - memory - copy to another
- * memory  - USART data register with out using DMA
+ * This demonstrates ADC data transfer from peripheral
+ * to memory to and copy to another memory to USART data 
+ * register with out using DMA
  */
 #define ADC_NO_DMAC_MEM_MEM_USART
 
