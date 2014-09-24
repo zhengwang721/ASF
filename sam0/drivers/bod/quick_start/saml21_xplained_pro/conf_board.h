@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM Brown Out Detector Driver
+ * \brief SAM L21 Xplained Pro board configuration.
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,10 +40,8 @@
  * \asf_license_stop
  *
  */
-#ifndef BOD_H_INCLUDED
-#define BOD_H_INCLUDED
 
-#include <compiler.h>
-#include <bod_feature.h>
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-#endif /* BOD_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

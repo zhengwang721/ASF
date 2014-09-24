@@ -1,13 +1,11 @@
 /**
  * \file
  *
- * \brief SAM Brown Out Detector Driver
+ * \brief SAM BOD Driver Quick Start
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
- *
- * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,65 +36,59 @@
  * POSSIBILITY OF SUCH DAMAGE.
  *
  * \asf_license_stop
- *
  */
-#include "bod.h"
+#include <asf.h>
 
-/**
- * \brief Configure a Brown Out Detector module.
- *
- * Configures a given BOD module with the settings stored in the given
- * configuration structure.
- *
- * \param[in] bod_id   BOD module to configure
- * \param[in] conf     Configuration settings to use for the specified BOD
- *
- * \retval STATUS_OK                  Operation completed successfully
- * \retval STATUS_ERR_INVALID_ARG     An invalid BOD was supplied
- * \retval STATUS_ERR_INVALID_OPTION  The requested BOD level was outside the acceptable range
- */
-enum status_code bod_set_config(
-		const enum bod bod_id,
-		struct bod_config *const conf)
+void configure_bod33(void);
+void configure_bod12(void);
+
+//! [setup]
+void configure_bod33(void)
 {
-	/* Sanity check arguments */
-	Assert(conf);
+//! [setup_config]
+	struct bod33_config config_bod33;
+//! [setup_config]
+//! [setup_config_defaults]
+	bod33_get_config_defaults(&config_bod33);
+//! [setup_config_defaults]
 
-	uint32_t temp = 0;
+//! [setup_set_config]
+	bod33_set_config(&config_bod33);
+//! [setup_set_config]
 
-	/* Convert BOD prescaler, trigger action and mode to a bitmask */
-	temp |= (uint32_t)conf->prescaler | (uint32_t)conf->action |
-			(uint32_t)conf->mode;
+//! [setup_enable]
+	bod33_enable();
+//! [setup_enable]
+}
 
-	if (conf->mode == BOD_MODE_SAMPLED) {
-		/* Enable sampling clock if sampled mode */
-		temp |= SYSCTRL_BOD33_CEN;
+void configure_bod12(void)
+{
+	struct bod12_config config_bod12;
+	bod12_get_config_defaults(&config_bod12);
+
+	bod12_set_config(&config_bod12);
+
+	bod12_enable();
+}
+//! [setup]
+
+int main(void)
+{
+	/* Configure the BOD 3.3V module */
+//! [setup_init_33]
+	configure_bod33();
+//! [setup_init_33]
+
+	/* Configure the BOD 1.2V module */
+//! [setup_init_12]
+	configure_bod12();
+//! [setup_init_12]
+
+//! [main]
+//! [main_loop]
+	while (true) {
+		/* Infinite loop */
 	}
-
-	if (conf->hysteresis == true) {
-		temp |= SYSCTRL_BOD33_HYST;
-	}
-
-	if (conf->run_in_standby == true) {
-		temp |= SYSCTRL_BOD33_RUNSTDBY;
-	}
-
-	switch (bod_id) {
-		case BOD_BOD33:
-			if (conf->level > 0x3F) {
-				return STATUS_ERR_INVALID_ARG;
-			}
-
-			SYSCTRL->BOD33.reg = SYSCTRL_BOD33_LEVEL(conf->level) |
-					temp | SYSCTRL_BOD33_ENABLE;
-
-			while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_B33SRDY)) {
-				/* Wait for BOD33 register sync ready */
-			}
-			break;
-		default:
-			return STATUS_ERR_INVALID_ARG;
-	}
-
-	return STATUS_OK;
+//! [main_loop]
+//! [main]
 }

@@ -40,10 +40,67 @@
  * \asf_license_stop
  *
  */
-#ifndef BOD_H_INCLUDED
-#define BOD_H_INCLUDED
+#include "bod.h"
 
-#include <compiler.h>
-#include <bod_feature.h>
+/**
+ * \brief Configure a Brown Out Detector module.
+ *
+ * Configures a given BOD module with the settings stored in the given
+ * configuration structure.
+ *
+ * \param[in] bod_id   BOD module to configure
+ * \param[in] conf     Configuration settings to use for the specified BOD
+ *
+ * \retval STATUS_OK                  Operation completed successfully
+ * \retval STATUS_ERR_INVALID_ARG     An invalid BOD was supplied
+ * \retval STATUS_ERR_INVALID_OPTION  The requested BOD level was outside the acceptable range
+ */
+enum status_code bod_set_config(
+		const enum bod bod_id,
+		struct bod_config *const conf)
+{
+	/* Sanity check arguments */
+	Assert(conf);
 
-#endif /* BOD_H_INCLUDED */
+	uint32_t temp = 0;
+
+	/* Check if module is enabled. */
+	if (SYSCTRL->BOD33.reg & SYSCTRL_BOD33_ENABLE) {
+		SYSCTRL->BOD33.reg &= ~SYSCTRL_BOD33_ENABLE;
+	}
+
+	/* Convert BOD prescaler, trigger action and mode to a bitmask */
+	temp |= (uint32_t)conf->prescaler | (uint32_t)conf->action |
+			(uint32_t)conf->mode;
+
+	if (conf->mode == BOD_MODE_SAMPLED) {
+		/* Enable sampling clock if sampled mode */
+		temp |= SYSCTRL_BOD33_CEN;
+	}
+
+	if (conf->hysteresis == true) {
+		temp |= SYSCTRL_BOD33_HYST;
+	}
+
+	if (conf->run_in_standby == true) {
+		temp |= SYSCTRL_BOD33_RUNSTDBY;
+	}
+
+	switch (bod_id) {
+		case BOD_BOD33:
+			if (conf->level > 0x3F) {
+				return STATUS_ERR_INVALID_ARG;
+			}
+
+			SYSCTRL->BOD33.reg = SYSCTRL_BOD33_LEVEL(conf->level) | temp;
+
+			while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_B33SRDY)) {
+				/* Wait for BOD33 register sync ready */
+			}
+			break;
+		default:
+			return STATUS_ERR_INVALID_ARG;
+	}
+
+	return STATUS_OK;
+}
