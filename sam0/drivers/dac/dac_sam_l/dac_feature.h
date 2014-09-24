@@ -78,17 +78,18 @@
  * \section asfdoc_sam0_dac_module_overview Module Overview
  *
  * The Digital-to-Analog converter converts a digital value to analog voltage.
- * The SAM DAC module has one channel with 10-bit resolution,
- * and is capable of converting up to 350k samples per second (ksps).
+ * The DAC Controller can operate as two independent DAC or as a single DAC
+ * in differential mode. Each DAC is 12-bit resolution and it is capable of
+ * converting up to 1M samples per second (Msps).
  *
  * A common use of DAC is to generate audio signals by connecting the DAC
  * output to a speaker, or to generate a reference voltage; either for an
  * external circuit or an internal peripheral such as the Analog Comparator.
  *
  * After being set up, the DAC will convert new digital values written to the
- * conversion data register (DATA) to an analog value either on the VOUT pin of
- * the device, or internally for use as an input to the AC, ADC and other analog
- * modules.
+ * conversion data register (DATA0 or DATA1) to an analog value either on the
+ * DAC output(VOUT0 or VOUT1) pin of the device, or internally for use as an 
+ * input to the AC, ADC and other analog modules.
  *
  * Writing the DATA register will start a new conversion. It is also possible
  * to trigger the conversion from the event system.
@@ -120,25 +121,20 @@
  * \f]
  *
  * \subsection asfdoc_sam0_dac_conversion Conversion
- * The digital value written to the conversion data register (DATA) will be
- * converted to an analog value.
- * Writing the DATA register will start a new conversion.
- * It is also possible to write the conversion data to the DATABUF register,
+ * The conversion digital value written to the DATA register will be converted
+ * to an analog value. Writing the DATA register will start a new conversion.
+ * It is also possible to write the conversion value to the DATABUF register,
  * the writing of the DATA register can then be triggered from the event
  * system, which will load the value from DATABUF to DATA.
  *
  * \subsection asfdoc_sam0_dac_analog_output Analog Output
- * The analog output value can be output to either the VOUT pin or internally,
- * but not both at the same time.
+ * The analog output value can be output to the VOUTx converted by DACx, and
+ * each data conversion can be started independently.
  *
- * \subsubsection asfdoc_sam0_dac_analog_output_external External Output
- * The output buffer must be enabled in order to drive the DAC output to the
- * VOUT pin. Due to the output buffer, the DAC has high drive strength, and is
- * capable of driving both resistive and capacitive loads, as well as loads
- * which combine both.
+ * In differential mode, DAC0 and DAC1 are operating synchronously to convert
+ * value. VOUT0 is the positive output and VOUT1 the negative output.
  *
- * \subsubsection asfdoc_sam0_dac_analog_output_internal Internal Output
- * The analog value can be internally available for use as input to the
+ * VOUT0 signal is internally connected so that it can be used as input for
  * AC or ADC or OPAMP modules when DAC0 is enabled.
  * \note the pin VOUT0 will be dedicated to internal input and cannot be 
  * configured as alternate function.
@@ -267,16 +263,19 @@
  * peripheral bus. As a consequence, the DAC needs two clock cycles of both
  * CLK_DAC and GCLK_DAC to synchronize the values written to some of the
  * control and data registers.
- * The oscillator source for the GCLK_DAC clock is selected in the System
- * Control Interface (SCIF).
+ * The oscillator source for the GCLK_DAC clock is selected in the Supply
+ * Control Interface (SUPC).
  *
  * \section asfdoc_sam0_dac_special_considerations Special Considerations
  *
- * \subsection asfdoc_sam0_dac_special_considerations_output_buffer Output Driver
- * The DAC can only do conversions in Active or Idle modes. However, if the
- * output buffer is enabled it will draw current even if the system is in
- * sleep mode. Therefore, always make sure that the output buffer is not
- * enabled when it is not needed, to ensure minimum power consumption.
+ * \subsection asfdoc_sam0_dac_special_considerations_sleep Sleep Mode
+ * The DAC can do conversions in Active or Idle modes, and will continue the
+ * conversions in standby sleep mode if the RUNSTDBY bit in the DACCTRLx 
+ * register is set. Otherwise, the DACx will stop conversions.
+ * 
+ * If DACx conversion is stopped in standby sleep mode, DACx is disabled to
+ * reduce power consumption. When exiting standby sleep mode, DACx is enabled 
+ * therefore startup time is required before starting a new conversion.
  *
  * \subsection asfdoc_sam0_dac_special_considerations_conversion_time Conversion Time
  * DAC conversion time is approximately 2.85us. The user must ensure that new
