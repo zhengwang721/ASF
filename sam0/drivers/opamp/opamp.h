@@ -448,6 +448,12 @@ static inline void opamp_module_disable(void)
  */
 static inline void opamp_voltage_doubler_enable(void)
 {
+	struct system_clock_source_osculp32k_config config;
+
+	/* Enable the OSCULP32K clock. */
+	system_clock_source_osculp32k_get_config_defaults(&config);
+	system_clock_source_osculp32k_set_config(&config);
+
 	/* Enable Voltage Doubler. */
 	OPAMP->CTRLA.reg &= ~ OPAMP_CTRLA_LPMUX;
 }

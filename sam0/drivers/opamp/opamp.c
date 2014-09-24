@@ -45,6 +45,12 @@
 
 void opamp_module_init(void)
 {
+	struct system_clock_source_osculp32k_config config;
+
+	/* Enable the OSCULP32K clock. */
+	system_clock_source_osculp32k_get_config_defaults(&config);
+	system_clock_source_osculp32k_set_config(&config);
+
 	/* Turn on the digital interface clock. */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBD, MCLK_APBDMASK_OPAMP);
 
