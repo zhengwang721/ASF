@@ -91,16 +91,16 @@ enum status_code aes_unregister_callback(
  */
 
 /**
- * \brief Enable an AES interrupt.
+ * \brief Enable an AES callback.
  *
  * \param[in,out] module  Pointer to the software instance struct
- * \param[in] type Interrupt source type
+ * \param[in] type Callback source type
  *
  * \return Status of the callback enable operation.
  * \retval STATUS_OK The callback was enabled successfully.
  * \retval STATUS_ERR_INVALID_ARG If an invalid callback type was supplied.
  */
-static inline enum status_code aes_enable_interrupt(struct aes_module *const module,
+static inline enum status_code aes_enable_callback(struct aes_module *const module,
 		const enum aes_callback_type type)
 {
 	if (type == AES_CALLBACK_ENCRYPTION_COMPLETE){
@@ -116,16 +116,16 @@ static inline enum status_code aes_enable_interrupt(struct aes_module *const mod
 }
 
 /**
- * \brief Disable an AES interrupt.
+ * \brief Disable an AES callback.
  *
  * \param[in,out] module  Pointer to the software instance struct
- * \param[in]  type Interrupt source type
+ * \param[in]  type Callback source type
  *
  * \return Status of the callback enable operation.
  * \retval STATUS_OK The callback was enabled successfully.
  * \retval STATUS_ERR_INVALID_ARG If an invalid callback type was supplied.
  */
-static inline enum status_code aes_disable_interrupt(struct aes_module *const module,
+static inline enum status_code aes_disable_callback(struct aes_module *const module,
 		 const enum aes_callback_type type)
 {
 	if (type == AES_CALLBACK_ENCRYPTION_COMPLETE){

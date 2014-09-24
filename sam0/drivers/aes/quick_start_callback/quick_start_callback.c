@@ -630,7 +630,7 @@ int main(void)
 //! [module_enable_register]
 	/* Enable AES interrupt. */
 	aes_register_callback(aes_callback,AES_CALLBACK_ENCRYPTION_COMPLETE);
-	aes_enable_interrupt(&aes_instance,AES_CALLBACK_ENCRYPTION_COMPLETE);
+	aes_enable_callback(&aes_instance,AES_CALLBACK_ENCRYPTION_COMPLETE);
 //! [module_enable_register]
 
 //! [setup_init]
