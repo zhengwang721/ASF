@@ -339,7 +339,6 @@ static inline void aes_write_random_seed(struct aes_module *const module,
 	module->hw->RANDSEED.reg = seed;
 }
 
-
 /** @} */
 
 /**
