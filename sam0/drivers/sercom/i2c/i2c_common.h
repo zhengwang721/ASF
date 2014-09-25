@@ -388,7 +388,7 @@ extern "C" {
 
 /**
  * \name Driver Feature Definition
- * Define SERCOME I<SUP>2</SUP>C driver features set according to different device family.
+ * Define SERCOM I<SUP>2</SUP>C driver features set according to different device family.
  *
  * \note The high speed mode and 10-bit address feature are not
  *       supported by the driver now.

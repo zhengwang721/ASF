@@ -282,13 +282,13 @@ extern "C" {
 #include <compiler.h>
 #include "conf_dma.h"
 
-/** DMA invalid channel number */
+/** DMA invalid channel number. */
 #define DMA_INVALID_CHANNEL        0xff
 
-/** ExInitial description section */
+/** ExInitial description section. */
 extern DmacDescriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
 
-/** DMA priority level */
+/** DMA priority level. */
 enum dma_priority_level {
 	/** Priority level 0. */
 	DMA_PRIORITY_LEVEL_0,
@@ -344,7 +344,7 @@ enum dma_address_increment_stepsize {
 
 /**
  * DMA step selection. This bit determines whether the step size setting
- * is applied to source or destination address
+ * is applied to source or destination address.
  */
 enum dma_step_selection {
 	/** Step size settings apply to the destination address. */

@@ -120,7 +120,7 @@
  *     <td align="right" border="0"> </td>
  *    </tr>
  *    <tr>
- *     <td align="right" border="1"> Start of NVM Memory</td>
+ *     <td align="right" border="0"> Start of NVM Memory</td>
  *    </tr>
  *   </table>
  *  >]
@@ -346,7 +346,7 @@ enum nvm_sleep_power_mode {
 /**
  * \brief NVM controller cache readmode configuration
  *
- * Control how the NVM cache prefetch data from flash
+ * Control how the NVM cache prefetch data from flash.
  *
  */
 enum nvm_cache_readmode {

@@ -1327,7 +1327,7 @@ enum status_code tcc_set_pattern(
  *
  * \param[in] module_inst  Pointer to the TCC software instance struct
  *
- * \return Bitmask of \c TCC_STATUS_* flags
+ * \return Bitmask of \c TCC_STATUS_* flags.
  *
  * \retval TCC_STATUS_CHANNEL_MATCH_CAPTURE(n)         Channel n match/capture has occured
  * \retval TCC_STATUS_CHANNEL_OUTPUT(n)                Channel n match/capture output state

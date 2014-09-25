@@ -189,7 +189,7 @@
  *
  * \section asfdoc_sam0_rtc_calendar_special_considerations Special Considerations
  *
- * \subsection asfdoc_sam0_rtc_calendar_special_considerations_year Year limit
+ * \subsection asfdoc_sam0_rtc_calendar_special_considerations_year Year Limit
  * The RTC module has a year range of 63 years from the starting year configured
  * when the module is initialized. Dates outside the start to end year range
  * described below will need software adjustment:

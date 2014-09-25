@@ -82,7 +82,7 @@ uint8_t extint_get_current_channel(void);
 
 /** @} */
 
-/** \name Callback Enabling and Disabling (channel)
+/** \name Callback Enabling and Disabling (Channel)
  * @{
  */
 

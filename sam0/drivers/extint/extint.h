@@ -531,7 +531,7 @@ enum status_code extint_nmi_set_config(
 
 /** @} */
 
-/** \name Detection Testing and Clearing (channel)
+/** \name Detection Testing and Clearing (Channel)
  * @{
  */
 

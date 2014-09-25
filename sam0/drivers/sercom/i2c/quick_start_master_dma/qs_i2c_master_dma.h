@@ -158,7 +158,7 @@
  * -# Set the auto address length and enable flag.
  *    \snippet qs_i2c_master_dma.c set_i2c_addr
  * 
- * -# Waiting for transfer complete
+ * -# Waiting for transfer complete.
  *    \snippet qs_i2c_master_dma.c waiting_for_complete
  *
  * -# Enter an infinite loop once transfer complete.

@@ -394,7 +394,7 @@
  * the specific SAM device being used, and in some cases the counter size.
  *
  * The maximum amount of capture compare registers available in any SAM
- * device is two when running in 32-bit mode and four in 8-, and 16-bit modes.
+ * device is two when running in 32-bit mode and four in 8- and 16-bit modes.
  *
  *
  * \section asfdoc_sam0_tc_extra_info Extra Information

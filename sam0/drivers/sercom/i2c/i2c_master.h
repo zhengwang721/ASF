@@ -161,11 +161,11 @@ enum i2c_master_baud_rate {
  * Enum for the transfer speed.
  */
 enum i2c_master_transfer_speed {
-	/** Standard-mode (Sm) up to 100 KHz and Fast-mode (Fm) up to 400 KHz. */
+	/** Standard-mode (Sm) up to 100KHz and Fast-mode (Fm) up to 400KHz. */
 	I2C_MASTER_SPEED_STANDARD_AND_FAST = SERCOM_I2CM_CTRLA_SPEED(0),
-	/** Fast-mode Plus (Fm+) up to 1 MHz. */
+	/** Fast-mode Plus (Fm+) up to 1MHz. */
 	I2C_MASTER_SPEED_FAST_MODE_PLUS = SERCOM_I2CM_CTRLA_SPEED(1),
-	/** High-speed mode (Hs-mode) up to 3.4 MHz. */
+	/** High-speed mode (Hs-mode) up to 3.4MHz. */
 	I2C_MASTER_SPEED_HIGH_SPEED = SERCOM_I2CM_CTRLA_SPEED(2),
 };
 #endif
@@ -572,9 +572,9 @@ void i2c_master_send_stop(struct i2c_master_module *const module);
  * This function will set the slave address, transfer size and enable the auto transfer
  * mode for DMA.
  *
- * \param[in,out] module Pointer to the driver instance to lock.
+ * \param[in,out] module Pointer to the driver instance to lock
  * \param[in] addr I<SUP>2</SUP>C slave address
- * \param[in] length I<SUP>2</SUP>C transfer length with DMA.
+ * \param[in] length I<SUP>2</SUP>C transfer length with DMA
  * \param[in] direction I<SUP>2</SUP>C transfer direction
  *
  */

@@ -735,7 +735,7 @@ enum adc_divide_result {
 
 #if ADC_CALLBACK_MODE == true
 /**
- * Enum for the possible ADC interrupt flags
+ * Enum for the possible ADC interrupt flags.
  */
 enum adc_interrupt_flag {
 	/** ADC result ready. */

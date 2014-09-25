@@ -98,7 +98,7 @@
  * distinct comparators which can be used independently or linked together for
  * Window Comparator mode. In this latter mode, the two comparator units in a
  * comparator pair are linked together to allow the module to detect if an input
- * voltage is below, inside, above or outside a window set by the upper and
+ * voltage is below, inside, above, or outside a window set by the upper and
  * lower threshold voltages set by the two comparators. If not required, window
  * comparison mode can be turned off and the two comparator units can be
  * configured and used separately.
@@ -106,7 +106,7 @@
  * \subsection asfdoc_sam0_ac_module_overview_pos_neg_mux Positive and Negative Input MUXs
  * Each comparator unit requires two input voltages, a positive and a negative
  * channel (note that these names refer to the logical operation that the unit
- * performs, and both voltages should be above GND) which are then compared with
+ * performs, and both voltages should be above GND), which are then compared with
  * one another. Both the positive and the negative channel inputs are connected to
  * a pair of MUXs, which allows one of several possible inputs to be selected
  * for each comparator channel.
@@ -287,11 +287,11 @@ extern struct ac_module *_ac_instance[AC_INST_NUM];
 
  /** Unknown output state; the comparator window channel was not ready. */
 #define AC_WIN_STATUS_UNKNOWN         (1UL << 0)
-/** Window Comparator's input voltage is above the window */
+/** Window Comparator's input voltage is above the window. */
 #define AC_WIN_STATUS_ABOVE           (1UL << 1)
-/** Window Comparator's input voltage is inside the window */
+/** Window Comparator's input voltage is inside the window. */
 #define AC_WIN_STATUS_INSIDE          (1UL << 2)
-/** Window Comparator's input voltage is below the window */
+/** Window Comparator's input voltage is below the window. */
 #define AC_WIN_STATUS_BELOW           (1UL << 3)
 /**
  * This state reflects the window interrupt flag. When the interrupt flag

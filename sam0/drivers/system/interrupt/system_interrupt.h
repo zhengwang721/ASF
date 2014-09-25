@@ -77,7 +77,7 @@ extern "C" {
  *
  * \section asfdoc_sam0_system_interrupt_module_overview Module Overview
  *
- * The ARM&reg; Cortex&reg; M0+ core contains an interrupt and an exception vector table, which
+ * The ARM&reg; Cortex&reg; M0+ core contains an interrupt and exception vector table, which
  * can be used to configure the device's interrupt handlers; individual
  * interrupts and exceptions can be enabled and disabled, as well as configured
  * with a variable priority.

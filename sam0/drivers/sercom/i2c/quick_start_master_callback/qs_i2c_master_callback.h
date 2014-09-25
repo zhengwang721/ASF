@@ -99,7 +99,7 @@
  *  -# Enable write complete callback.
  *     \snippet qs_i2c_master_callback.c callback_en
  * -# Create a packet to send to slave.
- *    \snippet qs_i2c_master_callback.c packet
+ *    \snippet qs_i2c_master_callback.c write_packet
  *
  * \section asfdoc_sam0_sercom_i2c_master_callback_use_case_implementation Implementation
  * \subsection asfdoc_sam0_sercom_i2c_master_callback_use_case_code Code

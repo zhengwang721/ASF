@@ -443,7 +443,7 @@
  *
  * \anchor asfdoc_sam0_tcc_module_pattern_gen
  * <table>
- *   <caption>TCC module Output Pattern Generation</caption>
+ *   <caption>TCC Module Output Pattern Generation</caption>
  *   <tr>
  *     <th>Pattern</th>
  *     <th>Description</th>
@@ -800,7 +800,7 @@ enum tcc_callback {
 #endif /* #if TCC_ASYNC == true */
 
 /**
- * \name Module status flags
+ * \name Module Status Flags
  *
  * TCC status flags, returned by \ref tcc_get_status() and cleared by
  * \ref tcc_clear_status().
@@ -996,7 +996,7 @@ enum tcc_ramp_index {
 /**
  * \brief TCC output inversion
  *
- * Used when enabling or disabling output inversion
+ * Used when enabling or disabling output inversion.
  */
 enum tcc_output_invertion {
 	/** Output inversion not to be enabled. */
@@ -1009,7 +1009,7 @@ enum tcc_output_invertion {
  * \brief TCC Counter reload action enum
  *
  * This enum specify how the counter is reloaded and whether the prescaler
- * should be restarted
+ * should be restarted.
  */
 enum tcc_reload_action {
 	/** The counter is reloaded/reset on the next GCLK and starts

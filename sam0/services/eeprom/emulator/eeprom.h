@@ -171,7 +171,7 @@
  *     <td align="right" border="0"> </td>
  *    </tr>
  *    <tr>
- *     <td align="right" border="1"> Start of NVM Memory</td>
+ *     <td align="right" border="0"> Start of NVM Memory</td>
  *    </tr>
  *   </table>
  *  >]
@@ -250,7 +250,7 @@
  * the physical memory.
  *
  * \anchor asfdoc_sam0_eeprom_page_write1
- * \image html nm1_page_write.svg "First Write To Logical EEPROM Page N-1"
+ * \image html nm1_page_write.svg "First Write to Logical EEPROM Page N-1"
  *
  * A second write of the same logical EEPROM page results in the layout shown
  * in \ref asfdoc_sam0_eeprom_page_write2 "the figure below".
@@ -365,7 +365,7 @@ struct eeprom_emulator_parameters {
 
 /** @} */
 
-/** \name Configuration and initialization
+/** \name Configuration and Initialization
  * @{
  */
 

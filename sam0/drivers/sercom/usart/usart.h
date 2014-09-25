@@ -304,7 +304,7 @@ extern "C" {
 /**
  * \brief USART Callback enum
  *
- * Callbacks for the Asynchronous USART driver
+ * Callbacks for the Asynchronous USART driver.
  */
 enum usart_callback {
 	/** Callback for buffer transmitted. */

@@ -90,9 +90,9 @@
  *    \note This should never go out of scope as long as the module is in use.
  *          In most cases, this should be global.
  *
- * -# Create a buffer to store the data to be transferred /received
+ * -# Create a buffer to store the data to be transferred /received.
  *    \snippet qs_usart_dma_use.c usart_buffer
- * -# Create DMA transfer descriptors for RX/TX
+ * -# Create DMA transfer descriptors for RX/TX.
  *    \snippet qs_usart_dma_use.c transfer_descriptor
  *
  * \subsubsection asfdoc_sam0_usart_dma_use_case_setup_flow_usart Configure the USART

@@ -510,7 +510,7 @@ bool events_is_users_ready(struct events_resource *resource);
  *
  * Check if an event has been detected on the channel.
  *
- * \note This function will clear the event detected interrupt flag
+ * \note This function will clear the event detected interrupt flag.
  *
  * \param[in] resource Pointer to an \ref events_resource struct
  *

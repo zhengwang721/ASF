@@ -150,7 +150,7 @@
  * -# Create a new interrupt hook and use the function event_counter as hook code.
  * \snippet qs_events_interrupt_hook.c setup_12
  *
- * -# Add the newly created hook to the interrupt hook queue and enable the event detected interrupt
+ * -# Add the newly created hook to the interrupt hook queue and enable the event detected interrupt.
  * \snippet qs_events_interrupt_hook.c setup_13
  *
  * -# Example interrupt hook code. If the hook was triggered by a event detected interrupt on the
