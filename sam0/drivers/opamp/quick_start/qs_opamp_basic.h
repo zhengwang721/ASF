@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0 OPAMP Driver Quick Start
+ * \brief SAM OPAMP Driver Quick Start
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *

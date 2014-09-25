@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0 Operational Amplifier Controller (OPAMP) Driver
+ * \brief SAM Operational Amplifier Controller (OPAMP) Driver
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
