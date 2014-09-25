@@ -562,11 +562,11 @@ enum i2c_slave_direction i2c_slave_get_direction_wait(
  * \brief Retrieves the current module status
  *
  * Checks the status of the module and returns it as a bitmask of status
- * flags
+ * flags.
  *
  * \param[in] module      Pointer to the I2C slave software device struct
  *
- * \return Bitmask of status flags
+ * \return Bitmask of status flags.
  *
  * \retval I2C_SLAVE_STATUS_ADDRESS_MATCH   A valid address has been received
  * \retval I2C_SLAVE_STATUS_DATA_READY      A I2C slave byte transmission is

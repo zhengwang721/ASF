@@ -228,7 +228,7 @@ struct port_config {
 	bool powersave;
 };
 
-/** \name State Reading/Writing (physical group orientated)
+/** \name State Reading/Writing (Physical Group Orientated)
  * @{
  */
 
@@ -372,7 +372,7 @@ void port_group_set_config(
 
 /** @} */
 
-/** \name State Reading/Writing (logical pin orientated)
+/** \name State Reading/Writing (Logical Pin Orientated)
  * @{
  */
 

@@ -452,7 +452,7 @@ void extint_disable_events(
 
 /** @} */
 
-/** \name Configuration and Initialization (channel)
+/** \name Configuration and Initialization (Channel)
  * @{
  */
 

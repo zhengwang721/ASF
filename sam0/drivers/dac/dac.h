@@ -311,7 +311,7 @@ extern "C" {
 #include <gclk.h>
 
 /**
- * Define DAC features set according to different device family
+ * Define DAC features set according to different device family.
  * @{
  */
 #if (SAMD21 || SAMD10 || SAMD11)
