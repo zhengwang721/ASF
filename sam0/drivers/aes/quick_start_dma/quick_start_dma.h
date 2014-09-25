@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief SAM AES Driver Quick Start
+ * \brief SAM AES Driver Quick Start with DMA.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *

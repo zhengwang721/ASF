@@ -2,7 +2,7 @@
  *
  * \file
  *
- * \brief AES-GCM example for SAM.
+ * \brief AES example for SAM.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
