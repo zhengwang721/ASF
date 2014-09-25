@@ -68,7 +68,13 @@ static enum system_interrupt_vector _tc_interrupt_get_interrupt_vector(
 {
 	static uint8_t tc_interrupt_vectors[TC_INST_NUM] =
 		{
+#if (SAML21E) || (SAML21G)
+			SYSTEM_INTERRUPT_MODULE_TC0,
+			SYSTEM_INTERRUPT_MODULE_TC1,
+			SYSTEM_INTERRUPT_MODULE_TC4
+#else
 			MRECURSION(TC_INST_NUM, _TC_INTERRUPT_VECT_NUM, TC_INST_MAX_ID)
+#endif
 		};
 
 	return (enum system_interrupt_vector)tc_interrupt_vectors[inst_num];
