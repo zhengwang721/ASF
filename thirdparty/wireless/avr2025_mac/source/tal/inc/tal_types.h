@@ -3,7 +3,7 @@
  *
  * @brief This file contains defines for TAL types.
  *
- * $Id: tal_types.h 34576 2013-04-25 07:36:44Z uwalter $
+ * $Id: tal_types.h 35536 2014-01-14 13:47:27Z uwalter $
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
@@ -28,7 +28,8 @@
 #define AT86RF212B              (0x22)
 #define AT86RF232               (0x12)
 #define AT86RF233               (0x13)
-#define AT86RF215               (0x14)
+#define AT86RF215LT             (0x14)
+#define AT86RF215               (0x15)
 /* TAL Type for Mega RF single chips, e.g. ATMEGA128RFA1 */
 #define ATMEGARFA1              (0x51)
 #define ATMEGARFR2              (0x53)

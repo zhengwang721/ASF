@@ -1423,6 +1423,18 @@ typedef enum cca_mode_tag
     CCA_MODE_4_ALOHA
 } SHORTENUM cca_mode_t;
 
+typedef enum ch_pg_tag
+{
+	CH_PG_2003 = 0,
+	CH_PG_2006 = 2,
+	CH_PG_CHINA = 5,
+	CH_PG_JAPAN = 6,
+	CH_PG_MSK = 7,
+	CH_PG_LRP_UWB = 8,
+	CH_PG_SUN = 9,
+	CH_PG_GENERIC_PHY = 10,
+	CH_PG_INVALID = 0xFF
+} SHORTENUM ch_pg_t;
 
 /* === Externals ============================================================ */
 

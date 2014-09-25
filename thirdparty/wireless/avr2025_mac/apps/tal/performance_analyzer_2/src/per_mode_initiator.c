@@ -1113,7 +1113,7 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
     
 	/* Point to the message : 1 =>size is first byte and 2=>FCS*/
     msg = (app_payload_t *)(mac_frame_info->mpdu + FRAME_OVERHEAD);
-	uint16_t lqi_pos = mac_frame_info->length + tal_pib[trx].FCSLen;
+	uint16_t lqi_pos = mac_frame_info->len_no_crc + tal_pib[trx].FCSLen;
 	uint16_t ed_pos = lqi_pos+1;
     switch ((msg->cmd_id))
     {
@@ -1122,7 +1122,7 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 if (op_mode[trx] == WAIT_FOR_TEST_RES)
                 {
 					
-                    if ((mac_frame_info->length) == ( FRAME_OVERHEAD +
+                    if ((mac_frame_info->len_no_crc) == ( FRAME_OVERHEAD +
                                                      ((sizeof(app_payload_t) -
                                                        sizeof(general_pkt_t)) +
                                                       sizeof(result_rsp_t))))
@@ -1222,7 +1222,7 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 bool crc_settings;
                 if (op_mode[trx] == CRC_STATUS_REQ_WAIT)
                 {
-                    if ((mac_frame_info->length) == ( FRAME_OVERHEAD +
+                    if ((mac_frame_info->len_no_crc) == ( FRAME_OVERHEAD +
                                                      ((sizeof(app_payload_t) -
                                                        sizeof(general_pkt_t)) +
                                                       sizeof(crc_stat_rsp_t))))
@@ -1252,7 +1252,7 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 if (op_mode[trx] == PEER_INFO_RSP_WAIT)
                 {
 					
-                    if ((mac_frame_info->length) == ( FRAME_OVERHEAD +
+                    if ((mac_frame_info->len_no_crc) == ( FRAME_OVERHEAD +
                                                      ((sizeof(app_payload_t) -
                                                        sizeof(general_pkt_t)) +
                                                       sizeof(peer_info_rsp_t))))
@@ -1288,7 +1288,7 @@ void per_mode_initiator_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 			 * and
 			 * also derrive the LQI and ED values sent by the
 			 * receptor from the received payload */
-			uint8_t phy_frame_len = (uint8_t)mac_frame_info->length; //check - > range test pklt length not more than 127
+			uint8_t phy_frame_len = (uint8_t)mac_frame_info->len_no_crc; //check - > range test pklt length not more than 127
 
 			app_led_event(LED_EVENT_RX_FRAME);
 
@@ -2070,7 +2070,7 @@ static void send_sun_page_changed(trx_id_t trx)
 	sizeof(phy_t));
 
 	/* Send the frame to Peer node */
-	if (MAC_SUCCESS == transmit_frame(trx, FCF_SHORT_ADDR,
+	if (MAC_SUCCESS == transmit_frame1(trx, FCF_SHORT_ADDR,
 	(uint8_t *) & (node_info[trx].peer_short_addr),
 	FCF_SHORT_ADDR,
 	seq_num_initiator[trx],
@@ -2785,7 +2785,7 @@ else
 
 	scan_time = (float)aBaseSuperframeDuration *
 			((1 << scan_duration[trx]) + 1) *
-			(TAL_CONVERT_SYMBOLS_TO_US(1)) * num_channels[trx] / (1e6);
+			(TAL_CONVERT_SYMBOLS_TO_US(trx, 1)) * num_channels[trx] / (1e6); //vk
 
 	if (scan_time >= 60) {
 		uint8_t scan_time_min = (uint8_t)(scan_time / 60);
@@ -3479,7 +3479,7 @@ static void configure_frame_sending(trx_id_t trx)
     /* First element shall be length of PHY frame. */ //check
     //frame_ptr--;
     //*frame_ptr = curr_trx_config_params[trx].phy_frame_length;
-	node_info[trx].tx_frame_info->length = (curr_trx_config_params[trx].phy_frame_length )-tal_pib[trx].FCSLen ;//+ 1500; //check->fcs length added at the end in tal
+	node_info[trx].tx_frame_info->len_no_crc = (curr_trx_config_params[trx].phy_frame_length )-tal_pib[trx].FCSLen ;//+ 1500; //check->fcs length added at the end in tal
     /* Finished building of frame. */
     node_info[trx].tx_frame_info->mpdu = frame_ptr;
 }
@@ -3515,7 +3515,7 @@ static void send_parameters_changed(trx_id_t trx, uint8_t param, uint16_t val)
                       sizeof(set_parm_req_t));
 
     /* Send the frame to Peer node */
-    if (MAC_SUCCESS == transmit_frame(trx, FCF_SHORT_ADDR,
+    if (MAC_SUCCESS == transmit_frame1(trx, FCF_SHORT_ADDR,
                                       (uint8_t *) & (node_info[trx].peer_short_addr),
                                       FCF_SHORT_ADDR,
                                       seq_num_initiator[trx],
@@ -3547,7 +3547,7 @@ static bool send_per_test_start_cmd(trx_id_t trx)
                       sizeof(result_req_t));
 
     /* Send the frame to Peer node */
-    if (MAC_SUCCESS == transmit_frame(trx, FCF_SHORT_ADDR,
+    if (MAC_SUCCESS == transmit_frame1(trx, FCF_SHORT_ADDR,
                                       (uint8_t *) & (node_info[trx].peer_short_addr),
                                       FCF_SHORT_ADDR,
                                       seq_num_initiator[trx],
@@ -3584,7 +3584,7 @@ static bool send_result_req(trx_id_t trx)
                       sizeof(result_req_t));
 
     /* Send the frame to Peer node */
-    if (MAC_SUCCESS == transmit_frame(trx, FCF_SHORT_ADDR,
+    if (MAC_SUCCESS == transmit_frame1(trx, FCF_SHORT_ADDR,
                                       (uint8_t *) & (node_info[trx].peer_short_addr),
                                       FCF_SHORT_ADDR,
                                       seq_num_initiator[trx],
@@ -3650,7 +3650,7 @@ static bool send_diversity_status_req(trx_id_t trx)
                       sizeof(div_stat_req_t));
 
     /* Send the frame to Peer node */
-    if (MAC_SUCCESS == transmit_frame(trx, FCF_SHORT_ADDR,
+    if (MAC_SUCCESS == transmit_frame1(trx, FCF_SHORT_ADDR,
                                       (uint8_t *) & (node_info[trx].peer_short_addr),
                                       FCF_SHORT_ADDR,
                                       seq_num_initiator[trx],
@@ -3689,7 +3689,7 @@ static bool send_diversity_set_req(trx_id_t trx, div_set_req_t div_msg)
                       sizeof(div_set_req_t));
 
     /* Send the frame to Peer node */
-    if (MAC_SUCCESS == transmit_frame(trx, FCF_SHORT_ADDR,
+    if (MAC_SUCCESS == transmit_frame1(trx, FCF_SHORT_ADDR,
                                       (uint8_t *) & (node_info[trx].peer_short_addr),
                                       FCF_SHORT_ADDR,
                                       seq_num_initiator[trx],
@@ -3752,7 +3752,7 @@ static bool send_crc_status_req(trx_id_t trx)
                       sizeof(div_stat_req_t));
 
     /* Send the frame to Peer node */
-    if (MAC_SUCCESS == transmit_frame(trx, FCF_SHORT_ADDR,
+    if (MAC_SUCCESS == transmit_frame1(trx, FCF_SHORT_ADDR,
                                       (uint8_t *) & (node_info[trx].peer_short_addr),
                                       FCF_SHORT_ADDR,
                                       seq_num_initiator[trx],
@@ -3791,7 +3791,7 @@ static bool send_crc_set_req(trx_id_t trx, crc_set_req_t crc_msg)
                       sizeof(crc_set_req_t));
 
     /* Send the frame to Peer node */
-    if (MAC_SUCCESS == transmit_frame(trx, FCF_SHORT_ADDR,
+    if (MAC_SUCCESS == transmit_frame1(trx, FCF_SHORT_ADDR,
                                       (uint8_t *) & (node_info[trx].peer_short_addr),
                                       FCF_SHORT_ADDR,
                                       seq_num_initiator[trx],
@@ -3826,7 +3826,7 @@ static bool send_identify_command(trx_id_t trx)
                        sizeof(general_pkt_t)));
 
     /* Send the frame to Peer node */
-    if (MAC_SUCCESS == transmit_frame(trx, FCF_SHORT_ADDR,
+    if (MAC_SUCCESS == transmit_frame1(trx, FCF_SHORT_ADDR,
                                       (uint8_t *) & (node_info[trx].peer_short_addr),
                                       FCF_SHORT_ADDR,
                                       seq_num_initiator[trx],
@@ -3859,7 +3859,7 @@ static bool send_disconnect_command(trx_id_t trx)
                        sizeof(general_pkt_t)));
 
     /* Send the frame to Peer node */
-    if (MAC_SUCCESS == transmit_frame(trx, FCF_SHORT_ADDR,
+    if (MAC_SUCCESS == transmit_frame1(trx, FCF_SHORT_ADDR,
                                       (uint8_t *) & (node_info[trx].peer_short_addr),
                                       FCF_SHORT_ADDR,
                                       seq_num_initiator[trx],
@@ -3891,7 +3891,7 @@ static bool send_peer_info_req(trx_id_t trx)
                        sizeof(general_pkt_t)));
 
     /* Send the frame to Peer node */
-    if (MAC_SUCCESS == transmit_frame(trx, FCF_SHORT_ADDR,
+    if (MAC_SUCCESS == transmit_frame1(trx, FCF_SHORT_ADDR,
                                       (uint8_t *) & (node_info[trx].peer_short_addr),
                                       FCF_SHORT_ADDR,
                                       seq_num_initiator[trx],
@@ -3925,7 +3925,7 @@ static bool send_set_default_config_command(trx_id_t trx)
                        sizeof(general_pkt_t)));
 
     /* Send the frame to Peer node */
-    if (MAC_SUCCESS == transmit_frame(trx, FCF_SHORT_ADDR,
+    if (MAC_SUCCESS == transmit_frame1(trx, FCF_SHORT_ADDR,
                                       (uint8_t *) & (node_info[trx].peer_short_addr),
                                       FCF_SHORT_ADDR,
                                       seq_num_initiator[trx],
@@ -4371,7 +4371,7 @@ static void configure_range_test_frame_sending(trx_id_t trx)
     /* First element shall be length of PHY frame. */ //check
     //frame_ptr--;
     //*frame_ptr = curr_trx_config_params[trx].phy_frame_length;
-	node_info[trx].tx_frame_info->length = (RANGE_TEST_PAYLOAD_LENGTH + FRAME_OVERHEAD ); // (RANGE_TEST_PKT_LENGTH -tal_pib[trx].FCSLen) ;
+	node_info[trx].tx_frame_info->len_no_crc = (RANGE_TEST_PAYLOAD_LENGTH + FRAME_OVERHEAD ); // (RANGE_TEST_PKT_LENGTH -tal_pib[trx].FCSLen) ;
 	
 	 /* Finished building of frame. */
     node_info[trx].tx_frame_info->mpdu = frame_ptr;
@@ -4403,7 +4403,7 @@ static bool send_range_test_start_cmd(trx_id_t trx)
 			sizeof(result_req_t));
 
 	/* Send the frame to Peer node */
-	if (MAC_SUCCESS == transmit_frame(trx,FCF_SHORT_ADDR,
+	if (MAC_SUCCESS == transmit_frame1(trx,FCF_SHORT_ADDR,
 			(uint8_t *)&(node_info[trx].peer_short_addr),
 			FCF_SHORT_ADDR,
 			seq_num_initiator[trx],
@@ -4440,7 +4440,7 @@ static bool send_range_test_stop_cmd(trx_id_t trx)
 			sizeof(result_req_t));
 
 	/* Send the frame to Peer node */
-	if (MAC_SUCCESS == transmit_frame(trx,FCF_SHORT_ADDR,
+	if (MAC_SUCCESS == transmit_frame1(trx,FCF_SHORT_ADDR,
 			(uint8_t *)&(node_info[trx].peer_short_addr),
 			FCF_SHORT_ADDR,
 			seq_num_initiator[trx],
@@ -4478,7 +4478,7 @@ static bool send_range_test_marker_rsp(trx_id_t trx)
 			sizeof(result_req_t));
 
 	/* Send the frame to Peer node */
-	if (MAC_SUCCESS == transmit_frame(trx,FCF_SHORT_ADDR,
+	if (MAC_SUCCESS == transmit_frame1(trx,FCF_SHORT_ADDR,
 			(uint8_t *)&(node_info[trx].peer_short_addr),
 			FCF_SHORT_ADDR,
 			seq_num_initiator[trx],

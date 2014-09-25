@@ -147,7 +147,7 @@ void wait_for_event_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 		ed_threshold = CONFIG_ED_THRESHOLD_RF09;
 	}
     /* Frame received on air: Processing the same */
-    if ((mac_frame_info->length) == expected_frame_size) //check
+    if ((mac_frame_info->len_no_crc) == expected_frame_size) //check
     {
         /* Point to the message : 1 =>size is first byte and 2=>FCS*/
         msg = (app_payload_t *)(mac_frame_info->mpdu + FRAME_OVERHEAD_SRC_IEEE_ADDR );
@@ -155,7 +155,7 @@ void wait_for_event_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
         /* Is this a peer request cmd */
         if ((msg->cmd_id) == PEER_REQUEST)
         {
-            uint8_t frame_len = mac_frame_info->length;
+            uint8_t frame_len = mac_frame_info->len_no_crc;
             uint8_t ed_val = mac_frame_info->mpdu[frame_len + LQI_LEN + ED_VAL_LEN];
 
             /* Check the threshold if the configuration mode is enabled, not otherwise */

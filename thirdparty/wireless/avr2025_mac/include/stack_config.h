@@ -53,7 +53,7 @@
 
 #include "tal_types.h"
 #if (TAL_TYPE == AT86RF215)
-#include "ieee_15_4g.h"
+#include "ieee_154g.h"
 #endif
 
 /**

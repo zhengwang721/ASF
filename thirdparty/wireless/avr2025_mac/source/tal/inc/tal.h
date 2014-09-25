@@ -3,7 +3,7 @@
  *
  * @brief This file contains TAL API function declarations
  *
- * $Id: tal.h 35164 2013-09-24 13:43:43Z uwalter $
+ * $Id: tal.h 36436 2014-09-01 13:49:57Z uwalter $
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
@@ -29,11 +29,12 @@
 #include "return_val.h"
 #include "tal_types.h"
 #include "mac_build_config.h"
-#if (TAL_TYPE == AT86RF215)
+#if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
 #include "tal_rf215.h"
 #endif
 
 /* === TYPES =============================================================== */
+#define NO_TRX                 (2)
 
 /* Structure implementing the PIB values stored in TAL */
 typedef struct tal_pib_tag
@@ -79,7 +80,7 @@ typedef struct tal_pib_tag
     /**
      * Current RF channel to be used for all transmissions and receptions.
      */
-#if (TAL_TYPE == AT86RF215)
+#if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
     uint16_t CurrentChannel;
 #else
     uint8_t CurrentChannel;
@@ -105,7 +106,7 @@ typedef struct tal_pib_tag
      * Default value of transmit power of transceiver
      * using IEEE defined format of phyTransmitPower.
      */
-#if (TAL_TYPE == AT86RF215)
+#if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
     int8_t TransmitPower;
 #else
     uint8_t TransmitPower;
@@ -153,13 +154,13 @@ typedef struct tal_pib_tag
      */
     uint8_t MaxFrameRetries;
 
-#if defined(PROMISCUOUS_MODE)
+#ifdef PROMISCUOUS_MODE
     /**
      * Promiscuous Mode
      */
     bool PromiscuousMode;
 #endif
-#if (TAL_TYPE == AT86RF215)
+#if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
 
 #ifdef RX_WHILE_BACKOFF
     /**
@@ -207,6 +208,21 @@ typedef struct tal_pib_tag
      * the time required to perform CCA detection.
      */
     bool CCATimeMethod;
+
+#ifdef SUPPORT_OQPSK
+    /**
+     * MR-O-QPSK rate mode
+     */
+    oqpsk_rate_mode_t OQPSKRateMode;
+#endif
+
+#ifdef SUPPORT_LEGACY_OQPSK
+    /**
+     * Proprietary high rate mode for legacy O-QPSK
+     */
+    bool HighRateEnabled;
+#endif
+
 #ifdef SUPPORT_FSK
     /**
      * A value of TRUE indicates that FEC is turned on. A value of FALSE indicates
@@ -227,6 +243,62 @@ typedef struct tal_pib_tag
      * (RSC) is employed. This attribute is only valid for the MR-FSK PHY.
      */
     bool FSKFECScheme;
+
+    /**
+     * The number of 1-octet patterns in the preamble.
+     * This attribute is only valid for the MR-FSK PHY.
+     */
+    uint16_t FSKPreambleLength;
+
+    /**
+     * Determines which group of SFDs is used.
+     * This attribute is only valid for the MR-FSK PHY.
+     */
+    bool MRFSKSFD;
+
+    /**
+     * A value of FALSE indicates that data whitening of the PSDU is disabled.
+     * A value of TRUE indicates that data whitening of the PSDU is enabled.
+     * This attribute is only valid for the MR-FSK PHY.
+     */
+    bool FSKScramblePSDU;
+#ifdef SUPPORT_MODE_SWITCH
+    /**
+     * A value of TRUE instructs the PHY entity to send a mode switch PPDU first and then a
+     * following PPDU that contains the PSDU using the associated mode switch parameters.
+     * This attribute is only valid for the MR-FSK PHY.
+     */
+    bool ModeSwitchEnabled;
+
+    /**
+     * The settling delay, in us, between the end of the final symbol of the PPDU
+     * initiating the mode switch and the start of the PPDU transmitted using the
+     * new PHY mode.
+     */
+    uint16_t ModeSwitchSettlingDelay;
+
+    /**
+     * PHY for the new mode following the mode switch PPDU
+     */
+    new_phy_t ModeSwitchNewMode;
+
+    /**
+     * Receive duration of the new mode after mode switch packet reception.
+     * Unit: microseconds
+     */
+    uint32_t ModeSwitchDuration;
+#endif /* #ifdef SUPPORT_MODE_SWITCH */
+#ifdef SUPPORT_FSK_RAW_MODE
+    /**
+     * Feature to enable FSK raw mode handling
+     */
+    bool FSKRawModeEnabled;
+
+    /**
+     * Expected Rx frame length in raw mode
+     */
+    uint16_t FSKRawModeRxLength;
+#endif
 #endif
     /**
      * The list of channel numbers supported when phyCurrentPage = 7 or 8.
@@ -254,7 +326,7 @@ typedef struct tal_pib_tag
      * Defines the current frequency band, modulation scheme, and particular PHY
      * mode when phyCurrentPage = 7 or 8.
      */
-    //uint8_t CurrentSUNPageEntry;
+    uint8_t CurrentSUNPageEntry;
 
     /**
      * The number of GenericPHYDescriptor entries supported by the device
@@ -278,35 +350,21 @@ typedef struct tal_pib_tag
      * PHY.
      */
     //uint8_t ModeSwitchParameterEntries;
-#ifdef SUPPORT_FSK
-    /**
-     * The number of 1-octet patterns in the preamble.
-     * This attribute is only valid for the MR-FSK PHY.
-     */
-    uint8_t FSKPreambleLength;
-#endif
-#ifdef SUPPORT_FSK
-    /**
-     * Determines which group of SFDs is used.
-     * This attribute is only valid for the MR-FSK PHY.
-     */
-    uint8_t MRFSKSFD;
-#endif
-#ifdef SUPPORT_FSK
-    /**
-     * A value of FALSE indicates that data whitening of the PSDU is disabled.
-     * A value of TRUE indicates that data whitening of the PSDU is enabled.
-     * This attribute is only valid for the MR-FSK PHY.
-     */
-    bool FSKScramblePSDU;
-#endif
+
+#ifdef SUPPORT_OFDM
     /**
      * A value of zero indicates an interleaving depth of one symbol.
      * A value of one indicates an interleaving depth of the number of symbols
      * equal to the frequency domain spreading factor (SF).
      * This attribute is only valid for the MR-OFDM PHY.
      */
-    //bool OFDMInterleaving;
+    bool OFDMInterleaving;
+
+    /**
+     * OFDM MCS value
+     */
+    ofdm_mcs_t OFDMMCS;
+#endif
 
     /**
      * The duration of the PHR, in symbols, for the current PHY.
@@ -331,7 +389,7 @@ typedef struct tal_pib_tag
     uint8_t FCSLen;
 
     /**
-     * Symbol durartion for the current PHY in us - read-only
+     * Symbol duration for the current PHY in us - read-only
      */
     uint16_t SymbolDuration_us;
 
@@ -350,15 +408,17 @@ typedef struct tal_pib_tag
      */
     uint16_t ACKWaitDuration;
 
+#if (!defined BASIC_MODE) && (defined MEASURE_ON_AIR_DURATION)
     /**
-     *
+     * ACK duration in us - read-only
      */
-    uint16_t MaxPHYPacketSize;
+    uint16_t ACKDuration_us;
+#endif
 
     /**
-     * Duration of a backoff period in us - read-only
+     * Maximum PHY packet size
      */
-    //uint8_t BackoffPeriodDuration;
+    uint16_t MaxPHYPacketSize;
 
     /**
      * CCA Threshold, register value
@@ -381,13 +441,13 @@ typedef struct tal_pib_tag
      */
     uint32_t OnAirDuration;
 #endif
-#ifdef ENABLE_ACK_RATE_MODE_ADAPTION
+#ifdef SUPPORT_ACK_RATE_MODE_ADAPTION
     /**
      * Adapt data rate of the incoming frame to use for ACK transmission
      */
     bool AdaptDataRateForACK;
 #endif
-#ifdef FRAME_FILTER_CONFIGURATION
+#ifdef SUPPORT_FRAME_FILTER_CONFIGURATION
     /**
      * Frame filter, frames types
      */
@@ -398,9 +458,19 @@ typedef struct tal_pib_tag
      */
     uint8_t frame_versions;
 #endif
-#endif /* #if (TAL_TYPE == AT86RF215) */
-} tal_pib_t;
+#endif /* #if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215) */
+#ifdef MEASURE_TIME_OF_FLIGHT
+    /**
+     * Time of flight
+     */
+    uint32_t TimeOfFlight;
+#endif
 
+    /**
+     * Settling duration of the AGC
+     */
+    uint16_t agc_settle_dur;
+} tal_pib_t;
 
 /**
  * MAC Message types
@@ -491,15 +561,14 @@ typedef struct
       */
     uint32_t time_stamp;
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
-#if (TAL_TYPE == AT86RF215)
-    /** MPDU length */
-    uint16_t length;
+#if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
+    /** MPDU length - does not include CRC length */
+    uint16_t len_no_crc;
 #endif
     /** Pointer to MPDU */
     uint8_t *mpdu;
 } frame_info_t;
 
-#define NO_TRX                 (2)
 
 /**
  * Sleep Mode supported by transceiver
@@ -573,18 +642,18 @@ extern tal_pib_t tal_pib;
 #define BAND_2400                           (1)
 
 /**
- * Multiple frequency bands supported
+ * 450 / 900 MHz and 2.4 GHz - Multiple band support
  */
 #define BAND_MULTIPLE                       (2)
 
-#if (TAL_TYPE == AT86RF230B) || (TAL_TYPE == AT86RF231) ||\
-    (TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == AT86RF232) || (TAL_TYPE == AT86RF233) ||\
+#if (TAL_TYPE == AT86RF231) ||\
+    (TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == AT86RF233) ||\
     (TAL_TYPE == ATMEGARFR2)
 /** RF band */
 #define RF_BAND                             BAND_2400
 #elif (TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B)
 #define RF_BAND                             BAND_900
-#elif (TAL_TYPE == AT86RF215)
+#elif (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
 #define RF_BAND                             BAND_MULTIPLE
 #else
 #error "Missing RF_BAND define"
@@ -621,10 +690,17 @@ extern tal_pib_t tal_pib;
 #define NO_SYMBOLS_SFD                      (tal_pib.CurrentPage == 0 ? 8 : 2)
 
 #elif (RF_BAND == BAND_MULTIPLE)
-/**
- * There are no defines for multiple band support.
- * These values are handled by variables instead of defines.
- */
+#   ifdef ACTIVE_TRX
+#       define SYMBOLS_PER_OCTET \
+    ((ACTIVE_TRX == RF24) ? 8 : \
+     (tal_pib[ACTIVE_TRX].CurrentPage == 0 ? 8 : 2))
+#       define NO_SYMBOLS_PREAMBLE \
+    ((ACTIVE_TRX == RF24) ? 32 : \
+     (tal_pib[ACTIVE_TRX].CurrentPage == 0 ? 32 : 8))
+#       define NO_SYMBOLS_SFD \
+    ((ACTIVE_TRX == RF24) ? 8 : \
+     (tal_pib[ACTIVE_TRX].CurrentPage == 0 ? 8 : 2))
+#   endif   /* #ifdef ACTIVE_TRX */
 
 #else   /* "MAC-2003" */
 /**
@@ -671,39 +747,37 @@ extern tal_pib_t tal_pib;
  */
 #define mac_i_pan_coordinator               (0x0B)
 
+#ifdef MULTI_TRX_SUPPORT
+#   define TAL_CONVERT_SYMBOLS_TO_US(trx_id, symbols)   ((uint32_t)(symbols) * tal_get_symbol_duration_us(trx_id))
+#else
 /**
  * Conversion of symbols to microseconds
  */
-#if (RF_BAND == BAND_2400)
-#define TAL_CONVERT_SYMBOLS_TO_US(symbols)      ((uint32_t)(symbols) << 4)
-#else   /* (RF_BAND == BAND_900) */
-#ifdef MULTI_TRX_SUPPORT
-#define TAL_CONVERT_SYMBOLS_TO_US(symbols)                                                        \
-    (tal_pib[0].CurrentPage == 0 ?                                                                   \
-     (tal_pib[0].CurrentChannel == 0 ? ((uint32_t)(symbols) * 50) : ((uint32_t)(symbols) * 25)) : \
-         (tal_pib[0].CurrentChannel == 0 ? ((uint32_t)(symbols) * 40) : ((uint32_t)(symbols) << 4))   \
+#   if (RF_BAND == BAND_2400)
+#       define TAL_CONVERT_SYMBOLS_TO_US(symbols)      ((uint32_t)(symbols) << 4)
+#   else   /* (RF_BAND == BAND_900) */
+#       define TAL_CONVERT_SYMBOLS_TO_US(symbols)                                                        \
+    (tal_pib.CurrentPage == 0 ?                                                                   \
+     (tal_pib.CurrentChannel == 0 ? ((uint32_t)(symbols) * 50) : ((uint32_t)(symbols) * 25)) : \
+         (tal_pib.CurrentChannel == 0 ? ((uint32_t)(symbols) * 40) : ((uint32_t)(symbols) << 4))   \
         )
-#else	
-#define TAL_CONVERT_SYMBOLS_TO_US(symbols)                                                        \
-(tal_pib.CurrentPage == 0 ?                                                                   \
-(tal_pib.CurrentChannel == 0 ? ((uint32_t)(symbols) * 50) : ((uint32_t)(symbols) * 25)) : \
-(tal_pib.CurrentChannel == 0 ? ((uint32_t)(symbols) * 40) : ((uint32_t)(symbols) << 4))   \
-)
-#endif	
-#endif  /* #if (RF_BAND == BAND_2400) */
+#   endif  /* #if (RF_BAND == BAND_2400) */
+#endif  /* #ifndef MULTI_TRX_SUPPORT */
 
+#ifndef MULTI_TRX_SUPPORT
 /**
  * Conversion of microseconds to symbols
  */
-#if (RF_BAND == BAND_2400)
-#define TAL_CONVERT_US_TO_SYMBOLS(time)         ((time) >> 4)
-#else   /* (RF_BAND == BAND_900) */
-#define TAL_CONVERT_US_TO_SYMBOLS(time)                                 \
+#   if (RF_BAND == BAND_2400)
+#       define TAL_CONVERT_US_TO_SYMBOLS(time)         ((time) >> 4)
+#   else   /* (RF_BAND == BAND_900) */
+#       define TAL_CONVERT_US_TO_SYMBOLS(time)                                 \
     (tal_pib.CurrentPage == 0 ?                                         \
      (tal_pib.CurrentChannel == 0 ? ((time) / 50) : ((time) / 25)) : \
          (tal_pib.CurrentChannel == 0 ? ((time) / 40) : ((time) >> 4))   \
         )
-#endif  /* #if (RF_BAND == BAND_2400) */
+#   endif  /* #if (RF_BAND == BAND_2400) */
+#endif  /* #ifndef MULTI_TRX_SUPPORT */
 
 /*
  * Beacon Interval formula: BI = aBaseSuperframeDuration 2^BO\f$0
@@ -737,12 +811,23 @@ extern tal_pib_t tal_pib;
     } while(0)
 #endif /* TAL_TYPE == ATMEGA128RFA1 */
 
+/**
+ * Get bit mask from sub register definition
+ */
+#define TAL_BIT_MASK(ADDR, MASK, POS)   MASK
+
+/**
+ * Get bit position from sub register definition
+ */
+#define TAL_BIT_POS(ADDR, MASK, POS)    POS
+
 /* === PROTOTYPES ========================================================== */
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
+retval_t trx_reset(trx_id_t trx_id); //vk
     /**
      * @brief TAL task handling
      *
@@ -832,12 +917,13 @@ extern "C" {
      * @param attribute TAL infobase attribute ID
      * @param value TAL infobase attribute value to be set
      *
-     * @return MAC_UNSUPPORTED_ATTRIBUTE if the TAL info base attribute is not found
-     *         TAL_BUSY if the TAL is not in TAL_IDLE state. An exception is
+     * @return
+     *      - @ref MAC_UNSUPPORTED_ATTRIBUTE if the TAL info base attribute is not found
+     *      - @ref TAL_BUSY if the TAL is not in TAL_IDLE state. An exception is
      *         macBeaconTxTime which can be accepted by TAL even if TAL is not
      *         in TAL_IDLE state.
-     *         MAC_SUCCESS if the attempt to set the PIB attribute was successful
-     *         TAL_TRX_ASLEEP if trx is in SLEEP mode and access to trx is required
+     *      - @ref MAC_SUCCESS if the attempt to set the PIB attribute was successful
+     *      - @ref TAL_TRX_ASLEEP if trx is in SLEEP mode and access to trx is required
      * @ingroup apiTalApi
      */
     retval_t tal_pib_set(uint8_t attribute, pib_value_t *value);
@@ -849,10 +935,10 @@ extern "C" {
      *
      * @param state New state of receiver
      *
-     * @return TAL_BUSY if the TAL state machine cannot switch receiver on or off,
-     *         TRX_OFF if receiver has been switched off, or
-     *         RX_ON otherwise.
-     *
+     * @return
+     *      - @ref TAL_BUSY if the TAL state machine cannot switch receiver on or off,
+     *      - @ref PHY_TRX_OFF if receiver has been switched off, or
+     *      - @ref PHY_RX_ON otherwise.
      * @ingroup apiTalApi
      */
     uint8_t tal_rx_enable(uint8_t state);
@@ -877,6 +963,7 @@ extern "C" {
     void rtb_rx_frame_cb(frame_info_t *rx_frame);
 #endif  /* ENABLE_RTB */
 
+#if (TAL_TYPE != AT86RF215LT) && (TAL_TYPE != AT86RF215)
 #if ((MAC_START_REQUEST_CONFIRM == 1) && (defined BEACON_SUPPORT)) || defined(DOXYGEN)
     /**
      * @brief Beacon frame transmission
@@ -886,6 +973,7 @@ extern "C" {
      */
     void tal_tx_beacon(frame_info_t *tx_frame);
 #endif /* ((MAC_START_REQUEST_CONFIRM == 1) && (defined BEACON_SUPPORT)) */
+#endif /* #if (TAL_TYPE != AT86RF215LT) && (TAL_TYPE != AT86RF215) */
 
     /**
      * @brief Requests to TAL to transmit frame
@@ -961,12 +1049,14 @@ extern "C" {
      *
      * @ingroup apiTalApi
      */
-#if (TAL_TYPE == AT86RF215)
+#if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
     retval_t tal_generate_rand_seed(void);
+    uint16_t tal_get_symbol_duration_us(trx_id_t trx_id);
 #else
     void tal_generate_rand_seed(void);
-#endif
+#endif /* #if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215) */
 
+#if (TAL_TYPE != AT86RF215LT) && (TAL_TYPE != AT86RF215)
     /**
      * @brief Adds two time values
      *
@@ -982,8 +1072,9 @@ extern "C" {
     {
         return ((a + b) & SYMBOL_MASK);
     }
+#endif /* #if (TAL_TYPE != AT86RF215LT) && (TAL_TYPE != AT86RF215) */
 
-
+#if (TAL_TYPE != AT86RF215LT) && (TAL_TYPE != AT86RF215)
     /**
      * @brief Subtract two time values
      *
@@ -1007,6 +1098,7 @@ extern "C" {
             return (((MAX_SYMBOL_TIME - b) + a) & SYMBOL_MASK);
         }
     }
+#endif /* #if (TAL_TYPE != AT86RF215LT) && (TAL_TYPE != AT86RF215) */
 
 #if defined(ENABLE_RP) || defined(ENABLE_RH)
     retval_t tal_rampup(void);

@@ -301,7 +301,7 @@ static int send_peer_rsp(trx_id_t trx,uint64_t *dst_addr)
                        sizeof(general_pkt_t)) +
                       sizeof(peer_rsp_t));
 
-    return( transmit_frame(trx, FCF_LONG_ADDR,
+    return( transmit_frame1(trx, FCF_LONG_ADDR,
                            (uint8_t *)(dst_addr),
                            FCF_SHORT_ADDR,
                            seq_num[trx],              /* seq_num used as msdu handle */
@@ -340,7 +340,7 @@ static void wait_for_conf_rx_cb(trx_id_t trx,frame_info_t *mac_frame_info)
 {
     app_payload_t *msg;
 
-    if ((mac_frame_info->length) == (FRAME_OVERHEAD
+    if ((mac_frame_info->len_no_crc) == (FRAME_OVERHEAD
                                     + ((sizeof(app_payload_t)
                                         - sizeof(general_pkt_t))
                                        + sizeof(peer_conf_t)))) //check

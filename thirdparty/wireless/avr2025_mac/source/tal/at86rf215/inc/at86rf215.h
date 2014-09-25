@@ -1,48 +1,16 @@
 /* This file is auto-generated. Do not modify manually! */
 /**
- * @file at86rf215lt.h
+ * @file rf215.h
  *
- * @brief File contains register and command defines specific for AT86RF215LT.
+ * @brief File contains register and command defines specific for RF215.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * $Id: at86rf215.h 36450 2014-09-03 13:12:11Z uwalter $
  *
- * \asf_license_start
- *
- * \page License
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
+ * @author    Atmel Corporation: http://www.atmel.com
+ * @author    Support email: avr@atmel.com
  */
-
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -53,6 +21,9 @@
 
 /* === INCLUDES ============================================================ */
 
+#include "tal_types.h"
+
+#if (TAL_TYPE == AT86RF215)
 
 /* === EXTERNALS =========================================================== */
 
@@ -62,6 +33,12 @@
 
 /* === MACROS ============================================================== */
 
+
+/** Parameter definitions */
+
+/** Typical timing values. */
+/* TRX Parameter: SPI_T2 */
+#define RST_PULSE_WIDTH_NS                                 (5)
 
 /** Subregister Type Definitions (MASK, SHIFT) */
 
@@ -132,6 +109,11 @@
 /** Bit Offset for Sub-Register IRQS.AGCR */
 #define IRQS_AGCR_SHIFT                 6
 
+/** Bit Mask for Sub-Register IRQS.FBLI */
+#define IRQS_FBLI_MASK                  0x80
+/** Bit Offset for Sub-Register IRQS.FBLI */
+#define IRQS_FBLI_SHIFT                 7
+
 /** Sub-registers of Register @ref RST */
 /** Bit Mask for Sub-Register RST.CMD */
 #define RST_CMD_MASK                    0x07
@@ -156,14 +138,14 @@
 
 /** Sub-registers of Register @ref CLKO */
 /** Bit Mask for Sub-Register CLKO.OS */
-#define CLKO_OS_MASK                    0x03
+#define CLKO_OS_MASK                    0x07
 /** Bit Offset for Sub-Register CLKO.OS */
 #define CLKO_OS_SHIFT                   0
 
 /** Bit Mask for Sub-Register CLKO.DRV */
-#define CLKO_DRV_MASK                   0x0C
+#define CLKO_DRV_MASK                   0x18
 /** Bit Offset for Sub-Register CLKO.DRV */
-#define CLKO_DRV_SHIFT                  2
+#define CLKO_DRV_SHIFT                  3
 
 /** Sub-registers of Register @ref BMDVC */
 /** Bit Mask for Sub-Register BMDVC.BMVTH */
@@ -230,7 +212,7 @@
 #define IQIFC1_SKEWDRV_SHIFT            0
 
 /** Bit Mask for Sub-Register IQIFC1.CHPM */
-#define IQIFC1_CHPM_MASK                0x30
+#define IQIFC1_CHPM_MASK                0x70
 /** Bit Offset for Sub-Register IQIFC1.CHPM */
 #define IQIFC1_CHPM_SHIFT               4
 
@@ -238,6 +220,12 @@
 #define IQIFC1_FAILSF_MASK              0x80
 /** Bit Offset for Sub-Register IQIFC1.FAILSF */
 #define IQIFC1_FAILSF_SHIFT             7
+
+/** Sub-registers of Register @ref IQIFC2 */
+/** Bit Mask for Sub-Register IQIFC2.SYNC */
+#define IQIFC2_SYNC_MASK                0x80
+/** Bit Offset for Sub-Register IQIFC2.SYNC */
+#define IQIFC2_SYNC_SHIFT               7
 
 /** Sub-registers of Register @ref PN */
 /** Bit Mask for Sub-Register PN.PN */
@@ -370,6 +358,11 @@
 #define RXBWC_IFS_MASK                  0x10
 /** Bit Offset for Sub-Register RXBWC.IFS */
 #define RXBWC_IFS_SHIFT                 4
+
+/** Bit Mask for Sub-Register RXBWC.IFI */
+#define RXBWC_IFI_MASK                  0x20
+/** Bit Offset for Sub-Register RXBWC.IFI */
+#define RXBWC_IFI_SHIFT                 5
 
 /** Sub-registers of Register @ref RXDFE */
 /** Bit Mask for Sub-Register RXDFE.SR */
@@ -504,6 +497,18 @@
 /** Bit Offset for Sub-Register PLL.LS */
 #define PLL_LS_SHIFT                    1
 
+/** Sub-registers of Register @ref TXCI */
+/** Bit Mask for Sub-Register TXCI.DCOI */
+#define TXCI_DCOI_MASK                  0x3F
+/** Bit Offset for Sub-Register TXCI.DCOI */
+#define TXCI_DCOI_SHIFT                 0
+
+/** Sub-registers of Register @ref TXCQ */
+/** Bit Mask for Sub-Register TXCQ.DCOQ */
+#define TXCQ_DCOQ_MASK                  0x3F
+/** Bit Offset for Sub-Register TXCQ.DCOQ */
+#define TXCQ_DCOQ_SHIFT                 0
+
 /** Sub-registers of Register @ref TXDACI */
 /** Bit Mask for Sub-Register TXDACI.TXDACID */
 #define TXDACI_TXDACID_MASK             0x7F
@@ -562,6 +567,11 @@
 /** Bit Offset for Sub-Register IRQM.AGCR */
 #define IRQM_AGCR_SHIFT                 6
 
+/** Bit Mask for Sub-Register IRQM.FBLI */
+#define IRQM_FBLI_MASK                  0x80
+/** Bit Offset for Sub-Register IRQM.FBLI */
+#define IRQM_FBLI_SHIFT                 7
+
 /** Sub-registers of Register @ref PC */
 /** Bit Mask for Sub-Register PC.PT */
 #define PC_PT_MASK                      0x03
@@ -604,12 +614,6 @@
 /** Bit Offset for Sub-Register PS.TXUR */
 #define PS_TXUR_SHIFT                   0
 
-/** Sub-registers of Register @ref FBLVL */
-/** Bit Mask for Sub-Register FBLVL.FBLVL */
-#define FBLVL_FBLVL_MASK                0xFF
-/** Bit Offset for Sub-Register FBLVL.FBLVL */
-#define FBLVL_FBLVL_SHIFT               0
-
 /** Sub-registers of Register @ref RXFLL */
 /** Bit Mask for Sub-Register RXFLL.RXFLL */
 #define RXFLL_RXFLL_MASK                0xFF
@@ -633,6 +637,30 @@
 #define TXFLH_TXFLH_MASK                0x07
 /** Bit Offset for Sub-Register TXFLH.TXFLH */
 #define TXFLH_TXFLH_SHIFT               0
+
+/** Sub-registers of Register @ref FBLL */
+/** Bit Mask for Sub-Register FBLL.FBLL */
+#define FBLL_FBLL_MASK                  0xFF
+/** Bit Offset for Sub-Register FBLL.FBLL */
+#define FBLL_FBLL_SHIFT                 0
+
+/** Sub-registers of Register @ref FBLH */
+/** Bit Mask for Sub-Register FBLH.FBLH */
+#define FBLH_FBLH_MASK                  0x07
+/** Bit Offset for Sub-Register FBLH.FBLH */
+#define FBLH_FBLH_SHIFT                 0
+
+/** Sub-registers of Register @ref FBLIL */
+/** Bit Mask for Sub-Register FBLIL.FBLIL */
+#define FBLIL_FBLIL_MASK                0xFF
+/** Bit Offset for Sub-Register FBLIL.FBLIL */
+#define FBLIL_FBLIL_SHIFT               0
+
+/** Sub-registers of Register @ref FBLIH */
+/** Bit Mask for Sub-Register FBLIH.FBLIH */
+#define FBLIH_FBLIH_MASK                0x07
+/** Bit Offset for Sub-Register FBLIH.FBLIH */
+#define FBLIH_FBLIH_SHIFT               0
 
 /** Sub-registers of Register @ref OFDMPHRTX */
 /** Bit Mask for Sub-Register OFDMPHRTX.MCS */
@@ -665,6 +693,11 @@
 #define OFDMPHRRX_MCS_MASK              0x07
 /** Bit Offset for Sub-Register OFDMPHRRX.MCS */
 #define OFDMPHRRX_MCS_SHIFT             0
+
+/** Bit Mask for Sub-Register OFDMPHRRX.SPC */
+#define OFDMPHRRX_SPC_MASK              0x08
+/** Bit Offset for Sub-Register OFDMPHRRX.SPC */
+#define OFDMPHRRX_SPC_SHIFT             3
 
 /** Bit Mask for Sub-Register OFDMPHRRX.RB5 */
 #define OFDMPHRRX_RB5_MASK              0x10
@@ -712,6 +745,17 @@
 /** Bit Offset for Sub-Register OFDMC.SSRX */
 #define OFDMC_SSRX_SHIFT                6
 
+/** Sub-registers of Register @ref OFDMSW */
+/** Bit Mask for Sub-Register OFDMSW.RXO */
+#define OFDMSW_RXO_MASK                 0x10
+/** Bit Offset for Sub-Register OFDMSW.RXO */
+#define OFDMSW_RXO_SHIFT                4
+
+/** Bit Mask for Sub-Register OFDMSW.PDT */
+#define OFDMSW_PDT_MASK                 0xE0
+/** Bit Offset for Sub-Register OFDMSW.PDT */
+#define OFDMSW_PDT_SHIFT                5
+
 /** Sub-registers of Register @ref OQPSKC0 */
 /** Bit Mask for Sub-Register OQPSKC0.FCHIP */
 #define OQPSKC0_FCHIP_MASK              0x03
@@ -734,6 +778,16 @@
 /** Bit Offset for Sub-Register OQPSKC1.PDT1 */
 #define OQPSKC1_PDT1_SHIFT              3
 
+/** Bit Mask for Sub-Register OQPSKC1.RXOLEG */
+#define OQPSKC1_RXOLEG_MASK             0x40
+/** Bit Offset for Sub-Register OQPSKC1.RXOLEG */
+#define OQPSKC1_RXOLEG_SHIFT            6
+
+/** Bit Mask for Sub-Register OQPSKC1.RXO */
+#define OQPSKC1_RXO_MASK                0x80
+/** Bit Offset for Sub-Register OQPSKC1.RXO */
+#define OQPSKC1_RXO_SHIFT               7
+
 /** Sub-registers of Register @ref OQPSKC2 */
 /** Bit Mask for Sub-Register OQPSKC2.RXM */
 #define OQPSKC2_RXM_MASK                0x03
@@ -750,16 +804,21 @@
 /** Bit Offset for Sub-Register OQPSKC2.ENPROP */
 #define OQPSKC2_ENPROP_SHIFT            3
 
-/** Sub-registers of Register @ref OQPSKC3 */
-/** Bit Mask for Sub-Register OQPSKC3.SFDS */
-#define OQPSKC3_SFDS_MASK               0x02
-/** Bit Offset for Sub-Register OQPSKC3.SFDS */
-#define OQPSKC3_SFDS_SHIFT              1
+/** Bit Mask for Sub-Register OQPSKC2.SPC */
+#define OQPSKC2_SPC_MASK                0x20
+/** Bit Offset for Sub-Register OQPSKC2.SPC */
+#define OQPSKC2_SPC_SHIFT               5
 
+/** Sub-registers of Register @ref OQPSKC3 */
 /** Bit Mask for Sub-Register OQPSKC3.NSFD */
 #define OQPSKC3_NSFD_MASK               0x0C
 /** Bit Offset for Sub-Register OQPSKC3.NSFD */
 #define OQPSKC3_NSFD_SHIFT              2
+
+/** Bit Mask for Sub-Register OQPSKC3.HRLEG */
+#define OQPSKC3_HRLEG_MASK              0x20
+/** Bit Offset for Sub-Register OQPSKC3.HRLEG */
+#define OQPSKC3_HRLEG_SHIFT             5
 
 /** Sub-registers of Register @ref OQPSKPHRTX */
 /** Bit Mask for Sub-Register OQPSKPHRTX.LEG */
@@ -777,6 +836,11 @@
 /** Bit Offset for Sub-Register OQPSKPHRTX.RB0 */
 #define OQPSKPHRTX_RB0_SHIFT            4
 
+/** Bit Mask for Sub-Register OQPSKPHRTX.PPDUT */
+#define OQPSKPHRTX_PPDUT_MASK           0x20
+/** Bit Offset for Sub-Register OQPSKPHRTX.PPDUT */
+#define OQPSKPHRTX_PPDUT_SHIFT          5
+
 /** Sub-registers of Register @ref OQPSKPHRRX */
 /** Bit Mask for Sub-Register OQPSKPHRRX.LEG */
 #define OQPSKPHRRX_LEG_MASK             0x01
@@ -792,6 +856,11 @@
 #define OQPSKPHRRX_RB0_MASK             0x10
 /** Bit Offset for Sub-Register OQPSKPHRRX.RB0 */
 #define OQPSKPHRRX_RB0_SHIFT            4
+
+/** Bit Mask for Sub-Register OQPSKPHRRX.PPDUT */
+#define OQPSKPHRRX_PPDUT_MASK           0x20
+/** Bit Offset for Sub-Register OQPSKPHRRX.PPDUT */
+#define OQPSKPHRRX_PPDUT_SHIFT          5
 
 /** Sub-registers of Register @ref AFC0 */
 /** Bit Mask for Sub-Register AFC0.AFEN0 */
@@ -1042,6 +1111,365 @@
 /** Bit Offset for Sub-Register MACSHA1F3.MACSHA1F3 */
 #define MACSHA1F3_MACSHA1F3_SHIFT       0
 
+/** Sub-registers of Register @ref AMCS */
+/** Bit Mask for Sub-Register AMCS.TX2RX */
+#define AMCS_TX2RX_MASK                 0x01
+/** Bit Offset for Sub-Register AMCS.TX2RX */
+#define AMCS_TX2RX_SHIFT                0
+
+/** Bit Mask for Sub-Register AMCS.CCATX */
+#define AMCS_CCATX_MASK                 0x02
+/** Bit Offset for Sub-Register AMCS.CCATX */
+#define AMCS_CCATX_SHIFT                1
+
+/** Bit Mask for Sub-Register AMCS.CCAED */
+#define AMCS_CCAED_MASK                 0x04
+/** Bit Offset for Sub-Register AMCS.CCAED */
+#define AMCS_CCAED_SHIFT                2
+
+/** Bit Mask for Sub-Register AMCS.AACK */
+#define AMCS_AACK_MASK                  0x08
+/** Bit Offset for Sub-Register AMCS.AACK */
+#define AMCS_AACK_SHIFT                 3
+
+/** Bit Mask for Sub-Register AMCS.AACKS */
+#define AMCS_AACKS_MASK                 0x10
+/** Bit Offset for Sub-Register AMCS.AACKS */
+#define AMCS_AACKS_SHIFT                4
+
+/** Bit Mask for Sub-Register AMCS.AACKDR */
+#define AMCS_AACKDR_MASK                0x20
+/** Bit Offset for Sub-Register AMCS.AACKDR */
+#define AMCS_AACKDR_SHIFT               5
+
+/** Bit Mask for Sub-Register AMCS.AACKFA */
+#define AMCS_AACKFA_MASK                0x40
+/** Bit Offset for Sub-Register AMCS.AACKFA */
+#define AMCS_AACKFA_SHIFT               6
+
+/** Bit Mask for Sub-Register AMCS.AACKFT */
+#define AMCS_AACKFT_MASK                0x80
+/** Bit Offset for Sub-Register AMCS.AACKFT */
+#define AMCS_AACKFT_SHIFT               7
+
+/** Sub-registers of Register @ref AMEDT */
+/** Bit Mask for Sub-Register AMEDT.AMEDT */
+#define AMEDT_AMEDT_MASK                0xFF
+/** Bit Offset for Sub-Register AMEDT.AMEDT */
+#define AMEDT_AMEDT_SHIFT               0
+
+/** Sub-registers of Register @ref AMAACKPD */
+/** Bit Mask for Sub-Register AMAACKPD.PD0 */
+#define AMAACKPD_PD0_MASK               0x01
+/** Bit Offset for Sub-Register AMAACKPD.PD0 */
+#define AMAACKPD_PD0_SHIFT              0
+
+/** Bit Mask for Sub-Register AMAACKPD.PD1 */
+#define AMAACKPD_PD1_MASK               0x02
+/** Bit Offset for Sub-Register AMAACKPD.PD1 */
+#define AMAACKPD_PD1_SHIFT              1
+
+/** Bit Mask for Sub-Register AMAACKPD.PD2 */
+#define AMAACKPD_PD2_MASK               0x04
+/** Bit Offset for Sub-Register AMAACKPD.PD2 */
+#define AMAACKPD_PD2_SHIFT              2
+
+/** Bit Mask for Sub-Register AMAACKPD.PD3 */
+#define AMAACKPD_PD3_MASK               0x08
+/** Bit Offset for Sub-Register AMAACKPD.PD3 */
+#define AMAACKPD_PD3_SHIFT              3
+
+/** Sub-registers of Register @ref AMAACKTL */
+/** Bit Mask for Sub-Register AMAACKTL.AMAACKTL */
+#define AMAACKTL_AMAACKTL_MASK          0xFF
+/** Bit Offset for Sub-Register AMAACKTL.AMAACKTL */
+#define AMAACKTL_AMAACKTL_SHIFT         0
+
+/** Sub-registers of Register @ref AMAACKTH */
+/** Bit Mask for Sub-Register AMAACKTH.AMAACKTH */
+#define AMAACKTH_AMAACKTH_MASK          0x07
+/** Bit Offset for Sub-Register AMAACKTH.AMAACKTH */
+#define AMAACKTH_AMAACKTH_SHIFT         0
+
+/** Sub-registers of Register @ref FSKC0 */
+/** Bit Mask for Sub-Register FSKC0.MORD */
+#define FSKC0_MORD_MASK                 0x01
+/** Bit Offset for Sub-Register FSKC0.MORD */
+#define FSKC0_MORD_SHIFT                0
+
+/** Bit Mask for Sub-Register FSKC0.MIDX */
+#define FSKC0_MIDX_MASK                 0x0E
+/** Bit Offset for Sub-Register FSKC0.MIDX */
+#define FSKC0_MIDX_SHIFT                1
+
+/** Bit Mask for Sub-Register FSKC0.MIDXS */
+#define FSKC0_MIDXS_MASK                0x30
+/** Bit Offset for Sub-Register FSKC0.MIDXS */
+#define FSKC0_MIDXS_SHIFT               4
+
+/** Bit Mask for Sub-Register FSKC0.BT */
+#define FSKC0_BT_MASK                   0xC0
+/** Bit Offset for Sub-Register FSKC0.BT */
+#define FSKC0_BT_SHIFT                  6
+
+/** Sub-registers of Register @ref FSKC1 */
+/** Bit Mask for Sub-Register FSKC1.SRATE */
+#define FSKC1_SRATE_MASK                0x0F
+/** Bit Offset for Sub-Register FSKC1.SRATE */
+#define FSKC1_SRATE_SHIFT               0
+
+/** Bit Mask for Sub-Register FSKC1.FI */
+#define FSKC1_FI_MASK                   0x20
+/** Bit Offset for Sub-Register FSKC1.FI */
+#define FSKC1_FI_SHIFT                  5
+
+/** Bit Mask for Sub-Register FSKC1.FSKPLH */
+#define FSKC1_FSKPLH_MASK               0xC0
+/** Bit Offset for Sub-Register FSKC1.FSKPLH */
+#define FSKC1_FSKPLH_SHIFT              6
+
+/** Sub-registers of Register @ref FSKC2 */
+/** Bit Mask for Sub-Register FSKC2.FECIE */
+#define FSKC2_FECIE_MASK                0x01
+/** Bit Offset for Sub-Register FSKC2.FECIE */
+#define FSKC2_FECIE_SHIFT               0
+
+/** Bit Mask for Sub-Register FSKC2.FECS */
+#define FSKC2_FECS_MASK                 0x02
+/** Bit Offset for Sub-Register FSKC2.FECS */
+#define FSKC2_FECS_SHIFT                1
+
+/** Bit Mask for Sub-Register FSKC2.PRI */
+#define FSKC2_PRI_MASK                  0x04
+/** Bit Offset for Sub-Register FSKC2.PRI */
+#define FSKC2_PRI_SHIFT                 2
+
+/** Bit Mask for Sub-Register FSKC2.MSE */
+#define FSKC2_MSE_MASK                  0x08
+/** Bit Offset for Sub-Register FSKC2.MSE */
+#define FSKC2_MSE_SHIFT                 3
+
+/** Bit Mask for Sub-Register FSKC2.RXPTO */
+#define FSKC2_RXPTO_MASK                0x10
+/** Bit Offset for Sub-Register FSKC2.RXPTO */
+#define FSKC2_RXPTO_SHIFT               4
+
+/** Bit Mask for Sub-Register FSKC2.RXO */
+#define FSKC2_RXO_MASK                  0x60
+/** Bit Offset for Sub-Register FSKC2.RXO */
+#define FSKC2_RXO_SHIFT                 5
+
+/** Sub-registers of Register @ref FSKC3 */
+/** Bit Mask for Sub-Register FSKC3.PDT */
+#define FSKC3_PDT_MASK                  0x0F
+/** Bit Offset for Sub-Register FSKC3.PDT */
+#define FSKC3_PDT_SHIFT                 0
+
+/** Bit Mask for Sub-Register FSKC3.SFDT */
+#define FSKC3_SFDT_MASK                 0xF0
+/** Bit Offset for Sub-Register FSKC3.SFDT */
+#define FSKC3_SFDT_SHIFT                4
+
+/** Sub-registers of Register @ref FSKC4 */
+/** Bit Mask for Sub-Register FSKC4.CSFD0 */
+#define FSKC4_CSFD0_MASK                0x03
+/** Bit Offset for Sub-Register FSKC4.CSFD0 */
+#define FSKC4_CSFD0_SHIFT               0
+
+/** Bit Mask for Sub-Register FSKC4.CSFD1 */
+#define FSKC4_CSFD1_MASK                0x0C
+/** Bit Offset for Sub-Register FSKC4.CSFD1 */
+#define FSKC4_CSFD1_SHIFT               2
+
+/** Bit Mask for Sub-Register FSKC4.RAWRBIT */
+#define FSKC4_RAWRBIT_MASK              0x10
+/** Bit Offset for Sub-Register FSKC4.RAWRBIT */
+#define FSKC4_RAWRBIT_SHIFT             4
+
+/** Bit Mask for Sub-Register FSKC4.SFD32 */
+#define FSKC4_SFD32_MASK                0x20
+/** Bit Offset for Sub-Register FSKC4.SFD32 */
+#define FSKC4_SFD32_SHIFT               5
+
+/** Bit Mask for Sub-Register FSKC4.SFDQ */
+#define FSKC4_SFDQ_MASK                 0x40
+/** Bit Offset for Sub-Register FSKC4.SFDQ */
+#define FSKC4_SFDQ_SHIFT                6
+
+/** Sub-registers of Register @ref FSKPLL */
+/** Bit Mask for Sub-Register FSKPLL.FSKPLL */
+#define FSKPLL_FSKPLL_MASK              0xFF
+/** Bit Offset for Sub-Register FSKPLL.FSKPLL */
+#define FSKPLL_FSKPLL_SHIFT             0
+
+/** Sub-registers of Register @ref FSKSFD0L */
+/** Bit Mask for Sub-Register FSKSFD0L.FSKSFD0L */
+#define FSKSFD0L_FSKSFD0L_MASK          0xFF
+/** Bit Offset for Sub-Register FSKSFD0L.FSKSFD0L */
+#define FSKSFD0L_FSKSFD0L_SHIFT         0
+
+/** Sub-registers of Register @ref FSKSFD0H */
+/** Bit Mask for Sub-Register FSKSFD0H.FSKSFD0H */
+#define FSKSFD0H_FSKSFD0H_MASK          0xFF
+/** Bit Offset for Sub-Register FSKSFD0H.FSKSFD0H */
+#define FSKSFD0H_FSKSFD0H_SHIFT         0
+
+/** Sub-registers of Register @ref FSKSFD1L */
+/** Bit Mask for Sub-Register FSKSFD1L.FSKSFD1L */
+#define FSKSFD1L_FSKSFD1L_MASK          0xFF
+/** Bit Offset for Sub-Register FSKSFD1L.FSKSFD1L */
+#define FSKSFD1L_FSKSFD1L_SHIFT         0
+
+/** Sub-registers of Register @ref FSKSFD1H */
+/** Bit Mask for Sub-Register FSKSFD1H.FSKSFD1H */
+#define FSKSFD1H_FSKSFD1H_MASK          0xFF
+/** Bit Offset for Sub-Register FSKSFD1H.FSKSFD1H */
+#define FSKSFD1H_FSKSFD1H_SHIFT         0
+
+/** Sub-registers of Register @ref FSKPHRTX */
+/** Bit Mask for Sub-Register FSKPHRTX.RB1 */
+#define FSKPHRTX_RB1_MASK               0x01
+/** Bit Offset for Sub-Register FSKPHRTX.RB1 */
+#define FSKPHRTX_RB1_SHIFT              0
+
+/** Bit Mask for Sub-Register FSKPHRTX.RB2 */
+#define FSKPHRTX_RB2_MASK               0x02
+/** Bit Offset for Sub-Register FSKPHRTX.RB2 */
+#define FSKPHRTX_RB2_SHIFT              1
+
+/** Bit Mask for Sub-Register FSKPHRTX.DW */
+#define FSKPHRTX_DW_MASK                0x04
+/** Bit Offset for Sub-Register FSKPHRTX.DW */
+#define FSKPHRTX_DW_SHIFT               2
+
+/** Bit Mask for Sub-Register FSKPHRTX.SFD */
+#define FSKPHRTX_SFD_MASK               0x08
+/** Bit Offset for Sub-Register FSKPHRTX.SFD */
+#define FSKPHRTX_SFD_SHIFT              3
+
+/** Sub-registers of Register @ref FSKPHRRX */
+/** Bit Mask for Sub-Register FSKPHRRX.RB1 */
+#define FSKPHRRX_RB1_MASK               0x01
+/** Bit Offset for Sub-Register FSKPHRRX.RB1 */
+#define FSKPHRRX_RB1_SHIFT              0
+
+/** Bit Mask for Sub-Register FSKPHRRX.RB2 */
+#define FSKPHRRX_RB2_MASK               0x02
+/** Bit Offset for Sub-Register FSKPHRRX.RB2 */
+#define FSKPHRRX_RB2_SHIFT              1
+
+/** Bit Mask for Sub-Register FSKPHRRX.DW */
+#define FSKPHRRX_DW_MASK                0x04
+/** Bit Offset for Sub-Register FSKPHRRX.DW */
+#define FSKPHRRX_DW_SHIFT               2
+
+/** Bit Mask for Sub-Register FSKPHRRX.SFD */
+#define FSKPHRRX_SFD_MASK               0x08
+/** Bit Offset for Sub-Register FSKPHRRX.SFD */
+#define FSKPHRRX_SFD_SHIFT              3
+
+/** Bit Mask for Sub-Register FSKPHRRX.MS */
+#define FSKPHRRX_MS_MASK                0x40
+/** Bit Offset for Sub-Register FSKPHRRX.MS */
+#define FSKPHRRX_MS_SHIFT               6
+
+/** Bit Mask for Sub-Register FSKPHRRX.FCST */
+#define FSKPHRRX_FCST_MASK              0x80
+/** Bit Offset for Sub-Register FSKPHRRX.FCST */
+#define FSKPHRRX_FCST_SHIFT             7
+
+/** Sub-registers of Register @ref FSKRRXFLL */
+/** Bit Mask for Sub-Register FSKRRXFLL.FSKRRXFLL */
+#define FSKRRXFLL_FSKRRXFLL_MASK        0xFF
+/** Bit Offset for Sub-Register FSKRRXFLL.FSKRRXFLL */
+#define FSKRRXFLL_FSKRRXFLL_SHIFT       0
+
+/** Sub-registers of Register @ref FSKRRXFLH */
+/** Bit Mask for Sub-Register FSKRRXFLH.FSKRRXFLH */
+#define FSKRRXFLH_FSKRRXFLH_MASK        0x07
+/** Bit Offset for Sub-Register FSKRRXFLH.FSKRRXFLH */
+#define FSKRRXFLH_FSKRRXFLH_SHIFT       0
+
+/** Sub-registers of Register @ref PMUC */
+/** Bit Mask for Sub-Register PMUC.EN */
+#define PMUC_EN_MASK                    0x01
+/** Bit Offset for Sub-Register PMUC.EN */
+#define PMUC_EN_SHIFT                   0
+
+/** Sub-registers of Register @ref PMUVAL */
+/** Bit Mask for Sub-Register PMUVAL.PMUVAL */
+#define PMUVAL_PMUVAL_MASK              0xFF
+/** Bit Offset for Sub-Register PMUVAL.PMUVAL */
+#define PMUVAL_PMUVAL_SHIFT             0
+
+/** Sub-registers of Register @ref PMUQF */
+/** Bit Mask for Sub-Register PMUQF.PMUQF */
+#define PMUQF_PMUQF_MASK                0xFF
+/** Bit Offset for Sub-Register PMUQF.PMUQF */
+#define PMUQF_PMUQF_SHIFT               0
+
+/** Sub-registers of Register @ref PMUI */
+/** Bit Mask for Sub-Register PMUI.PMUI */
+#define PMUI_PMUI_MASK                  0xFF
+/** Bit Offset for Sub-Register PMUI.PMUI */
+#define PMUI_PMUI_SHIFT                 0
+
+/** Sub-registers of Register @ref PMUQ */
+/** Bit Mask for Sub-Register PMUQ.PMUQ */
+#define PMUQ_PMUQ_MASK                  0xFF
+/** Bit Offset for Sub-Register PMUQ.PMUQ */
+#define PMUQ_PMUQ_SHIFT                 0
+
+/** Sub-registers of Register @ref CNTC */
+/** Bit Mask for Sub-Register CNTC.EN */
+#define CNTC_EN_MASK                    0x01
+/** Bit Offset for Sub-Register CNTC.EN */
+#define CNTC_EN_SHIFT                   0
+
+/** Bit Mask for Sub-Register CNTC.RSTRXS */
+#define CNTC_RSTRXS_MASK                0x02
+/** Bit Offset for Sub-Register CNTC.RSTRXS */
+#define CNTC_RSTRXS_SHIFT               1
+
+/** Bit Mask for Sub-Register CNTC.RSTTXS */
+#define CNTC_RSTTXS_MASK                0x04
+/** Bit Offset for Sub-Register CNTC.RSTTXS */
+#define CNTC_RSTTXS_SHIFT               2
+
+/** Bit Mask for Sub-Register CNTC.CAPRXS */
+#define CNTC_CAPRXS_MASK                0x08
+/** Bit Offset for Sub-Register CNTC.CAPRXS */
+#define CNTC_CAPRXS_SHIFT               3
+
+/** Bit Mask for Sub-Register CNTC.CAPTXS */
+#define CNTC_CAPTXS_MASK                0x10
+/** Bit Offset for Sub-Register CNTC.CAPTXS */
+#define CNTC_CAPTXS_SHIFT               4
+
+/** Sub-registers of Register @ref CNT0 */
+/** Bit Mask for Sub-Register CNT0.CNT0 */
+#define CNT0_CNT0_MASK                  0xFF
+/** Bit Offset for Sub-Register CNT0.CNT0 */
+#define CNT0_CNT0_SHIFT                 0
+
+/** Sub-registers of Register @ref CNT1 */
+/** Bit Mask for Sub-Register CNT1.CNT1 */
+#define CNT1_CNT1_MASK                  0xFF
+/** Bit Offset for Sub-Register CNT1.CNT1 */
+#define CNT1_CNT1_SHIFT                 0
+
+/** Sub-registers of Register @ref CNT2 */
+/** Bit Mask for Sub-Register CNT2.CNT2 */
+#define CNT2_CNT2_MASK                  0xFF
+/** Bit Offset for Sub-Register CNT2.CNT2 */
+#define CNT2_CNT2_SHIFT                 0
+
+/** Sub-registers of Register @ref CNT3 */
+/** Bit Mask for Sub-Register CNT3.CNT3 */
+#define CNT3_CNT3_MASK                  0xFF
+/** Bit Offset for Sub-Register CNT3.CNT3 */
+#define CNT3_CNT3_SHIFT                 0
+
 /** Sub-registers of Register @ref FBRXS */
 /** Bit Mask for Sub-Register FBRXS.FBRXS */
 #define FBRXS_FBRXS_MASK                0xFF
@@ -1093,10 +1521,10 @@
 #define BASE_ADDR_BBC0_CORE0            (0x0300)
 /** Base address for BBC1_CORE1 register set */
 #define BASE_ADDR_BBC1_CORE1            (0x0400)
-/** Base address for BBC0_FB register set */
-#define BASE_ADDR_BBC0_FB               (0x2000)
-/** Base address for BBC1_FB register set */
-#define BASE_ADDR_BBC1_FB               (0x3000)
+/** Base address for BBC0_FB0 register set */
+#define BASE_ADDR_BBC0_FB0              (0x2000)
+/** Base address for BBC1_FB1 register set */
+#define BASE_ADDR_BBC1_FB1              (0x3000)
 
 /** Register addresses */
 
@@ -1149,6 +1577,8 @@
 #define SR_BBC0_IRQS_AGCH               RG_BBC0_IRQS, IRQS_AGCH_MASK, IRQS_AGCH_SHIFT
 /** Access parameters for sub-register AGCR in register @ref RG_BBC0_IRQS */
 #define SR_BBC0_IRQS_AGCR               RG_BBC0_IRQS, IRQS_AGCR_MASK, IRQS_AGCR_SHIFT
+/** Access parameters for sub-register FBLI in register @ref RG_BBC0_IRQS */
+#define SR_BBC0_IRQS_FBLI               RG_BBC0_IRQS, IRQS_FBLI_MASK, IRQS_FBLI_SHIFT
 
 /** Address for register BBC1_IRQS */
 #define RG_BBC1_IRQS                    (0x03)
@@ -1167,6 +1597,8 @@
 #define SR_BBC1_IRQS_AGCH               RG_BBC1_IRQS, IRQS_AGCH_MASK, IRQS_AGCH_SHIFT
 /** Access parameters for sub-register AGCR in register @ref RG_BBC1_IRQS */
 #define SR_BBC1_IRQS_AGCR               RG_BBC1_IRQS, IRQS_AGCR_MASK, IRQS_AGCR_SHIFT
+/** Access parameters for sub-register FBLI in register @ref RG_BBC1_IRQS */
+#define SR_BBC1_IRQS_FBLI               RG_BBC1_IRQS, IRQS_FBLI_MASK, IRQS_FBLI_SHIFT
 
 /** Address for register RF_RST */
 #define RG_RF_RST                       (0x05)
@@ -1249,16 +1681,22 @@
 #define SR_RF_IQIFC1_SKEWDRV            RG_RF_IQIFC1, IQIFC1_SKEWDRV_MASK, IQIFC1_SKEWDRV_SHIFT
 /** Access parameters for sub-register CHPM in register @ref RG_RF_IQIFC1 */
 #define SR_RF_IQIFC1_CHPM               RG_RF_IQIFC1, IQIFC1_CHPM_MASK, IQIFC1_CHPM_SHIFT
-/** Constant MODE_BB for sub-register @ref SR_CHPM in register RF_IQIFC1 */
-#define RF_MODE_BB                      (0x3)
 /** Constant MODE_BBRF for sub-register @ref SR_CHPM in register RF_IQIFC1 */
 #define RF_MODE_BBRF                    (0x0)
-/** Constant MODE_BBRFIQ for sub-register @ref SR_CHPM in register RF_IQIFC1 */
-#define RF_MODE_BBRFIQ                  (0x2)
+/** Constant MODE_BBRF09 for sub-register @ref SR_CHPM in register RF_IQIFC1 */
+#define RF_MODE_BBRF09                  (0x4)
+/** Constant MODE_BBRF24 for sub-register @ref SR_CHPM in register RF_IQIFC1 */
+#define RF_MODE_BBRF24                  (0x5)
 /** Constant MODE_RF for sub-register @ref SR_CHPM in register RF_IQIFC1 */
 #define RF_MODE_RF                      (0x1)
 /** Access parameters for sub-register FAILSF in register @ref RG_RF_IQIFC1 */
 #define SR_RF_IQIFC1_FAILSF             RG_RF_IQIFC1, IQIFC1_FAILSF_MASK, IQIFC1_FAILSF_SHIFT
+
+/** Address for register RF_IQIFC2 */
+#define RG_RF_IQIFC2                    (0x0C)
+/** Sub-registers of Register @ref RG_RF_IQIFC2 */
+/** Access parameters for sub-register SYNC in register @ref RG_RF_IQIFC2 */
+#define SR_RF_IQIFC2_SYNC               RG_RF_IQIFC2, IQIFC2_SYNC_MASK, IQIFC2_SYNC_SHIFT
 
 /** Address for register RF_PN */
 #define RG_RF_PN                        (0x0D)
@@ -1381,6 +1819,8 @@
 #define RF_BW800KHZ_IF1000KHZ           (0x7)
 /** Access parameters for sub-register IFS in register @ref RG_RF09_RXBWC */
 #define SR_RF09_RXBWC_IFS               RG_RF09_RXBWC, RXBWC_IFS_MASK, RXBWC_IFS_SHIFT
+/** Access parameters for sub-register IFI in register @ref RG_RF09_RXBWC */
+#define SR_RF09_RXBWC_IFI               RG_RF09_RXBWC, RXBWC_IFI_MASK, RXBWC_IFI_SHIFT
 
 /** Address for register RF09_RXDFE */
 #define RG_RF09_RXDFE                   (0x10A)
@@ -1530,6 +1970,18 @@
 /** Access parameters for sub-register LS in register @ref RG_RF09_PLL */
 #define SR_RF09_PLL_LS                  RG_RF09_PLL, PLL_LS_MASK, PLL_LS_SHIFT
 
+/** Address for register RF09_TXCI */
+#define RG_RF09_TXCI                    (0x125)
+/** Sub-registers of Register @ref RG_RF09_TXCI */
+/** Access parameters for sub-register DCOI in register @ref RG_RF09_TXCI */
+#define SR_RF09_TXCI_DCOI               RG_RF09_TXCI, TXCI_DCOI_MASK, TXCI_DCOI_SHIFT
+
+/** Address for register RF09_TXCQ */
+#define RG_RF09_TXCQ                    (0x126)
+/** Sub-registers of Register @ref RG_RF09_TXCQ */
+/** Access parameters for sub-register DCOQ in register @ref RG_RF09_TXCQ */
+#define SR_RF09_TXCQ_DCOQ               RG_RF09_TXCQ, TXCQ_DCOQ_MASK, TXCQ_DCOQ_SHIFT
+
 /** Address for register RF09_TXDACI */
 #define RG_RF09_TXDACI                  (0x127)
 /** Sub-registers of Register @ref RG_RF09_TXDACI */
@@ -1635,6 +2087,8 @@
 #define SR_RF24_RXBWC_BW                RG_RF24_RXBWC, RXBWC_BW_MASK, RXBWC_BW_SHIFT
 /** Access parameters for sub-register IFS in register @ref RG_RF24_RXBWC */
 #define SR_RF24_RXBWC_IFS               RG_RF24_RXBWC, RXBWC_IFS_MASK, RXBWC_IFS_SHIFT
+/** Access parameters for sub-register IFI in register @ref RG_RF24_RXBWC */
+#define SR_RF24_RXBWC_IFI               RG_RF24_RXBWC, RXBWC_IFI_MASK, RXBWC_IFI_SHIFT
 
 /** Address for register RF24_RXDFE */
 #define RG_RF24_RXDFE                   (0x20A)
@@ -1736,6 +2190,18 @@
 /** Access parameters for sub-register LS in register @ref RG_RF24_PLL */
 #define SR_RF24_PLL_LS                  RG_RF24_PLL, PLL_LS_MASK, PLL_LS_SHIFT
 
+/** Address for register RF24_TXCI */
+#define RG_RF24_TXCI                    (0x225)
+/** Sub-registers of Register @ref RG_RF24_TXCI */
+/** Access parameters for sub-register DCOI in register @ref RG_RF24_TXCI */
+#define SR_RF24_TXCI_DCOI               RG_RF24_TXCI, TXCI_DCOI_MASK, TXCI_DCOI_SHIFT
+
+/** Address for register RF24_TXCQ */
+#define RG_RF24_TXCQ                    (0x226)
+/** Sub-registers of Register @ref RG_RF24_TXCQ */
+/** Access parameters for sub-register DCOQ in register @ref RG_RF24_TXCQ */
+#define SR_RF24_TXCQ_DCOQ               RG_RF24_TXCQ, TXCQ_DCOQ_MASK, TXCQ_DCOQ_SHIFT
+
 /** Address for register RF24_TXDACI */
 #define RG_RF24_TXDACI                  (0x227)
 /** Sub-registers of Register @ref RG_RF24_TXDACI */
@@ -1753,7 +2219,7 @@
 #define SR_RF24_TXDACQ_ENTXDACQD        RG_RF24_TXDACQ, TXDACQ_ENTXDACQD_MASK, TXDACQ_ENTXDACQD_SHIFT
 
 /** Address for register BBC0_FBRXE */
-#define RG_BBC0_FBRXE                   (0x27FF)
+#define RG_BBC0_FBRXE                   (0x27FE)
 /** Sub-registers of Register @ref RG_BBC0_FBRXE */
 /** Access parameters for sub-register FBRXE in register @ref RG_BBC0_FBRXE */
 #define SR_BBC0_FBRXE_FBRXE             RG_BBC0_FBRXE, FBRXE_FBRXE_MASK, FBRXE_FBRXE_SHIFT
@@ -1765,7 +2231,7 @@
 #define SR_BBC0_FBTXS_FBTXS             RG_BBC0_FBTXS, FBTXS_FBTXS_MASK, FBTXS_FBTXS_SHIFT
 
 /** Address for register BBC0_FBTXE */
-#define RG_BBC0_FBTXE                   (0x2FFF)
+#define RG_BBC0_FBTXE                   (0x2FFE)
 /** Sub-registers of Register @ref RG_BBC0_FBTXE */
 /** Access parameters for sub-register FBTXE in register @ref RG_BBC0_FBTXE */
 #define SR_BBC0_FBTXE_FBTXE             RG_BBC0_FBTXE, FBTXE_FBTXE_MASK, FBTXE_FBTXE_SHIFT
@@ -1787,6 +2253,8 @@
 #define SR_BBC0_IRQM_AGCH               RG_BBC0_IRQM, IRQM_AGCH_MASK, IRQM_AGCH_SHIFT
 /** Access parameters for sub-register AGCR in register @ref RG_BBC0_IRQM */
 #define SR_BBC0_IRQM_AGCR               RG_BBC0_IRQM, IRQM_AGCR_MASK, IRQM_AGCR_SHIFT
+/** Access parameters for sub-register FBLI in register @ref RG_BBC0_IRQM */
+#define SR_BBC0_IRQM_FBLI               RG_BBC0_IRQM, IRQM_FBLI_MASK, IRQM_FBLI_SHIFT
 
 /** Address for register BBC1_FBRXS */
 #define RG_BBC1_FBRXS                   (0x3000)
@@ -1826,12 +2294,6 @@
 /** Access parameters for sub-register TXUR in register @ref RG_BBC0_PS */
 #define SR_BBC0_PS_TXUR                 RG_BBC0_PS, PS_TXUR_MASK, PS_TXUR_SHIFT
 
-/** Address for register BBC0_FBLVL */
-#define RG_BBC0_FBLVL                   (0x303)
-/** Sub-registers of Register @ref RG_BBC0_FBLVL */
-/** Access parameters for sub-register FBLVL in register @ref RG_BBC0_FBLVL */
-#define SR_BBC0_FBLVL_FBLVL             RG_BBC0_FBLVL, FBLVL_FBLVL_MASK, FBLVL_FBLVL_SHIFT
-
 /** Address for register BBC0_RXFLL */
 #define RG_BBC0_RXFLL                   (0x304)
 /** Sub-registers of Register @ref RG_BBC0_RXFLL */
@@ -1856,6 +2318,30 @@
 /** Access parameters for sub-register TXFLH in register @ref RG_BBC0_TXFLH */
 #define SR_BBC0_TXFLH_TXFLH             RG_BBC0_TXFLH, TXFLH_TXFLH_MASK, TXFLH_TXFLH_SHIFT
 
+/** Address for register BBC0_FBLL */
+#define RG_BBC0_FBLL                    (0x308)
+/** Sub-registers of Register @ref RG_BBC0_FBLL */
+/** Access parameters for sub-register FBLL in register @ref RG_BBC0_FBLL */
+#define SR_BBC0_FBLL_FBLL               RG_BBC0_FBLL, FBLL_FBLL_MASK, FBLL_FBLL_SHIFT
+
+/** Address for register BBC0_FBLH */
+#define RG_BBC0_FBLH                    (0x309)
+/** Sub-registers of Register @ref RG_BBC0_FBLH */
+/** Access parameters for sub-register FBLH in register @ref RG_BBC0_FBLH */
+#define SR_BBC0_FBLH_FBLH               RG_BBC0_FBLH, FBLH_FBLH_MASK, FBLH_FBLH_SHIFT
+
+/** Address for register BBC0_FBLIL */
+#define RG_BBC0_FBLIL                   (0x30A)
+/** Sub-registers of Register @ref RG_BBC0_FBLIL */
+/** Access parameters for sub-register FBLIL in register @ref RG_BBC0_FBLIL */
+#define SR_BBC0_FBLIL_FBLIL             RG_BBC0_FBLIL, FBLIL_FBLIL_MASK, FBLIL_FBLIL_SHIFT
+
+/** Address for register BBC0_FBLIH */
+#define RG_BBC0_FBLIH                   (0x30B)
+/** Sub-registers of Register @ref RG_BBC0_FBLIH */
+/** Access parameters for sub-register FBLIH in register @ref RG_BBC0_FBLIH */
+#define SR_BBC0_FBLIH_FBLIH             RG_BBC0_FBLIH, FBLIH_FBLIH_MASK, FBLIH_FBLIH_SHIFT
+
 /** Address for register BBC0_OFDMPHRTX */
 #define RG_BBC0_OFDMPHRTX               (0x30C)
 /** Sub-registers of Register @ref RG_BBC0_OFDMPHRTX */
@@ -1875,6 +2361,8 @@
 /** Sub-registers of Register @ref RG_BBC0_OFDMPHRRX */
 /** Access parameters for sub-register MCS in register @ref RG_BBC0_OFDMPHRRX */
 #define SR_BBC0_OFDMPHRRX_MCS           RG_BBC0_OFDMPHRRX, OFDMPHRRX_MCS_MASK, OFDMPHRRX_MCS_SHIFT
+/** Access parameters for sub-register SPC in register @ref RG_BBC0_OFDMPHRRX */
+#define SR_BBC0_OFDMPHRRX_SPC           RG_BBC0_OFDMPHRRX, OFDMPHRRX_SPC_MASK, OFDMPHRRX_SPC_SHIFT
 /** Access parameters for sub-register RB5 in register @ref RG_BBC0_OFDMPHRRX */
 #define SR_BBC0_OFDMPHRRX_RB5           RG_BBC0_OFDMPHRRX, OFDMPHRRX_RB5_MASK, OFDMPHRRX_RB5_SHIFT
 /** Access parameters for sub-register RB17 in register @ref RG_BBC0_OFDMPHRRX */
@@ -1897,6 +2385,14 @@
 #define SR_BBC0_OFDMC_SSTX              RG_BBC0_OFDMC, OFDMC_SSTX_MASK, OFDMC_SSTX_SHIFT
 /** Access parameters for sub-register SSRX in register @ref RG_BBC0_OFDMC */
 #define SR_BBC0_OFDMC_SSRX              RG_BBC0_OFDMC, OFDMC_SSRX_MASK, OFDMC_SSRX_SHIFT
+
+/** Address for register BBC0_OFDMSW */
+#define RG_BBC0_OFDMSW                  (0x30F)
+/** Sub-registers of Register @ref RG_BBC0_OFDMSW */
+/** Access parameters for sub-register RXO in register @ref RG_BBC0_OFDMSW */
+#define SR_BBC0_OFDMSW_RXO              RG_BBC0_OFDMSW, OFDMSW_RXO_MASK, OFDMSW_RXO_SHIFT
+/** Access parameters for sub-register PDT in register @ref RG_BBC0_OFDMSW */
+#define SR_BBC0_OFDMSW_PDT              RG_BBC0_OFDMSW, OFDMSW_PDT_MASK, OFDMSW_PDT_SHIFT
 
 /** Address for register BBC0_OQPSKC0 */
 #define RG_BBC0_OQPSKC0                 (0x310)
@@ -1925,6 +2421,10 @@
 #define SR_BBC0_OQPSKC1_PDT0            RG_BBC0_OQPSKC1, OQPSKC1_PDT0_MASK, OQPSKC1_PDT0_SHIFT
 /** Access parameters for sub-register PDT1 in register @ref RG_BBC0_OQPSKC1 */
 #define SR_BBC0_OQPSKC1_PDT1            RG_BBC0_OQPSKC1, OQPSKC1_PDT1_MASK, OQPSKC1_PDT1_SHIFT
+/** Access parameters for sub-register RXOLEG in register @ref RG_BBC0_OQPSKC1 */
+#define SR_BBC0_OQPSKC1_RXOLEG          RG_BBC0_OQPSKC1, OQPSKC1_RXOLEG_MASK, OQPSKC1_RXOLEG_SHIFT
+/** Access parameters for sub-register RXO in register @ref RG_BBC0_OQPSKC1 */
+#define SR_BBC0_OQPSKC1_RXO             RG_BBC0_OQPSKC1, OQPSKC1_RXO_MASK, OQPSKC1_RXO_SHIFT
 
 /** Address for register BBC0_OQPSKC2 */
 #define RG_BBC0_OQPSKC2                 (0x312)
@@ -1935,14 +2435,16 @@
 #define SR_BBC0_OQPSKC2_FCSTLEG         RG_BBC0_OQPSKC2, OQPSKC2_FCSTLEG_MASK, OQPSKC2_FCSTLEG_SHIFT
 /** Access parameters for sub-register ENPROP in register @ref RG_BBC0_OQPSKC2 */
 #define SR_BBC0_OQPSKC2_ENPROP          RG_BBC0_OQPSKC2, OQPSKC2_ENPROP_MASK, OQPSKC2_ENPROP_SHIFT
+/** Access parameters for sub-register SPC in register @ref RG_BBC0_OQPSKC2 */
+#define SR_BBC0_OQPSKC2_SPC             RG_BBC0_OQPSKC2, OQPSKC2_SPC_MASK, OQPSKC2_SPC_SHIFT
 
 /** Address for register BBC0_OQPSKC3 */
 #define RG_BBC0_OQPSKC3                 (0x313)
 /** Sub-registers of Register @ref RG_BBC0_OQPSKC3 */
-/** Access parameters for sub-register SFDS in register @ref RG_BBC0_OQPSKC3 */
-#define SR_BBC0_OQPSKC3_SFDS            RG_BBC0_OQPSKC3, OQPSKC3_SFDS_MASK, OQPSKC3_SFDS_SHIFT
 /** Access parameters for sub-register NSFD in register @ref RG_BBC0_OQPSKC3 */
 #define SR_BBC0_OQPSKC3_NSFD            RG_BBC0_OQPSKC3, OQPSKC3_NSFD_MASK, OQPSKC3_NSFD_SHIFT
+/** Access parameters for sub-register HRLEG in register @ref RG_BBC0_OQPSKC3 */
+#define SR_BBC0_OQPSKC3_HRLEG           RG_BBC0_OQPSKC3, OQPSKC3_HRLEG_MASK, OQPSKC3_HRLEG_SHIFT
 
 /** Address for register BBC0_OQPSKPHRTX */
 #define RG_BBC0_OQPSKPHRTX              (0x314)
@@ -1953,6 +2455,8 @@
 #define SR_BBC0_OQPSKPHRTX_MOD          RG_BBC0_OQPSKPHRTX, OQPSKPHRTX_MOD_MASK, OQPSKPHRTX_MOD_SHIFT
 /** Access parameters for sub-register RB0 in register @ref RG_BBC0_OQPSKPHRTX */
 #define SR_BBC0_OQPSKPHRTX_RB0          RG_BBC0_OQPSKPHRTX, OQPSKPHRTX_RB0_MASK, OQPSKPHRTX_RB0_SHIFT
+/** Access parameters for sub-register PPDUT in register @ref RG_BBC0_OQPSKPHRTX */
+#define SR_BBC0_OQPSKPHRTX_PPDUT        RG_BBC0_OQPSKPHRTX, OQPSKPHRTX_PPDUT_MASK, OQPSKPHRTX_PPDUT_SHIFT
 
 /** Address for register BBC0_OQPSKPHRRX */
 #define RG_BBC0_OQPSKPHRRX              (0x315)
@@ -1963,6 +2467,8 @@
 #define SR_BBC0_OQPSKPHRRX_MOD          RG_BBC0_OQPSKPHRRX, OQPSKPHRRX_MOD_MASK, OQPSKPHRRX_MOD_SHIFT
 /** Access parameters for sub-register RB0 in register @ref RG_BBC0_OQPSKPHRRX */
 #define SR_BBC0_OQPSKPHRRX_RB0          RG_BBC0_OQPSKPHRRX, OQPSKPHRRX_RB0_MASK, OQPSKPHRRX_RB0_SHIFT
+/** Access parameters for sub-register PPDUT in register @ref RG_BBC0_OQPSKPHRRX */
+#define SR_BBC0_OQPSKPHRRX_PPDUT        RG_BBC0_OQPSKPHRRX, OQPSKPHRRX_PPDUT_MASK, OQPSKPHRRX_PPDUT_SHIFT
 
 /** Address for register BBC0_AFC0 */
 #define RG_BBC0_AFC0                    (0x320)
@@ -2168,11 +2674,201 @@
 /** Access parameters for sub-register MACSHA1F3 in register @ref RG_BBC0_MACSHA1F3 */
 #define SR_BBC0_MACSHA1F3_MACSHA1F3     RG_BBC0_MACSHA1F3, MACSHA1F3_MACSHA1F3_MASK, MACSHA1F3_MACSHA1F3_SHIFT
 
+/** Address for register BBC0_AMCS */
+#define RG_BBC0_AMCS                    (0x340)
+/** Sub-registers of Register @ref RG_BBC0_AMCS */
+/** Access parameters for sub-register TX2RX in register @ref RG_BBC0_AMCS */
+#define SR_BBC0_AMCS_TX2RX              RG_BBC0_AMCS, AMCS_TX2RX_MASK, AMCS_TX2RX_SHIFT
+/** Access parameters for sub-register CCATX in register @ref RG_BBC0_AMCS */
+#define SR_BBC0_AMCS_CCATX              RG_BBC0_AMCS, AMCS_CCATX_MASK, AMCS_CCATX_SHIFT
+/** Access parameters for sub-register CCAED in register @ref RG_BBC0_AMCS */
+#define SR_BBC0_AMCS_CCAED              RG_BBC0_AMCS, AMCS_CCAED_MASK, AMCS_CCAED_SHIFT
+/** Constant CH_BUSY for sub-register @ref SR_CCAED in register BBC0_AMCS */
+#define BB_CH_BUSY                      (0x1)
+/** Constant CH_CLEAR for sub-register @ref SR_CCAED in register BBC0_AMCS */
+#define BB_CH_CLEAR                     (0x0)
+/** Access parameters for sub-register AACK in register @ref RG_BBC0_AMCS */
+#define SR_BBC0_AMCS_AACK               RG_BBC0_AMCS, AMCS_AACK_MASK, AMCS_AACK_SHIFT
+/** Access parameters for sub-register AACKS in register @ref RG_BBC0_AMCS */
+#define SR_BBC0_AMCS_AACKS              RG_BBC0_AMCS, AMCS_AACKS_MASK, AMCS_AACKS_SHIFT
+/** Access parameters for sub-register AACKDR in register @ref RG_BBC0_AMCS */
+#define SR_BBC0_AMCS_AACKDR             RG_BBC0_AMCS, AMCS_AACKDR_MASK, AMCS_AACKDR_SHIFT
+/** Access parameters for sub-register AACKFA in register @ref RG_BBC0_AMCS */
+#define SR_BBC0_AMCS_AACKFA             RG_BBC0_AMCS, AMCS_AACKFA_MASK, AMCS_AACKFA_SHIFT
+/** Access parameters for sub-register AACKFT in register @ref RG_BBC0_AMCS */
+#define SR_BBC0_AMCS_AACKFT             RG_BBC0_AMCS, AMCS_AACKFT_MASK, AMCS_AACKFT_SHIFT
+
+/** Address for register BBC0_AMEDT */
+#define RG_BBC0_AMEDT                   (0x341)
+/** Sub-registers of Register @ref RG_BBC0_AMEDT */
+/** Access parameters for sub-register AMEDT in register @ref RG_BBC0_AMEDT */
+#define SR_BBC0_AMEDT_AMEDT             RG_BBC0_AMEDT, AMEDT_AMEDT_MASK, AMEDT_AMEDT_SHIFT
+
+/** Address for register BBC0_AMAACKPD */
+#define RG_BBC0_AMAACKPD                (0x342)
+/** Sub-registers of Register @ref RG_BBC0_AMAACKPD */
+/** Access parameters for sub-register PD0 in register @ref RG_BBC0_AMAACKPD */
+#define SR_BBC0_AMAACKPD_PD0            RG_BBC0_AMAACKPD, AMAACKPD_PD0_MASK, AMAACKPD_PD0_SHIFT
+/** Access parameters for sub-register PD1 in register @ref RG_BBC0_AMAACKPD */
+#define SR_BBC0_AMAACKPD_PD1            RG_BBC0_AMAACKPD, AMAACKPD_PD1_MASK, AMAACKPD_PD1_SHIFT
+/** Access parameters for sub-register PD2 in register @ref RG_BBC0_AMAACKPD */
+#define SR_BBC0_AMAACKPD_PD2            RG_BBC0_AMAACKPD, AMAACKPD_PD2_MASK, AMAACKPD_PD2_SHIFT
+/** Access parameters for sub-register PD3 in register @ref RG_BBC0_AMAACKPD */
+#define SR_BBC0_AMAACKPD_PD3            RG_BBC0_AMAACKPD, AMAACKPD_PD3_MASK, AMAACKPD_PD3_SHIFT
+
+/** Address for register BBC0_AMAACKTL */
+#define RG_BBC0_AMAACKTL                (0x343)
+/** Sub-registers of Register @ref RG_BBC0_AMAACKTL */
+/** Access parameters for sub-register AMAACKTL in register @ref RG_BBC0_AMAACKTL */
+#define SR_BBC0_AMAACKTL_AMAACKTL       RG_BBC0_AMAACKTL, AMAACKTL_AMAACKTL_MASK, AMAACKTL_AMAACKTL_SHIFT
+
+/** Address for register BBC0_AMAACKTH */
+#define RG_BBC0_AMAACKTH                (0x344)
+/** Sub-registers of Register @ref RG_BBC0_AMAACKTH */
+/** Access parameters for sub-register AMAACKTH in register @ref RG_BBC0_AMAACKTH */
+#define SR_BBC0_AMAACKTH_AMAACKTH       RG_BBC0_AMAACKTH, AMAACKTH_AMAACKTH_MASK, AMAACKTH_AMAACKTH_SHIFT
+
+/** Address for register BBC0_FSKC0 */
+#define RG_BBC0_FSKC0                   (0x360)
+/** Sub-registers of Register @ref RG_BBC0_FSKC0 */
+/** Access parameters for sub-register MORD in register @ref RG_BBC0_FSKC0 */
+#define SR_BBC0_FSKC0_MORD              RG_BBC0_FSKC0, FSKC0_MORD_MASK, FSKC0_MORD_SHIFT
+/** Access parameters for sub-register MIDX in register @ref RG_BBC0_FSKC0 */
+#define SR_BBC0_FSKC0_MIDX              RG_BBC0_FSKC0, FSKC0_MIDX_MASK, FSKC0_MIDX_SHIFT
+/** Access parameters for sub-register MIDXS in register @ref RG_BBC0_FSKC0 */
+#define SR_BBC0_FSKC0_MIDXS             RG_BBC0_FSKC0, FSKC0_MIDXS_MASK, FSKC0_MIDXS_SHIFT
+/** Access parameters for sub-register BT in register @ref RG_BBC0_FSKC0 */
+#define SR_BBC0_FSKC0_BT                RG_BBC0_FSKC0, FSKC0_BT_MASK, FSKC0_BT_SHIFT
+
+/** Address for register BBC0_FSKC1 */
+#define RG_BBC0_FSKC1                   (0x361)
+/** Sub-registers of Register @ref RG_BBC0_FSKC1 */
+/** Access parameters for sub-register SRATE in register @ref RG_BBC0_FSKC1 */
+#define SR_BBC0_FSKC1_SRATE             RG_BBC0_FSKC1, FSKC1_SRATE_MASK, FSKC1_SRATE_SHIFT
+/** Access parameters for sub-register FI in register @ref RG_BBC0_FSKC1 */
+#define SR_BBC0_FSKC1_FI                RG_BBC0_FSKC1, FSKC1_FI_MASK, FSKC1_FI_SHIFT
+/** Access parameters for sub-register FSKPLH in register @ref RG_BBC0_FSKC1 */
+#define SR_BBC0_FSKC1_FSKPLH            RG_BBC0_FSKC1, FSKC1_FSKPLH_MASK, FSKC1_FSKPLH_SHIFT
+
+/** Address for register BBC0_FSKC2 */
+#define RG_BBC0_FSKC2                   (0x362)
+/** Sub-registers of Register @ref RG_BBC0_FSKC2 */
+/** Access parameters for sub-register FECIE in register @ref RG_BBC0_FSKC2 */
+#define SR_BBC0_FSKC2_FECIE             RG_BBC0_FSKC2, FSKC2_FECIE_MASK, FSKC2_FECIE_SHIFT
+/** Access parameters for sub-register FECS in register @ref RG_BBC0_FSKC2 */
+#define SR_BBC0_FSKC2_FECS              RG_BBC0_FSKC2, FSKC2_FECS_MASK, FSKC2_FECS_SHIFT
+/** Access parameters for sub-register PRI in register @ref RG_BBC0_FSKC2 */
+#define SR_BBC0_FSKC2_PRI               RG_BBC0_FSKC2, FSKC2_PRI_MASK, FSKC2_PRI_SHIFT
+/** Access parameters for sub-register MSE in register @ref RG_BBC0_FSKC2 */
+#define SR_BBC0_FSKC2_MSE               RG_BBC0_FSKC2, FSKC2_MSE_MASK, FSKC2_MSE_SHIFT
+/** Access parameters for sub-register RXPTO in register @ref RG_BBC0_FSKC2 */
+#define SR_BBC0_FSKC2_RXPTO             RG_BBC0_FSKC2, FSKC2_RXPTO_MASK, FSKC2_RXPTO_SHIFT
+/** Access parameters for sub-register RXO in register @ref RG_BBC0_FSKC2 */
+#define SR_BBC0_FSKC2_RXO               RG_BBC0_FSKC2, FSKC2_RXO_MASK, FSKC2_RXO_SHIFT
+
+/** Address for register BBC0_FSKC3 */
+#define RG_BBC0_FSKC3                   (0x363)
+/** Sub-registers of Register @ref RG_BBC0_FSKC3 */
+/** Access parameters for sub-register PDT in register @ref RG_BBC0_FSKC3 */
+#define SR_BBC0_FSKC3_PDT               RG_BBC0_FSKC3, FSKC3_PDT_MASK, FSKC3_PDT_SHIFT
+/** Access parameters for sub-register SFDT in register @ref RG_BBC0_FSKC3 */
+#define SR_BBC0_FSKC3_SFDT              RG_BBC0_FSKC3, FSKC3_SFDT_MASK, FSKC3_SFDT_SHIFT
+
+/** Address for register BBC0_FSKC4 */
+#define RG_BBC0_FSKC4                   (0x364)
+/** Sub-registers of Register @ref RG_BBC0_FSKC4 */
+/** Access parameters for sub-register CSFD0 in register @ref RG_BBC0_FSKC4 */
+#define SR_BBC0_FSKC4_CSFD0             RG_BBC0_FSKC4, FSKC4_CSFD0_MASK, FSKC4_CSFD0_SHIFT
+/** Access parameters for sub-register CSFD1 in register @ref RG_BBC0_FSKC4 */
+#define SR_BBC0_FSKC4_CSFD1             RG_BBC0_FSKC4, FSKC4_CSFD1_MASK, FSKC4_CSFD1_SHIFT
+/** Access parameters for sub-register RAWRBIT in register @ref RG_BBC0_FSKC4 */
+#define SR_BBC0_FSKC4_RAWRBIT           RG_BBC0_FSKC4, FSKC4_RAWRBIT_MASK, FSKC4_RAWRBIT_SHIFT
+/** Access parameters for sub-register SFD32 in register @ref RG_BBC0_FSKC4 */
+#define SR_BBC0_FSKC4_SFD32             RG_BBC0_FSKC4, FSKC4_SFD32_MASK, FSKC4_SFD32_SHIFT
+/** Access parameters for sub-register SFDQ in register @ref RG_BBC0_FSKC4 */
+#define SR_BBC0_FSKC4_SFDQ              RG_BBC0_FSKC4, FSKC4_SFDQ_MASK, FSKC4_SFDQ_SHIFT
+
+/** Address for register BBC0_FSKPLL */
+#define RG_BBC0_FSKPLL                  (0x365)
+/** Sub-registers of Register @ref RG_BBC0_FSKPLL */
+/** Access parameters for sub-register FSKPLL in register @ref RG_BBC0_FSKPLL */
+#define SR_BBC0_FSKPLL_FSKPLL           RG_BBC0_FSKPLL, FSKPLL_FSKPLL_MASK, FSKPLL_FSKPLL_SHIFT
+
+/** Address for register BBC0_FSKSFD0L */
+#define RG_BBC0_FSKSFD0L                (0x366)
+/** Sub-registers of Register @ref RG_BBC0_FSKSFD0L */
+/** Access parameters for sub-register FSKSFD0L in register @ref RG_BBC0_FSKSFD0L */
+#define SR_BBC0_FSKSFD0L_FSKSFD0L       RG_BBC0_FSKSFD0L, FSKSFD0L_FSKSFD0L_MASK, FSKSFD0L_FSKSFD0L_SHIFT
+
+/** Address for register BBC0_FSKSFD0H */
+#define RG_BBC0_FSKSFD0H                (0x367)
+/** Sub-registers of Register @ref RG_BBC0_FSKSFD0H */
+/** Access parameters for sub-register FSKSFD0H in register @ref RG_BBC0_FSKSFD0H */
+#define SR_BBC0_FSKSFD0H_FSKSFD0H       RG_BBC0_FSKSFD0H, FSKSFD0H_FSKSFD0H_MASK, FSKSFD0H_FSKSFD0H_SHIFT
+
+/** Address for register BBC0_FSKSFD1L */
+#define RG_BBC0_FSKSFD1L                (0x368)
+/** Sub-registers of Register @ref RG_BBC0_FSKSFD1L */
+/** Access parameters for sub-register FSKSFD1L in register @ref RG_BBC0_FSKSFD1L */
+#define SR_BBC0_FSKSFD1L_FSKSFD1L       RG_BBC0_FSKSFD1L, FSKSFD1L_FSKSFD1L_MASK, FSKSFD1L_FSKSFD1L_SHIFT
+
+/** Address for register BBC0_FSKSFD1H */
+#define RG_BBC0_FSKSFD1H                (0x369)
+/** Sub-registers of Register @ref RG_BBC0_FSKSFD1H */
+/** Access parameters for sub-register FSKSFD1H in register @ref RG_BBC0_FSKSFD1H */
+#define SR_BBC0_FSKSFD1H_FSKSFD1H       RG_BBC0_FSKSFD1H, FSKSFD1H_FSKSFD1H_MASK, FSKSFD1H_FSKSFD1H_SHIFT
+
+/** Address for register BBC0_FSKPHRTX */
+#define RG_BBC0_FSKPHRTX                (0x36A)
+/** Sub-registers of Register @ref RG_BBC0_FSKPHRTX */
+/** Access parameters for sub-register RB1 in register @ref RG_BBC0_FSKPHRTX */
+#define SR_BBC0_FSKPHRTX_RB1            RG_BBC0_FSKPHRTX, FSKPHRTX_RB1_MASK, FSKPHRTX_RB1_SHIFT
+/** Access parameters for sub-register RB2 in register @ref RG_BBC0_FSKPHRTX */
+#define SR_BBC0_FSKPHRTX_RB2            RG_BBC0_FSKPHRTX, FSKPHRTX_RB2_MASK, FSKPHRTX_RB2_SHIFT
+/** Access parameters for sub-register DW in register @ref RG_BBC0_FSKPHRTX */
+#define SR_BBC0_FSKPHRTX_DW             RG_BBC0_FSKPHRTX, FSKPHRTX_DW_MASK, FSKPHRTX_DW_SHIFT
+/** Access parameters for sub-register SFD in register @ref RG_BBC0_FSKPHRTX */
+#define SR_BBC0_FSKPHRTX_SFD            RG_BBC0_FSKPHRTX, FSKPHRTX_SFD_MASK, FSKPHRTX_SFD_SHIFT
+
+/** Address for register BBC0_FSKPHRRX */
+#define RG_BBC0_FSKPHRRX                (0x36B)
+/** Sub-registers of Register @ref RG_BBC0_FSKPHRRX */
+/** Access parameters for sub-register RB1 in register @ref RG_BBC0_FSKPHRRX */
+#define SR_BBC0_FSKPHRRX_RB1            RG_BBC0_FSKPHRRX, FSKPHRRX_RB1_MASK, FSKPHRRX_RB1_SHIFT
+/** Access parameters for sub-register RB2 in register @ref RG_BBC0_FSKPHRRX */
+#define SR_BBC0_FSKPHRRX_RB2            RG_BBC0_FSKPHRRX, FSKPHRRX_RB2_MASK, FSKPHRRX_RB2_SHIFT
+/** Access parameters for sub-register DW in register @ref RG_BBC0_FSKPHRRX */
+#define SR_BBC0_FSKPHRRX_DW             RG_BBC0_FSKPHRRX, FSKPHRRX_DW_MASK, FSKPHRRX_DW_SHIFT
+/** Access parameters for sub-register SFD in register @ref RG_BBC0_FSKPHRRX */
+#define SR_BBC0_FSKPHRRX_SFD            RG_BBC0_FSKPHRRX, FSKPHRRX_SFD_MASK, FSKPHRRX_SFD_SHIFT
+/** Access parameters for sub-register MS in register @ref RG_BBC0_FSKPHRRX */
+#define SR_BBC0_FSKPHRRX_MS             RG_BBC0_FSKPHRRX, FSKPHRRX_MS_MASK, FSKPHRRX_MS_SHIFT
+/** Access parameters for sub-register FCST in register @ref RG_BBC0_FSKPHRRX */
+#define SR_BBC0_FSKPHRRX_FCST           RG_BBC0_FSKPHRRX, FSKPHRRX_FCST_MASK, FSKPHRRX_FCST_SHIFT
+
+/** Address for register BBC0_FSKRRXFLL */
+#define RG_BBC0_FSKRRXFLL               (0x370)
+/** Sub-registers of Register @ref RG_BBC0_FSKRRXFLL */
+/** Access parameters for sub-register FSKRRXFLL in register @ref RG_BBC0_FSKRRXFLL */
+#define SR_BBC0_FSKRRXFLL_FSKRRXFLL     RG_BBC0_FSKRRXFLL, FSKRRXFLL_FSKRRXFLL_MASK, FSKRRXFLL_FSKRRXFLL_SHIFT
+
+/** Address for register BBC0_FSKRRXFLH */
+#define RG_BBC0_FSKRRXFLH               (0x371)
+/** Sub-registers of Register @ref RG_BBC0_FSKRRXFLH */
+/** Access parameters for sub-register FSKRRXFLH in register @ref RG_BBC0_FSKRRXFLH */
+#define SR_BBC0_FSKRRXFLH_FSKRRXFLH     RG_BBC0_FSKRRXFLH, FSKRRXFLH_FSKRRXFLH_MASK, FSKRRXFLH_FSKRRXFLH_SHIFT
+
 /** Address for register BBC1_FBRXE */
-#define RG_BBC1_FBRXE                   (0x37FF)
+#define RG_BBC1_FBRXE                   (0x37FE)
 /** Sub-registers of Register @ref RG_BBC1_FBRXE */
 /** Access parameters for sub-register FBRXE in register @ref RG_BBC1_FBRXE */
 #define SR_BBC1_FBRXE_FBRXE             RG_BBC1_FBRXE, FBRXE_FBRXE_MASK, FBRXE_FBRXE_SHIFT
+
+/** Address for register BBC0_PMUC */
+#define RG_BBC0_PMUC                    (0x380)
+/** Sub-registers of Register @ref RG_BBC0_PMUC */
+/** Access parameters for sub-register EN in register @ref RG_BBC0_PMUC */
+#define SR_BBC0_PMUC_EN                 RG_BBC0_PMUC, PMUC_EN_MASK, PMUC_EN_SHIFT
 
 /** Address for register BBC1_FBTXS */
 #define RG_BBC1_FBTXS                   (0x3800)
@@ -2180,8 +2876,70 @@
 /** Access parameters for sub-register FBTXS in register @ref RG_BBC1_FBTXS */
 #define SR_BBC1_FBTXS_FBTXS             RG_BBC1_FBTXS, FBTXS_FBTXS_MASK, FBTXS_FBTXS_SHIFT
 
+/** Address for register BBC0_PMUVAL */
+#define RG_BBC0_PMUVAL                  (0x381)
+/** Sub-registers of Register @ref RG_BBC0_PMUVAL */
+/** Access parameters for sub-register PMUVAL in register @ref RG_BBC0_PMUVAL */
+#define SR_BBC0_PMUVAL_PMUVAL           RG_BBC0_PMUVAL, PMUVAL_PMUVAL_MASK, PMUVAL_PMUVAL_SHIFT
+
+/** Address for register BBC0_PMUQF */
+#define RG_BBC0_PMUQF                   (0x382)
+/** Sub-registers of Register @ref RG_BBC0_PMUQF */
+/** Access parameters for sub-register PMUQF in register @ref RG_BBC0_PMUQF */
+#define SR_BBC0_PMUQF_PMUQF             RG_BBC0_PMUQF, PMUQF_PMUQF_MASK, PMUQF_PMUQF_SHIFT
+
+/** Address for register BBC0_PMUI */
+#define RG_BBC0_PMUI                    (0x383)
+/** Sub-registers of Register @ref RG_BBC0_PMUI */
+/** Access parameters for sub-register PMUI in register @ref RG_BBC0_PMUI */
+#define SR_BBC0_PMUI_PMUI               RG_BBC0_PMUI, PMUI_PMUI_MASK, PMUI_PMUI_SHIFT
+
+/** Address for register BBC0_PMUQ */
+#define RG_BBC0_PMUQ                    (0x384)
+/** Sub-registers of Register @ref RG_BBC0_PMUQ */
+/** Access parameters for sub-register PMUQ in register @ref RG_BBC0_PMUQ */
+#define SR_BBC0_PMUQ_PMUQ               RG_BBC0_PMUQ, PMUQ_PMUQ_MASK, PMUQ_PMUQ_SHIFT
+
+/** Address for register BBC0_CNTC */
+#define RG_BBC0_CNTC                    (0x390)
+/** Sub-registers of Register @ref RG_BBC0_CNTC */
+/** Access parameters for sub-register EN in register @ref RG_BBC0_CNTC */
+#define SR_BBC0_CNTC_EN                 RG_BBC0_CNTC, CNTC_EN_MASK, CNTC_EN_SHIFT
+/** Access parameters for sub-register RSTRXS in register @ref RG_BBC0_CNTC */
+#define SR_BBC0_CNTC_RSTRXS             RG_BBC0_CNTC, CNTC_RSTRXS_MASK, CNTC_RSTRXS_SHIFT
+/** Access parameters for sub-register RSTTXS in register @ref RG_BBC0_CNTC */
+#define SR_BBC0_CNTC_RSTTXS             RG_BBC0_CNTC, CNTC_RSTTXS_MASK, CNTC_RSTTXS_SHIFT
+/** Access parameters for sub-register CAPRXS in register @ref RG_BBC0_CNTC */
+#define SR_BBC0_CNTC_CAPRXS             RG_BBC0_CNTC, CNTC_CAPRXS_MASK, CNTC_CAPRXS_SHIFT
+/** Access parameters for sub-register CAPTXS in register @ref RG_BBC0_CNTC */
+#define SR_BBC0_CNTC_CAPTXS             RG_BBC0_CNTC, CNTC_CAPTXS_MASK, CNTC_CAPTXS_SHIFT
+
+/** Address for register BBC0_CNT0 */
+#define RG_BBC0_CNT0                    (0x391)
+/** Sub-registers of Register @ref RG_BBC0_CNT0 */
+/** Access parameters for sub-register CNT0 in register @ref RG_BBC0_CNT0 */
+#define SR_BBC0_CNT0_CNT0               RG_BBC0_CNT0, CNT0_CNT0_MASK, CNT0_CNT0_SHIFT
+
+/** Address for register BBC0_CNT1 */
+#define RG_BBC0_CNT1                    (0x392)
+/** Sub-registers of Register @ref RG_BBC0_CNT1 */
+/** Access parameters for sub-register CNT1 in register @ref RG_BBC0_CNT1 */
+#define SR_BBC0_CNT1_CNT1               RG_BBC0_CNT1, CNT1_CNT1_MASK, CNT1_CNT1_SHIFT
+
+/** Address for register BBC0_CNT2 */
+#define RG_BBC0_CNT2                    (0x393)
+/** Sub-registers of Register @ref RG_BBC0_CNT2 */
+/** Access parameters for sub-register CNT2 in register @ref RG_BBC0_CNT2 */
+#define SR_BBC0_CNT2_CNT2               RG_BBC0_CNT2, CNT2_CNT2_MASK, CNT2_CNT2_SHIFT
+
+/** Address for register BBC0_CNT3 */
+#define RG_BBC0_CNT3                    (0x394)
+/** Sub-registers of Register @ref RG_BBC0_CNT3 */
+/** Access parameters for sub-register CNT3 in register @ref RG_BBC0_CNT3 */
+#define SR_BBC0_CNT3_CNT3               RG_BBC0_CNT3, CNT3_CNT3_MASK, CNT3_CNT3_SHIFT
+
 /** Address for register BBC1_FBTXE */
-#define RG_BBC1_FBTXE                   (0x3FFF)
+#define RG_BBC1_FBTXE                   (0x3FFE)
 /** Sub-registers of Register @ref RG_BBC1_FBTXE */
 /** Access parameters for sub-register FBTXE in register @ref RG_BBC1_FBTXE */
 #define SR_BBC1_FBTXE_FBTXE             RG_BBC1_FBTXE, FBTXE_FBTXE_MASK, FBTXE_FBTXE_SHIFT
@@ -2203,6 +2961,8 @@
 #define SR_BBC1_IRQM_AGCH               RG_BBC1_IRQM, IRQM_AGCH_MASK, IRQM_AGCH_SHIFT
 /** Access parameters for sub-register AGCR in register @ref RG_BBC1_IRQM */
 #define SR_BBC1_IRQM_AGCR               RG_BBC1_IRQM, IRQM_AGCR_MASK, IRQM_AGCR_SHIFT
+/** Access parameters for sub-register FBLI in register @ref RG_BBC1_IRQM */
+#define SR_BBC1_IRQM_FBLI               RG_BBC1_IRQM, IRQM_FBLI_MASK, IRQM_FBLI_SHIFT
 
 /** Address for register BBC1_PC */
 #define RG_BBC1_PC                      (0x401)
@@ -2228,12 +2988,6 @@
 /** Access parameters for sub-register TXUR in register @ref RG_BBC1_PS */
 #define SR_BBC1_PS_TXUR                 RG_BBC1_PS, PS_TXUR_MASK, PS_TXUR_SHIFT
 
-/** Address for register BBC1_FBLVL */
-#define RG_BBC1_FBLVL                   (0x403)
-/** Sub-registers of Register @ref RG_BBC1_FBLVL */
-/** Access parameters for sub-register FBLVL in register @ref RG_BBC1_FBLVL */
-#define SR_BBC1_FBLVL_FBLVL             RG_BBC1_FBLVL, FBLVL_FBLVL_MASK, FBLVL_FBLVL_SHIFT
-
 /** Address for register BBC1_RXFLL */
 #define RG_BBC1_RXFLL                   (0x404)
 /** Sub-registers of Register @ref RG_BBC1_RXFLL */
@@ -2258,6 +3012,30 @@
 /** Access parameters for sub-register TXFLH in register @ref RG_BBC1_TXFLH */
 #define SR_BBC1_TXFLH_TXFLH             RG_BBC1_TXFLH, TXFLH_TXFLH_MASK, TXFLH_TXFLH_SHIFT
 
+/** Address for register BBC1_FBLL */
+#define RG_BBC1_FBLL                    (0x408)
+/** Sub-registers of Register @ref RG_BBC1_FBLL */
+/** Access parameters for sub-register FBLL in register @ref RG_BBC1_FBLL */
+#define SR_BBC1_FBLL_FBLL               RG_BBC1_FBLL, FBLL_FBLL_MASK, FBLL_FBLL_SHIFT
+
+/** Address for register BBC1_FBLH */
+#define RG_BBC1_FBLH                    (0x409)
+/** Sub-registers of Register @ref RG_BBC1_FBLH */
+/** Access parameters for sub-register FBLH in register @ref RG_BBC1_FBLH */
+#define SR_BBC1_FBLH_FBLH               RG_BBC1_FBLH, FBLH_FBLH_MASK, FBLH_FBLH_SHIFT
+
+/** Address for register BBC1_FBLIL */
+#define RG_BBC1_FBLIL                   (0x40A)
+/** Sub-registers of Register @ref RG_BBC1_FBLIL */
+/** Access parameters for sub-register FBLIL in register @ref RG_BBC1_FBLIL */
+#define SR_BBC1_FBLIL_FBLIL             RG_BBC1_FBLIL, FBLIL_FBLIL_MASK, FBLIL_FBLIL_SHIFT
+
+/** Address for register BBC1_FBLIH */
+#define RG_BBC1_FBLIH                   (0x40B)
+/** Sub-registers of Register @ref RG_BBC1_FBLIH */
+/** Access parameters for sub-register FBLIH in register @ref RG_BBC1_FBLIH */
+#define SR_BBC1_FBLIH_FBLIH             RG_BBC1_FBLIH, FBLIH_FBLIH_MASK, FBLIH_FBLIH_SHIFT
+
 /** Address for register BBC1_OFDMPHRTX */
 #define RG_BBC1_OFDMPHRTX               (0x40C)
 /** Sub-registers of Register @ref RG_BBC1_OFDMPHRTX */
@@ -2277,6 +3055,8 @@
 /** Sub-registers of Register @ref RG_BBC1_OFDMPHRRX */
 /** Access parameters for sub-register MCS in register @ref RG_BBC1_OFDMPHRRX */
 #define SR_BBC1_OFDMPHRRX_MCS           RG_BBC1_OFDMPHRRX, OFDMPHRRX_MCS_MASK, OFDMPHRRX_MCS_SHIFT
+/** Access parameters for sub-register SPC in register @ref RG_BBC1_OFDMPHRRX */
+#define SR_BBC1_OFDMPHRRX_SPC           RG_BBC1_OFDMPHRRX, OFDMPHRRX_SPC_MASK, OFDMPHRRX_SPC_SHIFT
 /** Access parameters for sub-register RB5 in register @ref RG_BBC1_OFDMPHRRX */
 #define SR_BBC1_OFDMPHRRX_RB5           RG_BBC1_OFDMPHRRX, OFDMPHRRX_RB5_MASK, OFDMPHRRX_RB5_SHIFT
 /** Access parameters for sub-register RB17 in register @ref RG_BBC1_OFDMPHRRX */
@@ -2300,6 +3080,14 @@
 /** Access parameters for sub-register SSRX in register @ref RG_BBC1_OFDMC */
 #define SR_BBC1_OFDMC_SSRX              RG_BBC1_OFDMC, OFDMC_SSRX_MASK, OFDMC_SSRX_SHIFT
 
+/** Address for register BBC1_OFDMSW */
+#define RG_BBC1_OFDMSW                  (0x40F)
+/** Sub-registers of Register @ref RG_BBC1_OFDMSW */
+/** Access parameters for sub-register RXO in register @ref RG_BBC1_OFDMSW */
+#define SR_BBC1_OFDMSW_RXO              RG_BBC1_OFDMSW, OFDMSW_RXO_MASK, OFDMSW_RXO_SHIFT
+/** Access parameters for sub-register PDT in register @ref RG_BBC1_OFDMSW */
+#define SR_BBC1_OFDMSW_PDT              RG_BBC1_OFDMSW, OFDMSW_PDT_MASK, OFDMSW_PDT_SHIFT
+
 /** Address for register BBC1_OQPSKC0 */
 #define RG_BBC1_OQPSKC0                 (0x410)
 /** Sub-registers of Register @ref RG_BBC1_OQPSKC0 */
@@ -2315,6 +3103,10 @@
 #define SR_BBC1_OQPSKC1_PDT0            RG_BBC1_OQPSKC1, OQPSKC1_PDT0_MASK, OQPSKC1_PDT0_SHIFT
 /** Access parameters for sub-register PDT1 in register @ref RG_BBC1_OQPSKC1 */
 #define SR_BBC1_OQPSKC1_PDT1            RG_BBC1_OQPSKC1, OQPSKC1_PDT1_MASK, OQPSKC1_PDT1_SHIFT
+/** Access parameters for sub-register RXOLEG in register @ref RG_BBC1_OQPSKC1 */
+#define SR_BBC1_OQPSKC1_RXOLEG          RG_BBC1_OQPSKC1, OQPSKC1_RXOLEG_MASK, OQPSKC1_RXOLEG_SHIFT
+/** Access parameters for sub-register RXO in register @ref RG_BBC1_OQPSKC1 */
+#define SR_BBC1_OQPSKC1_RXO             RG_BBC1_OQPSKC1, OQPSKC1_RXO_MASK, OQPSKC1_RXO_SHIFT
 
 /** Address for register BBC1_OQPSKC2 */
 #define RG_BBC1_OQPSKC2                 (0x412)
@@ -2325,14 +3117,16 @@
 #define SR_BBC1_OQPSKC2_FCSTLEG         RG_BBC1_OQPSKC2, OQPSKC2_FCSTLEG_MASK, OQPSKC2_FCSTLEG_SHIFT
 /** Access parameters for sub-register ENPROP in register @ref RG_BBC1_OQPSKC2 */
 #define SR_BBC1_OQPSKC2_ENPROP          RG_BBC1_OQPSKC2, OQPSKC2_ENPROP_MASK, OQPSKC2_ENPROP_SHIFT
+/** Access parameters for sub-register SPC in register @ref RG_BBC1_OQPSKC2 */
+#define SR_BBC1_OQPSKC2_SPC             RG_BBC1_OQPSKC2, OQPSKC2_SPC_MASK, OQPSKC2_SPC_SHIFT
 
 /** Address for register BBC1_OQPSKC3 */
 #define RG_BBC1_OQPSKC3                 (0x413)
 /** Sub-registers of Register @ref RG_BBC1_OQPSKC3 */
-/** Access parameters for sub-register SFDS in register @ref RG_BBC1_OQPSKC3 */
-#define SR_BBC1_OQPSKC3_SFDS            RG_BBC1_OQPSKC3, OQPSKC3_SFDS_MASK, OQPSKC3_SFDS_SHIFT
 /** Access parameters for sub-register NSFD in register @ref RG_BBC1_OQPSKC3 */
 #define SR_BBC1_OQPSKC3_NSFD            RG_BBC1_OQPSKC3, OQPSKC3_NSFD_MASK, OQPSKC3_NSFD_SHIFT
+/** Access parameters for sub-register HRLEG in register @ref RG_BBC1_OQPSKC3 */
+#define SR_BBC1_OQPSKC3_HRLEG           RG_BBC1_OQPSKC3, OQPSKC3_HRLEG_MASK, OQPSKC3_HRLEG_SHIFT
 
 /** Address for register BBC1_OQPSKPHRTX */
 #define RG_BBC1_OQPSKPHRTX              (0x414)
@@ -2343,6 +3137,8 @@
 #define SR_BBC1_OQPSKPHRTX_MOD          RG_BBC1_OQPSKPHRTX, OQPSKPHRTX_MOD_MASK, OQPSKPHRTX_MOD_SHIFT
 /** Access parameters for sub-register RB0 in register @ref RG_BBC1_OQPSKPHRTX */
 #define SR_BBC1_OQPSKPHRTX_RB0          RG_BBC1_OQPSKPHRTX, OQPSKPHRTX_RB0_MASK, OQPSKPHRTX_RB0_SHIFT
+/** Access parameters for sub-register PPDUT in register @ref RG_BBC1_OQPSKPHRTX */
+#define SR_BBC1_OQPSKPHRTX_PPDUT        RG_BBC1_OQPSKPHRTX, OQPSKPHRTX_PPDUT_MASK, OQPSKPHRTX_PPDUT_SHIFT
 
 /** Address for register BBC1_OQPSKPHRRX */
 #define RG_BBC1_OQPSKPHRRX              (0x415)
@@ -2353,6 +3149,8 @@
 #define SR_BBC1_OQPSKPHRRX_MOD          RG_BBC1_OQPSKPHRRX, OQPSKPHRRX_MOD_MASK, OQPSKPHRRX_MOD_SHIFT
 /** Access parameters for sub-register RB0 in register @ref RG_BBC1_OQPSKPHRRX */
 #define SR_BBC1_OQPSKPHRRX_RB0          RG_BBC1_OQPSKPHRRX, OQPSKPHRRX_RB0_MASK, OQPSKPHRRX_RB0_SHIFT
+/** Access parameters for sub-register PPDUT in register @ref RG_BBC1_OQPSKPHRRX */
+#define SR_BBC1_OQPSKPHRRX_PPDUT        RG_BBC1_OQPSKPHRRX, OQPSKPHRRX_PPDUT_MASK, OQPSKPHRRX_PPDUT_SHIFT
 
 /** Address for register BBC1_AFC0 */
 #define RG_BBC1_AFC0                    (0x420)
@@ -2558,6 +3356,369 @@
 /** Access parameters for sub-register MACSHA1F3 in register @ref RG_BBC1_MACSHA1F3 */
 #define SR_BBC1_MACSHA1F3_MACSHA1F3     RG_BBC1_MACSHA1F3, MACSHA1F3_MACSHA1F3_MASK, MACSHA1F3_MACSHA1F3_SHIFT
 
+/** Address for register BBC1_AMCS */
+#define RG_BBC1_AMCS                    (0x440)
+/** Sub-registers of Register @ref RG_BBC1_AMCS */
+/** Access parameters for sub-register TX2RX in register @ref RG_BBC1_AMCS */
+#define SR_BBC1_AMCS_TX2RX              RG_BBC1_AMCS, AMCS_TX2RX_MASK, AMCS_TX2RX_SHIFT
+/** Access parameters for sub-register CCATX in register @ref RG_BBC1_AMCS */
+#define SR_BBC1_AMCS_CCATX              RG_BBC1_AMCS, AMCS_CCATX_MASK, AMCS_CCATX_SHIFT
+/** Access parameters for sub-register CCAED in register @ref RG_BBC1_AMCS */
+#define SR_BBC1_AMCS_CCAED              RG_BBC1_AMCS, AMCS_CCAED_MASK, AMCS_CCAED_SHIFT
+/** Access parameters for sub-register AACK in register @ref RG_BBC1_AMCS */
+#define SR_BBC1_AMCS_AACK               RG_BBC1_AMCS, AMCS_AACK_MASK, AMCS_AACK_SHIFT
+/** Access parameters for sub-register AACKS in register @ref RG_BBC1_AMCS */
+#define SR_BBC1_AMCS_AACKS              RG_BBC1_AMCS, AMCS_AACKS_MASK, AMCS_AACKS_SHIFT
+/** Access parameters for sub-register AACKDR in register @ref RG_BBC1_AMCS */
+#define SR_BBC1_AMCS_AACKDR             RG_BBC1_AMCS, AMCS_AACKDR_MASK, AMCS_AACKDR_SHIFT
+/** Access parameters for sub-register AACKFA in register @ref RG_BBC1_AMCS */
+#define SR_BBC1_AMCS_AACKFA             RG_BBC1_AMCS, AMCS_AACKFA_MASK, AMCS_AACKFA_SHIFT
+/** Access parameters for sub-register AACKFT in register @ref RG_BBC1_AMCS */
+#define SR_BBC1_AMCS_AACKFT             RG_BBC1_AMCS, AMCS_AACKFT_MASK, AMCS_AACKFT_SHIFT
 
+/** Address for register BBC1_AMEDT */
+#define RG_BBC1_AMEDT                   (0x441)
+/** Sub-registers of Register @ref RG_BBC1_AMEDT */
+/** Access parameters for sub-register AMEDT in register @ref RG_BBC1_AMEDT */
+#define SR_BBC1_AMEDT_AMEDT             RG_BBC1_AMEDT, AMEDT_AMEDT_MASK, AMEDT_AMEDT_SHIFT
+
+/** Address for register BBC1_AMAACKPD */
+#define RG_BBC1_AMAACKPD                (0x442)
+/** Sub-registers of Register @ref RG_BBC1_AMAACKPD */
+/** Access parameters for sub-register PD0 in register @ref RG_BBC1_AMAACKPD */
+#define SR_BBC1_AMAACKPD_PD0            RG_BBC1_AMAACKPD, AMAACKPD_PD0_MASK, AMAACKPD_PD0_SHIFT
+/** Access parameters for sub-register PD1 in register @ref RG_BBC1_AMAACKPD */
+#define SR_BBC1_AMAACKPD_PD1            RG_BBC1_AMAACKPD, AMAACKPD_PD1_MASK, AMAACKPD_PD1_SHIFT
+/** Access parameters for sub-register PD2 in register @ref RG_BBC1_AMAACKPD */
+#define SR_BBC1_AMAACKPD_PD2            RG_BBC1_AMAACKPD, AMAACKPD_PD2_MASK, AMAACKPD_PD2_SHIFT
+/** Access parameters for sub-register PD3 in register @ref RG_BBC1_AMAACKPD */
+#define SR_BBC1_AMAACKPD_PD3            RG_BBC1_AMAACKPD, AMAACKPD_PD3_MASK, AMAACKPD_PD3_SHIFT
+
+/** Address for register BBC1_AMAACKTL */
+#define RG_BBC1_AMAACKTL                (0x443)
+/** Sub-registers of Register @ref RG_BBC1_AMAACKTL */
+/** Access parameters for sub-register AMAACKTL in register @ref RG_BBC1_AMAACKTL */
+#define SR_BBC1_AMAACKTL_AMAACKTL       RG_BBC1_AMAACKTL, AMAACKTL_AMAACKTL_MASK, AMAACKTL_AMAACKTL_SHIFT
+
+/** Address for register BBC1_AMAACKTH */
+#define RG_BBC1_AMAACKTH                (0x444)
+/** Sub-registers of Register @ref RG_BBC1_AMAACKTH */
+/** Access parameters for sub-register AMAACKTH in register @ref RG_BBC1_AMAACKTH */
+#define SR_BBC1_AMAACKTH_AMAACKTH       RG_BBC1_AMAACKTH, AMAACKTH_AMAACKTH_MASK, AMAACKTH_AMAACKTH_SHIFT
+
+/** Address for register BBC1_FSKC0 */
+#define RG_BBC1_FSKC0                   (0x460)
+/** Sub-registers of Register @ref RG_BBC1_FSKC0 */
+/** Access parameters for sub-register MORD in register @ref RG_BBC1_FSKC0 */
+#define SR_BBC1_FSKC0_MORD              RG_BBC1_FSKC0, FSKC0_MORD_MASK, FSKC0_MORD_SHIFT
+/** Access parameters for sub-register MIDX in register @ref RG_BBC1_FSKC0 */
+#define SR_BBC1_FSKC0_MIDX              RG_BBC1_FSKC0, FSKC0_MIDX_MASK, FSKC0_MIDX_SHIFT
+/** Access parameters for sub-register MIDXS in register @ref RG_BBC1_FSKC0 */
+#define SR_BBC1_FSKC0_MIDXS             RG_BBC1_FSKC0, FSKC0_MIDXS_MASK, FSKC0_MIDXS_SHIFT
+/** Access parameters for sub-register BT in register @ref RG_BBC1_FSKC0 */
+#define SR_BBC1_FSKC0_BT                RG_BBC1_FSKC0, FSKC0_BT_MASK, FSKC0_BT_SHIFT
+
+/** Address for register BBC1_FSKC1 */
+#define RG_BBC1_FSKC1                   (0x461)
+/** Sub-registers of Register @ref RG_BBC1_FSKC1 */
+/** Access parameters for sub-register SRATE in register @ref RG_BBC1_FSKC1 */
+#define SR_BBC1_FSKC1_SRATE             RG_BBC1_FSKC1, FSKC1_SRATE_MASK, FSKC1_SRATE_SHIFT
+/** Access parameters for sub-register FI in register @ref RG_BBC1_FSKC1 */
+#define SR_BBC1_FSKC1_FI                RG_BBC1_FSKC1, FSKC1_FI_MASK, FSKC1_FI_SHIFT
+/** Access parameters for sub-register FSKPLH in register @ref RG_BBC1_FSKC1 */
+#define SR_BBC1_FSKC1_FSKPLH            RG_BBC1_FSKC1, FSKC1_FSKPLH_MASK, FSKC1_FSKPLH_SHIFT
+
+/** Address for register BBC1_FSKC2 */
+#define RG_BBC1_FSKC2                   (0x462)
+/** Sub-registers of Register @ref RG_BBC1_FSKC2 */
+/** Access parameters for sub-register FECIE in register @ref RG_BBC1_FSKC2 */
+#define SR_BBC1_FSKC2_FECIE             RG_BBC1_FSKC2, FSKC2_FECIE_MASK, FSKC2_FECIE_SHIFT
+/** Access parameters for sub-register FECS in register @ref RG_BBC1_FSKC2 */
+#define SR_BBC1_FSKC2_FECS              RG_BBC1_FSKC2, FSKC2_FECS_MASK, FSKC2_FECS_SHIFT
+/** Access parameters for sub-register PRI in register @ref RG_BBC1_FSKC2 */
+#define SR_BBC1_FSKC2_PRI               RG_BBC1_FSKC2, FSKC2_PRI_MASK, FSKC2_PRI_SHIFT
+/** Access parameters for sub-register MSE in register @ref RG_BBC1_FSKC2 */
+#define SR_BBC1_FSKC2_MSE               RG_BBC1_FSKC2, FSKC2_MSE_MASK, FSKC2_MSE_SHIFT
+/** Access parameters for sub-register RXPTO in register @ref RG_BBC1_FSKC2 */
+#define SR_BBC1_FSKC2_RXPTO             RG_BBC1_FSKC2, FSKC2_RXPTO_MASK, FSKC2_RXPTO_SHIFT
+/** Access parameters for sub-register RXO in register @ref RG_BBC1_FSKC2 */
+#define SR_BBC1_FSKC2_RXO               RG_BBC1_FSKC2, FSKC2_RXO_MASK, FSKC2_RXO_SHIFT
+
+/** Address for register BBC1_FSKC3 */
+#define RG_BBC1_FSKC3                   (0x463)
+/** Sub-registers of Register @ref RG_BBC1_FSKC3 */
+/** Access parameters for sub-register PDT in register @ref RG_BBC1_FSKC3 */
+#define SR_BBC1_FSKC3_PDT               RG_BBC1_FSKC3, FSKC3_PDT_MASK, FSKC3_PDT_SHIFT
+/** Access parameters for sub-register SFDT in register @ref RG_BBC1_FSKC3 */
+#define SR_BBC1_FSKC3_SFDT              RG_BBC1_FSKC3, FSKC3_SFDT_MASK, FSKC3_SFDT_SHIFT
+
+/** Address for register BBC1_FSKC4 */
+#define RG_BBC1_FSKC4                   (0x464)
+/** Sub-registers of Register @ref RG_BBC1_FSKC4 */
+/** Access parameters for sub-register CSFD0 in register @ref RG_BBC1_FSKC4 */
+#define SR_BBC1_FSKC4_CSFD0             RG_BBC1_FSKC4, FSKC4_CSFD0_MASK, FSKC4_CSFD0_SHIFT
+/** Access parameters for sub-register CSFD1 in register @ref RG_BBC1_FSKC4 */
+#define SR_BBC1_FSKC4_CSFD1             RG_BBC1_FSKC4, FSKC4_CSFD1_MASK, FSKC4_CSFD1_SHIFT
+/** Access parameters for sub-register RAWRBIT in register @ref RG_BBC1_FSKC4 */
+#define SR_BBC1_FSKC4_RAWRBIT           RG_BBC1_FSKC4, FSKC4_RAWRBIT_MASK, FSKC4_RAWRBIT_SHIFT
+/** Access parameters for sub-register SFD32 in register @ref RG_BBC1_FSKC4 */
+#define SR_BBC1_FSKC4_SFD32             RG_BBC1_FSKC4, FSKC4_SFD32_MASK, FSKC4_SFD32_SHIFT
+/** Access parameters for sub-register SFDQ in register @ref RG_BBC1_FSKC4 */
+#define SR_BBC1_FSKC4_SFDQ              RG_BBC1_FSKC4, FSKC4_SFDQ_MASK, FSKC4_SFDQ_SHIFT
+
+/** Address for register BBC1_FSKPLL */
+#define RG_BBC1_FSKPLL                  (0x465)
+/** Sub-registers of Register @ref RG_BBC1_FSKPLL */
+/** Access parameters for sub-register FSKPLL in register @ref RG_BBC1_FSKPLL */
+#define SR_BBC1_FSKPLL_FSKPLL           RG_BBC1_FSKPLL, FSKPLL_FSKPLL_MASK, FSKPLL_FSKPLL_SHIFT
+
+/** Address for register BBC1_FSKSFD0L */
+#define RG_BBC1_FSKSFD0L                (0x466)
+/** Sub-registers of Register @ref RG_BBC1_FSKSFD0L */
+/** Access parameters for sub-register FSKSFD0L in register @ref RG_BBC1_FSKSFD0L */
+#define SR_BBC1_FSKSFD0L_FSKSFD0L       RG_BBC1_FSKSFD0L, FSKSFD0L_FSKSFD0L_MASK, FSKSFD0L_FSKSFD0L_SHIFT
+
+/** Address for register BBC1_FSKSFD0H */
+#define RG_BBC1_FSKSFD0H                (0x467)
+/** Sub-registers of Register @ref RG_BBC1_FSKSFD0H */
+/** Access parameters for sub-register FSKSFD0H in register @ref RG_BBC1_FSKSFD0H */
+#define SR_BBC1_FSKSFD0H_FSKSFD0H       RG_BBC1_FSKSFD0H, FSKSFD0H_FSKSFD0H_MASK, FSKSFD0H_FSKSFD0H_SHIFT
+
+/** Address for register BBC1_FSKSFD1L */
+#define RG_BBC1_FSKSFD1L                (0x468)
+/** Sub-registers of Register @ref RG_BBC1_FSKSFD1L */
+/** Access parameters for sub-register FSKSFD1L in register @ref RG_BBC1_FSKSFD1L */
+#define SR_BBC1_FSKSFD1L_FSKSFD1L       RG_BBC1_FSKSFD1L, FSKSFD1L_FSKSFD1L_MASK, FSKSFD1L_FSKSFD1L_SHIFT
+
+/** Address for register BBC1_FSKSFD1H */
+#define RG_BBC1_FSKSFD1H                (0x469)
+/** Sub-registers of Register @ref RG_BBC1_FSKSFD1H */
+/** Access parameters for sub-register FSKSFD1H in register @ref RG_BBC1_FSKSFD1H */
+#define SR_BBC1_FSKSFD1H_FSKSFD1H       RG_BBC1_FSKSFD1H, FSKSFD1H_FSKSFD1H_MASK, FSKSFD1H_FSKSFD1H_SHIFT
+
+/** Address for register BBC1_FSKPHRTX */
+#define RG_BBC1_FSKPHRTX                (0x46A)
+/** Sub-registers of Register @ref RG_BBC1_FSKPHRTX */
+/** Access parameters for sub-register RB1 in register @ref RG_BBC1_FSKPHRTX */
+#define SR_BBC1_FSKPHRTX_RB1            RG_BBC1_FSKPHRTX, FSKPHRTX_RB1_MASK, FSKPHRTX_RB1_SHIFT
+/** Access parameters for sub-register RB2 in register @ref RG_BBC1_FSKPHRTX */
+#define SR_BBC1_FSKPHRTX_RB2            RG_BBC1_FSKPHRTX, FSKPHRTX_RB2_MASK, FSKPHRTX_RB2_SHIFT
+/** Access parameters for sub-register DW in register @ref RG_BBC1_FSKPHRTX */
+#define SR_BBC1_FSKPHRTX_DW             RG_BBC1_FSKPHRTX, FSKPHRTX_DW_MASK, FSKPHRTX_DW_SHIFT
+/** Access parameters for sub-register SFD in register @ref RG_BBC1_FSKPHRTX */
+#define SR_BBC1_FSKPHRTX_SFD            RG_BBC1_FSKPHRTX, FSKPHRTX_SFD_MASK, FSKPHRTX_SFD_SHIFT
+
+/** Address for register BBC1_FSKPHRRX */
+#define RG_BBC1_FSKPHRRX                (0x46B)
+/** Sub-registers of Register @ref RG_BBC1_FSKPHRRX */
+/** Access parameters for sub-register RB1 in register @ref RG_BBC1_FSKPHRRX */
+#define SR_BBC1_FSKPHRRX_RB1            RG_BBC1_FSKPHRRX, FSKPHRRX_RB1_MASK, FSKPHRRX_RB1_SHIFT
+/** Access parameters for sub-register RB2 in register @ref RG_BBC1_FSKPHRRX */
+#define SR_BBC1_FSKPHRRX_RB2            RG_BBC1_FSKPHRRX, FSKPHRRX_RB2_MASK, FSKPHRRX_RB2_SHIFT
+/** Access parameters for sub-register DW in register @ref RG_BBC1_FSKPHRRX */
+#define SR_BBC1_FSKPHRRX_DW             RG_BBC1_FSKPHRRX, FSKPHRRX_DW_MASK, FSKPHRRX_DW_SHIFT
+/** Access parameters for sub-register SFD in register @ref RG_BBC1_FSKPHRRX */
+#define SR_BBC1_FSKPHRRX_SFD            RG_BBC1_FSKPHRRX, FSKPHRRX_SFD_MASK, FSKPHRRX_SFD_SHIFT
+/** Access parameters for sub-register MS in register @ref RG_BBC1_FSKPHRRX */
+#define SR_BBC1_FSKPHRRX_MS             RG_BBC1_FSKPHRRX, FSKPHRRX_MS_MASK, FSKPHRRX_MS_SHIFT
+/** Access parameters for sub-register FCST in register @ref RG_BBC1_FSKPHRRX */
+#define SR_BBC1_FSKPHRRX_FCST           RG_BBC1_FSKPHRRX, FSKPHRRX_FCST_MASK, FSKPHRRX_FCST_SHIFT
+
+/** Address for register BBC1_FSKRRXFLL */
+#define RG_BBC1_FSKRRXFLL               (0x470)
+/** Sub-registers of Register @ref RG_BBC1_FSKRRXFLL */
+/** Access parameters for sub-register FSKRRXFLL in register @ref RG_BBC1_FSKRRXFLL */
+#define SR_BBC1_FSKRRXFLL_FSKRRXFLL     RG_BBC1_FSKRRXFLL, FSKRRXFLL_FSKRRXFLL_MASK, FSKRRXFLL_FSKRRXFLL_SHIFT
+
+/** Address for register BBC1_FSKRRXFLH */
+#define RG_BBC1_FSKRRXFLH               (0x471)
+/** Sub-registers of Register @ref RG_BBC1_FSKRRXFLH */
+/** Access parameters for sub-register FSKRRXFLH in register @ref RG_BBC1_FSKRRXFLH */
+#define SR_BBC1_FSKRRXFLH_FSKRRXFLH     RG_BBC1_FSKRRXFLH, FSKRRXFLH_FSKRRXFLH_MASK, FSKRRXFLH_FSKRRXFLH_SHIFT
+
+/** Address for register BBC1_PMUC */
+#define RG_BBC1_PMUC                    (0x480)
+/** Sub-registers of Register @ref RG_BBC1_PMUC */
+/** Access parameters for sub-register EN in register @ref RG_BBC1_PMUC */
+#define SR_BBC1_PMUC_EN                 RG_BBC1_PMUC, PMUC_EN_MASK, PMUC_EN_SHIFT
+
+/** Address for register BBC1_PMUVAL */
+#define RG_BBC1_PMUVAL                  (0x481)
+/** Sub-registers of Register @ref RG_BBC1_PMUVAL */
+/** Access parameters for sub-register PMUVAL in register @ref RG_BBC1_PMUVAL */
+#define SR_BBC1_PMUVAL_PMUVAL           RG_BBC1_PMUVAL, PMUVAL_PMUVAL_MASK, PMUVAL_PMUVAL_SHIFT
+
+/** Address for register BBC1_PMUQF */
+#define RG_BBC1_PMUQF                   (0x482)
+/** Sub-registers of Register @ref RG_BBC1_PMUQF */
+/** Access parameters for sub-register PMUQF in register @ref RG_BBC1_PMUQF */
+#define SR_BBC1_PMUQF_PMUQF             RG_BBC1_PMUQF, PMUQF_PMUQF_MASK, PMUQF_PMUQF_SHIFT
+
+/** Address for register BBC1_PMUI */
+#define RG_BBC1_PMUI                    (0x483)
+/** Sub-registers of Register @ref RG_BBC1_PMUI */
+/** Access parameters for sub-register PMUI in register @ref RG_BBC1_PMUI */
+#define SR_BBC1_PMUI_PMUI               RG_BBC1_PMUI, PMUI_PMUI_MASK, PMUI_PMUI_SHIFT
+
+/** Address for register BBC1_PMUQ */
+#define RG_BBC1_PMUQ                    (0x484)
+/** Sub-registers of Register @ref RG_BBC1_PMUQ */
+/** Access parameters for sub-register PMUQ in register @ref RG_BBC1_PMUQ */
+#define SR_BBC1_PMUQ_PMUQ               RG_BBC1_PMUQ, PMUQ_PMUQ_MASK, PMUQ_PMUQ_SHIFT
+
+/** Address for register BBC1_CNTC */
+#define RG_BBC1_CNTC                    (0x490)
+/** Sub-registers of Register @ref RG_BBC1_CNTC */
+/** Access parameters for sub-register EN in register @ref RG_BBC1_CNTC */
+#define SR_BBC1_CNTC_EN                 RG_BBC1_CNTC, CNTC_EN_MASK, CNTC_EN_SHIFT
+/** Access parameters for sub-register RSTRXS in register @ref RG_BBC1_CNTC */
+#define SR_BBC1_CNTC_RSTRXS             RG_BBC1_CNTC, CNTC_RSTRXS_MASK, CNTC_RSTRXS_SHIFT
+/** Access parameters for sub-register RSTTXS in register @ref RG_BBC1_CNTC */
+#define SR_BBC1_CNTC_RSTTXS             RG_BBC1_CNTC, CNTC_RSTTXS_MASK, CNTC_RSTTXS_SHIFT
+/** Access parameters for sub-register CAPRXS in register @ref RG_BBC1_CNTC */
+#define SR_BBC1_CNTC_CAPRXS             RG_BBC1_CNTC, CNTC_CAPRXS_MASK, CNTC_CAPRXS_SHIFT
+/** Access parameters for sub-register CAPTXS in register @ref RG_BBC1_CNTC */
+#define SR_BBC1_CNTC_CAPTXS             RG_BBC1_CNTC, CNTC_CAPTXS_MASK, CNTC_CAPTXS_SHIFT
+
+/** Address for register BBC1_CNT0 */
+#define RG_BBC1_CNT0                    (0x491)
+/** Sub-registers of Register @ref RG_BBC1_CNT0 */
+/** Access parameters for sub-register CNT0 in register @ref RG_BBC1_CNT0 */
+#define SR_BBC1_CNT0_CNT0               RG_BBC1_CNT0, CNT0_CNT0_MASK, CNT0_CNT0_SHIFT
+
+/** Address for register BBC1_CNT1 */
+#define RG_BBC1_CNT1                    (0x492)
+/** Sub-registers of Register @ref RG_BBC1_CNT1 */
+/** Access parameters for sub-register CNT1 in register @ref RG_BBC1_CNT1 */
+#define SR_BBC1_CNT1_CNT1               RG_BBC1_CNT1, CNT1_CNT1_MASK, CNT1_CNT1_SHIFT
+
+/** Address for register BBC1_CNT2 */
+#define RG_BBC1_CNT2                    (0x493)
+/** Sub-registers of Register @ref RG_BBC1_CNT2 */
+/** Access parameters for sub-register CNT2 in register @ref RG_BBC1_CNT2 */
+#define SR_BBC1_CNT2_CNT2               RG_BBC1_CNT2, CNT2_CNT2_MASK, CNT2_CNT2_SHIFT
+
+/** Address for register BBC1_CNT3 */
+#define RG_BBC1_CNT3                    (0x494)
+/** Sub-registers of Register @ref RG_BBC1_CNT3 */
+/** Access parameters for sub-register CNT3 in register @ref RG_BBC1_CNT3 */
+#define SR_BBC1_CNT3_CNT3               RG_BBC1_CNT3, CNT3_CNT3_MASK, CNT3_CNT3_SHIFT
+
+
+/** Enumerations */
+
+/** Enumeration for RF commands and states used for trx command and state registers */
+typedef enum rf_cmd_state_tag
+{
+    /** Constant RF_NOP for sub-register @ref SR_CMD */
+    RF_NOP =                            (0x0),
+
+    /** Constant RF_SLEEP for sub-register @ref SR_CMD */
+    RF_SLEEP =                          (0x1),
+
+    /** Constant RF_TRXOFF for sub-register @ref SR_CMD */
+    RF_TRXOFF =                         (0x2),
+
+    /** Constant RF_TXPREP for sub-register @ref SR_CMD */
+    RF_TXPREP =                         (0x3),
+
+    /** Constant RF_TX for sub-register @ref SR_CMD */
+    RF_TX =                             (0x4),
+
+    /** Constant RF_RX for sub-register @ref SR_CMD */
+    RF_RX =                             (0x5),
+
+    /** Constant RF_RESET for sub-register @ref SR_CMD */
+    RF_RESET =                          (0x7)
+} rf_cmd_state_t;
+
+/** Enumeration for RF commands and states used for trx command and state registers */
+typedef enum rf_cmd_status_tag
+{
+
+	/** Constant RF_TRXOFF for sub-register @ref SR_CMD */
+	STATUS_RF_TRXOFF =                         (0x2),
+
+	/** Constant RF_TXPREP for sub-register @ref SR_CMD */
+	STATUS_RF_TXPREP =                         (0x3),
+
+	/** Constant RF_TX for sub-register @ref SR_CMD */
+	STATUS_RF_TX =                             (0x4),
+
+	/** Constant RF_RX for sub-register @ref SR_CMD */
+	STATUS_RF_RX =                             (0x5),
+
+	/** Constant RF_RX for sub-register @ref SR_CMD */
+	STATUS_RF_TRANSITION =                      (0x6),
+	
+	/** Constant RF_RESET for sub-register @ref SR_CMD */
+	STATUS_RF_RESET =                          (0x7)
+} rf_cmd_status_t;
+
+/** Enumeration for RF IRQs used for IRQS and IRQM registers */
+typedef enum rf_irq_tag
+{
+    /** Constant RF_IRQ_IQIFSF for sub-register @ref SR_IQIFSF */
+    RF_IRQ_IQIFSF =                     (0x20),
+
+    /** Constant RF_IRQ_TRXERR for sub-register @ref SR_TRXERR */
+    RF_IRQ_TRXERR =                     (0x10),
+
+    /** Constant RF_IRQ_BATLOW for sub-register @ref SR_BATLOW */
+    RF_IRQ_BATLOW =                     (0x08),
+
+    /** Constant RF_IRQ_EDC for sub-register @ref SR_EDC */
+    RF_IRQ_EDC =                        (0x04),
+
+    /** Constant RF_IRQ_TRXRDY for sub-register @ref SR_TRXRDY */
+    RF_IRQ_TRXRDY =                     (0x02),
+
+    /** Constant RF_IRQ_WAKEUP for sub-register @ref SR_WAKEUP */
+    RF_IRQ_WAKEUP =                     (0x01),
+
+    /** No interrupt is indicated by IRQ_STATUS register */
+    RF_IRQ_NO_IRQ =                     (0x00),
+
+    /** All interrupts are indicated by IRQ_STATUS register */
+    RF_IRQ_ALL_IRQ =                    (0x3F)
+} rf_irq_t;
+
+/** Enumeration for BB IRQs */
+typedef enum bb_irq_tag
+{
+    /** Constant BB_IRQ_FBLI for sub-register @ref SR_FBLI */
+    BB_IRQ_FBLI =                       (0x80),
+
+    /** Constant BB_IRQ_AGCR for sub-register @ref SR_AGCR */
+    BB_IRQ_AGCR =                       (0x40),
+
+    /** Constant BB_IRQ_AGCH for sub-register @ref SR_AGCH */
+    BB_IRQ_AGCH =                       (0x20),
+
+    /** Constant BB_IRQ_TXFE for sub-register @ref SR_TXFE */
+    BB_IRQ_TXFE =                       (0x10),
+
+    /** Constant BB_IRQ_RXEM for sub-register @ref SR_RXEM */
+    BB_IRQ_RXEM =                       (0x08),
+
+    /** Constant BB_IRQ_RXAM for sub-register @ref SR_RXAM */
+    BB_IRQ_RXAM =                       (0x04),
+
+    /** Constant BB_IRQ_RXFE for sub-register @ref SR_RXFE */
+    BB_IRQ_RXFE =                       (0x02),
+
+    /** Constant BB_IRQ_RXFS for sub-register @ref SR_RXFS */
+    BB_IRQ_RXFS =                       (0x01),
+
+    /** No interrupt is indicated by IRQ_STATUS register */
+    BB_IRQ_NO_IRQ =                     (0x00),
+
+    /** All interrupts are indicated by IRQ_STATUS register */
+    BB_IRQ_ALL_IRQ =                    (0xFF)
+} bb_irq_t;
+
+
+
+#endif /* #if (TAL_TYPE == AT86RF215) */
 
 #endif /* RF215_H */

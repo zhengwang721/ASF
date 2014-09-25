@@ -366,7 +366,7 @@ static void peer_req_send_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
     app_payload_t *msg;
     uint16_t my_addr_from_peer;
 
-    if ((mac_frame_info->length) == (FRAME_OVERHEAD_DST_IEEE_ADDR
+    if ((mac_frame_info->len_no_crc) == (FRAME_OVERHEAD_DST_IEEE_ADDR
                                     + ((sizeof(app_payload_t)
                                         - sizeof(general_pkt_t))
                                        + sizeof(peer_rsp_t))))
@@ -460,7 +460,7 @@ static retval_t send_peer_req(trx_id_t trx)
     payload_length = ((sizeof(app_payload_t) -
                        sizeof(general_pkt_t)) +
                       sizeof(peer_req_t));
-    return( transmit_frame(trx, FCF_SHORT_ADDR,
+    return( transmit_frame1(trx, FCF_SHORT_ADDR,
                            (uint8_t *)(&dst_addr),/* dst_addr is braodcast */
                            FCF_LONG_ADDR,         /* src_addr_mode use IEEE addr */
                            seq_num[trx],               /* seq_num used as msdu handle */
@@ -632,7 +632,7 @@ static retval_t send_peer_conf(trx_id_t trx)
                        sizeof(general_pkt_t)) +
                       sizeof(peer_conf_t));
 
-    return( transmit_frame(trx,FCF_SHORT_ADDR,
+    return( transmit_frame1(trx,FCF_SHORT_ADDR,
                            (uint8_t *)(&node_info[trx].peer_short_addr),
                            FCF_SHORT_ADDR,
                            seq_num[trx],               /* seq_num used as msdu handle */

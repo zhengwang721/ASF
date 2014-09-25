@@ -3,45 +3,14 @@
  *
  * @brief This file implements the TAL state machine and provides general
  * functionality used by the TAL.
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
  *
- * \asf_license_start
+ * $Id: tal.c 36382 2014-08-26 11:56:01Z uwalter $
  *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
- *
+ * @author    Atmel Corporation: http://www.atmel.com
+ * @author    Support email: avr@atmel.com
  */
-
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -64,10 +33,21 @@
 #include "tal_internal.h"
 #include "mac_build_config.h"
 
-
 /* === TYPES =============================================================== */
 
 /* === MACROS ============================================================== */
+
+/*
+ * Time gap between each poll access in microseconds.
+ * If the value is equal to zero, no time gap is applied.
+ */
+#define POLL_TIME_GAP               10
+
+/* Maximum PLL lock duration in us */
+#define MAX_PLL_LOCK_DURATION       200
+
+/* Maximum settling duration after PLL has been freezed */
+#define PLL_FRZ_SETTLING_DURATION   20
 
 /* === GLOBALS ============================================================= */
 
@@ -87,6 +67,11 @@ tal_pib_t tal_pib[2];
 tal_state_t tal_state[2];
 
 /**
+ * Current state of the TX state machine.
+ */
+tx_state_t tx_state[2];
+
+/**
  * Indicates if a buffer shortage issue needs to handled by tal_task().
  */
 bool tal_buf_shortage[2];
@@ -100,7 +85,7 @@ uint8_t *tal_frame_to_tx[2];
 /**
  * Pointer to receive buffer that can be used to upload a frame from the trx.
  */
-buffer_t *tal_rx_buffer[2] = { NULL, NULL };
+buffer_t *tal_rx_buffer[2] = {NULL, NULL};
 
 /**
  * Queue that contains all frames that are uploaded from the trx, but have not
@@ -134,11 +119,6 @@ int8_t tal_current_ed_val[2];
 /** Parameter to handle timer callback functions */
 const uint8_t timer_cb_parameter[2] = {RF09, RF24};
 
-#ifdef RX_WHILE_BACKOFF
-/** Flag indicates if current CSMA backoff is onhold */
-bool csma_backoff_onhold[2] = {false, false};
-#endif
-
 /** Current trx state */
 rf_cmd_state_t trx_state[2];
 
@@ -165,6 +145,11 @@ uint32_t fs_tstamp[2];
  * Both scenarios use the same variable
  */
 uint32_t rxe_txe_tstamp[2];
+
+/**
+ * TX calibration values
+ */
+uint8_t txc[2][2];
 
 /* === PROTOTYPES ========================================================== */
 
@@ -196,8 +181,8 @@ void tal_task(void)
          */
         if (tal_buf_shortage[trx_id])
         {
-            //debug_text_val(PSTR("tal_task() - Handle tal_buf_shortage"),
-                         //  trx_id);
+            debug_text_val(PSTR("tal_task() - Handle tal_buf_shortage"),
+                           trx_id);
 
             /* If necessary, try to allocate a new buffer. */
             if (tal_rx_buffer[trx_id] == NULL)
@@ -208,7 +193,7 @@ void tal_task(void)
             /* Check if buffer could be allocated */
             if (tal_rx_buffer[trx_id] != NULL)
             {
-                //debug_text(PSTR("tal_task() - Buffer shortage resolved"));
+                debug_text(PSTR("tal_task() - Buffer shortage resolved"));
                 tal_buf_shortage[trx_id] = false;
                 if (tal_state[trx_id] == TAL_IDLE)
                 {
@@ -224,7 +209,7 @@ void tal_task(void)
             }
             else
             {
-                //debug_text(PSTR("tal_task() - Buffer shortage pending"));
+                debug_text(PSTR("tal_task() - Buffer shortage pending"));
             }
         }
 
@@ -248,75 +233,90 @@ void tal_task(void)
          * Handle pending interrupt events
          * that have not been processed within the ISR
          */
-        uint8_t irqs = tal_bb_irqs[trx_id];
-        if (irqs != BB_IRQ_NO_IRQ)
+        bb_irq_t bb_irqs;
+        rf_irq_t rf_irqs;
+        ENTER_TRX_REGION();
+        bb_irqs = tal_bb_irqs[trx_id];
+        rf_irqs = tal_rf_irqs[trx_id];
+        LEAVE_TRX_REGION();
+
+        if (bb_irqs != BB_IRQ_NO_IRQ)
         {
-            if (irqs & BB_IRQ_RXEM)
+            if (bb_irqs & BB_IRQ_RXEM)
             {
-                //debug_text(PSTR("tal_task - BB_IRQ_RXEM"));
+                debug_text(PSTR("tal_task - BB_IRQ_RXEM"));
                 TAL_BB_IRQ_CLR(trx_id, BB_IRQ_RXEM);
             }
-            if (irqs & BB_IRQ_RXAM)
+            if (bb_irqs & BB_IRQ_RXAM)
             {
-                //debug_text(PSTR("tal_task - BB_IRQ_RXAM"));
+                debug_text(PSTR("tal_task - BB_IRQ_RXAM"));
                 TAL_BB_IRQ_CLR(trx_id, BB_IRQ_RXAM);
             }
-            if (irqs & BB_IRQ_RXFS)
+            if (bb_irqs & BB_IRQ_RXFS)
             {
-                //debug_text(PSTR("tal_task - BB_IRQ_RXFS"));
+                debug_text(PSTR("tal_task - BB_IRQ_RXFS"));
                 TAL_BB_IRQ_CLR(trx_id, BB_IRQ_RXFS);
             }
-            if (irqs & BB_IRQ_TXFE)
+            if (bb_irqs & BB_IRQ_TXFE)
             {
-                //debug_text(PSTR("tal_task - BB_IRQ_TXFE"));
+                debug_text(PSTR("tal_task - BB_IRQ_TXFE"));
                 TAL_BB_IRQ_CLR(trx_id, BB_IRQ_TXFE);
+#ifndef BASIC_MODE
+                if (tx_state[trx_id] == TX_CCATX)
+                {
+                    /* Clear TRXRDY IRQ that has been issued while switching from Rx to TX via TXPREP */
+                    /* Clear EDC IRQ that has been issued for CCA measurement */
+                    TAL_RF_IRQ_CLR(trx_id, (RF_IRQ_EDC | RF_IRQ_TRXRDY));
+                    rf_irqs &= (uint8_t)(~((uint32_t)(RF_IRQ_EDC | RF_IRQ_TRXRDY)));
+                }
+#endif
                 handle_tx_end_irq((trx_id_t)trx_id);
             }
-            if (irqs & BB_IRQ_RXFE)
+            if (bb_irqs & BB_IRQ_RXFE)
             {
-                //debug_text(PSTR("tal_task - BB_IRQ_RXFE"));
+                debug_text(PSTR("tal_task - BB_IRQ_RXFE"));
                 TAL_BB_IRQ_CLR(trx_id, BB_IRQ_RXFE);
                 handle_rx_end_irq((trx_id_t)trx_id);
             }
         }
 
-        irqs = tal_rf_irqs[trx_id];
-        if (irqs != RF_IRQ_NO_IRQ)
+        /* Handle RF interrupts */
+        if (rf_irqs != RF_IRQ_NO_IRQ)
         {
-            if (irqs & RF_IRQ_TRXRDY)
+            if (rf_irqs & RF_IRQ_TRXRDY)
             {
-                //debug_text(PSTR("tal_task - RF_IRQ_TRXRDY"));
-                //debug_text_val(PSTR("Error: unexpected IRQ, tal_state = "),
-                               //tal_state[trx_id]);
+                debug_text(PSTR("tal_task - RF_IRQ_TRXRDY"));
+                debug_text_val(PSTR("Error: unexpected IRQ, tal_state = "),
+                               tal_state[trx_id]);
             }
-            if (irqs & RF_IRQ_TRXERR)
+            if (rf_irqs & RF_IRQ_TRXERR)
             {
-                //debug_text(PSTR("tal_task - RF_IRQ_TRXERR"));
+                debug_text(PSTR("tal_task - RF_IRQ_TRXERR"));
                 TAL_RF_IRQ_CLR(trx_id, RF_IRQ_TRXERR);
                 handle_trxerr((trx_id_t)trx_id);
             }
-            if (irqs & RF_IRQ_BATLOW)
+            if (rf_irqs & RF_IRQ_BATLOW)
             {
-                //debug_text(PSTR("tal_task - RF_IRQ_BATLOW"));
+                debug_text(PSTR("tal_task - RF_IRQ_BATLOW"));
                 TAL_RF_IRQ_CLR(trx_id, RF_IRQ_BATLOW);
 #if (defined ENABLE_TFA) || (defined TFA_BAT_MON_IRQ)
                 handle_batmon_irq(); // see tfa_batmon.c
 #endif
             }
-            if (irqs & RF_IRQ_WAKEUP)
+            if (rf_irqs & RF_IRQ_WAKEUP)
             {
-                //debug_text(PSTR("tal_task - RF_IRQ_WAKEUP"));
+                debug_text(PSTR("tal_task - RF_IRQ_WAKEUP"));
                 TAL_RF_IRQ_CLR(trx_id, RF_IRQ_WAKEUP);
-                //debug_text_val(PSTR("tal_state = "), tal_state[trx_id]);
+                debug_text_val(PSTR("tal_state = "), tal_state[trx_id]);
             }
-            if (irqs & RF_IRQ_IQIFSF)
+            if (rf_irqs & RF_IRQ_IQIFSF)
             {
-                //debug_text(PSTR("tal_task - RF_IRQ_IQIFSF"));
+                debug_text(PSTR("tal_task - RF_IRQ_IQIFSF"));
                 TAL_RF_IRQ_CLR(trx_id, RF_IRQ_IQIFSF);
             }
-            if (irqs & RF_IRQ_EDC)
+            if (rf_irqs & RF_IRQ_EDC)
             {
-                //debug_text(PSTR("tal_task - RF_IRQ_EDC"));
+                debug_text(PSTR("tal_task - RF_IRQ_EDC"));
                 TAL_RF_IRQ_CLR(trx_id, RF_IRQ_EDC);
                 handle_ed_end_irq((trx_id_t)trx_id);
             }
@@ -337,20 +337,20 @@ void tal_task(void)
  */
 void switch_to_rx(trx_id_t trx_id)
 {
-    //debug_text_val(PSTR("switch_to_rx(), trx_id ="), trx_id);
+    debug_text_val(PSTR("switch_to_rx(), trx_id ="), trx_id);
 
     /* Check if buffer is available now. */
     if (tal_rx_buffer[trx_id] != NULL)
     {
-        uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-        pal_trx_reg_write(rf_reg_offset + RG_RF09_CMD, RF_RX);
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+        pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_RX);
         trx_state[trx_id] = RF_RX;
     }
     else
     {
         switch_to_txprep(trx_id);
         tal_buf_shortage[trx_id] = true;
-        //debug_text_val(PSTR("Warning: buffer shortage !!!!!!!!!"), trx_id);
+        debug_text_val(PSTR("Warning: buffer shortage !!!!!!!!!"), trx_id);
     }
 }
 
@@ -365,25 +365,61 @@ void switch_to_rx(trx_id_t trx_id)
  */
 void switch_to_txprep(trx_id_t trx_id)
 {
-    //debug_text_val(PSTR("switch_to_txprep(), trx_id ="), trx_id);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
-    uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    pal_trx_reg_write(rf_reg_offset + RG_RF09_CMD, RF_TXPREP);
-    while (TAL_RF_IS_IRQ_SET(trx_id, RF_IRQ_TRXRDY) == 0)
-    {
-        /* wait until trx has reached TXPREP */
-    }
-    TAL_RF_IRQ_CLR(trx_id, RF_IRQ_TRXRDY);
-    trx_state[trx_id] = RF_TXPREP;
+    debug_text_val(PSTR("switch_to_txprep(), trx_id ="), trx_id);
 
-#ifdef AT86RF215LT
-    /* Workaround for errata reference 4623 */
-    if (tal_pib[trx_id].phy.freq_f0 >= 779000000)
+    pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TXPREP);
+
+    wait_for_txprep(trx_id);
+
+    /* Workaround for errata reference #4807 */
+    pal_trx_write(reg_offset + 0x125, (uint8_t *)&txc[trx_id][0], 2);
+}
+
+
+/**
+ * @brief Wait to reach TXPREP
+ *
+ * @param trx_id Transceiver identifier
+ */
+void wait_for_txprep(trx_id_t trx_id)
+{
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+    rf_cmd_state_t state;
+    uint32_t start_time = 0;
+
+    pal_get_current_time(&start_time);
+
+    do
     {
-        uint8_t val[2] = {0x1F, 0x1F};
-        pal_trx_write(rf_reg_offset + 0x125, val, 2);
-    }
+#if (POLL_TIME_GAP > 0)
+        pal_timer_delay(POLL_TIME_GAP); /* Delay to reduce SPI storm */
 #endif
+        state = (rf_cmd_state_t)pal_trx_reg_read(reg_offset + RG_RF09_STATE);
+
+        if (state != RF_TXPREP)
+        {
+            /* Workaround for errata reference #4810 */
+            uint32_t now;
+            pal_get_current_time(&now);
+            if (abs(now - start_time) > MAX_PLL_LOCK_DURATION)
+            {
+                pal_trx_reg_write(reg_offset + RG_RF09_PLL, 9);
+                pal_timer_delay(PLL_FRZ_SETTLING_DURATION);
+                pal_trx_reg_write(reg_offset + RG_RF09_PLL, 8);
+                do
+                {
+                    state = (rf_cmd_state_t)pal_trx_reg_read(reg_offset + RG_RF09_STATE);
+                }
+                while (state != RF_TXPREP);
+                break;
+            }
+        }
+    }
+    while (state != RF_TXPREP);
+
+    trx_state[trx_id] = RF_TXPREP;
 }
 
 
@@ -396,52 +432,35 @@ void switch_to_txprep(trx_id_t trx_id)
  */
 static void handle_trxerr(trx_id_t trx_id)
 {
-    //debug_text(PSTR("handle_trxerr()"));
-    //debug_text_val(PSTR("tal_state = "), tal_state[trx_id]);
+    debug_text(PSTR("handle_trxerr()"));
+    debug_text_val(PSTR("tal_state = "), tal_state[trx_id]);
 
     /* Set device to TRXOFF */
-    uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    pal_trx_reg_write(rf_reg_offset + RG_RF09_CMD, RF_TRXOFF);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+    pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
+    trx_state[trx_id] = RF_TRXOFF;
+    tx_state[trx_id] = TX_IDLE;
+    stop_tal_timer(trx_id);
+#ifdef ENABLE_FTN_PLL_CALIBRATION
+    stop_ftn_timer(trx_id);
+#endif  /* ENABLE_FTN_PLL_CALIBRATION */
 
     switch (tal_state[trx_id])
     {
-            /* Rx transaction */
-        case TAL_IDLE: /* Fall through */
-        case TAL_WAITING_FOR_ACK_TRANSMISION:  /* Fall through */
-        case TAL_ACK_TRANSMITTING:
-            /* Return to Rx again */
-            tal_state[trx_id] = TAL_IDLE;
-            switch_to_txprep(trx_id);
-            switch_to_rx(trx_id);
-            break;
-
-            /* Tx transaction */
-        case TAL_BACKOFF:  /* Fall through */
-        case TAL_CCA:  /* Fall through */
-        case TAL_TX:  /* Fall through */
-        case TAL_WAITING_FOR_ACK_RECEPTION:
-            stop_tal_timer(trx_id);
-            trx_state[trx_id] = RF_TRXOFF;
-            tx_done_handling(trx_id, MAC_NO_ACK);
+        case TAL_TX:
+            tx_done_handling(trx_id, FAILURE);
             break;
 
 #if (MAC_SCAN_ED_REQUEST_CONFIRM == 1)
-            /* Other transaction */
         case TAL_ED_SCAN:
-            trx_state[trx_id] = RF_TRXOFF;
             stop_ed_scan(trx_id); // see tal_ed.c; covers state handling
             break;
 #endif
 
         default:
-            if (trx_state[trx_id] == RF_RX)
+            if (trx_default_state[trx_id] == RF_RX)
             {
-                switch_to_txprep(trx_id);
-                switch_to_rx(trx_id);
-            }
-            else
-            {
-                trx_state[trx_id] = RF_TRXOFF;
+                tal_rx_enable(trx_id, PHY_RX_ON);
             }
             tal_state[trx_id] = TAL_IDLE;
             break;

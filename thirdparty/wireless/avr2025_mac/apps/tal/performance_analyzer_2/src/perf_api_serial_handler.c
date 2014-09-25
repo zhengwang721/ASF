@@ -1240,7 +1240,7 @@ void usr_per_test_start_confirm(trx_id_t trx, uint8_t status)
 void usr_range_test_beacon_tx(trx_id_t trx,frame_info_t *frame)
 {
 	uint8_t *msg_buf;
-	uint8_t frame_len = ((uint8_t)frame->length)+tal_pib[trx].FCSLen ; //start from length field ,range test length doesnot cross over 8bits ,complying with older trx
+	uint8_t frame_len = ((uint8_t)frame->len_no_crc)+tal_pib[trx].FCSLen ; //start from length field ,range test length doesnot cross over 8bits ,complying with older trx
 	uint8_t *frame_mpdu = frame->mpdu;
 	msg_buf = get_next_tx_buffer(trx);
 
@@ -1275,7 +1275,7 @@ void usr_range_test_beacon_rsp(trx_id_t trx,frame_info_t *frame, uint8_t lqi_h, 
 		uint8_t lqi_r, int8_t ed_r)
 {
 	uint8_t *msg_buf;
-	uint8_t frame_len = (uint8_t)frame->length+tal_pib[trx].FCSLen; /* First byte of mpdu is the frame length (RF215) //max length of range test pkt cannot exceed 8b hence maintaing the same variable
+	uint8_t frame_len = (uint8_t)frame->len_no_crc+tal_pib[trx].FCSLen; /* First byte of mpdu is the frame length (RF215) //max length of range test pkt cannot exceed 8b hence maintaing the same variable
 	                               **/ //check -> to be changed
 	uint8_t *frame_mpdu = frame->mpdu;
 	msg_buf = get_next_tx_buffer(trx);
@@ -1314,7 +1314,7 @@ void usr_range_test_beacon_rsp(trx_id_t trx,frame_info_t *frame, uint8_t lqi_h, 
 void usr_range_test_marker_ind(trx_id_t trx,frame_info_t *frame, uint8_t lqi, int8_t ed_value)
 {
 	uint8_t *msg_buf;
-	uint8_t frame_len = (uint8_t)frame->length+tal_pib[trx].FCSLen; /* First byte of mpdu is the frame length (RF215) //max length of range test pkt cannot exceed 8b hence maintaing the same variable
+	uint8_t frame_len = (uint8_t)frame->len_no_crc+tal_pib[trx].FCSLen; /* First byte of mpdu is the frame length (RF215) //max length of range test pkt cannot exceed 8b hence maintaing the same variable
 	                            **/ //check -> to be changed
 	uint8_t *frame_mpdu = frame->mpdu;
 	

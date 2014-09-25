@@ -3,45 +3,13 @@
  *
  * @brief This file handles the PHY configuration
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * $Id: tal_phy_cfg.c 36384 2014-08-27 07:19:39Z uwalter $
  *
- * \asf_license_start
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
- *
+ * @author    Atmel Corporation: http://www.atmel.com
+ * @author    Support email: avr@atmel.com
  */
-
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -58,8 +26,7 @@
 #include "ieee_const.h"
 #include "tal_pib.h"
 #include "tal_internal.h"
-#include "ieee_15_4g.h"
-
+#include "ieee_154g.h"
 
 /* === TYPES =============================================================== */
 
@@ -67,131 +34,23 @@
 
 /* === GLOBALS ============================================================= */
 
-#if (defined SUPPORT_LEGACY_OQPSK) || (defined SUPPORT_OQPSK)
-FLASH_DECLARE(uint8_t oqpsk_tx_rfcfg_table[4][2]) =
-{
-    /* rows: MCSn; column: option n */ \
-    {
-        (RF_PARAMP32U << TXCUTC_PARAMP_SHIFT | RF_FLC400KHZ << TXCUTC_LPFCUT_SHIFT),
-        (10 << TXDFE_SR_SHIFT | 3 << TXDFE_RCUT_SHIFT)
-    },
-    {
-        (RF_PARAMP16U << TXCUTC_PARAMP_SHIFT | RF_FLC400KHZ << TXCUTC_LPFCUT_SHIFT),
-        (5 << TXDFE_SR_SHIFT | 3 << TXDFE_RCUT_SHIFT)
-    },
-    {
-        (RF_PARAMP4U << TXCUTC_PARAMP_SHIFT | RF_FLC1000KHZ << TXCUTC_LPFCUT_SHIFT),
-        (1 << TXDFE_SR_SHIFT | 3 << TXDFE_RCUT_SHIFT)
-    },
-    {
-        (RF_PARAMP4U << TXCUTC_PARAMP_SHIFT | RF_FLC1000KHZ << TXCUTC_LPFCUT_SHIFT),
-        (1 << TXDFE_SR_SHIFT | 4 << TXDFE_RCUT_SHIFT)
-    }
-};
-
-FLASH_DECLARE(uint8_t oqpsk_rx_rfcfg_table[4][4]) =
-{
-    {
-        (RF_BW160KHZ_IF250KHZ << RXBWC_BW_SHIFT),
-        (1 << RXDFE_RCUT_SHIFT | 10 << RXDFE_SR_SHIFT),
-        (2 << AGCC_AVGS_SHIFT | 1 << AGCC_EN_SHIFT),
-        (7 << AGCS_TGT_SHIFT | 23 << AGCS_GCW_SHIFT)
-    },
-    {
-        (RF_BW250KHZ_IF250KHZ << RXBWC_BW_SHIFT),
-        (1 << RXDFE_RCUT_SHIFT | 5 << RXDFE_SR_SHIFT),
-        (2 << AGCC_AVGS_SHIFT | 1 << AGCC_EN_SHIFT),
-        (7 << AGCS_TGT_SHIFT | 23 << AGCS_GCW_SHIFT)
-    },
-    {
-        (RF_BW1000KHZ_IF1000KHZ << RXBWC_BW_SHIFT),
-        (0 << RXDFE_RCUT_SHIFT | 1 << RXDFE_SR_SHIFT),
-        (0 << AGCC_AVGS_SHIFT | 1 << AGCC_EN_SHIFT),
-        (3 << AGCS_TGT_SHIFT | 23 << AGCS_GCW_SHIFT)
-    },
-    {
-        (RF_BW2000KHZ_IF2000KHZ << RXBWC_BW_SHIFT),
-        (2 << RXDFE_RCUT_SHIFT | 1 << RXDFE_SR_SHIFT),
-        (0 << AGCC_AVGS_SHIFT | 1 << AGCC_EN_SHIFT),
-        (3 << AGCS_TGT_SHIFT | 23 << AGCS_GCW_SHIFT)
-    }
-};
-#endif /* #if (defined SUPPORT_LEGACY_OQPSK) || (defined SUPPORT_OQPSK) */
-
-#ifdef SUPPORT_OFDM
-FLASH_DECLARE(uint8_t ofdm_tx_rfcfg_table[4][2]) =
-{
-    /* rows: MCSn; column: option n */ \
-    {
-        (RF_PARAMP4U << TXCUTC_PARAMP_SHIFT | RF_FLC1000KHZ << TXCUTC_LPFCUT_SHIFT),
-        (3 << TXDFE_SR_SHIFT | 4 << TXDFE_RCUT_SHIFT)
-    },
-    {
-        (RF_PARAMP4U << TXCUTC_PARAMP_SHIFT | RF_FLC400KHZ << TXCUTC_LPFCUT_SHIFT),
-        (3 << TXDFE_SR_SHIFT | 3 << TXDFE_RCUT_SHIFT)
-    },
-    {
-        (RF_PARAMP4U << TXCUTC_PARAMP_SHIFT | RF_FLC315KHZ << TXCUTC_LPFCUT_SHIFT),
-        (6 << TXDFE_SR_SHIFT | 3 << TXDFE_RCUT_SHIFT)
-    },
-    {
-        (RF_PARAMP4U << TXCUTC_PARAMP_SHIFT | RF_FLC160KHZ << TXCUTC_LPFCUT_SHIFT),
-        (6 << TXDFE_SR_SHIFT | 2 << TXDFE_RCUT_SHIFT)
-    }
-};
-
-/* Use 900MHz setting if different from 2.4GHz */
-FLASH_DECLARE(uint8_t ofdm_rx_rfcfg_table[4][4]) =
-{
-    {
-        (RF_BW1250KHZ_IF2000KHZ << RXBWC_BW_SHIFT | 0 << RXBWC_IFS_SHIFT),
-#ifdef TCXO_AVAILABLE
-        (3 << RXDFE_RCUT_SHIFT | 3 << RXDFE_SR_SHIFT),
-#else
-        (4 << RXDFE_RCUT_SHIFT | 3 << RXDFE_SR_SHIFT),
-#endif
-        (0 << AGCC_AVGS_SHIFT | 0 << AGCC_AGCI_SHIFT | 1 << AGCC_EN_SHIFT),
-        (3 << AGCS_TGT_SHIFT | 23 << AGCS_GCW_SHIFT)
-    },
-
-    {
-        (RF_BW630KHZ_IF1000KHZ << RXBWC_BW_SHIFT | 0 << RXBWC_IFS_SHIFT),
-        (1 << RXDFE_RCUT_SHIFT | 3 << RXDFE_SR_SHIFT),
-        (2 << AGCC_AVGS_SHIFT | 0 << AGCC_AGCI_SHIFT | 1 << AGCC_EN_SHIFT),
-        (7 << AGCS_TGT_SHIFT | 23 << AGCS_GCW_SHIFT)
-    },
-
-    {
-        (RF_BW320KHZ_IF500KHZ << RXBWC_BW_SHIFT | 1 << RXBWC_IFS_SHIFT),
-        (2 << RXDFE_RCUT_SHIFT | 6 << RXDFE_SR_SHIFT),
-        (0 << AGCC_AVGS_SHIFT | 1 << AGCC_AGCI_SHIFT | 1 << AGCC_EN_SHIFT),
-        (3 << AGCS_TGT_SHIFT | 23 << AGCS_GCW_SHIFT)
-    },
-
-    {
-#ifdef TCXO_AVAILABLE
-        (RF_BW200KHZ_IF250KHZ << RXBWC_BW_SHIFT | 1 << RXBWC_IFS_SHIFT),
-        (0 << RXDFE_RCUT_SHIFT | 6 << RXDFE_SR_SHIFT),
-#else
-        (RF_BW320KHZ_IF500KHZ << RXBWC_BW_SHIFT | 1 << RXBWC_IFS_SHIFT),
-        (1 << RXDFE_RCUT_SHIFT | 6 << RXDFE_SR_SHIFT),
-#endif
-        (0 << AGCC_AVGS_SHIFT | 1 <<  AGCC_AGCI_SHIFT | 1 << AGCC_EN_SHIFT),
-        (3 << AGCS_TGT_SHIFT | 23 << AGCS_GCW_SHIFT)
-    }
-};
-#endif /* #ifdef SUPPORT_OFDM */
-
 /* === PROTOTYPES ========================================================== */
 
 #ifdef SUPPORT_OFDM
-static retval_t tal_ofdm_rfcfg(trx_id_t trx_id, ofdm_option_t ofdm_opt);
+static retval_t conf_ofdm(trx_id_t trx_id);
+#endif
+#ifdef SUPPORT_OQPSK
+static retval_t conf_oqpsk(trx_id_t trx_id);
+#endif
+#ifdef SUPPORT_LEGACY_OQPSK
+static retval_t conf_leg_oqpsk(trx_id_t trx_id);
 #endif
 #if (defined SUPPORT_LEGACY_OQPSK) || (defined SUPPORT_OQPSK)
-static retval_t tal_oqpsk_rfcfg(trx_id_t trx_id, oqpsk_chip_rate_t chip_rate);
 #endif
 #ifdef SUPPORT_FSK
-static retval_t tal_fsk_rfcfg(trx_id_t trx_id);
+#ifndef SUPPORT_MODE_SWITCH
+static retval_t conf_fsk(trx_id_t trx_id);
+#endif
 #endif
 
 /* === IMPLEMENTATION ====================================================== */
@@ -206,80 +65,45 @@ static retval_t tal_fsk_rfcfg(trx_id_t trx_id);
  */
 retval_t conf_trx_modulation(trx_id_t trx_id)
 {
-    //debug_text(PSTR("conf_trx_modulation()"));
+    debug_text(PSTR("conf_trx_modulation()"));
 
     retval_t status;
-    uint16_t bb_reg_offset = BB_BASE_ADDR_OFFSET * trx_id;
+
+    /* Change PHY only in TRXOFF or TXPREP. Since TXPREP is not possible here, check for TRXOFF */
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+    rf_cmd_state_t previous_trx_state = (rf_cmd_state_t)pal_trx_reg_read(reg_offset + RG_RF09_STATE);
+    if (previous_trx_state != RF_TRXOFF)
+    {
+        pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
+#ifdef IQ_RADIO
+        pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
+#endif
+        trx_state[trx_id] = RF_TRXOFF;
+    }
 
     switch (tal_pib[trx_id].phy.modulation)
     {
 #ifdef SUPPORT_FSK
         case FSK:
-            /* Configure RF */
-            status = tal_fsk_rfcfg(trx_id);
-            if (status == MAC_SUCCESS)
-            {
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_PC_PT, BB_MRFSK);
-
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_FSKC0_MORD, 0); // ?
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_FSKC0_MIDX, tal_pib[trx_id].phy.phy_mode.fsk.mod_idx); // ?
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_FSKC0_BT, 1); // ?
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_FSKC1_FSKPLH, 0); // ?
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_FSKC1_SRATE, 0); // ?
-                //FSKC1
-                //FSKPLL
-                pal_trx_reg_write(bb_reg_offset + RG_BBC0_FSKPLL, 8);
-                //FSKPHR
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_FSKPHR_DWTX, 1);
-            }
+            status = conf_fsk(trx_id);
             break;
 #endif
 
 #ifdef SUPPORT_OFDM
         case OFDM:
-            /* Configure RF */
-            status = tal_ofdm_rfcfg(trx_id, tal_pib[trx_id].phy.phy_mode.ofdm.option);
-            if (status == MAC_SUCCESS)
-            {
-                /* Configure BB */
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_PC_PT, BB_MROFDM);
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_OFDMC_OPT, tal_pib[trx_id].phy.phy_mode.ofdm.option);
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_OFDMC_POI, tal_pib[trx_id].phy.phy_mode.ofdm.interl);
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_OFDMPHRTX_MCS, tal_pib[trx_id].phy.phy_mode.ofdm.mcs_val);
-            }
+            status = conf_ofdm(trx_id);
             break;
 #endif
 
 #ifdef SUPPORT_OQPSK
         case OQPSK:
-            /* Configure RF */
-            status = tal_oqpsk_rfcfg(trx_id, tal_pib[trx_id].phy.phy_mode.oqpsk.chip_rate);
-            if (status == MAC_SUCCESS)
-            {
-                /* Configure BB */
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_PC_PT, BB_MROQPSK);
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_OQPSKC0_FCHIP, tal_pib[trx_id].phy.phy_mode.oqpsk.chip_rate);
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_OQPSKPHRTX_LEG, 0);
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_OQPSKPHRTX_MOD,
-                                  tal_pib[trx_id].phy.phy_mode.oqpsk.rate_mode);
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_OQPSKC2_RXM, 0); // MR mode only
-            }
+            status = conf_oqpsk(trx_id);
             break;
 #endif
 
 #ifdef SUPPORT_LEGACY_OQPSK
         case LEG_OQPSK:
-            /* Configure RF */
-            status = tal_oqpsk_rfcfg(trx_id, tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate);
-            if (status == MAC_SUCCESS)
-            {
-                /* set bb_core0 baseband mode to OQPSK */
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_PC_PT, BB_MROQPSK);
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_OQPSKC0_FCHIP,
-                                  tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate);
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_OQPSKC2_RXM, 1); // legacy mode only
-                pal_trx_bit_write(bb_reg_offset + SR_BBC0_OQPSKPHRTX_LEG, 1); // configure legacy transmit
-            }
+            status = conf_leg_oqpsk(trx_id);
             break;
 #endif
 
@@ -288,99 +112,45 @@ retval_t conf_trx_modulation(trx_id_t trx_id)
             break;
     }
 
+    /* Restore previous state */
+    switch (previous_trx_state)
+    {
+        case RF_RX:
+            switch_to_rx(trx_id);
+            break;
+
+        case RF_TXPREP:
+            switch_to_txprep(trx_id);
+            break;
+
+        default:
+            /* stay in TRXOFF */
+            break;
+    }
+
     return status;
 }
 
 
 #ifdef SUPPORT_OFDM
 /**
- * @brief Configures RF according MR-OFDM
+ * @brief Configures MR-OFDM
  *
  * @param trx_id Transceiver identifier
- * @param ofdm_opt OFDM option
  */
-static retval_t tal_ofdm_rfcfg(trx_id_t trx_id, ofdm_option_t ofdm_opt)
+static retval_t conf_ofdm(trx_id_t trx_id)
 {
-    retval_t status = MAC_SUCCESS;
+    retval_t status;
 
-#if (DEBUG > 0)
-    if (ofdm_opt > 3)
+    /* Configure RF */
+    status = ofdm_rfcfg(tal_pib[trx_id].phy.phy_mode.ofdm.option, trx_id);
+    if (status == MAC_SUCCESS)
     {
-        //debug_text_val_finish(PSTR("ERROR: OFDM option must be in [0..3], is:"), ofdm_opt, DEBUG_ERROR);
-        status = MAC_INVALID_PARAMETER;
-    }
-    else
-#endif
-    {
-        uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
-        /* Limit transmit power */
-        pal_trx_bit_write(rf_reg_offset + SR_RF09_PAC_TXPWR, 28);
-        tal_pib[trx_id].TransmitPower = 11;
-
-#if (defined __GNUC__) && (defined __AVR__)
-        uint8_t tx_cfg[2] =
-        {
-            (uint8_t)PGM_READ_BYTE(&ofdm_tx_rfcfg_table[ofdm_opt][0]),
-            (uint8_t)PGM_READ_BYTE(&ofdm_tx_rfcfg_table[ofdm_opt][1])
-        };
-
-        pal_trx_write(rf_reg_offset + RG_RF09_TXCUTC, tx_cfg, 2);
-
-        uint8_t rx_cfg[4] =
-        {
-            (uint8_t)PGM_READ_BYTE(&ofdm_rx_rfcfg_table[ofdm_opt][0]),
-            (uint8_t)PGM_READ_BYTE(&ofdm_rx_rfcfg_table[ofdm_opt][1]),
-            (uint8_t)PGM_READ_BYTE(&ofdm_rx_rfcfg_table[ofdm_opt][2]),
-            (uint8_t)PGM_READ_BYTE(&ofdm_rx_rfcfg_table[ofdm_opt][3])
-        };
-
-        pal_trx_write(rf_reg_offset + RG_RF09_RXBWC, rx_cfg, 4);
-#else
-        pal_trx_write(rf_reg_offset + RG_RF09_TXCUTC,
-                      (uint8_t *)&ofdm_tx_rfcfg_table[ofdm_opt][0], 2);
-        pal_trx_write(rf_reg_offset + RG_RF09_RXBWC,
-                      (uint8_t *)&ofdm_rx_rfcfg_table[ofdm_opt][0], 4);
-#endif
-
-#ifndef TCXO_AVAILABLE
-        /* Handle band specific settings */
-        if ((ofdm_opt != 0) && (trx_id == RF24))
-        {
-            uint8_t tmp[2];
-
-            switch (ofdm_opt)
-            {
-                case  OFDM_OPT_2:    /*OFDM Option 2: BW nom.: 552 kHz */
-                    /* RXBWC */
-                    tmp[0] = (RF_BW800KHZ_IF1000KHZ << RXBWC_BW_SHIFT) | (0 << RXBWC_IFS_SHIFT);
-                    /* RXDFE */
-                    tmp[1] = (3 << RXDFE_RCUT_SHIFT) | (3 << RXDFE_SR_SHIFT);
-                    break;
-
-                case  OFDM_OPT_3:    /*OFDM Option 3: BW nom.: 281 kHz */
-                    /* RXBWC */
-                    tmp[0] = (RF_BW400KHZ_IF500KHZ << RXBWC_BW_SHIFT) | (1 << RXBWC_IFS_SHIFT);
-                    /* RXDFE */
-                    tmp[1] = (3 << RXDFE_RCUT_SHIFT) | (6 << RXDFE_SR_SHIFT);
-                    break;
-
-                case  OFDM_OPT_4:    /*OFDM Option 4: BW nom.: 156 kHz */
-                    /* RXBWC */
-                    tmp[0] = (RF_BW320KHZ_IF500KHZ << RXBWC_BW_SHIFT) | (1 << RXBWC_IFS_SHIFT);
-                    /* RXDFE */
-                    tmp[1] = (2 << RXDFE_RCUT_SHIFT) | (6 << RXDFE_SR_SHIFT);;
-                    break;
-
-                default:
-                    //debug_text_val_finish(PSTR("ERROR: OFDM option must be in [0..3], is:"), ofdm_opt, DEBUG_ERROR);
-                    status = MAC_INVALID_PARAMETER;
-                    break;
-            }
-            pal_trx_write(RG_RF24_RXBWC, tmp, 2);
-        }
-#endif /* #ifndef TCXO_AVAILABLE */
-
+        /* Configure BB */
+        pal_trx_bit_write(reg_offset + SR_BBC0_PC_PT, BB_MROFDM);
+        pal_trx_bit_write(reg_offset + SR_BBC0_OFDMC_OPT, tal_pib[trx_id].phy.phy_mode.ofdm.option - 1);
     }
 
     return status;
@@ -388,92 +158,156 @@ static retval_t tal_ofdm_rfcfg(trx_id_t trx_id, ofdm_option_t ofdm_opt)
 #endif /* #ifdef SUPPORT_OFDM */
 
 
-#if (defined SUPPORT_LEGACY_OQPSK) || (defined SUPPORT_OQPSK)
+#ifdef SUPPORT_OQPSK
 /**
- * @brief Configures RF according MR-OQPSK
+ * @brief Configures MR-OQPSK
  *
  * @param trx_id Transceiver identifier
- * @param chip_rate OQPSK chip mode
  */
-static retval_t tal_oqpsk_rfcfg(trx_id_t trx_id, oqpsk_chip_rate_t chip_rate)
+static retval_t conf_oqpsk(trx_id_t trx_id)
 {
-    retval_t status = MAC_SUCCESS;
+    retval_t status;
 
-    if (chip_rate > 3)
+    /* Configure RF */
+    status = oqpsk_rfcfg(tal_pib[trx_id].phy.phy_mode.oqpsk.chip_rate, trx_id);
+    if (status == MAC_SUCCESS)
     {
-        //debug_text_val_finish(PSTR("ERROR: MODE_FCHIP  must be in [0..3], is:"), chip_rate, DEBUG_ERROR);
-        status = MAC_INVALID_PARAMETER;
-    }
-    else
-    {
-        /* set transmit power to 14 dBm */
-        uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-        pal_trx_bit_write(rf_reg_offset + SR_RF09_PAC_TXPWR, 0x1F);
-        tal_pib[trx_id].TransmitPower = 14;
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
-#if (defined __GNUC__) && (defined __AVR__)
-        uint8_t tx_cfg[2] =
-        {
-            (uint8_t)PGM_READ_BYTE(&oqpsk_tx_rfcfg_table[chip_rate][0]),
-            (uint8_t)PGM_READ_BYTE(&oqpsk_tx_rfcfg_table[chip_rate][1])
-        };
-
-        pal_trx_write(rf_reg_offset + RG_RF09_TXCUTC, tx_cfg, 2);
-
-        uint8_t rx_cfg[4] =
-        {
-            (uint8_t)PGM_READ_BYTE(&oqpsk_rx_rfcfg_table[chip_rate][0]),
-            (uint8_t)PGM_READ_BYTE(&oqpsk_rx_rfcfg_table[chip_rate][1]),
-            (uint8_t)PGM_READ_BYTE(&oqpsk_rx_rfcfg_table[chip_rate][2]),
-            (uint8_t)PGM_READ_BYTE(&oqpsk_rx_rfcfg_table[chip_rate][3])
-        };
-
-        pal_trx_write(rf_reg_offset + RG_RF09_RXBWC, rx_cfg, 4);
-#else
-        pal_trx_write(rf_reg_offset + RG_RF09_TXCUTC,
-                      (uint8_t *)&oqpsk_tx_rfcfg_table[chip_rate][0], 2);
-        pal_trx_write(rf_reg_offset + RG_RF09_RXBWC,
-                      (uint8_t *)&oqpsk_rx_rfcfg_table[chip_rate][0], 4);
-#endif
+        /* Configure BB */
+        pal_trx_bit_write(reg_offset + SR_BBC0_PC_PT, BB_MROQPSK);
+        pal_trx_bit_write(reg_offset + SR_BBC0_OQPSKC0_FCHIP,
+                          tal_pib[trx_id].phy.phy_mode.oqpsk.chip_rate);
+        pal_trx_bit_write(reg_offset + SR_BBC0_OQPSKPHRTX_LEG, 0);
+        pal_trx_bit_write(reg_offset + SR_BBC0_OQPSKC2_RXM, 0); // MR mode only
     }
 
     return status;
 }
-#endif /* #if (defined SUPPORT_LEGACY_OQPSK) || (defined SUPPORT_OQPSK) */
+#endif /* #ifdef SUPPORT_OQPSK */
+
+
+#ifdef SUPPORT_LEGACY_OQPSK
+/**
+ * @brief Configures legacy O-QPSK
+ *
+ * @param trx_id Transceiver identifier
+ */
+static retval_t conf_leg_oqpsk(trx_id_t trx_id)
+{
+    retval_t status;
+
+    /* Configure RF */
+    status = oqpsk_rfcfg(tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate, trx_id);
+    if (status == MAC_SUCCESS)
+    {
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+
+        /* set bb_core0 baseband mode to OQPSK */
+        pal_trx_bit_write(reg_offset + SR_BBC0_PC_PT, BB_MROQPSK);
+        pal_trx_bit_write(reg_offset + SR_BBC0_OQPSKC0_FCHIP,
+                          tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate);
+        pal_trx_bit_write(reg_offset + SR_BBC0_OQPSKC2_RXM, 1); // legacy mode only
+        pal_trx_bit_write(reg_offset + SR_BBC0_OQPSKPHRTX_LEG, 1); // configure legacy transmit
+    }
+
+    return status;
+}
+#endif /* #ifdef SUPPORT_LEGACY_OQPSK */
 
 
 #ifdef SUPPORT_FSK
-static retval_t tal_fsk_rfcfg(trx_id_t trx_id)
+/**
+ * @brief Configures FSK
+ *
+ * @param trx_id Transceiver identifier
+ */
+#ifdef SUPPORT_MODE_SWITCH
+retval_t conf_fsk(trx_id_t trx_id)
+#else
+static retval_t conf_fsk(trx_id_t trx_id)
+#endif
 {
-    retval_t status = MAC_SUCCESS;
+    retval_t status;
 
-    uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+    /* Configure RF */
+    status = fsk_rfcfg(tal_pib[trx_id].phy.phy_mode.fsk.data_rate, tal_pib[trx_id].phy.phy_mode.fsk.mod_idx, trx_id);
+    if (status == MAC_SUCCESS)
+    {
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
-    /* 50 kbps, fs= 400 kHz */
-
-    /* -- TX ----------------------------------------------------------- */
-    /* PA ramp time 32 us */
-    pal_trx_bit_write(rf_reg_offset + SR_RF09_TXCUTC_PARAMP, RF_PARAMP32U);
-    /* I/F rate: 0.4 Ms/sec */
-    pal_trx_bit_write(rf_reg_offset + SR_RF09_TXDFE_SR, 10);
-    /* DFE cut-off: 0.75 */
-    pal_trx_bit_write(rf_reg_offset + SR_RF09_TXDFE_RCUT, 3);
-    /* analog tx-filter */
-    pal_trx_bit_write(rf_reg_offset + SR_RF09_TXCUTC_LPFCUT, RF_FLC400KHZ);
-    /* -- RX ----------------------------------------------------------- */
-    /* analog rx-filter */
-    pal_trx_bit_write(rf_reg_offset + SR_RF09_RXBWC_BW, RF_BW160KHZ_IF250KHZ);
-    /* DFE cut-off: 0.375 */
-    pal_trx_bit_write(rf_reg_offset + SR_RF09_RXDFE_RCUT, 1);
-    /* I/F rate: 0.4 Ms/sec */
-    pal_trx_bit_write(rf_reg_offset + SR_RF09_RXDFE_SR, 10);
-    /* AGC setup: 32 samples */
-    pal_trx_bit_write(rf_reg_offset + SR_RF09_AGCC_AVGS, 2);
-    /* AGC target: -42 dB */
-    pal_trx_bit_write(rf_reg_offset + SR_RF09_AGCS_TGT, 7);
+        pal_trx_bit_write(reg_offset + SR_BBC0_PC_PT, BB_MRFSK);
+        // FSKC0
+        pal_trx_bit_write(reg_offset + SR_BBC0_FSKC0_MORD,
+                          tal_pib[trx_id].phy.phy_mode.fsk.mod_type);
+        pal_trx_bit_write(reg_offset + SR_BBC0_FSKC0_MIDX,
+                          tal_pib[trx_id].phy.phy_mode.fsk.mod_idx);
+        // FSKC1
+        pal_trx_bit_write(reg_offset + SR_BBC0_FSKC1_SRATE,
+                          tal_pib[trx_id].phy.phy_mode.fsk.data_rate);
+        /* Configure SFD */
+        set_sfd(trx_id);
+    }
 
     return status;
 }
 #endif /* #ifdef SUPPORT_FSK */
+
+
+#ifdef SUPPORT_FSK
+/**
+ * @brief Configures SFDs
+ *
+ * @param trx_id Transceiver identifier
+ */
+void set_sfd(trx_id_t trx_id)
+{
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+    uint32_t sfd;
+
+    uint32_t sfd_reset;
+    pal_trx_read(reg_offset + RG_BBC0_FSKSFD0L, (uint8_t *)&sfd_reset, 4);
+    sfd_reset++;
+
+    if (tal_pib[trx_id].phy.phy_mode.fsk.mod_type == F2FSK)
+    {
+        if (tal_pib[trx_id].MRFSKSFD == 0)
+        {
+            sfd = (uint32_t)F2FSK_SFD_0_UNCODED | ((uint32_t)F2FSK_SFD_0_CODED << 16);
+        }
+        else // SFD 1
+        {
+            sfd = (uint32_t)F2FSK_SFD_1_UNCODED | ((uint32_t)F2FSK_SFD_1_CODED << 16);
+        }
+    }
+    else // 4FSK
+    {
+        if (tal_pib[trx_id].MRFSKSFD == 0)
+        {
+            if (tal_pib[trx_id].FSKFECEnabled)
+            {
+                sfd = F4FSK_SFD_0_CODED;
+            }
+            else
+            {
+                sfd = F4FSK_SFD_0_UNCODED;
+            }
+        }
+        else // SFD 1
+        {
+            if (tal_pib[trx_id].FSKFECEnabled)
+            {
+                sfd = F4FSK_SFD_1_CODED;
+            }
+            else
+            {
+                sfd = F4FSK_SFD_1_UNCODED;
+            }
+        }
+    }
+    pal_trx_write(reg_offset + RG_BBC0_FSKSFD0L, (uint8_t *)&sfd, 4);
+}
+#endif /* #ifdef SUPPORT_FSK */
+
 
 /* EOF */

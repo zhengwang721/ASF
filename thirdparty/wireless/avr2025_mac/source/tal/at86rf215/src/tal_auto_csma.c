@@ -3,48 +3,20 @@
  *
  * @brief This file handles CSMA / CA before frame transmission within the TAL.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * $Id: tal_auto_csma.c 36425 2014-08-29 16:38:42Z uwalter $
  *
- * \asf_license_start
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
- *
+ * @author    Atmel Corporation: http://www.atmel.com
+ * @author    Support email: avr@atmel.com
  */
-
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
+
+#include "tal_config.h"
+
+#ifndef BASIC_MODE
 
 /* === INCLUDES ============================================================ */
 
@@ -56,9 +28,7 @@
 #include "return_val.h"
 #include "tal.h"
 #include "ieee_const.h"
-#include "tal_config.h"
 #include "tal_internal.h"
-
 
 /* === TYPES =============================================================== */
 
@@ -73,6 +43,9 @@ static uint8_t BE[2];
 
 static void start_backoff(trx_id_t trx_id);
 static void cca_start(void *parameter);
+#ifdef SUPPORT_MODE_SWITCH
+static void trigger_cca_meaurement(trx_id_t trx_id);
+#endif
 
 /* === IMPLEMENTATION ====================================================== */
 
@@ -84,14 +57,31 @@ static void cca_start(void *parameter);
  */
 void csma_start(trx_id_t trx_id)
 {
-    //debug_text(PSTR("csma_start()"));
+    debug_text(PSTR("csma_start()"));
 
     /* Initialize CSMA variables */
     NB[trx_id] = 0;
     BE[trx_id] = tal_pib[trx_id].MinBE;
 
-    /* Start backoff timer to trigger CCA */
-    start_backoff(trx_id);
+    if (BE[trx_id] == 0)
+    {
+        /* Collision avoidance is disabled during first iteration */
+#ifdef SUPPORT_MODE_SWITCH
+        if (tal_pib[trx_id].ModeSwitchEnabled)
+        {
+            tx_ms_ppdu(trx_id);
+        }
+        else
+#endif
+        {
+            transmit_frame(trx_id, NO_CCA);
+        }
+    }
+    else
+    {
+        /* Start backoff timer to trigger CCA */
+        start_backoff(trx_id);
+    }
 }
 
 
@@ -102,22 +92,21 @@ void csma_start(trx_id_t trx_id)
  */
 static void start_backoff(trx_id_t trx_id)
 {
-    //debug_text(PSTR("start_backoff()"));
+    debug_text(PSTR("start_backoff()"));
 
     /* Start backoff timer to trigger CCA */
     uint8_t backoff_8;
-    backoff_8  = (uint8_t)rand() & ((1 << BE[trx_id]) - 1);
+    backoff_8  = (uint8_t)(rand() & (((uint16_t)1 << BE[trx_id]) - 1));
     if (backoff_8 > 0)
     {
         uint8_t timer_id;
         uint16_t backoff_16;
         uint32_t backoff_duration_us;
         backoff_16 = backoff_8 * aUnitBackoffPeriod;
-        backoff_duration_us = tal_pib[trx_id].SymbolDuration_us * backoff_16;
+        backoff_duration_us = (uint32_t)tal_pib[trx_id].SymbolDuration_us * (uint32_t)backoff_16;
 #ifdef REDUCED_BACKOFF_DURATION
         backoff_duration_us = REDUCED_BACKOFF_DURATION;
 #endif
-
         if (trx_id == RF09)
         {
             timer_id = TAL_T_0;
@@ -126,7 +115,7 @@ static void start_backoff(trx_id_t trx_id)
         {
             timer_id = TAL_T_1;
         }
-        //debug_text_val(PSTR("start backoff timer"), (uint16_t)backoff_duration_us);
+        debug_text_val(PSTR("start backoff timer"), (uint16_t)backoff_duration_us);
 
         retval_t status =
             pal_timer_start(timer_id, backoff_duration_us, TIMEOUT_RELATIVE,
@@ -134,10 +123,9 @@ static void start_backoff(trx_id_t trx_id)
         if (status != MAC_SUCCESS)
         {
             tx_done_handling(trx_id, status);
-
             return;
         }
-        tal_state[trx_id] = TAL_BACKOFF;
+        tx_state[trx_id] = TX_BACKOFF;
 
 #ifdef RX_WHILE_BACKOFF
         /* Keep receiver on during backoff */
@@ -158,18 +146,18 @@ static void start_backoff(trx_id_t trx_id)
         {
 #ifdef USE_TXPREP_DURING_BACKOFF
             /* Switch to TXPREP during backoff */
-            //debug_text(PSTR("switch to TXPREP during backoff"));
+            debug_text(PSTR("switch to TXPREP during backoff"));
             if (trx_state[trx_id] != RF_TXPREP)
             {
                 switch_to_txprep(trx_id);
             }
 #else
             /* Switch to TRXOFF during backoff */
-            //debug_text(PSTR("switch to TRXOFF during backoff"));
+            debug_text(PSTR("switch to TRXOFF during backoff"));
             if (trx_state[trx_id] != RF_TRXOFF)
             {
-                uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-                pal_trx_reg_write(rf_reg_offset + RG_RF09_CMD, RF_TRXOFF);
+                uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+                pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
                 trx_state[trx_id] = RF_TRXOFF;
             }
 #endif
@@ -192,65 +180,93 @@ static void cca_start(void *parameter)
 {
     trx_id_t trx_id = *(trx_id_t *)parameter;
 
-    //debug_text_val(PSTR("cca_start(), trx_id = "), trx_id);
+    debug_text_val(PSTR("cca_start(), trx_id = "), trx_id);
 
     /* Check if trx is currently detecting a frame ota */
     if (trx_state[trx_id] == RF_RX)
     {
-        uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-        uint8_t agc_freeze = pal_trx_bit_read(rf_reg_offset + SR_RF09_AGCC_FRZS);
+        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+        uint8_t agc_freeze = pal_trx_bit_read(reg_offset + SR_RF09_AGCC_FRZS);
         if (agc_freeze)
         {
-            //debug_text(PSTR("AGC is freezed"));
+            debug_text(PSTR("AGC is freezed"));
             csma_continue(trx_id);
         }
         else
         {
-            trigger_cca_meaurement(trx_id);
+#ifdef SUPPORT_MODE_SWITCH
+            if (tal_pib[trx_id].ModeSwitchEnabled)
+            {
+                trigger_cca_meaurement(trx_id);
+            }
+            else
+#endif
+            {
+                transmit_frame(trx_id, WITH_CCA);
+            }
         }
     }
     else
     {
-        trigger_cca_meaurement(trx_id);
+#ifdef SUPPORT_MODE_SWITCH
+        if (tal_pib[trx_id].ModeSwitchEnabled)
+        {
+            trigger_cca_meaurement(trx_id);
+        }
+        else
+#endif
+        {
+            transmit_frame(trx_id, WITH_CCA);
+        }
     }
 }
 
 
+#ifdef SUPPORT_MODE_SWITCH
 /**
  * @brief Triggers CCA measurement at transceiver
  *
  * @param trx_id Transceiver identifier
  */
-void trigger_cca_meaurement(trx_id_t trx_id)
+static void trigger_cca_meaurement(trx_id_t trx_id)
 {
     /* Trigger CCA measurement */
-    //debug_text(PSTR("trigger_cca_meaurement()"));
+    debug_text(PSTR("trigger_cca_meaurement()"));
+
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
     /* Cancel any ongoing reception and ensure that TXPREP is reached. */
-    if (trx_state[trx_id] != RF_TXPREP)
+    if (trx_state[trx_id] == RF_TRXOFF)
     {
         switch_to_txprep(trx_id);
     }
 
     /* Disable BB */
-    uint16_t bb_reg_offset = BB_BASE_ADDR_OFFSET * trx_id;
-    pal_trx_bit_write(bb_reg_offset + SR_BBC0_PC_BBEN, 0);
+    pal_trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 0);
+
+    /* Enable IRQ EDC */
+    pal_trx_bit_write(reg_offset + SR_RF09_IRQM_EDC, 1);
 
     /* CCA duration is already set by default; see apply_phy_settings() */
     /* Setup and start energy detection */
-    uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    pal_trx_bit_write(rf_reg_offset + SR_RF09_AGCC_FRZC, 0);// Ensure AGC is not hold
-    //debug_text(PSTR("Switch to Rx"));
-    pal_trx_reg_write(rf_reg_offset + RG_RF09_CMD, RF_RX);
-    trx_state[trx_id] = RF_RX;
-    tal_state[trx_id] = TAL_CCA;
+    pal_trx_bit_write(reg_offset + SR_RF09_AGCC_FRZC, 0); // Ensure AGC is not hold
+    if (trx_state[trx_id] != RF_RX)
+    {
+        debug_text(PSTR("Switch to Rx"));
+        pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_RX);
+        pal_timer_delay(tal_pib[trx_id].agc_settle_dur); // allow filters to settle
+        trx_state[trx_id] = RF_RX;
+    }
+    tx_state[trx_id] = TX_CCA;
     /* Start single ED measurement; use reg_write - it's the only subregister */
-    pal_trx_reg_write(rf_reg_offset + RG_RF09_EDC, RF_EDSINGLE);
+    pal_trx_reg_write(reg_offset + RG_RF09_EDC, RF_EDSINGLE);
 
     /* Wait for EDC IRQ and handle it within cca_done_handling() */
 }
+#endif
 
 
+#ifdef SUPPORT_MODE_SWITCH
 /**
  * @brief Callback function for CCA completion.
  *
@@ -258,28 +274,29 @@ void trigger_cca_meaurement(trx_id_t trx_id)
  */
 void cca_done_handling(trx_id_t trx_id)
 {
-    //debug_text(PSTR("cca_done_handling()"));
+    debug_text(PSTR("cca_done_handling()"));
 
     switch_to_txprep(trx_id); /* Leave state Rx */
 
     /* Switch BB on again */
-    uint16_t bb_reg_offset = BB_BASE_ADDR_OFFSET * trx_id;
-    pal_trx_bit_write(bb_reg_offset + SR_BBC0_PC_BBEN, 1);
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+    pal_trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 1);
 
     /* Determine if channel is idle */
     if (tal_current_ed_val[trx_id] < tal_pib[trx_id].CCAThreshold)
     {
         /* Idle */
-        //debug_text(PSTR("channel idle"));
-        tal_transmit_frame(trx_id);
+        debug_text(PSTR("channel idle"));
+        tx_ms_ppdu(trx_id);
     }
     else
     {
         /* Busy */
-        //debug_text(PSTR("channel busy"));
+        debug_text(PSTR("channel busy"));
         csma_continue(trx_id);
     }
 }
+#endif
 
 
 /**
@@ -289,10 +306,10 @@ void cca_done_handling(trx_id_t trx_id)
  */
 void csma_continue(trx_id_t trx_id)
 {
-    //debug_text(PSTR("csma_continue()"));
+    debug_text(PSTR("csma_continue()"));
 
     NB[trx_id]++;
-    //debug_text_val(PSTR("NB = "), NB[trx_id]);
+    debug_text_val(PSTR("NB = "), NB[trx_id]);
     if (NB[trx_id] > tal_pib[trx_id].MaxCSMABackoffs)
     {
         tx_done_handling(trx_id, MAC_CHANNEL_ACCESS_FAILURE);
@@ -309,5 +326,6 @@ void csma_continue(trx_id_t trx_id)
     }
 }
 
+#endif /* #ifndef BASIC_MODE */
 
 /* EOF */

@@ -148,7 +148,7 @@ void range_test_tx_on_task(void)
 void range_test_rx_cb(frame_info_t *mac_frame_info)
 {
     app_payload_t *msg;
-    if ((mac_frame_info->length) == (FRAME_OVERHEAD +
+    if ((mac_frame_info->len_no_crc) == (FRAME_OVERHEAD +
                                     ((sizeof(app_payload_t) -
                                       sizeof(general_pkt_t)) +
                                      sizeof(data_pkt_range_test_t))))
@@ -257,7 +257,7 @@ static int range_test_frame_tx(void)
                        sizeof(general_pkt_t)) +
                       sizeof(data_pkt_range_test_t));
 
-    return( transmit_frame(RF24,FCF_SHORT_ADDR,
+    return( transmit_frame1(RF24,FCF_SHORT_ADDR,
                            (uint8_t *)(&node_info[RF24].peer_short_addr),
                            FCF_SHORT_ADDR,
                            seq_num,              /* seq_num used as msdu handle */

@@ -4,7 +4,7 @@
  * @brief This file is the interface for Transceiver Feature Access (TFA)
  * functionality.
  *
- * $Id: tfa.h 34576 2013-04-25 07:36:44Z uwalter $
+ * $Id: tfa.h 36214 2014-07-22 14:28:43Z sschneid $
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
@@ -19,7 +19,8 @@
 #ifndef TFA_H
 #define TFA_H
 
-#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN)
+#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN) || \
+    (defined TFA_BAT_MON_READ) || (defined TFA_BAT_MON_IRQ)
 
 /* === INCLUDES ============================================================ */
 
@@ -145,7 +146,7 @@ extern "C" {
     retval_t tfa_pib_set(tfa_pib_t tfa_pib_attribute, void *value);
 #endif
 
-#if (defined ENABLE_TFA) || (defined DOXYGEN)
+#if (defined ENABLE_TFA) || (defined TFA_CCA) || (defined DOXYGEN)
 #ifdef MULTI_TRX_SUPPORT
     /**
      * @brief Perform a CCA
@@ -173,20 +174,38 @@ extern "C" {
 #endif /* #ifdef MULTI_TRX_SUPPORT */
 #endif
 
-#if (defined ENABLE_TFA) || (defined DOXYGEN)
+#if (defined ENABLE_TFA) || (defined TFA_ED_SAMPLE) || (defined DOXYGEN)
+#ifdef MULTI_TRX_SUPPORT
+    /**
+     * @brief Perform a single ED measurement
+     *
+     * @param trx_id Identifier of the transceiver
+     *
+     * @return ed_value Result of the measurement (transceiver's register value)
+     *         If the build switch TRX_REG_RAW_VALUE is defined, the transceiver's
+     *         register value is returned.
+     *
+     * @ingroup apiTfaApi
+     */
+    uint8_t tfa_ed_sample(trx_id_t trx_id);
+#else
     /**
      * @brief Perform a single ED measurement
      *
      * @return ed_value Result of the measurement (transceiver's register value)
+     *         If the build switch TRX_REG_RAW_VALUE is defined, the transceiver's
+     *         register value is returned.
      *
      * @ingroup apiTfaApi
      */
     uint8_t tfa_ed_sample(void);
+#endif /* #ifdef MULTI_TRX_SUPPORT */
 #endif
 
-#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN)
+#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN) || \
+    (defined TFA_BAT_MON_READ)
     /**
-     * @brief Get the transceiver's supply voltage
+     * @brief Gets the transceiver's supply voltage
      *
      * @return mv Milli Volt; 0 if below threshold, 0xFFFF if above threshold
      *
@@ -195,7 +214,23 @@ extern "C" {
     uint16_t tfa_get_batmon_voltage(void);
 #endif
 
-#if (defined ENABLE_TFA)  || (defined DOXYGEN)
+#if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN) || \
+    (defined TFA_BAT_MON_IRQ)
+    /**
+     * @brief Setups the battery monitor interrupt
+     *
+     * @param   batmon_irq_cb Callback function for the batmon interrupt
+     * @param   vth Threshold value in millivolt
+     *
+     * @return MAC_SUCCESS if provided voltage is within range, else
+     *         MAC_INVALID_PARAMETER
+     *
+     * @ingroup apiTfaApi
+     */
+    retval_t tfa_batmon_irq_init(FUNC_PTR(batmon_irq_cb), uint16_t vth);
+#endif
+
+#if (defined ENABLE_TFA) || (PAL_GENERIC_TYPE == MEGA_RF) || (defined DOXYGEN)
     /**
      * @brief Get the temperature value from the integrated sensor
      *
@@ -206,8 +241,8 @@ extern "C" {
     double tfa_get_temperature(void);
 #endif
 
-#if ((defined ENABLE_TFA) || (TAL_TYPE != AT86RF230B) || \
-     ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED))  || defined(DOXYGEN))
+#if ((defined ENABLE_TFA) || defined(DOXYGEN))
+#ifdef MULTI_TRX_SUPPORT
     /**
      * @brief Starts continuous transmission on current channel
      *
@@ -215,25 +250,33 @@ extern "C" {
      * @param tx_mode Transmission mode
      * @param random_content Use random content if true
      */
-#ifdef MULTI_TRX_SUPPORT
     void tfa_continuous_tx_start(trx_id_t trx_id, continuous_tx_mode_t tx_mode);
 #else
+    /**
+     * @brief Starts continuous transmission on current channel
+     *
+     * @param trx_id Identifier of the transceiver
+     * @param tx_mode Transmission mode
+     * @param random_content Use random content if true
+     */
     void tfa_continuous_tx_start(continuous_tx_mode_t tx_mode, bool random_content);
-#endif
+#endif /* #ifdef MULTI_TRX_SUPPORT */
 #endif
 
-#if ((defined ENABLE_TFA) || (TAL_TYPE != AT86RF230B) || \
-     ((TAL_TYPE == AT86RF230B) && (defined CW_SUPPORTED))  || defined(DOXYGEN))
+#if ((defined ENABLE_TFA) || defined(DOXYGEN))
+#ifdef MULTI_TRX_SUPPORT
     /**
      * @brief Stops CW transmission
      *
      * @param trx_if Transceiver identifier
      */
-#ifdef MULTI_TRX_SUPPORT
     void tfa_continuous_tx_stop(trx_id_t trx_id);
 #else
+    /**
+     * @brief Stops CW transmission
+     */
     void tfa_continuous_tx_stop(void);
-#endif
+#endif /* #ifdef MULTI_TRX_SUPPORT */
 #endif
 
 

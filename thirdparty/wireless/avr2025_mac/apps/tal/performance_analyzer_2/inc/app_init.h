@@ -236,7 +236,7 @@ extern volatile node_ib_t node_info[NO_TRX];
  *transmission
  *         TAL_BUSY         if the TAL is busy servicing the previous tx request
  */
-extern retval_t transmit_frame( trx_id_t trx,uint8_t dst_addr_mode,
+extern retval_t transmit_frame1( trx_id_t trx,uint8_t dst_addr_mode,
 		uint8_t *dst_addr,
 		uint8_t src_addr_mode,
 		uint8_t msdu_handle,

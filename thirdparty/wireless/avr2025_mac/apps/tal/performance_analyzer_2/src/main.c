@@ -564,7 +564,7 @@ void set_main_state(trx_id_t trx, main_state_t state, void *arg)
  *         TAL_BUSY         if the TAL is busy servicing the previous tx request
  */
 
-retval_t transmit_frame(trx_id_t trx,
+retval_t transmit_frame1(trx_id_t trx,
 						uint8_t dst_addr_mode,
                         uint8_t *dst_addr,
                         uint8_t src_addr_mode,
@@ -677,9 +677,9 @@ retval_t transmit_frame(trx_id_t trx,
 	/* Finished building of frame. */
 	node_info[trx].tx_frame_info->mpdu = frame_ptr;
 
-    node_info[trx].tx_frame_info->length = frame_length;
-    /* Finished building of frame. */
-    node_info[trx].tx_frame_info->mpdu = frame_ptr;
+    node_info[trx].tx_frame_info->len_no_crc = frame_length;
+    ///* Finished building of frame. */
+    //node_info[trx].tx_frame_info->mpdu = frame_ptr;
 
     /* Place msdu handle for tracking */
     node_info[trx].tx_frame_info->msduHandle = msdu_handle;

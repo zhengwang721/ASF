@@ -62,7 +62,7 @@
 /* === TYPES =============================================================== */
 
 /* === MACROS ============================================================== */
-extern retval_t trx_reset(trx_id_t trx_id);
+//extern retval_t trx_reset(trx_id_t trx_id); vk
 /* === PROTOTYPES ========================================================== */
 static void configuration_mode_selection(trx_id_t trx);
 /* === GLOBALS ============================================================= */

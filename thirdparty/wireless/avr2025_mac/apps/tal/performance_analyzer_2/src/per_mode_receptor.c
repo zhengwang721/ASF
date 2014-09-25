@@ -224,7 +224,7 @@ static bool send_range_test_marker_cmd(trx_id_t trx)
 			sizeof(result_req_t));
 
 	/* Send the frame to Peer node */
-	if (MAC_SUCCESS == transmit_frame(trx,FCF_SHORT_ADDR,
+	if (MAC_SUCCESS == transmit_frame1(trx,FCF_SHORT_ADDR,
 			(uint8_t *)&(node_info[trx].peer_short_addr),
 			FCF_SHORT_ADDR,
 			seq_num_receptor[trx],
@@ -267,7 +267,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
     static uint8_t rx_count;
     uint8_t expected_frame_size;	
 	
-	uint16_t lqi_pos = mac_frame_info->length + tal_pib[trx].FCSLen;
+	uint16_t lqi_pos = mac_frame_info->len_no_crc + tal_pib[trx].FCSLen;
 	uint16_t ed_pos = lqi_pos+1;
 
 
@@ -326,7 +326,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 	        expected_frame_size = (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
 	        sizeof(general_pkt_t)) +
 	        sizeof(phy_t)));
-	        if ((mac_frame_info->length) == expected_frame_size)
+	        if ((mac_frame_info->len_no_crc) == expected_frame_size)
 	        {
 		//	phy_t sun_phy_page_set = (phy_t *)&(msg->payload);
 			if (tal_pib_set(trx, phySetting, (pib_value_t *)&msg->payload) != MAC_SUCCESS)
@@ -401,7 +401,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 expected_frame_size =  (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                            sizeof(general_pkt_t)) +
                                                           sizeof(result_req_t)));
-                if ((mac_frame_info->length) == expected_frame_size)
+                if ((mac_frame_info->len_no_crc) == expected_frame_size)
                 {
                     if (number_rx_frames[trx] != 0)
                     {
@@ -503,7 +503,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 expected_frame_size =  (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                            sizeof(general_pkt_t)) +
                                                           sizeof(crc_stat_req_t)));
-                if ((mac_frame_info->length) == expected_frame_size)
+                if ((mac_frame_info->len_no_crc) == expected_frame_size)
                 {
                     send_crc_status_rsp(trx);
                 }
@@ -516,7 +516,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
                 expected_frame_size = (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
                                                           sizeof(general_pkt_t)) +
                                                          sizeof(crc_set_req_t)));
-                if ((mac_frame_info->length) == expected_frame_size)
+                if ((mac_frame_info->len_no_crc) == expected_frame_size)
                 {
                     if (msg->payload.crc_set_req_data.status)
                     {
@@ -603,7 +603,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 		 * lqi values of
 		 * the received pkt and add it as the payload of the response
 		 * frame*/
-		uint8_t phy_frame_len = mac_frame_info->length;
+		uint8_t phy_frame_len = mac_frame_info->len_no_crc;
 		uint32_t frame_count;
 		/* Get the frame count in correct format */
 		frame_count
@@ -630,7 +630,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 		/* On reception of the Response frame to the Marker cmd sent ,
 		 * get the lqi and ed values and print it on the terminal */
 
-		uint8_t phy_frame_len = mac_frame_info->length;
+		uint8_t phy_frame_len = mac_frame_info->len_no_crc;
 		printf("\r\nMarker Response Received... LQI : %d\t ED %d \n",
 									mac_frame_info->mpdu[lqi_pos],
 									(int8_t)mac_frame_info->mpdu[ed_pos]);
@@ -918,7 +918,7 @@ static void send_result_rsp(trx_id_t trx)
 	sizeof(result_rsp_t));
 
 	/* Send the frame to Peer node */
-	transmit_frame(trx, FCF_SHORT_ADDR,
+	transmit_frame1(trx, FCF_SHORT_ADDR,
 	(uint8_t *) & (node_info[trx].peer_short_addr),
 	FCF_SHORT_ADDR,
 	seq_num_receptor[trx],
@@ -949,7 +949,7 @@ static void send_peer_info_rsp(trx_id_t trx)
                       sizeof(peer_info_rsp_t));
 
     /* Send the frame to Peer node */
-    transmit_frame(trx, FCF_SHORT_ADDR,
+    transmit_frame1(trx, FCF_SHORT_ADDR,
                    (uint8_t *) & (node_info[trx].peer_short_addr),
                    FCF_SHORT_ADDR,
                    seq_num_receptor[trx],
@@ -989,7 +989,7 @@ static void send_range_test_rsp(trx_id_t trx,uint8_t seq_num, uint32_t frame_cou
 			sizeof(range_tx_t));
 
 	/* Send the frame to Peer node */
-	transmit_frame(trx,FCF_SHORT_ADDR,
+	transmit_frame1(trx,FCF_SHORT_ADDR,
 			(uint8_t *)&(node_info[trx].peer_short_addr),
 			FCF_SHORT_ADDR,
 			seq_num_receptor[trx],
@@ -1107,7 +1107,7 @@ static void send_diversity_status_rsp(trx_id_t trx)
                        sizeof(general_pkt_t)) +
                       sizeof(div_stat_rsp_t));
     /* Send the frame to Peer node */
-    transmit_frame(trx, FCF_SHORT_ADDR,
+    transmit_frame1(trx, FCF_SHORT_ADDR,
                    (uint8_t *) & (node_info[trx].peer_short_addr),
                    FCF_SHORT_ADDR,
                    seq_num_receptor[trx],
@@ -1142,7 +1142,7 @@ static void send_crc_status_rsp(trx_id_t trx)
                       sizeof(crc_stat_rsp_t));
 
     /* Send the frame to Peer node */
-    transmit_frame(trx, FCF_SHORT_ADDR,
+    transmit_frame1(trx, FCF_SHORT_ADDR,
                    (uint8_t *) & (node_info[trx].peer_short_addr),
                    FCF_SHORT_ADDR,
                    seq_num_receptor[trx],

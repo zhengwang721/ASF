@@ -3,45 +3,13 @@
  *
  * @brief This file implements the random seed function.
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * $Id: tal_rand.c 36327 2014-08-14 07:15:23Z uwalter $
  *
- * \asf_license_start
- *
- * Redistribution and use in source and binary forms, with or without
- * modification, are permitted provided that the following conditions are met:
- *
- * 1. Redistributions of source code must retain the above copyright notice,
- *    this list of conditions and the following disclaimer.
- *
- * 2. Redistributions in binary form must reproduce the above copyright notice,
- *    this list of conditions and the following disclaimer in the documentation
- *    and/or other materials provided with the distribution.
- *
- * 3. The name of Atmel may not be used to endorse or promote products derived
- *    from this software without specific prior written permission.
- *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
- * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
- * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
- * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
- * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
- * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
- * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
- * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
- * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
- * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
- * POSSIBILITY OF SUCH DAMAGE.
- *
- * \asf_license_stop
- *
- *
+ * @author    Atmel Corporation: http://www.atmel.com
+ * @author    Support email: avr@atmel.com
  */
-
 /*
- * Copyright (c) 2013, Atmel Corporation All rights reserved.
+ * Copyright (c) 2012, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -57,7 +25,6 @@
 #include "tal.h"
 #include "tal_config.h"
 #include "tal_internal.h"
-
 
 /* === MACROS ============================================================== */
 
@@ -81,12 +48,12 @@ retval_t tal_generate_rand_seed(void)
     trx_id_t trx_id;
     rf_cmd_state_t previous_trx_state = RF_NOP;
 
-    //debug_text(PSTR("tal_generate_rand_seed()"));
+    debug_text(PSTR("tal_generate_rand_seed()"));
 
     /* Check for non sleeping device */
     if ((tal_state[RF09] == TAL_SLEEP) && (tal_state[RF24] == TAL_SLEEP))
     {
-        //debug_text(PSTR("no seed generated - TAL_SLEEP"));
+        debug_text(PSTR("no seed generated - TAL_SLEEP"));
         return TAL_TRX_ASLEEP;
     }
 
@@ -103,82 +70,81 @@ retval_t tal_generate_rand_seed(void)
         }
         else
         {
-            //debug_text(PSTR("no seed generated - TAL_BUSY"));
+            debug_text(PSTR("no seed generated - TAL_BUSY"));
             return TAL_BUSY;
         }
     }
 
-    uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
-    /* Set widest filter bandwidth */
-    uint8_t previous_bw = pal_trx_bit_read(rf_reg_offset + SR_RF09_RXBWC_BW);
-    pal_trx_bit_write(rf_reg_offset + SR_RF09_RXBWC_BW, 0x0B);
+    /* Set widest filter bandwidth and set IF shift */
+    uint8_t previous_bwc;
+#ifdef IQ_RADIO
+    previous_bwc = pal_trx_reg_read(RF215_RF, reg_offset + RG_RF09_RXBWC);
+    pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_RXBWC, 0x1B);
+#else
+    previous_bwc = pal_trx_reg_read(reg_offset + RG_RF09_RXBWC);
+    pal_trx_reg_write(reg_offset + RG_RF09_RXBWC, 0x1B);
+#endif
 
     /* Ensure that transceiver is not in off mode */
     if (trx_state[trx_id] == RF_TRXOFF)
     {
         previous_trx_state = RF_TRXOFF;
-        uint16_t bb_reg_offset = BB_BASE_ADDR_OFFSET * trx_id;
 
-        /* Disable BB */
-        pal_trx_bit_write(bb_reg_offset + SR_BBC0_PC_BBEN, 0);
+        /* Disable BB to avoid receiving any frame */
+        pal_trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 0);
 
-        /* Enter TXPREP state */
-        ENTER_TRX_REGION();
-        pal_trx_bit_write(rf_reg_offset + SR_RF09_CMD_CMD, RF_TXPREP);
-        rf_cmd_state_t temp_state = RF_NOP;
-        while (1)
-        {
-            if (IRQ_PINGET() == HIGH)
-            {
-				
-                break;
-            }
-        }
-        do
-        {
-            temp_state = (rf_cmd_state_t)pal_trx_bit_read(
-                             rf_reg_offset + SR_RF09_STATE_STATE);
-        }
-        while (temp_state != RF_TXPREP);
-        /* Clear trx irqs */
-        trx_irq_handler_cb();
-        TAL_RF_IRQ_CLR(trx_id, RF_IRQ_TRXRDY);
-
-        LEAVE_TRX_REGION();
+        switch_to_txprep(trx_id);
 
         /*
          * Enter Rx state
          * Use direct register access to change to Rx state, since no buffer is
          * required.
          */
-        pal_trx_bit_write(rf_reg_offset + SR_RF09_CMD_CMD, RF_RX);
+        pal_trx_bit_write(reg_offset + SR_RF09_CMD_CMD, RF_RX);
+#ifdef IQ_RADIO
+        pal_trx_bit_write(RF215_RF, reg_offset + SR_RF09_CMD_CMD, RF_RX);
+#endif
         trx_state[trx_id] = RF_RX;
+
+        pal_timer_delay(10); /* Allow frontend to settle */
     }
     else
     {
-        //debug_text(PSTR("Trx is NOT off"));
+        debug_text(PSTR("Trx is NOT off"));
     }
 
     uint16_t seed;
-#ifdef AT86RF215LT
-    seed = pal_trx_reg_read(rf_reg_offset + RG_RF09_RNDV); // dummy read
-#endif
-    seed = pal_trx_reg_read(rf_reg_offset + RG_RF09_RNDV);
-    seed |= (uint16_t)pal_trx_reg_read(rf_reg_offset + RG_RF09_RNDV) << 8;
+    for (uint8_t i = 0; i < 2; i++)
+    {
+        seed = pal_trx_reg_read(reg_offset + RG_RF09_RNDV);
+        seed |= (uint16_t)pal_trx_reg_read(reg_offset + RG_RF09_RNDV) << 8;
+    }
 
     /* Restore previous transceiver state */
     if (previous_trx_state == RF_TRXOFF)
     {
-        pal_trx_bit_write(rf_reg_offset + SR_RF09_CMD_CMD, RF_TRXOFF);
+#ifdef IQ_RADIO
+        pal_trx_bit_write(RF215_BB, reg_offset + SR_RF09_CMD_CMD, RF_TRXOFF);
+        pal_trx_bit_write(RF215_RF, reg_offset + SR_RF09_CMD_CMD, RF_TRXOFF);
         trx_state[trx_id] = RF_TRXOFF;
         /* Enable BB again */
-        uint16_t bb_reg_offset = BB_BASE_ADDR_OFFSET * trx_id;
-        pal_trx_bit_write(bb_reg_offset + SR_BBC0_PC_BBEN, 1);
+        pal_trx_bit_write(RF215_BB, reg_offset + SR_BBC0_PC_BBEN, 1);
+#else
+        pal_trx_bit_write(reg_offset + SR_RF09_CMD_CMD, RF_TRXOFF);
+        trx_state[trx_id] = RF_TRXOFF;
+        /* Enable BB again */
+        pal_trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 1);
+#endif
     }
 
     /* Restore previous filter bandwidth setting */
-    pal_trx_bit_write(rf_reg_offset + SR_RF09_RXBWC_BW, previous_bw);
+#ifdef IQ_RADIO
+    pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_RXBWC, previous_bwc);
+#else
+    pal_trx_reg_write(reg_offset + RG_RF09_RXBWC, previous_bwc);
+#endif
 
     /* Set the seed for the random number generator. */
     srand(seed);

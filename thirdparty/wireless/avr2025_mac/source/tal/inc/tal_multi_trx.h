@@ -3,7 +3,7 @@
  *
  * @brief This file contains TAL API function declarations for multi trx support
  *
- * $Id: tal_multi_trx.h 35127 2013-09-19 12:45:54Z uwalter $
+ * $Id: tal_multi_trx.h 36436 2014-09-01 13:49:57Z uwalter $
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
@@ -46,8 +46,9 @@ extern "C" {
      * @param set_default_pib Defines whether PIB values need to be set
      *                        to its default values
      *
-     * @return MAC_SUCCESS  if the transceiver state is changed to TRX_OFF
-     *         FAILURE otherwise
+     * @return
+     *      - @ref MAC_SUCCESS if the transceiver state is changed to TRX_OFF
+     *      - @ref FAILURE otherwise
      * @ingroup apiTalApi
      */
     retval_t tal_reset(trx_id_t trx_id, bool set_default_pib);
@@ -62,10 +63,11 @@ extern "C" {
      * @param scan_duration Specifies the ED scan duration in symbols
      * @param trx_id Transceiver identifier
      *
-     * @return MAC_SUCCESS - ED scan duration timer started successfully
-     *         TAL_BUSY - TAL is busy servicing the previous request from MAC
-     *         TAL_TRX_ASLEEP - Transceiver is currently sleeping
-     *         FAILURE otherwise
+     * @return
+     *      - @ref MAC_SUCCESS - ED scan duration timer started successfully
+     *      - @ref TAL_BUSY - TAL is busy servicing the previous request from MAC
+     *      - @ref TAL_TRX_ASLEEP - Transceiver is currently sleeping
+     *      - @ref FAILURE otherwise
      * @ingroup apiTalApi
      */
     retval_t tal_ed_start(trx_id_t trx_id, uint8_t scan_duration);
@@ -90,8 +92,9 @@ extern "C" {
      * @param[in] attribute TAL infobase attribute ID
      * @param[out] value TAL infobase attribute value
      *
-     * @return MAC_UNSUPPORTED_ATTRIBUTE if the TAL infobase attribute is not found
-     *         MAC_SUCCESS otherwise
+     * @return
+     *      - @ref MAC_UNSUPPORTED_ATTRIBUTE if the TAL infobase attribute is not found
+     *      - @ref MAC_SUCCESS otherwise
      * @ingroup apiTalApi
      */
     retval_t tal_pib_get(trx_id_t trx_id, uint8_t attribute, uint8_t *value);
@@ -106,12 +109,13 @@ extern "C" {
      * @param attribute TAL infobase attribute ID
      * @param value TAL infobase attribute value to be set
      *
-     * @return MAC_UNSUPPORTED_ATTRIBUTE if the TAL info base attribute is not found
-     *         TAL_BUSY if the TAL is not in TAL_IDLE state. An exception is
+     * @return
+     *      - @ref MAC_UNSUPPORTED_ATTRIBUTE if the TAL info base attribute is not found
+     *      - @ref TAL_BUSY if the TAL is not in TAL_IDLE state. An exception is
      *         macBeaconTxTime which can be accepted by TAL even if TAL is not
      *         in TAL_IDLE state.
-     *         MAC_SUCCESS if the attempt to set the PIB attribute was successful
-     *         TAL_TRX_ASLEEP if trx is in SLEEP mode and access to trx is required
+     *      - @ref MAC_SUCCESS if the attempt to set the PIB attribute was successful
+     *      - @ref TAL_TRX_ASLEEP if trx is in SLEEP mode and access to trx is required
      * @ingroup apiTalApi
      */
     retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value);
@@ -124,10 +128,10 @@ extern "C" {
      * @param trx_id Transceiver identifier
      * @param state New state of receiver
      *
-     * @return TAL_BUSY if the TAL state machine cannot switch receiver on or off,
-     *         TRX_OFF if receiver has been switched off, or
-     *         RX_ON otherwise.
-     *
+     * @return
+     *      - @ref TAL_BUSY if the TAL state machine cannot switch receiver on or off,
+     *      - @ref PHY_TRX_OFF if receiver has been switched off, or
+     *      - @ref PHY_RX_ON otherwise.
      * @ingroup apiTalApi
      */
     uint8_t tal_rx_enable(trx_id_t trx_id, uint8_t state);
@@ -142,6 +146,18 @@ extern "C" {
      */
     void tal_rx_frame_cb(trx_id_t trx_id, frame_info_t *rx_frame);
 
+#ifdef ENABLE_RTB
+    /**
+    * @brief Callback function called by TAL on frame reception if RTB is used.
+    *
+    * This function pushes an event into the TAL-RTB queue, indicating a
+    * frame reception.
+    *
+    * @param frame Pointer to received frame
+    */
+    void rtb_rx_frame_cb(trx_id_t trx_id, frame_info_t *rx_frame);
+#endif  /* ENABLE_RTB */
+
     /**
      * @brief Requests to TAL to transmit frame
      *
@@ -155,9 +171,12 @@ extern "C" {
      * @param perform_frame_retry Indicates whether to retries are to be performed for
      *                            this frame
      *
-     * @return MAC_SUCCESS  if the TAL has accepted the data from the MAC for frame
+     * @return
+     *      - @ref MAC_SUCCESS  if the TAL has accepted the data from NHLE for frame
      *                 transmission
-     *         TAL_BUSY if the TAL is busy servicing the previous MAC request
+     *      - @ref TAL_BUSY if the TAL is busy servicing the previous MAC request
+     *      - @ref TAL_TRX_ASLEEP if the device is in sleep mode
+     *      - @ref MAC_INVALID_PARAMETER is a provided parameter is invalid
      * @ingroup apiTalApi
      */
     retval_t tal_tx_frame(trx_id_t trx_id, frame_info_t *tx_frame, csma_mode_t csma_mode, bool perform_frame_retry);
@@ -179,10 +198,11 @@ extern "C" {
      *
      * @param trx_id Transceiver identifier
      *
-     * @return   TAL_BUSY - The transceiver is busy in TX or RX
-     *           MAC_SUCCESS - The transceiver is put to sleep
-     *           TAL_TRX_ASLEEP - The transceiver is already asleep
-     *           MAC_INVALID_PARAMETER - The specified sleep mode is not supported
+     * @return
+     *      - @ref TAL_BUSY - The transceiver is busy in TX or RX
+     *      - @ref MAC_SUCCESS - The transceiver is put to sleep
+     *      - @ref TAL_TRX_ASLEEP - The transceiver is already asleep
+     *      - @ref MAC_INVALID_PARAMETER - The specified sleep mode is not supported
      * @ingroup apiTalApi
      */
     retval_t tal_trx_sleep(trx_id_t trx_id);
@@ -194,9 +214,10 @@ extern "C" {
      *
      * @param trx_id Transceiver identifier
      *
-     * @return   TAL_TRX_AWAKE - The transceiver is already awake
-     *           MAC_SUCCESS - The transceiver is woken up from sleep
-     *           FAILURE - The transceiver did not wake-up from sleep
+     * @return
+     *      - @ref TAL_TRX_AWAKE - The transceiver is already awake
+     *      - @ref MAC_SUCCESS - The transceiver is woken up from sleep
+     *      - @ref FAILURE - The transceiver did not wake-up from sleep
      * @ingroup apiTalApi
      */
     retval_t tal_trx_wakeup(trx_id_t trx_id);
