@@ -460,8 +460,9 @@ enum status_code nvm_write_buffer(
 	 * less than page size */
 	if (length < NVMCTRL_PAGE_SIZE) {
 #ifdef FEATURE_NVM_WWREE
-	 return ((is_wwr_eeprom) ? (nvm_execute_command(NVM_COMMAND_WWREE_WRITE_PAGE,destination_address, 0))
-	 				:(nvm_execute_command(NVM_COMMAND_WRITE_PAGE,destination_address, 0)));
+	 return ((is_wwr_eeprom) ? 
+				(nvm_execute_command(NVM_COMMAND_WWREE_WRITE_PAGE,destination_address, 0)):
+	 			(nvm_execute_command(NVM_COMMAND_WRITE_PAGE,destination_address, 0)));
 #else
 		return nvm_execute_command(NVM_COMMAND_WRITE_PAGE,
 				destination_address, 0);
@@ -610,8 +611,9 @@ enum status_code nvm_erase_row(
 	/* Set address and command */
 	nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[row_address / 4];
 #ifdef FEATURE_NVM_WWREE
-	nvm_module->CTRLA.reg = ((is_wwr_eeprom) ? (NVM_COMMAND_WWREE_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY)
-											: (NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY));
+	nvm_module->CTRLA.reg = ((is_wwr_eeprom) ? 
+								(NVM_COMMAND_WWREE_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY):
+								(NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY));
 #else
 	nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
 #endif

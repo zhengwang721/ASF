@@ -866,7 +866,7 @@ struct tc_config {
 	enum tc_reload_action reload_action;
 
 	/** Specifies which channel(s) to invert the waveform on.
-		For SAML21, it's also used to inverts IO input pin*/
+		For SAML21, it's also used to invert IO input pin*/
 	uint8_t waveform_invert_output;
 
 	/** Specifies which channel(s) to enable channel capture

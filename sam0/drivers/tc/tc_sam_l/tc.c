@@ -116,20 +116,20 @@ enum status_code tc_init(
 
 #if	(SAML21J)
 	/* Array of GLCK ID for different TC instances */
-	uint8_t inst_gclk_id[] = {TC0_GCLK_ID,TC1_GCLK_ID,TC2_GCLK_ID,TC3_GCLK_ID,TC4_GCLK_ID};
+	uint8_t inst_gclk_id[] = {TC0_GCLK_ID, TC1_GCLK_ID, TC2_GCLK_ID, TC3_GCLK_ID, TC4_GCLK_ID};
 	/* Array of MCLK APB mask bit position for different TC instances */
-	uint32_t inst_mclk_apbmask[] = {SYSTEM_CLOCK_APB_APBC,MCLK_APBCMASK_TC0,
-									SYSTEM_CLOCK_APB_APBC,MCLK_APBCMASK_TC1,
-									SYSTEM_CLOCK_APB_APBC,MCLK_APBCMASK_TC2,
-									SYSTEM_CLOCK_APB_APBC,MCLK_APBCMASK_TC3,
-									SYSTEM_CLOCK_APB_APBD,MCLK_APBDMASK_TC4};
+	uint32_t inst_mclk_apbmask[] = {SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC0,
+									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC1,
+									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC2,
+									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC3,
+									SYSTEM_CLOCK_APB_APBD, MCLK_APBDMASK_TC4};
 #else
 	/* Array of GLCK ID for different TC instances */
-	uint8_t inst_gclk_id[] = {TC0_GCLK_ID,TC1_GCLK_ID,TC4_GCLK_ID};
+	uint8_t inst_gclk_id[] = {TC0_GCLK_ID, TC1_GCLK_ID, TC4_GCLK_ID};
 	/* Array of PM APB mask bit position for different TC instances */
-	uint32_t inst_mclk_apbmask[] = {SYSTEM_CLOCK_APB_APBC,MCLK_APBCMASK_TC0,
-									SYSTEM_CLOCK_APB_APBC,MCLK_APBCMASK_TC1,
-									SYSTEM_CLOCK_APB_APBD,MCLK_APBDMASK_TC4};
+	uint32_t inst_mclk_apbmask[] = {SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC0,
+									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC1,
+									SYSTEM_CLOCK_APB_APBD, MCLK_APBDMASK_TC4};
 #endif
 
 	struct system_pinmux_config pin_config;
@@ -205,7 +205,7 @@ enum status_code tc_init(
 			inst_mclk_apbmask[2*instance+1]);
 
 	/* Enable the slave counter if counter_size is 32 bit */
-	if ((config->counter_size == TC_COUNTER_SIZE_32BIT) && instance+1 < TC_INST_NUM)
+	if ((config->counter_size == TC_COUNTER_SIZE_32BIT) && (instance+1 < TC_INST_NUM))
 	{
 		/* Enable the user interface clock in the MCLK */
 		system_apb_clock_set_mask((enum system_clock_apb_bus)inst_mclk_apbmask[instance*2+1],
@@ -671,25 +671,25 @@ enum status_code tc_set_top_value (
 	switch (module_inst->counter_size) {
 		case TC_COUNTER_SIZE_8BIT:
 			if (module_inst->double_buffering_enabled){
-					tc_module->COUNT8.PERBUF.reg = (uint8_t)top_value;
-				} else {
-					tc_module->COUNT8.PER.reg = (uint8_t)top_value;
+				tc_module->COUNT8.PERBUF.reg = (uint8_t)top_value;
+			} else {
+				tc_module->COUNT8.PER.reg = (uint8_t)top_value;
 			}
 			return STATUS_OK;
 
 		case TC_COUNTER_SIZE_16BIT:
 			if (module_inst->double_buffering_enabled){
-					tc_module->COUNT16.CCBUF[0].reg = (uint16_t)top_value;
-				} else {
-					tc_module->COUNT16.CC[0].reg = (uint16_t)top_value;
+				tc_module->COUNT16.CCBUF[0].reg = (uint16_t)top_value;
+			} else {
+				tc_module->COUNT16.CC[0].reg = (uint16_t)top_value;
 			}
 			return STATUS_OK;
 
 		case TC_COUNTER_SIZE_32BIT:
 			if (module_inst->double_buffering_enabled){
-					tc_module->COUNT32.CCBUF[0].reg = (uint32_t)top_value;
-				} else {
-					tc_module->COUNT32.CC[0].reg = (uint32_t)top_value;
+				tc_module->COUNT32.CCBUF[0].reg = (uint32_t)top_value;
+			} else {
+				tc_module->COUNT32.CC[0].reg = (uint32_t)top_value;
 			}
 			return STATUS_OK;
 
