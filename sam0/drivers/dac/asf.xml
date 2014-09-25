@@ -55,7 +55,7 @@
 			<require idref="sam0.drivers.system"/>
 		</module>
 	</select-by-config>
-	<module type="driver" id="sam0.drivers.dac.appnote" caption="Application note for Digital-to-Analog(DAC)">
+	<module type="meta" id="sam0.drivers.dac.appnote" caption="Application note for Digital-to-Analog(DAC)">
 			<info type="keyword" value="technology">
 				<keyword value="Analog Conversion"/>
 			</info>

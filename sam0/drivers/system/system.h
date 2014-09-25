@@ -47,6 +47,8 @@
 #include <clock.h>
 #include <gclk.h>
 #include <pinmux.h>
+#include <power.h>
+#include <reset.h>
 
 #ifdef __cplusplus
 extern "C" {
@@ -58,16 +60,23 @@ extern "C" {
  * This driver for SAM devices provides an interface for the configuration
  * and management of the device's system relation functionality, necessary for
  * the basic device operation. This is not limited to a single peripheral, but
- * extends across multiple hardware peripherals,
+ * extends across multiple hardware peripherals.
  *
  * The following peripherals are used by this module:
- * - SYSCTRL (System Control)
- * - PM (Power Manager)
+ * \if DEVICE_SAML21_SUPPORT
+ *  - PM (Power Manager)
+ *  - RSTC(Reset Controller)
+ *  - SUPC(Supply Controller)
+ * \else
+ *  - SYSCTRL (System Control)
+ *  - PM (Power Manager)
+ * \endif
  *
  * The following devices can use this module:
  *  - SAM D20/D21
  *  - SAM R21
  *  - SAM D10/D11
+ *  - SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_system_prerequisites
@@ -96,6 +105,23 @@ extern "C" {
  * - \ref asfdoc_sam0_system_pinmux_group "System Pin Multiplexer Control" (sub-module)
  *
  *
+ * \if DEVICE_SAML21_SUPPORT
+ * \subsection asfdoc_sam0_system_module_overview_vreg Voltage Regulator
+ * The SAML21 device controls the voltage regulators for the core (VDDCORE) and
+ * backup (VDDBU) domains. It sets the voltage regulators according to the sleep
+ * modes, the performance level, or the user configuration.
+ *
+ * In active mode, the voltage regulator can be chosen on the fly between a LDO
+ * or a Buck converter.In standby mode, the low power voltage regulator is used
+ * to supply VDDCORE.
+ *
+ * \subsection asfdoc_sam0_system_module_overview_bbps Battery Backup Power Switch
+ * The SAML21 device supports connection of a battery backup to the VBAT power pin.
+ * It includes functionality that enables automatic power switching between main
+ * power and battery backup power. This will ensure power to the backup domain,
+ * when the main battery or power source is unavailable.
+ * \endif
+ *
  * \subsection asfdoc_sam0_system_module_overview_vref Voltage References
  * The various analog modules within the SAM devices (such as AC, ADC and
  * DAC) require a voltage reference to be configured to act as a reference point
@@ -115,6 +141,124 @@ extern "C" {
  * For this reason, an API is provided to retrieve the cause of the last system
  * reset, so that appropriate action can be taken.
  *
+ * \if DEVICE_SAML21_SUPPORT
+ * For SAM L21,There are three groups of reset sources:
+ *   - Power supply reset: Resets caused by an electrical issue. It covers POR and BODs reset.
+ *   - User reset: Resets caused by the application. It covers external reset,
+ *             system resetrequest and watchdog reset.
+ *   - Backup reset: Resets caused by a backup mode exit condition.
+ *
+ * \subsection asfdoc_sam0_system_module_overview_performance_level Performance Level
+ * Performance level allows use to adjust the regulator output voltage to reduce
+ * power consumption. The user can select on the fly the performance level
+ * configuration which best suits its application.
+ *
+ * The SAM L21 device embeds up to three performance level (PL0, PL1 and PL2).
+ * Each performance level defines a maximum frequency and a corresponding
+ * consumption in ¦ÌA/MHz,when the application selects a new performance level,
+ * the voltage applied on the full logic area moves from a value to another,
+ * it can reduce the active consumption while decreasing the maximum frequency
+ * of the device.
+ *
+ * Performance level transition is possible only when the device is in active
+ * mode, after a reset, the device starts in the lowest performance level
+ * (lowest power consumption and lowest max frequency). The application can then
+ * switch to another performance level at anytime without any stop in the code
+ * execution. As shown in \ref asfdoc_sam0_system_performance_level_transition_figure.
+ *
+ * \anchor asfdoc_sam0_system_performance_level_transition_figure
+ * \image html performance_level_transition.gif "The performance level  transition"
+
+ * \subsection asfdoc_sam0_system_module_overview_power_domain Power Domain
+ * Power domain gating  can  turn on or off power domain voltage to save power
+ * while keeping other domain powered up. It can be used in standby sleep mode,
+ * in standby mode, when power-gated, the internal state of the logic can be
+ * retained  allowing the application context to be kept.
+ *
+ * The SAM L21 device has three power domains: PD0, PD1 and PD2.
+ *
+ * Here is an overview of sleep mode versus power domain state. As shown in
+ * \ref asfdoc_sam0_system_power_domain_overview_table
+ *
+ * \anchor asfdoc_sam0_system_power_domain_overview_table
+ * <table>
+ *  <caption>Sleep Mode versus Power Domain State Overview</caption>
+ *  <tr>
+ *      <th>Sleep mode</th>
+ *      <th></th>
+ *      <th>PD0</th>
+ *      <th>PD1</th>
+ *      <th>PD2</th>
+ *      <th>PDTOP</th>
+ *      <th>PDBACKUP</th>
+ *  </tr>
+ *  <tr>
+ *      <td>IDLE</td>
+ *      <td></td>
+ *      <td>active</td>
+ *      <td>active</td>
+ *      <td>active</td>
+ *      <td>active</td>
+ *      <td>active</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Standby</td>
+ *      <td>Case 1</td>
+ *      <td>active</td>
+ *      <td>active</td>
+ *      <td>active</td>
+ *      <td>active</td>
+ *      <td>active</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Standby</td>
+ *      <td>Case 2</td>
+ *      <td>active</td>
+ *      <td>active</td>
+ *      <td>retention</td>
+ *      <td>active</td>
+ *      <td>active</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Standby</td>
+ *      <td>Case 3</td>
+ *      <td>active</td>
+ *      <td>retention</td>
+ *      <td>retention</td>
+ *      <td>active</td>
+ *      <td>active</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Standby</td>
+ *      <td>Case 4</td>
+ *      <td>retention</td>
+ *      <td>retention</td>
+ *      <td>retention</td>
+ *      <td>active</td>
+ *      <td>active</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Backup</td>
+ *      <td></td>
+ *      <td>OFF</td>
+ *      <td>OFF</td>
+ *      <td>OFF</td>
+ *      <td>OFF</td>
+ *      <td>active</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Off</td>
+ *      <td></td>
+ *      <td>OFF</td>
+ *      <td>OFF</td>
+ *      <td>OFF</td>
+ *      <td>OFF</td>
+ *      <td>OFF</td>
+ *  </tr>
+ * </table>
+ *
+ * \endif
+ *
  * \subsection asfdoc_sam0_system_module_overview_sleep_mode Sleep Modes
  * The SAM devices have several sleep modes, where the sleep mode controls
  * which clock systems on the device will remain enabled or disabled when the
@@ -125,61 +269,119 @@ extern "C" {
  * \anchor asfdoc_sam0_system_module_sleep_mode_table
  * <table>
  *  <caption>SAM Device Sleep Modes</caption>
- * 	<tr>
- * 		<th>Sleep mode</th>
- * 		<th>CPU clock</th>
- * 		<th>AHB clock</th>
- * 		<th>APB clocks</th>
- * 		<th>Clock sources</th>
- * 		<th>System clock</th>
- * 		<th>32KHz</th>
- * 		<th>Reg mode</th>
- * 		<th>RAM mode</th>
- * 	</tr>
- * 	<tr>
- * 		<td>IDLE 0</td>
- * 		<td>Stop</td>
- * 		<td>Run</td>
- * 		<td>Run</td>
- * 		<td>Run</td>
- * 		<td>Run</td>
- * 		<td>Run</td>
- * 		<td>Normal</td>
- * 		<td>Normal</td>
- * 	</tr>
- * 	<tr>
- * 		<td>IDLE 1</td>
- * 		<td>Stop</td>
- * 		<td>Stop</td>
- * 		<td>Run</td>
- * 		<td>Run</td>
- * 		<td>Run</td>
- * 		<td>Run</td>
- * 		<td>Normal</td>
- * 		<td>Normal</td>
- *	</tr>
- * 	<tr>
- * 		<td>IDLE 2</td>
- * 		<td>Stop</td>
- * 		<td>Stop</td>
- * 		<td>Stop</td>
- * 		<td>Run</td>
- * 		<td>Run</td>
- * 		<td>Run</td>
- * 		<td>Normal</td>
- * 		<td>Normal</td>
- *	</tr>
- * 	<tr>
- * 		<td>STANDBY</td>
- * 		<td>Stop</td>
- * 		<td>Stop</td>
- * 		<td>Stop</td>
- * 		<td>Stop</td>
- * 		<td>Stop</td>
- * 		<td>Stop</td>
- * 		<td>Low Power</td>
- * 		<td>Source/Drain biasing</td>
- * 	</tr>
+ * \if DEVICE_SAML21_SUPPORT
+ *  <tr>
+ *      <th>Sleep mode</th>
+ *      <th>System clock</th>
+ *      <th>CPU clock</th>
+ *      <th>AHB/AHB clock</th>
+ *      <th>GCLK clocks</th>
+ *      <th>Oscillators (ONDEMAND  = 0)</th>
+ *      <th>Oscillators (ONDEMAND  = 1)</th>
+ *      <th>Regulator mode</th>
+ *      <th>RAM mode</th>
+ *  </tr>
+ *  <tr>
+ *      <td>IDLE</td>
+ *      <td>Run</td>
+ *      <td>Stop</td>
+ *      <td>Run if requested</td>
+ *      <td>Run</td>
+ *      <td>Run</td>
+ *      <td>Run if requested</td>
+ *      <td>Normal</td>
+ *      <td>Normal</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Standby</td>
+ *      <td>Stop</td>
+ *      <td>Stop</td>
+ *      <td>Run if requested</td>
+ *      <td>Run if requested</td>
+ *      <td>Run if requested or RUNSTDBY  = 1</td>
+ *      <td>Run if requested</td>
+ *      <td>Low pwer</td>
+ *      <td>Low pwer</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Backup</td>
+ *      <td>Stop</td>
+ *      <td>Stop</td>
+ *      <td>Stop</td>
+ *      <td>Stop</td>
+ *      <td>Stop</td>
+ *      <td>Stop</td>
+ *      <td>Backup</td>
+ *      <td>OFF</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Off</td>
+ *      <td>OFF</td>
+ *      <td>OFF</td>
+ *      <td>OFF</td>
+ *      <td>OFF</td>
+ *      <td>OFF</td>
+ *      <td>OFF</td>
+ *      <td>OFF</td>
+ *      <td>OFF</td>
+ *  </tr>
+ * \else
+ *  <tr>
+ *      <th>Sleep mode</th>
+ *      <th>CPU clock</th>
+ *      <th>AHB clock</th>
+ *      <th>APB clocks</th>
+ *      <th>Clock sources</th>
+ *      <th>System clock</th>
+ *      <th>32KHz</th>
+ *      <th>Reg mode</th>
+ *      <th>RAM mode</th>
+ *  </tr>
+ *  <tr>
+ *      <td>IDLE 0</td>
+ *      <td>Stop</td>
+ *      <td>Run</td>
+ *      <td>Run</td>
+ *      <td>Run</td>
+ *      <td>Run</td>
+ *      <td>Run</td>
+ *      <td>Normal</td>
+ *      <td>Normal</td>
+ *  </tr>
+ *  <tr>
+ *      <td>IDLE 1</td>
+ *      <td>Stop</td>
+ *      <td>Stop</td>
+ *      <td>Run</td>
+ *      <td>Run</td>
+ *      <td>Run</td>
+ *      <td>Run</td>
+ *      <td>Normal</td>
+ *      <td>Normal</td>
+ *  </tr>
+ *  <tr>
+ *      <td>IDLE 2</td>
+ *      <td>Stop</td>
+ *      <td>Stop</td>
+ *      <td>Stop</td>
+ *      <td>Run</td>
+ *      <td>Run</td>
+ *      <td>Run</td>
+ *      <td>Normal</td>
+ *      <td>Normal</td>
+ *  </tr>
+ *  <tr>
+ *      <td>STANDBY</td>
+ *      <td>Stop</td>
+ *      <td>Stop</td>
+ *      <td>Stop</td>
+ *      <td>Stop</td>
+ *      <td>Stop</td>
+ *      <td>Stop</td>
+ *      <td>Low Power</td>
+ *      <td>Source/Drain biasing</td>
+ *  </tr>
+ * \endif
  * </table>
  *
  * To enter device sleep, one of the available sleep modes must be set, and the
@@ -218,57 +420,32 @@ extern "C" {
  */
 
 /**
- * \brief Voltage references within the device.
- *
- * List of available voltage references (VREF) that may be used within the
- * device.
+ * \name System Debugger
+ * @{
  */
-enum system_voltage_reference {
-	/** Temperature sensor voltage reference. */
-	SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE,
-	/** Bandgap voltage reference. */
-	SYSTEM_VOLTAGE_REFERENCE_BANDGAP,
-};
 
 /**
- * \brief Device sleep modes.
+ * \brief Check if debugger is present
  *
- * List of available sleep modes in the device. A table of clocks available in
- * different sleep modes can be found in \ref asfdoc_sam0_system_module_overview_sleep_mode.
+ * Check if debugger is connected to the onboard debug system (DAP)
+ *
+ * \return A bool identifying if a debugger is present
+ *
+ * \retval true  Debugger is connected to the system
+ * \retval false Debugger is not connected to the system
+ *
  */
-enum system_sleepmode {
-	/** IDLE 0 sleep mode. */
-	SYSTEM_SLEEPMODE_IDLE_0,
-	/** IDLE 1 sleep mode. */
-	SYSTEM_SLEEPMODE_IDLE_1,
-	/** IDLE 2 sleep mode. */
-	SYSTEM_SLEEPMODE_IDLE_2,
-	/** Standby sleep mode. */
-	SYSTEM_SLEEPMODE_STANDBY,
-};
+static inline bool system_is_debugger_present(void)
+{
+	return DSU->STATUSB.reg & DSU_STATUSB_DBGPRES;
+}
 
 /**
- * \brief Reset causes of the system.
- *
- * List of possible reset causes of the system.
+ * @}
  */
-enum system_reset_cause {
-	/** The system was last reset by a software reset. */
-	SYSTEM_RESET_CAUSE_SOFTWARE       = PM_RCAUSE_SYST,
-	/** The system was last reset by the watchdog timer. */
-	SYSTEM_RESET_CAUSE_WDT            = PM_RCAUSE_WDT,
-	/** The system was last reset because the external reset line was pulled low. */
-	SYSTEM_RESET_CAUSE_EXTERNAL_RESET = PM_RCAUSE_EXT,
-	/** The system was last reset by the BOD33. */
-	SYSTEM_RESET_CAUSE_BOD33          = PM_RCAUSE_BOD33,
-	/** The system was last reset by the BOD12. */
-	SYSTEM_RESET_CAUSE_BOD12          = PM_RCAUSE_BOD12,
-	/** The system was last reset by the POR (Power on reset). */
-	SYSTEM_RESET_CAUSE_POR            = PM_RCAUSE_POR,
-};
 
 /**
- * \name System identification
+ * \name System Identification
  * @{
  */
 
@@ -288,185 +465,8 @@ static inline uint32_t system_get_device_id(void)
  * @}
  */
 
-
 /**
- * \name Voltage references
- * @{
- */
-
-/**
- * \brief Enable the selected voltage reference
- *
- * Enables the selected voltage reference source, making the voltage reference
- * available on a pin as well as an input source to the analog peripherals.
- *
- * \param[in] vref  Voltage reference to enable
- */
-static inline void system_voltage_reference_enable(
-		const enum system_voltage_reference vref)
-{
-	switch (vref) {
-		case SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE:
-			SYSCTRL->VREF.reg |= SYSCTRL_VREF_TSEN;
-			break;
-
-		case SYSTEM_VOLTAGE_REFERENCE_BANDGAP:
-			SYSCTRL->VREF.reg |= SYSCTRL_VREF_BGOUTEN;
-			break;
-
-		default:
-			Assert(false);
-			return;
-	}
-}
-
-/**
- * \brief Disable the selected voltage reference
- *
- * Disables the selected voltage reference source.
- *
- * \param[in] vref  Voltage reference to disable
- */
-static inline void system_voltage_reference_disable(
-		const enum system_voltage_reference vref)
-{
-	switch (vref) {
-		case SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE:
-			SYSCTRL->VREF.reg &= ~SYSCTRL_VREF_TSEN;
-			break;
-
-		case SYSTEM_VOLTAGE_REFERENCE_BANDGAP:
-			SYSCTRL->VREF.reg &= ~SYSCTRL_VREF_BGOUTEN;
-			break;
-
-		default:
-			Assert(false);
-			return;
-	}
-}
-
-/**
- * @}
- */
-
-
-/**
- * \name Device sleep
- * @{
- */
-
-/**
- * \brief Set the sleep mode of the device
- *
- * Sets the sleep mode of the device; the configured sleep mode will be entered
- * upon the next call of the \ref system_sleep() function.
- *
- * For an overview of which systems are disabled in sleep for the different
- * sleep modes, see \ref asfdoc_sam0_system_module_overview_sleep_mode.
- *
- * \param[in] sleep_mode  Sleep mode to configure for the next sleep operation
- *
- * \retval STATUS_OK               Operation completed successfully
- * \retval STATUS_ERR_INVALID_ARG  The requested sleep mode was invalid or not
- *                                 available
- */
-static inline enum status_code system_set_sleepmode(
-	const enum system_sleepmode sleep_mode)
-{
-#if (SAMD20 || SAMD21)
-	/* Errata: Make sure that the Flash does not power all the way down
-	 * when in sleep mode. */
-	NVMCTRL->CTRLB.bit.SLEEPPRM = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val;
-#endif
-	switch (sleep_mode) {
-		case SYSTEM_SLEEPMODE_IDLE_0:
-		case SYSTEM_SLEEPMODE_IDLE_1:
-		case SYSTEM_SLEEPMODE_IDLE_2:
-			SCB->SCR &= ~SCB_SCR_SLEEPDEEP_Msk;
-			PM->SLEEP.reg = sleep_mode;
-			break;
-
-		case SYSTEM_SLEEPMODE_STANDBY:
-			SCB->SCR |=  SCB_SCR_SLEEPDEEP_Msk;
-			break;
-
-		default:
-			return STATUS_ERR_INVALID_ARG;
-	}
-
-	return STATUS_OK;
-}
-
-/**
- * \brief Put the system to sleep waiting for interrupt
- *
- * Executes a device DSB (Data Synchronization Barrier) instruction to ensure
- * all ongoing memory accesses have completed, then a WFI (Wait For Interrupt)
- * instruction to place the device into the sleep mode specified by
- * \ref system_set_sleepmode until woken by an interrupt.
- */
-static inline void system_sleep(void)
-{
-	__DSB();
-	__WFI();
-}
-
-/**
- * @}
- */
-
-/**
- * \name Reset control
- * @{
- */
-
-/**
- * \brief Check if bugger is present
- *
- * Check if debugger is connected to the onboard debug system (DAP)
- *
- * \return A bool identifying if a debugger is present
- *
- * \retval true  Debugger is connected to the system
- * \retval false Debugger is not connected to the system
- *
- */
-static inline bool system_is_debugger_present(void)
-{
-	return DSU->STATUSB.reg & DSU_STATUSB_DBGPRES;
-}
-
-/**
- * \brief Reset the MCU
- *
- * Resets the MCU and all associated peripherals and registers, except RTC, all 32kHz sources,
- * WDT (if ALWAYSON is set) and GCLK (if WRTLOCK is set).
- *
- */
-static inline void system_reset(void)
-{
-	NVIC_SystemReset();
-}
-
-/**
- * \brief Return the reset cause
- *
- * Retrieves the cause of the last system reset.
- *
- * \return An enum value indicating the cause of the last system reset.
- */
-static inline enum system_reset_cause system_get_reset_cause(void)
-{
-	return (enum system_reset_cause)PM->RCAUSE.reg;
-}
-
-/**
- * @}
- */
-
-
-/**
- * \name System initialization
+ * \name System Initialization
  * @{
  */
 
@@ -494,12 +494,12 @@ void system_init(void);
  *      <th>Definition</th>
  *  </tr>
  *  <tr>
- *		<td>PM</td>
- *		<td>Power Manager</td>
+ *      <td>PM</td>
+ *      <td>Power Manager</td>
  *  </tr>
  *  <tr>
- *		<td>SYSCTRL</td>
- *		<td>System control interface</td>
+ *      <td>SYSCTRL</td>
+ *      <td>System control interface</td>
  *  </tr>
  * </table>
  *
@@ -521,52 +521,55 @@ void system_init(void);
  * the table.
  *
  * <table>
- *	<tr>
- *		<th>Changelog</th>
- *	</tr>
- *	<tr>
- *		<td>Added support for SAMD21</td>
- *	</tr>
- *	<tr>
- *		<td>Added new \c system_reset() to reset the complete MCU with some exceptions</td>
- *	</tr>
- *	<tr>
- *		<td>Added new \c system_get_device_id() function to retrieved the device
+ *  <tr>
+ *      <th>Changelog</th>
+ *  </tr>
+ *  <tr>
+ *      <td>Added low power features and support for SAML21</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Added support for SAMD21</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Added new \c system_reset() to reset the complete MCU with some exceptions</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Added new \c system_get_device_id() function to retrieved the device
  *          ID.</td>
- *	</tr>
- *	<tr>
- *		<td>Initial Release</td>
- *	</tr>
+ *  </tr>
+ *  <tr>
+ *      <td>Initial Release</td>
+ *  </tr>
  * </table>
  *
  * \page asfdoc_sam0_system_document_revision_history Document Revision History
  *
  * <table>
- *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
- *	</tr>
- *	<tr>
- *		<td>D</td>
- *		<td>04/2014</td>
- *		<td>Added support for SAMR21 and SAMD10/D11.</td>
- *	</tr>
- *	<tr>
- *		<td>C</td>
- *		<td>01/2014</td>
- *		<td>Added support for SAMD21.</td>
- *	</tr>
- *	<tr>
- *		<td>B</td>
- *		<td>06/2013</td>
- *		<td>Corrected documentation typos.</td>
- *	</tr>
- *	<tr>
- *		<td>A</td>
- *		<td>06/2013</td>
- *		<td>Initial release</td>
- *	</tr>
+ * <tr>
+ *      <th>Doc. Rev.</td>
+ *      <th>Date</td>
+ *      <th>Comments</td>
+ *  </tr>
+ *  <tr>
+ *      <td>D</td>
+ *      <td>04/2014</td>
+ *      <td>Added support for SAMR21 and SAMD10/D11.</td>
+ * </tr>
+ * <tr>
+ *      <td>C</td>
+ *      <td>01/2014</td>
+ *      <td>Added support for SAMD21.</td>
+ *  </tr>
+ *  <tr>
+ *      <td>B</td>
+ *      <td>06/2013</td>
+ *      <td>Corrected documentation typos.</td>
+ *  </tr>
+ *  <tr>
+ *      <td>A</td>
+ *      <td>06/2013</td>
+ *      <td>Initial release</td>
+ *  </tr>
  * </table>
  */
 

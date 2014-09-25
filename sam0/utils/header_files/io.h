@@ -71,4 +71,8 @@
 #  include "samd11.h"
 #endif
 
+#if (SAML21)
+#  include "saml21.h"
+#endif
+
 #endif /* _SAM_IO_ */

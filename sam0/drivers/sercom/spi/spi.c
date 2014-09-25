@@ -379,7 +379,7 @@ static enum status_code _spi_check_config(
 			return STATUS_ERR_DENIED;
 		}
 
-		ctrla |= SERCOM_SPI_CTRLA_MODE_SPI_MASTER;
+		ctrla |= SERCOM_SPI_CTRLA_MODE(0x3);
 	}
 #  endif
 
@@ -403,7 +403,7 @@ static enum status_code _spi_check_config(
 			/* Enable pre-loading of shift register */
 			ctrlb |= SERCOM_SPI_CTRLB_PLOADEN;
 		}
-		ctrla |= SERCOM_SPI_CTRLA_MODE_SPI_SLAVE;
+		ctrla |= SERCOM_SPI_CTRLA_MODE(0x2);
 	}
 #  endif
 	/* Set data order */
@@ -506,7 +506,11 @@ enum status_code spi_init(
 	}
 
 	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
+#if (SAML21)
+	uint32_t pm_index     = sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
+#else
 	uint32_t pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
+#endif
 	uint32_t gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
 
 	/* Turn on module in PM */
@@ -523,14 +527,14 @@ enum status_code spi_init(
 #  if CONF_SPI_MASTER_ENABLE == true
 	if (config->mode == SPI_MODE_MASTER) {
 		/* Set the SERCOM in SPI master mode */
-		spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE_SPI_MASTER;
+		spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE(0x3);
 	}
 #  endif
 
 #  if CONF_SPI_SLAVE_ENABLE == true
 	if (config->mode == SPI_MODE_SLAVE) {
 		/* Set the SERCOM in SPI slave mode */
-		spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE_SPI_SLAVE;
+		spi_module->CTRLA.reg |= SERCOM_SPI_CTRLA_MODE(0x2);
 	}
 #  endif
 

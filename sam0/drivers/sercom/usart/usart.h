@@ -64,6 +64,7 @@
  *  - SAM D20/D21
  *  - SAM R21
  *  - SAM D10/D11
+ *  - SAM L21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_sercom_usart_prerequisites
@@ -93,35 +94,35 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_SYNC_SCHEME_V2</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_OVER_SAMPLE</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_HARDWARE_FLOW_CONTROL</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IRDA</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_LIN_SLAVE</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_COLLISION_DECTION</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_START_FRAME_DECTION</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -265,7 +266,7 @@ extern "C" {
  * Define SERCOM USART features set according to different device family.
  * @{
  */
-#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || defined(__DOXYGEN__)
+#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || defined(__DOXYGEN__)
 /** Usart sync scheme version 2. */
 #  define FEATURE_USART_SYNC_SCHEME_V2
 /** Usart over sampling. */
@@ -1087,6 +1088,9 @@ static inline void usart_disable_transceiver(
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
+ *  <tr>
+ *		<td>Add support for SAML21 (same features as SAMD21).</td>
+ *  </tr>
  *  <tr>
  *		<td>Add support for SAMD10/D11 (same features as SAMD21).</td>
  *  </tr>

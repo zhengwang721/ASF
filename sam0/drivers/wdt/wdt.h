@@ -63,6 +63,7 @@
  *  - SAM D20/D21
  *  - SAM R21
  *  - SAM D10/D11
+ *  - SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_wdt_prerequisites
@@ -144,7 +145,7 @@
  * \dot
  * digraph overview {
  *   rankdir=LR;
- *   node [label="GCLK\nGeneric Clock" shape=square] wdt_clock;
+ *   node [label="GCLK*\nGeneric Clock" shape=square] wdt_clock;
  *
  *   subgraph driver {
  *     node [label="<f0> WDT | <f1> Watchdog Counter" shape=record] wdt_module;
@@ -156,6 +157,10 @@
  * }
  * \enddot
  *
+ * \note SAM L21's Watchdog Counter is \a not provided by GCLK, but it uses an 
+ *       internal 1kHz OSCULP32K output clock.\n
+ *       This clock must be configured and enabled in the 32kHz Oscillator 
+ *       Controller(OSC32KCTRL) before using the WDT. 
  *
  * \section asfdoc_sam0_wdt_special_considerations Special Considerations
  *
@@ -244,8 +249,10 @@ struct wdt_conf {
 	bool always_on;
 	/** Enable/Disable the Watchdog Timer */
 	bool enable;
-	/** GCLK generator used to clock the peripheral */
+#if !(SAML21)
+	/** GCLK generator used to clock the peripheral except SAM L21*/
 	enum gclk_generator clock_source;
+#endif
 	/** Number of Watchdog timer clock ticks until the Watchdog expires. */
 	enum wdt_period timeout_period;
 	/** Number of Watchdog timer clock ticks until the reset window opens. */
@@ -277,7 +284,11 @@ static inline bool wdt_is_syncing(void)
 {
 	Wdt *const WDT_module = WDT;
 
+#if (SAML21)
+	if (WDT_module->SYNCBUSY.reg) {
+#else
 	if (WDT_module->STATUS.reg & WDT_STATUS_SYNCBUSY) {
+#endif
 		return true;
 	}
 
@@ -311,7 +322,9 @@ static inline void wdt_get_config_defaults(
 	/* Default configuration values */
 	config->always_on            = false;
 	config->enable               = true;
+#if !(SAML21)
 	config->clock_source         = GCLK_GENERATOR_4;
+#endif
 	config->timeout_period       = WDT_PERIOD_16384CLK;
 	config->window_period        = WDT_PERIOD_NONE;
 	config->early_warning_period = WDT_PERIOD_NONE;
@@ -331,7 +344,11 @@ static inline bool wdt_is_locked(void)
 {
 	Wdt *const WDT_module = WDT;
 
+#if (SAML21)
+	return (WDT_module->CTRLA.reg & WDT_CTRLA_ALWAYSON);
+#else
 	return (WDT_module->CTRL.reg & WDT_CTRL_ALWAYSON);
+#endif
 }
 
 /** @} */
@@ -449,6 +466,11 @@ void wdt_reset_count(void);
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>09/2014</td>
+ *		<td>Added SAML21 support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
