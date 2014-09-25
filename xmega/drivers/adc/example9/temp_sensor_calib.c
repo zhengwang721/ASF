@@ -3,7 +3,8 @@
  *
  * \brief AVR XMEGA Analog to Digital Converter Driver Example 9
  * Example which shows two-point calibration of the internal temperature sensor
- * of Xmega E.
+ * of AVR XMEGA E.
+ *
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -48,8 +49,8 @@
  *
  * \section intro Introduction
  * This example shows the usage of two calibration points available for
- * the internal temperature sensor in Xmega E devices.
- * Two-point calibration of the Xmega E internal temperature sensor helps
+ * the internal temperature sensor in AVR XMEGA E devices.
+ * Two-point calibration of the AVR XMEGA E internal temperature sensor helps
  * to keep the error in temperature readings to the lowest levels.
  *
  * The production signature row of XmegaE device contains calibration data
@@ -142,7 +143,7 @@ int main(void)
 	cpu_irq_enable();
 	stdio_serial_init(CONF_TEST_USART, &usart_serial_options);
 
-	printf("\x0C\n\r-- Xmega E Internal Temperature Sensor \
+	printf("\x0C\n\r-- AVR XMEGA E Internal Temperature Sensor \
 			Two Point Calibration");
 	printf("  (Compiled: %s %s)\n\r", __DATE__, __TIME__);
 

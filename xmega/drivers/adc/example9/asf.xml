@@ -1,11 +1,12 @@
 <asf xmlversion="1.0">
-	<module type="application" id="xmega.drivers.adc.example9" caption="Xmega E Internal Temperature Sensor Two Point Calibration">
+	<module type="application" id="xmega.drivers.adc.example9" caption="XMEGA E Internal Temperature Sensor Two Point Calibration">
 		<info type="description" value="summary">
-		This example shows the usage of two calibration points available for the internal temperature sensor in Xmega E devices. 
-		Two-point calibration of the Xmega E internal temperature sensor helps to improve the accuracy of temperature readings.
+		This example shows the usage of two calibration points available for the internal temperature sensor in XMEGA E devices. 
+		Two-point calibration of the XMEGA E internal temperature sensor helps to improve the accuracy of temperature readings.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Sensors"/>
+			<keyword value="Analog Conversion"/>
 		</info>
 		<build type="c-source" value="temp_sensor_calib.c"/>
 		<build type="library" subtype="compiler" value="libm"/>

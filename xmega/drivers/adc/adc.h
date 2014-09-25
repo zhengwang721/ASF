@@ -208,39 +208,45 @@ struct adc_config {
 #define TEMPSENSE0    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE0)
 /** Temperature sensor calibration byte 1. */
 #define TEMPSENSE1    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE1)
+#if XMEGA_E
 /** Temperature at which TEMPSENSE1/TEMPSENSE0 is measured. */
-#define HOTTEMP       offsetof(NVM_PROD_SIGNATURES_t, HOTTEMP)
+#	define HOTTEMP       offsetof(NVM_PROD_SIGNATURES_t, HOTTEMP)
 /** Temperature at which TEMPSENSE3/TEMPSENSE2 is measured. */
-#define ROOMTEMP      offsetof(NVM_PROD_SIGNATURES_t, ROOMTEMP)
+#	define ROOMTEMP      offsetof(NVM_PROD_SIGNATURES_t, ROOMTEMP)
 /** Temperature sensor calibration byte 2. */
-#define TEMPSENSE2    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE2)
+#	define TEMPSENSE2    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE2)
 /** Temperature sensor calibration byte 3. */
-#define TEMPSENSE3    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE3)
-
+#	define TEMPSENSE3    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE3)
+#endif
 /** @} */
 
 /** \brief ADC calibration data */
 enum adc_calibration_data {
-	ADC_CAL_ADCA,    /**< ADC A pipeline calibration data. */
-	ADC_CAL_ADCB,    /**< ADC B pipeline calibration data. */
+	ADC_CAL_ADCA,    /** ADC A pipeline calibration data. */
+	ADC_CAL_ADCB,    /** ADC B pipeline calibration data. */
 
 	/**
 	 * \brief Temperature sensor calibration data.
 	 * \note 12-bit unsigned, measured at 85 degrees Celsius, equivalent to
 	 * 358.15 kelvin.
 	 *
-	 * For Xmega E devices, the calibration reading is 12 Bit signed.
-	 * Xmega E production signature row contains data for two 
+	 * For AVR XMEGA E devices, the calibration reading is 12 Bit signed.
+	 * AVR XMEGA E production signature row contains data for two 
 	 * calibration points. Each calibration point has one byte for
-	 * temperature and two bytes for the corresponding ADC reading.
+	 * storing the temperature at which the internal temperature sensor
+	 * is measured and two bytes for the corresponding ADC reading.
 	 */
-	ADC_CAL_TEMPSENSE,	/**< ADC reading at HOTTEMP */
-	ADC_CAL_HOTTEMP,    /**< Normally done at 85 Deg C, 
-						but the excat value is given 
-						in this signature row*/
-	ADC_CAL_TEMPSENSE2,  /**< ADC reading at ROOMTEMP */
-	ADC_CAL_ROOMTEMP    /**< The room temperature measured 
-						during device manufacturing */
+	/** ADC reading at HOTTEMP. */
+	ADC_CAL_TEMPSENSE,
+	/** Normally the one calibration point is taken at 85 Deg C,
+	 * but the exact value in Deg C is given in the HOTTEMP signature row.
+	 */
+	ADC_CAL_HOTTEMP,
+	/** ADC reading at ROOMTEMP in stored in TEMPSENSE2. */
+	ADC_CAL_TEMPSENSE2,
+	/** The room temperature (in Deg C) measured during device manufacturing.
+	 */
+	ADC_CAL_ROOMTEMP
 };
 
 /** \name ADC channel masks */
@@ -782,9 +788,11 @@ static inline uint16_t adc_get_calibration_data(enum adc_calibration_data cal)
 	case ADC_CAL_HOTTEMP:
 		data = nvm_read_production_signature_row(HOTTEMP);
 		break;
+	
 	case ADC_CAL_ROOMTEMP:
 		data = nvm_read_production_signature_row(ROOMTEMP);
 		break;
+	
 	case ADC_CAL_TEMPSENSE2:
 		data = nvm_read_production_signature_row(TEMPSENSE3);
 		data <<= 8;
