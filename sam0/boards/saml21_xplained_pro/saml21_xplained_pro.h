@@ -324,6 +324,7 @@ void system_board_init(void);
 #define EXT2_PWM_1_MUX            MUX_PB13E_TC0_WO1
 #define EXT2_PWM_1_PINMUX         PINMUX_PB13E_TC0_WO1
 /** @} */
+
 /** \name Extension header #2 IRQ/External interrupt definitions
  *  @{
  */
