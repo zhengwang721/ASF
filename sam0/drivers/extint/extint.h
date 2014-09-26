@@ -674,11 +674,11 @@ static inline void extint_nmi_clear_detected(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Add SAMR21 support.</td>
+ *		<td>Add SAMR21 support</td>
  *	</tr>
  *	<tr>
  *		<td>
- *		\li Driver updated to follow driver type convention.
+ *		\li Driver updated to follow driver type convention
  *		\li Removed \c %extint_reset(), \c %extint_disable() and
  *		    \c extint_enable() functions. Added internal function
  *		    \c %_system_extint_init()
@@ -690,14 +690,14 @@ static inline void extint_nmi_clear_detected(
  *	</tr>
  *	<tr>
  *		<td>Updated interrupt handler to clear interrupt flag before calling
- *          callback function.</td>
+ *          callback function</td>
  *	</tr>
  *	<tr>
  *		<td>Updated initialization function to also enable the digital interface
- *          clock to the module if it is disabled.</td>
+ *          clock to the module if it is disabled</td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */

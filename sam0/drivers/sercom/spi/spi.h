@@ -1417,14 +1417,14 @@ enum status_code spi_select_slave(
  *	</tr>
  *	<tr>
  *		<td>Edited slave part of write and transceive buffer functions to ensure
- *		that second character is sent at the right time.</td>
+ *		that second character is sent at the right time</td>
  *	</tr>
  *	<tr>
  *		<td>Renamed the anonymous union in \c struct spi_config to
- *          \c mode_specific.</td>
+ *          \c mode_specific</td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */

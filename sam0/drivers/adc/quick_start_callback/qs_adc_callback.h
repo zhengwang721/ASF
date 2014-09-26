@@ -49,7 +49,7 @@
  * application that conversion is compete.
  *
  * The ADC will be set up as follows:
- * - VCC / 2 as reference
+ * - V<SUB>CC</SUB> / 2 as reference
  * - Div 8 clock prescaler
  * - 12-bit resolution
  * - Window monitor disabled

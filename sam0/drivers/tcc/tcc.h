@@ -606,7 +606,7 @@
  * used.
  *
  * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM TCC Feature List
- * For SAM D21/R21, the TCC features are as:
+ * For SAM D21/R21, the TCC features are:
  * \anchor asfdoc_sam0_tcc_features_d21
  * <table>
  *   <caption>TCC Module Features For SAM D21/R21</caption>
@@ -661,7 +661,7 @@
  * </table>
  *
  * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d11 SAM D10/D11 TCC Feature List
- * For SAM D10/D11, the TCC features are as:
+ * For SAM D10/D11, the TCC features are:
  * \anchor asfdoc_sam0_tcc_features_d11
  * <table>
  *   <caption>TCC Module Features For SAM D10/D11</caption>
@@ -1265,7 +1265,7 @@ enum tcc_fault_capture_channel {
 enum tcc_fault_source {
 	/** Fault input is disabled. */
 	TCC_FAULT_SOURCE_DISABLE,
-	/** Match Capture Event x (MCE 0,1) input. */
+	/** Match Capture Event x (x=0,1) input. */
 	TCC_FAULT_SOURCE_ENABLE,
 	/** Inverted MCEx (x=0,1) event input. */
 	TCC_FAULT_SOURCE_INVERT,
@@ -2318,13 +2318,13 @@ enum status_code tcc_set_double_buffer_compare_values(
  *      <th>Changelog</th>
  *  </tr>
  *  <tr>
- *      <td>Add double buffering functionality.</td>
+ *      <td>Add double buffering functionality</td>
  *  </tr>
  *  <tr>
- *      <td>Add fault handling functionality.</td>
+ *      <td>Add fault handling functionality</td>
  *  </tr>
  *  <tr>
- *      <td>Initial Release.</td>
+ *      <td>Initial Release</td>
  *  </tr>
  * </table>
  */

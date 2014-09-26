@@ -766,7 +766,7 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  *     <th>Changelog</th>
  *   </tr>
  *   <tr>
- *     <td>Initial Release.</td>
+ *     <td>Initial Release</td>
  *   </tr>
  * </table>
  */

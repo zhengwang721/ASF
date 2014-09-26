@@ -490,11 +490,11 @@ enum i2c_transfer_direction {
  *	</tr>
  *	<tr>
  *		<td>Fixed incorrect logical mask for determining if a bus error has
- *          occurred in I<SUP>2</SUP>C Slave mode.
+ *          occurred in I<SUP>2</SUP>C Slave mode
  *      </td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */

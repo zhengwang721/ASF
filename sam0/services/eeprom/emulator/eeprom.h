@@ -461,10 +461,10 @@ enum status_code eeprom_emulator_read_buffer(
  *		<th>Changelog</th>
  *	</tr>
   *	<tr>
- *		<td>Fix warnings and document for SAM D21.</td>
+ *		<td>Fix warnings and document for SAM D21</td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */

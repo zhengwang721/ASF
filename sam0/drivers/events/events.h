@@ -618,10 +618,10 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset);
  *     <th>Changelog</th>
  *   </tr>
  *   <tr>
- *     <td>Rewrite of events driver.</td>
+ *     <td>Rewrite of events driver</td>
  *   </tr>
  *   <tr>
- *     <td>Initial Release.</td>
+ *     <td>Initial Release</td>
  *   </tr>
  * </table>
  */

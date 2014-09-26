@@ -410,7 +410,7 @@ enum rtc_calendar_alarm_mask {
 	RTC_CALENDAR_ALARM_MASK_MIN      = RTC_MODE2_MASK_SEL_MMSS,
 	/** Alarm match on second, minute, and hour. */
 	RTC_CALENDAR_ALARM_MASK_HOUR     = RTC_MODE2_MASK_SEL_HHMMSS,
-	/** Alarm match on second, minutes hour, and day. */
+	/** Alarm match on second, minute, hour, and day. */
 	RTC_CALENDAR_ALARM_MASK_DAY      = RTC_MODE2_MASK_SEL_DDHHMMSS,
 	/** Alarm match on second, minute, hour, day, and month. */
 	RTC_CALENDAR_ALARM_MASK_MONTH    = RTC_MODE2_MASK_SEL_MMDDHHMMSS,
@@ -431,8 +431,7 @@ struct rtc_calendar_events {
 	 *  count. */
 	bool generate_event_on_alarm[RTC_NUM_OF_ALARMS];
 	/** Generate an output event periodically at a binary division of the RTC
-	 *  counter frequency (see
-	 *  \ref asfdoc_sam0_rtc_calendar_module_overview_periodic).
+	 *  counter frequency.
 	 */
 	bool generate_event_on_periodic[8];
 };
@@ -998,15 +997,15 @@ static inline void rtc_calendar_disable_events(
  *	<tr>
  *		<td>
  *             Added support for SAMD21 and added driver instance parameter to all
- *             API function calls, except get_config_defaults.
+ *             API function calls, except get_config_defaults
  *             </td>
  *	</tr>
  *	<tr>
  *		<td>Updated initialization function to also enable the digital interface
- *          clock to the module if it is disabled.</td>
+ *          clock to the module if it is disabled</td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */

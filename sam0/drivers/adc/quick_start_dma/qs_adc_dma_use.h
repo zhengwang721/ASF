@@ -72,7 +72,7 @@
  * - Pin scan mode disabled
  *
  * The DAC will be configured with the following settings:
- * - Analog VCC as reference
+ * - Analog V<SUB>CC</SUB> as reference
  * - Internal output disabled
  * - Drive the DAC output to PA2
  * - Right adjust data

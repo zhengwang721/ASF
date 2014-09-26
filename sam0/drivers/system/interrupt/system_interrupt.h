@@ -362,16 +362,16 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD10/D11.</td>
+ *		<td>Added support for SAMD10/D11</td>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMR21.</td>
+ *		<td>Added support for SAMR21</td>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21.</td>
+ *		<td>Added support for SAMD21</td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */

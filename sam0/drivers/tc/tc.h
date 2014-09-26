@@ -1395,10 +1395,10 @@ static inline void tc_clear_status(
  *		<th>Changelog</th>
  *	</tr>
  *  <tr>
- *    <td>Added support for SAMD10/D11.</td>
+ *    <td>Added support for SAMD10/D11</td>
  *  </tr>
  *  <tr>
- *    <td>Added support for SAMR21.</td>
+ *    <td>Added support for SAMR21</td>
  *  </tr>
  *	<tr>
  *    <td>Added support for SAMD21 and do some modifications as below:
@@ -1409,10 +1409,10 @@ static inline void tc_clear_status(
  *	</tr>
  *	<tr>
  *		<td>Added automatic digital clock interface enable for the slave TC
- *          module when a timer is initialized in 32-bit mode.</td>
+ *          module when a timer is initialized in 32-bit mode</td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */

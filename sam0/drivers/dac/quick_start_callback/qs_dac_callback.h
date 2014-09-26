@@ -49,7 +49,7 @@
  * application that conversion is compete.
  *
  * The DAC will be set up as follows:
- * - Analog VCC as reference
+ * - Analog V<SUB>CC</SUB> as reference
  * - Internal output disabled
  * - Drive the DAC output to the V<sub>OUT</sub> pin
  * - Right adjust data

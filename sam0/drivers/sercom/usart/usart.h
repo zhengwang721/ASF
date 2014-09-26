@@ -1087,10 +1087,10 @@ static inline void usart_disable_transceiver(
  *		<th>Changelog</th>
  *	</tr>
  *  <tr>
- *		<td>Add support for SAMD10/D11 (same features as SAMD21).</td>
+ *		<td>Add support for SAMD10/D11 (same features as SAMD21)</td>
  *  </tr>
  *  <tr>
- *		<td>Add support for SAMR21 (same features as SAMD21).</td>
+ *		<td>Add support for SAMR21 (same features as SAMD21)</td>
  *  </tr>
  *	<tr>
  *		<td>Add support for SAMD21 and added new feature as below:
@@ -1112,7 +1112,7 @@ static inline void usart_disable_transceiver(
  *              not aborting correctly when a timeout condition occurs</td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
 */

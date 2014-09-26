@@ -382,9 +382,9 @@ enum system_osc8m_div {
 };
 
 /**
- * \brief Frequency range for the internal 8Mhz RC oscillator
+ * \brief Frequency range for the internal 8MHz RC oscillator
  *
- * Internal 8Mhz RC oscillator frequency range setting
+ * Internal 8MHz RC oscillator frequency range setting
  */
 enum system_osc8m_frequency_range {
 	/** Frequency range 4MHz to6 MHz. */
@@ -508,7 +508,7 @@ enum system_clock_dfll_quick_lock {
 /**
  * \brief Available clock sources in the system
  *
- * Clock sources available to the GCLK generators
+ * Clock sources available to the GCLK generators.
  */
 enum system_clock_source {
 	/** Internal 8MHz RC oscillator. */
@@ -1433,13 +1433,13 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	</tr>
  *  <tr>
  *		<td>Fixed \c system_gclk_chan_disable() deadlocking if a channel is enabled
- *		    and configured to a failed/not running clock generator.</td>
+ *		    and configured to a failed/not running clock generator</td>
  *  </tr>
  *	<tr>
  *		<td>
- *			\li Changed default value for CONF_CLOCK_DFLL_ON_DEMAND from \c true to \c false.
+ *			\li Changed default value for CONF_CLOCK_DFLL_ON_DEMAND from \c true to \c false
  *			\li Fixed system_flash_set_waitstates() failing with an assertion
- *			    if an odd number of wait states provided.
+ *			    if an odd number of wait states provided
  *		</td>
  *	</tr>
  *	<tr>
@@ -1465,7 +1465,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *      </td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */

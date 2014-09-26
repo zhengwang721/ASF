@@ -765,20 +765,20 @@ static inline enum nvm_error nvm_get_error(void)
  *	</tr>
  *	<tr>
  *		<td>Added support for SAMD21, removed BOD12 reference, removed
- *          nvm_set_fuses() API.</td>
+ *          nvm_set_fuses() API</td>
  *	</tr>
  *	<tr>
- *		<td>Added functions to read/write fuse settings.</td>
+ *		<td>Added functions to read/write fuse settings</td>
  *	</tr>
  *	<tr>
- *		<td>Added support for nvm cache configuration.</td>
+ *		<td>Added support for nvm cache configuration</td>
  *	</tr>
  *	<tr>
  *		<td>Updated initialization function to also enable the digital interface
- *          clock to the module if it is disabled.</td>
+ *          clock to the module if it is disabled</td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */

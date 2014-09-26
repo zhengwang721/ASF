@@ -423,7 +423,7 @@ void wdt_reset_count(void);
  *             \li WDT module enable state moved inside the configuration struct </td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */

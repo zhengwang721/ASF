@@ -167,7 +167,7 @@ enum bod_prescale {
 /**
  * \brief Brown Out Detector detection actions.
  *
- * List of possible BOD actions when a BOD module detects a brown-out condition.
+ * List of possible BOD actions when a BOD module detects a brown out condition.
  */
 enum bod_action {
 	/** A BOD detect will do nothing, and the BOD state must be polled. */
@@ -390,10 +390,10 @@ static inline void bod_clear_detected(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21 and removed BOD12 reference.</td>
+ *		<td>Added support for SAMD21 and removed BOD12 reference</td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */

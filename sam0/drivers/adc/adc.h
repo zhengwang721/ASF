@@ -464,9 +464,9 @@ enum adc_callback {
 enum adc_reference {
 	/** 1.0V voltage reference. */
 	ADC_REFERENCE_INT1V   = ADC_REFCTRL_REFSEL_INT1V,
-	/** 1/1.48 V<SUP>CC</SUP> reference. */
+	/** 1/1.48 V<SUB>CC</SUB> reference. */
 	ADC_REFERENCE_INTVCC0 = ADC_REFCTRL_REFSEL_INTVCC0,
-	/** 1/2 V<SUP>CC</SUP> (only for internal V<SUP>CC</SUP> > 2.1V). */
+	/** 1/2 V<SUB>CC</SUB> (only for internal V<SUB>CC</SUB> > 2.1V). */
 	ADC_REFERENCE_INTVCC1 = ADC_REFCTRL_REFSEL_INTVCC1,
 	/** External reference A. */
 	ADC_REFERENCE_AREFA   = ADC_REFCTRL_REFSEL_AREFA,
@@ -1722,17 +1722,17 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMR21.</td>
+ *		<td>Added support for SAMR21</td>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21 and new DMA quick start guide.</td>
+ *		<td>Added support for SAMD21 and new DMA quick start guide</td>
  *	</tr>
  *	<tr>
  *		<td>Added ADC calibration constant loading from the device signature
- *          row when the module is initialized.</td>
+ *          row when the module is initialized</td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */

@@ -384,7 +384,7 @@ enum dac_callback {
 enum dac_reference {
 	/** 1V from the internal band-gap reference.*/
 	DAC_REFERENCE_INT1V = DAC_CTRLB_REFSEL(0),
-	/** Analog VCC as reference. */
+	/** Analog V<SUB>CC</SUB> as reference. */
 	DAC_REFERENCE_AVCC  = DAC_CTRLB_REFSEL(1),
 	/** External reference on AREF. */
 	DAC_REFERENCE_AREF  = DAC_CTRLB_REFSEL(2),
@@ -822,7 +822,7 @@ void dac_clear_status(
  *		\c DAC_CALLBACK_TRANSFER_COMPLETE for DAC conversion job</td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */

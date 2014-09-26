@@ -520,17 +520,17 @@ void system_init(void);
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21.</td>
+ *		<td>Added support for SAMD21</td>
  *	</tr>
  *	<tr>
- *		<td>Added new \c system_reset() to reset the complete MCU with some exceptions.</td>
+ *		<td>Added new \c system_reset() to reset the complete MCU with some exceptions</td>
  *	</tr>
  *	<tr>
  *		<td>Added new \c system_get_device_id() function to retrieved the device
- *          ID.</td>
+ *          ID</td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
  *

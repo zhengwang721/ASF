@@ -416,7 +416,7 @@ enum ac_chan_neg_mux {
 	AC_CHAN_NEG_MUX_PIN3       = AC_COMPCTRL_MUXNEG_PIN3,
 	/** Negative comparator input is connected to the internal ground plane. */
 	AC_CHAN_NEG_MUX_GND        = AC_COMPCTRL_MUXNEG_GND,
-	/** Negative comparator input is connected to the channel's internal VCC
+	/** Negative comparator input is connected to the channel's internal V<SUB>CC</SUB>
 	 *  plane voltage scalar. */
 	AC_CHAN_NEG_MUX_SCALED_VCC = AC_COMPCTRL_MUXNEG_VSCALE,
 	/** Negative comparator input is connected to the internal band gap voltage
@@ -596,9 +596,9 @@ struct ac_chan_config {
 	/** Input multiplexer selection for the comparator's negative input pin. */
 	enum ac_chan_neg_mux negative_input;
 	/** Scaled VCC voltage division factor for the channel, when a comparator
-	 *  pin is connected to the VCC voltage scalar input. The formular is:
+	 *  pin is connected to the V<SUB>CC</SUB> voltage scalar input. The formular is:
 	 *      Vscale = Vdd * vcc_scale_factor / 64.
-	 *  If the VCC voltage scalar is not selected as a comparator
+	 *  If the V<SUB>CC</SUB> voltage scalar is not selected as a comparator
 	 *  channel pin's input, this value will be ignored. */
 	uint8_t vcc_scale_factor;
 	/** Interrupt criteria for the comparator channel, to select the condition
@@ -879,8 +879,8 @@ static inline void ac_disable_events(
  *   \li Hysteresis enabled on the input pins
  *   \li Internal comparator output mode
  *   \li Comparator pin multiplexer 0 selected as the positive input
- *   \li Scaled VCC voltage selected as the negative input
- *   \li VCC voltage scaler set for a division factor of two
+ *   \li Scaled V<SUB>CC</SUB> voltage selected as the negative input
+ *   \li V<SUB>CC</SUB> voltage scaler set for a division factor of two
  *   \li Channel interrupt set to occur when the compare threshold is passed
  *
  *   \param[out] config  Channel configuration structure to initialize to
@@ -1236,10 +1236,10 @@ static inline void ac_win_clear_status(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21.</td>
+ *		<td>Added support for SAMD21</td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */

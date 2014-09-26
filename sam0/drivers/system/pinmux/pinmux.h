@@ -447,17 +447,17 @@ static inline void system_pinmux_pin_set_input_sample_mode(
  *	</tr>
  *	<tr>
  *		<td>Removed code of open drain, slew limit and drive strength
- *		features.</td>
+ *		features</td>
  *	</tr>
  *	<tr>
  *		<td>Fixed broken sampling mode function implementations, which wrote
- *		    corrupt configuration values to the device registers.</td>
+ *		    corrupt configuration values to the device registers</td>
  *	</tr>
  *	<tr>
- *		<td>Added missing NULL pointer asserts to the PORT driver functions.</td>
+ *		<td>Added missing NULL pointer asserts to the PORT driver functions</td>
  *	</tr>
  *	<tr>
- *		<td>Initial Release.</td>
+ *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */
