@@ -66,8 +66,6 @@
  *
  * \note
  * All AVR XMEGA E devices can be used.
- * The usage of two available calibration points is described in the
- * Application Note AT03217
  * The ADC driver API can be found \ref adc_group "here".
  *
  * \section board_setup Board setup
@@ -98,7 +96,7 @@
  */
 float m = 0.0;
 float c = 0.0;
-bool result_ready = false;
+volatile bool result_ready = false;
 volatile int16_t temperature = 0;
 
 /* Internal ADC functions */
@@ -157,7 +155,7 @@ int main(void)
 
 	/* Find the slope of the line m = (y2-y1)/(x2-x1)*/
 	m = (float)(calib_hottemp -
-		calib_roomtemp) / (adc_val_hottemp - adc_val_roomtemp);
+			calib_roomtemp) / (adc_val_hottemp - adc_val_roomtemp);
 	/* Find the y intercept c = y - mx*/
 	c = (float)calib_hottemp - (m * adc_val_hottemp);
 
@@ -176,17 +174,16 @@ int main(void)
 
 	uint16_t i, j;
 	while (1) {
-		/* Give time to finish the previous printf */
+		/* Delay between two readings */
 		i = 0xFFFF;
 		j = 0x9;
 		while (j--) {
 			while (i--) {
 			}
 		}
-
-		/* Start next conversion. */
-		adc_start_conversion(&ADCA, ADC_CH0);
 		if (result_ready) {
+			/* Start next conversion. */
+			adc_start_conversion(&ADCA, ADC_CH0);
 			/* Display the temperature reading */
 			printf("The temperature is now %u Deg C\n\r", temperature);
 			result_ready = false;

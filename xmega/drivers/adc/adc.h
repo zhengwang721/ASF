@@ -208,23 +208,22 @@ struct adc_config {
 #define TEMPSENSE0    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE0)
 /** Temperature sensor calibration byte 1. */
 #define TEMPSENSE1    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE1)
-#if XMEGA_E
 /** Temperature at which TEMPSENSE1/TEMPSENSE0 is measured. */
-#	define HOTTEMP       offsetof(NVM_PROD_SIGNATURES_t, HOTTEMP)
+#define HOTTEMP       offsetof(NVM_PROD_SIGNATURES_t, HOTTEMP)
 /** Temperature at which TEMPSENSE3/TEMPSENSE2 is measured. */
-#	define ROOMTEMP      offsetof(NVM_PROD_SIGNATURES_t, ROOMTEMP)
+#define ROOMTEMP      offsetof(NVM_PROD_SIGNATURES_t, ROOMTEMP)
 /** Temperature sensor calibration byte 2. */
-#	define TEMPSENSE2    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE2)
+#define TEMPSENSE2    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE2)
 /** Temperature sensor calibration byte 3. */
-#	define TEMPSENSE3    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE3)
-#endif
+#define TEMPSENSE3    offsetof(NVM_PROD_SIGNATURES_t, TEMPSENSE3)
 /** @} */
 
 /** \brief ADC calibration data */
 enum adc_calibration_data {
-	ADC_CAL_ADCA,    /** ADC A pipeline calibration data. */
-	ADC_CAL_ADCB,    /** ADC B pipeline calibration data. */
-
+	/** ADC A pipeline calibration data. */
+	ADC_CAL_ADCA,
+	/** ADC B pipeline calibration data. */
+	ADC_CAL_ADCB,
 	/**
 	 * \brief Temperature sensor calibration data.
 	 * \note 12-bit unsigned, measured at 85 degrees Celsius, equivalent to
@@ -238,7 +237,7 @@ enum adc_calibration_data {
 	 */
 	/** ADC reading at HOTTEMP. */
 	ADC_CAL_TEMPSENSE,
-	/** Normally the one calibration point is taken at 85 Deg C,
+	/** Normally one calibration point is taken at 85 Deg C,
 	 * but the exact value in Deg C is given in the HOTTEMP signature row.
 	 */
 	ADC_CAL_HOTTEMP,
