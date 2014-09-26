@@ -122,9 +122,46 @@ static inline void _system_dfll_wait_for_sync(void)
  */
 static inline void _system_osc32k_wait_for_sync(void)
 {
-	while (!(OSC32KCTRL->STATUS.reg & OSC32KCTRL_STATUS_OSC32KRDY)) {		
+	while (!(OSC32KCTRL->STATUS.reg & OSC32KCTRL_STATUS_OSC32KRDY)) {
 		/* Wait for OSC32K sync */
 	}
+}
+
+/**
+ * \internal
+ * \brief OSC16M frequency selection.
+ *  Frequency selection can be done only when OSC16M is disabled,thus,
+ *  OSCULP32K is temporarily used as a new clocksource for mainclock .
+ *
+ */
+static inline void _system_clock_source_osc16m_freq_sel(void)
+{
+	struct system_gclk_gen_config gclk_conf;
+	struct system_clock_source_osc16m_config osc16m_conf;
+
+	/* Select OSCULP32K as new clock source for mainclock temporarily */
+	system_gclk_gen_get_config_defaults(&gclk_conf);
+	gclk_conf.source_clock = SYSTEM_CLOCK_SOURCE_ULP32K;
+	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclk_conf);
+
+	/* GCLK0 is enabled after POR */
+
+	/* Disable OSC16M clock*/
+	system_clock_source_disable(SYSTEM_CLOCK_SOURCE_OSC16M);
+
+	/* Switch to new frequency selection and enable OSC16M */
+	system_clock_source_osc16m_get_config_defaults(&osc16m_conf);
+	osc16m_conf.fsel      		= CONF_CLOCK_OSC16M_FREQ_SEL;
+	osc16m_conf.on_demand       = CONF_CLOCK_OSC16M_ON_DEMAND;
+	osc16m_conf.run_in_standby  = CONF_CLOCK_OSC16M_RUN_IN_STANDBY;
+	system_clock_source_osc16m_set_config(&osc16m_conf);
+	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC16M);
+	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_OSC16M));
+
+	/* Select OSC16M for mainclock again */
+	system_gclk_gen_get_config_defaults(&gclk_conf);
+	gclk_conf.source_clock = SYSTEM_CLOCK_SOURCE_OSC16M;
+	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclk_conf);
 }
 
 static inline void _system_clock_source_dfll_set_config_errata_9905(void)
@@ -156,10 +193,10 @@ uint32_t system_clock_source_get_hz(
 	switch (clock_source) {
 	case SYSTEM_CLOCK_SOURCE_XOSC:
 		return _system_clock_inst.xosc.frequency;
-		
+
 	case SYSTEM_CLOCK_SOURCE_OSC16M:
 		return (OSCCTRL->OSC16MCTRL.bit.FSEL+1)*4000000UL;
-		
+
 	case SYSTEM_CLOCK_SOURCE_OSC32K:
 		return 32768UL;
 
@@ -204,13 +241,15 @@ uint32_t system_clock_source_get_hz(
  * Configures the 16MHz (nominal) internal RC oscillator with the given
  * configuration settings.
  *
+ * \note Frequency selection can be done only when OSC16M is disabled.
+ *
  * \param[in] config  OSC16M configuration structure containing the new config
  */
 void system_clock_source_osc16m_set_config(
 		struct system_clock_source_osc16m_config *const config)
 {
 	OSCCTRL_OSC16MCTRL_Type temp = OSCCTRL->OSC16MCTRL;
-	
+
 	/* Use temporary struct to reduce register access */
 	temp.bit.FSEL    = config->fsel;
 	temp.bit.ONDEMAND = config->on_demand;
@@ -231,7 +270,7 @@ void system_clock_source_osc32k_set_config(
 		struct system_clock_source_osc32k_config *const config)
 {
 	OSC32KCTRL_OSC32K_Type temp = OSC32KCTRL->OSC32K;
-	
+
 
 	/* Update settings via a temporary struct to reduce register access */
 	temp.bit.EN1K     = config->enable_1khz_output;
@@ -261,7 +300,7 @@ void system_clock_source_osculp32k_set_config(
 	temp.bit.EN32K    = config->enable_32khz_output;
 	temp.bit.WRTLOCK  = config->write_once;
 	OSC32KCTRL->OSCULP32K  = temp;
-}	
+}
 
 /**
  * \brief Configure the external oscillator clock source
@@ -324,7 +363,7 @@ void system_clock_source_xosc32k_set_config(
 		struct system_clock_source_xosc32k_config *const config)
 {
 	OSC32KCTRL_XOSC32K_Type temp = OSC32KCTRL->XOSC32K;
-	
+
 	temp.bit.STARTUP = config->startup_time;
 
 	if (config->external_clock == SYSTEM_CLOCK_EXTERNAL_CRYSTAL) {
@@ -434,7 +473,7 @@ void system_clock_source_dpll_set_config(
 
 	while(OSCCTRL->DPLLSYNCBUSY.reg & OSCCTRL_DPLLSYNCBUSY_DPLLRATIO){
 		}
-	
+
 	OSCCTRL->DPLLCTRLB.reg =
 			OSCCTRL_DPLLCTRLB_DIV(config->reference_divider) |
 			((uint32_t)config->lock_bypass << OSCCTRL_DPLLCTRLB_LBYPASS_Pos) |
@@ -443,7 +482,7 @@ void system_clock_source_dpll_set_config(
 			((uint32_t)config->wake_up_fast << OSCCTRL_DPLLCTRLB_WUF_Pos) |
 			((uint32_t)config->low_power_enable << OSCCTRL_DPLLCTRLB_LPEN_Pos) |
 			OSCCTRL_DPLLCTRLB_FILTER(config->filter);
-	
+
 	OSCCTRL->DPLLPRESC.reg  = OSCCTRL_DPLLPRESC_PRESC(config->prescaler);
 	while(OSCCTRL->DPLLSYNCBUSY.reg & OSCCTRL_DPLLSYNCBUSY_DPLLPRESC){
 		}
@@ -724,8 +763,11 @@ void system_clock_init(void)
 	   This will ensure that these bits are cleared */
 	OSCCTRL->INTFLAG.reg = OSCCTRL_INTFLAG_DFLLRDY;
 	SUPC->INTFLAG.reg = SUPC_INTFLAG_BOD33RDY | SUPC_INTFLAG_BOD33DET;
-	
+
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
+
+	/*  Switch to PL2 to be sure configuration of GCLK0 is safe */
+	system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_2);
 
 	/* XOSC */
 #if CONF_CLOCK_XOSC_ENABLE == true
@@ -742,7 +784,6 @@ void system_clock_init(void)
 	system_clock_source_xosc_set_config(&xosc_conf);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC);
 #endif
-
 
 	/* XOSC32K */
 #if CONF_CLOCK_XOSC32K_ENABLE == true
@@ -766,13 +807,10 @@ void system_clock_init(void)
 	}
 #endif
 
-
 	/* OSCK32K */
 #if CONF_CLOCK_OSC32K_ENABLE == true
 
 	//OSC32KCTRL->OSC32K.bit.CALIB = OSC32KCTRL_OSC32K_CALIB(16);
-		
-
 
 	struct system_clock_source_osc32k_config osc32k_conf;
 	system_clock_source_osc32k_get_config_defaults(&osc32k_conf);
@@ -787,6 +825,16 @@ void system_clock_init(void)
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC32K);
 #endif
 
+	/* OSC16M */
+	if (CONF_CLOCK_OSC16M_FREQ_SEL == SYSTEM_OSC16M_4M){
+		OSCCTRL->OSC16MCTRL.reg |= (CONF_CLOCK_OSC16M_ON_DEMAND << OSCCTRL_OSC16MCTRL_ONDEMAND_Pos)
+								|(CONF_CLOCK_OSC16M_RUN_IN_STANDBY << OSCCTRL_OSC16MCTRL_RUNSTDBY_Pos);
+	} else {
+		_system_clock_source_osc16m_freq_sel();
+	}
+
+	OSC32KCTRL->OSCULP32K.reg = (CONF_CLOCK_OSCULP32K_ENABLE_1KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN1K_Pos)
+									|(CONF_CLOCK_OSCULP32K_ENABLE_32KHZ_OUTPUT << OSC32KCTRL_OSCULP32K_EN32K_Pos);
 
 	/* DFLL Config (Open and Closed Loop) */
 #if CONF_CLOCK_DFLL_ENABLE == true
@@ -865,19 +913,6 @@ void system_clock_init(void)
 	system_clock_source_dfll_set_config(&dfll_conf);
 #endif
 
-
-	/* OSC16M */
-	struct system_clock_source_osc16m_config osc16m_conf;
-	system_clock_source_osc16m_get_config_defaults(&osc16m_conf);
-
-	osc16m_conf.fsel      		= CONF_CLOCK_OSC16M_FREQ_SEL;
-	osc16m_conf.on_demand       = CONF_CLOCK_OSC16M_ON_DEMAND;
-	osc16m_conf.run_in_standby  = CONF_CLOCK_OSC16M_RUN_IN_STANDBY;
-
-	system_clock_source_osc16m_set_config(&osc16m_conf);
-	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_OSC16M);
-
-
 	/* GCLK */
 #if CONF_CLOCK_CONFIGURE_GCLK == true
 	system_gclk_init();
@@ -892,12 +927,11 @@ void system_clock_init(void)
 
 		system_gclk_chan_get_config_defaults(&dfll_gclk_chan_conf);
 		dfll_gclk_chan_conf.source_generator = CONF_CLOCK_DFLL_SOURCE_GCLK_GENERATOR;
-		system_gclk_chan_set_config(SYSCTRL_GCLK_ID_DFLL48, &dfll_gclk_chan_conf);
-		system_gclk_chan_enable(SYSCTRL_GCLK_ID_DFLL48);
+		system_gclk_chan_set_config(OSCCTRL_GCLK_ID_DFLL48, &dfll_gclk_chan_conf);
+		system_gclk_chan_enable(OSCCTRL_GCLK_ID_DFLL48);
 	}
 #  endif
 #endif
-
 
 	/* DFLL Enable (Open and Closed Loop) */
 #if CONF_CLOCK_DFLL_ENABLE == true
@@ -935,7 +969,7 @@ void system_clock_init(void)
 	dpll_config.reference_divider   = CONF_CLOCK_DPLL_REFEREMCE_DIVIDER;
 	dpll_config.output_frequency    = CONF_CLOCK_DPLL_OUTPUT_FREQUENCY;
 	dpll_config.prescaler           = CONF_CLOCK_DPLL_PRESCALER;
-	
+
 	system_clock_source_dpll_set_config(&dpll_config);
 	system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DPLL);
 	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_DPLL));
@@ -947,9 +981,7 @@ void system_clock_init(void)
 
 	/* CPU and BUS clocks */
 	system_cpu_clock_set_divider(CONF_CLOCK_CPU_DIVIDER);
-
 	system_main_clock_set_failure_detect(CONF_CLOCK_CPU_CLOCK_FAILURE_DETECT);
-
 	system_low_power_clock_set_divider(CONF_CLOCK_LOW_POWER_DIVIDER);
 	system_backup_clock_set_divider(CONF_CLOCK_BACKUP_DIVIDER);
 
@@ -958,4 +990,12 @@ void system_clock_init(void)
 	/* Configure the main GCLK last as it might depend on other generators */
 	_CONF_CLOCK_GCLK_CONFIG(0, ~);
 #endif
+
+	/* Set performance level according to CPU frequency */
+	uint32_t cpu_freq = system_cpu_clock_get_hz();
+	if (cpu_freq < SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ) {
+		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_0);
+	} else if (cpu_freq < SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ) {
+		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_1);
+	}
 }

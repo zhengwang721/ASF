@@ -55,7 +55,7 @@ define symbol __ICFEDIT_region_PICOPRAM_start__ = 0x50000000;
 define symbol __ICFEDIT_region_PICOPRAM_end__ = 0x500007FF;
 /*-Sizes-*/
 if (!isdefinedsymbol(__ICFEDIT_size_cstack__)) {
-  define symbol __ICFEDIT_size_cstack__    = 0x50;
+  define symbol __ICFEDIT_size_cstack__    = 0x2000;
 }
 if (!isdefinedsymbol(__ICFEDIT_size_heap__)) {
   define symbol __ICFEDIT_size_heap__      = 0x0;

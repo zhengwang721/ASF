@@ -389,6 +389,10 @@ enum status_code nvm_write_buffer(
 		const uint8_t *buffer,
 		uint16_t length)
 {
+#ifdef FEATURE_NVM_WWREE
+	bool is_wwr_eeprom = false;
+#endif
+
 	/* Check if the destination address is valid */
 	if (destination_address >
 			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
@@ -397,6 +401,7 @@ enum status_code nvm_write_buffer(
 			|| destination_address < NVMCTRL_WWR_EEPROM_ADDR){
 			return STATUS_ERR_BAD_ADDRESS;
 		}
+		is_wwr_eeprom = true;
 #else
 		return STATUS_ERR_BAD_ADDRESS;
 #endif
@@ -454,8 +459,14 @@ enum status_code nvm_write_buffer(
 	/* Perform a manual NVM write when the length of data to be programmed is
 	 * less than page size */
 	if (length < NVMCTRL_PAGE_SIZE) {
+#ifdef FEATURE_NVM_WWREE
+	 return ((is_wwr_eeprom) ? 
+				(nvm_execute_command(NVM_COMMAND_WWREE_WRITE_PAGE,destination_address, 0)):
+	 			(nvm_execute_command(NVM_COMMAND_WRITE_PAGE,destination_address, 0)));
+#else
 		return nvm_execute_command(NVM_COMMAND_WRITE_PAGE,
 				destination_address, 0);
+#endif
 	}
 
 	return STATUS_OK;
@@ -563,6 +574,10 @@ enum status_code nvm_read_buffer(
 enum status_code nvm_erase_row(
 		const uint32_t row_address)
 {
+#ifdef FEATURE_NVM_WWREE
+		bool is_wwr_eeprom = false;
+#endif
+
 	/* Check if the row address is valid */
 	if (row_address >
 			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
@@ -571,6 +586,7 @@ enum status_code nvm_erase_row(
 			|| row_address < NVMCTRL_WWR_EEPROM_ADDR){
 			return STATUS_ERR_BAD_ADDRESS;
 		}
+		is_wwr_eeprom = true;
 #else
 		return STATUS_ERR_BAD_ADDRESS;
 #endif
@@ -594,8 +610,13 @@ enum status_code nvm_erase_row(
 
 	/* Set address and command */
 	nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[row_address / 4];
+#ifdef FEATURE_NVM_WWREE
+	nvm_module->CTRLA.reg = ((is_wwr_eeprom) ? 
+								(NVM_COMMAND_WWREE_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY):
+								(NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY));
+#else
 	nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
-
+#endif
 	return STATUS_OK;
 }
 

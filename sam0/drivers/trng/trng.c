@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM Brown Out Detector Driver
+ * \brief SAM True Random Number Generator (TRNG) Driver
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,63 +40,59 @@
  * \asf_license_stop
  *
  */
-#include "bod.h"
+
+#include "trng.h"
 
 /**
- * \brief Configure a Brown Out Detector module.
+ * \brief Initializes a hardware TRNG module instance.
  *
- * Configures a given BOD module with the settings stored in the given
- * configuration structure.
+ * Enables the clock and initializes the TRNG module, based on the given
+ * configuration values.
  *
- * \param[in] bod_id   BOD module to configure
- * \param[in] conf     Configuration settings to use for the specified BOD
+ * \param[in,out] module_inst  Pointer to the software module instance struct
+ * \param[in]     hw           Pointer to the TRNG hardware module
+ * \param[in]     config       Pointer to the TRNG configuration options struct
  *
- * \retval STATUS_OK                  Operation completed successfully
- * \retval STATUS_ERR_INVALID_ARG     An invalid BOD was supplied
- * \retval STATUS_ERR_INVALID_OPTION  The requested BOD level was outside the acceptable range
+ * \return Status of the initialization procedure.
+ *
+ * \retval STATUS_OK           The module was initialized successfully
  */
-enum status_code bod_set_config(
-		const enum bod bod_id,
-		struct bod_config *const conf)
+enum status_code trng_init(
+		struct trng_module *const module_inst,
+		Trng *const hw,
+		struct trng_config *const config)
 {
 	/* Sanity check arguments */
-	Assert(conf);
+	Assert(module_inst);
+	Assert(hw);
+	Assert(config);
 
-	uint32_t temp = 0;
+	/* Initialize device instance */
+	module_inst->hw = hw;
 
-	/* Convert BOD prescaler, trigger action and mode to a bitmask */
-	temp |= (uint32_t)conf->prescaler | (uint32_t)conf->action |
-			(uint32_t)conf->mode;
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TRNG);
 
-	if (conf->mode == BOD_MODE_SAMPLED) {
-		/* Enable sampling clock if sampled mode */
-		temp |= SYSCTRL_BOD33_CEN;
+#if TRNG_CALLBACK_MODE == true
+	/* Initialize parameters */
+	for (uint8_t i = 0; i < TRNG_CALLBACK_N; i++) {
+		module_inst->callback[i] = NULL;
 	}
 
-	if (conf->hysteresis == true) {
-		temp |= SYSCTRL_BOD33_HYST;
-	}
+	/* Initialize software flags*/
+	module_inst->register_callback_mask = 0x00;
+	module_inst->enable_callback_mask   = 0x00;
+	module_inst->job_buffer             = NULL;
+	module_inst->remaining_number       = 0;
+	module_inst->job_status             = STATUS_OK;
 
-	if (conf->run_in_standby == true) {
-		temp |= SYSCTRL_BOD33_RUNSTDBY;
-	}
+	/* Register this instance for callbacks*/
+	_trng_instance = module_inst;
+#endif
 
-	switch (bod_id) {
-		case BOD_BOD33:
-			if (conf->level > 0x3F) {
-				return STATUS_ERR_INVALID_ARG;
-			}
-
-			SYSCTRL->BOD33.reg = SYSCTRL_BOD33_LEVEL(conf->level) |
-					temp | SYSCTRL_BOD33_ENABLE;
-
-			while (!(SYSCTRL->PCLKSR.reg & SYSCTRL_PCLKSR_B33SRDY)) {
-				/* Wait for BOD33 register sync ready */
-			}
-			break;
-		default:
-			return STATUS_ERR_INVALID_ARG;
-	}
+	/* Write configuration to module */
+	hw->CTRLA.reg = ((uint32_t)config->run_in_standby << TRNG_CTRLA_RUNSTDBY_Pos);
 
 	return STATUS_OK;
 }
+
