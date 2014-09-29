@@ -354,7 +354,7 @@ bool uhd_ep0_alloc(usb_add_t add, uint8_t ep_size)
 		return false;
 	}
 
-	ed_info_temp.ed_info_s.bFunctionAddress = 1;               // device address=UHC_DEVICE_ENUM_ADD=1
+	ed_info_temp.ed_info_s.bFunctionAddress = add;             // device address
 	ed_info_temp.ed_info_s.bEndpointNumber = 0;                // endpoint 0
 	ed_info_temp.ed_info_s.bDirection = 0;                     // in TD
 	ed_info_temp.ed_info_s.bSpeed = ohci_get_device_speed();   // speed

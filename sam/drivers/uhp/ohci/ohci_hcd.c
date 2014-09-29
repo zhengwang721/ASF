@@ -42,10 +42,13 @@
  */
 
 #include "ohci_hcd.h"
+#include "delay.h"
 #include <string.h>
 
 static struct ohci_hcca hcca;
 struct ohci_ed control_ed;
+struct ohci_td_general control_td_head;
+struct ohci_td_general control_td_tail;
 
 static ohci_callback_t ohci_callback_pointer[OHCI_NUM_OF_INTERRUPT_SOURCE];
 static uint32_t callback_para;
@@ -71,21 +74,23 @@ void ohci_init(void)
 	memset((void *)&hcca, 0, sizeof(hcca));
 	memset((void *)&control_ed, 0, sizeof(control_ed));
 
-	UHP->HcHCCA = (uint32_t)&hcca;
-	UHP->HcControlHeadED = (uint32_t)&control_ed;
-
 	// Setup Host Controller to issue a software reset
 	UHP->HcCommandStatus |= HC_COMMANDSTATUS_HCR;
 	while (UHP->HcCommandStatus & HC_COMMANDSTATUS_HCR);
 
-	// Enable all interrupts
-	UHP->HcInterruptEnable = HC_INTERRUPT_SO | HC_INTERRUPT_WDH | HC_INTERRUPT_SF
-			| HC_INTERRUPT_RD | HC_INTERRUPT_UE
-			| HC_INTERRUPT_FNO | HC_INTERRUPT_RHSC
-			| HC_INTERRUPT_OC | HC_INTERRUPT_MIE;
+	UHP->HcHCCA = (uint32_t)&hcca;
+//	UHP->HcControlHeadED = (uint32_t)&control_ed;
+
+	// Enable some interrupts()
+//	UHP->HcInterruptEnable = HC_INTERRUPT_SO | HC_INTERRUPT_WDH | HC_INTERRUPT_SF
+//			| HC_INTERRUPT_RD | HC_INTERRUPT_UE
+//			| HC_INTERRUPT_FNO | HC_INTERRUPT_RHSC
+//			| HC_INTERRUPT_OC | HC_INTERRUPT_MIE;
+	UHP->HcInterruptEnable = HC_INTERRUPT_WDH | HC_INTERRUPT_SF
+				| HC_INTERRUPT_RD | HC_INTERRUPT_RHSC | HC_INTERRUPT_MIE;
 
 	// Enable all queues
-	UHP->HcControl |= HC_CONTROL_PLE | HC_CONTROL_IE | HC_CONTROL_CLE | HC_CONTROL_BLE;
+//	UHP->HcControl |= HC_CONTROL_PLE | HC_CONTROL_IE | HC_CONTROL_CLE | HC_CONTROL_BLE;
 
 	//Not sure if FSLargestDataPacket in UHP->HcFmInterval need to be set
 
@@ -99,6 +104,9 @@ void ohci_init(void)
 	UHP->HcControl = temp_value;
 
 	//delay some time to access the port
+	delay_ms(50);
+
+	UHP->HcRhStatus = RH_HS_LPSC; 						  /* Set Global Power*/
 
 	// enable port
 	UHP->HcRhPortStatus |= RH_PS_PES;
@@ -213,7 +221,9 @@ void ohci_bus_reset(void)
 {
 	Assert(!(UHP->HcRhPortStatus & RH_PS_CCS));
 
+	delay_ms(100);
 	UHP->HcRhPortStatus |= RH_PS_PRS;
+	delay_ms(100);
 	bus_reset_flag = true;
 }
 
@@ -482,6 +492,7 @@ void ohci_remove_ed(uint8_t ep_number)
  *
  * \return true for success.
  */
+#if 0
 bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
 {
 	struct ohci_td_general *control_td;
@@ -491,7 +502,7 @@ bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
 	if (control_td == NULL) {
 		return false;
 	}
-	control_td->td_info.bBufferRounding = 0;
+	control_td->td_info.bBufferRounding = 1;
 	control_td->td_info.bDirectionPID = pid;
 	control_td->td_info.bDelayInterrupt = 0;
 	if (pid == TD_PID_SETUP) {
@@ -500,7 +511,7 @@ bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
 		control_td->td_info.bDataToggle = 3;
 	}
 	control_td->td_info.bErrorCount = 0;
-	control_td->td_info.bConditionCode = 0;
+	control_td->td_info.bConditionCode = 0xf;
 	control_td->pCurrentBufferPointer= buf;
 	control_td->p_next_td = NULL;
 	control_td->pBufferEnd = buf + buf_size - 1;
@@ -510,18 +521,13 @@ bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
 		return false;
 	}
 
-	if (control_ed.p_td_head != control_ed.p_td_tail) {
+	if (control_ed.p_td_head == control_ed.p_td_tail) {
 		// set the skip
 		control_ed.ed_info.ed_info_s.bSkip = 1;
 
-		td_general_header = (struct ohci_td_general *)control_ed.p_td_head;
-		if (td_general_header == NULL) {
-			control_ed.p_td_head = control_td;
-		}
-		while (td_general_header->p_next_td != NULL) {
-			td_general_header = td_general_header->p_next_td;
-		}
-		td_general_header->p_next_td = control_td;
+		control_ed.p_td_head = control_td;
+
+		control_ed.p_td_tail = NULL;;
 
 		// clear the skip
 		control_ed.ed_info.ed_info_s.bSkip = 0;
@@ -529,7 +535,52 @@ bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
 		UHP->HcCommandStatus |= HC_COMMANDSTATUS_CLF;
 
 		return true;
+	} else {
+		td_general_header = (struct ohci_td_general *)control_ed.p_td_head;
+		while (td_general_header->p_next_td != NULL) {
+			td_general_header = td_general_header->p_next_td;
+		}
+		td_general_header->p_next_td = control_td;
+		return true;
 	}
+}
+#endif
+bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
+{
+	memset((void *)&control_td_head, 0, sizeof(control_td_head));
+	memset((void *)&control_td_tail, 0, sizeof(control_td_tail));
+
+	control_td_head.td_info.bBufferRounding = 1;
+	control_td_head.td_info.bDirectionPID = pid;
+	control_td_head.td_info.bDelayInterrupt = 0;
+	if (pid == TD_PID_SETUP) {
+		control_td_head.td_info.bDataToggle = 2;
+	} else {
+		control_td_head.td_info.bDataToggle = 3;
+	}
+	control_td_head.td_info.bErrorCount = 0;
+	control_td_head.td_info.bConditionCode = 0xf;
+	control_td_head.pCurrentBufferPointer= buf;
+	control_td_head.p_next_td = &control_td_tail;
+	control_td_head.pBufferEnd = buf + buf_size - 1;
+
+	/* Check the halt status. */
+	if ((uint32_t)control_ed.p_td_head & 0x01) {
+		return false;
+	}
+
+	// set the skip
+//	control_ed.ed_info.ed_info_s.bSkip = 1;
+
+	control_ed.p_td_head = &control_td_head;
+	control_ed.p_td_tail = &control_td_tail;;
+
+	// clear the skip
+//	control_ed.ed_info.ed_info_s.bSkip = 0;
+
+	UHP->HcControlHeadED = (uint32_t)&control_ed;
+	UHP->HcCommandStatus |= HC_COMMANDSTATUS_CLF;
+	UHP->HcControl |= HC_CONTROL_CLE;
 
 	return true;
 }
@@ -575,7 +626,7 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf, uint32_t buf_size)
 				return false;
 			}
 
-			if (ed_header->p_td_head != ed_header->p_td_tail) {
+			if (ed_header->p_td_head == ed_header->p_td_tail) {
 				// set the skip
 				ed_header->ed_info.ed_info_s.bSkip = 1;
 
@@ -624,7 +675,7 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf, uint32_t buf_size)
 					return false;
 				}
 
-				if (ed_header->p_td_head != ed_header->p_td_tail) {
+				if (ed_header->p_td_head == ed_header->p_td_tail) {
 					// set the skip
 					ed_header->ed_info.ed_info_s.bSkip = 1;
 
@@ -666,7 +717,7 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf, uint32_t buf_size)
 					return false;
 				}
 
-				if (ed_header->p_td_head != ed_header->p_td_tail) {
+				if (ed_header->p_td_head == ed_header->p_td_tail) {
 					// set the skip
 					ed_header->ed_info.ed_info_s.bSkip = 1;
 
@@ -850,7 +901,7 @@ void UHP_Handler()
 	uint32_t rh_port_status;
 	struct ohci_td_general *td_general_header;
 
-	rh_status = UHP->HcInterruptStatus;
+	rh_status = UHP->HcRhStatus;
 	rh_port_status = UHP->HcRhPortStatus;
 
 	/* Read interrupt status (and flush pending writes).  We ignore the
@@ -875,18 +926,21 @@ void UHP_Handler()
 		//rhsc
 		UHP->HcInterruptStatus |=  HC_INTERRUPT_RD | HC_INTERRUPT_RHSC;
 		if (bus_reset_flag) {
-			if (rh_status & RH_PS_PRSC) {
+			if (rh_port_status & RH_PS_PRSC) {
+				UHP->HcRhPortStatus = RH_PS_PRSC;
 				bus_reset_flag = false;
 				callback_para = BUS_RESET;
 				ohci_callback_pointer[OHCI_INTERRUPT_RHSC](&callback_para);
 			}
 		} else if (!(rh_status & RH_HS_DRWE)) {
-			if (rh_port_status & RH_PS_CCS) {
-				callback_para = BUS_CONNECT;
-			} else {
-				callback_para = BUS_DISCONNECT;
+			if (rh_port_status & RH_PS_CSC) {
+				if (rh_port_status & RH_PS_CCS) {
+					callback_para = BUS_CONNECT;
+				} else {
+					callback_para = BUS_DISCONNECT;
+				}
+				ohci_callback_pointer[OHCI_INTERRUPT_RHSC](&callback_para);
 			}
-			ohci_callback_pointer[OHCI_INTERRUPT_RHSC](&callback_para);
 		} else {
 			callback_para = 0xff;
 		}
@@ -915,6 +969,8 @@ void UHP_Handler()
 	if (int_status & HC_INTERRUPT_UE) {
 		ohci_callback_pointer[OHCI_INTERRUPT_UE](&callback_para);
 	}
+
+//	UHP->HcInterruptStatus = int_status;
 
 }
 

@@ -54,7 +54,7 @@ typedef struct {
   __IO uint32_t PMC_MCKR;       /**< \brief (Pmc Offset: 0x0030) Master Clock Register */
    __I  uint32_t Reserved3[1];
   __IO uint32_t PMC_USB;       /**< \brief (Pmc Offset: 0x0038) USB Clock Register */
-  __IO uint32_t PMC_USB_UHP;       /**< \brief (Pmc Offset: 0x003C) USB UHP Clock Register */
+  __I  uint32_t Reserved4[1];
   __IO uint32_t PMC_PCK[3];     /**< \brief (Pmc Offset: 0x0040) Programmable Clock 0 Register */
   __I  uint32_t Reserved5[5];
   __O  uint32_t PMC_IER;        /**< \brief (Pmc Offset: 0x0060) Interrupt Enable Register */
@@ -74,7 +74,7 @@ typedef struct {
   __O  uint32_t PMC_PCER1;     /**< \brief (Pmc Offset: 0x0100) Peripheral Clock Enable Register 1 */
   __O  uint32_t PMC_PCDR1;     /**< \brief (Pmc Offset: 0x0104) Peripheral Clock Disable Register 1 */
   __I  uint32_t PMC_PCSR1;     /**< \brief (Pmc Offset: 0x0108) Peripheral Clock Status Register 1 */
-  __IO uint32_t PMC_PCR;        /**< \brief (Pmc Offset: 0x010C) Peripheral Control Register */
+  __I  uint32_t Reserved7[1];
   __IO uint32_t PMC_OCR;        /**< \brief (Pmc Offset: 0x0110) Oscillator Calibration Register */
   __O  uint32_t PMC_SLPWK_ER0;  /**< \brief (Pmc Offset: 0x114) SleepWalking Enable Register 0 */
   __O  uint32_t PMC_SLPWK_DR0;  /**< \brief (Pmc Offset: 0x118) SleepWalking Disable Register 0 */
@@ -431,18 +431,6 @@ typedef struct {
 #define PMC_PCSR1_PID47 (0x1u << 15) /**< \brief (PMC_PCSR1) Peripheral Clock 47 Status */
 #define PMC_PCSR1_PID48 (0x1u << 16) /**< \brief (PMC_PCSR1) Peripheral Clock 48 Status */
 #define PMC_PCSR1_PID49 (0x1u << 17) /**< \brief (PMC_PCSR1) Peripheral Clock 49 Status */
-/* -------- PMC_PCR : (PMC Offset: 0x010C) Peripheral Control Register -------- */
-#define PMC_PCR_PID_Pos 0
-#define PMC_PCR_PID_Msk (0x3fu << PMC_PCR_PID_Pos) /**< \brief (PMC_PCR) Peripheral ID */
-#define PMC_PCR_PID(value) ((PMC_PCR_PID_Msk & ((value) << PMC_PCR_PID_Pos)))
-#define PMC_PCR_CMD (0x1u << 12) /**< \brief (PMC_PCR) Command */
-#define PMC_PCR_DIV_Pos 16
-#define PMC_PCR_DIV_Msk (0x3u << PMC_PCR_DIV_Pos) /**< \brief (PMC_PCR) Divisor Value */
-#define   PMC_PCR_DIV_PERIPH_DIV_MCK (0x0u << 16) /**< \brief (PMC_PCR) Peripheral clock is MCK */
-#define   PMC_PCR_DIV_PERIPH_DIV2_MCK (0x1u << 16) /**< \brief (PMC_PCR) Peripheral clock is MCK/2 */
-#define   PMC_PCR_DIV_PERIPH_DIV4_MCK (0x2u << 16) /**< \brief (PMC_PCR) Peripheral clock is MCK/4 */
-#define   PMC_PCR_DIV_PERIPH_DIV8_MCK (0x3u << 16) /**< \brief (PMC_PCR) Peripheral clock is MCK/8 */
-#define PMC_PCR_EN (0x1u << 28) /**< \brief (PMC_PCR) Enable */
 /* -------- PMC_OCR : (PMC Offset: 0x0110) Oscillator Calibration Register -------- */
 #define PMC_OCR_CAL8_Pos 0
 #define PMC_OCR_CAL8_Msk (0x7fu << PMC_OCR_CAL8_Pos) /**< \brief (PMC_OCR) RC Oscillator Calibration bits for 8 MHz */

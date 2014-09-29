@@ -1153,7 +1153,7 @@ void pmc_disable_udpck(void)
  */
 void pmc_switch_uhpck_to_pllack(uint32_t ul_usbdiv)
 {
-	PMC->PMC_USB_UHP = PMC_USB_USBDIV(ul_usbdiv);
+	PMC->PMC_USB = PMC_USB_USBDIV(ul_usbdiv);
 }
 
 /**
@@ -1163,7 +1163,7 @@ void pmc_switch_uhpck_to_pllack(uint32_t ul_usbdiv)
  */
 void pmc_switch_uhpck_to_pllbck(uint32_t ul_usbdiv)
 {
-	PMC->PMC_USB_UHP = PMC_USB_USBDIV(ul_usbdiv) | PMC_USB_USBS;
+	PMC->PMC_USB = PMC_USB_USBDIV(ul_usbdiv) | PMC_USB_USBS;
 }
 
 /**
@@ -1171,7 +1171,6 @@ void pmc_switch_uhpck_to_pllbck(uint32_t ul_usbdiv)
  */
 void pmc_enable_uhpck(void)
 {
-//	PMC->PMC_PCR = PMC_PCR_EN | PMC_PCR_CMD | PMC_PCR_PID(ID_UHP);
 	PMC->PMC_SCER = PMC_SCER_UHP;
 }
 #endif
