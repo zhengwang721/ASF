@@ -165,14 +165,6 @@ void dac_chan_disable(
 		struct dac_module *const dev_inst,
 		enum dac_channel channel);
 
-void dac_chan_enable_output_buffer(
-		struct dac_module *const dev_inst,
-		const enum dac_channel channel);
-
-void dac_chan_disable_output_buffer(
-		struct dac_module *const dev_inst,
-		const enum dac_channel channel);
-
 /** @} */
 
 /**

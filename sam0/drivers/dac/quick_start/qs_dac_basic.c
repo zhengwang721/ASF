@@ -62,10 +62,6 @@ void configure_dac(void)
 //! [setup_set_config]
 	dac_init(&dac_instance, DAC, &config_dac);
 //! [setup_set_config]
-
-//! [setup_enable]
-	dac_enable(&dac_instance);
-//! [setup_enable]
 }
 
 void configure_dac_channel(void)
@@ -92,9 +88,13 @@ int main(void)
 	system_init();
 
 //! [setup_init]
-	configure_dac_channel();
 	configure_dac();
+	configure_dac_channel();
 //! [setup_init]
+
+//! [setup_enable]
+	dac_enable(&dac_instance);
+//! [setup_enable]
 
 //! [main]
 //! [main_output_var]

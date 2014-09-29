@@ -88,7 +88,7 @@
  *
  * After being set up, the DAC will convert new digital values written to the
  * conversion data register (DATA0 or DATA1) to an analog value either on the
- * DAC output(VOUT0 or VOUT1) pin of the device, or internally for use as an 
+ * DAC output(VOUT0 or VOUT1) pin of the device, or internally for use as an
  * input to the AC, ADC and other analog modules.
  *
  * Writing the DATA register will start a new conversion. It is also possible
@@ -136,7 +136,7 @@
  *
  * VOUT0 signal is internally connected so that it can be used as input for
  * AC or ADC or OPAMP modules when DAC0 is enabled.
- * \note the pin VOUT0 will be dedicated to internal input and cannot be 
+ * \note the pin VOUT0 will be dedicated to internal input and cannot be
  * configured as alternate function.
  *
  * \subsection asfdoc_sam0_dac_events Events
@@ -270,11 +270,11 @@
  *
  * \subsection asfdoc_sam0_dac_special_considerations_sleep Sleep Mode
  * The DAC can do conversions in Active or Idle modes, and will continue the
- * conversions in standby sleep mode if the RUNSTDBY bit in the DACCTRLx 
+ * conversions in standby sleep mode if the RUNSTDBY bit in the DACCTRLx
  * register is set. Otherwise, the DACx will stop conversions.
- * 
+ *
  * If DACx conversion is stopped in standby sleep mode, DACx is disabled to
- * reduce power consumption. When exiting standby sleep mode, DACx is enabled 
+ * reduce power consumption. When exiting standby sleep mode, DACx is enabled
  * therefore startup time is required before starting a new conversion.
  *
  * \subsection asfdoc_sam0_dac_special_considerations_conversion_time Conversion Time
@@ -458,7 +458,10 @@ struct dac_chan_config {
 	bool run_in_standby;
 	/** Dither mode enable data */
 	bool dither_mode;
-	/** */
+	/**
+	 * The DAC conversion refreshed periodically when used to generate a static
+	 * voltage
+	 */
 	uint8_t refresh_period;
 };
 
@@ -572,10 +575,10 @@ bool dac_chan_is_end_of_conversion(
  *  - \subpage asfdoc_sam0_dac_basic_use_case_callback
  * \endif
  *
- * \if DAC_DMA_USE_MODE_SELECTION 
- * \page asfdoc_sam0_adc_dma_use_case_dac_in_dma Quick Start Guide for Using DMA with ADC/DAC  
- * For	this examples, see	
- * \ref asfdoc_sam0_adc_dma_use_case  
+ * \if DAC_DMA_USE_MODE_SELECTION
+ * \page asfdoc_sam0_adc_dma_use_case_dac_in_dma Quick Start Guide for Using DMA with ADC/DAC
+ * For	this examples, see
+ * \ref asfdoc_sam0_adc_dma_use_case
  * \endif
  *
  * \page asfdoc_sam0_dac_document_revision_history Document Revision History

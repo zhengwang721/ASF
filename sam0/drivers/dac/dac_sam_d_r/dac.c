@@ -119,8 +119,8 @@ static void _dac_set_config(
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true if the module has completed synchronization
- * \retval false if the module synchronization is ongoing
+ * \retval true if the module synchronization is ongoing
+ * \retval false if the module has completed synchronization
  */
 bool dac_is_syncing(
 		struct dac_module *const dev_inst)
@@ -611,7 +611,7 @@ enum status_code dac_chan_write(
  *
  * \return Status of the operation
  * \retval STATUS_OK           If the data was written or no data conversion required
- * \retval STATUS_ERR_UNSUPPORTED_DEV  The DAC is not configured as using 
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  The DAC is not configured as using
  *                                         event trigger.
  * \retval STATUS_BUSY      The DAC is busy to convert.
  */
@@ -656,7 +656,7 @@ enum status_code dac_chan_write_buffer_wait(
 	while (length--) {
 		/* Convert one data */
 		dac_chan_write(module_inst, channel, buffer[length]);
-		
+
 		/* Wait until Transmit is complete or timeout */
 		for (uint32_t i = 0; i <= DAC_TIMEOUT; i++) {
 			if (dac_module->INTFLAG.reg & DAC_INTFLAG_EMPTY) {

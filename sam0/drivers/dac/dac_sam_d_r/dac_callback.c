@@ -71,7 +71,7 @@ struct dac_module *_dac_instances[DAC_INST_NUM];
  */
 enum status_code dac_chan_write_buffer_job(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		uint16_t *buffer,
 		uint32_t length)
 {
@@ -138,7 +138,7 @@ enum status_code dac_chan_write_buffer_job(
  */
 enum status_code dac_chan_write_job(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		uint16_t data)
 {
 	/* Sanity check arguments */
@@ -183,7 +183,7 @@ enum status_code dac_chan_write_job(
  */
 enum status_code dac_register_callback(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		const dac_callback_t callback,
 		const enum dac_callback type)
 {
@@ -226,7 +226,7 @@ enum status_code dac_register_callback(
  */
 enum status_code dac_unregister_callback(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		const enum dac_callback type)
 {
 	/* Sanity check arguments */
@@ -266,7 +266,7 @@ enum status_code dac_unregister_callback(
  */
 enum status_code dac_chan_enable_callback(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		const enum dac_callback type)
 {
 	/* Sanity check arguments */
@@ -302,7 +302,7 @@ enum status_code dac_chan_enable_callback(
  */
 enum status_code dac_chan_disable_callback(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		const enum dac_callback type)
 {
 	/* Sanity check arguments */
@@ -345,7 +345,7 @@ static void _dac_interrupt_handler(const uint8_t instance)
 
 		/* If in a write buffer job */
 		if (module->remaining_conversions) {
-			
+
 			/* Fill the data buffer with next data in write buffer */
 			dac_hw->DATABUF.reg =
 				module->job_buffer[module->transferred_conversions++];
@@ -387,14 +387,19 @@ void DAC_Handler(void)
  *
  * Gets the status of an ongoing or the last job.
  *
- * \param [in]  module_inst Pointer to the DAC software instance struct
+ * \param[in]  module_inst Pointer to the DAC software instance struct
+ * \param[in]  channel     Logical channel to enable callback function
  *
  * \return Status of the job
  */
-enum status_code dac_get_job_status( struct dac_module *module_inst)
+enum status_code dac_chan_get_job_status(
+		struct dac_module *module_inst,
+		const enum dac_channel channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
+
+	UNUSED(channel);
 
 	return module_inst->job_status;
 }
@@ -404,12 +409,17 @@ enum status_code dac_get_job_status( struct dac_module *module_inst)
  *
  * Aborts an ongoing job.
  *
- * \param [in]  module_inst Pointer to the DAC software instance struct
+ * \param[in]  module_inst Pointer to the DAC software instance struct
+ * \param[in]  channel     Logical channel to enable callback function
  */
-void dac_abort_job(struct dac_module *module_inst)
+void dac_chan_abort_job(
+		struct dac_module *module_inst,
+		const enum dac_channel channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
+
+	UNUSED(channel);
 
 	/* Disable interrupt */
 	module_inst->hw->INTFLAG.reg = DAC_INTFLAG_UNDERRUN | DAC_INTFLAG_EMPTY;

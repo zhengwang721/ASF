@@ -82,6 +82,22 @@ static void _dac_set_config(
 	dac_module->CTRLB.reg = new_ctrlb;
 }
 
+/**
+ * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
+ *
+ * Checks to see if the underlying hardware peripheral module(s) are currently
+ * synchronizing across multiple clock domains to the hardware bus, This
+ * function can be used to delay further operations on a module until such time
+ * that it is ready, to prevent blocking delays for synchronization in the
+ * user application.
+ *
+ * \param[in] dev_inst  Pointer to the DAC software instance struct
+ *
+ * \return Synchronization status of the underlying hardware module(s).
+ *
+ * \retval true if the module synchronization is ongoing
+ * \retval false if the module has completed synchronization
+ */
 bool dac_is_syncing(
 		struct dac_module *const dev_inst)
 {
@@ -183,13 +199,13 @@ enum status_code dac_init(
 
 	/* Set up the DAC0 VOUT pin */
 	pin_conf.mux_position = MUX_PA02B_DAC_VOUT0;
-	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;//??SYSTEM_PINMUX_PIN_DIR_OUTPUT
+	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
 	pin_conf.input_pull   = SYSTEM_PINMUX_PIN_PULL_NONE;
 	system_pinmux_pin_set_config(PIN_PA02B_DAC_VOUT0, &pin_conf);
 
 	/* Set up the DAC1 VOUT pin */
 	pin_conf.mux_position = MUX_PA05B_DAC_VOUT1;
-	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;//???SYSTEM_PINMUX_PIN_DIR_OUTPUT
+	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
 	pin_conf.input_pull   = SYSTEM_PINMUX_PIN_PULL_NONE;
 	system_pinmux_pin_set_config(PIN_PA05B_DAC_VOUT1, &pin_conf);
 
@@ -401,7 +417,7 @@ void dac_chan_get_config_defaults(
 	config->left_adjust    = false;
 	config->current        = DAC_CURRENT_12M;
 	config->run_in_standby = false;
-	config->dither_mode    = false;	
+	config->dither_mode    = false;
 }
 
 
@@ -429,14 +445,9 @@ void dac_chan_set_config(
 	Assert(config);
 
 	Dac *const dac_module = module_inst->hw;
-	
-	/* Check if module is enabled. */
-	if (dac_module->CTRLA.reg & DAC_CTRLA_ENABLE) {
-		return;
-	}
 
 	uint32_t new_dacctrl = 0;
-	
+
 	/* Left adjust data if configured */
 	if (config->left_adjust) {
 		new_dacctrl |= DAC_DACCTRL_LEFTADJ;
@@ -444,7 +455,7 @@ void dac_chan_set_config(
 
 	/* Set current control */
 	new_dacctrl |= config->current;
-	
+
 	/* Enable DAC in standby sleep mode if configured */
 	if (config->run_in_standby) {
 		new_dacctrl |= DAC_DACCTRL_RUNSTDBY;
@@ -456,7 +467,7 @@ void dac_chan_set_config(
 	}
 
 	new_dacctrl |= DAC_DACCTRL_REFRESH(config->refresh_period);
-	
+
 	/* Apply the new configuration to the hardware module */
 	dac_module->DACCTRL[channel].reg = new_dacctrl;
 }
@@ -479,11 +490,11 @@ void dac_chan_enable(
 	Assert(module_inst->hw);
 
 	Dac *const dac_module = module_inst->hw;
-	
+
 	/* Enable the module */
 	dac_module->DACCTRL[channel].reg |= DAC_DACCTRL_ENABLE;
 
-	while(! (dac_module->STATUS.reg & (1 << channel))) {
+	while(! (dac_module->STATUS.reg & DAC_STATUS_READY(channel + 1))) {
 	};
 }
 
@@ -505,7 +516,7 @@ void dac_chan_disable(
 	Assert(module_inst->hw);
 
 	Dac *const dac_module = module_inst->hw;
-	
+
 	/* Enable the module */
 	dac_module->DACCTRL[channel].reg &= ~DAC_DACCTRL_ENABLE;
 
@@ -577,7 +588,7 @@ enum status_code dac_chan_write(
  *
  * \return Status of the operation
  * \retval STATUS_OK           If the data was written or no data conversion required
- * \retval STATUS_ERR_UNSUPPORTED_DEV  The DAC is not configured as using 
+ * \retval STATUS_ERR_UNSUPPORTED_DEV  The DAC is not configured as using
  *                                         event trigger.
  * \retval STATUS_BUSY      The DAC is busy to convert.
  */
@@ -619,7 +630,7 @@ enum status_code dac_chan_write_buffer_wait(
 	while (length--) {
 		/* Convert one data */
 		dac_chan_write(module_inst, channel, buffer[length]);
-		
+
 		/* Wait until Transmit is complete or timeout */
 		for (uint32_t i = 0; i <= DAC_TIMEOUT; i++) {
 			if(channel == DAC_CHANNEL_0) {
@@ -644,7 +655,7 @@ enum status_code dac_chan_write_buffer_wait(
 /**
  * \brief Retrieves the status of DAC channel end of conversion
  *
- * Checks the conversion is completed or not and returns boolean flag 
+ * Checks the conversion is completed or not and returns boolean flag
  * of status.
  *
  * \param[in] module_inst  Pointer to the DAC software instance struct
@@ -662,8 +673,8 @@ bool dac_chan_is_end_of_conversion(
 	Assert(module_inst->hw);
 
 	Dac *const dac_module = module_inst->hw;
-	
-	if(dac_module->STATUS.reg & (4 << channel)) {
+
+	if(dac_module->STATUS.reg & DAC_STATUS_EOC(channel + 1)) {
 		return true;
 	} else {
 		return false;

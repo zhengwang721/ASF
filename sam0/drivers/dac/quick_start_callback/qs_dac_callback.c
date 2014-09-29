@@ -61,7 +61,7 @@ struct rtc_module rtc_instance;
 //! [rtc_module_inst]
 
 //! [event_res]
-	struct events_resource event_dac;
+struct events_resource event_dac;
 //! [event_res]
 
 //! [transfer_done_flag]
@@ -192,10 +192,6 @@ void configure_dac(void)
 //! [enable_dac_event]
 	dac_enable_events(&dac_instance, &events);
 //! [enable_dac_event]
-
-//! [enable_dac]
-	dac_enable(&dac_instance);
-//! [enable_dac]
 }
 //! [setup_dac]
 
@@ -237,13 +233,17 @@ int main(void)
 	rtc_count_set_period(&rtc_instance, 1);
 //! [set_rtc_period]
 
+//! [init_dac]
+	configure_dac();
+//! [init_dac]
+
 //! [init_dac_chan]
 	configure_dac_channel();
 //! [init_dac_chan]
 
-//! [init_dac]
-	configure_dac();
-//! [init_dac]
+//! [enable_dac]
+	dac_enable(&dac_instance);
+//! [enable_dac]
 
 //! [init_event_resource]
 	configure_event_resource();

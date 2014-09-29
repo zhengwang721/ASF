@@ -461,6 +461,21 @@ struct dac_chan_config {
 #endif
 };
 
+/**
+ * \name Configuration and Initialization (Channel)
+ * @{
+ */
+
+void dac_chan_enable_output_buffer(
+		struct dac_module *const dev_inst,
+		const enum dac_channel channel);
+
+void dac_chan_disable_output_buffer(
+		struct dac_module *const dev_inst,
+		const enum dac_channel channel);
+
+/** @} */
+
 /** @} */
 
 /**
@@ -523,7 +538,7 @@ struct dac_chan_config {
  *	</tr>
  *	<tr>
  *		<td>Added new configuration parameters \c databuf_protection_bypass,
- *		\c voltage_pump_disable. Added new callback functions 
+ *		\c voltage_pump_disable. Added new callback functions
  *		\c dac_chan_write_buffer_wait,
  *		\c dac_chan_write_buffer_job, \c dac_chan_write_job,
  *		\c dac_get_job_status, \c dac_abort_job and new callback type
@@ -548,16 +563,16 @@ struct dac_chan_config {
  * \if DAC_CALLBACK_MODE
  *  - \subpage asfdoc_sam0_dac_basic_use_case_callback
  * \endif
- * \if DAC_DMA_USE_MODE_SELECTION  
- *	- \subpage asfdoc_sam0_adc_dma_use_case_dac_in_dma	
- *	\else  
- *  - \subpage asfdoc_sam0_adc_dma_use_case  
- * \endif  
+ * \if DAC_DMA_USE_MODE_SELECTION
+ *	- \subpage asfdoc_sam0_adc_dma_use_case_dac_in_dma
+ *	\else
+ *  - \subpage asfdoc_sam0_adc_dma_use_case
+ * \endif
  *
- * \if DAC_DMA_USE_MODE_SELECTION 
- * \page asfdoc_sam0_adc_dma_use_case_dac_in_dma Quick Start Guide for Using DMA with ADC/DAC  
- * For	this examples, see	
- * \ref asfdoc_sam0_adc_dma_use_case  
+ * \if DAC_DMA_USE_MODE_SELECTION
+ * \page asfdoc_sam0_adc_dma_use_case_dac_in_dma Quick Start Guide for Using DMA with ADC/DAC
+ * For	this examples, see
+ * \ref asfdoc_sam0_adc_dma_use_case
  * \endif
  *
  * \page asfdoc_sam0_dac_document_revision_history Document Revision History

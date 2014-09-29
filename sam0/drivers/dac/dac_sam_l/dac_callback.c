@@ -71,7 +71,7 @@ struct dac_module *_dac_instances[DAC_INST_NUM];
  */
 enum status_code dac_chan_write_buffer_job(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		uint16_t *buffer,
 		uint32_t length)
 {
@@ -109,15 +109,15 @@ enum status_code dac_chan_write_buffer_job(
 	case DAC_CHANNEL_0:
 		dac_module->INTFLAG.reg = DAC_INTFLAG_UNDERRUN0 | DAC_INTFLAG_EMPTY0;
 		dac_module->INTENSET.reg = DAC_INTENSET_UNDERRUN0 | DAC_INTENSET_EMPTY0;
-
 		break;
 	case DAC_CHANNEL_1:
 		dac_module->INTFLAG.reg = DAC_INTFLAG_UNDERRUN1 | DAC_INTFLAG_EMPTY1;
 		dac_module->INTENSET.reg = DAC_INTENSET_UNDERRUN1 | DAC_INTENSET_EMPTY1;
-
+		break;
+	default:
 		break;
 	}
-	
+
 	return STATUS_OK;
 }
 
@@ -146,7 +146,7 @@ enum status_code dac_chan_write_buffer_job(
  */
 enum status_code dac_chan_write_job(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		uint16_t data)
 {
 	/* Sanity check arguments */
@@ -189,7 +189,7 @@ enum status_code dac_chan_write_job(
  */
 enum status_code dac_register_callback(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		const dac_callback_t callback,
 		const enum dac_callback type)
 {
@@ -230,7 +230,7 @@ enum status_code dac_register_callback(
  */
 enum status_code dac_unregister_callback(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		const enum dac_callback type)
 {
 	/* Sanity check arguments */
@@ -268,7 +268,7 @@ enum status_code dac_unregister_callback(
  */
 enum status_code dac_chan_enable_callback(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		const enum dac_callback type)
 {
 	/* Sanity check arguments */
@@ -302,7 +302,7 @@ enum status_code dac_chan_enable_callback(
  */
 enum status_code dac_chan_disable_callback(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		const enum dac_callback type)
 {
 	/* Sanity check arguments */
@@ -354,7 +354,7 @@ static void _dac_interrupt_handler(const uint8_t instance)
 
 		/* If in a write buffer job */
 		if (module->remaining_conversions[DAC_CHANNEL_0]) {
-			
+
 			/* Fill the data buffer with next data in write buffer */
 			dac_hw->DATABUF[DAC_CHANNEL_0].reg =
 				module->job_buffer[DAC_CHANNEL_0][module->transferred_conversions[DAC_CHANNEL_0]++];
@@ -389,7 +389,7 @@ static void _dac_interrupt_handler(const uint8_t instance)
 
 		/* If in a write buffer job */
 		if (module->remaining_conversions[DAC_CHANNEL_1]) {
-			
+
 			/* Fill the data buffer with next data in write buffer */
 			dac_hw->DATABUF[DAC_CHANNEL_1].reg =
 				module->job_buffer[DAC_CHANNEL_1][module->transferred_conversions[DAC_CHANNEL_1]++];
@@ -437,8 +437,8 @@ void DAC_Handler(void)
  * \return Status of the job
  */
 enum status_code dac_chan_get_job_status(
-		struct dac_module *module_inst, 
-		const uint32_t channel)
+		struct dac_module *module_inst,
+		const enum dac_channel channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
@@ -456,7 +456,7 @@ enum status_code dac_chan_get_job_status(
  */
 void dac_chan_abort_job(
 		struct dac_module *module_inst,
-		const uint32_t channel)
+		const enum dac_channel channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
