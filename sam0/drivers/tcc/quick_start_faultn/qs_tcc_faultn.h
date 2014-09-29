@@ -97,10 +97,10 @@
  *
  * Add to the main application source file, before any functions, according to
  * the kit used:
- * - SAM D21 Xplained Pro:
+ * - SAM D21 Xplained Pro.
  *   \snippet samd21_xplained_pro/conf_quick_start_faultn.h definition_pwm
  *   \snippet samd21_xplained_pro/conf_quick_start_faultn.h definition_fault
- * - SAM R21 Xplained Pro:
+ * - SAM R21 Xplained Pro.
  *   \snippet samd21_xplained_pro/conf_quick_start_faultn.h definition_pwm
  *   \snippet samd21_xplained_pro/conf_quick_start_faultn.h definition_fault
  *

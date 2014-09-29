@@ -115,7 +115,7 @@
  *          settings.
  *
  * -# Set extra configurations for the DMA resource. It is using peripheral
- *    trigger, SERCOM RX trigger, and trigger causes a beat transfer in this
+ *    trigger. SERCOM RX trigger causes a beat transfer in this
  *    example.
  *    \snippet qs_i2c_slave_dma.c dma_setup_3
  *

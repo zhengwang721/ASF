@@ -141,7 +141,7 @@
  *
  * In compare mode, when output signal is generated, extended waveform controls
  * are available, to arrange the compare outputs into specific formats.
- * The Output matrix can change the channel output routing, Pattern generation
+ * The Output matrix can change the channel output routing. Pattern generation
  * unit can overwrite the output signal line to specific state.
  * The Fault protection feature of the TCC supports recoverable and
  * non-recoverable faults.

@@ -182,7 +182,7 @@
  *          settings.
  *
  * -# Set extra configurations for the DMA resource. ADC_DMAC_ID_RESRDY trigger
- *    and trigger causes a beat transfer in this example.
+ *      causes a beat transfer in this example.
  *    \snippet qs_adc_dma_use.c setup_dma_set_config_extra
  *
  * -# Allocate a DMA resource with the configurations.

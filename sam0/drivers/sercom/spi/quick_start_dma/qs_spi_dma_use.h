@@ -85,12 +85,12 @@
  *
  * \subsection asfdoc_sam0_sercom_spi_dma_use_case_prereq Prerequisites
  * The following connections has to be made using wires:
- * - SAM D21 Xplained Pro
+ * - SAM D21 Xplained Pro.
  *  - \b SS_0:  EXT1 PIN15 (PA05) <--> EXT2 PIN15 (PA17)
  *  - \b DO/DI: EXT1 PIN16 (PA06) <--> EXT2 PIN17 (PA16)
  *  - \b DI/DO: EXT1 PIN17 (PA04) <--> EXT2 PIN16 (PA18)
  *  - \b SCK:   EXT1 PIN18 (PA07) <--> EXT2 PIN18 (PA19)
- * - SAM R21 Xplained Pro
+ * - SAM R21 Xplained Pro.
  *  - \b SS_0:  EXT1 PIN15 (PB03) <--> EXT1 PIN10 (PA23)
  *  - \b DO/DI: EXT1 PIN16 (PB22) <--> EXT1 PIN9  (PA22)
  *  - \b DI/DO: EXT1 PIN17 (PB02) <--> EXT1 PIN7  (PA18)
@@ -141,7 +141,7 @@
  *
  * -# Create transfer done flag to indication DMA transfer done.
  *    \snippet qs_spi_dma_use.c dma_transfer_done_flag
- * -# Define the buffer length for tx/rx.
+ * -# Define the buffer length for TX/RX.
  *    \snippet qs_spi_dma_use.c buf_length
  * -# Create buffer to store the data to be transferred.
  *    \snippet qs_spi_dma_use.c spi_buffer
@@ -182,7 +182,7 @@
  *          settings.
  *
  * -# Set extra configurations for the DMA resource. It is using peripheral
- *    trigger, SERCOM TX empty, and RX complete trigger causes a beat transfer in
+ *    trigger. SERCOM TX empty and RX complete trigger causes a beat transfer in
  *    this example.
  *    \snippet qs_spi_dma_use.c dma_tx_setup_3
  *    \snippet qs_spi_dma_use.c dma_rx_setup_3

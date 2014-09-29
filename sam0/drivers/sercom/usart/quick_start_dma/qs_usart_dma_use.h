@@ -133,7 +133,7 @@
  *          settings.
  *
  * -# Set extra configurations for the DMA resource. It is using peripheral
- *    trigger, SERCOM TX empty trigger, and trigger causes a beat transfer in
+ *    trigger. SERCOM TX empty trigger causes a beat transfer in
  *    this example.
  *    \snippet qs_usart_dma_use.c setup_rx_3
  *
@@ -158,7 +158,7 @@
  * -# Create the DMA transfer descriptor.
  *    \snippet qs_usart_dma_use.c setup_rx_8
  *
- * -# Create a DMA resource configuration structure for tx, which can be filled
+ * -# Create a DMA resource configuration structure for TX, which can be filled
  *    out to adjust the configuration of a single DMA transfer.
  *    \snippet qs_usart_dma_use.c setup_tx_1
  *
@@ -170,7 +170,7 @@
  *          settings.
  *
  * -# Set extra configurations for the DMA resource. It is using peripheral
- *    trigger, SERCOM RX Ready trigger, and trigger causes a beat transfer in
+ *    trigger. SERCOM RX Ready trigger causes a beat transfer in
  *    this example.
  *    \snippet qs_usart_dma_use.c setup_tx_3
  *

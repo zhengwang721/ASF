@@ -82,13 +82,13 @@
  *
  * Add to the main application source file, before any functions, according to
  * the kit used:
- * - SAM D21 Xplained Pro
+ * - SAM D21 Xplained Pro.
  *   \snippet samd21_xplained_pro/conf_quick_start.h definition_pwm
  *   \snippet samd21_xplained_pro/conf_quick_start.h definition_dma
- * - SAM R21 Xplained Pro
+ * - SAM R21 Xplained Pro.
  *   \snippet samr21_xplained_pro/conf_quick_start.h definition_pwm
  *   \snippet samr21_xplained_pro/conf_quick_start.h definition_dma
- * - SAM D11 Xplained Pro
+ * - SAM D11 Xplained Pro.
  *   \snippet samd11_xplained_pro/conf_quick_start.h definition_pwm
  *   \snippet samd11_xplained_pro/conf_quick_start.h definition_dma
  *

@@ -464,9 +464,9 @@ enum adc_callback {
 enum adc_reference {
 	/** 1.0V voltage reference. */
 	ADC_REFERENCE_INT1V   = ADC_REFCTRL_REFSEL_INT1V,
-	/** 1/1.48 V<SUB>CC</SUB> reference. */
+	/** 1/1.48V<SUB>CC</SUB> reference. */
 	ADC_REFERENCE_INTVCC0 = ADC_REFCTRL_REFSEL_INTVCC0,
-	/** 1/2 V<SUB>CC</SUB> (only for internal V<SUB>CC</SUB> > 2.1V). */
+	/** 1/2V<SUB>CC</SUB> (only for internal V<SUB>CC</SUB> > 2.1V). */
 	ADC_REFERENCE_INTVCC1 = ADC_REFCTRL_REFSEL_INTVCC1,
 	/** External reference A. */
 	ADC_REFERENCE_AREFA   = ADC_REFCTRL_REFSEL_AREFA,

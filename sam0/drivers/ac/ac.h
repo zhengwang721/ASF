@@ -112,7 +112,7 @@
  * for each comparator channel.
  *
  * The exact channels available for each comparator differ for the positive and
- * negative inputs, but the same MUX choices are available for all comparator
+ * the negative inputs, but the same MUX choices are available for all comparator
  * units (i.e. all positive MUXes are identical, all negative MUXes are
  * identical). This allows the user application to select which voltages are
  * compared to one another.

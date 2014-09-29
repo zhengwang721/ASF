@@ -115,12 +115,12 @@
  *
  * Add to the main application source file, before any functions, according to
  * the kit used:
- * - SAM D21 Xplained Pro:
+ * - SAM D21 Xplained Pro.
  * \snippet samd21_xplained_pro/conf_quick_start_dma.h definition_pwm
  * \snippet samd21_xplained_pro/conf_quick_start_dma.h definition_feedback
  * \snippet samd21_xplained_pro/conf_quick_start_dma.h definition_dma_compare_trigger
  * \snippet samd21_xplained_pro/conf_quick_start_dma.h definition_dma_capture_trigger
- * - SAM R21 Xplained Pro:
+ * - SAM R21 Xplained Pro.
  * \snippet samr21_xplained_pro/conf_quick_start_dma.h definition_pwm
  * \snippet samr21_xplained_pro/conf_quick_start_dma.h definition_feedback
  * \snippet samr21_xplained_pro/conf_quick_start_dma.h definition_dma_compare_trigger

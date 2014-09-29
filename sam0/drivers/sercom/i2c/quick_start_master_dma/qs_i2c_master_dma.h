@@ -121,7 +121,7 @@
  *          settings.
  *
  * -# Set extra configurations for the DMA resource. It is using peripheral
- *    trigger, SERCOM Tx trigger, and trigger causes a transaction transfer in
+ *    trigger. SERCOM TX trigger causes a transaction transfer in
  *    this example.
  *    \snippet qs_i2c_master_dma.c dma_setup_3
  *

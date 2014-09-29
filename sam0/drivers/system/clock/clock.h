@@ -387,7 +387,7 @@ enum system_osc8m_div {
  * Internal 8MHz RC oscillator frequency range setting
  */
 enum system_osc8m_frequency_range {
-	/** Frequency range 4MHz to6 MHz. */
+	/** Frequency range 4MHz to 6MHz. */
 	SYSTEM_OSC8M_FREQUENCY_RANGE_4_TO_6,
 	/** Frequency range 6MHz to 8MHz. */
 	SYSTEM_OSC8M_FREQUENCY_RANGE_6_TO_8,

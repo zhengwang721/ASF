@@ -204,7 +204,7 @@
  * (Generic Clock) channel. The GCLK channel connects to any of the GCLK
  * generators. The GCLK generators are configured to use one of the available
  * clock sources on the system such as internal oscillator, external crystals,
- * etc. - see the \ref asfdoc_sam0_system_clock_group "Generic Clock driver"
+ * etc. see the \ref asfdoc_sam0_system_clock_group "Generic Clock driver"
  *for
  * more information.
  *

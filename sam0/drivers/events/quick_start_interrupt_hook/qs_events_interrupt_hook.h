@@ -67,16 +67,16 @@
  * \subsection asfdoc_sam0_events_interrupt_hook_setup_code Code
  * Add to the main application source file, before any functions, according to
  * the kit used:
- * - SAM D20 Xplained Pro
+ * - SAM D20 Xplained Pro.
  *   \snippet samd20_xplained_pro/conf_qs_events_interrupt_hook.h definition_event
  *   \snippet samd20_xplained_pro/conf_qs_events_interrupt_hook.h definition_tc
- * - SAM D21 Xplained Pro
+ * - SAM D21 Xplained Pro.
  *   \snippet samd21_xplained_pro/conf_qs_events_interrupt_hook.h definition_event
  *   \snippet samd21_xplained_pro/conf_qs_events_interrupt_hook.h definition_tc
- * - SAM R21 Xplained Pro
+ * - SAM R21 Xplained Pro.
  *   \snippet samr21_xplained_pro/conf_qs_events_interrupt_hook.h definition_event
  *   \snippet samr21_xplained_pro/conf_qs_events_interrupt_hook.h definition_tc
- * - SAM D11 Xplained Pro
+ * - SAM D11 Xplained Pro.
  *   \snippet samd11_xplained_pro/conf_qs_events_interrupt_hook.h definition_event
  *   \snippet samd11_xplained_pro/conf_qs_events_interrupt_hook.h definition_tc
  *

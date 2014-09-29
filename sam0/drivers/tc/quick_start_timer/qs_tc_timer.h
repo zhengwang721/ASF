@@ -79,13 +79,13 @@
  *
  * Add to the main application source file, before any functions, according to
  * the kit used:
- * - SAM D20 Xplained Pro
+ * - SAM D20 Xplained Pro.
  *   \snippet samd20_xplained_pro/conf_qs_tc_timer.h definition_tc
- * - SAM D21 Xplained Pro
+ * - SAM D21 Xplained Pro.
  *   \snippet samd21_xplained_pro/conf_qs_tc_timer.h definition_tc
- * - SAM R21 Xplained Pro
+ * - SAM R21 Xplained Pro.
  *   \snippet samr21_xplained_pro/conf_qs_tc_timer.h definition_tc
- * - SAM D11 Xplained Pro
+ * - SAM D11 Xplained Pro.
  *   \snippet samd11_xplained_pro/conf_qs_tc_timer.h definition_tc
  *
  * Add to the main application source file, outside of any functions:

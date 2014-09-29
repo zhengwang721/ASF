@@ -63,9 +63,9 @@ extern "C" {
  *
  */
 enum events_interrupt_source {
-	/* Overrun in event channel detected interrupt. */
+	/** Overrun in event channel detected interrupt. */
 	EVENTS_INTERRUPT_OVERRUN,
-	/* Event signal propagation in event channel detected interrupt. */
+	/** Event signal propagation in event channel detected interrupt. */
 	EVENTS_INTERRUPT_DETECT,
 };
 

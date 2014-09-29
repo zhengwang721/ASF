@@ -88,7 +88,7 @@
  *
  * After being set up, the DAC will convert new digital values written to the
  * conversion data register (DATA) to an analog value either on the VOUT pin of
- * the device, or internally for use as an input to the AC, ADC and other analog
+ * the device, or internally for use as an input to the AC, ADC, and other analog
  * modules.
  *
  * Writing the DATA register will start a new conversion. It is also possible
