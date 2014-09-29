@@ -1089,7 +1089,7 @@ enum tcc_event_action {
 	 * reaches TOP or Zero
 	 * depending on the direction. */
 	TCC_EVENT_ACTION_START,
-	/** Count events; i.e; Increment or decrement depending on count
+	/** Count events; i.e. Increment or decrement depending on count
 	 * direction. */
 	TCC_EVENT_ACTION_COUNT_EVENT,
 	/** The event source must be an asynchronous event, input value will

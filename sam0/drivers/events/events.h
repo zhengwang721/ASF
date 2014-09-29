@@ -381,7 +381,9 @@ struct events_config {
 /** @} */
 ///@endcond
 
-/** Definition for no generator selection. */
+/** 
+*  Definition for no generator selection.
+*/
 #define EVSYS_ID_GEN_NONE   0
 /** Definition for no user selection. */
 #define EVSYS_ID_USER_NONE  0

@@ -881,7 +881,7 @@ static inline bool spi_is_syncing(
  *  \li MSB of the data is transmitted first
  *  \li Transfer mode 0
  *  \li MUX Setting D
- *  \li Character size eight bit
+ *  \li Character size eight bits
  *  \li Not enabled in sleep mode
  *  \li Receiver enabled
  *  \li Baudrate 100000
