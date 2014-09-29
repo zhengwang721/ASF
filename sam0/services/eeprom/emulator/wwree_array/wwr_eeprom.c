@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM EEPROM Emulator
+ * \brief SAM Write While Read EEPROM Emulator
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,9 +40,26 @@
  * \asf_license_stop
  *
  */
-#include "eeprom.h"
+#include "wwr_eeprom.h"
 #include <string.h>
 #include <nvm.h>
+#include "conf_wwree.h"
+
+#if !defined(CONF_LOGICAL_PAGE_NUM_IN_ROW) || defined(__DOXYGEN__)
+#  warning  CONF_LOGICAL_PAGE_NUM_IN_ROW is not defined, assuming WWREE_LOGICAL_PAGE_NUM_1.
+
+/** Configuration option, one logical page stored in a physical row.
+ */
+#  define CONF_LOGICAL_PAGE_NUM_IN_ROW  WWREE_LOGICAL_PAGE_NUM_1
+#endif
+
+#if !defined(CONF_PAGE_CHECKSUM_ENABLE) || defined(__DOXYGEN__)
+#  warning  CONF_PAGE_CHECKSUM_ENABLE is not defined, assuming false.
+
+/** Configuration option, page checksum enabled.
+ */
+#  define CONF_PAGE_CHECKSUM_ENABLE  false
+#endif
 
 /**
  * \internal
@@ -50,21 +67,21 @@
  * sequence of 32-bit values to speed up checking of the key, which can be
  * implemented as a number of simple integer comparisons,
  */
-#define EEPROM_MAGIC_KEY                 {0x41744545, 0x50524f4d, 0x456d752e}
+#define WWR_EEPROM_MAGIC_KEY                 {0x41744545, 0x50524f4d, 0x456d752e}
 
 /** \internal
  *  Length of the magic key, in 32-bit elements.
  */
-#define EEPROM_MAGIC_KEY_COUNT           3
+#define WWR_EEPROM_MAGIC_KEY_COUNT           3
 
 COMPILER_PACK_SET(1);
 /**
  * \internal
  * \brief Structure describing the EEPROM Emulation master page
  */
-struct _eeprom_master_page {
+struct _wwr_eeprom_master_page {
 	/** Magic key which in ASCII will show as AtEEPROMEmu. */
-	uint32_t magic_key[EEPROM_MAGIC_KEY_COUNT];
+	uint32_t magic_key[WWR_EEPROM_MAGIC_KEY_COUNT];
 
 	/** Emulator major version information. */
 	uint8_t  major_version;
@@ -83,17 +100,18 @@ struct _eeprom_master_page {
 
 /**
  * \internal
- * \brief Structure describing emulated pages of EEPROM data
+ * \brief Structure describing emulated pages of WWR EEPROM data
  */
-struct _eeprom_page {
-	/** Header information of the EEPROM page. */
+struct _wwr_eeprom_page {
+	/** Header information of the WWR EEPROM page. */
 	struct {
 		uint8_t logical_page;
-		uint8_t reserved[EEPROM_HEADER_SIZE - 1];
+		uint8_t page_checksum;
+		uint8_t reserved[WWR_EEPROM_HEADER_SIZE - 2];
 	} header;
 
-	/** Data content of the EEPROM page. */
-	uint8_t data[EEPROM_PAGE_SIZE];
+	/** Data content of the WWR EEPROM page. */
+	uint8_t data[WWR_EEPROM_PAGE_SIZE];
 };
 COMPILER_PACK_RESET();
 
@@ -101,71 +119,92 @@ COMPILER_PACK_RESET();
  * \internal
  * \brief Internal device instance struct
  */
-struct _eeprom_module {
-	/** Initialization state of the EEPROM emulator. */
+struct _wwr_eeprom_module {
+	/** Initialization state of the WWR EEPROM emulator. */
 	bool initialized;
 
-	/** Absolute byte pointer to the first byte of FLASH where the emulated
-	 *  EEPROM is stored. */
-	const struct _eeprom_page *flash;
+	/** Absolute byte pointer to the first byte of memory where the emulated
+	 *  WWR EEPROM is stored. */
+	const struct _wwr_eeprom_page *wwree_addr;
 
-	/** Number of physical FLASH pages occupied by the EEPROM emulator. */
+	/** Number of physical pages occupied by the WWR EEPROM emulator. */
 	uint16_t physical_pages;
-	/** Number of logical FLASH pages occupied by the EEPROM emulator. */
+	/** Number of logical pages occupied by the WWR EEPROM emulator. */
 	uint8_t  logical_pages;
 
-	/** Mapping array from logical EEPROM pages to physical FLASH pages. */
-	uint8_t page_map[EEPROM_MAX_PAGES / 2 - 4];
+	/** Mapping array from logical WWR EEPROM pages to physical pages. */
+	uint8_t page_map[WWR_EEPROM_MAX_PAGES / CONF_LOGICAL_PAGE_NUM_IN_ROW - 4];
 
 	/** Row number for the spare row (used by next write). */
 	uint8_t spare_row;
 
 	/** Buffer to hold the currently cached page. */
-	struct _eeprom_page cache;
+	struct _wwr_eeprom_page cache;
 	/** Indicates if the cache contains valid data. */
 	bool cache_active;
 };
 
 /**
  * \internal
- * \brief Internal EEPROM emulator instance
+ * \brief Internal WWR EEPROM emulator instance
  */
-static struct _eeprom_module _eeprom_instance = {
+static struct _wwr_eeprom_module _eeprom_instance = {
 	.initialized = false,
 };
 
+/** \internal
+ *  \brief WWR EEPROM Page Checksum.
+ *
+ *  \param[in] buffer Pointer of page data
+ *
+ * \return Checksum result.
+ */
+static uint8_t _wwr_eeprom_emulator_page_checksum(
+		const uint8_t * buffer)
+{
+	uint16_t sum=0;
+	for(uint8_t i = 0; i < WWR_EEPROM_PAGE_SIZE;i++){
+		sum += buffer[i];
+	}
+	return (uint8_t)(sum & 0xff);
+}
 
 /** \internal
- *  \brief Erases a given row within the physical EEPROM memory space.
+ *  \brief Erases a given row within the physical WWR EEPROM memory space.
  *
- *  \param[in] row  Physical row in EEPROM space to erase
+ *  \param[in] row  Physical row in WWR EEPROM space to erase
  */
-static void _eeprom_emulator_nvm_erase_row(
+static void _wwr_eeprom_emulator_nvm_erase_row(
 		const uint8_t row)
 {
 	enum status_code error_code = STATUS_OK;
 
 	do {
 		error_code = nvm_erase_row(
-				(uint32_t)&_eeprom_instance.flash[row * NVMCTRL_ROW_PAGES]);
+				(uint32_t)&_eeprom_instance.wwree_addr[row * NVMCTRL_ROW_PAGES]);
 	} while (error_code == STATUS_BUSY);
 }
 
 /** \internal
- *  \brief Fills the internal NVM controller page buffer in physical EEPROM memory space.
+ *  \brief Fills the internal NVM controller page buffer in physical WWR EEPROM memory space.
  *
- *  \param[in] physical_page  Physical page in EEPROM space to fill
+ *  \param[in] physical_page  Physical page in WWR EEPROM space to fill
  *  \param[in] data           Data to write to the physical memory page
  */
-static void _eeprom_emulator_nvm_fill_cache(
+static void _wwr_eeprom_emulator_nvm_fill_cache(
 		const uint16_t physical_page,
 		const void* const data)
 {
 	enum status_code error_code = STATUS_OK;
 
+	if (CONF_PAGE_CHECKSUM_ENABLE && (_eeprom_instance.initialized)){
+		struct _wwr_eeprom_page *temp= (struct _wwr_eeprom_page *) data;
+		temp->header.page_checksum = _wwr_eeprom_emulator_page_checksum(temp->data);
+	}
+
 	do {
 		error_code = nvm_write_buffer(
-				(uint32_t)&_eeprom_instance.flash[physical_page],
+				(uint32_t)&_eeprom_instance.wwree_addr[physical_page],
 				(uint8_t*)data,
 				NVMCTRL_PAGE_SIZE);
 	} while (error_code == STATUS_BUSY);
@@ -174,27 +213,32 @@ static void _eeprom_emulator_nvm_fill_cache(
 /** \internal
  *  \brief Commits the internal NVM controller page buffer to physical memory.
  *
- *  \param[in] physical_page  Physical page in EEPROM space to commit
+ *  \param[in] physical_page  Physical page in WWR EEPROM space to commit
  */
-static void _eeprom_emulator_nvm_commit_cache(
+static void _wwr_eeprom_emulator_nvm_commit_cache(
 		const uint16_t physical_page)
 {
 	enum status_code error_code = STATUS_OK;
 
 	do {
 		error_code = nvm_execute_command(
-				NVM_COMMAND_WRITE_PAGE,
-				(uint32_t)&_eeprom_instance.flash[physical_page], 0);
+				NVM_COMMAND_WWREE_WRITE_PAGE,
+				(uint32_t)&_eeprom_instance.wwree_addr[physical_page], 0);
 	} while (error_code == STATUS_BUSY);
 }
 
 /** \internal
- *  \brief Reads a page of data stored in physical EEPROM memory space.
+ *  \brief Reads a page of data stored in physical WWR EEPROM memory space.
  *
- *  \param[in]  physical_page  Physical page in EEPROM space to read
+ *  \param[in]  physical_page  Physical page in WWR EEPROM space to read
  *  \param[out] data           Destination buffer to fill with the read data
+ *
+ * \return Whether the page data checksum is correct.
+ *
+ * \retval \c true   The page data checksum is correct
+ * \retval \c false  The page data checksum is wrong
  */
-static void _eeprom_emulator_nvm_read_page(
+static bool _wwr_eeprom_emulator_nvm_read_page(
 		const uint16_t physical_page,
 		void* const data)
 {
@@ -202,50 +246,61 @@ static void _eeprom_emulator_nvm_read_page(
 
 	do {
 		error_code = nvm_read_buffer(
-				(uint32_t)&_eeprom_instance.flash[physical_page],
+				(uint32_t)&_eeprom_instance.wwree_addr[physical_page],
 				(uint8_t*)data,
 				NVMCTRL_PAGE_SIZE);
 	} while (error_code == STATUS_BUSY);
+
+	if (CONF_PAGE_CHECKSUM_ENABLE && (_eeprom_instance.initialized)){
+		struct _wwr_eeprom_page *temp= (struct _wwr_eeprom_page *) data;
+		if (temp->header.page_checksum ==
+			_wwr_eeprom_emulator_page_checksum(temp->data)){
+			return true;
+		} else {
+			return false;
+		}
+	}
+	return true;
 }
 
 /**
- * \brief Initializes the emulated EEPROM memory, destroying the current contents.
+ * \brief Initializes the emulated WWR EEPROM memory, destroying the current contents.
  */
-static void _eeprom_emulator_format_memory(void)
+static void _wwr_eeprom_emulator_format_memory(void)
 {
 	uint16_t logical_page = 0;
 
 	/* Set row 0 as the spare row */
 	_eeprom_instance.spare_row = 0;
-	_eeprom_emulator_nvm_erase_row(_eeprom_instance.spare_row);
+	_wwr_eeprom_emulator_nvm_erase_row(_eeprom_instance.spare_row);
 
 	for (uint16_t physical_page = NVMCTRL_ROW_PAGES;
 			physical_page < _eeprom_instance.physical_pages; physical_page++) {
 
-		if (physical_page == EEPROM_MASTER_PAGE_NUMBER) {
+		if (physical_page == WWR_EEPROM_MASTER_PAGE_NUMBER) {
 			continue;
 		}
 
 		/* If we are at the first page in a new row, erase the entire row */
 		if ((physical_page % NVMCTRL_ROW_PAGES) == 0) {
-			_eeprom_emulator_nvm_erase_row(physical_page / NVMCTRL_ROW_PAGES);
+			_wwr_eeprom_emulator_nvm_erase_row(physical_page / NVMCTRL_ROW_PAGES);
 		}
 
-		/* Two logical pages are stored in each physical row; program in a
-		 * pair of initialized but blank set of emulated EEPROM pages */
-		if ((physical_page % NVMCTRL_ROW_PAGES) < 2) {
+		/* One or two logical pages are stored in each physical row; program in a
+		 * pair of initialized but blank set of emulated WWR EEPROM pages */
+		if ((physical_page % NVMCTRL_ROW_PAGES) < CONF_LOGICAL_PAGE_NUM_IN_ROW) {
 			/* Make a buffer to hold the initialized EEPROM page */
-			struct _eeprom_page data;
+			struct _wwr_eeprom_page data;
 			memset(&data, 0xFF, sizeof(data));
 
 			/* Set up the new EEPROM row's header */
 			data.header.logical_page = logical_page;
 
 			/* Write the page out to physical memory */
-			_eeprom_emulator_nvm_fill_cache(physical_page, &data);
-			_eeprom_emulator_nvm_commit_cache(physical_page);
+			_wwr_eeprom_emulator_nvm_fill_cache(physical_page, &data);
+			_wwr_eeprom_emulator_nvm_commit_cache(physical_page);
 
-			/* Increment the logical EEPROM page address now that the current
+			/* Increment the logical WWR EEPROM page address now that the current
 			 * address' page has been initialized */
 			logical_page++;
 		}
@@ -253,21 +308,21 @@ static void _eeprom_emulator_format_memory(void)
 }
 
 /**
- * \brief Creates a map in SRAM to translate logical EEPROM pages to physical FLASH pages
+ * \brief Creates a map in SRAM to translate logical WWR EEPROM pages to physical pages
  */
-static void _eeprom_emulator_update_page_mapping(void)
+static void _wwr_eeprom_emulator_update_page_mapping(void)
 {
 	/* Scan through all physical pages, to map physical and logical pages */
 	for (uint16_t c = 0; c < _eeprom_instance.physical_pages; c++) {
-		if (c == EEPROM_MASTER_PAGE_NUMBER) {
+		if (c == WWR_EEPROM_MASTER_PAGE_NUMBER) {
 			continue;
 		}
 
 		/* Read in the logical page stored in the current physical page */
-		uint16_t logical_page = _eeprom_instance.flash[c].header.logical_page;
+		uint16_t logical_page = _eeprom_instance.wwree_addr[c].header.logical_page;
 
 		/* If the logical page number is valid, add it to the mapping */
-		if ((logical_page != EEPROM_INVALID_PAGE_NUMBER) &&
+		if ((logical_page != WWR_EEPROM_INVALID_PAGE_NUMBER) &&
 				(logical_page < _eeprom_instance.logical_pages)) {
 			_eeprom_instance.page_map[logical_page] = c;
 		}
@@ -275,7 +330,7 @@ static void _eeprom_emulator_update_page_mapping(void)
 
 	/* Use an invalid page number as the spare row until a valid one has been
 	 * found */
-	_eeprom_instance.spare_row = EEPROM_INVALID_ROW_NUMBER;
+	_eeprom_instance.spare_row = WWR_EEPROM_INVALID_ROW_NUMBER;
 
 	/* Scan through all physical rows, to find an erased row to use as the
 	 * spare */
@@ -286,12 +341,12 @@ static void _eeprom_emulator_update_page_mapping(void)
 		for (uint8_t c2 = 0; c2 < NVMCTRL_ROW_PAGES; c2++) {
 			uint16_t physical_page = (c * NVMCTRL_ROW_PAGES) + c2;
 
-			if (physical_page == EEPROM_MASTER_PAGE_NUMBER) {
+			if (physical_page == WWR_EEPROM_MASTER_PAGE_NUMBER) {
 				continue;
 			}
 
-			if (_eeprom_instance.flash[physical_page].header.logical_page !=
-					EEPROM_INVALID_PAGE_NUMBER) {
+			if (_eeprom_instance.wwree_addr[physical_page].header.logical_page !=
+					WWR_EEPROM_INVALID_PAGE_NUMBER) {
 				spare_row_found = false;
 			}
 		}
@@ -307,9 +362,9 @@ static void _eeprom_emulator_update_page_mapping(void)
 /**
  * \brief Finds the next free page in the given row if one is available
  *
- * \param[in]  start_physical_page  Physical FLASH page index of the row to
+ * \param[in]  start_physical_page  Physical page index of the row to
  *                                  search
- * \param[out] free_physical_page   Index of the physical FLASH page that is
+ * \param[out] free_physical_page   Index of the physical page that is
  *                                  currently free (if one was found)
  *
  * \return Whether a free page was found in the specified row.
@@ -317,11 +372,11 @@ static void _eeprom_emulator_update_page_mapping(void)
  * \retval \c true   If a free page was found
  * \retval \c false  If the specified row was full and needs an erase
  */
-static bool _eeprom_emulator_is_page_free_on_row(
+static bool _wwr_eeprom_emulator_is_page_free_on_row(
 		const uint8_t start_physical_page,
 		uint8_t *const free_physical_page)
 {
-	/* Convert physical page number to a FLASH row and page within the row */
+	/* Convert physical page number to a WWREE row and page within the row */
 	uint8_t row         = (start_physical_page / NVMCTRL_ROW_PAGES);
 	uint8_t page_in_row = (start_physical_page % NVMCTRL_ROW_PAGES);
 
@@ -331,8 +386,8 @@ static bool _eeprom_emulator_is_page_free_on_row(
 		uint8_t page = (row * NVMCTRL_ROW_PAGES) + c;
 
 		/* If the page is free, pass it to the caller and exit */
-		if (_eeprom_instance.flash[page].header.logical_page ==
-				EEPROM_INVALID_PAGE_NUMBER) {
+		if (_eeprom_instance.wwree_addr[page].header.logical_page ==
+				WWR_EEPROM_INVALID_PAGE_NUMBER) {
 			*free_physical_page = page;
 			return true;
 		}
@@ -350,12 +405,12 @@ static bool _eeprom_emulator_is_page_free_on_row(
  * page is replaced with a new buffer of data.
  *
  * \param[in] row_number    Physical row to examine
- * \param[in] logical_page  Logical EEPROM page number in the row to update
+ * \param[in] logical_page  Logical WWR EEPROM page number in the row to update
  * \param[in] data          New data to replace the old in the logical page
  *
  * \return Status code indicating the status of the operation.
  */
-static enum status_code _eeprom_emulator_move_data_to_spare(
+static enum status_code _wwr_eeprom_emulator_move_data_to_spare(
 		const uint8_t row_number,
 		const uint8_t logical_page,
 		const uint8_t *const data)
@@ -366,20 +421,19 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 		uint8_t physical_page;
 	} page_trans[2];
 
-	const struct _eeprom_page *row_data =
-			(struct _eeprom_page *)&_eeprom_instance.flash[row_number * NVMCTRL_ROW_PAGES];
+	const struct _wwr_eeprom_page *row_data =
+			(struct _wwr_eeprom_page *)&_eeprom_instance.wwree_addr[row_number * NVMCTRL_ROW_PAGES];
 
-	/* There should be two logical pages of data in each row, possibly with
+	/* There should be one or two logical pages of data in each row, possibly with
 	 * multiple revisions (right-most version is the newest). Start by assuming
 	 * the left-most two pages contain the newest page revisions. */
-	page_trans[0].logical_page  = row_data[0].header.logical_page;
-	page_trans[0].physical_page = (row_number * NVMCTRL_ROW_PAGES);
+	for (uint8_t i = 0; i < CONF_LOGICAL_PAGE_NUM_IN_ROW; i++){
+		page_trans[i].logical_page  = row_data[i].header.logical_page;
+		page_trans[i].physical_page = (row_number * NVMCTRL_ROW_PAGES) + i;
+	}
 
-	page_trans[1].logical_page  = row_data[1].header.logical_page;
-	page_trans[1].physical_page = (row_number * NVMCTRL_ROW_PAGES) + 1;
-
-	/* Look for newer revisions of the two logical pages stored in the row */
-	for (uint8_t c = 0; c < 2; c++) {
+	/* Look for newer revisions of the one or two logical pages stored in the row */
+	for (uint8_t c = 0; c < CONF_LOGICAL_PAGE_NUM_IN_ROW; c++) {
 		/* Look through the remaining pages in the row for any newer revisions */
 		for (uint8_t c2 = 2; c2 < NVMCTRL_ROW_PAGES; c2++) {
 			if (page_trans[c].logical_page == row_data[c2].header.logical_page) {
@@ -390,13 +444,13 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 	}
 
 	/* Need to move both saved logical pages stored in the same row */
-	for (uint8_t c = 0; c < 2; c++) {
+	for (uint8_t c = 0; c < CONF_LOGICAL_PAGE_NUM_IN_ROW; c++) {
 		/* Find the physical page index for the new spare row pages */
 		uint32_t new_page =
 				((_eeprom_instance.spare_row * NVMCTRL_ROW_PAGES) + c);
 
 		/* Commit any cached data to physical non-volatile memory */
-		eeprom_emulator_commit_page_buffer();
+		wwr_eeprom_emulator_commit_page_buffer();
 
 		/* Check if we we are looking at the page the calling function wishes
 		 * to change during the move operation */
@@ -405,17 +459,17 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 			_eeprom_instance.cache.header.logical_page = logical_page;
 
 			/* Write data to SRAM cache */
-			memcpy(_eeprom_instance.cache.data, data, EEPROM_PAGE_SIZE);
+			memcpy(_eeprom_instance.cache.data, data, WWR_EEPROM_PAGE_SIZE);
 		} else {
-			/* Copy existing EEPROM page to cache buffer wholesale */
-			_eeprom_emulator_nvm_read_page(
+			/* Copy existing WWR EEPROM page to cache buffer wholesale */
+			_wwr_eeprom_emulator_nvm_read_page(
 					page_trans[c].physical_page, &_eeprom_instance.cache);
 		}
 
 		/* Fill the physical NVM buffer with the new data so that it can be
 		 * quickly committed in the future if needed due to a low power
 		 * condition */
-		_eeprom_emulator_nvm_fill_cache(new_page, &_eeprom_instance.cache);
+		_wwr_eeprom_emulator_nvm_fill_cache(new_page, &_eeprom_instance.cache);
 
 		/* Update the page map with the new page location and indicate that
 		 * the cache now holds new data */
@@ -424,7 +478,7 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 	}
 
 	/* Erase the row that was moved and set it as the new spare row */
-	_eeprom_emulator_nvm_erase_row(row_number);
+	_wwr_eeprom_emulator_nvm_erase_row(row_number);
 
 	/* Keep the index of the new spare row */
 	_eeprom_instance.spare_row = row_number;
@@ -433,75 +487,75 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 }
 
 /**
- * \brief Create master emulated EEPROM management page
+ * \brief Create master emulated WWR EEPROM management page
  *
- * Creates a new master page in emulated EEPROM, giving information on the
- * emulator used to store the EEPROM data.
+ * Creates a new master page in emulated WWR EEPROM, giving information on the
+ * emulator used to store the WWR EEPROM data.
  */
-static void _eeprom_emulator_create_master_page(void)
+static void _wwr_eeprom_emulator_create_master_page(void)
 {
-	const uint32_t magic_key[] = EEPROM_MAGIC_KEY;
+	const uint32_t magic_key[] = WWR_EEPROM_MAGIC_KEY;
 
-	struct _eeprom_master_page master_page;
+	struct _wwr_eeprom_master_page master_page;
 	memset(&master_page, 0xFF, sizeof(master_page));
 
 	/* Fill out the magic key header to indicate an initialized master page */
-	for (uint8_t c = 0; c < EEPROM_MAGIC_KEY_COUNT; c++) {
+	for (uint8_t c = 0; c < WWR_EEPROM_MAGIC_KEY_COUNT; c++) {
 		master_page.magic_key[c] = magic_key[c];
 	}
 
 	/* Update master header with version information of this emulator */
-	master_page.emulator_id   = EEPROM_EMULATOR_ID;
-	master_page.major_version = EEPROM_MAJOR_VERSION;
-	master_page.minor_version = EEPROM_MINOR_VERSION;
-	master_page.revision      = EEPROM_REVISION;
+	master_page.emulator_id   = WWR_EEPROM_EMULATOR_ID;
+	master_page.major_version = WWR_EEPROM_MAJOR_VERSION;
+	master_page.minor_version = WWR_EEPROM_MINOR_VERSION;
+	master_page.revision      = WWR_EEPROM_REVISION;
 
-	_eeprom_emulator_nvm_erase_row(
-			EEPROM_MASTER_PAGE_NUMBER / NVMCTRL_ROW_PAGES);
+	_wwr_eeprom_emulator_nvm_erase_row(
+			WWR_EEPROM_MASTER_PAGE_NUMBER / NVMCTRL_ROW_PAGES);
 
 	/* Write the new master page data to physical memory */
-	_eeprom_emulator_nvm_fill_cache(EEPROM_MASTER_PAGE_NUMBER, &master_page);
-	_eeprom_emulator_nvm_commit_cache(EEPROM_MASTER_PAGE_NUMBER);
+	_wwr_eeprom_emulator_nvm_fill_cache(WWR_EEPROM_MASTER_PAGE_NUMBER, &master_page);
+	_wwr_eeprom_emulator_nvm_commit_cache(WWR_EEPROM_MASTER_PAGE_NUMBER);
 }
 
 /**
- * \brief Verify the contents of a master EEPROM page
+ * \brief Verify the contents of a master WWR EEPROM page
  *
- * Verify the contents of a master EEPROM page to ensure that it contains the
- * correct information for this version of the EEPROM emulation service.
+ * Verify the contents of a master WWR EEPROM page to ensure that it contains the
+ * correct information for this version of the WWR EEPROM emulation service.
  *
  * \retval STATUS_OK              Given master page contents is valid
  * \retval STATUS_ERR_BAD_FORMAT  Master page contents was invalid
  * \retval STATUS_ERR_IO          Master page indicates the data is incompatible
- *                                with this version of the EEPROM emulator
+ *                                with this version of the WWR EEPROM emulator
  */
-static enum status_code _eeprom_emulator_verify_master_page(void)
+static enum status_code _wwr_eeprom_emulator_verify_master_page(void)
 {
-	const uint32_t magic_key[] = EEPROM_MAGIC_KEY;
-	struct _eeprom_master_page master_page;
+	const uint32_t magic_key[] = WWR_EEPROM_MAGIC_KEY;
+	struct _wwr_eeprom_master_page master_page;
 
 	/* Copy the master page to the RAM buffer so that it can be inspected */
-	_eeprom_emulator_nvm_read_page(EEPROM_MASTER_PAGE_NUMBER, &master_page);
+	_wwr_eeprom_emulator_nvm_read_page(WWR_EEPROM_MASTER_PAGE_NUMBER, &master_page);
 
 	/* Verify magic key is correct in the master page header */
-	for (uint8_t c = 0; c < EEPROM_MAGIC_KEY_COUNT; c++) {
+	for (uint8_t c = 0; c < WWR_EEPROM_MAGIC_KEY_COUNT; c++) {
 		if (master_page.magic_key[c] != magic_key[c]) {
 			return STATUS_ERR_BAD_FORMAT;
 		}
 	}
 
 	/* Verify emulator ID in header to ensure the same scheme is used */
-	if (master_page.emulator_id   != EEPROM_EMULATOR_ID) {
+	if (master_page.emulator_id   != WWR_EEPROM_EMULATOR_ID) {
 		return STATUS_ERR_IO;
 	}
 
 	/* Verify major version in header to ensure the same version is used */
-	if (master_page.major_version != EEPROM_MAJOR_VERSION) {
+	if (master_page.major_version != WWR_EEPROM_MAJOR_VERSION) {
 		return STATUS_ERR_IO;
 	}
 
 	/* Verify minor version in header to ensure the same version is used */
-	if (master_page.minor_version != EEPROM_MINOR_VERSION) {
+	if (master_page.minor_version != WWR_EEPROM_MINOR_VERSION) {
 		return STATUS_ERR_IO;
 	}
 
@@ -513,58 +567,59 @@ static enum status_code _eeprom_emulator_verify_master_page(void)
 
 
 /**
- * \brief Retrieves the parameters of the EEPROM Emulator memory layout.
+ * \brief Retrieves the parameters of the WWR EEPROM Emulator memory layout.
  *
- * Retrieves the configuration parameters of the EEPROM Emulator, after it has
+ * Retrieves the configuration parameters of the WWR EEPROM Emulator, after it has
  * been initialized.
  *
- * \param[out] parameters  EEPROM Emulator parameter struct to fill
+ * \param[out] parameters  WWR EEPROM Emulator parameter struct to fill
  *
  * \return Status of the operation.
  *
  * \retval STATUS_OK                    If the emulator parameters were retrieved
  *                                      successfully
- * \retval STATUS_ERR_NOT_INITIALIZED   If the EEPROM Emulator is not initialized
+ * \retval STATUS_ERR_NOT_INITIALIZED   If the WWR EEPROM Emulator is not initialized
  */
-enum status_code eeprom_emulator_get_parameters(
-	struct eeprom_emulator_parameters *const parameters)
+enum status_code wwr_eeprom_emulator_get_parameters(
+	struct wwr_eeprom_emulator_parameters *const parameters)
 {
 	if (_eeprom_instance.initialized == false) {
 		return STATUS_ERR_NOT_INITIALIZED;
 	}
 
-	parameters->page_size              = EEPROM_PAGE_SIZE;
+	parameters->page_size              = WWR_EEPROM_PAGE_SIZE;
 	parameters->eeprom_number_of_pages = _eeprom_instance.logical_pages;
 
 	return STATUS_OK;
 }
 
 /**
- * \brief Initializes the EEPROM Emulator service
+ * \brief Initializes the WWR EEPROM Emulator service
  *
- * Initializes the emulated EEPROM memory space; if the emulated EEPROM memory
+ * Initializes the emulated WWR EEPROM memory space; if the emulated WWR EEPROM memory
  * has not been previously initialized, it will need to be explicitly formatted
- * via \ref eeprom_emulator_erase_memory(). The EEPROM memory space will \b not
+ * via \ref wwr_eeprom_emulator_erase_memory(). The WWR EEPROM memory space will \b not
  * be automatically erased by the initialization function, so that partial data
  * may be recovered by the user application manually if the service is unable to
  * initialize successfully.
  *
  * \return Status code indicating the status of the operation.
  *
- * \retval STATUS_OK              EEPROM emulation service was successfully
+ * \retval STATUS_OK              WWR EEPROM emulation service was successfully
  *                                initialized
- * \retval STATUS_ERR_NO_MEMORY   No EEPROM section has been allocated in the
- *                                device
- * \retval STATUS_ERR_BAD_FORMAT  Emulated EEPROM memory is corrupt or not
+ * \retval STATUS_ERR_BAD_FORMAT  Emulated WWR EEPROM memory is corrupt or not
  *                                formatted
- * \retval STATUS_ERR_IO          EEPROM data is incompatible with this version
- *                                or scheme of the EEPROM emulator
+ * \retval STATUS_ERR_IO          WWR EEPROM data is incompatible with this version
+ *                                or scheme of the WWR EEPROM emulator
  */
-enum status_code eeprom_emulator_init(void)
+enum status_code wwr_eeprom_emulator_init(void)
 {
 	enum status_code error_code = STATUS_OK;
 	struct nvm_config config;
 	struct nvm_parameters parameters;
+
+	/* Mark initialization as start */
+	_eeprom_instance.initialized = false;
 
 	/* Retrieve the NVM controller configuration - enable manual page writing
 	 * mode so that the emulator has exclusive control over page writes to
@@ -580,42 +635,34 @@ enum status_code eeprom_emulator_init(void)
 	/* Get the NVM controller configuration parameters */
 	nvm_get_parameters(&parameters);
 
-	/* Ensure the device fuses are configured for at least one master page row,
-	 * one user EEPROM data row and one spare row */
-	if (parameters.eeprom_number_of_pages < (3 * NVMCTRL_ROW_PAGES)) {
-		return STATUS_ERR_NO_MEMORY;
-	}
-
-	/* Configure the EEPROM instance physical and logical number of pages:
+	/* Configure the WWR EEPROM instance physical and logical number of pages:
 	 *  - One row is reserved for the master page
 	 *  - One row is reserved for the spare row
-	 *  - Two logical pages can be stored in one physical row
+	 *  - One or two logical pages can be stored in one physical row
 	 */
 	_eeprom_instance.physical_pages =
-			parameters.eeprom_number_of_pages;
+			parameters.wwr_eeprom_number_of_pages;
 	_eeprom_instance.logical_pages  =
-			(parameters.eeprom_number_of_pages - (2 * NVMCTRL_ROW_PAGES)) / 2;
+			(parameters.wwr_eeprom_number_of_pages - (2 * NVMCTRL_ROW_PAGES)) / CONF_LOGICAL_PAGE_NUM_IN_ROW;
 
-	/* Configure the EEPROM instance starting physical address in FLASH and
-	 * pre-compute the index of the first page in FLASH used for EEPROM */
-	_eeprom_instance.flash =
-			(void*)(FLASH_SIZE -
-			((uint32_t)_eeprom_instance.physical_pages * NVMCTRL_PAGE_SIZE));
+	/* Configure the WWR EEPROM instance starting physical address and
+	 * pre-compute the index of the first page used for WWR EEPROM */
+	_eeprom_instance.wwree_addr = (void*)NVMCTRL_WWR_EEPROM_ADDR;
 
-	/* Clear EEPROM page write cache on initialization */
+	/* Clear WWR EEPROM page write cache on initialization */
 	_eeprom_instance.cache_active = false;
 
 	/* Scan physical memory and re-create logical to physical page mapping
-	 * table to locate logical pages of EEPROM data in physical FLASH */
-	_eeprom_emulator_update_page_mapping();
+	 * table to locate logical pages of WWR EEPROM data */
+	_wwr_eeprom_emulator_update_page_mapping();
 
 	/* Could not find spare row - abort as the memory appears to be corrupt */
-	if (_eeprom_instance.spare_row == EEPROM_INVALID_ROW_NUMBER) {
+	if (_eeprom_instance.spare_row == WWR_EEPROM_INVALID_ROW_NUMBER) {
 		return STATUS_ERR_BAD_FORMAT;
 	}
 
 	/* Verify that the master page contains valid data for this service */
-	error_code = _eeprom_emulator_verify_master_page();
+	error_code = _wwr_eeprom_emulator_verify_master_page();
 	if (error_code != STATUS_OK) {
 		return error_code;
 	}
@@ -627,48 +674,54 @@ enum status_code eeprom_emulator_init(void)
 }
 
 /**
- * \brief Erases the entire emulated EEPROM memory space
+ * \brief Erases the entire emulated WWR EEPROM memory space
  *
- * Erases and re-initializes the emulated EEPROM memory space, destroying any
+ * Erases and re-initializes the emulated WWR EEPROM memory space, destroying any
  * existing data.
  */
-void eeprom_emulator_erase_memory(void)
+void wwr_eeprom_emulator_erase_memory(void)
 {
-	/* Create new EEPROM memory block in EEPROM emulation section */
-	_eeprom_emulator_format_memory();
+	/* Create new WWR EEPROM memory block in EEPROM emulation section */
+	_wwr_eeprom_emulator_format_memory();
 
-	/* Write EEPROM emulation master block */
-	_eeprom_emulator_create_master_page();
+	bool temp = _eeprom_instance.initialized;
 
-	/* Map the newly created EEPROM memory block */
-	_eeprom_emulator_update_page_mapping();
+	/** Master page should be created during uninitialized status*/
+	_eeprom_instance.initialized = false;
+
+	/* Write WWR EEPROM emulation master block */
+	_wwr_eeprom_emulator_create_master_page();
+	_eeprom_instance.initialized = temp;
+
+	/* Map the newly created WWR EEPROM memory block */
+	_wwr_eeprom_emulator_update_page_mapping();
 }
 
 /**
- * \brief Writes a page of data to an emulated EEPROM memory page
+ * \brief Writes a page of data to an emulated WWR EEPROM memory page
  *
- * Writes an emulated EEPROM page of data to the emulated EEPROM memory space.
+ * Writes an emulated WWR EEPROM page of data to the emulated WWR EEPROM memory space.
  *
  * \note Data stored in pages may be cached in volatile RAM memory; to commit
  *       any cached data to physical non-volatile memory, the
- *       \ref eeprom_emulator_commit_page_buffer() function should be called.
+ *       \ref wwr_eeprom_emulator_commit_page_buffer() function should be called.
  *
- * \param[in] logical_page  Logical EEPROM page number to write to
+ * \param[in] logical_page  Logical WWR EEPROM page number to write to
  * \param[in] data          Pointer to the data buffer containing source data to
  *                          write
  *
  * \return Status code indicating the status of the operation.
  *
  * \retval STATUS_OK                    If the page was successfully read
- * \retval STATUS_ERR_NOT_INITIALIZED   If the EEPROM emulator is not initialized
+ * \retval STATUS_ERR_NOT_INITIALIZED   If the WWR EEPROM emulator is not initialized
  * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
- *                                      EEPROM memory space was supplied
+ *                                      WWR EEPROM memory space was supplied
  */
-enum status_code eeprom_emulator_write_page(
+enum status_code wwr_eeprom_emulator_write_page(
 		const uint8_t logical_page,
 		const uint8_t *const data)
 {
-	/* Ensure the emulated EEPROM has been initialized first */
+	/* Ensure the emulated WWR EEPROM has been initialized first */
 	if (_eeprom_instance.initialized == false) {
 		return STATUS_ERR_NOT_INITIALIZED;
 	}
@@ -684,13 +737,13 @@ enum status_code eeprom_emulator_write_page(
 	if ((_eeprom_instance.cache_active == true) &&
 			(_eeprom_instance.cache.header.logical_page != logical_page)) {
 		/* Commit the currently cached data buffer to non-volatile memory */
-		eeprom_emulator_commit_page_buffer();
+		wwr_eeprom_emulator_commit_page_buffer();
 	}
 
 	/* Check if we have space in the current page location's physical row for
 	 * a new version, and if so get the new page index */
 	uint8_t new_page = 0;
-	bool page_spare  = _eeprom_emulator_is_page_free_on_row(
+	bool page_spare  = _wwr_eeprom_emulator_is_page_free_on_row(
 			_eeprom_instance.page_map[logical_page], &new_page);
 
 	/* Check if the current row is full, and we need to swap it out with a
@@ -699,7 +752,7 @@ enum status_code eeprom_emulator_write_page(
 		/* Move the other page we aren't writing that is stored in the same
 		 * page to the new row, and replace the old current page with the
 		 * new page contents (cache is updated to match) */
-		_eeprom_emulator_move_data_to_spare(
+		_wwr_eeprom_emulator_move_data_to_spare(
 				_eeprom_instance.page_map[logical_page] / NVMCTRL_ROW_PAGES,
 				logical_page,
 				data);
@@ -714,11 +767,11 @@ enum status_code eeprom_emulator_write_page(
 	/* Update the page cache contents with the new data */
 	memcpy(&_eeprom_instance.cache.data,
 			data,
-			EEPROM_PAGE_SIZE);
+			WWR_EEPROM_PAGE_SIZE);
 
 	/* Fill the physical NVM buffer with the new data so that it can be quickly
 	 * committed in the future if needed due to a low power condition */
-	_eeprom_emulator_nvm_fill_cache(new_page, &_eeprom_instance.cache);
+	_wwr_eeprom_emulator_nvm_fill_cache(new_page, &_eeprom_instance.cache);
 
 	/* Update the cache parameters and mark the cache as active */
 	_eeprom_instance.page_map[logical_page] = new_page;
@@ -729,25 +782,27 @@ enum status_code eeprom_emulator_write_page(
 }
 
 /**
- * \brief Reads a page of data from an emulated EEPROM memory page
+ * \brief Reads a page of data from an emulated WWR EEPROM memory page
  *
- * Reads an emulated EEPROM page of data from the emulated EEPROM memory space.
+ * Reads an emulated WWR EEPROM page of data from the emulated WWR EEPROM memory space.
  *
- * \param[in]  logical_page  Logical EEPROM page number to read from
+ * \param[in]  logical_page  Logical WWR EEPROM page number to read from
  * \param[out] data          Pointer to the destination data buffer to fill
  *
  * \return Status code indicating the status of the operation.
  *
  * \retval STATUS_OK                    If the page was successfully read
- * \retval STATUS_ERR_NOT_INITIALIZED   If the EEPROM emulator is not initialized
+ * \retval STATUS_ERR_NOT_INITIALIZED   If the WWR EEPROM emulator is not initialized
  * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
- *                                      EEPROM memory space was supplied
+ *                                      WWR EEPROM memory space was supplied
+ * \retval STATUS_ERR_BAD_FORMAT        Page data checksum is not correct, maybe data
+ *                                      is damaged.
  */
-enum status_code eeprom_emulator_read_page(
+enum status_code wwr_eeprom_emulator_read_page(
 		const uint8_t logical_page,
 		uint8_t *const data)
 {
-	/* Ensure the emulated EEPROM has been initialized first */
+	/* Ensure the emulated WWR EEPROM has been initialized first */
 	if (_eeprom_instance.initialized == false) {
 		return STATUS_ERR_NOT_INITIALIZED;
 	}
@@ -762,33 +817,37 @@ enum status_code eeprom_emulator_read_page(
 	if ((_eeprom_instance.cache_active == true) &&
 		 (_eeprom_instance.cache.header.logical_page == logical_page)) {
 		/* Copy the potentially newer cached data into the user buffer */
-		memcpy(data, _eeprom_instance.cache.data, EEPROM_PAGE_SIZE);
+		memcpy(data, _eeprom_instance.cache.data, WWR_EEPROM_PAGE_SIZE);
 	} else {
-		struct _eeprom_page temp;
+		struct _wwr_eeprom_page temp;
 
 		/* Copy the data from non-volatile memory into the temporary buffer */
-		_eeprom_emulator_nvm_read_page(
-				_eeprom_instance.page_map[logical_page], &temp);
-
-		/* Copy the data portion of the read page to the user's buffer */
-		memcpy(data, temp.data, EEPROM_PAGE_SIZE);
+		if (_wwr_eeprom_emulator_nvm_read_page(
+				_eeprom_instance.page_map[logical_page], &temp)){
+			/* Copy the data portion of the read page to the user's buffer */
+			memcpy(data, temp.data, WWR_EEPROM_PAGE_SIZE);
+		}else{
+			/* Copy data even the checksum is not correct*/
+			memcpy(data, temp.data, WWR_EEPROM_PAGE_SIZE);
+			return STATUS_ERR_BAD_FORMAT;
+		}
 	}
 
 	return STATUS_OK;
 }
 
 /**
- * \brief Writes a buffer of data to the emulated EEPROM memory space
+ * \brief Writes a buffer of data to the emulated WWR EEPROM memory space
  *
- * Writes a buffer of data to a section of emulated EEPROM memory space. The
+ * Writes a buffer of data to a section of emulated WWR EEPROM memory space. The
  * source buffer may be of any size, and the destination may lie outside of an
- * emulated EEPROM page boundary.
+ * emulated WWR EEPROM page boundary.
  *
  * \note Data stored in pages may be cached in volatile RAM memory; to commit
  *       any cached data to physical non-volatile memory, the
- *       \ref eeprom_emulator_commit_page_buffer() function should be called.
+ *       \ref wwr_eeprom_emulator_commit_page_buffer() function should be called.
  *
- * \param[in] offset  Starting byte offset to write to, in emulated EEPROM
+ * \param[in] offset  Starting byte offset to write to, in emulated WWR EEPROM
  *                    memory space
  * \param[in] data    Pointer to the data buffer containing source data to write
  * \param[in] length  Length of the data to write, in bytes
@@ -796,24 +855,24 @@ enum status_code eeprom_emulator_read_page(
  * \return Status code indicating the status of the operation.
  *
  * \retval STATUS_OK                    If the page was successfully read
- * \retval STATUS_ERR_NOT_INITIALIZED   If the EEPROM emulator is not initialized
+ * \retval STATUS_ERR_NOT_INITIALIZED   If the WWR EEPROM emulator is not initialized
  * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
- *                                      EEPROM memory space was supplied
+ *                                      WWR EEPROM memory space was supplied
  */
-enum status_code eeprom_emulator_write_buffer(
+enum status_code wwr_eeprom_emulator_write_buffer(
 		const uint16_t offset,
 		const uint8_t *const data,
 		const uint16_t length)
 {
 	enum status_code error_code = STATUS_OK;
-	uint8_t buffer[EEPROM_PAGE_SIZE];
-	uint8_t logical_page = offset / EEPROM_PAGE_SIZE;
+	uint8_t buffer[WWR_EEPROM_PAGE_SIZE];
+	uint8_t logical_page = offset / WWR_EEPROM_PAGE_SIZE;
 	uint16_t c = offset;
 	/* Keep track of whether the currently updated page has been written */
 	bool page_dirty = false;
 	/** Perform the initial page read if necessary*/
-	if ((offset % EEPROM_PAGE_SIZE) || length < EEPROM_PAGE_SIZE) {
-		error_code = eeprom_emulator_read_page(logical_page, buffer);
+	if ((offset % WWR_EEPROM_PAGE_SIZE) || length < WWR_EEPROM_PAGE_SIZE) {
+		error_code = wwr_eeprom_emulator_read_page(logical_page, buffer);
 
 		if (error_code != STATUS_OK) {
 			return error_code;
@@ -821,19 +880,19 @@ enum status_code eeprom_emulator_write_buffer(
 	}
 
 	/* To avoid entering into the initial if in the loop the first time */
-	if ((offset % EEPROM_PAGE_SIZE) == 0) {
-		buffer[c % EEPROM_PAGE_SIZE] = data[c - offset];
+	if ((offset % WWR_EEPROM_PAGE_SIZE) == 0) {
+		buffer[c % WWR_EEPROM_PAGE_SIZE] = data[c - offset];
 		page_dirty = true;
 		c=c+1;
 	}
 
-	/* Write the specified data to the emulated EEPROM memory space */
+	/* Write the specified data to the emulated WWR EEPROM memory space */
 	for (; c < (length + offset); c++) {
-		/* Check if we have written up to a new EEPROM page boundary */
-		if ((c % EEPROM_PAGE_SIZE) == 0) {
+		/* Check if we have written up to a new WWR EEPROM page boundary */
+		if ((c % WWR_EEPROM_PAGE_SIZE) == 0) {
 			/* Write the current page to non-volatile memory from the temporary
 			 * buffer */
-			error_code = eeprom_emulator_write_page(logical_page, buffer);
+			error_code = wwr_eeprom_emulator_write_page(logical_page, buffer);
 			page_dirty = false;
 
 			if (error_code != STATUS_OK) {
@@ -845,7 +904,7 @@ enum status_code eeprom_emulator_write_buffer(
 
 			/* Read the next page from non-volatile memory into the temporary
 			 * buffer in case of a partial page write */
-			error_code = eeprom_emulator_read_page(logical_page, buffer);
+			error_code = wwr_eeprom_emulator_read_page(logical_page, buffer);
 
 			if (error_code != STATUS_OK) {
 				return error_code;
@@ -853,26 +912,26 @@ enum status_code eeprom_emulator_write_buffer(
 		}
 		/* Copy the next byte of data from the user's buffer to the temporary
 		 * buffer */
-		buffer[c % EEPROM_PAGE_SIZE] = data[c - offset];
+		buffer[c % WWR_EEPROM_PAGE_SIZE] = data[c - offset];
 		page_dirty = true;
 	}
 
 	/* If the current page is dirty, write it */
 	if (page_dirty) {
-		error_code = eeprom_emulator_write_page(logical_page, buffer);
+		error_code = wwr_eeprom_emulator_write_page(logical_page, buffer);
 	}
 
 	return error_code;
 }
 
 /**
- * \brief Reads a buffer of data from the emulated EEPROM memory space
+ * \brief Reads a buffer of data from the emulated WWR EEPROM memory space
  *
- * Reads a buffer of data from a section of emulated EEPROM memory space. The
+ * Reads a buffer of data from a section of emulated WWR EEPROM memory space. The
  * destination buffer may be of any size, and the source may lie outside of an
- * emulated EEPROM page boundary.
+ * emulated WWR EEPROM page boundary.
  *
- * \param[in]  offset  Starting byte offset to read from, in emulated EEPROM
+ * \param[in]  offset  Starting byte offset to read from, in emulated WWR EEPROM
  *                     memory space
  * \param[out] data    Pointer to the data buffer containing source data to read
  * \param[in]  length  Length of the data to read, in bytes
@@ -880,42 +939,42 @@ enum status_code eeprom_emulator_write_buffer(
  * \return Status code indicating the status of the operation.
  *
  * \retval STATUS_OK                    If the page was successfully read
- * \retval STATUS_ERR_NOT_INITIALIZED   If the EEPROM emulator is not initialized
+ * \retval STATUS_ERR_NOT_INITIALIZED   If the WWR EEPROM emulator is not initialized
  * \retval STATUS_ERR_BAD_ADDRESS       If an address outside the valid emulated
- *                                      EEPROM memory space was supplied
+ *                                      WWR EEPROM memory space was supplied
  */
-enum status_code eeprom_emulator_read_buffer(
+enum status_code wwr_eeprom_emulator_read_buffer(
 		const uint16_t offset,
 		uint8_t *const data,
 		const uint16_t length)
 {
 	enum status_code error_code;
-	uint8_t buffer[EEPROM_PAGE_SIZE];
-	uint8_t logical_page = offset / EEPROM_PAGE_SIZE;
+	uint8_t buffer[WWR_EEPROM_PAGE_SIZE];
+	uint8_t logical_page = offset / WWR_EEPROM_PAGE_SIZE;
 	uint16_t c = offset;
 
 	/** Perform the initial page read  */
-	error_code = eeprom_emulator_read_page(logical_page, buffer);
+	error_code = wwr_eeprom_emulator_read_page(logical_page, buffer);
 	if (error_code != STATUS_OK) {
 		return error_code;
 	}
 
 	/* To avoid entering into the initial if in the loop the first time */
-	if ((offset % EEPROM_PAGE_SIZE) == 0) {
+	if ((offset % WWR_EEPROM_PAGE_SIZE) == 0) {
 		data[0] = buffer[0];
 		c=c+1;
 	}
 
-	/* Read in the specified data from the emulated EEPROM memory space */
+	/* Read in the specified data from the emulated WWR EEPROM memory space */
 	for (; c < (length + offset); c++) {
-		/* Check if we have read up to a new EEPROM page boundary */
-		if ((c % EEPROM_PAGE_SIZE) == 0) {
+		/* Check if we have read up to a new WWR EEPROM page boundary */
+		if ((c % WWR_EEPROM_PAGE_SIZE) == 0) {
 			/* Increment the page number we are looking at */
 			logical_page++;
 
 			/* Read the next page from non-volatile memory into the temporary
 			 * buffer */
-			error_code = eeprom_emulator_read_page(logical_page, buffer);
+			error_code = wwr_eeprom_emulator_read_page(logical_page, buffer);
 
 			if (error_code != STATUS_OK) {
 				return error_code;
@@ -924,7 +983,7 @@ enum status_code eeprom_emulator_read_buffer(
 
 		/* Copy the next byte of data from the temporary buffer to the user's
 		 * buffer */
-		data[c - offset] = buffer[c % EEPROM_PAGE_SIZE];
+		data[c - offset] = buffer[c % WWR_EEPROM_PAGE_SIZE];
 	}
 
 	return error_code;
@@ -948,7 +1007,7 @@ enum status_code eeprom_emulator_read_buffer(
  *
  * \return Status code indicating the status of the operation.
  */
-enum status_code eeprom_emulator_commit_page_buffer(void)
+enum status_code wwr_eeprom_emulator_commit_page_buffer(void)
 {
 	enum status_code error_code = STATUS_OK;
 
@@ -959,8 +1018,8 @@ enum status_code eeprom_emulator_commit_page_buffer(void)
 
 	uint8_t cached_logical_page = _eeprom_instance.cache.header.logical_page;
 
-	/* Perform the page write to commit the NVM page buffer to FLASH */
-	_eeprom_emulator_nvm_commit_cache(
+	/* Perform the page write to commit the NVM page buffer to physical memory */
+	_wwr_eeprom_emulator_nvm_commit_cache(
 			_eeprom_instance.page_map[cached_logical_page]);
 
 	barrier(); // Enforce ordering to prevent incorrect cache state

@@ -21,6 +21,8 @@
 		<build type="header-file" subtype="api" value="wwr_eeprom.h"/>
 		<build type="c-source" value="wwr_eeprom.c"/>
 		<build type="header-file" value="quick_start/qs_emulator_basic.h"/>
+		<build type="module-config" subtype="required-header-file" value="conf_wwree.h"/>
+		<build type="module-config" subtype="path" value="module_config"/>
 		<build type="doxygen-example-path" value="quick_start"/>
 		<build type="doxygen-image-path" value="docimg"/>
 		<build type="doxygen-entry-point" value="asfdoc_sam0_wwr_eeprom_group"/>

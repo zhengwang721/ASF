@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM EEPROM Emulator Service Quick Start
+ * \brief WWR EEPROM Service Configuration Header
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,57 +40,10 @@
  * \asf_license_stop
  *
  */
-#include <asf.h>
+#ifndef CONF_WWREE_H_INCLUDED
+#define CONF_WWREE_H_INCLUDED
 
-void configure_eeprom(void);
+#define CONF_LOGICAL_PAGE_NUM_IN_ROW  WWREE_LOGICAL_PAGE_NUM_1
+#define CONF_PAGE_CHECKSUM_ENABLE  false
 
-//! [setup]
-void configure_eeprom(void)
-{
-	/* Setup EEPROM emulator service */
-//! [init_eeprom_service]
-	enum status_code error_code = wwr_eeprom_emulator_init();
-//! [init_eeprom_service]
-
-//! [check_re-init]
-	if (error_code != STATUS_OK) {
-		/* Erase the emulated EEPROM memory (assume it is unformatted or
-		 * irrecoverably corrupt) */
-		wwr_eeprom_emulator_erase_memory();
-		wwr_eeprom_emulator_init();
-	}
-//! [check_re-init]
-}
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-//! [setup_init]
-	configure_eeprom();
-//! [setup_init]
-
-//! [main]
-//! [read_page]
-	uint8_t page_data[WWR_EEPROM_PAGE_SIZE];
-	wwr_eeprom_emulator_read_page(0, page_data);
-//! [read_page]
-
-//! [toggle_first_byte]
-	page_data[0] = !page_data[0];
-//! [toggle_first_byte]
-//! [set_led]
-	port_pin_set_output_level(LED_0_PIN, page_data[0]);
-//! [set_led]
-
-//! [write_page]
-	wwr_eeprom_emulator_write_page(0, page_data);
-	wwr_eeprom_emulator_commit_page_buffer();
-//! [write_page]
-
-	while (true) {
-
-	}
-//! [main]
-}
+#endif
