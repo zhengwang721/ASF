@@ -44,7 +44,7 @@
 #define WWR_EEPROM_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_wwr_eeprom_group SAM L21 Write While Read EEPROM Emulator Service (WWR EEPROM)
+ * \defgroup asfdoc_sam0_wwr_eeprom_group SAM L21 Write While Read EEPROM (WWR EEPROM) Emulator Service
  *
  * This driver for Atmel® | SMART™ SAM L21 provides a WWR emulated EEPROM
  * memory area, for the storage and retrieval of user-application
@@ -477,7 +477,7 @@ enum status_code wwr_eeprom_emulator_read_buffer(
  *		<td>Electronically Erasable Read-Only Memory</td>
  *	</tr>
  *	<tr>
- *		<td>WWREEPROM</td>
+ *		<td>WWREE</td>
  *		<td>Write While Read EEPROM</td>
  *	</tr>
   *	<tr>
