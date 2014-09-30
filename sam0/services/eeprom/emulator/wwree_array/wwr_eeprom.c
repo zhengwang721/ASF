@@ -74,6 +74,12 @@
  */
 #define WWR_EEPROM_MAGIC_KEY_COUNT           3
 
+/** \internal
+ *  WWR EEPROM max logical page num.
+ */
+#define WWR_EEPROM_MAX_LOGICAL_PAGES (((NVMCTRL_WWREE_PAGES - (2 * NVMCTRL_ROW_PAGES)) \
+										/ NVMCTRL_ROW_PAGES) * CONF_LOGICAL_PAGE_NUM_IN_ROW)
+
 COMPILER_PACK_SET(1);
 /**
  * \internal
@@ -133,7 +139,7 @@ struct _wwr_eeprom_module {
 	uint8_t  logical_pages;
 
 	/** Mapping array from logical WWR EEPROM pages to physical pages. */
-	uint8_t page_map[WWR_EEPROM_MAX_PAGES / CONF_LOGICAL_PAGE_NUM_IN_ROW - 4];
+	uint8_t page_map[WWR_EEPROM_MAX_LOGICAL_PAGES];
 
 	/** Row number for the spare row (used by next write). */
 	uint8_t spare_row;
@@ -611,6 +617,7 @@ enum status_code wwr_eeprom_emulator_get_parameters(
  *                                formatted
  * \retval STATUS_ERR_IO          WWR EEPROM data is incompatible with this version
  *                                or scheme of the WWR EEPROM emulator
+ * \retval STATUS_ERR_INVALID_ARG Invalid logical page configuration
  */
 enum status_code wwr_eeprom_emulator_init(void)
 {
@@ -621,6 +628,10 @@ enum status_code wwr_eeprom_emulator_init(void)
 	/* Mark initialization as start */
 	_eeprom_instance.initialized = false;
 
+	if ((CONF_LOGICAL_PAGE_NUM_IN_ROW == WWREE_LOGICAL_PAGE_NUM_1 || 
+		CONF_LOGICAL_PAGE_NUM_IN_ROW == WWREE_LOGICAL_PAGE_NUM_2)){
+		return STATUS_ERR_INVALID_ARG;
+	}
 	/* Retrieve the NVM controller configuration - enable manual page writing
 	 * mode so that the emulator has exclusive control over page writes to
 	 * allow for caching */
@@ -642,8 +653,7 @@ enum status_code wwr_eeprom_emulator_init(void)
 	 */
 	_eeprom_instance.physical_pages =
 			parameters.wwr_eeprom_number_of_pages;
-	_eeprom_instance.logical_pages  =
-			(parameters.wwr_eeprom_number_of_pages - (2 * NVMCTRL_ROW_PAGES)) / CONF_LOGICAL_PAGE_NUM_IN_ROW;
+	_eeprom_instance.logical_pages  = WWR_EEPROM_MAX_LOGICAL_PAGES;
 
 	/* Configure the WWR EEPROM instance starting physical address and
 	 * pre-compute the index of the first page used for WWR EEPROM */
