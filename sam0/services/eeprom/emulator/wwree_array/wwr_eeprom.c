@@ -628,7 +628,7 @@ enum status_code wwr_eeprom_emulator_init(void)
 	/* Mark initialization as start */
 	_eeprom_instance.initialized = false;
 
-	if ((CONF_LOGICAL_PAGE_NUM_IN_ROW == WWREE_LOGICAL_PAGE_NUM_1 || 
+	if (!(CONF_LOGICAL_PAGE_NUM_IN_ROW == WWREE_LOGICAL_PAGE_NUM_1 || 
 		CONF_LOGICAL_PAGE_NUM_IN_ROW == WWREE_LOGICAL_PAGE_NUM_2)){
 		return STATUS_ERR_INVALID_ARG;
 	}
@@ -837,7 +837,7 @@ enum status_code wwr_eeprom_emulator_read_page(
 			/* Copy the data portion of the read page to the user's buffer */
 			memcpy(data, temp.data, WWR_EEPROM_PAGE_SIZE);
 		}else{
-			/* Copy data even the checksum is not correct*/
+			/* Copy data even the checksum is not correct */
 			memcpy(data, temp.data, WWR_EEPROM_PAGE_SIZE);
 			return STATUS_ERR_BAD_FORMAT;
 		}
