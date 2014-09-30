@@ -95,7 +95,7 @@ void configure_event_resource(void)
 //! [allocate_event_resource]
 
 //! [attach_event_to_dac]
-#ifdef DAC_CHANNEL_NUM_N
+#if (SAML21)
 	events_attach_user(&event_dac, EVSYS_ID_USER_DAC_START_0);
 #else
 	events_attach_user(&event_dac, EVSYS_ID_USER_DAC_START);
@@ -169,7 +169,7 @@ void configure_dac(void)
 //! [setup_dac_config_default]
 
 //! [setup_dac_start_on_event]
-#ifdef DAC_CHANNEL_NUM_N
+#if (SAML21)
 	dac_instance.start_on_event[DAC_CHANNEL_0] = true;
 #else
 	dac_instance.start_on_event = true;
@@ -182,7 +182,7 @@ void configure_dac(void)
 
 //! [setup_dac_on_event_start_conversion]
 	struct dac_events events =
-#ifdef DAC_CHANNEL_NUM_N
+#if (SAML21)
 		{ .on_event_chan0_start_conversion = true };
 #else
 		{ .on_event_start_conversion = true };

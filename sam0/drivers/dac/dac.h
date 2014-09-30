@@ -65,9 +65,6 @@ extern "C" {
 #if (SAMD21 || SAMD10 || SAMD11)
 #  define FEATURE_DAC_DATABUF_WRITE_PROTECTION
 #endif
-#if (SAML21)
-#  define DAC_CHANNEL_NUM_N
-#endif
 /**@}*/
 
 #ifndef DAC_TIMEOUT
