@@ -48,6 +48,9 @@
 #include "twi_master.h"
 #include "freertos_twi_master.h"
 #include "freertos_peripheral_control_private.h"
+#if SAMG55
+#include "flexcom.h"
+#endif
 
 /* Every bit in the interrupt mask. */
 #define MASK_ALL_INTERRUPTS     (0xffffffffUL)

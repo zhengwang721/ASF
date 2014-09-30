@@ -38,6 +38,7 @@
 			<build type="doxygen-entry-point" value="sam_drivers_usart_group"/>
 			<build type="doxygen-quick-start" value="sam_usart_quickstart"/>
 			<device-support value="samg55"/>
+			<require idref="sam.drivers.flexcom"/>
 			<generator value="doxygen-module" default-mcu="unspecified-samg55"/>
 		</module>
 	</select-by-device>
