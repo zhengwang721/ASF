@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 Serial Peripheral Interface Driver
+ * \brief SAM Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -47,12 +47,23 @@
 #include <compiler.h>
 #include <system.h>
 #include <clock.h>
-#include "sercom_interrupt.h"
+#include <system_interrupt.h>
 #include "sercom_pinout.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#if (SAMD10) || (SAMD11)
+
+#if (SERCOM0_GCLK_ID_SLOW == SERCOM1_GCLK_ID_SLOW && \
+     SERCOM0_GCLK_ID_SLOW == SERCOM2_GCLK_ID_SLOW)
+#  define SERCOM_GCLK_ID SERCOM0_GCLK_ID_SLOW
+#else
+#  error "SERCOM modules must share the same slow GCLK channel ID."
+#endif
+
+#else
 
 #if (SERCOM0_GCLK_ID_SLOW == SERCOM1_GCLK_ID_SLOW && \
      SERCOM0_GCLK_ID_SLOW == SERCOM2_GCLK_ID_SLOW && \
@@ -60,6 +71,8 @@ extern "C" {
 #  define SERCOM_GCLK_ID SERCOM0_GCLK_ID_SLOW
 #else
 #  error "SERCOM modules must share the same slow GCLK channel ID."
+#endif
+
 #endif
 
 #if (0x1ff >= REV_SERCOM)
@@ -111,6 +124,8 @@ uint32_t _sercom_get_default_pad(
 		Sercom *const sercom_module,
 		const uint8_t pad);
 
+uint8_t _sercom_get_sercom_inst_index(
+		Sercom *const sercom_instance);
 #ifdef __cplusplus
 }
 #endif

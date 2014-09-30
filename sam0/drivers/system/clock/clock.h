@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 Clock Driver
+ * \brief SAM Clock Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -48,9 +48,9 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_system_clock_group SAM D20/D21/R21 System Clock Management Driver (SYSTEM CLOCK)
+ * \defgroup asfdoc_sam0_system_clock_group SAM System Clock Management Driver (SYSTEM CLOCK)
  *
- * This driver for SAM D20/D21/R21 devices provides an interface for the configuration
+ * This driver for SAM devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection and
@@ -61,6 +61,11 @@ extern "C" {
  * - GCLK (Generic Clock Management)
  * - PM (Power Management)
  * - SYSCTRL (Clock Source Control)
+ *
+ * The following devices can use this module:
+ *  - SAM D20/D21
+ *  - SAM R21
+ *  - SAM D10/D11
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_system_clock_prerequisites
@@ -77,7 +82,7 @@ extern "C" {
  *
  *
  * \section asfdoc_sam0_system_clock_module_overview Module Overview
- * The SAM D20/D21/R21 devices contain a sophisticated clocking system, which is designed
+ * The SAM devices contain a sophisticated clocking system, which is designed
  * to give the maximum flexibility to the user application. This system allows
  * a system designer to tune the performance and power consumption of the device
  * in a dynamic manner, to achieve the best trade-off between the two for a
@@ -94,14 +99,14 @@ extern "C" {
  *	</tr>
  *	<tr>
  *		<td>FEATURE_SYSTEM_CLOCK_DPLL</td>
- *		<td>SAMD21, SAMR21</td>
+ *		<td>SAMD21, SAMR21, SAMD10, SAMD11</td>
  *	</tr>
  * </table>
  * \note The specific features are only available in the driver when the
  * selected device supports those features.
  *
  * \subsection asfdoc_sam0_system_clock_module_overview_clock_sources Clock Sources
- * The SAM D20/D21/R21 devices have a number of master clock source modules, each of
+ * The SAM devices have a number of master clock source modules, each of
  * which being capable of producing a stabilized output frequency which can then
  * be fed into the various peripherals and modules within the device.
  *
@@ -148,12 +153,12 @@ extern "C" {
  *
  * \subsection asfdoc_sam0_system_clock_module_overview_clock_masking Clock Masking
  * To save power, the input clock to one or more peripherals on the AHB and APBx
- * busses can be masked away - when masked, no clock is passed into the module.
+ * buses can be masked away - when masked, no clock is passed into the module.
  * Disabling of clocks of unused modules will prevent all access to the masked
  * module, but will reduce the overall device power consumption.
  *
  * \subsection asfdoc_sam0_system_clock_module_overview_gclk Generic Clocks
- * Within the SAM D20/D21/R21 devices are a number of Generic Clocks; these are used to
+ * Within the SAM devices are a number of Generic Clocks; these are used to
  * provide clocks to the various peripheral clock domains in the device in a
  * standardized manner. One or more master source clocks can be selected as the
  * input clock to a Generic Clock Generator, which can prescale down the input
@@ -263,7 +268,7 @@ extern "C" {
  * Define system clock features set according to different device family.
  * @{
  */
-#if (SAMD21) || (SAMR21) || defined(__DOXYGEN__)
+#if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || defined(__DOXYGEN__)
 /** Digital Phase Locked Loop (DPLL) feature support */
 #  define FEATURE_SYSTEM_CLOCK_DPLL
 #endif
@@ -379,7 +384,7 @@ enum system_osc8m_div {
 /**
  * \brief Frequency range for the internal 8Mhz RC oscillator
  *
- * Internal 8Mhz RC oscillator freqency range setting
+ * Internal 8Mhz RC oscillator frequency range setting
  */
 enum system_osc8m_frequency_range {
 	/** Frequency range 4 Mhz to 6 Mhz */
@@ -440,10 +445,13 @@ enum system_clock_dfll_loop_mode {
 	 *  a low frequency reference clock
 	 */
 	SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED = SYSCTRL_DFLLCTRL_MODE,
+
+#ifdef SYSCTRL_DFLLCTRL_USBCRM
 	/** The DFLL is operating in USB recovery mode with frequency feedback
 	 *  from USB SOF
 	 */
 	SYSTEM_CLOCK_DFLL_LOOP_MODE_USB_RECOVERY = SYSCTRL_DFLLCTRL_USBCRM,
+#endif
 };
 
 /**
@@ -515,6 +523,10 @@ enum system_clock_source {
 	SYSTEM_CLOCK_SOURCE_DFLL     = GCLK_SOURCE_DFLL48M,
 	/** Internal Ultra Low Power 32kHz oscillator */
 	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
+	/** Generator input pad */
+	SYSTEM_CLOCK_SOURCE_GCLKIN     = GCLK_SOURCE_GCLKIN,
+	/** Generic clock generator 1 output */
+	SYSTEM_CLOCK_SOURCE_GCLKGEN1   = GCLK_SOURCE_GCLKGEN1,
 #ifdef FEATURE_SYSTEM_CLOCK_DPLL
 	/** Digital Phase Locked Loop (DPLL).
 	 * Check \c FEATURE_SYSTEM_CLOCK_DPLL for which device support it.
@@ -1480,8 +1492,8 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	</tr>
  *	<tr>
  *		<td>D</td>
- *		<td>02/2014</td>
- *		<td>Added support for SAMR21.</td>
+ *		<td>04/2014</td>
+ *		<td>Added support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>

@@ -14,7 +14,7 @@
 		<build type="header-file" value="conf_spi.h"/>
 
 		<config name="config.sam0.drivers.sercom.spi" value="polled"/>
-		<config name="config.sam0.drivers.sercom.usart" value="polled"/>
+		<config name="config.sam0.drivers.sercom.usart" value="callback"/>
 		<require idref="board.samr21_xplained_pro"/>
 		<config name="config.thirdparty.wireless.avr2130_lwmesh.source.phy.ext" value="at86rf233"/>		
 
