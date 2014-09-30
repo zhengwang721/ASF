@@ -3,7 +3,7 @@
  *
  * \brief SAM Digital-to-Analog Interrupt Driver
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,7 +71,7 @@ struct dac_module *_dac_instances[DAC_INST_NUM];
  */
 enum status_code dac_chan_write_buffer_job(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		uint16_t *buffer,
 		uint32_t length)
 {
@@ -80,35 +80,43 @@ enum status_code dac_chan_write_buffer_job(
 	Assert(module_inst->hw);
 	Assert(buffer);
 
-	UNUSED(channel);
-
 	Dac *const dac_module = module_inst->hw;
 
 	/* DAC interrupts require it to be driven by events to work, fail if in
 	 * unbuffered (polled) mode */
-	if (module_inst->start_on_event == false) {
+	if (module_inst->start_on_event[channel] == false) {
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
 
-	if(module_inst->remaining_conversions != 0 ||
-			module_inst->job_status == STATUS_BUSY){
+	if(module_inst->remaining_conversions[channel] != 0 ||
+			module_inst->job_status[channel] == STATUS_BUSY){
 		return STATUS_BUSY;
 	}
 
 	/* Wait until the synchronization is complete */
-	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY) {
+	while (dac_is_syncing(module_inst)) {
 	};
 
-	module_inst->job_status = STATUS_BUSY;
+	module_inst->job_status[channel] = STATUS_BUSY;
 
-	module_inst->remaining_conversions = length;
-	module_inst->job_buffer = buffer;
-	module_inst->transferred_conversions = 0;
+	module_inst->remaining_conversions[channel] = length;
+	module_inst->job_buffer[channel] = buffer;
+	module_inst->transferred_conversions[channel] = 0;
 
 	/* Enable interrupt */
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_DAC);
-	dac_module->INTFLAG.reg = DAC_INTFLAG_UNDERRUN | DAC_INTFLAG_EMPTY;
-	dac_module->INTENSET.reg = DAC_INTENSET_UNDERRUN | DAC_INTENSET_EMPTY;
+	switch(channel){
+	case DAC_CHANNEL_0:
+		dac_module->INTFLAG.reg = DAC_INTFLAG_UNDERRUN0 | DAC_INTFLAG_EMPTY0;
+		dac_module->INTENSET.reg = DAC_INTENSET_UNDERRUN0 | DAC_INTENSET_EMPTY0;
+		break;
+	case DAC_CHANNEL_1:
+		dac_module->INTFLAG.reg = DAC_INTFLAG_UNDERRUN1 | DAC_INTFLAG_EMPTY1;
+		dac_module->INTENSET.reg = DAC_INTENSET_UNDERRUN1 | DAC_INTENSET_EMPTY1;
+		break;
+	default:
+		break;
+	}
 
 	return STATUS_OK;
 }
@@ -138,23 +146,21 @@ enum status_code dac_chan_write_buffer_job(
  */
 enum status_code dac_chan_write_job(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		uint16_t data)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw);
 
-	UNUSED(channel);
-
 	/* DAC interrupts require it to be driven by events to work, fail if in
 	 * unbuffered (polled) mode */
-	if (module_inst->start_on_event == false) {
+	if (module_inst->start_on_event[channel] == false) {
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
 
-	if(module_inst->remaining_conversions != 0 ||
-			module_inst->job_status == STATUS_BUSY){
+	if(module_inst->remaining_conversions[channel] != 0 ||
+			module_inst->job_status[channel] == STATUS_BUSY){
 		return STATUS_BUSY;
 	}
 
@@ -183,7 +189,7 @@ enum status_code dac_chan_write_job(
  */
 enum status_code dac_register_callback(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		const dac_callback_t callback,
 		const enum dac_callback type)
 {
@@ -191,16 +197,14 @@ enum status_code dac_register_callback(
 	Assert(module_inst);
 	Assert(callback);
 
-	UNUSED(channel);
-
 	/* DAC interrupts require it to be driven by events to work, fail if in
 	 * unbuffered (polled) mode */
-	if (module_inst->start_on_event == false) {
+	if (module_inst->start_on_event[channel] == false) {
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
 
 	if ((uint8_t)type < DAC_CALLBACK_N) {
-		module_inst->callback[(uint8_t)type] = callback;
+		module_inst->callback[channel][(uint8_t)type] = callback;
 		return STATUS_OK;
 	}
 
@@ -226,22 +230,20 @@ enum status_code dac_register_callback(
  */
 enum status_code dac_unregister_callback(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		const enum dac_callback type)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
 
-	UNUSED(channel);
-
 	/* DAC interrupts require it to be driven by events to work, fail if in
 	 * unbuffered (polled) mode */
-	if (module_inst->start_on_event == false) {
+	if (module_inst->start_on_event[channel] == false) {
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
 
 	if ((uint8_t)type < DAC_CALLBACK_N) {
-		module_inst->callback[(uint8_t)type] = NULL;
+		module_inst->callback[channel][(uint8_t)type] = NULL;
 		return STATUS_OK;
 	}
 
@@ -266,21 +268,19 @@ enum status_code dac_unregister_callback(
  */
 enum status_code dac_chan_enable_callback(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		const enum dac_callback type)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
 
-	UNUSED(channel);
-
 	/* DAC interrupts require it to be driven by events to work, fail if in
 	 * unbuffered (polled) mode */
-	if (module_inst->start_on_event == false) {
+	if (module_inst->start_on_event[channel] == false) {
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
 
-	module_inst->callback_enable[type] = true;
+	module_inst->callback_enable[channel][type] = true;
 
 	return STATUS_OK;
 }
@@ -302,7 +302,7 @@ enum status_code dac_chan_enable_callback(
  */
 enum status_code dac_chan_disable_callback(
 		struct dac_module *const module_inst,
-		const uint32_t channel,
+		const enum dac_channel channel,
 		const enum dac_callback type)
 {
 	/* Sanity check arguments */
@@ -312,11 +312,11 @@ enum status_code dac_chan_disable_callback(
 
 	/* DAC interrupts require it to be driven by events to work, fail if in
 	 * unbuffered (polled) mode */
-	if (module_inst->start_on_event == false) {
+	if (module_inst->start_on_event[channel] == false) {
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
 
-	module_inst->callback_enable[type] = false;
+	module_inst->callback_enable[channel][type] = false;
 
 	return STATUS_OK;
 }
@@ -331,47 +331,91 @@ static void _dac_interrupt_handler(const uint8_t instance)
 	struct dac_module *module = _dac_instances[instance];
 	Dac *const dac_hw = module->hw;
 
-	if (dac_hw->INTFLAG.reg & DAC_INTFLAG_UNDERRUN) {
-		dac_hw->INTFLAG.reg = DAC_INTFLAG_UNDERRUN;
+	if (dac_hw->INTFLAG.reg & DAC_INTFLAG_UNDERRUN0) {
+		dac_hw->INTFLAG.reg = DAC_INTFLAG_UNDERRUN0;
 
 		if ((module->callback) &&
-			 (module->callback_enable[DAC_CALLBACK_DATA_UNDERRUN])){
-			module->callback[DAC_CALLBACK_DATA_UNDERRUN](0);
+			 (module->callback_enable[DAC_CHANNEL_0][DAC_CALLBACK_DATA_UNDERRUN])) {
+			module->callback[DAC_CHANNEL_0][DAC_CALLBACK_DATA_UNDERRUN](0);
 		}
 	}
 
-	if (dac_hw->INTFLAG.reg & DAC_INTFLAG_EMPTY) {
-		dac_hw->INTFLAG.reg = DAC_INTFLAG_EMPTY;
+	if (dac_hw->INTFLAG.reg & DAC_INTFLAG_UNDERRUN1) {
+		dac_hw->INTFLAG.reg = DAC_INTFLAG_UNDERRUN1;
+
+		if ((module->callback) &&
+			 (module->callback_enable[DAC_CHANNEL_1][DAC_CALLBACK_DATA_UNDERRUN])) {
+			module->callback[DAC_CHANNEL_1][DAC_CALLBACK_DATA_UNDERRUN](0);
+		}
+	}
+
+	if (dac_hw->INTFLAG.reg & DAC_INTFLAG_EMPTY0) {
+		dac_hw->INTFLAG.reg = DAC_INTFLAG_EMPTY0;
 
 		/* If in a write buffer job */
-		if (module->remaining_conversions) {
-			
+		if (module->remaining_conversions[DAC_CHANNEL_0]) {
+
 			/* Fill the data buffer with next data in write buffer */
-			dac_hw->DATABUF.reg =
-				module->job_buffer[module->transferred_conversions++];
+			dac_hw->DATABUF[DAC_CHANNEL_0].reg =
+				module->job_buffer[DAC_CHANNEL_0][module->transferred_conversions[DAC_CHANNEL_0]++];
 
 			/* Write buffer size decrement */
-			module->remaining_conversions --;
+			module->remaining_conversions[DAC_CHANNEL_0] --;
 
 			/* If in a write buffer job and all the data are converted */
-			if (module->remaining_conversions == 0) {
-				module->job_status = STATUS_OK;
+			if (module->remaining_conversions[DAC_CHANNEL_0] == 0) {
+				module->job_status[DAC_CHANNEL_0] = STATUS_OK;
 
 				/* Disable interrupt */
-				dac_hw->INTENCLR.reg = DAC_INTENCLR_EMPTY;
-				dac_hw->INTFLAG.reg = DAC_INTFLAG_EMPTY;
+				dac_hw->INTENCLR.reg = DAC_INTENCLR_EMPTY0;
+				dac_hw->INTFLAG.reg = DAC_INTFLAG_EMPTY0;
 				system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_DAC);
 
 				if ((module->callback) &&
-					 (module->callback_enable[DAC_CALLBACK_TRANSFER_COMPLETE])) {
-					module->callback[DAC_CALLBACK_TRANSFER_COMPLETE](0);
+					 (module->callback_enable[DAC_CHANNEL_0][DAC_CALLBACK_TRANSFER_COMPLETE])) {
+					module->callback[DAC_CHANNEL_0][DAC_CALLBACK_TRANSFER_COMPLETE](0);
 				}
 			}
 		}
 
 		if ((module->callback) &&
-			 (module->callback_enable[DAC_CALLBACK_DATA_EMPTY])) {
-			module->callback[DAC_CALLBACK_DATA_EMPTY](0);
+			 (module->callback_enable[DAC_CHANNEL_0][DAC_CALLBACK_DATA_EMPTY])) {
+			module->callback[DAC_CHANNEL_0][DAC_CALLBACK_DATA_EMPTY](0);
+		}
+	}
+
+	if (dac_hw->INTFLAG.reg & DAC_INTFLAG_EMPTY1) {
+		dac_hw->INTFLAG.reg = DAC_INTFLAG_EMPTY1;
+
+		/* If in a write buffer job */
+		if (module->remaining_conversions[DAC_CHANNEL_1]) {
+
+			/* Fill the data buffer with next data in write buffer */
+			dac_hw->DATABUF[DAC_CHANNEL_1].reg =
+				module->job_buffer[DAC_CHANNEL_1][module->transferred_conversions[DAC_CHANNEL_1]++];
+
+			/* Write buffer size decrement */
+			module->remaining_conversions[DAC_CHANNEL_1] --;
+
+			/* If in a write buffer job and all the data are converted */
+			if (module->remaining_conversions[DAC_CHANNEL_1] == 0) {
+				module->job_status[DAC_CHANNEL_1] = STATUS_OK;
+
+				/* Disable interrupt */
+				dac_hw->INTENCLR.reg = DAC_INTENCLR_EMPTY1;
+				dac_hw->INTFLAG.reg = DAC_INTFLAG_EMPTY1;
+				system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_DAC);
+
+				if ((module->callback) &&
+					 (module->callback_enable[DAC_CHANNEL_1][DAC_CALLBACK_TRANSFER_COMPLETE])) {
+					module->callback[DAC_CHANNEL_1][DAC_CALLBACK_TRANSFER_COMPLETE](0);
+				}
+			}
+		}
+
+		if ((module->callback) &&
+			 (module->callback_enable[DAC_CHANNEL_1][DAC_CALLBACK_DATA_EMPTY])) {
+			module->callback[DAC_CHANNEL_1][DAC_CALLBACK_DATA_EMPTY](0);
 		}
 	}
 }
@@ -387,16 +431,19 @@ void DAC_Handler(void)
  *
  * Gets the status of an ongoing or the last job.
  *
- * \param [in]  module_inst Pointer to the DAC software instance struct
+ * \param[in]  module_inst Pointer to the DAC software instance struct
+ * \param[in]  channel     Logical channel to enable callback function
  *
  * \return Status of the job
  */
-enum status_code dac_get_job_status( struct dac_module *module_inst)
+enum status_code dac_chan_get_job_status(
+		struct dac_module *module_inst,
+		const enum dac_channel channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
 
-	return module_inst->job_status;
+	return module_inst->job_status[channel];
 }
 
 /**
@@ -404,19 +451,32 @@ enum status_code dac_get_job_status( struct dac_module *module_inst)
  *
  * Aborts an ongoing job.
  *
- * \param [in]  module_inst Pointer to the DAC software instance struct
+ * \param[in]  module_inst Pointer to the DAC software instance struct
+ * \param[in]  channel     Logical channel to enable callback function
  */
-void dac_abort_job(struct dac_module *module_inst)
+void dac_chan_abort_job(
+		struct dac_module *module_inst,
+		const enum dac_channel channel)
 {
 	/* Sanity check arguments */
 	Assert(module_inst);
 
 	/* Disable interrupt */
-	module_inst->hw->INTFLAG.reg = DAC_INTFLAG_UNDERRUN | DAC_INTFLAG_EMPTY;
-	module_inst->hw->INTENCLR.reg = DAC_INTENCLR_UNDERRUN | DAC_INTENCLR_EMPTY;
+	switch(channel) {
+	case DAC_CHANNEL_0:
+		module_inst->hw->INTFLAG.reg = DAC_INTFLAG_UNDERRUN0 | DAC_INTFLAG_EMPTY0;
+		module_inst->hw->INTENCLR.reg = DAC_INTENCLR_UNDERRUN0 | DAC_INTENCLR_EMPTY0;
+		break;
+	case DAC_CHANNEL_1:
+		module_inst->hw->INTFLAG.reg = DAC_INTFLAG_UNDERRUN1 | DAC_INTFLAG_EMPTY1;
+		module_inst->hw->INTENCLR.reg = DAC_INTENCLR_UNDERRUN1 | DAC_INTENCLR_EMPTY1;
+		break;
+	default:
+		break;
+	}
 
 	/* Mark job as aborted */
-	module_inst->job_status = STATUS_ABORTED;
-	module_inst->remaining_conversions = 0;
+	module_inst->job_status[channel] = STATUS_ABORTED;
+	module_inst->remaining_conversions[channel] = 0;
 
 }
