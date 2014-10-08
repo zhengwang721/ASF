@@ -44,6 +44,19 @@
 #ifndef CONF_BOARD_H_INCLUDED
 #define CONF_BOARD_H_INCLUDED
 
-/* Intentionally empty */
+#ifndef BOARD_FLEXCOM_TWI
+/** FLEXCOM base address for TWI mode*/
+#define BOARD_FLEXCOM_TWI    FLEXCOM4
+#endif
+
+#ifndef BOARD_FLEXCOM_SPI
+/** FLEXCOM base address for SPI mode*/
+#define BOARD_FLEXCOM_SPI    FLEXCOM5
+#endif
+
+#ifndef BOARD_FLEXCOM_USART
+/** FLEXCOM base address for USART mode*/
+#define BOARD_FLEXCOM_USART  FLEXCOM6
+#endif
 
 #endif /* CONF_BOARD_H_INCLUDED */
