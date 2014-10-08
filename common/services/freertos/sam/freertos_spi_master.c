@@ -187,6 +187,9 @@ freertos_spi_if freertos_spi_master_init(Spi *p_spi,
 	bool is_valid_operating_mode;
 	freertos_spi_if return_value;
 	const enum peripheral_operation_mode valid_operating_modes[] = {SPI_MASTER};
+#if (SAMG55)
+	uint32_t temp;
+#endif
 
 	/* Find the index into the all_spi_definitions array that holds details of
 	the p_spi peripheral. */
@@ -226,7 +229,6 @@ freertos_spi_if freertos_spi_master_init(Spi *p_spi,
 			/* Call the standard ASF init function. */
 #if (SAMG55)
 			/* Enable the peripheral and set SPI mode. */
-			uint32_t temp;
 			temp = (uint32_t)(all_spi_definitions[spi_index].peripheral_base_address - 0x400);
 			Flexcom *p_flexcom = (Flexcom *)temp;
 			flexcom_enable(p_flexcom);
