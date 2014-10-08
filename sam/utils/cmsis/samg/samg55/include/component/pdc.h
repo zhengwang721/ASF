@@ -110,7 +110,7 @@ typedef struct {
 #define PERIPH_PTSR_TXTEN (0x1u << 8) /**< \brief (PERIPH_PTSR) Transmitter Transfer Enable */
 #define PERIPH_PTSR_RXCBEN (0x1u << 16) /**< \brief (PERIPH_PTSR) Receiver Transfer Enable */
 #define PERIPH_PTSR_TXCBEN (0x1u << 18) /**< \brief (PERIPH_PTSR) Transmitter Transfer Enable */
-#define PERIPH_PTSR_ERR (0x1u << 24) /**< \brief (PERIPH_PTSR) Transfer Bus Error */
+#define PERIPH_PTSR_ERR (0x1u << 24) /**< \brief (PERIPH_PTSR) Transfer Bus Error (clear on read) */
 
 /*@}*/
 

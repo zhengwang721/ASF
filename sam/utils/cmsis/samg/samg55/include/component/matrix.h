@@ -63,11 +63,12 @@ typedef struct {
   __I  uint32_t Reserved5[1];
   __IO uint32_t MATRIX_PRAS3;   /**< \brief (Matrix Offset: 0x0098) Priority Register A for Slave 3 */
   __I  uint32_t Reserved6[1];
-  __I  uint32_t Reserved7[29];
+  __I  uint32_t Reserved7[28];
+  __IO uint32_t CCFG_RDMMEM;    /**< \brief (Matrix Offset: 0x0110) Embedded Memories Read Margin Values Register */
   __IO uint32_t CCFG_SYSIO;     /**< \brief (Matrix Offset: 0x0114) System I/O Configuration Register */
-  __IO uint32_t CCFG_DYNCKG;     /**< \brief (Matrix Offset: 0x0118) Dynamic clock gating Register */
-  __IO uint32_t CCFG_I2SCLKSEL;     /**< \brief (Matrix Offset: 0x011C) I2S clock source selection Register */
-  __IO uint32_t CCFG_USBMR;     /**< \brief (Matrix Offset: 0x0120) USB management Register */
+  __IO uint32_t CCFG_DYNCKG;    /**< \brief (Matrix Offset: 0x0118) Dynamic Clock Gating Register */
+  __IO uint32_t CCFG_I2SCLKSEL; /**< \brief (Matrix Offset: 0x011C) I2S Clock Source Selection Register */
+  __IO uint32_t CCFG_USBMR;     /**< \brief (Matrix Offset: 0x0120) USB Management Register */
   __I  uint32_t Reserved8[48];
   __IO uint32_t MATRIX_WPMR;    /**< \brief (Matrix Offset: 0x1E4) Write Protection Mode Register */
   __I  uint32_t MATRIX_WPSR;    /**< \brief (Matrix Offset: 0x1E8) Write Protection Status Register */
@@ -152,6 +153,31 @@ typedef struct {
 #define MATRIX_PRAS3_M3PR_Pos 12
 #define MATRIX_PRAS3_M3PR_Msk (0x3u << MATRIX_PRAS3_M3PR_Pos) /**< \brief (MATRIX_PRAS3) Master 3 Priority */
 #define MATRIX_PRAS3_M3PR(value) ((MATRIX_PRAS3_M3PR_Msk & ((value) << MATRIX_PRAS3_M3PR_Pos)))
+/* -------- CCFG_RDMMEM : (MATRIX Offset: 0x0110) Embedded Memories Read Margin Values Register -------- */
+#define CCFG_RDMMEM_READ_MARGIN_ROM_Pos 0
+#define CCFG_RDMMEM_READ_MARGIN_ROM_Msk (0xfu << CCFG_RDMMEM_READ_MARGIN_ROM_Pos) /**< \brief (CCFG_RDMMEM) ROM Read Margin Value Selection */
+#define CCFG_RDMMEM_READ_MARGIN_ROM(value) ((CCFG_RDMMEM_READ_MARGIN_ROM_Msk & ((value) << CCFG_RDMMEM_READ_MARGIN_ROM_Pos)))
+#define CCFG_RDMMEM_READ_MARGIN_DPRAM_Pos 4
+#define CCFG_RDMMEM_READ_MARGIN_DPRAM_Msk (0xfu << CCFG_RDMMEM_READ_MARGIN_DPRAM_Pos) /**< \brief (CCFG_RDMMEM) DPRAM Read Margin Value Selection */
+#define CCFG_RDMMEM_READ_MARGIN_DPRAM(value) ((CCFG_RDMMEM_READ_MARGIN_DPRAM_Msk & ((value) << CCFG_RDMMEM_READ_MARGIN_DPRAM_Pos)))
+#define CCFG_RDMMEM_READ_MARGIN_RAM32k_Pos 8
+#define CCFG_RDMMEM_READ_MARGIN_RAM32k_Msk (0xfu << CCFG_RDMMEM_READ_MARGIN_RAM32k_Pos) /**< \brief (CCFG_RDMMEM) RAM32k Read Margin Value Selection */
+#define CCFG_RDMMEM_READ_MARGIN_RAM32k(value) ((CCFG_RDMMEM_READ_MARGIN_RAM32k_Msk & ((value) << CCFG_RDMMEM_READ_MARGIN_RAM32k_Pos)))
+#define CCFG_RDMMEM_READ_MARGIN_RAM16k_Pos 12
+#define CCFG_RDMMEM_READ_MARGIN_RAM16k_Msk (0xfu << CCFG_RDMMEM_READ_MARGIN_RAM16k_Pos) /**< \brief (CCFG_RDMMEM) RAM16k Read Margin Value Selection */
+#define CCFG_RDMMEM_READ_MARGIN_RAM16k(value) ((CCFG_RDMMEM_READ_MARGIN_RAM16k_Msk & ((value) << CCFG_RDMMEM_READ_MARGIN_RAM16k_Pos)))
+#define CCFG_RDMMEM_READ_MARGIN_RAM8k_Pos 16
+#define CCFG_RDMMEM_READ_MARGIN_RAM8k_Msk (0xfu << CCFG_RDMMEM_READ_MARGIN_RAM8k_Pos) /**< \brief (CCFG_RDMMEM) RAM8k Read Margin Value Selection */
+#define CCFG_RDMMEM_READ_MARGIN_RAM8k(value) ((CCFG_RDMMEM_READ_MARGIN_RAM8k_Msk & ((value) << CCFG_RDMMEM_READ_MARGIN_RAM8k_Pos)))
+#define CCFG_RDMMEM_READ_MARGIN_RAM4k_Pos 20
+#define CCFG_RDMMEM_READ_MARGIN_RAM4k_Msk (0xfu << CCFG_RDMMEM_READ_MARGIN_RAM4k_Pos) /**< \brief (CCFG_RDMMEM) RAM4k Read Margin Value Selection */
+#define CCFG_RDMMEM_READ_MARGIN_RAM4k(value) ((CCFG_RDMMEM_READ_MARGIN_RAM4k_Msk & ((value) << CCFG_RDMMEM_READ_MARGIN_RAM4k_Pos)))
+#define CCFG_RDMMEM_READ_MARGIN_REGFILE0_Pos 24
+#define CCFG_RDMMEM_READ_MARGIN_REGFILE0_Msk (0xfu << CCFG_RDMMEM_READ_MARGIN_REGFILE0_Pos) /**< \brief (CCFG_RDMMEM) REGFILE0 Read Margin Value Selection */
+#define CCFG_RDMMEM_READ_MARGIN_REGFILE0(value) ((CCFG_RDMMEM_READ_MARGIN_REGFILE0_Msk & ((value) << CCFG_RDMMEM_READ_MARGIN_REGFILE0_Pos)))
+#define CCFG_RDMMEM_READ_MARGIN_REGFILE1_Pos 28
+#define CCFG_RDMMEM_READ_MARGIN_REGFILE1_Msk (0xfu << CCFG_RDMMEM_READ_MARGIN_REGFILE1_Pos) /**< \brief (CCFG_RDMMEM) REGFILE1 Read Margin Value Selection */
+#define CCFG_RDMMEM_READ_MARGIN_REGFILE1(value) ((CCFG_RDMMEM_READ_MARGIN_REGFILE1_Msk & ((value) << CCFG_RDMMEM_READ_MARGIN_REGFILE1_Pos)))
 /* -------- CCFG_SYSIO : (MATRIX Offset: 0x0114) System I/O Configuration Register -------- */
 #define CCFG_SYSIO_SYSIO4 (0x1u << 4) /**< \brief (CCFG_SYSIO) PB4 or TDI Assignment */
 #define CCFG_SYSIO_SYSIO5 (0x1u << 5) /**< \brief (CCFG_SYSIO) PB5 or TDO/TRACESWO Assignment */
@@ -160,8 +186,17 @@ typedef struct {
 #define CCFG_SYSIO_SYSIO10 (0x1u << 10) /**< \brief (CCFG_SYSIO) PA21 or DM Assignment */
 #define CCFG_SYSIO_SYSIO11 (0x1u << 11) /**< \brief (CCFG_SYSIO) PA22 or DP Assignment */
 #define CCFG_SYSIO_SYSIO12 (0x1u << 12) /**< \brief (CCFG_SYSIO) PB12 or ERASE Assignment */
-/* -------- CCFG_USBMR : (MATRIX Offset: 0x0120) USB management Register -------- */
+/* -------- CCFG_DYNCKG : (MATRIX Offset: 0x0118) Dynamic Clock Gating Register -------- */
+#define CCFG_DYNCKG_MATCKG (0x1u << 0) /**< \brief (CCFG_DYNCKG) MATRIX Dynamic Clock Gating */
+#define CCFG_DYNCKG_BRIDCKG (0x1u << 1) /**< \brief (CCFG_DYNCKG) Bridge Dynamic Clock Gating Enable */
+#define CCFG_DYNCKG_EFCCKG (0x1u << 2) /**< \brief (CCFG_DYNCKG) EFC Dynamic Clock Gating Enable */
+/* -------- CCFG_I2SCLKSEL : (MATRIX Offset: 0x011C) I2S Clock Source Selection Register -------- */
+#define CCFG_I2SCLKSEL_CLKSEL0 (0x1u << 0) /**< \brief (CCFG_I2SCLKSEL) I2S0 clock source */
+#define CCFG_I2SCLKSEL_CLKSEL1 (0x1u << 1) /**< \brief (CCFG_I2SCLKSEL) I2S1 clock source */
+/* -------- CCFG_USBMR : (MATRIX Offset: 0x0120) USB Management Register -------- */
 #define CCFG_USBMR_DEVICE (0x1u << 0) /**< \brief (CCFG_USBMR) USB device mode */
+#define CCFG_USBMR_USBHTSSC (0x1u << 1) /**< \brief (CCFG_USBMR) USB Transceiver Suspend Software Control */
+#define CCFG_USBMR_USBHTSC (0x1u << 2) /**< \brief (CCFG_USBMR) USB Host Transceiver Suspend Control */
 /* -------- MATRIX_WPMR : (MATRIX Offset: 0x1E4) Write Protection Mode Register -------- */
 #define MATRIX_WPMR_WPEN (0x1u << 0) /**< \brief (MATRIX_WPMR) Write Protection Enable */
 #define MATRIX_WPMR_WPKEY_Pos 8

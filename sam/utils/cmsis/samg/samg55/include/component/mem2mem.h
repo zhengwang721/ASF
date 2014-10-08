@@ -139,7 +139,7 @@ typedef struct {
 #define MEM2MEM_PTSR_TXTEN (0x1u << 8) /**< \brief (MEM2MEM_PTSR) Transmitter Transfer Enable */
 #define MEM2MEM_PTSR_RXCBEN (0x1u << 16) /**< \brief (MEM2MEM_PTSR) Receiver Transfer Enable */
 #define MEM2MEM_PTSR_TXCBEN (0x1u << 18) /**< \brief (MEM2MEM_PTSR) Transmitter Transfer Enable */
-#define MEM2MEM_PTSR_ERR (0x1u << 24) /**< \brief (MEM2MEM_PTSR) Transfer Bus Error */
+#define MEM2MEM_PTSR_ERR (0x1u << 24) /**< \brief (MEM2MEM_PTSR) Transfer Bus Error (clear on read) */
 
 /*@}*/
 

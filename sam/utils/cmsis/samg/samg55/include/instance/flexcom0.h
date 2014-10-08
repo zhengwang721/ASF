@@ -44,15 +44,13 @@
 
 /* ========== Register definition for FLEXCOM0 peripheral ========== */
 #if (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
-  #define REG_FLEXCOM0_MR                       (0x4000C000U) /**< \brief (FLEXCOM0) FLEXCOM Mode register */
-  #define REG_FLEXCOM0_RHR                      (0x4000C010U) /**< \brief (FLEXCOM0) FLEXCOM Receive Holding Register */
-  #define REG_FLEXCOM0_THR                      (0x4000C020U) /**< \brief (FLEXCOM0) FLEXCOM Transmit Holding Register */
-  #define REG_FLEXCOM0_VERSION                  (0x4000C0FCU) /**< \brief (FLEXCOM0) FLEXCOM Version Register */
+  #define REG_FLEXCOM0_MR                   (0x4000C000U) /**< \brief (FLEXCOM0) FLEXCOM Mode register */
+  #define REG_FLEXCOM0_RHR                  (0x4000C010U) /**< \brief (FLEXCOM0) FLEXCOM Receive Holding Register */
+  #define REG_FLEXCOM0_THR                  (0x4000C020U) /**< \brief (FLEXCOM0) FLEXCOM Transmit Holding Register */
 #else
-  #define REG_FLEXCOM0_MR      (*(__IO uint32_t*)0x4000C000U) /**< \brief (FLEXCOM0) FLEXCOM Mode register */
-  #define REG_FLEXCOM0_RHR     (*(__I  uint32_t*)0x4000C010U) /**< \brief (FLEXCOM0) FLEXCOM Receive Holding Register */
-  #define REG_FLEXCOM0_THR     (*(__IO uint32_t*)0x4000C020U) /**< \brief (FLEXCOM0) FLEXCOM Transmit Holding Register */
-  #define REG_FLEXCOM0_VERSION (*(__I  uint32_t*)0x4000C0FCU) /**< \brief (FLEXCOM0) FLEXCOM Version Register */
+  #define REG_FLEXCOM0_MR  (*(__IO uint32_t*)0x4000C000U) /**< \brief (FLEXCOM0) FLEXCOM Mode register */
+  #define REG_FLEXCOM0_RHR (*(__I  uint32_t*)0x4000C010U) /**< \brief (FLEXCOM0) FLEXCOM Receive Holding Register */
+  #define REG_FLEXCOM0_THR (*(__IO uint32_t*)0x4000C020U) /**< \brief (FLEXCOM0) FLEXCOM Transmit Holding Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMG55_FLEXCOM0_INSTANCE_ */

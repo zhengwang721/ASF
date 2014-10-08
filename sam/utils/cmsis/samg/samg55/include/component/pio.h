@@ -102,13 +102,12 @@ typedef struct {
   __I  uint32_t PIO_ELSR;      /**< \brief (Pio Offset: 0x00C8) Edge/Level Status Register */
   __I  uint32_t Reserved10[1];
   __O  uint32_t PIO_FELLSR;    /**< \brief (Pio Offset: 0x00D0) Falling Edge/Low-Level Select Register */
-  __O  uint32_t PIO_REHLSR;    /**< \brief (Pio Offset: 0x00D4) Rising Edge/ High-Level Select Register */
+  __O  uint32_t PIO_REHLSR;    /**< \brief (Pio Offset: 0x00D4) Rising Edge/High-Level Select Register */
   __I  uint32_t PIO_FRLHSR;    /**< \brief (Pio Offset: 0x00D8) Fall/Rise - Low/High Status Register */
   __I  uint32_t Reserved11[2];
   __IO uint32_t PIO_WPMR;      /**< \brief (Pio Offset: 0x00E4) Write Protection Mode Register */
   __I  uint32_t PIO_WPSR;      /**< \brief (Pio Offset: 0x00E8) Write Protection Status Register */
-  __I  uint32_t Reserved12[4];
-  __I  uint32_t PIO_VERSION;   /**< \brief (Pio Offset: 0x00FC) Version Register */
+  __I  uint32_t Reserved12[5];
   __IO uint32_t PIO_SCHMITT;   /**< \brief (Pio Offset: 0x0100) Schmitt Trigger Register */
 } Pio;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
@@ -1511,11 +1510,6 @@ typedef struct {
 #define PIO_WPSR_WPVS (0x1u << 0) /**< \brief (PIO_WPSR) Write Protection Violation Status */
 #define PIO_WPSR_WPVSRC_Pos 8
 #define PIO_WPSR_WPVSRC_Msk (0xffffu << PIO_WPSR_WPVSRC_Pos) /**< \brief (PIO_WPSR) Write Protection Violation Source */
-/* -------- PIO_VERSION : (PIO Offset: 0x00FC) Version Register -------- */
-#define PIO_VERSION_VERSION_Pos 0
-#define PIO_VERSION_VERSION_Msk (0xfffu << PIO_VERSION_VERSION_Pos) /**< \brief (PIO_VERSION) Hardware Module Version */
-#define PIO_VERSION_MFN_Pos 16
-#define PIO_VERSION_MFN_Msk (0x7u << PIO_VERSION_MFN_Pos) /**< \brief (PIO_VERSION) Metal Fix Number */
 /* -------- PIO_SCHMITT : (PIO Offset: 0x0100) Schmitt Trigger Register -------- */
 #define PIO_SCHMITT_SCHMITT0 (0x1u << 0) /**< \brief (PIO_SCHMITT) Schmitt Trigger Control */
 #define PIO_SCHMITT_SCHMITT1 (0x1u << 1) /**< \brief (PIO_SCHMITT) Schmitt Trigger Control */

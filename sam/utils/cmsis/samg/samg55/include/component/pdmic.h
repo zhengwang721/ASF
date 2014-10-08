@@ -65,8 +65,7 @@ typedef struct {
   __I  uint32_t Reserved3[33];
   __IO uint32_t PDMIC_WPMR;    /**< \brief (Pdmic Offset: 0xE4) Write Protection Mode Register */
   __I  uint32_t PDMIC_WPSR;    /**< \brief (Pdmic Offset: 0xE8) Write Protection Status Register */
-  __I  uint32_t Reserved4[4];
-  __I  uint32_t PDMIC_VERSION; /**< \brief (Pdmic Offset: 0xFC) Version Register */
+  __I  uint32_t Reserved4[5];
   __IO uint32_t PDMIC_RPR;     /**< \brief (Pdmic Offset: 0x100) Receive Pointer Register */
   __IO uint32_t PDMIC_RCR;     /**< \brief (Pdmic Offset: 0x104) Receive Counter Register */
   __I  uint32_t Reserved5[2];
@@ -133,17 +132,12 @@ typedef struct {
 /* -------- PDMIC_WPMR : (PDMIC Offset: 0xE4) Write Protection Mode Register -------- */
 #define PDMIC_WPMR_WPEN (0x1u << 0) /**< \brief (PDMIC_WPMR) Write Protection Enable */
 #define PDMIC_WPMR_WPKEY_Pos 8
-#define PDMIC_WPMR_WPKEY_Msk (0xffffffu << PDMIC_WPMR_WPKEY_Pos) /**< \brief (PDMIC_WPMR) Write Protect KEY */
+#define PDMIC_WPMR_WPKEY_Msk (0xffffffu << PDMIC_WPMR_WPKEY_Pos) /**< \brief (PDMIC_WPMR) Write Protect Key */
 #define   PDMIC_WPMR_WPKEY_PASSWD (0x414443u << 8) /**< \brief (PDMIC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0. */
 /* -------- PDMIC_WPSR : (PDMIC Offset: 0xE8) Write Protection Status Register -------- */
 #define PDMIC_WPSR_WPVS (0x1u << 0) /**< \brief (PDMIC_WPSR) Write Protection Violation Status */
 #define PDMIC_WPSR_WPVSRC_Pos 8
 #define PDMIC_WPSR_WPVSRC_Msk (0xffffu << PDMIC_WPSR_WPVSRC_Pos) /**< \brief (PDMIC_WPSR) Write Protection Violation Source */
-/* -------- PDMIC_VERSION : (PDMIC Offset: 0xFC) Version Register -------- */
-#define PDMIC_VERSION_VERSION_Pos 0
-#define PDMIC_VERSION_VERSION_Msk (0xfffu << PDMIC_VERSION_VERSION_Pos) /**< \brief (PDMIC_VERSION) Version of the Hardware Module */
-#define PDMIC_VERSION_MFN_Pos 16
-#define PDMIC_VERSION_MFN_Msk (0x7u << PDMIC_VERSION_MFN_Pos) /**< \brief (PDMIC_VERSION) Metal Fix Number */
 /* -------- PDMIC_RPR : (PDMIC Offset: 0x100) Receive Pointer Register -------- */
 #define PDMIC_RPR_RXPTR_Pos 0
 #define PDMIC_RPR_RXPTR_Msk (0xffffffffu << PDMIC_RPR_RXPTR_Pos) /**< \brief (PDMIC_RPR) Receive Pointer Register */
@@ -175,7 +169,7 @@ typedef struct {
 #define PDMIC_PTSR_TXTEN (0x1u << 8) /**< \brief (PDMIC_PTSR) Transmitter Transfer Enable */
 #define PDMIC_PTSR_RXCBEN (0x1u << 16) /**< \brief (PDMIC_PTSR) Receiver Transfer Enable */
 #define PDMIC_PTSR_TXCBEN (0x1u << 18) /**< \brief (PDMIC_PTSR) Transmitter Transfer Enable */
-#define PDMIC_PTSR_ERR (0x1u << 24) /**< \brief (PDMIC_PTSR) Transfer Bus Error */
+#define PDMIC_PTSR_ERR (0x1u << 24) /**< \brief (PDMIC_PTSR) Transfer Bus Error (clear on read) */
 
 /*@}*/
 

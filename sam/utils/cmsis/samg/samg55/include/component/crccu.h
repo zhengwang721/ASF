@@ -51,28 +51,23 @@
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief Crccu hardware registers */
 typedef struct {
-  __IO uint32_t CRCCU_DSCR;      /**< \brief (Crccu Offset: 0x000) CRCCU Descriptor Base Register */
+  __IO uint32_t CRCCU_DSCR;    /**< \brief (Crccu Offset: 0x000) CRCCU Descriptor Base Register */
   __I  uint32_t Reserved1[1];
-  __O  uint32_t CRCCU_DMA_EN;    /**< \brief (Crccu Offset: 0x008) CRCCU DMA Enable Register */
-  __O  uint32_t CRCCU_DMA_DIS;   /**< \brief (Crccu Offset: 0x00C) CRCCU DMA Disable Register */
-  __I  uint32_t CRCCU_DMA_SR;    /**< \brief (Crccu Offset: 0x010) CRCCU DMA Status Register */
-  __O  uint32_t CRCCU_DMA_IER;   /**< \brief (Crccu Offset: 0x014) CRCCU DMA Interrupt Enable Register */
-  __O  uint32_t CRCCU_DMA_IDR;   /**< \brief (Crccu Offset: 0x018) CRCCU DMA Interrupt Disable Register */
-  __I  uint32_t CRCCU_DMA_IMR;   /**< \brief (Crccu Offset: 0x001C) CRCCU DMA Interrupt Mask Register */
-  __I  uint32_t CRCCU_DMA_ISR;   /**< \brief (Crccu Offset: 0x020) CRCCU DMA Interrupt Status Register */
+  __O  uint32_t CRCCU_DMA_EN;  /**< \brief (Crccu Offset: 0x008) CRCCU DMA Enable Register */
+  __O  uint32_t CRCCU_DMA_DIS; /**< \brief (Crccu Offset: 0x00C) CRCCU DMA Disable Register */
+  __I  uint32_t CRCCU_DMA_SR;  /**< \brief (Crccu Offset: 0x010) CRCCU DMA Status Register */
+  __O  uint32_t CRCCU_DMA_IER; /**< \brief (Crccu Offset: 0x014) CRCCU DMA Interrupt Enable Register */
+  __O  uint32_t CRCCU_DMA_IDR; /**< \brief (Crccu Offset: 0x018) CRCCU DMA Interrupt Disable Register */
+  __I  uint32_t CRCCU_DMA_IMR; /**< \brief (Crccu Offset: 0x001C) CRCCU DMA Interrupt Mask Register */
+  __I  uint32_t CRCCU_DMA_ISR; /**< \brief (Crccu Offset: 0x020) CRCCU DMA Interrupt Status Register */
   __I  uint32_t Reserved2[4];
-  __O  uint32_t CRCCU_CR;        /**< \brief (Crccu Offset: 0x034) CRCCU Control Register */
-  __IO uint32_t CRCCU_MR;        /**< \brief (Crccu Offset: 0x038) CRCCU Mode Register */
-  __I  uint32_t CRCCU_SR;        /**< \brief (Crccu Offset: 0x03C) CRCCU Status Register */
-  __O  uint32_t CRCCU_IER;       /**< \brief (Crccu Offset: 0x040) CRCCU Interrupt Enable Register */
-  __O  uint32_t CRCCU_IDR;       /**< \brief (Crccu Offset: 0x044) CRCCU Interrupt Disable Register */
-  __I  uint32_t CRCCU_IMR;       /**< \brief (Crccu Offset: 0x048) CRCCU Interrupt Mask Register */
-  __I  uint32_t CRCCU_ISR;       /**< \brief (Crccu Offset: 0x004C) CRCCU Interrupt Status Register */
-  __I  uint32_t Reserved3[39];
-  __I  uint32_t CRCCU_ADDRSIZE;  /**< \brief (Crccu Offset: 0x0EC) Address Size Register */
-  __I  uint32_t CRCCU_IPNAME[2]; /**< \brief (Crccu Offset: 0x0F0) IP Name1 register */
-  __I  uint32_t CRCCU_FEATURE;   /**< \brief (Crccu Offset: 0x0F8) Feature Register */
-  __I  uint32_t CRCCU_VERSION;   /**< \brief (Crccu Offset: 0x0FC) CRCCU Version Register */
+  __O  uint32_t CRCCU_CR;      /**< \brief (Crccu Offset: 0x034) CRCCU Control Register */
+  __IO uint32_t CRCCU_MR;      /**< \brief (Crccu Offset: 0x038) CRCCU Mode Register */
+  __I  uint32_t CRCCU_SR;      /**< \brief (Crccu Offset: 0x03C) CRCCU Status Register */
+  __O  uint32_t CRCCU_IER;     /**< \brief (Crccu Offset: 0x040) CRCCU Interrupt Enable Register */
+  __O  uint32_t CRCCU_IDR;     /**< \brief (Crccu Offset: 0x044) CRCCU Interrupt Disable Register */
+  __I  uint32_t CRCCU_IMR;     /**< \brief (Crccu Offset: 0x048) CRCCU Interrupt Mask Register */
+  __I  uint32_t CRCCU_ISR;     /**< \brief (Crccu Offset: 0x004C) CRCCU Interrupt Status Register */
 } Crccu;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- CRCCU_DSCR : (CRCCU Offset: 0x000) CRCCU Descriptor Base Register -------- */
@@ -80,19 +75,19 @@ typedef struct {
 #define CRCCU_DSCR_DSCR_Msk (0x7fffffu << CRCCU_DSCR_DSCR_Pos) /**< \brief (CRCCU_DSCR) Descriptor Base Address */
 #define CRCCU_DSCR_DSCR(value) ((CRCCU_DSCR_DSCR_Msk & ((value) << CRCCU_DSCR_DSCR_Pos)))
 /* -------- CRCCU_DMA_EN : (CRCCU Offset: 0x008) CRCCU DMA Enable Register -------- */
-#define CRCCU_DMA_EN_DMAEN (0x1u << 0) /**< \brief (CRCCU_DMA_EN) DMA Enable Register */
+#define CRCCU_DMA_EN_DMAEN (0x1u << 0) /**< \brief (CRCCU_DMA_EN) DMA Enable */
 /* -------- CRCCU_DMA_DIS : (CRCCU Offset: 0x00C) CRCCU DMA Disable Register -------- */
-#define CRCCU_DMA_DIS_DMADIS (0x1u << 0) /**< \brief (CRCCU_DMA_DIS) DMA Disable Register */
+#define CRCCU_DMA_DIS_DMADIS (0x1u << 0) /**< \brief (CRCCU_DMA_DIS) DMA Disable */
 /* -------- CRCCU_DMA_SR : (CRCCU Offset: 0x010) CRCCU DMA Status Register -------- */
-#define CRCCU_DMA_SR_DMASR (0x1u << 0) /**< \brief (CRCCU_DMA_SR) DMA Status Register */
+#define CRCCU_DMA_SR_DMASR (0x1u << 0) /**< \brief (CRCCU_DMA_SR) DMA Status */
 /* -------- CRCCU_DMA_IER : (CRCCU Offset: 0x014) CRCCU DMA Interrupt Enable Register -------- */
-#define CRCCU_DMA_IER_DMAIER (0x1u << 0) /**< \brief (CRCCU_DMA_IER) Interrupt Enable register */
+#define CRCCU_DMA_IER_DMAIER (0x1u << 0) /**< \brief (CRCCU_DMA_IER) Interrupt Enable */
 /* -------- CRCCU_DMA_IDR : (CRCCU Offset: 0x018) CRCCU DMA Interrupt Disable Register -------- */
-#define CRCCU_DMA_IDR_DMAIDR (0x1u << 0) /**< \brief (CRCCU_DMA_IDR) Interrupt Disable register */
+#define CRCCU_DMA_IDR_DMAIDR (0x1u << 0) /**< \brief (CRCCU_DMA_IDR) Interrupt Disable */
 /* -------- CRCCU_DMA_IMR : (CRCCU Offset: 0x001C) CRCCU DMA Interrupt Mask Register -------- */
-#define CRCCU_DMA_IMR_DMAIMR (0x1u << 0) /**< \brief (CRCCU_DMA_IMR) Interrupt Mask Register */
+#define CRCCU_DMA_IMR_DMAIMR (0x1u << 0) /**< \brief (CRCCU_DMA_IMR) Interrupt Mask */
 /* -------- CRCCU_DMA_ISR : (CRCCU Offset: 0x020) CRCCU DMA Interrupt Status Register -------- */
-#define CRCCU_DMA_ISR_DMAISR (0x1u << 0) /**< \brief (CRCCU_DMA_ISR) Interrupt Status register */
+#define CRCCU_DMA_ISR_DMAISR (0x1u << 0) /**< \brief (CRCCU_DMA_ISR) Interrupt Status */
 /* -------- CRCCU_CR : (CRCCU Offset: 0x034) CRCCU Control Register -------- */
 #define CRCCU_CR_RESET (0x1u << 0) /**< \brief (CRCCU_CR) CRC Computation Reset */
 /* -------- CRCCU_MR : (CRCCU Offset: 0x038) CRCCU Mode Register -------- */
@@ -106,6 +101,9 @@ typedef struct {
 #define CRCCU_MR_DIVIDER_Pos 4
 #define CRCCU_MR_DIVIDER_Msk (0xfu << CRCCU_MR_DIVIDER_Pos) /**< \brief (CRCCU_MR) Request Divider */
 #define CRCCU_MR_DIVIDER(value) ((CRCCU_MR_DIVIDER_Msk & ((value) << CRCCU_MR_DIVIDER_Pos)))
+#define CRCCU_MR_BITORDER (0x1u << 17) /**< \brief (CRCCU_MR) Precomputation Bit Swap Operation of the CRC */
+#define   CRCCU_MR_BITORDER_MSBFIRST (0x0u << 17) /**< \brief (CRCCU_MR) CRC computation is performed from the most significant bit to the least significant bit */
+#define   CRCCU_MR_BITORDER_LSBFIRST (0x1u << 17) /**< \brief (CRCCU_MR) CRC computation is performed from the least significant bit to the most significant bit */
 /* -------- CRCCU_SR : (CRCCU Offset: 0x03C) CRCCU Status Register -------- */
 #define CRCCU_SR_CRC_Pos 0
 #define CRCCU_SR_CRC_Msk (0xffffffffu << CRCCU_SR_CRC_Pos) /**< \brief (CRCCU_SR) Cyclic Redundancy Check Value */
@@ -117,17 +115,6 @@ typedef struct {
 #define CRCCU_IMR_ERRIMR (0x1u << 0) /**< \brief (CRCCU_IMR) CRC Error Interrupt Mask */
 /* -------- CRCCU_ISR : (CRCCU Offset: 0x004C) CRCCU Interrupt Status Register -------- */
 #define CRCCU_ISR_ERRISR (0x1u << 0) /**< \brief (CRCCU_ISR) CRC Error Interrupt Status */
-/* -------- CRCCU_ADDRSIZE : (CRCCU Offset: 0x0EC) Address Size Register -------- */
-#define CRCCU_ADDRSIZE_ADDRSIZE_Pos 0
-#define CRCCU_ADDRSIZE_ADDRSIZE_Msk (0xffffu << CRCCU_ADDRSIZE_ADDRSIZE_Pos) /**< \brief (CRCCU_ADDRSIZE) Address Size */
-/* -------- CRCCU_IPNAME[2] : (CRCCU Offset: 0x0F0) IP Name1 register -------- */
-#define CRCCU_IPNAME_IPNAME_Pos 0
-#define CRCCU_IPNAME_IPNAME_Msk (0xffffffffu << CRCCU_IPNAME_IPNAME_Pos) /**< \brief (CRCCU_IPNAME[2]) IP Name */
-/* -------- CRCCU_VERSION : (CRCCU Offset: 0x0FC) CRCCU Version Register -------- */
-#define CRCCU_VERSION_VERSION_Pos 0
-#define CRCCU_VERSION_VERSION_Msk (0xfffu << CRCCU_VERSION_VERSION_Pos) /**< \brief (CRCCU_VERSION) Hardware Version Number */
-#define CRCCU_VERSION_MFN_Pos 16
-#define CRCCU_VERSION_MFN_Msk (0x7u << CRCCU_VERSION_MFN_Pos) /**< \brief (CRCCU_VERSION) Metal Fix Number */
 
 /*@}*/
 

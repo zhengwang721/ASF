@@ -59,10 +59,8 @@
   #define REG_TWI7_ACR                    (0x40034640U) /**< \brief (TWI7) TWI Alternative Command Register */
   #define REG_TWI7_FILTR                  (0x40034644U) /**< \brief (TWI7) TWI Filter Register */
   #define REG_TWI7_SWMR                   (0x4003464CU) /**< \brief (TWI7) TWI SleepWalking Matching Register */
-  #define REG_TWI7_DR                     (0x400346D0U) /**< \brief (TWI7) TWI Debug Register */
   #define REG_TWI7_WPMR                   (0x400346E4U) /**< \brief (TWI7) TWI Write Protection Mode Register */
   #define REG_TWI7_WPSR                   (0x400346E8U) /**< \brief (TWI7) TWI Write Protection Status Register */
-  #define REG_TWI7_VER                    (0x400346FCU) /**< \brief (TWI7) TWI Version Register */
   #define REG_TWI7_RPR                    (0x40034700U) /**< \brief (TWI7) Receive Pointer Register */
   #define REG_TWI7_RCR                    (0x40034704U) /**< \brief (TWI7) Receive Counter Register */
   #define REG_TWI7_TPR                    (0x40034708U) /**< \brief (TWI7) Transmit Pointer Register */
@@ -89,10 +87,8 @@
   #define REG_TWI7_ACR   (*(__IO uint32_t*)0x40034640U) /**< \brief (TWI7) TWI Alternative Command Register */
   #define REG_TWI7_FILTR (*(__IO uint32_t*)0x40034644U) /**< \brief (TWI7) TWI Filter Register */
   #define REG_TWI7_SWMR  (*(__IO uint32_t*)0x4003464CU) /**< \brief (TWI7) TWI SleepWalking Matching Register */
-  #define REG_TWI7_DR    (*(__I  uint32_t*)0x400346D0U) /**< \brief (TWI7) TWI Debug Register */
   #define REG_TWI7_WPMR  (*(__IO uint32_t*)0x400346E4U) /**< \brief (TWI7) TWI Write Protection Mode Register */
   #define REG_TWI7_WPSR  (*(__I  uint32_t*)0x400346E8U) /**< \brief (TWI7) TWI Write Protection Status Register */
-  #define REG_TWI7_VER   (*(__I  uint32_t*)0x400346FCU) /**< \brief (TWI7) TWI Version Register */
   #define REG_TWI7_RPR   (*(__IO uint32_t*)0x40034700U) /**< \brief (TWI7) Receive Pointer Register */
   #define REG_TWI7_RCR   (*(__IO uint32_t*)0x40034704U) /**< \brief (TWI7) Receive Counter Register */
   #define REG_TWI7_TPR   (*(__IO uint32_t*)0x40034708U) /**< \brief (TWI7) Transmit Pointer Register */

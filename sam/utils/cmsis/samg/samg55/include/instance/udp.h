@@ -56,8 +56,6 @@
   #define REG_UDP_CSR                       (0x40044030U) /**< \brief (UDP) Endpoint Control and Status Register */
   #define REG_UDP_FDR                       (0x40044050U) /**< \brief (UDP) Endpoint FIFO Data Register */
   #define REG_UDP_TXVC                      (0x40044074U) /**< \brief (UDP) Transceiver Control Register */
-  #define REG_UDP_FEATURES                  (0x400440F8U) /**< \brief (UDP) USB FS Device Features Register */
-  #define REG_UDP_VERSION                   (0x400440FCU) /**< \brief (UDP) Version Register */
 #else
   #define REG_UDP_FRM_NUM  (*(__I  uint32_t*)0x40044000U) /**< \brief (UDP) Frame Number Register */
   #define REG_UDP_GLB_STAT (*(__IO uint32_t*)0x40044004U) /**< \brief (UDP) Global State Register */
@@ -71,8 +69,6 @@
   #define REG_UDP_CSR      (*(__IO uint32_t*)0x40044030U) /**< \brief (UDP) Endpoint Control and Status Register */
   #define REG_UDP_FDR      (*(__IO uint32_t*)0x40044050U) /**< \brief (UDP) Endpoint FIFO Data Register */
   #define REG_UDP_TXVC     (*(__IO uint32_t*)0x40044074U) /**< \brief (UDP) Transceiver Control Register */
-  #define REG_UDP_FEATURES (*(__I  uint32_t*)0x400440F8U) /**< \brief (UDP) USB FS Device Features Register */
-  #define REG_UDP_VERSION  (*(__I  uint32_t*)0x400440FCU) /**< \brief (UDP) Version Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMG55_UDP_INSTANCE_ */

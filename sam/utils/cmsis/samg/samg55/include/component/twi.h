@@ -69,13 +69,10 @@ typedef struct {
   __IO uint32_t TWI_FILTR;     /**< \brief (Twi Offset: 0x044) TWI Filter Register */
   __I  uint32_t Reserved3[1];
   __IO uint32_t TWI_SWMR;      /**< \brief (Twi Offset: 0x04C) TWI SleepWalking Matching Register */
-  __I  uint32_t Reserved4[32];
-  __I  uint32_t TWI_DR;        /**< \brief (Twi Offset: 0x0D0) TWI Debug Register */
-  __I  uint32_t Reserved5[4];
+  __I  uint32_t Reserved4[37];
   __IO uint32_t TWI_WPMR;      /**< \brief (Twi Offset: 0x0E4) TWI Write Protection Mode Register */
   __I  uint32_t TWI_WPSR;      /**< \brief (Twi Offset: 0x0E8) TWI Write Protection Status Register */
-  __I  uint32_t Reserved6[4];
-  __I  uint32_t TWI_VER;       /**< \brief (Twi Offset: 0x0FC) TWI Version Register */
+  __I  uint32_t Reserved5[5];
   __IO uint32_t TWI_RPR;       /**< \brief (Twi Offset: 0x100) Receive Pointer Register */
   __IO uint32_t TWI_RCR;       /**< \brief (Twi Offset: 0x104) Receive Counter Register */
   __IO uint32_t TWI_TPR;       /**< \brief (Twi Offset: 0x108) Transmit Pointer Register */
@@ -121,7 +118,7 @@ typedef struct {
 #define TWI_MMR_DADR_Msk (0x7fu << TWI_MMR_DADR_Pos) /**< \brief (TWI_MMR) Device Address */
 #define TWI_MMR_DADR(value) ((TWI_MMR_DADR_Msk & ((value) << TWI_MMR_DADR_Pos)))
 /* -------- TWI_SMR : (TWI Offset: 0x008) TWI Slave Mode Register -------- */
-#define TWI_SMR_NACKEN (0x1u << 0) /**< \brief (TWI_SMR) Slave Receiver Data Phase NACK enable */
+#define TWI_SMR_NACKEN (0x1u << 0) /**< \brief (TWI_SMR) Slave Receiver Data Phase NACK Enable */
 #define TWI_SMR_SMDA (0x1u << 2) /**< \brief (TWI_SMR) SMBus Default Address */
 #define TWI_SMR_SMHH (0x1u << 3) /**< \brief (TWI_SMR) SMBus Host Header */
 #define TWI_SMR_SCLWSDIS (0x1u << 6) /**< \brief (TWI_SMR) Clock Wait State Disable */
@@ -294,11 +291,6 @@ typedef struct {
 #define TWI_SWMR_DATAM_Pos 24
 #define TWI_SWMR_DATAM_Msk (0xffu << TWI_SWMR_DATAM_Pos) /**< \brief (TWI_SWMR) Data Match */
 #define TWI_SWMR_DATAM(value) ((TWI_SWMR_DATAM_Msk & ((value) << TWI_SWMR_DATAM_Pos)))
-/* -------- TWI_DR : (TWI Offset: 0x0D0) TWI Debug Register -------- */
-#define TWI_DR_SWEN (0x1u << 0) /**< \brief (TWI_DR) SleepWalking Enable */
-#define TWI_DR_CLKRQ (0x1u << 1) /**< \brief (TWI_DR) Clock Request */
-#define TWI_DR_SWMATCH (0x1u << 2) /**< \brief (TWI_DR) SleepWalking Match */
-#define TWI_DR_TRP (0x1u << 3) /**< \brief (TWI_DR) Transfer Pending */
 /* -------- TWI_WPMR : (TWI Offset: 0x0E4) TWI Write Protection Mode Register -------- */
 #define TWI_WPMR_WPEN (0x1u << 0) /**< \brief (TWI_WPMR) Write Protection Enable */
 #define TWI_WPMR_WPKEY_Pos 8
@@ -308,11 +300,6 @@ typedef struct {
 #define TWI_WPSR_WPVS (0x1u << 0) /**< \brief (TWI_WPSR) Write Protect Violation Status */
 #define TWI_WPSR_WPVSRC_Pos 8
 #define TWI_WPSR_WPVSRC_Msk (0xffffffu << TWI_WPSR_WPVSRC_Pos) /**< \brief (TWI_WPSR) Write Protection Violation Source */
-/* -------- TWI_VER : (TWI Offset: 0x0FC) TWI Version Register -------- */
-#define TWI_VER_VERSION_Pos 0
-#define TWI_VER_VERSION_Msk (0xfffu << TWI_VER_VERSION_Pos) /**< \brief (TWI_VER) Version of the Hardware Module */
-#define TWI_VER_MFN_Pos 16
-#define TWI_VER_MFN_Msk (0x7u << TWI_VER_MFN_Pos) /**< \brief (TWI_VER) Metal Fix Number */
 /* -------- TWI_RPR : (TWI Offset: 0x100) Receive Pointer Register -------- */
 #define TWI_RPR_RXPTR_Pos 0
 #define TWI_RPR_RXPTR_Msk (0xffffffffu << TWI_RPR_RXPTR_Pos) /**< \brief (TWI_RPR) Receive Pointer Register */
@@ -360,7 +347,7 @@ typedef struct {
 #define TWI_PTSR_TXTEN (0x1u << 8) /**< \brief (TWI_PTSR) Transmitter Transfer Enable */
 #define TWI_PTSR_RXCBEN (0x1u << 16) /**< \brief (TWI_PTSR) Receiver Transfer Enable */
 #define TWI_PTSR_TXCBEN (0x1u << 18) /**< \brief (TWI_PTSR) Transmitter Transfer Enable */
-#define TWI_PTSR_ERR (0x1u << 24) /**< \brief (TWI_PTSR) Transfer Bus Error */
+#define TWI_PTSR_ERR (0x1u << 24) /**< \brief (TWI_PTSR) Transfer Bus Error (clear on read) */
 
 /*@}*/
 

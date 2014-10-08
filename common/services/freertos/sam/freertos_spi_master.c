@@ -226,7 +226,8 @@ freertos_spi_if freertos_spi_master_init(Spi *p_spi,
 			/* Call the standard ASF init function. */
 #if (SAMG55)
 			/* Enable the peripheral and set SPI mode. */
-			uint32_t temp = (uint32_t)(all_spi_definitions[spi_index].peripheral_base_address - 0x400);
+			uint32_t temp;
+			temp = (uint32_t)(all_spi_definitions[spi_index].peripheral_base_address - 0x400);
 			Flexcom *p_flexcom = (Flexcom *)temp;
 			flexcom_enable(p_flexcom);
 			flexcom_set_opmode(p_flexcom, FLEXCOM_SPI);

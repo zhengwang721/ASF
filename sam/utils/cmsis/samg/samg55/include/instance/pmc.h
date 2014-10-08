@@ -53,7 +53,9 @@
   #define REG_CKGR_MOR                        (0x400E0420U) /**< \brief (PMC) Main Oscillator Register */
   #define REG_CKGR_MCFR                       (0x400E0424U) /**< \brief (PMC) Main Clock Frequency Register */
   #define REG_CKGR_PLLAR                      (0x400E0428U) /**< \brief (PMC) PLLA Register */
+  #define REG_CKGR_PLLBR                      (0x400E042CU) /**< \brief (PMC) PLLB Register */
   #define REG_PMC_MCKR                        (0x400E0430U) /**< \brief (PMC) Master Clock Register */
+  #define REG_PMC_USB                         (0x400E0438U) /**< \brief (PMC) USB Clock Register */
   #define REG_PMC_PCK                         (0x400E0440U) /**< \brief (PMC) Programmable Clock 0 Register */
   #define REG_PMC_IER                         (0x400E0460U) /**< \brief (PMC) Interrupt Enable Register */
   #define REG_PMC_IDR                         (0x400E0464U) /**< \brief (PMC) Interrupt Disable Register */
@@ -64,10 +66,7 @@
   #define REG_PMC_FOCR                        (0x400E0478U) /**< \brief (PMC) Fault Output Clear Register */
   #define REG_PMC_WPMR                        (0x400E04E4U) /**< \brief (PMC) Write Protection Mode Register */
   #define REG_PMC_WPSR                        (0x400E04E8U) /**< \brief (PMC) Write Protection Status Register */
-  #define REG_PMC_ADDRSIZE                    (0x400E04ECU) /**< \brief (PMC) Address Size Register */
-  #define REG_PMC_IPNAME                      (0x400E04F0U) /**< \brief (PMC) IP Name1 Register */
-  #define REG_PMC_FEATURES                    (0x400E04F8U) /**< \brief (PMC) Features Register */
-  #define REG_PMC_VERSION                     (0x400E04FCU) /**< \brief (PMC) Version Register */
+  #define REG_PMC_PCR                         (0x400E050CU) /**< \brief (PMC) Peripheral Control Register */
   #define REG_PMC_OCR                         (0x400E0510U) /**< \brief (PMC) Oscillator Calibration Register */
   #define REG_PMC_SLPWK_ER0                   (0x400E0514U) /**< \brief (PMC) SleepWalking Enable Register 0 */
   #define REG_PMC_SLPWK_DR0                   (0x400E0518U) /**< \brief (PMC) SleepWalking Disable Register 0 */
@@ -84,7 +83,9 @@
   #define REG_CKGR_MOR       (*(__IO uint32_t*)0x400E0420U) /**< \brief (PMC) Main Oscillator Register */
   #define REG_CKGR_MCFR      (*(__IO uint32_t*)0x400E0424U) /**< \brief (PMC) Main Clock Frequency Register */
   #define REG_CKGR_PLLAR     (*(__IO uint32_t*)0x400E0428U) /**< \brief (PMC) PLLA Register */
+  #define REG_CKGR_PLLBR     (*(__IO uint32_t*)0x400E042CU) /**< \brief (PMC) PLLB Register */
   #define REG_PMC_MCKR       (*(__IO uint32_t*)0x400E0430U) /**< \brief (PMC) Master Clock Register */
+  #define REG_PMC_USB        (*(__IO uint32_t*)0x400E0438U) /**< \brief (PMC) USB Clock Register */
   #define REG_PMC_PCK        (*(__IO uint32_t*)0x400E0440U) /**< \brief (PMC) Programmable Clock 0 Register */
   #define REG_PMC_IER        (*(__O  uint32_t*)0x400E0460U) /**< \brief (PMC) Interrupt Enable Register */
   #define REG_PMC_IDR        (*(__O  uint32_t*)0x400E0464U) /**< \brief (PMC) Interrupt Disable Register */
@@ -95,10 +96,7 @@
   #define REG_PMC_FOCR       (*(__O  uint32_t*)0x400E0478U) /**< \brief (PMC) Fault Output Clear Register */
   #define REG_PMC_WPMR       (*(__IO uint32_t*)0x400E04E4U) /**< \brief (PMC) Write Protection Mode Register */
   #define REG_PMC_WPSR       (*(__I  uint32_t*)0x400E04E8U) /**< \brief (PMC) Write Protection Status Register */
-  #define REG_PMC_ADDRSIZE   (*(__I  uint32_t*)0x400E04ECU) /**< \brief (PMC) Address Size Register */
-  #define REG_PMC_IPNAME     (*(__I  uint32_t*)0x400E04F0U) /**< \brief (PMC) IP Name1 Register */
-  #define REG_PMC_FEATURES   (*(__I  uint32_t*)0x400E04F8U) /**< \brief (PMC) Features Register */
-  #define REG_PMC_VERSION    (*(__I  uint32_t*)0x400E04FCU) /**< \brief (PMC) Version Register */
+  #define REG_PMC_PCR        (*(__IO uint32_t*)0x400E050CU) /**< \brief (PMC) Peripheral Control Register */
   #define REG_PMC_OCR        (*(__IO uint32_t*)0x400E0510U) /**< \brief (PMC) Oscillator Calibration Register */
   #define REG_PMC_SLPWK_ER0  (*(__O  uint32_t*)0x400E0514U) /**< \brief (PMC) SleepWalking Enable Register 0 */
   #define REG_PMC_SLPWK_DR0  (*(__O  uint32_t*)0x400E0518U) /**< \brief (PMC) SleepWalking Disable Register 0 */

@@ -80,7 +80,6 @@
   #define REG_TC1_BCR                    (0x400140C0U) /**< \brief (TC1) Block Control Register */
   #define REG_TC1_BMR                    (0x400140C4U) /**< \brief (TC1) Block Mode Register */
   #define REG_TC1_WPMR                   (0x400140E4U) /**< \brief (TC1) Write Protection Mode Register */
-  #define REG_TC1_VER                    (0x400140FCU) /**< \brief (TC1) Version Register */
 #else
   #define REG_TC1_CCR0  (*(__O  uint32_t*)0x40014000U) /**< \brief (TC1) Channel Control Register (channel = 0) */
   #define REG_TC1_CMR0  (*(__IO uint32_t*)0x40014004U) /**< \brief (TC1) Channel Mode Register (channel = 0) */
@@ -118,7 +117,6 @@
   #define REG_TC1_BCR   (*(__O  uint32_t*)0x400140C0U) /**< \brief (TC1) Block Control Register */
   #define REG_TC1_BMR   (*(__IO uint32_t*)0x400140C4U) /**< \brief (TC1) Block Mode Register */
   #define REG_TC1_WPMR  (*(__IO uint32_t*)0x400140E4U) /**< \brief (TC1) Write Protection Mode Register */
-  #define REG_TC1_VER   (*(__I  uint32_t*)0x400140FCU) /**< \brief (TC1) Version Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMG55_TC1_INSTANCE_ */

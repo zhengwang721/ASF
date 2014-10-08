@@ -66,8 +66,7 @@ typedef struct {
   __I  uint32_t Reserved3[38];
   __IO uint32_t SPI_WPMR;      /**< \brief (Spi Offset: 0x0E4) SPI Write Protection Mode Register */
   __I  uint32_t SPI_WPSR;      /**< \brief (Spi Offset: 0x0E8) SPI Write Protection Status Register */
-  __I  uint32_t Reserved4[4];
-  __I  uint32_t SPI_VERSION;   /**< \brief (Spi Offset: 0x0FC) SPI Version Register */
+  __I  uint32_t Reserved4[5];
   __IO uint32_t SPI_RPR;       /**< \brief (Spi Offset: 0x100) Receive Pointer Register */
   __IO uint32_t SPI_RCR;       /**< \brief (Spi Offset: 0x104) Receive Counter Register */
   __IO uint32_t SPI_TPR;       /**< \brief (Spi Offset: 0x108) Transmit Pointer Register */
@@ -98,7 +97,7 @@ typedef struct {
 #define SPI_MR_LLB (0x1u << 7) /**< \brief (SPI_MR) Local Loopback Enable */
 #define SPI_MR_CMPMODE (0x1u << 12) /**< \brief (SPI_MR) Comparison Mode */
 #define   SPI_MR_CMPMODE_FLAG_ONLY (0x0u << 12) /**< \brief (SPI_MR) Any character is received and comparison function drives CMP flag. */
-#define   SPI_MR_CMPMODE_START_CONDITION (0x1u << 12) /**< \brief (SPI_MR) Comparison condition must be met to start reception. */
+#define   SPI_MR_CMPMODE_START_CONDITION (0x1u << 12) /**< \brief (SPI_MR) Comparison condition must be met to start reception of all incoming characters until REQCLR is set. */
 #define SPI_MR_PCS_Pos 16
 #define SPI_MR_PCS_Msk (0x3u << SPI_MR_PCS_Pos) /**< \brief (SPI_MR) Peripheral Chip Select */
 #define SPI_MR_PCS(value) ((SPI_MR_PCS_Msk & ((value) << SPI_MR_PCS_Pos)))
@@ -119,19 +118,19 @@ typedef struct {
 #define SPI_TDR_PCS(value) ((SPI_TDR_PCS_Msk & ((value) << SPI_TDR_PCS_Pos)))
 #define SPI_TDR_LASTXFER (0x1u << 24) /**< \brief (SPI_TDR) Last Transfer */
 /* -------- SPI_SR : (SPI Offset: 0x010) SPI Status Register -------- */
-#define SPI_SR_RDRF (0x1u << 0) /**< \brief (SPI_SR) Receive Data Register Full */
-#define SPI_SR_TDRE (0x1u << 1) /**< \brief (SPI_SR) Transmit Data Register Empty */
-#define SPI_SR_MODF (0x1u << 2) /**< \brief (SPI_SR) Mode Fault Error */
-#define SPI_SR_OVRES (0x1u << 3) /**< \brief (SPI_SR) Overrun Error Status */
-#define SPI_SR_ENDRX (0x1u << 4) /**< \brief (SPI_SR) End of RX buffer */
-#define SPI_SR_ENDTX (0x1u << 5) /**< \brief (SPI_SR) End of TX buffer */
-#define SPI_SR_RXBUFF (0x1u << 6) /**< \brief (SPI_SR) RX Buffer Full */
-#define SPI_SR_TXBUFE (0x1u << 7) /**< \brief (SPI_SR) TX Buffer Empty */
-#define SPI_SR_NSSR (0x1u << 8) /**< \brief (SPI_SR) NSS Rising */
-#define SPI_SR_TXEMPTY (0x1u << 9) /**< \brief (SPI_SR) Transmission Registers Empty */
-#define SPI_SR_UNDES (0x1u << 10) /**< \brief (SPI_SR) Underrun Error Status (Slave mode Only) */
-#define SPI_SR_CMP (0x1u << 11) /**< \brief (SPI_SR) Comparison Status */
-#define SPI_SR_SPIENS (0x1u << 16) /**< \brief (SPI_SR) SPI Enable Status */
+#define SPI_SR_RDRF (0x1u << 0) /**< \brief (SPI_SR) Receive Data Register Full (automatically set/cleared) */
+#define SPI_SR_TDRE (0x1u << 1) /**< \brief (SPI_SR) Transmit Data Register Empty (automatically set/cleared) */
+#define SPI_SR_MODF (0x1u << 2) /**< \brief (SPI_SR) Mode Fault Error (cleared on read) */
+#define SPI_SR_OVRES (0x1u << 3) /**< \brief (SPI_SR) Overrun Error Status (cleared on read) */
+#define SPI_SR_ENDRX (0x1u << 4) /**< \brief (SPI_SR) End of RX buffer (automatically set/cleared) */
+#define SPI_SR_ENDTX (0x1u << 5) /**< \brief (SPI_SR) End of TX buffer (automatically set/cleared) */
+#define SPI_SR_RXBUFF (0x1u << 6) /**< \brief (SPI_SR) RX Buffer Full (automatically set/cleared) */
+#define SPI_SR_TXBUFE (0x1u << 7) /**< \brief (SPI_SR) TX Buffer Empty (automatically set/cleared) */
+#define SPI_SR_NSSR (0x1u << 8) /**< \brief (SPI_SR) NSS Rising (cleared on read) */
+#define SPI_SR_TXEMPTY (0x1u << 9) /**< \brief (SPI_SR) Transmission Registers Empty (automatically set/cleared) */
+#define SPI_SR_UNDES (0x1u << 10) /**< \brief (SPI_SR) Underrun Error Status (slave mode only) (cleared on read) */
+#define SPI_SR_CMP (0x1u << 11) /**< \brief (SPI_SR) Comparison Status (cleared on read) */
+#define SPI_SR_SPIENS (0x1u << 16) /**< \brief (SPI_SR) SPI Enable Status (automatically set/cleared) */
 /* -------- SPI_IER : (SPI Offset: 0x014) SPI Interrupt Enable Register -------- */
 #define SPI_IER_RDRF (0x1u << 0) /**< \brief (SPI_IER) Receive Data Register Full Interrupt Enable */
 #define SPI_IER_TDRE (0x1u << 1) /**< \brief (SPI_IER) SPI Transmit Data Register Empty Interrupt Enable */
@@ -212,11 +211,6 @@ typedef struct {
 #define SPI_WPSR_WPVS (0x1u << 0) /**< \brief (SPI_WPSR) Write Protection Violation Status */
 #define SPI_WPSR_WPVSRC_Pos 8
 #define SPI_WPSR_WPVSRC_Msk (0xffu << SPI_WPSR_WPVSRC_Pos) /**< \brief (SPI_WPSR) Write Protection Violation Source */
-/* -------- SPI_VERSION : (SPI Offset: 0x0FC) SPI Version Register -------- */
-#define SPI_VERSION_VERSION_Pos 0
-#define SPI_VERSION_VERSION_Msk (0xfffu << SPI_VERSION_VERSION_Pos) /**< \brief (SPI_VERSION) Version of the Hardware Module */
-#define SPI_VERSION_MFN_Pos 16
-#define SPI_VERSION_MFN_Msk (0x7u << SPI_VERSION_MFN_Pos) /**< \brief (SPI_VERSION) Metal Fix Number */
 /* -------- SPI_RPR : (SPI Offset: 0x100) Receive Pointer Register -------- */
 #define SPI_RPR_RXPTR_Pos 0
 #define SPI_RPR_RXPTR_Msk (0xffffffffu << SPI_RPR_RXPTR_Pos) /**< \brief (SPI_RPR) Receive Pointer Register */
@@ -264,7 +258,7 @@ typedef struct {
 #define SPI_PTSR_TXTEN (0x1u << 8) /**< \brief (SPI_PTSR) Transmitter Transfer Enable */
 #define SPI_PTSR_RXCBEN (0x1u << 16) /**< \brief (SPI_PTSR) Receiver Transfer Enable */
 #define SPI_PTSR_TXCBEN (0x1u << 18) /**< \brief (SPI_PTSR) Transmitter Transfer Enable */
-#define SPI_PTSR_ERR (0x1u << 24) /**< \brief (SPI_PTSR) Transfer Bus Error */
+#define SPI_PTSR_ERR (0x1u << 24) /**< \brief (SPI_PTSR) Transfer Bus Error (clear on read) */
 
 /*@}*/
 

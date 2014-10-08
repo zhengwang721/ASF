@@ -74,8 +74,7 @@ typedef struct {
   __I  uint32_t Reserved4[20];
   __IO uint32_t US_WPMR;       /**< \brief (Usart Offset: 0x0E4) USART Write Protection Mode Register */
   __I  uint32_t US_WPSR;       /**< \brief (Usart Offset: 0x0E8) USART Write Protection Status Register */
-  __I  uint32_t Reserved5[4];
-  __I  uint32_t US_VERSION;    /**< \brief (Usart Offset: 0x0FC) USART Version Register */
+  __I  uint32_t Reserved5[5];
   __IO uint32_t US_RPR;        /**< \brief (Usart Offset: 0x100) Receive Pointer Register */
   __IO uint32_t US_RCR;        /**< \brief (Usart Offset: 0x104) Receive Counter Register */
   __IO uint32_t US_TPR;        /**< \brief (Usart Offset: 0x108) Transmit Pointer Register */
@@ -114,20 +113,20 @@ typedef struct {
 #define US_MR_USART_MODE_Pos 0
 #define US_MR_USART_MODE_Msk (0xfu << US_MR_USART_MODE_Pos) /**< \brief (US_MR) USART Mode of Operation */
 #define   US_MR_USART_MODE_NORMAL (0x0u << 0) /**< \brief (US_MR) Normal mode */
-#define   US_MR_USART_MODE_RS485 (0x1u << 0) /**< \brief (US_MR) RS485 */
+#define   US_MR_USART_MODE_RS485 (0x1u << 0) /**< \brief (US_MR) RS485 mode */
 #define   US_MR_USART_MODE_HW_HANDSHAKING (0x2u << 0) /**< \brief (US_MR) Hardware Handshaking */
 #define   US_MR_USART_MODE_IS07816_T_0 (0x4u << 0) /**< \brief (US_MR) IS07816 Protocol: T = 0 */
 #define   US_MR_USART_MODE_IS07816_T_1 (0x6u << 0) /**< \brief (US_MR) IS07816 Protocol: T = 1 */
-#define   US_MR_USART_MODE_LIN_MASTER (0xAu << 0) /**< \brief (US_MR) LIN master */
-#define   US_MR_USART_MODE_LIN_SLAVE (0xBu << 0) /**< \brief (US_MR) LIN Slave */
-#define   US_MR_USART_MODE_SPI_MASTER (0xEu << 0) /**< \brief (US_MR) SPI master */
-#define   US_MR_USART_MODE_SPI_SLAVE (0xFu << 0) /**< \brief (US_MR) SPI Slave */
+#define   US_MR_USART_MODE_LIN_MASTER (0xAu << 0) /**< \brief (US_MR) LIN master mode */
+#define   US_MR_USART_MODE_LIN_SLAVE (0xBu << 0) /**< \brief (US_MR) LIN Slave mode */
+#define   US_MR_USART_MODE_SPI_MASTER (0xEu << 0) /**< \brief (US_MR) SPI master mode */
+#define   US_MR_USART_MODE_SPI_SLAVE (0xFu << 0) /**< \brief (US_MR) SPI Slave mode */
 #define US_MR_USCLKS_Pos 4
 #define US_MR_USCLKS_Msk (0x3u << US_MR_USCLKS_Pos) /**< \brief (US_MR) Clock Selection */
 #define   US_MR_USCLKS_MCK (0x0u << 4) /**< \brief (US_MR) Peripheral clock is selected */
 #define   US_MR_USCLKS_DIV (0x1u << 4) /**< \brief (US_MR) Peripheral clock Divided (DIV=8) is selected */
-#define   US_MR_USCLKS_PMC_PCK (0x2u << 4) /**< \brief (US_MR) A PMC programmable clock is selected */
-#define   US_MR_USCLKS_SCK (0x3u << 4) /**< \brief (US_MR) External pin SCK is selected */
+#define   US_MR_USCLKS_PMC_PCK (0x2u << 4) /**< \brief (US_MR) PMC programmable clock (PCK) is selected.If the SCK pin is driven (CLKO=1), the CD field must be greater than 1. */
+#define   US_MR_USCLKS_SCK (0x3u << 4) /**< \brief (US_MR) External pin (SCK) is selected */
 #define US_MR_CHRL_Pos 6
 #define US_MR_CHRL_Msk (0x3u << US_MR_CHRL_Pos) /**< \brief (US_MR) Character Length */
 #define   US_MR_CHRL_5_BIT (0x0u << 6) /**< \brief (US_MR) Character length is 5 bits */
@@ -146,7 +145,7 @@ typedef struct {
 #define US_MR_NBSTOP_Pos 12
 #define US_MR_NBSTOP_Msk (0x3u << US_MR_NBSTOP_Pos) /**< \brief (US_MR) Number of Stop Bits */
 #define   US_MR_NBSTOP_1_BIT (0x0u << 12) /**< \brief (US_MR) 1 stop bit */
-#define   US_MR_NBSTOP_1_5_BIT (0x1u << 12) /**< \brief (US_MR) 1.5 stop bit (SYNC = 0) or reserved (SYNC = 1) */
+#define   US_MR_NBSTOP_1_5_BIT (0x1u << 12) /**< \brief (US_MR) 1.5 stop bits (SYNC = 0) or reserved (SYNC = 1) */
 #define   US_MR_NBSTOP_2_BIT (0x2u << 12) /**< \brief (US_MR) 2 stop bits */
 #define US_MR_CHMODE_Pos 14
 #define US_MR_CHMODE_Msk (0x3u << US_MR_CHMODE_Pos) /**< \brief (US_MR) Channel Mode */
@@ -172,16 +171,16 @@ typedef struct {
 #define US_IER_RXRDY (0x1u << 0) /**< \brief (US_IER) RXRDY Interrupt Enable */
 #define US_IER_TXRDY (0x1u << 1) /**< \brief (US_IER) TXRDY Interrupt Enable */
 #define US_IER_RXBRK (0x1u << 2) /**< \brief (US_IER) Receiver Break Interrupt Enable */
-#define US_IER_ENDRX (0x1u << 3) /**< \brief (US_IER) End of Receive Transfer Interrupt Enable (available in all USART modes of operation) */
-#define US_IER_ENDTX (0x1u << 4) /**< \brief (US_IER) End of Transmit Interrupt Enable (available in all USART modes of operation) */
+#define US_IER_ENDRX (0x1u << 3) /**< \brief (US_IER) End of Receive Buffer Interrupt Enable (available in all USART modes of operation) */
+#define US_IER_ENDTX (0x1u << 4) /**< \brief (US_IER) End of Transmit Buffer Interrupt Enable (available in all USART modes of operation) */
 #define US_IER_OVRE (0x1u << 5) /**< \brief (US_IER) Overrun Error Interrupt Enable */
 #define US_IER_FRAME (0x1u << 6) /**< \brief (US_IER) Framing Error Interrupt Enable */
 #define US_IER_PARE (0x1u << 7) /**< \brief (US_IER) Parity Error Interrupt Enable */
 #define US_IER_TIMEOUT (0x1u << 8) /**< \brief (US_IER) Time-out Interrupt Enable */
 #define US_IER_TXEMPTY (0x1u << 9) /**< \brief (US_IER) TXEMPTY Interrupt Enable */
 #define US_IER_ITER (0x1u << 10) /**< \brief (US_IER) Max number of Repetitions Reached Interrupt Enable */
-#define US_IER_TXBUFE (0x1u << 11) /**< \brief (US_IER) Buffer Empty Interrupt Enable (available in all USART modes of operation) */
-#define US_IER_RXBUFF (0x1u << 12) /**< \brief (US_IER) Buffer Full Interrupt Enable (available in all USART modes of operation) */
+#define US_IER_TXBUFE (0x1u << 11) /**< \brief (US_IER) Transmit Buffer Empty Interrupt Enable (available in all USART modes of operation) */
+#define US_IER_RXBUFF (0x1u << 12) /**< \brief (US_IER) Receive Buffer Full Interrupt Enable (available in all USART modes of operation) */
 #define US_IER_NACK (0x1u << 13) /**< \brief (US_IER) Non Acknowledge Interrupt Enable */
 #define US_IER_CTSIC (0x1u << 19) /**< \brief (US_IER) Clear to Send Input Change Interrupt Enable */
 #define US_IER_CMP (0x1u << 22) /**< \brief (US_IER) Comparison Interrupt Enable */
@@ -200,16 +199,16 @@ typedef struct {
 #define US_IDR_RXRDY (0x1u << 0) /**< \brief (US_IDR) RXRDY Interrupt Disable */
 #define US_IDR_TXRDY (0x1u << 1) /**< \brief (US_IDR) TXRDY Interrupt Disable */
 #define US_IDR_RXBRK (0x1u << 2) /**< \brief (US_IDR) Receiver Break Interrupt Disable */
-#define US_IDR_ENDRX (0x1u << 3) /**< \brief (US_IDR) End of Receive Transfer Interrupt Disable (available in all USART modes of operation) */
-#define US_IDR_ENDTX (0x1u << 4) /**< \brief (US_IDR) End of Transmit Interrupt Disable (available in all USART modes of operation) */
+#define US_IDR_ENDRX (0x1u << 3) /**< \brief (US_IDR) End of Receive Buffer Interrupt Enable (available in all USART modes of operation) */
+#define US_IDR_ENDTX (0x1u << 4) /**< \brief (US_IDR) End of Transmit Buffer Interrupt Disable (available in all USART modes of operation) */
 #define US_IDR_OVRE (0x1u << 5) /**< \brief (US_IDR) Overrun Error Interrupt Enable */
 #define US_IDR_FRAME (0x1u << 6) /**< \brief (US_IDR) Framing Error Interrupt Disable */
 #define US_IDR_PARE (0x1u << 7) /**< \brief (US_IDR) Parity Error Interrupt Disable */
 #define US_IDR_TIMEOUT (0x1u << 8) /**< \brief (US_IDR) Time-out Interrupt Disable */
 #define US_IDR_TXEMPTY (0x1u << 9) /**< \brief (US_IDR) TXEMPTY Interrupt Disable */
 #define US_IDR_ITER (0x1u << 10) /**< \brief (US_IDR) Max Number of Repetitions Reached Interrupt Disable */
-#define US_IDR_TXBUFE (0x1u << 11) /**< \brief (US_IDR) Buffer Empty Interrupt Disable (available in all USART modes of operation) */
-#define US_IDR_RXBUFF (0x1u << 12) /**< \brief (US_IDR) Buffer Full Interrupt Disable (available in all USART modes of operation) */
+#define US_IDR_TXBUFE (0x1u << 11) /**< \brief (US_IDR) Transmit Buffer Empty Interrupt Enable (available in all USART modes of operation) */
+#define US_IDR_RXBUFF (0x1u << 12) /**< \brief (US_IDR) Receive Buffer Full Interrupt Enable (available in all USART modes of operation) */
 #define US_IDR_NACK (0x1u << 13) /**< \brief (US_IDR) Non Acknowledge Interrupt Disable */
 #define US_IDR_CTSIC (0x1u << 19) /**< \brief (US_IDR) Clear to Send Input Change Interrupt Disable */
 #define US_IDR_CMP (0x1u << 22) /**< \brief (US_IDR) Comparison Interrupt Disable */
@@ -228,16 +227,16 @@ typedef struct {
 #define US_IMR_RXRDY (0x1u << 0) /**< \brief (US_IMR) RXRDY Interrupt Mask */
 #define US_IMR_TXRDY (0x1u << 1) /**< \brief (US_IMR) TXRDY Interrupt Mask */
 #define US_IMR_RXBRK (0x1u << 2) /**< \brief (US_IMR) Receiver Break Interrupt Mask */
-#define US_IMR_ENDRX (0x1u << 3) /**< \brief (US_IMR) End of Receive Transfer Interrupt Mask (available in all USART modes of operation) */
-#define US_IMR_ENDTX (0x1u << 4) /**< \brief (US_IMR) End of Transmit Interrupt Mask (available in all USART modes of operation) */
+#define US_IMR_ENDRX (0x1u << 3) /**< \brief (US_IMR) End of Receive Buffer Interrupt Mask (available in all USART modes of operation) */
+#define US_IMR_ENDTX (0x1u << 4) /**< \brief (US_IMR) End of Transmit Buffer Interrupt Mask (available in all USART modes of operation) */
 #define US_IMR_OVRE (0x1u << 5) /**< \brief (US_IMR) Overrun Error Interrupt Mask */
 #define US_IMR_FRAME (0x1u << 6) /**< \brief (US_IMR) Framing Error Interrupt Mask */
 #define US_IMR_PARE (0x1u << 7) /**< \brief (US_IMR) Parity Error Interrupt Mask */
 #define US_IMR_TIMEOUT (0x1u << 8) /**< \brief (US_IMR) Time-out Interrupt Mask */
 #define US_IMR_TXEMPTY (0x1u << 9) /**< \brief (US_IMR) TXEMPTY Interrupt Mask */
 #define US_IMR_ITER (0x1u << 10) /**< \brief (US_IMR) Max Number of Repetitions Reached Interrupt Mask */
-#define US_IMR_TXBUFE (0x1u << 11) /**< \brief (US_IMR) Buffer Empty Interrupt Mask (available in all USART modes of operation) */
-#define US_IMR_RXBUFF (0x1u << 12) /**< \brief (US_IMR) Buffer Full Interrupt Mask (available in all USART modes of operation) */
+#define US_IMR_TXBUFE (0x1u << 11) /**< \brief (US_IMR) Transmit Buffer Empty Interrupt Mask (available in all USART modes of operation) */
+#define US_IMR_RXBUFF (0x1u << 12) /**< \brief (US_IMR) Receive Buffer Full Interrupt Mask (available in all USART modes of operation) */
 #define US_IMR_NACK (0x1u << 13) /**< \brief (US_IMR) Non Acknowledge Interrupt Mask */
 #define US_IMR_CTSIC (0x1u << 19) /**< \brief (US_IMR) Clear to Send Input Change Interrupt Mask */
 #define US_IMR_CMP (0x1u << 22) /**< \brief (US_IMR) Comparison Interrupt Mask */
@@ -253,35 +252,35 @@ typedef struct {
 #define US_IMR_LINSTE (0x1u << 30) /**< \brief (US_IMR) LIN Synch Tolerance Error Interrupt Mask */
 #define US_IMR_LINHTE (0x1u << 31) /**< \brief (US_IMR) LIN Header Timeout Error Interrupt Mask */
 /* -------- US_CSR : (USART Offset: 0x014) USART Channel Status Register -------- */
-#define US_CSR_RXRDY (0x1u << 0) /**< \brief (US_CSR) Receiver Ready */
-#define US_CSR_TXRDY (0x1u << 1) /**< \brief (US_CSR) Transmitter Ready */
-#define US_CSR_RXBRK (0x1u << 2) /**< \brief (US_CSR) Break Received/End of Break */
-#define US_CSR_ENDRX (0x1u << 3) /**< \brief (US_CSR) End of Receiver Transfer */
-#define US_CSR_ENDTX (0x1u << 4) /**< \brief (US_CSR) End of Transmitter Transfer */
-#define US_CSR_OVRE (0x1u << 5) /**< \brief (US_CSR) Overrun Error */
-#define US_CSR_FRAME (0x1u << 6) /**< \brief (US_CSR) Framing Error */
-#define US_CSR_PARE (0x1u << 7) /**< \brief (US_CSR) Parity Error */
-#define US_CSR_TIMEOUT (0x1u << 8) /**< \brief (US_CSR) Receiver Time-out */
-#define US_CSR_TXEMPTY (0x1u << 9) /**< \brief (US_CSR) Transmitter Empty */
-#define US_CSR_ITER (0x1u << 10) /**< \brief (US_CSR) Max Number of Repetitions Reached */
-#define US_CSR_TXBUFE (0x1u << 11) /**< \brief (US_CSR) Transmission Buffer Empty */
-#define US_CSR_RXBUFF (0x1u << 12) /**< \brief (US_CSR) Reception Buffer Full */
-#define US_CSR_NACK (0x1u << 13) /**< \brief (US_CSR) Non Acknowledge Interrupt */
-#define US_CSR_CTSIC (0x1u << 19) /**< \brief (US_CSR) Clear to Send Input Change Flag */
-#define US_CSR_CMP (0x1u << 22) /**< \brief (US_CSR) Comparison Status */
-#define US_CSR_CTS (0x1u << 23) /**< \brief (US_CSR) Image of CTS Input */
-#define US_CSR_UNRE (0x1u << 10) /**< \brief (US_CSR) Underrun Error */
-#define US_CSR_LINBK (0x1u << 13) /**< \brief (US_CSR) LIN Break Sent or LIN Break Received */
-#define US_CSR_LINID (0x1u << 14) /**< \brief (US_CSR) LIN Identifier Sent or LIN Identifier Received */
-#define US_CSR_LINTC (0x1u << 15) /**< \brief (US_CSR) LIN Transfer Completed */
+#define US_CSR_RXRDY (0x1u << 0) /**< \brief (US_CSR) Receiver Ready (automatically set / cleared) */
+#define US_CSR_TXRDY (0x1u << 1) /**< \brief (US_CSR) Transmitter Ready (automatically set / cleared) */
+#define US_CSR_RXBRK (0x1u << 2) /**< \brief (US_CSR) Break Received/End of Break (cleared by US_CR.RSTSTA command) */
+#define US_CSR_ENDRX (0x1u << 3) /**< \brief (US_CSR) End of RX Buffer (automatically set / cleared) */
+#define US_CSR_ENDTX (0x1u << 4) /**< \brief (US_CSR) End of TX Buffer (automatically set / cleared) */
+#define US_CSR_OVRE (0x1u << 5) /**< \brief (US_CSR) Overrun Error (cleared by US_CR.RSTSTA command) */
+#define US_CSR_FRAME (0x1u << 6) /**< \brief (US_CSR) Framing Error (cleared by US_CR.RSTSTA command) */
+#define US_CSR_PARE (0x1u << 7) /**< \brief (US_CSR) Parity Error (cleared by US_CR.RSTSTA command) */
+#define US_CSR_TIMEOUT (0x1u << 8) /**< \brief (US_CSR) Receiver Time-out (cleared by US_CR.STTTO command) */
+#define US_CSR_TXEMPTY (0x1u << 9) /**< \brief (US_CSR) Transmitter Empty (automatically set / cleared) */
+#define US_CSR_ITER (0x1u << 10) /**< \brief (US_CSR) Max Number of Repetitions Reached (cleared by US_CR.RSTIT command) */
+#define US_CSR_TXBUFE (0x1u << 11) /**< \brief (US_CSR) TX Buffer Empty (automatically set / cleared) */
+#define US_CSR_RXBUFF (0x1u << 12) /**< \brief (US_CSR) RX Buffer Full (automatically set / cleared) */
+#define US_CSR_NACK (0x1u << 13) /**< \brief (US_CSR) Non Acknowledge Interrupt (cleared by US_CR.RSTNACK command) */
+#define US_CSR_CTSIC (0x1u << 19) /**< \brief (US_CSR) Clear to Send Input Change Flag (clear on read) */
+#define US_CSR_CMP (0x1u << 22) /**< \brief (US_CSR) Comparison Status (cleared by US_CR.RSTSTA command) */
+#define US_CSR_CTS (0x1u << 23) /**< \brief (US_CSR) Image of CTS Input (automatically set / cleared) */
+#define US_CSR_UNRE (0x1u << 10) /**< \brief (US_CSR) Underrun Error (cleared by US_CR.RSTSTA) */
+#define US_CSR_LINBK (0x1u << 13) /**< \brief (US_CSR) LIN Break Sent or LIN Break Received (cleared by US_CR.RSTSTA command) */
+#define US_CSR_LINID (0x1u << 14) /**< \brief (US_CSR) LIN Identifier Sent or LIN Identifier Received (cleared by US_CR.RSTSTA command) */
+#define US_CSR_LINTC (0x1u << 15) /**< \brief (US_CSR) LIN Transfer Completed (cleared by US_CR.RSTSTA command) */
 #define US_CSR_LINBLS (0x1u << 23) /**< \brief (US_CSR) LIN Bus Line Status */
-#define US_CSR_LINBE (0x1u << 25) /**< \brief (US_CSR) LIN Bit Error */
-#define US_CSR_LINISFE (0x1u << 26) /**< \brief (US_CSR) LIN Inconsistent Synch Field Error */
-#define US_CSR_LINIPE (0x1u << 27) /**< \brief (US_CSR) LIN Identifier Parity Error */
-#define US_CSR_LINCE (0x1u << 28) /**< \brief (US_CSR) LIN Checksum Error */
-#define US_CSR_LINSNRE (0x1u << 29) /**< \brief (US_CSR) LIN Slave Not Responding Error */
-#define US_CSR_LINSTE (0x1u << 30) /**< \brief (US_CSR) LIN Synch Tolerance Error */
-#define US_CSR_LINHTE (0x1u << 31) /**< \brief (US_CSR) LIN Header Timeout Error */
+#define US_CSR_LINBE (0x1u << 25) /**< \brief (US_CSR) LIN Bit Error (cleared by US_CR.RSTSTA command) */
+#define US_CSR_LINISFE (0x1u << 26) /**< \brief (US_CSR) LIN Inconsistent Synch Field Error (cleared by US_CR.RSTSTA command) */
+#define US_CSR_LINIPE (0x1u << 27) /**< \brief (US_CSR) LIN Identifier Parity Error (cleared by US_CR.RSTSTA command) */
+#define US_CSR_LINCE (0x1u << 28) /**< \brief (US_CSR) LIN Checksum Error (cleared by US_CR.RSTSTA command) */
+#define US_CSR_LINSNRE (0x1u << 29) /**< \brief (US_CSR) LIN Slave Not Responding Error (cleared by US_CR.RSTSTA command) */
+#define US_CSR_LINSTE (0x1u << 30) /**< \brief (US_CSR) LIN Synch Tolerance Error (cleared by US_CR.RSTSTA command) */
+#define US_CSR_LINHTE (0x1u << 31) /**< \brief (US_CSR) LIN Header Timeout Error (cleared by US_CR.RSTSTA command) */
 /* -------- US_RHR : (USART Offset: 0x018) USART Receive Holding Register -------- */
 #define US_RHR_RXCHR_Pos 0
 #define US_RHR_RXCHR_Msk (0x1ffu << US_RHR_RXCHR_Pos) /**< \brief (US_RHR) Received Character */
@@ -345,7 +344,7 @@ typedef struct {
 #define US_CMPR_VAL1(value) ((US_CMPR_VAL1_Msk & ((value) << US_CMPR_VAL1_Pos)))
 #define US_CMPR_CMPMODE (0x1u << 12) /**< \brief (US_CMPR) Comparison Mode */
 #define   US_CMPR_CMPMODE_FLAG_ONLY (0x0u << 12) /**< \brief (US_CMPR) Any character is received and comparison function drives CMP flag. */
-#define   US_CMPR_CMPMODE_START_CONDITION (0x1u << 12) /**< \brief (US_CMPR) Comparison condition must be met to start reception. */
+#define   US_CMPR_CMPMODE_START_CONDITION (0x1u << 12) /**< \brief (US_CMPR) Comparison condition must be met to start reception of all incoming charactersuntil REQCLR is set. */
 #define US_CMPR_CMPPAR (0x1u << 14) /**< \brief (US_CMPR) Compare Parity */
 #define US_CMPR_VAL2_Pos 16
 #define US_CMPR_VAL2_Msk (0x1ffu << US_CMPR_VAL2_Pos) /**< \brief (US_CMPR) Second Comparison Value for Received Character */
@@ -359,11 +358,6 @@ typedef struct {
 #define US_WPSR_WPVS (0x1u << 0) /**< \brief (US_WPSR) Write Protection Violation Status */
 #define US_WPSR_WPVSRC_Pos 8
 #define US_WPSR_WPVSRC_Msk (0xffffu << US_WPSR_WPVSRC_Pos) /**< \brief (US_WPSR) Write Protection Violation Source */
-/* -------- US_VERSION : (USART Offset: 0x0FC) USART Version Register -------- */
-#define US_VERSION_VERSION_Pos 0
-#define US_VERSION_VERSION_Msk (0xfffu << US_VERSION_VERSION_Pos) /**< \brief (US_VERSION) Hardware Module Version */
-#define US_VERSION_MFN_Pos 16
-#define US_VERSION_MFN_Msk (0x7u << US_VERSION_MFN_Pos) /**< \brief (US_VERSION) Metal Fix Number */
 /* -------- US_RPR : (USART Offset: 0x100) Receive Pointer Register -------- */
 #define US_RPR_RXPTR_Pos 0
 #define US_RPR_RXPTR_Msk (0xffffffffu << US_RPR_RXPTR_Pos) /**< \brief (US_RPR) Receive Pointer Register */
@@ -411,7 +405,7 @@ typedef struct {
 #define US_PTSR_TXTEN (0x1u << 8) /**< \brief (US_PTSR) Transmitter Transfer Enable */
 #define US_PTSR_RXCBEN (0x1u << 16) /**< \brief (US_PTSR) Receiver Transfer Enable */
 #define US_PTSR_TXCBEN (0x1u << 18) /**< \brief (US_PTSR) Transmitter Transfer Enable */
-#define US_PTSR_ERR (0x1u << 24) /**< \brief (US_PTSR) Transfer Bus Error */
+#define US_PTSR_ERR (0x1u << 24) /**< \brief (US_PTSR) Transfer Bus Error (clear on read) */
 
 /*@}*/
 

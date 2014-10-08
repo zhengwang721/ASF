@@ -80,7 +80,6 @@
   #define REG_TC0_BCR                    (0x400100C0U) /**< \brief (TC0) Block Control Register */
   #define REG_TC0_BMR                    (0x400100C4U) /**< \brief (TC0) Block Mode Register */
   #define REG_TC0_WPMR                   (0x400100E4U) /**< \brief (TC0) Write Protection Mode Register */
-  #define REG_TC0_VER                    (0x400100FCU) /**< \brief (TC0) Version Register */
   #define REG_TC0_RPR0                   (0x40010100U) /**< \brief (TC0) Receive Pointer Register (pdc = 0) */
   #define REG_TC0_RCR0                   (0x40010104U) /**< \brief (TC0) Receive Counter Register (pdc = 0) */
   #define REG_TC0_RNPR0                  (0x40010110U) /**< \brief (TC0) Receive Next Pointer Register (pdc = 0) */
@@ -124,7 +123,6 @@
   #define REG_TC0_BCR   (*(__O  uint32_t*)0x400100C0U) /**< \brief (TC0) Block Control Register */
   #define REG_TC0_BMR   (*(__IO uint32_t*)0x400100C4U) /**< \brief (TC0) Block Mode Register */
   #define REG_TC0_WPMR  (*(__IO uint32_t*)0x400100E4U) /**< \brief (TC0) Write Protection Mode Register */
-  #define REG_TC0_VER   (*(__I  uint32_t*)0x400100FCU) /**< \brief (TC0) Version Register */
   #define REG_TC0_RPR0  (*(__IO uint32_t*)0x40010100U) /**< \brief (TC0) Receive Pointer Register (pdc = 0) */
   #define REG_TC0_RCR0  (*(__IO uint32_t*)0x40010104U) /**< \brief (TC0) Receive Counter Register (pdc = 0) */
   #define REG_TC0_RNPR0 (*(__IO uint32_t*)0x40010110U) /**< \brief (TC0) Receive Next Pointer Register (pdc = 0) */

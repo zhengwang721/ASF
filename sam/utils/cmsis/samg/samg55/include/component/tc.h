@@ -73,8 +73,7 @@ typedef struct {
   __IO uint32_t  TC_BMR;                       /**< \brief (Tc Offset: 0xC4) Block Mode Register */
   __I  uint32_t  Reserved1[7];
   __IO uint32_t  TC_WPMR;                      /**< \brief (Tc Offset: 0xE4) Write Protection Mode Register */
-  __I  uint32_t  Reserved2[5];
-  __I  uint32_t  TC_VER;                       /**< \brief (Tc Offset: 0xFC) Version Register */
+  __I  uint32_t  Reserved2[6];
   __IO uint32_t  TC_RPR0;                      /**< \brief (Tc Offset: 0x100) Receive Pointer Register (pdc = 0) */
   __IO uint32_t  TC_RCR0;                      /**< \brief (Tc Offset: 0x104) Receive Counter Register (pdc = 0) */
   __I  uint32_t  Reserved3[2];
@@ -201,7 +200,7 @@ typedef struct {
 #define   TC_CMR_BSWTRG_TOGGLE (0x3u << 30) /**< \brief (TC_CMR) Toggle */
 /* -------- TC_SMMR : (TC Offset: N/A) Stepper Motor Mode Register -------- */
 #define TC_SMMR_GCEN (0x1u << 0) /**< \brief (TC_SMMR) Gray Count Enable */
-#define TC_SMMR_DOWN (0x1u << 1) /**< \brief (TC_SMMR) DOWN Count */
+#define TC_SMMR_DOWN (0x1u << 1) /**< \brief (TC_SMMR) Down Count */
 /* -------- TC_CV : (TC Offset: N/A) Counter Value -------- */
 #define TC_CV_CV_Pos 0
 #define TC_CV_CV_Msk (0xffffffffu << TC_CV_CV_Pos) /**< \brief (TC_CV) Counter Value */
@@ -283,15 +282,10 @@ typedef struct {
 #define   TC_BMR_TC2XC2S_TIOA0 (0x2u << 4) /**< \brief (TC_BMR) Signal connected to XC2: TIOA0 */
 #define   TC_BMR_TC2XC2S_TIOA1 (0x3u << 4) /**< \brief (TC_BMR) Signal connected to XC2: TIOA1 */
 /* -------- TC_WPMR : (TC Offset: 0xE4) Write Protection Mode Register -------- */
-#define TC_WPMR_WPEN (0x1u << 0) /**< \brief (TC_WPMR) Write Protect Enable */
+#define TC_WPMR_WPEN (0x1u << 0) /**< \brief (TC_WPMR) Write Protection Enable */
 #define TC_WPMR_WPKEY_Pos 8
-#define TC_WPMR_WPKEY_Msk (0xffffffu << TC_WPMR_WPKEY_Pos) /**< \brief (TC_WPMR) Write Protect KEY */
+#define TC_WPMR_WPKEY_Msk (0xffffffu << TC_WPMR_WPKEY_Pos) /**< \brief (TC_WPMR) Write Protection Key */
 #define   TC_WPMR_WPKEY_PASSWD (0x54494Du << 8) /**< \brief (TC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0. */
-/* -------- TC_VER : (TC Offset: 0xFC) Version Register -------- */
-#define TC_VER_VERSION_Pos 0
-#define TC_VER_VERSION_Msk (0xfffu << TC_VER_VERSION_Pos) /**< \brief (TC_VER) Version of the Hardware Module */
-#define TC_VER_MFN_Pos 16
-#define TC_VER_MFN_Msk (0x7u << TC_VER_MFN_Pos) /**< \brief (TC_VER) Metal Fix Number */
 /* -------- TC_RPR0 : (TC Offset: 0x100) Receive Pointer Register (pdc = 0) -------- */
 #define TC_RPR0_RXPTR_Pos 0
 #define TC_RPR0_RXPTR_Msk (0xffffffffu << TC_RPR0_RXPTR_Pos) /**< \brief (TC_RPR0) Receive Pointer Register */
@@ -323,7 +317,7 @@ typedef struct {
 #define TC_PTSR0_TXTEN (0x1u << 8) /**< \brief (TC_PTSR0) Transmitter Transfer Enable */
 #define TC_PTSR0_RXCBEN (0x1u << 16) /**< \brief (TC_PTSR0) Receiver Transfer Enable */
 #define TC_PTSR0_TXCBEN (0x1u << 18) /**< \brief (TC_PTSR0) Transmitter Transfer Enable */
-#define TC_PTSR0_ERR (0x1u << 24) /**< \brief (TC_PTSR0) Transfer Bus Error */
+#define TC_PTSR0_ERR (0x1u << 24) /**< \brief (TC_PTSR0) Transfer Bus Error (clear on read) */
 
 /*@}*/
 

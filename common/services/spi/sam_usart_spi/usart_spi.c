@@ -45,6 +45,7 @@
 #include "sysclk.h"
 #if SAMG55
 #include "flexcom.h"
+#include "conf_board.h"
 #endif
 
 /// @cond 0
