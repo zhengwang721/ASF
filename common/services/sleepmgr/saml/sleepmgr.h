@@ -111,6 +111,7 @@ static inline void sleepmgr_sleep(const enum sleepmgr_mode sleep_mode)
 	case SLEEPMGR_IDLE:
 		system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE);
 		cpu_irq_enable();
+		system_sleep();
 		break;
 	case SLEEPMGR_STANDBY:
 		system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
