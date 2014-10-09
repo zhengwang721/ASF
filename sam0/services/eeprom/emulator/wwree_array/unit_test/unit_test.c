@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM EEPROM Emulator Service Unit test
+ * \brief SAM Write While Read(WWR) EEPROM Emulator Service Unit test
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
