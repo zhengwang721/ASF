@@ -76,7 +76,7 @@ enum sleepmgr_mode {
 
 	/**
 	 *  Backup mode.
-	 *  Potential Wake Up sources: RSTC.
+	 *  Potential Wake Up sources: Backup reset detected by the RSTC.
 	 */
 	SLEEPMGR_BACKUP,
 
@@ -109,13 +109,21 @@ static inline void sleepmgr_sleep(const enum sleepmgr_mode sleep_mode)
 	/* Enter the sleep mode. */
 	switch (sleep_mode) {
 	case SLEEPMGR_IDLE:
-		system_set_sleepmode((enum system_sleepmode)(sleep_mode + 1));
+		system_set_sleepmode(SYSTEM_SLEEPMODE_IDLE);
 		cpu_irq_enable();
 		break;
 	case SLEEPMGR_STANDBY:
+		system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
+		cpu_irq_enable();
+		system_sleep();
+		break;
 	case SLEEPMGR_BACKUP:
+		system_set_sleepmode(SYSTEM_SLEEPMODE_BACKUP);
+		cpu_irq_enable();
+		system_sleep();
+		break;
 	case SLEEPMGR_OFF:
-		system_set_sleepmode((enum system_sleepmode)(sleep_mode + 2));
+		system_set_sleepmode(SYSTEM_SLEEPMODE_OFF);
 		cpu_irq_enable();
 		system_sleep();
 		break;
