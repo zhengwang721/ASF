@@ -226,7 +226,7 @@ uint8_t ethernet_phy_set_link(Gmac *p_gmac, uint8_t uc_phy_addr,
 		uc_fd = true;
 	}
 
-	if ((ul_stat1 & GMII_100BASE_T4_HD) && (ul_stat2 & GMII_100TX_HDX)) {
+	if ((ul_stat1 & GMII_100BASE_TX_HD) && (ul_stat2 & GMII_100TX_HDX)) {
 		/* Set MII for 100BaseTX and Half Duplex */
 		uc_speed = true;
 		uc_fd = false;
