@@ -79,8 +79,7 @@
  *
  * \section asfdoc_sam0_eeprom_module_overview Module Overview
  *
- * As the SAM devices (except SAM L21, SAM L21 has a Write while read EEPROM 
- * emulation area) do not contain any physical EEPROM memory, the storage
+ * As the SAM devices do not contain any physical EEPROM memory, the storage
  * of non-volatile user data is instead emulated using a special section of the
  * device's main FLASH memory. The use of FLASH memory technology over EEPROM
  * presents several difficulties over true EEPROM memory; data must be written
@@ -463,7 +462,7 @@ enum status_code eeprom_emulator_read_buffer(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Add support for SAM D21</td>
+ *		<td>Add support for SAM L21</td>
  *	</tr>
  *	<tr>
  *		<td>Fix warnings and document for SAM D21</td>

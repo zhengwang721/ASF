@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM L21 EEPROM Emulator Service Unit test
+ * \brief SAM EEPROM Emulator Service Unit test
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage SAM L21 Write While Read(WWR) EEPROM Emulator Unit Test
+ * \mainpage SAM Write While Read(WWR) EEPROM Emulator Unit Test
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
@@ -56,7 +56,7 @@
  */
 
 /**
- * \page appdoc_main SAM L21 WWR EEPROM Emulator Unit Test
+ * \page appdoc_main SAM WWR EEPROM Emulator Unit Test
  *
  * Overview:
  * - \ref appdoc_sam0_wwr_eeprom_emulator_unit_test_intro
@@ -76,7 +76,7 @@
  *  - \b None
  *
  * To run the test:
- *  - Connect the SAM L21 Xplained Pro board to the computer using a
+ *  - Connect the SAM Xplained Pro board to the computer using a
  *    micro USB cable.
  *  - Open the virtual COM port in a terminal application.
  *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
@@ -347,7 +347,7 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(eeprom_test_suite, eeprom_tests,
-			"SAM L21 WWR EEPROM emulator service test suite");
+			"SAM WWR EEPROM emulator service test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&eeprom_test_suite);

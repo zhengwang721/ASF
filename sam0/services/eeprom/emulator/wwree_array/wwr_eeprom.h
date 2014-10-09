@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM L21 Write While Read EEPROM Emulator
+ * \brief SAM Write While Read EEPROM Emulator
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -44,9 +44,9 @@
 #define WWR_EEPROM_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_wwr_eeprom_group SAM L21 Write While Read EEPROM (WWR EEPROM) Emulator Service
+ * \defgroup asfdoc_sam0_wwr_eeprom_group SAM Write While Read EEPROM (WWR EEPROM) Emulator Service
  *
- * This driver for Atmel® | SMART™ SAM L21 provides a WWR emulated EEPROM
+ * This driver for Atmel® | SMART™ SAM provides a WWR emulated EEPROM
  * memory area, for the storage and retrieval of user-application
  * configuration data into and out of non-volatile memory. The main array
  * can therefore run code while eeprom data is written.
@@ -72,7 +72,7 @@
  *
  * \section asfdoc_sam0_wwr_eeprom_module_overview Module Overview
  *
- * SAM L21 embedds a separate write while read EEPROM emulation (WWREE) array
+ * SAM device embedds a separate write while read EEPROM emulation (WWREE) array
  * that can be programmed while the main array is not blocked.
  * To use WWREE memory, data must be written as a number of physical memory pages
  * (of several bytes each) rather than being individually byte addressable, and
@@ -115,7 +115,7 @@
  * entire emulated WWR EEPROM space.
  *
  * \subsubsection asfdoc_sam0_wwr_eeprom_module_overview_implementation_pf Physical Memory
- * The SAM L21 WWR EEPROM is divided into a number of physical rows, each
+ * WWR EEPROM emulator is divided into a number of physical rows, each
  * containing four identically sized pages. Pages may be read or written
  * to individually, however pages must be erased before being reprogrammed and
  * the smallest granularity available for erasure is one single row.
@@ -209,7 +209,7 @@
  * memory pages(It depends on application configuration file). This quartered or 
  * halves the available storage space for the emulated WWR EEPROM
  * but reduces the overall number of row erases that are required, by reserving
- * one or two pages within each row for updated versions of the logical page contents.
+ * two or three pages within each row for updated versions of the logical page contents.
  * See \ref asfdoc_sam0_wwr_eeprom_init_layout "here" for a visual layout of the WWR
  * EEPROM Emulator physical memory.
  *

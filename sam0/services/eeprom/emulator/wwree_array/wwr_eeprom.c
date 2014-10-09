@@ -63,16 +63,16 @@
 
 /**
  * \internal
- * Magic key is the sequence "AtEEPROMEmu." in ASCII. The key is encoded as a
+ * Magic key is the sequence "AtEEPROMEmu_WWR." in ASCII. The key is encoded as a
  * sequence of 32-bit values to speed up checking of the key, which can be
  * implemented as a number of simple integer comparisons,
  */
-#define WWR_EEPROM_MAGIC_KEY                 {0x41744545, 0x50524f4d, 0x456d752e}
+#define WWR_EEPROM_MAGIC_KEY                 {0x41744545, 0x50524f4d, 0x456d752d,0x5757522e}
 
 /** \internal
  *  Length of the magic key, in 32-bit elements.
  */
-#define WWR_EEPROM_MAGIC_KEY_COUNT           3
+#define WWR_EEPROM_MAGIC_KEY_COUNT           4
 
 /** \internal
  *  WWR EEPROM max logical page num.
@@ -86,7 +86,7 @@ COMPILER_PACK_SET(1);
  * \brief Structure describing the EEPROM Emulation master page
  */
 struct _wwr_eeprom_master_page {
-	/** Magic key which in ASCII will show as AtEEPROMEmu. */
+	/** Magic key which in ASCII will show as AtEEPROMEmu_WWR. */
 	uint32_t magic_key[WWR_EEPROM_MAGIC_KEY_COUNT];
 
 	/** Emulator major version information. */
@@ -101,7 +101,7 @@ struct _wwr_eeprom_master_page {
 	uint8_t  emulator_id;
 
 	/** Unused reserved bytes in the master page. */
-	uint8_t  reserved[45];
+	uint8_t  reserved[44];
 };
 
 /**
@@ -204,7 +204,7 @@ static void _wwr_eeprom_emulator_nvm_fill_cache(
 	enum status_code error_code = STATUS_OK;
 
 	if (CONF_PAGE_CHECKSUM_ENABLE && (_eeprom_instance.initialized)){
-		struct _wwr_eeprom_page *temp= (struct _wwr_eeprom_page *) data;
+		struct _wwr_eeprom_page *temp = (struct _wwr_eeprom_page *)data;
 		temp->header.page_checksum = _wwr_eeprom_emulator_page_checksum(temp->data);
 	}
 
@@ -425,7 +425,7 @@ static enum status_code _wwr_eeprom_emulator_move_data_to_spare(
 	struct {
 		uint8_t logical_page;
 		uint8_t physical_page;
-	} page_trans[2];
+	} page_trans[CONF_LOGICAL_PAGE_NUM_IN_ROW];
 
 	const struct _wwr_eeprom_page *row_data =
 			(struct _wwr_eeprom_page *)&_eeprom_instance.wwree_addr[row_number * NVMCTRL_ROW_PAGES];
@@ -441,7 +441,7 @@ static enum status_code _wwr_eeprom_emulator_move_data_to_spare(
 	/* Look for newer revisions of the one or two logical pages stored in the row */
 	for (uint8_t c = 0; c < CONF_LOGICAL_PAGE_NUM_IN_ROW; c++) {
 		/* Look through the remaining pages in the row for any newer revisions */
-		for (uint8_t c2 = 2; c2 < NVMCTRL_ROW_PAGES; c2++) {
+		for (uint8_t c2 = CONF_LOGICAL_PAGE_NUM_IN_ROW; c2 < NVMCTRL_ROW_PAGES; c2++) {
 			if (page_trans[c].logical_page == row_data[c2].header.logical_page) {
 				page_trans[c].physical_page =
 						(row_number * NVMCTRL_ROW_PAGES) + c2;
@@ -449,7 +449,7 @@ static enum status_code _wwr_eeprom_emulator_move_data_to_spare(
 		}
 	}
 
-	/* Need to move both saved logical pages stored in the same row */
+	/* Need to move saved logical pages stored in the same row */
 	for (uint8_t c = 0; c < CONF_LOGICAL_PAGE_NUM_IN_ROW; c++) {
 		/* Find the physical page index for the new spare row pages */
 		uint32_t new_page =

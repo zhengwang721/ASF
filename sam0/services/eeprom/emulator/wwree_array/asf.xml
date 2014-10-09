@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.services.wwr_eeprom_emulator" caption="Write While Read EEPROM Emulator Service">
 		<info type="description" value="summary">
-			Write While Read EEPROM Emulator service for SAM L21.
+			Write While Read EEPROM Emulator service for SAM.
 		</info>
 		<info type="keyword" value="technology">
 			<keyword value="Memory" />
@@ -14,7 +14,7 @@
 		</info>
 
 		<info type="description" value="pdf">
-			This document describes how to use the WWR EEPROM fpr SAM L21, both the ASF driver and the peripheral itself.
+			This document describes how to use the WWR EEPROM fpr SAM, both the ASF driver and the peripheral itself.
 		</info>
 
 		<build type="include-path" value="."/>
