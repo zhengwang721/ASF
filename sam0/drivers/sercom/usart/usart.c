@@ -184,6 +184,8 @@ static enum status_code _usart_set_config(
 #ifdef FEATURE_USART_LIN_SLAVE
 		if(config->lin_slave_enable) {
 			ctrla |= SERCOM_USART_CTRLA_FORM(0x5);
+		} else {
+			ctrla |= SERCOM_USART_CTRLA_FORM(1);
 		}
 #else
 		ctrla |= SERCOM_USART_CTRLA_FORM(1);
@@ -193,6 +195,8 @@ static enum status_code _usart_set_config(
 #ifdef FEATURE_USART_LIN_SLAVE
 		if(config->lin_slave_enable) {
 			ctrla |= SERCOM_USART_CTRLA_FORM(0x4);
+		} else {
+			ctrla |= SERCOM_USART_CTRLA_FORM(0);
 		}
 #else
 		ctrla |= SERCOM_USART_CTRLA_FORM(0);
