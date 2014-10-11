@@ -717,8 +717,6 @@ bool system_clock_source_is_ready(
 	default:
 		return false;
 	}
-
-	return false;
 }
 
 /* Include some checks for conf_clocks.h validation */
@@ -766,8 +764,10 @@ void system_clock_init(void)
 
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
 
+#ifndef SAML21_REV_A
 	/*  Switch to PL2 to be sure configuration of GCLK0 is safe */
 	system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_2);
+#endif
 
 	/* XOSC */
 #if CONF_CLOCK_XOSC_ENABLE == true
@@ -991,6 +991,7 @@ void system_clock_init(void)
 	_CONF_CLOCK_GCLK_CONFIG(0, ~);
 #endif
 
+#ifndef SAML21_REV_A
 	/* Set performance level according to CPU frequency */
 	uint32_t cpu_freq = system_cpu_clock_get_hz();
 	if (cpu_freq < SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ) {
@@ -998,4 +999,5 @@ void system_clock_init(void)
 	} else if (cpu_freq < SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ) {
 		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_1);
 	}
+#endif
 }
