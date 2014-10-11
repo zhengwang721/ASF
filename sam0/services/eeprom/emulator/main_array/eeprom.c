@@ -78,7 +78,7 @@ struct _eeprom_master_page {
 	uint8_t  emulator_id;
 
 	/** Unused reserved bytes in the master page. */
-	uint8_t  reserved[45];
+	uint8_t  reserved[48];
 };
 
 /**

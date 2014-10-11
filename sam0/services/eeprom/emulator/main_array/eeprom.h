@@ -57,6 +57,7 @@
  *  - SAM D20/D21
  *  - SAM R21
  *  - SAM D10/D11
+ *  - SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_eeprom_prerequisites
@@ -460,7 +461,10 @@ enum status_code eeprom_emulator_read_buffer(
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
-  *	<tr>
+ *	<tr>
+ *		<td>Add support for SAM L21</td>
+ *	</tr>
+ *	<tr>
  *		<td>Fix warnings and document for SAM D21</td>
  *	</tr>
  *	<tr>
