@@ -62,13 +62,13 @@
 #define PIN_TC_WAVEFORM     EXT1_PIN_PWM_0
 #define PIN_TC_WAVEFORM_MUX EXT1_PWM_0_MUX
 
-/** Configure TC0 channel 2 as capture input. **/
+/** Configure TC0 channel 1 as capture input. **/
 #define TC_CHANNEL_CAPTURE 1
 #define ID_TC_CAPTURE ID_TC1
 #define PIN_TC_CAPTURE EXT1_PIN_PWM_1
 #define PIN_TC_CAPTURE_MUX EXT1_PWM_1_MUX
 
-/** Use TC2_Handler for TC capture interrupt**/
+/** Use TC1_Handler for TC capture interrupt**/
 #define TC_Handler  TC1_Handler
 #define TC_IRQn     TC1_IRQn
 
