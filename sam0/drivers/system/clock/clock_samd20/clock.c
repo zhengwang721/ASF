@@ -686,7 +686,7 @@ static void _switch_peripheral_gclk(void)
 	gclk_conf.source_generator = GCLK_GENERATOR_7;
 #endif
 
-	for (gclk_id = 0; gclk_id < 0x1C; gclk_id++) {
+	for (gclk_id = 0; gclk_id < GCLK_NUM; gclk_id++) {
 		system_gclk_chan_set_config(gclk_id, &gclk_conf);
 	}
 }
