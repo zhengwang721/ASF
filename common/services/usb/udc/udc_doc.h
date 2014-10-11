@@ -257,20 +257,20 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * The following procedure must be executed to set up the project correctly:
  * - Specify the clock configuration:
- *   - XMEGA® USB devices need 48MHZ clock input.
+ *   - XMEGA USB devices need 48MHz clock input.
  *
- *     XMEGA® USB devices need CPU frequency higher than 12MHZ.
+ *     XMEGA USB devices need CPU frequency higher than 12MHz.
  *
- *     You can use either an internal RC 48MHZ auto calibrated by Start of Frames
+ *     You can use either an internal RC 48MHz auto calibrated by Start of Frames
  *     or an external OSC.
- *   - UC3® and Atmel® | SMART™ SAM3/4 devices without USB high speed support need 48MHZ clock input.
+ *   - UC3 and SAM3/4 devices without USB high speed support need 48MHz clock input.
  *
  *     You must use a PLL and an external OSC.
- *   - UC3® and Atmel® | SMART™ SAM3/4 devices with USB high speed support need 12MHZ clock input.
+ *   - UC3 and SAM3/4 devices with USB high speed support need 12MHz clock input.
  *
  *     You must use an external OSC.
- *   - UC3® devices with USBC hardware need CPU frequency higher than 25MHZ.
- *   - SAMD21 devices without USB high speed support need 48MHZ clock input.
+ *   - UC3 devices with USBC hardware need CPU frequency higher than 25MHz.
+ *   - SAMD21 devices without USB high speed support need 48MHz clock input.
  *
  *     You should use DFLL with USBCRM.
  * - In conf_board.h, the define CONF_BOARD_USB_PORT must be added to enable USB lines.
@@ -285,7 +285,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * \subpage udc_conf_clock.
  *
- * For AVR® and Atmel® | SMART SAM3/4 devices, add to the initialization code:
+ * For AVR and SAM3/4 devices, add to the initialization code:
  * \code
  sysclk_init();
  irq_initialize_vectors();
@@ -362,19 +362,19 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  * Content of XMEGA conf_clock.h:
  * \code
  // Configuration based on internal RC:
- // USB clock need of 48MHZ
+ // USB clock need of 48MHz
  #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_RCOSC
  #define CONFIG_OSC_RC32_CAL         48000000UL
  #define CONFIG_OSC_AUTOCAL_RC32MHZ_REF_OSC  OSC_ID_USBSOF
- // CPU clock need of clock > 12MHZ to run with USB (Here 24MHZ)
- #define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_RC32MHZ
+ // CPU clock need of clock > 12MHz to run with USB (Here 24MHz)
+ #define CONFIG_SYSCLK_SOURCE     SYSCLK_SRC_RC32MHz
  #define CONFIG_SYSCLK_PSADIV     SYSCLK_PSADIV_2
  #define CONFIG_SYSCLK_PSBCDIV    SYSCLK_PSBCDIV_1_1
  \endcode
  *
  * Content of conf_clock.h for AT32UC3A0, AT32UC3A1, and AT32UC3B devices (USBB):
  * \code
- // Configuration based on 12MHZ external OSC:
+ // Configuration based on 12MHz external OSC:
  #define CONFIG_PLL1_SOURCE          PLL_SRC_OSC0
  #define CONFIG_PLL1_MUL             8
  #define CONFIG_PLL1_DIV             2
@@ -384,20 +384,20 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * Content of conf_clock.h for AT32UC3A3 and AT32UC3A4 devices (USBB with high speed support):
  * \code
- // Configuration based on 12MHZ external OSC:
+ // Configuration based on 12MHz external OSC:
  #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_OSC0
  #define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
  \endcode
  *
  * Content of conf_clock.h for AT32UC3C, ATUCXXD, ATUCXXL3U, and ATUCXXL4U devices (USBC):
  * \code
- // Configuration based on 12MHZ external OSC:
+ // Configuration based on 12MHz external OSC:
  #define CONFIG_PLL1_SOURCE          PLL_SRC_OSC0
  #define CONFIG_PLL1_MUL             8
  #define CONFIG_PLL1_DIV             2
  #define CONFIG_USBCLK_SOURCE        USBCLK_SRC_PLL1
  #define CONFIG_USBCLK_DIV           1 // Fusb = Fsys/(2 ^ USB_div)
- // CPU clock need of clock > 25MHZ to run with USBC
+ // CPU clock need of clock > 25MHz to run with USBC
  #define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_PLL1
  \endcode
  *
