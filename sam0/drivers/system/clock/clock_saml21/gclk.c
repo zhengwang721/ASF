@@ -67,7 +67,7 @@ static inline bool system_gclk_is_syncing(const uint8_t generator)
 	 if (GCLK->SYNCBUSY.reg & ((generator ) << GCLK_SYNCBUSY_GENCTRL_Pos)){
 		 return true;
 	}
-	 
+
 	 return false;
 }
 
@@ -177,7 +177,7 @@ void system_gclk_gen_set_config(
 	system_interrupt_enter_critical_section();
 
 	GCLK->GENCTRL[generator].reg = new_genctrl_config | (GCLK->GENCTRL[generator].reg & GCLK_GENCTRL_GENEN);
-	
+
 	while (system_gclk_is_syncing(generator)) {
 		/* Wait for synchronization */
 	};
@@ -318,11 +318,11 @@ void system_gclk_chan_set_config(
 
 	/* Disable generic clock channel */
 	system_gclk_chan_disable(channel);
-	
+
 	/* Configure the peripheral channel */
 	GCLK->PCHCTRL[channel].reg = GCLK_PCHCTRL_GEN(config->source_generator);
 
-	
+
 }
 
 /**
@@ -337,10 +337,14 @@ void system_gclk_chan_enable(
 		const uint8_t channel)
 {
 	system_interrupt_enter_critical_section();
-	
+
 	/* Enable the peripheral channel */
 	GCLK->PCHCTRL[channel].reg |= GCLK_PCHCTRL_CHEN;
-	
+
+	while (!(GCLK->PCHCTRL[channel].reg & GCLK_PCHCTRL_CHEN)) {
+		/* Wait for clock synchronization */
+	}
+
 	system_interrupt_leave_critical_section();
 }
 
@@ -357,26 +361,15 @@ void system_gclk_chan_disable(
 {
 	system_interrupt_enter_critical_section();
 
-	
 	/* Sanity check WRTLOCK */
 	Assert(!GCLK->PCHCTRL[channel].bit.WRTLOCK);
 
-	/* Switch to known-working source so that the channel can be disabled */
-	uint32_t prev_gen_id = GCLK->PCHCTRL[channel].bit.GEN;
-	
-	
-	GCLK->PCHCTRL[channel].bit.GEN = 0;
+	/* Disable the peripheral channel */
+	GCLK->PCHCTRL[channel].reg &= ~GCLK_PCHCTRL_CHEN;
 
-	/* Disable the generic clock */
-	GCLK->GENCTRL[prev_gen_id].reg &= ~GCLK_GENCTRL_GENEN;
-
-
-	while (GCLK->GENCTRL[prev_gen_id].reg & GCLK_GENCTRL_GENEN) {
-		/* Wait for clock to become disabled */
+	while (GCLK->PCHCTRL[channel].reg & GCLK_PCHCTRL_CHEN) {
+		/* Wait for clock synchronization */
 	}
-
-	/* Restore previous configured clock generator */
-	GCLK->PCHCTRL[channel].bit.GEN = prev_gen_id;
 
 	system_interrupt_leave_critical_section();
 }
@@ -399,7 +392,7 @@ bool system_gclk_chan_is_enabled(
 
 	/* Select the requested generic clock channel */
 	enabled = GCLK->PCHCTRL[channel].bit.CHEN;
-		
+
 	system_interrupt_leave_critical_section();
 
 	return enabled;

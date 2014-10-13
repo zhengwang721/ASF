@@ -480,7 +480,7 @@ void adc_configure_sequence(Adc *const adc,
 	adc->ADC_SEQR1 = 0;
 #endif
 
-	if (uc_num < ADC_SEQ1_CHANNEL_NUM) {
+	if (uc_num <= ADC_SEQ1_CHANNEL_NUM) {
 		for (uc_counter = 0; uc_counter < uc_num; uc_counter++) {
 #if (SAM4N || SAMG)
 			adc->ADC_SEQR1
@@ -488,7 +488,7 @@ void adc_configure_sequence(Adc *const adc,
 				|= ch_list[uc_counter] << (4 * uc_counter);
 		}
 	} else {
-		for (uc_counter = 0; uc_counter < ADC_SEQ1_CHANNEL_NUM;
+		for (uc_counter = 0; uc_counter <= ADC_SEQ1_CHANNEL_NUM;
 				uc_counter++) {
 #if (SAM4N || SAMG)
 			adc->ADC_SEQR1
@@ -498,7 +498,7 @@ void adc_configure_sequence(Adc *const adc,
 		for (uc_counter = 0; uc_counter < uc_num - ADC_SEQ1_CHANNEL_NUM;
 				uc_counter++) {
 #if (SAM4N)
-			adc->ADC_SEQR2 |= ch_list[uc_counter] << (4 * uc_counter);
+			adc->ADC_SEQR2 |= ch_list[8 + uc_counter] << (4 * uc_counter);
 #endif
 		}
 	}
