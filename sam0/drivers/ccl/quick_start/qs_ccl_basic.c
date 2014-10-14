@@ -58,40 +58,35 @@ void configure_ccl(void)
 	ccl_get_config_defaults(&conf);
 	//! [setup_2]
 
-	/** Set the CCL. */
-	//! [setup_3]
-	conf.run_in_standby = true;
-	//! [setup_3]
-
 	/** Initialize the CCL with the user settings. */
-	//! [setup_4]
+	//! [setup_3]
 	ccl_init(&conf);
-	//! [setup_4]
+	//! [setup_3]
 }
 
 void configure_ccl_lut0(void)
 {
 	/** Creates a new configuration structure for the LUT0. */
-	//! [setup_5]
+	//! [setup_4]
 	struct ccl_lut_config conf;
-	//! [setup_5]
+	//! [setup_4]
 
 	/** Settings and fill with the default settings. */
-	//! [setup_6]
+	//! [setup_5]
 	ccl_lut_get_config_defaults(&conf);
-	//! [setup_6]
+	//! [setup_5]
 
 	/** Set the LUT0. */
-	//! [setup_7]
+	//! [setup_6]
+	conf.truth_table_value = 0x02;
 	conf.input0_src_sel = CCL_LUT_INPUT_SRC_IO;
 	conf.input1_src_sel = CCL_LUT_INPUT_SRC_IO;
 	conf.input2_src_sel = CCL_LUT_INPUT_SRC_IO;
-	conf.edge_selection_enable = true;
 	conf.filter_sel = CCL_LUTCTRL_FILTSEL_FILTER;
-	//! [setup_7]
+	//! [setup_6]
 
 	/** Set up LUT0 input and output pin. */
-	//! [setup_8]
+	//! [setup_7]
 	struct system_pinmux_config lut0_input_pin0_conf, lut0_input_pin1_conf, lut0_input_pin2_conf;
 	system_pinmux_get_config_defaults(&lut0_input_pin0_conf);
 	system_pinmux_get_config_defaults(&lut0_input_pin1_conf);
@@ -110,20 +105,61 @@ void configure_ccl_lut0(void)
 	lut0_out_pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
 	lut0_out_pin_conf.mux_position = MUX_PA07I_CCL_OUT0;
 	system_pinmux_pin_set_config(PIN_PA07I_CCL_OUT0, &lut0_out_pin_conf);
-	//! [setup_8]
+	//! [setup_7]
 
 	/** Initialize and enable the LUT0 with the user settings. */
-	//! [setup_9]
+	//! [setup_8]
 	ccl_lut_set_config(CCL_LUT_0, &conf);
+	//! [setup_8]
+}
+
+void configure_ccl_lut1(void)
+{
+	/** Creates a new configuration structure for the LUT1. */
 	//! [setup_9]
+	struct ccl_lut_config conf;
+	//! [setup_9]
+
+	/** Settings and fill with the default settings. */
 	//! [setup_10]
-	ccl_lut_enable(CCL_LUT_0);
+	ccl_lut_get_config_defaults(&conf);
 	//! [setup_10]
 
+	/** Set the LUT1. */
 	//! [setup_11]
-	/** Enable CCL module. */
-	ccl_module_enable();
+	conf.truth_table_value = 0x02;
+	conf.input0_src_sel = CCL_LUT_INPUT_SRC_IO;
+	conf.input1_src_sel = CCL_LUT_INPUT_SRC_IO;
+	conf.input2_src_sel = CCL_LUT_INPUT_SRC_IO;
+	conf.filter_sel = CCL_LUTCTRL_FILTSEL_FILTER;
 	//! [setup_11]
+
+	/** Set up LUT1 input and output pin. */
+	//! [setup_12]
+	struct system_pinmux_config lut1_input_pin0_conf, lut1_input_pin1_conf, lut1_input_pin2_conf;
+	system_pinmux_get_config_defaults(&lut1_input_pin0_conf);
+	system_pinmux_get_config_defaults(&lut1_input_pin1_conf);
+	system_pinmux_get_config_defaults(&lut1_input_pin2_conf);
+	lut1_input_pin0_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	lut1_input_pin0_conf.mux_position = MUX_PA08I_CCL_IN3;
+	lut1_input_pin1_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	lut1_input_pin1_conf.mux_position = MUX_PA09I_CCL_IN4;
+	lut1_input_pin2_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	lut1_input_pin2_conf.mux_position = MUX_PA10I_CCL_IN5;
+	system_pinmux_pin_set_config(PIN_PA08I_CCL_IN3, &lut1_input_pin0_conf);
+	system_pinmux_pin_set_config(PIN_PA09I_CCL_IN4, &lut1_input_pin1_conf);
+	system_pinmux_pin_set_config(PIN_PA10I_CCL_IN5, &lut1_input_pin2_conf);
+	struct system_pinmux_config lut1_out_pin_conf;
+	system_pinmux_get_config_defaults(&lut1_out_pin_conf);
+	lut1_out_pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
+	lut1_out_pin_conf.mux_position = MUX_PA11I_CCL_OUT1;
+	system_pinmux_pin_set_config(PIN_PA11I_CCL_OUT1, &lut1_out_pin_conf);
+	//! [setup_12]
+
+	/** Initialize and enable the LUT1 with the user settings. */
+	//! [setup_13]
+	ccl_lut_set_config(CCL_LUT_1, &conf);
+	//! [setup_13]
 }
 //! [setup]
 
@@ -134,7 +170,19 @@ int main(void)
 	//! [setup_init]
 	configure_ccl();
 	configure_ccl_lut0();
+	configure_ccl_lut1();
+	/** Configure the sequential logic with the D flip flop mode. */
+	//! [setup_14]	
+	ccl_seq_config(CCL_SEQ_0, CCL_SEQ_D_FLIP_FLOP);
+	//! [setup_14]
 	//! [setup_init]
+
+	//! [setup_enable]
+	/** Enable CCL module. */
+	ccl_lut_enable(CCL_LUT_0);
+	ccl_lut_enable(CCL_LUT_1);
+	ccl_module_enable();
+	//! [setup_enable]
 
 	//! [main]
 	while (true) {

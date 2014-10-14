@@ -239,6 +239,11 @@ struct ccl_lut_config {
 };
 
 /**
+ * \name Initialize and Reset CCL Module
+ * @{
+ */
+ 
+/**
  * \brief Initializes CCL module.
  *
  * Resets all registers in the MODULE to their initial state,
@@ -284,6 +289,7 @@ static inline void ccl_module_reset(void)
 
 	while((CCL->CTRL.reg & CCL_CTRL_SWRST));
 }
+/** @} */
 
 /**
  * \name Enable and disable CCL module
@@ -345,6 +351,11 @@ static inline void ccl_gclk_runstdby_disable(void)
 }
 /** @} */
 
+/**
+ * \name Configure LUT
+ * @{
+ */
+ 
 /** 
  *  \brief Writes sequential selection to the hardware module.
  *
@@ -379,6 +390,7 @@ void ccl_lut_get_config_defaults(struct ccl_lut_config *const config);
  */
 void ccl_lut_set_config(const enum ccl_lut_id number,
 		struct ccl_lut_config *const config);
+/** @} */
 
 /**
  * \name Enable and disable LUT

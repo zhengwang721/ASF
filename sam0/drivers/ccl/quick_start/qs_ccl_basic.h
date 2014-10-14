@@ -44,7 +44,9 @@
 /**
  * \page asfdoc_sam0_ccl_basic_use_case Quick Start Guide for CCL - Basic
  *
- * In this use case, the LUT0 input source is configured as I/O pin.
+ * In this use case, the LUT0 and LUT1 input source is configured as I/O pin.
+ * The LUT0 and LUT1 pair is connected to internal sequential logic, which is configured
+ * as D flip flop mode.
  *
  * \section asfdoc_sam0_ccl_basic_use_case_setup Setup
  *
@@ -57,6 +59,7 @@
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_ccl_basic.c setup_init
+ * \snippet qs_ccl_basic.c setup_enable
  *
  * \subsection asfdoc_sam0_ccl_basic_use_case_setup_flow Workflow
  * -# Creates a CCL configuration struct, which can be filled out to
@@ -65,37 +68,44 @@
  *
  * -# settings and fill the CCL configuration struct with the default settings.
  *    \snippet qs_ccl_basic.c setup_2
- *    \note This should always be performed before using the configuration
- *          struct to ensure that all values are initialized to known default
- *          settings.
  *
- * -# Adjust the CCL configuration struct.
+ * -# Initializes CCL module.
  *    \snippet qs_ccl_basic.c setup_3
- *    \note The existing configuration struct may be re-used, as long as any
- *          values that have been altered from the default settings are taken
- *          into account by the user application.
- *
-  * -# Initializes CCL module.
- *    \snippet qs_ccl_basic.c setup_4
  *
  * -# Creates a LUT configuration struct, which can be filled out to
- *    adjust the configuration of LUT.
+ *    adjust the configuration of LUT0.
+ *    \snippet qs_ccl_basic.c setup_4
+ *
+  * -# Fill the LUT0 configuration struct with the default settings.
  *    \snippet qs_ccl_basic.c setup_5
  *
-  * -# Fill the LUT configuration struct with the default settings.
+ * -# Adjust the LUT0 configuration struct.
  *    \snippet qs_ccl_basic.c setup_6
  *
- * -# Adjust the LUT configuration struct.
+ * -# Set up LUT0 input and output pin.
  *    \snippet qs_ccl_basic.c setup_7
  *
- * -# Set up LUT input and output pin.
+ * -# Writes LUT0 configuration to the hardware module.
  *    \snippet qs_ccl_basic.c setup_8
  *
- * -# Writes LUT configuration to the hardware module.
+ * -# Creates a LUT configuration struct, which can be filled out to
+ *    adjust the configuration of LUT1.
  *    \snippet qs_ccl_basic.c setup_9
  *
- * -# Enable LUT.
+  * -# Fill the LUT1 configuration struct with the default settings.
  *    \snippet qs_ccl_basic.c setup_10
+ *
+ * -# Adjust the LUT1 configuration struct.
+ *    \snippet qs_ccl_basic.c setup_11
+ *
+ * -# Set up LUT1 input and output pin.
+ *    \snippet qs_ccl_basic.c setup_12
+ *
+ * -# Writes LUT1 configuration to the hardware module.
+ *    \snippet qs_ccl_basic.c setup_13
+ *
+ * -# Configure the sequential logic with the D flip flop mode.
+ *    \snippet qs_ccl_basic.c setup_14
  *
  * \section asfdoc_sam0_ccl_basic_use_case_use_main Use Case
  *

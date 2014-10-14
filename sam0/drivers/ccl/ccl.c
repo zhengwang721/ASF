@@ -71,7 +71,7 @@ void ccl_lut_get_config_defaults(struct ccl_lut_config *const config)
 	Assert(config);
 
 	/* Default configuration values */
-	config->truth_table_value = 0;
+	config->truth_table_value = 0x00;
 	config->event_output_enable = false;
 	config->event_input_enable = false;
 	config->event_input_inverted_enable = false;
@@ -87,7 +87,6 @@ void ccl_lut_set_config(const enum ccl_lut_id number,
 {
 	/* Sanity check arguments */
 	Assert(config);
-	Assert(number);
 
 	uint32_t temp = 0;
 
@@ -120,25 +119,18 @@ void ccl_seq_config(const enum ccl_seq_id number,
 {
 	/* Sanity check arguments */
 	Assert(seq_selection);
-	Assert(number);
 
 	CCL->SEQCTRL[number].reg = seq_selection;
 }
 
 void ccl_lut_enable(const enum ccl_lut_id number)
 {
-	/* Sanity check arguments */
-	Assert(number);
-
 	/* Enable the LUTx */
 	CCL->LUTCTRL[number].reg |= CCL_LUTCTRL_ENABLE;
 }
 
 void ccl_lut_disable(const enum ccl_lut_id number)
 {
-	/* Sanity check arguments */
-	Assert(number);
-
 	/* Disable the LUTx */
 	CCL->LUTCTRL[number].reg &= ~CCL_LUTCTRL_ENABLE;
 }
