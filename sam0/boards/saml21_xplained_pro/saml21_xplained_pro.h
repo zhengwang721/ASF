@@ -113,6 +113,12 @@ void system_board_init(void);
 #define LED0_GPIO                 LED0_PIN
 #define LED0                      LED0_PIN
 
+#define LED_0_PWM4CTRL_MODULE     TCC0
+#define LED_0_PWM4CTRL_CHANNEL    0
+#define LED_0_PWM4CTRL_OUTPUT     0
+#define LED_0_PWM4CTRL_PIN        PIN_PB10F_TCC0_WO4
+#define LED_0_PWM4CTRL_MUX        MUX_PB10F_TCC0_WO4
+#define LED_0_PWM4CTRL_PINMUX     PINMUX_PB10F_TCC0_WO4
 /** @} */
 
 /** Number of on-board LEDs */

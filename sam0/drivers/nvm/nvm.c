@@ -745,16 +745,16 @@ static void _nvm_translate_raw_fusebits_to_struct (
 
 #if (SAML21)
 	fusebits->bod33_level = (uint8_t)
-			((raw_user_row[0] & SUPC_FUSES_BOD33USERLEVEL_Msk)
-			>> SUPC_FUSES_BOD33USERLEVEL_Pos);
+			((raw_user_row[0] & FUSES_BOD33USERLEVEL_Msk)
+			>> FUSES_BOD33USERLEVEL_Pos);
 
 	fusebits->bod33_enable = (bool)
-			(!((raw_user_row[0] & SUPC_FUSES_BOD33_DIS_Msk)
-			>> SUPC_FUSES_BOD33_DIS_Pos));
+			(!((raw_user_row[0] & FUSES_BOD33_DIS_Msk)
+			>> FUSES_BOD33_DIS_Pos));
 
 	fusebits->bod33_action = (enum nvm_bod33_action)
-			((raw_user_row[0] & SUPC_FUSES_BOD33_ACTION_Msk)
-			>> SUPC_FUSES_BOD33_ACTION_Pos);
+			((raw_user_row[0] & FUSES_BOD33_ACTION_Msk)
+			>> FUSES_BOD33_ACTION_Pos);
 #else
 	fusebits->bod33_level = (uint8_t)
 				((raw_user_row[0] & SYSCTRL_FUSES_BOD33USERLEVEL_Msk)

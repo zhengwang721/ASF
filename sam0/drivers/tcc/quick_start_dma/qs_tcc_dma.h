@@ -45,7 +45,7 @@
  * \page asfdoc_sam0_tcc_dma_use_case Quick Start Guide for Using DMA with TCC
  *
  * The supported board list:
- *    - SAM D21/R21 Xplained Pro
+ *    - SAM D21/R21/L21 Xplained Pro
  *
  * In this use case, the TCC will be used to generate a PWM signal. Here
  * the pulse width varies through following values with the help of DMA
@@ -61,6 +61,7 @@
  *  <tr><th> Board        </td><th> Pin  </td><th> Connect to </td></tr>
  *  <tr><td> SAMD21 Xpro  </td><td> PB30 </td><td> LED0       </td></tr>
  *  <tr><td> SAMR21 Xpro  </td><td> PA19 </td><td> LED0       </td></tr>
+ *  <tr><td> SAML21 Xpro  </td><td> PB10 </td><td> LED0       </td></tr>
  * </table>
  *
  * The TCC module will be setup as follows:
