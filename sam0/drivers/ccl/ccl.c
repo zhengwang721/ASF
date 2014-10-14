@@ -117,9 +117,6 @@ void ccl_lut_set_config(const enum ccl_lut_id number,
 void ccl_seq_config(const enum ccl_seq_id number,
 		const enum ccl_seq_selection seq_selection)
 {
-	/* Sanity check arguments */
-	Assert(seq_selection);
-
 	CCL->SEQCTRL[number].reg = seq_selection;
 }
 
