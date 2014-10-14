@@ -45,9 +45,9 @@
 #define CCL_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_ccl_group SAM0 Configurable Custom Logic (CCL) Driver
+ * \defgroup asfdoc_sam0_ccl_group SAM Configurable Custom Logic (CCL) Driver
  *
- * This driver for SAM0 devices provides an interface for the configuration
+ * This driver for SAM devices provides an interface for the configuration
  * and management of the device's Configurable Custom Logic functionality.
  *
  * The following peripherals are used by this module:
@@ -75,8 +75,17 @@
  * This driver provides an interface for the Configurable Custom Logic
  * functions on the device.
  *
- * For the detail configuration reference, you can refer to the datasheet
- * "Build-in Modes" section.
+ * The Configurable Custom Logic (CCL) contains programmable logic 
+ * which can be connected to the device pins, events or internal peripherals.
+ *
+ * Each LUT consists of three inputs, a truth table and optional synchronizer,
+ * filter and edge detector. Each LUT can generate an output as a user programmable
+ * logic expression with three inputs.
+ *
+ * The output can be combinatorially generated from the inputs, or filtered to remove spike.
+ * An optional sequential module can be enabled. The inputs of sequential module are 
+ * individually controlled by two independent, adjacent LUT(LUT0/LUT1, LUT2/LUT3 etc) outputs,
+ * enabling complex waveform generation.
  *
  * \section asfdoc_sam0_ccl_special_considerations Special Considerations
  *
@@ -199,7 +208,7 @@ enum ccl_lut_filter_sel {
  *  Configuration structure for CCL module.
  */
 struct ccl_config {
-	/** GCLK generator used to clock the peripheral */
+	/** GCLK generator used to clock the peripheral. */
 	enum gclk_generator clock_source;
 	/** If \c true, the GCLK_CCL clock will not stopped in standby sleep mode. */
 	bool run_in_standby;
@@ -272,8 +281,15 @@ static inline void ccl_module_reset(void)
 {
 	/* Reset CCL. */
 	CCL->CTRL.reg |= CCL_CTRL_SWRST;
+
+	while((CCL->CTRL.reg & CCL_CTRL_SWRST));
 }
 
+/**
+ * \name Enable and disable CCL module
+ * @{
+ */
+ 
 /**
  * \brief Enables CCL module.
  *
@@ -298,30 +314,39 @@ static inline void ccl_module_disable(void)
 	CCL->CTRL.reg &= ~CCL_CTRL_ENABLE;
 }
 
+/** @} */
+
 /**
- * \brief Enables CCL module run in standby mode.
+ * \name Enable and disable CCL module
+ * @{
+ */
+ 
+/**
+ * \brief Enables GCLK_CCL run in standby mode.
  *
  * Generic clock is required in standby sleep mode.
  *
  */
-static inline void ccl_module_runstdby_enable(void)
+static inline void ccl_gclk_runstdby_enable(void)
 {
 	/* Enable run in standy mode. */
 	CCL->CTRL.reg |= CCL_CTRL_RUNSTDBY;
 }
 
 /**
- * \brief Disables CCL module run in standby mode.
+ * \brief Disables GCLK_CCL run in standby mode.
  *
  * Generic clock is not required in standby sleep mode.
  */
-static inline void ccl_module_runstdby_disable(void)
+static inline void ccl_gclk_runstdby_disable(void)
 {
 	/* Disable run in standy mode. */
 	CCL->CTRL.reg &= ~ CCL_CTRL_RUNSTDBY;
 }
+/** @} */
 
-/** \brief Writes sequential selection to the hardware module.
+/** 
+ *  \brief Writes sequential selection to the hardware module.
  *
  *  Writes a given sequential selection configuration to the hardware module.
  *
@@ -356,12 +381,17 @@ void ccl_lut_set_config(const enum ccl_lut_id number,
 		struct ccl_lut_config *const config);
 
 /**
+ * \name Enable and disable LUT
+ * @{
+ */
+ 
+/**
  * \brief Enables an LUT that was previously configured.
  *
  *  Enables an LUT that was previously configured via a call to
  *  the set configuration function.
  *
- *  \param[in] number      LUT number to enable.
+ *  \param[in] number      LUT number to enable
  */
 void ccl_lut_enable(const enum ccl_lut_id number);
 
@@ -371,9 +401,11 @@ void ccl_lut_enable(const enum ccl_lut_id number);
  *  Disables an LUT that was previously enabled via a call to
  *  \ref ccl_lut_enable().
  *
- *  \param[in] number      LUT number to enable.
+ *  \param[in] number      LUT number to enable
  */
 void ccl_lut_disable(const enum ccl_lut_id number);
+
+/** @} */
 
 #ifdef __cplusplus
 }

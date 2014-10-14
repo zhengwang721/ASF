@@ -70,7 +70,7 @@
  *          settings.
  *
  * -# Adjust the CCL configuration struct.
- *    \snippet qs_port_basic.c setup_3
+ *    \snippet qs_ccl_basic.c setup_3
  *    \note The existing configuration struct may be re-used, as long as any
  *          values that have been altered from the default settings are taken
  *          into account by the user application.

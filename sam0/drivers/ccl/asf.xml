@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.drivers.ccl" caption="CCL - Configurable Custom Logic">
 		<info type="description" value="summary">
-			Driver for the SAM0 CCL module. Provides a unified interface for
+			Driver for the SAM CCL module. Provides a unified interface for
 			the configuration and management of the physical device CCL.
 		</info>
 
@@ -13,7 +13,7 @@
 
 		<info type="description" value="pdf">
 			This document describes how to use the Configurable Custom Logic on the
-			SAM0, both the ASF driver and the peripheral itself.
+			SAM, both the ASF driver and the peripheral itself.
 		</info>
 
 		<build type="include-path" value="."/>
@@ -29,7 +29,7 @@
 		<device-support value="sam0"/>
 
 		<require idref="sam0.utils"/>
-		<require idref="sam0.drivers.system.pinmux"/>
+		<require idref="sam0.drivers.system"/>
 
 		<generator value="doxygen-module-v2" default-mcu="unspecified-saml21"/>
 	</module>

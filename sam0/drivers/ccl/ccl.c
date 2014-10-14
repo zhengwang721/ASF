@@ -51,9 +51,6 @@ void ccl_init(struct ccl_config *const config)
 	/* Reset module. */
 	ccl_module_reset();
 
-	/* Enable module. */
-	ccl_module_enable();
-
 	/* Configure GCLK channel and enable clock */
 	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
@@ -62,9 +59,9 @@ void ccl_init(struct ccl_config *const config)
 	system_gclk_chan_enable(CCL_GCLK_ID);
 
 	if(config->run_in_standby) {
-		ccl_module_runstdby_enable();
+		ccl_gclk_runstdby_enable();
 	} else {
-		ccl_module_runstdby_disable();
+		ccl_gclk_runstdby_disable();
 	}
 }
 
@@ -125,7 +122,7 @@ void ccl_seq_config(const enum ccl_seq_id number,
 	Assert(seq_selection);
 	Assert(number);
 
-	CCL->SEQCTRL[number].reg |= seq_selection;
+	CCL->SEQCTRL[number].reg = seq_selection;
 }
 
 void ccl_lut_enable(const enum ccl_lut_id number)

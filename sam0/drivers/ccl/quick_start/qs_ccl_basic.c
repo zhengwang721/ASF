@@ -51,14 +51,14 @@ void configure_ccl(void)
 	/** Creates a new configuration structure for the CCL. */
 	//! [setup_1]
 	struct ccl_config conf;
-	//! [setup_1
+	//! [setup_1]
 
 	/** Settings and fill with the default settings. */
 	//! [setup_2]
 	ccl_get_config_defaults(&conf);
 	//! [setup_2]
 
-	/* Set the CCL. */
+	/** Set the CCL. */
 	//! [setup_3]
 	conf.run_in_standby = true;
 	//! [setup_3]
@@ -81,7 +81,7 @@ void configure_ccl_lut0(void)
 	ccl_lut_get_config_defaults(&conf);
 	//! [setup_6]
 
-	/* Set the LUT0. */
+	/** Set the LUT0. */
 	//! [setup_7]
 	conf.input0_src_sel = CCL_LUT_INPUT_SRC_IO;
 	conf.input1_src_sel = CCL_LUT_INPUT_SRC_IO;
@@ -90,7 +90,7 @@ void configure_ccl_lut0(void)
 	conf.filter_sel = CCL_LUTCTRL_FILTSEL_FILTER;
 	//! [setup_7]
 
-	/* Set up LUT0 input and output pin. */
+	/** Set up LUT0 input and output pin. */
 	//! [setup_8]
 	struct system_pinmux_config lut0_input_pin0_conf, lut0_input_pin1_conf, lut0_input_pin2_conf;
 	system_pinmux_get_config_defaults(&lut0_input_pin0_conf);
@@ -119,6 +119,11 @@ void configure_ccl_lut0(void)
 	//! [setup_10]
 	ccl_lut_enable(CCL_LUT_0);
 	//! [setup_10]
+
+	//! [setup_11]
+	/** Enable CCL module. */
+	ccl_module_enable();
+	//! [setup_11]
 }
 //! [setup]
 
