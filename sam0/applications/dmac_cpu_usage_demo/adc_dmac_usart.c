@@ -181,7 +181,7 @@ void SysTick_Handler(void)
  * \brief Initialize the SysTick timer
  *
  */
-void systick_init ()
+void systick_init()
 {
 	/* Calculate the reload value */
 	systick_reload = SYSTICK_MAX_VALUE;
@@ -572,7 +572,7 @@ int main(void)
  * are used to calculate the CPU usage for the chosen case.
  *
  * For more details about this application, please refer to the Application 
- * note "ATxxxxx : CPU Usage demonstration using DMAC Application" in the 
+ * note "AT07685: CPU Usage demonstration using DMAC Application" in the 
  * link http://www.atmel.com/devices/ATSAMD11D14A.aspx?tab=documents
  *
  * \section referenceinfo References
@@ -583,7 +583,7 @@ int main(void)
  *
  * \section compinfo Compiler Support
  * This example application supports
- * - GNU GCC for AVR32
+ * - GNU GCC for ARM
  *
  * \section deviceinfo Device support
  * - ATSAMD11/10 Series
