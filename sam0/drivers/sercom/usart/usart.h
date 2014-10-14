@@ -883,9 +883,10 @@ static inline void usart_disable(
 	/* Get a pointer to the hardware module instance */
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
+#if USART_CALLBACK_MODE == true	
 	/* Disable Global interrupt for module */
 	system_interrupt_disable(_sercom_get_interrupt_vector(module->hw));
-
+#endif
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
 
@@ -1223,14 +1224,9 @@ static inline void usart_disable_transceiver(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>F</td>
- *		<td>05/2014</td>
- *		<td>Add support for SAMD10/D11.</td>
- *	</tr>
- *	<tr>
  *		<td>E</td>
- *		<td>03/2014</td>
- *		<td>Add support for SAMR21.</td>
+ *		<td>05/2014</td>
+ *		<td>Add support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

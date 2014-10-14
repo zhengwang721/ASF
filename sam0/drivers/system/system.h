@@ -373,6 +373,11 @@ static inline void system_voltage_reference_disable(
 static inline enum status_code system_set_sleepmode(
 	const enum system_sleepmode sleep_mode)
 {
+#if (SAMD20 || SAMD21)
+	/* Errata: Make sure that the Flash does not power all the way down
+	 * when in sleep mode. */
+	NVMCTRL->CTRLB.bit.SLEEPPRM = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val;
+#endif
 	switch (sleep_mode) {
 		case SYSTEM_SLEEPMODE_IDLE_0:
 		case SYSTEM_SLEEPMODE_IDLE_1:
@@ -543,14 +548,9 @@ void system_init(void);
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>E</td>
- *		<td>04/2014</td>
- *		<td>Added support for SAMD10/D11.</td>
- *	</tr>
- *	<tr>
  *		<td>D</td>
- *		<td>02/2014</td>
- *		<td>Added support for SAMR21.</td>
+ *		<td>04/2014</td>
+ *		<td>Added support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>

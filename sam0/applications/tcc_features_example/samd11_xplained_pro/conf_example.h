@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21 Xplained PRO board configuration.
+ * \brief SAM D11 Xplained Pro board configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,7 +41,60 @@
  *
  */
 
-#ifndef CONF_BOARD_H_INCLUDED
-#define CONF_BOARD_H_INCLUDED
+#ifndef CONF_EXAMPLE_H_INCLUDED
+#define CONF_EXAMPLE_H_INCLUDED
 
-#endif /* CONF_BOARD_H_INCLUDED */
+
+#define TCC_MODE_CIRCULAR_BUFFER
+#undef TCC_MODE_PATTERN_GENERATION
+#undef TCC_MODE_OTMX_DTI
+#undef TCC_MODE_SWAP
+#undef TCC_MODE_ONESHOT
+#undef TCC_MODE_RAMP2
+
+#ifdef TCC_MODE_CIRCULAR_BUFFER
+#define GLCK_SOURCE GCLK_GENERATOR_0
+#define TCC_PERIOD_VALUE 0xFF
+#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1
+#define CC0_Value			0x80
+#define CCB0_Value			0xC0
+#endif 
+
+#ifdef TCC_MODE_PATTERN_GENERATION
+#define GLCK_SOURCE GCLK_GENERATOR_1
+#define TCC_PERIOD_VALUE 0xFFFF
+#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1
+#endif
+
+#ifdef TCC_MODE_OTMX_DTI
+#define GLCK_SOURCE GCLK_GENERATOR_0
+#define TCC_PERIOD_VALUE 0xFF
+#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1
+#endif
+
+#ifdef TCC_MODE_SWAP
+#define GLCK_SOURCE GCLK_GENERATOR_0
+#define TCC_PERIOD_VALUE 0xFF
+#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1
+#endif
+
+#ifdef TCC_MODE_ONESHOT
+#define TCC_PERIOD_VALUE 31250
+#define GLCK_SOURCE GCLK_GENERATOR_3
+#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV256
+#endif
+
+#ifdef TCC_MODE_RAMP2
+#define GLCK_SOURCE GCLK_GENERATOR_1
+#define TCC_PERIOD_VALUE 0xFFFF
+#define TCC_CLOCK_DIVIDER TCC_CLOCK_PRESCALER_DIV1
+#endif
+
+/* Function Prototypes for the TCC mode operation */
+
+void configure_tcc(void);
+void swap_operation(void);
+void pattern_generation(void);
+void oneshot_operation(void);
+
+#endif /* CONF_EXAMPLE_H_INCLUDED */
