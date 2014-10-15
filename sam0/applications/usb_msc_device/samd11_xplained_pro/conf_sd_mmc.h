@@ -1,10 +1,9 @@
 /**
  * \file
  *
- * \brief Provides the low-level initialization functions that called 
- * on chip startup.
+ * \brief SD/MMC stack configuration file.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,45 +41,40 @@
  *
  */
 
-#ifndef SYSTEM_SAM3S_H_INCLUDED
-#define SYSTEM_SAM3S_H_INCLUDED
+#ifndef CONF_SD_MMC_H_INCLUDED
+#define CONF_SD_MMC_H_INCLUDED
 
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/* @endcond */
+// Define to enable the SPI mode instead of Multimedia Card interface mode
+#define SD_MMC_SPI_MODE
 
-#include <stdint.h>
-#include <compiler.h>
+// Define to enable the SDIO support
+//#define SDIO_SUPPORT_ENABLE
 
-extern uint32_t SystemCoreClock;	/* System Clock Frequency (Core Clock) */
+// Define to enable the debug trace to the current standard output (stdio)
+//#define SD_MMC_DEBUG
 
-/**
- * @brief Setup the microcontroller system.
- * Initialize the System and update the SystemCoreClock variable.
- */
-void SystemInit(void);
+// Define to memory count
+#define SD_MMC_SPI_MEM_CNT          1
 
-/**
- * @brief Updates the SystemCoreClock with current core Clock 
- * retrieved from cpu registers.
- */
-void SystemCoreClockUpdate(void);
+//! Select the SPI module SD/MMC is connected to
+#define SD_MMC_SPI                 EXT1_SPI_MODULE
 
-/** 
- * Initialize flash.
- */
-void system_init_flash(uint32_t ul_clk);
+#define SD_MMC_SPI_PINMUX_SETTING  EXT1_SPI_SERCOM_MUX_SETTING
+#define SD_MMC_SPI_PINMUX_PAD0     EXT1_SPI_SERCOM_PINMUX_PAD0
+#define SD_MMC_SPI_PINMUX_PAD1     EXT1_SPI_SERCOM_PINMUX_PAD1
+#define SD_MMC_SPI_PINMUX_PAD2     EXT1_SPI_SERCOM_PINMUX_PAD2
+#define SD_MMC_SPI_PINMUX_PAD3     EXT1_SPI_SERCOM_PINMUX_PAD3
 
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/* @endcond */
+#define SD_MMC_CS                  EXT1_PIN_15
 
-#endif /* SYSTEM_SAM3S_H_INCLUDED */
+#define SD_MMC_0_CD_GPIO           (EXT1_PIN_10)
+#define SD_MMC_0_CD_DETECT_VALUE    0
+
+// Define the SPI clock source
+#define SD_MMC_SPI_SOURCE_CLOCK    GCLK_GENERATOR_1
+
+// Define the SPI max clock
+#define SD_MMC_SPI_MAX_CLOCK       4000000
+
+#endif /* CONF_SD_MMC_H_INCLUDED */
+

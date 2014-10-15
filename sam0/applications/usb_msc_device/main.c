@@ -1,10 +1,11 @@
 /**
  * \file
  *
- * \brief Provides the low-level initialization functions that called 
- * on chip startup.
+ * \brief SAM USB MSC Quick Start
+ *        Refer following application note for details.
+ *        AT7694 - USB Mass Storage Device
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,45 +43,25 @@
  *
  */
 
-#ifndef SYSTEM_SAM3S_H_INCLUDED
-#define SYSTEM_SAM3S_H_INCLUDED
-
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/* @endcond */
-
-#include <stdint.h>
-#include <compiler.h>
-
-extern uint32_t SystemCoreClock;	/* System Clock Frequency (Core Clock) */
-
-/**
- * @brief Setup the microcontroller system.
- * Initialize the System and update the SystemCoreClock variable.
+/*
+ * Include header files for all drivers that have been imported from
+ * Atmel Software Framework (ASF).
  */
-void SystemInit(void);
+#include <asf.h>
+#include "usb_msc.h"
 
-/**
- * @brief Updates the SystemCoreClock with current core Clock 
- * retrieved from cpu registers.
- */
-void SystemCoreClockUpdate(void);
-
-/** 
- * Initialize flash.
- */
-void system_init_flash(uint32_t ul_clk);
-
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
+void main_callback_sof(void)
+{
 }
-#endif
-/**INDENT-ON**/
-/* @endcond */
 
-#endif /* SYSTEM_SAM3S_H_INCLUDED */
+int main(void)
+{	
+	/*USB Clock initialization*/
+	system_init();	
+	/*SD Card initialization*/
+    sd_mmc_init();
+	/*USB initialization*/
+	usb_init();	
+	/*Execution waits in while loop till USB interrupt occurs*/
+	while (1);
+}
