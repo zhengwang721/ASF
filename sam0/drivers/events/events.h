@@ -410,6 +410,8 @@ struct events_resource {
 #if !defined(__DOXYGEN__)
 	/* Channel allocated for the event resource */
 	uint8_t channel;
+	/** Channel setting in CHANNEL register */
+	uint32_t channel_reg;
 #endif
 };
 
