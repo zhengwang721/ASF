@@ -975,8 +975,8 @@ uint8_t _tc_get_inst_index(
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true if the module has completed synchronization
- * \retval false if the module synchronization is ongoing
+ * \retval false if the module has completed synchronization
+ * \retval true  if the module synchronization is ongoing
  */
 static inline bool tc_is_syncing(
 		const struct tc_module *const module_inst)
@@ -988,8 +988,8 @@ static inline bool tc_is_syncing(
 	/* Get a pointer to the module's hardware instance */
 	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
 
-#ifdef FEATURE_TC_STAMP_PW_CAPTURE
-	return (tc_module->STATUS.reg);
+#if (SAML21)
+	return (tc_module->SYNCBUSY.reg);
 #else
 	return (tc_module->STATUS.reg & TC_STATUS_SYNCBUSY);
 #endif
