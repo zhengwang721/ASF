@@ -90,7 +90,7 @@ void init_state_init(trx_id_t trx, void *arg)
     sw_timer_init();
      
     /* Set the node information base */
-   config_node_ib(trx);
+    config_node_ib(trx);
 
     /* Initialize the TAL layer */
     if (tal_init() != MAC_SUCCESS)

@@ -95,7 +95,7 @@
 
 #define FSK_CCA_THRES_TABLE \
     { FSK_CCA_THRES_50_KBIT, FSK_CCA_THRES_100_KBIT, FSK_CCA_THRES_150_KBIT,  \
-    FSK_CCA_THRES_200_KBIT, FSK_CCA_THRES_300_KBIT, FSK_CCA_THRES_400_KBIT  }
+        FSK_CCA_THRES_200_KBIT, FSK_CCA_THRES_300_KBIT, FSK_CCA_THRES_400_KBIT  }
 #define FSK_CCA_THRES_TABLE_SIZE    6
 #define FSK_CCA_THRES_DATA_TYPE     int8_t
 
@@ -997,7 +997,7 @@ uint16_t calculate_cca_duration_us(trx_id_t trx_id)
  *
  * @return ACK duration in symbols
  */
-#if (!defined BASIC_MODE) && (defined MEASURE_ON_AIR_DURATION)
+#ifdef MEASURE_ON_AIR_DURATION
 uint16_t get_ack_duration_sym(trx_id_t trx_id)
 {
 #if (defined SUPPORT_FSK) || (defined SUPPORT_OFDM)
@@ -1099,11 +1099,14 @@ retval_t get_supported_channels_tuple(trx_id_t trx_id, uint32_t *value)
                 switch (tal_pib[trx_id].phy.freq_band)
                 {
                     case CHINA_470:
-                        *value = (uint32_t)(0 | (7 << 16));
+					case CHINA_780:
+                        //*value = (uint32_t)(0 | ((uint32_t)7 << 16));
+						*(uint32_t *)value = 0x0000000F;
                         break;
 
                     case US_915:
-                        *value = (uint32_t)(1 | (10 << 16));
+                        //*value = (uint32_t)(1 | ((uint32_t)10 << 16));
+						*(uint32_t *)value = 0x000007FE;
                         break;
 
                     default:
@@ -1113,7 +1116,8 @@ retval_t get_supported_channels_tuple(trx_id_t trx_id, uint32_t *value)
             }
             else // RF24
             {
-                *value = (uint32_t)(11 | (26 << 16));
+                //*value = (uint32_t)(11 | ((uint32_t)26 << 16));
+				*(uint32_t *)value = 0x07FFF800;
             }
             break;
 #endif

@@ -131,7 +131,7 @@ typedef struct {
 #define MAX_SCAN_DURATION                       (14)
 #define NO_OF_REGISTERS                         (256)
 
-#define TIMEOUT_FOR_RESPONSE_IN_MICRO_SEC       (200000)
+#define TIMEOUT_FOR_RESPONSE_IN_MICRO_SEC       (2000000)
 #define RANGE_TX_BEACON_INTERVAL                (3000000)
 #define RANGE_TX_BEACON_START_INTERVAL          (100000)
 #define PULSE_CW_TX_TIME_IN_MICRO_SEC           (50000)
@@ -331,7 +331,7 @@ void per_mode_initiator_init(trx_id_t trx,void *parameter)
 
 		/* Put the transceiver in TRX OFF state- default state for
 		 * Single node tests */
-		set_trx_state(trx,RF_TXPREP);
+		//set_trx_state(trx,RF_TXPREP);  //vk critical!!!
 
 		/* Send the confirmation to the PC application via Serial
 		 * interface */
@@ -2941,21 +2941,21 @@ void get_current_configuration(trx_id_t trx)
     {
 
 	        	/* Put the transceiver in TRX OFF state- default state for Single node tests */
-	        	set_trx_state(trx,RF_RX);
+	        	//set_trx_state(trx,RF_RX); //vk
 
     }
     else if (TRX_OFF == curr_trx_config_params[trx].trx_state)
     {
 
 	       	/* Put the transceiver in TRX OFF state- default state for Single node tests */
-	       	set_trx_state(trx,RF_TXPREP);
+	       	//set_trx_state(trx,RF_TXPREP); //vk
 
     }
     else if (PLL_ON == curr_trx_config_params[trx].trx_state)
     {
 
 	        	/* Put the transceiver in TRX OFF state- default state for Single node tests */
-	        	set_trx_state(trx,RF_TXPREP);
+	        	//set_trx_state(trx,RF_TXPREP); //vk
 
     }
 #if(TAL_TYPE != AT86RF230B)
@@ -3072,7 +3072,7 @@ static void set_antenna_diversity_settings(trx_id_t trx, uint8_t config_value)
         {
 
 	            	/* Put the transceiver in TRX OFF state- default state for Single node tests */
- 	            	set_trx_state(CMD_TRX_OFF);
+ 	            	//set_trx_state(CMD_TRX_OFF); //vk
 
         }
 
@@ -3116,14 +3116,14 @@ static void set_antenna_diversity_settings(trx_id_t trx, uint8_t config_value)
         {
 
 	            	/* Put the transceiver in TRX OFF state- default state for Single node tests */
-	            	set_trx_state(CMD_RX_ON);
+	            	//set_trx_state(CMD_RX_ON); //vk
 
         }
         else if (RX_AACK_ON == curr_state)
         {
 
 	                        	/* Put the transceiver in TRX OFF state- default state for Single node tests */
-	                        	set_trx_state(CMD_RX_AACK_ON);
+	                        	//set_trx_state(CMD_RX_AACK_ON); //vk
 
         }
         else

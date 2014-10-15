@@ -25,6 +25,7 @@
 #include "pal.h"
 #include "ieee_154g.h"
 #include "at86rf215.h"
+//#include "tal.h"
 
 /* === TYPES =============================================================== */
 //check
@@ -33,6 +34,7 @@
  *                and is effectively read-only.
  */
 #define TX_PWR_TOLERANCE   (0x80)
+
 /**
  * Enumeration for TRX identification
  */
@@ -53,8 +55,6 @@ typedef enum trx_id_tag
 
 /* === EXTERNALS =========================================================== */
 
-extern volatile bb_irq_t tal_bb_irqs[2];
-extern volatile rf_irq_t tal_rf_irqs[2];
 
 /* === MACROS ============================================================== */
 
@@ -104,5 +104,4 @@ void get_ofdm_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,ofdm_option_t o
 void get_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *freq, uint32_t *spacing);
 oqpsk_chip_rate_t get_oqpsk_chip_rate(trx_id_t trx_id,sun_freq_band_t freq_band);
 uint16_t get_sun_max_ch_no(trx_id_t trx_id);
-
 #endif /* TAL_RF215_H */

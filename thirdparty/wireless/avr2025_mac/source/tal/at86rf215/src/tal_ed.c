@@ -44,8 +44,8 @@
  * the specified Scan Duration.
  */
 #if (MAC_SCAN_ED_REQUEST_CONFIRM == 1)
-static int8_t max_ed_level[2];
-static uint32_t sampler_counter[2];
+static int8_t max_ed_level[NO_TRX];
+static uint32_t sampler_counter[NO_TRX];
 #endif
 
 /* === PROTOTYPES ========================================================== */
@@ -168,7 +168,7 @@ void handle_ed_end_irq(trx_id_t trx_id)
     debug_text_val(PSTR("tal_current_ed_val (dBm) = -"),
                    (256 - (uint8_t)tal_current_ed_val[trx_id]));
 
-#ifdef SUPPORT_MODE_SWITCH
+#if (defined SUPPORT_MODE_SWITCH) || (defined BASIC_MODE)
     if (tx_state[trx_id] == TX_CCA)
     {
         cca_done_handling(trx_id);

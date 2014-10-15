@@ -63,7 +63,7 @@
  * ENABLE_FTN_PLL_CALIBRATION.
  */
 #   ifndef ENABLE_FTN_PLL_CALIBRATION
-#       define ENABLE_FTN_PLL_CALIBRATION
+//#       define ENABLE_FTN_PLL_CALIBRATION
 #   endif
 
 /**
@@ -73,7 +73,7 @@
  * phyOnAirDuration.
  */
 #   ifndef MEASURE_ON_AIR_DURATION
-#       define MEASURE_ON_AIR_DURATION
+//#       define MEASURE_ON_AIR_DURATION
 #   endif
 
 /**
@@ -82,7 +82,7 @@
  * RX_WHILE_BACKOFF.
  */
 #   ifndef RX_WHILE_BACKOFF
-#       define RX_WHILE_BACKOFF
+//#       define RX_WHILE_BACKOFF
 #   endif
 
 /**
@@ -92,7 +92,7 @@
  * ENABLE_TSTAMP.
  */
 #   ifndef ENABLE_TSTAMP
-#       define ENABLE_TSTAMP
+//#       define ENABLE_TSTAMP
 #   endif
 
 /**
@@ -110,7 +110,7 @@
  * using the PIB attribute macPromiscuousMode.
  */
 #   ifndef PROMISCUOUS_MODE
-#       define PROMISCUOUS_MODE
+//#       define PROMISCUOUS_MODE
 #   endif
 
 /**
@@ -206,8 +206,67 @@
  */
 #   ifndef MEASURE_TIME_OF_FLIGHT
 #       ifndef BASIC_MODE
-#           define MEASURE_TIME_OF_FLIGHT
+//#           define MEASURE_TIME_OF_FLIGHT
 #       endif
+#   endif
+
+/**
+ * Support all TFA features
+ * To include all TFA features to the build,
+ * uncomment the following define ENABLE_TFA.
+ */
+#   ifndef ENABLE_TFA
+#       define ENABLE_TFA
+#   endif
+
+/**
+ * Support all battery monitor features
+ * To include all battery monitor features to the build,
+ * uncomment the following define TFA_BAT_MON.
+ * It is a subset of the configuration ENABLE_TFA.
+ */
+#   ifndef TFA_BAT_MON
+#       define TFA_BAT_MON
+#   endif
+
+/**
+ * Support the battery monitor read feature
+ * To include the battery monitor read feature to the build,
+ * uncomment the following define TFA_BAT_MON_READ.
+ * It is a subset of the configuration TFA_BAT_MON.
+ */
+#   ifndef TFA_BAT_MON_READ
+#       define TFA_BAT_MON_READ
+#   endif
+
+/**
+ * Support the battery monitor interrupt feature
+ * To include the battery monitor interrupt feature to the build,
+ * uncomment the following define TFA_BAT_MON_IRQ.
+ * It is a subset of the configuration TFA_BAT_MON.
+ */
+#   ifndef TFA_BAT_MON_IRQ
+#       define TFA_BAT_MON_IRQ
+#   endif
+
+/**
+ * Support the continuous transmission feature
+ * To include the continuous transmission feature to the build,
+ * uncomment the following define TFA_CW.
+ * It is a subset of the configuration ENABLE_TFA.
+ */
+#   ifndef TFA_CW
+#       define TFA_CW
+#   endif
+
+/**
+ * Support the TFA CCA feature
+ * To include the TFA CCA to the build,
+ * uncomment the following define TFA_CCA.
+ * It is a subset of the configuration ENABLE_TFA.
+ */
+#   ifndef TFA_CCA
+#       define TFA_CCA
 #   endif
 
 #endif /* TAL_SUPPORT_ALL_FEATURES */

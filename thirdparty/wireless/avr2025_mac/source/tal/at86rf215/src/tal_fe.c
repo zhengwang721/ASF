@@ -100,22 +100,8 @@ retval_t ofdm_rfcfg(ofdm_option_t ofdm_opt, trx_id_t trx_id)
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 
     /* gather additional PHY configuration data */
-#ifdef FWNAME
-    uint8_t mcs = bb_bit_read(reg_offset + SR_BBC0_OFDMPHRTX_MCS);    /* TX modulation and coding scheme */
-#endif
     uint8_t lfo = bb_bit_read(reg_offset + SR_BBC0_OFDMC_LFO);        /* RX Low frequency offset (TCXO) */
     uint8_t spc = bb_bit_read(reg_offset + SR_BBC0_OFDMPHRRX_SPC);    /* RX spurious compensation */
-
-    /* Set max tx power */
-#ifdef FWNAME
-    int8_t max_tx_pwr = get_max_ofdm_tx_pwr(trx_id, (ofdm_mcs_t)mcs);
-#else
-    int8_t max_tx_pwr = get_max_ofdm_tx_pwr(trx_id, tal_pib[trx_id].OFDMMCS);
-#endif
-    uint8_t pwr = max_tx_pwr + 17;
-#ifndef FWNAME
-    tal_pib[trx_id].TransmitPower = max_tx_pwr;     /* transmit power [dBm], pwr=31 corresponds to 14 dBm */
-#endif
 
     uint8_t sr, txrcut, txfc, rxrcut09, rxrcut24, bw09, bw24, ifs09, ifs24, agci, pdt;
 
@@ -144,7 +130,7 @@ retval_t ofdm_rfcfg(ofdm_option_t ofdm_opt, trx_id_t trx_id)
     /* TXDFE */
     tx[1] = (txrcut << TXDFE_RCUT_SHIFT) | (sr << TXDFE_SR_SHIFT);
     /* PAC */
-    tx[2] = (3 << PAC_PACUR_SHIFT) | (pwr << PAC_TXPWR_SHIFT);
+    tx[2] = (3 << PAC_PACUR_SHIFT) | (DEFAULT_TX_PWR_REG << PAC_TXPWR_SHIFT);
     rf_blk_write(reg_offset + RG_RF09_TXCUTC, tx, 3);
 
     /* Rx settings: RXBWC, RXDFE, AGCC, AGCS */
@@ -192,57 +178,6 @@ retval_t ofdm_rfcfg(ofdm_option_t ofdm_opt, trx_id_t trx_id)
 #endif /* #ifdef SUPPORT_OFDM */
 
 
-#ifdef SUPPORT_OFDM
-/**
- * @brief Get maximum OFDM tx power
- *
- * Recommended maximum transmit power fulfilling EVM requirements.
- * Settings are derived from OFDM_EVM.xlsx and Validation_RF215.pdf
- *
- * @param trx_id Transceiver identifier
- * @param mcs MCS level
- *
- * @return Maximum tx power in dBm
- */
-int8_t get_max_ofdm_tx_pwr(trx_id_t trx_id, ofdm_mcs_t mcs)
-{
-    uint8_t pwr; // register value
-    if (mcs < 5)
-    {
-        pwr = 31;
-    }
-    else // mcs == 5 and mcs == 6
-    {
-        if (trx_id == RF24)
-        {
-            pwr = 25;
-        }
-        else // RF09
-        {
-#ifdef FWNAME
-            uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-            uint8_t ccf0h = bb_reg_read(reg_offset + RG_RF09_CCF0H);           /* Channel Center Frequency F0 High Byte */
-            uint8_t cm    = (bb_reg_read(reg_offset + RG_RF09_CNM) >> 6) & 3;  /* Channel Setting Mode */
-            if ((cm == 0x01) || ((cm == 0x00) && (ccf0h < 0x60)))  /* CNM:CM==0x01 or (CNM:CM==0x00 (IEEE) && F0 < 614,4 MHz) */
-#else
-            if (tal_pib[RF09].phy.freq_f0 > 510000000)
-#endif
-            {
-                pwr = 27;
-            }
-            else // 450MHz range
-            {
-                pwr = 31;
-            }
-        }
-    }
-
-    /* Convert to dBm */
-    return (int8_t)(pwr - 17);
-}
-#endif /* #ifdef SUPPORT_OFDM */
-
-
 #if (defined SUPPORT_LEGACY_OQPSK) || (defined SUPPORT_OQPSK)
 /**
  * @brief Configures RF according MR-OQPSK
@@ -254,41 +189,6 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
 {
     retval_t status = MAC_SUCCESS;
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-
-    /* Set maximum tx power */
-    uint8_t pwr; // register value
-#ifndef FWNAME
-    if ((trx_id == RF09) || (tal_pib[trx_id].phy.modulation == LEG_OQPSK))
-#else
-    uint8_t leg = pal_dev_bit_read(RF215_TRX, reg_offset + SR_BBC0_OQPSKPHRTX_LEG);
-    if ((trx_id == RF09) || (leg))
-#endif
-    {
-        /* set transmit power to 14 dBm */
-        pwr = 31;
-    }
-    else
-    {
-        /* Limit 200kchip/s mode to 10dBm at 2.4GHz */
-#ifndef FWNAME
-        if (tal_pib[trx_id].phy.phy_mode.oqpsk.chip_rate == CHIP_RATE_200)
-#else
-        uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-        oqpsk_chip_rate_t rate;
-        rate = (oqpsk_chip_rate_t)pal_dev_bit_read(RF215_TRX, reg_offset + SR_BBC0_OQPSKC0_FCHIP);
-        if (rate  == CHIP_RATE_200)
-#endif
-        {
-            pwr = 26;
-        }
-        else
-        {
-            pwr = 31;
-        }
-    }
-#ifndef FWNAME
-    tal_pib[trx_id].TransmitPower = pwr - 17;
-#endif
 
     uint8_t paramp, lpfcut, txrcut, sr, rxbw, rxrcut, avgs;
     switch (chip_rate)
@@ -354,7 +254,7 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
     /* TXDFE */
     tx[1] = (txrcut << TXDFE_RCUT_SHIFT) | (sr << TXDFE_SR_SHIFT);
     /* PAC */
-    tx[2] = (3 << PAC_PACUR_SHIFT) | (pwr << PAC_TXPWR_SHIFT);
+    tx[2] = (3 << PAC_PACUR_SHIFT) | (DEFAULT_TX_PWR_REG << PAC_TXPWR_SHIFT);
     rf_blk_write(reg_offset + RG_RF09_TXCUTC, tx, 3);
 
     /* Rx settings: RXBWC, RXDFE, AGCC, AGCS */
@@ -365,7 +265,7 @@ retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id)
     rx[1] = (rxrcut << RXDFE_RCUT_SHIFT) | (sr << RXDFE_SR_SHIFT);
     /* AGCC */
     rx[2] = 0x81 | (0 << AGCC_AGCI_SHIFT) | (avgs << AGCC_AVGS_SHIFT); /* AGC input: after channel filter */
-    rx[3] = (7 << AGCS_TGT_SHIFT) | (0x17 << AGCS_GCW_SHIFT); /* AGC target: -42 dB */
+    rx[3] = (3 << AGCS_TGT_SHIFT) | (0x17 << AGCS_GCW_SHIFT); /* AGC target: -30 dB */
     rf_blk_write(reg_offset + RG_RF09_RXBWC, rx, 4);
 
 #ifdef IQ_RADIO
@@ -399,57 +299,43 @@ retval_t fsk_rfcfg(fsk_data_rate_t srate, mod_idx_t mod_idx, trx_id_t trx_id)
     /* TX configuration: */
     /* - PA ramp time +  TX-SSBF fcut */
     /* - DFE sampling rate reduction + TX-DFE fcut */
-    rf_blk_write(reg_offset + RG_RF09_TXCUTC, (uint8_t *)&fsk_params_tbl[srate_midx][0], 2);
+    {
+        uint8_t temp[2];
+        PGM_READ_BLOCK(temp, (uint8_t *)&fsk_params_tbl[srate_midx][0], 2);
+        rf_blk_write(reg_offset + RG_RF09_TXCUTC, temp, 2);
+    }
 
     /* - Transmit Power*/
-    if (trx_id == RF09)
-    {
-#ifdef FWNAME
-        uint8_t ccf0h = bb_reg_read(reg_offset + RG_RF09_CCF0H);           /* Channel Center Frequency F0 High Byte */
-        uint8_t cm    = (bb_reg_read(reg_offset + RG_RF09_CNM) >> 6) & 3;  /* Channel Setting Mode */
-        if ((cm == 0x01) || ((cm == 0x00) && (ccf0h < 0x60)))  /* CNM:CM==0x01 or (CNM:CM==0x00 (IEEE) && F0 < 614,4 MHz) */
+#ifdef IQ_RADIO
+    pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_PAC,
+                      ((3 << PAC_PACUR_SHIFT) | (DEFAULT_TX_PWR_REG << PAC_TXPWR_SHIFT)));
 #else
-        if (tal_pib[RF09].phy.freq_f0 < 510000000)
+    pal_trx_reg_write(reg_offset + RG_RF09_PAC,
+                      ((3 << PAC_PACUR_SHIFT) | (DEFAULT_TX_PWR_REG << PAC_TXPWR_SHIFT)));
 #endif
-        {
-            /* 470 MHz Band */
-            rf_reg_write(RG_RF09_PAC, (uint8_t)PGM_READ_BYTE(&fsk_params_tbl[srate_midx][2]));
-#ifndef FWNAME
-            tal_pib[trx_id].TransmitPower = ((uint8_t)PGM_READ_BYTE(&fsk_params_tbl[srate_midx][2]) & 0x1F) - 17;
-#endif
-        }
-        else
-        {
-            /* 900 MHz Band */
-            rf_reg_write(RG_RF09_PAC, (uint8_t)PGM_READ_BYTE(&fsk_params_tbl[srate_midx][3]));
-#ifndef FWNAME
-            tal_pib[trx_id].TransmitPower = ((uint8_t)PGM_READ_BYTE(&fsk_params_tbl[srate_midx][3]) & 0x1F) - 17;
-#endif
-        }
-    }
-    else
-    {
-        /* 2400 MHz Band */
-        rf_reg_write(RG_RF24_PAC, (uint8_t)PGM_READ_BYTE(&fsk_params_tbl[srate_midx][4]));
-#ifndef FWNAME
-        tal_pib[trx_id].TransmitPower = ((uint8_t)PGM_READ_BYTE(&fsk_params_tbl[srate_midx][4]) & 0x1F) - 17;
-#endif
-    }
 
     /* RX configuration: */
     /* - RX-SSBF bandwidth + RX-SSBF IF shift */
     /* - DFE sampling rate reduction  + RX-DFE cut-off ratio */
     if (trx_id == RF09)
     {
-        rf_blk_write(RG_RF09_RXBWC, (uint8_t *)&fsk_params_tbl[srate_midx][5], 2);
+        uint8_t temp[2];
+        PGM_READ_BLOCK(temp, (uint8_t *)&fsk_params_tbl[srate_midx][5], 2);
+        rf_blk_write(RG_RF09_RXBWC, temp, 2);
     }
     else
     {
-        rf_blk_write(RG_RF24_RXBWC, (uint8_t *)&fsk_params_tbl[srate_midx][7], 2);
+        uint8_t temp[2];
+        PGM_READ_BLOCK(temp, (uint8_t *)&fsk_params_tbl[srate_midx][7], 2);
+        rf_blk_write(RG_RF24_RXBWC, temp, 2);
     }
     /* - AGC input + AGC average period */
     /* - AGC target */
-    rf_blk_write(reg_offset + RG_RF09_AGCC, (uint8_t *)&fsk_params_tbl[srate_midx][9], 2);
+    {
+        uint8_t temp[2];
+        PGM_READ_BLOCK(temp, (uint8_t *)&fsk_params_tbl[srate_midx][9], 2);
+        rf_blk_write(reg_offset + RG_RF09_AGCC, temp, 2);
+    }
 
 #ifndef FWNAME
     uint8_t agcc = (uint8_t)PGM_READ_BYTE(&fsk_params_tbl[srate_midx][9]);

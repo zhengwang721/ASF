@@ -59,71 +59,71 @@
 /**
  * TAL PIBs
  */
-tal_pib_t tal_pib[2];
+tal_pib_t tal_pib[NO_TRX];
 
 /**
  * Current state of the TAL state machine.
  */
-tal_state_t tal_state[2];
+tal_state_t tal_state[NO_TRX];
 
 /**
  * Current state of the TX state machine.
  */
-tx_state_t tx_state[2];
+tx_state_t tx_state[NO_TRX];
 
 /**
  * Indicates if a buffer shortage issue needs to handled by tal_task().
  */
-bool tal_buf_shortage[2];
+bool tal_buf_shortage[NO_TRX];
 
 /**
  * Pointer to the 15.4 frame created by the TAL to be handed over
  * to the transceiver.
  */
-uint8_t *tal_frame_to_tx[2];
+uint8_t *tal_frame_to_tx[NO_TRX];
 
 /**
  * Pointer to receive buffer that can be used to upload a frame from the trx.
  */
-buffer_t *tal_rx_buffer[2] = {NULL, NULL};
+buffer_t *tal_rx_buffer[NO_TRX] = {NULL, NULL};
 
 /**
  * Queue that contains all frames that are uploaded from the trx, but have not
  * be processed by the MCL yet.
  */
-queue_t tal_incoming_frame_queue[2];
+queue_t tal_incoming_frame_queue[NO_TRX];
 
 /**
  * Frame pointer for the frame structure provided by the MCL.
  */
-frame_info_t *mac_frame_ptr[2];
+frame_info_t *mac_frame_ptr[NO_TRX];
 
 /**
  * Shadow variable for BB IRQS; variable is filled during TRX ISR,
  * see trx_irq_handler_cb() in tal_irq_handler.c
  */
-volatile bb_irq_t tal_bb_irqs[2] = {BB_IRQ_NO_IRQ, BB_IRQ_NO_IRQ};
+volatile bb_irq_t tal_bb_irqs[NO_TRX] = {BB_IRQ_NO_IRQ, BB_IRQ_NO_IRQ};
 
 /**
  * Shadow variable for RF IRQS; variable is filled during TRX ISR,
  * see trx_irq_handler_cb() in tal_irq_handler.c
  */
-volatile rf_irq_t tal_rf_irqs[2] = {RF_IRQ_NO_IRQ, RF_IRQ_NO_IRQ};
+volatile rf_irq_t tal_rf_irqs[NO_TRX] = {RF_IRQ_NO_IRQ, RF_IRQ_NO_IRQ};
 
 /**
  * Last retrieved energy value;
  * variable is filled by handle_ed_end_irq() in tal_ed.c
  */
-int8_t tal_current_ed_val[2];
+int8_t tal_current_ed_val[NO_TRX];
 
 /** Parameter to handle timer callback functions */
-const uint8_t timer_cb_parameter[2] = {RF09, RF24};
+const uint8_t timer_cb_parameter[NO_TRX] = {RF09, RF24};
 
 /** Current trx state */
-rf_cmd_state_t trx_state[2];
+rf_cmd_state_t trx_state[NO_TRX];
 
 /** Default/Previous trx state while entering a transaction */
-rf_cmd_state_t trx_default_state[2];
+rf_cmd_state_t trx_default_state[NO_TRX];
 
 
 #if (defined ENABLE_TSTAMP) || (defined MEASURE_ON_AIR_DURATION)
@@ -134,7 +134,7 @@ rf_cmd_state_t trx_default_state[2];
  * During Rx transaction it stores the time when the frame is actually received,
  * i.e. frame end - RXFE.
  */
-uint32_t fs_tstamp[2];
+uint32_t fs_tstamp[NO_TRX];
 #endif  /* #ifdef ENABLE_TSTAMP */
 
 /**
@@ -144,12 +144,12 @@ uint32_t fs_tstamp[2];
  * used during Tx transaction to calculate ACK timeout.
  * Both scenarios use the same variable
  */
-uint32_t rxe_txe_tstamp[2];
+uint32_t rxe_txe_tstamp[NO_TRX];
 
 /**
  * TX calibration values
  */
-uint8_t txc[2][2];
+uint8_t txc[NO_TRX][2];
 
 /* === PROTOTYPES ========================================================== */
 
@@ -168,7 +168,7 @@ static void handle_trxerr(trx_id_t trx_id);
  */
 void tal_task(void)
 {
-    for (uint8_t trx_id = 0; trx_id < 2; trx_id++)
+    for (uint8_t trx_id = 0; trx_id < NO_TRX; trx_id++)
     {
         if (tal_state[trx_id] == TAL_SLEEP)
         {
@@ -270,6 +270,7 @@ void tal_task(void)
                     rf_irqs &= (uint8_t)(~((uint32_t)(RF_IRQ_EDC | RF_IRQ_TRXRDY)));
                 }
 #endif
+				stop_tal_timer(trx_id);
                 handle_tx_end_irq((trx_id_t)trx_id);
             }
             if (bb_irqs & BB_IRQ_RXFE)
@@ -393,13 +394,13 @@ void wait_for_txprep(trx_id_t trx_id)
 
     do
     {
-#if (POLL_TIME_GAP > 0)
-        pal_timer_delay(POLL_TIME_GAP); /* Delay to reduce SPI storm */
-#endif
         state = (rf_cmd_state_t)pal_trx_reg_read(reg_offset + RG_RF09_STATE);
 
         if (state != RF_TXPREP)
         {
+#if (POLL_TIME_GAP > 0)
+            pal_timer_delay(POLL_TIME_GAP); /* Delay to reduce SPI storm */
+#endif
             /* Workaround for errata reference #4810 */
             uint32_t now;
             pal_get_current_time(&now);

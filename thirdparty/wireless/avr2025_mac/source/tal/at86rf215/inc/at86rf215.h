@@ -3653,7 +3653,7 @@ typedef enum rf_cmd_status_tag
 	
 	/** Constant RF_RESET for sub-register @ref SR_CMD */
 	STATUS_RF_RESET =                          (0x7)
-} rf_cmd_status_t;
+} rf_cmd_status_t; //vk
 
 /** Enumeration for RF IRQs used for IRQS and IRQM registers */
 typedef enum rf_irq_tag

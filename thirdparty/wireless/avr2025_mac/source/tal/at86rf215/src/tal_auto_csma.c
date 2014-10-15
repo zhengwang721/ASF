@@ -36,8 +36,8 @@
 
 /* === GLOBALS ============================================================= */
 
-static uint8_t NB[2];
-static uint8_t BE[2];
+static uint8_t NB[NO_TRX];
+static uint8_t BE[NO_TRX];
 
 /* === PROTOTYPES ========================================================== */
 

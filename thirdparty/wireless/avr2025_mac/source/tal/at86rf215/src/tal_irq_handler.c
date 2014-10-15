@@ -33,7 +33,7 @@
 #include "app_common.h"
 #include <inttypes.h>
 #endif
-
+#include "ieee_const.h"
 /* === TYPES =============================================================== */
 
 /* === MACROS ============================================================== */
@@ -41,7 +41,7 @@
 /* === EXTERNALS =========================================================== */
 
 #ifdef IRQ_DEBUGGING
-extern per_info_t per[2];
+extern per_info_t per[NO_TRX];
 #endif
 
 /* === GLOBALS ============================================================= */
@@ -78,7 +78,7 @@ void trx_irq_handler_cb(void)
     pal_trx_read(RG_RF09_IRQS, irqs_array, 4);
 
     /* Handle BB IRQS */
-    for (uint8_t trx_id = 0; trx_id < 2; trx_id++)
+    for (uint8_t trx_id = 0; trx_id < NO_TRX; trx_id++)
     {
         if (tal_state[trx_id] == TAL_SLEEP)
         {
@@ -110,6 +110,16 @@ void trx_irq_handler_cb(void)
                 per[trx_id].agcr++;
                 printf("AGCR %"PRIu32"\n", now);
 #endif
+#ifndef BASIC_MODE
+                /* Workaround for errata reference #4830 */
+                if ((irqs & BB_IRQ_RXFE) == 0)
+                {
+                    debug_text(PSTR("Apply workaround for #4830"));
+                    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+                    pal_trx_bit_write(reg_offset + SR_BBC0_AMCS_AACK, 0);
+                    pal_trx_bit_write(reg_offset + SR_BBC0_AMCS_AACK, 1);
+                }
+#endif
             }
             if (irqs & BB_IRQ_AGCH)
             {
@@ -136,6 +146,7 @@ void trx_irq_handler_cb(void)
             {
                 debug_text(PSTR("IRQ - BB_IRQ_RXFE"));
                 pal_get_current_time(&rxe_txe_tstamp[trx_id]);
+//				tal_rx_enable(trx_id, PHY_RX_ON); //vk
 #ifdef IRQ_DEBUGGING
                 per[trx_id].rxfe++;
                 printf("RXFE %"PRIu32"\n", now);
@@ -146,6 +157,7 @@ void trx_irq_handler_cb(void)
                 debug_text(PSTR("IRQ - BB_IRQ_TXFE"));
                 /* used for IFS and for MEASURE_ON_AIR_DURATION */
                 pal_get_current_time(&rxe_txe_tstamp[trx_id]);
+				tal_rx_enable(trx_id, PHY_RX_ON);
             }
 
             /*
@@ -157,7 +169,7 @@ void trx_irq_handler_cb(void)
     }
 
     /* Handle RF IRQS */
-    for (uint8_t trx_id = 0; trx_id < 2; trx_id++)
+    for (uint8_t trx_id = 0; trx_id < NO_TRX; trx_id++)
     {
         if (tal_state[trx_id] == TAL_SLEEP)
         {
@@ -217,7 +229,7 @@ void bb_irq_handler_cb(void)
     pal_trx_read(RF215_BB, RG_RF09_IRQS, irqs_array, 4);
 
     /* Handle BB IRQS */
-    for (uint8_t trx_id = 0; trx_id < 2; trx_id++)
+    for (uint8_t trx_id = 0; trx_id < NO_TRX; trx_id++)
     {
         if (tal_state[trx_id] == TAL_SLEEP)
         {
@@ -256,6 +268,16 @@ void bb_irq_handler_cb(void)
 #ifdef IRQ_DEBUGGING
                 per[trx_id].agcr++;
                 printf("AGCR %"PRIu32"\n", now);
+#endif
+#ifndef BASIC_MODE
+                /* Workaround for errata reference #4830 */
+                if ((irqs & BB_IRQ_RXFE) == 0)
+                {
+                    debug_text(PSTR("Apply workaround for #4830"));
+                    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+                    pal_trx_bit_write(reg_offset + SR_BBC0_AMCS_AACK, 0);
+                    pal_trx_bit_write(reg_offset + SR_BBC0_AMCS_AACK, 1);
+                }
 #endif
             }
             if (irqs & BB_IRQ_AGCH)
@@ -311,7 +333,7 @@ void bb_irq_handler_cb(void)
     }
 
     /* Handle RF IRQS */
-    for (uint8_t trx_id = 0; trx_id < 2; trx_id++)
+    for (uint8_t trx_id = 0; trx_id < NO_TRX; trx_id++)
     {
         if (tal_state[trx_id] == TAL_SLEEP)
         {
@@ -392,7 +414,7 @@ void rf_irq_handler_cb(void)
     pal_trx_read(RF215_RF, RG_RF09_IRQS, irqs_array, 4);
 
     /* Handle BB IRQS */
-    for (uint8_t trx_id = 0; trx_id < 2; trx_id++)
+    for (uint8_t trx_id = 0; trx_id < NO_TRX; trx_id++)
     {
         if (tal_state[trx_id] == TAL_SLEEP)
         {
@@ -449,7 +471,7 @@ void rf_irq_handler_cb(void)
     }
 
     /* Handle RF IRQS */
-    for (uint8_t trx_id = 0; trx_id < 2; trx_id++)
+    for (uint8_t trx_id = 0; trx_id < NO_TRX; trx_id++)
     {
         if (tal_state[trx_id] == TAL_SLEEP)
         {
@@ -466,7 +488,7 @@ void rf_irq_handler_cb(void)
             if (irqs & RF_IRQ_TRXRDY)
             {
                 debug_text(PSTR("RF IRQ - RF_IRQ_TRXRDY"));
-                //irqs &= (uint8_t)(~((uint32_t)RF_IRQ_TRXRDY)); // avoid Pa091
+                irqs &= (uint8_t)(~((uint32_t)RF_IRQ_TRXRDY)); // avoid Pa091
             }
             if (irqs & RF_IRQ_TRXERR)
             {
@@ -501,12 +523,6 @@ void rf_irq_handler_cb(void)
             if (irqs & RF_IRQ_EDC)
             {
                 debug_text(PSTR("RF IRQ - RF_IRQ_EDC"));
-                if /*(*/(tal_state[trx_id] != TAL_ED_SCAN) //&& (tal_state[trx_id] != TAL_CCA))
-                {
-                    /* ED value is read with RXFE IRQ */
-                    //debug_text(PSTR("Clear EDC"));
-                    irqs &= (uint8_t)(~((uint32_t)RF_IRQ_EDC)); // avoid Pa091
-                }
             }
             /*
             if (irqs != 0)

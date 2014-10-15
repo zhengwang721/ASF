@@ -193,6 +193,15 @@ void ack_timout_cb(void *parameter)
 
     trx_id_t trx_id = *(trx_id_t *)parameter;
 
+    /* Configure frame filter to receive all allowed frame types */
+    /* Re-store frame filter to pass "normal" frames */
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+#ifdef SUPPORT_FRAME_FILTER_CONFIGURATION
+    pal_trx_reg_write(reg_offset + RG_BBC0_AFFTM, tal_pib[trx_id].frame_types);
+#else
+    pal_trx_reg_write(reg_offset + RG_BBC0_AFFTM, DEFAULT_FRAME_TYPES);
+#endif
+
     stop_tal_timer(trx_id);
 
     tx_done_handling(trx_id, MAC_NO_ACK);

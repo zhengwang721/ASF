@@ -233,23 +233,33 @@ void calibrate_LO(trx_id_t trx_id)
 
     if (trx_state[trx_id] != RF_TRXOFF)
     {
-        pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #ifdef IQ_RADIO
-        pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
+        pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
+#else
+        pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
 #endif
         trx_state[trx_id] = RF_TRXOFF;
     }
 
     for (uint8_t i = 0; i < TRIM_LOOPS; i++)
     {
-        pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TXPREP);
 #ifdef IQ_RADIO
-        pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TXPREP);
+        pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TXPREP);
+#else
+        pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TXPREP);
 #endif
-        wait_for_txprep(trx_id);;
+        wait_for_txprep(trx_id);
+#ifdef IQ_RADIO
+        pal_dev_reg_write(RF215_RF, reg_offset + RG_RF09_CMD, RF_TRXOFF);
+#else
         pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
+#endif
         trx_state[trx_id] = RF_TRXOFF;
+#ifdef IQ_RADIO
+        pal_dev_read(RF215_RF, reg_offset + 0x125, (uint8_t *)&temp[i][0], 2);
+#else
         pal_trx_read(reg_offset + 0x125, (uint8_t *)&temp[i][0], 2);
+#endif
 
         /* Check if the short loop measurement is sufficient */
         if (i == (NUM_SUFFICIENT_MEASUREMENTS - 1))

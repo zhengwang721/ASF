@@ -95,6 +95,7 @@ retval_t tal_init(void)
     {
         return FAILURE;
     }
+	
     /* Check if RF215 is connected */
     if ((pal_trx_reg_read(RG_RF_PN) != 0x34) ||
         (pal_trx_reg_read(RG_RF_VN) != 0x01))
@@ -113,7 +114,7 @@ retval_t tal_init(void)
     bmm_buffer_init();
 
     /* Configure both trx and set default PIB values */
-    for (uint8_t trx_id = 0; trx_id < 2; trx_id++)
+    for (uint8_t trx_id = 0; trx_id < NO_TRX; trx_id++)
     {
         /* Configure transceiver */
         trx_config((trx_id_t)trx_id);
@@ -359,7 +360,7 @@ static void trx_init(void)
  */
 retval_t tal_reset(trx_id_t trx_id, bool set_default_pib)
 {
-    rf_cmd_state_t previous_trx_state[2];
+    rf_cmd_state_t previous_trx_state[NO_TRX];
 
     debug_text_val(PSTR("tal_reset(), trx_id ="), trx_id);
 
@@ -382,7 +383,7 @@ retval_t tal_reset(trx_id_t trx_id, bool set_default_pib)
 
     if (trx_id == RFBOTH)
     {
-        for (uint8_t i = 0; i < 2; i++)
+        for (uint8_t i = 0; i < NO_TRX; i++)
         {
             /* Clean TAL and removed any pending tasks */
             cleanup_tal((trx_id_t)i);

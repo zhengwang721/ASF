@@ -112,10 +112,13 @@ retval_t conf_trx_modulation(trx_id_t trx_id)
             break;
     }
 
+    tal_pib[trx_id].TransmitPower = - 17 + (int8_t)DEFAULT_TX_PWR_REG;
+
     /* Restore previous state */
     switch (previous_trx_state)
     {
         case RF_RX:
+            switch_to_txprep(trx_id);
             switch_to_rx(trx_id);
             break;
 
@@ -265,45 +268,13 @@ void set_sfd(trx_id_t trx_id)
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     uint32_t sfd;
 
-    uint32_t sfd_reset;
-    pal_trx_read(reg_offset + RG_BBC0_FSKSFD0L, (uint8_t *)&sfd_reset, 4);
-    sfd_reset++;
-
-    if (tal_pib[trx_id].phy.phy_mode.fsk.mod_type == F2FSK)
+    if (tal_pib[trx_id].MRFSKSFD == 0)
     {
-        if (tal_pib[trx_id].MRFSKSFD == 0)
-        {
-            sfd = (uint32_t)F2FSK_SFD_0_UNCODED | ((uint32_t)F2FSK_SFD_0_CODED << 16);
-        }
-        else // SFD 1
-        {
-            sfd = (uint32_t)F2FSK_SFD_1_UNCODED | ((uint32_t)F2FSK_SFD_1_CODED << 16);
-        }
+        sfd = (uint32_t)F2FSK_SFD_0_UNCODED | ((uint32_t)F2FSK_SFD_0_CODED << 16);
     }
-    else // 4FSK
+    else // SFD 1
     {
-        if (tal_pib[trx_id].MRFSKSFD == 0)
-        {
-            if (tal_pib[trx_id].FSKFECEnabled)
-            {
-                sfd = F4FSK_SFD_0_CODED;
-            }
-            else
-            {
-                sfd = F4FSK_SFD_0_UNCODED;
-            }
-        }
-        else // SFD 1
-        {
-            if (tal_pib[trx_id].FSKFECEnabled)
-            {
-                sfd = F4FSK_SFD_1_CODED;
-            }
-            else
-            {
-                sfd = F4FSK_SFD_1_UNCODED;
-            }
-        }
+        sfd = (uint32_t)F2FSK_SFD_1_UNCODED | ((uint32_t)F2FSK_SFD_1_CODED << 16);
     }
     pal_trx_write(reg_offset + RG_BBC0_FSKSFD0L, (uint8_t *)&sfd, 4);
 }

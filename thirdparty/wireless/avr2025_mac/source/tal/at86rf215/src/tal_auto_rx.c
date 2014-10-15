@@ -41,7 +41,7 @@
 
 /* === GLOBALS ============================================================= */
 
-frame_info_t *rx_frm_info[2];
+frame_info_t *rx_frm_info[NO_TRX];
 
 /* === PROTOTYPES ========================================================== */
 
@@ -127,6 +127,8 @@ static void handle_incoming_frame(trx_id_t trx_id)
 {
     debug_text_val(PSTR("handle_incoming_frame(), trx_id ="), trx_id);
 
+    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+
     if (is_frame_an_ack(trx_id))
     {
         if (tx_state[trx_id] == TX_WAITING_FOR_ACK)
@@ -136,6 +138,13 @@ static void handle_incoming_frame(trx_id_t trx_id)
                 /* Stop ACK timeout timer */
                 debug_text(PSTR("Stop ACKWaitDuration timer"));
                 stop_tal_timer(trx_id);
+                /* Re-store frame filter to pass "normal" frames */
+                /* Configure frame filter to receive all allowed frame types */
+#ifdef SUPPORT_FRAME_FILTER_CONFIGURATION
+                pal_trx_reg_write(reg_offset + RG_BBC0_AFFTM, tal_pib[trx_id].frame_types);
+#else
+                pal_trx_reg_write(reg_offset + RG_BBC0_AFFTM, DEFAULT_FRAME_TYPES);
+#endif
                 tx_done_handling(trx_id, MAC_SUCCESS);
             }
             else
@@ -154,13 +163,17 @@ static void handle_incoming_frame(trx_id_t trx_id)
     }
 
     /* Check if ACK transmission is done by transceiver */
-    uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
     bool ack_transmitting = pal_trx_bit_read(reg_offset + SR_BBC0_AMCS_AACKFT);
-    if (ack_transmitting)
-    {
-        debug_text(PSTR("ACK transmitting"));
-    }
-    else
+    //if (ack_transmitting)
+    //{
+        //debug_text(PSTR("ACK transmitting"));
+    //}
+    //else
+	if(ack_transmitting)
+	{
+		delay_ms(1);
+	}
+	
     {
         debug_text(PSTR("No ACK transmitting"));
         complete_rx_transaction(trx_id);

@@ -44,7 +44,7 @@ typedef enum tal_state_tag
     TAL_WAKING_UP,
     TAL_TX,
     TAL_ED_SCAN
-#if (defined ENABLE_TFA) || (defined TFA_ED_SAMPLE) || (defined CW_SUPPORTED)
+#if (defined ENABLE_TFA) || (defined TFA_CCA) || (defined TFA_CW)
     ,
     TAL_TFA_CW_RX,
     TAL_TFA_CW,
@@ -52,7 +52,8 @@ typedef enum tal_state_tag
 #endif
 #ifdef SUPPORT_MODE_SWITCH
     ,
-    TAL_NEW_MODE_RECEIVING
+    TAL_NEW_MODE_RECEIVING,
+    TAL_ACK_TRANSMITTING
 #endif
 } SHORTENUM tal_state_t;
 
@@ -94,31 +95,33 @@ typedef enum cca_use_tag
 /* === EXTERNALS =========================================================== */
 
 /* Global TAL variables */
-extern tal_state_t tal_state[2];
-extern tx_state_t tx_state[2];
-extern const uint8_t timer_cb_parameter[2];
-extern int8_t tal_current_ed_val[2];
-extern frame_info_t *mac_frame_ptr[2];
-extern queue_t tal_incoming_frame_queue[2];
-extern uint8_t *tal_frame_to_tx[2];
-extern buffer_t *tal_rx_buffer[2];
-extern bool tal_buf_shortage[2];
-extern rf_cmd_state_t trx_state[2];
-extern rf_cmd_state_t trx_default_state[2];
-extern uint32_t rxe_txe_tstamp[2];
-extern uint8_t txc[2][2];
-extern bool frame_buf_filled[2];
+extern tal_state_t tal_state[NO_TRX];
+extern tx_state_t tx_state[NO_TRX];
+extern const uint8_t timer_cb_parameter[NO_TRX];
+extern int8_t tal_current_ed_val[NO_TRX];
+extern frame_info_t *mac_frame_ptr[NO_TRX];
+extern queue_t tal_incoming_frame_queue[NO_TRX];
+extern uint8_t *tal_frame_to_tx[NO_TRX];
+extern buffer_t *tal_rx_buffer[NO_TRX];
+extern bool tal_buf_shortage[NO_TRX];
+extern rf_cmd_state_t trx_state[NO_TRX];
+extern rf_cmd_state_t trx_default_state[NO_TRX];
+extern uint32_t rxe_txe_tstamp[NO_TRX];
+extern uint8_t txc[NO_TRX][2];
+extern bool frame_buf_filled[NO_TRX];
 #if (defined ENABLE_TSTAMP) || (defined MEASURE_ON_AIR_DURATION)
-extern uint32_t fs_tstamp[2];
+extern uint32_t fs_tstamp[NO_TRX];
 #endif
-extern frame_info_t *rx_frm_info[2];
+extern frame_info_t *rx_frm_info[NO_TRX];
 #ifdef BASIC_MODE
-extern uint8_t *rx_frm_ptr[2];
-extern uint16_t last_txframe_length[2];
+extern uint8_t *rx_frm_ptr[NO_TRX];
+extern uint16_t last_txframe_length[NO_TRX];
 #endif
 #ifdef SUPPORT_MODE_SWITCH
-extern bool csm_active[2];
+extern bool csm_active[NO_TRX];
 #endif
+extern volatile bb_irq_t tal_bb_irqs[NO_TRX];
+extern volatile rf_irq_t tal_rf_irqs[NO_TRX];
 
 /* === MACROS ============================================================== */
 
@@ -126,17 +129,36 @@ extern bool csm_active[2];
 #define TAL_INCOMING_FRAME_QUEUE_CAPACITY   (255)
 #endif  /* ENABLE_QUEUE_CAPACITY */
 
+/* Setup IRQ mask: Using auto modes, AGCR IRQ is used to handle #4830 */
 #ifdef ENABLE_TSTAMP
-#define TAL_DEFAULT_BB_IRQ_MASK     (BB_IRQ_TXFE | BB_IRQ_RXFE | BB_IRQ_RXFS)
+#   ifndef BASIC_MODE
+#       define TAL_DEFAULT_BB_IRQ_MASK      (BB_IRQ_TXFE | BB_IRQ_RXFE | BB_IRQ_RXFS | BB_IRQ_AGCR)
+#   else
+#       define TAL_DEFAULT_BB_IRQ_MASK      (BB_IRQ_TXFE | BB_IRQ_RXFE | BB_IRQ_RXFS)
+#   endif
 #else
-#define TAL_DEFAULT_BB_IRQ_MASK     (BB_IRQ_TXFE | BB_IRQ_RXFE)
+#   ifndef BASIC_MODE
+#       define TAL_DEFAULT_BB_IRQ_MASK      (BB_IRQ_TXFE | BB_IRQ_RXFE | BB_IRQ_AGCR)
+#   else
+#       define TAL_DEFAULT_BB_IRQ_MASK      (BB_IRQ_TXFE | BB_IRQ_RXFE)
+#   endif
 #endif
 #ifdef BASIC_MODE
-#define TAL_DEFAULT_RF_IRQ_MASK     RF_IRQ_ALL_IRQ
+#   define TAL_DEFAULT_RF_IRQ_MASK          (RF_IRQ_IQIFSF | RF_IRQ_TRXERR | \
+                                             RF_IRQ_EDC | RF_IRQ_BATLOW | RF_IRQ_WAKEUP)
 #else
-#define TAL_DEFAULT_RF_IRQ_MASK     (RF_IRQ_IQIFSF | RF_IRQ_TRXERR | \
-                                     RF_IRQ_BATLOW | RF_IRQ_WAKEUP)
+#   define TAL_DEFAULT_RF_IRQ_MASK          (RF_IRQ_IQIFSF | RF_IRQ_TRXERR | \
+                                             RF_IRQ_BATLOW | RF_IRQ_WAKEUP)
 #endif
+
+/**
+ * Register value for default transmit power
+ */
+#define DEFAULT_TX_PWR_REG                  20
+
+#define DEFAULT_FRAME_TYPES         ((1 << FCF_FRAMETYPE_BEACON) | \
+                                     (1 << FCF_FRAMETYPE_DATA) | (1 << FCF_FRAMETYPE_MAC_CMD))
+#define ACK_FRAME_TYPE_ONLY         (1 << FCF_FRAMETYPE_ACK)
 
 /* === PROTOTYPES ========================================================== */
 
@@ -148,8 +170,6 @@ void switch_to_rx(trx_id_t trx_id);
 void switch_to_txprep(trx_id_t trx_id);
 void wait_for_txprep(trx_id_t trx_id);
 void stop_tal_timer(trx_id_t trx_id);
-
-rf_cmd_status_t set_trx_state(trx_id_t trx,rf_cmd_state_t trx_cmd);
 
 /*
  * Prototypes from tal_ftn.c
@@ -197,7 +217,7 @@ uint8_t phr_duration_sym(trx_id_t trx_id);
 uint16_t calculate_cca_duration_us(trx_id_t trx_id);
 float get_data_rate(trx_id_t trx_id);
 uint8_t shr_duration_sym(trx_id_t trx_id);
-#if (!defined BASIC_MODE) && (defined MEASURE_ON_AIR_DURATION)
+#ifdef MEASURE_ON_AIR_DURATION
 uint16_t get_ack_duration_sym(trx_id_t trx_id);
 #endif
 retval_t get_supported_channels_tuple(trx_id_t trx_id, uint32_t *value);
@@ -223,7 +243,6 @@ retval_t fsk_rfcfg(fsk_data_rate_t srate, mod_idx_t mod_idx, trx_id_t trx_id);
 #endif
 #ifdef SUPPORT_OFDM
 retval_t ofdm_rfcfg(ofdm_option_t ofdm_opt, trx_id_t trx_id);
-int8_t get_max_ofdm_tx_pwr(trx_id_t trx_id, ofdm_mcs_t mcs);
 #endif
 #if (defined SUPPORT_OQPSK) || (defined SUPPORT_LEGACY_OQPSK)
 retval_t oqpsk_rfcfg(oqpsk_chip_rate_t chip_rate, trx_id_t trx_id);

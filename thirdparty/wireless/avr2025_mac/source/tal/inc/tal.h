@@ -34,7 +34,6 @@
 #endif
 
 /* === TYPES =============================================================== */
-#define NO_TRX                 (2)
 
 /* Structure implementing the PIB values stored in TAL */
 typedef struct tal_pib_tag
@@ -408,7 +407,7 @@ typedef struct tal_pib_tag
      */
     uint16_t ACKWaitDuration;
 
-#if (!defined BASIC_MODE) && (defined MEASURE_ON_AIR_DURATION)
+#ifdef MEASURE_ON_AIR_DURATION
     /**
      * ACK duration in us - read-only
      */
@@ -471,6 +470,8 @@ typedef struct tal_pib_tag
      */
     uint16_t agc_settle_dur;
 } tal_pib_t;
+
+
 
 /**
  * MAC Message types
@@ -619,6 +620,12 @@ typedef union
  * Counter of transmitted octets
  */
 extern uint32_t tal_tx_octet_cnt;
+#endif
+
+#if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
+#   define NO_TRX                           2
+#else
+#   define NO_TRX                           1
 #endif
 
 #ifdef MULTI_TRX_SUPPORT

@@ -96,9 +96,9 @@ typedef struct ms_phr_tag
 
 /* === GLOBALS ============================================================= */
 
-static temp_phy_t previous_phy[2];
+static temp_phy_t previous_phy[NO_TRX];
 static phy_t csm_phy;
-bool csm_active[2] = {false, false};
+bool csm_active[NO_TRX] = {false, false};
 #ifdef SUPPORT_OQPSK
 FLASH_DECLARE(OQPSK_CHIP_RATE_REGION_TABLE_DATA_TYPE
               oqpsk_chip_rate_region_table[OQPSK_CHIP_RATE_REGION_TABLE_ROW_SIZE][OQPSK_CHIP_RATE_REGION_TABLE_COL_SIZE]) =
@@ -268,11 +268,6 @@ void tx_ms_ppdu(trx_id_t trx_id)
         {
             debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
         }
-        else
-        {
-            /* Select corresponding baseband core */
-            pal_trx_bit_write(RF215_BB, SR_RF_IQIFC2_CSELTX, RF09); // RF09 is selected
-        }
     }
     else
     {
@@ -281,12 +276,8 @@ void tx_ms_ppdu(trx_id_t trx_id)
         {
             debug_text_finish(PSTR("Radio is already in use"), DEBUG_ERROR);
         }
-        else
-        {
-            /* Select corresponding baseband core */
-            pal_trx_bit_write(RF215_BB, SR_RF_IQIFC2_CSELTX, RF24); // RF24 is selected
-        }
     }
+    pal_dev_bit_write(RF215_BB, SR_RF_IQIFC2_CSELTX, trx_id);
 #endif
 
     debug_text(PSTR("switch to Tx"));
@@ -393,7 +384,7 @@ void prepare_actual_transmission(trx_id_t trx_id)
     uint32_t diff = tal_pib[trx_id].ModeSwitchSettlingDelay - (now - rxe_txe_tstamp[trx_id]);
     retval_t status =
         pal_timer_start(timer_id, diff, TIMEOUT_RELATIVE,
-                        (FUNC_PTR())tx_actual_frame, (void *)&timer_cb_parameter[trx_id]);
+                        (FUNC_PTR)tx_actual_frame, (void *)&timer_cb_parameter[trx_id]);
     if (status == MAC_SUCCESS)
     {
         configure_new_tx_mode(trx_id);
@@ -704,7 +695,7 @@ void handle_rx_ms_packet(trx_id_t trx_id)
                 timer_id = TAL_T_1;
             }
             pal_timer_start(timer_id, tal_pib[trx_id].ModeSwitchDuration, TIMEOUT_RELATIVE,
-                (FUNC_PTR())cancel_new_mode_reception, (void *)&timer_cb_parameter[trx_id]);
+                (FUNC_PTR)cancel_new_mode_reception, (void *)&timer_cb_parameter[trx_id]);
         }
         else
         {

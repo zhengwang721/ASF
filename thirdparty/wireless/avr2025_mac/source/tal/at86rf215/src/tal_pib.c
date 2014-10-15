@@ -248,7 +248,7 @@ void init_tal_pib(trx_id_t trx_id)
  */
 retval_t config_phy(trx_id_t trx_id)
 {
-    retval_t status;
+    retval_t status = MAC_SUCCESS;
 
     status = conf_trx_modulation(trx_id);
     if (status == MAC_SUCCESS)
@@ -275,19 +275,6 @@ retval_t config_phy(trx_id_t trx_id)
     return status;
 }
 
-/*
- * \brief Sets transceiver state
- *
- * \param trx_cmd needs to be one of the trx commands
- *
- * \return current trx state
- */
-rf_cmd_status_t set_trx_state(trx_id_t trx,rf_cmd_state_t trx_cmd)
-{
-
-	//check
-	return STATUS_RF_TRXOFF;
-}
 
 /**
  * @brief Calculates PIB values that depend on the current PHY configuration
@@ -345,7 +332,7 @@ void calculate_pib_values(trx_id_t trx_id)
 #endif
     tal_pib[trx_id].ACKTiming = get_AckTiming_us(trx_id);
     debug_text_val(PSTR("ACKTiming"), tal_pib[trx_id].ACKTiming);
-#if (!defined BASIC_MODE) && (defined MEASURE_ON_AIR_DURATION)
+#ifdef MEASURE_ON_AIR_DURATION
     tal_pib[trx_id].ACKDuration_us = tal_pib[trx_id].SymbolDuration_us * get_ack_duration_sym(trx_id);
 #endif
 }
@@ -394,15 +381,9 @@ void write_all_tal_pib_to_trx(trx_id_t trx_id)
 #ifdef PROMISCUOUS_MODE
     if (tal_pib[trx_id].PromiscuousMode)
     {
+        debug_text(PSTR("Promiscuous mode enabled"));
         pal_trx_bit_write(reg_offset + SR_BBC0_AFC0_PM, 1);
-        if (trx_state[trx_id] != RF_RX)
-        {
-            if (trx_state[trx_id] == RF_TRXOFF)
-            {
-                switch_to_txprep(trx_id);
-            }
-            switch_to_rx(trx_id);
-        }
+        tal_rx_enable(trx_id, PHY_RX_ON);
     }
 #endif
 #ifdef SUPPORT_OQPSK
@@ -532,8 +513,8 @@ static retval_t check_valid_freq_range(trx_id_t trx_id)
 {
     retval_t status = MAC_SUCCESS;
 
-    uint32_t freq = tal_pib[trx_id].phy.freq_f0 +
-                    (tal_pib[trx_id].phy.ch_spacing * tal_pib[trx_id].CurrentChannel);
+    uint32_t freq = tal_pib[trx_id].phy.freq_f0 /*//vk +
+                    (tal_pib[trx_id].phy.ch_spacing * tal_pib[trx_id].CurrentChannel)*/;
     uint32_t spacing = tal_pib[trx_id].phy.ch_spacing;
 
     if ((spacing % 25000) > 0)
@@ -1081,17 +1062,14 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                               tal_pib[trx_id].OFDMMCS);
             if (tal_pib[trx_id].phy.modulation == OFDM)
             {
+                int8_t previous_tx_pwr = tal_pib[trx_id].TransmitPower;
                 calculate_pib_values(trx_id);
                 status = conf_trx_modulation(trx_id);
+                /* Restore previous power setting */
+                set_tx_pwr(trx_id, previous_tx_pwr);
 #ifndef BASIC_MODE
                 pal_trx_reg_write(reg_offset + RG_BBC0_AMEDT,
                                   tal_pib[trx_id].CCAThreshold);
-                /* Update ty power if it exceeds its maximum */
-                int8_t max_pwr = get_max_ofdm_tx_pwr(trx_id, tal_pib[trx_id].OFDMMCS);
-                if (tal_pib[trx_id].TransmitPower > max_pwr)
-                {
-                    set_tx_pwr(trx_id, max_pwr);
-                }
 #endif
             }
             break;
@@ -1285,20 +1263,49 @@ static retval_t set_channel(trx_id_t trx_id, uint16_t ch)
     /* Adjust internal channel number to IEEE compliant numbering */
     if (tal_pib[trx_id].phy.modulation == LEG_OQPSK)
     {
-        if (trx_id == RF09)
-        {
-            if ((ch < 1) || (ch > 10))
-            {
-                ret = MAC_INVALID_PARAMETER;
-            }
-        }
-        else // RF24
-        {
-            if ((ch < 11) || (ch > 26))
-            {
-                ret = MAC_INVALID_PARAMETER;
-            }
-        }
+                if (trx_id == RF24)
+                {
+	                if ((ch < 11) ||
+	                (ch > 26))
+	                {
+		                ret = MAC_INVALID_PARAMETER;
+		                /* no further processing of the channel value */
+	                }
+	                else
+	                {
+		                ch -= 11;
+	                }
+                }
+                else // RF09
+                {
+	                if ((tal_pib[trx_id].phy.freq_band == US_915))
+	                {
+		                if ((ch < 1)&& (ch > 10))
+		                {
+			                
+			                ret = MAC_INVALID_PARAMETER;
+			                /* no further processing of the channel value */
+		                }
+
+		                ch -= 1;
+
+	                }
+	                else if (tal_pib[trx_id].phy.freq_band == CHINA_780)
+	                {
+		                if (ch > 3)
+		                {
+			                ret = MAC_INVALID_PARAMETER;
+			                /* no further processing of the channel value */
+		                }
+		                
+	                }
+	                else{
+		                
+		                ret = MAC_INVALID_PARAMETER;
+		                /* no further processing of the channel value */
+	                }
+
+                }
     }
 #endif
 

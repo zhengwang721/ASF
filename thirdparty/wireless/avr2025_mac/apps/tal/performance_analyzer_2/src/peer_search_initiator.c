@@ -466,7 +466,7 @@ static retval_t send_peer_req(trx_id_t trx)
                            seq_num[trx],               /* seq_num used as msdu handle */
                            (uint8_t *)&msg,
                            payload_length,
-                           1));
+                           0));
 }
 
 

@@ -79,11 +79,11 @@ void wait_for_event_init(trx_id_t trx,void *arg)
     configure_pibs(trx);
 
     /* Leave the radio in RX mode in default channel */
-	//if(trx==RF09)
+	if(trx==RF09) //vk
 	{
     tal_rx_enable(RF09, PHY_RX_ON);
 	}
-	//else
+	else
 	{
     tal_rx_enable(RF24, PHY_RX_ON);
 	}

@@ -44,18 +44,14 @@
 
 /* === MACROS ============================================================== */
 
-#define DEFAULT_FRAME_TYPES         ((1 << FCF_FRAMETYPE_BEACON) | \
-                                     (1 << FCF_FRAMETYPE_DATA) | (1 << FCF_FRAMETYPE_MAC_CMD))
-#define ACK_FRAME_TYPE_ONLY         (1 << FCF_FRAMETYPE_ACK)
-
 /* === GLOBALS ============================================================= */
 
-static uint8_t number_of_tx_retries[2];
-static csma_mode_t global_csma_mode[2];
-static bool ack_requested[2];
+static uint8_t number_of_tx_retries[NO_TRX];
+static csma_mode_t global_csma_mode[NO_TRX];
+static bool ack_requested[NO_TRX];
 /* Last frame length for IFS handling. */
-uint16_t last_txframe_length[2];
-bool frame_buf_filled[2];
+uint16_t last_txframe_length[NO_TRX];
+bool frame_buf_filled[NO_TRX];
 
 /* === PROTOTYPES ========================================================== */
 
@@ -279,7 +275,7 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
                       (uint8_t *)mac_frame_ptr[trx_id]->mpdu,
                       mac_frame_ptr[trx_id]->len_no_crc);
 
-#if DEBUG > 0
+#if (PAL_GENERIC_TYPE == MEGA_RF_SIM)
         for (uint16_t i = 0; i < mac_frame_ptr[trx_id]->len_no_crc; i++)
         {
             debug_text_val(PSTR("tx val = "), mac_frame_ptr[trx_id]->mpdu[i]);
@@ -288,20 +284,39 @@ void transmit_frame(trx_id_t trx_id, cca_use_t cca)
 
         /* Check if under-run has occurred */
         bool underrun = pal_trx_bit_read(reg_offset + SR_BBC0_PS_TXUR);
-        /* Enable automatic FCS appending for remaining frame or later ACK transmission */
-        pal_trx_bit_write(reg_offset + SR_BBC0_PC_TXAFCS, 1);
         if (underrun)
         {
             debug_text(PSTR("Tx underrun occured"));
             /* Abort ongoing transmission */
             pal_trx_reg_write(reg_offset + RG_RF09_CMD, RF_TRXOFF);
             trx_state[trx_id] = RF_TRXOFF;
+
+            /* Enable BB again and TXAFCS */
+            uint8_t pc = pal_trx_reg_read(reg_offset + RG_BBC0_PC);
+            pc |= PC_TXAFCS_MASK | PC_BBEN_MASK;
+            pal_trx_reg_write(reg_offset + RG_BBC0_PC, pc);
+
             TAL_BB_IRQ_CLR(trx_id, BB_IRQ_TXFE);
             TAL_RF_IRQ_CLR(trx_id, RF_IRQ_TRXERR | RF_IRQ_TRXRDY | RF_IRQ_EDC);
             tx_done_handling(trx_id, FAILURE);
         }
         else
         {
+            /* Enable automatic FCS appending for remaining frame or later ACK transmission */
+            uint16_t reg_pc = reg_offset + RG_BBC0_PC;
+            uint8_t pc = pal_trx_reg_read(reg_pc);
+            pc |= PC_TXAFCS_MASK;
+            pal_trx_reg_write(reg_pc, pc);
+            if (cca == WITH_CCA)
+            {
+                rf_cmd_state_t state = (rf_cmd_state_t)pal_trx_reg_read(reg_offset + RG_RF09_STATE);
+                if (state != RF_RX)
+                {
+                    pc |= PC_BBEN_MASK;
+                    pal_trx_reg_write(reg_pc, pc);
+                }
+            }
+
             frame_buf_filled[trx_id] = true;
         }
     }
@@ -337,6 +352,8 @@ void handle_tx_end_irq(trx_id_t trx_id)
                 }
                 else
                 {
+                    /* Switch BB on again */
+                    pal_trx_bit_write(reg_offset + SR_BBC0_PC_BBEN, 1);
                     trx_state[trx_id] = RF_RX;
                     debug_text(PSTR("Channel busy"));
                     csma_continue(trx_id);
@@ -476,22 +493,15 @@ void tx_done_handling(trx_id_t trx_id, retval_t status)
 #endif
 
     uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-    /* Re-store frame filter to pass "normal" frames */
+#ifdef MEASURE_TIME_OF_FLIGHT
     if (ack_requested[trx_id])
     {
-        /* Configure frame filter to receive all allowed frame types */
-#ifdef SUPPORT_FRAME_FILTER_CONFIGURATION
-        pal_trx_reg_write(reg_offset + RG_BBC0_AFFTM, tal_pib[trx_id].frame_types);
-#else
-        pal_trx_reg_write(reg_offset + RG_BBC0_AFFTM, DEFAULT_FRAME_TYPES);
-#endif
-#ifdef MEASURE_TIME_OF_FLIGHT
         if (status == MAC_SUCCESS)
         {
             pal_trx_read(reg_offset + RG_BBC0_CNT0, (uint8_t *)&tal_pib[trx_id].TimeOfFlight, 4);
         }
-#endif
     }
+#endif
     /* Enable AACK again and disable CCA / TX procedure */
     pal_trx_reg_write(reg_offset + RG_BBC0_AMCS, AMCS_AACK_MASK);
 
