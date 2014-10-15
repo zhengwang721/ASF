@@ -136,6 +136,7 @@ static inline void _system_osc32k_wait_for_sync(void)
  */
 static inline void _system_clock_source_osc16m_freq_sel(void)
 {
+#ifndef SAML21_REV_A
 	struct system_gclk_gen_config gclk_conf;
 	struct system_clock_source_osc16m_config osc16m_conf;
 
@@ -162,6 +163,15 @@ static inline void _system_clock_source_osc16m_freq_sel(void)
 	system_gclk_gen_get_config_defaults(&gclk_conf);
 	gclk_conf.source_clock = SYSTEM_CLOCK_SOURCE_OSC16M;
 	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclk_conf);
+#else
+	struct system_clock_source_osc16m_config osc16m_conf;
+	system_clock_source_osc16m_get_config_defaults(&osc16m_conf);
+	osc16m_conf.fsel      		= CONF_CLOCK_OSC16M_FREQ_SEL;
+	osc16m_conf.on_demand       = CONF_CLOCK_OSC16M_ON_DEMAND;
+	osc16m_conf.run_in_standby  = CONF_CLOCK_OSC16M_RUN_IN_STANDBY;
+	system_clock_source_osc16m_set_config(&osc16m_conf);
+	while(!system_clock_source_is_ready(SYSTEM_CLOCK_SOURCE_OSC16M));
+#endif
 }
 
 static inline void _system_clock_source_dfll_set_config_errata_9905(void)
@@ -793,7 +803,6 @@ void system_clock_init(void)
 	xosc32k_conf.frequency           = 32768UL;
 	xosc32k_conf.external_clock      = CONF_CLOCK_XOSC32K_EXTERNAL_CRYSTAL;
 	xosc32k_conf.startup_time        = CONF_CLOCK_XOSC32K_STARTUP_TIME;
-	xosc32k_conf.auto_gain_control   = CONF_CLOCK_XOSC32K_AUTO_AMPLITUDE_CONTROL;
 	xosc32k_conf.enable_1khz_output  = CONF_CLOCK_XOSC32K_ENABLE_1KHZ_OUPUT;
 	xosc32k_conf.enable_32khz_output = CONF_CLOCK_XOSC32K_ENABLE_32KHZ_OUTPUT;
 	xosc32k_conf.on_demand           = false;
