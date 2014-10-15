@@ -1,10 +1,9 @@
 /**
  * \file
  *
- * \brief Provides the low-level initialization functions that called 
- * on chip startup.
+ * \brief SAM D11 Xplained Pro board configuration.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,45 +41,7 @@
  *
  */
 
-#ifndef SYSTEM_SAM3S_H_INCLUDED
-#define SYSTEM_SAM3S_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-extern "C" {
-#endif
-/**INDENT-ON**/
-/* @endcond */
-
-#include <stdint.h>
-#include <compiler.h>
-
-extern uint32_t SystemCoreClock;	/* System Clock Frequency (Core Clock) */
-
-/**
- * @brief Setup the microcontroller system.
- * Initialize the System and update the SystemCoreClock variable.
- */
-void SystemInit(void);
-
-/**
- * @brief Updates the SystemCoreClock with current core Clock 
- * retrieved from cpu registers.
- */
-void SystemCoreClockUpdate(void);
-
-/** 
- * Initialize flash.
- */
-void system_init_flash(uint32_t ul_clk);
-
-/* @cond 0 */
-/**INDENT-OFF**/
-#ifdef __cplusplus
-}
-#endif
-/**INDENT-ON**/
-/* @endcond */
-
-#endif /* SYSTEM_SAM3S_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
