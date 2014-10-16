@@ -179,7 +179,8 @@ enum status_code events_allocate(
 		system_gclk_chan_enable(EVSYS_GCLK_ID_0 + new_channel);
 	}
 
-	EVSYS->CHANNEL[new_channel].reg = EVSYS_CHANNEL_EVGEN(config->generator) |
+	/* Save channel setting and configure it after user multiplexer */
+	resource->channel_reg = EVSYS_CHANNEL_EVGEN(config->generator)           |
 			EVSYS_CHANNEL_PATH(config->path)                                 |
 			((uint32_t)config->run_in_standby << EVSYS_CHANNEL_RUNSTDBY_Pos) |
 			((uint32_t)config->on_demand << EVSYS_CHANNEL_ONDEMAND_Pos) |
@@ -290,8 +291,11 @@ enum status_code events_attach_user(struct events_resource *resource, uint8_t us
 {
 	Assert(resource);
 
-	/* Channel number is n + 1 */
+	/* First configure user multiplexer: channel number is n + 1 */
 	EVSYS->USER[user_id].reg = EVSYS_USER_CHANNEL(resource->channel + 1);
+
+	/* Then configure the channel */
+	EVSYS->CHANNEL[resource->channel].reg = resource->channel_reg;
 
 	return STATUS_OK;
 }

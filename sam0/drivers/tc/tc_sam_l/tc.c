@@ -107,7 +107,7 @@ enum status_code tc_init(
 
 	/* Temporary variable to hold all updates to the CTRLA
 	 * register before they are written to it */
-	uint16_t ctrla_tmp = 0;
+	uint32_t ctrla_tmp = 0;
 	/* Temporary variable to hold all updates to the CTRLBSET
 	 * register before they are written to it */
 	uint8_t ctrlbset_tmp = 0;

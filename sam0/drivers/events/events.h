@@ -381,14 +381,14 @@ struct events_config {
  * @{
  */
 #if (SAML21)
-#  define _EVENTS_START_OFFSET_BUSY_BITS           8
-#  define _EVENTS_START_OFFSET_USER_READY_BIT      0
-#  define _EVENTS_START_OFFSET_DETECTION_BIT       8
-#  define _EVENTS_START_OFFSET_OVERRUN_BIT         0
-#else /* SAMD/R */
 #  define _EVENTS_START_OFFSET_BUSY_BITS           16
 #  define _EVENTS_START_OFFSET_USER_READY_BIT      0
 #  define _EVENTS_START_OFFSET_DETECTION_BIT       16
+#  define _EVENTS_START_OFFSET_OVERRUN_BIT         0
+#else /* SAM D/R */
+#  define _EVENTS_START_OFFSET_BUSY_BITS           8
+#  define _EVENTS_START_OFFSET_USER_READY_BIT      0
+#  define _EVENTS_START_OFFSET_DETECTION_BIT       8
 #  define _EVENTS_START_OFFSET_OVERRUN_BIT         0
 #endif
 /** @} */
@@ -410,6 +410,8 @@ struct events_resource {
 #if !defined(__DOXYGEN__)
 	/* Channel allocated for the event resource */
 	uint8_t channel;
+	/** Channel setting in CHANNEL register */
+	uint32_t channel_reg;
 #endif
 };
 
