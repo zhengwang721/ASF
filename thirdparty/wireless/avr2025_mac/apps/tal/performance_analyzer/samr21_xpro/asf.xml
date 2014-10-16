@@ -27,6 +27,7 @@
 		<build type="define"   name="HIGH_DATA_RATE_SUPPORT"              value=""/>		
 	
 		<config name="config.compiler.armgcc.optimization" value="high" />
+		<generator value="iarewarm"/>
 		<generator value="as5_arm" />
 		<generator value="doxygen"/>
 		<device-support value="atsamr21g18a"/>
