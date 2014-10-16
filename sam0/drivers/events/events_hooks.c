@@ -170,7 +170,7 @@ bool events_is_interrupt_set(struct events_resource *resource, enum events_inter
 {
 	Assert((source == EVENTS_INTERRUPT_DETECT) || (source == EVENTS_INTERRUPT_OVERRUN));
 
-	uint8_t bitpos;
+	uint32_t bitpos;
 
 	if (source == EVENTS_INTERRUPT_DETECT) {
 		bitpos = _events_find_bit_position(resource->channel,
@@ -189,7 +189,7 @@ enum status_code events_ack_interrupt(struct events_resource *resource, enum eve
 {
 	Assert((source == EVENTS_INTERRUPT_DETECT) || (source == EVENTS_INTERRUPT_OVERRUN));
 
-	uint8_t bitpos;
+	uint32_t bitpos;
 
 	if (source == EVENTS_INTERRUPT_DETECT) {
 		bitpos = _events_find_bit_position(resource->channel,
