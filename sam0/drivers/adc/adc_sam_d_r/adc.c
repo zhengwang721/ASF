@@ -160,7 +160,7 @@ void adc_set_window_mode(
 * \internal Configure MUX settings for the analog pins
 *
 * This function will set the given ADC input pins
-* to the analog function in the pin mux, giving
+* to the analog function in the pinmux, giving
 * the ADC access to the analog signal
 *
 * \param [in] pin AINxx pin to configure
@@ -368,7 +368,7 @@ static enum status_code _adc_set_config(
 		resolution = ADC_RESOLUTION_16BIT;
 		break;
 #if SAMD20
-	/* Please see $35.1.8 for ADC errata of SAM D20.
+	/* See $35.1.8 for ADC errata of SAM D20.
 	   The revisions before D have this issue.*/
 	case ADC_RESOLUTION_15BIT:
 		/* Increase resolution by 3 bit */
@@ -616,7 +616,7 @@ static enum status_code _adc_set_config(
  * \param[in]  hw          Pointer to the ADC module instance
  * \param[in]  config      Pointer to the configuration struct
  *
- * \return Status of the initialization procedure
+ * \return Status of the initialization procedure.
  * \retval STATUS_OK                The initialization was successful
  * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) were provided
  * \retval STATUS_BUSY          The module is busy with a reset operation

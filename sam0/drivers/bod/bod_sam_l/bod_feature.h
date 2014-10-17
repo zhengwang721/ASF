@@ -51,7 +51,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_bod_group SAM Brown Out Detector Driver (BOD)
  *
- * This driver for SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
  * and management of the device's Brown Out Detector (BOD) modules, to detect
  * and respond to under-voltage events and take an appropriate action.
  *
@@ -59,7 +59,7 @@ extern "C" {
  * - SUPC (Supply Controller)
  *
  * The following devices can use this module:
- *  - SAM L21
+ *  - Atmel® | SMART™ SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_bod_prerequisites
@@ -93,7 +93,7 @@ extern "C" {
  *
  * \section asfdoc_sam0_bod_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_bod_extra. This includes:
+ * For extra information, see \ref asfdoc_sam0_bod_extra. This includes:
  *  - \ref asfdoc_sam0_bod_extra_acronyms
  *  - \ref asfdoc_sam0_bod_extra_dependencies
  *  - \ref asfdoc_sam0_bod_extra_errata
@@ -236,37 +236,37 @@ struct bod33_config {
  * speed of a BOD12 to lower the power consumption.
  */
 enum bod12_prescale {
-	/** Divide input prescaler clock by 2 */
+	/** Divide input prescaler clock by 2. */
 	BOD12_PRESCALE_DIV_2       = SUPC_BOD12_PSEL(0),
-	/** Divide input prescaler clock by 4 */
+	/** Divide input prescaler clock by 4. */
 	BOD12_PRESCALE_DIV_4       = SUPC_BOD12_PSEL(1),
-	/** Divide input prescaler clock by 8 */
+	/** Divide input prescaler clock by 8. */
 	BOD12_PRESCALE_DIV_8       = SUPC_BOD12_PSEL(2),
-	/** Divide input prescaler clock by 16 */
+	/** Divide input prescaler clock by 16. */
 	BOD12_PRESCALE_DIV_16      = SUPC_BOD12_PSEL(3),
-	/** Divide input prescaler clock by 32*/
+	/** Divide input prescaler clock by 32. */
 	BOD12_PRESCALE_DIV_32      = SUPC_BOD12_PSEL(4),
-	/** Divide input prescaler clock by 64 */
+	/** Divide input prescaler clock by 64. */
 	BOD12_PRESCALE_DIV_64      = SUPC_BOD12_PSEL(5),
-	/** Divide input prescaler clock by 128 */
+	/** Divide input prescaler clock by 128. */
 	BOD12_PRESCALE_DIV_128     = SUPC_BOD12_PSEL(6),
-	/** Divide input prescaler clock by 256 */
+	/** Divide input prescaler clock by 256. */
 	BOD12_PRESCALE_DIV_256     = SUPC_BOD12_PSEL(7),
-	/** Divide input prescaler clock by 512 */
+	/** Divide input prescaler clock by 512. */
 	BOD12_PRESCALE_DIV_512     = SUPC_BOD12_PSEL(8),
-	/** Divide input prescaler clock by 1024 */
+	/** Divide input prescaler clock by 1024. */
 	BOD12_PRESCALE_DIV_1024    = SUPC_BOD12_PSEL(9),
-	/** Divide input prescaler clock by 2048 */
+	/** Divide input prescaler clock by 2048. */
 	BOD12_PRESCALE_DIV_2048    = SUPC_BOD12_PSEL(10),
-	/** Divide input prescaler clock by 4096 */
+	/** Divide input prescaler clock by 4096. */
 	BOD12_PRESCALE_DIV_4096    = SUPC_BOD12_PSEL(11),
-	/** Divide input prescaler clock by 8192 */
+	/** Divide input prescaler clock by 8192. */
 	BOD12_PRESCALE_DIV_8192    = SUPC_BOD12_PSEL(12),
-	/** Divide input prescaler clock by 16384 */
+	/** Divide input prescaler clock by 16384. */
 	BOD12_PRESCALE_DIV_16384   = SUPC_BOD12_PSEL(13),
-	/** Divide input prescaler clock by 32768 */
+	/** Divide input prescaler clock by 32768. */
 	BOD12_PRESCALE_DIV_32768   = SUPC_BOD12_PSEL(14),
-	/** Divide input prescaler clock by 65536 */
+	/** Divide input prescaler clock by 65536. */
 	BOD12_PRESCALE_DIV_65536   = SUPC_BOD12_PSEL(15),
 };
 
@@ -521,9 +521,9 @@ static inline void bod12_clear_detected(void)
 	return;
 }
 
-/**
- * @}
- */
+
+/** @} */
+
 /**
  * @}
  */
@@ -542,7 +542,7 @@ static inline void bod12_clear_detected(void)
  *  </tr>
  *  <tr>
  *      <td>BOD</td>
- *      <td>Brownout detector</td>
+ *      <td>Brown out detector</td>
  *  </tr>
  * </table>
  *
@@ -588,7 +588,7 @@ static inline void bod12_clear_detected(void)
  *
  * \page asfdoc_sam0_bod_application_use_case Application Use Case for BOD - Application
  * The preferred method of setting BOD33 levels and settings is trough the fuses.
- * when it is desirable to set it in software, please see the below use case.
+ * When it is desirable to set it in software, see the below use case.
  *
  * In this use case, a new BOD33 level might be set in SW if the clock settings
  * are adjusted up after a battery has charged to a higher level. When the battery

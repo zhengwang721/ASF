@@ -46,9 +46,9 @@
 /**
  * \defgroup asfdoc_sam0_wdt_group SAM Watchdog Driver (WDT)
  *
- * This driver for SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
  * and management of the device's Watchdog Timer module, including the enabling,
- * disabling and kicking within the device. The following driver API modes are
+ * disabling, and kicking within the device. The following driver API modes are
  * covered by this manual:
  *
  *  - Polled APIs
@@ -60,10 +60,10 @@
  *  - WDT (Watchdog Timer)
  *
  * The following devices can use this module:
- *  - SAM D20/D21
- *  - SAM R21
- *  - SAM D10/D11
- *  - SAM L21
+ *  - Atmel® | SMART™ SAM D20/D21
+ *  - Atmel® | SMART™ SAM R21
+ *  - Atmel® | SMART™ SAM D10/D11
+ *  - Atmel® | SMART™ SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_wdt_prerequisites
@@ -157,10 +157,10 @@
  * }
  * \enddot
  *
- * \note SAM L21's Watchdog Counter is \a not provided by GCLK, but it uses an 
+ * \note SAM L21's Watchdog Counter is \a not provided by GCLK, but it uses an
  *       internal 1kHz OSCULP32K output clock.\n
- *       This clock must be configured and enabled in the 32kHz Oscillator 
- *       Controller(OSC32KCTRL) before using the WDT. 
+ *       This clock must be configured and enabled in the 32kHz Oscillator
+ *       Controller(OSC32KCTRL) before using the WDT.
  *
  * \section asfdoc_sam0_wdt_special_considerations Special Considerations
  *
@@ -171,7 +171,7 @@
  *
  * \section asfdoc_sam0_wdt_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_wdt_extra. This includes:
+ * For extra information, see \ref asfdoc_sam0_wdt_extra. This includes:
  *  - \ref asfdoc_sam0_wdt_extra_acronyms
  *  - \ref asfdoc_sam0_wdt_extra_dependencies
  *  - \ref asfdoc_sam0_wdt_extra_errata
@@ -247,10 +247,10 @@ struct wdt_conf {
 	/** If \c true, the Watchdog will be locked to the current configuration
 	 *  settings when the Watchdog is enabled. */
 	bool always_on;
-	/** Enable/Disable the Watchdog Timer */
+	/** Enable/Disable the Watchdog Timer. */
 	bool enable;
 #if !(SAML21)
-	/** GCLK generator used to clock the peripheral except SAM L21*/
+	/** GCLK generator used to clock the peripheral except SAM L21.*/
 	enum gclk_generator clock_source;
 #endif
 	/** Number of Watchdog timer clock ticks until the Watchdog expires. */
@@ -262,7 +262,7 @@ struct wdt_conf {
 	enum wdt_period early_warning_period;
 };
 
-/** \name Configuration and initialization
+/** \name Configuration and Initialization
  * @{
  */
 
@@ -270,7 +270,7 @@ struct wdt_conf {
  * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
  *
  * Checks to see if the underlying hardware peripheral module(s) are currently
- * synchronizing across multiple clock domains to the hardware bus, This
+ * synchronizing across multiple clock domains to the hardware bus. This
  * function can be used to delay further operations on a module until such time
  * that it is ready, to prevent blocking delays for synchronization in the
  * user application.

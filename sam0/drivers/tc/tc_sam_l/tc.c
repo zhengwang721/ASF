@@ -92,7 +92,7 @@ uint8_t _tc_get_inst_index(
  * \retval STATUS_INVALID_ARG  An invalid configuration option or argument
  *                             was supplied
  * \retval STATUS_ERR_DENIED   Hardware module was already enabled, or the
- *                             hardware module is configured in 32 bit
+ *                             hardware module is configured in 32-bit
  *                             slave mode
  */
 enum status_code tc_init(
@@ -204,7 +204,7 @@ enum status_code tc_init(
 	system_apb_clock_set_mask((enum system_clock_apb_bus)inst_mclk_apbmask[instance*2],
 			inst_mclk_apbmask[2*instance+1]);
 
-	/* Enable the slave counter if counter_size is 32 bit */
+	/* Enable the slave counter if counter_size is 32-bit */
 	if ((config->counter_size == TC_COUNTER_SIZE_32BIT) && (instance+1 < TC_INST_NUM))
 	{
 		/* Enable the user interface clock in the MCLK */
@@ -596,7 +596,7 @@ enum status_code tc_set_compare_value(
  *
  * \param[in]  module_inst    Pointer to the software module instance struct
  *
- * \return Status of the procedure
+ * \return Status of the procedure.
  * \retval STATUS_OK                   The module was reset successfully
  * \retval STATUS_ERR_UNSUPPORTED_DEV  A 32-bit slave TC module was passed to
  *                                     the function. Only use reset on master

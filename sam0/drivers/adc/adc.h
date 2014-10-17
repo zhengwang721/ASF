@@ -47,7 +47,7 @@
 /**
  * \defgroup asfdoc_sam0_adc_group SAM Analog to Digital Converter Driver (ADC)
  *
- * This driver for SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
  * and management of the device's Analog to Digital Converter functionality, for
  * the conversion of analog voltages into a corresponding digital form.
  * The following driver API modes are covered by this manual:
@@ -60,10 +60,10 @@
  *  - ADC (Analog to Digital Converter)
  *
  * The following devices can use this module:
- *  - SAM D20/D21
- *  - SAM R21
- *  - SAM D10/D11
- *  - SAM L21
+ *  - Atmel® | SMART™ SAM D20/D21
+ *  - Atmel® | SMART™ SAM R21
+ *  - Atmel® | SMART™ SAM D10/D11
+ *  - Atmel® | SMART™ SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_adc_prerequisites
@@ -88,7 +88,7 @@
  *
  * The ADC has a compare function for accurate monitoring of user defined
  * thresholds with minimum software intervention required.
- * The ADC may be configured for 8-, 10- or 12-bit result, reducing the
+ * The ADC may be configured for 8-, 10-, or 12-bit result, reducing the
  * conversion time from 2.0μs for 12-bit to 1.4μs for 8-bit result. ADC
  * conversion results are provided left or right adjusted which eases
  * calculation when the result is represented as a signed integer.
@@ -143,25 +143,25 @@
  *
  *
  * \subsection asfdoc_sam0_adc_module_overview_prescaler Sample Clock Prescaler
- * The ADC features a prescaler which enables conversion at lower clock rates
+ * The ADC features a prescaler, which enables conversion at lower clock rates
  * than the input Generic Clock to the ADC module. This feature can be used to
  * lower the synchronization time of the digital interface to the ADC module
  * via a high speed Generic Clock frequency, while still allowing the ADC
  * sampling rate to be reduced.
  *
  * \subsection asfdoc_sam0_adc_module_overview_resolution ADC Resolution
- * The ADC supports full 8-bit, 10-bit or 12-bit resolution. Hardware
+ * The ADC supports full 8-bit, 10-bit, or 12-bit resolution. Hardware
  * oversampling and decimation can be used to increase the
  * effective resolution at the expense of throughput. Using oversampling and
  * decimation mode the ADC resolution is increased from 12-bits to an effective
- * 13, 14, 15 or 16-bits. In these modes the conversion rate is reduced, as
+ * 13, 14, 15, or 16-bits. In these modes the conversion rate is reduced, as
  * a greater number of samples is used to achieve the increased resolution. The
  * available resolutions and effective conversion rate is listed in
  * \ref asfdoc_sam0_adc_module_conversion_rate "the table below".
  *
  * \anchor asfdoc_sam0_adc_module_conversion_rate
  * <table>
- *	<caption>Effective ADC conversion speed using oversampling</caption>
+ *	<caption>Effective ADC Conversion Speed Using Oversampling</caption>
  *	<tr>
  *		<th>Resolution</th>
  *		<th>Effective conversion rate</th>
@@ -223,7 +223,7 @@
  * ADC_RESOLUTION_CUSTOM needs to be set as the resolution. When this is set
  * the number of samples to accumulate and the division ratio can be set by
  * the configuration struct members \ref adc_config.accumulate_samples and
- * \ref adc_config.divide_result When using this mode the ADC result register
+ * \ref adc_config.divide_result. When using this mode the ADC result register
  * will be set to be 16-bits wide to accommodate the larger result sizes
  * produced by the accumulator.
  *
@@ -234,10 +234,10 @@
  *
  * \anchor asfdoc_sam0_adc_module_hw_av_resolution
  * <table>
- *   <caption>Effective ADC resolution from various hardware averaging modes</caption>
+ *   <caption>Effective ADC Resolution From Various Hardware Averaging Modes</caption>
  *   <tr>
- *     <th>Number of Samples</tr>
- *     <th>Final Result</tr>
+ *     <th>Number of samples</tr>
+ *     <th>Final result</tr>
  *   </tr>
  *   <tr>
  *     <td>1</td>
@@ -320,8 +320,8 @@
  * conversion is completed, the next conversion will start at the next positive
  * input channel and so on, until all requested pins to scan have been sampled
  * and converted.
- * SAM L21 has automatic sequences feature instead of pin scan mode. In automatic 
- * sequence mode, all of 32 positives inputs can be included in a sequence. The 
+ * SAM L21 has automatic sequences feature instead of pin scan mode. In automatic
+ * sequence mode, all of 32 positives inputs can be included in a sequence. The
  * sequence starts from the lowest input, and go to the next enabled input
  * automatically.
  *
@@ -344,7 +344,7 @@
  * sampling bit precision set when the ADC is configured by the user application.
  * For example, only the eight lower bits of the window threshold values will be
  * compares to the sampled data whilst the ADC is configured in 8-bit mode.
- * In addition, if using differential mode, the 8th bit will be considered as
+ * In addition, if using differential mode, the 8<SUP>th</SUP> bit will be considered as
  * the sign bit even if bit 9 is zero.
  *
  * \subsection asfdoc_sam0_adc_module_overview_events Events
@@ -377,14 +377,14 @@
  * \section asfdoc_sam0_adc_special_considerations Special Considerations
  *
  * An integrated analog temperature sensor is available for use with the ADC.
- * The bandgap voltage, as well as the scaled IO and core voltages can also be
+ * The bandgap voltage, as well as the scaled I/O and core voltages can also be
  * measured by the ADC. For internal ADC inputs, the internal source(s) may need
  * to be manually enabled by the user application before they can be measured.
  *
  *
  * \section asfdoc_sam0_adc_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_adc_extra. This includes:
+ * For extra information, see \ref asfdoc_sam0_adc_extra. This includes:
  *  - \ref asfdoc_sam0_adc_extra_acronyms
  *  - \ref asfdoc_sam0_adc_extra_dependencies
  *  - \ref asfdoc_sam0_adc_extra_errata
@@ -410,7 +410,7 @@ extern "C" {
 #include <adc_feature.h>
 
 /**
- * \name Module status flags
+ * \name Module Status Flags
  *
  * ADC status flags, returned by \ref adc_get_status() and cleared by
  * \ref adc_clear_status().
@@ -418,11 +418,11 @@ extern "C" {
  * @{
  */
 
-/** ADC result ready */
+/** ADC result ready. */
 #define ADC_STATUS_RESULT_READY  (1UL << 0)
-/** Window monitor match */
+/** Window monitor match. */
 #define ADC_STATUS_WINDOW        (1UL << 1)
-/** ADC result overwritten before read */
+/** ADC result overwritten before read. */
 #define ADC_STATUS_OVERRUN       (1UL << 2)
 
 /** @} */
@@ -452,7 +452,7 @@ void adc_get_config_defaults(
  *
  * \param[in] module_inst  Pointer to the ADC software instance struct
  *
- * \return Bitmask of \c ADC_STATUS_* flags
+ * \return Bitmask of \c ADC_STATUS_* flags.
  *
  * \retval ADC_STATUS_RESULT_READY  ADC Result is ready to be read
  * \retval ADC_STATUS_WINDOW        ADC has detected a value inside the set
@@ -531,7 +531,7 @@ static inline void adc_clear_status(
 /** @} */
 
 /**
- * \name Enable, disable and reset ADC module, start conversion and read result
+ * \name Enable, Disable and Reset ADC Module, Start Conversion and Read Result
  * @{
  */
 
@@ -778,7 +778,7 @@ static inline enum status_code adc_read(
 /** @} */
 
 /**
- * \name Runtime changes of ADC module
+ * \name Runtime Changes of ADC Module
  * @{
  */
 
@@ -885,7 +885,7 @@ static inline void adc_set_negative_input(
 
 #if ADC_CALLBACK_MODE == true
 /**
- * \name Enable and disable interrupts
+ * \name Enable and Disable Interrupts
  * @{
  */
 
@@ -995,17 +995,17 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAML21.</td>
+ *		<td>Added support for SAML21</td>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMR21.</td>
+ *		<td>Added support for SAMR21</td>
  *	</tr>
  *	<tr>
- *		<td>Added support for SAMD21 and new DMA quick start guide.</td>
+ *		<td>Added support for SAMD21 and new DMA quick start guide</td>
  *	</tr>
  *	<tr>
  *		<td>Added ADC calibration constant loading from the device signature
- *          row when the module is initialized.</td>
+ *          row when the module is initialized</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>

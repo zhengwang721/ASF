@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief KSZ8051MNL (Ethernet PHY) driver for SAM.
+ * \brief KSZ8081MNX (Ethernet PHY) driver for SAM.
  *
- * Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -56,8 +56,8 @@
 #define GMII_ANER        0x06   // Auto-negotiation Expansion
 #define GMII_ANNPR       0x07   // Auto-negotiation Next Page
 #define GMII_ANLPNPAR    0x08   // Link Partner Next Page Ability
-//#define GMII_1000BTCR    9   // 1000Base-T Control  // Reserved
-//#define GMII_1000BTSR   10   // 1000Base-T Status   // Reserved
+//#define GMII_1000BTCR    0x9   // 1000Base-T Control  // Reserved
+#define GMII_DRCR        0x10   // Digtal Reserved Control
 #define GMII_AFECR1        0x11   // AFE Control 1
 //#define GMII_ERDWR      12   // Extend Register - Data Write Register
 //#define GMII_ERDRR      13   // Extend Register - Data Read Register

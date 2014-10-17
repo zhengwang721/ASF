@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_dac_group SAM Digital-to-Analog Driver (DAC)
  *
- * This driver for SAM devices provides an interface for the conversion of
+ * This driver for Atmel® | SMART™ SAM devices provides an interface for the conversion of
  * digital values to analog voltage. The following driver API modes are covered
  * by this manual:
  *
@@ -59,7 +59,7 @@
  *  - DAC (Digital to Analog Converter)
  *
  * The following devices can use this module:
- *  - SAM L21
+ *  - Atmel® | SMART™ SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_dac_prerequisites
@@ -313,7 +313,7 @@ extern "C" {
 
 
 /**
- * \name DAC status flags
+ * \name DAC Status Flags
  *
  * DAC status flags, returned by \ref dac_get_status() and cleared by
  * \ref dac_clear_status().

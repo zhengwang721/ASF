@@ -1,9 +1,9 @@
  /**
  * \file
  *
- * \brief API driver for KSZ8051MNL PHY component.
+ * \brief API driver for KSZ8081MNX PHY component.
  *
- * Copyright (c) 2013 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,9 +54,9 @@ extern "C" {
 /// @endcond
 
 /**
- * \defgroup ksz8051mnl_ethernet_phy_group PHY component (KSZ8051MNL)
+ * \defgroup ksz8081mnx_ethernet_phy_group PHY component (KSZ8081MNX)
  *
- * Driver for the ksz8051mnl component. This driver provides access to the main
+ * Driver for the ksz8081mnx component. This driver provides access to the main
  * features of the PHY.
  *
  * \section dependencies Dependencies

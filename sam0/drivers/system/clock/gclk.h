@@ -141,7 +141,7 @@ enum gclk_generator {
  * the user application.
  */
 struct system_gclk_gen_config {
-	/** Source clock input channel index, please see the \ref system_clock_source. */
+	/** Source clock input channel index, see the \ref system_clock_source. */
 	uint8_t source_clock;
 	/** If \c true, the generator output level is high when disabled. */
 	bool high_when_disabled;
@@ -165,7 +165,7 @@ struct system_gclk_chan_config {
 	enum gclk_generator source_generator;
 };
 
-/** \name Generic Clock management
+/** \name Generic Clock Management
  * @{
  */
 void system_gclk_init(void);
@@ -174,7 +174,7 @@ void system_gclk_init(void);
 
 
 /**
- * \name Generic Clock management (Generators)
+ * \name Generic Clock Management (Generators)
  * @{
  */
 
@@ -230,7 +230,7 @@ bool system_gclk_gen_is_enabled(
 
 
 /**
- * \name Generic Clock management (Channels)
+ * \name Generic Clock Management (Channels)
  * @{
  */
 
@@ -281,7 +281,7 @@ bool system_gclk_chan_is_locked(
 
 
 /**
- * \name Generic Clock frequency retrieval
+ * \name Generic Clock Frequency Retrieval
  * @{
  */
 

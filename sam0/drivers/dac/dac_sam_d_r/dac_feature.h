@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_dac_group SAM Digital-to-Analog Driver (DAC)
  *
- * This driver for SAM devices provides an interface for the conversion of
+ * This driver for Atmel® | SMART™ SAM devices provides an interface for the conversion of
  * digital values to analog voltage. The following driver API modes are covered
  * by this manual:
  *
@@ -59,8 +59,8 @@
  *  - DAC (Digital to Analog Converter)
  *
  * The following devices can use this module:
- *  - SAM D20/D21
- *  - SAM D10/D11
+ *  - Atmel® | SMART™ SAM D20/D21
+ *  - Atmel® | SMART™ SAM D10/D11
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_dac_prerequisites
@@ -88,7 +88,7 @@
  *
  * After being set up, the DAC will convert new digital values written to the
  * conversion data register (DATA) to an analog value either on the VOUT pin of
- * the device, or internally for use as an input to the AC, ADC and other analog
+ * the device, or internally for use as an input to the AC, ADC, and other analog
  * modules.
  *
  * Writing the DATA register will start a new conversion. It is also possible
@@ -277,7 +277,7 @@
  * enabled when it is not needed, to ensure minimum power consumption.
  *
  * \subsection asfdoc_sam0_dac_special_considerations_conversion_time Conversion Time
- * DAC conversion time is approximately 2.85us. The user must ensure that new
+ * DAC conversion time is approximately 2.85μs. The user must ensure that new
  * data is not written to the DAC before the last conversion is complete.
  * Conversions should be triggered by a periodic event from a Timer/Counter or
  * another peripheral.
@@ -285,7 +285,7 @@
  *
  * \section asfdoc_sam0_dac_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_dac_extra. This includes:
+ * For extra information, see \ref asfdoc_sam0_dac_extra. This includes:
  *  - \ref asfdoc_sam0_dac_extra_acronyms
  *  - \ref asfdoc_sam0_dac_extra_dependencies
  *  - \ref asfdoc_sam0_dac_extra_errata
@@ -312,7 +312,7 @@ extern "C" {
 
 
 /**
- * \name DAC status flags
+ * \name DAC Status Flags
  *
  * DAC status flags, returned by \ref dac_get_status() and cleared by
  * \ref dac_clear_status().
@@ -339,7 +339,7 @@ extern "C" {
 enum dac_reference {
 	/** 1V from the internal band-gap reference.*/
 	DAC_REFERENCE_INT1V = DAC_CTRLB_REFSEL(0),
-	/** Analog VCC as reference. */
+	/** Analog V<SUB>CC</SUB> as reference. */
 	DAC_REFERENCE_AVCC  = DAC_CTRLB_REFSEL(1),
 	/** External reference on AREF. */
 	DAC_REFERENCE_AREF  = DAC_CTRLB_REFSEL(2),
@@ -380,26 +380,26 @@ enum dac_channel {
  */
 struct dac_module {
 #if !defined(__DOXYGEN__)
-	/** DAC hardware module */
+	/** DAC hardware module. */
 	Dac *hw;
-	/** DAC output selection */
+	/** DAC output selection. */
 	enum dac_output output;
-	/** Reference selection */
+	/** Reference selection. */
 	enum dac_reference reference;
-	/** DAC event selection */
+	/** DAC event selection. */
 	bool start_on_event;
 #  if DAC_CALLBACK_MODE == true
-	/** Pointer to buffer used for ADC results */
+	/** Pointer to buffer used for ADC results. */
 	volatile uint16_t *job_buffer;
-	/** Remaining number of conversions in current job */
+	/** Remaining number of conversions in current job. */
 	volatile uint16_t remaining_conversions;
-	/** Transferred number of conversions in current job */
+	/** Transferred number of conversions in current job. */
 	volatile uint16_t transferred_conversions;
-	/** DAC callback enable */
+	/** DAC callback enable. */
 	bool callback_enable[DAC_CALLBACK_N];
-	/** DAC registered callback functions */
+	/** DAC registered callback functions. */
 	dac_callback_t callback[DAC_CALLBACK_N];
-	/** Holds the status of the ongoing or last conversion job */
+	/** Holds the status of the ongoing or last conversion job. */
 	volatile enum status_code job_status;
 #  endif
 #endif
@@ -413,23 +413,23 @@ struct dac_module {
  * function before being modified by the user application.
  */
 struct dac_config {
-	/** Reference voltage */
+	/** Reference voltage. */
 	enum dac_reference reference;
-	/** Select DAC output */
+	/** Select DAC output. */
 	enum dac_output output;
-	/** Left adjusted data */
+	/** Left adjusted data. */
 	bool left_adjust;
-	/** GCLK generator used to clock the peripheral */
+	/** GCLK generator used to clock the peripheral. */
 	enum gclk_generator clock_source;
 #ifdef FEATURE_DAC_DATABUF_WRITE_PROTECTION
-	/** Bypass DATABUF write protection */
+	/** Bypass DATABUF write protection. */
 	bool databuf_protection_bypass;
 #endif
-	/** Voltage pump disable */
+	/** Voltage pump disable. */
 	bool voltage_pump_disable;
 	/**
 	 * The DAC behaves as in normal mode when the chip enters STANDBY sleep
-	 * mode
+	 * mode.
 	 */
 	bool run_in_standby;
 };
@@ -441,9 +441,9 @@ struct dac_config {
  * disable events via \ref dac_enable_events() and \ref dac_disable_events().
  */
 struct dac_events {
-	/** Start a new DAC conversion */
+	/** Start a new DAC conversion. */
 	bool on_event_start_conversion;
-	/** Enable event generation on data buffer empty */
+	/** Enable event generation on data buffer empty. */
 	bool generate_event_on_buffer_empty;
 };
 
@@ -456,7 +456,7 @@ struct dac_events {
  */
 struct dac_chan_config {
 #if !defined(__DOXYGEN__)
-	/** Dummy value to ensure the struct has at least one member */
+	/** Dummy value to ensure the struct has at least one member. */
 	uint8_t _dummy;
 #endif
 };

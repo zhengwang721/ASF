@@ -55,7 +55,7 @@
  *  - NVM (Non-Volatile Memory Controller)
  *
  * The following devices can use this module:
- *  - SAM L21
+ *  - Atmel® | SMART™ SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_wwr_eeprom_prerequisites
@@ -206,7 +206,7 @@
  *
  * \subsubsection asfdoc_sam0_wwr_eeprom_module_overview_implementation_rc Row Contents
  * Each physical row initially stores the contents of one or two logical WWR EEPROM
- * memory pages(It depends on application configuration file). This quartered or 
+ * memory pages(It depends on application configuration file). This quartered or
  * halves the available storage space for the emulated WWR EEPROM
  * but reduces the overall number of row erases that are required, by reserving
  * two or three pages within each row for updated versions of the logical page contents.
@@ -221,7 +221,7 @@
  *
  * When it's configured each physical row stores the contents of one logical WWR EEPROM
  * memory page, this system will allows for the same logical page to be updated up
- * to four times into physical memory before a row erasure procedure is needed. 
+ * to four times into physical memory before a row erasure procedure is needed.
  * In the case of multiple versions of the same logical WWR EEPROM page being stored in
  * the same physical row, the right-most (highest physical memory page address)
  * version is considered to be the most current.
@@ -246,8 +246,8 @@
  * \anchor asfdoc_sam0_wwr_eeprom_page_layout
  * \image html page_layout.svg "Internal Layout of An Emulated WWR EEPROM age"
  *
- * \note In the following memory layout example, each physical row stores the 
- * contents of one logical WWR EEPROM page, you can refer to "AT03265: SAM EEPROM 
+ * \note In the following memory layout example, each physical row stores the
+ * contents of one logical WWR EEPROM page, you can refer to "AT03265: SAM EEPROM
  * Emulator Service (EEPROM)" for the example of two logical EEPROM pages in one row.
  *
  * Within the WWR EEPROM memory reservation section at the top of the NVM memory
@@ -322,7 +322,7 @@
  * directly.
  *
  * \subsection asfdoc_sam0_wwr_eeprom_special_considerations_checksum WWR EEPROM Page Checksum
- * For each page, a checksum function is used to verify the integrity of 
+ * For each page, a checksum function is used to verify the integrity of
  * the page data. After reading the page data using \ref wwr_eeprom_emulator_read_page() ,
  * When its checksum is not correct, and error can be detected.
  * This function can be enabled or disabled through configuration file.
@@ -375,7 +375,7 @@ enum wwree_logical_page_num_in_row {
 };
 
 
-/** \name WWR EEPROM emulator information
+/** \name WWR EEPROM Emulator Information
  * @{
  */
 
@@ -408,7 +408,7 @@ struct wwr_eeprom_emulator_parameters {
 
 /** @} */
 
-/** \name Configuration and initialization
+/** \name Configuration and Initialization
  * @{
  */
 
@@ -422,7 +422,7 @@ enum status_code wwr_eeprom_emulator_get_parameters(
 /** @} */
 
 
-/** \name Logical WWR EEPROM page reading/writing
+/** \name Logical WWR EEPROM Page Reading/Writing
  * @{
  */
 
@@ -438,7 +438,7 @@ enum status_code wwr_eeprom_emulator_read_page(
 
 /** @} */
 
-/** \name Buffer WWR EEPROM reading/writing
+/** \name Buffer WWR EEPROM Reading/Writing
  * @{
  */
 

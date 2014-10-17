@@ -74,7 +74,7 @@ extern "C" {
 #if DAC_CALLBACK_MODE == true
 #  include <system_interrupt.h>
 
-/** Forward definition of the device instance */
+/** Forward definition of the device instance. */
 struct dac_module;
 
 #if !defined(__DOXYGEN__)

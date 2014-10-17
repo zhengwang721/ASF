@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_port_group SAM Port Driver (PORT)
  *
- * This driver for SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
  * and management of the device's General Purpose Input/Output (GPIO) pin
  * functionality, for manual pin state reading and writing.
  *
@@ -54,10 +54,10 @@
  *  - PORT (GPIO Management)
  *
  * The following devices can use this module:
- *  - SAM D20/D21
- *  - SAM R21
- *  - SAM D10/D11
- *  - SAM L21
+ *  - Atmel® | SMART™ SAM D20/D21
+ *  - Atmel® | SMART™ SAM R21
+ *  - Atmel® | SMART™ SAM D10/D11
+ *  - Atmel® | SMART™ SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_port_prerequisites
@@ -97,7 +97,7 @@
  *
  * \subsection asfdoc_sam0_port_module_overview_pin_numbering Physical and Logical GPIO Pins
  * SAM devices use two naming conventions for the I/O pins in the device; one
- * physical, and one logical. Each physical pin on a device package is assigned
+ * physical and one logical. Each physical pin on a device package is assigned
  * both a physical port and pin identifier (e.g. "PORTA.0") as well as a
  * monotonically incrementing logical GPIO number (e.g. "GPIO0"). While the
  * former is used to map physical pins to their physical internal device module
@@ -115,7 +115,7 @@
  *   node [label="Port Pad" shape=square] pad;
  *
  *   subgraph driver {
- *     node [label="Peripheral Mux" shape=trapezium] pinmux;
+ *     node [label="Peripheral MUX" shape=trapezium] pinmux;
  *     node [label="GPIO Module" shape=ellipse] gpio;
  *     node [label="Other Peripheral Modules" shape=ellipse style=filled fillcolor=lightgray] peripherals;
  *   }
@@ -135,7 +135,7 @@
  *
  * \section asfdoc_sam0_port_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_port_extra. This includes:
+ * For extra information, see \ref asfdoc_sam0_port_extra. This includes:
  *  - \ref asfdoc_sam0_port_extra_acronyms
  *  - \ref asfdoc_sam0_port_extra_dependencies
  *  - \ref asfdoc_sam0_port_extra_errata
@@ -294,12 +294,12 @@ struct port_config {
 
 	/** Enable lowest possible powerstate on the pin
 	 *
-	 *  \note All other configurations will be ignored, the pin will be disabled
+	 *  \note All other configurations will be ignored, the pin will be disabled.
 	 */
 	bool powersave;
 };
 
-/** \name State reading/writing (physical group orientated)
+/** \name State Reading/Writing (Physical Group Orientated)
  * @{
  */
 
@@ -403,7 +403,7 @@ static inline void port_group_toggle_output_level(
 
 /** @} */
 
-/** \name Configuration and initialization
+/** \name Configuration and Initialization
  * @{
  */
 
@@ -443,7 +443,7 @@ void port_group_set_config(
 
 /** @} */
 
-/** \name State reading/writing (logical pin orientated)
+/** \name State Reading/Writing (Logical Pin Orientated)
  * @{
  */
 
@@ -451,7 +451,7 @@ void port_group_set_config(
  *  \brief Retrieves the state of a port pin that is configured as an input.
  *
  *  Reads the current logic level of a port pin and returns the current
- *  level as a boolean value.
+ *  level as a Boolean value.
  *
  *  \param[in] gpio_pin  Index of the GPIO pin to read.
  *
@@ -470,7 +470,7 @@ static inline bool port_pin_get_input_level(
  *  \brief Retrieves the state of a port pin that is configured as an output.
  *
  *  Reads the current logical output level of a port pin and returns the current
- *  level as a boolean value.
+ *  level as a Boolean value.
  *
  *  \param[in] gpio_pin  Index of the GPIO pin to read.
  *
@@ -532,7 +532,7 @@ static inline void port_pin_toggle_output_level(
 /** \name Port input event
  * @{
  */
- 
+
 /**
  *  \brief Enable the port event input.
  *

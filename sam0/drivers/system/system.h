@@ -57,7 +57,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_group SAM System Driver (SYSTEM)
  *
- * This driver for SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
  * and management of the device's system relation functionality, necessary for
  * the basic device operation. This is not limited to a single peripheral, but
  * extends across multiple hardware peripherals.
@@ -73,10 +73,10 @@ extern "C" {
  * \endif
  *
  * The following devices can use this module:
- *  - SAM D20/D21
- *  - SAM R21
- *  - SAM D10/D11
- *  - SAM L21
+ *  - Atmel® | SMART™ SAM D20/D21
+ *  - Atmel® | SMART™ SAM R21
+ *  - Atmel® | SMART™ SAM D10/D11
+ *  - Atmel® | SMART™ SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_system_prerequisites
@@ -123,7 +123,7 @@ extern "C" {
  * \endif
  *
  * \subsection asfdoc_sam0_system_module_overview_vref Voltage References
- * The various analog modules within the SAM devices (such as AC, ADC and
+ * The various analog modules within the SAM devices (such as AC, ADC, and
  * DAC) require a voltage reference to be configured to act as a reference point
  * for comparisons and conversions.
  *
@@ -133,7 +133,7 @@ extern "C" {
  * where applicable.
  *
  * \subsection asfdoc_sam0_system_module_overview_reset_cause System Reset Cause
- * In some application there may be a need to execute a different program
+ * In some applications there may be a need to execute a different program
  * flow based on how the device was reset. For example, if the cause of reset
  * was the Watchdog timer (WDT), this might indicate an error in the application
  * and a form of error handling or error logging might be needed.
@@ -155,7 +155,7 @@ extern "C" {
  *
  * The SAM L21 device embeds up to three performance level (PL0, PL1 and PL2).
  * Each performance level defines a maximum frequency and a corresponding
- * consumption in ��A/MHz,when the application selects a new performance level,
+ * consumption in µA/MHz,when the application selects a new performance level,
  * the voltage applied on the full logic area moves from a value to another,
  * it can reduce the active consumption while decreasing the maximum frequency
  * of the device.
@@ -402,7 +402,7 @@ extern "C" {
  *
  * \section asfdoc_sam0_system_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_system_extra. This includes:
+ * For extra information, see \ref asfdoc_sam0_system_extra. This includes:
  *  - \ref asfdoc_sam0_system_extra_acronyms
  *  - \ref asfdoc_sam0_system_extra_dependencies
  *  - \ref asfdoc_sam0_system_extra_errata
@@ -411,7 +411,7 @@ extern "C" {
  *
  * \section asfdoc_sam0_system_examples Examples
  *
- * For SYSTEM module related examples, please refer to the sub-modules listed in
+ * For SYSTEM module related examples, refer to the sub-modules listed in
  * the \ref asfdoc_sam0_system_module_overview "system module overview".
  *
  *
@@ -578,3 +578,4 @@ void system_init(void);
 #endif
 
 #endif /* SYSTEM_H_INCLUDED */
+
