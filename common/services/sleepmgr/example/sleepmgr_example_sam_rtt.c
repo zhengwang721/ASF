@@ -59,6 +59,7 @@
  * The example has been tested on the boards:
  *  - SAM4N Xplained Pro kit
  *  - SAMG53 Xplained Pro kit
+ *  - SAMG55 Xplained Pro kit
  *  - SAM4C evaluation kit
  *
  * \section exampledescription Description of the example
@@ -126,7 +127,7 @@ int main(void)
 
 	/* Set wakeup source to rtt_alarm */
 	pmc_set_fast_startup_input(PMC_FSMR_RTTAL);
-#if (!SAMG)
+#if ((!SAMG51) && (!SAMG53) && (!SAMG54))
 	supc_set_wakeup_mode(SUPC, SUPC_WUMR_RTTEN_ENABLE);
 #endif
 	/* Initialize the sleep manager, lock initial mode. */
