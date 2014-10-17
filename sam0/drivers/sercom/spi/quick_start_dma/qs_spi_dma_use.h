@@ -47,7 +47,6 @@
  * The supported board list:
  *    - SAMD21 Xplained Pro
  *    - SAMR21 Xplained Pro
- *    - SAML21 Xplained Pro
  *
  * This quick start will transmit a buffer data from master to slave through DMA.
  * In this use case the SPI master will be configured with the following
@@ -96,11 +95,6 @@
  *  - \b DO/DI: EXT1 PIN16 (PB22) <--> EXT1 PIN9  (PA22)
  *  - \b DI/DO: EXT1 PIN17 (PB02) <--> EXT1 PIN7  (PA18)
  *  - \b SCK:   EXT1 PIN18 (PB23) <--> EXT1 PIN8  (PA19)
- * - SAM L21 Xplained Pro
- *  - \b SS_0:  EXT1 PIN15 (PA05) <--> EXT2 PIN15 (PB17)
- *  - \b DO/DI: EXT1 PIN16 (PA06) <--> EXT2 PIN17  (PB22)
- *  - \b DI/DO: EXT1 PIN17 (PA04) <--> EXT2 PIN16  (PB16)
- *  - \b SCK:   EXT1 PIN18 (PA07) <--> EXT2 PIN18  (PB23)
  *
  * \subsection asfdoc_sam0_spi_dma_use_case_setup_code Code
  *

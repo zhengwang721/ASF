@@ -25696,8 +25696,8 @@ typedef struct {
 #define SERCOM4_INT_MSB             6
 #define SERCOM4_PMSB                3
 /* ========== Instance parameters for SERCOM5 peripheral ========== */
-#define SERCOM5_DMAC_ID_RX           11        // Index of DMA RX trigger
-#define SERCOM5_DMAC_ID_TX           12        // Index of DMA TX trigger
+#define SERCOM5_DMAC_ID_RX                   // Index of DMA RX trigger
+#define SERCOM5_DMAC_ID_TX                   // Index of DMA TX trigger
 #define SERCOM5_GCLK_ID_CORE        24
 #define SERCOM5_GCLK_ID_SLOW        23
 #define SERCOM5_INT_MSB             3
