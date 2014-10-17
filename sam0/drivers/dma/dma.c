@@ -65,11 +65,11 @@ struct _dma_module _dma_inst = {
 #define DMA_CHANNEL_MASK   (0x1f)
 
 COMPILER_ALIGNED(16)
-DmacDescriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM];
+DmacDescriptor descriptor_section[CONF_MAX_USED_CHANNEL_NUM] SECTION_DMAC_DESCRIPTOR;
 
 /** Initial write back memory section */
 COMPILER_ALIGNED(16)
-static DmacDescriptor _write_back_section[CONF_MAX_USED_CHANNEL_NUM];
+static DmacDescriptor _write_back_section[CONF_MAX_USED_CHANNEL_NUM] SECTION_DMAC_DESCRIPTOR;
 
 /** Internal DMA resource pool */
 static struct dma_resource* _dma_active_resource[CONF_MAX_USED_CHANNEL_NUM];
