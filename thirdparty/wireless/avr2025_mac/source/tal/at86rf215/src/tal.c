@@ -235,10 +235,10 @@ void tal_task(void)
          */
         bb_irq_t bb_irqs;
         rf_irq_t rf_irqs;
-        ENTER_TRX_REGION();
+        ENTER_CRITICAL_REGION();
         bb_irqs = tal_bb_irqs[trx_id];
         rf_irqs = tal_rf_irqs[trx_id];
-        LEAVE_TRX_REGION();
+        LEAVE_CRITICAL_REGION();
 
         if (bb_irqs != BB_IRQ_NO_IRQ)
         {

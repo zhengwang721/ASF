@@ -164,16 +164,11 @@ static void handle_incoming_frame(trx_id_t trx_id)
 
     /* Check if ACK transmission is done by transceiver */
     bool ack_transmitting = pal_trx_bit_read(reg_offset + SR_BBC0_AMCS_AACKFT);
-    //if (ack_transmitting)
-    //{
-        //debug_text(PSTR("ACK transmitting"));
-    //}
-    //else
-	if(ack_transmitting)
-	{
-		delay_ms(1);
-	}
-	
+    if (ack_transmitting)
+    {
+	    debug_text(PSTR("ACK transmitting"));
+    }
+    else
     {
         debug_text(PSTR("No ACK transmitting"));
         complete_rx_transaction(trx_id);

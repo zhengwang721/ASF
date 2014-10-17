@@ -425,7 +425,7 @@ typedef enum sun_freq_band_tag
 
 typedef enum ofdm_option_tag
 {
-    OFDM_OPT_1 = 1,
+    OFDM_OPT_1,
     OFDM_OPT_2,
     OFDM_OPT_3,
     OFDM_OPT_4
