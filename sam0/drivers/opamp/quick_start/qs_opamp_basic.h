@@ -44,7 +44,7 @@
 /**
  * \page asfdoc_sam0_opamp_basic_use_case Quick Start Guide for OPAMP - Basic
  *
- * In this use case, the OPAMP0 is configured as "Inverting PGA" mode,
+ * In this use case, the OPAMP0 is configured as "Non-Inverting PGA" mode,
  *  Please refer to the second mode in datasheet "Build-in Modes" section.
  *
  * This use case sets up the OPAMP0 to inveret the input signal in OA0NEG
@@ -78,7 +78,7 @@
  *          struct to ensure that all values are initialized to known default
  *          settings.
  *
- * -# Adjust the configuration struct to Set the the OPAMP0 as "Inverting PGA" mode.
+ * -# Adjust the configuration struct to Set the the OPAMP0 as "Non-Inverting PGA" mode.
  *    \snippet qs_port_basic.c setup_4
  *    \note The existing configuration struct may be re-used, as long as any
  *          values that have been altered from the default settings are taken

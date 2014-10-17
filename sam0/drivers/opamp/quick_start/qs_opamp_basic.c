@@ -42,10 +42,10 @@
  */
 #include <asf.h>
 
-void configure_inverting_pga_opamp0(void);
+void configure_non_inverting_pga_opamp0(void);
 
 //! [setup]
-void configure_inverting_pga_opamp0(void)
+void configure_non_inverting_pga_opamp0(void)
 {
 	/** Creates a new configuration structure for the OPAMP0. */
 	//! [setup_1]
@@ -62,11 +62,11 @@ void configure_inverting_pga_opamp0(void)
 	opamp0_get_config_defaults(&conf);
 	//! [setup_3]
 
-	/* Set the the OPAMP0 as "Inverting PGA" mode. */
+	/* Set the the OPAMP0 as "Non-Inverting PGA" mode. */
 	//! [setup_4]
 	conf.negative_input = OPAMP0_NEG_MUX_TAP0;
-	conf.positive_input = OPAMP0_POS_MUX_GND;
-	conf.r1_connection = OPAMP0_RES1_MUX_NEG_PIN0;
+	conf.positive_input = OPAMP0_POS_MUX_PIN0;
+	conf.r1_connection = OPAMP0_RES1_MUX_GND;
 	conf.config_common.r1_enable = true;
 	conf.config_common.r2_out = true;
 	//! [setup_4]
@@ -76,8 +76,8 @@ void configure_inverting_pga_opamp0(void)
 	struct system_pinmux_config opamp0_neg_pin_conf;
 	system_pinmux_get_config_defaults(&opamp0_neg_pin_conf);
 	opamp0_neg_pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	opamp0_neg_pin_conf.mux_position = MUX_PA02B_OPAMP_OANEG0;
-	system_pinmux_pin_set_config(PIN_PA02B_OPAMP_OANEG0, &opamp0_neg_pin_conf);
+	opamp0_neg_pin_conf.mux_position = MUX_PA06B_OPAMP_OAPOS0;
+	system_pinmux_pin_set_config(PIN_PA06B_OPAMP_OAPOS0, &opamp0_neg_pin_conf);
 	struct system_pinmux_config opamp0_out_pin_conf;
 	system_pinmux_get_config_defaults(&opamp0_out_pin_conf);
 	opamp0_out_pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
@@ -105,7 +105,7 @@ int main(void)
 	system_init();
 
 	//! [setup_init]
-	configure_inverting_pga_opamp0();
+	configure_non_inverting_pga_opamp0();
 	//! [setup_init]
 
 	//! [main]
