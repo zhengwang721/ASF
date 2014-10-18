@@ -322,6 +322,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 			
         case SET_SUN_PAGE:
         {
+			phy_t *phy_temp = &msg->payload;
 	        /* Calculate the expected frame size in case of SET_PARAM cmd */
 	        expected_frame_size = (FRAME_OVERHEAD + ((sizeof(app_payload_t) -
 	        sizeof(general_pkt_t)) +
@@ -331,6 +332,21 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 		//	phy_t sun_phy_page_set = (phy_t *)&(msg->payload);
 			if (tal_pib_set(trx, phySetting, (pib_value_t *)&msg->payload) != MAC_SUCCESS)
 			{
+				if(phy_temp->modulation == OFDM)
+				{
+					if(tal_pib_set(trx, phyOFDMMCS, (pib_value_t *)&(phy_temp->phy_mode).ofdm.mcs_val) != MAC_SUCCESS)
+					{
+						return;
+					}
+				}
+				
+				if(phy_temp->modulation == OQPSK)
+				{
+					if(tal_pib_set(trx, phyOQPSKRateMode, (pib_value_t *)&(phy_temp->phy_mode).oqpsk.rate_mode) != MAC_SUCCESS)
+					{
+						return;
+					}
+				}
 				printf("SUN Channel Page Change Failure");
 			}
 			else

@@ -482,7 +482,7 @@ typedef struct leg_oqpsk_tag
 
 typedef enum fsk_op_mode_tag
 {
-    FSK_OP_MOD_1,
+    FSK_OP_MOD_1 = 1,
     FSK_OP_MOD_2,
     FSK_OP_MOD_3,
     FSK_OP_MOD_4

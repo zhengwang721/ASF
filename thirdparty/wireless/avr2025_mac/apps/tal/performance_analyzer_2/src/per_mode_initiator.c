@@ -630,29 +630,40 @@ void per_mode_initiator_tx_done_cb(trx_id_t trx,retval_t status, frame_info_t *f
 		    msg = (app_payload_t *)(frame->mpdu + FRAME_OVERHEAD);
 		    if(msg->cmd_id == SET_SUN_PAGE)
 			{
-			if (((tal_pib_set(trx, phySetting, (pib_value_t *)&sun_phy_page_set[trx]) == MAC_SUCCESS)) && (status == MAC_SUCCESS))
-			{
-			tal_pib[trx].CurrentPage = 9; //check -> to be revisited
-			curr_trx_config_params[trx].channel_page = 9;
-			tal_pib_get(trx,phyCurrentChannel, (uint8_t *)&channel);
-			curr_trx_config_params[trx].channel = channel;		
-			memcpy(&curr_trx_config_params[trx].sun_phy_page, &sun_page[trx], sizeof(sun_phy_t));
-			usr_perf_set_confirm(trx,MAC_SUCCESS,PARAM_CHANNEL_PAGE,(param_value_t *)sun_page_param_val[trx]);
+				if (((tal_pib_set(trx, phySetting, (pib_value_t *)&sun_phy_page_set[trx]) == MAC_SUCCESS)) && (status == MAC_SUCCESS))
+				{
+					if(sun_phy_page_set[trx].modulation == OFDM)
+					{
+						if(tal_pib_set(trx, phyOFDMMCS, (pib_value_t *)&sun_phy_page_set[trx].phy_mode.ofdm.mcs_val) != MAC_SUCCESS)
+						{
+							usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)sun_page_param_val[trx]);
+						}
+					}
+				
+					if(sun_phy_page_set[trx].modulation == OQPSK)
+					{
+						if(tal_pib_set(trx, phyOQPSKRateMode, (pib_value_t *)&sun_phy_page_set[trx].phy_mode.oqpsk.rate_mode) != MAC_SUCCESS)
+						{
+							usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)sun_page_param_val[trx]);
+						}
+					}
+					tal_pib[trx].CurrentPage = 9; //check -> to be revisited
+					curr_trx_config_params[trx].channel_page = 9;
+					tal_pib_get(trx,phyCurrentChannel, (uint8_t *)&channel);
+					curr_trx_config_params[trx].channel = channel;		
+					memcpy(&curr_trx_config_params[trx].sun_phy_page, &sun_page[trx], sizeof(sun_phy_t));
+					usr_perf_set_confirm(trx,MAC_SUCCESS,PARAM_CHANNEL_PAGE,(param_value_t *)sun_page_param_val[trx]);
+				}
+				else
+				{
+					usr_perf_set_confirm(trx,UNABLE_TO_CONTACT_PEER,PARAM_CHANNEL_PAGE,(param_value_t *)sun_page_param_val[trx]);
+				}
 			}
 			else
 			{
-			usr_perf_set_confirm(trx,UNABLE_TO_CONTACT_PEER,PARAM_CHANNEL_PAGE,(param_value_t *)sun_page_param_val[trx]);
-			
-			}
-			
-			}
-			else
-			{
-			/* After successful transmission, set the params on Initiator node */
+				/* After successful transmission, set the params on Initiator node */
 				set_parameter_on_transmitter_node(trx,status);	
 			}
-			
-
 		op_mode[trx] = TX_OP_MODE;
 	}
 	break;
@@ -1988,7 +1999,7 @@ void perf_set_sun_page(trx_id_t trx,uint8_t *param_val)
 	sun_page[trx].modulation = sun_phy_page_set[trx].modulation = *temp_param_val++;	
 	if(sun_page[trx].modulation == OFDM)
 	{
-		sun_page[trx].sun_phy_mode.mr_ofdm.option = sun_phy_page_set[trx].phy_mode.ofdm.option = *temp_param_val++;	
+		sun_page[trx].sun_phy_mode.mr_ofdm.option = sun_phy_page_set[trx].phy_mode.ofdm.option = *temp_param_val++;
 		sun_page[trx].sun_phy_mode.mr_ofdm.mcs_val = sun_phy_page_set[trx].phy_mode.ofdm.mcs_val = *temp_param_val++;	
 		if((sun_phy_page_set[trx].phy_mode.ofdm.mcs_val > MCS6)  || 
 		(sun_phy_page_set[trx].phy_mode.ofdm.option > OFDM_OPT_4) || 
@@ -2031,6 +2042,24 @@ void perf_set_sun_page(trx_id_t trx,uint8_t *param_val)
 
 			if (tal_pib_set(trx, phySetting, (pib_value_t *)&sun_phy_page_set[trx]) == MAC_SUCCESS)
 			{
+				if(sun_phy_page_set[trx].modulation == OFDM)
+				{
+					if(tal_pib_set(trx, phyOFDMMCS, (pib_value_t *)&sun_phy_page_set[trx].phy_mode.ofdm.mcs_val) != MAC_SUCCESS)
+					{
+						usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
+						return;
+					}
+				}
+				
+				if(sun_phy_page_set[trx].modulation == OQPSK)
+				{
+					if(tal_pib_set(trx, phyOQPSKRateMode, (pib_value_t *)&sun_phy_page_set[trx].phy_mode.oqpsk.rate_mode) != MAC_SUCCESS)
+					{
+						usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
+						return;
+					}
+				}
+
 				tal_pib[trx].CurrentPage = 9; //check -> needs to be revisited
 				curr_trx_config_params[trx].channel_page = 9;
 				tal_pib_get(trx,phyCurrentChannel, &channel);
@@ -2923,6 +2952,23 @@ void get_current_configuration(trx_id_t trx)
 
 		if (tal_pib_set(trx, phySetting, (pib_value_t *)&phy_to_set) == MAC_SUCCESS)
 		{
+			if(sun_phy_page_set[trx].modulation == OFDM)
+			{
+				if(tal_pib_set(trx, phyOFDMMCS, (pib_value_t *)&sun_phy_page_set[trx].phy_mode.ofdm.mcs_val) != MAC_SUCCESS)
+				{
+					//usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
+					//return;
+				}
+			}
+				
+			if(sun_phy_page_set[trx].modulation == OQPSK)
+			{
+				if(tal_pib_set(trx, phyOQPSKRateMode, (pib_value_t *)&sun_phy_page_set[trx].phy_mode.oqpsk.rate_mode) != MAC_SUCCESS)
+				{
+					//usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
+					//return;
+				}
+			}
 			tal_pib[trx].CurrentPage = 9; //check -> needs to be revisited
 
 		}
