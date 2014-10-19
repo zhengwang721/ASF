@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project caption="MAC Serial Interface Beacon FFD AT86RF212B-SAM D21 Xplained Pro" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.bcn_ffd.ncp.samd21_xplained_pro_rf212b" force-caption="true" force-description="true">
+	<project caption="MAC Serial Interface Beacon FFD AT86RF212B (ATZB-212B-XPRO) - SAM D21 Xplained Pro" id="thirdparty.wireless.avr2025_mac.apps.mac.serial_if.bcn_ffd.ncp.samd21_xplained_pro_rf212b" force-caption="true" force-description="true">
 		<info type="description" value="summary">
 		MAC Serial Interface Application - Beacon FFD
 		</info>	
