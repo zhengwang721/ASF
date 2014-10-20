@@ -64,7 +64,7 @@
 static inline bool system_gclk_is_syncing(const uint8_t generator)
 {
 
-	 if (GCLK->SYNCBUSY.reg & ((generator ) << GCLK_SYNCBUSY_GENCTRL_Pos)){
+	 if (GCLK->SYNCBUSY.reg & GCLK_SYNCBUSY_GENCTRL(1 << generator )){
 		 return true;
 	}
 
