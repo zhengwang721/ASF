@@ -107,11 +107,12 @@ enum status_code dac_chan_write_buffer_job(
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_DAC);
 	switch(channel){
 	case DAC_CHANNEL_0:
-		dac_module->INTFLAG.reg = DAC_INTFLAG_UNDERRUN0 | DAC_INTFLAG_EMPTY0;
+	/*TODO: to be confirm the interrupt flag need clear or not...*/
+//		dac_module->INTFLAG.reg = DAC_INTFLAG_UNDERRUN0 | DAC_INTFLAG_EMPTY0;
 		dac_module->INTENSET.reg = DAC_INTENSET_UNDERRUN0 | DAC_INTENSET_EMPTY0;
 		break;
 	case DAC_CHANNEL_1:
-		dac_module->INTFLAG.reg = DAC_INTFLAG_UNDERRUN1 | DAC_INTFLAG_EMPTY1;
+//		dac_module->INTFLAG.reg = DAC_INTFLAG_UNDERRUN1 | DAC_INTFLAG_EMPTY1;
 		dac_module->INTENSET.reg = DAC_INTENSET_UNDERRUN1 | DAC_INTENSET_EMPTY1;
 		break;
 	default:

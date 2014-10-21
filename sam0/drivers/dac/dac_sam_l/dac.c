@@ -65,8 +65,8 @@ static void _dac_set_config(
 	Dac *const dac_module = module_inst->hw;
 
 	/* Set selected DAC start on event to be disable when enabling the module */
-	module_inst->start_on_event[0] = false;
-	module_inst->start_on_event[1] = false;
+	module_inst->start_on_event[DAC_CHANNEL_0] = false;
+	module_inst->start_on_event[DAC_CHANNEL_1] = false;
 
 	uint32_t new_ctrlb = 0;
 
@@ -217,7 +217,7 @@ enum status_code dac_init(
 
 #if DAC_CALLBACK_MODE == true
 	for (uint8_t i = 0; i < DAC_CHANNEL_N; i++) {
-		for (uint8_t j = 0; j < DAC_CALLBACK_N; i++) {
+		for (uint8_t j = 0; j < DAC_CALLBACK_N; j++) {
 			module_inst->callback[i][j] = NULL;
 		}
 	};
@@ -282,6 +282,14 @@ void dac_enable(
 	if (module_inst->reference == DAC_REFERENCE_INTREF) {
 		system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_OUTPUT);
 	}
+
+	if(dac_module->DACCTRL[DAC_CHANNEL_0].reg & DAC_DACCTRL_ENABLE) {
+		while(! (dac_module->STATUS.reg & DAC_STATUS_READY(DAC_CHANNEL_0 + 1))) {
+		};
+	} else if(dac_module->DACCTRL[DAC_CHANNEL_1].reg & DAC_DACCTRL_ENABLE) {
+		while(! (dac_module->STATUS.reg & DAC_STATUS_READY(DAC_CHANNEL_1 + 1))) {
+		};
+	}
 }
 
 /**
@@ -334,25 +342,25 @@ void dac_enable_events(
 	uint32_t event_mask = 0;
 
 	/* Configure Buffer Empty event */
-	if (events->on_event_chan0_start_conversion) {
+	if (events->generate_event_on_chan0_buffer_empty) {
 		event_mask |= DAC_EVCTRL_EMPTYEO0;
 	}
 
 	/* Configure Buffer Empty event */
-	if (events->on_event_chan1_start_conversion) {
+	if (events->generate_event_on_chan0_buffer_empty) {
 		event_mask |= DAC_EVCTRL_EMPTYEO1;
 	}
 
 	/* Configure Conversion Start event */
-	if (events->generate_event_on_chan0_buffer_empty) {
+	if (events->on_event_chan0_start_conversion) {
 		event_mask |= DAC_EVCTRL_STARTEI0;
-		module_inst->start_on_event[0] = true;
+		module_inst->start_on_event[DAC_CHANNEL_0] = true;
 	}
 
 	/* Configure Conversion Start event */
-	if (events->generate_event_on_chan0_buffer_empty) {
+	if (events->on_event_chan1_start_conversion) {
 		event_mask |= DAC_EVCTRL_STARTEI1;
-		module_inst->start_on_event[1] = true;
+		module_inst->start_on_event[DAC_CHANNEL_1] = true;
 	}
 
 	dac_module->EVCTRL.reg |= event_mask;
@@ -395,13 +403,13 @@ void dac_disable_events(
 	/* Configure Conversion Start event */
 	if (events->generate_event_on_chan0_buffer_empty) {
 		event_mask |= DAC_EVCTRL_STARTEI0;
-		module_inst->start_on_event[0] = false;
+		module_inst->start_on_event[DAC_CHANNEL_0] = false;
 	}
 
 	/* Configure Conversion Start event */
 	if (events->generate_event_on_chan0_buffer_empty) {
 		event_mask |= DAC_EVCTRL_STARTEI1;
-		module_inst->start_on_event[1] = false;
+		module_inst->start_on_event[DAC_CHANNEL_1] = false;
 	}
 
 	dac_module->EVCTRL.reg &= ~event_mask;
@@ -493,9 +501,6 @@ void dac_chan_enable(
 
 	/* Enable the module */
 	dac_module->DACCTRL[channel].reg |= DAC_DACCTRL_ENABLE;
-
-	while(! (dac_module->STATUS.reg & DAC_STATUS_READY(channel + 1))) {
-	};
 }
 
 /**
@@ -558,7 +563,7 @@ enum status_code dac_chan_write(
 		/* Wait until the synchronization is complete */
 	}
 
-	if (module_inst->start_on_event) {
+	if (module_inst->start_on_event[channel]) {
 		/* Write the new value to the buffered DAC data register */
 		dac_module->DATABUF[channel].reg = data;
 	} else {
@@ -622,7 +627,7 @@ enum status_code dac_chan_write_buffer_wait(
 #endif
 
 	/* Only support event triggered conversion */
-	if (module_inst->start_on_event == false) {
+	if (module_inst->start_on_event[channel] == false) {
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
 
