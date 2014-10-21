@@ -50,7 +50,7 @@
  *
  * This quick start will transmit a buffer data from master to slave through DMA.
  * In this use case the SPI master will be configured with the following
- * settings on SAMD21 Xplained Pro:
+ * settings on SAM Xplained Pro:
  * - Master Mode enabled
  * - MSB of the data is transmitted first
  * - Transfer mode 0

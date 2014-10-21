@@ -442,6 +442,30 @@ enum rtc_count_compare {
 #endif
 };
 
+#ifdef FEATURE_RTC_PERIODIC_INT
+/**
+ * \brief Available periodic interval source.
+ */
+enum rtc_count_periodic_interval{
+	/** Periodic interval 0 */
+	RTC_COUNT_PERIODIC_INTERVAL_0 = 0,
+	/** Periodic interval 1 */
+	RTC_COUNT_PERIODIC_INTERVAL_1 = 1,
+	/** Periodic interval 2 */
+	RTC_COUNT_PERIODIC_INTERVAL_2 = 2,
+	/** Periodic interval 3 */
+	RTC_COUNT_PERIODIC_INTERVAL_3 = 3,
+	/** Periodic interval 4 */
+	RTC_COUNT_PERIODIC_INTERVAL_4 = 4,
+	/** Periodic interval 5 */
+	RTC_COUNT_PERIODIC_INTERVAL_5 = 5,
+	/** Periodic interval 6 */
+	RTC_COUNT_PERIODIC_INTERVAL_6 = 6,
+	/** Periodic interval 7 */
+	RTC_COUNT_PERIODIC_INTERVAL_7 = 7,
+};
+#endif
+
 #if RTC_COUNT_ASYNC == true
 #ifdef FEATURE_RTC_PERIODIC_INT
 /**
@@ -835,6 +859,55 @@ static inline void rtc_count_clear_overflow(struct rtc_module *const module)
 	rtc_module->MODE0.INTFLAG.reg = RTC_MODE0_INTFLAG_OVF;
 }
 
+#ifdef FEATURE_RTC_PERIODIC_INT
+/**
+ * \brief Check if an RTC periodic interval interrupt has occurred.
+ *
+ * Checks the periodic interval flag in the RTC.
+ *
+ * \param[in,out]  module  RTC hardware module
+ * \param[in]  n  RTC periodic interval interrupt
+ *
+ * \return periodic interval interrupt state of the RTC module.
+ *
+ * \retval true   RTC periodic interval interrupt occurs
+ * \retval false  RTC periodic interval interrupt dosen't occurs
+ */
+static inline bool rtc_count_is_periodic_interval(struct rtc_module *const module,
+										enum rtc_count_periodic_interval n)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
+
+	/* Return status of flag */
+	return (rtc_module->MODE0.INTFLAG.reg & RTC_MODE0_INTFLAG_PER(1 << n));
+}
+
+/**
+ * \brief Clears the RTC periodic interval flag.
+ *
+ * Clears the RTC module counter periodic interval flag, so that new periodic
+ *  interval conditions can be detected.
+ *
+ * \param[in,out]  module  RTC hardware module
+ * \param[in]  n  RTC periodic interval interrupt
+ */
+static inline void rtc_count_clear_periodic_interval(struct rtc_module *const module,
+												enum rtc_count_periodic_interval n)
+{
+	/* Sanity check arguments */
+	Assert(module);
+	Assert(module->hw);
+
+	Rtc *const rtc_module = module->hw;
+
+	/* Clear periodic interval flag */
+	rtc_module->MODE0.INTFLAG.reg = RTC_MODE0_INTFLAG_PER(1 << n);
+}
+#endif
 bool rtc_count_is_compare_match(
 		struct rtc_module *const module,
 		const enum rtc_count_compare comp_index);
