@@ -67,7 +67,7 @@
  * a button is pressed, using a variety of methods and modules within the device.
  *
  * This application has been tested on following boards:
- * - SAM D20/D21/R21/D11 Xplained Pro
+ * - SAM D20/D21/R21/D11/L21 Xplained Pro
  *
  * \section appdoc_sam0_led_toggle_app_usage Usage
  * When run, press the board button to turn on the board LED, release to turn
