@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Events example configuration.
+ * \brief SAM L21 Xplained Pro test configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,16 +41,15 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-//[definition_event]
-#define CONF_EVENT_GENERATOR    EVSYS_ID_GEN_TC4_OVF
-#define CONF_EVENT_USER         EVSYS_ID_USER_DMAC_CH_0
-//[definition_event]
+#define CONF_STDIO_USART          EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE       38400
 
-//[definition_tc]
-#define CONF_TC_MODULE TC4
-//[definition_tc]
-
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#endif /* CONF_TEST_H_INCLUDED */

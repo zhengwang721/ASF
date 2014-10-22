@@ -81,6 +81,7 @@
  *      - SAM D20 Xplained Pro board
  *      - SAM D21 Xplained Pro board
  *      - SAM R21 Xplained Pro board
+ *      - SAM L21 Xplained Pro board
  *
  * \section appdoc_sam0_events_unit_test_setup Setup
  * The following connections has to be made using wires:
@@ -205,7 +206,9 @@ static void test_event_gen_user_init(void)
 	rtc_count_get_config_defaults(&config_rtc_count);
 	config_rtc_count.prescaler           = RTC_COUNT_PRESCALER_DIV_1;
 	config_rtc_count.mode                = RTC_COUNT_MODE_16BIT;
+#ifdef FEATURE_RTC_CONTINUOUSLY_UPDATED
 	config_rtc_count.continuously_update = true;
+#endif
 	config_rtc_count.compare_values[0]   = 50;
 	status = rtc_count_init(&rtc_inst, RTC, &config_rtc_count);
 
