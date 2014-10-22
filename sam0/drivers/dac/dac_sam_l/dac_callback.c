@@ -352,70 +352,69 @@ static void _dac_interrupt_handler(const uint8_t instance)
 	if (dac_hw->INTFLAG.reg & DAC_INTFLAG_EMPTY0) {
 		dac_hw->INTFLAG.reg = DAC_INTFLAG_EMPTY0;
 
-		/* If in a write buffer job */
-		if (module->remaining_conversions[DAC_CHANNEL_0]) {
-
-			/* Fill the data buffer with next data in write buffer */
-			dac_hw->DATABUF[DAC_CHANNEL_0].reg =
-				module->job_buffer[DAC_CHANNEL_0][module->transferred_conversions[DAC_CHANNEL_0]++];
-
-			/* Write buffer size decrement */
-			module->remaining_conversions[DAC_CHANNEL_0] --;
-
-			/* If in a write buffer job and all the data are converted */
-			if (module->remaining_conversions[DAC_CHANNEL_0] == 0) {
-				module->job_status[DAC_CHANNEL_0] = STATUS_OK;
-
-				/* Disable interrupt */
-				dac_hw->INTENCLR.reg = DAC_INTENCLR_EMPTY0;
-				dac_hw->INTFLAG.reg = DAC_INTFLAG_EMPTY0;
-				system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_DAC);
-
-				if ((module->callback) &&
-					 (module->callback_enable[DAC_CHANNEL_0][DAC_CALLBACK_TRANSFER_COMPLETE])) {
-					module->callback[DAC_CHANNEL_0][DAC_CALLBACK_TRANSFER_COMPLETE](0);
-				}
-			}
-		}
-
 		if ((module->callback) &&
 			 (module->callback_enable[DAC_CHANNEL_0][DAC_CALLBACK_DATA_EMPTY])) {
 			module->callback[DAC_CHANNEL_0][DAC_CALLBACK_DATA_EMPTY](0);
 		}
 	}
 
-	if (dac_hw->INTFLAG.reg & DAC_INTFLAG_EMPTY1) {
-		dac_hw->INTFLAG.reg = DAC_INTFLAG_EMPTY1;
+	/* If in a write buffer job */
+	if (module->remaining_conversions[DAC_CHANNEL_0]) {
 
-		/* If in a write buffer job */
-		if (module->remaining_conversions[DAC_CHANNEL_1]) {
+		/* Fill the data buffer with next data in write buffer */
+		dac_hw->DATABUF[DAC_CHANNEL_0].reg =
+			module->job_buffer[DAC_CHANNEL_0][module->transferred_conversions[DAC_CHANNEL_0]++];
 
-			/* Fill the data buffer with next data in write buffer */
-			dac_hw->DATABUF[DAC_CHANNEL_1].reg =
-				module->job_buffer[DAC_CHANNEL_1][module->transferred_conversions[DAC_CHANNEL_1]++];
+		/* Write buffer size decrement */
+		module->remaining_conversions[DAC_CHANNEL_0] --;
 
-			/* Write buffer size decrement */
-			module->remaining_conversions[DAC_CHANNEL_1] --;
+		/* If in a write buffer job and all the data are converted */
+		if (module->remaining_conversions[DAC_CHANNEL_0] == 0) {
+			module->job_status[DAC_CHANNEL_0] = STATUS_OK;
 
-			/* If in a write buffer job and all the data are converted */
-			if (module->remaining_conversions[DAC_CHANNEL_1] == 0) {
-				module->job_status[DAC_CHANNEL_1] = STATUS_OK;
+			/* Disable interrupt */
+			dac_hw->INTENCLR.reg = DAC_INTENCLR_EMPTY0;
+			dac_hw->INTFLAG.reg = DAC_INTFLAG_EMPTY0;
+			system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_DAC);
 
-				/* Disable interrupt */
-				dac_hw->INTENCLR.reg = DAC_INTENCLR_EMPTY1;
-				dac_hw->INTFLAG.reg = DAC_INTFLAG_EMPTY1;
-				system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_DAC);
-
-				if ((module->callback) &&
-					 (module->callback_enable[DAC_CHANNEL_1][DAC_CALLBACK_TRANSFER_COMPLETE])) {
-					module->callback[DAC_CHANNEL_1][DAC_CALLBACK_TRANSFER_COMPLETE](0);
-				}
+			if ((module->callback) &&
+				 (module->callback_enable[DAC_CHANNEL_0][DAC_CALLBACK_TRANSFER_COMPLETE])) {
+				module->callback[DAC_CHANNEL_0][DAC_CALLBACK_TRANSFER_COMPLETE](0);
 			}
 		}
+	}
+
+	if (dac_hw->INTFLAG.reg & DAC_INTFLAG_EMPTY1) {
+		dac_hw->INTFLAG.reg = DAC_INTFLAG_EMPTY1;
 
 		if ((module->callback) &&
 			 (module->callback_enable[DAC_CHANNEL_1][DAC_CALLBACK_DATA_EMPTY])) {
 			module->callback[DAC_CHANNEL_1][DAC_CALLBACK_DATA_EMPTY](0);
+		}
+	}
+	/* If in a write buffer job */
+	if (module->remaining_conversions[DAC_CHANNEL_1]) {
+
+		/* Fill the data buffer with next data in write buffer */
+		dac_hw->DATABUF[DAC_CHANNEL_1].reg =
+			module->job_buffer[DAC_CHANNEL_1][module->transferred_conversions[DAC_CHANNEL_1]++];
+
+		/* Write buffer size decrement */
+		module->remaining_conversions[DAC_CHANNEL_1] --;
+
+		/* If in a write buffer job and all the data are converted */
+		if (module->remaining_conversions[DAC_CHANNEL_1] == 0) {
+			module->job_status[DAC_CHANNEL_1] = STATUS_OK;
+
+			/* Disable interrupt */
+			dac_hw->INTENCLR.reg = DAC_INTENCLR_EMPTY1;
+			dac_hw->INTFLAG.reg = DAC_INTFLAG_EMPTY1;
+			system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_DAC);
+
+			if ((module->callback) &&
+				 (module->callback_enable[DAC_CHANNEL_1][DAC_CALLBACK_TRANSFER_COMPLETE])) {
+				module->callback[DAC_CHANNEL_1][DAC_CALLBACK_TRANSFER_COMPLETE](0);
+			}
 		}
 	}
 }

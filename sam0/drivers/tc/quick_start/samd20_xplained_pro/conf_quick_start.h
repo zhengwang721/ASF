@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TC Quick Start configuration for SAM L21 Xplained Pro
+ * \brief TC Quick Start configuration
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,17 +44,13 @@
 #ifndef CONF_QUICK_START_H_INCLUDED
 #define CONF_QUICK_START_H_INCLUDED
 
-//! [definition_pwm]
+//[definition_pwm]
 /** PWM module to use */
-#define PWM_MODULE      EXT2_PWM_MODULE
+#define PWM_MODULE      EXT1_PWM_MODULE
 /** PWM output pin */
-#define PWM_OUT_PIN     EXT2_PWM_0_PIN
-/** PWM output pin mux */
-#define PWM_OUT_MUX     EXT2_PWM_0_MUX
-//! [definition_pwm]
-
-//! [definition_dma]
-#define M2M_DMAC_TRIGGER_ID TC0_DMAC_ID_MC_0
-//! [definition_dma]
+#define PWM_OUT_PIN     EXT1_PWM_0_PIN
+/** PWM output pinmux */
+#define PWM_OUT_MUX     EXT1_PWM_0_MUX
+//[definition_pwm]
 
 #endif /* CONF_QUICK_START_H_INCLUDED */
