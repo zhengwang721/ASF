@@ -118,10 +118,15 @@
 #define ADC_VAL_DAC_FULL_OUTPUT 4095
 /* Offset due to ADC & DAC errors */
 #define ADC_OFFSET              100
+#if (SAML21)
+#  define DAC_VAL_HALF_VOLT     2047
+#  define DAC_VAL_ONE_VOLT      4095
+#else
 /* Theoretical DAC value for 0.5V output*/
-#define DAC_VAL_HALF_VOLT       512
+#  define DAC_VAL_HALF_VOLT     512
 /* Theoretical DAC value for 1.0V output*/
-#define DAC_VAL_ONE_VOLT        1023
+#  define DAC_VAL_ONE_VOLT      1023
+#endif
 
 /* Structure for UART module connected to EDBG (used for unit test output) */
 struct usart_module cdc_uart_module;
@@ -187,15 +192,20 @@ static void test_dac_init(void)
 
 	/* Configure the DAC module */
 	dac_get_config_defaults(&config);
+#if (SAML21)
+    config.reference    = DAC_REFERENCE_INTREF;
+#else
 	config.reference    = DAC_REFERENCE_INT1V;
+#endif
 	config.clock_source = GCLK_GENERATOR_3;
 	dac_init(&dac_inst, DAC, &config);
-	dac_enable(&dac_inst);
 
 	/* Configure the DAC channel */
 	dac_chan_get_config_defaults(&chan_config);
 	dac_chan_set_config(&dac_inst, DAC_CHANNEL_0, &chan_config);
 	dac_chan_enable(&dac_inst, DAC_CHANNEL_0);
+
+	dac_enable(&dac_inst);
 }
 
 /**
@@ -218,9 +228,15 @@ static void run_adc_init_test(const struct test_case *test)
 	adc_get_config_defaults(&config);
 	config.positive_input = ADC_POSITIVE_INPUT_PIN2;
 	config.negative_input = ADC_NEGATIVE_INPUT_GND;
+#if (SAML21)
+    config.reference      = ADC_REFERENCE_INTREF;
+#else
 	config.reference      = ADC_REFERENCE_INT1V;
+#endif
 	config.clock_source   = GCLK_GENERATOR_3;
+#if !(SAML21)
 	config.gain_factor    = ADC_GAIN_FACTOR_1X;
+#endif
 
 	/* Initialize the ADC */
 	status = adc_init(&adc_inst, ADC, &config);
@@ -425,9 +441,15 @@ static void setup_adc_average_mode_test(const struct test_case *test)
 	adc_get_config_defaults(&config);
 	config.positive_input     = ADC_POSITIVE_INPUT_PIN2;
 	config.negative_input     = ADC_NEGATIVE_INPUT_GND;
+#if (SAML21)
+    config.reference          = ADC_REFERENCE_INTREF;
+#else
 	config.reference          = ADC_REFERENCE_INT1V;
+#endif
 	config.clock_source       = GCLK_GENERATOR_3;
+#if !(SAML21)
 	config.gain_factor        = ADC_GAIN_FACTOR_1X;
+#endif
 
 	/* Re-initialize & enable ADC */
 	status = adc_init(&adc_inst, ADC, &config);
@@ -498,9 +520,15 @@ static void setup_adc_window_mode_test(const struct test_case *test)
 	adc_get_config_defaults(&config);
 	config.positive_input = ADC_POSITIVE_INPUT_PIN2;
 	config.negative_input = ADC_NEGATIVE_INPUT_GND;
+#if (SAML21)
+    config.reference      = ADC_REFERENCE_INTREF;
+#else
 	config.reference      = ADC_REFERENCE_INT1V;
+#endif
 	config.clock_source   = GCLK_GENERATOR_3;
+#if !(SAML21)
 	config.gain_factor    = ADC_GAIN_FACTOR_1X;
+#endif
 	config.resolution     = ADC_RESOLUTION_12BIT;
 	config.freerunning    = true;
 	config.window.window_mode = ADC_WINDOW_MODE_BETWEEN_INVERTED;
