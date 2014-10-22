@@ -194,6 +194,22 @@ enum status_code dac_init(
 	system_gclk_chan_set_config(DAC_GCLK_ID, &gclk_chan_conf);
 	system_gclk_chan_enable(DAC_GCLK_ID);
 
+	/* MUX the DAC VOUT pin */
+	struct system_pinmux_config pin_conf;
+	system_pinmux_get_config_defaults(&pin_conf);
+
+	/* Set up the DAC VOUT0 pin */
+	pin_conf.mux_position = MUX_PA02B_DAC_VOUT0;
+	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
+	pin_conf.input_pull   = SYSTEM_PINMUX_PIN_PULL_NONE;
+	system_pinmux_pin_set_config(PIN_PA02B_DAC_VOUT0, &pin_conf);
+
+	/* Set up the DAC VOUT1 pin */
+	pin_conf.mux_position = MUX_PA05B_DAC_VOUT1;
+	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
+	pin_conf.input_pull   = SYSTEM_PINMUX_PIN_PULL_NONE;
+	system_pinmux_pin_set_config(PIN_PA05B_DAC_VOUT1, &pin_conf);
+
 	/* Write configuration to module */
 	_dac_set_config(module_inst, config);
 
@@ -326,13 +342,23 @@ void dac_enable_events(
 
 	uint32_t event_mask = 0;
 
+	/* Configure Enable Inversion of input event */
+	if (events->generate_event_on_chan0_falling_edge) {
+		event_mask |= DAC_EVCTRL_INVEI0;
+	}
+
+	/* Configure Enable Inversion of input event */
+	if (events->generate_event_on_chan1_falling_edge) {
+		event_mask |= DAC_EVCTRL_INVEI1;
+	}
+
 	/* Configure Buffer Empty event */
 	if (events->generate_event_on_chan0_buffer_empty) {
 		event_mask |= DAC_EVCTRL_EMPTYEO0;
 	}
 
 	/* Configure Buffer Empty event */
-	if (events->generate_event_on_chan0_buffer_empty) {
+	if (events->generate_event_on_chan1_buffer_empty) {
 		event_mask |= DAC_EVCTRL_EMPTYEO1;
 	}
 
@@ -411,6 +437,7 @@ void dac_chan_get_config_defaults(
 	config->current        = DAC_CURRENT_12M;
 	config->run_in_standby = false;
 	config->dither_mode    = false;
+	config->refresh_period = 1;
 }
 
 
