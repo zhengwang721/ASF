@@ -30,7 +30,7 @@
 		<build type="doxygen-example-path" value="quick_start"/>
 		<build type="doxygen-quick-start" value="asfdoc_sam0_opamp_exqsg"/>
 
-		<device-support value="sam0"/>
+		<device-support value="saml21"/>
 
 		<require idref="sam0.utils"/>
 		<require idref="sam0.drivers.system.pinmux"/>
