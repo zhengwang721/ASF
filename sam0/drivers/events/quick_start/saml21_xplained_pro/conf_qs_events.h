@@ -45,8 +45,8 @@
 #define CONF_EXAMPLE_H_INCLUDED
 
 //[definition_event]
-#define CONF_EVENT_GENERATOR    EVSYS_ID_GEN_TC4_MCX_0
-#define CONF_EVENT_USER         EVSYS_ID_USER_TC3_EVU
+#define CONF_EVENT_GENERATOR    EVSYS_ID_GEN_NONE
+#define CONF_EVENT_USER         EVSYS_ID_USER_PORT_EV_0
 //[definition_event]
 
 #endif /* CONF_EXAMPLE_H_INCLUDED */

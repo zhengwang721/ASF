@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief Events example configuration.
+ * \brief SAM L21 Xplained Pro board configuration.
  *
  * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
@@ -41,16 +41,7 @@
  *
  */
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-//[definition_event]
-#define CONF_EVENT_GENERATOR    EVSYS_ID_GEN_TC4_OVF
-#define CONF_EVENT_USER         EVSYS_ID_USER_DMAC_CH_0
-//[definition_event]
-
-//[definition_tc]
-#define CONF_TC_MODULE TC4
-//[definition_tc]
-
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */
