@@ -80,18 +80,6 @@
  *
  * \subsection asfdoc_sam0_tc_dma_use_case_setup_code Code
  *
- * Add to the main application source file, before any functions, according to
- * the kit used:
- * - SAM D21 Xplained Pro.
- *   \snippet samd21_xplained_pro/conf_quick_start.h definition_pwm
- *   \snippet samd21_xplained_pro/conf_quick_start.h definition_dma
- * - SAM R21 Xplained Pro.
- *   \snippet samr21_xplained_pro/conf_quick_start.h definition_pwm
- *   \snippet samr21_xplained_pro/conf_quick_start.h definition_dma
- * - SAM D11 Xplained Pro.
- *   \snippet samd11_xplained_pro/conf_quick_start.h definition_pwm
- *   \snippet samd11_xplained_pro/conf_quick_start.h definition_dma
- *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_dma.c module_inst
  * \snippet qs_tc_dma.c dma_resource

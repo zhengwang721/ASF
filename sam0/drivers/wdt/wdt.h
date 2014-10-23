@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_wdt_group SAM Watchdog Driver (WDT)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of the device's Watchdog Timer module, including the enabling,
  * disabling, and kicking within the device. The following driver API modes are
  * covered by this manual:
@@ -60,9 +60,9 @@
  *  - WDT (Watchdog Timer)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_wdt_prerequisites
