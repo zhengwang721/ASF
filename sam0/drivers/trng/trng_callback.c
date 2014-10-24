@@ -42,6 +42,7 @@
  */
 
 #include "trng_callback.h"
+#include "system_interrupt.h"
 
 struct trng_module *_trng_instance;
 
@@ -74,6 +75,9 @@ enum status_code trng_register_callback(
 
 	/* Set the bit corresponding to the callback_type */
 	module->register_callback_mask |= (1 << callback_type);
+
+	/* Enable interrupts for this TRNG module */
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_TRNG);
 
 	return STATUS_OK;
 }

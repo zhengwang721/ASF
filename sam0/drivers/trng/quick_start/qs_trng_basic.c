@@ -94,6 +94,10 @@ int main(void)
 		//! [main_2]
 		//! [main_3]
 		port_pin_toggle_output_level(LED_0_PIN);
+		/* Add a short delay to see LED toggle */
+		volatile uint32_t delay = 50000;
+		while(delay--) {
+		}
 		//! [main_3]
 	}
 	//! [main]
