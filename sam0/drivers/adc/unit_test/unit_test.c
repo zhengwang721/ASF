@@ -194,7 +194,7 @@ static void test_dac_init(void)
 	/* Configure the DAC module */
 	dac_get_config_defaults(&config);
 #if (SAML21)
-    config.reference    = DAC_REFERENCE_INTREF;
+	config.reference    = DAC_REFERENCE_INTREF;
 #else
 	config.reference    = DAC_REFERENCE_INT1V;
 #endif
@@ -230,7 +230,7 @@ static void run_adc_init_test(const struct test_case *test)
 	config.positive_input = ADC_POSITIVE_INPUT_PIN2;
 	config.negative_input = ADC_NEGATIVE_INPUT_GND;
 #if (SAML21)
-    config.reference      = ADC_REFERENCE_INTREF;
+	config.reference      = ADC_REFERENCE_INTREF;
 #else
 	config.reference      = ADC_REFERENCE_INT1V;
 #endif
@@ -443,7 +443,7 @@ static void setup_adc_average_mode_test(const struct test_case *test)
 	config.positive_input     = ADC_POSITIVE_INPUT_PIN2;
 	config.negative_input     = ADC_NEGATIVE_INPUT_GND;
 #if (SAML21)
-    config.reference          = ADC_REFERENCE_INTREF;
+	config.reference          = ADC_REFERENCE_INTREF;
 #else
 	config.reference          = ADC_REFERENCE_INT1V;
 #endif
@@ -522,7 +522,8 @@ static void setup_adc_window_mode_test(const struct test_case *test)
 	config.positive_input = ADC_POSITIVE_INPUT_PIN2;
 	config.negative_input = ADC_NEGATIVE_INPUT_GND;
 #if (SAML21)
-    config.reference      = ADC_REFERENCE_INTREF;
+	config.reference      = ADC_REFERENCE_INTREF;
+	config.clock_prescaler = ADC_CLOCK_PRESCALER_DIV16;
 #else
 	config.reference      = ADC_REFERENCE_INT1V;
 #endif
