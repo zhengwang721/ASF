@@ -228,11 +228,7 @@ enum status_code events_trigger(struct events_resource *resource)
 		return STATUS_ERR_UNSUPPORTED_DEV;
 	}
 
-	/* The ONDEMAND bit has to be set while triggering the software event */
-	EVSYS->CHANNEL[resource->channel].reg |= EVSYS_CHANNEL_ONDEMAND;
-
-	EVSYS->SWEVT.reg |= _events_find_bit_position(resource->channel,
-			_EVENTS_START_OFFSET_BUSY_BITS);
+	EVSYS->SWEVT.reg = (0x01UL << resource->channel);
 
 	system_interrupt_leave_critical_section();
 

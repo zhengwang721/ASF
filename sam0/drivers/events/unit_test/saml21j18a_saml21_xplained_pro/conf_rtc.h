@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Events example configuration.
+ * \brief SAM RTC Driver Configuration Header
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,17 +40,13 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_RTC_H_INCLUDED
+#define CONF_RTC_H_INCLUDED
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+/** Select RTC clock. Use 1.024kHz from 32kHz internal ULP oscillator(OSCULP32K)
+ *  for RTC clock , before using the clock, OSCULP32K and its 1kHz output should
+ *  be enabled in the clock configuration file.
+ */
+#  define RTC_CLOCK_SOURCE    RTC_CLOCK_SELECTION_ULP1K
 
-//[definition_event]
-#define CONF_EVENT_GENERATOR    EVSYS_ID_GEN_TC4_OVF
-#define CONF_EVENT_USER         EVSYS_ID_USER_DMAC_CH_0
-//[definition_event]
-
-//[definition_tc]
-#define CONF_TC_MODULE TC4
-//[definition_tc]
-
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#endif

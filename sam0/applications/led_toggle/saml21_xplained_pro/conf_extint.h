@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief Events example configuration.
+ * \brief SAM L21 External Interrupt Driver Configuration Header
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,17 +40,9 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_EXTINT_H_INCLUDED
+#define CONF_EXTINT_H_INCLUDED
 
-#ifndef CONF_EXAMPLE_H_INCLUDED
-#define CONF_EXAMPLE_H_INCLUDED
+#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
 
-//[definition_event]
-#define CONF_EVENT_GENERATOR    EVSYS_ID_GEN_TC4_OVF
-#define CONF_EVENT_USER         EVSYS_ID_USER_DMAC_CH_0
-//[definition_event]
-
-//[definition_tc]
-#define CONF_TC_MODULE TC4
-//[definition_tc]
-
-#endif /* CONF_EXAMPLE_H_INCLUDED */
+#endif

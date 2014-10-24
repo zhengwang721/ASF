@@ -47,11 +47,11 @@
  * In this use case, the EVENT module is configured for:
  *  \li Synchronous event path with rising edge detection
  *  \li TC4 as event generator on the allocated event channel
- *  \li No event channel user attached
+ *  \li One event channel user attached
  *  \li An event interrupt hook is used to execute some code when an event is detected
  *
  * In this usecase TC4 is used as event generator, generating events on overflow.
- * No user attached, counting events on the channel. To be able to execute
+ * One user attached, counting events on the channel. To be able to execute
  * some code when an event is detected, an interrupt hook is used. The interrupt
  * hook will also count the number of events detected and toggle a led on the board
  * each time an event is detected.
@@ -122,7 +122,7 @@
  * -# Create config_tc and config_events configuration structure instances.
  *  \snippet qs_events_interrupt_hook.c setup_6
  *  \br
- * 
+ *
  * -# Initialize the TC module configuration structure with safe default values.
  * \note This function shall always be called on new configuration structure instances
  *       to make sure that all structure members is initialized.
