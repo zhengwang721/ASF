@@ -85,7 +85,7 @@
 /*
  * Default value of transmit power of transceiver: Use highest tx power
  */
-#define TAL_TRANSMIT_POWER_DEFAULT              (TX_PWR_TOLERANCE | 0x04)
+#define TAL_TRANSMIT_POWER_DEFAULT              (0x04)
 #endif
 
 /**

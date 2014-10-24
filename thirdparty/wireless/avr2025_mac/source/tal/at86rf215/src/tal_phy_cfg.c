@@ -153,7 +153,7 @@ static retval_t conf_ofdm(trx_id_t trx_id)
 
         /* Configure BB */
         pal_trx_bit_write(reg_offset + SR_BBC0_PC_PT, BB_MROFDM);
-        pal_trx_bit_write(reg_offset + SR_BBC0_OFDMC_OPT, tal_pib[trx_id].phy.phy_mode.ofdm.option - 1);
+        pal_trx_bit_write(reg_offset + SR_BBC0_OFDMC_OPT, tal_pib[trx_id].phy.phy_mode.ofdm.option);
     }
 
     return status;

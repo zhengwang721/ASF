@@ -340,7 +340,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 					printf("\r\nSun PHY Page Changed");
 					if(phy_temp->modulation == OFDM)
 					{
-						if(tal_pib_set(trx, phyOFDMMCS, (pib_value_t *)&(phy_temp->phy_mode).ofdm.mcs_val) != MAC_SUCCESS)
+						if(tal_pib_set(trx, phyOFDMMCS, (pib_value_t *)&(phy_temp->phy_mode).ofdm.mcs_val) == MAC_SUCCESS)
 						{
 							printf("\r\nOFDM MCS = %d", (phy_temp->phy_mode).ofdm.mcs_val);
 						}
@@ -352,7 +352,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 				
 					if(phy_temp->modulation == OQPSK)
 					{
-						if(tal_pib_set(trx, phyOQPSKRateMode, (pib_value_t *)&(phy_temp->phy_mode).oqpsk.rate_mode) != MAC_SUCCESS)
+						if(tal_pib_set(trx, phyOQPSKRateMode, (pib_value_t *)&(phy_temp->phy_mode).oqpsk.rate_mode) == MAC_SUCCESS)
 						{
 							printf("\r\nOQPSK Rate mode = %d", (phy_temp->phy_mode).oqpsk.rate_mode);
 						}

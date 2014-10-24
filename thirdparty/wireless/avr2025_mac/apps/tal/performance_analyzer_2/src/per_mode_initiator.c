@@ -2976,8 +2976,7 @@ void get_current_configuration(trx_id_t trx)
 		
 
 		/* Tx_power configurations */
-		//temp = CONV_DBM_TO_phyTransmitPower(curr_trx_config_params[trx].tx_power_dbm);
-		tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&curr_trx_config_params[trx].tx_power_dbm);
+			tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&curr_trx_config_params[trx].tx_power_dbm);
 		//tal_set_tx_pwr(trx,REGISTER_VALUE,curr_trx_config_params[trx].tx_power_reg);
 
     /* trx state configuration */

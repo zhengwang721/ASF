@@ -107,7 +107,7 @@ void init_state_init(trx_id_t trx, void *arg)
     /* select the configuration mode */
     configuration_mode_selection(trx);
 
-	//if(trx == RF09)
+	if(trx == RF09)
 	{
 			/* Configure PHY for sub-1GHz */
 			phy_t phy;
@@ -121,7 +121,7 @@ void init_state_init(trx_id_t trx, void *arg)
 					app_alert();
 			}
 	}
-	//else
+	else
 	{
 		/* Configure PHY for 2.4GHz */
 		phy_t phy;

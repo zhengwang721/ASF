@@ -1179,7 +1179,7 @@ oqpsk_chip_rate_t get_oqpsk_chip_rate(trx_id_t trx_id,sun_freq_band_t freq_band)
 	uint16_t rate = 0;
 	uint8_t rate_mode;
 
-	for (uint8_t i = 0; i < OQPSK_CHIP_RATE_TABLE_SIZE; i++)
+	for (uint8_t i = 0; i < OQPSK_CHIP_RATE_FREQ_TABLE_ROW_SIZE; i++)
 	{
 		if (freq_band == (uint16_t)PGM_READ_WORD(&oqpsk_chip_rate_freq_table[i][0]))//vk
 		{

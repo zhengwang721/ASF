@@ -555,9 +555,137 @@ static retval_t check_valid_freq_range(trx_id_t trx_id)
  */
 static retval_t apply_channel_settings(trx_id_t trx_id)
 {
-    debug_text_val(PSTR("apply_channel_settings(), trx_id ="), trx_id);
+	  retval_t status = check_valid_freq_range(trx_id);
+    if (status == MAC_SUCCESS)
+    {
+        uint32_t freq = tal_pib[trx_id].phy.freq_f0;
+        uint32_t spacing = tal_pib[trx_id].phy.ch_spacing;
+        uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+        uint16_t reg_val;
+		uint8_t temp_val;
 
-    /* Check if spacing and frequency are within the correct range. */
+        /* Offset handling for 2.4GHz only */
+        if (trx_id == RF24)
+        {
+            freq -= 1500000000;
+        }
+        reg_val = (uint16_t)(freq / 25000);
+        pal_trx_write(rf_reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
+
+        /* Set channel spacing */
+        spacing /= 25000; // adjust to register scaling
+        pal_trx_reg_write(rf_reg_offset + RG_RF09_CS, (uint8_t)spacing);
+
+        /*
+         * Set channel and channel mode.
+         * Touching the CNM register forces the calculation of the actual frequency.
+         */
+//#ifdef	SUPPORT_LEGACY_OQPSK
+if(tal_pib[trx_id].phy.modulation == LEG_OQPSK)
+{
+
+uint16_t value;
+ if ((tal_pib[trx_id].phy.freq_band == CHINA_780))
+ {
+	 if(tal_pib[trx_id].CurrentChannel>3)
+	 {	 
+	 value = tal_pib[trx_id].CurrentChannel=3; //check
+	 }
+	 else
+	 {
+	
+	 value = tal_pib[trx_id].CurrentChannel;
+	 }
+ }
+	 else if ((tal_pib[trx_id].phy.freq_band == WORLD_2450))
+	 {
+
+if((tal_pib[trx_id].CurrentChannel >26) || (tal_pib[trx_id].CurrentChannel < 11))
+{
+	tal_pib[trx_id].CurrentChannel=11;
+	value = tal_pib[trx_id].CurrentChannel-11;
+}
+else
+{
+	
+	value = tal_pib[trx_id].CurrentChannel-11;
+}
+	 
+	 }
+	 
+	else if ((tal_pib[trx_id].phy.freq_band == US_915))
+	{
+	if((tal_pib[trx_id].CurrentChannel >10) || (tal_pib[trx_id].CurrentChannel < 1))
+	{
+		tal_pib[trx_id].CurrentChannel=1;
+		value = tal_pib[trx_id].CurrentChannel-1;
+	}
+	else
+	{
+		
+		value = tal_pib[trx_id].CurrentChannel-1;
+	}
+	}
+	
+	 pal_trx_write(rf_reg_offset + RG_RF09_CNL,
+	 (uint8_t *)&value, 2);
+ 
+ 
+}
+else
+	 {
+		uint16_t max_ch = get_sun_max_ch_no(trx_id);
+		if(tal_pib[trx_id].CurrentChannel > (max_ch-1))
+		{
+		tal_pib[trx_id].CurrentChannel = (max_ch-1);		
+		}
+		if ((tal_pib[trx_id].phy.freq_band == EU_863)&&(tal_pib[trx_id].phy.modulation == OQPSK))
+		{
+			if(tal_pib[trx_id].CurrentChannel == 0)
+			{
+				freq = 868300000;
+
+
+			}			
+			else if(tal_pib[trx_id].CurrentChannel == 1)
+			{
+				 freq = 868950000;
+
+			}
+			else if(tal_pib[trx_id].CurrentChannel == 2)
+			{
+				freq = 869525000;
+
+			}	
+			temp_val = 0;
+			reg_val = (uint16_t)(freq / 25000);					
+			pal_trx_write(rf_reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
+			pal_trx_write(rf_reg_offset + RG_RF09_CNL,
+			(uint8_t *)&temp_val, 2); // write cnl as 0 to get the same freq as freq			
+		}
+		else
+		{
+        pal_trx_write(rf_reg_offset + RG_RF09_CNL,
+                      (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
+		}
+}					  
+        /* Wait until channel set is completed */
+        if (trx_state[trx_id] == RF_TXPREP)
+        {
+            while (TAL_RF_IS_IRQ_SET(trx_id, RF_IRQ_TRXRDY) == 0)
+            {
+                /* Wait until new channel is set */
+            }
+            TAL_RF_IRQ_CLR(trx_id, RF_IRQ_TRXRDY);
+            //debug_text(PSTR("RF_IRQ_TRXRDY: channel change completed"));
+        }
+    }
+
+    return status;
+	
+ /*   debug_text_val(PSTR("apply_channel_settings(), trx_id ="), trx_id);
+
+    / * Check if spacing and frequency are within the correct range. * /
 #ifdef REDUCED_PARAM_CHECK
     retval_t status = MAC_SUCCESS;
 #else
@@ -570,7 +698,7 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
         uint16_t reg_val;
 
-        /* Offset handling for 2.4GHz only */
+        / * Offset handling for 2.4GHz only * /
         if (trx_id == RF24)
         {
             freq -= 1500000000;
@@ -581,17 +709,17 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
 #endif
         pal_trx_write(reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
 
-        /* Set channel spacing */
+        / * Set channel spacing * /
         spacing /= 25000; // adjust to register scaling
 #ifdef IQ_RADIO
         pal_trx_reg_write(RF215_RF, reg_offset + RG_RF09_CS, (uint8_t)spacing);
 #endif
         pal_trx_reg_write(reg_offset + RG_RF09_CS, (uint8_t)spacing);
 
-        /*
+        / *
          * Set channel and channel mode.
          * Touching the CNM register forces the calculation of the actual frequency.
-         */
+         * /
 #ifdef IQ_RADIO
         pal_trx_write(RF215_RF, reg_offset + RG_RF09_CNL,
                       (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
@@ -599,7 +727,7 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
         pal_trx_write(reg_offset + RG_RF09_CNL,
                       (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
 
-        /* Wait until channel set is completed */
+        / * Wait until channel set is completed * /
         if (trx_state[trx_id] == RF_TXPREP)
         {
             wait_for_txprep(trx_id);
@@ -607,7 +735,7 @@ static retval_t apply_channel_settings(trx_id_t trx_id)
         }
     }
 
-    return status;
+    return status;*/
 }
 
 
@@ -915,7 +1043,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
                 uint32_t ch;
                 if (get_supported_channels_tuple(trx_id, &ch) == MAC_SUCCESS)
                 {
-                    tal_pib[trx_id].CurrentChannel = (uint16_t)(ch & 0xFFFF);
+                   // tal_pib[trx_id].CurrentChannel = (uint16_t)(ch & 0xFFFF);
                 }
                 else
                 {
@@ -1257,6 +1385,7 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
  */
 static retval_t set_channel(trx_id_t trx_id, uint16_t ch)
 {
+	uint16_t channel_to_set = ch;
     retval_t ret = MAC_SUCCESS;
 
 #if (defined SUPPORT_LEGACY_OQPSK) && (!defined REDUCED_PARAM_CHECK)
@@ -1311,7 +1440,7 @@ static retval_t set_channel(trx_id_t trx_id, uint16_t ch)
 
     if (ret == MAC_SUCCESS)
     {
-        tal_pib[trx_id].CurrentChannel = ch;
+        tal_pib[trx_id].CurrentChannel = channel_to_set;
 
         rf_cmd_state_t previous_state = trx_state[trx_id];
         if (trx_state[trx_id] == RF_RX)
@@ -1323,10 +1452,10 @@ static retval_t set_channel(trx_id_t trx_id, uint16_t ch)
         uint16_t reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
 #ifdef IQ_RADIO
         pal_trx_write(RF215_RF, reg_offset + RG_RF09_CNL,
-                      (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
+                      (uint8_t *)&ch, 2);
 #endif
         pal_trx_write(reg_offset + RG_RF09_CNL,
-                      (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
+                      (uint8_t *)&ch, 2);
 
         if (trx_state[trx_id] == RF_TXPREP)
         {
@@ -1369,7 +1498,7 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
             {
                 tal_pib[trx_id].phy.ch_spacing = LEG_2450_CH_SPAC;
                 tal_pib[trx_id].phy.freq_band = WORLD_2450;
-                tal_pib[trx_id].phy.freq_f0 = LEG_2450_F0 - (11 * LEG_2450_CH_SPAC);
+                tal_pib[trx_id].phy.freq_f0 = LEG_2450_F0 ;//- (11 * LEG_2450_CH_SPAC);
                 tal_pib[trx_id].phy.modulation = LEG_OQPSK;
                 tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_2000;
             }
@@ -1399,7 +1528,7 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
     {
         uint32_t ch;
         get_supported_channels_tuple(trx_id, &ch);
-        tal_pib[trx_id].CurrentChannel = (uint16_t)(ch & 0xFFFF);
+       // tal_pib[trx_id].CurrentChannel = (uint16_t)(ch & 0xFFFF);
         calculate_pib_values(trx_id);
         ret = config_phy(trx_id);
     }
