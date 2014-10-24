@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21/D10/D11/L21 ADC with DMA quick start
+ * \brief SAM D21/D11/L21 ADC with DMA quick start
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
