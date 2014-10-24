@@ -329,33 +329,42 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 	        sizeof(phy_t)));
 	        if ((mac_frame_info->len_no_crc) == expected_frame_size)
 	        {
-		//	phy_t sun_phy_page_set = (phy_t *)&(msg->payload);
-			if (tal_pib_set(trx, phySetting, (pib_value_t *)&msg->payload) != MAC_SUCCESS)
-			{
-				if(phy_temp->modulation == OFDM)
+				//	phy_t sun_phy_page_set = (phy_t *)&(msg->payload);
+				if (tal_pib_set(trx, phySetting, (pib_value_t *)&msg->payload) != MAC_SUCCESS)
 				{
-					if(tal_pib_set(trx, phyOFDMMCS, (pib_value_t *)&(phy_temp->phy_mode).ofdm.mcs_val) != MAC_SUCCESS)
-					{
-						return;
-					}
+
+					printf("SUN Channel Page Change Failure");
 				}
+				else
+				{							
+					printf("\r\nSun PHY Page Changed");
+					if(phy_temp->modulation == OFDM)
+					{
+						if(tal_pib_set(trx, phyOFDMMCS, (pib_value_t *)&(phy_temp->phy_mode).ofdm.mcs_val) != MAC_SUCCESS)
+						{
+							printf("\r\nOFDM MCS = %d", (phy_temp->phy_mode).ofdm.mcs_val);
+						}
+						else
+						{
+							printf("\r\nSetting OFDM MCS failed");
+						}
+					}
 				
-				if(phy_temp->modulation == OQPSK)
-				{
-					if(tal_pib_set(trx, phyOQPSKRateMode, (pib_value_t *)&(phy_temp->phy_mode).oqpsk.rate_mode) != MAC_SUCCESS)
+					if(phy_temp->modulation == OQPSK)
 					{
-						return;
+						if(tal_pib_set(trx, phyOQPSKRateMode, (pib_value_t *)&(phy_temp->phy_mode).oqpsk.rate_mode) != MAC_SUCCESS)
+						{
+							printf("\r\nOQPSK Rate mode = %d", (phy_temp->phy_mode).oqpsk.rate_mode);
+						}
+						else
+						{
+							printf("\r\nSetting OQPSK Rate mode failed");
+						}
 					}
 				}
-				printf("SUN Channel Page Change Failure");
-			}
-			else
-			{							
-			printf("\r\nSun PHY Page Changed");			
-			}
 	        }
-	        break;
-	        } /* case SET_SUN_PAGE */			
+	    break;
+	    } /* case SET_SUN_PAGE */			
 
         case PER_TEST_PKT:
             {

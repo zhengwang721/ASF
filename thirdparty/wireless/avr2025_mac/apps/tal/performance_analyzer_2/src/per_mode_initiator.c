@@ -2004,15 +2004,13 @@ void perf_set_sun_page(trx_id_t trx,uint8_t *param_val)
 		if((sun_phy_page_set[trx].phy_mode.ofdm.mcs_val > MCS6)  || 
 		(sun_phy_page_set[trx].phy_mode.ofdm.option > OFDM_OPT_4) || 
 		((sun_phy_page_set[trx].phy_mode.ofdm.option == OFDM_OPT_3)&& (sun_phy_page_set[trx].phy_mode.ofdm.mcs_val < MCS1)) ||
-		 ((sun_phy_page_set[trx].phy_mode.ofdm.option == OFDM_OPT_4)&& (sun_phy_page_set[trx].phy_mode.ofdm.mcs_val < MCS2)))
-		 
+		((sun_phy_page_set[trx].phy_mode.ofdm.option == OFDM_OPT_4)&& (sun_phy_page_set[trx].phy_mode.ofdm.mcs_val < MCS2)))
 		{
 			usr_perf_set_confirm(trx,INVALID_VALUE,PARAM_CHANNEL_PAGE,(param_value_t *)param_val);
 			return;
 		}
 		sun_page[trx].sun_phy_mode.mr_ofdm.interl = sun_phy_page_set[trx].phy_mode.ofdm.interl =  *temp_param_val++;
 		get_ofdm_freq_f0(trx,sun_page[trx].freq_band,sun_page[trx].sun_phy_mode.mr_ofdm.option,&sun_phy_page_set[trx].freq_f0,&sun_phy_page_set[trx].ch_spacing);	
-		
 	}
 	else if(sun_page[trx].modulation == OQPSK)
 	{
