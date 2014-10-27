@@ -368,16 +368,6 @@ static inline void gmac_tx_pause_zero_quantum_frame(Gmac* p_gmac)
 }
 
 /**
- * \brief Read snapshot.
- *
- * \param p_gmac   Pointer to the GMAC instance.
- */
-static inline void gmac_read_snapshot(Gmac* p_gmac)
-{
-	p_gmac->GMAC_NCR |= GMAC_NCR_RDS;
-}
-
-/**
  * \brief Store receivetime stamp to memory.
  *
  * \param p_gmac   Pointer to the GMAC instance.

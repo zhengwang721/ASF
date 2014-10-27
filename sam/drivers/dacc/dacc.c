@@ -248,10 +248,10 @@ void dacc_write_conversion_data(Dacc *p_dacc, uint32_t ul_data)
 void dacc_set_writeprotect(Dacc *p_dacc, uint32_t ul_enable)
 {
 	if (ul_enable) {
-		p_dacc->DACC_WPMR = DACC_WPMR_WPKEY(DACC_WP_KEY)
+		p_dacc->DACC_WPMR = DACC_WPMR_WPKEY_PASSWD
 			          | DACC_WPMR_WPEN;
 	} else {
-		p_dacc->DACC_WPMR = DACC_WPMR_WPKEY(DACC_WP_KEY);
+		p_dacc->DACC_WPMR = DACC_WPMR_WPKEY_PASSWD;
 	}
 }
 

@@ -51,26 +51,28 @@
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief Uart hardware registers */
 typedef struct {
-  WoReg UART_CR;       /**< \brief (Uart Offset: 0x0000) Control Register */
-  RwReg UART_MR;       /**< \brief (Uart Offset: 0x0004) Mode Register */
-  WoReg UART_IER;      /**< \brief (Uart Offset: 0x0008) Interrupt Enable Register */
-  WoReg UART_IDR;      /**< \brief (Uart Offset: 0x000C) Interrupt Disable Register */
-  RoReg UART_IMR;      /**< \brief (Uart Offset: 0x0010) Interrupt Mask Register */
-  RoReg UART_SR;       /**< \brief (Uart Offset: 0x0014) Status Register */
-  RoReg UART_RHR;      /**< \brief (Uart Offset: 0x0018) Receive Holding Register */
-  WoReg UART_THR;      /**< \brief (Uart Offset: 0x001C) Transmit Holding Register */
-  RwReg UART_BRGR;     /**< \brief (Uart Offset: 0x0020) Baud Rate Generator Register */
-  RoReg Reserved1[55];
-  RwReg UART_RPR;      /**< \brief (Uart Offset: 0x100) Receive Pointer Register */
-  RwReg UART_RCR;      /**< \brief (Uart Offset: 0x104) Receive Counter Register */
-  RwReg UART_TPR;      /**< \brief (Uart Offset: 0x108) Transmit Pointer Register */
-  RwReg UART_TCR;      /**< \brief (Uart Offset: 0x10C) Transmit Counter Register */
-  RwReg UART_RNPR;     /**< \brief (Uart Offset: 0x110) Receive Next Pointer Register */
-  RwReg UART_RNCR;     /**< \brief (Uart Offset: 0x114) Receive Next Counter Register */
-  RwReg UART_TNPR;     /**< \brief (Uart Offset: 0x118) Transmit Next Pointer Register */
-  RwReg UART_TNCR;     /**< \brief (Uart Offset: 0x11C) Transmit Next Counter Register */
-  WoReg UART_PTCR;     /**< \brief (Uart Offset: 0x120) Transfer Control Register */
-  RoReg UART_PTSR;     /**< \brief (Uart Offset: 0x124) Transfer Status Register */
+  __O  uint32_t UART_CR;       /**< \brief (Uart Offset: 0x0000) Control Register */
+  __IO uint32_t UART_MR;       /**< \brief (Uart Offset: 0x0004) Mode Register */
+  __O  uint32_t UART_IER;      /**< \brief (Uart Offset: 0x0008) Interrupt Enable Register */
+  __O  uint32_t UART_IDR;      /**< \brief (Uart Offset: 0x000C) Interrupt Disable Register */
+  __I  uint32_t UART_IMR;      /**< \brief (Uart Offset: 0x0010) Interrupt Mask Register */
+  __I  uint32_t UART_SR;       /**< \brief (Uart Offset: 0x0014) Status Register */
+  __I  uint32_t UART_RHR;      /**< \brief (Uart Offset: 0x0018) Receive Holding Register */
+  __O  uint32_t UART_THR;      /**< \brief (Uart Offset: 0x001C) Transmit Holding Register */
+  __IO uint32_t UART_BRGR;     /**< \brief (Uart Offset: 0x0020) Baud Rate Generator Register */
+  __I  uint32_t Reserved1[48];
+  __IO uint32_t UART_WPMR;     /**< \brief (Uart Offset: 0x00E4) Write Protection Mode Register */
+  __I  uint32_t Reserved2[6];
+  __IO uint32_t UART_RPR;      /**< \brief (Uart Offset: 0x100) Receive Pointer Register */
+  __IO uint32_t UART_RCR;      /**< \brief (Uart Offset: 0x104) Receive Counter Register */
+  __IO uint32_t UART_TPR;      /**< \brief (Uart Offset: 0x108) Transmit Pointer Register */
+  __IO uint32_t UART_TCR;      /**< \brief (Uart Offset: 0x10C) Transmit Counter Register */
+  __IO uint32_t UART_RNPR;     /**< \brief (Uart Offset: 0x110) Receive Next Pointer Register */
+  __IO uint32_t UART_RNCR;     /**< \brief (Uart Offset: 0x114) Receive Next Counter Register */
+  __IO uint32_t UART_TNPR;     /**< \brief (Uart Offset: 0x118) Transmit Next Pointer Register */
+  __IO uint32_t UART_TNCR;     /**< \brief (Uart Offset: 0x11C) Transmit Next Counter Register */
+  __O  uint32_t UART_PTCR;     /**< \brief (Uart Offset: 0x120) Transfer Control Register */
+  __I  uint32_t UART_PTSR;     /**< \brief (Uart Offset: 0x124) Transfer Status Register */
 } Uart;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- UART_CR : (UART Offset: 0x0000) Control Register -------- */
@@ -150,6 +152,11 @@ typedef struct {
 #define UART_BRGR_CD_Pos 0
 #define UART_BRGR_CD_Msk (0xffffu << UART_BRGR_CD_Pos) /**< \brief (UART_BRGR) Clock Divisor */
 #define UART_BRGR_CD(value) ((UART_BRGR_CD_Msk & ((value) << UART_BRGR_CD_Pos)))
+/* -------- UART_WPMR : (UART Offset: 0x00E4) Write Protection Mode Register -------- */
+#define UART_WPMR_WPEN (0x1u << 0) /**< \brief (UART_WPMR) Write Protection Enable */
+#define UART_WPMR_WPKEY_Pos 8
+#define UART_WPMR_WPKEY_Msk (0xffffffu << UART_WPMR_WPKEY_Pos) /**< \brief (UART_WPMR) Write Protection Key */
+#define   UART_WPMR_WPKEY_PASSWD (0x554152u << 8) /**< \brief (UART_WPMR) Writing any other value in this field aborts the write operation.Always reads as 0. */
 /* -------- UART_RPR : (UART Offset: 0x100) Receive Pointer Register -------- */
 #define UART_RPR_RXPTR_Pos 0
 #define UART_RPR_RXPTR_Msk (0xffffffffu << UART_RPR_RXPTR_Pos) /**< \brief (UART_RPR) Receive Pointer Register */

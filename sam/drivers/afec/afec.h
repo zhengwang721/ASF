@@ -404,10 +404,10 @@ static inline void afec_set_writeprotect(Afec *const afec,
 		const bool is_enable)
 {
 	if (is_enable) {
-		afec->AFEC_WPMR = AFEC_WPMR_WPEN | AFEC_WPMR_WPKEY_ADC;
+		afec->AFEC_WPMR = AFEC_WPMR_WPEN | AFEC_WPMR_WPKEY_PASSWD;
 	} else {
 		afec->AFEC_WPMR &= ~AFEC_WPMR_WPEN;
-		afec->AFEC_WPMR |= AFEC_WPMR_WPKEY_ADC;
+		afec->AFEC_WPMR |= AFEC_WPMR_WPKEY_PASSWD;
 	}
 }
 

@@ -394,8 +394,8 @@ void acc_set_writeprotect(
  * \param[in] p_acc Module hardware register base address pointer
  *
  * \return The ACC register write-protection status.
- * \retval 0                 No write-protection error
- * \retval ACC_WPSR_WPROTERR Write-protection error
+ * \retval 0                No write-protection error
+ * \retval ACC_WPSR_WPVS    Write-protection error
  */
 uint32_t acc_get_writeprotect_status(
 		Acc *p_acc)
@@ -403,7 +403,7 @@ uint32_t acc_get_writeprotect_status(
 	/* Validate the parameters. */
 	Assert(p_acc);
 	
-	return p_acc->ACC_WPSR & ACC_WPSR_WPROTERR;
+	return p_acc->ACC_WPSR & ACC_WPSR_WPVS;
 }
 
 /// @cond

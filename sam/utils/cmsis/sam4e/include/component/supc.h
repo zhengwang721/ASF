@@ -51,24 +51,24 @@
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief Supc hardware registers */
 typedef struct {
-  WoReg SUPC_CR;   /**< \brief (Supc Offset: 0x00) Supply Controller Control Register */
-  RwReg SUPC_SMMR; /**< \brief (Supc Offset: 0x04) Supply Controller Supply Monitor Mode Register */
-  RwReg SUPC_MR;   /**< \brief (Supc Offset: 0x08) Supply Controller Mode Register */
-  RwReg SUPC_WUMR; /**< \brief (Supc Offset: 0x0C) Supply Controller Wake-up Mode Register */
-  RwReg SUPC_WUIR; /**< \brief (Supc Offset: 0x10) Supply Controller Wake-up Inputs Register */
-  RoReg SUPC_SR;   /**< \brief (Supc Offset: 0x14) Supply Controller Status Register */
+  __O  uint32_t SUPC_CR;   /**< \brief (Supc Offset: 0x00) Supply Controller Control Register */
+  __IO uint32_t SUPC_SMMR; /**< \brief (Supc Offset: 0x04) Supply Controller Supply Monitor Mode Register */
+  __IO uint32_t SUPC_MR;   /**< \brief (Supc Offset: 0x08) Supply Controller Mode Register */
+  __IO uint32_t SUPC_WUMR; /**< \brief (Supc Offset: 0x0C) Supply Controller Wake-up Mode Register */
+  __IO uint32_t SUPC_WUIR; /**< \brief (Supc Offset: 0x10) Supply Controller Wake-up Inputs Register */
+  __I  uint32_t SUPC_SR;   /**< \brief (Supc Offset: 0x14) Supply Controller Status Register */
 } Supc;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- SUPC_CR : (SUPC Offset: 0x00) Supply Controller Control Register -------- */
 #define SUPC_CR_VROFF (0x1u << 2) /**< \brief (SUPC_CR) Voltage Regulator Off */
-#define   SUPC_CR_VROFF_NO_EFFECT (0x0u << 2) /**< \brief (SUPC_CR) no effect. */
-#define   SUPC_CR_VROFF_STOP_VREG (0x1u << 2) /**< \brief (SUPC_CR) if KEY is correct, asserts the vddcore_nreset and stops the voltage regulator. */
+#define   SUPC_CR_VROFF_NO_EFFECT (0x0u << 2) /**< \brief (SUPC_CR) No effect. */
+#define   SUPC_CR_VROFF_STOP_VREG (0x1u << 2) /**< \brief (SUPC_CR) If KEY is correct, asserts the vddcore_nreset and stops the voltage regulator. */
 #define SUPC_CR_XTALSEL (0x1u << 3) /**< \brief (SUPC_CR) Crystal Oscillator Select */
-#define   SUPC_CR_XTALSEL_NO_EFFECT (0x0u << 3) /**< \brief (SUPC_CR) no effect. */
-#define   SUPC_CR_XTALSEL_CRYSTAL_SEL (0x1u << 3) /**< \brief (SUPC_CR) if KEY is correct, switches the slow clock on the crystal oscillator output. */
+#define   SUPC_CR_XTALSEL_NO_EFFECT (0x0u << 3) /**< \brief (SUPC_CR) No effect. */
+#define   SUPC_CR_XTALSEL_CRYSTAL_SEL (0x1u << 3) /**< \brief (SUPC_CR) If KEY is correct, switches the slow clock on the crystal oscillator output. */
 #define SUPC_CR_KEY_Pos 24
 #define SUPC_CR_KEY_Msk (0xffu << SUPC_CR_KEY_Pos) /**< \brief (SUPC_CR) Password */
-#define SUPC_CR_KEY(value) ((SUPC_CR_KEY_Msk & ((value) << SUPC_CR_KEY_Pos)))
+#define   SUPC_CR_KEY_PASSWD (0xA5u << 24) /**< \brief (SUPC_CR) Writing any other value in this field aborts the write operation. */
 /* -------- SUPC_SMMR : (SUPC Offset: 0x04) Supply Controller Supply Monitor Mode Register -------- */
 #define SUPC_SMMR_SMTH_Pos 0
 #define SUPC_SMMR_SMTH_Msk (0xfu << SUPC_SMMR_SMTH_Pos) /**< \brief (SUPC_SMMR) Supply Monitor Threshold */
@@ -97,33 +97,33 @@ typedef struct {
 #define   SUPC_MR_ONREG_ONREG_UNUSED (0x0u << 14) /**< \brief (SUPC_MR) Internal voltage regulator is not used (external power supply is used) */
 #define   SUPC_MR_ONREG_ONREG_USED (0x1u << 14) /**< \brief (SUPC_MR) internal voltage regulator is used */
 #define SUPC_MR_OSCBYPASS (0x1u << 20) /**< \brief (SUPC_MR) Oscillator Bypass */
-#define   SUPC_MR_OSCBYPASS_NO_EFFECT (0x0u << 20) /**< \brief (SUPC_MR) no effect. Clock selection depends on XTALSEL value. */
-#define   SUPC_MR_OSCBYPASS_BYPASS (0x1u << 20) /**< \brief (SUPC_MR) the 32-KHz XTAL oscillator is selected and is put in bypass mode. */
+#define   SUPC_MR_OSCBYPASS_NO_EFFECT (0x0u << 20) /**< \brief (SUPC_MR) No effect. Clock selection depends on XTALSEL value. */
+#define   SUPC_MR_OSCBYPASS_BYPASS (0x1u << 20) /**< \brief (SUPC_MR) The 32 kHz crystal oscillator is selected and put in bypass mode. */
 #define SUPC_MR_KEY_Pos 24
 #define SUPC_MR_KEY_Msk (0xffu << SUPC_MR_KEY_Pos) /**< \brief (SUPC_MR) Password Key */
-#define SUPC_MR_KEY(value) ((SUPC_MR_KEY_Msk & ((value) << SUPC_MR_KEY_Pos)))
+#define   SUPC_MR_KEY_PASSWD (0xA5u << 24) /**< \brief (SUPC_MR) Writing any other value in this field aborts the write operation. */
 /* -------- SUPC_WUMR : (SUPC Offset: 0x0C) Supply Controller Wake-up Mode Register -------- */
 #define SUPC_WUMR_FWUPEN (0x1u << 0) /**< \brief (SUPC_WUMR) Force Wake-up Enable */
-#define   SUPC_WUMR_FWUPEN_NOT_ENABLE (0x0u << 0) /**< \brief (SUPC_WUMR) the Force Wake-up pin has no wake-up effect. */
-#define   SUPC_WUMR_FWUPEN_ENABLE (0x1u << 0) /**< \brief (SUPC_WUMR) the Force Wake-up pin low forces the wake-up of the core power supply. */
+#define   SUPC_WUMR_FWUPEN_NOT_ENABLE (0x0u << 0) /**< \brief (SUPC_WUMR) The force wake-up pin has no wake-up effect. */
+#define   SUPC_WUMR_FWUPEN_ENABLE (0x1u << 0) /**< \brief (SUPC_WUMR) The force wake-up pin low forces the wake-up of the core power supply. */
 #define SUPC_WUMR_SMEN (0x1u << 1) /**< \brief (SUPC_WUMR) Supply Monitor Wake-up Enable */
-#define   SUPC_WUMR_SMEN_NOT_ENABLE (0x0u << 1) /**< \brief (SUPC_WUMR) the supply monitor detection has no wake-up effect. */
-#define   SUPC_WUMR_SMEN_ENABLE (0x1u << 1) /**< \brief (SUPC_WUMR) the supply monitor detection forces the wake-up of the core power supply. */
-#define SUPC_WUMR_RTTEN (0x1u << 2) /**< \brief (SUPC_WUMR) Real Time Timer Wake-up Enable */
-#define   SUPC_WUMR_RTTEN_NOT_ENABLE (0x0u << 2) /**< \brief (SUPC_WUMR) the RTT alarm signal has no wake-up effect. */
-#define   SUPC_WUMR_RTTEN_ENABLE (0x1u << 2) /**< \brief (SUPC_WUMR) the RTT alarm signal forces the wake-up of the core power supply. */
-#define SUPC_WUMR_RTCEN (0x1u << 3) /**< \brief (SUPC_WUMR) Real Time Clock Wake-up Enable */
-#define   SUPC_WUMR_RTCEN_NOT_ENABLE (0x0u << 3) /**< \brief (SUPC_WUMR) the RTC alarm signal has no wake-up effect. */
-#define   SUPC_WUMR_RTCEN_ENABLE (0x1u << 3) /**< \brief (SUPC_WUMR) the RTC alarm signal forces the wake-up of the core power supply. */
-#define SUPC_WUMR_LPDBCEN0 (0x1u << 5) /**< \brief (SUPC_WUMR) Low power Debouncer ENable WKUP0 */
-#define   SUPC_WUMR_LPDBCEN0_NOT_ENABLE (0x0u << 5) /**< \brief (SUPC_WUMR) the WKUP0 input pin is not connected with low power debouncer. */
-#define   SUPC_WUMR_LPDBCEN0_ENABLE (0x1u << 5) /**< \brief (SUPC_WUMR) the WKUP0 input pin is connected with low power debouncer and can force a core wake-up. */
-#define SUPC_WUMR_LPDBCEN1 (0x1u << 6) /**< \brief (SUPC_WUMR) Low power Debouncer ENable WKUP1 */
-#define   SUPC_WUMR_LPDBCEN1_NOT_ENABLE (0x0u << 6) /**< \brief (SUPC_WUMR) the WKUP1input pin is not connected with low power debouncer. */
-#define   SUPC_WUMR_LPDBCEN1_ENABLE (0x1u << 6) /**< \brief (SUPC_WUMR) the WKUP1 input pin is connected with low power debouncer and can force a core wake-up. */
-#define SUPC_WUMR_LPDBCCLR (0x1u << 7) /**< \brief (SUPC_WUMR) Low power Debouncer Clear */
-#define   SUPC_WUMR_LPDBCCLR_NOT_ENABLE (0x0u << 7) /**< \brief (SUPC_WUMR) a low power debounce event does not create an immediate clear on first half GPBR registers. */
-#define   SUPC_WUMR_LPDBCCLR_ENABLE (0x1u << 7) /**< \brief (SUPC_WUMR) a low power debounce event on WKUP0 or WKUP1 generates an immediate clear on first half GPBR registers. */
+#define   SUPC_WUMR_SMEN_NOT_ENABLE (0x0u << 1) /**< \brief (SUPC_WUMR) The supply monitor detection has no wake-up effect. */
+#define   SUPC_WUMR_SMEN_ENABLE (0x1u << 1) /**< \brief (SUPC_WUMR) The supply monitor detection forces the wake-up of the core power supply. */
+#define SUPC_WUMR_RTTEN (0x1u << 2) /**< \brief (SUPC_WUMR) Real-time Timer Wake-up Enable */
+#define   SUPC_WUMR_RTTEN_NOT_ENABLE (0x0u << 2) /**< \brief (SUPC_WUMR) The RTT alarm signal has no wake-up effect. */
+#define   SUPC_WUMR_RTTEN_ENABLE (0x1u << 2) /**< \brief (SUPC_WUMR) The RTT alarm signal forces the wake-up of the core power supply. */
+#define SUPC_WUMR_RTCEN (0x1u << 3) /**< \brief (SUPC_WUMR) Real-time Clock Wake-up Enable */
+#define   SUPC_WUMR_RTCEN_NOT_ENABLE (0x0u << 3) /**< \brief (SUPC_WUMR) The RTC alarm signal has no wake-up effect. */
+#define   SUPC_WUMR_RTCEN_ENABLE (0x1u << 3) /**< \brief (SUPC_WUMR) The RTC alarm signal forces the wake-up of the core power supply. */
+#define SUPC_WUMR_LPDBCEN0 (0x1u << 5) /**< \brief (SUPC_WUMR) Low-power Debouncer Enable WKUP0 */
+#define   SUPC_WUMR_LPDBCEN0_NOT_ENABLE (0x0u << 5) /**< \brief (SUPC_WUMR) The WKUP0 input pin is not connected with low-power debouncer. */
+#define   SUPC_WUMR_LPDBCEN0_ENABLE (0x1u << 5) /**< \brief (SUPC_WUMR) The WKUP0 input pin is connected with low-power debouncer and forces a system wake-up. */
+#define SUPC_WUMR_LPDBCEN1 (0x1u << 6) /**< \brief (SUPC_WUMR) Low-power Debouncer Enable WKUP1 */
+#define   SUPC_WUMR_LPDBCEN1_NOT_ENABLE (0x0u << 6) /**< \brief (SUPC_WUMR) The WKUP1 input pin is not connected with low-power debouncer. */
+#define   SUPC_WUMR_LPDBCEN1_ENABLE (0x1u << 6) /**< \brief (SUPC_WUMR) The WKUP1 input pin is connected with low-power debouncer and forces a system wake-up. */
+#define SUPC_WUMR_LPDBCCLR (0x1u << 7) /**< \brief (SUPC_WUMR) Low-power Debouncer Clear */
+#define   SUPC_WUMR_LPDBCCLR_NOT_ENABLE (0x0u << 7) /**< \brief (SUPC_WUMR) A low-power debounce event does not create an immediate clear on the first half of GPBR registers. */
+#define   SUPC_WUMR_LPDBCCLR_ENABLE (0x1u << 7) /**< \brief (SUPC_WUMR) A low-power debounce event on WKUP0 or WKUP1 generates an immediate clear on the first half of GPBR registers. */
 #define SUPC_WUMR_FWUPDBC_Pos 8
 #define SUPC_WUMR_FWUPDBC_Msk (0x7u << SUPC_WUMR_FWUPDBC_Pos) /**< \brief (SUPC_WUMR) Force Wake-up Debouncer Period */
 #define   SUPC_WUMR_FWUPDBC_IMMEDIATE (0x0u << 8) /**< \brief (SUPC_WUMR) Immediate, no debouncing, detected active at least on one Slow Clock edge. */
@@ -141,15 +141,15 @@ typedef struct {
 #define   SUPC_WUMR_WKUPDBC_4096_SCLK (0x4u << 12) /**< \brief (SUPC_WUMR) WKUPx shall be in its active state for at least 4,096 SLCK periods */
 #define   SUPC_WUMR_WKUPDBC_32768_SCLK (0x5u << 12) /**< \brief (SUPC_WUMR) WKUPx shall be in its active state for at least 32,768 SLCK periods */
 #define SUPC_WUMR_LPDBC_Pos 16
-#define SUPC_WUMR_LPDBC_Msk (0x7u << SUPC_WUMR_LPDBC_Pos) /**< \brief (SUPC_WUMR) Low Power DeBounCer Period */
-#define   SUPC_WUMR_LPDBC_DISABLE (0x0u << 16) /**< \brief (SUPC_WUMR) Disable the low power debouncer. */
-#define   SUPC_WUMR_LPDBC_2_RTCOUT0 (0x1u << 16) /**< \brief (SUPC_WUMR) WKUP0/1 in its active state for at least 2 RTCOUT0 periods */
-#define   SUPC_WUMR_LPDBC_3_RTCOUT0 (0x2u << 16) /**< \brief (SUPC_WUMR) WKUP0/1 in its active state for at least 3 RTCOUT0 periods */
-#define   SUPC_WUMR_LPDBC_4_RTCOUT0 (0x3u << 16) /**< \brief (SUPC_WUMR) WKUP0/1 in its active state for at least 4 RTCOUT0 periods */
-#define   SUPC_WUMR_LPDBC_5_RTCOUT0 (0x4u << 16) /**< \brief (SUPC_WUMR) WKUP0/1 in its active state for at least 5 RTCOUT0 periods */
-#define   SUPC_WUMR_LPDBC_6_RTCOUT0 (0x5u << 16) /**< \brief (SUPC_WUMR) WKUP0/1 in its active state for at least 6 RTCOUT0 periods */
-#define   SUPC_WUMR_LPDBC_7_RTCOUT0 (0x6u << 16) /**< \brief (SUPC_WUMR) WKUP0/1 in its active state for at least 7 RTCOUT0 periods */
-#define   SUPC_WUMR_LPDBC_8_RTCOUT0 (0x7u << 16) /**< \brief (SUPC_WUMR) WKUP0/1 in its active state for at least 8 RTCOUT0 periods */
+#define SUPC_WUMR_LPDBC_Msk (0x7u << SUPC_WUMR_LPDBC_Pos) /**< \brief (SUPC_WUMR) Low-power Debouncer Period */
+#define   SUPC_WUMR_LPDBC_DISABLE (0x0u << 16) /**< \brief (SUPC_WUMR) Disable the low-power debouncers. */
+#define   SUPC_WUMR_LPDBC_2_RTCOUT0 (0x1u << 16) /**< \brief (SUPC_WUMR) WKUP0/1 in active state for at least 2 RTCOUTx periods */
+#define   SUPC_WUMR_LPDBC_3_RTCOUT0 (0x2u << 16) /**< \brief (SUPC_WUMR) WKUP0/1 in active state for at least 3 RTCOUTx periods */
+#define   SUPC_WUMR_LPDBC_4_RTCOUT0 (0x3u << 16) /**< \brief (SUPC_WUMR) WKUP0/1 in active state for at least 4 RTCOUTx periods */
+#define   SUPC_WUMR_LPDBC_5_RTCOUT0 (0x4u << 16) /**< \brief (SUPC_WUMR) WKUP0/1 in active state for at least 5 RTCOUTx periods */
+#define   SUPC_WUMR_LPDBC_6_RTCOUT0 (0x5u << 16) /**< \brief (SUPC_WUMR) WKUP0/1 in active state for at least 6 RTCOUTx periods */
+#define   SUPC_WUMR_LPDBC_7_RTCOUT0 (0x6u << 16) /**< \brief (SUPC_WUMR) WKUP0/1 in active state for at least 7 RTCOUTx periods */
+#define   SUPC_WUMR_LPDBC_8_RTCOUT0 (0x7u << 16) /**< \brief (SUPC_WUMR) WKUP0/1 in active state for at least 8 RTCOUTx periods */
 /* -------- SUPC_WUIR : (SUPC Offset: 0x10) Supply Controller Wake-up Inputs Register -------- */
 #define SUPC_WUIR_WKUPEN0 (0x1u << 0) /**< \brief (SUPC_WUIR) Wake-up Input Enable 0 */
 #define   SUPC_WUIR_WKUPEN0_DISABLE (0x0u << 0) /**< \brief (SUPC_WUIR) the corresponding wake-up input has no wake-up effect. */

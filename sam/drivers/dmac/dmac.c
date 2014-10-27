@@ -674,10 +674,9 @@ void dmac_set_writeprotect(
 	Assert(p_dmac);
 	
 	if (ul_enable) {
-		p_dmac->DMAC_WPMR = DMAC_WPMR_WPKEY(DMAC_WPKEY) |
-				DMAC_WPMR_WPEN;
+		p_dmac->DMAC_WPMR = DMAC_WPMR_WPKEY_PASSWD | DMAC_WPMR_WPEN;
 	} else {
-		p_dmac->DMAC_WPMR = DMAC_WPMR_WPKEY(DMAC_WPKEY);
+		p_dmac->DMAC_WPMR = DMAC_WPMR_WPKEY_PASSWD;
 	}
 }
 
