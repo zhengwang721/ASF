@@ -208,8 +208,8 @@ uint8_t ant_div_before_ct;
 
 #if (TAL_TYPE == AT86RF233)
 /* Backup for ISM frequency related registers for CW Transmission */
-static uint8_t cc_band_ct;
-static uint8_t cc_number_ct;
+uint8_t cc_band_ct;
+uint8_t cc_number_ct;
 #endif /* End of #if (TAL_TYPE == AT86RF233) */
 
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
@@ -1047,102 +1047,6 @@ static void set_parameter_on_transmitter_node(retval_t status)
 		break;
 	}
 
-	/* Handle tx power in dBm */
-	case TX_POWER_DBM:
-	{
-		int8_t tx_pwr_dbm;
-#if ((TAL_TYPE == AT86RF233))
-		uint8_t previous_RPC_value;
-#endif
-		tx_pwr_dbm = (int8_t)set_param_cb.param_value;
-		temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
-
-		/* If RPC enabled, disble RPC to change the TX power value refer
-		 * sec 9.2.4 */
-#if (TAL_TYPE == AT86RF233)
-		/* Store currents RPC settings */
-		tal_trx_reg_read(RG_TRX_RPC, &previous_RPC_value);
-		tal_rpc_mode_config(DISABLE_ALL_RPC_MODES);
-#endif
-		pib_value.pib_value_8bit = temp_var;
-		tal_pib_set(phyTransmitPower, &pib_value);
-#if (TAL_TYPE == AT86RF233)
-		/* Restore RPC settings. */
-		tal_trx_reg_write(RG_TRX_RPC, previous_RPC_value);
-#endif
-
-		/* update the data base with this value */
-		curr_trx_config_params.tx_power_dbm = tx_pwr_dbm;
-
-#if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
-
-		/*Tx power in dBm also need to be updated as it changes with reg
-		 * value */
-		tal_get_curr_trx_config(TX_PWR,
-				&(curr_trx_config_params.tx_power_reg));
-#endif
-		/* Send Set confirmation with status SUCCESS */
-		param_value.param_value_8bit = tx_pwr_dbm;
-		usr_perf_set_confirm(MAC_SUCCESS,
-				PARAM_TX_POWER_DBM,
-				&param_value);
-		break;
-	}
-
-#if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
-	/* Handle tx power in reg value */
-	case TX_POWER_REG:
-	{
-		uint8_t tx_pwr_reg;
-		int8_t tx_pwr_dbm;
-#if (TAL_TYPE == AT86RF233)
-		uint8_t previous_RPC_value;
-#endif
-		tx_pwr_reg = set_param_cb.param_value;
-		if (MAC_SUCCESS ==
-				tal_convert_reg_value_to_dBm(tx_pwr_reg,
-				&tx_pwr_dbm)) {
-			temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
-
-			/* If RPC enabled, disble RPC to change the TX power
-			 * value refer sec 9.2.4 */
-#if (TAL_TYPE == AT86RF233)
-			/* Store currents RPC settings */
-			tal_trx_reg_read(RG_TRX_RPC, &previous_RPC_value);
-			tal_rpc_mode_config(DISABLE_ALL_RPC_MODES);
-#endif
-			pib_value.pib_value_8bit = temp_var;
-			tal_pib_set(phyTransmitPower, &pib_value);
-
-			/* To make sure that TX_PWR register is updated with the
-			 * value whatever user povided.Otherwise lowest dBm
-			 * power
-			 * (highest reg value will be taken)
-			 */
-			tal_set_tx_pwr(REGISTER_VALUE, tx_pwr_reg);
-#if (TAL_TYPE == AT86RF233)
-			/* Restore RPC settings. */
-			tal_trx_reg_write(RG_TRX_RPC, previous_RPC_value);
-#endif
-
-			/* update the data base with this value */
-			curr_trx_config_params.tx_power_reg = tx_pwr_reg;
-
-			/*Tx power in dBm also need to be updated as it changes
-			 * with reg value */
-			curr_trx_config_params.tx_power_dbm = tx_pwr_dbm;
-
-			/* Send Set confirmation with status */
-			param_value.param_value_8bit = tx_pwr_reg;
-			usr_perf_set_confirm(MAC_SUCCESS,
-					PARAM_TX_POWER_REG,
-					&param_value);
-		}
-
-		break;
-	}
-
-#endif /* End of (TAL_TYPE != AT86RF212) */
 	default:
 		break;
 	}
@@ -2339,6 +2243,7 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 	param_value_t param_value;
 	pib_value_t pib_value;
 
+				
 	switch (tx_power_format) {
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 	/* To handle TX_PWR reg value input */
@@ -2361,13 +2266,6 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 		if (tx_pwr_reg <= MIN_TX_PWR_REG_VAL)
 #endif
 		{
-/*
-			if (true == peer_found) {
-				/ * send the tx power in Reg value to remote node
-				** /
-				send_parameters_changed(TX_POWER_REG,
-						(uint8_t)tx_pwr_reg);
-			} else {*/ //sriram
 				/* set the Tx power on source node in case of no
 				 * peer */
 				if (MAC_SUCCESS ==
@@ -2458,19 +2356,13 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 #endif /* End of EXT_RF_FRONT_END_CTRL */
 
 		{
-/*
-			if (true == peer_found) {
-				/ *send the tx power in dBm to remote node * /
-				send_parameters_changed(TX_POWER_DBM,
-						(uint8_t)tx_pwr_dbm);
-			} else {*/ //sriram
-				/* set the Tx power on source node in case of no
-				 * peer */
+
 				temp_var = CONV_DBM_TO_phyTransmitPower(
 						tx_pwr_dbm);
+
 				pib_value.pib_value_8bit = temp_var;
 				tal_pib_set(phyTransmitPower, &pib_value);
-
+				
 				/* update the data base with this value */
 				curr_trx_config_params.tx_power_dbm
 					= tx_pwr_dbm;
@@ -2536,6 +2428,7 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 	default:
 		break;
 	}
+	
 }
 
 /**

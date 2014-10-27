@@ -90,7 +90,8 @@ bool cw_ack_sent=false,remote_cw_start=false;
 uint8_t cw_start_mode;
 bool pulse_mode = false;
 bool rx_on_mode = false;
-
+extern uint8_t cc_band_ct;
+extern uint8_t cc_number_ct;
 /* === DEFINES============================================================== */
 
 #define DEFAULT_NO_OF_TEST_FRAMES               (100)
@@ -178,12 +179,12 @@ void config_per_test_parameters(void)
 
 #if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2))
 	curr_trx_config_params.rpc_enable
-		= default_trx_config_params.rpc_enable = true;
+		= default_trx_config_params.rpc_enable = false;
 
 	/* Enable RPC feature by default */
-	tal_rpc_mode_config(ENABLE_ALL_RPC_MODES);
+	tal_rpc_mode_config(DISABLE_ALL_RPC_MODES);
 	/* Reset RX_SAFE Mode in TRX_CTRL_2 */
-	tal_trx_reg_write(RG_TRX_CTRL_2, DISABLE_RX_SAFE_MODE);
+	tal_trx_reg_write(RG_TRX_CTRL_2, ENABLE_RX_SAFE_MODE);
 #endif
 	if (peer_found == true) {
 		curr_trx_config_params.trx_state
@@ -775,7 +776,7 @@ void recover_all_settings(void)
 
 	/*RPC settings are reseted during tal_reset,hence reconfiguring based
 	 *on old config*/
-#if (TAL_TYPE == ATMEGARFR2)
+#if ((TAL_TYPE == ATMEGARFR2)||(TAL_TYPE == AT86RF233))
 	if (true == curr_trx_config_params.rpc_enable) {
 		tal_rpc_mode_config(ENABLE_ALL_RPC_MODES); /* RPC feature
 		                                            * configuration. */

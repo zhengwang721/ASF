@@ -56,7 +56,7 @@
 #include "sio2host.h"
 #include "perf_api.h"
 #include "perf_api_serial_handler.h"
-
+#include "tal_helper.h"
 /**
  * \addtogroup group_serial_parser
  * \{
@@ -391,7 +391,7 @@ static inline void handle_incoming_msg(void)
 		return;
 		}
 	else
-{
+	{
 		sio_rx_buf[MESSAGE_ID_POS] &=  0X7F;
 	}		
 		
@@ -837,11 +837,14 @@ static inline void handle_incoming_msg(void)
 		if ((PER_TEST_INITIATOR == node_info.main_state) || (PER_TEST_RECEPTOR == node_info.main_state) ||
 				(SINGLE_NODE_TESTS == node_info.main_state)
 				) {
+		
+			
 			read_trx_registers(((uint16_t)(sio_rx_buf[
 						REGISTER_ADDR_POS +
 						1] <<
 					8) |
 					(sio_rx_buf[REGISTER_ADDR_POS])));
+
 		} else {
 			/* Send the confirmation with status as INVALID_CMD
 			 * as this command is not allowed in this state
@@ -886,12 +889,14 @@ static inline void handle_incoming_msg(void)
 		if ((PER_TEST_INITIATOR == node_info.main_state) || (PER_TEST_RECEPTOR == node_info.main_state) ||
 				(SINGLE_NODE_TESTS == node_info.main_state)
 				) {
+					
 			write_trx_registers(((uint16_t)(sio_rx_buf[
 						REGISTER_ADDR_POS +
 						1] <<
 					8) |
 					(sio_rx_buf[REGISTER_ADDR_POS])),
 					sio_rx_buf[REGISTER_VAL_POS] );
+					
 		} else {
 			/* Send the confirmation with status as INVALID_CMD
 			 * as this command is not allowed in this state
@@ -941,6 +946,7 @@ static inline void handle_incoming_msg(void)
 		if ((PER_TEST_INITIATOR == node_info.main_state) || (PER_TEST_RECEPTOR == node_info.main_state) ||
 				(SINGLE_NODE_TESTS == node_info.main_state)
 				) {
+	
 			dump_trx_register_values(((uint16_t)(sio_rx_buf[
 						START_REG_ADDR_POS +
 						1] <<
@@ -950,6 +956,8 @@ static inline void handle_incoming_msg(void)
 					+ 1] <<
 					8) |
 					(sio_rx_buf[END_REG_ADDR_POS])));
+					
+
 		} else {
 			/* Send the confirmation with status as INVALID_CMD
 			 * as this command is not allowed in this state

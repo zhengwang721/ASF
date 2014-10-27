@@ -130,6 +130,12 @@ extern bool pkt_stream_stop;
 extern uint32_t pkt_stream_gap_time ;
 extern bool rdy_to_tx;
 extern bool rx_on_mode;
+
+static uint8_t remote_cmd_len;
+uint8_t* remote_cmd_ptr;
+static bool remote_cmd_rx=false;
+
+
 /* ! \} */
 
 /* === IMPLEMENTATION ====================================================== */
@@ -171,6 +177,12 @@ void per_mode_receptor_init(void *parameter)
  */
 void per_mode_receptor_task(void)
 {
+	if(remote_cmd_rx)
+	{
+		convert_ota_serial_frame_rx(remote_cmd_ptr,remote_cmd_len);	
+		remote_cmd_rx = false;
+	}	
+	
 	/* For Range Test  in PER Mode the receptor has to poll for a button
 	 * press to initiate marker transmission */
 	if (range_test_in_progress || remote_cw_start || ((!pkt_stream_stop && rdy_to_tx && !node_info.transmitting))) {
@@ -631,9 +643,11 @@ if(rx_on_mode)
 		}
 		remote_cmd_seq_num = msg->seq_num;
 		/*Command received by the receptor to start a test ,from the initiator node*/
-		uint8_t serial_data_len;	
-		serial_data_len = *(mac_frame_info->mpdu + 12);
-		convert_ota_serial_frame_rx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);
+		remote_cmd_len = *(mac_frame_info->mpdu + 12);
+		remote_cmd_ptr = msg->payload.remote_test_req_data.remote_serial_data;
+		remote_cmd_rx = true;
+		//serial_data_len = *(mac_frame_info->mpdu + 12); sriram 
+		//convert_ota_serial_frame_rx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);
 		break;
 	}
 	case RANGE_TEST_START_PKT:
