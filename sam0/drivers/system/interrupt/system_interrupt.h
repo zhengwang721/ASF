@@ -60,6 +60,7 @@ extern "C" {
  *  - Atmel® | SMART™ SAM D20/D21
  *  - Atmel® | SMART™ SAM R21
  *  - Atmel® | SMART™ SAM D10/D11
+ *  - Atmel® | SMART™ SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_system_interrupt_prerequisites
@@ -360,6 +361,9 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for SAML21</td>
  *	</tr>
  *	<tr>
  *		<td>Added support for SAMD10/D11</td>

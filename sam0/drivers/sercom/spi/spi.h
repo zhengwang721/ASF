@@ -63,6 +63,7 @@
  *  - Atmel® | SMART™ SAM D20/D21
  *  - Atmel® | SMART™ SAM R21
  *  - Atmel® | SMART™ SAM D10/D11
+ *  - Atmel® | SMART™ SAM L21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_sercom_spi_prerequisites
@@ -100,19 +101,19 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_SLAVE_SELECT_LOW_DETECT</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_HARDWARE_SLAVE_SELECT</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_ERROR_INTERRUPT</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SPI_SYNC_SCHEME_VERSION_2</td>
- *    <td>SAM D21/R21/D10/D11</td>
+ *    <td>SAM D21/R21/D10/D11/L21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -371,8 +372,7 @@ extern "C" {
 #endif
 
 #if (CONF_SPI_MASTER_ENABLE == false) && (CONF_SPI_SLAVE_ENABLE == false)
-#error "Not possible compile SPI driver, invalid driver configuration.        \
-Make sure that either/both CONF_SPI_MASTER_ENABLE/CONF_SPI_SLAVE_ENABLE is set to true"
+#error "Not possible compile SPI driver, invalid driver configuration. Make sure that either/both CONF_SPI_MASTER_ENABLE/CONF_SPI_SLAVE_ENABLE is set to true."
 #endif
 
 /**
@@ -380,7 +380,7 @@ Make sure that either/both CONF_SPI_MASTER_ENABLE/CONF_SPI_SLAVE_ENABLE is set t
  * Define SERCOM SPI features set according to different device family.
  * @{
  */
-#  if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || defined(__DOXYGEN__)
+#  if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAML21) || defined(__DOXYGEN__)
 /** SPI slave select low detection. */
 #  define FEATURE_SPI_SLAVE_SELECT_LOW_DETECT
 /** Slave select can be controlled by hardware. */

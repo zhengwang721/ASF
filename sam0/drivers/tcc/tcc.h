@@ -67,6 +67,7 @@
  *  - Atmel® | SMART™ SAM D21
  *  - Atmel® | SMART™ SAM R21
  *  - Atmel® | SMART™ SAM D10/D11
+ *  - Atmel® | SMART™ SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_tcc_prerequisites
@@ -606,10 +607,10 @@
  * used.
  *
  * \subsubsection asfdoc_sam0_tcc_special_considerations_tcc_d21 SAM TCC Feature List
- * For SAM D21/R21, the TCC features are:
+ * For SAM D21/R21/L21, the TCC features are:
  * \anchor asfdoc_sam0_tcc_features_d21
  * <table>
- *   <caption>TCC Module Features For SAM D21/R21</caption>
+ *   <caption>TCC module features for SAM D21/R21/L21</caption>
  *   <tr>
  *     <th>TCC#</th>
  *     <th>Match/Capture channels</th>
@@ -1629,8 +1630,8 @@ uint8_t _tcc_get_inst_index(
  *
  * \return Synchronization status of the underlying hardware module.
  *
- * \retval true If the module has completed synchronization
- * \retval false If the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
+ * \retval true  If the module synchronization is ongoing
  */
 static inline bool tcc_is_syncing(
 		const struct tcc_module *const module_inst)

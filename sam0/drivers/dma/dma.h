@@ -64,6 +64,8 @@ extern "C" {
  *  - Atmel® | SMART™ SAM D21
  *  - Atmel® | SMART™ SAM R21
  *  - Atmel® | SMART™ SAM D10/D11
+ *  - Atmel® | SMART™ SAM D10/D11
+ *  - Atmel® | SMART™ SAM L21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_dma_prerequisites
@@ -157,6 +159,20 @@ extern "C" {
  *
  * }
  * \enddot
+ *
+ * \subsection asfdoc_sam0_dma_features Driver Feature Macro Definition
+ * <table>
+ *  <tr>
+ *    <th>Driver Feature Macro</th>
+ *    <th>Supported devices</th>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_DMA_CHANNEL_STANDBY</td>
+ *    <td>SAML21</td>
+ *  </tr>
+ * </table>
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
  *
  * \subsection asfdoc_sam0_dma_module_overview_dma_transf_term Terminology Used in DMAC Transfers
  *
@@ -281,6 +297,10 @@ extern "C" {
 
 #include <compiler.h>
 #include "conf_dma.h"
+
+#if (SAML21)
+#define FEATURE_DMA_CHANNEL_STANDBY
+#endif
 
 /** DMA invalid channel number. */
 #define DMA_INVALID_CHANNEL        0xff
@@ -477,6 +497,10 @@ struct dma_resource_config {
 	uint8_t peripheral_trigger;
 	/** DMA trigger action. */
 	enum dma_transfer_trigger_action trigger_action;
+#ifdef FEATURE_DMA_CHANNEL_STANDBY
+	/** Keep DMA channel enabled in standby sleep mode if true. */
+	bool run_in_standby;
+#endif
 	/** DMA events configurations. */
 	struct dma_events_config event_config;
 };
@@ -764,6 +788,9 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  * <table>
  *   <tr>
  *     <th>Changelog</th>
+ *   </tr>
+ *   <tr>
+ *     <td>Add SAM L21 support</td>
  *   </tr>
  *   <tr>
  *     <td>Initial Release</td>

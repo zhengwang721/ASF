@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21/D10/D11 ADC with DMA quick start
+ * \brief SAM D21/D11/L21 ADC with DMA quick start
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -63,7 +63,7 @@ struct dma_resource example_resource;
 
 // [transfer_descriptor]
 COMPILER_ALIGNED(16)
-DmacDescriptor example_descriptor;
+DmacDescriptor example_descriptor SECTION_DMAC_DESCRIPTOR;
 // [transfer_descriptor]
 
 //! [setup]
@@ -79,7 +79,9 @@ void configure_adc(void)
 //! [setup_adc_config_defaults]
 
 //! [setup_adc_config_extra]
+#if !(SAML21)
 	config_adc.gain_factor     = ADC_GAIN_FACTOR_DIV2;
+#endif
 	config_adc.clock_prescaler = ADC_CLOCK_PRESCALER_DIV16;
 	config_adc.reference       = ADC_REFERENCE_INTVCC1;
 	config_adc.positive_input  = ADC_POSITIVE_INPUT_PIN4;
@@ -110,16 +112,17 @@ void configure_dac(void)
 //! [setup_dac_config_defaults]
 
 //! [setup_dac_config_extra]
+#if (SAML21)
+	config_dac.reference = DAC_REFERENCE_INTREF;
+#else
 	config_dac.reference = DAC_REFERENCE_AVCC;
+#endif
 //! [setup_dac_config_extra]
 
 //! [setup_dac_set_config]
 	dac_init(&dac_instance, DAC, &config_dac);
 //! [setup_dac_set_config]
 
-//! [setup_dac_enable]
-	dac_enable(&dac_instance);
-//! [setup_dac_enable]
 }
 //! [configure_dac]
 
@@ -183,7 +186,11 @@ void setup_transfer_descriptor(DmacDescriptor *descriptor)
 	descriptor_config.src_increment_enable = false;
 	descriptor_config.block_transfer_count = 1000;
 	descriptor_config.source_address = (uint32_t)(&adc_instance.hw->RESULT.reg);
+#if (SAML21)
+	descriptor_config.destination_address = (uint32_t)(&dac_instance.hw->DATA[DAC_CHANNEL_0].reg);
+#else
 	descriptor_config.destination_address = (uint32_t)(&dac_instance.hw->DATA.reg);
+#endif
 	descriptor_config.next_descriptor_address = (uint32_t)descriptor;
 //! [setup_dma_desc_config_set_extra]
 
@@ -210,6 +217,10 @@ int main(void)
 //! [setup_dac_channel]
 	configure_dac_channel();
 //! [setup_dac_channel]
+
+//! [setup_dac_enable]
+	dac_enable(&dac_instance);
+//! [setup_dac_enable]
 
 //! [setup_dma_resource]
 	configure_dma_resource(&example_resource);

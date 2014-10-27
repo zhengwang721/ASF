@@ -88,7 +88,7 @@ enum status_code tc_register_callback(
 /**
  * \brief Unregisters a callback
  *
- * Unregisters a callback function implemented by the user. The callback should be 
+ * Unregisters a callback function implemented by the user. The callback should be
  * disabled before it is unregistered.
  *
  * \param[in]     module Pointer to TC software instance struct
@@ -128,7 +128,13 @@ enum status_code tc_unregister_callback(
 			_tc_interrupt_handler(m); \
 		}
 
+#if (SAML21E) || (SAML21G)
+_TC_INTERRUPT_HANDLER(0,0)
+_TC_INTERRUPT_HANDLER(1,1)
+_TC_INTERRUPT_HANDLER(4,2)
+#else
 MRECURSION(TC_INST_NUM, _TC_INTERRUPT_HANDLER, TC_INST_MAX_ID)
+#endif
 
 
 /**
