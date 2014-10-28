@@ -92,8 +92,8 @@ struct usart_module usart_instance;
 struct dma_resource example_resource_tx;
 struct dma_resource example_resource_rx;
 COMPILER_ALIGNED(16)
-DmacDescriptor example_descriptor_tx;
-DmacDescriptor example_descriptor_rx;
+DmacDescriptor example_descriptor_tx SECTION_DMAC_DESCRIPTOR;
+DmacDescriptor example_descriptor_rx SECTION_DMAC_DESCRIPTOR;
 //! [module_var_dma]
 
 //! [setup]
@@ -102,20 +102,18 @@ static void configure_usart(void)
 
 	struct usart_config config_usart;
 	usart_get_config_defaults(&config_usart);
-	config_usart.baudrate    = 9600;
+	config_usart.baudrate	 = 38400;
 	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
 	config_usart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
 	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
 	config_usart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
 	config_usart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
-	while (usart_init(&usart_instance,
-			EDBG_CDC_MODULE, &config_usart) != STATUS_OK) {
-	}
+	stdio_serial_init(&usart_instance, EDBG_CDC_MODULE, &config_usart);
 	usart_enable(&usart_instance);
 }
 
 /**
- * \brief ECB mode encryption and decryption test with DMA.
+ * \brief ECB mode encryption test with DMA.
  */
 static void ecb_mode_test_dma(void)
 {
@@ -144,10 +142,22 @@ static void ecb_mode_test_dma(void)
 
 	/* The initialization vector is not used by the ECB cipher mode. */
 
-	dma_start_transfer_job(&example_resource_rx);
 	dma_start_transfer_job(&example_resource_tx);
+	aes_set_new_message(&aes_instance);
+	aes_clear_new_message(&aes_instance);
+
+	/* Wait DMA transfer */
+	while (false == state) {
+	}
 
 	/* Wait for the end of the encryption process. */
+	while (!(aes_get_status(&aes_instance) & AES_ENCRYPTION_COMPLETE)) {
+	}
+
+	state = false;
+	dma_start_transfer_job(&example_resource_rx);
+
+	/* Wait DMA transfer */
 	while (false == state) {
 	}
 
@@ -163,7 +173,7 @@ static void ecb_mode_test_dma(void)
 
 }
 
-static void transfer_rx_done( const struct dma_resource* const resource )
+static void transfer_tx_rx_done( const struct dma_resource* const resource )
 {
 	state = true;
 }
@@ -174,7 +184,7 @@ static void configure_dma_aes_wr(void)
 	dma_get_config_defaults(&tx_config);
 
 	tx_config.peripheral_trigger = AES_DMAC_ID_WR;
-	tx_config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
+	tx_config.trigger_action = DMA_TRIGGER_ACTON_BLOCK;
 
 	dma_allocate(&example_resource_tx, &tx_config);
 
@@ -186,12 +196,10 @@ static void configure_dma_aes_wr(void)
 	tx_descriptor_config.dst_increment_enable = false;
 	tx_descriptor_config.block_transfer_count = AES_EXAMPLE_REFBUF_SIZE;
 	tx_descriptor_config.source_address = (uint32_t)ref_plain_text + sizeof(ref_plain_text);
-	tx_descriptor_config.destination_address =
-		(uint32_t)(&aes_instance.hw->INDATA.reg);
-
+	tx_descriptor_config.destination_address =(uint32_t) &(AES->INDATA);
 	dma_descriptor_create(&example_descriptor_tx, &tx_descriptor_config);
 
-	dma_add_descriptor(&example_resource_rx, &example_descriptor_tx);
+	dma_add_descriptor(&example_resource_tx, &example_descriptor_tx);
 }
 
 static void configure_dma_aes_rd(void)
@@ -206,7 +214,6 @@ static void configure_dma_aes_rd(void)
 
 	dma_allocate(&example_resource_rx, &rx_config);
 
-
 	struct dma_descriptor_config rx_descriptor_config;
 
 	dma_descriptor_get_config_defaults(&rx_descriptor_config);
@@ -214,15 +221,13 @@ static void configure_dma_aes_rd(void)
 	rx_descriptor_config.beat_size = DMA_BEAT_SIZE_WORD;
 	rx_descriptor_config.src_increment_enable = false;
 	rx_descriptor_config.block_transfer_count = AES_EXAMPLE_REFBUF_SIZE;
-	rx_descriptor_config.source_address =
-		(uint32_t)(&aes_instance.hw->INDATA.reg);
+	rx_descriptor_config.source_address = (uint32_t)&(AES->INDATA);
 	rx_descriptor_config.destination_address =
 		(uint32_t)output_data + sizeof(output_data);
 
 	dma_descriptor_create(&example_descriptor_rx, &rx_descriptor_config);
 
 	dma_add_descriptor(&example_resource_rx, &example_descriptor_rx);
-
 }
 //! [setup]
 
@@ -242,7 +247,11 @@ int main(void)
 	configure_dma_aes_wr();
 	configure_dma_aes_rd();
 
-	dma_register_callback(&example_resource_rx, transfer_rx_done,
+	dma_register_callback(&example_resource_tx, transfer_tx_rx_done,
+			DMA_CALLBACK_TRANSFER_DONE);
+	dma_enable_callback(&example_resource_tx, DMA_CALLBACK_TRANSFER_DONE);
+
+	dma_register_callback(&example_resource_rx, transfer_tx_rx_done,
 			DMA_CALLBACK_TRANSFER_DONE);
 	dma_enable_callback(&example_resource_rx, DMA_CALLBACK_TRANSFER_DONE);
 //! [setup_dma]

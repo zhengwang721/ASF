@@ -221,6 +221,7 @@ enum aes_cfb_size {
 
 /** AES CounterMeasure type */
 enum aes_countermeature_type {
+	AES_COUNTERMEASURE_TYPE_disabled = 0x0,
 	AES_COUNTERMEASURE_TYPE_1 = 0x01,
 	AES_COUNTERMEASURE_TYPE_2 = 0x02,
 	AES_COUNTERMEASURE_TYPE_3 = 0x04,
@@ -309,7 +310,7 @@ void aes_init(struct aes_module *const module,
 /**
  * \brief Start a manual encryption/decryption process.
  *
- * \param[in] hw Module hardware register base address pointer
+ * \param[in] module Module hardware register base address pointer
  */
 static inline void aes_start(struct aes_module *const module)
 {
@@ -317,6 +318,31 @@ static inline void aes_start(struct aes_module *const module)
 	Assert(module->hw);
 
 	module->hw->CTRLB.reg |= AES_CTRLB_START;
+}
+/**
+ * \brief Notifies the module that the next input data block
+ * is the beginning of a new message.
+ *
+ * \param[in] module Module hardware register base address pointer
+ *
+ */
+static inline void aes_set_new_message(struct aes_module *const module)
+{
+	Assert(module);
+	Assert(module->hw);
+	module->hw->CTRLB.reg |= AES_CTRLB_NEWMSG;
+}
+/**
+ * \brief Clear the indication of the beginning for a new message
+ *
+ * \param[in] module Module hardware register base address pointer
+ *
+ */
+static inline void aes_clear_new_message(struct aes_module *const module)
+{
+	Assert(module);
+	Assert(module->hw);
+	module->hw->CTRLB.reg &= ~AES_CTRLB_NEWMSG;
 }
 
 void aes_enable(struct aes_module *const module);
@@ -469,7 +495,7 @@ static inline uint32_t aes_gcm_read_hash_key(struct aes_module *const module,
 	Assert(module);
 	Assert(module->hw);
 
-	return (*(&(module->hw->HASHKEY0.reg) + 4*id));
+	return (*(uint32_t *)((uint32_t )&(module->hw->HASHKEY0.reg) + 4*id));
 }
 
 /**
@@ -485,7 +511,7 @@ static inline void aes_gcm_write_hash_key(struct aes_module *const module,
 	Assert(module);
 	Assert(module->hw);
 
-	*(&(module->hw->HASHKEY0.reg) + 4*id) = key;
+	*(uint32_t *)((uint32_t)&(module->hw->HASHKEY0.reg) + 4*id) = key;
 }
 
 /**
