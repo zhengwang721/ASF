@@ -73,10 +73,10 @@ uint32_t calculate_cycles_taken(uint32_t start_cycle, uint32_t end_cycle);
 void usart_write_data(struct usart_module *const module, uint8_t *usart_tx_data, uint32_t length);
 
 /*! ADC interrupt Handler */
-static void _adc_interrupt_handler();
+static void _adc_interrupt_handler(void);
 
 /*! USART interrupt Handler */
-static void _usart_interrupt_handler();
+static void _usart_interrupt_handler(void);
 
 
 /* MACRO Definitions */
@@ -134,7 +134,7 @@ uint8_t interrupt_mask)
  * \param adc_module_inst       ADC module instance
  * \param usart_module_inst     USART module instance
  */
-static void _adc_interrupt_handler()
+static void _adc_interrupt_handler(void)
 {
 	/* ADC base address */
 	Adc *const adc_hw = adc_instance.hw;
@@ -175,7 +175,7 @@ static void _adc_interrupt_handler()
  * NOTE: This will point to the _adc_interrupt_handler function
  *       where the ADC interrupt is being processed.
  */
-void ADC_Handler()
+void ADC_Handler(void)
 {
 	#if defined (ENABLE_PORT_TOGGLE)
 		/* 	 Use oscilloscope to probe the pin. */
@@ -189,7 +189,7 @@ void ADC_Handler()
  * \brief USART interrupt Handler 
  * \param usart_module_inst       USART module instance
  */
-static void _usart_interrupt_handler()
+static void _usart_interrupt_handler(void)
 {
 	/* Pointer to the hardware module instance */
 	SercomUsart *const usart_hw	= &(usart_instance.hw->USART);

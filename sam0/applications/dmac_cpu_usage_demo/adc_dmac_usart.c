@@ -153,7 +153,7 @@ volatile PortGroup *const port_base = PORT;
  */
  
  /*! \brief DMA Channel0 call back */
-static void dmac_calback_channel0( struct dma_resource *resource) 
+static void dmac_calback_channel0( const struct dma_resource *const resource)
 {
 	#if defined (ENABLE_PORT_TOGGLE)
 		/* 	 Use oscilloscope to probe the pin. */

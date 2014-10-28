@@ -150,7 +150,7 @@ volatile PortGroup *const port_base = PORT;
  */
  
  /*! \brief DMA Channel0 call back */
-static void dmac_calback_channel0( struct dma_resource *resource) 
+static void dmac_calback_channel0(  const struct dma_resource *const resource) 
 {
 
 	#if defined (ENABLE_PORT_TOGGLE)
@@ -164,14 +164,14 @@ static void dmac_calback_channel0( struct dma_resource *resource)
 
 
 /*! \brief DMA Channel1 call back */
-static void dmac_calback_channel1( struct dma_resource *resource) 
+static void dmac_calback_channel1(  const struct dma_resource *const resource) 
 {
 	/* Enable and start channel2 transfer */
 	dma_start_transfer_job(&dmac_adc_channel2);
 }
 
 /*! \brief DMA Channel2 call back */
-static void dmac_calback_channel2( struct dma_resource *resource) 
+static void dmac_calback_channel2( const struct dma_resource *const resource) 
 {
 	/* Indicate DMA transfer has been completed */
 	adc_dma_transfer_is_done = true;

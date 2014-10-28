@@ -13,6 +13,9 @@
 		<config name="config.sam0.drivers.sercom.usart" value="polled"/>
 		<config name="config.sam0.drivers.adc" value="polled"/>
 
+		<toolchain-config name="armgcc.compiler.optimization.level" value="None (-O0)" toolchain="armgcc"/>
+		<config name="config.compiler.armgcc.optimization" value="none" />
+
 		<generator value="armgcc"/>
 		<generator value="as5_arm"/>
 
