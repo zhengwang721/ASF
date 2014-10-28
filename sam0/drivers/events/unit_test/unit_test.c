@@ -476,33 +476,6 @@ static void run_asynchronous_event_test(const struct test_case *test)
 	test_assert_true(test, init_success,
 			"Skipping test due to failed initialization");
 
-	/* Check whether event user is ready */
-	do {
-
-		timeout_cycles--;
-		if (events_is_users_ready(&events)) {
-			break;
-		}
-
-	} while (timeout_cycles > 0);
-
-	test_assert_true(test, timeout_cycles > 0,
-			"Timeout error: Event user not ready");
-
-	/* Check whether event channel is ready */
-	timeout_cycles = 1000;
-	do {
-
-		timeout_cycles--;
-		if (!events_is_busy(&events)) {
-			break;
-		}
-
-	} while (timeout_cycles > 0);
-
-	test_assert_true(test, timeout_cycles > 0,
-			"Timeout error: Event channel not ready");
-
 	/* Event action test */
 	rtc_count_enable(&rtc_inst);
 	rtc_count_set_period(&rtc_inst, 100);
