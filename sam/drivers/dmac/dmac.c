@@ -43,6 +43,10 @@
 
 #include  "dmac.h"
 
+#ifndef DMAC_WPMR_WPKEY_PASSWD
+#  define DMAC_WPMR_WPKEY_PASSWD DMAC_WPMR_WPKEY(0x444D41u)
+#endif
+
 /**
  * \brief Initialize the DMA controller and disable it.
  *

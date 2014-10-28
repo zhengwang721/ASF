@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -128,7 +128,7 @@ typedef struct {
 #define ACC_WPMR_WPKEY_Msk (0xffffffu << ACC_WPMR_WPKEY_Pos) /**< \brief (ACC_WPMR) Write Protection Key */
 #define   ACC_WPMR_WPKEY_PASSWD (0x414343u << 8) /**< \brief (ACC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0. */
 /* -------- ACC_WPSR : (ACC Offset: 0xE8) Write Protection Status Register -------- */
-#define ACC_WPSR_WPVS (0x1u << 0) /**< \brief (ACC_WPSR) Write Protection Violation Status */
+#define ACC_WPSR_WPROTERR(0x1u << 0) /**< \brief (ACC_WPSR) Write Protection Violation Status */
 
 /*@}*/
 
