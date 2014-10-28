@@ -81,11 +81,11 @@ void configure_adc(void)
 //! [setup_adc_config_extra]
 #if !(SAML21)
 	config_adc.gain_factor     = ADC_GAIN_FACTOR_DIV2;
+	config_adc.resolution      = ADC_RESOLUTION_10BIT;
 #endif
 	config_adc.clock_prescaler = ADC_CLOCK_PRESCALER_DIV16;
 	config_adc.reference       = ADC_REFERENCE_INTVCC1;
 	config_adc.positive_input  = ADC_POSITIVE_INPUT_PIN4;
-	config_adc.resolution      = ADC_RESOLUTION_10BIT;
 	config_adc.freerunning     = true;
 	config_adc.left_adjust     = false;
 //! [setup_adc_config_extra]
