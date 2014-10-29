@@ -386,7 +386,7 @@ static inline void aes_write_random_seed(struct aes_module *const module,
  *
  * Retrieves the status of the module, giving overall state information.
  *
- * \param[in] module  Pointer to the AES software instance struct
+ * \param[in] module Pointer to the AES software instance struct
  *
  * \retval AES_ENCRYPTION_COMPLETE   AES encryption complete
  * \retval AES_GF_MULTI_COMPLETE   AES GF multiplication complete
@@ -416,8 +416,8 @@ static inline uint32_t aes_get_status(struct aes_module *const module)
  *
  * Clears the given status flag of the module.
  *
- * \param[in] module   Pointer to the AES software instance struct
- * \param[in] status_flags  Bitmask flags to clear
+ * \param[in] module Pointer to the AES software instance struct
+ * \param[in] status_flags Bitmask flags to clear
  */
 static inline void aes_clear_status(
 		struct aes_module *const module,
@@ -451,8 +451,8 @@ static inline void aes_clear_status(
 /**
  * \brief  Get the AES GCM Hash Value.
  *
- * \param[in] module   Pointer to the AES software instance struct
- * \param[in]  id    Index into the GHASH array (range 0 to 3)
+ * \param[in] module Pointer to the AES software instance struct
+ * \param[in] id Index into the GHASH array (range 0 to 3)
  *
  * \return The content of the GHASHRx[x = 0...3] vlaue.
  */
@@ -468,8 +468,8 @@ static inline uint32_t aes_gcm_read_ghash(struct aes_module *const module, uint3
  * \brief  Set the AES GCM Hash Value.
  *
  * \param[in] module Pointer to the AES software instance struct
- * \param[in] id     Index into the GHASHx array (range 0 to 3)
- * \param[in] ghash  GCM hash vlaue
+ * \param[in] id Index into the GHASHx array (range 0 to 3)
+ * \param[in] ghash GCM hash vlaue
  */
 static inline void aes_gcm_write_ghash(struct aes_module *const module,
 									uint32_t id,uint32_t ghash)
@@ -502,8 +502,8 @@ static inline uint32_t aes_gcm_read_hash_key(struct aes_module *const module,
  * \brief  Set the AES GCM Hash key.
  *
  * \param[in] module Pointer to the AES software instance struct
- * \param[in]  id    Index into the Hash key array (range 0 to 3)
- * \param[in]  key GCM Hash key
+ * \param[in] id Index into the Hash key array (range 0 to 3)
+ * \param[in] key GCM Hash key
  */
 static inline void aes_gcm_write_hash_key(struct aes_module *const module,
 										uint32_t id, uint32_t key)
@@ -533,7 +533,7 @@ static inline uint32_t aes_gcm_read_cipher_len(struct aes_module *const module)
  * \brief  Set the AES GCM cipher length.
  *
  * \param[in] module Pointer to the AES software instance struct
- * \param[in]  len cipher length
+ * \param[in] len cipher length
  */
 static inline void aes_gcm_write_cipher_len(struct aes_module *const module,
 										uint32_t len)
