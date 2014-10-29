@@ -257,7 +257,7 @@ static uint8_t run_fatfs_test(uint32_t disk_dev_num)
 		puts("-I- Please wait a moment during formatting...\r");
 		res = f_mkfs(disk_dev_num, /* Drv */
 				0, /* FDISK partition */
-				1024); /* AllocSize */
+				512); /* AllocSize */
 		puts("-I- Disk format finished !\r");
 		if (res != FR_OK) {
 			printf("-E- f_mkfs pb: 0x%X\n\r", res);
