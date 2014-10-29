@@ -52,9 +52,9 @@
 /** PWM output */
 #define CONF_PWM_OUTPUT      LED_0_PWM4CTRL_OUTPUT
 /** PWM output pin */
-#define CONF_PWM_OUT_PIN     PIN_PA06E_TCC1_WO0
+#define CONF_PWM_OUT_PIN     LED_0_PWM4CTRL_PIN
 /** PWM output pin mux */
-#define CONF_PWM_OUT_MUX     MUX_PA06E_TCC1_WO0
+#define CONF_PWM_OUT_MUX     LED_0_PWM4CTRL_MUX
 //[definition_pwm]
 
 //[definition_fault]
