@@ -270,7 +270,7 @@ void tal_task(void)
                     rf_irqs &= (uint8_t)(~((uint32_t)(RF_IRQ_EDC | RF_IRQ_TRXRDY)));
                 }
 #endif
-				stop_tal_timer(trx_id);
+				//stop_tal_timer(trx_id); //vk
                 handle_tx_end_irq((trx_id_t)trx_id);
             }
             if (bb_irqs & BB_IRQ_RXFE)

@@ -340,6 +340,7 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 					printf("\r\nSun PHY Page Changed");
 					if(phy_temp->modulation == OFDM)
 					{
+						printf("\r\nOFDM Option = %d", (phy_temp->phy_mode).ofdm.option);
 						if(tal_pib_set(trx, phyOFDMMCS, (pib_value_t *)&(phy_temp->phy_mode).ofdm.mcs_val) == MAC_SUCCESS)
 						{
 							printf("\r\nOFDM MCS = %d", (phy_temp->phy_mode).ofdm.mcs_val);

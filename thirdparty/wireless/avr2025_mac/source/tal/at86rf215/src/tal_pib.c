@@ -1513,7 +1513,7 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
             {
                 tal_pib[trx_id].phy.ch_spacing = LEG_915_CH_SPAC;
                 tal_pib[trx_id].phy.freq_band = US_915;
-                tal_pib[trx_id].phy.freq_f0 = LEG_915_F0 - LEG_915_CH_SPAC;
+                tal_pib[trx_id].phy.freq_f0 = LEG_915_F0/* - LEG_915_CH_SPAC*/; //vk
                 tal_pib[trx_id].phy.modulation = LEG_OQPSK;
                 tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_1000;
             }

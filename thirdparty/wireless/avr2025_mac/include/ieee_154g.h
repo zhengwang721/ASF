@@ -244,7 +244,7 @@
 /** Legacy O-QPSK constants */
 #define LEG_780_F0                  780000000
 #define LEG_868_F0                  868300000
-#define LEG_915_F0                  906000000
+#define LEG_915_F0                  904000000 //vk it was 9060...
 #define LEG_915_CH_SPAC               2000000
 #define LEG_2450_F0                2405000000
 #define LEG_2450_CH_SPAC              5000000
