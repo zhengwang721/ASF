@@ -164,9 +164,9 @@ static void run_trng_polling_read_test(const struct test_case *test)
 	struct trng_config config;
 
 	/* Initialize and enable the TRNG */
-    trng_get_config_defaults(&config);
-    trng_init(&trng_instance, TRNG, &config);
-    trng_enable(&trng_instance);
+	trng_get_config_defaults(&config);
+	trng_init(&trng_instance, TRNG, &config);
+	trng_enable(&trng_instance);
 
 
 	/* Read random data */
