@@ -65,7 +65,7 @@
  * SAM3S-EK/SAM3U-EK/SAM4E-EK/SAM4S-EK/SAM4S-Xplained/ATxmega128A1-Xplained/
  * ATxmegaA3BU-Xplained/SAM4N-Xplained-Pro/SAM4CMP16C-SAM4CMP-DB/
  * SAM4CMS16C-SAM4CMS-DB. The file system is created in the
- * Micro SD/MMC on IO1 extension board connected to SAM D/R Xplained Pro.
+ * Micro SD/MMC on IO1 extension board connected to SAM D/R/L Xplained Pro.
  *
  *  \section Description
  *
