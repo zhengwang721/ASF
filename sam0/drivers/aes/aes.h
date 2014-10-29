@@ -363,7 +363,7 @@ void aes_read_output_data(struct aes_module *const module,
  * \brief Write AES random seed.
  *
  * \param[in] module Pointer to the AES software instance struct
- * \param[in] random_seed Seed for the random number generator
+ * \param[in] seed Seed for the random number generator
  */
 static inline void aes_write_random_seed(struct aes_module *const module,
 										uint32_t seed)
@@ -386,7 +386,7 @@ static inline void aes_write_random_seed(struct aes_module *const module,
  *
  * Retrieves the status of the module, giving overall state information.
  *
- * \param[in] module_inst  Pointer to the AES software instance struct
+ * \param[in] module  Pointer to the AES software instance struct
  *
  * \retval AES_ENCRYPTION_COMPLETE   AES encryption complete
  * \retval AES_GF_MULTI_COMPLETE   AES GF multiplication complete

@@ -647,7 +647,7 @@ int main(void)
 	aes_register_callback(aes_callback,AES_CALLBACK_ENCRYPTION_COMPLETE);
 	aes_enable_callback(&aes_instance,AES_CALLBACK_ENCRYPTION_COMPLETE);
 //! [module_enable_register]
-	system_interrupt_enable_global();
+
 //! [setup_init]
 	printf("Start test\r\n");
 //! [encryption_decryption]

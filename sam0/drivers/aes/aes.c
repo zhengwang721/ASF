@@ -171,7 +171,7 @@ void aes_set_config(
 			 | (config->enable_xor_key << AES_CTRLA_XORKEY_Pos)
 			 | (config->enable_key_gen << AES_CTRLA_KEYGEN_Pos)
 			 | (config->lod << AES_CTRLA_LOD_Pos);
-	if (hw->CTRLA.reg & AES_CTRLA_ENABLE){
+	if (hw->CTRLA.reg & AES_CTRLA_ENABLE) {
 		aes_disable(module);
 		hw->CTRLA.reg = ul_mode;
 		aes_enable(module);
