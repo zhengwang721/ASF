@@ -310,7 +310,7 @@ void aes_init(struct aes_module *const module,
 /**
  * \brief Start a manual encryption/decryption process.
  *
- * \param[in] module Module hardware register base address pointer
+ * \param[in] module Pointer to the AES software instance struct
  */
 static inline void aes_start(struct aes_module *const module)
 {
@@ -323,7 +323,7 @@ static inline void aes_start(struct aes_module *const module)
  * \brief Notifies the module that the next input data block
  * is the beginning of a new message.
  *
- * \param[in] module Module hardware register base address pointer
+ * \param[in] module Pointer to the AES software instance struct
  *
  */
 static inline void aes_set_new_message(struct aes_module *const module)
@@ -335,7 +335,7 @@ static inline void aes_set_new_message(struct aes_module *const module)
 /**
  * \brief Clear the indication of the beginning for a new message
  *
- * \param[in] module Module hardware register base address pointer
+ * \param[in] module Pointer to the AES software instance struct
  *
  */
 static inline void aes_clear_new_message(struct aes_module *const module)

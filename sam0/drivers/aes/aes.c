@@ -175,7 +175,7 @@ void aes_set_config(
 		aes_disable(module);
 		hw->CTRLA.reg = ul_mode;
 		aes_enable(module);
-	}else{
+	} else {
 		hw->CTRLA.reg = ul_mode;
 	}
 }
