@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21 DAC Quick Start
+ * \brief SAM DAC Quick Start
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -45,7 +45,7 @@
  * \page asfdoc_sam0_dac_basic_use_case Quick Start Guide for DAC - Basic
  *
  * In this use case, the DAC will be configured with the following settings:
- * - Analog VCC as reference
+ * - Analog V<SUB>CC</SUB> as reference
  * - Internal output disabled
  * - Drive the DAC output to the V<sub>OUT</sub> pin
  * - Right adjust data

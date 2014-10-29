@@ -131,9 +131,9 @@ static inline void _system_clock_source_dfll_set_config_errata_9905(void)
  *
  * Determines the current operating frequency of a given clock source.
  *
- * \param[in] clock_source  Clock source to get the frequency of
+ * \param[in] clock_source  Clock source to get the frequency
  *
- * \returns Frequency of the given clock source, in Hz
+ * \returns Frequency of the given clock source, in Hz.
  */
 uint32_t system_clock_source_get_hz(
 		const enum system_clock_source clock_source)
@@ -669,8 +669,7 @@ void system_clock_init(void)
 {
 	/* Various bits in the INTFLAG register can be set to one at startup.
 	   This will ensure that these bits are cleared */
-	SYSCTRL->INTFLAG.reg = SYSCTRL_INTFLAG_BOD12RDY | SYSCTRL_INTFLAG_BOD33RDY |
-			SYSCTRL_INTFLAG_BOD12DET | SYSCTRL_INTFLAG_BOD33DET |
+	SYSCTRL->INTFLAG.reg = SYSCTRL_INTFLAG_BOD33RDY | SYSCTRL_INTFLAG_BOD33DET |
 			SYSCTRL_INTFLAG_DFLLRDY;
 
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);

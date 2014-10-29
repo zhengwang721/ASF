@@ -67,7 +67,7 @@
  */
 #define  USB_EP_DIR_OUT       0x00
 
-#if SAMD21
+#if SAMD21 || SAMD11
 /**
  * \name Macros for USB device those are not realized in head file
  *
@@ -126,10 +126,12 @@ COMPILER_PACK_RESET()
  */
 static struct usb_module *_usb_instances;
 
+#if !SAMD11
 /**
  * \brief Host pipe callback structure variable
  */
 static struct usb_pipe_callback_parameter pipe_callback_para;
+#endif
 
 /* Device LPM callback variable */
 static uint32_t device_callback_lpm_wakeup_enable;
@@ -162,6 +164,7 @@ static const uint8_t _usb_endpoint_irq_bits[USB_DEVICE_EP_CALLBACK_N] = {
 	USB_DEVICE_EPINTFLAG_STALL_Msk
 };
 
+#if !SAMD11
 /**
  * \brief Bit mask for pipe job busy status
  */
@@ -1060,6 +1063,7 @@ void usb_host_pipe_set_auto_zlp(struct usb_module *module_inst, uint8_t pipe_num
 
 	usb_descriptor_table.usb_pipe_table[pipe_num].HostDescBank[0].PCKSIZE.bit.AUTO_ZLP = value;
 }
+#endif
 
 /**
  * \brief Registers a USB device callback
@@ -1446,14 +1450,14 @@ enum status_code usb_device_endpoint_set_config(struct usb_module *module_inst,
 		case USB_DEVICE_ENDPOINT_TYPE_ISOCHRONOUS:
 			if (ep_bank) {
 				if ((module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg & USB_DEVICE_EPCFG_EPTYPE1_Msk) == 0){
-					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg = USB_DEVICE_EPCFG_EPTYPE1(2);
+					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg |= USB_DEVICE_EPCFG_EPTYPE1(2);
 					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSCLR.reg = USB_DEVICE_EPSTATUSCLR_BK1RDY;
 				} else {
 					return STATUS_ERR_DENIED;
 				}
 			} else {
 				if ((module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg & USB_DEVICE_EPCFG_EPTYPE0_Msk) == 0){
-					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg = USB_DEVICE_EPCFG_EPTYPE0(2);
+					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg |= USB_DEVICE_EPCFG_EPTYPE0(2);
 					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSSET.reg = USB_DEVICE_EPSTATUSSET_BK0RDY;
 				} else {
 					return STATUS_ERR_DENIED;
@@ -1464,14 +1468,14 @@ enum status_code usb_device_endpoint_set_config(struct usb_module *module_inst,
 		case USB_DEVICE_ENDPOINT_TYPE_BULK:
 			if (ep_bank) {
 				if ((module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg & USB_DEVICE_EPCFG_EPTYPE1_Msk) == 0){
-					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg = USB_DEVICE_EPCFG_EPTYPE1(3);
+					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg |= USB_DEVICE_EPCFG_EPTYPE1(3);
 					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSCLR.reg = USB_DEVICE_EPSTATUSCLR_BK1RDY;
 				} else {
 					return STATUS_ERR_DENIED;
 				}
 			} else {
 				if ((module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg & USB_DEVICE_EPCFG_EPTYPE0_Msk) == 0){
-					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg = USB_DEVICE_EPCFG_EPTYPE0(3);
+					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg |= USB_DEVICE_EPCFG_EPTYPE0(3);
 					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSSET.reg = USB_DEVICE_EPSTATUSSET_BK0RDY;
 				} else {
 					return STATUS_ERR_DENIED;
@@ -1482,14 +1486,14 @@ enum status_code usb_device_endpoint_set_config(struct usb_module *module_inst,
 		case USB_DEVICE_ENDPOINT_TYPE_INTERRUPT:
 			if (ep_bank) {
 				if ((module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg & USB_DEVICE_EPCFG_EPTYPE1_Msk) == 0){
-					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg = USB_DEVICE_EPCFG_EPTYPE1(4);
+					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg |= USB_DEVICE_EPCFG_EPTYPE1(4);
 					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSCLR.reg = USB_DEVICE_EPSTATUSCLR_BK1RDY;
 				} else {
 					return STATUS_ERR_DENIED;
 				}
 			} else {
 				if ((module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg & USB_DEVICE_EPCFG_EPTYPE0_Msk) == 0){
-					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg = USB_DEVICE_EPCFG_EPTYPE0(4);
+					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPCFG.reg |= USB_DEVICE_EPCFG_EPTYPE0(4);
 					module_inst->hw->DEVICE.DeviceEndpoint[ep_num].EPSTATUSSET.reg = USB_DEVICE_EPSTATUSSET_BK0RDY;
 				} else {
 					return STATUS_ERR_DENIED;
@@ -1876,8 +1880,10 @@ void usb_disable(struct usb_module *module_inst)
 void USB_Handler(void)
 {
 	if (_usb_instances->hw->HOST.CTRLA.bit.MODE) {
+#if !SAMD11
 		/*host mode ISR */
 		_usb_host_interrupt_handler();
+#endif
 	} else {
 		/*device mode ISR */
 		_usb_device_interrupt_handler();
@@ -1936,7 +1942,9 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 	struct system_pinmux_config pin_config;
 	struct system_gclk_chan_config gclk_chan_config;
 
+#if !SAMD11
 	host_pipe_job_busy_status = 0;
+#endif
 
 	_usb_instances = module_inst;
 
@@ -2012,6 +2020,7 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 	memset((uint8_t *)(&usb_descriptor_table.usb_endpoint_table[0]), 0,
 			sizeof(usb_descriptor_table.usb_endpoint_table));
 
+#if !SAMD11
 	/* callback related init */
 	for (i = 0; i < USB_HOST_CALLBACK_N; i++) {
 		module_inst->host_callback[i] = NULL;
@@ -2027,6 +2036,8 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 		module_inst->host_pipe_registered_callback_mask[i] = 0;
 		module_inst->host_pipe_enabled_callback_mask[i] = 0;
 	}
+#endif
+
 	/*  device callback related */
 	for (i = 0; i < USB_DEVICE_CALLBACK_N; i++) {
 		module_inst->device_callback[i] = NULL;

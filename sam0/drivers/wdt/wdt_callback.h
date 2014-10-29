@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 Watchdog Driver
+ * \brief SAM Watchdog Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -81,7 +81,7 @@ enum status_code wdt_unregister_callback(
 
 /** @} */
 
-/** \name Callback enabling and disabling
+/** \name Callback Enabling and Disabling
  * @{
  */
 

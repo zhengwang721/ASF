@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21/R21 TCC - Timer Counter for Control Applications Callback Driver Quick Start
+ * \brief SAM TCC - Timer Counter for Control Applications Callback Driver Quick Start
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -44,7 +44,7 @@
 /**
  * \page asfdoc_sam0_tcc_callback_use_case Quick Start Guide for TCC - Callback
  *
- * The supported kit list:
+ * The supported board list:
  *    - SAM D21/R21 Xplained Pro
  *
  * In this use case, the TCC will be used to generate a PWM signal, with a
@@ -62,7 +62,7 @@
  *
  * The TCC module will be set up as follows:
  * - GCLK generator 0 (GCLK main) clock source
- * - Use double buffering write when set top, compare or pattern through API
+ * - Use double buffering write when set top, compare, or pattern through API
  * - No dithering on the counter or compare
  * - No prescaler
  * - Single Slope PWM wave generation

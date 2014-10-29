@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 EEPROM Emulator
+ * \brief SAM EEPROM Emulator
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -44,15 +44,19 @@
 #define EEPROM_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_eeprom_group SAM D20/D21/R21 EEPROM Emulator Service (EEPROM)
+ * \defgroup asfdoc_sam0_eeprom_group SAM EEPROM Emulator Service (EEPROM)
  *
- * This driver for SAM D20/D21/R21 devices provides an emulated EEPROM memory space in
+ * This driver for Atmel® | SMART™ SAM devices provides an emulated EEPROM memory space in
  * the device's FLASH memory, for the storage and retrieval of user-application
  * configuration data into and out of non-volatile memory.
  *
  * The following peripherals are used by this module:
- *
  *  - NVM (Non-Volatile Memory Controller)
+ *
+ * The following devices can use this module:
+ *  - Atmel® | SMART™ SAM D20/D21
+ *  - Atmel® | SMART™ SAM R21
+ *  - Atmel® | SMART™ SAM D10/D11
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_eeprom_prerequisites
@@ -65,7 +69,7 @@
  *
  * \section asfdoc_sam0_eeprom_prerequisites Prerequisites
  *
- * The SAM D20/D21/R21 device fuses must be configured via an external programmer or
+ * The SAM device fuses must be configured via an external programmer or
  * debugger, so that an EEPROM section is allocated in the main NVM flash
  * memory contents. If a NVM section is not allocated for the EEPROM emulator,
  * or if insufficient space for the emulator is reserved, the module will fail
@@ -74,7 +78,7 @@
  *
  * \section asfdoc_sam0_eeprom_module_overview Module Overview
  *
- * As the SAM D20/D21/R21 devices do not contain any physical EEPROM memory, the storage
+ * As the SAM devices do not contain any physical EEPROM memory, the storage
  * of non-volatile user data is instead emulated using a special section of the
  * device's main FLASH memory. The use of FLASH memory technology over EEPROM
  * presents several difficulties over true EEPROM memory; data must be written
@@ -102,12 +106,12 @@
  * The following information is relevant for <b>EEPROM Emulator scheme 1,
  * version 1.0.0</b>, as implemented by this module. Other revisions or
  * emulation schemes may vary in their implementation details and may have
- * different wear-leveling, latency and other characteristics.
+ * different wear-leveling, latency, and other characteristics.
  *
  * \subsubsection asfdoc_sam0_eeprom_module_overview_implementation_ec Emulator Characteristics
  * This emulator is designed for <b>best reliability, with a good balance of
  * available storage and write-cycle limits</b>. It is designed to ensure that
- * page data is atomically updated so that in the event of a failed update the
+ * page data is automatically updated so that in the event of a failed update the
  * previous data is not lost (when used correctly). With the exception of a
  * system reset with data cached to the internal write-cache buffer, at most
  * only the latest write to physical non-volatile memory will be lost in the
@@ -119,7 +123,7 @@
  * entire emulated EEPROM space.
  *
  * \subsubsection asfdoc_sam0_eeprom_module_overview_implementation_pf Physical Memory
- * The SAM D20/D21/R21 non-volatile FLASH is divided into a number of physical rows, each
+ * The SAM non-volatile FLASH is divided into a number of physical rows, each
  * containing four identically sized flash pages. Pages may be read or written
  * to individually, however pages must be erased before being reprogrammed and
  * the smallest granularity available for erasure is one single row.
@@ -226,7 +230,7 @@
  * \ref asfdoc_sam0_eeprom_page_layout "the following figure".
  *
  * \anchor asfdoc_sam0_eeprom_page_layout
- * \image html page_layout.svg "Internal layout of an emulated EEPROM page"
+ * \image html page_layout.svg "Internal Layout of An Emulated EEPROM Page"
  *
  * Within the EEPROM memory reservation section at the top of the NVM memory
  * space, this emulator will produce the layout as shown in
@@ -234,7 +238,7 @@
  * the first time.
  *
  * \anchor asfdoc_sam0_eeprom_init_layout
- * \image html init_layout.svg "Initial physical layout of the emulated EEPROM memory"
+ * \image html init_layout.svg "Initial Physical Layout of The Emulated EEPROM Mmemory"
  *
  * When an EEPROM page needs to be committed to physical memory, the next free
  * FLASH page in the same row will be chosen - this makes recovery simple, as the
@@ -246,13 +250,13 @@
  * the physical memory.
  *
  * \anchor asfdoc_sam0_eeprom_page_write1
- * \image html nm1_page_write.svg "First write to logical EEPROM page N-1"
+ * \image html nm1_page_write.svg "First Write to Logical EEPROM Page N-1"
  *
  * A second write of the same logical EEPROM page results in the layout shown
  * in \ref asfdoc_sam0_eeprom_page_write2 "the figure below".
  *
  * \anchor asfdoc_sam0_eeprom_page_write2
- * \image html nm1_page_write2.svg "Second write to logical EEPROM page N-1"
+ * \image html nm1_page_write2.svg "Second Write To Logical EEPROM Page N-1"
  *
  * A third write of the same logical page requires that the EEPROM emulator
  * erase the row, as it has become full. Prior to this, the contents of the
@@ -262,7 +266,7 @@
  * \ref asfdoc_sam0_eeprom_page_write3 "the figure below".
  *
  * \anchor asfdoc_sam0_eeprom_page_write3
- * \image html nm1_page_write3.svg "Third write to logical EEPROM page N-1"
+ * \image html nm1_page_write3.svg "Third Write To Logical EEPROM Page N-1"
  *
  *
  * \section asfdoc_sam0_eeprom_special_considerations Special Considerations
@@ -296,7 +300,7 @@
  *
  * \section asfdoc_sam0_eeprom_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_eeprom_extra. This includes:
+ * For extra information, see \ref asfdoc_sam0_eeprom_extra. This includes:
  *  - \ref asfdoc_sam0_eeprom_extra_acronyms
  *  - \ref asfdoc_sam0_eeprom_extra_dependencies
  *  - \ref asfdoc_sam0_eeprom_extra_errata
@@ -328,7 +332,7 @@ extern "C" {
 #endif
 
 
-/** \name EEPROM emulator information
+/** \name EEPROM Emulator Information
  * @{
  */
 
@@ -361,7 +365,7 @@ struct eeprom_emulator_parameters {
 
 /** @} */
 
-/** \name Configuration and initialization
+/** \name Configuration and Initialization
  * @{
  */
 
@@ -375,7 +379,7 @@ enum status_code eeprom_emulator_get_parameters(
 /** @} */
 
 
-/** \name Logical EEPROM page reading/writing
+/** \name Logical EEPROM Page Reading/Writing
  * @{
  */
 
@@ -391,7 +395,7 @@ enum status_code eeprom_emulator_read_page(
 
 /** @} */
 
-/** \name Buffer EEPROM reading/writing
+/** \name Buffer EEPROM Reading/Writing
  * @{
  */
 
@@ -466,7 +470,7 @@ enum status_code eeprom_emulator_read_buffer(
  */
 
 /**
- * \page asfdoc_sam0_eeprom_exqsg Examples for Emulated EEPROM service
+ * \page asfdoc_sam0_eeprom_exqsg Examples for Emulated EEPROM Service
  *
  * This is a list of the available Quick Start guides (QSGs) and example
  * applications for \ref asfdoc_sam0_eeprom_group. QSGs are simple examples with
@@ -480,36 +484,35 @@ enum status_code eeprom_emulator_read_buffer(
  *
  * <table>
  *	<tr>
- *		<th>Doc. Rev.</td>
- *		<th>Date</td>
- *		<th>Comments</td>
+ *		<th>Doc. Rev.</th>
+ *		<th>Date</th>
+ *		<th>Comments</th>
  *	</tr>
  *	<tr>
  *		<td>D</td>
- *		<td>03/2014</td>
- *		<td>Add SAM R21 support.</td>
+ *		<td>09/2014</td>
+ *		<td>
+ *         - Add SAM R21 support
+ *         - Add SAM D10/D11 support
+ *      </td>
  *	</tr>
  *	<tr>
  *		<td>C</td>
- *		<td>01/2014</td>
+ *		<td>07/2014</td>
  *		<td>Add SAM D21 support.</td>
  *	</tr>
  *  <tr>
  *	   <td>B</td>
  *	   <td>11/2013</td>
  *     <td>
- *        ASF 3.13: Fixed bugs related to eeprom_emulator_write_buffer() and
- *        eeprom_emulator_read_buffer(). The functions now handle offsets that
- *        are multiples of 60. The length can now be smaller than one page without
- *        risking corruption. Addresses that are multiples of 60 will be written
- *        correctly.
+ *        - ASF 3.13: Fixed bugs related to eeprom_emulator_write_buffer() and
+ *          eeprom_emulator_read_buffer(). The functions now handle offsets that
+ *          are multiples of 60. The length can now be smaller than one page without
+ *          risking corruption. Addresses that are multiples of 60 will be written
+ *          correctly
+ *        - Updated module figures and re-worded the module overview. Corrected
+ *          documentation typos
  *     </td>
- *	</tr>
- *	<tr>
- *		<td>B</td>
- *		<td>06/2013</td>
- *		<td>Updated module figures and re-worded the module overview. Corrected
- *          documentation typos.</td>
  *	</tr>
  *	<tr>
  *		<td>A</td>

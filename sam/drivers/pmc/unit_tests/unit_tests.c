@@ -95,7 +95,7 @@
  *
  * \section contactinfo Contact Information
  * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
- * Support and FAQ: http://support.atmel.no/
+ * Support and FAQ: http://www.atmel.com/design-support/
  */
 
 //! \name Unit test configuration
@@ -244,6 +244,8 @@ static void run_switch_mainck_as_mck_test(const struct test_case *test)
 	/*
 	 * Switch main clock as MCK and use 12M fast RC as clock input
 	 */
+	/* Switch slow clock as MCK */
+	pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
 
 	/* Switch the mainck clock to the Fast RC */
 	pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_12_MHz);

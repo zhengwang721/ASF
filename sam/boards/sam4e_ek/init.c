@@ -118,7 +118,7 @@ void board_init(void)
 #ifdef CONF_BOARD_UART_CONSOLE
 	/* Configure UART pins */
 	ioport_set_port_peripheral_mode(PINS_UART0_PORT, PINS_UART0,
-			PINS_UART0_MASK);
+			PINS_UART0_FLAGS);
 #endif
 
 #ifdef CONF_BOARD_PWM_LED0
@@ -217,7 +217,7 @@ void board_init(void)
 #  endif
 #endif
 
-#ifdef CONF_BOARD_ILI9325
+#if defined(CONF_BOARD_ILI9325) || defined(CONF_BOARD_ILI93XX)
 	/* Configure LCD EBI pins */
 	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D0,PIN_EBI_DATA_BUS_FLAGS);
 	ioport_set_pin_peripheral_mode(PIN_EBI_DATA_BUS_D1,PIN_EBI_DATA_BUS_FLAGS);

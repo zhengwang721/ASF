@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 System related functionality
+ * \brief SAM System related functionality
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -53,17 +53,21 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_system_group SAM D20/D21/R21 System Driver (SYSTEM)
+ * \defgroup asfdoc_sam0_system_group SAM System Driver (SYSTEM)
  *
- * This driver for SAM D20/D21/R21 devices provides an interface for the configuration
+ * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
  * and management of the device's system relation functionality, necessary for
  * the basic device operation. This is not limited to a single peripheral, but
- * extends across multiple hardware peripherals,
+ * extends across multiple hardware peripherals.
  *
  * The following peripherals are used by this module:
- *
  * - SYSCTRL (System Control)
  * - PM (Power Manager)
+ *
+ * The following devices can use this module:
+ *  - Atmel® | SMART™ SAM D20/D21
+ *  - Atmel® | SMART™ SAM R21
+ *  - Atmel® | SMART™ SAM D10/D11
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_system_prerequisites
@@ -93,17 +97,17 @@ extern "C" {
  *
  *
  * \subsection asfdoc_sam0_system_module_overview_vref Voltage References
- * The various analog modules within the SAM D20/D21/R21 devices (such as AC, ADC and
+ * The various analog modules within the SAM devices (such as AC, ADC, and
  * DAC) require a voltage reference to be configured to act as a reference point
  * for comparisons and conversions.
  *
- * The SAM D20/D21/R21 devices contain multiple references, including an internal
+ * The SAM devices contain multiple references, including an internal
  * temperature sensor, and a fixed band-gap voltage source. When enabled, the
  * associated voltage reference can be selected within the desired peripheral
  * where applicable.
  *
  * \subsection asfdoc_sam0_system_module_overview_reset_cause System Reset Cause
- * In some application there may be a need to execute a different program
+ * In some applications there may be a need to execute a different program
  * flow based on how the device was reset. For example, if the cause of reset
  * was the Watchdog timer (WDT), this might indicate an error in the application
  * and a form of error handling or error logging might be needed.
@@ -112,7 +116,7 @@ extern "C" {
  * reset, so that appropriate action can be taken.
  *
  * \subsection asfdoc_sam0_system_module_overview_sleep_mode Sleep Modes
- * The SAM D20/D21/R21 devices have several sleep modes, where the sleep mode controls
+ * The SAM devices have several sleep modes, where the sleep mode controls
  * which clock systems on the device will remain enabled or disabled when the
  * device enters a low power sleep mode.
  * \ref asfdoc_sam0_system_module_sleep_mode_table "The table below" lists the
@@ -120,7 +124,7 @@ extern "C" {
  *
  * \anchor asfdoc_sam0_system_module_sleep_mode_table
  * <table>
- *  <caption>SAM D20/D21/R21 Device Sleep Modes</caption>
+ *  <caption>SAM Device Sleep Modes</caption>
  * 	<tr>
  * 		<th>Sleep mode</th>
  * 		<th>CPU clock</th>
@@ -196,7 +200,7 @@ extern "C" {
  *
  * \section asfdoc_sam0_system_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_system_extra. This includes:
+ * For extra information, see \ref asfdoc_sam0_system_extra. This includes:
  *  - \ref asfdoc_sam0_system_extra_acronyms
  *  - \ref asfdoc_sam0_system_extra_dependencies
  *  - \ref asfdoc_sam0_system_extra_errata
@@ -205,7 +209,7 @@ extern "C" {
  *
  * \section asfdoc_sam0_system_examples Examples
  *
- * For SYSTEM module related examples, please refer to the sub-modules listed in
+ * For SYSTEM module related examples, refer to the sub-modules listed in
  * the \ref asfdoc_sam0_system_module_overview "system module overview".
  *
  *
@@ -264,7 +268,7 @@ enum system_reset_cause {
 };
 
 /**
- * \name System identification
+ * \name System Identification
  * @{
  */
 
@@ -286,7 +290,7 @@ static inline uint32_t system_get_device_id(void)
 
 
 /**
- * \name Voltage references
+ * \name Voltage References
  * @{
  */
 
@@ -347,7 +351,7 @@ static inline void system_voltage_reference_disable(
 
 
 /**
- * \name Device sleep
+ * \name Device Sleep
  * @{
  */
 
@@ -369,6 +373,11 @@ static inline void system_voltage_reference_disable(
 static inline enum status_code system_set_sleepmode(
 	const enum system_sleepmode sleep_mode)
 {
+#if (SAMD20 || SAMD21)
+	/* Errata: Make sure that the Flash does not power all the way down
+	 * when in sleep mode. */
+	NVMCTRL->CTRLB.bit.SLEEPPRM = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val;
+#endif
 	switch (sleep_mode) {
 		case SYSTEM_SLEEPMODE_IDLE_0:
 		case SYSTEM_SLEEPMODE_IDLE_1:
@@ -407,16 +416,16 @@ static inline void system_sleep(void)
  */
 
 /**
- * \name Reset control
+ * \name Reset Control
  * @{
  */
 
 /**
  * \brief Check if bugger is present
  *
- * Check if debugger is connected to the onboard debug system (DAP)
+ * Check if debugger is connected to the onboard debug system (DAP).
  *
- * \return A bool identifying if a debugger is present
+ * \return A bool identifying if a debugger is present.
  *
  * \retval true  Debugger is connected to the system
  * \retval false Debugger is not connected to the system
@@ -431,7 +440,7 @@ static inline bool system_is_debugger_present(void)
  * \brief Reset the MCU
  *
  * Resets the MCU and all associated peripherals and registers, except RTC, all 32kHz sources,
- * WDT (if ALWAYSON is set) and GCLK (if WRTLOCK is set).
+ * WDT (if ALWAYSON is set), and GCLK (if WRTLOCK is set).
  *
  */
 static inline void system_reset(void)
@@ -457,7 +466,7 @@ static inline enum system_reset_cause system_get_reset_cause(void)
 
 
 /**
- * \name System initialization
+ * \name System Initialization
  * @{
  */
 
@@ -523,7 +532,7 @@ void system_init(void);
  *	</tr>
  *	<tr>
  *		<td>Added new \c system_get_device_id() function to retrieved the device
- *          ID.</td>
+ *          ID</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
@@ -540,8 +549,8 @@ void system_init(void);
  *	</tr>
  *	<tr>
  *		<td>D</td>
- *		<td>02/2014</td>
- *		<td>Added support for SAMR21.</td>
+ *		<td>04/2014</td>
+ *		<td>Added support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>

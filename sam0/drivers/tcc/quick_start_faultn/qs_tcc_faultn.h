@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21/R21 TCC - Timer Counter for Control Applications Callback Driver Quick Start (with Recoverable Fault)
+ * \brief SAM TCC - Timer Counter for Control Applications Callback Driver Quick Start (with Recoverable Fault)
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -44,7 +44,7 @@
 /**
  * \page asfdoc_sam0_tcc_faultn_use_case Quick Start Guide for TCC - Recoverable Fault
  *
- * The supported kit list:
+ * The supported board list:
  *    - SAM D21/R21 Xplained Pro
  *
  * In this use case, the TCC will be used to generate a PWM signal, with a
@@ -70,7 +70,7 @@
  *
  * The TCC module will be set up as follows:
  * - GCLK generator 0 (GCLK main) clock source
- * - Use double buffering write when set top, compare or pattern through API
+ * - Use double buffering write when set top, compare, or pattern through API
  * - No dithering on the counter or compare
  * - No prescaler
  * - Single Slope PWM wave generation
@@ -97,10 +97,10 @@
  *
  * Add to the main application source file, before any functions, according to
  * the kit used:
- * - SAM D21 Xplained Pro:
+ * - SAM D21 Xplained Pro.
  *   \snippet samd21_xplained_pro/conf_quick_start_faultn.h definition_pwm
  *   \snippet samd21_xplained_pro/conf_quick_start_faultn.h definition_fault
- * - SAM R21 Xplained Pro:
+ * - SAM R21 Xplained Pro.
  *   \snippet samd21_xplained_pro/conf_quick_start_faultn.h definition_pwm
  *   \snippet samd21_xplained_pro/conf_quick_start_faultn.h definition_fault
  *
@@ -212,7 +212,7 @@
  *    \snippet qs_tcc_faultn.c eic_callback_setup_2
  *
  * \subsubsection asfdoc_sam0_tcc_faultn_use_case_setup_flow_evt Configure EVENTS for fault input
- * -# Create a event resource instance struct for the EVENTS module to store
+ * -# Create a event resource instance struct for the EVENTS module to store.
  *    \snippet qs_tcc_faultn.c events_resource
  *    \note This should never go out of scope as long as the resource is in use.
  *          In most cases, this should be global.

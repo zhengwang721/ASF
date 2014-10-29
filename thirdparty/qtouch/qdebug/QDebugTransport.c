@@ -10,10 +10,10 @@
  * - Supported devices:  AT32UC3A0/A1 Series, AT32UC3B0/B1 Series,
  *                       AT32UC3C0/C1 Series AND AT32UC3L0 series
  * - Userguide:          QTouch Library User Guide - doc8207.pdf.
- * - Support email:      touch@atmel.com
+ * - Support: http://www.atmel.com/design-support/
  *
  *
- * Copyright (c) 2010-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -59,6 +59,8 @@
 #include "touch_api_at32uc3l.h"
 #elif SAM4L
 #include "touch_api_sam4l.h"
+#elif (SAMD20 || SAMD21)
+#include "touch_api_SAMD.h"
 #else
 #include "touch_api.h"
 #endif
@@ -70,6 +72,8 @@
 #  include "QDebug_at32uc3l.h"
 #elif SAM4L
 # include "QDebug_sam4l.h"
+#elif (SAMD20 || SAMD21)
+# include "QDebug_samd.h"
 #else
 #  include "QDebug.h"
 #endif

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 Peripheral Analog-to-Digital Converter Driver
+ * \brief SAM Peripheral Analog-to-Digital Converter Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -52,7 +52,7 @@
 * \internal Configure MUX settings for the analog pins
 *
 * This function will set the given ADC input pins
-* to the analog function in the pin mux, giving
+* to the analog function in the pinmux, giving
 * the ADC access to the analog signal
 *
 * \param [in] pin AINxx pin to configure
@@ -117,6 +117,39 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_PA08B_ADC_AIN16, PIN_PA09B_ADC_AIN17,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+#elif (SAMD10C | SAMD11C)
+			PIN_PA02B_ADC_AIN0,  PIN_INVALID_ADC_AIN,
+			PIN_PA04B_ADC_AIN2,  PIN_PA05B_ADC_AIN3,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_PA14B_ADC_AIN6,  PIN_PA15B_ADC_AIN7,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+#elif (SAMD10DS | SAMD11DS)
+			PIN_PA02B_ADC_AIN0,  PIN_INVALID_ADC_AIN,
+			PIN_PA04B_ADC_AIN2,  PIN_PA05B_ADC_AIN3,
+			PIN_PA06B_ADC_AIN4,  PIN_PA07B_ADC_AIN5,
+			PIN_PA14B_ADC_AIN6,  PIN_PA15B_ADC_AIN7,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+#elif (SAMD10DM | SAMD11DM)
+			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
+			PIN_PA04B_ADC_AIN2,  PIN_PA05B_ADC_AIN3,
+			PIN_PA06B_ADC_AIN4,  PIN_PA07B_ADC_AIN5,
+			PIN_PA14B_ADC_AIN6,  PIN_PA15B_ADC_AIN7,
+			PIN_PA10B_ADC_AIN8,  PIN_PA11B_ADC_AIN9,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 #else
 #  error ADC pin mappings are not defined for this device.
@@ -227,7 +260,7 @@ static enum status_code _adc_set_config(
 		resolution = ADC_RESOLUTION_16BIT;
 		break;
 #if SAMD20
-	/* Please see $35.1.8 for ADC errata of SAM D20.
+	/* See $35.1.8 for ADC errata of SAM D20.
 	   The revisions before D have this issue.*/
 	case ADC_RESOLUTION_15BIT:
 		/* Increase resolution by 3 bit */
@@ -475,7 +508,7 @@ static enum status_code _adc_set_config(
  * \param[in]  hw          Pointer to the ADC module instance
  * \param[in]  config      Pointer to the configuration struct
  *
- * \return Status of the initialization procedure
+ * \return Status of the initialization procedure.
  * \retval STATUS_OK                The initialization was successful
  * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) were provided
  * \retval STATUS_BUSY          The module is busy with a reset operation

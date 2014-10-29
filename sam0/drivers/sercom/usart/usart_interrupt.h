@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 SERCOM USART Asynchronous Driver
+ * \brief SAM SERCOM USART Asynchronous Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -130,7 +130,7 @@ static inline void usart_disable_callback(
  */
 
 /**
- * \name Writing and reading
+ * \name Writing and Reading
  * @{
  */
 enum status_code usart_write_job(

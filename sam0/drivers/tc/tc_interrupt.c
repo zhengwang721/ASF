@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 TC - Timer Counter Callback Driver
+ * \brief SAM TC - Timer Counter Callback Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -120,7 +120,7 @@ enum status_code tc_unregister_callback(
 /**
  * \internal ISR handler for TC
  *
- * Auto-generate a set of interrupt handlers for each TC in the device
+ * Auto-generate a set of interrupt handlers for each TC in the device.
  */
 #define _TC_INTERRUPT_HANDLER(n, m) \
 		void TC##n##_Handler(void) \

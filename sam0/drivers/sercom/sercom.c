@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 Serial Peripheral Interface Driver
+ * \brief SAM Serial Peripheral Interface Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -43,7 +43,7 @@
 #include "sercom.h"
 
 #define SHIFT 32
-#define BAUD_INT_MAX   8192   
+#define BAUD_INT_MAX   8192
 #define BAUD_FP_MAX     8
 
 #if !defined(__DOXYGEN__)
@@ -59,6 +59,33 @@ struct _sercom_conf {
 
 static struct _sercom_conf _sercom_config;
 
+
+/**
+ * \internal Calculate 64 bit division, ref can be found in
+ * http://en.wikipedia.org/wiki/Division_algorithm#Long_division
+ */
+static uint64_t long_division(uint64_t n, uint64_t d)
+{
+	int32_t i;
+	uint64_t q = 0, r = 0, bit_shift;
+	for (i = 63; i >= 0; i--) {
+		bit_shift = (uint64_t)1 << i;
+
+		r = r << 1;
+
+		if (n & bit_shift) {
+			r |= 0x01;
+		}
+
+		if (r >= d) {
+			r = r - d;
+			q |= bit_shift;
+		}
+	}
+
+	return q;
+}
+
 /**
  * \internal Calculate synchronous baudrate value (SPI/UART)
  */
@@ -69,6 +96,8 @@ enum status_code _sercom_get_sync_baud_val(
 {
 	/* Baud value variable */
 	uint16_t baud_calculated = 0;
+	uint32_t clock_value = external_clock;
+
 
 	/* Check if baudrate is outside of valid range. */
 	if (baudrate > (external_clock / 2)) {
@@ -77,7 +106,12 @@ enum status_code _sercom_get_sync_baud_val(
 	}
 
 	/* Calculate BAUD value from clock frequency and baudrate */
-	baud_calculated = (external_clock / (2 * baudrate)) - 1;
+	clock_value = external_clock / 2;
+	while (clock_value >= baudrate) {
+		clock_value = clock_value - baudrate;
+		baud_calculated++;
+	}
+	baud_calculated = baud_calculated - 1;
 
 	/* Check if BAUD value is more than 255, which is maximum
 	 * for synchronous mode */
@@ -105,22 +139,27 @@ enum status_code _sercom_get_async_baud_val(
 	uint64_t scale = 0;
 	uint64_t baud_calculated = 0;
 	uint8_t baud_fp;
-	uint32_t baud_int;
+	uint32_t baud_int = 0;
+	uint64_t temp1, temp2;
 
 	/* Check if the baudrate is outside of valid range */
-	if ((baudrate * sample_num) >= peripheral_clock) {
+	if ((baudrate * sample_num) > peripheral_clock) {
 		/* Return with error code */
 		return STATUS_ERR_BAUDRATE_UNAVAILABLE;
 	}
 
 	if(mode == SERCOM_ASYNC_OPERATION_MODE_ARITHMETIC) {
 		/* Calculate the BAUD value */
-		ratio = ((sample_num * (uint64_t)baudrate) << SHIFT) / peripheral_clock;
+		temp1 = ((sample_num * (uint64_t)baudrate) << SHIFT);
+		ratio = long_division(temp1, peripheral_clock);
 		scale = ((uint64_t)1 << SHIFT) - ratio;
 		baud_calculated = (65536 * scale) >> SHIFT;
 	} else if(mode == SERCOM_ASYNC_OPERATION_MODE_FRACTIONAL) {
 		for(baud_fp = 0; baud_fp < BAUD_FP_MAX; baud_fp++) {
-			baud_int = BAUD_FP_MAX * (uint64_t)peripheral_clock / ((uint64_t)baudrate * sample_num)  - baud_fp;
+			temp1 = BAUD_FP_MAX * (uint64_t)peripheral_clock;
+			temp2 = ((uint64_t)baudrate * sample_num);
+			baud_int = long_division(temp1, temp2);
+			baud_int -= baud_fp;
 			baud_int = baud_int / BAUD_FP_MAX;
 			if(baud_int < BAUD_INT_MAX) {
 				break;
@@ -205,13 +244,13 @@ enum status_code sercom_set_gclk_generator(
 /**
  * \internal Gets the default PAD pinout for a given SERCOM.
  *
- * Returns the PINMUX settings for the given SERCOM and pad. This is used
+ * Returns the pinmux settings for the given SERCOM and pad. This is used
  * for default configuration of pins.
  *
  * \param[in]  sercom_module   Pointer to the SERCOM module
  * \param[in]  pad             PAD to get default pinout for
  *
- * \returns The default PINMUX for the given SERCOM instance and PAD
+ * \returns The default pinmux for the given SERCOM instance and PAD
  *
  */
 uint32_t _sercom_get_default_pad(
@@ -223,6 +262,32 @@ uint32_t _sercom_get_default_pad(
 		MREPEAT(SERCOM_INST_NUM, _SERCOM_PAD_DEFAULTS_CASE, pad)
 	}
 
+	Assert(false);
+	return 0;
+}
+
+/**
+ * \internal
+ * Find index of given instance.
+ *
+ * \param[in] sercom_instance  Instance pointer.
+ *
+ * \return Index of given instance.
+ */
+uint8_t _sercom_get_sercom_inst_index(
+		Sercom *const sercom_instance)
+{
+	/* Save all available SERCOM instances for compare. */
+	Sercom *sercom_instances[SERCOM_INST_NUM] = SERCOM_INSTS;
+
+	/* Find index for sercom instance. */
+	for (uint32_t i = 0; i < SERCOM_INST_NUM; i++) {
+		if ((uintptr_t)sercom_instance == (uintptr_t)sercom_instances[i]) {
+			return i;
+		}
+	}
+
+	/* Invalid data given. */
 	Assert(false);
 	return 0;
 }

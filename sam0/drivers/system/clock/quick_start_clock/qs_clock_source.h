@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 System Clock Driver Quick Start
+ * \brief SAM System Clock Driver Quick Start
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -45,7 +45,7 @@
  *
  * In this case we apply the following configuration:
  * - RC8MHz (internal 8MHz RC oscillator)
- *  - Divide by 4, giving a frequency of 2MHz
+ *  - Divide by four, giving a frequency of 2MHz
  * - DFLL (Digital frequency locked loop)
  *  - Open loop mode
  *  - 48MHz frequency

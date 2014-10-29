@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 Watchdog Driver
+ * \brief SAM Watchdog Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -47,7 +47,7 @@
  * \brief Sets up the WDT hardware module based on the configuration.
  *
  * Writes a given configuration of a WDT configuration to the
- * hardware module, and initializes the internal device struct
+ * hardware module, and initializes the internal device struct.
  *
  * \param[in]  config  Pointer to the configuration struct
  *

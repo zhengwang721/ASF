@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 External Interrupt Driver
+ * \brief SAM External Interrupt Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -236,7 +236,7 @@ void extint_chan_set_config(
  *
  * \returns Status code indicating the success or failure of the request.
  * \retval  STATUS_OK                   Configuration succeeded
- * \retval  STATUS_ERR_PIN_MUX_INVALID  An invalid pin mux value was supplied
+ * \retval  STATUS_ERR_PIN_MUX_INVALID  An invalid pinmux value was supplied
  * \retval  STATUS_ERR_BAD_FORMAT       An invalid detection mode was requested
  */
 enum status_code extint_nmi_set_config(

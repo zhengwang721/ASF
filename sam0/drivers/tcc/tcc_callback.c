@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21/R21 TCC - Timer Counter for Control Applications Callback Driver
+ * \brief SAM TCC - Timer Counter for Control Applications Callback Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -197,7 +197,7 @@ void tcc_disable_callback(
 /**
  * \internal ISR handler for TCC
  *
- * Auto-generate a set of interrupt handlers for each TCC in the device
+ * Auto-generate a set of interrupt handlers for each TCC in the device.
  */
 #define _TCC_INTERRUPT_HANDLER(n, m) \
 		void TCC##n##_Handler(void) \

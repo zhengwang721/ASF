@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 External Interrupt Driver
+ * \brief SAM External Interrupt Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -55,7 +55,7 @@ extern "C" {
  * @{
  */
 
-/** \name Callback configuration and initialization
+/** \name Callback Configuration and Initialization
  * @{
  */
 
@@ -82,7 +82,7 @@ uint8_t extint_get_current_channel(void);
 
 /** @} */
 
-/** \name Callback enabling and disabling (channel)
+/** \name Callback Enabling and Disabling (Channel)
  * @{
  */
 

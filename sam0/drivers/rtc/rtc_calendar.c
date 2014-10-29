@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 RTC Driver (Calendar Mode)
+ * \brief SAM RTC Driver (Calendar Mode)
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -265,9 +265,9 @@ void rtc_calendar_init(
 /**
  * \brief Swaps between 12h and 24h clock mode.
  *
- * Swaps the current RTC time mode.
- * - If currently in 12h mode, it will swap to 24h.
- * - If currently in 24h mode, it will swap to 12h.
+ * Swaps the current RTC time mode:
+ * - If currently in 12h mode, it will swap to 24h
+ * - If currently in 24h mode, it will swap to 12h
  *
  * \note This will not change setting in user's configuration structure.
  *

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 SPI Quick Start
+ * \brief SAM SPI Quick Start
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -97,11 +97,11 @@
  *      \snippet qs_spi_slave_basic.c conf_preload
  *   -# Set frame format to SPI frame.
  *      \snippet qs_spi_slave_basic.c conf_format
- *   -# Set mux setting E.
+ *   -# Set MUX setting E.
  *      \snippet qs_spi_slave_basic.c mux_setting
  *   -# Set pinmux for pad 0 (data in (MOSI) on extension header 1, pin 17).
  *      \snippet qs_spi_slave_basic.c di
- *   -# Set pinmux for pad 1 (slave select on on extension header 1, pin 15)
+ *   -# Set pinmux for pad 1 (slave select on on extension header 1, pin 15).
  *      \snippet qs_spi_slave_basic.c ss
  *   -# Set pinmux for pad 2 (data out (MISO) on extension header 1, pin 16).
  *      \snippet qs_spi_slave_basic.c do

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 TC - Timer Counter Driver
+ * \brief SAM TC - Timer Counter Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -45,9 +45,9 @@
 #define TC_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_tc_group SAM D20/D21/R21 Timer/Counter Driver (TC)
+ * \defgroup asfdoc_sam0_tc_group SAM Timer/Counter Driver (TC)
  *
- * This driver for SAM D20/D21/R21 devices provides an interface for the configuration
+ * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
  * and management of the timer modules within the device, for waveform
  * generation and timing operations. The following driver API modes are covered
  * by this manual:
@@ -59,8 +59,12 @@
  *
  *
  * The following peripherals are used by this module:
- *
  *  - TC (Timer/Counter)
+ *
+ * The following devices can use this module:
+ *  - Atmel® | SMART™ SAM D20/D21
+ *  - Atmel® | SMART™ SAM R21
+ *  - Atmel® | SMART™ SAM D10/D11
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_tc_prerequisites
@@ -84,7 +88,7 @@
  * periodic operations. TC modules can be configured to use an 8-, 16-, or
  * 32-bit counter size.
  *
- * This TC module for the SAM D20/D21/R21 is capable of the following functions:
+ * This TC module for the SAM is capable of the following functions:
  *
  * - Generation of PWM signals
  * - Generation of timestamps for events
@@ -96,7 +100,7 @@
  * of the TC module design.
  *
  * \anchor asfdoc_sam0_tc_block_diagram
- * \image html overview.svg "Basic overview of the TC module"
+ * \image html overview.svg "Basic Overview of the TC Module"
  *
  *
  * \subsection asfdoc_sam0_tc_module_overview_func_desc Functional Description
@@ -115,7 +119,7 @@
  * signal generation.
  *
  * \note The connection of events between modules requires the use of the
- *       \ref asfdoc_sam0_events_group "SAM D20/D21/R21 Event System Driver (EVENTS)"
+ *       \ref asfdoc_sam0_events_group "SAM Event System Driver (EVENTS)"
  *       to route output event of one module to the the input event of another.
  *       For more information on event routing, refer to the event driver
  *       documentation.
@@ -129,11 +133,11 @@
  *
  * \anchor asfdoc_sam0_tc_count_size_vs_top
  * <table>
- *  <caption>Timer counter sizes and their maximum count values</caption>
+ *  <caption>Timer Counter Sizes and Their Maximum Count Values</caption>
  *  <tr>
- *    <th>Counter Size</th>
- *    <th>Max (Hexadecimal)</th>
- *    <th>Max (Decimal)</th>
+ *    <th>Counter size</th>
+ *    <th>Max. (hexadecimal)</th>
+ *    <th>Max. (decimal)</th>
  *  </tr>
  *  <tr>
  *    <td>8-bit</td>
@@ -157,15 +161,16 @@
  * generation match mode.
  *
  * When using 32-bit counter size, two 16-bit counters are chained together
- * in a cascade formation. Even numbered TC modules (e.g. TC0, TC2) can be
- * configured as 32-bit counters. The odd numbered counters will act as slaves
- * to the even numbered masters, and will not be reconfigurable until the
- * master timer is disabled. The pairing of timer modules for 32-bit mode is
- * shown in \ref asfdoc_sam0_tc_module_ms_pairs "the table below".
+ * in a cascade formation. Except in SAM D10/D11, Even numbered TC modules
+ * (e.g. TC0, TC2) can be configured as 32-bit counters. The odd numbered
+ * counters will act as slaves to the even numbered masters, and will not
+ * be reconfigurable until the master timer is disabled. The pairing of timer
+ * modules for 32-bit mode is shown in \ref asfdoc_sam0_tc_module_ms_pairs
+ * "the table below".
  *
  * \anchor asfdoc_sam0_tc_module_ms_pairs
  * <table>
- *   <caption>TC master and slave module pairings</caption>
+ *   <caption>TC Master and Slave Module Pairings</caption>
  *   <tr>
  *     <th>Master TC Module</th>
  *     <th>Slave TC Module</th>
@@ -188,23 +193,27 @@
  *   </tr>
  * </table>
  *
+ * In SAMD10/D11, odd numbered TC modules (e.g. TC1) can be configured as 32-bit
+ * counters. The even numbered(e.g. TC2) counters will act as slaves to the odd
+ * numbered masters.
+ *
  * \subsection asfdoc_sam0_tc_module_overview_clock Clock Settings
  *
  * \subsubsection asfdoc_sam0_tc_module_overview_clock_selection Clock Selection
  * Each TC peripheral is clocked asynchronously to the system clock by a GCLK
  * (Generic Clock) channel. The GCLK channel connects to any of the GCLK
  * generators. The GCLK generators are configured to use one of the available
- * clock sources on the system such as internal oscillator, external crystals
- * etc. - see the \ref asfdoc_sam0_system_clock_group "Generic Clock driver"
+ * clock sources on the system such as internal oscillator, external crystals,
+ * etc. see the \ref asfdoc_sam0_system_clock_group "Generic Clock driver"
  *for
  * more information.
  *
  * \subsubsection asfdoc_sam0_tc_module_overview_clock_prescaler Prescaler
- * Each TC module in the SAM D20/D21/R21 has its own individual clock prescaler, which
+ * Each TC module in the SAM has its own individual clock prescaler, which
  * can be used to divide the input clock frequency used in the counter. This
  * prescaler only scales the clock used to provide clock pulses for the counter
  * to count, and does not affect the digital register interface portion of
- * the module, thus the timer registers will synchronized to the raw GCLK
+ * the module, thus the timer registers will synchronize to the raw GCLK
  * frequency input to the module.
  *
  * As a result of this, when selecting a GCLK frequency and timer prescaler
@@ -212,13 +221,13 @@
  * required and the synchronization frequency, to avoid lengthy
  * synchronization times of the module if a very slow GCLK frequency is fed
  * into the TC module. It is preferable to use a higher module GCLK frequency
- * as the input to the timer and prescale this down as much as possible to
+ * as the input to the timer, and prescale this down as much as possible to
  * obtain a suitable counter frequency in latency-sensitive applications.
  *
  * \subsubsection asfdoc_sam0_tc_module_overview_clock_reloading Reloading
  * Timer modules also contain a configurable reload action, used when a
  * re-trigger event occurs. Examples of a re-trigger event are the counter
- * reaching the max value when counting up, or when an event from the event
+ * reaching the maximum value when counting up, or when an event from the event
  * system tells the counter to re-trigger. The reload action determines if the
  * prescaler should be reset, and when this should happen. The counter will
  * always be reloaded with the value it is set to start counting from. The user
@@ -227,9 +236,9 @@
  *
  * \anchor asfdoc_sam0_tc_module_reload_act
  * <table>
- *   <caption>TC module reload actions</caption>
+ *   <caption>TC Module Reload Actions</caption>
  *   <tr>
- *     <th>Reload Action</th>
+ *     <th>Reload action</th>
  *     <th>Description</th>
  *   </tr>
  *   <tr>
@@ -254,7 +263,7 @@
  * the TC uses the prescaler, the counter in the prescaler should not have a
  * value between zero and the division factor. The TC counter and the counter
  * in the prescaler should both start at zero. When the counter is set to
- * re-trigger when it reaches the max value on the other hand, this is not the
+ * re-trigger when it reaches the maximum value on the other hand, this is not the
  * right option to use. In such a case it would be better if the prescaler is
  * left unaltered when the re-trigger happens, letting the counter reset on the
  * next GCLK cycle.
@@ -277,7 +286,7 @@
  * \subsubsection asfdoc_sam0_tc_module_overview_compare_match_wg Waveform Generation
  *
  * Waveform generation enables the TC module to generate square waves, or if
- * combined with an external passive low-pass filter, analog waveforms.
+ * combined with an external passive low-pass filter; analog waveforms.
  *
  * \subsubsection asfdoc_sam0_tc_module_overview_compare_match_wg_pwm Waveform Generation - PWM
  *
@@ -300,7 +309,7 @@
  * normal (i.e. non-inverted) output mode.
  *
  * \anchor asfdoc_sam0_tc_module_pwm_normal_diag
- * \image html pwm_normal_ex.svg "Example of PWM in normal mode, and different counter operations"
+ * \image html pwm_normal_ex.svg "Example of PWM in Normal Mode, and Different Counter Operations"
  *
  *
  * In \ref asfdoc_sam0_tc_module_pwm_match_diag "the figure below", the
@@ -311,7 +320,7 @@
  * change the TOP value when running in PWM match mode.
  *
  * \anchor asfdoc_sam0_tc_module_pwm_match_diag
- * \image html pwm_match_ex.svg "Example of PWM in match mode, and different counter operations"
+ * \image html pwm_match_ex.svg "Example of PWM in Match Mode, and Different Counter Operations"
  *
  * \subsubsection asfdoc_sam0_tc_module_overview_compare_match_wg_freq Waveform Generation - Frequency
  *
@@ -382,15 +391,15 @@
  * \section asfdoc_sam0_tc_special_considerations Special Considerations
  *
  * The number of capture compare registers in each TC module is dependent on
- * the specific SAM D20/D21/R21 device being used, and in some cases the counter size.
+ * the specific SAM device being used, and in some cases the counter size.
  *
- * The maximum amount of capture compare registers available in any SAM D20/D21/R21
- * device is two when running in 32-bit mode and four in 8-, and 16-bit modes.
+ * The maximum amount of capture compare registers available in any SAM
+ * device is two when running in 32-bit mode and four in 8- and 16-bit modes.
  *
  *
  * \section asfdoc_sam0_tc_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_tc_extra. This includes:
+ * For extra information, see \ref asfdoc_sam0_tc_extra. This includes:
  *  - \ref asfdoc_sam0_tc_extra_acronyms
  *  - \ref asfdoc_sam0_tc_extra_dependencies
  *  - \ref asfdoc_sam0_tc_extra_errata
@@ -418,17 +427,24 @@
 #if SAMD21 || SAMR21
 #  define TC_INSTANCE_OFFSET 3
 #endif
+#if SAMD10 || SAMD11
+#  define TC_INSTANCE_OFFSET 1
+#endif
 
 #if SAMD20
 #  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC0_CC8_NUM
+#elif SAMD10 || SAMD11
+#  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC1_CC8_NUM
 #else
 #  define NUMBER_OF_COMPARE_CAPTURE_CHANNELS TC3_CC8_NUM
    /* Same number for 8-, 16- and 32-bit TC and all TC instances */
 #endif
 
-/** TC Instance MAX ID Number */
+/** TC Instance MAX ID Number. */
 #if SAMD20E || SAMD21G || SAMD21E || SAMR21
 #define TC_INST_MAX_ID  5
+#elif SAMD10 || SAMD11
+#define TC_INST_MAX_ID  2
 #else
 #define TC_INST_MAX_ID  7
 #endif
@@ -446,13 +462,13 @@ extern "C" {
 #if TC_ASYNC == true
 /** Enum for the possible callback types for the TC module. */
 enum tc_callback {
-	/** Callback for TC overflow */
+	/** Callback for TC overflow. */
 	TC_CALLBACK_OVERFLOW,
-	/** Callback for capture overflow error */
+	/** Callback for capture overflow error. */
 	TC_CALLBACK_ERROR,
-	/** Callback for capture compare channel 0 */
+	/** Callback for capture compare channel 0. */
 	TC_CALLBACK_CC_CHANNEL0,
-	/** Callback for capture compare channel 1 */
+	/** Callback for capture compare channel 1. */
 	TC_CALLBACK_CC_CHANNEL1,
 #  if !defined(__DOXYGEN__)
 	/** Number of available callbacks. */
@@ -462,7 +478,7 @@ enum tc_callback {
 #endif
 
 /**
- * \name Module status flags
+ * \name Module Status Flags
  *
  * TC status flags, returned by \ref tc_get_status() and cleared by
  * \ref tc_clear_status().
@@ -505,9 +521,9 @@ enum tc_callback {
  * operations on.
  */
 enum tc_compare_capture_channel {
-	/** Index of compare capture channel 0 */
+	/** Index of compare capture channel 0. */
 	TC_COMPARE_CAPTURE_CHANNEL_0,
-	/** Index of compare capture channel 1 */
+	/** Index of compare capture channel 1. */
 	TC_COMPARE_CAPTURE_CHANNEL_1,
 };
 
@@ -519,23 +535,23 @@ enum tc_compare_capture_channel {
  *
  */
 enum tc_wave_generation {
-	/** Top is max, except in 8-bit counter size where it is the PER
-	 * register
+	/** Top is maximum, except in 8-bit counter size where it is the PER
+	 * register.
 	 */
 	TC_WAVE_GENERATION_NORMAL_FREQ      = TC_CTRLA_WAVEGEN_NFRQ,
 
 	/** Top is CC0, except in 8-bit counter size where it is the PER
-	 * register
+	 * register.
 	 */
 	TC_WAVE_GENERATION_MATCH_FREQ       = TC_CTRLA_WAVEGEN_MFRQ,
 
-	/** Top is max, except in 8-bit counter size where it is the PER
-	 * register
+	/** Top is maximum, except in 8-bit counter size where it is the PER
+	 * register.
 	 */
 	TC_WAVE_GENERATION_NORMAL_PWM       = TC_CTRLA_WAVEGEN_NPWM,
 
 	/** Top is CC0, except in 8-bit counter size where it is the PER
-	 * register
+	 * register.
 	 */
 	TC_WAVE_GENERATION_MATCH_PWM        = TC_CTRLA_WAVEGEN_MPWM,
 };
@@ -546,19 +562,19 @@ enum tc_wave_generation {
  * This enum specifies the maximum value it is possible to count to.
  */
 enum tc_counter_size {
-	/** The counter's max value is 0xFF, the period register is
+	/** The counter's maximum value is 0xFF, the period register is
 	 * available to be used as top value.
 	 */
 	TC_COUNTER_SIZE_8BIT                = TC_CTRLA_MODE_COUNT8,
 
-	/** The counter's max value is 0xFFFF. There is no separate
+	/** The counter's maximum value is 0xFFFF. There is no separate
 	 * period register, to modify top one of the capture compare
 	 * registers has to be used. This limits the amount of
 	 * available channels.
 	 */
 	TC_COUNTER_SIZE_16BIT               = TC_CTRLA_MODE_COUNT16,
 
-	/** The counter's max value is 0xFFFFFFFF. There is no separate
+	/** The counter's maximum value is 0xFFFFFFFF. There is no separate
 	 * period register, to modify top one of the capture compare
 	 * registers has to be used. This limits the amount of
 	 * available channels.
@@ -577,7 +593,7 @@ enum tc_reload_action {
 	 */
 	TC_RELOAD_ACTION_GCLK               = TC_CTRLA_PRESCSYNC_GCLK,
 
-	/** The counter is reloaded/reset on the next prescaler clock
+	/** The counter is reloaded/reset on the next prescaler clock.
 	 */
 	TC_RELOAD_ACTION_PRESC              = TC_CTRLA_PRESCSYNC_PRESC,
 
@@ -595,21 +611,21 @@ enum tc_reload_action {
  * module to make the counter count slower.
  */
 enum tc_clock_prescaler {
-	/** Divide clock by 1 */
+	/** Divide clock by 1. */
 	TC_CLOCK_PRESCALER_DIV1             = TC_CTRLA_PRESCALER(0),
-	/** Divide clock by 2 */
+	/** Divide clock by 2. */
 	TC_CLOCK_PRESCALER_DIV2             = TC_CTRLA_PRESCALER(1),
-	/** Divide clock by 4 */
+	/** Divide clock by 4. */
 	TC_CLOCK_PRESCALER_DIV4             = TC_CTRLA_PRESCALER(2),
-	/** Divide clock by 8 */
+	/** Divide clock by 8. */
 	TC_CLOCK_PRESCALER_DIV8             = TC_CTRLA_PRESCALER(3),
-	/** Divide clock by 16 */
+	/** Divide clock by 16. */
 	TC_CLOCK_PRESCALER_DIV16            = TC_CTRLA_PRESCALER(4),
-	/** Divide clock by 64 */
+	/** Divide clock by 64. */
 	TC_CLOCK_PRESCALER_DIV64            = TC_CTRLA_PRESCALER(5),
-	/** Divide clock by 256 */
+	/** Divide clock by 256. */
 	TC_CLOCK_PRESCALER_DIV256           = TC_CTRLA_PRESCALER(6),
-	/** Divide clock by 1024 */
+	/** Divide clock by 1024. */
 	TC_CLOCK_PRESCALER_DIV1024          = TC_CTRLA_PRESCALER(7),
 };
 
@@ -811,11 +827,11 @@ struct tc_module {
 	/** Size of the initialized Timer/Counter module configuration. */
 	enum tc_counter_size counter_size;
 #  if TC_ASYNC == true
-	/** Array of callbacks */
+	/** Array of callbacks. */
 	tc_callback_t callback[TC_CALLBACK_N];
-	/** Bit mask for callbacks registered */
+	/** Bit mask for callbacks registered. */
 	uint8_t register_callback_mask;
-	/** Bit mask for callbacks enabled */
+	/** Bit mask for callbacks enabled. */
 	uint8_t enable_callback_mask;
 #  endif
 #endif
@@ -836,7 +852,7 @@ uint8_t _tc_get_inst_index(
  *the bus.
  *
  * Checks to see if the underlying hardware peripheral module(s) are currently
- * synchronizing across multiple clock domains to the hardware bus, This
+ * synchronizing across multiple clock domains to the hardware bus. This
  * function can be used to delay further operations on a module until such time
  * that it is ready, to prevent blocking delays for synchronization in the
  * user application.
@@ -888,7 +904,7 @@ static inline bool tc_is_syncing(
  *  \li Capture compare channel 0 set to 0
  *  \li Capture compare channel 1 set to 0
  *  \li No PWM pin output enabled
- *  \li Pin and Mux configuration not set
+ *  \li Pin and MUX configuration not set
  *
  * \param[out]  config  Pointer to a TC module configuration structure to set
  */
@@ -1120,7 +1136,7 @@ enum status_code tc_set_count_value(
  *
  * This function will stop the counter. When the counter is stopped
  * the value in the count value is set to 0 if the counter was
- * counting up, or max or the top value if the counter was counting
+ * counting up, or maximum if the counter was counting
  * down when stopped.
  *
  * \param[in]  module_inst   Pointer to the software module instance struct
@@ -1216,7 +1232,7 @@ enum status_code tc_set_top_value(
  *
  * \param[in] module_inst  Pointer to the TC software instance struct
  *
- * \return Bitmask of \c TC_STATUS_* flags
+ * \return Bitmask of \c TC_STATUS_* flags.
  *
  * \retval TC_STATUS_CHANNEL_0_MATCH   Timer channel 0 compare/capture match
  * \retval TC_STATUS_CHANNEL_1_MATCH   Timer channel 1 compare/capture match
@@ -1379,18 +1395,21 @@ static inline void tc_clear_status(
  *		<th>Changelog</th>
  *	</tr>
  *  <tr>
- *    <td>Added support for SAMR21.</td>
+ *    <td>Added support for SAMD10/D11</td>
+ *  </tr>
+ *  <tr>
+ *    <td>Added support for SAMR21</td>
  *  </tr>
  *	<tr>
  *    <td>Added support for SAMD21 and do some modifications as below:
  *          \li Clean up in the configuration structure, the counter size
  *              setting specific registers is accessed through the counter_8_bit,
- *              counter_16_bit and counter_32_bit structures.
+ *              counter_16_bit and counter_32_bit structures
  *          \li All event related settings moved into the tc_event structure </td>
  *	</tr>
  *	<tr>
  *		<td>Added automatic digital clock interface enable for the slave TC
- *          module when a timer is initialized in 32-bit mode.</td>
+ *          module when a timer is initialized in 32-bit mode</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
@@ -1423,14 +1442,10 @@ static inline void tc_clear_status(
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>E</td>
- *		<td>03/2014</td>
- *		<td>Added support for SAMR21.</td>
- *	</tr>
- *	<tr>
  *		<td>D</td>
- *		<td>03/2014</td>
- *		<td>Added timer use case.</td>
+ *		<td>05/2014</td>
+ *		<td>Added timer use case.
+ *		    Added support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>

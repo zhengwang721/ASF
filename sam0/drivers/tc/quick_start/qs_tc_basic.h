@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 TC Driver Quick Start
+ * \brief SAM TC Driver Quick Start
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -49,7 +49,7 @@
  * set up as follows:
  *
  * - GCLK generator 0 (GCLK main) clock source
- * - 16 bit resolution on the counter
+ * - 16-bit resolution on the counter
  * - No prescaler
  * - Normal PWM wave generation
  * - GCLK reload action
@@ -100,7 +100,7 @@
  *           settings.
  *
  *  -# Alter the TC settings to configure the counter width, wave generation
- *     mode and the compare channel 0 value.
+ *     mode, and the compare channel 0 value.
  *     \snippet qs_tc_basic.c setup_change_config
  *  -# Alter the TC settings to configure the PWM output on a physical device
  *     pin.

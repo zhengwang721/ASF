@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 BOD Driver Quick Start
+ * \brief SAM BOD Driver Quick Start
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -45,7 +45,7 @@
  *
  * In this use case, the BOD33 will be configured with the following settings:
  * - Continuous sampling mode
- * - Prescaler setting of 2
+ * - Prescaler setting of two
  * - Reset action on low voltage detect
  *
  * \section asfdoc_sam0_bod_basic_use_case_setup Quick Start

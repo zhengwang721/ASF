@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 System Interrupt Driver
+ * \brief SAM System Interrupt Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -48,14 +48,18 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_system_interrupt_group SAM D20/D21/R21 System Interrupt Driver (SYSTEM INTERRUPT)
+ * \defgroup asfdoc_sam0_system_interrupt_group SAM System Interrupt Driver (SYSTEM INTERRUPT)
  *
- * This driver for SAM D20/D21/R21 devices provides an interface for the configuration
+ * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
  * and management of internal software and hardware interrupts/exceptions.
  *
  * The following peripherals are used by this module:
- *
  *  - NVIC (Nested Vector Interrupt Controller)
+ *
+ * The following devices can use this module:
+ *  - Atmel® | SMART™ SAM D20/D21
+ *  - Atmel® | SMART™ SAM R21
+ *  - Atmel® | SMART™ SAM D10/D11
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_system_interrupt_prerequisites
@@ -73,7 +77,7 @@ extern "C" {
  *
  * \section asfdoc_sam0_system_interrupt_module_overview Module Overview
  *
- * The ARM&reg; Cortex&reg; M0+ core contains an interrupt an exception vector table, which
+ * The ARM&reg; Cortex&reg; M0+ core contains an interrupt and exception vector table, which
  * can be used to configure the device's interrupt handlers; individual
  * interrupts and exceptions can be enabled and disabled, as well as configured
  * with a variable priority.
@@ -98,7 +102,7 @@ extern "C" {
  *
  * \section asfdoc_sam0_system_interrupt_special_considerations Special Considerations
  *
- * Interrupts from peripherals in the SAM D20/D21/R21 devices are on a per-module basis;
+ * Interrupts from peripherals in the SAM devices are on a per-module basis;
  * an interrupt raised from any source within a module will cause a single,
  * module-common handler to execute. It is the user application or driver's
  * responsibility to de-multiplex the module-common interrupt to determine the
@@ -106,7 +110,7 @@ extern "C" {
  *
  * \section asfdoc_sam0_system_interrupt_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_sam0_system_interrupt_extra. This includes:
+ * For extra information, see \ref asfdoc_sam0_system_interrupt_extra. This includes:
  *  - \ref asfdoc_sam0_system_interrupt_extra_acronyms
  *  - \ref asfdoc_sam0_system_interrupt_extra_dependencies
  *  - \ref asfdoc_sam0_system_interrupt_extra_errata
@@ -186,7 +190,7 @@ static inline void system_interrupt_leave_critical_section(void)
  *
  * Checks if global interrupts are currently enabled.
  *
- * \returns A boolean that identifies if the global interrupts are enabled or not.
+ * \returns A Boolean that identifies if the global interrupts are enabled or not.
  *
  * \retval true   Global interrupts are currently enabled
  * \retval false  Global interrupts are currently disabled
@@ -225,7 +229,7 @@ static inline void system_interrupt_disable_global(void)
  *
  * \param[in] vector  Interrupt vector number to check
  *
- * \returns A variable identifying if the requested interrupt vector is enabled
+ * \returns A variable identifying if the requested interrupt vector is enabled.
  *
  * \retval true   Specified interrupt vector is currently enabled
  * \retval false  Specified interrupt vector is currently disabled
@@ -358,6 +362,9 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added support for SAMD10/D11</td>
+ *	</tr>
+ *	<tr>
  *		<td>Added support for SAMR21</td>
  *	</tr>
  *	<tr>
@@ -391,8 +398,8 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *	</tr>
  *	<tr>
  *		<td>D</td>
- *		<td>02/2014</td>
- *		<td>Add support for SAMR21.</td>
+ *		<td>04/2014</td>
+ *		<td>Add support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>
  *		<td>C</td>

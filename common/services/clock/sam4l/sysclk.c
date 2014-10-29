@@ -3,7 +3,7 @@
  *
  * \brief Chip-specific system clock management functions
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -740,8 +740,12 @@ void sysclk_disable_peripheral_clock(const volatile void *module)
 	}
 
 	// Disable PBA divided clock if possible.
-#define PBADIV_CLKSRC_MASK (SYSCLK_TC0 | SYSCLK_TC1 \
-		| SYSCLK_USART0 | SYSCLK_USART1 | SYSCLK_USART2 | SYSCLK_USART3)
+#define PBADIV_CLKSRC_MASK ((1 << SYSCLK_TC0) | \
+							(1 << SYSCLK_TC1) | \
+							(1 << SYSCLK_USART0) | \
+							(1 << SYSCLK_USART1) | \
+							(1 << SYSCLK_USART2) | \
+							(1 << SYSCLK_USART3))
 	if ((PM->PM_PBAMASK & PBADIV_CLKSRC_MASK) == 0) {
 		sysclk_disable_pba_divmask(PBA_DIVMASK_Msk);
 	}
@@ -900,6 +904,10 @@ void sysclk_init(void)
 	/* Automatically select best power scaling mode */
 #ifdef CONFIG_FLASH_READ_MODE_HIGH_SPEED_ENABLE
 	ps_value = BPM_PS_2;
+	is_fwu_enabled = false;
+#elif (defined(CONFIG_PLL0_MUL) || defined(CONFIG_DFLL0_MUL) ||	defined(CONFIG_USBCLK_DIV))
+	/* USB/DFLL/PLL are not available in PS1 (BPM.PMCON.PS=1) mode */
+	ps_value = BPM_PS_0;
 	is_fwu_enabled = false;
 #else
 	if (sysclk_get_cpu_hz() <= FLASH_FREQ_PS1_FWS_1_MAX_FREQ) {

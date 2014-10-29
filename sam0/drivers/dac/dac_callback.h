@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21 Digital-to-Analog Interrupt Driver
+ * \brief SAM Digital-to-Analog Interrupt Driver
  *
  * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
@@ -56,7 +56,7 @@ extern "C" {
  * @{
  */
 
-/** \name Callback configuration and initialization
+/** \name Callback Configuration and Initialization
  * @{
  */
 enum status_code dac_chan_write_buffer_job(
@@ -83,7 +83,7 @@ enum status_code dac_unregister_callback(
 
 /** @} */
 
-/** \name Callback enabling and disabling (Channel)
+/** \name Callback Enabling and Disabling (Channel)
  * @{
  */
 

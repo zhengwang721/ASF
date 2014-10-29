@@ -99,7 +99,11 @@
 
 /* SAM4CM series */
 #if (SAM4CM)
-#  include "sam4cm.h"
+#  if (SAM4CMP32 || SAM4CMS32)
+#    include "sam4cm32.h"
+#  else
+#    include "sam4cm.h"
+#  endif
 #endif
 
 /* SAM4CP series */
@@ -120,6 +124,11 @@
 /* SAMG54 series */
 #if (SAMG54)
 #  include "samg54.h"
+#endif
+
+/* SAMG55 series */
+#if (SAMG55)
+#  include "samg55.h"
 #endif
 
 #endif /* _SAM_IO_ */

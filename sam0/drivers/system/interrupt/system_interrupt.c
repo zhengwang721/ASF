@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D20/D21/R21 System Interrupt Driver
+ * \brief SAM System Interrupt Driver
  *
  * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
@@ -49,7 +49,7 @@
  *
  * \param[in] vector  Interrupt vector number to check
  *
- * \returns A boolean identifying if the requested interrupt vector is pending.
+ * \returns A Boolean identifying if the requested interrupt vector is pending.
  *
  * \retval true   Specified interrupt vector is pending
  * \retval false  Specified interrupt vector is not pending
