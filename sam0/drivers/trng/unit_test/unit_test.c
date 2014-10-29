@@ -163,9 +163,11 @@ static void run_trng_polling_read_test(const struct test_case *test)
 	/* Structure for TRNG configuration */
 	struct trng_config config;
 
-	/* Initialize the TRNG */
+	/* Initialize and enable the TRNG */
 	trng_get_config_defaults(&config);
 	trng_init(&trng_instance, TRNG, &config);
+	trng_enable(&trng_instance);
+
 
 	/* Read random data */
 	for (i = 0; i < 3; i++) {
@@ -189,9 +191,6 @@ static void run_trng_polling_read_test(const struct test_case *test)
 		test_assert_true(test, false,
 				"Get same random data in polling mode.");
 	}
-
-	/* Test done, disable TRNG instance */
-	trng_disable(&trng_instance);
 }
 
 /**
@@ -213,7 +212,7 @@ static void run_trng_callback_read_test(const struct test_case *test)
 	trng_enable_callback(&trng_instance, TRNG_CALLBACK_READ_BUFFER);
 
 	/* Start TRNG read job */
-	trng_read_buffer_job(&trng_instance, random_result, 5);
+	trng_read_buffer_job(&trng_instance, random_result, 3);
 	do {
 		timeout--;
 		if (interrupt_flag) {
