@@ -126,7 +126,7 @@
 #define MENU_HEADER "\n\r" \
 	"---------------------------------------------------------\n\r"
 
-#if SAMD20 || SAMD21 || SAMR21
+#if SAM0
 /* Structure for UART module connected to EDBG (used for unit test output) */
 struct usart_module cdc_uart_module;
 #endif
@@ -257,7 +257,7 @@ static uint8_t run_fatfs_test(uint32_t disk_dev_num)
 		puts("-I- Please wait a moment during formatting...\r");
 		res = f_mkfs(disk_dev_num, /* Drv */
 				0, /* FDISK partition */
-				512); /* AllocSize */
+				1024); /* AllocSize */
 		puts("-I- Disk format finished !\r");
 		if (res != FR_OK) {
 			printf("-E- f_mkfs pb: 0x%X\n\r", res);
@@ -363,7 +363,7 @@ static uint8_t run_fatfs_test(uint32_t disk_dev_num)
 int main(void)
 {
 	uint32_t disk_dev_num;
-#if SAMD20 || SAMD21 || SAMR21
+#if SAM0
 	system_init();
 	struct usart_config usart_conf;
 	usart_get_config_defaults(&usart_conf);
