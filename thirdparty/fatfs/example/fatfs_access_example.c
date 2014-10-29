@@ -86,7 +86,7 @@
  *  -# Build the program and download it into the evaluation board.
  *  -# On the computer, open and configure a terminal application
  *     (e.g., HyperTerminal on Microsoft Windows) with these settings:
- *    - 115200 bauds (or 38400 bauds on SAM D/R Xplained Pro)
+ *    - 115200 bauds (or 38400 bauds on SAM D/R/L Xplained Pro)
  *    - 8 bits of data
  *    - No parity
  *    - 1 stop bit
