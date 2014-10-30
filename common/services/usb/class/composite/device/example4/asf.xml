@@ -77,7 +77,6 @@
 			<device-support value="sam4s"/>
 			<device-support value="sam4l"/>
 			<device-support value="sam4e"/>
-			<device-support value="samg55"/>
 			<info type="gui-flag" value="move-to-root"/>
 		</module>
 		<module type="application" id="common.services.usb.composite.device.example.cdc_msc#3" caption="USB Composite Device Example CDC and MSC">

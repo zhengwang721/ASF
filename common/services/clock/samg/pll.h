@@ -188,9 +188,11 @@ static inline uint32_t pll_is_locked(uint32_t ul_pll_id)
 	if (ul_pll_id == PLLA_ID) {
 		return pmc_is_locked_pllack();
 #if SAMG55
-	} else {
+	} else if (ul_pll_id == PLLB_ID) {
 		return pmc_is_locked_pllbck();
 #endif
+	} else {
+		return 0;
 	}
 }
 
