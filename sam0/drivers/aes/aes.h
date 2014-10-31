@@ -221,6 +221,7 @@ enum aes_cfb_size {
 
 /** AES CounterMeasure type */
 enum aes_countermeature_type {
+	AES_COUNTERMEASURE_TYPE_disabled = 0x0,
 	AES_COUNTERMEASURE_TYPE_1 = 0x01,
 	AES_COUNTERMEASURE_TYPE_2 = 0x02,
 	AES_COUNTERMEASURE_TYPE_3 = 0x04,
@@ -309,7 +310,7 @@ void aes_init(struct aes_module *const module,
 /**
  * \brief Start a manual encryption/decryption process.
  *
- * \param[in] hw Module hardware register base address pointer
+ * \param[in] module Pointer to the AES software instance struct
  */
 static inline void aes_start(struct aes_module *const module)
 {
@@ -317,6 +318,31 @@ static inline void aes_start(struct aes_module *const module)
 	Assert(module->hw);
 
 	module->hw->CTRLB.reg |= AES_CTRLB_START;
+}
+/**
+ * \brief Notifies the module that the next input data block
+ * is the beginning of a new message.
+ *
+ * \param[in] module Pointer to the AES software instance struct
+ *
+ */
+static inline void aes_set_new_message(struct aes_module *const module)
+{
+	Assert(module);
+	Assert(module->hw);
+	module->hw->CTRLB.reg |= AES_CTRLB_NEWMSG;
+}
+/**
+ * \brief Clear the indication of the beginning for a new message
+ *
+ * \param[in] module Pointer to the AES software instance struct
+ *
+ */
+static inline void aes_clear_new_message(struct aes_module *const module)
+{
+	Assert(module);
+	Assert(module->hw);
+	module->hw->CTRLB.reg &= ~AES_CTRLB_NEWMSG;
 }
 
 void aes_enable(struct aes_module *const module);
@@ -337,7 +363,7 @@ void aes_read_output_data(struct aes_module *const module,
  * \brief Write AES random seed.
  *
  * \param[in] module Pointer to the AES software instance struct
- * \param[in] random_seed Seed for the random number generator
+ * \param[in] seed Seed for the random number generator
  */
 static inline void aes_write_random_seed(struct aes_module *const module,
 										uint32_t seed)
@@ -360,7 +386,7 @@ static inline void aes_write_random_seed(struct aes_module *const module,
  *
  * Retrieves the status of the module, giving overall state information.
  *
- * \param[in] module_inst  Pointer to the AES software instance struct
+ * \param[in] module Pointer to the AES software instance struct
  *
  * \retval AES_ENCRYPTION_COMPLETE   AES encryption complete
  * \retval AES_GF_MULTI_COMPLETE   AES GF multiplication complete
@@ -390,8 +416,8 @@ static inline uint32_t aes_get_status(struct aes_module *const module)
  *
  * Clears the given status flag of the module.
  *
- * \param[in] module   Pointer to the AES software instance struct
- * \param[in] status_flags  Bitmask flags to clear
+ * \param[in] module Pointer to the AES software instance struct
+ * \param[in] status_flags Bitmask flags to clear
  */
 static inline void aes_clear_status(
 		struct aes_module *const module,
@@ -425,8 +451,8 @@ static inline void aes_clear_status(
 /**
  * \brief  Get the AES GCM Hash Value.
  *
- * \param[in] module   Pointer to the AES software instance struct
- * \param[in]  id    Index into the GHASH array (range 0 to 3)
+ * \param[in] module Pointer to the AES software instance struct
+ * \param[in] id Index into the GHASH array (range 0 to 3)
  *
  * \return The content of the GHASHRx[x = 0...3] vlaue.
  */
@@ -442,8 +468,8 @@ static inline uint32_t aes_gcm_read_ghash(struct aes_module *const module, uint3
  * \brief  Set the AES GCM Hash Value.
  *
  * \param[in] module Pointer to the AES software instance struct
- * \param[in] id     Index into the GHASHx array (range 0 to 3)
- * \param[in] ghash  GCM hash vlaue
+ * \param[in] id Index into the GHASHx array (range 0 to 3)
+ * \param[in] ghash GCM hash vlaue
  */
 static inline void aes_gcm_write_ghash(struct aes_module *const module,
 									uint32_t id,uint32_t ghash)
@@ -469,15 +495,15 @@ static inline uint32_t aes_gcm_read_hash_key(struct aes_module *const module,
 	Assert(module);
 	Assert(module->hw);
 
-	return (*(&(module->hw->HASHKEY0.reg) + 4*id));
+	return (*(uint32_t *)((uint32_t )&(module->hw->HASHKEY0.reg) + 4*id));
 }
 
 /**
  * \brief  Set the AES GCM Hash key.
  *
  * \param[in] module Pointer to the AES software instance struct
- * \param[in]  id    Index into the Hash key array (range 0 to 3)
- * \param[in]  key GCM Hash key
+ * \param[in] id Index into the Hash key array (range 0 to 3)
+ * \param[in] key GCM Hash key
  */
 static inline void aes_gcm_write_hash_key(struct aes_module *const module,
 										uint32_t id, uint32_t key)
@@ -485,7 +511,7 @@ static inline void aes_gcm_write_hash_key(struct aes_module *const module,
 	Assert(module);
 	Assert(module->hw);
 
-	*(&(module->hw->HASHKEY0.reg) + 4*id) = key;
+	*(uint32_t *)((uint32_t)&(module->hw->HASHKEY0.reg) + 4*id) = key;
 }
 
 /**
@@ -507,7 +533,7 @@ static inline uint32_t aes_gcm_read_cipher_len(struct aes_module *const module)
  * \brief  Set the AES GCM cipher length.
  *
  * \param[in] module Pointer to the AES software instance struct
- * \param[in]  len cipher length
+ * \param[in] len cipher length
  */
 static inline void aes_gcm_write_cipher_len(struct aes_module *const module,
 										uint32_t len)

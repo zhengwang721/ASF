@@ -146,15 +146,13 @@ static void configure_usart(void)
 
 	struct usart_config config_usart;
 	usart_get_config_defaults(&config_usart);
-	config_usart.baudrate    = 9600;
+	config_usart.baudrate    = 38400;
 	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
 	config_usart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
 	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
 	config_usart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
 	config_usart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
-	while (usart_init(&usart_instance,
-			EDBG_CDC_MODULE, &config_usart) != STATUS_OK) {
-	}
+	stdio_serial_init(&usart_instance, EDBG_CDC_MODULE, &config_usart);
 	usart_enable(&usart_instance);
 }
 
@@ -191,14 +189,15 @@ static void ecb_mode_test(void)
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
 	aes_set_config(&aes_instance,AES, &g_aes_cfg);
-
 	/* Set the cryptographic key. */
 	aes_write_key(&aes_instance, key128);
 
 	/* The initialization vector is not used by the ECB cipher mode. */
 
+	aes_set_new_message(&aes_instance);
 	/* Write the data to be ciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_plain_text);
+	aes_clear_new_message(&aes_instance);
 
 	/* Wait for the end of the encryption process. */
 	while (false == state) {
@@ -235,10 +234,10 @@ static void ecb_mode_test(void)
 	aes_write_key(&aes_instance, key128);
 
 	/* The initialization vector is not used by the ECB cipher mode. */
-
+	aes_set_new_message(&aes_instance);
 	/* Write the data to be deciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_cipher_text_ecb);
-
+	aes_clear_new_message(&aes_instance);
 	/* Wait for the end of the decryption process. */
 	while (false == state) {
 	}
@@ -271,7 +270,7 @@ static void cbc_mode_test(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_START;
+	g_aes_cfg.start_mode = AES_MANUAL_START;
 	g_aes_cfg.opmode = AES_CBC_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -285,7 +284,9 @@ static void cbc_mode_test(void)
 
 	/* Write the data to be ciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_plain_text);
-
+	aes_set_new_message(&aes_instance);
+	aes_start(&aes_instance);
+	aes_clear_new_message(&aes_instance);
 	/* Wait for the end of the encryption process. */
 	while (false == state) {
 	}
@@ -323,8 +324,10 @@ static void cbc_mode_test(void)
 	/* Set the initialization vector. */
 	aes_write_init_vector(&aes_instance, init_vector);
 
+	aes_set_new_message(&aes_instance);
 	/* Write the data to be deciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_cipher_text_cbc);
+	aes_clear_new_message(&aes_instance);
 
 	/* Wait for the end of the decryption process. */
 	while (false == state) {
@@ -357,7 +360,7 @@ static void cfb128_mode_test(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_ENCRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_START;
+	g_aes_cfg.start_mode = AES_MANUAL_START;
 	g_aes_cfg.opmode = AES_CFB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -371,7 +374,9 @@ static void cfb128_mode_test(void)
 
 	/* Write the data to be ciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_plain_text);
-
+	aes_set_new_message(&aes_instance);
+	aes_start(&aes_instance);
+	aes_clear_new_message(&aes_instance);
 	/* Wait for the end of the encryption process. */
 	while (false == state) {
 	}
@@ -398,7 +403,7 @@ static void cfb128_mode_test(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_START;
+	g_aes_cfg.start_mode = AES_MANUAL_START;
 	g_aes_cfg.opmode = AES_CFB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -412,7 +417,9 @@ static void cfb128_mode_test(void)
 
 	/* Write the data to be deciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_cipher_text_cfb128);
-
+	aes_set_new_message(&aes_instance);
+	aes_start(&aes_instance);
+	aes_clear_new_message(&aes_instance);
 	/* Wait for the end of the decryption process. */
 	while (false == state) {
 	}
@@ -456,10 +463,10 @@ static void ofb_mode_test(void)
 
 	/* Set the initialization vector. */
 	aes_write_init_vector(&aes_instance, init_vector);
-
+	aes_set_new_message(&aes_instance);
 	/* Write the data to be ciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_plain_text);
-
+	aes_clear_new_message(&aes_instance);
 	/* Wait for the end of the encryption process. */
 	while (false == state) {
 	}
@@ -486,7 +493,7 @@ static void ofb_mode_test(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_START;
+	g_aes_cfg.start_mode = AES_MANUAL_START;
 	g_aes_cfg.opmode = AES_OFB_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -500,6 +507,10 @@ static void ofb_mode_test(void)
 
 	/* Write the data to be deciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_cipher_text_ofb);
+
+	aes_set_new_message(&aes_instance);
+	aes_start(&aes_instance);
+	aes_clear_new_message(&aes_instance);
 
 	/* Wait for the end of the decryption process. */
 	while (false == state) {
@@ -544,9 +555,10 @@ static void ctr_mode_test(void)
 
 	/* Set the initialization vector. */
 	aes_write_init_vector(&aes_instance, init_vector_ctr);
-
+	aes_set_new_message(&aes_instance);
 	/* Write the data to be ciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_plain_text);
+	aes_clear_new_message(&aes_instance);
 
 	/* Wait for the end of the encryption process. */
 	while (false == state) {
@@ -574,7 +586,7 @@ static void ctr_mode_test(void)
 	/* Configure the AES. */
 	g_aes_cfg.encrypt_mode = AES_DECRYPTION;
 	g_aes_cfg.key_size = AES_KEY_SIZE_128;
-	g_aes_cfg.start_mode = AES_AUTO_START;
+	g_aes_cfg.start_mode = AES_MANUAL_START;
 	g_aes_cfg.opmode = AES_CTR_MODE;
 	g_aes_cfg.cfb_size = AES_CFB_SIZE_128;
 	g_aes_cfg.lod = false;
@@ -589,6 +601,9 @@ static void ctr_mode_test(void)
 	/* Write the data to be deciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_cipher_text_ctr);
 
+	aes_set_new_message(&aes_instance);
+	aes_start(&aes_instance);
+	aes_clear_new_message(&aes_instance);
 	/* Wait for the end of the decryption process. */
 	while (false == state) {
 	}
@@ -634,7 +649,7 @@ int main(void)
 //! [module_enable_register]
 
 //! [setup_init]
-
+	printf("Start test\r\n");
 //! [encryption_decryption]
 //![ECB_MODE]
 	ecb_mode_test();

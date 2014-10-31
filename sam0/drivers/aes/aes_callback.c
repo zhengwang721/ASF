@@ -90,16 +90,18 @@ enum status_code aes_unregister_callback(
 */
 void AES_Handler(void)
 {
-	uint32_t status = AES->INTFLAG.reg;;
+	uint32_t status = AES->INTFLAG.reg;
 
 	if (status & AES_INTFLAG_ENCCMP) {
 		if (aes_callback_pointer[AES_CALLBACK_ENCRYPTION_COMPLETE]) {
+			AES->INTFLAG.reg |= AES_INTFLAG_ENCCMP;
 			aes_callback_pointer[AES_CALLBACK_ENCRYPTION_COMPLETE]();
 		}
 	}
 
 	if (status & AES_INTFLAG_GFMCMP) {
 		if (aes_callback_pointer[AES_CALLBACK_ENCRYPTION_COMPLETE]) {
+			AES->INTFLAG.reg |= AES_INTFLAG_GFMCMP;
 			aes_callback_pointer[AES_CALLBACK_ENCRYPTION_COMPLETE]();
 		}
 	}
