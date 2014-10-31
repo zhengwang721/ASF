@@ -167,9 +167,13 @@ static void udd_sleep_mode(enum udd_usb_state_enum new_state)
 {
 	enum sleepmgr_mode sleep_mode[] = {
 		SLEEPMGR_ACTIVE,  /* UDD_STATE_OFF (not used) */
+	#if SAML21
+		SLEEPMGR_IDLE,  /* UDD_STATE_IDLE */
+	#else
 		SLEEPMGR_IDLE_2,  /* UDD_STATE_SUSPEND */
 		SLEEPMGR_IDLE_1,  /* UDD_STATE_SUSPEND_LPM */
 		SLEEPMGR_IDLE_0,  /* UDD_STATE_IDLE */
+	#endif	
 	};
 
 	static enum udd_usb_state_enum udd_state = UDD_STATE_OFF;
