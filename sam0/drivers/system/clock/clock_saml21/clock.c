@@ -751,6 +751,9 @@ bool system_clock_source_is_ready(
 		if (n > 0) { _CONF_CLOCK_GCLK_CONFIG(n, unused); }
 #endif
 
+#ifdef SAML21_REV_A
+extern void set_perf_level(uint32_t Perflevel);
+#endif
 /**
  * \brief Initialize clock system based on the configuration in conf_clocks.h
  *
@@ -766,9 +769,13 @@ void system_clock_init(void)
 	SUPC->INTFLAG.reg = SUPC_INTFLAG_BOD33RDY | SUPC_INTFLAG_BOD33DET;
 
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
-
 #ifndef SAML21_REV_A
+
 	/*  Switch to PL2 to be sure configuration of GCLK0 is safe */
+	system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_2);
+#else
+	set_perf_level(2);
+  	system_flash_set_waitstates(1);
 	system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_2);
 #endif
 

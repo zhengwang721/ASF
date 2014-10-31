@@ -28231,7 +28231,7 @@ static void load_calibrations(void)
     /* FIXME: Adjust FCAL (0x0 ~ 0x3F) according to specific board:
      * - 0x29 for XPRO board SN: 0200000038
      */
-    //OSCCTRL->CAL4M.bit.FCAL = 0x29;
+    OSCCTRL->CAL4M.bit.FCAL = 0x30;
     SUPC->BUVREGCAL.bit.BKUP = (FUSES_BUVREG_BKUPCALIB_MASK & cal1) >> FUSES_BUVREG_BKUPCALIB_OFFSET;
     SUPC->BUVREGCAL.bit.NOTINBKUP = (FUSES_BUVREG_NOBKUPCALIB_MASK & cal1) >> FUSES_BUVREG_NOBKUPCALIB_OFFSET;
 
@@ -28664,3 +28664,33 @@ void Dummy_Handler(void)
         while (1) {
         }
 }
+
+void set_perf_level(uint32_t Perflevel)
+{
+	//Switch to PLx for this test
+
+		//Enable testmode to access shadow registers
+		DSUSTANDBY->TESTMODE.reg |= 0x1;
+		if(!((DSU->TESTMODE.reg & 0x1) || (DSUSTANDBY->TESTMODE.reg & 0x1)))
+		{
+		  while(1);// Error dsu_test_enable not set
+		}
+		
+	
+		if(Perflevel==0)
+			SUPC->VREFCAL.bit.VREFVREG = 0x37;	 // Value : 0.96V
+	
+		if(Perflevel==1)
+			SUPC->VREFCAL.bit.VREFVREG = 0x4E;	 // Value : 1.05V
+	
+		if(Perflevel==2)
+			SUPC->VREFCAL.bit.VREFVREG = 0x6B;	 // Value : 1.20V
+		  
+		SUPC->VREGTEST.reg = SUPC_VREGTEST_LDOEN |	SUPC_VREGTEST_SCEN;
+		SUPC->VREGTEST.bit.FVREFVREG = 1;
+		SUPC->VREGTEST.bit.TESTEN = 1;	  
+		
+		DSUSTANDBY->TESTMODE.reg = 0;	 
+
+}
+
