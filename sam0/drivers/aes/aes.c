@@ -112,9 +112,6 @@ void aes_init(
 
 	/* Initialize the AES with new configurations */
 	aes_set_config(module,hw, config);
-
-	/* Disable clock for AES */
-	system_apb_clock_clear_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_AES);
 }
 
 /**
@@ -126,7 +123,6 @@ void aes_enable(struct aes_module *const module)
 {
 	Assert(module);
 	Assert(module->hw);
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_AES);
 	module->hw->CTRLA.reg |= AES_CTRLA_ENABLE;
 
 }
@@ -140,7 +136,6 @@ void aes_disable(struct aes_module *const module)
 	Assert(module);
 	Assert(module->hw);
 	module->hw->CTRLA.reg &= (~AES_CTRLA_ENABLE);
-	system_apb_clock_clear_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_AES);
 }
 
 /**
@@ -176,8 +171,13 @@ void aes_set_config(
 			 | (config->enable_xor_key << AES_CTRLA_XORKEY_Pos)
 			 | (config->enable_key_gen << AES_CTRLA_KEYGEN_Pos)
 			 | (config->lod << AES_CTRLA_LOD_Pos);
-
-	hw->CTRLA.reg = ul_mode;
+	if (hw->CTRLA.reg & AES_CTRLA_ENABLE) {
+		aes_disable(module);
+		hw->CTRLA.reg = ul_mode;
+		aes_enable(module);
+	} else {
+		hw->CTRLA.reg = ul_mode;
+	}
 }
 
 /**
@@ -217,7 +217,7 @@ void aes_write_key(
 	}
 
 	for (i = 0; i < key_length; i++) {
-		*(((uint8_t*)&(module->hw->KEYWORD0.reg)) + 4*i) = *key;
+		*((uint32_t *)((uint32_t)&(module->hw->KEYWORD0.reg) + 4*i)) = *key;
 		key++;
 	}
 }
@@ -240,10 +240,8 @@ void aes_write_init_vector(
 	Assert(module->hw);
 	Assert(module->opmode != AES_ECB_MODE);
 
-	module->hw->CTRLB.reg |= AES_CTRLB_NEWMSG;
-
 	for (i = 0; i < 4; i++) {
-		*(&(module->hw->INTVECTV0.reg) + 4*i) = *vector;
+		*(uint32_t *)((uint32_t)&(module->hw->INTVECTV0.reg) + 4*i) = *vector;
 		vector++;
 	}
 }

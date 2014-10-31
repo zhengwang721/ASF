@@ -52,7 +52,7 @@ extern "C" {
 #endif
 
 #include <compiler.h>
-
+#include <system_interrupt.h>
 /**
  * \addtogroup asfdoc_sam0_drivers_aes_group
  *
@@ -103,6 +103,7 @@ enum status_code aes_unregister_callback(
 static inline enum status_code aes_enable_callback(struct aes_module *const module,
 		const enum aes_callback_type type)
 {
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_AES);
 	if (type == AES_CALLBACK_ENCRYPTION_COMPLETE){
 		module->hw->INTENSET.reg = AES_INTENSET_ENCCMP;
 	} else if (type == AES_CALLBACK_GF_MULTI_COMPLETE){
@@ -128,6 +129,7 @@ static inline enum status_code aes_enable_callback(struct aes_module *const modu
 static inline enum status_code aes_disable_callback(struct aes_module *const module,
 		 const enum aes_callback_type type)
 {
+	system_interrupt_disable(SYSTEM_INTERRUPT_MODULE_AES);
 	if (type == AES_CALLBACK_ENCRYPTION_COMPLETE){
 		module->hw->INTENCLR.reg = AES_INTENCLR_ENCCMP;
 	} else if (type == AES_CALLBACK_GF_MULTI_COMPLETE){

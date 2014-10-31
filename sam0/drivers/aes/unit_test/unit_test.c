@@ -102,6 +102,8 @@
  */
 
 #include <asf.h>
+#include <stdio_serial.h>
+#include <string.h>
 
 #define AES_EXAMPLE_REFBUF_SIZE 4
 
@@ -207,17 +209,16 @@ DmacDescriptor example_descriptor_rx;
  */
 static void configure_usart(void)
 {
+
 	struct usart_config config_usart;
 	usart_get_config_defaults(&config_usart);
-	config_usart.baudrate    = 9600;
+	config_usart.baudrate	 = 38400;
 	config_usart.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
 	config_usart.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
 	config_usart.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
 	config_usart.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
 	config_usart.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
-	while (usart_init(&usart_instance,
-			EDBG_CDC_MODULE, &config_usart) != STATUS_OK) {
-	}
+	stdio_serial_init(&usart_instance, EDBG_CDC_MODULE, &config_usart);
 	usart_enable(&usart_instance);
 }
 
@@ -230,11 +231,10 @@ static void configure_dma_aes_wr(void)
 	dma_get_config_defaults(&tx_config);
 
 	tx_config.peripheral_trigger = AES_DMAC_ID_WR;
-	tx_config.trigger_action = DMA_TRIGGER_ACTON_BEAT;
+	tx_config.trigger_action = DMA_TRIGGER_ACTON_BLOCK;
 
 	/* Allocate DMA resource.*/
 	dma_allocate(&example_resource_tx, &tx_config);
-
 
 	struct dma_descriptor_config tx_descriptor_config;
 
@@ -244,14 +244,11 @@ static void configure_dma_aes_wr(void)
 	tx_descriptor_config.dst_increment_enable = false;
 	tx_descriptor_config.block_transfer_count = AES_EXAMPLE_REFBUF_SIZE;
 	tx_descriptor_config.source_address = (uint32_t)ref_plain_text + sizeof(ref_plain_text);
-	tx_descriptor_config.destination_address =
-		(uint32_t)(&aes_instance.hw->INDATA.reg);
-
-	/* Create a DMA transfer descriptor.*/
+	tx_descriptor_config.destination_address =(uint32_t) &(AES->INDATA);
 	dma_descriptor_create(&example_descriptor_tx, &tx_descriptor_config);
 
 	/*  Add DMA transfer descriptor to DMA resource.*/
-	dma_add_descriptor(&example_resource_rx, &example_descriptor_tx);
+	dma_add_descriptor(&example_resource_tx, &example_descriptor_tx);
 }
 
 /**
@@ -270,28 +267,25 @@ static void configure_dma_aes_rd(void)
 	/* Allocate DMA resource.*/
 	dma_allocate(&example_resource_rx, &rx_config);
 
-
 	struct dma_descriptor_config rx_descriptor_config;
 	dma_descriptor_get_config_defaults(&rx_descriptor_config);
 
 	rx_descriptor_config.beat_size = DMA_BEAT_SIZE_WORD;
 	rx_descriptor_config.src_increment_enable = false;
 	rx_descriptor_config.block_transfer_count = AES_EXAMPLE_REFBUF_SIZE;
-	rx_descriptor_config.source_address =
-		(uint32_t)(&aes_instance.hw->INDATA.reg);
+	rx_descriptor_config.source_address = (uint32_t)&(AES->INDATA);
 	rx_descriptor_config.destination_address =
 		(uint32_t)output_data + sizeof(output_data);
 
 	/* Create a DMA transfer descriptor.*/
 	dma_descriptor_create(&example_descriptor_rx, &rx_descriptor_config);
 
-	/*  Add DMA transfer descriptor to DMA resource.*/
+	/* Add DMA transfer descriptor to DMA resource.*/
 	dma_add_descriptor(&example_resource_rx, &example_descriptor_rx);
-
 }
 
 /**
- * \brief Test ECB mode encryption and decryption with DMA.
+ * \brief Test ECB mode encryption with DMA.
  *
  * \param test Current test case.
  */
@@ -313,12 +307,13 @@ static void run_ecb_mode_test_dma(const struct test_case *test)
 	/* Set the cryptographic key. */
 	aes_write_key(&aes_instance, key128);
 
-	dma_start_transfer_job(&example_resource_rx);
 	dma_start_transfer_job(&example_resource_tx);
-
+	aes_set_new_message(&aes_instance);
+	aes_clear_new_message(&aes_instance);
 	/* Wait for the end of the encryption process. */
 	delay_ms(30);
-
+	dma_start_transfer_job(&example_resource_rx);
+	delay_ms(30);
 	if ((ref_cipher_text_ecb[0] != output_data[0]) ||
 			(ref_cipher_text_ecb[1] != output_data[1]) ||
 			(ref_cipher_text_ecb[2] != output_data[2]) ||
@@ -328,10 +323,8 @@ static void run_ecb_mode_test_dma(const struct test_case *test)
 		flag = true;
 	}
 
-	test_assert_true(test, flag == true, "ECB mode encryption not work!");
+	test_assert_true(test, flag == true, "ECB mode encryption with DMA not work!");
 }
-
-
 
 /**
  * \brief Test ECB mode encryption and decryption.
@@ -354,12 +347,15 @@ static void run_ecb_mode_test(const struct test_case *test)
 
 	/* The initialization vector is not used by the ECB cipher mode. */
 
+	aes_set_new_message(&aes_instance);
 	/* Write the data to be ciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_plain_text);
+	aes_clear_new_message(&aes_instance);
 
 	/* Wait for the end of the encryption process. */
 	delay_ms(30);
 
+	aes_read_output_data(&aes_instance,output_data);
 	if ((ref_cipher_text_ecb[0] != output_data[0]) ||
 			(ref_cipher_text_ecb[1] != output_data[1]) ||
 			(ref_cipher_text_ecb[2] != output_data[2]) ||
@@ -385,12 +381,15 @@ static void run_ecb_mode_test(const struct test_case *test)
 
 	/* The initialization vector is not used by the ECB cipher mode. */
 
+	aes_set_new_message(&aes_instance);
 	/* Write the data to be deciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_cipher_text_ecb);
+	aes_clear_new_message(&aes_instance);
 
 	/* Wait for the end of the decryption process. */
 	delay_ms(30);
 
+	aes_read_output_data(&aes_instance,output_data);
 	/* check the result. */
 	if ((ref_plain_text[0] != output_data[0]) ||
 			(ref_plain_text[1] != output_data[1]) ||
@@ -426,12 +425,15 @@ static void run_cbc_mode_test(const struct test_case *test)
 	/* Set the initialization vector. */
 	aes_write_init_vector(&aes_instance, init_vector);
 
+	aes_set_new_message(&aes_instance);
 	/* Write the data to be ciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_plain_text);
+	aes_clear_new_message(&aes_instance);
 
 	/* Wait for the end of the encryption process. */
 	delay_ms(30);
 
+	aes_read_output_data(&aes_instance,output_data);
 	if ((ref_cipher_text_cbc[0] != output_data[0]) ||
 			(ref_cipher_text_cbc[1] != output_data[1]) ||
 			(ref_cipher_text_cbc[2] != output_data[2]) ||
@@ -458,12 +460,15 @@ static void run_cbc_mode_test(const struct test_case *test)
 	/* Set the initialization vector. */
 	aes_write_init_vector(&aes_instance, init_vector);
 
+	aes_set_new_message(&aes_instance);
 	/* Write the data to be deciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_cipher_text_cbc);
+	aes_clear_new_message(&aes_instance);
 
 	/* Wait for the end of the decryption process. */
 	delay_ms(30);
 
+	aes_read_output_data(&aes_instance,output_data);
 	if ((ref_plain_text[0] != output_data[0]) ||
 			(ref_plain_text[1] != output_data[1]) ||
 			(ref_plain_text[2] != output_data[2]) ||
@@ -498,12 +503,15 @@ static void run_cfb128_mode_test(const struct test_case *test)
 	/* Set the initialization vector. */
 	aes_write_init_vector(&aes_instance, init_vector);
 
+	aes_set_new_message(&aes_instance);
 	/* Write the data to be ciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_plain_text);
+	aes_clear_new_message(&aes_instance);
 
 	/* Wait for the end of the encryption process. */
 	delay_ms(30);
 
+	aes_read_output_data(&aes_instance,output_data);
 	/* check the result. */
 	if ((ref_cipher_text_cfb128[0] != output_data[0]) ||
 			(ref_cipher_text_cfb128[1] != output_data[1]) ||
@@ -532,12 +540,15 @@ static void run_cfb128_mode_test(const struct test_case *test)
 	/* Set the initialization vector. */
 	aes_write_init_vector(&aes_instance, init_vector);
 
+	aes_set_new_message(&aes_instance);
 	/* Write the data to be deciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_cipher_text_cfb128);
+	aes_clear_new_message(&aes_instance);
 
 	/* Wait for the end of the decryption process. */
 	delay_ms(30);
 
+	aes_read_output_data(&aes_instance,output_data);
 	/* check the result. */
 	if ((ref_plain_text[0] != output_data[0]) ||
 			(ref_plain_text[1] != output_data[1]) ||
@@ -574,12 +585,15 @@ static void run_ofb_mode_test(const struct test_case *test)
 	/* Set the initialization vector. */
 	aes_write_init_vector(&aes_instance, init_vector);
 
+	aes_set_new_message(&aes_instance);
 	/* Write the data to be ciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_plain_text);
+	aes_clear_new_message(&aes_instance);
 
 	/* Wait for the end of the encryption process. */
 	delay_ms(30);
 
+	aes_read_output_data(&aes_instance,output_data);
 	/* check the result. */
 	if ((ref_cipher_text_ofb[0] != output_data[0]) ||
 			(ref_cipher_text_ofb[1] != output_data[1]) ||
@@ -607,12 +621,15 @@ static void run_ofb_mode_test(const struct test_case *test)
 	/* Set the initialization vector. */
 	aes_write_init_vector(&aes_instance, init_vector);
 
+	aes_set_new_message(&aes_instance);
 	/* Write the data to be deciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_cipher_text_ofb);
+	aes_clear_new_message(&aes_instance);
 
 	/* Wait for the end of the decryption process. */
 	delay_ms(30);
 
+	aes_read_output_data(&aes_instance,output_data);
 	/* check the result. */
 	if ((ref_plain_text[0] != output_data[0]) ||
 			(ref_plain_text[1] != output_data[1]) ||
@@ -648,12 +665,15 @@ static void run_ctr_mode_test(const struct test_case *test)
 	/* Set the initialization vector. */
 	aes_write_init_vector(&aes_instance, init_vector_ctr);
 
+	aes_set_new_message(&aes_instance);
 	/* Write the data to be ciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_plain_text);
+	aes_clear_new_message(&aes_instance);
 
 	/* Wait for the end of the encryption process. */
 	delay_ms(30);
 
+	aes_read_output_data(&aes_instance,output_data);
 	/* check the result. */
 	if ((ref_cipher_text_ctr[0] != output_data[0]) ||
 			(ref_cipher_text_ctr[1] != output_data[1]) ||
@@ -681,12 +701,15 @@ static void run_ctr_mode_test(const struct test_case *test)
 	/* Set the initialization vector. */
 	aes_write_init_vector(&aes_instance, init_vector_ctr);
 
+	aes_set_new_message(&aes_instance);
 	/* Write the data to be deciphered to the input data registers. */
 	aes_write_input_data(&aes_instance, ref_cipher_text_ctr);
+	aes_clear_new_message(&aes_instance);
 
 	/* Wait for the end of the decryption process. */
 	delay_ms(30);
 
+	aes_read_output_data(&aes_instance,output_data);
 	/* check the result. */
 	if ((ref_plain_text[0] != output_data[0]) ||
 			(ref_plain_text[1] != output_data[1]) ||
@@ -716,7 +739,6 @@ int main(void)
 	aes_get_config_defaults(&g_aes_cfg);
 	aes_init(&aes_instance,AES, &g_aes_cfg);
 	aes_enable(&aes_instance);
-
 
 	/* Define all the test cases. */
 	DEFINE_TEST_CASE(ecb_mode_test, NULL, run_ecb_mode_test, NULL,
