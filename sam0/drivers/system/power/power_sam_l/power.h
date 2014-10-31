@@ -749,7 +749,6 @@ static inline enum status_code system_switch_performance_level(
 	while (!PM->INTFLAG.reg) {
 		;
 	}
-
 	return STATUS_OK;
 }
 
