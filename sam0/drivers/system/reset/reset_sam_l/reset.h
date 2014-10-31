@@ -209,7 +209,7 @@ static inline void system_set_pin_wakeup_polarity_high(const uint16_t pin_mask)
  */
 static inline void system_enable_pin_wakeup(const uint16_t pin_mask)
 {
-	RSTC->WKPOL.reg |= RSTC_WKEN_WKEN(pin_mask);
+	RSTC->WKEN.reg |= RSTC_WKEN_WKEN(pin_mask);
 }
 
 /**
@@ -221,7 +221,7 @@ static inline void system_enable_pin_wakeup(const uint16_t pin_mask)
  */
 static inline void system_disable_pin_wakeup(const uint16_t pin_mask)
 {
-	RSTC->WKPOL.reg &= ~(RSTC_WKEN_WKEN(pin_mask));
+	RSTC->WKEN.reg &= ~(RSTC_WKEN_WKEN(pin_mask));
 }
 
 /**
