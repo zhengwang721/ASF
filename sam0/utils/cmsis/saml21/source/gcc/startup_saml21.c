@@ -41,7 +41,11 @@
  *
  */
 
+#if 0 // #ifndef SAML21_REV_A
 #include "saml21.h"
+#else // For RevA0 workaround
+#include "saml21_internal.h"
+#endif
 
 /* Initialize segments */
 extern uint32_t _sfixed;
@@ -235,6 +239,10 @@ const DeviceVectors exception_table = {
 void Reset_Handler(void)
 {
         uint32_t *pSrc, *pDest;
+
+#if 1 // SAML21_REV_A
+        software_fuse_update();
+#endif
 
         /* Initialize the relocate segment */
         pSrc = &_etext;

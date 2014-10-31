@@ -123,12 +123,16 @@ int main(void)
 		trng_read_buffer_job(&trng_instance, random_buffer, 5);
 		//! [main_2]
 		//! [main_3]
-		while (trng_read_done != true) {
-			trng_read_done = false;
+		while (!trng_read_done) {
 		}
+		trng_read_done = false;
 		//! [main_3]
 		//! [main_4]
 		port_pin_toggle_output_level(LED_0_PIN);
+		/* Add a short delay to see LED toggle */
+		volatile uint32_t delay = 50000;
+		while(delay--) {
+		}
 		//! [main_4]
 	}
 	//! [main]
