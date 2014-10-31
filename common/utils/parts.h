@@ -1181,13 +1181,6 @@
 		SAM_PART_IS_DEFINED(SAMG54N19) \
 		)
 
-#define SAMG55 ( \
-		SAM_PART_IS_DEFINED(SAMG55G18) ||\
-		SAM_PART_IS_DEFINED(SAMG55G19) ||\
-		SAM_PART_IS_DEFINED(SAMG55J18) ||\
-		SAM_PART_IS_DEFINED(SAMG55J19) ||\
-		SAM_PART_IS_DEFINED(SAMG55N19) \
-		)
 /** @} */
 /**
  * \name SAM families
@@ -1257,7 +1250,7 @@
 #define SAM4CP   (SAM4CP16)
 
 /** SAMG Family */
-#define SAMG (SAMG51 || SAMG53 || SAMG54 || SAMG55)
+#define SAMG (SAMG51 || SAMG53 || SAMG54)
 
 /** SAM0 product line (cortex-m0+) */
 #define SAM0 (SAMD20 || SAMD21 || SAMR21 || SAMD10 || SAMD11 || SAML21)
