@@ -424,6 +424,7 @@ void stop_pkt_streaming(void * parameter)
 {
 	pkt_stream_stop = true;
 	sw_timer_stop(T_APP_TIMER);
+	node_info.transmitting = false; // incase a transmission is initiated clear it //check
 	usr_pkt_stream_confirm(MAC_SUCCESS,false);
 }
 
