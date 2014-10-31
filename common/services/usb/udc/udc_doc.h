@@ -65,7 +65,7 @@
 /**
  * \brief Authorizes the VBUS event
  *
- * \return true, if the VBUS monitoring is possible.
+ * \return True, if the VBUS monitoring is possible.
  *
  * See \ref asfdoc_udc_vbus_monitoring for more details.
  *
@@ -121,7 +121,7 @@ static inline void udc_remotewakeup(void)
 /**
  * \brief Returns a pointer on the current interface descriptor
  *
- * \return pointer on the current interface descriptor.
+ * \return Pointer on the current interface descriptor.
  */
 usb_iface_desc_t UDC_DESC_STORAGE *udc_get_interface_desc(void);
 
@@ -252,25 +252,25 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * This module is based on USB device stack full interrupt driven, and supporting
  * \ref sleepmgr_group "sleepmgr".
- * For AVR® and Atmel® | SMART™ SAM3/4 devices the \ref clk_group "clock services" is supported.
+ * For AVR® and Atmel® | SMART SAM3/4 devices the \ref clk_group "clock services" is supported.
  * For SAMD21 devices the \ref asfdoc_sam0_system_clock_group "clock driver" is supported.
  *
  * The following procedure must be executed to set up the project correctly:
  * - Specify the clock configuration:
- *   - XMEGA® USB devices need 48MHZ clock input.
+ *   - XMEGA® USB devices need 48MHz clock input.
  *
- *     XMEGA® USB devices need CPU frequency higher than 12MHZ.
+ *     XMEGA® USB devices need CPU frequency higher than 12MHz.
  *
- *     You can use either an internal RC 48MHZ auto calibrated by Start of Frames
+ *     You can use either an internal RC 48MHz auto calibrated by Start of Frames
  *     or an external OSC.
- *   - UC3® and Atmel® | SMART™ SAM3/4 devices without USB high speed support need 48MHZ clock input.
+ *   - UC3® and Atmel® | SMART SAM3/4 devices without USB high speed support need 48MHz clock input.
  *
  *     You must use a PLL and an external OSC.
- *   - UC3® and Atmel® | SMART™ SAM3/4 devices with USB high speed support need 12MHZ clock input.
+ *   - UC3® and Atmel® | SMART SAM3/4 devices with USB high speed support need 12MHz clock input.
  *
  *     You must use an external OSC.
- *   - UC3® devices with USBC hardware need CPU frequency higher than 25MHZ.
- *   - SAMD21 devices without USB high speed support need 48MHZ clock input.
+ *   - UC3® devices with USBC hardware need CPU frequency higher than 25MHz.
+ *   - SAMD21 devices without USB high speed support need 48MHz clock input.
  *
  *     You should use DFLL with USBCRM.
  * - In conf_board.h, the define CONF_BOARD_USB_PORT must be added to enable USB lines.
@@ -354,8 +354,9 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  \endcode
  *   \note In case of USB dual roles (Device and Host) managed through USB OTG connector
  * (USB ID pin), the call of udc_start() must be removed and replaced by uhc_start().
- * Refer to section "Dual roles" in the application note "Atmel AVR4950: ASF - USB Host Stack"
- * for further information about dual roles.
+ * Refer to section "Dual roles" for further information in the application note:
+ * - <a href="http://www.atmel.com/images/doc8486.pdf">
+ *   Atmel AVR4950: ASF - USB Host Stack</a>
  *
  * \section udc_conf_clock conf_clock.h Examples
  *

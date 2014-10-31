@@ -53,7 +53,7 @@
  * - \ref asfdoc_uhi_hid_mouse_config_examples
  *
  * For more details for Atmel® Software Framework (ASF) USB Host Stack,
- * refer to following application notes:
+ * refer to following application note:
  * - <a href="http://www.atmel.com/dyn/resources/prod_documents/doc8486.pdf">
  *   AVR4950: ASF - USB Host Stack</a>
  *
@@ -81,7 +81,7 @@
 /**@}*/
 
 /**
- * \name Functions Required by UHC.
+ * \name Functions Required by UHC
  * @{
  */
 
@@ -143,7 +143,7 @@ extern void uhi_hid_mouse_uninstall(uhc_device_t* dev);
  * steps for setup can be copied into a custom initialization function, while
  * the steps for usage can be copied into, e.g., the main application function.
  *
- * \section uhi_hid_mouse_basic_use_case Basic use case
+ * \section uhi_hid_mouse_basic_use_case Basic Use Case
  * In this basic use case, the "USB Host HID Mouse (Single Class support)" module is used.
  * The "USB Host HID Mouse (Multiple Classes support)" module usage is described
  * in \ref uhi_hid_mouse_use_cases "Advanced Use Cases".
