@@ -39,37 +39,95 @@
  */
 #include <asf.h>
 
+void configure_extosc32k(void);
+void configure_dfll_open_loop(void);
 
+//! [setup]
+//! [config_extosc32k]
+void configure_extosc32k(void)
+{
+//! [config_extosc32k_config]
+	struct system_clock_source_xosc32k_config config_ext32k;
+//! [config_extosc32k_config]
+//! [config_extosc32k_get_defaults]
+	system_clock_source_xosc32k_get_config_defaults(&config_ext32k);
+//! [config_extosc32k_get_defaults]
+
+//! [config_extosc32k_change_defaults]
+	config_ext32k.startup_time = SYSTEM_XOSC32K_STARTUP_4096;
+//! [config_extosc32k_change_defaults]
+
+//! [config_extosc32k_set_config]
+	system_clock_source_xosc32k_set_config(&config_ext32k);
+//! [config_extosc32k_set_config]
+}
+//! [config_extosc32k]
+
+//! [config_dfll]
+void configure_dfll_open_loop(void)
+{
+//! [config_dfll_config]
+	struct system_clock_source_dfll_config config_dfll;
+//! [config_dfll_config]
+//! [config_dfll_get_defaults]
+	system_clock_source_dfll_get_config_defaults(&config_dfll);
+//! [config_dfll_get_defaults]
+
+//! [config_dfll_set_config]
+	system_clock_source_dfll_set_config(&config_dfll);
+//! [config_dfll_set_config]
+}
+//! [config_dfll]
+//! [setup]
 
 int main(void)
 {
-    system_init();
-    
-    struct system_pinmux_config pin_conf;
-    system_pinmux_get_config_defaults(&pin_conf);
+//! [main]
+	/* Configure the external 32KHz oscillator */
+//! [config_extosc32k_main]
+	configure_extosc32k();
+//! [config_extosc32k_main]
 
-    /*GCLK0 clock output*/
-    pin_conf.mux_position = MUX_PB22H_GCLK_IO0;//PINMUX_PB14H_GCLK_IO0;
-    pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-    system_pinmux_pin_set_config(PIN_PB22, &pin_conf);
-    
-    /*GCLK1 clock output*/
-    pin_conf.mux_position = MUX_PB23H_GCLK_IO1;//PINMUX_PB14H_GCLK_IO0;
-    pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-    system_pinmux_pin_set_config(PIN_PB23, &pin_conf);
-    
-    /*GCLK2 clock output*/
-     pin_conf.mux_position = MUX_PB16H_GCLK_IO2;//PINMUX_PB14H_GCLK_IO0;
-    pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-    system_pinmux_pin_set_config(PIN_PB16, &pin_conf);
-    
-     /*GCLK3 clock output*/
-    pin_conf.mux_position = MUX_PA17H_GCLK_IO3;//PINMUX_PB14H_GCLK_IO0;
-    pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-    system_pinmux_pin_set_config(PIN_PA17, &pin_conf);
-    
-   
-    port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+	/* Enable the external 32KHz oscillator */
+//! [enable_extosc32k_main]
+	enum status_code osc32k_status =
+			system_clock_source_enable(SYSTEM_CLOCK_SOURCE_XOSC32K);
+
+	if (osc32k_status != STATUS_OK) {
+		/* Error enabling the clock source */
+	}
+//! [enable_extosc32k_main]
+
+	/* Configure the DFLL in open loop mode using default values */
+//! [config_dfll_main]
+	configure_dfll_open_loop();
+//! [config_dfll_main]
+
+	/* Enable the DFLL oscillator */
+//! [enable_dfll_main]
+	enum status_code dfll_status =
+			system_clock_source_enable(SYSTEM_CLOCK_SOURCE_DFLL);
+
+	if (dfll_status != STATUS_OK) {
+		/* Error enabling the clock source */
+	}
+//! [enable_dfll_main]
+
+	/* Configure flash wait states before switching to high frequency clock */
+//! [set_sys_wait_states]
+	system_flash_set_waitstates(2);
+//! [set_sys_wait_states]
+
+	/* Change system clock to DFLL */
+//! [set_sys_clk_src]
+	struct system_gclk_gen_config config_gclock_gen;
+	system_gclk_gen_get_config_defaults(&config_gclock_gen);
+	config_gclock_gen.source_clock    = SYSTEM_CLOCK_SOURCE_DFLL;
+	config_gclock_gen.division_factor = 1;
+	system_gclk_gen_set_config(GCLK_GENERATOR_0, &config_gclock_gen);
+//! [set_sys_clk_src]
+//! [main]
+
 	while (true) {
 
 	}
