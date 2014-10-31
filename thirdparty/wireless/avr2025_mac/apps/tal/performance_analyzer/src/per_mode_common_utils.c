@@ -522,7 +522,7 @@ if(node_info.main_state == PER_TEST_RECEPTOR && !cw_ack_sent)
 	
 	
 }
-else if(node_info.main_state == PER_TEST_INITIATOR || ((node_info.main_state == PER_TEST_RECEPTOR) && cw_ack_sent))
+else if(node_info.main_state == PER_TEST_INITIATOR || (node_info.main_state == SINGLE_NODE_TESTS) || ((node_info.main_state == PER_TEST_RECEPTOR) && cw_ack_sent))
 {
 	/* Save all user settings before continuous tx */
 	save_all_settings();

@@ -325,7 +325,10 @@ void per_mode_initiator_task(void)
 		 * queried from the remote node */
 		if (!node_info.transmitting) {
 			node_info.transmitting = true;
-			node_info.tx_frame_info->mpdu[PL_POS_SEQ_NUM]++;
+			if(node_info.main_state == PER_TEST_INITIATOR)
+			{
+				node_info.tx_frame_info->mpdu[PL_POS_SEQ_NUM]++;
+			}			
 			if((op_mode==PKT_STREAM_MODE))
 			{				
 				tal_tx_frame(stream_pkt,NO_CSMA_NO_IFS,false);
