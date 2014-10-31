@@ -1189,8 +1189,10 @@ enum system_clock_source_dpll_reference_clock {
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC32K,
 	/** Select XOSC as clock reference. */
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC,
-	/** Select GCLK_DPLL as clock reference. */
+	/** Select GCLK as clock reference. */
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK,
+	/** Select GCLK_32K as clock reference. */
+	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK_32K,
 };
 
 /**

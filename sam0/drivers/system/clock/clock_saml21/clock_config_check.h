@@ -268,6 +268,14 @@
 #  error CONF_CLOCK_DPLL_PRESCALER not defined in conf_clock.h
 #endif
 
+#if !defined(CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR)
+#  error CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_DPLL_REFERENCE_GCLK_32K_GENERATOR)
+#  error CONF_CLOCK_DPLL_REFERENCE_GCLK_32K_GENERATOR not defined in conf_clock.h
+#endif
+
 
 #if !defined(CONF_CLOCK_CONFIGURE_GCLK)
 #  error CONF_CLOCK_CONFIGURE_GCLK not defined in conf_clock.h
