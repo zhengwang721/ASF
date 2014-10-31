@@ -738,21 +738,18 @@ static inline enum status_code system_switch_performance_level(
 			system_performance_level_max_freq[performance_level]) {
 		return STATUS_ERR_INVALID_ARG;
 	}
-#ifndef SAML21_REV_A
 
 	/* Clear performance level status */
 	PM->INTFLAG.reg = PM_INTFLAG_PLRDY;
-#endif
+
 	/* Switch performance level */
 	PM->PLCFG.reg = performance_level;
-
-#ifndef SAML21_REV_A
 
 	/* Waiting performance level ready */
 	while (!PM->INTFLAG.reg) {
 		;
 	}
-#endif
+
 	return STATUS_OK;
 }
 

@@ -775,8 +775,6 @@ void system_clock_init(void)
 	system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_2);
 #else
 	set_perf_level(2);
-  	system_flash_set_waitstates(1);
-	system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_2);
 #endif
 
 	/* XOSC */
