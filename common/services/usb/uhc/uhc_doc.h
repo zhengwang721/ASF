@@ -54,7 +54,7 @@
  * USB enumeration.
  *
  * For more details for Atmel Software Framework (ASF) USB Host Stack,
- * refer to following Application Note:
+ * refer to following application note:
  * - <a href="http://www.atmel.com/dyn/resources/prod_documents/doc8486.pdf">
  *   AVR4950: ASF - USB Host Stack</a>
  *
