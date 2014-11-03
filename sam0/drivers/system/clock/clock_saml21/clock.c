@@ -751,6 +751,9 @@ bool system_clock_source_is_ready(
 		if (n > 0) { _CONF_CLOCK_GCLK_CONFIG(n, unused); }
 #endif
 
+#ifdef SAML21_REV_A
+extern void set_perf_level(uint32_t Perflevel);
+#endif
 /**
  * \brief Initialize clock system based on the configuration in conf_clocks.h
  *
@@ -766,10 +769,12 @@ void system_clock_init(void)
 	SUPC->INTFLAG.reg = SUPC_INTFLAG_BOD33RDY | SUPC_INTFLAG_BOD33DET;
 
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
-
 #ifndef SAML21_REV_A
+
 	/*  Switch to PL2 to be sure configuration of GCLK0 is safe */
 	system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_2);
+#else
+	set_perf_level(2);
 #endif
 
 	/* XOSC */
@@ -954,6 +959,20 @@ void system_clock_init(void)
 	}else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC) {
 		/* XOSC should have been enabled for GCLK_XOSC */
 		Assert(CONF_CLOCK_XOSC_ENABLE);
+	} else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK) {
+		struct system_gclk_chan_config dpll_gclk_chan_conf;
+		system_gclk_chan_get_config_defaults(&dpll_gclk_chan_conf);
+		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR;
+		system_gclk_chan_set_config(OSCCTRL_GCLK_ID_FDPLL, &dpll_gclk_chan_conf);
+		system_gclk_chan_enable(OSCCTRL_GCLK_ID_FDPLL);
+	} else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK_32K) {
+		struct system_gclk_chan_config dpll_gclk_chan_conf;
+		system_gclk_chan_get_config_defaults(&dpll_gclk_chan_conf);
+		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_REFERENCE_GCLK_32K_GENERATOR;
+		system_gclk_chan_set_config(OSCCTRL_GCLK_ID_FDPLL, &dpll_gclk_chan_conf);
+		system_gclk_chan_enable(OSCCTRL_GCLK_ID_FDPLL);
+	} else {
+		Assert(false);
 	}
 	struct system_clock_source_dpll_config dpll_config;
 	system_clock_source_dpll_get_config_defaults(&dpll_config);

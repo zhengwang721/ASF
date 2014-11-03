@@ -120,9 +120,14 @@
 #  define CONF_CLOCK_DPLL_PRESCALER               SYSTEM_CLOCK_SOURCE_DPLL_DIV_1
 
 
-#  define CONF_CLOCK_DPLL_REFERENCE_FREQUENCY     32768
+#  define CONF_CLOCK_DPLL_REFERENCE_FREQUENCY     4000000
 #  define CONF_CLOCK_DPLL_REFEREMCE_DIVIDER       1
 #  define CONF_CLOCK_DPLL_OUTPUT_FREQUENCY        48000000
+
+/* DPLL GCLK reference configuration */
+#  define CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR GCLK_GENERATOR_1
+/* DPLL GCLK 32K reference configuration */
+#  define CONF_CLOCK_DPLL_REFERENCE_GCLK_32K_GENERATOR GCLK_GENERATOR_1
 
 /* Set this to true to configure the GCLK when running clocks_init. If set to
  * false, none of the GCLK generators will be configured in clocks_init(). */
