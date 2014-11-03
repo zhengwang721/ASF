@@ -1297,9 +1297,6 @@ void pmc_enable_waitmode(void)
 	i |= ul_flash_in_wait_mode;
 	PMC->PMC_FSMR = i;
 
-	/* Clear SLEEPDEEP bit */
-	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk;
-
 	/* Set the WAITMODE bit = 1 */
 	PMC->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_WAITMODE;
 
