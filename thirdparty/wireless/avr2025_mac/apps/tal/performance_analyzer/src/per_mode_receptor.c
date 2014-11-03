@@ -185,7 +185,7 @@ void per_mode_receptor_task(void)
 	
 	/* For Range Test  in PER Mode the receptor has to poll for a button
 	 * press to initiate marker transmission */
-	if (range_test_in_progress || remote_cw_start || ((!pkt_stream_stop && rdy_to_tx && !node_info.transmitting))) {
+	if (range_test_in_progress || remote_cw_start || ((!pkt_stream_stop && !node_info.transmitting))) {
 		static uint8_t key_press;
 		/* Check for any key press */
 		key_press = app_debounce_button();
@@ -210,7 +210,7 @@ void per_mode_receptor_task(void)
 				sw_timer_stop(CW_TX_TIMER);
 				stop_cw_transmission(&(cw_start_mode));
 			}
-			else //(!pkt_stream_stop && rdy_to_tx && !node_info.transmitting)
+			else 
 			{
 				stop_pkt_streaming(NULL);
 			}

@@ -396,8 +396,8 @@ void configure_pkt_stream_frames(uint16_t frame_len)
 	frame_ptr--;
 	*frame_ptr = (uint8_t)rand();
 
-	/* Set the FCF. */
-	fcf |= FCF_FRAMETYPE_DATA | FCF_SET_SOURCE_ADDR_MODE(FCF_SHORT_ADDR) |
+	/* Set the FCF. */ // Reserved frame type so that other apps doesnot receive and process this data
+	fcf |= 0x04 | FCF_SET_SOURCE_ADDR_MODE(FCF_SHORT_ADDR) |
 			FCF_SET_DEST_ADDR_MODE(FCF_SHORT_ADDR);
 
 
@@ -424,7 +424,6 @@ void stop_pkt_streaming(void * parameter)
 {
 	pkt_stream_stop = true;
 	sw_timer_stop(T_APP_TIMER);
-	node_info.transmitting = false; // incase a transmission is initiated clear it //check
 	usr_pkt_stream_confirm(MAC_SUCCESS,false);
 }
 
