@@ -1470,8 +1470,7 @@ static inline void adc_set_gain(
 
 	/* Set new gain factor */
 	adc_module->INPUTCTRL.reg =
-			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_GAIN_Msk) |
-			(gain_factor << ADC_INPUTCTRL_GAIN_Pos);
+			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_GAIN_Msk) | gain_factor ;
 }
 
 /**
@@ -1574,8 +1573,7 @@ static inline void adc_set_positive_input(
 
 	/* Set positive input pin */
 	adc_module->INPUTCTRL.reg =
-			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_MUXPOS_Msk) |
-			(positive_input << ADC_INPUTCTRL_MUXPOS_Pos);
+			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_MUXPOS_Msk) | positive_input;
 }
 
 
@@ -1604,8 +1602,7 @@ static inline void adc_set_negative_input(
 
 	/* Set negative input pin */
 	adc_module->INPUTCTRL.reg =
-			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_MUXNEG_Msk) |
-			(negative_input << ADC_INPUTCTRL_MUXNEG_Pos);
+			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_MUXNEG_Msk) | negative_input;
 }
 
 /** @} */
