@@ -94,7 +94,11 @@ struct usb_module usb_device;
  * @{
  */
 #ifndef UDD_CLOCK_GEN
+#if SAML21
+#  define UDD_CLOCK_GEN      GCLK_GENERATOR_3
+#else
 #  define UDD_CLOCK_GEN      GCLK_GENERATOR_0
+#endif
 #endif
 #ifndef UDD_CLOCK_SOURCE
 #  define UDD_CLOCK_SOURCE   SYSTEM_CLOCK_SOURCE_DFLL
