@@ -708,6 +708,35 @@ bool system_clock_source_is_ready(
 		if (n > 0) { _CONF_CLOCK_GCLK_CONFIG(n, unused); }
 #endif
 
+/** \internal
+ *
+ * Switch all peripheral clock to a not enabled general clock
+ * to save power.
+ */
+static void _switch_peripheral_gclk(void)
+{
+	uint32_t gclk_id;
+	struct system_gclk_chan_config gclk_conf;
+
+#if CONF_CLOCK_GCLK_1_ENABLE == false
+	gclk_conf.source_generator = GCLK_GENERATOR_1;
+#elif CONF_CLOCK_GCLK_2_ENABLE == false
+	gclk_conf.source_generator = GCLK_GENERATOR_2;
+#elif CONF_CLOCK_GCLK_3_ENABLE == false
+	gclk_conf.source_generator = GCLK_GENERATOR_3;
+#elif CONF_CLOCK_GCLK_4_ENABLE == false
+	gclk_conf.source_generator = GCLK_GENERATOR_4;
+#elif CONF_CLOCK_GCLK_5_ENABLE == false
+	gclk_conf.source_generator = GCLK_GENERATOR_5;
+#else
+	gclk_conf.source_generator = GCLK_GENERATOR_5;
+#endif
+
+	for (gclk_id = 0; gclk_id < GCLK_NUM; gclk_id++) {
+		system_gclk_chan_set_config(gclk_id, &gclk_conf);
+	}
+}
+
 /**
  * \brief Initialize clock system based on the configuration in conf_clocks.h
  *
@@ -723,6 +752,9 @@ void system_clock_init(void)
 			SYSCTRL_INTFLAG_DFLLRDY;
 
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
+
+	/* Switch all peripheral clock to a not enabled general clock to save power. */
+	_switch_peripheral_gclk();
 
 	/* XOSC */
 #if CONF_CLOCK_XOSC_ENABLE == true
