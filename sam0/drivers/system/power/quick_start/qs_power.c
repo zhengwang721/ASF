@@ -50,10 +50,13 @@ static void performance_level_switch_test(void)
 	/* Switch to PL2 */
 	system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_2);
 	system_flash_set_waitstates(2);
-
+	
 	/* Switch Clock freq to 48MHz */
 	system_gclk_gen_get_config_defaults(&gclk_conf);
 	gclk_conf.source_clock = SYSTEM_CLOCK_SOURCE_DFLL;
+	gclk_conf.division_factor = 1;      
+	gclk_conf.run_in_standby  = 0; 
+	gclk_conf.output_enable   = 1; 
 	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclk_conf);
 }
 
@@ -181,9 +184,9 @@ int main(void)
 	} else {
 		while(1);
 	}
-	
-	/* GCLK0 is  running at 48MHz and GCLK1 is running at 4MHz.*/
+        
 
+	/* GCLK0 is  running at 48MHz and GCLK1 is running at 4MHz.*/
 	while(1){
 
 	}
