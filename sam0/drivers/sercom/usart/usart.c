@@ -541,6 +541,15 @@ enum status_code usart_read_wait(
  * \param[in]  tx_data  Pointer to data to transmit
  * \param[in]  length   Number of characters to transmit
  *
+ * \note if using 9-bit data, the array that *tx_data point to should be defined uint16_t
+ *       array and should be casted to uint8_t* point. Because it is a address point, the
+ *       highest byte is not discarded. For example:
+ * \code
+ *         #define TX_LEN 3
+ *         uint16_t tx_buf[TX_LEN] = {0x0111, 0x0022, 0x0133};
+ *         usart_write_buffer_wait(&module, (uint8_t*)tx_buf, TX_LEN);
+  \endcode
+ * 
  * \return Status of the operation.
  * \retval STATUS_OK              If operation was completed
  * \retval STATUS_ERR_INVALID_ARG If operation was not completed, due to invalid
@@ -625,6 +634,15 @@ enum status_code usart_write_buffer_wait(
  * \param[in]  module   Pointer to USART software instance struct
  * \param[out] rx_data  Pointer to receive buffer
  * \param[in]  length   Number of characters to receive
+ *
+ * \note if using 9-bit data, the array that *rx_data point to should be defined uint16_t
+ *       array and should be casted to uint8_t* point. Because it is a address point, the
+ *       highest byte is not discarded. For example:
+ * \code      
+ *         #define RX_LEN 3
+ *         uint16_t rx_buf[RX_LEN] = {0x0,};
+ *         usart_read_buffer_wait(&module, (uint8_t*)rx_buf, RX_LEN);
+  \endcode
  *
  * \return Status of the operation.
  * \retval STATUS_OK                If operation was completed
