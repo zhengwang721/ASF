@@ -485,7 +485,7 @@ uint32_t rtc_get_valid_entry(Rtc *p_rtc)
 void rtc_set_time_event(Rtc *p_rtc, uint32_t ul_selection)
 {
 	p_rtc->RTC_CR &= ~RTC_CR_TIMEVSEL_Msk;
-	p_rtc->RTC_CR |= ul_selection & RTC_CR_TIMEVSEL_Msk;
+	p_rtc->RTC_CR |= (ul_selection << RTC_CR_TIMEVSEL_Pos) & RTC_CR_TIMEVSEL_Msk;
 }
 
 /**
@@ -497,7 +497,7 @@ void rtc_set_time_event(Rtc *p_rtc, uint32_t ul_selection)
 void rtc_set_Calendar_event(Rtc *p_rtc, uint32_t ul_selection)
 {
 	p_rtc->RTC_CR &= ~RTC_CR_CALEVSEL_Msk;
-	p_rtc->RTC_CR |= ul_selection & RTC_CR_CALEVSEL_Msk;
+	p_rtc->RTC_CR |= (ul_selection << RTC_CR_CALEVSEL_Pos) & RTC_CR_CALEVSEL_Msk;
 }
 
 #if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4N) || (SAM4C) || (SAMG) || (SAM4CP) || (SAM4CM))
