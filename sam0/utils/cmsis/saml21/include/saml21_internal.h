@@ -28231,7 +28231,7 @@ static void load_calibrations(void)
     /* FIXME: Adjust FCAL (0x0 ~ 0x3F) according to specific board:
      * - 0x29 for XPRO board SN: 0200000038
      */
-    //OSCCTRL->CAL4M.bit.FCAL = 0x29;
+    OSCCTRL->CAL4M.bit.FCAL = 0x29;
     SUPC->BUVREGCAL.bit.BKUP = (FUSES_BUVREG_BKUPCALIB_MASK & cal1) >> FUSES_BUVREG_BKUPCALIB_OFFSET;
     SUPC->BUVREGCAL.bit.NOTINBKUP = (FUSES_BUVREG_NOBKUPCALIB_MASK & cal1) >> FUSES_BUVREG_NOBKUPCALIB_OFFSET;
 

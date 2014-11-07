@@ -632,7 +632,7 @@ static inline void adc_set_gain(
 	/* Set new gain factor */
 	adc_module->INPUTCTRL.reg =
 			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_GAIN_Msk) |
-			(gain_factor << ADC_INPUTCTRL_GAIN_Pos);
+			(gain_factor);
 }
 
 /**

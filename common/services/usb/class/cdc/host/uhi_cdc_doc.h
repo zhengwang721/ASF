@@ -53,7 +53,7 @@
  * - \ref asfdoc_uhi_cdc_config_examples
  *
  * For more details for Atmel® Software Framework (ASF) USB Host Stack,
- * refer to following application notes:
+ * refer to following application note:
  * - <a href="http://www.atmel.com/dyn/resources/prod_documents/doc8486.pdf">
  *   AVR4950: ASF - USB Host Stack</a>
  *
