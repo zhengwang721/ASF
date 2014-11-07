@@ -613,6 +613,8 @@ uint32_t flash_write(uint32_t ul_address, const void *p_buffer,
 	/* According to the errata, set the wait state value to 6. */
 	ul_fws_temp = efc_get_wait_state(p_efc);
 	efc_set_wait_state(p_efc, 6);
+#else
+	UNUSED(ul_fws_temp);
 #endif
 
 	/* Write all pages */
