@@ -517,7 +517,7 @@ void rtc_set_calendar_mode(Rtc *p_rtc, uint32_t ul_mode)
 }
 
 /**
- * \brief Set the RTC calendar mode.
+ * \brief Get the RTC calendar mode.
  *
  * \param p_rtc Pointer to an RTC instance.
  *
