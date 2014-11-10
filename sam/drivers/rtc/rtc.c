@@ -494,7 +494,7 @@ void rtc_set_time_event(Rtc *p_rtc, uint32_t ul_selection)
  * \param p_rtc Pointer to an RTC instance.
  * \param ul_selection Calendar event selection to be enabled..
  */
-void rtc_set_Calendar_event(Rtc *p_rtc, uint32_t ul_selection)
+void rtc_set_calendar_event(Rtc *p_rtc, uint32_t ul_selection)
 {
 	p_rtc->RTC_CR &= ~RTC_CR_CALEVSEL_Msk;
 	p_rtc->RTC_CR |= (ul_selection << RTC_CR_CALEVSEL_Pos) & RTC_CR_CALEVSEL_Msk;
