@@ -75,7 +75,7 @@
  * @{
  */
 
-/** Global structure which contains standard UDI API for UDC */
+/** Global structure which contains standard UDI API for UDC. */
 extern UDC_DESC_STORAGE udi_api_t udi_api_hid_kbd;
 /**@}*/
 

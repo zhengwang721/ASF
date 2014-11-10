@@ -38,7 +38,6 @@
 			<device-support value="samr21"/>
 			<device-support value="sam4c32e"/>
 			<device-support value="samd11"/>
-			<device-support value="samg55"/>
 			<device-support value="saml21"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
@@ -115,7 +114,6 @@
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
 			<device-support value="sam4c32e"/>
-			<device-support value="samg55"/>
 			<device-support value="saml21"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
@@ -175,7 +173,6 @@
 			<device-support value="samr21"/>
 			<device-support value="sam4c32e"/>
 			<device-support value="samd11"/>
-			<device-support value="samg55"/>
 			<device-support value="saml21"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
@@ -212,7 +209,6 @@
 			<device-support value="samr21"/>
 			<device-support value="sam4c32e"/>
 			<device-support value="samd11"/>
-			<device-support value="samg55"/>
 			<device-support value="saml21"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
@@ -249,7 +245,6 @@
 			<device-support value="samr21"/>
 			<device-support value="sam4c32e"/>
 			<device-support value="samd11"/>
-			<device-support value="samg55"/>
 			<device-support value="saml21"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
@@ -285,8 +280,7 @@
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
 			<device-support value="sam4c32e"/>
-			<device-support value="samg55"/>
-			<device-support value="saml21"/>		
+			<device-support value="saml21"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#phdc" caption="USB Device PHDC">
@@ -320,8 +314,7 @@
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
 			<device-support value="sam4c32e"/>
-			<device-support value="samg55"/>
-			<device-support value="saml21"/>		
+			<device-support value="saml21"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.device#vendor_class" caption="USB Device Vendor Class">
@@ -356,7 +349,6 @@
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
 			<device-support value="sam4c32e"/>
-			<device-support value="samg55"/>
 			<device-support value="saml21"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
@@ -441,7 +433,7 @@
 			<device-support value="samd21"/>
 			<device-support value="samr21"/>
 			<device-support value="sam4c32e"/>
-			<device-support value="saml21"/>		
+			<device-support value="saml21"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.host#hid_mouse" caption="USB Host HID mouse">
