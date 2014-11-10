@@ -82,17 +82,17 @@
 
 /*
 ===== Target frequency (System clock)
-- XTAL frequency: 12MHZ
+- XTAL frequency: 12MHz
 - System clock source: PLLA
 - System clock prescaler: 2 (divided by 2)
 - PLLA source: XTAL
 - PLLA output: XTAL * 14 / 1
-- System clock is: 12 * 14 / 1 /2 = 84MHZ
+- System clock is: 12 * 14 / 1 /2 = 84MHz
 ===== Target frequency (USB Clock)
 - USB clock source: UPLL
 - USB clock devider: 1 (not devided)
-- UPLL frequency: 480MHZ
-- USB clock: 480 / 1 = 480MHZ
+- UPLL frequency: 480MHz
+- USB clock: 480 / 1 = 480MHz
 */
 
 
