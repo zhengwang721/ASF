@@ -183,10 +183,10 @@ static void adc_setup(void)
 #endif
 	/* Use GCLK generator 4 as clock source */
 	config.clock_source       = GCLK_GENERATOR_4;
-	/* Divide input clock by 4 (8MHz / 4 = 2MHz) */
+	/* Divide input clock by 4 */
 	config.clock_prescaler    = ADC_CLOCK_PRESCALER_DIV4;
 #if (SAML21)
-	/* Use internal 1V band-gap reference */
+	/* Use internal bandgap reference */
 	config.reference          = ADC_REFERENCE_INTREF;
 #else
 	/* Use internal 1V band-gap reference */
@@ -207,6 +207,17 @@ static void adc_setup(void)
 	config.window.window_mode        = ADC_WINDOW_MODE_BELOW_UPPER;
 	/* (1.0V / 4095 *2048) = 0.5V */
 	config.window.window_upper_value = 2048;
+
+#if (SAML21)
+	/* Config internal references before using it */
+	struct system_voltage_references_config voltage_reference_config;
+	system_voltage_reference_get_config_defaults(&voltage_reference_config);
+	voltage_reference_config.sel = SYSTEM_VOLTAGE_REFERENCE_1V0;
+	voltage_reference_config.run_in_standby = true;
+	system_voltage_reference_set_config(&voltage_reference_config);
+	/* Enable internal reference */
+	system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_OUTPUT);
+#endif
 
 	/* Apply configuration to ADC module */
 	adc_init(&module_inst, ADC, &config);
