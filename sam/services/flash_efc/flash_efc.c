@@ -609,9 +609,13 @@ uint32_t flash_write(uint32_t ul_address, const void *p_buffer,
 
 	translate_address(&p_efc, ul_address, &us_page, &us_offset);
 
+#if SAM3S || SAM3N || SAM3XA || SAM3U
 	/* According to the errata, set the wait state value to 6. */
 	ul_fws_temp = efc_get_wait_state(p_efc);
 	efc_set_wait_state(p_efc, 6);
+#else
+	UNUSED(ul_fws_temp);
+#endif
 
 	/* Write all pages */
 	while (ul_size > 0) {
@@ -661,8 +665,10 @@ uint32_t flash_write(uint32_t ul_address, const void *p_buffer,
 		us_offset = 0;
 	}
 
+#if SAM3S || SAM3N || SAM3XA || SAM3U
 	/* According to the errata, restore the wait state value. */
 	efc_set_wait_state(p_efc, ul_fws_temp);
+#endif
 
 	return FLASH_RC_OK;
 }
