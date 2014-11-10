@@ -71,7 +71,7 @@
  * a given threshold; in this application 0.5 Volts.
  *
  * This application has been tested on following boards:
- * - SAM D20/D21/R21/D11 Xplained Pro
+ * - SAM D20/D21/R21/D11/L21 Xplained Pro
  *
  * \section appdoc_sam0_adc_sleepwalking_setup Hardware Setup
  * This application use AIN0 as ADC input channel.
@@ -79,7 +79,7 @@
  * toggling the led pin to signal that the low voltage condition has happened.
  * Connect the PA02(EXT3 pin3) to GND in SAM D20/D21 Xplained Pro to trigger it.
  * Connect the PA06(EXT1 pin3) to GND in SAM R21 Xplained Pro to trigger it.
- * Connect the PA02(EXT1 pin3) to GND in SAM D10/D11 Xplained Pro to trigger it.
+ * Connect the PA02(EXT1 pin3) to GND in SAM D10/D11/L21 Xplained Pro to trigger it.
  *
  * If debugging it is also possible to start a debug session and place a
  * breakpoint in the window callback that will trigger whenever the voltage
@@ -178,14 +178,20 @@ static void adc_setup(void)
 {
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-
+#if (!SAML21)
 	config.gain_factor        = ADC_GAIN_FACTOR_1X;
+#endif
 	/* Use GCLK generator 4 as clock source */
 	config.clock_source       = GCLK_GENERATOR_4;
 	/* Divide input clock by 4 (8MHz / 4 = 2MHz) */
 	config.clock_prescaler    = ADC_CLOCK_PRESCALER_DIV4;
+#if (SAML21)
+	/* Use internal 1V band-gap reference */
+	config.reference          = ADC_REFERENCE_INTREF;
+#else
 	/* Use internal 1V band-gap reference */
 	config.reference          = ADC_REFERENCE_INT1V;
+#endif
 	/* Start new conversion on event */
 	config.event_action       = ADC_EVENT_ACTION_START_CONV;
 
