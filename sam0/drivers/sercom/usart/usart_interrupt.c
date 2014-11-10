@@ -251,14 +251,14 @@ enum status_code usart_read_job(
  * \param[in]  tx_data  Pointer do data buffer to transmit
  * \param[in]  length   Length of the data to transmit
  *
- * \note if using 9-bit data, the array that *tx_data point to should be defined uint16_t
- *       array and should be casted to uint8_t* point. Because it is a address point, the
- *       highest byte is not discarded. For example:
- * \code
- *         #define TX_LEN 3
- *         uint16_t tx_buf[TX_LEN] = {0x0111, 0x0022, 0x0133};
- *         usart_write_buffer_job(&module, (uint8_t*)tx_buf, TX_LEN);
-  \endcode
+ * \note if using 9-bit data, the array that *tx_data point to should be defined 
+ *       as uint16_t array and should be casted to uint8_t* pointer. Because it 
+ *       is a address pointer, the highest byte is not discarded. For example:
+ *   \code
+          #define TX_LEN 3
+          uint16_t tx_buf[TX_LEN] = {0x0111, 0x0022, 0x0133};
+          usart_write_buffer_job(&module, (uint8_t*)tx_buf, TX_LEN);
+    \endcode
  *
  * \returns Status of the operation.
  * \retval STATUS_OK              If operation was completed successfully.
@@ -306,14 +306,14 @@ enum status_code usart_write_buffer_job(
  * \param[out] rx_data  Pointer to data buffer to receive
  * \param[in]  length   Data buffer length
  *
- * \note if using 9-bit data, the array that *rx_data point to should be defined uint16_t
- *       array and should be casted to uint8_t* point. Because it is a address point, the
- *       highest byte is not discarded. For example:
- * \code
- *         #define RX_LEN 3
- *         uint16_t rx_buf[RX_LEN] = {0x0,};
- *         usart_read_buffer_job(&module, (uint8_t*)rx_buf, RX_LEN);
-  \endcode
+ * \note if using 9-bit data, the array that *rx_data point to should be defined
+ *       as uint16_t array and should be casted to uint8_t* pointer. Because it 
+ *       is a address pointer, the highest byte is not discarded. For example:
+ *   \code
+           #define RX_LEN 3
+           uint16_t rx_buf[RX_LEN] = {0x0,};
+           usart_read_buffer_job(&module, (uint8_t*)rx_buf, RX_LEN);
+    \endcode
  *
  * \returns Status of the operation.
  * \retval STATUS_OK              If operation was completed
