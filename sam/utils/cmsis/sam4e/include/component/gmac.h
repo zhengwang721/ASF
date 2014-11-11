@@ -186,7 +186,7 @@ typedef struct {
 #define   GMAC_NCFGR_CLK_MCK_8 (0x0u << 18) /**< \brief (GMAC_NCFGR) MCK divided by 8 (MCK up to 20 MHz) */
 #define   GMAC_NCFGR_CLK_MCK_16 (0x1u << 18) /**< \brief (GMAC_NCFGR) MCK divided by 16 (MCK up to 40 MHz) */
 #define   GMAC_NCFGR_CLK_MCK_32 (0x2u << 18) /**< \brief (GMAC_NCFGR) MCK divided by 32 (MCK up to 80 MHz) */
-#define   GMAC_NCFGR_CLK_MCK_48 (0x3u << 18) /**< \brief (GMAC_NCFGR) MCK divided by 48 (MCK up to 120MHz) */
+#define   GMAC_NCFGR_CLK_MCK_48 (0x3u << 18) /**< \brief (GMAC_NCFGR) MCK divided by 48 (MCK up to 120 MHz) */
 #define   GMAC_NCFGR_CLK_MCK_64 (0x4u << 18) /**< \brief (GMAC_NCFGR) MCK divided by 64 (MCK up to 160 MHz) */
 #define   GMAC_NCFGR_CLK_MCK_96 (0x5u << 18) /**< \brief (GMAC_NCFGR) MCK divided by 96 (MCK up to 240 MHz) */
 #define GMAC_NCFGR_DBW_Pos 21

@@ -441,7 +441,7 @@ typedef struct {
 #define PWM_FPV2_FPZL1 (0x1u << 17) /**< \brief (PWM_FPV2) Fault Protection to Hi-Z for PWML output on channel 1 */
 #define PWM_FPV2_FPZL2 (0x1u << 18) /**< \brief (PWM_FPV2) Fault Protection to Hi-Z for PWML output on channel 2 */
 #define PWM_FPV2_FPZL3 (0x1u << 19) /**< \brief (PWM_FPV2) Fault Protection to Hi-Z for PWML output on channel 3 */
-/* -------- PWM_WPCR : (PWM Offset: 0xE4) PWM Write Protect Control Register -------- */
+/* -------- PWM_WPCR : (PWM Offset: 0xE4) PWM Write Protection Control Register -------- */
 #define PWM_WPCR_WPCMD_Pos 0
 #define PWM_WPCR_WPCMD_Msk (0x3u << PWM_WPCR_WPCMD_Pos) /**< \brief (PWM_WPCR) Write Protection Command */
 #define   PWM_WPCR_WPCMD_DISABLE_SW_PROT (0x0u << 0) /**< \brief (PWM_WPCR) Disables the software write protection of the register groups of which the bit WPRGx is at '1'. */

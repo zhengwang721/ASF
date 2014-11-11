@@ -217,7 +217,7 @@ typedef struct {
 #define AFEC_SEQ1R_USCH7_Pos 28
 #define AFEC_SEQ1R_USCH7_Msk (0xfu << AFEC_SEQ1R_USCH7_Pos) /**< \brief (AFEC_SEQ1R) User Sequence Number 7 */
 #define AFEC_SEQ1R_USCH7(value) ((AFEC_SEQ1R_USCH7_Msk & ((value) << AFEC_SEQ1R_USCH7_Pos)))
-/* -------- AFEC_SEQ2R : (AFEC Offset: 0x10) Channel Sequence 2 Register -------- */
+/* -------- AFEC_SEQ2R : (AFEC Offset: 0x10) AFEC Channel Sequence 2 Register -------- */
 #define AFEC_SEQ2R_USCH8_Pos 0
 #define AFEC_SEQ2R_USCH8_Msk (0xfu << AFEC_SEQ2R_USCH8_Pos) /**< \brief (AFEC_SEQ2R) User Sequence Number 8 */
 #define AFEC_SEQ2R_USCH8(value) ((AFEC_SEQ2R_USCH8_Msk & ((value) << AFEC_SEQ2R_USCH8_Pos)))

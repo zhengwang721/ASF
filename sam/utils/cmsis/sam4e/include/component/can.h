@@ -172,7 +172,7 @@ typedef struct {
 #define CAN_SR_SLEEP (0x1u << 20) /**< \brief (CAN_SR) CAN controller in Low power Mode */
 #define CAN_SR_WAKEUP (0x1u << 21) /**< \brief (CAN_SR) CAN controller is not in Low power Mode */
 #define CAN_SR_TOVF (0x1u << 22) /**< \brief (CAN_SR) Timer Overflow */
-#define CAN_SR_TSTP (0x1u << 23) /**< \brief (CAN_SR)  */
+#define CAN_SR_TSTP (0x1u << 23) /**< \brief (CAN_SR) Timestamp */
 #define CAN_SR_CERR (0x1u << 24) /**< \brief (CAN_SR) Mailbox CRC Error */
 #define CAN_SR_SERR (0x1u << 25) /**< \brief (CAN_SR) Mailbox Stuffing Error */
 #define CAN_SR_AERR (0x1u << 26) /**< \brief (CAN_SR) Acknowledgment Error */
@@ -199,7 +199,7 @@ typedef struct {
 #define CAN_BR_BRP(value) ((CAN_BR_BRP_Msk & ((value) << CAN_BR_BRP_Pos)))
 #define CAN_BR_SMP (0x1u << 24) /**< \brief (CAN_BR) Sampling Mode */
 #define   CAN_BR_SMP_ONCE (0x0u << 24) /**< \brief (CAN_BR) The incoming bit stream is sampled once at sample point. */
-#define   CAN_BR_SMP_THREE (0x1u << 24) /**< \brief (CAN_BR) The incoming bit stream is sampled three times with a period of a MCK clock period, centered on sample point. */
+#define   CAN_BR_SMP_THREE (0x1u << 24) /**< \brief (CAN_BR) The incoming bit stream is sampled three times with a period of a peripheral clock, centered on sample point. */
 /* -------- CAN_TIM : (CAN Offset: 0x0018) Timer Register -------- */
 #define CAN_TIM_TIMER_Pos 0
 #define CAN_TIM_TIMER_Msk (0xffffu << CAN_TIM_TIMER_Pos) /**< \brief (CAN_TIM) Timer */

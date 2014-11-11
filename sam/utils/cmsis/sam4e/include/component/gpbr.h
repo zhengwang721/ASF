@@ -43,9 +43,9 @@
 #define _SAM4E_GPBR_COMPONENT_
 
 /* ============================================================================= */
-/**  SOFTWARE API DEFINITION FOR General Purpose Backup Register */
+/**  SOFTWARE API DEFINITION FOR General Purpose Backup Registers */
 /* ============================================================================= */
-/** \addtogroup SAM4E_GPBR General Purpose Backup Register */
+/** \addtogroup SAM4E_GPBR General Purpose Backup Registers */
 /*@{*/
 
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
