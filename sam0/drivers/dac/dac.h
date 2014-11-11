@@ -862,10 +862,9 @@ void dac_clear_status(
  *	</tr>
  *	<tr>
  *		<td>D</td>
- *		<td>05/2014</td>
+ *		<td>10/2014</td>
  *		<td>Add SAMD10/D11 support.</td>
  *	</tr>
- *	<tr>
  *	<tr>
  *		<td>C</td>
  *		<td>01/2014</td>

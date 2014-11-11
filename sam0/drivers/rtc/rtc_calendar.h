@@ -567,7 +567,7 @@ static inline void rtc_calendar_get_time_defaults(
  *  - Continuously sync clock off
  *  - 12 hour calendar
  *  - Start year 2000 (Year 0 in the counter will be year 2000)
- *  - Events off.
+ *  - Events off
  *  - Alarms set to January 1. 2000, 00:00:00
  *  - Alarm will match on second, minute, hour, day, month, and year
  *
