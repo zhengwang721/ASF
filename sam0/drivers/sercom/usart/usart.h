@@ -1225,7 +1225,7 @@ static inline void usart_disable_transceiver(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>05/2014</td>
+ *		<td>11/2014</td>
  *		<td>Add support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>
