@@ -45,7 +45,7 @@
 #define CONF_CLOCK_H_INCLUDED
 
 // ===== System Clock Source Options
-//! CPU clock need of clock > 25MHZ to run with USBC
+//! CPU clock need of clock > 25MHz to run with USBC
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_RCSYS
 //#define CONFIG_SYSCLK_SOURCE        SYSCLK_SRC_OSC0
 #define CONFIG_SYSCLK_SOURCE          SYSCLK_SRC_PLL0
