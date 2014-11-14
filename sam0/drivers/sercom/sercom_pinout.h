@@ -43,7 +43,7 @@
 #ifndef SERCOM_PINOUT_H_INCLUDED
 #define SERCOM_PINOUT_H_INCLUDED
 
-#include "sercom.h"
+#include <compiler.h>
 
 #if SAMR21E
 	/* SERCOM0 */
