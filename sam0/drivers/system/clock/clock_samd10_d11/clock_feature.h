@@ -906,39 +906,6 @@ uint32_t system_clock_source_get_hz(
  * @{
  */
 
-#ifdef FEATURE_SYSTEM_CLOCK_FAILURE_DETECT
-/**
- * \brief Enable or disable the main clock failure detection.
- *
- * This mechanism allows switching automatically the main clock to the safe
- * RCSYS clock, when the main clock source is considered off.
- *
- * This may happen for instance when an external crystal is selected as the
- * clock source of the main clock and the crystal dies. The mechanism is to
- * detect, during a RCSYS period, at least one rising edge of the main clock.
- * If no rising edge is seen the clock is considered failed.
- * As soon as the detector is enabled, the clock failure detector
- * CFD) will monitor the divided main clock. When a clock failure is detected,
- * the main clock automatically switches to the RCSYS clock and the CFD
- * interrupt is generated if enabled.
- *
- * \note The failure detect must be disabled if the system clock is the same or
- *       slower than 32KHz as it will believe the system clock has failed with
- *       a too-slow clock.
- *
- * \param[in] enable  Boolean \c true to enable, \c false to disable detection
- */
-static inline void system_main_clock_set_failure_detect(
-		const bool enable)
-{
-	if (enable) {
-		PM->CTRL.reg |=  PM_CTRL_CFDEN;
-	} else {
-		PM->CTRL.reg &= ~PM_CTRL_CFDEN;
-	}
-}
-#endif
-
 /**
  * \brief Set main CPU clock divider.
  *
