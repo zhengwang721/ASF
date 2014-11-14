@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_port_group SAM Port Driver (PORT)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's General Purpose Input/Output (GPIO) pin
  * functionality, for manual pin state reading and writing.
  *
@@ -54,10 +54,10 @@
  *  - PORT (GPIO Management)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM L21
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_port_prerequisites
@@ -160,11 +160,12 @@ extern "C" {
 #endif
 
 /**
- * Define port features set according to different device family
+ * \name Driver Feature Definition
+ * Define port features set according to different device family.
  * @{
 */
 #if (SAML21) || defined(__DOXYGEN__)
-/** Event input control feature support for PORT group */
+/** Event input control feature support for PORT group. */
 #  define FEATURE_PORT_INPUT_EVENT
 #endif
 /*@}*/
@@ -754,6 +755,11 @@ static inline enum status_code port_input_event_set_config(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+  *	<tr>
+ *		<td>E</td>
+ *		<td>11/2014</td>
+ *		<td>Added input event feature and support for SAML21.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

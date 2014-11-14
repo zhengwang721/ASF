@@ -50,7 +50,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_dma_group SAM Direct Memory Access Controller Driver (DMAC)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the Direct Memory Access Controller(DMAC) module within
  * the device. The DMAC can transfer data between memories and peripherals, and
  * thus off-load these tasks from the CPU. The module supports peripheral to
@@ -61,11 +61,11 @@ extern "C" {
  * - DMAC (Direct Memory Access Controller)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM L21
+ *  - Atmel | SMART SAM D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_dma_prerequisites
@@ -822,6 +822,11 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  *        <th>Doc. Rev.</td>
  *        <th>Date</td>
  *        <th>Comments</td>
+ *    </tr>
+ *    <tr>
+ *        <td>C</td>
+ *        <td>11/2014</td>
+ *        <td>Added SAML21 support</td>
  *    </tr>
  *    <tr>
  *        <td>B</td>
