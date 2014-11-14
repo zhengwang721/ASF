@@ -50,7 +50,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_events_group SAM Event System Driver (EVENTS)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's peripheral event resources and users within
  * the device, including enabling and disabling of peripheral source selection
  * and synchronization of clock domains between various modules. The following API
@@ -64,10 +64,10 @@ extern "C" {
  * - EVSYS (Event System Management)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM L21
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_events_prerequisites
@@ -311,7 +311,7 @@ extern "C" {
 #include "events_common.h"
 
 /**
- * \brief Edge detect enum
+ * \brief Edge detect enum.
  *
  * Event channel edge detect setting.
  *
@@ -328,7 +328,7 @@ enum events_edge_detect {
 };
 
 /**
- * \brief Path selection enum
+ * \brief Path selection enum.
  *
  * Event channel path selection.
  *
@@ -343,7 +343,7 @@ enum events_path_selection {
 };
 
 /**
- * \brief Events configuration struct
+ * \brief Events configuration struct.
  *
  * This events configuration struct is used to configure each of the channels.
  *
@@ -358,15 +358,15 @@ struct events_config {
 	/** Clock source for the event channel. */
 	uint8_t                    clock_source;
 #if (SAML21)
-	/** Run in standby mode for the channel */
+	/** Run in standby mode for the channel. */
 	bool                       run_in_standby;
-	/** Run On Demand */
+	/** Run On Demand. */
 	bool                       on_demand;
 #endif
 };
 
 /**
- * \brief No event generator definition
+ * \brief No event generator definition.
  *
  * Use this to disable any peripheral event input to a channel. This can be useful
  * if you only want to use a channel for software generated events.
@@ -400,7 +400,7 @@ struct events_config {
 #define EVSYS_ID_GEN_NONE   0
 
 /**
- * \brief Event channel resource
+ * \brief Event channel resource.
  *
  * Event resource structure.
  *
@@ -411,7 +411,7 @@ struct events_resource {
 #if !defined(__DOXYGEN__)
 	/* Channel allocated for the event resource. */
 	uint8_t channel;
-	/** Channel setting in CHANNEL register */
+	/** Channel setting in CHANNEL register. */
 	uint32_t channel_reg;
 #endif
 };
@@ -427,7 +427,7 @@ struct events_hook {
 #endif
 
 /**
- * \brief Initializes an event configurations struct to defaults
+ * \brief Initializes an event configurations struct to defaults.
  *
  * Initailizes an event configuration struct to predefined safe default settings.
  *
@@ -437,7 +437,7 @@ struct events_hook {
 void events_get_config_defaults(struct events_config *config);
 
 /**
- * \brief Allocate an event channel and set configuration
+ * \brief Allocate an event channel and set configuration.
  *
  * Allocates an event channel from the event channel pool and sets
  * the channel configuration.
@@ -453,7 +453,7 @@ void events_get_config_defaults(struct events_config *config);
 enum status_code events_allocate(struct events_resource *resource, struct events_config *config);
 
 /**
- * \brief Attach user to the event channel
+ * \brief Attach user to the event channel.
  *
  * Attach a user peripheral to the event channel to receive events.
  *
@@ -466,7 +466,7 @@ enum status_code events_allocate(struct events_resource *resource, struct events
 enum status_code events_attach_user(struct events_resource *resource, uint8_t user_id);
 
 /**
- * \brief Detach an user peripheral from the event channel
+ * \brief Detach an user peripheral from the event channel.
  *
  * Deattach an user peripheral from the event channels so it does not receive any more events.
  *
@@ -479,7 +479,7 @@ enum status_code events_attach_user(struct events_resource *resource, uint8_t us
 enum status_code events_detach_user(struct events_resource *resource, uint8_t user_id);
 
 /**
- * \brief Check if a channel is busy
+ * \brief Check if a channel is busy.
  *
  * Check if a channel is busy, a channels stays busy until all users connected to the channel
  * has handled an event.
@@ -493,7 +493,7 @@ enum status_code events_detach_user(struct events_resource *resource, uint8_t us
 bool events_is_busy(struct events_resource *resource);
 
 /**
- * \brief Trigger software event
+ * \brief Trigger software event.
  *
  * Trigger an event by software.
  *
@@ -507,7 +507,7 @@ bool events_is_busy(struct events_resource *resource);
 enum status_code events_trigger(struct events_resource *resource);
 
 /**
- * \brief Check if all users connected to the channel is ready
+ * \brief Check if all users connected to the channel is ready.
  *
  * Check if all users connected to the channel is ready to handle incomming events.
  *
@@ -520,7 +520,7 @@ enum status_code events_trigger(struct events_resource *resource);
 bool events_is_users_ready(struct events_resource *resource);
 
 /**
- * \brief Check if event is detected on event channel
+ * \brief Check if event is detected on event channel.
  *
  * Check if an event has been detected on the channel.
  *
@@ -535,7 +535,7 @@ bool events_is_users_ready(struct events_resource *resource);
 bool events_is_detected(struct events_resource *resource);
 
 /**
- * \brief Check if there has been an overrun situation on this channel
+ * \brief Check if there has been an overrun situation on this channel.
  *
  * Check if there has been an overrun situation on this channel.
  *
@@ -550,7 +550,7 @@ bool events_is_detected(struct events_resource *resource);
 bool events_is_overrun(struct events_resource *resource);
 
 /**
- * \brief Release allocated channel back the the resource pool
+ * \brief Release allocated channel back the the resource pool.
  *
  * Release an allocated channel back to the resource pool to make it available for other purposes.
  *

@@ -47,14 +47,14 @@
 /**
  * \defgroup asfdoc_sam0_ccl_group SAM Configurable Custom Logic (CCL) Driver
  *
- * This driver for SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of the device's Configurable Custom Logic functionality.
  *
  * The following peripherals are used by this module:
  *  - CCL (Configurable Custom Logic)
  *
  * The following devices can use this module:
- *  - SAM L21
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_ccl_prerequisites
@@ -263,7 +263,7 @@ void ccl_init(struct ccl_config *const config);
  *  The default configuration is as follows:
  *   \li Configurable Custom Logic will not be stopped in standby sleep mode
  *
- *  \param[out] config  Configuration structure to initialize to default values
+ *  \param[out] config  Configuration structure to initialize to default values.
  */
 static inline void ccl_get_config_defaults(
 		struct ccl_config *const config)
