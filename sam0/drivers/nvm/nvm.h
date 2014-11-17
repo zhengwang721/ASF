@@ -375,7 +375,7 @@ enum nvm_sleep_power_mode {
 };
 
 /**
- * \brief NVM controller cache readmode configuration
+ * \brief NVM controller cache readmode configuration.
  *
  * Control how the NVM cache prefetch data from flash.
  *
@@ -518,7 +518,7 @@ enum nvm_bod33_action {
 };
 
 /**
- * \brief WDT Window time-out period
+ * \brief WDT Window time-out period.
  *
  * Window mode time-out period in clock cycles.
  *
@@ -551,7 +551,7 @@ enum nvm_wdt_window_timeout {
 };
 
 /**
- * \brief WDT Early warning offset
+ * \brief WDT Early warning offset.
  *
  * This setting determine how many GCLK_WDT cycles before a watchdog time-out period
  * an early warning interrupt should be triggered.
@@ -585,7 +585,7 @@ enum nvm_wdt_early_warning_offset {
 };
 
 /**
- * \brief NVM user row fuse setting structure
+ * \brief NVM user row fuse setting structure.
  *
  * This structure contain the layout of the first 64 bits of the user row
  * which contain the fuse settings.

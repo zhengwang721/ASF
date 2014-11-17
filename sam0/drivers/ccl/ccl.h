@@ -263,7 +263,7 @@ void ccl_init(struct ccl_config *const config);
  *  The default configuration is as follows:
  *   \li Configurable Custom Logic will not be stopped in standby sleep mode
  *
- *  \param[out] config  Configuration structure to initialize to default values.
+ *  \param[out] config  Configuration structure to initialize to default values
  */
 static inline void ccl_get_config_defaults(
 		struct ccl_config *const config)

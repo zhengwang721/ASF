@@ -564,7 +564,7 @@ bool events_is_overrun(struct events_resource *resource);
 enum status_code events_release(struct events_resource *resource);
 
 /**
- * \brief Get number of free channels
+ * \brief Get number of free channels.
  *
  * Get number of allocatable channels in the events system resource pool.
  *
