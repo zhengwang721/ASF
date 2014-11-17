@@ -297,17 +297,17 @@ extern "C" {
  *
  * \anchor asfdoc_sam0_system_power_ram_state_table
  * <table>
- *  <caption>Sleep Mode versus Power Domain State Overview</caption>
+ *  <caption>RAM Back-biasing mode</caption>
  *  <tr>
  *      <th>RAM mode</th>
  *      <th>Description</th>
  *  </tr>
  *  <tr>
- *      <td>Retention Back biasing mode</td>
+ *      <td>Retention Back-biasing mode</td>
  *      <td>RAM is back-biased if its power domain is in retention mode</td>
  *  </tr>
  *  <tr>
- *      <td>Standby Back Biasing mode</td>
+ *      <td>Standby Back-biasing mode</td>
  *      <td>RAM is back-biased if the device is in standby mode</td>
  *  </tr>
  *  <tr>
