@@ -541,9 +541,9 @@ static inline enum status_code dma_get_job_status(struct dma_resource *resource)
 }
 
 /**
- * \brief Check if the given DMA resource is busy
+ * \brief Check if the given DMA resource is busy.
  *
- * \param[in] resource Pointer to the DMA resource.
+ * \param[in] resource Pointer to the DMA resource
  *
  * \return Status which indicates whether the DMA resource is busy.
  *

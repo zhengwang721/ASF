@@ -74,7 +74,7 @@
 struct _extint_module _extint_dev;
 
 /**
- * \brief Determin if the general clock is required
+ * \brief Determin if the general clock is required.
  *
  * \param[in] filter_input_signal Filter the raw input signal to prevent noise
  * \param[in] detection_criteria  Edge detection mode to use (\ref extint_detect)

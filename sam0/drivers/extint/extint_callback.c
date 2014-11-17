@@ -199,7 +199,7 @@ enum status_code extint_chan_disable_callback(
 }
 
 /**
- * \brief Find what channel caused the callback
+ * \brief Find what channel caused the callback.
  *
  * Can be used in an EXTINT callback function to find what channel caused
  * the callback in case same callback is used by multiple channels.
