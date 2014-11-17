@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -70,8 +70,7 @@
   #define REG_PMC_PCDR1                   (0x400E0504U) /**< \brief (PMC) Peripheral Clock Disable Register 1 */
   #define REG_PMC_PCSR1                   (0x400E0508U) /**< \brief (PMC) Peripheral Clock Status Register 1 */
   #define REG_PMC_OCR                     (0x400E0510U) /**< \brief (PMC) Oscillator Calibration Register */
-  #define REG_PMC_PMMR                    (0x400E0530U) /**< \brief (PMC) PLL Maximum Multiplier Value Register */
-#else
+  #else
   #define REG_PMC_SCER   (*(__O  uint32_t*)0x400E0400U) /**< \brief (PMC) System Clock Enable Register */
   #define REG_PMC_SCDR   (*(__O  uint32_t*)0x400E0404U) /**< \brief (PMC) System Clock Disable Register */
   #define REG_PMC_SCSR   (*(__I  uint32_t*)0x400E0408U) /**< \brief (PMC) System Clock Status Register */
@@ -98,7 +97,6 @@
   #define REG_PMC_PCDR1  (*(__O  uint32_t*)0x400E0504U) /**< \brief (PMC) Peripheral Clock Disable Register 1 */
   #define REG_PMC_PCSR1  (*(__I  uint32_t*)0x400E0508U) /**< \brief (PMC) Peripheral Clock Status Register 1 */
   #define REG_PMC_OCR    (*(__IO uint32_t*)0x400E0510U) /**< \brief (PMC) Oscillator Calibration Register */
-  #define REG_PMC_PMMR   (*(__IO uint32_t*)0x400E0530U) /**< \brief (PMC) PLL Maximum Multiplier Value Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAM4S_PMC_INSTANCE_ */

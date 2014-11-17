@@ -1897,7 +1897,7 @@ void usb_get_config_defaults(struct usb_config *module_config)
 	/* Write default configuration to config struct */
 	module_config->select_host_mode = 0;
 	module_config->run_in_standby = 1;
-	module_config->source_generator = GCLK_GENERATOR_0;
+	module_config->source_generator = GCLK_GENERATOR_3;
 	module_config->speed_mode = USB_SPEED_FULL;
 }
 
