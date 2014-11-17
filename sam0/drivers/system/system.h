@@ -57,7 +57,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_group SAM System Driver (SYSTEM)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's system relation functionality, necessary for
  * the basic device operation. This is not limited to a single peripheral, but
  * extends across multiple hardware peripherals.
@@ -73,10 +73,13 @@ extern "C" {
  * \endif
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM L21
+ * \if DEVICE_SAML21_SUPPORT
+ *  - Atmel | SMART SAM L21
+ * \else
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ * \endif
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_system_prerequisites
@@ -107,7 +110,7 @@ extern "C" {
  *
  * \if DEVICE_SAML21_SUPPORT
  * \subsection asfdoc_sam0_system_module_overview_vreg Voltage Regulator
- * The SAML21 device controls the voltage regulators for the core (VDDCORE) and
+ * The SAM device controls the voltage regulators for the core (VDDCORE) and
  * backup (VDDBU) domains. It sets the voltage regulators according to the sleep
  * modes, the performance level, or the user configuration.
  *
@@ -116,7 +119,7 @@ extern "C" {
  * to supply VDDCORE.
  *
  * \subsection asfdoc_sam0_system_module_overview_bbps Battery Backup Power Switch
- * The SAML21 device supports connection of a battery backup to the VBAT power pin.
+ * The SAM device supports connection of a battery backup to the VBAT power pin.
  * It includes functionality that enables automatic power switching between main
  * power and battery backup power. This will ensure power to the backup domain,
  * when the main battery or power source is unavailable.
@@ -142,7 +145,7 @@ extern "C" {
  * reset, so that appropriate action can be taken.
  *
  * \if DEVICE_SAML21_SUPPORT
- * For SAM L21,There are three groups of reset sources:
+ * There are three groups of reset sources:
  *   - Power supply reset: Resets caused by an electrical issue. It covers POR and BODs reset.
  *   - User reset: Resets caused by the application. It covers external reset,
  *             system resetrequest and watchdog reset.
@@ -153,7 +156,7 @@ extern "C" {
  * power consumption. The user can select on the fly the performance level
  * configuration which best suits its application.
  *
- * The SAM L21 device embeds up to three performance level (PL0, PL1 and PL2).
+ * The SAM device embeds up to three performance level (PL0, PL1 and PL2).
  * Each performance level defines a maximum frequency and a corresponding
  * consumption in µA/MHz,when the application selects a new performance level,
  * the voltage applied on the full logic area moves from a value to another,
@@ -166,19 +169,49 @@ extern "C" {
  * switch to another performance level at anytime without any stop in the code
  * execution. As shown in \ref asfdoc_sam0_system_performance_level_transition_figure.
  *
+ * \note When scaling down the performance level,the bus frequency should be first
+ *  scaled down in order to not exceed the maximum frequency allowed for the
+ *  low performance level.
+ *  When scaling up the performance level (for example from PL0 to PL2), the bus
+ *  frequency can be increased only once the performance level transition is
+ *  completed,check the performance level status.
+ *
  * \anchor asfdoc_sam0_system_performance_level_transition_figure
  * \image html performance_level_transition.gif "The performance level  transition"
-
- * \subsection asfdoc_sam0_system_module_overview_power_domain Power Domain
+ *
+ * \subsection asfdoc_sam0_system_module_overview_power_domain Power Domain Gating
  * Power domain gating  can  turn on or off power domain voltage to save power
  * while keeping other domain powered up. It can be used in standby sleep mode,
  * in standby mode, when power-gated, the internal state of the logic can be
  * retained  allowing the application context to be kept.
  *
- * The SAM L21 device has three power domains: PD0, PD1 and PD2.
+ * Power domain can be in three states:
+ * - Active state: the power domain is powered on.
+ * - Retention state: the main voltage supply for the power domain is switched off, 
+ * while maintaining a secondary low-power supply for the sequential cells. The 
+ * logic context is restored when waking up.
+ * - Off state: the power domain is entirely powered off. The logic context is lost.
  *
- * Here is an overview of sleep mode versus power domain state. As shown in
- * \ref asfdoc_sam0_system_power_domain_overview_table
+ * The SAM L21 device has three power domains: PD0, PD1 and PD2. 
+ * - By default, a power domain is set automatically to retention state in standby 
+ * sleep mode if no activity is required in it, the application can force all power
+ * domains to remain in active state during standby sleep mode in order to accelerate
+ * wakeup time.
+ * - Static Power_SleepWalking: When entering standby mode, if a peripheral needs to 
+ * remain in run mode to perform sleepwalking task, its power domain (PDn) remains in
+ * active state as well as the inferior power domains (<PDn).
+ * - Dynamic Power_SleepWalking: During standby mode, a power domain (PDn) in active
+ * state (using the static Power_SleepWalking principle), can wakeup a superior power
+ * domain (>PDn) in order to perform a sleepwalking task. The superior power domain is 
+ * then automatically set to active state. At the end of the sleepwalking task, either 
+ * the device can be waken-up or the superior power domain can be set again to retention
+ * state.
+ *
+ * Power domains can be linked each other,it allows a power domain (PDn) to be kept
+ * in active state if the inferior power domain (PDn-1) is in active state too.
+ *
+ * The table \ref asfdoc_sam0_system_power_domain_overview_table illustrates the 
+ * four cases to consider in standby mode
  *
  * \anchor asfdoc_sam0_system_power_domain_overview_table
  * <table>
@@ -254,6 +287,36 @@ extern "C" {
  *      <td>OFF</td>
  *      <td>OFF</td>
  *      <td>OFF</td>
+ *  </tr>
+ * </table>
+ *
+ * \subsection asfdoc_sam0_system_module_overview_ram_state RAMs Low Power Mode
+ * By default, in standby sleep mode, RAM is in low power mode (back biased) 
+ * if its power domain is in retention state.
+ * The table \ref asfdoc_sam0_system_power_ram_state_table lists RAMs low power mode.
+ *
+ * \anchor asfdoc_sam0_system_power_ram_state_table
+ * <table>
+ *  <caption>Sleep Mode versus Power Domain State Overview</caption>
+ *  <tr>
+ *      <th>RAM mode</th>
+ *      <th>Description</th>
+ *  </tr>
+ *  <tr>
+ *      <td>Retention Back biasing mode</td>
+ *      <td>RAM is back-biased if its power domain is in retention mode</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Standby Back Biasing mode</td>
+ *      <td>RAM is back-biased if the device is in standby mode</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Standby OFF mode</td>
+ *      <td>RAM is OFF if the device is in standby mode</td>
+ *  </tr>
+ *  <tr>
+ *      <td>Always OFF mode</td>
+ *      <td>RAM is OFF if the device is in RET mode</td>
  *  </tr>
  * </table>
  *
@@ -497,10 +560,21 @@ void system_init(void);
  *      <td>PM</td>
  *      <td>Power Manager</td>
  *  </tr>
+ * \if DEVICE_SAML21_SUPPORT
+ *  <tr>
+ *      <td>SUPC</td>
+ *      <td>Supply Controller</td>
+ *  </tr>
+ *  <tr>
+ *      <td>RSTC</td>
+ *      <td>Reset Controller</td>
+ *  </tr>
+ * \else
  *  <tr>
  *      <td>SYSCTRL</td>
  *      <td>System control interface</td>
  *  </tr>
+ * \endif
  * </table>
  *
  *
@@ -524,6 +598,11 @@ void system_init(void);
  *  <tr>
  *      <th>Changelog</th>
  *  </tr>
+ * \if DEVICE_SAML21_SUPPORT
+ *  <tr>
+ *      <td>Initial Release</td>
+ *  </tr>
+ * \else
  *  <tr>
  *      <td>Added low power features and support for SAML21</td>
  *  </tr>
@@ -540,6 +619,7 @@ void system_init(void);
  *  <tr>
  *      <td>Initial Release</td>
  *  </tr>
+ * \endif
  * </table>
  *
  * \page asfdoc_sam0_system_document_revision_history Document Revision History
@@ -550,6 +630,13 @@ void system_init(void);
  *      <th>Date</td>
  *      <th>Comments</td>
  *  </tr>
+ * \if DEVICE_SAML21_SUPPORT
+ *  <tr>
+ *      <td>A</td>
+ *      <td>11/2014</td>
+ *      <td>Initial release.</td>
+ * </tr>
+ * \else
  *  <tr>
  *      <td>D</td>
  *      <td>04/2014</td>
@@ -570,6 +657,7 @@ void system_init(void);
  *      <td>06/2013</td>
  *      <td>Initial release</td>
  *  </tr>
+ * \endif
  * </table>
  */
 

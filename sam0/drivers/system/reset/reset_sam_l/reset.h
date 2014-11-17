@@ -61,19 +61,19 @@ extern "C" {
  * List of possible reset causes of the system.
  */
 enum system_reset_cause {
-	/** The system was last reset by a backup reset. */
+	/** The system was last reset by a backup reset */
 	SYSTEM_RESET_CAUSE_BACKUP         = RSTC_RCAUSE_BACKUP,
-	/** The system was last reset by a software reset. */
+	/** The system was last reset by a software reset */
 	SYSTEM_RESET_CAUSE_SOFTWARE       = RSTC_RCAUSE_SYST,
-	/** The system was last reset by the watchdog timer. */
+	/** The system was last reset by the watchdog timer */
 	SYSTEM_RESET_CAUSE_WDT            = RSTC_RCAUSE_WDT,
-	/** The system was last reset because the external reset line was pulled low. */
+	/** The system was last reset because the external reset line was pulled low */
 	SYSTEM_RESET_CAUSE_EXTERNAL_RESET = RSTC_RCAUSE_EXT,
-	/** The system was last reset by the BOD33. */
+	/** The system was last reset by the BOD33 */
 	SYSTEM_RESET_CAUSE_BOD33          = RSTC_RCAUSE_BOD33,
-	/** The system was last reset by the BOD12. */
+	/** The system was last reset by the BOD12 */
 	SYSTEM_RESET_CAUSE_BOD12          = RSTC_RCAUSE_BOD12,
-	/** The system was last reset by the POR (Power on reset). */
+	/** The system was last reset by the POR (Power on reset) */
 	SYSTEM_RESET_CAUSE_POR            = RSTC_RCAUSE_POR,
 };
 
@@ -83,11 +83,11 @@ enum system_reset_cause {
  * List of possible backup exit source.
  */
 enum system_reset_backup_exit_source {
-	/** The backup exit source was external wakeup. */
+	/** The backup exit source was external wakeup */
 	SYSTEM_RESET_BACKKUP_EXIT_EXTWAKE    = RSTC_BKUPEXIT_EXTWAKE,
-	/** The backup exit source was RTC interrupt. */
+	/** The backup exit source was RTC interrupt */
 	SYSTEM_RESET_BACKKUP_EXIT_RTC        = RSTC_BKUPEXIT_RTC,
-	/** The backup exit source was battery backup power switch. */
+	/** The backup exit source was battery backup power switch */
 	SYSTEM_RESET_BACKKUP_EXIT_BBPS       = RSTC_BKUPEXIT_BBPS,
 };
 
@@ -97,19 +97,19 @@ enum system_reset_backup_exit_source {
  * Wakeup debounce counter value when waking up by external wakeup pin from backup mode.
  */
 enum system_wakeup_debounce_count {
-	/** No debouncing. */
+	/** No debouncing */
 	SYSTEM_WAKEUP_DEBOUNCE_OFF         = RSTC_WKDBCONF_WKDBCNT_OFF,
-	/** Input pin shall be active for at least two 32kHz clock period. */
+	/** Input pin shall be active for at least two 32kHz clock period */
 	SYSTEM_WAKEUP_DEBOUNCE_2CK32       = RSTC_WKDBCONF_WKDBCNT_2K32,
-	/** Input pin shall be active for at least three 32kHz clock period. */
+	/** Input pin shall be active for at least three 32kHz clock period */
 	SYSTEM_WAKEUP_DEBOUNCE_3CK32       = RSTC_WKDBCONF_WKDBCNT_3CK32,
-	/** Input pin shall be active for at least 32 32kHz clock period. */
+	/** Input pin shall be active for at least 32 32kHz clock period */
 	SYSTEM_WAKEUP_DEBOUNCE_32CK32      = RSTC_WKDBCONF_WKDBCNT_32CK32,
-	/** Input pin shall be active for at least 512 32kHz clock period. */
+	/** Input pin shall be active for at least 512 32kHz clock period */
 	SYSTEM_WAKEUP_DEBOUNCE_512CK32     = RSTC_WKDBCONF_WKDBCNT_512CK32,
-	/** Input pin shall be active for at least 4096 32kHz clock period. */
+	/** Input pin shall be active for at least 4096 32kHz clock period */
 	SYSTEM_WAKEUP_DEBOUNCE_4096CK32    = RSTC_WKDBCONF_WKDBCNT_4096CK32,
-	/** Input pin shall be active for at least 32768 32kHz clock period. */
+	/** Input pin shall be active for at least 32768 32kHz clock period */
 	SYSTEM_WAKEUP_DEBOUNCE_32768CK32   = RSTC_WKDBCONF_WKDBCNT_32768CK32,
 };
 
@@ -168,7 +168,7 @@ static inline enum system_reset_backup_exit_source system_get_backup_exit_source
  *
  * Set the wakeup debounce counter value with the given count.
  *
- * \param[in] wakeup_debounce_count Wakeup debounce counter value.
+ * \param[in] wakeup_debounce_count Wakeup debounce counter value
  */
 static inline void system_set_pin_wakeup_debounce_counter(
 					const enum system_wakeup_debounce_count wakeup_debounce_count)
@@ -181,7 +181,7 @@ static inline void system_set_pin_wakeup_debounce_counter(
  *
  * Set low polarity with the given wakeup input pin mask.
  *
- * \param[in] pin_mask Input pin mask.
+ * \param[in] pin_mask Input pin mask
  */
 static inline void system_set_pin_wakeup_polarity_low(const uint16_t pin_mask)
 {
@@ -193,7 +193,7 @@ static inline void system_set_pin_wakeup_polarity_low(const uint16_t pin_mask)
  *
  * Set high polarity with the given wakeup input pin mask.
  *
- * \param[in] pin_mask Input pin mask.
+ * \param[in] pin_mask Input pin mask
  */
 static inline void system_set_pin_wakeup_polarity_high(const uint16_t pin_mask)
 {
@@ -205,7 +205,7 @@ static inline void system_set_pin_wakeup_polarity_high(const uint16_t pin_mask)
  *
  * Enable pin wakeup from the backup mode with the given pin mask.
  *
- * \param[in] pin Input pin mask.
+ * \param[in] pin Input pin mask
  */
 static inline void system_enable_pin_wakeup(const uint16_t pin_mask)
 {
@@ -217,7 +217,7 @@ static inline void system_enable_pin_wakeup(const uint16_t pin_mask)
  *
  * Disable pin wakeup from the backup mode with the given pin mask.
  *
- * \param[in] pin Input pin mask.
+ * \param[in] pin Input pin mask
  */
 static inline void system_disable_pin_wakeup(const uint16_t pin_mask)
 {
