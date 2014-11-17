@@ -604,10 +604,10 @@ enum status_code dac_chan_write(
  * \param[in] length             Length of the write buffer
  *
  * \return Status of the operation.
- * \retval STATUS_OK           If the data was written or no data conversion required.
+ * \retval STATUS_OK           If the data was written or no data conversion required
  * \retval STATUS_ERR_UNSUPPORTED_DEV  The DAC is not configured as using
- *                                         event trigger.
- * \retval STATUS_BUSY      The DAC is busy to convert.
+ *                                         event trigger
+ * \retval STATUS_BUSY      The DAC is busy to convert
  */
 enum status_code dac_chan_write_buffer_wait(
 		struct dac_module *const module_inst,
@@ -678,8 +678,8 @@ enum status_code dac_chan_write_buffer_wait(
  * \param[in] module_inst  Pointer to the DAC software instance struct
  * \param[in] channel      Channel to disable
  *
- * \retval true     Conversion is complete, VOUT is stable.
- * \retval false    No conversion completed since last load of DATA.
+ * \retval true     Conversion is complete, VOUT is stable
+ * \retval false    No conversion completed since last load of DATA
  */
 bool dac_chan_is_end_of_conversion(
 		struct dac_module *const module_inst,

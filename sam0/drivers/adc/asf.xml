@@ -142,7 +142,7 @@
 				<keyword value="Analog Conversion"/>
 			</info>
 
-			<info type="appnote" value="ATXXXX"/>
+			<info type="appnote" value="AT11380"/>
 			<info type="keyword" value="pdf">
 				<keyword value="ADC"/>
 				<keyword value="I/O"/>
@@ -176,8 +176,7 @@
 
 			<build type="define" name="ADC_CALLBACK_MODE" value="true"/>
 			<build type="doxygen-enable-section" value="ADC_CALLBACK_MODE"/>
-			<build type="define" name="ADC_DEVICE_SAML21" value="true"/>
-			<build type="doxygen-enable-section" value="ADC_DEVICE_SAML21"/>
+			<build type="doxygen-enable-section" value="DEVICE_SAML21_SUPPORT"/>
 
 			<device-support value="saml21"/>
 

@@ -153,11 +153,11 @@ void adc_set_window_mode(
 }
 
 /**
-* \internal Configure MUX settings for the analog pins
+* \internal Configure MUX settings for the analog pins.
 *
 * This function will set the given ADC input pins
 * to the analog function in the pin mux, giving
-* the ADC access to the analog signal
+* the ADC access to the analog signal.
 *
 * \param [in] pin AINxx pin to configure
 */
@@ -230,7 +230,7 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 }
 
 /**
- * \internal Writes an ADC configuration to the hardware module
+ * \internal Writes an ADC configuration to the hardware module.
  *
  * Writes out a given ADC module configuration to the hardware module.
  *

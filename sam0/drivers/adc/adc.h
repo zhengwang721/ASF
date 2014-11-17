@@ -60,7 +60,7 @@
  *  - ADC (Analog to Digital Converter)
  *
  * The following devices can use this module:
- * \if ADC_DEVICE_SAML21
+ * \if DEVICE_SAML21_SUPPORT
  *  - Atmel | SMART SAM L21
  * \else
  *  - Atmel | SMART SAM D20/D21
@@ -87,7 +87,7 @@
  * This driver provides an interface for the Analog-to-Digital conversion
  * functions on the device, to convert analog voltages to a corresponding
  * digital value. The ADC has up to 12-bit resolution, and is capable of
- * \if ADC_DEVICE_SAML21
+ * \if DEVICE_SAML21_SUPPORT
  * converting up to 1,000,000 samples per second (1 Msps).
  * \else
  * converting up to 500k samples per second (ksps).
@@ -1000,6 +1000,11 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
+ * \if DEVICE_SAML21_SUPPORT
+ *  <tr>
+ *		<td>Initial Release</td>
+ * </tr>
+ * \else
  *	<tr>
  *		<td>Added support for SAML21</td>
  *	</tr>
@@ -1016,6 +1021,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
+ * \endif
  * </table>
  */
 
@@ -1042,6 +1048,13 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<th>Date</td>
  *		<th>Comments</td>
  *	</tr>
+ * \if DEVICE_SAML21_SUPPORT
+ *  <tr>
+ *      <td>A</td>
+ *      <td>11/2014</td>
+ *      <td>Initial release.</td>
+ * </tr>
+ * \else
  *	<tr>
  *		<td>D</td>
  *		<td>05/2014</td>
@@ -1063,6 +1076,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<td>06/2013</td>
  *		<td>Initial release</td>
  *	</tr>
+ * \endif
  * </table>
  */
 

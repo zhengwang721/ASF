@@ -393,7 +393,7 @@ enum adc_oversampling_and_decimation {
 };
 
 /**
- * \brief Window monitor configuration structure
+ * \brief Window monitor configuration structure.
  *
  * Window monitor configuration structure.
  */
@@ -492,7 +492,7 @@ struct adc_config {
 	 * Positive input enabled mask for conversion sequence.
 	 * The sequence start from the lowest input,and go to the next enabled input
 	 * automatically when the conversion is done. If no bits are set the
-	 * sequence is disabled
+	 * sequence is disabled.
 	 */
 	uint32_t positive_input_sequence_mask_enable;
 	/**
@@ -506,7 +506,7 @@ struct adc_config {
 	 * prescaled clock cycles (depends of \c ADC_PRESCALER value), thus
 	 * controlling the ADC input impedance. Sampling time is set according to
 	 * the formula:
-	 * Sample time = (sample_length+1) * (ADCclk / 2)
+	 * Sample time = (sample_length+1) * (ADCclk / 2).
 	 */
 	uint8_t sample_length;
 	/** Window monitor configuration structure. */
@@ -595,7 +595,7 @@ static inline bool adc_is_syncing(
  *
  * The sequence start from the lowest input,and go to the next enabled input
  * automatically when the conversion is done. If no bits are set the
- * sequence is disabled
+ * sequence is disabled.
  *
  * \param[in] module_inst  Pointer to the ADC software instance struct
  * \param[in] eanble_seq_mask  Sequence mask
@@ -614,7 +614,7 @@ static inline void adc_enable_positive_input_sequence(
 /**
  * \brief Disable positive input in the sequence.
  *
- * Disable positive input in the sequence
+ * Disable positive input in the sequence.
  *
  * \param[in] module_inst  Pointer to the ADC software instance struct
  */
@@ -631,7 +631,7 @@ static inline void adc_disable_positive_input_sequence(
 /**
  * \brief Get ADC sequence status.
  *
- * Check if a sequence is done and get last conversion done in the sequence
+ * Check if a sequence is done and get last conversion done in the sequence.
  *
  * \param[in] module_inst  Pointer to the ADC software instance struct
  * \param[out] is_sequence_busy  Sequence busy status
