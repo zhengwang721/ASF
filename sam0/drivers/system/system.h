@@ -488,11 +488,11 @@ extern "C" {
  */
 
 /**
- * \brief Check if debugger is present
+ * \brief Check if debugger is present.
  *
- * Check if debugger is connected to the onboard debug system (DAP)
+ * Check if debugger is connected to the onboard debug system (DAP).
  *
- * \return A bool identifying if a debugger is present
+ * \return A bool identifying if a debugger is present.
  *
  * \retval true  Debugger is connected to the system
  * \retval false Debugger is not connected to the system
@@ -513,11 +513,11 @@ static inline bool system_is_debugger_present(void)
  */
 
 /**
- * \brief Retrieve the device identification signature
+ * \brief Retrieve the device identification signature.
  *
  * Retrieves the signature of the current device.
  *
- * \return Device ID signature as a 32-bit integer.
+ * \return Device ID signature as a 32-bit integer
  */
 static inline uint32_t system_get_device_id(void)
 {
