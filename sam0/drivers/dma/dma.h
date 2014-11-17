@@ -543,7 +543,7 @@ static inline enum status_code dma_get_job_status(struct dma_resource *resource)
 /**
  * \brief Check if the given DMA resource is busy
  *
- * \param[in] resource Pointer to the DMA resource
+ * \param[in] resource Pointer to the DMA resource.
  *
  * \return Status which indicates whether the DMA resource is busy.
  *
@@ -558,7 +558,7 @@ static inline bool dma_is_busy(struct dma_resource *resource)
 }
 
 /**
- * \brief Enable a callback function for a dedicated DMA resource
+ * \brief Enable a callback function for a dedicated DMA resource.
  *
  * \param[in] resource Pointer to the DMA resource
  * \param[in] type Callback function type
@@ -573,7 +573,7 @@ static inline void dma_enable_callback(struct dma_resource *resource,
 }
 
 /**
- * \brief Disable a callback function for a dedicated DMA resource
+ * \brief Disable a callback function for a dedicated DMA resource.
  *
  * \param[in] resource Pointer to the DMA resource
  * \param[in] type Callback function type
@@ -588,7 +588,7 @@ static inline void dma_disable_callback(struct dma_resource *resource,
 }
 
 /**
- * \brief Register a callback function for a dedicated DMA resource
+ * \brief Register a callback function for a dedicated DMA resource.
  *
  * There are three types of callback functions, which can be registered:
  * - Callback for transfer complete
@@ -609,7 +609,7 @@ static inline void dma_register_callback(struct dma_resource *resource,
 }
 
 /**
- * \brief Unregister a callback function for a dedicated DMA resource
+ * \brief Unregister a callback function for a dedicated DMA resource.
  *
  * There are three types of callback functions:
  * - Callback for transfer complete
@@ -632,7 +632,7 @@ static inline void dma_unregister_callback(struct dma_resource *resource,
 }
 
 /**
- * \brief Will set a software trigger for resource
+ * \brief Will set a software trigger for resource.
  *
  * This function is used to set a software trigger on the DMA channel
  * associated with resource. If a trigger is already pending no new trigger
@@ -701,7 +701,7 @@ static inline void dma_descriptor_get_config_defaults(struct dma_descriptor_conf
 }
 
 /**
- * \brief Update DMA descriptor
+ * \brief Update DMA descriptor.
  *
  * This function can update the descriptor of an allocated DMA resource.
  *
@@ -715,7 +715,7 @@ static inline void dma_update_descriptor(struct dma_resource *resource,
 }
 
 /**
- * \brief Reset DMA descriptor
+ * \brief Reset DMA descriptor.
  *
  * This function will clear the DESCADDR register of an allocated DMA resource.
  *

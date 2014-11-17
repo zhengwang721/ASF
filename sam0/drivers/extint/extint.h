@@ -357,7 +357,7 @@ struct _extint_module
  * Retrieves the base address of a EIC hardware module associated with the
  * given external interrupt channel.
  *
- * \param[in] channel  External interrupt channel index to convert.
+ * \param[in] channel  External interrupt channel index to convert
  *
  * \return Base address of the associated EIC module.
  */
@@ -383,7 +383,7 @@ static inline Eic * _extint_get_eic_from_channel(
  * Retrieves the base address of a EIC hardware module associated with the
  * given non-maskable external interrupt channel.
  *
- * \param[in] nmi_channel  Non-Maskable interrupt channel index to convert.
+ * \param[in] nmi_channel  Non-Maskable interrupt channel index to convert
  *
  * \return Base address of the associated EIC module.
  */
@@ -477,7 +477,7 @@ enum status_code extint_nmi_set_config(
  *  Reads the current state of a configured channel, and determines
  *  if the detection criteria of the channel has been met.
  *
- *  \param[in] channel  External Interrupt channel index to check.
+ *  \param[in] channel  External Interrupt channel index to check
  *
  *  \return Status of the requested channel's edge detection state.
  *  \retval true   If the channel's edge/level detection criteria was met
@@ -498,7 +498,7 @@ static inline bool extint_chan_is_detected(
  *  Clears the current state of a configured channel, readying it for
  *  the next level or edge detection.
  *
- *  \param[in] channel  External Interrupt channel index to check.
+ *  \param[in] channel  External Interrupt channel index to check
  */
 static inline void extint_chan_clear_detected(
 		const uint8_t channel)
@@ -521,7 +521,7 @@ static inline void extint_chan_clear_detected(
  *  Reads the current state of a configured NMI channel, and determines
  *  if the detection criteria of the NMI channel has been met.
  *
- *  \param[in] nmi_channel  External Interrupt NMI channel index to check.
+ *  \param[in] nmi_channel  External Interrupt NMI channel index to check
  *
  *  \return Status of the requested NMI channel's edge detection state.
  *  \retval true   If the NMI channel's edge/level detection criteria was met
@@ -541,7 +541,7 @@ static inline bool extint_nmi_is_detected(
  *  Clears the current state of a configured NMI channel, readying it for
  *  the next level or edge detection.
  *
- *  \param[in] nmi_channel  External Interrupt NMI channel index to check.
+ *  \param[in] nmi_channel  External Interrupt NMI channel index to check
  */
 static inline void extint_nmi_clear_detected(
 		const uint8_t nmi_channel)

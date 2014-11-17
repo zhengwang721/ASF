@@ -72,10 +72,10 @@ uint8_t _current_channel;
  * \param[in] type      Type of callback function to register
  *
  * \return Status of the registration operation.
- * \retval STATUS_OK               The callback was registered successfully.
- * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
+ * \retval STATUS_OK               The callback was registered successfully
+ * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied
  * \retval STATUS_ERR_ALREADY_INITIALIZED    Callback function has been
- *                                  registered, need unregister first.
+ *                                  registered, need unregister first
  */
 enum status_code extint_register_callback(
 	const extint_callback_t callback,
@@ -111,10 +111,10 @@ enum status_code extint_register_callback(
  * \param[in] type      Type of callback function to unregister
  *
  * \return Status of the de-registration operation.
- * \retval STATUS_OK               The callback was Unregistered successfully.
- * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
+ * \retval STATUS_OK               The callback was Unregistered successfully
+ * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied
  * \retval STATUS_ERR_BAD_ADDRESS  No matching entry was found in the
- *                                 registration table.
+ *                                 registration table
  */
 enum status_code extint_unregister_callback(
 	const extint_callback_t callback,
@@ -148,8 +148,8 @@ enum status_code extint_unregister_callback(
  * \param[in] type     Type of callback function callbacks to enable
  *
  * \return Status of the callback enable operation.
- * \retval STATUS_OK               The callback was enabled successfully.
- * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
+ * \retval STATUS_OK               The callback was enabled successfully
+ * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied
  */
 enum status_code extint_chan_enable_callback(
 	const uint8_t channel,
@@ -178,8 +178,8 @@ enum status_code extint_chan_enable_callback(
  * \param[in] type     Type of callback function callbacks to disable
  *
  * \return Status of the callback disable operation.
- * \retval STATUS_OK               The callback was disabled successfully.
- * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
+ * \retval STATUS_OK               The callback was disabled successfully
+ * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied
  */
 enum status_code extint_chan_disable_callback(
 	const uint8_t channel,
