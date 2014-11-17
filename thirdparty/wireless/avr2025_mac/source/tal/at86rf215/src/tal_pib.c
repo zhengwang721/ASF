@@ -555,133 +555,120 @@ static retval_t check_valid_freq_range(trx_id_t trx_id)
  */
 static retval_t apply_channel_settings(trx_id_t trx_id)
 {
-	  retval_t status = check_valid_freq_range(trx_id);
-    if (status == MAC_SUCCESS)
-    {
-        uint32_t freq = tal_pib[trx_id].phy.freq_f0;
-        uint32_t spacing = tal_pib[trx_id].phy.ch_spacing;
-        uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
-        uint16_t reg_val;
+	retval_t status = check_valid_freq_range(trx_id);
+	if (status == MAC_SUCCESS)
+	{
+		uint32_t freq = tal_pib[trx_id].phy.freq_f0;
+		uint32_t spacing = tal_pib[trx_id].phy.ch_spacing;
+		uint16_t rf_reg_offset = RF_BASE_ADDR_OFFSET * trx_id;
+		uint16_t reg_val;
 		uint8_t temp_val;
 
-        /* Offset handling for 2.4GHz only */
-        if (trx_id == RF24)
-        {
-            freq -= 1500000000;
-        }
-        reg_val = (uint16_t)(freq / 25000);
-        pal_trx_write(rf_reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
-
-        /* Set channel spacing */
-        spacing /= 25000; // adjust to register scaling
-        pal_trx_reg_write(rf_reg_offset + RG_RF09_CS, (uint8_t)spacing);
-
-        /*
-         * Set channel and channel mode.
-         * Touching the CNM register forces the calculation of the actual frequency.
-         */
-//#ifdef	SUPPORT_LEGACY_OQPSK
-if(tal_pib[trx_id].phy.modulation == LEG_OQPSK)
-{
-
-uint16_t value;
- if ((tal_pib[trx_id].phy.freq_band == CHINA_780))
- {
-	 if(tal_pib[trx_id].CurrentChannel>3)
-	 {	 
-	 value = tal_pib[trx_id].CurrentChannel=3; //check
-	 }
-	 else
-	 {
-	
-	 value = tal_pib[trx_id].CurrentChannel;
-	 }
- }
-	 else if ((tal_pib[trx_id].phy.freq_band == WORLD_2450))
-	 {
-
-if((tal_pib[trx_id].CurrentChannel >26) || (tal_pib[trx_id].CurrentChannel < 11))
-{
-	tal_pib[trx_id].CurrentChannel=11;
-	value = tal_pib[trx_id].CurrentChannel-11;
-}
-else
-{
-	
-	value = tal_pib[trx_id].CurrentChannel-11;
-}
-	 
-	 }
-	 
-	else if ((tal_pib[trx_id].phy.freq_band == US_915))
-	{
-	if((tal_pib[trx_id].CurrentChannel >10) || (tal_pib[trx_id].CurrentChannel < 1))
-	{
-		tal_pib[trx_id].CurrentChannel=1;
-		value = tal_pib[trx_id].CurrentChannel-1;
-	}
-	else
-	{
-		
-		value = tal_pib[trx_id].CurrentChannel-1;
-	}
-	}
-	
-	 pal_trx_write(rf_reg_offset + RG_RF09_CNL,
-	 (uint8_t *)&value, 2);
- 
- 
-}
-else
-	 {
-		uint16_t max_ch = get_sun_max_ch_no(trx_id);
-		if(tal_pib[trx_id].CurrentChannel > (max_ch-1))
+		/* Offset handling for 2.4GHz only */
+		if (trx_id == RF24)
 		{
-		tal_pib[trx_id].CurrentChannel = (max_ch-1);		
+			freq -= 1500000000;
 		}
-		if ((tal_pib[trx_id].phy.freq_band == EU_863)&&(tal_pib[trx_id].phy.modulation == OQPSK))
+		reg_val = (uint16_t)(freq / 25000);
+		pal_trx_write(rf_reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
+
+		/* Set channel spacing */
+		spacing /= 25000; // adjust to register scaling
+		pal_trx_reg_write(rf_reg_offset + RG_RF09_CS, (uint8_t)spacing);
+
+		/*
+		* Set channel and channel mode.
+		* Touching the CNM register forces the calculation of the actual frequency.
+		*/
+		//#ifdef	SUPPORT_LEGACY_OQPSK
+		if(tal_pib[trx_id].phy.modulation == LEG_OQPSK)
 		{
-			if(tal_pib[trx_id].CurrentChannel == 0)
+			uint16_t value;
+			if ((tal_pib[trx_id].phy.freq_band == CHINA_780))
 			{
-				freq = 868300000;
-
-
-			}			
-			else if(tal_pib[trx_id].CurrentChannel == 1)
-			{
-				 freq = 868950000;
-
+				if(tal_pib[trx_id].CurrentChannel>3)
+				{	 
+					value = tal_pib[trx_id].CurrentChannel=3; //check
+				}
+				else
+				{
+					value = tal_pib[trx_id].CurrentChannel;
+				}
 			}
-			else if(tal_pib[trx_id].CurrentChannel == 2)
+			else if ((tal_pib[trx_id].phy.freq_band == WORLD_2450))
 			{
-				freq = 869525000;
-
-			}	
-			temp_val = 0;
-			reg_val = (uint16_t)(freq / 25000);					
-			pal_trx_write(rf_reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
-			pal_trx_write(rf_reg_offset + RG_RF09_CNL,
-			(uint8_t *)&temp_val, 2); // write cnl as 0 to get the same freq as freq			
+				if((tal_pib[trx_id].CurrentChannel >26) || (tal_pib[trx_id].CurrentChannel < 11))
+				{
+					tal_pib[trx_id].CurrentChannel=11;
+					value = tal_pib[trx_id].CurrentChannel-11;
+				}
+				else
+				{
+					value = tal_pib[trx_id].CurrentChannel-11;
+				}
+	 
+			}
+			else if ((tal_pib[trx_id].phy.freq_band == US_915))
+			{
+				if((tal_pib[trx_id].CurrentChannel >10) || (tal_pib[trx_id].CurrentChannel < 1))
+				{
+					tal_pib[trx_id].CurrentChannel=1;
+					value = tal_pib[trx_id].CurrentChannel-1;
+				}
+				else
+				{
+					value = tal_pib[trx_id].CurrentChannel-1;
+				}
+			}
+	
+			pal_trx_write(rf_reg_offset + RG_RF09_CNL, (uint8_t *)&value, 2);
 		}
 		else
 		{
-        pal_trx_write(rf_reg_offset + RG_RF09_CNL,
-                      (uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
+			uint16_t max_ch = get_sun_max_ch_no(trx_id);
+			if(tal_pib[trx_id].CurrentChannel > (max_ch-1))
+			{
+				tal_pib[trx_id].CurrentChannel = (max_ch-1);		
+			}
+			if ((tal_pib[trx_id].phy.freq_band == EU_863)&&(tal_pib[trx_id].phy.modulation == OQPSK))
+			{
+				if(tal_pib[trx_id].CurrentChannel == 0)
+				{
+					freq = 868300000;
+				}			
+				else if(tal_pib[trx_id].CurrentChannel == 1)
+				{
+					freq = 868950000;
+				}
+				else if(tal_pib[trx_id].CurrentChannel == 2)
+				{
+					freq = 869525000;
+				}	
+				temp_val = 0;
+				reg_val = (uint16_t)(freq / 25000);					
+				pal_trx_write(rf_reg_offset + RG_RF09_CCF0L, (uint8_t *)&reg_val, 2);
+				pal_trx_write(rf_reg_offset + RG_RF09_CNL,
+				(uint8_t *)&temp_val, 2); // write cnl as 0 to get the same freq as freq			
+			}
+			else
+			{
+			pal_trx_write(rf_reg_offset + RG_RF09_CNL,
+			(uint8_t *)&tal_pib[trx_id].CurrentChannel, 2);
+			}
+		}					  
+		/* Wait until channel set is completed */
+		if (trx_state[trx_id] == RF_TXPREP)
+		{
+			while (TAL_RF_IS_IRQ_SET(trx_id, RF_IRQ_TRXRDY) == 0)
+			{
+			/* Wait until new channel is set */
+			}
+			TAL_RF_IRQ_CLR(trx_id, RF_IRQ_TRXRDY);
+			//debug_text(PSTR("RF_IRQ_TRXRDY: channel change completed"));
+			}
 		}
-}					  
-        /* Wait until channel set is completed */
-        if (trx_state[trx_id] == RF_TXPREP)
-        {
-            while (TAL_RF_IS_IRQ_SET(trx_id, RF_IRQ_TRXRDY) == 0)
-            {
-                /* Wait until new channel is set */
-            }
-            TAL_RF_IRQ_CLR(trx_id, RF_IRQ_TRXRDY);
-            //debug_text(PSTR("RF_IRQ_TRXRDY: channel change completed"));
-        }
-    }
 
-    return status;
+	return status;
 	
  /*   debug_text_val(PSTR("apply_channel_settings(), trx_id ="), trx_id);
 
@@ -1074,7 +1061,13 @@ retval_t tal_pib_set(trx_id_t trx_id, uint8_t attribute, pib_value_t *value)
 
         case phyCurrentPage:
             status = set_phy_based_on_channel_page(trx_id, (ch_pg_t)value->pib_value_8bit);
-            break;
+			if (MAC_SUCCESS != status) {
+				tal_pib[trx_id].CurrentPage = value->pib_value_8bit;
+			}
+			else {
+				return MAC_INVALID_PARAMETER;
+			}
+		    break;
 
         case phyCCADuration: /* CCA duration in symbols */
             tal_pib[trx_id].CCADuration_sym = value->pib_value_8bit;
@@ -1518,6 +1511,20 @@ static retval_t set_phy_based_on_channel_page(trx_id_t trx_id, ch_pg_t pg)
                 tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_1000;
             }
             break;
+        case CH_PG_CHINA:
+        if (trx_id == RF24)
+        {
+	        ret = MAC_INVALID_PARAMETER;
+        }
+        else
+        {
+	        tal_pib[trx_id].phy.ch_spacing = LEG_915_CH_SPAC;
+	        tal_pib[trx_id].phy.freq_band = CHINA_780;
+	        tal_pib[trx_id].phy.freq_f0 = LEG_780_F0/* - LEG_915_CH_SPAC*/; //vk
+	        tal_pib[trx_id].phy.modulation = LEG_OQPSK;
+	        tal_pib[trx_id].phy.phy_mode.leg_oqpsk.chip_rate = CHIP_RATE_1000;
+        }
+        break;
 #endif
 
         default:

@@ -311,6 +311,45 @@
 #define OQPSK_SHR_DURATION_TABLE_SIZE  4
 #define OQPSK_SHR_DURATION_TABLE_DATA_TYPE  uint8_t
 
+#define FSK_CH_CENTER_FREQ0_MAP  \
+/* EU_169 */ \
+/* US_450 */ \
+{ CHINA_470, 470020000, 470040000, 470020000, 0 }, \
+{ CHINA_780, 779200000, 779400000, 779400000, 0 }, \
+{ EU_863, 863125000, 863225000, 863225000, 0 }, \
+/* US_896 */  \
+/* US_901 */  \
+{ US_915, 902200000, 902400000, 902400000, 0 }, \
+{ KOREA_917, 917100000, 917300000, 917300000, 0 }, \
+{ JAPAN_920, 920600000, 920900000, 920800000, 920800000 }, \
+/* US_928 */   \
+/* { JAPAN_950, 0, 951300000, 951100000, 951000000 }, */\
+/* US_1427 */  \
+{ WORLD_2450, 2400200000, 2400400000, 2400400000, 0 }
+
+#define FSK_CH_CENTER_FREQ0_MAP_ROW_SIZE    7
+#define FSK_CH_CENTER_FREQ0_MAP_COL_SIZE    5
+
+#define FSK_TOTAL_CHANNELS_MAP  \
+/* frequency band, opmode1 ,opmode2 ,opmode3 ,opmode4 total channels */ \
+/* EU_169 */ \
+/* US_450 */ \
+{ CHINA_470, 199,99,99,0 }, \
+{ CHINA_780, 39,19,19,0 }, \
+{ EU_863, 34,17,17,0 }, \
+/* US_896 */  \
+/* US_901 */  \
+{ US_915, 129,64,64,0 }, \
+{ KOREA_917, 32,16,16,0 }, \
+{ JAPAN_920, 38,18,12,12 }, \
+/* US_928 */   \
+/* { JAPAN_950, 951100000, 400000 }, */\
+/* US_1427 */  \
+{ WORLD_2450, 416,207,207,0 }
+
+#define FSK_TOTAL_CHANNELS_MAP_ROW_SIZE    7
+#define FSK_TOTAL_CHANNELS_MAP_COL_SIZE    5
+
 #define FPGA_CCA_THRES_VALUE    -105
 
 /* === GLOBALS ============================================================= */
@@ -364,6 +403,12 @@ FLASH_DECLARE(OFDM_PROCESSING_DELAY_ACK_TIMING_TABLE_DATA_TYPE
 #endif
 
 #ifdef SUPPORT_FSK
+FLASH_DECLARE(uint32_t fsk_freq0_map[FSK_CH_CENTER_FREQ0_MAP_ROW_SIZE][FSK_CH_CENTER_FREQ0_MAP_COL_SIZE]) = { FSK_CH_CENTER_FREQ0_MAP }; //vk
+
+FLASH_DECLARE(uint32_t fsk_max_ch_map[FSK_TOTAL_CHANNELS_MAP_ROW_SIZE][FSK_TOTAL_CHANNELS_MAP_COL_SIZE]) = { FSK_TOTAL_CHANNELS_MAP }; //vk
+
+FLASH_DECLARE(uint32_t fsk_ch_spacing_table[]) = { CH_SPAC_FSK_TABLE }; //vk
+
 FLASH_DECLARE(FSK_DATA_RATE_TABLE_DATA_TYPE fsk_data_rate_table[FSK_DATA_RATE_TABLE_SIZE]) =
     FSK_DATA_RATE_TABLE;
 
@@ -1174,6 +1219,22 @@ void get_oqpsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band ,uint32_t *freq
 	}
 }
 
+void get_fsk_freq_f0(trx_id_t trx_id,sun_freq_band_t freq_band,fsk_op_mode_t option,uint32_t *freq, uint32_t *spacing)
+{
+
+	for (uint8_t i = 0; i < FSK_CH_CENTER_FREQ0_MAP_ROW_SIZE; i++)
+	{
+		if (freq_band == (uint32_t)PGM_READ_DWORD(&fsk_freq0_map[i][0]))
+		{
+			*freq = (uint32_t)PGM_READ_DWORD(&fsk_freq0_map[i][option]);
+			break;
+		}
+	}
+	*spacing = (uint32_t)PGM_READ_DWORD(&fsk_ch_spacing_table[option - 1]);
+
+
+}
+
 oqpsk_chip_rate_t get_oqpsk_chip_rate(trx_id_t trx_id,sun_freq_band_t freq_band)
 {
 	uint16_t rate = 0;
@@ -1221,7 +1282,7 @@ uint16_t get_sun_max_ch_no(trx_id_t trx_id)
 		{
 			if (tal_pib[trx_id].phy.freq_band == (uint32_t)PGM_READ_DWORD(&ofdm_freq0_map[i][0]))
 			{
-				max_ch = (uint32_t)PGM_READ_DWORD(&ofdm_max_ch_map[i][tal_pib[trx_id].phy.phy_mode.ofdm.option +1]);//vk
+				max_ch = (uint32_t)PGM_READ_DWORD(&ofdm_max_ch_map[i][tal_pib[trx_id].phy.phy_mode.ofdm.option]);
 				break;
 			}
 		}
@@ -1232,12 +1293,20 @@ uint16_t get_sun_max_ch_no(trx_id_t trx_id)
 		{
 			if (tal_pib[trx_id].phy.freq_band == (uint32_t)PGM_READ_DWORD(&oqpsk_freq0_map[i][0]))
 			{
-				max_ch = (uint32_t)PGM_READ_DWORD(&oqpsk_max_ch_map[i][1]); //vk
+				max_ch = (uint32_t)PGM_READ_DWORD(&oqpsk_max_ch_map[i][1]);
 				break;
 			}
 		}
 		break;
-
+		case FSK:
+		for (uint8_t i = 0; i < FSK_CH_CENTER_FREQ0_MAP_ROW_SIZE; i++)
+		{
+			if (tal_pib[trx_id].phy.freq_band == (uint32_t)PGM_READ_DWORD(&fsk_freq0_map[i][0]))
+			{
+				max_ch = (uint32_t)PGM_READ_DWORD(&fsk_max_ch_map[i][tal_pib[trx_id].phy.phy_mode.fsk.op_mode]);
+				break;
+			}
+		}		break;
 		default:
 		break;
 	}

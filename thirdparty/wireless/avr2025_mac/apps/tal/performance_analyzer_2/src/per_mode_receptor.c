@@ -338,6 +338,10 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 				else
 				{							
 					printf("\r\nSun PHY Page Changed");
+					//printf("\r\nFrequency Band = %d", phy_temp->freq_band);
+					//printf("\r\nStarting freq F0 = %ld",phy_temp->freq_f0);
+					//printf("\r\nChannel Spacing = %ld", phy_temp->ch_spacing);
+					printf("\r\nModulation = %d", phy_temp->modulation);
 					if(phy_temp->modulation == OFDM)
 					{
 						printf("\r\nOFDM Option = %d", (phy_temp->phy_mode).ofdm.option);
@@ -361,6 +365,13 @@ void per_mode_receptor_rx_cb(trx_id_t trx, frame_info_t *mac_frame_info)
 						{
 							printf("\r\nSetting OQPSK Rate mode failed");
 						}
+					}
+					if(phy_temp->modulation == FSK)
+					{
+						printf("\r\nFsk mode type = %d", (phy_temp->phy_mode).fsk.mod_type);
+						printf("\r\nFsk mode idx = %d", (phy_temp->phy_mode).fsk.mod_idx);
+						printf("\r\nFsk data rate = %d", (phy_temp->phy_mode).fsk.data_rate);
+						printf("\r\nFsk op mode = %d", (phy_temp->phy_mode).fsk.op_mode);
 					}
 				}
 	        }

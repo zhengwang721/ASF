@@ -187,7 +187,7 @@
  * uncomment the following define SUPPORT_MODE_SWITCH.
  */
 #   ifndef SUPPORT_MODE_SWITCH
-#       define SUPPORT_MODE_SWITCH
+//#       define SUPPORT_MODE_SWITCH //vk
 #   endif
 
 /**
@@ -196,7 +196,7 @@
  * uncomment the following define SUPPORT_FSK_RAW_MODE
  */
 #   ifndef SUPPORT_FSK_RAW_MODE
-#       define SUPPORT_FSK_RAW_MODE
+//#       define SUPPORT_FSK_RAW_MODE //vk
 #   endif
 
 /**

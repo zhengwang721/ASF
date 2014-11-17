@@ -826,9 +826,12 @@ switch (sio_rx_buf[trx][MESSAGE_ID_POS])  /* message id */
 		 * msg_id;
 		 * scan_duration;
 		 */
-
- /* Clear for every ED SCAN REQ
-			                         * MSG */
+		if (CH_PG_SUN == tal_pib[trx].CurrentPage)
+		{
+			/* ED Scan is not supported for SUN Phy pages... */
+			error_code = INVALID_CMD;
+		}
+		/* Clear for every ED SCAN REQ MSG */
 		/* Check any ongoing transaction in place */
 		if (error_code) {
 			/* Send the confirmation with status as Failure
@@ -848,17 +851,14 @@ switch (sio_rx_buf[trx][MESSAGE_ID_POS])  /* message id */
 					MSG_LEN_ED_SCAN_REQ) {
 						
 				/* Extract the 4bytes of selected channel mask
-				 * from the sio_rx_buf */				
+				 * from the sio_rx_buf */
 				MEMCPY_ENDIAN(&(rcvd_channel_mask[trx]),&(sio_rx_buf[trx][CHANNELS_SELECT_POS]),4);
 			} else {
 				rcvd_channel_mask[trx] = TRX_SUPPORTED_CHANNELS_LEG(trx);
 			}
 
 			start_ed_scan(trx,sio_rx_buf[trx][SCAN_DURATION_POS],
-					rcvd_channel_mask[trx]);                         /*
-				                                                     *
-				                                                     *scan_duration
-				                                                     **/
+					rcvd_channel_mask[trx]);
 		} else {
 			/* Send the confirmation with status as INVALID_CMD
 			 * as this command is not allowed in this state
@@ -1451,6 +1451,10 @@ void usr_perf_set_confirm(trx_id_t trx, uint8_t status, uint8_t param_type, para
 		else if((uint8_t)((param_value->param_value_32bit)>>16) == OQPSK)
 		{
 			*msg_buf++ = param_len = 4;
+		}
+		else if((uint8_t)((param_value->param_value_32bit)>>16) == FSK)
+		{
+			*msg_buf++ = param_len = 3;
 		}
 	}
 	else
@@ -2189,27 +2193,35 @@ void usr_get_current_config_confirm(trx_id_t trx, uint8_t status, trx_config_par
     *msg_buf++ = (uint8_t)(curr_trx_config_params->channel >> 8);	
 	if(curr_trx_config_params->channel_page == 9) //check
 	{
-	*msg_buf++ = curr_trx_config_params->sun_phy_page.page_no;
-	*msg_buf++ = curr_trx_config_params->sun_phy_page.freq_band;
-	*msg_buf++ = curr_trx_config_params->sun_phy_page.modulation;
-	*ptr_to_msg_size += 3;
-	if(curr_trx_config_params->sun_phy_page.modulation == OFDM)
-	{
-	*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_ofdm.option;	
-	*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_ofdm.mcs_val;
-	*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_ofdm.interl;
-	*ptr_to_msg_size += 3;
-	}
-	else if(curr_trx_config_params->sun_phy_page.modulation == OQPSK)
-	{
-		*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_oqpsk_rate_mode;
-		*ptr_to_msg_size += 1;
-	}
+		*msg_buf++ = curr_trx_config_params->sun_phy_page.page_no;
+		*msg_buf++ = curr_trx_config_params->sun_phy_page.freq_band;
+		*msg_buf++ = curr_trx_config_params->sun_phy_page.modulation;
+		*ptr_to_msg_size += 3;
+		if(curr_trx_config_params->sun_phy_page.modulation == OFDM)
+		{
+			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_ofdm.option;
+			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_ofdm.mcs_val;
+			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_ofdm.interl;
+			*ptr_to_msg_size += 3;
+		}
+		else if(curr_trx_config_params->sun_phy_page.modulation == OQPSK)
+		{
+			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_oqpsk_rate_mode;
+			*ptr_to_msg_size += 1;
+		}
+		else if(curr_trx_config_params->sun_phy_page.modulation == FSK)
+		{
+			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_fsk.mod_type;
+			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_fsk.mod_idx;
+			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_fsk.data_rate;
+			*msg_buf++ = curr_trx_config_params->sun_phy_page.sun_phy_mode.mr_fsk.op_mode;
+			*ptr_to_msg_size += 4;
+		}
 	}
 	else
 	{
-    *msg_buf++ = curr_trx_config_params->channel_page;		
-	*ptr_to_msg_size += 1;
+		*msg_buf++ = curr_trx_config_params->channel_page;		
+		*ptr_to_msg_size += 1;
 	}
 	
     *msg_buf++ = curr_trx_config_params->tx_power_dbm;

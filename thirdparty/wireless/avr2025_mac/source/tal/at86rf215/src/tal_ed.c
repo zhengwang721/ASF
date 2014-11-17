@@ -219,7 +219,7 @@ void handle_ed_end_irq(trx_id_t trx_id)
 #endif
             }
             /* Scale result to 0xFF */
-            uint8_t ed = scale_ed_value(max_ed_level[trx_id]);
+            int8_t ed = max_ed_level[trx_id];//scale_ed_value(max_ed_level[trx_id]);
 #ifndef BASIC_MODE
             /* Disable EDC IRQ again */
             pal_trx_bit_write(reg_offset + SR_RF09_IRQM_EDC, 0);
