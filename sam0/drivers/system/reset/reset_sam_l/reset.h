@@ -99,17 +99,17 @@ enum system_reset_backup_exit_source {
 enum system_wakeup_debounce_count {
 	/** No debouncing. */
 	SYSTEM_WAKEUP_DEBOUNCE_OFF         = RSTC_WKDBCONF_WKDBCNT_OFF,
-	/** Input pin shall be active for at least two 32kHz clock period. */
+	/** Input pin shall be active for at least two 32KHz clock period. */
 	SYSTEM_WAKEUP_DEBOUNCE_2CK32       = RSTC_WKDBCONF_WKDBCNT_2K32,
-	/** Input pin shall be active for at least three 32kHz clock period. */
+	/** Input pin shall be active for at least three 32KHz clock period. */
 	SYSTEM_WAKEUP_DEBOUNCE_3CK32       = RSTC_WKDBCONF_WKDBCNT_3CK32,
-	/** Input pin shall be active for at least 32 32kHz clock period. */
+	/** Input pin shall be active for at least 32 32KHz clock period. */
 	SYSTEM_WAKEUP_DEBOUNCE_32CK32      = RSTC_WKDBCONF_WKDBCNT_32CK32,
-	/** Input pin shall be active for at least 512 32kHz clock period. */
+	/** Input pin shall be active for at least 512 32KHz clock period. */
 	SYSTEM_WAKEUP_DEBOUNCE_512CK32     = RSTC_WKDBCONF_WKDBCNT_512CK32,
-	/** Input pin shall be active for at least 4096 32kHz clock period. */
+	/** Input pin shall be active for at least 4096 32KHz clock period. */
 	SYSTEM_WAKEUP_DEBOUNCE_4096CK32    = RSTC_WKDBCONF_WKDBCNT_4096CK32,
-	/** Input pin shall be active for at least 32768 32kHz clock period. */
+	/** Input pin shall be active for at least 32768 32KHz clock period. */
 	SYSTEM_WAKEUP_DEBOUNCE_32768CK32   = RSTC_WKDBCONF_WKDBCNT_32768CK32,
 };
 

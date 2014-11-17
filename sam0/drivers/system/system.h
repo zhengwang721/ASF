@@ -165,7 +165,7 @@ extern "C" {
  *
  * Performance level transition is possible only when the device is in active
  * mode, after a reset, the device starts in the lowest performance level
- * (lowest power consumption and lowest max frequency). The application can then
+ * (lowest power consumption and lowest max. frequency). The application can then
  * switch to another performance level at anytime without any stop in the code
  * execution. As shown in \ref asfdoc_sam0_system_performance_level_transition_figure.
  *
@@ -517,7 +517,7 @@ static inline bool system_is_debugger_present(void)
  *
  * Retrieves the signature of the current device.
  *
- * \return Device ID signature as a 32-bit integer
+ * \return Device ID signature as a 32-bit integer.
  */
 static inline uint32_t system_get_device_id(void)
 {
