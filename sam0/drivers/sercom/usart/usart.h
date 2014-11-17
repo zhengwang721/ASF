@@ -679,10 +679,10 @@ struct usart_module {
  * that, e.g., transactions by different services will not interfere with each
  * other.
  *
- * \param[in,out] module Pointer to the driver instance to lock.
+ * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked.
- * \retval STATUS_BUSY if the module was already locked.
+ * \retval STATUS_OK if the module was locked
+ * \retval STATUS_BUSY if the module was already locked
  */
 static inline enum status_code usart_lock(
 		struct usart_module *const module)
@@ -709,7 +709,7 @@ static inline enum status_code usart_lock(
  * This function clears the instance lock, indicating that it is available for
  * use.
  *
- * \param[in,out] module Pointer to the driver instance to lock.
+ * \param[in,out] module Pointer to the driver instance to lock
  *
  */
 static inline void usart_unlock(struct usart_module *const module)
@@ -955,7 +955,7 @@ enum status_code usart_read_buffer_wait(
  * Enable the given transceiver. Either RX or TX.
  *
  * \param[in]  module            Pointer to USART software instance struct
- * \param[in]  transceiver_type  Transceiver type.
+ * \param[in]  transceiver_type  Transceiver type
  */
 static inline void usart_enable_transceiver(
 		struct usart_module *const module,
@@ -992,7 +992,7 @@ static inline void usart_enable_transceiver(
  * Disable the given transceiver (RX or TX).
  *
  * \param[in]  module            Pointer to USART software instance struct
- * \param[in]  transceiver_type  Transceiver type.
+ * \param[in]  transceiver_type  Transceiver type
  */
 static inline void usart_disable_transceiver(
 		struct usart_module *const module,

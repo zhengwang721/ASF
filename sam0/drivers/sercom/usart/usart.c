@@ -377,7 +377,7 @@ enum status_code usart_init(
  * \return Status of the operation.
  * \retval STATUS_OK         If the operation was completed
  * \retval STATUS_BUSY       If the operation was not completed, due to the USART
- *                           module being busy.
+ *                           module being busy
  * \retval STATUS_ERR_DENIED If the transmitter is not enabled
  */
 enum status_code usart_write_wait(
