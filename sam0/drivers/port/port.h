@@ -530,7 +530,7 @@ static inline void port_pin_toggle_output_level(
 
 #ifdef FEATURE_PORT_INPUT_EVENT
 
-/** \name Port input event
+/** \name Port Input Event
  * @{
  */
 
