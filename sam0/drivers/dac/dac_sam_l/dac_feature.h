@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_dac_group SAM Digital-to-Analog Driver (DAC)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the conversion of
+ * This driver for Atmel® | SMART SAM devices provides an interface for the conversion of
  * digital values to analog voltage. The following driver API modes are covered
  * by this manual:
  *
@@ -59,7 +59,7 @@
  *  - DAC (Digital to Analog Converter)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM L21
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_dac_prerequisites
@@ -89,7 +89,7 @@
  * After being set up, the DAC will convert new digital values written to the
  * conversion data register (DATA0 or DATA1) to an analog value either on the
  * DAC output(VOUT0 or VOUT1) pin of the device, or internally for use as an
- * input to the AC, ADC and other analog modules.
+ * input to the AC, ADC, and other analog modules.
  *
  * Writing the DATA register will start a new conversion. It is also possible
  * to trigger the conversion from the event system.
@@ -278,7 +278,7 @@
  * therefore startup time is required before starting a new conversion.
  *
  * \subsection asfdoc_sam0_dac_special_considerations_conversion_time Conversion Time
- * DAC conversion time is approximately 2.85us. The user must ensure that new
+ * DAC conversion time is approximately 2.85μs. The user must ensure that new
  * data is not written to the DAC before the last conversion is complete.
  * Conversions should be triggered by a periodic event from a Timer/Counter or
  * another peripheral.
@@ -366,11 +366,11 @@ enum dac_reference {
 enum dac_current_ctrl {
 	/** 1MHz < GCLK_DAC < 12MHz.*/
 	DAC_CURRENT_12M  = DAC_DACCTRL_CCTRL(0),
-	/** 100kHz < GCLK_DAC < 1MHz. */
+	/** 100KHz < GCLK_DAC < 1MHz. */
 	DAC_CURRENT_1M   = DAC_DACCTRL_CCTRL(1),
-	/** 10kHz < GCLK_DAC < 100kHz. */
+	/** 10KHz < GCLK_DAC < 100KHz. */
 	DAC_CURRENT_100K = DAC_DACCTRL_CCTRL(2),
-	/** GCLK_DAC < 10kHz. */
+	/** GCLK_DAC < 10KHz. */
 	DAC_CURRENT_10K  = DAC_DACCTRL_CCTRL(3),
 };
 
@@ -431,7 +431,7 @@ struct dac_module {
  * function before being modified by the user application.
  */
 struct dac_config {
-	/**/
+	/** Differential mode enable data */
 	bool differential_mode;
 	/** Reference voltage */
 	enum dac_reference reference;
@@ -440,7 +440,7 @@ struct dac_config {
 };
 
 /**
- * \brief DAC channel configuration structure
+ * \brief DAC channel configuration structure.
  *
  * Configuration for a DAC channel. This structure should be initialized by the
  * \ref dac_chan_get_config_defaults() function before being modified by the

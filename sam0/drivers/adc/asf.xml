@@ -176,6 +176,8 @@
 
 			<build type="define" name="ADC_CALLBACK_MODE" value="true"/>
 			<build type="doxygen-enable-section" value="ADC_CALLBACK_MODE"/>
+			<build type="define" name="ADC_DEVICE_SAML21" value="true"/>
+			<build type="doxygen-enable-section" value="ADC_DEVICE_SAML21"/>
 
 			<device-support value="saml21"/>
 

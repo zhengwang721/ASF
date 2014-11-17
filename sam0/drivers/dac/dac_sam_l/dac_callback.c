@@ -62,8 +62,8 @@ struct dac_module *_dac_instances[DAC_INST_NUM];
  * \param[in] buffer             Pointer to the digital data write buffer to be converted
  * \param[in] length             Size of the write buffer
  *
- * \return Status of the operation
- * \retval STATUS_OK           If the data was written
+ * \return Status of the operation.
+ * \retval STATUS_OK           If the data was written.
  * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
  *                                     mode was specified with a DAC instance
  *                                     configured in non-event mode.
@@ -137,8 +137,8 @@ enum status_code dac_chan_write_buffer_job(
  * \param[in] channel          DAC channel to write to
  * \param[in] data             Digital data to be converted
  *
- * \return Status of the operation
- * \retval STATUS_OK           If the data was written
+ * \return Status of the operation.
+ * \retval STATUS_OK           If the data was written.
  * \retval STATUS_ERR_UNSUPPORTED_DEV  If a callback that requires event driven
  *                                     mode was specified with a DAC instance
  *                                     configured in non-event mode.
@@ -426,14 +426,14 @@ void DAC_Handler(void)
 }
 
 /**
- * \brief Gets the status of a job
+ * \brief Gets the status of a job.
  *
  * Gets the status of an ongoing or the last job.
  *
  * \param[in]  module_inst Pointer to the DAC software instance struct
  * \param[in]  channel     Logical channel to enable callback function
  *
- * \return Status of the job
+ * \return Status of the job.
  */
 enum status_code dac_chan_get_job_status(
 		struct dac_module *module_inst,
@@ -446,7 +446,7 @@ enum status_code dac_chan_get_job_status(
 }
 
 /**
- * \brief Aborts an ongoing job
+ * \brief Aborts an ongoing job.
  *
  * Aborts an ongoing job.
  *

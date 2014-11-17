@@ -44,7 +44,7 @@
 #include "adc.h"
 
 /**
- * \brief Initializes an ADC configuration structure to defaults
+ * \brief Initializes an ADC configuration structure to defaults.
  *
  * Initializes a given ADC configuration struct to a set of known default
  * values. This function should be called on any new instance of the
@@ -54,7 +54,7 @@
  *  \li GCLK generator 0 (GCLK main) clock source
  *  \li internal bandgap reference
  *  \li Div 2 clock prescaler
- *  \li 12 bit resolution
+ *  \li 12-bit resolution
  *  \li Window monitor disabled
  *  \li Positive input on ADC PIN 0
  *  \li Negative input on Internal ground
@@ -105,7 +105,7 @@ void adc_get_config_defaults(struct adc_config *const config)
 }
 
 /**
- * \brief Sets the ADC window mode
+ * \brief Sets the ADC window mode.
  *
  * Sets the ADC window mode to a given mode and value range.
  *
@@ -237,7 +237,7 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
  * \param[out] module_inst  Pointer to the ADC software instance struct
  * \param[in]  config       Pointer to configuration struct
  *
- * \return Status of the configuration procedure
+ * \return Status of the configuration procedure.
  * \retval STATUS_OK               The configuration was successful
  * \retval STATUS_ERR_INVALID_ARG  Invalid argument(s) were provided
  */
@@ -515,7 +515,7 @@ static enum status_code _adc_set_config(
 }
 
 /**
- * \brief Initializes the ADC
+ * \brief Initializes the ADC.
  *
  * Initializes the ADC device struct and the hardware module based on the
  * given configuration struct values.
@@ -524,7 +524,7 @@ static enum status_code _adc_set_config(
  * \param[in]  hw          Pointer to the ADC module instance
  * \param[in]  config      Pointer to the configuration struct
  *
- * \return Status of the initialization procedure
+ * \return Status of the initialization procedure.
  * \retval STATUS_OK                The initialization was successful
  * \retval STATUS_ERR_INVALID_ARG   Invalid argument(s) were provided
  * \retval STATUS_BUSY          The module is busy with a reset operation

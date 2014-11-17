@@ -47,7 +47,7 @@
 /**
  * \defgroup asfdoc_sam0_adc_group SAM Analog to Digital Converter Driver (ADC)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's Analog to Digital Converter functionality, for
  * the conversion of analog voltages into a corresponding digital form.
  * The following driver API modes are covered by this manual:
@@ -60,10 +60,13 @@
  *  - ADC (Analog to Digital Converter)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM L21
+ * \if ADC_DEVICE_SAML21
+ *  - Atmel | SMART SAM L21
+ * \else
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ * \endif
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_adc_prerequisites
@@ -84,14 +87,17 @@
  * This driver provides an interface for the Analog-to-Digital conversion
  * functions on the device, to convert analog voltages to a corresponding
  * digital value. The ADC has up to 12-bit resolution, and is capable of
+ * \if ADC_DEVICE_SAML21
+ * converting up to 1,000,000 samples per second (1 Msps).
+ * \else
  * converting up to 500k samples per second (ksps).
+ * \endif
  *
  * The ADC has a compare function for accurate monitoring of user defined
  * thresholds with minimum software intervention required.
  * The ADC may be configured for 8-, 10-, or 12-bit result, reducing the
- * conversion time from 2.0μs for 12-bit to 1.4μs for 8-bit result. ADC
- * conversion results are provided left or right adjusted which eases
- * calculation when the result is represented as a signed integer.
+ * conversion time. ADC conversion results are provided left or right adjusted
+ * which eases calculation when the result is represented as a signed integer.
  *
  * The input selection is flexible, and both single-ended and differential
  * measurements can be made. For differential measurements, an optional gain
@@ -536,7 +542,7 @@ static inline void adc_clear_status(
  */
 
 /**
- * \brief Enables the ADC module
+ * \brief Enables the ADC module.
  *
  * Enables an ADC module that has previously been configured. If any internal reference
  * is selected it will be enabled.
@@ -568,7 +574,7 @@ static inline enum status_code adc_enable(
 }
 
 /**
- * \brief Disables the ADC module
+ * \brief Disables the ADC module.
  *
  * Disables an ADC module that was previously enabled.
  *
@@ -599,7 +605,7 @@ static inline enum status_code adc_disable(
 }
 
 /**
- * \brief Resets the ADC module
+ * \brief Resets the ADC module.
  *
  * Resets an ADC module, clearing all module state and registers to their
  * default values.
@@ -703,7 +709,7 @@ static inline void adc_disable_events(
 }
 
 /**
- * \brief Starts an ADC conversion
+ * \brief Starts an ADC conversion.
  *
  * Starts a new ADC conversion.
  *
@@ -729,7 +735,7 @@ static inline void adc_start_conversion(
 }
 
 /**
- * \brief Reads the ADC result
+ * \brief Reads the ADC result.
  *
  * Reads the result from an ADC conversion that was previously started.
  *
@@ -783,7 +789,7 @@ static inline enum status_code adc_read(
  */
 
 /**
- * \brief Flushes the ADC pipeline
+ * \brief Flushes the ADC pipeline.
  *
  * Flushes the pipeline and restart the ADC clock on the next peripheral clock
  * edge. All conversions in progress will be lost. When flush is complete, the
@@ -816,7 +822,7 @@ void adc_set_window_mode(
 		const int16_t window_upper_value);
 
 /**
- * \brief Sets positive ADC input pin
+ * \brief Sets positive ADC input pin.
  *
  * Sets the positive ADC input pin selection.
  *
@@ -849,7 +855,7 @@ static inline void adc_set_positive_input(
 
 
 /**
- * \brief Sets negative ADC input pin for differential mode
+ * \brief Sets negative ADC input pin for differential mode.
  *
  * Sets the negative ADC input pin, when the ADC is configured in differential
  * mode.
@@ -890,7 +896,7 @@ static inline void adc_set_negative_input(
  */
 
 /**
- * \brief Enable interrupt
+ * \brief Enable interrupt.
  *
  * Enable the given interrupt request from the ADC module.
  *
@@ -910,7 +916,7 @@ static inline void adc_enable_interrupt(struct adc_module *const module_inst,
 }
 
 /**
- * \brief Disable interrupt
+ * \brief Disable interrupt.
  *
  * Disable the given interrupt request from the ADC module.
  *
