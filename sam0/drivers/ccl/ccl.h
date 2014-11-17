@@ -292,7 +292,7 @@ static inline void ccl_module_reset(void)
 /** @} */
 
 /**
- * \name Enable and disable CCL module
+ * \name Enable and Disable CCL Module
  * @{
  */
  
@@ -323,7 +323,7 @@ static inline void ccl_module_disable(void)
 /** @} */
 
 /**
- * \name Enable and disable CCL module
+ * \name Enable and Disable CCL Module
  * @{
  */
  
@@ -361,8 +361,8 @@ static inline void ccl_gclk_runstdby_disable(void)
  *
  *  Writes a given sequential selection configuration to the hardware module.
  *
- *  \param[in] seq_selection       Enum for the sequential selection configuration.
- *  \param[in] number     SEQ unit number to config.
+ *  \param[in] seq_selection       Enum for the sequential selection configuration
+ *  \param[in] number     SEQ unit number to config
  */
 void ccl_seq_config(const enum ccl_seq_id number,
 		const enum ccl_seq_selection seq_selection);
@@ -377,7 +377,7 @@ void ccl_seq_config(const enum ccl_seq_id number,
  *  user application.
  *
  *  \param[out] config  LUT configuration structure to initialize to
- *                       default values.
+ *                       default values
  */
 void ccl_lut_get_config_defaults(struct ccl_lut_config *const config);
 
@@ -385,15 +385,15 @@ void ccl_lut_get_config_defaults(struct ccl_lut_config *const config);
  *
  *  Writes a given LUT configuration to the hardware  module.
  *
- *  \param[in] config       Pointer to the LUT configuration struct.
- *  \param[in] number     LUT number to config.
+ *  \param[in] config       Pointer to the LUT configuration struct
+ *  \param[in] number     LUT number to config
  */
 void ccl_lut_set_config(const enum ccl_lut_id number,
 		struct ccl_lut_config *const config);
 /** @} */
 
 /**
- * \name Enable and disable LUT
+ * \name Enable and Disable LUT
  * @{
  */
  

@@ -298,7 +298,7 @@ extern "C" {
 #endif
 
 /**
- * \name Driver feature definition
+ * \name Driver Feature Definition
  * Define AC driver feature set according to different device family.
  * @{
  */
