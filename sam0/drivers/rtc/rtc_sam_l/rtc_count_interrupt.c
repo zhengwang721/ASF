@@ -45,7 +45,7 @@
 extern struct rtc_module *_rtc_instance[RTC_INST_NUM];
 
 /**
- * \brief Registers callback for the specified callback type
+ * \brief Registers callback for the specified callback type.
  *
  * Associates the given callback function with the
  * specified callback type.
@@ -57,7 +57,7 @@ extern struct rtc_module *_rtc_instance[RTC_INST_NUM];
  *                           callback
  * \param[in]  callback_type Callback type to register
  *
- * \return                        Status of registering callback
+ * \return                        Status of registering callback.
  * \retval STATUS_OK              Registering was done successfully
  * \retval STATUS_ERR_INVALID_ARG If trying to register a callback not available
  */
@@ -106,7 +106,7 @@ enum status_code rtc_count_register_callback(
 }
 
 /**
- * \brief Unregisters callback for the specified callback type
+ * \brief Unregisters callback for the specified callback type.
  *
  * When called, the currently registered callback for the given callback type
  * will be removed.
@@ -114,7 +114,7 @@ enum status_code rtc_count_register_callback(
  * \param[in,out]  module  Pointer to the software instance struct
  * \param[in]     callback_type  Specifies the callback type to unregister
  *
- * \return                        Status of unregistering callback
+ * \return                        Status of unregistering callback.
  * \retval STATUS_OK              Unregistering was done successfully
  * \retval STATUS_ERR_INVALID_ARG If trying to unregister a callback not available
  */
@@ -159,7 +159,7 @@ enum status_code rtc_count_unregister_callback(
 }
 
 /**
- * \brief Enables callback
+ * \brief Enables callback.
  *
  * Enables the callback specified by the callback_type.
  *
@@ -189,7 +189,7 @@ void rtc_count_enable_callback(
 }
 
 /**
- * \brief Disables callback
+ * \brief Disables callback.
  *
  * Disables the callback specified by the callback_type.
  *
