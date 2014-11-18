@@ -83,20 +83,20 @@ void system_board_init(void);
 
 /** \name LED0 definitions
  *  @{ */
-#define LED0_PIN                  PIN_PB10
+#define LED0_PIN                  PIN_PA15
 #define LED0_ACTIVE               false
 #define LED0_INACTIVE             !LED0_ACTIVE
 /** @} */
 
 /** \name SW0 definitions
  *  @{ */
-#define SW0_PIN                   PIN_PA16
+#define SW0_PIN                   PIN_PA28
 #define SW0_ACTIVE                false
 #define SW0_INACTIVE              !SW0_ACTIVE
-#define SW0_EIC_PIN               PIN_PA16A_EIC_EXTINT0
-#define SW0_EIC_MUX               MUX_PA16A_EIC_EXTINT0
-#define SW0_EIC_PINMUX            PINMUX_PA16A_EIC_EXTINT0
-#define SW0_EIC_LINE              0
+#define SW0_EIC_PIN               PIN_PA28A_EIC_EXTINT8
+#define SW0_EIC_MUX               MUX_PA28A_EIC_EXTINT8
+#define SW0_EIC_PINMUX            PINMUX_PA28A_EIC_EXTINT8
+#define SW0_EIC_LINE              8
 /** @} */
 
 /**
@@ -138,6 +138,132 @@ void system_board_init(void);
 
 /** Number of on-board buttons */
 #define BUTTON_COUNT 1
+
+/** \name Extension header #1 pin definitions
+ *  @{
+ */
+#define EXT1_PIN_3                PIN_PB09
+#define EXT1_PIN_4                PIN_PB08
+#define EXT1_PIN_5                PIN_PA20
+#define EXT1_PIN_6                PIN_PA21
+#define EXT1_PIN_7                PIN_PB12
+#define EXT1_PIN_8                PIN_PB13
+#define EXT1_PIN_9                PIN_PB14
+#define EXT1_PIN_10               PIN_PB15
+#define EXT1_PIN_11               PIN_PA12
+#define EXT1_PIN_12               PIN_PA13
+#define EXT1_PIN_13               PIN_PA23
+#define EXT1_PIN_14               PIN_PA22
+#define EXT1_PIN_15               PIN_PA17
+#define EXT1_PIN_16               PIN_PA18
+#define EXT1_PIN_17               PIN_PA16
+#define EXT1_PIN_18               PIN_PA19
+/** @} */
+
+/** \name Extension header #1 pin definitions by function
+ *  @{
+ */
+#define EXT1_PIN_ADC_0            EXT1_PIN_3
+#define EXT1_PIN_ADC_1            EXT1_PIN_4
+#define EXT1_PIN_GPIO_0           EXT1_PIN_5
+#define EXT1_PIN_GPIO_1           EXT1_PIN_6
+#define EXT1_PIN_PWM_0            EXT1_PIN_7
+#define EXT1_PIN_PWM_1            EXT1_PIN_8
+#define EXT1_PIN_IRQ              EXT1_PIN_9
+#define EXT1_PIN_I2C_SDA          EXT1_PIN_11
+#define EXT1_PIN_I2C_SCL          EXT1_PIN_12
+#define EXT1_PIN_UART_RX          EXT1_PIN_13
+#define EXT1_PIN_UART_TX          EXT1_PIN_14
+#define EXT1_PIN_SPI_SS_1         EXT1_PIN_10
+#define EXT1_PIN_SPI_SS_0         EXT1_PIN_15
+#define EXT1_PIN_SPI_MOSI         EXT1_PIN_16
+#define EXT1_PIN_SPI_MISO         EXT1_PIN_17
+#define EXT1_PIN_SPI_SCK          EXT1_PIN_18
+/** @} */
+
+/** \name Extension header #2 pin definitions
+ *  @{
+ */
+#define EXT2_PIN_3                PIN_PA08
+#define EXT2_PIN_4                PIN_PA09
+#define EXT2_PIN_5                PIN_PA10
+#define EXT2_PIN_6                PIN_PA11
+#define EXT2_PIN_7                PIN_PB30
+#define EXT2_PIN_8                PIN_PB31
+#define EXT2_PIN_9                PIN_PB16
+#define EXT2_PIN_10               PIN_PB17
+#define EXT2_PIN_11               PIN_PA12
+#define EXT2_PIN_12               PIN_PA13
+#define EXT2_PIN_13               PIN_PA23
+#define EXT2_PIN_14               PIN_PA22
+#define EXT2_PIN_15               PIN_PB03
+#define EXT2_PIN_16               PIN_PB00
+#define EXT2_PIN_17               PIN_PB02
+#define EXT2_PIN_18               PIN_PB01
+/** @} */
+
+/** \name Extension header #2 pin definitions by function
+ *  @{
+ */
+#define EXT2_PIN_ADC_0            EXT2_PIN_3
+#define EXT2_PIN_ADC_1            EXT2_PIN_4
+#define EXT2_PIN_GPIO_0           EXT2_PIN_5
+#define EXT2_PIN_GPIO_1           EXT2_PIN_6
+#define EXT2_PIN_PWM_0            EXT2_PIN_7
+#define EXT2_PIN_PWM_1            EXT2_PIN_8
+#define EXT2_PIN_IRQ              EXT2_PIN_9
+#define EXT2_PIN_I2C_SDA          EXT2_PIN_11
+#define EXT2_PIN_I2C_SCL          EXT2_PIN_12
+#define EXT2_PIN_UART_RX          EXT2_PIN_13
+#define EXT2_PIN_UART_TX          EXT2_PIN_14
+#define EXT2_PIN_SPI_SS_1         EXT2_PIN_10
+#define EXT2_PIN_SPI_SS_0         EXT2_PIN_15
+#define EXT2_PIN_SPI_MOSI         EXT2_PIN_16
+#define EXT2_PIN_SPI_MISO         EXT2_PIN_17
+#define EXT2_PIN_SPI_SCK          EXT2_PIN_18
+/** @} */
+
+/** \name Extension header #3 pin definitions
+ *  @{
+ */
+#define EXT3_PIN_3                PIN_PB07
+#define EXT3_PIN_4                PIN_PB06
+#define EXT3_PIN_5                PIN_PB04
+#define EXT3_PIN_6                PIN_PB05
+#define EXT3_PIN_7                PIN_PA14
+#define EXT3_PIN_8                PIN_PA15
+#define EXT3_PIN_9                PIN_PA28
+#define EXT3_PIN_10               PIN_PA27
+#define EXT3_PIN_11               PIN_PA12
+#define EXT3_PIN_12               PIN_PA13
+#define EXT3_PIN_13               PIN_PA23
+#define EXT3_PIN_14               PIN_PA22
+#define EXT3_PIN_15               PIN_PA02
+#define EXT3_PIN_16               PIN_PB00
+#define EXT3_PIN_17               PIN_PB02
+#define EXT3_PIN_18               PIN_PB01
+/** @} */
+
+/** \name Extension header #3 pin definitions by function
+ *  @{
+ */
+#define EXT3_PIN_ADC_0            EXT3_PIN_3
+#define EXT3_PIN_ADC_1            EXT3_PIN_4
+#define EXT3_PIN_GPIO_0           EXT3_PIN_5
+#define EXT3_PIN_GPIO_1           EXT3_PIN_6
+#define EXT3_PIN_PWM_0            EXT3_PIN_7
+#define EXT3_PIN_PWM_1            EXT3_PIN_8
+#define EXT3_PIN_IRQ              EXT3_PIN_9
+#define EXT3_PIN_I2C_SDA          EXT3_PIN_11
+#define EXT3_PIN_I2C_SCL          EXT3_PIN_12
+#define EXT3_PIN_UART_RX          EXT3_PIN_13
+#define EXT3_PIN_UART_TX          EXT3_PIN_14
+#define EXT3_PIN_SPI_SS_1         EXT3_PIN_10
+#define EXT3_PIN_SPI_SS_0         EXT3_PIN_15
+#define EXT3_PIN_SPI_MOSI         EXT3_PIN_16
+#define EXT3_PIN_SPI_MISO         EXT3_PIN_17
+#define EXT3_PIN_SPI_SCK          EXT3_PIN_18
+/** @} */
 
 #ifdef __cplusplus
 }
