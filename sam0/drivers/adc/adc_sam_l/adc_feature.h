@@ -62,7 +62,7 @@ struct adc_module;
 typedef void (*adc_callback_t)(const struct adc_module *const module);
 
 /**
- * \brief ADC Callback enum.
+ * \brief ADC callback enum.
  *
  * Callback types for ADC callback driver.
  *

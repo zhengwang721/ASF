@@ -90,7 +90,7 @@
  * \if DEVICE_SAML21_SUPPORT
  * converting up to 1,000,000 samples per second (1 Msps).
  * \else
- * converting up to 500k samples per second (ksps).
+ * converting up to 500K samples per second (Ksps).
  * \endif
  *
  * The ADC has a compare function for accurate monitoring of user defined
@@ -434,7 +434,7 @@ extern "C" {
 /** @} */
 
 /**
- * \name Driver initialization and configuration
+ * \name Driver Initialization and Configuration
  * @{
  */
 enum status_code adc_init(

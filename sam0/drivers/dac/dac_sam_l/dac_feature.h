@@ -400,24 +400,24 @@ enum dac_channel {
  */
 struct dac_module {
 #if !defined(__DOXYGEN__)
-	/** DAC hardware module */
+	/** DAC hardware module. */
 	Dac *hw;
-	/** Reference selection */
+	/** Reference selection. */
 	enum dac_reference reference;
-	/** DAC event selection */
+	/** DAC event selection. */
 	bool start_on_event[DAC_CHANNEL_N];
 #  if DAC_CALLBACK_MODE == true
-	/** Pointer to buffer used for ADC results */
+	/** Pointer to buffer used for ADC results. */
 	volatile uint16_t *job_buffer[DAC_CHANNEL_N];
-	/** Remaining number of conversions in current job */
+	/** Remaining number of conversions in current job. */
 	volatile uint16_t remaining_conversions[DAC_CHANNEL_N];
-	/** Transferred number of conversions in current job */
+	/** Transferred number of conversions in current job. */
 	volatile uint16_t transferred_conversions[DAC_CHANNEL_N];
-	/** DAC callback enable */
+	/** DAC callback enable. */
 	bool callback_enable[DAC_CHANNEL_N][DAC_CALLBACK_N];
-	/** DAC registered callback functions */
+	/** DAC registered callback functions. */
 	dac_callback_t callback[DAC_CHANNEL_N][DAC_CALLBACK_N];
-	/** Holds the status of the ongoing or last conversion job */
+	/** Holds the status of the ongoing or last conversion job. */
 	volatile enum status_code job_status[DAC_CHANNEL_N];
 #  endif
 #endif
@@ -431,11 +431,11 @@ struct dac_module {
  * function before being modified by the user application.
  */
 struct dac_config {
-	/** Differential mode enable data */
+	/** Differential mode enable data. */
 	bool differential_mode;
-	/** Reference voltage */
+	/** Reference voltage. */
 	enum dac_reference reference;
-	/** GCLK generator used to clock the peripheral */
+	/** GCLK generator used to clock the peripheral. */
 	enum gclk_generator clock_source;
 };
 
@@ -447,20 +447,20 @@ struct dac_config {
  * user application.
  */
 struct dac_chan_config {
-	/** Left adjusted data */
+	/** Left adjusted data. */
 	bool left_adjust;
-	/** Current control data */
+	/** Current control data. */
 	enum dac_current_ctrl current;
 	/**
 	 * The DAC behaves as in normal mode when the chip enters STANDBY sleep
-	 * mode
+	 * mode.
 	 */
 	bool run_in_standby;
-	/** Dither mode enable data */
+	/** Dither mode enable data. */
 	bool dither_mode;
 	/**
 	 * The DAC conversion refreshed periodically when used to generate a static
-	 * voltage
+	 * voltage.
 	 */
 	uint8_t refresh_period;
 };
@@ -472,17 +472,17 @@ struct dac_chan_config {
  * disable events via \ref dac_enable_events() and \ref dac_disable_events().
  */
 struct dac_events {
-	/** Start a new DAC0 conversion */
+	/** Start a new DAC0 conversion. */
 	bool on_event_chan0_start_conversion;
-	/** Start a new DAC1 conversion */
+	/** Start a new DAC1 conversion. */
 	bool on_event_chan1_start_conversion;
-	/** Enable event generation on DAC0 data buffer empty */
+	/** Enable event generation on DAC0 data buffer empty. */
 	bool generate_event_on_chan0_buffer_empty;
-	/** Enable event generation on DAC1 data buffer empty */
+	/** Enable event generation on DAC1 data buffer empty. */
 	bool generate_event_on_chan1_buffer_empty;
-	/** Enable the falling edge of the input event for DAC0*/
+	/** Enable the falling edge of the input event for DAC0. */
 	bool generate_event_on_chan0_falling_edge;
-	/** Enable the falling edge of the input event for DAC1*/
+	/** Enable the falling edge of the input event for DAC1. */
 	bool generate_event_on_chan1_falling_edge;
 };
 
