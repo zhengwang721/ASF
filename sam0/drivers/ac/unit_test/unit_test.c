@@ -74,6 +74,7 @@
  * The following kit is required for carrying out the test:
  *  - SAM D20 Xplained Pro board
  *  - SAM D21 Xplained Pro board
+ *  - SAM L21 Xplained Pro board
  *
  * \section appdoc_sam0_ac_unit_test_setup Setup
  * The following connections has to be made using wires:
@@ -185,12 +186,13 @@ static void test_dac_init(void)
 	/* Configure the DAC module */
 	dac_get_config_defaults(&config);
 	dac_init(&dac_inst, DAC, &config);
-	dac_enable(&dac_inst);
 
 	/* Configure the DAC channel */
 	dac_chan_get_config_defaults(&chan_config);
 	dac_chan_set_config(&dac_inst, DAC_CHANNEL_0, &chan_config);
 	dac_chan_enable(&dac_inst, DAC_CHANNEL_0);
+
+	dac_enable(&dac_inst);
 }
 
 /**
