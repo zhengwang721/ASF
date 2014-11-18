@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_system_pinmux_group SAM System Pin Multiplexer Driver (SYSTEM PINMUX)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's physical I/O Pins, to alter the direction and
  * input/drive characteristics as well as to configure the pin peripheral
  * multiplexer selection.
@@ -55,10 +55,10 @@
  *  - PORT (Port I/O Management)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM L21
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
  *
  * Physically, the modules are interconnected within the device as shown in the
  * following diagram:
@@ -335,7 +335,7 @@ void system_pinmux_group_set_config(
  * Retrieves the PORT module group instance associated with a given logical
  * GPIO pin number.
  *
- * \param[in] gpio_pin  Index of the GPIO pin to convert.
+ * \param[in] gpio_pin  Index of the GPIO pin to convert
  *
  * \return Base address of the associated PORT module.
  */
@@ -372,7 +372,7 @@ void system_pinmux_group_set_input_sample_mode(
  *
  * Retrieves the selected MUX peripheral on a given logical GPIO pin.
  *
- * \param[in]  gpio_pin  Index of the GPIO pin to configure.
+ * \param[in]  gpio_pin  Index of the GPIO pin to configure
  *
  * \return Currently selected peripheral index on the specified pin.
  */
@@ -403,8 +403,8 @@ static inline uint8_t system_pinmux_pin_get_mux_position(
  * control when the physical I/O pin value is sampled and
  * stored inside the microcontroller.
  *
- * \param[in] gpio_pin Index of the GPIO pin to configure.
- * \param[in] mode     New pin sampling mode to configure.
+ * \param[in] gpio_pin Index of the GPIO pin to configure
+ * \param[in] mode     New pin sampling mode to configure
  */
 static inline void system_pinmux_pin_set_input_sample_mode(
 		const uint8_t gpio_pin,
@@ -443,8 +443,8 @@ enum system_pinmux_pin_strength {
  * Configures the output drive strength for a GPIO output, to
  * control the amount of current the pad is able to sink/source.
  *
- * \param[in] gpio_pin  Index of the GPIO pin to configure.
- * \param[in] mode      New output driver strength mode to configure.
+ * \param[in] gpio_pin  Index of the GPIO pin to configure
+ * \param[in] mode      New output driver strength mode to configure
  */
 static inline void system_pinmux_pin_set_output_strength(
     const uint8_t gpio_pin,
@@ -489,8 +489,8 @@ enum system_pinmux_pin_slew_rate {
  * control the speed at which the physical output pin can react to
  * logical changes of the I/O pin value.
  *
- * \param[in] gpio_pin  Index of the GPIO pin to configure.
- * \param[in] mode      New pin slew rate mode to configure.
+ * \param[in] gpio_pin  Index of the GPIO pin to configure
+ * \param[in] mode      New pin slew rate mode to configure
  */
 static inline void system_pinmux_pin_set_output_slew_rate(
     const uint8_t gpio_pin,
@@ -533,8 +533,8 @@ enum system_pinmux_pin_drive {
  * Configures the output driver mode for a GPIO output, to
  * control the pad behavior.
  *
- * \param[in] gpio_pin  Index of the GPIO pin to configure.
- * \param[in] mode      New pad output driver mode to configure.
+ * \param[in] gpio_pin  Index of the GPIO pin to configure
+ * \param[in] mode      New pad output driver mode to configure
  */
 static inline void system_pinmux_pin_set_output_drive(
     const uint8_t gpio_pin,
@@ -643,6 +643,11 @@ void system_pinmux_group_set_output_drive(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>F</td>
+ *		<td>11/2014</td>
+ *		<td>Add support for SAML21.</td>
  *	</tr>
  *	<tr>
  *		<td>E</td>
