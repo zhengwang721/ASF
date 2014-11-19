@@ -50,7 +50,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_dma_group SAM Direct Memory Access Controller Driver (DMAC)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the Direct Memory Access Controller(DMAC) module within
  * the device. The DMAC can transfer data between memories and peripherals, and
  * thus off-load these tasks from the CPU. The module supports peripheral to
@@ -61,11 +61,11 @@ extern "C" {
  * - DMAC (Direct Memory Access Controller)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM L21
+ *  - Atmel | SMART SAM D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_dma_prerequisites
@@ -541,7 +541,7 @@ static inline enum status_code dma_get_job_status(struct dma_resource *resource)
 }
 
 /**
- * \brief Check if the given DMA resource is busy
+ * \brief Check if the given DMA resource is busy.
  *
  * \param[in] resource Pointer to the DMA resource
  *
@@ -558,7 +558,7 @@ static inline bool dma_is_busy(struct dma_resource *resource)
 }
 
 /**
- * \brief Enable a callback function for a dedicated DMA resource
+ * \brief Enable a callback function for a dedicated DMA resource.
  *
  * \param[in] resource Pointer to the DMA resource
  * \param[in] type Callback function type
@@ -573,7 +573,7 @@ static inline void dma_enable_callback(struct dma_resource *resource,
 }
 
 /**
- * \brief Disable a callback function for a dedicated DMA resource
+ * \brief Disable a callback function for a dedicated DMA resource.
  *
  * \param[in] resource Pointer to the DMA resource
  * \param[in] type Callback function type
@@ -588,7 +588,7 @@ static inline void dma_disable_callback(struct dma_resource *resource,
 }
 
 /**
- * \brief Register a callback function for a dedicated DMA resource
+ * \brief Register a callback function for a dedicated DMA resource.
  *
  * There are three types of callback functions, which can be registered:
  * - Callback for transfer complete
@@ -609,7 +609,7 @@ static inline void dma_register_callback(struct dma_resource *resource,
 }
 
 /**
- * \brief Unregister a callback function for a dedicated DMA resource
+ * \brief Unregister a callback function for a dedicated DMA resource.
  *
  * There are three types of callback functions:
  * - Callback for transfer complete
@@ -632,7 +632,7 @@ static inline void dma_unregister_callback(struct dma_resource *resource,
 }
 
 /**
- * \brief Will set a software trigger for resource
+ * \brief Will set a software trigger for resource.
  *
  * This function is used to set a software trigger on the DMA channel
  * associated with resource. If a trigger is already pending no new trigger
@@ -701,7 +701,7 @@ static inline void dma_descriptor_get_config_defaults(struct dma_descriptor_conf
 }
 
 /**
- * \brief Update DMA descriptor
+ * \brief Update DMA descriptor.
  *
  * This function can update the descriptor of an allocated DMA resource.
  *
@@ -715,7 +715,7 @@ static inline void dma_update_descriptor(struct dma_resource *resource,
 }
 
 /**
- * \brief Reset DMA descriptor
+ * \brief Reset DMA descriptor.
  *
  * This function will clear the DESCADDR register of an allocated DMA resource.
  *
@@ -822,6 +822,11 @@ enum status_code dma_add_descriptor(struct dma_resource *resource,
  *        <th>Doc. Rev.</td>
  *        <th>Date</td>
  *        <th>Comments</td>
+ *    </tr>
+ *    <tr>
+ *        <td>C</td>
+ *        <td>11/2014</td>
+ *        <td>Added SAML21 support</td>
  *    </tr>
  *    <tr>
  *        <td>B</td>
