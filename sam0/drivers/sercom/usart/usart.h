@@ -540,7 +540,7 @@ struct usart_config {
 	bool immediate_buffer_overflow_notification;
 #endif
 #ifdef FEATURE_USART_IRDA
-	/** Enable IrDA encoding format */
+	/** Enable IrDA encoding format. */
 	bool encoding_format_enable;
 	/** The minimum pulse length that is required for a pulse to be accepted by the IrDA receiver. */
 	uint8_t receive_pulse_length;
@@ -598,7 +598,7 @@ struct usart_config {
 /**
  * \brief USART module instance
  *
- * Forward Declaration for the device instance
+ * Forward Declaration for the device instance.
  */
 struct usart_module;
 
@@ -623,7 +623,7 @@ struct usart_module {
 #if !defined(__DOXYGEN__)
 	/** Pointer to the hardware instance. */
 	Sercom *hw;
-	/** Module lock */
+	/** Module lock. */
 	volatile bool locked;
 	/** Character size of the data being transferred. */
 	enum usart_character_size character_size;
