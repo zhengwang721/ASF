@@ -79,6 +79,9 @@
  * - SAM D11 Xplained Pro.
  *   \snippet samd11_xplained_pro/conf_qs_events_interrupt_hook.h definition_event
  *   \snippet samd11_xplained_pro/conf_qs_events_interrupt_hook.h definition_tc
+ * - SAM L21 Xplained Pro.
+ *   \snippet saml21_xplained_pro/conf_qs_events_interrupt_hook.h definition_event
+ *   \snippet saml21_xplained_pro/conf_qs_events_interrupt_hook.h definition_tc
  *
  * Copy-paste the following setup code to your user application:
  * \snippet qs_events_interrupt_hook.c setup

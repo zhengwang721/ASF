@@ -53,14 +53,14 @@
  *          exception, and terminate program execution.
  *
  * \param[in] peripheral_id  ID for the peripheral to be locked, sourced via the
- *                           \ref SYSTEM_PERIPHERAL_ID macro.
+ *                           \ref SYSTEM_PERIPHERAL_ID macro
  * \param[in] key  Bitwise inverse of peripheral ID, used as key to
  *                 reduce the chance of accidental locking. See
- *                 \ref asfdoc_sam0_pac_bitwise_code.
+ *                 \ref asfdoc_sam0_pac_bitwise_code
  *
  * \return Status of the peripheral lock procedure.
- * \retval STATUS_OK                If the peripheral was successfully locked.
- * \retval STATUS_ERR_INVALID_ARG	If invalid argument(s) were supplied.
+ * \retval STATUS_OK                If the peripheral was successfully locked
+ * \retval STATUS_ERR_INVALID_ARG	If invalid argument(s) were supplied
  */
 __no_inline enum status_code system_peripheral_lock(
 		const uint32_t peripheral_id,
@@ -88,14 +88,14 @@ __no_inline enum status_code system_peripheral_lock(
  *          exception, and terminate program execution.
  *
  * \param[in] peripheral_id  ID for the peripheral to be locked, sourced via the
- *                           \ref SYSTEM_PERIPHERAL_ID macro.
+ *                           \ref SYSTEM_PERIPHERAL_ID macro
  * \param[in] key  Bitwise inverse of peripheral ID, used as key to
  *                 reduce the chance of accidental locking. See
- *                 \ref asfdoc_sam0_pac_bitwise_code.
+ *                 \ref asfdoc_sam0_pac_bitwise_code
  *
  * \return Status of the peripheral lock procedure.
- * \retval STATUS_OK                If the peripheral was successfully locked.
- * \retval STATUS_ERR_INVALID_ARG	If invalid argument(s) were supplied.
+ * \retval STATUS_OK                If the peripheral was successfully locked
+ * \retval STATUS_ERR_INVALID_ARG	If invalid argument(s) were supplied
  */
 __no_inline enum status_code system_peripheral_lock_always(
 		const uint32_t peripheral_id,
@@ -122,14 +122,14 @@ __no_inline enum status_code system_peripheral_lock_always(
  *          exception, and terminate program execution.
  *
  * \param[in] peripheral_id  ID for the peripheral to be unlocked, sourced via the
- *                          \ref SYSTEM_PERIPHERAL_ID macro.
+ *                          \ref SYSTEM_PERIPHERAL_ID macro
  * \param[in] key  Bitwise inverse of peripheral ID, used as key to
  *                 reduce the chance of accidental unlocking. See
- *                 \ref asfdoc_sam0_pac_bitwise_code.
+ *                 \ref asfdoc_sam0_pac_bitwise_code
  *
  * \return Status of the peripheral unlock procedure.
- * \retval STATUS_OK                If the peripheral was successfully locked.
- * \retval STATUS_ERR_INVALID_ARG	If invalid argument(s) were supplied.
+ * \retval STATUS_OK                If the peripheral was successfully locked
+ * \retval STATUS_ERR_INVALID_ARG	If invalid argument(s) were supplied
  */
 __no_inline enum status_code system_peripheral_unlock(
 		const uint32_t peripheral_id,

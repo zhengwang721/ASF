@@ -210,7 +210,7 @@ enum status_code ac_chan_set_config(
 }
 
 /**
- * \brief Function used to setup interrupt selection of a window
+ * \brief Function used to setup interrupt selection of a window.
  *
  * This function is used to setup when an interrupt should occur
  * for a given window.
@@ -370,7 +370,7 @@ void ac_win_disable(
  *  \param[in] module_inst  Software instance for the Analog Comparator peripheral
  *  \param[in] win_channel  Comparator Window channel to test
  *
- *  \return Bit mask of Analog Comparator window channel status flags
+ *  \return Bit mask of Analog Comparator window channel status flags.
  */
 uint8_t ac_win_get_status(
 		struct ac_module *const module_inst,
