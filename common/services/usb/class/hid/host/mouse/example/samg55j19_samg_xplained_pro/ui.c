@@ -49,7 +49,7 @@
 #define  RESUME_PIO      (PIN_PUSHBUTTON_1_PIO)
 #define  RESUME_PIO_ID   (PIN_PUSHBUTTON_1_ID)
 #define  RESUME_PIO_MASK (PIN_PUSHBUTTON_1_MASK)
-#define  RESUME_PIO_ATTR (PIN_PUSHBUTTON_1_ATTR)
+#define  RESUME_PIO_ATTR (PIO_PULLUP | PIO_DEBOUNCE | PIO_IT_FALL_EDGE)
 
 /**
  * \name Internal routines to manage asynchronous interrupt pin change
@@ -143,6 +143,8 @@ static uhc_enum_status_t ui_enum_status = UHC_ENUM_DISCONNECT;
 static uint16_t ui_device_speed_blink;
 /*! Manages device mouse button down */
 static uint8_t ui_nb_down = 0;
+/*! Manages device mouse move */
+static bool ui_move = false;
 
 void ui_usb_vbus_change(bool b_vbus_present)
 {
@@ -221,6 +223,11 @@ void ui_usb_sof_event(void)
 		if (ui_nb_down) {
 			LED_On(LED0);
 		}
+		/* Power on a LED when the mouse moves */
+		if (ui_move) {
+			ui_move = false;
+			LED_On(LED0);
+		}
 	}
 }
 
@@ -253,6 +260,7 @@ void ui_uhi_hid_mouse_move(int8_t x, int8_t y, int8_t scroll)
 	UNUSED(x);
 	UNUSED(y);
 	UNUSED(scroll);
+	ui_move = true;
 }
 
 /*! @} */

@@ -45,16 +45,38 @@
 #include "delay.h"
 #include <string.h>
 
+/* HCCA strcture. */
 static struct ohci_hcca hcca;
+
+/* Control endpoint related. */
 struct ohci_ed control_ed;
 struct ohci_td_general control_td_head;
 struct ohci_td_general control_td_tail;
 
+/* Bulk endpoint related. */
+struct ohci_ed bulk_ed[4];
+static uint8_t bulk_ed_status = 0;
+struct ohci_td_general bulk_td_head;
+struct ohci_td_general bulk_td_tail;
+
+/* Interrupt endpoint related. */
+struct ohci_ed interrupt_ed[4];
+static uint8_t interrupt_ed_status = 0;
+struct ohci_td_general interrupt_td_head;
+struct ohci_td_general interrupt_td_tail;
+
+/* Isochronous endpoint related. */
+struct ohci_ed isochronous_ed[4];
+static uint8_t isochronous_ed_status = 0;
+struct ohci_td_iso isochronous_td_head;
+struct ohci_td_iso isochronous_td_tail;
+
+/* Callback related. */
 static ohci_callback_t ohci_callback_pointer[OHCI_NUM_OF_INTERRUPT_SOURCE];
 static uint32_t callback_para;
-static uint32_t bus_reset_flag;
 
-volatile uint32_t watch;
+/* Reset flag. */
+static uint32_t bus_reset_flag;
 
 /**
  * \brief Initialize the OHCI module.
@@ -64,38 +86,33 @@ void ohci_init(void)
 {
 	uint32_t i, temp_value;
 
-	watch = UHP->HcFmInterval;
-	watch = UHP->HcRevision;
-
 	for (i = 0; i < OHCI_NUM_OF_INTERRUPT_SOURCE; i++) {
 		ohci_callback_pointer[i] = 0;
 	}
 
 	memset((void *)&hcca, 0, sizeof(hcca));
 	memset((void *)&control_ed, 0, sizeof(control_ed));
+	for (i = 0; i < 4; i++) {
+		memset((void *)&bulk_ed[i], 0, sizeof(bulk_ed[i]));
+		memset((void *)&interrupt_ed[i], 0, sizeof(interrupt_ed[i]));
+		memset((void *)&isochronous_ed[i], 0, sizeof(isochronous_ed[i]));
+	}
+	memset((void *)&control_td_head, 0, sizeof(control_td_head));
+	memset((void *)&control_td_tail, 0, sizeof(control_td_tail));
+	memset((void *)&bulk_td_head, 0, sizeof(bulk_td_head));
+	memset((void *)&bulk_td_head, 0, sizeof(bulk_td_head));
+	memset((void *)&interrupt_td_head, 0, sizeof(interrupt_td_head));
+	memset((void *)&interrupt_td_tail, 0, sizeof(interrupt_td_tail));
+	memset((void *)&isochronous_td_head, 0, sizeof(isochronous_td_head));
+	memset((void *)&isochronous_td_tail, 0, sizeof(isochronous_td_tail));
 
 	// Setup Host Controller to issue a software reset
-	UHP->HcCommandStatus |= HC_COMMANDSTATUS_HCR;
+	UHP->HcCommandStatus = HC_COMMANDSTATUS_HCR;
 	while (UHP->HcCommandStatus & HC_COMMANDSTATUS_HCR);
 
-	UHP->HcHCCA = (uint32_t)&hcca;
-//	UHP->HcControlHeadED = (uint32_t)&control_ed;
-
-	// Enable some interrupts()
-//	UHP->HcInterruptEnable = HC_INTERRUPT_SO | HC_INTERRUPT_WDH | HC_INTERRUPT_SF
-//			| HC_INTERRUPT_RD | HC_INTERRUPT_UE
-//			| HC_INTERRUPT_FNO | HC_INTERRUPT_RHSC
-//			| HC_INTERRUPT_OC | HC_INTERRUPT_MIE;
-	UHP->HcInterruptEnable = HC_INTERRUPT_WDH | HC_INTERRUPT_SF
-				| HC_INTERRUPT_RD | HC_INTERRUPT_RHSC | HC_INTERRUPT_MIE;
-
-	// Enable all queues
-//	UHP->HcControl |= HC_CONTROL_PLE | HC_CONTROL_IE | HC_CONTROL_CLE | HC_CONTROL_BLE;
-
-	//Not sure if FSLargestDataPacket in UHP->HcFmInterval need to be set
-
-	// Set HcPeriodicStart value to 90% if frame interval
-	UHP->HcPeriodicStart = ((UHP->HcFmInterval & HC_FMINTERVAL_FI) * 9) / 10;
+    // Write Fm Interval and Largest Data Packet Counter
+    UHP->HcFmInterval    = FIT | (FSMP(FI)<< 16) | FI;
+    UHP->HcPeriodicStart = FI * 90 / 100;
 
 	// Begin sending SOF
 	temp_value = UHP->HcControl;
@@ -103,13 +120,40 @@ void ohci_init(void)
 	temp_value |= HC_CONTROL_HCFS_USBOPERATIONAL;
 	UHP->HcControl = temp_value;
 
+	UHP->HcControl |= HC_CONTROL_PLE;
+	UHP->HcControl |= HC_CONTROL_IE;
+
+	UHP->HcHCCA = (uint32_t)&hcca;
+//	UHP->HcControlHeadED = (uint32_t)&control_ed;
+
+    // Clear Interrrupt Status
+    UHP->HcInterruptStatus |= UHP->HcInterruptStatus;
+
+	// Enable some interrupts()
+//	UHP->HcInterruptEnable = HC_INTERRUPT_SO | HC_INTERRUPT_WDH | HC_INTERRUPT_SF
+//			| HC_INTERRUPT_RD | HC_INTERRUPT_UE
+//			| HC_INTERRUPT_FNO | HC_INTERRUPT_RHSC
+//			| HC_INTERRUPT_OC | HC_INTERRUPT_MIE;
+	UHP->HcInterruptEnable = HC_INTERRUPT_WDH | HC_INTERRUPT_SF | HC_INTERRUPT_UE
+				| HC_INTERRUPT_RD | HC_INTERRUPT_RHSC | HC_INTERRUPT_MIE;
+
+	// Enable all queues
+//	UHP->HcControl |= HC_CONTROL_PLE | HC_CONTROL_IE | HC_CONTROL_CLE | HC_CONTROL_BLE;
+
 	//delay some time to access the port
 	delay_ms(50);
 
 	UHP->HcRhStatus = RH_HS_LPSC; 						  /* Set Global Power*/
 
+	// Initiate port reset
+	UHP->HcRhPortStatus = RH_PS_PRS;
+	while (UHP->HcRhPortStatus & RH_PS_PRS);
+	delay_ms(100);
+    // ...and clear port reset signal
+    UHP->HcRhPortStatus = RH_PS_PRSC;
+
 	// enable port
-	UHP->HcRhPortStatus |= RH_PS_PES;
+//	UHP->HcRhPortStatus = RH_PS_PES;
 
 }
 
@@ -195,11 +239,15 @@ void ohci_deinit(void)
 /**
  * \brief Gets the speed of connected device.
  *
- * \return Device speed
+ * \return Device speed, true for low speed, false for full speed.
  */
-uint32_t ohci_get_device_speed (void)
+bool ohci_get_device_speed (void)
 {
-	return UHP->HcRhPortStatus & RH_PS_LSDA;
+	if (UHP->HcRhPortStatus & RH_PS_LSDA) {
+		return true;
+	} else {
+		return false;
+	}
 }
 
 /**
@@ -221,9 +269,15 @@ void ohci_bus_reset(void)
 {
 	Assert(!(UHP->HcRhPortStatus & RH_PS_CCS));
 
+//	delay_ms(100);
+
+	// Initiate port reset
+	UHP->HcRhPortStatus = RH_PS_PRS;
+	while (UHP->HcRhPortStatus & RH_PS_PRS);
 	delay_ms(100);
-	UHP->HcRhPortStatus |= RH_PS_PRS;
-	delay_ms(100);
+    // ...and clear port reset signal
+    UHP->HcRhPortStatus = RH_PS_PRSC;
+
 	bus_reset_flag = true;
 }
 
@@ -235,10 +289,8 @@ void ohci_bus_suspend(void)
 {
 	uint32_t temp_value;
 
-	UHP->HcRhPortStatus |= RH_PS_PSS;
-
 	/* First stop any processing */
-	UHP->HcControl &= ~(HC_CONTROL_CLE|HC_CONTROL_BLE|HC_CONTROL_PLE|HC_CONTROL_IE);
+//	UHP->HcControl &= ~(HC_CONTROL_CLE|HC_CONTROL_BLE|HC_CONTROL_PLE|HC_CONTROL_IE);
 
 	UHP->HcControl |= HC_CONTROL_RWE;
 
@@ -251,8 +303,9 @@ void ohci_bus_suspend(void)
 	UHP->HcControl = temp_value;
 
 	// device remote wakeup enable
-	UHP->HcRhStatus |= RH_HS_DRWE;
-//	UHP->HcInterruptDisable |= HC_INTERRUPT_RHSC;
+	UHP->HcRhStatus = RH_HS_DRWE;
+
+//	UHP->HcRhPortStatus = RH_PS_PSS;
 }
 
 /**
@@ -273,21 +326,15 @@ void ohci_bus_resume(void)
 {
 	uint32_t temp_value;
 
+	// device remote wakeup disable
+	UHP->HcRhStatus = RH_HS_CRWE;
+
 	temp_value = UHP->HcControl;
 	temp_value &= ~HC_CONTROL_HCFS;
 	temp_value |= HC_CONTROL_HCFS_USBRESUME;
 	UHP->HcControl = temp_value;
 
-	/* disable old schedule state, reinit from scratch */
-	UHP->HcControlCurrentED = 0;
-	UHP->HcBulkCurrentED = 0;
-
-	UHP->HcHCCA = (uint32_t)&hcca;
-	/* interrupts might have been disabled */
-	UHP->HcInterruptEnable = HC_INTERRUPT_SO | HC_INTERRUPT_WDH | HC_INTERRUPT_SF
-			| HC_INTERRUPT_RD | HC_INTERRUPT_UE
-			| HC_INTERRUPT_FNO | HC_INTERRUPT_RHSC
-			| HC_INTERRUPT_OC | HC_INTERRUPT_MIE;
+	delay_ms(50);
 
 	/* Then re-enable operations */
 	temp_value = UHP->HcControl;
@@ -295,11 +342,18 @@ void ohci_bus_resume(void)
 	temp_value |= HC_CONTROL_HCFS_USBOPERATIONAL;
 	UHP->HcControl = temp_value;
 
-	// device remote wakeup disable
-	UHP->HcRhStatus |= RH_HS_CRWE;
+
+	UHP->HcControl &= ~HC_CONTROL_RWE;
+
+	/* Restore any processing */
+//	UHP->HcControl = HC_CONTROL_CLE|HC_CONTROL_BLE|HC_CONTROL_PLE|HC_CONTROL_IE;
+
+	// enable port
+//	UHP->HcRhPortStatus = RH_PS_PES;
+//	UHP->HcRhPortStatus = RH_PS_PESC;
 
 	//port resume
-	UHP->HcRhPortStatus |= RH_PS_POCI;
+//	UHP->HcRhPortStatus = RH_PS_POCI;
 }
 
 /**
@@ -308,6 +362,9 @@ void ohci_bus_resume(void)
  */
 bool ohci_add_ed_control(ed_info_t *ed_info)
 {
+	/* control endpoint. */	
+	memset((void *)&control_ed, 0, sizeof(control_ed));
+	UHP->HcControlHeadED = (uint32_t)&control_ed;
 	control_ed.ed_info.ul_ed_info = ed_info->ul_ed_info;
 	return true;
 }
@@ -318,36 +375,45 @@ bool ohci_add_ed_control(ed_info_t *ed_info)
  */
 bool ohci_add_ed_bulk(ed_info_t *ed_info)
 {
-	struct ohci_ed *bulk_ed;
+	uint32_t i;
 
-	bulk_ed = (struct ohci_ed *)UHP->HcBulkHeadED;
+	struct ohci_ed *bulk_ed_head;
+	struct ohci_ed *bulk_ed_add;
 
-	if (bulk_ed == NULL) {
-		bulk_ed = malloc(sizeof(struct ohci_ed));
-		if (bulk_ed == NULL) {
-			return false;
+	/* Check if there is free bulk endpoint. */
+	for (i = 0; i < 4; i++) {
+		if (!(bulk_ed_status & (1 << i))) {
+			bulk_ed_status |= (1 << i);
+			memset((void *)&bulk_ed[i], 0, sizeof(bulk_ed[i]));
+			bulk_ed_add = &bulk_ed[i];
+			break;
 		}
-		bulk_ed->ed_info.ul_ed_info = ed_info->ul_ed_info;
-		UHP->HcBulkHeadED = (uint32_t)bulk_ed;
+	}
+	if (i == 4) {
+		return false;
+	}
+
+	bulk_ed_head = (struct ohci_ed *)UHP->HcBulkHeadED;
+
+	if (bulk_ed_head == NULL) {
+		bulk_ed_add->ed_info.ul_ed_info = ed_info->ul_ed_info;
+		UHP->HcBulkHeadED = (uint32_t)bulk_ed_add;
 	} else {
 		/* Check if the endpoint has been allocated */
-		while (bulk_ed != NULL) {
-			if (bulk_ed->ed_info.ed_info_s.bEndpointNumber ==
+		while (bulk_ed_head != NULL) {
+			if (bulk_ed_head->ed_info.ed_info_s.bEndpointNumber ==
 					ed_info->ed_info_s.bEndpointNumber) {
 				return false;
 			}
-			if (bulk_ed->p_next_ed == NULL) {
+			if (bulk_ed_head->p_next_ed == NULL) {
 				break;
 			} else {
-				bulk_ed = bulk_ed->p_next_ed;
+				bulk_ed_head = bulk_ed_head->p_next_ed;
 			}
 		};
 
-		bulk_ed->p_next_ed = malloc(sizeof(struct ohci_ed));
-		if (bulk_ed->p_next_ed == NULL) {
-			return false;
-		}
-		bulk_ed->ed_info.ul_ed_info = ed_info->ul_ed_info;
+		bulk_ed_head->p_next_ed = bulk_ed_add;
+		bulk_ed_add->ed_info.ul_ed_info = ed_info->ul_ed_info;
 	}
 	return true;
 }
@@ -361,36 +427,64 @@ bool ohci_add_ed_bulk(ed_info_t *ed_info)
  */
 bool ohci_add_ed_period(ed_info_t *ed_info)
 {
-	uint32_t i;
-	struct ohci_ed *period_ed;
+	uint32_t i, j;
+	struct ohci_ed *period_ed_add;
 	struct ohci_ed *period_ed_header;
 
 	if (ed_info->ed_info_s.bFormat) {
 		/* isochronous ED */
-		period_ed = malloc(sizeof(struct ohci_ed));
-		if (period_ed == NULL) {
-			return false;
-		}
-		period_ed->ed_info.ul_ed_info = ed_info->ul_ed_info;
-		for (i = 0; i < 32; i++) {
-			period_ed_header = (struct ohci_ed *)hcca.InterruptTable[i];
-			if (period_ed_header == NULL) {
-				hcca.InterruptTable[i] = (uint32_t)period_ed;
-			} else {
-				period_ed_header->p_next_ed = period_ed;
+
+		/* Check if there is free isochronous endpoint. */
+		for (j = 0; j < 4; j++) {
+			if (!(isochronous_ed_status & (1 << j))) {
+				isochronous_ed_status |= (1 << j);
+				memset((void *)&isochronous_ed[j], 0, sizeof(isochronous_ed[j]));
+				period_ed_add = &isochronous_ed[j];
+				break;
 			}
 		}
-	} else {
-		/* interrupt ED */
+		if (j == 4) {
+			return false;
+		}
+
+		period_ed_add->ed_info.ul_ed_info = ed_info->ul_ed_info;
 		for (i = 0; i < 32; i++) {
 			period_ed_header = (struct ohci_ed *)hcca.InterruptTable[i];
 			if (period_ed_header == NULL) {
-				period_ed = malloc(sizeof(struct ohci_ed));
-				if (period_ed == NULL) {
-					return false;
-				}
-				period_ed->ed_info.ul_ed_info = ed_info->ul_ed_info;
-				hcca.InterruptTable[i] = (uint32_t)period_ed;
+				hcca.InterruptTable[i] = (uint32_t)period_ed_add;
+			} else {
+				period_ed_header->p_next_ed = period_ed_add;
+			}
+		}
+		return true;
+	} else {
+		/* interrupt ED */
+
+		/* Check if there is free interrupt endpoint. */
+		for (j = 0; j < 4; j++) {
+			if (!(interrupt_ed_status & (1 << j))) {
+				interrupt_ed_status |= (1 << j);
+				memset((void *)&interrupt_ed[j], 0, sizeof(interrupt_ed[j]));
+				period_ed_add = &interrupt_ed[j];
+				break;
+			}
+		}
+		if (j == 4) {
+			return false;
+		}
+
+		for (i = 0; i < 4; i++) {
+			period_ed_header = (struct ohci_ed *)hcca.InterruptTable[i];
+			if (period_ed_header == NULL) {
+				period_ed_add->ed_info.ul_ed_info = ed_info->ul_ed_info;
+				hcca.InterruptTable[i] = (uint32_t)period_ed_add;
+				hcca.InterruptTable[i + 4] = (uint32_t)period_ed_add;
+				hcca.InterruptTable[i + 8] = (uint32_t)period_ed_add;
+				hcca.InterruptTable[i + 12] = (uint32_t)period_ed_add;
+				hcca.InterruptTable[i + 16] = (uint32_t)period_ed_add;
+				hcca.InterruptTable[i + 20] = (uint32_t)period_ed_add;
+				hcca.InterruptTable[i + 24] = (uint32_t)period_ed_add;
+				hcca.InterruptTable[i + 28] = (uint32_t)period_ed_add;
 				return true;
 			} else {
 				if (period_ed_header->ed_info.ed_info_s.bEndpointNumber
@@ -400,7 +494,7 @@ bool ohci_add_ed_period(ed_info_t *ed_info)
 			}
 		}
 	}
-	return true;
+	return false;
 }
 
 /**
@@ -410,7 +504,7 @@ bool ohci_add_ed_period(ed_info_t *ed_info)
  */
 void ohci_remove_ed(uint8_t ep_number)
 {
-	uint32_t i;
+	uint32_t i, j;
 	struct ohci_ed *ed_header;
 	struct ohci_ed *ed_free_header;
 
@@ -427,7 +521,6 @@ void ohci_remove_ed(uint8_t ep_number)
 			if (ed_header->ed_info.ed_info_s.bEndpointNumber == ep_number) {
 				UHP->HcBulkHeadED = (uint32_t)ed_header->p_next_ed;
 				ed_free_header = ed_header;
-				free(ed_free_header);
 			} else {
 				/* Check the list */
 				while ((ed_header != NULL) && (ed_header->p_next_ed != NULL)) {
@@ -435,7 +528,6 @@ void ohci_remove_ed(uint8_t ep_number)
 							==	ep_number) {
 						ed_free_header = ed_header->p_next_ed;
 						ed_header->p_next_ed = ed_header->p_next_ed->p_next_ed;
-						free(ed_free_header);
 						break;
 					}
 					ed_header = ed_header->p_next_ed;
@@ -449,37 +541,42 @@ void ohci_remove_ed(uint8_t ep_number)
 			while (ed_header != NULL) {
 				if (ed_header->ed_info.ed_info_s.bEndpointNumber == ep_number) {
 					ed_free_header = ed_header;
-					free(ed_free_header);
 					break;
 				}
 				ed_header = ed_header->p_next_ed;
 			}
 		}
+
+		for (j = 0; j < 8; j++) {
+			if (ed_free_header == &bulk_ed[j]) {
+				bulk_ed_status &= ~(1 << j);
+				break;
+			}
+			if (ed_free_header == &interrupt_ed[j]) {
+				interrupt_ed_status &= ~(1 << j);
+				break;
+			}
+			if (ed_free_header == &isochronous_ed[j]) {
+				isochronous_ed_status &= ~(1 << j);
+				break;
+			}
+		}
+
 	}
 
 	/* All endpoints. */
 	if (ep_number == 0xFF) {
 		/* Bulk endpoints. */
-		ed_header = (struct ohci_ed *)UHP->HcBulkHeadED;
-		while (ed_header != NULL) {
-			ed_free_header = ed_header;
-			ed_header = ed_header->p_next_ed;
-			free(ed_free_header);
-		}
+		UHP->HcBulkHeadED = 0;
 
 		/* Int/ISO endpoints. */
 		for (i = 0; i < 32; i++) {
-			ed_header = (struct ohci_ed *)hcca.InterruptTable[i];
-			while (ed_header != NULL) {
-				if (ed_header->ed_info.ed_info_s.bEndpointNumber == ep_number) {
-					ed_free_header = ed_header;
-					ed_header = ed_header->p_next_ed;
-					free(ed_free_header);
-				} else {
-					ed_header = ed_header->p_next_ed;
-				}
-			}
+			hcca.InterruptTable[i] = 0;
 		}
+
+		bulk_ed_status = 0;
+		interrupt_ed_status = 0;
+		isochronous_ed_status = 0;
 	};
 }
 
@@ -492,61 +589,12 @@ void ohci_remove_ed(uint8_t ep_number)
  *
  * \return true for success.
  */
-#if 0
 bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
 {
-	struct ohci_td_general *control_td;
-	struct ohci_td_general *td_general_header;
+	uint32_t p_td_head, p_td_tail;
 
-	control_td = malloc(sizeof(struct ohci_td_general));
-	if (control_td == NULL) {
-		return false;
-	}
-	control_td->td_info.bBufferRounding = 1;
-	control_td->td_info.bDirectionPID = pid;
-	control_td->td_info.bDelayInterrupt = 0;
-	if (pid == TD_PID_SETUP) {
-		control_td->td_info.bDataToggle = 2;
-	} else {
-		control_td->td_info.bDataToggle = 3;
-	}
-	control_td->td_info.bErrorCount = 0;
-	control_td->td_info.bConditionCode = 0xf;
-	control_td->pCurrentBufferPointer= buf;
-	control_td->p_next_td = NULL;
-	control_td->pBufferEnd = buf + buf_size - 1;
+	UHP->HcControl &= ~HC_CONTROL_CLE;
 
-	/* Check the halt status. */
-	if ((uint32_t)control_ed.p_td_head & 0x01) {
-		return false;
-	}
-
-	if (control_ed.p_td_head == control_ed.p_td_tail) {
-		// set the skip
-		control_ed.ed_info.ed_info_s.bSkip = 1;
-
-		control_ed.p_td_head = control_td;
-
-		control_ed.p_td_tail = NULL;;
-
-		// clear the skip
-		control_ed.ed_info.ed_info_s.bSkip = 0;
-
-		UHP->HcCommandStatus |= HC_COMMANDSTATUS_CLF;
-
-		return true;
-	} else {
-		td_general_header = (struct ohci_td_general *)control_ed.p_td_head;
-		while (td_general_header->p_next_td != NULL) {
-			td_general_header = td_general_header->p_next_td;
-		}
-		td_general_header->p_next_td = control_td;
-		return true;
-	}
-}
-#endif
-bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
-{
 	memset((void *)&control_td_head, 0, sizeof(control_td_head));
 	memset((void *)&control_td_tail, 0, sizeof(control_td_tail));
 
@@ -573,14 +621,19 @@ bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
 //	control_ed.ed_info.ed_info_s.bSkip = 1;
 
 	control_ed.p_td_head = &control_td_head;
-	control_ed.p_td_tail = &control_td_tail;;
+	control_ed.p_td_tail = &control_td_tail;
 
 	// clear the skip
 //	control_ed.ed_info.ed_info_s.bSkip = 0;
 
-	UHP->HcControlHeadED = (uint32_t)&control_ed;
-	UHP->HcCommandStatus |= HC_COMMANDSTATUS_CLF;
+	UHP->HcCommandStatus = HC_COMMANDSTATUS_CLF;
 	UHP->HcControl |= HC_CONTROL_CLE;
+
+	// Wait for transfer done.
+	do {
+		p_td_head = (uint32_t)control_ed.p_td_head & 0xFFFFFFF0;
+		p_td_tail = (uint32_t)control_ed.p_td_tail & 0xFFFFFFF0;
+	} while(p_td_head != p_td_tail);
 
 	return true;
 }
@@ -596,147 +649,158 @@ bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
  */
 bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf, uint32_t buf_size)
 {
-	struct ohci_td_general *general_td;
-	struct ohci_td_general *td_general_header;
-	struct ohci_td_iso *iso_td;
-	struct ohci_td_iso *iso_td_header;
+	uint32_t p_td_head, p_td_tail;
 	struct ohci_ed *ed_header;
 	uint32_t i;
+	uint8_t ep_dir;
+
+	if (ep_number & 0x80) {
+		ep_dir = 2;
+	} else {
+		ep_dir = 1;
+	}
+	ep_number = ep_number & 0xF;
 
 	/* Bulk endpoints. */
 	ed_header = (struct ohci_ed *)UHP->HcBulkHeadED;
 	while (ed_header != NULL) {
-		if (ed_header->ed_info.ed_info_s.bEndpointNumber == ep_number) {
-			general_td = malloc(sizeof(struct ohci_td_general));
-			if (general_td == NULL) {
-				return false;
-			}
-			general_td->td_info.bBufferRounding = 0;
-			general_td->td_info.bDirectionPID = 3;
-			general_td->td_info.bDelayInterrupt = 0;
-			general_td->td_info.bDataToggle = 0;
-			general_td->td_info.bErrorCount = 0;
-			general_td->td_info.bConditionCode = 0;
-			general_td->pCurrentBufferPointer= buf;
-			general_td->p_next_td = NULL;
-			general_td->pBufferEnd = buf + buf_size - 1;
+		if ((ed_header->ed_info.ed_info_s.bEndpointNumber == ep_number) &&
+				(ed_header->ed_info.ed_info_s.bDirection == ep_dir)) {
+			// Wait for transfer done.
+			do {
+				p_td_head = (uint32_t)ed_header->p_td_head & 0xFFFFFFF0;
+				p_td_tail = (uint32_t)ed_header->p_td_tail & 0xFFFFFFF0;
+			} while(p_td_head != p_td_tail);
+
+			UHP->HcControl &= ~HC_CONTROL_BLE;
+			
+			memset((void *)&bulk_td_head, 0, sizeof(bulk_td_head));
+			memset((void *)&bulk_td_tail, 0, sizeof(bulk_td_tail));
+
+			bulk_td_head.td_info.bBufferRounding = 1;
+			bulk_td_head.td_info.bDirectionPID = 3;
+			bulk_td_head.td_info.bDelayInterrupt = 0;
+			bulk_td_head.td_info.bDataToggle = 0;
+			bulk_td_head.td_info.bErrorCount = 0;
+			bulk_td_head.td_info.bConditionCode = 0;
+			bulk_td_head.pCurrentBufferPointer= buf;
+			bulk_td_head.p_next_td = &bulk_td_tail;
+			bulk_td_head.pBufferEnd = buf + buf_size - 1;
 
 			/* Check the halt status. */
 			if ((uint32_t)ed_header->p_td_head & 0x01) {
 				return false;
 			}
 
-			if (ed_header->p_td_head == ed_header->p_td_tail) {
-				// set the skip
-				ed_header->ed_info.ed_info_s.bSkip = 1;
+			// set the skip
+//			ed_header->ed_info.ed_info_s.bSkip = 1;
 
-				td_general_header = (struct ohci_td_general *)ed_header->p_td_head;
+			ed_header->p_td_head = &bulk_td_head;
+			ed_header->p_td_tail = &bulk_td_tail;
 
-				if (td_general_header == NULL) {
-					ed_header->p_td_head = general_td;
-				}
-
-				while (td_general_header->p_next_td != NULL) {
-					td_general_header = td_general_header->p_next_td;
-				}
-				td_general_header->p_next_td = general_td;
 
 				// clear the skip
-				ed_header->ed_info.ed_info_s.bSkip = 0;
+//				ed_header->ed_info.ed_info_s.bSkip = 0;
 
-				UHP->HcCommandStatus |= HC_COMMANDSTATUS_BLF;
-
-				return true;
-			}
+			UHP->HcCommandStatus = HC_COMMANDSTATUS_BLF;
+			UHP->HcControl |= HC_CONTROL_BLE;
+				
+			return true;
 		}
 	}
 
 	/* Int/ISO endpoints. */
 	for (i = 0; i < 32; i++) {
 		ed_header = (struct ohci_ed *)hcca.InterruptTable[i];
-		if (ed_header->ed_info.ed_info_s.bEndpointNumber == ep_number) {
+		if ((ed_header->ed_info.ed_info_s.bEndpointNumber == ep_number) &&
+				(ed_header->ed_info.ed_info_s.bDirection == ep_dir)) {
 			if (ed_header->ed_info.ed_info_s.bFormat == 0) {
-				general_td = malloc(sizeof(struct ohci_td_general));
-				if (general_td == NULL) {
-					return false;
-				}
-				general_td->td_info.bBufferRounding = 0;
-				general_td->td_info.bDirectionPID = 3;
-				general_td->td_info.bDelayInterrupt = 0;
-				general_td->td_info.bDataToggle = 0;
-				general_td->td_info.bErrorCount = 0;
-				general_td->td_info.bConditionCode = 0;
-				general_td->pCurrentBufferPointer= buf;
-				general_td->p_next_td = NULL;
-				general_td->pBufferEnd = buf + buf_size - 1;
+				// Wait for transfer done.
+				do {
+					p_td_head = (uint32_t)ed_header->p_td_head & 0xFFFFFFF0;
+					p_td_tail = (uint32_t)ed_header->p_td_tail & 0xFFFFFFF0;
+				} while(p_td_head != p_td_tail);
+
+				UHP->HcControl &= ~HC_CONTROL_PLE;
+				UHP->HcControl &= ~HC_CONTROL_IE;
+				
+				memset((void *)&interrupt_td_head, 0, sizeof(interrupt_td_head));
+				memset((void *)&interrupt_td_tail, 0, sizeof(interrupt_td_tail));
+
+				interrupt_td_head.td_info.bBufferRounding = 1;
+				interrupt_td_head.td_info.bDirectionPID = 3;
+				interrupt_td_head.td_info.bDelayInterrupt = 0;
+				interrupt_td_head.td_info.bDataToggle = 0;
+				interrupt_td_head.td_info.bErrorCount = 0;
+				interrupt_td_head.td_info.bConditionCode = 0;
+				interrupt_td_head.pCurrentBufferPointer= buf;
+				interrupt_td_head.p_next_td = NULL;
+				interrupt_td_head.pBufferEnd = buf + buf_size - 1;
 
 				/* Check the halt status. */
 				if ((uint32_t)ed_header->p_td_head & 0x01) {
 					return false;
 				}
 
-				if (ed_header->p_td_head == ed_header->p_td_tail) {
-					// set the skip
-					ed_header->ed_info.ed_info_s.bSkip = 1;
+				// set the skip
+//				ed_header->ed_info.ed_info_s.bSkip = 1;
 
-					td_general_header = (struct ohci_td_general *)ed_header->p_td_head;
+				p_td_head = (uint32_t)&interrupt_td_head;
+				p_td_head &= 0xFFFFFFF0;
+				p_td_tail = (uint32_t)ed_header->p_td_head;
+				p_td_tail &= 0x0000000F;
+				p_td_head |= p_td_tail;
+				ed_header->p_td_head = (void *)p_td_head;
+				ed_header->p_td_tail = NULL;
 
-					if (td_general_header == NULL) {
-						ed_header->p_td_head = general_td;
-					}
+				// clear the skip
+//				ed_header->ed_info.ed_info_s.bSkip = 0;
 
-					while (td_general_header->p_next_td != NULL) {
-						td_general_header = td_general_header->p_next_td;
-					}
-					td_general_header->p_next_td = general_td;
+				UHP->HcControl |= HC_CONTROL_PLE;
+				UHP->HcControl |= HC_CONTROL_IE;
 
-					// clear the skip
-					ed_header->ed_info.ed_info_s.bSkip = 0;
-
-					UHP->HcCommandStatus |= HC_COMMANDSTATUS_BLF;
-
-					return true;
-				}
+				return true;
 			} else {
-				iso_td = malloc(sizeof(struct ohci_td_iso));
-				if (iso_td == NULL) {
-					return false;
-				}
+				// Wait for transfer done.
+				do {
+					p_td_head = (uint32_t)ed_header->p_td_head & 0xFFFFFFF0;
+					p_td_tail = (uint32_t)ed_header->p_td_tail & 0xFFFFFFF0;
+				} while(p_td_head != p_td_tail);
+
+				UHP->HcControl &= ~HC_CONTROL_PLE;
+				UHP->HcControl &= ~HC_CONTROL_IE;
+				
+				memset((void *)&isochronous_td_head, 0, sizeof(isochronous_td_head));
+				memset((void *)&isochronous_td_tail, 0, sizeof(isochronous_td_tail));
+
 				// start after 3 frame
-				iso_td->td_info.bStartingFrame = ohci_get_frame_number() + 3;
-				iso_td->td_info.bDelayInterrupt = 0;
-				iso_td->td_info.FrameCount = 0;				// one frame transaction
-				iso_td->td_info.bConditionCode = 0;
-				iso_td->pBufferPage0= buf;
-				iso_td->p_next_td = NULL;
-				iso_td->pBufferEnd = buf + buf_size - 1;
-				iso_td->offset_psw[0] = 0;
+				isochronous_td_head.td_info.bStartingFrame = ohci_get_frame_number() + 3;
+				isochronous_td_head.td_info.bDelayInterrupt = 0;
+				isochronous_td_head.td_info.FrameCount = 0;				// one frame transaction
+				isochronous_td_head.td_info.bConditionCode = 0;
+				isochronous_td_head.pBufferPage0= buf;
+				isochronous_td_head.p_next_td = &isochronous_td_tail;
+				isochronous_td_head.pBufferEnd = buf + buf_size - 1;
+				isochronous_td_head.offset_psw[0] = 0;
 
 				/* Check the halt status. */
-				if ((uint32_t)ed_header->p_td_head & 0x01) {
-					return false;
-				}
+//				if ((uint32_t)ed_header->p_td_head & 0x01) {
+//					return false;
+//				}
 
-				if (ed_header->p_td_head == ed_header->p_td_tail) {
-					// set the skip
-					ed_header->ed_info.ed_info_s.bSkip = 1;
+				// set the skip
+//				ed_header->ed_info.ed_info_s.bSkip = 1;
 
-					iso_td_header = (struct ohci_td_iso *)ed_header->p_td_head;
+				ed_header->p_td_head = &isochronous_td_head;
+				ed_header->p_td_tail = &isochronous_td_tail;
 
-					if (iso_td_header == NULL) {
-						ed_header->p_td_head = iso_td;
-					}
+				// clear the skip
+//				ed_header->ed_info.ed_info_s.bSkip = 0;
 
-					while (iso_td_header->p_next_td != NULL) {
-						iso_td_header = iso_td_header->p_next_td;
-					}
-					iso_td_header->p_next_td = iso_td;
-
-					// clear the skip
-					ed_header->ed_info.ed_info_s.bSkip = 0;
-
-					return true;
-				}
+				UHP->HcControl |= HC_CONTROL_PLE;
+				UHP->HcControl |= HC_CONTROL_IE;
+					
+				return true;
 			}
 		}
 	}
@@ -899,7 +963,7 @@ void UHP_Handler()
 	uint32_t int_status;
 	uint32_t rh_status;
 	uint32_t rh_port_status;
-	struct ohci_td_general *td_general_header;
+//	struct ohci_td_general *td_general_header;
 
 	rh_status = UHP->HcRhStatus;
 	rh_port_status = UHP->HcRhPortStatus;
@@ -914,26 +978,55 @@ void UHP_Handler()
 	int_status &= UHP->HcInterruptEnable;
 
 	if (int_status & HC_INTERRUPT_WDH) {
-		td_general_header = (struct ohci_td_general *)hcca.pDoneHead;
+		UHP->HcInterruptStatus = HC_INTERRUPT_WDH;
+//		td_general_header = (struct ohci_td_general *)hcca.pDoneHead;
 //		callback_para = td_general_header->pCurrentBufferPointer;    //byte transferred if no error
-		callback_para = td_general_header->td_info.bConditionCode;  //
-		free(td_general_header);
+//		callback_para = td_general_header->td_info.bConditionCode;  //
+		if (((uint32_t)hcca.pDoneHead & 0xFFFFFFF0)
+				== ((uint32_t)&control_td_head & 0xFFFFFFF0)) {
+			callback_para = 0;
+		} else {
+			callback_para = 1;
+		}
 		ohci_callback_pointer[OHCI_INTERRUPT_WDH](&callback_para);
-		UHP->HcInterruptStatus &= ~HC_INTERRUPT_WDH;
+	}
+
+	/* For connect and disconnect events, we expect the controller
+	 * to turn on RHSC along with RD.  But for remote wakeup events
+	 * this might not happen.
+	 */
+	if (int_status & HC_INTERRUPT_RD) {
+		// resume detect
+		UHP->HcInterruptStatus = HC_INTERRUPT_RD;
+
+		// Initiate port reset
+		//UHP->HcRhPortStatus = RH_PS_PRS;
+		//while (UHP->HcRhPortStatus & RH_PS_PRS);
+		//delay_ms(100);
+		// ...and clear port reset signal
+		//UHP->HcRhPortStatus = RH_PS_PRSC;
+		// enable port
+//		UHP->HcRhPortStatus = RH_PS_PES;
+//		UHP->HcRhPortStatus = RH_PS_PESC;
+
+		ohci_bus_resume();
+
+		ohci_callback_pointer[OHCI_INTERRUPT_RD](&callback_para);
 	}
 
 	if (int_status & HC_INTERRUPT_RHSC) {
-		//rhsc
-		UHP->HcInterruptStatus |=  HC_INTERRUPT_RD | HC_INTERRUPT_RHSC;
 		if (bus_reset_flag) {
-			if (rh_port_status & RH_PS_PRSC) {
+//			if (rh_port_status & RH_PS_PRSC) {
 				UHP->HcRhPortStatus = RH_PS_PRSC;
+				UHP->HcInterruptStatus = HC_INTERRUPT_RHSC;
 				bus_reset_flag = false;
 				callback_para = BUS_RESET;
 				ohci_callback_pointer[OHCI_INTERRUPT_RHSC](&callback_para);
-			}
-		} else if (!(rh_status & RH_HS_DRWE)) {
-			if (rh_port_status & RH_PS_CSC) {
+//			}
+		} else if (rh_port_status & RH_PS_CSC) {
+			UHP->HcRhPortStatus = RH_PS_CSC;
+			UHP->HcInterruptStatus = HC_INTERRUPT_RHSC;
+			if (!(rh_status & RH_HS_DRWE)) {
 				if (rh_port_status & RH_PS_CCS) {
 					callback_para = BUS_CONNECT;
 				} else {
@@ -942,35 +1035,24 @@ void UHP_Handler()
 				ohci_callback_pointer[OHCI_INTERRUPT_RHSC](&callback_para);
 			}
 		} else {
+			UHP->HcInterruptStatus = HC_INTERRUPT_RHSC;
 			callback_para = 0xff;
 		}
 	}
 
-	/* For connect and disconnect events, we expect the controller
-	 * to turn on RHSC along with RD.  But for remote wakeup events
-	 * this might not happen.
-	 */
-	else if (int_status & HC_INTERRUPT_RD) {
-		// resume detect
-		UHP->HcInterruptStatus |= HC_INTERRUPT_RD;
-
-		ohci_bus_resume();
-		ohci_callback_pointer[OHCI_INTERRUPT_RD](&callback_para);
-	}
-
 	if (int_status & HC_INTERRUPT_SF) {
+		UHP->HcInterruptStatus = HC_INTERRUPT_SF;
 		ohci_callback_pointer[OHCI_INTERRUPT_SF](&callback_para);
 	}
 
 	if (int_status & HC_INTERRUPT_SO) {
+		UHP->HcInterruptStatus = HC_INTERRUPT_SO;
 		ohci_callback_pointer[OHCI_INTERRUPT_SO](&callback_para);
 	}
 
 	if (int_status & HC_INTERRUPT_UE) {
+		UHP->HcInterruptStatus = HC_INTERRUPT_UE;
 		ohci_callback_pointer[OHCI_INTERRUPT_UE](&callback_para);
 	}
-
-//	UHP->HcInterruptStatus = int_status;
-
 }
 

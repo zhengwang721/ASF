@@ -73,7 +73,7 @@ typedef void (*ohci_callback_t)(void *pointer);
 
 void ohci_init(void);
 void ohci_deinit(void);
-uint32_t ohci_get_device_speed (void);
+bool ohci_get_device_speed (void);
 uint16_t ohci_get_frame_number (void);
 void ohci_bus_reset(void);
 void ohci_bus_suspend(void);

@@ -173,26 +173,39 @@ struct uhd_callback_trans_end_parameter {
 static struct uhd_callback_trans_end_parameter callback_trans_end_para;
 static uhd_callback_trans_t callback_trans_end_func = NULL;
 
+/** Variables to manage the suspend/resume sequence */
+static uint8_t uhd_suspend_start;
+static uint8_t uhd_resume_start;
+static uint8_t uhd_transfer_start;
+
 /**
  * \internal
  * \brief Manages callback in transfer end
  */
 static void uhd_transfer_end(void *pointer)
 {
+	uint32_t *type = (uint32_t *)pointer;
 
-	if (callback_setup_end_func != NULL) {
-		callback_setup_end_func(callback_setup_end_para.add,
-					callback_setup_end_para.status,
-					callback_setup_end_para.payload_trans);
-		callback_setup_end_func = NULL;
-	}
+	if (*type) {
+		if (callback_trans_end_func != NULL) {
+			uhd_callback_trans_t callback_transfer = callback_trans_end_func;
+			callback_trans_end_func = NULL;
 
-	if (callback_trans_end_func != NULL) {
-		callback_trans_end_func(callback_trans_end_para.add,
-					callback_trans_end_para.ep,
-					callback_trans_end_para.status,
-					callback_trans_end_para.nb_transfered);
-		callback_trans_end_func = NULL;
+			callback_transfer(callback_trans_end_para.add,
+						callback_trans_end_para.ep,
+						callback_trans_end_para.status,
+						callback_trans_end_para.nb_transfered);
+		}
+	} else {
+		if (callback_setup_end_func != NULL) {
+			uhd_callback_setup_end_t callback_setup = callback_setup_end_func;
+			callback_setup_end_func = NULL;
+
+			callback_setup(callback_setup_end_para.add,
+						callback_setup_end_para.status,
+						callback_setup_end_para.payload_trans);
+
+		}
 	}
 }
 
@@ -204,6 +217,47 @@ static void uhd_transfer_end(void *pointer)
  */
 static void uhd_sof_interrupt(void *pointer)
 {
+	/* Manage a delay to enter in suspend */
+	if (uhd_suspend_start) {
+		if (--uhd_suspend_start == 0) {
+			/* In case of high CPU frequency,
+			 *  the current Keep-Alive/SOF can be always on-going
+			 *  then wait end of SOF generation
+			 *  to be sure that disable SOF has been accepted
+			 */
+			dbg_print("SUSP\n");
+//			usb_host_disable_sof(&dev);
+			/* Enable wakeup/resumes interrupts */
+//			usb_host_enable_callback(&dev, USB_HOST_CALLBACK_WAKEUP);
+//			usb_host_enable_callback(&dev, USB_HOST_CALLBACK_DNRSM);
+//			usb_host_enable_callback(&dev, USB_HOST_CALLBACK_UPRSM);
+
+			ohci_bus_suspend();
+			
+			//uhd_sleep_mode(UHD_STATE_SUSPEND);
+		}
+		return; // Abort SOF events
+	}
+
+	/* Manage a delay to exit of suspend */
+	if (uhd_resume_start) {
+		if (--uhd_resume_start == 0) {
+//			ohci_bus_resume();
+			// Notify the UHC
+			uhc_notify_resume();
+			//uhd_sleep_mode(UHD_STATE_IDLE);
+		}
+		return; // Abort SOF events
+	}	
+
+	/* Manage a delay to start next transfer */
+	if (uhd_transfer_start) {
+		if (--uhd_transfer_start == 0) {
+			UHP->HcControl |= HC_CONTROL_BLE|HC_CONTROL_PLE|HC_CONTROL_IE;
+		}
+		return; // Abort SOF events
+	}
+
 	// Notify the UHC
 	uhc_notify_sof(false);
 
@@ -213,9 +267,8 @@ static void uhd_sof_interrupt(void *pointer)
 
 static void uhd_remote_wakeup(void *pointer)
 {
-	// Notify the UHC
-	uhc_notify_resume();
-	uhd_sleep_mode(UHD_STATE_IDLE);
+	/* Wait 50ms before restarting transfer */
+	uhd_resume_start = 50;
 }
 
 static void uhd_status_change(void *pointer)
@@ -239,6 +292,10 @@ static void uhd_status_change(void *pointer)
 void uhd_enable(void)
 {
 	irqflags_t flags;
+
+	uhd_suspend_start = 0;
+	uhd_resume_start = 0;
+	uhd_transfer_start = 0;
 
 	uhd_sleep_mode(UHD_STATE_DISCONNECT);
 
@@ -323,9 +380,7 @@ void uhd_send_reset(uhd_callback_reset_t callback)
 void uhd_suspend(void)
 {
 	// Wait three SOFs before entering in suspend state
-//	uhd_suspend_start = 3;
-
-	ohci_bus_suspend();
+	uhd_suspend_start = 3;
 }
 
 bool uhd_is_suspend(void)
@@ -343,7 +398,8 @@ void uhd_resume(void)
 //	uhd_enable_sof();
 
 	ohci_bus_resume();
-	uhd_sleep_mode(UHD_STATE_IDLE);
+	/* Wait 50ms before restarting transfer */
+	uhd_resume_start = 50;
 }
 
 bool uhd_ep0_alloc(usb_add_t add, uint8_t ep_size)
@@ -374,7 +430,7 @@ bool uhd_ep_alloc(usb_add_t add, usb_ep_desc_t * ep_desc)
 //	uint8_t ep_addr;
 	uint8_t ep_type;
 	uint8_t ep_dir;
-	uint8_t ep_interval;
+//	uint8_t ep_interval;
 
 //	ep_addr = ep_desc->bEndpointAddress & USB_EP_ADDR_MASK;
 	ep_type = ep_desc->bmAttributes&USB_EP_TYPE_MASK;
@@ -384,7 +440,7 @@ bool uhd_ep_alloc(usb_add_t add, usb_ep_desc_t * ep_desc)
 		ep_dir = 1;
 	}
 
-	ed_info_temp.ed_info_s.bFunctionAddress = 1;			   // device address=UHC_DEVICE_ENUM_ADD=1
+	ed_info_temp.ed_info_s.bFunctionAddress = add;			   // device address=UHC_DEVICE_ENUM_ADD=1
 	ed_info_temp.ed_info_s.bEndpointNumber = ep_desc->bEndpointAddress; // endpoint number
 	ed_info_temp.ed_info_s.bDirection = ep_dir;				   // Set direction
 	ed_info_temp.ed_info_s.bSpeed = ohci_get_device_speed();   // speed
@@ -395,17 +451,17 @@ bool uhd_ep_alloc(usb_add_t add, usb_ep_desc_t * ep_desc)
 		// Bank choice
 		switch(ep_type) {
 		case USB_EP_TYPE_ISOCHRONOUS:
-			ep_interval = ep_desc->bInterval;
+//			ep_interval = ep_desc->bInterval;
 			ed_info_temp.ed_info_s.bFormat = 1;                // ISO TD
 			return_value = ohci_add_ed_period(&ed_info_temp);
 			break;
 		case USB_EP_TYPE_INTERRUPT:
-			ep_interval = ep_desc->bInterval;
+//			ep_interval = ep_desc->bInterval;
 			return_value = ohci_add_ed_period(&ed_info_temp);
 			break;
 		case USB_EP_TYPE_BULK:
 			// 0 is required by UHP hardware for bulk
-			ep_interval = 0;
+//			ep_interval = 0;
 			return_value = ohci_add_ed_bulk(&ed_info_temp);
 			break;
 		default:
@@ -433,29 +489,49 @@ bool uhd_setup_request(
 {
 	bool return_value = true;
 
-	irqflags_t flags;
-	flags = cpu_irq_save();
+//	irqflags_t flags;
+//	flags = cpu_irq_save();
 
 	// add setup TD
 	return_value = ohci_add_td_control(TD_PID_SETUP, (uint8_t *)req, sizeof(usb_setup_req_t));
 	if (return_value == false) {
-		cpu_irq_restore(flags);
+//		cpu_irq_restore(flags);
 		return false;
 	}
+
+//	delay_ms(5);
 
 	if ((req->bmRequestType & USB_REQ_DIR_MASK) == USB_REQ_DIR_IN) {
 		// add in TD
 		return_value = ohci_add_td_control(TD_PID_IN, payload, payload_size);
 		if (return_value == false) {
-			cpu_irq_restore(flags);
+//			cpu_irq_restore(flags);
+			return false;
+		}
+
+//		delay_ms(5);
+
+		// add out TD
+		return_value = ohci_add_td_control(TD_PID_OUT, payload, 0);
+		if (return_value == false) {
+//			cpu_irq_restore(flags);
 			return false;
 		}
 	} else {
-		// add out TD
-		return_value = ohci_add_td_control(TD_PID_OUT, payload, payload_size);
-		if (return_value == false) {
-			cpu_irq_restore(flags);
-			return false;
+		if (req->wLength) {
+			// add out TD
+			return_value = ohci_add_td_control(TD_PID_OUT, payload, payload_size);
+			if (return_value == false) {
+//				cpu_irq_restore(flags);
+				return false;
+			}
+		} else {
+			/* No DATA phase */
+			return_value = ohci_add_td_control(TD_PID_IN, payload, 0);
+			if (return_value == false) {
+//				cpu_irq_restore(flags);
+				return false;
+			}
 		}
 	}
 
@@ -464,7 +540,9 @@ bool uhd_setup_request(
 	callback_setup_end_para.payload_trans = payload_size;
 	callback_setup_end_func = callback_end;
 
-	cpu_irq_restore(flags);
+	// wait for the transfer complete
+//	while (callback_setup_end_func);
+//	cpu_irq_restore(flags);
 
 	return true;
 }
@@ -483,18 +561,8 @@ bool uhd_ep_run(usb_add_t add,
 
 	flags = cpu_irq_save();
 
-	// No job running. Let's setup a new one.
-	// Fill structure
-//	ptr_job->buf = buf;
-//	ptr_job->buf_size = buf_size;
-//	ptr_job->nb_trans = 0;
-//	ptr_job->timeout = timeout;
-//	ptr_job->b_shortpacket = b_shortpacket;
-//	ptr_job->call_end = callback;
-//	if ((Is_uhd_pipe_int(pipe) || Is_uhd_pipe_iso(pipe))
-//			&& (Is_uhd_pipe_out(pipe))) {
-//		ptr_job->b_periodic_start = true;
-//	}
+	/* First stop any processing */
+//	UHP->HcControl &= ~(HC_CONTROL_BLE|HC_CONTROL_PLE|HC_CONTROL_IE);
 
 	return_value = ohci_add_td_non_control(endp, buf, buf_size);
 	if (return_value == false) {
@@ -507,6 +575,9 @@ bool uhd_ep_run(usb_add_t add,
 	callback_trans_end_para.status = UHD_TRANS_NOERROR;
 	callback_trans_end_para.nb_transfered = buf_size;
 	callback_trans_end_func = callback;
+
+	/* Wait 5ms before restarting transfer */
+//	uhd_transfer_start = 5;
 
 	cpu_irq_restore(flags);
 
