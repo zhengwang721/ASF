@@ -55,7 +55,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_group SAM System Driver (SYSTEM)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of the device's system relation functionality, necessary for
  * the basic device operation. This is not limited to a single peripheral, but
  * extends across multiple hardware peripherals.
@@ -65,9 +65,9 @@ extern "C" {
  * - PM (Power Manager)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_system_prerequisites
@@ -549,7 +549,7 @@ void system_init(void);
  *	</tr>
  *	<tr>
  *		<td>D</td>
- *		<td>04/2014</td>
+ *		<td>11/2014</td>
  *		<td>Added support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>

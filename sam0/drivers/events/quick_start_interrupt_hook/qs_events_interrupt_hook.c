@@ -111,7 +111,8 @@ static void configure_tc(struct tc_module *tc_instance)
 
 }
 
-static void configure_event_interrupt(struct events_resource *resource, struct events_hook *hook)
+static void configure_event_interrupt(struct events_resource *resource,
+		struct events_hook *hook)
 {
 	//! [setup_12]
 	events_create_hook(hook, event_counter);
