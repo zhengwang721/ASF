@@ -391,4 +391,20 @@ iram_size_t uhi_cdc_write_buf(uint8_t port, const void* buf, iram_size_t size);
  * \include example/samd21j18a_samd21_xplained_pro/conf_board.h
  */
 
+/**
+ * \page asfdoc_uhi_cdc_document_revision_history Document Revision History
+ *
+ * <table>
+ * <tr>
+ *    <th>Doc. Rev.</td>
+ *    <th>Date</td>
+ *    <th>Comments</td>
+ * </tr>
+ * <tr>
+ *    <td>A</td>
+ *    <td>11/2014</td>
+ *    <td>Initial release.</td>
+ * </tr>
+ * </table>
+ */
 
