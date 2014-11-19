@@ -86,7 +86,7 @@
  * Callback function:
  * \snippet qs_spi_slave_callback.c callback
  *
- * Add to user application %main():
+ * Add to user application \c main():
  * \snippet qs_spi_slave_callback.c main_start
  *
  * \subsection asfdoc_sam0_sercom_spi_slave_callback_use_workflow Workflow

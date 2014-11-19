@@ -82,7 +82,7 @@
  * A function for configuring the SPI:
  * \snippet qs_spi_master_basic.c configure_spi
  *
- * Add to user application %main():
+ * Add to user application \c main():
  * \snippet qs_spi_master_basic.c main_setup
  *
  * \section asfdoc_sam0_sercom_spi_master_basic_use_workflow Workflow

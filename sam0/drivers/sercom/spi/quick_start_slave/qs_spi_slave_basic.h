@@ -79,7 +79,7 @@
  * A function for configuring the SPI.
  * \snippet qs_spi_slave_basic.c configure_spi
  *
- * Add to user application %main():
+ * Add to user application \c main():
  * \snippet qs_spi_slave_basic.c main_start
  *
  * \subsection asfdoc_sam0_sercom_spi_slave_basic_use_workflow Workflow

@@ -89,7 +89,7 @@
  * Callback function:
  * \snippet qs_spi_master_callback.c callback
  *
- * Add to user application %main():
+ * Add to user application \c main():
  * \snippet qs_spi_master_callback.c main_start
  *
  * \section asfdoc_sam0_sercom_spi_master_callback_use_workflow Workflow
