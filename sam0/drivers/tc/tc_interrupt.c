@@ -48,7 +48,7 @@ void *_tc_instances[TC_INST_NUM];
 void _tc_interrupt_handler(uint8_t instance);
 
 /**
- * \brief Registers a callback
+ * \brief Registers a callback.
  *
  * Registers a callback function which is implemented by the user.
  *
@@ -86,7 +86,7 @@ enum status_code tc_register_callback(
 }
 
 /**
- * \brief Unregisters a callback
+ * \brief Unregisters a callback.
  *
  * Unregisters a callback function implemented by the user. The callback should be
  * disabled before it is unregistered.
