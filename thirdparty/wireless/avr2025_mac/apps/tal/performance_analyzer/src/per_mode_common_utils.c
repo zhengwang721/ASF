@@ -441,7 +441,7 @@ void pulse_cw_transmission(void)
 	}
 	uint16_t channel;
 	op_mode = CONTINUOUS_TX_MODE;
-	tal_pib_get(phyCurrentChannel, &channel);
+	tal_pib_get(phyCurrentChannel,(uint8_t *)&channel);
 
 	/* Save all user settings before continuous tx */
 	save_all_settings();
