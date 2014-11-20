@@ -1,4 +1,5 @@
 <asf xmlversion="1.0">
+<asf xmlversion="1.0">
 	<module type="meta" id="common.applications.user_application.sam0_system.user_board.common_samd20" caption="User board project template">
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="config_samd20"/>
@@ -589,17 +590,6 @@
 		<generator value="as5_arm_template"/>
 		<generator value="doxygen"/>
 		<device-support value="atsaml21e17a"/>
-	</project>
-	
-	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsaml21e18a" caption="User board project template for SAML21E18A" type="template">
-		<info type="description" value="summary">
-		User board project template for SAML21E18A devices.
-		</info>
-		<require idref="common.applications.user_application.sam0_system.user_board.common_saml21"/>
-		<require idref="board.user_board.saml21e"/>
-		<generator value="as5_arm_template"/>
-		<generator value="doxygen"/>
-		<device-support value="atsaml21e18a"/>
 	</project>
 	
 	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsaml21g16a" caption="User board project template for SAML21G16A" type="template">
