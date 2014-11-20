@@ -71,4 +71,24 @@
   #error Library does not support the specified device.
 #endif
 
+/**
+  * Chip revision definition for engineering sample.
+  * Should remove for public release.
+  */
+#define SAML21_REV_A
+/*
+    *SAML21 RevA Bug13273*
+    * Bug13273 is present on RevA of SAML21 (bug13273)
+      This bug affects the startup of the device and forces us to keep the part in a so called « Fresh From Fab » state. (for more details on this, see bugzilla and startup logic  state machine : (powerup.vsd)
+
+    * In this Fresh From Fab state, several limitations appear :
+      ** Calibrations are not loaded at startup
+      We need to write the calibrations value into the IPs by software using a specific startup file while they are in testmode.
+      Calibrations will be loaded from factory areas written at production/test.
+      ** The debugger needs to be connected to allow testmodes to be activated.
+      ** BOD33 cannot be disabled or changed.
+      ** No performance level switching is possible, but we can set the voltage regulator value to emulate a given performance level.
+      ** Standby/Backup sleep modes cannot be entered.
+*/
+
 #endif /* _SAML21_ */
