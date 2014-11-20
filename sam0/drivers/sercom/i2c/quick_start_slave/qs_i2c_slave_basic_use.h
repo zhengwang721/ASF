@@ -74,7 +74,7 @@
  * \snippet qs_i2c_slave_basic_use.c run_initialize_i2c
  *
  * \subsection asfdoc_sam0_sercom_i2c_slave_basic_use_setup_workflow Workflow
- * -# Configure and enable module:
+ * -# Configure and enable module.
  *    \snippet qs_i2c_slave_basic_use.c config
  *   -# Create and initialize configuration structure.
  *      \snippet qs_i2c_slave_basic_use.c init_conf
