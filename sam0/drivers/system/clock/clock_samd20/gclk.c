@@ -251,13 +251,13 @@ void system_gclk_gen_disable(
 }
 
 /**
- * \brief Determins if the specified Generic Clock Generator is enabled
+ * \brief Determins if the specified Generic Clock Generator is enabled.
  *
  * \param[in] generator  Generic Clock Generator index to check
  *
  * \return The enabled status.
- * \retval true The Generic Clock Generator is enabled;
- * \retval false The Generic Clock Generator is disabled.
+ * \retval true The Generic Clock Generator is enabled
+ * \retval false The Generic Clock Generator is disabled
  */
 bool system_gclk_gen_is_enabled(
 		const uint8_t generator)
@@ -425,8 +425,8 @@ void system_gclk_chan_disable(
  * \param[in] channel  Generic Clock Channel index
  *
  * \return The enabled status.
- * \retval true The Generic Clock channel is enabled;
- * \retval false The Generic Clock channel is disabled.
+ * \retval true The Generic Clock channel is enabled
+ * \retval false The Generic Clock channel is disabled
  */
 bool system_gclk_chan_is_enabled(
 		const uint8_t channel)
@@ -467,13 +467,13 @@ void system_gclk_chan_lock(
 }
 
 /**
- * \brief Determins if the specified Generic Clock channel is locked
+ * \brief Determins if the specified Generic Clock channel is locked.
  *
  * \param[in] channel  Generic Clock Channel index
  *
  * \return The lock status.
- * \retval true The Generic Clock channel is locked;
- * \retval false The Generic Clock channel is not locked.
+ * \retval true The Generic Clock channel is locked
+ * \retval false The Generic Clock channel is not locked
  */
 bool system_gclk_chan_is_locked(
 		const uint8_t channel)
