@@ -370,16 +370,16 @@ extern "C" {
  * @{
 */
 #if (SAML21) || defined(__DOXYGEN__)
-/** RTC periodic interval interrupt */
+/** RTC periodic interval interrupt. */
 #  define FEATURE_RTC_PERIODIC_INT
-/** RTC prescaler is off */
+/** RTC prescaler is off. */
 #  define FEATURE_RTC_PRESCALER_OFF
-/** RTC clock selection */
+/** RTC clock selection. */
 #  define FEATURE_RTC_CLOCK_SELECTION
-/** General purpose registers*/
+/** General purpose registers. */
 #  define FEATURE_RTC_GENERAL_PURPOSE_REG
 #else
-/** RTC continuously updated  */
+/** RTC continuously updated. */
 #  define FEATURE_RTC_CONTINUOUSLY_UPDATED
 #endif
 /*@}*/
