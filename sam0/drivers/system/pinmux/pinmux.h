@@ -197,12 +197,9 @@
 extern "C" {
 #endif
 
-/**
- * Define pinmux features set according to different device family
- * @{
-*/
+/*@{*/
 #if (SAML21) || defined(__DOXYGEN__)
-/** Output Driver Strength Selection feature support */
+/** Output Driver Strength Selection feature support. */
 #  define FEATURE_SYSTEM_PINMUX_DRIVE_STRENGTH
 #endif
 /*@}*/

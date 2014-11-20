@@ -333,7 +333,7 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *	</tr>
  *	<tr>
  *		<td>NMI</td>
- *		<td>Non-maskable interrupt</td>
+ *		<td>Non-maskable Interrupt</td>
  *	</tr>
  *	<tr>
  *		<td>SERCOM</td>
