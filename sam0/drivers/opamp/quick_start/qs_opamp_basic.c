@@ -50,7 +50,7 @@ void configure_non_inverting_pga_opamp0(void)
 	/** Creates a new configuration structure for the OPAMP0. */
 	//! [setup_1]
 	struct opamp0_config conf;
-	//! [setup_1
+	//! [setup_1]
 
 	/** Initializes OPAMP module. */
 	//! [setup_2]
