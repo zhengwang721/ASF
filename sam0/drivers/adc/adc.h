@@ -159,8 +159,8 @@
  * The ADC supports full 8-bit, 10-bit, or 12-bit resolution. Hardware
  * oversampling and decimation can be used to increase the
  * effective resolution at the expense of throughput. Using oversampling and
- * decimation mode the ADC resolution is increased from 12-bits to an effective
- * 13, 14, 15, or 16-bits. In these modes the conversion rate is reduced, as
+ * decimation mode the ADC resolution is increased from 12-bit to an effective
+ * 13-, 14-, 15-, or 16-bit. In these modes the conversion rate is reduced, as
  * a greater number of samples is used to achieve the increased resolution. The
  * available resolutions and effective conversion rate is listed in
  * \ref asfdoc_sam0_adc_module_conversion_rate "the table below".
@@ -173,19 +173,19 @@
  *		<th>Effective conversion rate</th>
  *	</tr>
  *	<tr>
- *		<td>13-bits</td>
+ *		<td>13-bit</td>
  *		<td>Conversion rate divided by 4</td>
  *	</tr>
  *	<tr>
- *		<td>14-bits</td>
+ *		<td>14-bit</td>
  *		<td>Conversion rate divided by 16</td>
  *	</tr>
  *	<tr>
- *		<td>15-bits</td>
+ *		<td>15-bit</td>
  *		<td>Conversion rate divided by 64</td>
  *	</tr>
  *	<tr>
- *		<td>16-bits</td>
+ *		<td>16-bit</td>
  *		<td>Conversion rate divided by 256</td>
  *	</tr>
  * </table>
@@ -230,7 +230,7 @@
  * the number of samples to accumulate and the division ratio can be set by
  * the configuration struct members \ref adc_config.accumulate_samples and
  * \ref adc_config.divide_result. When using this mode the ADC result register
- * will be set to be 16-bits wide to accommodate the larger result sizes
+ * will be set to be 16-bit wide to accommodate the larger result sizes
  * produced by the accumulator.
  *
  * The effective ADC conversion rate will be reduced by a factor of the number
@@ -247,47 +247,47 @@
  *   </tr>
  *   <tr>
  *     <td>1</td>
- *     <td>12-bits</td>
+ *     <td>12-bit</td>
  *   </tr>
  *   <tr>
  *      <td>2</td>
- *      <td>13-bits</td>
+ *      <td>13-bit</td>
  *   </tr>
  *   <tr>
  *      <td>4</td>
- *      <td>14-bits</td>
+ *      <td>14-bit</td>
  *   </tr>
  *   <tr>
  *      <td>8</td>
- *      <td>15-bits</td>
+ *      <td>15-bit</td>
  *   </tr>
  *   <tr>
  *      <td>16</td>
- *      <td>16-bits</td>
+ *      <td>16-bit</td>
  *   </tr>
  *   <tr>
  *      <td>32</td>
- *      <td>16-bits</td>
+ *      <td>16-bit</td>
  *   </tr>
  *   <tr>
  *      <td>64</td>
- *      <td>16-bits</td>
+ *      <td>16-bit</td>
  *   </tr>
  *   <tr>
  *      <td>128</td>
- *      <td>16-bits</td>
+ *      <td>16-bit</td>
  *   </tr>
  *   <tr>
  *      <td>256</td>
- *      <td>16-bits</td>
+ *      <td>16-bit</td>
  *   </tr>
  *   <tr>
  *      <td>512</td>
- *      <td>16-bits</td>
+ *      <td>16-bit</td>
  *   </tr>
  *   <tr>
  *      <td>1024</td>
- *      <td>16-bits</td>
+ *      <td>16-bit</td>
  *   </tr>
  * </table>
  *
@@ -1005,9 +1005,6 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<td>Initial Release</td>
  * </tr>
  * \else
- *	<tr>
- *		<td>Added support for SAML21</td>
- *	</tr>
  *	<tr>
  *		<td>Added support for SAMR21</td>
  *	</tr>
