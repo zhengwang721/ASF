@@ -487,15 +487,15 @@ enum system_clock_dfll_quick_lock {
 enum system_clock_source {
 	/** Internal 16MHz RC oscillator. */
 	SYSTEM_CLOCK_SOURCE_OSC16M    = GCLK_SOURCE_OSC16M,
-	/** Internal 32kHz RC oscillator. */
+	/** Internal 32KHz RC oscillator. */
 	SYSTEM_CLOCK_SOURCE_OSC32K   = GCLK_SOURCE_OSC32K,
 	/** External oscillator. */
 	SYSTEM_CLOCK_SOURCE_XOSC     = GCLK_SOURCE_XOSC ,
-	/** External 32kHz oscillator. */
+	/** External 32KHz oscillator. */
 	SYSTEM_CLOCK_SOURCE_XOSC32K  = GCLK_SOURCE_XOSC32K,
 	/** Digital Frequency Locked Loop (DFLL). */
 	SYSTEM_CLOCK_SOURCE_DFLL     = GCLK_SOURCE_DFLL48M,
-	/** Internal Ultra Low Power 32kHz oscillator. */
+	/** Internal Ultra Low Power 32KHz oscillator. */
 	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
 	/** Generator input pad. */
 	SYSTEM_CLOCK_SOURCE_GCLKIN     = GCLK_SOURCE_GCLKIN,
@@ -592,9 +592,9 @@ struct system_clock_source_osc16m_config {
  * Internal 32KHz Ultra Low Power oscillator configuration structure.
  */
 struct system_clock_source_osculp32k_config {
-	/** Enable 1kHz output. */
+	/** Enable 1KHz output. */
 	bool enable_1khz_output;
-	/** Enable 32kHz output. */
+	/** Enable 32KHz output. */
 	bool enable_32khz_output;
 	/** Lock configuration after it has been written,
 	 *  a device reset will release the lock. */
