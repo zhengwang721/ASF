@@ -1513,7 +1513,7 @@ void tcc_clear_status(
 }
 
 /**
- * \brief Enable Circular option for double buffered Compare Values.
+ * \brief Enable circular option for double buffered compare values.
  *
  * Enable circular option for the double buffered channel compare values.
  * On each UPDATE condition, the contents of CCBx and CCx are switched, meaning
@@ -1553,7 +1553,7 @@ enum status_code tcc_enable_circular_buffer_compare(
 }
 
 /**
- * \brief Disable Circular option for double buffered Compare Values.
+ * \brief Disable circular option for double buffered compare values.
  *
  * Stop circularing the double buffered compare values.
  *

@@ -949,7 +949,7 @@ enum tcc_wave_polarity {
  * Used when disabling output pattern or when selecting a specific pattern.
  */
 enum tcc_output_pattern {
-	/** SWAP Output pattern is not used. */
+	/** SWAP output pattern is not used. */
 	TCC_OUTPUT_PATTERN_DISABLE,
 	/** Pattern 0 is applied to SWAP output. */
 	TCC_OUTPUT_PATTERN_0,
@@ -960,7 +960,7 @@ enum tcc_output_pattern {
 /**
  * \brief Ramp Operations which are supported in single-slope PWM generation
  *
- * Ramp Operations which are supported in single-slope PWM generation.
+ * Ramp operations which are supported in single-slope PWM generation.
  */
 enum tcc_ramp {
 	/** Default timer/counter PWM operation. */

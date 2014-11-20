@@ -566,11 +566,11 @@ enum tc_callback {
 #define TC_STATUS_COUNT_OVERFLOW     (1UL << 4)
 
 #ifdef FEATURE_TC_DOUBLE_BUFFERED
-/** Channel 0 compare or capture buffer valid */
+/** Channel 0 compare or capture buffer valid. */
 #define TC_STATUS_CHN0_BUFFER_VALID     (1UL << 5)
-/** Channel 1 compare or capture buffer valid */
+/** Channel 1 compare or capture buffer valid. */
 #define TC_STATUS_CHN1_BUFFER_VALID     (1UL << 6)
-/** Period buffer valid */
+/** Period buffer valid. */
 #define TC_STATUS_PERIOD_BUFFER_VALID     (1UL << 7)
 #endif
 /** @} */
@@ -588,7 +588,7 @@ enum tc_compare_capture_channel {
 	TC_COMPARE_CAPTURE_CHANNEL_1,
 };
 
-/** TC wave generation mode*/
+/** TC wave generation mode. */
 #if SAML21
 #define TC_WAVE_GENERATION_NORMAL_FREQ_MODE TC_WAVE_WAVEGEN_NFRQ
 #define TC_WAVE_GENERATION_MATCH_FREQ_MODE  TC_WAVE_WAVEGEN_MFRQ
@@ -716,7 +716,7 @@ enum tc_count_direction {
 	TC_COUNT_DIRECTION_DOWN,
 };
 
-/** Waveform inversion mode*/
+/** Waveform inversion mode. */
 #if SAML21
 #define TC_WAVEFORM_INVERT_CC0_MODE  TC_DRVCTRL_INVEN(1)
 #define TC_WAVEFORM_INVERT_CC1_MODE  TC_DRVCTRL_INVEN(2)
