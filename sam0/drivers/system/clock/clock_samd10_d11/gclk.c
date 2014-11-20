@@ -251,7 +251,7 @@ void system_gclk_gen_disable(
 }
 
 /**
- * \brief Determins if the specified Generic Clock Generator is enabled
+ * \brief Determins if the specified Generic Clock Generator is enabled.
  *
  * \param[in] generator  Generic Clock Generator index to check
  *
@@ -420,7 +420,7 @@ void system_gclk_chan_disable(
 }
 
 /**
- * \brief Determins if the specified Generic Clock channel is enabled
+ * \brief Determins if the specified Generic Clock channel is enabled.
  *
  * \param[in] channel  Generic Clock Channel index
  *
@@ -467,7 +467,7 @@ void system_gclk_chan_lock(
 }
 
 /**
- * \brief Determins if the specified Generic Clock channel is locked
+ * \brief Determins if the specified Generic Clock channel is locked.
  *
  * \param[in] channel  Generic Clock Channel index
  *
