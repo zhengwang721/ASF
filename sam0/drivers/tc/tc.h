@@ -47,7 +47,7 @@
 /**
  * \defgroup asfdoc_sam0_tc_group SAM Timer/Counter Driver (TC)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the timer modules within the device, for waveform
  * generation and timing operations. The following driver API modes are covered
  * by this manual:
@@ -62,10 +62,10 @@
  *  - TC (Timer/Counter)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM L21
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_tc_prerequisites
@@ -157,7 +157,7 @@
  *
  * \subsection asfdoc_sam0_tc_module_overview_tc_size Timer/Counter Size
  * Each timer module can be configured in one of three different counter
- * sizes; 8-, 16-, and 32-bits. The size of the counter determines the maximum
+ * sizes; 8-, 16-, and 32-bit. The size of the counter determines the maximum
  * value it can count to before an overflow occurs and the count is reset back
  * to zero. \ref asfdoc_sam0_tc_count_size_vs_top "The table below" shows the
  * maximum values for each of the possible counter sizes.
@@ -566,17 +566,17 @@ enum tc_callback {
 #define TC_STATUS_COUNT_OVERFLOW     (1UL << 4)
 
 #ifdef FEATURE_TC_DOUBLE_BUFFERED
-/** Channel 0 compare or capture buffer valid */
+/** Channel 0 compare or capture buffer valid. */
 #define TC_STATUS_CHN0_BUFFER_VALID     (1UL << 5)
-/** Channel 1 compare or capture buffer valid */
+/** Channel 1 compare or capture buffer valid. */
 #define TC_STATUS_CHN1_BUFFER_VALID     (1UL << 6)
-/** Period buffer valid */
+/** Period buffer valid. */
 #define TC_STATUS_PERIOD_BUFFER_VALID     (1UL << 7)
 #endif
 /** @} */
 
 /**
- * \brief Index of the compare capture channels
+ * \brief Index of the compare capture channels.
  *
  * This enum is used to specify which capture/compare channel to do
  * operations on.
@@ -588,7 +588,7 @@ enum tc_compare_capture_channel {
 	TC_COMPARE_CAPTURE_CHANNEL_1,
 };
 
-/** TC wave generation mode*/
+/** TC wave generation mode. */
 #if SAML21
 #define TC_WAVE_GENERATION_NORMAL_FREQ_MODE TC_WAVE_WAVEGEN_NFRQ
 #define TC_WAVE_GENERATION_MATCH_FREQ_MODE  TC_WAVE_WAVEGEN_MFRQ
@@ -602,7 +602,7 @@ enum tc_compare_capture_channel {
 #endif
 
 /**
- * \brief TC wave generation mode enum
+ * \brief TC wave generation mode enum.
  *
  * This enum is used to select which mode to run the wave
  * generation in.
@@ -631,7 +631,7 @@ enum tc_wave_generation {
 };
 
 /**
- * \brief Specifies if the counter is 8-, 16-, or 32-bits.
+ * \brief Specifies if the counter is 8-, 16-, or 32-bit.
  *
  * This enum specifies the maximum value it is possible to count to.
  */
@@ -657,7 +657,7 @@ enum tc_counter_size {
 };
 
 /**
- * \brief TC Counter reload action enum
+ * \brief TC Counter reload action enum.
  *
  * This enum specify how the counter and prescaler should reload.
  */
@@ -678,7 +678,7 @@ enum tc_reload_action {
 };
 
 /**
- * \brief TC clock prescaler values
+ * \brief TC clock prescaler values.
  *
  * This enum is used to choose the clock prescaler
  * configuration. The prescaler divides the clock frequency of the TC
@@ -716,7 +716,7 @@ enum tc_count_direction {
 	TC_COUNT_DIRECTION_DOWN,
 };
 
-/** Waveform inversion mode*/
+/** Waveform inversion mode. */
 #if SAML21
 #define TC_WAVEFORM_INVERT_CC0_MODE  TC_DRVCTRL_INVEN(1)
 #define TC_WAVEFORM_INVERT_CC1_MODE  TC_DRVCTRL_INVEN(2)
@@ -850,7 +850,7 @@ struct tc_config {
 	/** When \c true the module is enabled during standby. */
 	bool run_in_standby;
 #if (SAML21)
-	/** Run on demand */
+	/** Run on demand. */
 	bool on_demand;
 #endif
 	/** Specifies either 8-, 16-, or 32-bit counter size. */
@@ -866,7 +866,7 @@ struct tc_config {
 	enum tc_reload_action reload_action;
 
 	/** Specifies which channel(s) to invert the waveform on.
-		For SAML21, it's also used to invert IO input pin*/
+		For SAML21, it's also used to invert IO input pin. */
 	uint8_t waveform_invert_output;
 
 	/** Specifies which channel(s) to enable channel capture
@@ -913,10 +913,10 @@ struct tc_config {
 };
 
 #if TC_ASYNC == true
-/* Forward Declaration for the device instance */
+/* Forward Declaration for the device instance. */
 struct tc_module;
 
-/* Type of the callback functions */
+/* Type of the callback functions. */
 typedef void (*tc_callback_t)(struct tc_module *const module);
 #endif
 
@@ -1366,7 +1366,7 @@ static inline void tc_update_double_buffer(
 
 #ifdef FEATURE_TC_READ_SYNC
 /**
- * \name COUNT read synchronization
+ * \name Count Read Synchronization
  * @{
  */
 
@@ -1629,6 +1629,9 @@ static inline void tc_clear_status(
  *		<th>Changelog</th>
  *	</tr>
  *  <tr>
+ *    <td>Added support for SAML21</td>
+ *  </tr>
+ *  <tr>
  *    <td>Added support for SAMD10/D11</td>
  *  </tr>
  *  <tr>
@@ -1674,6 +1677,11 @@ static inline void tc_clear_status(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>11/2014</td>
+ *		<td>Added support for SAML21.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

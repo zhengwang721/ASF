@@ -119,7 +119,7 @@ const uint8_t _tcc_ow_nums[TCC_INST_NUM] = TCC_OW_NUMS;
 /**
  * \internal Find the index of the given TCC module instance.
  *
- * \param[in] The TCC module instance pointer.
+ * \param[in] The TCC module instance pointer
  *
  * \return Index of the given TCC module instance.
  */
@@ -259,7 +259,7 @@ void tcc_get_config_defaults(
 
 
 /**
- * \brief Build CTRLA register value from configuration
+ * \brief Build CTRLA register value from configuration.
  *
  * \param[in]  module_index The software module instance index
  * \param[in]  config       Pointer to the TCC configuration options struct
@@ -271,7 +271,7 @@ void tcc_get_config_defaults(
  *                                value built and save to buffer
  * \retval STATUS_ERR_INVALID_ARG Invalid parameter found:
  *                                assigned dither mode is invalid for module;
- *                                used capture channel is invalid for module.
+ *                                used capture channel is invalid for module
  */
 static inline enum status_code _tcc_build_ctrla(
 		const uint8_t module_index,
@@ -304,7 +304,7 @@ static inline enum status_code _tcc_build_ctrla(
 }
 
 /**
- * \brief Build CTRLB register value from configuration
+ * \brief Build CTRLB register value from configuration.
  *
  * \param[in]  module_index The software module instance index
  * \param[in]  config       Pointer to the TCC configuration options struct
@@ -328,7 +328,7 @@ static inline void _tcc_build_ctrlb(
 }
 
 /**
- * \brief Build FAULTs register values from configuration
+ * \brief Build FAULTs register values from configuration.
  *
  * \param[in]  module_index The software module instance index
  * \param[in]  config       Pointer to the TCC configuration options struct
@@ -338,7 +338,7 @@ static inline void _tcc_build_ctrlb(
  *                                value built and save to buffer
  * \retval STATUS_ERR_INVALID_ARG Invalid parameter found: assigned fault
  *                                capture channel is invalid; assigned filter
- *                                value is invalid.
+ *                                value is invalid
  */
 static inline enum status_code _tcc_build_faults(
 		const uint8_t module_index,
@@ -374,7 +374,7 @@ static inline enum status_code _tcc_build_faults(
 }
 
 /**
- * \brief Build DRVCTRL register values from configuration
+ * \brief Build DRVCTRL register values from configuration.
  *
  * \param[in]  module_index The software module instance index
  * \param[in]  config       Pointer to the TCC configuration options struct
@@ -383,7 +383,7 @@ static inline enum status_code _tcc_build_faults(
  * \retval STATUS_OK              Configuration values are good and register
  *                                value built and save to buffer
  * \retval STATUS_ERR_INVALID_ARG Invalid parameter found: assigned output line
- *                                is invalid; filter value is invalid.
+ *                                is invalid; filter value is invalid
  */
 static inline enum status_code _tcc_build_drvctrl(
 		const uint8_t module_index,
@@ -421,7 +421,7 @@ static inline enum status_code _tcc_build_drvctrl(
 }
 
 /**
- * \brief Build WAVE & WAVEB register values from configuration
+ * \brief Build WAVE & WAVEB register values from configuration.
  *
  * \param[in]  module_index The software module instance index
  * \param[in]  config       Pointer to the TCC configuration options struct
@@ -432,7 +432,7 @@ static inline enum status_code _tcc_build_drvctrl(
  * \retval STATUS_ERR_INVALID_ARG Invalid parameter found: assigned output line
  *                                is invalid; circular and double buffering
  *                                conflict; assigned function not supported by
- *                                module.
+ *                                module
  */
 static inline enum status_code _tcc_build_waves(
 		const uint8_t module_index,
@@ -1273,7 +1273,7 @@ enum status_code tcc_set_double_buffer_top_values(
 
 
 /**
- * \brief Sets the TCC module waveform output pattern
+ * \brief Sets the TCC module waveform output pattern.
  *
  * Force waveform output line to generate specific pattern (0, 1, or as is).
  *
@@ -1513,7 +1513,7 @@ void tcc_clear_status(
 }
 
 /**
- * \brief Enable Circular option for double buffered Compare Values
+ * \brief Enable circular option for double buffered compare values.
  *
  * Enable circular option for the double buffered channel compare values.
  * On each UPDATE condition, the contents of CCBx and CCx are switched, meaning
@@ -1553,7 +1553,7 @@ enum status_code tcc_enable_circular_buffer_compare(
 }
 
 /**
- * \brief Disable Circular option for double buffered Compare Values
+ * \brief Disable circular option for double buffered compare values.
  *
  * Stop circularing the double buffered compare values.
  *

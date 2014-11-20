@@ -126,6 +126,10 @@
  * \snippet samr21_xplained_pro/conf_quick_start_dma.h definition_feedback
  * \snippet samr21_xplained_pro/conf_quick_start_dma.h definition_dma_compare_trigger
  * \snippet samr21_xplained_pro/conf_quick_start_dma.h definition_dma_capture_trigger
+ * - SAM L21 Xplained Pro.
+ * \snippet saml21_xplained_pro/conf_quick_start_dma.h definition_pwm
+ * \snippet saml21_xplained_pro/conf_quick_start_dma.h definition_feedback
+ * \snippet saml21_xplained_pro/conf_quick_start_dma.h definition_dma_compare_trigger
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tcc_dma.c module_inst
