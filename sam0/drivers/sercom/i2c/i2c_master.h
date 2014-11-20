@@ -230,7 +230,7 @@ struct i2c_master_module {
 	volatile uint16_t buffer_length;
 	/**
 	 * Counter used for bytes left to send in write and to count number of
-	 * obtained bytes in read
+	 * obtained bytes in read.
 	 */
 	volatile uint16_t buffer_remaining;
 	/** Data buffer for packet write and read. */
