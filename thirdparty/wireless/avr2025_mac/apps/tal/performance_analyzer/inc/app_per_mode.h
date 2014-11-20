@@ -193,7 +193,7 @@ typedef struct {
 	uint8_t antenna_selected_on_peer;
 #endif
 
-	uint8_t channel;
+	uint16_t channel;
 	uint8_t channel_page;
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 	uint8_t tx_power_reg;
@@ -201,7 +201,7 @@ typedef struct {
 	int8_t tx_power_dbm;
 	uint8_t trx_state;
 
-	uint8_t phy_frame_length;
+	uint16_t phy_frame_length;
 	uint32_t number_test_frames;
 
 #if (TAL_TYPE == AT86RF233)
@@ -214,7 +214,7 @@ typedef struct {
  *
  */
 typedef struct {
-	uint8_t channel_no;
+	uint16_t channel_no;
 	int8_t p_in;
 } ed_scan_result_t;
 

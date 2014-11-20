@@ -115,7 +115,7 @@ static void stop_pulse_cb(void *callback_parameter);
  */
 void app_reset(void)
 {
-	/* app reset - this is to make the node to restart applicationa as
+	/* app reset - this is to make the node to restart application as
 	 * bootup */
 	set_main_state(INIT, NULL);
 
@@ -207,7 +207,7 @@ void config_per_test_parameters(void)
 	 */
 	curr_trx_config_params.channel = default_trx_config_params.channel
 				= DEFAULT_CHANNEL;
-	pib_value.pib_value_8bit = default_trx_config_params.channel;
+	pib_value.pib_value_16bit = default_trx_config_params.channel;
 	tal_pib_set(phyCurrentChannel,
 			&pib_value);
 
@@ -329,7 +329,7 @@ void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop,uint16_t 
 void configure_pkt_stream_frames(uint16_t frame_len)
 {
 	uint8_t index;
-	uint8_t app_frame_length;
+	uint16_t app_frame_length;
 	uint8_t *frame_ptr;
 	uint8_t *temp_frame_ptr;
 	uint16_t fcf = 0;
@@ -439,7 +439,7 @@ void pulse_cw_transmission(void)
 		//give some time //sriram
 		delay_ms(10);
 	}
-	uint8_t channel;
+	uint16_t channel;
 	op_mode = CONTINUOUS_TX_MODE;
 	tal_pib_get(phyCurrentChannel, &channel);
 

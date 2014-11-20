@@ -287,7 +287,7 @@ static void peer_rsp_send_tx_done_cb(retval_t status, frame_info_t *frame)
  */
 static int send_peer_rsp(uint64_t *dst_addr)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	peer_rsp_t *data;
 

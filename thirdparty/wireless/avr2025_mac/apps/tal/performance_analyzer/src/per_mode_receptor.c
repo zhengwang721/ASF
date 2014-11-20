@@ -234,7 +234,7 @@ void per_mode_receptor_task(void)
  */
 static bool send_range_test_marker_cmd(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	result_req_t *data;
 
@@ -295,7 +295,7 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
 bool send_remote_reply_cmd(uint8_t* serial_buf,uint8_t len)
 {
 	
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 
 	/* Create the payload */
@@ -362,7 +362,7 @@ if(rx_on_mode)
 		uint16_t dest_addr;
 		memcpy(&dest_addr, &mac_frame_info->mpdu[PL_POS_DST_ADDR_START],
 				SHORT_ADDR_LEN);
-		tal_pib_get(macShortAddress, (uint8_t *)&my_addr_temp);
+		tal_pib_get(macShortAddress,(uint8_t*)&my_addr_temp);
 
 		my_addr = (uint16_t)my_addr_temp;
 		/* Check the destination address of the packet is my address  */
@@ -552,6 +552,9 @@ if(rx_on_mode)
 				}
 			}
 		}
+		// Update database
+		curr_trx_config_params.antenna_selected = msg->payload.div_set_req_data.ant_sel;
+		curr_trx_config_params.antenna_diversity = msg->payload.div_set_req_data.status;
 
 		break;
 	}     /* DIV_SET_REQ */
@@ -647,7 +650,7 @@ if(rx_on_mode)
 		remote_cmd_ptr = msg->payload.remote_test_req_data.remote_serial_data;
 		remote_cmd_rx = true;
 		//serial_data_len = *(mac_frame_info->mpdu + 12); sriram 
-		//convert_ota_serial_frame_rx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);
+		//convert_ota_serial_frame_rx(msg->payload.remote_test_req_data.remote_serial_data,remote_cmd_len);
 		break;
 	}
 	case RANGE_TEST_START_PKT:
@@ -747,14 +750,14 @@ if(rx_on_mode)
  */
 static void set_paramter_on_recptor_node(app_payload_t *msg)
 {
-	uint8_t param_val;
+	uint16_t param_val;
 	pib_value_t pib_value;
 
 	switch (msg->payload.set_parm_req_data.param_type) {
 	case CHANNEL: /* Parameter = channel */
 	{
 #ifdef EXT_RF_FRONT_END_CTRL
-		uint8_t chn_before_set;
+		uint16_t chn_before_set;
 		tal_pib_get(phyCurrentChannel, &chn_before_set);
 #endif
 		
@@ -802,7 +805,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 #endif
 	case CHANNEL_PAGE:
 	{
-		param_val = msg->payload.set_parm_req_data.param_value;
+		param_val = (uint8_t)msg->payload.set_parm_req_data.param_value;
 		pib_value.pib_value_8bit = param_val;
 		retval_t status  = tal_pib_set(phyCurrentPage,
 				&pib_value);
@@ -824,7 +827,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 		uint8_t previous_RPC_value;
 #endif
 		/* Get the the received tx power in dBm */
-		param_val = msg->payload.set_parm_req_data.param_value;
+		param_val = (uint8_t)msg->payload.set_parm_req_data.param_value;
 		temp_var = CONV_DBM_TO_phyTransmitPower((int8_t)param_val);
 
 		/* If RPC enabled, disable RPC to change the TX power value
@@ -897,7 +900,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 		uint8_t previous_RPC_value;
 #endif
 		/* get the the received tx power as reg value */
-		param_val = msg->payload.set_parm_req_data.param_value;
+		param_val = (uint8_t)msg->payload.set_parm_req_data.param_value;
 		if (MAC_SUCCESS ==
 				tal_convert_reg_value_to_dBm(param_val,
 				&tx_pwr_dbm)) {
@@ -1128,7 +1131,7 @@ static bool crc_check_ok(frame_info_t *mac_frame_info)
  */
 static void send_result_rsp(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	result_rsp_t *data;
 
@@ -1175,7 +1178,7 @@ static void send_result_rsp(void)
  */
 static void send_peer_info_rsp(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	peer_info_rsp_t *data;
 
@@ -1212,7 +1215,7 @@ static void send_peer_info_rsp(void)
 static void send_range_test_rsp(uint8_t seq_num, uint32_t frame_count,
 		int8_t ed, uint8_t lqi)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	range_tx_t *data;
 
@@ -1265,7 +1268,7 @@ static void get_node_info(peer_info_rsp_t *data)
  */
 static void send_diversity_status_rsp(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	uint8_t temp;
 	div_stat_rsp_t *data;
@@ -1310,7 +1313,7 @@ static void send_diversity_status_rsp(void)
  */
 static void send_crc_status_rsp(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	crc_stat_rsp_t *data;
 

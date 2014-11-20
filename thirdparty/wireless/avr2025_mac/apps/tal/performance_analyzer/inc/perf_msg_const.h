@@ -75,7 +75,7 @@
 #define OCTET_STR_LEN_BYTE_LEN          (1)
 
 #define IDENTIFY_BOARD_CONFIRM_LEN      (19)
-#define PERF_START_CONFIRM_LEN          (21)
+#define PERF_START_CONFIRM_LEN          (23)
 #define PERF_SET_CONFIRM_LEN            (3)
 #define PERF_GET_CONFIRM_LEN            (3)
 #define IDENTIFY_PEER_NODE_CONFIRM_LEN  (2)
@@ -98,8 +98,8 @@
 #define RANGE_TEST_STOP_CONFIRM_LEN     (2)
 #define PER_TEST_END_INDICATION_LEN     (36)
 #define PEER_DISCONNECT_CONFIRM_LEN     (2)
-#define SET_DEFAULT_CONFIG_CONFIRM_LEN  (20)
-#define GET_CURRENT_CONFIG_CONFIRM_LEN  (24)
+#define SET_DEFAULT_CONFIG_CONFIRM_LEN  (22)
+#define GET_CURRENT_CONFIG_CONFIRM_LEN  (26)
 #define RANGE_MEASURE_STATS_CONFIRM     (10)
 
 /* ! \} */
@@ -242,7 +242,7 @@
 #define NUL_VAL                           (0)
 #define START_MODE_PER                    (1)
 #define START_MODE_SINGLE_NODE            (2)
-#define RESULT_SIZE_PER_CHANNEL           (2)
+#define RESULT_SIZE_PER_CHANNEL           (3)
 
 #define START_CWT                         (1)
 #define STOP_CWT                          (0)

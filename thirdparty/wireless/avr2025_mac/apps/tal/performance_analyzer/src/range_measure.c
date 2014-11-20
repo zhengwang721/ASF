@@ -235,7 +235,7 @@ static void range_test_tx_timer_handler_cb(void *parameter)
  */
 static int range_test_frame_tx(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	data_pkt_range_test_t *data;
 

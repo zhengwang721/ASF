@@ -1348,7 +1348,8 @@ void usr_perf_start_confirm(uint8_t status,
 	*msg_buf++ = status;
 	*msg_buf++ = start_mode;
 	/* Copy all configuration parameters */
-	*msg_buf++ = trx_config_params->channel;
+	*msg_buf++ = (uint8_t)trx_config_params->channel;
+	*msg_buf++ = (uint8_t)(trx_config_params->channel>>8);
 	*msg_buf++ = trx_config_params->channel_page;
 	*msg_buf++ = trx_config_params->tx_power_dbm;
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
@@ -1390,6 +1391,7 @@ void usr_perf_start_confirm(uint8_t status,
 	*msg_buf++ = (uint8_t)(trx_config_params->number_test_frames >> 16);
 	*msg_buf++ = (uint8_t)(trx_config_params->number_test_frames >> 24);
 	*msg_buf++ = trx_config_params->phy_frame_length;
+	*msg_buf++ = (uint8_t)(trx_config_params->phy_frame_length>>8);
 
 	/*Peer settings for parameters like CRC and ant diversity */
 #if (ANTENNA_DIVERSITY == 1)
@@ -2185,6 +2187,7 @@ void usr_ed_scan_end_indication(uint8_t no_of_channels,
 	*msg_buf++ = no_of_channels;
 	for (ch_cnt = 0; ch_cnt < no_of_channels; ch_cnt++) {
 		*msg_buf++ = ed_scan_result[ch_cnt].channel_no;
+		*msg_buf++ = (uint8_t)ed_scan_result[ch_cnt].channel_no>>8;
 		*msg_buf++ = ed_scan_result[ch_cnt].p_in;
 	}
 	/* Update the length field  */
@@ -2294,7 +2297,8 @@ void usr_set_default_config_confirm(uint8_t status,
 	/* Copy confirmation payload */
 	*msg_buf++ = status;
 	/* configuration parameters */
-	*msg_buf++ = default_trx_config_params->channel;
+	*msg_buf++ = (uint8_t)default_trx_config_params->channel;
+	*msg_buf++ = (uint8_t)(default_trx_config_params->channel>>8);
 	*msg_buf++ = default_trx_config_params->channel_page;
 	*msg_buf++ = default_trx_config_params->tx_power_dbm;
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
@@ -2342,6 +2346,7 @@ void usr_set_default_config_confirm(uint8_t status,
 		= (uint8_t)(default_trx_config_params->number_test_frames >>
 			24);
 	*msg_buf++ = default_trx_config_params->phy_frame_length;
+	*msg_buf++ = (uint8_t)(default_trx_config_params->phy_frame_length>>8);
 
 	/*Peer settings for parameters like CRC and ant diversity */
 #if (ANTENNA_DIVERSITY == 1)
@@ -2488,7 +2493,8 @@ void usr_get_current_config_confirm(uint8_t status,
 	/* Copy confirmation payload */
 	*msg_buf++ = status;
 	/* configuration parameters */
-	*msg_buf++ = curr_trx_conf_params->channel;
+	*msg_buf++ = (uint8_t)curr_trx_conf_params->channel;
+	*msg_buf++ = (uint8_t)(curr_trx_conf_params->channel>>8);
 	*msg_buf++ = curr_trx_conf_params->channel_page;
 	*msg_buf++ = curr_trx_conf_params->tx_power_dbm;
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
@@ -2532,6 +2538,7 @@ void usr_get_current_config_confirm(uint8_t status,
 	*msg_buf++
 		= (uint8_t)(curr_trx_conf_params->number_test_frames >> 24);
 	*msg_buf++ = curr_trx_conf_params->phy_frame_length;
+	*msg_buf++ = (uint8_t)(curr_trx_conf_params->phy_frame_length>>8);
 
 	/*peer node settings need to be added */
 	/*Peer settings for parameters like CRC and ant diversity */

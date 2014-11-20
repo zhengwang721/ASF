@@ -621,12 +621,12 @@ retval_t transmit_frame(uint8_t dst_addr_mode,
 		uint8_t src_addr_mode,
 		uint8_t msdu_handle,
 		uint8_t *payload,
-		uint8_t payload_length,
+		uint16_t payload_length,
 		uint8_t ack_req)
 {
 	uint8_t i;
 	uint16_t temp_value;
-	uint8_t frame_length;
+	uint16_t frame_length;
 	uint8_t *frame_ptr;
 	uint8_t *temp_frame_ptr;
 	uint16_t fcf = 0;

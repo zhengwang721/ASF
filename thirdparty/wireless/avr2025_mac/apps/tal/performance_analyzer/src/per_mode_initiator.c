@@ -77,7 +77,7 @@
  */
 typedef struct {
 	uint8_t param_type;
-	uint8_t param_value;
+	uint16_t param_value;
 } set_param_cb_t;
 
 /*=====EXTERNALS============================================================*/
@@ -99,7 +99,7 @@ extern trx_config_params_t curr_trx_config_params;
 
 /* === PROTOTYPES ========================================================== */
 static void configure_frame_sending(void);
-static void send_parameters_changed(uint8_t param, uint8_t val);
+static void send_parameters_changed(uint8_t param, uint16_t val);
 static bool send_result_req(void);
 static bool send_peer_info_req(void);
 static void wait_for_reply_timer_handler_cb(void *parameter);
@@ -144,7 +144,7 @@ static bool validate_tx_power(int8_t dbm_value);
 
 static float calculate_time_duration(void);
 static float calculate_net_data_rate(float per_test_duration_sec);
-static void set_channel(uint8_t channel);
+static void set_channel(uint16_t channel);
 static void set_channel_page(uint8_t channel_page);
 static void set_tx_power(uint8_t tx_power_format, int8_t power_value);
 static void config_ack_request(bool config_value);
@@ -161,7 +161,7 @@ static void config_rx_desensitization(bool config_value);
 #endif /* (TAL_TYPE != AT86RF230B) */
 
 static void set_transceiver_state(uint8_t trx_state);
-static void set_phy_frame_length(uint8_t frame_len);
+static void set_phy_frame_length(uint16_t frame_len);
 static bool send_set_default_config_command(void);
 static bool send_per_test_start_cmd(void);
 static bool send_range_test_start_cmd(void);
@@ -191,7 +191,7 @@ static uint32_t frame_access_failure;
 static uint32_t frame_failure;
 static uint32_t frames_to_transmit;
 static set_param_cb_t set_param_cb;
-static uint8_t num_channels;
+static uint16_t num_channels;
 /**
  * This is variable is to keep track of the specific features supported
  */
@@ -222,7 +222,7 @@ static uint32_t range_test_frame_cnt = 0;
 
 /* Size constants for PERformance configuration parameters */
 FLASH_DECLARE(uint8_t perf_config_param_size[]) = {
-	sizeof(uint8_t),            /* channel */
+	sizeof(uint16_t),            /* channel */
 	sizeof(uint8_t),            /* channel page */
 	sizeof(uint8_t),            /* TX power_reg */
 	sizeof(int8_t),             /* TX_power_dBm */
@@ -235,7 +235,7 @@ FLASH_DECLARE(uint8_t perf_config_param_size[]) = {
 	sizeof(uint8_t),            /* Transceiver state */
 	sizeof(uint8_t),            /* CRC on remote node */
 	sizeof(uint32_t),           /* No. of test frames */
-	sizeof(uint8_t),            /* Physical frame length */
+	sizeof(uint16_t),            /* Physical frame length */
 	sizeof(uint8_t),            /* RPC */
 	sizeof(float),              /* ISM frequency */
 };
@@ -917,8 +917,8 @@ static void set_parameter_on_transmitter_node(retval_t status)
 		 * the channel changed from 26 to other channel
 		 */
 #ifdef EXT_RF_FRONT_END_CTRL
-		uint8_t chn_before_set;
-		tal_pib_get(phyCurrentChannel, &chn_before_set);
+		uint16_t chn_before_set;
+		tal_pib_get(phyCurrentChannel, (uint8_t *)&chn_before_set);
 #endif
 
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
@@ -936,7 +936,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 		 */
 		curr_trx_config_params.ism_frequency = 0.0;
 #endif /* End of #if(TAL_TYPE == AT86RF233) */
-		pib_value.pib_value_8bit = set_param_cb.param_value;
+		pib_value.pib_value_16bit = set_param_cb.param_value;
 		tal_pib_set(phyCurrentChannel,
 				&pib_value);
 
@@ -958,7 +958,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 #endif /* End of EXT_RF_FRONT_END_CTRL */
 
 		/* Send the confirmation for Set request as Success */
-		param_value.param_value_8bit = set_param_cb.param_value;
+		param_value.param_value_16bit = set_param_cb.param_value;
 		usr_perf_set_confirm(MAC_SUCCESS,
 				PARAM_CHANNEL,
 				&param_value);
@@ -1023,7 +1023,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 	case CHANNEL_PAGE:
 	{
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
-		uint8_t channel;
+		uint16_t channel;
 		int8_t dbm_val = 0;
 		uint8_t tx_pwr = 0;
 #endif
@@ -1590,7 +1590,7 @@ void per_mode_initiator_ed_end_cb(uint8_t energy_level)
 	uint8_t ch_cnt;
 	pib_value_t pib_value_temp;
 	static uint8_t p_in_index;
-	uint8_t channel;
+	uint16_t channel;
 
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 	uint8_t page;
@@ -1598,7 +1598,7 @@ void per_mode_initiator_ed_end_cb(uint8_t energy_level)
 	static ed_scan_result_t ed_scan_result[16];
 
 	/* Print result */
-	tal_pib_get(phyCurrentChannel, &channel);
+	tal_pib_get(phyCurrentChannel, (uint8_t *)&channel);
 
 #ifndef TRX_REG_RAW_VALUE
 	/* Re-scale ED value to Pin(dBm)- for more details refer tal_ed.c */
@@ -1698,7 +1698,7 @@ void perf_set_req(uint8_t set_param_type, param_value_t *param_value)
 	switch (set_param_type) { /* parameter type */
 	case PARAM_CHANNEL: /* Channel Set request */
 	{
-		set_channel(param_value->param_value_8bit);
+		set_channel(param_value->param_value_16bit);
 	}
 	break;
 
@@ -1816,7 +1816,7 @@ void perf_set_req(uint8_t set_param_type, param_value_t *param_value)
 	case PARAM_PHY_FRAME_LENGTH:  /* Set PHY frame length for PER test
 		                       * request */
 	{
-		set_phy_frame_length(param_value->param_value_8bit);
+		set_phy_frame_length(param_value->param_value_16bit);
 	}
 	break;
 
@@ -1857,10 +1857,10 @@ void perf_get_req(uint8_t param_type_data)
 	switch (param_type_data) { /* parameter type */
 	case PARAM_CHANNEL: /* Channel Get request */
 	{
-		uint8_t current_channel = 0;
-		tal_pib_get(phyCurrentChannel, &current_channel);
+		uint16_t current_channel = 0;
+		tal_pib_get(phyCurrentChannel, (uint8_t *)&current_channel);
 		/* Send Get confirmation with status SUCCESS */
-		param_value.param_value_8bit = (uint8_t)current_channel;
+		param_value.param_value_16bit = (uint16_t)current_channel;
 		usr_perf_get_confirm(MAC_SUCCESS, PARAM_CHANNEL,
 				&param_value);
 	}
@@ -2014,7 +2014,7 @@ void perf_get_req(uint8_t param_type_data)
 		                       * request */
 	{
 		/* Send get confirmation with status SUCCESS */
-		param_value.param_value_8bit
+		param_value.param_value_16bit
 			= curr_trx_config_params.phy_frame_length;
 		usr_perf_get_confirm(MAC_SUCCESS,
 				PARAM_PHY_FRAME_LENGTH,
@@ -2064,7 +2064,7 @@ void perf_get_req(uint8_t param_type_data)
  *
  * \param frame_len Length of the frame to be set
  */
-static void set_phy_frame_length(uint8_t frame_len)
+static void set_phy_frame_length(uint16_t frame_len)
 {
 	param_value_t param_value;
 	/* Check for maximum allowed IEEE 802.15.4 frame length. */
@@ -2080,7 +2080,7 @@ static void set_phy_frame_length(uint8_t frame_len)
 	configure_frame_sending();
 
 	/* Send Set confirmation with status SUCCESS */
-	param_value.param_value_8bit = curr_trx_config_params.phy_frame_length;
+	param_value.param_value_16bit = curr_trx_config_params.phy_frame_length;
 	usr_perf_set_confirm(MAC_SUCCESS,
 			PARAM_PHY_FRAME_LENGTH,
 			&param_value);
@@ -2091,7 +2091,7 @@ static void set_phy_frame_length(uint8_t frame_len)
  *
  * \param channel channel number to be set
  */
-static void set_channel(uint8_t channel)
+static void set_channel(uint16_t channel)
 {
 	uint32_t supported_channels;
 	param_value_t param_value;
@@ -2109,7 +2109,7 @@ static void set_channel(uint8_t channel)
 			 * the channel changed from 26 to other channel
 			 */
 #ifdef EXT_RF_FRONT_END_CTRL
-			uint8_t chn_before_set;
+			uint16_t chn_before_set;
 			tal_pib_get(phyCurrentChannel, &chn_before_set);
 #endif
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
@@ -2120,7 +2120,7 @@ static void set_channel(uint8_t channel)
 			/* Set the CC_BAND to zero before setting the channel */
 			tal_set_frequency_regs(CC_BAND_0, CC_NUMBER_0);
 #endif
-			pib_value.pib_value_8bit = channel;
+			pib_value.pib_value_16bit = channel;
 			tal_pib_set(phyCurrentChannel, &pib_value);
 
 			/* Update the database */
@@ -2142,14 +2142,14 @@ static void set_channel(uint8_t channel)
 #endif
 
 			/* Send Set confirmation with status SUCCESS */
-			param_value.param_value_8bit = channel;
+			param_value.param_value_16bit = channel;
 			usr_perf_set_confirm(MAC_SUCCESS,
 					PARAM_CHANNEL,
 					&param_value);
 		}
 	} else {
 		/* Send Set confirmation with status MAC_INVALID_PARAMETER */
-		param_value.param_value_8bit = channel;
+		param_value.param_value_16bit = channel;
 		usr_perf_set_confirm(VALUE_OUT_OF_RANGE,
 				PARAM_CHANNEL,
 				&param_value);
@@ -2192,7 +2192,7 @@ static void set_channel_page(uint8_t channel_page)
 						channel_page);
 			} else {
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
-				uint8_t channel;
+				uint16_t channel;
 				int8_t dbm_val = 0;
 				uint8_t tx_pwr = 0;
 #endif
@@ -2442,7 +2442,7 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
  */
 void start_ed_scan(uint8_t ed_scan_duration, uint32_t channel_sel_mask)
 {
-	uint8_t first_channel = 0;
+	uint16_t first_channel = 0;
 	uint8_t ch_cnt;
 	pib_value_t pib_value;
 
@@ -2490,9 +2490,9 @@ void start_ed_scan(uint8_t ed_scan_duration, uint32_t channel_sel_mask)
 				reverse_float(scan_time));
 	}
 
-	uint8_t temp_var;
-	tal_pib_get(phyCurrentChannel, &temp_var);
-	channel_before_scan = (uint8_t)temp_var;
+	uint16_t temp_var;
+	tal_pib_get(phyCurrentChannel, (uint8_t *)&temp_var);
+	channel_before_scan = (uint16_t)temp_var;
 
 	/* Identify first channel */
 	for (ch_cnt = MIN_CHANNEL; ch_cnt <= MAX_CHANNEL; ch_cnt++) {
@@ -2502,7 +2502,7 @@ void start_ed_scan(uint8_t ed_scan_duration, uint32_t channel_sel_mask)
 			break;
 		}
 	}
-	pib_value.pib_value_8bit = first_channel;
+	pib_value.pib_value_16bit = first_channel;
 	tal_pib_set(phyCurrentChannel, &pib_value);
 	tal_ed_start(scan_duration);
 }
@@ -2582,7 +2582,7 @@ void get_current_configuration(void)
 	 * channel */
 	if (curr_trx_config_params.channel != INVALID_VALUE) {
 		/* Channel configuration */
-		pib_value.pib_value_8bit = curr_trx_config_params.channel;
+		pib_value.pib_value_16bit = curr_trx_config_params.channel;
 		tal_pib_set(phyCurrentChannel,
 				&pib_value);
 	} else { /* The transceiver was currently set to ism frequency */
@@ -2631,8 +2631,8 @@ void get_current_configuration(void)
 	tal_set_tx_pwr(REGISTER_VALUE, curr_trx_config_params.tx_power_reg);
 #endif
 
-	/* trx state configuration */
-	if (RX_AACK_ON == curr_trx_config_params.trx_state) {
+    /* trx state configuration */
+    if (RX_AACK_ON == curr_trx_config_params.trx_state) {
 		set_trx_state(CMD_RX_AACK_ON);
 	} else if (TRX_OFF == curr_trx_config_params.trx_state) {
 		set_trx_state(CMD_TRX_OFF);
@@ -2839,6 +2839,8 @@ static void config_antenna_diversity_peer_node(uint8_t config_value)
 			return;
 		}
 		}
+		
+		
 		/* Diversity set request sent successfully  */
 		if (send_diversity_set_req(div_msg)) {
 			op_mode = DIVERSITY_SET_REQ;
@@ -3101,7 +3103,7 @@ void stop_range_test(void)
 static void configure_frame_sending(void)
 {
 	uint8_t index;
-	uint8_t app_frame_length;
+	uint16_t app_frame_length;
 	uint8_t *frame_ptr;
 	uint8_t *temp_frame_ptr;
 	uint16_t fcf = 0;
@@ -3196,7 +3198,7 @@ static void configure_frame_sending(void)
 static void configure_range_test_frame_sending(void)
 {
 	uint8_t index;
-	uint8_t app_frame_length;
+	uint16_t app_frame_length;
 	uint8_t *frame_ptr;
 	uint8_t *temp_frame_ptr;
 	uint16_t fcf = 0;
@@ -3311,9 +3313,9 @@ static void configure_range_test_frame_sending(void)
  * \param val    Value of the parameter being modified
  *
  */
-static void send_parameters_changed(uint8_t param, uint8_t val)
+static void send_parameters_changed(uint8_t param, uint16_t val)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	set_parm_req_t *data;
 
@@ -3348,7 +3350,7 @@ static void send_parameters_changed(uint8_t param, uint8_t val)
 
 static bool send_per_test_start_cmd(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	result_req_t *data;
 
@@ -3385,7 +3387,7 @@ static bool send_per_test_start_cmd(void)
  */
 static bool send_range_test_start_cmd(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	result_req_t *data;
 
@@ -3422,7 +3424,7 @@ static bool send_range_test_start_cmd(void)
  */
 static bool send_range_test_stop_cmd(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	result_req_t *data;
 
@@ -3460,7 +3462,7 @@ static bool send_range_test_stop_cmd(void)
 static bool send_range_test_marker_rsp(void)
 {
 	static uint8_t marker_seq_num;
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	result_req_t *data;
 
@@ -3502,7 +3504,7 @@ static bool send_range_test_marker_rsp(void)
  */
 static bool send_result_req(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	result_req_t *data;
 
@@ -3562,7 +3564,7 @@ static void get_diversity_settings_peer_node(void)
  */
 static bool send_diversity_status_req(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	div_stat_req_t *data;
 
@@ -3602,7 +3604,7 @@ static bool send_diversity_status_req(void)
  */
 static bool send_diversity_set_req(div_set_req_t div_msg)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 
 	/* Create the payload */
@@ -3658,7 +3660,7 @@ static void get_crc_settings_peer_node(void)
  */
 static bool send_crc_status_req(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	crc_stat_req_t *data;
 
@@ -3699,7 +3701,7 @@ static bool send_crc_status_req(void)
  */
 static bool send_crc_set_req(crc_set_req_t crc_msg)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 
 	/* Create the payload */
@@ -3736,7 +3738,7 @@ static bool send_crc_set_req(crc_set_req_t crc_msg)
  */
 static bool send_identify_command(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 
 	/* Create the payload */
@@ -3770,7 +3772,7 @@ static bool send_identify_command(void)
  */
 static bool send_disconnect_command(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 
 	/* Create the payload */
@@ -3803,7 +3805,7 @@ static bool send_disconnect_command(void)
  */
 static bool send_peer_info_req(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 
 	/* Create the payload */
@@ -3832,7 +3834,7 @@ static bool send_peer_info_req(void)
 void send_remote_cmd(uint8_t* serial_buf,uint8_t len,bool ack_req)
 {
 	
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 
 	/* Create the payload */
@@ -3872,7 +3874,7 @@ void send_remote_cmd(uint8_t* serial_buf,uint8_t len,bool ack_req)
  */
 static bool send_set_default_config_command(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 
 	/* Create the payload */

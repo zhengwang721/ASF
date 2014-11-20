@@ -272,7 +272,7 @@ extern retval_t transmit_frame( uint8_t dst_addr_mode,
 		uint8_t src_addr_mode,
 		uint8_t msdu_handle,
 		uint8_t *payload,
-		uint8_t payload_length,
+		uint16_t payload_length,
 		uint8_t ack_req);
 
 #ifdef __cplusplus
