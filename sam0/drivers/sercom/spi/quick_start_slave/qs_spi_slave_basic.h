@@ -79,13 +79,13 @@
  * A function for configuring the SPI.
  * \snippet qs_spi_slave_basic.c configure_spi
  *
- * Add to user application \c main():
+ * Add to user application \c main().
  * \snippet qs_spi_slave_basic.c main_start
  *
  * \subsection asfdoc_sam0_sercom_spi_slave_basic_use_workflow Workflow
  * -# Initialize system.
  *    \snippet qs_spi_slave_basic.c system_init
- * -# Setup the SPI:
+ * -# Setup the SPI.
  *    \snippet qs_spi_slave_basic.c run_config
  *   -# Create configuration struct.
  *      \snippet qs_spi_slave_basic.c config
@@ -114,7 +114,7 @@
  *
  * \section asfdoc_sam0_sercom_spi_slave_basic_use_case Use Case
  * \subsection asfdoc_sam0_sercom_spi_slave_basic_use_case_code Code
- * Add the following to your user application \c main():
+ * Add the following to your user application \c main().
  * \snippet qs_spi_slave_basic.c main_use_case
  * \subsection asfdoc_sam0_sercom_spi_slave_basic_use_case_workflow Workflow
  * -# Write buffer to SPI master. Placed in a loop to retry in case of a

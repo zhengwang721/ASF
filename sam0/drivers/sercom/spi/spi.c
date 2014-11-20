@@ -163,7 +163,7 @@ static void _spi_clear_tx_complete_flag(
  * \param[in]  config  Pointer to the configuration struct
  *
  * \return The status of the configuration.
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided
  * \retval STATUS_OK               If the configuration was written
  */
 static enum status_code _spi_set_config(
@@ -311,7 +311,7 @@ static enum status_code _spi_set_config(
  * \param[in]  config  Pointer to the configuration struct
  *
  * \return The status of the configuration.
- * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided.
+ * \retval STATUS_ERR_INVALID_ARG  If invalid argument(s) were provided
  * \retval STATUS_ERR_DENIED       If configuration was different from previous
  * \retval STATUS_OK               If the configuration was written
  */
