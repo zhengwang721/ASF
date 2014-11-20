@@ -1,5 +1,4 @@
 <asf xmlversion="1.0">
-<asf xmlversion="1.0">
 	<module type="meta" id="common.applications.user_application.sam0_system.user_board.common_samd20" caption="User board project template">
 		<info type="gui-flag" value="move-to-root"/>
 		<build type="include-path" value="config_samd20"/>
