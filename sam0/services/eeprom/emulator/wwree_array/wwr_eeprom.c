@@ -602,7 +602,7 @@ enum status_code wwr_eeprom_emulator_get_parameters(
 /**
  * \brief Initializes the WWR EEPROM Emulator service
  *
- * Initializes the emulated WWR EEPROM memory space; if the emulated WWR EEPROM memory
+ * Initializes the emulated WWR EEPROM memory space, if the emulated WWR EEPROM memory
  * has not been previously initialized, it will need to be explicitly formatted
  * via \ref wwr_eeprom_emulator_erase_memory(). The WWR EEPROM memory space will \b not
  * be automatically erased by the initialization function, so that partial data
