@@ -1034,7 +1034,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 		/* update the data base with this value */
 		curr_trx_config_params.channel_page = set_param_cb.param_value;
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
-		tal_pib_get(phyCurrentChannel, &channel);
+		tal_pib_get(phyCurrentChannel,(uint8_t *)&channel);
 		curr_trx_config_params.channel = channel;
 
 		tal_pib_get(phyTransmitPower, &tx_pwr);
@@ -2204,7 +2204,8 @@ static void set_channel_page(uint8_t channel_page)
 				curr_trx_config_params.channel_page
 					= channel_page;
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
-				tal_pib_get(phyCurrentChannel, &channel);
+				tal_pib_get(phyCurrentChannel,(uint8_t *)
+				 &channel);
 				curr_trx_config_params.channel = channel;
 				tal_pib_get(phyTransmitPower, &tx_pwr);
 				dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
