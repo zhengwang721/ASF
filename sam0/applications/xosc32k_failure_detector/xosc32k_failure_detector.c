@@ -87,10 +87,10 @@
  *
  * \section appdoc_sam0_xosc32k_fail_detect_usageinfo Usage
  * Connect an oscilloscope to PA28 of the SAM D20/D21 or PB22 of SAMR21 or PA08
- * of SAM D10/D11 or PA27 of SAML21 Xplained Pro. Run the example application, and press and hold
- * the board button to turn off the external XOSC32K crystal clock source to observe
- * the fail-over to the internal clock source. Releasing the button will re-enable
- * the external crystal.
+ * of SAM D10/D11 or PA27 of SAML21 Xplained Pro. Run the example application, and 
+ * press and hold the board button to turn off the external XOSC32K crystal clock 
+ * source to observe the fail-over to the internal clock source. Releasing the 
+ * button will re-enable the external crystal.
  *
  * The board LED will be turned on when the external crystal is used, and
  *  will be turned off when the internal RC is used due to a crystal failure
@@ -116,7 +116,7 @@
 #define GCLK_GENERATOR_XOSC32K GCLK_GENERATOR_2
 /** Generator index configured to source from the internal OSC32K oscillator. */
 #define GCLK_GENERATOR_OSC32K  GCLK_GENERATOR_1
-/** If \c true, the CPU clock will be routed out to the PA27 GPIO pin */
+/** If \c true, the CPU clock will be routed out to GPIO pin */
 #define ENABLE_CPU_CLOCK_OUT   true
 
 /** Software instance of the XOSC32K timer */
