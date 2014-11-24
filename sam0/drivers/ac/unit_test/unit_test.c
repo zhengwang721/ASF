@@ -119,9 +119,17 @@
 /* Theoretical DAC value for 0.0V output*/
 #define DAC_VAL_ZERO_VOLT   0
 /* Theoretical DAC value for 0.5V output*/
-#define DAC_VAL_HALF_VOLT   512
+#if (SAML21)
+#  define DAC_VAL_HALF_VOLT   620
+#else
+#  define DAC_VAL_HALF_VOLT   512
+#endif
 /* Theoretical DAC value for 1.0V output*/
-#define DAC_VAL_ONE_VOLT    1023
+#if (SAML21)
+#  define DAC_VAL_ONE_VOLT    1241
+#else
+#  define DAC_VAL_ONE_VOLT    1023
+#endif
 
 /* Structure for UART module connected to EDBG (used for unit test output) */
 struct usart_module cdc_uart_module;
