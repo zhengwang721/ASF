@@ -50,9 +50,9 @@
  * \note If the pin direction is set as an output, the pull-up/pull-down input
  *       configuration setting is ignored.
  *
- * \param[in] port      Base of the PORT module to configure.
- * \param[in] pin_mask  Mask of the port pin to configure.
- * \param[in] config    Configuration settings for the pin.
+ * \param[in] port      Base of the PORT module to configure
+ * \param[in] pin_mask  Mask of the port pin to configure
+ * \param[in] config    Configuration settings for the pin
  */
 static void _system_pinmux_config(
 		PortGroup *const port,
@@ -151,8 +151,8 @@ static void _system_pinmux_config(
  * \note If the pin direction is set as an output, the pull-up/pull-down input
  *       configuration setting is ignored.
  *
- * \param[in] gpio_pin  Index of the GPIO pin to configure.
- * \param[in] config    Configuration settings for the pin.
+ * \param[in] gpio_pin  Index of the GPIO pin to configure
+ * \param[in] config    Configuration settings for the pin
  */
 void system_pinmux_pin_set_config(
 		const uint8_t gpio_pin,
@@ -173,9 +173,9 @@ void system_pinmux_pin_set_config(
  * \note If the pin direction is set as an output, the pull-up/pull-down input
  *       configuration setting is ignored.
  *
- * \param[in] port      Base of the PORT module to configure.
- * \param[in] mask      Mask of the port pin(s) to configure.
- * \param[in] config    Configuration settings for the pin.
+ * \param[in] port      Base of the PORT module to configure
+ * \param[in] mask      Mask of the port pin(s) to configure
+ * \param[in] config    Configuration settings for the pin
  */
 void system_pinmux_group_set_config(
 		PortGroup *const port,
@@ -198,9 +198,9 @@ void system_pinmux_group_set_config(
  * control when the physical I/O pin value is sampled and
  * stored inside the microcontroller.
  *
- * \param[in] port     Base of the PORT module to configure.
- * \param[in] mask     Mask of the port pin(s) to configure.
- * \param[in] mode     New pin sampling mode to configure.
+ * \param[in] port     Base of the PORT module to configure
+ * \param[in] mask     Mask of the port pin(s) to configure
+ * \param[in] mode     New pin sampling mode to configure
  */
 void system_pinmux_group_set_input_sample_mode(
 		PortGroup *const port,
@@ -224,9 +224,9 @@ void system_pinmux_group_set_input_sample_mode(
  * control the speed at which the physical output pin can react to
  * logical changes of the I/O pin value.
  *
- * \param[in] port     Base of the PORT module to configure.
- * \param[in] mask     Mask of the port pin(s) to configure.
- * \param[in] mode     New pin slew rate mode to configure.
+ * \param[in] port     Base of the PORT module to configure
+ * \param[in] mask     Mask of the port pin(s) to configure
+ * \param[in] mode     New pin slew rate mode to configure
  */
 void system_pinmux_group_set_output_slew_rate(
     PortGroup *const port,
@@ -255,9 +255,9 @@ void system_pinmux_group_set_output_slew_rate(
  * Configures the output drive strength for a group of pins, to
  * control the amount of current the pad is able to sink/source.
  *
- * \param[in] port     Base of the PORT module to configure.
- * \param[in] mask     Mask of the port pin(s) to configure.
- * \param[in] mode     New output driver strength mode to configure.
+ * \param[in] port     Base of the PORT module to configure
+ * \param[in] mask     Mask of the port pin(s) to configure
+ * \param[in] mode     New output driver strength mode to configure
  */
 void system_pinmux_group_set_output_strength(
     PortGroup *const port,
@@ -286,9 +286,9 @@ void system_pinmux_group_set_output_strength(
  * Configures the output driver mode for a group of pins, to
  * control the pad behavior.
  *
- * \param[in] port Base of the PORT module to configure.
- * \param[in] mask Mask of the port pin(s) to configure.
- * \param[in] mode New pad output driver mode to configure.
+ * \param[in] port Base of the PORT module to configure
+ * \param[in] mask Mask of the port pin(s) to configure
+ * \param[in] mode New pad output driver mode to configure
  */
 void system_pinmux_group_set_output_drive(
     PortGroup *const port,

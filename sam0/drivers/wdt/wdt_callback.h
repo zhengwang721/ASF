@@ -56,7 +56,7 @@ extern "C" {
  * @{
  */
 
-/** \name Callback configuration and initialization
+/** \name Callback Configuration and Initialization
  * @{
  */
 
