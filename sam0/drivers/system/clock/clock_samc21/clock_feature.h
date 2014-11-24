@@ -658,7 +658,7 @@ void system_clock_source_xosc_set_config(
  * \retval true   XOSC clock failure detected
  * \retval false  XOSC clock failure is not detected
  */
-static inline system_clock_xosc_clock_failure_detected(void)
+static inline bool system_clock_xosc_clock_failure_detected(void)
 {
 	return ((OSCCTRL->STATUS.reg & OSCCTRL_STATUS_XOSCFAIL) == OSCCTRL_STATUS_XOSCFAIL);
 }
@@ -676,7 +676,7 @@ static inline system_clock_xosc_clock_failure_detected(void)
  *  or crystal oscillator clock
  */
 
-static inline system_clock_xosc_is_switched(void)
+static inline bool system_clock_xosc_is_switched(void)
 {
 	return ((OSCCTRL->STATUS.reg & OSCCTRL_STATUS_XOSCCKSW) == OSCCTRL_STATUS_XOSCCKSW);
 }
@@ -745,7 +745,7 @@ void system_clock_source_xosc32k_set_config(
  * \retval true   XOSC32K clock failure detected
  * \retval false  XOSC32K clock failure is not detected
  */
-static inline system_clock_xosc32k_clock_failure_detected(void)
+static inline bool system_clock_xosc32k_clock_failure_detected(void)
 {
 	return ((OSC32KCTRL->STATUS.reg & OSC32KCTRL_STATUS_CLKFAIL) == OSC32KCTRL_STATUS_CLKFAIL);
 }
@@ -762,7 +762,7 @@ static inline system_clock_xosc32k_clock_failure_detected(void)
  * \retval false  XOSC32K clock is not switched and provides the external clock 
  *  or crystal oscillator clock
  */
-static inline system_clock_xosc_is_switched(void)
+static inline bool system_clock_xosc32k_is_switched(void)
 {
 	return ((OSC32KCTRL->STATUS.reg & OSC32KCTRL_STATUS_CLKSW) == OSC32KCTRL_STATUS_CLKSW);
 }

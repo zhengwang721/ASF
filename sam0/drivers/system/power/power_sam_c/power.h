@@ -55,7 +55,62 @@ extern "C" {
  * @{
  */
 
+/**
+ * \brief Device sleep modes.
+ *
+ * List of available sleep modes in the device. A table of clocks available in
+ * different sleep modes can be found in \ref asfdoc_sam0_system_module_overview_sleep_mode.
+ */
+enum system_sleepmode {
+	/** IDLE sleep mode. */
+	SYSTEM_SLEEPMODE_IDLE       = PM_SLEEPCFG_SLEEPMODE(0x2),
+	/** STANDBY sleep mode. */
+	SYSTEM_SLEEPMODE_STANDBY    = PM_SLEEPCFG_SLEEPMODE_STANDBY,
+	/** BACKUP sleep mode. */
+	SYSTEM_SLEEPMODE_BACKUP     = PM_SLEEPCFG_SLEEPMODE_BACKUP,
+	/** OFF sleep mode. */
+	SYSTEM_SLEEPMODE_OFF        = PM_SLEEPCFG_SLEEPMODE_OFF,
+};
 
+/**
+ * \name Device Sleep Control
+ * @{
+ */
+
+/**
+ * \brief Set the sleep mode of the device.
+ *
+ * Sets the sleep mode of the device; the configured sleep mode will be entered
+ * upon the next call of the \ref system_sleep() function.
+ *
+ * For an overview of which systems are disabled in sleep for the different
+ * sleep modes, see \ref asfdoc_sam0_system_module_overview_sleep_mode.
+ *
+ * \param[in] sleep_mode  Sleep mode to configure for the next sleep operation
+ */
+static inline void system_set_sleepmode(
+	const enum system_sleepmode sleep_mode)
+{
+	PM->SLEEPCFG.reg = sleep_mode;
+}
+
+/**
+ * \brief Put the system to sleep waiting for interrupt.
+ *
+ * Executes a device DSB (Data Synchronization Barrier) instruction to ensure
+ * all ongoing memory accesses have completed, then a WFI (Wait For Interrupt)
+ * instruction to place the device into the sleep mode specified by
+ * \ref system_set_sleepmode until woken by an interrupt.
+ */
+static inline void system_sleep(void)
+{
+	__DSB();
+	__WFI();
+}
+
+/**
+ * @}
+ */
 /** @} */
 
 #ifdef __cplusplus
