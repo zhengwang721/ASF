@@ -73,7 +73,7 @@ void _system_extint_init(void);
 #endif
 
 /**
- * \brief Initialize system
+ * \brief Initialize system.
  *
  * This function will call the various initialization functions within the
  * system namespace. If a given optional system module is not available, the

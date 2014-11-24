@@ -49,8 +49,8 @@ SEARCH_DIR(.)
 /* Memory Spaces Definitions */
 MEMORY
 {
-  ram    (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00002000
-  lpram  (rwx) : ORIGIN = 0x30000000, LENGTH = 0x00001000
+  ram      (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00002000
+  lpram    (rwx) : ORIGIN = 0x30000000, LENGTH = 0x00001000
   picopram (rwx) : ORIGIN = 0x50000000, LENGTH = 0x00000400
 }
 

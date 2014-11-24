@@ -68,27 +68,27 @@
  * \subsection asfdoc_sam0_sercom_spi_master_basic_use_setup_code Code
  * The following must be added to the user application:
  *
- * A sample buffer to send via SPI:
+ * A sample buffer to send via SPI.
  * \snippet qs_spi_master_basic.c buffer
- * Number of entries in the sample buffer:
+ * Number of entries in the sample buffer.
  * \snippet qs_spi_master_basic.c buf_length
- * GPIO pin to use as Slave Select:
+ * GPIO pin to use as Slave Select.
  * \snippet qs_spi_master_basic.c slave_select_pin
  * A globally available software device instance struct to store the SPI driver
  * state while it is in use.
  * \snippet qs_spi_master_basic.c dev_inst
  * A globally available peripheral slave software device instance struct.
  * \snippet qs_spi_master_basic.c slave_dev_inst
- * A function for configuring the SPI:
+ * A function for configuring the SPI.
  * \snippet qs_spi_master_basic.c configure_spi
  *
- * Add to user application %main():
+ * Add to user application \c main().
  * \snippet qs_spi_master_basic.c main_setup
  *
  * \section asfdoc_sam0_sercom_spi_master_basic_use_workflow Workflow
  * -# Initialize system.
  *    \snippet qs_spi_master_basic.c system_init
- * -# Setup the SPI:
+ * -# Setup the SPI.
  *    \snippet qs_spi_master_basic.c run_config
  *   -# Create configuration struct.
  *      \snippet qs_spi_master_basic.c config
@@ -121,7 +121,7 @@
  *
  * \section asfdoc_sam0_sercom_spi_master_basic_use_case Use Case
  * \subsection asfdoc_sam0_sercom_spi_master_basic_use_case_code Code
- * Add the following to your user application \c main():
+ * Add the following to your user application \c main().
  * \snippet qs_spi_master_basic.c main_use_case
  * \subsection asfdoc_sam0_sercom_spi_master_basic_use_case_workflow Workflow
  * -# Select slave.

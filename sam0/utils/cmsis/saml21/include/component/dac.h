@@ -51,7 +51,7 @@
 /*@{*/
 
 #define DAC_U2244
-#define REV_DAC                     0x100
+#define REV_DAC                     0x101
 
 /* -------- DAC_CTRLA : (DAC Offset: 0x00) (R/W  8) Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -66,13 +66,13 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DAC_CTRLA_OFFSET            0x00         /**< \brief (DAC_CTRLA offset) Control A */
-#define DAC_CTRLA_RESETVALUE        0x00         /**< \brief (DAC_CTRLA reset_value) Control A */
+#define DAC_CTRLA_RESETVALUE        0x00ul       /**< \brief (DAC_CTRLA reset_value) Control A */
 
 #define DAC_CTRLA_SWRST_Pos         0            /**< \brief (DAC_CTRLA) Software Reset */
-#define DAC_CTRLA_SWRST             (0x1u << DAC_CTRLA_SWRST_Pos)
+#define DAC_CTRLA_SWRST             (0x1ul << DAC_CTRLA_SWRST_Pos)
 #define DAC_CTRLA_ENABLE_Pos        1            /**< \brief (DAC_CTRLA) Enable DAC Controller */
-#define DAC_CTRLA_ENABLE            (0x1u << DAC_CTRLA_ENABLE_Pos)
-#define DAC_CTRLA_MASK              0x03u        /**< \brief (DAC_CTRLA) MASK Register */
+#define DAC_CTRLA_ENABLE            (0x1ul << DAC_CTRLA_ENABLE_Pos)
+#define DAC_CTRLA_MASK              0x03ul       /**< \brief (DAC_CTRLA) MASK Register */
 
 /* -------- DAC_CTRLB : (DAC Offset: 0x01) (R/W  8) Control B -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -87,22 +87,22 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DAC_CTRLB_OFFSET            0x01         /**< \brief (DAC_CTRLB offset) Control B */
-#define DAC_CTRLB_RESETVALUE        0x00         /**< \brief (DAC_CTRLB reset_value) Control B */
+#define DAC_CTRLB_RESETVALUE        0x00ul       /**< \brief (DAC_CTRLB reset_value) Control B */
 
 #define DAC_CTRLB_DIFF_Pos          0            /**< \brief (DAC_CTRLB) Differential mode enable */
-#define DAC_CTRLB_DIFF              (0x1u << DAC_CTRLB_DIFF_Pos)
+#define DAC_CTRLB_DIFF              (0x1ul << DAC_CTRLB_DIFF_Pos)
 #define DAC_CTRLB_REFSEL_Pos        1            /**< \brief (DAC_CTRLB) Reference Selection for DAC0/1 */
-#define DAC_CTRLB_REFSEL_Msk        (0x3u << DAC_CTRLB_REFSEL_Pos)
+#define DAC_CTRLB_REFSEL_Msk        (0x3ul << DAC_CTRLB_REFSEL_Pos)
 #define DAC_CTRLB_REFSEL(value)     ((DAC_CTRLB_REFSEL_Msk & ((value) << DAC_CTRLB_REFSEL_Pos)))
-#define   DAC_CTRLB_REFSEL_VREFPU_Val     0x0u   /**< \brief (DAC_CTRLB) External reference unbuffered */
-#define   DAC_CTRLB_REFSEL_VDDANA_Val     0x1u   /**< \brief (DAC_CTRLB) Analog supply */
-#define   DAC_CTRLB_REFSEL_VREFPB_Val     0x2u   /**< \brief (DAC_CTRLB) External reference buffered */
-#define   DAC_CTRLB_REFSEL_INTREF_Val     0x3u   /**< \brief (DAC_CTRLB) Internal bandgap reference */
+#define   DAC_CTRLB_REFSEL_VREFPU_Val     0x0ul  /**< \brief (DAC_CTRLB) External reference unbuffered */
+#define   DAC_CTRLB_REFSEL_VDDANA_Val     0x1ul  /**< \brief (DAC_CTRLB) Analog supply */
+#define   DAC_CTRLB_REFSEL_VREFPB_Val     0x2ul  /**< \brief (DAC_CTRLB) External reference buffered */
+#define   DAC_CTRLB_REFSEL_INTREF_Val     0x3ul  /**< \brief (DAC_CTRLB) Internal bandgap reference */
 #define DAC_CTRLB_REFSEL_VREFPU     (DAC_CTRLB_REFSEL_VREFPU_Val   << DAC_CTRLB_REFSEL_Pos)
 #define DAC_CTRLB_REFSEL_VDDANA     (DAC_CTRLB_REFSEL_VDDANA_Val   << DAC_CTRLB_REFSEL_Pos)
 #define DAC_CTRLB_REFSEL_VREFPB     (DAC_CTRLB_REFSEL_VREFPB_Val   << DAC_CTRLB_REFSEL_Pos)
 #define DAC_CTRLB_REFSEL_INTREF     (DAC_CTRLB_REFSEL_INTREF_Val   << DAC_CTRLB_REFSEL_Pos)
-#define DAC_CTRLB_MASK              0x07u        /**< \brief (DAC_CTRLB) MASK Register */
+#define DAC_CTRLB_MASK              0x07ul       /**< \brief (DAC_CTRLB) MASK Register */
 
 /* -------- DAC_EVCTRL : (DAC Offset: 0x02) (R/W  8) Event Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -127,30 +127,30 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DAC_EVCTRL_OFFSET           0x02         /**< \brief (DAC_EVCTRL offset) Event Control */
-#define DAC_EVCTRL_RESETVALUE       0x00         /**< \brief (DAC_EVCTRL reset_value) Event Control */
+#define DAC_EVCTRL_RESETVALUE       0x00ul       /**< \brief (DAC_EVCTRL reset_value) Event Control */
 
 #define DAC_EVCTRL_STARTEI0_Pos     0            /**< \brief (DAC_EVCTRL) Start Conversion Event Input DAC 0 */
 #define DAC_EVCTRL_STARTEI0         (1 << DAC_EVCTRL_STARTEI0_Pos)
 #define DAC_EVCTRL_STARTEI1_Pos     1            /**< \brief (DAC_EVCTRL) Start Conversion Event Input DAC 1 */
 #define DAC_EVCTRL_STARTEI1         (1 << DAC_EVCTRL_STARTEI1_Pos)
 #define DAC_EVCTRL_STARTEI_Pos      0            /**< \brief (DAC_EVCTRL) Start Conversion Event Input DAC x */
-#define DAC_EVCTRL_STARTEI_Msk      (0x3u << DAC_EVCTRL_STARTEI_Pos)
+#define DAC_EVCTRL_STARTEI_Msk      (0x3ul << DAC_EVCTRL_STARTEI_Pos)
 #define DAC_EVCTRL_STARTEI(value)   ((DAC_EVCTRL_STARTEI_Msk & ((value) << DAC_EVCTRL_STARTEI_Pos)))
 #define DAC_EVCTRL_EMPTYEO0_Pos     2            /**< \brief (DAC_EVCTRL) Data Buffer Empty Event Output DAC 0 */
 #define DAC_EVCTRL_EMPTYEO0         (1 << DAC_EVCTRL_EMPTYEO0_Pos)
 #define DAC_EVCTRL_EMPTYEO1_Pos     3            /**< \brief (DAC_EVCTRL) Data Buffer Empty Event Output DAC 1 */
 #define DAC_EVCTRL_EMPTYEO1         (1 << DAC_EVCTRL_EMPTYEO1_Pos)
 #define DAC_EVCTRL_EMPTYEO_Pos      2            /**< \brief (DAC_EVCTRL) Data Buffer Empty Event Output DAC x */
-#define DAC_EVCTRL_EMPTYEO_Msk      (0x3u << DAC_EVCTRL_EMPTYEO_Pos)
+#define DAC_EVCTRL_EMPTYEO_Msk      (0x3ul << DAC_EVCTRL_EMPTYEO_Pos)
 #define DAC_EVCTRL_EMPTYEO(value)   ((DAC_EVCTRL_EMPTYEO_Msk & ((value) << DAC_EVCTRL_EMPTYEO_Pos)))
 #define DAC_EVCTRL_INVEI0_Pos       4            /**< \brief (DAC_EVCTRL) Enable Invertion of DAC 0 input event */
 #define DAC_EVCTRL_INVEI0           (1 << DAC_EVCTRL_INVEI0_Pos)
 #define DAC_EVCTRL_INVEI1_Pos       5            /**< \brief (DAC_EVCTRL) Enable Invertion of DAC 1 input event */
 #define DAC_EVCTRL_INVEI1           (1 << DAC_EVCTRL_INVEI1_Pos)
 #define DAC_EVCTRL_INVEI_Pos        4            /**< \brief (DAC_EVCTRL) Enable Invertion of DAC x input event */
-#define DAC_EVCTRL_INVEI_Msk        (0x3u << DAC_EVCTRL_INVEI_Pos)
+#define DAC_EVCTRL_INVEI_Msk        (0x3ul << DAC_EVCTRL_INVEI_Pos)
 #define DAC_EVCTRL_INVEI(value)     ((DAC_EVCTRL_INVEI_Msk & ((value) << DAC_EVCTRL_INVEI_Pos)))
-#define DAC_EVCTRL_MASK             0x3Fu        /**< \brief (DAC_EVCTRL) MASK Register */
+#define DAC_EVCTRL_MASK             0x3Ful       /**< \brief (DAC_EVCTRL) MASK Register */
 
 /* -------- DAC_INTENCLR : (DAC Offset: 0x04) (R/W  8) Interrupt Enable Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -172,23 +172,23 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DAC_INTENCLR_OFFSET         0x04         /**< \brief (DAC_INTENCLR offset) Interrupt Enable Clear */
-#define DAC_INTENCLR_RESETVALUE     0x00         /**< \brief (DAC_INTENCLR reset_value) Interrupt Enable Clear */
+#define DAC_INTENCLR_RESETVALUE     0x00ul       /**< \brief (DAC_INTENCLR reset_value) Interrupt Enable Clear */
 
 #define DAC_INTENCLR_UNDERRUN0_Pos  0            /**< \brief (DAC_INTENCLR) Underrun Interrupt Enable for DAC 0 */
 #define DAC_INTENCLR_UNDERRUN0      (1 << DAC_INTENCLR_UNDERRUN0_Pos)
 #define DAC_INTENCLR_UNDERRUN1_Pos  1            /**< \brief (DAC_INTENCLR) Underrun Interrupt Enable for DAC 1 */
 #define DAC_INTENCLR_UNDERRUN1      (1 << DAC_INTENCLR_UNDERRUN1_Pos)
 #define DAC_INTENCLR_UNDERRUN_Pos   0            /**< \brief (DAC_INTENCLR) Underrun Interrupt Enable for DAC x */
-#define DAC_INTENCLR_UNDERRUN_Msk   (0x3u << DAC_INTENCLR_UNDERRUN_Pos)
+#define DAC_INTENCLR_UNDERRUN_Msk   (0x3ul << DAC_INTENCLR_UNDERRUN_Pos)
 #define DAC_INTENCLR_UNDERRUN(value) ((DAC_INTENCLR_UNDERRUN_Msk & ((value) << DAC_INTENCLR_UNDERRUN_Pos)))
 #define DAC_INTENCLR_EMPTY0_Pos     2            /**< \brief (DAC_INTENCLR) Data Buffer 0 Empty Interrupt Enable */
 #define DAC_INTENCLR_EMPTY0         (1 << DAC_INTENCLR_EMPTY0_Pos)
 #define DAC_INTENCLR_EMPTY1_Pos     3            /**< \brief (DAC_INTENCLR) Data Buffer 1 Empty Interrupt Enable */
 #define DAC_INTENCLR_EMPTY1         (1 << DAC_INTENCLR_EMPTY1_Pos)
 #define DAC_INTENCLR_EMPTY_Pos      2            /**< \brief (DAC_INTENCLR) Data Buffer x Empty Interrupt Enable */
-#define DAC_INTENCLR_EMPTY_Msk      (0x3u << DAC_INTENCLR_EMPTY_Pos)
+#define DAC_INTENCLR_EMPTY_Msk      (0x3ul << DAC_INTENCLR_EMPTY_Pos)
 #define DAC_INTENCLR_EMPTY(value)   ((DAC_INTENCLR_EMPTY_Msk & ((value) << DAC_INTENCLR_EMPTY_Pos)))
-#define DAC_INTENCLR_MASK           0x0Fu        /**< \brief (DAC_INTENCLR) MASK Register */
+#define DAC_INTENCLR_MASK           0x0Ful       /**< \brief (DAC_INTENCLR) MASK Register */
 
 /* -------- DAC_INTENSET : (DAC Offset: 0x05) (R/W  8) Interrupt Enable Set -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -210,23 +210,23 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DAC_INTENSET_OFFSET         0x05         /**< \brief (DAC_INTENSET offset) Interrupt Enable Set */
-#define DAC_INTENSET_RESETVALUE     0x00         /**< \brief (DAC_INTENSET reset_value) Interrupt Enable Set */
+#define DAC_INTENSET_RESETVALUE     0x00ul       /**< \brief (DAC_INTENSET reset_value) Interrupt Enable Set */
 
 #define DAC_INTENSET_UNDERRUN0_Pos  0            /**< \brief (DAC_INTENSET) Underrun Interrupt Enable for DAC 0 */
 #define DAC_INTENSET_UNDERRUN0      (1 << DAC_INTENSET_UNDERRUN0_Pos)
 #define DAC_INTENSET_UNDERRUN1_Pos  1            /**< \brief (DAC_INTENSET) Underrun Interrupt Enable for DAC 1 */
 #define DAC_INTENSET_UNDERRUN1      (1 << DAC_INTENSET_UNDERRUN1_Pos)
 #define DAC_INTENSET_UNDERRUN_Pos   0            /**< \brief (DAC_INTENSET) Underrun Interrupt Enable for DAC x */
-#define DAC_INTENSET_UNDERRUN_Msk   (0x3u << DAC_INTENSET_UNDERRUN_Pos)
+#define DAC_INTENSET_UNDERRUN_Msk   (0x3ul << DAC_INTENSET_UNDERRUN_Pos)
 #define DAC_INTENSET_UNDERRUN(value) ((DAC_INTENSET_UNDERRUN_Msk & ((value) << DAC_INTENSET_UNDERRUN_Pos)))
 #define DAC_INTENSET_EMPTY0_Pos     2            /**< \brief (DAC_INTENSET) Data Buffer 0 Empty Interrupt Enable */
 #define DAC_INTENSET_EMPTY0         (1 << DAC_INTENSET_EMPTY0_Pos)
 #define DAC_INTENSET_EMPTY1_Pos     3            /**< \brief (DAC_INTENSET) Data Buffer 1 Empty Interrupt Enable */
 #define DAC_INTENSET_EMPTY1         (1 << DAC_INTENSET_EMPTY1_Pos)
 #define DAC_INTENSET_EMPTY_Pos      2            /**< \brief (DAC_INTENSET) Data Buffer x Empty Interrupt Enable */
-#define DAC_INTENSET_EMPTY_Msk      (0x3u << DAC_INTENSET_EMPTY_Pos)
+#define DAC_INTENSET_EMPTY_Msk      (0x3ul << DAC_INTENSET_EMPTY_Pos)
 #define DAC_INTENSET_EMPTY(value)   ((DAC_INTENSET_EMPTY_Msk & ((value) << DAC_INTENSET_EMPTY_Pos)))
-#define DAC_INTENSET_MASK           0x0Fu        /**< \brief (DAC_INTENSET) MASK Register */
+#define DAC_INTENSET_MASK           0x0Ful       /**< \brief (DAC_INTENSET) MASK Register */
 
 /* -------- DAC_INTFLAG : (DAC Offset: 0x06) (R/W  8) Interrupt Flag Status and Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -248,23 +248,23 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DAC_INTFLAG_OFFSET          0x06         /**< \brief (DAC_INTFLAG offset) Interrupt Flag Status and Clear */
-#define DAC_INTFLAG_RESETVALUE      0x00         /**< \brief (DAC_INTFLAG reset_value) Interrupt Flag Status and Clear */
+#define DAC_INTFLAG_RESETVALUE      0x00ul       /**< \brief (DAC_INTFLAG reset_value) Interrupt Flag Status and Clear */
 
 #define DAC_INTFLAG_UNDERRUN0_Pos   0            /**< \brief (DAC_INTFLAG) DAC 0 Underrun */
 #define DAC_INTFLAG_UNDERRUN0       (1 << DAC_INTFLAG_UNDERRUN0_Pos)
 #define DAC_INTFLAG_UNDERRUN1_Pos   1            /**< \brief (DAC_INTFLAG) DAC 1 Underrun */
 #define DAC_INTFLAG_UNDERRUN1       (1 << DAC_INTFLAG_UNDERRUN1_Pos)
 #define DAC_INTFLAG_UNDERRUN_Pos    0            /**< \brief (DAC_INTFLAG) DAC x Underrun */
-#define DAC_INTFLAG_UNDERRUN_Msk    (0x3u << DAC_INTFLAG_UNDERRUN_Pos)
+#define DAC_INTFLAG_UNDERRUN_Msk    (0x3ul << DAC_INTFLAG_UNDERRUN_Pos)
 #define DAC_INTFLAG_UNDERRUN(value) ((DAC_INTFLAG_UNDERRUN_Msk & ((value) << DAC_INTFLAG_UNDERRUN_Pos)))
 #define DAC_INTFLAG_EMPTY0_Pos      2            /**< \brief (DAC_INTFLAG) Data Buffer 0 Empty */
 #define DAC_INTFLAG_EMPTY0          (1 << DAC_INTFLAG_EMPTY0_Pos)
 #define DAC_INTFLAG_EMPTY1_Pos      3            /**< \brief (DAC_INTFLAG) Data Buffer 1 Empty */
 #define DAC_INTFLAG_EMPTY1          (1 << DAC_INTFLAG_EMPTY1_Pos)
 #define DAC_INTFLAG_EMPTY_Pos       2            /**< \brief (DAC_INTFLAG) Data Buffer x Empty */
-#define DAC_INTFLAG_EMPTY_Msk       (0x3u << DAC_INTFLAG_EMPTY_Pos)
+#define DAC_INTFLAG_EMPTY_Msk       (0x3ul << DAC_INTFLAG_EMPTY_Pos)
 #define DAC_INTFLAG_EMPTY(value)    ((DAC_INTFLAG_EMPTY_Msk & ((value) << DAC_INTFLAG_EMPTY_Pos)))
-#define DAC_INTFLAG_MASK            0x0Fu        /**< \brief (DAC_INTFLAG) MASK Register */
+#define DAC_INTFLAG_MASK            0x0Ful       /**< \brief (DAC_INTFLAG) MASK Register */
 
 /* -------- DAC_STATUS : (DAC Offset: 0x07) (R/   8) Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -286,23 +286,23 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DAC_STATUS_OFFSET           0x07         /**< \brief (DAC_STATUS offset) Status */
-#define DAC_STATUS_RESETVALUE       0x00         /**< \brief (DAC_STATUS reset_value) Status */
+#define DAC_STATUS_RESETVALUE       0x00ul       /**< \brief (DAC_STATUS reset_value) Status */
 
 #define DAC_STATUS_READY0_Pos       0            /**< \brief (DAC_STATUS) DAC 0 Startup Ready */
 #define DAC_STATUS_READY0           (1 << DAC_STATUS_READY0_Pos)
 #define DAC_STATUS_READY1_Pos       1            /**< \brief (DAC_STATUS) DAC 1 Startup Ready */
 #define DAC_STATUS_READY1           (1 << DAC_STATUS_READY1_Pos)
 #define DAC_STATUS_READY_Pos        0            /**< \brief (DAC_STATUS) DAC x Startup Ready */
-#define DAC_STATUS_READY_Msk        (0x3u << DAC_STATUS_READY_Pos)
+#define DAC_STATUS_READY_Msk        (0x3ul << DAC_STATUS_READY_Pos)
 #define DAC_STATUS_READY(value)     ((DAC_STATUS_READY_Msk & ((value) << DAC_STATUS_READY_Pos)))
 #define DAC_STATUS_EOC0_Pos         2            /**< \brief (DAC_STATUS) DAC 0 End of Conversion */
 #define DAC_STATUS_EOC0             (1 << DAC_STATUS_EOC0_Pos)
 #define DAC_STATUS_EOC1_Pos         3            /**< \brief (DAC_STATUS) DAC 1 End of Conversion */
 #define DAC_STATUS_EOC1             (1 << DAC_STATUS_EOC1_Pos)
 #define DAC_STATUS_EOC_Pos          2            /**< \brief (DAC_STATUS) DAC x End of Conversion */
-#define DAC_STATUS_EOC_Msk          (0x3u << DAC_STATUS_EOC_Pos)
+#define DAC_STATUS_EOC_Msk          (0x3ul << DAC_STATUS_EOC_Pos)
 #define DAC_STATUS_EOC(value)       ((DAC_STATUS_EOC_Msk & ((value) << DAC_STATUS_EOC_Pos)))
-#define DAC_STATUS_MASK             0x0Fu        /**< \brief (DAC_STATUS) MASK Register */
+#define DAC_STATUS_MASK             0x0Ful       /**< \brief (DAC_STATUS) MASK Register */
 
 /* -------- DAC_SYNCBUSY : (DAC Offset: 0x08) (R/  32) Synchronization Busy -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -327,27 +327,27 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DAC_SYNCBUSY_OFFSET         0x08         /**< \brief (DAC_SYNCBUSY offset) Synchronization Busy */
-#define DAC_SYNCBUSY_RESETVALUE     0x00000000   /**< \brief (DAC_SYNCBUSY reset_value) Synchronization Busy */
+#define DAC_SYNCBUSY_RESETVALUE     0x00000000ul /**< \brief (DAC_SYNCBUSY reset_value) Synchronization Busy */
 
 #define DAC_SYNCBUSY_SWRST_Pos      0            /**< \brief (DAC_SYNCBUSY) Software Reset */
-#define DAC_SYNCBUSY_SWRST          (0x1u << DAC_SYNCBUSY_SWRST_Pos)
+#define DAC_SYNCBUSY_SWRST          (0x1ul << DAC_SYNCBUSY_SWRST_Pos)
 #define DAC_SYNCBUSY_ENABLE_Pos     1            /**< \brief (DAC_SYNCBUSY) DAC Enable Status */
-#define DAC_SYNCBUSY_ENABLE         (0x1u << DAC_SYNCBUSY_ENABLE_Pos)
+#define DAC_SYNCBUSY_ENABLE         (0x1ul << DAC_SYNCBUSY_ENABLE_Pos)
 #define DAC_SYNCBUSY_DATA0_Pos      2            /**< \brief (DAC_SYNCBUSY) Data DAC 0 */
 #define DAC_SYNCBUSY_DATA0          (1 << DAC_SYNCBUSY_DATA0_Pos)
 #define DAC_SYNCBUSY_DATA1_Pos      3            /**< \brief (DAC_SYNCBUSY) Data DAC 1 */
 #define DAC_SYNCBUSY_DATA1          (1 << DAC_SYNCBUSY_DATA1_Pos)
 #define DAC_SYNCBUSY_DATA_Pos       2            /**< \brief (DAC_SYNCBUSY) Data DAC x */
-#define DAC_SYNCBUSY_DATA_Msk       (0x3u << DAC_SYNCBUSY_DATA_Pos)
+#define DAC_SYNCBUSY_DATA_Msk       (0x3ul << DAC_SYNCBUSY_DATA_Pos)
 #define DAC_SYNCBUSY_DATA(value)    ((DAC_SYNCBUSY_DATA_Msk & ((value) << DAC_SYNCBUSY_DATA_Pos)))
 #define DAC_SYNCBUSY_DATABUF0_Pos   4            /**< \brief (DAC_SYNCBUSY) Data Buffer DAC 0 */
 #define DAC_SYNCBUSY_DATABUF0       (1 << DAC_SYNCBUSY_DATABUF0_Pos)
 #define DAC_SYNCBUSY_DATABUF1_Pos   5            /**< \brief (DAC_SYNCBUSY) Data Buffer DAC 1 */
 #define DAC_SYNCBUSY_DATABUF1       (1 << DAC_SYNCBUSY_DATABUF1_Pos)
 #define DAC_SYNCBUSY_DATABUF_Pos    4            /**< \brief (DAC_SYNCBUSY) Data Buffer DAC x */
-#define DAC_SYNCBUSY_DATABUF_Msk    (0x3u << DAC_SYNCBUSY_DATABUF_Pos)
+#define DAC_SYNCBUSY_DATABUF_Msk    (0x3ul << DAC_SYNCBUSY_DATABUF_Pos)
 #define DAC_SYNCBUSY_DATABUF(value) ((DAC_SYNCBUSY_DATABUF_Msk & ((value) << DAC_SYNCBUSY_DATABUF_Pos)))
-#define DAC_SYNCBUSY_MASK           0x0000003Fu  /**< \brief (DAC_SYNCBUSY) MASK Register */
+#define DAC_SYNCBUSY_MASK           0x0000003Ful /**< \brief (DAC_SYNCBUSY) MASK Register */
 
 /* -------- DAC_DACCTRL : (DAC Offset: 0x0C) (R/W 16) DACx Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -367,31 +367,31 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DAC_DACCTRL_OFFSET          0x0C         /**< \brief (DAC_DACCTRL offset) DACx Control */
-#define DAC_DACCTRL_RESETVALUE      0x0000       /**< \brief (DAC_DACCTRL reset_value) DACx Control */
+#define DAC_DACCTRL_RESETVALUE      0x0000ul     /**< \brief (DAC_DACCTRL reset_value) DACx Control */
 
 #define DAC_DACCTRL_LEFTADJ_Pos     0            /**< \brief (DAC_DACCTRL) Left Adjusted Data */
-#define DAC_DACCTRL_LEFTADJ         (0x1u << DAC_DACCTRL_LEFTADJ_Pos)
+#define DAC_DACCTRL_LEFTADJ         (0x1ul << DAC_DACCTRL_LEFTADJ_Pos)
 #define DAC_DACCTRL_ENABLE_Pos      1            /**< \brief (DAC_DACCTRL) Enable DAC0 */
-#define DAC_DACCTRL_ENABLE          (0x1u << DAC_DACCTRL_ENABLE_Pos)
+#define DAC_DACCTRL_ENABLE          (0x1ul << DAC_DACCTRL_ENABLE_Pos)
 #define DAC_DACCTRL_CCTRL_Pos       2            /**< \brief (DAC_DACCTRL) Current Control */
-#define DAC_DACCTRL_CCTRL_Msk       (0x3u << DAC_DACCTRL_CCTRL_Pos)
+#define DAC_DACCTRL_CCTRL_Msk       (0x3ul << DAC_DACCTRL_CCTRL_Pos)
 #define DAC_DACCTRL_CCTRL(value)    ((DAC_DACCTRL_CCTRL_Msk & ((value) << DAC_DACCTRL_CCTRL_Pos)))
-#define   DAC_DACCTRL_CCTRL_CC12M_Val     0x0u   /**< \brief (DAC_DACCTRL) 1MHz<GCLK_DAC<12MHz */
-#define   DAC_DACCTRL_CCTRL_CC1M_Val      0x1u   /**< \brief (DAC_DACCTRL) 100kHz<GCLK_DAC<1MHz */
-#define   DAC_DACCTRL_CCTRL_CC100K_Val    0x2u   /**< \brief (DAC_DACCTRL) 10kHz<GCLK_DAC<100kHz */
-#define   DAC_DACCTRL_CCTRL_CC10K_Val     0x3u   /**< \brief (DAC_DACCTRL) GCLK_DAC<100kHz */
+#define   DAC_DACCTRL_CCTRL_CC12M_Val     0x0ul  /**< \brief (DAC_DACCTRL) 1MHz<GCLK_DAC<12MHz */
+#define   DAC_DACCTRL_CCTRL_CC1M_Val      0x1ul  /**< \brief (DAC_DACCTRL) 100kHz<GCLK_DAC<1MHz */
+#define   DAC_DACCTRL_CCTRL_CC100K_Val    0x2ul  /**< \brief (DAC_DACCTRL) 10kHz<GCLK_DAC<100kHz */
+#define   DAC_DACCTRL_CCTRL_CC10K_Val     0x3ul  /**< \brief (DAC_DACCTRL) GCLK_DAC<100kHz */
 #define DAC_DACCTRL_CCTRL_CC12M     (DAC_DACCTRL_CCTRL_CC12M_Val   << DAC_DACCTRL_CCTRL_Pos)
 #define DAC_DACCTRL_CCTRL_CC1M      (DAC_DACCTRL_CCTRL_CC1M_Val    << DAC_DACCTRL_CCTRL_Pos)
 #define DAC_DACCTRL_CCTRL_CC100K    (DAC_DACCTRL_CCTRL_CC100K_Val  << DAC_DACCTRL_CCTRL_Pos)
 #define DAC_DACCTRL_CCTRL_CC10K     (DAC_DACCTRL_CCTRL_CC10K_Val   << DAC_DACCTRL_CCTRL_Pos)
 #define DAC_DACCTRL_RUNSTDBY_Pos    6            /**< \brief (DAC_DACCTRL) Run in Standby */
-#define DAC_DACCTRL_RUNSTDBY        (0x1u << DAC_DACCTRL_RUNSTDBY_Pos)
+#define DAC_DACCTRL_RUNSTDBY        (0x1ul << DAC_DACCTRL_RUNSTDBY_Pos)
 #define DAC_DACCTRL_DITHER_Pos      7            /**< \brief (DAC_DACCTRL) Dithering Mode */
-#define DAC_DACCTRL_DITHER          (0x1u << DAC_DACCTRL_DITHER_Pos)
+#define DAC_DACCTRL_DITHER          (0x1ul << DAC_DACCTRL_DITHER_Pos)
 #define DAC_DACCTRL_REFRESH_Pos     8            /**< \brief (DAC_DACCTRL) Refresh period */
-#define DAC_DACCTRL_REFRESH_Msk     (0xFu << DAC_DACCTRL_REFRESH_Pos)
+#define DAC_DACCTRL_REFRESH_Msk     (0xFul << DAC_DACCTRL_REFRESH_Pos)
 #define DAC_DACCTRL_REFRESH(value)  ((DAC_DACCTRL_REFRESH_Msk & ((value) << DAC_DACCTRL_REFRESH_Pos)))
-#define DAC_DACCTRL_MASK            0x0FCFu      /**< \brief (DAC_DACCTRL) MASK Register */
+#define DAC_DACCTRL_MASK            0x0FCFul     /**< \brief (DAC_DACCTRL) MASK Register */
 
 /* -------- DAC_DATA : (DAC Offset: 0x10) ( /W 16) Data DAC0 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -404,12 +404,12 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DAC_DATA_OFFSET             0x10         /**< \brief (DAC_DATA offset) Data DAC0 */
-#define DAC_DATA_RESETVALUE         0x0000       /**< \brief (DAC_DATA reset_value) Data DAC0 */
+#define DAC_DATA_RESETVALUE         0x0000ul     /**< \brief (DAC_DATA reset_value) Data DAC0 */
 
 #define DAC_DATA_DATA_Pos           0            /**< \brief (DAC_DATA) DAC0 Data */
-#define DAC_DATA_DATA_Msk           (0xFFFFu << DAC_DATA_DATA_Pos)
+#define DAC_DATA_DATA_Msk           (0xFFFFul << DAC_DATA_DATA_Pos)
 #define DAC_DATA_DATA(value)        ((DAC_DATA_DATA_Msk & ((value) << DAC_DATA_DATA_Pos)))
-#define DAC_DATA_MASK               0xFFFFu      /**< \brief (DAC_DATA) MASK Register */
+#define DAC_DATA_MASK               0xFFFFul     /**< \brief (DAC_DATA) MASK Register */
 
 /* -------- DAC_DATABUF : (DAC Offset: 0x14) ( /W 16) Data Buffer DAC0 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -422,12 +422,12 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DAC_DATABUF_OFFSET          0x14         /**< \brief (DAC_DATABUF offset) Data Buffer DAC0 */
-#define DAC_DATABUF_RESETVALUE      0x0000       /**< \brief (DAC_DATABUF reset_value) Data Buffer DAC0 */
+#define DAC_DATABUF_RESETVALUE      0x0000ul     /**< \brief (DAC_DATABUF reset_value) Data Buffer DAC0 */
 
 #define DAC_DATABUF_DATABUF_Pos     0            /**< \brief (DAC_DATABUF) DAC0 Data Buffer */
-#define DAC_DATABUF_DATABUF_Msk     (0xFFFFu << DAC_DATABUF_DATABUF_Pos)
+#define DAC_DATABUF_DATABUF_Msk     (0xFFFFul << DAC_DATABUF_DATABUF_Pos)
 #define DAC_DATABUF_DATABUF(value)  ((DAC_DATABUF_DATABUF_Msk & ((value) << DAC_DATABUF_DATABUF_Pos)))
-#define DAC_DATABUF_MASK            0xFFFFu      /**< \brief (DAC_DATABUF) MASK Register */
+#define DAC_DATABUF_MASK            0xFFFFul     /**< \brief (DAC_DATABUF) MASK Register */
 
 /* -------- DAC_DBGCTRL : (DAC Offset: 0x18) (R/W  8) Debug Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -441,11 +441,11 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define DAC_DBGCTRL_OFFSET          0x18         /**< \brief (DAC_DBGCTRL offset) Debug Control */
-#define DAC_DBGCTRL_RESETVALUE      0x00         /**< \brief (DAC_DBGCTRL reset_value) Debug Control */
+#define DAC_DBGCTRL_RESETVALUE      0x00ul       /**< \brief (DAC_DBGCTRL reset_value) Debug Control */
 
 #define DAC_DBGCTRL_DBGRUN_Pos      0            /**< \brief (DAC_DBGCTRL) Debug Run */
-#define DAC_DBGCTRL_DBGRUN          (0x1u << DAC_DBGCTRL_DBGRUN_Pos)
-#define DAC_DBGCTRL_MASK            0x01u        /**< \brief (DAC_DBGCTRL) MASK Register */
+#define DAC_DBGCTRL_DBGRUN          (0x1ul << DAC_DBGCTRL_DBGRUN_Pos)
+#define DAC_DBGCTRL_MASK            0x01ul       /**< \brief (DAC_DBGCTRL) MASK Register */
 
 /** \brief DAC hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

@@ -104,6 +104,7 @@
 			<build type="doxygen-example-path" value="quick_start"/>
 			<build type="doxygen-example-path" value="quick_start_dma"/>
 			<build type="doxygen-example-path" value="quick_start_callback"/>
+			<build type="doxygen-example-path" value="."/>
 			<build type="doxygen-image-path" value="docimg" />
 			<build type="doxygen-entry-point" value="asfdoc_sam0_tc_group" />
 			<build type="doxygen-quick-start" value="asfdoc_sam0_tc_exqsg"/>

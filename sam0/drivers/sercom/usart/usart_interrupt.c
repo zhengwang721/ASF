@@ -409,12 +409,12 @@ void usart_abort_job(
  * \retval STATUS_BUSY             A transfer is ongoing
  * \retval STATUS_ERR_BAD_DATA     The last operation was aborted due to a
  *                                 parity error. The transfer could be affected
- *                                 by external noise.
+ *                                 by external noise
  * \retval STATUS_ERR_BAD_FORMAT   The last operation was aborted due to a
- *                                 frame error.
+ *                                 frame error
  * \retval STATUS_ERR_OVERFLOW     The last operation was aborted due to a
- *                                 buffer overflow.
- * \retval STATUS_ERR_INVALID_ARG  An invalid transceiver enum given.
+ *                                 buffer overflow
+ * \retval STATUS_ERR_INVALID_ARG  An invalid transceiver enum given
  */
 enum status_code usart_get_job_status(
 		struct usart_module *const module,

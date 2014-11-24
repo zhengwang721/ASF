@@ -234,6 +234,14 @@ int __low_level_init(void)
 
         SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
 
+        MCLK->APBEMASK.reg = 5; //Disable PPP, Enable PAC & HMATRIXLP
+
+        // Set protection off for DSUSTANDBY & DSU
+        PAC->WRCTRL.reg = PAC_WRCTRL_KEY(PAC_WRCTRL_KEY_CLR_Val)|PAC_WRCTRL_PERID(ID_DSUSTANDBY);
+        while((PAC->STATUSA.reg & PAC_STATUSA_DSUSTANDBY) > 0);
+        PAC->WRCTRL.reg = PAC_WRCTRL_KEY(PAC_WRCTRL_KEY_CLR_Val)|PAC_WRCTRL_PERID(ID_DSU);
+        while((PAC->STATUSB.reg & PAC_STATUSB_DSU) > 0);
+
         return 1; /* if return 0, the data sections will not be initialized */
 }
 

@@ -102,7 +102,7 @@ void ADC_Handler(void)
 }
 
 /**
- * \brief Registers a callback
+ * \brief Registers a callback.
  *
  * Registers a callback function which is implemented by the user.
  *
@@ -131,7 +131,7 @@ void adc_register_callback(
 }
 
 /**
- * \brief Unregisters a callback
+ * \brief Unregisters a callback.
  *
  * Unregisters a callback function which is implemented by the user.
  *
@@ -154,7 +154,7 @@ void adc_unregister_callback(
 }
 
 /**
- * \brief Read multiple samples from ADC
+ * \brief Read multiple samples from ADC.
  *
  * Read \c samples samples from the ADC into the buffer \c buffer.
  * If there is no hardware trigger defined (event action) the
@@ -166,7 +166,7 @@ void adc_unregister_callback(
  * \param[in]  samples      Number of samples to acquire
  * \param[out] buffer       Buffer to store the ADC samples
  *
- * \return Status of the job start
+ * \return Status of the job start.
  * \retval STATUS_OK        The conversion job was started successfully and is
  *                          in progress
  * \retval STATUS_BUSY      The ADC is already busy with another job
@@ -199,14 +199,14 @@ enum status_code adc_read_buffer_job(
 }
 
 /**
- * \brief Gets the status of a job
+ * \brief Gets the status of a job.
  *
  * Gets the status of an ongoing or the last job.
  *
  * \param [in]  module_inst Pointer to the ADC software instance struct
  * \param [in]  type        Type of job to abort
  *
- * \return Status of the job
+ * \return Status of the job.
  */
 enum status_code adc_get_job_status(
 		struct adc_module *module_inst,
@@ -223,7 +223,7 @@ enum status_code adc_get_job_status(
 }
 
 /**
- * \brief Aborts an ongoing job
+ * \brief Aborts an ongoing job.
  *
  * Aborts an ongoing job.
  *
