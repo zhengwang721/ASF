@@ -63,8 +63,8 @@ enum status_code _i2c_master_send_hs_master_code(
 /**
  * \internal Sets configurations to module
  *
- * \param[out] module  Pointer to software module structure.
- * \param[in]  config  Configuration structure with configurations to set.
+ * \param[out] module  Pointer to software module structure
+ * \param[in]  config  Configuration structure with configurations to set
  *
  * \return Status of setting configuration.
  * \retval STATUS_OK                        If module was configured correctly
@@ -411,7 +411,7 @@ enum status_code _i2c_master_wait_for_bus(
  * \param[in]     hs_master_code 8-bit master code (0000 1XXX)
  *
  * \return Status of bus.
- * \retval STATUS_OK           No error happen.
+ * \retval STATUS_OK           No error happen
  */
 enum status_code _i2c_master_send_hs_master_code(
 		struct i2c_master_module *const module,
@@ -438,8 +438,8 @@ enum status_code _i2c_master_send_hs_master_code(
  * \internal
  * Starts blocking read operation.
  *
- * \param[in,out] module  Pointer to software module struct.
- * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer.
+ * \param[in,out] module  Pointer to software module struct
+ * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
  * \return Status of reading packet.
  * \retval STATUS_OK                    The packet was read successfully
@@ -662,8 +662,8 @@ enum status_code i2c_master_read_packet_wait_no_stop(
  * \internal
  * Starts blocking write operation.
  *
- * \param[in,out] module  Pointer to software module struct.
- * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer.
+ * \param[in,out] module  Pointer to software module struct
+ * \param[in,out] packet  Pointer to I<SUP>2</SUP>C packet to transfer
  *
  * \return Status of reading packet.
  * \retval STATUS_OK                    The packet was read successfully
