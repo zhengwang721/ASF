@@ -454,10 +454,10 @@ static inline void opamp_module_disable(void)
 }
 
 /**
- * \brief Enables OPAMP Voltage Doubler.
+ * \brief Enables OPAMP voltage doubler.
  *
  * The analog input muxes have low resistance, but consume more
- * power at lower voltages(e.g., are driven by the voltage doubler).
+ * power at lower voltages(e.g., driven by the voltage doubler).
  *
  */
 static inline void opamp_voltage_doubler_enable(void)
@@ -473,7 +473,7 @@ static inline void opamp_voltage_doubler_enable(void)
 }
 
 /**
- * \brief Disables OPAMP Voltage Doubler.
+ * \brief Disables OPAMP voltage doubler.
  *
  * The analog input muxes have high resistance, but consume less power
  * at lower voltages (e.g., the voltage doubler is disabled).
@@ -588,8 +588,8 @@ void opamp_disable(const enum opamp_id number);
  *
  * \return Ready status of the select OPAMP.
  *
- * \retval false if the select OPAMP output is not ready
- * \retval ture if the select OPAMP output is ready
+ * \retval false If the select OPAMP output is not ready
+ * \retval ture If the select OPAMP output is ready
 
  */
 bool opamp_is_ready(const enum opamp_id number);
