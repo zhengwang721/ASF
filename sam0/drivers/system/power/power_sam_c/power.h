@@ -62,15 +62,217 @@ extern "C" {
  * different sleep modes can be found in \ref asfdoc_sam0_system_module_overview_sleep_mode.
  */
 enum system_sleepmode {
-	/** IDLE sleep mode. */
-	SYSTEM_SLEEPMODE_IDLE       = PM_SLEEPCFG_SLEEPMODE(0x2),
-	/** STANDBY sleep mode. */
-	SYSTEM_SLEEPMODE_STANDBY    = PM_SLEEPCFG_SLEEPMODE_STANDBY,
-	/** BACKUP sleep mode. */
-	SYSTEM_SLEEPMODE_BACKUP     = PM_SLEEPCFG_SLEEPMODE_BACKUP,
-	/** OFF sleep mode. */
-	SYSTEM_SLEEPMODE_OFF        = PM_SLEEPCFG_SLEEPMODE_OFF,
+	/** IDLE 0 sleep mode. */
+	SYSTEM_SLEEPMODE_IDLE_0,
+	/** IDLE 1 sleep mode. */
+	SYSTEM_SLEEPMODE_IDLE_1,
+	/** IDLE 2 sleep mode. */
+	SYSTEM_SLEEPMODE_IDLE_2,
+	/** Standby sleep mode. */
+	SYSTEM_SLEEPMODE_STANDBY,
 };
+
+/**
+ * \brief Voltage reference value for ADC/DAC.
+ *
+ * Voltage references selection for ADC/DAC.
+ */
+enum system_voltage_references_sel {
+	/** 1.024V voltage reference typical value. */
+	SYSTEM_VOLTAGE_REFERENCE_1V024  = SUPC_VREF_SEL_1V024_Val,
+	/** 2.048V voltage reference typical value. */
+	SYSTEM_VOLTAGE_REFERENCE_2V048  = SUPC_VREF_SEL_2V048_Val,
+	/** 4.096V voltage reference typical value. */
+	SYSTEM_VOLTAGE_REFERENCE_4V096    = SUPC_VREF_SEL_4V096_Val,
+};
+
+
+/**
+ * \brief Voltage reference.
+ *
+ * List of available voltage references (VREF) that may be used within the
+ * device.
+ */
+enum system_voltage_reference {
+	/** Temperature sensor voltage reference. */
+	SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE,
+	/** Voltage reference output for ADC/DAC. */
+	SYSTEM_VOLTAGE_REFERENCE_OUTPUT,
+};
+
+/**
+ * \brief Voltage Regulator System (VREG) Control configuration.
+ *
+ * Configuration structure for VREG.
+ */
+struct system_voltage_regulator_config {
+	/** Run in standby in standby sleep mode. */
+	bool run_in_standby;
+};
+
+/**
+ * \brief Voltage References System (VREF) Control configuration.
+ *
+ * Configuration structure for VREF.
+ */
+struct system_voltage_references_config {
+	/** Voltage references selection. */
+	enum system_voltage_references_sel  sel;
+	/** On demand control. */
+	bool on_demand;
+	/** run in standby. */
+	bool run_in_standby;
+};
+
+/**
+ * \name Voltage Regulator
+ * @{
+ */
+
+/**
+ * \brief Retrieve the default configuration for voltage regulator.
+ *
+ * Fills a configuration structure with the default configuration:
+ *   - The voltage regulator is in low power mode in Standby sleep mode
+ *
+ * \param[out] config  Configuration structure to fill with default values
+ */
+static inline void system_voltage_regulator_get_config_defaults(
+		struct system_voltage_regulator_config *const config)
+{
+	Assert(config);
+	config->run_in_standby       = false;
+}
+
+/**
+ * \brief Configure voltage regulator.
+ *
+ * Configures voltage regulator with the given configuration.
+ *
+ * \param[in] config  voltage regulator configuration structure containing
+ *                    the new config
+ */
+static inline void system_voltage_regulator_set_config(
+		struct system_voltage_regulator_config *const config)
+{
+	SUPC->VREG.bit.RUNSTDBY = config->run_in_standby;
+}
+
+/**
+* \brief Enable the selected voltage regulator.
+ *
+ * Enables the selected voltage regulator source.
+ */
+static inline void system_voltage_regulator_enable(void)
+{
+	SUPC->VREG.reg |= SUPC_VREG_ENABLE;
+}
+
+/**
+ * \brief Disable the selected voltage regulator.
+ *
+ * Disables the selected voltage regulator.
+ */
+static inline void system_voltage_regulator_disable(void)
+{
+	SUPC->VREG.reg &= ~SUPC_VREG_ENABLE;
+}
+
+/**
+ * @}
+ */
+
+/**
+ * \name Voltage References
+ * @{
+ */
+
+/**
+ * \brief Retrieve the default configuration for voltage reference.
+ *
+ * Fill a configuration structure with the default configuration:
+ *   - 1.024V voltage reference typical value
+ *   - On demand control:disabled
+ *   - The voltage reference and the temperature sensor are halted during standby sleep mode
+ *
+ * \param[out] config  Configuration structure to fill with default values
+ */
+static inline void system_voltage_reference_get_config_defaults(
+		struct system_voltage_references_config *const config)
+{
+	Assert(config);
+	config->sel            = SYSTEM_VOLTAGE_REFERENCE_1V024;
+	config->on_demand      = false;
+	config->run_in_standby = false;
+}
+
+/**
+ * \brief Configure voltage reference.
+ *
+ * Configures voltage reference with the given configuration.
+ *
+ * \param[in] config  voltage reference configuration structure containing
+ *                    the new config
+ */
+static inline void system_voltage_reference_set_config(
+		struct system_voltage_references_config *const config)
+{
+	Assert(config);
+	SUPC->VREF.bit.SEL      = config->sel;
+	SUPC->VREF.bit.ONDEMAND = config->on_demand;
+	SUPC->VREF.bit.RUNSTDBY = config->run_in_standby;
+}
+
+/**
+ * \brief Enable the selected voltage reference.
+ *
+ * Enables the selected voltage reference source, making the voltage reference
+ * available on a pin as well as an input source to the analog peripherals.
+ *
+ * \param[in] vref  Voltage reference to enable
+ */
+static inline void system_voltage_reference_enable(
+		const enum system_voltage_reference vref)
+{
+	switch (vref) {
+		case SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE:
+			SUPC->VREF.reg |= SUPC_VREF_TSEN;
+			break;
+		case SYSTEM_VOLTAGE_REFERENCE_OUTPUT:
+			SUPC->VREF.reg |= SUPC_VREF_VREFOE;
+			break;
+		default:
+			Assert(false);
+			return;
+	}
+}
+
+/**
+ * \brief Disable the selected voltage reference.
+ *
+ * Disables the selected voltage reference source.
+ *
+ * \param[in] vref  Voltage reference to disable
+ */
+static inline void system_voltage_reference_disable(
+		const enum system_voltage_reference vref)
+{
+	switch (vref) {
+		case SYSTEM_VOLTAGE_REFERENCE_TEMPSENSE:
+			SUPC->VREF.reg &= ~SUPC_VREF_TSEN;
+			break;
+		case SYSTEM_VOLTAGE_REFERENCE_OUTPUT:
+			SUPC->VREF.reg &= ~SUPC_VREF_VREFOE;
+			break;
+		default:
+			Assert(false);
+			return;
+	}
+}
+
+/**
+ * @}
+ */
 
 /**
  * \name Device Sleep Control
@@ -94,6 +296,7 @@ static inline void system_set_sleepmode(
 	PM->SLEEPCFG.reg = sleep_mode;
 }
 
+
 /**
  * \brief Put the system to sleep waiting for interrupt.
  *
@@ -111,6 +314,7 @@ static inline void system_sleep(void)
 /**
  * @}
  */
+
 /** @} */
 
 #ifdef __cplusplus

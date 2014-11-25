@@ -63,7 +63,7 @@ extern "C" {
  * extends across multiple hardware peripherals.
  *
  * The following peripherals are used by this module:
- * \if DEVICE_SAML21_SUPPORT
+ * \if DEVICE_SAML21_SUPPORT || DEVICE_SAMC21_SUPPORT
  *  - PM (Power Manager)
  *  - RSTC(Reset Controller)
  *  - SUPC(Supply Controller)
@@ -75,6 +75,8 @@ extern "C" {
  * The following devices can use this module:
  * \if DEVICE_SAML21_SUPPORT
  *  - Atmel | SMART SAM L21
+ * \elif DEVICE_SAMC21_SUPPORT
+ *  - Atmel | SMART SAM C21
  * \else
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
@@ -123,6 +125,15 @@ extern "C" {
  * It includes functionality that enables automatic power switching between main
  * power and battery backup power. This will ensure power to the backup domain,
  * when the main battery or power source is unavailable.
+ * \endif
+ *
+ * \if DEVICE_SAMC21_SUPPORT
+ * \subsection asfdoc_sam0_system_module_overview_vreg Voltage Regulator
+ * The SAM device controls the voltage regulators for the core (VDDCORE). It sets
+ * the voltage regulators according to the sleep modes.
+ *
+ * There are a selectable reference voltage and voltage dependent on the temperature
+ * which can be used by analog modules like the ADC.
  * \endif
  *
  * \subsection asfdoc_sam0_system_module_overview_vref Voltage References
@@ -560,7 +571,7 @@ void system_init(void);
  *      <td>PM</td>
  *      <td>Power Manager</td>
  *  </tr>
- * \if DEVICE_SAML21_SUPPORT
+ * \if DEVICE_SAML21_SUPPORT || DEVICE_SAMC21_SUPPORT
  *  <tr>
  *      <td>SUPC</td>
  *      <td>Supply Controller</td>
@@ -602,6 +613,10 @@ void system_init(void);
  *  <tr>
  *      <td>Initial Release</td>
  *  </tr>
+ * \elif DEVICE_SAMC21_SUPPORT
+ *  <tr>
+ *      <td>Initial Release</td>
+ *  </tr>
  * \else
  *  <tr>
  *      <td>Added low power features and support for SAML21</td>
@@ -634,6 +649,12 @@ void system_init(void);
  *  <tr>
  *      <td>A</td>
  *      <td>11/2014</td>
+ *      <td>Initial release.</td>
+ * </tr>
+ * \elif DEVICE_SAMC21_SUPPORT
+ *  <tr>
+ *      <td>A</td>
+ *      <td>12/2014</td>
  *      <td>Initial release.</td>
  * </tr>
  * \else

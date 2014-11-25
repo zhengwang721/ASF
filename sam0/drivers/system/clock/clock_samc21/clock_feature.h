@@ -97,14 +97,14 @@ extern "C" {
  * which being capable of producing a stabilized output frequency which can then
  * be fed into the various peripherals and modules within the device.
  *
- * Possible clock source modules include internal R/C oscillators, internal
- * DFLL modules, as well as external crystal oscillators and/or clock inputs.
+ * Possible clock source modules include internal R/C oscillators as well as external 
+ * crystal oscillators and/or clock inputs.
  *
  * \subsection asfdoc_sam0_system_clock_module_overview_cpu_clock CPU / Bus Clocks
  * The CPU and AHB/APBx buses are clocked by the same physical clock source
- * (referred in this module as the Main Clock).
- * The CPU and bus clocks are divided into a number of clock domains. Each clock domain can
- * run at different frequencies.
+ * (referred in this module as the Main Clock), however the APBx buses may
+ * have additional prescaler division ratios set to give each peripheral bus a
+ * different clock speed.
  *
  * The general main clock tree for the CPU and associated buses is shown in
  * \ref asfdoc_sam0_system_clock_module_clock_tree "the figure below".
@@ -116,23 +116,25 @@ extern "C" {
  *   clk_src [label="Clock Sources", shape=none, height=0];
  *   node [label="CPU Bus" shape=ellipse] cpu_bus;
  *   node [label="AHB Bus" shape=ellipse] ahb_bus;
- *   node [label="APBx Bus" shape=ellipse] apb_bus;
+ *   node [label="APBA Bus" shape=ellipse] apb_a_bus;
+ *   node [label="APBB Bus" shape=ellipse] apb_b_bus;
+ *   node [label="APBC Bus" shape=ellipse] apb_c_bus;
  *   node [label="Main Bus\nPrescaler" shape=square] main_prescaler;
- *   node [label="CPU Clock\nPrescaler" shape=square] cpu_prescaler;
- *   node [label="Low Power Clock\nPrescaler" shape=square] low_power_prescaler;
- *   node [label="Backup clock\nPrescaler" shape=square] backup_prescaler;
+ *   node [label="APBA Bus\nPrescaler" shape=square] apb_a_prescaler;
+ *   node [label="APBB Bus\nPrescaler" shape=square] apb_b_prescaler;
+ *   node [label="APBC Bus\nPrescaler" shape=square] apb_c_prescaler;
  *   node [label="", shape=polygon, sides=4, distortion=0.6, orientation=90, style=filled, fillcolor=black, height=0.9, width=0.2] main_clock_mux;
  *
  *   clk_src         -> main_clock_mux;
  *   main_clock_mux  -> main_prescaler;
- *   main_prescaler  -> cpu_prescaler;
- *   main_prescaler  -> low_power_prescaler;
- *   main_prescaler  -> backup_prescaler;
- *   cpu_prescaler -> cpu_bus;
- *   cpu_prescaler -> ahb_bus;
- *   low_power_prescaler -> ahb_bus;
- *   low_power_prescaler -> apb_bus;
- *   backup_prescaler -> apb_bus;
+ *   main_prescaler  -> cpu_bus;
+ *   main_prescaler  -> ahb_bus;
+ *   main_prescaler  -> apb_a_prescaler;
+ *   main_prescaler  -> apb_b_prescaler;
+ *   main_prescaler  -> apb_c_prescaler;
+ *   apb_a_prescaler -> apb_a_bus;
+ *   apb_b_prescaler -> apb_b_bus;
+ *   apb_c_prescaler -> apb_c_bus;
  * }
  * \enddot
  *
@@ -143,7 +145,7 @@ extern "C" {
  * module, but will reduce the overall device power consumption.
  *
  * \subsection asfdoc_sam0_system_clock_module_overview_gclk Generic Clocks
- * Within the SAM devices are a number of Generic Clocks; these are used to
+ * Within the SAM devices there are a number of Generic Clocks; these are used to
  * provide clocks to the various peripheral clock domains in the device in a
  * standardized manner. One or more master source clocks can be selected as the
  * input clock to a Generic Clock Generator, which can prescale down the input
@@ -190,7 +192,7 @@ extern "C" {
  *   system_clock_source0 -> clock_gen0;
  *   clock_gen0    -> clock_chan0;
  *   clock_chan0   -> peripheral0;
- *   node [label="16MHz R/C\nOscillator (OSC16M)" shape=square fillcolor=white] system_clock_source1;
+ *   node [label="48MHz R/C\nOscillator (OSC48M)" shape=square fillcolor=white] system_clock_source1;
  *   node [label="Generator 1" shape=square] clock_gen1;
  *   node [label="Channel y" shape=square] clock_chan1;
  *   node [label="Channel z" shape=square] clock_chan2;
@@ -1362,7 +1364,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>08/2014</td>
+ *		<td>11/2014</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
