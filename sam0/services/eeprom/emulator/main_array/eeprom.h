@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_eeprom_group SAM EEPROM Emulator Service (EEPROM)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an emulated EEPROM memory space in
+ * This driver for Atmel® | SMART SAM devices provides an emulated EEPROM memory space in
  * the device's FLASH memory, for the storage and retrieval of user-application
  * configuration data into and out of non-volatile memory.
  *
@@ -54,10 +54,10 @@
  *  - NVM (Non-Volatile Memory Controller)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM L21
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_eeprom_prerequisites
@@ -491,6 +491,11 @@ enum status_code eeprom_emulator_read_buffer(
  *		<th>Doc. Rev.</th>
  *		<th>Date</th>
  *		<th>Comments</th>
+ *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>11/2014</td>
+ *		<td>Add SAM L21 support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
