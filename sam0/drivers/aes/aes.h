@@ -50,7 +50,7 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_drivers_aes_group SAM L21 Advanced Encryption Standard (AES)
+ * \defgroup asfdoc_sam0_drivers_aes_group SAM Advanced Encryption Standard (AES)
  *
  * This driver for Atmel® | SMART™ SAM L21 devices provides an interface for the configuration
  * and management of the device's Advanced Encryption Standard functionality.

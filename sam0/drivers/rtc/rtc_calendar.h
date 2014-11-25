@@ -98,7 +98,7 @@
  *  - Date tracking in day, month, and year
  *  - Automatic leap year correction
  *
- * \subsection asfdoc_sam0_rtc_features Driver Feature Macro Definition
+ * \subsection asfdoc_sam0_rtc_calendar_features Driver Feature Macro Definition
  * <table>
  *  <tr>
  *    <th>Driver Feature Macro</th>
