@@ -52,7 +52,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_drivers_aes_group SAM L21 Advanced Encryption Standard (AES)
  *
- * This driver for Atmel® | SMART SAM L21 devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's Advanced Encryption Standard functionality. The following 
  * driver API modes are covered by this manual:
  *
@@ -124,19 +124,19 @@ extern "C" {
  * encryption of a message and in the corresponding decryption of the message.
  *
  * There are three encryption/decryption start modes:
- * - Manual Mode: Start encryption/decryption manually.
+ * - Manual Mode: Start encryption/decryption manually
  * - Auto Start Mode: Once the correct number of input data registers is written,
- * processing is automatically started, DMA operation uses this mode.
+ * processing is automatically started, DMA operation uses this mode
  * - Last Output Data Mode (LOD): This mode is used to generate message
- * authentication code (MAC) on data in CCM mode of operation.
+ * authentication code (MAC) on data in CCM mode of operation
  *
  * \subsection asfdoc_sam0_drivers_aes_module_overview_hardware_countermeasures Hardware Countermeasures
  * The AES module features four types of hardware countermeasures that are
  * useful for protecting data against differential power analysis attacks:
- * - Type 1: Randomly add one cycle to data processing.
- * - Type 2: Randomly add one cycle to data processing (other version).
+ * - Type 1: Randomly add one cycle to data processing
+ * - Type 2: Randomly add one cycle to data processing (other version)
  * - Type 3: Add a random number of clock cycles to data processing, subject to
- * a maximum of 11/13/15 clock cycles for key sizes of 128/192/256 bits.
+ * a maximum of 11/13/15 clock cycles for key sizes of 128/192/256 bits
  * - Type 4: Add random spurious power consumption during data processing
  *
  * \subsection asfdoc_sam0_drivers_aes_module_overview_gcm Galois Counter Mode (GCM)
@@ -179,41 +179,41 @@ extern "C" {
 
 /** AES processing mode. */
 enum aes_encrypt_mode {
-	AES_DECRYPTION = 0, 	/**< Decryption of data will be performed. */
-	AES_ENCRYPTION,			/**< Encryption of data will be performed. */
+	AES_DECRYPTION = 0,     /**< Decryption of data will be performed. */
+	AES_ENCRYPTION,         /**< Encryption of data will be performed. */
 };
 
 /** AES cryptographic key size. */
 enum aes_key_size {
-	AES_KEY_SIZE_128 = 0, 	/**< AES key size is 128-bit. */
-	AES_KEY_SIZE_192,		/**< AES key size is 192-bit. */
-	AES_KEY_SIZE_256,		/**< AES key size is 256-bit. */
+	AES_KEY_SIZE_128 = 0,   /**< AES key size is 128-bit. */
+	AES_KEY_SIZE_192,       /**< AES key size is 192-bit. */
+	AES_KEY_SIZE_256,       /**< AES key size is 256-bit. */
 };
 
 /** AES start mode. */
 enum aes_start_mode {
-	AES_MANUAL_START = 0,	/**< Manual start mode. */
-	AES_AUTO_START,			/**< Auto start mode. */
+	AES_MANUAL_START = 0,   /**< Manual start mode. */
+	AES_AUTO_START,         /**< Auto start mode. */
 };
 
 /** AES operation mode. */
 enum aes_operation_mode {
-	AES_ECB_MODE = 0,		/**< Electronic Codebook (ECB). */
-	AES_CBC_MODE,			/**< Cipher Block Chaining (CBC). */
-	AES_OFB_MODE,			/**< Output Feedback (OFB). */
-	AES_CFB_MODE,			/**< Cipher Feedback (CFB). */
-	AES_CTR_MODE,			/**< Counter (CTR). */
-	AES_CCM_MODE,			/**< Counter (CCM). */
-	AES_GCM_MODE,			/**< Galois Counter Mode (GCM).*/
+	AES_ECB_MODE = 0,       /**< Electronic Codebook (ECB). */
+	AES_CBC_MODE,           /**< Cipher Block Chaining (CBC). */
+	AES_OFB_MODE,           /**< Output Feedback (OFB). */
+	AES_CFB_MODE,           /**< Cipher Feedback (CFB). */
+	AES_CTR_MODE,           /**< Counter (CTR). */
+	AES_CCM_MODE,           /**< Counter (CCM). */
+	AES_GCM_MODE,           /**< Galois Counter Mode (GCM).*/
 };
 
 /** AES Cipher FeedBack (CFB) size. */
 enum aes_cfb_size {
-	AES_CFB_SIZE_128 = 0,	/**< Cipher feedback data size is 128-bit. */
-	AES_CFB_SIZE_64,		/**< Cipher feedback data size is 64-bit. */
-	AES_CFB_SIZE_32,		/**< Cipher feedback data size is 32-bit. */
-	AES_CFB_SIZE_16,		/**< Cipher feedback data size is 16-bit. */
-	AES_CFB_SIZE_8,			/**< Cipher feedback data size is 8-bit. */
+	AES_CFB_SIZE_128 = 0,   /**< Cipher feedback data size is 128-bit. */
+	AES_CFB_SIZE_64,        /**< Cipher feedback data size is 64-bit. */
+	AES_CFB_SIZE_32,        /**< Cipher feedback data size is 32-bit. */
+	AES_CFB_SIZE_16,        /**< Cipher feedback data size is 16-bit. */
+	AES_CFB_SIZE_8,         /**< Cipher feedback data size is 8-bit. */
 };
 
 /** AES countermeasure type */
@@ -227,7 +227,7 @@ enum aes_countermeature_type {
 };
 
 /**
- * \name Module status flags
+ * \name Module Status Flags
  *
  * AES status flags, returned by \ref aes_get_status() and cleared by
  * \ref aes_clear_status().
@@ -664,7 +664,7 @@ static inline void aes_gcm_set_gf_multiplication(struct aes_module *const module
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Initial document release</td>
+ *		<td>Initial release</td>
  *	</tr>
  * </table>
  */
@@ -697,7 +697,7 @@ static inline void aes_gcm_set_gf_multiplication(struct aes_module *const module
  *	<tr>
  *      <td>A</td>
  *		<td>09/2014</td>
- *		<td>Initial document release</td>
+ *		<td>Initial release</td>
  *	</tr>
  * </table>
  *
