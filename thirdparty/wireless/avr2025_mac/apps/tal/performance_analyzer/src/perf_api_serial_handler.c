@@ -2187,7 +2187,6 @@ void usr_ed_scan_end_indication(uint8_t no_of_channels,
 	*msg_buf++ = no_of_channels;
 	for (ch_cnt = 0; ch_cnt < no_of_channels; ch_cnt++) {
 		*msg_buf++ = ed_scan_result[ch_cnt].channel_no;
-		*msg_buf++ = (uint8_t)ed_scan_result[ch_cnt].channel_no>>8;
 		*msg_buf++ = ed_scan_result[ch_cnt].p_in;
 	}
 	/* Update the length field  */

@@ -242,7 +242,7 @@
 #define NUL_VAL                           (0)
 #define START_MODE_PER                    (1)
 #define START_MODE_SINGLE_NODE            (2)
-#define RESULT_SIZE_PER_CHANNEL           (3)
+#define RESULT_SIZE_PER_CHANNEL           (2)
 
 #define START_CWT                         (1)
 #define STOP_CWT                          (0)

@@ -758,7 +758,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 	{
 #ifdef EXT_RF_FRONT_END_CTRL
 		uint16_t chn_before_set;
-		tal_pib_get(phyCurrentChannel, &chn_before_set);
+		tal_pib_get(phyCurrentChannel,(uint8_t *)&chn_before_set);
 #endif
 		
 		param_val = msg->payload.set_parm_req_data.param_value;
@@ -766,7 +766,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 #if (TAL_TYPE == AT86RF233)
 		tal_set_frequency_regs(CC_BAND_0, CC_NUMBER_0);
 #endif
-		pib_value.pib_value_8bit = param_val;
+		pib_value.pib_value_8bit = (uint8_t)param_val;
 		/* set the channel on receptor with the received value */
 		tal_pib_set(phyCurrentChannel, &pib_value);
 		curr_trx_config_params.channel=param_val;

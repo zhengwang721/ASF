@@ -633,14 +633,11 @@ void system_board_init(void);
 #define AT86RFX_CSD                  EXT1_PIN_5
 #define AT86RFX_CPS                  EXT1_PIN_8
 
-
-#define AT86RFX_SPI_CONFIG(config) \
-		config.mux_setting = EXT1_SPI_SERCOM_MUX_SETTING; \
-		config.mode_specific.master.baudrate = AT86RFX_SPI_BAUDRATE; \
-		config.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0; \
-		config.pinmux_pad1 = PINMUX_UNUSED; \
-		config.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2; \
-		config.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
+#define AT86RFX_SPI_MUX_SETTING      EXT1_SPI_SERCOM_MUX_SETTING
+#define AT86RFX_SPI_SERCOM_PINMUX_PAD0   EXT1_SPI_SERCOM_PINMUX_PAD0
+#define AT86RFX_SPI_SERCOM_PINMUX_PAD1   PINMUX_UNUSED
+#define AT86RFX_SPI_SERCOM_PINMUX_PAD2   EXT1_SPI_SERCOM_PINMUX_PAD2
+#define AT86RFX_SPI_SERCOM_PINMUX_PAD3   EXT1_SPI_SERCOM_PINMUX_PAD3
 
 #define AT86RFX_IRQ_CHAN       EXT1_IRQ_INPUT
 #define AT86RFX_INTC_INIT()    \

@@ -214,7 +214,7 @@ typedef struct {
  *
  */
 typedef struct {
-	uint16_t channel_no;
+	uint8_t channel_no;
 	int8_t p_in;
 } ed_scan_result_t;
 
