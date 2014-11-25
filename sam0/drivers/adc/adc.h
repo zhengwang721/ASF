@@ -47,7 +47,7 @@
 /**
  * \defgroup asfdoc_sam0_adc_group SAM Analog to Digital Converter Driver (ADC)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of the device's Analog to Digital Converter functionality, for
  * the conversion of analog voltages into a corresponding digital form.
  * The following driver API modes are covered by this manual:

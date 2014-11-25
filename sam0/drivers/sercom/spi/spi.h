@@ -47,7 +47,7 @@
 /**
  * \defgroup asfdoc_sam0_sercom_spi_group SAM Serial Peripheral Interface Driver (SERCOM SPI)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of the SERCOM module in its SPI mode to transfer SPI  data
  * frames. The following driver API modes are covered by this manual:
  *

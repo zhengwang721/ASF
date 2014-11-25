@@ -448,3 +448,20 @@ bool uhi_vendor_iso_is_available(void);
  * \include example/samd21j18a_samd21_xplained_pro/conf_board.h
  */
 
+/**
+ * \page asfdoc_uhi_vendor_document_revision_history Document Revision History
+ *
+ * <table>
+ * <tr>
+ *    <th>Doc. Rev.</td>
+ *    <th>Date</td>
+ *    <th>Comments</td>
+ * </tr>
+ * <tr>
+ *    <td>A</td>
+ *    <td>11/2014</td>
+ *    <td>Initial release.</td>
+ * </tr>
+ * </table>
+ */
+
