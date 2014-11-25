@@ -323,7 +323,7 @@ static inline void trng_disable_events(
 /** @} */
 
 /**
- * \name Read  TRNG result
+ * \name Read TRNG Result
  * @{
  */
 
