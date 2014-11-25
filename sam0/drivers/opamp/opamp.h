@@ -192,7 +192,7 @@ enum opamp2_neg_mux {
 /**
  * \brief Positive input mux selection configuration enum.
  *
- * Enum for the negative input of OPAMP0.
+ * Enum for the positive input of OPAMP0.
  */
 enum opamp0_pos_mux {
 	/** Positive I/O pin 0. */
@@ -208,39 +208,39 @@ enum opamp0_pos_mux {
 /**
  * \brief Positive input mux selection configuration enum.
  *
- * Enum for the negative input of OPAMP1.
+ * Enum for the positive input of OPAMP1.
  */
 enum opamp1_pos_mux {
 	/** Positive I/O pin 1. */
-	OPAMP1_POS_MUX_PIN1 = OPAMP_OPAMPCTRL0_MUXPOS(0),
+	OPAMP1_POS_MUX_PIN1 = OPAMP_OPAMPCTRL1_MUXPOS(0),
 	/** Resistor ladder 1 taps. */
-	OPAMP1_POS_MUX_TAP1 = OPAMP_OPAMPCTRL0_MUXPOS(1),
+	OPAMP1_POS_MUX_TAP1 = OPAMP_OPAMPCTRL1_MUXPOS(1),
 	/** OPAMP0 output. */
-	OPAMP1_POS_MUX_OUT0 = OPAMP_OPAMPCTRL0_MUXPOS(2),
+	OPAMP1_POS_MUX_OUT0 = OPAMP_OPAMPCTRL1_MUXPOS(2),
 	/** Ground. */
-	OPAMP1_POS_MUX_GND = OPAMP_OPAMPCTRL0_MUXPOS(3),
+	OPAMP1_POS_MUX_GND = OPAMP_OPAMPCTRL1_MUXPOS(3),
 };
 
 /**
  * \brief Positive input mux selection configuration enum.
  *
- * Enum for the negative input of OPAMP2.
+ * Enum for the positive input of OPAMP2.
  */
 enum opamp2_pos_mux {
 	/** Positive I/O pin 2. */
-	OPAMP2_POS_MUX_PIN2 = OPAMP_OPAMPCTRL0_MUXPOS(0),
+	OPAMP2_POS_MUX_PIN2 = OPAMP_OPAMPCTRL2_MUXPOS(0),
 	/** Resistor ladder 2 taps. */
-	OPAMP2_POS_MUX_TAP2 = OPAMP_OPAMPCTRL0_MUXPOS(1),
+	OPAMP2_POS_MUX_TAP2 = OPAMP_OPAMPCTRL2_MUXPOS(1),
 	/** OPAMP1 output. */
-	OPAMP2_POS_MUX_OUT1 = OPAMP_OPAMPCTRL0_MUXPOS(2),
+	OPAMP2_POS_MUX_OUT1 = OPAMP_OPAMPCTRL2_MUXPOS(2),
 	/** Ground. */
-	OPAMP2_POS_MUX_GND = OPAMP_OPAMPCTRL0_MUXPOS(3),
+	OPAMP2_POS_MUX_GND = OPAMP_OPAMPCTRL2_MUXPOS(3),
 	/** Positive I/O pin 0. */
-	OPAMP2_POS_MUX_PIN0 = OPAMP_OPAMPCTRL0_MUXPOS(4),
+	OPAMP2_POS_MUX_PIN0 = OPAMP_OPAMPCTRL2_MUXPOS(4),
 	/** Positive I/O pin 1. */
-	OPAMP2_POS_MUX_PIN1 = OPAMP_OPAMPCTRL0_MUXPOS(5),
+	OPAMP2_POS_MUX_PIN1 = OPAMP_OPAMPCTRL2_MUXPOS(5),
 	/** Resistor ladder 0 taps. */
-	OPAMP2_POS_MUX_TAP0 = OPAMP_OPAMPCTRL0_MUXPOS(6),
+	OPAMP2_POS_MUX_TAP0 = OPAMP_OPAMPCTRL2_MUXPOS(6),
 };
 
 /**
@@ -290,13 +290,13 @@ enum opamp0_res1_mux {
  */
 enum opamp1_res1_mux {
 	/** Positive input of OPAMP1. */
-	OPAMP1_RES1_MUX_POS_PIN0 = OPAMP_OPAMPCTRL0_RES1MUX(0),
+	OPAMP1_RES1_MUX_POS_PIN0 = OPAMP_OPAMPCTRL1_RES1MUX(0),
 	/** Negative input of OPAMP1. */
-	OPAMP1_RES1_MUX_NEG_PIN0 = OPAMP_OPAMPCTRL0_RES1MUX(1),
+	OPAMP1_RES1_MUX_NEG_PIN0 = OPAMP_OPAMPCTRL1_RES1MUX(1),
 	/** OPAMP0 output. */
-	OPAMP1_RES1_MUX_OUT0 = OPAMP_OPAMPCTRL0_RES1MUX(2),
+	OPAMP1_RES1_MUX_OUT0 = OPAMP_OPAMPCTRL1_RES1MUX(2),
 	/** Ground. */
-	OPAMP1_RES1_MUX_GND = OPAMP_OPAMPCTRL0_RES1MUX(3),
+	OPAMP1_RES1_MUX_GND = OPAMP_OPAMPCTRL1_RES1MUX(3),
 };
 
 /**
@@ -306,13 +306,13 @@ enum opamp1_res1_mux {
  */
 enum opamp2_res1_mux {
 	/** Positive input of OPAMP2. */
-	OPAMP2_RES1_MUX_POS_PIN0 = OPAMP_OPAMPCTRL0_RES1MUX(0),
+	OPAMP2_RES1_MUX_POS_PIN0 = OPAMP_OPAMPCTRL2_RES1MUX(0),
 	/** Negative input of OPAMP2. */
-	OPAMP2_RES1_MUX_NEG_PIN0 = OPAMP_OPAMPCTRL0_RES1MUX(1),
+	OPAMP2_RES1_MUX_NEG_PIN0 = OPAMP_OPAMPCTRL2_RES1MUX(1),
 	/** OPAMP1 output. */
-	OPAMP2_RES1_MUX_OUT1 = OPAMP_OPAMPCTRL0_RES1MUX(2),
+	OPAMP2_RES1_MUX_OUT1 = OPAMP_OPAMPCTRL2_RES1MUX(2),
 	/** Ground. */
-	OPAMP2_RES1_MUX_GND = OPAMP_OPAMPCTRL0_RES1MUX(3),
+	OPAMP2_RES1_MUX_GND = OPAMP_OPAMPCTRL2_RES1MUX(3),
 };
 
 /**
@@ -341,9 +341,9 @@ struct opamp_config_common {
 	enum opamp_pot_mux potentiometer_selection;
 	/** If \c true, R1 connected to RES1MUX. */
 	bool r1_enable;
-	/** If \c true, resistor ladder To VCC. */
+	/** If \c true, resistor ladder to VCC. */
 	bool r2_vcc;
-	/** If \c true, resistor ladder To Output. */
+	/** If \c true, resistor ladder to output. */
 	bool r2_out;
 	/** If \c true, the OPAMPx is enabled when a peripheral is requesting
 	 * the OPAMPx to be used as an input. The OPAMPx is
@@ -378,7 +378,7 @@ struct opamp0_config {
 /**
  * \brief OPAMP 1 configuration structure.
  *
- *  Configuration structure for OPAMP 0.
+ *  Configuration structure for OPAMP 1.
  */
 struct opamp1_config {
 	/** Negative input mux selection. */
@@ -395,7 +395,7 @@ struct opamp1_config {
 /**
  * \brief OPAMP 2 configuration structure.
  *
- *  Configuration structure for OPAMP 0.
+ *  Configuration structure for OPAMP 2.
  */
 struct opamp2_config {
 	/** Negative input mux selection. */
@@ -494,7 +494,7 @@ static inline void opamp_voltage_doubler_disable(void)
  *  user application.
  *
  *  The default configuration is setting OPAMP0 as "Voltage Follower",
- *  Please refer to the first mode in datasheet "Build-in Modes" section.
+ *  refer to the first mode in datasheet "Build-in Modes" section.
  *
  *  \param[out] config  OPAMP0 configuration structure to initialize to
  *                       default values
@@ -511,7 +511,7 @@ void opamp0_get_config_defaults(struct opamp0_config *const config);
  *  user application.
  *
  *  The default configuration is setting OPAMP1 as "Voltage Follower",
- *  Please refer to the first mode in datasheet "Build-in Modes" section.
+ *  refer to the first mode in datasheet "Build-in Modes" section.
  *
  *  \param[out] config  OPAMP1 configuration structure to initialize to
  *                       default values
@@ -528,7 +528,7 @@ void opamp1_get_config_defaults(struct opamp1_config *const config);
  *  user application.
  *
  *  The default configuration is setting OPAMP2 as "Voltage Follower",
- *  Please refer to the first mode in datasheet "Build-in Modes" section.
+ *  refer to the first mode in datasheet "Build-in Modes" section.
  *
  *  \param[out] config  OPAMP2 configuration structure to initialize to
  *                       default values
