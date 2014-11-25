@@ -50,7 +50,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_clock_group SAM System Clock Management Driver (SYSTEM CLOCK)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks, and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection, and
@@ -63,9 +63,9 @@ extern "C" {
  * - SYSCTRL (Clock Source Control)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_system_clock_prerequisites
@@ -905,39 +905,6 @@ uint32_t system_clock_source_get_hz(
  * \name Main Clock Management
  * @{
  */
-
-#ifdef FEATURE_SYSTEM_CLOCK_FAILURE_DETECT
-/**
- * \brief Enable or disable the main clock failure detection.
- *
- * This mechanism allows switching automatically the main clock to the safe
- * RCSYS clock, when the main clock source is considered off.
- *
- * This may happen for instance when an external crystal is selected as the
- * clock source of the main clock and the crystal dies. The mechanism is to
- * detect, during a RCSYS period, at least one rising edge of the main clock.
- * If no rising edge is seen the clock is considered failed.
- * As soon as the detector is enabled, the clock failure detector
- * CFD) will monitor the divided main clock. When a clock failure is detected,
- * the main clock automatically switches to the RCSYS clock and the CFD
- * interrupt is generated if enabled.
- *
- * \note The failure detect must be disabled if the system clock is the same or
- *       slower than 32KHz as it will believe the system clock has failed with
- *       a too-slow clock.
- *
- * \param[in] enable  Boolean \c true to enable, \c false to disable detection
- */
-static inline void system_main_clock_set_failure_detect(
-		const bool enable)
-{
-	if (enable) {
-		PM->CTRL.reg |=  PM_CTRL_CFDEN;
-	} else {
-		PM->CTRL.reg &= ~PM_CTRL_CFDEN;
-	}
-}
-#endif
 
 /**
  * \brief Set main CPU clock divider.

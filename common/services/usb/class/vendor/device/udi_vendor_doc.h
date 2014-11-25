@@ -639,7 +639,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  * \subsection asfdoc_udi_vendor_config_examples_2_1 SAM3X and SAM3A Devices (UOTGHS: USB OTG High Speed)
  * \include example/sam3x8h_sam3x_ek/conf_clock.h
  *
- * \subsection asfdoc_udi_vendor_config_examples_2_2 SAM4L Device(USBC)
+ * \subsection asfdoc_udi_vendor_config_examples_2_2 SAM4L Device (USBC)
  * \include example/sam4lc4c_sam4l_ek/conf_clock.h
   *
  * \section asfdoc_udi_vendor_config_examples_3 conf_clocks.h
@@ -652,10 +652,27 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  * \subsection asfdoc_udi_vendor_config_examples_4_1 SAM3X and SAM3A Devices (UOTGHS: USB OTG High Speed)
  * \include example/sam3x8h_sam3x_ek/conf_board.h
  *
- * \subsection asfdoc_udi_vendor_config_examples_4_2 SAM4L Device(USBC)
+ * \subsection asfdoc_udi_vendor_config_examples_4_2 SAM4L Device (USBC)
  * \include example/sam4lc4c_sam4l_ek/conf_board.h
  *
  * \subsection asfdoc_udi_vendor_config_examples_4_3 SAMD21 Device (USB)
  * \include example/samd21j18a_samd21_xplained_pro/conf_board.h
+ */
+
+/**
+ * \page asfdoc_udi_vendor_document_revision_history Document Revision History
+ *
+ * <table>
+ * <tr>
+ *    <th>Doc. Rev.</td>
+ *    <th>Date</td>
+ *    <th>Comments</td>
+ * </tr>
+ * <tr>
+ *    <td>A</td>
+ *    <td>11/2014</td>
+ *    <td>Initial release.</td>
+ * </tr>
+ * </table>
  */
 

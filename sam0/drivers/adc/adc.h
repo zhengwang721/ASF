@@ -47,7 +47,7 @@
 /**
  * \defgroup asfdoc_sam0_adc_group SAM Analog to Digital Converter Driver (ADC)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of the device's Analog to Digital Converter functionality, for
  * the conversion of analog voltages into a corresponding digital form.
  * The following driver API modes are covered by this manual:
@@ -60,9 +60,9 @@
  *  - ADC (Analog to Digital Converter)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_adc_prerequisites
@@ -1470,8 +1470,7 @@ static inline void adc_set_gain(
 
 	/* Set new gain factor */
 	adc_module->INPUTCTRL.reg =
-			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_GAIN_Msk) |
-			(gain_factor << ADC_INPUTCTRL_GAIN_Pos);
+			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_GAIN_Msk) | gain_factor ;
 }
 
 /**
@@ -1574,8 +1573,7 @@ static inline void adc_set_positive_input(
 
 	/* Set positive input pin */
 	adc_module->INPUTCTRL.reg =
-			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_MUXPOS_Msk) |
-			(positive_input << ADC_INPUTCTRL_MUXPOS_Pos);
+			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_MUXPOS_Msk) | positive_input;
 }
 
 
@@ -1604,8 +1602,7 @@ static inline void adc_set_negative_input(
 
 	/* Set negative input pin */
 	adc_module->INPUTCTRL.reg =
-			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_MUXNEG_Msk) |
-			(negative_input << ADC_INPUTCTRL_MUXNEG_Pos);
+			(adc_module->INPUTCTRL.reg & ~ADC_INPUTCTRL_MUXNEG_Msk) | negative_input;
 }
 
 /** @} */

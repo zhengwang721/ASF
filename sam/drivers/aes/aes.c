@@ -187,11 +187,7 @@ void aes_set_config(
 
 	ul_mode |= AES_MR_PROCDLY(p_cfg->processing_delay);
 
-	#if SAM4C || SAM4CP || SAM4CM
 	ul_mode |= AES_MR_CKEY_PASSWD;
-	#else
-	ul_mode |= AES_MR_CKEY(0xE);
-	#endif /* !(SAM4C || SAM4CP || SAM4CM) */
 
 	p_aes->AES_MR = ul_mode;
 }
