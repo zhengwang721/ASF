@@ -63,8 +63,12 @@ extern "C" {
  * extends across multiple hardware peripherals.
  *
  * The following peripherals are used by this module:
- * \if DEVICE_SAML21_SUPPORT || DEVICE_SAMC21_SUPPORT
+ * \if DEVICE_SAML21_SUPPORT
  *  - PM (Power Manager)
+ *  - RSTC(Reset Controller)
+ *  - SUPC(Supply Controller)
+ * \elseif DEVICE_SAMC21_SUPPORT
+ *  - PM(Power Manager)
  *  - RSTC(Reset Controller)
  *  - SUPC(Supply Controller)
  * \else
@@ -75,7 +79,7 @@ extern "C" {
  * The following devices can use this module:
  * \if DEVICE_SAML21_SUPPORT
  *  - Atmel | SMART SAM L21
- * \elif DEVICE_SAMC21_SUPPORT
+ * \elseif DEVICE_SAMC21_SUPPORT
  *  - Atmel | SMART SAM C21
  * \else
  *  - Atmel | SMART SAM D20/D21
@@ -571,7 +575,16 @@ void system_init(void);
  *      <td>PM</td>
  *      <td>Power Manager</td>
  *  </tr>
- * \if DEVICE_SAML21_SUPPORT || DEVICE_SAMC21_SUPPORT
+ * \if DEVICE_SAML21_SUPPORT
+ *  <tr>
+ *      <td>SUPC</td>
+ *      <td>Supply Controller</td>
+ *  </tr>
+ *  <tr>
+ *      <td>RSTC</td>
+ *      <td>Reset Controller</td>
+ *  </tr>
+ * \elseif DEVICE_SAMC21_SUPPORT
  *  <tr>
  *      <td>SUPC</td>
  *      <td>Supply Controller</td>
@@ -613,7 +626,7 @@ void system_init(void);
  *  <tr>
  *      <td>Initial Release</td>
  *  </tr>
- * \elif DEVICE_SAMC21_SUPPORT
+ * \elseif DEVICE_SAMC21_SUPPORT
  *  <tr>
  *      <td>Initial Release</td>
  *  </tr>
@@ -651,7 +664,7 @@ void system_init(void);
  *      <td>11/2014</td>
  *      <td>Initial release.</td>
  * </tr>
- * \elif DEVICE_SAMC21_SUPPORT
+ * \elseif DEVICE_SAMC21_SUPPORT
  *  <tr>
  *      <td>A</td>
  *      <td>12/2014</td>

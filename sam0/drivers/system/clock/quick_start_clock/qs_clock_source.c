@@ -129,8 +129,9 @@ int main(void)
 	config_gclock_gen.division_factor = 1;
 	system_gclk_gen_set_config(GCLK_GENERATOR_0, &config_gclock_gen);
 //! [set_sys_clk_src]
-//! [main]
 #endif
+//! [main]
+
 	while (true) {
 
 	}
