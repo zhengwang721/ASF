@@ -113,7 +113,7 @@ void trx_spi_init(void)
 	struct extint_chan_conf eint_chan_conf; 
 	extint_chan_get_config_defaults(&eint_chan_conf); 
 	eint_chan_conf.gpio_pin = AT86RFX_IRQ_PIN; 
-	eint_chan_conf.gpio_pin_mux = AT86RF_IRQ_PINMUX; 
+	eint_chan_conf.gpio_pin_mux = AT86RFX_IRQ_PINMUX; 
 	eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_DOWN; 
 	eint_chan_conf.wake_if_sleeping    = true; 
 	eint_chan_conf.filter_input_signal = false; 
