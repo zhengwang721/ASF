@@ -169,14 +169,15 @@ struct uhd_callback_trans_end_parameter {
 	usb_ep_t ep;
 	uhd_trans_status_t status;
 	iram_size_t nb_transfered;
+	struct ohci_td_general *td_general_header;
+	uhd_callback_trans_t callback_trans_end_func;
+	bool flag;
 };
-static struct uhd_callback_trans_end_parameter callback_trans_end_para;
-static uhd_callback_trans_t callback_trans_end_func = NULL;
+static struct uhd_callback_trans_end_parameter callback_trans_end_para[8];
 
 /** Variables to manage the suspend/resume sequence */
 static uint8_t uhd_suspend_start;
 static uint8_t uhd_resume_start;
-static uint8_t uhd_transfer_start;
 
 /**
  * \internal
@@ -184,19 +185,38 @@ static uint8_t uhd_transfer_start;
  */
 static void uhd_transfer_end(void *pointer)
 {
+	uint32_t i;
+	struct ohci_td_general *td_general_header;
+
+	td_general_header = (struct ohci_td_general *)pointer;
+
 	uint32_t *type = (uint32_t *)pointer;
+	volatile uint32_t callback_type = *type;
 
-	if (*type) {
-		if (callback_trans_end_func != NULL) {
-			uhd_callback_trans_t callback_transfer = callback_trans_end_func;
-			callback_trans_end_func = NULL;
-
-			callback_transfer(callback_trans_end_para.add,
-						callback_trans_end_para.ep,
-						callback_trans_end_para.status,
-						callback_trans_end_para.nb_transfered);
+	if (callback_type & 0x02) {
+		td_general_header = (struct ohci_td_general *)(callback_type & 0xFFFFFFF0);
+		/* Check if there is free callback resource. */
+		for (i = 0; i < 8; i++) {
+			if (callback_trans_end_para[i].td_general_header ==
+						td_general_header) {
+				break;
+			}
 		}
-	} else {
+		if (i == 8) {
+			return;
+		}
+
+		if (callback_trans_end_para[i].callback_trans_end_func != NULL) {
+			callback_trans_end_para[i].callback_trans_end_func(
+					callback_trans_end_para[i].add,
+					callback_trans_end_para[i].ep,
+					callback_trans_end_para[i].status,
+					((iram_size_t)td_general_header->pCurrentBufferPointer
+					- callback_trans_end_para[i].nb_transfered));
+			memset((void *)&callback_trans_end_para[i], 0,
+					sizeof(callback_trans_end_para[i]));
+		}
+	} else if (callback_type & 0x01) {
 		if (callback_setup_end_func != NULL) {
 			uhd_callback_setup_end_t callback_setup = callback_setup_end_func;
 			callback_setup_end_func = NULL;
@@ -220,21 +240,9 @@ static void uhd_sof_interrupt(void *pointer)
 	/* Manage a delay to enter in suspend */
 	if (uhd_suspend_start) {
 		if (--uhd_suspend_start == 0) {
-			/* In case of high CPU frequency,
-			 *  the current Keep-Alive/SOF can be always on-going
-			 *  then wait end of SOF generation
-			 *  to be sure that disable SOF has been accepted
-			 */
 			dbg_print("SUSP\n");
-//			usb_host_disable_sof(&dev);
-			/* Enable wakeup/resumes interrupts */
-//			usb_host_enable_callback(&dev, USB_HOST_CALLBACK_WAKEUP);
-//			usb_host_enable_callback(&dev, USB_HOST_CALLBACK_DNRSM);
-//			usb_host_enable_callback(&dev, USB_HOST_CALLBACK_UPRSM);
-
 			ohci_bus_suspend();
-			
-			//uhd_sleep_mode(UHD_STATE_SUSPEND);
+			uhd_sleep_mode(UHD_STATE_SUSPEND);
 		}
 		return; // Abort SOF events
 	}
@@ -242,21 +250,12 @@ static void uhd_sof_interrupt(void *pointer)
 	/* Manage a delay to exit of suspend */
 	if (uhd_resume_start) {
 		if (--uhd_resume_start == 0) {
-//			ohci_bus_resume();
 			// Notify the UHC
 			uhc_notify_resume();
-			//uhd_sleep_mode(UHD_STATE_IDLE);
+			uhd_sleep_mode(UHD_STATE_IDLE);
 		}
 		return; // Abort SOF events
 	}	
-
-	/* Manage a delay to start next transfer */
-	if (uhd_transfer_start) {
-		if (--uhd_transfer_start == 0) {
-			UHP->HcControl |= HC_CONTROL_BLE|HC_CONTROL_PLE|HC_CONTROL_IE;
-		}
-		return; // Abort SOF events
-	}
 
 	// Notify the UHC
 	uhc_notify_sof(false);
@@ -295,7 +294,6 @@ void uhd_enable(void)
 
 	uhd_suspend_start = 0;
 	uhd_resume_start = 0;
-	uhd_transfer_start = 0;
 
 	uhd_sleep_mode(UHD_STATE_DISCONNECT);
 
@@ -394,9 +392,6 @@ bool uhd_is_suspend(void)
 
 void uhd_resume(void)
 {
-//	otg_unfreeze_clock();
-//	uhd_enable_sof();
-
 	ohci_bus_resume();
 	/* Wait 50ms before restarting transfer */
 	uhd_resume_start = 50;
@@ -489,13 +484,13 @@ bool uhd_setup_request(
 {
 	bool return_value = true;
 
-//	irqflags_t flags;
-//	flags = cpu_irq_save();
+	irqflags_t flags;
+	flags = cpu_irq_save();
 
 	// add setup TD
 	return_value = ohci_add_td_control(TD_PID_SETUP, (uint8_t *)req, sizeof(usb_setup_req_t));
 	if (return_value == false) {
-//		cpu_irq_restore(flags);
+		cpu_irq_restore(flags);
 		return false;
 	}
 
@@ -505,7 +500,7 @@ bool uhd_setup_request(
 		// add in TD
 		return_value = ohci_add_td_control(TD_PID_IN, payload, payload_size);
 		if (return_value == false) {
-//			cpu_irq_restore(flags);
+			cpu_irq_restore(flags);
 			return false;
 		}
 
@@ -514,7 +509,7 @@ bool uhd_setup_request(
 		// add out TD
 		return_value = ohci_add_td_control(TD_PID_OUT, payload, 0);
 		if (return_value == false) {
-//			cpu_irq_restore(flags);
+			cpu_irq_restore(flags);
 			return false;
 		}
 	} else {
@@ -522,14 +517,21 @@ bool uhd_setup_request(
 			// add out TD
 			return_value = ohci_add_td_control(TD_PID_OUT, payload, payload_size);
 			if (return_value == false) {
-//				cpu_irq_restore(flags);
+				cpu_irq_restore(flags);
+				return false;
+			}
+
+			// add out TD
+			return_value = ohci_add_td_control(TD_PID_IN, payload, 0);
+			if (return_value == false) {
+				cpu_irq_restore(flags);
 				return false;
 			}
 		} else {
 			/* No DATA phase */
 			return_value = ohci_add_td_control(TD_PID_IN, payload, 0);
 			if (return_value == false) {
-//				cpu_irq_restore(flags);
+				cpu_irq_restore(flags);
 				return false;
 			}
 		}
@@ -540,9 +542,7 @@ bool uhd_setup_request(
 	callback_setup_end_para.payload_trans = payload_size;
 	callback_setup_end_func = callback_end;
 
-	// wait for the transfer complete
-//	while (callback_setup_end_func);
-//	cpu_irq_restore(flags);
+	cpu_irq_restore(flags);
 
 	return true;
 }
@@ -555,29 +555,38 @@ bool uhd_ep_run(usb_add_t add,
 		uint16_t timeout,
 		uhd_callback_trans_t callback)
 {
+	uint32_t i;
 	bool return_value = true;
+
+	/* Check if there is free callback resource. */
+	for (i = 0; i < 8; i++) {
+		if (!callback_trans_end_para[i].flag) {
+			memset((void *)&callback_trans_end_para[i], 0,
+					sizeof(callback_trans_end_para[i]));
+			break;
+		}
+	}
+	if (i == 8) {
+		return false;
+	}
 
 	irqflags_t flags;
 
 	flags = cpu_irq_save();
 
-	/* First stop any processing */
-//	UHP->HcControl &= ~(HC_CONTROL_BLE|HC_CONTROL_PLE|HC_CONTROL_IE);
-
-	return_value = ohci_add_td_non_control(endp, buf, buf_size);
+	return_value = ohci_add_td_non_control(endp, buf, buf_size,
+			&callback_trans_end_para[i].td_general_header);
 	if (return_value == false) {
 		cpu_irq_restore(flags);
 		return false;
 	}
 
-	callback_trans_end_para.add = add;
-	callback_trans_end_para.ep = endp;
-	callback_trans_end_para.status = UHD_TRANS_NOERROR;
-	callback_trans_end_para.nb_transfered = buf_size;
-	callback_trans_end_func = callback;
-
-	/* Wait 5ms before restarting transfer */
-//	uhd_transfer_start = 5;
+	callback_trans_end_para[i].add = add;
+	callback_trans_end_para[i].ep = endp;
+	callback_trans_end_para[i].status = UHD_TRANS_NOERROR;
+	callback_trans_end_para[i].nb_transfered = (iram_size_t)buf;
+	callback_trans_end_para[i].callback_trans_end_func = callback;
+	callback_trans_end_para[i].flag = 1;
 
 	cpu_irq_restore(flags);
 

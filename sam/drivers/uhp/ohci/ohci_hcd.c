@@ -46,37 +46,40 @@
 #include <string.h>
 
 /* HCCA strcture. */
-static struct ohci_hcca hcca;
+static volatile struct ohci_hcca hcca;
 
 /* Control endpoint related. */
-struct ohci_ed control_ed;
-struct ohci_td_general control_td_head;
-struct ohci_td_general control_td_tail;
+static volatile struct ohci_ed control_ed;
+static volatile struct ohci_td_general control_td_head;
+static volatile struct ohci_td_general control_td_tail;
 
 /* Bulk endpoint related. */
-struct ohci_ed bulk_ed[4];
-static uint8_t bulk_ed_status = 0;
-struct ohci_td_general bulk_td_head;
-struct ohci_td_general bulk_td_tail;
+static volatile struct ohci_ed bulk_ed[8];
+static volatile uint8_t bulk_ed_status = 0;
+static volatile struct ohci_td_general bulk_td_head[8];
+static volatile struct ohci_td_general bulk_td_tail[8];
 
 /* Interrupt endpoint related. */
-struct ohci_ed interrupt_ed[4];
-static uint8_t interrupt_ed_status = 0;
-struct ohci_td_general interrupt_td_head;
-struct ohci_td_general interrupt_td_tail;
+static volatile struct ohci_ed interrupt_ed[8];
+static volatile uint8_t interrupt_ed_status = 0;
+static volatile struct ohci_td_general interrupt_td_head;
+static volatile struct ohci_td_general interrupt_td_tail;
 
 /* Isochronous endpoint related. */
-struct ohci_ed isochronous_ed[4];
-static uint8_t isochronous_ed_status = 0;
-struct ohci_td_iso isochronous_td_head;
-struct ohci_td_iso isochronous_td_tail;
+static volatile struct ohci_ed isochronous_ed[8];
+static volatile uint8_t isochronous_ed_status = 0;
+static volatile struct ohci_td_iso isochronous_td_head;
+static volatile struct ohci_td_iso isochronous_td_tail;
 
 /* Callback related. */
 static ohci_callback_t ohci_callback_pointer[OHCI_NUM_OF_INTERRUPT_SOURCE];
 static uint32_t callback_para;
 
 /* Reset flag. */
-static uint32_t bus_reset_flag;
+static volatile uint32_t bus_reset_flag;
+
+/* Temp variable to store the TD head and tail. */
+static volatile uint32_t p_td_head, p_td_tail;
 
 /**
  * \brief Initialize the OHCI module.
@@ -92,15 +95,15 @@ void ohci_init(void)
 
 	memset((void *)&hcca, 0, sizeof(hcca));
 	memset((void *)&control_ed, 0, sizeof(control_ed));
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < 8; i++) {
 		memset((void *)&bulk_ed[i], 0, sizeof(bulk_ed[i]));
 		memset((void *)&interrupt_ed[i], 0, sizeof(interrupt_ed[i]));
 		memset((void *)&isochronous_ed[i], 0, sizeof(isochronous_ed[i]));
+		memset((void *)&bulk_td_head[i], 0, sizeof(bulk_td_head[i]));
+		memset((void *)&bulk_td_tail[i], 0, sizeof(bulk_td_tail[i]));
 	}
 	memset((void *)&control_td_head, 0, sizeof(control_td_head));
 	memset((void *)&control_td_tail, 0, sizeof(control_td_tail));
-	memset((void *)&bulk_td_head, 0, sizeof(bulk_td_head));
-	memset((void *)&bulk_td_head, 0, sizeof(bulk_td_head));
 	memset((void *)&interrupt_td_head, 0, sizeof(interrupt_td_head));
 	memset((void *)&interrupt_td_tail, 0, sizeof(interrupt_td_tail));
 	memset((void *)&isochronous_td_head, 0, sizeof(isochronous_td_head));
@@ -124,21 +127,13 @@ void ohci_init(void)
 	UHP->HcControl |= HC_CONTROL_IE;
 
 	UHP->HcHCCA = (uint32_t)&hcca;
-//	UHP->HcControlHeadED = (uint32_t)&control_ed;
 
     // Clear Interrrupt Status
     UHP->HcInterruptStatus |= UHP->HcInterruptStatus;
 
 	// Enable some interrupts()
-//	UHP->HcInterruptEnable = HC_INTERRUPT_SO | HC_INTERRUPT_WDH | HC_INTERRUPT_SF
-//			| HC_INTERRUPT_RD | HC_INTERRUPT_UE
-//			| HC_INTERRUPT_FNO | HC_INTERRUPT_RHSC
-//			| HC_INTERRUPT_OC | HC_INTERRUPT_MIE;
-	UHP->HcInterruptEnable = HC_INTERRUPT_WDH | HC_INTERRUPT_SF | HC_INTERRUPT_UE
+	UHP->HcInterruptEnable = HC_INTERRUPT_WDH | HC_INTERRUPT_SF
 				| HC_INTERRUPT_RD | HC_INTERRUPT_RHSC | HC_INTERRUPT_MIE;
-
-	// Enable all queues
-//	UHP->HcControl |= HC_CONTROL_PLE | HC_CONTROL_IE | HC_CONTROL_CLE | HC_CONTROL_BLE;
 
 	//delay some time to access the port
 	delay_ms(50);
@@ -175,14 +170,8 @@ void ohci_deinit(void)
 	// Free all allocated EDs and TDs
 
 	/* TDs in control endpoint. */
-	if (control_ed.p_td_head != control_ed.p_td_tail) {
-		td_general_free_header = (struct ohci_td_general *)control_ed.p_td_head;
-		while (td_general_free_header != NULL) {
-			td_general_header = td_general_free_header->p_next_td;
-			free(td_general_free_header);
-			td_general_free_header = td_general_header;
-		}
-	}
+	control_ed.p_td_head = NULL;
+	control_ed.p_td_tail = NULL; 
 
 	/* TDs in Bulk endpoints. */
 	ed_header = (struct ohci_ed *)UHP->HcBulkHeadED;
@@ -381,7 +370,7 @@ bool ohci_add_ed_bulk(ed_info_t *ed_info)
 	struct ohci_ed *bulk_ed_add;
 
 	/* Check if there is free bulk endpoint. */
-	for (i = 0; i < 4; i++) {
+	for (i = 0; i < 8; i++) {
 		if (!(bulk_ed_status & (1 << i))) {
 			bulk_ed_status |= (1 << i);
 			memset((void *)&bulk_ed[i], 0, sizeof(bulk_ed[i]));
@@ -389,7 +378,7 @@ bool ohci_add_ed_bulk(ed_info_t *ed_info)
 			break;
 		}
 	}
-	if (i == 4) {
+	if (i == 8) {
 		return false;
 	}
 
@@ -435,7 +424,7 @@ bool ohci_add_ed_period(ed_info_t *ed_info)
 		/* isochronous ED */
 
 		/* Check if there is free isochronous endpoint. */
-		for (j = 0; j < 4; j++) {
+		for (j = 0; j < 8; j++) {
 			if (!(isochronous_ed_status & (1 << j))) {
 				isochronous_ed_status |= (1 << j);
 				memset((void *)&isochronous_ed[j], 0, sizeof(isochronous_ed[j]));
@@ -443,7 +432,7 @@ bool ohci_add_ed_period(ed_info_t *ed_info)
 				break;
 			}
 		}
-		if (j == 4) {
+		if (j == 8) {
 			return false;
 		}
 
@@ -461,7 +450,7 @@ bool ohci_add_ed_period(ed_info_t *ed_info)
 		/* interrupt ED */
 
 		/* Check if there is free interrupt endpoint. */
-		for (j = 0; j < 4; j++) {
+		for (j = 0; j < 8; j++) {
 			if (!(interrupt_ed_status & (1 << j))) {
 				interrupt_ed_status |= (1 << j);
 				memset((void *)&interrupt_ed[j], 0, sizeof(interrupt_ed[j]));
@@ -469,22 +458,18 @@ bool ohci_add_ed_period(ed_info_t *ed_info)
 				break;
 			}
 		}
-		if (j == 4) {
+		if (j == 8) {
 			return false;
 		}
 
-		for (i = 0; i < 4; i++) {
+		for (i = 0; i < 8; i++) {
 			period_ed_header = (struct ohci_ed *)hcca.InterruptTable[i];
 			if (period_ed_header == NULL) {
 				period_ed_add->ed_info.ul_ed_info = ed_info->ul_ed_info;
 				hcca.InterruptTable[i] = (uint32_t)period_ed_add;
-				hcca.InterruptTable[i + 4] = (uint32_t)period_ed_add;
 				hcca.InterruptTable[i + 8] = (uint32_t)period_ed_add;
-				hcca.InterruptTable[i + 12] = (uint32_t)period_ed_add;
 				hcca.InterruptTable[i + 16] = (uint32_t)period_ed_add;
-				hcca.InterruptTable[i + 20] = (uint32_t)period_ed_add;
 				hcca.InterruptTable[i + 24] = (uint32_t)period_ed_add;
-				hcca.InterruptTable[i + 28] = (uint32_t)period_ed_add;
 				return true;
 			} else {
 				if (period_ed_header->ed_info.ed_info_s.bEndpointNumber
@@ -505,8 +490,8 @@ bool ohci_add_ed_period(ed_info_t *ed_info)
 void ohci_remove_ed(uint8_t ep_number)
 {
 	uint32_t i, j;
-	struct ohci_ed *ed_header;
-	struct ohci_ed *ed_free_header;
+	struct ohci_ed *ed_header = 0;
+	struct ohci_ed *ed_free_header = 0;
 
 	/* Control endpoints. */
 	if (ep_number == 0) {
@@ -591,8 +576,6 @@ void ohci_remove_ed(uint8_t ep_number)
  */
 bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
 {
-	uint32_t p_td_head, p_td_tail;
-
 	UHP->HcControl &= ~HC_CONTROL_CLE;
 
 	memset((void *)&control_td_head, 0, sizeof(control_td_head));
@@ -631,8 +614,8 @@ bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
 
 	// Wait for transfer done.
 	do {
-		p_td_head = (uint32_t)control_ed.p_td_head & 0xFFFFFFF0;
-		p_td_tail = (uint32_t)control_ed.p_td_tail & 0xFFFFFFF0;
+		p_td_head = ((uint32_t)(control_ed.p_td_head)) & 0xFFFFFFF0;
+		p_td_tail = ((uint32_t)(control_ed.p_td_tail)) & 0xFFFFFFF0;
 	} while(p_td_head != p_td_tail);
 
 	return true;
@@ -647,9 +630,9 @@ bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
  *
  * \return true for success.
  */
-bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf, uint32_t buf_size)
+bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
+		uint32_t buf_size, struct ohci_td_general **td_general_header)
 {
-	uint32_t p_td_head, p_td_tail;
 	struct ohci_ed *ed_header;
 	uint32_t i;
 	uint8_t ep_dir;
@@ -662,30 +645,29 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf, uint32_t buf_size)
 	ep_number = ep_number & 0xF;
 
 	/* Bulk endpoints. */
+	i = 0;
 	ed_header = (struct ohci_ed *)UHP->HcBulkHeadED;
 	while (ed_header != NULL) {
 		if ((ed_header->ed_info.ed_info_s.bEndpointNumber == ep_number) &&
 				(ed_header->ed_info.ed_info_s.bDirection == ep_dir)) {
 			// Wait for transfer done.
 			do {
-				p_td_head = (uint32_t)ed_header->p_td_head & 0xFFFFFFF0;
-				p_td_tail = (uint32_t)ed_header->p_td_tail & 0xFFFFFFF0;
+				p_td_head = ((uint32_t)(ed_header->p_td_head)) & 0xFFFFFFF0;
+				p_td_tail = ((uint32_t)(ed_header->p_td_tail)) & 0xFFFFFFF0;
 			} while(p_td_head != p_td_tail);
 
-			UHP->HcControl &= ~HC_CONTROL_BLE;
-			
-			memset((void *)&bulk_td_head, 0, sizeof(bulk_td_head));
-			memset((void *)&bulk_td_tail, 0, sizeof(bulk_td_tail));
+			memset((void *)&bulk_td_head[i], 0, sizeof(bulk_td_head[i]));
+			memset((void *)&bulk_td_tail[i], 0, sizeof(bulk_td_tail[i]));
 
-			bulk_td_head.td_info.bBufferRounding = 1;
-			bulk_td_head.td_info.bDirectionPID = 3;
-			bulk_td_head.td_info.bDelayInterrupt = 0;
-			bulk_td_head.td_info.bDataToggle = 0;
-			bulk_td_head.td_info.bErrorCount = 0;
-			bulk_td_head.td_info.bConditionCode = 0;
-			bulk_td_head.pCurrentBufferPointer= buf;
-			bulk_td_head.p_next_td = &bulk_td_tail;
-			bulk_td_head.pBufferEnd = buf + buf_size - 1;
+			bulk_td_head[i].td_info.bBufferRounding = 1;
+			bulk_td_head[i].td_info.bDirectionPID = 3;
+			bulk_td_head[i].td_info.bDelayInterrupt = 0;
+			bulk_td_head[i].td_info.bDataToggle = 0;
+			bulk_td_head[i].td_info.bErrorCount = 0;
+			bulk_td_head[i].td_info.bConditionCode = 0;
+			bulk_td_head[i].pCurrentBufferPointer= buf;
+			bulk_td_head[i].p_next_td = NULL;
+			bulk_td_head[i].pBufferEnd = buf + buf_size - 1;
 
 			/* Check the halt status. */
 			if ((uint32_t)ed_header->p_td_head & 0x01) {
@@ -695,8 +677,17 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf, uint32_t buf_size)
 			// set the skip
 //			ed_header->ed_info.ed_info_s.bSkip = 1;
 
-			ed_header->p_td_head = &bulk_td_head;
-			ed_header->p_td_tail = &bulk_td_tail;
+			p_td_head = (uint32_t)(&bulk_td_head[i]);
+			p_td_head &= 0xFFFFFFF0;
+			*td_general_header = (struct ohci_td_general *)p_td_head;
+			p_td_tail = (uint32_t)(ed_header->p_td_head);
+			p_td_tail &= 0x0000000F;
+			p_td_head |= p_td_tail;
+
+//			UHP->HcControl &= ~HC_CONTROL_BLE;
+
+			ed_header->p_td_head = (void *)p_td_head;
+			ed_header->p_td_tail = NULL;
 
 
 				// clear the skip
@@ -706,6 +697,9 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf, uint32_t buf_size)
 			UHP->HcControl |= HC_CONTROL_BLE;
 				
 			return true;
+		} else {
+			ed_header = ed_header->p_next_ed;
+			i++;
 		}
 	}
 
@@ -717,8 +711,8 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf, uint32_t buf_size)
 			if (ed_header->ed_info.ed_info_s.bFormat == 0) {
 				// Wait for transfer done.
 				do {
-					p_td_head = (uint32_t)ed_header->p_td_head & 0xFFFFFFF0;
-					p_td_tail = (uint32_t)ed_header->p_td_tail & 0xFFFFFFF0;
+					p_td_head = ((uint32_t)(ed_header->p_td_head)) & 0xFFFFFFF0;
+					p_td_tail = ((uint32_t)(ed_header->p_td_tail)) & 0xFFFFFFF0;
 				} while(p_td_head != p_td_tail);
 
 				UHP->HcControl &= ~HC_CONTROL_PLE;
@@ -745,9 +739,10 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf, uint32_t buf_size)
 				// set the skip
 //				ed_header->ed_info.ed_info_s.bSkip = 1;
 
-				p_td_head = (uint32_t)&interrupt_td_head;
+				p_td_head = (uint32_t)(&interrupt_td_head);
 				p_td_head &= 0xFFFFFFF0;
-				p_td_tail = (uint32_t)ed_header->p_td_head;
+				*td_general_header = (struct ohci_td_general *)p_td_head;
+				p_td_tail = (uint32_t)(ed_header->p_td_head);
 				p_td_tail &= 0x0000000F;
 				p_td_head |= p_td_tail;
 				ed_header->p_td_head = (void *)p_td_head;
@@ -763,8 +758,8 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf, uint32_t buf_size)
 			} else {
 				// Wait for transfer done.
 				do {
-					p_td_head = (uint32_t)ed_header->p_td_head & 0xFFFFFFF0;
-					p_td_tail = (uint32_t)ed_header->p_td_tail & 0xFFFFFFF0;
+					p_td_head = ((uint32_t)(ed_header->p_td_head)) & 0xFFFFFFF0;
+					p_td_tail = ((uint32_t)(ed_header->p_td_tail)) & 0xFFFFFFF0;
 				} while(p_td_head != p_td_tail);
 
 				UHP->HcControl &= ~HC_CONTROL_PLE;
@@ -821,14 +816,8 @@ void ohci_remove_td(uint8_t ep_number)
 
 	/* Control endpoints. */
 	if (ep_number == 0) {
-		if (control_ed.p_td_head != control_ed.p_td_tail) {
-			td_general_free_header = (struct ohci_td_general *)control_ed.p_td_head;
-			while (td_general_free_header != NULL) {
-				td_general_header = td_general_free_header->p_next_td;
-				free(td_general_free_header);
-				td_general_free_header = td_general_header;
-			}
-		}
+		control_ed.p_td_head = NULL;
+		control_ed.p_td_tail = NULL; 
 		return;
 	} 
 
@@ -853,14 +842,8 @@ void ohci_remove_td(uint8_t ep_number)
 		ed_header = (struct ohci_ed *)hcca.InterruptTable[i];
 		while (ed_header != NULL) {
 			if (ed_header->ed_info.ed_info_s.bEndpointNumber == ep_number) {
-				if (ed_header->p_td_head != ed_header->p_td_tail) {
-					td_general_free_header = (struct ohci_td_general *)ed_header->p_td_head;
-					while (td_general_free_header != NULL) {
-						td_general_header = td_general_free_header->p_next_td;
-						free(td_general_free_header);
-						td_general_free_header = td_general_header;
-					}
-				}
+				ed_header->p_td_head = NULL;
+				ed_header->p_td_tail = NULL;
 				return;
 			}
 			ed_header = ed_header->p_next_ed;
@@ -963,7 +946,7 @@ void UHP_Handler()
 	uint32_t int_status;
 	uint32_t rh_status;
 	uint32_t rh_port_status;
-//	struct ohci_td_general *td_general_header;
+	struct ohci_td_general *td_general_header;
 
 	rh_status = UHP->HcRhStatus;
 	rh_port_status = UHP->HcRhPortStatus;
@@ -979,14 +962,14 @@ void UHP_Handler()
 
 	if (int_status & HC_INTERRUPT_WDH) {
 		UHP->HcInterruptStatus = HC_INTERRUPT_WDH;
-//		td_general_header = (struct ohci_td_general *)hcca.pDoneHead;
-//		callback_para = td_general_header->pCurrentBufferPointer;    //byte transferred if no error
+		td_general_header = (struct ohci_td_general *)hcca.pDoneHead;
+		callback_para = (uint32_t)td_general_header;
+		callback_para &= 0xFFFFFFF0;
 //		callback_para = td_general_header->td_info.bConditionCode;  //
-		if (((uint32_t)hcca.pDoneHead & 0xFFFFFFF0)
-				== ((uint32_t)&control_td_head & 0xFFFFFFF0)) {
-			callback_para = 0;
+		if (callback_para == ((uint32_t)&control_td_head & 0xFFFFFFF0)) {
+			callback_para |= 0x01;
 		} else {
-			callback_para = 1;
+			callback_para |= 0x02;
 		}
 		ohci_callback_pointer[OHCI_INTERRUPT_WDH](&callback_para);
 	}
@@ -998,31 +981,17 @@ void UHP_Handler()
 	if (int_status & HC_INTERRUPT_RD) {
 		// resume detect
 		UHP->HcInterruptStatus = HC_INTERRUPT_RD;
-
-		// Initiate port reset
-		//UHP->HcRhPortStatus = RH_PS_PRS;
-		//while (UHP->HcRhPortStatus & RH_PS_PRS);
-		//delay_ms(100);
-		// ...and clear port reset signal
-		//UHP->HcRhPortStatus = RH_PS_PRSC;
-		// enable port
-//		UHP->HcRhPortStatus = RH_PS_PES;
-//		UHP->HcRhPortStatus = RH_PS_PESC;
-
 		ohci_bus_resume();
-
 		ohci_callback_pointer[OHCI_INTERRUPT_RD](&callback_para);
 	}
 
 	if (int_status & HC_INTERRUPT_RHSC) {
 		if (bus_reset_flag) {
-//			if (rh_port_status & RH_PS_PRSC) {
-				UHP->HcRhPortStatus = RH_PS_PRSC;
-				UHP->HcInterruptStatus = HC_INTERRUPT_RHSC;
-				bus_reset_flag = false;
-				callback_para = BUS_RESET;
-				ohci_callback_pointer[OHCI_INTERRUPT_RHSC](&callback_para);
-//			}
+			UHP->HcRhPortStatus = RH_PS_PRSC;
+			UHP->HcInterruptStatus = HC_INTERRUPT_RHSC;
+			bus_reset_flag = false;
+			callback_para = BUS_RESET;
+			ohci_callback_pointer[OHCI_INTERRUPT_RHSC](&callback_para);
 		} else if (rh_port_status & RH_PS_CSC) {
 			UHP->HcRhPortStatus = RH_PS_CSC;
 			UHP->HcInterruptStatus = HC_INTERRUPT_RHSC;

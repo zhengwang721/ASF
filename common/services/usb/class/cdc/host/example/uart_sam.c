@@ -3,7 +3,7 @@
  *
  * \brief UART functions
  *
- * Copyright (C) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,18 +44,27 @@
 #include "conf_example.h"
 #include "conf_usb_host.h"
 #include <asf.h>
+#if (SAMG55)
+#include "flexcom.h"
+#endif
 
 #if SAM4L
 #   define USART_PERIPH_CLK_ENABLE() sysclk_enable_peripheral_clock(USART_BASE)
+#elif SAMG55
+#   define USART_PERIPH_CLK_ENABLE() flexcom_enable(BOARD_FLEXCOM);      \
+	                                                        flexcom_set_opmode(BOARD_FLEXCOM, FLEXCOM_USART);
 #else
 #   define USART_PERIPH_CLK_ENABLE() sysclk_enable_peripheral_clock(USART_ID)
 #endif
 
 
+static volatile uint32_t value;
+static volatile bool b_error;
+
 /* Default option */
 static sam_usart_opt_t usart_options = {
 	.baudrate = 115200,
-	.char_length = 8,
+	.char_length = US_MR_CHRL_8_BIT,
 	.parity_type = US_MR_PAR_NO,
 	.stop_bits = US_MR_NBSTOP_1_BIT,
 	.channel_mode = US_MR_CHMODE_NORMAL,
@@ -67,8 +76,7 @@ ISR(USART_HANDLER)
 	if (sr & US_CSR_RXRDY) {
 		/* Data received */
 		ui_com_tx_start();
-		uint32_t value;
-		bool b_error = usart_read(USART_BASE, &value) ||
+		b_error = usart_read(USART_BASE, &value) ||
 			(sr & (US_CSR_FRAME | US_CSR_TIMEOUT | US_CSR_PARE));
 		if (b_error) {
 			usart_reset_rx(USART_BASE);
