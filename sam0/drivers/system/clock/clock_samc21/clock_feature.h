@@ -97,7 +97,7 @@ extern "C" {
  * which being capable of producing a stabilized output frequency which can then
  * be fed into the various peripherals and modules within the device.
  *
- * Possible clock source modules include internal R/C oscillators as well as external 
+ * Possible clock source modules include internal R/C oscillators as well as external
  * crystal oscillators and/or clock inputs.
  *
  * \subsection asfdoc_sam0_system_clock_module_overview_cpu_clock CPU / Bus Clocks
@@ -561,7 +561,7 @@ struct system_clock_source_xosc32k_config {
  */
 struct system_clock_source_osc48m_config {
 	/* Internal 48MHz RC oscillator divider. */
-	enum system_osc48m_div div; 
+	enum system_osc48m_div div;
 	/** Keep the OSC48M enabled in standby sleep mode. */
 	bool run_in_standby;
 	/** Run On Demand. If this is set the OSC48M won't run
@@ -674,7 +674,7 @@ static inline bool system_clock_xosc_clock_failure_detected(void)
  * \returns XOSC clock switch state.
  *
  * \retval true   XOSC clock is switched and provides the safe clock
- * \retval false  XOSC clock is not switched and provides the external clock 
+ * \retval false  XOSC clock is not switched and provides the external clock
  *  or crystal oscillator clock
  */
 
@@ -761,7 +761,7 @@ static inline bool system_clock_xosc32k_clock_failure_detected(void)
  * \returns XOSC32K clock switch state.
  *
  * \retval true   XOSC32K clock is switched and provides the safe clock
- * \retval false  XOSC32K clock is not switched and provides the external clock 
+ * \retval false  XOSC32K clock is not switched and provides the external clock
  *  or crystal oscillator clock
  */
 static inline bool system_clock_xosc32k_is_switched(void)

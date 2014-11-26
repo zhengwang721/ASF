@@ -174,7 +174,7 @@ enum system_interrupt_vector {
 	/** Interrupt vector index for a Digital-to-Analog peripheral interrupt. */
 	SYSTEM_INTERRUPT_MODULE_DAC        = DAC_IRQn,
 	/** Interrupt vector index for a Sigma-Delta Analog Digital Converter peripheral interrupt. */
-	SYSTEM_INTERRUPT_MODULE_SDADC        = SDADC_IRQn,
+	SYSTEM_INTERRUPT_MODULE_SDADC      = SDADC_IRQn,
 	/** Interrupt vector index for a Peripheral Touch Controller peripheral
 	 *  interrupt. */
 	SYSTEM_INTERRUPT_MODULE_PTC        = PTC_IRQn,

@@ -253,7 +253,7 @@ void system_clock_source_xosc_set_config(
 	temp.bit.ONDEMAND = config->on_demand;
 	temp.bit.RUNSTDBY = config->run_in_standby;
 	temp.bit.SWBEN    = config->enable_clock_switch_back;
-	
+
 	if (config->enable_clock_failure_detector) {
 		Assert(OSCCTRL->OSC48MCTRL.reg & OSCCTRL_OSC48MCTRL_ENABLE);
 		temp.bit.CFDEN    = config->enable_clock_failure_detector;
@@ -262,12 +262,12 @@ void system_clock_source_xosc_set_config(
 	/* Store XOSC frequency for internal use */
 	_system_clock_inst.xosc.frequency = config->frequency;
 
-	OSCCTRL->EVCTRL.reg = 
+	OSCCTRL->EVCTRL.reg =
 			config->enable_clock_failure_detector_event_outut << OSCCTRL_EVCTRL_CFDEO_Pos;
 
 	OSCCTRL->CFDPRESC.reg = OSCCTRL_CFDPRESC_CFDPRESC(config->clock_failure_detector_prescaler) ;
 
-	OSCCTRL->XOSCCTRL = temp;	
+	OSCCTRL->XOSCCTRL = temp;
 }
 
 /**
@@ -302,12 +302,12 @@ void system_clock_source_xosc32k_set_config(
 	 * operating frequency later */
 	_system_clock_inst.xosc32k.frequency = config->frequency;
 
-	OSC32KCTRL->CFDCTRL.reg = 
+	OSC32KCTRL->CFDCTRL.reg =
 		(config->clock_failure_detector_prescaler << OSC32KCTRL_CFDCTRL_CFDPRESC_Pos) |
 		(config->enable_clock_failure_detector << OSC32KCTRL_CFDCTRL_CFDEN_Pos)|
 		(config->enable_clock_switch_back << OSC32KCTRL_CFDCTRL_SWBACK_Pos);
 
-	OSC32KCTRL->EVCTRL.reg = 
+	OSC32KCTRL->EVCTRL.reg =
 			(config->enable_clock_failure_detector_event_outut << OSC32KCTRL_EVCTRL_CFDEO_Pos);
 
 	OSC32KCTRL->XOSC32K = temp;
@@ -638,7 +638,7 @@ void system_clock_init(void)
 	xosc_conf.run_in_standby    = CONF_CLOCK_XOSC_RUN_IN_STANDBY;
 	xosc_conf.clock_failure_detector_prescaler = CONF_CLOCK_XOSC_FAILURE_DETECTOT_PRE;
 	xosc_conf.enable_clock_failure_detector    = CONF_CLOCK_XOSC_FAILURE_DETECTOT_EANBLE;
-	xosc_conf.enable_clock_failure_detector_event_outut = 
+	xosc_conf.enable_clock_failure_detector_event_outut =
 											CONF_CLOCK_XOSC_FAILURE_DETECTOT_EVENT_OUTPUT_EANBLE;
 	xosc_conf.enable_clock_switch_back = CONF_CLOCK_XOSC_FAILURE_SWITCH_BACK_EANBLE;
 
@@ -660,7 +660,7 @@ void system_clock_init(void)
 	xosc32k_conf.run_in_standby      = CONF_CLOCK_XOSC32K_RUN_IN_STANDBY;
 	xosc32k_conf.clock_failure_detector_prescaler = CONF_CLOCK_XOSC32K_FAILURE_DETECTOT_PRE;
 	xosc32k_conf.enable_clock_failure_detector    = CONF_CLOCK_XOSC32K_FAILURE_DETECTOT_EANBLE;
-	xosc32k_conf.enable_clock_failure_detector_event_outut = 
+	xosc32k_conf.enable_clock_failure_detector_event_outut =
 											CONF_CLOCK_XOSC32K_FAILURE_DETECTOT_EVENT_OUTPUT_EANBLE;
 	xosc32k_conf.enable_clock_switch_back = CONF_CLOCK_XOSC32K_FAILURE_SWITCH_BACK_EANBLE;
 
