@@ -826,14 +826,7 @@ void ssc_set_writeprotect(Ssc *p_ssc, uint32_t ul_enable)
  */
 uint32_t ssc_get_writeprotect_status(Ssc *p_ssc)
 {
-	uint32_t ul_reg_val;
-
-	ul_reg_val = p_ssc->SSC_WPMR;
-	if (ul_reg_val & SSC_WPMR_WPEN) {
-		return (ul_reg_val & SSC_WPSR_WPVSRC_Msk) >> SSC_WPSR_WPVSRC_Pos;
-	} else {
-		return 0;
-	}
+	return p_ssc->SSC_WPSR & SSC_WPSR_WPVS;
 }
 
 //@}

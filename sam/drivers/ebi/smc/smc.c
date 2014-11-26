@@ -162,7 +162,7 @@ void smc_enable_writeprotect(Smc *p_smc, uint32_t ul_enable)
  */
 uint32_t smc_get_writeprotect_status(Smc *p_smc)
 {
-	return p_smc->SMC_WPSR;
+	return p_smc->SMC_WPSR & SMC_WPSR_WPVS;
 }
 #endif
 

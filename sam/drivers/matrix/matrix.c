@@ -440,7 +440,7 @@ uint32_t matrix_get_writeprotect_status(void)
 {
 	Matrix *p_matrix = MATRIX;
 
-	return (p_matrix->MATRIX_WPSR);
+	return p_matrix->MATRIX_WPSR & MATRIX_WPSR_WPVS;
 }
 #endif
 

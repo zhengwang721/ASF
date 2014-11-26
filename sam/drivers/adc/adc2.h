@@ -484,8 +484,7 @@ static inline void adc_set_writeprotect(Adc *const adc,
  */
 static inline uint32_t adc_get_writeprotect_status(Adc *const adc)
 {
-	return (adc->ADC_WPSR & ADC_WPSR_WPVS) ?
-			(adc->ADC_WPSR & ADC_WPMR_WPKEY_Msk) : 0;
+	return adc->ADC_WPSR & ADC_WPSR_WPVS;
 }
 
 /**

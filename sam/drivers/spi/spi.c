@@ -423,7 +423,7 @@ void spi_set_writeprotect(Spi *p_spi, uint32_t ul_enable)
  */
 uint32_t spi_get_writeprotect_status(Spi *p_spi)
 {
-	return p_spi->SPI_WPSR;
+	return p_spi->SPI_WPSR & SPI_WPSR_WPVS;
 }
 
 /**

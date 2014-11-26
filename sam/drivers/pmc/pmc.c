@@ -1424,12 +1424,14 @@ void pmc_set_writeprotect(uint32_t ul_enable)
 /**
  * \brief Return write protect status.
  *
- * \retval 0 Protection disabled.
- * \retval 1 Protection enabled.
+ *
+ * param[in] p_pmc Module hardware register base address pointer
+ * \retval 0 No write protection violation.
+ * \retval 1 A write protection violation.
  */
-uint32_t pmc_get_writeprotect_status(void)
+uint32_t pmc_get_writeprotect_status(Pmc *p_pmc)
 {
-	return PMC->PMC_WPMR & PMC_WPMR_WPEN;
+	return p_pmc->PMC_WPSR & PMC_WPSR_WPVS;
 }
 
 #if (SAMG53 || SAMG54 || SAMG55)

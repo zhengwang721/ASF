@@ -339,7 +339,7 @@ void pmc_disable_sclk_osc_freq_monitor(void);
 //@{
 
 void pmc_set_writeprotect(uint32_t ul_enable);
-uint32_t pmc_get_writeprotect_status(void);
+uint32_t pmc_get_writeprotect_status(Pmc *p_pmc);
 
 //@}
 
