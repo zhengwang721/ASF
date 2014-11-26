@@ -1272,8 +1272,8 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *		<td>Internal 32KHz Oscillator</td>
  *	</tr>
  *	<tr>
- *		<td>OSC16M</td>
- *		<td>Internal 16MHz Oscillator</td>
+ *		<td>OSC48M</td>
+ *		<td>Internal 48MHz Oscillator</td>
  *	</tr>
  *	<tr>
  *		<td>PLL</td>
