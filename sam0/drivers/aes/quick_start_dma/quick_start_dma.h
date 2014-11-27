@@ -73,7 +73,7 @@
  * \snippet quick_start_dma.c setup_init
  *
  * \subsection asfdoc_sam0_aes_dma_use_case_setup_flow Workflow
- * -# Define sample data from NIST-800-38A appendix F for ECB mode
+ * -# Define sample data from NIST-800-38A appendix F for ECB mode.
  *    \snippet quick_start_dma.c cipher_data
  *
  * -# Create related module variable and software instance structure.
@@ -82,7 +82,7 @@
  * -# Create DMA resource struct and descriptor.
  *    \snippet quick_start_dma.c module_var_dma
  *
- * -# Configure ,initialize and enable AES module.
+ * -# Configure, initialize, and enable AES module.
  *  -# Configuration AES DMA module, which can be used for AES.
  *     \snippet quick_start_dma.c setup_dma
  *  -# Configuration AES struct, which can be filled out to
