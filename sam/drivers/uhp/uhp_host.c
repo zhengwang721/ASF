@@ -185,15 +185,17 @@ static uint8_t uhd_resume_start;
  */
 static void uhd_transfer_end(void *pointer)
 {
+	uint32_t completion_code;
 	uint32_t i;
 	struct ohci_td_general *td_general_header;
+	iram_size_t current_buffer_point;
 
 	td_general_header = (struct ohci_td_general *)pointer;
 
 	uint32_t *type = (uint32_t *)pointer;
 	volatile uint32_t callback_type = *type;
 
-	if (callback_type & 0x02) {
+	if (!(callback_type & 0x80000000)) {
 		td_general_header = (struct ohci_td_general *)(callback_type & 0xFFFFFFF0);
 		/* Check if there is free callback resource. */
 		for (i = 0; i < 8; i++) {
@@ -207,16 +209,30 @@ static void uhd_transfer_end(void *pointer)
 		}
 
 		if (callback_trans_end_para[i].callback_trans_end_func != NULL) {
+			current_buffer_point =
+					(iram_size_t)td_general_header->pCurrentBufferPointer;
+			if (!current_buffer_point) {
+				current_buffer_point =
+					(iram_size_t)td_general_header->pBufferEnd + 1;
+			}
+
+			completion_code = (callback_type & 0x0000000F);
+			if (completion_code == CC_STALL) {
+				callback_trans_end_para[i].status = UHD_TRANS_STALL;
+				ohci_clear_ed_transfer_status(td_general_header);
+			}
+
 			callback_trans_end_para[i].callback_trans_end_func(
 					callback_trans_end_para[i].add,
 					callback_trans_end_para[i].ep,
 					callback_trans_end_para[i].status,
-					((iram_size_t)td_general_header->pCurrentBufferPointer
+					(current_buffer_point
 					- callback_trans_end_para[i].nb_transfered));
+
 			memset((void *)&callback_trans_end_para[i], 0,
 					sizeof(callback_trans_end_para[i]));
 		}
-	} else if (callback_type & 0x01) {
+	} else if (callback_type & 0x80000000) {
 		if (callback_setup_end_func != NULL) {
 			uhd_callback_setup_end_t callback_setup = callback_setup_end_func;
 			callback_setup_end_func = NULL;

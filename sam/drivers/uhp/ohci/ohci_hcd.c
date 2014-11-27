@@ -62,14 +62,14 @@ static volatile struct ohci_td_general bulk_td_tail[8];
 /* Interrupt endpoint related. */
 static volatile struct ohci_ed interrupt_ed[8];
 static volatile uint8_t interrupt_ed_status = 0;
-static volatile struct ohci_td_general interrupt_td_head;
-static volatile struct ohci_td_general interrupt_td_tail;
+static volatile struct ohci_td_general interrupt_td_head[8];
+static volatile struct ohci_td_general interrupt_td_tail[8];
 
 /* Isochronous endpoint related. */
 static volatile struct ohci_ed isochronous_ed[8];
 static volatile uint8_t isochronous_ed_status = 0;
-static volatile struct ohci_td_iso isochronous_td_head;
-static volatile struct ohci_td_iso isochronous_td_tail;
+static volatile struct ohci_td_iso isochronous_td_head[8];
+static volatile struct ohci_td_iso isochronous_td_tail[8];
 
 /* Callback related. */
 static ohci_callback_t ohci_callback_pointer[OHCI_NUM_OF_INTERRUPT_SOURCE];
@@ -566,6 +566,45 @@ void ohci_remove_ed(uint8_t ep_number)
 }
 
 /**
+ * \brief Remove an endpoint transfer status.
+ *
+ * \param td_general_header TD used by the endpoint.
+ */
+void ohci_clear_ed_transfer_status(struct ohci_td_general *td_general_header)
+{
+	uint32_t i;
+	uint32_t temp_head;
+
+	if (td_general_header == &control_td_head) {
+		temp_head = (uint32_t)control_ed.p_td_head;
+		temp_head &= 0xFFFFFFF0;
+		control_ed.p_td_head = (void *)temp_head;
+	}
+
+	for (i = 0; i < 8; i++) {
+		if (td_general_header == &bulk_td_head[i]) {
+			temp_head = (uint32_t)bulk_ed[i].p_td_head;
+			temp_head &= 0xFFFFFFF0;
+			bulk_ed[i].p_td_head = (void *)temp_head;
+		}
+	}
+	for (i = 0; i < 8; i++) {
+		if (td_general_header == &interrupt_td_head[i]) {
+			temp_head = (uint32_t)interrupt_ed[i].p_td_head;
+			temp_head &= 0xFFFFFFF0;
+			interrupt_ed[i].p_td_head = (void *)temp_head;
+		}
+	}
+	for (i = 0; i < 8; i++) {
+		if (td_general_header == &isochronous_td_head[i]) {
+			temp_head = (uint32_t)isochronous_ed[i].p_td_head;
+			temp_head &= 0xFFFFFFF0;
+			isochronous_ed[i].p_td_head = (void *)temp_head;
+		}
+	}
+}
+
+/**
  * \brief Add a transfer descriptor to control endpoint.
  *
  * \param pid PID type.
@@ -592,7 +631,7 @@ bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
 	control_td_head.td_info.bErrorCount = 0;
 	control_td_head.td_info.bConditionCode = 0xf;
 	control_td_head.pCurrentBufferPointer= buf;
-	control_td_head.p_next_td = &control_td_tail;
+	control_td_head.p_next_td = NULL;
 	control_td_head.pBufferEnd = buf + buf_size - 1;
 
 	/* Check the halt status. */
@@ -604,7 +643,7 @@ bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
 //	control_ed.ed_info.ed_info_s.bSkip = 1;
 
 	control_ed.p_td_head = &control_td_head;
-	control_ed.p_td_tail = &control_td_tail;
+	control_ed.p_td_tail = NULL;
 
 	// clear the skip
 //	control_ed.ed_info.ed_info_s.bSkip = 0;
@@ -704,7 +743,7 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 	}
 
 	/* Int/ISO endpoints. */
-	for (i = 0; i < 32; i++) {
+	for (i = 0; i < 8; i++) {
 		ed_header = (struct ohci_ed *)hcca.InterruptTable[i];
 		if ((ed_header->ed_info.ed_info_s.bEndpointNumber == ep_number) &&
 				(ed_header->ed_info.ed_info_s.bDirection == ep_dir)) {
@@ -718,18 +757,18 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 				UHP->HcControl &= ~HC_CONTROL_PLE;
 				UHP->HcControl &= ~HC_CONTROL_IE;
 				
-				memset((void *)&interrupt_td_head, 0, sizeof(interrupt_td_head));
-				memset((void *)&interrupt_td_tail, 0, sizeof(interrupt_td_tail));
+				memset((void *)&interrupt_td_head[i], 0, sizeof(interrupt_td_head[i]));
+				memset((void *)&interrupt_td_tail[i], 0, sizeof(interrupt_td_tail[i]));
 
-				interrupt_td_head.td_info.bBufferRounding = 1;
-				interrupt_td_head.td_info.bDirectionPID = 3;
-				interrupt_td_head.td_info.bDelayInterrupt = 0;
-				interrupt_td_head.td_info.bDataToggle = 0;
-				interrupt_td_head.td_info.bErrorCount = 0;
-				interrupt_td_head.td_info.bConditionCode = 0;
-				interrupt_td_head.pCurrentBufferPointer= buf;
-				interrupt_td_head.p_next_td = NULL;
-				interrupt_td_head.pBufferEnd = buf + buf_size - 1;
+				interrupt_td_head[i].td_info.bBufferRounding = 1;
+				interrupt_td_head[i].td_info.bDirectionPID = 3;
+				interrupt_td_head[i].td_info.bDelayInterrupt = 0;
+				interrupt_td_head[i].td_info.bDataToggle = 0;
+				interrupt_td_head[i].td_info.bErrorCount = 0;
+				interrupt_td_head[i].td_info.bConditionCode = 0;
+				interrupt_td_head[i].pCurrentBufferPointer= buf;
+				interrupt_td_head[i].p_next_td = NULL;
+				interrupt_td_head[i].pBufferEnd = buf + buf_size - 1;
 
 				/* Check the halt status. */
 				if ((uint32_t)ed_header->p_td_head & 0x01) {
@@ -739,7 +778,7 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 				// set the skip
 //				ed_header->ed_info.ed_info_s.bSkip = 1;
 
-				p_td_head = (uint32_t)(&interrupt_td_head);
+				p_td_head = (uint32_t)(&interrupt_td_head[i]);
 				p_td_head &= 0xFFFFFFF0;
 				*td_general_header = (struct ohci_td_general *)p_td_head;
 				p_td_tail = (uint32_t)(ed_header->p_td_head);
@@ -765,18 +804,18 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 				UHP->HcControl &= ~HC_CONTROL_PLE;
 				UHP->HcControl &= ~HC_CONTROL_IE;
 				
-				memset((void *)&isochronous_td_head, 0, sizeof(isochronous_td_head));
-				memset((void *)&isochronous_td_tail, 0, sizeof(isochronous_td_tail));
+				memset((void *)&isochronous_td_head[i], 0, sizeof(isochronous_td_head[i]));
+				memset((void *)&isochronous_td_tail[i], 0, sizeof(isochronous_td_tail[i]));
 
 				// start after 3 frame
-				isochronous_td_head.td_info.bStartingFrame = ohci_get_frame_number() + 3;
-				isochronous_td_head.td_info.bDelayInterrupt = 0;
-				isochronous_td_head.td_info.FrameCount = 0;				// one frame transaction
-				isochronous_td_head.td_info.bConditionCode = 0;
-				isochronous_td_head.pBufferPage0= buf;
-				isochronous_td_head.p_next_td = &isochronous_td_tail;
-				isochronous_td_head.pBufferEnd = buf + buf_size - 1;
-				isochronous_td_head.offset_psw[0] = 0;
+				isochronous_td_head[i].td_info.bStartingFrame = ohci_get_frame_number() + 3;
+				isochronous_td_head[i].td_info.bDelayInterrupt = 0;
+				isochronous_td_head[i].td_info.FrameCount = 0;				// one frame transaction
+				isochronous_td_head[i].td_info.bConditionCode = 0;
+				isochronous_td_head[i].pBufferPage0= buf;
+				isochronous_td_head[i].p_next_td = NULL;
+				isochronous_td_head[i].pBufferEnd = buf + buf_size - 1;
+				isochronous_td_head[i].offset_psw[0] = 0;
 
 				/* Check the halt status. */
 //				if ((uint32_t)ed_header->p_td_head & 0x01) {
@@ -786,8 +825,8 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 				// set the skip
 //				ed_header->ed_info.ed_info_s.bSkip = 1;
 
-				ed_header->p_td_head = &isochronous_td_head;
-				ed_header->p_td_tail = &isochronous_td_tail;
+				ed_header->p_td_head = &isochronous_td_head[i];
+				ed_header->p_td_tail = &isochronous_td_tail[i];
 
 				// clear the skip
 //				ed_header->ed_info.ed_info_s.bSkip = 0;
@@ -965,12 +1004,10 @@ void UHP_Handler()
 		td_general_header = (struct ohci_td_general *)hcca.pDoneHead;
 		callback_para = (uint32_t)td_general_header;
 		callback_para &= 0xFFFFFFF0;
-//		callback_para = td_general_header->td_info.bConditionCode;  //
 		if (callback_para == ((uint32_t)&control_td_head & 0xFFFFFFF0)) {
-			callback_para |= 0x01;
-		} else {
-			callback_para |= 0x02;
+			callback_para |= 0x80000000;
 		}
+		callback_para |= td_general_header->td_info.bConditionCode;
 		ohci_callback_pointer[OHCI_INTERRUPT_WDH](&callback_para);
 	}
 

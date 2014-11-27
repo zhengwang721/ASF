@@ -286,5 +286,20 @@ struct ohci_hcca {
 #define	FIT			(1 << 31)
 #define LSTHRESH		0x628		/* lowspeed bit threshold */
 
+/*
+ * The Completion Codes defined in section 4.3.3 of the OHCI spec.
+ */
+#define CC_NOERROR             0
+#define CC_CRC                 1
+#define CC_BITSTUFFING         2
+#define CC_DATATOGGLEMISMATCH  3
+#define CC_STALL               4
+#define CC_DEVICENOTRESPONDING 5
+#define CC_PIDCHECKFAILURE     6
+#define CC_UNEXPECTEDPID       7
+#define CC_DATAOVERRUN         8
+#define CC_DATAUNDERRUN        9
+#define CC_BUFFEROVERRUN       12
+#define CC_BUFFERUNDERRUN      13
 
 #endif /* _OHCI_COMPONENT_ */

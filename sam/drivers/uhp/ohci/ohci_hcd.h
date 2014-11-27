@@ -83,6 +83,7 @@ bool ohci_add_ed_control(ed_info_t *ed_info);
 bool ohci_add_ed_bulk(ed_info_t *ed_info);
 bool ohci_add_ed_period(ed_info_t *ed_info);
 void ohci_remove_ed(uint8_t ep_number);
+void ohci_clear_ed_transfer_status(struct ohci_td_general *td_general_header);
 bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size);
 bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 		uint32_t buf_size, struct ohci_td_general **td_general_header);
