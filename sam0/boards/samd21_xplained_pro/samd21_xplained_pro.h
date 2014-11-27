@@ -640,18 +640,7 @@ void system_board_init(void);
 #define AT86RFX_SPI_SERCOM_PINMUX_PAD3   EXT1_SPI_SERCOM_PINMUX_PAD3
 
 #define AT86RFX_IRQ_CHAN       EXT1_IRQ_INPUT
-#define AT86RFX_INTC_INIT()    \
-		struct extint_chan_conf eint_chan_conf; \
-		extint_chan_get_config_defaults(&eint_chan_conf); \
-		eint_chan_conf.gpio_pin = AT86RFX_IRQ_PIN; \
-		eint_chan_conf.gpio_pin_mux = EXT1_IRQ_PINMUX; \
-		eint_chan_conf.gpio_pin_pull      = EXTINT_PULL_NONE; \
-		eint_chan_conf.wake_if_sleeping    = true; \
-		eint_chan_conf.filter_input_signal = false; \
-		eint_chan_conf.detection_criteria  = EXTINT_DETECT_RISING; \
-		extint_chan_set_config(AT86RFX_IRQ_CHAN, &eint_chan_conf); \
-		extint_register_callback(AT86RFX_ISR, AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT);\
-		extint_chan_enable_callback(AT86RFX_IRQ_CHAN, EXTINT_CALLBACK_TYPE_DETECT);
+#define AT86RFX_IRQ_PINMUX     EXT1_IRQ_PINMUX
 
 
 /** Enables the transceiver main interrupt. */
