@@ -268,7 +268,7 @@ void dacc_set_writeprotect(Dacc *p_dacc, uint32_t ul_enable)
  */
 uint32_t dacc_get_writeprotect_status(Dacc *p_dacc)
 {
-	return p_dacc->DACC_WPSR & DACC_WPSR_WPVS;
+	return p_dacc->DACC_WPSR;
 }
 
 #if !SAM4L

@@ -697,6 +697,6 @@ uint32_t dmac_get_writeprotect_status(
 	/* Validate parameters. */
 	Assert(p_dmac);
 	
-	return p_dmac->DMAC_WPSR | DMAC_WPSR_WPVS;
+	return p_dmac->DMAC_WPSR;
 }
 #endif /* (SAM3XA || SAM4E) || defined(__DOXYGEN__) */

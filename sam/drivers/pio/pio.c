@@ -690,7 +690,7 @@ void pio_set_writeprotect(Pio *p_pio, const uint32_t ul_enable)
  */
 uint32_t pio_get_writeprotect_status(const Pio *p_pio)
 {
-	return p_pio->PIO_WPSR & PIO_WPSR_WPVS;
+	return p_pio->PIO_WPSR;
 }
 
 /**

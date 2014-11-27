@@ -364,7 +364,7 @@ static inline void slcdc_set_writeprotect(Slcdc *p_slcdc, uint32_t ul_enable)
  */
 static inline uint32_t slcdc_get_writeprotect_status(Slcdc *p_slcdc)
 {
-	return p_slcdc->SLCDC_WPSR & SLCDC_WPSR_WPVS;
+	return p_slcdc->SLCDC_WPSR;
 }
 
 /**
