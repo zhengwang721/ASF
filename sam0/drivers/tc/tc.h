@@ -104,7 +104,7 @@
  * \image html overview.svg "Basic Overview of the TC Module"
  *
  *
- * \subsection asfdoc_sam0_rtc_features Driver Feature Macro Definition
+ * \subsection asfdoc_sam0_tc_features Driver Feature Macro Definition
  * <table>
  *  <tr>
  *    <th>Driver Feature Macro</th>
