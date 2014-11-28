@@ -102,8 +102,10 @@ enum system_interrupt_vector {
 	SYSTEM_INTERRUPT_MODULE_EIC        = EIC_IRQn,
 	/** Interrupt vector index for Frequency Meter peripheral interrupt. */
 	SYSTEM_INTERRUPT_MODULE_FREQM      = FREQM_IRQn,
+#ifdef ID_TSENS
 	/** Interrupt vector index for Temperature Sensor peripheral interrupt. */
 	SYSTEM_INTERRUPT_MODULE_TSENS       = TSENS_IRQn,
+#endif
 	/** Interrupt vector index for a Non Volatile Memory Controller interrupt. */
 	SYSTEM_INTERRUPT_MODULE_NVMCTRL    = NVMCTRL_IRQn,
 	/** Interrupt vector index for a Direct Memory Access interrupt. */
@@ -138,7 +140,16 @@ enum system_interrupt_vector {
 	 */
 	SYSTEM_INTERRUPT_MODULE_TCn        = TCn_IRQn,
 #else
-	_SYSTEM_INTERRUPT_MODULES(SERCOM)
+	SYSTEM_INTERRUPT_MODULE_SERCOM0    = SERCOM0_IRQn,
+	SYSTEM_INTERRUPT_MODULE_SERCOM1    = SERCOM1_IRQn,
+	SYSTEM_INTERRUPT_MODULE_SERCOM2    = SERCOM2_IRQn,
+	SYSTEM_INTERRUPT_MODULE_SERCOM3    = SERCOM3_IRQn,
+#ifdef ID_SERCOM4
+	SYSTEM_INTERRUPT_MODULE_SERCOM4    = SERCOM4_IRQn,
+#endif
+#ifdef ID_SERCOM5
+	SYSTEM_INTERRUPT_MODULE_SERCOM5    = SERCOM5_IRQn,
+#endif
 	_SYSTEM_INTERRUPT_MODULES(TCC)
 	SYSTEM_INTERRUPT_MODULE_TC0        = TC0_IRQn,
 	SYSTEM_INTERRUPT_MODULE_TC1        = TC1_IRQn,
@@ -154,30 +165,37 @@ enum system_interrupt_vector {
 
 #ifdef ID_CAN0
 	/** Interrupt vector index for  Control Area Network 0  interrupt. */
-	SYSTEM_INTERRUPT_MODULE_CAN0      = CAN0_IRQn,
+	SYSTEM_INTERRUPT_MODULE_CAN0       = CAN0_IRQn,
 #endif
 #ifdef ID_CAN1
 	/** Interrupt vector index for	Control Area Network 1	interrupt. */
-	SYSTEM_INTERRUPT_MODULE_CAN1	  = CAN1_IRQn,
+	SYSTEM_INTERRUPT_MODULE_CAN1	   = CAN1_IRQn,
 #endif
-
+#ifdef ID_AC
 	/** Interrupt vector index for an Analog Comparator peripheral interrupt. */
 	SYSTEM_INTERRUPT_MODULE_AC         = AC_IRQn,
+#endif
 #ifdef ID_ADC0
 	/** Interrupt vector index for an Analog-to-Digital 0 peripheral interrupt. */
-	SYSTEM_INTERRUPT_MODULE_ADC0        = ADC0_IRQn,
+	SYSTEM_INTERRUPT_MODULE_ADC0       = ADC0_IRQn,
 #endif
 #ifdef ID_ADC1
 	/** Interrupt vector index for an Analog-to-Digital 1 peripheral interrupt. */
-	SYSTEM_INTERRUPT_MODULE_ADC1		= ADC1_IRQn,
+	SYSTEM_INTERRUPT_MODULE_ADC1       = ADC1_IRQn,
 #endif
+#ifdef ID_DAC
 	/** Interrupt vector index for a Digital-to-Analog peripheral interrupt. */
 	SYSTEM_INTERRUPT_MODULE_DAC        = DAC_IRQn,
+#endif
+#ifdef ID_SDADC
 	/** Interrupt vector index for a Sigma-Delta Analog Digital Converter peripheral interrupt. */
 	SYSTEM_INTERRUPT_MODULE_SDADC      = SDADC_IRQn,
+#endif
+#ifdef ID_PTC
 	/** Interrupt vector index for a Peripheral Touch Controller peripheral
 	 *  interrupt. */
 	SYSTEM_INTERRUPT_MODULE_PTC        = PTC_IRQn,
+#endif
 };
 
 /** @} */

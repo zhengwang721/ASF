@@ -253,7 +253,7 @@ extern "C" {
 
 
 /**
- * \brief Available start-up times for the XOSC32K
+ * \brief Available start-up times for the XOSC32K.
  *
  * Available external 32KHz oscillator start-up times, as a number of external
  * clock cycles.
@@ -276,7 +276,7 @@ enum system_xosc32k_startup {
 };
 
 /**
- * \brief Available start-up times for the XOSC
+ * \brief Available start-up times for the XOSC.
  *
  * Available external oscillator start-up times, as a number of external clock
  * cycles.
@@ -317,7 +317,7 @@ enum system_xosc_startup {
 };
 
 /**
- * \brief Available start-up times for the OSC32K
+ * \brief Available start-up times for the OSC32K.
  *
  * Available internal 32KHz oscillator start-up times, as a number of internal
  * OSC32K clock cycles.
@@ -342,7 +342,7 @@ enum system_osc32k_startup {
 };
 
 /**
- * \brief Division prescalers for the internal 48MHz system clock
+ * \brief Division prescalers for the internal 48MHz system clock.
  *
  * Available prescalers for the internal 48MHz (nominal) system clock.
  */
@@ -350,35 +350,35 @@ enum system_osc48m_div {
 	/** Divide the 48MHz RC oscillator output by one. */
 	SYSTEM_OSC48M_DIV_1,
 	/** Divide the 48MHz RC oscillator output by two. */
-	SYSTEM_OSC8M_DIV_2,
+	SYSTEM_OSC48M_DIV_2,
 	/** Divide the 48MHz RC oscillator output by three. */
 	SYSTEM_OSC48M_DIV_3,
 	/** Divide the 48MHz RC oscillator output by four. */
-	SYSTEM_OSC8M_DIV_4,
+	SYSTEM_OSC48M_DIV_4,
 	/** Divide the 48MHz RC oscillator output by five. */
 	SYSTEM_OSC48M_DIV_5,
 	/** Divide the 48MHz RC oscillator output by six. */
-	SYSTEM_OSC8M_DIV_6,
+	SYSTEM_OSC48M_DIV_6,
 	/** Divide the 48MHz RC oscillator output by seven. */
 	SYSTEM_OSC48M_DIV_7,
 	/** Divide the 48MHz RC oscillator output by eight. */
-	SYSTEM_OSC8M_DIV_8,
+	SYSTEM_OSC48M_DIV_8,
 	/** Divide the 48MHz RC oscillator output by nine. */
 	SYSTEM_OSC48M_DIV_9,
 	/** Divide the 48MHz RC oscillator output by ten. */
-	SYSTEM_OSC8M_DIV_10,
+	SYSTEM_OSC48M_DIV_10,
 	/** Divide the 48MHz RC oscillator output by eleven. */
 	SYSTEM_OSC48M_DIV_11,
 	/** Divide the 48MHz RC oscillator output by twelve. */
-	SYSTEM_OSC8M_DIV_12,
+	SYSTEM_OSC48M_DIV_12,
 	/** Divide the 48MHz RC oscillator output by thirteen. */
 	SYSTEM_OSC48M_DIV_13,
 	/** Divide the 48MHz RC oscillator output by fourteen. */
-	SYSTEM_OSC8M_DIV_14,
+	SYSTEM_OSC48M_DIV_14,
 	/** Divide the 48MHz RC oscillator output by fifteen. */
 	SYSTEM_OSC48M_DIV_15,
 	/** Divide the 48MHz RC oscillator output by sexteen. */
-	SYSTEM_OSC8M_DIV_16,
+	SYSTEM_OSC48M_DIV_16,
 };
 
 /**
@@ -454,20 +454,20 @@ enum system_clock_external {
 };
 
 /**
- * \brief Available clock sources in the system
+ * \brief Available clock sources in the system.
  *
  * Clock sources available to the GCLK generators
  */
 enum system_clock_source {
 	/** Internal 48MHz RC oscillator. */
 	SYSTEM_CLOCK_SOURCE_OSC48M    = GCLK_SOURCE_OSC48M,
-	/** Internal 32kHz RC oscillator. */
+	/** Internal 32KHz RC oscillator. */
 	SYSTEM_CLOCK_SOURCE_OSC32K   = GCLK_SOURCE_OSC32K,
 	/** External oscillator. */
 	SYSTEM_CLOCK_SOURCE_XOSC     = GCLK_SOURCE_XOSC ,
-	/** External 32kHz oscillator. */
+	/** External 32KHz oscillator. */
 	SYSTEM_CLOCK_SOURCE_XOSC32K  = GCLK_SOURCE_XOSC32K,
-	/** Internal Ultra Low Power 32kHz oscillator. */
+	/** Internal Ultra Low Power 32KHz oscillator. */
 	SYSTEM_CLOCK_SOURCE_ULP32K   = GCLK_SOURCE_OSCULP32K,
 	/** Generator input pad. */
 	SYSTEM_CLOCK_SOURCE_GCLKIN     = GCLK_SOURCE_GCLKIN,
@@ -478,7 +478,7 @@ enum system_clock_source {
 };
 
 /**
- * \brief List of APB peripheral buses
+ * \brief List of APB peripheral buses.
  *
  * Available bus clock domains on the APB bus.
  */
@@ -492,7 +492,7 @@ enum system_clock_apb_bus {
 };
 
 /**
- * \brief Configuration structure for XOSC
+ * \brief Configuration structure for XOSC.
  *
  * External oscillator clock configuration structure.
  */
@@ -521,7 +521,7 @@ struct system_clock_source_xosc_config {
 };
 
 /**
- * \brief Configuration structure for XOSC32K
+ * \brief Configuration structure for XOSC32K.
  *
  * External 32KHz oscillator clock configuration structure.
  */
@@ -555,7 +555,7 @@ struct system_clock_source_xosc32k_config {
 };
 
 /**
- * \brief Configuration structure for OSC48M
+ * \brief Configuration structure for OSC48M.
  *
  * Internal 48MHz (nominal) oscillator configuration structure.
  */
@@ -570,14 +570,14 @@ struct system_clock_source_osc48m_config {
 };
 
 /**
- * \brief Configuration structure for OSCULP32K
+ * \brief Configuration structure for OSCULP32K.
  *
  * Internal 32KHz Ultra Low Power oscillator configuration structure.
  */
 struct system_clock_source_osculp32k_config {
-	/** Enable 1kHz output. */
+	/** Enable 1KHz output. */
 	bool enable_1khz_output;
-	/** Enable 32kHz output. */
+	/** Enable 32KHz output. */
 	bool enable_32khz_output;
 	/** Lock configuration after it has been written,
 	 *  a device reset will release the lock. */
@@ -585,7 +585,7 @@ struct system_clock_source_osculp32k_config {
 };
 
 /**
- * \brief Configuration structure for OSC32K
+ * \brief Configuration structure for OSCULP32K.
  *
  * Internal 32KHz  oscillator configuration structure.
  */
@@ -612,7 +612,7 @@ struct system_clock_source_osc32k_config {
  */
 
 /**
- * \brief Retrieve the default configuration for XOSC
+ * \brief Retrieve the default configuration for XOSC.
  *
  * Fills a configuration structure with the default configuration for an
  * external oscillator module:
@@ -694,7 +694,7 @@ static inline bool system_clock_xosc_is_switched(void)
  */
 
 /**
- * \brief Retrieve the default configuration for XOSC32K
+ * \brief Retrieve the default configuration for XOSC32K.
  *
  * Fills a configuration structure with the default configuration for an
  * external 32KHz oscillator module:
@@ -780,7 +780,7 @@ static inline bool system_clock_xosc32k_is_switched(void)
  */
 
 /**
- * \brief Retrieve the default configuration for OSC32K
+ * \brief Retrieve the default configuration for OSC32K.
  *
  * Fills a configuration structure with the default configuration for an
  * internal 32KHz oscillator module:
@@ -819,7 +819,7 @@ void system_clock_source_osc32k_set_config(
  */
 
 /**
- * \brief Retrieve the default configuration for OSCULP32K
+ * \brief Retrieve the default configuration for OSCULP32K.
  *
  * Fills a configuration structure with the default configuration for an
  * internal Ultra Low Power 32KHz oscillator module:
@@ -852,7 +852,7 @@ void system_clock_source_osculp32k_set_config(
  */
 
 /**
- * \brief Retrieve the default configuration for OSC48M
+ * \brief Retrieve the default configuration for OSC48M.
  *
  * Fills a configuration structure with the default configuration for an
  * internal 48MHz (nominal) oscillator module:
@@ -867,7 +867,7 @@ static inline void system_clock_source_osc48m_get_config_defaults(
 {
 	Assert(config);
 
-	config->div = SYSTEM_OSC8M_DIV_12;
+	config->div = SYSTEM_OSC48M_DIV_12;
 	config->run_in_standby  = false;
 	config->on_demand       = true;
 }
@@ -1064,7 +1064,7 @@ static inline enum status_code system_apb_clock_clear_mask(
  */
 
 /**
- * \brief Reference clock source of the DPLL module
+ * \brief Reference clock source of the DPLL module.
  */
 enum system_clock_source_dpll_reference_clock {
 	/** Select XOSC32K as clock reference. */
@@ -1078,7 +1078,7 @@ enum system_clock_source_dpll_reference_clock {
 };
 
 /**
- * \brief Lock time-out value of the DPLL module
+ * \brief Lock time-out value of the DPLL module.
  */
 enum system_clock_source_dpll_lock_time {
 	/** Set no time-out as default. */
@@ -1094,7 +1094,7 @@ enum system_clock_source_dpll_lock_time {
 };
 
 /**
- * \brief Filter type of the DPLL module
+ * \brief Filter type of the DPLL module.
  */
 enum system_clock_source_dpll_filter {
 	/** Default filter mode. */
@@ -1108,7 +1108,7 @@ enum system_clock_source_dpll_filter {
 };
 
 /**
- * \brief DPLL Output Clock Prescaler
+ * \brief DPLL Output Clock Prescaler.
  */
 enum system_clock_source_dpll_prescaler {
 	/** DPLL output is divided by 1 */
@@ -1120,7 +1120,7 @@ enum system_clock_source_dpll_prescaler {
 };
 
 /**
- * \brief Configuration structure for DPLL
+ * \brief Configuration structure for DPLL.
  *
  * DPLL oscillator configuration structure.
  */
@@ -1160,7 +1160,7 @@ struct system_clock_source_dpll_config {
  */
 
 /**
- * \brief Retrieve the default configuration for DPLL
+ * \brief Retrieve the default configuration for DPLL.
  *
  * Fills a configuration structure with the default configuration for a
  * DPLL oscillator module:
@@ -1219,7 +1219,7 @@ void system_clock_init(void);
  */
 
 /**
- * \brief Set flash controller wait states
+ * \brief Set flash controller wait states.
  *
  * Will set the number of wait states that are used by the onboard
  * flash memory. The number of wait states depend on both device
