@@ -340,11 +340,11 @@ struct bod12_config {
  * - Clock prescaler set to divide the input clock by two
  * - Continuous in active mode
  * - Continuous in standby mode
- * - Monitor the VDD power pin
+ * - Monitor the V<SUB>DD</SUB> power pin
  * - Reset on BOD33 detect
  * - Hysteresis enabled
- * - BOD33 level 0x27 on VDD
- * - BOD33 level 0x27 on VBAT
+ * - BOD33 level 0x27 on V<SUB>DD</SUB>
+ * - BOD33 level 0x27 on V<SUB>BAT</SUB>
  * - BOD33 kept enabled during device sleep
  * - BOD33 kept enabled during standby
  *

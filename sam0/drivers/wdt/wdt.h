@@ -277,8 +277,8 @@ struct wdt_conf {
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true if the module has completed synchronization
- * \retval false if the module synchronization is ongoing
+ * \retval true If the module has completed synchronization
+ * \retval false If the module synchronization is ongoing
  */
 static inline bool wdt_is_syncing(void)
 {

@@ -975,8 +975,8 @@ uint8_t _tc_get_inst_index(
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval false if the module has completed synchronization
- * \retval true  if the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
+ * \retval true  If the module synchronization is ongoing
  */
 static inline bool tc_is_syncing(
 		const struct tc_module *const module_inst)

@@ -294,7 +294,7 @@ enum system_xosc32k_startup {
  * cycles.
  */
 enum system_xosc_startup {
-	/** Wait one clock cycles until the clock source is considered stable. */
+	/** Wait one clock cycle until the clock source is considered stable. */
 	SYSTEM_XOSC_STARTUP_1,
 	/** Wait two clock cycles until the clock source is considered stable. */
 	SYSTEM_XOSC_STARTUP_2,

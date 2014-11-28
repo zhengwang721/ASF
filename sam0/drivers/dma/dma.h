@@ -64,7 +64,6 @@ extern "C" {
  *  - Atmel | SMART SAM D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
