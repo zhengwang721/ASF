@@ -59,6 +59,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM C21
  *
  * Physically, the modules are interconnected within the device as shown in the
  * following diagram:
@@ -93,7 +94,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_SYSTEM_PINMUX_DRIVE_STRENGTH</td>
- *    <td>SAML21</td>
+ *    <td>SAML21,SAMC21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -198,7 +199,7 @@ extern "C" {
 #endif
 
 /*@{*/
-#if (SAML21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAMC21) || defined(__DOXYGEN__)
 /** Output Driver Strength Selection feature support. */
 #  define FEATURE_SYSTEM_PINMUX_DRIVE_STRENGTH
 #endif
@@ -601,6 +602,9 @@ void system_pinmux_group_set_output_drive(
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Add SAMC21 support.</td>
  *	</tr>
  *	<tr>
  *		<td>Add SAML21 support.</td>

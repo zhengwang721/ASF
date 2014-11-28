@@ -73,6 +73,44 @@
 		<device-support value="saml21"/>
 		<generator value="doxygen-module-v2" default-mcu="unspecified-saml21"/>
 	</module>
+	<module type="meta" id="sam0.drivers.system.appnote_3" caption="SYSTEM - Core System Driver For SAM C21">
+		<info type="description" value="summary">
+			Driver for the SAM C21 core system modules. Provides a unified
+			interface for the configuration and management of the core device
+			functionality required for a functional system.
+		</info>
+		<info type="keyword" value="technology">
+			<keyword value="I/O" />
+			<keyword value="CPU" />
+			<keyword value="Clocks" />
+		</info>
+
+		<info type="appnote" value="ATXXXX"/>
+		<info type="keyword" value="pdf">
+			<keyword value="SYSTEM"/>
+			<keyword value="I/O"/>
+			<keyword value="CPU"/>
+			<keyword value="Clocks"/>
+		</info>
+
+		<info type="description" value="pdf">
+			This document describes how to use the core system modules on the
+			SAM C21, both the ASF driver and the peripheral itself.
+		</info>
+		<build type="include-path" value="."/>
+		<build type="include-path" value="power/power_sam_c"/>
+		<build type="include-path" value="reset/reset_sam_c"/>
+		<build type="header-file" subtype="api" value="system.h"/>
+		<build type="header-file" value="power/power_sam_c/power.h"/>
+		<build type="header-file" value="reset/reset_sam_c/reset.h"/>
+		<build type="c-source" value="system.c"/>
+		<build type="doxygen-enable-section" value="DEVICE_SAMC21_SUPPORT"/>
+		<build type="doxygen-entry-point" value="asfdoc_sam0_system_group"/>
+		<build type="doxygen-image-path" value="docimg"/>
+
+		<device-support value="samc21"/>
+		<generator value="doxygen-module-v2" default-mcu="unspecified-samc21"/>
+	</module>
 	<module type="driver" id="sam0.drivers.system" caption="SYSTEM - Core System Driver">
 		<info type="description" value="summary">
 			Driver for the SAM core system modules. Provides a unified
