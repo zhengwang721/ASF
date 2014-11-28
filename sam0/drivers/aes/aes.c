@@ -181,7 +181,7 @@ void aes_set_config(
 }
 
 /**
- * \brief Write the 128/192/256bit cryptographic key.
+ * \brief Write the 128/192/256-bit cryptographic key.
  *
  * \param[in] module  Pointer to the software instance struct
  * \param[in]  key Pointer to 4/6/8 contiguous 32-bit words

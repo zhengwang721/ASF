@@ -47,7 +47,7 @@
 /**
  * \defgroup asfdoc_sam0_tcc_group SAM Timer Counter for Control Applications Driver (TCC)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of the TCC module within the device, for waveform
  * generation and timing operations. It also provides extended options for
  * control applications.
@@ -64,10 +64,10 @@
  *  - TCC (Timer/Counter for Control Applications)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM L21
+ *  - Atmel | SMART SAM D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_tcc_prerequisites
@@ -158,7 +158,7 @@
  *
  * \anchor asfdoc_sam0_tcc_count_size_vs_top
  * <table>
- *  <caption>Timer Counter Sizes And Their Maximum Count Values</caption>
+ *  <caption>Timer Counter Sizes and Their Maximum Count Values</caption>
  *  <tr>
  *    <th>Counter size</th>
  *    <th>Max. (hexadecimal)</th>
@@ -420,7 +420,7 @@
  * set to normal (i.e. non-inverted) output mode.
  *
  * \anchor asfdoc_sam0_tcc_module_pwm_single_diag
- * \image html pwm_single_ex.svg "Example Of PWM In Single-Slope Mode, And Different Counter Operations"
+ * \image html pwm_single_ex.svg "Example Of PWM In Single-Slope Mode, and Different Counter Operations"
  *
  * Several PWM modes are supported by the TCC module, refer to
  * datasheet for the details on PWM waveform generation.
@@ -937,9 +937,9 @@ enum tcc_wave_generation {
  * Specifies whether the wave output needs to be inverted or not.
  */
 enum tcc_wave_polarity {
-	/** Wave output is not inverted */
+	/** Wave output is not inverted. */
 	TCC_WAVE_POLARITY_0,
-	/** Wave output is inverted */
+	/** Wave output is inverted. */
 	TCC_WAVE_POLARITY_1
 };
 
@@ -949,18 +949,18 @@ enum tcc_wave_polarity {
  * Used when disabling output pattern or when selecting a specific pattern.
  */
 enum tcc_output_pattern {
-	/** SWAP Output pattern is not used */
+	/** SWAP output pattern is not used. */
 	TCC_OUTPUT_PATTERN_DISABLE,
-	/** Pattern 0 is applied to SWAP output */
+	/** Pattern 0 is applied to SWAP output. */
 	TCC_OUTPUT_PATTERN_0,
-	/** Pattern 1 is applied to SWAP output */
+	/** Pattern 1 is applied to SWAP output. */
 	TCC_OUTPUT_PATTERN_1
 };
 
 /**
  * \brief Ramp Operations which are supported in single-slope PWM generation
  *
- * Ramp Operations which are supported in single-slope PWM generation.
+ * Ramp operations which are supported in single-slope PWM generation.
  */
 enum tcc_ramp {
 	/** Default timer/counter PWM operation. */
@@ -2045,8 +2045,8 @@ static inline void tcc_set_ramp_index(
  *
  * \return Status which indicates whether the module is running.
  *
- * \retval true The timer/counter is running.
- * \retval false The timer/counter is stopped.
+ * \retval true The timer/counter is running
+ * \retval false The timer/counter is stopped
  */
 static inline bool tcc_is_running(
 		struct tcc_module *const module_inst)
@@ -2356,6 +2356,11 @@ enum status_code tcc_set_double_buffer_compare_values(
  *      <th>Doc. Rev.</td>
  *      <th>Date</td>
  *      <th>Comments</td>
+ *  </tr>
+ *  <tr>
+ *      <td>C</td>
+ *      <td>11/2014</td>
+ *      <td>Added support for SAML21</td>
  *  </tr>
  *  <tr>
  *      <td>B</td>

@@ -100,7 +100,7 @@
  * -# Enable the now initialized TRNG peripheral.
  *    \snippet qs_trng_callback.c setup_init_1
  *    \note This should not be done until after the TRNG is setup and ready
- *       to be used
+ *       to be used.
  *
  * \section asfdoc_sam0_trng_callback_use_case_imp Implementation
  *

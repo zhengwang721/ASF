@@ -62,7 +62,7 @@ struct adc_module;
 typedef void (*adc_callback_t)(const struct adc_module *const module);
 
 /**
- * \brief ADC Callback enum
+ * \brief ADC callback enum.
  *
  * Callback types for ADC callback driver.
  *
@@ -88,7 +88,7 @@ enum adc_callback {
  */
 
 /**
- * \brief ADC reference voltage enum
+ * \brief ADC reference voltage enum.
  *
  * Enum for the possible reference voltages for the ADC.
  *
@@ -109,7 +109,7 @@ enum adc_reference {
 };
 
 /**
- * \brief ADC clock prescaler enum
+ * \brief ADC clock prescaler enum.
  *
  * Enum for the possible clock prescaler values for the ADC.
  *
@@ -134,7 +134,7 @@ enum adc_clock_prescaler {
 };
 
 /**
- * \brief ADC resolution enum
+ * \brief ADC resolution enum.
  *
  * Enum for the possible resolution values for the ADC.
  *
@@ -164,7 +164,7 @@ enum adc_resolution {
 };
 
 /**
- * \brief ADC window monitor mode enum
+ * \brief ADC window monitor mode enum.
  *
  * Enum for the possible window monitor modes for the ADC.
  *
@@ -183,7 +183,7 @@ enum adc_window_mode {
 };
 
 /**
- * \brief ADC event action enum
+ * \brief ADC event action enum.
  *
  * Enum for the possible actions to take on an incoming event.
  *
@@ -198,7 +198,7 @@ enum adc_event_action {
 };
 
 /**
- * \brief ADC positive MUX input selection enum
+ * \brief ADC positive MUX input selection enum.
  *
  * Enum for the possible positive MUX input selections for the ADC.
  *
@@ -271,7 +271,7 @@ enum adc_positive_input {
 };
 
 /**
- * \brief ADC negative MUX input selection enum
+ * \brief ADC negative MUX input selection enum.
  *
  * Enum for the possible negative MUX input selections for the ADC.
  *
@@ -298,7 +298,7 @@ enum adc_negative_input {
 };
 
 /**
- * \brief ADC number of accumulated samples enum
+ * \brief ADC number of accumulated samples enum.
  *
  * Enum for the possible numbers of ADC samples to accumulate.
  * This setting is only used when the \ref ADC_RESOLUTION_CUSTOM
@@ -331,7 +331,7 @@ enum adc_accumulate_samples {
 };
 
 /**
- * \brief ADC possible dividers for the result register
+ * \brief ADC possible dividers for the result register.
  *
  * Enum for the possible division factors to use when accumulating
  * multiple samples. To keep the same resolution for the averaged
@@ -373,7 +373,7 @@ enum adc_interrupt_flag {
 #endif
 
 /**
- * \brief ADC oversampling and decimation enum
+ * \brief ADC oversampling and decimation enum.
  *
  * Enum for the possible numbers of bits resolution can be increased by when
  * using oversampling and decimation.
@@ -393,7 +393,7 @@ enum adc_oversampling_and_decimation {
 };
 
 /**
- * \brief Window monitor configuration structure
+ * \brief Window monitor configuration structure.
  *
  * Window monitor configuration structure.
  */
@@ -420,7 +420,7 @@ struct adc_events {
 };
 
 /**
- * \brief Gain and offset correction configuration structure
+ * \brief Gain and offset correction configuration structure.
  *
  * Gain and offset correction configuration structure.
  * Part of the \ref adc_config struct and will  be initialized by
@@ -449,7 +449,7 @@ struct adc_correction_config {
 };
 
 /**
- * \brief ADC configuration structure
+ * \brief ADC configuration structure.
  *
  * Configuration structure for an ADC instance. This structure should be
  * initialized by the \ref adc_get_config_defaults()
@@ -492,7 +492,7 @@ struct adc_config {
 	 * Positive input enabled mask for conversion sequence.
 	 * The sequence start from the lowest input,and go to the next enabled input
 	 * automatically when the conversion is done. If no bits are set the
-	 * sequence is disabled
+	 * sequence is disabled.
 	 */
 	uint32_t positive_input_sequence_mask_enable;
 	/**
@@ -506,7 +506,7 @@ struct adc_config {
 	 * prescaled clock cycles (depends of \c ADC_PRESCALER value), thus
 	 * controlling the ADC input impedance. Sampling time is set according to
 	 * the formula:
-	 * Sample time = (sample_length+1) * (ADCclk / 2)
+	 * Sample time = (sample_length+1) * (ADCclk / 2).
 	 */
 	uint8_t sample_length;
 	/** Window monitor configuration structure. */
@@ -595,7 +595,7 @@ static inline bool adc_is_syncing(
  *
  * The sequence start from the lowest input,and go to the next enabled input
  * automatically when the conversion is done. If no bits are set the
- * sequence is disabled
+ * sequence is disabled.
  *
  * \param[in] module_inst  Pointer to the ADC software instance struct
  * \param[in] eanble_seq_mask  Sequence mask
@@ -614,7 +614,7 @@ static inline void adc_enable_positive_input_sequence(
 /**
  * \brief Disable positive input in the sequence.
  *
- * Disable positive input in the sequence
+ * Disable positive input in the sequence.
  *
  * \param[in] module_inst  Pointer to the ADC software instance struct
  */
@@ -631,7 +631,7 @@ static inline void adc_disable_positive_input_sequence(
 /**
  * \brief Get ADC sequence status.
  *
- * Check if a sequence is done and get last conversion done in the sequence
+ * Check if a sequence is done and get last conversion done in the sequence.
  *
  * \param[in] module_inst  Pointer to the ADC software instance struct
  * \param[out] is_sequence_busy  Sequence busy status

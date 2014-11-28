@@ -96,7 +96,7 @@ enum status_code tc_unregister_callback(
 		const enum tc_callback callback_type);
 
 /**
- * \brief Enables callback
+ * \brief Enables callback.
  *
  * Enables the callback function registered by the \ref
  * tc_register_callback. The callback function will be called from the
@@ -133,7 +133,7 @@ static inline void tc_enable_callback(
 }
 
 /**
- * \brief Disables callback
+ * \brief Disables callback.
  *
  * Disables the callback function registered by the \ref
  * tc_register_callback, and the callback will not be called from the

@@ -48,6 +48,7 @@
  *    - SAMD21 Xplained Pro
  *    - SAMR21 Xplained Pro
  *    - SAMD11 Xplained Pro
+ *    - SAML21 Xplained Pro
  *
  * In this use case, the DMAC is configured for:
  *  \li Moving data from memory to memory

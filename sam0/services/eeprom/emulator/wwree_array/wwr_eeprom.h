@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_wwr_eeprom_group SAM Write While Read EEPROM (WWR EEPROM) Emulator Service
  *
- * This driver for Atmel® | SMART™ SAM provides a WWR emulated EEPROM
+ * This driver for Atmel® | SMART SAM provides a WWR emulated EEPROM
  * memory area, for the storage and retrieval of user-application
  * configuration data into and out of non-volatile memory. The main array
  * can therefore run code while eeprom data is written.
@@ -55,7 +55,7 @@
  *  - NVM (Non-Volatile Memory Controller)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM L21
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_wwr_eeprom_prerequisites
@@ -538,7 +538,7 @@ enum status_code wwr_eeprom_emulator_read_buffer(
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>10/2014</td>
+ *		<td>11/2014</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

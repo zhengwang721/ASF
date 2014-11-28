@@ -142,7 +142,7 @@
 			<keyword value="Analog Conversion"/>
 		</info>
 
-		<info type="appnote" value="ATXXXXX"/>
+		<info type="appnote" value="AT11379"/>
 		<info type="keyword" value="pdf">
 			<keyword value="DAC"/>
 			<keyword value="Digital to Analog Converter"/>
