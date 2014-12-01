@@ -283,7 +283,7 @@ retval_t tal_pib_get(uint8_t attribute, uint8_t *value)
 		break;
 
 	case phyCurrentChannel:
-		*(uint16_t *)value = tal_pib.CurrentChannel;
+		*value = tal_pib.CurrentChannel;
 		break;
 
 	case phyChannelsSupported:

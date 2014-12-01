@@ -77,7 +77,7 @@
  */
 typedef struct {
 	uint8_t param_type;
-	uint16_t param_value;
+	uint8_t param_value;
 } set_param_cb_t;
 
 /*=====EXTERNALS============================================================*/
@@ -936,7 +936,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 		 */
 		curr_trx_config_params.ism_frequency = 0.0;
 #endif /* End of #if(TAL_TYPE == AT86RF233) */
-		pib_value.pib_value_16bit = set_param_cb.param_value;
+		pib_value.pib_value_8bit = set_param_cb.param_value;
 		tal_pib_set(phyCurrentChannel,
 				&pib_value);
 
@@ -958,7 +958,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 #endif /* End of EXT_RF_FRONT_END_CTRL */
 
 		/* Send the confirmation for Set request as Success */
-		param_value.param_value_16bit = set_param_cb.param_value;
+		param_value.param_value_8bit = set_param_cb.param_value;
 		usr_perf_set_confirm(MAC_SUCCESS,
 				PARAM_CHANNEL,
 				&param_value);
@@ -2110,7 +2110,7 @@ static void set_channel(uint16_t channel)
 			 */
 #ifdef EXT_RF_FRONT_END_CTRL
 			uint16_t chn_before_set;
-			tal_pib_get(phyCurrentChannel, &chn_before_set);
+			tal_pib_get(phyCurrentChannel,(uint8_t *)&chn_before_set);
 #endif
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 			int8_t dbm_val = 0;
@@ -2120,7 +2120,7 @@ static void set_channel(uint16_t channel)
 			/* Set the CC_BAND to zero before setting the channel */
 			tal_set_frequency_regs(CC_BAND_0, CC_NUMBER_0);
 #endif
-			pib_value.pib_value_16bit = channel;
+			pib_value.pib_value_8bit = (uint8_t)channel;
 			tal_pib_set(phyCurrentChannel, &pib_value);
 
 			/* Update the database */
@@ -2503,7 +2503,7 @@ void start_ed_scan(uint8_t ed_scan_duration, uint32_t channel_sel_mask)
 			break;
 		}
 	}
-	pib_value.pib_value_16bit = first_channel;
+	pib_value.pib_value_8bit = (uint8_t)first_channel;
 	tal_pib_set(phyCurrentChannel, &pib_value);
 	tal_ed_start(scan_duration);
 }
@@ -2583,7 +2583,7 @@ void get_current_configuration(void)
 	 * channel */
 	if (curr_trx_config_params.channel != INVALID_VALUE) {
 		/* Channel configuration */
-		pib_value.pib_value_16bit = curr_trx_config_params.channel;
+		pib_value.pib_value_8bit = (uint8_t)curr_trx_config_params.channel;
 		tal_pib_set(phyCurrentChannel,
 				&pib_value);
 	} else { /* The transceiver was currently set to ism frequency */

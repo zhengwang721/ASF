@@ -276,7 +276,7 @@ retval_t tal_pib_get(uint8_t attribute, uint8_t *value)
 		break;
 
 	case phyCurrentChannel:
-		*(uint16_t *)value = tal_pib.CurrentChannel;
+		*value = tal_pib.CurrentChannel;
 		break;
 
 	case phyChannelsSupported:
@@ -517,7 +517,7 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 
 			if ((uint32_t)TRX_SUPPORTED_CHANNELS &
 					((uint32_t)0x01 <<
-					value->pib_value_16bit)) {
+					value->pib_value_8bit)) {
 				tal_trx_status_t previous_trx_status = TRX_OFF;
 
 				/*
@@ -543,7 +543,7 @@ retval_t tal_pib_set(uint8_t attribute, pib_value_t *value)
 							TRX_OFF);
 				}
 
-				tal_pib.CurrentChannel = value->pib_value_16bit;
+				tal_pib.CurrentChannel = value->pib_value_8bit;
 				trx_bit_write(SR_CHANNEL,
 						tal_pib.CurrentChannel);
 				/* Re-store previous trx state */

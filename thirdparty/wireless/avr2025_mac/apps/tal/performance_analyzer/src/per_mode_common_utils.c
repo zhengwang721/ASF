@@ -207,7 +207,7 @@ void config_per_test_parameters(void)
 	 */
 	curr_trx_config_params.channel = default_trx_config_params.channel
 				= DEFAULT_CHANNEL;
-	pib_value.pib_value_16bit = default_trx_config_params.channel;
+	pib_value.pib_value_8bit = (uint8_t)default_trx_config_params.channel;
 	tal_pib_set(phyCurrentChannel,
 			&pib_value);
 
