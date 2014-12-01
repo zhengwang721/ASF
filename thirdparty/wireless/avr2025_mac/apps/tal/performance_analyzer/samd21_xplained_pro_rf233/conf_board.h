@@ -71,5 +71,6 @@
  */
 #define TAL_TRANSMIT_POWER_DEFAULT      (TX_PWR_TOLERANCE | 0x14)
 #endif
+#define MCU_SOC_NAME        "ATSAMD21J18A"
 #define AT86RFX_SPI_BAUDRATE             4000000UL
 #endif /* CONF_BOARD_H_INCLUDED */
