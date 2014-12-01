@@ -5,7 +5,6 @@
 		</info>
 		<build type="include-path" value="."/>
 		<build type="header-file" value="saml21.h"/>
-		<build type="header-file" value="saml21_internal.h"/>
 		<build type="header-file" value="saml21e15a.h"/>
 		<build type="header-file" value="saml21e16a.h"/>
 		<build type="header-file" value="saml21e17a.h"/>

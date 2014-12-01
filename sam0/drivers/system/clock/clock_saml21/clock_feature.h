@@ -48,9 +48,9 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_system_clock_group SAM L21 System Clock Management Driver (SYSTEM CLOCK)
+ * \defgroup asfdoc_sam0_system_clock_group SAM System Clock Management Driver (SYSTEM CLOCK)
  *
- * This driver for Atmel | SMART SAM L21 devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection and
@@ -294,7 +294,7 @@ enum system_xosc32k_startup {
  * cycles.
  */
 enum system_xosc_startup {
-	/** Wait one clock cycles until the clock source is considered stable. */
+	/** Wait one clock cycle until the clock source is considered stable. */
 	SYSTEM_XOSC_STARTUP_1,
 	/** Wait two clock cycles until the clock source is considered stable. */
 	SYSTEM_XOSC_STARTUP_2,

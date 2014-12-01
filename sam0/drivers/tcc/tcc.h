@@ -774,9 +774,9 @@ enum tcc_callback {
 	TCC_CALLBACK_FAULTA,
 	/** Callback for Recoverable Fault B. */
 	TCC_CALLBACK_FAULTB,
-	/** Callback for Non-Recoverable Fault. 0. */
+	/** Callback for Non-Recoverable Fault 0. */
 	TCC_CALLBACK_FAULT0,
-	/** Callback for Non-Recoverable Fault. 1. */
+	/** Callback for Non-Recoverable Fault 1. */
 	TCC_CALLBACK_FAULT1,
 
 #  if defined(__DOXYGEN__)
