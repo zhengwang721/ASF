@@ -72,7 +72,7 @@
 #define CONFIG_PLL0_MUL             14
 #define CONFIG_PLL0_DIV             1
 
-/* ===== UPLL (UTMI) Hardware fixed at 480 Mhz. */
+/* ===== UPLL (UTMI) Hardware fixed at 480MHz. */
 
 /* ===== USB Clock Source Options   (Fusb = FpllX / USB_div)
    Use div effective value here. */

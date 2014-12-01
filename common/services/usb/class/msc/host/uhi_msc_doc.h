@@ -163,7 +163,8 @@ bool uhi_msc_is_available(void);
 /**
  * \brief Gives the number of LUN available
  *
- * Note: A LUN can be available, but with a status LUN_NOT_PRESENT.
+ * \note A LUN can be available, but with a status LUN_NOT_PRESENT.
+ *
  * It is the case for a card reader without card.
  *
  * \return Number of LUN available.
@@ -192,7 +193,7 @@ bool uhi_msc_scsi_test_unit_ready(uint8_t lun, uhi_msc_scsi_callback_t callback)
 /**
  * \brief Reads a LUN data section to RAM buffer
  *
- * Note: The sector size used to define the data section
+ * \note The sector size used to define the data section
  * is the sector size returned by LUN in \capacity field.
  *
  * \param[in] lun       LUN number
@@ -209,7 +210,7 @@ bool uhi_msc_scsi_read_10(uint8_t lun, uint32_t addr, uint8_t *ram,
 /**
  * \brief Writes a RAM buffer in a LUN data section
  *
- * Note: The sector size used to define the data section
+ * \note The sector size used to define the data section
  * is the sector size returned by LUN in \capacity field.
  *
  * \param[in] lun       LUN number
@@ -236,7 +237,8 @@ bool uhi_msc_scsi_write_10(uint8_t lun, uint32_t addr, const uint8_t *ram,
 /**
  * \brief Gives the number of available LUN
  *
- * Note: A LUN can be available, but with a status not present.
+ * \note A LUN can be available, but with a status not present.
+ *
  * It is the case for a card reader without card.
  *
  * \return Number of available LUN.

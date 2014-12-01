@@ -52,7 +52,7 @@
  * - \ref asfdoc_udi_vendor_exqsg
  * - \ref asfdoc_udi_vendor_config_examples
  *
- * For more details for Atmel® Software Framework (ASF) USB Device Stack,and
+ * For more details for Atmel® Software Framework (ASF) USB Device Stack, and
  * USB Device Vendor, refer to following application notes:
  * - <a href="http://www.atmel.com/dyn/resources/prod_documents/doc8360.pdf">
  *   AVR4900: ASF - USB Device Stack</a>
@@ -200,7 +200,7 @@ typedef struct {
 #define UDI_VENDOR_STRING_ID     0
 #endif
 
- /** Maximum 6 endpoints used by vendor interface. */
+ /** Maximum six endpoints used by vendor interface. */
 #define UDI_VENDOR_EP_NB_INT  ((UDI_VENDOR_EPS_SIZE_INT_FS)?2:0)
 #define UDI_VENDOR_EP_NB_BULK ((UDI_VENDOR_EPS_SIZE_BULK_FS)?2:0)
 #define UDI_VENDOR_EP_NB_ISO  ((UDI_VENDOR_EPS_SIZE_ISO_FS)?2:0)
@@ -483,7 +483,7 @@ bool udi_vendor_iso_out_run(uint8_t * buf, iram_size_t buf_size,
  * \note The endpoint size is defined by the final application, and can be
  *       disabled if the full speed size is zero.
  *
- * -# The Vendor transfers on interrupt, bulk and isochronous endpoints are
+ * -# The Vendor transfers on interrupt, bulk, and isochronous endpoints are
  * done through these functions:
  * \code
  // Start a transfer on interrupt IN
