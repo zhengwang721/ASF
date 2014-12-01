@@ -45,9 +45,9 @@
 #define OPAMP_H_INCLUDED
 
 /**
- * \defgroup asfdoc_sam0_opamp_group SAM0 Operational Amplifier Controller (OPAMP) Driver
+ * \defgroup asfdoc_sam0_opamp_group SAM Operational Amplifier Controller (OPAMP) Driver
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of the device's Operational Amplifier Controller functionality.
  *
  * The following peripherals are used by this module:
@@ -341,7 +341,7 @@ struct opamp_config_common {
 	enum opamp_pot_mux potentiometer_selection;
 	/** If \c true, R1 connected to RES1MUX. */
 	bool r1_enable;
-	/** If \c true, resistor ladder to VCC. */
+	/** If \c true, resistor ladder to V<SUB>CC</SUB>. */
 	bool r2_vcc;
 	/** If \c true, resistor ladder to output. */
 	bool r2_out;
