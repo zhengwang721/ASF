@@ -1429,9 +1429,9 @@ void pmc_set_writeprotect(uint32_t ul_enable)
  *
  * \return Return write protect status.
  */
-uint32_t pmc_get_writeprotect_status(Pmc *p_pmc)
+uint32_t pmc_get_writeprotect_status(void)
 {
-	return p_pmc->PMC_WPSR;
+	return PMC->PMC_WPSR;
 }
 
 #if (SAMG53 || SAMG54 || SAMG55)
