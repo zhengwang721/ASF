@@ -181,7 +181,7 @@ struct ohci_ed {
     void           *p_td_tail;                //!< Pointer to the tail TD
     void           *p_td_head;                //!< Pointer to the head TD
     struct ohci_ed  *p_next_ed;               //!< Pointer to next ED
-} COMPILER_ALIGNED(16);
+};
 
 /** \brief  Transfer descriptor directions */
 #define TD_DIRECTION_SETUP              0
@@ -264,7 +264,7 @@ struct ohci_td_general {
 	void           *pCurrentBufferPointer; //!< Pointer to the data buffer
 	struct ohci_td_general *p_next_td;               //!< Pointer to next TD
 	void           *pBufferEnd;            //!< Address of data buffer last byte
-}COMPILER_ALIGNED(16);
+};
 
 struct ohci_td_iso {
 	struct {
@@ -279,7 +279,7 @@ struct ohci_td_iso {
 	struct ohci_td_iso *p_next_td;               //!< Pointer to next TD
 	void           *pBufferEnd;            //!< Address of data buffer last byte
 	uint16_t    offset_psw[8];            //!< Offset, packet status word
-}COMPILER_ALIGNED(32);
+};
 
 /*
  * The HCCA (Host Controller Communications Area) is a 256 byte
@@ -293,7 +293,7 @@ struct ohci_hcca {
     void         *pDoneHead;
     uint32_t Reserved[29];
 	uint32_t what;		/* spec only identifies 252 bytes :) */
-} COMPILER_ALIGNED(256);
+};
 
 #define	FI			0x2edf		/* 12000 bits per frame (-1) */
 #define	FSMP(fi)	(0x7fff & ((6 * ((fi) - 210)) / 7))

@@ -46,29 +46,42 @@
 #include <string.h>
 
 /* HCCA strcture. */
+COMPILER_ALIGNED(256)
 static volatile struct ohci_hcca hcca;
 
 /* Control endpoint related. */
+COMPILER_ALIGNED(16)
 static volatile struct ohci_ed control_ed;
+COMPILER_ALIGNED(16)
 static volatile struct ohci_td_general control_td_head;
+COMPILER_ALIGNED(16)
 static volatile struct ohci_td_general control_td_tail;
 
 /* Bulk endpoint related. */
+COMPILER_ALIGNED(16)
 static volatile struct ohci_ed bulk_ed[8];
 static volatile uint8_t bulk_ed_status = 0;
+COMPILER_ALIGNED(16)
 static volatile struct ohci_td_general bulk_td_head[8];
+COMPILER_ALIGNED(16)
 static volatile struct ohci_td_general bulk_td_tail[8];
 
 /* Interrupt endpoint related. */
+COMPILER_ALIGNED(16)
 static volatile struct ohci_ed interrupt_ed[8];
 static volatile uint8_t interrupt_ed_status = 0;
+COMPILER_ALIGNED(16)
 static volatile struct ohci_td_general interrupt_td_head[8];
+COMPILER_ALIGNED(16)
 static volatile struct ohci_td_general interrupt_td_tail[8];
 
 /* Isochronous endpoint related. */
+COMPILER_ALIGNED(16)
 static volatile struct ohci_ed isochronous_ed[8];
 static volatile uint8_t isochronous_ed_status = 0;
+COMPILER_ALIGNED(32)
 static volatile struct ohci_td_iso isochronous_td_head[8];
+COMPILER_ALIGNED(32)
 static volatile struct ohci_td_iso isochronous_td_tail[8];
 
 /* Callback related. */
@@ -128,8 +141,8 @@ void ohci_init(void)
 
 	UHP->HcHCCA = (uint32_t)&hcca;
 
-    /* Clear Interrrupt Status. */
-    UHP->HcInterruptStatus |= UHP->HcInterruptStatus;
+	/* Clear Interrrupt Status. */
+	UHP->HcInterruptStatus |= UHP->HcInterruptStatus;
 
 	/* Enable some interrupts. */
 	UHP->HcInterruptEnable = HC_INTERRUPT_WDH | HC_INTERRUPT_SF
