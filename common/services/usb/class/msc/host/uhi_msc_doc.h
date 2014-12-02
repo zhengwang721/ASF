@@ -471,8 +471,8 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
  *    <th>Comments</td>
  * </tr>
  * <tr>
- *    <td>A</td>
- *    <td>11/2014</td>
+ *    <td>42344A</td>
+ *    <td>12/2014</td>
  *    <td>Initial release.</td>
  * </tr>
  * </table>
