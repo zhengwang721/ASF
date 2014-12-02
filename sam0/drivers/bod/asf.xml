@@ -43,7 +43,7 @@
 			<keyword value="Power Management" />
 		</info>
 
-		<info type="appnote" value="ATXXXXX"/>
+		<info type="appnote" value="AT11512"/>
 		<info type="keyword" value="pdf">
 			<keyword value="BOD"/>
 			<keyword value="Brown Out Detector"/>

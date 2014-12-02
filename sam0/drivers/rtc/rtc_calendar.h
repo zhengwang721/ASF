@@ -98,7 +98,7 @@
  *  - Date tracking in day, month, and year
  *  - Automatic leap year correction
  *
- * \subsection asfdoc_sam0_rtc_features Driver Feature Macro Definition
+ * \subsection asfdoc_sam0_rtc_calendar_features Driver Feature Macro Definition
  * <table>
  *  <tr>
  *    <th>Driver Feature Macro</th>
@@ -122,7 +122,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
- *    <td>SAMD20,SAMD21,SAMR21,SAMD10,SAMD11</td>
+ *    <td>SAMD20, SAMD21, SAMR21, SAMD10, SAMD11</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the

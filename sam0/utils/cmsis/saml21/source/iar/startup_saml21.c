@@ -39,11 +39,7 @@
  *
  */
 
-#if 1 // #ifndef SAML21_REV_A
 #include "saml21.h"
-#else // For RevA0 workaround
-#include "saml21_internal.h"
-#endif
 
 typedef void (*intfunc) (void);
 typedef union { intfunc __fun; void * __ptr; } intvec_elem;
@@ -234,14 +230,6 @@ int __low_level_init(void)
 
         SCB->VTOR = ((uint32_t) pSrc & SCB_VTOR_TBLOFF_Msk);
 
-        MCLK->APBEMASK.reg = 5; //Disable PPP, Enable PAC & HMATRIXLP
-
-        // Set protection off for DSUSTANDBY & DSU
-        PAC->WRCTRL.reg = PAC_WRCTRL_KEY(PAC_WRCTRL_KEY_CLR_Val)|PAC_WRCTRL_PERID(12);
-        while((PAC->STATUSA.reg & (1<<12)) > 0);
-        PAC->WRCTRL.reg = PAC_WRCTRL_KEY(PAC_WRCTRL_KEY_CLR_Val)|PAC_WRCTRL_PERID(ID_DSU);
-        while((PAC->STATUSB.reg & PAC_STATUSB_DSU) > 0);
-
         return 1; /* if return 0, the data sections will not be initialized */
 }
 
@@ -251,9 +239,6 @@ int __low_level_init(void)
  *------------------------------------------------------------------------------*/
 void Reset_Handler(void)
 {
-#if 0 // SAML21_REV_A
-        software_fuse_update();
-#endif
         __iar_program_start();
 }
 

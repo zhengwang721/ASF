@@ -101,7 +101,7 @@
  *   - Clear counter value on match
  *   - Up to four configurable compare values
  *
- * \subsection asfdoc_sam0_rtc_features Driver Feature Macro Definition
+ * \subsection asfdoc_sam0_rtc_count_features Driver Feature Macro Definition
  * <table>
  *  <tr>
  *    <th>Driver Feature Macro</th>
@@ -224,7 +224,7 @@
  * \section asfdoc_sam0_rtc_count_special_considerations Special Considerations
  *
  * \subsection asfdoc_sam0_rtc_count_special_considerations_clock Clock Setup
- * \subsubsection asfdoc_sam0_rtc_calendar_clock_samd_r SAM D20/D21/R21/D10/D11 Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_count_clock_samd_r SAM D20/D21/R21/D10/D11 Clock Setup
  * The RTC is typically clocked by a specialized GCLK generator that has a
  * smaller prescaler than the others. By default the RTC clock is on, selected
  * to use the internal 32KHz RC-oscillator with a prescaler of 32, giving a
@@ -278,14 +278,14 @@
  * }
  * \enddot
  *
- * \subsubsection asfdoc_sam0_rtc_calendar_clock_saml SAM L21 Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_count_clock_saml SAM L21 Clock Setup
  * The RTC clock can be selected from OSC32K,XOSC32K or OSCULP32K , and a 32KHz
  * or 1KHz oscillator clock frequency is required. This clock must be
  * configured and enabled in the 32KHz oscillator controller before using the RTC.
  *
- * The table below lists the available RTC clock \ref asfdoc_sam0_rtc_calendar_rtc_clk
+ * The table below lists the available RTC clock \ref asfdoc_sam0_rtc_count_rtc_clk
  *
- * \anchor asfdoc_sam0_rtc_calendar_rtc_clk
+ * \anchor asfdoc_sam0_rtc_count_rtc_clk
  * <table>
  *   <caption>RTC clocks source</caption>
  *   <tr>
