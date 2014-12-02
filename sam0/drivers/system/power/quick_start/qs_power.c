@@ -55,25 +55,26 @@ static void performance_level_switch_test(void)
 	system_gclk_gen_get_config_defaults(&gclk_conf);
 	gclk_conf.source_clock = SYSTEM_CLOCK_SOURCE_DFLL;
 	gclk_conf.division_factor = 1;      
-	gclk_conf.run_in_standby  = 0; 
-	gclk_conf.output_enable   = 1; 
+	gclk_conf.run_in_standby  = false; 
+	gclk_conf.output_enable   = true; 
 	system_gclk_gen_set_config(GCLK_GENERATOR_0, &gclk_conf);
 }
 
 static void config_clockoutput_extwake_pin(void)
 {
 	struct system_pinmux_config pin_conf;
-	
 	system_pinmux_get_config_defaults(&pin_conf);
-	
-    pin_conf.mux_position = CONF_GCLK0_OUTPUT_PINMUX;
-    pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-    system_pinmux_pin_set_config(CONF_GCLK0_OUTPUT_PIN, &pin_conf);
-    pin_conf.mux_position = CONF_GCLK1_OUTPUT_PINMUX;
-    system_pinmux_pin_set_config(CONF_GCLK1_OUTPUT_PIN, &pin_conf);
 
+	pin_conf.mux_position = CONF_GCLK0_OUTPUT_PINMUX;
+	pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
+	system_pinmux_pin_set_config(CONF_GCLK0_OUTPUT_PIN, &pin_conf);
+	pin_conf.mux_position = CONF_GCLK1_OUTPUT_PINMUX;
+	system_pinmux_pin_set_config(CONF_GCLK1_OUTPUT_PIN, &pin_conf);
+
+	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	pin_conf.input_pull = SYSTEM_PINMUX_PIN_PULL_UP;
 	pin_conf.mux_position = CONF_EXT_WAKEUP_PINMUX;
-    system_pinmux_pin_set_config(CONF_EXT_WAKEUP_PIN, &pin_conf);
+	system_pinmux_pin_set_config(CONF_EXT_WAKEUP_PIN, &pin_conf);
 }
 
 static void configure_extint_channel(void)
@@ -86,6 +87,8 @@ static void configure_extint_channel(void)
 	config_extint_chan.gpio_pin_pull      = EXTINT_PULL_UP;
 	config_extint_chan.detection_criteria = EXTINT_DETECT_BOTH;
 	extint_chan_set_config(BUTTON_0_EIC_LINE, &config_extint_chan);
+ 	extint_chan_enable_callback(BUTTON_0_EIC_LINE,EXTINT_CALLBACK_TYPE_DETECT);
+	system_interrupt_enable_global();
 }
 
 
@@ -99,8 +102,138 @@ static void supc_battery_backup_power_switch_test(void)
 	
 }
 
+static void delay_time_s(uint32_t time)
+{
+	uint32_t i,j;
+	
+	for(j=0;i<time;j++)
+		for(i=0;i<1000000;i++)
+			;
+}
 int main(void)
 {
+
+		
+/* Check if the RESET is caused by exit BACKUP mode */
+			if (system_get_reset_cause() == SYSTEM_RESET_CAUSE_BACKUP
+				&& system_get_backup_exit_source() == SYSTEM_RESET_BACKKUP_EXIT_EXTWAKE
+				/*&& (system_get_pin_wakeup_cause() & (1 << CONF_EXT_WAKEUP_PIN))*/){
+		
+				/* GCLK0 is running at 4MHz,GCLK1 is disabled due to the BACKUP reset */
+					
+				/* The	GCLK0 freq output pin and LED0 are still ok due to they are retained */
+		
+				system_init();
+			//port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+			config_clockoutput_extwake_pin();
+			port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+			delay_time_s(1);  
+			port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+			delay_time_s(1);  
+			port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+			delay_time_s(1);  
+			port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+			delay_time_s(1);
+			port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+			delay_time_s(1);
+			port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+			 //   performance_level_switch_test();
+			
+			while(1);
+			}
+
+#if 1
+
+			/*Wait automatic power switch between  VDD and VBAT power.*/
+	if (system_get_reset_cause() == SYSTEM_RESET_CAUSE_BACKUP
+		&& system_get_backup_exit_source() == SYSTEM_RESET_BACKKUP_EXIT_BBPS){
+
+		/* GCLK0 is running at 4MHz,GCLK1 is disabled due to the BACKUP reset */	
+		/* The  GCLK0 freq output pin and LED0 are still ok due to they are retained */
+		system_init();
+		port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+		config_clockoutput_extwake_pin();
+		performance_level_switch_test();
+		while(1);
+	} 
+	
+	#endif
+
+	system_io_retension_disable();
+	system_init();
+	port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+	supc_battery_backup_power_switch_test();
+
+	delay_time_s(2);
+		//supc_battery_backup_power_switch_test();
+
+		port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+
+		/* Now XOSC32K(32KHz),OSC16M(4MHz) and DFLL(48MHz) are running,
+		   GCLK0 is running at 4MHz,
+		   GCLK1 is runing at 4MHz.
+		 */
+	 
+		/*Set GCLK0 and GCLK1 freq output pin and BACKUP extwake pin
+		*/
+		config_clockoutput_extwake_pin(); 
+
+
+                /*  GCLK0/GCLK1 are running at 4MHz.*/
+                struct system_standby_config config;
+		configure_extint_channel();
+		
+		system_standby_get_config_defaults(&config);
+		config.power_domain        = SYSTEM_POWER_DOMAIN_DEFAULT;
+	    config.linked_power_domain = SYSTEM_LINKED_POWER_DOMAIN_DEFAULT;
+
+		while (extint_chan_is_detected(BUTTON_0_EIC_LINE))
+			extint_chan_clear_detected(BUTTON_0_EIC_LINE);
+		
+		//system_standby_set_config(&config);
+		system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
+		system_sleep();
+	//! [main]
+           port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);      
+#if 0
+	while (true) {
+		
+		//! [main_1]
+		//if (extint_chan_is_detected(BUTTON_0_EIC_LINE))
+		 {
+		
+			extint_chan_clear_detected(BUTTON_0_EIC_LINE);
+                      //  port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+                        break;
+		}
+	}
+#endif
+		
+
+		extint_chan_disable_callback(BUTTON_0_EIC_LINE,
+					EXTINT_CALLBACK_TYPE_DETECT);
+						
+extint_chan_clear_detected(BUTTON_0_EIC_LINE);
+      //  port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+		//performance_level_switch_test();
+		
+/*Set EXTWAKE pin*/
+		system_set_pin_wakeup_polarity_low(1<<CONF_EXT_WAKEUP_PIN);
+		system_enable_pin_wakeup(1<<CONF_EXT_WAKEUP_PIN);
+		system_set_pin_wakeup_debounce_counter(SYSTEM_WAKEUP_DEBOUNCE_2CK32);
+
+            delay_time_s(1);  
+			port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+			delay_time_s(1);  
+			port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+			delay_time_s(1);  
+			port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+		/*Enter BACKUP mode*/
+		system_set_sleepmode(SYSTEM_SLEEPMODE_BACKUP);
+		//system_io_retension_enable();
+		system_sleep();
+
+#if 0
 	/* The reset cause is POR , start testing performance level and backup mode*/
 	if (system_get_reset_cause() == SYSTEM_RESET_CAUSE_POR){
 
@@ -185,7 +318,7 @@ int main(void)
 		while(1);
 	}
         
-
+#endif
 	/* GCLK0 is  running at 48MHz and GCLK1 is running at 4MHz.*/
 	while(1){
 
