@@ -1,31 +1,43 @@
-/* ---------------------------------------------------------------------------- */
-/*                  Atmel Microcontroller Software Support                      */
-/*                       SAM Software Package License                           */
-/* ---------------------------------------------------------------------------- */
-/* Copyright (c) 2014, Atmel Corporation                                        */
-/*                                                                              */
-/* All rights reserved.                                                         */
-/*                                                                              */
-/* Redistribution and use in source and binary forms, with or without           */
-/* modification, are permitted provided that the following condition is met:    */
-/*                                                                              */
-/* - Redistributions of source code must retain the above copyright notice,     */
-/* this list of conditions and the disclaimer below.                            */
-/*                                                                              */
-/* Atmel's name may not be used to endorse or promote products derived from     */
-/* this software without specific prior written permission.                     */
-/*                                                                              */
-/* DISCLAIMER:  THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR   */
-/* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF */
-/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE   */
-/* DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,      */
-/* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT */
-/* LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,  */
-/* OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF    */
-/* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING         */
-/* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, */
-/* EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                           */
-/* ---------------------------------------------------------------------------- */
+/**
+ * \file
+ *
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
 
 #ifndef _SAMG55_PDMIC_COMPONENT_
 #define _SAMG55_PDMIC_COMPONENT_
@@ -53,8 +65,7 @@ typedef struct {
   __I  uint32_t Reserved3[33];
   __IO uint32_t PDMIC_WPMR;    /**< \brief (Pdmic Offset: 0xE4) Write Protection Mode Register */
   __I  uint32_t PDMIC_WPSR;    /**< \brief (Pdmic Offset: 0xE8) Write Protection Status Register */
-  __I  uint32_t Reserved4[4];
-  __I  uint32_t PDMIC_VERSION; /**< \brief (Pdmic Offset: 0xFC) Version Register */
+  __I  uint32_t Reserved4[5];
   __IO uint32_t PDMIC_RPR;     /**< \brief (Pdmic Offset: 0x100) Receive Pointer Register */
   __IO uint32_t PDMIC_RCR;     /**< \brief (Pdmic Offset: 0x104) Receive Counter Register */
   __I  uint32_t Reserved5[2];
@@ -121,17 +132,12 @@ typedef struct {
 /* -------- PDMIC_WPMR : (PDMIC Offset: 0xE4) Write Protection Mode Register -------- */
 #define PDMIC_WPMR_WPEN (0x1u << 0) /**< \brief (PDMIC_WPMR) Write Protection Enable */
 #define PDMIC_WPMR_WPKEY_Pos 8
-#define PDMIC_WPMR_WPKEY_Msk (0xffffffu << PDMIC_WPMR_WPKEY_Pos) /**< \brief (PDMIC_WPMR) Write Protect KEY */
+#define PDMIC_WPMR_WPKEY_Msk (0xffffffu << PDMIC_WPMR_WPKEY_Pos) /**< \brief (PDMIC_WPMR) Write Protect Key */
 #define   PDMIC_WPMR_WPKEY_PASSWD (0x414443u << 8) /**< \brief (PDMIC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0. */
 /* -------- PDMIC_WPSR : (PDMIC Offset: 0xE8) Write Protection Status Register -------- */
 #define PDMIC_WPSR_WPVS (0x1u << 0) /**< \brief (PDMIC_WPSR) Write Protection Violation Status */
 #define PDMIC_WPSR_WPVSRC_Pos 8
 #define PDMIC_WPSR_WPVSRC_Msk (0xffffu << PDMIC_WPSR_WPVSRC_Pos) /**< \brief (PDMIC_WPSR) Write Protection Violation Source */
-/* -------- PDMIC_VERSION : (PDMIC Offset: 0xFC) Version Register -------- */
-#define PDMIC_VERSION_VERSION_Pos 0
-#define PDMIC_VERSION_VERSION_Msk (0xfffu << PDMIC_VERSION_VERSION_Pos) /**< \brief (PDMIC_VERSION) Version of the Hardware Module */
-#define PDMIC_VERSION_MFN_Pos 16
-#define PDMIC_VERSION_MFN_Msk (0x7u << PDMIC_VERSION_MFN_Pos) /**< \brief (PDMIC_VERSION) Metal Fix Number */
 /* -------- PDMIC_RPR : (PDMIC Offset: 0x100) Receive Pointer Register -------- */
 #define PDMIC_RPR_RXPTR_Pos 0
 #define PDMIC_RPR_RXPTR_Msk (0xffffffffu << PDMIC_RPR_RXPTR_Pos) /**< \brief (PDMIC_RPR) Receive Pointer Register */
@@ -163,7 +169,7 @@ typedef struct {
 #define PDMIC_PTSR_TXTEN (0x1u << 8) /**< \brief (PDMIC_PTSR) Transmitter Transfer Enable */
 #define PDMIC_PTSR_RXCBEN (0x1u << 16) /**< \brief (PDMIC_PTSR) Receiver Transfer Enable */
 #define PDMIC_PTSR_TXCBEN (0x1u << 18) /**< \brief (PDMIC_PTSR) Transmitter Transfer Enable */
-#define PDMIC_PTSR_ERR (0x1u << 24) /**< \brief (PDMIC_PTSR) Transfer Bus Error */
+#define PDMIC_PTSR_ERR (0x1u << 24) /**< \brief (PDMIC_PTSR) Transfer Bus Error (clear on read) */
 
 /*@}*/
 

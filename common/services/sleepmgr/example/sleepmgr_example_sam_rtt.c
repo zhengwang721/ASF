@@ -79,7 +79,7 @@
  * \section contactinfo Contact Information
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
- * Support and FAQ: http://support.atmel.no/
+ * Support and FAQ: http://www.atmel.com/design-support/
  */
 
 #include <asf.h>
@@ -127,7 +127,7 @@ int main(void)
 
 	/* Set wakeup source to rtt_alarm */
 	pmc_set_fast_startup_input(PMC_FSMR_RTTAL);
-#if (!SAMG)
+#if ((!SAMG51) && (!SAMG53) && (!SAMG54))
 	supc_set_wakeup_mode(SUPC, SUPC_WUMR_RTTEN_ENABLE);
 #endif
 	/* Initialize the sleep manager, lock initial mode. */

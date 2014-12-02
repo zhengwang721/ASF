@@ -45,6 +45,7 @@
 #include "at30tse75x.h"
 #if SAMG55
 #include "flexcom.h"
+#include "conf_board.h"
 #endif
 
 /* AT30TSE75x Device Type ID for Temperature Sensor: 0b1001xxx */

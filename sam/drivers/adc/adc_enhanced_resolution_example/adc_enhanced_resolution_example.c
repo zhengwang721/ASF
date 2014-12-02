@@ -221,6 +221,7 @@ static void set_adc_resolution(void)
 		case 'b':
 			g_max_digital = MAX_DIGITAL_13_BIT;
 			adc_set_resolution(ADC, ADC_13_BITS);
+			adc_average_on_single_trigger(ADC);
 			puts(" Set Resolution to Enhanced 13-bit \n\r");
 			uc_done = 1;
 			puts(" Quit Configuration \n\r");

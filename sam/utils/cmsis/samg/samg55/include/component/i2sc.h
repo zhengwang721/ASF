@@ -1,31 +1,43 @@
-/* ---------------------------------------------------------------------------- */
-/*                  Atmel Microcontroller Software Support                      */
-/*                       SAM Software Package License                           */
-/* ---------------------------------------------------------------------------- */
-/* Copyright (c) 2014, Atmel Corporation                                        */
-/*                                                                              */
-/* All rights reserved.                                                         */
-/*                                                                              */
-/* Redistribution and use in source and binary forms, with or without           */
-/* modification, are permitted provided that the following condition is met:    */
-/*                                                                              */
-/* - Redistributions of source code must retain the above copyright notice,     */
-/* this list of conditions and the disclaimer below.                            */
-/*                                                                              */
-/* Atmel's name may not be used to endorse or promote products derived from     */
-/* this software without specific prior written permission.                     */
-/*                                                                              */
-/* DISCLAIMER:  THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR   */
-/* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF */
-/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE   */
-/* DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,      */
-/* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT */
-/* LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,  */
-/* OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF    */
-/* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING         */
-/* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, */
-/* EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                           */
-/* ---------------------------------------------------------------------------- */
+/**
+ * \file
+ *
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
 
 #ifndef _SAMG55_I2SC_COMPONENT_
 #define _SAMG55_I2SC_COMPONENT_
@@ -49,8 +61,7 @@ typedef struct {
   __I  uint32_t I2SC_IMR;      /**< \brief (I2sc Offset: 0x1C) Interrupt Mask Register */
   __I  uint32_t I2SC_RHR;      /**< \brief (I2sc Offset: 0x20) Receiver Holding Register */
   __O  uint32_t I2SC_THR;      /**< \brief (I2sc Offset: 0x24) Transmitter Holding Register */
-  __I  uint32_t I2SC_VERSION;  /**< \brief (I2sc Offset: 0x28) Version Register */
-  __I  uint32_t Reserved1[53];
+  __I  uint32_t Reserved1[54];
   __IO uint32_t I2SC_RPR;      /**< \brief (I2sc Offset: 0x100) Receive Pointer Register */
   __IO uint32_t I2SC_RCR;      /**< \brief (I2sc Offset: 0x104) Receive Counter Register */
   __IO uint32_t I2SC_TPR;      /**< \brief (I2sc Offset: 0x108) Transmit Pointer Register */
@@ -69,12 +80,12 @@ typedef struct {
 #define I2SC_CR_CKEN (0x1u << 2) /**< \brief (I2SC_CR) Clocks Enable */
 #define I2SC_CR_CKDIS (0x1u << 3) /**< \brief (I2SC_CR) Clocks Disable */
 #define I2SC_CR_TXEN (0x1u << 4) /**< \brief (I2SC_CR) Transmitter Enable */
-#define I2SC_CR_TXDIS (0x1u << 5) /**< \brief (I2SC_CR) Transmiter Disable */
+#define I2SC_CR_TXDIS (0x1u << 5) /**< \brief (I2SC_CR) Transmitter Disable */
 #define I2SC_CR_SWRST (0x1u << 7) /**< \brief (I2SC_CR) Software Reset */
 /* -------- I2SC_MR : (I2SC Offset: 0x04) Mode Register -------- */
 #define I2SC_MR_MODE (0x1u << 0) /**< \brief (I2SC_MR) Inter-IC Sound Controller Mode */
-#define   I2SC_MR_MODE_SLAVE (0x0u << 0) /**< \brief (I2SC_MR) i2SCK and i2SWS pin inputs used as bit clock and word select/frame sync. */
-#define   I2SC_MR_MODE_MASTER (0x1u << 0) /**< \brief (I2SC_MR) Bit clock and word select/frame sync generated by I2SC from MCK and output to I2SCK and I2WS pins. MCK is output as master clock on I2SMCK if IMCKMODE bit of I2SC_MR is set. */
+#define   I2SC_MR_MODE_SLAVE (0x0u << 0) /**< \brief (I2SC_MR) I2SCK and i2SWS pin inputs used as bit clock and word select/frame synchronization. */
+#define   I2SC_MR_MODE_MASTER (0x1u << 0) /**< \brief (I2SC_MR) Bit clock and word select/frame synchronization generated by I2SC from MCK and output to I2SCK and I2SWS pins. MCK is output as master clock on I2SMCK if IMCKMODE bit of I2SC_MR is set. */
 #define I2SC_MR_DATALENGTH_Pos 2
 #define I2SC_MR_DATALENGTH_Msk (0x7u << I2SC_MR_DATALENGTH_Pos) /**< \brief (I2SC_MR) Data Word Length */
 #define   I2SC_MR_DATALENGTH_32_BITS (0x0u << 2) /**< \brief (I2SC_MR) Data length is set to 32 bits */
@@ -82,17 +93,17 @@ typedef struct {
 #define   I2SC_MR_DATALENGTH_20_BITS (0x2u << 2) /**< \brief (I2SC_MR) Data length is set to 20 bits */
 #define   I2SC_MR_DATALENGTH_18_BITS (0x3u << 2) /**< \brief (I2SC_MR) Data length is set to 18 bits */
 #define   I2SC_MR_DATALENGTH_16_BITS (0x4u << 2) /**< \brief (I2SC_MR) Data length is set to 16 bits */
-#define   I2SC_MR_DATALENGTH_16_BITS_COMPACT (0x5u << 2) /**< \brief (I2SC_MR) Data length is set to 16-bit compact stereo. Left sample in bits 15 through 0 and right sample in bits 31 through 16 of same word. */
+#define   I2SC_MR_DATALENGTH_16_BITS_COMPACT (0x5u << 2) /**< \brief (I2SC_MR) Data length is set to 16-bit compact stereo. Left sample in bits 15:0 and right sample in bits 31:16 of same word. */
 #define   I2SC_MR_DATALENGTH_8_BITS (0x6u << 2) /**< \brief (I2SC_MR) Data length is set to 8 bits */
-#define   I2SC_MR_DATALENGTH_8_BITS_COMPACT (0x7u << 2) /**< \brief (I2SC_MR) Data length is set to 8-bit compact stereo. Left sample in bits 7 through 0 and right sample in bits 15 to 8 of the same word. */
+#define   I2SC_MR_DATALENGTH_8_BITS_COMPACT (0x7u << 2) /**< \brief (I2SC_MR) Data length is set to 8-bit compact stereo. Left sample in bits 7:0 and right sample in bits 15:8 of the same word. */
 #define I2SC_MR_RXMONO (0x1u << 8) /**< \brief (I2SC_MR) Receive Mono */
-#define I2SC_MR_RXDMA (0x1u << 9) /**< \brief (I2SC_MR) Single or Multiple Peripheral DMA Controller Channels for Receiver */
+#define I2SC_MR_RXDMA (0x1u << 9) /**< \brief (I2SC_MR) Single or Multiple PDC Channels for Receiver */
 #define I2SC_MR_RXLOOP (0x1u << 10) /**< \brief (I2SC_MR) Loop-back Test Mode */
 #define I2SC_MR_TXMONO (0x1u << 12) /**< \brief (I2SC_MR) Transmit Mono */
-#define I2SC_MR_TXDMA (0x1u << 13) /**< \brief (I2SC_MR) Single or Multiple Peripheral DMA Controller Channels for Transmitter */
+#define I2SC_MR_TXDMA (0x1u << 13) /**< \brief (I2SC_MR) Single or Multiple PDC Channels for Transmitter */
 #define I2SC_MR_TXSAME (0x1u << 14) /**< \brief (I2SC_MR) Transmit Data when Underrun */
 #define I2SC_MR_IMCKDIV_Pos 16
-#define I2SC_MR_IMCKDIV_Msk (0x3fu << I2SC_MR_IMCKDIV_Pos) /**< \brief (I2SC_MR) MCK to I2SC Master Clock Ratio */
+#define I2SC_MR_IMCKDIV_Msk (0x3fu << I2SC_MR_IMCKDIV_Pos) /**< \brief (I2SC_MR) Peripheral Clock to I2SC Master Clock Ratio */
 #define I2SC_MR_IMCKDIV(value) ((I2SC_MR_IMCKDIV_Msk & ((value) << I2SC_MR_IMCKDIV_Pos)))
 #define I2SC_MR_IMCKFS_Pos 24
 #define I2SC_MR_IMCKFS_Msk (0x3fu << I2SC_MR_IMCKFS_Pos) /**< \brief (I2SC_MR) Master Clock to fs Ratio */
@@ -120,11 +131,11 @@ typedef struct {
 #define I2SC_SR_TXUR (0x1u << 6) /**< \brief (I2SC_SR) Transmit Underrun */
 #define I2SC_SR_ENDTX (0x1u << 7) /**< \brief (I2SC_SR) End of Transmitter Transfer */
 #define I2SC_SR_RXORCH_Pos 8
-#define I2SC_SR_RXORCH_Msk (0x3u << I2SC_SR_RXORCH_Pos) /**< \brief (I2SC_SR)  */
-#define I2SC_SR_RXBUFF (0x1u << 19) /**< \brief (I2SC_SR)  */
+#define I2SC_SR_RXORCH_Msk (0x3u << I2SC_SR_RXORCH_Pos) /**< \brief (I2SC_SR) Receive Overrun Channel */
+#define I2SC_SR_RXBUFF (0x1u << 19) /**< \brief (I2SC_SR) Receive Buffer Full */
 #define I2SC_SR_TXURCH_Pos 20
-#define I2SC_SR_TXURCH_Msk (0x3u << I2SC_SR_TXURCH_Pos) /**< \brief (I2SC_SR)  */
-#define I2SC_SR_TXBUFE (0x1u << 31) /**< \brief (I2SC_SR)  */
+#define I2SC_SR_TXURCH_Msk (0x3u << I2SC_SR_TXURCH_Pos) /**< \brief (I2SC_SR) Transmit Underrun Channel */
+#define I2SC_SR_TXBUFE (0x1u << 31) /**< \brief (I2SC_SR) Transmit Buffer Empty */
 /* -------- I2SC_SCR : (I2SC Offset: 0x0C) Status Clear Register -------- */
 #define I2SC_SCR_RXOR (0x1u << 2) /**< \brief (I2SC_SCR) Receive Overrun Status Clear */
 #define I2SC_SCR_TXUR (0x1u << 6) /**< \brief (I2SC_SCR) Transmit Underrun Status Clear */
@@ -150,7 +161,7 @@ typedef struct {
 #define I2SC_IER_TXRDY (0x1u << 5) /**< \brief (I2SC_IER) Transmit Ready Interrupt Enable */
 #define I2SC_IER_TXUR (0x1u << 6) /**< \brief (I2SC_IER) Transmit Underflow Interrupt Enable */
 #define I2SC_IER_ENDTX (0x1u << 7) /**< \brief (I2SC_IER) End of Transmission Interrupt Enable */
-#define I2SC_IER_RXFULL (0x1u << 19) /**< \brief (I2SC_IER) Receive Buffer Full Interrut Enable */
+#define I2SC_IER_RXFULL (0x1u << 19) /**< \brief (I2SC_IER) Receive Buffer Full Interrupt Enable */
 #define I2SC_IER_TXEMPTY (0x1u << 31) /**< \brief (I2SC_IER) Transmit Buffer Empty Interrupt Enable */
 /* -------- I2SC_IDR : (I2SC Offset: 0x18) Interrupt Disable Register -------- */
 #define I2SC_IDR_RXRDY (0x1u << 1) /**< \brief (I2SC_IDR) Receiver Ready Interrupt Disable */
@@ -159,7 +170,7 @@ typedef struct {
 #define I2SC_IDR_TXRDY (0x1u << 5) /**< \brief (I2SC_IDR) Transmit Ready Interrupt Disable */
 #define I2SC_IDR_TXUR (0x1u << 6) /**< \brief (I2SC_IDR) Transmit Underflow Interrupt Disable */
 #define I2SC_IDR_ENDTX (0x1u << 7) /**< \brief (I2SC_IDR) End of Transmission Interrupt Disable */
-#define I2SC_IDR_RXFULL (0x1u << 19) /**< \brief (I2SC_IDR) Receive Buffer Full Interrut Disable */
+#define I2SC_IDR_RXFULL (0x1u << 19) /**< \brief (I2SC_IDR) Receive Buffer Full Interrupt Disable */
 #define I2SC_IDR_TXEMPTY (0x1u << 31) /**< \brief (I2SC_IDR) Transmit Buffer Empty Interrupt Disable */
 /* -------- I2SC_IMR : (I2SC Offset: 0x1C) Interrupt Mask Register -------- */
 #define I2SC_IMR_RXRDY (0x1u << 1) /**< \brief (I2SC_IMR) Receiver Ready Interrupt Disable */
@@ -168,7 +179,7 @@ typedef struct {
 #define I2SC_IMR_TXRDY (0x1u << 5) /**< \brief (I2SC_IMR) Transmit Ready Interrupt Disable */
 #define I2SC_IMR_TXUR (0x1u << 6) /**< \brief (I2SC_IMR) Transmit Underflow Interrupt Disable */
 #define I2SC_IMR_ENDTX (0x1u << 7) /**< \brief (I2SC_IMR) End of Transmission Interrupt Disable */
-#define I2SC_IMR_RXFULL (0x1u << 19) /**< \brief (I2SC_IMR) Receive Buffer Full Interrut Disable */
+#define I2SC_IMR_RXFULL (0x1u << 19) /**< \brief (I2SC_IMR) Receive Buffer Full Interrupt Disable */
 #define I2SC_IMR_TXEMPTY (0x1u << 31) /**< \brief (I2SC_IMR) Transmit Buffer Empty Interrupt Disable */
 /* -------- I2SC_RHR : (I2SC Offset: 0x20) Receiver Holding Register -------- */
 #define I2SC_RHR_RHR_Pos 0
@@ -177,11 +188,6 @@ typedef struct {
 #define I2SC_THR_THR_Pos 0
 #define I2SC_THR_THR_Msk (0xffffffffu << I2SC_THR_THR_Pos) /**< \brief (I2SC_THR) Transmitter Holding Register */
 #define I2SC_THR_THR(value) ((I2SC_THR_THR_Msk & ((value) << I2SC_THR_THR_Pos)))
-/* -------- I2SC_VERSION : (I2SC Offset: 0x28) Version Register -------- */
-#define I2SC_VERSION_VERSION_Pos 0
-#define I2SC_VERSION_VERSION_Msk (0xfffu << I2SC_VERSION_VERSION_Pos) /**< \brief (I2SC_VERSION) Version of the Hardware Module */
-#define I2SC_VERSION_MFN_Pos 16
-#define I2SC_VERSION_MFN_Msk (0x7u << I2SC_VERSION_MFN_Pos) /**< \brief (I2SC_VERSION) Metal Fix Number */
 /* -------- I2SC_RPR : (I2SC Offset: 0x100) Receive Pointer Register -------- */
 #define I2SC_RPR_RXPTR_Pos 0
 #define I2SC_RPR_RXPTR_Msk (0xffffffffu << I2SC_RPR_RXPTR_Pos) /**< \brief (I2SC_RPR) Receive Pointer Register */
@@ -229,7 +235,7 @@ typedef struct {
 #define I2SC_PTSR_TXTEN (0x1u << 8) /**< \brief (I2SC_PTSR) Transmitter Transfer Enable */
 #define I2SC_PTSR_RXCBEN (0x1u << 16) /**< \brief (I2SC_PTSR) Receiver Transfer Enable */
 #define I2SC_PTSR_TXCBEN (0x1u << 18) /**< \brief (I2SC_PTSR) Transmitter Transfer Enable */
-#define I2SC_PTSR_ERR (0x1u << 24) /**< \brief (I2SC_PTSR) Transfer Bus Error */
+#define I2SC_PTSR_ERR (0x1u << 24) /**< \brief (I2SC_PTSR) Transfer Bus Error (clear on read) */
 
 /*@}*/
 

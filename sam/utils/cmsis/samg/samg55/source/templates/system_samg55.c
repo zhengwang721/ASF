@@ -78,7 +78,7 @@ uint32_t SystemCoreClock = CHIP_FREQ_MAINCK_RC_8MHZ;
 void SystemInit(void)
 {
 	/* Set FWS according to SYS_BOARD_MCKR configuration */
-	EFC->EEFC_FMR = EEFC_FMR_FWS(2)|EEFC_FMR_CLOE;
+	EFC->EEFC_FMR = EEFC_FMR_FWS(8)|EEFC_FMR_CLOE;
 
 	/* Initialize PLLA */
 	PMC->CKGR_PLLAR = SYS_BOARD_PLLAR;

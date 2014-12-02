@@ -44,6 +44,7 @@
 #include "spi_master.h"
 #if SAMG55
 #include "flexcom.h"
+#include "conf_board.h"
 #endif
 
 /**

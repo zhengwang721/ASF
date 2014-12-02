@@ -1,31 +1,43 @@
-/* ---------------------------------------------------------------------------- */
-/*                  Atmel Microcontroller Software Support                      */
-/*                       SAM Software Package License                           */
-/* ---------------------------------------------------------------------------- */
-/* Copyright (c) 2014, Atmel Corporation                                        */
-/*                                                                              */
-/* All rights reserved.                                                         */
-/*                                                                              */
-/* Redistribution and use in source and binary forms, with or without           */
-/* modification, are permitted provided that the following condition is met:    */
-/*                                                                              */
-/* - Redistributions of source code must retain the above copyright notice,     */
-/* this list of conditions and the disclaimer below.                            */
-/*                                                                              */
-/* Atmel's name may not be used to endorse or promote products derived from     */
-/* this software without specific prior written permission.                     */
-/*                                                                              */
-/* DISCLAIMER:  THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR   */
-/* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF */
-/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE   */
-/* DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,      */
-/* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT */
-/* LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,  */
-/* OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF    */
-/* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING         */
-/* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, */
-/* EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                           */
-/* ---------------------------------------------------------------------------- */
+/**
+ * \file
+ *
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
 
 #ifndef _SAMG55_UDP_INSTANCE_
 #define _SAMG55_UDP_INSTANCE_
@@ -44,8 +56,6 @@
   #define REG_UDP_CSR                       (0x40044030U) /**< \brief (UDP) Endpoint Control and Status Register */
   #define REG_UDP_FDR                       (0x40044050U) /**< \brief (UDP) Endpoint FIFO Data Register */
   #define REG_UDP_TXVC                      (0x40044074U) /**< \brief (UDP) Transceiver Control Register */
-  #define REG_UDP_FEATURES                  (0x400440F8U) /**< \brief (UDP) USB FS Device Features Register */
-  #define REG_UDP_VERSION                   (0x400440FCU) /**< \brief (UDP) Version Register */
 #else
   #define REG_UDP_FRM_NUM  (*(__I  uint32_t*)0x40044000U) /**< \brief (UDP) Frame Number Register */
   #define REG_UDP_GLB_STAT (*(__IO uint32_t*)0x40044004U) /**< \brief (UDP) Global State Register */
@@ -59,8 +69,6 @@
   #define REG_UDP_CSR      (*(__IO uint32_t*)0x40044030U) /**< \brief (UDP) Endpoint Control and Status Register */
   #define REG_UDP_FDR      (*(__IO uint32_t*)0x40044050U) /**< \brief (UDP) Endpoint FIFO Data Register */
   #define REG_UDP_TXVC     (*(__IO uint32_t*)0x40044074U) /**< \brief (UDP) Transceiver Control Register */
-  #define REG_UDP_FEATURES (*(__I  uint32_t*)0x400440F8U) /**< \brief (UDP) USB FS Device Features Register */
-  #define REG_UDP_VERSION  (*(__I  uint32_t*)0x400440FCU) /**< \brief (UDP) Version Register */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #endif /* _SAMG55_UDP_INSTANCE_ */

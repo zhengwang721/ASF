@@ -1,31 +1,43 @@
-/* ---------------------------------------------------------------------------- */
-/*                  Atmel Microcontroller Software Support                      */
-/*                       SAM Software Package License                           */
-/* ---------------------------------------------------------------------------- */
-/* Copyright (c) 2014, Atmel Corporation                                        */
-/*                                                                              */
-/* All rights reserved.                                                         */
-/*                                                                              */
-/* Redistribution and use in source and binary forms, with or without           */
-/* modification, are permitted provided that the following condition is met:    */
-/*                                                                              */
-/* - Redistributions of source code must retain the above copyright notice,     */
-/* this list of conditions and the disclaimer below.                            */
-/*                                                                              */
-/* Atmel's name may not be used to endorse or promote products derived from     */
-/* this software without specific prior written permission.                     */
-/*                                                                              */
-/* DISCLAIMER:  THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR   */
-/* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF */
-/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE   */
-/* DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,      */
-/* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT */
-/* LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,  */
-/* OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF    */
-/* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING         */
-/* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, */
-/* EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                           */
-/* ---------------------------------------------------------------------------- */
+/**
+ * \file
+ *
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
 
 #ifndef _SAMG55_UDP_COMPONENT_
 #define _SAMG55_UDP_COMPONENT_
@@ -39,26 +51,23 @@
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief Udp hardware registers */
 typedef struct {
-  __I  uint32_t UDP_FRM_NUM;   /**< \brief (Udp Offset: 0x000) Frame Number Register */
-  __IO uint32_t UDP_GLB_STAT;  /**< \brief (Udp Offset: 0x004) Global State Register */
-  __IO uint32_t UDP_FADDR;     /**< \brief (Udp Offset: 0x008) Function Address Register */
+  __I  uint32_t UDP_FRM_NUM;  /**< \brief (Udp Offset: 0x000) Frame Number Register */
+  __IO uint32_t UDP_GLB_STAT; /**< \brief (Udp Offset: 0x004) Global State Register */
+  __IO uint32_t UDP_FADDR;    /**< \brief (Udp Offset: 0x008) Function Address Register */
   __I  uint32_t Reserved1[1];
-  __O  uint32_t UDP_IER;       /**< \brief (Udp Offset: 0x010) Interrupt Enable Register */
-  __O  uint32_t UDP_IDR;       /**< \brief (Udp Offset: 0x014) Interrupt Disable Register */
-  __I  uint32_t UDP_IMR;       /**< \brief (Udp Offset: 0x018) Interrupt Mask Register */
-  __I  uint32_t UDP_ISR;       /**< \brief (Udp Offset: 0x01C) Interrupt Status Register */
-  __O  uint32_t UDP_ICR;       /**< \brief (Udp Offset: 0x020) Interrupt Clear Register */
+  __O  uint32_t UDP_IER;      /**< \brief (Udp Offset: 0x010) Interrupt Enable Register */
+  __O  uint32_t UDP_IDR;      /**< \brief (Udp Offset: 0x014) Interrupt Disable Register */
+  __I  uint32_t UDP_IMR;      /**< \brief (Udp Offset: 0x018) Interrupt Mask Register */
+  __I  uint32_t UDP_ISR;      /**< \brief (Udp Offset: 0x01C) Interrupt Status Register */
+  __O  uint32_t UDP_ICR;      /**< \brief (Udp Offset: 0x020) Interrupt Clear Register */
   __I  uint32_t Reserved2[1];
-  __IO uint32_t UDP_RST_EP;    /**< \brief (Udp Offset: 0x028) Reset Endpoint Register */
+  __IO uint32_t UDP_RST_EP;   /**< \brief (Udp Offset: 0x028) Reset Endpoint Register */
   __I  uint32_t Reserved3[1];
-  __IO uint32_t UDP_CSR[6];    /**< \brief (Udp Offset: 0x030) Endpoint Control and Status Register */
+  __IO uint32_t UDP_CSR[6];   /**< \brief (Udp Offset: 0x030) Endpoint Control and Status Register */
   __I  uint32_t Reserved4[2];
-  __IO uint32_t UDP_FDR[6];    /**< \brief (Udp Offset: 0x050) Endpoint FIFO Data Register */
+  __IO uint32_t UDP_FDR[6];   /**< \brief (Udp Offset: 0x050) Endpoint FIFO Data Register */
   __I  uint32_t Reserved5[3];
-  __IO uint32_t UDP_TXVC;      /**< \brief (Udp Offset: 0x074) Transceiver Control Register */
-  __I  uint32_t Reserved6[32];
-  __I  uint32_t UDP_FEATURES;  /**< \brief (Udp Offset: 0x0F8) USB FS Device Features Register */
-  __I  uint32_t UDP_VERSION;   /**< \brief (Udp Offset: 0x0FC) Version Register */
+  __IO uint32_t UDP_TXVC;     /**< \brief (Udp Offset: 0x074) Transceiver Control Register */
 } Udp;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- UDP_FRM_NUM : (UDP Offset: 0x000) Frame Number Register -------- */
@@ -172,32 +181,6 @@ typedef struct {
 /* -------- UDP_TXVC : (UDP Offset: 0x074) Transceiver Control Register -------- */
 #define UDP_TXVC_TXVDIS (0x1u << 8) /**< \brief (UDP_TXVC) Transceiver Disable */
 #define UDP_TXVC_PUON (0x1u << 9) /**< \brief (UDP_TXVC) Pull-up On */
-/* -------- UDP_FEATURES : (UDP Offset: 0x0F8) USB FS Device Features Register -------- */
-#define UDP_FEATURES_EPT0SIZE_Pos 0
-#define UDP_FEATURES_EPT0SIZE_Msk (0xfu << UDP_FEATURES_EPT0SIZE_Pos) /**< \brief (UDP_FEATURES) EndPoinT X SIZE */
-#define UDP_FEATURES_EPT1SIZE_Pos 4
-#define UDP_FEATURES_EPT1SIZE_Msk (0xfu << UDP_FEATURES_EPT1SIZE_Pos) /**< \brief (UDP_FEATURES) EndPoinT X SIZE */
-#define UDP_FEATURES_EPT2SIZE_Pos 8
-#define UDP_FEATURES_EPT2SIZE_Msk (0xfu << UDP_FEATURES_EPT2SIZE_Pos) /**< \brief (UDP_FEATURES) EndPoinT X SIZE */
-#define UDP_FEATURES_EPT3SIZE_Pos 12
-#define UDP_FEATURES_EPT3SIZE_Msk (0xfu << UDP_FEATURES_EPT3SIZE_Pos) /**< \brief (UDP_FEATURES) EndPoinT X SIZE */
-#define UDP_FEATURES_EPT4SIZE_Pos 16
-#define UDP_FEATURES_EPT4SIZE_Msk (0xfu << UDP_FEATURES_EPT4SIZE_Pos) /**< \brief (UDP_FEATURES) EndPoinT X SIZE */
-#define UDP_FEATURES_EPT5SIZE_Pos 20
-#define UDP_FEATURES_EPT5SIZE_Msk (0xfu << UDP_FEATURES_EPT5SIZE_Pos) /**< \brief (UDP_FEATURES) EndPoinT X SIZE */
-#define UDP_FEATURES_PPEPT1 (0x1u << 24) /**< \brief (UDP_FEATURES) Ping Pong EndPoinTx */
-#define UDP_FEATURES_PPEPT2 (0x1u << 25) /**< \brief (UDP_FEATURES) Ping Pong EndPoinTx */
-#define UDP_FEATURES_PPEPT3 (0x1u << 26) /**< \brief (UDP_FEATURES) Ping Pong EndPoinTx */
-#define UDP_FEATURES_PPEPT4 (0x1u << 27) /**< \brief (UDP_FEATURES) Ping Pong EndPoinTx */
-#define UDP_FEATURES_PPEPT5 (0x1u << 28) /**< \brief (UDP_FEATURES) Ping Pong EndPoinTx */
-#define UDP_FEATURES_SRSEQ (0x1u << 29) /**< \brief (UDP_FEATURES) Send Resume SEQuence */
-#define UDP_FEATURES_DPRTYPE_Pos 30
-#define UDP_FEATURES_DPRTYPE_Msk (0x3u << UDP_FEATURES_DPRTYPE_Pos) /**< \brief (UDP_FEATURES) Dual Port RAM TYPE */
-/* -------- UDP_VERSION : (UDP Offset: 0x0FC) Version Register -------- */
-#define UDP_VERSION_VERSION_Pos 0
-#define UDP_VERSION_VERSION_Msk (0xfffu << UDP_VERSION_VERSION_Pos) /**< \brief (UDP_VERSION) Version of the Hardware Module */
-#define UDP_VERSION_MFN_Pos 16
-#define UDP_VERSION_MFN_Msk (0x7u << UDP_VERSION_MFN_Pos) /**< \brief (UDP_VERSION) Metal Fix Number */
 
 /*@}*/
 

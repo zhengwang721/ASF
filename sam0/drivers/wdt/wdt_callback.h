@@ -56,7 +56,7 @@ extern "C" {
  * @{
  */
 
-/** \name Callback configuration and initialization
+/** \name Callback Configuration and Initialization
  * @{
  */
 
@@ -81,7 +81,7 @@ enum status_code wdt_unregister_callback(
 
 /** @} */
 
-/** \name Callback enabling and disabling
+/** \name Callback Enabling and Disabling
  * @{
  */
 

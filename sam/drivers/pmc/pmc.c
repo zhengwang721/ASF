@@ -1308,13 +1308,11 @@ void pmc_set_flash_in_wait_mode(uint32_t ul_flash_state)
 }
 
 /**
- * \brief Enable Wait Mode. Enter condition: (WAITMODE bit = 1) +
- * (SLEEPDEEP bit = 0) + FLPM
+ * \brief Enable Wait Mode. Enter condition: (WAITMODE bit = 1) + FLPM
  *
- * \note In this function the FWS is reset to 0 to get best flash access
- * performance while running on fast wake up RC clock. Make sure the
- * non-zero FWS value is saved before invoking this function, and restored
- * after system woken up, to avoid flash access error.
+ * \note In this function, FLPM will retain, WAITMODE bit will be set, 
+ * Generally, this function will be called by pmc_sleep() in order to 
+ * complete all sequence entering wait mode.
  * See \ref pmc_sleep() for entering different sleep modes.
  */
 void pmc_enable_waitmode(void)
@@ -1326,9 +1324,6 @@ void pmc_enable_waitmode(void)
 	i &= ~PMC_FSMR_FLPM_Msk;
 	i |= ul_flash_in_wait_mode;
 	PMC->PMC_FSMR = i;
-
-	/* Clear SLEEPDEEP bit */
-	SCB->SCR &= (uint32_t) ~ SCB_SCR_SLEEPDEEP_Msk;
 
 	/* Set the WAITMODE bit = 1 */
 	PMC->CKGR_MOR |= CKGR_MOR_KEY_PASSWD | CKGR_MOR_WAITMODE;

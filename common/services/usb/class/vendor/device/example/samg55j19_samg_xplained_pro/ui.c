@@ -44,8 +44,6 @@
 #include <asf.h>
 #include "ui.h"
 
-static volatile bool ui_b_loopback = true;
-
 void ui_init(void)
 {
 	// Initialize LEDs
@@ -64,16 +62,11 @@ void ui_wakeup(void)
 
 void ui_loop_back_state(bool b_started)
 {
-	ui_b_loopback = b_started;
+	//do nothing
 }
 
 void ui_process(uint16_t framenumber)
 {
-	if (ui_b_loopback) {
-		LED_On(LED0);
-		return;
-	}
-
 	if ((framenumber % 1000) == 0) {
 		LED_On(LED0);
 	}
@@ -87,7 +80,4 @@ void ui_process(uint16_t framenumber)
  *
  * Human interface on SAMG55-XPRO:
  * - LED0 blinks when USB host has checked and enabled Vendor interface
- * - LED0 is on when
- *   - USB is in IDLE mode and Vendor interface is not enabled by Host
- *   - loopback is running
  */

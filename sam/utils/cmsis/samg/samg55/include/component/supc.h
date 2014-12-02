@@ -1,31 +1,43 @@
-/* ---------------------------------------------------------------------------- */
-/*                  Atmel Microcontroller Software Support                      */
-/*                       SAM Software Package License                           */
-/* ---------------------------------------------------------------------------- */
-/* Copyright (c) 2014, Atmel Corporation                                        */
-/*                                                                              */
-/* All rights reserved.                                                         */
-/*                                                                              */
-/* Redistribution and use in source and binary forms, with or without           */
-/* modification, are permitted provided that the following condition is met:    */
-/*                                                                              */
-/* - Redistributions of source code must retain the above copyright notice,     */
-/* this list of conditions and the disclaimer below.                            */
-/*                                                                              */
-/* Atmel's name may not be used to endorse or promote products derived from     */
-/* this software without specific prior written permission.                     */
-/*                                                                              */
-/* DISCLAIMER:  THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR   */
-/* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF */
-/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE   */
-/* DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,      */
-/* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT */
-/* LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,  */
-/* OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF    */
-/* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING         */
-/* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, */
-/* EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                           */
-/* ---------------------------------------------------------------------------- */
+/**
+ * \file
+ *
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
 
 #ifndef _SAMG55_SUPC_COMPONENT_
 #define _SAMG55_SUPC_COMPONENT_
@@ -39,16 +51,14 @@
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief Supc hardware registers */
 typedef struct {
-  __O  uint32_t SUPC_CR;       /**< \brief (Supc Offset: 0x00) Supply Controller Control Register */
-  __IO uint32_t SUPC_SMMR;     /**< \brief (Supc Offset: 0x04) Supply Controller Supply Monitor Mode Register */
-  __IO uint32_t SUPC_MR;       /**< \brief (Supc Offset: 0x08) Supply Controller Mode Register */
-  __IO uint32_t SUPC_WUMR;     /**< \brief (Supc Offset: 0x0C) Supply Controller Wake-up Mode Register */
-  __IO uint32_t SUPC_WUIR;     /**< \brief (Supc Offset: 0x10) Supply Controller Wake-up Inputs Register */
-  __I  uint32_t SUPC_SR;       /**< \brief (Supc Offset: 0x14) Supply Controller Status Register */
+  __O  uint32_t SUPC_CR;      /**< \brief (Supc Offset: 0x00) Supply Controller Control Register */
+  __IO uint32_t SUPC_SMMR;    /**< \brief (Supc Offset: 0x04) Supply Controller Supply Monitor Mode Register */
+  __IO uint32_t SUPC_MR;      /**< \brief (Supc Offset: 0x08) Supply Controller Mode Register */
+  __IO uint32_t SUPC_WUMR;    /**< \brief (Supc Offset: 0x0C) Supply Controller Wake-up Mode Register */
+  __IO uint32_t SUPC_WUIR;    /**< \brief (Supc Offset: 0x10) Supply Controller Wake-up Inputs Register */
+  __I  uint32_t SUPC_SR;      /**< \brief (Supc Offset: 0x14) Supply Controller Status Register */
   __I  uint32_t Reserved1[1];
-  __IO uint32_t SUPC_PWMR;     /**< \brief (Supc Offset: 0x1C) Supply Controller Power Mode Register */
-  __I  uint32_t Reserved2[55];
-  __IO uint32_t SYSC_VERSION;  /**< \brief (Supc Offset: 0xFC) Version Register */
+  __IO uint32_t SUPC_PWMR;    /**< \brief (Supc Offset: 0x1C) Supply Controller Power Mode Register */
 } Supc;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- SUPC_CR : (SUPC Offset: 0x00) Supply Controller Control Register -------- */
@@ -278,13 +288,51 @@ typedef struct {
 #define SUPC_SR_WKUPIS15 (0x1u << 31) /**< \brief (SUPC_SR) WKUP Input Status 15 */
 #define   SUPC_SR_WKUPIS15_DISABLED (0x0u << 31) /**< \brief (SUPC_SR) The corresponding wake-up input is disabled, or was inactive at the time the debouncer triggered a wake-up event. */
 #define   SUPC_SR_WKUPIS15_ENABLED (0x1u << 31) /**< \brief (SUPC_SR) The corresponding wake-up input was active at the time the debouncer triggered a wake-up event. */
-/* -------- SYSC_VERSION : (SUPC Offset: 0xFC) Version Register -------- */
-#define SYSC_VERSION_VERSION_Pos 0
-#define SYSC_VERSION_VERSION_Msk (0xfffu << SYSC_VERSION_VERSION_Pos) /**< \brief (SYSC_VERSION) Version of the Hardware Module */
-#define SYSC_VERSION_VERSION(value) ((SYSC_VERSION_VERSION_Msk & ((value) << SYSC_VERSION_VERSION_Pos)))
-#define SYSC_VERSION_MFN_Pos 16
-#define SYSC_VERSION_MFN_Msk (0x7u << SYSC_VERSION_MFN_Pos) /**< \brief (SYSC_VERSION) Metal Fix Number */
-#define SYSC_VERSION_MFN(value) ((SYSC_VERSION_MFN_Msk & ((value) << SYSC_VERSION_MFN_Pos)))
+/* -------- SUPC_PWMR : (SUPC Offset: 0x1C) Supply Controller Power Mode Register -------- */
+#define SUPC_PWMR_LPOWERS (0x1u << 0) /**< \brief (SUPC_PWMR) Low Power Value Selection */
+#define   SUPC_PWMR_LPOWERS_FACTORY (0x0u << 0) /**< \brief (SUPC_PWMR) The trimming value applied to the regulator when the device is in wait mode. This value is factory-defined. */
+#define   SUPC_PWMR_LPOWERS_USER (0x1u << 0) /**< \brief (SUPC_PWMR) The trimming value applied to the regulator is defined by the value programmed in the LPOWERx bits. */
+#define SUPC_PWMR_LPOWER0 (0x1u << 1) /**< \brief (SUPC_PWMR) Low Power Value */
+#define SUPC_PWMR_LPOWER1 (0x1u << 2) /**< \brief (SUPC_PWMR) Low Power Value */
+#define SUPC_PWMR_LPOWER2 (0x1u << 3) /**< \brief (SUPC_PWMR) Low Power Value */
+#define SUPC_PWMR_LPOWER3 (0x1u << 4) /**< \brief (SUPC_PWMR) Low Power Value */
+#define SUPC_PWMR_STUPTIME (0x1u << 7) /**< \brief (SUPC_PWMR) Start-up Time when Resuming from Wait Mode */
+#define   SUPC_PWMR_STUPTIME_FAST (0x0u << 7) /**< \brief (SUPC_PWMR) Fast start-up. */
+#define   SUPC_PWMR_STUPTIME_SLOW (0x1u << 7) /**< \brief (SUPC_PWMR) Slow start-up. */
+#define SUPC_PWMR_ECPWRS (0x1u << 8) /**< \brief (SUPC_PWMR) Enhanced Custom Power Value Selection */
+#define   SUPC_PWMR_ECPWRS_FACTORY (0x0u << 8) /**< \brief (SUPC_PWMR) The trimming value applied to the regulator when the device is in active mode. This value is factory-defined. */
+#define   SUPC_PWMR_ECPWRS_USER (0x1u << 8) /**< \brief (SUPC_PWMR) The trimming value applied to the regulator is defined by the value programmed in ECPWRx bits. */
+#define SUPC_PWMR_ECPWR0 (0x1u << 9) /**< \brief (SUPC_PWMR) Enhanced Custom Power Value */
+#define SUPC_PWMR_ECPWR1 (0x1u << 10) /**< \brief (SUPC_PWMR) Enhanced Custom Power Value */
+#define SUPC_PWMR_ECPWR2 (0x1u << 11) /**< \brief (SUPC_PWMR) Enhanced Custom Power Value */
+#define SUPC_PWMR_ECPWR3 (0x1u << 12) /**< \brief (SUPC_PWMR) Enhanced Custom Power Value */
+#define SUPC_PWMR_SRAM0ON (0x1u << 16) /**< \brief (SUPC_PWMR) SRAM Power Control */
+#define   SUPC_PWMR_SRAM0ON_OFF (0x0u << 16) /**< \brief (SUPC_PWMR) SRAMx is not powered. */
+#define   SUPC_PWMR_SRAM0ON_ON (0x1u << 16) /**< \brief (SUPC_PWMR) SRAMx is powered. */
+#define SUPC_PWMR_SRAM1ON (0x1u << 17) /**< \brief (SUPC_PWMR) SRAM Power Control */
+#define   SUPC_PWMR_SRAM1ON_OFF (0x0u << 17) /**< \brief (SUPC_PWMR) SRAMx is not powered. */
+#define   SUPC_PWMR_SRAM1ON_ON (0x1u << 17) /**< \brief (SUPC_PWMR) SRAMx is powered. */
+#define SUPC_PWMR_SRAM2ON (0x1u << 18) /**< \brief (SUPC_PWMR) SRAM Power Control */
+#define   SUPC_PWMR_SRAM2ON_OFF (0x0u << 18) /**< \brief (SUPC_PWMR) SRAMx is not powered. */
+#define   SUPC_PWMR_SRAM2ON_ON (0x1u << 18) /**< \brief (SUPC_PWMR) SRAMx is powered. */
+#define SUPC_PWMR_SRAM3ON (0x1u << 19) /**< \brief (SUPC_PWMR) SRAM Power Control */
+#define   SUPC_PWMR_SRAM3ON_OFF (0x0u << 19) /**< \brief (SUPC_PWMR) SRAMx is not powered. */
+#define   SUPC_PWMR_SRAM3ON_ON (0x1u << 19) /**< \brief (SUPC_PWMR) SRAMx is powered. */
+#define SUPC_PWMR_SRAM4ON (0x1u << 20) /**< \brief (SUPC_PWMR) SRAM Power Control */
+#define   SUPC_PWMR_SRAM4ON_OFF (0x0u << 20) /**< \brief (SUPC_PWMR) SRAMx is not powered. */
+#define   SUPC_PWMR_SRAM4ON_ON (0x1u << 20) /**< \brief (SUPC_PWMR) SRAMx is powered. */
+#define SUPC_PWMR_SRAM5ON (0x1u << 21) /**< \brief (SUPC_PWMR) SRAM Power Control */
+#define   SUPC_PWMR_SRAM5ON_OFF (0x0u << 21) /**< \brief (SUPC_PWMR) SRAMx is not powered. */
+#define   SUPC_PWMR_SRAM5ON_ON (0x1u << 21) /**< \brief (SUPC_PWMR) SRAMx is powered. */
+#define SUPC_PWMR_SRAM6ON (0x1u << 22) /**< \brief (SUPC_PWMR) SRAM Power Control */
+#define   SUPC_PWMR_SRAM6ON_OFF (0x0u << 22) /**< \brief (SUPC_PWMR) SRAMx is not powered. */
+#define   SUPC_PWMR_SRAM6ON_ON (0x1u << 22) /**< \brief (SUPC_PWMR) SRAMx is powered. */
+#define SUPC_PWMR_DPRAMON (0x1u << 23) /**< \brief (SUPC_PWMR) Dual-port RAM Power Control */
+#define   SUPC_PWMR_DPRAMON_OFF (0x0u << 23) /**< \brief (SUPC_PWMR) USB dual-port RAM is not powered. */
+#define   SUPC_PWMR_DPRAMON_ON (0x1u << 23) /**< \brief (SUPC_PWMR) USB dual-port RAM is powered. */
+#define SUPC_PWMR_KEY_Pos 24
+#define SUPC_PWMR_KEY_Msk (0xffu << SUPC_PWMR_KEY_Pos) /**< \brief (SUPC_PWMR) Password Key */
+#define   SUPC_PWMR_KEY_PASSWD (0x5Au << 24) /**< \brief (SUPC_PWMR) Writing any other value in this field aborts the write operation.Always reads as 0. */
 
 /*@}*/
 

@@ -1,31 +1,43 @@
-/* ---------------------------------------------------------------------------- */
-/*                  Atmel Microcontroller Software Support                      */
-/*                       SAM Software Package License                           */
-/* ---------------------------------------------------------------------------- */
-/* Copyright (c) 2014, Atmel Corporation                                        */
-/*                                                                              */
-/* All rights reserved.                                                         */
-/*                                                                              */
-/* Redistribution and use in source and binary forms, with or without           */
-/* modification, are permitted provided that the following condition is met:    */
-/*                                                                              */
-/* - Redistributions of source code must retain the above copyright notice,     */
-/* this list of conditions and the disclaimer below.                            */
-/*                                                                              */
-/* Atmel's name may not be used to endorse or promote products derived from     */
-/* this software without specific prior written permission.                     */
-/*                                                                              */
-/* DISCLAIMER:  THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR   */
-/* IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF */
-/* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE   */
-/* DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR ANY DIRECT, INDIRECT,      */
-/* INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT */
-/* LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA,  */
-/* OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF    */
-/* LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING         */
-/* NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, */
-/* EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.                           */
-/* ---------------------------------------------------------------------------- */
+/**
+ * \file
+ *
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ *
+ * \asf_license_start
+ *
+ * \page License
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * 3. The name of Atmel may not be used to endorse or promote products derived
+ *    from this software without specific prior written permission.
+ *
+ * 4. This software may only be redistributed and used in connection with an
+ *    Atmel microcontroller product.
+ *
+ * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
+ * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
+ * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
+ * EXPRESSLY AND SPECIFICALLY DISCLAIMED. IN NO EVENT SHALL ATMEL BE LIABLE FOR
+ * ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT,
+ * STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN
+ * ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ *
+ * \asf_license_stop
+ *
+ */
 
 #ifndef _SAMG55_RTC_COMPONENT_
 #define _SAMG55_RTC_COMPONENT_
@@ -51,8 +63,10 @@ typedef struct {
   __O  uint32_t RTC_IDR;       /**< \brief (Rtc Offset: 0x24) Interrupt Disable Register */
   __I  uint32_t RTC_IMR;       /**< \brief (Rtc Offset: 0x28) Interrupt Mask Register */
   __I  uint32_t RTC_VER;       /**< \brief (Rtc Offset: 0x2C) Valid Entry Register */
-  __I  uint32_t Reserved1[51];
-  __I  uint32_t RTC_VERSION;   /**< \brief (Rtc Offset: 0xFC) Version Register */
+  __I  uint32_t Reserved1[40];
+  __I  uint32_t RTC_MSR;       /**< \brief (Rtc Offset: 0xD0) Milliseconds Register */
+  __I  uint32_t Reserved2[4];
+  __IO uint32_t RTC_WPMR;      /**< \brief (Rtc Offset: 0xE4) Write Protection Mode Register */
 } Rtc;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 /* -------- RTC_CR : (RTC Offset: 0x00) Control Register -------- */
@@ -79,20 +93,20 @@ typedef struct {
 #define RTC_MR_HIGHPPM (0x1u << 15) /**< \brief (RTC_MR) HIGH PPM Correction */
 #define RTC_MR_OUT0_Pos 16
 #define RTC_MR_OUT0_Msk (0x7u << RTC_MR_OUT0_Pos) /**< \brief (RTC_MR) All ADC Channel Trigger Event Source Selection */
-#define   RTC_MR_OUT0_NO_WAVE (0x0u << 16) /**< \brief (RTC_MR) no waveform, stuck at '0' */
+#define   RTC_MR_OUT0_NO_WAVE (0x0u << 16) /**< \brief (RTC_MR) No waveform, stuck at '0' */
 #define   RTC_MR_OUT0_FREQ1HZ (0x1u << 16) /**< \brief (RTC_MR) 1 Hz square wave */
 #define   RTC_MR_OUT0_FREQ32HZ (0x2u << 16) /**< \brief (RTC_MR) 32 Hz square wave */
 #define   RTC_MR_OUT0_FREQ64HZ (0x3u << 16) /**< \brief (RTC_MR) 64 Hz square wave */
 #define   RTC_MR_OUT0_FREQ512HZ (0x4u << 16) /**< \brief (RTC_MR) 512 Hz square wave */
-#define   RTC_MR_OUT0_ALARM_FLAG (0x6u << 16) /**< \brief (RTC_MR) output is a copy of the alarm flag */
+#define   RTC_MR_OUT0_ALARM_FLAG (0x6u << 16) /**< \brief (RTC_MR) Output is a copy of the alarm flag */
 #define RTC_MR_OUT1_Pos 20
 #define RTC_MR_OUT1_Msk (0x7u << RTC_MR_OUT1_Pos) /**< \brief (RTC_MR) ADC Last Channel Trigger Event Source Selection */
-#define   RTC_MR_OUT1_NO_WAVE (0x0u << 20) /**< \brief (RTC_MR) no waveform, stuck at '0' */
+#define   RTC_MR_OUT1_NO_WAVE (0x0u << 20) /**< \brief (RTC_MR) No waveform, stuck at '0' */
 #define   RTC_MR_OUT1_FREQ1HZ (0x1u << 20) /**< \brief (RTC_MR) 1 Hz square wave */
 #define   RTC_MR_OUT1_FREQ32HZ (0x2u << 20) /**< \brief (RTC_MR) 32 Hz square wave */
 #define   RTC_MR_OUT1_FREQ64HZ (0x3u << 20) /**< \brief (RTC_MR) 64 Hz square wave */
 #define   RTC_MR_OUT1_FREQ512HZ (0x4u << 20) /**< \brief (RTC_MR) 512 Hz square wave */
-#define   RTC_MR_OUT1_ALARM_FLAG (0x6u << 20) /**< \brief (RTC_MR) output is a copy of the alarm flag */
+#define   RTC_MR_OUT1_ALARM_FLAG (0x6u << 20) /**< \brief (RTC_MR) Output is a copy of the alarm flag */
 /* -------- RTC_TIMR : (RTC Offset: 0x08) Time Register -------- */
 #define RTC_TIMR_SEC_Pos 0
 #define RTC_TIMR_SEC_Msk (0x7fu << RTC_TIMR_SEC_Pos) /**< \brief (RTC_TIMR) Current Second */
@@ -194,11 +208,14 @@ typedef struct {
 #define RTC_VER_NVCAL (0x1u << 1) /**< \brief (RTC_VER) Non-valid Calendar */
 #define RTC_VER_NVTIMALR (0x1u << 2) /**< \brief (RTC_VER) Non-valid Time Alarm */
 #define RTC_VER_NVCALALR (0x1u << 3) /**< \brief (RTC_VER) Non-valid Calendar Alarm */
-/* -------- RTC_VERSION : (RTC Offset: 0xFC) Version Register -------- */
-#define RTC_VERSION_VERSION_Pos 0
-#define RTC_VERSION_VERSION_Msk (0xfffu << RTC_VERSION_VERSION_Pos) /**< \brief (RTC_VERSION) Version of the Hardware Module */
-#define RTC_VERSION_MFN_Pos 16
-#define RTC_VERSION_MFN_Msk (0x7u << RTC_VERSION_MFN_Pos) /**< \brief (RTC_VERSION) Metal Fix Number */
+/* -------- RTC_MSR : (RTC Offset: 0xD0) Milliseconds Register -------- */
+#define RTC_MSR_MS_Pos 0
+#define RTC_MSR_MS_Msk (0x3ffu << RTC_MSR_MS_Pos) /**< \brief (RTC_MSR) Number of 1/1024 seconds elapsed within 1 second */
+/* -------- RTC_WPMR : (RTC Offset: 0xE4) Write Protection Mode Register -------- */
+#define RTC_WPMR_WPEN (0x1u << 0) /**< \brief (RTC_WPMR) Write Protection Enable */
+#define RTC_WPMR_WPKEY_Pos 8
+#define RTC_WPMR_WPKEY_Msk (0xffffffu << RTC_WPMR_WPKEY_Pos) /**< \brief (RTC_WPMR) Write Protection Key */
+#define   RTC_WPMR_WPKEY_PASSWD (0x525443u << 8) /**< \brief (RTC_WPMR) Writing any other value in this field aborts the write operation of the WPEN bit.Always reads as 0. */
 
 /*@}*/
 

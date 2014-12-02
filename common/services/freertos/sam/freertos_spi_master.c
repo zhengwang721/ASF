@@ -48,6 +48,9 @@
 #include "spi_master.h"
 #include "freertos_spi_master.h"
 #include "freertos_peripheral_control_private.h"
+#if SAMG55
+#include "flexcom.h"
+#endif
 
 /* Every bit in the interrupt mask. */
 #define MASK_ALL_INTERRUPTS                         (0xffffffffUL)
@@ -184,6 +187,9 @@ freertos_spi_if freertos_spi_master_init(Spi *p_spi,
 	bool is_valid_operating_mode;
 	freertos_spi_if return_value;
 	const enum peripheral_operation_mode valid_operating_modes[] = {SPI_MASTER};
+#if (SAMG55)
+	uint32_t temp;
+#endif
 
 	/* Find the index into the all_spi_definitions array that holds details of
 	the p_spi peripheral. */
@@ -223,7 +229,7 @@ freertos_spi_if freertos_spi_master_init(Spi *p_spi,
 			/* Call the standard ASF init function. */
 #if (SAMG55)
 			/* Enable the peripheral and set SPI mode. */
-			uint32_t temp = (uint32_t)(all_spi_definitions[spi_index].peripheral_base_address - 0x400);
+			temp = (uint32_t)(all_spi_definitions[spi_index].peripheral_base_address - 0x400);
 			Flexcom *p_flexcom = (Flexcom *)temp;
 			flexcom_enable(p_flexcom);
 			flexcom_set_opmode(p_flexcom, FLEXCOM_SPI);

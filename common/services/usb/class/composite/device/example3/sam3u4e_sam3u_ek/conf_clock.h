@@ -3,7 +3,7 @@
  *
  * \brief SAM3U clock configuration.
  *
- * Copyright (c) 2011 - 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -87,6 +87,5 @@
 // - USB clock source: UPLL
 // - UPLL frequency: 480MHz
 // - USB clock: 480MHz
-
 
 #endif /* CONF_CLOCK_H_INCLUDED */
