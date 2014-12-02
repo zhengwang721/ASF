@@ -47,77 +47,78 @@
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief OHCI hardware registers */
 typedef struct {
-  __I  uint32_t HcRevision;   /**< \brief (Udp Offset: 0x000) Frame Number Register */
-  __IO uint32_t HcControl;  /**< \brief (Udp Offset: 0x004) Global State Register */
-  __IO uint32_t HcCommandStatus;     /**< \brief (Udp Offset: 0x008) Function Address Register */
-  __IO uint32_t HcInterruptStatus;
-  __IO uint32_t HcInterruptEnable;       /**< \brief (Udp Offset: 0x010) Interrupt Enable Register */
-  __IO uint32_t HcInterruptDisable;       /**< \brief (Udp Offset: 0x014) Interrupt Disable Register */
-  __IO uint32_t HcHCCA;       /**< \brief (Udp Offset: 0x018) Interrupt Mask Register */
-  __I  uint32_t HcPeriodCurrentED;       /**< \brief (Udp Offset: 0x01C) Interrupt Status Register */
-  __IO uint32_t HcControlHeadED;       /**< \brief (Udp Offset: 0x020) Interrupt Clear Register */
-  __IO uint32_t HcControlCurrentED;
-  __IO uint32_t HcBulkHeadED;    /**< \brief (Udp Offset: 0x028) Reset Endpoint Register */
-  __IO uint32_t HcBulkCurrentED;
-  __I  uint32_t HcDoneHead;    /**< \brief (Udp Offset: 0x030) Endpoint Control and Status Register */
-  __IO uint32_t HcFmInterval;
-  __I  uint32_t HcFmRemaining;    /**< \brief (Udp Offset: 0x050) Endpoint FIFO Data Register */
-  __I  uint32_t HcFmNumber;
-  __IO uint32_t HcPeriodicStart;      /**< \brief (Udp Offset: 0x074) Transceiver Control Register */
-  __IO uint32_t HcLSThreshold;
-  __IO uint32_t HcRhDescriptorA;  /**< \brief (Udp Offset: 0x0F8) USB FS Device Features Register */
-  __IO uint32_t HcRhDescriptorB;   /**< \brief (Udp Offset: 0x0FC) Version Register */
-  __IO uint32_t HcRhStatus;  /**< \brief (Udp Offset: 0x0F8) USB FS Device Features Register */
-  __IO uint32_t HcRhPortStatus;   /**< \brief (Udp Offset: 0x0FC) Version Register */
+	__I uint32_t HcRevision;   /**< \brief (Udp Offset: 0x000) Frame Number Register */
+	__IO uint32_t HcControl;  /**< \brief (Udp Offset: 0x004) Global State Register */
+	__IO uint32_t HcCommandStatus;     /**< \brief (Udp Offset: 0x008) Function Address Register */
+	__IO uint32_t HcInterruptStatus;   /**< \brief (Udp Offset: 0x00C) Interrupt Status Register */
+	__IO uint32_t HcInterruptEnable;       /**< \brief (Udp Offset: 0x010) Interrupt Enable Register */
+	__IO uint32_t HcInterruptDisable;       /**< \brief (Udp Offset: 0x014) Interrupt Disable Register */
+	__IO uint32_t HcHCCA;       /**< \brief (Udp Offset: 0x018) Interrupt Mask Register */
+	__IO uint32_t HcPeriodCurrentED;       /**< \brief (Udp Offset: 0x01C) Interrupt Status Register */
+	__IO uint32_t HcControlHeadED;       /**< \brief (Udp Offset: 0x020) Interrupt Clear Register */
+	__IO uint32_t HcControlCurrentED;
+	__IO uint32_t HcBulkHeadED;    /**< \brief (Udp Offset: 0x028) Reset Endpoint Register */
+	__IO uint32_t HcBulkCurrentED;
+	__I uint32_t HcDoneHead;    /**< \brief (Udp Offset: 0x030) Endpoint Control and Status Register */
+	__IO uint32_t HcFmInterval;
+	__I uint32_t HcFmRemaining;    /**< \brief (Udp Offset: 0x050) Endpoint FIFO Data Register */
+	__I uint32_t HcFmNumber;
+	__IO uint32_t HcPeriodicStart;      /**< \brief (Udp Offset: 0x074) Transceiver Control Register */
+	__IO uint32_t HcLSThreshold;
+	__IO uint32_t HcRhDescriptorA;  /**< \brief (Udp Offset: 0x0F8) USB FS Device Features Register */
+	__IO uint32_t HcRhDescriptorB;   /**< \brief (Udp Offset: 0x0FC) Version Register */
+	__IO uint32_t HcRhStatus;  /**< \brief (Udp Offset: 0x0F8) USB FS Device Features Register */
+	__IO uint32_t HcRhPortStatus;   /**< \brief (Udp Offset: 0x0FC) Version Register */
 } Uhp;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-//! \brief  HcControl register fields
-#define HC_CONTROL_PLE                  (1 << 2)
-#define HC_CONTROL_IE                   (1 << 3)
-#define HC_CONTROL_CLE                  (1 << 4)
-#define HC_CONTROL_BLE                  (1 << 5)
-#define HC_CONTROL_HCFS                 (3 << 6)
-#define HC_CONTROL_HCFS_USBRESET        (0 << 6)
-#define HC_CONTROL_HCFS_USBRESUME       (1 << 6)
-#define HC_CONTROL_HCFS_USBOPERATIONAL  (2 << 6)
-#define HC_CONTROL_HCFS_USBSUSPEND      (3 << 6)
-#define HC_CONTROL_IR	                (1 << 8)	/* interrupt routing */
-#define HC_CONTROL_RWC	                (1 << 9)	/* remote wakeup connected */
-#define HC_CONTROL_RWE	                (1 << 10)	/* remote wakeup enable */
+/** \brief  HcControl register fields */
+#define HC_CONTROL_PLE                  (0x1u << 2)
+#define HC_CONTROL_IE                   (0x1u << 3)
+#define HC_CONTROL_CLE                  (0x1u << 4)
+#define HC_CONTROL_BLE                  (0x1u << 5)
+#define HC_CONTROL_HCFS                 (0x3u << 6)
+#define HC_CONTROL_HCFS_USBRESET        (0x0u << 6)
+#define HC_CONTROL_HCFS_USBRESUME       (0x1u << 6)
+#define HC_CONTROL_HCFS_USBOPERATIONAL  (0x2u << 6)
+#define HC_CONTROL_HCFS_USBSUSPEND      (0x3u << 6)
+#define HC_CONTROL_IR	                (0x1u << 8)	/* interrupt routing */
+#define HC_CONTROL_RWC	                (0x1u << 9)	/* remote wakeup connected */
+#define HC_CONTROL_RWE	                (0x1u << 10)	/* remote wakeup enable */
 
-//! \brief  HcCommandStatus register fields
-#define HC_COMMANDSTATUS_HCR            (1 << 0)
-#define HC_COMMANDSTATUS_CLF            (1 << 1)
-#define HC_COMMANDSTATUS_BLF            (1 << 2)
+/** \brief  HcCommandStatus register fields */
+#define HC_COMMANDSTATUS_HCR            (0x1u << 0)
+#define HC_COMMANDSTATUS_CLF            (0x1u << 1)
+#define HC_COMMANDSTATUS_BLF            (0x1u << 2)
 
 /*
+ * \brief  HcInterruptEnable/Disable/Status registers fields
+ *
  * masks used with interrupt registers:
  * HcInterruptStatus (intrstatus)
  * HcInterruptEnable (intrenable)
  * HcInterruptDisable (intrdisable)
  */
-//! \brief  HcInterruptEnable/Disable/Status registers fields
-#define HC_INTERRUPT_SO                 (1 << 0)  /* scheduling overrun */
-#define HC_INTERRUPT_WDH                (1 << 1)  /* writeback of done_head */
-#define HC_INTERRUPT_SF                 (1 << 2)  /* start frame */
-#define HC_INTERRUPT_RD                 (1 << 3)  /* resume detect */
-#define HC_INTERRUPT_UE                 (1 << 4)  /* unrecoverable error */
-#define HC_INTERRUPT_FNO                (1 << 5)  /* frame number overflow */
-#define HC_INTERRUPT_RHSC               (1 << 6)  /* root hub status change */
-#define HC_INTERRUPT_OC                 (1 << 30) /* ownership change */ 
-#define HC_INTERRUPT_MIE                (1 << 31) /* master interrupt enable */
+#define HC_INTERRUPT_SO                 (0x1u << 0)  /* scheduling overrun */
+#define HC_INTERRUPT_WDH                (0x1u << 1)  /* writeback of done_head */
+#define HC_INTERRUPT_SF                 (0x1u << 2)  /* start frame */
+#define HC_INTERRUPT_RD                 (0x1u << 3)  /* resume detect */
+#define HC_INTERRUPT_UE                 (0x1u << 4)  /* unrecoverable error */
+#define HC_INTERRUPT_FNO                (0x1u << 5)  /* frame number overflow */
+#define HC_INTERRUPT_RHSC               (0x1u << 6)  /* root hub status change */
+#define HC_INTERRUPT_OC                 (0x1u << 30) /* ownership change */ 
+#define HC_INTERRUPT_MIE                (0x1u << 31) /* master interrupt enable */
 
-//! \brief  HcFmInterval register fields
+/** \brief  HcFmInterval register fields */
 #define HC_FMINTERVAL_FI                0x00003FFF
 
-//! \brief  HcRhDescriptorA register fields
+/** \brief  HcRhDescriptorA register fields */
 #define HC_RHDESCRIPTORA_NDP            0x000000FF
 
 //! \brief  HcRhPortStatus register fields
-#define HC_RHPORTSTATUS_CCS             (1 << 0)
-#define HC_RHPORTSTATUS_PRS             (1 << 4)
-#define HC_RHPORTSTATUS_LSDA            (1 << 9)
+#define HC_RHPORTSTATUS_CCS             (0x1u << 0)
+#define HC_RHPORTSTATUS_PRS             (0x1u << 4)
+#define HC_RHPORTSTATUS_LSDA            (0x1u << 9)
 
 
 /* OHCI ROOT HUB REGISTER MASKS */
@@ -150,11 +151,11 @@ typedef struct {
 
 /* roothub.a masks */
 #define	RH_A_NDP	(0xff << 0)		/* number of downstream ports */
-#define	RH_A_PSM	(1 << 8)		/* power switching mode */
-#define	RH_A_NPS	(1 << 9)		/* no power switching */
-#define	RH_A_DT		(1 << 10)		/* device type (mbz) */
-#define	RH_A_OCPM	(1 << 11)		/* over current protection mode */
-#define	RH_A_NOCP	(1 << 12)		/* no over current protection */
+#define	RH_A_PSM	(0x1u << 8)		/* power switching mode */
+#define	RH_A_NPS	(0x1u << 9)		/* no power switching */
+#define	RH_A_DT		(0x1u << 10)		/* device type (mbz) */
+#define	RH_A_OCPM	(0x1u << 11)		/* over current protection mode */
+#define	RH_A_NOCP	(0x1u << 12)		/* no over current protection */
 #define	RH_A_POTPGT	(0xff << 24)		/* power on to power good time */
 
 /*
@@ -182,54 +183,67 @@ struct ohci_ed {
     struct ohci_ed  *p_next_ed;               //!< Pointer to next ED
 } COMPILER_ALIGNED(16);
 
-//! \brief  Transfer descriptor directions
+/** \brief  Transfer descriptor directions */
 #define TD_DIRECTION_SETUP              0
 #define TD_DIRECTION_OUT                1
 #define TD_DIRECTION_IN                 2
 
-//! \brief  Transfer descriptor data toggle values
+/** \brief  Transfer descriptor data toggle values */
 #define TD_TOGGLE_AUTO                  0
 #define TD_TOGGLE_DATA0                 2
 #define TD_TOGGLE_DATA1                 3
 
-//! \brief  Condition code field values
-// Completion Codes
-// General TD or isochronous data packet processing completed with 
-// no detected errors
+/**
+ * \brief  Condition code field values
+ * Completion Codes, General TD or isochronous data packet processing
+ * completed with.
+ */
+/* no detected errors */
 #define TD_CONDITIONCODE_NOERROR            0x0 // 0000
-// Last data packet from endpoint contained a CRC error.
+/* Last data packet from endpoint contained a CRC error. */
 #define TD_CONDITIONCODE_CRC                0x1 // 0001
-// Last data packet from endpoint contained a bit stuffing violation
+/* Last data packet from endpoint contained a bit stuffing violation. */
 #define TD_CONDITIONCODE_BITSTUFFING        0x2 // 0010
-// Last packet from endpoint had data toggle PID that didnot match 
-// the expected value.
+/**
+ * Last packet from endpoint had data toggle PID that didnot match
+ * the expected value.
+ */
 #define TD_CONDITIONCODE_DATATOGGLEMISMATCH 0x3 // 0011
-// STALL: TD was moved to the Done Queue because the endpoint returned 
-// a STALL PID
+/* TD was moved to the Done Queue because the endpoint returned a STALL PID. */
 #define TD_CONDITIONCODE_STALL              0x4 // 0100
-// Device did not respond to token (IN) or did not provide a handshake (OUT)
+/* Device did not respond to token (IN) or did not provide a handshake (OUT). */
 #define TD_CONDITIONCODE_NOTRESPONDING      0x5 // 0101
-// Check bits on PID from endpoint failed on data PID (IN) or handshake (OUT)
+/* Check bits on PID from endpoint failed on data PID (IN) or handshake (OUT). */
 #define TD_CONDITIONCODE_PIDCHECKFAILURE    0x6 // 0110
-// Receive PID was not valid when encountered or PID value is not defined.
+// Receive PID was not valid when encountered or PID value is not defined. */
 #define TD_CONDITIONCODE_UNEXPECTEDPID      0x7 // 0111
-// The amount of data returned by the endpoint exceeded either the size of 
-// the maximum data packet allowed from the endpoint (found in 
-// MaximumPacketSize field of ED) or the remaining buffer size.
+/**
+ * The amount of data returned by the endpoint exceeded either the size of 
+ * the maximum data packet allowed from the endpoint (found in 
+ * MaximumPacketSize field of ED) or the remaining buffer size.
+ */
 #define TD_CONDITIONCODE_DATAOVERRUN        0x8 // 1000
-// The endpoint returned less than MaximumPacketSize and that amount was not
-// sufficient to fill the specified buffer
+/**
+ * The endpoint returned less than MaximumPacketSize and that amount was not
+ * sufficient to fill the specified buffer.
+ */
 #define TD_CONDITIONCODE_DATAUNDERRUN       0x9 // 1001
 // Reserved                                 0xA // 1010
 // Reserved                                 0xB // 1011
-// During an IN, HC received data from endpoint faster than it could be written
-// to system memory
+/**
+ * During an IN, HC received data from endpoint faster than it could be written
+ * to system memory.
+ */
 #define TD_CONDITIONCODE_BUFFEROVERRUN      0xC // 1100
-// During an OUT, HC could not retrieve data from system memory fast enough 
-// to keep up with data USB data rate.
+/**
+ * During an OUT, HC could not retrieve data from system memory fast enough
+ * to keep up with data USB data rate.
+ */
 #define TD_CONDITIONCODE_BUFFERUNDERRUN     0xD // 1101
-// This code is set by software before the TD is placed on a list to be 
-// processed by the HC.
+/**
+ * This code is set by software before the TD is placed on a list to be
+ * processed by the HC.
+ */
 #define TD_CONDITIONCODE_NOTACCESSED        0xE // 111x
 
 /*
@@ -282,24 +296,8 @@ struct ohci_hcca {
 } COMPILER_ALIGNED(256);
 
 #define	FI			0x2edf		/* 12000 bits per frame (-1) */
-#define	FSMP(fi)		(0x7fff & ((6 * ((fi) - 210)) / 7))
-#define	FIT			(1 << 31)
-#define LSTHRESH		0x628		/* lowspeed bit threshold */
-
-/*
- * The Completion Codes defined in section 4.3.3 of the OHCI spec.
- */
-#define CC_NOERROR             0
-#define CC_CRC                 1
-#define CC_BITSTUFFING         2
-#define CC_DATATOGGLEMISMATCH  3
-#define CC_STALL               4
-#define CC_DEVICENOTRESPONDING 5
-#define CC_PIDCHECKFAILURE     6
-#define CC_UNEXPECTEDPID       7
-#define CC_DATAOVERRUN         8
-#define CC_DATAUNDERRUN        9
-#define CC_BUFFEROVERRUN       12
-#define CC_BUFFERUNDERRUN      13
+#define	FSMP(fi)	(0x7fff & ((6 * ((fi) - 210)) / 7))
+#define	FIT			(0x1u << 31)
+#define LSTHRESH	0x628		/* lowspeed bit threshold */
 
 #endif /* _OHCI_COMPONENT_ */

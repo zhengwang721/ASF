@@ -57,7 +57,7 @@
 # define UHD_USB_INT_LEVEL 5 // By default USB interrupt have low priority
 #endif
 
-// Optional UHC callbacks
+/* Optional UHC callbacks. */
 #ifndef UHC_MODE_CHANGE
 # define UHC_MODE_CHANGE(arg)
 #endif
@@ -71,15 +71,11 @@
 # define UHC_VBUS_ERROR()
 #endif
 
-// for debug text
-//#define dbg_print printf
-#define dbg_print(...)
-
 /**
  * \ingroup usb_host_group
  * \defgroup uhd_group USB Host Driver (UHD)
  *
- * \section uhdp_conf UHDP Custom configuration
+ * \section uhp_conf UHP Custom configuration
  * The following UHP driver configuration must be defined in conf_usb_host.h
  * file of the application.
  *
@@ -105,7 +101,7 @@
 #ifndef UHP_NO_SLEEP_MGR
 
 #include "sleepmgr.h"
-//! States of UHP interface
+/** States of UHP interface. */
 enum uhd_uhp_state_enum {
 	UHD_STATE_OFF = 0,
 	UHD_STATE_WAIT_ID_HOST = 1,
@@ -115,7 +111,8 @@ enum uhd_uhp_state_enum {
 	UHD_STATE_IDLE = 5,
 };
 
-/*! \brief Manages the sleep mode following the UHP state
+/**
+ * \brief Manages the sleep mode following the UHP state
  *
  * \param new_state  New UHP state
  */
@@ -136,11 +133,11 @@ static void uhd_sleep_mode(enum uhd_uhp_state_enum new_state)
 		return; // No change
 	}
 	if (new_state != UHD_STATE_OFF) {
-		// Lock new limit
+		/* Lock new limit. */
 		sleepmgr_lock_mode(sleep_mode[new_state]);
 	}
 	if (uhd_state != UHD_STATE_OFF) {
-		// Unlock old limit
+		/* Unlock old limit. */
 		sleepmgr_unlock_mode(sleep_mode[uhd_state]);
 	}
 	uhd_state = new_state;
@@ -151,10 +148,10 @@ static void uhd_sleep_mode(enum uhd_uhp_state_enum new_state)
 #endif // UHP_NO_SLEEP_MGR
 //@}
 
-//! Store the callback to be call at the end of reset signal
+/** Store the callback to be call at the end of reset signal. */
 static uhd_callback_reset_t uhd_reset_callback = NULL;
 
-//! Store the callback to be call at the end of setup request
+/** Store the callback to be call at the end of setup request. */
 struct uhd_callback_setup_end_parameter {
 	usb_add_t add;
 	uhd_trans_status_t status;
@@ -163,7 +160,7 @@ struct uhd_callback_setup_end_parameter {
 static struct uhd_callback_setup_end_parameter callback_setup_end_para;
 static uhd_callback_setup_end_t callback_setup_end_func = NULL;
 
-//! Store the callback to be call at the end of one transaction
+/** Store the callback to be call at the end of one transaction. */
 struct uhd_callback_trans_end_parameter {
 	usb_add_t add;
 	usb_ep_t ep;
@@ -197,40 +194,44 @@ static void uhd_transfer_end(void *pointer)
 
 	if (!(callback_type & 0x80000000)) {
 		td_general_header = (struct ohci_td_general *)(callback_type & 0xFFFFFFF0);
-		/* Check if there is free callback resource. */
-		for (i = 0; i < 8; i++) {
-			if (callback_trans_end_para[i].td_general_header ==
-						td_general_header) {
-				break;
+		while (td_general_header != NULL) {
+			/* Check if there is free callback resource. */
+			for (i = 0; i < 8; i++) {
+				if (callback_trans_end_para[i].td_general_header ==
+							td_general_header) {
+					break;
+				}
 			}
-		}
-		if (i == 8) {
-			return;
-		}
+			if (i == 8) {
+				return;
+			}
 
-		if (callback_trans_end_para[i].callback_trans_end_func != NULL) {
-			current_buffer_point =
-					(iram_size_t)td_general_header->pCurrentBufferPointer;
-			if (!current_buffer_point) {
+			if (callback_trans_end_para[i].callback_trans_end_func != NULL) {
 				current_buffer_point =
-					(iram_size_t)td_general_header->pBufferEnd + 1;
+						(iram_size_t)td_general_header->pCurrentBufferPointer;
+				if (!current_buffer_point) {
+					current_buffer_point =
+						(iram_size_t)td_general_header->pBufferEnd + 1;
+				}
+
+				completion_code = (callback_type & 0x0000000F);
+				if (completion_code == TD_CONDITIONCODE_STALL) {
+					callback_trans_end_para[i].status = UHD_TRANS_STALL;
+					ohci_clear_ed_transfer_status(td_general_header);
+				}
+
+				callback_trans_end_para[i].callback_trans_end_func(
+						callback_trans_end_para[i].add,
+						callback_trans_end_para[i].ep,
+						callback_trans_end_para[i].status,
+						(current_buffer_point
+						- callback_trans_end_para[i].nb_transfered));
+
+				memset((void *)&callback_trans_end_para[i], 0,
+						sizeof(callback_trans_end_para[i]));
 			}
 
-			completion_code = (callback_type & 0x0000000F);
-			if (completion_code == CC_STALL) {
-				callback_trans_end_para[i].status = UHD_TRANS_STALL;
-				ohci_clear_ed_transfer_status(td_general_header);
-			}
-
-			callback_trans_end_para[i].callback_trans_end_func(
-					callback_trans_end_para[i].add,
-					callback_trans_end_para[i].ep,
-					callback_trans_end_para[i].status,
-					(current_buffer_point
-					- callback_trans_end_para[i].nb_transfered));
-
-			memset((void *)&callback_trans_end_para[i], 0,
-					sizeof(callback_trans_end_para[i]));
+			td_general_header = td_general_header->p_next_td;
 		}
 	} else if (callback_type & 0x80000000) {
 		if (callback_setup_end_func != NULL) {
@@ -253,10 +254,11 @@ static void uhd_transfer_end(void *pointer)
  */
 static void uhd_sof_interrupt(void *pointer)
 {
+	UNUSED(pointer);
+
 	/* Manage a delay to enter in suspend */
 	if (uhd_suspend_start) {
 		if (--uhd_suspend_start == 0) {
-			dbg_print("SUSP\n");
 			ohci_bus_suspend();
 			uhd_sleep_mode(UHD_STATE_SUSPEND);
 		}
@@ -273,16 +275,18 @@ static void uhd_sof_interrupt(void *pointer)
 		return; // Abort SOF events
 	}	
 
-	// Notify the UHC
+	/* Notify the UHC. */
 	uhc_notify_sof(false);
 
-	// Notify the user application
+	/* Notify the user application. */
 	UHC_SOF_EVENT();
 }
 
 static void uhd_remote_wakeup(void *pointer)
 {
-	/* Wait 50ms before restarting transfer */
+	UNUSED(pointer);
+
+	/* Wait 50ms before restarting transfer. */
 	uhd_resume_start = 50;
 }
 
@@ -317,17 +321,19 @@ void uhd_enable(void)
 	matrix_set_usb_host();
 #endif
 
-	//* Enable USB hardware clock
+	/* Enable USB hardware clock. */
 	sysclk_enable_usb();
 	pmc_enable_periph_clk(ID_UHP);
 
-	// Always authorize asynchronous USB interrupts to exit of sleep mode
-	// For SAMG55 USB wake up device except BACKUP mode
-	NVIC_SetPriority((IRQn_Type) ID_UHP, UHD_USB_INT_LEVEL);
-	NVIC_EnableIRQ((IRQn_Type) ID_UHP);
+	/**
+	 * Always authorize asynchronous USB interrupts to exit of sleep mode
+	 * For SAMG55 USB wake up device except BACKUP mode.
+	 */
+	NVIC_SetPriority((IRQn_Type)ID_UHP, UHD_USB_INT_LEVEL);
+	NVIC_EnableIRQ((IRQn_Type)ID_UHP);
 //	pmc_set_fast_startup_input(PMC_FSMR_USBAL);
 
-	// To avoid USB interrupt before end of initialization
+	/* To avoid USB interrupt before end of initialization. */
 	flags = cpu_irq_save();
 
 	ohci_init();
@@ -342,13 +348,15 @@ void uhd_enable(void)
 
 void uhd_disable(bool b_id_stop)
 {
+	UNUSED(b_id_stop);
+
 	irqflags_t flags;
 
 	flags = cpu_irq_save();
 	ohci_deinit();
 	cpu_irq_restore(flags);
 
-	// Do not authorize asynchronous USB interrupts
+	/* Do not authorize asynchronous USB interrupts. */
 //	pmc_clr_fast_startup_input(PMC_FSMR_USBAL);
 	sysclk_disable_usb();
 	pmc_disable_periph_clk(ID_UHP);
@@ -386,14 +394,11 @@ void uhd_send_reset(uhd_callback_reset_t callback)
 {
 	uhd_reset_callback = callback;
 	ohci_bus_reset();
-//	ohci_start_port_reset();
-//reset complete status can be get from HcRhPortStatus Register bit 20 PRSC
-//maybe polling to do the callback
 }
 
 void uhd_suspend(void)
 {
-	// Wait three SOFs before entering in suspend state
+	/* Wait three SOFs before entering in suspend state. */
 	uhd_suspend_start = 3;
 }
 
@@ -409,7 +414,7 @@ bool uhd_is_suspend(void)
 void uhd_resume(void)
 {
 	ohci_bus_resume();
-	/* Wait 50ms before restarting transfer */
+	/* Wait 50ms before restarting transfer. */
 	uhd_resume_start = 50;
 }
 
@@ -438,12 +443,9 @@ bool uhd_ep_alloc(usb_add_t add, usb_ep_desc_t * ep_desc)
 {
 	ed_info_t ed_info_temp;
 	bool return_value;
-//	uint8_t ep_addr;
 	uint8_t ep_type;
 	uint8_t ep_dir;
-//	uint8_t ep_interval;
 
-//	ep_addr = ep_desc->bEndpointAddress & USB_EP_ADDR_MASK;
 	ep_type = ep_desc->bmAttributes&USB_EP_TYPE_MASK;
 	if (ep_desc->bEndpointAddress & USB_EP_DIR_IN) {
 		ep_dir = 2;
@@ -459,34 +461,30 @@ bool uhd_ep_alloc(usb_add_t add, usb_ep_desc_t * ep_desc)
 	ed_info_temp.ed_info_s.bFormat = 0; 					   // General TD
 	ed_info_temp.ed_info_s.bMaximumPacketSize = ep_desc->wMaxPacketSize;  // max packet size
 
-		// Bank choice
-		switch(ep_type) {
-		case USB_EP_TYPE_ISOCHRONOUS:
-//			ep_interval = ep_desc->bInterval;
-			ed_info_temp.ed_info_s.bFormat = 1;                // ISO TD
-			return_value = ohci_add_ed_period(&ed_info_temp);
-			break;
-		case USB_EP_TYPE_INTERRUPT:
-//			ep_interval = ep_desc->bInterval;
-			return_value = ohci_add_ed_period(&ed_info_temp);
-			break;
-		case USB_EP_TYPE_BULK:
-			// 0 is required by UHP hardware for bulk
-//			ep_interval = 0;
-			return_value = ohci_add_ed_bulk(&ed_info_temp);
-			break;
-		default:
-			Assert(false);
-			return false;
-		}
+	switch(ep_type) {
+	case USB_EP_TYPE_ISOCHRONOUS:
+		ed_info_temp.ed_info_s.bFormat = 1;                // ISO TD
+		return_value = ohci_add_ed_period(&ed_info_temp);
+		break;
+	case USB_EP_TYPE_INTERRUPT:
+		return_value = ohci_add_ed_period(&ed_info_temp);
+		break;
+	case USB_EP_TYPE_BULK:
+		return_value = ohci_add_ed_bulk(&ed_info_temp);
+		break;
+	default:
+		Assert(false);
+		return false;
+	}
 
-		return return_value;
-
+	return return_value;
 }
 
 
 void uhd_ep_free(usb_add_t add, usb_ep_t endp)
 {
+	UNUSED(add);
+
 	ohci_remove_ed(endp);
 }
 
@@ -498,31 +496,29 @@ bool uhd_setup_request(
 		uhd_callback_setup_run_t callback_run,
 		uhd_callback_setup_end_t callback_end)
 {
+	UNUSED(callback_run);
+
 	bool return_value = true;
 
 	irqflags_t flags;
 	flags = cpu_irq_save();
 
-	// add setup TD
+	/* Add setup TD. */
 	return_value = ohci_add_td_control(TD_PID_SETUP, (uint8_t *)req, sizeof(usb_setup_req_t));
 	if (return_value == false) {
 		cpu_irq_restore(flags);
 		return false;
 	}
 
-//	delay_ms(5);
-
 	if ((req->bmRequestType & USB_REQ_DIR_MASK) == USB_REQ_DIR_IN) {
-		// add in TD
+		/* Add in TD. */
 		return_value = ohci_add_td_control(TD_PID_IN, payload, payload_size);
 		if (return_value == false) {
 			cpu_irq_restore(flags);
 			return false;
 		}
 
-//		delay_ms(5);
-
-		// add out TD
+		/* Add out TD. */
 		return_value = ohci_add_td_control(TD_PID_OUT, payload, 0);
 		if (return_value == false) {
 			cpu_irq_restore(flags);
@@ -530,14 +526,14 @@ bool uhd_setup_request(
 		}
 	} else {
 		if (req->wLength) {
-			// add out TD
+			/* Add out TD. */
 			return_value = ohci_add_td_control(TD_PID_OUT, payload, payload_size);
 			if (return_value == false) {
 				cpu_irq_restore(flags);
 				return false;
 			}
 
-			// add out TD
+			/* Add in TD. */
 			return_value = ohci_add_td_control(TD_PID_IN, payload, 0);
 			if (return_value == false) {
 				cpu_irq_restore(flags);
@@ -571,6 +567,9 @@ bool uhd_ep_run(usb_add_t add,
 		uint16_t timeout,
 		uhd_callback_trans_t callback)
 {
+	UNUSED(b_shortpacket);
+	UNUSED(timeout);
+
 	uint32_t i;
 	bool return_value = true;
 
@@ -611,6 +610,8 @@ bool uhd_ep_run(usb_add_t add,
 
 void uhd_ep_abort(usb_add_t add, usb_ep_t endp)
 {
+	UNUSED(add);
+
 	ohci_remove_td(endp);
 }
 

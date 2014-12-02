@@ -109,15 +109,15 @@ void ohci_init(void)
 	memset((void *)&isochronous_td_head, 0, sizeof(isochronous_td_head));
 	memset((void *)&isochronous_td_tail, 0, sizeof(isochronous_td_tail));
 
-	// Setup Host Controller to issue a software reset
+	/* Setup Host Controller to issue a software reset. */
 	UHP->HcCommandStatus = HC_COMMANDSTATUS_HCR;
 	while (UHP->HcCommandStatus & HC_COMMANDSTATUS_HCR);
 
-    // Write Fm Interval and Largest Data Packet Counter
-    UHP->HcFmInterval    = FIT | (FSMP(FI)<< 16) | FI;
-    UHP->HcPeriodicStart = FI * 90 / 100;
+    /* Write Fm Interval and Largest Data Packet Counter. */
+	UHP->HcFmInterval    = FIT | (FSMP(FI)<< 16) | FI;
+	UHP->HcPeriodicStart = FI * 90 / 100;
 
-	// Begin sending SOF
+	/* Begin sending SOF. */
 	temp_value = UHP->HcControl;
 	temp_value &= ~HC_CONTROL_HCFS;
 	temp_value |= HC_CONTROL_HCFS_USBOPERATIONAL;
@@ -128,28 +128,25 @@ void ohci_init(void)
 
 	UHP->HcHCCA = (uint32_t)&hcca;
 
-    // Clear Interrrupt Status
+    /* Clear Interrrupt Status. */
     UHP->HcInterruptStatus |= UHP->HcInterruptStatus;
 
-	// Enable some interrupts()
+	/* Enable some interrupts. */
 	UHP->HcInterruptEnable = HC_INTERRUPT_WDH | HC_INTERRUPT_SF
 				| HC_INTERRUPT_RD | HC_INTERRUPT_RHSC | HC_INTERRUPT_MIE;
 
-	//delay some time to access the port
+	/* Delay some time to access the port. */
 	delay_ms(50);
 
-	UHP->HcRhStatus = RH_HS_LPSC; 						  /* Set Global Power*/
+	/* Set Global Power. */
+	UHP->HcRhStatus = RH_HS_LPSC;
 
-	// Initiate port reset
+	/* Initiate port reset. */
 	UHP->HcRhPortStatus = RH_PS_PRS;
 	while (UHP->HcRhPortStatus & RH_PS_PRS);
 	delay_ms(100);
-    // ...and clear port reset signal
+    /* Clear port reset signal. */
     UHP->HcRhPortStatus = RH_PS_PRSC;
-
-	// enable port
-//	UHP->HcRhPortStatus = RH_PS_PES;
-
 }
 
 /**
@@ -164,10 +161,10 @@ void ohci_deinit(void)
 	struct ohci_ed *ed_header;
 	struct ohci_ed *ed_free_header;
 
-	// Change to reset state
+	/* Change to reset state. */
 	UHP->HcControl &= ~HC_CONTROL_HCFS;;
 	
-	// Free all allocated EDs and TDs
+	/* Free all allocated EDs and TDs. */
 
 	/* TDs in control endpoint. */
 	control_ed.p_td_head = NULL;
@@ -246,7 +243,6 @@ bool ohci_get_device_speed (void)
  */
 uint16_t ohci_get_frame_number (void)
 {
-	// not sure if need check the Pad1 status
 	return hcca.FrameNumber;
 }
 
@@ -258,13 +254,11 @@ void ohci_bus_reset(void)
 {
 	Assert(!(UHP->HcRhPortStatus & RH_PS_CCS));
 
-//	delay_ms(100);
-
-	// Initiate port reset
+	/* Initiate port reset. */
 	UHP->HcRhPortStatus = RH_PS_PRS;
 	while (UHP->HcRhPortStatus & RH_PS_PRS);
 	delay_ms(100);
-    // ...and clear port reset signal
+    /* Clear port reset signal. */
     UHP->HcRhPortStatus = RH_PS_PRSC;
 
 	bus_reset_flag = true;
@@ -278,12 +272,10 @@ void ohci_bus_suspend(void)
 {
 	uint32_t temp_value;
 
-	/* First stop any processing */
-//	UHP->HcControl &= ~(HC_CONTROL_CLE|HC_CONTROL_BLE|HC_CONTROL_PLE|HC_CONTROL_IE);
-
 	UHP->HcControl |= HC_CONTROL_RWE;
 
-	/* Suspend hub ... this is the "global (to this bus) suspend" mode,
+	/**
+	 * Suspend hub ... this is the "global (to this bus) suspend" mode,
 	 * which doesn't imply ports will first be individually suspended.
 	 */
 	temp_value = UHP->HcControl;
@@ -291,10 +283,8 @@ void ohci_bus_suspend(void)
 	temp_value |= HC_CONTROL_HCFS_USBSUSPEND;
 	UHP->HcControl = temp_value;
 
-	// device remote wakeup enable
+	/* Device remote wakeup enable. */
 	UHP->HcRhStatus = RH_HS_DRWE;
-
-//	UHP->HcRhPortStatus = RH_PS_PSS;
 }
 
 /**
@@ -315,7 +305,7 @@ void ohci_bus_resume(void)
 {
 	uint32_t temp_value;
 
-	// device remote wakeup disable
+	/* Device remote wakeup disable. */
 	UHP->HcRhStatus = RH_HS_CRWE;
 
 	temp_value = UHP->HcControl;
@@ -333,16 +323,6 @@ void ohci_bus_resume(void)
 
 
 	UHP->HcControl &= ~HC_CONTROL_RWE;
-
-	/* Restore any processing */
-//	UHP->HcControl = HC_CONTROL_CLE|HC_CONTROL_BLE|HC_CONTROL_PLE|HC_CONTROL_IE;
-
-	// enable port
-//	UHP->HcRhPortStatus = RH_PS_PES;
-//	UHP->HcRhPortStatus = RH_PS_PESC;
-
-	//port resume
-//	UHP->HcRhPortStatus = RH_PS_POCI;
 }
 
 /**
@@ -374,7 +354,7 @@ bool ohci_add_ed_bulk(ed_info_t *ed_info)
 		if (!(bulk_ed_status & (1 << i))) {
 			bulk_ed_status |= (1 << i);
 			memset((void *)&bulk_ed[i], 0, sizeof(bulk_ed[i]));
-			bulk_ed_add = &bulk_ed[i];
+			bulk_ed_add = (struct ohci_ed *)&bulk_ed[i];
 			break;
 		}
 	}
@@ -428,7 +408,7 @@ bool ohci_add_ed_period(ed_info_t *ed_info)
 			if (!(isochronous_ed_status & (1 << j))) {
 				isochronous_ed_status |= (1 << j);
 				memset((void *)&isochronous_ed[j], 0, sizeof(isochronous_ed[j]));
-				period_ed_add = &isochronous_ed[j];
+				period_ed_add = (struct ohci_ed *)&isochronous_ed[j];
 				break;
 			}
 		}
@@ -454,7 +434,7 @@ bool ohci_add_ed_period(ed_info_t *ed_info)
 			if (!(interrupt_ed_status & (1 << j))) {
 				interrupt_ed_status |= (1 << j);
 				memset((void *)&interrupt_ed[j], 0, sizeof(interrupt_ed[j]));
-				period_ed_add = &interrupt_ed[j];
+				period_ed_add = (struct ohci_ed *)&interrupt_ed[j];
 				break;
 			}
 		}
@@ -596,7 +576,8 @@ void ohci_clear_ed_transfer_status(struct ohci_td_general *td_general_header)
 		}
 	}
 	for (i = 0; i < 8; i++) {
-		if (td_general_header == &isochronous_td_head[i]) {
+		if (td_general_header ==
+					(struct ohci_td_general *)&isochronous_td_head[i]) {
 			temp_head = (uint32_t)isochronous_ed[i].p_td_head;
 			temp_head &= 0xFFFFFFF0;
 			isochronous_ed[i].p_td_head = (void *)temp_head;
@@ -639,19 +620,13 @@ bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
 		return false;
 	}
 
-	// set the skip
-//	control_ed.ed_info.ed_info_s.bSkip = 1;
-
-	control_ed.p_td_head = &control_td_head;
+	control_ed.p_td_head = (void *)&control_td_head;
 	control_ed.p_td_tail = NULL;
-
-	// clear the skip
-//	control_ed.ed_info.ed_info_s.bSkip = 0;
 
 	UHP->HcCommandStatus = HC_COMMANDSTATUS_CLF;
 	UHP->HcControl |= HC_CONTROL_CLE;
 
-	// Wait for transfer done.
+	/* Wait for transfer done. */
 	do {
 		p_td_head = ((uint32_t)(control_ed.p_td_head)) & 0xFFFFFFF0;
 		p_td_tail = ((uint32_t)(control_ed.p_td_tail)) & 0xFFFFFFF0;
@@ -689,7 +664,7 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 	while (ed_header != NULL) {
 		if ((ed_header->ed_info.ed_info_s.bEndpointNumber == ep_number) &&
 				(ed_header->ed_info.ed_info_s.bDirection == ep_dir)) {
-			// Wait for transfer done.
+			/* Wait for transfer done. */
 			do {
 				p_td_head = ((uint32_t)(ed_header->p_td_head)) & 0xFFFFFFF0;
 				p_td_tail = ((uint32_t)(ed_header->p_td_tail)) & 0xFFFFFFF0;
@@ -713,9 +688,6 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 				return false;
 			}
 
-			// set the skip
-//			ed_header->ed_info.ed_info_s.bSkip = 1;
-
 			p_td_head = (uint32_t)(&bulk_td_head[i]);
 			p_td_head &= 0xFFFFFFF0;
 			*td_general_header = (struct ohci_td_general *)p_td_head;
@@ -723,14 +695,8 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 			p_td_tail &= 0x0000000F;
 			p_td_head |= p_td_tail;
 
-//			UHP->HcControl &= ~HC_CONTROL_BLE;
-
 			ed_header->p_td_head = (void *)p_td_head;
 			ed_header->p_td_tail = NULL;
-
-
-				// clear the skip
-//				ed_header->ed_info.ed_info_s.bSkip = 0;
 
 			UHP->HcCommandStatus = HC_COMMANDSTATUS_BLF;
 			UHP->HcControl |= HC_CONTROL_BLE;
@@ -748,7 +714,7 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 		if ((ed_header->ed_info.ed_info_s.bEndpointNumber == ep_number) &&
 				(ed_header->ed_info.ed_info_s.bDirection == ep_dir)) {
 			if (ed_header->ed_info.ed_info_s.bFormat == 0) {
-				// Wait for transfer done.
+				/* Wait for transfer done. */
 				do {
 					p_td_head = ((uint32_t)(ed_header->p_td_head)) & 0xFFFFFFF0;
 					p_td_tail = ((uint32_t)(ed_header->p_td_tail)) & 0xFFFFFFF0;
@@ -775,9 +741,6 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 					return false;
 				}
 
-				// set the skip
-//				ed_header->ed_info.ed_info_s.bSkip = 1;
-
 				p_td_head = (uint32_t)(&interrupt_td_head[i]);
 				p_td_head &= 0xFFFFFFF0;
 				*td_general_header = (struct ohci_td_general *)p_td_head;
@@ -787,15 +750,12 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 				ed_header->p_td_head = (void *)p_td_head;
 				ed_header->p_td_tail = NULL;
 
-				// clear the skip
-//				ed_header->ed_info.ed_info_s.bSkip = 0;
-
 				UHP->HcControl |= HC_CONTROL_PLE;
 				UHP->HcControl |= HC_CONTROL_IE;
 
 				return true;
 			} else {
-				// Wait for transfer done.
+				/* Wait for transfer done. */
 				do {
 					p_td_head = ((uint32_t)(ed_header->p_td_head)) & 0xFFFFFFF0;
 					p_td_tail = ((uint32_t)(ed_header->p_td_tail)) & 0xFFFFFFF0;
@@ -807,7 +767,7 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 				memset((void *)&isochronous_td_head[i], 0, sizeof(isochronous_td_head[i]));
 				memset((void *)&isochronous_td_tail[i], 0, sizeof(isochronous_td_tail[i]));
 
-				// start after 3 frame
+				/* Start after 3 frame. */
 				isochronous_td_head[i].td_info.bStartingFrame = ohci_get_frame_number() + 3;
 				isochronous_td_head[i].td_info.bDelayInterrupt = 0;
 				isochronous_td_head[i].td_info.FrameCount = 0;				// one frame transaction
@@ -825,8 +785,8 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 				// set the skip
 //				ed_header->ed_info.ed_info_s.bSkip = 1;
 
-				ed_header->p_td_head = &isochronous_td_head[i];
-				ed_header->p_td_tail = &isochronous_td_tail[i];
+				ed_header->p_td_head = (void *)&isochronous_td_head[i];
+				ed_header->p_td_tail = NULL;
 
 				// clear the skip
 //				ed_header->ed_info.ed_info_s.bSkip = 0;
@@ -990,7 +950,8 @@ void UHP_Handler()
 	rh_status = UHP->HcRhStatus;
 	rh_port_status = UHP->HcRhPortStatus;
 
-	/* Read interrupt status (and flush pending writes).  We ignore the
+	/**
+	 * Read interrupt status (and flush pending writes).  We ignore the
 	 * optimization of checking the LSB of hcca->done_head; it doesn't
 	 * work on all systems (edge triggering for OHCI can be a factor).
 	 */
@@ -1000,8 +961,8 @@ void UHP_Handler()
 	int_status &= UHP->HcInterruptEnable;
 
 	if (int_status & HC_INTERRUPT_WDH) {
-		UHP->HcInterruptStatus = HC_INTERRUPT_WDH;
 		td_general_header = (struct ohci_td_general *)hcca.pDoneHead;
+		UHP->HcInterruptStatus = HC_INTERRUPT_WDH;
 		callback_para = (uint32_t)td_general_header;
 		callback_para &= 0xFFFFFFF0;
 		if (callback_para == ((uint32_t)&control_td_head & 0xFFFFFFF0)) {
@@ -1011,12 +972,13 @@ void UHP_Handler()
 		ohci_callback_pointer[OHCI_INTERRUPT_WDH](&callback_para);
 	}
 
-	/* For connect and disconnect events, we expect the controller
+	/**
+	 * For connect and disconnect events, we expect the controller
 	 * to turn on RHSC along with RD.  But for remote wakeup events
 	 * this might not happen.
 	 */
 	if (int_status & HC_INTERRUPT_RD) {
-		// resume detect
+		/* Resume detected. */
 		UHP->HcInterruptStatus = HC_INTERRUPT_RD;
 		ohci_bus_resume();
 		ohci_callback_pointer[OHCI_INTERRUPT_RD](&callback_para);

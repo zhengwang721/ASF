@@ -58,9 +58,6 @@
 #endif
 
 
-static volatile uint32_t value;
-static volatile bool b_error;
-
 /* Default option */
 static sam_usart_opt_t usart_options = {
 	.baudrate = 115200,
@@ -76,7 +73,8 @@ ISR(USART_HANDLER)
 	if (sr & US_CSR_RXRDY) {
 		/* Data received */
 		ui_com_tx_start();
-		b_error = usart_read(USART_BASE, &value) ||
+		uint32_t value;
+		bool b_error = usart_read(USART_BASE, &value) ||
 			(sr & (US_CSR_FRAME | US_CSR_TIMEOUT | US_CSR_PARE));
 		if (b_error) {
 			usart_reset_rx(USART_BASE);
