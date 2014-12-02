@@ -1012,8 +1012,4 @@ void system_clock_init(void)
 	} else if (cpu_freq < SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ) {
 		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_1);
 	}
-<<<<<<< HEAD
-
-=======
->>>>>>> 2629b8f35cc0ed3034fd1f99271f27b5db897709
 }
