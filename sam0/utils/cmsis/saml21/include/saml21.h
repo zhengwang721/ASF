@@ -75,7 +75,7 @@
   * Chip revision definition for engineering sample.
   * Should remove for public release.
   */
-#define SAML21_REV_A
+//#define SAML21_REV_A
 /*
     *SAML21 RevA Bug13273*
     * Bug13273 is present on RevA of SAML21 (bug13273)
