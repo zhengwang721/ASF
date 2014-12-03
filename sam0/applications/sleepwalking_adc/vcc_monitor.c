@@ -167,6 +167,10 @@ static void event_setup(struct events_resource *event)
 	/* Setup a event channel with RTC compare 0 as input */
 	config.generator    = EVSYS_ID_GEN_RTC_CMP_0;
 	config.path         = EVENTS_PATH_ASYNCHRONOUS;
+#if (SAML21)
+    config.run_in_standby = true;
+    config.on_demand      = true;
+#endif
 	events_allocate(event, &config);
 
 	/* Setup ADC to listen to the event channel */
@@ -205,18 +209,12 @@ static void adc_setup(void)
 
 	/* Configure window */
 	config.window.window_mode        = ADC_WINDOW_MODE_BELOW_UPPER;
+#if (SAML21)
+	config.on_demand = true;
+	config.window.window_upper_value = 512;
+#else
 	/* (1.0V / 4095 *2048) = 0.5V */
 	config.window.window_upper_value = 2048;
-
-#if (SAML21)
-	/* Config internal references before using it */
-	struct system_voltage_references_config voltage_reference_config;
-	system_voltage_reference_get_config_defaults(&voltage_reference_config);
-	voltage_reference_config.sel = SYSTEM_VOLTAGE_REFERENCE_1V0;
-	voltage_reference_config.run_in_standby = true;
-	system_voltage_reference_set_config(&voltage_reference_config);
-	/* Enable internal reference */
-	system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_OUTPUT);
 #endif
 
 	/* Apply configuration to ADC module */
@@ -249,7 +247,13 @@ int main(void)
 
 	/* Set sleep mode to STANDBY */
 	system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
-
+#if (SAML21)
+	struct system_standby_config config;
+	system_standby_get_config_defaults(&config);
+	config.enable_dpgpd0 = true;
+	config.power_domain = SYSTEM_POWER_DOMAIN_PD0;
+	system_standby_set_config(&config);
+#endif
 	/* Stay in STANDBY sleep until low voltage is detected */
 	system_sleep();
 
