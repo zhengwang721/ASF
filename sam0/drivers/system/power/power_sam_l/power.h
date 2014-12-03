@@ -799,8 +799,8 @@ static inline void system_clear_performance_level_status(void)
  * \brief Retrieve the default configuration for standby.
  *
  * Fills a configuration structure with the default configuration for standby:
- *   - Standby back biasing mode for PICOPRAM
- *   - Standby back biasing mode for HMCRAMCLP
+ *   - Retention back biasing mode for PICOPRAM
+ *   - Retention back biasing mode for HMCRAMCLP
  *   - Retention back biasing mode for HMCRAMCHS
  *   - Power domains PD0/PD1/PD2 are not linked
  *   - Automatic VREG switching is used
@@ -820,8 +820,8 @@ static inline void system_standby_get_config_defaults(
 	config->disable_avregsd     = false;
 	config->linked_power_domain = SYSTEM_LINKED_POWER_DOMAIN_DEFAULT;
 	config->hmcramchs_back_bias = SYSTEM_RAM_BACK_BIAS_RETENTION;
-	config->hmcramclp_back_bias = SYSTEM_RAM_BACK_BIAS_STANDBY;
-	config->picopram_back_bias  = SYSTEM_RAM_BACK_BIAS_STANDBY;
+	config->hmcramclp_back_bias = SYSTEM_RAM_BACK_BIAS_RETENTION;
+	config->picopram_back_bias  = SYSTEM_RAM_BACK_BIAS_RETENTION;
 }
 
 /**
