@@ -40,24 +40,24 @@
  * \asf_license_stop
  *
  */
- 
+
  /** \page asfdoc_sam0_power_basic_use_case Quick Start Guide for Power Driver
  *
  * The supported board list:
  *    - SAM L21 Xplained Pro
  *
- * This example demonstrates how to use the power driver. BUTTON0 is used to 
+ * This example demonstrates how to use the power driver. BUTTON0 is used to
  * wake up system from standby mode and PA04 is used as an external wake up
  * pin to wake up system from BACKUP mode. The wakeup level is low.
  * PB22/PB23 are used as GCLK0/GCLK1 output pin, oscilloscope can be used to
  * monitor their clock frequency.
  *
  * After POR, LED0 is ON and GCLK0/GCLK1 are running at 4MHz, after a short time,
- * LED0 becomes OFF and system enters standby mode. BUTTON0 can be used to wake up 
+ * LED0 becomes OFF and system enters standby mode. BUTTON0 can be used to wake up
  * system. After system wake up, LED0 becomes ON and performance level switch to PL2,
  * GCLK0 is running at 48MHz ,GCLK1 is running at 4MHz. Then LED0 twinkles for
  * eight times and becomes OFF, system enters BACKUP mode.
- * 
+ *
  * When PA04 is connected to low level, system wakes up from BACKUP mode, LED0 becoms
  * ON and twinkles for three times. GCLK0/GCLK1 are running at 4MHz.
  *

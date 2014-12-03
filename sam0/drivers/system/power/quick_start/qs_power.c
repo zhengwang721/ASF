@@ -107,32 +107,18 @@ static void configure_extint_channel(void)
 	system_interrupt_enable_global();
 	while (extint_chan_is_detected(BUTTON_0_EIC_LINE)) {
 		extint_chan_clear_detected(BUTTON_0_EIC_LINE);
-	}	
+	}
 }
 //! [config_extint]
 
-#if 0
-/**
- * \brief Battery backup power switch configuration.
- */
-static void supc_battery_backup_power_switch_test(void)
-{
-	struct system_battery_backup_power_switch_config config;
-	system_battery_backup_power_switch_get_config_defaults(&config);
-	config.wake_enabled         = true;
-	config.battery_power_switch = SYSTEM_BATTERY_POWER_SWITCH_AUTOMATIC;
-	system_battery_backup_power_switch_set_config(&config);
-
-}
-#endif
 /**
  * \brief Using for a short delay.
  */
 static void  delay_short_time(uint32_t time)
-{ 
+{
 	uint32_t i,j;
-	for( j=0;i<time;j++) 
-		for( i=0;i<1000000;i++) 
+	for( j=0;i<time;j++)
+		for( i=0;i<1000000;i++)
 				;
 }
 
@@ -164,82 +150,67 @@ int main(void)
 		system_init();
 		config_clockoutput_extwake_pin();
 		/* Now GCLK0/GCLK1 are running at 4MHz , using LED0 ON/OFF as an indication */
-		led_indication(3);	
+		led_indication(3);
+		port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
 		while(1);
 	}
 //! [ext_wakeup]
 
-#if 0
-	/*Wait automatic power switch between  VDD and VBAT power.*/
-	if (/*system_get_reset_cause() == SYSTEM_RESET_CAUSE_BACKUP
-		&& */system_get_backup_exit_source() == SYSTEM_RESET_BACKKUP_EXIT_BBPS){
-
-		/* GCLK0 is running at 4MHz,GCLK1 is disabled due to the BACKUP reset */
-		/* The  GCLK0 freq output pin and LED0 are still ok due to they are retained */
-		system_init();
-		port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
-		config_clockoutput_extwake_pin();
-		performance_level_switch_test();
-		while(1);
-	}
-#endif
-
-
 //! [backup_stanby_mode]
 
-		/* Disable I/O retention*/
-		system_io_retension_disable();
+	/* Disable I/O retention*/
+	system_io_retension_disable();
 
-		system_init();
-		
-		port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
-		
-		/* Config GCLK0/GCLK1 output pin and extwakeup pin */
-		config_clockoutput_extwake_pin();
+	system_init();
 
-		/* Config external interrupt for wakeup system from standby mode*/
-		configure_extint_channel();
+	port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
 
-		/* System will enter standby mode after a short delay */
-		delay_short_time(1);
+	/* Config GCLK0/GCLK1 output pin and extwakeup pin */
+	config_clockoutput_extwake_pin();
 
-		/* Turn off LED0 before enter standby mode */
-		port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
+	/* Config external interrupt for wakeup system from standby mode*/
+	configure_extint_channel();
 
-		/* Set and enter standby mode, using default stanby config */
-		system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
-		system_sleep();
+	/* System will enter standby mode after a short delay */
+	delay_short_time(1);
 
-		/* Detect BUTTON pressed and system  wakeup from standby mode,
-			turn on led */
-		port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE); 
-		
-		/* Disable external interrupt to avoid any impact */
-		extint_chan_disable_callback(BUTTON_0_EIC_LINE,
-					EXTINT_CALLBACK_TYPE_DETECT);
-		extint_chan_clear_detected(BUTTON_0_EIC_LINE);
+	/* Turn off LED0 before enter standby mode */
+	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
 
-		/* Switch GCLK0 to 48MHz */
-		performance_level_switch_test();
+	/* Set and enter standby mode, using default stanby config */
+	system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
+	system_sleep();
 
-		/* GCLK0 is 48MHz and GCLK1 is 4MHz ,use led on and off as an indication */
-		led_indication(8);
-				
+	/* Detect BUTTON pressed and system  wakeup from standby mode,
+		turn on led */
+	port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
 
-		/*Set external wakeup pin polarity*/
-		system_set_pin_wakeup_polarity_low(1<<CONF_EXT_WAKEUP_PIN);
-		
-		/*Set external wakeup detector  */
-		system_enable_pin_wakeup(1<<CONF_EXT_WAKEUP_PIN);
-		system_set_pin_wakeup_debounce_counter(SYSTEM_WAKEUP_DEBOUNCE_2CK32);
-		//supc_battery_backup_power_switch_test();
-	    
-		/*Enter BACKUP mode*/
-		system_set_sleepmode(SYSTEM_SLEEPMODE_BACKUP);
-		//system_io_retension_enable();
-		system_sleep();
+	/* Disable external interrupt to avoid any impact */
+	extint_chan_disable_callback(BUTTON_0_EIC_LINE,
+				EXTINT_CALLBACK_TYPE_DETECT);
+	extint_chan_clear_detected(BUTTON_0_EIC_LINE);
 
-		/* Now system is in BACKUP mode and wait for extwakeup pin to low */
+	/* Switch GCLK0 to 48MHz */
+	performance_level_switch_test();
+
+	/* GCLK0 is 48MHz and GCLK1 is 4MHz ,use led on and off as an indication */
+	led_indication(8);
+
+
+	/*Set external wakeup pin polarity*/
+	system_set_pin_wakeup_polarity_low(1<<CONF_EXT_WAKEUP_PIN);
+
+	/*Set external wakeup detector  */
+	system_enable_pin_wakeup(1<<CONF_EXT_WAKEUP_PIN);
+	system_set_pin_wakeup_debounce_counter(SYSTEM_WAKEUP_DEBOUNCE_2CK32);
+	//supc_battery_backup_power_switch_test();
+
+	/*Enter BACKUP mode*/
+	system_set_sleepmode(SYSTEM_SLEEPMODE_BACKUP);
+	//system_io_retension_enable();
+	system_sleep();
+
+	/* Now system is in BACKUP mode and wait for extwakeup pin to low */
 //! [backup_stanby_mode]
 
 //! [setup_init]
