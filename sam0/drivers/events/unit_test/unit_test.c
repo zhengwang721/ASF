@@ -470,7 +470,7 @@ static void setup_asynchronous_event_test(const struct test_case *test)
  */
 static void run_asynchronous_event_test(const struct test_case *test)
 {
-	uint32_t timeout_cycles = 1000;
+	uint32_t timeout_cycles;
 
 	/* Skip test if initialization failed */
 	test_assert_true(test, init_success,
