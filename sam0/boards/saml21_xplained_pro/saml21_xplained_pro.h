@@ -515,6 +515,27 @@ void system_board_init(void);
 #define EDBG_CDC_SERCOM_DMAC_ID_TX   SERCOM3_DMAC_ID_TX
 #define EDBG_CDC_SERCOM_DMAC_ID_RX   SERCOM3_DMAC_ID_RX
 /** @} */
+
+/** \name USB definitions
+ * @{
+ */
+#define USB_ID
+#define USB_TARGET_DP_PIN            PIN_PA25G_USB_DP
+#define USB_TARGET_DP_MUX            MUX_PA25G_USB_DP
+#define USB_TARGET_DP_PINMUX         PINMUX_PA25G_USB_DP
+#define USB_TARGET_DM_PIN            PIN_PA24G_USB_DM
+#define USB_TARGET_DM_MUX            MUX_PA24G_USB_DM
+#define USB_TARGET_DM_PINMUX         PINMUX_PA24G_USB_DM
+#define USB_VBUS_PIN                 PIN_PA14
+#define USB_VBUS_EIC_LINE            14
+#define USB_VBUS_EIC_MUX             MUX_PA14A_EIC_EXTINT14
+#define USB_VBUS_EIC_PINMUX          PINMUX_PA14A_EIC_EXTINT14
+#define USB_ID_PIN                   PIN_PB02
+#define USB_ID_EIC_LINE              2
+#define USB_ID_EIC_MUX               MUX_PB02A_EIC_EXTINT2
+#define USB_ID_EIC_PINMUX            PINMUX_PB02A_EIC_EXTINT2
+/** @} */
+
 /**
  * \brief Turns off the specified LEDs.
  *

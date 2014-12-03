@@ -512,9 +512,8 @@ uint32_t twihs_slave_read(Twihs *p_twihs, uint8_t *p_data)
 	do {
 		status = p_twihs->TWIHS_SR;
 		if (status & TWIHS_SR_SVACC) {
-			if (!(status & TWIHS_SR_GACC) &&
-				((status & (TWIHS_SR_SVREAD | TWIHS_SR_RXRDY))
-				 == (TWIHS_SR_SVREAD | TWIHS_SR_RXRDY))) {
+			if (!(status & (TWIHS_SR_GACC | TWIHS_SR_SVREAD)) &&
+			(status & TWIHS_SR_RXRDY)) {
 				*p_data++ = (uint8_t) p_twihs->TWIHS_RHR;
 				cnt++;
 			}
@@ -544,8 +543,9 @@ uint32_t twihs_slave_write(Twihs *p_twihs, uint8_t *p_data)
 	do {
 		status = p_twihs->TWIHS_SR;
 		if (status & TWIHS_SR_SVACC) {
-			if (!(status & (TWIHS_SR_GACC | TWIHS_SR_SVREAD)) &&
-				(status & TWIHS_SR_TXRDY)) {
+			if (!(status & (TWIHS_SR_GACC | TWIHS_SR_NACK)) &&
+			((status & (TWIHS_SR_SVREAD | TWIHS_SR_TXRDY))
+			== (TWIHS_SR_SVREAD | TWIHS_SR_TXRDY))) {
 				p_twihs->TWIHS_THR = *p_data++;
 				cnt++;
 			}

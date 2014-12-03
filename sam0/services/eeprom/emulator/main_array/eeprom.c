@@ -60,7 +60,7 @@
 COMPILER_PACK_SET(1);
 /**
  * \internal
- * \brief Structure describing the EEPROM Emulation master page
+ * \brief Structure describing the EEPROM Emulation master page.
  */
 struct _eeprom_master_page {
 	/** Magic key which in ASCII will show as AtEEPROMEmu. */
@@ -83,7 +83,7 @@ struct _eeprom_master_page {
 
 /**
  * \internal
- * \brief Structure describing emulated pages of EEPROM data
+ * \brief Structure describing emulated pages of EEPROM data.
  */
 struct _eeprom_page {
 	/** Header information of the EEPROM page. */
@@ -99,7 +99,7 @@ COMPILER_PACK_RESET();
 
 /**
  * \internal
- * \brief Internal device instance struct
+ * \brief Internal device instance struct.
  */
 struct _eeprom_module {
 	/** Initialization state of the EEPROM emulator. */
@@ -128,7 +128,7 @@ struct _eeprom_module {
 
 /**
  * \internal
- * \brief Internal EEPROM emulator instance
+ * \brief Internal EEPROM emulator instance.
  */
 static struct _eeprom_module _eeprom_instance = {
 	.initialized = false,
@@ -253,7 +253,7 @@ static void _eeprom_emulator_format_memory(void)
 }
 
 /**
- * \brief Creates a map in SRAM to translate logical EEPROM pages to physical FLASH pages
+ * \brief Creates a map in SRAM to translate logical EEPROM pages to physical FLASH pages.
  */
 static void _eeprom_emulator_update_page_mapping(void)
 {
@@ -305,7 +305,7 @@ static void _eeprom_emulator_update_page_mapping(void)
 }
 
 /**
- * \brief Finds the next free page in the given row if one is available
+ * \brief Finds the next free page in the given row if one is available.
  *
  * \param[in]  start_physical_page  Physical FLASH page index of the row to
  *                                  search
@@ -343,7 +343,7 @@ static bool _eeprom_emulator_is_page_free_on_row(
 }
 
 /**
- * \brief Moves data from the specified logical page to the spare row
+ * \brief Moves data from the specified logical page to the spare row.
  *
  * Moves the contents of the specified row into the spare row, so that the
  * original row can be erased and re-used. The contents of the given logical
@@ -433,7 +433,7 @@ static enum status_code _eeprom_emulator_move_data_to_spare(
 }
 
 /**
- * \brief Create master emulated EEPROM management page
+ * \brief Create master emulated EEPROM management page.
  *
  * Creates a new master page in emulated EEPROM, giving information on the
  * emulator used to store the EEPROM data.
@@ -465,7 +465,7 @@ static void _eeprom_emulator_create_master_page(void)
 }
 
 /**
- * \brief Verify the contents of a master EEPROM page
+ * \brief Verify the contents of a master EEPROM page.
  *
  * Verify the contents of a master EEPROM page to ensure that it contains the
  * correct information for this version of the EEPROM emulation service.
@@ -540,7 +540,7 @@ enum status_code eeprom_emulator_get_parameters(
 }
 
 /**
- * \brief Initializes the EEPROM Emulator service
+ * \brief Initializes the EEPROM Emulator service.
  *
  * Initializes the emulated EEPROM memory space; if the emulated EEPROM memory
  * has not been previously initialized, it will need to be explicitly formatted
@@ -627,7 +627,7 @@ enum status_code eeprom_emulator_init(void)
 }
 
 /**
- * \brief Erases the entire emulated EEPROM memory space
+ * \brief Erases the entire emulated EEPROM memory space.
  *
  * Erases and re-initializes the emulated EEPROM memory space, destroying any
  * existing data.
@@ -645,7 +645,7 @@ void eeprom_emulator_erase_memory(void)
 }
 
 /**
- * \brief Writes a page of data to an emulated EEPROM memory page
+ * \brief Writes a page of data to an emulated EEPROM memory page.
  *
  * Writes an emulated EEPROM page of data to the emulated EEPROM memory space.
  *
@@ -729,7 +729,7 @@ enum status_code eeprom_emulator_write_page(
 }
 
 /**
- * \brief Reads a page of data from an emulated EEPROM memory page
+ * \brief Reads a page of data from an emulated EEPROM memory page.
  *
  * Reads an emulated EEPROM page of data from the emulated EEPROM memory space.
  *
@@ -778,7 +778,7 @@ enum status_code eeprom_emulator_read_page(
 }
 
 /**
- * \brief Writes a buffer of data to the emulated EEPROM memory space
+ * \brief Writes a buffer of data to the emulated EEPROM memory space.
  *
  * Writes a buffer of data to a section of emulated EEPROM memory space. The
  * source buffer may be of any size, and the destination may lie outside of an
@@ -866,7 +866,7 @@ enum status_code eeprom_emulator_write_buffer(
 }
 
 /**
- * \brief Reads a buffer of data from the emulated EEPROM memory space
+ * \brief Reads a buffer of data from the emulated EEPROM memory space.
  *
  * Reads a buffer of data from a section of emulated EEPROM memory space. The
  * destination buffer may be of any size, and the source may lie outside of an
@@ -931,7 +931,7 @@ enum status_code eeprom_emulator_read_buffer(
 }
 
 /**
- * \brief Commits any cached data to physical non-volatile memory
+ * \brief Commits any cached data to physical non-volatile memory.
  *
  * Commits the internal SRAM caches to physical non-volatile memory, to ensure
  * that any outstanding cached data is preserved. This function should be called

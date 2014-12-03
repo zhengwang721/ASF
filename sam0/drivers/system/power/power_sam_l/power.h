@@ -120,7 +120,7 @@ enum system_linked_power_domain {
 	SYSTEM_LINKED_POWER_DOMAIN_PD01      = PM_STDBYCFG_LINKPD_PD01_Val,
 	/** Power domains PD1 and PD2 are linked. */
 	SYSTEM_LINKED_POWER_DOMAIN_PD12      = PM_STDBYCFG_LINKPD_PD12_Val,
-	/** All Power domains are linked.*/
+	/** All Power domains are linked. */
 	SYSTEM_LINKED_POWER_DOMAIN_PD012     = PM_STDBYCFG_LINKPD_PD012_Val,
 };
 
@@ -216,11 +216,11 @@ enum system_voltage_reference {
  * by the SUPC.
  */
 enum system_backup_pin {
-	/** Power Supply OK status pin */
+	/** Power Supply OK status pin. */
 	SYSTEM_BACKUP_PIN_PSOK  = (0x1 << 0),
-	/** Backup output pin 0  */
+	/** Backup output pin 0.  */
 	SYSTEM_BACKUP_PIN_OUT_0 = (0x1 << 1),
-	/** Backup output pin 1  */
+	/** Backup output pin 1.  */
 	SYSTEM_BACKUP_PIN_OUT_1 = (0x1 << 2)
 };
 
@@ -230,21 +230,21 @@ enum system_backup_pin {
  * Configuration structure for standby mode.
  */
 struct system_standby_config {
-	/** Power domain */
+	/** Power domain. */
 	enum system_power_domain  power_domain;
-	/** Enable dynamic power gating for power domain 0 */
+	/** Enable dynamic power gating for power domain 0. */
 	bool enable_dpgpd0;
-	/** Enable dynamic power gating for power domain 1 */
+	/** Enable dynamic power gating for power domain 1. */
 	bool enable_dpgpd1;
-	/** Automatic VREG switching disable */
+	/** Automatic VREG switching disable. */
 	bool disable_avregsd;
-	/** Linked power domain */
+	/** Linked power domain. */
 	enum system_linked_power_domain linked_power_domain;
-	/** Back bias for HMCRAMCHS */
+	/** Back bias for HMCRAMCHS. */
 	enum system_ram_back_bias_mode hmcramchs_back_bias;
-	/** Back bias for HMCRAMCLP */
+	/** Back bias for HMCRAMCLP. */
 	enum system_ram_back_bias_mode hmcramclp_back_bias;
-	/** Back bias for PICOPRAM */
+	/** Back bias for PICOPRAM. */
 	enum system_ram_back_bias_mode picopram_back_bias;
 };
 
@@ -254,13 +254,13 @@ struct system_standby_config {
  * Configuration structure for VREG.
  */
 struct system_voltage_regulator_config {
-	/** Voltage scaling period */
+	/** Voltage scaling period. */
 	uint8_t  voltage_scale_period;
-	/** Voltage scaling voltage step */
+	/** Voltage scaling voltage step. */
 	uint8_t voltage_scale_step;
-	/** Run in standby in standby sleep mode */
+	/** Run in standby in standby sleep mode. */
 	bool run_in_standby;
-	/** Voltage Regulator Selection */
+	/** Voltage Regulator Selection. */
 	enum system_voltage_regulator_sel  regulator_sel;
 };
 
@@ -270,11 +270,11 @@ struct system_voltage_regulator_config {
  * Configuration structure for VREF.
  */
 struct system_voltage_references_config {
-	/** Voltage References Selection */
+	/** Voltage References Selection. */
 	enum system_voltage_references_sel  sel;
-	/** On Demand Control */
+	/** On Demand Control. */
 	bool on_demand;
-	/** run in standby */
+	/** run in standby. */
 	bool run_in_standby;
 };
 
@@ -291,11 +291,11 @@ struct system_battery_backup_power_switch_config {
 	enum system_battery_power_switch battery_power_switch;
 };
 
-/** Performance level 0 maximum frequency. */
+/** Performance level 0 maximum frequency */
 #define	SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ    15000000UL
-/** Performance level 1 maximum frequency. */
+/** Performance level 1 maximum frequency */
 #define	SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ    30000000UL
-/** Performance level 2 maximum frequency. */
+/** Performance level 2 maximum frequency */
 #define	SYSTEM_PERFORMANCE_LEVEL_2_MAX_FREQ    60000000UL
 
 /**
@@ -346,9 +346,9 @@ static inline void system_voltage_regulator_set_config(
 }
 
 /**
-* \brief Enable the selected voltage regulator
+* \brief Enable the selected voltage regulator.
  *
- * Enables the selected voltage regulator source
+ * Enables the selected voltage regulator source.
  */
 static inline void system_voltage_regulator_enable(void)
 {
@@ -527,7 +527,7 @@ static inline void system_battery_backup_power_switch_set_config(
  *
  *  The output is enabled and driven by the SUPC.
  *
- *  \param[in] pin Backup pin index.
+ *  \param[in] pin Backup pin index
  */
 static inline void system_backup_pin_output_enable(
 		enum system_backup_pin pin)
@@ -544,7 +544,7 @@ static inline void system_backup_pin_output_enable(
  *
  *  The output is not enabled.
  *
- *  \param[in] pin Backup pin index.
+ *  \param[in] pin Backup pin index
  */
 static inline void system_backup_pin_output_disable(
 		enum system_backup_pin pin)
@@ -559,11 +559,11 @@ static inline void system_backup_pin_output_disable(
 /**
  * \brief Check if backup pin output is enabled.
  *
- *  \param[in] pin Backup pin index.
+ *  \param[in] pin Backup pin index
  *
  * \return The enabled status.
- * \retval true The output is enabled;
- * \retval false The output is not enabled.
+ * \retval true The output is enabled
+ * \retval false The output is not enabled
  */
 static inline bool system_backup_pin_output_is_enabled(
 		enum system_backup_pin pin)
@@ -587,7 +587,7 @@ static inline bool system_backup_pin_output_is_enabled(
  *
  *  Toggle output on RTC event is enabled.
  *
- *  \param[in] pin Backup pin index.
+ *  \param[in] pin Backup pin index
  */
 static inline void system_backup_pin_output_enable_rtc_toggle(
 		enum system_backup_pin pin)
@@ -602,7 +602,7 @@ static inline void system_backup_pin_output_enable_rtc_toggle(
  *
  *  Toggle output on RTC event is disabled.
  *
- *  \param[in] pin Backup pin index.
+ *  \param[in] pin Backup pin index
  */
 static inline void system_backup_pin_output_disable_rtc_toggle(
 		enum system_backup_pin pin)
@@ -617,7 +617,7 @@ static inline void system_backup_pin_output_disable_rtc_toggle(
  *
  *  Set the corresponding output pin.
  *
- *  \param[in] pin Backup pin index.
+ *  \param[in] pin Backup pin index
  */
 static inline void system_backup_pin_output_set(
 		enum system_backup_pin pin)
@@ -632,7 +632,7 @@ static inline void system_backup_pin_output_set(
  *
  *  Clear the corresponding output.
  *
- *  \param[in] pin Backup pin index.
+ *  \param[in] pin Backup pin index
  */
 static inline void system_backup_pin_output_clear(
 		enum system_backup_pin pin)
@@ -648,7 +648,7 @@ static inline void system_backup_pin_output_clear(
  *  Get the backup I/O data input values, if the corresponding pin is enabled,
  *  the I/O input value is given on the pin.
  *
- *  \param[in] pin Backup pin index.
+ *  \param[in] pin Backup pin index
  *
  * \return The backup I/O input level value.
  */
@@ -719,7 +719,7 @@ static inline void system_sleep(void)
  *  frequency can be increased only once the performance level transition is
  *  completed,check the performance level status.
  *
- * \param[in] performance_level  Performance level to switch.
+ * \param[in] performance_level  Performance level to switch
  *
  * \retval STATUS_ERR_INVALID_ARG  Invalid parameter
  * \retval STATUS_OK               Successfully
@@ -797,7 +797,7 @@ static inline void system_clear_performance_level_status(void)
 /**
  * \brief Retrieve the default configuration for standby.
  *
- * Fills a configuration structure with the default configuration for standby
+ * Fills a configuration structure with the default configuration for standby:
  *   - Standby back biasing mode for PICOPRAM
  *   - Standby back biasing mode for HMCRAMCLP
  *   - Retention back biasing mode for HMCRAMCHS

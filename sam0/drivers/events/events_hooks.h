@@ -57,7 +57,7 @@ extern "C" {
  */
 
 /**
- * \brief Interrupt source enumerator
+ * \brief Interrupt source enumerator.
  *
  * Interrupt source selector definitions.
  *
@@ -70,7 +70,7 @@ enum events_interrupt_source {
 };
 
 /**
- * \brief Initializes a interrupt hook for insertion in the event interrupt hook queue
+ * \brief Initializes a interrupt hook for insertion in the event interrupt hook queue.
  *
  * Initializes a hook structure so it is ready for insertion in the interrupt hook queue.
  *
@@ -84,7 +84,7 @@ enum events_interrupt_source {
 enum status_code events_create_hook(struct events_hook *hook, events_interrupt_hook hook_func);
 
 /**
- * \brief Insert hook into the event drivers interrupt hook queue
+ * \brief Insert hook into the event drivers interrupt hook queue.
  *
  * Inserts a hook into the event drivers interrupt hook queue.
  *
@@ -98,7 +98,7 @@ enum status_code events_create_hook(struct events_hook *hook, events_interrupt_h
 enum status_code events_add_hook(struct events_resource *resource, struct events_hook *hook);
 
 /**
- * \brief Remove hook from the event drivers interrupt hook queue
+ * \brief Remove hook from the event drivers interrupt hook queue.
  *
  * Removes a hook from the event drivers interrupt hook queue.
  *
@@ -114,7 +114,7 @@ enum status_code events_add_hook(struct events_resource *resource, struct events
 enum status_code events_del_hook(struct events_resource *resource, struct events_hook *hook);
 
 /**
- * \brief Enable interrupt source
+ * \brief Enable interrupt source.
  *
  * Enable an interrupt source so can trigger execution of an interrupt hook.
  *
@@ -129,7 +129,7 @@ enum status_code events_del_hook(struct events_resource *resource, struct events
 enum status_code events_enable_interrupt_source(struct events_resource *resource, enum events_interrupt_source source);
 
 /**
- * \brief Disable interrupt source
+ * \brief Disable interrupt source.
  *
  * Disable an interrupt source so can trigger execution of an interrupt hook.
  *
@@ -144,7 +144,7 @@ enum status_code events_enable_interrupt_source(struct events_resource *resource
 enum status_code events_disable_interrupt_source(struct events_resource *resource, enum events_interrupt_source source);
 
 /**
- * \brief Check if interrupt source is set
+ * \brief Check if interrupt source is set.
  *
  * Check if an interrupt source is set and should be processed.
  *
@@ -159,7 +159,7 @@ enum status_code events_disable_interrupt_source(struct events_resource *resourc
 bool events_is_interrupt_set(struct events_resource *resource, enum events_interrupt_source source);
 
 /**
- * \brief Acknowledge an interrupt source
+ * \brief Acknowledge an interrupt source.
  *
  * Acknowledge an interrupt source so the interrupt state is cleared in hardware.
  *

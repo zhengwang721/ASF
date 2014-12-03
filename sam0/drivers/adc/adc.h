@@ -47,7 +47,7 @@
 /**
  * \defgroup asfdoc_sam0_adc_group SAM Analog to Digital Converter Driver (ADC)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of the device's Analog to Digital Converter functionality, for
  * the conversion of analog voltages into a corresponding digital form.
  * The following driver API modes are covered by this manual:
@@ -60,10 +60,13 @@
  *  - ADC (Analog to Digital Converter)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM L21
+ * \if DEVICE_SAML21_SUPPORT
+ *  - Atmel | SMART SAM L21
+ * \else
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ * \endif
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_adc_prerequisites
@@ -84,14 +87,17 @@
  * This driver provides an interface for the Analog-to-Digital conversion
  * functions on the device, to convert analog voltages to a corresponding
  * digital value. The ADC has up to 12-bit resolution, and is capable of
- * converting up to 500k samples per second (ksps).
+ * \if DEVICE_SAML21_SUPPORT
+ * converting up to 1,000,000 samples per second (1 Msps).
+ * \else
+ * converting up to 500K samples per second (Ksps).
+ * \endif
  *
  * The ADC has a compare function for accurate monitoring of user defined
  * thresholds with minimum software intervention required.
  * The ADC may be configured for 8-, 10-, or 12-bit result, reducing the
- * conversion time from 2.0μs for 12-bit to 1.4μs for 8-bit result. ADC
- * conversion results are provided left or right adjusted which eases
- * calculation when the result is represented as a signed integer.
+ * conversion time. ADC conversion results are provided left or right adjusted
+ * which eases calculation when the result is represented as a signed integer.
  *
  * The input selection is flexible, and both single-ended and differential
  * measurements can be made. For differential measurements, an optional gain
@@ -153,8 +159,8 @@
  * The ADC supports full 8-bit, 10-bit, or 12-bit resolution. Hardware
  * oversampling and decimation can be used to increase the
  * effective resolution at the expense of throughput. Using oversampling and
- * decimation mode the ADC resolution is increased from 12-bits to an effective
- * 13, 14, 15, or 16-bits. In these modes the conversion rate is reduced, as
+ * decimation mode the ADC resolution is increased from 12-bit to an effective
+ * 13-, 14-, 15-, or 16-bit. In these modes the conversion rate is reduced, as
  * a greater number of samples is used to achieve the increased resolution. The
  * available resolutions and effective conversion rate is listed in
  * \ref asfdoc_sam0_adc_module_conversion_rate "the table below".
@@ -167,19 +173,19 @@
  *		<th>Effective conversion rate</th>
  *	</tr>
  *	<tr>
- *		<td>13-bits</td>
+ *		<td>13-bit</td>
  *		<td>Conversion rate divided by 4</td>
  *	</tr>
  *	<tr>
- *		<td>14-bits</td>
+ *		<td>14-bit</td>
  *		<td>Conversion rate divided by 16</td>
  *	</tr>
  *	<tr>
- *		<td>15-bits</td>
+ *		<td>15-bit</td>
  *		<td>Conversion rate divided by 64</td>
  *	</tr>
  *	<tr>
- *		<td>16-bits</td>
+ *		<td>16-bit</td>
  *		<td>Conversion rate divided by 256</td>
  *	</tr>
  * </table>
@@ -224,7 +230,7 @@
  * the number of samples to accumulate and the division ratio can be set by
  * the configuration struct members \ref adc_config.accumulate_samples and
  * \ref adc_config.divide_result. When using this mode the ADC result register
- * will be set to be 16-bits wide to accommodate the larger result sizes
+ * will be set to be 16-bit wide to accommodate the larger result sizes
  * produced by the accumulator.
  *
  * The effective ADC conversion rate will be reduced by a factor of the number
@@ -241,47 +247,47 @@
  *   </tr>
  *   <tr>
  *     <td>1</td>
- *     <td>12-bits</td>
+ *     <td>12-bit</td>
  *   </tr>
  *   <tr>
  *      <td>2</td>
- *      <td>13-bits</td>
+ *      <td>13-bit</td>
  *   </tr>
  *   <tr>
  *      <td>4</td>
- *      <td>14-bits</td>
+ *      <td>14-bit</td>
  *   </tr>
  *   <tr>
  *      <td>8</td>
- *      <td>15-bits</td>
+ *      <td>15-bit</td>
  *   </tr>
  *   <tr>
  *      <td>16</td>
- *      <td>16-bits</td>
+ *      <td>16-bit</td>
  *   </tr>
  *   <tr>
  *      <td>32</td>
- *      <td>16-bits</td>
+ *      <td>16-bit</td>
  *   </tr>
  *   <tr>
  *      <td>64</td>
- *      <td>16-bits</td>
+ *      <td>16-bit</td>
  *   </tr>
  *   <tr>
  *      <td>128</td>
- *      <td>16-bits</td>
+ *      <td>16-bit</td>
  *   </tr>
  *   <tr>
  *      <td>256</td>
- *      <td>16-bits</td>
+ *      <td>16-bit</td>
  *   </tr>
  *   <tr>
  *      <td>512</td>
- *      <td>16-bits</td>
+ *      <td>16-bit</td>
  *   </tr>
  *   <tr>
  *      <td>1024</td>
- *      <td>16-bits</td>
+ *      <td>16-bit</td>
  *   </tr>
  * </table>
  *
@@ -428,7 +434,7 @@ extern "C" {
 /** @} */
 
 /**
- * \name Driver initialization and configuration
+ * \name Driver Initialization and Configuration
  * @{
  */
 enum status_code adc_init(
@@ -536,7 +542,7 @@ static inline void adc_clear_status(
  */
 
 /**
- * \brief Enables the ADC module
+ * \brief Enables the ADC module.
  *
  * Enables an ADC module that has previously been configured. If any internal reference
  * is selected it will be enabled.
@@ -568,7 +574,7 @@ static inline enum status_code adc_enable(
 }
 
 /**
- * \brief Disables the ADC module
+ * \brief Disables the ADC module.
  *
  * Disables an ADC module that was previously enabled.
  *
@@ -599,7 +605,7 @@ static inline enum status_code adc_disable(
 }
 
 /**
- * \brief Resets the ADC module
+ * \brief Resets the ADC module.
  *
  * Resets an ADC module, clearing all module state and registers to their
  * default values.
@@ -703,7 +709,7 @@ static inline void adc_disable_events(
 }
 
 /**
- * \brief Starts an ADC conversion
+ * \brief Starts an ADC conversion.
  *
  * Starts a new ADC conversion.
  *
@@ -729,7 +735,7 @@ static inline void adc_start_conversion(
 }
 
 /**
- * \brief Reads the ADC result
+ * \brief Reads the ADC result.
  *
  * Reads the result from an ADC conversion that was previously started.
  *
@@ -783,7 +789,7 @@ static inline enum status_code adc_read(
  */
 
 /**
- * \brief Flushes the ADC pipeline
+ * \brief Flushes the ADC pipeline.
  *
  * Flushes the pipeline and restart the ADC clock on the next peripheral clock
  * edge. All conversions in progress will be lost. When flush is complete, the
@@ -816,7 +822,7 @@ void adc_set_window_mode(
 		const int16_t window_upper_value);
 
 /**
- * \brief Sets positive ADC input pin
+ * \brief Sets positive ADC input pin.
  *
  * Sets the positive ADC input pin selection.
  *
@@ -849,7 +855,7 @@ static inline void adc_set_positive_input(
 
 
 /**
- * \brief Sets negative ADC input pin for differential mode
+ * \brief Sets negative ADC input pin for differential mode.
  *
  * Sets the negative ADC input pin, when the ADC is configured in differential
  * mode.
@@ -890,7 +896,7 @@ static inline void adc_set_negative_input(
  */
 
 /**
- * \brief Enable interrupt
+ * \brief Enable interrupt.
  *
  * Enable the given interrupt request from the ADC module.
  *
@@ -910,7 +916,7 @@ static inline void adc_enable_interrupt(struct adc_module *const module_inst,
 }
 
 /**
- * \brief Disable interrupt
+ * \brief Disable interrupt.
  *
  * Disable the given interrupt request from the ADC module.
  *
@@ -994,9 +1000,11 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *	<tr>
  *		<th>Changelog</th>
  *	</tr>
- *	<tr>
- *		<td>Added support for SAML21</td>
- *	</tr>
+ * \if DEVICE_SAML21_SUPPORT
+ *  <tr>
+ *		<td>Initial Release</td>
+ * </tr>
+ * \else
  *	<tr>
  *		<td>Added support for SAMR21</td>
  *	</tr>
@@ -1010,6 +1018,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
+ * \endif
  * </table>
  */
 
@@ -1036,6 +1045,13 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<th>Date</td>
  *		<th>Comments</td>
  *	</tr>
+ * \if DEVICE_SAML21_SUPPORT
+ *  <tr>
+ *      <td>A</td>
+ *      <td>11/2014</td>
+ *      <td>Initial release.</td>
+ * </tr>
+ * \else
  *	<tr>
  *		<td>D</td>
  *		<td>05/2014</td>
@@ -1057,6 +1073,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  *		<td>06/2013</td>
  *		<td>Initial release</td>
  *	</tr>
+ * \endif
  * </table>
  */
 

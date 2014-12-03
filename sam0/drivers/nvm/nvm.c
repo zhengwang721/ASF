@@ -360,7 +360,7 @@ enum status_code nvm_update_buffer(
 }
 
 /**
- * \brief Writes a number of bytes to a page in the NVM memory region
+ * \brief Writes a number of bytes to a page in the NVM memory region.
  *
  * Writes from a buffer to a given page address in the NVM memory.
  *
@@ -473,7 +473,7 @@ enum status_code nvm_write_buffer(
 }
 
 /**
- * \brief Reads a number of bytes from a page in the NVM memory region
+ * \brief Reads a number of bytes from a page in the NVM memory region.
  *
  * Reads a given number of bytes from a given page address in the NVM memory
  * space into a buffer.
@@ -555,7 +555,7 @@ enum status_code nvm_read_buffer(
 }
 
 /**
- * \brief Erases a row in the NVM memory space
+ * \brief Erases a row in the NVM memory space.
  *
  * Erases a given row in the NVM memory region.
  *
@@ -688,7 +688,7 @@ void nvm_get_parameters(
 }
 
 /**
- * \brief Checks whether the page region is locked
+ * \brief Checks whether the page region is locked.
  *
  * Extracts the region to which the given page belongs and checks whether
  * that region is locked.
@@ -803,7 +803,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 ///@endcond
 
 /**
- * \brief Get fuses from user row
+ * \brief Get fuses from user row.
  *
  * Read out the fuse settings from the user row.
  *

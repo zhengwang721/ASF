@@ -72,7 +72,6 @@
 #define NVMCTRL_AUX1_ADDRESS        0x00806000
 #define NVMCTRL_AUX2_ADDRESS        0x00808000
 #define NVMCTRL_AUX3_ADDRESS        0x0080A000
-#define NVMCTRL_CLK_AHB_DOMAIN               // Clock domain of AHB clock
 #define NVMCTRL_CLK_AHB_ID          8        // Index of AHB Clock in PM.AHBMASK register
 #define NVMCTRL_CLK_AHB_ID_PICACHU  15       // Index of PICACHU AHB Clock
 #define NVMCTRL_FACTORY_WORD_IMPLEMENTED_MASK 0XC0000007FFFFFFFF
@@ -92,6 +91,5 @@
 #define NVMCTRL_USER_WORD_IMPLEMENTED_MASK 0XC01FFFFFFFFFFFFF
 #define NVMCTRL_WWREE_PAGES         128     
 #define NVMCTRL_WWR_EEPROM_ADDR     0x00400000 // Start address of the WWR EEPROM area
-#define NVMCTRL_WWR_EEPROM_SIZE     8192     // Byte size of the WWR EEPROM area
 
 #endif /* _SAML21_NVMCTRL_INSTANCE_ */

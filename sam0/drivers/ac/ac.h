@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_ac_group SAM Analog Comparator Driver (AC)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of the device's Analog Comparator functionality, for the
  * comparison of analog voltages against a known reference voltage to determine
  * its relative level. The following driver API modes are covered by this
@@ -60,10 +60,10 @@
  *  - AC (Analog Comparator)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM L21
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_ac_prerequisites
@@ -298,7 +298,7 @@ extern "C" {
 #endif
 
 /**
- * \name Driver feature definition
+ * \name Driver Feature Definition
  * Define AC driver feature set according to different device family.
  * @{
  */
@@ -751,8 +751,8 @@ uint8_t _ac_get_inst_index(
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval false if the module has completed synchronization
- * \retval ture if the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
+ * \retval ture If the module synchronization is ongoing
  */
 static inline bool ac_is_syncing(
         struct ac_module *const module_inst)
@@ -1159,7 +1159,7 @@ static inline uint8_t ac_chan_get_status(
 }
 
 /**
- * \brief Clears an interrupt status flag
+ * \brief Clears an interrupt status flag.
  *
  * This function is used to clear the AC_CHAN_STATUS_INTERRUPT_SET flag
  * it will clear the flag for the channel indicated by the channel argument.
@@ -1270,7 +1270,7 @@ uint8_t ac_win_get_status(
 		const enum ac_win_channel win_channel);
 
 /**
- * \brief Clears an interrupt status flag
+ * \brief Clears an interrupt status flag.
  *
  * This function is used to clear the AC_WIN_STATUS_INTERRUPT_SET flag
  * it will clear the flag for the channel indicated by the win_channel argument.

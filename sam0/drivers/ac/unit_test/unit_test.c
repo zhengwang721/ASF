@@ -74,6 +74,7 @@
  * The following kit is required for carrying out the test:
  *  - SAM D20 Xplained Pro board
  *  - SAM D21 Xplained Pro board
+ *  - SAM L21 Xplained Pro board
  *
  * \section appdoc_sam0_ac_unit_test_setup Setup
  * The following connections has to be made using wires:
@@ -118,9 +119,17 @@
 /* Theoretical DAC value for 0.0V output*/
 #define DAC_VAL_ZERO_VOLT   0
 /* Theoretical DAC value for 0.5V output*/
-#define DAC_VAL_HALF_VOLT   512
+#if (SAML21)
+#  define DAC_VAL_HALF_VOLT   620
+#else
+#  define DAC_VAL_HALF_VOLT   512
+#endif
 /* Theoretical DAC value for 1.0V output*/
-#define DAC_VAL_ONE_VOLT    1023
+#if (SAML21)
+#  define DAC_VAL_ONE_VOLT    1241
+#else
+#  define DAC_VAL_ONE_VOLT    1023
+#endif
 
 /* Structure for UART module connected to EDBG (used for unit test output) */
 struct usart_module cdc_uart_module;
@@ -185,12 +194,13 @@ static void test_dac_init(void)
 	/* Configure the DAC module */
 	dac_get_config_defaults(&config);
 	dac_init(&dac_inst, DAC, &config);
-	dac_enable(&dac_inst);
 
 	/* Configure the DAC channel */
 	dac_chan_get_config_defaults(&chan_config);
 	dac_chan_set_config(&dac_inst, DAC_CHANNEL_0, &chan_config);
 	dac_chan_enable(&dac_inst, DAC_CHANNEL_0);
+
+	dac_enable(&dac_inst);
 }
 
 /**

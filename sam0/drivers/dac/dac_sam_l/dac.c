@@ -86,7 +86,7 @@ static void _dac_set_config(
  * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
  *
  * Checks to see if the underlying hardware peripheral module(s) are currently
- * synchronizing across multiple clock domains to the hardware bus, This
+ * synchronizing across multiple clock domains to the hardware bus. This
  * function can be used to delay further operations on a module until such time
  * that it is ready, to prevent blocking delays for synchronization in the
  * user application.
@@ -95,8 +95,8 @@ static void _dac_set_config(
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true if the module synchronization is ongoing
- * \retval false if the module has completed synchronization
+ * \retval true If the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
  */
 bool dac_is_syncing(
 		struct dac_module *const dev_inst)
@@ -156,7 +156,7 @@ void dac_get_config_defaults(
  * \param[in]  config       Pointer to the config struct, created by the user
  *                          application
  *
- * \return Status of initialization
+ * \return Status of initialization.
  * \retval STATUS_OK          Module initiated correctly
  * \retval STATUS_ERR_DENIED  If module is enabled
  * \retval STATUS_BUSY        If module is busy resetting
@@ -557,7 +557,7 @@ void dac_chan_disable(
  * \param[in] channel          DAC channel to write to
  * \param[in] data             Conversion data
  *
- * \return Status of the operation
+ * \return Status of the operation.
  * \retval STATUS_OK           If the data was written
  */
 enum status_code dac_chan_write(
@@ -603,11 +603,11 @@ enum status_code dac_chan_write(
  * \param[in] buffer             Pointer to the digital data write buffer to be converted
  * \param[in] length             Length of the write buffer
  *
- * \return Status of the operation
+ * \return Status of the operation.
  * \retval STATUS_OK           If the data was written or no data conversion required
  * \retval STATUS_ERR_UNSUPPORTED_DEV  The DAC is not configured as using
- *                                         event trigger.
- * \retval STATUS_BUSY      The DAC is busy to convert.
+ *                                         event trigger
+ * \retval STATUS_BUSY      The DAC is busy to convert
  */
 enum status_code dac_chan_write_buffer_wait(
 		struct dac_module *const module_inst,
@@ -670,7 +670,7 @@ enum status_code dac_chan_write_buffer_wait(
 }
 
 /**
- * \brief Retrieves the status of DAC channel end of conversion
+ * \brief Retrieves the status of DAC channel end of conversion.
  *
  * Checks the conversion is completed or not and returns boolean flag
  * of status.
@@ -678,8 +678,8 @@ enum status_code dac_chan_write_buffer_wait(
  * \param[in] module_inst  Pointer to the DAC software instance struct
  * \param[in] channel      Channel to disable
  *
- * \retval true     conversion is complete, VOUT is stable.
- * \retval false    No conversion completed since last load of DATA.
+ * \retval true     Conversion is complete, VOUT is stable
+ * \retval false    No conversion completed since last load of DATA
  */
 bool dac_chan_is_end_of_conversion(
 		struct dac_module *const module_inst,
@@ -699,20 +699,20 @@ bool dac_chan_is_end_of_conversion(
 }
 
 /**
- * \brief Retrieves the current module status
+ * \brief Retrieves the current module status.
  *
  * Checks the status of the module and returns it as a bitmask of status
  * flags.
  *
  * \param[in] module_inst      Pointer to the DAC software device struct
  *
- * \return Bitmask of status flags
+ * \return Bitmask of status flags.
  *
  * \retval DAC_STATUS_CHANNEL_0_EMPTY    Data has been transferred from DATABUF
  *                                       to DATA by a start conversion event
  *                                       and DATABUF is ready for new data.
  * \retval DAC_STATUS_CHANNEL_0_UNDERRUN A start conversion event has occurred
- *                                       when DATABUF is empty
+ *                                       when DATABUF is empty.
  *
  */
 uint32_t dac_get_status(
@@ -747,7 +747,7 @@ uint32_t dac_get_status(
 }
 
 /**
- * \brief Clears a module status flag
+ * \brief Clears a module status flag.
  *
  * Clears the given status flag of the module.
  *

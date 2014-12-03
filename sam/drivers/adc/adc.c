@@ -236,11 +236,8 @@ void adc_configure_sequence(Adc *p_adc, const enum adc_channel_num_t ch_list[],
 		uint8_t uc_num)
 {
 	uint8_t uc_counter;
-#if SAM4S
-	volatile uint32_t *adc_seqr = &p_adc->ADC_SEQR[0];
-#else
 	volatile uint32_t *adc_seqr = &p_adc->ADC_SEQR1;
-#endif
+
 	if (uc_num <= 8) {
 		for (uc_counter = 0; uc_counter < uc_num; uc_counter++) {
 			adc_seqr[0] |=

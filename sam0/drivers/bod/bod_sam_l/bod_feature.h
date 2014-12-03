@@ -51,7 +51,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_bod_group SAM Brown Out Detector Driver (BOD)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of the device's Brown Out Detector (BOD) modules, to detect
  * and respond to under-voltage events and take an appropriate action.
  *
@@ -59,7 +59,7 @@ extern "C" {
  * - SUPC (Supply Controller)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM L21
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_bod_prerequisites
@@ -117,37 +117,37 @@ extern "C" {
  * speed of a BOD33 to lower the power consumption.
  */
 enum bod33_prescale {
-	/** Divide input prescaler clock by 2 */
+	/** Divide input prescaler clock by 2. */
 	BOD33_PRESCALE_DIV_2       = SUPC_BOD33_PSEL(0),
-	/** Divide input prescaler clock by 4 */
+	/** Divide input prescaler clock by 4. */
 	BOD33_PRESCALE_DIV_4       = SUPC_BOD33_PSEL(1),
-	/** Divide input prescaler clock by 8 */
+	/** Divide input prescaler clock by 8. */
 	BOD33_PRESCALE_DIV_8       = SUPC_BOD33_PSEL(2),
-	/** Divide input prescaler clock by 16 */
+	/** Divide input prescaler clock by 16. */
 	BOD33_PRESCALE_DIV_16      = SUPC_BOD33_PSEL(3),
-	/** Divide input prescaler clock by 32*/
+	/** Divide input prescaler clock by 32. */
 	BOD33_PRESCALE_DIV_32      = SUPC_BOD33_PSEL(4),
-	/** Divide input prescaler clock by 64 */
+	/** Divide input prescaler clock by 64. */
 	BOD33_PRESCALE_DIV_64      = SUPC_BOD33_PSEL(5),
-	/** Divide input prescaler clock by 128 */
+	/** Divide input prescaler clock by 128. */
 	BOD33_PRESCALE_DIV_128     = SUPC_BOD33_PSEL(6),
-	/** Divide input prescaler clock by 256 */
+	/** Divide input prescaler clock by 256. */
 	BOD33_PRESCALE_DIV_256     = SUPC_BOD33_PSEL(7),
-	/** Divide input prescaler clock by 512 */
+	/** Divide input prescaler clock by 512. */
 	BOD33_PRESCALE_DIV_512     = SUPC_BOD33_PSEL(8),
-	/** Divide input prescaler clock by 1024 */
+	/** Divide input prescaler clock by 1024. */
 	BOD33_PRESCALE_DIV_1024    = SUPC_BOD33_PSEL(9),
-	/** Divide input prescaler clock by 2048 */
+	/** Divide input prescaler clock by 2048. */
 	BOD33_PRESCALE_DIV_2048    = SUPC_BOD33_PSEL(10),
-	/** Divide input prescaler clock by 4096 */
+	/** Divide input prescaler clock by 4096. */
 	BOD33_PRESCALE_DIV_4096    = SUPC_BOD33_PSEL(11),
-	/** Divide input prescaler clock by 8192 */
+	/** Divide input prescaler clock by 8192. */
 	BOD33_PRESCALE_DIV_8192    = SUPC_BOD33_PSEL(12),
-	/** Divide input prescaler clock by 16384 */
+	/** Divide input prescaler clock by 16384. */
 	BOD33_PRESCALE_DIV_16384   = SUPC_BOD33_PSEL(13),
-	/** Divide input prescaler clock by 32768 */
+	/** Divide input prescaler clock by 32768. */
 	BOD33_PRESCALE_DIV_32768   = SUPC_BOD33_PSEL(14),
-	/** Divide input prescaler clock by 65536 */
+	/** Divide input prescaler clock by 65536. */
 	BOD33_PRESCALE_DIV_65536   = SUPC_BOD33_PSEL(15),
 };
 
@@ -171,7 +171,7 @@ enum bod33_vol_monitor {
 enum bod33_mode_in_active {
 	/** BOD33 will sample the supply line continuously. */
 	BOD33_ACTCFG_CONTINUOUS = 0,
-	/** BOD33 will use the BOD33 sampling clock (1kHz) to sample the supply line. */
+	/** BOD33 will use the BOD33 sampling clock (1KHz) to sample the supply line. */
 	BOD33_ACTCFG_SAMPLED    = SUPC_BOD33_ACTCFG,
 };
 
@@ -183,7 +183,7 @@ enum bod33_mode_in_active {
 enum bod33_mode_in_standby {
 	/** BOD33 will sample the supply line continuously. */
 	BOD33_STDBYCFG_CONTINUOUS = 0,
-	/** BOD33 will use the BOD33 sampling clock (1kHz) to sample the supply line. */
+	/** BOD33 will use the BOD33 sampling clock (1KHz) to sample the supply line. */
 	BOD33_STDBYCFG_SAMPLED    = SUPC_BOD33_STDBYCFG,
 };
 
@@ -278,7 +278,7 @@ enum bod12_prescale {
 enum bod12_mode_in_active {
 	/** BOD12 will sample the supply line continuously. */
 	BOD12_ACTCFG_CONTINUOUS = 0,
-	/** BOD12 will use the BOD12 sampling clock (1kHz) to sample the supply line. */
+	/** BOD12 will use the BOD12 sampling clock (1KHz) to sample the supply line. */
 	BOD12_ACTCFG_SAMPLED    = SUPC_BOD12_ACTCFG,
 };
 
@@ -290,7 +290,7 @@ enum bod12_mode_in_active {
 enum bod12_mode_in_standby {
 	/** BOD12 will sample the supply line continuously. */
 	BOD12_STDBYCFG_CONTINUOUS = 0,
-	/** BOD12 will use the BOD12 sampling clock (1kHz) to sample the supply line. */
+	/** BOD12 will use the BOD12 sampling clock (1KHz) to sample the supply line. */
 	BOD12_STDBYCFG_SAMPLED    = SUPC_BOD12_STDBYCFG,
 };
 
@@ -337,14 +337,14 @@ struct bod12_config {
  * \brief Get default BOD33 configuration.
  *
  * The default BOD33 configuration is:
- * - Clock prescaler set to divide the input clock by 2
+ * - Clock prescaler set to divide the input clock by two
  * - Continuous in active mode
  * - Continuous in standby mode
- * - Monitor the VDD power pin
+ * - Monitor the V<SUB>DD</SUB> power pin
  * - Reset on BOD33 detect
  * - Hysteresis enabled
- * - BOD33 level 0x27 on VDD
- * - BOD33 level 0x27 on VBAT
+ * - BOD33 level 0x27 on V<SUB>DD</SUB>
+ * - BOD33 level 0x27 on V<SUB>BAT</SUB>
  * - BOD33 kept enabled during device sleep
  * - BOD33 kept enabled during standby
  *
@@ -434,7 +434,7 @@ static inline void bod33_clear_detected(void)
  * \brief Get default BOD12 configuration.
  *
  * The default BOD12 configuration is:
- * - Clock prescaler set to divide the input clock by 2
+ * - Clock prescaler set to divide the input clock by two
  * - Continuous in active mode
  * - Continuous in standby mode
  * - Reset on BOD12 detect

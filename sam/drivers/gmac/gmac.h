@@ -368,16 +368,6 @@ static inline void gmac_tx_pause_zero_quantum_frame(Gmac* p_gmac)
 }
 
 /**
- * \brief Read snapshot.
- *
- * \param p_gmac   Pointer to the GMAC instance.
- */
-static inline void gmac_read_snapshot(Gmac* p_gmac)
-{
-	p_gmac->GMAC_NCR |= GMAC_NCR_RDS;
-}
-
-/**
  * \brief Store receivetime stamp to memory.
  *
  * \param p_gmac   Pointer to the GMAC instance.
@@ -997,11 +987,11 @@ static inline void gmac_select_mii_mode(Gmac* p_gmac, gmac_mii_mode_t mode)
 	switch (mode) {
 		case GMAC_PHY_MII:
 		case GMAC_PHY_RMII:
-			p_gmac->GMAC_UR |= GMAC_UR_RMIIMII;
+			p_gmac->GMAC_UR |= GMAC_UR_MII;
 		break;
 
 		default:
-			p_gmac->GMAC_UR &= ~GMAC_UR_RMIIMII;
+			p_gmac->GMAC_UR &= ~GMAC_UR_MII;
 		break;
 	}
 }

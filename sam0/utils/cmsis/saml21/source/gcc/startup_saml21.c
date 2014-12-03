@@ -41,11 +41,7 @@
  *
  */
 
-#if 0 // #ifndef SAML21_REV_A
 #include "saml21.h"
-#else // For RevA0 workaround
-#include "saml21_internal.h"
-#endif
 
 /* Initialize segments */
 extern uint32_t _sfixed;
@@ -240,10 +236,6 @@ void Reset_Handler(void)
 {
         uint32_t *pSrc, *pDest;
 
-#if 1 // SAML21_REV_A
-        software_fuse_update();
-#endif
-
         /* Initialize the relocate segment */
         pSrc = &_etext;
         pDest = &_srelocate;
@@ -280,33 +272,4 @@ void Dummy_Handler(void)
 {
         while (1) {
         }
-}
-
-void set_perf_level(uint32_t Perflevel)
-{
-	//Switch to PLx for this test
-
-		//Enable testmode to access shadow registers
-		DSUSTANDBY->TESTMODE.reg |= 0x1;
-		if(!((DSU->TESTMODE.reg & 0x1) || (DSUSTANDBY->TESTMODE.reg & 0x1)))
-		{
-		  while(1);// Error dsu_test_enable not set
-		}
-		
-	
-		if(Perflevel==0)
-			SUPC->VREFCAL.bit.VREFVREG = 0x37;	 // Value : 0.96V
-	
-		if(Perflevel==1)
-			SUPC->VREFCAL.bit.VREFVREG = 0x4E;	 // Value : 1.05V
-	
-		if(Perflevel==2)
-			SUPC->VREFCAL.bit.VREFVREG = 0x6B;	 // Value : 1.20V
-		  
-		SUPC->VREGTEST.reg = SUPC_VREGTEST_LDOEN |	SUPC_VREGTEST_SCEN;
-		SUPC->VREGTEST.bit.FVREFVREG = 1;
-		SUPC->VREGTEST.bit.TESTEN = 1;	  
-		
-		DSUSTANDBY->TESTMODE.reg = 0;	 
-
 }

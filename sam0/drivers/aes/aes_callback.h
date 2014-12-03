@@ -59,9 +59,8 @@ extern "C" {
  * @{
  */
 
-/** \name Callback configuration and initialization
- * @{
- */
+/** AES interrupt callback function type. */
+typedef void (*aes_callback_t)(void); 
 
 /** AES callback type. */
 enum aes_callback_type {
@@ -70,11 +69,11 @@ enum aes_callback_type {
 	/** GF Multiplication Complete callback.*/
 	AES_CALLBACK_GF_MULTI_COMPLETE = 1,
 };
-
-
-/** AES interrupt callback function type. */
-typedef void (*aes_callback_t)(void);
-
+ 
+/** \name Callback Configuration and Initialization
+ * @{
+ */
+ 
 enum status_code aes_register_callback(
 	const aes_callback_t callback,
 	const enum aes_callback_type type);
@@ -86,7 +85,7 @@ enum status_code aes_unregister_callback(
 /** @} */
 
 
-/** \name Callback enabling and disabling
+/** \name Callback Enabling and Disabling
  * @{
  */
 
@@ -97,8 +96,8 @@ enum status_code aes_unregister_callback(
  * \param[in] type Callback source type
  *
  * \return Status of the callback enable operation.
- * \retval STATUS_OK The callback was enabled successfully.
- * \retval STATUS_ERR_INVALID_ARG If an invalid callback type was supplied.
+ * \retval STATUS_OK The callback was enabled successfully
+ * \retval STATUS_ERR_INVALID_ARG If an invalid callback type was supplied
  */
 static inline enum status_code aes_enable_callback(struct aes_module *const module,
 		const enum aes_callback_type type)
@@ -123,8 +122,8 @@ static inline enum status_code aes_enable_callback(struct aes_module *const modu
  * \param[in]  type Callback source type
  *
  * \return Status of the callback enable operation.
- * \retval STATUS_OK The callback was enabled successfully.
- * \retval STATUS_ERR_INVALID_ARG If an invalid callback type was supplied.
+ * \retval STATUS_OK The callback was enabled successfully
+ * \retval STATUS_ERR_INVALID_ARG If an invalid callback type was supplied
  */
 static inline enum status_code aes_disable_callback(struct aes_module *const module,
 		 const enum aes_callback_type type)

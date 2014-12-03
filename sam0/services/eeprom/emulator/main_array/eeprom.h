@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_eeprom_group SAM EEPROM Emulator Service (EEPROM)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an emulated EEPROM memory space in
+ * This driver for Atmel® | SMART SAM devices provides an emulated EEPROM memory space in
  * the device's FLASH memory, for the storage and retrieval of user-application
  * configuration data into and out of non-volatile memory.
  *
@@ -54,10 +54,10 @@
  *  - NVM (Non-Volatile Memory Controller)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM L21
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_eeprom_prerequisites
@@ -239,7 +239,7 @@
  * the first time.
  *
  * \anchor asfdoc_sam0_eeprom_init_layout
- * \image html init_layout.svg "Initial Physical Layout of The Emulated EEPROM Mmemory"
+ * \image html init_layout.svg "Initial Physical Layout of The Emulated EEPROM Memory"
  *
  * When an EEPROM page needs to be committed to physical memory, the next free
  * FLASH page in the same row will be chosen - this makes recovery simple, as the
@@ -257,7 +257,7 @@
  * in \ref asfdoc_sam0_eeprom_page_write2 "the figure below".
  *
  * \anchor asfdoc_sam0_eeprom_page_write2
- * \image html nm1_page_write2.svg "Second Write To Logical EEPROM Page N-1"
+ * \image html nm1_page_write2.svg "Second Write to Logical EEPROM Page N-1"
  *
  * A third write of the same logical page requires that the EEPROM emulator
  * erase the row, as it has become full. Prior to this, the contents of the
@@ -267,7 +267,7 @@
  * \ref asfdoc_sam0_eeprom_page_write3 "the figure below".
  *
  * \anchor asfdoc_sam0_eeprom_page_write3
- * \image html nm1_page_write3.svg "Third Write To Logical EEPROM Page N-1"
+ * \image html nm1_page_write3.svg "Third Write to Logical EEPROM Page N-1"
  *
  *
  * \section asfdoc_sam0_eeprom_special_considerations Special Considerations
@@ -491,6 +491,11 @@ enum status_code eeprom_emulator_read_buffer(
  *		<th>Doc. Rev.</th>
  *		<th>Date</th>
  *		<th>Comments</th>
+ *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>11/2014</td>
+ *		<td>Add SAM L21 support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

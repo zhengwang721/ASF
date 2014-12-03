@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_nvm_group SAM Non-Volatile Memory Driver (NVM)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of non-volatile memories within the device, for partitioning,
  * erasing, reading, and writing of data.
  *
@@ -54,10 +54,10 @@
  *  - NVM (Non-Volatile Memory)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM L21
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_nvm_prerequisites
@@ -342,8 +342,7 @@ enum nvm_command {
 	NVM_COMMAND_SET_SECURITY_BIT           = NVMCTRL_CTRLA_CMD_SSB,
 
 	/** Enter power reduction mode in the NVM controller to reduce the power
-	 *  consumption of the system. When in low power mode, all commands other
-	 *  than \ref NVM_COMMAND_EXIT_LOW_POWER_MODE will fail.
+	 *  consumption of the system.
 	 */
 	NVM_COMMAND_ENTER_LOW_POWER_MODE       = NVMCTRL_CTRLA_CMD_SPRM,
 
@@ -375,7 +374,7 @@ enum nvm_sleep_power_mode {
 };
 
 /**
- * \brief NVM controller cache readmode configuration
+ * \brief NVM controller cache readmode configuration.
  *
  * Control how the NVM cache prefetch data from flash.
  *
@@ -518,7 +517,7 @@ enum nvm_bod33_action {
 };
 
 /**
- * \brief WDT Window time-out period
+ * \brief WDT Window time-out period.
  *
  * Window mode time-out period in clock cycles.
  *
@@ -551,7 +550,7 @@ enum nvm_wdt_window_timeout {
 };
 
 /**
- * \brief WDT Early warning offset
+ * \brief WDT Early warning offset.
  *
  * This setting determine how many GCLK_WDT cycles before a watchdog time-out period
  * an early warning interrupt should be triggered.
@@ -585,7 +584,7 @@ enum nvm_wdt_early_warning_offset {
 };
 
 /**
- * \brief NVM user row fuse setting structure
+ * \brief NVM user row fuse setting structure.
  *
  * This structure contain the layout of the first 64 bits of the user row
  * which contain the fuse settings.
@@ -840,6 +839,11 @@ static inline enum nvm_error nvm_get_error(void)
  *		<th>Date</td>
  *		<th>Comments</td>
  *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>08/2014</td>
+ *		<td>Added support for SAML21.</td>
+ *	</tr> 
  *	<tr>
  *		<td>D</td>
  *		<td>05/2014</td>

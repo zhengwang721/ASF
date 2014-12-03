@@ -67,15 +67,15 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define OPAMP_CTRLA_OFFSET          0x00         /**< \brief (OPAMP_CTRLA offset) Control A */
-#define OPAMP_CTRLA_RESETVALUE      0x00         /**< \brief (OPAMP_CTRLA reset_value) Control A */
+#define OPAMP_CTRLA_RESETVALUE      0x00ul       /**< \brief (OPAMP_CTRLA reset_value) Control A */
 
 #define OPAMP_CTRLA_SWRST_Pos       0            /**< \brief (OPAMP_CTRLA) Software Reset */
-#define OPAMP_CTRLA_SWRST           (0x1u << OPAMP_CTRLA_SWRST_Pos)
+#define OPAMP_CTRLA_SWRST           (0x1ul << OPAMP_CTRLA_SWRST_Pos)
 #define OPAMP_CTRLA_ENABLE_Pos      1            /**< \brief (OPAMP_CTRLA) Enable */
-#define OPAMP_CTRLA_ENABLE          (0x1u << OPAMP_CTRLA_ENABLE_Pos)
+#define OPAMP_CTRLA_ENABLE          (0x1ul << OPAMP_CTRLA_ENABLE_Pos)
 #define OPAMP_CTRLA_LPMUX_Pos       7            /**< \brief (OPAMP_CTRLA) Low-Power Mux */
-#define OPAMP_CTRLA_LPMUX           (0x1u << OPAMP_CTRLA_LPMUX_Pos)
-#define OPAMP_CTRLA_MASK            0x83u        /**< \brief (OPAMP_CTRLA) MASK Register */
+#define OPAMP_CTRLA_LPMUX           (0x1ul << OPAMP_CTRLA_LPMUX_Pos)
+#define OPAMP_CTRLA_MASK            0x83ul       /**< \brief (OPAMP_CTRLA) MASK Register */
 
 /* -------- OPAMP_STATUS : (OPAMP Offset: 0x02) (R/   8) Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -91,15 +91,15 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define OPAMP_STATUS_OFFSET         0x02         /**< \brief (OPAMP_STATUS offset) Status */
-#define OPAMP_STATUS_RESETVALUE     0x00         /**< \brief (OPAMP_STATUS reset_value) Status */
+#define OPAMP_STATUS_RESETVALUE     0x00ul       /**< \brief (OPAMP_STATUS reset_value) Status */
 
 #define OPAMP_STATUS_READY0_Pos     0            /**< \brief (OPAMP_STATUS) OPAMP 0 Ready */
-#define OPAMP_STATUS_READY0         (0x1u << OPAMP_STATUS_READY0_Pos)
+#define OPAMP_STATUS_READY0         (0x1ul << OPAMP_STATUS_READY0_Pos)
 #define OPAMP_STATUS_READY1_Pos     1            /**< \brief (OPAMP_STATUS) OPAMP 1 Ready */
-#define OPAMP_STATUS_READY1         (0x1u << OPAMP_STATUS_READY1_Pos)
+#define OPAMP_STATUS_READY1         (0x1ul << OPAMP_STATUS_READY1_Pos)
 #define OPAMP_STATUS_READY2_Pos     2            /**< \brief (OPAMP_STATUS) OPAMP 2 Ready */
-#define OPAMP_STATUS_READY2         (0x1u << OPAMP_STATUS_READY2_Pos)
-#define OPAMP_STATUS_MASK           0x07u        /**< \brief (OPAMP_STATUS) MASK Register */
+#define OPAMP_STATUS_READY2         (0x1ul << OPAMP_STATUS_READY2_Pos)
+#define OPAMP_STATUS_MASK           0x07ul       /**< \brief (OPAMP_STATUS) MASK Register */
 
 /* -------- OPAMP_OPAMPCTRL0 : (OPAMP Offset: 0x04) (R/W 32) OPAMP Control 0 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -127,38 +127,38 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define OPAMP_OPAMPCTRL0_OFFSET     0x04         /**< \brief (OPAMP_OPAMPCTRL0 offset) OPAMP Control 0 */
-#define OPAMP_OPAMPCTRL0_RESETVALUE 0x00000000   /**< \brief (OPAMP_OPAMPCTRL0 reset_value) OPAMP Control 0 */
+#define OPAMP_OPAMPCTRL0_RESETVALUE 0x00000000ul /**< \brief (OPAMP_OPAMPCTRL0 reset_value) OPAMP Control 0 */
 
 #define OPAMP_OPAMPCTRL0_ENABLE_Pos 1            /**< \brief (OPAMP_OPAMPCTRL0) Operational Amplifier Enable */
-#define OPAMP_OPAMPCTRL0_ENABLE     (0x1u << OPAMP_OPAMPCTRL0_ENABLE_Pos)
+#define OPAMP_OPAMPCTRL0_ENABLE     (0x1ul << OPAMP_OPAMPCTRL0_ENABLE_Pos)
 #define OPAMP_OPAMPCTRL0_ANAOUT_Pos 2            /**< \brief (OPAMP_OPAMPCTRL0) Analog Output */
-#define OPAMP_OPAMPCTRL0_ANAOUT     (0x1u << OPAMP_OPAMPCTRL0_ANAOUT_Pos)
+#define OPAMP_OPAMPCTRL0_ANAOUT     (0x1ul << OPAMP_OPAMPCTRL0_ANAOUT_Pos)
 #define OPAMP_OPAMPCTRL0_BIAS_Pos   3            /**< \brief (OPAMP_OPAMPCTRL0) Bias Selection */
-#define OPAMP_OPAMPCTRL0_BIAS_Msk   (0x3u << OPAMP_OPAMPCTRL0_BIAS_Pos)
+#define OPAMP_OPAMPCTRL0_BIAS_Msk   (0x3ul << OPAMP_OPAMPCTRL0_BIAS_Pos)
 #define OPAMP_OPAMPCTRL0_BIAS(value) ((OPAMP_OPAMPCTRL0_BIAS_Msk & ((value) << OPAMP_OPAMPCTRL0_BIAS_Pos)))
 #define OPAMP_OPAMPCTRL0_RUNSTDBY_Pos 6            /**< \brief (OPAMP_OPAMPCTRL0) Run in Standby */
-#define OPAMP_OPAMPCTRL0_RUNSTDBY   (0x1u << OPAMP_OPAMPCTRL0_RUNSTDBY_Pos)
+#define OPAMP_OPAMPCTRL0_RUNSTDBY   (0x1ul << OPAMP_OPAMPCTRL0_RUNSTDBY_Pos)
 #define OPAMP_OPAMPCTRL0_ONDEMAND_Pos 7            /**< \brief (OPAMP_OPAMPCTRL0) On Demand Control */
-#define OPAMP_OPAMPCTRL0_ONDEMAND   (0x1u << OPAMP_OPAMPCTRL0_ONDEMAND_Pos)
+#define OPAMP_OPAMPCTRL0_ONDEMAND   (0x1ul << OPAMP_OPAMPCTRL0_ONDEMAND_Pos)
 #define OPAMP_OPAMPCTRL0_RES2OUT_Pos 8            /**< \brief (OPAMP_OPAMPCTRL0) Resistor ladder To Output */
-#define OPAMP_OPAMPCTRL0_RES2OUT    (0x1u << OPAMP_OPAMPCTRL0_RES2OUT_Pos)
+#define OPAMP_OPAMPCTRL0_RES2OUT    (0x1ul << OPAMP_OPAMPCTRL0_RES2OUT_Pos)
 #define OPAMP_OPAMPCTRL0_RES2VCC_Pos 9            /**< \brief (OPAMP_OPAMPCTRL0) Resistor ladder To VCC */
-#define OPAMP_OPAMPCTRL0_RES2VCC    (0x1u << OPAMP_OPAMPCTRL0_RES2VCC_Pos)
+#define OPAMP_OPAMPCTRL0_RES2VCC    (0x1ul << OPAMP_OPAMPCTRL0_RES2VCC_Pos)
 #define OPAMP_OPAMPCTRL0_RES1EN_Pos 10           /**< \brief (OPAMP_OPAMPCTRL0) Resistor 1 Enable */
-#define OPAMP_OPAMPCTRL0_RES1EN     (0x1u << OPAMP_OPAMPCTRL0_RES1EN_Pos)
+#define OPAMP_OPAMPCTRL0_RES1EN     (0x1ul << OPAMP_OPAMPCTRL0_RES1EN_Pos)
 #define OPAMP_OPAMPCTRL0_RES1MUX_Pos 11           /**< \brief (OPAMP_OPAMPCTRL0) Resistor 1 Mux */
-#define OPAMP_OPAMPCTRL0_RES1MUX_Msk (0x3u << OPAMP_OPAMPCTRL0_RES1MUX_Pos)
+#define OPAMP_OPAMPCTRL0_RES1MUX_Msk (0x3ul << OPAMP_OPAMPCTRL0_RES1MUX_Pos)
 #define OPAMP_OPAMPCTRL0_RES1MUX(value) ((OPAMP_OPAMPCTRL0_RES1MUX_Msk & ((value) << OPAMP_OPAMPCTRL0_RES1MUX_Pos)))
 #define OPAMP_OPAMPCTRL0_POTMUX_Pos 13           /**< \brief (OPAMP_OPAMPCTRL0) Potentiometer Selection */
-#define OPAMP_OPAMPCTRL0_POTMUX_Msk (0x7u << OPAMP_OPAMPCTRL0_POTMUX_Pos)
+#define OPAMP_OPAMPCTRL0_POTMUX_Msk (0x7ul << OPAMP_OPAMPCTRL0_POTMUX_Pos)
 #define OPAMP_OPAMPCTRL0_POTMUX(value) ((OPAMP_OPAMPCTRL0_POTMUX_Msk & ((value) << OPAMP_OPAMPCTRL0_POTMUX_Pos)))
 #define OPAMP_OPAMPCTRL0_MUXPOS_Pos 16           /**< \brief (OPAMP_OPAMPCTRL0) Positive Input Mux Selection */
-#define OPAMP_OPAMPCTRL0_MUXPOS_Msk (0x7u << OPAMP_OPAMPCTRL0_MUXPOS_Pos)
+#define OPAMP_OPAMPCTRL0_MUXPOS_Msk (0x7ul << OPAMP_OPAMPCTRL0_MUXPOS_Pos)
 #define OPAMP_OPAMPCTRL0_MUXPOS(value) ((OPAMP_OPAMPCTRL0_MUXPOS_Msk & ((value) << OPAMP_OPAMPCTRL0_MUXPOS_Pos)))
 #define OPAMP_OPAMPCTRL0_MUXNEG_Pos 20           /**< \brief (OPAMP_OPAMPCTRL0) Negative Input Mux Selection */
-#define OPAMP_OPAMPCTRL0_MUXNEG_Msk (0x7u << OPAMP_OPAMPCTRL0_MUXNEG_Pos)
+#define OPAMP_OPAMPCTRL0_MUXNEG_Msk (0x7ul << OPAMP_OPAMPCTRL0_MUXNEG_Pos)
 #define OPAMP_OPAMPCTRL0_MUXNEG(value) ((OPAMP_OPAMPCTRL0_MUXNEG_Msk & ((value) << OPAMP_OPAMPCTRL0_MUXNEG_Pos)))
-#define OPAMP_OPAMPCTRL0_MASK       0x0077FFDEu  /**< \brief (OPAMP_OPAMPCTRL0) MASK Register */
+#define OPAMP_OPAMPCTRL0_MASK       0x0077FFDEul /**< \brief (OPAMP_OPAMPCTRL0) MASK Register */
 
 /* -------- OPAMP_OPAMPCTRL1 : (OPAMP Offset: 0x08) (R/W 32) OPAMP Control 1 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -186,38 +186,38 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define OPAMP_OPAMPCTRL1_OFFSET     0x08         /**< \brief (OPAMP_OPAMPCTRL1 offset) OPAMP Control 1 */
-#define OPAMP_OPAMPCTRL1_RESETVALUE 0x00000000   /**< \brief (OPAMP_OPAMPCTRL1 reset_value) OPAMP Control 1 */
+#define OPAMP_OPAMPCTRL1_RESETVALUE 0x00000000ul /**< \brief (OPAMP_OPAMPCTRL1 reset_value) OPAMP Control 1 */
 
 #define OPAMP_OPAMPCTRL1_ENABLE_Pos 1            /**< \brief (OPAMP_OPAMPCTRL1) Operational Amplifier Enable */
-#define OPAMP_OPAMPCTRL1_ENABLE     (0x1u << OPAMP_OPAMPCTRL1_ENABLE_Pos)
+#define OPAMP_OPAMPCTRL1_ENABLE     (0x1ul << OPAMP_OPAMPCTRL1_ENABLE_Pos)
 #define OPAMP_OPAMPCTRL1_ANAOUT_Pos 2            /**< \brief (OPAMP_OPAMPCTRL1) Analog Output */
-#define OPAMP_OPAMPCTRL1_ANAOUT     (0x1u << OPAMP_OPAMPCTRL1_ANAOUT_Pos)
+#define OPAMP_OPAMPCTRL1_ANAOUT     (0x1ul << OPAMP_OPAMPCTRL1_ANAOUT_Pos)
 #define OPAMP_OPAMPCTRL1_BIAS_Pos   3            /**< \brief (OPAMP_OPAMPCTRL1) Bias Selection */
-#define OPAMP_OPAMPCTRL1_BIAS_Msk   (0x3u << OPAMP_OPAMPCTRL1_BIAS_Pos)
+#define OPAMP_OPAMPCTRL1_BIAS_Msk   (0x3ul << OPAMP_OPAMPCTRL1_BIAS_Pos)
 #define OPAMP_OPAMPCTRL1_BIAS(value) ((OPAMP_OPAMPCTRL1_BIAS_Msk & ((value) << OPAMP_OPAMPCTRL1_BIAS_Pos)))
 #define OPAMP_OPAMPCTRL1_RUNSTDBY_Pos 6            /**< \brief (OPAMP_OPAMPCTRL1) Run in Standby */
-#define OPAMP_OPAMPCTRL1_RUNSTDBY   (0x1u << OPAMP_OPAMPCTRL1_RUNSTDBY_Pos)
+#define OPAMP_OPAMPCTRL1_RUNSTDBY   (0x1ul << OPAMP_OPAMPCTRL1_RUNSTDBY_Pos)
 #define OPAMP_OPAMPCTRL1_ONDEMAND_Pos 7            /**< \brief (OPAMP_OPAMPCTRL1) On Demand Control */
-#define OPAMP_OPAMPCTRL1_ONDEMAND   (0x1u << OPAMP_OPAMPCTRL1_ONDEMAND_Pos)
+#define OPAMP_OPAMPCTRL1_ONDEMAND   (0x1ul << OPAMP_OPAMPCTRL1_ONDEMAND_Pos)
 #define OPAMP_OPAMPCTRL1_RES2OUT_Pos 8            /**< \brief (OPAMP_OPAMPCTRL1) Resistor ladder To Output */
-#define OPAMP_OPAMPCTRL1_RES2OUT    (0x1u << OPAMP_OPAMPCTRL1_RES2OUT_Pos)
+#define OPAMP_OPAMPCTRL1_RES2OUT    (0x1ul << OPAMP_OPAMPCTRL1_RES2OUT_Pos)
 #define OPAMP_OPAMPCTRL1_RES2VCC_Pos 9            /**< \brief (OPAMP_OPAMPCTRL1) Resistor ladder To VCC */
-#define OPAMP_OPAMPCTRL1_RES2VCC    (0x1u << OPAMP_OPAMPCTRL1_RES2VCC_Pos)
+#define OPAMP_OPAMPCTRL1_RES2VCC    (0x1ul << OPAMP_OPAMPCTRL1_RES2VCC_Pos)
 #define OPAMP_OPAMPCTRL1_RES1EN_Pos 10           /**< \brief (OPAMP_OPAMPCTRL1) Resistor 1 Enable */
-#define OPAMP_OPAMPCTRL1_RES1EN     (0x1u << OPAMP_OPAMPCTRL1_RES1EN_Pos)
+#define OPAMP_OPAMPCTRL1_RES1EN     (0x1ul << OPAMP_OPAMPCTRL1_RES1EN_Pos)
 #define OPAMP_OPAMPCTRL1_RES1MUX_Pos 11           /**< \brief (OPAMP_OPAMPCTRL1) Resistor 1 Mux */
-#define OPAMP_OPAMPCTRL1_RES1MUX_Msk (0x3u << OPAMP_OPAMPCTRL1_RES1MUX_Pos)
+#define OPAMP_OPAMPCTRL1_RES1MUX_Msk (0x3ul << OPAMP_OPAMPCTRL1_RES1MUX_Pos)
 #define OPAMP_OPAMPCTRL1_RES1MUX(value) ((OPAMP_OPAMPCTRL1_RES1MUX_Msk & ((value) << OPAMP_OPAMPCTRL1_RES1MUX_Pos)))
 #define OPAMP_OPAMPCTRL1_POTMUX_Pos 13           /**< \brief (OPAMP_OPAMPCTRL1) Potentiometer Selection */
-#define OPAMP_OPAMPCTRL1_POTMUX_Msk (0x7u << OPAMP_OPAMPCTRL1_POTMUX_Pos)
+#define OPAMP_OPAMPCTRL1_POTMUX_Msk (0x7ul << OPAMP_OPAMPCTRL1_POTMUX_Pos)
 #define OPAMP_OPAMPCTRL1_POTMUX(value) ((OPAMP_OPAMPCTRL1_POTMUX_Msk & ((value) << OPAMP_OPAMPCTRL1_POTMUX_Pos)))
 #define OPAMP_OPAMPCTRL1_MUXPOS_Pos 16           /**< \brief (OPAMP_OPAMPCTRL1) Positive Input Mux Selection */
-#define OPAMP_OPAMPCTRL1_MUXPOS_Msk (0x7u << OPAMP_OPAMPCTRL1_MUXPOS_Pos)
+#define OPAMP_OPAMPCTRL1_MUXPOS_Msk (0x7ul << OPAMP_OPAMPCTRL1_MUXPOS_Pos)
 #define OPAMP_OPAMPCTRL1_MUXPOS(value) ((OPAMP_OPAMPCTRL1_MUXPOS_Msk & ((value) << OPAMP_OPAMPCTRL1_MUXPOS_Pos)))
 #define OPAMP_OPAMPCTRL1_MUXNEG_Pos 20           /**< \brief (OPAMP_OPAMPCTRL1) Negative Input Mux Selection */
-#define OPAMP_OPAMPCTRL1_MUXNEG_Msk (0x7u << OPAMP_OPAMPCTRL1_MUXNEG_Pos)
+#define OPAMP_OPAMPCTRL1_MUXNEG_Msk (0x7ul << OPAMP_OPAMPCTRL1_MUXNEG_Pos)
 #define OPAMP_OPAMPCTRL1_MUXNEG(value) ((OPAMP_OPAMPCTRL1_MUXNEG_Msk & ((value) << OPAMP_OPAMPCTRL1_MUXNEG_Pos)))
-#define OPAMP_OPAMPCTRL1_MASK       0x0077FFDEu  /**< \brief (OPAMP_OPAMPCTRL1) MASK Register */
+#define OPAMP_OPAMPCTRL1_MASK       0x0077FFDEul /**< \brief (OPAMP_OPAMPCTRL1) MASK Register */
 
 /* -------- OPAMP_OPAMPCTRL2 : (OPAMP Offset: 0x0C) (R/W 32) OPAMP Control 2 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -245,38 +245,38 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define OPAMP_OPAMPCTRL2_OFFSET     0x0C         /**< \brief (OPAMP_OPAMPCTRL2 offset) OPAMP Control 2 */
-#define OPAMP_OPAMPCTRL2_RESETVALUE 0x00000000   /**< \brief (OPAMP_OPAMPCTRL2 reset_value) OPAMP Control 2 */
+#define OPAMP_OPAMPCTRL2_RESETVALUE 0x00000000ul /**< \brief (OPAMP_OPAMPCTRL2 reset_value) OPAMP Control 2 */
 
 #define OPAMP_OPAMPCTRL2_ENABLE_Pos 1            /**< \brief (OPAMP_OPAMPCTRL2) Operational Amplifier Enable */
-#define OPAMP_OPAMPCTRL2_ENABLE     (0x1u << OPAMP_OPAMPCTRL2_ENABLE_Pos)
+#define OPAMP_OPAMPCTRL2_ENABLE     (0x1ul << OPAMP_OPAMPCTRL2_ENABLE_Pos)
 #define OPAMP_OPAMPCTRL2_ANAOUT_Pos 2            /**< \brief (OPAMP_OPAMPCTRL2) Analog Output */
-#define OPAMP_OPAMPCTRL2_ANAOUT     (0x1u << OPAMP_OPAMPCTRL2_ANAOUT_Pos)
+#define OPAMP_OPAMPCTRL2_ANAOUT     (0x1ul << OPAMP_OPAMPCTRL2_ANAOUT_Pos)
 #define OPAMP_OPAMPCTRL2_BIAS_Pos   3            /**< \brief (OPAMP_OPAMPCTRL2) Bias Selection */
-#define OPAMP_OPAMPCTRL2_BIAS_Msk   (0x3u << OPAMP_OPAMPCTRL2_BIAS_Pos)
+#define OPAMP_OPAMPCTRL2_BIAS_Msk   (0x3ul << OPAMP_OPAMPCTRL2_BIAS_Pos)
 #define OPAMP_OPAMPCTRL2_BIAS(value) ((OPAMP_OPAMPCTRL2_BIAS_Msk & ((value) << OPAMP_OPAMPCTRL2_BIAS_Pos)))
 #define OPAMP_OPAMPCTRL2_RUNSTDBY_Pos 6            /**< \brief (OPAMP_OPAMPCTRL2) Run in Standby */
-#define OPAMP_OPAMPCTRL2_RUNSTDBY   (0x1u << OPAMP_OPAMPCTRL2_RUNSTDBY_Pos)
+#define OPAMP_OPAMPCTRL2_RUNSTDBY   (0x1ul << OPAMP_OPAMPCTRL2_RUNSTDBY_Pos)
 #define OPAMP_OPAMPCTRL2_ONDEMAND_Pos 7            /**< \brief (OPAMP_OPAMPCTRL2) On Demand Control */
-#define OPAMP_OPAMPCTRL2_ONDEMAND   (0x1u << OPAMP_OPAMPCTRL2_ONDEMAND_Pos)
+#define OPAMP_OPAMPCTRL2_ONDEMAND   (0x1ul << OPAMP_OPAMPCTRL2_ONDEMAND_Pos)
 #define OPAMP_OPAMPCTRL2_RES2OUT_Pos 8            /**< \brief (OPAMP_OPAMPCTRL2) Resistor ladder To Output */
-#define OPAMP_OPAMPCTRL2_RES2OUT    (0x1u << OPAMP_OPAMPCTRL2_RES2OUT_Pos)
+#define OPAMP_OPAMPCTRL2_RES2OUT    (0x1ul << OPAMP_OPAMPCTRL2_RES2OUT_Pos)
 #define OPAMP_OPAMPCTRL2_RES2VCC_Pos 9            /**< \brief (OPAMP_OPAMPCTRL2) Resistor ladder To VCC */
-#define OPAMP_OPAMPCTRL2_RES2VCC    (0x1u << OPAMP_OPAMPCTRL2_RES2VCC_Pos)
+#define OPAMP_OPAMPCTRL2_RES2VCC    (0x1ul << OPAMP_OPAMPCTRL2_RES2VCC_Pos)
 #define OPAMP_OPAMPCTRL2_RES1EN_Pos 10           /**< \brief (OPAMP_OPAMPCTRL2) Resistor 1 Enable */
-#define OPAMP_OPAMPCTRL2_RES1EN     (0x1u << OPAMP_OPAMPCTRL2_RES1EN_Pos)
+#define OPAMP_OPAMPCTRL2_RES1EN     (0x1ul << OPAMP_OPAMPCTRL2_RES1EN_Pos)
 #define OPAMP_OPAMPCTRL2_RES1MUX_Pos 11           /**< \brief (OPAMP_OPAMPCTRL2) Resistor 1 Mux */
-#define OPAMP_OPAMPCTRL2_RES1MUX_Msk (0x3u << OPAMP_OPAMPCTRL2_RES1MUX_Pos)
+#define OPAMP_OPAMPCTRL2_RES1MUX_Msk (0x3ul << OPAMP_OPAMPCTRL2_RES1MUX_Pos)
 #define OPAMP_OPAMPCTRL2_RES1MUX(value) ((OPAMP_OPAMPCTRL2_RES1MUX_Msk & ((value) << OPAMP_OPAMPCTRL2_RES1MUX_Pos)))
 #define OPAMP_OPAMPCTRL2_POTMUX_Pos 13           /**< \brief (OPAMP_OPAMPCTRL2) Potentiometer Selection */
-#define OPAMP_OPAMPCTRL2_POTMUX_Msk (0x7u << OPAMP_OPAMPCTRL2_POTMUX_Pos)
+#define OPAMP_OPAMPCTRL2_POTMUX_Msk (0x7ul << OPAMP_OPAMPCTRL2_POTMUX_Pos)
 #define OPAMP_OPAMPCTRL2_POTMUX(value) ((OPAMP_OPAMPCTRL2_POTMUX_Msk & ((value) << OPAMP_OPAMPCTRL2_POTMUX_Pos)))
 #define OPAMP_OPAMPCTRL2_MUXPOS_Pos 16           /**< \brief (OPAMP_OPAMPCTRL2) Positive Input Mux Selection */
-#define OPAMP_OPAMPCTRL2_MUXPOS_Msk (0x7u << OPAMP_OPAMPCTRL2_MUXPOS_Pos)
+#define OPAMP_OPAMPCTRL2_MUXPOS_Msk (0x7ul << OPAMP_OPAMPCTRL2_MUXPOS_Pos)
 #define OPAMP_OPAMPCTRL2_MUXPOS(value) ((OPAMP_OPAMPCTRL2_MUXPOS_Msk & ((value) << OPAMP_OPAMPCTRL2_MUXPOS_Pos)))
 #define OPAMP_OPAMPCTRL2_MUXNEG_Pos 20           /**< \brief (OPAMP_OPAMPCTRL2) Negative Input Mux Selection */
-#define OPAMP_OPAMPCTRL2_MUXNEG_Msk (0x7u << OPAMP_OPAMPCTRL2_MUXNEG_Pos)
+#define OPAMP_OPAMPCTRL2_MUXNEG_Msk (0x7ul << OPAMP_OPAMPCTRL2_MUXNEG_Pos)
 #define OPAMP_OPAMPCTRL2_MUXNEG(value) ((OPAMP_OPAMPCTRL2_MUXNEG_Msk & ((value) << OPAMP_OPAMPCTRL2_MUXNEG_Pos)))
-#define OPAMP_OPAMPCTRL2_MASK       0x0077FFDEu  /**< \brief (OPAMP_OPAMPCTRL2) MASK Register */
+#define OPAMP_OPAMPCTRL2_MASK       0x0077FFDEul /**< \brief (OPAMP_OPAMPCTRL2) MASK Register */
 
 /** \brief OPAMP hardware registers */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

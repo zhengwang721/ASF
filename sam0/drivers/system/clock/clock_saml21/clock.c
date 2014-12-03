@@ -47,7 +47,7 @@
 
 /**
  * \internal
- * \brief DFLL-specific data container
+ * \brief DFLL-specific data container.
  */
 struct _system_clock_dfll_config {
 	uint32_t control;
@@ -57,7 +57,7 @@ struct _system_clock_dfll_config {
 
 /**
  * \internal
- * \brief DPLL-specific data container
+ * \brief DPLL-specific data container.
  */
 struct _system_clock_dpll_config {
 	uint32_t frequency;
@@ -66,7 +66,7 @@ struct _system_clock_dpll_config {
 
 /**
  * \internal
- * \brief XOSC-specific data container
+ * \brief XOSC-specific data container.
  */
 struct _system_clock_xosc_config {
 	uint32_t frequency;
@@ -74,7 +74,7 @@ struct _system_clock_xosc_config {
 
 /**
  * \internal
- * \brief System clock module data container
+ * \brief System clock module data container.
  */
 struct _system_clock_module {
 	volatile struct _system_clock_dfll_config dfll;
@@ -86,7 +86,7 @@ struct _system_clock_module {
 
 /**
  * \internal
- * \brief Internal module instance to cache configuration values
+ * \brief Internal module instance to cache configuration values.
  */
 static struct _system_clock_module _system_clock_inst = {
 		.dfll = {
@@ -107,7 +107,7 @@ static struct _system_clock_module _system_clock_inst = {
 
 /**
  * \internal
- * \brief Wait for sync to the DFLL control registers
+ * \brief Wait for sync to the DFLL control registers.
  */
 static inline void _system_dfll_wait_for_sync(void)
 {
@@ -118,7 +118,7 @@ static inline void _system_dfll_wait_for_sync(void)
 
 /**
  * \internal
- * \brief Wait for sync to the OSC32K control registers
+ * \brief Wait for sync to the OSC32K control registers.
  */
 static inline void _system_osc32k_wait_for_sync(void)
 {
@@ -182,13 +182,13 @@ static inline void _system_clock_source_dfll_set_config_errata_9905(void)
 }
 
 /**
- * \brief Retrieve the frequency of a clock source
+ * \brief Retrieve the frequency of a clock source.
  *
  * Determines the current operating frequency of a given clock source.
  *
  * \param[in] clock_source  Clock source to get the frequency of
  *
- * \returns Frequency of the given clock source, in Hz
+ * \returns Frequency of the given clock source, in Hz.
  */
 uint32_t system_clock_source_get_hz(
 		const enum system_clock_source clock_source)
@@ -239,7 +239,7 @@ uint32_t system_clock_source_get_hz(
 }
 
 /**
- * \brief Configure the internal OSC16M oscillator clock source
+ * \brief Configure the internal OSC16M oscillator clock source.
  *
  * Configures the 16MHz (nominal) internal RC oscillator with the given
  * configuration settings.
@@ -262,7 +262,7 @@ void system_clock_source_osc16m_set_config(
 }
 
 /**
- * \brief Configure the internal OSC32K oscillator clock source
+ * \brief Configure the internal OSC32K oscillator clock source.
  *
  * Configures the 32KHz (nominal) internal RC oscillator with the given
  * configuration settings.
@@ -287,7 +287,7 @@ void system_clock_source_osc32k_set_config(
 }
 
 /**
- * \brief Configure the internal OSCULP32K oscillator clock source
+ * \brief Configure the internal OSCULP32K oscillator clock source.
  *
  * Configures the Ultra Low Power 32KHz internal RC oscillator with the given
  * configuration settings.
@@ -306,7 +306,7 @@ void system_clock_source_osculp32k_set_config(
 }
 
 /**
- * \brief Configure the external oscillator clock source
+ * \brief Configure the external oscillator clock source.
  *
  * Configures the external oscillator clock source with the given configuration
  * settings.
@@ -355,7 +355,7 @@ void system_clock_source_xosc_set_config(
 }
 
 /**
- * \brief Configure the XOSC32K external 32KHz oscillator clock source
+ * \brief Configure the XOSC32K external 32KHz oscillator clock source.
  *
  * Configures the external 32KHz oscillator clock source with the given
  * configuration settings.
@@ -390,7 +390,7 @@ void system_clock_source_xosc32k_set_config(
 }
 
 /**
- * \brief Configure the DFLL clock source
+ * \brief Configure the DFLL clock source.
  *
  * Configures the Digital Frequency Locked Loop clock source with the given
  * configuration settings.
@@ -436,7 +436,7 @@ void system_clock_source_dfll_set_config(
 }
 
 /**
- * \brief Configure the DPLL clock source
+ * \brief Configure the DPLL clock source.
  *
  * Configures the Digital Phase-Locked Loop clock source with the given
  * configuration settings.
@@ -499,7 +499,7 @@ void system_clock_source_dpll_set_config(
 }
 
 /**
- * \brief Writes the calibration values for a given oscillator clock source
+ * \brief Writes the calibration values for a given oscillator clock source.
  *
  * Writes an oscillator calibration value to the given oscillator control
  * registers. The acceptable ranges are:
@@ -562,7 +562,7 @@ enum status_code system_clock_source_write_calibration(
 }
 
 /**
- * \brief Enables a clock source
+ * \brief Enables a clock source.
  *
  * Enables a clock source which has been previously configured.
  *
@@ -617,7 +617,7 @@ enum status_code system_clock_source_enable(
 }
 
 /**
- * \brief Disables a clock source
+ * \brief Disables a clock source.
  *
  * Disables a clock source that was previously enabled.
  *
@@ -667,7 +667,7 @@ enum status_code system_clock_source_disable(
 }
 
 /**
- * \brief Checks if a clock source is ready
+ * \brief Checks if a clock source is ready.
  *
  * Checks if a given clock source is ready to be used.
  *
@@ -751,11 +751,8 @@ bool system_clock_source_is_ready(
 		if (n > 0) { _CONF_CLOCK_GCLK_CONFIG(n, unused); }
 #endif
 
-#ifdef SAML21_REV_A
-extern void set_perf_level(uint32_t Perflevel);
-#endif
 /**
- * \brief Initialize clock system based on the configuration in conf_clocks.h
+ * \brief Initialize clock system based on the configuration in conf_clocks.h.
  *
  * This function will apply the settings in conf_clocks.h when run from the user
  * application. All clock sources and GCLK generators are running when this function
@@ -769,13 +766,9 @@ void system_clock_init(void)
 	SUPC->INTFLAG.reg = SUPC_INTFLAG_BOD33RDY | SUPC_INTFLAG_BOD33DET;
 
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
-#ifndef SAML21_REV_A
 
 	/*  Switch to PL2 to be sure configuration of GCLK0 is safe */
 	system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_2);
-#else
-	set_perf_level(2);
-#endif
 
 	/* XOSC */
 #if CONF_CLOCK_XOSC_ENABLE == true
@@ -1012,7 +1005,6 @@ void system_clock_init(void)
 	_CONF_CLOCK_GCLK_CONFIG(0, ~);
 #endif
 
-#ifndef SAML21_REV_A
 	/* Set performance level according to CPU frequency */
 	uint32_t cpu_freq = system_cpu_clock_get_hz();
 	if (cpu_freq < SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ) {
@@ -1020,5 +1012,4 @@ void system_clock_init(void)
 	} else if (cpu_freq < SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ) {
 		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_1);
 	}
-#endif
 }
