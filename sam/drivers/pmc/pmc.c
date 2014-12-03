@@ -1424,9 +1424,6 @@ void pmc_set_writeprotect(uint32_t ul_enable)
 /**
  * \brief Return write protect status.
  *
- *
- * param[in] p_pmc Pointer to a PMC instance
- *
  * \return Return write protect status.
  */
 uint32_t pmc_get_writeprotect_status(void)
