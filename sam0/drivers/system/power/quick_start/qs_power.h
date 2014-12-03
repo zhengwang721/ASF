@@ -83,11 +83,11 @@
  *
  * \section asfdoc_sam0_power_basic_use_case_main Use Case
  *
- * \subsection asfdoc_sam0_aes_basic_use_case_main_code Code
+ * \subsection asfdoc_sam0_power_basic_use_case_main_code Code
  * Copy-paste the following code to your user application:
  * \snippet quick_start/qs_power.c  setup_init
  *
- * \subsection asfdoc_sam0_aes_basic_use_case_main_flow Workflow
+ * \subsection asfdoc_sam0_power_basic_use_case_main_flow Workflow
  * -# Check if the RESET is caused by external wakeup pin.
  *    \snippet quick_start/qs_power.c ext_wakeup
  * -# Check STANDBY mode and BACKUP mode.
