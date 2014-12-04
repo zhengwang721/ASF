@@ -47,7 +47,7 @@
 /**
  * \defgroup asfdoc_sam0_tc_group SAM Timer/Counter Driver (TC)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of the timer modules within the device, for waveform
  * generation and timing operations. The following driver API modes are covered
  * by this manual:
@@ -104,7 +104,7 @@
  * \image html overview.svg "Basic Overview of the TC Module"
  *
  *
- * \subsection asfdoc_sam0_rtc_features Driver Feature Macro Definition
+ * \subsection asfdoc_sam0_tc_features Driver Feature Macro Definition
  * <table>
  *  <tr>
  *    <th>Driver Feature Macro</th>
@@ -975,8 +975,8 @@ uint8_t _tc_get_inst_index(
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval false if the module has completed synchronization
- * \retval true  if the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
+ * \retval true  If the module synchronization is ongoing
  */
 static inline bool tc_is_syncing(
 		const struct tc_module *const module_inst)

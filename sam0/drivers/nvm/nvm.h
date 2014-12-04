@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_nvm_group SAM Non-Volatile Memory Driver (NVM)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of non-volatile memories within the device, for partitioning,
  * erasing, reading, and writing of data.
  *
@@ -342,8 +342,7 @@ enum nvm_command {
 	NVM_COMMAND_SET_SECURITY_BIT           = NVMCTRL_CTRLA_CMD_SSB,
 
 	/** Enter power reduction mode in the NVM controller to reduce the power
-	 *  consumption of the system. When in low power mode, all commands other
-	 *  than \ref NVM_COMMAND_EXIT_LOW_POWER_MODE will fail.
+	 *  consumption of the system.
 	 */
 	NVM_COMMAND_ENTER_LOW_POWER_MODE       = NVMCTRL_CTRLA_CMD_SPRM,
 

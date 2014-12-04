@@ -73,13 +73,13 @@
  * \snippet quick_start_basic.c setup_init
  *
  * \subsection asfdoc_sam0_aes_basic_use_case_setup_flow Workflow
- * -# Define sample data from NIST-800-38A appendix F for ECB mode
+ * -# Define sample data from NIST-800-38A appendix F for ECB mode.
  *    \snippet quick_start_basic.c cipher_data
  *
  * -# Create related module variable and software instance structure.
  *    \snippet quick_start_basic.c module_var
  *
- * -# Configure ,initialize and enable AES module.
+ * -# Configure, initialize, and enable AES module.
  *  -# Configuration AES struct, which can be filled out to
  *     adjust the configuration of a physical AES peripheral.
  *     \snippet quick_start_basic.c setup_config

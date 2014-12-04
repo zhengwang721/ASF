@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_wdt_group SAM Watchdog Driver (WDT)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of the device's Watchdog Timer module, including the enabling,
  * disabling, and kicking within the device. The following driver API modes are
  * covered by this manual:
@@ -277,8 +277,8 @@ struct wdt_conf {
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true if the module has completed synchronization
- * \retval false if the module synchronization is ongoing
+ * \retval true If the module has completed synchronization
+ * \retval false If the module synchronization is ongoing
  */
 static inline bool wdt_is_syncing(void)
 {

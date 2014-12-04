@@ -459,3 +459,20 @@ Ctrl_status uhi_msc_mem_write_10_ram(uint32_t addr, const void *ram);
  * \include example2/samd21j18a_samd21_xplained_pro/conf_board.h
  */
 
+/**
+ * \page asfdoc_uhi_msc_document_revision_history Document Revision History
+ *
+ * <table>
+ * <tr>
+ *    <th>Doc. Rev.</td>
+ *    <th>Date</td>
+ *    <th>Comments</td>
+ * </tr>
+ * <tr>
+ *    <td>A</td>
+ *    <td>11/2014</td>
+ *    <td>Initial release.</td>
+ * </tr>
+ * </table>
+ */
+

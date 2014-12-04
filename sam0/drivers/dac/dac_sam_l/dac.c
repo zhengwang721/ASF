@@ -95,8 +95,8 @@ static void _dac_set_config(
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true if the module synchronization is ongoing
- * \retval false if the module has completed synchronization
+ * \retval true If the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
  */
 bool dac_is_syncing(
 		struct dac_module *const dev_inst)

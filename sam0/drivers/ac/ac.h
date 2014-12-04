@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_ac_group SAM Analog Comparator Driver (AC)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel | SMART SAM devices provides an interface for the configuration
  * and management of the device's Analog Comparator functionality, for the
  * comparison of analog voltages against a known reference voltage to determine
  * its relative level. The following driver API modes are covered by this
@@ -751,8 +751,8 @@ uint8_t _ac_get_inst_index(
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval false if the module has completed synchronization
- * \retval ture if the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
+ * \retval ture If the module synchronization is ongoing
  */
 static inline bool ac_is_syncing(
         struct ac_module *const module_inst)
