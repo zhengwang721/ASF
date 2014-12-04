@@ -412,7 +412,8 @@ void system_clock_source_dfll_set_config(
 			(uint32_t)config->stable_tracking |
 			(uint32_t)config->quick_lock      |
 			(uint32_t)config->chill_cycle     |
-			((uint32_t)config->on_demand << OSCCTRL_DFLLCTRL_ONDEMAND_Pos);
+			((uint32_t)config->on_demand << OSCCTRL_DFLLCTRL_ONDEMAND_Pos) |
+			((uint32_t)config->run_in_stanby << OSCCTRL_DFLLCTRL_RUNSTDBY_Pos);
 
 	if (config->loop_mode == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
 
@@ -850,6 +851,7 @@ void system_clock_init(void)
 
 	dfll_conf.loop_mode      = CONF_CLOCK_DFLL_LOOP_MODE;
 	dfll_conf.on_demand      = false;
+	dfll_conf.run_in_stanby  = CONF_CLOCK_DFLL_RUN_IN_STANDBY;
 
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN) {
 		dfll_conf.coarse_value = CONF_CLOCK_DFLL_COARSE_VALUE;
