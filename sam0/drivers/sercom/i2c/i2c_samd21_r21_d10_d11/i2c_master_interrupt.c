@@ -87,10 +87,6 @@ static void _i2c_master_read(
 		}
 	}
 
-	/* Read byte from slave and put in buffer */
-	_i2c_master_wait_for_sync(module);
-	module->buffer[buffer_index] = i2c_module->DATA.reg;
-
 	if (module->buffer_remaining == 0) {
 		if (module->send_stop) {
 			/* Send stop condition */
@@ -98,6 +94,10 @@ static void _i2c_master_read(
 			i2c_module->CTRLB.reg |= SERCOM_I2CM_CTRLB_CMD(3);
 		}
 	}
+	
+	/* Read byte from slave and put in buffer */
+	_i2c_master_wait_for_sync(module);
+	module->buffer[buffer_index] = i2c_module->DATA.reg;
 }
 
 /**

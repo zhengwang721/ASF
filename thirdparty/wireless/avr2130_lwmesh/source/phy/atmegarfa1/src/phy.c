@@ -159,7 +159,9 @@ void PHY_Wakeup(void)
 void PHY_DataReq(uint8_t *data)
 {
 	phyTrxSetState(TRX_CMD_TX_ARET_ON);
-
+	
+	IRQ_STATUS_REG = IRQ_CLEAR_VALUE;
+	
 	TRX_FRAME_BUFFER(0) = data[0] + PHY_CRC_SIZE;
 	for (uint8_t i = 0; i < data[0]; i++) {
 		TRX_FRAME_BUFFER(i + 1) = data[i + 1];

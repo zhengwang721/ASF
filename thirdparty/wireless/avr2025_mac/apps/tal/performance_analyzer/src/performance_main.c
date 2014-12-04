@@ -429,34 +429,34 @@ volatile node_ib_t node_info;
 /* === IMPLEMENTATION ====================================================== */
 
 /**
- * \brief Main function of the Performance Analyzer application
+ * \brief Init function of the Performance Analyzer application
  * \ingroup group_app_init
  */
-void performance_analyzer_main(void)
+void performance_analyzer_init(void)
 {
 	sio2host_init();
-
 	/*
 	 * Power ON - so set the board to INIT state. All hardware, PAL, TAL and
 	 * stack level initialization must be done using this function
 	 */
 	set_main_state(INIT, NULL);
 
-	cpu_irq_enable();
-
 	/* INIT was a success - so change to WAIT_FOR_EVENT state */
 	set_main_state(WAIT_FOR_EVENT, NULL);
 
-	/* Endless while loop */
-	while (1) {
-		pal_task(); /* Handle platform specific tasks, like serial
-		             * interface */
-		tal_task(); /* Handle transceiver specific tasks */
-		app_task(); /* Application task */
-		serial_data_handler();
-	}
 }
 
+/**
+ * \brief This task needs to be called in a while(1) for performing Performance Analyzer tasks
+ */
+void performance_analyzer_task(void)
+{
+	pal_task(); /* Handle platform specific tasks, like serial
+		            * interface */
+	tal_task(); /* Handle transceiver specific tasks */
+	app_task(); /* Application task */
+	serial_data_handler();
+}
 /**
  * \brief Application task
  */

@@ -53,7 +53,7 @@
  * - \ref asfdoc_uhi_cdc_config_examples
  *
  * For more details for Atmel® Software Framework (ASF) USB Host Stack,
- * refer to following application notes:
+ * refer to following application note:
  * - <a href="http://www.atmel.com/dyn/resources/prod_documents/doc8486.pdf">
  *   AVR4950: ASF - USB Host Stack</a>
  *
@@ -391,4 +391,20 @@ iram_size_t uhi_cdc_write_buf(uint8_t port, const void* buf, iram_size_t size);
  * \include example/samd21j18a_samd21_xplained_pro/conf_board.h
  */
 
+/**
+ * \page asfdoc_uhi_cdc_document_revision_history Document Revision History
+ *
+ * <table>
+ * <tr>
+ *    <th>Doc. Rev.</td>
+ *    <th>Date</td>
+ *    <th>Comments</td>
+ * </tr>
+ * <tr>
+ *    <td>A</td>
+ *    <td>11/2014</td>
+ *    <td>Initial release.</td>
+ * </tr>
+ * </table>
+ */
 

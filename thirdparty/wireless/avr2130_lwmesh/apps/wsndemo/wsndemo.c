@@ -479,7 +479,11 @@ static void APP_TaskHandler(void)
 
 /*****************************************************************************
 *****************************************************************************/
-int wsndemo_main(void)
+
+/**
+ * Init function of the WSNDemo application
+ */
+void wsndemo_init(void)
 {
 	SYS_Init();
 #if APP_ENDDEVICE
@@ -488,9 +492,15 @@ int wsndemo_main(void)
 #if APP_COORDINATOR
 	sio2host_init();
 #endif
-	cpu_irq_enable();
-	while (1) {
-		SYS_TaskHandler();
-		APP_TaskHandler();
-	}
+	
+}
+
+/**
+ * Task of the WSNDemo application
+ * This task should be called in a while(1)
+ */
+void wsndemo_task(void)
+{
+	SYS_TaskHandler();
+	APP_TaskHandler();
 }

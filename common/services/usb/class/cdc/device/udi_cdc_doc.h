@@ -558,7 +558,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
 //@}
 
 /**
- * \page asfdoc_udi_cdc_exqsg Quick Start Guide for USB device Communication Class Device Module (UDI CDC)
+ * \page asfdoc_udi_cdc_exqsg Quick Start Guide for USB Device Communication Class Device Module (UDI CDC)
  *
  * This is the quick start guide for the \ref asfdoc_udi_cdc_group
  * "USB Device Interface CDC Module (UDI CDC)" with step-by-step instructions on
@@ -878,8 +878,8 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  * </tr>
  * <tr>
  *    <td>A</td>
- *    <td>08/2014</td>
- *    <td>Initial release</td>
+ *    <td>11/2014</td>
+ *    <td>Initial release.</td>
  * </tr>
  * </table>
  */
