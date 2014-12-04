@@ -66,6 +66,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_rtc_count_prerequisites
@@ -109,15 +110,15 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PERIODIC_INT</td>
- *    <td>SAML21</td>
+ *    <td>SAML21/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_PRESCALER_OFF</td>
- *    <td>SAML21</td>
+ *    <td>SAML21/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CLOCK_SELECTION</td>
- *    <td>SAML21</td>
+ *    <td>SAML21/C21</td>
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_GENERAL_PURPOSE_REG</td>
@@ -125,7 +126,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_RTC_CONTINUOUSLY_UPDATED</td>
- *    <td>SAMD20,SAMD21,SAMR21,SAMD10,SAMD11</td>
+ *    <td>SAMD20/D21/R21/D10/D11</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -278,7 +279,7 @@
  * }
  * \enddot
  *
- * \subsubsection asfdoc_sam0_rtc_calendar_clock_saml SAM L21 Clock Setup
+ * \subsubsection asfdoc_sam0_rtc_calendar_clock_saml SAM L21/C21 Clock Setup
  * The RTC clock can be selected from OSC32K,XOSC32K or OSCULP32K , and a 32KHz
  * or 1KHz oscillator clock frequency is required. This clock must be
  * configured and enabled in the 32KHz oscillator controller before using the RTC.
@@ -359,15 +360,17 @@ extern "C" {
  * Define port features set according to different device family
  * @{
 */
-#if (SAML21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAMC21) || defined(__DOXYGEN__)
 /** RTC periodic interval interrupt. */
 #  define FEATURE_RTC_PERIODIC_INT
 /** RTC prescaler is off. */
 #  define FEATURE_RTC_PRESCALER_OFF
 /** RTC clock selection. */
 #  define FEATURE_RTC_CLOCK_SELECTION
+#  if !(SAMC21)
 /** General purpose registers. */
 #  define FEATURE_RTC_GENERAL_PURPOSE_REG
+#  endif
 #else
 /** RTC continuously updated. */
 #  define FEATURE_RTC_CONTINUOUSLY_UPDATED
@@ -500,7 +503,7 @@ enum rtc_count_callback {
 	/** Callback for compare channel 2. */
 	RTC_COUNT_CALLBACK_COMPARE_2,
 #  endif
-#  if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
+#  if (RTC_NUM_OF_COMP16 > 3) || defined(__DOXYGEN__)
 	/** Callback for compare channel 3. */
 	RTC_COUNT_CALLBACK_COMPARE_3,
 #  endif
@@ -537,7 +540,7 @@ enum rtc_count_callback {
 	/** Callback for compare channel 2. */
 	RTC_COUNT_CALLBACK_COMPARE_2,
 #  endif
-#  if (RTC_NUM_OF_COMP16 > 3)	|| defined(__DOXYGEN__)
+#  if (RTC_NUM_OF_COMP16 > 3) || defined(__DOXYGEN__)
 	/** Callback for compare channel 3. */
 	RTC_COUNT_CALLBACK_COMPARE_3,
 #  endif
@@ -1124,6 +1127,9 @@ static inline uint32_t rtc_read_general_purpose_reg(
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for SAMC21</td>
  *	</tr>
  *	<tr>
  *		<td>Added support for SAML21</td>
