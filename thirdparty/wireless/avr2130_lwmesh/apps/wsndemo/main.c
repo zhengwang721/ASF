@@ -60,5 +60,12 @@ int main(void)
 	board_init();
 	#endif
 	irq_initialize_vectors();
-	wsndemo_main();
+	wsndemo_init();
+	cpu_irq_enable();
+	
+	while(1)
+	{
+	wsndemo_task();	
+	}
+	
 }
