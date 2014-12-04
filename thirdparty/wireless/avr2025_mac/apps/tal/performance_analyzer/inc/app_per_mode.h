@@ -158,12 +158,12 @@
 #define RANGE_TEST_MARKER_CMD               (0x15)
 #define RANGE_TEST_MARKER_RSP               (0x16)
 #define REMOTE_TEST_CMD		                (0x17)
-#define  REMOTE_TEST_REPLY_CMD              (0x18)
+#define REMOTE_TEST_REPLY_CMD               (0x18)
 #define PKT_STREAM_PKT						(0x18)
 #define RANGE_TEST_PKT_LENGTH               (19)
 #define LED_BLINK_RATE_IN_MICRO_SEC         (50000)
 /* \} */
-#define PULSE_CW_TX_TIME_IN_MICRO_SEC           (50000)
+#define PULSE_CW_TX_TIME_IN_MICRO_SEC       (50000)
 /* === Types ================================================================ */
 
 /**
@@ -342,6 +342,7 @@ void marker_tx_timer_handler_cb(void *parameter);
  * \param parameter pass parameters to timer handler
  */
 void marker_rsp_timer_handler_cb(void *parameter);
+
 
 #ifdef EXT_RF_FRONT_END_CTRL
 

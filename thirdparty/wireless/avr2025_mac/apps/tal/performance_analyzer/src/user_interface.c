@@ -296,6 +296,7 @@ void app_led_event(led_event_t ev)
 		LED_Off(TX_LED);
 		LED_Off(RX_LED);
 		break;
+		
 	}
 #endif
 }

@@ -1066,7 +1066,7 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
 	static uint8_t range_test_seq_num,remote_cmd_seq_num;
 	app_payload_t *msg;
 	param_value_t param_value;
-
+	
 	if(rx_on_mode)
 	{
 		//do not handle requests in continuous rx on mode

@@ -24,7 +24,7 @@
  *    from this software without specific prior written permission.
  *
  * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
+ *    Atmel micro controller product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -85,8 +85,7 @@ extern frame_info_t *stream_pkt;
 #define LED_BLINK_RATE_IN_MICRO_SEC           (50000)
 #define DELAY_BEFORE_APP_RESET_IN_MICRO_SEC   (5000)
 
-/* === PROTOTYPES ========================================================== */
-static void identify_timer_handler_cb(void *parameter);
+/* === PROTOTYPES ========================================================== */ 
 static void app_reset_cb(void *parameter);
 static void send_result_rsp(void);
 static void send_peer_info_rsp(void);
@@ -552,7 +551,7 @@ if(rx_on_mode)
 				}
 			}
 		}
-		// Update database
+		/* Update database with this values */
 		curr_trx_config_params.antenna_selected = msg->payload.div_set_req_data.ant_sel;
 		curr_trx_config_params.antenna_diversity = msg->payload.div_set_req_data.status;
 
@@ -615,7 +614,7 @@ if(rx_on_mode)
 		sw_timer_start(APP_TIMER_TO_TX,
 				LED_BLINK_RATE_IN_MICRO_SEC,
 				SW_TIMEOUT_RELATIVE,
-				(FUNC_PTR)identify_timer_handler_cb,
+				(FUNC_PTR)blink_led_timer_handler_cb,
 				NULL);
 		break;
 	}
@@ -649,8 +648,6 @@ if(rx_on_mode)
 		remote_cmd_len = *(mac_frame_info->mpdu + 12);
 		remote_cmd_ptr = msg->payload.remote_test_req_data.remote_serial_data;
 		remote_cmd_rx = true;
-		//serial_data_len = *(mac_frame_info->mpdu + 12); sriram 
-		//convert_ota_serial_frame_rx(msg->payload.remote_test_req_data.remote_serial_data,remote_cmd_len);
 		break;
 	}
 	case RANGE_TEST_START_PKT:
@@ -963,7 +960,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
  *
  * \param parameter pass parameters to timer handler
  */
-static void identify_timer_handler_cb(void *parameter)
+void blink_led_timer_handler_cb(void *parameter)
 {
 #if (LED_COUNT > 0)
 	static uint8_t led_count;
@@ -987,7 +984,7 @@ static void identify_timer_handler_cb(void *parameter)
 		sw_timer_start(APP_TIMER_TO_TX,
 				LED_BLINK_RATE_IN_MICRO_SEC,
 				SW_TIMEOUT_RELATIVE,
-				(FUNC_PTR)identify_timer_handler_cb,
+				(FUNC_PTR)blink_led_timer_handler_cb,
 				NULL);
 	}
 #endif

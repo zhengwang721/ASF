@@ -222,13 +222,22 @@ void get_current_configuration(void);
 uint8_t check_error_conditions(void);
 
 /*
- * \brief get the parameter length based on the paramter tye
+ * \brief get the parameter length based on the parameter type
  *
- * \param param_type Paramter type
+ * \param param_type Parameter type
  */
 uint8_t get_param_length(uint8_t parameter_type);
 
+/**
+ * \brief Starts Packet streaming test
+ * \param gap_time  Time between successive packets
+ * \param timeout   Time to which packet streaming take place
+ * \param start_stop  Parameter to start or stop packet streaming
+ * \param frame_len   Length of the frame in bytes
+ */
 void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop,uint16_t frame_len);
+
+void blink_led_timer_handler_cb(void *parameter);
 
 void rx_on_test(bool start_stop_param);
 
@@ -343,9 +352,9 @@ void usr_per_test_end_indication(uint8_t status,
  * host application via serial interface.
  * Called by Performance application as Indication before starting the ED scan
  * \param status                Confirmation to the ED scan req
- * \param scan_time_min         Approx time to be taken for ed can if timme is
+ * \param scan_time_min         Approx time to be taken for ed scan if time is
  * more than a minute
- * \param scan_time_sec         Approx time to be taken for ed can if timme is
+ * \param scan_time_sec         Approx time to be taken for ed scan if time is
  * less than a minute
  *
  * \return void
@@ -372,7 +381,7 @@ void usr_ed_scan_end_indication(uint8_t no_of_channels,
  * Called by Performance application as confirmation after getting the sensor
  * data
  * \param status           Result for the Sensor data get req
- * \param bat_voltage      Battery voltage vlaue
+ * \param bat_voltage      Battery voltage value
  * \param temperature      temperature value
  *
  * \return void
@@ -524,11 +533,11 @@ void usr_set_default_config_confirm(uint8_t status,
  * Function to generate Get Current config Confirm frame that must be sent to
  * host application via serial interface.
  * Called by Performance application as confirmation after getting the all
- * configurable paramters on source and peer node, if exists
+ * configurable parameters on source and peer node, if exists
  * \param status           Result for the set default config req
  *
  * \param curr_trx config params    structure of configurable
- *                                     paramters with current values
+ *                                     parameters with current values
  * \return void
  */
 void usr_get_current_config_confirm(uint8_t status,

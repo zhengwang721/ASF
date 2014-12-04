@@ -97,6 +97,7 @@ extern uint8_t cc_number_ct;
 #define DEFAULT_NO_OF_TEST_FRAMES               (100)
 #define DEFAULT_FRAME_LENGTH                    (20)
 
+
 /* === PROTOTYPES============================================================== */
 
 #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
@@ -105,8 +106,7 @@ extern uint8_t cc_number_ct;
 static void stop_pulse_cb(void *callback_parameter);
 
 #endif /* End of #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) &&
-        *(defined CW_SUPPORTED))) */
-
+        *(defined CW_SUPPORTED))) */ 
 /* === IMPLEMENTATION======================================================= */
 
 /*
@@ -406,7 +406,7 @@ void configure_pkt_stream_frames(uint16_t frame_len)
 
 	/* First element shall be length of PHY frame. */
 	frame_ptr--;
-	*frame_ptr = frame_len; //sriram
+	*frame_ptr = frame_len; 
 
 	/* Finished building of frame. */
 	stream_pkt->mpdu = frame_ptr;
@@ -425,6 +425,14 @@ void stop_pkt_streaming(void * parameter)
 	pkt_stream_stop = true;
 	sw_timer_stop(T_APP_TIMER);
 	usr_pkt_stream_confirm(MAC_SUCCESS,false);
+	if(node_info.main_state == PER_TEST_RECEPTOR)
+	{
+		sw_timer_start(T_APP_TIMER,
+		LED_BLINK_RATE_IN_MICRO_SEC,
+		SW_TIMEOUT_RELATIVE,
+		(FUNC_PTR)blink_led_timer_handler_cb,
+		NULL);
+	}
 }
 
 /*
@@ -436,7 +444,7 @@ void pulse_cw_transmission(void)
 {
 	if(node_info.main_state == PER_TEST_RECEPTOR)
 	{
-		//give some time //sriram
+		//Todo : comment to be added
 		delay_ms(10);
 	}
 	uint16_t channel;
@@ -598,6 +606,15 @@ void stop_cw_transmission(void *parameter)
 	op_mode = TX_OP_MODE;
 	usr_cont_wave_tx_confirm(MAC_SUCCESS, STOP_CWT /*stop*/, cw_mode);
 	remote_cw_start = false;
+	if(node_info.main_state == PER_TEST_RECEPTOR)
+	{
+		sw_timer_start(T_APP_TIMER,
+		LED_BLINK_RATE_IN_MICRO_SEC,
+		SW_TIMEOUT_RELATIVE,
+		(FUNC_PTR)blink_led_timer_handler_cb,
+		NULL);
+	}
+	
 }
 
 #endif

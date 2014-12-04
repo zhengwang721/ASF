@@ -188,6 +188,8 @@ void init_sio(void)
  */
 void serial_data_handler(void)
 {
+	
+	
 	/* Serial data handler is to handle only PER mode msg commands */
 	if ((RANGE_TEST_TX_ON == node_info.main_state) ||
 			(RANGE_TEST_TX_OFF == node_info.main_state)) {
@@ -223,9 +225,25 @@ void serial_data_handler(void)
 		data_length--;
 		rx_index++;
 	}
+	
+	
 
 	/* Tx processing */
 	if (buf_count != 0) {
+		/* Check Continuous transmission is finished at remote node, if so Blink LED at initiator */
+		uint8_t cont_tx_remote  = sio_tx_buf[head][3];
+		if ((cont_tx_remote == (0X80 |PKT_STREAM_CONFIRM)) || (cont_tx_remote == (0X80 | CONT_WAVE_TX_CONFIRM )))
+		{
+			uint8_t stop_cont_tx = sio_tx_buf[head][5];
+			if (stop_cont_tx == 0)
+			{
+				sw_timer_start(T_APP_TIMER,
+				LED_BLINK_RATE_IN_MICRO_SEC,
+				SW_TIMEOUT_RELATIVE,
+				(FUNC_PTR)blink_led_timer_handler_cb,
+				NULL);
+			}
+		}
 		uint8_t no_of_bytes_transmitted
 			= sio2host_tx(
 				&sio_tx_buf[head][curr_tx_buffer_index],

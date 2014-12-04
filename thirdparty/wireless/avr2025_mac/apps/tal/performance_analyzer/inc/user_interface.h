@@ -75,8 +75,8 @@ typedef enum {
 	LED_EVENT_START_PEER_SEARCH,
 	LED_EVENT_PEER_SEARCH_DONE,
 	LED_EVENT_ALL_ON,
-	LED_EVENT_ALL_OFF
-} led_event_t;
+	LED_EVENT_ALL_OFF,
+	} led_event_t;
 
 /* ! \} */
 
