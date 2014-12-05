@@ -64,7 +64,7 @@ extern "C" {
 /**
  * \brief Gives the number of available LUN
  *
- * Note: A LUN can be available, but with a status not present.
+ * \note A LUN can be available, but with a status not present.
  * It is the case for a card reader without card.
  *
  * \return Number of available LUN
