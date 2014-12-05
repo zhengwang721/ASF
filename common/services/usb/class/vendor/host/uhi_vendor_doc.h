@@ -458,8 +458,8 @@ bool uhi_vendor_iso_is_available(void);
  *    <th>Comments</td>
  * </tr>
  * <tr>
- *    <td>A</td>
- *    <td>11/2014</td>
+ *    <td>42346A</td>
+ *    <td>12/2014</td>
  *    <td>Initial release.</td>
  * </tr>
  * </table>

@@ -50,8 +50,8 @@
  *    <th>Comments</td>
  *  </tr>
  *  <tr>
- *    <td>A</td>
- *    <td>11/2014</td>
+ *    <td>42336A</td>
+ *    <td>12/2014</td>
  *    <td>Initial release.</td>
  *  </tr>
  * </table>
