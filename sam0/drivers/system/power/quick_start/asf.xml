@@ -8,6 +8,7 @@
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.system"/>
 		<require idref="sam0.drivers.extint"/>
+		<require idref="common2.services.delay"/>
 		<device-support value="saml21"/>
 	</module>
 </asf>
