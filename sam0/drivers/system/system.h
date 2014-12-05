@@ -477,6 +477,11 @@ extern "C" {
  * For SYSTEM module related examples, refer to the sub-modules listed in
  * the \ref asfdoc_sam0_system_module_overview "system module overview".
  *
+ * \if DEVICE_SAML21_SUPPORT
+ * For a list of examples related to this driver, see
+ * \ref asfdoc_sam0_drivers_power_exqsg.
+ * \endif
+ *
  *
  * \section asfdoc_sam0_system_api_overview API Overview
  * @{
@@ -545,6 +550,17 @@ void system_init(void);
  */
 
 /**
+
+* \page asfdoc_sam0_drivers_power_exqsg Examples for Power Driver
+ *
+ * This is a list of the available Quick Start Guides (QSGs) and example
+ * applications. QSGs are simple examples with step-by-step instructions to 
+ * configure and use this driver in a selection of
+ * use cases. Note that QSGs can be compiled as a standalone application or be
+ * added to the user application.
+ *
+ *  - \subpage asfdoc_sam0_power_basic_use_case
+ *
  * \page asfdoc_sam0_system_extra Extra Information for SYSTEM Driver
  *
  * \section asfdoc_sam0_system_extra_acronyms Acronyms
