@@ -116,7 +116,7 @@ static void configure_extint_channel(void)
  */
 static void led_toggle_indication(uint32_t count)
 {
-	for(uint32_t i=0;i<count;i++) {
+	for (uint32_t i = 0; i < count; i++) {
 		port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
 		delay_ms(200);
 		port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
@@ -159,7 +159,7 @@ int main(void)
 
 	/* Config external interrupt for wakeup system from standby mode*/
 	configure_extint_channel();
-	delay_s(1);;
+	delay_s(1);
 
 	/* Turn off LED0 before enter standby mode */
 	port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE);
