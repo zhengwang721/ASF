@@ -481,8 +481,8 @@ bool udi_hid_mouse_btnleft(bool b_state);
  *    <th>Comments</td>
  * </tr>
  * <tr>
- *    <td>A</td>
- *    <td>11/2014</td>
+ *    <td>42341A</td>
+ *    <td>12/2014</td>
  *    <td>Initial release.</td>
  * </tr>
  * </table>

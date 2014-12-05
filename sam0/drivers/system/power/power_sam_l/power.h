@@ -683,6 +683,7 @@ static inline void system_set_sleepmode(
 	const enum system_sleepmode sleep_mode)
 {
 	PM->SLEEPCFG.reg = sleep_mode;
+	while(PM->SLEEPCFG.reg != sleep_mode) ;
 }
 
 /**
@@ -798,8 +799,8 @@ static inline void system_clear_performance_level_status(void)
  * \brief Retrieve the default configuration for standby.
  *
  * Fills a configuration structure with the default configuration for standby:
- *   - Standby back biasing mode for PICOPRAM
- *   - Standby back biasing mode for HMCRAMCLP
+ *   - Retention back biasing mode for PICOPRAM
+ *   - Retention back biasing mode for HMCRAMCLP
  *   - Retention back biasing mode for HMCRAMCHS
  *   - Power domains PD0/PD1/PD2 are not linked
  *   - Automatic VREG switching is used
@@ -819,8 +820,8 @@ static inline void system_standby_get_config_defaults(
 	config->disable_avregsd     = false;
 	config->linked_power_domain = SYSTEM_LINKED_POWER_DOMAIN_DEFAULT;
 	config->hmcramchs_back_bias = SYSTEM_RAM_BACK_BIAS_RETENTION;
-	config->hmcramclp_back_bias = SYSTEM_RAM_BACK_BIAS_STANDBY;
-	config->picopram_back_bias  = SYSTEM_RAM_BACK_BIAS_STANDBY;
+	config->hmcramclp_back_bias = SYSTEM_RAM_BACK_BIAS_RETENTION;
+	config->picopram_back_bias  = SYSTEM_RAM_BACK_BIAS_RETENTION;
 }
 
 /**
@@ -836,9 +837,9 @@ static inline void system_standby_set_config(
 {
 	Assert(config);
 	PM->STDBYCFG.reg = PM_STDBYCFG_PDCFG(config->power_domain)
-					 | (config->enable_dpgpd0 ? PM_STDBYCFG_DPGPD0 : (~PM_STDBYCFG_DPGPD0))
-					 | (config->enable_dpgpd1 ? PM_STDBYCFG_DPGPD1 : (~PM_STDBYCFG_DPGPD1))
-					 | (config->disable_avregsd ? PM_STDBYCFG_AVREGSD : (~PM_STDBYCFG_AVREGSD))
+					 | (config->enable_dpgpd0 << PM_STDBYCFG_DPGPD0_Pos)
+					 | (config->enable_dpgpd1 << PM_STDBYCFG_DPGPD1_Pos)
+					 | (config->disable_avregsd << PM_STDBYCFG_AVREGSD_Pos)
 					 | PM_STDBYCFG_LINKPD(config->linked_power_domain)
 					 | PM_STDBYCFG_BBIASHS(config->hmcramchs_back_bias)
 					 | PM_STDBYCFG_BBIASLP(config->hmcramclp_back_bias)
