@@ -401,8 +401,8 @@ iram_size_t uhi_cdc_write_buf(uint8_t port, const void* buf, iram_size_t size);
  *    <th>Comments</td>
  * </tr>
  * <tr>
- *    <td>A</td>
- *    <td>11/2014</td>
+ *    <td>42338A</td>
+ *    <td>12/2014</td>
  *    <td>Initial release.</td>
  * </tr>
  * </table>
