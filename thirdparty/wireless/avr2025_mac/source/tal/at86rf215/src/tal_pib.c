@@ -1566,7 +1566,7 @@ static ch_pg_t calc_ch_page(trx_id_t trx_id)
         {
             switch (tal_pib[trx_id].phy.freq_band)
             {
-                case CHINA_470:
+                case CHINA_780: //vk
                     pg = CH_PG_CHINA;
                     break;
 

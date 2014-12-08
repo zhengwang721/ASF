@@ -174,7 +174,7 @@ static void toggle_trx_sleep(trx_id_t trx);
 static float calculate_time_duration(trx_id_t trx);
 static float calculate_net_data_rate(trx_id_t trx,float per_test_duration_sec);
 static void config_per_test_parameters(trx_id_t trx);
-static void set_channel(trx_id_t trx, uint16_t channel);
+static void set_channel_app(trx_id_t trx, uint16_t channel);
 static void set_channel_page(trx_id_t trx, uint8_t channel_page);
 static void set_tx_power(trx_id_t trx, uint8_t tx_power_format, int8_t power_value);
 static void config_ack_request(trx_id_t trx, bool config_value);
@@ -2036,11 +2036,6 @@ void perf_set_sun_page(trx_id_t trx,uint8_t *param_val)
 			return;
 		}
 		
-		printf("\r\nFSK Mode Type = %d", sun_phy_page_set[trx].phy_mode.fsk.mod_type);
-		printf("\r\nFSK Mode IDX = %d", sun_phy_page_set[trx].phy_mode.fsk.mod_idx);
-		printf("\r\nFSK Data rate = %d", sun_phy_page_set[trx].phy_mode.fsk.data_rate);
-		printf("\r\nFSK OP Mode = %d", sun_phy_page_set[trx].phy_mode.fsk.op_mode); //vk remove
-
 		get_fsk_freq_f0(trx,sun_page[trx].freq_band,sun_phy_page_set[trx].phy_mode.fsk.op_mode,&sun_phy_page_set[trx].freq_f0,&sun_phy_page_set[trx].ch_spacing);
 	}
 	else
@@ -2137,7 +2132,7 @@ void perf_set_req(trx_id_t trx, uint8_t param_type, param_value_t *param_value)
     {
         case PARAM_CHANNEL: /* Channel Set request */
             {
-                set_channel(trx, param_value->param_value_16bit);
+                set_channel_app(trx, param_value->param_value_16bit);
             }
             break;
         case PARAM_CHANNEL_PAGE: /* Channel Page Set request */
@@ -2523,7 +2518,7 @@ static void set_phy_frame_length(trx_id_t trx, uint16_t frame_len)
  *
  * \param channel channel number to be set
  */
-static void set_channel(trx_id_t trx, uint16_t channel)
+static void set_channel_app(trx_id_t trx, uint16_t channel)
 {
     uint32_t supported_channels;
 //uint16_t channel_to_set = channel;
@@ -2933,13 +2928,12 @@ void get_current_configuration(trx_id_t trx)
 	//	if (temp_channel != INVALID_VALUE)
 		//{
 			/* Channel configuration */
-			tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&temp_channel);
 
 		//} check
 		//printf("\r\nCurrent channel = %d", temp_channel);
 
 		/* Channel page configuration */
-		if(curr_trx_config_params[trx].channel_page != 9)
+		if(curr_trx_config_params[trx].channel_page != CH_PG_SUN)
 		{
 			tal_pib_set(trx,phyCurrentPage, (pib_value_t *)&curr_trx_config_params[trx].channel_page);
 		}
@@ -2994,6 +2988,8 @@ void get_current_configuration(trx_id_t trx)
 			tal_pib[trx].CurrentPage = 9; //check -> needs to be revisited
 		}
 	}	
+
+	tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&curr_trx_config_params[trx].channel);
 
 	/* Tx_power configurations */
 	tal_pib_set(trx,phyTransmitPower, (pib_value_t *)&curr_trx_config_params[trx].tx_power_dbm);

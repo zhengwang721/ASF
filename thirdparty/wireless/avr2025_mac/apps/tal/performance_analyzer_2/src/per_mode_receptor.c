@@ -702,12 +702,10 @@ static void set_paramter_on_recptor_node(trx_id_t trx, app_payload_t *msg)
 				uint16_t param_ch_val;
                 param_ch_val = msg->payload.set_parm_req_data.param_value;
 
-					/* set the channel on receptor with the received value */
-					tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&param_ch_val);
+				/* set the channel on receptor with the received value */
+				tal_pib_set(trx,phyCurrentChannel, (pib_value_t *)&param_ch_val);
 
-                    printf("\r\n Channel changed to %d", param_ch_val);
-                
-
+                printf("\r\n Channel changed to %d", param_ch_val);
             }
             break;
 			
@@ -716,21 +714,15 @@ static void set_paramter_on_recptor_node(trx_id_t trx, app_payload_t *msg)
 				retval_t status;
                 param_val = (uint8_t)msg->payload.set_parm_req_data.param_value;
 
-					status  = tal_pib_set(trx,phyCurrentPage, (pib_value_t *)&param_val);
+				status  = tal_pib_set(trx,phyCurrentPage, (pib_value_t *)&param_val);
 
                 if (status == MAC_SUCCESS)
                 {
-                    
-                        printf("\r\n Channel page changed to %d", param_val);
-                    
+					printf("\r\n Channel page changed to %d", param_val);
                 }
                 else
                 {
-
-                    
-                        printf("\r\n Channel page change failed");
-                   
-
+					printf("\r\n Channel page change failed");
                 }
                 
             }

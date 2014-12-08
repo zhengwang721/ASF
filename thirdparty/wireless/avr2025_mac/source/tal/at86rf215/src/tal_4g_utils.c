@@ -1282,7 +1282,7 @@ uint16_t get_sun_max_ch_no(trx_id_t trx_id)
 		{
 			if (tal_pib[trx_id].phy.freq_band == (uint32_t)PGM_READ_DWORD(&ofdm_freq0_map[i][0]))
 			{
-				max_ch = (uint32_t)PGM_READ_DWORD(&ofdm_max_ch_map[i][tal_pib[trx_id].phy.phy_mode.ofdm.option]);
+				max_ch = (uint32_t)PGM_READ_DWORD(&ofdm_max_ch_map[i][tal_pib[trx_id].phy.phy_mode.ofdm.option + 1]);
 				break;
 			}
 		}
