@@ -211,11 +211,8 @@ static void adc_setup(void)
 	config.window.window_mode        = ADC_WINDOW_MODE_BELOW_UPPER;
 #if (SAML21)
 	config.on_demand = true;
-
-	/* (1.0V / 1024 *512) = 0.5V */
 	config.window.window_upper_value = 512;
 #else
-	/* (1.0V / 4095 *2048) = 0.5V */
 	config.window.window_upper_value = 2048;
 #endif
 
