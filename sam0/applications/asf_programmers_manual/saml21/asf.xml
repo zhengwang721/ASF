@@ -56,7 +56,7 @@
 		<require idref="sam0.drivers.usb"/>
 
 		<require idref="sam0.services.eeprom_emulator"/>
-		<require idref="sam0.services.wwr_eeprom_emulator"/>
+		<require idref="sam0.services.rww_eeprom_emulator"/>
 
 		<device-support value="unspecified-saml21"/>
 	</project>

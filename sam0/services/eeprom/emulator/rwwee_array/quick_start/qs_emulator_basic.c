@@ -49,15 +49,15 @@ void configure_eeprom(void)
 {
 	/* Setup EEPROM emulator service */
 //! [init_eeprom_service]
-	enum status_code error_code = wwr_eeprom_emulator_init();
+	enum status_code error_code = rww_eeprom_emulator_init();
 //! [init_eeprom_service]
 
 //! [check_re-init]
 	if (error_code != STATUS_OK) {
 		/* Erase the emulated EEPROM memory (assume it is unformatted or
 		 * irrecoverably corrupt) */
-		wwr_eeprom_emulator_erase_memory();
-		wwr_eeprom_emulator_init();
+		rww_eeprom_emulator_erase_memory();
+		rww_eeprom_emulator_init();
 	}
 //! [check_re-init]
 }
@@ -73,8 +73,8 @@ int main(void)
 
 //! [main]
 //! [read_page]
-	uint8_t page_data[WWR_EEPROM_PAGE_SIZE];
-	wwr_eeprom_emulator_read_page(0, page_data);
+	uint8_t page_data[RWW_EEPROM_PAGE_SIZE];
+	rww_eeprom_emulator_read_page(0, page_data);
 //! [read_page]
 
 //! [toggle_first_byte]
@@ -85,8 +85,8 @@ int main(void)
 //! [set_led]
 
 //! [write_page]
-	wwr_eeprom_emulator_write_page(0, page_data);
-	wwr_eeprom_emulator_commit_page_buffer();
+	rww_eeprom_emulator_write_page(0, page_data);
+	rww_eeprom_emulator_commit_page_buffer();
 //! [write_page]
 
 	while (true) {

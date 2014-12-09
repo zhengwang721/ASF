@@ -86,7 +86,7 @@
  *    <th>Supported devices</th>
  *  </tr>
  *  <tr>
- *    <td>FEATURE_NVM_WWREE</td>
+ *    <td>FEATURE_NVM_RWWEE</td>
  *    <td>SAML21</td>
  *  </tr>
  * </table>
@@ -269,8 +269,8 @@ extern "C" {
  * @{
 */
 #if (SAML21) || defined(__DOXYGEN__)
-/** Write while read EEPROM emulation feature*/
-#  define FEATURE_NVM_WWREE
+/** Read while write EEPROM emulation feature*/
+#  define FEATURE_NVM_RWWEE
 #endif
 /*@}*/
 
@@ -350,11 +350,11 @@ enum nvm_command {
 	 *  commands to be issued.
 	 */
 	NVM_COMMAND_EXIT_LOW_POWER_MODE        = NVMCTRL_CTRLA_CMD_CPRM,
-#ifdef FEATURE_NVM_WWREE
-	/** Write while read(WWR) EEPROM area erase row */
-	NVM_COMMAND_WWREE_ERASE_ROW            = NVMCTRL_CTRLA_CMD_WWREEER,
-	/** WWR EEPROM write page */
-	NVM_COMMAND_WWREE_WRITE_PAGE           = NVMCTRL_CTRLA_CMD_WWREEWP,
+#ifdef FEATURE_NVM_RWWEE
+	/** Read while write(RWW) EEPROM area erase row */
+	NVM_COMMAND_RWWEE_ERASE_ROW            = NVMCTRL_CTRLA_CMD_WWREEER,
+	/** RWW EEPROM write page */
+	NVM_COMMAND_RWWEE_WRITE_PAGE           = NVMCTRL_CTRLA_CMD_WWREEWP,
 #endif
 };
 
@@ -445,9 +445,9 @@ struct nvm_parameters {
 	/** Size of the Bootloader memory section configured in the NVM auxiliary
 	 *  memory space. */
 	uint32_t bootloader_number_of_pages;
-#ifdef FEATURE_NVM_WWREE
-	/** Number of pages in read while write EEPROM(WWREE) emulation area. */
-	uint16_t wwr_eeprom_number_of_pages;
+#ifdef FEATURE_NVM_RWWEE
+	/** Number of pages in read while write EEPROM(RWWEE) emulation area. */
+	uint16_t rww_eeprom_number_of_pages;
 #endif
 };
 
