@@ -71,7 +71,7 @@
  * a given threshold; in this application 0.5 Volts.
  *
  * This application has been tested on following boards:
- * - SAM D20/D21/R21/D11 Xplained Pro
+ * - SAM D20/D21/R21/D11/L21 Xplained Pro
  *
  * \section appdoc_sam0_adc_sleepwalking_setup Hardware Setup
  * This application use AIN0 as ADC input channel.
@@ -79,7 +79,7 @@
  * toggling the led pin to signal that the low voltage condition has happened.
  * Connect the PA02(EXT3 pin3) to GND in SAM D20/D21 Xplained Pro to trigger it.
  * Connect the PA06(EXT1 pin3) to GND in SAM R21 Xplained Pro to trigger it.
- * Connect the PA02(EXT1 pin3) to GND in SAM D10/D11 Xplained Pro to trigger it.
+ * Connect the PA02(EXT1 pin3) to GND in SAM D10/D11/L21 Xplained Pro to trigger it.
  *
  * If debugging it is also possible to start a debug session and place a
  * breakpoint in the window callback that will trigger whenever the voltage
@@ -167,6 +167,10 @@ static void event_setup(struct events_resource *event)
 	/* Setup a event channel with RTC compare 0 as input */
 	config.generator    = EVSYS_ID_GEN_RTC_CMP_0;
 	config.path         = EVENTS_PATH_ASYNCHRONOUS;
+#if (SAML21)
+    config.run_in_standby = true;
+    config.on_demand      = true;
+#endif
 	events_allocate(event, &config);
 
 	/* Setup ADC to listen to the event channel */
@@ -178,14 +182,20 @@ static void adc_setup(void)
 {
 	struct adc_config config;
 	adc_get_config_defaults(&config);
-
+#if (!SAML21)
 	config.gain_factor        = ADC_GAIN_FACTOR_1X;
+#endif
 	/* Use GCLK generator 4 as clock source */
 	config.clock_source       = GCLK_GENERATOR_4;
-	/* Divide input clock by 4 (8MHz / 4 = 2MHz) */
+	/* Divide input clock by 4 */
 	config.clock_prescaler    = ADC_CLOCK_PRESCALER_DIV4;
+#if (SAML21)
+	/* Use internal bandgap reference */
+	config.reference          = ADC_REFERENCE_INTREF;
+#else
 	/* Use internal 1V band-gap reference */
 	config.reference          = ADC_REFERENCE_INT1V;
+#endif
 	/* Start new conversion on event */
 	config.event_action       = ADC_EVENT_ACTION_START_CONV;
 
@@ -199,8 +209,12 @@ static void adc_setup(void)
 
 	/* Configure window */
 	config.window.window_mode        = ADC_WINDOW_MODE_BELOW_UPPER;
-	/* (1.0V / 4095 *2048) = 0.5V */
+#if (SAML21)
+	config.on_demand = true;
+	config.window.window_upper_value = 512;
+#else
 	config.window.window_upper_value = 2048;
+#endif
 
 	/* Apply configuration to ADC module */
 	adc_init(&module_inst, ADC, &config);
@@ -232,7 +246,14 @@ int main(void)
 
 	/* Set sleep mode to STANDBY */
 	system_set_sleepmode(SYSTEM_SLEEPMODE_STANDBY);
-
+#if (SAML21)
+	/* Configure standby mode */
+	struct system_standby_config config;
+	system_standby_get_config_defaults(&config);
+	config.enable_dpgpd0 = true;
+	config.power_domain = SYSTEM_POWER_DOMAIN_PD0;
+	system_standby_set_config(&config);
+#endif
 	/* Stay in STANDBY sleep until low voltage is detected */
 	system_sleep();
 
