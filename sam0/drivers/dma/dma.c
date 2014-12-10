@@ -456,7 +456,7 @@ enum status_code dma_start_transfer_job(struct dma_resource *resource)
 						sizeof(DmacDescriptor));
 
 	/* Enable the transfer channel */
-	DMAC->CHCTRLA.reg = DMAC_CHCTRLA_ENABLE;
+	DMAC->CHCTRLA.reg |= DMAC_CHCTRLA_ENABLE;
 
 	system_interrupt_leave_critical_section();
 
