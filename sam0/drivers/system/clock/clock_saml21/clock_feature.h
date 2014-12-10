@@ -634,6 +634,8 @@ struct system_clock_source_dfll_config {
 	/** Run On Demand. If this is set the DFLL won't run
 	 * until requested by a peripheral. */
 	bool on_demand;
+	/** Run in stanby*/
+	bool run_in_stanby;
 	/** Enable Quick Lock. */
 	enum system_clock_dfll_quick_lock quick_lock;
 	/** Enable Chill Cycle. */
@@ -877,6 +879,7 @@ static inline void system_clock_source_dfll_get_config_defaults(
 	config->wakeup_lock     = SYSTEM_CLOCK_DFLL_WAKEUP_LOCK_KEEP;
 	config->stable_tracking = SYSTEM_CLOCK_DFLL_STABLE_TRACKING_TRACK_AFTER_LOCK;
 	config->on_demand       = true;
+	config->run_in_stanby   = false;
 
 	/* Open loop mode calibration value */
 	config->coarse_value    = 0x1f / 4; /* Midpoint */
