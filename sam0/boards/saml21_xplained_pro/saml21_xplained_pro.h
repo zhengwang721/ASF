@@ -90,12 +90,12 @@ void system_board_init(void);
 
 /** \name SW0 definitions
  *  @{ */
-#define SW0_PIN                   PIN_PA16
+#define SW0_PIN                   PIN_PA02
 #define SW0_ACTIVE                false
 #define SW0_INACTIVE              !SW0_ACTIVE
-#define SW0_EIC_PIN               PIN_PA16A_EIC_EXTINT0
-#define SW0_EIC_MUX               MUX_PA16A_EIC_EXTINT0
-#define SW0_EIC_PINMUX            PINMUX_PA16A_EIC_EXTINT0
+#define SW0_EIC_PIN               PIN_PA02A_EIC_EXTINT2
+#define SW0_EIC_MUX               MUX_PA02A_EIC_EXTINT2
+#define SW0_EIC_PINMUX            PINMUX_PA02A_EIC_EXTINT2
 #define SW0_EIC_LINE              0
 /** @} */
 
@@ -148,14 +148,14 @@ void system_board_init(void);
 /** \name Extension header #1 pin definitions
  *  @{
  */
-#define EXT1_PIN_3                PIN_PA02
+#define EXT1_PIN_3                PIN_PB05
 #define EXT1_PIN_4                PIN_PA03
 #define EXT1_PIN_5                PIN_PB06
 #define EXT1_PIN_6                PIN_PB07
 #define EXT1_PIN_7                PIN_PA12
 #define EXT1_PIN_8                PIN_PA13
 #define EXT1_PIN_9                PIN_PB04
-#define EXT1_PIN_10               PIN_PB05
+#define EXT1_PIN_10               PIN_PA02
 #define EXT1_PIN_11               PIN_PA08
 #define EXT1_PIN_12               PIN_PA09
 #define EXT1_PIN_13               PIN_PB09
@@ -191,10 +191,10 @@ void system_board_init(void);
  *  @{
  */
 #define EXT1_ADC_MODULE           ADC
-#define EXT1_ADC_0_CHANNEL        0
-#define EXT1_ADC_0_PIN            PIN_PA02B_ADC_AIN0
-#define EXT1_ADC_0_MUX            MUX_PA02B_ADC_AIN0
-#define EXT1_ADC_0_PINMUX         PINMUX_PA02B_ADC_AIN0
+#define EXT1_ADC_13_CHANNEL       13
+#define EXT1_ADC_13_PIN           PIN_PB05B_ADC_AIN13
+#define EXT1_ADC_13_MUX           MUX_PB05B_ADC_AIN13
+#define EXT1_ADC_13_PINMUX        PINMUX_PB05B_ADC_AIN13
 #define EXT1_ADC_1_CHANNEL        1
 #define EXT1_ADC_1_PIN            PIN_PA03B_ADC_AIN1
 #define EXT1_ADC_1_MUX            MUX_PA03B_ADC_AIN1
