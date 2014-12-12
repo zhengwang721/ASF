@@ -96,7 +96,7 @@ void system_board_init(void);
 #define SW0_EIC_PIN               PIN_PA02A_EIC_EXTINT2
 #define SW0_EIC_MUX               MUX_PA02A_EIC_EXTINT2
 #define SW0_EIC_PINMUX            PINMUX_PA02A_EIC_EXTINT2
-#define SW0_EIC_LINE              0
+#define SW0_EIC_LINE              2
 /** @} */
 
 /**
