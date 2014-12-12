@@ -96,12 +96,25 @@ extern "C" {
  * the DMAC to transfer the data into another peripheral or into SRAM.
  * The CPU can remain in sleep during this time to reduce power consumption.
  *
- * \if DEVICE_SAML21_SUPPORT
- * The DMAC module has 16 channels. The DMA channel
- * \else
- * The DMAC module has 12 channels. The DMA channel
- * \endif
- * operation can be suspended at any time by software, by events
+ * <table>
+ *    <tr>
+ *      <th>Device</th>
+ *      <th>Dma channel number</th>
+ *    </tr>
+ *    <tr>
+ *      <td>SAMD21/R21/C21</td>
+ *      <td>12</td>
+ *    </tr>
+ *    <tr>
+ *      <td>SAMD10/D11</td>
+ *      <td>6</td>
+ *    </tr>
+ *    <tr>
+ *      <td>SAML21</td>
+ *      <td>16</td>
+ *    </tr>
+ * </table>
+ * The DMA channel operation can be suspended at any time by software, by events
  * from event system, or after selectable descriptor execution. The operation
  * can be resumed by software or by events from event system.
  * The DMAC driver for SAM supports four types of transfers such as
