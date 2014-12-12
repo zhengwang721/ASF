@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief WWR EEPROM Service Configuration Header
+ * \brief RWW EEPROM Service Configuration Header
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -40,10 +40,10 @@
  * \asf_license_stop
  *
  */
-#ifndef CONF_WWREE_H_INCLUDED
-#define CONF_WWREE_H_INCLUDED
+#ifndef CONF_RWWEE_H_INCLUDED
+#define CONF_RWWEE_H_INCLUDED
 
-#define CONF_LOGICAL_PAGE_NUM_IN_ROW  WWREE_LOGICAL_PAGE_NUM_1
+#define CONF_LOGICAL_PAGE_NUM_IN_ROW  RWWEE_LOGICAL_PAGE_NUM_1
 #define CONF_PAGE_CHECKSUM_ENABLE  false
 
 #endif

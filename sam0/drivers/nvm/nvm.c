@@ -180,7 +180,7 @@ enum status_code nvm_execute_command(
 
 	/* Check that the address given is valid  */
 	if (address > ((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)){
-#ifdef FEATURE_NVM_WWREE
+#ifdef FEATURE_NVM_RWWEE
 		if (address >= ((uint32_t)NVMCTRL_WWR_EEPROM_SIZE + NVMCTRL_WWR_EEPROM_ADDR)
 			|| address < NVMCTRL_WWR_EEPROM_ADDR){
 			return STATUS_ERR_BAD_ADDRESS;
@@ -225,9 +225,9 @@ enum status_code nvm_execute_command(
 		case NVM_COMMAND_WRITE_PAGE:
 		case NVM_COMMAND_LOCK_REGION:
 		case NVM_COMMAND_UNLOCK_REGION:
-#ifdef FEATURE_NVM_WWREE
-		case NVM_COMMAND_WWREE_ERASE_ROW:
-		case NVM_COMMAND_WWREE_WRITE_PAGE:
+#ifdef FEATURE_NVM_RWWEE
+		case NVM_COMMAND_RWWEE_ERASE_ROW:
+		case NVM_COMMAND_RWWEE_WRITE_PAGE:
 #endif
 
 			/* Set address, command will be issued elsewhere */
@@ -389,19 +389,19 @@ enum status_code nvm_write_buffer(
 		const uint8_t *buffer,
 		uint16_t length)
 {
-#ifdef FEATURE_NVM_WWREE
-	bool is_wwr_eeprom = false;
+#ifdef FEATURE_NVM_RWWEE
+	bool is_rww_eeprom = false;
 #endif
 
 	/* Check if the destination address is valid */
 	if (destination_address >
 			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
-#ifdef FEATURE_NVM_WWREE
+#ifdef FEATURE_NVM_RWWEE
 		if (destination_address >= ((uint32_t)NVMCTRL_WWR_EEPROM_SIZE + NVMCTRL_WWR_EEPROM_ADDR)
 			|| destination_address < NVMCTRL_WWR_EEPROM_ADDR){
 			return STATUS_ERR_BAD_ADDRESS;
 		}
-		is_wwr_eeprom = true;
+		is_rww_eeprom = true;
 #else
 		return STATUS_ERR_BAD_ADDRESS;
 #endif
@@ -459,9 +459,9 @@ enum status_code nvm_write_buffer(
 	/* Perform a manual NVM write when the length of data to be programmed is
 	 * less than page size */
 	if (length < NVMCTRL_PAGE_SIZE) {
-#ifdef FEATURE_NVM_WWREE
-	 return ((is_wwr_eeprom) ? 
-				(nvm_execute_command(NVM_COMMAND_WWREE_WRITE_PAGE,destination_address, 0)):
+#ifdef FEATURE_NVM_RWWEE
+	 return ((is_rww_eeprom) ? 
+				(nvm_execute_command(NVM_COMMAND_RWWEE_WRITE_PAGE,destination_address, 0)):
 	 			(nvm_execute_command(NVM_COMMAND_WRITE_PAGE,destination_address, 0)));
 #else
 		return nvm_execute_command(NVM_COMMAND_WRITE_PAGE,
@@ -502,7 +502,7 @@ enum status_code nvm_read_buffer(
 	/* Check if the source address is valid */
 	if (source_address >
 			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
-#ifdef FEATURE_NVM_WWREE
+#ifdef FEATURE_NVM_RWWEE
 		if (source_address >= ((uint32_t)NVMCTRL_WWR_EEPROM_SIZE + NVMCTRL_WWR_EEPROM_ADDR)
 			|| source_address < NVMCTRL_WWR_EEPROM_ADDR){
 			return STATUS_ERR_BAD_ADDRESS;
@@ -574,19 +574,19 @@ enum status_code nvm_read_buffer(
 enum status_code nvm_erase_row(
 		const uint32_t row_address)
 {
-#ifdef FEATURE_NVM_WWREE
-		bool is_wwr_eeprom = false;
+#ifdef FEATURE_NVM_RWWEE
+		bool is_rww_eeprom = false;
 #endif
 
 	/* Check if the row address is valid */
 	if (row_address >
 			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
-#ifdef FEATURE_NVM_WWREE
+#ifdef FEATURE_NVM_RWWEE
 		if (row_address >= ((uint32_t)NVMCTRL_WWR_EEPROM_SIZE + NVMCTRL_WWR_EEPROM_ADDR)
 			|| row_address < NVMCTRL_WWR_EEPROM_ADDR){
 			return STATUS_ERR_BAD_ADDRESS;
 		}
-		is_wwr_eeprom = true;
+		is_rww_eeprom = true;
 #else
 		return STATUS_ERR_BAD_ADDRESS;
 #endif
@@ -610,9 +610,9 @@ enum status_code nvm_erase_row(
 
 	/* Set address and command */
 	nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[row_address / 4];
-#ifdef FEATURE_NVM_WWREE
-	nvm_module->CTRLA.reg = ((is_wwr_eeprom) ? 
-								(NVM_COMMAND_WWREE_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY):
+#ifdef FEATURE_NVM_RWWEE
+	nvm_module->CTRLA.reg = ((is_rww_eeprom) ? 
+								(NVM_COMMAND_RWWEE_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY):
 								(NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY));
 #else
 	nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
@@ -652,9 +652,9 @@ void nvm_get_parameters(
 	parameters->nvm_number_of_pages =
 			(param_reg & NVMCTRL_PARAM_NVMP_Msk) >> NVMCTRL_PARAM_NVMP_Pos;
 
-#ifdef FEATURE_NVM_WWREE
-	/* Mask out wwree number of pages count */
-	parameters->wwr_eeprom_number_of_pages =
+#ifdef FEATURE_NVM_RWWEE
+	/* Mask out rwwee number of pages count */
+	parameters->rww_eeprom_number_of_pages =
 			(param_reg & NVMCTRL_PARAM_WWREEP_Msk) >> NVMCTRL_PARAM_WWREEP_Pos;
 #endif
 
@@ -706,7 +706,7 @@ bool nvm_is_page_locked(uint16_t page_number)
 	uint16_t pages_in_region;
 	uint16_t region_number;
 
-#ifdef FEATURE_NVM_WWREE
+#ifdef FEATURE_NVM_RWWEE
 	Assert(page_number < _nvm_dev.number_of_pages);
 #endif
 
