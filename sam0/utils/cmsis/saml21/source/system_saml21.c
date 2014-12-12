@@ -44,7 +44,7 @@
 #include "saml21.h"
 
 /**
- * Initial system clock frequency. The System RC Oscillator (OSC16M) provides
+ * Initial system clock frequency. The System RC Oscillator (RCSYS) provides
  *  the source for the main clock at chip startup.
  */
 #define __SYSTEM_CLOCK    (4000000)

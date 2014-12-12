@@ -52,7 +52,7 @@ define symbol __ICFEDIT_region_RAM_end__      = 0x20001FFF;
 define symbol __ICFEDIT_region_LPRAM_start__  = 0x30000000;
 define symbol __ICFEDIT_region_LPRAM_end__    = 0x30000FFF;
 define symbol __ICFEDIT_region_PICOPRAM_start__ = 0x50000000;
-define symbol __ICFEDIT_region_PICOPRAM_end__ = 0x500003FF;
+define symbol __ICFEDIT_region_PICOPRAM_end__ = 0x50000FFF;
 /*-Sizes-*/
 if (!isdefinedsymbol(__ICFEDIT_size_cstack__)) {
   define symbol __ICFEDIT_size_cstack__    = 0x800;
