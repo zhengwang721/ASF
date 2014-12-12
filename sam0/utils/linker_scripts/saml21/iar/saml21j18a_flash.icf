@@ -52,7 +52,7 @@ define symbol __ICFEDIT_region_RAM_end__      = 0x20007FFF;
 define symbol __ICFEDIT_region_LPRAM_start__  = 0x30000000;
 define symbol __ICFEDIT_region_LPRAM_end__    = 0x30001FFF;
 define symbol __ICFEDIT_region_PICOPRAM_start__ = 0x50000000;
-define symbol __ICFEDIT_region_PICOPRAM_end__ = 0x500007FF;
+define symbol __ICFEDIT_region_PICOPRAM_end__ = 0x50000FFF;
 define symbol __ICFEDIT_region_ROM_start__    = 0x00000000;
 define symbol __ICFEDIT_region_ROM_end__      = 0x0003FFFF;
 /*-Sizes-*/
