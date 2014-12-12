@@ -64,7 +64,6 @@ extern "C" {
  *  - Atmel | SMART SAM D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
- *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
  *  - Atmel | SMART SAM C21
  *
@@ -97,7 +96,11 @@ extern "C" {
  * the DMAC to transfer the data into another peripheral or into SRAM.
  * The CPU can remain in sleep during this time to reduce power consumption.
  *
+ * \if DEVICE_SAML21_SUPPORT
+ * The DMAC module has 16 channels. The DMA channel
+ * \else
  * The DMAC module has 12 channels. The DMA channel
+ * \endif
  * operation can be suspended at any time by software, by events
  * from event system, or after selectable descriptor execution. The operation
  * can be resumed by software or by events from event system.
