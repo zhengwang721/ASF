@@ -1145,6 +1145,36 @@ void pmc_disable_udpck(void)
 }
 #endif
 
+#if SAMG55
+/**
+ * \brief Switch UHP (USB) clock source selection to PLLA clock.
+ *
+ * \param ul_usbdiv Clock divisor.
+ */
+void pmc_switch_uhpck_to_pllack(uint32_t ul_usbdiv)
+{
+	PMC->PMC_USB = PMC_USB_USBDIV(ul_usbdiv);
+}
+
+/**
+ * \brief Switch UHP (USB) clock source selection to PLLB clock.
+ *
+ * \param ul_usbdiv Clock divisor.
+ */
+void pmc_switch_uhpck_to_pllbck(uint32_t ul_usbdiv)
+{
+	PMC->PMC_USB = PMC_USB_USBDIV(ul_usbdiv) | PMC_USB_USBS;
+}
+
+/**
+ * \brief Enable UHP (USB) clock.
+ */
+void pmc_enable_uhpck(void)
+{
+	PMC->PMC_SCER = PMC_SCER_UHP;
+}
+#endif
+
 /**
  * \brief Enable PMC interrupts.
  *
