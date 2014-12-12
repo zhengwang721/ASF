@@ -300,7 +300,7 @@
 			<v:textBlock v:margins="rect(3.99999,3.99999,3.99999,3.99999)" v:tabSpace="42.5196"/>
 			<v:textRect cx="62.6289" cy="162.559" width="125.26" height="16"/>
 			<rect x="0" y="154.559" width="125.26" height="16" class="st5"/>
-			<text x="4" y="164.96" class="st3" v:langID="1033"><v:paragraph/><v:tabList/>End of <tspan class="st4" v:langID="2052">WWR EEPROM</tspan></text>		</g>
+			<text x="4" y="164.96" class="st3" v:langID="1033"><v:paragraph/><v:tabList/>End of <tspan class="st4" v:langID="2052">RWW EEPROM</tspan></text>		</g>
 		<g id="shape38-88" v:mID="38" v:groupContext="shape" transform="translate(457.311,-6.41322)">
 			<title>工作表.38</title>
 			<desc>End of FLASH – EEPROM Rows</desc>
@@ -309,7 +309,7 @@
 			<v:textRect cx="63.0777" cy="162.559" width="126.16" height="16"/>
 			<rect x="0" y="154.559" width="126.157" height="16" class="st5"/>
 			<text x="4" y="164.96" class="st3" v:langID="2052"><v:paragraph/><v:tabList/>Start<tspan class="st4" v:langID="1033"> </tspan><tspan
-						class="st4" v:langID="1033">of </tspan>WWR<tspan class="st4" v:langID="1033"> </tspan><tspan class="st4"
+						class="st4" v:langID="1033">of </tspan>RWW<tspan class="st4" v:langID="1033"> </tspan><tspan class="st4"
 						v:langID="1033">EEPROM</tspan></text>		</g>
 	</g>
 </svg>

@@ -295,19 +295,19 @@
 		</g>
 		<g id="shape37-83" v:mID="37" v:groupContext="shape" transform="translate(458.207,-147.232)">
 			<title>工作表.37</title>
-			<desc>End of WWR EEPROM</desc>
+			<desc>End of RWW EEPROM</desc>
 			<v:userDefs/>
 			<v:textBlock v:margins="rect(3.99997,3.99997,3.99997,3.99997)" v:tabSpace="42.5194"/>
 			<v:textRect cx="62.6279" cy="162.559" width="125.26" height="16"/>
 			<rect x="0" y="154.559" width="125.26" height="16" class="st5"/>
-			<text x="4" y="164.96" class="st3" v:langID="1033"><v:paragraph/><v:tabList/>End of WWR EEPROM                                </text>		</g>
+			<text x="4" y="164.96" class="st3" v:langID="1033"><v:paragraph/><v:tabList/>End of RWW EEPROM                                </text>		</g>
 		<g id="shape38-86" v:mID="38" v:groupContext="shape" transform="translate(457.309,-6.4132)">
 			<title>工作表.38</title>
-			<desc>Start WWR EEPROM</desc>
+			<desc>Start RWW EEPROM</desc>
 			<v:userDefs/>
 			<v:textBlock v:margins="rect(3.99997,3.99997,3.99997,3.99997)" v:tabSpace="42.5194"/>
 			<v:textRect cx="63.0767" cy="162.559" width="126.16" height="16"/>
 			<rect x="0" y="154.559" width="126.157" height="16" class="st5"/>
-			<text x="4" y="164.96" class="st3" v:langID="1033"><v:paragraph/><v:tabList/>Start of WWR EEPROM                                </text>		</g>
+			<text x="4" y="164.96" class="st3" v:langID="1033"><v:paragraph/><v:tabList/>Start of RWW EEPROM                                </text>		</g>
 	</g>
 </svg>
