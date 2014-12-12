@@ -960,12 +960,6 @@ void system_clock_init(void)
 		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR;
 		system_gclk_chan_set_config(OSCCTRL_GCLK_ID_FDPLL, &dpll_gclk_chan_conf);
 		system_gclk_chan_enable(OSCCTRL_GCLK_ID_FDPLL);
-	} else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK_32K) {
-		struct system_gclk_chan_config dpll_gclk_chan_conf;
-		system_gclk_chan_get_config_defaults(&dpll_gclk_chan_conf);
-		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_REFERENCE_GCLK_32K_GENERATOR;
-		system_gclk_chan_set_config(OSCCTRL_GCLK_ID_FDPLL, &dpll_gclk_chan_conf);
-		system_gclk_chan_enable(OSCCTRL_GCLK_ID_FDPLL);
 	} else {
 		Assert(false);
 	}

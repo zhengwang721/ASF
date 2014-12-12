@@ -735,6 +735,10 @@ static inline enum status_code system_switch_performance_level(
 		SYSTEM_PERFORMANCE_LEVEL_2_MAX_FREQ
 	};
 
+	if (performance_level == (enum system_performance_level)PM->PLCFG.reg) {
+		return STATUS_OK;
+	}
+
 	if (system_cpu_clock_get_hz() >
 			system_performance_level_max_freq[performance_level]) {
 		return STATUS_ERR_INVALID_ARG;
