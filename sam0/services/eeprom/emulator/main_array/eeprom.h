@@ -499,7 +499,7 @@ enum status_code eeprom_emulator_read_buffer(
  *	</tr>
  *	<tr>
  *		<td>D</td>
- *		<td>09/2014</td>
+ *		<td>12/2014</td>
  *		<td>
  *         - Add SAM R21 support
  *         - Add SAM D10/D11 support

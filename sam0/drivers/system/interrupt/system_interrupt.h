@@ -50,7 +50,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_interrupt_group SAM System Interrupt Driver (SYSTEM INTERRUPT)
  *
- * This driver for Atmel | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of internal software and hardware interrupts/exceptions.
  *
  * The following peripherals are used by this module:
@@ -407,7 +407,7 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *	</tr>
  *	<tr>
  *		<td>D</td>
- *		<td>04/2014</td>
+ *		<td>12/2014</td>
  *		<td>Add support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>

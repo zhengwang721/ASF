@@ -1,11 +1,13 @@
 /**
  * \file
  *
- * \brief ASF Programmers Manual Revision History
+ * \brief SAM D11 Direct Memory Access Driver Configuration Header
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
+ *
+ * \page License
  *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
@@ -38,21 +40,43 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_DMA_H_INCLUDED
+#define CONF_DMA_H_INCLUDED
 
 
-/**
- * \page appdoc_samd11_asf_prog_manual_samd11_revision_history Document Revision History
- *
- * <table>
- *  <tr>
- *    <th>Doc. Rev.</td>
- *    <th>Date</td>
- *    <th>Comments</td>
- *  </tr>
- *  <tr>
- *    <td>42361A</td>
- *    <td>12/2014</td>
- *    <td>Initial release.</td>
- *  </tr>
- * </table>
+/* Number of DMA channels used in this example */
+# define CONF_MAX_USED_CHANNEL_NUM     3
+
+
+/* 
+ * Enable port toggle to calculate idle time.
+ * Use Oscilloscope to probe the pins.
  */
+#define ENABLE_PORT_TOGGLE
+
+
+/*
+ * This demonstrates DMA peripheral to peripheral transfer 
+ * between ADC and USART
+ */ 
+//#define ADC_DMAC_USART
+
+/*
+ * This demonstrates DMA peripheral to memory transfer, memory to 
+ * memory transfer and memory to peripheral transfer.
+ */
+//#define ADC_DMAC_MEM_MEM_USART
+
+/*
+ * This demonstrates ADC to USART transfer with out using DMA
+ */
+//#define ADC_NO_DMAC_USART
+
+/*
+ * This demonstrates ADC data transfer from peripheral
+ * to memory to and copy to another memory to USART data 
+ * register with out using DMA
+ */
+#define ADC_NO_DMAC_MEM_MEM_USART
+
+#endif

@@ -678,7 +678,7 @@ void pio_set_additional_interrupt_mode(Pio *p_pio,
  */
 void pio_set_writeprotect(Pio *p_pio, const uint32_t ul_enable)
 {
-	p_pio->PIO_WPMR = PIO_WPMR_WPKEY_PASSWD | ul_enable;
+	p_pio->PIO_WPMR = PIO_WPMR_WPKEY_PASSWD | (ul_enable & PIO_WPMR_WPEN);
 }
 
 /**

@@ -50,7 +50,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_clock_group SAM System Clock Management Driver (SYSTEM CLOCK)
  *
- * This driver for Atmel | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection and
@@ -1489,7 +1489,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>08/2014</td>
+ *		<td>12/2014</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

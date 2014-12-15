@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_ac_group SAM Analog Comparator Driver (AC)
  *
- * This driver for Atmel | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's Analog Comparator functionality, for the
  * comparison of analog voltages against a known reference voltage to determine
  * its relative level. The following driver API modes are covered by this
@@ -1376,12 +1376,12 @@ static inline void ac_win_clear_status(
  *    </tr>
  *    <tr>
  *      <td>E</td>
- *      <td>08/2014</td>
+ *      <td>12/2014</td>
  *      <td>Added support for SAML21.</td>
  *    </tr>
  *    <tr>
  *      <td>D</td>
- *      <td>05/2014</td>
+ *      <td>12/2014</td>
  *      <td>Added support for SAMR21 and SAMD10/D11.</td>
  *    </tr>
  *    <tr>

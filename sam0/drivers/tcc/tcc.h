@@ -47,7 +47,7 @@
 /**
  * \defgroup asfdoc_sam0_tcc_group SAM Timer Counter for Control Applications Driver (TCC)
  *
- * This driver for Atmel | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the TCC module within the device, for waveform
  * generation and timing operations. It also provides extended options for
  * control applications.
@@ -2364,7 +2364,7 @@ enum status_code tcc_set_double_buffer_compare_values(
  *  </tr>
  *  <tr>
  *      <td>B</td>
- *      <td>05/2014</td>
+ *      <td>12/2014</td>
  *      <td>Added fault handling functionality;
  *          Added double buffering functionality with use case;
  *          Added timer use case;

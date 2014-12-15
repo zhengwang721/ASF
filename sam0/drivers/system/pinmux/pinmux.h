@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_system_pinmux_group SAM System Pin Multiplexer Driver (SYSTEM PINMUX)
  *
- * This driver for Atmel | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's physical I/O Pins, to alter the direction and
  * input/drive characteristics as well as to configure the pin peripheral
  * multiplexer selection.
@@ -648,7 +648,7 @@ void system_pinmux_group_set_output_drive(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>04/2014</td>
+ *		<td>12/2014</td>
  *		<td>Add support for SAMR21 and SAMD10/D11</td>
  *	</tr>
  *	<tr>
