@@ -54,7 +54,7 @@
 /**
  * \defgroup asfdoc_sam0_sercom_spi_master_vec_group SAM Serial Peripheral Interface Master Driver w/ Vectored I/O (SERCOM SPI)
  *
- * This driver for Atmel | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and operation of the SERCOM module in SPI master mode and uses vectored I/O
  * for data transfers.
  *
@@ -662,7 +662,7 @@ static inline enum status_code spi_master_vec_transceive_buffer_wait(
   *	    </tr>
   *	     <tr>
   *		      <td>C</td>
-  *		      <td>04/2014</td>
+  *		      <td>12/2014</td>
   *		      <td>Add SAM D10/D11 support.</td>
   *	    </tr>  
   *	    <tr>
