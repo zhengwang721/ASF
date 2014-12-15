@@ -24,7 +24,7 @@
  *    from this software without specific prior written permission.
  *
  * 4. This software may only be redistributed and used in connection with an
- *    Atmel micro controller product.
+ *    Atmel microcontroller product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -64,7 +64,7 @@
 #if !(SAMD || SAMR21)
 #include "led.h"
 #endif
-extern frame_info_t *stream_pkt;
+//extern frame_info_t *stream_pkt;
 /**
  * \addtogroup group_per_mode_receptor
  * \{
@@ -73,11 +73,13 @@ extern frame_info_t *stream_pkt;
 /* === TYPES =============================================================== */
 
 /*=====EXTERBNALS============================================================*/
+extern bool pkt_stream_stop; 
+
 
 /* === MACROS ============================================================== */
 
-/* LED Blink count for identify command */
-#define LED_BLINK_COUNT_FOR_IDENTIFY          (20)
+/* LED Blink count for Marker command */
+
 #define LED_BLINK_COUNT_FOR_BUTTON_PRESS      (10)
 
 /* At every LED_TOGGLE_COUNT_FOR_PER count the Led toggles when PER test
@@ -119,20 +121,12 @@ bool manual_crc = false;
 #endif
 static uint8_t marker_seq_num = 0;
 
-extern bool cw_ack_sent,remote_cw_start;
-extern uint8_t cw_start_mode;
-extern uint16_t cw_tmr_val;
-extern bool pulse_mode ;
-
-extern bool pkt_stream_stop;
-
-extern uint32_t pkt_stream_gap_time ;
-extern bool rdy_to_tx;
-extern bool rx_on_mode;
-
+/*Length of the Remote Command Request Received*/
 static uint8_t remote_cmd_len;
-uint8_t* remote_cmd_ptr;
+/*Flag to denote whether a remote test request is received or not */
 static bool remote_cmd_rx=false;
+/*Pointer to the remote test request serial data payload received*/
+static uint8_t* remote_cmd_ptr;
 
 
 /* ! \} */
@@ -176,6 +170,8 @@ void per_mode_receptor_init(void *parameter)
  */
 void per_mode_receptor_task(void)
 {
+	/*If a remote test request is received the received over the air payload is converted into a serial data frame
+	   which will be handled by the Serial handler as if it was received from the UI*/	
 	if(remote_cmd_rx)
 	{
 		convert_ota_serial_frame_rx(remote_cmd_ptr,remote_cmd_len);	
@@ -183,7 +179,9 @@ void per_mode_receptor_task(void)
 	}	
 	
 	/* For Range Test  in PER Mode the receptor has to poll for a button
-	 * press to initiate marker transmission */
+	 * press to initiate marker transmission 
+	 * If CW Transmission or Packet Strteaming is initiated then this could be aborted by pressing the push button
+	 */
 	if (range_test_in_progress || remote_cw_start || ((!pkt_stream_stop && !node_info.transmitting))) {
 		static uint8_t key_press;
 		/* Check for any key press */
@@ -209,12 +207,15 @@ void per_mode_receptor_task(void)
 				sw_timer_stop(CW_TX_TIMER);
 				stop_cw_transmission(&(cw_start_mode));
 			}
+			
+			
 			else 
 			{
 				stop_pkt_streaming(NULL);
 			}
 		}
 	}
+	/*If the node is in packet streaming mode and ready to transmit  then initiate the next frame*/
 	if(!pkt_stream_stop && rdy_to_tx && !node_info.transmitting)
 	{
 		tal_tx_frame(stream_pkt,NO_CSMA_NO_IFS,false);
@@ -272,6 +273,7 @@ static bool send_range_test_marker_cmd(void)
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
  */
+
 void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
 {
 	status = status;
@@ -282,7 +284,7 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
 		cw_ack_sent = true;
 		start_cw_transmission(cw_start_mode, cw_tmr_val);
 	}
-	//enable rx on mode in receptor after sending rxon confirm to the initiator
+	/*enable rx on mode in receptor after sending rxon confirm to the initiator*/
 	if(rx_on_mode)
 	{
 		set_trx_state(CMD_RX_ON);
@@ -291,6 +293,9 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
 	node_info.transmitting = false;
 }
 
+/**
+ * \brief This function is used to send a remote test repsonse command back to the initiator
+ */
 bool send_remote_reply_cmd(uint8_t* serial_buf,uint8_t len)
 {
 	
@@ -302,7 +307,7 @@ bool send_remote_reply_cmd(uint8_t* serial_buf,uint8_t len)
 	seq_num_receptor++;
 	msg.seq_num = seq_num_receptor;
 
-	payload_length = ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-SIO_BUF_SIZE+len+1));
+	payload_length = ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-REMOTE_MSG_BUF_SIZE+len+1));
 	memcpy(&msg.payload.remote_test_req_data.remote_serial_data,serial_buf+1,len+1); // from length to be copied
 	/* Send the frame to Peer node */
 	if(MAC_SUCCESS == transmit_frame(FCF_SHORT_ADDR,(uint8_t *)&(node_info.peer_short_addr),FCF_SHORT_ADDR,
@@ -342,6 +347,7 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
 		= (app_payload_t *)(mac_frame_info->mpdu + LENGTH_FIELD_LEN +
 			FRAME_OVERHEAD - FCS_LEN);
 
+/*If the remote node is in RX_ON mode then do not accept any request unless the request is to stop the RX_ON mode*/
 if(rx_on_mode)
 {
 	
@@ -614,7 +620,7 @@ if(rx_on_mode)
 		sw_timer_start(APP_TIMER_TO_TX,
 				LED_BLINK_RATE_IN_MICRO_SEC,
 				SW_TIMEOUT_RELATIVE,
-				(FUNC_PTR)blink_led_timer_handler_cb,
+				(FUNC_PTR)led_blinker_timer_handler_cb,
 				NULL);
 		break;
 	}
@@ -638,6 +644,7 @@ if(rx_on_mode)
 		
 	}
 	break;
+	/*The REMOTE_TEST_CMD handles the remote test requests sent from the initiator node.The received payload is extracted and sent to the serial handler*/
 	case REMOTE_TEST_CMD:
 	{
 		if (remote_cmd_seq_num == msg->seq_num) {
@@ -645,7 +652,7 @@ if(rx_on_mode)
 		}
 		remote_cmd_seq_num = msg->seq_num;
 		/*Command received by the receptor to start a test ,from the initiator node*/
-		remote_cmd_len = *(mac_frame_info->mpdu + 12);
+		remote_cmd_len = *(mac_frame_info->mpdu + LENGTH_FIELD_LEN + FRAME_OVERHEAD + CMD_ID_LEN + SEQ_NUM_LEN - FCS_LEN);
 		remote_cmd_ptr = msg->payload.remote_test_req_data.remote_serial_data;
 		remote_cmd_rx = true;
 		break;
@@ -747,7 +754,7 @@ if(rx_on_mode)
  */
 static void set_paramter_on_recptor_node(app_payload_t *msg)
 {
-	uint16_t param_val;
+	uint8_t param_val;
 	pib_value_t pib_value;
 
 	switch (msg->payload.set_parm_req_data.param_type) {
@@ -763,16 +770,16 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 #if (TAL_TYPE == AT86RF233)
 		tal_set_frequency_regs(CC_BAND_0, CC_NUMBER_0);
 #endif
-		pib_value.pib_value_8bit = (uint8_t)param_val;
+		pib_value.pib_value_8bit = param_val;
 		/* set the channel on receptor with the received value */
 		tal_pib_set(phyCurrentChannel, &pib_value);
-		curr_trx_config_params.channel=param_val;
+		curr_trx_config_params.channel = (uint16_t)param_val;
 		printf("\r\n Channel changed to %d", param_val);
 #ifdef EXT_RF_FRONT_END_CTRL
 
 		/* Limit the tx power below the default power for ch26 to meet
 		 * FCC Compliance */
-		limit_tx_power_in_ch26(param_val, chn_before_set);
+		limit_tx_power_in_ch26(param_val, (uint8_t)chn_before_set);
 #endif
 	}
 	break;
@@ -802,7 +809,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 #endif
 	case CHANNEL_PAGE:
 	{
-		param_val = (uint8_t)msg->payload.set_parm_req_data.param_value;
+		param_val = msg->payload.set_parm_req_data.param_value;
 		pib_value.pib_value_8bit = param_val;
 		retval_t status  = tal_pib_set(phyCurrentPage,
 				&pib_value);
@@ -824,7 +831,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 		uint8_t previous_RPC_value;
 #endif
 		/* Get the the received tx power in dBm */
-		param_val = (uint8_t)msg->payload.set_parm_req_data.param_value;
+		param_val = msg->payload.set_parm_req_data.param_value;
 		temp_var = CONV_DBM_TO_phyTransmitPower((int8_t)param_val);
 
 		/* If RPC enabled, disable RPC to change the TX power value
@@ -859,25 +866,20 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 			printf(
 					"\r\n Tx Power set to %d dBm (TX_PWR=0x%x) on the node",
 					(int8_t)temp_val, tx_pwr_reg);
-								/* update the data base with this value
-					**/
+				   /* update the data base with this value*/
 
-
-					/*Tx power in dBm also need to be
+                    /*Tx power in dBm also need to be
 					 * updated as it changes with reg value
 					 **/
-					curr_trx_config_params.tx_power_dbm
-						= temp_val;					
+					curr_trx_config_params.tx_power_dbm = temp_val;					
 		} else {
 			printf(
 					"\r\n Tx Power set to %d dBm (TX_PWR=0x%x) on the node",
 					(int8_t)param_val, tx_pwr_reg);
-					curr_trx_config_params.tx_power_dbm
-					= param_val;
+					curr_trx_config_params.tx_power_dbm = param_val;
 					
-		}
-							curr_trx_config_params.tx_power_reg
-							= tx_pwr_reg;
+		       }
+					curr_trx_config_params.tx_power_reg = tx_pwr_reg;
 #endif /* (TAL_TYPE != AT86RF233) */
 
 #else               /* In case of AT86Rf212 */
@@ -897,7 +899,7 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 		uint8_t previous_RPC_value;
 #endif
 		/* get the the received tx power as reg value */
-		param_val = (uint8_t)msg->payload.set_parm_req_data.param_value;
+		param_val = msg->payload.set_parm_req_data.param_value;
 		if (MAC_SUCCESS ==
 				tal_convert_reg_value_to_dBm(param_val,
 				&tx_pwr_dbm)) {
@@ -932,16 +934,13 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 			printf(
 					"\r\n Tx Power set to %d dBm (TX_PWR=0x%x) on the node",
 					tx_pwr_dbm, param_val);
-										/* update the data base with this value
-					**/
-					curr_trx_config_params.tx_power_reg
-						= param_val;
+					/* update the data base with this value*/
+					curr_trx_config_params.tx_power_reg = param_val;
 
 					/*Tx power in dBm also need to be
 					 * updated as it changes with reg value
 					 **/
-					curr_trx_config_params.tx_power_dbm
-						= tx_pwr_dbm;
+					curr_trx_config_params.tx_power_dbm = tx_pwr_dbm;
 #endif /* End of (TAL_TYPE != AT86RF233) */
 		}
 	}
@@ -951,44 +950,6 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 		printf(" \r\nUnsupported Parameter");
 		break;
 	}
-}
-
-/**
- * \brief Timer Callback function  if identify command is received on air
- *        by a node in reflector configuration. This is used to blink the LED
- *        and thus identify itself
- *
- * \param parameter pass parameters to timer handler
- */
-void blink_led_timer_handler_cb(void *parameter)
-{
-#if (LED_COUNT > 0)
-	static uint8_t led_count;
-	parameter = parameter;
-	/* LED Blinking sequence is completed */
-	if (led_count > LED_BLINK_COUNT_FOR_IDENTIFY) {
-		led_count = 0;
-		app_led_event(LED_EVENT_PEER_SEARCH_DONE);
-	} else { /* Blink count is not completed  */
-		 /* For every timeout switch off and on all LEDs alternatively
-		 **/
-		if (led_count & 0x01) {
-			led_count++;
-			app_led_event(LED_EVENT_ALL_OFF);
-			sw_timer_stop(APP_TIMER_TO_TX);
-		} else {
-			led_count++;
-			app_led_event(LED_EVENT_ALL_ON);
-		}
-
-		sw_timer_start(APP_TIMER_TO_TX,
-				LED_BLINK_RATE_IN_MICRO_SEC,
-				SW_TIMEOUT_RELATIVE,
-				(FUNC_PTR)blink_led_timer_handler_cb,
-				NULL);
-	}
-#endif
-	return;
 }
 
 /**
@@ -1148,9 +1109,8 @@ static void send_result_rsp(void)
 	} else
 #endif /* #ifdef CRC_SETTING_ON_REMOTE_NODE */
 	{
-		/* Set a value of 0xffffffff if we are not counting CRC errors
-		**/
-		data->frames_with_wrong_crc
+		/* Set a value of 0xffffffff if we are not counting CRC errors*/
+		   data->frames_with_wrong_crc
 			= CCPU_ENDIAN_TO_LE32((uint32_t)(-1));
 	}
 

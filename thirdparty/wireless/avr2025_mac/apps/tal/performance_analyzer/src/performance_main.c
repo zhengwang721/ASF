@@ -717,7 +717,9 @@ retval_t transmit_frame(uint8_t dst_addr_mode,
 
 	/* First element shall be length of PHY frame. */
 	frame_ptr--;
-	*frame_ptr = frame_length;
+	*frame_ptr = (uint8_t) frame_length;
+	
+	
 
 	/* Finished building of frame. */
 	node_info.tx_frame_info->mpdu = frame_ptr;

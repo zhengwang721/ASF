@@ -128,7 +128,7 @@
  */
 
 /**
- * \name Packet Error rate Measurement Generic Macros
+ * \name Request and response Ids which sent over the air  
  * \{
  */
 #define SET_PARAM                           (0x01)
@@ -160,9 +160,13 @@
 #define REMOTE_TEST_CMD		                (0x17)
 #define REMOTE_TEST_REPLY_CMD               (0x18)
 #define PKT_STREAM_PKT						(0x18)
+
+/* Range test packet length */
 #define RANGE_TEST_PKT_LENGTH               (19)
+/* Timer value in us for LED blinking */
 #define LED_BLINK_RATE_IN_MICRO_SEC         (50000)
 /* \} */
+/* Pulse CW transmission time in us */
 #define PULSE_CW_TX_TIME_IN_MICRO_SEC       (50000)
 /* === Types ================================================================ */
 
@@ -224,6 +228,10 @@ FLASH_EXTERN(int8_t tx_pwr_table[16]);
 #endif
 
 extern trx_config_params_t curr_trx_config_params;
+/**
+ * \brief Configure the frame to be used for Packet Streaming
+ * \param frame_len Length of the frame to be used for Packet Streaming
+ */
 void configure_pkt_stream_frames(uint16_t frame_len);
 
 /* ! \} */
@@ -238,7 +246,7 @@ void configure_pkt_stream_frames(uint16_t frame_len);
 
 /**
  * \brief Initialize the application in PER Measurement mode as Initiator
- * \param parameter Pointer to the paramter to be carried, if any.
+ * \param parameter Pointer to the parameter to be carried, if any.
  */
 void per_mode_initiator_init(void *parameter);
 
@@ -275,6 +283,9 @@ void per_mode_initiator_rx_cb(frame_info_t *frame);
  */
 void per_mode_initiator_ed_end_cb(uint8_t energy_level);
 
+/**
+ * \brief This function is used to send a remote test repsonse command back to the initiator
+ */
 bool send_remote_reply_cmd(uint8_t* serial_buf,uint8_t len);
 /* ! \} */
 
@@ -296,8 +307,6 @@ void per_mode_receptor_init(void *parameter);
  *
  */
 void per_mode_receptor_task(void);
-void config_per_remote_test_parameters(void);
-
 
 /**
  * \brief Callback that is called once tx is done in PER_TEST_RECEPTOR state
@@ -356,11 +365,21 @@ void marker_rsp_timer_handler_cb(void *parameter);
 void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl);
 
 #endif
-
+/**
+ * \brief The reverse_float is used for reversing a float variable for
+ * supporting BIG ENDIAN systems
+ * \param float_val Float variable to be reversed
+ */
 float reverse_float( const float float_val );
 
+/**
+ * \brief Timer used in Packet Streaming Mode to add gap in between consecutive frames
+ */
 void pkt_stream_gap_timer(void *parameter);
 
+/**
+ * \brief This function is called to abort the packet streaming mode in progress
+ */
 void stop_pkt_streaming(void * parameter);
 
 /* ! \} */

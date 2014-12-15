@@ -52,6 +52,8 @@
 
 int main(void)
 {
+	irq_initialize_vectors();
+	
 	#if SAMD || SAMR21
 	system_init();
 	delay_init();
@@ -59,7 +61,7 @@ int main(void)
 	sysclk_init();
 	board_init();
 	#endif
-	irq_initialize_vectors();
+	
 	wsndemo_init();
 	cpu_irq_enable();
 	

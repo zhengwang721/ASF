@@ -24,7 +24,7 @@
  *    from this software without specific prior written permission.
  *
  * 4. This software may only be redistributed and used in connection with an
- *    Atmel micro controller product.
+ *    Atmel microcontroller product.
  *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
@@ -62,41 +62,26 @@
 
 /* === EXTERNALS============================================================== */
 
-extern bool rdy_to_tx;
-extern bool pkt_stream_stop;
-extern bool peer_found;
-extern uint8_t last_tx_power_format_set;
-#if (ANTENNA_DIVERSITY == 1)
-extern uint8_t ant_sel_before_ct;
-extern uint8_t ant_div_before_ct;
-#endif /* End of #if (ANTENNA_DIVERSITY == 1) */
-extern uint8_t op_mode;
+
+  extern bool pkt_stream_stop;
+  extern uint8_t op_mode;
 
 /* === GLOBALS============================================================== */
 
 #ifdef EXT_RF_FRONT_END_CTRL
 static uint8_t prev_non_26chn_tx_power;
 #endif
-frame_info_t *stream_pkt;
+
+/*Buffer used for storing data frame to be used in Packet Streaming Mode*/
 uint8_t pkt_buffer[LARGE_BUFFER_SIZE];
-uint32_t pkt_stream_gap_time ;
-/* Database to maintain the default settings of the configurable parameter */
-trx_config_params_t default_trx_config_params;
-/* Database to maintain the updated/latest settings of the configurable
- * parameters */
-trx_config_params_t curr_trx_config_params;
-uint16_t cw_tmr_val = 0;
-bool cw_ack_sent=false,remote_cw_start=false;
-uint8_t cw_start_mode;
-bool pulse_mode = false;
-bool rx_on_mode = false;
-extern uint8_t cc_band_ct;
-extern uint8_t cc_number_ct;
+
 /* === DEFINES============================================================== */
 
 #define DEFAULT_NO_OF_TEST_FRAMES               (100)
 #define DEFAULT_FRAME_LENGTH                    (20)
 
+/* LED Blink count for identify command */
+#define LED_BLINK_COUNT_FOR_IDENTIFY          (20)
 
 /* === PROTOTYPES============================================================== */
 
@@ -271,11 +256,16 @@ void config_per_test_parameters(void)
 }
 
 
-/*Start Packet Streaming Test*/
-
+/**
+ * \brief This function initiates packet streaming test.
+ * \param gap_time Gap to be provided between consecutive frames in terms of millseconds
+ * \timeout : This parameter is used by the receptor node to timeout/stop the packet streaming 
+ * \param frame_len Length of the Data frame to be streamed
+ */
 void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop,uint16_t frame_len)
 {
 	pkt_stream_gap_time = gap_time;
+	/*Return if the frame length is less than 127(Max MPDU Length)*/
 	if(frame_len<=127)
 	{
 		usr_pkt_stream_confirm(MAC_SUCCESS,start_stop);
@@ -285,14 +275,20 @@ void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop,uint16_t 
 		usr_pkt_stream_confirm(INVALID_ARGUMENT,start_stop);
 	}
 	
+	/*Send the Packet Stream Start Confirm in case of Receptor before beginning packet streaming.Serial Handler 
+	   will take care in sending the confirmation over the air to the Host*/
 	if((node_info.main_state == PER_TEST_RECEPTOR))
 	{
 		serial_data_handler();
 	}
 	if(start_stop)
 	{
+		/*Configure the frame for streaming*/
 		configure_pkt_stream_frames(frame_len);
+		
 		op_mode=PKT_STREAM_MODE;
+		
+		/*Start the gap timer*/
 		if(pkt_stream_gap_time)
 		{
 			sw_timer_start(T_APP_TIMER,pkt_stream_gap_time*1E3,SW_TIMEOUT_RELATIVE,(FUNC_PTR)pkt_stream_gap_timer,NULL);
@@ -314,7 +310,7 @@ void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop,uint16_t 
 	}
 	else
 	{
-		//stop packet streaming once the current packet transmission is completed
+		/*stop packet streaming once the current packet transmission is completed*/
 		pkt_stream_stop = true;
 		sw_timer_stop(T_APP_TIMER);
 		 op_mode=TX_OP_MODE;
@@ -324,7 +320,8 @@ void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop,uint16_t 
 }
 
 /**
- * \brief To Configure the frame sending
+ * \brief Configure the frame to be used for Packet Streaming
+ * \param frame_len Length of the frame to be used for Packet Streaming
  */
 void configure_pkt_stream_frames(uint16_t frame_len)
 {
@@ -406,20 +403,25 @@ void configure_pkt_stream_frames(uint16_t frame_len)
 
 	/* First element shall be length of PHY frame. */
 	frame_ptr--;
-	*frame_ptr = frame_len; 
+	*frame_ptr = (uint8_t)frame_len; 
 
 	/* Finished building of frame. */
 	stream_pkt->mpdu = frame_ptr;
 }
 
 
-
+/**
+ * \brief Timer used in Packet Streaming Mode to add gap in between consecutive frames
+ */
 void pkt_stream_gap_timer(void *parameter)
 {
 	rdy_to_tx = true;
 	parameter=parameter;
 }
 
+/**
+ * \brief This function is called to abort the packet streaming mode in progress
+ */
 void stop_pkt_streaming(void * parameter)
 {
 	pkt_stream_stop = true;
@@ -430,7 +432,7 @@ void stop_pkt_streaming(void * parameter)
 		sw_timer_start(T_APP_TIMER,
 		LED_BLINK_RATE_IN_MICRO_SEC,
 		SW_TIMEOUT_RELATIVE,
-		(FUNC_PTR)blink_led_timer_handler_cb,
+		(FUNC_PTR)led_blinker_timer_handler_cb,
 		NULL);
 	}
 }
@@ -442,13 +444,16 @@ void stop_pkt_streaming(void * parameter)
 	(defined CW_SUPPORTED)))
 void pulse_cw_transmission(void)
 {
+	uint16_t channel;
+	
 	if(node_info.main_state == PER_TEST_RECEPTOR)
 	{
-		//Todo : comment to be added
-		delay_ms(10);
+		/*A small delay is required to send the ACK back for the last transaction before starting the Pulse CW on the receptor node
+		 Else this might lead to a MAC_NO_ACK status on the host */
+		delay_ms(1);
 	}
-	uint16_t channel;
-	op_mode = CONTINUOUS_TX_MODE;
+	
+		op_mode = CONTINUOUS_TX_MODE;
 	tal_pib_get(phyCurrentChannel,(uint8_t *)&channel);
 
 	/* Save all user settings before continuous tx */
@@ -473,6 +478,8 @@ void pulse_cw_transmission(void)
 			SW_TIMEOUT_RELATIVE,
 			(FUNC_PTR)stop_pulse_cb,
 			NULL);
+	
+	
 }
 
 #endif
@@ -491,9 +498,10 @@ static void stop_pulse_cb(void *callback_parameter)
 	op_mode = TX_OP_MODE;
 	/* recover all user setting set before continuous tx */
 	recover_all_settings();
-
-	/* Send the confirmation with status as SUCCESS */
+	
+	
 	usr_cont_pulse_tx_confirm(MAC_SUCCESS);
+	
 
 	/* Keep compiler happy. */
 	callback_parameter = callback_parameter;
@@ -504,11 +512,16 @@ static void stop_pulse_cb(void *callback_parameter)
 /*
  * \brief Start CW transmission on current channel page
  * \param tx_mode  Continuous transmission mode
+ * \param tmr_val  This parameter is used by the receptor node to stop the CW transmission
  */
 #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
 	(defined CW_SUPPORTED)))
 void start_cw_transmission(uint8_t tx_mode,uint16_t tmr_val)
 {
+	
+/*If the test is initiated on the receptor node.First send the Start confirmation back to the host
+ * Once this is done the test could be started.The cw_ack_sent flag is used for this purpose
+ */
 if(node_info.main_state == PER_TEST_RECEPTOR && !cw_ack_sent)
 {
 
@@ -519,7 +532,7 @@ if(node_info.main_state == PER_TEST_RECEPTOR && !cw_ack_sent)
 	}
 	else
 	{
-	   /* Send Set confirmation with status SUCCESS and start cw trx on successful trx of the */
+	   /* Send Set confirmation with status SUCCESS and start CW trx on successful transmission of the Confirmation message*/
 	   usr_cont_wave_tx_confirm(MAC_SUCCESS, START_CWT, tx_mode); 
 	   remote_cw_start = true;
 	   cw_start_mode = tx_mode;
@@ -529,6 +542,7 @@ if(node_info.main_state == PER_TEST_RECEPTOR && !cw_ack_sent)
 	
 	
 }
+
 else if(node_info.main_state == PER_TEST_INITIATOR || (node_info.main_state == SINGLE_NODE_TESTS) || ((node_info.main_state == PER_TEST_RECEPTOR) && cw_ack_sent))
 {
 	/* Save all user settings before continuous tx */
@@ -593,7 +607,7 @@ if((node_info.main_state == PER_TEST_RECEPTOR) && 1 <= tmr_val )
 
 /*
  * \brief Stop CW transmission on current channel page
- * \param tx_mode  Continuous transmission mode
+ * \param parameter Pointer to the variable which defines the Continuous transmission mode
  */
 void stop_cw_transmission(void *parameter)
 {
@@ -611,7 +625,7 @@ void stop_cw_transmission(void *parameter)
 		sw_timer_start(T_APP_TIMER,
 		LED_BLINK_RATE_IN_MICRO_SEC,
 		SW_TIMEOUT_RELATIVE,
-		(FUNC_PTR)blink_led_timer_handler_cb,
+		(FUNC_PTR)led_blinker_timer_handler_cb,
 		NULL);
 	}
 	
@@ -720,10 +734,16 @@ void dump_trx_register_values(uint16_t start_reg_addr, uint16_t end_reg_addr)
 	}
 }
 
+/**
+ * \brief This function is called to initiate the RX_ON test 
+ * The transceiver is put into the RX_ON mode and no requests are handled until this mode is stopped.
+ * On the receptor ,the mode is stopped only on reception of the RX_ON_STOP command which is sent without ack_req
+ * \param start_stop_param Indicates whether the request is to Start or Stop the mode
+ */
 void rx_on_test(bool start_stop_param)
 {
 
-	// Implementation for Rx on mode
+
 	if(start_stop_param)
 	{
 		if(node_info.main_state != PER_TEST_RECEPTOR)
@@ -732,7 +752,7 @@ void rx_on_test(bool start_stop_param)
 			set_trx_state(CMD_RX_ON);
 			curr_trx_config_params.trx_state = RX_ON ;
 		}
-		// handle rx on mode in rcptor tx done cb
+		/*For receptor the mode is switched on successful transmission of the confirmation message*/
 		rx_on_mode = true;
 	}
 	else
@@ -743,6 +763,7 @@ void rx_on_test(bool start_stop_param)
 	}
 	usr_rx_on_confirm(MAC_SUCCESS,start_stop_param);
 }
+
 
 #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
 	(defined CW_SUPPORTED)))
@@ -875,6 +896,45 @@ void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl)
 }
 
 #endif /* End of EXT_RF_FRONT_END_CTRL */
+
+
+/**
+ * \brief Timer Callback function  if identify command is received on air
+ *        by a node in reflector configuration. This is used to blink the LED
+ *        and thus identify itself
+ *
+ * \param parameter pass parameters to timer handler
+ */
+void led_blinker_timer_handler_cb(void *parameter)
+{
+#if (LED_COUNT > 0)
+	static uint8_t led_count;
+	parameter = parameter;
+	/* LED Blinking sequence is completed */
+	if (led_count > LED_BLINK_COUNT_FOR_IDENTIFY) {
+		led_count = 0;
+		app_led_event(LED_EVENT_PEER_SEARCH_DONE);
+	} else { /* Blink count is not completed  */
+		 /* For every timeout switch off and on all LEDs alternatively
+		 **/
+		if (led_count & 0x01) {
+			led_count++;
+			app_led_event(LED_EVENT_ALL_OFF);
+			sw_timer_stop(APP_TIMER_TO_TX);
+		} else {
+			led_count++;
+			app_led_event(LED_EVENT_ALL_ON);
+		}
+
+		sw_timer_start(APP_TIMER_TO_TX,
+				LED_BLINK_RATE_IN_MICRO_SEC,
+				SW_TIMEOUT_RELATIVE,
+				(FUNC_PTR)led_blinker_timer_handler_cb,
+				NULL);
+	}
+#endif
+	return;
+}
 
 /**
  * \brief The reverse_float is used for reversing a float variable for

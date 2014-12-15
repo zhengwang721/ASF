@@ -73,9 +73,10 @@
 
 #define PROTOCOL_ID_LEN                 (1)
 #define OCTET_STR_LEN_BYTE_LEN          (1)
+#define CMD_ID_LEN                      (1)
 
 #define IDENTIFY_BOARD_CONFIRM_LEN      (19)
-#define PERF_START_CONFIRM_LEN          (23)
+#define PERF_START_CONFIRM_LEN          (31)
 #define PERF_SET_CONFIRM_LEN            (3)
 #define PERF_GET_CONFIRM_LEN            (3)
 #define IDENTIFY_PEER_NODE_CONFIRM_LEN  (2)
@@ -251,6 +252,7 @@
 #define TX_POWER_FORMAT_DBM               (1)
 
 #define MESSAGE_ID_POS                    (2)
+#define CMD_POS                           (3)
 
 /* Field positions - PERF_SET_REQ frame */
 #define PARAM_TYPE_POS                    (3)
@@ -269,7 +271,7 @@
 #define REGISTER_ADDR_POS                 (3)
 #define REGISTER_VAL_POS                  (5)
 #define PKTSTREAM_STOP					  (0)
-#define RX_ON_STOP					  (0)
+#define RX_ON_STOP					      (0)
 /* Field positions - REGISTER_DUMP_REQ */
 #define START_REG_ADDR_POS                (3)
 #define END_REG_ADDR_POS                  (5)
@@ -279,6 +281,18 @@
 #define SCAN_DURATION_POS                 (3)
 #define CHANNELS_SELECT_POS               (4)
 #define MSG_LEN_ED_SCAN_REQ               (7)
+
+/* Field positions - PKT_STREAM_REQ frame */
+#define FRAME_LEN_1                       (4) 
+#define FRAME_LEN_2                       (5)
+#define GAP_TIME_1                        (6)
+#define GAP_TIME_2                        (7)
+#define TIMEOUT_VAL_1                     (8)
+#define TIMEOUT_VAL_2                     (9)
+
+
+
+
 
 /* ! \} */
 /* === Types ================================================================ */
@@ -343,7 +357,7 @@ SHORTENUM;
 /* ! \} */
 
 /**
- * Paramter value types
+ * Parameter value types
  */
 typedef union {
 	/** Parameter Bool */

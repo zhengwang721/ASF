@@ -54,7 +54,7 @@
 /* === Includes ============================================================= */
 
 /* === Macros =============================================================== */
-#define SIO_BUF_SIZE                 (116)
+#define REMOTE_MSG_BUF_SIZE                 (116)
 /* === Types ================================================================ */
 COMPILER_PACK_SET(1)
 
@@ -99,7 +99,7 @@ typedef struct {
  */
 typedef struct {
 	uint8_t param_type;
-	uint16_t param_value;
+	uint8_t param_value;
 } set_parm_req_t;
 
 /**
@@ -174,7 +174,7 @@ typedef struct {
  *
  */
  typedef struct {
- uint8_t remote_serial_data[SIO_BUF_SIZE];
+ uint8_t remote_serial_data[REMOTE_MSG_BUF_SIZE];
  } remote_test_req_t;
 
 /**
@@ -248,7 +248,7 @@ typedef union {
 } general_pkt_t;
 
 /**
- * \brief application payload frame stucture
+ * \brief application payload frame structure
  *
  */
 typedef struct {

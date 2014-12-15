@@ -81,25 +81,12 @@ typedef struct {
 } set_param_cb_t;
 
 /*=====EXTERNALS============================================================*/
-extern bool cw_ack_sent,remote_cw_start;
-extern uint8_t cw_start_mode;
-extern uint16_t cw_tmr_val;
-extern bool pulse_mode ;
-extern uint32_t pkt_stream_gap_time ;
-extern bool rx_on_mode;
-extern frame_info_t *stream_pkt;
 
-/* Database to maintain the default settings of the configurable parameter */
-extern trx_config_params_t default_trx_config_params;
-
-/* Database to maintain the updated/latest settings of the configurable
- * parameters */
-extern trx_config_params_t curr_trx_config_params;
 /* === MACROS ============================================================== */
 
 /* === PROTOTYPES ========================================================== */
 static void configure_frame_sending(void);
-static void send_parameters_changed(uint8_t param, uint16_t val);
+static void send_parameters_changed(uint8_t param, uint8_t val);
 static bool send_result_req(void);
 static bool send_peer_info_req(void);
 static void wait_for_reply_timer_handler_cb(void *parameter);
@@ -173,14 +160,15 @@ static bool send_range_test_marker_rsp(void);
 static bool scanning = false;
 static bool trx_sleep_status = false;
 static bool range_test_in_progress = false;
-bool remote_serial_tx_failure = false;
-bool peer_found = false;
+
 static uint8_t scan_duration;
 static uint8_t seq_num_initiator;
 static uint8_t channel_before_scan;
 uint8_t op_mode = TX_OP_MODE;
+
+/*This flag determines if the pkt stream mode is in progress*/
 bool pkt_stream_stop = true;
-bool rdy_to_tx = false;
+
 static uint16_t no_of_roll_overs;
 static uint32_t start_time;
 static uint32_t end_time;
@@ -201,23 +189,7 @@ static uint32_t fw_feature_mask = 0;
 static uint8_t phy_tx_power;
 #endif
 
-#if (ANTENNA_DIVERSITY == 1)
-uint8_t ant_sel_before_ct;
-uint8_t ant_div_before_ct;
-#endif /* End of #if (ANTENNA_DIVERSITY == 1) */
-
-#if (TAL_TYPE == AT86RF233)
-/* Backup for ISM frequency related registers for CW Transmission */
-uint8_t cc_band_ct;
-uint8_t cc_number_ct;
-#endif /* End of #if (TAL_TYPE == AT86RF233) */
-
-#if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
-uint8_t last_tx_power_format_set;
-#endif /* #if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) ) */
-
 static uint32_t range_test_frame_cnt = 0;
-
 
 
 /* Size constants for PERformance configuration parameters */
@@ -559,15 +531,10 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
 		/* Point to the message : 1 =>size is first byte and 2=>FCS*/
 		msg	= (app_payload_t *)(frame->mpdu + LENGTH_FIELD_LEN +
 		FRAME_OVERHEAD - FCS_LEN);		
-		serial_data_len = *(frame->mpdu + 12);
+		serial_data_len = *(frame->mpdu + LENGTH_FIELD_LEN + FRAME_OVERHEAD + CMD_ID_LEN + SEQ_NUM_LEN - FCS_LEN);
 		remote_serial_tx_failure = true;
 		sw_timer_stop(CW_TX_TIMER);
 		convert_ota_serial_frame_rx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);	
-	}
-	//stop the timer if the transmission of RX_ON frame was successful and do not reach wait_for_reply_timer_handler_cb
-	if(sw_timer_is_running(CW_TX_TIMER))
-	{
-		sw_timer_stop(CW_TX_TIMER);
 	}
 	
 	op_mode = TX_OP_MODE;
@@ -941,7 +908,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 				&pib_value);
 
 		/* update the data base with this value */
-		curr_trx_config_params.channel = set_param_cb.param_value;
+		curr_trx_config_params.channel = (uint16_t)set_param_cb.param_value;
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 		tal_pib_get(phyTransmitPower, &tx_pwr);
 		dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
@@ -954,11 +921,11 @@ static void set_parameter_on_transmitter_node(retval_t status)
 		 * FCC Compliance
 		 */
 		limit_tx_power_in_ch26(set_param_cb.param_value,
-				chn_before_set);
+				(uint8_t)chn_before_set);
 #endif /* End of EXT_RF_FRONT_END_CTRL */
 
 		/* Send the confirmation for Set request as Success */
-		param_value.param_value_8bit = set_param_cb.param_value;
+		param_value.param_value_16bit = (uint16_t)set_param_cb.param_value; // check abi
 		usr_perf_set_confirm(MAC_SUCCESS,
 				PARAM_CHANNEL,
 				&param_value);
@@ -1077,16 +1044,24 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
 			LENGTH_FIELD_LEN + FRAME_OVERHEAD - FCS_LEN);
 
 	switch ((msg->cmd_id)) {
-		
+	
+	/*The below case handles reply/confirmation messages received from the remote node for the Remote Test Requests sent from the host*/
 	case REMOTE_TEST_REPLY_CMD:
 	{
 		if (remote_cmd_seq_num == msg->seq_num) {
 			return;
 		}
-		sw_timer_stop(CW_TX_TIMER);
+		
+		/*The CW_TX_TIMER is stopped in case it was started for the RX_ON Req mode */
+		if(sw_timer_is_running(CW_TX_TIMER))
+		{
+			sw_timer_stop(CW_TX_TIMER);
+		}
+		
 		remote_cmd_seq_num = msg->seq_num;
 		uint8_t serial_data_len;
-		serial_data_len = *(mac_frame_info->mpdu + 12);
+		serial_data_len = *(mac_frame_info->mpdu + LENGTH_FIELD_LEN + FRAME_OVERHEAD + CMD_ID_LEN + SEQ_NUM_LEN - FCS_LEN);
+		/*The received over-the-air payload is converted into serial message sent to the PC HOST */
 		convert_ota_serial_frame_tx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);
 	}
 	case RESULT_RSP:
@@ -1860,7 +1835,7 @@ void perf_get_req(uint8_t param_type_data)
 		uint16_t current_channel = 0;
 		tal_pib_get(phyCurrentChannel, (uint8_t *)&current_channel);
 		/* Send Get confirmation with status SUCCESS */
-		param_value.param_value_16bit = (uint16_t)current_channel;
+		param_value.param_value_16bit = current_channel;
 		usr_perf_get_confirm(MAC_SUCCESS, PARAM_CHANNEL,
 				&param_value);
 	}
@@ -1872,7 +1847,7 @@ void perf_get_req(uint8_t param_type_data)
 		tal_pib_get(phyCurrentPage, &ch_page);
 
 		/* Send Get confirmation with status SUCCESS */
-		param_value.param_value_8bit = (uint8_t)ch_page;
+		param_value.param_value_8bit = ch_page;
 		usr_perf_get_confirm(MAC_SUCCESS, PARAM_CHANNEL_PAGE,
 				&param_value);
 	}
@@ -1901,7 +1876,7 @@ void perf_get_req(uint8_t param_type_data)
 		tx_pwr_dbm = CONV_phyTransmitPower_TO_DBM(tx_pwr);
 
 		/* Send Get confirmation with status SUCCESS */
-		param_value.param_value_8bit = (uint8_t)tx_pwr_dbm;
+		param_value.param_value_8bit = tx_pwr_dbm;
 		usr_perf_get_confirm(MAC_SUCCESS,
 				PARAM_TX_POWER_DBM,
 				&param_value);
@@ -2103,7 +2078,7 @@ static void set_channel(uint16_t channel)
 	if ((channel < BIT_COUNT) &&
 			(supported_channels & ((uint32_t)0x01) << channel)) {
 		if (true == peer_found) {
-			send_parameters_changed(CHANNEL, channel);
+			send_parameters_changed(CHANNEL,(uint8_t)channel);
 		} else {
 			/* Set back the Tx power to default value when
 			 * the channel changed from 26 to other channel
@@ -2272,15 +2247,11 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 		{
 				/* set the Tx power on source node in case of no
 				 * peer */
-				if (MAC_SUCCESS ==
-						tal_convert_reg_value_to_dBm(
-						tx_pwr_reg,
-						&tx_pwr_dbm)) {
-					temp_var = CONV_DBM_TO_phyTransmitPower(
-							tx_pwr_dbm);
+				if (MAC_SUCCESS == tal_convert_reg_value_to_dBm(tx_pwr_reg,&tx_pwr_dbm))
+				 {
+					temp_var = CONV_DBM_TO_phyTransmitPower(tx_pwr_dbm);
 					pib_value.pib_value_8bit = temp_var;
-					tal_pib_set(phyTransmitPower,
-							&pib_value);
+					tal_pib_set(phyTransmitPower,&pib_value);
 
 					/* To make sure that TX_PWR register is
 					 * updated with the
@@ -2288,28 +2259,22 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 					 * lowest dBm power
 					 * (highest reg value will be taken)
 					 */
-					tal_set_tx_pwr(REGISTER_VALUE,
-							tx_pwr_reg);
+					tal_set_tx_pwr(REGISTER_VALUE,tx_pwr_reg);
 
-					/* update the data base with this value
-					**/
-					curr_trx_config_params.tx_power_reg
-						= tx_pwr_reg;
+					/* update the data base with this value */
+					curr_trx_config_params.tx_power_reg = tx_pwr_reg;
 
 					/*Tx power in dBm also need to be
 					 * updated as it changes with reg value
 					 **/
-					curr_trx_config_params.tx_power_dbm
-						= tx_pwr_dbm;
+					curr_trx_config_params.tx_power_dbm = tx_pwr_dbm;
 
-					/* Send Set confirmation with status
-					 * SUCCESS */
-					param_value.param_value_8bit
-						= tx_pwr_reg;
+					/* Send Set confirmation with status SUCCESS */
+					param_value.param_value_8bit = tx_pwr_reg;
 					usr_perf_set_confirm(MAC_SUCCESS,
 							PARAM_TX_POWER_REG,
 							&param_value);
-				}
+			       }
 			
 		} else {
 			/* Send confirmation as VALUE_OUT_OF_RANGE */
@@ -2400,7 +2365,7 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 			if (true == peer_found) {
 				/*send the tx power in dBm to remote node */
 				send_parameters_changed(TX_POWER_DBM,
-						(uint8_t)tx_pwr_dbm);
+						tx_pwr_dbm);
 			} else {
 				/* set the Tx power on source node in case of no
 				 * peer */
@@ -2440,6 +2405,7 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
  *
  * \param ed_scan_duration  Scan duration parameter which is used to calculate
  *                          the scan time on each channel
+ * \param channel_sel_mask  Selected channel mask for which the Energy should be detected
  */
 void start_ed_scan(uint8_t ed_scan_duration, uint32_t channel_sel_mask)
 {
@@ -2493,7 +2459,7 @@ void start_ed_scan(uint8_t ed_scan_duration, uint32_t channel_sel_mask)
 
 	uint16_t temp_var;
 	tal_pib_get(phyCurrentChannel, (uint8_t *)&temp_var);
-	channel_before_scan = (uint16_t)temp_var;
+	channel_before_scan = (uint8_t)temp_var;
 
 	/* Identify first channel */
 	for (ch_cnt = MIN_CHANNEL; ch_cnt <= MAX_CHANNEL; ch_cnt++) {
@@ -3314,7 +3280,7 @@ static void configure_range_test_frame_sending(void)
  * \param val    Value of the parameter being modified
  *
  */
-static void send_parameters_changed(uint8_t param, uint16_t val)
+static void send_parameters_changed(uint8_t param, uint8_t val)
 {
 	uint16_t payload_length;
 	app_payload_t msg;
@@ -3802,7 +3768,7 @@ static bool send_disconnect_command(void)
 /**
  * \brief Function to configure and send the peer node info request.
  *
- * \return    Trasmission status - success/failure
+ * \return    Transmission status - success/failure
  */
 static bool send_peer_info_req(void)
 {
@@ -3832,6 +3798,14 @@ static bool send_peer_info_req(void)
 	return(false);
 }
 
+/**
+ * \brief Function to send the command to Remote node to perform remote test
+ *
+ * \param  serial_buf Pointer to the serial buffer
+ * \param  len        Length of the message
+ * \param  ack_req    specifies ack requested for frame if set to 1
+ */
+
 void send_remote_cmd(uint8_t* serial_buf,uint8_t len,bool ack_req)
 {
 	
@@ -3843,8 +3817,8 @@ void send_remote_cmd(uint8_t* serial_buf,uint8_t len,bool ack_req)
 	seq_num_initiator++;
 	msg.seq_num = seq_num_initiator;
 
-	payload_length = ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-SIO_BUF_SIZE+len+1));
-	memcpy(&msg.payload.remote_test_req_data.remote_serial_data,serial_buf,len+1);		 //len+1 including length to be copied
+	payload_length = ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-REMOTE_MSG_BUF_SIZE+len+1));
+	memcpy(&msg.payload.remote_test_req_data.remote_serial_data,serial_buf,len+1);		
 	/* Send the frame to Peer node */
 	if (MAC_SUCCESS == transmit_frame(FCF_SHORT_ADDR,
 	(uint8_t *)&(node_info.peer_short_addr),

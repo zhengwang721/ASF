@@ -196,7 +196,14 @@ void set_main_state(main_state_t state, void *arg);
 
 void app_alert(void);
 
+/**
+ * \brief Save all user settings before Start of CW transmission
+ */
 void save_all_settings(void);
+
+/**
+ * \brief Recover all user settings before Start of CW transmission
+ */
 void recover_all_settings(void);
 
 /* INIT state functions */

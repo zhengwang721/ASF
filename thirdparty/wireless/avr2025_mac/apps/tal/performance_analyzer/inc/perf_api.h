@@ -63,8 +63,51 @@
 #include "app_per_mode.h"
 /* === Macros =============================================================== */
 
-/*======================Extern===============================================*/
+/*======================Globals===============================================*/
 
+/*This flag is used for packet streaming mode to check if the gap time is acheived*/
+ bool rdy_to_tx;
+ 
+ /* This flag is set as true when peer device found */
+ bool peer_found;
+
+#if (ANTENNA_DIVERSITY == 1)
+ uint8_t ant_sel_before_ct;
+ uint8_t ant_div_before_ct;
+#endif /* End of #if (ANTENNA_DIVERSITY == 1) */
+
+ 
+ #if (TAL_TYPE == AT86RF233)
+ /* Backup for ISM frequency related registers for CW Transmission */
+   uint8_t cc_band_ct;
+   uint8_t cc_number_ct;
+ #endif /* End of #if (TAL_TYPE == AT86RF233) */
+ 
+ #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
+ uint8_t last_tx_power_format_set;
+#endif /* #if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) ) */
+
+ bool cw_ack_sent,remote_cw_start;
+ uint8_t cw_start_mode;
+ uint16_t cw_tmr_val;
+ bool pulse_mode ;
+ /*Gap between consecutive frames in Packet Streaming Mode,This value is set by the user from Performance Analyzer*/
+ uint32_t pkt_stream_gap_time ;
+ bool rx_on_mode;
+ 
+ /*Pointer to the data frame to be used in Packet Streaming Mode*/
+ frame_info_t *stream_pkt;
+
+/* Database to maintain the default settings of the configurable parameter */
+ trx_config_params_t default_trx_config_params;
+
+/* Database to maintain the updated/latest settings of the configurable
+ * parameters */
+ trx_config_params_t curr_trx_config_params;
+ 
+ /*If test request to the remote node is failed this falg is used to send a failure confiramtion back to the UI*/
+ bool remote_serial_tx_failure;
+ 
 /*========================Prototypes========================================= */
 
 /**
@@ -100,8 +143,9 @@ void initiate_range_test(void);
 /**
  * \brief Function to start the ED scan
  *
- * \param scan_duration paramter which is used to calculate the scan time
+ * \param scan_duration parameter which is used to calculate the scan time
  *        on each channel
+ * \param channel_sel_mask  Selected channel mask for which the Energy should be detected
  */
 void start_ed_scan(uint8_t scan_duration, uint32_t channel_sel_mask);
 
@@ -143,7 +187,13 @@ void usr_range_test_marker_ind(uint8_t *mpdu, uint8_t lqi, int8_t ed_value);
  */
 void identify_peer_node(void);
 
-
+/**
+ * \brief Function to send the command to Remote node to perform remote test
+ *
+ * \param  serial_buf Pointer to the serial buffer
+ * \param  len        Length of the message
+ * \param  ack_req    specifies ack requested for frame if set to 1
+ */
 void send_remote_cmd(uint8_t* serial_buf,uint8_t len,bool ack_req);
 
 #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
@@ -157,12 +207,13 @@ void pulse_cw_transmission(void);
 /**
  * \brief Start CW transmission on current channel page
  * \param tx_mode  Continuous transmission mode
+ * \param tmr_val  This parameter is used by the receptor node to stop the CW transmission
  */
 void start_cw_transmission(uint8_t tx_mode,uint16_t tmr_val);
 
 /**
  * \brief Stop CW transmission on current channel page
- * \param tx_mode  Continuous transmission mode
+ * \param parameter Pointer to the variable which defines the Continuous transmission mode
  */
 void stop_cw_transmission(void *parameter);
 
@@ -198,17 +249,21 @@ void disconnect_peer_node(void);
 /**
  * \brief Function to set the default values of
  *
- * all configurable paramters on source and peer node
+ * all configurable parameters on source and peer node
  */
 void set_default_configuration(void);
 
+/**
+ * \brief Function to set trx configure parameters
+ *
+ */
 void config_per_test_parameters(void);
 
 
 /**
- * \brief Function to get the current values of the all configurabel patameters
+ * \brief Function to get the current values of the all configurable parameters
  *
- * in the Performance Anlayzer application
+ * in the Performance Analyzer application
  */
 void get_current_configuration(void);
 
@@ -217,7 +272,7 @@ void get_current_configuration(void);
  *
  * processing the received command
  *
- * \return the erroe codee based onthe currently ongoing operation,if any
+ * \return the error code based on the currently ongoing operation,if any
  */
 uint8_t check_error_conditions(void);
 
@@ -237,8 +292,14 @@ uint8_t get_param_length(uint8_t parameter_type);
  */
 void pktstream_test(uint16_t gap_time,uint16_t timeout,bool start_stop,uint16_t frame_len);
 
-void blink_led_timer_handler_cb(void *parameter);
+void led_blinker_timer_handler_cb(void *parameter);
 
+/**
+* \brief This function is called to initiate the RX_ON test
+* The transceiver is put into the RX_ON mode and no requests are handled until this mode is stopped.
+* On the receptor ,the mode is stopped only on reception of the RX_ON_STOP command which is sent without ack_req
+* \param start_stop_param Indicates whether the request is to Start or Stop the mode
+*/
 void rx_on_test(bool start_stop_param);
 
 /* ! \} */
@@ -272,7 +333,7 @@ void usr_perf_start_confirm(uint8_t status,
 		char *peer_trx_name,
 		char *peer_board_name,
 		uint64_t peer_mac_address,
-		float fw_version,uint32_t feature_mask);
+		float peer_fw_version,uint32_t peer_feature_mask);
 
 /**
  * Function to generate Per Test Start confirmation frame that must be sent to
@@ -296,7 +357,18 @@ void usr_per_test_start_confirm(uint8_t status);
  */
 void usr_range_test_start_confirm(uint8_t status);
 
+/**
+ * The Received Remote Reply Command is converted into Serial Data and sent to the Host interface
+ */
 void convert_ota_serial_frame_tx(uint8_t *buf,uint8_t len);
+
+/**
+*\brief  The received over the air payload containing the serial data request for the remote node is converter into serial data
+* to be used by the Serial Handler for processing further requests
+* \param buf pointer to the payload
+* len Length of the Serial Data Payload
+*/
+
 void convert_ota_serial_frame_rx(uint8_t *buf,uint8_t len);
 
 /**
@@ -543,7 +615,29 @@ void usr_set_default_config_confirm(uint8_t status,
 void usr_get_current_config_confirm(uint8_t status,
 		trx_config_params_t *curr_trx_conf_params);
 		
+/*
+ * Function to generate Packet stream confirm frame that must be
+ * sent to
+ * host application via serial interface.
+ * Called by Performance application as Indication before starting/stopping the packet stream
+ * \param status                Confirmation to the packet stream request
+ * \param start_stop            Parameter to indicate whether Packet streaming is started or stopped    
+ *
+ * \return void
+ */		
+		
 void usr_pkt_stream_confirm(uint8_t status,bool start_stop);
+
+/*
+ * Function to generate RX_ON confirm frame that must be
+ * sent to
+ * host application via serial interface.
+ * Called by Performance application as Indication before starting/stopping the rx_on mode
+ * \param status                Confirmation to the rx_on_req request
+ * \param start_stop            Parameter to indicate whether rx_on test is started or stopped    
+ *
+ * \return void
+ */		
 
 void usr_rx_on_confirm(uint8_t status,bool start_stop);
 

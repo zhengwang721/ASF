@@ -95,7 +95,7 @@ void system_board_init(void)
 		
 	/*Pins  PA12/RFCTRL2 and PA09/RFCTRL1 are used as DIG1 and DIG2 pins respectively in SAMR21 Xplained Pro*/	
 	
-	/* #define RFCTRL_CFG_ANT_DIV 4 => F2CFG = 00 and F1CFG = 01 in FECTRL register*/	
+	/* FECTRL register is Written with value 4 => F2CFG = 00 and F1CFG = 01 */	
 	REG_RFCTRL_FECFG = RFCTRL_CFG_ANT_DIV;
 	
 	struct system_pinmux_config config_pinmux;
