@@ -47,7 +47,7 @@
  *    - SAM L21 Xplained Pro
  *
  * This example demonstrates how to use the power driver. BUTTON0 is used to
- * wake up system from standby mode and PA04 is used as an external wake up
+ * wake up system from standby mode and as an external wake up
  * pin to wake up system from BACKUP mode. The wakeup pin level is low.
  * PB22/PB23 are used as GCLK0/GCLK1 output pin, oscilloscope can be used to
  * monitor their clock frequency.
