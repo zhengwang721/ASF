@@ -51,7 +51,7 @@
 /*@{*/
 
 #define RSTC_U2239
-#define REV_RSTC                    0x100
+#define REV_RSTC                    0x110
 
 /* -------- RSTC_RCAUSE : (RSTC Offset: 0x00) (R/   8) Reset Cause -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -148,7 +148,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint16_t WKPOL:16;         /*!< bit:  0..15  Wakeup Polarity                    */
+    uint16_t WKPOL:8;          /*!< bit:  0.. 7  Wakeup Polarity                    */
+    uint16_t :8;               /*!< bit:  8..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RSTC_WKPOL_Type;
@@ -158,15 +159,16 @@ typedef union {
 #define RSTC_WKPOL_RESETVALUE       0x0000ul     /**< \brief (RSTC_WKPOL reset_value) Wakeup Polarity */
 
 #define RSTC_WKPOL_WKPOL_Pos        0            /**< \brief (RSTC_WKPOL) Wakeup Polarity */
-#define RSTC_WKPOL_WKPOL_Msk        (0xFFFFul << RSTC_WKPOL_WKPOL_Pos)
+#define RSTC_WKPOL_WKPOL_Msk        (0xFFul << RSTC_WKPOL_WKPOL_Pos)
 #define RSTC_WKPOL_WKPOL(value)     ((RSTC_WKPOL_WKPOL_Msk & ((value) << RSTC_WKPOL_WKPOL_Pos)))
-#define RSTC_WKPOL_MASK             0xFFFFul     /**< \brief (RSTC_WKPOL) MASK Register */
+#define RSTC_WKPOL_MASK             0x00FFul     /**< \brief (RSTC_WKPOL) MASK Register */
 
 /* -------- RSTC_WKEN : (RSTC Offset: 0x0C) (R/W 16) Wakeup Enable -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint16_t WKEN:16;          /*!< bit:  0..15  Wakeup Enable                      */
+    uint16_t WKEN:8;           /*!< bit:  0.. 7  Wakeup Enable                      */
+    uint16_t :8;               /*!< bit:  8..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RSTC_WKEN_Type;
@@ -176,9 +178,9 @@ typedef union {
 #define RSTC_WKEN_RESETVALUE        0x0000ul     /**< \brief (RSTC_WKEN reset_value) Wakeup Enable */
 
 #define RSTC_WKEN_WKEN_Pos          0            /**< \brief (RSTC_WKEN) Wakeup Enable */
-#define RSTC_WKEN_WKEN_Msk          (0xFFFFul << RSTC_WKEN_WKEN_Pos)
+#define RSTC_WKEN_WKEN_Msk          (0xFFul << RSTC_WKEN_WKEN_Pos)
 #define RSTC_WKEN_WKEN(value)       ((RSTC_WKEN_WKEN_Msk & ((value) << RSTC_WKEN_WKEN_Pos)))
-#define RSTC_WKEN_MASK              0xFFFFul     /**< \brief (RSTC_WKEN) MASK Register */
+#define RSTC_WKEN_MASK              0x00FFul     /**< \brief (RSTC_WKEN) MASK Register */
 
 /* -------- RSTC_WKCAUSE : (RSTC Offset: 0x10) (R/W 16) Wakeup Cause -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

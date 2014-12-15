@@ -217,7 +217,7 @@ void aes_write_key(
 	}
 
 	for (i = 0; i < key_length; i++) {
-		*((uint32_t *)((uint32_t)&(module->hw->KEYWORD0.reg) + 4*i)) = *key;
+		module->hw->KEYWORD[i].reg = *key;
 		key++;
 	}
 }
@@ -241,7 +241,7 @@ void aes_write_init_vector(
 	Assert(module->opmode != AES_ECB_MODE);
 
 	for (i = 0; i < 4; i++) {
-		*(uint32_t *)((uint32_t)&(module->hw->INTVECTV0.reg) + 4*i) = *vector;
+		module->hw->INTVECTV[i].reg = *vector;
 		vector++;
 	}
 }

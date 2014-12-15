@@ -54,6 +54,7 @@
 #define REG_EIC_INTENCLR           (0x4000240CU) /**< \brief (EIC) Interrupt Enable Clear */
 #define REG_EIC_INTENSET           (0x40002410U) /**< \brief (EIC) Interrupt Enable Set */
 #define REG_EIC_INTFLAG            (0x40002414U) /**< \brief (EIC) Interrupt Flag Status and Clear */
+#define REG_EIC_EIC_ASYNCH         (0x40002418U) /**< \brief (EIC) EIC Asynchronous edge Detection Enable */
 #define REG_EIC_CONFIG0            (0x4000241CU) /**< \brief (EIC) Configuration 0 */
 #define REG_EIC_CONFIG1            (0x40002420U) /**< \brief (EIC) Configuration 1 */
 #else
@@ -65,11 +66,13 @@
 #define REG_EIC_INTENCLR           (*(RwReg  *)0x4000240CU) /**< \brief (EIC) Interrupt Enable Clear */
 #define REG_EIC_INTENSET           (*(RwReg  *)0x40002410U) /**< \brief (EIC) Interrupt Enable Set */
 #define REG_EIC_INTFLAG            (*(RwReg  *)0x40002414U) /**< \brief (EIC) Interrupt Flag Status and Clear */
+#define REG_EIC_EIC_ASYNCH         (*(RwReg  *)0x40002418U) /**< \brief (EIC) EIC Asynchronous edge Detection Enable */
 #define REG_EIC_CONFIG0            (*(RwReg  *)0x4000241CU) /**< \brief (EIC) Configuration 0 */
 #define REG_EIC_CONFIG1            (*(RwReg  *)0x40002420U) /**< \brief (EIC) Configuration 1 */
 #endif /* (defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /* ========== Instance parameters for EIC peripheral ========== */
+#define EIC_EXTINT_NUM              16      
 #define EIC_GCLK_ID                 3       
 #define EIC_NUMBER_OF_CONFIG_REGS   2       
 #define EIC_NUMBER_OF_INTERRUPTS    16      

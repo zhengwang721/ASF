@@ -181,8 +181,8 @@ enum status_code nvm_execute_command(
 	/* Check that the address given is valid  */
 	if (address > ((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)){
 #ifdef FEATURE_NVM_RWWEE
-		if (address >= ((uint32_t)NVMCTRL_WWR_EEPROM_SIZE + NVMCTRL_WWR_EEPROM_ADDR)
-			|| address < NVMCTRL_WWR_EEPROM_ADDR){
+		if (address >= ((uint32_t)NVMCTRL_RWW_EEPROM_SIZE + NVMCTRL_RWW_EEPROM_ADDR)
+			|| address < NVMCTRL_RWW_EEPROM_ADDR){
 			return STATUS_ERR_BAD_ADDRESS;
 		}
 #else
@@ -397,8 +397,8 @@ enum status_code nvm_write_buffer(
 	if (destination_address >
 			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
 #ifdef FEATURE_NVM_RWWEE
-		if (destination_address >= ((uint32_t)NVMCTRL_WWR_EEPROM_SIZE + NVMCTRL_WWR_EEPROM_ADDR)
-			|| destination_address < NVMCTRL_WWR_EEPROM_ADDR){
+		if (destination_address >= ((uint32_t)NVMCTRL_RWW_EEPROM_SIZE + NVMCTRL_RWW_EEPROM_ADDR)
+			|| destination_address < NVMCTRL_RWW_EEPROM_ADDR){
 			return STATUS_ERR_BAD_ADDRESS;
 		}
 		is_rww_eeprom = true;
@@ -503,8 +503,8 @@ enum status_code nvm_read_buffer(
 	if (source_address >
 			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
 #ifdef FEATURE_NVM_RWWEE
-		if (source_address >= ((uint32_t)NVMCTRL_WWR_EEPROM_SIZE + NVMCTRL_WWR_EEPROM_ADDR)
-			|| source_address < NVMCTRL_WWR_EEPROM_ADDR){
+		if (source_address >= ((uint32_t)NVMCTRL_RWW_EEPROM_SIZE + NVMCTRL_RWW_EEPROM_ADDR)
+			|| source_address < NVMCTRL_RWW_EEPROM_ADDR){
 			return STATUS_ERR_BAD_ADDRESS;
 		}
 #else
@@ -582,8 +582,8 @@ enum status_code nvm_erase_row(
 	if (row_address >
 			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
 #ifdef FEATURE_NVM_RWWEE
-		if (row_address >= ((uint32_t)NVMCTRL_WWR_EEPROM_SIZE + NVMCTRL_WWR_EEPROM_ADDR)
-			|| row_address < NVMCTRL_WWR_EEPROM_ADDR){
+		if (row_address >= ((uint32_t)NVMCTRL_RWW_EEPROM_SIZE + NVMCTRL_RWW_EEPROM_ADDR)
+			|| row_address < NVMCTRL_RWW_EEPROM_ADDR){
 			return STATUS_ERR_BAD_ADDRESS;
 		}
 		is_rww_eeprom = true;
@@ -655,7 +655,7 @@ void nvm_get_parameters(
 #ifdef FEATURE_NVM_RWWEE
 	/* Mask out rwwee number of pages count */
 	parameters->rww_eeprom_number_of_pages =
-			(param_reg & NVMCTRL_PARAM_WWREEP_Msk) >> NVMCTRL_PARAM_WWREEP_Pos;
+			(param_reg & NVMCTRL_PARAM_RWWEEP_Msk) >> NVMCTRL_PARAM_RWWEEP_Pos;
 #endif
 
 	/* Read the current EEPROM fuse value from the USER row */

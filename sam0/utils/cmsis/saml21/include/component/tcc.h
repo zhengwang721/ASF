@@ -51,7 +51,7 @@
 /*@{*/
 
 #define TCC_U2213
-#define REV_TCC                     0x210
+#define REV_TCC                     0x300
 
 /* -------- TCC_CTRLA : (TCC Offset: 0x00) (R/W 32) Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -67,7 +67,8 @@ typedef union {
     uint32_t PRESCSYNC:2;      /*!< bit: 12..13  Prescaler and Counter Synchronization Selection */
     uint32_t ALOCK:1;          /*!< bit:     14  Auto Lock                          */
     uint32_t MSYNC:1;          /*!< bit:     15  Master Synchronization (only for TCC Slave Instance) */
-    uint32_t :8;               /*!< bit: 16..23  Reserved                           */
+    uint32_t :7;               /*!< bit: 16..22  Reserved                           */
+    uint32_t DTRG:1;           /*!< bit:     23  DMA Trigger Mode                   */
     uint32_t CPTEN0:1;         /*!< bit:     24  Capture Channel 0 Enable           */
     uint32_t CPTEN1:1;         /*!< bit:     25  Capture Channel 1 Enable           */
     uint32_t CPTEN2:1;         /*!< bit:     26  Capture Channel 2 Enable           */
@@ -135,6 +136,8 @@ typedef union {
 #define TCC_CTRLA_ALOCK             (0x1ul << TCC_CTRLA_ALOCK_Pos)
 #define TCC_CTRLA_MSYNC_Pos         15           /**< \brief (TCC_CTRLA) Master Synchronization (only for TCC Slave Instance) */
 #define TCC_CTRLA_MSYNC             (0x1ul << TCC_CTRLA_MSYNC_Pos)
+#define TCC_CTRLA_DTRG_Pos          23           /**< \brief (TCC_CTRLA) DMA Trigger Mode */
+#define TCC_CTRLA_DTRG              (0x1ul << TCC_CTRLA_DTRG_Pos)
 #define TCC_CTRLA_CPTEN0_Pos        24           /**< \brief (TCC_CTRLA) Capture Channel 0 Enable */
 #define TCC_CTRLA_CPTEN0            (1 << TCC_CTRLA_CPTEN0_Pos)
 #define TCC_CTRLA_CPTEN1_Pos        25           /**< \brief (TCC_CTRLA) Capture Channel 1 Enable */
@@ -146,7 +149,7 @@ typedef union {
 #define TCC_CTRLA_CPTEN_Pos         24           /**< \brief (TCC_CTRLA) Capture Channel x Enable */
 #define TCC_CTRLA_CPTEN_Msk         (0xFul << TCC_CTRLA_CPTEN_Pos)
 #define TCC_CTRLA_CPTEN(value)      ((TCC_CTRLA_CPTEN_Msk & ((value) << TCC_CTRLA_CPTEN_Pos)))
-#define TCC_CTRLA_MASK              0x0F00FF63ul /**< \brief (TCC_CTRLA) MASK Register */
+#define TCC_CTRLA_MASK              0x0F80FF63ul /**< \brief (TCC_CTRLA) MASK Register */
 
 /* -------- TCC_CTRLBCLR : (TCC Offset: 0x04) (R/W  8) Control B Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -190,11 +193,13 @@ typedef union {
 #define   TCC_CTRLBCLR_CMD_STOP_Val       0x2ul  /**< \brief (TCC_CTRLBCLR) Force stop */
 #define   TCC_CTRLBCLR_CMD_UPDATE_Val     0x3ul  /**< \brief (TCC_CTRLBCLR) Force update or double buffered registers */
 #define   TCC_CTRLBCLR_CMD_READSYNC_Val   0x4ul  /**< \brief (TCC_CTRLBCLR) Force COUNT read synchronization */
+#define   TCC_CTRLBCLR_CMD_DMATRG_Val     0x5ul  /**< \brief (TCC_CTRLBCLR) Generate DMA triggers */
 #define TCC_CTRLBCLR_CMD_NONE       (TCC_CTRLBCLR_CMD_NONE_Val     << TCC_CTRLBCLR_CMD_Pos)
 #define TCC_CTRLBCLR_CMD_RETRIGGER  (TCC_CTRLBCLR_CMD_RETRIGGER_Val << TCC_CTRLBCLR_CMD_Pos)
 #define TCC_CTRLBCLR_CMD_STOP       (TCC_CTRLBCLR_CMD_STOP_Val     << TCC_CTRLBCLR_CMD_Pos)
 #define TCC_CTRLBCLR_CMD_UPDATE     (TCC_CTRLBCLR_CMD_UPDATE_Val   << TCC_CTRLBCLR_CMD_Pos)
 #define TCC_CTRLBCLR_CMD_READSYNC   (TCC_CTRLBCLR_CMD_READSYNC_Val << TCC_CTRLBCLR_CMD_Pos)
+#define TCC_CTRLBCLR_CMD_DMATRG     (TCC_CTRLBCLR_CMD_DMATRG_Val   << TCC_CTRLBCLR_CMD_Pos)
 #define TCC_CTRLBCLR_MASK           0xFFul       /**< \brief (TCC_CTRLBCLR) MASK Register */
 
 /* -------- TCC_CTRLBSET : (TCC Offset: 0x05) (R/W  8) Control B Set -------- */
@@ -239,11 +244,13 @@ typedef union {
 #define   TCC_CTRLBSET_CMD_STOP_Val       0x2ul  /**< \brief (TCC_CTRLBSET) Force stop */
 #define   TCC_CTRLBSET_CMD_UPDATE_Val     0x3ul  /**< \brief (TCC_CTRLBSET) Force update or double buffered registers */
 #define   TCC_CTRLBSET_CMD_READSYNC_Val   0x4ul  /**< \brief (TCC_CTRLBSET) Force COUNT read synchronization */
+#define   TCC_CTRLBSET_CMD_DMATRG_Val     0x5ul  /**< \brief (TCC_CTRLBSET) Generate DMA triggers */
 #define TCC_CTRLBSET_CMD_NONE       (TCC_CTRLBSET_CMD_NONE_Val     << TCC_CTRLBSET_CMD_Pos)
 #define TCC_CTRLBSET_CMD_RETRIGGER  (TCC_CTRLBSET_CMD_RETRIGGER_Val << TCC_CTRLBSET_CMD_Pos)
 #define TCC_CTRLBSET_CMD_STOP       (TCC_CTRLBSET_CMD_STOP_Val     << TCC_CTRLBSET_CMD_Pos)
 #define TCC_CTRLBSET_CMD_UPDATE     (TCC_CTRLBSET_CMD_UPDATE_Val   << TCC_CTRLBSET_CMD_Pos)
 #define TCC_CTRLBSET_CMD_READSYNC   (TCC_CTRLBSET_CMD_READSYNC_Val << TCC_CTRLBSET_CMD_Pos)
+#define TCC_CTRLBSET_CMD_DMATRG     (TCC_CTRLBSET_CMD_DMATRG_Val   << TCC_CTRLBSET_CMD_Pos)
 #define TCC_CTRLBSET_MASK           0xFFul       /**< \brief (TCC_CTRLBSET) MASK Register */
 
 /* -------- TCC_SYNCBUSY : (TCC Offset: 0x08) (R/  32) Synchronization Busy -------- */
@@ -1611,6 +1618,14 @@ typedef union {
 #define TCC_WAVEBUF_RAMPB_Pos       4            /**< \brief (TCC_WAVEBUF) Ramp Mode Buffer */
 #define TCC_WAVEBUF_RAMPB_Msk       (0x3ul << TCC_WAVEBUF_RAMPB_Pos)
 #define TCC_WAVEBUF_RAMPB(value)    ((TCC_WAVEBUF_RAMPB_Msk & ((value) << TCC_WAVEBUF_RAMPB_Pos)))
+#define   TCC_WAVEBUF_RAMPB_RAMP1_Val     0x0ul  /**< \brief (TCC_WAVEBUF) RAMP1 operation */
+#define   TCC_WAVEBUF_RAMPB_RAMP2A_Val    0x1ul  /**< \brief (TCC_WAVEBUF) Alternative RAMP2 operation */
+#define   TCC_WAVEBUF_RAMPB_RAMP2_Val     0x2ul  /**< \brief (TCC_WAVEBUF) RAMP2 operation */
+#define   TCC_WAVEBUF_RAMPB_RAMP2C_Val    0x3ul  /**< \brief (TCC_WAVEBUF) Critical RAMP2 operation */
+#define TCC_WAVEBUF_RAMPB_RAMP1     (TCC_WAVEBUF_RAMPB_RAMP1_Val   << TCC_WAVEBUF_RAMPB_Pos)
+#define TCC_WAVEBUF_RAMPB_RAMP2A    (TCC_WAVEBUF_RAMPB_RAMP2A_Val  << TCC_WAVEBUF_RAMPB_Pos)
+#define TCC_WAVEBUF_RAMPB_RAMP2     (TCC_WAVEBUF_RAMPB_RAMP2_Val   << TCC_WAVEBUF_RAMPB_Pos)
+#define TCC_WAVEBUF_RAMPB_RAMP2C    (TCC_WAVEBUF_RAMPB_RAMP2C_Val  << TCC_WAVEBUF_RAMPB_Pos)
 #define TCC_WAVEBUF_CIPERENB_Pos    7            /**< \brief (TCC_WAVEBUF) Circular Period Enable Buffer */
 #define TCC_WAVEBUF_CIPERENB        (0x1ul << TCC_WAVEBUF_CIPERENB_Pos)
 #define TCC_WAVEBUF_CICCENB0_Pos    8            /**< \brief (TCC_WAVEBUF) Circular Channel 0 Enable Buffer */
