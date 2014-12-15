@@ -1424,12 +1424,11 @@ void pmc_set_writeprotect(uint32_t ul_enable)
 /**
  * \brief Return write protect status.
  *
- * \retval 0 Protection disabled.
- * \retval 1 Protection enabled.
+ * \return Return write protect status.
  */
 uint32_t pmc_get_writeprotect_status(void)
 {
-	return PMC->PMC_WPMR & PMC_WPMR_WPEN;
+	return PMC->PMC_WPSR;
 }
 
 #if (SAMG53 || SAMG54 || SAMG55)
