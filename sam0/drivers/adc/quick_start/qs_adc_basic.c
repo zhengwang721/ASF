@@ -57,6 +57,7 @@ void configure_adc(void)
 //! [setup_config_defaults]
 	adc_get_config_defaults(&config_adc);
 //! [setup_config_defaults]
+	config_adc.positive_input = ADC_POSITIVE_INPUT_PIN1;
 
 //! [setup_set_config]
 	adc_init(&adc_instance, ADC, &config_adc);
