@@ -45,6 +45,8 @@
 #include "delay.h"
 #include <string.h>
 
+#define OHCI         ((Ohci      *)0x20400000U) /**< \brief (OHCI) Base Address */
+
 /* HCCA strcture. */
 COMPILER_ALIGNED(256)
 static volatile struct ohci_hcca hcca;
@@ -123,43 +125,43 @@ void ohci_init(void)
 	memset((void *)&isochronous_td_tail, 0, sizeof(isochronous_td_tail));
 
 	/* Setup Host Controller to issue a software reset. */
-	UHP->HcCommandStatus = HC_COMMANDSTATUS_HCR;
-	while (UHP->HcCommandStatus & HC_COMMANDSTATUS_HCR);
+	OHCI->HcCommandStatus = HC_COMMANDSTATUS_HCR;
+	while (OHCI->HcCommandStatus & HC_COMMANDSTATUS_HCR);
 
     /* Write Fm Interval and Largest Data Packet Counter. */
-	UHP->HcFmInterval    = FIT | (FSMP(FI)<< 16) | FI;
-	UHP->HcPeriodicStart = FI * 90 / 100;
+	OHCI->HcFmInterval    = FIT | (FSMP(FI)<< 16) | FI;
+	OHCI->HcPeriodicStart = FI * 90 / 100;
 
 	/* Begin sending SOF. */
-	temp_value = UHP->HcControl;
+	temp_value = OHCI->HcControl;
 	temp_value &= ~HC_CONTROL_HCFS;
 	temp_value |= HC_CONTROL_HCFS_USBOPERATIONAL;
-	UHP->HcControl = temp_value;
+	OHCI->HcControl = temp_value;
 
-	UHP->HcControl |= HC_CONTROL_PLE;
-	UHP->HcControl |= HC_CONTROL_IE;
+	OHCI->HcControl |= HC_CONTROL_PLE;
+	OHCI->HcControl |= HC_CONTROL_IE;
 
-	UHP->HcHCCA = (uint32_t)&hcca;
+	OHCI->HcHCCA = (uint32_t)&hcca;
 
 	/* Clear Interrrupt Status. */
-	UHP->HcInterruptStatus |= UHP->HcInterruptStatus;
+	OHCI->HcInterruptStatus |= OHCI->HcInterruptStatus;
 
 	/* Enable some interrupts. */
-	UHP->HcInterruptEnable = HC_INTERRUPT_WDH | HC_INTERRUPT_SF
+	OHCI->HcInterruptEnable = HC_INTERRUPT_WDH | HC_INTERRUPT_SF
 				| HC_INTERRUPT_RD | HC_INTERRUPT_RHSC | HC_INTERRUPT_MIE;
 
 	/* Delay some time to access the port. */
 	delay_ms(50);
 
 	/* Set Global Power. */
-	UHP->HcRhStatus = RH_HS_LPSC;
+	OHCI->HcRhStatus = RH_HS_LPSC;
 
 	/* Initiate port reset. */
-	UHP->HcRhPortStatus = RH_PS_PRS;
-	while (UHP->HcRhPortStatus & RH_PS_PRS);
+	OHCI->HcRhPortStatus = RH_PS_PRS;
+	while (OHCI->HcRhPortStatus & RH_PS_PRS);
 	delay_ms(100);
     /* Clear port reset signal. */
-    UHP->HcRhPortStatus = RH_PS_PRSC;
+    OHCI->HcRhPortStatus = RH_PS_PRSC;
 }
 
 /**
@@ -175,7 +177,7 @@ void ohci_deinit(void)
 	struct ohci_ed *ed_free_header;
 
 	/* Change to reset state. */
-	UHP->HcControl &= ~HC_CONTROL_HCFS;;
+	OHCI->HcControl &= ~HC_CONTROL_HCFS;;
 	
 	/* Free all allocated EDs and TDs. */
 
@@ -184,7 +186,7 @@ void ohci_deinit(void)
 	control_ed.p_td_tail = NULL; 
 
 	/* TDs in Bulk endpoints. */
-	ed_header = (struct ohci_ed *)UHP->HcBulkHeadED;
+	ed_header = (struct ohci_ed *)OHCI->HcBulkHeadED;
 	while (ed_header != NULL) {
 		if (ed_header->p_td_head != ed_header->p_td_tail) {
 			td_general_free_header = (struct ohci_td_general *)ed_header->p_td_head;
@@ -217,7 +219,7 @@ void ohci_deinit(void)
 
 
 	/* Bulk endpoints. */
-	ed_header = (struct ohci_ed *)UHP->HcBulkHeadED;
+	ed_header = (struct ohci_ed *)OHCI->HcBulkHeadED;
 	while (ed_header != NULL) {
 		ed_free_header = ed_header;
 		ed_header = ed_header->p_next_ed;
@@ -242,7 +244,7 @@ void ohci_deinit(void)
  */
 bool ohci_get_device_speed (void)
 {
-	if (UHP->HcRhPortStatus & RH_PS_LSDA) {
+	if (OHCI->HcRhPortStatus & RH_PS_LSDA) {
 		return true;
 	} else {
 		return false;
@@ -265,14 +267,14 @@ uint16_t ohci_get_frame_number (void)
  */
 void ohci_bus_reset(void)
 {
-	Assert(!(UHP->HcRhPortStatus & RH_PS_CCS));
+	Assert(!(OHCI->HcRhPortStatus & RH_PS_CCS));
 
 	/* Initiate port reset. */
-	UHP->HcRhPortStatus = RH_PS_PRS;
-	while (UHP->HcRhPortStatus & RH_PS_PRS);
+	OHCI->HcRhPortStatus = RH_PS_PRS;
+	while (OHCI->HcRhPortStatus & RH_PS_PRS);
 	delay_ms(100);
     /* Clear port reset signal. */
-    UHP->HcRhPortStatus = RH_PS_PRSC;
+    OHCI->HcRhPortStatus = RH_PS_PRSC;
 
 	bus_reset_flag = true;
 }
@@ -285,19 +287,19 @@ void ohci_bus_suspend(void)
 {
 	uint32_t temp_value;
 
-	UHP->HcControl |= HC_CONTROL_RWE;
+	OHCI->HcControl |= HC_CONTROL_RWE;
 
 	/**
 	 * Suspend hub ... this is the "global (to this bus) suspend" mode,
 	 * which doesn't imply ports will first be individually suspended.
 	 */
-	temp_value = UHP->HcControl;
+	temp_value = OHCI->HcControl;
 	temp_value &= ~HC_CONTROL_HCFS;
 	temp_value |= HC_CONTROL_HCFS_USBSUSPEND;
-	UHP->HcControl = temp_value;
+	OHCI->HcControl = temp_value;
 
 	/* Device remote wakeup enable. */
-	UHP->HcRhStatus = RH_HS_DRWE;
+	OHCI->HcRhStatus = RH_HS_DRWE;
 }
 
 /**
@@ -306,7 +308,7 @@ void ohci_bus_suspend(void)
  */
 bool ohci_is_suspend(void)
 {
-	return ((UHP->HcControl & HC_CONTROL_HCFS) == HC_CONTROL_HCFS_USBSUSPEND);
+	return ((OHCI->HcControl & HC_CONTROL_HCFS) == HC_CONTROL_HCFS_USBSUSPEND);
 }
 
 /**
@@ -319,23 +321,23 @@ void ohci_bus_resume(void)
 	uint32_t temp_value;
 
 	/* Device remote wakeup disable. */
-	UHP->HcRhStatus = RH_HS_CRWE;
+	OHCI->HcRhStatus = RH_HS_CRWE;
 
-	temp_value = UHP->HcControl;
+	temp_value = OHCI->HcControl;
 	temp_value &= ~HC_CONTROL_HCFS;
 	temp_value |= HC_CONTROL_HCFS_USBRESUME;
-	UHP->HcControl = temp_value;
+	OHCI->HcControl = temp_value;
 
 	delay_ms(50);
 
 	/* Then re-enable operations */
-	temp_value = UHP->HcControl;
+	temp_value = OHCI->HcControl;
 	temp_value &= ~HC_CONTROL_HCFS;
 	temp_value |= HC_CONTROL_HCFS_USBOPERATIONAL;
-	UHP->HcControl = temp_value;
+	OHCI->HcControl = temp_value;
 
 
-	UHP->HcControl &= ~HC_CONTROL_RWE;
+	OHCI->HcControl &= ~HC_CONTROL_RWE;
 }
 
 /**
@@ -346,7 +348,7 @@ bool ohci_add_ed_control(ed_info_t *ed_info)
 {
 	/* control endpoint. */	
 	memset((void *)&control_ed, 0, sizeof(control_ed));
-	UHP->HcControlHeadED = (uint32_t)&control_ed;
+	OHCI->HcControlHeadED = (uint32_t)&control_ed;
 	control_ed.ed_info.ul_ed_info = ed_info->ul_ed_info;
 	return true;
 }
@@ -375,11 +377,11 @@ bool ohci_add_ed_bulk(ed_info_t *ed_info)
 		return false;
 	}
 
-	bulk_ed_head = (struct ohci_ed *)UHP->HcBulkHeadED;
+	bulk_ed_head = (struct ohci_ed *)OHCI->HcBulkHeadED;
 
 	if (bulk_ed_head == NULL) {
 		bulk_ed_add->ed_info.ul_ed_info = ed_info->ul_ed_info;
-		UHP->HcBulkHeadED = (uint32_t)bulk_ed_add;
+		OHCI->HcBulkHeadED = (uint32_t)bulk_ed_add;
 	} else {
 		/* Check if the endpoint has been allocated */
 		while (bulk_ed_head != NULL) {
@@ -494,10 +496,10 @@ void ohci_remove_ed(uint8_t ep_number)
 	/* Bulk/Int/ISO endpoints. */
 	if (ep_number != 0xFF) {
 		/* Bulk endpoints. */
-		ed_header = (struct ohci_ed *)UHP->HcBulkHeadED;
+		ed_header = (struct ohci_ed *)OHCI->HcBulkHeadED;
 		if (ed_header != NULL) {
 			if (ed_header->ed_info.ed_info_s.bEndpointNumber == ep_number) {
-				UHP->HcBulkHeadED = (uint32_t)ed_header->p_next_ed;
+				OHCI->HcBulkHeadED = (uint32_t)ed_header->p_next_ed;
 				ed_free_header = ed_header;
 			} else {
 				/* Check the list */
@@ -545,7 +547,7 @@ void ohci_remove_ed(uint8_t ep_number)
 	/* All endpoints. */
 	if (ep_number == 0xFF) {
 		/* Bulk endpoints. */
-		UHP->HcBulkHeadED = 0;
+		OHCI->HcBulkHeadED = 0;
 
 		/* Int/ISO endpoints. */
 		for (i = 0; i < 32; i++) {
@@ -609,7 +611,7 @@ void ohci_clear_ed_transfer_status(struct ohci_td_general *td_general_header)
  */
 bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
 {
-	UHP->HcControl &= ~HC_CONTROL_CLE;
+	OHCI->HcControl &= ~HC_CONTROL_CLE;
 
 	memset((void *)&control_td_head, 0, sizeof(control_td_head));
 	memset((void *)&control_td_tail, 0, sizeof(control_td_tail));
@@ -636,8 +638,8 @@ bool ohci_add_td_control(enum pid pid, uint8_t *buf, uint16_t buf_size)
 	control_ed.p_td_head = (void *)&control_td_head;
 	control_ed.p_td_tail = NULL;
 
-	UHP->HcCommandStatus = HC_COMMANDSTATUS_CLF;
-	UHP->HcControl |= HC_CONTROL_CLE;
+	OHCI->HcCommandStatus = HC_COMMANDSTATUS_CLF;
+	OHCI->HcControl |= HC_CONTROL_CLE;
 
 	/* Wait for transfer done. */
 	do {
@@ -673,7 +675,7 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 
 	/* Bulk endpoints. */
 	i = 0;
-	ed_header = (struct ohci_ed *)UHP->HcBulkHeadED;
+	ed_header = (struct ohci_ed *)OHCI->HcBulkHeadED;
 	while (ed_header != NULL) {
 		if ((ed_header->ed_info.ed_info_s.bEndpointNumber == ep_number) &&
 				(ed_header->ed_info.ed_info_s.bDirection == ep_dir)) {
@@ -711,8 +713,8 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 			ed_header->p_td_head = (void *)p_td_head;
 			ed_header->p_td_tail = NULL;
 
-			UHP->HcCommandStatus = HC_COMMANDSTATUS_BLF;
-			UHP->HcControl |= HC_CONTROL_BLE;
+			OHCI->HcCommandStatus = HC_COMMANDSTATUS_BLF;
+			OHCI->HcControl |= HC_CONTROL_BLE;
 				
 			return true;
 		} else {
@@ -733,8 +735,8 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 					p_td_tail = ((uint32_t)(ed_header->p_td_tail)) & 0xFFFFFFF0;
 				} while(p_td_head != p_td_tail);
 
-				UHP->HcControl &= ~HC_CONTROL_PLE;
-				UHP->HcControl &= ~HC_CONTROL_IE;
+				OHCI->HcControl &= ~HC_CONTROL_PLE;
+				OHCI->HcControl &= ~HC_CONTROL_IE;
 				
 				memset((void *)&interrupt_td_head[i], 0, sizeof(interrupt_td_head[i]));
 				memset((void *)&interrupt_td_tail[i], 0, sizeof(interrupt_td_tail[i]));
@@ -763,8 +765,8 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 				ed_header->p_td_head = (void *)p_td_head;
 				ed_header->p_td_tail = NULL;
 
-				UHP->HcControl |= HC_CONTROL_PLE;
-				UHP->HcControl |= HC_CONTROL_IE;
+				OHCI->HcControl |= HC_CONTROL_PLE;
+				OHCI->HcControl |= HC_CONTROL_IE;
 
 				return true;
 			} else {
@@ -774,8 +776,8 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 					p_td_tail = ((uint32_t)(ed_header->p_td_tail)) & 0xFFFFFFF0;
 				} while(p_td_head != p_td_tail);
 
-				UHP->HcControl &= ~HC_CONTROL_PLE;
-				UHP->HcControl &= ~HC_CONTROL_IE;
+				OHCI->HcControl &= ~HC_CONTROL_PLE;
+				OHCI->HcControl &= ~HC_CONTROL_IE;
 				
 				memset((void *)&isochronous_td_head[i], 0, sizeof(isochronous_td_head[i]));
 				memset((void *)&isochronous_td_tail[i], 0, sizeof(isochronous_td_tail[i]));
@@ -804,8 +806,8 @@ bool ohci_add_td_non_control(uint8_t ep_number, uint8_t *buf,
 				// clear the skip
 //				ed_header->ed_info.ed_info_s.bSkip = 0;
 
-				UHP->HcControl |= HC_CONTROL_PLE;
-				UHP->HcControl |= HC_CONTROL_IE;
+				OHCI->HcControl |= HC_CONTROL_PLE;
+				OHCI->HcControl |= HC_CONTROL_IE;
 					
 				return true;
 			}
@@ -834,7 +836,7 @@ void ohci_remove_td(uint8_t ep_number)
 	} 
 
 	/* Bulk endpoints. */
-	ed_header = (struct ohci_ed *)UHP->HcBulkHeadED;
+	ed_header = (struct ohci_ed *)OHCI->HcBulkHeadED;
 	while (ed_header != NULL) {
 		if (ed_header->ed_info.ed_info_s.bEndpointNumber ==	ep_number) {
 			if (ed_header->p_td_head != ed_header->p_td_tail) {
@@ -871,28 +873,28 @@ void ohci_remove_td(uint8_t ep_number)
 void ohci_enable_interrupt(enum ohci_interrupt_source int_source)
 {
 	if (int_source == OHCI_INTERRUPT_SO) {
-		UHP->HcInterruptEnable = HC_INTERRUPT_SO;
+		OHCI->HcInterruptEnable = HC_INTERRUPT_SO;
 	}
 	if (int_source == OHCI_INTERRUPT_WDH) {
-		UHP->HcInterruptEnable = HC_INTERRUPT_WDH;
+		OHCI->HcInterruptEnable = HC_INTERRUPT_WDH;
 	}
 	if (int_source == OHCI_INTERRUPT_SF) {
-		UHP->HcInterruptEnable = HC_INTERRUPT_SF;
+		OHCI->HcInterruptEnable = HC_INTERRUPT_SF;
 	}
 	if (int_source == OHCI_INTERRUPT_RD) {
-		UHP->HcInterruptEnable = HC_INTERRUPT_RD;
+		OHCI->HcInterruptEnable = HC_INTERRUPT_RD;
 	}
 	if (int_source == OHCI_INTERRUPT_UE) {
-		UHP->HcInterruptEnable = HC_INTERRUPT_UE;
+		OHCI->HcInterruptEnable = HC_INTERRUPT_UE;
 	}
 	if (int_source == OHCI_INTERRUPT_FNO) {
-		UHP->HcInterruptEnable = HC_INTERRUPT_FNO;
+		OHCI->HcInterruptEnable = HC_INTERRUPT_FNO;
 	}
 	if (int_source == OHCI_INTERRUPT_RHSC) {
-		UHP->HcInterruptEnable = HC_INTERRUPT_RHSC;
+		OHCI->HcInterruptEnable = HC_INTERRUPT_RHSC;
 	}
 	if (int_source == OHCI_INTERRUPT_OC) {
-		UHP->HcInterruptEnable = HC_INTERRUPT_OC;
+		OHCI->HcInterruptEnable = HC_INTERRUPT_OC;
 	}
 }
 
@@ -904,28 +906,28 @@ void ohci_enable_interrupt(enum ohci_interrupt_source int_source)
 void ohci_disable_interrupt(enum ohci_interrupt_source int_source)
 {
 	if (int_source == OHCI_INTERRUPT_SO) {
-		UHP->HcInterruptDisable = HC_INTERRUPT_SO;
+		OHCI->HcInterruptDisable = HC_INTERRUPT_SO;
 	}
 	if (int_source == OHCI_INTERRUPT_WDH) {
-		UHP->HcInterruptDisable = HC_INTERRUPT_WDH;
+		OHCI->HcInterruptDisable = HC_INTERRUPT_WDH;
 	}
 	if (int_source == OHCI_INTERRUPT_SF) {
-		UHP->HcInterruptDisable = HC_INTERRUPT_SF;
+		OHCI->HcInterruptDisable = HC_INTERRUPT_SF;
 	}
 	if (int_source == OHCI_INTERRUPT_RD) {
-		UHP->HcInterruptDisable = HC_INTERRUPT_RD;
+		OHCI->HcInterruptDisable = HC_INTERRUPT_RD;
 	}
 	if (int_source == OHCI_INTERRUPT_UE) {
-		UHP->HcInterruptDisable = HC_INTERRUPT_UE;
+		OHCI->HcInterruptDisable = HC_INTERRUPT_UE;
 	}
 	if (int_source == OHCI_INTERRUPT_FNO) {
-		UHP->HcInterruptDisable = HC_INTERRUPT_FNO;
+		OHCI->HcInterruptDisable = HC_INTERRUPT_FNO;
 	}
 	if (int_source == OHCI_INTERRUPT_RHSC) {
-		UHP->HcInterruptDisable = HC_INTERRUPT_RHSC;
+		OHCI->HcInterruptDisable = HC_INTERRUPT_RHSC;
 	}
 	if (int_source == OHCI_INTERRUPT_OC) {
-		UHP->HcInterruptDisable = HC_INTERRUPT_OC;
+		OHCI->HcInterruptDisable = HC_INTERRUPT_OC;
 	}
 }
 
@@ -960,22 +962,22 @@ void UHP_Handler()
 	uint32_t rh_port_status;
 	struct ohci_td_general *td_general_header;
 
-	rh_status = UHP->HcRhStatus;
-	rh_port_status = UHP->HcRhPortStatus;
+	rh_status = OHCI->HcRhStatus;
+	rh_port_status = OHCI->HcRhPortStatus;
 
 	/**
 	 * Read interrupt status (and flush pending writes).  We ignore the
 	 * optimization of checking the LSB of hcca->done_head; it doesn't
 	 * work on all systems (edge triggering for OHCI can be a factor).
 	 */
-	int_status = UHP->HcInterruptStatus;
+	int_status = OHCI->HcInterruptStatus;
 
 	/* We only care about interrupts that are enabled */
-	int_status &= UHP->HcInterruptEnable;
+	int_status &= OHCI->HcInterruptEnable;
 
 	if (int_status & HC_INTERRUPT_WDH) {
 		td_general_header = (struct ohci_td_general *)hcca.pDoneHead;
-		UHP->HcInterruptStatus = HC_INTERRUPT_WDH;
+		OHCI->HcInterruptStatus = HC_INTERRUPT_WDH;
 		callback_para = (uint32_t)td_general_header;
 		callback_para &= 0xFFFFFFF0;
 		if (callback_para == ((uint32_t)&control_td_head & 0xFFFFFFF0)) {
@@ -992,21 +994,21 @@ void UHP_Handler()
 	 */
 	if (int_status & HC_INTERRUPT_RD) {
 		/* Resume detected. */
-		UHP->HcInterruptStatus = HC_INTERRUPT_RD;
+		OHCI->HcInterruptStatus = HC_INTERRUPT_RD;
 		ohci_bus_resume();
 		ohci_callback_pointer[OHCI_INTERRUPT_RD](&callback_para);
 	}
 
 	if (int_status & HC_INTERRUPT_RHSC) {
 		if (bus_reset_flag) {
-			UHP->HcRhPortStatus = RH_PS_PRSC;
-			UHP->HcInterruptStatus = HC_INTERRUPT_RHSC;
+			OHCI->HcRhPortStatus = RH_PS_PRSC;
+			OHCI->HcInterruptStatus = HC_INTERRUPT_RHSC;
 			bus_reset_flag = false;
 			callback_para = BUS_RESET;
 			ohci_callback_pointer[OHCI_INTERRUPT_RHSC](&callback_para);
 		} else if (rh_port_status & RH_PS_CSC) {
-			UHP->HcRhPortStatus = RH_PS_CSC;
-			UHP->HcInterruptStatus = HC_INTERRUPT_RHSC;
+			OHCI->HcRhPortStatus = RH_PS_CSC;
+			OHCI->HcInterruptStatus = HC_INTERRUPT_RHSC;
 			if (!(rh_status & RH_HS_DRWE)) {
 				if (rh_port_status & RH_PS_CCS) {
 					callback_para = BUS_CONNECT;
@@ -1016,23 +1018,23 @@ void UHP_Handler()
 				ohci_callback_pointer[OHCI_INTERRUPT_RHSC](&callback_para);
 			}
 		} else {
-			UHP->HcInterruptStatus = HC_INTERRUPT_RHSC;
+			OHCI->HcInterruptStatus = HC_INTERRUPT_RHSC;
 			callback_para = 0xff;
 		}
 	}
 
 	if (int_status & HC_INTERRUPT_SF) {
-		UHP->HcInterruptStatus = HC_INTERRUPT_SF;
+		OHCI->HcInterruptStatus = HC_INTERRUPT_SF;
 		ohci_callback_pointer[OHCI_INTERRUPT_SF](&callback_para);
 	}
 
 	if (int_status & HC_INTERRUPT_SO) {
-		UHP->HcInterruptStatus = HC_INTERRUPT_SO;
+		OHCI->HcInterruptStatus = HC_INTERRUPT_SO;
 		ohci_callback_pointer[OHCI_INTERRUPT_SO](&callback_para);
 	}
 
 	if (int_status & HC_INTERRUPT_UE) {
-		UHP->HcInterruptStatus = HC_INTERRUPT_UE;
+		OHCI->HcInterruptStatus = HC_INTERRUPT_UE;
 		ohci_callback_pointer[OHCI_INTERRUPT_UE](&callback_para);
 	}
 }

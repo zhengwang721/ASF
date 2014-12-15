@@ -69,7 +69,7 @@ typedef struct {
 	__IO uint32_t HcRhDescriptorB;   /**< \brief (Udp Offset: 0x0FC) Version Register */
 	__IO uint32_t HcRhStatus;  /**< \brief (Udp Offset: 0x0F8) USB FS Device Features Register */
 	__IO uint32_t HcRhPortStatus;   /**< \brief (Udp Offset: 0x0FC) Version Register */
-} Uhp;
+} Ohci;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 /** \brief  HcControl register fields */
