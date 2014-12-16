@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM SERCOM I2C Master Interface Driver
+ * \brief SAM SERCOM I<SUP>2</SUP>C Master Interface Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

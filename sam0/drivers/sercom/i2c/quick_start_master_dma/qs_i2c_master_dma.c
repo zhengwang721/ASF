@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM SERCOM I2C Master with DMA Quick Start Guide
+ * \brief SAM SERCOM I<SUP>2</SUP>C Master with DMA Quick Start Guide
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
