@@ -43,11 +43,13 @@
 #include <asf.h>
 
 //! [buffer]
-const int32_t numerator_s[] = {
+#define buf_len 8
+
+const int32_t numerator_s[buf_len] = {
 	2046, 415, 26, 1, -1, -255, -3798, -65535,
 };
 
-const uint32_t numerator_u[] = {
+const uint32_t numerator_u[buf_len] = {
 	0x00000001,
 	0x0000005A,
 	0x000007AB,
@@ -57,99 +59,74 @@ const uint32_t numerator_u[] = {
 	0x20781945, 
 	0x7FFFFFFF,
 };
-//! [buffer]
 
-//! [setup]
-//static void cdc_uart_init(void)
-//{
-	//struct usart_config usart_conf;
-//
-	///* Configure USART for unit test output */
-	//usart_get_config_defaults(&usart_conf);
-	//usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
-	//usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
-	//usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
-	//usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
-	//usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
-	//usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
-//
-	//stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART, &usart_conf);
-	//usart_enable(&cdc_uart_module);
-//}
-//! [setup]
+static int32_t result_s[buf_len], result_s_m[buf_len];
+static uint32_t result_u[buf_len], result_u_m[buf_len];
+static uint32_t result_r[buf_len];
+//! [buffer]
 
 //! [calculate]
 static void signed_division(void)
 {
 	int32_t numerator, denominator;
-	int32_t result[8];
 	uint8_t i;
 	
-	for(i = 0; i < sizeof(numerator_s) / sizeof(int32_t); i++)
+	for(i = 0; i < buf_len; i++)
 	{
 		numerator = numerator_s[i];
-		denominator = i+1;
-		result[i] = numerator / denominator;
-		//printf("%ld / %ld = %ld\n", numerator, denominator, result);
+		denominator = i + 1;
+		result_s[i] = numerator / denominator;
 	}
 }
 
 static void unsigned_division(void)
 {
 	uint32_t numerator, denominator;
-	uint32_t result[8];
 	uint8_t i;
 	
-	for(i = 0; i < sizeof(numerator_s) / sizeof(int32_t); i++)
+	for(i = 0; i < buf_len; i++)
 	{
 		numerator = numerator_u[i];
-		denominator = i+1;
-		result[i] = numerator / denominator;
-		//printf("%lu / %lu = %lu\n", numerator, denominator, result);
+		denominator = i + 1;
+		result_u[i] = numerator / denominator;
 	}
 }
 
 static void signed_division_mod(void)
 {
 	int32_t numerator, denominator;
-	int32_t result[8];
 	uint8_t i;
 	
-	for(i = 0; i < sizeof(numerator_s) / sizeof(int32_t); i++)
+	for(i = 0; i < buf_len; i++)
 	{
 		numerator = numerator_s[i];
-		denominator = i+1;
-		result[i] = numerator % denominator;
-		//printf("%ld % %ld = %ld\n", numerator, denominator, result);
+		denominator = i + 1;
+		result_s_m[i] = numerator % denominator;
 	}
 }
 
 static void unsigned_division_mod(void)
 {
 	uint32_t numerator, denominator;
-	uint32_t result[8];
 	uint8_t i;
 	
-	for(i = 0; i < sizeof(numerator_s) / sizeof(int32_t); i++)
+	for(i = 0; i < buf_len; i++)
 	{
 		numerator = numerator_u[i];
-		denominator = i+1;
-		result[i] = numerator % denominator;
-		//printf("%lu % %lu = %lu\n", numerator, denominator, result);
+		denominator = i + 1;
+		result_u_m[i] = numerator % denominator;
 	}
 }
 
 static void squart_root(void)
 {
 	uint32_t operator;
-	uint32_t result[8];
 	uint8_t i;
 	
-	for(i = 0; i < sizeof(numerator_s) / sizeof(int32_t); i++)
+	for(i = 0; i < buf_len; i++)
 	{
 		operator = numerator_u[i];
-		result[i] = divas_sqrt(operator);
-		//printf("sqrt(%lu) = %lu\n", operator, result);
+		result_r[i] = divas_sqrt(operator);
 	}
 }
 //! [calculate]
@@ -157,15 +134,7 @@ static void squart_root(void)
 int main(void)
 {
 	//! [setup_init]
-	//! [setup_init_1]
 	system_init();
-	//! [setup_init_1]
-	//! [setup_init_2]
-	//cdc_uart_init();
-	//! [setup_init_2]
-	//! [setup_init_3]
-	//cpu_irq_enable();
-	//! [setup_init_3]
 	//! [setup_init]
 	
 	//! [main]
@@ -187,6 +156,7 @@ int main(void)
 	
 	//! [main_6]
 	while (true) {
+		/* Infinite loop */
 	}
 	//! [main_6]
 	//! [main]

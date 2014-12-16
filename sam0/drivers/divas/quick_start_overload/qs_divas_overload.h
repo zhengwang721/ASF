@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM True Random Number Generator Driver Quick Start
+ * \brief SAM Divide and Square Root Accelerator (DIVAS) Driver Quick Start
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -61,22 +61,11 @@
  * The signed and unsigned dividend: 
  * \snippet qs_divas_overload.c buffer
 
- * Copy-paste the following setup code to your user application:
- * \snippet qs_divas_overload.c setup
  * Copy-paste the following function code to your user application:
  * \snippet qs_divas_overload.c calculate
  *
  * Add to user application initialization (typically the start of \c main()):
  * \snippet qs_divas_overload.c setup_init
- *
- * \subsection asfdoc_sam0_divas_overload_use_case_setup_flow Workflow
- * -# Initialize system.
- *    \snippet qs_divas_overload.c setup_init_1
- * -# Create a new function \c cdc_uart_init(), which will be used to initialize 
- *    the usart.
- *    \snippet qs_divas_overload.c setup_init_2
- * -# Enable the interruption.
- *    \snippet qs_divas_overload.c setup_init_3
  *
  * \section asfdoc_sam0_divas_overload_use_case_imp Implementation
  *

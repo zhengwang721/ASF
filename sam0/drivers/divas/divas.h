@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0 Divide and Square Root Accelerator (DIVAS) Driver
+ * \brief SAM Divide and Square Root Accelerator (DIVAS) Driver
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -47,14 +47,14 @@
 /**
  * \defgroup asfdoc_sam0_divas_group SAM0 Divide and Square Root Accelerator (DIVAS) Driver
  *
- * This driver for SAM0 devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's Divide and Square Root Accelerator functionality.
  *
  * The following peripherals are used by this module:
  *  - DIVAS (Divide and Square Root Accelerator)
  *
  * The following devices can use this module:
- *  - SAM C21
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_divas_prerequisites

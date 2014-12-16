@@ -26,7 +26,7 @@
 			<device-support value="samc21"/>
 
 			<require idref="sam0.utils"/>
-			<require idref="sam0.drivers.system.pinmux"/>
+			<require idref="sam0.drivers.system"/>
 		</module>
 
 		<module type="driver" id="sam0.drivers.divas#overload" caption="DIVAS - Divide and Square Root Accelerator (Overload APIs)">
@@ -64,7 +64,7 @@
 			<device-support value="samc21"/>
 
 			<require idref="sam0.utils"/>
-			<require idref="sam0.drivers.system.pinmux"/>
+			<require idref="sam0.drivers.system"/>
 
 			<generator value="doxygen-module-v2" default-mcu="unspecified-samc21"/>
 		</module>

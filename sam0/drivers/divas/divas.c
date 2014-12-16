@@ -147,6 +147,9 @@ uint32_t  divas_sqrt(uint32_t radicand)
  * @{
  */
 
+#if defined ( __GNUC__ )
+
+#if 0
 int32_t __aeabi_idiv(int32_t numerator, int32_t denominator)
 {
 	return divas_idiv(numerator, denominator);
@@ -157,7 +160,6 @@ uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator)
 	return divas_uidiv(numerator, denominator);
 }
 
-#if defined ( __GNUC__ )
 int32_t __aeabi_idivmod(int32_t numerator, int32_t denominator)
 {
 	int32_t rem;
@@ -187,8 +189,20 @@ uint32_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator)
 	"pop {r7, pc}" "\n\t"
 	);
 }
+#endif
 
 #elif defined ( __ICCARM__ )
+
+int32_t __aeabi_idiv(int32_t numerator, int32_t denominator)
+{
+	return divas_idiv(numerator, denominator);
+}
+
+uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator)
+{
+	return divas_uidiv(numerator, denominator);
+}
+
 __value_in_regs idiv_return __aeabi_idivmod(int numerator, int denominator)
 {
 	idiv_return result;
