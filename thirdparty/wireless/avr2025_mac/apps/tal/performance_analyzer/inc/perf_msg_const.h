@@ -236,7 +236,8 @@
  * \{
  */
 /* generic macros */
-
+#define REMOTE_CMD_MASK                   (0x80)
+#define MESSAGE_ID_MASK                   (0x7F)
 #define FIELD_DOES_NOT_EXIST              (0xFF)
 #define BYTE_LEN                          (0x08)
 

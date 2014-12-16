@@ -64,7 +64,7 @@
 #if !(SAMD || SAMR21)
 #include "led.h"
 #endif
-//extern frame_info_t *stream_pkt;
+
 /**
  * \addtogroup group_per_mode_receptor
  * \{
@@ -73,8 +73,6 @@
 /* === TYPES =============================================================== */
 
 /*=====EXTERBNALS============================================================*/
-extern bool pkt_stream_stop; 
-
 
 /* === MACROS ============================================================== */
 
@@ -352,7 +350,7 @@ if(rx_on_mode)
 {
 	
 
-	if(!((msg->cmd_id == REMOTE_TEST_CMD) && (msg->payload.remote_test_req_data.remote_serial_data[MESSAGE_ID_POS])==(RX_ON_REQ|0X80)))
+	if(!((msg->cmd_id == REMOTE_TEST_CMD) && (msg->payload.remote_test_req_data.remote_serial_data[MESSAGE_ID_POS])==(RX_ON_REQ|REMOTE_CMD_MASK)))
 	{
 
 		return;
@@ -758,7 +756,8 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 	pib_value_t pib_value;
 
 	switch (msg->payload.set_parm_req_data.param_type) {
-	case CHANNEL: /* Parameter = channel */
+    /* If Parameter = channel */
+	case CHANNEL: 
 	{
 #ifdef EXT_RF_FRONT_END_CTRL
 		uint16_t chn_before_set;
@@ -785,7 +784,8 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 	break;
 
 #if (TAL_TYPE == AT86RF233)
-	case FREQ_BAND_08: /* Parameter = frequency in band 8 */
+    /* If Parameter = frequency in band 8 */
+	case FREQ_BAND_08: 
 	{
 		float frequency;
 		param_val = msg->payload.set_parm_req_data.param_value;
@@ -795,8 +795,8 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 		printf("\r\n Frequency changed to %0.1fMHz", (double)frequency);
 	}
 	break;
-
-	case FREQ_BAND_09: /* Parameter = frequency in band 9 */
+    /* If Parameter = frequency in band 9 */
+	case FREQ_BAND_09: 
 	{
 		float frequency;
 		param_val = msg->payload.set_parm_req_data.param_value;
@@ -824,7 +824,8 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 	break;
 
 	/* Handle Tx power value in dBm */
-	case TX_POWER_DBM: /* parameter = Tx power in dBm */
+	/* If parameter = Tx power in dBm */
+	case TX_POWER_DBM: 
 	{
 		uint8_t temp_var;
 #if (TAL_TYPE == AT86RF233)
@@ -892,7 +893,8 @@ static void set_paramter_on_recptor_node(app_payload_t *msg)
 
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 	/* Handle Tx power value in dBm */
-	case TX_POWER_REG: /* Parameter = TX power in Reg value */
+	/* If Parameter = TX power in Reg value */
+	case TX_POWER_REG: 
 	{
 		int8_t tx_pwr_dbm = 0;
 #if (TAL_TYPE == AT86RF233)

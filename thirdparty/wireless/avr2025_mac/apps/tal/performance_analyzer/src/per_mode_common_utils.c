@@ -62,10 +62,6 @@
 
 /* === EXTERNALS============================================================== */
 
-extern bool pkt_stream_stop;
-
-extern uint8_t op_mode;
-
 /* === GLOBALS============================================================== */
 
 #ifdef EXT_RF_FRONT_END_CTRL

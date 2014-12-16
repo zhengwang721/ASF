@@ -924,7 +924,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 #endif /* End of EXT_RF_FRONT_END_CTRL */
 
 		/* Send the confirmation for Set request as Success */
-		param_value.param_value_16bit = (uint16_t)set_param_cb.param_value; // check abi
+		param_value.param_value_16bit = (uint16_t)set_param_cb.param_value; 
 		usr_perf_set_confirm(MAC_SUCCESS,
 				PARAM_CHANNEL,
 				&param_value);
@@ -1470,8 +1470,10 @@ static void set_transceiver_state(uint8_t trx_state)
 	break;
 
 #ifdef ENABLE_DEEP_SLEEP
-	case TRX_SLEEP:   /* Put the transceiver in sleep mode */
+
+	case TRX_SLEEP:   
 	{
+		/* Put the transceiver in sleep mode */
 		toggle_trx_sleep(SLEEP_MODE_1);
 		curr_trx_config_params.trx_state = TRX_SLEEP;
 	}
@@ -1670,29 +1672,29 @@ void perf_set_req(uint8_t set_param_type, param_value_t *param_value)
 {
 	param_value_t param_value_temp;
 	switch (set_param_type) { /* parameter type */
-	case PARAM_CHANNEL: /* Channel Set request */
-	{
+	case PARAM_CHANNEL: 
+	{   /* Channel Set request */
 		set_channel(param_value->param_value_16bit);
 	}
 	break;
 
-	case PARAM_CHANNEL_PAGE: /* Channel Page Set request */
-	{
+	case PARAM_CHANNEL_PAGE: 
+	{    /* Channel Page Set request */
 		set_channel_page(param_value->param_value_8bit);
 	}
 	break;
 
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
-	case PARAM_TX_POWER_REG: /* TX power in Register value Set request  */
-	{
+	case PARAM_TX_POWER_REG: 
+	{   /* TX power in Register value Set request  */
 		set_tx_power(0, param_value->param_value_8bit);
 		last_tx_power_format_set = 0;
 	}
 	break;
 
 #endif /* End of (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) */
-	case PARAM_TX_POWER_DBM: /* TX power in dBm value Set request  */
-	{
+	case PARAM_TX_POWER_DBM: 
+	{   /* TX power in dBm value Set request  */
 		set_tx_power(1, (int8_t)param_value->param_value_8bit);
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 		last_tx_power_format_set = 1;
@@ -1700,67 +1702,67 @@ void perf_set_req(uint8_t set_param_type, param_value_t *param_value)
 	}
 	break;
 
-	case PARAM_CSMA: /* CSMA configuration request- Enable/Disable */
-	{
+	case PARAM_CSMA: 
+	{ /* CSMA configuration request- Enable/Disable */
 		config_csma(param_value->param_value_bool);
 	}
 	break;
 
-	case PARAM_FRAME_RETRY: /* Frame Retry configuration request-
-		                 * Enable/Disable */
-	{
+	case PARAM_FRAME_RETRY: 
+	{   /* Frame Retry configuration request-Enable/Disable */
+		                  
 		config_frame_retry(param_value->param_value_bool);
 	}
 	break;
 
-	case PARAM_ACK_REQUEST: /* Auto Ack Request configuration request-
-		                 * Enable/Disable */
-	{
+	case PARAM_ACK_REQUEST:
+		                 
+	{    /* Auto Ack Request configuration request- Enable/Disable */
 		config_ack_request(param_value->param_value_bool);
 	}
 	break;
 
 #if (ANTENNA_DIVERSITY == 1)
-	case PARAM_ANT_DIVERSITY: /* Antenna Diversity Configuration request */
-	{
+	case PARAM_ANT_DIVERSITY:
+	{    /* Antenna Diversity Configuration request */
 		set_antenna_diversity_settings(param_value->param_value_8bit);
 	}
 	break;
 
-	case PARAM_ANT_DIVERSITY_ON_PEER: /* Antenna Diversity Configuration on
-		                           * remote request */
-	{
+	case PARAM_ANT_DIVERSITY_ON_PEER: 
+		                           
+	{   /* Antenna Diversity Configuration on * remote request */
 		config_antenna_diversity_peer_node(param_value->param_value_8bit);
 	}
 	break;
 
 #endif /* #if (ANTENNA_DIVERSITY ==1) */
 #if (TAL_TYPE != AT86RF230B)
-	case PARAM_DESENSITIZATION: /* Configure Rx Desensitization request-
-		                     * Enable /Disable*/
-	{
+	case PARAM_DESENSITIZATION:
+		                     
+	{     /* Configure Rx Desensitization request- Enable /Disable*/
 		config_rx_desensitization(param_value->param_value_bool);
 	}
 	break;
 
 #endif /* (TAL_TYPE != AT86RF230B) */
 #ifdef CRC_SETTING_ON_REMOTE_NODE
-	case PARAM_CRC_ON_PEER: /* Set CRC settings on Peer node request */
-	{
+	case PARAM_CRC_ON_PEER: 
+	{   /* Set CRC settings on Peer node request */
 		config_crc_peer_node(param_value->param_value_bool);
 	}
 	break;
 
 #endif
-	case PARAM_TRX_STATE: /* Set Transceiver state request */
-	{
+	case PARAM_TRX_STATE: 
+	{    /* Set Transceiver state request */
 		set_transceiver_state(param_value->param_value_8bit);
 	}
 	break;
 
-	case PARAM_NO_OF_TEST_FRAMES: /* Set No.Of test Frames for PER test
-		                       * request */
-	{
+	case PARAM_NO_OF_TEST_FRAMES: 
+		                      
+	{   /* Set No.Of test Frames for PER test  request */
 		uint32_t no_of_test_frames = 0;
 		param_value->param_value_32bit
 			= CCPU_ENDIAN_TO_LE32((param_value->
@@ -1787,9 +1789,9 @@ void perf_set_req(uint8_t set_param_type, param_value_t *param_value)
 	}
 	break;
 
-	case PARAM_PHY_FRAME_LENGTH:  /* Set PHY frame length for PER test
-		                       * request */
-	{
+	case PARAM_PHY_FRAME_LENGTH:  
+		                       
+	{   /* Set PHY frame length for PER test  request */
 		set_phy_frame_length(param_value->param_value_16bit);
 	}
 	break;
@@ -1828,9 +1830,10 @@ void perf_set_req(uint8_t set_param_type, param_value_t *param_value)
 void perf_get_req(uint8_t param_type_data)
 {
 	param_value_t param_value;
-	switch (param_type_data) { /* parameter type */
-	case PARAM_CHANNEL: /* Channel Get request */
-	{
+	/*  check for parameter type */
+	switch (param_type_data) { 
+	case PARAM_CHANNEL: 
+	{   /* Channel Get request */
 		uint16_t current_channel = 0;
 		tal_pib_get(phyCurrentChannel, (uint8_t *)&current_channel);
 		/* Send Get confirmation with status SUCCESS */
@@ -1840,8 +1843,8 @@ void perf_get_req(uint8_t param_type_data)
 	}
 	break;
 
-	case PARAM_CHANNEL_PAGE: /* Channel Page Get request */
-	{
+	case PARAM_CHANNEL_PAGE: 
+	{   /* Channel Page Get request */
 		uint8_t ch_page = 0;
 		tal_pib_get(phyCurrentPage, &ch_page);
 
@@ -1853,8 +1856,8 @@ void perf_get_req(uint8_t param_type_data)
 	break;
 
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
-	case PARAM_TX_POWER_REG: /* TX power in Register value Set request  */
-	{
+	case PARAM_TX_POWER_REG:
+	{     /* TX power in Register value Set request  */
 		uint8_t tx_pwr_reg = 0;
 
 		tal_get_curr_trx_config(TX_PWR, &(tx_pwr_reg));
@@ -1867,8 +1870,8 @@ void perf_get_req(uint8_t param_type_data)
 	break;
 
 #endif /* End of (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B)  */
-	case PARAM_TX_POWER_DBM: /* TX power in dBm value Set request  */
-	{
+	case PARAM_TX_POWER_DBM: 
+	{   /* TX power in dBm value Set request  */
 		uint8_t tx_pwr = 0;
 		int8_t tx_pwr_dbm = 0;
 		tal_pib_get(phyTransmitPower, &tx_pwr);
@@ -1882,8 +1885,9 @@ void perf_get_req(uint8_t param_type_data)
 	}
 	break;
 
-	case PARAM_CSMA: /* CSMA configuration request- Enable/Disable */
-	{
+	case PARAM_CSMA: 
+	{   
+		/* CSMA configuration request- Enable/Disable */
 		/* Send Get confirmation with status SUCCESS */
 		param_value.param_value_bool
 			= curr_trx_config_params.csma_enabled;
@@ -1893,9 +1897,9 @@ void perf_get_req(uint8_t param_type_data)
 	}
 	break;
 
-	case PARAM_FRAME_RETRY: /* Frame Retry configuration request-
-		                 * Enable/Disable */
-	{
+	case PARAM_FRAME_RETRY: 
+		                 
+	{   /* Frame Retry configuration request- Enable/Disable */
 		/* Send Get confirmation with status SUCCESS */
 		param_value.param_value_bool
 			= curr_trx_config_params.retry_enabled;
@@ -1905,9 +1909,9 @@ void perf_get_req(uint8_t param_type_data)
 	}
 	break;
 
-	case PARAM_ACK_REQUEST: /* Auto Ack Request configuration request-
-		                 * Enable/Disable */
-	{
+	case PARAM_ACK_REQUEST: 
+		                 
+	{   /* Auto Ack Request configuration request-  Enable/Disable */
 		/* Send Get confirmation with status SUCCESS */
 		param_value.param_value_bool
 			= curr_trx_config_params.ack_request;
@@ -1918,8 +1922,9 @@ void perf_get_req(uint8_t param_type_data)
 	break;
 
 #if (ANTENNA_DIVERSITY == 1)
-	case PARAM_ANT_DIVERSITY: /* Antenna Diversity Configuration request */
-	{
+	case PARAM_ANT_DIVERSITY: 
+	{  
+		/* Antenna Diversity Configuration request */
 		/* Send Get confirmation with status SUCCESS */
 		param_value.param_value_8bit
 			= curr_trx_config_params.antenna_selected;
@@ -1929,18 +1934,19 @@ void perf_get_req(uint8_t param_type_data)
 	}
 	break;
 
-	case PARAM_ANT_DIVERSITY_ON_PEER: /* Antenna Diversity Configuration on
-		                           * remote request */
-	{
+	case PARAM_ANT_DIVERSITY_ON_PEER: 
+		                           
+	{   /* Antenna Diversity Configuration on remote request */
 		get_diversity_settings_peer_node();
 	}
 	break;
 
 #endif /* #if (ANTENNA_DIVERSITY == 1) */
 #if (TAL_TYPE != AT86RF230B)
-	case PARAM_DESENSITIZATION: /* Configure Rx Desensitization request-
-		                     * Enable /Disable*/
-	{
+	case PARAM_DESENSITIZATION:
+	{   
+		 /* Configure Rx Desensitization request- Enable /Disable*/
+		                      
 		/* Send Get confirmation with status SUCCESS */
 		param_value.param_value_bool
 			= curr_trx_config_params.rx_desensitize;
@@ -1952,15 +1958,17 @@ void perf_get_req(uint8_t param_type_data)
 
 #endif /* (TAL_TYPE != AT86RF230B) */
 #ifdef CRC_SETTING_ON_REMOTE_NODE
-	case PARAM_CRC_ON_PEER: /* Set CRC settings on Peer node request */
-	{
+	case PARAM_CRC_ON_PEER: 
+	{   
+		/* Set CRC settings on Peer node request */
 		get_crc_settings_peer_node();
 	}
 	break;
 
 #endif
-	case PARAM_TRX_STATE: /* Set Transceiver state request */
-	{
+	case PARAM_TRX_STATE:
+	{  
+		 /* Set Transceiver state request */
 		uint8_t trx_state;
 		trx_state = tal_get_trx_status();
 
@@ -1972,9 +1980,10 @@ void perf_get_req(uint8_t param_type_data)
 	}
 	break;
 
-	case PARAM_NO_OF_TEST_FRAMES: /* Set No.Of test Frames for PER test
-		                       * request */
-	{
+	case PARAM_NO_OF_TEST_FRAMES: 
+	{ 
+		/* Set No.Of test Frames for PER test request */
+		                       
 		/* Send get confirmation with status SUCCESS */
 		param_value.param_value_32bit
 			= curr_trx_config_params.number_test_frames;
@@ -1984,9 +1993,10 @@ void perf_get_req(uint8_t param_type_data)
 	}
 	break;
 
-	case PARAM_PHY_FRAME_LENGTH:  /* Set PHY frame length for PER test
-		                       * request */
-	{
+	case PARAM_PHY_FRAME_LENGTH:  
+	{  
+		/* Set PHY frame length for PER test request */
+		                       
 		/* Send get confirmation with status SUCCESS */
 		param_value.param_value_16bit
 			= curr_trx_config_params.phy_frame_length;
@@ -2224,8 +2234,9 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 				
 	switch (tx_power_format) {
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
-	/* To handle TX_PWR reg value input */
-	case TX_POWER_FORMAT_REG: /* Input is in the Register value */
+	/* To handle TX_PWR reg value input */ 
+	/* Input is in the Register value */
+	case TX_POWER_FORMAT_REG: 
 	{
 		uint8_t tx_pwr_reg = (uint8_t)power_value;
 
@@ -2287,7 +2298,8 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 
 #endif /* End of ( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) ) */
 	/* To handle Absolute power(dBm) input */
-	case TX_POWER_FORMAT_DBM: /* Input is in dBm values */
+	/* Input is in dBm values */
+	case TX_POWER_FORMAT_DBM: 
 	{
 		tx_pwr_dbm = power_value;
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
@@ -2715,17 +2727,17 @@ static void set_antenna_diversity_settings(uint8_t config_value)
 		}
 
 		switch (config_value) {
-		case ENABLE_ANTENNA_1: /* Disable antenna Diversity request &
-			                * Enable ANT1 */
+	    /* Disable antenna Diversity request & Enable ANT1 */		             
+		case ENABLE_ANTENNA_1:
 		{
 			/* Update the data base with these values*/
 			curr_trx_config_params.antenna_diversity = false;
 			curr_trx_config_params.antenna_selected = ANT_CTRL_1;
 		}
 		break;
-
-		case ENABLE_ANTENNA_2: /* Disable antenna Diversity request &
-			                * Enable ANT2 */
+		
+         /* Disable antenna Diversity request & Enable ANT2 */
+        case ENABLE_ANTENNA_2: 
 		{
 			/* Update the data base with these values*/
 			curr_trx_config_params.antenna_diversity = false;
@@ -2771,24 +2783,25 @@ static void config_antenna_diversity_peer_node(uint8_t config_value)
 	if (true == peer_found) {
 		div_set_req_t div_msg;
 		switch (config_value) {
-		case ENABLE_ANT_DIVERSITY: /* Enable Antenna diversity on peer
-			                    * node request */
+		/* Enable Antenna diversity on peer node request */
+		case ENABLE_ANT_DIVERSITY: 
 		{
 			div_msg.status = ANT_DIV_ENABLE;
-			div_msg.ant_sel = ANT_CTRL_0; /* No antenna selected */
+			/* No antenna selected */
+			div_msg.ant_sel = ANT_CTRL_0; 
 		}
 		break;
-
-		case ENABLE_ANTENNA_1: /* Disable Antenna diversity on peer node
-			                * request & select ANT1*/
+		
+        /* Disable Antenna diversity on peer node request & select ANT1*/
+		case ENABLE_ANTENNA_1: 
 		{
 			div_msg.status = ANT_DIV_DISABLE;
 			div_msg.ant_sel = ANT_CTRL_1;
 		}
 		break;
-
-		case ENABLE_ANTENNA_2: /* Disable Antenna diversity on peer node
-			                * request & select ANT2*/
+		
+        /* Disable Antenna diversity on peer node request & select ANT2*/	                 
+		case ENABLE_ANTENNA_2: 
 		{
 			div_msg.status = ANT_DIV_DISABLE;
 			div_msg.ant_sel = ANT_CTRL_2;
@@ -2817,7 +2830,8 @@ static void config_antenna_diversity_peer_node(uint8_t config_value)
 					(param_value_t *)&config_value);
 			op_mode = TX_OP_MODE;
 		}
-	} else { /* The node is operating in the SINGLE NODE TESTS mode*/
+	} else { 
+		/* The node is operating in the SINGLE NODE TESTS mode*/
 		usr_perf_set_confirm(INVALID_CMD,
 				PARAM_ANT_DIVERSITY_ON_PEER,
 				(param_value_t *)&config_value);
@@ -3089,11 +3103,7 @@ static void configure_frame_sending(void)
 	frame_ptr = temp_frame_ptr
 				= (uint8_t *)node_info.tx_frame_info +
 					LARGE_BUFFER_SIZE -
-					app_frame_length - FCS_LEN; /* Add 2
-	                                                             * octets
-	                                                             *for
-	                                                             * FCS. */
-
+					app_frame_length - FCS_LEN; 
 	tmp = (app_payload_t *)temp_frame_ptr;
 
 	(tmp->cmd_id) = PER_TEST_PKT;
@@ -3105,9 +3115,9 @@ static void configure_frame_sending(void)
 	 * Payload is stored to the end of the buffer avoiding payload copying
 	 * by TAL.
 	 */
-	for (index = 0; index < (app_frame_length - 1); index++) { /* 1=> cmd ID
-		                                                   **/
-		*temp_frame_ptr++ = index; /* dummy values */
+	for (index = 0; index < (app_frame_length - 1); index++) {
+		 /* dummy values */
+		*temp_frame_ptr++ = index; 
 	}
 
 	/* Source Address */
@@ -3180,18 +3190,13 @@ static void configure_range_test_frame_sending(void)
 	 */
 
 	/* Get length of current frame. */
-	app_frame_length = (RANGE_TEST_PKT_LENGTH - FRAME_OVERHEAD); /* to be
-	                                                              * changed
-	                                                              **/
-
+	app_frame_length = (RANGE_TEST_PKT_LENGTH - FRAME_OVERHEAD); 
+	
 	/* Set payload pointer. */
 	frame_ptr = temp_frame_ptr
 				= (uint8_t *)node_info.tx_frame_info +
 					LARGE_BUFFER_SIZE -
-					app_frame_length - FCS_LEN; /* Add 2
-	                                                             * octets
-	                                                             *for
-	                                                             * FCS. */
+					app_frame_length - FCS_LEN; 
 
 	tmp = (app_payload_t *)temp_frame_ptr;
 
@@ -3203,12 +3208,7 @@ static void configure_range_test_frame_sending(void)
 	                                    **/
 	temp_frame_ptr++;
 	range_test_frame_cnt++;
-	data->frame_count = (CCPU_ENDIAN_TO_LE32(range_test_frame_cnt)); /* to
-	                                                                  * be
-	                                                                  *
-	                                                                  *
-	                                                                  *checked
-	                                                                  **/
+	data->frame_count = (CCPU_ENDIAN_TO_LE32(range_test_frame_cnt)); 
 	temp_frame_ptr += 4;
 	data->ed = 0;
 	temp_frame_ptr++;
@@ -3220,9 +3220,10 @@ static void configure_range_test_frame_sending(void)
 	 * Payload is stored to the end of the buffer avoiding payload copying
 	 * by TAL.
 	 */
-	for (index = 0; index < (app_frame_length - 8); index++) { /* 1=> cmd ID
-		                                                   **/
-		*temp_frame_ptr++ = index; /* dummy values */
+	for (index = 0; index < (app_frame_length - 8); index++) { 
+		
+		*temp_frame_ptr++ = index; 
+		
 	}
 
 	/* Source Address */
@@ -3526,7 +3527,7 @@ static void get_diversity_settings_peer_node(void)
  * \brief Function used to send the diversity status request to get the
  * diversity settings on peer node
  *
- *  \return    Trasmission status - success/failure
+ *  \return    Transmission status - success/failure
  */
 static bool send_diversity_status_req(void)
 {
@@ -3622,7 +3623,7 @@ static void get_crc_settings_peer_node(void)
 /**
  * \brief Function used to send crc status request to get
  * CRC settings on the peer node
- * \return    Trasmission status - success/failure
+ * \return    Transmission status - success/failure
  */
 static bool send_crc_status_req(void)
 {
@@ -3663,7 +3664,7 @@ static bool send_crc_status_req(void)
  *
  * \param crc_msg   CRC settings for peer node
  *
- * \return    Trasmission status - success/failure
+ * \return    Transmission status - success/failure
  */
 static bool send_crc_set_req(crc_set_req_t crc_msg)
 {
@@ -3700,7 +3701,7 @@ static bool send_crc_set_req(crc_set_req_t crc_msg)
 /**
  * \brief Function used to send identify peer node command
  *
- * \return    Trasmission status - success/failure
+ * \return    Transmission status - success/failure
  */
 static bool send_identify_command(void)
 {
@@ -3734,7 +3735,7 @@ static bool send_identify_command(void)
 /**
  * \brief Function used to send disconnect peer node command
  *
- * \return    Trasmission status - success/failure
+ * \return    Transmission status - success/failure
  */
 static bool send_disconnect_command(void)
 {
@@ -3949,22 +3950,24 @@ uint8_t check_error_conditions(void)
 	/* Check whether transceiver is in sleep */
 	if (true == trx_sleep_status) {
 		error_code = TRANSCEIVER_IN_SLEEP;
-	} else if (true == scanning) { /* Check whether ED scan is in progress
-		                       **/
+	} else if (true == scanning) {
+		 /* Check whether ED scan is in progress */
+		                       
 		error_code = ED_SCAN_UNDER_PROGRESS;
-	} else if (CONTINUOUS_TX_MODE == op_mode) { /* Check CW transmission is
-		                                     * going on */
-		error_code = CW_TRANSMISSION_UNDER_PROGRESS;
+	} else if (CONTINUOUS_TX_MODE == op_mode) { 
+		/* Check CW transmission is going on */
+		 error_code = CW_TRANSMISSION_UNDER_PROGRESS;
 	}
 	else if(pkt_stream_stop == false)
 	{		
 		error_code = PKT_STREAM_IN_PROGRESS;
 		
-	} else if (frames_to_transmit > 0) { /* Check currently Transmission is
-		                              * initiated */
+	} else if (frames_to_transmit > 0) {
+		/* Check currently Transmission is initiated */
+		                               
 		error_code = TRANSMISSION_UNDER_PROGRESS;
-	} else if (true == range_test_in_progress) { /* Check if Range Mode is
-		                                      * initiated */
+	} else if (true == range_test_in_progress) { 
+		/* Check if Range Mode is  initiated */
 		error_code = RANGE_TEST_IN_PROGRESS;
 	}else if (true == remote_serial_tx_failure) 
 	{
@@ -4026,10 +4029,8 @@ static void config_rpc_mode(bool config_value)
 		tal_rpc_mode_config(ENABLE_ALL_RPC_MODES); /* RPC feature
 		                                            * configuration. */
 #if (ANTENNA_DIVERSITY == 1)
-		/*  Disable antenna diversity */
-		tal_ant_div_config(ANT_DIVERSITY_DISABLE, ANT_CTRL_1); /* Enable
-		                                                        * A1/X2
-		                                                        **/
+		/*  Disable antenna diversity & Enable A1/X2 */ 
+		tal_ant_div_config(ANT_DIVERSITY_DISABLE, ANT_CTRL_1); 
 
 		/* Update this changes in the data base */
 		curr_trx_config_params.antenna_diversity = false;
@@ -4146,7 +4147,8 @@ static bool validate_tx_power(int8_t dbm_value)
 		return(false);
 	} else {
 		switch (ch_page) {
-		case 0: /* BPSK */
+	    /*  If BPSK */
+		case 0: 
 		{
 			if (0 == tal_pib.CurrentChannel) {
 				if (dbm_value > MAX_TX_PWR_BPSK_20) { /*MAX_TX_PWR_BPSK_20*/
@@ -4168,7 +4170,8 @@ static bool validate_tx_power(int8_t dbm_value)
 					                                 **/
 					return (false);
 				}
-			} else { /* channels 1-10 */
+			} else { 
+				/* channels 1-10 */
 				if (dbm_value > MAX_TX_PWR) { /* MAX_TX_PWR */
 					return (false);
 				}

@@ -44,7 +44,7 @@
 #define CONF_BOARD_H
 
 #define SENSOR_TERMINAL_BOARD
- #define CONF_BOARD_ENABLE_USARTA1 
- #define BREAKOUT_BOARD 
+ //#define CONF_BOARD_ENABLE_USARTA1 
+ //#define BREAKOUT_BOARD 
 
 #endif /* CONF_BOARD_H */

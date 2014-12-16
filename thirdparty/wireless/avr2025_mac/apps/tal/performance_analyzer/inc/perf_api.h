@@ -71,9 +71,9 @@
  /* This flag is set as true when peer device found */
  extern bool peer_found;
 
-
+ extern bool pkt_stream_stop;
  
-
+ extern  uint8_t op_mode;
  
  #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
  extern uint8_t last_tx_power_format_set;

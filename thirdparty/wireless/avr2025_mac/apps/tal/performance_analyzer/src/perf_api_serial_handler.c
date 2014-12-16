@@ -205,7 +205,7 @@ void serial_data_handler(void)
 	
 	{
 		remote_cmd_rcvd = false;	
-		sio_tx_buf[head][CMD_POS] |= 0X80;	
+		sio_tx_buf[head][CMD_POS] |= REMOTE_CMD_MASK;	
 		if(send_remote_reply_cmd(&sio_tx_buf[head][curr_tx_buffer_index],(sio_tx_buf[head][1])))
 		{
 			
@@ -215,7 +215,7 @@ void serial_data_handler(void)
 	}
 	if(remote_serial_tx_failure)
 	{
-	sio_tx_buf[head][CMD_POS] |= 0X80;	
+	sio_tx_buf[head][CMD_POS] |= REMOTE_CMD_MASK;	
 	/*reset the flag*/
 	remote_serial_tx_failure = false;
 	}
@@ -237,7 +237,7 @@ void serial_data_handler(void)
 	if (buf_count != 0) {
 		/* Check Continuous transmission is finished at remote node, if so Blink LED at initiator */
 		uint8_t cont_tx_remote  = sio_tx_buf[head][CMD_POS];
-		if ((cont_tx_remote == (0X80 |PKT_STREAM_CONFIRM)) || (cont_tx_remote == (0X80 | CONT_WAVE_TX_CONFIRM )))
+		if ((cont_tx_remote == (REMOTE_CMD_MASK |PKT_STREAM_CONFIRM)) || (cont_tx_remote == (REMOTE_CMD_MASK | CONT_WAVE_TX_CONFIRM )))
 		{
 			uint8_t stop_cont_tx = sio_tx_buf[head][5];
 			if (stop_cont_tx == 0)
@@ -401,11 +401,11 @@ static inline void handle_incoming_msg(void)
 	error_code = check_error_conditions();
 	
 	/*Check if the message needs to be sent over the air to the remote node for performing tests on the remote node*/
-    if((sio_rx_buf[MESSAGE_ID_POS] & 0X80) && (PER_TEST_INITIATOR == node_info.main_state))
+    if((sio_rx_buf[MESSAGE_ID_POS] & REMOTE_CMD_MASK) && (PER_TEST_INITIATOR == node_info.main_state))
 	{		
 		if(error_code ==  MAC_SUCCESS)
 		{		
-			if(((sio_rx_buf[MESSAGE_ID_POS]&0X7F)==RX_ON_REQ) && (sio_rx_buf[START_STOP_POS] == RX_ON_STOP))
+			if(((sio_rx_buf[MESSAGE_ID_POS]&MESSAGE_ID_MASK)==RX_ON_REQ) && (sio_rx_buf[START_STOP_POS] == RX_ON_STOP))
 			{			
 				send_remote_cmd(sio_rx_buf,*sio_rx_buf,false);
 			}
@@ -417,19 +417,20 @@ static inline void handle_incoming_msg(void)
 		}
 		else
 		{  /*Send Error Code back*/
-			sio_rx_buf[MESSAGE_ID_POS] &=  0X7F;
+			sio_rx_buf[MESSAGE_ID_POS] &=  MESSAGE_ID_MASK;
 		}		
 		
 	}
 	/*Perform test on the receptor*/
-	else if((sio_rx_buf[MESSAGE_ID_POS] && 0X80) && (PER_TEST_RECEPTOR == node_info.main_state))
+	else if((sio_rx_buf[MESSAGE_ID_POS] && REMOTE_CMD_MASK) && (PER_TEST_RECEPTOR == node_info.main_state))
 	{
-		sio_rx_buf[MESSAGE_ID_POS] &=  0X7F;
+		sio_rx_buf[MESSAGE_ID_POS] &=  MESSAGE_ID_MASK;
 		remote_cmd_rcvd = true;
 		
 	}
 	
 	/* Process the commands */
+	/* Check for message id */
 	switch (sio_rx_buf[MESSAGE_ID_POS]) { 
 	/* Process Board identification command to get the board details */
 	case IDENTIFY_BOARD_REQ:
@@ -455,18 +456,17 @@ static inline void handle_incoming_msg(void)
 		/* Make sure that the node is in WAIT_FOR_EVENT state to process
 		 * this command */
 		if (WAIT_FOR_EVENT == node_info.main_state) {
-			/* PER mode */
+			/* Check for PER mode */
 			if (START_MODE_PER == sio_rx_buf[START_MODE_POS]) {
 				 
 	             /* start_req received on UART - so change to
 				 * state PEER_SEARCH_PER_TX */
 				set_main_state(PEER_SEARCH_PER_TX, NULL);
 			} 
-			/* Single node tests */
+			/* Check for Single node tests */
 			else if (START_MODE_SINGLE_NODE ==
 					sio_rx_buf[START_MODE_POS]) {
-						/* Single node tests */
-						               
+								               
 				/* start_req received on UART - so change to
 				 * single node tests state directly */
 				set_main_state(SINGLE_NODE_TESTS, NULL);
@@ -645,7 +645,7 @@ static inline void handle_incoming_msg(void)
 	}
 	break;
 
-	/* Proces Continuous Pulse transmission req command */
+	/* Process Continuous Pulse transmission req command */
 	case CONT_PULSE_TX_REQ:
 	{
 #if ((TAL_TYPE != AT86RF230B) || ((TAL_TYPE == AT86RF230B) && \
@@ -735,12 +735,12 @@ static inline void handle_incoming_msg(void)
 				(SINGLE_NODE_TESTS == node_info.main_state)
 				) {
 					
-			/* Start_Stop mode - Start =0x01, Stop = 0x00 */
+			/*  Check for Start or Stop CWT , Start_Stop mode - Start =0x01, Stop = 0x00 */
 			if (START_CWT == sio_rx_buf[START_STOP_POS]) { 
 				
 				
 					                                
-			    /* tx_mode - CW = 0x00, PRBS = 0x01 */
+			    /* Check for transmission mode, tx_mode - CW = 0x00, PRBS = 0x01 */
 				start_cw_transmission(sio_rx_buf[TX_MODE_POS],
 				               ((uint16_t)(sio_rx_buf[TMR_VAL_2] << 8) | 
 							   (sio_rx_buf[TMR_VAL_1]))); 
