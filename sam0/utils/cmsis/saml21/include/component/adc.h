@@ -620,14 +620,14 @@ typedef union {
   struct {
     uint16_t SWRST:1;          /*!< bit:      0  SWRST Synchronization Busy         */
     uint16_t ENABLE:1;         /*!< bit:      1  ENABLE Synchronization Busy        */
-    uint16_t AVGCTRL:1;        /*!< bit:      2  AVGCTRL Synchronization Busy       */
-    uint16_t SAMPCTRL:1;       /*!< bit:      3  SAMPCTRL Synchronization Busy      */
-    uint16_t CTRLC:1;          /*!< bit:      4  CTRLC Synchronization Busy         */
-    uint16_t INPUTCTRL:1;      /*!< bit:      5  INPUTCTRL Synchronization Busy     */
-    uint16_t OFFSETCORR:1;     /*!< bit:      6  OFFSETCTRL Synchronization Busy    */
-    uint16_t GAINCORR:1;       /*!< bit:      7  GAINCORR Synchronization Busy      */
-    uint16_t WINLT:1;          /*!< bit:      8  WINLT Synchronization Busy         */
-    uint16_t WINUT:1;          /*!< bit:      9  WINUT Synchronization Busy         */
+    uint16_t INPUTCTRL:1;      /*!< bit:      2  INPUTCTRL Synchronization Busy     */
+    uint16_t CTRLC:1;          /*!< bit:      3  CTRLC Synchronization Busy         */
+    uint16_t AVGCTRL:1;        /*!< bit:      4  AVGCTRL Synchronization Busy       */
+    uint16_t SAMPCTRL:1;       /*!< bit:      5  SAMPCTRL Synchronization Busy      */
+    uint16_t WINLT:1;          /*!< bit:      6  WINLT Synchronization Busy         */
+    uint16_t WINUT:1;          /*!< bit:      7  WINUT Synchronization Busy         */
+    uint16_t GAINCORR:1;       /*!< bit:      8  GAINCORR Synchronization Busy      */
+    uint16_t OFFSETCORR:1;     /*!< bit:      9  OFFSETCTRL Synchronization Busy    */
     uint16_t SWTRIG:1;         /*!< bit:     10  SWTRG Synchronization Busy         */
     uint16_t :5;               /*!< bit: 11..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
@@ -642,22 +642,22 @@ typedef union {
 #define ADC_SYNCBUSY_SWRST          (0x1ul << ADC_SYNCBUSY_SWRST_Pos)
 #define ADC_SYNCBUSY_ENABLE_Pos     1            /**< \brief (ADC_SYNCBUSY) ENABLE Synchronization Busy */
 #define ADC_SYNCBUSY_ENABLE         (0x1ul << ADC_SYNCBUSY_ENABLE_Pos)
-#define ADC_SYNCBUSY_AVGCTRL_Pos    2            /**< \brief (ADC_SYNCBUSY) AVGCTRL Synchronization Busy */
-#define ADC_SYNCBUSY_AVGCTRL        (0x1ul << ADC_SYNCBUSY_AVGCTRL_Pos)
-#define ADC_SYNCBUSY_SAMPCTRL_Pos   3            /**< \brief (ADC_SYNCBUSY) SAMPCTRL Synchronization Busy */
-#define ADC_SYNCBUSY_SAMPCTRL       (0x1ul << ADC_SYNCBUSY_SAMPCTRL_Pos)
-#define ADC_SYNCBUSY_CTRLC_Pos      4            /**< \brief (ADC_SYNCBUSY) CTRLC Synchronization Busy */
-#define ADC_SYNCBUSY_CTRLC          (0x1ul << ADC_SYNCBUSY_CTRLC_Pos)
-#define ADC_SYNCBUSY_INPUTCTRL_Pos  5            /**< \brief (ADC_SYNCBUSY) INPUTCTRL Synchronization Busy */
+#define ADC_SYNCBUSY_INPUTCTRL_Pos  2            /**< \brief (ADC_SYNCBUSY) INPUTCTRL Synchronization Busy */
 #define ADC_SYNCBUSY_INPUTCTRL      (0x1ul << ADC_SYNCBUSY_INPUTCTRL_Pos)
-#define ADC_SYNCBUSY_OFFSETCORR_Pos 6            /**< \brief (ADC_SYNCBUSY) OFFSETCTRL Synchronization Busy */
-#define ADC_SYNCBUSY_OFFSETCORR     (0x1ul << ADC_SYNCBUSY_OFFSETCORR_Pos)
-#define ADC_SYNCBUSY_GAINCORR_Pos   7            /**< \brief (ADC_SYNCBUSY) GAINCORR Synchronization Busy */
-#define ADC_SYNCBUSY_GAINCORR       (0x1ul << ADC_SYNCBUSY_GAINCORR_Pos)
-#define ADC_SYNCBUSY_WINLT_Pos      8            /**< \brief (ADC_SYNCBUSY) WINLT Synchronization Busy */
+#define ADC_SYNCBUSY_CTRLC_Pos      3            /**< \brief (ADC_SYNCBUSY) CTRLC Synchronization Busy */
+#define ADC_SYNCBUSY_CTRLC          (0x1ul << ADC_SYNCBUSY_CTRLC_Pos)
+#define ADC_SYNCBUSY_AVGCTRL_Pos    4            /**< \brief (ADC_SYNCBUSY) AVGCTRL Synchronization Busy */
+#define ADC_SYNCBUSY_AVGCTRL        (0x1ul << ADC_SYNCBUSY_AVGCTRL_Pos)
+#define ADC_SYNCBUSY_SAMPCTRL_Pos   5            /**< \brief (ADC_SYNCBUSY) SAMPCTRL Synchronization Busy */
+#define ADC_SYNCBUSY_SAMPCTRL       (0x1ul << ADC_SYNCBUSY_SAMPCTRL_Pos)
+#define ADC_SYNCBUSY_WINLT_Pos      6            /**< \brief (ADC_SYNCBUSY) WINLT Synchronization Busy */
 #define ADC_SYNCBUSY_WINLT          (0x1ul << ADC_SYNCBUSY_WINLT_Pos)
-#define ADC_SYNCBUSY_WINUT_Pos      9            /**< \brief (ADC_SYNCBUSY) WINUT Synchronization Busy */
+#define ADC_SYNCBUSY_WINUT_Pos      7            /**< \brief (ADC_SYNCBUSY) WINUT Synchronization Busy */
 #define ADC_SYNCBUSY_WINUT          (0x1ul << ADC_SYNCBUSY_WINUT_Pos)
+#define ADC_SYNCBUSY_GAINCORR_Pos   8            /**< \brief (ADC_SYNCBUSY) GAINCORR Synchronization Busy */
+#define ADC_SYNCBUSY_GAINCORR       (0x1ul << ADC_SYNCBUSY_GAINCORR_Pos)
+#define ADC_SYNCBUSY_OFFSETCORR_Pos 9            /**< \brief (ADC_SYNCBUSY) OFFSETCTRL Synchronization Busy */
+#define ADC_SYNCBUSY_OFFSETCORR     (0x1ul << ADC_SYNCBUSY_OFFSETCORR_Pos)
 #define ADC_SYNCBUSY_SWTRIG_Pos     10           /**< \brief (ADC_SYNCBUSY) SWTRG Synchronization Busy */
 #define ADC_SYNCBUSY_SWTRIG         (0x1ul << ADC_SYNCBUSY_SWTRIG_Pos)
 #define ADC_SYNCBUSY_MASK           0x07FFul     /**< \brief (ADC_SYNCBUSY) MASK Register */

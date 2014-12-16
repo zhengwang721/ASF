@@ -458,7 +458,7 @@ static inline uint32_t aes_gcm_read_ghash(struct aes_module *const module, uint3
 	Assert(module);
 	Assert(module->hw);
 
-	return (*(&(module->hw->GHASH0.reg) + 4*id));
+	return module->hw->GHASH[id].reg;
 }
 
 /**
@@ -474,7 +474,7 @@ static inline void aes_gcm_write_ghash(struct aes_module *const module,
 	Assert(module);
 	Assert(module->hw);
 
-	*(&(module->hw->GHASH0.reg) + 4*id) = ghash;
+	module->hw->GHASH[id].reg = ghash;
 }
 
 
@@ -492,7 +492,7 @@ static inline uint32_t aes_gcm_read_hash_key(struct aes_module *const module,
 	Assert(module);
 	Assert(module->hw);
 
-	return (*(uint32_t *)((uint32_t )&(module->hw->HASHKEY0.reg) + 4*id));
+	return module->hw->HASHKEY[id].reg;
 }
 
 /**
@@ -508,7 +508,7 @@ static inline void aes_gcm_write_hash_key(struct aes_module *const module,
 	Assert(module);
 	Assert(module->hw);
 
-	*(uint32_t *)((uint32_t)&(module->hw->HASHKEY0.reg) + 4*id) = key;
+	module->hw->HASHKEY[id].reg = key;
 }
 
 /**

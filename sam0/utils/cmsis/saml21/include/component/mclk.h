@@ -376,7 +376,7 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define MCLK_APBBMASK_OFFSET        0x18         /**< \brief (MCLK_APBBMASK offset) APBB Mask */
-#define MCLK_APBBMASK_RESETVALUE    0x00000007ul /**< \brief (MCLK_APBBMASK reset_value) APBB Mask */
+#define MCLK_APBBMASK_RESETVALUE    0x00000017ul /**< \brief (MCLK_APBBMASK reset_value) APBB Mask */
 
 #define MCLK_APBBMASK_USB_Pos       0            /**< \brief (MCLK_APBBMASK) USB APB Clock Enable */
 #define MCLK_APBBMASK_USB           (0x1ul << MCLK_APBBMASK_USB_Pos)
@@ -497,7 +497,7 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define MCLK_APBEMASK_OFFSET        0x24         /**< \brief (MCLK_APBEMASK offset) APBE Mask */
-#define MCLK_APBEMASK_RESETVALUE    0x00000009ul /**< \brief (MCLK_APBEMASK reset_value) APBE Mask */
+#define MCLK_APBEMASK_RESETVALUE    0x0000000Dul /**< \brief (MCLK_APBEMASK reset_value) APBE Mask */
 
 #define MCLK_APBEMASK_PAC_Pos       0            /**< \brief (MCLK_APBEMASK) PAC APB Clock Enable */
 #define MCLK_APBEMASK_PAC           (0x1ul << MCLK_APBEMASK_PAC_Pos)

@@ -77,7 +77,7 @@
 /** \internal
  *  RWW EEPROM max logical page num.
  */
-#define RWW_EEPROM_MAX_LOGICAL_PAGES (((NVMCTRL_WWREE_PAGES - (2 * NVMCTRL_ROW_PAGES)) \
+#define RWW_EEPROM_MAX_LOGICAL_PAGES (((NVMCTRL_RWWEE_PAGES - (2 * NVMCTRL_ROW_PAGES)) \
 										/ NVMCTRL_ROW_PAGES) * CONF_LOGICAL_PAGE_NUM_IN_ROW)
 
 COMPILER_PACK_SET(1);
@@ -657,7 +657,7 @@ enum status_code rww_eeprom_emulator_init(void)
 
 	/* Configure the RWW EEPROM instance starting physical address and
 	 * pre-compute the index of the first page used for RWW EEPROM */
-	_eeprom_instance.rwwee_addr = (void*)NVMCTRL_WWR_EEPROM_ADDR;
+	_eeprom_instance.rwwee_addr = (void*)NVMCTRL_RWW_EEPROM_ADDR;
 
 	/* Clear RWW EEPROM page write cache on initialization */
 	_eeprom_instance.cache_active = false;

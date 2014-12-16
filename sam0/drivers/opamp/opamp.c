@@ -122,30 +122,30 @@ void opamp0_set_config(struct opamp0_config *const config)
 	uint32_t temp = 0;
 
 	if (config->config_common.r1_enable) {
-		temp |= OPAMP_OPAMPCTRL0_RES1EN;
+		temp |= OPAMP_OPAMPCTRL_RES1EN;
 	}
 
 	if (config->config_common.r2_vcc) {
-		temp |= OPAMP_OPAMPCTRL0_RES2VCC;
+		temp |= OPAMP_OPAMPCTRL_RES2VCC;
 	}
 
 	if (config->config_common.r2_out) {
-		temp |= OPAMP_OPAMPCTRL0_RES2OUT;
+		temp |= OPAMP_OPAMPCTRL_RES2OUT;
 	}
 
 	if (config->config_common.on_demand) {
-		temp |= OPAMP_OPAMPCTRL0_ONDEMAND;
+		temp |= OPAMP_OPAMPCTRL_ONDEMAND;
 	}
 
 	if (config->config_common.run_in_standby) {
-		temp |= OPAMP_OPAMPCTRL0_RUNSTDBY;
+		temp |= OPAMP_OPAMPCTRL_RUNSTDBY;
 	}
 
 	if (config->config_common.analog_out) {
-		temp |= OPAMP_OPAMPCTRL0_ANAOUT;
+		temp |= OPAMP_OPAMPCTRL_ANAOUT;
 	}
 
-	OPAMP->OPAMPCTRL0.reg = temp |
+	OPAMP->OPAMPCTRL[0].reg = temp |
 		config->config_common.potentiometer_selection |
 		config->config_common.bias_value |
 		config->negative_input |
@@ -158,30 +158,30 @@ void opamp1_set_config(struct opamp1_config *const config)
 	uint32_t temp = 0;
 
 	if (config->config_common.r1_enable) {
-		temp |= OPAMP_OPAMPCTRL1_RES1EN;
+		temp |= OPAMP_OPAMPCTRL_RES1EN;
 	}
 
 	if (config->config_common.r2_vcc) {
-		temp |= OPAMP_OPAMPCTRL1_RES2VCC;
+		temp |= OPAMP_OPAMPCTRL_RES2VCC;
 	}
 
 	if (config->config_common.r2_out) {
-		temp |= OPAMP_OPAMPCTRL1_RES2OUT;
+		temp |= OPAMP_OPAMPCTRL_RES2OUT;
 	}
 
 	if (config->config_common.on_demand) {
-		temp |= OPAMP_OPAMPCTRL1_ONDEMAND;
+		temp |= OPAMP_OPAMPCTRL_ONDEMAND;
 	}
 
 	if (config->config_common.run_in_standby) {
-		temp |= OPAMP_OPAMPCTRL1_RUNSTDBY;
+		temp |= OPAMP_OPAMPCTRL_RUNSTDBY;
 	}
 
 	if (config->config_common.analog_out) {
-		temp |= OPAMP_OPAMPCTRL1_ANAOUT;
+		temp |= OPAMP_OPAMPCTRL_ANAOUT;
 	}
 
-	OPAMP->OPAMPCTRL1.reg = temp |
+	OPAMP->OPAMPCTRL[1].reg = temp |
 		config->config_common.potentiometer_selection |
 		config->config_common.bias_value |
 		config->negative_input |
@@ -194,30 +194,30 @@ void opamp2_set_config(struct opamp2_config *const config)
 	uint32_t temp = 0;
 
 	if (config->config_common.r1_enable) {
-		temp |= OPAMP_OPAMPCTRL2_RES1EN;
+		temp |= OPAMP_OPAMPCTRL_RES1EN;
 	}
 
 	if (config->config_common.r2_vcc) {
-		temp |= OPAMP_OPAMPCTRL2_RES2VCC;
+		temp |= OPAMP_OPAMPCTRL_RES2VCC;
 	}
 
 	if (config->config_common.r2_out) {
-		temp |= OPAMP_OPAMPCTRL2_RES2OUT;
+		temp |= OPAMP_OPAMPCTRL_RES2OUT;
 	}
 
 	if (config->config_common.on_demand) {
-		temp |= OPAMP_OPAMPCTRL2_ONDEMAND;
+		temp |= OPAMP_OPAMPCTRL_ONDEMAND;
 	}
 
 	if (config->config_common.run_in_standby) {
-		temp |= OPAMP_OPAMPCTRL2_RUNSTDBY;
+		temp |= OPAMP_OPAMPCTRL_RUNSTDBY;
 	}
 
 	if (config->config_common.analog_out) {
-		temp |= OPAMP_OPAMPCTRL2_ANAOUT;
+		temp |= OPAMP_OPAMPCTRL_ANAOUT;
 	}
 
-	OPAMP->OPAMPCTRL2.reg = temp |
+	OPAMP->OPAMPCTRL[2].reg = temp |
 		config->config_common.potentiometer_selection |
 		config->config_common.bias_value |
 		config->negative_input |
@@ -232,11 +232,11 @@ void opamp_enable(const enum opamp_id number)
 
 	/* Enable the OPAMP */
 	if (number == OPAMP_0) {
-		OPAMP->OPAMPCTRL0.reg |= OPAMP_OPAMPCTRL0_ENABLE;
+		OPAMP->OPAMPCTRL[0].reg |= OPAMP_OPAMPCTRL_ENABLE;
 	} else if (number == OPAMP_1) {
-		OPAMP->OPAMPCTRL1.reg |= OPAMP_OPAMPCTRL1_ENABLE;
+		OPAMP->OPAMPCTRL[1].reg |= OPAMP_OPAMPCTRL_ENABLE;
 	} else if (number == OPAMP_2) {
-		OPAMP->OPAMPCTRL2.reg |= OPAMP_OPAMPCTRL2_ENABLE;
+		OPAMP->OPAMPCTRL[2].reg |= OPAMP_OPAMPCTRL_ENABLE;
 	}
 }
 
@@ -247,11 +247,11 @@ void opamp_disable(const enum opamp_id number)
 
 	/* Disable the OPAMP */
 	if (number == OPAMP_0) {
-		OPAMP->OPAMPCTRL0.reg &= ~OPAMP_OPAMPCTRL0_ENABLE;
+		OPAMP->OPAMPCTRL[1].reg &= ~OPAMP_OPAMPCTRL_ENABLE;
 	} else if (number == OPAMP_1) {
-		OPAMP->OPAMPCTRL1.reg &= ~OPAMP_OPAMPCTRL1_ENABLE;
+		OPAMP->OPAMPCTRL[1].reg &= ~OPAMP_OPAMPCTRL_ENABLE;
 	} else if (number == OPAMP_2) {
-		OPAMP->OPAMPCTRL2.reg &= ~OPAMP_OPAMPCTRL2_ENABLE;
+		OPAMP->OPAMPCTRL[2].reg &= ~OPAMP_OPAMPCTRL_ENABLE;
 	}
 }
 

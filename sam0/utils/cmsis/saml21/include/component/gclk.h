@@ -51,7 +51,7 @@
 /*@{*/
 
 #define GCLK_U2122
-#define REV_GCLK                    0x100
+#define REV_GCLK                    0x111
 
 /* -------- GCLK_CTRLA : (GCLK Offset: 0x00) (R/W  8) Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -116,8 +116,8 @@ typedef union {
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
-    uint32_t SRC:5;            /*!< bit:  0.. 4  Source Select                      */
-    uint32_t :3;               /*!< bit:  5.. 7  Reserved                           */
+    uint32_t SRC:4;            /*!< bit:  0.. 3  Source Select                      */
+    uint32_t :4;               /*!< bit:  4.. 7  Reserved                           */
     uint32_t GENEN:1;          /*!< bit:      8  Generic Clock Generator Enable     */
     uint32_t IDC:1;            /*!< bit:      9  Improve Duty Cycle                 */
     uint32_t OOV:1;            /*!< bit:     10  Output Off Value                   */
@@ -135,7 +135,7 @@ typedef union {
 #define GCLK_GENCTRL_RESETVALUE     0x00000000ul /**< \brief (GCLK_GENCTRL reset_value) Generic Clock Generator Control */
 
 #define GCLK_GENCTRL_SRC_Pos        0            /**< \brief (GCLK_GENCTRL) Source Select */
-#define GCLK_GENCTRL_SRC_Msk        (0x1Ful << GCLK_GENCTRL_SRC_Pos)
+#define GCLK_GENCTRL_SRC_Msk        (0xFul << GCLK_GENCTRL_SRC_Pos)
 #define GCLK_GENCTRL_SRC(value)     ((GCLK_GENCTRL_SRC_Msk & ((value) << GCLK_GENCTRL_SRC_Pos)))
 #define   GCLK_GENCTRL_SRC_XOSC_Val       0x0ul  /**< \brief (GCLK_GENCTRL) XOSC oscillator output */
 #define   GCLK_GENCTRL_SRC_GCLKIN_Val     0x1ul  /**< \brief (GCLK_GENCTRL) Generator input pad */
@@ -170,7 +170,7 @@ typedef union {
 #define GCLK_GENCTRL_DIV_Pos        16           /**< \brief (GCLK_GENCTRL) Division Factor */
 #define GCLK_GENCTRL_DIV_Msk        (0xFFFFul << GCLK_GENCTRL_DIV_Pos)
 #define GCLK_GENCTRL_DIV(value)     ((GCLK_GENCTRL_DIV_Msk & ((value) << GCLK_GENCTRL_DIV_Pos)))
-#define GCLK_GENCTRL_MASK           0xFFFF3F1Ful /**< \brief (GCLK_GENCTRL) MASK Register */
+#define GCLK_GENCTRL_MASK           0xFFFF3F0Ful /**< \brief (GCLK_GENCTRL) MASK Register */
 
 /* -------- GCLK_PCHCTRL : (GCLK Offset: 0x80) (R/W 32) Peripheral Clock Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

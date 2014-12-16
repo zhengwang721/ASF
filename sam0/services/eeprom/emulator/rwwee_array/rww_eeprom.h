@@ -353,7 +353,7 @@ extern "C" {
 #include <compiler.h>
 
 #if !defined(__DOXYGEN__)
-#  define RWW_EEPROM_MAX_PAGES            NVMCTRL_WWREE_PAGES
+#  define RWW_EEPROM_MAX_PAGES            NVMCTRL_RWWEE_PAGES
 #  define RWW_EEPROM_MASTER_PAGE_NUMBER   (_eeprom_instance.physical_pages - 1)
 #  define RWW_EEPROM_INVALID_PAGE_NUMBER  0xFF
 #  define RWW_EEPROM_INVALID_ROW_NUMBER   (RWW_EEPROM_INVALID_PAGE_NUMBER / NVMCTRL_ROW_PAGES)
