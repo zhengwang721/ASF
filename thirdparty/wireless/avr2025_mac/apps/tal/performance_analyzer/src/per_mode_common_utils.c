@@ -62,9 +62,9 @@
 
 /* === EXTERNALS============================================================== */
 
+extern bool pkt_stream_stop;
 
-  extern bool pkt_stream_stop;
-  extern uint8_t op_mode;
+extern uint8_t op_mode;
 
 /* === GLOBALS============================================================== */
 
@@ -74,6 +74,47 @@ static uint8_t prev_non_26chn_tx_power;
 
 /*Buffer used for storing data frame to be used in Packet Streaming Mode*/
 uint8_t pkt_buffer[LARGE_BUFFER_SIZE];
+
+#if (ANTENNA_DIVERSITY == 1)
+ static uint8_t ant_sel_before_ct;
+ static uint8_t ant_div_before_ct;
+#endif /* End of #if (ANTENNA_DIVERSITY == 1) */
+
+/* Database to maintain the default settings of the configurable parameter */
+ trx_config_params_t default_trx_config_params;
+ 
+/* Database to maintain the updated/latest settings of the configurable
+ * parameters */
+ trx_config_params_t curr_trx_config_params;
+
+  uint8_t cw_start_mode;
+
+  uint16_t cw_tmr_val;
+  
+  uint8_t last_tx_power_format_set;  
+  
+  bool peer_found;
+ 
+  uint32_t pkt_stream_gap_time;
+ 
+  bool pulse_mode ;
+  
+  bool rdy_to_tx;
+  
+  bool remote_serial_tx_failure;
+  
+  bool rx_on_mode;
+ 
+ /*Pointer to the data frame to be used in Packet Streaming Mode*/
+  frame_info_t *stream_pkt;
+
+#if (TAL_TYPE == AT86RF233)
+ /* Backup for ISM frequency related registers for CW Transmission */
+  static uint8_t cc_band_ct;
+  static uint8_t cc_number_ct;
+#endif /* End of #if (TAL_TYPE == AT86RF233) */
+  
+bool cw_ack_sent,remote_cw_start;  
 
 /* === DEFINES============================================================== */
 

@@ -228,6 +228,9 @@ FLASH_EXTERN(int8_t tx_pwr_table[16]);
 #endif
 
 extern trx_config_params_t curr_trx_config_params;
+
+/* Database to maintain the default settings of the configurable parameter */
+extern trx_config_params_t default_trx_config_params;
 /**
  * \brief Configure the frame to be used for Packet Streaming
  * \param frame_len Length of the frame to be used for Packet Streaming

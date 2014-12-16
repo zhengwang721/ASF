@@ -175,8 +175,7 @@ static uint8_t *get_next_tx_buffer(void);
 static inline void handle_incoming_msg(void);
 
 static uint8_t curr_tx_buffer_index = 0;
-//extern bool remote_serial_tx_failure;
-//extern bool rx_on_mode;
+
 /* ! \} */
 /* === Implementation ====================================================== */
 

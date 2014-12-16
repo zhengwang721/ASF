@@ -66,47 +66,34 @@
 /*======================Globals===============================================*/
 
 /*This flag is used for packet streaming mode to check if the gap time is acheived*/
- bool rdy_to_tx;
+ extern bool rdy_to_tx;
  
  /* This flag is set as true when peer device found */
- bool peer_found;
+ extern bool peer_found;
 
-#if (ANTENNA_DIVERSITY == 1)
- uint8_t ant_sel_before_ct;
- uint8_t ant_div_before_ct;
-#endif /* End of #if (ANTENNA_DIVERSITY == 1) */
 
  
- #if (TAL_TYPE == AT86RF233)
- /* Backup for ISM frequency related registers for CW Transmission */
-   uint8_t cc_band_ct;
-   uint8_t cc_number_ct;
- #endif /* End of #if (TAL_TYPE == AT86RF233) */
+
  
  #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
- uint8_t last_tx_power_format_set;
+ extern uint8_t last_tx_power_format_set;
 #endif /* #if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) ) */
 
- bool cw_ack_sent,remote_cw_start;
- uint8_t cw_start_mode;
- uint16_t cw_tmr_val;
- bool pulse_mode ;
+ extern bool cw_ack_sent,remote_cw_start;
+ extern uint8_t cw_start_mode;
+ extern uint16_t cw_tmr_val;
+ extern bool pulse_mode ;
  /*Gap between consecutive frames in Packet Streaming Mode,This value is set by the user from Performance Analyzer*/
- uint32_t pkt_stream_gap_time ;
- bool rx_on_mode;
+ extern uint32_t pkt_stream_gap_time ;
+ extern bool rx_on_mode;
  
  /*Pointer to the data frame to be used in Packet Streaming Mode*/
- frame_info_t *stream_pkt;
+ extern frame_info_t *stream_pkt;
 
-/* Database to maintain the default settings of the configurable parameter */
- trx_config_params_t default_trx_config_params;
 
-/* Database to maintain the updated/latest settings of the configurable
- * parameters */
- trx_config_params_t curr_trx_config_params;
  
  /*If test request to the remote node is failed this falg is used to send a failure confiramtion back to the UI*/
- bool remote_serial_tx_failure;
+ extern bool remote_serial_tx_failure;
  
 /*========================Prototypes========================================= */
 

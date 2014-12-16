@@ -864,7 +864,6 @@ void per_mode_initiator_tx_done_cb(retval_t status, frame_info_t *frame)
  */
 static void set_parameter_on_transmitter_node(retval_t status)
 {
-	uint8_t temp_var;
 	param_value_t param_value;
 	pib_value_t pib_value;
 
