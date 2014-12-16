@@ -269,13 +269,12 @@ void ui_uhi_hid_mouse_move(int8_t x, int8_t y, int8_t scroll)
  * \defgroup UI User Interface
  *
  * Human interface on SAMG55 Xplained Pro:
- * - Led 0 is on when it's host and there is no device connected
  * - Led 0 blinks when a HID mouse is enumerated and USB in idle mode
  *   - The blink is slow (1s) with low speed device
  *   - The blink is normal (0.5s) with full speed device
  *   - The blink is fast (0.25s) with high speed device
- * - Led 0 is on when a HID mouse button is pressed
+ * - Led 0 is on when a HID mouse button is pressed or the mouse is moving
  * - Button SW0 allows to enter the device in suspend mode with remote wakeup
  *   feature authorized
- * - Only SW0 button can be used to wakeup USB device in suspend mode
+ * - SW0 button can be used to wakeup USB device in suspend mode
  */
