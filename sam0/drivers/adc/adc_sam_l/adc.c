@@ -56,7 +56,7 @@
  *  \li Div 2 clock prescaler
  *  \li 12-bit resolution
  *  \li Window monitor disabled
- *  \li Positive input on ADC PIN 0
+ *  \li Positive input on ADC PIN 1
  *  \li Negative input on Internal ground
  *  \li Averaging disabled
  *  \li Oversampling disabled
@@ -85,8 +85,8 @@ void adc_get_config_defaults(struct adc_config *const config)
 	config->window.window_mode            = ADC_WINDOW_MODE_DISABLE;
 	config->window.window_upper_value     = 0;
 	config->window.window_lower_value     = 0;
-	config->positive_input                = ADC_POSITIVE_INPUT_PIN0 ;
-	config->negative_input                = ADC_NEGATIVE_INPUT_GND ;
+	config->positive_input                = ADC_POSITIVE_INPUT_PIN1;
+	config->negative_input                = ADC_NEGATIVE_INPUT_GND;
 	config->accumulate_samples            = ADC_ACCUMULATE_DISABLE;
 	config->divide_result                 = ADC_DIVIDE_RESULT_DISABLE;
 	config->left_adjust                   = false;

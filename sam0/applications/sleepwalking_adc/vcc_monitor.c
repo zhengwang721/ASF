@@ -193,7 +193,6 @@ static void adc_setup(void)
 #if (SAML21)
 	/* Use internal bandgap reference */
 	config.reference          = ADC_REFERENCE_INTREF;
-	config.positive_input     = ADC_POSITIVE_INPUT_PIN1;
 #else
 	/* Use internal 1V band-gap reference */
 	config.reference          = ADC_REFERENCE_INT1V;
