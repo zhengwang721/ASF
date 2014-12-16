@@ -79,7 +79,8 @@
  * toggling the led pin to signal that the low voltage condition has happened.
  * Connect the PA02(EXT3 pin3) to GND in SAM D20/D21 Xplained Pro to trigger it.
  * Connect the PA06(EXT1 pin3) to GND in SAM R21 Xplained Pro to trigger it.
- * Connect the PA02(EXT1 pin3) to GND in SAM D10/D11/L21 Xplained Pro to trigger it.
+ * Connect the PA02(EXT1 pin3) to GND in SAM D10/D11 Xplained Pro to trigger it.
+ * Connect the PA03(EXT1 pin4) to GND in SAM L21 Xplained Pro to trigger it.
  *
  * If debugging it is also possible to start a debug session and place a
  * breakpoint in the window callback that will trigger whenever the voltage
@@ -208,13 +209,11 @@ static void adc_setup(void)
 	config.divide_result      = ADC_DIVIDE_RESULT_16;
 
 	/* Configure window */
-	config.window.window_mode        = ADC_WINDOW_MODE_BELOW_UPPER;
+	config.window.window_mode = ADC_WINDOW_MODE_BELOW_UPPER;
 #if (SAML21)
-	config.on_demand = true;
-	config.window.window_upper_value = 512;
-#else
-	config.window.window_upper_value = 2048;
+	config.on_demand          = true;
 #endif
+	config.window.window_upper_value = 2048;
 
 	/* Apply configuration to ADC module */
 	adc_init(&module_inst, ADC, &config);
