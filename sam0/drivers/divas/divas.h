@@ -260,7 +260,7 @@ uint32_t divas_sqrt(uint32_t radicand);
  * @{
  */
 
-#if DIVAS_OVERLOAD_MODE
+#if DIVAS_OVERLOAD_MODE == true
 /**
  * \brief Signed division operation overload
  *

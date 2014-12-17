@@ -147,7 +147,7 @@ uint32_t  divas_sqrt(uint32_t radicand)
  * @{
  */
 
-#if DIVAS_OVERLOAD_MODE 
+#if DIVAS_OVERLOAD_MODE == true
 #if defined ( __GNUC__ )
 
 #if 0
