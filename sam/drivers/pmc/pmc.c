@@ -279,8 +279,6 @@ uint32_t pmc_switch_mck_to_upllck(uint32_t ul_pres)
 /**
  * \brief Switch slow clock source selection to external 32k (Xtal or Bypass).
  *
- * \note This function disables the PLLs.
- *
  * \note Switching SCLK back to 32krc is only possible by shutting down the
  *       VDDIO power supply.
  *
