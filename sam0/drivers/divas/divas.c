@@ -147,6 +147,7 @@ uint32_t  divas_sqrt(uint32_t radicand)
  * @{
  */
 
+#if DIVAS_OVERLOAD_MODE 
 #if defined ( __GNUC__ )
 
 #if 0
@@ -249,6 +250,7 @@ __value_in_regs uidiv_return __aeabi_uidivmod(unsigned numerator, unsigned denom
 	return result;
 }
 
+#endif
 #endif
 
 

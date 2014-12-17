@@ -260,6 +260,7 @@ uint32_t divas_sqrt(uint32_t radicand);
  * @{
  */
 
+#if DIVAS_OVERLOAD_MODE
 /**
  * \brief Signed division operation overload
  *
@@ -327,6 +328,7 @@ __value_in_regs idiv_return __aeabi_idivmod(int numerator, int denominator);
  * \return The remainder of the DIVAS unsigned division operation.
  */
 __value_in_regs uidiv_return __aeabi_uidivmod(unsigned numerator, unsigned denominator); 
+#endif
 #endif
 
 /** @} */
