@@ -45,7 +45,7 @@
 #include "conf_usb_host.h"
 #include "sysclk.h"
 #include "matrix.h"
-#include "ohci\ohci_hcd.h"
+#include "ohci/ohci_hcd.h"
 #include <string.h>
 #include <stdlib.h>
 
@@ -498,7 +498,7 @@ bool uhd_setup_request(
 {
 	UNUSED(callback_run);
 
-	bool return_value = true;
+	bool return_value;
 
 	irqflags_t flags;
 	flags = cpu_irq_save();

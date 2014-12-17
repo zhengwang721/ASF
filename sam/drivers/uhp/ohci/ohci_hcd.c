@@ -384,16 +384,12 @@ bool ohci_add_ed_bulk(ed_info_t *ed_info)
 		OHCI->HcBulkHeadED = (uint32_t)bulk_ed_add;
 	} else {
 		/* Check if the endpoint has been allocated */
-		while (bulk_ed_head != NULL) {
+		while (bulk_ed_head->p_next_ed != NULL) {
 			if (bulk_ed_head->ed_info.ed_info_s.bEndpointNumber ==
 					ed_info->ed_info_s.bEndpointNumber) {
 				return false;
 			}
-			if (bulk_ed_head->p_next_ed == NULL) {
-				break;
-			} else {
-				bulk_ed_head = bulk_ed_head->p_next_ed;
-			}
+			bulk_ed_head = bulk_ed_head->p_next_ed;
 		};
 
 		bulk_ed_head->p_next_ed = bulk_ed_add;
