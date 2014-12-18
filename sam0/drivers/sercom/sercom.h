@@ -77,7 +77,7 @@ extern "C" {
 
 #if (0x1ff >= REV_SERCOM)
 #  define FEATURE_SERCOM_SYNCBUSY_SCHEME_VERSION_1
-#elif (0x2ff >= REV_SERCOM)
+#elif (0x300 >= REV_SERCOM)
 #  define FEATURE_SERCOM_SYNCBUSY_SCHEME_VERSION_2
 #else
 #  error "Unknown SYNCBUSY scheme for this SERCOM revision"
