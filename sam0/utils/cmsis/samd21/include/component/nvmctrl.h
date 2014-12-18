@@ -464,7 +464,7 @@ typedef struct {
 #define NVMCTRL_FUSES_EEPROM_SIZE_Msk (0x7ul << NVMCTRL_FUSES_EEPROM_SIZE_Pos)
 #define NVMCTRL_FUSES_EEPROM_SIZE(value) ((NVMCTRL_FUSES_EEPROM_SIZE_Msk & ((value) << NVMCTRL_FUSES_EEPROM_SIZE_Pos)))
 
-/* Compabible definition for previous driver (begin 1) */
+/* Compatible definition for previous driver (begin 1) */
 #define NVMCTRL_FUSES_HOT_ADC_VAL_ADDR (NVMCTRL_TEMP_LOG + 4)
 #define NVMCTRL_FUSES_HOT_ADC_VAL_Pos 20           /**< \brief (NVMCTRL_TEMP_LOG) 12-bit ADC conversion at hot temperature */
 #define NVMCTRL_FUSES_HOT_ADC_VAL_Msk (0xFFFu << NVMCTRL_FUSES_HOT_ADC_VAL_Pos)
@@ -484,7 +484,7 @@ typedef struct {
 #define NVMCTRL_FUSES_HOT_TEMP_VAL_INT_Pos 12           /**< \brief (NVMCTRL_TEMP_LOG) Integer part of hot temperature in oC */
 #define NVMCTRL_FUSES_HOT_TEMP_VAL_INT_Msk (0xFFu << NVMCTRL_FUSES_HOT_TEMP_VAL_INT_Pos)
 #define NVMCTRL_FUSES_HOT_TEMP_VAL_INT(value) ((NVMCTRL_FUSES_HOT_TEMP_VAL_INT_Msk & ((value) << NVMCTRL_FUSES_HOT_TEMP_VAL_INT_Pos)))
-/* Compabible definition for previous driver (end 1) */
+/* Compatible definition for previous driver (end 1) */
 
 #define NVMCTRL_FUSES_NVMP_ADDR     NVMCTRL_OTP1
 #define NVMCTRL_FUSES_NVMP_Pos      16           /**< \brief (NVMCTRL_OTP1) Number of NVM Pages */
@@ -506,7 +506,7 @@ typedef struct {
 #define NVMCTRL_FUSES_REGION_LOCKS_Msk (0xFFFFul << NVMCTRL_FUSES_REGION_LOCKS_Pos)
 #define NVMCTRL_FUSES_REGION_LOCKS(value) ((NVMCTRL_FUSES_REGION_LOCKS_Msk & ((value) << NVMCTRL_FUSES_REGION_LOCKS_Pos)))
 
-/* Compabible definition for previous driver (begin 2) */
+/* Compatible definition for previous driver (begin 2) */
 #define NVMCTRL_FUSES_ROOM_ADC_VAL_ADDR (NVMCTRL_TEMP_LOG + 4)
 #define NVMCTRL_FUSES_ROOM_ADC_VAL_Pos 8            /**< \brief (NVMCTRL_TEMP_LOG) 12-bit ADC conversion at room temperature */
 #define NVMCTRL_FUSES_ROOM_ADC_VAL_Msk (0xFFFu << NVMCTRL_FUSES_ROOM_ADC_VAL_Pos)
@@ -554,7 +554,7 @@ typedef struct {
 #define SYSCTRL_FUSES_OSC32K_CAL_Pos 6            /**< \brief (NVMCTRL_OTP4) OSC32K Calibration */
 #define SYSCTRL_FUSES_OSC32K_CAL_Msk (0x7Fu << SYSCTRL_FUSES_OSC32K_CAL_Pos)
 #define SYSCTRL_FUSES_OSC32K_CAL(value) ((SYSCTRL_FUSES_OSC32K_CAL_Msk & ((value) << SYSCTRL_FUSES_OSC32K_CAL_Pos)))
-/* Compabible definition for previous driver (end 2) */
+/* Compatible definition for previous driver (end 2) */
 
 #define USB_FUSES_TRANSN_ADDR       (NVMCTRL_OTP4 + 4)
 #define USB_FUSES_TRANSN_Pos        13           /**< \brief (NVMCTRL_OTP4) USB pad Transn calibration */
