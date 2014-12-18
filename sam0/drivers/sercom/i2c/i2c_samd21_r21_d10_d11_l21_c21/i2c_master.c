@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM I<SUP>2</SUP>C Master Driver
+ * \brief SAM I2C Master Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

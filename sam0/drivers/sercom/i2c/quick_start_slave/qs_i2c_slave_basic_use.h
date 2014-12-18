@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM SERCOM I<SUP>2</SUP>C Slave Quick Start Guide with Callbacks
+ * \brief SAM SERCOM I2C Slave Quick Start Guide with Callbacks
  *
  * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
