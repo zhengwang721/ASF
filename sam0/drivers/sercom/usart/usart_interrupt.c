@@ -285,7 +285,7 @@ enum status_code usart_write_buffer_job(
 		return STATUS_BUSY;
 	}
 
-	/* Check that the receiver is enabled */
+	/* Check that the transmitter is enabled */
 	if (!(module->transmitter_enabled)) {
 		return STATUS_ERR_DENIED;
 	}
