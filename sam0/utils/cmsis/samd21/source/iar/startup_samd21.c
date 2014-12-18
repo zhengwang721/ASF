@@ -103,7 +103,12 @@ void Dummy_Handler(void);
 #ifdef       ID_PTC
 #pragma weak PTC_Handler              = Dummy_Handler
 #endif
+#ifdef       ID_I2S
 #pragma weak I2S_Handler              = Dummy_Handler
+#endif
+#ifdef       ID_AC1
+#pragma weak AC1_Handler              = Dummy_Handler
+#endif
 
 /* Exception Table */
 #pragma language = extended
@@ -183,7 +188,7 @@ const DeviceVectors __vector_table[] = {
         (void*) (0UL), /* Reserved*/
 #endif
 #ifdef ID_AC
-        (void*) AC_Handler,             /* 24 Analog Comparators */
+        (void*) AC_Handler,             /* 24 Analog Comparators 0 */
 #else
         (void*) (0UL), /* Reserved*/
 #endif
@@ -197,7 +202,14 @@ const DeviceVectors __vector_table[] = {
 #else
         (void*) (0UL), /* Reserved*/
 #endif
-        (void*) I2S_Handler             /* 27 Inter-IC Sound Interface */
+#ifdef ID_I2S
+        (void*) I2S_Handler,            /* 27 Inter-IC Sound Interface */
+#else
+        (void*) (0UL), /* Reserved*/
+#endif
+#ifdef ID_AC1
+        (void*) AC1_Handler             /* 28 Analog Comparators 1 */
+#endif
 };
 
 /**------------------------------------------------------------------------------

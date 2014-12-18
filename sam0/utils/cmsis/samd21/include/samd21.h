@@ -73,6 +73,22 @@
   #include "samd21j17a.h"
 #elif defined(__SAMD21J18A__) || defined(__ATSAMD21J18A__)
   #include "samd21j18a.h"
+#elif defined(__SAMD21E15B__) || defined(__ATSAMD21E15B__)
+  #include "samd21e15b.h"
+#elif defined(__SAMD21E15L__) || defined(__ATSAMD21E15L__)
+  #include "samd21e15l.h"
+#elif defined(__SAMD21E16B__) || defined(__ATSAMD21E16B__)
+  #include "samd21e16b.h"
+#elif defined(__SAMD21E16L__) || defined(__ATSAMD21E16L__)
+  #include "samd21e16l.h"
+#elif defined(__SAMD21G15B__) || defined(__ATSAMD21G15B__)
+  #include "samd21g15b.h"
+#elif defined(__SAMD21G16B__) || defined(__ATSAMD21G16B__)
+  #include "samd21g16b.h"
+#elif defined(__SAMD21J15B__) || defined(__ATSAMD21J15B__)
+  #include "samd21j15b.h"
+#elif defined(__SAMD21J16B__) || defined(__ATSAMD21J16B__)
+  #include "samd21j16b.h"
 #else
   #error Library does not support the specified device.
 #endif

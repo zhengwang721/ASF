@@ -51,7 +51,7 @@
 /*@{*/
 
 #define TCC_U2213
-#define REV_TCC                     0x101
+#define REV_TCC                     0x121
 
 /* -------- TCC_CTRLA : (TCC Offset: 0x00) (R/W 32) Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
