@@ -51,7 +51,7 @@
 /*@{*/
 
 #define DSU_U2209
-#define REV_DSU                     0x200
+#define REV_DSU                     0x202
 
 /* -------- DSU_CTRL : (DSU Offset: 0x0000) ( /W  8) Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

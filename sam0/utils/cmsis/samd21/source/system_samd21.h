@@ -3,7 +3,7 @@
  *
  * \brief Low-level initialization functions called upon chip startup
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

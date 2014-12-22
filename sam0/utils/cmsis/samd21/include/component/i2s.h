@@ -51,7 +51,7 @@
 /*@{*/
 
 #define I2S_U2224
-#define REV_I2S                     0x102
+#define REV_I2S                     0x110
 
 /* -------- I2S_CTRLA : (I2S Offset: 0x00) (R/W  8) Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
