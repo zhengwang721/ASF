@@ -328,6 +328,10 @@ struct extint_nmi_conf {
 	 *  detection modes for NMIs.
 	 */
 	enum extint_detect detection_criteria;
+#if (SAML21)
+	/** Enable asynchronous edge detection. */
+	bool enable_async_edge_detection;
+#endif
 };
 
 #if EXTINT_CALLBACK_MODE == true
@@ -447,6 +451,7 @@ void extint_chan_set_config(
  * The default configuration is as follows:
  * \li Input filtering disabled
  * \li Detect falling edges of a signal
+ * \li Asynchronous edge detection is disabled
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
@@ -462,6 +467,10 @@ static inline void extint_nmi_get_config_defaults(
 	config->gpio_pin_pull       = EXTINT_PULL_UP;
 	config->filter_input_signal = false;
 	config->detection_criteria  = EXTINT_DETECT_FALLING;
+#if (SAML21)
+	 config->enable_async_edge_detection = false;
+#endif
+
 }
 
 enum status_code extint_nmi_set_config(
