@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="driver" id="sam0.utils.cmsis.samd21.include.pio" caption="SAMD21 PIO definitions">
 		<info type="description" value="summary">
-		SAMD20 PIO component definitions.
+		SAMD21 PIO component definitions.
 		</info>
 		<build type="header-file" value="samd21e15a.h"/>
 		<build type="header-file" value="samd21e15b.h"/>

@@ -73,7 +73,9 @@
  * \brief Table of possible system interrupt/exception vector numbers.
  *
  * Table of all possible interrupt and exception vector indexes within the
- * SAMD21 device.
+ * SAMD21 device. Check peripherals configuration in SAMD21 datasheet for
+ * available vector index for specific device.
+ *
  */
 #if defined(__DOXYGEN__)
 /** \note The actual enumeration name is "system_interrupt_vector". */
@@ -147,10 +149,10 @@ enum system_interrupt_vector {
 	SYSTEM_INTERRUPT_MODULE_TC3        = TC3_IRQn,
 	SYSTEM_INTERRUPT_MODULE_TC4        = TC4_IRQn,
 	SYSTEM_INTERRUPT_MODULE_TC5        = TC5_IRQn,
-#  if defined(__DOXYGEN__) || defined(ID_TC6)
+#  if defined(ID_TC6)
 	SYSTEM_INTERRUPT_MODULE_TC6        = TC6_IRQn,
 #  endif
-#  if defined(__DOXYGEN__) || defined(ID_TC7)
+#  defined(ID_TC7)
 	SYSTEM_INTERRUPT_MODULE_TC7        = TC7_IRQn,
 #  endif
 #endif
