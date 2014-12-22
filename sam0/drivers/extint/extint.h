@@ -282,7 +282,10 @@ struct extint_chan_conf {
 	uint32_t gpio_pin_mux;
 	/** Internal pull to enable on the input pin. */
 	enum extint_pull gpio_pin_pull;
-#if (!SAML21)
+#if (SAML21)
+	/** Enable asynchronous edge detection. */
+	bool enable_async_edge_detection;
+#else
 	/** Wake up the device if the channel interrupt fires during sleep mode. */
 	bool wake_if_sleeping;
 #endif
