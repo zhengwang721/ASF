@@ -118,7 +118,7 @@
 /* Theoretical ADC result for DAC full-swing output */
 #define ADC_VAL_DAC_FULL_OUTPUT 4095
 /* Offset due to ADC & DAC errors */
-#define ADC_OFFSET              100
+#define ADC_OFFSET              150
 #if (SAML21)
 #  define DAC_VAL_HALF_VOLT     2047
 #  define DAC_VAL_ONE_VOLT      4095
