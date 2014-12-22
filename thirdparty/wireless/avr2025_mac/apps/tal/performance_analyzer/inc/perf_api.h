@@ -79,7 +79,7 @@
  extern uint8_t last_tx_power_format_set;
 #endif /* #if( (TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B) ) */
 
- extern bool cw_ack_sent,remote_cw_start;
+ extern bool cw_ack_sent,remote_cw_start,remote_pulse_cw_start;
  extern uint8_t cw_start_mode;
  extern uint16_t cw_tmr_val;
  extern bool pulse_mode ;

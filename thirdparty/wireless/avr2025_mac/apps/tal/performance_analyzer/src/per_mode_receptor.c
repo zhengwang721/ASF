@@ -282,6 +282,11 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
 		cw_ack_sent = true;
 		start_cw_transmission(cw_start_mode, cw_tmr_val);
 	}
+	if(remote_pulse_cw_start)
+	{
+		cw_ack_sent = true;
+		pulse_cw_transmission();
+	}
 	/*enable rx on mode in receptor after sending rxon confirm to the initiator*/
 	if(rx_on_mode)
 	{

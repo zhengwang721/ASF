@@ -110,7 +110,7 @@ uint8_t pkt_buffer[LARGE_BUFFER_SIZE];
   static uint8_t cc_number_ct;
 #endif /* End of #if (TAL_TYPE == AT86RF233) */
   
-bool cw_ack_sent,remote_cw_start;  
+bool cw_ack_sent,remote_cw_start,remote_pulse_cw_start;  
 
 /* === DEFINES============================================================== */
 
@@ -483,14 +483,18 @@ void pulse_cw_transmission(void)
 {
 	uint16_t channel;
 	
-	if(node_info.main_state == PER_TEST_RECEPTOR)
+	/*Start the Pulse CW Trx after the confirmation is sent*/
+	if(node_info.main_state == PER_TEST_RECEPTOR && !cw_ack_sent)
 	{
-		/*A small delay is required to send the ACK back for the last transaction before starting the Pulse CW on the receptor node
-		 Else this might lead to a MAC_NO_ACK status on the host */
-		delay_ms(1);
+	   remote_pulse_cw_start = true;
+	   usr_cont_pulse_tx_confirm(MAC_SUCCESS);	   
+	   return;
 	}
 	
-		op_mode = CONTINUOUS_TX_MODE;
+	remote_pulse_cw_start = false;
+	cw_ack_sent = false;
+	
+	op_mode = CONTINUOUS_TX_MODE;
 	tal_pib_get(phyCurrentChannel,(uint8_t *)&channel);
 
 	/* Save all user settings before continuous tx */
@@ -535,11 +539,8 @@ static void stop_pulse_cb(void *callback_parameter)
 	op_mode = TX_OP_MODE;
 	/* recover all user setting set before continuous tx */
 	recover_all_settings();
-	
-	
+		
 	usr_cont_pulse_tx_confirm(MAC_SUCCESS);
-	
-
 	/* Keep compiler happy. */
 	callback_parameter = callback_parameter;
 }

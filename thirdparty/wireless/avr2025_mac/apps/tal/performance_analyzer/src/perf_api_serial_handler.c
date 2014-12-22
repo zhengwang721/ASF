@@ -507,7 +507,7 @@ static inline void handle_incoming_msg(void)
 		 * size;
 		 * protocol_id;
 		 * msg_id;
-		 * param_type;
+		 * parameter_type;
 		 * param_value;
 		 */
 
@@ -578,7 +578,7 @@ static inline void handle_incoming_msg(void)
 		 * size;
 		 * protocol_id;
 		 * msg_id;
-		 * param_type;
+		 * parameter_type;
 		 */
 
 		param_value_t param_value;
@@ -1637,11 +1637,11 @@ void usr_range_test_stop_confirm(uint8_t status)
  * host application via serial interface.
  * Called by Performance application as confirmation for perf_set_req request
  * \param status        Result for requested perf_set_req
- * \param param_type    Type of the parameter that has been set
+ * \param parameter_type    Type of the parameter that has been set
  * \param param_value   Pointer to the value of the parameter that has been set
  * \return void
  */
-void usr_perf_set_confirm(uint8_t status, uint8_t param_type,
+void usr_perf_set_confirm(uint8_t status, uint8_t parameter_type,
 		param_value_t *param_value)
 {
 	uint8_t *msg_buf;
@@ -1668,8 +1668,8 @@ void usr_perf_set_confirm(uint8_t status, uint8_t param_type,
 	/* Copy the payload of the Set confirmation */
 	*msg_buf++ = status;
 	/* Copy Parameter type */
-	*msg_buf++ = param_type;
-	*msg_buf++ = param_len = get_param_length(param_type);
+	*msg_buf++ = parameter_type;
+	*msg_buf++ = param_len = get_param_length(parameter_type);
 	/* Update the Length field */
 	*ptr_to_msg_size += OCTET_STR_LEN_BYTE_LEN;
 
@@ -1688,11 +1688,11 @@ void usr_perf_set_confirm(uint8_t status, uint8_t param_type,
  * host application via serial interface.
  * Called by Performance application as confirmation for perf_get_req request
  * \param status        Result for requested perf_get_req
- * \param param_type    Type of the parameter that has been read
+ * \param parameter_type    Type of the parameter that has been read
  * \param param_value   Pointer to the value of the parameter that has been read
  * \return void
  */
-void usr_perf_get_confirm(uint8_t status, uint8_t param_type,
+void usr_perf_get_confirm(uint8_t status, uint8_t parameter_type,
 		param_value_t *param_value)
 {
 	uint8_t *msg_buf;
@@ -1719,8 +1719,8 @@ void usr_perf_get_confirm(uint8_t status, uint8_t param_type,
 	/* Copy the payload of the Get confirmation */
 	*msg_buf++ = status;
 	/* Copy Parameter type */
-	*msg_buf++ = param_type;
-	*msg_buf++ = param_len = get_param_length(param_type);
+	*msg_buf++ = parameter_type;
+	*msg_buf++ = param_len = get_param_length(parameter_type);
 	/* Update the Length field */
 	*ptr_to_msg_size += OCTET_STR_LEN_BYTE_LEN;
 	/* Copy Parameter value */
@@ -2258,7 +2258,7 @@ void usr_peer_disconnect_confirm(uint8_t status)
  * \return void
  */
 void usr_set_default_config_confirm(uint8_t status,
-		trx_config_params_t *default_trx_config_params)
+		trx_config_params_t *default_config_params)
 {
 	uint8_t *msg_buf;
 
@@ -2277,21 +2277,21 @@ void usr_set_default_config_confirm(uint8_t status,
 	/* Copy confirmation payload */
 	*msg_buf++ = status;
 	/* configuration parameters */
-	*msg_buf++ = (uint8_t)default_trx_config_params->channel;
-	*msg_buf++ = (uint8_t)(default_trx_config_params->channel>>8);
-	*msg_buf++ = default_trx_config_params->channel_page;
-	*msg_buf++ = default_trx_config_params->tx_power_dbm;
+	*msg_buf++ = (uint8_t)default_config_params->channel;
+	*msg_buf++ = (uint8_t)(default_config_params->channel>>8);
+	*msg_buf++ = default_config_params->channel_page;
+	*msg_buf++ = default_config_params->tx_power_dbm;
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
-	*msg_buf++ = default_trx_config_params->tx_power_reg;
+	*msg_buf++ = default_config_params->tx_power_reg;
 #else
 	*msg_buf++ = FIELD_DOES_NOT_EXIST; /* Tx Power in reg support is given
 	                                    * for RF212 and 212B transceivers */
 #endif
-	*msg_buf++ = (uint8_t)default_trx_config_params->csma_enabled;
-	*msg_buf++ = (uint8_t)default_trx_config_params->retry_enabled;
-	*msg_buf++ = (uint8_t)default_trx_config_params->ack_request;
+	*msg_buf++ = (uint8_t)default_config_params->csma_enabled;
+	*msg_buf++ = (uint8_t)default_config_params->retry_enabled;
+	*msg_buf++ = (uint8_t)default_config_params->ack_request;
 #if (TAL_TYPE != AT86RF230B)
-	*msg_buf++ = (uint8_t)default_trx_config_params->rx_desensitize;
+	*msg_buf++ = (uint8_t)default_config_params->rx_desensitize;
 #else
     /*Filled with 0xff to indicate this parameter is not available for
 	* this  transceiver */
@@ -2300,7 +2300,7 @@ void usr_set_default_config_confirm(uint8_t status,
 #endif
 
 #if ((TAL_TYPE == AT86RF233) || (TAL_TYPE == ATMEGARFR2))
-	*msg_buf++ = (uint8_t)default_trx_config_params->rpc_enable;
+	*msg_buf++ = (uint8_t)default_config_params->rpc_enable;
 #else
     /*Filled with 0xff to indicate this parameter is not available for
 	* this  transceiver */
@@ -2308,33 +2308,33 @@ void usr_set_default_config_confirm(uint8_t status,
 #endif
 
 #if (ANTENNA_DIVERSITY == 1)
-	*msg_buf++ = default_trx_config_params->antenna_selected;
+	*msg_buf++ = default_config_params->antenna_selected;
 #else
 	*msg_buf++ = FIELD_DOES_NOT_EXIST;
 #endif
 
-	*msg_buf++ = default_trx_config_params->trx_state;
-	*msg_buf++ = (uint8_t)default_trx_config_params->number_test_frames;
+	*msg_buf++ = default_config_params->trx_state;
+	*msg_buf++ = (uint8_t)default_config_params->number_test_frames;
 	*msg_buf++
-		= (uint8_t)(default_trx_config_params->number_test_frames >>
+		= (uint8_t)(default_config_params->number_test_frames >>
 			8);
 	*msg_buf++
-		= (uint8_t)(default_trx_config_params->number_test_frames >>
+		= (uint8_t)(default_config_params->number_test_frames >>
 			16);
 	*msg_buf++
-		= (uint8_t)(default_trx_config_params->number_test_frames >>
+		= (uint8_t)(default_config_params->number_test_frames >>
 			24);
-	*msg_buf++ = default_trx_config_params->phy_frame_length;
-	*msg_buf++ = (uint8_t)(default_trx_config_params->phy_frame_length>>8);
+	*msg_buf++ = default_config_params->phy_frame_length;
+	*msg_buf++ = (uint8_t)(default_config_params->phy_frame_length>>8);
 
 	/*Peer settings for parameters like CRC and ant diversity */
 #if (ANTENNA_DIVERSITY == 1)
-	*msg_buf++ = default_trx_config_params->antenna_selected_on_peer;
+	*msg_buf++ = default_config_params->antenna_selected_on_peer;
 #else
 	*msg_buf++ = FIELD_DOES_NOT_EXIST;
 #endif
 #ifdef CRC_SETTING_ON_REMOTE_NODE
-	*msg_buf++ = default_trx_config_params->crc_settings_on_peer;
+	*msg_buf++ = default_config_params->crc_settings_on_peer;
 #else
 	*msg_buf++ = FIELD_DOES_NOT_EXIST;
 #endif
