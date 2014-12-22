@@ -487,15 +487,15 @@ static void  range_test_timer_handler_rf24_cb(void *parameter)
 		configure_range_test_frame_sending(trx);
 
 		/* Transmit the Range Test Packet */
-		if (curr_trx_config_params[trx].csma_enabled) {
+		//if (curr_trx_config_params[trx].csma_enabled) {
 			tal_tx_frame(trx,node_info[trx].tx_frame_info,
 					CSMA_UNSLOTTED,
 					curr_trx_config_params[trx].retry_enabled );
-		} else {
-			tal_tx_frame(trx,node_info[trx].tx_frame_info,
-					NO_CSMA_NO_IFS,
-					curr_trx_config_params[trx].retry_enabled );
-		}
+		//} else {
+			//tal_tx_frame(trx,node_info[trx].tx_frame_info,
+					//NO_CSMA_NO_IFS,
+					//curr_trx_config_params[trx].retry_enabled );
+		//}
 
 		node_info[trx].transmitting = true;
 
@@ -519,15 +519,15 @@ static void  range_test_timer_handler_rf09_cb(void *parameter)
 		configure_range_test_frame_sending(trx);
 
 		/* Transmit the Range Test Packet */
-		if (curr_trx_config_params[trx].csma_enabled) {
+		//if (curr_trx_config_params[trx].csma_enabled) {
 			tal_tx_frame(trx,node_info[trx].tx_frame_info,
 					CSMA_UNSLOTTED,
 					curr_trx_config_params[trx].retry_enabled );
-		} else {
-			tal_tx_frame(trx,node_info[trx].tx_frame_info,
-					NO_CSMA_NO_IFS,
-					curr_trx_config_params[trx].retry_enabled );
-		}
+		//} else {
+			//tal_tx_frame(trx,node_info[trx].tx_frame_info,
+					//NO_CSMA_NO_IFS,
+					//curr_trx_config_params[trx].retry_enabled );
+		//}
 
 		node_info[trx].transmitting = true;
 
@@ -4280,26 +4280,26 @@ static void start_range_test(trx_id_t trx)
 	/* Change the OPMODE to Range Test TX */
 	op_mode[trx] = RANGE_TEST_TX;
 
-if(RF24 == trx)
-{
-	/* Start a Range test timer  to start the  transmission of range test
-	 * packets periodically*/
-	sw_timer_start(T_APP_TIMER_RANGE_RF24,
-			RANGE_TX_BEACON_START_INTERVAL,
-			SW_TIMEOUT_RELATIVE,
-			(FUNC_PTR)range_test_timer_handler_rf24_cb,
-			(void*) trx);
-}
-else
-{
-	/* Start a Range test timer  to start the  transmission of range test
-	 * packets periodically*/
-	sw_timer_start(T_APP_TIMER_RANGE_RF09,
-			RANGE_TX_BEACON_START_INTERVAL,
-			SW_TIMEOUT_RELATIVE,
-			(FUNC_PTR)range_test_timer_handler_rf09_cb,
-			(void*) trx);	
-}
+	if(RF24 == trx)
+	{
+		/* Start a Range test timer  to start the  transmission of range test
+		 * packets periodically*/
+		sw_timer_start(T_APP_TIMER_RANGE_RF24,
+				RANGE_TX_BEACON_START_INTERVAL,
+				SW_TIMEOUT_RELATIVE,
+				(FUNC_PTR)range_test_timer_handler_rf24_cb,
+				(void*) trx);
+	}
+	else
+	{
+		/* Start a Range test timer  to start the  transmission of range test
+		 * packets periodically*/
+		sw_timer_start(T_APP_TIMER_RANGE_RF09,
+				RANGE_TX_BEACON_START_INTERVAL,
+				SW_TIMEOUT_RELATIVE,
+				(FUNC_PTR)range_test_timer_handler_rf09_cb,
+				(void*) trx);	
+	}
 }
 
 /*
