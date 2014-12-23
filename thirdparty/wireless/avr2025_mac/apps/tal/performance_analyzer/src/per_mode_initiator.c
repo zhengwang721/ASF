@@ -907,7 +907,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 				&pib_value);
 
 		/* update the data base with this value */
-		curr_trx_config_params.channel = (uint16_t)set_param_cb.param_value;
+		curr_trx_config_params.channel = set_param_cb.param_value;
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 		tal_pib_get(phyTransmitPower, &tx_pwr);
 		dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
@@ -924,7 +924,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 #endif /* End of EXT_RF_FRONT_END_CTRL */
 
 		/* Send the confirmation for Set request as Success */
-		param_value.param_value_16bit = (uint16_t)set_param_cb.param_value; 
+		param_value.param_value_16bit = set_param_cb.param_value; 
 		usr_perf_set_confirm(MAC_SUCCESS,
 				PARAM_CHANNEL,
 				&param_value);
@@ -1001,7 +1001,7 @@ static void set_parameter_on_transmitter_node(retval_t status)
 		curr_trx_config_params.channel_page = set_param_cb.param_value;
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 		tal_pib_get(phyCurrentChannel,(uint8_t *)&channel);
-		curr_trx_config_params.channel = channel;
+		curr_trx_config_params.channel = (uint8_t)channel;
 
 		tal_pib_get(phyTransmitPower, &tx_pwr);
 		dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
@@ -2117,7 +2117,7 @@ static void set_channel(uint16_t channel)
 			/* Limit the tx power below the default power for ch26
 			 * to meet
 			 * FCC Compliance */
-			limit_tx_power_in_ch26(channel, chn_before_set);
+			limit_tx_power_in_ch26((uint8_t)channel, (uint8_t)chn_before_set);
 			/* update the curr_tx_power_reg to use in trx_config
 			 *print menu  */
 #endif
@@ -2187,7 +2187,7 @@ static void set_channel_page(uint8_t channel_page)
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 				tal_pib_get(phyCurrentChannel,(uint8_t *)
 				 &channel);
-				curr_trx_config_params.channel = channel;
+				curr_trx_config_params.channel = (uint8_t)channel;
 				tal_pib_get(phyTransmitPower, &tx_pwr);
 				dbm_val = CONV_phyTransmitPower_TO_DBM(tx_pwr);
 				curr_trx_config_params.tx_power_dbm = dbm_val;
