@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21/R21/D10/D11 Quick Start Guide for Using Usart driver with DMA
+ * \brief SAM Quick Start Guide for Using Usart driver with DMA
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -48,6 +48,8 @@
  *    - SAMD21 Xplained Pro
  *    - SAMR21 Xplained Pro
  *    - SAMR11 Xplained Pro
+ *    - SAML21 Xplained Pro
+ *    - SAMC21 Xplained Pro
  *
  * This quick start will receiving eight bytes of data from PC terminal and transmit back the string
  * to the terminal through DMA. In this use case the USART will be configured with the following

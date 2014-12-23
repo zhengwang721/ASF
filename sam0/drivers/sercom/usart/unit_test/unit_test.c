@@ -75,6 +75,7 @@
  *  - SAM D21 Xplained Pro board
  *  - SAM R21 Xplained Pro board
  *  - SAM L21 Xplained Pro board
+ *  - SAM C21 Xplained Pro board
  *
  * \section appdoc_sam0_usart_unit_test_setup Setup
  * The following connections has to be made using wires:
@@ -82,7 +83,7 @@
  *  - \b TX/RX: EXT1 PIN17 (PA04) <--> EXT1 PIN13 (PB09)
  * - SAM R21 Xplained Pro board
  *  - \b TX/RX: EXT1 PIN9  (PA22) <--> EXT1 PIN15 (PB03)
- * - SAM L21 Xplained Pro board
+ * - SAM L21/C21 Xplained Pro board
  *  - \b TX/RX: EXT2 PIN14 (PA18) <--> EXT1 PIN13 (PB09)
  *
  * To run the test:
