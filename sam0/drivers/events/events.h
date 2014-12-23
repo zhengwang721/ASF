@@ -50,7 +50,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_events_group SAM Event System Driver (EVENTS)
  *
- * This driver for Atmel | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's peripheral event resources and users within
  * the device, including enabling and disabling of peripheral source selection
  * and synchronization of clock domains between various modules. The following API
@@ -652,7 +652,7 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_ofset);
  *	</tr>
  *  <tr>
  *		<td>E</td>
- *		<td>05/2014</td>
+ *		<td>12/2014</td>
  *		<td>Added support for interrupt hook mode.
  *		    Added support for SAMR21 and SAMD10/D11</td>
  *  </tr>

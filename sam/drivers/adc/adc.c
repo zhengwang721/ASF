@@ -778,12 +778,19 @@ void adc_set_writeprotect(Adc *p_adc, const uint32_t ul_enable)
  *
  * \param p_adc Pointer to an ADC instance.
  *
- * \return 0 if the peripheral is not protected, or 16-bit write protect
- * violation Status.
+ * \return 0 if no write protect violation occurred, or 16-bit write protect
+ * violation source.
  */
 uint32_t adc_get_writeprotect_status(const Adc *p_adc)
 {
-	return p_adc->ADC_WPSR & ADC_WPSR_WPVS;
+	uint32_t reg_value;
+
+	reg_value = p_adc->ADC_WPSR;
+	if (reg_value & ADC_WPSR_WPVS) {
+		return (reg_value & ADC_WPSR_WPVSRC_Msk) >> ADC_WPSR_WPVSRC_Pos;
+	} else {
+		return 0;
+	}
 }
 
 /**

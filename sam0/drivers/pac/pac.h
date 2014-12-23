@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_pac_group  SAM Peripheral Access Controller Driver (PAC)
  *
- * This driver for Atmel | SMART SAM devices provides an interface for the locking and
+ * This driver for Atmel® | SMART SAM devices provides an interface for the locking and
  * unlocking of peripheral registers within the device. When a peripheral is
  * locked, accidental writes to the peripheral will be blocked and a CPU
  * exception will be raised.
@@ -922,7 +922,7 @@ __no_inline enum status_code system_peripheral_unlock(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>04/2014</td>
+ *		<td>12/2014</td>
  *		<td>Added support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>

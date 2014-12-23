@@ -1639,8 +1639,8 @@ void usart_disable_writeprotect(Usart *p_usart)
  *
  * \param p_usart Pointer to a USART instance.
  *
- * \return 0 if the peripheral is not protected.
- * \return 16-bit Write Protect Violation Status otherwise.
+ * \return 0 if no write protect violation occurred, or 16-bit write protect
+ * violation source.
  */
 uint32_t usart_get_writeprotect_status(Usart *p_usart)
 {
