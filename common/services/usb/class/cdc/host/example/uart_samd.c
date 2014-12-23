@@ -198,15 +198,7 @@ void uart_config(usb_cdc_line_coding_t *cfg)
 
 void uart_open(void)
 {
-	usart_disable(&usart_module_edbg);
-	usart_init(&usart_module_edbg, CONF_USART_BASE, &usart_conf);
 	usart_enable(&usart_module_edbg);
-
-	/* Enable interrupts */
-	usart_register_callback(&usart_module_edbg, usart_tx_callback,
-			USART_CALLBACK_BUFFER_TRANSMITTED);
-	usart_register_callback(&usart_module_edbg, usart_rx_callback,
-			USART_CALLBACK_BUFFER_RECEIVED);
 }
 
 void uart_close(void)
