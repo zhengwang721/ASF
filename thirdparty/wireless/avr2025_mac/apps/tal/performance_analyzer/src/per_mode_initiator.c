@@ -2370,11 +2370,6 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 		/* Check for the valid range of tx power in dBm based on channel
 		 *& page */
 		if (validate_tx_power(tx_pwr_dbm)) {
-			if (true == peer_found) {
-				/*send the tx power in dBm to remote node */
-				send_parameters_changed(TX_POWER_DBM,
-						tx_pwr_dbm);
-			} else {
 				/* set the Tx power on source node in case of no
 				 * peer */
 				temp_var = CONV_DBM_TO_phyTransmitPower(
@@ -2390,7 +2385,7 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
 				usr_perf_set_confirm(MAC_SUCCESS,
 						PARAM_TX_POWER_DBM,
 						(param_value_t *)&tx_pwr_dbm);
-			}
+			
 		} else {
 			/* Send Set confirmation with status SUCCESS */
 			usr_perf_set_confirm(VALUE_OUT_OF_RANGE,
