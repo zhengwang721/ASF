@@ -463,6 +463,7 @@ void stop_pkt_streaming(void * parameter)
 {
 	pkt_stream_stop = true;
 	sw_timer_stop(T_APP_TIMER);
+	sw_timer_stop(CW_TX_TIMER);
 	usr_pkt_stream_confirm(MAC_SUCCESS,false);
 	if(node_info.main_state == PER_TEST_RECEPTOR)
 	{

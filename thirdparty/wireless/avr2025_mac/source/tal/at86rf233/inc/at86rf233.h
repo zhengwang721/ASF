@@ -53,12 +53,19 @@
 /* === INCLUDES ============================================================ */
 
 #include "tal_types.h"
+
 #if (TAL_TYPE == AT86RF233)
 #ifndef EXT_RF_FRONT_END_CTRL
 #define TRANSCEIVER_NAME    "AT86RF233"
 #else
 #define TRANSCEIVER_NAME    "AT86RF233+FEM"
 #endif
+
+#if SAMR21
+#undef TRANSCEIVER_NAME
+#define TRANSCEIVER_NAME "ATSAMR21"
+#endif
+
 /* === EXTERNALS =========================================================== */
 
 /* === TYPES =============================================================== */

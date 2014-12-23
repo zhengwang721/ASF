@@ -1221,7 +1221,7 @@ static void get_node_info(peer_info_rsp_t *data)
 	/* Get the MAC address of the node */
 	data->mac_address = tal_pib.IeeeAddress;
 	data->fw_version = reverse_float(FIRMWARE_VERSION);
-	data->feature_mask = (MULTI_CHANNEL_SELECT)|(PER_RANGE_TEST_MODE)|(PER_REMOTE_CONFIG_MODE)|(PKT_STREAMING_MODE)|(CONTINUOUS_RX_ON_MODE);
+	data->feature_mask = CCPU_ENDIAN_TO_LE32((MULTI_CHANNEL_SELECT)|(PER_RANGE_TEST_MODE)|(PER_REMOTE_CONFIG_MODE)|(PKT_STREAMING_MODE)|(CONTINUOUS_RX_ON_MODE));
 	
 }
 
