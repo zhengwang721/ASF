@@ -420,4 +420,24 @@
 #  error CONF_CLOCK_GCLK_7_OUTPUT_ENABLE not defined in conf_clock.h
 #endif
 
+#if !defined(CONF_CLOCK_GCLK_8_ENABLE)
+#  error CONF_CLOCK_GCLK_8_ENABLE not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_GCLK_8_RUN_IN_STANDBY)
+#  error CONF_CLOCK_GCLK_8_RUN_IN_STANDBY not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_GCLK_8_CLOCK_SOURCE)
+#  error CONF_CLOCK_GCLK_8_CLOCK_SOURCE not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_GCLK_8_PRESCALER)
+#  error CONF_CLOCK_GCLK_8_PRESCALER not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_GCLK_8_OUTPUT_ENABLE)
+#  error CONF_CLOCK_GCLK_8_OUTPUT_ENABLE not defined in conf_clock.h
+#endif
+
 #endif /* CLOCK_CONFIG_CHECK_H */
