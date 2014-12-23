@@ -341,10 +341,10 @@ struct bod12_config {
  * - Continuous in active mode
  * - Continuous in standby mode
  * - Monitor the V<SUB>DD</SUB> power pin
- * - Reset on BOD33 detect
+ * - No action on BOD33 detect
  * - Hysteresis enabled
- * - BOD33 level 0x27 on V<SUB>DD</SUB>
- * - BOD33 level 0x27 on V<SUB>BAT</SUB>
+ * - BOD33 level 0x7 on V<SUB>DD</SUB>
+ * - BOD33 level 0x7 on V<SUB>BAT</SUB>
  * - BOD33 kept enabled during device sleep
  * - BOD33 kept enabled during standby
  *
@@ -360,9 +360,9 @@ static inline void bod33_get_config_defaults(
 	conf->monitor         = BOD33_VMON_VDD;
 	conf->mode_in_active  = BOD33_ACTCFG_CONTINUOUS;
 	conf->mode_in_standby = BOD33_STDBYCFG_CONTINUOUS;
-	conf->action          = BOD33_ACTION_RESET;
-	conf->level           = 0x27;
-	conf->backuplevel     = 0x27;
+	conf->action          = BOD33_ACTION_NONE;
+	conf->level           = 0x7;
+	conf->backuplevel     = 0x7;
 	conf->run_in_backup   = true;
 	conf->run_in_standby  = true;
 	conf->hysteresis      = true;
