@@ -61,10 +61,6 @@
 #define TRANSCEIVER_NAME    "AT86RF233+FEM"
 #endif
 
-#if SAMR21
-#undef TRANSCEIVER_NAME
-#define TRANSCEIVER_NAME "ATSAMR21"
-#endif
 
 /* === EXTERNALS =========================================================== */
 
