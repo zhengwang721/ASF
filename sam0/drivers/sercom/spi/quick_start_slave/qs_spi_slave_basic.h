@@ -50,11 +50,6 @@
  * - Preloading of shift register enabled
  * - MSB of the data is transmitted first
  * - Transfer mode 0
- * - SPI MUX Setting E (see \ref asfdoc_sam0_sercom_spi_mux_settings_slave)
- *   - MISO on pad 2, extension header 1, pin 16
- *   - MOSI on pad 0, extension header 1, pin 17
- *   - SCK on pad 3, extension header 1, pin 18
- *   - SS on pad 1, extension header 1, pin
  * - 8-bit character size
  * - Not enabled in sleep mode
  * - GLCK generator 0
