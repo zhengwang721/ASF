@@ -55,11 +55,6 @@
  * - Master Mode enabled
  * - MSB of the data is transmitted first
  * - Transfer mode 0
- * - SPI MUX Setting E
- *   - MOSI on pad 2, extension header 2, pin 16
- *   - MISO on pad 0, extension header 2, pin 17
- *   - SCK on pad 3, extension header 2, pin 18
- *   - SS on extension header 2, pin 15
  * - 8-bit character size
  * - Not enabled in sleep mode
  * - Baudrate 100000
@@ -70,11 +65,6 @@
  * - Preloading of shift register enabled
  * - MSB of the data is transmitted first
  * - Transfer mode 0
- * - SPI MUX Setting E
- *   - MISO on pad 2, extension header 1, pin 16
- *   - MOSI on pad 0, extension header 1, pin 17
- *   - SCK on pad 3, extension header 1, pin 18
- *   - SS on pad 1, extension header 1, pin 15
  * - 8-bit character size
  * - Not enabled in sleep mode
  * - GLCK generator 0
