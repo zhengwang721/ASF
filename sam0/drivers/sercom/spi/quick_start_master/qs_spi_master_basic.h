@@ -101,13 +101,13 @@
  *      \snippet qs_spi_master_basic.c conf_defaults
  *   -# Set MUX setting E.
  *      \snippet qs_spi_master_basic.c mux_setting
- *   -# Set pinmux for pad 0 (data in (MISO) on extension header 1, pin 17).
+ *   -# Set pinmux for pad 0 (data in (MISO).
  *      \snippet qs_spi_master_basic.c di
  *   -# Set pinmux for pad 1 as unused, so the pin can be used for other purposes.
  *      \snippet qs_spi_master_basic.c ss
- *   -# Set pinmux for pad 2 (data out (MOSI) on extension header 1, pin 16).
+ *   -# Set pinmux for pad 2 (data out (MOSI)).
  *      \snippet qs_spi_master_basic.c do
- *   -# Set pinmux for pad 3 (SCK on extension header 1, pin 18).
+ *   -# Set pinmux for pad 3 (SCK).
  *      \snippet qs_spi_master_basic.c sck
  *   -# Initialize SPI module with configuration.
  *      \snippet qs_spi_master_basic.c init
