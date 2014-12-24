@@ -247,6 +247,10 @@
 #endif
 
 #if (SAMD || SAMR21)
+#if SAMR21
+#warning \
+	"For SAMR21 Antenna Diversity Related Pin configurations refer to system_board_init function of SAMR21 Xplained Pro board_init.c file "
+#endif
 #ifndef AT86RFX_SPI
 #define AT86RFX_SPI                  SERCOM0
 #define AT86RFX_RST_PIN              PIN_PA23
