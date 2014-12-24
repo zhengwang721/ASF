@@ -1015,7 +1015,7 @@ static inline void system_backup_clock_set_divider(
  */
 static inline uint32_t system_cpu_clock_get_hz(void)
 {
-	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) >> MCLK->CPUDIV.reg);
+	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) >> (MCLK->CPUDIV.reg - 1));
 
 }
 
@@ -1029,7 +1029,7 @@ static inline uint32_t system_cpu_clock_get_hz(void)
  */
 static inline uint32_t system_low_power_clock_get_hz(void)
 {
-	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) >> MCLK->LPDIV.reg);
+	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) >> (MCLK->LPDIV.reg - 1));
 
 }
 
@@ -1043,7 +1043,7 @@ static inline uint32_t system_low_power_clock_get_hz(void)
  */
 static inline uint32_t system_backup_clock_get_hz(void)
 {
-	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) >> MCLK->BUPDIV.reg);
+	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) >> (MCLK->BUPDIV.reg - 1));
 
 }
 
