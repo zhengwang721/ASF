@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21/R21 Quick Start Guide for Using SPI driver with DMA
+ * \brief SAM D21/R21/L21 Quick Start Guide for Using SPI driver with DMA
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -47,6 +47,7 @@
  * The supported board list:
  *    - SAMD21 Xplained Pro
  *    - SAMR21 Xplained Pro
+ *    - SAML21 Xplained Pro
  *
  * This quick start will transmit a buffer data from master to slave through DMA.
  * In this use case the SPI master will be configured with the following
@@ -95,6 +96,11 @@
  *  - \b DO/DI: EXT1 PIN16 (PB22) <--> EXT1 PIN9  (PA22)
  *  - \b DI/DO: EXT1 PIN17 (PB02) <--> EXT1 PIN7  (PA18)
  *  - \b SCK:   EXT1 PIN18 (PB23) <--> EXT1 PIN8  (PA19)
+ * - SAM L21 Xplained Pro.
+ *  - \b SS_0:  EXT1 PIN15 (PA05) <--> EXT1 PIN12 (PA09)
+ *  - \b DO/DI: EXT1 PIN16 (PA06) <--> EXT1 PIN11 (PA08)
+ *  - \b DI/DO: EXT1 PIN17 (PA04) <--> EXT2 PIN03 (PA10)
+ *  - \b SCK:   EXT1 PIN18 (PA07) <--> EXT2 PIN04 (PA11)
  *
  * \subsection asfdoc_sam0_spi_dma_use_case_setup_code Code
  *
@@ -109,6 +115,10 @@
  * \snippet samr21_xplained_pro/conf_quick_start.h definition_master
  * \snippet samr21_xplained_pro/conf_quick_start.h definition_slave
  * \snippet samr21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
+ * For SAML21 Xplained Pro:
+ * \snippet saml21_xplained_pro/conf_quick_start.h definition_master
+ * \snippet saml21_xplained_pro/conf_quick_start.h definition_slave
+ * \snippet saml21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
 
  * Add to the main application source file, outside of any functions:
  * \snippet qs_spi_dma_use.c buf_length

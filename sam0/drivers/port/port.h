@@ -46,7 +46,7 @@
 /**
  * \defgroup asfdoc_sam0_port_group SAM Port Driver (PORT)
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's General Purpose Input/Output (GPIO) pin
  * functionality, for manual pin state reading and writing.
  *
@@ -54,10 +54,11 @@
  *  - PORT (GPIO Management)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM L21
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_port_prerequisites
@@ -89,7 +90,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_PORT_INPUT_EVENT</td>
- *    <td>SAML21</td>
+ *    <td>SAML21/C21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -160,11 +161,12 @@ extern "C" {
 #endif
 
 /**
- * Define port features set according to different device family
+ * \name Driver Feature Definition
+ * Define port features set according to different device family.
  * @{
 */
-#if (SAML21) || defined(__DOXYGEN__)
-/** Event input control feature support for PORT group */
+#if (SAML21) || (SAMC21) || defined(__DOXYGEN__)
+/** Event input control feature support for PORT group. */
 #  define FEATURE_PORT_INPUT_EVENT
 #endif
 /*@}*/
@@ -240,7 +242,7 @@ enum port_pin_pull {
  */
 enum port_input_event_action {
 	/** Event out to pin. */
-	PORT_INPUT_EVENT_ACTION_OUT	= 0,
+	PORT_INPUT_EVENT_ACTION_OUT = 0,
 	/** Set output register of pin on event. */
 	PORT_INPUT_EVENT_ACTION_SET,
 	/** Clear output register pin on event. */
@@ -256,13 +258,13 @@ enum port_input_event_action {
  */
 enum port_input_event{
 	/** Port input event 0. */
-	PORT_INPUT_EVENT_0	= 0,
+	PORT_INPUT_EVENT_0 = 0,
 	/** Port input event 1. */
-	PORT_INPUT_EVENT_1	= 1,
+	PORT_INPUT_EVENT_1 = 1,
 	/** Port input event 2. */
-	PORT_INPUT_EVENT_2	= 2,
+	PORT_INPUT_EVENT_2 = 2,
 	/** Port input event 3. */
-	PORT_INPUT_EVENT_3	= 3,
+	PORT_INPUT_EVENT_3 = 3,
 };
 
 /**
@@ -309,7 +311,7 @@ struct port_config {
  *  Retrieves the PORT module group instance associated with a given logical
  *  GPIO pin number.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to convert.
+ *  \param[in] gpio_pin  Index of the GPIO pin to convert
  *
  *  \return Base address of the associated PORT module.
  */
@@ -325,8 +327,8 @@ static inline PortGroup* port_get_group_from_gpio_pin(
  *  Reads the current logic level of a port module's pins and returns the
  *  current levels as a bitmask.
  *
- *  \param[in] port  Base of the PORT module to read from.
- *  \param[in] mask  Mask of the port pin(s) to read.
+ *  \param[in] port  Base of the PORT module to read from
+ *  \param[in] mask  Mask of the port pin(s) to read
  *
  *  \return Status of the port pin(s) input buffers.
  */
@@ -346,8 +348,8 @@ static inline uint32_t port_group_get_input_level(
  *  Reads the current logical output level of a port module's pins and returns
  *  the current levels as a bitmask.
  *
- *  \param[in] port  Base of the PORT module to read from.
- *  \param[in] mask  Mask of the port pin(s) to read.
+ *  \param[in] port  Base of the PORT module to read from
+ *  \param[in] mask  Mask of the port pin(s) to read
  *
  *  \return Status of the port pin(s) output buffers.
  */
@@ -367,9 +369,9 @@ static inline uint32_t port_group_get_output_level(
  *  Sets the current output level of a port module's pins to a given logic
  *  level.
  *
- *  \param[out] port        Base of the PORT module to write to.
- *  \param[in]  mask        Mask of the port pin(s) to change.
- *  \param[in]  level_mask  Mask of the port level(s) to set.
+ *  \param[out] port        Base of the PORT module to write to
+ *  \param[in]  mask        Mask of the port pin(s) to change
+ *  \param[in]  level_mask  Mask of the port level(s) to set
  */
 static inline void port_group_set_output_level(
 		PortGroup *const port,
@@ -388,8 +390,8 @@ static inline void port_group_set_output_level(
  *
  *  Toggles the current output levels of a port module's pins.
  *
- *  \param[out] port  Base of the PORT module to write to.
- *  \param[in]  mask  Mask of the port pin(s) to toggle.
+ *  \param[out] port  Base of the PORT module to write to
+ *  \param[in]  mask  Mask of the port pin(s) to toggle
  */
 static inline void port_group_toggle_output_level(
 		PortGroup *const port,
@@ -418,7 +420,7 @@ static inline void port_group_toggle_output_level(
  *  The default configuration is as follows:
  *   \li Input mode with internal pullup enabled
  *
- *  \param[out] config  Configuration structure to initialize to default values.
+ *  \param[out] config  Configuration structure to initialize to default values
  */
 static inline void port_get_config_defaults(
 		struct port_config *const config)
@@ -453,7 +455,7 @@ void port_group_set_config(
  *  Reads the current logic level of a port pin and returns the current
  *  level as a Boolean value.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to read.
+ *  \param[in] gpio_pin  Index of the GPIO pin to read
  *
  *  \return Status of the port pin's input buffer.
  */
@@ -472,7 +474,7 @@ static inline bool port_pin_get_input_level(
  *  Reads the current logical output level of a port pin and returns the current
  *  level as a Boolean value.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to read.
+ *  \param[in] gpio_pin  Index of the GPIO pin to read
  *
  *  \return Status of the port pin's output buffer.
  */
@@ -490,8 +492,8 @@ static inline bool port_pin_get_output_level(
  *
  *  Sets the current output level of a port pin to a given logic level.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to write to.
- *  \param[in] level     Logical level to set the given pin to.
+ *  \param[in] gpio_pin  Index of the GPIO pin to write to
+ *  \param[in] level     Logical level to set the given pin to
  */
 static inline void port_pin_set_output_level(
 		const uint8_t gpio_pin,
@@ -513,7 +515,7 @@ static inline void port_pin_set_output_level(
  *
  *  Toggles the current output level of a port pin.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to toggle.
+ *  \param[in] gpio_pin  Index of the GPIO pin to toggle
  */
 static inline void port_pin_toggle_output_level(
 		const uint8_t gpio_pin)
@@ -529,7 +531,7 @@ static inline void port_pin_toggle_output_level(
 
 #ifdef FEATURE_PORT_INPUT_EVENT
 
-/** \name Port input event
+/** \name Port Input Event
  * @{
  */
 
@@ -538,8 +540,8 @@ static inline void port_pin_toggle_output_level(
  *
  *  Enable the port event input with the given pin and event.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin.
- *  \param[in] n  Port input event.
+ *  \param[in] gpio_pin  Index of the GPIO pin
+ *  \param[in] n  Port input event
  *
  * \retval STATUS_ERR_INVALID_ARG  Invalid parameter
  * \retval STATUS_OK               Successfully
@@ -574,8 +576,8 @@ static inline enum status_code port_enable_input_event(
  *
  *  Disable the port event input with the given pin and event.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin.
- *  \param[in] gpio_pin  Port input event.
+ *  \param[in] gpio_pin  Index of the GPIO pin
+ *  \param[in] gpio_pin  Port input event
  *
  * \retval STATUS_ERR_INVALID_ARG  Invalid parameter
  * \retval STATUS_OK               Successfully
@@ -606,7 +608,7 @@ static inline enum status_code port_disable_input_event(
 }
 
 /**
- * \brief Retrieve the default configuration for port input event
+ * \brief Retrieve the default configuration for port input event.
  *
  * Fills a configuration structure with the default configuration for port input event:
  *   - Event output to pin
@@ -623,7 +625,7 @@ static inline void port_input_event_get_config_defaults(
 }
 
 /**
- * \brief Configure port input event
+ * \brief Configure port input event.
  *
  * Configures port input event with the given configuration settings.
  *
@@ -650,19 +652,19 @@ static inline enum status_code port_input_event_set_config(
 	switch (n) {
 		case PORT_INPUT_EVENT_0:
 			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
-						   		   | PORT_EVCTRL_PID0(pin_index);
+									| PORT_EVCTRL_PID0(pin_index);
 			break;
 		case PORT_INPUT_EVENT_1:
 			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
-						   		   | PORT_EVCTRL_PID0(pin_index);
+									| PORT_EVCTRL_PID0(pin_index);
 			break;
 		case PORT_INPUT_EVENT_2:
 			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
-						   		   | PORT_EVCTRL_PID0(pin_index);
+									| PORT_EVCTRL_PID0(pin_index);
 			break;
 		case PORT_INPUT_EVENT_3:
 			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
-						   		   | PORT_EVCTRL_PID0(pin_index);
+									| PORT_EVCTRL_PID0(pin_index);
 			break;
 		default:
 			Assert(false);
@@ -754,6 +756,11 @@ static inline enum status_code port_input_event_set_config(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+  *	<tr>
+ *		<td>E</td>
+ *		<td>11/2014</td>
+ *		<td>Added input event feature and support for SAML21.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

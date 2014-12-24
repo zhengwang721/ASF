@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM L21 Reset functionality
+ * \brief SAM Reset functionality
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -99,17 +99,17 @@ enum system_reset_backup_exit_source {
 enum system_wakeup_debounce_count {
 	/** No debouncing. */
 	SYSTEM_WAKEUP_DEBOUNCE_OFF         = RSTC_WKDBCONF_WKDBCNT_OFF,
-	/** Input pin shall be active for at least two 32kHz clock period. */
+	/** Input pin shall be active for at least two 32KHz clock period. */
 	SYSTEM_WAKEUP_DEBOUNCE_2CK32       = RSTC_WKDBCONF_WKDBCNT_2K32,
-	/** Input pin shall be active for at least three 32kHz clock period. */
+	/** Input pin shall be active for at least three 32KHz clock period. */
 	SYSTEM_WAKEUP_DEBOUNCE_3CK32       = RSTC_WKDBCONF_WKDBCNT_3CK32,
-	/** Input pin shall be active for at least 32 32kHz clock period. */
+	/** Input pin shall be active for at least 32 32KHz clock period. */
 	SYSTEM_WAKEUP_DEBOUNCE_32CK32      = RSTC_WKDBCONF_WKDBCNT_32CK32,
-	/** Input pin shall be active for at least 512 32kHz clock period. */
+	/** Input pin shall be active for at least 512 32KHz clock period. */
 	SYSTEM_WAKEUP_DEBOUNCE_512CK32     = RSTC_WKDBCONF_WKDBCNT_512CK32,
-	/** Input pin shall be active for at least 4096 32kHz clock period. */
+	/** Input pin shall be active for at least 4096 32KHz clock period. */
 	SYSTEM_WAKEUP_DEBOUNCE_4096CK32    = RSTC_WKDBCONF_WKDBCNT_4096CK32,
-	/** Input pin shall be active for at least 32768 32kHz clock period. */
+	/** Input pin shall be active for at least 32768 32KHz clock period. */
 	SYSTEM_WAKEUP_DEBOUNCE_32768CK32   = RSTC_WKDBCONF_WKDBCNT_32768CK32,
 };
 
@@ -168,7 +168,7 @@ static inline enum system_reset_backup_exit_source system_get_backup_exit_source
  *
  * Set the wakeup debounce counter value with the given count.
  *
- * \param[in] wakeup_debounce_count Wakeup debounce counter value.
+ * \param[in] wakeup_debounce_count Wakeup debounce counter value
  */
 static inline void system_set_pin_wakeup_debounce_counter(
 					const enum system_wakeup_debounce_count wakeup_debounce_count)
@@ -181,7 +181,7 @@ static inline void system_set_pin_wakeup_debounce_counter(
  *
  * Set low polarity with the given wakeup input pin mask.
  *
- * \param[in] pin_mask Input pin mask.
+ * \param[in] pin_mask Input pin mask
  */
 static inline void system_set_pin_wakeup_polarity_low(const uint16_t pin_mask)
 {
@@ -193,7 +193,7 @@ static inline void system_set_pin_wakeup_polarity_low(const uint16_t pin_mask)
  *
  * Set high polarity with the given wakeup input pin mask.
  *
- * \param[in] pin_mask Input pin mask.
+ * \param[in] pin_mask Input pin mask
  */
 static inline void system_set_pin_wakeup_polarity_high(const uint16_t pin_mask)
 {
@@ -205,7 +205,7 @@ static inline void system_set_pin_wakeup_polarity_high(const uint16_t pin_mask)
  *
  * Enable pin wakeup from the backup mode with the given pin mask.
  *
- * \param[in] pin Input pin mask.
+ * \param[in] pin Input pin mask
  */
 static inline void system_enable_pin_wakeup(const uint16_t pin_mask)
 {
@@ -217,7 +217,7 @@ static inline void system_enable_pin_wakeup(const uint16_t pin_mask)
  *
  * Disable pin wakeup from the backup mode with the given pin mask.
  *
- * \param[in] pin Input pin mask.
+ * \param[in] pin Input pin mask
  */
 static inline void system_disable_pin_wakeup(const uint16_t pin_mask)
 {

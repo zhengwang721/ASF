@@ -59,7 +59,7 @@ extern "C" {
  *   \defgroup asfdoc_sam0_sercom_i2c_group SAM I2C Slave Mode Driver (SERCOM I2C)
  * \endif
  *
- * This driver for Atmel® | SMART™ SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's SERCOM I<SUP>2</SUP>C module, for the transfer
  * of data via an I<SUP>2</SUP>C bus. The following driver API modes are covered
  * by this manual:
@@ -81,10 +81,11 @@ extern "C" {
  * - SERCOM (Serial Communication Interface)
  *
  * The following devices can use this module:
- *  - Atmel® | SMART™ SAM D20/D21
- *  - Atmel® | SMART™ SAM R21
- *  - Atmel® | SMART™ SAM D10/D11
- *  - Atmel® | SMART™ SAM L21
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_sercom_i2c_prerequisites
@@ -116,19 +117,19 @@ extern "C" {
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED</td>
- *		<td>SAM D21/R21/D10/D11/L21</td>
+ *		<td>SAM D21/R21/D10/D11/L21/C21</td>
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_10_BIT_ADDRESS</td>
- *		<td>SAM D21/R21/D10/D11/L21</td>
+ *		<td>SAM D21/R21/D10/D11/L21/C21</td>
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_SCL_STRETCH_MODE</td>
- *		<td>SAM D21/R21/D10/D11/L21</td>
+ *		<td>SAM D21/R21/D10/D11/L21/C21</td>
  *	</tr>
  *	<tr>
  *		<td>FEATURE_I2C_SCL_EXTEND_TIMEOUT</td>
- *		<td>SAM D21/R21/D10/D11/L21</td>
+ *		<td>SAM D21/R21/D10/D11/L21/C21</td>
  *	</tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -395,7 +396,7 @@ extern "C" {
  *       supported by the driver now.
  * @{
  */
-#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) ||defined(__DOXYGEN__)
+#if (SAMD21) || (SAMR21) || (SAMD10) || (SAMD11) || (SAML21) || (SAMC21) || defined(__DOXYGEN__)
 /** Fast mode plus and high speed support. */
 #  define FEATURE_I2C_FAST_MODE_PLUS_AND_HIGH_SPEED
 /** 10-bit address support. */
@@ -414,7 +415,9 @@ extern "C" {
  * For slave: direction of request from master.
  */
 enum i2c_transfer_direction {
+	/** Master write operation is in progress. */
 	I2C_TRANSFER_WRITE = 0,
+	/** Master read operation is in progress. */
 	I2C_TRANSFER_READ  = 1,
 };
 
@@ -531,6 +534,11 @@ enum i2c_transfer_direction {
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>12/2014</td>
+ *		<td>Added SAM L21/C21 support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

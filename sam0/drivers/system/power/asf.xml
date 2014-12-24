@@ -39,5 +39,23 @@
 
 			<device-support value="saml21"/>
 		</module>
+		<module type="driver" id="sam0.drivers.system.power#sam_c" caption="SYSTEM - Power Management for SAM C21">
+			<info type="description" value="summary">
+				Driver for the SAM C21 power management units. Provides a unified
+				interface for power configuration and management in the device.
+			</info>
+			<info type="keyword" value="technology">
+				<keyword value="CPU" />
+			</info>
+
+			<build type="include-path" value="."/>
+			<build type="include-path" value="power_sam_c"/>
+			<build type="header-file" subtype="api" value="power_sam_c/power.h"/>
+			<require idref="sam0.drivers.system.clock"/>
+			<require idref="thirdparty.cmsis"/>
+			<require idref="sam0.utils"/>
+
+			<device-support value="samc21"/>
+		</module>
 	</select-by-device>
 </asf>

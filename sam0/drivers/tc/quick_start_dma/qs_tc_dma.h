@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21/R21/D10/D11/L21 TC Driver Quick Start
+ * \brief SAM D21/R21/D11/L21 TC Driver Quick Start
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -83,17 +83,17 @@
  * Add to the main application source file, before any functions, according to
  * the kit used:
  * - SAM D21 Xplained Pro.
- *   \snippet samd21_xplained_pro/conf_quick_start.h definition_pwm
- *   \snippet samd21_xplained_pro/conf_quick_start.h definition_dma
+ *   \snippet quick_start_dma/samd21_xplained_pro/conf_quick_start.h definition_pwm
+ *   \snippet quick_start_dma/samd21_xplained_pro/conf_quick_start.h definition_dma
  * - SAM R21 Xplained Pro.
- *   \snippet samr21_xplained_pro/conf_quick_start.h definition_pwm
- *   \snippet samr21_xplained_pro/conf_quick_start.h definition_dma
+ *   \snippet quick_start_dma/samr21_xplained_pro/conf_quick_start.h definition_pwm
+ *   \snippet quick_start_dma/samr21_xplained_pro/conf_quick_start.h definition_dma
  * - SAM D11 Xplained Pro.
- *   \snippet samd11_xplained_pro/conf_quick_start.h definition_pwm
- *   \snippet samd11_xplained_pro/conf_quick_start.h definition_dma
+ *   \snippet quick_start_dma/samd11_xplained_pro/conf_quick_start.h definition_pwm
+ *   \snippet quick_start_dma/samd11_xplained_pro/conf_quick_start.h definition_dma
  * - SAM L21 Xplained Pro.
- *   \snippet saml21_xplained_pro/conf_quick_start.h definition_pwm
- *   \snippet saml21_xplained_pro/conf_quick_start.h definition_dma
+ *   \snippet quick_start_dma/saml21_xplained_pro/conf_quick_start.h definition_pwm
+ *   \snippet quick_start_dma/saml21_xplained_pro/conf_quick_start.h definition_dma
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_dma.c module_inst

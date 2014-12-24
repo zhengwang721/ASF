@@ -120,7 +120,7 @@ static uint8_t _dma_find_first_free_channel_and_allocate(void)
 /**
  * \brief Release an allocated DMA channel.
  *
- * \param[in]  channel  Channel id to be released.
+ * \param[in]  channel  Channel id to be released
  *
  */
 static void _dma_release_channel(uint8_t channel)
@@ -305,7 +305,7 @@ enum status_code dma_allocate(struct dma_resource *resource,
 
 	if (!_dma_inst._dma_init) {
 		/* Initialize clocks for DMA */
-#if (SAML21)
+#if (SAML21) || (SAMC21)
 		system_ahb_clock_set_mask(MCLK_AHBMASK_DMAC);
 #else
 		system_ahb_clock_set_mask(PM_AHBMASK_DMAC);
@@ -612,7 +612,7 @@ void dma_descriptor_create(DmacDescriptor* descriptor,
 }
 
 /**
- * \brief Add a DMA transfer descriptor to a DMA resource
+ * \brief Add a DMA transfer descriptor to a DMA resource.
  *
  * This function will add a DMA transfer descriptor to a DMA resource.
  * If there was a transfer descriptor already allocated to the DMA resource,

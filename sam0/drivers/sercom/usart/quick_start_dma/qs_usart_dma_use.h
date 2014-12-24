@@ -48,6 +48,7 @@
  *    - SAMD21 Xplained Pro
  *    - SAMR21 Xplained Pro
  *    - SAMR11 Xplained Pro
+ *    - SAMD11 Xplained Pro
  *    - SAML21 Xplained Pro
  *    - SAMC21 Xplained Pro
  *

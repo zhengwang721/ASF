@@ -60,15 +60,18 @@ void system_clock_init(void) WEAK __attribute__((alias("_system_dummy_init")));
 void system_board_init(void) WEAK __attribute__((alias("_system_dummy_init")));
 void _system_events_init(void) WEAK __attribute__((alias("_system_dummy_init")));
 void _system_extint_init(void) WEAK __attribute__((alias("_system_dummy_init")));
+void _system_divas_init(void) WEAK __attribute__((alias("_system_dummy_init")));
 #  elif defined(__ICCARM__)
 void system_clock_init(void);
 void system_board_init(void);
 void _system_events_init(void);
 void _system_extint_init(void);
+void _system_divas_init(void);
 #    pragma weak system_clock_init=_system_dummy_init
 #    pragma weak system_board_init=_system_dummy_init
 #    pragma weak _system_events_init=_system_dummy_init
 #    pragma weak _system_extint_init=_system_dummy_init
+#    pragma weak _system_divas_init=_system_dummy_init
 #  endif
 #endif
 
@@ -98,5 +101,8 @@ void system_init(void)
 
 	/* Initialize External hardware */
 	_system_extint_init();
+	
+	/* Initialize DIVAS hardware */
+	_system_divas_init();
 }
 

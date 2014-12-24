@@ -66,36 +66,36 @@
  * There are no special setup requirements for this use-case.
  *
  * \subsection asfdoc_sam0_sercom_spi_master_callback_use_setup_code Code
- * The following must be added to the user application:
+ * The following must be added to the user application.
  *
- * A sample buffer to send via SPI:
+ * A sample buffer to send via SPI.
  * \snippet qs_spi_master_callback.c buffer
- * Number of entries in the sample buffer:
+ * Number of entries in the sample buffer.
  * \snippet qs_spi_master_callback.c buf_length
- * GPIO pin to use as Slave Select:
+ * GPIO pin to use as Slave Select.
  * \snippet qs_spi_master_callback.c slave_select_pin
  * A globally available software device instance struct to store the SPI driver
  * state while it is in use.
  * \snippet qs_spi_master_callback.c dev_inst
  * A globally available peripheral slave software device instance struct.
  * \snippet qs_spi_master_callback.c slave_dev_inst
- * A function for configuring the SPI:
+ * A function for configuring the SPI.
  * \snippet qs_spi_master_callback.c configure_spi
- * A function for configuring the callback functionality of the SPI:
+ * A function for configuring the callback functionality of the SPI.
  * \snippet qs_spi_master_callback.c conf_callback
  * A global variable that can flag to the application that the buffer has been
- * transferred:
+ * transferred.
  * \snippet qs_spi_master_callback.c var
- * Callback function:
+ * Callback function.
  * \snippet qs_spi_master_callback.c callback
  *
- * Add to user application %main():
+ * Add to user application \c main().
  * \snippet qs_spi_master_callback.c main_start
  *
  * \section asfdoc_sam0_sercom_spi_master_callback_use_workflow Workflow
  * -# Initialize system.
  *    \snippet qs_spi_master_callback.c system_init
- * -# Setup the SPI:
+ * -# Setup the SPI.
  *    \snippet qs_spi_master_callback.c run_config
  *   -# Create configuration struct.
  *      \snippet qs_spi_master_callback.c config
@@ -123,7 +123,7 @@
  *      \snippet qs_spi_master_callback.c init
  *   -# Enable SPI module.
  *      \snippet qs_spi_master_callback.c enable
- * -# Setup the callback functionality:
+ * -# Setup the callback functionality.
  *    \snippet qs_spi_master_callback.c run_callback_config
  *   -# Register callback function for buffer transmitted.
  *      \snippet qs_spi_master_callback.c reg_callback
@@ -132,7 +132,7 @@
  *
  * \section asfdoc_sam0_sercom_spi_master_callback_use_case Use Case
  * \subsection asfdoc_sam0_sercom_spi_master_callback_use_case_code Code
- * Add the following to your user application \c main():
+ * Add the following to your user application \c main().
  * \snippet qs_spi_master_callback.c main_use_case
  * \subsection asfdoc_sam0_sercom_spi_master_callback_use_case_workflow Workflow
  * -# Select slave.

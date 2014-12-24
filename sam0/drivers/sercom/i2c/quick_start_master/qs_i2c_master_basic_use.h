@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Master Quick Start Guide
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -79,7 +79,7 @@
  * \snippet qs_i2c_master_basic_use.c init
  *
  * \subsection asfdoc_sam0_sercom_i2c_master_basic_use_setup_workflow Workflow
- * -# Configure and enable module:
+ * -# Configure and enable module.
  *    \snippet qs_i2c_master_basic_use.c initialize_i2c
  *   -# Create and initialize configuration structure.
  *      \snippet qs_i2c_master_basic_use.c init_conf
@@ -91,7 +91,7 @@
  *      \snippet qs_i2c_master_basic_use.c enable_module
  * -# Create a variable to see when we should stop trying to send packet.
  *    \snippet qs_i2c_master_basic_use.c timeout_counter
- * -# Create a packet to send:
+ * -# Create a packet to send.
  *    \snippet qs_i2c_master_basic_use.c packet
  *
  * \section asfdoc_sam0_sercom_i2c_master_basic_use_implemenation Implementation
