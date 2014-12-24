@@ -137,6 +137,8 @@
 
 #if ((TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == ATMEGARFR2))
 #define IC_TYPE 0X01
+#elif SAMR21
+#define IC_TYPE 0X01
 #else
 #define IC_TYPE 0X00
 #endif
