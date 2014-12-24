@@ -447,7 +447,8 @@ void performance_analyzer_init(void)
 }
 
 /**
- * \brief This task needs to be called in a while(1) for performing Performance Analyzer tasks
+ * \brief This task needs to be called in a while(1) for performing 
+ *  Performance Analyzer tasks
  */
 void performance_analyzer_task(void)
 {
@@ -613,8 +614,9 @@ void set_main_state(main_state_t state, void *arg)
  * \param ack_req           specifies ack requested for frame if set to 1
  *
  * \return MAC_SUCCESS      if the TAL has accepted the data for frame
- * transmission
- *         TAL_BUSY         if the TAL is busy servicing the previous tx request
+ *                          transmission
+ *         TAL_BUSY         if the TAL is busy servicing the previous tx 
+ *                          request
  */
 retval_t transmit_frame(uint8_t dst_addr_mode,
 		uint8_t *dst_addr,

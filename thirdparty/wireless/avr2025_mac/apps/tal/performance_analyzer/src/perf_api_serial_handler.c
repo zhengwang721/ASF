@@ -235,7 +235,8 @@ void serial_data_handler(void)
 
 	/* Tx processing */
 	if (buf_count != 0) {
-		/* Check Continuous transmission is finished at remote node, if so Blink LED at initiator */
+		/* Check Continuous transmission is finished at remote node, 
+		 * if so Blink LED at initiator */
 		uint8_t cont_tx_remote  = sio_tx_buf[head][CMD_POS];
 		if ((cont_tx_remote == (REMOTE_CMD_MASK |PKT_STREAM_CONFIRM)) || (cont_tx_remote == (REMOTE_CMD_MASK | CONT_WAVE_TX_CONFIRM )))
 		{
@@ -363,14 +364,16 @@ static uint8_t *get_next_tx_buffer(void)
 }
 
 /**
- *\brief  The received over the air payload containing the serial data request for the remote node is converter into serial data 
- * to be used by the Serial Handler for processing further requests
+ *\brief  The received over the air payload containing the serial data request 
+ * for the remote node is converter into serial data to be used by 
+ * the Serial Handler for processing further requests
  * \param buf pointer to the payload
  * len Length of the Serial Data Payload 
  */
 void convert_ota_serial_frame_rx(uint8_t *buf,uint8_t len)
 {
-    /*Copy the serial data payload to sio_rx_buf ,len+1 denotes copying payload including the length field*/
+    /* Copy the serial data payload to sio_rx_buf ,len+1 denotes copying payload 
+	 * including the length field*/
 	memcpy(sio_rx_buf,buf,len+1);
 	handle_incoming_msg();
 }
@@ -400,7 +403,8 @@ static inline void handle_incoming_msg(void)
 	/* Check for the error conditions */
 	error_code = check_error_conditions();
 	
-	/*Check if the message needs to be sent over the air to the remote node for performing tests on the remote node*/
+	/* Check if the message needs to be sent over the air to the remote node
+	 * for performing tests on the remote node*/
     if((sio_rx_buf[MESSAGE_ID_POS] & REMOTE_CMD_MASK) && (PER_TEST_INITIATOR == node_info.main_state))
 	{		
 		if(error_code ==  MAC_SUCCESS)
@@ -735,12 +739,13 @@ static inline void handle_incoming_msg(void)
 				(SINGLE_NODE_TESTS == node_info.main_state)
 				) {
 					
-			/*  Check for Start or Stop CWT , Start_Stop mode - Start =0x01, Stop = 0x00 */
+	        /*  Check for Start or Stop CWT , 
+	         *  Start_Stop mode - Start =0x01, Stop = 0x00 */
 			if (START_CWT == sio_rx_buf[START_STOP_POS]) { 
-				
-				
 					                                
-			    /* Check for transmission mode, tx_mode - CW = 0x00, PRBS = 0x01 */
+			    
+			/* Check for transmission mode, 
+			 *  tx_mode - CW = 0x00, PRBS = 0x01 */
 				start_cw_transmission(sio_rx_buf[TX_MODE_POS],
 				               ((uint16_t)(sio_rx_buf[TMR_VAL_2] << 8) | 
 							   (sio_rx_buf[TMR_VAL_1]))); 
@@ -1586,7 +1591,8 @@ void usr_range_test_start_confirm(uint8_t status)
 }
 
 /**
- * The Received Remote Reply Command is converted into Serial Data and sent to the Host interface
+ * The Received Remote Reply Command is converted into Serial Data 
+ * and sent to the Host interface
  */
 void convert_ota_serial_frame_tx(uint8_t *buf,uint8_t len)
 {
@@ -1689,7 +1695,7 @@ void usr_perf_set_confirm(uint8_t status, uint8_t parameter_type,
  * Called by Performance application as confirmation for perf_get_req request
  * \param status        Result for requested perf_get_req
  * \param parameter_type    Type of the parameter that has been read
- * \param param_value   Pointer to the value of the parameter that has been read
+ * \param param_value  Pointer to the value of the parameter that has been read
  * \return void
  */
 void usr_perf_get_confirm(uint8_t status, uint8_t parameter_type,
@@ -2067,12 +2073,12 @@ void usr_ed_scan_start_confirm(uint8_t status, uint8_t scan_time_min,
 }
 /*
  * Function to generate Packet stream confirm frame that must be
- * sent to
- * host application via serial interface.
- * Called by Performance application as Indication before starting/stopping the packet stream
- * \param status                Confirmation to the packet stream request
- * \param start_stop            Parameter to indicate whether Packet streaming is started or stopped    
- *
+ * sent to host application via serial interface.
+ * Called by Performance application as Indication before starting/stopping 
+ * the packet stream.
+ * \param status       Confirmation to the packet stream request
+ * \param start_stop   Parameter to indicate whether Packet streaming
+ *                     is started or stopped    
  * \return void
  */
 void usr_pkt_stream_confirm(uint8_t status,bool start_stop)
@@ -2100,12 +2106,12 @@ void usr_pkt_stream_confirm(uint8_t status,bool start_stop)
 
 /*
  * Function to generate RX_ON confirm frame that must be
- * sent to
- * host application via serial interface.
- * Called by Performance application as Indication before starting/stopping the rx_on mode
- * \param status                Confirmation to the rx_on_req request
- * \param start_stop            Parameter to indicate whether rx_on test is started or stopped    
- *
+ * sent to host application via serial interface.
+ * Called by Performance application as Indication before 
+ * starting/stopping the rx_on mode
+ * \param status       Confirmation to the rx_on_req request
+ * \param start_stop   Parameter to indicate whether rx_on test 
+ *                     is started or stopped    
  * \return void
  */		
 void usr_rx_on_confirm(uint8_t status,bool start_stop)

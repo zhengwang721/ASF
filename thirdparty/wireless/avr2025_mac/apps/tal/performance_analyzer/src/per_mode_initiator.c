@@ -426,7 +426,7 @@ static void  range_test_timer_handler_cb(void *parameter)
 /**
  * \brief Wait for reply timer handler is called if any command sent on air
  * times out before any response message is received.
- * This function  handles all the scenarios if the remote node is not accessible
+ * This function handles all the scenarios if the remote node is not accessible
  * \param parameter pass parameters to timer handler
  */
 static void wait_for_reply_timer_handler_cb(void *parameter)
@@ -1044,14 +1044,15 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
 
 	switch ((msg->cmd_id)) {
 	
-	/*The below case handles reply/confirmation messages received from the remote node for the Remote Test Requests sent from the host*/
+	/* The below case handles reply/confirmation messages received from 
+	 * the remote node for the Remote Test Requests sent from the host*/
 	case REMOTE_TEST_REPLY_CMD:
 	{
 		if (remote_cmd_seq_num == msg->seq_num) {
 			return;
 		}
 		
-		/*The CW_TX_TIMER is stopped in case it was started for the RX_ON Req mode */
+ /*The CW_TX_TIMER is stopped in case it was started for the RX_ON Req mode */
 		if(sw_timer_is_running(CW_TX_TIMER))
 		{
 			sw_timer_stop(CW_TX_TIMER);
@@ -1060,7 +1061,8 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
 		remote_cmd_seq_num = msg->seq_num;
 		uint8_t serial_data_len;
 		serial_data_len = *(mac_frame_info->mpdu + LENGTH_FIELD_LEN + FRAME_OVERHEAD + CMD_ID_LEN + SEQ_NUM_LEN - FCS_LEN);
-		/*The received over-the-air payload is converted into serial message sent to the PC HOST */
+   /* The received over-the-air payload is converted into serial message 
+    * sent to the PC HOST */
 		convert_ota_serial_frame_tx(msg->payload.remote_test_req_data.remote_serial_data,serial_data_len);
 	}
 	case RESULT_RSP:
@@ -1154,13 +1156,13 @@ void per_mode_initiator_rx_cb(frame_info_t *mac_frame_info)
 							msg->payload.
 							div_stat_rsp_data
 							.ant_sel) {
-						/*Antenna Diversity Disabled on Remote Node and ANT2 is selected*/
+			/*Antenna Diversity Disabled on Remote Node and ANT2 is selected*/
 						ant_div_settings = ANT_CTRL_1;
 					} else if (ENABLE_ANTENNA_2 ==
 							msg->payload.
 							div_stat_rsp_data
 							.ant_sel) {
-						/*Antenna Diversity Disabled on Remote Node and ANT2 is selected*/
+			/*Antenna Diversity Disabled on Remote Node and ANT2 is selected*/
 						ant_div_settings = ANT_CTRL_2; 
 					} else {
 						ant_div_settings
@@ -2408,7 +2410,8 @@ static void set_tx_power(uint8_t tx_power_format, int8_t power_value)
  *
  * \param ed_scan_duration  Scan duration parameter which is used to calculate
  *                          the scan time on each channel
- * \param channel_sel_mask  Selected channel mask for which the Energy should be detected
+ * \param channel_sel_mask  Selected channel mask for which the Energy should 
+ *                          be detected
  */
 void start_ed_scan(uint8_t ed_scan_duration, uint32_t channel_sel_mask)
 {

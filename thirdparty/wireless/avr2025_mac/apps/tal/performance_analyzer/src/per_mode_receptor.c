@@ -168,8 +168,9 @@ void per_mode_receptor_init(void *parameter)
  */
 void per_mode_receptor_task(void)
 {
-	/*If a remote test request is received the received over the air payload is converted into a serial data frame
-	   which will be handled by the Serial handler as if it was received from the UI*/	
+	/* If a remote test request is received the received over the air payload 
+	 * is converted into a serial data frame which will be handled by 
+	 * the Serial handler as if it was received from the UI*/	
 	if(remote_cmd_rx)
 	{
 		convert_ota_serial_frame_rx(remote_cmd_ptr,remote_cmd_len);	
@@ -178,9 +179,10 @@ void per_mode_receptor_task(void)
 	
 	/* For Range Test  in PER Mode the receptor has to poll for a button
 	 * press to initiate marker transmission 
-	 * If CW Transmission or Packet Strteaming is initiated then this could be aborted by pressing the push button
+	 * If CW Transmission or Packet Streaming is initiated then this could
+	 * be aborted by pressing the push button
 	 */
-	if (range_test_in_progress || remote_cw_start || ((!pkt_stream_stop && !node_info.transmitting))) {
+	if (range_test_in_progress || remote_cw_start ||(!pkt_stream_stop && !node_info.transmitting)) {
 		static uint8_t key_press;
 		/* Check for any key press */
 		key_press = app_debounce_button();
@@ -213,7 +215,8 @@ void per_mode_receptor_task(void)
 			}
 		}
 	}
-	/*If the node is in packet streaming mode and ready to transmit  then initiate the next frame*/
+	/* If the node is in packet streaming mode and ready to transmit  
+	 * then initiate the next frame*/
 	if(!pkt_stream_stop && rdy_to_tx && !node_info.transmitting)
 	{
 		tal_tx_frame(stream_pkt,NO_CSMA_NO_IFS,false);
@@ -287,7 +290,7 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
 		cw_ack_sent = true;
 		pulse_cw_transmission();
 	}
-	/*enable rx on mode in receptor after sending rxon confirm to the initiator*/
+/*enable rx on mode in receptor after sending rxon confirm to the initiator*/
 	if(rx_on_mode)
 	{
 		set_trx_state(CMD_RX_ON);
@@ -297,7 +300,8 @@ void per_mode_receptor_tx_done_cb(retval_t status, frame_info_t *frame)
 }
 
 /**
- * \brief This function is used to send a remote test repsonse command back to the initiator
+ * \brief This function is used to send a remote test response command back to
+ *  the initiator
  */
 bool send_remote_reply_cmd(uint8_t* serial_buf,uint8_t len)
 {
@@ -311,7 +315,7 @@ bool send_remote_reply_cmd(uint8_t* serial_buf,uint8_t len)
 	msg.seq_num = seq_num_receptor;
 
 	payload_length = ((sizeof(app_payload_t)-sizeof(general_pkt_t)+sizeof(remote_test_req_t)-REMOTE_MSG_BUF_SIZE+len+1));
-	memcpy(&msg.payload.remote_test_req_data.remote_serial_data,serial_buf+1,len+1); // from length to be copied
+	memcpy(&msg.payload.remote_test_req_data.remote_serial_data,serial_buf+1,len+1); 
 	/* Send the frame to Peer node */
 	if(MAC_SUCCESS == transmit_frame(FCF_SHORT_ADDR,(uint8_t *)&(node_info.peer_short_addr),FCF_SHORT_ADDR,
 	seq_num_receptor,
@@ -350,7 +354,8 @@ void per_mode_receptor_rx_cb(frame_info_t *mac_frame_info)
 		= (app_payload_t *)(mac_frame_info->mpdu + LENGTH_FIELD_LEN +
 			FRAME_OVERHEAD - FCS_LEN);
 
-/*If the remote node is in RX_ON mode then do not accept any request unless the request is to stop the RX_ON mode*/
+/* If the remote node is in RX_ON mode then do not accept any request unless 
+ * the request is to stop the RX_ON mode*/
 if(rx_on_mode)
 {
 	
@@ -647,14 +652,16 @@ if(rx_on_mode)
 		
 	}
 	break;
-	/*The REMOTE_TEST_CMD handles the remote test requests sent from the initiator node.The received payload is extracted and sent to the serial handler*/
+	/* The REMOTE_TEST_CMD handles the remote test requests 
+	 * sent from the initiator node.
+	 * The received payload is extracted and sent to the serial handler*/
 	case REMOTE_TEST_CMD:
 	{
 		if (remote_cmd_seq_num == msg->seq_num) {
 			return;
 		}
 		remote_cmd_seq_num = msg->seq_num;
-		/*Command received by the receptor to start a test ,from the initiator node*/
+/*Command received by the receptor to start a test ,from the initiator node*/
 		remote_cmd_len = *(mac_frame_info->mpdu + LENGTH_FIELD_LEN + FRAME_OVERHEAD + CMD_ID_LEN + SEQ_NUM_LEN - FCS_LEN);
 		remote_cmd_ptr = msg->payload.remote_test_req_data.remote_serial_data;
 		remote_cmd_rx = true;
@@ -1171,8 +1178,8 @@ static void send_peer_info_rsp(void)
  * \brief Function used to send response to the received range test packet
  * \param seq_num sequence number of the range test packet received
  * \param frame_count Count of the received Range Test Packet
- * \param ed ED value of the received range test packet which has to be uploaded
- * into the response payload
+ * \param ed ED value of the received range test packet which has to be 
+ *  uploaded into the response payload
  * \param lqi LQI value of the received range test packet which has to be
  * uploaded into the response payload
  */

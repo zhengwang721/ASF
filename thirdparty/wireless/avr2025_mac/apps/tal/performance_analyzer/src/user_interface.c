@@ -186,13 +186,8 @@ bool app_debounce_button(void)
 			key_cnt++;
 		}
 	} else if (!(button_pressed()) &&
-			(key_cnt == COUNT_FOR_VALID_KEY_PRESS)) {           /*
-		                                                             *
-		                                                             *Button
-		                                                             *
-		                                                             *
-		                                                             *released
-		                                                             **/
+			(key_cnt == COUNT_FOR_VALID_KEY_PRESS)){ 
+		/* Button released */
 		ret = 1;
 		key_cnt = 0;
 	} else {
@@ -224,7 +219,7 @@ bool button_pressed(void)
 		return false;
 	}
 
-#elif defined GPIO_PUSH_BUTTON_0        /*Read the current state of the button*/
+#elif defined GPIO_PUSH_BUTTON_0   /*Read the current state of the button*/
 	if (ioport_get_pin_level(GPIO_PUSH_BUTTON_0)) {
 		return false;
 	} else {
