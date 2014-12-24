@@ -101,7 +101,7 @@
  *      \snippet qs_spi_master_basic.c conf_defaults
  *   -# Set MUX setting E.
  *      \snippet qs_spi_master_basic.c mux_setting
- *   -# Set pinmux for pad 0 (data in (MISO).
+ *   -# Set pinmux for pad 0 (data in (MISO)).
  *      \snippet qs_spi_master_basic.c di
  *   -# Set pinmux for pad 1 as unused, so the pin can be used for other purposes.
  *      \snippet qs_spi_master_basic.c ss
