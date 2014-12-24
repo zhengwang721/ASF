@@ -3,7 +3,7 @@
  *
  * \brief SERCOM SPI master with vectored I/O driver configuration
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,7 +44,7 @@
 #ifndef CONF_SPI_MASTER_VEC_H
 #define CONF_SPI_MASTER_VEC_H
 
-#if defined(__FREERTOS__) || defined(__DOXYGEN__)
+#ifdef __FREERTOS__
 #  include <FreeRTOS.h>
 #  include <semphr.h>
 
@@ -52,8 +52,6 @@
 #  define CONF_SPI_MASTER_VEC_SEMAPHORE_TYPE                   xSemaphoreHandle
 #  define CONF_SPI_MASTER_VEC_CREATE_SEMAPHORE(semaphore)  \
 		vSemaphoreCreateBinary(semaphore)
-#  define CONF_SPI_MASTER_VEC_DELETE_SEMAPHORE(semaphore)  \
-		vSemaphoreDelete(semaphore)
 #  define CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE(semaphore)  \
 		xSemaphoreTake((semaphore), portMAX_DELAY)
 #  define CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE(semaphore)  \

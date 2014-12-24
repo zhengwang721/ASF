@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SERCOM SPI master with vectored I/O driver configuration
+ * \brief SAM C21 Xplained Pro test configuration.
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,25 +41,30 @@
  *
  */
 
-#ifndef CONF_SPI_MASTER_VEC_H
-#define CONF_SPI_MASTER_VEC_H
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-#if defined(__FREERTOS__) || defined(__DOXYGEN__)
-#  include <FreeRTOS.h>
-#  include <semphr.h>
+#define CONF_STDIO_USART          EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE       38400
 
-#  define CONF_SPI_MASTER_VEC_OS_SUPPORT
-#  define CONF_SPI_MASTER_VEC_SEMAPHORE_TYPE                   xSemaphoreHandle
-#  define CONF_SPI_MASTER_VEC_CREATE_SEMAPHORE(semaphore)  \
-		vSemaphoreCreateBinary(semaphore)
-#  define CONF_SPI_MASTER_VEC_DELETE_SEMAPHORE(semaphore)  \
-		vSemaphoreDelete(semaphore)
-#  define CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE(semaphore)  \
-		xSemaphoreTake((semaphore), portMAX_DELAY)
-#  define CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE(semaphore)  \
-		xSemaphoreGive((semaphore))
-#  define CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE_FROM_ISR(semaphore)  \
-		xSemaphoreGiveFromISR((semaphore), NULL)
-#endif
+/* SERCOM SPI pin-out defines for SPI slave */
+#define CONF_SPI_SLAVE_MODULE              EXT1_SPI_MODULE
+#define CONF_SPI_SLAVE_SPI_MUX             EXT1_SPI_SERCOM_MUX_SETTING
+#define CONF_SPI_SLAVE_DATA_IN_PIN_MUX     EXT1_SPI_SERCOM_PINMUX_PAD0
+#define CONF_SPI_SLAVE_SS_PIN_MUX          EXT1_SPI_SERCOM_PINMUX_PAD1
+#define CONF_SPI_SLAVE_DATA_OUT_PIN_MUX    EXT1_SPI_SERCOM_PINMUX_PAD2
+#define CONF_SPI_SLAVE_SCK_PIN_MUX         EXT1_SPI_SERCOM_PINMUX_PAD3
+/* SERCOM SPI pin-out defines for SPI master */
+#define CONF_SPI_MASTER_MODULE             EXT2_SPI_MODULE
+#define CONF_SPI_MASTER_SPI_MUX            EXT2_SPI_SERCOM_MUX_SETTING
+#define CONF_SPI_MASTER_DATA_IN_PIN_MUX    EXT2_SPI_SERCOM_PINMUX_PAD0
+#define CONF_SPI_MASTER_DATA_OUT_PIN_MUX   EXT2_SPI_SERCOM_PINMUX_PAD2
+#define CONF_SPI_MASTER_SCK_PIN_MUX        EXT2_SPI_SERCOM_PINMUX_PAD3
+#define CONF_SPI_SLAVE_SS_PIN              EXT2_PIN_SPI_SS_0
 
-#endif // CONF_SPI_MASTER_VEC_H
+#endif /* CONF_TEST_H_INCLUDED */

@@ -3,7 +3,7 @@
  *
  * \brief SAM SPI Unit test
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -76,6 +76,7 @@
  *  - SAM D21 Xplained Pro board
  *  - SAM R21 Xplained Pro board
  *  - SAM L21 Xplained Pro board
+ *  - SAM C21 Xplained Pro board
  *
  * \section appdoc_sam0_spi_unit_test_setup Setup
  * The following connections has to be made using wires:
@@ -94,6 +95,11 @@
  *  - \b DO/DI: EXT1 PIN16 (PA06) <--> EXT3 PIN17 (PB16)
  *  - \b DI/DO: EXT1 PIN17 (PA04) <--> EXT3 PIN16 (PB22)
  *  - \b SCK:   EXT1 PIN18 (PA07) <--> EXT3 PIN18 (PB23)
+ * - SAM C21 Xplained Pro.
+ *  - \b SS_0:  EXT1 PIN15 (PA17) <--> EXT2 PIN15 (PB03)
+ *  - \b DO/DI: EXT1 PIN16 (PA18) <--> EXT2 PIN17 (PB02)
+ *  - \b DI/DO: EXT1 PIN17 (PA16) <--> EXT2 PIN16 (PB00)
+ *  - \b SCK:   EXT1 PIN18 (PA19) <--> EXT2 PIN18 (PB01)
  *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a
