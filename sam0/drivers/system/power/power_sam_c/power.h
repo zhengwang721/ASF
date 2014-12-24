@@ -62,13 +62,13 @@ extern "C" {
  */
 enum system_sleepmode {
 	/** IDLE 0 sleep mode. */
-	SYSTEM_SLEEPMODE_IDLE_0,
+	SYSTEM_SLEEPMODE_IDLE_0 = 0,
 	/** IDLE 1 sleep mode. */
 	SYSTEM_SLEEPMODE_IDLE_1,
 	/** IDLE 2 sleep mode. */
 	SYSTEM_SLEEPMODE_IDLE_2,
 	/** Standby sleep mode. */
-	SYSTEM_SLEEPMODE_STANDBY,
+	SYSTEM_SLEEPMODE_STANDBY = 4,
 };
 
 /**
