@@ -64,25 +64,25 @@ enum sleepmgr_mode {
 
 	/**
 	 *  Idle 0 mode.
-	 *  Potential Wake Up sources: Synchronous(APB, AHB), asynchronous.
+	 *  Potential Wake Up sources: IRQ.
 	 */
 	SLEEPMGR_IDLE_0,
 
 	/**
 	 *  Idle 1 mode.
-	 *  Potential Wake Up sources: Synchronous (APB), asynchronous
+	 *  Potential Wake Up sources: IRQ.
 	 */
 	SLEEPMGR_IDLE_1,
 
 	/**
 	 *  Idle 2 mode.
-	 *  Potential Wake Up sources: Asynchronous
+	 *  Potential Wake Up sources: IRQ.
 	 */
 	SLEEPMGR_IDLE_2,
 
 	/**
 	 * Standby mode.
-	 * Potential Wake Up sources: Asynchronous
+	 * Potential Wake Up sources: Asynchronous IRQ.
 	 */
 	SLEEPMGR_STANDBY,
 
