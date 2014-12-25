@@ -95,7 +95,7 @@ static inline void _sdadc_configure_ain_pin(uint32_t pin)
  * \param[out] module_inst  Pointer to the SDADC software instance struct
  * \param[in]  config       Pointer to configuration struct
  *
- * \return Status of the configuration procedure
+ * \return Status of the configuration procedure.
  * \retval STATUS_OK               The configuration was successful
  * \retval STATUS_ERR_INVALID_ARG  Invalid argument(s) were provided
  */
@@ -242,7 +242,7 @@ static enum status_code _sdadc_set_config(
 }
 
 /**
- * \brief Initializes the SDADC
+ * \brief Initializes the SDADC.
  *
  * Initializes the SDADC device struct and the hardware module based on the
  * given configuration struct values.

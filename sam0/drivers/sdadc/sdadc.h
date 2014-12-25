@@ -177,7 +177,7 @@ struct sdadc_module;
 typedef void (*sdadc_callback_t)(const struct sdadc_module *const module);
 
 /**
- * \brief SDADC Callback enum
+ * \brief SDADC Callback enum.
  *
  * Callback types for SDADC callback driver.
  *
@@ -216,7 +216,7 @@ enum sdadc_callback {
 /** @} */
 
 /**
- * \brief SDADC reference voltage enum
+ * \brief SDADC reference voltage enum.
  *
  * Enum for the possible reference voltages for the SDADC.
  *
@@ -233,7 +233,7 @@ enum sdadc_reference {
 };
 
 /**
- * \brief SDADC over sampling ratio enum
+ * \brief SDADC over sampling ratio enum.
  *
  * Enum for the over sampling ratio which change the output data rate.
  *
@@ -252,7 +252,7 @@ enum sdadc_over_sampling_ratio {
 };
 
 /**
- * \brief SDADC window monitor mode enum
+ * \brief SDADC window monitor mode enum.
  *
  * Enum for the possible window monitor modes for the SDADC.
  *
@@ -271,7 +271,7 @@ enum sdadc_window_mode {
 };
 
 /**
- * \brief SDADC event action enum
+ * \brief SDADC event action enum.
  *
  * Enum for the possible actions to take on an incoming event.
  *
@@ -286,7 +286,7 @@ enum sdadc_event_action {
 };
 
 /**
- * \brief SDADC MUX input selection enum
+ * \brief SDADC MUX input selection enum.
  *
  * Enum for the possible MUX input selections for the SDADC.
  *
@@ -315,7 +315,7 @@ enum sdadc_interrupt_flag {
 #endif
 
 /**
- * \brief Window monitor configuration structure
+ * \brief Window monitor configuration structure.
  *
  * Window monitor configuration structure.
  */
@@ -342,7 +342,7 @@ struct sdadc_events {
 };
 
 /**
- * \brief SDADC correction configuration structure
+ * \brief SDADC correction configuration structure.
  *
  * Offset, gain, and shift correction configuration structure.
  * Part of the \ref sdadc_config struct will be initialized by
@@ -363,7 +363,7 @@ struct sdadc_correction_config {
 };
 
 /**
- * \brief SDADC configuration structure
+ * \brief SDADC configuration structure.
  *
  * Configuration structure for an SDADC instance. This structure should be
  * initialized by the \ref sdadc_get_config_defaults()
@@ -442,7 +442,7 @@ enum status_code sdadc_init(
 		struct sdadc_config *config);
 
 /**
- * \brief Initializes an SDADC configuration structure to defaults
+ * \brief Initializes an SDADC configuration structure to defaults.
  *
  * Initializes a given SDADC configuration struct to a set of known default
  * values. This function should be called on any new instance of the
@@ -646,7 +646,7 @@ static inline bool sdadc_is_syncing(
 }
 
 /**
- * \brief Enables the SDADC module
+ * \brief Enables the SDADC module.
  *
  * Enables an SDADC module that has previously been configured. If any internal reference
  * is selected it will be enabled.
@@ -674,7 +674,7 @@ static inline enum status_code sdadc_enable(
 }
 
 /**
- * \brief Disables the SDADC module
+ * \brief Disables the SDADC module.
  *
  * Disables an SDADC module that was previously enabled.
  *
@@ -701,7 +701,7 @@ static inline enum status_code sdadc_disable(
 }
 
 /**
- * \brief Resets the SDADC module
+ * \brief Resets the SDADC module.
  *
  * Resets an SDADC module, clearing all module state and registers to their
  * default values.
@@ -805,7 +805,7 @@ static inline void sdadc_disable_events(
 }
 
 /**
- * \brief Starts an SDADC conversion
+ * \brief Starts an SDADC conversion.
  *
  * Starts a new SDADC conversion.
  *
@@ -827,7 +827,7 @@ static inline void sdadc_start_conversion(
 }
 
 /**
- * \brief Reads the SDADC result
+ * \brief Reads the SDADC result.
  *
  * Reads the result from an SDADC conversion that was previously started.
  *
@@ -877,7 +877,7 @@ static inline enum status_code sdadc_read(
  */
 
 /**
- * \brief Flushes the SDADC pipeline
+ * \brief Flushes the SDADC pipeline.
  *
  * Flushes the pipeline and restart the SDADC clock on the next peripheral clock
  * edge. All conversions in progress will be lost. When flush is complete, the
@@ -901,7 +901,7 @@ static inline void sdadc_flush(
 }
 
 /**
- * \brief Sets the SDADC window mode
+ * \brief Sets the SDADC window mode.
  *
  * Sets the SDADC window mode to a given mode and value range.
  *
@@ -945,7 +945,7 @@ static inline void sdadc_set_window_mode(
 }
 
 /**
- * \brief Sets MUX SDADC input pin
+ * \brief Sets MUX SDADC input pin.
  *
  * Sets the MUX SDADC input pin selection.
  *
@@ -981,7 +981,7 @@ static inline void sdadc_set_mux_input(
  */
 
 /**
- * \brief Enable interrupt
+ * \brief Enable interrupt.
  *
  * Enable the given interrupt request from the SDADC module.
  *
@@ -1001,7 +1001,7 @@ static inline void sdadc_enable_interrupt(struct sdadc_module *const module_inst
 }
 
 /**
- * \brief Disable interrupt
+ * \brief Disable interrupt.
  *
  * Disable the given interrupt request from the SDADC module.
  *
