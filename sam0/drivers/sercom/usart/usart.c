@@ -269,7 +269,7 @@ enum status_code usart_init(
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
-#if (SAML21)
+#if (SAML21) || (SAMC21)
 	uint32_t pm_index     = sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
 #else
 	uint32_t pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;

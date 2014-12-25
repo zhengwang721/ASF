@@ -123,6 +123,7 @@
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 
@@ -144,6 +145,7 @@
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 
@@ -163,6 +165,7 @@
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 
@@ -184,6 +187,7 @@
 			<device-support value="samd10"/>
 			<device-support value="samd11"/>
 			<device-support value="saml21"/>
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 
