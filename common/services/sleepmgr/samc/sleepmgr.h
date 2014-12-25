@@ -82,7 +82,7 @@ enum sleepmgr_mode {
 
 	/**
 	 * Standby mode.
-	 * Potential Wake Up sources: Asynchronous IRQ.
+	 * Potential Wake Up sources: Asynchronous IRQ (or Sync IRQ in APB sleep-walking).
 	 */
 	SLEEPMGR_STANDBY,
 
