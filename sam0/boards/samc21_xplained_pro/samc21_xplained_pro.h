@@ -181,6 +181,19 @@ void system_board_init(void);
 #define EXT1_PIN_SPI_SCK          EXT1_PIN_18
 /** @} */
 
+/** \name Extension header #1 UART definitions
+ *  @{
+ */
+#define EXT1_UART_MODULE              SERCOM3
+#define EXT1_UART_SERCOM_MUX_SETTING  USART_RX_1_TX_0_XCK_1
+#define EXT1_UART_SERCOM_PINMUX_PAD0  PINMUX_PA22C_SERCOM3_PAD0
+#define EXT1_UART_SERCOM_PINMUX_PAD1  PINMUX_PA23C_SERCOM3_PAD1
+#define EXT1_UART_SERCOM_PINMUX_PAD2  PINMUX_UNUSED
+#define EXT1_UART_SERCOM_PINMUX_PAD3  PINMUX_UNUSED
+#define EXT1_UART_SERCOM_DMAC_ID_TX   SERCOM3_DMAC_ID_TX
+#define EXT1_UART_SERCOM_DMAC_ID_RX   SERCOM3_DMAC_ID_RX
+/** @} */
+
 /** \name Extension header #2 pin definitions
  *  @{
  */
@@ -223,6 +236,19 @@ void system_board_init(void);
 #define EXT2_PIN_SPI_SCK          EXT2_PIN_18
 /** @} */
 
+/** \name Extension header #2 UART definitions
+ *  @{
+ */
+#define EXT2_UART_MODULE              SERCOM3
+#define EXT2_UART_SERCOM_MUX_SETTING  USART_RX_1_TX_0_XCK_1
+#define EXT2_UART_SERCOM_PINMUX_PAD0  PINMUX_PA22C_SERCOM3_PAD0
+#define EXT2_UART_SERCOM_PINMUX_PAD1  PINMUX_PA23C_SERCOM3_PAD1
+#define EXT2_UART_SERCOM_PINMUX_PAD2  PINMUX_UNUSED
+#define EXT2_UART_SERCOM_PINMUX_PAD3  PINMUX_UNUSED
+#define EXT2_UART_SERCOM_DMAC_ID_TX   SERCOM3_DMAC_ID_TX
+#define EXT2_UART_SERCOM_DMAC_ID_RX   SERCOM3_DMAC_ID_RX
+/** @} */
+
 /** \name Extension header #3 pin definitions
  *  @{
  */
@@ -263,6 +289,19 @@ void system_board_init(void);
 #define EXT3_PIN_SPI_MOSI         EXT3_PIN_16
 #define EXT3_PIN_SPI_MISO         EXT3_PIN_17
 #define EXT3_PIN_SPI_SCK          EXT3_PIN_18
+/** @} */
+
+/** \name Embedded debugger CDC Gateway USART interface definitions
+ * @{
+ */
+#define EDBG_CDC_MODULE              SERCOM4
+#define EDBG_CDC_SERCOM_MUX_SETTING  USART_RX_3_TX_2_XCK_3
+#define EDBG_CDC_SERCOM_PINMUX_PAD0  PINMUX_UNUSED
+#define EDBG_CDC_SERCOM_PINMUX_PAD1  PINMUX_UNUSED
+#define EDBG_CDC_SERCOM_PINMUX_PAD2  PINMUX_PB10D_SERCOM4_PAD2
+#define EDBG_CDC_SERCOM_PINMUX_PAD3  PINMUX_PB11D_SERCOM4_PAD3
+#define EDBG_CDC_SERCOM_DMAC_ID_TX   SERCOM4_DMAC_ID_TX
+#define EDBG_CDC_SERCOM_DMAC_ID_RX   SERCOM4_DMAC_ID_RX
 /** @} */
 
 #ifdef __cplusplus
