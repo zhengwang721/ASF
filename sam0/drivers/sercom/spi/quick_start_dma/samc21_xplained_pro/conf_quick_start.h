@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SERCOM SPI master with vectored I/O driver configuration
+ * \brief SERCOM SPI with DMA configurations for SAM C21 Xplained Pro
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,25 +41,31 @@
  *
  */
 
-#ifndef CONF_SPI_MASTER_VEC_H
-#define CONF_SPI_MASTER_VEC_H
+#ifndef CONF_QUICK_START_DMA_H_INCLUDED
+#define CONF_QUICK_START_DMA_H_INCLUDED
 
-#if defined(__FREERTOS__) || defined(__DOXYGEN__)
-#  include <FreeRTOS.h>
-#  include <semphr.h>
+//[definition_master]
+#define CONF_MASTER_SPI_MODULE  EXT2_SPI_MODULE
+#define CONF_MASTER_SS_PIN      EXT2_PIN_SPI_SS_0
+#define CONF_MASTER_MUX_SETTING EXT2_SPI_SERCOM_MUX_SETTING
+#define CONF_MASTER_PINMUX_PAD0 EXT2_SPI_SERCOM_PINMUX_PAD0
+#define CONF_MASTER_PINMUX_PAD1 PINMUX_UNUSED
+#define CONF_MASTER_PINMUX_PAD2 EXT2_SPI_SERCOM_PINMUX_PAD2
+#define CONF_MASTER_PINMUX_PAD3 EXT2_SPI_SERCOM_PINMUX_PAD3
+//[definition_master]
 
-#  define CONF_SPI_MASTER_VEC_OS_SUPPORT
-#  define CONF_SPI_MASTER_VEC_SEMAPHORE_TYPE                   xSemaphoreHandle
-#  define CONF_SPI_MASTER_VEC_CREATE_SEMAPHORE(semaphore)  \
-		vSemaphoreCreateBinary(semaphore)
-#  define CONF_SPI_MASTER_VEC_DELETE_SEMAPHORE(semaphore)  \
-		vSemaphoreDelete(semaphore)
-#  define CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE(semaphore)  \
-		xSemaphoreTake((semaphore), portMAX_DELAY)
-#  define CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE(semaphore)  \
-		xSemaphoreGive((semaphore))
-#  define CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE_FROM_ISR(semaphore)  \
-		xSemaphoreGiveFromISR((semaphore), NULL)
-#endif
+//[definition_slave]
+#define CONF_SLAVE_SPI_MODULE  EXT1_SPI_MODULE
+#define CONF_SLAVE_MUX_SETTING EXT1_SPI_SERCOM_MUX_SETTING
+#define CONF_SLAVE_PINMUX_PAD0 EXT1_SPI_SERCOM_PINMUX_PAD0
+#define CONF_SLAVE_PINMUX_PAD1 EXT1_SPI_SERCOM_PINMUX_PAD1
+#define CONF_SLAVE_PINMUX_PAD2 EXT1_SPI_SERCOM_PINMUX_PAD2
+#define CONF_SLAVE_PINMUX_PAD3 EXT1_SPI_SERCOM_PINMUX_PAD3
+//[definition_slave]
 
-#endif // CONF_SPI_MASTER_VEC_H
+//[definition_peripheral_trigger]
+#define CONF_PERIPHERAL_TRIGGER_TX   SERCOM5_DMAC_ID_TX
+#define CONF_PERIPHERAL_TRIGGER_RX   SERCOM3_DMAC_ID_RX
+//[definition_peripheral_trigger]
+
+#endif /* CONF_QUICK_START_DMA_H_INCLUDED */

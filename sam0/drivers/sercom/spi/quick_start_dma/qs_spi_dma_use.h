@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D21/R21/L21 Quick Start Guide for Using SPI driver with DMA
+ * \brief SAM Quick Start Guide for Using SPI driver with DMA
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,6 +48,7 @@
  *    - SAMD21 Xplained Pro
  *    - SAMR21 Xplained Pro
  *    - SAML21 Xplained Pro
+ *    - SAMC21 Xplained Pro
  *
  * This quick start will transmit a buffer data from master to slave through DMA.
  * In this use case the SPI master will be configured with the following
@@ -56,10 +57,6 @@
  * - MSB of the data is transmitted first
  * - Transfer mode 0
  * - SPI MUX Setting E
- *   - MOSI on pad 2, extension header 2, pin 16
- *   - MISO on pad 0, extension header 2, pin 17
- *   - SCK on pad 3, extension header 2, pin 18
- *   - SS on extension header 2, pin 15
  * - 8-bit character size
  * - Not enabled in sleep mode
  * - Baudrate 100000
@@ -71,10 +68,6 @@
  * - MSB of the data is transmitted first
  * - Transfer mode 0
  * - SPI MUX Setting E
- *   - MISO on pad 2, extension header 1, pin 16
- *   - MOSI on pad 0, extension header 1, pin 17
- *   - SCK on pad 3, extension header 1, pin 18
- *   - SS on pad 1, extension header 1, pin 15
  * - 8-bit character size
  * - Not enabled in sleep mode
  * - GLCK generator 0
@@ -101,6 +94,11 @@
  *  - \b DO/DI: EXT1 PIN16 (PA06) <--> EXT1 PIN11 (PA08)
  *  - \b DI/DO: EXT1 PIN17 (PA04) <--> EXT2 PIN03 (PA10)
  *  - \b SCK:   EXT1 PIN18 (PA07) <--> EXT2 PIN04 (PA11)
+ * - SAM C21 Xplained Pro.
+ *  - \b SS_0:  EXT1 PIN15 (PA17) <--> EXT2 PIN15 (PB03)
+ *  - \b DO/DI: EXT1 PIN16 (PA18) <--> EXT2 PIN17 (PB02)
+ *  - \b DI/DO: EXT1 PIN17 (PA16) <--> EXT2 PIN16 (PB00)
+ *  - \b SCK:   EXT1 PIN18 (PA19) <--> EXT2 PIN18 (PB01)
  *
  * \subsection asfdoc_sam0_spi_dma_use_case_setup_code Code
  *
@@ -119,6 +117,10 @@
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_master
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_slave
  * \snippet saml21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
+ * For SAMC21 Xplained Pro:
+ * \snippet samc21_xplained_pro/conf_quick_start.h definition_master
+ * \snippet samc21_xplained_pro/conf_quick_start.h definition_slave
+ * \snippet samc21_xplained_pro/conf_quick_start.h definition_peripheral_trigger
 
  * Add to the main application source file, outside of any functions:
  * \snippet qs_spi_dma_use.c buf_length

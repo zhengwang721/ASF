@@ -3,7 +3,7 @@
  *
  * \brief SAM SPI Quick Start
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,10 +51,6 @@
  * - MSB of the data is transmitted first
  * - Transfer mode 0
  * - SPI MUX Setting E (see \ref asfdoc_sam0_sercom_spi_mux_settings_slave)
- *   - MISO on pad 2, extension header 1, pin 16
- *   - MOSI on pad 0, extension header 1, pin 17
- *   - SCK on pad 3, extension header 1, pin 18
- *   - SS on pad 1, extension header 1, pin
  * - 8-bit character size
  * - Not enabled in sleep mode
  * - GLCK generator 0
@@ -99,13 +95,13 @@
  *      \snippet qs_spi_slave_basic.c conf_format
  *   -# Set MUX setting E.
  *      \snippet qs_spi_slave_basic.c mux_setting
- *   -# Set pinmux for pad 0 (data in (MOSI) on extension header 1, pin 17).
+ *   -# Set pinmux for pad 0 (data in MOSI).
  *      \snippet qs_spi_slave_basic.c di
- *   -# Set pinmux for pad 1 (slave select on on extension header 1, pin 15).
+ *   -# Set pinmux for pad 1 (slave select).
  *      \snippet qs_spi_slave_basic.c ss
- *   -# Set pinmux for pad 2 (data out (MISO) on extension header 1, pin 16).
+ *   -# Set pinmux for pad 2 (data out MISO).
  *      \snippet qs_spi_slave_basic.c do
- *   -# Set pinmux for pad 3 (SCK on extension header 1, pin 18).
+ *   -# Set pinmux for pad 3 (SCK).
  *      \snippet qs_spi_slave_basic.c sck
  *   -# Initialize SPI module with configuration.
  *      \snippet qs_spi_slave_basic.c init

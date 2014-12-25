@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SERCOM SPI master with vectored I/O driver configuration
+ * \brief SAM C21 Direct Memory Access Driver Configuration Header
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,26 +40,9 @@
  * \asf_license_stop
  *
  */
+#ifndef CONF_DMA_H_INCLUDED
+#define CONF_DMA_H_INCLUDED
 
-#ifndef CONF_SPI_MASTER_VEC_H
-#define CONF_SPI_MASTER_VEC_H
+# define CONF_MAX_USED_CHANNEL_NUM     2
 
-#if defined(__FREERTOS__) || defined(__DOXYGEN__)
-#  include <FreeRTOS.h>
-#  include <semphr.h>
-
-#  define CONF_SPI_MASTER_VEC_OS_SUPPORT
-#  define CONF_SPI_MASTER_VEC_SEMAPHORE_TYPE                   xSemaphoreHandle
-#  define CONF_SPI_MASTER_VEC_CREATE_SEMAPHORE(semaphore)  \
-		vSemaphoreCreateBinary(semaphore)
-#  define CONF_SPI_MASTER_VEC_DELETE_SEMAPHORE(semaphore)  \
-		vSemaphoreDelete(semaphore)
-#  define CONF_SPI_MASTER_VEC_TAKE_SEMAPHORE(semaphore)  \
-		xSemaphoreTake((semaphore), portMAX_DELAY)
-#  define CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE(semaphore)  \
-		xSemaphoreGive((semaphore))
-#  define CONF_SPI_MASTER_VEC_GIVE_SEMAPHORE_FROM_ISR(semaphore)  \
-		xSemaphoreGiveFromISR((semaphore), NULL)
 #endif
-
-#endif // CONF_SPI_MASTER_VEC_H
