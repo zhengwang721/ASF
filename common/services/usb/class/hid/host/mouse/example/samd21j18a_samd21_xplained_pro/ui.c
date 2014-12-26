@@ -44,10 +44,6 @@
 #include <asf.h>
 #include "ui.h"
 
-#define LED_On(LED_0_PIN)      port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE)
-#define LED_Off(LED_0_PIN)     port_pin_set_output_level(LED_0_PIN, LED_0_INACTIVE)
-#define LED_Toggle(LED_0_PIN)  port_pin_toggle_output_level(LED_0_PIN)
-
 /**
  * \name Internal routines to manage asynchronous interrupt pin change
  * This interrupt is connected to a switch and allows to wakeup CPU in low sleep

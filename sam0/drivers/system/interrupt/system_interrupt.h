@@ -60,6 +60,7 @@ extern "C" {
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_system_interrupt_prerequisites
@@ -153,7 +154,7 @@ enum system_interrupt_priority_level {
  */
 
 /**
- * \brief Enters a critical section
+ * \brief Enters a critical section.
  *
  * Disables global interrupts. To support nested critical sections, an internal
  * count of the critical section nesting will be kept, so that global interrupts
@@ -166,7 +167,7 @@ static inline void system_interrupt_enter_critical_section(void)
 }
 
 /**
- * \brief Leaves a critical section
+ * \brief Leaves a critical section.
  *
  * Enables global interrupts. To support nested critical sections, an internal
  * count of the critical section nesting will be kept, so that global interrupts
@@ -186,11 +187,11 @@ static inline void system_interrupt_leave_critical_section(void)
  */
 
 /**
- * \brief Check if global interrupts are enabled
+ * \brief Check if global interrupts are enabled.
  *
  * Checks if global interrupts are currently enabled.
  *
- * \returns A Boolean that identifies if the global interrupts are enabled or not.
+ * \returns A boolean that identifies if the global interrupts are enabled or not.
  *
  * \retval true   Global interrupts are currently enabled
  * \retval false  Global interrupts are currently disabled
@@ -202,7 +203,7 @@ static inline bool system_interrupt_is_global_enabled(void)
 }
 
 /**
- * \brief Enables global interrupts
+ * \brief Enables global interrupts.
  *
  * Enables global interrupts in the device to fire any enabled interrupt handlers.
  */
@@ -212,7 +213,7 @@ static inline void system_interrupt_enable_global(void)
 }
 
 /**
- * \brief Disables global interrupts
+ * \brief Disables global interrupts.
  *
  * Disabled global interrupts in the device, preventing any enabled interrupt
  * handlers from executing.
@@ -223,7 +224,7 @@ static inline void system_interrupt_disable_global(void)
 }
 
 /**
- * \brief Checks if an interrupt vector is enabled or not
+ * \brief Checks if an interrupt vector is enabled or not.
  *
  * Checks if a specific interrupt vector is currently enabled.
  *
@@ -242,7 +243,7 @@ static inline bool system_interrupt_is_enabled(
 }
 
 /**
- * \brief Enable interrupt vector
+ * \brief Enable interrupt vector.
  *
  * Enables execution of the software handler for the requested interrupt vector.
  *
@@ -255,7 +256,7 @@ static inline void system_interrupt_enable(
 }
 
 /**
- * \brief Disable interrupt vector
+ * \brief Disable interrupt vector.
  *
  * Disables execution of the software handler for the requested interrupt vector.
  *
@@ -275,7 +276,7 @@ static inline void system_interrupt_disable(
  */
 
 /**
- * \brief Get active interrupt (if any)
+ * \brief Get active interrupt (if any).
  *
  * Return the vector number for the current executing software handler, if any.
  *
@@ -332,7 +333,7 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *	</tr>
  *	<tr>
  *		<td>NMI</td>
- *		<td>Non-maskable interrupt</td>
+ *		<td>Non-maskable Interrupt</td>
  *	</tr>
  *	<tr>
  *		<td>SERCOM</td>
@@ -360,6 +361,9 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  * <table>
  *	<tr>
  *		<th>Changelog</th>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for SAML21</td>
  *	</tr>
  *	<tr>
  *		<td>Added support for SAMD10/D11</td>
@@ -395,6 +399,11 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>11/2014</td>
+ *		<td>Add support for SAML21.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>

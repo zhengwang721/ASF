@@ -78,7 +78,7 @@
  * Function for setting up the callback functionality of the driver:
  * \snippet qs_i2c_master_callback.c setup_callback
  *
- * Add to user application main():
+ * Add to user application \c main():
  * \snippet qs_i2c_master_callback.c run_initialize_i2c
  *
  * \subsection asfdoc_sam0_sercom_i2c_master_callback_use_case_setup_workflow Workflow
@@ -103,7 +103,7 @@
  *
  * \section asfdoc_sam0_sercom_i2c_master_callback_use_case_implementation Implementation
  * \subsection asfdoc_sam0_sercom_i2c_master_callback_use_case_code Code
- * Add to user application main:
+ * Add to user application \c main():
  * \snippet qs_i2c_master_callback.c while
  * \subsection asfdoc_sam0_sercom_i2c_master_callback_use_case_implementation_workflow Workflow
  * -# Write packet to slave.
