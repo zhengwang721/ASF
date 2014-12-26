@@ -159,10 +159,10 @@ static enum status_code _usart_set_config(
 	ctrla |= config->transfer_mode;
 
 	if (config->use_external_clock == false) {
-		ctrla |= SERCOM_USART_CTRLA_MODE_USART_INT_CLK;
+		ctrla |= SERCOM_USART_CTRLA_MODE(0x1);
 	}
 	else {
-		ctrla |= SERCOM_USART_CTRLA_MODE_USART_EXT_CLK;
+		ctrla |= SERCOM_USART_CTRLA_MODE(0x0);
 	}
 
 	/* Set stopbits, character size and enable transceivers */
@@ -269,7 +269,11 @@ enum status_code usart_init(
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
+#if (SAML21)
+	uint32_t pm_index     = sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
+#else
 	uint32_t pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
+#endif
 	uint32_t gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
 
 	if (usart_hw->CTRLA.reg & SERCOM_USART_CTRLA_SWRST) {
@@ -373,7 +377,7 @@ enum status_code usart_init(
  * \return Status of the operation.
  * \retval STATUS_OK         If the operation was completed
  * \retval STATUS_BUSY       If the operation was not completed, due to the USART
- *                           module being busy.
+ *                           module being busy
  * \retval STATUS_ERR_DENIED If the transmitter is not enabled
  */
 enum status_code usart_write_wait(

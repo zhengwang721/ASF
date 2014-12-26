@@ -44,7 +44,7 @@
 #define _EVENTS_COMMON_H_INCLUDED_
 
 /**
- * \internal Internal module structure to manage necassery globals
+ * \internal Internal module structure to manage necessary globals
  *
  *
  */

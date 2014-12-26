@@ -57,6 +57,7 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_nvm_prerequisites
@@ -77,6 +78,20 @@
  * The Non-Volatile Memory (NVM) module provides an interface to the device's
  * Non-Volatile Memory controller, so that memory pages can be written, read,
  * erased and reconfigured in a standardized manner.
+ *
+ * \subsection asfdoc_sam0_nvm_features Driver Feature Macro Definition
+ * <table>
+ *  <tr>
+ *    <th>Driver Feature Macro</th>
+ *    <th>Supported devices</th>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_NVM_RWWEE</td>
+ *    <td>SAML21</td>
+ *  </tr>
+ * </table>
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
  *
  * \subsection asfdoc_sam0_nvm_module_overview_regions Memory Regions
  * The NVM memory space of the SAM devices is divided into two sections:
@@ -249,6 +264,16 @@
 extern "C" {
 #endif
 
+/**
+ * Define NVM features set according to different device family
+ * @{
+*/
+#if (SAML21) || defined(__DOXYGEN__)
+/** Read while write EEPROM emulation feature*/
+#  define FEATURE_NVM_RWWEE
+#endif
+/*@}*/
+
 #if !defined(__DOXYGEN__)
 /**
  * \brief Mask for the error flags in the status register.
@@ -325,6 +350,12 @@ enum nvm_command {
 	 *  commands to be issued.
 	 */
 	NVM_COMMAND_EXIT_LOW_POWER_MODE        = NVMCTRL_CTRLA_CMD_CPRM,
+#ifdef FEATURE_NVM_RWWEE
+	/** Read while write(RWW) EEPROM area erase row */
+	NVM_COMMAND_RWWEE_ERASE_ROW            = NVMCTRL_CTRLA_CMD_RWWEEER,
+	/** RWW EEPROM write page */
+	NVM_COMMAND_RWWEE_WRITE_PAGE           = NVMCTRL_CTRLA_CMD_RWWEEWP,
+#endif
 };
 
 /**
@@ -343,7 +374,7 @@ enum nvm_sleep_power_mode {
 };
 
 /**
- * \brief NVM controller cache readmode configuration
+ * \brief NVM controller cache readmode configuration.
  *
  * Control how the NVM cache prefetch data from flash.
  *
@@ -414,6 +445,10 @@ struct nvm_parameters {
 	/** Size of the Bootloader memory section configured in the NVM auxiliary
 	 *  memory space. */
 	uint32_t bootloader_number_of_pages;
+#ifdef FEATURE_NVM_RWWEE
+	/** Number of pages in read while write EEPROM(RWWEE) emulation area. */
+	uint16_t rww_eeprom_number_of_pages;
+#endif
 };
 
 /**
@@ -482,7 +517,7 @@ enum nvm_bod33_action {
 };
 
 /**
- * \brief WDT Window time-out period
+ * \brief WDT Window time-out period.
  *
  * Window mode time-out period in clock cycles.
  *
@@ -515,7 +550,7 @@ enum nvm_wdt_window_timeout {
 };
 
 /**
- * \brief WDT Early warning offset
+ * \brief WDT Early warning offset.
  *
  * This setting determine how many GCLK_WDT cycles before a watchdog time-out period
  * an early warning interrupt should be triggered.
@@ -549,7 +584,7 @@ enum nvm_wdt_early_warning_offset {
 };
 
 /**
- * \brief NVM user row fuse setting structure
+ * \brief NVM user row fuse setting structure.
  *
  * This structure contain the layout of the first 64 bits of the user row
  * which contain the fuse settings.
@@ -763,6 +798,9 @@ static inline enum nvm_error nvm_get_error(void)
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added support for SAML21.</td>
+ *	</tr>
+ *	<tr>
  *		<td>Added support for SAMD21, removed BOD12 reference, removed
  *          nvm_set_fuses() API</td>
  *	</tr>
@@ -801,6 +839,11 @@ static inline enum nvm_error nvm_get_error(void)
  *		<th>Date</td>
  *		<th>Comments</td>
  *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>08/2014</td>
+ *		<td>Added support for SAML21.</td>
+ *	</tr> 
  *	<tr>
  *		<td>D</td>
  *		<td>12/2014</td>

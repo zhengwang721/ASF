@@ -875,6 +875,21 @@ bool rtc_is_tamper_occur_in_backup_mode(Rtc *p_rtc, uint8_t reg_num)
 }
 #endif
 
+#if (SAMG55)
+/**
+ * \brief Get the RTC milliseconds value.
+ *
+ * \param p_rtc Pointer to an RTC instance.
+ *
+ * \return Number of 1/1024 seconds elapsed within one second.
+ */
+uint32_t rtc_get_milliseconds(Rtc *p_rtc)
+{
+	return (p_rtc->RTC_MSR) & RTC_MSR_MS_Msk;
+}
+#endif
+
+
 //@}
 
 /// @cond 0

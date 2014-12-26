@@ -55,7 +55,7 @@
  * - Window monitor disabled
  * - 1/2 gain
  * - Positive input on ADC PIN 0
- * - Negative input to GND (Single ended)
+ * - Negative input to GND (single ended)
  * - Averaging disabled
  * - Oversampling disabled
  * - Right adjust data
