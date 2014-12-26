@@ -77,6 +77,7 @@
 extern "C" {
 #endif
 
+
 /**
  * \brief This function does the initialization of the Serial handler state
  * Machine.

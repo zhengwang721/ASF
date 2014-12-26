@@ -51,7 +51,9 @@
 #define WSNDEMO_H
 
 # include "board.h"
-int wsndemo_main(void);
+
+void wsndemo_init(void);
+void wsndemo_task(void);
 
 #ifndef LED_COUNT
 #define LED_COUNT 0

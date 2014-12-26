@@ -281,13 +281,13 @@ static void peer_rsp_send_tx_done_cb(retval_t status, frame_info_t *frame)
  * \brief Send peer response. This is a unicast send to the node which
  *        had earlier send the peer request
  *
- * \param src_addr The address which had been sent as payload of peer request
+ * \param src_addr The address which had been sent as payload of peer request  
  *                it becomes the source address of node which sent peer rsp
  * \param seq_num Sequence number of the Peer request frame
  */
 static int send_peer_rsp(uint64_t *dst_addr)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	peer_rsp_t *data;
 
