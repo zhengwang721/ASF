@@ -79,7 +79,7 @@ void sdadc_unregister_callback(
 		enum sdadc_callback callback_type);
 
 /**
- * \brief Enables callback
+ * \brief Enables callback.
  *
  * Enables the callback function registered by \ref
  * sdadc_register_callback. The callback function will be called from the
@@ -115,7 +115,7 @@ static inline void sdadc_enable_callback(
 }
 
 /**
- * \brief Disables callback
+ * \brief Disables callback.
  *
  * Disables the callback function registered by the \ref
  * sdadc_register_callback.

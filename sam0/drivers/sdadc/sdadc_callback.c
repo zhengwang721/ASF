@@ -102,7 +102,7 @@ void SDADC_Handler(void)
 }
 
 /**
- * \brief Registers a callback
+ * \brief Registers a callback.
  *
  * Registers a callback function which is implemented by the user.
  *
@@ -131,7 +131,7 @@ void sdadc_register_callback(
 }
 
 /**
- * \brief Unregisters a callback
+ * \brief Unregisters a callback.
  *
  * Unregisters a callback function which is implemented by the user.
  *
@@ -154,7 +154,7 @@ void sdadc_unregister_callback(
 }
 
 /**
- * \brief Read multiple samples from SDADC
+ * \brief Read multiple samples from SDADC.
  *
  * Read \c samples samples from the SDADC into the buffer \c buffer.
  * If there is no hardware trigger defined (event action) the
@@ -199,7 +199,7 @@ enum status_code sdadc_read_buffer_job(
 }
 
 /**
- * \brief Gets the status of a job
+ * \brief Gets the status of a job.
  *
  * Gets the status of an ongoing or the last job.
  *
@@ -223,7 +223,7 @@ enum status_code sdadc_get_job_status(
 }
 
 /**
- * \brief Aborts an ongoing job
+ * \brief Aborts an ongoing job.
  *
  * Aborts an ongoing job.
  *
