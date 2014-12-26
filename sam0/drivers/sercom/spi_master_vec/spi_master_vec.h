@@ -65,6 +65,7 @@
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
  *
  * The reader is assumed to be familiar with the regular SERCOM SPI driver, and
  * how it is configured and operated. Configuration of this driver is done a
@@ -664,7 +665,7 @@ static inline enum status_code spi_master_vec_transceive_buffer_wait(
   *		      <td>C</td>
   *		      <td>12/2014</td>
   *		      <td>Add SAM D10/D11 support.</td>
-  *	    </tr>  
+  *	    </tr>
   *	    <tr>
   *		      <td>B</td>
   *		      <td>03/2014</td>

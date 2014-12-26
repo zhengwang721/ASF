@@ -61,11 +61,12 @@
  * - \ref conf_spinctrl.h
  *
  * \section asfdoc_common2_spinctrl_example_deviceinfo Device Info
- * All AVR devices can be used.
+ * All SAM devices can be used.
  * This example has been tested with the following setup:
  * - SAM D20 Xplained Pro
  * - SAM D21 Xplained Pro
  * - SAM R21 Xplained Pro
+ * - SAM L21 Xplained Pro
  *
  * \section asfdoc_common2_spinctrl_example_description Description of the example application
  * This example application will initialize string spinner and two integer
@@ -79,7 +80,7 @@
  * - \ref asfdoc_common2_gfx_mono_spinctrl
  *
  * \section asfdoc_common2_spinctrl_example_compinfo Compilation Info
- * This software was written for the GNU GCC and IAR for AVR.
+ * This software was written for the GNU GCC and IAR.
  * Other compilers may or may not work.
  *
  * \section asfdoc_common2_spinctrl_example_contactinfo Contact Information

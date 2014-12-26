@@ -87,6 +87,8 @@
  *   \snippet samr21_xplained_pro/conf_qs_tc_timer.h definition_tc
  * - SAM D11 Xplained Pro.
  *   \snippet samd11_xplained_pro/conf_qs_tc_timer.h definition_tc
+ * - SAM L21 Xplained Pro.
+ *   \snippet saml21_xplained_pro/conf_qs_tc_timer.h definition_tc
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_timer.c module_inst

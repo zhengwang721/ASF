@@ -82,6 +82,7 @@
 		<device-support value="sam4e"/>
 		<device-support value="samd21"/>
 		<device-support value="samr21"/>
+		<device-support value="saml21"/>
 		<device-support value="samg55"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>

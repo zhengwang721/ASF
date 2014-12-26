@@ -141,7 +141,7 @@ extern "C" {
  *
  * The OLED controller support both serial and parallel mode, that means there
  * is a number of possible ways of interfacing the controller using different
- * AVR peripherals. The different interfaces can be selected using different
+ * SAM peripherals. The different interfaces can be selected using different
  * defines. This driver supports the serial communication mode using an
  * SPI Master.
  *
