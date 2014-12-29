@@ -758,6 +758,10 @@ bool system_clock_source_is_ready(
  * This function will apply the settings in conf_clocks.h when run from the user
  * application. All clock sources and GCLK generators are running when this function
  * returns.
+ *
+ * \note OSC16M is always enabled and if user selects other clocks for GCLK generators,
+ * the OSC16M default enable can be disabled after system_clock_init. Make sure the
+ * clock switch successfully before disabling OSC8M.
  */
 void system_clock_init(void)
 {
