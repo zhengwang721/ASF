@@ -3,7 +3,7 @@
  *
  * \brief SAM CCL Driver Quick Start
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,6 +44,7 @@
 
 void configure_ccl(void);
 void configure_ccl_lut0(void);
+void configure_ccl_lut1(void);
 
 //! [setup]
 void configure_ccl(void)
