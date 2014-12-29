@@ -59,6 +59,7 @@
 			<build type="c-source" value="extint_sam_l/extint.c"/>
 
 			<device-support value="saml21"/>
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 	<module type="meta" id="sam0.drivers.extint.appnote" caption="EXTINT - External Interrupt (Callback APIs)">

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM L21 TC - Timer Counter Driver
+ * \brief SAM TC - Timer Counter Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -114,7 +114,7 @@ enum status_code tc_init(
 	/* Temporary variable to hold TC instance number */
 	uint8_t instance = _tc_get_inst_index(hw);
 
-#if	(SAML21J)
+#if	(SAML21J) || (SAMC21J)
 	/* Array of GLCK ID for different TC instances */
 	uint8_t inst_gclk_id[] = {TC0_GCLK_ID, TC1_GCLK_ID, TC2_GCLK_ID, TC3_GCLK_ID, TC4_GCLK_ID};
 	/* Array of MCLK APB mask bit position for different TC instances */

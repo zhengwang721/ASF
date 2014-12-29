@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21/R21/D11/L21 TC Driver Quick Start
+ * \brief SAM D21/R21/D11/L21/C21 TC Driver Quick Start
  *
  * Copyright (C) 2014 Atmel Corporation. All rights reserved.
  *
@@ -45,7 +45,7 @@
  * \page asfdoc_sam0_tc_dma_use_case Quick Start Guide for Using DMA with TC
  *
  * The supported kit list:
- *    - SAM D21/R21/D11/L21 Xplained Pro
+ *    - SAM D21/R21/D11/L21/C21 Xplained Pro
  *
  * In this use case, the TC will be used to generate a PWM signal. Here
  * the pulse width is set to one quarter of the period. Once the counter value
@@ -94,6 +94,9 @@
  * - SAM L21 Xplained Pro.
  *   \snippet quick_start_dma/saml21_xplained_pro/conf_quick_start.h definition_pwm
  *   \snippet quick_start_dma/saml21_xplained_pro/conf_quick_start.h definition_dma
+ * - SAM C21 Xplained Pro.
+ *   \snippet quick_start_dma/samc21_xplained_pro/conf_quick_start.h definition_pwm
+ *   \snippet quick_start_dma/samc21_xplained_pro/conf_quick_start.h definition_dma 
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_dma.c module_inst

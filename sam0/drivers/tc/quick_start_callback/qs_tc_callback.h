@@ -3,7 +3,7 @@
  *
  * \brief SAM TC - Timer Counter Callback Driver Quick Start
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -80,6 +80,8 @@
  *   \snippet samd11_xplained_pro/conf_quick_start_callback.h definition_pwm
  * - SAM L21 Xplained Pro.
  *   \snippet saml21_xplained_pro/conf_quick_start_callback.h definition_pwm
+ * - SAM C21 Xplained Pro.
+ *   \snippet samc21_xplained_pro/conf_quick_start_callback.h definition_pwm 
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_callback.c module_inst
