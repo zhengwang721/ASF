@@ -60,9 +60,41 @@ const uint32_t numerator_u[buf_len] = {
 	0x7FFFFFFF,
 };
 
+const int32_t excepted_s[buf_len] = {
+	2046, 207, 8, 0, 0, -42, -542, -8191};
+	
+const int32_t excepted_s_m[buf_len] = {
+	0, 1, 2, 1, -1, -3, -4, -7};
+	
+const uint32_t excepted_u[buf_len] = {
+	0x00000001,
+	0x0000002d,
+	0x0000028E,
+	0x00001AAF,
+	0x0000DE19,
+	0x00189612,
+	0x04A37153,
+	0x0FFFFFFF, 
+};
+
+const uint32_t excepted_u_m[buf_len] = {
+	0, 0, 1, 0, 0, 2, 0, 7};
+
+const uint32_t excepted_r[buf_len] = {
+	0x00000001,
+	0x00000009,
+	0x0000002C,
+	0x000000A5,
+	0x00000215,
+	0x00000C25,
+	0x00005B2B,
+	0x0000B504,
+};
+
 static int32_t result_s[buf_len], result_s_m[buf_len];
 static uint32_t result_u[buf_len], result_u_m[buf_len];
 static uint32_t result_r[buf_len];
+static uint32_t result = 0;
 //! [buffer]
 
 //! [calculate]
@@ -76,6 +108,9 @@ static void signed_division(void)
 		numerator = numerator_s[i];
 		denominator = i + 1;
 		result_s[i] = divas_idiv(numerator, denominator);
+		if(result_s[i] != excepted_s[i]) {
+			result = 1;
+		}
 	}
 }
 
@@ -89,6 +124,9 @@ static void unsigned_division(void)
 		numerator = numerator_u[i];
 		denominator = i + 1;
 		result_u[i] = divas_uidiv(numerator, denominator);
+		if(result_u[i] != excepted_u[i]) {
+			result = 1;
+		}
 	}
 }
 
@@ -102,6 +140,9 @@ static void signed_division_mod(void)
 		numerator = numerator_s[i];
 		denominator = i + 1;
 		result_s_m[i] = divas_idivmod(numerator, denominator);
+		if(result_s_m[i] != excepted_s_m[i]) {
+			result = 1;
+		}
 	}
 }
 
@@ -115,6 +156,9 @@ static void unsigned_division_mod(void)
 		numerator = numerator_u[i];
 		denominator = i + 1;
 		result_u_m[i] = divas_uidivmod(numerator, denominator);
+		if(result_u_m[i] != excepted_u_m[i]) {
+			result = 1;
+		}
 	}
 }
 
@@ -127,6 +171,9 @@ static void squart_root(void)
 	{
 		operator = numerator_u[i];
 		result_r[i] = divas_sqrt(operator);
+		if(result_r[i] != excepted_r[i]) {
+			result = 1;
+		}
 	}
 }
 //! [calculate]
@@ -156,7 +203,15 @@ int main(void)
 	
 	//! [main_6]
 	while (true) {
-		/* Infinite loop */
+		if(result) {
+			port_pin_toggle_output_level(LED_0_PIN);
+			/* Add a short delay to see LED toggle */
+			volatile uint32_t delay = 50000;
+			while(delay--) {
+			}
+		} else {
+			port_pin_set_output_level(LED_0_PIN, LED_0_ACTIVE);
+		}
 	}
 	//! [main_6]
 	//! [main]

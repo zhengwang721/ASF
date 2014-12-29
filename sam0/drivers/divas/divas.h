@@ -86,7 +86,7 @@
  * - Overload the EABI functions
  * \note About overload, User can transparently access the DIVAS module when 
  * writing normal C code. E.g. "a = b / c;" or "a = b % c;" will be translated  
- * to a subroutine call which uses the DIVAS.
+ * to a subroutine call which uses the DIVAS. Except square root.
  * 
  * \subsection asfdoc_sam0_divas_module_overview_operand Operand Size
  *  - Divide
@@ -110,6 +110,7 @@
  * \subsection asfdoc_sam0_divas_module_overview_square Unsigned Square Root
  *  When the square root input register is programmed, the square root function 
  *  starts and the result will be stored in the Result and Remainder registers.
+ * \note The square root function can't overload.
  *
  * \section asfdoc_sam0_divas_special_considerations Special Considerations
  *
@@ -293,7 +294,7 @@ uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator);
  *
  * \return The remainder of the DIVAS signed division operation.
  */
-int32_t __aeabi_idivmod(int32_t numerator, int32_t denominator);
+uint64_t __aeabi_idivmod(int32_t numerator, int32_t denominator);
 
 /**
  * \brief Unsigned division remainder operation overload
@@ -304,7 +305,7 @@ int32_t __aeabi_idivmod(int32_t numerator, int32_t denominator);
  *
  * \return The remainder of the DIVAS unsigned division operation.
  */
-uint32_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator);
+uint64_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator);
 
 #elif defined ( __ICCARM__ )
 /**

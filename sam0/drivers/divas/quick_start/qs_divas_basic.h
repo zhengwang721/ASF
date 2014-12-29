@@ -47,7 +47,9 @@
  * In this use case, the Divide and Square Root Accelerator (DIVAS) module is 
  * configured for.
  *
- * This use case will read the calculation data via the virtual COM port.
+ * This use case will calculate the data in basic mode. If all the calculation 
+ * result is the same as the desired results, the board LED will be lighted. 
+ * Otherwise, the board LED will be flashing.
  *
  * \section asfdoc_sam0_divas_basic_use_case_setup Setup
  *
