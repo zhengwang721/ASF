@@ -46,7 +46,7 @@
 
 //[definition_event]
 #define CONF_EVENT_GENERATOR    EVSYS_ID_GEN_TC2_OVF
-#define CONF_EVENT_USER         EVSYS_ID_USER_NONE
+#define CONF_EVENT_USER         EVSYS_ID_USER_DMAC_CH_0
 //[definition_event]
 
 //[definition_tc]

@@ -50,7 +50,7 @@
  */
 int main(void)
 {
-#if SAMD21
+#if SAMD21 || SAML21
 	system_init();
 #else
 	sysclk_init();

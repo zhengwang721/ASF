@@ -70,7 +70,16 @@
  *
  * \subsection asfdoc_sam0_tc_callback_use_case_setup_code Code
  * Add to the main application source file, before any functions:
- * \snippet conf_quick_start_callback.h definition_pwm
+ * - SAM D21 Xplained Pro.
+ *   \snippet samd21_xplained_pro/conf_quick_start_callback.h definition_pwm
+ * - SAM D20 Xplained Pro.
+ *   \snippet samd20_xplained_pro/conf_quick_start_callback.h definition_pwm
+ * - SAM R21 Xplained Pro.
+ *   \snippet samr21_xplained_pro/conf_quick_start_callback.h definition_pwm
+ * - SAM D11 Xplained Pro.
+ *   \snippet samd11_xplained_pro/conf_quick_start_callback.h definition_pwm
+ * - SAM L21 Xplained Pro.
+ *   \snippet saml21_xplained_pro/conf_quick_start_callback.h definition_pwm
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_callback.c module_inst

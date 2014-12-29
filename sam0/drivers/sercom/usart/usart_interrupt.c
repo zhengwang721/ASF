@@ -188,11 +188,12 @@ void usart_unregister_callback(
  */
 enum status_code usart_write_job(
 		struct usart_module *const module,
-		const uint16_t tx_data)
+		const uint16_t *tx_data)
 {
 	/* Sanity check arguments */
 	Assert(module);
-	Assert(module->hw);
+	Assert(tx_data);
+
 	/* Check if the USART transmitter is busy */
 	if (module->remaining_tx_buffer_length > 0) {
 		return STATUS_BUSY;
@@ -204,7 +205,7 @@ enum status_code usart_write_job(
 	}
 
 	/* Call internal write buffer function with length 1 */
-	_usart_write_buffer(module, (uint8_t *)&tx_data, 1);
+	_usart_write_buffer(module, (uint8_t *)tx_data, 1);
 
 	return STATUS_OK;
 }
@@ -229,6 +230,7 @@ enum status_code usart_read_job(
 {
 	/* Sanity check arguments */
 	Assert(module);
+	Assert(rx_data);
 
 	/* Check if the USART receiver is busy */
 	if (module->remaining_rx_buffer_length > 0) {
@@ -275,6 +277,7 @@ enum status_code usart_write_buffer_job(
 {
 	/* Sanity check arguments */
 	Assert(module);
+	Assert(tx_data);
 
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;
@@ -409,12 +412,12 @@ void usart_abort_job(
  * \retval STATUS_BUSY             A transfer is ongoing
  * \retval STATUS_ERR_BAD_DATA     The last operation was aborted due to a
  *                                 parity error. The transfer could be affected
- *                                 by external noise.
+ *                                 by external noise
  * \retval STATUS_ERR_BAD_FORMAT   The last operation was aborted due to a
- *                                 frame error.
+ *                                 frame error
  * \retval STATUS_ERR_OVERFLOW     The last operation was aborted due to a
- *                                 buffer overflow.
- * \retval STATUS_ERR_INVALID_ARG  An invalid transceiver enum given.
+ *                                 buffer overflow
+ * \retval STATUS_ERR_INVALID_ARG  An invalid transceiver enum given
  */
 enum status_code usart_get_job_status(
 		struct usart_module *const module,

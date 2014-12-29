@@ -50,8 +50,8 @@
  * - 12-bit resolution
  * - Window monitor disabled
  * - No gain
- * - Positive input on ADC PIN 0
- * - Negative input on ADC PIN 1
+ * - Positive input on ADC PIN x (depend on default configuration)
+ * - Negative input to GND (single ended)
  * - Averaging disabled
  * - Oversampling disabled
  * - Right adjust data

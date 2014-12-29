@@ -46,7 +46,7 @@
 
 //[definition_event]
 #define CONF_EVENT_GENERATOR    EVSYS_ID_GEN_TC4_OVF
-#define CONF_EVENT_USER         EVSYS_ID_USER_NONE
+#define CONF_EVENT_USER         EVSYS_ID_USER_TC0_EVU
 //[definition_event]
 
 //[definition_tc]
