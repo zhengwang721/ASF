@@ -425,13 +425,13 @@ enum usart_signal_mux_settings {
 	USART_RX_3_TX_0_RTS_2_CTS_3 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO(2)),
 #ifdef FEATURE_USART_RS485
 	/** MUX setting USART_RX_0_TX_0_XCK_1_TE_2. */
-	USART_RX_0_TX_0_XCK_1_TE_2 = (SERCOM_USART_CTRLA_RXPO(0) | SERCOM_USART_CTRLA_TXPO(0)),
+	USART_RX_0_TX_0_XCK_1_TE_2 = (SERCOM_USART_CTRLA_RXPO(0) | SERCOM_USART_CTRLA_TXPO(3)),
 	/** MUX setting USART_RX_1_TX_0_XCK_1_TE_2. */
-	USART_RX_1_TX_0_XCK_1_TE_2 = (SERCOM_USART_CTRLA_RXPO(1) | SERCOM_USART_CTRLA_TXPO(0)),
+	USART_RX_1_TX_0_XCK_1_TE_2 = (SERCOM_USART_CTRLA_RXPO(1) | SERCOM_USART_CTRLA_TXPO(3)),
 	/** MUX setting USART_RX_2_TX_0_XCK_1_TE_2. */
-	USART_RX_2_TX_0_XCK_1_TE_2 = (SERCOM_USART_CTRLA_RXPO(2) | SERCOM_USART_CTRLA_TXPO(0)),
+	USART_RX_2_TX_0_XCK_1_TE_2 = (SERCOM_USART_CTRLA_RXPO(2) | SERCOM_USART_CTRLA_TXPO(3)),
 	/** MUX setting USART_RX_3_TX_0_XCK_1_TE_2. */
-	USART_RX_3_TX_0_XCK_1_TE_2 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO(0)),
+	USART_RX_3_TX_0_XCK_1_TE_2 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO(3)),
 #endif
 #else
 	/** MUX setting RX_0_TX_0_XCK_1. */
@@ -1188,6 +1188,7 @@ static inline void usart_disable_transceiver(
  * - \subpage asfdoc_sam0_sercom_usart_callback_use_case
  * \endif
  * - \subpage asfdoc_sam0_sercom_usart_dma_use_case
+ * - \subpage asfdoc_sam0_sercom_usart_rs485_use_case
  */
 
 /**
