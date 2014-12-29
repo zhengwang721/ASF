@@ -174,7 +174,7 @@ int main(void)
 	configure_usart_lin();
 //! [configure_lin]
 
-//! [lin_msater_cmd]
+//! [lin_master_cmd]
 	while(1) {
 		if (CONF_LIN_NODE_TYPE == LIN_MASTER_NODE) {
 			lin_master_send_cmd(&lin_instance,LIN_MASTER_AUTO_TRANSMIT_CMD);
@@ -182,7 +182,7 @@ int main(void)
 			delay_s(LIN_COMMAND_INTERVAL);
 		}
 	}
-//! [lin_msater_cmd]
+//! [lin_master_cmd]
 
 //! [main_setup]
 }

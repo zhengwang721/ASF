@@ -373,14 +373,6 @@ void system_board_init(void);
 #define LIN_USART_SERCOM_PINMUX_PAD1  PINMUX_UNUSED
 #define LIN_USART_SERCOM_PINMUX_PAD2  PINMUX_PA06D_SERCOM0_PAD2
 #define LIN_USART_SERCOM_PINMUX_PAD3  PINMUX_PA07D_SERCOM0_PAD3
-
-#define LIN_USART_CONFIG(config) \
-		config.mux_setting = LIN_USART_SERCOM_MUX_SETTING; \
-		config.pinmux_pad0 = EXT1_SPI_SERCOM_PINMUX_PAD0; \
-		config.pinmux_pad1 = PINMUX_UNUSED; \
-		config.pinmux_pad2 = EXT1_SPI_SERCOM_PINMUX_PAD2; \
-		config.pinmux_pad3 = EXT1_SPI_SERCOM_PINMUX_PAD3;
-
 /** @} */
 
 /** \name Embedded debugger I2C interface definitions

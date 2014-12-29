@@ -103,5 +103,5 @@
  * -# Set up USART LIN module.
  *     \snippet qs_lin.c configure_lin
  * -# For LIN master, sending LIN command every \c LIN_COMMAND_INTERVAL .
- *     \snippet qs_lin.c lin_msater_cmd
+ *     \snippet qs_lin.c lin_master_cmd
  */
