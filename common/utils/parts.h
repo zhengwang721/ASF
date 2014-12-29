@@ -1286,7 +1286,7 @@
 #define SAM4CP   (SAM4CP16)
 
 /** SAMG Family */
-#define SAMG (SAMG51 || SAMG53 || SAMG54)
+#define SAMG (SAMG51 || SAMG53 || SAMG54 || SAMG55)
 
 /** SAM0 product line (cortex-m0+) */
 #define SAM0 (SAMD20 || SAMD21 || SAMR21 || SAMD10 || SAMD11 || SAML21 || SAMC21)

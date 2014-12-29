@@ -611,7 +611,7 @@ enum status_code rtc_calendar_get_alarm(
  * When used, the RTC will compensate for an inaccurate oscillator. The
  * RTC module will add or subtract cycles from the RTC prescaler to adjust the
  * frequency in approximately 1 PPM steps. The provided correction value should
- * be between -127 and 127, allowing for a maximum 127 PPM correction in either
+ * be between 0 and 127, allowing for a maximum 127 PPM correction in either
  * direction.
  *
  * If no correction is needed, set value to zero.

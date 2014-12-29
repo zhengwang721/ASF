@@ -51,7 +51,7 @@
 /*@{*/
 
 #define OSC32KCTRL_U2246
-#define REV_OSC32KCTRL              0x100
+#define REV_OSC32KCTRL              0x110
 
 /* -------- OSC32KCTRL_INTENCLR : (OSC32KCTRL Offset: 0x00) (R/W 32) Interrupt Enable Clear -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

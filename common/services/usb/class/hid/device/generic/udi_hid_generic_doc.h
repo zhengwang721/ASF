@@ -455,3 +455,20 @@ bool udi_hid_generic_send_report_in(uint8_t *data);
  * \subsection asfdoc_udi_hid_generic_config_examples_4_3 SAMD21 Device (USB)
  * \include example/samd21j18a_samd21_xplained_pro/conf_board.h
  */
+
+/**
+ * \page asfdoc_udi_hid_generic_document_revision_history Document Revision History
+ *
+ * <table>
+ * <tr>
+ *    <th>Doc. Rev.</td>
+ *    <th>Date</td>
+ *    <th>Comments</td>
+ * </tr>
+ * <tr>
+ *    <td>42339A</td>
+ *    <td>12/2014</td>
+ *    <td>Initial release.</td>
+ * </tr>
+ * </table>
+ */

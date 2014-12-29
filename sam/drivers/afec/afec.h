@@ -404,10 +404,9 @@ static inline void afec_set_writeprotect(Afec *const afec,
 		const bool is_enable)
 {
 	if (is_enable) {
-		afec->AFEC_WPMR = AFEC_WPMR_WPEN | AFEC_WPMR_WPKEY_ADC;
+		afec->AFEC_WPMR = AFEC_WPMR_WPEN | AFEC_WPMR_WPKEY_PASSWD;
 	} else {
-		afec->AFEC_WPMR &= ~AFEC_WPMR_WPEN;
-		afec->AFEC_WPMR |= AFEC_WPMR_WPKEY_ADC;
+		afec->AFEC_WPMR = AFEC_WPMR_WPKEY_PASSWD;
 	}
 }
 
@@ -416,13 +415,19 @@ static inline void afec_set_writeprotect(Afec *const afec,
  *
  * \param afec  Base address of the AFEC.
  *
- * \return 0 if the peripheral is not protected, or 16-bit write protect
+ * \return 0 if no write protect violation occurred, or 16-bit write protect
  * violation source.
  */
 static inline uint32_t afec_get_writeprotect_status(Afec *const afec)
 {
-	return (afec->AFEC_WPSR & AFEC_WPSR_WPVS) ?
-			(afec->AFEC_WPSR & AFEC_WPMR_WPKEY_Msk) : 0;
+	uint32_t reg_value;
+
+	reg_value = afec->AFEC_WPSR;
+	if (reg_value & AFEC_WPSR_WPVS) {
+		return (reg_value & AFEC_WPSR_WPVSRC_Msk) >> AFEC_WPSR_WPVSRC_Pos;
+	} else {
+		return 0;
+	}
 }
 
 /**

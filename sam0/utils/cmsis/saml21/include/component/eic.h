@@ -51,7 +51,7 @@
 /*@{*/
 
 #define EIC_U2254
-#define REV_EIC                     0x100
+#define REV_EIC                     0x200
 
 /* -------- EIC_CTRLA : (EIC Offset: 0x00) (R/W  8) Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -84,7 +84,8 @@ typedef union {
   struct {
     uint8_t  NMISENSE:3;       /*!< bit:  0.. 2  NMI Input Sense Configuration      */
     uint8_t  NMIFILTEN:1;      /*!< bit:      3  NMI Filter Enable                  */
-    uint8_t  :4;               /*!< bit:  4.. 7  Reserved                           */
+    uint8_t  NMIASYNCH:1;      /*!< bit:      4  NMI Asynchronous edge Detection Enable */
+    uint8_t  :3;               /*!< bit:  5.. 7  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint8_t reg;                 /*!< Type      used for register access              */
 } EIC_NMICTRL_Type;
@@ -110,7 +111,9 @@ typedef union {
 #define EIC_NMICTRL_NMISENSE_LOW    (EIC_NMICTRL_NMISENSE_LOW_Val  << EIC_NMICTRL_NMISENSE_Pos)
 #define EIC_NMICTRL_NMIFILTEN_Pos   3            /**< \brief (EIC_NMICTRL) NMI Filter Enable */
 #define EIC_NMICTRL_NMIFILTEN       (0x1ul << EIC_NMICTRL_NMIFILTEN_Pos)
-#define EIC_NMICTRL_MASK            0x0Ful       /**< \brief (EIC_NMICTRL) MASK Register */
+#define EIC_NMICTRL_NMIASYNCH_Pos   4            /**< \brief (EIC_NMICTRL) NMI Asynchronous edge Detection Enable */
+#define EIC_NMICTRL_NMIASYNCH       (0x1ul << EIC_NMICTRL_NMIASYNCH_Pos)
+#define EIC_NMICTRL_MASK            0x1Ful       /**< \brief (EIC_NMICTRL) MASK Register */
 
 /* -------- EIC_NMIFLAG : (EIC Offset: 0x02) (R/W 16) NMI Interrupt Flag -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -226,6 +229,25 @@ typedef union {
 #define EIC_INTFLAG_EXTINT_Msk      (0xFFFFul << EIC_INTFLAG_EXTINT_Pos)
 #define EIC_INTFLAG_EXTINT(value)   ((EIC_INTFLAG_EXTINT_Msk & ((value) << EIC_INTFLAG_EXTINT_Pos)))
 #define EIC_INTFLAG_MASK            0x0000FFFFul /**< \brief (EIC_INTFLAG) MASK Register */
+
+/* -------- EIC_EIC_ASYNCH : (EIC Offset: 0x18) (R/W 32) EIC Asynchronous edge Detection Enable -------- */
+#if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
+typedef union {
+  struct {
+    uint32_t ASYNCH:16;        /*!< bit:  0..15  EIC Asynchronous edge Detection Enable */
+    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
+  } bit;                       /*!< Structure used for bit  access                  */
+  uint32_t reg;                /*!< Type      used for register access              */
+} EIC_EIC_ASYNCH_Type;
+#endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
+
+#define EIC_EIC_ASYNCH_OFFSET       0x18         /**< \brief (EIC_EIC_ASYNCH offset) EIC Asynchronous edge Detection Enable */
+#define EIC_EIC_ASYNCH_RESETVALUE   0x00000000ul /**< \brief (EIC_EIC_ASYNCH reset_value) EIC Asynchronous edge Detection Enable */
+
+#define EIC_EIC_ASYNCH_ASYNCH_Pos   0            /**< \brief (EIC_EIC_ASYNCH) EIC Asynchronous edge Detection Enable */
+#define EIC_EIC_ASYNCH_ASYNCH_Msk   (0xFFFFul << EIC_EIC_ASYNCH_ASYNCH_Pos)
+#define EIC_EIC_ASYNCH_ASYNCH(value) ((EIC_EIC_ASYNCH_ASYNCH_Msk & ((value) << EIC_EIC_ASYNCH_ASYNCH_Pos)))
+#define EIC_EIC_ASYNCH_MASK         0x0000FFFFul /**< \brief (EIC_EIC_ASYNCH) MASK Register */
 
 /* -------- EIC_CONFIG : (EIC Offset: 0x1C) (R/W 32) Configuration n -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -404,7 +426,7 @@ typedef struct {
   __IO EIC_INTENCLR_Type         INTENCLR;    /**< \brief Offset: 0x0C (R/W 32) Interrupt Enable Clear */
   __IO EIC_INTENSET_Type         INTENSET;    /**< \brief Offset: 0x10 (R/W 32) Interrupt Enable Set */
   __IO EIC_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x14 (R/W 32) Interrupt Flag Status and Clear */
-       RoReg8                    Reserved1[0x4];
+  __IO EIC_EIC_ASYNCH_Type       EIC_ASYNCH;  /**< \brief Offset: 0x18 (R/W 32) EIC Asynchronous edge Detection Enable */
   __IO EIC_CONFIG_Type           CONFIG[2];   /**< \brief Offset: 0x1C (R/W 32) Configuration n */
 } Eic;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */

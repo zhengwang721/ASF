@@ -99,7 +99,7 @@
  *  - Date tracking in day, month, and year
  *  - Automatic leap year correction
  *
- * \subsection asfdoc_sam0_rtc_features Driver Feature Macro Definition
+ * \subsection asfdoc_sam0_rtc_calendar_features Driver Feature Macro Definition
  * <table>
  *  <tr>
  *    <th>Driver Feature Macro</th>
@@ -774,7 +774,7 @@ static inline void rtc_calendar_get_time_defaults(
  *  - Continuously sync clock off
  *  - 12 hour calendar
  *  - Start year 2000 (Year 0 in the counter will be year 2000)
- *  - Events off.
+ *  - Events off
  *  - Alarms set to January 1. 2000, 00:00:00
  *  - Alarm will match on second, minute, hour, day, month, and year
  *
@@ -1305,7 +1305,7 @@ static inline uint32_t rtc_read_general_purpose_reg(
  *	</tr>
  *	<tr>
  *		<td>D</td>
- *		<td>05/2014</td>
+ *		<td>12/2014</td>
  *		<td>Added support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>

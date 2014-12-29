@@ -50,15 +50,19 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_drivers_aes_group SAM L21 Advanced Encryption Standard (AES)
+ * \defgroup asfdoc_sam0_drivers_aes_group SAM Advanced Encryption Standard (AES)
  *
- * This driver for Atmel® | SMART™ SAM L21 devices provides an interface for the configuration
- * and management of the device's Advanced Encryption Standard functionality.
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * and management of the device's Advanced Encryption Standard functionality. The following 
+ * driver API modes are covered by this manual:
+ *
+ *  - Polled APIs
+ *  - Callback APIs
  *
  * The Advanced Encryption Standard module supports all five confidentiality
  * modes of operation for symmetrical key block cipher algorithms (as specified
  * in the NIST Special Publication 800-38A Recommendation):
- * - Electronic Codebook (ECB)
+ * - Electronic Code Book (ECB)
  * - Cipher Block Chaining (CBC)
  * - Output Feedback (OFB)
  * - Cipher Feedback (CFB)
@@ -68,7 +72,7 @@ extern "C" {
  *  - AES (Advanced Encryption Standard)
  *
  * The following devices can use this module:
- *  - SAM L21
+ *  - Atmel | SMART SAM L21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_drivers_aes_prerequisites
@@ -94,7 +98,7 @@ extern "C" {
  * The AES supports all five confidentiality modes of operation for symmetrical
  * key block cipher algorithms (as specified in the NIST Special Publication
  * 800-38A Recommendation) :
- * - Electronic Codebook (ECB)
+ * - Electronic Code Book (ECB)
  * - Cipher Block Chaining (CBC)
  * - Output Feedback (OFB)
  * - Cipher Feedback (CFB)
@@ -111,7 +115,7 @@ extern "C" {
  *
  * \subsection asfdoc_sam0_drivers_aes_module_overview_en_de Encryption and Decryption
  * The AES is capable of using cryptographic keys of 128/192/256 bits to
- * encrypt and decrypt data in blocks of 128 bits.In Cipher Feedback Mode (CFB),
+ * encrypt and decrypt data in blocks of 128 bits. In Cipher Feedback Mode (CFB),
  * five data sizes are possible (8, 16, 32, 64 or 128 bits).
  *
  * The input to the encryption processes of the CBC, CFB and OFB modes includes,
@@ -120,27 +124,20 @@ extern "C" {
  * encryption of a message and in the corresponding decryption of the message.
  *
  * There are three encryption/decryption start modes:
- *
- * Manual Mode: start encryption/decryption manually.
- *
- * Auto start Mode:once the correct number of input data registers is written,
- * processing is automatically started, DMA operation uses this mode.
- *
- * Last Output Data Mode (LOD):This mode is used to generate message
- * authentication code (MAC) on data in CCM mode of operation.
+ * - Manual Mode: Start encryption/decryption manually
+ * - Auto Start Mode: Once the correct number of input data registers is written,
+ * processing is automatically started, DMA operation uses this mode
+ * - Last Output Data Mode (LOD): This mode is used to generate message
+ * authentication code (MAC) on data in CCM mode of operation
  *
  * \subsection asfdoc_sam0_drivers_aes_module_overview_hardware_countermeasures Hardware Countermeasures
  * The AES module features four types of hardware countermeasures that are
  * useful for protecting data against differential power analysis attacks:
- *
- * Type 1: Randomly add one cycle to data processing.
- *
- * Type 2: Randomly add one cycle to data processing (other version).
- *
- * Type 3: Add a random number of clock cycles to data processing, subject to
- * a maximum of 11/13/15 clock cycles for key sizes of 128/192/256 bits.
- *
- * Type 4: Add random spurious power consumption during data processing
+ * - Type 1: Randomly add one cycle to data processing
+ * - Type 2: Randomly add one cycle to data processing (other version)
+ * - Type 3: Add a random number of clock cycles to data processing, subject to
+ * a maximum of 11/13/15 clock cycles for key sizes of 128/192/256 bits
+ * - Type 4: Add random spurious power consumption during data processing
  *
  * \subsection asfdoc_sam0_drivers_aes_module_overview_gcm Galois Counter Mode (GCM)
  * GCM is comprised of the AES engine in CTR mode along with a universal hash
@@ -182,55 +179,55 @@ extern "C" {
 
 /** AES processing mode. */
 enum aes_encrypt_mode {
-	AES_DECRYPTION = 0, 	/**< Decryption of data will be performed. */
-	AES_ENCRYPTION,			/**< Encryption of data will be performed. */
+	AES_DECRYPTION = 0,     /**< Decryption of data will be performed. */
+	AES_ENCRYPTION,         /**< Encryption of data will be performed. */
 };
 
 /** AES cryptographic key size. */
 enum aes_key_size {
-	AES_KEY_SIZE_128 = 0, 	/**< AES key size is 128 bits. */
-	AES_KEY_SIZE_192,		/**< AES key size is 192 bits. */
-	AES_KEY_SIZE_256,		/**< AES key size is 256 bits. */
+	AES_KEY_SIZE_128 = 0,   /**< AES key size is 128-bit. */
+	AES_KEY_SIZE_192,       /**< AES key size is 192-bit. */
+	AES_KEY_SIZE_256,       /**< AES key size is 256-bit. */
 };
 
 /** AES start mode. */
 enum aes_start_mode {
-	AES_MANUAL_START = 0,	/**< Manual start mode. */
-	AES_AUTO_START,			/**< Auto start mode. */
+	AES_MANUAL_START = 0,   /**< Manual start mode. */
+	AES_AUTO_START,         /**< Auto start mode. */
 };
 
 /** AES operation mode. */
 enum aes_operation_mode {
-	AES_ECB_MODE = 0,		/**< Electronic Codebook (ECB). */
-	AES_CBC_MODE,			/**< Cipher Block Chaining (CBC). */
-	AES_OFB_MODE,			/**< Output Feedback (OFB). */
-	AES_CFB_MODE,			/**< Cipher Feedback (CFB). */
-	AES_CTR_MODE,			/**< Counter (CTR). */
-	AES_CCM_MODE,			/**< Counter (CCM). */
-	AES_GCM_MODE,			/**< Galois Counter Mode (GCM).*/
+	AES_ECB_MODE = 0,       /**< Electronic Codebook (ECB). */
+	AES_CBC_MODE,           /**< Cipher Block Chaining (CBC). */
+	AES_OFB_MODE,           /**< Output Feedback (OFB). */
+	AES_CFB_MODE,           /**< Cipher Feedback (CFB). */
+	AES_CTR_MODE,           /**< Counter (CTR). */
+	AES_CCM_MODE,           /**< Counter (CCM). */
+	AES_GCM_MODE,           /**< Galois Counter Mode (GCM).*/
 };
 
 /** AES Cipher FeedBack (CFB) size. */
 enum aes_cfb_size {
-	AES_CFB_SIZE_128 = 0,	/**< Cipher feedback data size is 128-bit. */
-	AES_CFB_SIZE_64,		/**< Cipher feedback data size is 64-bit. */
-	AES_CFB_SIZE_32,		/**< Cipher feedback data size is 32-bit. */
-	AES_CFB_SIZE_16,		/**< Cipher feedback data size is 16-bit. */
-	AES_CFB_SIZE_8,			/**< Cipher feedback data size is 8-bit. */
+	AES_CFB_SIZE_128 = 0,   /**< Cipher feedback data size is 128-bit. */
+	AES_CFB_SIZE_64,        /**< Cipher feedback data size is 64-bit. */
+	AES_CFB_SIZE_32,        /**< Cipher feedback data size is 32-bit. */
+	AES_CFB_SIZE_16,        /**< Cipher feedback data size is 16-bit. */
+	AES_CFB_SIZE_8,         /**< Cipher feedback data size is 8-bit. */
 };
 
-/** AES CounterMeasure type */
+/** AES countermeasure type */
 enum aes_countermeature_type {
-	AES_COUNTERMEASURE_TYPE_disabled = 0x0,
-	AES_COUNTERMEASURE_TYPE_1 = 0x01,
-	AES_COUNTERMEASURE_TYPE_2 = 0x02,
-	AES_COUNTERMEASURE_TYPE_3 = 0x04,
-	AES_COUNTERMEASURE_TYPE_4 = 0x08,
-	AES_COUNTERMEASURE_TYPE_ALL = 0x0F,
+	AES_COUNTERMEASURE_TYPE_disabled = 0x0,    /**< Countermeasure type all disabled. */
+	AES_COUNTERMEASURE_TYPE_1 = 0x01,          /**< Countermeasure1 enabled. */
+	AES_COUNTERMEASURE_TYPE_2 = 0x02,          /**< Countermeasure2 enabled. */
+	AES_COUNTERMEASURE_TYPE_3 = 0x04,          /**< Countermeasure3 enabled. */
+	AES_COUNTERMEASURE_TYPE_4 = 0x08,          /**< Countermeasure4 enabled. */
+	AES_COUNTERMEASURE_TYPE_ALL = 0x0F,        /**< Countermeasure type all enabled. */
 };
 
 /**
- * \name Module status flags
+ * \name Module Status Flags
  *
  * AES status flags, returned by \ref aes_get_status() and cleared by
  * \ref aes_clear_status().
@@ -461,7 +458,7 @@ static inline uint32_t aes_gcm_read_ghash(struct aes_module *const module, uint3
 	Assert(module);
 	Assert(module->hw);
 
-	return (*(&(module->hw->GHASH0.reg) + 4*id));
+	return module->hw->GHASH[id].reg;
 }
 
 /**
@@ -477,7 +474,7 @@ static inline void aes_gcm_write_ghash(struct aes_module *const module,
 	Assert(module);
 	Assert(module->hw);
 
-	*(&(module->hw->GHASH0.reg) + 4*id) = ghash;
+	module->hw->GHASH[id].reg = ghash;
 }
 
 
@@ -495,7 +492,7 @@ static inline uint32_t aes_gcm_read_hash_key(struct aes_module *const module,
 	Assert(module);
 	Assert(module->hw);
 
-	return (*(uint32_t *)((uint32_t )&(module->hw->HASHKEY0.reg) + 4*id));
+	return module->hw->HASHKEY[id].reg;
 }
 
 /**
@@ -511,7 +508,7 @@ static inline void aes_gcm_write_hash_key(struct aes_module *const module,
 	Assert(module);
 	Assert(module->hw);
 
-	*(uint32_t *)((uint32_t)&(module->hw->HASHKEY0.reg) + 4*id) = key;
+	module->hw->HASHKEY[id].reg = key;
 }
 
 /**
@@ -667,7 +664,7 @@ static inline void aes_gcm_set_gf_multiplication(struct aes_module *const module
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Initial document release</td>
+ *		<td>Initial release</td>
  *	</tr>
  * </table>
  */
@@ -693,8 +690,14 @@ static inline void aes_gcm_set_gf_multiplication(struct aes_module *const module
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
+ *      <td>B</td>
+ *		<td>11/2014</td>
+ *		<td>Corrected documentation typos.</td>
+ *	</tr>
+ *	<tr>
+ *      <td>A</td>
  *		<td>09/2014</td>
- *		<td>Initial document release</td>
+ *		<td>Initial release</td>
  *	</tr>
  * </table>
  *

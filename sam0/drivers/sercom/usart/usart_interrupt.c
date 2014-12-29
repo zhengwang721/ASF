@@ -188,11 +188,12 @@ void usart_unregister_callback(
  */
 enum status_code usart_write_job(
 		struct usart_module *const module,
-		const uint16_t tx_data)
+		const uint16_t *tx_data)
 {
 	/* Sanity check arguments */
 	Assert(module);
-	Assert(module->hw);
+	Assert(tx_data);
+
 	/* Check if the USART transmitter is busy */
 	if (module->remaining_tx_buffer_length > 0) {
 		return STATUS_BUSY;
@@ -204,7 +205,7 @@ enum status_code usart_write_job(
 	}
 
 	/* Call internal write buffer function with length 1 */
-	_usart_write_buffer(module, (uint8_t *)&tx_data, 1);
+	_usart_write_buffer(module, (uint8_t *)tx_data, 1);
 
 	return STATUS_OK;
 }
@@ -229,6 +230,7 @@ enum status_code usart_read_job(
 {
 	/* Sanity check arguments */
 	Assert(module);
+	Assert(rx_data);
 
 	/* Check if the USART receiver is busy */
 	if (module->remaining_rx_buffer_length > 0) {
@@ -275,6 +277,7 @@ enum status_code usart_write_buffer_job(
 {
 	/* Sanity check arguments */
 	Assert(module);
+	Assert(tx_data);
 
 	if (length == 0) {
 		return STATUS_ERR_INVALID_ARG;

@@ -359,8 +359,8 @@ struct i2c_slave_config {
  *
  * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked
- * \retval STATUS_BUSY if the module was already locked
+ * \retval STATUS_OK If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 static inline enum status_code i2c_slave_lock(
 		struct i2c_slave_module *const module)
@@ -389,8 +389,8 @@ static inline enum status_code i2c_slave_lock(
  *
  * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked
- * \retval STATUS_BUSY if the module was already locked
+ * \retval STATUS_OK If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 static inline void i2c_slave_unlock(struct i2c_slave_module *const module)
 {

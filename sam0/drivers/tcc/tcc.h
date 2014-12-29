@@ -158,7 +158,7 @@
  *
  * \anchor asfdoc_sam0_tcc_count_size_vs_top
  * <table>
- *  <caption>Timer Counter Sizes And Their Maximum Count Values</caption>
+ *  <caption>Timer Counter Sizes and Their Maximum Count Values</caption>
  *  <tr>
  *    <th>Counter size</th>
  *    <th>Max. (hexadecimal)</th>
@@ -420,7 +420,7 @@
  * set to normal (i.e. non-inverted) output mode.
  *
  * \anchor asfdoc_sam0_tcc_module_pwm_single_diag
- * \image html pwm_single_ex.svg "Example Of PWM In Single-Slope Mode, And Different Counter Operations"
+ * \image html pwm_single_ex.svg "Example Of PWM In Single-Slope Mode, and Different Counter Operations"
  *
  * Several PWM modes are supported by the TCC module, refer to
  * datasheet for the details on PWM waveform generation.
@@ -774,9 +774,9 @@ enum tcc_callback {
 	TCC_CALLBACK_FAULTA,
 	/** Callback for Recoverable Fault B. */
 	TCC_CALLBACK_FAULTB,
-	/** Callback for Non-Recoverable Fault. 0. */
+	/** Callback for Non-Recoverable Fault 0. */
 	TCC_CALLBACK_FAULT0,
-	/** Callback for Non-Recoverable Fault. 1. */
+	/** Callback for Non-Recoverable Fault 1. */
 	TCC_CALLBACK_FAULT1,
 
 #  if defined(__DOXYGEN__)
@@ -2364,7 +2364,7 @@ enum status_code tcc_set_double_buffer_compare_values(
  *  </tr>
  *  <tr>
  *      <td>B</td>
- *      <td>05/2014</td>
+ *      <td>12/2014</td>
  *      <td>Added fault handling functionality;
  *          Added double buffering functionality with use case;
  *          Added timer use case;

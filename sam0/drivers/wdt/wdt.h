@@ -277,8 +277,8 @@ struct wdt_conf {
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true if the module has completed synchronization
- * \retval false if the module synchronization is ongoing
+ * \retval true If the module has completed synchronization
+ * \retval false If the module synchronization is ongoing
  */
 static inline bool wdt_is_syncing(void)
 {
@@ -477,7 +477,7 @@ void wdt_reset_count(void);
  *	</tr>
  *	<tr>
  *		<td>D</td>
- *		<td>05/2014</td>
+ *		<td>12/2014</td>
  *		<td>Added SAMR21 and SAMD10/D11 support.</td>
  *	</tr>
  *	<tr>

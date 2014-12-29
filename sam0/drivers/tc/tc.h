@@ -104,7 +104,7 @@
  * \image html overview.svg "Basic Overview of the TC Module"
  *
  *
- * \subsection asfdoc_sam0_rtc_features Driver Feature Macro Definition
+ * \subsection asfdoc_sam0_tc_features Driver Feature Macro Definition
  * <table>
  *  <tr>
  *    <th>Driver Feature Macro</th>
@@ -975,8 +975,8 @@ uint8_t _tc_get_inst_index(
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval false if the module has completed synchronization
- * \retval true  if the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
+ * \retval true  If the module synchronization is ongoing
  */
 static inline bool tc_is_syncing(
 		const struct tc_module *const module_inst)
@@ -1685,7 +1685,7 @@ static inline void tc_clear_status(
  *	</tr>
  *	<tr>
  *		<td>D</td>
- *		<td>05/2014</td>
+ *		<td>12/2014</td>
  *		<td>Added timer use case.
  *		    Added support for SAMR21 and SAMD10/D11.</td>
  *	</tr>

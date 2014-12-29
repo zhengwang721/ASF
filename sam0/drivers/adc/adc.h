@@ -1054,7 +1054,7 @@ static inline void adc_disable_interrupt(struct adc_module *const module_inst,
  * \else
  *	<tr>
  *		<td>D</td>
- *		<td>05/2014</td>
+ *		<td>12/2014</td>
  *		<td>Added support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>

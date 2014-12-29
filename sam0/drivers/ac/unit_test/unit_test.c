@@ -120,13 +120,13 @@
 #define DAC_VAL_ZERO_VOLT   0
 /* Theoretical DAC value for 0.5V output*/
 #if (SAML21)
-#  define DAC_VAL_HALF_VOLT   620
+#  define DAC_VAL_HALF_VOLT   2048
 #else
 #  define DAC_VAL_HALF_VOLT   512
 #endif
 /* Theoretical DAC value for 1.0V output*/
 #if (SAML21)
-#  define DAC_VAL_ONE_VOLT    1241
+#  define DAC_VAL_ONE_VOLT    4095
 #else
 #  define DAC_VAL_ONE_VOLT    1023
 #endif

@@ -68,39 +68,6 @@
 #define  USB_EP_DIR_OUT       0x00
 
 /**
- * \name Macros for USB device those are not realized in head file
- *
- * @{
- */
-#define USB_DEVICE_EPINTENCLR_TRCPT0        USB_DEVICE_EPINTENCLR_TRCPT(1)
-#define USB_DEVICE_EPINTENCLR_TRCPT1        USB_DEVICE_EPINTENCLR_TRCPT(2)
-#define USB_DEVICE_EPINTENCLR_TRFAIL0       USB_DEVICE_EPINTENCLR_TRFAIL(1)
-#define USB_DEVICE_EPINTENCLR_TRFAIL1       USB_DEVICE_EPINTENCLR_TRFAIL(2)
-#define USB_DEVICE_EPINTENCLR_STALL0        USB_DEVICE_EPINTENCLR_STALL(1)
-#define USB_DEVICE_EPINTENCLR_STALL1        USB_DEVICE_EPINTENCLR_STALL(2)
-
-#define USB_DEVICE_EPINTENSET_TRCPT0        USB_DEVICE_EPINTENSET_TRCPT(1)
-#define USB_DEVICE_EPINTENSET_TRCPT1        USB_DEVICE_EPINTENSET_TRCPT(2)
-#define USB_DEVICE_EPINTENSET_TRFAIL0       USB_DEVICE_EPINTENSET_TRFAIL(1)
-#define USB_DEVICE_EPINTENSET_TRFAIL1       USB_DEVICE_EPINTENSET_TRFAIL(2)
-#define USB_DEVICE_EPINTENSET_STALL0        USB_DEVICE_EPINTENSET_STALL(1)
-#define USB_DEVICE_EPINTENSET_STALL1        USB_DEVICE_EPINTENSET_STALL(2)
-
-#define USB_DEVICE_EPINTFLAG_TRCPT0         USB_DEVICE_EPINTFLAG_TRCPT(1)
-#define USB_DEVICE_EPINTFLAG_TRCPT1         USB_DEVICE_EPINTFLAG_TRCPT(2)
-#define USB_DEVICE_EPINTFLAG_TRFAIL0        USB_DEVICE_EPINTFLAG_TRFAIL(1)
-#define USB_DEVICE_EPINTFLAG_TRFAIL1        USB_DEVICE_EPINTFLAG_TRFAIL(2)
-#define USB_DEVICE_EPINTFLAG_STALL0         USB_DEVICE_EPINTFLAG_STALL(1)
-#define USB_DEVICE_EPINTFLAG_STALL1         USB_DEVICE_EPINTFLAG_STALL(2)
-
-#define USB_DEVICE_EPSTATUSSET_STALLRQ0     USB_DEVICE_EPSTATUSSET_STALLRQ(1)
-#define USB_DEVICE_EPSTATUSSET_STALLRQ1     USB_DEVICE_EPSTATUSSET_STALLRQ(2)
-#define USB_DEVICE_EPSTATUSCLR_STALLRQ0     USB_DEVICE_EPSTATUSCLR_STALLRQ(1)
-#define USB_DEVICE_EPSTATUSCLR_STALLRQ1     USB_DEVICE_EPSTATUSCLR_STALLRQ(2)
-
-/** @} */
-
-/**
  * \name USB SRAM data containing pipe descriptor table
  * The content of the USB SRAM can be :
  * - modified by USB hardware interface to update pipe status.
@@ -1403,7 +1370,7 @@ void usb_device_endpoint_get_config_defaults(struct usb_device_endpoint_config *
  * \param[in] module_inst    Pointer to USB software instance struct
  * \param[in] ep_config      Configuration settings for the endpoint
  *
- * \return Status of the device endpoint configuration operation
+ * \return Status of the device endpoint configuration operation.
  * \retval STATUS_OK         The device endpoint was configured successfully
  * \retval STATUS_ERR_DENIED The endpoint address is already configured
  */
@@ -1517,7 +1484,7 @@ enum status_code usb_device_endpoint_set_config(struct usb_module *module_inst,
  * \param module_inst   Pointer to USB software instance struct
  * \param ep            Endpoint address (direction & number)
  *
- * \return \c true if endpoint is configured and ready to use
+ * \return \c true if endpoint is configured and ready to use.
  */
 bool usb_device_endpoint_is_configured(struct usb_module *module_inst, uint8_t ep)
 {
@@ -1562,7 +1529,7 @@ void usb_device_endpoint_abort_job(struct usb_module *module_inst, uint8_t ep)
  * \param module_inst Pointer to USB software instance struct
  * \param ep          Endpoint address
  *
- * \return \c true if the endpoint is halted
+ * \return \c true if the endpoint is halted.
  */
 bool usb_device_endpoint_is_halted(struct usb_module *module_inst, uint8_t ep)
 {
@@ -1634,7 +1601,7 @@ void usb_device_endpoint_clear_halt(struct usb_module *module_inst, uint8_t ep)
  * \param pbuf        Pointer to buffer
  * \param buf_size    Size of buffer
  *
- * \return Status of procedure
+ * \return Status of procedure.
  * \retval STATUS_OK Job started successfully
  * \retval STATUS_ERR_DENIED Endpoint is not ready
  */
@@ -1669,7 +1636,7 @@ enum status_code usb_device_endpoint_write_buffer_job(struct usb_module *module_
  * \param pbuf        Pointer to buffer
  * \param buf_size    Size of buffer
  *
- * \return Status of procedure
+ * \return Status of procedure.
  * \retval STATUS_OK Job started successfully
  * \retval STATUS_ERR_DENIED Endpoint is not ready
  */
@@ -1702,7 +1669,7 @@ enum status_code usb_device_endpoint_read_buffer_job(struct usb_module *module_i
  * \param module_inst Pointer to USB device module instance
  * \param pbuf        Pointer to buffer
  *
- * \return Status of procedure
+ * \return Status of procedure.
  * \retval STATUS_OK Job started successfully
  * \retval STATUS_ERR_DENIED Endpoint is not ready
  */

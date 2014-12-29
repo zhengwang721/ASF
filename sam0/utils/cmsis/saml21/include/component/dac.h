@@ -51,7 +51,7 @@
 /*@{*/
 
 #define DAC_U2244
-#define REV_DAC                     0x101
+#define REV_DAC                     0x100
 
 /* -------- DAC_CTRLA : (DAC Offset: 0x00) (R/W  8) Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -349,7 +349,7 @@ typedef union {
 #define DAC_SYNCBUSY_DATABUF(value) ((DAC_SYNCBUSY_DATABUF_Msk & ((value) << DAC_SYNCBUSY_DATABUF_Pos)))
 #define DAC_SYNCBUSY_MASK           0x0000003Ful /**< \brief (DAC_SYNCBUSY) MASK Register */
 
-/* -------- DAC_DACCTRL : (DAC Offset: 0x0C) (R/W 16) DACx Control -------- */
+/* -------- DAC_DACCTRL : (DAC Offset: 0x0C) (R/W 16) DAC n Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
@@ -366,8 +366,8 @@ typedef union {
 } DAC_DACCTRL_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define DAC_DACCTRL_OFFSET          0x0C         /**< \brief (DAC_DACCTRL offset) DACx Control */
-#define DAC_DACCTRL_RESETVALUE      0x0000ul     /**< \brief (DAC_DACCTRL reset_value) DACx Control */
+#define DAC_DACCTRL_OFFSET          0x0C         /**< \brief (DAC_DACCTRL offset) DAC n Control */
+#define DAC_DACCTRL_RESETVALUE      0x0000ul     /**< \brief (DAC_DACCTRL reset_value) DAC n Control */
 
 #define DAC_DACCTRL_LEFTADJ_Pos     0            /**< \brief (DAC_DACCTRL) Left Adjusted Data */
 #define DAC_DACCTRL_LEFTADJ         (0x1ul << DAC_DACCTRL_LEFTADJ_Pos)
@@ -393,7 +393,7 @@ typedef union {
 #define DAC_DACCTRL_REFRESH(value)  ((DAC_DACCTRL_REFRESH_Msk & ((value) << DAC_DACCTRL_REFRESH_Pos)))
 #define DAC_DACCTRL_MASK            0x0FCFul     /**< \brief (DAC_DACCTRL) MASK Register */
 
-/* -------- DAC_DATA : (DAC Offset: 0x10) ( /W 16) Data DAC0 -------- */
+/* -------- DAC_DATA : (DAC Offset: 0x10) ( /W 16) DAC n Data -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
@@ -403,15 +403,15 @@ typedef union {
 } DAC_DATA_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define DAC_DATA_OFFSET             0x10         /**< \brief (DAC_DATA offset) Data DAC0 */
-#define DAC_DATA_RESETVALUE         0x0000ul     /**< \brief (DAC_DATA reset_value) Data DAC0 */
+#define DAC_DATA_OFFSET             0x10         /**< \brief (DAC_DATA offset) DAC n Data */
+#define DAC_DATA_RESETVALUE         0x0000ul     /**< \brief (DAC_DATA reset_value) DAC n Data */
 
 #define DAC_DATA_DATA_Pos           0            /**< \brief (DAC_DATA) DAC0 Data */
 #define DAC_DATA_DATA_Msk           (0xFFFFul << DAC_DATA_DATA_Pos)
 #define DAC_DATA_DATA(value)        ((DAC_DATA_DATA_Msk & ((value) << DAC_DATA_DATA_Pos)))
 #define DAC_DATA_MASK               0xFFFFul     /**< \brief (DAC_DATA) MASK Register */
 
-/* -------- DAC_DATABUF : (DAC Offset: 0x14) ( /W 16) Data Buffer DAC0 -------- */
+/* -------- DAC_DATABUF : (DAC Offset: 0x14) ( /W 16) DAC n Data Buffer -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
 typedef union {
   struct {
@@ -421,8 +421,8 @@ typedef union {
 } DAC_DATABUF_Type;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
-#define DAC_DATABUF_OFFSET          0x14         /**< \brief (DAC_DATABUF offset) Data Buffer DAC0 */
-#define DAC_DATABUF_RESETVALUE      0x0000ul     /**< \brief (DAC_DATABUF reset_value) Data Buffer DAC0 */
+#define DAC_DATABUF_OFFSET          0x14         /**< \brief (DAC_DATABUF offset) DAC n Data Buffer */
+#define DAC_DATABUF_RESETVALUE      0x0000ul     /**< \brief (DAC_DATABUF reset_value) DAC n Data Buffer */
 
 #define DAC_DATABUF_DATABUF_Pos     0            /**< \brief (DAC_DATABUF) DAC0 Data Buffer */
 #define DAC_DATABUF_DATABUF_Msk     (0xFFFFul << DAC_DATABUF_DATABUF_Pos)
@@ -459,9 +459,9 @@ typedef struct {
   __IO DAC_INTFLAG_Type          INTFLAG;     /**< \brief Offset: 0x06 (R/W  8) Interrupt Flag Status and Clear */
   __I  DAC_STATUS_Type           STATUS;      /**< \brief Offset: 0x07 (R/   8) Status */
   __I  DAC_SYNCBUSY_Type         SYNCBUSY;    /**< \brief Offset: 0x08 (R/  32) Synchronization Busy */
-  __IO DAC_DACCTRL_Type          DACCTRL[2];  /**< \brief Offset: 0x0C (R/W 16) DACx Control */
-  __O  DAC_DATA_Type             DATA[2];     /**< \brief Offset: 0x10 ( /W 16) Data DAC0 */
-  __O  DAC_DATABUF_Type          DATABUF[2];  /**< \brief Offset: 0x14 ( /W 16) Data Buffer DAC0 */
+  __IO DAC_DACCTRL_Type          DACCTRL[2];  /**< \brief Offset: 0x0C (R/W 16) DAC n Control */
+  __O  DAC_DATA_Type             DATA[2];     /**< \brief Offset: 0x10 ( /W 16) DAC n Data */
+  __O  DAC_DATABUF_Type          DATABUF[2];  /**< \brief Offset: 0x14 ( /W 16) DAC n Data Buffer */
   __IO DAC_DBGCTRL_Type          DBGCTRL;     /**< \brief Offset: 0x18 (R/W  8) Debug Control */
 } Dac;
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */

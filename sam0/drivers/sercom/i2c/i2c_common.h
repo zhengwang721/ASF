@@ -542,7 +542,7 @@ enum i2c_transfer_direction {
  *	</tr>
  *	<tr>
  *		<td>D</td>
- *		<td>04/2014</td>
+ *		<td>12/2014</td>
  *		<td>Added 10-bit addressing and high speed support in SAM D21
  *		    Added SAM R21/D10/D11 support.</td>
  *	</tr>

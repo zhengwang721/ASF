@@ -239,6 +239,7 @@ void _extint_disable(void)
  * \li Input filtering disabled
  * \li Internal pull-up enabled
  * \li Detect falling edges of a signal
+ * \li Asynchronous edge detection is disabled
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
@@ -254,6 +255,7 @@ void extint_chan_get_config_defaults(
 	config->gpio_pin_pull       = EXTINT_PULL_UP;
 	config->filter_input_signal = false;
 	config->detection_criteria  = EXTINT_DETECT_FALLING;
+	config->enable_async_edge_detection = false;
 }
 
 /**
@@ -308,6 +310,13 @@ void extint_chan_set_config(
 			~((EIC_CONFIG_SENSE0_Msk | EIC_CONFIG_FILTEN0) << config_pos)) |
 			(new_config << config_pos);
 
+	/* Config asynchronous edge detection */
+	if (config->enable_async_edge_detection) {
+		EIC_module->EIC_ASYNCH.reg |= (1UL << channel);
+	} else {
+		EIC_module->EIC_ASYNCH.reg &= (EIC_EIC_ASYNCH_MASK & (~(1UL << channel)));
+	}
+
 	_extint_enable();
 }
 
@@ -358,6 +367,11 @@ enum status_code extint_nmi_set_config(
 	/* Enable the hardware signal filter if requested in the config */
 	if (config->filter_input_signal) {
 		new_config |= EIC_NMICTRL_NMIFILTEN;
+	}
+
+	/* Enable asynchronous edge detection if requested in the config */
+	if (config->enable_async_edge_detection) {
+		new_config |= EIC_NMICTRL_NMIASYNCH;
 	}
 
 	/* Disable EIC and general clock to configure NMI */

@@ -257,7 +257,7 @@ Event_VBUS_present() // VBUS interrupt or GPIO interrupt or other
  *
  * The following procedure must be executed to set up the project correctly:
  * - Specify the clock configuration:
- *   - XMEGA USB devices need 48MHz clock input.
+ *   - XMEGA® USB devices need 48MHz clock input.
  *
  *     XMEGA USB devices need CPU frequency higher than 12MHz.
  *

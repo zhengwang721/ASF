@@ -51,7 +51,7 @@ MEMORY
 {
   ram      (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00001000
   lpram    (rwx) : ORIGIN = 0x30000000, LENGTH = 0x00000800
-  picopram (rwx) : ORIGIN = 0x50000000, LENGTH = 0x00000400
+  picopram (rwx) : ORIGIN = 0x50000000, LENGTH = 0x00001000
 }
 
 /* The stack size used by the application. NOTE: you need to adjust according to your application. */
@@ -109,6 +109,14 @@ SECTIONS
         _efixed = .;            /* End of text section */
     } > ram
 
+    /* .ARM.exidx is sorted, so has to go in its own output section.  */
+    PROVIDE_HIDDEN (__exidx_start = .);
+    .ARM.exidx :
+    {
+      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+    } > ram
+    PROVIDE_HIDDEN (__exidx_end = .);
+
     . = ALIGN(4);
     _etext = .;
 
@@ -121,6 +129,24 @@ SECTIONS
         . = ALIGN(4);
         _erelocate = .;
     } > ram
+
+    .lpram :
+    {
+        . = ALIGN(8);
+        _slpram = .;
+        *(.lpram .lpram.*);
+        . = ALIGN(8);
+        _elpram = .;
+    } > lpram
+
+    .picopram :
+    {
+        . = ALIGN(8);
+        _spicopram = .;
+        *(.picopram .picopram.*);
+        . = ALIGN(8);
+        _epicopram = .;
+    } > picopram
 
     /* .bss section which is used for uninitialized data */
     .bss (NOLOAD) :
@@ -144,14 +170,6 @@ SECTIONS
         . = ALIGN(8);
         _estack = .;
     } > ram
-
-    /* .ARM.exidx is sorted, so has to go in its own output section.  */
-    PROVIDE_HIDDEN (__exidx_start = .);
-    .ARM.exidx :
-    {
-      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-    } > ram
-    PROVIDE_HIDDEN (__exidx_end = .);
 
     . = ALIGN(4);
     _end = . ;

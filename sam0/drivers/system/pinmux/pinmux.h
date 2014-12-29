@@ -652,7 +652,7 @@ void system_pinmux_group_set_output_drive(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>04/2014</td>
+ *		<td>12/2014</td>
  *		<td>Add support for SAMR21 and SAMD10/D11</td>
  *	</tr>
  *	<tr>

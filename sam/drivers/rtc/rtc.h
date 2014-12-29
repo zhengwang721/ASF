@@ -111,6 +111,10 @@ uint32_t rtc_get_tamper_event_counter(Rtc *p_rtc);
 bool rtc_is_tamper_occur_in_backup_mode(Rtc *p_rtc, uint8_t reg_num);
 #endif
 
+#if (SAMG55)
+uint32_t rtc_get_milliseconds(Rtc *p_rtc);
+#endif
+
 /**
  * \page sam_rtc_quickstart Quickstart guide for SAM RTC driver
  *

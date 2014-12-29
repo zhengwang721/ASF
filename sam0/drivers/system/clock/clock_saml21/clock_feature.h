@@ -48,9 +48,9 @@ extern "C" {
 #endif
 
 /**
- * \defgroup asfdoc_sam0_system_clock_group SAM L21 System Clock Management Driver (SYSTEM CLOCK)
+ * \defgroup asfdoc_sam0_system_clock_group SAM System Clock Management Driver (SYSTEM CLOCK)
  *
- * This driver for Atmel® | SMART SAM L21 devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's clocking related functions. This includes
  * the various clock sources, bus clocks and generic clocks within the device,
  * with functions to manage the enabling, disabling, source selection and
@@ -294,7 +294,7 @@ enum system_xosc32k_startup {
  * cycles.
  */
 enum system_xosc_startup {
-	/** Wait one clock cycles until the clock source is considered stable. */
+	/** Wait one clock cycle until the clock source is considered stable. */
 	SYSTEM_XOSC_STARTUP_1,
 	/** Wait two clock cycles until the clock source is considered stable. */
 	SYSTEM_XOSC_STARTUP_2,
@@ -634,6 +634,8 @@ struct system_clock_source_dfll_config {
 	/** Run On Demand. If this is set the DFLL won't run
 	 * until requested by a peripheral. */
 	bool on_demand;
+	/** Run in stanby*/
+	bool run_in_stanby;
 	/** Enable Quick Lock. */
 	enum system_clock_dfll_quick_lock quick_lock;
 	/** Enable Chill Cycle. */
@@ -877,6 +879,7 @@ static inline void system_clock_source_dfll_get_config_defaults(
 	config->wakeup_lock     = SYSTEM_CLOCK_DFLL_WAKEUP_LOCK_KEEP;
 	config->stable_tracking = SYSTEM_CLOCK_DFLL_STABLE_TRACKING_TRACK_AFTER_LOCK;
 	config->on_demand       = true;
+	config->run_in_stanby   = false;
 
 	/* Open loop mode calibration value */
 	config->coarse_value    = 0x1f / 4; /* Midpoint */
@@ -1012,7 +1015,7 @@ static inline void system_backup_clock_set_divider(
  */
 static inline uint32_t system_cpu_clock_get_hz(void)
 {
-	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) >> MCLK->CPUDIV.reg);
+	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) >> (MCLK->CPUDIV.reg - 1));
 
 }
 
@@ -1026,7 +1029,7 @@ static inline uint32_t system_cpu_clock_get_hz(void)
  */
 static inline uint32_t system_low_power_clock_get_hz(void)
 {
-	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) >> MCLK->LPDIV.reg);
+	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) >> (MCLK->LPDIV.reg - 1));
 
 }
 
@@ -1040,7 +1043,7 @@ static inline uint32_t system_low_power_clock_get_hz(void)
  */
 static inline uint32_t system_backup_clock_get_hz(void)
 {
-	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) >> MCLK->BUPDIV.reg);
+	return (system_gclk_gen_get_hz(GCLK_GENERATOR_0) >> (MCLK->BUPDIV.reg - 1));
 
 }
 
@@ -1192,8 +1195,6 @@ enum system_clock_source_dpll_reference_clock {
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC,
 	/** Select GCLK as clock reference. */
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK,
-	/** Select GCLK_32K as clock reference. */
-	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK_32K,
 };
 
 /**
@@ -1488,7 +1489,7 @@ static inline void system_flash_set_waitstates(uint8_t wait_states)
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>08/2014</td>
+ *		<td>12/2014</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
