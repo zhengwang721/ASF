@@ -81,6 +81,7 @@
  * The \c NVMCTRL_FUSES_EEPROM_SIZE has to be set to 0x00 in the fuse setting
  * of the device to run this test. Atmel Studio can be used to set this fuse
  * (Tools->Device Programming).
+ *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a
  *    micro USB cable.
