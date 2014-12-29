@@ -61,6 +61,7 @@
 			<build type="header-file" value="quick_start/qs_usart_basic_use.h"/>
 			<build type="header-file" value="quick_start_callback/qs_usart_callback.h"/>
 			<build type="header-file" value="quick_start_dma/qs_usart_dma_use.h" />
+			<build type="header-file" value="quick_start_rs485/qs_rs485.h" />
 
 			<build type="header-file" subtype="api" value="usart.h"/>
 			<build type="header-file" subtype="api" value="usart_interrupt.h"/>
@@ -75,6 +76,7 @@
 			<build type="doxygen-example-path" value="quick_start"/>
 			<build type="doxygen-example-path" value="quick_start_callback"/>
 			<build type="doxygen-example-path" value="quick_start_dma"/>
+			<build type="doxygen-example-path" value="quick_start_rs485"/>
 			<build type="doxygen-quick-start" value="asfdoc_sam0_sercom_usart_exqsg"/>
 
 			<require idref="sam0.utils"/>
