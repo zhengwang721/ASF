@@ -135,7 +135,7 @@ static inline void usart_disable_callback(
  */
 enum status_code usart_write_job(
 		struct usart_module *const module,
-		const uint16_t tx_data);
+		const uint16_t *tx_data);
 
 enum status_code usart_read_job(
 		struct usart_module *const module,

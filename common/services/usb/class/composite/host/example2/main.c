@@ -76,7 +76,7 @@ static int main_count_states(test_state_t state);
  */
 int main(void)
 {
-#if SAMD21
+#if SAMD21 || SAML21
 	system_init();
 #else
 	sysclk_init();
