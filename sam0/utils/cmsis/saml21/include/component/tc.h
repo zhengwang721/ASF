@@ -51,7 +51,7 @@
 /*@{*/
 
 #define TC_U2249
-#define REV_TC                      0x110
+#define REV_TC                      0x200
 
 /* -------- TC_CTRLA : (TC Offset: 0x00) (R/W 32) Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -94,18 +94,18 @@ typedef union {
 #define TC_CTRLA_MODE_Pos           2            /**< \brief (TC_CTRLA) Timer Counter Mode */
 #define TC_CTRLA_MODE_Msk           (0x3ul << TC_CTRLA_MODE_Pos)
 #define TC_CTRLA_MODE(value)        ((TC_CTRLA_MODE_Msk & ((value) << TC_CTRLA_MODE_Pos)))
-#define   TC_CTRLA_MODE_COUNT16_Val       0x0ul  /**< \brief (TC_CTRLA)  */
-#define   TC_CTRLA_MODE_COUNT8_Val        0x1ul  /**< \brief (TC_CTRLA)  */
-#define   TC_CTRLA_MODE_COUNT32_Val       0x2ul  /**< \brief (TC_CTRLA)  */
+#define   TC_CTRLA_MODE_COUNT16_Val       0x0ul  /**< \brief (TC_CTRLA) Counter in 16-bit mode */
+#define   TC_CTRLA_MODE_COUNT8_Val        0x1ul  /**< \brief (TC_CTRLA) Counter in 8-bit mode */
+#define   TC_CTRLA_MODE_COUNT32_Val       0x2ul  /**< \brief (TC_CTRLA) Counter in 32-bit mode */
 #define TC_CTRLA_MODE_COUNT16       (TC_CTRLA_MODE_COUNT16_Val     << TC_CTRLA_MODE_Pos)
 #define TC_CTRLA_MODE_COUNT8        (TC_CTRLA_MODE_COUNT8_Val      << TC_CTRLA_MODE_Pos)
 #define TC_CTRLA_MODE_COUNT32       (TC_CTRLA_MODE_COUNT32_Val     << TC_CTRLA_MODE_Pos)
 #define TC_CTRLA_PRESCSYNC_Pos      4            /**< \brief (TC_CTRLA) Prescaler and Counter Synchronization */
 #define TC_CTRLA_PRESCSYNC_Msk      (0x3ul << TC_CTRLA_PRESCSYNC_Pos)
 #define TC_CTRLA_PRESCSYNC(value)   ((TC_CTRLA_PRESCSYNC_Msk & ((value) << TC_CTRLA_PRESCSYNC_Pos)))
-#define   TC_CTRLA_PRESCSYNC_GCLK_Val     0x0ul  /**< \brief (TC_CTRLA)  */
-#define   TC_CTRLA_PRESCSYNC_PRESC_Val    0x1ul  /**< \brief (TC_CTRLA)  */
-#define   TC_CTRLA_PRESCSYNC_RESYNC_Val   0x2ul  /**< \brief (TC_CTRLA)  */
+#define   TC_CTRLA_PRESCSYNC_GCLK_Val     0x0ul  /**< \brief (TC_CTRLA) Reload or reset the counter on next generic clock */
+#define   TC_CTRLA_PRESCSYNC_PRESC_Val    0x1ul  /**< \brief (TC_CTRLA) Reload or reset the counter on next prescaler clock */
+#define   TC_CTRLA_PRESCSYNC_RESYNC_Val   0x2ul  /**< \brief (TC_CTRLA) Reload or reset the counter on next generic clock and reset the prescaler counter */
 #define TC_CTRLA_PRESCSYNC_GCLK     (TC_CTRLA_PRESCSYNC_GCLK_Val   << TC_CTRLA_PRESCSYNC_Pos)
 #define TC_CTRLA_PRESCSYNC_PRESC    (TC_CTRLA_PRESCSYNC_PRESC_Val  << TC_CTRLA_PRESCSYNC_Pos)
 #define TC_CTRLA_PRESCSYNC_RESYNC   (TC_CTRLA_PRESCSYNC_RESYNC_Val << TC_CTRLA_PRESCSYNC_Pos)
@@ -116,6 +116,22 @@ typedef union {
 #define TC_CTRLA_PRESCALER_Pos      8            /**< \brief (TC_CTRLA) Prescaler */
 #define TC_CTRLA_PRESCALER_Msk      (0x7ul << TC_CTRLA_PRESCALER_Pos)
 #define TC_CTRLA_PRESCALER(value)   ((TC_CTRLA_PRESCALER_Msk & ((value) << TC_CTRLA_PRESCALER_Pos)))
+#define   TC_CTRLA_PRESCALER_DIV1_Val     0x0ul  /**< \brief (TC_CTRLA) Prescaler: GCLK_TC */
+#define   TC_CTRLA_PRESCALER_DIV2_Val     0x1ul  /**< \brief (TC_CTRLA) Prescaler: GCLK_TC/2 */
+#define   TC_CTRLA_PRESCALER_DIV4_Val     0x2ul  /**< \brief (TC_CTRLA) Prescaler: GCLK_TC/4 */
+#define   TC_CTRLA_PRESCALER_DIV8_Val     0x3ul  /**< \brief (TC_CTRLA) Prescaler: GCLK_TC/8 */
+#define   TC_CTRLA_PRESCALER_DIV16_Val    0x4ul  /**< \brief (TC_CTRLA) Prescaler: GCLK_TC/16 */
+#define   TC_CTRLA_PRESCALER_DIV64_Val    0x5ul  /**< \brief (TC_CTRLA) Prescaler: GCLK_TC/64 */
+#define   TC_CTRLA_PRESCALER_DIV256_Val   0x6ul  /**< \brief (TC_CTRLA) Prescaler: GCLK_TC/256 */
+#define   TC_CTRLA_PRESCALER_DIV1024_Val  0x7ul  /**< \brief (TC_CTRLA) Prescaler: GCLK_TC/1024 */
+#define TC_CTRLA_PRESCALER_DIV1     (TC_CTRLA_PRESCALER_DIV1_Val   << TC_CTRLA_PRESCALER_Pos)
+#define TC_CTRLA_PRESCALER_DIV2     (TC_CTRLA_PRESCALER_DIV2_Val   << TC_CTRLA_PRESCALER_Pos)
+#define TC_CTRLA_PRESCALER_DIV4     (TC_CTRLA_PRESCALER_DIV4_Val   << TC_CTRLA_PRESCALER_Pos)
+#define TC_CTRLA_PRESCALER_DIV8     (TC_CTRLA_PRESCALER_DIV8_Val   << TC_CTRLA_PRESCALER_Pos)
+#define TC_CTRLA_PRESCALER_DIV16    (TC_CTRLA_PRESCALER_DIV16_Val  << TC_CTRLA_PRESCALER_Pos)
+#define TC_CTRLA_PRESCALER_DIV64    (TC_CTRLA_PRESCALER_DIV64_Val  << TC_CTRLA_PRESCALER_Pos)
+#define TC_CTRLA_PRESCALER_DIV256   (TC_CTRLA_PRESCALER_DIV256_Val << TC_CTRLA_PRESCALER_Pos)
+#define TC_CTRLA_PRESCALER_DIV1024  (TC_CTRLA_PRESCALER_DIV1024_Val << TC_CTRLA_PRESCALER_Pos)
 #define TC_CTRLA_ALOCK_Pos          11           /**< \brief (TC_CTRLA) Auto Lock */
 #define TC_CTRLA_ALOCK              (0x1ul << TC_CTRLA_ALOCK_Pos)
 #define TC_CTRLA_CAPTEN0_Pos        16           /**< \brief (TC_CTRLA) Capture Channel 0 Enable */
@@ -160,16 +176,18 @@ typedef union {
 #define TC_CTRLBCLR_CMD_Pos         5            /**< \brief (TC_CTRLBCLR) Command */
 #define TC_CTRLBCLR_CMD_Msk         (0x7ul << TC_CTRLBCLR_CMD_Pos)
 #define TC_CTRLBCLR_CMD(value)      ((TC_CTRLBCLR_CMD_Msk & ((value) << TC_CTRLBCLR_CMD_Pos)))
-#define   TC_CTRLBCLR_CMD_NONE_Val        0x0ul  /**< \brief (TC_CTRLBCLR)  */
-#define   TC_CTRLBCLR_CMD_RETRIGGER_Val   0x1ul  /**< \brief (TC_CTRLBCLR)  */
-#define   TC_CTRLBCLR_CMD_STOP_Val        0x2ul  /**< \brief (TC_CTRLBCLR)  */
-#define   TC_CTRLBCLR_CMD_UPDATE_Val      0x3ul  /**< \brief (TC_CTRLBCLR)  */
-#define   TC_CTRLBCLR_CMD_READSYNC_Val    0x4ul  /**< \brief (TC_CTRLBCLR)  */
+#define   TC_CTRLBCLR_CMD_NONE_Val        0x0ul  /**< \brief (TC_CTRLBCLR) No action */
+#define   TC_CTRLBCLR_CMD_RETRIGGER_Val   0x1ul  /**< \brief (TC_CTRLBCLR) Force a start, restart or retrigger */
+#define   TC_CTRLBCLR_CMD_STOP_Val        0x2ul  /**< \brief (TC_CTRLBCLR) Force a stop */
+#define   TC_CTRLBCLR_CMD_UPDATE_Val      0x3ul  /**< \brief (TC_CTRLBCLR) Force update of double-buffered register */
+#define   TC_CTRLBCLR_CMD_READSYNC_Val    0x4ul  /**< \brief (TC_CTRLBCLR) Force a read synchronization of COUNT */
+#define   TC_CTRLBCLR_CMD_DMATRG_Val      0x5ul  /**< \brief (TC_CTRLBCLR) Generate DMA triggers */
 #define TC_CTRLBCLR_CMD_NONE        (TC_CTRLBCLR_CMD_NONE_Val      << TC_CTRLBCLR_CMD_Pos)
 #define TC_CTRLBCLR_CMD_RETRIGGER   (TC_CTRLBCLR_CMD_RETRIGGER_Val << TC_CTRLBCLR_CMD_Pos)
 #define TC_CTRLBCLR_CMD_STOP        (TC_CTRLBCLR_CMD_STOP_Val      << TC_CTRLBCLR_CMD_Pos)
 #define TC_CTRLBCLR_CMD_UPDATE      (TC_CTRLBCLR_CMD_UPDATE_Val    << TC_CTRLBCLR_CMD_Pos)
 #define TC_CTRLBCLR_CMD_READSYNC    (TC_CTRLBCLR_CMD_READSYNC_Val  << TC_CTRLBCLR_CMD_Pos)
+#define TC_CTRLBCLR_CMD_DMATRG      (TC_CTRLBCLR_CMD_DMATRG_Val    << TC_CTRLBCLR_CMD_Pos)
 #define TC_CTRLBCLR_MASK            0xE7ul       /**< \brief (TC_CTRLBCLR) MASK Register */
 
 /* -------- TC_CTRLBSET : (TC Offset: 0x05) (R/W  8) Control B Set -------- */
@@ -198,16 +216,18 @@ typedef union {
 #define TC_CTRLBSET_CMD_Pos         5            /**< \brief (TC_CTRLBSET) Command */
 #define TC_CTRLBSET_CMD_Msk         (0x7ul << TC_CTRLBSET_CMD_Pos)
 #define TC_CTRLBSET_CMD(value)      ((TC_CTRLBSET_CMD_Msk & ((value) << TC_CTRLBSET_CMD_Pos)))
-#define   TC_CTRLBSET_CMD_NONE_Val        0x0ul  /**< \brief (TC_CTRLBSET)  */
-#define   TC_CTRLBSET_CMD_RETRIGGER_Val   0x1ul  /**< \brief (TC_CTRLBSET)  */
-#define   TC_CTRLBSET_CMD_STOP_Val        0x2ul  /**< \brief (TC_CTRLBSET)  */
-#define   TC_CTRLBSET_CMD_UPDATE_Val      0x3ul  /**< \brief (TC_CTRLBSET)  */
-#define   TC_CTRLBSET_CMD_READSYNC_Val    0x4ul  /**< \brief (TC_CTRLBSET)  */
+#define   TC_CTRLBSET_CMD_NONE_Val        0x0ul  /**< \brief (TC_CTRLBSET) No action */
+#define   TC_CTRLBSET_CMD_RETRIGGER_Val   0x1ul  /**< \brief (TC_CTRLBSET) Force a start, restart or retrigger */
+#define   TC_CTRLBSET_CMD_STOP_Val        0x2ul  /**< \brief (TC_CTRLBSET) Force a stop */
+#define   TC_CTRLBSET_CMD_UPDATE_Val      0x3ul  /**< \brief (TC_CTRLBSET) Force update of double-buffered register */
+#define   TC_CTRLBSET_CMD_READSYNC_Val    0x4ul  /**< \brief (TC_CTRLBSET) Force a read synchronization of COUNT */
+#define   TC_CTRLBSET_CMD_DMATRG_Val      0x5ul  /**< \brief (TC_CTRLBSET) Generate DMA triggers */
 #define TC_CTRLBSET_CMD_NONE        (TC_CTRLBSET_CMD_NONE_Val      << TC_CTRLBSET_CMD_Pos)
 #define TC_CTRLBSET_CMD_RETRIGGER   (TC_CTRLBSET_CMD_RETRIGGER_Val << TC_CTRLBSET_CMD_Pos)
 #define TC_CTRLBSET_CMD_STOP        (TC_CTRLBSET_CMD_STOP_Val      << TC_CTRLBSET_CMD_Pos)
 #define TC_CTRLBSET_CMD_UPDATE      (TC_CTRLBSET_CMD_UPDATE_Val    << TC_CTRLBSET_CMD_Pos)
 #define TC_CTRLBSET_CMD_READSYNC    (TC_CTRLBSET_CMD_READSYNC_Val  << TC_CTRLBSET_CMD_Pos)
+#define TC_CTRLBSET_CMD_DMATRG      (TC_CTRLBSET_CMD_DMATRG_Val    << TC_CTRLBSET_CMD_Pos)
 #define TC_CTRLBSET_MASK            0xE7ul       /**< \brief (TC_CTRLBSET) MASK Register */
 
 /* -------- TC_EVCTRL : (TC Offset: 0x06) (R/W 16) Event Control -------- */
@@ -240,14 +260,14 @@ typedef union {
 #define TC_EVCTRL_EVACT_Pos         0            /**< \brief (TC_EVCTRL) Event Action */
 #define TC_EVCTRL_EVACT_Msk         (0x7ul << TC_EVCTRL_EVACT_Pos)
 #define TC_EVCTRL_EVACT(value)      ((TC_EVCTRL_EVACT_Msk & ((value) << TC_EVCTRL_EVACT_Pos)))
-#define   TC_EVCTRL_EVACT_OFF_Val         0x0ul  /**< \brief (TC_EVCTRL)  */
-#define   TC_EVCTRL_EVACT_RETRIGGER_Val   0x1ul  /**< \brief (TC_EVCTRL)  */
-#define   TC_EVCTRL_EVACT_COUNT_Val       0x2ul  /**< \brief (TC_EVCTRL)  */
-#define   TC_EVCTRL_EVACT_START_Val       0x3ul  /**< \brief (TC_EVCTRL)  */
-#define   TC_EVCTRL_EVACT_STAMP_Val       0x4ul  /**< \brief (TC_EVCTRL)  */
-#define   TC_EVCTRL_EVACT_PPW_Val         0x5ul  /**< \brief (TC_EVCTRL)  */
-#define   TC_EVCTRL_EVACT_PWP_Val         0x6ul  /**< \brief (TC_EVCTRL)  */
-#define   TC_EVCTRL_EVACT_PW_Val          0x7ul  /**< \brief (TC_EVCTRL)  */
+#define   TC_EVCTRL_EVACT_OFF_Val         0x0ul  /**< \brief (TC_EVCTRL) Event action disabled */
+#define   TC_EVCTRL_EVACT_RETRIGGER_Val   0x1ul  /**< \brief (TC_EVCTRL) Start, restart or retrigger TC on event */
+#define   TC_EVCTRL_EVACT_COUNT_Val       0x2ul  /**< \brief (TC_EVCTRL) Count on event */
+#define   TC_EVCTRL_EVACT_START_Val       0x3ul  /**< \brief (TC_EVCTRL) Start TC on event */
+#define   TC_EVCTRL_EVACT_STAMP_Val       0x4ul  /**< \brief (TC_EVCTRL) Time stamp capture */
+#define   TC_EVCTRL_EVACT_PPW_Val         0x5ul  /**< \brief (TC_EVCTRL) Period catured in CC0, pulse width in CC1 */
+#define   TC_EVCTRL_EVACT_PWP_Val         0x6ul  /**< \brief (TC_EVCTRL) Period catured in CC1, pulse width in CC0 */
+#define   TC_EVCTRL_EVACT_PW_Val          0x7ul  /**< \brief (TC_EVCTRL) Pulse width capture */
 #define TC_EVCTRL_EVACT_OFF         (TC_EVCTRL_EVACT_OFF_Val       << TC_EVCTRL_EVACT_Pos)
 #define TC_EVCTRL_EVACT_RETRIGGER   (TC_EVCTRL_EVACT_RETRIGGER_Val << TC_EVCTRL_EVACT_Pos)
 #define TC_EVCTRL_EVACT_COUNT       (TC_EVCTRL_EVACT_COUNT_Val     << TC_EVCTRL_EVACT_Pos)
@@ -435,10 +455,10 @@ typedef union {
 #define TC_WAVE_WAVEGEN_Pos         0            /**< \brief (TC_WAVE) Waveform Generation Mode */
 #define TC_WAVE_WAVEGEN_Msk         (0x3ul << TC_WAVE_WAVEGEN_Pos)
 #define TC_WAVE_WAVEGEN(value)      ((TC_WAVE_WAVEGEN_Msk & ((value) << TC_WAVE_WAVEGEN_Pos)))
-#define   TC_WAVE_WAVEGEN_NFRQ_Val        0x0ul  /**< \brief (TC_WAVE)  */
-#define   TC_WAVE_WAVEGEN_MFRQ_Val        0x1ul  /**< \brief (TC_WAVE)  */
-#define   TC_WAVE_WAVEGEN_NPWM_Val        0x2ul  /**< \brief (TC_WAVE)  */
-#define   TC_WAVE_WAVEGEN_MPWM_Val        0x3ul  /**< \brief (TC_WAVE)  */
+#define   TC_WAVE_WAVEGEN_NFRQ_Val        0x0ul  /**< \brief (TC_WAVE) Normal frequency */
+#define   TC_WAVE_WAVEGEN_MFRQ_Val        0x1ul  /**< \brief (TC_WAVE) Match frequency */
+#define   TC_WAVE_WAVEGEN_NPWM_Val        0x2ul  /**< \brief (TC_WAVE) Normal PWM */
+#define   TC_WAVE_WAVEGEN_MPWM_Val        0x3ul  /**< \brief (TC_WAVE) Match PWM */
 #define TC_WAVE_WAVEGEN_NFRQ        (TC_WAVE_WAVEGEN_NFRQ_Val      << TC_WAVE_WAVEGEN_Pos)
 #define TC_WAVE_WAVEGEN_MFRQ        (TC_WAVE_WAVEGEN_MFRQ_Val      << TC_WAVE_WAVEGEN_Pos)
 #define TC_WAVE_WAVEGEN_NPWM        (TC_WAVE_WAVEGEN_NPWM_Val      << TC_WAVE_WAVEGEN_Pos)

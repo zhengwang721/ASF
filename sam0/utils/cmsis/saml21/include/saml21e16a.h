@@ -596,7 +596,7 @@ void PICOP_Handler               ( void );
 #define FLASH_USER_PAGE_SIZE  64
 #define HSRAM_SIZE            0x2000UL /* 8 kB */
 #define LPRAM_SIZE            0x1000UL /* 4 kB */
-#define PICOPRAM_SIZE         0x400UL /* 1 kB */
+#define PICOPRAM_SIZE         0x1000UL /* 4 kB */
 #define FLASH_ADDR            (0x00000000UL) /**< FLASH base address */
 #define FLASH_USER_PAGE_ADDR  (0x00800000UL) /**< FLASH_USER_PAGE base address */
 #define HSRAM_ADDR            (0x20000000UL) /**< HSRAM base address */
@@ -604,7 +604,7 @@ void PICOP_Handler               ( void );
 #define PICOPRAM_ADDR         (0x50000000UL) /**< PICOPRAM base address */
 
 #define DSU_DID_RESETVALUE    0x1081000CUL
-#define NVMCTRL_WWR_EEPROM_SIZE 0x800UL /* 2 kB */
+#define NVMCTRL_RWW_EEPROM_SIZE 0x800UL /* 2 kB */
 #define PORT_GROUPS           1
 #define USB_HOST_IMPLEMENTED  1
 

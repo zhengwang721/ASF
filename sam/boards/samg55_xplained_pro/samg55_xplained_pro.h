@@ -186,7 +186,7 @@ void system_board_init(void);
 #define BUTTON_COUNT 1
 
 #define CONSOLE_UART               USART7
-#define CONSOLE_UART_ID            ID_USART7
+#define CONSOLE_UART_ID            ID_FLEXCOM7
 /** USART7 pins (TXD7 and RXD7) definitions, PA27,28. */
 #define PINS_USART7        (PIO_PA27B_RXD7| PIO_PA28B_TXD7)
 #define PINS_USART7_FLAGS  (IOPORT_MODE_MUX_B)

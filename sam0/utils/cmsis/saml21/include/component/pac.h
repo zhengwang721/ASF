@@ -51,7 +51,7 @@
 /*@{*/
 
 #define PAC_U2120
-#define REV_PAC                     0x100
+#define REV_PAC                     0x110
 
 /* -------- PAC_WRCTRL : (PAC Offset: 0x00) (R/W 32) Write control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

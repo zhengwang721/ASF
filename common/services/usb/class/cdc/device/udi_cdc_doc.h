@@ -878,7 +878,7 @@ iram_size_t udi_cdc_multi_write_buf(uint8_t port, const void* buf, iram_size_t s
  * </tr>
  * <tr>
  *    <td>42337A</td>
- *    <td>10/2014</td>
+ *    <td>12/2014</td>
  *    <td>Initial release.</td>
  * </tr>
  * </table>

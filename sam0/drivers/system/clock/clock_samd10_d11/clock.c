@@ -743,6 +743,10 @@ static void _switch_peripheral_gclk(void)
  * This function will apply the settings in conf_clocks.h when run from the user
  * application. All clock sources and GCLK generators are running when this function
  * returns.
+ *
+ * \note OSC8M is always enabled and if user selects other clocks for GCLK generators,
+ * the OSC8M default enable can be disabled after system_clock_init. Make sure the
+ * clock switch successfully before disabling OSC8M.
  */
 void system_clock_init(void)
 {

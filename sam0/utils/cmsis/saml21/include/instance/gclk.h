@@ -149,6 +149,7 @@
 #define GCLK_GEN_NUM_MSB            8        // Number of Generic Clock Generators - 1
 #define GCLK_GEN_SOURCE_NUM_MSB     8        // Number of Generic Clock Sources - 1
 #define GCLK_NUM                    36       // Number of Generic Clock Users
+#define GCLK_SOURCE_BITS            4       
 #define GCLK_SOURCE_DFLL48M         7       
 #define GCLK_SOURCE_FDPLL           8       
 #define GCLK_SOURCE_GCLKGEN1        2       

@@ -541,3 +541,20 @@ bool udi_msc_trans_block(bool b_read, uint8_t * block, iram_size_t block_size,
  * \include example/sam3u4e_sam3u_ek/conf_virtual_mem.h
  */
 
+/**
+ * \page asfdoc_udi_msc_document_revision_history Document Revision History
+ *
+ * <table>
+ * <tr>
+ *    <th>Doc. Rev.</td>
+ *    <th>Date</td>
+ *    <th>Comments</td>
+ * </tr>
+ * <tr>
+ *    <td>42343A</td>
+ *    <td>12/2014</td>
+ *    <td>Initial release.</td>
+ * </tr>
+ * </table>
+ */
+

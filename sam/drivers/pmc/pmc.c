@@ -279,8 +279,6 @@ uint32_t pmc_switch_mck_to_upllck(uint32_t ul_pres)
 /**
  * \brief Switch slow clock source selection to external 32k (Xtal or Bypass).
  *
- * \note This function disables the PLLs.
- *
  * \note Switching SCLK back to 32krc is only possible by shutting down the
  *       VDDIO power supply.
  *
@@ -1145,6 +1143,36 @@ void pmc_disable_udpck(void)
 }
 #endif
 
+#if SAMG55
+/**
+ * \brief Switch UHP (USB) clock source selection to PLLA clock.
+ *
+ * \param ul_usbdiv Clock divisor.
+ */
+void pmc_switch_uhpck_to_pllack(uint32_t ul_usbdiv)
+{
+	PMC->PMC_USB = PMC_USB_USBDIV(ul_usbdiv);
+}
+
+/**
+ * \brief Switch UHP (USB) clock source selection to PLLB clock.
+ *
+ * \param ul_usbdiv Clock divisor.
+ */
+void pmc_switch_uhpck_to_pllbck(uint32_t ul_usbdiv)
+{
+	PMC->PMC_USB = PMC_USB_USBDIV(ul_usbdiv) | PMC_USB_USBS;
+}
+
+/**
+ * \brief Enable UHP (USB) clock.
+ */
+void pmc_enable_uhpck(void)
+{
+	PMC->PMC_SCER = PMC_SCER_UHP;
+}
+#endif
+
 /**
  * \brief Enable PMC interrupts.
  *
@@ -1424,12 +1452,11 @@ void pmc_set_writeprotect(uint32_t ul_enable)
 /**
  * \brief Return write protect status.
  *
- * \retval 0 Protection disabled.
- * \retval 1 Protection enabled.
+ * \return Return write protect status.
  */
 uint32_t pmc_get_writeprotect_status(void)
 {
-	return PMC->PMC_WPMR & PMC_WPMR_WPEN;
+	return PMC->PMC_WPSR;
 }
 
 #if (SAMG53 || SAMG54 || SAMG55)

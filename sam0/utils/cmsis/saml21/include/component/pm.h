@@ -51,7 +51,7 @@
 /*@{*/
 
 #define PM_U2240
-#define REV_PM                      0x100
+#define REV_PM                      0x101
 
 /* -------- PM_CTRLA : (PM Offset: 0x00) (R/W  8) Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -84,7 +84,7 @@ typedef union {
 #endif /* !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__)) */
 
 #define PM_SLEEPCFG_OFFSET          0x01         /**< \brief (PM_SLEEPCFG offset) Sleep Configuration */
-#define PM_SLEEPCFG_RESETVALUE      0x00ul       /**< \brief (PM_SLEEPCFG reset_value) Sleep Configuration */
+#define PM_SLEEPCFG_RESETVALUE      0x02ul       /**< \brief (PM_SLEEPCFG reset_value) Sleep Configuration */
 
 #define PM_SLEEPCFG_SLEEPMODE_Pos   0            /**< \brief (PM_SLEEPCFG) Sleep Mode */
 #define PM_SLEEPCFG_SLEEPMODE_Msk   (0x7ul << PM_SLEEPCFG_SLEEPMODE_Pos)

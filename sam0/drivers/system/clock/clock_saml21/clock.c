@@ -412,7 +412,8 @@ void system_clock_source_dfll_set_config(
 			(uint32_t)config->stable_tracking |
 			(uint32_t)config->quick_lock      |
 			(uint32_t)config->chill_cycle     |
-			((uint32_t)config->on_demand << OSCCTRL_DFLLCTRL_ONDEMAND_Pos);
+			((uint32_t)config->on_demand << OSCCTRL_DFLLCTRL_ONDEMAND_Pos) |
+			((uint32_t)config->run_in_stanby << OSCCTRL_DFLLCTRL_RUNSTDBY_Pos);
 
 	if (config->loop_mode == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {
 
@@ -751,15 +752,16 @@ bool system_clock_source_is_ready(
 		if (n > 0) { _CONF_CLOCK_GCLK_CONFIG(n, unused); }
 #endif
 
-#ifdef SAML21_REV_A
-extern void set_perf_level(uint32_t Perflevel);
-#endif
 /**
  * \brief Initialize clock system based on the configuration in conf_clocks.h.
  *
  * This function will apply the settings in conf_clocks.h when run from the user
  * application. All clock sources and GCLK generators are running when this function
  * returns.
+ *
+ * \note OSC16M is always enabled and if user selects other clocks for GCLK generators,
+ * the OSC16M default enable can be disabled after system_clock_init. Make sure the
+ * clock switch successfully before disabling OSC8M.
  */
 void system_clock_init(void)
 {
@@ -769,13 +771,9 @@ void system_clock_init(void)
 	SUPC->INTFLAG.reg = SUPC_INTFLAG_BOD33RDY | SUPC_INTFLAG_BOD33DET;
 
 	system_flash_set_waitstates(CONF_CLOCK_FLASH_WAIT_STATES);
-#ifndef SAML21_REV_A
 
 	/*  Switch to PL2 to be sure configuration of GCLK0 is safe */
 	system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_2);
-#else
-	set_perf_level(2);
-#endif
 
 	/* XOSC */
 #if CONF_CLOCK_XOSC_ENABLE == true
@@ -850,6 +848,7 @@ void system_clock_init(void)
 
 	dfll_conf.loop_mode      = CONF_CLOCK_DFLL_LOOP_MODE;
 	dfll_conf.on_demand      = false;
+	dfll_conf.run_in_stanby  = CONF_CLOCK_DFLL_RUN_IN_STANDBY;
 
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_OPEN) {
 		dfll_conf.coarse_value = CONF_CLOCK_DFLL_COARSE_VALUE;
@@ -965,12 +964,6 @@ void system_clock_init(void)
 		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR;
 		system_gclk_chan_set_config(OSCCTRL_GCLK_ID_FDPLL, &dpll_gclk_chan_conf);
 		system_gclk_chan_enable(OSCCTRL_GCLK_ID_FDPLL);
-	} else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK_32K) {
-		struct system_gclk_chan_config dpll_gclk_chan_conf;
-		system_gclk_chan_get_config_defaults(&dpll_gclk_chan_conf);
-		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_REFERENCE_GCLK_32K_GENERATOR;
-		system_gclk_chan_set_config(OSCCTRL_GCLK_ID_FDPLL, &dpll_gclk_chan_conf);
-		system_gclk_chan_enable(OSCCTRL_GCLK_ID_FDPLL);
 	} else {
 		Assert(false);
 	}
@@ -1012,7 +1005,6 @@ void system_clock_init(void)
 	_CONF_CLOCK_GCLK_CONFIG(0, ~);
 #endif
 
-#ifndef SAML21_REV_A
 	/* Set performance level according to CPU frequency */
 	uint32_t cpu_freq = system_cpu_clock_get_hz();
 	if (cpu_freq < SYSTEM_PERFORMANCE_LEVEL_0_MAX_FREQ) {
@@ -1020,5 +1012,4 @@ void system_clock_init(void)
 	} else if (cpu_freq < SYSTEM_PERFORMANCE_LEVEL_1_MAX_FREQ) {
 		system_switch_performance_level(SYSTEM_PERFORMANCE_LEVEL_1);
 	}
-#endif
 }

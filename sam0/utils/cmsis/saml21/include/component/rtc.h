@@ -51,7 +51,7 @@
 /*@{*/
 
 #define RTC_U2250
-#define REV_RTC                     0x100
+#define REV_RTC                     0x110
 
 /* -------- RTC_MODE0_CTRLA : (RTC Offset: 0x00) (R/W 16) MODE0 MODE0 Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -63,7 +63,8 @@ typedef union {
     uint16_t :3;               /*!< bit:  4.. 6  Reserved                           */
     uint16_t MATCHCLR:1;       /*!< bit:      7  Clear on Match                     */
     uint16_t PRESCALER:4;      /*!< bit:  8..11  Prescaler                          */
-    uint16_t :4;               /*!< bit: 12..15  Reserved                           */
+    uint16_t :3;               /*!< bit: 12..14  Reserved                           */
+    uint16_t SYNCDIS:1;        /*!< bit:     15  Count Read Synchronization Disable */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RTC_MODE0_CTRLA_Type;
@@ -114,7 +115,9 @@ typedef union {
 #define RTC_MODE0_CTRLA_PRESCALER_DIV256 (RTC_MODE0_CTRLA_PRESCALER_DIV256_Val << RTC_MODE0_CTRLA_PRESCALER_Pos)
 #define RTC_MODE0_CTRLA_PRESCALER_DIV512 (RTC_MODE0_CTRLA_PRESCALER_DIV512_Val << RTC_MODE0_CTRLA_PRESCALER_Pos)
 #define RTC_MODE0_CTRLA_PRESCALER_DIV1024 (RTC_MODE0_CTRLA_PRESCALER_DIV1024_Val << RTC_MODE0_CTRLA_PRESCALER_Pos)
-#define RTC_MODE0_CTRLA_MASK        0x0F8Ful     /**< \brief (RTC_MODE0_CTRLA) MASK Register */
+#define RTC_MODE0_CTRLA_SYNCDIS_Pos 15           /**< \brief (RTC_MODE0_CTRLA) Count Read Synchronization Disable */
+#define RTC_MODE0_CTRLA_SYNCDIS     (0x1ul << RTC_MODE0_CTRLA_SYNCDIS_Pos)
+#define RTC_MODE0_CTRLA_MASK        0x8F8Ful     /**< \brief (RTC_MODE0_CTRLA) MASK Register */
 
 /* -------- RTC_MODE1_CTRLA : (RTC Offset: 0x00) (R/W 16) MODE1 MODE1 Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -125,7 +128,8 @@ typedef union {
     uint16_t MODE:2;           /*!< bit:  2.. 3  Operating Mode                     */
     uint16_t :4;               /*!< bit:  4.. 7  Reserved                           */
     uint16_t PRESCALER:4;      /*!< bit:  8..11  Prescaler                          */
-    uint16_t :4;               /*!< bit: 12..15  Reserved                           */
+    uint16_t :3;               /*!< bit: 12..14  Reserved                           */
+    uint16_t SYNCDIS:1;        /*!< bit:     15  Count Read Synchronization Disable */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RTC_MODE1_CTRLA_Type;
@@ -174,7 +178,9 @@ typedef union {
 #define RTC_MODE1_CTRLA_PRESCALER_DIV256 (RTC_MODE1_CTRLA_PRESCALER_DIV256_Val << RTC_MODE1_CTRLA_PRESCALER_Pos)
 #define RTC_MODE1_CTRLA_PRESCALER_DIV512 (RTC_MODE1_CTRLA_PRESCALER_DIV512_Val << RTC_MODE1_CTRLA_PRESCALER_Pos)
 #define RTC_MODE1_CTRLA_PRESCALER_DIV1024 (RTC_MODE1_CTRLA_PRESCALER_DIV1024_Val << RTC_MODE1_CTRLA_PRESCALER_Pos)
-#define RTC_MODE1_CTRLA_MASK        0x0F0Ful     /**< \brief (RTC_MODE1_CTRLA) MASK Register */
+#define RTC_MODE1_CTRLA_SYNCDIS_Pos 15           /**< \brief (RTC_MODE1_CTRLA) Count Read Synchronization Disable */
+#define RTC_MODE1_CTRLA_SYNCDIS     (0x1ul << RTC_MODE1_CTRLA_SYNCDIS_Pos)
+#define RTC_MODE1_CTRLA_MASK        0x8F0Ful     /**< \brief (RTC_MODE1_CTRLA) MASK Register */
 
 /* -------- RTC_MODE2_CTRLA : (RTC Offset: 0x00) (R/W 16) MODE2 MODE2 Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -187,7 +193,8 @@ typedef union {
     uint16_t CLKREP:1;         /*!< bit:      6  Clock Representation               */
     uint16_t MATCHCLR:1;       /*!< bit:      7  Clear on Match                     */
     uint16_t PRESCALER:4;      /*!< bit:  8..11  Prescaler                          */
-    uint16_t :4;               /*!< bit: 12..15  Reserved                           */
+    uint16_t :3;               /*!< bit: 12..14  Reserved                           */
+    uint16_t SYNCDIS:1;        /*!< bit:     15  Clock Read Synchronization Disable */
   } bit;                       /*!< Structure used for bit  access                  */
   uint16_t reg;                /*!< Type      used for register access              */
 } RTC_MODE2_CTRLA_Type;
@@ -240,7 +247,9 @@ typedef union {
 #define RTC_MODE2_CTRLA_PRESCALER_DIV256 (RTC_MODE2_CTRLA_PRESCALER_DIV256_Val << RTC_MODE2_CTRLA_PRESCALER_Pos)
 #define RTC_MODE2_CTRLA_PRESCALER_DIV512 (RTC_MODE2_CTRLA_PRESCALER_DIV512_Val << RTC_MODE2_CTRLA_PRESCALER_Pos)
 #define RTC_MODE2_CTRLA_PRESCALER_DIV1024 (RTC_MODE2_CTRLA_PRESCALER_DIV1024_Val << RTC_MODE2_CTRLA_PRESCALER_Pos)
-#define RTC_MODE2_CTRLA_MASK        0x0FCFul     /**< \brief (RTC_MODE2_CTRLA) MASK Register */
+#define RTC_MODE2_CTRLA_SYNCDIS_Pos 15           /**< \brief (RTC_MODE2_CTRLA) Clock Read Synchronization Disable */
+#define RTC_MODE2_CTRLA_SYNCDIS     (0x1ul << RTC_MODE2_CTRLA_SYNCDIS_Pos)
+#define RTC_MODE2_CTRLA_MASK        0x8FCFul     /**< \brief (RTC_MODE2_CTRLA) MASK Register */
 
 /* -------- RTC_MODE0_EVCTRL : (RTC Offset: 0x04) (R/W 32) MODE0 MODE0 Event Control -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -957,7 +966,9 @@ typedef union {
     uint32_t COUNT:1;          /*!< bit:      3  COUNT Register Busy                */
     uint32_t :1;               /*!< bit:      4  Reserved                           */
     uint32_t COMP0:1;          /*!< bit:      5  COMP 0 Register Busy               */
-    uint32_t :26;              /*!< bit:  6..31  Reserved                           */
+    uint32_t :9;               /*!< bit:  6..14  Reserved                           */
+    uint32_t SYNCDIS:1;        /*!< bit:     15  Count Read Synchronization Disable Bit Busy */
+    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
     uint32_t :5;               /*!< bit:  0.. 4  Reserved                           */
@@ -984,7 +995,9 @@ typedef union {
 #define RTC_MODE0_SYNCBUSY_COMP_Pos 5            /**< \brief (RTC_MODE0_SYNCBUSY) COMP x Register Busy */
 #define RTC_MODE0_SYNCBUSY_COMP_Msk (0x1ul << RTC_MODE0_SYNCBUSY_COMP_Pos)
 #define RTC_MODE0_SYNCBUSY_COMP(value) ((RTC_MODE0_SYNCBUSY_COMP_Msk & ((value) << RTC_MODE0_SYNCBUSY_COMP_Pos)))
-#define RTC_MODE0_SYNCBUSY_MASK     0x0000002Ful /**< \brief (RTC_MODE0_SYNCBUSY) MASK Register */
+#define RTC_MODE0_SYNCBUSY_SYNCDIS_Pos 15           /**< \brief (RTC_MODE0_SYNCBUSY) Count Read Synchronization Disable Bit Busy */
+#define RTC_MODE0_SYNCBUSY_SYNCDIS  (0x1ul << RTC_MODE0_SYNCBUSY_SYNCDIS_Pos)
+#define RTC_MODE0_SYNCBUSY_MASK     0x0000802Ful /**< \brief (RTC_MODE0_SYNCBUSY) MASK Register */
 
 /* -------- RTC_MODE1_SYNCBUSY : (RTC Offset: 0x10) (R/  32) MODE1 MODE1 Synchronization Busy Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -997,7 +1010,9 @@ typedef union {
     uint32_t PER:1;            /*!< bit:      4  PER Register Busy                  */
     uint32_t COMP0:1;          /*!< bit:      5  COMP 0 Register Busy               */
     uint32_t COMP1:1;          /*!< bit:      6  COMP 1 Register Busy               */
-    uint32_t :25;              /*!< bit:  7..31  Reserved                           */
+    uint32_t :8;               /*!< bit:  7..14  Reserved                           */
+    uint32_t SYNCDIS:1;        /*!< bit:     15  Count Read Synchronization Disable Bit Busy */
+    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
     uint32_t :5;               /*!< bit:  0.. 4  Reserved                           */
@@ -1028,7 +1043,9 @@ typedef union {
 #define RTC_MODE1_SYNCBUSY_COMP_Pos 5            /**< \brief (RTC_MODE1_SYNCBUSY) COMP x Register Busy */
 #define RTC_MODE1_SYNCBUSY_COMP_Msk (0x3ul << RTC_MODE1_SYNCBUSY_COMP_Pos)
 #define RTC_MODE1_SYNCBUSY_COMP(value) ((RTC_MODE1_SYNCBUSY_COMP_Msk & ((value) << RTC_MODE1_SYNCBUSY_COMP_Pos)))
-#define RTC_MODE1_SYNCBUSY_MASK     0x0000007Ful /**< \brief (RTC_MODE1_SYNCBUSY) MASK Register */
+#define RTC_MODE1_SYNCBUSY_SYNCDIS_Pos 15           /**< \brief (RTC_MODE1_SYNCBUSY) Count Read Synchronization Disable Bit Busy */
+#define RTC_MODE1_SYNCBUSY_SYNCDIS  (0x1ul << RTC_MODE1_SYNCBUSY_SYNCDIS_Pos)
+#define RTC_MODE1_SYNCBUSY_MASK     0x0000807Ful /**< \brief (RTC_MODE1_SYNCBUSY) MASK Register */
 
 /* -------- RTC_MODE2_SYNCBUSY : (RTC Offset: 0x10) (R/  32) MODE2 MODE2 Synchronization Busy Status -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -1042,7 +1059,9 @@ typedef union {
     uint32_t ALARM0:1;         /*!< bit:      5  ALARM 0 Register Busy              */
     uint32_t :5;               /*!< bit:  6..10  Reserved                           */
     uint32_t MASK0:1;          /*!< bit:     11  MASK 0 Register Busy               */
-    uint32_t :20;              /*!< bit: 12..31  Reserved                           */
+    uint32_t :3;               /*!< bit: 12..14  Reserved                           */
+    uint32_t SYNCDIS:1;        /*!< bit:     15  Clock Read Synchronization Disable Bit Busy */
+    uint32_t :16;              /*!< bit: 16..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   struct {
     uint32_t :5;               /*!< bit:  0.. 4  Reserved                           */
@@ -1076,7 +1095,9 @@ typedef union {
 #define RTC_MODE2_SYNCBUSY_MASK_Pos 11           /**< \brief (RTC_MODE2_SYNCBUSY) MASK x Register Busy */
 #define RTC_MODE2_SYNCBUSY_MASK_Msk (0x1ul << RTC_MODE2_SYNCBUSY_MASK_Pos)
 #define RTC_MODE2_SYNCBUSY_MASK(value) ((RTC_MODE2_SYNCBUSY_MASK_Msk & ((value) << RTC_MODE2_SYNCBUSY_MASK_Pos)))
-#define RTC_MODE2_SYNCBUSY_MASK_    0x0000082Ful /**< \brief (RTC_MODE2_SYNCBUSY) MASK Register */
+#define RTC_MODE2_SYNCBUSY_SYNCDIS_Pos 15           /**< \brief (RTC_MODE2_SYNCBUSY) Clock Read Synchronization Disable Bit Busy */
+#define RTC_MODE2_SYNCBUSY_SYNCDIS  (0x1ul << RTC_MODE2_SYNCBUSY_SYNCDIS_Pos)
+#define RTC_MODE2_SYNCBUSY_MASK_    0x0000882Ful /**< \brief (RTC_MODE2_SYNCBUSY) MASK Register */
 
 /* -------- RTC_FREQCORR : (RTC Offset: 0x14) (R/W  8) Frequency Correction -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

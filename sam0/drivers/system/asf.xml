@@ -68,6 +68,9 @@
 		<build type="c-source" value="system.c"/>
 		<build type="doxygen-enable-section" value="DEVICE_SAML21_SUPPORT"/>
 		<build type="doxygen-entry-point" value="asfdoc_sam0_system_group"/>
+		<build type="doxygen-quick-start" value="asfdoc_sam0_drivers_power_exqsg"/>
+		<build type="doxygen-example-path" value="power"/>
+		<build type="header-file" value="power/quick_start/qs_power.h" />
 		<build type="doxygen-image-path" value="docimg"/>
 
 		<device-support value="saml21"/>

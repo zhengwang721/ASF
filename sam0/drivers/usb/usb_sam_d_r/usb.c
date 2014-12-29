@@ -67,6 +67,40 @@
  */
 #define  USB_EP_DIR_OUT       0x00
 
+#if SAMD11
+/**
+ * \name Macros for USB device those are not realized in head file
+ *
+ * @{
+ */
+#define USB_DEVICE_EPINTENCLR_TRCPT0        USB_DEVICE_EPINTENCLR_TRCPT(1)
+#define USB_DEVICE_EPINTENCLR_TRCPT1        USB_DEVICE_EPINTENCLR_TRCPT(2)
+#define USB_DEVICE_EPINTENCLR_TRFAIL0       USB_DEVICE_EPINTENCLR_TRFAIL(1)
+#define USB_DEVICE_EPINTENCLR_TRFAIL1       USB_DEVICE_EPINTENCLR_TRFAIL(2)
+#define USB_DEVICE_EPINTENCLR_STALL0        USB_DEVICE_EPINTENCLR_STALL(1)
+#define USB_DEVICE_EPINTENCLR_STALL1        USB_DEVICE_EPINTENCLR_STALL(2)
+
+#define USB_DEVICE_EPINTENSET_TRCPT0        USB_DEVICE_EPINTENSET_TRCPT(1)
+#define USB_DEVICE_EPINTENSET_TRCPT1        USB_DEVICE_EPINTENSET_TRCPT(2)
+#define USB_DEVICE_EPINTENSET_TRFAIL0       USB_DEVICE_EPINTENSET_TRFAIL(1)
+#define USB_DEVICE_EPINTENSET_TRFAIL1       USB_DEVICE_EPINTENSET_TRFAIL(2)
+#define USB_DEVICE_EPINTENSET_STALL0        USB_DEVICE_EPINTENSET_STALL(1)
+#define USB_DEVICE_EPINTENSET_STALL1        USB_DEVICE_EPINTENSET_STALL(2)
+
+#define USB_DEVICE_EPINTFLAG_TRCPT0         USB_DEVICE_EPINTFLAG_TRCPT(1)
+#define USB_DEVICE_EPINTFLAG_TRCPT1         USB_DEVICE_EPINTFLAG_TRCPT(2)
+#define USB_DEVICE_EPINTFLAG_TRFAIL0        USB_DEVICE_EPINTFLAG_TRFAIL(1)
+#define USB_DEVICE_EPINTFLAG_TRFAIL1        USB_DEVICE_EPINTFLAG_TRFAIL(2)
+#define USB_DEVICE_EPINTFLAG_STALL0         USB_DEVICE_EPINTFLAG_STALL(1)
+#define USB_DEVICE_EPINTFLAG_STALL1         USB_DEVICE_EPINTFLAG_STALL(2)
+
+#define USB_DEVICE_EPSTATUSSET_STALLRQ0     USB_DEVICE_EPSTATUSSET_STALLRQ(1)
+#define USB_DEVICE_EPSTATUSSET_STALLRQ1     USB_DEVICE_EPSTATUSSET_STALLRQ(2)
+#define USB_DEVICE_EPSTATUSCLR_STALLRQ0     USB_DEVICE_EPSTATUSCLR_STALLRQ(1)
+#define USB_DEVICE_EPSTATUSCLR_STALLRQ1     USB_DEVICE_EPSTATUSCLR_STALLRQ(2)
+/** @} */
+#endif
+
 /**
  * \name USB SRAM data containing pipe descriptor table
  * The content of the USB SRAM can be :
@@ -1881,6 +1915,12 @@ void usb_get_config_defaults(struct usb_config *module_config)
 #define NVM_USB_PAD_TRIM_POS  55
 #define NVM_USB_PAD_TRIM_SIZE 3
 
+/* Compatiable definition for USB_DEVICE_CTRLB_SPDCONF_ */
+#if SAMD11
+#define   USB_DEVICE_CTRLB_SPDCONF_FS_Val USB_DEVICE_CTRLB_SPDCONF_0_Val
+#define   USB_DEVICE_CTRLB_SPDCONF_LS_Val USB_DEVICE_CTRLB_SPDCONF_1_Val
+#endif
+
 /**
  * \brief Initializes USB module instance
  *
@@ -1978,9 +2018,9 @@ enum status_code usb_init(struct usb_module *module_inst, Usb *const hw,
 	hw->HOST.CTRLA.bit.RUNSTDBY = module_config->run_in_standby;
 	hw->HOST.DESCADD.reg = (uint32_t)(&usb_descriptor_table.usb_endpoint_table[0]);
 	if (USB_SPEED_FULL == module_config->speed_mode) {
-		module_inst->hw->DEVICE.CTRLB.bit.SPDCONF = USB_DEVICE_CTRLB_SPDCONF_0_Val;
+		module_inst->hw->DEVICE.CTRLB.bit.SPDCONF = USB_DEVICE_CTRLB_SPDCONF_FS_Val;
 	} else if(USB_SPEED_LOW == module_config->speed_mode) {
-		module_inst->hw->DEVICE.CTRLB.bit.SPDCONF = USB_DEVICE_CTRLB_SPDCONF_1_Val;
+		module_inst->hw->DEVICE.CTRLB.bit.SPDCONF = USB_DEVICE_CTRLB_SPDCONF_LS_Val;
 	}
 
 	memset((uint8_t *)(&usb_descriptor_table.usb_endpoint_table[0]), 0,

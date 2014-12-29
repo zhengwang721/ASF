@@ -55,11 +55,11 @@ struct trng_module *_trng_instance;
  * in order for the interrupt handler to call it when the conditions for the
  * callback type is met.
  *
- * \param[in]     module      Pointer to TC software instance struct
+ * \param[in]     module        Pointer to TC software instance struct
  * \param[in]     callback_func Pointer to callback function
  * \param[in]     callback_type Callback type given by an enum
  *
- * \retval STATUS_OK  The function exited successfully.
+ * \retval STATUS_OK  The function exited successfully
  */
 enum status_code trng_register_callback(
 		struct trng_module *const module,
@@ -88,10 +88,10 @@ enum status_code trng_register_callback(
  * Unregisters a callback function implemented by the user. The callback should be
  * disabled before it is unregistered.
  *
- * \param[in]     module Pointer to TC software instance struct
+ * \param[in]     module        Pointer to TC software instance struct
  * \param[in]     callback_type Callback type given by an enum
  *
- * \retval STATUS_OK  The function exited successfully.
+ * \retval STATUS_OK  The function exited successfully
  */
 enum status_code trng_unregister_callback(
 		struct trng_module *const module,

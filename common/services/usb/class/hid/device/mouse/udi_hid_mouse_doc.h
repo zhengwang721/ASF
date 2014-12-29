@@ -470,3 +470,20 @@ bool udi_hid_mouse_btnleft(bool b_state);
  * \subsection asfdoc_udi_hid_mouse_config_examples_4_5 SAMD21 Device (USB)
  * \include example/samd21j18a_samd21_xplained_pro/conf_board.h
  */
+
+/**
+ * \page asfdoc_udi_hid_mouse_document_revision_history Document Revision History
+ *
+ * <table>
+ * <tr>
+ *    <th>Doc. Rev.</td>
+ *    <th>Date</td>
+ *    <th>Comments</td>
+ * </tr>
+ * <tr>
+ *    <td>42341A</td>
+ *    <td>12/2014</td>
+ *    <td>Initial release.</td>
+ * </tr>
+ * </table>
+ */

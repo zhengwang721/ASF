@@ -52,7 +52,7 @@ MEMORY
   rom      (rx)  : ORIGIN = 0x00000000, LENGTH = 0x00040000
   ram      (rwx) : ORIGIN = 0x20000000, LENGTH = 0x00008000
   lpram    (rwx) : ORIGIN = 0x30000000, LENGTH = 0x00002000
-  picopram (rwx) : ORIGIN = 0x50000000, LENGTH = 0x00000800
+  picopram (rwx) : ORIGIN = 0x50000000, LENGTH = 0x00001000
 }
 
 /* The stack size used by the application. NOTE: you need to adjust according to your application. */
@@ -130,6 +130,24 @@ SECTIONS
         . = ALIGN(4);
         _erelocate = .;
     } > ram
+
+    .lpram :
+    {
+        . = ALIGN(8);
+        _slpram = .;
+        *(.lpram .lpram.*);
+        . = ALIGN(8);
+        _elpram = .;
+    } > lpram
+
+    .picopram :
+    {
+        . = ALIGN(8);
+        _spicopram = .;
+        *(.picopram .picopram.*);
+        . = ALIGN(8);
+        _epicopram = .;
+    } > picopram
 
     /* .bss section which is used for uninitialized data */
     .bss (NOLOAD) :

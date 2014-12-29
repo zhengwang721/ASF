@@ -411,7 +411,7 @@ enum system_interrupt_priority_level system_interrupt_get_priority(
  *	</tr>
  *	<tr>
  *		<td>D</td>
- *		<td>04/2014</td>
+ *		<td>12/2014</td>
  *		<td>Add support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>

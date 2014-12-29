@@ -51,7 +51,7 @@
 /*@{*/
 
 #define TAL_U2253
-#define REV_TAL                     0x100
+#define REV_TAL                     0x102
 
 /* -------- TAL_CTRLA : (TAL Offset: 0x00) (R/W  8) Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

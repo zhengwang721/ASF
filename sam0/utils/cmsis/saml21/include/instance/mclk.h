@@ -79,6 +79,6 @@
 #define MCLK_CTRLA_MCSEL_GCLK       1       
 #define MCLK_CTRLA_MCSEL_OSC8M      0       
 #define MCLK_MCLK_CLK_APB_NUM       5       
-#define MCLK_SYSTEM_CLOCK           1000000  // System Clock Frequency at Reset
+#define MCLK_SYSTEM_CLOCK           4000000  // System Clock Frequency at Reset
 
 #endif /* _SAML21_MCLK_INSTANCE_ */

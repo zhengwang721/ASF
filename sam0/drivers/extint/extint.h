@@ -123,7 +123,7 @@
  *
  * \anchor asfdoc_sam0_extint_filter_table
  * <table>
- *  <caption>Sampled Input And Rresulting Filtered Output</caption>
+ *  <caption>Sampled Input and Rresulting Filtered Output</caption>
  *  <tr>
  *      <th>Input Sample 1</th>
  *      <th>Input Sample 2</th>
@@ -282,7 +282,10 @@ struct extint_chan_conf {
 	uint32_t gpio_pin_mux;
 	/** Internal pull to enable on the input pin. */
 	enum extint_pull gpio_pin_pull;
-#if (!SAML21)
+#if (SAML21)
+	/** Enable asynchronous edge detection. */
+	bool enable_async_edge_detection;
+#else
 	/** Wake up the device if the channel interrupt fires during sleep mode. */
 	bool wake_if_sleeping;
 #endif
@@ -325,6 +328,10 @@ struct extint_nmi_conf {
 	 *  detection modes for NMIs.
 	 */
 	enum extint_detect detection_criteria;
+#if (SAML21)
+	/** Enable asynchronous edge detection. */
+	bool enable_async_edge_detection;
+#endif
 };
 
 #if EXTINT_CALLBACK_MODE == true
@@ -444,6 +451,7 @@ void extint_chan_set_config(
  * The default configuration is as follows:
  * \li Input filtering disabled
  * \li Detect falling edges of a signal
+ * \li Asynchronous edge detection is disabled
  *
  * \param[out] config  Configuration structure to initialize to default values
  */
@@ -459,6 +467,10 @@ static inline void extint_nmi_get_config_defaults(
 	config->gpio_pin_pull       = EXTINT_PULL_UP;
 	config->filter_input_signal = false;
 	config->detection_criteria  = EXTINT_DETECT_FALLING;
+#if (SAML21)
+	 config->enable_async_edge_detection = false;
+#endif
+
 }
 
 enum status_code extint_nmi_set_config(
@@ -665,12 +677,12 @@ static inline void extint_nmi_clear_detected(
  *  </tr>
  *  <tr>
  *      <td>E</td>
- *      <td>11/2014</td>
+ *      <td>12/2014</td>
  *      <td>Added support for SAML21.</td>
  *  </tr>
  *  <tr>
  *      <td>D</td>
- *      <td>05/2014</td>
+ *      <td>12/2014</td>
  *      <td>Added support for SAMR21 and SAMD10/D11.</td>
  *  </tr>
  *  <tr>

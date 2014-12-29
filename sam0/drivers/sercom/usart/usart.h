@@ -766,8 +766,8 @@ struct usart_module {
  *
  * \param[in,out] module Pointer to the driver instance to lock
  *
- * \retval STATUS_OK if the module was locked
- * \retval STATUS_BUSY if the module was already locked
+ * \retval STATUS_OK If the module was locked
+ * \retval STATUS_BUSY If the module was already locked
  */
 static inline enum status_code usart_lock(
 		struct usart_module *const module)
@@ -1370,7 +1370,7 @@ static inline bool lin_master_transmission_status(struct usart_module *const mod
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>05/2014</td>
+ *		<td>12/2014</td>
  *		<td>Add support for SAMR21 and SAMD10/D11.</td>
  *	</tr>
  *	<tr>

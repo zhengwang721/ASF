@@ -751,8 +751,8 @@ uint8_t _ac_get_inst_index(
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval false if the module has completed synchronization
- * \retval ture if the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
+ * \retval ture If the module synchronization is ongoing
  */
 static inline bool ac_is_syncing(
         struct ac_module *const module_inst)
@@ -1376,12 +1376,12 @@ static inline void ac_win_clear_status(
  *    </tr>
  *    <tr>
  *      <td>E</td>
- *      <td>08/2014</td>
+ *      <td>12/2014</td>
  *      <td>Added support for SAML21.</td>
  *    </tr>
  *    <tr>
  *      <td>D</td>
- *      <td>05/2014</td>
+ *      <td>12/2014</td>
  *      <td>Added support for SAMR21 and SAMD10/D11.</td>
  *    </tr>
  *    <tr>
