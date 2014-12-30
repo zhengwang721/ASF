@@ -46,11 +46,11 @@
 
 //! [definition_pwm]
 /** PWM module to use */
-#define PWM_MODULE      EXT4_PWM_MODULE
+#define PWM_MODULE      EXT1_PWM_MODULE
 /** PWM output pin */
-#define PWM_OUT_PIN     EXT4_PWM_0_PIN
+#define PWM_OUT_PIN     EXT1_PWM_0_PIN
 /** PWM output pinmux */
-#define PWM_OUT_MUX     EXT4_PWM_0_MUX
+#define PWM_OUT_MUX     EXT1_PWM_0_MUX
 //! [definition_pwm]
 
 #endif /* CONF_QUICK_START_H_INCLUDED */

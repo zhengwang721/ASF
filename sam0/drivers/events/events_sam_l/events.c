@@ -3,7 +3,7 @@
  *
  * \brief SAM Event System Controller Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -126,8 +126,13 @@ static void _events_release_channel(uint8_t channel)
 #endif
 void _system_events_init(void)
 {
+#if SAMC21
+	/* Enable EVSYS register interface */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_EVSYS);
+#else
 	/* Enable EVSYS register interface */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBD, MCLK_APBDMASK_EVSYS);
+#endif
 
 	/* Make sure the EVSYS module is properly reset */
 	EVSYS->CTRLA.reg = EVSYS_CTRLA_SWRST;

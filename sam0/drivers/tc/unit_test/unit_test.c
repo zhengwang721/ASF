@@ -79,7 +79,7 @@
  *  - \b SAM D21 Xplained Pro:EXTINT 0 (PA16, EXT2 pin 17) <-----> TC4 WO1 (PB09, EXT1 pin 13)
  *  - \b SAM R21 Xplained Pro:EXTINT 0 (PA16, EXT1 pin 11) <-----> TC4 WO1 (PA23, EXT1 pin 10)
  *  - \b SAM L21 Xplained Pro:EXTINT 0 (PA16, EXT3 pin 9) <-----> TC0 WO1 (PB12, EXT2 pin 7)
- *  - \b SAM C21 Xplained Pro:EXTINT 0 (PB16, EXT2 pin 9) <-----> TC4 WO1 (PB13, EXT1 pin 8)
+ *  - \b SAM C21 Xplained Pro:EXTINT 0 (PB16, EXT2 pin 9) <-----> TC0 WO1 (PB13, EXT1 pin 8)
  *
  * To run the test:
  *  - Connect the SAM Xplained Pro board to the computer using a
@@ -390,8 +390,13 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 
 	/* Calculate the theoretical PWM frequency & duty */
 	uint32_t frequency_output, duty_output;
-#if SAML21 || SAMC21
+#if SAML21
 	frequency_output = system_clock_source_get_hz(SYSTEM_CLOCK_SOURCE_OSC16M)/ (0x03FF+1);
+	/* This value is depend on the WaveGeneration Mode */
+	duty_output = (uint32_t)(tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_1]) * 200 \
+					/ tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_0];
+#elif SAMC21
+	frequency_output = system_clock_source_get_hz(SYSTEM_CLOCK_SOURCE_OSC48M)/ (0x03FF+1);
 	/* This value is depend on the WaveGeneration Mode */
 	duty_output = (uint32_t)(tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_1]) * 200 \
 					/ tc_test0_config.counter_16_bit.compare_capture_channel[TC_COMPARE_CAPTURE_CHANNEL_0];
@@ -473,8 +478,10 @@ static void run_16bit_capture_and_compare_test(const struct test_case *test)
 	}
 
 	if(period_after_capture != 0) {
-#if SAML21 || SAMC21
+#if SAML21
 		capture_frequency = system_clock_source_get_hz(SYSTEM_CLOCK_SOURCE_OSC16M)/ period_after_capture;
+#elif SAMC21
+		capture_frequency = system_clock_source_get_hz(SYSTEM_CLOCK_SOURCE_OSC48M)/ period_after_capture;
 #else
 		capture_frequency = system_clock_source_get_hz(SYSTEM_CLOCK_SOURCE_OSC8M)/ period_after_capture;
 #endif

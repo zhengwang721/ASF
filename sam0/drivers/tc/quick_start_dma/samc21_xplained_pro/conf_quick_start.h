@@ -54,7 +54,7 @@
 //! [definition_pwm]
 
 //! [definition_dma]
-#define M2M_DMAC_TRIGGER_ID TC4_DMAC_ID_MC_0
+#define M2M_DMAC_TRIGGER_ID TC0_DMAC_ID_MC_0
 //! [definition_dma]
 
 #endif /* CONF_QUICK_START_H_INCLUDED */

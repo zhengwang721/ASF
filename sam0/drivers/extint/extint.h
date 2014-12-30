@@ -3,7 +3,7 @@
  *
  * \brief SAM External Interrupt Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -282,7 +282,7 @@ struct extint_chan_conf {
 	uint32_t gpio_pin_mux;
 	/** Internal pull to enable on the input pin. */
 	enum extint_pull gpio_pin_pull;
-#if (SAML21)
+#if (SAML21) || (SAMC21)
 	/** Enable asynchronous edge detection. */
 	bool enable_async_edge_detection;
 #else
@@ -328,7 +328,7 @@ struct extint_nmi_conf {
 	 *  detection modes for NMIs.
 	 */
 	enum extint_detect detection_criteria;
-#if (SAML21)
+#if (SAML21) || (SAMC21)
 	/** Enable asynchronous edge detection. */
 	bool enable_async_edge_detection;
 #endif
@@ -467,7 +467,7 @@ static inline void extint_nmi_get_config_defaults(
 	config->gpio_pin_pull       = EXTINT_PULL_UP;
 	config->filter_input_signal = false;
 	config->detection_criteria  = EXTINT_DETECT_FALLING;
-#if (SAML21)
+#if (SAML21) || (SAMC21)
 	 config->enable_async_edge_detection = false;
 #endif
 

@@ -220,15 +220,15 @@ void system_board_init(void);
 /** \name Extension header #1 PWM definitions
  *  @{
  */
-#define EXT1_PWM_MODULE           TC4
+#define EXT1_PWM_MODULE           TC0
 #define EXT1_PWM_0_CHANNEL        0
-#define EXT1_PWM_0_PIN            PIN_PB12E_TC4_WO0
-#define EXT1_PWM_0_MUX            MUX_PB12E_TC4_WO0
-#define EXT1_PWM_0_PINMUX         PINMUX_PB12E_TC4_WO0
+#define EXT1_PWM_0_PIN            PIN_PB12E_TC0_WO0
+#define EXT1_PWM_0_MUX            MUX_PB12E_TC0_WO0
+#define EXT1_PWM_0_PINMUX         PINMUX_PB12E_TC0_WO0
 #define EXT1_PWM_1_CHANNEL        1
-#define EXT1_PWM_1_PIN            PIN_PB13E_TC4_WO1
-#define EXT1_PWM_1_MUX            MUX_PB13E_TC4_WO1
-#define EXT1_PWM_1_PINMUX         PINMUX_PB13E_TC4_WO1
+#define EXT1_PWM_1_PIN            PIN_PB13E_TC0_WO1
+#define EXT1_PWM_1_MUX            MUX_PB13E_TC0_WO1
+#define EXT1_PWM_1_PINMUX         PINMUX_PB13E_TC0_WO1
 /** @} */
 
 /** \name Extension header #2 pin definitions
@@ -372,6 +372,20 @@ void system_board_init(void);
 #define EXT3_SPI_SERCOM_PINMUX_PAD3  PINMUX_PB01D_SERCOM5_PAD3
 #define EXT3_SPI_SERCOM_DMAC_ID_TX   SERCOM5_DMAC_ID_TX
 #define EXT3_SPI_SERCOM_DMAC_ID_RX   SERCOM5_DMAC_ID_RX
+/** @} */
+
+/** \name Extension header #3 PWM definitions
+ *  @{
+ */
+#define EXT3_PWM_MODULE           TC4
+#define EXT3_PWM_0_CHANNEL        0
+#define EXT3_PWM_0_PIN            PIN_PA14E_TC4_WO0
+#define EXT3_PWM_0_MUX            MUX_PA14E_TC4_WO0
+#define EXT3_PWM_0_PINMUX         PINMUX_PA14E_TC4_WO0
+#define EXT3_PWM_1_CHANNEL        1
+#define EXT3_PWM_1_PIN            PIN_PA15E_TC4_WO1
+#define EXT3_PWM_1_MUX            MUX_PA15E_TC4_WO1
+#define EXT3_PWM_1_PINMUX         PINMUX_PA15E_TC4_WO1
 /** @} */
 
 /** \name Embedded debugger I2C interface definitions
