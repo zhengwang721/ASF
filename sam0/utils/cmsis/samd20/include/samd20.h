@@ -69,8 +69,12 @@
 #include "samd20g16.h"
 #elif defined(__SAMD20G17__) || defined(__ATSAMD20G17__)
 #include "samd20g17.h"
+#elif defined(__SAMD20G17U__) || defined(__ATSAMD20G17U__)
+#include "samd20g17u.h"
 #elif defined(__SAMD20G18__) || defined(__ATSAMD20G18__)
 #include "samd20g18.h"
+#elif defined(__SAMD20G18U__) || defined(__ATSAMD20G18U__)
+#include "samd20g18u.h"
 #elif defined(__SAMD20J14__) || defined(__ATSAMD20J14__)
 #include "samd20j14.h"
 #elif defined(__SAMD20J15__) || defined(__ATSAMD20J15__)
