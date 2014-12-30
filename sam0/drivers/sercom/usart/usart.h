@@ -1141,9 +1141,9 @@ static inline void lin_master_send_cmd(
 }
 
 /**
- * \brief Sending LIN command.
+ * \brief Get LIN transmission status.
  *
- * Sending LIN command.
+ * Get LIN transmission status.
  *
  * \param[in]  module Pointer to USART software instance struct.
  *

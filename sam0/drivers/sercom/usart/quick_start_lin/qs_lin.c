@@ -41,6 +41,7 @@
  *
  */
 #include <asf.h>
+#include <string.h>
 #include <conf_lin.h>
 
 //! [module_var]
@@ -177,8 +178,10 @@ int main(void)
 //! [lin_master_cmd]
 	while(1) {
 		if (CONF_LIN_NODE_TYPE == LIN_MASTER_NODE) {
-			lin_master_send_cmd(&lin_instance,LIN_MASTER_AUTO_TRANSMIT_CMD);
-			usart_write_wait(&lin_instance,LIN_ID_FIELD_VALUE);
+			if (lin_master_transmission_status(&lin_instance)) {
+				lin_master_send_cmd(&lin_instance,LIN_MASTER_AUTO_TRANSMIT_CMD);
+				usart_write_wait(&lin_instance,LIN_ID_FIELD_VALUE);
+			}
 			delay_s(LIN_COMMAND_INTERVAL);
 		}
 	}
