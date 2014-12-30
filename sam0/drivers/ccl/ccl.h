@@ -3,7 +3,7 @@
  *
  * \brief SAM Configurable Custom Logic (CCL) Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,6 +55,7 @@
  *
  * The following devices can use this module:
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_ccl_prerequisites
@@ -75,7 +76,7 @@
  * This driver provides an interface for the Configurable Custom Logic
  * functions on the device.
  *
- * The Configurable Custom Logic (CCL) contains programmable logic 
+ * The Configurable Custom Logic (CCL) contains programmable logic
  * which can be connected to the device pins, events or internal peripherals.
  *
  * Each LUT consists of three inputs, a truth table and optional synchronizer,
@@ -83,7 +84,7 @@
  * logic expression with three inputs.
  *
  * The output can be combinatorially generated from the inputs, or filtered to remove spike.
- * An optional sequential module can be enabled. The inputs of sequential module are 
+ * An optional sequential module can be enabled. The inputs of sequential module are
  * individually controlled by two independent, adjacent LUT(LUT0/LUT1, LUT2/LUT3 etc) outputs,
  * enabling complex waveform generation.
  *
@@ -242,7 +243,7 @@ struct ccl_lut_config {
  * \name Initialize and Reset CCL Module
  * @{
  */
- 
+
 /**
  * \brief Initializes CCL module.
  *
@@ -295,7 +296,7 @@ static inline void ccl_module_reset(void)
  * \name Enable and Disable CCL Module
  * @{
  */
- 
+
 /**
  * \brief Enables CCL module.
  *
@@ -326,7 +327,7 @@ static inline void ccl_module_disable(void)
  * \name Enable and Disable CCL Module
  * @{
  */
- 
+
 /**
  * \brief Enables GCLK_CCL run in standby mode.
  *
@@ -355,8 +356,8 @@ static inline void ccl_gclk_runstdby_disable(void)
  * \name Configure LUT
  * @{
  */
- 
-/** 
+
+/**
  *  \brief Writes sequential selection to the hardware module.
  *
  *  Writes a given sequential selection configuration to the hardware module.
@@ -396,7 +397,7 @@ void ccl_lut_set_config(const enum ccl_lut_id number,
  * \name Enable and Disable LUT
  * @{
  */
- 
+
 /**
  * \brief Enables an LUT that was previously configured.
  *
@@ -487,6 +488,11 @@ void ccl_lut_disable(const enum ccl_lut_id number);
  *		<th>Date</td>
  *		<th>Comments</td>
  *	</tr>
+ *    <tr>
+ *      <td>B</td>
+ *      <td>12/2014</td>
+ *      <td>Added support for SAMC21.</td>
+ *    </tr>
  *	<tr>
  *		<td>A</td>
  *		<td>09/2014</td>
