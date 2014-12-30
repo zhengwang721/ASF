@@ -126,6 +126,9 @@
  *  -# Read packet from master.
  *     \snippet qs_i2c_slave_callback.c read_packet
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 #include <asf.h>
 #include <conf_clocks.h>

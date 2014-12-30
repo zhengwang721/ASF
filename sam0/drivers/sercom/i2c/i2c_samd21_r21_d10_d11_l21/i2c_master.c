@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 #include "i2c_master.h"
 
@@ -503,7 +506,7 @@ static enum status_code _i2c_master_read_packet(
 
 		if (tmp_status == STATUS_OK) {
 			/*
-			 * Write ADDR[7:0] register to “11110 address[9:8] 1”.
+			 * Write ADDR[7:0] register to 鈥10 address[9:8] 1鈥
 			 * ADDR.TENBITEN must be cleared
 			 */
 			i2c_module->ADDR.reg = (((packet->address >> 8) | 0x78) << 1) |

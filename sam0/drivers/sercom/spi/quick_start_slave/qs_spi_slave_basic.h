@@ -118,3 +118,6 @@
  * -# Infinite loop.
  *    \snippet qs_spi_slave_basic.c inf_loop
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */

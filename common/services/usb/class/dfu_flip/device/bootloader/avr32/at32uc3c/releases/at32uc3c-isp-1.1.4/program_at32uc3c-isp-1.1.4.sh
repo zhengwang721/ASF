@@ -1,4 +1,7 @@
 #!/bin/sh
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 # This shell script programs the ISP (flash array), the ISP configuration words
 # (User page) and the general-purpose fuse bits.

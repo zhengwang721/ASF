@@ -52,7 +52,7 @@
  * - \ref asfdoc_uhi_hid_mouse_exqsg
  * - \ref asfdoc_uhi_hid_mouse_config_examples
  *
- * For more details for Atmel® Software Framework (ASF) USB Host Stack,
+ * For more details for Atmel庐 Software Framework (ASF) USB Host Stack,
  * refer to following application note:
  * - <a href="http://www.atmel.com/dyn/resources/prod_documents/doc8486.pdf">
  *   AVR4950: ASF - USB Host Stack</a>
@@ -72,6 +72,9 @@
 /** Global define which contains standard UHI API for UHC.
  *
  *  It must be added in USB_HOST_UHI define from conf_usb_host.h file. */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #define UHI_HID_MOUSE { \
 	.install = uhi_hid_mouse_install, \
 	.enable = uhi_hid_mouse_enable, \

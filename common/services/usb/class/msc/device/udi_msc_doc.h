@@ -52,7 +52,7 @@
  * - \ref asfdoc_udi_msc_exqsg
  * - \ref asfdoc_udi_msc_config_examples
  *
- * For more details for Atmel® Software Framework (ASF) USB Device Stack,
+ * For more details for Atmel庐 Software Framework (ASF) USB Device Stack,
  * refer to following application notes:
  * - <a href="http://www.atmel.com/dyn/resources/prod_documents/doc8360.pdf">
  *   AVR4900: ASF - USB Device Stack</a>
@@ -92,6 +92,9 @@ typedef struct {
 } udi_msc_desc_t;
 
 /** By default no string is associated to this interface. */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef UDI_MSC_STRING_ID
 #define UDI_MSC_STRING_ID     0
 #endif

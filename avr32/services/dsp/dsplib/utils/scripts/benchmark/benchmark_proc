@@ -1,4 +1,7 @@
 #!/bin/sh
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 # Copyright (C) 2006-2008, Atmel Corporation All rights reserved.
 #
