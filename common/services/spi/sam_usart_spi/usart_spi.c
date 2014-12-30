@@ -3,7 +3,7 @@
  *
  * \brief SAM USART in SPI mode driver functions.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,6 +43,10 @@
 
 #include "usart_spi.h"
 #include "sysclk.h"
+#if SAMG55
+#include "flexcom.h"
+#include "conf_board.h"
+#endif
 
 /// @cond 0
 /**INDENT-OFF**/
@@ -59,6 +63,8 @@ extern "C" {
  */
 void usart_spi_init(Usart *p_usart)
 {
+#if (!SAMG55)
+
 	uint8_t uc_id;
 
 #ifdef USART0
@@ -84,8 +90,17 @@ void usart_spi_init(Usart *p_usart)
 		uc_id = ID_USART3;
 	}
 #endif
-	
+
+#endif
+
+#if SAM4L
+	sysclk_enable_peripheral_clock(p_usart);
+#elif SAMG55
+	flexcom_enable(BOARD_FLEXCOM_USART);
+	flexcom_set_opmode(BOARD_FLEXCOM_USART, FLEXCOM_USART);
+#else
 	sysclk_enable_peripheral_clock(uc_id);
+#endif
 }
 
 /**

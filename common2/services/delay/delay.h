@@ -3,7 +3,7 @@
  *
  * \brief Common Delay Service
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,8 +47,6 @@
 extern "C" {
 #endif
 
-#include "sam0/cycle_counter.h"
-
 /**
  * @defgroup group_common_services_delay Busy-Wait Delay Routines
  *
@@ -58,6 +56,15 @@ extern "C" {
  *
  * @{
  */
+
+#ifdef SYSTICK_MODE
+#include "sam0/systick_counter.h"
+#endif
+#ifdef CYCLE_MODE
+#include "sam0/cycle_counter.h"
+#endif
+
+void delay_init(void);
 
 /**
  * \def delay_s

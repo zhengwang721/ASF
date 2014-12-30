@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Watchdog Driver
+ * \brief SAM Watchdog Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,11 +44,11 @@
 #define WDT_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_wdt_group SAM D20 Watchdog Driver (WDT)
+ * \defgroup asfdoc_sam0_wdt_group SAM Watchdog Driver (WDT)
  *
- * This driver for SAM D20 devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's Watchdog Timer module, including the enabling,
- * disabling and kicking within the device. The following driver API modes are
+ * disabling, and kicking within the device. The following driver API modes are
  * covered by this manual:
  *
  *  - Polled APIs
@@ -57,24 +57,29 @@
  * \endif
  *
  * The following peripherals are used by this module:
- *
  *  - WDT (Watchdog Timer)
  *
+ * The following devices can use this module:
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
+ *
  * The outline of this documentation is as follows:
- *  - \ref asfdoc_samd20_wdt_prerequisites
- *  - \ref asfdoc_samd20_wdt_module_overview
- *  - \ref asfdoc_samd20_wdt_special_considerations
- *  - \ref asfdoc_samd20_wdt_extra_info
- *  - \ref asfdoc_samd20_wdt_examples
- *  - \ref asfdoc_samd20_wdt_api_overview
+ *  - \ref asfdoc_sam0_wdt_prerequisites
+ *  - \ref asfdoc_sam0_wdt_module_overview
+ *  - \ref asfdoc_sam0_wdt_special_considerations
+ *  - \ref asfdoc_sam0_wdt_extra_info
+ *  - \ref asfdoc_sam0_wdt_examples
+ *  - \ref asfdoc_sam0_wdt_api_overview
  *
  *
- * \section asfdoc_samd20_wdt_prerequisites Prerequisites
+ * \section asfdoc_sam0_wdt_prerequisites Prerequisites
  *
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_samd20_wdt_module_overview Module Overview
+ * \section asfdoc_sam0_wdt_module_overview Module Overview
  *
  * The Watchdog module (WDT) is designed to give an added level of safety in
  * critical systems, to ensure a system reset is triggered in the case of a
@@ -94,7 +99,7 @@
  * timeout period equal to this upper bound, a malfunction in the system will
  * force a full system reset to allow for a graceful recovery.
  *
- * \subsection asfdoc_samd20_wdt_module_locked_mode Locked Mode
+ * \subsection asfdoc_sam0_wdt_module_locked_mode Locked Mode
  * The Watchdog configuration can be set in the device fuses and locked in
  * hardware, so that no software changes can be made to the Watchdog
  * configuration. Additionally, the Watchdog can be locked on in software if it
@@ -105,7 +110,7 @@
  * cause the Watchdog configuration to be changed, preserving the level of
  * safety given by the module.
  *
- * \subsection asfdoc_samd20_wdt_module_window_mode Window Mode
+ * \subsection asfdoc_sam0_wdt_module_window_mode Window Mode
  * Just as there is a reasonable upper bound to the time the main program loop
  * should take for each iteration, there is also in many applications a lower
  * bound, i.e. a \a minimum time for which each loop iteration should run for
@@ -116,7 +121,7 @@
  * If the Watchdog is not reset \a after the window opens but not \a before the
  * Watchdog expires, the system will reset.
  *
- * \subsection asfdoc_samd20_wdt_module_early_warning Early Warning
+ * \subsection asfdoc_sam0_wdt_module_early_warning Early Warning
  * In some cases it is desirable to receive an early warning that the Watchdog is
  * about to expire, so that some system action (such as saving any system
  * configuration data for failure analysis purposes) can be performed before the
@@ -131,16 +136,16 @@
  *       Instead, this feature should be used purely to perform any tasks that
  *       need to be undertaken before the system reset occurs.
  *
- * \subsection asfdoc_samd20_wdt_module_overview_physical Physical Connection
+ * \subsection asfdoc_sam0_wdt_module_overview_physical Physical Connection
  *
- * \ref asfdoc_samd20_wdt_module_int_connections "The figure below" shows how
+ * \ref asfdoc_sam0_wdt_module_int_connections "The figure below" shows how
  * this module is interconnected within the device.
  *
- * \anchor asfdoc_samd20_wdt_module_int_connections
+ * \anchor asfdoc_sam0_wdt_module_int_connections
  * \dot
  * digraph overview {
  *   rankdir=LR;
- *   node [label="GCLK\nGeneric Clock" shape=square] wdt_clock;
+ *   node [label="GCLK*\nGeneric Clock" shape=square] wdt_clock;
  *
  *   subgraph driver {
  *     node [label="<f0> WDT | <f1> Watchdog Counter" shape=record] wdt_module;
@@ -152,29 +157,33 @@
  * }
  * \enddot
  *
+ * \note SAM L21's Watchdog Counter is \a not provided by GCLK, but it uses an
+ *       internal 1KHz OSCULP32K output clock.
+ *       This clock must be configured and enabled in the 32KHz Oscillator
+ *       Controller(OSC32KCTRL) before using the WDT.
  *
- * \section asfdoc_samd20_wdt_special_considerations Special Considerations
+ * \section asfdoc_sam0_wdt_special_considerations Special Considerations
  *
  * On some devices the Watchdog configuration can be fused to be always on in
  * a particular configuration; if this mode is enabled the Watchdog is not
  * software configurable and can have its count reset and early warning state
  * checked/cleared only.
  *
- * \section asfdoc_samd20_wdt_extra_info Extra Information
+ * \section asfdoc_sam0_wdt_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_samd20_wdt_extra. This includes:
- *  - \ref asfdoc_samd20_wdt_extra_acronyms
- *  - \ref asfdoc_samd20_wdt_extra_dependencies
- *  - \ref asfdoc_samd20_wdt_extra_errata
- *  - \ref asfdoc_samd20_wdt_extra_history
+ * For extra information, see \ref asfdoc_sam0_wdt_extra. This includes:
+ *  - \ref asfdoc_sam0_wdt_extra_acronyms
+ *  - \ref asfdoc_sam0_wdt_extra_dependencies
+ *  - \ref asfdoc_sam0_wdt_extra_errata
+ *  - \ref asfdoc_sam0_wdt_extra_history
  *
  *
- * \section asfdoc_samd20_wdt_examples Examples
+ * \section asfdoc_sam0_wdt_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_samd20_wdt_exqsg.
+ * \ref asfdoc_sam0_wdt_exqsg.
  *
- * \section asfdoc_samd20_wdt_api_overview API Overview
+ * \section asfdoc_sam0_wdt_api_overview API Overview
  * @{
  */
 
@@ -238,8 +247,12 @@ struct wdt_conf {
 	/** If \c true, the Watchdog will be locked to the current configuration
 	 *  settings when the Watchdog is enabled. */
 	bool always_on;
-	/** GCLK generator used to clock the peripheral */
+	/** Enable/Disable the Watchdog Timer. */
+	bool enable;
+#if !(SAML21)
+	/** GCLK generator used to clock the peripheral except SAM L21.*/
 	enum gclk_generator clock_source;
+#endif
 	/** Number of Watchdog timer clock ticks until the Watchdog expires. */
 	enum wdt_period timeout_period;
 	/** Number of Watchdog timer clock ticks until the reset window opens. */
@@ -249,22 +262,7 @@ struct wdt_conf {
 	enum wdt_period early_warning_period;
 };
 
-#if !defined(__DOXYGEN__)
-struct _wdt_module {
-	/** If \c true, the Watchdog should be locked on when enabled. */
-	bool always_on;
-#  if WDT_CALLBACK_MODE == true
-	wdt_callback_t early_warning_callback;
-#  endif
-};
-
-#  if WDT_CALLBACK_MODE == true
-extern struct _wdt_module _wdt_instance;
-#  endif
-#endif
-
-
-/** \name Configuration and initialization
+/** \name Configuration and Initialization
  * @{
  */
 
@@ -272,21 +270,25 @@ extern struct _wdt_module _wdt_instance;
  * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
  *
  * Checks to see if the underlying hardware peripheral module(s) are currently
- * synchronizing across multiple clock domains to the hardware bus, This
+ * synchronizing across multiple clock domains to the hardware bus. This
  * function can be used to delay further operations on a module until such time
  * that it is ready, to prevent blocking delays for synchronization in the
  * user application.
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true if the module has completed synchronization
- * \retval false if the module synchronization is ongoing
+ * \retval true If the module has completed synchronization
+ * \retval false If the module synchronization is ongoing
  */
 static inline bool wdt_is_syncing(void)
 {
 	Wdt *const WDT_module = WDT;
 
+#if (SAML21)
+	if (WDT_module->SYNCBUSY.reg) {
+#else
 	if (WDT_module->STATUS.reg & WDT_STATUS_SYNCBUSY) {
+#endif
 		return true;
 	}
 
@@ -303,6 +305,7 @@ static inline bool wdt_is_syncing(void)
  *
  *  The default configuration is as follows:
  *   \li Not locked, to allow for further (re-)configuration
+ *   \li Enable WDT
  *   \li Watchdog timer sourced from Generic Clock Channel 4
  *   \li A timeout period of 16384 clocks of the Watchdog module clock
  *   \li No window period, so that the Watchdog count can be reset at any time
@@ -318,18 +321,17 @@ static inline void wdt_get_config_defaults(
 
 	/* Default configuration values */
 	config->always_on            = false;
+	config->enable               = true;
+#if !(SAML21)
 	config->clock_source         = GCLK_GENERATOR_4;
+#endif
 	config->timeout_period       = WDT_PERIOD_16384CLK;
 	config->window_period        = WDT_PERIOD_NONE;
 	config->early_warning_period = WDT_PERIOD_NONE;
 }
 
-enum status_code wdt_init(
+enum status_code wdt_set_config(
 		const struct wdt_conf *const config);
-
-enum status_code wdt_enable(void);
-
-enum status_code wdt_disable(void);
 
 /** \brief Determines if the Watchdog timer is currently locked in an enabled state.
  *
@@ -342,7 +344,11 @@ static inline bool wdt_is_locked(void)
 {
 	Wdt *const WDT_module = WDT;
 
+#if (SAML21)
+	return (WDT_module->CTRLA.reg & WDT_CTRLA_ALWAYSON);
+#else
 	return (WDT_module->CTRL.reg & WDT_CTRL_ALWAYSON);
+#endif
 }
 
 /** @} */
@@ -351,9 +357,9 @@ static inline bool wdt_is_locked(void)
  * @{
  */
 
-/** \brief Clears the Watchdog timer Early Warning period elapsed flag.
+/** \brief Clears the Watchdog timer early warning period elapsed flag.
  *
- *  Clears the Watchdog timer Early Warning period elapsed flag, so that a new
+ *  Clears the Watchdog timer early warning period elapsed flag, so that a new
  *  early warning period can be detected.
  */
 static inline void wdt_clear_early_warning(void)
@@ -363,9 +369,9 @@ static inline void wdt_clear_early_warning(void)
 	WDT_module->INTFLAG.reg = WDT_INTFLAG_EW;
 }
 
-/** \brief Determines if the Watchdog timer Early Warning period has elapsed.
+/** \brief Determines if the Watchdog timer early warning period has elapsed.
  *
- *  Determines if the Watchdog timer Early Warning period has elapsed.
+ *  Determines if the Watchdog timer early warning period has elapsed.
  *
  *  \note If no early warning period was configured, the value returned by this
  *        function is invalid.
@@ -390,9 +396,9 @@ void wdt_reset_count(void);
 /** @} */
 
 /**
- * \page asfdoc_samd20_wdt_extra Extra Information for WDT Driver
+ * \page asfdoc_sam0_wdt_extra Extra Information for WDT Driver
  *
- * \section asfdoc_samd20_wdt_extra_acronyms Acronyms
+ * \section asfdoc_sam0_wdt_extra_acronyms Acronyms
  * The table below presents the acronyms used in this module:
  *
  * <table>
@@ -407,17 +413,17 @@ void wdt_reset_count(void);
  * </table>
  *
  *
- * \section asfdoc_samd20_wdt_extra_dependencies Dependencies
+ * \section asfdoc_sam0_wdt_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
- *  - \ref asfdoc_samd20_system_clock_group "System Clock Driver"
+ *  - \ref asfdoc_sam0_system_clock_group "System Clock Driver"
  *
  *
- * \section asfdoc_samd20_wdt_extra_errata Errata
+ * \section asfdoc_sam0_wdt_extra_errata Errata
  * There are no errata related to this driver.
  *
  *
- * \section asfdoc_samd20_wdt_extra_history Module History
+ * \section asfdoc_sam0_wdt_extra_history Module History
  * An overview of the module history is presented in the table below, with
  * details on the enhancements and fixes made to the module since its first
  * release. The current version of this corresponds to the newest version in
@@ -428,32 +434,56 @@ void wdt_reset_count(void);
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Add support for SAML21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Add SAMD21 support and driver updated to follow driver type convention:
+ *             \li wdt_init, wdt_enable, wdt_disable functions removed
+ *             \li wdt_set_config function added
+ *             \li WDT module enable state moved inside the configuration struct </td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */
 
 /**
- * \page asfdoc_samd20_wdt_exqsg Examples for WDT Driver
+ * \page asfdoc_sam0_wdt_exqsg Examples for WDT Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_samd20_wdt_group. QSGs are simple examples with
+ * applications for \ref asfdoc_sam0_wdt_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
- *  - \subpage asfdoc_samd20_wdt_basic_use_case
+ *  - \subpage asfdoc_sam0_wdt_basic_use_case
  * \if WDT_CALLBACK_MODE
- *  - \subpage asfdoc_samd20_wdt_callback_use_case
+ *  - \subpage asfdoc_sam0_wdt_callback_use_case
  * \endif
  *
- * \page asfdoc_samd20_wdt_document_revision_history Document Revision History
+ * \page asfdoc_sam0_wdt_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>09/2014</td>
+ *		<td>Added SAML21 support.</td>
+ *	</tr>
+ *	<tr>
+ *		<td>D</td>
+ *		<td>12/2014</td>
+ *		<td>Added SAMR21 and SAMD10/D11 support.</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Add SAMD21 support.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>

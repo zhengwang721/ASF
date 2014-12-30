@@ -4,7 +4,7 @@
  * @brief This file implements the functions for initializing buffer module,
  *  allocating and freeing up buffers.
  *
- * $Id: bmm.c 34721 2013-06-11 07:09:57Z awachtle $
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
@@ -58,10 +58,10 @@
  * Common Buffer pool holding the buffer user area
  */
 #if (TOTAL_NUMBER_OF_SMALL_BUFS > 0)
-static uint8_t buf_pool[(TOTAL_NUMBER_OF_LARGE_BUFS * LARGE_BUFFER_SIZE) +
-                        (TOTAL_NUMBER_OF_SMALL_BUFS * SMALL_BUFFER_SIZE)];
+static uint8_t buf_pool[(((TOTAL_NUMBER_OF_LARGE_BUFS * LARGE_BUFFER_SIZE) +
+(TOTAL_NUMBER_OF_SMALL_BUFS * SMALL_BUFFER_SIZE)))];
 #else
-static uint8_t buf_pool[(TOTAL_NUMBER_OF_LARGE_BUFS * LARGE_BUFFER_SIZE)];
+static uint8_t buf_pool[((TOTAL_NUMBER_OF_LARGE_BUFS * LARGE_BUFFER_SIZE))];
 #endif
 /*
  * Array of buffer headers
@@ -186,16 +186,36 @@ buffer_t *bmm_buffer_alloc(uint8_t size)
             pfree_buffer = qmm_queue_remove(&free_small_buffer_q, NULL);
         }
 
-        /*
-         * If size is greater than small buffer size or no free small buffer is
-         * available, allocate a buffer from large buffer pool if avialable
-         */
-        if (NULL == pfree_buffer)
-        {
-            /* Allocate buffer from free large buffer queue */
-            pfree_buffer = qmm_queue_remove(&free_large_buffer_q, NULL);
-        }
-    }
+	/*
+	 * Allocate buffer only if size requested is less than or equal to
+	 * maximum
+	 * size that can be allocated.
+	 */
+	if (size <= LARGE_BUFFER_SIZE) {
+		/*
+		 * Allocate small buffer if size is less than small buffer size
+		 * and if
+		 * small buffer is available allocate from small buffer pool.
+		 */
+		if ((size <= SMALL_BUFFER_SIZE)) {
+			/* Allocate buffer from free small buffer queue */
+			pfree_buffer = qmm_queue_remove(&free_small_buffer_q,
+					NULL);
+		}
+
+		/*
+		 * If size is greater than small buffer size or no free small
+		 * buffer is
+		 * available, allocate a buffer from large buffer pool if
+		 * avialable
+		 */
+		if (NULL == pfree_buffer) {
+			/* Allocate buffer from free large buffer queue */
+			pfree_buffer = qmm_queue_remove(&free_large_buffer_q,
+					NULL);
+		}
+	}
+
 #else /* no small buffers available at all */
     /* Allocate buffer from free large buffer queue */
     pfree_buffer = qmm_queue_remove(&free_large_buffer_q, NULL);

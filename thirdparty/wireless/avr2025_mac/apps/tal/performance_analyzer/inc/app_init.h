@@ -4,7 +4,7 @@
  * \brief Initialization prototypes and enumerations - Performance Analyzer
  * application
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -57,7 +57,7 @@
 /**
  * \defgroup group_perf_analyzer Performance Analyzer Application
  * This  application Performance Analyzer  is a Serial interface based
- *application,
+ * application,
  * which communicates with Wireless Analyzer to demonstrate various features and
  * capabilities of Atmel Transceivers
  *
@@ -73,7 +73,7 @@
 
 /* === Macros =============================================================== */
 /* Version of the software */
-#define FIRMWARE_VERSION    2.2f
+#define FIRMWARE_VERSION   3.0f
 
 #if ((TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B))
 #define DEFAULT_CHANNEL         (1)
@@ -98,18 +98,34 @@
 
 #define OFFSET_FOR_SRC_IEEE_ADDR    (7)
 
+#ifndef LED_COUNT
+#define LED_COUNT 0
+#endif
+
 #if (LED_COUNT >= 3)
-#define STATUS_LED              LED0
-#define TX_LED                  LED1
-#define RX_LED                  LED2
+#define STATUS_LED              LED0_GPIO
+#define TX_LED                  LED1_GPIO
+#define RX_LED                  LED2_GPIO
 #elif (LED_COUNT >= 2)
-#define STATUS_LED              LED0
-#define TX_LED                  LED0
-#define RX_LED                  LED1
-#else
-#define STATUS_LED              LED0
-#define TX_LED                  LED0
-#define RX_LED                  LED0
+#define STATUS_LED              LED0_GPIO
+#define TX_LED                  LED0_GPIO
+#define RX_LED                  LED1_GPIO
+#elif (LED_COUNT == 1)
+#define STATUS_LED              LED0_GPIO
+#define TX_LED                  LED0_GPIO
+#define RX_LED                  LED0_GPIO
+#endif
+
+#ifdef LED0_ACTIVE_LEVEL
+#define STATUS_LED_GPIO       LED0_GPIO
+#define TX_LED_GPIO          LED0_GPIO
+#define RX_LED_GPIO         LED0_GPIO
+#define STATUS_LED_ACTIVE_LEVEL  LED0_ACTIVE_LEVEL
+#define STATUS_LED_INACTIVE_LEVEL  LED0_INACTIVE_LEVEL
+#define TX_LED_ACTIVE_LEVEL  LED0_ACTIVE_LEVEL
+#define TX_LED_INACTIVE_LEVEL  LED0_INACTIVE_LEVEL
+#define RX_LED_ACTIVE_LEVEL  LED0_ACTIVE_LEVEL
+#define RX_LED_INACTIVE_LEVEL  LED0_INACTIVE_LEVEL
 #endif
 
 /* Macro to enable the feature of counting wrong CRC packets */
@@ -117,6 +133,21 @@
 	(TAL_TYPE == AT86RF212) || (TAL_TYPE == AT86RF212B) || \
 	(TAL_TYPE == AT86RF231) || (TAL_TYPE == AT86RF233))
 #define CRC_SETTING_ON_REMOTE_NODE
+#endif
+
+#if ((TAL_TYPE == ATMEGARFA1) || (TAL_TYPE == ATMEGARFR2))
+#define IC_TYPE 0X01
+#elif SAMR21
+#define IC_TYPE 0X01
+#else
+#define IC_TYPE 0X00
+#endif
+
+#ifndef BOARD_NAME
+#define BOARD_NAME "USER_BOARD"
+#endif
+#ifndef MCU_SOC_NAME
+#define MCU_SOC_NAME "USER_MCU"
 #endif
 /* === Types ================================================================ */
 /* Main states */
@@ -167,6 +198,16 @@ void set_main_state(main_state_t state, void *arg);
 
 void app_alert(void);
 
+/**
+ * \brief Save all user settings before Start of CW transmission
+ */
+void save_all_settings(void);
+
+/**
+ * \brief Recover all user settings before Start of CW transmission
+ */
+void recover_all_settings(void);
+
 /* INIT state functions */
 
 /**
@@ -214,6 +255,7 @@ extern uint8_t T_APP_TIMER_RANGE;
 extern uint8_t APP_TIMER_TO_TX;
 extern uint8_t APP_TIMER_TO_TX_LED_OFF;
 extern uint8_t APP_TIMER_TO_RX_LED_OFF;
+extern uint8_t CW_TX_TIMER;
 
 /* === Externals ============================================================ */
 
@@ -231,7 +273,7 @@ extern volatile node_ib_t node_info;
  * \param ack_req           specifies ack requested for frame if set to 1
  *
  * \return MAC_SUCCESS      if the TAL has accepted the data for frame
- *transmission
+ * transmission
  *         TAL_BUSY         if the TAL is busy servicing the previous tx request
  */
 extern retval_t transmit_frame( uint8_t dst_addr_mode,
@@ -239,7 +281,7 @@ extern retval_t transmit_frame( uint8_t dst_addr_mode,
 		uint8_t src_addr_mode,
 		uint8_t msdu_handle,
 		uint8_t *payload,
-		uint8_t payload_length,
+		uint16_t payload_length,
 		uint8_t ack_req);
 
 #ifdef __cplusplus

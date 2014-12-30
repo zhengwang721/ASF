@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Watchdog Driver Quick Start
+ * \brief SAM Watchdog Driver Quick Start
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -59,17 +59,16 @@ void configure_wdt(void)
 	/* Set the Watchdog configuration settings */
 	//! [setup_3]
 	config_wdt.always_on      = false;
+#if !(SAML21)
 	config_wdt.clock_source   = GCLK_GENERATOR_4;
+#endif
 	config_wdt.timeout_period = WDT_PERIOD_2048CLK;
 	//! [setup_3]
 
 	/* Initialize and enable the Watchdog with the user settings */
 	//! [setup_4]
-	wdt_init(&config_wdt);
+	wdt_set_config(&config_wdt);
 	//! [setup_4]
-	//! [setup_5]
-	wdt_enable();
-	//! [setup_5]
 }
 //! [setup]
 

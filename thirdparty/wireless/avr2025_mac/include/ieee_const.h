@@ -2,9 +2,9 @@
  * @file ieee_const.h
  *
  * @brief This header holds all IEEE 802.15.4-2006 constants and attribute
- *identifiers
+ * identifiers
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -52,7 +52,13 @@
 #ifndef IEEE_CONST_H
 #define IEEE_CONST_H
 
-#include "tal.h"
+/**
+ *
+ * \defgroup group_inc Common WL Definitions
+ * All General Definitions  used by the Wireless Stack applications are defined
+ * in this module.
+ *
+ */
 
 #if !defined(RF_BAND)
 #error "Please define RF_BAND to BAND_2400 or BAND_900."
@@ -652,7 +658,8 @@
  *
  * - @em Type: Integer
  * - @em Range: See equation (14)
- * - @em Default: Dependent on currently selected PHY, indicated by phyCurrentPage
+ * - @em Default: Dependent on currently selected PHY, indicated by
+ * phyCurrentPage
  */
 #define macMaxFrameTotalWaitTime        (0x58)
 
@@ -749,12 +756,19 @@
 #define macSecurityEnabled_def          (false)
 #endif  /* No MAC_SECURITY */
 
+/*
+ * PIB attribute without relevant index, i.e. PIB attribute not
+ * contained in 802.15.4-2006 table 88.
+ */
+#define NO_PIB_INDEX                    (0)
+
 /**
  * The minimum number of symbols forming a LIFS period.
  *
  * - @em Type: Integer
  * - @em Range: See Table 3 in Clause 6 (40 symbols)
- * - @em Default: Dependent on currently selected PHY, indicated by phyCurrentPage
+ * - @em Default: Dependent on currently selected PHY, indicated by
+ * phyCurrentPage
  */
 #define macMinLIFSPeriod                (0x5E)
 
@@ -769,7 +783,8 @@
  *
  * - @em Type: Integer
  * - @em Range: See Table 3 in Clause 6 (12 symbols)
- * - @em Default: Dependent on currently selected PHY, indicated by phyCurrentPage
+ * - @em Default: Dependent on currently selected PHY, indicated by
+ * phyCurrentPage
  */
 #define macMinSIFSPeriod                (0x5F)
 
@@ -914,46 +929,53 @@ typedef enum phy_enum_tag
      */
     PHY_IDLE                              = (0x04),
 
-    /**
-     * A SET/GET request was issued with a parameter in the primitive that is out
-     * of the valid range.
-     */
-    PHY_INVALID_PARAMETER                 = (0x05),
+	/**
+	 * A SET/GET request was issued with a parameter in the primitive that
+	 * is out
+	 * of the valid range.
+	 */
+	PHY_INVALID_PARAMETER                 = (0x05),
 
-    /**
-     * The transceiver is in or is to be configured into the receiver enabled
-     * state.
-     */
-    PHY_RX_ON                             = (0x06),
+	/**
+	 * The transceiver is in or is to be configured into the receiver
+	 * enabled
+	 * state.
+	 */
+	PHY_RX_ON                             = (0x06),
 
-    /**
-     * A SET/GET, an ED operation, or a transceiver state change was successful.
-     */
-    PHY_SUCCESS                           = (0x07),
+	/**
+	 * A SET/GET, an ED operation, or a transceiver state change was
+	 * successful.
+	 */
+	PHY_SUCCESS                           = (0x07),
 
-    /**
-     * The transceiver is in or is to be configured into the transceiver disabled
-     * state.
-     */
-    PHY_TRX_OFF                           = (0x08),
+	/**
+	 * The transceiver is in or is to be configured into the transceiver
+	 * disabled
+	 * state.
+	 */
+	PHY_TRX_OFF                           = (0x08),
 
-    /**
-     * The transceiver is in or is to be configured into the transmitter enabled
-     * state.
-     */
-    PHY_TX_ON                             = (0x09),
+	/**
+	 * The transceiver is in or is to be configured into the transmitter
+	 * enabled
+	 * state.
+	 */
+	PHY_TX_ON                             = (0x09),
 
-    /**
-     * A SET/GET request was issued with the identifier of an attribute that is not
-     * supported.
-     */
-    PHY_UNSUPPORTED_ATTRIBUTE             = (0x0A),
+	/**
+	 * A SET/GET request was issued with the identifier of an attribute that
+	 * is not
+	 * supported.
+	 */
+	PHY_UNSUPPORTED_ATTRIBUTE             = (0x0A),
 
-    /**
-     * A SET/GET request was issued with the identifier of an attribute that is
-     * read-only.
-     */
-    PHY_READ_ONLY                         = (0x0B)
+	/**
+	 * A SET/GET request was issued with the identifier of an attribute that
+	 * is
+	 * read-only.
+	 */
+	PHY_READ_ONLY                         = (0x0B)
 } SHORTENUM phy_enum_t;
 
 
@@ -999,28 +1021,40 @@ typedef enum phy_enum_tag
 #define MLME_SCAN_TYPE_ORPHAN           (0x03)
 
 /**
- * Value for TxOptions parameter im @ref wpan_mcps_data_req().
+ * Value for TxOptions parameter in @ref wpan_mcps_data_req().
  * @ingroup apiConst
  */
 #define WPAN_TXOPT_OFF                  (0x00)
 
 /**
- * Value for TxOptions parameter im @ref wpan_mcps_data_req().
+ * Value for TxOptions parameter in @ref wpan_mcps_data_req().
  * @ingroup apiConst
  */
 #define WPAN_TXOPT_ACK                  (0x01)
 
 /**
- * Value for TxOptions parameter im @ref wpan_mcps_data_req().
+ * Value for TxOptions parameter in @ref wpan_mcps_data_req().
  * @ingroup apiConst
  */
 #define WPAN_TXOPT_INDIRECT             (0x04)
 
 /**
- * Value for TxOptions parameter im @ref wpan_mcps_data_req().
+ * Value for TxOptions parameter in @ref wpan_mcps_data_req().
  * @ingroup apiConst
  */
 #define WPAN_TXOPT_INDIRECT_ACK         (0x05)
+
+/**
+ * Value for TxOptions parameter in @ref wpan_mcps_data_req().
+ * @ingroup apiConst
+ */
+#define WPAN_TXOPT_GTS                  (0x02)
+
+/**
+ * Value for TxOptions parameter in @ref wpan_mcps_data_req().
+ * @ingroup apiConst
+ */
+#define WPAN_TXOPT_GTS_ACK              (0x03)
 
 /* Various constants */
 
@@ -1295,12 +1329,14 @@ typedef enum phy_enum_tag
 #define PL_POS_SEQ_NUM                      (3)
 
 /**
- * Octet start position of Destination PAN-Id field within payload array of frame_info_t.
+ * Octet start position of Destination PAN-Id field within payload array of
+ * frame_info_t.
  */
 #define PL_POS_DST_PAN_ID_START             (4)
 
 /**
- * Octet start position of Destination Address field within payload array of frame_info_t.
+ * Octet start position of Destination Address field within payload array of
+ * frame_info_t.
  */
 #define PL_POS_DST_ADDR_START               (6)
 
@@ -1353,6 +1389,32 @@ typedef enum phy_enum_tag
  * Length (in octets) of ACK payload
  */
 #define ACK_PAYLOAD_LEN                     (0x03)
+
+#ifdef GTS_SUPPORT
+
+#define GTS_SLOT_LENGTH_1                   (0x01)
+#define GTS_SLOT_LENGTH_2                   (0x02)
+#define GTS_SLOT_LENGTH_3                   (0x03)
+#define GTS_SLOT_LENGTH_4                   (0x04)
+#define GTS_SLOT_LENGTH_5                   (0x05)
+#define GTS_SLOT_LENGTH_6                   (0x06)
+#define GTS_SLOT_LENGTH_7                   (0x07)
+#define GTS_SLOT_LENGTH_8                   (0x08)
+#define GTS_SLOT_LENGTH_9                   (0x09)
+#define GTS_SLOT_LENGTH_10                  (0x0A)
+#define GTS_SLOT_LENGTH_11                  (0x0B)
+#define GTS_SLOT_LENGTH_12                  (0x0C)
+#define GTS_SLOT_LENGTH_13                  (0x0D)
+#define GTS_SLOT_LENGTH_14                  (0x0E)
+#define GTS_SLOT_LENGTH_15                  (0x0F)
+
+#define GTS_RX_SLOT                         (1)
+#define GTS_TX_SLOT                         (0)
+
+#define GTS_ALLOCATE                        (1)
+#define GTS_DEALLOCATE                      (0)
+
+#endif /* GTS_SUPPORT */
 
 /**
  * Maximum length of the key id field

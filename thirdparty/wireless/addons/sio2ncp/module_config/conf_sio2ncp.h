@@ -3,7 +3,7 @@
  *
  * \brief Serial Input & Output configuration
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -90,7 +90,7 @@
 
 /* ! \name Configuration for SAM4L */
 /* ! @{ */
-#if (SAM)
+#if (SAM && !(SAMD || SAMR21))
 #define NCP_RESET_GPIO            PIN_PC00
 
 #define USART_NCP                 USART1
@@ -104,9 +104,24 @@
 #define USART_NCP_RX_ISR_ENABLE() usart_enable_interrupt(USART_NCP, \
 		US_IER_RXRDY); \
 	NVIC_EnableIRQ(USART_NCP_IRQn);
-#endif /* SAM */
+#endif /* (SAM && !SAMD20) */
 /* ! @} */
+#if SAMD || SAMR21
+#define USART_NCP                 SERCOM4
 
+/** Baudrate setting */
+#define USART_NCP_BAUDRATE        9600
+
+#define NCP_SERCOM_MUX_SETTING    USART_RX_1_TX_0_XCK_1
+#define NCP_SERCOM_PINMUX_PAD0	  PINMUX_UNUSED
+#define NCP_SERCOM_PINMUX_PAD1    PINMUX_UNUSED
+#define NCP_SERCOM_PINMUX_PAD2    PINMUX_PB09D_SERCOM4_PAD1
+#define NCP_SERCOM_PINMUX_PAD3    PINMUX_PB08D_SERCOM4_PAD0
+
+#define USART_NCP_RX_ISR_ENABLE()  _sercom_set_handler(4, USART_NCP_ISR_VECT); \
+	USART_NCP->USART.INTENSET.reg = SERCOM_USART_INTFLAG_RXC; \
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SERCOM4);
+#endif
 #include "serial.h"
 
 #endif /* CONF_SIO2NCP_H_INCLUDED */

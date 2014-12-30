@@ -42,7 +42,18 @@ and reduces time-to-market for new embedded applications.
 			<device-support value="sam4n"/>
 			<device-support value="atsam4c8c_0"/>
 			<device-support value="atsam4c16c_0"/>
+			<device-support value="atsam4c32c_0"/>
+			<device-support value="atsam4c32e_0"/>
+			<device-support value="atsam4cmp8c_0"/>
+			<device-support value="atsam4cmp16c_0"/>
+			<device-support value="atsam4cmp32c_0"/>
+			<device-support value="atsam4cms8c_0"/>
+			<device-support value="atsam4cms16c_0"/>
+			<device-support value="atsam4cms32c_0"/>
+			<device-support value="atsam4cp16b_0"/>
 			<device-support value="unspecified-sam4c"/>    <!-- A workaround for Jenkin doxygen-module check -->
+			<device-support value="unspecified-sam4cm"/>   <!-- A workaround for Jenkin doxygen-module check -->
+			<device-support value="unspecified-sam4cp"/>   <!-- A workaround for Jenkin doxygen-module check -->
 			<require idref="thirdparty.cmsis.license"/>
 			<info type="gui-flag" value="hidden"/>
 		</module>
@@ -62,9 +73,19 @@ and reduces time-to-market for new embedded applications.
 			<build type="header-file" value="Include/core_cmFunc.h" toolchain="armgcc"/>
 			<build type="header-file" value="Include/core_cmInstr.h" toolchain="armgcc"/>
 			<require idref="sam.utils.fpu_used"/>
+			<device-support value="samg"/>
 			<device-support value="sam4e"/>
 			<device-support value="atsam4c8c_1"/>
 			<device-support value="atsam4c16c_1"/>
+			<device-support value="atsam4c32c_1"/>
+			<device-support value="atsam4c32e_1"/>
+			<device-support value="atsam4cmp8c_1"/>
+			<device-support value="atsam4cmp16c_1"/>
+			<device-support value="atsam4cmp32c_1"/>
+			<device-support value="atsam4cms8c_1"/>
+			<device-support value="atsam4cms16c_1"/>
+			<device-support value="atsam4cms32c_1"/>
+			<device-support value="atsam4cp16b_1"/>
 			<require idref="thirdparty.cmsis.license"/>
 			<info type="gui-flag" value="hidden"/>
 		</module>
@@ -104,5 +125,6 @@ and reduces time-to-market for new embedded applications.
 		<build type="distribute" subtype="file" value="CMSIS END USER LICENCE AGREEMENT.pdf"/>
 		<build type="distribute" subtype="file" value="README.txt"/>
 		<build type="distribute" subtype="license" value="license.txt"/>
+		<build type="distribute" subtype="file" value="ATMEL-disclaimer.txt"/>
 	</module>
 </asf>

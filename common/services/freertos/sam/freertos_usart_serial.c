@@ -3,7 +3,7 @@
  *
  * \brief FreeRTOS Peripheral Control API For the USART
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,8 +46,11 @@
 
 /* ASF includes. */
 #include "serial.h"
-#include "freertos_uart_serial.h"
+#include "freertos_usart_serial.h"
 #include "freertos_peripheral_control_private.h"
+#if (SAMG55)
+#include "flexcom.h"
+#endif
 
 /* Every bit in the interrupt mask. */
 #define MASK_ALL_INTERRUPTS         (0xffffffffUL)
@@ -65,29 +68,28 @@ Equivalent to times 5 then divide by 1000. */
 #define BITS_PER_5_MS               (200UL)
 
 /* Work out how many USARTS are present. */
-#if defined(USART6)
+#if defined(PDC_USART7)
+	#define MAX_USARTS                              (8)
+#elif defined(PDC_USART6)
 	#define MAX_USARTS                              (7)
-#elif defined(USART5)
+#elif defined(PDC_USART5)
 	#define MAX_USARTS                              (6)
-#elif defined(USART4)
+#elif defined(PDC_USART4)
 	#define MAX_USARTS                              (5)
-#elif defined(USART3)
+#elif defined(PDC_USART3)
 	#define MAX_USARTS                              (4)
-#elif defined(USART2)
+#elif defined(PDC_USART2)
 	#define MAX_USARTS                              (3)
-#elif defined(USART1)
+#elif defined(PDC_USART1)
 	#define MAX_USARTS                              (2)
-#elif defined(USART0)
+#elif defined(PDC_USART0)
+	#define MAX_USARTS                              (1)
+#elif defined(PDC_USART)
 	#define MAX_USARTS                              (1)
 #else
-	#error No USARTS defined
+	#error No PDC USARTS defined
 #endif
 
-/* SAM3N only has PDC support on USART0 */
-#if SAM3N
-	#undef MAX_USARTS
-	#define MAX_USARTS                              (1)
-#endif
 
 enum buffer_operations {
 	data_added = 0,
@@ -108,31 +110,56 @@ static freertos_dma_event_control_t tx_dma_control[MAX_USARTS];
 /* Create an array that holds the information required about each defined
 USART. */
 static const freertos_pdc_peripheral_parameters_t all_usart_definitions[MAX_USARTS] = {
+#if SAMG55
+	{USART0, PDC_USART0, ID_FLEXCOM0, FLEXCOM0_IRQn},
+	{USART1, PDC_USART1, ID_FLEXCOM1, FLEXCOM1_IRQn},
+	{USART2, PDC_USART2, ID_FLEXCOM2, FLEXCOM2_IRQn},
+	{USART3, PDC_USART3, ID_FLEXCOM3, FLEXCOM3_IRQn},
+	{USART4, PDC_USART4, ID_FLEXCOM4, FLEXCOM4_IRQn},
+	{USART5, PDC_USART5, ID_FLEXCOM5, FLEXCOM5_IRQn},
+	{USART6, PDC_USART6, ID_FLEXCOM6, FLEXCOM6_IRQn},
+#if (MAX_USARTS > 7)
+	{USART7, PDC_USART7, ID_FLEXCOM7, FLEXCOM7_IRQn},
+#endif
+
+#else
+#if	defined(PDC_USART0)
 	{USART0, PDC_USART0, ID_USART0, USART0_IRQn},
+#endif
 
-	#if (MAX_USARTS > 1)
+#if	defined(PDC_USART)
+	{USART, PDC_USART, ID_USART, USART_IRQn},
+#endif
+
+#if (MAX_USARTS > 1)
 	{USART1, PDC_USART1, ID_USART1, USART1_IRQn},
-	#endif
+#endif
 
-	#if (MAX_USARTS > 2)
+#if (MAX_USARTS > 2)
 	{USART2, PDC_USART2, ID_USART2, USART2_IRQn},
-	#endif
+#endif
 
-	#if (MAX_USARTS > 3)
+#if (MAX_USARTS > 3)
 	{USART3, PDC_USART3, ID_USART3, USART3_IRQn},
-	#endif
+#endif
 
-	#if (MAX_USARTS > 4)
+#if (MAX_USARTS > 4)
 	{USART4, PDC_USART4, ID_USART4, USART4_IRQn},
-	#endif
+#endif
 
-	#if (MAX_USARTS > 5)
-	{USART4, PDC_USART5, ID_USART4, USART4_IRQn},
-	#endif
+#if (MAX_USARTS > 5)
+	{USART5, PDC_USART5, ID_USART5, USART5_IRQn},
+#endif
 
-	#if (MAX_USARTS > 6)
-	{USART4, PDC_USART6, ID_USART4, USART4_IRQn},
-	#endif
+#if (MAX_USARTS > 6)
+	{USART6, PDC_USART6, ID_USART6, USART6_IRQn},
+#endif
+
+#if (MAX_USARTS > 7)
+	{USART7, PDC_USART7, ID_USART7, USART7_IRQn},
+#endif
+
+#endif
 };
 
 /**
@@ -140,16 +167,16 @@ static const freertos_pdc_peripheral_parameters_t all_usart_definitions[MAX_USAR
  * \brief Initializes the FreeRTOS ASF USART driver for the specified USART
  * port.
  *
- * freertos_usart_master_init() is an ASF specific FreeRTOS driver function.  It
+ * freertos_usart_serial_init() is an ASF specific FreeRTOS driver function.  It
  * must be called before any other ASF specific FreeRTOS driver functions
  * attempt to access the same USART port.
  *
  * If freertos_driver_parameters->operation_mode equals USART_RS232 then
- * freertos_usart_master_init() will configure the USART port for standard RS232
+ * freertos_usart_serial_init() will configure the USART port for standard RS232
  * operation.  If freertos_driver_parameters->operation_mode equals any other
- * value then freertos_usart_master_init() will not take any action.
+ * value then freertos_usart_serial_init() will not take any action.
  *
- * Other ASF USART functions can be called after freertos_usart_master_init()
+ * Other ASF USART functions can be called after freertos_usart_serial_init()
  * has completed successfully.
  *
  * The FreeRTOS ASF driver both installs and handles the USART PDC interrupts.
@@ -206,9 +233,17 @@ freertos_usart_if freertos_usart_serial_init(Usart *p_usart,
 		pdc_disable_transfer(all_usart_definitions[usart_index].pdc_base_address,
 				(PERIPH_PTCR_RXTDIS | PERIPH_PTCR_TXTDIS));
 
+#if (SAMG55)
+		/* Enable the peripheral and set USART mode. */
+		uint32_t temp = (uint32_t)all_usart_definitions[usart_index].peripheral_base_address - 0x200;
+		Flexcom *p_flexcom = (Flexcom *)temp;
+		flexcom_enable(p_flexcom);
+		flexcom_set_opmode(p_flexcom, FLEXCOM_USART);
+#else
 		/* Enable the peripheral clock in the PMC. */
 		pmc_enable_periph_clk(
 				all_usart_definitions[usart_index].peripheral_id);
+#endif
 
 		switch (freertos_driver_parameters->operation_mode) {
 		case USART_RS232:
@@ -268,8 +303,8 @@ freertos_usart_if freertos_usart_serial_init(Usart *p_usart,
 					freertos_driver_parameters->receive_buffer_size;
 			pdc_rx_init(
 					all_usart_definitions[usart_index].pdc_base_address,
-					&(rx_buffer_definitions[usart_index].
-					rx_pdc_parameters), NULL);
+					&(rx_buffer_definitions[usart_index].rx_pdc_parameters),
+					NULL);
 
 			/* Set the next byte to read to the start of the buffer as no data
 			has yet been read. */
@@ -342,7 +377,7 @@ freertos_usart_if freertos_usart_serial_init(Usart *p_usart,
  * complete before returning.
  *
  * The FreeRTOS USART driver is initialized using a call to
- * freertos_usart_master_init().  The freertos_driver_parameters.options_flags
+ * freertos_usart_serial_init().  The freertos_driver_parameters.options_flags
  * parameter passed into the initialization function defines the driver behavior.
  * freertos_usart_write_packet_async() can only be used if the
  * freertos_driver_parameters.options_flags parameter passed to the initialization
@@ -359,11 +394,11 @@ freertos_usart_if freertos_usart_serial_init(Usart *p_usart,
  * not install their own interrupt handler.
  *
  * \param p_usart    The handle to the USART peripheral returned by the
- *     freertos_usart_master_init() call used to initialise the peripheral.
+ *     freertos_usart_serial_init() call used to initialise the peripheral.
  * \param data    A pointer to the data to be transmitted.
  * \param len    The number of bytes to transmit.
  * \param block_time_ticks    The FreeRTOS ASF USART driver is initialized using
- *     a call to freertos_usart_master_init().  The
+ *     a call to freertos_usart_serial_init().  The
  *     freertos_driver_parameters.options_flags parameter passed to the
  *     initialization function defines the driver behavior.  If
  *     freertos_driver_parameters.options_flags had the USE_TX_ACCESS_MUTEX bit
@@ -456,7 +491,7 @@ status_code_t freertos_usart_write_packet_async(freertos_usart_if p_usart,
  * not install their own interrupt handler.
  *
  * \param p_usart    The handle to the USART port returned by the
- *     freertos_usart_master_init() call used to initialise the port.
+ *     freertos_usart_serial_init() call used to initialise the port.
  * \param data    A pointer to the buffer into which received data is to be
  *     copied.
  * \param len    The number of bytes to copy.
@@ -466,7 +501,7 @@ status_code_t freertos_usart_write_packet_async(freertos_usart_if p_usart,
  *     time.
  *
  *     The FreeRTOS ASF USART driver is initialized using a
- *     call to freertos_usart_master_init().  The
+ *     call to freertos_usart_serial_init().  The
  *     freertos_driver_parameters.options_flags parameter passed to the
  *     initialization function defines the driver behavior.  If
  *     freertos_driver_parameters.options_flags had the USE_RX_ACCESS_MUTEX bit
@@ -624,7 +659,7 @@ static void configure_rx_dma(uint32_t usart_index,
 			rx_buffer_definition->past_rx_buffer_end_address - rx_buffer_definition->rx_pdc_parameters.ul_addr;
 	}
 
-	configASSERT((rx_buffer_definition->rx_pdc_parameters.ul_size +
+	configASSERT((rx_buffer_definition->rx_pdc_parameters.ul_addr +
 			rx_buffer_definition->rx_pdc_parameters.ul_size) <=
 			rx_buffer_definition->past_rx_buffer_end_address);
 
@@ -653,7 +688,7 @@ static void configure_rx_dma(uint32_t usart_index,
 
 /*
  * For internal use only.
- * A common SPI interrupt handler that is called for all SPI peripherals.
+ * A common USART interrupt handler that is called for all USART peripherals.
  */
 static void local_usart_handler(const portBASE_TYPE usart_index)
 {
@@ -763,6 +798,65 @@ static void local_usart_handler(const portBASE_TYPE usart_index)
  * Individual interrupt handlers follow from here.  Each individual interrupt
  * handler calls the common interrupt handler.
  */
+#if SAMG55
+#ifdef CONF_FREERTOS_USE_USART0
+void FLEXCOM0_Handler(void)
+{
+	local_usart_handler(0);
+}
+#endif
+#ifdef CONF_FREERTOS_USE_USART1
+void FLEXCOM1_Handler(void)
+{
+	local_usart_handler(1);
+}
+#endif
+#ifdef CONF_FREERTOS_USE_USART2
+void FLEXCOM2_Handler(void)
+{
+	local_usart_handler(2);
+}
+#endif
+#ifdef CONF_FREERTOS_USE_USART3
+void FLEXCOM3_Handler(void)
+{
+	local_usart_handler(3);
+}
+#endif
+#ifdef CONF_FREERTOS_USE_USART4
+void FLEXCOM4_Handler(void)
+{
+	local_usart_handler(4);
+}
+#endif
+#ifdef CONF_FREERTOS_USE_USART5
+void FLEXCOM5_Handler(void)
+{
+	local_usart_handler(5);
+}
+#endif
+#ifdef CONF_FREERTOS_USE_USART6
+void FLEXCOM6_Handler(void)
+{
+	local_usart_handler(6);
+}
+#endif
+#ifdef CONF_FREERTOS_USE_USART7
+void FLEXCOM7_Handler(void)
+{
+	local_usart_handler(7);
+}
+#endif
+	
+#else
+#ifdef USART
+
+void USART_Handler(void)
+{
+	local_usart_handler(0);
+}
+
+#endif /* USART */
 
 #ifdef USART0
 
@@ -826,3 +920,4 @@ void USART6_Handler(void)
 }
 
 #endif /* USART6 */
+#endif

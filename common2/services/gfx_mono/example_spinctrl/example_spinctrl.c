@@ -3,7 +3,7 @@
  *
  * \brief Example application for GFX Monochrome spinner widget
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -61,13 +61,16 @@
  * - \ref conf_spinctrl.h
  *
  * \section asfdoc_common2_spinctrl_example_deviceinfo Device Info
- * All AVR devices can be used.
+ * All SAM devices can be used.
  * This example has been tested with the following setup:
- * - SAMD20 Xplained Pro
+ * - SAM D20 Xplained Pro
+ * - SAM D21 Xplained Pro
+ * - SAM R21 Xplained Pro
+ * - SAM L21 Xplained Pro
  *
  * \section asfdoc_common2_spinctrl_example_description Description of the example application
  * This example application will initialize string spinner and two integer
- * spinners, set up a spincollection with the spinners and display them on
+ * spinners, set up a spin collection with the spinners and display them on
  * the screen.
  *
  * \section asfdoc_common2_spinctrl_example_dependencies Dependencies
@@ -77,7 +80,7 @@
  * - \ref asfdoc_common2_gfx_mono_spinctrl
  *
  * \section asfdoc_common2_spinctrl_example_compinfo Compilation Info
- * This software was written for the GNU GCC and IAR for AVR.
+ * This software was written for the GNU GCC and IAR.
  * Other compilers may or may not work.
  *
  * \section asfdoc_common2_spinctrl_example_contactinfo Contact Information

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 GPIO Port Driver
+ * \brief SAM GPIO Port Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,8 +51,8 @@
  *  \note If the pin direction is set as an output, the pull-up/pull-down input
  *        configuration setting is ignored.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to configure.
- *  \param[in] config    Configuration settings for the pin.
+ *  \param[in] gpio_pin  Index of the GPIO pin to configure
+ *  \param[in] config    Configuration settings for the pin
  */
 void port_pin_set_config(
 		const uint8_t gpio_pin,
@@ -67,6 +67,7 @@ void port_pin_set_config(
 	pinmux_config.mux_position = SYSTEM_PINMUX_GPIO;
 	pinmux_config.direction    = (enum system_pinmux_pin_dir)config->direction;
 	pinmux_config.input_pull   = (enum system_pinmux_pin_pull)config->input_pull;
+	pinmux_config.powersave    = config->powersave;
 
 	system_pinmux_pin_set_config(gpio_pin, &pinmux_config);
 }
@@ -80,9 +81,9 @@ void port_pin_set_config(
  *  \note If the pin direction is set as an output, the pull-up/pull-down input
  *        configuration setting is ignored.
  *
- *  \param[out] port    Base of the PORT module to write to.
- *  \param[in]  mask    Mask of the port pin(s) to configure.
- *  \param[in]  config  Configuration settings for the pin group.
+ *  \param[out] port    Base of the PORT module to write to
+ *  \param[in]  mask    Mask of the port pin(s) to configure
+ *  \param[in]  config  Configuration settings for the pin group
  */
 void port_group_set_config(
 		PortGroup *const port,
@@ -99,6 +100,7 @@ void port_group_set_config(
 	pinmux_config.mux_position = SYSTEM_PINMUX_GPIO;
 	pinmux_config.direction    = (enum system_pinmux_pin_dir)config->direction;
 	pinmux_config.input_pull   = (enum system_pinmux_pin_pull)config->input_pull;
+	pinmux_config.powersave    = config->powersave;
 
 	system_pinmux_group_set_config(port, mask, &pinmux_config);
 }

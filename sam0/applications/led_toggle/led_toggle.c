@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 LED Toggle Example
+ * \brief SAM LED Toggle Example
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage SAM D20 LED Toggle Example
+ * \mainpage SAM LED Toggle Example
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
@@ -53,29 +53,32 @@
  */
 
 /**
- * \page appdoc_main SAM D20 LED Toggle Example
+ * \page appdoc_main SAM LED Toggle Example
  *
  * Overview:
- * - \ref appdoc_samd20_led_toggle_app_intro
- * - \ref appdoc_samd20_led_toggle_app_usage
- * - \ref appdoc_samd20_led_toggle_app_config
- * - \ref appdoc_samd20_led_toggle_app_compinfo
- * - \ref appdoc_samd20_led_toggle_app_contactinfo
+ * - \ref appdoc_sam0_led_toggle_app_intro
+ * - \ref appdoc_sam0_led_toggle_app_usage
+ * - \ref appdoc_sam0_led_toggle_app_config
+ * - \ref appdoc_sam0_led_toggle_app_compinfo
+ * - \ref appdoc_sam0_led_toggle_app_contactinfo
  *
- * \section appdoc_samd20_led_toggle_app_intro Introduction
+ * \section appdoc_sam0_led_toggle_app_intro Introduction
  * This application demonstrates a simple example to turn on the board LED when
  * a button is pressed, using a variety of methods and modules within the device.
  *
- * \section appdoc_samd20_led_toggle_app_usage Usage
+ * This application has been tested on following boards:
+ * - SAM D20/D21/R21/D11/L21 Xplained Pro
+ *
+ * \section appdoc_sam0_led_toggle_app_usage Usage
  * When run, press the board button to turn on the board LED, release to turn
  * the LED off. If the application settings are altered, the application must be
  * recompiled and re-run on the device.
  *
- * \section appdoc_samd20_led_toggle_app_config Configuration
- * The table \ref appdoc_samd20_led_toggle_app_conftable "below" shows the
+ * \section appdoc_sam0_led_toggle_app_config Configuration
+ * The table \ref appdoc_sam0_led_toggle_app_conftable "below" shows the
  * possible configurations of this example.
  *
- * \anchor appdoc_samd20_led_toggle_app_conftable
+ * \anchor appdoc_sam0_led_toggle_app_conftable
  * <table>
  *  <caption>Example Configurations</caption>
  * 	<tr>
@@ -105,16 +108,20 @@
  * 	</tr>
  * </table>
  *
- * \section appdoc_samd20_led_toggle_app_compinfo Compilation Info
+ * \note When the button is connected to the non-maskable pin, the USE_EIC_NMI
+ *       in conf_example.h should be defined to true, else be false.
+ *
+ * \section appdoc_sam0_led_toggle_app_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for ARM.
  * Other compilers may or may not work.
  *
- * \section appdoc_samd20_led_toggle_app_contactinfo Contact Information
+ * \section appdoc_sam0_led_toggle_app_contactinfo Contact Information
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
 
 #include <asf.h>
+#include "conf_example.h"
 
 /** If \true, interrupts are used to alter the board state, when \false polling
  *  is used.
@@ -136,12 +143,11 @@ static void update_led_state(void)
 
 #if USE_INTERRUPTS == true
 #  if USE_EIC == true
+#    if USE_EIC_NMI == false
 /** Callback function for the EXTINT driver, called when an external interrupt
  *  detection occurs.
- *
- *  \param[in] channel  External Interrupt channel that has changed state
  */
-static void extint_callback(uint32_t channel)
+static void extint_callback(void)
 {
 	update_led_state();
 }
@@ -152,10 +158,22 @@ static void extint_callback(uint32_t channel)
 static void configure_eic_callback(void)
 {
 	extint_register_callback(extint_callback,
+			BUTTON_0_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
 	extint_chan_enable_callback(BUTTON_0_EIC_LINE,
 			EXTINT_CALLBACK_TYPE_DETECT);
 }
+#    else
+/** Handler for the NMI module interrupt. */
+void NMI_Handler(void)
+{
+	if (extint_nmi_is_detected(BUTTON_0_EIC_LINE)) {
+		/* Clear flag */
+		extint_nmi_clear_detected(BUTTON_0_EIC_LINE);
+		update_led_state();
+	}
+}
+#    endif
 #  else
 /** Handler for the device SysTick module, called when the SysTick counter
  *  reaches the set period.
@@ -186,6 +204,7 @@ static void configure_systick_handler(void)
 /** Configures the External Interrupt Controller to detect changes in the board
  *  button state.
  */
+#  if USE_EIC_NMI == false
 static void configure_extint(void)
 {
 	struct extint_chan_conf eint_chan_conf;
@@ -194,10 +213,25 @@ static void configure_extint(void)
 	eint_chan_conf.gpio_pin           = BUTTON_0_EIC_PIN;
 	eint_chan_conf.gpio_pin_mux       = BUTTON_0_EIC_MUX;
 	eint_chan_conf.detection_criteria = EXTINT_DETECT_BOTH;
+	eint_chan_conf.filter_input_signal = true;
 	extint_chan_set_config(BUTTON_0_EIC_LINE, &eint_chan_conf);
-
-	extint_enable();
 }
+#  else
+ /** Configures the NMI to detect changes in the board
+ *  button state.
+ */
+static void configure_nmi(void)
+{
+	struct extint_nmi_conf eint_nmi_conf;
+	extint_nmi_get_config_defaults(&eint_nmi_conf);
+
+	eint_nmi_conf.gpio_pin           = BUTTON_0_EIC_PIN;
+	eint_nmi_conf.gpio_pin_mux       = BUTTON_0_EIC_MUX;
+	eint_nmi_conf.detection_criteria = EXTINT_DETECT_BOTH;
+	eint_nmi_conf.filter_input_signal = true;
+	extint_nmi_set_config(BUTTON_0_EIC_LINE, &eint_nmi_conf);
+}
+#  endif
 #endif
 
 int main(void)
@@ -205,14 +239,20 @@ int main(void)
 	system_init();
 
 #if USE_EIC == true
+#  if USE_EIC_NMI == false
 	configure_extint();
+#  else
+	configure_nmi();
+#  endif
 #endif
 
 #if USE_INTERRUPTS == true
 #  if USE_EIC == false
 	configure_systick_handler();
 #  else
+#    if USE_EIC_NMI == false
 	configure_eic_callback();
+#    endif
 #  endif
 
 	system_interrupt_enable_global();
@@ -227,11 +267,13 @@ int main(void)
 	}
 #  else
 	while (true) {
+#    if USE_EIC_NMI == false
 		if (extint_chan_is_detected(BUTTON_0_EIC_LINE)) {
 			extint_chan_clear_detected(BUTTON_0_EIC_LINE);
 
 			update_led_state();
 		}
+#    endif
 	}
 #  endif
 #endif

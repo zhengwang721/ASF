@@ -4,13 +4,13 @@
  * @brief This file is the interface for Transceiver Feature Access (TFA)
  * functionality.
  *
- * $Id: tfa.h 36214 2014-07-22 14:28:43Z sschneid $
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
  */
 /*
- * Copyright (c) 2009, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -22,10 +22,20 @@
 #if (defined ENABLE_TFA) || (defined TFA_BAT_MON) || (defined DOXYGEN) || \
     (defined TFA_BAT_MON_READ) || (defined TFA_BAT_MON_IRQ)
 
+/**
+ * \defgroup group_tfa           Transceiver Feature Access
+ * The Atmel transceivers provide a variety of additional hardware features
+ * features that are not reflected in the IEEE 802.15.4 standard.
+ * These features are for eg .Reading battery voltage, Continuous wave
+ * transmission etc .
+ * @{
+ */
+
 /* === INCLUDES ============================================================ */
 
 #include "return_val.h"
 #include "ieee_const.h"
+#include "tal_types.h"
 
 /* === TYPES =============================================================== */
 

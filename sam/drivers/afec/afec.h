@@ -3,7 +3,7 @@
  *
  * \brief Analog-Front-End Controller driver for SAM.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -246,7 +246,7 @@ enum afec_interrupt_source {
 	AFEC_INTERRUPT_TEMP_CHANGE,
 	AFEC_INTERRUPT_END_CAL,
 	_AFEC_NUM_OF_INTERRUPT_SOURCE,
-	AFEC_INTERRUPT_ALL = 0xFFFFFFFF,
+	AFEC_INTERRUPT_ALL = 0xDF00803F,
 };
 #elif defined __SAM4E8E__  || defined __SAM4E16E__
 /** AFEC interrupt source type */
@@ -275,7 +275,7 @@ enum afec_interrupt_source {
 	AFEC_INTERRUPT_TEMP_CHANGE,
 	AFEC_INTERRUPT_END_CAL,
 	_AFEC_NUM_OF_INTERRUPT_SOURCE,
-	AFEC_INTERRUPT_ALL = 0xFFFFFFFF,
+	AFEC_INTERRUPT_ALL = 0xDF00FFFF,
 };
 #endif
 
@@ -404,10 +404,9 @@ static inline void afec_set_writeprotect(Afec *const afec,
 		const bool is_enable)
 {
 	if (is_enable) {
-		afec->AFEC_WPMR = AFEC_WPMR_WPEN | AFEC_WPMR_WPKEY_ADC;
+		afec->AFEC_WPMR = AFEC_WPMR_WPEN | AFEC_WPMR_WPKEY_PASSWD;
 	} else {
-		afec->AFEC_WPMR &= ~AFEC_WPMR_WPEN;
-		afec->AFEC_WPMR |= AFEC_WPMR_WPKEY_ADC;
+		afec->AFEC_WPMR = AFEC_WPMR_WPKEY_PASSWD;
 	}
 }
 
@@ -416,13 +415,19 @@ static inline void afec_set_writeprotect(Afec *const afec,
  *
  * \param afec  Base address of the AFEC.
  *
- * \return 0 if the peripheral is not protected, or 16-bit write protect
+ * \return 0 if no write protect violation occurred, or 16-bit write protect
  * violation source.
  */
 static inline uint32_t afec_get_writeprotect_status(Afec *const afec)
 {
-	return (afec->AFEC_WPSR & AFEC_WPSR_WPVS) ?
-			(afec->AFEC_WPSR & AFEC_WPMR_WPKEY_Msk) : 0;
+	uint32_t reg_value;
+
+	reg_value = afec->AFEC_WPSR;
+	if (reg_value & AFEC_WPSR_WPVS) {
+		return (reg_value & AFEC_WPSR_WPVSRC_Msk) >> AFEC_WPSR_WPVSRC_Pos;
+	} else {
+		return 0;
+	}
 }
 
 /**
@@ -675,12 +680,12 @@ static inline enum status_code afec_start_calibration(Afec *const afec)
  * \subsection afec_basic_use_case_setup_code Example code
  * Add to application C-file:
  * \code
- *  afec_enable(AFEC0);
- *  afec_get_config_defaults(&afec_cfg);
- *  afec_init(AFEC0, &afec_cfg);
- *  afec_set_trigger(AFEC0, AFEC_TRIG_SW);
- *  afec_channel_enable(AFEC0, AFEC_CHANNEL_5);
- * \endcode
+	afec_enable(AFEC0);
+	afec_get_config_defaults(&afec_cfg);
+	afec_init(AFEC0, &afec_cfg);
+	afec_set_trigger(AFEC0, AFEC_TRIG_SW);
+	afec_channel_enable(AFEC0, AFEC_CHANNEL_5);
+\endcode
  *
  * \subsection afec_basic_use_case_setup_flow Workflow
  * -# Enable AFEC Module:
@@ -698,19 +703,19 @@ static inline enum status_code afec_start_calibration(Afec *const afec)
  * \subsection afec_basic_use_case_usage_code Example code
  * Add to, e.g., main loop in application C-file:
  * \code
- *  afec_start_software_conversion(AFEC0);
- *  while (afec_get_interrupt_status(AFEC0) & (1 << AFEC_CHANNEL_5));
- *  uint32_t result = afec_channel_get_value(AFEC0, AFEC_CHANNEL_5);
- * \endcode
+	afec_start_software_conversion(AFEC0);
+	while (afec_get_interrupt_status(AFEC0) & (1 << AFEC_CHANNEL_5));
+	uint32_t result = afec_channel_get_value(AFEC0, AFEC_CHANNEL_5);
+\endcode
  *
  * \subsection afec_basic_use_case_usage_flow Workflow
  * -# Start AFEC conversion on channel:
  *   - \code afec_start_software_conversion(AFEC0); \endcode
  * -# Wait for the conversion over:
  *   - \code while (afec_get_interrupt_status(AFEC0) & (1 << AFEC_CHANNEL_5));
- *     \endcode
+\endcode
  * -# Get the conversion result:
  *   - \code uint32_t result = afec_channel_get_value(AFEC0, AFEC_CHANNEL_5);
- *     \endcode
+\endcode
  */
 #endif /* AFEC_H_INCLUDED */

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 SERCOM USART Driver
+ * \brief SAM SERCOM USART Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,135 +47,6 @@
 #endif
 
 /**
- * \internal Checks a USART config against current set config
- *
- * This function will check that the config does not alter the
- * configuration of the module. If the new config changes any
- * setting, the initialization will be discarded.
- *
- * \param[in]  module  Pointer to the software instance struct
- * \param[in]  config  Pointer to the configuration struct
- *
- * \return The status of the configuration
- * \retval STATUS_ERR_INVALID_ARG       If invalid argument(s) were provided.
- * \retval STATUS_ERR_DENIED            If configuration was different from previous
- * \retval STATUS_OK                    If the configuration was written
- */
-static enum status_code _usart_check_config(
-		struct usart_module *const module,
-		const struct usart_config *const config)
-{
-		/* Sanity check arguments */
-	Assert(module);
-	Assert(module->hw);
-
-	SercomUsart *const usart_hw = &(module->hw->USART);
-	Sercom *const hw = (module->hw);
-
-	uint32_t pad_pinmuxes[] = {
-		config->pinmux_pad0, config->pinmux_pad1,
-		config->pinmux_pad2, config->pinmux_pad3
-	};
-
-	/* Compare the current SERCOM pins against the user configuration */
-	for (uint8_t pad = 0; pad < 4; pad++) {
-		uint32_t current_pinmux = pad_pinmuxes[pad];
-
-		if (current_pinmux == PINMUX_DEFAULT) {
-			current_pinmux = _sercom_get_default_pad(hw, pad);
-		}
-
-		if (current_pinmux == PINMUX_UNUSED) {
-			continue;
-		}
-
-		if ((current_pinmux & 0xFFFF) !=
-				system_pinmux_pin_get_mux_position(current_pinmux >> 16)) {
-			module->hw = NULL;
-			return STATUS_ERR_DENIED;
-		}
-	}
-
-	/* Find baud value and compare it */
-	uint16_t baud  = 0;
-	enum status_code status_code = STATUS_OK;
-
-	switch (config->transfer_mode)
-	{
-	case USART_TRANSFER_SYNCHRONOUSLY:
-		if (!config->use_external_clock) {
-			status_code = _sercom_get_sync_baud_val(config->baudrate,
-					system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
-		}
-
-		break;
-
-	case USART_TRANSFER_ASYNCHRONOUSLY:
-		if (config->use_external_clock) {
-			status_code =
-					_sercom_get_async_baud_val(config->baudrate,
-						config->ext_clock_freq, &baud);
-		} else {
-			status_code =
-					_sercom_get_async_baud_val(config->baudrate,
-						system_gclk_chan_get_hz(SERCOM_GCLK_ID), &baud);
-		}
-
-		break;
-	}
-
-	if (status_code != STATUS_OK) {
-		/* Baud rate calculation error, return status code */
-		return STATUS_ERR_DENIED;
-	}
-
-	if (usart_hw->BAUD.reg != baud) {
-		return STATUS_ERR_DENIED;
-	}
-
-	uint32_t ctrla = 0;
-	uint32_t ctrlb = 0;
-
-	/* Check sample mode, data order, internal muxing, and clock polarity */
-	ctrla = (uint32_t)config->data_order |
-		(uint32_t)config->mux_setting |
-		(uint32_t)config->transfer_mode |
-		SERCOM_USART_CTRLA_MODE(0) |
-		(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
-
-	/* set enable bit */
-	ctrla |= (SERCOM_USART_CTRLA_ENABLE);
-
-	if (config->use_external_clock == false) {
-		ctrla |= SERCOM_USART_CTRLA_MODE_USART_INT_CLK;
-	}
-	else {
-		ctrla |= SERCOM_USART_CTRLA_MODE_USART_EXT_CLK;
-	}
-
-	/* Check stopbits and character size */
-	ctrlb = (uint32_t)config->stopbits | (uint32_t)config->character_size |
-			(config->receiver_enable << SERCOM_USART_CTRLB_RXEN_Pos) |
-			(config->transmitter_enable << SERCOM_USART_CTRLB_TXEN_Pos);
-
-	/* Check parity mode bits */
-	if (config->parity != USART_PARITY_NONE) {
-		ctrla |= SERCOM_USART_CTRLA_FORM(1);
-		ctrlb |= config->parity;
-	} else {
-		ctrla |= SERCOM_USART_CTRLA_FORM(0);
-	}
-
-	if (usart_hw->CTRLA.reg == ctrla && usart_hw->CTRLB.reg == ctrlb) {
-		module->character_size = config->character_size;
-		return STATUS_OK;
-	} else {
-		module->hw = NULL;
-		return STATUS_ERR_DENIED;
-	}
-}
-
-/**
  * \internal
  * Set Configuration of the USART module
  */
@@ -199,9 +70,44 @@ static enum status_code _usart_set_config(
 	uint32_t ctrlb = 0;
 	uint16_t baud  = 0;
 
+	enum sercom_asynchronous_operation_mode mode = SERCOM_ASYNC_OPERATION_MODE_ARITHMETIC;
+	enum sercom_asynchronous_sample_num sample_num = SERCOM_ASYNC_SAMPLE_NUM_16;
+
+#ifdef FEATURE_USART_OVER_SAMPLE
+	switch (config->sample_rate) {
+		case USART_SAMPLE_RATE_16X_ARITHMETIC:
+			mode = SERCOM_ASYNC_OPERATION_MODE_ARITHMETIC;
+			sample_num = SERCOM_ASYNC_SAMPLE_NUM_16;
+			break;
+		case USART_SAMPLE_RATE_8X_ARITHMETIC:
+			mode = SERCOM_ASYNC_OPERATION_MODE_ARITHMETIC;
+			sample_num = SERCOM_ASYNC_SAMPLE_NUM_8;
+			break;
+		case USART_SAMPLE_RATE_3X_ARITHMETIC:
+			mode = SERCOM_ASYNC_OPERATION_MODE_ARITHMETIC;
+			sample_num = SERCOM_ASYNC_SAMPLE_NUM_3;
+			break;
+		case USART_SAMPLE_RATE_16X_FRACTIONAL:
+			mode = SERCOM_ASYNC_OPERATION_MODE_FRACTIONAL;
+			sample_num = SERCOM_ASYNC_SAMPLE_NUM_16;
+			break;
+		case USART_SAMPLE_RATE_8X_FRACTIONAL:
+			mode = SERCOM_ASYNC_OPERATION_MODE_FRACTIONAL;
+			sample_num = SERCOM_ASYNC_SAMPLE_NUM_8;
+			break;
+	}
+#endif
+
 	/* Set data order, internal muxing, and clock polarity */
 	ctrla = (uint32_t)config->data_order |
 		(uint32_t)config->mux_setting |
+	#ifdef FEATURE_USART_OVER_SAMPLE
+		config->sample_adjustment |
+		config->sample_rate |
+	#endif
+	#ifdef FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
+		(config->immediate_buffer_overflow_notification << SERCOM_USART_CTRLA_IBON_Pos) |
+	#endif
 		(config->clock_polarity_inverted << SERCOM_USART_CTRLA_CPOL_Pos);
 
 	enum status_code status_code = STATUS_OK;
@@ -221,21 +127,27 @@ static enum status_code _usart_set_config(
 			if (config->use_external_clock) {
 				status_code =
 						_sercom_get_async_baud_val(config->baudrate,
-							config->ext_clock_freq, &baud);
+							config->ext_clock_freq, &baud, mode, sample_num);
 			} else {
 				status_code =
 						_sercom_get_async_baud_val(config->baudrate,
-							system_gclk_chan_get_hz(gclk_index), &baud);
+							system_gclk_chan_get_hz(gclk_index), &baud, mode, sample_num);
 			}
 
 			break;
 	}
 
-	/* Check if calculating the baud rate failed */
+	/* Check if calculating the baudrate failed */
 	if (status_code != STATUS_OK) {
 		/* Abort */
 		return status_code;
 	}
+
+#ifdef FEATURE_USART_IRDA
+	if(config->encoding_format_enable) {
+		usart_hw->RXPL.reg = config->receive_pulse_length;
+	}
+#endif
 
 	/* Wait until synchronization is complete */
 	_usart_wait_for_sync(module);
@@ -247,28 +159,52 @@ static enum status_code _usart_set_config(
 	ctrla |= config->transfer_mode;
 
 	if (config->use_external_clock == false) {
-		ctrla |= SERCOM_USART_CTRLA_MODE_USART_INT_CLK;
+		ctrla |= SERCOM_USART_CTRLA_MODE(0x1);
 	}
 	else {
-		ctrla |= SERCOM_USART_CTRLA_MODE_USART_EXT_CLK;
+		ctrla |= SERCOM_USART_CTRLA_MODE(0x0);
 	}
 
 	/* Set stopbits, character size and enable transceivers */
 	ctrlb = (uint32_t)config->stopbits | (uint32_t)config->character_size |
+		#ifdef FEATURE_USART_IRDA
+			(config->encoding_format_enable << SERCOM_USART_CTRLB_ENC_Pos) |
+		#endif
+		#ifdef FEATURE_USART_START_FRAME_DECTION
+			(config->start_frame_detection_enable << SERCOM_USART_CTRLB_SFDE_Pos) |
+		#endif
+		#ifdef FEATURE_USART_COLLISION_DECTION
+			(config->collision_detection_enable << SERCOM_USART_CTRLB_COLDEN_Pos) |
+		#endif
 			(config->receiver_enable << SERCOM_USART_CTRLB_RXEN_Pos) |
 			(config->transmitter_enable << SERCOM_USART_CTRLB_TXEN_Pos);
 
-	/* Set parity mode */
+	/* Check parity mode bits */
 	if (config->parity != USART_PARITY_NONE) {
+#ifdef FEATURE_USART_LIN_SLAVE
+		if(config->lin_slave_enable) {
+			ctrla |= SERCOM_USART_CTRLA_FORM(0x5);
+		} else {
+			ctrla |= SERCOM_USART_CTRLA_FORM(1);
+		}
+#else
 		ctrla |= SERCOM_USART_CTRLA_FORM(1);
+#endif
 		ctrlb |= config->parity;
 	} else {
+#ifdef FEATURE_USART_LIN_SLAVE
+		if(config->lin_slave_enable) {
+			ctrla |= SERCOM_USART_CTRLA_FORM(0x4);
+		} else {
+			ctrla |= SERCOM_USART_CTRLA_FORM(0);
+		}
+#else
 		ctrla |= SERCOM_USART_CTRLA_FORM(0);
+#endif
 	}
 
-	/* Set run mode during device sleep */
-	if (config->run_in_standby) {
-		/* Enable in sleep mode */
+	/* Set whether module should run in standby. */
+	if (config->run_in_standby || system_is_debugger_present()) {
 		ctrla |= SERCOM_USART_CTRLA_RUNSTDBY;
 	}
 
@@ -297,7 +233,7 @@ static enum status_code _usart_set_config(
  * \param[in]  hw      Pointer to USART hardware instance
  * \param[in]  config  Pointer to configuration struct
  *
- * \return Status of the initialization
+ * \return Status of the initialization.
  *
  * \retval STATUS_OK                       The initialization was successful
  * \retval STATUS_BUSY                     The USART module is busy
@@ -333,7 +269,11 @@ enum status_code usart_init(
 	SercomUsart *const usart_hw = &(module->hw->USART);
 
 	uint32_t sercom_index = _sercom_get_sercom_inst_index(module->hw);
+#if (SAML21)
+	uint32_t pm_index     = sercom_index + MCLK_APBCMASK_SERCOM0_Pos;
+#else
 	uint32_t pm_index     = sercom_index + PM_APBCMASK_SERCOM0_Pos;
+#endif
 	uint32_t gclk_index   = sercom_index + SERCOM0_GCLK_ID_CORE;
 
 	if (usart_hw->CTRLA.reg & SERCOM_USART_CTRLA_SWRST) {
@@ -342,8 +282,8 @@ enum status_code usart_init(
 	}
 
 	if (usart_hw->CTRLA.reg & SERCOM_USART_CTRLA_ENABLE) {
-		/* Check if the new setting are the same as the old */
-		return _usart_check_config(module, config);
+		/* Check the module is enabled */
+		return STATUS_ERR_DENIED;
 	}
 
 	/* Turn on module in PM */
@@ -364,6 +304,12 @@ enum status_code usart_init(
 	module->receiver_enabled = config->receiver_enable;
 	module->transmitter_enabled = config->transmitter_enable;
 
+#ifdef FEATURE_USART_LIN_SLAVE
+	module->lin_slave_enabled = config->lin_slave_enable;
+#endif
+#ifdef FEATURE_USART_START_FRAME_DECTION
+	module->start_frame_detection_enabled = config->start_frame_detection_enable;
+#endif
 	/* Set configuration according to the config struct */
 	status_code = _usart_set_config(module, config);
 	if(status_code != STATUS_OK) {
@@ -373,6 +319,7 @@ enum status_code usart_init(
 	struct system_pinmux_config pin_conf;
 	system_pinmux_get_config_defaults(&pin_conf);
 	pin_conf.direction = SYSTEM_PINMUX_PIN_DIR_INPUT;
+	pin_conf.input_pull = SYSTEM_PINMUX_PIN_PULL_NONE;
 
 	uint32_t pad_pinmuxes[] = {
 			config->pinmux_pad0, config->pinmux_pad1,
@@ -427,10 +374,10 @@ enum status_code usart_init(
  * \param[in]  module   Pointer to the software instance struct
  * \param[in]  tx_data  Data to transfer
  *
- * \return Status of the operation
+ * \return Status of the operation.
  * \retval STATUS_OK         If the operation was completed
  * \retval STATUS_BUSY       If the operation was not completed, due to the USART
- *                           module being busy.
+ *                           module being busy
  * \retval STATUS_ERR_DENIED If the transmitter is not enabled
  */
 enum status_code usart_write_wait(
@@ -484,7 +431,7 @@ enum status_code usart_write_wait(
  * \param[in]   module   Pointer to the software instance struct
  * \param[out]  rx_data  Pointer to received data
  *
- * \return Status of the operation
+ * \return Status of the operation.
  * \retval STATUS_OK                If the operation was completed
  * \retval STATUS_BUSY              If the operation was not completed,
  *                                  due to the USART module being busy
@@ -492,7 +439,7 @@ enum status_code usart_write_wait(
  *                                  due to configuration mismatch between USART
  *                                  and the sender
  * \retval STATUS_ERR_BAD_OVERFLOW  If the operation was not completed,
- *                                  due to the baud rate being too low or the
+ *                                  due to the baudrate being too low or the
  *                                  system frequency being too high
  * \retval STATUS_ERR_BAD_DATA      If the operation was not completed, due to
  *                                  data being corrupted
@@ -558,6 +505,24 @@ enum status_code usart_read_wait(
 
 			return STATUS_ERR_BAD_DATA;
 		}
+#ifdef FEATURE_USART_LIN_SLAVE
+		else if (error_code & SERCOM_USART_STATUS_ISF) {
+			/* Clear flag by writing 1 to it  and
+			 *  return with an error code */
+			usart_hw->STATUS.reg |= SERCOM_USART_STATUS_ISF;
+
+			return STATUS_ERR_PROTOCOL;
+		}
+#endif
+#ifdef FEATURE_USART_COLLISION_DECTION
+		else if (error_code & SERCOM_USART_STATUS_COLL) {
+			/* Clear flag by writing 1 to it
+			 *  return with an error code */
+			usart_hw->STATUS.reg |= SERCOM_USART_STATUS_COLL;
+
+			return STATUS_ERR_PACKET_COLLISION;
+		}
+#endif
 	}
 
 	/* Read data from USART module */
@@ -570,7 +535,7 @@ enum status_code usart_read_wait(
  * \brief Transmit a buffer of characters via the USART
  *
  * This blocking function will transmit a block of \c length characters
- * via the USART
+ * via the USART.
  *
  * \note Using this function in combination with the interrupt (\c _job) functions is
  *       not recommended as it has no functionality to check if there is an
@@ -580,7 +545,16 @@ enum status_code usart_read_wait(
  * \param[in]  tx_data  Pointer to data to transmit
  * \param[in]  length   Number of characters to transmit
  *
- * \return Status of the operation
+ * \note if using 9-bit data, the array that *tx_data point to should be defined 
+ *       as uint16_t array and should be casted to uint8_t* pointer. Because it 
+ *       is an address pointer, the highest byte is not discarded. For example:
+ *   \code
+          #define TX_LEN 3
+          uint16_t tx_buf[TX_LEN] = {0x0111, 0x0022, 0x0133};
+          usart_write_buffer_wait(&module, (uint8_t*)tx_buf, TX_LEN);
+    \endcode
+ * 
+ * \return Status of the operation.
  * \retval STATUS_OK              If operation was completed
  * \retval STATUS_ERR_INVALID_ARG If operation was not completed, due to invalid
  *                                arguments
@@ -665,6 +639,15 @@ enum status_code usart_write_buffer_wait(
  * \param[out] rx_data  Pointer to receive buffer
  * \param[in]  length   Number of characters to receive
  *
+ * \note if using 9-bit data, the array that *rx_data point to should be defined 
+ *       as uint16_t array and should be casted to uint8_t* pointer. Because it 
+ *       is an address pointer, the highest byte is not discarded. For example:
+ *   \code      
+          #define RX_LEN 3
+          uint16_t rx_buf[RX_LEN] = {0x0,};
+          usart_read_buffer_wait(&module, (uint8_t*)rx_buf, RX_LEN);
+    \endcode
+ *
  * \return Status of the operation.
  * \retval STATUS_OK                If operation was completed
  * \retval STATUS_ERR_INVALID_ARG   If operation was not completed, due to an
@@ -675,7 +658,7 @@ enum status_code usart_write_buffer_wait(
  *                                  due to a configuration mismatch
  *                                  between USART and the sender
  * \retval STATUS_ERR_BAD_OVERFLOW  If the operation was not completed,
- *                                  due to the baud rate being too low or the
+ *                                  due to the baudrate being too low or the
  *                                  system frequency being too high
  * \retval STATUS_ERR_BAD_DATA      If the operation was not completed, due
  *                                  to data being corrupted

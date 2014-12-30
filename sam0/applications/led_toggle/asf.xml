@@ -3,11 +3,13 @@
 		<info type="description" value="summary">
 		Example application to toggle the board LED when a button is pressed, using various device drivers.
 		</info>
+
 		<info type="keyword" value="technology">
 			<keyword value="Interrupt" />
 			<keyword value="I/O" />
 			<keyword value="CPU" />
 		</info>
+
 		<info type="gui-flag" value="move-to-root"/>
 
 		<build type="c-source" value="led_toggle.c"/>
@@ -18,6 +20,6 @@
 		<require idref="sam0.drivers.extint"/>
 		<require idref="sam0.drivers.system"/>
 
-		<device-support value="samd20"/>
+		<device-support value="sam0"/>
 	</module>
 </asf>

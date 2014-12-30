@@ -13,7 +13,7 @@
 		<build type="header-file" value="FreeRTOSConfig.h"/>
 		<build type="header-file" value="conf_demo.h"/>
 		<build type="header-file" value="conf_fatfs.h"/>
-		<build type="header-file" value="conf_ili9325.h"/>
+		<build type="header-file" value="conf_ili93xx.h"/>
 		<build type="header-file" value="conf_aat31xx.h"/>
 		<build type="header-file" value="conf_spi_master.h"/>
 		<build type="header-file" value="conf_ads7843.h"/>
@@ -33,7 +33,7 @@
 		<require idref="common.components.memory.nand_flash"/>
 		<config name="config.common.services.usb.class.device" value="mass_storage"/>
 		<config name="config.common.services.fs.fatfs.codepage" value="sbcs"/>
-		<config name="config.gfx.display" value="ili9325_ftm280c34d"/>
+		<config name="config.gfx.display" value="ili93xx"/>
 		<require idref="sam.application.sam_toolkit_demo"/>
 		<require idref="board.sam4s_ek2"/>
 		<require idref="sam.drivers.wdt"/>
@@ -59,6 +59,7 @@
 		<generator value="as5_arm"/>
 		<generator value="doxygen"/>
 		<config name="config.compiler.armgcc.create_aux" value="no"/>
+		<config name="config.compiler.iarewarm.create_aux" value="no"/>
 		<config name="config.compiler.iarewarm.heap_size" value="0x8000"/>
 		<device-support value="atsam4sd32c"/>
 	</project>

@@ -4,7 +4,7 @@
  * \brief Universal Synchronous Asynchronous Receiver Transmitter (USART) driver
  * for SAM.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -115,7 +115,7 @@ extern "C" {
  * \retval 1 Baud rate set point is out of range for the given input clock
  * frequency.
  */
-static uint32_t usart_set_async_baudrate(Usart *p_usart,
+uint32_t usart_set_async_baudrate(Usart *p_usart,
 		uint32_t baudrate, uint32_t ul_mck)
 {
 	uint32_t over;
@@ -517,6 +517,7 @@ uint32_t usart_init_rs485(Usart *p_usart,
 	return 0;
 }
 
+#if (!SAMG55)
 /**
  * \brief Configure USART to work in IrDA mode.
  *
@@ -546,6 +547,7 @@ uint32_t usart_init_irda(Usart *p_usart,
 
 	return 0;
 }
+#endif
 
 /**
  * \brief Configure USART to work in ISO7816 mode.
@@ -748,7 +750,7 @@ uint32_t usart_init_spi_slave(Usart *p_usart,
 	return 0;
 }
 
-#if (SAM3XA || SAM4L)
+#if (SAM3XA || SAM4L || SAMG55)
 
 /**
  * \brief Configure USART to work in LIN mode and act as a LIN master.
@@ -1553,10 +1555,18 @@ Pdc *usart_get_pdc_base(Usart *p_usart)
 
 	p_pdc_base = (Pdc *)NULL;
 
+#ifdef PDC_USART
+	if (p_usart == USART) {
+		p_pdc_base = PDC_USART;
+		return p_pdc_base;
+	}
+#endif
+#ifdef PDC_USART0
 	if (p_usart == USART0) {
 		p_pdc_base = PDC_USART0;
 		return p_pdc_base;
 	}
+#endif
 #ifdef PDC_USART1
 	else if (p_usart == USART1) {
 		p_pdc_base = PDC_USART1;
@@ -1572,6 +1582,30 @@ Pdc *usart_get_pdc_base(Usart *p_usart)
 #ifdef PDC_USART3
 	else if (p_usart == USART3) {
 		p_pdc_base = PDC_USART3;
+		return p_pdc_base;
+	}
+#endif
+#ifdef PDC_USART4
+	else if (p_usart == USART4) {
+		p_pdc_base = PDC_USART4;
+		return p_pdc_base;
+	}
+#endif
+#ifdef PDC_USART5
+	else if (p_usart == USART5) {
+		p_pdc_base = PDC_USART5;
+		return p_pdc_base;
+	}
+#endif
+#ifdef PDC_USART6
+	else if (p_usart == USART6) {
+		p_pdc_base = PDC_USART6;
+		return p_pdc_base;
+	}
+#endif
+#ifdef PDC_USART7
+	else if (p_usart == USART7) {
+		p_pdc_base = PDC_USART7;
 		return p_pdc_base;
 	}
 #endif
@@ -1605,8 +1639,8 @@ void usart_disable_writeprotect(Usart *p_usart)
  *
  * \param p_usart Pointer to a USART instance.
  *
- * \return 0 if the peripheral is not protected.
- * \return 16-bit Write Protect Violation Status otherwise.
+ * \return 0 if no write protect violation occurred, or 16-bit write protect
+ * violation source.
  */
 uint32_t usart_get_writeprotect_status(Usart *p_usart)
 {
@@ -1632,7 +1666,7 @@ uint8_t usart_get_error_number(Usart *p_usart)
 	return (p_usart->US_NER & US_NER_NB_ERRORS_Msk);
 }
 
-#if (SAM3S || SAM4S || SAM3U || SAM3XA || SAM4L || SAM4E || SAM4C)
+#if (SAM3S || SAM4S || SAM3U || SAM3XA || SAM4L || SAM4E || SAM4C || SAM4CP || SAM4CM)
 
 /**
  * \brief Configure the transmitter preamble length when the Manchester
@@ -1751,6 +1785,39 @@ uint32_t usart_get_version(Usart *p_usart)
 	return p_usart->US_VERSION;
 }
 
+#endif
+
+#if SAMG55
+/**
+ * \brief Set sleepwalking match mode.
+ *
+ * \param p_uart Pointer to a USART instance.
+ * \param ul_low_value First comparison value for received character.
+ * \param ul_high_value Second comparison value for received character.
+ * \param cmpmode ture for start condition, false for flag only.
+ * \param cmppar ture for parity check, false for no.
+ */
+void usart_set_sleepwalking(Usart *p_uart, uint8_t ul_low_value,
+		bool cmpmode, bool cmppar, uint8_t ul_high_value)
+{
+	Assert(ul_low_value <= ul_high_value);
+
+	uint32_t temp = 0;
+
+	if (cmpmode) {
+		temp |= US_CMPR_CMPMODE_START_CONDITION;
+	}
+
+	if (cmppar) {
+		temp |= US_CMPR_CMPPAR;
+	}
+
+	temp |= US_CMPR_VAL1(ul_low_value);
+
+	temp |= US_CMPR_VAL2(ul_high_value);
+
+	p_uart->US_CMPR= temp;
+}
 #endif
 
 //@}

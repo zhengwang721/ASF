@@ -8,7 +8,7 @@
  *
  * To use this board, define BOARD= ATMEGA256RFR2_XPLAINED_PRO.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -48,10 +48,393 @@
 
 #include "compiler.h"
 #include "conf_board.h"
-# include "helper.h"
+#include "helper.h"
+#include <asf.h>
 
 
+#if (!defined KEY_RC_BOARD)
 static board_t board_type;
+#endif
+
+#ifdef KEY_RC_BOARD 
+static uint8_t latch_status = 0xDF;
+#ifdef ADC_ACCELEROMETER
+static uint16_t x_axis_val;
+static uint16_t y_axis_val;
+static uint16_t z_axis_val;
+static uint16_t ADC_ref_val;
+
+
+
+
+static void acc_enable(acc_status_t status);
+
+#endif /* ADC_ACCELEROMETER */
+ 
+/**
+ * @brief Button pins setting for active/normal mode
+ */
+void set_button_pins_for_normal_mode(void)
+{
+    /* input */
+    BUTTON_PORT1_DIR &= 0x80;
+    BUTTON_PORT2_DIR &= ~((1 << PD5) | (1 << PD7));
+    /* pull-up */
+    BUTTON_PORT1 |= 0x7F;
+    BUTTON_PORT2 |= (1 << PD5) | (1 << PD7);
+}
+#ifdef ADC_ACCELEROMETER
+/**
+ * @brief Initialize ADC for Accelerometer
+ */
+void adc_init(void)
+{
+    /* power up ADC */
+    PRR0 &= ~(1 << PRADC);
+
+    /* divider 128 on */
+    ADCSRA = (1 << ADPS2) | (1 << ADPS1) | (1 << ADPS0);
+
+    /* not the free running mode */
+    ADCSRB = 0x00;
+
+    /* disable digital input buffers */
+    DIDR0 = (1 << ADC3D) | (1 << ADC2D) | (1 << ADC1D) | (1 << ADC0D);
+
+    /* disable analog comperator */
+    ACSR = (1 << ACD);
+}
+/**
+ * @brief Initialize the Accelerometer
+ */
+void acc_init(void)
+{
+    /* Reset all the previous values */
+    x_axis_val = 0;
+    y_axis_val = 0;
+    z_axis_val = 0;
+    ADC_ref_val = 0;
+
+    /* Leave the Accelerometer ON always other wise it
+     * takes 10 to 20 milli sec for conversion
+     */
+    acc_enable( ACC_ON );
+}
+/**
+ * @brief Enable or disable the Accelerometer
+ *
+ * @param status Enable or disable the accelerometer
+ *
+ */
+static void acc_enable(acc_status_t status)
+{
+    if (status)
+    {
+        /* Enable the Accerometer */
+        latch_status |= (1 << ACC_PWR);
+    }
+    else
+    {
+        /* Disable the Accerometer */
+        latch_status &= ~(1 << ACC_PWR);
+    }
+
+    /* Apply latch pulse to enable Accelerometer */
+    pulse_latch();
+}
+/**
+ * @brief disable the Accelerometer
+ *
+ */
+void acc_disable(void)
+{
+    acc_enable( ACC_OFF );
+}
+/**
+ * @brief Read the ADC for Accelerometer
+ *
+ * @param channel ADC channel to be read
+ *
+ * @return uint16_t Value read from ADC
+ *
+ */
+uint16_t adc_read(adc_channel_t channel)
+{
+    uint16_t result;
+
+    /* Prescaler 0 */
+    ADCSRA = (1 << ADEN);
+
+    /* disable digital input buffers */
+    DIDR0 = (1 << ADC3D) | (1 << ADC2D) | (1 << ADC1D) | (1 << ADC0D);
+
+    /* select Channel */
+    ADMUX = (uint8_t)channel;
+    ADCSRB &= ~(1 << MUX5);
+
+    /* Reference is 1.6V intern */
+    ADMUX |= (1 << REFS1) | (1 << REFS0);
+
+    /* start conversion */
+    ADCSRA |= (1 << ADSC);
+
+    /* wait for conversion to finish */
+    while ( (ADCSRA & (1 << ADSC)) );
+
+    /* ADC value is read into the variable */
+    result = ADC;
+
+    /* Enable digital input buffers */
+    DIDR0 &= ~(1 << ADC3D) & ~(1 << ADC2D) & ~(1 << ADC1D) & ~(1 << ADC0D);
+
+    /* Disable ADC */
+    ADCSRA &= ~(1 << ADEN);
+
+    return result;
+}
+/**
+ * @brief Read the ACC-Sensor Values with low-pass filtering
+ *
+ * @param x   X-axis value is read and stored in this parameter
+ * @param y   y-axis value is read and stored in this parameter
+ * @param z   z-axis value is read and stored in this parameter
+ * @param ref ref value is read and stored in this parameter
+ *
+ */
+void read_acc(uint16_t *x, uint16_t *y, uint16_t *z, uint16_t *ref)
+{
+    static adc_channel_t select_adc = X_AXIS;
+
+    uint16_t accX_old = x_axis_val;
+    uint16_t accY_old = y_axis_val;
+    uint16_t accZ_old = z_axis_val;
+    uint16_t accR_old = ADC_ref_val;
+
+    accX_old = ((accX_old << 2) - accX_old);
+    accY_old = ((accY_old << 2) - accY_old);
+    accZ_old = ((accZ_old << 2) - accZ_old);
+    accR_old = ((accR_old << 2) - accR_old);
+
+    switch (select_adc)
+    {
+        case X_AXIS:
+            {
+                x_axis_val = adc_read(X_AXIS);
+                x_axis_val = ((accX_old + x_axis_val) >> 2);
+                select_adc = Y_AXIS;
+                break;
+            }
+        case Y_AXIS:
+            {
+                y_axis_val = adc_read(Y_AXIS);
+                y_axis_val = ((accY_old + y_axis_val) >> 2);
+                select_adc = Z_AXIS;
+                break;
+            }
+        case Z_AXIS:
+            {
+                z_axis_val = adc_read(Z_AXIS);
+                z_axis_val = ((accZ_old + z_axis_val) >> 2);
+                select_adc = ADC_REF;
+                break;
+            }
+        case ADC_REF:
+            {
+                /* ADC_ref is measured from PF3 line which is connected across a resistor divider circuit of
+                 * 30Kohm and 10Kohm to make ADC_ref equal to half of supply voltage(Vs) the value has to be
+                 * substracted by a ratio of voltage at PF3 divided by 10. Please refer to the Remote control
+                 * schematics for more details
+                 */
+                ADC_ref_val  = adc_read(ADC_REF);
+                ADC_ref_val -= (ADC_ref_val / 10);
+                ADC_ref_val = ((accR_old + ADC_ref_val) >> 2);
+                select_adc = X_AXIS;
+                break;
+            }
+    }
+
+    (*x) = x_axis_val;
+    (*y) = y_axis_val;
+    (*z) = z_axis_val;
+    (*ref) = ADC_ref_val;
+}
+#endif /* ADC_ACCELEROMETER */
+
+/**
+ * @brief Pulse latch for connected external hardware
+ */
+void pulse_latch(void)
+{
+    uint8_t data_port;
+    uint8_t data_dir;
+
+    /* Store previous values */
+    data_port = LATCH_DATA;
+    data_dir = LATCH_DATA_DIR;
+
+    /* Apply latch pulse to set LED status */
+
+    LATCH_DATA_DIR = 0xFF;
+
+    LATCH_DATA = latch_status;
+    LATCH_PULSE();
+
+    /* Re-store previous values */
+    LATCH_DATA = data_port;
+    LATCH_DATA_DIR = data_dir;
+}
+
+/**
+ * @brief Update the latch status
+ *
+ */
+void update_latch_status(void)
+{
+	/* Switch all LEDs off, low active */	
+	latch_status |= (1 << PB0) | (1 << PB1) | (1 << PB2) | \
+					(1 << PB3) | (1 << PB4);
+}
+
+/**
+ * @brief Control LED status
+ *
+ * @param[in]  led_no LED ID
+ * @param[in]  led_setting LED_ON, LED_OFF, LED_TOGGLE
+ */
+void led_ctrl(led_id_t led_no, led_action_t led_setting)
+{
+    led_no--;
+    switch (led_setting)
+    {
+            /* low active LEDs */
+        case LED_ON:
+            latch_status &= ~(1 << led_no);
+            break;
+        case LED_OFF:
+            latch_status |= (1 << led_no);
+            break;
+        case LED_TOGGLE:
+        default:
+            if (latch_status & (1 << led_no))
+            {
+                latch_status &= ~(1 << led_no);
+            }
+            else
+            {
+                latch_status |= (1 << led_no);
+            }
+            break;
+    }
+
+    pulse_latch();
+}
+
+/**
+ * @brief Button handling handles the button pressed events
+ *
+ * @param button_no
+ */
+button_id_t button_scan(void)
+{
+    uint32_t ret_val = 0;
+    uint8_t i, k, r;
+    uint8_t pin_no;
+    uint32_t result[NUM_OF_IDENTICAL_KEYS];
+    for (r = 0; r < NUM_OF_IDENTICAL_KEYS; r++)
+    {
+        /* indicating unused entry */
+        result[r] = 0x80000000;  
+    }
+
+    for (k = 0; k < MAX_KEY_SCANS; k++)
+    {
+        ret_val = 0;
+
+        for (i = 1; i < 4; i++)
+        {
+            /* Set IRQ pin to output, low */
+            BUTTON_IRQ_PORT_DIR |= (1 << i);
+            BUTTON_IRQ_PORT &= ~(1 << i);
+            nop();
+            delay_ms(1);  /* wait until next rising edge changes input state */
+            if ((BUTTON_PORT1_IN & 0x7F) != 0x7F) /* Any of the pins are pressed. */
+            {
+
+                if (ioport_get_pin_level(BUTTON_PIN_0) == 0)
+                {
+                    pin_no = 0;
+                    ret_val |= (((uint32_t)1 << (((i - 1) * 9) + pin_no)));
+                }
+                if (ioport_get_pin_level(BUTTON_PIN_1) == 0)
+                {
+                    pin_no = 1;
+                    ret_val |= (((uint32_t)1 << (((i - 1) * 9) + pin_no)));
+                }
+                if (ioport_get_pin_level(BUTTON_PIN_2) == 0)
+                {
+                    pin_no = 2;
+                    ret_val |= (((uint32_t)1 << (((i - 1) * 9) + pin_no)));
+                }
+                if (ioport_get_pin_level(BUTTON_PIN_3) == 0)
+                {
+                    pin_no = 3;
+                    ret_val |= (((uint32_t)1 << (((i - 1) * 9) + pin_no)));
+                }
+                if (ioport_get_pin_level(BUTTON_PIN_4) == 0)
+                {
+                    pin_no = 4;
+                    ret_val |= (((uint32_t)1 << (((i - 1) * 9) + pin_no)));
+                }
+                if (ioport_get_pin_level(BUTTON_PIN_5) == 0)
+                {
+                    pin_no = 5;
+                    ret_val |= (((uint32_t)1 << (((i - 1) * 9) + pin_no)));
+                }
+                if (ioport_get_pin_level(BUTTON_PIN_6) == 0)
+                {
+                    pin_no = 6;
+                    ret_val |= (((uint32_t)1 << (((i - 1) * 9) + pin_no)));
+                }
+            }
+            if (ioport_get_pin_level(BUTTON_PIN_7) == 0)
+            {
+                pin_no = 7;
+                ret_val |= (((uint32_t)1 << (((i - 1) * 9) + pin_no)));
+            }
+            if (ioport_get_pin_level(BUTTON_PIN_8) == 0)
+            {
+                pin_no = 8;
+                ret_val |= (((uint32_t)1 << (((i - 1) * 9) + pin_no)));
+            }
+
+            /* Reset current pin */
+            BUTTON_IRQ_PORT_DIR &= ~(1 << i);
+            BUTTON_IRQ_PORT |= (1 << i);
+
+        }
+
+        /* Debouncing: Check if key value is reproducible */
+        for (r = 0; r < NUM_OF_IDENTICAL_KEYS; r++)
+        {
+            if (result[r] == ret_val)
+            {
+                if (r == (NUM_OF_IDENTICAL_KEYS - 1))
+                {
+                    return ret_val;
+                }
+            }
+            else
+            {
+                result[r] = ret_val;
+                break;
+            }
+        }
+    }
+    return ret_val;
+}
+
+#else /* KEY_RC_BOARD */
+
 
 /**
  * \brief Read XRAM
@@ -138,39 +521,6 @@ void xram_write(uint16_t addr, uint8_t data)
 }
 
 
-
-
- void board_identify(void)
-{
-    uint8_t i;
-    uint8_t count = 0;
-    mem_test_t mem_vals[NUM_CHECK];
-    for (i = 0; i < NUM_CHECK ; i++)
-    {
-        mem_vals[i].addr = 0x8000 + (i * 10);
-        mem_vals[i].val = 4;
-        xram_write(mem_vals[i].addr, mem_vals[i].val);
-    }
-    for (i = 0; i < NUM_CHECK ; i++)
-    {
-        if (mem_vals[i].val == xram_read(mem_vals[i].addr))
-        {
-            count++;
-        }
-    }
-    if (count)
-    {
-        board_type = SENSOR_TERM_BOARD;
-
-    }
-    else
-    {
-        board_type = PLAIN;    
-    }   
-
-
-}
-#ifdef  SENSOR_TERMINAL_BOARD
 bool stb_button_read(void)
 {
 
@@ -241,7 +591,38 @@ switch (board_type)
     return false;
 
 }
-#endif
+
+void board_identify(void)
+{
+    uint8_t i;
+    uint8_t count = 0;
+    mem_test_t mem_vals[NUM_CHECK];
+    for (i = 0; i < NUM_CHECK ; i++)
+    {
+        mem_vals[i].addr = 0x8000 + (i * 10);
+        mem_vals[i].val = 4;
+        xram_write(mem_vals[i].addr, mem_vals[i].val);
+    }
+    for (i = 0; i < NUM_CHECK ; i++)
+    {
+        if (mem_vals[i].val == xram_read(mem_vals[i].addr))
+        {
+            count++;
+        }
+    }
+    if (count)
+    {
+        board_type = SENSOR_TERM_BOARD;
+
+    }
+    else
+    {
+        board_type = PLAIN;    
+    }   
+
+
+}
+
 
 void led_ctrl(led_id_t led_no, led_action_t led_setting)
 {
@@ -352,8 +733,13 @@ case PLAIN:
         break;
         }
     }
+	
 }
+
 }
+
+
+
 
 
 void led_helper_func(void)
@@ -382,3 +768,5 @@ void led_helper_func(void)
     LED_ADDR_DEC_PORT &= ~_BV(7);
     LED_ADDR_DEC_DDR |= _BV(7);
 }
+#endif
+

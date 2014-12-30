@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Serial Peripheral Interface Driver
+ * \brief SAM Serial Peripheral Interface Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,12 +47,23 @@
 #include <compiler.h>
 #include <system.h>
 #include <clock.h>
-#include "sercom_interrupt.h"
+#include <system_interrupt.h>
 #include "sercom_pinout.h"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+#if (SAMD10) || (SAMD11)
+
+#if (SERCOM0_GCLK_ID_SLOW == SERCOM1_GCLK_ID_SLOW && \
+     SERCOM0_GCLK_ID_SLOW == SERCOM2_GCLK_ID_SLOW)
+#  define SERCOM_GCLK_ID SERCOM0_GCLK_ID_SLOW
+#else
+#  error "SERCOM modules must share the same slow GCLK channel ID."
+#endif
+
+#else
 
 #if (SERCOM0_GCLK_ID_SLOW == SERCOM1_GCLK_ID_SLOW && \
      SERCOM0_GCLK_ID_SLOW == SERCOM2_GCLK_ID_SLOW && \
@@ -61,6 +72,37 @@ extern "C" {
 #else
 #  error "SERCOM modules must share the same slow GCLK channel ID."
 #endif
+
+#endif
+
+#if (0x1ff >= REV_SERCOM)
+#  define FEATURE_SERCOM_SYNCBUSY_SCHEME_VERSION_1
+#elif (0x2ff >= REV_SERCOM)
+#  define FEATURE_SERCOM_SYNCBUSY_SCHEME_VERSION_2
+#else
+#  error "Unknown SYNCBUSY scheme for this SERCOM revision"
+#endif
+
+/**
+ * \brief sercom asynchronous operation mode
+ *
+ * Select sercom asynchronous operation mode
+ */
+enum sercom_asynchronous_operation_mode {
+	SERCOM_ASYNC_OPERATION_MODE_ARITHMETIC = 0,
+	SERCOM_ASYNC_OPERATION_MODE_FRACTIONAL,
+};
+
+/**
+ * \brief sercom asynchronous samples per bit
+ *
+ * Select number of samples per bit
+ */
+enum sercom_asynchronous_sample_num {
+	SERCOM_ASYNC_SAMPLE_NUM_3 = 3,
+	SERCOM_ASYNC_SAMPLE_NUM_8 = 8,
+	SERCOM_ASYNC_SAMPLE_NUM_16 = 16,
+};
 
 enum status_code sercom_set_gclk_generator(
 		const enum gclk_generator generator_source,
@@ -74,12 +116,16 @@ enum status_code _sercom_get_sync_baud_val(
 enum status_code _sercom_get_async_baud_val(
 		const uint32_t baudrate,
 		const uint32_t peripheral_clock,
-		uint16_t *const baudval);
+		uint16_t *const baudval,
+		enum sercom_asynchronous_operation_mode mode,
+		enum sercom_asynchronous_sample_num sample_num);
 
 uint32_t _sercom_get_default_pad(
 		Sercom *const sercom_module,
 		const uint8_t pad);
 
+uint8_t _sercom_get_sercom_inst_index(
+		Sercom *const sercom_instance);
 #ifdef __cplusplus
 }
 #endif

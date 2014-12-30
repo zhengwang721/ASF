@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project force-caption="true" force-description="true" caption="RF4CE-ZRC controller serial interface ATmegarfr2-ATmega256RFR2 Xplained Pro" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.ctr.ncp.atmega256rfr2_xplained_pro">
+	<project force-caption="true" force-description="true" caption="RF4CE-ZRC controller serial interface - ATmega256RFR2 Xplained Pro" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.ctr.ncp.atmega256rfr2_xplained_pro">
 		<info type="description" value="summary">
 		The RF4CE-ZRC controller stack running on the network co-processor and driven by the host application
 		</info>
@@ -11,14 +11,12 @@
 		<build type="header-file" value="conf_flash.h"/>
         <build type="header-file" value="conf_nvm.h"/>
 		<build type="header-file" value="conf_hw_timer.h"/>
-		<build type="define" name="EXTERN_EEPROM_AVAILABLE" value ="0"/>
+
 
 
 		<config name="config.compiler.iarew.data_stack_size" value="0x200"/>
 		<config name="config.compiler.iarew.near_heap_size" value="0x40"/>
 		
-		
-		<config name="config.thirdparty.wireless.avr2025_mac.source.sal" value="atmegarf_sal"/>
 		<config name="config.thirdparty.wireless.avr2025_mac.source.mac.api" value="no" />
 		<config name="config.thirdparty.wireless.addons.sio2host" value="uart"/>
 		<config name="config.common.drivers.nvm.mem_type" value="no_extmem"/>

@@ -3,7 +3,7 @@
  *
  * \brief TC Capture Waveform Example for SAM.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,84 +41,11 @@
  *
  */
 
-/**
- * \mainpage TC Capture Waveform Example
- *
- * \section Purpose
- *
- * This example indicates how to use TC in capture mode to measure the pulse
- * frequency and count the total pulse number of an external signal injected
- * on TIOA pin.
- *
- * \section Requirements
- *
- * This package can be used with SAM evaluation kits.
- * It generates a waveform on TC TC_CHANNEL_WAVEFORM PIN_TC_WAVEFORM, and it
- * captures wave from TC_CHANNEL_CAPTURE PIN_TC_CAPTURE. Look at the
- * conf_board.h file to check these previous define.
- *
- * To measure the wavefrom on channel_waveform, connect PIN_TC_WAVEFORM to
- * PIN_TC_CAPTURE, and configure PIN_TC_WAVEFORM as output peripheral and
- * PIN_TC_CAPTURE as input peripheral.
- *
- * \section Descriptions
- *
- * This example shows how to configure TC in waveform and capture mode.
- * In capture mode, pulse signal (from PIN_TC_WAVEFORM) is set as an input to
- * PIN_TC_CAPTURE, and RA and RB will be loaded when programmed event occurs.
- * When TC interrupt happens, we could read RA and RB value for calculating
- * pulse frequency and increased pulse number. The current pulse frequency
- * and total pulse number are output on UART.
- *
- * The code can be roughly broken down as follows:
- * <ul>
- * <li>Select pre-defined waveform frequency and duty cycle to be generated.
- * <li>Configure TC_CHANNEL_WAVEFORM as waveform output.
- * <li>Configure TC_CHANNEL_CAPTURE as capture input.
- * <li>Configure capture Register A loaded when rising edge of TIOA occurs.
- * <li>Configure capture Register B loaded when falling edge of TIOA occurs.
- * <li>Configure an interrupt for TC and enable the RB load interrupt.
- * <li> 'c' starts capture.
- * <li> 's' stops capture, and dumps the information that has been captured.
- * </ul>
- *
- * \section Usage
- *
- * -# Compile the application.
- * -# Connect the UART port of the evaluation board to the computer and open
- * it in a terminal.
- *    - Settings: 115200 bauds, 8 bits, 1 stop bit, no parity, no flow control.
- * -# Download the program into the evaluation board and run it.
- * -# Upon startup, the application will output the following line on the UART:
- *    \code
- *     -- TC capture waveform example  xxx --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *    \endcode
- * -# Choose the item in the following menu to test.
- *    \code
- *     Menu :
- *     ------
- *       Output waveform property:
- *       0: Set Frequency =  178 Hz, Duty Cycle = 30%
- *       1: Set Frequency =  375 Hz, Duty Cycle = 50%
- *       2: Set Frequency =  800 Hz, Duty Cycle = 75%
- *       3: Set Frequency = 1000 Hz, Duty Cycle = 80%
- *       4: Set Frequency = 4000 Hz, Duty Cycle = 55%
- *       -------------------------------------------
- *       c: Capture waveform from TC(TC_PERIPHERAL) channel(TC_CHANNEL_CAPTURE)
- *       s: Stop capture and display captured informations
- *       h: Display menu
- *     ------
- *    \endcode
- *
- */
+#include <asf.h>
+#include <conf_board.h>
+#include <conf_clock.h>
 
-#include "asf.h"
-#include "conf_board.h"
-#include "conf_clock.h"
-
-/// @cond 0
+/// @cond
 /**INDENT-OFF**/
 #ifdef __cplusplus
 extern "C" {
@@ -131,7 +58,9 @@ extern "C" {
 		"-- "BOARD_NAME " --\r\n" \
 		"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
 
+//! [tc_capture_selection]
 #define TC_CAPTURE_TIMER_SELECTION TC_CMR_TCCLKS_TIMER_CLOCK3
+//! [tc_capture_selection]
 
 struct waveconfig_t {
 	/** Internal clock signals selection. */
@@ -187,7 +116,7 @@ static void display_menu(void)
 	}
 	printf("  -------------------------------------------\n\r"
 			"  c: Capture waveform from TC%d channel %d\n\r"
-			"  s: Stop capture and display captured informations \n\r"
+			"  s: Stop capture and display captured information \n\r"
 			"  h: Display menu \n\r"
 			"------\n\r\r", TC_PERIPHERAL,TC_CHANNEL_CAPTURE);
 }
@@ -201,6 +130,12 @@ static void tc_waveform_initialize(void)
 
 	/* Configure the PMC to enable the TC module. */
 	sysclk_enable_peripheral_clock(ID_TC_WAVEFORM);
+#if SAMG55
+	/* Enable PCK output */
+	pmc_disable_pck(PMC_PCK_3);
+	pmc_switch_pck_to_mck(PMC_PCK_3, PMC_PCK_PRES_CLK_1);
+	pmc_enable_pck(PMC_PCK_3);
+#endif
 
 	/* Init TC to waveform mode. */
 	tc_init(TC, TC_CHANNEL_WAVEFORM,
@@ -230,10 +165,17 @@ static void tc_waveform_initialize(void)
 /**
  * \brief Configure TC TC_CHANNEL_CAPTURE in capture operating mode.
  */
+//! [tc_capture_init]
 static void tc_capture_initialize(void)
 {
 	/* Configure the PMC to enable the TC module */
 	sysclk_enable_peripheral_clock(ID_TC_CAPTURE);
+#if SAMG55
+	/* Enable PCK output */
+	pmc_disable_pck(PMC_PCK_3);
+	pmc_switch_pck_to_mck(PMC_PCK_3, PMC_PCK_PRES_CLK_1);
+	pmc_enable_pck(PMC_PCK_3);
+#endif
 
 	/* Init TC to capture mode. */
 	tc_init(TC, TC_CHANNEL_CAPTURE,
@@ -244,18 +186,29 @@ static void tc_capture_initialize(void)
 			| TC_CMR_ETRGEDG_FALLING /* External Trigger Edge: Falling edge */
 	);
 }
+//! [tc_capture_init]
 
 /**
  * \brief Interrupt handler for the TC TC_CHANNEL_CAPTURE
  */
+//! [tc_capture_irq_handler_start]
 void TC_Handler(void)
 {
+	//! [tc_capture_irq_handler_start]
+	//! [tc_capture_irq_handler_status]
 	if ((tc_get_status(TC, TC_CHANNEL_CAPTURE) & TC_SR_LDRBS) == TC_SR_LDRBS) {
+		//! [tc_capture_irq_handler_status]
 		gs_ul_captured_pulses++;
+		//! [tc_capture_irq_handler_read_ra]
 		gs_ul_captured_ra = tc_read_ra(TC, TC_CHANNEL_CAPTURE);
+		//! [tc_capture_irq_handler_read_ra]
+		//! [tc_capture_irq_handler_read_rb]
 		gs_ul_captured_rb = tc_read_rb(TC, TC_CHANNEL_CAPTURE);
+		//! [tc_capture_irq_handler_read_rb]
 	}
+//! [tc_capture_irq_handler_end]
 }
+//! [tc_capture_irq_handler_end]
 
 /**
  *  Configure UART console.
@@ -299,29 +252,41 @@ int main(void)
 	printf("-- %s\n\r", BOARD_NAME);
 	printf("-- Compiled: %s %s --\n\r", __DATE__, __TIME__);
 
-	/* Configure PIO Pins for TC */
+	//! [tc_waveform_gpio]
+	/** Configure PIO Pins for TC */
 	ioport_set_pin_mode(PIN_TC_WAVEFORM, PIN_TC_WAVEFORM_MUX);
-	/* Disable IO to enable peripheral mode) */
+	/** Disable I/O to enable peripheral mode) */
 	ioport_disable_pin(PIN_TC_WAVEFORM);
+	//! [tc_waveform_gpio]
+	
+	//! [tc_capture_gpio]
+	/** Configure PIO Pins for TC */
 	ioport_set_pin_mode(PIN_TC_CAPTURE, PIN_TC_CAPTURE_MUX);
-	/* Disable IO to enable peripheral mode) */
+	/** Disable I/O to enable peripheral mode) */
 	ioport_disable_pin(PIN_TC_CAPTURE);
+	//! [tc_capture_gpio]
 
 	/* Configure TC TC_CHANNEL_WAVEFORM as waveform operating mode */
 	printf("Configure TC%d channel %d as waveform operating mode \n\r",
 			TC_PERIPHERAL, TC_CHANNEL_WAVEFORM);
+	//! [tc_waveform_init_call]
 	tc_waveform_initialize();
+	//! [tc_waveform_init_call]
         
 	/* Configure TC TC_CHANNEL_CAPTURE as capture operating mode */
 	printf("Configure TC%d channel %d as capture operating mode \n\r",
 			TC_PERIPHERAL, TC_CHANNEL_CAPTURE);
+	//! [tc_capture_init_call]
 	tc_capture_initialize();
+	//! [tc_capture_init_call]
 
-	/* Configure TC interrupts for TC TC_CHANNEL_CAPTURE only */
+	//! [tc_capture_init_irq]
+	/** Configure TC interrupts for TC TC_CHANNEL_CAPTURE only */
 	NVIC_DisableIRQ(TC_IRQn);
 	NVIC_ClearPendingIRQ(TC_IRQn);
 	NVIC_SetPriority(TC_IRQn, 0);
 	NVIC_EnableIRQ(TC_IRQn);
+	//! [tc_capture_init_irq]
 
 	/* Display menu */
 	display_menu();
@@ -362,9 +327,13 @@ int main(void)
 
 		case 'c':
 			puts("Start capture, press 's' to stop \r");
+			//! [tc_capture_init_module_irq]
 			tc_enable_interrupt(TC, TC_CHANNEL_CAPTURE, TC_IER_LDRBS);
+			//! [tc_capture_init_module_irq]
 			/* Start the timer counter on TC TC_CHANNEL_CAPTURE */
+			//! [tc_capture_start_now]
 			tc_start(TC, TC_CHANNEL_CAPTURE);
+			//! [tc_capture_start_now]
 			break;
 
 		default:
@@ -383,7 +352,7 @@ int main(void)
 	}
 }
 
-/// @cond 0
+/// @cond
 /**INDENT-OFF**/
 #ifdef __cplusplus
 }

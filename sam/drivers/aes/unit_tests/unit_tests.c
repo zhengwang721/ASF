@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for AES driver.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -65,6 +65,7 @@
  * This example has been tested with the following setup:
  * - sam4e16e_sam4e_ek
  * - sam4c16c_sam4c_ek
+ * - sam4cp16b_sam4cp16bmb
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -72,7 +73,7 @@
  *
  * \section contactinfo Contact Information
  * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
- * Support and FAQ: http://support.atmel.no/
+ * Support and FAQ: http://www.atmel.com/design-support/
  */
 
 #define AES_EXAMPLE_REFBUF_SIZE 4
@@ -354,7 +355,7 @@ static void run_ecb_mode_test_dma(const struct test_case *test)
 
 #endif
 
-#if SAM4C
+#if SAM4C || SAM4CP || SAM4CM
 /* PDC data packet for transfer */
 pdc_packet_t g_pdc_tx_packet;
 pdc_packet_t g_pdc_rx_packet;
@@ -868,7 +869,7 @@ int main(void)
 #if SAM4E
 	DEFINE_TEST_CASE(ecb_mode_test_dma, NULL, run_ecb_mode_test_dma, NULL,
 			"SAM AES ECB mode encryption and decryption with DMA test.");
-#elif SAM4C
+#elif SAM4C || SAM4CP || SAM4CM
 	DEFINE_TEST_CASE(ecb_mode_test_pdc, NULL, run_ecb_mode_test_pdc, NULL,
 			"SAM AES ECB mode encryption and decryption with pdc test.");
 #endif
@@ -882,7 +883,7 @@ int main(void)
 		&ctr_mode_test,
 #if SAM4E
 		&ecb_mode_test_dma,
-#elif SAM4C
+#elif SAM4C || SAM4CP || SAM4CM
 		&ecb_mode_test_pdc,
 #endif
 	};

@@ -3,7 +3,7 @@
  *
  * \brief Watchdog Timer (WDT) example for SAM.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -57,12 +57,12 @@
  *
  * At first, the example configures the pins of LED and Console UART, enables
  * the watchdog timer, and then prints some information via UART. Before user
- * presses the push button that the information mentions, the LED keeps blinking and
- * the counter of the watchdog timer is restarted before any fault of the
- * watchdog timer occurs (the interrupt in this case). The example enters a
- * deadlock status after user presses the push button and it causes that the counter
- * will not be restarted until a fault occurs (the interrupt). In the interrupt
- * handler, the counter is restarted.
+ * presses the push button that the information mentions, the LED keeps
+ * blinking and the counter of the watchdog timer is restarted before any
+ * fault of the watchdog timer occurs (the interrupt in this case).
+ * The example enters a deadlock status after user presses the push button
+ * and it causes that the counter will not be restarted until a fault
+ * occurs (the interrupt). In the interrupt handler, the counter is restarted.
  *
  *
  * \section Usage
@@ -74,14 +74,14 @@
  * -# Download the program into the evaluation board and run it.
  * -# Upon startup, the application will output the following lines on the UART:
  *    \code
- *     -- Watchdog with IRQ Interrupt Example --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *    \endcode
+	-- Watchdog with IRQ Interrupt Example --
+	-- xxxxxx-xx
+	-- Compiled: xxx xx xxxx xx:xx:xx --
+\endcode
  * -# Press the push button on board.
  *    \code
- *     Press xxx to simulate a deadlock loop.
- *    \endcode
+	Press xxx to simulate a deadlock loop.
+\endcode
  */
 
 #include "asf.h"
@@ -161,7 +161,13 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
 	};
 
 	/* Configure console UART. */
@@ -200,7 +206,7 @@ static void configure_led(void)
 }
 
 /**
- * \brief Application entry point for wdt_irq example.
+ * \brief Application entry point for WDT example.
  *
  * \return Unused (ANSI-C compatibility).
  */
@@ -263,7 +269,7 @@ int main(void)
 
 			/* Toggle LED at the given period. */
 			if ((g_ul_ms_ticks % BLINK_PERIOD) == 0) {
-#if SAM4E || SAM4N || SAM4C
+#if (SAM4E || SAM4N || SAM4C || SAMG)
 				LED_Toggle(LED0);
 #else
 				LED_Toggle(LED0_GPIO);

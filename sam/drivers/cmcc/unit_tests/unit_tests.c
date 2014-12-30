@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for CMCC driver.
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -61,6 +61,9 @@
  * All SAM devices with an CMCC module can be used.
  * This example has been tested with the following setup:
  * - sam4e16e_sam4e_ek
+ * - sam4c16c_sam4c_ek
+ * - sam4cmp16c_sam4cmp_db
+ * - sam4cms16c_sam4cms_db
  *
  * \section compinfo Compilation info
  * This software was written for the GNU GCC and IAR for ARM. Other compilers
@@ -68,8 +71,15 @@
  *
  * \section contactinfo Contact Information
  * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
- * Support and FAQ: http://support.atmel.no/
+ * Support and FAQ: http://www.atmel.com/design-support/
  */
+
+/** Define CMCC Base */
+#if SAM4C || SAM4CM
+#define CMCC_BASE    CMCC0
+#else
+#define CMCC_BASE    CMCC
+#endif
 
 #define FIBONACCI_NUM    30
 
@@ -102,7 +112,7 @@ static uint32_t recfibo(uint32_t n)
 static void run_cache_data_hit_test(const struct test_case *test)
 {
 	recfibo(FIBONACCI_NUM);
-	if (0 == cmcc_get_monitor_cnt(CMCC)) {
+	if (0 == cmcc_get_monitor_cnt(CMCC_BASE)) {
 		flag = false;
 	} else {
 		flag = true;
@@ -127,8 +137,8 @@ int main(void)
 
 	/* Enable the CMCC module. */
 	cmcc_get_config_defaults(&g_cmcc_cfg);
-	cmcc_init(CMCC, &g_cmcc_cfg);
-	cmcc_enable(CMCC);
+	cmcc_init(CMCC_BASE, &g_cmcc_cfg);
+	cmcc_enable(CMCC_BASE);
 
 	/* Define all the test cases. */
 	DEFINE_TEST_CASE(dhit_mode_test, NULL, run_cache_data_hit_test, NULL,

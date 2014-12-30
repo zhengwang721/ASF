@@ -3,7 +3,7 @@
  *
  * \brief Common SD/MMC stack
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -41,7 +41,6 @@
  *
  */
 
-#include <asf.h>
 #include <string.h>
 #include "conf_board.h"
 #include "board.h"
@@ -49,6 +48,14 @@
 #include "sd_mmc_protocol.h"
 #include "sd_mmc.h"
 #include "delay.h"
+#include "ioport.h"
+
+#ifdef FREERTOS_USED
+#include "FreeRTOS.h"
+#include "task.h"
+#include "portmacro.h"
+#include "projdefs.h"
+#endif
 
 /**
  * \ingroup sd_mmc_stack
@@ -1905,12 +1912,14 @@ sd_mmc_err_t sd_mmc_start_read_blocks(void *dest, uint16_t nb_block)
 	return SD_MMC_OK;
 }
 
-sd_mmc_err_t sd_mmc_wait_end_of_read_blocks(void)
+sd_mmc_err_t sd_mmc_wait_end_of_read_blocks(bool abort)
 {
 	if (!driver_wait_end_of_read_blocks()) {
 		return SD_MMC_ERR_COMM;
 	}
-	if (sd_mmc_nb_block_remaining) {
+	if (abort) {
+		sd_mmc_nb_block_remaining = 0;
+	} else if (sd_mmc_nb_block_remaining) {
 		return SD_MMC_OK;
 	}
 
@@ -1989,12 +1998,14 @@ sd_mmc_err_t sd_mmc_start_write_blocks(const void *src, uint16_t nb_block)
 	return SD_MMC_OK;
 }
 
-sd_mmc_err_t sd_mmc_wait_end_of_write_blocks(void)
+sd_mmc_err_t sd_mmc_wait_end_of_write_blocks(bool abort)
 {
 	if (!driver_wait_end_of_write_blocks()) {
 		return SD_MMC_ERR_COMM;
 	}
-	if (sd_mmc_nb_block_remaining) {
+	if (abort) {
+		sd_mmc_nb_block_remaining = 0;
+	} else if (sd_mmc_nb_block_remaining) {
 		return SD_MMC_OK;
 	}
 

@@ -3,7 +3,7 @@
  *
  * \brief Analog-to-Digital Converter (ADC/ADC12B) driver for SAM.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -62,7 +62,7 @@ extern "C" {
  * @{
  */
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C
+#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C || SAM4CP || SAM4CM
 /**
  * \brief Initialize the given ADC with the specified ADC clock and startup time.
  *
@@ -140,7 +140,7 @@ uint32_t adc_init(Adc *p_adc, const uint32_t ul_mck, const uint32_t ul_adc_clock
  */
 void adc_set_resolution(Adc *p_adc, const enum adc_resolution_t resolution)
 {
-#if SAM4C
+#if SAM4C || SAM4CP || SAM4CM
 	p_adc->ADC_EMR &= ~ADC_EMR_OSR_Msk;
 	switch (resolution) {
 	case ADC_8_BITS:
@@ -156,12 +156,13 @@ void adc_set_resolution(Adc *p_adc, const enum adc_resolution_t resolution)
 		break;
 	}
 #else
-	p_adc->ADC_MR |= (resolution << 4) & ADC_MR_LOWRES;
+	p_adc->ADC_MR &= ~ADC_MR_LOWRES;
+	p_adc->ADC_MR |= resolution;
 #endif
 }
 
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C
+#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C || SAM4CP || SAM4CM
 /**
  * \brief Configure conversion trigger and free run mode.
  *
@@ -206,7 +207,7 @@ void adc_configure_power_save(Adc *p_adc, const uint8_t uc_sleep, const uint8_t 
 	p_adc->ADC_MR |= (((uc_sleep << 5) & ADC_MR_SLEEP) |
 			((uc_fwup << 6) & ADC_MR_FWUP));
 }
-#elif SAM3U || SAM4C
+#elif SAM3U || SAM4C || SAM4CP || SAM4CM
 /**
  * \brief Configure ADC power saving mode.
  *
@@ -223,7 +224,7 @@ void adc_configure_power_save(Adc *p_adc, const uint8_t uc_sleep)
 }
 #endif
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C
+#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C || SAM4CP || SAM4CM
 /**
  * \brief Configure conversion sequence.
  *
@@ -235,12 +236,9 @@ void adc_configure_sequence(Adc *p_adc, const enum adc_channel_num_t ch_list[],
 		uint8_t uc_num)
 {
 	uint8_t uc_counter;
-#if SAM4S
-	volatile uint32_t *adc_seqr = &p_adc->ADC_SEQR[0];
-#else
 	volatile uint32_t *adc_seqr = &p_adc->ADC_SEQR1;
-#endif
-	if (uc_num < 8) {
+
+	if (uc_num <= 8) {
 		for (uc_counter = 0; uc_counter < uc_num; uc_counter++) {
 			adc_seqr[0] |=
 					ch_list[uc_counter] << (4 * uc_counter);
@@ -252,7 +250,7 @@ void adc_configure_sequence(Adc *p_adc, const enum adc_channel_num_t ch_list[],
 		}
 		for (uc_counter = 0; uc_counter < uc_num - 8; uc_counter++) {
 			adc_seqr[1] |=
-					ch_list[uc_counter] << (4 * uc_counter);
+					ch_list[8 + uc_counter] << (4 * uc_counter);
 		}
 	}
 }
@@ -273,7 +271,7 @@ void adc_configure_timing(Adc *p_adc, const uint8_t uc_tracking,
 	p_adc->ADC_MR |= ADC_MR_TRANSFER(uc_transfer)
 			| settling | ADC_MR_TRACKTIM(uc_tracking);
 }
-#elif SAM3N || SAM4C
+#elif SAM3N || SAM4C || SAM4CP || SAM4CM
 /**
  * \brief Configure ADC timing.
  *
@@ -367,7 +365,7 @@ void adc_enable_all_channel(Adc *p_adc)
 {
 #if SAM3S || SAM4S || SAM3N || SAM3XA
 	p_adc->ADC_CHER = 0xFFFF;
-#elif SAM3U || SAM4C
+#elif SAM3U || SAM4C || SAM4CP || SAM4CM
 	p_adc->ADC_CHER = 0xFF;
 #endif
 }
@@ -392,7 +390,7 @@ void adc_disable_all_channel(Adc *p_adc)
 {
 #if SAM3S || SAM4S || SAM3N || SAM3XA
 	p_adc->ADC_CHDR = 0xFFFF;
-#elif SAM3U || SAM4C
+#elif SAM3U || SAM4C || SAM4CP || SAM4CM
 	p_adc->ADC_CHDR = 0xFF;
 #endif
 }
@@ -442,7 +440,7 @@ uint32_t adc_get_latest_value(const Adc *p_adc)
 	return p_adc->ADC_LCDR;
 }
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C
+#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C || SAM4CP || SAM4CM
 /**
  * \brief Enable TAG option so that the number of the last converted channel
  * can be indicated.
@@ -674,7 +672,7 @@ void adc_disable_interrupt(Adc *p_adc, const uint32_t ul_source)
 	p_adc->ADC_IDR = ul_source;
 }
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C
+#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C || SAM4CP || SAM4CM
 /**
  * \brief Get ADC interrupt and overrun error status.
  *
@@ -760,7 +758,7 @@ void adc_disable_ts(Adc *p_adc)
 }
 #endif
 
-#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C
+#if SAM3S || SAM4S || SAM3N || SAM3XA || SAM4C || SAM4CP || SAM4CM
 #ifndef ADC_WPMR_WPKEY_PASSWD
 #define ADC_WPMR_WPKEY_PASSWD ADC_WPMR_WPKEY(0x414443u)
 #endif
@@ -780,12 +778,19 @@ void adc_set_writeprotect(Adc *p_adc, const uint32_t ul_enable)
  *
  * \param p_adc Pointer to an ADC instance.
  *
- * \return 0 if the peripheral is not protected, or 16-bit write protect
- * violation Status.
+ * \return 0 if no write protect violation occurred, or 16-bit write protect
+ * violation source.
  */
 uint32_t adc_get_writeprotect_status(const Adc *p_adc)
 {
-	return p_adc->ADC_WPSR & ADC_WPSR_WPVS;
+	uint32_t reg_value;
+
+	reg_value = p_adc->ADC_WPSR;
+	if (reg_value & ADC_WPSR_WPVS) {
+		return (reg_value & ADC_WPSR_WPVSRC_Msk) >> ADC_WPSR_WPVSRC_Pos;
+	} else {
+		return 0;
+	}
 }
 
 /**
@@ -873,7 +878,7 @@ void adc_check(Adc *p_adc, const uint32_t ul_mck)
 		if (p_adc->ADC_MR & ADC_MR_FREERUN_ON) {
 			puts("FreeRun forbidden in sleep mode\r");
 		}
-#if !SAM4C
+#if !SAM4C && !SAM4CP && !SAM4CM
 		if (!(p_adc->ADC_MR & ADC_MR_FWUP_ON)) {
 			/* Sleep 40ms */
 			if (ADC_STARTUP_NORM * ul_adcfreq / 1000000 >
@@ -911,7 +916,7 @@ Pdc *adc_get_pdc_base(const Adc *p_adc)
 	return PDC_ADC;
 }
 
-#if SAM4C
+#if SAM4C || SAM4CP || SAM4CM
 /**
  * \brief Set digital averaging trigger.
  *

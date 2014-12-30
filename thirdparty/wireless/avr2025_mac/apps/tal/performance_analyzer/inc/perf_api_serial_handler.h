@@ -3,7 +3,7 @@
  *
  * \brief This file contains macros and function prototypes for SIO handling.
  * - Performance Analyzer application.
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -77,9 +77,10 @@
 extern "C" {
 #endif
 
+
 /**
  * \brief This function does the initialization of the Serial handler state
- *Machine.
+ * Machine.
  */
 void init_sio(void);
 

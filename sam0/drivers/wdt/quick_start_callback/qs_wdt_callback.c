@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Watchdog Driver Callback Quick Start
+ * \brief SAM Watchdog Driver Callback Quick Start
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -66,30 +66,29 @@ void configure_wdt(void)
 	/* Set the Watchdog configuration settings */
 	//! [setup_3]
 	config_wdt.always_on            = false;
+#if !(SAML21)
 	config_wdt.clock_source         = GCLK_GENERATOR_4;
+#endif
 	config_wdt.timeout_period       = WDT_PERIOD_4096CLK;
 	config_wdt.early_warning_period = WDT_PERIOD_2048CLK;
 	//! [setup_3]
 
 	/* Initialize and enable the Watchdog with the user settings */
 	//! [setup_4]
-	wdt_init(&config_wdt);
+	wdt_set_config(&config_wdt);
 	//! [setup_4]
-	//! [setup_5]
-	wdt_enable();
-	//! [setup_5]
 }
 
 void configure_wdt_callbacks(void)
 {
-	//! [setup_6]
+	//! [setup_5]
 	wdt_register_callback(watchdog_early_warning_callback,
 		WDT_CALLBACK_EARLY_WARNING);
-	//! [setup_6]
+	//! [setup_5]
 
-	//! [setup_7]
+	//! [setup_6]
 	wdt_enable_callback(WDT_CALLBACK_EARLY_WARNING);
-	//! [setup_7]
+	//! [setup_6]
 }
 //! [setup]
 

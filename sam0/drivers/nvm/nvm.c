@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Non Volatile Memory driver
+ * \brief SAM Non Volatile Memory driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,7 +45,6 @@
 #include <system_interrupt.h>
 #include <string.h>
 
-
 /**
  * \internal Internal device instance struct
  *
@@ -54,9 +53,9 @@
  * into the struct in the nvm_init() function.
  */
 struct _nvm_module {
-	/** Number of bytes contained per page */
+	/** Number of bytes contained per page. */
 	uint16_t page_size;
-	/** Total number of pages in the NVM memory */
+	/** Total number of pages in the NVM memory. */
 	uint16_t number_of_pages;
 	/** If \c false, a page write command will be issued automatically when the
 	 *  page buffer is full. */
@@ -83,7 +82,7 @@ static struct _nvm_module _nvm_dev;
  * \brief Sets the up the NVM hardware module based on the configuration.
  *
  * Writes a given configuration of a NVM controller configuration to the
- * hardware module, and initializes the internal device struct
+ * hardware module, and initializes the internal device struct.
  *
  * \param[in] config    Configuration settings for the NVM controller
  *
@@ -107,11 +106,16 @@ enum status_code nvm_set_config(
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
 
+#if (SAML21)
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, MCLK_APBBMASK_NVMCTRL);
+#else
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, PM_APBBMASK_NVMCTRL);
+#endif
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
 
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
@@ -120,12 +124,11 @@ enum status_code nvm_set_config(
 
 	/* Writing configuration to the CTRLB register */
 	nvm_module->CTRLB.reg =
-			NVMCTRL_CTRLB_SLEEPPRM(config->sleep_power_mode)               |
+			NVMCTRL_CTRLB_SLEEPPRM(config->sleep_power_mode) |
 			((config->manual_page_write & 0x01) << NVMCTRL_CTRLB_MANW_Pos) |
-			NVMCTRL_CTRLB_RWS(config->wait_states)                         |
+			NVMCTRL_CTRLB_RWS(config->wait_states) |
 			((config->disable_cache & 0x01) << NVMCTRL_CTRLB_CACHEDIS_Pos) |
 			NVMCTRL_CTRLB_READMODE(config->cache_readmode);
-
 
 	/* Initialize the internal device struct */
 	_nvm_dev.page_size         = (8 << nvm_module->PARAM.bit.PSZ);
@@ -173,16 +176,29 @@ enum status_code nvm_execute_command(
 		const uint32_t address,
 		const uint32_t parameter)
 {
+	uint32_t temp;
+
 	/* Check that the address given is valid  */
 	if (address > ((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)){
+#ifdef FEATURE_NVM_RWWEE
+		if (address >= ((uint32_t)NVMCTRL_RWW_EEPROM_SIZE + NVMCTRL_RWW_EEPROM_ADDR)
+			|| address < NVMCTRL_RWW_EEPROM_ADDR){
+			return STATUS_ERR_BAD_ADDRESS;
+		}
+#else
 		return STATUS_ERR_BAD_ADDRESS;
+#endif
 	}
 
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
 
+	/* turn off cache before issuing flash commands */
+	temp = nvm_module->CTRLB.reg;
+	nvm_module->CTRLB.reg = temp | NVMCTRL_CTRLB_CACHEDIS;
+
 	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
 
 	/* Check if the module is busy */
 	if (!nvm_is_ready()) {
@@ -196,7 +212,7 @@ enum status_code nvm_execute_command(
 		case NVM_COMMAND_WRITE_AUX_ROW:
 
 			/* Auxiliary space cannot be accessed if the security bit is set */
-			if(nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
+			if (nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
 				return STATUS_ERR_IO;
 			}
 
@@ -209,6 +225,10 @@ enum status_code nvm_execute_command(
 		case NVM_COMMAND_WRITE_PAGE:
 		case NVM_COMMAND_LOCK_REGION:
 		case NVM_COMMAND_UNLOCK_REGION:
+#ifdef FEATURE_NVM_RWWEE
+		case NVM_COMMAND_RWWEE_ERASE_ROW:
+		case NVM_COMMAND_RWWEE_WRITE_PAGE:
+#endif
 
 			/* Set address, command will be issued elsewhere */
 			nvm_module->ADDR.reg = (uintptr_t)&NVM_MEMORY[address / 4];
@@ -227,6 +247,13 @@ enum status_code nvm_execute_command(
 
 	/* Set command */
 	nvm_module->CTRLA.reg = command | NVMCTRL_CTRLA_CMDEX_KEY;
+
+	/* Wait for the nvm controller to become ready */
+	while (!nvm_is_ready()) {
+	}
+
+	/* restore the setting */
+	nvm_module->CTRLB.reg = temp;
 
 	return STATUS_OK;
 }
@@ -333,7 +360,7 @@ enum status_code nvm_update_buffer(
 }
 
 /**
- * \brief Writes a number of bytes to a page in the NVM memory region
+ * \brief Writes a number of bytes to a page in the NVM memory region.
  *
  * Writes from a buffer to a given page address in the NVM memory.
  *
@@ -362,10 +389,22 @@ enum status_code nvm_write_buffer(
 		const uint8_t *buffer,
 		uint16_t length)
 {
+#ifdef FEATURE_NVM_RWWEE
+	bool is_rww_eeprom = false;
+#endif
+
 	/* Check if the destination address is valid */
 	if (destination_address >
 			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
+#ifdef FEATURE_NVM_RWWEE
+		if (destination_address >= ((uint32_t)NVMCTRL_RWW_EEPROM_SIZE + NVMCTRL_RWW_EEPROM_ADDR)
+			|| destination_address < NVMCTRL_RWW_EEPROM_ADDR){
+			return STATUS_ERR_BAD_ADDRESS;
+		}
+		is_rww_eeprom = true;
+#else
 		return STATUS_ERR_BAD_ADDRESS;
+#endif
 	}
 
 	/* Check if the write address not aligned to the start of a page */
@@ -395,7 +434,7 @@ enum status_code nvm_write_buffer(
 	}
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
 
 	uint32_t nvm_address = destination_address / 2;
 
@@ -417,11 +456,24 @@ enum status_code nvm_write_buffer(
 		NVM_MEMORY[nvm_address++] = data;
 	}
 
+	/* Perform a manual NVM write when the length of data to be programmed is
+	 * less than page size */
+	if (length < NVMCTRL_PAGE_SIZE) {
+#ifdef FEATURE_NVM_RWWEE
+	 return ((is_rww_eeprom) ? 
+				(nvm_execute_command(NVM_COMMAND_RWWEE_WRITE_PAGE,destination_address, 0)):
+	 			(nvm_execute_command(NVM_COMMAND_WRITE_PAGE,destination_address, 0)));
+#else
+		return nvm_execute_command(NVM_COMMAND_WRITE_PAGE,
+				destination_address, 0);
+#endif
+	}
+
 	return STATUS_OK;
 }
 
 /**
- * \brief Reads a number of bytes from a page in the NVM memory region
+ * \brief Reads a number of bytes from a page in the NVM memory region.
  *
  * Reads a given number of bytes from a given page address in the NVM memory
  * space into a buffer.
@@ -450,7 +502,14 @@ enum status_code nvm_read_buffer(
 	/* Check if the source address is valid */
 	if (source_address >
 			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
+#ifdef FEATURE_NVM_RWWEE
+		if (source_address >= ((uint32_t)NVMCTRL_RWW_EEPROM_SIZE + NVMCTRL_RWW_EEPROM_ADDR)
+			|| source_address < NVMCTRL_RWW_EEPROM_ADDR){
+			return STATUS_ERR_BAD_ADDRESS;
+		}
+#else
 		return STATUS_ERR_BAD_ADDRESS;
+#endif
 	}
 
 	/* Check if the read address is not aligned to the start of a page */
@@ -472,7 +531,7 @@ enum status_code nvm_read_buffer(
 	}
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
 
 	uint32_t page_address = source_address / 2;
 
@@ -496,7 +555,7 @@ enum status_code nvm_read_buffer(
 }
 
 /**
- * \brief Erases a row in the NVM memory space
+ * \brief Erases a row in the NVM memory space.
  *
  * Erases a given row in the NVM memory region.
  *
@@ -515,10 +574,22 @@ enum status_code nvm_read_buffer(
 enum status_code nvm_erase_row(
 		const uint32_t row_address)
 {
+#ifdef FEATURE_NVM_RWWEE
+		bool is_rww_eeprom = false;
+#endif
+
 	/* Check if the row address is valid */
 	if (row_address >
 			((uint32_t)_nvm_dev.page_size * _nvm_dev.number_of_pages)) {
+#ifdef FEATURE_NVM_RWWEE
+		if (row_address >= ((uint32_t)NVMCTRL_RWW_EEPROM_SIZE + NVMCTRL_RWW_EEPROM_ADDR)
+			|| row_address < NVMCTRL_RWW_EEPROM_ADDR){
+			return STATUS_ERR_BAD_ADDRESS;
+		}
+		is_rww_eeprom = true;
+#else
 		return STATUS_ERR_BAD_ADDRESS;
+#endif
 	}
 
 	/* Check if the address to erase is not aligned to the start of a row */
@@ -535,12 +606,17 @@ enum status_code nvm_erase_row(
 	}
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
 
 	/* Set address and command */
 	nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[row_address / 4];
+#ifdef FEATURE_NVM_RWWEE
+	nvm_module->CTRLA.reg = ((is_rww_eeprom) ? 
+								(NVM_COMMAND_RWWEE_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY):
+								(NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY));
+#else
 	nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
-
+#endif
 	return STATUS_OK;
 }
 
@@ -563,7 +639,7 @@ void nvm_get_parameters(
 	Nvmctrl *const nvm_module = NVMCTRL;
 
 	/* Clear error flags */
-	nvm_module->STATUS.reg &= ~NVMCTRL_STATUS_MASK;
+	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
 
 	/* Read out from the PARAM register */
 	uint32_t param_reg = nvm_module->PARAM.reg;
@@ -575,6 +651,12 @@ void nvm_get_parameters(
 	/* Mask out number of pages count */
 	parameters->nvm_number_of_pages =
 			(param_reg & NVMCTRL_PARAM_NVMP_Msk) >> NVMCTRL_PARAM_NVMP_Pos;
+
+#ifdef FEATURE_NVM_RWWEE
+	/* Mask out rwwee number of pages count */
+	parameters->rww_eeprom_number_of_pages =
+			(param_reg & NVMCTRL_PARAM_RWWEEP_Msk) >> NVMCTRL_PARAM_RWWEEP_Pos;
+#endif
 
 	/* Read the current EEPROM fuse value from the USER row */
 	uint16_t eeprom_fuse_value =
@@ -606,14 +688,14 @@ void nvm_get_parameters(
 }
 
 /**
- * \brief Checks whether the page region is locked
+ * \brief Checks whether the page region is locked.
  *
  * Extracts the region to which the given page belongs and checks whether
  * that region is locked.
  *
  * \param[in] page_number    Page number to be checked
  *
- * \return Page lock status
+ * \return Page lock status.
  *
  * \retval true              Page is locked
  * \retval false             Page is not locked
@@ -623,6 +705,10 @@ bool nvm_is_page_locked(uint16_t page_number)
 {
 	uint16_t pages_in_region;
 	uint16_t region_number;
+
+#ifdef FEATURE_NVM_RWWEE
+	Assert(page_number < _nvm_dev.number_of_pages);
+#endif
 
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
@@ -641,7 +727,7 @@ bool nvm_is_page_locked(uint16_t page_number)
 /**
  * \internal
  *
- * \brief Translate fusebit words into struct content. 
+ * \brief Translate fusebit words into struct content.
  *
  */
 static void _nvm_translate_raw_fusebits_to_struct (
@@ -657,9 +743,22 @@ static void _nvm_translate_raw_fusebits_to_struct (
 			((raw_user_row[0] & NVMCTRL_FUSES_EEPROM_SIZE_Msk)
 			>> NVMCTRL_FUSES_EEPROM_SIZE_Pos);
 
+#if (SAML21)
 	fusebits->bod33_level = (uint8_t)
-			((raw_user_row[0] & SYSCTRL_FUSES_BOD33USERLEVEL_Msk)
-			>> SYSCTRL_FUSES_BOD33USERLEVEL_Pos);
+			((raw_user_row[0] & FUSES_BOD33USERLEVEL_Msk)
+			>> FUSES_BOD33USERLEVEL_Pos);
+
+	fusebits->bod33_enable = (bool)
+			(!((raw_user_row[0] & FUSES_BOD33_DIS_Msk)
+			>> FUSES_BOD33_DIS_Pos));
+
+	fusebits->bod33_action = (enum nvm_bod33_action)
+			((raw_user_row[0] & FUSES_BOD33_ACTION_Msk)
+			>> FUSES_BOD33_ACTION_Pos);
+#else
+	fusebits->bod33_level = (uint8_t)
+				((raw_user_row[0] & SYSCTRL_FUSES_BOD33USERLEVEL_Msk)
+				>> SYSCTRL_FUSES_BOD33USERLEVEL_Pos);
 
 	fusebits->bod33_enable = (bool)
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_EN_Msk)
@@ -669,17 +768,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_ACTION_Msk)
 			>> SYSCTRL_FUSES_BOD33_ACTION_Pos);
 
-	fusebits->bod12_level = (uint8_t)
-			((raw_user_row[0] & SYSCTRL_FUSES_BOD12USERLEVEL_Msk)
-			>> SYSCTRL_FUSES_BOD12USERLEVEL_Pos);
-
-	fusebits->bod12_enable = (bool)
-			((raw_user_row[0] & SYSCTRL_FUSES_BOD12_EN_Msk) >> SYSCTRL_FUSES_BOD12_EN_Pos);
-
-	fusebits->bod12_action = (enum nvm_bod12_action)
-			((raw_user_row[0] & SYSCTRL_FUSES_BOD12_ACTION_Msk)
-			>> SYSCTRL_FUSES_BOD12_ACTION_Pos);
-
+#endif
 	fusebits->wdt_enable = (bool)
 			((raw_user_row[0] & WDT_FUSES_ENABLE_Msk) >> WDT_FUSES_ENABLE_Pos);
 
@@ -689,12 +778,16 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->wdt_timeout_period = (uint8_t)
 			((raw_user_row[0] & WDT_FUSES_PER_Msk) >> WDT_FUSES_PER_Pos);
 
+#if (SAML21)
+	fusebits->wdt_window_timeout = (enum nvm_wdt_window_timeout)
+			((raw_user_row[1] & WDT_FUSES_WINDOW_Msk) >> WDT_FUSES_WINDOW_Pos);
+#else
 	/* WDT Windows timout lay between two 32-bit words in the user row. Because only one bit lays in word[0],
 	   bits in word[1] must be left sifted by one to make the correct number */
 	fusebits->wdt_window_timeout = (enum nvm_wdt_window_timeout)
-			((raw_user_row[0] & WDT_FUSES_WINDOW_0_Msk) >> WDT_FUSES_WINDOW_0_Pos) |
-			((raw_user_row[1] & WDT_FUSES_WINDOW_1_Msk) << 1);
-
+			(((raw_user_row[0] & WDT_FUSES_WINDOW_0_Msk) >> WDT_FUSES_WINDOW_0_Pos) |
+			((raw_user_row[1] & WDT_FUSES_WINDOW_1_Msk) << 1));
+#endif
 	fusebits->wdt_early_warning_offset = (enum nvm_wdt_early_warning_offset)
 			((raw_user_row[1] & WDT_FUSES_EWOFFSET_Msk) >> WDT_FUSES_EWOFFSET_Pos);
 
@@ -707,83 +800,16 @@ static void _nvm_translate_raw_fusebits_to_struct (
 
 }
 
-/**
- * \internal
- * \name Fusebit mask for reserved bits
- *
- * These macros create a fuse bit mask for reserved bits. These bits should always read 1.
- *
- * @{
- */
-#define _NVM_FUSEBITS_0_RESERVED_BITS ~(NVMCTRL_FUSES_BOOTPROT_Msk | NVMCTRL_FUSES_EEPROM_SIZE_Msk | \
-	SYSCTRL_FUSES_BOD33USERLEVEL_Msk | SYSCTRL_FUSES_BOD33_EN_Msk | SYSCTRL_FUSES_BOD33_ACTION_Msk | \
-	SYSCTRL_FUSES_BOD12USERLEVEL_Msk | SYSCTRL_FUSES_BOD12_EN_Msk | SYSCTRL_FUSES_BOD12_ACTION_Msk | \
-	WDT_FUSES_ENABLE_Msk | WDT_FUSES_ALWAYSON_Msk | WDT_FUSES_PER_Msk | WDT_FUSES_WINDOW_0_Msk)
-
-#define _NVM_FUSEBITS_1_RESERVED_BITS ~(WDT_FUSES_WINDOW_1_Msk | WDT_FUSES_EWOFFSET_Msk | \
-	WDT_FUSES_WEN_Msk | NVMCTRL_FUSES_REGION_LOCKS_Msk)
-
-/** @} */
-
-/**
- * \internal
- *
- * \brief Translate struct content into a 2*32bit word bit pattern.
- *
- */
-static void _nvm_translate_struct_to_raw_fusebits (
-		struct nvm_fusebits *fusebits,
-		uint32_t *raw_fusebits)
-{
-
-	/* Generating 32-bit word 1 */
-			/* Setting EEPROM emulator area size and bootloader size */
-	raw_fusebits[0] = (NVMCTRL_FUSES_BOOTPROT((uint8_t)(fusebits->bootloader_size))         |
-			    NVMCTRL_FUSES_EEPROM_SIZE((uint8_t)(fusebits->eeprom_size))         |
-
-			/* Reserved bits should be 1 */
-			    _NVM_FUSEBITS_0_RESERVED_BITS                                       |
-
-			/* Setting BOD33 fuses */
-			    SYSCTRL_FUSES_BOD33USERLEVEL(fusebits->bod33_level)                 |
-			    ((uint32_t)(fusebits->bod33_enable)) << SYSCTRL_FUSES_BOD33_EN_Pos  |
-			    SYSCTRL_FUSES_BOD33_ACTION((uint8_t)(fusebits->bod33_action))       |
-
-			/* Setting BOD12 fuses */
-			    SYSCTRL_FUSES_BOD12USERLEVEL(fusebits->bod12_level)                 |
-			    ((uint32_t)(fusebits->bod33_enable)) << SYSCTRL_FUSES_BOD12_EN_Pos  |
-			    SYSCTRL_FUSES_BOD12_ACTION((uint8_t)(fusebits->bod12_action))       |
-
-			/* Setting WDT fuses */
-			    ((uint32_t)(fusebits->wdt_enable)) << WDT_FUSES_ENABLE_Pos          |
-			    ((uint32_t)(fusebits->wdt_always_on)) << WDT_FUSES_ALWAYSON_Pos     |
-			    WDT_FUSES_PER(fusebits->wdt_timeout_period)                         |
-			    (((uint32_t)(fusebits->wdt_window_timeout)) & 0x01) << WDT_FUSES_WINDOW_0_Pos);
-
-	/* Generating 32-bit word 2 */
-			/* WDT fuse settings continued */
-	raw_fusebits[1] = ((((uint32_t)(fusebits->wdt_window_timeout)) & 0x0E) >> 1                      |
-			  WDT_FUSES_EWOFFSET((uint32_t)(fusebits->wdt_early_warning_offset))             |
-			  ((uint32_t)(fusebits->wdt_window_mode_enable_at_poweron)) << WDT_FUSES_WEN_Pos |
-
-			/* Reserved bits should be 1 */
-			  _NVM_FUSEBITS_1_RESERVED_BITS                                                   |
-
-			/* Setting flash region lock bits */
-			  NVMCTRL_FUSES_REGION_LOCKS(fusebits->lockbits));
-
-}
-
 ///@endcond
 
 /**
- * \brief Get fuses from user row
+ * \brief Get fuses from user row.
  *
- * Read out the fuse settings from the user row
+ * Read out the fuse settings from the user row.
  *
- * \param[in] fusebits Pointer to a 64bit wide memory buffer of type struct nvm_fusebits
+ * \param[in] fusebits Pointer to a 64-bit wide memory buffer of type struct nvm_fusebits
  *
- * \return             Status of read fuses attempt
+ * \return             Status of read fuses attempt.
  *
  * \retval STATUS_OK   This function will always return STATUS_OK
  */
@@ -806,113 +832,5 @@ enum status_code nvm_get_fuses (
 	_nvm_translate_raw_fusebits_to_struct(raw_fusebits, fusebits);
 
 	return error_code;
-}
-
-
-///@cond INTERNAL
-
-/**
- * \internal
- * \name Fuse write function states
- *
- * This defines internal states for the fuse write function
- *
- * @{
- */
-#define _NVM_SET_FUSES_STATE_ERASE_ROW         0
-#define _NVM_SET_FUSES_STATE_ERASE_PAGE_BUFFER 1
-#define _NVM_SET_FUSES_STATE_WRITE_FUSES       2
-#define _NVM_SET_FUSES_STATE_END               3
-/** @} */
-
-///@endcond
-
-/**
- * \brief Set fuses in user row
- *
- * Write new fuse setting to user row
- *
- * \param[in] fusebits Pointer to a 64bit wide memory buffer with new fuse settings
- *
- * \return Status of write attempt
- *
- * \retval STATUS_OK          New fuse settings where written sucessfully to user row
- *
- * \retval STATUS_ERR_IO      Secitity bit is set, user row can not be written
- *
- * \retval STATUS_ERR_IO      Writing of fuses to user row failed
- */
-enum status_code nvm_set_fuses(
-		struct nvm_fusebits *fusebits)
-{
-	Nvmctrl *const nvm_module = NVMCTRL;
-	uint8_t state = _NVM_SET_FUSES_STATE_ERASE_ROW;
-	uint32_t raw_fusebits[2];
-	enum status_code err = STATUS_OK;
-
-	/* If the security bit is set, the auxiliary space cannot be written */
-	if (nvm_module->STATUS.reg & NVMCTRL_STATUS_SB) {
-		return STATUS_ERR_IO;
-	}
-
-	/* Enter critcal section to avoid context switching */
-	system_interrupt_enter_critical_section();
-
-	do {
-
-		/* Wait for the nvm controller to become ready */
-		while (!nvm_is_ready()) {
-		}
-
-		/* Has something gone wrong? */
-		if (nvm_module->INTFLAG.reg & NVMCTRL_INTFLAG_ERROR) {
-			/* Don't bother about what, just clear status flags and return error status*/
-			nvm_module->STATUS.reg  |= ~NVMCTRL_STATUS_MASK;
-			nvm_module->INTFLAG.reg |= NVMCTRL_INTFLAG_ERROR;
-
-			err = STATUS_ERR_IO;
-			break;
-		}
-
-		switch (state) {
-
-		case _NVM_SET_FUSES_STATE_ERASE_ROW:
-			/* Erase AUX row */
-			nvm_module->PARAM.reg = 0;
-			nvm_module->ADDR.reg = NVMCTRL_USER / 2;
-			nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_AUX_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
-			break;
-
-		case _NVM_SET_FUSES_STATE_ERASE_PAGE_BUFFER:
-			/* Erase the page buffer before buffering new data */
-			nvm_module->CTRLA.reg = NVM_COMMAND_PAGE_BUFFER_CLEAR | NVMCTRL_CTRLA_CMDEX_KEY;
-			break;
-
-		case _NVM_SET_FUSES_STATE_WRITE_FUSES:
-			_nvm_translate_struct_to_raw_fusebits(fusebits, raw_fusebits);
-
-			/* Write new user row content (address must be converted from 8-bit to 16-bit aligned) */
-			NVM_MEMORY[NVMCTRL_USER / 2]       = ((uint16_t*)raw_fusebits)[0];
-			NVM_MEMORY[(NVMCTRL_USER / 2) + 1] = ((uint16_t*)raw_fusebits)[1];
-			NVM_MEMORY[(NVMCTRL_USER / 2) + 2] = ((uint16_t*)raw_fusebits)[2];
-			NVM_MEMORY[(NVMCTRL_USER / 2) + 3] = ((uint16_t*)raw_fusebits)[3];
-
-			nvm_module->CTRLA.reg = NVM_COMMAND_WRITE_AUX_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
-			break;
-
-		default:
-			/* Should never be executed */
-			Assert(false);
-			break;
-		}
-
-		/* Goto next state */
-		state++;
-
-	} while (state != _NVM_SET_FUSES_STATE_END);
-
-	system_interrupt_leave_critical_section();
-
-	return err;
 }
 

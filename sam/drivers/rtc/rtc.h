@@ -3,7 +3,7 @@
  *
  * \brief Real-Time Clock (RTC) driver for SAM.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -75,27 +75,33 @@ uint32_t rtc_set_date_alarm(Rtc *p_rtc,
 		uint32_t ul_month_flag, uint32_t ul_month,
 		uint32_t ul_day_flag, uint32_t ul_day);
 void rtc_clear_time_alarm(Rtc *p_rtc);
-void rtc_clear_data_alarm(Rtc *p_rtc);
+void rtc_clear_date_alarm(Rtc *p_rtc);
 uint32_t rtc_get_status(Rtc *p_rtc);
 void rtc_clear_status(Rtc *p_rtc, uint32_t ul_clear);
+uint32_t rtc_get_valid_entry(Rtc *p_rtc);
+void rtc_set_time_event(Rtc *p_rtc, uint32_t ul_selection);
+void rtc_set_calendar_event(Rtc *p_rtc, uint32_t ul_selection);
 
-#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4N) || (SAM4C))
+#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4N) || (SAM4C) || (SAMG) || (SAM4CP) || (SAM4CM))
 void rtc_set_calendar_mode(Rtc *p_rtc, uint32_t ul_mode);
+uint32_t rtc_get_calendar_mode(Rtc *p_rtc);
 void rtc_set_calibration(Rtc *p_rtc, uint32_t ul_direction_ppm,
 		uint32_t ul_correction, uint32_t ul_range_ppm);
 #endif
 
-#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C))
+#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C) || (SAMG) || (SAM4CP) || (SAM4CM))
 void rtc_set_waveform(Rtc *p_rtc, uint32_t ul_channel, uint32_t ul_value);
+#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C)|| (SAM4CP) || (SAM4CM))
 void rtc_set_pulse_parameter(Rtc *p_rtc, uint32_t ul_time_high,
 		uint32_t ul_period);
-#endif /* ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C)) */
+#endif
+#endif
 
 #if ((SAM3N) || (SAM3U) || (SAM3XA))
 void rtc_set_writeprotect(Rtc *p_rtc, uint32_t ul_enable);
 #endif /* ((SAM3N) || (SAM3U) || (SAM3XA)) */
 
-#if SAM4C
+#if ((SAM4C) || (SAM4CP) || (SAM4CM))
 void rtc_get_tamper_time(Rtc *p_rtc, uint32_t *pul_hour, uint32_t *pul_minute,
 		uint32_t *pul_second, uint8_t reg_num);
 void rtc_get_tamper_date(Rtc *p_rtc, uint32_t *pul_year, uint32_t *pul_month,
@@ -103,6 +109,10 @@ void rtc_get_tamper_date(Rtc *p_rtc, uint32_t *pul_year, uint32_t *pul_month,
 uint32_t rtc_get_tamper_source(Rtc *p_rtc, uint8_t reg_num);
 uint32_t rtc_get_tamper_event_counter(Rtc *p_rtc);
 bool rtc_is_tamper_occur_in_backup_mode(Rtc *p_rtc, uint8_t reg_num);
+#endif
+
+#if (SAMG55)
+uint32_t rtc_get_milliseconds(Rtc *p_rtc);
 #endif
 
 /**
@@ -127,15 +137,15 @@ bool rtc_is_tamper_occur_in_backup_mode(Rtc *p_rtc, uint8_t reg_num);
  * \subsection rtc_basic_use_case_setup_code Example code
  * Add to application C-file:
  * \code
- *   void rtc_setup(void)
- *   {
- *       pmc_switch_sclk_to_32kxtal(PMC_OSC_XTAL);
- *
- *       while (!pmc_osc_is_ready_32kxtal());
- *
- *       rtc_set_hour_mode(RTC, 0);
- *   }
- * \endcode
+	   void rtc_setup(void)
+	   {
+	       pmc_switch_sclk_to_32kxtal(PMC_OSC_XTAL);
+
+	       while (!pmc_osc_is_ready_32kxtal());
+
+	       rtc_set_hour_mode(RTC, 0);
+	   }
+\endcode
  *
  * \subsection rtc_basic_use_case_setup_flow Workflow
  *   - \note Please make sure the external 32kHz crystal is available.
@@ -150,12 +160,12 @@ bool rtc_is_tamper_occur_in_backup_mode(Rtc *p_rtc, uint8_t reg_num);
  * \subsection rtc_basic_use_case_usage_code Example code
  * Add to, e.g., main loop in application C-file:
  * \code
- *    uint32_t hour, minute, second;
- *    uint32_t year, month, day, week;
- *
- *    rtc_get_time(RTC, &hour, &minute, &second);
- *    rtc_get_date(RTC, &year, &month, &day, &week);
- * \endcode
+	    uint32_t hour, minute, second;
+	    uint32_t year, month, day, week;
+
+	    rtc_get_time(RTC, &hour, &minute, &second);
+	    rtc_get_date(RTC, &year, &month, &day, &week);
+\endcode
  *
  * \subsection rtc_basic_use_case_usage_flow Workflow
  * -# Start Define the variables for the date and time:

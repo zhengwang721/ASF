@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<module type="application" id="sam0.drivers.system.interrupt.quick_start" caption="Quick Start for the SAM D20 SYSTEM Interrupt Driver">
+	<module type="application" id="sam0.drivers.system.interrupt.quick_start" caption="Quick Start for the SAM SYSTEM Interrupt Driver">
 		<info type="description" value="summary">
 		Quick start guide for the system interrupt driver demonstrating critical section, enabling/disabling
 		peripheral interrupt.
@@ -9,5 +9,10 @@
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.system"/>
 		<device-support value="samd20"/>
+		<device-support value="samd21"/>
+		<device-support value="samr21"/>
+		<device-support value="samd10"/>
+		<device-support value="samd11"/>
+		<device-support value="saml21"/>
 	</module>
 </asf>

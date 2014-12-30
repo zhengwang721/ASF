@@ -6,7 +6,7 @@
  * This header file declares prototypes of PAL APIs, enumerations
  * used by TAL and MAC.
  *
- *  Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ *  Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -228,8 +228,6 @@ retval_t pal_ps_get(ps_type_t ps_type, uint16_t start_addr, uint16_t length,
 retval_t pal_ps_set(uint16_t start_addr, uint16_t length, void *value);
 
 retval_t pal_timer_get_id(uint8_t *timer_id);
-
-
 
 /**
  * @brief Checks if the timer of requested timer identifier is running

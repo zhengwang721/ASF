@@ -1,37 +1,76 @@
 <asf xmlversion="1.0">
 	<select-by-config id="sam0.drivers.tc" name="config.sam0.drivers.tc" caption="TC - Timer Counter" default="callback">
 		<info type="description" value="summary">
-		  Driver for the SAM D20 Timer/Counter module. Provides a unified
+		  Driver for the SAM Timer/Counter module. Provides a unified
 		  interface for the configuration and management of the device's
 		  hardware timers.
 		</info>
-		<info type="keyword" value="technology">
-			<keyword value="Timers" />
-		</info>
 
-		<module caption="TC - Timer Counter" id="sam0.drivers.tc#polled" type="driver">
+		<module caption="TC - Timer Counter (Polled APIs)" id="sam0.drivers.tc#polled" type="driver">
+			<info type="keyword" value="technology">
+				<keyword value="Timers" />
+			</info>
+
 			<build type="include-path" value="." />
-
 			<build name="TC_ASYNC" type="define" value="false" />
-
 			<build subtype="api" type="header-file" value="tc.h" />
-			<build type="c-source" value="tc.c" />
 
-			<build type="header-file" value="quick_start/qs_tc_basic.h" />
+			<build type="doxygen-entry-point" value="asfdoc_sam0_tc_group" />
 
-			<build type="doxygen-example-path" value="quick_start"/>
-			<build type="doxygen-image-path" value="docimg" />
-			<build type="doxygen-entry-point" value="asfdoc_samd20_tc_group" />
-
-			<device-support value="samd20" />
+			<device-support value="sam0" />
 
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
 			<require idref="sam0.drivers.port" />
-
-			<generator default-mcu="unspecified-samd20" value="doxygen-module-v2" />
+			<require idref="sam0.drivers.tc.common" />
 		</module>
-		<module caption="TC - Timer Counter" id="sam0.drivers.tc#callback" type="driver">
+
+		<module caption="TC - Timer Counter (Callback APIs)" id="sam0.drivers.tc#callback" type="driver">
+			<info type="keyword" value="technology">
+				<keyword value="Timers" />
+			</info>
+
+			<build type="include-path" value="." />
+			<build name="TC_ASYNC" type="define" value="true" />
+			<build subtype="api" type="header-file" value="tc.h" />
+			<build subtype="api" type="header-file" value="tc_interrupt.h" />
+			<build type="c-source" value="tc_interrupt.c" />
+
+			<build type="doxygen-entry-point" value="asfdoc_sam0_tc_group" />
+
+			<device-support value="sam0" />
+
+			<require idref="sam0.utils" />
+			<require idref="sam0.drivers.system" />
+			<require idref="sam0.drivers.port" />
+			<require idref="sam0.drivers.tc.common" />
+		</module>
+	</select-by-config>
+	<select-by-device id="sam0.drivers.tc.common" caption="TC - Time Counter">
+		<module type="meta" id="sam0.drivers.tc.common#sam_d_r" caption="TC - Time Counter">
+			<build type="include-path" value="." />
+			<build type="include-path" value="tc_sam_d_r"/>
+			<build type="c-source" value="tc_sam_d_r/tc.c"/>
+
+			<device-support value="samd20"/>
+			<device-support value="samd21"/>
+			<device-support value="samr21"/>
+			<device-support value="samd10"/>
+			<device-support value="samd11"/>
+		</module>
+		<module type="meta" id="sam0.drivers.tc.common#sam_l" caption="TC - Time Counter">
+			<build type="include-path" value="." />
+			<build type="include-path" value="tc_sam_l"/>
+			<build type="c-source" value="tc_sam_l/tc.c"/>
+
+			<device-support value="saml21"/>
+		</module>
+	</select-by-device>
+	<module  type="meta" caption="TC - Timer Counter" id="sam0.drivers.tc.appnote">
+			<info type="keyword" value="technology">
+				<keyword value="Timers" />
+			</info>
+
 			<info type="appnote" value="AT03263"/>
 			<info type="keyword" value="pdf">
 				<keyword value="I/O"/>
@@ -42,7 +81,8 @@
 			</info>
 
 			<info type="description" value="pdf">
-				This document describes how to use the Timer Counter on the SAM D20, both the ASF driver and the peripheral itself.
+				This document describes how to use the Timer Counter on the SAM
+				both the ASF driver and the peripheral itself.
 			</info>
 
 			<build type="include-path" value="." />
@@ -50,19 +90,26 @@
 			<build name="TC_ASYNC" type="define" value="true" />
 			<build type="doxygen-enable-section" value="TC_CALLBACK_MODE"/>
 
+			<build type="include-path" value="tc_sam_d_r"/>
 			<build subtype="api" type="header-file" value="tc.h" />
 			<build subtype="api" type="header-file" value="tc_interrupt.h" />
 			<build type="c-source" value="tc_interrupt.c" />
-			<build type="c-source" value="tc.c" />
+			<build type="c-source" value="tc_sam_d_r/tc.c" />
 			<build type="header-file" value="quick_start_callback/qs_tc_callback.h" />
 			<build type="header-file" value="quick_start/qs_tc_basic.h" />
+			<build type="header-file" value="quick_start_timer/qs_tc_timer.h" />
+			<build type="header-file" value="quick_start_dma/qs_tc_dma.h" />
 
+			<build type="doxygen-example-path" value="quick_start_timer"/>
 			<build type="doxygen-example-path" value="quick_start"/>
+			<build type="doxygen-example-path" value="quick_start_dma"/>
 			<build type="doxygen-example-path" value="quick_start_callback"/>
+			<build type="doxygen-example-path" value="."/>
 			<build type="doxygen-image-path" value="docimg" />
-			<build type="doxygen-entry-point" value="asfdoc_samd20_tc_group" />
+			<build type="doxygen-entry-point" value="asfdoc_sam0_tc_group" />
+			<build type="doxygen-quick-start" value="asfdoc_sam0_tc_exqsg"/>
 
-			<device-support value="samd20" />
+			<device-support value="sam0" />
 
 			<require idref="sam0.utils" />
 			<require idref="sam0.drivers.system" />
@@ -70,5 +117,4 @@
 
 			<generator default-mcu="unspecified-samd20" value="doxygen-module-v2" />
 		</module>
-	</select-by-config>
 </asf>

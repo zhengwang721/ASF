@@ -3,7 +3,7 @@
  *
  * \brief TWI Slave driver for SAM.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,17 +51,43 @@ typedef Twi *twi_slave_t;
 
 static inline void twi_slave_setup(twi_slave_t p_twi, uint32_t dw_device_addr)
 {
+#if SAMG55
+	if (p_twi == TWI0) {
+		sysclk_enable_peripheral_clock(ID_FLEXCOM0);
+	} else if (p_twi == TWI1) {
+		sysclk_enable_peripheral_clock(ID_FLEXCOM1);
+	} else if (p_twi == TWI2) {
+		sysclk_enable_peripheral_clock(ID_FLEXCOM2);
+	} else if (p_twi == TWI3) {
+		sysclk_enable_peripheral_clock(ID_FLEXCOM3);
+	} else if (p_twi == TWI4) {
+		sysclk_enable_peripheral_clock(ID_FLEXCOM4);
+	} else if (p_twi == TWI5) {
+		sysclk_enable_peripheral_clock(ID_FLEXCOM5);
+	} else if (p_twi == TWI6) {
+		sysclk_enable_peripheral_clock(ID_FLEXCOM6);
+	} else if (p_twi == TWI7) {
+		sysclk_enable_peripheral_clock(ID_FLEXCOM7);
+	} else {
+		// Do Nothing
+	}
+#else
+#if (!(SAMG51 || SAMG53 || SAMG54))
 	if (p_twi == TWI0) {
 		sysclk_enable_peripheral_clock(ID_TWI0);
-	} else if (p_twi == TWI1) {
+	} else
+#endif
+	if (p_twi == TWI1) {
 		sysclk_enable_peripheral_clock(ID_TWI1);
-#if SAM4N
+#if (SAM4N || SAMG)
 	} else if (p_twi == TWI2) {
 		sysclk_enable_peripheral_clock(ID_TWI2);
 #endif
 	} else {
 		// Do Nothing
 	}
+#endif
+
 	twi_slave_init(p_twi, dw_device_addr);
 }
 

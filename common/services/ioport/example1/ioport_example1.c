@@ -3,7 +3,7 @@
  *
  * \brief Common IOPORT service example 1.
  *
- * Copyright (c) 2012 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -70,6 +70,11 @@
  *  - STK600 evaluation Kit (Tested with STK600-ATMEGA128RFA1)
  *  - ATmega256RFR2 Xplained Pro kit
  *  - SAM4C evaluation kit
+ *  - SAM4CP16BMB evaluation board (no button version)
+ *  - SAMG53 Xplained Pro kit
+ *  - SAMG55 Xplained Pro kit
+ *  - SAM4CMP16C demo board
+ *  - SAM4CMS16C demo board
  *
  * \section example_description Description of the example
  * This example flashes a group of LEDs present on a port with flash speed of
@@ -84,7 +89,7 @@
  *
  * \section contactinfo Contact Information
  * For further information, visit <a href="http://www.atmel.com/">Atmel</a>.\n
- * Support and FAQ: http://support.atmel.no/
+ * Support and FAQ: http://www.atmel.com/design-support/
  */
 #include <asf.h>
 #include "conf_example.h"
@@ -104,6 +109,7 @@ int main(void)
 	ioport_set_port_dir(EXAMPLE_LED_PORT, EXAMPLE_LED_MASK,
 			IOPORT_DIR_OUTPUT);
 
+#ifdef EXAMPLE_BUTTON_PORT
 	/* Set direction and pullup on the given button IOPORT */
 	ioport_set_port_dir(EXAMPLE_BUTTON_PORT, EXAMPLE_BUTTON_MASK,
 			IOPORT_DIR_INPUT);
@@ -113,15 +119,18 @@ int main(void)
 	/* Set LED IOPORTs high */
 	ioport_set_port_level(EXAMPLE_LED_PORT, EXAMPLE_LED_MASK,
 			IOPORT_PIN_LEVEL_HIGH);
+#endif
 
 	while (true) {
 		/* Toggle LED IOPORTs with half a second interval */
 		ioport_toggle_port_level(EXAMPLE_LED_PORT, EXAMPLE_LED_MASK);
 		delay_ms(500);
 
+#ifdef EXAMPLE_BUTTON_PORT
 		/* Get value from button port */
 		/* Use watch with debugger to see it */
 		port_val = ioport_get_port_level(EXAMPLE_BUTTON_PORT,
 				EXAMPLE_BUTTON_MASK);
+#endif
 	}
 }

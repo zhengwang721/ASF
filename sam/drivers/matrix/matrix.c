@@ -3,7 +3,7 @@
  *
  * \brief Matrix driver for SAM.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -65,6 +65,22 @@ extern "C" {
 
 #if SAM4C
 #ifdef SAM4C_0
+#define MATRIX MATRIX0
+#else
+#define MATRIX MATRIX1
+#endif
+#endif
+
+#if SAM4CP
+#ifdef SAM4CP_0
+#define MATRIX MATRIX0
+#else
+#define MATRIX MATRIX1
+#endif
+#endif
+
+#if SAM4CM
+#ifdef SAM4CM_0
 #define MATRIX MATRIX0
 #else
 #define MATRIX MATRIX1
@@ -202,7 +218,7 @@ uint32_t matrix_get_slave_fixed_default_master(uint32_t ul_id)
 	return (ul_reg >> MATRIX_SCFG_FIXED_DEFMSTR_Pos);
 }
 
-#if !SAM4E && !SAM4C
+#if !SAM4E && !SAM4C && !SAM4CP && !SAM4CM
 
 /**
  * \brief Set slave arbitration type of the specified slave.
@@ -308,7 +324,7 @@ uint32_t matrix_get_master_remap(void)
 
 #endif /* (SAM3XA || SAM3U || SAM4E) */
 
-#if (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C)
+#if (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 
 /**
  * \brief Set system IO.
@@ -318,8 +334,17 @@ uint32_t matrix_get_master_remap(void)
 void matrix_set_system_io(uint32_t ul_io)
 {
 	Matrix *p_matrix = MATRIX;
-
+	
+#if (SAM4C || SAM4CP || SAM4CM)
+	
+	p_matrix->MATRIX_SYSIO = ul_io;
+	
+#else
+	
 	p_matrix->CCFG_SYSIO = ul_io;
+	
+#endif
+	
 }
 
 /**
@@ -330,13 +355,21 @@ void matrix_set_system_io(uint32_t ul_io)
 uint32_t matrix_get_system_io(void)
 {
 	Matrix *p_matrix = MATRIX;
+	
+#if (SAM4C || SAM4CP || SAM4CM)
 
+	return (p_matrix->MATRIX_SYSIO);
+	
+#else
+	
 	return (p_matrix->CCFG_SYSIO);
+	
+#endif
 }
 
-#endif /* (SAM3S || SAM3XA || SAM3N || SAM4S || SAM4E || SAM4C) */
+#endif
 
-#if (SAM3S || SAM4S || SAM4E || SAM4C)
+#if (SAM3S || SAM4S || SAM4E || SAM4C || SAM4CP || SAM4CM)
 
 /**
  * \brief Set NAND Flash Chip Select configuration register.
@@ -348,7 +381,16 @@ void matrix_set_nandflash_cs(uint32_t ul_cs)
 {
 	Matrix *p_matrix = MATRIX;
 
+	
+#if (SAM4C || SAM4CP || SAM4CM)
+
+	p_matrix->MATRIX_SMCNFCS = ul_cs;
+	
+#else
+	
 	p_matrix->CCFG_SMCNFCS = ul_cs;
+	
+#endif
 }
 
 /**
@@ -359,12 +401,20 @@ void matrix_set_nandflash_cs(uint32_t ul_cs)
 uint32_t matrix_get_nandflash_cs(void)
 {
 	Matrix *p_matrix = MATRIX;
+	
+#if (SAM4C || SAM4CP || SAM4CM)
 
+	return (p_matrix->MATRIX_SMCNFCS);
+	
+#else
+	
 	return (p_matrix->CCFG_SMCNFCS);
+	
+#endif
 }
 
-#endif /* (SAM3S || SAM4S || SAM4E || SAM4C) */
-
+#endif /* (SAM3S || SAM4S || SAM4E || SAM4C || SAM4CP || SAM4CM) */
+#if (!SAMG)
 /**
  * \brief Enable or disable write protect of MATRIX registers.
  *
@@ -392,6 +442,36 @@ uint32_t matrix_get_writeprotect_status(void)
 
 	return (p_matrix->MATRIX_WPSR);
 }
+#endif
+
+#if SAMG55
+/**
+ * \brief Set USB device mode.
+ *
+ */
+void matrix_set_usb_device(void)
+{
+	Matrix *p_matrix = MATRIX;
+
+	p_matrix->CCFG_SYSIO &= ~(CCFG_SYSIO_SYSIO10 | CCFG_SYSIO_SYSIO11);
+
+	p_matrix->CCFG_USBMR |= CCFG_USBMR_DEVICE;
+}
+
+/**
+ * \brief Set USB device mode.
+ *
+ */
+void matrix_set_usb_host(void)
+{
+	Matrix *p_matrix = MATRIX;
+
+	p_matrix->CCFG_SYSIO &= ~(CCFG_SYSIO_SYSIO10 | CCFG_SYSIO_SYSIO11);
+
+	p_matrix->CCFG_USBMR &= ~CCFG_USBMR_DEVICE;
+}
+#endif
+
 
 /* @} */
 

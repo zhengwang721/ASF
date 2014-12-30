@@ -3,7 +3,7 @@
  *
  * \brief USART Serial wrapper service for the SAM D20 devices.
  *
- * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,17 +44,23 @@
 #define _USART_SERIAL_H_
 
 #include "compiler.h"
-#ifndef SAMD20
+#if !(SAM0)
 # include "sysclk.h"
 #endif
 #include "status_codes.h"
 #include "usart.h"
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /** \name Serial Management Configuration */
 
 typedef Sercom * usart_inst_t;
 
-/** \brief Initializes the USART in master mode.
+//struct usart_module usart;
+
+/*! \brief Initializes the Usart in master mode.
  *
  * \param[in,out] module  Software instance of the USART to initialize.
  * \param[in]     hw      Base address of the hardware USART.
@@ -87,7 +93,9 @@ static inline enum status_code usart_serial_putchar(
 		struct usart_module *const module,
 		uint8_t c)
 {
-	return usart_write_wait(module, c);
+	while(STATUS_OK !=usart_write_wait(module, c));
+
+	return STATUS_OK;
 }
 
 /** \brief Waits until a character is received, and returns it.
@@ -99,9 +107,9 @@ static inline void usart_serial_getchar(
 		struct usart_module *const module,
 		uint8_t *c)
 {
-	uint16_t temp;
+	uint16_t temp = 0;
 
-	usart_read_wait(module, &temp);
+	while(STATUS_OK != usart_read_wait(module, &temp));
 
 	*c = temp;
 }
@@ -135,5 +143,9 @@ static inline enum status_code usart_serial_read_packet(
 {
 	return usart_read_buffer_wait(module, rx_data, length);
 }
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif  // _USART_SERIAL_H_

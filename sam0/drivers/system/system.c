@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 System related functionality
+ * \brief SAM System related functionality
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -58,29 +58,22 @@ void _system_dummy_init(void)
 #  if defined(__GNUC__)
 void system_clock_init(void) WEAK __attribute__((alias("_system_dummy_init")));
 void system_board_init(void) WEAK __attribute__((alias("_system_dummy_init")));
+void _system_events_init(void) WEAK __attribute__((alias("_system_dummy_init")));
+void _system_extint_init(void) WEAK __attribute__((alias("_system_dummy_init")));
 #  elif defined(__ICCARM__)
 void system_clock_init(void);
 void system_board_init(void);
+void _system_events_init(void);
+void _system_extint_init(void);
 #    pragma weak system_clock_init=_system_dummy_init
 #    pragma weak system_board_init=_system_dummy_init
+#    pragma weak _system_events_init=_system_dummy_init
+#    pragma weak _system_extint_init=_system_dummy_init
 #  endif
 #endif
 
-
 /**
- * Handler for the CPU Hard Fault interrupt, fired if an illegal access was
- * attempted to a memory address.
- */
-void HardFault_Handler(void)
-{
-	while (1) {
-		/* Infinite loop if CPU exception is detected */
-		Assert(false);
-	}
-}
-
-/**
- * \brief Initialize system
+ * \brief Initialize system.
  *
  * This function will call the various initialization functions within the
  * system namespace. If a given optional system module is not available, the
@@ -89,6 +82,8 @@ void HardFault_Handler(void)
  * Currently the following initialization functions are supported:
  *  - System clock initialization (via the SYSTEM CLOCK sub-module)
  *  - Board hardware initialization (via the Board module)
+ *  - Event system driver initialization (via the EVSYS module)
+ *  - External Interrupt driver initialization (via the EXTINT module)
  */
 void system_init(void)
 {
@@ -97,5 +92,11 @@ void system_init(void)
 
 	/* Initialize board hardware */
 	system_board_init();
+
+	/* Initialize EVSYS hardware */
+	_system_events_init();
+
+	/* Initialize External hardware */
+	_system_extint_init();
 }
 

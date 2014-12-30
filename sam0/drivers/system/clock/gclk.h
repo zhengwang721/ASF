@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Generic Clock Driver
+ * \brief SAM Generic Clock Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,7 +44,7 @@
 #define SYSTEM_CLOCK_GCLK_H_INCLUDED
 
 /**
- * \addtogroup asfdoc_samd20_system_clock_group
+ * \addtogroup asfdoc_sam0_system_clock_group
  *
  * @{
  */
@@ -141,7 +141,7 @@ enum gclk_generator {
  * the user application.
  */
 struct system_gclk_gen_config {
-	/** Source clock input channel index. */
+	/** Source clock input channel index, see the \ref system_clock_source. */
 	uint8_t source_clock;
 	/** If \c true, the generator output level is high when disabled. */
 	bool high_when_disabled;
@@ -163,45 +163,18 @@ struct system_gclk_gen_config {
 struct system_gclk_chan_config {
 	/** Generic Clock Generator source channel. */
 	enum gclk_generator source_generator;
-	/** If \c true the clock configuration will be locked until the device is
-	 *  reset. */
-	bool write_lock;
 };
 
-/** \name Generic Clock management
+/** \name Generic Clock Management
  * @{
  */
-
-/**
- * \brief Determines if the hardware module(s) are currently synchronizing to the bus.
- *
- * Checks to see if the underlying hardware peripheral module(s) are currently
- * synchronizing across multiple clock domains to the hardware bus, This
- * function can be used to delay further operations on a module until such time
- * that it is ready, to prevent blocking delays for synchronization in the
- * user application.
- *
- * \return Synchronization status of the underlying hardware module(s).
- *
- * \retval true if the module has completed synchronization
- * \retval false if the module synchronization is ongoing
- */
-static inline bool system_gclk_is_syncing(void)
-{
-	if (GCLK->STATUS.reg & GCLK_STATUS_SYNCBUSY) {
-		return true;
-	}
-
-	return false;
-}
-
 void system_gclk_init(void);
 
 /** @} */
 
 
 /**
- * \name Generic Clock management (Generators)
+ * \name Generic Clock Management (Generators)
  * @{
  */
 
@@ -231,7 +204,11 @@ static inline void system_gclk_gen_get_config_defaults(
 	/* Default configuration values */
 	config->division_factor    = 1;
 	config->high_when_disabled = false;
+#if SAML21
+	config->source_clock       = GCLK_SOURCE_OSC16M;
+#else
 	config->source_clock       = GCLK_SOURCE_OSC8M;
+#endif
 	config->run_in_standby     = false;
 	config->output_enable      = false;
 }
@@ -246,11 +223,14 @@ void system_gclk_gen_enable(
 void system_gclk_gen_disable(
 		const uint8_t generator);
 
+bool system_gclk_gen_is_enabled(
+		const uint8_t generator);
+
 /** @} */
 
 
 /**
- * \name Generic Clock management (Channels)
+ * \name Generic Clock Management (Channels)
  * @{
  */
 
@@ -276,7 +256,6 @@ static inline void system_gclk_chan_get_config_defaults(
 
 	/* Default configuration values */
 	config->source_generator = GCLK_GENERATOR_0;
-	config->write_lock       = false;
 }
 
 void system_gclk_chan_set_config(
@@ -289,11 +268,20 @@ void system_gclk_chan_enable(
 void system_gclk_chan_disable(
 		const uint8_t channel);
 
+bool system_gclk_chan_is_enabled(
+		const uint8_t channel);
+
+void system_gclk_chan_lock(
+		const uint8_t channel);
+
+bool system_gclk_chan_is_locked(
+		const uint8_t channel);
+
 /** @} */
 
 
 /**
- * \name Generic Clock frequency retrieval
+ * \name Generic Clock Frequency Retrieval
  * @{
  */
 

@@ -3,7 +3,7 @@
  *
  * \brief USB Device Personal Healthcare Device Class (PHDC) interface.
  *
- * Copyright (c) 2009-2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -90,7 +90,8 @@ UDC_DESC_STORAGE udi_api_t udi_api_phdc = {
  */
 
 /* ! Variable to store the transfer pending flag */
-static le16_t udi_phdc_holding_data;
+COMPILER_WORD_ALIGNED
+		static le16_t udi_phdc_holding_data;
 
 #if (UDI_PHDC_PREAMBLE_FEATURE == true)
 /* ! Flag to signal the state of preample feature */
@@ -446,7 +447,7 @@ static bool udi_phdc_send_preamplemsg(void)
 			udi_phdc_in_trans.metadata->opaque_size);
 	/* Send preample message */
 	if (!udd_ep_run(UDI_PHDC_EP_BULK_IN,
-			false,
+			true,
 			(uint8_t *)&udi_phdc_in_trans.preample_header,
 			udi_phdc_in_trans.
 			preample_header.bOpaqueDataSize +
@@ -498,7 +499,7 @@ static bool udi_phdc_send_metadata(void)
 	}
 
 	/* Send data */
-	if (!udd_ep_run(ep_num, false, udi_phdc_in_trans.metadata->metadata,
+	if (!udd_ep_run(ep_num, true, udi_phdc_in_trans.metadata->metadata,
 			udi_phdc_in_trans.
 			metadata->metadata_size,
 			udi_phdc_metadata_ack)) {

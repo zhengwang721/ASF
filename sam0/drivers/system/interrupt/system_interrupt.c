@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 System Interrupt Driver
+ * \brief SAM System Interrupt Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,7 +43,7 @@
 #include "system_interrupt.h"
 
 /**
- * \brief Check if a interrupt line is pending
+ * \brief Check if a interrupt line is pending.
  *
  * Checks if the requested interrupt vector is pending.
  *
@@ -73,7 +73,7 @@ bool system_interrupt_is_pending(
 }
 
 /**
- * \brief Set a interrupt vector as pending
+ * \brief Set a interrupt vector as pending.
  *
  * Set the requested interrupt vector as pending (i.e issues a software
  * interrupt request for the specified vector). The software handler will be
@@ -111,7 +111,7 @@ enum status_code system_interrupt_set_pending(
 }
 
 /**
- * \brief Clear pending interrupt vector
+ * \brief Clear pending interrupt vector.
  *
  * Clear a pending interrupt vector, so the software handler is not executed.
  *
@@ -146,7 +146,7 @@ enum status_code system_interrupt_clear_pending(
 }
 
 /**
- * \brief Set interrupt vector priority level
+ * \brief Set interrupt vector priority level.
  *
  * Set the priority level of an external interrupt or exception.
  *
@@ -169,7 +169,10 @@ enum status_code system_interrupt_set_priority(
 		uint8_t register_num = vector / 4;
 		uint8_t priority_pos = ((vector % 4) * 8) + (8 - __NVIC_PRIO_BITS);
 
-		NVIC->IP[register_num] = (priority_level << priority_pos);
+		NVIC->IP[register_num] =
+				(NVIC->IP[register_num] & ~(0x3 << priority_pos)) |
+				(priority_level << priority_pos);
+
 	} else if (vector == SYSTEM_INTERRUPT_SYSTICK) {
 		SCB->SHP[1] = (priority_level << _SYSTEM_INTERRUPT_SYSTICK_PRI_POS);
 	} else {
@@ -181,7 +184,7 @@ enum status_code system_interrupt_set_priority(
 }
 
 /**
- * \brief Get interrupt vector priority level
+ * \brief Get interrupt vector priority level.
  *
  * Retrieves the priority level of the requested external interrupt or exception.
  *

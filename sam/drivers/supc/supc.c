@@ -3,7 +3,7 @@
  *
  * \brief Supply Controller (SUPC) driver for SAM.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -60,6 +60,7 @@ extern "C" {
  * @{
  */
 
+#if (!SAMG)
 /**
  * \brief Switch off the voltage regulator to put the device in backup mode.
  *
@@ -68,24 +69,8 @@ extern "C" {
 void supc_enable_backup_mode(Supc *p_supc)
 {
 	p_supc->SUPC_CR = SUPC_CR_KEY_PASSWD | SUPC_CR_VROFF;
-}
-
-/**
- * \brief Switch slow clock source selection to external 32k (Xtal or Bypass) oscillator.
- * This function disables the PLLs.
- *
- * \note Switching sclk back to 32krc is only possible by shutting down the VDDIO power supply.
- *
- * \param ul_bypass 0 for Xtal, 1 for bypass.
- */
-void supc_switch_sclk_to_32kxtal(Supc *p_supc, uint32_t ul_bypass)
-{
-	/* Set Bypass mode if required */
-	if (ul_bypass == 1) {
-		p_supc->SUPC_MR |= SUPC_MR_KEY_PASSWD | SUPC_MR_OSCBYPASS;
-	}
-
-	p_supc->SUPC_CR |= SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL;
+	__WFE();
+	__WFI();
 }
 
 /**
@@ -117,6 +102,25 @@ void supc_disable_voltage_regulator(Supc *p_supc)
 	uint32_t ul_mr = p_supc->SUPC_MR & (~(SUPC_MR_KEY_Msk | SUPC_MR_ONREG));
 #endif
 	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr;
+}
+#endif
+
+/**
+ * \brief Switch slow clock source selection to external 32k (Xtal or Bypass) oscillator.
+ * This function disables the PLLs.
+ *
+ * \note Switching sclk back to 32krc is only possible by shutting down the VDDIO power supply.
+ *
+ * \param ul_bypass 0 for Xtal, 1 for bypass.
+ */
+void supc_switch_sclk_to_32kxtal(Supc *p_supc, uint32_t ul_bypass)
+{
+	/* Set Bypass mode if required */
+	if (ul_bypass == 1) {
+		p_supc->SUPC_MR |= SUPC_MR_KEY_PASSWD | SUPC_MR_OSCBYPASS;
+	}
+
+	p_supc->SUPC_CR |= SUPC_CR_KEY_PASSWD | SUPC_CR_XTALSEL;
 }
 
 /**
@@ -227,6 +231,7 @@ void supc_disable_monitor_interrupt(Supc *p_supc)
 	p_supc->SUPC_SMMR &= ~SUPC_SMMR_SMIEN;
 }
 
+#if (!(SAMG51 || SAMG53 || SAMG54))
 /**
  * \brief Set system controller wake up mode.
  *
@@ -253,6 +258,7 @@ void supc_set_wakeup_inputs(Supc *p_supc, uint32_t ul_inputs,
 {
 	p_supc->SUPC_WUIR = ul_inputs | ul_transition;
 }
+#endif
 
 /**
  * \brief Get supply controller status.
@@ -266,7 +272,7 @@ uint32_t supc_get_status(Supc *p_supc)
 	return p_supc->SUPC_SR;
 }
 
-#if SAM4C
+#if (SAM4C || SAM4CP || SAM4CM)
 /**
  * \brief Enable Backup Area Power-On Reset.
  *
@@ -346,6 +352,36 @@ void supc_set_slcd_vol(Supc *p_supc, uint32_t vol)
 	p_supc->SUPC_MR = tmp;
 
 }
+#endif
+
+#if SAMG54
+/**
+ * \brief Set the internal voltage regulator to use factory trim value.
+ *
+ * \param p_supc Pointer to a SUPC instance.
+ */
+void supc_set_regulator_trim_factory(Supc *p_supc)
+{
+	uint32_t ul_mr = p_supc->SUPC_MR &
+			(~(SUPC_MR_VRVDD_Msk | SUPC_MR_VDDSEL_USER_VRVDD));
+	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr;
+}
+
+/**
+ * \brief Set the internal voltage regulator trim value.
+ *
+ * \param p_supc Pointer to a SUPC instance.
+ * \param value the trim value.
+ *
+ * \note For the trim value in 96M PLL, please read the value in flash unique identifier area.
+ */
+void supc_set_regulator_trim_user(Supc *p_supc, uint32_t value)
+{
+	uint32_t ul_mr = p_supc->SUPC_MR & (~SUPC_MR_VRVDD_Msk);
+	p_supc->SUPC_MR = SUPC_MR_KEY_PASSWD | ul_mr | SUPC_MR_VDDSEL_USER_VRVDD
+		 | SUPC_MR_VRVDD(value);
+}
+
 #endif
 
 //@}

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Watchdog Driver
+ * \brief SAM Watchdog Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,12 +51,12 @@ extern "C" {
 #endif
 
 /**
- * \addtogroup asfdoc_samd20_wdt_group
+ * \addtogroup asfdoc_sam0_wdt_group
  *
  * @{
  */
 
-/** \name Callback configuration and initialization
+/** \name Callback Configuration and Initialization
  * @{
  */
 
@@ -81,7 +81,7 @@ enum status_code wdt_unregister_callback(
 
 /** @} */
 
-/** \name Callback enabling and disabling
+/** \name Callback Enabling and Disabling
  * @{
  */
 

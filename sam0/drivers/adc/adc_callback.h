@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Peripheral Analog-to-Digital Converter Driver
+ * \brief SAM Peripheral Analog-to-Digital Converter Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,8 +44,12 @@
 #ifndef ADC_CALLBACK_H_INCLUDED
 #define ADC_CALLBACK_H_INCLUDED
 
+#ifdef __cplusplus
+extern "C" {
+#endif
+
 /**
- * \addtogroup asfdoc_samd20_adc_group
+ * \addtogroup asfdoc_sam0_adc_group
  *
  * @{
  */
@@ -57,7 +61,7 @@
  * the driver.
  */
 enum adc_job_type {
-	/** Asynchronous ADC read into a user provided buffer */
+	/** Asynchronous ADC read into a user provided buffer. */
 	ADC_JOB_READ_BUFFER,
 };
 
@@ -75,7 +79,7 @@ void adc_unregister_callback(
 		enum adc_callback callback_type);
 
 /**
- * \brief Enables callback
+ * \brief Enables callback.
  *
  * Enables the callback function registered by \ref
  * adc_register_callback. The callback function will be called from the
@@ -84,7 +88,7 @@ void adc_unregister_callback(
  * \param[in]     module Pointer to ADC software instance struct
  * \param[in]     callback_type Callback type given by an enum
  *
- * \returns    Status of the operation
+ * \return    Status of the operation.
  * \retval     STATUS_OK              If operation was completed
  * \retval     STATUS_ERR_INVALID     If operation was not completed,
  *                                    due to invalid callback_type
@@ -111,7 +115,7 @@ static inline void adc_enable_callback(
 }
 
 /**
- * \brief Disables callback
+ * \brief Disables callback.
  *
  * Disables the callback function registered by the \ref
  * adc_register_callback.
@@ -119,7 +123,7 @@ static inline void adc_enable_callback(
  * \param[in]     module Pointer to ADC software instance struct
  * \param[in]     callback_type Callback type given by an enum
  *
- * \returns    Status of the operation
+ * \return    Status of the operation.
  * \retval     STATUS_OK              If operation was completed
  * \retval     STATUS_ERR_INVALID     If operation was not completed,
  *                                    due to invalid callback_type
@@ -167,5 +171,9 @@ void adc_abort_job(
 /** @} */
 
 /** @} */
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif /* ADC_CALLBACK_H_INCLUDED */

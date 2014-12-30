@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 USART Unit test
+ * \brief SAM USART Unit test
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage SAM D20 USART Unit Test
+ * \mainpage SAM USART Unit Test
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
@@ -50,36 +50,43 @@
  * \page appdoc_preface Overview
  * This unit test carries out tests for SERCOM USART driver.
  * It consists of test cases for the following functionalities:
- *      - Test for driver initialization.
- *      - Test for single 8-bit write and read by polling.
- *      - Test for single 9-bit write and read by polling.
- *      - Test for multiple 8-bit write by polling and read by interrupts.
- *      - Test for multiple 8-bit write and read by interrupts.
- *      - Test for multiple re-intialization.
+ *  - Test for driver initialization.
+ *  - Test for single 8-bit write and read by polling.
+ *  - Test for single 9-bit write and read by polling.
+ *  - Test for multiple 8-bit write by polling and read by interrupts.
+ *  - Test for multiple 8-bit write and read by interrupts.
  */
 
 /**
- * \page appdoc_main SAM D20 USART Unit Test
+ * \page appdoc_main SAM USART Unit Test
  *
  * Overview:
- * - \ref appdoc_samd20_usart_unit_test_intro
- * - \ref appdoc_samd20_usart_unit_test_setup
- * - \ref appdoc_samd20_usart_unit_test_usage
- * - \ref appdoc_samd20_usart_unit_test_compinfo
- * - \ref appdoc_samd20_usart_unit_test_contactinfo
+ * - \ref appdoc_sam0_usart_unit_test_intro
+ * - \ref appdoc_sam0_usart_unit_test_setup
+ * - \ref appdoc_sam0_usart_unit_test_usage
+ * - \ref appdoc_sam0_usart_unit_test_compinfo
+ * - \ref appdoc_sam0_usart_unit_test_contactinfo
  *
- * \section appdoc_samd20_usart_unit_test_intro Introduction
+ * \section appdoc_sam0_usart_unit_test_intro Introduction
  * \copydetails appdoc_preface
  *
  * The following kit is required for carrying out the test:
- *      - SAM D20 Xplained Pro board
+ *  - SAM D20 Xplained Pro board
+ *  - SAM D21 Xplained Pro board
+ *  - SAM R21 Xplained Pro board
+ *  - SAM L21 Xplained Pro board
  *
- * \section appdoc_samd20_usart_unit_test_setup Setup
+ * \section appdoc_sam0_usart_unit_test_setup Setup
  * The following connections has to be made using wires:
+ * - SAM D20/D21/R21 Xplained Pro board
  *  - \b TX/RX: EXT1 PIN17 (PA04) <--> EXT1 PIN13 (PB09)
+ * - SAM R21 Xplained Pro board
+ *  - \b TX/RX: EXT1 PIN9  (PA22) <--> EXT1 PIN15 (PB03)
+ * - SAM L21 Xplained Pro board
+ *  - \b TX/RX: EXT2 PIN14 (PA18) <--> EXT1 PIN13 (PB09)
  *
  * To run the test:
- *  - Connect the SAM D20 Xplained Pro board to the computer using a
+ *  - Connect the SAM Xplained Pro board to the computer using a
  *    micro USB cable.
  *  - Open the virtual COM port in a terminal application.
  *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
@@ -88,17 +95,17 @@
  *  - Build the project, program the target and run the application.
  *    The terminal shows the results of the unit test.
  *
- * \section appdoc_samd20_usart_unit_test_usage Usage
- *  - The unit tests are carried out with SERCOM0 on EXT1 as the USART
- *    transmitter and SERCOM4 on EXT1 as the SERCOM USART receiver.
+ * \section appdoc_sam0_usart_unit_test_usage Usage
+ *  - The unit tests are carried out with one SERCOM on EXT1 as the USART
+ *    transmitter and another SERCOM on EXT1 as the SERCOM USART receiver.
  *  - Data is transmitted from transmitter to receiver in lengths of a single
  *    byte as well as multiple bytes.
  *
- * \section appdoc_samd20_usart_unit_test_compinfo Compilation Info
+ * \section appdoc_sam0_usart_unit_test_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for ARM.
  * Other compilers may or may not work.
  *
- * \section appdoc_samd20_usart_unit_test_contactinfo Contact Information
+ * \section appdoc_sam0_usart_unit_test_contactinfo Contact Information
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
@@ -107,30 +114,6 @@
 #include <stdio_serial.h>
 #include <string.h>
 #include "conf_test.h"
-
-/* RX USART to test */
-#define RX_USART              EXT1_UART_MODULE
-#define RX_USART_SERCOM_MUX   EXT1_UART_SERCOM_MUX_SETTING
-#define RX_USART_PINMUX_PAD0  EXT1_UART_SERCOM_PINMUX_PAD0
-#define RX_USART_PINMUX_PAD1  EXT1_UART_SERCOM_PINMUX_PAD1
-#define RX_USART_PINMUX_PAD2  EXT1_UART_SERCOM_PINMUX_PAD2
-#define RX_USART_PINMUX_PAD3  EXT1_UART_SERCOM_PINMUX_PAD3
-
-/* TX USART to test
- *
- * There is only one SERCOM for USART on the EXT headers of the rev. 2
- * SAM D20 Xplained Pro. The settings below are a hack to get a second
- * USART via a SERCOM that is not mapped to a RX/TX pin on a header.
- *
- * More specifically, it is the SPI SERCOM on EXT1, with RX mapped to PA05
- * (EXT1_PIN_15 or "SS_0") and TX mapped to PA04 (EXT1_PIN_17 or "MISO").
- */
-#define TX_USART              SERCOM0
-#define TX_USART_SERCOM_MUX   USART_RX_1_TX_0_XCK_1
-#define TX_USART_PINMUX_PAD0  PINMUX_PA04D_SERCOM0_PAD0
-#define TX_USART_PINMUX_PAD1  PINMUX_PA05D_SERCOM0_PAD1
-#define TX_USART_PINMUX_PAD2  PINMUX_PA06D_SERCOM0_PAD2
-#define TX_USART_PINMUX_PAD3  PINMUX_PA07D_SERCOM0_PAD3
 
 /* Test string to send */
 #define TEST_STRING        "Hello world!"
@@ -198,7 +181,7 @@ static void cdc_uart_init(void)
  */
 static void run_transfer_single_8bit_char_test(const struct test_case *test)
 {
-	volatile uint16_t tx_char = 0x53;
+	uint16_t tx_char = 0x53;
 	volatile uint16_t rx_char = 0;
 
 	/* Write and read the data */
@@ -228,13 +211,13 @@ static void run_transfer_single_9bit_char_test(const struct test_case *test)
 	/* Re-configure RX USART to operate with 9 bit character size */
 	usart_disable(&usart_rx_module);
 	usart_rx_config.character_size = USART_CHARACTER_SIZE_9BIT;
-	usart_init(&usart_rx_module, RX_USART,	&usart_rx_config);
+	usart_init(&usart_rx_module, CONF_RX_USART,	&usart_rx_config);
 	usart_enable(&usart_rx_module);
 
 	/* Re-configure TX USART to operate with 9 bit character size */
 	usart_disable(&usart_tx_module);
 	usart_tx_config.character_size = USART_CHARACTER_SIZE_9BIT;
-	usart_init(&usart_tx_module, TX_USART,	&usart_tx_config);
+	usart_init(&usart_tx_module, CONF_TX_USART,	&usart_tx_config);
 	usart_enable(&usart_tx_module);
 
 	/* Write and read the data */
@@ -248,13 +231,13 @@ static void run_transfer_single_9bit_char_test(const struct test_case *test)
 	/* Put RX USART back in 8 bit mode */
 	usart_disable(&usart_rx_module);
 	usart_rx_config.character_size = USART_CHARACTER_SIZE_8BIT;
-	usart_init(&usart_rx_module, RX_USART,	&usart_rx_config);
+	usart_init(&usart_rx_module, CONF_RX_USART,	&usart_rx_config);
 	usart_enable(&usart_rx_module);
 
 	/* Put TX USART back in 8 bit mode */
 	usart_disable(&usart_tx_module);
 	usart_tx_config.character_size = USART_CHARACTER_SIZE_8BIT;
-	usart_init(&usart_tx_module, TX_USART,	&usart_tx_config);
+	usart_init(&usart_tx_module, CONF_TX_USART,	&usart_tx_config);
 	usart_enable(&usart_tx_module);
 }
 
@@ -315,69 +298,6 @@ static void run_buffer_write_blocking_read_interrupt_test(const struct test_case
 			"Failed receiving string. TX='%s', RX='%s'", tx_string, rx_string);
 }
 
-
-/**
- * \internal
- * \brief Test initializing a module multiple times
- *
- * This test initializes a USART module many times to check that
- * it fails when the config is different and returns STATUS_OK
- * when it is the same
- *
- * \param test Current test case.
- */
-static void run_multiple_init_while_enabled_test(const struct test_case *test)
-{
-	usart_disable(&usart_rx_module);
-	/* Configure RX USART */
-	usart_get_config_defaults(&usart_rx_config);
-	usart_rx_config.mux_setting = RX_USART_SERCOM_MUX;
-	usart_rx_config.pinmux_pad0 = RX_USART_PINMUX_PAD0;
-	usart_rx_config.pinmux_pad1 = RX_USART_PINMUX_PAD1;
-	usart_rx_config.pinmux_pad2 = RX_USART_PINMUX_PAD2;
-	usart_rx_config.pinmux_pad3 = RX_USART_PINMUX_PAD3;
-	usart_rx_config.baudrate    = TEST_USART_SPEED;
-	/* Apply configuration */
-	while(usart_is_syncing(&usart_rx_module)) {
-		/* wait for it */
-	}
-	usart_init(&usart_rx_module,
-			RX_USART, &usart_rx_config);
-
-	usart_enable(&usart_rx_module);
-	/* Apply same configuration when enabled */
-	while(usart_is_syncing(&usart_rx_module)) {
-		/* wait for it */
-	}
-	enum status_code test_code = usart_init(&usart_rx_module,
-			RX_USART, &usart_rx_config);
-	test_assert_true(test, (test_code == STATUS_OK),
-			"Writing an unchanged configuration failed");
-
-	/* Test changing the baud rate*/
-	usart_rx_config.baudrate = 38400;
-	/* Apply new configuration */
-	test_code = usart_init(&usart_rx_module,
-			RX_USART, &usart_rx_config);
-	test_assert_false(test, (test_code == STATUS_OK),
-			"Changing the baudrate did not fail as it should");
-	/* revert to old configuration */
-	usart_rx_config.baudrate = TEST_USART_SPEED;
-
-	/* Test changing the pad*/
-	usart_rx_config.pinmux_pad1 = 0x0003;
-	/* Apply new configuration */
-	test_code = usart_init(&usart_rx_module,
-			RX_USART, &usart_rx_config);
-	test_assert_false(test, (test_code == STATUS_OK),
-			"Changing the pad did not fail as it should");
-	/* revert to old configuration */
-	usart_rx_config.pinmux_pad1 = RX_USART_PINMUX_PAD1;
-	usart_init(&usart_rx_module,
-			RX_USART, &usart_rx_config);
-}
-
-
 /**
  * \internal
  * \brief Test sending and receiving a string using interrupts.
@@ -432,45 +352,34 @@ static void run_buffer_read_write_interrupt_test(const struct test_case *test)
 /**
  * \brief Initialize USARTs for unit tests
  *
- * Initializes the three USARTs used by the unit test. One for
- * outputting the results (using embedded debugger) and two for
- * the actual unit tests (one for RX and one for TX).
+ * Initializes the two USARTs used by the unit test (one for RX and one for TX).
  *
- * The RX USART used is the one connected to EXT1 on rev. 2 of the
- * SAM D20 Xplained Pro, while the TX USART used is the one reserved
- * for SPI on EXT1.
- *
- * The two SERCOMs have RX on pin 13 (RX) and 15 (SS_0), and TX on pin
- * 14 (TX) and 17 (MISO), respectively, on the EXT1 header.
- * Hence, the required connections on EXT1 are:
- * - 13 <--> 17
- * - 14 <--> 15
  */
 static void test_system_init(void)
 {
 	/* Configure RX USART */
 	usart_get_config_defaults(&usart_rx_config);
-	usart_rx_config.mux_setting = RX_USART_SERCOM_MUX;
-	usart_rx_config.pinmux_pad0 = RX_USART_PINMUX_PAD0;
-	usart_rx_config.pinmux_pad1 = RX_USART_PINMUX_PAD1;
-	usart_rx_config.pinmux_pad2 = RX_USART_PINMUX_PAD2;
-	usart_rx_config.pinmux_pad3 = RX_USART_PINMUX_PAD3;
+	usart_rx_config.mux_setting = CONF_RX_USART_SERCOM_MUX;
+	usart_rx_config.pinmux_pad0 = CONF_RX_USART_PINMUX_PAD0;
+	usart_rx_config.pinmux_pad1 = CONF_RX_USART_PINMUX_PAD1;
+	usart_rx_config.pinmux_pad2 = CONF_RX_USART_PINMUX_PAD2;
+	usart_rx_config.pinmux_pad3 = CONF_RX_USART_PINMUX_PAD3;
 	usart_rx_config.baudrate    = TEST_USART_SPEED;
 	/* Apply configuration */
-	usart_init(&usart_rx_module, RX_USART, &usart_rx_config);
+	usart_init(&usart_rx_module, CONF_RX_USART, &usart_rx_config);
 	/* Enable USART */
 	usart_enable(&usart_rx_module);
 
 	/* Configure TX USART */
 	usart_get_config_defaults(&usart_tx_config);
-	usart_tx_config.mux_setting = TX_USART_SERCOM_MUX;
-	usart_tx_config.pinmux_pad0 = TX_USART_PINMUX_PAD0;
-	usart_tx_config.pinmux_pad1 = TX_USART_PINMUX_PAD1;
-	usart_tx_config.pinmux_pad2 = TX_USART_PINMUX_PAD2;
-	usart_tx_config.pinmux_pad3 = TX_USART_PINMUX_PAD3;
+	usart_tx_config.mux_setting = CONF_TX_USART_SERCOM_MUX;
+	usart_tx_config.pinmux_pad0 = CONF_TX_USART_PINMUX_PAD0;
+	usart_tx_config.pinmux_pad1 = CONF_TX_USART_PINMUX_PAD1;
+	usart_tx_config.pinmux_pad2 = CONF_TX_USART_PINMUX_PAD2;
+	usart_tx_config.pinmux_pad3 = CONF_TX_USART_PINMUX_PAD3;
 	usart_tx_config.baudrate    = TEST_USART_SPEED;
 	/* Apply configuration */
-	usart_init(&usart_tx_module, TX_USART, &usart_tx_config);
+	usart_init(&usart_tx_module, CONF_TX_USART, &usart_tx_config);
 	/* Enable USART */
 	usart_enable(&usart_tx_module);
 }
@@ -505,22 +414,17 @@ int main(void)
 			run_buffer_read_write_interrupt_test, NULL,
 			"Buffer interrupt read and write");
 
-	DEFINE_TEST_CASE(multiple_init_while_enabled_test, NULL,
-			run_multiple_init_while_enabled_test, NULL,
-			"Multiple inits while module is enabled");
-
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(usart_tests) = {
 			&transfer_single_8bit_char_test,
 			&transfer_single_9bit_char_test,
 			&transfer_buffer_test,
 			&receive_buffer_test,
-			&multiple_init_while_enabled_test,
 			};
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(usart_suite, usart_tests,
-			"SAM D20 USART driver test suite");
+			"SAM USART driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&usart_suite);

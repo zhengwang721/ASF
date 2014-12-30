@@ -8,7 +8,7 @@
 		</info>
 		<build type="include-path" value="."/>
 		<build type="c-source" value="example_sysfont.c"/>
-		<device-support value="samd20"/>
+		<device-support value="sam0"/>
 		<require idref="common2.services.gfx_mono"/>
 		<require idref="common2.services.gfx_mono.font"/>
 	</module>

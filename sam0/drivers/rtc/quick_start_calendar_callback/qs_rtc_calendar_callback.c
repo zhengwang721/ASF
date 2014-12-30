@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 RTC Calendar Callback Quick Start
+ * \brief SAM RTC Calendar Callback Quick Start
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -46,6 +46,14 @@ void rtc_match_callback(void);
 void configure_rtc_callbacks(void);
 void configure_rtc_calendar(void);
 
+//! [rtc_module_instance]
+struct rtc_module rtc_instance;
+//! [rtc_module_instance]
+
+//! [alarm_struct]
+struct rtc_calendar_alarm_time alarm;
+//! [alarm_struct]
+
 //! [callback]
 void rtc_match_callback(void)
 {
@@ -53,11 +61,6 @@ void rtc_match_callback(void)
 	port_pin_toggle_output_level(LED_0_PIN);
 
 	/* Set new alarm in 5 seconds */
-	//! [alarm_struct]
-	struct rtc_calendar_alarm_time alarm;
-	rtc_calendar_get_time(&alarm.time);
-	//! [alarm_struct]
-
 	//! [alarm_mask]
 	alarm.mask = RTC_CALENDAR_ALARM_MASK_SEC;
 	//! [alarm_mask]
@@ -66,7 +69,7 @@ void rtc_match_callback(void)
 	alarm.time.second += 5;
 	alarm.time.second = alarm.time.second % 60;
 
-	rtc_calendar_set_alarm(&alarm, RTC_CALENDAR_ALARM_0);
+	rtc_calendar_set_alarm(&rtc_instance, &alarm, RTC_CALENDAR_ALARM_0);
 	//! [set_alarm]
 }
 //! [callback]
@@ -76,10 +79,10 @@ void configure_rtc_callbacks(void)
 {
 	//! [reg_callback]
 	rtc_calendar_register_callback(
-			rtc_match_callback, RTC_CALENDAR_CALLBACK_ALARM_0);
+			&rtc_instance, rtc_match_callback, RTC_CALENDAR_CALLBACK_ALARM_0);
 	//! [reg_callback]
 	//! [en_callback]
-	rtc_calendar_enable_callback(RTC_CALENDAR_CALLBACK_ALARM_0);
+	rtc_calendar_enable_callback(&rtc_instance, RTC_CALENDAR_CALLBACK_ALARM_0);
 	//! [en_callback]
 }
 //! [setup_callback]
@@ -94,28 +97,26 @@ void configure_rtc_calendar(void)
 //! [init_conf]
 
 //! [time_struct]
-	struct rtc_calendar_time alarm;
-	rtc_calendar_get_time_defaults(&alarm);
-	alarm.year      = 2013;
-	alarm.month     = 1;
-	alarm.day       = 1;
-	alarm.hour      = 0;
-	alarm.minute    = 0;
-	alarm.second    = 4;
+	alarm.time.year      = 2013;
+	alarm.time.month     = 1;
+	alarm.time.day       = 1;
+	alarm.time.hour      = 0;
+	alarm.time.minute    = 0;
+	alarm.time.second    = 4;
 //! [time_struct]
 
 //! [set_config]
 	config_rtc_calendar.clock_24h = true;
-	config_rtc_calendar.alarm[0].time = alarm;
+	config_rtc_calendar.alarm[0].time = alarm.time;
 	config_rtc_calendar.alarm[0].mask = RTC_CALENDAR_ALARM_MASK_YEAR;
 //! [set_config]
 
 //! [init_rtc]
-	rtc_calendar_init(&config_rtc_calendar);
+	rtc_calendar_init(&rtc_instance, RTC, &config_rtc_calendar);
 //! [init_rtc]
 
 //! [enable]
-	rtc_calendar_enable();
+	rtc_calendar_enable(&rtc_instance);
 //! [enable]
 }
 //! [initialize_rtc]
@@ -150,7 +151,7 @@ int main(void)
 
 	/* Set current time. */
 //! [set_time]
-	rtc_calendar_set_time(&time);
+	rtc_calendar_set_time(&rtc_instance, &time);
 //! [set_time]
 //! [run_initialize_rtc]
 

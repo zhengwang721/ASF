@@ -4,9 +4,11 @@
 			FreeRTOS is a popular, portable, open source, royalty free, mini Real Time Kernel.
 			For complete information on FreeRTOS, see www.freertos.org.
 		</info>
+		<info type="gui-flag" value="hidden"/>
 		<build type="distribute" subtype="file" value="readme.txt"/>
 		<build type="distribute" subtype="file" value="Source/readme.txt"/>
 		<build type="distribute" subtype="license" value="License/license.txt"/>
+		<build type="define" name="__FREERTOS__" value=""/>
 		<build type="c-source" value="Source/croutine.c"/>
 		<build type="c-source" value="Source/list.c"/>
 		<build type="c-source" value="Source/queue.c"/>
@@ -45,7 +47,7 @@
 			<info type="gui-flag" value="hidden"/>
 			<build type="asm-source" value="Source/portable/IAR/ARM_CM0/portasm.s" toolchain="iarewarm"/>
 			<build type="c-source" value="Source/portable/GCC/ARM_CM0/port.c" toolchain="armgcc"/>
-			<build type="c-source" value="Source/portable/IAR/ARM_CM0/port.c" toolchain="iarewarm"/>
+			<build type="c-source" value="Source/portable/IAR/ARM_CM0/FreeRTOS_port.c" toolchain="iarewarm"/>
 			<build type="header-file" value="Source/portable/GCC/ARM_CM0/portmacro.h" toolchain="armgcc"/>
 			<build type="header-file" value="Source/portable/IAR/ARM_CM0/portmacro.h" toolchain="iarewarm"/>
 			<build type="include-path" value="Source/portable/GCC/ARM_CM0/" toolchain="armgcc"/>

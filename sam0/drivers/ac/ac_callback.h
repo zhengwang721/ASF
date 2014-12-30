@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 AC - Analog Comparator Callback Driver
+ * \brief SAM AC - Analog Comparator Callback Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -58,7 +58,7 @@ extern "C" {
 /**
  * \internal Get the interrupt vector for the given device instance
  *
- * \param[in] TC module instance number.
+ * \param[in] TC module instance number
  *
  * \return Interrupt vector for of the given TC module instance.
  */
@@ -89,7 +89,7 @@ enum status_code ac_unregister_callback(
 		const enum ac_callback callback_type);
 
 /**
- * \brief Enables callback
+ * \brief Enables callback.
  *
  * Enables the callback function registered by the \ref
  * ac_register_callback. The callback function will be called from the
@@ -149,7 +149,7 @@ static inline void ac_enable_callback(
 }
 
 /**
- * \brief Disables callback
+ * \brief Disables callback.
  *
  * Disables the callback function registered by the \ref
  * ac_register_callback, and the callback will not be called from the

@@ -3,7 +3,7 @@
  *
  * \brief Main functions for USB host mass storage example
  *
- * Copyright (C) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -58,7 +58,7 @@ typedef enum test_state {
 	TEST_ERROR
 } test_state_t;
 
-static uint16_t main_usb_sof_counter = 0;
+static volatile uint16_t main_usb_sof_counter = 0;
 
 static test_state_t lun_states[MAX_DRIVE];
 
@@ -76,14 +76,18 @@ static int main_count_states(test_state_t state);
  */
 int main(void)
 {
+#if SAMD21 || SAML21
+	system_init();
+#else
 	sysclk_init();
+	board_init();
+#endif
 	irq_initialize_vectors();
 	cpu_irq_enable();
 
 	// Initialize the sleep manager
 	sleepmgr_init();
 
-	board_init();
 	ui_init();
 
 	// Start USB host stack
@@ -94,7 +98,7 @@ int main(void)
 	// - to play with the power modes
 	// - to create a file on each new LUN connected
 	while (true) {
-		sleepmgr_enter_sleep();
+		//sleepmgr_enter_sleep();
 		if (main_usb_sof_counter > 2000) {
 			main_usb_sof_counter = 0;
 			volatile uint8_t lun;

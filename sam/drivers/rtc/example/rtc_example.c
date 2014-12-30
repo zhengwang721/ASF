@@ -3,7 +3,7 @@
  *
  * \brief Real-Time Clock (RTC) example for SAM.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -60,45 +60,45 @@
  * Upon startup, the program displays the currently set time and date
  * and a menu to perform the following:
  *     \code
- *     Menu:
- *        t - Set time
- *        d - Set date
- *        i - Set time alarm
- *        m - Set date alarm
- *        c - Clear the alarm notification (only if it has been triggered)
- *        w - Generate Waveform
- *     \endcode
+	Menu:
+	   t - Set time
+	   d - Set date
+	   i - Set time alarm
+	   m - Set date alarm
+	   c - Clear the alarm notification (only if it has been triggered)
+	   w - Generate Waveform
+\endcode
  *
- * "w" is an additional option for SAM3S8, SAM3SD8, SAM4S and SAM4C. An RTC
- * output can be programmed to generate several waveforms, including a prescaled
- * clock derived from slow clock.
+ * "w" is an additional option for SAM3S8, SAM3SD8, SAM4S, SAM4C, SAM4CP and SAM4CM.
+ * An RTC output can be programmed to generate several waveforms, including a
+ * prescaled clock derived from slow clock.
  *
  * Setting the time, date and time alarm is done by using Menu option, and
  * the display is updated accordingly.
  *
- * The time alarm is triggered only when the second, minute and hour match the
- * preset values; the date alarm is triggered only when the month and date match
- * the preset values.
+ * The time alarm is triggered only when the second, minute and hour match the 
+ * preset values; the date alarm is triggered only when the month and date
+ * match the preset values. 
  *
  * Generating waveform is done by using Menu option "w" and a menu to perform
  * the following:
  *     \code
- *     Menu:
- *     0 - No Waveform
- *     1 - 1 Hz square wave
- *     2 - 32 Hz square wave
- *     3 - 64 Hz square wave
- *     4 - 512 Hz square wave
- *     5 - Toggles when alarm flag rise
- *     6 - Copy of the alarm flag
- *     7 - Duty cycle programmable pulse
- *     8 - Quit
- *     \endcode
+	Menu:
+	0 - No Waveform
+	1 - 1 Hz square wave
+	2 - 32 Hz square wave
+	3 - 64 Hz square wave
+	4 - 512 Hz square wave
+	5 - Toggles when alarm flag rise
+	6 - Copy of the alarm flag
+	7 - Duty cycle programmable pulse
+	8 - Quit
+\endcode
  *
- * \note The example is using RC oscillator by default. This would generate an accuracy
- * problem for the RTC if not calibrated. It is recommended to use an external 32KHz
- * crystal to get high accuracy. How to initialize RTC with external 32KHz crystal can be
- * referred at \ref sam_rtc_quickstart.
+ * \note The example is using RC oscillator by default. This would generate an
+ * accuracy problem for the RTC if not calibrated. It is recommended to use an
+ * external 32KHz crystal to get high accuracy. How to initialize RTC with
+ * external 32KHz crystal can be referred at \ref sam_rtc_quickstart.
  *
  * \note In sam4c_ek board, please use SWD instead of JTAG because RTCOUT share pin with
  * JTAG interface. Otherwise there is a debug issue when enable wave output.
@@ -116,18 +116,19 @@
  * -# Start the application.
  * -# In the terminal window, the following text should appear:
  *    \code
- *     -- RTC Example xxx --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *
- *     Menu:
- *     t - Set time
- *     d - Set date
- *     i - Set time alarm
- *     m - Set date alarm
- *    \endcode
- * -# Press one of the keys listed in the menu to perform the corresponding action.
- *
+	     -- RTC Example xxx --
+	     -- xxxxxx-xx
+	     -- Compiled: xxx xx xxxx xx:xx:xx --
+
+	     Menu:
+	     t - Set time
+	     d - Set date
+	     i - Set time alarm
+	     m - Set date alarm
+\endcode
+ * -# Press one of the keys listed in the menu to perform the corresponding
+ * action.
+ * 
  */
 
 #include "asf.h"
@@ -209,7 +210,13 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
 	};
 
 	/* Configure console UART. */
@@ -234,7 +241,7 @@ static uint32_t get_new_time(void)
 	/* Use gs_uc_rtc_time[] as a format template. */
 	while (1) {
 
-		while (uart_read(CONSOLE_UART, &uc_key));
+		scanf("%c", (char *)&uc_key);
 
 		/* End input */
 		if (uc_key == 0x0d || uc_key == 0x0a) {
@@ -254,19 +261,23 @@ static uint32_t get_new_time(void)
 				--i;
 
 				/* Delimiter ':' for time is uneditable */
-				if (!((gs_uc_rtc_time[i]) >= '0' && (gs_uc_rtc_time[i]) <= '9') && i > 0) {
+				if (!((gs_uc_rtc_time[i]) >= '0' && (gs_uc_rtc_time[i]) <= '9')
+						&& i > 0) {
 					puts("\b \b");
 					--i;
 				}
 			}
 		}
 
-		/* End of gs_uc_rtc_time[], no more input except the above DEL/BS, or enter to end. */
+		/*
+		 * End of gs_uc_rtc_time[], no more input except the above DEL/BS,
+		 * or enter to end.
+		 */
 		if (!gs_uc_rtc_time[i]) {
 			continue;
 		}
 
-		while (uart_write(CONSOLE_UART, uc_key));
+		printf("%c", uc_key);
 		gs_uc_rtc_time[i++] = uc_key;
 
 	}
@@ -330,7 +341,7 @@ static uint32_t get_new_date(void)
 	/* Use gs_uc_rtc_time[] as a format template */
 	while (1) {
 
-		while (uart_read(CONSOLE_UART, &uc_key));
+		scanf("%c", (char *)&uc_key);
 
 		/* End input */
 		if (uc_key == 0x0d || uc_key == 0x0a) {
@@ -350,19 +361,23 @@ static uint32_t get_new_date(void)
 				--i;
 
 				/* Delimiter '/' for date is uneditable */
-				if (!((gs_uc_date[i]) >= '0' && (gs_uc_date[i]) <='9') && i > 0) {
+				if (!((gs_uc_date[i]) >= '0' && (gs_uc_date[i]) <='9')
+						&& i > 0) {
 					puts("\b \b");
 					--i;
 				}
 			}
 		}
 
-		/* End of gs_uc_rtc_time[], no more input except the above DEL/BS, or enter to end. */
+		/*
+		 * End of gs_uc_rtc_time[], no more input except the above DEL/BS,
+		 * or enter to end.
+		 */
 		if (!gs_uc_date[i]) {
 			continue;
 		}
 
-		while (uart_write(CONSOLE_UART, uc_key));
+		printf("%c", uc_key);
 		gs_uc_date[i++] = uc_key;
 
 	}
@@ -377,18 +392,24 @@ static uint32_t get_new_date(void)
 	}
 
 	/* MM-DD-YY */
-	gs_ul_new_month = char_to_digit(gs_uc_date[0]) * 10 + char_to_digit(gs_uc_date[1]);
-	gs_ul_new_day = char_to_digit(gs_uc_date[3]) * 10 + char_to_digit(gs_uc_date[4]);
+	gs_ul_new_month = char_to_digit(gs_uc_date[0]) * 10
+			+ char_to_digit(gs_uc_date[1]);
+	gs_ul_new_day = char_to_digit(gs_uc_date[3]) * 10
+			+ char_to_digit(gs_uc_date[4]);
 	if (i != 6) {
 		/* For 'Set Date' option, get the input new year and new week. */
 		gs_ul_new_year = char_to_digit(gs_uc_date[6]) * 1000 +
 				char_to_digit(gs_uc_date[7]) * 100 +
 				char_to_digit(gs_uc_date[8]) * 10 +
 				char_to_digit(gs_uc_date[9]);
-		gs_ul_new_week = calculate_week(gs_ul_new_year, gs_ul_new_month, gs_ul_new_day);
+		gs_ul_new_week = calculate_week(gs_ul_new_year, gs_ul_new_month,
+				gs_ul_new_day);
 	}
 
-	/* Success input. Verification of data is left to RTC internal Error Checking. */
+	/*
+	 * Success input. Verification of data is left to RTC internal Error
+	 * Checking.
+	 */
 	return 0;
 }
 
@@ -415,7 +436,7 @@ static void refresh_display(void)
 					"  d - Set date\n\r"
 					"  i - Set time alarm\n\r"
 					"  m - Set date alarm\r");
-#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C))
+#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C) || (SAM4CP) || (SAM4CM))
 			puts("  w - Generate Waveform\r");
 #endif
 			if (gs_ul_alarm_triggered) {
@@ -505,7 +526,7 @@ int main(void)
 	/* Handle keypresses */
 	while (1) {
 
-		while (uart_read(CONSOLE_UART, &uc_key));
+		scanf("%c", (char *)&uc_key);
 
 		/* Set time */
 		if (uc_key == 't') {
@@ -555,7 +576,8 @@ int main(void)
 			}
 
 			/* Only 'mm/dd' is input. */
-			if (gs_ul_new_month != 0xFFFFFFFF && gs_ul_new_year == 0xFFFFFFFF) {
+			if (gs_ul_new_month != 0xFFFFFFFF &&
+						gs_ul_new_year == 0xFFFFFFFF) {
 				puts("\n\r Not Set for no year field!\r");
 			}
 
@@ -568,7 +590,7 @@ int main(void)
 		if (uc_key == 'i') {
 			gs_ul_state = STATE_SET_TIME_ALARM;
 
-			rtc_clear_data_alarm(RTC);
+			rtc_clear_date_alarm(RTC);
 
 			do {
 				puts("\n\r\n\r Set time alarm(hh:mm:ss): ");
@@ -607,7 +629,8 @@ int main(void)
 
 			if (gs_ul_new_year != 0xFFFFFFFF && (gs_uc_date[2] == '/')
 					&& (gs_uc_date[5] == '/')) {
-				if (rtc_set_date_alarm(RTC, 1, gs_ul_new_month, 1, gs_ul_new_day)) {
+				if (rtc_set_date_alarm(RTC, 1, gs_ul_new_month, 1,
+						gs_ul_new_day)) {
 					puts("\n\r Date alarm not set, invalid input!\r");
 				} else {
 					printf("\n\r Date alarm is set on %02u/%02u/%4u!",
@@ -625,7 +648,7 @@ int main(void)
 			refresh_display();
 		}
 
-#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C))
+#if ((SAM3S8) || (SAM3SD8) || (SAM4S) || (SAM4C) || (SAM4CP) || (SAM4CM))
 		/* Generate Waveform */
 		if (uc_key == 'w') {
 			gs_ul_state = STATE_WAVEFORM;
@@ -641,7 +664,7 @@ int main(void)
 					"  8 - Quit\r");
 
 			while (1) {
-				while (uart_read(CONSOLE_UART, &uc_key));
+				scanf("%c", (char *)&uc_key);
 
 				if ((uc_key >= '0') && (uc_key <= '7')) {
 					rtc_set_waveform(RTC, 0, char_to_digit(uc_key));

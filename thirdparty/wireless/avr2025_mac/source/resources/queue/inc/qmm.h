@@ -3,7 +3,7 @@
  *
  * @brief This file contains the Queue Management Module definitions.
  *
- * $Id: qmm.h 33955 2012-11-30 15:18:57Z sschneid $
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
@@ -31,6 +31,7 @@
 /**
  * @brief Structure to search for a buffer to be removed from a queue
  */
+__PACK__DATA__
 typedef struct
 #if !defined(DOXYGEN)
         search_tag
@@ -61,19 +62,21 @@ typedef struct
     /** Pointer to tail of queue */
     buffer_t *tail;
 #ifdef ENABLE_QUEUE_CAPACITY
-    /**
-     * Maximum number of buffers that can be accomodated in the current queue
-     * Note: This is only required if the queue capacity shall be different
-     * from 255.
-     */
-    uint8_t capacity;
+
+	/**
+	 * Maximum number of buffers that can be accomodated in the current
+	 * queue
+	 * Note: This is only required if the queue capacity shall be different
+	 * from 255.
+	 */
+	uint8_t capacity;
 #endif  /* ENABLE_QUEUE_CAPACITY */
     /**
      * Number of buffers present in the current queue
      */
     uint8_t size;
 } queue_t;
-
+__PACK__RST_DATA__
 /* === Externals =========================================================== */
 
 

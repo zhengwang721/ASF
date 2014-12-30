@@ -14,6 +14,9 @@
 		<device-support value="uc3"/>
 		<device-support value="xmega"/>
 		<device-support value="sam"/>
+		<device-support value="samd21"/>
+		<device-support value="samr21"/>
+		<device-support value="saml21"/>
 		<generator value="doxygen-module" default-mcu="unspecified-xmegaa1"/>
 	</module>
 </asf>

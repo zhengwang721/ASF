@@ -3,7 +3,7 @@
  *
  * \brief Universal Asynchronous Receiver Transceiver (UART) driver for SAM.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -73,13 +73,6 @@ extern "C" {
  *
  * @{
  */
-
-/* UART internal div factor for sampling */
-#define UART_MCK_DIV             16
-/* Div factor to get the maximum baud rate */
-#define UART_MCK_DIV_MIN_FACTOR  1
-/* Div factor to get the minimum baud rate */
-#define UART_MCK_DIV_MAX_FACTOR  65535
 
 /**
  * \brief Configure UART with the specified parameters.
@@ -263,6 +256,16 @@ uint32_t uart_get_status(Uart *p_uart)
 }
 
 /**
+ * \brief Reset status bits.
+ *
+ * \param p_uart Pointer to a UART instance.
+ */
+void uart_reset_status(Uart *p_uart)
+{
+	p_uart->UART_CR = UART_CR_RSTSTA;
+}
+
+/**
  * \brief Check if Transmit is Ready.
  * Check if data has been loaded in UART_THR and is waiting to be loaded in the
  * Transmit Shift Register (TSR).
@@ -359,6 +362,18 @@ uint32_t uart_is_tx_buf_empty(Uart *p_uart)
 }
 
 /**
+ * \brief Set UART clock divisor value
+ *
+ * \param p_uart Pointer to a UART instance.
+ * \param us_divisor Value to be set.
+ *
+ */
+void uart_set_clock_divisor(Uart *p_uart, uint16_t us_divisor)
+{
+	p_uart->UART_BRGR = us_divisor;
+}
+
+/**
  * \brief Write to UART Transmit Holding Register
  * Before writing user should check if tx is ready (or empty).
  *
@@ -410,7 +425,7 @@ Pdc *uart_get_pdc_base(Uart *p_uart)
 {
 	Pdc *p_pdc_base;
 
-#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C)
+#if (SAM3S || SAM3N || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 	if (p_uart == UART0)
 		p_pdc_base = PDC_UART0;
 #elif (SAM3XA || SAM3U)
@@ -420,7 +435,7 @@ Pdc *uart_get_pdc_base(Uart *p_uart)
 #error "Unsupported device"
 #endif
 
-#if (SAM3S || SAM4S || SAM4E || SAM4N || SAM4C)
+#if (SAM3S || SAM4S || SAM4E || SAM4N || SAM4C || SAMG || SAM4CP || SAM4CM)
 	if (p_uart == UART1)
 		p_pdc_base = PDC_UART1;
 #endif
@@ -433,7 +448,7 @@ Pdc *uart_get_pdc_base(Uart *p_uart)
 	return p_pdc_base;
 }
 
-#if SAM4C
+#if (SAM4C || SAM4CP || SAM4CM)
 /**
  * \brief Enable UART optical interface.
  *
@@ -478,6 +493,54 @@ void uart_config_optical_interface(Uart *p_uart,
 			| cfg->duty | cfg->threshold;
 
 	p_uart->UART_MR = reg;
+}
+#endif
+
+#if (SAMG53 || SAMG54)
+/**
+ * \brief Set sleepwalking match mode.
+ *
+ * \param p_uart Pointer to a UART instance.
+ * \param ul_low_value First comparison value for received character.
+ * \param ul_high_value Second comparison value for received character.
+ * \param cmpmode ture for start condition, false for flag only.
+ * \param cmppar ture for parity check, false for no.
+ */
+void uart_set_sleepwalking(Uart *p_uart, uint8_t ul_low_value,
+		bool cmpmode, bool cmppar, uint8_t ul_high_value)
+{
+	Assert(ul_low_value <= ul_high_value);
+
+	uint32_t temp = 0;
+
+	if (cmpmode) {
+		temp |= UART_CMPR_CMPMODE_START_CONDITION;
+	}
+
+	if (cmppar) {
+		temp |= UART_CMPR_CMPPAR;
+	}
+
+	temp |= UART_CMPR_VAL1(ul_low_value);
+
+	temp |= UART_CMPR_VAL2(ul_high_value);
+
+	p_uart->UART_CMPR= temp;
+}
+
+/**
+ * \brief Enables/Disables write protection mode.
+ *
+ * \param p_uart Pointer to a UART instance.
+ * \param flag ture for enable, false for disable.
+ */
+void uart_set_write_protection(Uart *p_uart, bool flag)
+{
+	if (flag) {
+		p_uart->UART_WPMR = UART_WPMR_WPKEY_PASSWD | UART_WPMR_WPEN;
+	} else {
+		p_uart->UART_WPMR = UART_WPMR_WPKEY_PASSWD;
+	}
 }
 #endif
 

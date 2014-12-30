@@ -3,7 +3,7 @@
  *
  * \brief SAM3X clock configuration.
  *
- * Copyright (c) 2012 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -72,7 +72,7 @@
 #define CONFIG_PLL0_MUL             14
 #define CONFIG_PLL0_DIV             1
 
-/* ===== UPLL (UTMI) Hardware fixed at 480 Mhz. */
+/* ===== UPLL (UTMI) Hardware fixed at 480MHz. */
 
 /* ===== USB Clock Source Options   (Fusb = FpllX / USB_div)
    Use div effective value here. */

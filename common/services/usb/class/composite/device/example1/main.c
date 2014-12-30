@@ -3,7 +3,7 @@
  *
  * \brief Main functions for USB composite example
  *
- * Copyright (c) 2009-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,7 +45,7 @@
 #include "conf_usb.h"
 #include "ui.h"
 
-static bool main_b_mouse_enable = false;
+static volatile bool main_b_mouse_enable = false;
 static volatile bool main_b_msc_enable = false;
 
 /*! \brief Main function. Execution starts here.
@@ -57,9 +57,12 @@ int main(void)
 
 	// Initialize the sleep manager
 	sleepmgr_init();
-
+#if !SAMD21 && !SAMR21 && !SAML21
 	sysclk_init();
 	board_init();
+#else
+	system_init();
+#endif
 	ui_init();
 	ui_powerdown();
 

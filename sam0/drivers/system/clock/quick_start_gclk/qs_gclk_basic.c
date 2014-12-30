@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Generic Clock Driver Quick Start
+ * \brief SAM Generic Clock Driver Quick Start
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -55,10 +55,18 @@ void configure_gclock_generator(void)
 	system_gclk_gen_get_config_defaults(&gclock_gen_conf);
 //! [setup_2]
 
+#if (SAML21)
+//! [setup_3]
+	gclock_gen_conf.source_clock    = SYSTEM_CLOCK_SOURCE_OSC16M;
+	gclock_gen_conf.division_factor = 128;
+//! [setup_3]
+#else
 //! [setup_3]
 	gclock_gen_conf.source_clock    = SYSTEM_CLOCK_SOURCE_OSC8M;
 	gclock_gen_conf.division_factor = 128;
 //! [setup_3]
+#endif
+
 //! [setup_4]
 	system_gclk_gen_set_config(GCLK_GENERATOR_1, &gclock_gen_conf);
 //! [setup_4]
@@ -80,13 +88,23 @@ void configure_gclock_channel(void)
 //! [setup_8]
 	gclk_chan_conf.source_generator = GCLK_GENERATOR_1;
 //! [setup_8]
+#if (SAMD10) || (SAMD11)
 //! [setup_9]
-	system_gclk_chan_set_config(TC0_GCLK_ID, &gclk_chan_conf);
+	system_gclk_chan_set_config(TC1_GCLK_ID, &gclk_chan_conf);
 //! [setup_9]
 
 //! [setup_10]
-	system_gclk_chan_enable(TC0_GCLK_ID);
+	system_gclk_chan_enable(TC1_GCLK_ID);
 //! [setup_10]
+#else
+//! [setup_9]
+	system_gclk_chan_set_config(TC3_GCLK_ID, &gclk_chan_conf);
+//! [setup_9]
+
+//! [setup_10]
+	system_gclk_chan_enable(TC3_GCLK_ID);
+//! [setup_10]
+#endif
 }
 //! [setup]
 

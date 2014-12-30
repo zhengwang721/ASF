@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 SPI Unit test
+ * \brief SAM SPI Unit test
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage SAM D20 SPI Unit Test
+ * \mainpage SAM SPI Unit Test
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
@@ -50,39 +50,53 @@
  * \page appdoc_preface Overview
  * This unit test carries out tests for SERCOM SPI driver.
  * It consists of test cases for the following functionalities:
- *      - Test for driver initialization.
- *      - Test for single byte write and read by polling.
- *      - Test for buffer write by polling and read with interrupt.
- *      - Test for buffer read & write using transceive function.
- *      - Test for 9-bit data transfer.
- *      - Test for baudrate.
+ *  - Test for driver initialization.
+ *  - Test for single byte write and read by polling.
+ *  - Test for buffer write by polling and read with interrupt.
+ *  - Test for buffer read & write using transceive function.
+ *  - Test for 9-bit data transfer.
+ *  - Test for baudrate.
  */
 
 /**
- * \page appdoc_main SAM D20 SPI Unit Test
+ * \page appdoc_main SAM SPI Unit Test
  *
  * Overview:
- * - \ref appdoc_samd20_spi_unit_test_intro
- * - \ref appdoc_samd20_spi_unit_test_setup
- * - \ref appdoc_samd20_spi_unit_test_usage
- * - \ref appdoc_samd20_spi_unit_test_compinfo
- * - \ref appdoc_samd20_spi_unit_test_contactinfo
+ * - \ref appdoc_sam0_spi_unit_test_intro
+ * - \ref appdoc_sam0_spi_unit_test_setup
+ * - \ref appdoc_sam0_spi_unit_test_usage
+ * - \ref appdoc_sam0_spi_unit_test_compinfo
+ * - \ref appdoc_sam0_spi_unit_test_contactinfo
  *
- * \section appdoc_samd20_spi_unit_test_intro Introduction
+ * \section appdoc_sam0_spi_unit_test_intro Introduction
  * \copydetails appdoc_preface
  *
  * The following kit is required for carrying out the test:
- *      - SAM D20 Xplained Pro board
+ *  - SAM D20 Xplained Pro board
+ *  - SAM D21 Xplained Pro board
+ *  - SAM R21 Xplained Pro board
+ *  - SAM L21 Xplained Pro board
  *
- * \section appdoc_samd20_spi_unit_test_setup Setup
+ * \section appdoc_sam0_spi_unit_test_setup Setup
  * The following connections has to be made using wires:
+ * - SAM D20/D21 Xplained Pro
  *  - \b SS_0:  EXT1 PIN15 (PA05) <--> EXT2 PIN15 (PA17)
  *  - \b DO/DI: EXT1 PIN16 (PA06) <--> EXT2 PIN17 (PA16)
  *  - \b DI/DO: EXT1 PIN17 (PA04) <--> EXT2 PIN16 (PA18)
  *  - \b SCK:   EXT1 PIN18 (PA07) <--> EXT2 PIN18 (PA19)
+ * - SAM R21 Xplained Pro
+ *  - \b SS_0:  EXT1 PIN15 (PB03) <--> EXT1 PIN10 (PA23)
+ *  - \b DO/DI: EXT1 PIN16 (PB22) <--> EXT1 PIN9  (PA22)
+ *  - \b DI/DO: EXT1 PIN17 (PB02) <--> EXT1 PIN7  (PA18)
+ *  - \b SCK:   EXT1 PIN18 (PB23) <--> EXT1 PIN8  (PA19)
+ * - SAM L21 Xplained Pro
+ *  - \b SS_0:  EXT1 PIN15 (PA05) <--> EXT3 PIN15 (PB17)
+ *  - \b DO/DI: EXT1 PIN16 (PA06) <--> EXT3 PIN17 (PB16)
+ *  - \b DI/DO: EXT1 PIN17 (PA04) <--> EXT3 PIN16 (PB22)
+ *  - \b SCK:   EXT1 PIN18 (PA07) <--> EXT3 PIN18 (PB23)
  *
  * To run the test:
- *  - Connect the SAM D20 Xplained Pro board to the computer using a
+ *  - Connect the SAM Xplained Pro board to the computer using a
  *    micro USB cable.
  *  - Open the virtual COM port in a terminal application.
  *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
@@ -91,17 +105,17 @@
  *  - Build the project, program the target and run the application.
  *    The terminal shows the results of the unit test.
  *
- * \section appdoc_samd20_spi_unit_test_usage Usage
+ * \section appdoc_sam0_spi_unit_test_usage Usage
  *  - The unit tests are carried out with SERCOM1 on EXT2 as SPI master and
  *    SERCOM0 on EXT1 as SPI slave.
  *  - Data is transmitted from master to slave in lengths of a single byte
  *    as well as multiple bytes.
  *
- * \section appdoc_samd20_spi_unit_test_compinfo Compilation Info
+ * \section appdoc_sam0_spi_unit_test_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for ARM.
  * Other compilers may or may not work.
  *
- * \section appdoc_samd20_spi_unit_test_contactinfo Contact Information
+ * \section appdoc_sam0_spi_unit_test_contactinfo Contact Information
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
@@ -110,21 +124,6 @@
 #include <stdio_serial.h>
 #include <string.h>
 #include "conf_test.h"
-
-/* SERCOM SPI pin-out defines for SPI slave */
-#define SPI_SLAVE_MODULE              EXT1_SPI_MODULE
-#define SPI_SLAVE_SPI_MUX             EXT1_SPI_SERCOM_MUX_SETTING
-#define SPI_SLAVE_DATA_IN_PIN_MUX     EXT1_SPI_SERCOM_PINMUX_PAD0
-#define SPI_SLAVE_SS_PIN_MUX          EXT1_SPI_SERCOM_PINMUX_PAD1
-#define SPI_SLAVE_DATA_OUT_PIN_MUX    EXT1_SPI_SERCOM_PINMUX_PAD2
-#define SPI_SLAVE_SCK_PIN_MUX         EXT1_SPI_SERCOM_PINMUX_PAD3
-/* SERCOM SPI pin-out defines for SPI master */
-#define SPI_MASTER_MODULE             EXT2_SPI_MODULE
-#define SPI_MASTER_SPI_MUX            EXT2_SPI_SERCOM_MUX_SETTING
-#define SPI_MASTER_DATA_IN_PIN_MUX    EXT2_SPI_SERCOM_PINMUX_PAD0
-#define SPI_MASTER_DATA_OUT_PIN_MUX   EXT2_SPI_SERCOM_PINMUX_PAD2
-#define SPI_MASTER_SCK_PIN_MUX        EXT2_SPI_SERCOM_PINMUX_PAD3
-#define SPI_SLAVE_SS_PIN              EXT2_PIN_SPI_SS_0
 
 /* Test Baud rate */
 #define TEST_SPI_BAUDRATE             1000000UL
@@ -208,18 +207,18 @@ static void run_spi_init_test(const struct test_case *test)
 
 	/* Select SPI slave SS pin */
 	spi_slave_inst_get_config_defaults(&slave_config);
-	slave_config.ss_pin = SPI_SLAVE_SS_PIN;
+	slave_config.ss_pin = CONF_SPI_SLAVE_SS_PIN;
 	spi_attach_slave(&slave_inst, &slave_config);
 
 	/* Configure the SPI master */
 	spi_get_config_defaults(&config);
-	config.mux_setting     = SPI_MASTER_SPI_MUX;
-	config.pinmux_pad0     = SPI_MASTER_DATA_IN_PIN_MUX;
+	config.mux_setting     = CONF_SPI_MASTER_SPI_MUX;
+	config.pinmux_pad0     = CONF_SPI_MASTER_DATA_IN_PIN_MUX;
 	config.pinmux_pad1     = PINMUX_UNUSED;
-	config.pinmux_pad2     = SPI_MASTER_DATA_OUT_PIN_MUX;
-	config.pinmux_pad3     = SPI_MASTER_SCK_PIN_MUX;
+	config.pinmux_pad2     = CONF_SPI_MASTER_DATA_OUT_PIN_MUX;
+	config.pinmux_pad3     = CONF_SPI_MASTER_SCK_PIN_MUX;
 	config.mode_specific.master.baudrate = TEST_SPI_BAUDRATE;
-	status = spi_init(&master, SPI_MASTER_MODULE, &config);
+	status = spi_init(&master, CONF_SPI_MASTER_MODULE, &config);
 	test_assert_true(test, status == STATUS_OK,
 			"SPI master initialization failed");
 
@@ -230,14 +229,14 @@ static void run_spi_init_test(const struct test_case *test)
 	/* Configure the SPI slave */
 	spi_get_config_defaults(&config);
 	config.mode                 = SPI_MODE_SLAVE;
-	config.mux_setting          = SPI_SLAVE_SPI_MUX;
-	config.pinmux_pad0          = SPI_SLAVE_DATA_IN_PIN_MUX;
-	config.pinmux_pad1          = SPI_SLAVE_SS_PIN_MUX;
-	config.pinmux_pad2          = SPI_SLAVE_DATA_OUT_PIN_MUX;
-	config.pinmux_pad3          = SPI_SLAVE_SCK_PIN_MUX;
+	config.mux_setting          = CONF_SPI_SLAVE_SPI_MUX;
+	config.pinmux_pad0          = CONF_SPI_SLAVE_DATA_IN_PIN_MUX;
+	config.pinmux_pad1          = CONF_SPI_SLAVE_SS_PIN_MUX;
+	config.pinmux_pad2          = CONF_SPI_SLAVE_DATA_OUT_PIN_MUX;
+	config.pinmux_pad3          = CONF_SPI_SLAVE_SCK_PIN_MUX;
 	config.mode_specific.slave.frame_format   = SPI_FRAME_FORMAT_SPI_FRAME;
 	config.mode_specific.slave.preload_enable = true;
-	status = spi_init(&slave, SPI_SLAVE_MODULE, &config);
+	status = spi_init(&slave, CONF_SPI_SLAVE_MODULE, &config);
 	test_assert_true(test, status == STATUS_OK,
 			"SPI slave initialization failed");
 
@@ -450,16 +449,16 @@ static void run_baud_test(const struct test_case *test)
 
 	/* Configure the SPI master */
 	spi_get_config_defaults(&config);
-	config.mux_setting     = SPI_MASTER_SPI_MUX;
-	config.pinmux_pad0     = SPI_MASTER_DATA_IN_PIN_MUX;
+	config.mux_setting     = CONF_SPI_MASTER_SPI_MUX;
+	config.pinmux_pad0     = CONF_SPI_MASTER_DATA_IN_PIN_MUX;
 	config.pinmux_pad1     = PINMUX_UNUSED;
-	config.pinmux_pad2     = SPI_MASTER_DATA_OUT_PIN_MUX;
-	config.pinmux_pad3     = SPI_MASTER_SCK_PIN_MUX;
+	config.pinmux_pad2     = CONF_SPI_MASTER_DATA_OUT_PIN_MUX;
+	config.pinmux_pad3     = CONF_SPI_MASTER_SCK_PIN_MUX;
 
 	do {
 		spi_disable(&master);
 		config.mode_specific.master.baudrate = test_baud;
-		spi_init(&master, SPI_MASTER_MODULE, &config);
+		spi_init(&master, CONF_SPI_MASTER_MODULE, &config);
 		spi_enable(&master);
 
 		/* Send data to slave */
@@ -502,14 +501,14 @@ static void setup_transfer_9bit_test(const struct test_case *test)
 
 	/* Configure the SPI master */
 	spi_get_config_defaults(&config);
-	config.mux_setting     = SPI_MASTER_SPI_MUX;
-	config.pinmux_pad0     = SPI_MASTER_DATA_IN_PIN_MUX;
+	config.mux_setting     = CONF_SPI_MASTER_SPI_MUX;
+	config.pinmux_pad0     = CONF_SPI_MASTER_DATA_IN_PIN_MUX;
 	config.pinmux_pad1     = PINMUX_UNUSED;
-	config.pinmux_pad2     = SPI_MASTER_DATA_OUT_PIN_MUX;
-	config.pinmux_pad3     = SPI_MASTER_SCK_PIN_MUX;
+	config.pinmux_pad2     = CONF_SPI_MASTER_DATA_OUT_PIN_MUX;
+	config.pinmux_pad3     = CONF_SPI_MASTER_SCK_PIN_MUX;
 	config.mode_specific.master.baudrate = TEST_SPI_BAUDRATE;
 	config.character_size  = SPI_CHARACTER_SIZE_9BIT;
-	status = spi_init(&master, SPI_MASTER_MODULE, &config);
+	status = spi_init(&master, CONF_SPI_MASTER_MODULE, &config);
 	test_assert_true(test, status == STATUS_OK,
 			"SPI master initialization failed for 9-bit configuration");
 	/* Enable the SPI master */
@@ -520,15 +519,15 @@ static void setup_transfer_9bit_test(const struct test_case *test)
 	/* Configure the SPI slave */
 	spi_get_config_defaults(&config);
 	config.mode                 = SPI_MODE_SLAVE;
-	config.mux_setting          = SPI_SLAVE_SPI_MUX;
-	config.pinmux_pad0          = SPI_SLAVE_DATA_IN_PIN_MUX;
-	config.pinmux_pad1          = SPI_SLAVE_SS_PIN_MUX;
-	config.pinmux_pad2          = SPI_SLAVE_DATA_OUT_PIN_MUX;
-	config.pinmux_pad3          = SPI_SLAVE_SCK_PIN_MUX;
+	config.mux_setting          = CONF_SPI_SLAVE_SPI_MUX;
+	config.pinmux_pad0          = CONF_SPI_SLAVE_DATA_IN_PIN_MUX;
+	config.pinmux_pad1          = CONF_SPI_SLAVE_SS_PIN_MUX;
+	config.pinmux_pad2          = CONF_SPI_SLAVE_DATA_OUT_PIN_MUX;
+	config.pinmux_pad3          = CONF_SPI_SLAVE_SCK_PIN_MUX;
 	config.mode_specific.slave.frame_format   = SPI_FRAME_FORMAT_SPI_FRAME;
 	config.mode_specific.slave.preload_enable = true;
 	config.character_size       = SPI_CHARACTER_SIZE_9BIT;
-	status = spi_init(&slave, SPI_SLAVE_MODULE, &config);
+	status = spi_init(&slave, CONF_SPI_SLAVE_MODULE, &config);
 	test_assert_true(test, status == STATUS_OK,
 			"SPI slave initialization failed for 9-bit configuration");
 
@@ -640,7 +639,7 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(spi_test_suite, spi_tests,
-			"SAM D20 SPI driver test suite");
+			"SAM SPI driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&spi_test_suite);

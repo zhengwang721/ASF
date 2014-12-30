@@ -6,7 +6,7 @@
  *
  * This implements the range measurement mode functionality
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -143,16 +143,16 @@ void range_test_tx_on_task(void)
  * states
  * \param frame Pointer to received frame
  */
-void range_test_rx_cb(frame_info_t *frame_info)
+void range_test_rx_cb(frame_info_t *mac_frame_info)
 {
 	app_payload_t *msg;
-	if (*(frame_info->mpdu) == (FRAME_OVERHEAD +
+	if (*(mac_frame_info->mpdu) == (FRAME_OVERHEAD +
 			((sizeof(app_payload_t) -
 			sizeof(general_pkt_t)) +
 			sizeof(data_pkt_range_test_t)))) {
 		/* Point to the message : 1 =>size is first byte and 2=>FCS*/
 		msg
-			= (app_payload_t *)(frame_info->mpdu +
+			= (app_payload_t *)(mac_frame_info->mpdu +
 				LENGTH_FIELD_LEN +
 				FRAME_OVERHEAD - FCS_LEN);
 		if ((msg->cmd_id) == DATA_PKT) {
@@ -230,12 +230,12 @@ static void range_test_tx_timer_handler_cb(void *parameter)
 /**
  * \brief Send Range Measurement mode test frames to the peer device.
  *
- * This is a unicast with source address and destination addreses which were set
- * during peer search process
+ * This is a unicast with source address and destination addresses which were 
+ *set during peer search process
  */
 static int range_test_frame_tx(void)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	data_pkt_range_test_t *data;
 

@@ -1,5 +1,5 @@
 <asf xmlversion="1.0">
-	<project force-caption="true" force-description="true" caption="RF4CE-ZRC controller serial interface AT86RF233 REB-SAM4L Xplained Pro" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.ctr.ncp.sam4lc4c_reb233_xpro">
+	<project force-caption="true" force-description="true" caption="RF4CE-ZRC controller serial interface AT86RF233 (ATREB233-XPRO) - SAM4L Xplained Pro" id="thirdparty.wireless.avr2102_rf4control.apps.zrc.serial_if.ctr.ncp.sam4lc4c_reb233_xpro">
 		<info type="description" value="summary">
 		he RF4CE-ZRC controller stack running on the network co-processor and driven by the host application
 		</info>
@@ -11,12 +11,11 @@
 		<build type="header-file" value="conf_uart_serial.h"/>
         <build type="header-file" value="conf_nvm.h"/>
 		<build type="header-file" value="conf_hw_timer.h"/>
-		<build type="define" name="EXTERN_EEPROM_AVAILABLE" value ="0"/>
 
 	
 		
 		<config name="config.thirdparty.wireless.avr2025_mac.source.tal" value="at86rf233"/>
-		<config name="config.thirdparty.wireless.avr2025_mac.source.sal" value="at86rf2xx"/>
+		
 		<config name="config.thirdparty.wireless.avr2025_mac.source.mac.api" value="no" />
 		<config name="config.thirdparty.wireless.addons.sio2host" value="uart"/>
 		

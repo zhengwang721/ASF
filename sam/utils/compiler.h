@@ -3,7 +3,7 @@
  *
  * \brief Commonly used includes, types and macros.
  *
- * Copyright (c) 2010-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -159,6 +159,21 @@
 #	define __always_inline   inline __attribute__((__always_inline__))
 #elif (defined __ICCARM__)
 #	define __always_inline   _Pragma("inline=forced")
+#endif
+
+/**
+ * \def __no_inline
+ * \brief The function should not be inlined.
+ *
+ * This annotation instructs the compiler to ignore its inlining
+ * heuristics and not inline the function.
+ */
+#if defined(__CC_ARM)
+#   define __no_inline   __attribute__((noinline))
+#elif (defined __GNUC__)
+#	define __no_inline   __attribute__((__noinline__))
+#elif (defined __ICCARM__)
+#	define __no_inline   _Pragma("inline=never")
 #endif
 
 /*! \brief This macro is used to test fatal errors.
@@ -1128,6 +1143,22 @@ static inline void convert_16_bit_to_byte_address(uint16_t value, uint8_t *data)
 static inline uint16_t convert_byte_array_to_16_bit(uint8_t *data)
 {
     return (data[0] | ((uint16_t)data[1] << 8));
+}
+
+/* Converts a 8 Byte array into a 32-Bit value */
+static inline uint32_t convert_byte_array_to_32_bit(uint8_t *data)
+{
+	union
+	{
+		uint32_t u32;
+		uint8_t u8[8];
+	}long_addr;
+	uint8_t index;
+	for (index = 0; index < 4; index++)
+	{
+		long_addr.u8[index] = *data++;
+	}
+	return long_addr.u32;
 }
 
 /**

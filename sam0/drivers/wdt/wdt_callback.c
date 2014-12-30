@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Watchdog Driver
+ * \brief SAM Watchdog Driver
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,6 +42,9 @@
  */
 #include "wdt.h"
 #include <system.h>
+#include <system_interrupt.h>
+
+wdt_callback_t wdt_early_warning_callback;
 
 /**
  * \brief Registers an asynchronous callback function with the driver.
@@ -54,8 +57,8 @@
  * \param[in] type      Type of callback function to register
  *
  * \return Status of the registration operation.
- * \retval STATUS_OK               The callback was registered successfully.
- * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
+ * \retval STATUS_OK               The callback was registered successfully
+ * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied
  */
 enum status_code wdt_register_callback(
 		const wdt_callback_t callback,
@@ -67,7 +70,7 @@ enum status_code wdt_register_callback(
 	switch (type)
 	{
 	case WDT_CALLBACK_EARLY_WARNING:
-		_wdt_instance.early_warning_callback = callback;
+		wdt_early_warning_callback = callback;
 		return STATUS_OK;
 	default:
 		Assert(false);
@@ -84,8 +87,8 @@ enum status_code wdt_register_callback(
  * \param[in] type  Type of callback function to unregister
  *
  * \return Status of the de-registration operation.
- * \retval STATUS_OK               The callback was Unregistered successfully.
- * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
+ * \retval STATUS_OK               The callback was Unregistered successfully
+ * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied
  */
 enum status_code wdt_unregister_callback(
 		const enum wdt_callback type)
@@ -93,7 +96,7 @@ enum status_code wdt_unregister_callback(
 	switch (type)
 	{
 	case WDT_CALLBACK_EARLY_WARNING:
-		_wdt_instance.early_warning_callback = NULL;
+		wdt_early_warning_callback = NULL;
 		return STATUS_OK;
 	default:
 		Assert(false);
@@ -110,8 +113,8 @@ enum status_code wdt_unregister_callback(
  * \param[in] type  Type of callback function to enable
  *
  * \return Status of the callback enable operation.
- * \retval STATUS_OK               The callback was enabled successfully.
- * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
+ * \retval STATUS_OK               The callback was enabled successfully
+ * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied
  */
 enum status_code wdt_enable_callback(
 		const enum wdt_callback type)
@@ -122,6 +125,7 @@ enum status_code wdt_enable_callback(
 	{
 	case WDT_CALLBACK_EARLY_WARNING:
 		WDT_module->INTENSET.reg = WDT_INTENSET_EW;
+		system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_WDT);
 		return STATUS_OK;
 	default:
 		Assert(false);
@@ -137,8 +141,8 @@ enum status_code wdt_enable_callback(
  * \param[in] type  Type of callback function to disable
  *
  * \return Status of the callback disable operation.
- * \retval STATUS_OK               The callback was disabled successfully.
- * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied.
+ * \retval STATUS_OK               The callback was disabled successfully
+ * \retval STATUS_ERR_INVALID_ARG  If an invalid callback type was supplied
  */
 enum status_code wdt_disable_callback(
 		const enum wdt_callback type)
@@ -161,7 +165,7 @@ void WDT_Handler(void)
 {
 	wdt_clear_early_warning();
 
-	if (_wdt_instance.early_warning_callback) {
-		_wdt_instance.early_warning_callback();
+	if (wdt_early_warning_callback) {
+		wdt_early_warning_callback();
 	}
 }

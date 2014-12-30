@@ -3,7 +3,7 @@
  *
  * \brief TWI SLAVE Example for SAM.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,9 +54,9 @@
  *
  * In addition, another device will be needed to act as the TWI master. The
  * twi_eeprom_example can be used for that, in which case a second kit
- * supported by that project is needed (on SAM4S evaluation kits, TWI1 is used).
- * -# Connect TWD0 (SDA) for the 2 boards.
- * -# Connect TWCK0 (SCL) for the 2 boards.
+ * supported by that project is needed.
+ * -# Connect TWD (SDA) for the 2 boards.
+ * -# Connect TWCK (SCL) for the 2 boards.
  * -# Connect GND for the 2 boards.
  * -# Make sure there is a pull up resistor on TWD and TWCK.
  *
@@ -79,8 +79,8 @@
  * sent by the master.
  * The default address for the TWI slave is fixed to 0x40. If the board has a TWI
  * component with this address, you can change the define AT24C_ADDRESS in
- * twi_eeprom_example.c of twi_eeprom_example project, and the define SLAVE_ADDRESS
- * in twi_slave_example.c of twi_slave_exmaple project.
+ * twi_eeprom_example.c of twi_eeprom_example project, and the define
+ * SLAVE_ADDRESS in twi_slave_example.c of twi_slave_exmaple project.
  *
  * \section compinfo Compilation Info
  * This software was written for the GNU GCC and IAR EWARM.
@@ -89,7 +89,7 @@
  * \section contactinfo Contact Information
  * For further information, visit
  * <A href="http://www.atmel.com/">Atmel</A>.\n
- * Support and FAQ: http://support.atmel.com/
+ * Support and FAQ: http://www.atmel.com/design-support/
  *
  */
 
@@ -154,20 +154,21 @@ void BOARD_TWI_Handler(void)
 
 		if (emulate_driver.uc_acquire_address == 1) {
 			/* Acquire MSB address */
-			emulate_driver.us_page_address = (twi_read_byte(BOARD_BASE_TWI_SLAVE)
-					& 0xFF) << 8;
+			emulate_driver.us_page_address =
+					(twi_read_byte(BOARD_BASE_TWI_SLAVE) & 0xFF) << 8;
 			emulate_driver.uc_acquire_address++;
 		} else {
 			if (emulate_driver.uc_acquire_address == 2) {
 				/* Acquire LSB address */
-				emulate_driver.us_page_address |= (twi_read_byte(BOARD_BASE_TWI_SLAVE)
-						& 0xFF);
+				emulate_driver.us_page_address |=
+						(twi_read_byte(BOARD_BASE_TWI_SLAVE) & 0xFF);
 				emulate_driver.uc_acquire_address++;
 			} else {
 				/* Read one byte of data from master to slave device */
 				emulate_driver.uc_memory[emulate_driver.us_page_address +
-						emulate_driver.us_offset_memory] = (twi_read_byte(BOARD_BASE_TWI_SLAVE)
-								& 0xFF);
+					emulate_driver.us_offset_memory] =
+						(twi_read_byte(BOARD_BASE_TWI_SLAVE) & 0xFF);
+
 				emulate_driver.us_offset_memory++;
 			}
 		}
@@ -180,7 +181,8 @@ void BOARD_TWI_Handler(void)
 			emulate_driver.uc_acquire_address = 0;
 			emulate_driver.us_page_address = 0;
 			twi_enable_interrupt(BOARD_BASE_TWI_SLAVE, TWI_SR_SVACC);
-			twi_disable_interrupt(BOARD_BASE_TWI_SLAVE, TWI_IDR_RXRDY | TWI_IDR_GACC |
+			twi_disable_interrupt(BOARD_BASE_TWI_SLAVE,
+					TWI_IDR_RXRDY | TWI_IDR_GACC |
 					TWI_IDR_NACK | TWI_IDR_EOSACC | TWI_IDR_SCL_WS);
 		} else {
 			if (((status & TWI_SR_SVACC) == TWI_SR_SVACC)
@@ -205,7 +207,13 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
 	};
 
 	/* Configure console UART. */
@@ -240,8 +248,14 @@ int main(void)
 	/* Output example information */
 	puts(STRING_HEADER);
 
+#if (SAMG55)
+	/* Enable the peripheral and set TWI mode. */
+	flexcom_enable(BOARD_FLEXCOM_TWI);
+	flexcom_set_opmode(BOARD_FLEXCOM_TWI, FLEXCOM_TWI);
+#else
 	/* Enable the peripheral clock for TWI */
 	pmc_enable_periph_clk(BOARD_ID_TWI_SLAVE);
+#endif
 
 	for (i = 0; i < MEMORY_SIZE; i++) {
 		emulate_driver.uc_memory[i] = 0;

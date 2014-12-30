@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 GPIO Port Driver
+ * \brief SAM GPIO Port Driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,31 +44,36 @@
 #define PORT_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_port_group SAM D20 Port Driver (PORT)
+ * \defgroup asfdoc_sam0_port_group SAM Port Driver (PORT)
  *
- * This driver for SAM D20 devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's General Purpose Input/Output (GPIO) pin
  * functionality, for manual pin state reading and writing.
  *
  * The following peripherals are used by this module:
- *
  *  - PORT (GPIO Management)
  *
+ * The following devices can use this module:
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
+ *
  * The outline of this documentation is as follows:
- *  - \ref asfdoc_samd20_port_prerequisites
- *  - \ref asfdoc_samd20_port_module_overview
- *  - \ref asfdoc_samd20_port_special_considerations
- *  - \ref asfdoc_samd20_port_extra_info
- *  - \ref asfdoc_samd20_port_examples
- *  - \ref asfdoc_samd20_port_api_overview
+ *  - \ref asfdoc_sam0_port_prerequisites
+ *  - \ref asfdoc_sam0_port_module_overview
+ *  - \ref asfdoc_sam0_port_special_considerations
+ *  - \ref asfdoc_sam0_port_extra_info
+ *  - \ref asfdoc_sam0_port_examples
+ *  - \ref asfdoc_sam0_port_api_overview
  *
  *
- * \section asfdoc_samd20_port_prerequisites Prerequisites
+ * \section asfdoc_sam0_port_prerequisites Prerequisites
  *
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_samd20_port_module_overview Module Overview
+ * \section asfdoc_sam0_port_module_overview Module Overview
  *
  * The device GPIO (PORT) module provides an interface between the user
  * application logic and external hardware peripherals, when general pin state
@@ -76,27 +81,41 @@
  * the physical pin input samplers and output drivers, so that pins can be read
  * from or written to for general purpose external hardware control.
  *
- * \subsection asfdoc_samd20_port_module_overview_pin_numbering Physical and Logical GPIO Pins
- * SAM D20 devices use two naming conventions for the I/O pins in the device; one
- * physical, and one logical. Each physical pin on a device package is assigned
+ * \subsection asfdoc_sam0_port_features Driver Feature Macro Definition
+ * <table>
+ *  <tr>
+ *    <th>Driver Feature Macro</th>
+ *    <th>Supported devices</th>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_PORT_INPUT_EVENT</td>
+ *    <td>SAML21</td>
+ *  </tr>
+ * </table>
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
+ *
+ * \subsection asfdoc_sam0_port_module_overview_pin_numbering Physical and Logical GPIO Pins
+ * SAM devices use two naming conventions for the I/O pins in the device; one
+ * physical and one logical. Each physical pin on a device package is assigned
  * both a physical port and pin identifier (e.g. "PORTA.0") as well as a
  * monotonically incrementing logical GPIO number (e.g. "GPIO0"). While the
  * former is used to map physical pins to their physical internal device module
  * counterparts, for simplicity the design of this driver uses the logical GPIO
  * numbers instead.
  *
- * \subsection asfdoc_samd20_port_module_overview_physical Physical Connection
+ * \subsection asfdoc_sam0_port_module_overview_physical Physical Connection
  *
- * \ref asfdoc_samd20_port_module_int_connections "The diagram below" shows how
+ * \ref asfdoc_sam0_port_module_int_connections "The diagram below" shows how
  * this module is interconnected within the device.
  *
- * \anchor asfdoc_samd20_port_module_int_connections
+ * \anchor asfdoc_sam0_port_module_int_connections
  * \dot
  * digraph overview {
  *   node [label="Port Pad" shape=square] pad;
  *
  *   subgraph driver {
- *     node [label="Peripheral Mux" shape=trapezium] pinmux;
+ *     node [label="Peripheral MUX" shape=trapezium] pinmux;
  *     node [label="GPIO Module" shape=ellipse] gpio;
  *     node [label="Other Peripheral Modules" shape=ellipse style=filled fillcolor=lightgray] peripherals;
  *   }
@@ -108,28 +127,28 @@
  * \enddot
  *
  *
- * \section asfdoc_samd20_port_special_considerations Special Considerations
+ * \section asfdoc_sam0_port_special_considerations Special Considerations
  *
- * The SAM D20 port pin input sampler can be disabled when the pin is configured
+ * The SAM port pin input sampler can be disabled when the pin is configured
  * in pure output mode to save power; reading the pin state of a pin configured
  * in output-only mode will read the logical output state that was last set.
  *
- * \section asfdoc_samd20_port_extra_info Extra Information
+ * \section asfdoc_sam0_port_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_samd20_port_extra. This includes:
- *  - \ref asfdoc_samd20_port_extra_acronyms
- *  - \ref asfdoc_samd20_port_extra_dependencies
- *  - \ref asfdoc_samd20_port_extra_errata
- *  - \ref asfdoc_samd20_port_extra_history
+ * For extra information, see \ref asfdoc_sam0_port_extra. This includes:
+ *  - \ref asfdoc_sam0_port_extra_acronyms
+ *  - \ref asfdoc_sam0_port_extra_dependencies
+ *  - \ref asfdoc_sam0_port_extra_errata
+ *  - \ref asfdoc_sam0_port_extra_history
  *
  *
- * \section asfdoc_samd20_port_examples Examples
+ * \section asfdoc_sam0_port_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_samd20_port_exqsg.
+ * \ref asfdoc_sam0_port_exqsg.
  *
  *
- * \section asfdoc_samd20_port_api_overview API Overview
+ * \section asfdoc_sam0_port_api_overview API Overview
  * @{
  */
 
@@ -139,6 +158,17 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/**
+ * \name Driver Feature Definition
+ * Define port features set according to different device family.
+ * @{
+*/
+#if (SAML21) || defined(__DOXYGEN__)
+/** Event input control feature support for PORT group. */
+#  define FEATURE_PORT_INPUT_EVENT
+#endif
+/*@}*/
 
 /** \name PORT Alias Macros
  * @{
@@ -203,6 +233,52 @@ enum port_pin_pull {
 	PORT_PIN_PULL_DOWN = SYSTEM_PINMUX_PIN_PULL_DOWN,
 };
 
+#ifdef FEATURE_PORT_INPUT_EVENT
+/**
+ *  \brief Port input event action.
+ *
+ *  List of port input events action on pin.
+ */
+enum port_input_event_action {
+	/** Event out to pin. */
+	PORT_INPUT_EVENT_ACTION_OUT	= 0,
+	/** Set output register of pin on event. */
+	PORT_INPUT_EVENT_ACTION_SET,
+	/** Clear output register pin on event. */
+	PORT_INPUT_EVENT_ACTION_CLR,
+	/** Toggle output register pin on event. */
+	PORT_INPUT_EVENT_ACTION_TGL,
+};
+
+/**
+ *  \brief Port input event.
+ *
+ *  List of port input events.
+ */
+enum port_input_event{
+	/** Port input event 0. */
+	PORT_INPUT_EVENT_0	= 0,
+	/** Port input event 1. */
+	PORT_INPUT_EVENT_1	= 1,
+	/** Port input event 2. */
+	PORT_INPUT_EVENT_2	= 2,
+	/** Port input event 3. */
+	PORT_INPUT_EVENT_3	= 3,
+};
+
+/**
+ *  \brief Port input event configuration structure.
+ *
+ *  Configuration structure for a port input event.
+ */
+struct port_input_event_config{
+	/** PPort input event action. */
+	enum port_input_event_action  action;
+	/** GPIO pin. */
+	uint8_t gpio_pin;
+};
+#endif
+
 /**
  *  \brief Port pin configuration structure.
  *
@@ -216,9 +292,15 @@ struct port_config {
 
 	/** Port pull-up/pull-down for input pins. */
 	enum port_pin_pull input_pull;
+
+	/** Enable lowest possible powerstate on the pin
+	 *
+	 *  \note All other configurations will be ignored, the pin will be disabled.
+	 */
+	bool powersave;
 };
 
-/** \name State reading/writing (physical group orientated)
+/** \name State Reading/Writing (Physical Group Orientated)
  * @{
  */
 
@@ -228,7 +310,7 @@ struct port_config {
  *  Retrieves the PORT module group instance associated with a given logical
  *  GPIO pin number.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to convert.
+ *  \param[in] gpio_pin  Index of the GPIO pin to convert
  *
  *  \return Base address of the associated PORT module.
  */
@@ -244,8 +326,8 @@ static inline PortGroup* port_get_group_from_gpio_pin(
  *  Reads the current logic level of a port module's pins and returns the
  *  current levels as a bitmask.
  *
- *  \param[in] port  Base of the PORT module to read from.
- *  \param[in] mask  Mask of the port pin(s) to read.
+ *  \param[in] port  Base of the PORT module to read from
+ *  \param[in] mask  Mask of the port pin(s) to read
  *
  *  \return Status of the port pin(s) input buffers.
  */
@@ -265,8 +347,8 @@ static inline uint32_t port_group_get_input_level(
  *  Reads the current logical output level of a port module's pins and returns
  *  the current levels as a bitmask.
  *
- *  \param[in] port  Base of the PORT module to read from.
- *  \param[in] mask  Mask of the port pin(s) to read.
+ *  \param[in] port  Base of the PORT module to read from
+ *  \param[in] mask  Mask of the port pin(s) to read
  *
  *  \return Status of the port pin(s) output buffers.
  */
@@ -286,9 +368,9 @@ static inline uint32_t port_group_get_output_level(
  *  Sets the current output level of a port module's pins to a given logic
  *  level.
  *
- *  \param[out] port        Base of the PORT module to write to.
- *  \param[in]  mask        Mask of the port pin(s) to change.
- *  \param[in]  level_mask  Mask of the port level(s) to set.
+ *  \param[out] port        Base of the PORT module to write to
+ *  \param[in]  mask        Mask of the port pin(s) to change
+ *  \param[in]  level_mask  Mask of the port level(s) to set
  */
 static inline void port_group_set_output_level(
 		PortGroup *const port,
@@ -307,8 +389,8 @@ static inline void port_group_set_output_level(
  *
  *  Toggles the current output levels of a port module's pins.
  *
- *  \param[out] port  Base of the PORT module to write to.
- *  \param[in]  mask  Mask of the port pin(s) to toggle.
+ *  \param[out] port  Base of the PORT module to write to
+ *  \param[in]  mask  Mask of the port pin(s) to toggle
  */
 static inline void port_group_toggle_output_level(
 		PortGroup *const port,
@@ -322,7 +404,7 @@ static inline void port_group_toggle_output_level(
 
 /** @} */
 
-/** \name Configuration and initialization
+/** \name Configuration and Initialization
  * @{
  */
 
@@ -337,7 +419,7 @@ static inline void port_group_toggle_output_level(
  *  The default configuration is as follows:
  *   \li Input mode with internal pullup enabled
  *
- *  \param[out] config  Configuration structure to initialize to default values.
+ *  \param[out] config  Configuration structure to initialize to default values
  */
 static inline void port_get_config_defaults(
 		struct port_config *const config)
@@ -346,8 +428,9 @@ static inline void port_get_config_defaults(
 	Assert(config);
 
 	/* Default configuration values */
-	config->direction = PORT_PIN_DIR_INPUT;
+	config->direction  = PORT_PIN_DIR_INPUT;
 	config->input_pull = PORT_PIN_PULL_UP;
+	config->powersave  = false;
 }
 
 void port_pin_set_config(
@@ -361,7 +444,7 @@ void port_group_set_config(
 
 /** @} */
 
-/** \name State reading/writing (logical pin orientated)
+/** \name State Reading/Writing (Logical Pin Orientated)
  * @{
  */
 
@@ -369,9 +452,9 @@ void port_group_set_config(
  *  \brief Retrieves the state of a port pin that is configured as an input.
  *
  *  Reads the current logic level of a port pin and returns the current
- *  level as a boolean value.
+ *  level as a Boolean value.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to read.
+ *  \param[in] gpio_pin  Index of the GPIO pin to read
  *
  *  \return Status of the port pin's input buffer.
  */
@@ -388,9 +471,9 @@ static inline bool port_pin_get_input_level(
  *  \brief Retrieves the state of a port pin that is configured as an output.
  *
  *  Reads the current logical output level of a port pin and returns the current
- *  level as a boolean value.
+ *  level as a Boolean value.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to read.
+ *  \param[in] gpio_pin  Index of the GPIO pin to read
  *
  *  \return Status of the port pin's output buffer.
  */
@@ -408,8 +491,8 @@ static inline bool port_pin_get_output_level(
  *
  *  Sets the current output level of a port pin to a given logic level.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to write to.
- *  \param[in] level     Logical level to set the given pin to.
+ *  \param[in] gpio_pin  Index of the GPIO pin to write to
+ *  \param[in] level     Logical level to set the given pin to
  */
 static inline void port_pin_set_output_level(
 		const uint8_t gpio_pin,
@@ -431,7 +514,7 @@ static inline void port_pin_set_output_level(
  *
  *  Toggles the current output level of a port pin.
  *
- *  \param[in] gpio_pin  Index of the GPIO pin to toggle.
+ *  \param[in] gpio_pin  Index of the GPIO pin to toggle
  */
 static inline void port_pin_toggle_output_level(
 		const uint8_t gpio_pin)
@@ -445,6 +528,154 @@ static inline void port_pin_toggle_output_level(
 
 /** @} */
 
+#ifdef FEATURE_PORT_INPUT_EVENT
+
+/** \name Port Input Event
+ * @{
+ */
+
+/**
+ *  \brief Enable the port event input.
+ *
+ *  Enable the port event input with the given pin and event.
+ *
+ *  \param[in] gpio_pin  Index of the GPIO pin
+ *  \param[in] n  Port input event
+ *
+ * \retval STATUS_ERR_INVALID_ARG  Invalid parameter
+ * \retval STATUS_OK               Successfully
+ */
+static inline enum status_code port_enable_input_event(
+		const uint8_t gpio_pin,
+		const enum port_input_event n)
+{
+	PortGroup *const port_base = port_get_group_from_gpio_pin(gpio_pin);
+	switch (n) {
+		case PORT_INPUT_EVENT_0:
+			port_base->EVCTRL.reg |= PORT_EVCTRL_PORTEI0;
+			break;
+		case PORT_INPUT_EVENT_1:
+			port_base->EVCTRL.reg |= PORT_EVCTRL_PORTEI1;
+			break;
+		case PORT_INPUT_EVENT_2:
+			port_base->EVCTRL.reg |= PORT_EVCTRL_PORTEI2;
+			break;
+		case PORT_INPUT_EVENT_3:
+			port_base->EVCTRL.reg |= PORT_EVCTRL_PORTEI3;
+			break;
+		default:
+			Assert(false);
+			return STATUS_ERR_INVALID_ARG;
+	}
+	return STATUS_OK;
+}
+
+/**
+ *  \brief Disable the port event input.
+ *
+ *  Disable the port event input with the given pin and event.
+ *
+ *  \param[in] gpio_pin  Index of the GPIO pin
+ *  \param[in] gpio_pin  Port input event
+ *
+ * \retval STATUS_ERR_INVALID_ARG  Invalid parameter
+ * \retval STATUS_OK               Successfully
+ */
+static inline enum status_code port_disable_input_event(
+		const uint8_t gpio_pin,
+		const enum port_input_event n)
+{
+	PortGroup *const port_base = port_get_group_from_gpio_pin(gpio_pin);
+	switch (n) {
+		case PORT_INPUT_EVENT_0:
+			port_base->EVCTRL.reg &= ~PORT_EVCTRL_PORTEI0;
+			break;
+		case PORT_INPUT_EVENT_1:
+			port_base->EVCTRL.reg &= ~PORT_EVCTRL_PORTEI1;
+			break;
+		case PORT_INPUT_EVENT_2:
+			port_base->EVCTRL.reg &= ~PORT_EVCTRL_PORTEI2;
+			break;
+		case PORT_INPUT_EVENT_3:
+			port_base->EVCTRL.reg &= ~PORT_EVCTRL_PORTEI3;
+			break;
+		default:
+			Assert(false);
+			return STATUS_ERR_INVALID_ARG;
+	}
+	return STATUS_OK;
+}
+
+/**
+ * \brief Retrieve the default configuration for port input event.
+ *
+ * Fills a configuration structure with the default configuration for port input event:
+ *   - Event output to pin
+ *   - Event action to be executed on PIN 0
+ *
+ * \param[out] config  Configuration structure to fill with default values
+ */
+static inline void port_input_event_get_config_defaults(
+		struct port_input_event_config *const config)
+{
+	Assert(config);
+	config->action   = PORT_INPUT_EVENT_ACTION_OUT;
+	config->gpio_pin = 0;
+}
+
+/**
+ * \brief Configure port input event.
+ *
+ * Configures port input event with the given configuration settings.
+ *
+ * \param[in] config  Port input even configuration structure containing the new config
+ *
+ * \retval STATUS_ERR_INVALID_ARG  Invalid parameter
+ * \retval STATUS_OK               Successfully
+ */
+
+static inline enum status_code port_input_event_set_config(
+		const enum port_input_event n,
+		struct port_input_event_config *const config)
+{
+	Assert(config);
+	PortGroup *const port_base = port_get_group_from_gpio_pin(config->gpio_pin);
+	uint8_t pin_index = config->gpio_pin % 32;
+	struct port_config pin_conf;
+
+	port_get_config_defaults(&pin_conf);
+	/* Configure the GPIO pin as outputs*/
+	pin_conf.direction  = PORT_PIN_DIR_OUTPUT;
+	port_pin_set_config(config->gpio_pin, &pin_conf);
+
+	switch (n) {
+		case PORT_INPUT_EVENT_0:
+			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
+						   		   | PORT_EVCTRL_PID0(pin_index);
+			break;
+		case PORT_INPUT_EVENT_1:
+			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
+						   		   | PORT_EVCTRL_PID0(pin_index);
+			break;
+		case PORT_INPUT_EVENT_2:
+			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
+						   		   | PORT_EVCTRL_PID0(pin_index);
+			break;
+		case PORT_INPUT_EVENT_3:
+			port_base->EVCTRL.reg |= PORT_EVCTRL_EVACT0(config->action)
+						   		   | PORT_EVCTRL_PID0(pin_index);
+			break;
+		default:
+			Assert(false);
+			return STATUS_ERR_INVALID_ARG;
+	}
+	return STATUS_OK;
+}
+
+/** @} */
+
+#endif
+
 #ifdef __cplusplus
 }
 #endif
@@ -452,9 +683,9 @@ static inline void port_pin_toggle_output_level(
 /** @} */
 
 /**
- * \page asfdoc_samd20_port_extra Extra Information for PORT Driver
+ * \page asfdoc_sam0_port_extra Extra Information for PORT Driver
  *
- * \section asfdoc_samd20_port_extra_acronyms Acronyms
+ * \section asfdoc_sam0_port_extra_acronyms Acronyms
  * Below is a table listing the acronyms used in this module, along with their
  * intended meanings.
  *
@@ -474,17 +705,17 @@ static inline void port_pin_toggle_output_level(
  * </table>
  *
  *
- * \section asfdoc_samd20_port_extra_dependencies Dependencies
+ * \section asfdoc_sam0_port_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
- *  - \ref asfdoc_samd20_system_pinmux_group "System Pin Multiplexer Driver"
+ *  - \ref asfdoc_sam0_system_pinmux_group "System Pin Multiplexer Driver"
  *
  *
- * \section asfdoc_samd20_port_extra_errata Errata
+ * \section asfdoc_sam0_port_extra_errata Errata
  * There are no errata related to this driver.
  *
  *
- * \section asfdoc_samd20_port_extra_history Module History
+ * \section asfdoc_sam0_port_extra_history Module History
  * An overview of the module history is presented in the table below, with
  * details on the enhancements and fixes made to the module since its first
  * release. The current version of this corresponds to the newest version in
@@ -495,29 +726,50 @@ static inline void port_pin_toggle_output_level(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added input event feature and support for SAML21</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for SAMD21</td>
+ *	</tr>
+ *	<tr>
  *		<td>Initial Release</td>
  *	</tr>
  * </table>
  */
 
 /**
- * \page asfdoc_samd20_port_exqsg Examples for PORT Driver
+ * \page asfdoc_sam0_port_exqsg Examples for PORT Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_samd20_port_group. QSGs are simple examples with
+ * applications for \ref asfdoc_sam0_port_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
- *  - \subpage asfdoc_samd20_port_basic_use_case
+ *  - \subpage asfdoc_sam0_port_basic_use_case
  *
- * \page asfdoc_samd20_port_document_revision_history Document Revision History
+ * \page asfdoc_sam0_port_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+  *	<tr>
+ *		<td>E</td>
+ *		<td>11/2014</td>
+ *		<td>Added input event feature and support for SAML21.</td>
+ *	</tr>
+ *	<tr>
+ *		<td>D</td>
+ *		<td>12/2014</td>
+ *		<td>Added support for SAMR21 and SAMD10/D11.</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>

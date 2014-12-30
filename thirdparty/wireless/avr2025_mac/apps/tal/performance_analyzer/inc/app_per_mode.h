@@ -5,7 +5,7 @@
  *
  * -Performance Analyzer application
  *
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -56,7 +56,7 @@
  * \defgroup group_per_mode  Packet error rate measurement
  *  Handles the functionalities of Packet Error Rate Measurement(PER) Mode,
  *  User can set and get various paramters of Transceiver like Channel,Antenna
- *Diversity,CSMA
+ * Diversity,CSMA
  *  and do the Packet Error Rate Measurement.
  */
 
@@ -78,7 +78,7 @@
  * \ingroup group_per_mode
  * \defgroup group_per_mode_utils  PER mode Common Utilities
  * This module handles the PER mode Common utilities used by Initiator and
- *Receptor.
+ * Receptor.
  *
  */
 
@@ -121,13 +121,14 @@
 #define ENABLE_RX_SAFE_MODE                      (0xA0)
 #define DISABLE_RX_SAFE_MODE                     (0x60)
 #endif
+
 /**
  * \addtogroup group_per_mode
  * \{
  */
 
 /**
- * \name Packet Error rate Measurement Generic Macros
+ * \name Request and response Ids which sent over the air  
  * \{
  */
 #define SET_PARAM                           (0x01)
@@ -154,12 +155,19 @@
 #define RANGE_TEST_PKT                      (0x12)
 #define RANGE_TEST_RSP                      (0x13)
 #define RANGE_TEST_STOP_PKT                 (0x14)
-#define RANGE_TEST_MARKER_CMD                (0x15)
-#define RANGE_TEST_MARKER_RSP                (0x16)
-#define RANGE_TEST_PKT_LENGTH                (19)
-#define LED_BLINK_RATE_IN_MICRO_SEC           (50000)
-/* \} */
+#define RANGE_TEST_MARKER_CMD               (0x15)
+#define RANGE_TEST_MARKER_RSP               (0x16)
+#define REMOTE_TEST_CMD		                (0x17)
+#define REMOTE_TEST_REPLY_CMD               (0x18)
+#define PKT_STREAM_PKT						(0x18)
 
+/* Range test packet length */
+#define RANGE_TEST_PKT_LENGTH               (19)
+/* Timer value in us for LED blinking */
+#define LED_BLINK_RATE_IN_MICRO_SEC         (50000)
+/* \} */
+/* Pulse CW transmission time in us */
+#define PULSE_CW_TX_TIME_IN_MICRO_SEC       (50000)
 /* === Types ================================================================ */
 
 /**
@@ -189,7 +197,7 @@ typedef struct {
 	uint8_t antenna_selected_on_peer;
 #endif
 
-	uint8_t channel;
+	uint16_t channel;
 	uint8_t channel_page;
 #if ((TAL_TYPE != AT86RF212) && (TAL_TYPE != AT86RF212B))
 	uint8_t tx_power_reg;
@@ -197,7 +205,7 @@ typedef struct {
 	int8_t tx_power_dbm;
 	uint8_t trx_state;
 
-	uint8_t phy_frame_length;
+	uint16_t phy_frame_length;
 	uint32_t number_test_frames;
 
 #if (TAL_TYPE == AT86RF233)
@@ -221,6 +229,14 @@ FLASH_EXTERN(int8_t tx_pwr_table[16]);
 
 extern trx_config_params_t curr_trx_config_params;
 
+/* Database to maintain the default settings of the configurable parameter */
+extern trx_config_params_t default_trx_config_params;
+/**
+ * \brief Configure the frame to be used for Packet Streaming
+ * \param frame_len Length of the frame to be used for Packet Streaming
+ */
+void configure_pkt_stream_frames(uint16_t frame_len);
+
 /* ! \} */
 /* === Prototypes =========================================================== */
 
@@ -233,7 +249,7 @@ extern trx_config_params_t curr_trx_config_params;
 
 /**
  * \brief Initialize the application in PER Measurement mode as Initiator
- * \param parameter Pointer to the paramter to be carried, if any.
+ * \param parameter Pointer to the parameter to be carried, if any.
  */
 void per_mode_initiator_init(void *parameter);
 
@@ -270,6 +286,10 @@ void per_mode_initiator_rx_cb(frame_info_t *frame);
  */
 void per_mode_initiator_ed_end_cb(uint8_t energy_level);
 
+/**
+ * \brief This function is used to send a remote test repsonse command back to the initiator
+ */
+bool send_remote_reply_cmd(uint8_t* serial_buf,uint8_t len);
 /* ! \} */
 
 /**
@@ -280,7 +300,7 @@ void per_mode_initiator_ed_end_cb(uint8_t energy_level);
 
 /**
  * \brief Initialize the application in PER Measurement mode as Receptor
- **\param parameter Pointer to the paramter to be carried, if any.
+ ***\param parameter Pointer to the paramter to be carried, if any.
  */
 void per_mode_receptor_init(void *parameter);
 
@@ -320,9 +340,9 @@ void app_reset(void);
 
 /**
  * \brief Timer Callback function  if marker response command is transmitted on
- *air
+ * air
  *  This is used to blink the LED and thus identify that the transmission is
- *done
+ * done
  * \param parameter pass parameters to timer handler
  */
 void marker_tx_timer_handler_cb(void *parameter);
@@ -330,10 +350,11 @@ void marker_tx_timer_handler_cb(void *parameter);
 /**
  * \brief Timer Callback function  if marker command is received on air
  * This is used to blink the LED and thus identify that the marker frame is
- *received
+ * received
  * \param parameter pass parameters to timer handler
  */
 void marker_rsp_timer_handler_cb(void *parameter);
+
 
 #ifdef EXT_RF_FRONT_END_CTRL
 
@@ -345,7 +366,24 @@ void marker_rsp_timer_handler_cb(void *parameter);
  * \param prev_chnl Previous Channel
  */
 void limit_tx_power_in_ch26(uint8_t curr_chnl, uint8_t prev_chnl);
+
 #endif
+/**
+ * \brief The reverse_float is used for reversing a float variable for
+ * supporting BIG ENDIAN systems
+ * \param float_val Float variable to be reversed
+ */
+float reverse_float( const float float_val );
+
+/**
+ * \brief Timer used in Packet Streaming Mode to add gap in between consecutive frames
+ */
+void pkt_stream_gap_timer(void *parameter);
+
+/**
+ * \brief This function is called to abort the packet streaming mode in progress
+ */
+void stop_pkt_streaming(void * parameter);
 
 /* ! \} */
 #ifdef __cplusplus

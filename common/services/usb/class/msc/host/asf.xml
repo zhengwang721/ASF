@@ -19,12 +19,18 @@
 			<device-support value="sam3x"/>
 			<device-support value="sam3a"/>
 			<device-support value="sam4l"/>
+			<device-support value="samd21"/>
+			<device-support value="samr21"/>
+			<device-support value="sam4c32e"/>
+			<device-support value="saml21"/>
+			<device-support value="samg55"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 		<module type="service" id="common.services.usb.class.msc.host.composite.ctrl_access#disable" caption="USB Host MSC disabled">
 			<info type="gui-flag" value="hidden"/>
 			<device-support value="avr"/>
 			<device-support value="sam"/>
+			<device-support value="sam0"/>
 			<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 		</module>
 	</select-by-config>
@@ -46,6 +52,11 @@
 		<device-support value="sam3x"/>
 		<device-support value="sam3a"/>
 		<device-support value="sam4l"/>
+		<device-support value="samd21"/>
+		<device-support value="samr21"/>
+		<device-support value="sam4c32e"/>
+		<device-support value="saml21"/>
+		<device-support value="samg55"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>
 	<module type="service" id="common.services.usb.class.msc.host.ctrl_access" caption="USB Host MSC (Single Class support)">
@@ -66,6 +77,11 @@
 		<device-support value="sam3x"/>
 		<device-support value="sam3a"/>
 		<device-support value="sam4l"/>
+		<device-support value="samd21"/>
+		<device-support value="samr21"/>
+		<device-support value="sam4c32e"/>
+		<device-support value="saml21"/>
+		<device-support value="samg55"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>
 	<module type="service" id="common.services.usb.class.msc.host" caption="USB Host MSC (Single Class support)">
@@ -88,7 +104,45 @@
 		<device-support value="sam3x"/>
 		<device-support value="sam3a"/>
 		<device-support value="sam4l"/>
+		<device-support value="samd21"/>
+		<device-support value="samr21"/>
+		<device-support value="sam4c32e"/>
+		<device-support value="saml21"/>
+		<device-support value="samg55"/>
 		<generator value="doxygen-module" default-mcu="unspecified-uc3a"/>
 	</module>
 
+	<module type="meta" id="common.services.usb.class.msc.host.appnote" caption="USB Host MSC (Application Note)">
+		<info type="keyword" value="technology">
+			<keyword value="USB"/>
+			<keyword value="Communication" />
+		</info>
+		<info type="gui-flag" value="hidden"/>
+
+		<info type="appnote" value="AT09339"/>
+		<info type="keyword" value="pdf">
+			<keyword value="USB"/>
+			<keyword value="Universal Serial Bus"/>
+		</info>
+
+		<info type="description" value="pdf">
+			This document describes use cases for USB Host Stack MSC driver - UHI MSC.
+		</info>
+
+		<build type="include-path" value="."/>
+
+		<build type="header-file" value="uhi_msc_doc.h"/>
+
+		<build type="doxygen-example-path" value="."/>
+		<build type="doxygen-example-path" value="../../"/>
+		<build type="doxygen-example-path" value="../../../"/>
+		<build type="doxygen-entry-point" value="asfdoc_uhi_msc_group"/>
+
+		<require idref="common.services.usb.uhc.appnote"/>
+
+		<device-support value="sam"/>
+		<device-support value="sam0"/>
+		<device-support value="avr"/>
+		<generator default-mcu="unspecified-samd21" value="doxygen-module-v2"/>
+	</module>
 </asf>

@@ -3,13 +3,13 @@
  *
  * @brief This file contains defines for TAL types.
  *
- * $Id: tal_types.h 35536 2014-01-14 13:47:27Z uwalter $
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
  */
 /*
- * Copyright (c) 2009, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */

@@ -3,13 +3,13 @@
  *
  * @brief This file contains TAL API function declarations
  *
- * $Id: tal.h 36436 2014-09-01 13:49:57Z uwalter $
+ * Copyright (c) 2013-2014-2014 Atmel Corporation. All rights reserved.
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
  */
 /*
- * Copyright (c) 2009, Atmel Corporation All rights reserved.
+ * Copyright (c) 2013-2014, Atmel Corporation All rights reserved.
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
@@ -29,12 +29,22 @@
 #include "return_val.h"
 #include "tal_types.h"
 #include "mac_build_config.h"
+#include "qmm.h"
 #if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
 #include "tal_rf215.h"
 #endif
 
-/* === TYPES =============================================================== */
+/**
+ * \defgroup group_tal  Transceiver Abstraction Layer
+ * The Transceiver Abstraction Layer (TAL) implements the transceiver specific
+ * functionalities and
+ * provides interfaces to the upper layers (like IEEE 802.15.4 MAC )and  uses
+ * the services of PAL.
+ *
+ */
 
+/* === EXTERNALS =========================================================== */
+__PACK__DATA__
 /* Structure implementing the PIB values stored in TAL */
 typedef struct tal_pib_tag
 {
@@ -65,11 +75,12 @@ typedef struct tal_pib_tag
      */
     uint16_t PANId;
 
-    /**
-     * Maximum number of symbols in a frame:
-     * = phySHRDuration + ceiling([aMaxPHYPacketSize + 1] x phySymbolsPerOctet)
-     */
-    uint16_t MaxFrameDuration;
+	/**
+	 * Maximum number of symbols in a frame:
+	 * = phySHRDuration + ceiling([aMaxPHYPacketSize + 1] x
+	 * phySymbolsPerOctet)
+	 */
+	uint16_t MaxFrameDuration;
 
     /**
      * CCA Mode
@@ -91,10 +102,11 @@ typedef struct tal_pib_tag
      */
     uint8_t MaxCSMABackoffs;
 
-    /**
-     * The minimum value of the backoff exponent BE in the CSMA-CA algorithm.
-     */
-    uint8_t MinBE;
+	/**
+	 * The minimum value of the backoff exponent BE in the CSMA-CA
+	 * algorithm.
+	 */
+	uint8_t MinBE;
 
     /**
      * Indicates if the node is a PAN coordinator or not.
@@ -133,20 +145,22 @@ typedef struct tal_pib_tag
      */
     uint8_t CurrentPage;
 
-    /**
-     * Duration of the synchronization header (SHR) in symbols for the current PHY.
-     */
-    uint8_t SHRDuration;
+	/**
+	 * Duration of the synchronization header (SHR) in symbols for the
+	 * current PHY.
+	 */
+	uint8_t SHRDuration;
 
     /**
      * Number of symbols per octet for the current PHY.
      */
     uint8_t SymbolsPerOctet;
 
-    /**
-     * The maximum value of the backoff exponent BE in the CSMA-CA algorithm.
-     */
-    uint8_t MaxBE;
+	/**
+	 * The maximum value of the backoff exponent BE in the CSMA-CA
+	 * algorithm.
+	 */
+	uint8_t MaxBE;
 
     /**
      * The maximum number of retries allowed after a transmission failure.
@@ -496,20 +510,22 @@ typedef enum
     /* Command Frame Identifier for Coordinator Realignment */
     COORDINATORREALIGNMENT,
 
-    /*
-     * These are not MAC command frames but listed here as they are needed
-     * in the msgtype field
-     */
-    /* Message is a directed orphan realignment command */
-    ORPHANREALIGNMENT,
-    /* Message is a beacon frame (in response to a beacon request cmd) */
-    BEACON_MESSAGE,
-    /* Message type field value for implicite poll without request */
-    DATAREQUEST_IMPL_POLL,
-    /* Message type field value for Null frame */
-    NULL_FRAME,
-    /* Message type field value for MCPS message */
-    MCPS_MESSAGE
+	GTSREQUEST,
+
+	/*
+	 * These are not MAC command frames but listed here as they are needed
+	 * in the msgtype field
+	 */
+	/* Message is a directed orphan realignment command */
+	ORPHANREALIGNMENT,
+	/* Message is a beacon frame (in response to a beacon request cmd) */
+	BEACON_MESSAGE,
+	/* Message type field value for implicite poll without request */
+	DATAREQUEST_IMPL_POLL,
+	/* Message type field value for Null frame */
+	NULL_FRAME,
+	/* Message type field value for MCPS message */
+	MCPS_MESSAGE
 #ifdef ENABLE_RTB
     ,
     /* RTB Message Types */
@@ -555,12 +571,21 @@ typedef struct
     uint16_t persistence_time;
     /** Indirect frame transmission ongoing */
     bool indirect_in_transit;
+#ifdef MAC_SECURITY_ZIP
+	/** MAC Payload Pointer */
+	uint8_t *mac_payload;
+#endif
+
+#ifdef GTS_SUPPORT
+	queue_t *gts_queue;
+#endif /* GTS_SUPPORT */
 #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP)
-    /** Timestamp information of frame
-      * The timestamping is only required for beaconing networks
-      * or if timestamping is explicitly enabled.
-      */
-    uint32_t time_stamp;
+
+	/** Timestamp information of frame
+	 * The time stamping is only required for beaconing networks
+	 * or if time stamping is explicitly enabled.
+	 */
+	uint32_t time_stamp;
 #endif  /* #if (defined BEACON_SUPPORT) || (defined ENABLE_TSTAMP) */
 #if (TAL_TYPE == AT86RF215LT) || (TAL_TYPE == AT86RF215)
     /** MPDU length - does not include CRC length */
@@ -594,7 +619,7 @@ typedef enum csma_mode_tag
     CSMA_UNSLOTTED,
     CSMA_SLOTTED
 } csma_mode_t;
-
+__PACK__RST_DATA__
 
 /**
  * PIB attribute value type
@@ -724,7 +749,8 @@ extern tal_pib_t tal_pib;
 #endif
 
 /**
- * Number of symbols forming the synchronization header (SHR) for the current PHY.
+ * Number of symbols forming the synchronization header (SHR) for the current
+ * PHY.
  * This value is the base for the PHY PIB attribute phySHRDuration.
  */
 #define NO_OF_SYMBOLS_PREAMBLE_SFD          (NO_SYMBOLS_PREAMBLE + NO_SYMBOLS_SFD)
@@ -813,9 +839,10 @@ extern tal_pib_t tal_pib;
  * TRX registers to finish a register write access. It is only needed when TRX
  * is in one of the PLL states. See also datasheet, section "Register access".
  */
-#define CONF_REG_WRITE()   do {    \
-        pal_trx_reg_write(RG_PART_NUM, PART_NUM); \
-    } while(0)
+#define CONF_REG_WRITE()   do {	\
+		trx_reg_write(RG_PART_NUM, PART_NUM); \
+} \
+	while (0)
 #endif /* TAL_TYPE == ATMEGA128RFA1 */
 
 /**
@@ -1010,6 +1037,26 @@ retval_t trx_reset(trx_id_t trx_id); //vk
      */
     void tal_tx_frame_done_cb(retval_t status, frame_info_t *frame);
 
+/**
+ * \brief Requests to TAL to transmit frame
+ *
+ * This function is called by the MAC to deliver a frame to the TAL
+ * to be transmitted by the transceiver.
+ *
+ * \param tx_frame Pointer to the frame_info_t structure or
+ *                 to frame array to be transmitted
+ * \param csma_mode Indicates mode of csma-ca to be performed for this frame
+ * \param perform_frame_retry Indicates whether to retries are to be performed
+ * for
+ *                            this frame
+ *
+ * \return MAC_SUCCESS  if the TAL has accepted the data from the MAC for frame
+ *                 transmission
+ *         TAL_BUSY if the TAL is busy servicing the previous MAC request
+ * \ingroup group_tal_tx
+ */
+retval_t tal_tx_frame(frame_info_t *tx_frame, csma_mode_t csma_mode,
+		bool perform_frame_retry);
     /**
      * @brief Sets the transceiver to sleep
      *

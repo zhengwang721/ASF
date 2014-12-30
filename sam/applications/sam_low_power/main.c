@@ -3,7 +3,7 @@
  *
  * \brief Low Power Application.
  *
- * Copyright (c) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -60,7 +60,8 @@
  * configuration and enter into a different power mode, and then measure the
  * power consumption.
  *
- * An amperemeter has to be plugged on the board instead of the VDDx jumper.
+ * For Eks, an amperemeter has to be plugged on the board instead of the
+ * VDDx jumper.
  *
  * Note that for better consumption measurement:
  * - Run program out of flash without ICE connected.
@@ -76,34 +77,6 @@
  *   - 1 stop bit
  *   - No flow control
  * -# Start the application.
- * -# In the terminal window, the following text should appear:
- *    \code
- *     -- Low Power Example xxx --
- *     -- xxxxxx-xx
- *     -- Compiled: xxx xx xxxx xx:xx:xx --
- *
- *     ===============================================
- *     Menu: press a key to continue.
- *     ===============================================
- *     Configure:
- *       F : 128-bit flash access
- *       G : 64-bit flash access
- *     Mode:
- *       A : Active Mode
- *       S : Sleep Mode
- *       W : Wait Mode
- *       B : Backup Mode(Entered 1 times).
- *     Quit:
- *       Q : Quit test.
- *
- *     -----------------------------------------------
- *     Current configuration:
- *       CPU Clock         : MCK=24000000 Hz
- *       Flash access mode : 128-bit
- *     -----------------------------------------------
- *    \endcode
- * -# Press one of the keys listed in the menu to perform the corresponding
- *    action.
  */
 
 #include "asf.h"
@@ -152,6 +125,11 @@
 #define example_disable_pll()  pmc_disable_pllack()
 #endif
 
+#ifndef example_set_wakeup_from_wait_mode
+#define example_set_wakeup_from_wait_mode() \
+	pmc_set_fast_startup_input(WAKEUP_WAIT_INPUT_ID)
+#endif
+
 #ifndef example_set_wakeup_from_backup_mode
 #define example_set_wakeup_from_backup_mode() \
 	supc_set_wakeup_inputs(SUPC, WAKEUP_BACKUP_INPUT_ID, \
@@ -169,6 +147,18 @@ volatile uint32_t g_ul_button_pressed = 0;
  */
 static void set_default_working_clock(void)
 {
+#if (SAMG)
+	/* Switch MCK to slow clock  */
+	pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
+
+	/*
+	 * Configure PLL and switch clock.
+	 * MCK = XTAL * (PLL_DEFAULT_MUL+1) / PLL_DEFAULT_DIV / MCK_DEFAULT_DIV
+	 *     = 24 MHz
+	 */
+	example_switch_clock(PLL_DEFAULT_MUL, PLL_COUNT, PLL_DEFAULT_DIV,
+			MCK_DEFAULT_DIV);
+#else
 	/* Switch MCK to slow clock  */
 	pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
 
@@ -185,9 +175,14 @@ static void set_default_working_clock(void)
 
 	/* Disable unused clock to save power */
 	pmc_osc_disable_fastrc();
+#endif
 
 	/* Save current clock */
+#if SAMG55
+	g_ul_current_mck = 48000000; /* 48MHz */
+#else
 	g_ul_current_mck = 24000000; /* 24MHz */
+#endif
 }
 
 /**
@@ -197,7 +192,13 @@ static void configure_console(void)
 {
 	const usart_serial_options_t uart_serial_options = {
 		.baudrate = CONF_UART_BAUDRATE,
-		.paritytype = CONF_UART_PARITY
+#ifdef CONF_UART_CHAR_LENGTH
+		.charlength = CONF_UART_CHAR_LENGTH,
+#endif
+		.paritytype = CONF_UART_PARITY,
+#ifdef CONF_UART_STOP_BITS
+		.stopbits = CONF_UART_STOP_BITS,
+#endif
 	};
 
 	/* Configure console UART. */
@@ -210,6 +211,33 @@ static void configure_console(void)
 /**
  *  Reconfigure UART console for changed MCK and baudrate.
  */
+#if SAMG55
+static void reconfigure_console(uint32_t ul_mck, uint32_t ul_baudrate)
+{
+	sam_usart_opt_t uart_serial_options;
+	
+	uart_serial_options.baudrate = ul_baudrate,
+	uart_serial_options.char_length = CONF_UART_CHAR_LENGTH,
+	uart_serial_options.parity_type = US_MR_PAR_NO;
+	uart_serial_options.stop_bits = CONF_UART_STOP_BITS,
+	uart_serial_options.channel_mode= US_MR_CHMODE_NORMAL,
+	uart_serial_options.irda_filter = 0,
+
+	/* Configure PMC */
+	flexcom_enable(CONF_FLEXCOM);
+	flexcom_set_opmode(CONF_FLEXCOM, FLEXCOM_USART);
+
+	/* Configure PIO */
+	pio_configure_pin_group(CONF_UART_PIO, CONF_PINS_UART,
+			CONF_PINS_UART_FLAGS);
+
+	/* Configure UART */
+	usart_init_rs232(CONF_UART, &uart_serial_options, ul_mck);
+	/* Enable the receiver and transmitter. */
+	usart_enable_tx(CONF_UART);
+	usart_enable_rx(CONF_UART);
+}
+#else
 static void reconfigure_console(uint32_t ul_mck, uint32_t ul_baudrate)
 {
 	const sam_uart_opt_t uart_console_settings =
@@ -225,15 +253,22 @@ static void reconfigure_console(uint32_t ul_mck, uint32_t ul_baudrate)
 	/* Configure UART */
 	uart_init(CONF_UART, &uart_console_settings);
 }
+#endif
 
 /**
  * \brief Initialize the chip for low power test.
  */
 static void init_chip(void)
 {
+#if SAMG55
+	/* Wait for the transmission done before changing clock */
+	while (!usart_is_tx_empty(CONSOLE_UART)) {
+	}
+#else
 	/* Wait for the transmission done before changing clock */
 	while (!uart_is_tx_empty(CONSOLE_UART)) {
 	}
+#endif
 
 	/* Disable all the peripheral clocks */
 	pmc_disable_all_periph_clk();
@@ -258,15 +293,21 @@ static void user_change_clock(uint8_t *p_uc_str)
 	/* Print menu */
 	puts(CLOCK_LIST_MENU);
 
-	while (uart_read(CONSOLE_UART, &uc_key)) {
-	}
+	scanf("%c", (char *)&uc_key);
 	printf("Select option is: %c\n\r\n\r", uc_key);
 	if (p_uc_str) {
 		puts((char const *)p_uc_str);
 	}
 
+#if SAMG55
+	/* Wait for the transmission done before changing clock */
+	while (!usart_is_tx_empty(CONSOLE_UART)) {
+	}
+#else
+	/* Wait for the transmission done before changing clock */
 	while (!uart_is_tx_empty(CONSOLE_UART)) {
 	}
+#endif
 
 	if ((uc_key >= MIN_CLOCK_FAST_RC_ITEM) &&
 			(uc_key <= MAX_CLOCK_FAST_RC_ITEM)) {
@@ -279,7 +320,7 @@ static void user_change_clock(uint8_t *p_uc_str)
 		pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
 
 		/* Switch mainck to fast RC */
-		pmc_osc_enable_fastrc(CKGR_MOR_MOSCRCF_4_MHz);
+		pmc_osc_enable_fastrc(CKGR_MOR_MOSCRCF_8_MHz);
 		pmc_switch_mainck_to_fastrc(g_fastrc_clock_list[ul_id][1]);
 
 		/* Switch MCK to mainck */
@@ -296,17 +337,24 @@ static void user_change_clock(uint8_t *p_uc_str)
 		/* Save current clock */
 		g_ul_current_mck = g_pll_clock_list[ul_id][0];
 
+#if (SAMG)
+		/* Switch MCK to main clock  */
+		pmc_switch_mck_to_mainck(PMC_MCKR_PRES_CLK_1);
+#else
 		/* Switch MCK to slow clock  */
 		pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
 
 		/* Switch mainck to external xtal */
 		pmc_switch_mainck_to_xtal(0, BOARD_OSC_STARTUP_US);
+#endif
 		/* Configure PLL and switch clock */
 		example_switch_clock(g_pll_clock_list[ul_id][1], PLL_COUNT,
 				g_pll_clock_list[ul_id][2], g_pll_clock_list[ul_id][3]);
 
+#if (!SAMG)
 		/* Disable unused clock to save power */
 		pmc_osc_disable_fastrc();
+#endif
 	} else {
 		puts("Clock is not changed.\r");
 	}
@@ -391,6 +439,7 @@ static void test_active_mode(void)
 	puts("Exit from active mode.\r");
 }
 
+#if (!(SAMG51 || SAMG53 || SAMG54))
 /**
  * \brief Test sleep Mode.
  */
@@ -402,6 +451,9 @@ static void test_sleep_mode(void)
 	/* Select clock for sleep mode */
 	user_change_clock(STRING_SLEEP);
 
+	/* Disable UART */
+	pmc_disable_periph_clk(CONSOLE_UART_ID);
+
 	/* Enter into sleep Mode */
 	pmc_enable_sleepmode(0);
 
@@ -411,6 +463,7 @@ static void test_sleep_mode(void)
 
 	puts("Exit from sleep Mode.\r");
 }
+#endif
 
 /**
  * \brief Test wait mode.
@@ -419,23 +472,36 @@ static void test_wait_mode(void)
 {
 	puts(STRING_WAIT);
 
+#if SAMG55
+	/* Wait for the transmission done before changing clock */
+	while (!usart_is_tx_empty(CONSOLE_UART)) {
+	}
+#else
 	/* Wait for the transmission done before changing clock */
 	while (!uart_is_tx_empty(CONSOLE_UART)) {
 	}
+#endif
 
-	/* Configure 4Mhz fast RC oscillator */
+	/* Configure fast RC oscillator */
 	pmc_switch_mck_to_sclk(PMC_MCKR_PRES_CLK_1);
+#if (SAMG)
+	pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_8_MHz);
+#else
 	pmc_switch_mainck_to_fastrc(CKGR_MOR_MOSCRCF_4_MHz);
+#endif
 	pmc_switch_mck_to_mainck(PMC_PCK_PRES_CLK_1);
 
+#if (SAMG)
+	g_ul_current_mck = 8000000; /* 8MHz */
+#else
 	g_ul_current_mck = 4000000; /* 4MHz */
-
+#endif
 	/* Disable unused clock to save power */
 	pmc_osc_disable_xtal(0);
 	example_disable_pll();
 
 	/* Set wakeup input for fast startup */
-	pmc_set_fast_startup_input(WAKEUP_WAIT_INPUT_ID);
+	example_set_wakeup_from_wait_mode();
 
 	/* Enter into wait Mode */
 	pmc_enable_waitmode();
@@ -447,6 +513,7 @@ static void test_wait_mode(void)
 	puts("Exit from wait Mode.\r");
 }
 
+#if (!(SAMG51 || SAMG53 || SAMG54))
 /**
  * \brief Test backup mode.
  *
@@ -456,9 +523,15 @@ static void test_backup_mode(void)
 {
 	puts(STRING_BACKUP);
 
+#if SAMG55
+	/* Wait for the transmission done before changing clock */
+	while (!usart_is_tx_empty(CONSOLE_UART)) {
+	}
+#else
 	/* Wait for the transmission done before changing clock */
 	while (!uart_is_tx_empty(CONSOLE_UART)) {
 	}
+#endif
 
 	/* GPBR0 is for recording times of entering into backup mode */
 	gpbr_write(GPBR0, gpbr_read(GPBR0) + 1);
@@ -478,6 +551,7 @@ static void test_backup_mode(void)
 
 	/* Note: The core will reset when exiting from backup mode. */
 }
+#endif
 
 /**
  * \brief Display test core menu.
@@ -493,9 +567,13 @@ static void display_menu_core(void)
 	printf("  G : 64-bit flash access\n\r");
 	printf("Mode:\n\r");
 	printf("  A : Active Mode\n\r");
+#if (!(SAMG51 || SAMG53 || SAMG54))
 	printf("  S : Sleep Mode\n\r");
+#endif
 	printf("  W : Wait Mode\n\r");
+#if (!(SAMG51 || SAMG53 || SAMG54))
 	printf("  B : Backup Mode(Entered %d times).\n\r", (int)gpbr_read(GPBR0));
+#endif
 	printf("Quit:\n\r");
 	printf("  Q : Quit test.\n\r");
 
@@ -525,8 +603,7 @@ static void test_core(void)
 		display_menu_core();
 
 		/* Read a key from console */
-		while (uart_read(CONSOLE_UART, &uc_key)) {
-		}
+		scanf("%c", (char *)&uc_key);
 
 		switch (uc_key) {
 		/* Configuration */
@@ -546,20 +623,24 @@ static void test_core(void)
 			test_active_mode();
 			break;
 
+#if (!(SAMG51 || SAMG53 || SAMG54))
 		case 's':
 		case 'S':
 			test_sleep_mode();
 			break;
+#endif
 
 		case 'w':
 		case 'W':
 			test_wait_mode();
 			break;
 
+#if (!(SAMG51 || SAMG53 || SAMG54))
 		case 'b':
 		case 'B':
 			test_backup_mode();
 			break;
+#endif
 
 		/* Quit test */
 		case 'q':

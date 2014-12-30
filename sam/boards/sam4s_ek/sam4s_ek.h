@@ -3,7 +3,7 @@
  *
  * \brief SAM4S-EK Board Definition.
  *
- * Copyright (c) 2011 - 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,7 +71,7 @@
 /** Master clock frequency */
 #define BOARD_MCK                   CHIP_FREQ_CPU_MAX
 
-/** board main clock xtal statup time */
+/** board main clock xtal startup time */
 #define BOARD_OSC_STARTUP_US   15625
 
 /*----------------------------------------------------------------------------*/
@@ -648,6 +648,10 @@
 #define BOARD_ILI9325_ADDR          0x61000000
 /** Define ILI9325 register select signal. */
 #define BOARD_ILI9325_RS            (1 << 1)
+/** Define ILI93xx base address. */
+#define BOARD_ILI93XX_ADDR          0x61000000
+/** Define ILI93xx register select signal. */
+#define BOARD_ILI93XX_RS            (1 << 1)
 /** Display width in pixels. */
 #define BOARD_LCD_WIDTH             240
 /** Display height in pixels. */

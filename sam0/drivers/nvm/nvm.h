@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Non-Volatile Memory driver
+ * \brief SAM Non-Volatile Memory driver
  *
- * Copyright (C) 2012-2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,44 +44,63 @@
 #define NVM_H_INCLUDED
 
 /**
- * \defgroup asfdoc_samd20_nvm_group SAM D20 Non-Volatile Memory Driver (NVM)
+ * \defgroup asfdoc_sam0_nvm_group SAM Non-Volatile Memory Driver (NVM)
  *
- * This driver for SAM D20 devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of non-volatile memories within the device, for partitioning,
- * erasing, reading and writing of data.
+ * erasing, reading, and writing of data.
  *
  * The following peripherals are used by this module:
- *
  *  - NVM (Non-Volatile Memory)
  *
+ * The following devices can use this module:
+ *  - Atmel | SMART SAM D20/D21
+ *  - Atmel | SMART SAM R21
+ *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM L21
+ *
  * The outline of this documentation is as follows:
- *  - \ref asfdoc_samd20_nvm_prerequisites
- *  - \ref asfdoc_samd20_nvm_module_overview
- *  - \ref asfdoc_samd20_nvm_special_considerations
- *  - \ref asfdoc_samd20_nvm_extra_info
- *  - \ref asfdoc_samd20_nvm_examples
- *  - \ref asfdoc_samd20_nvm_api_overview
+ *  - \ref asfdoc_sam0_nvm_prerequisites
+ *  - \ref asfdoc_sam0_nvm_module_overview
+ *  - \ref asfdoc_sam0_nvm_special_considerations
+ *  - \ref asfdoc_sam0_nvm_extra_info
+ *  - \ref asfdoc_sam0_nvm_examples
+ *  - \ref asfdoc_sam0_nvm_api_overview
  *
  *
- * \section asfdoc_samd20_nvm_prerequisites Prerequisites
+ * \section asfdoc_sam0_nvm_prerequisites Prerequisites
  *
  * There are no prerequisites for this module.
  *
  *
- * \section asfdoc_samd20_nvm_module_overview Module Overview
+ * \section asfdoc_sam0_nvm_module_overview Module Overview
  *
  * The Non-Volatile Memory (NVM) module provides an interface to the device's
  * Non-Volatile Memory controller, so that memory pages can be written, read,
  * erased and reconfigured in a standardized manner.
  *
- * \subsection asfdoc_samd20_nvm_module_overview_regions Memory Regions
- * The NVM memory space of the SAM D20 devices is divided into two sections:
+ * \subsection asfdoc_sam0_nvm_features Driver Feature Macro Definition
+ * <table>
+ *  <tr>
+ *    <th>Driver Feature Macro</th>
+ *    <th>Supported devices</th>
+ *  </tr>
+ *  <tr>
+ *    <td>FEATURE_NVM_RWWEE</td>
+ *    <td>SAML21</td>
+ *  </tr>
+ * </table>
+ * \note The specific features are only available in the driver when the
+ * selected device supports those features.
+ *
+ * \subsection asfdoc_sam0_nvm_module_overview_regions Memory Regions
+ * The NVM memory space of the SAM devices is divided into two sections:
  * a Main Array section, and an Auxiliary space section. The Main Array space
  * can be configured to have an (emulated) EEPROM and/or boot loader section.
  * The memory layout with the EEPROM and bootloader partitions is shown in
- * \ref asfdoc_samd20_nvm_module_mem_layout "the figure below".
+ * \ref asfdoc_sam0_nvm_module_mem_layout "the figure below".
  *
- * \anchor asfdoc_samd20_nvm_module_mem_layout
+ * \anchor asfdoc_sam0_nvm_module_mem_layout
  * \dot
  * digraph memory_layout {
  *  size="5,5"
@@ -134,11 +153,11 @@
  * \f[ PageNum = (RowNum \times 4) + PagePosInRow \f]
  * \f[ PageAddr = PageNum \times PageSize \f]
  *
- * \ref asfdoc_samd20_nvm_module_row_layout "The figure below" shows an example
+ * \ref asfdoc_sam0_nvm_module_row_layout "The figure below" shows an example
  * of the memory page and address values associated with logical row 7 of the
  * NVM memory space.
  *
- * \anchor asfdoc_samd20_nvm_module_row_layout
+ * \anchor asfdoc_sam0_nvm_module_row_layout
  * \dot
  * digraph row_layout {
  *  size="4,4"
@@ -164,8 +183,8 @@
  * }
  * \enddot
  *
- * \subsection asfdoc_samd20_nvm_module_overview_locking_regions Region Lock Bits
- * As mentioned in \ref asfdoc_samd20_nvm_module_overview_regions, the main
+ * \subsection asfdoc_sam0_nvm_module_overview_locking_regions Region Lock Bits
+ * As mentioned in \ref asfdoc_sam0_nvm_module_overview_regions, the main
  * block of the NVM memory is divided into a number of individually addressable
  * pages. These pages are grouped into 16 equal sized regions, where each region
  * can be locked separately issuing an \ref NVM_COMMAND_LOCK_REGION command or
@@ -179,11 +198,11 @@
  *       however the adjusted configuration will not take effect until the next
  *       device reset.
  *
- * \note If the \ref asfdoc_samd20_nvm_special_consideration_security_bit is
+ * \note If the \ref asfdoc_sam0_nvm_special_consideration_security_bit is
  *       set, the auxiliary space cannot be written to. Clearing of the security
  *       bit can only be performed by a full chip erase.
  *
- * \subsection asfdoc_samd20_nvm_module_overview_sub_rw Read/Write
+ * \subsection asfdoc_sam0_nvm_module_overview_sub_rw Read/Write
  * Reading from the NVM memory can be performed using direct addressing into the
  * NVM memory space, or by calling the \ref nvm_read_buffer() function.
  *
@@ -196,44 +215,44 @@
  * first via the \ref nvm_erase_row() function. Writing to a non-erased page
  * will result in corrupt data being stored in the NVM memory space.
  *
- * \section asfdoc_samd20_nvm_special_considerations Special Considerations
+ * \section asfdoc_sam0_nvm_special_considerations Special Considerations
  *
- * \subsection asfdoc_samd20_nvm_special_consideration_pageerase Page Erasure
+ * \subsection asfdoc_sam0_nvm_special_consideration_pageerase Page Erasure
  * The granularity of an erase is per row, while the granularity of a write is
  * per page. Thus, if the user application is modifying only one page of a row,
  * the remaining pages in the row must be buffered and the row erased, as an
  * erase is mandatory before writing to a page.
  *
- * \subsection asfdoc_samd20_nvm_special_consideration_clocks Clocks
+ * \subsection asfdoc_sam0_nvm_special_consideration_clocks Clocks
  * The user must ensure that the driver is configured with a proper number of
  * wait states when the CPU is running at high frequencies.
  *
- * \subsection asfdoc_samd20_nvm_special_consideration_security_bit Security Bit
+ * \subsection asfdoc_sam0_nvm_special_consideration_security_bit Security Bit
  * The User Row in the Auxiliary Space Cannot be read or written when
  * the Security Bit is set. The Security Bit can be set by using passing
  * \ref NVM_COMMAND_SET_SECURITY_BIT to the \ref nvm_execute_command() function,
  * or it will be set if one tries to access a locked region. See
- * \ref asfdoc_samd20_nvm_module_overview_locking_regions.
+ * \ref asfdoc_sam0_nvm_module_overview_locking_regions.
  *
  * The Security Bit can only be cleared by performing a chip erase.
  *
  *
- * \section asfdoc_samd20_nvm_extra_info Extra Information
+ * \section asfdoc_sam0_nvm_extra_info Extra Information
  *
- * For extra information see \ref asfdoc_samd20_nvm_extra. This includes:
- *  - \ref asfdoc_samd20_nvm_extra_acronyms
- *  - \ref asfdoc_samd20_nvm_extra_dependencies
- *  - \ref asfdoc_samd20_nvm_extra_errata
- *  - \ref asfdoc_samd20_nvm_extra_history
+ * For extra information, see \ref asfdoc_sam0_nvm_extra. This includes:
+ *  - \ref asfdoc_sam0_nvm_extra_acronyms
+ *  - \ref asfdoc_sam0_nvm_extra_dependencies
+ *  - \ref asfdoc_sam0_nvm_extra_errata
+ *  - \ref asfdoc_sam0_nvm_extra_history
  *
  *
- * \section asfdoc_samd20_nvm_examples Examples
+ * \section asfdoc_sam0_nvm_examples Examples
  *
  * For a list of examples related to this driver, see
- * \ref asfdoc_samd20_nvm_exqsg.
+ * \ref asfdoc_sam0_nvm_exqsg.
  *
  *
- * \section asfdoc_samd20_nvm_api_overview API Overview
+ * \section asfdoc_sam0_nvm_api_overview API Overview
  * @{
  */
 
@@ -244,6 +263,16 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+
+/**
+ * Define NVM features set according to different device family
+ * @{
+*/
+#if (SAML21) || defined(__DOXYGEN__)
+/** Read while write EEPROM emulation feature*/
+#  define FEATURE_NVM_RWWEE
+#endif
+/*@}*/
 
 #if !defined(__DOXYGEN__)
 /**
@@ -261,7 +290,7 @@ extern "C" {
  * controller after a command is issued.
  */
 enum nvm_error {
-	/** No errors */
+	/** No errors. */
 	NVM_ERROR_NONE = 0,
 	/** Lock error, a locked region was attempted accessed. */
 	NVM_ERROR_LOCK = NVMCTRL_STATUS_NVME | NVMCTRL_STATUS_LOCKE,
@@ -313,8 +342,7 @@ enum nvm_command {
 	NVM_COMMAND_SET_SECURITY_BIT           = NVMCTRL_CTRLA_CMD_SSB,
 
 	/** Enter power reduction mode in the NVM controller to reduce the power
-	 *  consumption of the system. When in low power mode, all commands other
-	 *  than \ref NVM_COMMAND_EXIT_LOW_POWER_MODE will fail.
+	 *  consumption of the system.
 	 */
 	NVM_COMMAND_ENTER_LOW_POWER_MODE       = NVMCTRL_CTRLA_CMD_SPRM,
 
@@ -322,6 +350,12 @@ enum nvm_command {
 	 *  commands to be issued.
 	 */
 	NVM_COMMAND_EXIT_LOW_POWER_MODE        = NVMCTRL_CTRLA_CMD_CPRM,
+#ifdef FEATURE_NVM_RWWEE
+	/** Read while write(RWW) EEPROM area erase row */
+	NVM_COMMAND_RWWEE_ERASE_ROW            = NVMCTRL_CTRLA_CMD_RWWEEER,
+	/** RWW EEPROM write page */
+	NVM_COMMAND_RWWEE_WRITE_PAGE           = NVMCTRL_CTRLA_CMD_RWWEEWP,
+#endif
 };
 
 /**
@@ -332,17 +366,17 @@ enum nvm_command {
  */
 enum nvm_sleep_power_mode {
 	/** NVM controller exits low power mode on first access after sleep. */
-	NVM_SLEEP_POWER_MODE_WAKEONACCESS  = NVMCTRL_CTRLB_SLEEPPRM_WAKEONACCESS,
+	NVM_SLEEP_POWER_MODE_WAKEONACCESS  = NVMCTRL_CTRLB_SLEEPPRM_WAKEONACCESS_Val,
 	/** NVM controller exits low power mode when the device exits sleep mode. */
-	NVM_SLEEP_POWER_MODE_WAKEUPINSTANT = NVMCTRL_CTRLB_SLEEPPRM_WAKEUPINSTANT,
+	NVM_SLEEP_POWER_MODE_WAKEUPINSTANT = NVMCTRL_CTRLB_SLEEPPRM_WAKEUPINSTANT_Val,
 	/** Power reduction mode in the NVM controller disabled. */
-	NVM_SLEEP_POWER_MODE_ALWAYS_AWAKE  = NVMCTRL_CTRLB_SLEEPPRM_DISABLED,
+	NVM_SLEEP_POWER_MODE_ALWAYS_AWAKE  = NVMCTRL_CTRLB_SLEEPPRM_DISABLED_Val,
 };
 
 /**
- * \brief NVM controller cache readmode configuration
+ * \brief NVM controller cache readmode configuration.
  *
- * Control how the NVM cache prefetch data from flash
+ * Control how the NVM cache prefetch data from flash.
  *
  */
 enum nvm_cache_readmode {
@@ -351,7 +385,7 @@ enum nvm_cache_readmode {
 	 */
 	NVM_CACHE_READMODE_NO_MISS_PENALTY,
 	/** Reduces power consumption of the cache system, but inserts a
-	 *  wait state each time there is a cache miss
+	 *  wait state each time there is a cache miss.
 	 */
 	NVM_CACHE_READMODE_LOW_POWER,
 	/** The cache system ensures that a cache hit or miss takes the same
@@ -411,6 +445,10 @@ struct nvm_parameters {
 	/** Size of the Bootloader memory section configured in the NVM auxiliary
 	 *  memory space. */
 	uint32_t bootloader_number_of_pages;
+#ifdef FEATURE_NVM_RWWEE
+	/** Number of pages in read while write EEPROM(RWWEE) emulation area. */
+	uint16_t rww_eeprom_number_of_pages;
+#endif
 };
 
 /**
@@ -420,13 +458,21 @@ struct nvm_parameters {
  *
  */
 enum nvm_bootloader_size {
+	/** Boot Loader Size is 32768 Bytes. */
 	NVM_BOOTLOADER_SIZE_128,
+	/** Boot Loader Size is 16384 Bytes. */
 	NVM_BOOTLOADER_SIZE_64,
+	/** Boot Loader Size is 8192 Bytes. */
 	NVM_BOOTLOADER_SIZE_32,
+	/** Boot Loader Size is 4096 Bytes. */
 	NVM_BOOTLOADER_SIZE_16,
+	/** Boot Loader Size is 2048 Bytes. */
 	NVM_BOOTLOADER_SIZE_8,
+	/** Boot Loader Size is 1024 Bytes. */
 	NVM_BOOTLOADER_SIZE_4,
+	/** Boot Loader Size is 512 Bytes. */
 	NVM_BOOTLOADER_SIZE_2,
+	/** Boot Loader Size is 0 Bytes. */
 	NVM_BOOTLOADER_SIZE_0,
 };
 
@@ -437,13 +483,21 @@ enum nvm_bootloader_size {
  *
  */
 enum nvm_eeprom_emulator_size {
+	/** EEPROM Size for EEPROM emulation is 16384 bytes. */
 	NVM_EEPROM_EMULATOR_SIZE_16384,
+	/** EEPROM Size for EEPROM emulation is 8192 bytes. */
 	NVM_EEPROM_EMULATOR_SIZE_8192,
+	/** EEPROM Size for EEPROM emulation is 4096 bytes. */
 	NVM_EEPROM_EMULATOR_SIZE_4096,
+	/** EEPROM Size for EEPROM emulation is 2048 bytes. */
 	NVM_EEPROM_EMULATOR_SIZE_2048,
+	/** EEPROM Size for EEPROM emulation is 1024 bytes. */
 	NVM_EEPROM_EMULATOR_SIZE_1024,
+	/** EEPROM Size for EEPROM emulation is 512 bytes. */
 	NVM_EEPROM_EMULATOR_SIZE_512,
+	/** EEPROM Size for EEPROM emulation is 256 bytes. */
 	NVM_EEPROM_EMULATOR_SIZE_256,
+	/** EEPROM Size for EEPROM emulation is 0 bytes. */
 	NVM_EEPROM_EMULATOR_SIZE_0,
 };
 
@@ -454,68 +508,83 @@ enum nvm_eeprom_emulator_size {
  *
  */
 enum nvm_bod33_action {
+	/** No action. */
 	NVM_BOD33_ACTION_NONE,
+	/** The BOD33 generates a reset. */
 	NVM_BOD33_ACTION_RESET,
+	/** The BOD33 generates an interrupt. */
 	NVM_BOD33_ACTION_INTERRUPT,
 };
 
 /**
- * \brief BOD12 Action
+ * \brief WDT Window time-out period.
  *
- * What action should be triggered when BOD12 is detected.
- *
- */
-enum nvm_bod12_action {
-	NVM_BOD12_ACTION_NONE,
-	NVM_BOD12_ACTION_RESET,
-	NVM_BOD12_ACTION_INTERRUPT,
-};
-
-/**
- * \brief WDT Window time-out period
- *
- * Windows mode time-out period in clock cycles.
+ * Window mode time-out period in clock cycles.
  *
  */
 enum nvm_wdt_window_timeout {
+	/** 8 clock cycles. */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_8,
+	/** 16 clock cycles. */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_16,
+	/** 32 clock cycles. */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_32,
+	/** 64 clock cycles. */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_64,
+	/** 128 clock cycles. */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_128,
+	/** 256 clock cycles. */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_256,
+	/** 512 clock cycles. */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_512,
+	/** 1024 clock cycles. */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_1024,
+	/** 2048 clock cycles. */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_2048,
+	/** 4096 clock cycles. */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_4096,
+	/** 8192 clock cycles. */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_8192,
+	/** 16384 clock cycles. */
 	NVM_WDT_WINDOW_TIMEOUT_PERIOD_16384,
 };
 
 /**
- * \brief WDT Early warning offset
+ * \brief WDT Early warning offset.
  *
  * This setting determine how many GCLK_WDT cycles before a watchdog time-out period
  * an early warning interrupt should be triggered.
  *
  */
 enum nvm_wdt_early_warning_offset {
+	/** 8 clock cycles. */
 	NVM_WDT_EARLY_WARNING_OFFSET_8,
+	/** 16 clock cycles. */
 	NVM_WDT_EARLY_WARNING_OFFSET_16,
+	/** 32 clock cycles. */
 	NVM_WDT_EARLY_WARNING_OFFSET_32,
+	/** 64 clock cycles. */
 	NVM_WDT_EARLY_WARNING_OFFSET_64,
+	/** 128 clock cycles. */
 	NVM_WDT_EARLY_WARNING_OFFSET_128,
+	/** 256 clock cycles. */
 	NVM_WDT_EARLY_WARNING_OFFSET_256,
+	/** 512 clock cycles. */
 	NVM_WDT_EARLY_WARNING_OFFSET_512,
+	/** 1024 clock cycles. */
 	NVM_WDT_EARLY_WARNING_OFFSET_1024,
+	/** 2048 clock cycles. */
 	NVM_WDT_EARLY_WARNING_OFFSET_2048,
+	/** 4096 clock cycles. */
 	NVM_WDT_EARLY_WARNING_OFFSET_4096,
+	/** 8192 clock cycles. */
 	NVM_WDT_EARLY_WARNING_OFFSET_8192,
+	/** 16384 clock cycles. */
 	NVM_WDT_EARLY_WARNING_OFFSET_16384,
 };
 
 /**
- * \brief NVM user row fuse setting structure
+ * \brief NVM user row fuse setting structure.
  *
  * This structure contain the layout of the first 64 bits of the user row
  * which contain the fuse settings.
@@ -523,33 +592,27 @@ enum nvm_wdt_early_warning_offset {
 struct nvm_fusebits {
 	/** Bootloader size. */
 	enum nvm_bootloader_size          bootloader_size;
-	/** EEPROM emulation area size */
+	/** EEPROM emulation area size. */
 	enum nvm_eeprom_emulator_size     eeprom_size;
-	/** BOD33 Threshold level at power on */
+	/** BOD33 Threshold level at power on. */
 	uint8_t                           bod33_level;
-	/** BOD33 Enable at power on */
+	/** BOD33 Enable at power on. */
 	bool                              bod33_enable;
-	/** BOD33 Action at power on */
+	/** BOD33 Action at power on. */
 	enum nvm_bod33_action             bod33_action;
-	/** BOD12 Threshold level at power on */
-	uint8_t                           bod12_level;
-	/** BOD12 Enable at power on */
-	bool                              bod12_enable;
-	/** BOD12 Action at power on */
-	enum nvm_bod12_action             bod12_action;
-	/** WDT Enable at power on */
+	/** WDT Enable at power on. */
 	bool                              wdt_enable;
-	/** WDT Always-on at power on */
+	/** WDT Always-on at power on. */
 	bool                              wdt_always_on;
-	/** WDT Period at power on */
+	/** WDT Period at power on. */
 	uint8_t                           wdt_timeout_period;
-	/** WDT Window mode time-out at power on */
+	/** WDT Window mode time-out at power on. */
 	enum nvm_wdt_window_timeout       wdt_window_timeout;
-	/** WDT Early warning interrupt time offset at power on */
+	/** WDT Early warning interrupt time offset at power on. */
 	enum nvm_wdt_early_warning_offset wdt_early_warning_offset;
-	/** WDT Window mode enabled at power on */
+	/** WDT Window mode enabled at power on. */
 	bool                              wdt_window_mode_enable_at_poweron;
-	/** NVM Lock bits */
+	/** NVM Lock bits. */
 	uint16_t                          lockbits;
 };
 
@@ -647,9 +710,6 @@ enum status_code nvm_execute_command(
 
 enum status_code nvm_get_fuses(struct nvm_fusebits *fusebits);
 
-enum status_code nvm_set_fuses(struct nvm_fusebits *fusebits);
-
-
 bool nvm_is_page_locked(uint16_t page_number);
 
 /**
@@ -696,9 +756,9 @@ static inline enum nvm_error nvm_get_error(void)
 /** @} */
 
 /**
- * \page asfdoc_samd20_nvm_extra Extra Information for NVM Driver
+ * \page asfdoc_sam0_nvm_extra Extra Information for NVM Driver
  *
- * \section asfdoc_samd20_nvm_extra_acronyms Acronyms
+ * \section asfdoc_sam0_nvm_extra_acronyms Acronyms
  * The table below presents the acronyms used in this module:
  *
  * <table>
@@ -717,17 +777,17 @@ static inline enum nvm_error nvm_get_error(void)
  * </table>
  *
  *
- * \section asfdoc_samd20_nvm_extra_dependencies Dependencies
+ * \section asfdoc_sam0_nvm_extra_dependencies Dependencies
  * This driver has the following dependencies:
  *
  *  - None
  *
  *
- * \section asfdoc_samd20_nvm_extra_errata Errata
+ * \section asfdoc_sam0_nvm_extra_errata Errata
  * There are no errata related to this driver.
  *
  *
- * \section asfdoc_samd20_nvm_extra_history Module History
+ * \section asfdoc_sam0_nvm_extra_history Module History
  * An overview of the module history is presented in the table below, with
  * details on the enhancements and fixes made to the module since its first
  * release. The current version of this corresponds to the newest version in
@@ -738,6 +798,13 @@ static inline enum nvm_error nvm_get_error(void)
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added support for SAML21.</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Added support for SAMD21, removed BOD12 reference, removed
+ *          nvm_set_fuses() API</td>
+ *	</tr>
+ *	<tr>
  *		<td>Added functions to read/write fuse settings</td>
  *	</tr>
  *	<tr>
@@ -745,7 +812,7 @@ static inline enum nvm_error nvm_get_error(void)
  *	</tr>
  *	<tr>
  *		<td>Updated initialization function to also enable the digital interface
- *          clock to the module if it is disabled.</td>
+ *          clock to the module if it is disabled</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>
@@ -754,23 +821,38 @@ static inline enum nvm_error nvm_get_error(void)
  */
 
 /**
- * \page asfdoc_samd20_nvm_exqsg Examples for NVM Driver
+ * \page asfdoc_sam0_nvm_exqsg Examples for NVM Driver
  *
  * This is a list of the available Quick Start guides (QSGs) and example
- * applications for \ref asfdoc_samd20_nvm_group. QSGs are simple examples with
+ * applications for \ref asfdoc_sam0_nvm_group. QSGs are simple examples with
  * step-by-step instructions to configure and use this driver in a selection of
  * use cases. Note that QSGs can be compiled as a standalone application or be
  * added to the user application.
  *
- *  - \subpage asfdoc_samd20_nvm_basic_use_case
+ *  - \subpage asfdoc_sam0_nvm_basic_use_case
  *
- * \page asfdoc_samd20_nvm_document_revision_history Document Revision History
+ * \page asfdoc_sam0_nvm_document_revision_history Document Revision History
  *
  * <table>
  *	<tr>
  *		<th>Doc. Rev.</td>
  *		<th>Date</td>
  *		<th>Comments</td>
+ *	</tr>
+ *	<tr>
+ *		<td>E</td>
+ *		<td>08/2014</td>
+ *		<td>Added support for SAML21.</td>
+ *	</tr> 
+ *	<tr>
+ *		<td>D</td>
+ *		<td>12/2014</td>
+ *		<td>Added support for SAMR21 and SAMD10/D11.</td>
+ *	</tr>
+ *	<tr>
+ *		<td>C</td>
+ *		<td>01/2014</td>
+ *		<td>Added support for SAMD21.</td>
  *	</tr>
  *	<tr>
  *		<td>B</td>

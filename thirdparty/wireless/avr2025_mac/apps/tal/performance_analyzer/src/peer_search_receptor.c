@@ -3,7 +3,7 @@
  *
  * \brief Receptor functionalities in Peer Search Process - Performance Analyzer
  *  application
- * Copyright (c) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -120,6 +120,7 @@ static peer_state_function_t const peer_search_receptor_state_table[
  */
 void peer_search_receptor_init(void *arg)
 {
+	pib_value_t pib_value;
 	peer_search_receptor_arg_t *arg_ptr = (peer_search_receptor_arg_t *)arg;
 
 	/* Change LED pattern */
@@ -135,14 +136,15 @@ void peer_search_receptor_init(void *arg)
 	} while (!node_info.peer_short_addr);
 
 	/* Set my address which my peer send me */
-	tal_pib_set(macShortAddress, (pib_value_t *)&(arg_ptr->my_short_addr));
-    
+	pib_value.pib_value_16bit = arg_ptr->my_short_addr;
+	tal_pib_set(macShortAddress, &pib_value);
+
 #ifdef EXT_RF_FRONT_END_CTRL
-    /* Disable RF front end control during peer search process*/
-    tal_ext_pa_ctrl(PA_EXT_DISABLE);
-    /* Make sure that Tx power is at max, when PA_EXT is disabled */
-    tal_set_tx_pwr(REGISTER_VALUE, 0x00);
-#endif    
+	/* Disable RF front end control during peer search process*/
+	tal_ext_pa_ctrl(PA_EXT_DISABLE);
+	/* Make sure that Tx power is at max, when PA_EXT is disabled */
+	tal_set_tx_pwr(REGISTER_VALUE, 0x00);
+#endif
 }
 
 /*
@@ -279,13 +281,13 @@ static void peer_rsp_send_tx_done_cb(retval_t status, frame_info_t *frame)
  * \brief Send peer response. This is a unicast send to the node which
  *        had earlier send the peer request
  *
- * \param src_addr The address which had been sent as payload of peer request
+ * \param src_addr The address which had been sent as payload of peer request  
  *                it becomes the source address of node which sent peer rsp
  * \param seq_num Sequence number of the Peer request frame
  */
 static int send_peer_rsp(uint64_t *dst_addr)
 {
-	uint8_t payload_length;
+	uint16_t payload_length;
 	app_payload_t msg;
 	peer_rsp_t *data;
 
@@ -341,19 +343,18 @@ static void wait_for_conf_init(void *arg)
  * \param status    Status of the transmission procedure
  * \param frame     Pointer to the transmitted frame structure
  */
-static void wait_for_conf_rx_cb(frame_info_t *frame_info)
+static void wait_for_conf_rx_cb(frame_info_t *mac_frame_info)
 {
 	app_payload_t *msg;
 
-	if (*(frame_info->mpdu) == (FRAME_OVERHEAD
+	if (*(mac_frame_info->mpdu) == (FRAME_OVERHEAD
 			+ ((sizeof(app_payload_t)
 			- sizeof(general_pkt_t))
 			+ sizeof(peer_conf_t)))) {
 		/* Point to the message : 1 =>size is first byte and 2=>FCS*/
 		msg
-			= (app_payload_t *)(frame_info->mpdu + 1 +
-				FRAME_OVERHEAD -
-				2);
+			= (app_payload_t *)(mac_frame_info->mpdu + 1 +
+				FRAME_OVERHEAD - 2);
 		if ((msg->cmd_id) == PEER_CONFIRM) {
 			if (node_info.peer_short_addr ==
 					(msg->payload.peer_conf_data.nwk_addr))

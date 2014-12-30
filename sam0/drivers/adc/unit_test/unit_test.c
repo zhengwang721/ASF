@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D20 Analog to Digital Converter (ADC) Unit test
+ * \brief SAM Analog to Digital Converter (ADC) Unit test
  *
- * Copyright (C) 2013 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,7 +42,7 @@
  */
 
 /**
- * \mainpage SAM D20 ADC Unit Test
+ * \mainpage SAM ADC Unit Test
  * See \ref appdoc_main "here" for project documentation.
  * \copydetails appdoc_preface
  *
@@ -58,29 +58,31 @@
  */
 
 /**
- * \page appdoc_main SAM D20 ADC Unit Test
+ * \page appdoc_main SAM ADC Unit Test
  *
  * Overview:
- * - \ref appdoc_samd20_adc_unit_test_intro
- * - \ref appdoc_samd20_adc_unit_test_setup
- * - \ref appdoc_samd20_adc_unit_test_usage
- * - \ref appdoc_samd20_adc_unit_test_compinfo
- * - \ref appdoc_samd20_adc_unit_test_contactinfo
+ * - \ref asfdoc_sam0_adc_unit_test_intro
+ * - \ref asfdoc_sam0_adc_unit_test_setup
+ * - \ref asfdoc_sam0_adc_unit_test_usage
+ * - \ref asfdoc_sam0_adc_unit_test_compinfo
+ * - \ref asfdoc_sam0_adc_unit_test_contactinfo
  *
- * \section appdoc_samd20_adc_unit_test_intro Introduction
+ * \section asfdoc_sam0_adc_unit_test_intro Introduction
  * \copydetails appdoc_preface
  *
  * Input to the ADC is provided with the DAC module.
  *
  * The following kit is required for carrying out the test:
- *      - SAM D20 Xplained Pro board
+ *  - SAM D20 Xplained Pro board
+ *  - SAM D21 Xplained Pro board
+ *  - SAM L21 Xplained Pro board
  *
- * \section appdoc_samd20_adc_unit_test_setup Setup
+ * \section asfdoc_sam0_adc_unit_test_setup Setup
  * The following connections has to be made using wires:
  *  - \b DAC VOUT (PA02) <-----> ADC2 (PB08)
  *
  * To run the test:
- *  - Connect the SAM D20 Xplained Pro board to the computer using a
+ *  - Connect the supported Xplained Pro board to the computer using a
  *    micro USB cable.
  *  - Open the virtual COM port in a terminal application.
  *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
@@ -89,17 +91,17 @@
  *  - Build the project, program the target and run the application.
  *    The terminal shows the results of the unit test.
  *
- * \section appdoc_samd20_adc_unit_test_usage Usage
+ * \section asfdoc_sam0_adc_unit_test_usage Usage
  *  - The unit test configures DAC module to provide voltage to the ADC input.
  *  - DAC output is adjusted to generate various voltages which are measured by
  *    the ADC.
  *  - Different modes of the ADC are tested.
  *
- * \section appdoc_samd20_adc_unit_test_compinfo Compilation Info
+ * \section asfdoc_sam0_adc_unit_test_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for ARM.
  * Other compilers may or may not work.
  *
- * \section appdoc_samd20_adc_unit_test_contactinfo Contact Information
+ * \section asfdoc_sam0_adc_unit_test_contactinfo Contact Information
  * For further information, visit
  * <a href="http://www.atmel.com">http://www.atmel.com</a>.
  */
@@ -116,11 +118,16 @@
 /* Theoretical ADC result for DAC full-swing output */
 #define ADC_VAL_DAC_FULL_OUTPUT 4095
 /* Offset due to ADC & DAC errors */
-#define ADC_OFFSET              50
+#define ADC_OFFSET              150
+#if (SAML21)
+#  define DAC_VAL_HALF_VOLT     2047
+#  define DAC_VAL_ONE_VOLT      4095
+#else
 /* Theoretical DAC value for 0.5V output*/
-#define DAC_VAL_HALF_VOLT       512
+#  define DAC_VAL_HALF_VOLT     512
 /* Theoretical DAC value for 1.0V output*/
-#define DAC_VAL_ONE_VOLT        1023
+#  define DAC_VAL_ONE_VOLT      1023
+#endif
 
 /* Structure for UART module connected to EDBG (used for unit test output) */
 struct usart_module cdc_uart_module;
@@ -186,15 +193,20 @@ static void test_dac_init(void)
 
 	/* Configure the DAC module */
 	dac_get_config_defaults(&config);
+#if (SAML21)
+	config.reference    = DAC_REFERENCE_INTREF;
+#else
 	config.reference    = DAC_REFERENCE_INT1V;
+#endif
 	config.clock_source = GCLK_GENERATOR_3;
 	dac_init(&dac_inst, DAC, &config);
-	dac_enable(&dac_inst);
 
 	/* Configure the DAC channel */
 	dac_chan_get_config_defaults(&chan_config);
 	dac_chan_set_config(&dac_inst, DAC_CHANNEL_0, &chan_config);
 	dac_chan_enable(&dac_inst, DAC_CHANNEL_0);
+
+	dac_enable(&dac_inst);
 }
 
 /**
@@ -217,9 +229,15 @@ static void run_adc_init_test(const struct test_case *test)
 	adc_get_config_defaults(&config);
 	config.positive_input = ADC_POSITIVE_INPUT_PIN2;
 	config.negative_input = ADC_NEGATIVE_INPUT_GND;
+#if (SAML21)
+	config.reference      = ADC_REFERENCE_INTREF;
+#else
 	config.reference      = ADC_REFERENCE_INT1V;
+#endif
 	config.clock_source   = GCLK_GENERATOR_3;
+#if !(SAML21)
 	config.gain_factor    = ADC_GAIN_FACTOR_1X;
+#endif
 
 	/* Initialize the ADC */
 	status = adc_init(&adc_inst, ADC, &config);
@@ -270,7 +288,7 @@ static void run_adc_polled_mode_test(const struct test_case *test)
 	/* Test result */
 	test_assert_true(test,
 			(adc_result > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET)) &&
-			(adc_result < (ADC_VAL_DAC_FULL_OUTPUT - ADC_OFFSET)),
+			(adc_result < (ADC_VAL_DAC_HALF_OUTPUT + ADC_OFFSET)),
 			"Error in ADC conversion at 0.5V input (Expected: ~%d, Result: %d)", ADC_VAL_DAC_HALF_OUTPUT, adc_result);
 
 	adc_flush(&adc_inst);
@@ -376,8 +394,8 @@ static void run_adc_callback_mode_test(const struct test_case *test)
 	for (uint8_t i = 0; i < ADC_SAMPLES; i++) {
 		test_assert_true(test,
 				(adc_buf[i] > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET)) &&
-				(adc_buf[i] < (ADC_VAL_DAC_FULL_OUTPUT - ADC_OFFSET)),
-				"Error in ADC conversion for 0.5V at index %d", i);
+				(adc_buf[i] < (ADC_VAL_DAC_HALF_OUTPUT + ADC_OFFSET)),
+				"Error in ADC conversion for 0.5V at index %d, Result: %d", i, adc_buf[i]);
 	}
 }
 
@@ -424,11 +442,15 @@ static void setup_adc_average_mode_test(const struct test_case *test)
 	adc_get_config_defaults(&config);
 	config.positive_input     = ADC_POSITIVE_INPUT_PIN2;
 	config.negative_input     = ADC_NEGATIVE_INPUT_GND;
+#if (SAML21)
+	config.reference          = ADC_REFERENCE_INTREF;
+#else
 	config.reference          = ADC_REFERENCE_INT1V;
+#endif
 	config.clock_source       = GCLK_GENERATOR_3;
+#if !(SAML21)
 	config.gain_factor        = ADC_GAIN_FACTOR_1X;
-	config.resolution         = ADC_RESOLUTION_16BIT;
-	config.accumulate_samples = ADC_ACCUMULATE_SAMPLES_16;
+#endif
 
 	/* Re-initialize & enable ADC */
 	status = adc_init(&adc_inst, ADC, &config);
@@ -461,12 +483,11 @@ static void run_adc_average_mode_test(const struct test_case *test)
 	adc_start_conversion(&adc_inst);
 	while (adc_read(&adc_inst, &adc_result) != STATUS_OK) {
 	}
-	adc_result = adc_result >> 4;
 
 	/* Test result */
 	test_assert_true(test,
 			(adc_result > (ADC_VAL_DAC_HALF_OUTPUT - ADC_OFFSET)) &&
-			(adc_result < (ADC_VAL_DAC_FULL_OUTPUT - ADC_OFFSET)),
+			(adc_result < (ADC_VAL_DAC_HALF_OUTPUT + ADC_OFFSET)),
 			"Error in ADC average mode conversion at 0.5V input");
 }
 
@@ -500,9 +521,16 @@ static void setup_adc_window_mode_test(const struct test_case *test)
 	adc_get_config_defaults(&config);
 	config.positive_input = ADC_POSITIVE_INPUT_PIN2;
 	config.negative_input = ADC_NEGATIVE_INPUT_GND;
+#if (SAML21)
+	config.reference      = ADC_REFERENCE_INTREF;
+	config.clock_prescaler = ADC_CLOCK_PRESCALER_DIV16;
+#else
 	config.reference      = ADC_REFERENCE_INT1V;
+#endif
 	config.clock_source   = GCLK_GENERATOR_3;
+#if !(SAML21)
 	config.gain_factor    = ADC_GAIN_FACTOR_1X;
+#endif
 	config.resolution     = ADC_RESOLUTION_12BIT;
 	config.freerunning    = true;
 	config.window.window_mode = ADC_WINDOW_MODE_BETWEEN_INVERTED;
@@ -623,7 +651,7 @@ int main(void)
 
 	/* Define the test suite */
 	DEFINE_TEST_SUITE(adc_test_suite, adc_tests,
-			"SAM D20 ADC driver test suite");
+			"SAM ADC driver test suite");
 
 	/* Run all tests in the suite*/
 	test_suite_run(&adc_test_suite);

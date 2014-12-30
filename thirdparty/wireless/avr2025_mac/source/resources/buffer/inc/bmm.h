@@ -3,7 +3,7 @@
  *
  * @brief This file contains the Buffer Management Module definitions.
  *
- * $Id: bmm.h 34721 2013-06-11 07:09:57Z awachtle $
+ * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
  *
  * @author    Atmel Corporation: http://www.atmel.com
  * @author    Support email: avr@atmel.com
@@ -23,12 +23,29 @@
 #include <stdint.h>
 #include <stdbool.h>
 
+/**
+ * \defgroup group_resources  Resource Management
+ * The Resource Management provides access to resources  to the stack or the
+ * application.
+ *  @{
+ */
+
+/**
+ * \defgroup group_bmm  Buffer Management
+ * Buffer Management (large and small buffers): provides services for
+ * dynamically
+ * allocating and freeing memory buffers.
+ *  @{
+ */
+
 /* === Macros ============================================================== */
 
 /**
- * This macro provides the pointer to the corresponding body of the supplied buffer header.
+ * This macro provides the pointer to the corresponding body of the supplied
+ * buffer header.
  */
-#define BMM_BUFFER_POINTER(buf) ((buf)->body)
+
+#define BMM_BUFFER_POINTER(buf)  ((buf)->body)
 
 /* === Types =============================================================== */
 
@@ -37,17 +54,19 @@
  *
  * @ingroup apiMacTypes
  */
+__PACK__DATA__
 typedef struct
 #if !defined(DOXYGEN)
         buffer_tag
 #endif
 {
-    /** Pointer to the buffer body */
-    uint8_t *body;
-    /** Pointer to next free buffer */
-    struct buffer_tag *next;
-} buffer_t;
+	/** Pointer to the buffer body */
+	uint8_t *body;
 
+	/** Pointer to next free buffer */
+	struct buffer_tag *next;
+} buffer_t;
+__PACK__RST_DATA__
 /* === Externals =========================================================== */
 
 

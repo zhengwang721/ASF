@@ -3,7 +3,7 @@
  *
  * \brief Two-Wire Interface (TWI) driver for SAM.
  *
- * Copyright (c) 2011-2013 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -80,11 +80,7 @@ extern "C" {
 #define TWI_CLK_DIV_MAX      0xFF
 #define TWI_CLK_DIV_MIN      7
 
-#if SAM4E
-#define TWI_WP_KEY_VALUE TWI_WPROT_MODE_SECURITY_CODE((uint32_t)0x545749)
-#elif SAM4C
 #define TWI_WP_KEY_VALUE TWI_WPMR_WPKEY_PASSWD
-#endif
 
 /**
  * \brief Enable TWI master mode.
@@ -254,8 +250,11 @@ static uint32_t twi_mk_addr(const uint8_t *addr, int len)
  */
 uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
 {
-	uint32_t status, cnt = p_packet->length;
+	uint32_t status;
+	uint32_t cnt = p_packet->length;
 	uint8_t *buffer = p_packet->buffer;
+	uint8_t stop_sent = 0;
+	uint32_t timeout = TWI_TIMEOUT;;
 	
 	/* Check argument */
 	if (cnt == 0) {
@@ -272,8 +271,14 @@ uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
 	p_twi->TWI_IADR = 0;
 	p_twi->TWI_IADR = twi_mk_addr(p_packet->addr, p_packet->addr_length);
 
-	/* Send a START Condition */
-	p_twi->TWI_CR = TWI_CR_START;
+	/* Send a START condition */
+	if (cnt == 1) {
+		p_twi->TWI_CR = TWI_CR_START | TWI_CR_STOP;
+		stop_sent = 1;
+	} else {
+		p_twi->TWI_CR = TWI_CR_START;
+		stop_sent = 0;
+	}
 
 	while (cnt > 0) {
 		status = p_twi->TWI_SR;
@@ -281,9 +286,14 @@ uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
 			return TWI_RECEIVE_NACK;
 		}
 
+		if (!timeout--) {
+			return TWI_ERROR_TIMEOUT;
+		}
+				
 		/* Last byte ? */
-		if (cnt == 1) {
+		if (cnt == 1  && !stop_sent) {
 			p_twi->TWI_CR = TWI_CR_STOP;
+			stop_sent = 1;
 		}
 
 		if (!(status & TWI_SR_RXRDY)) {
@@ -292,6 +302,7 @@ uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
 		*buffer++ = p_twi->TWI_RHR;
 
 		cnt--;
+		timeout = TWI_TIMEOUT;
 	}
 
 	while (!(p_twi->TWI_SR & TWI_SR_TXCOMP)) {
@@ -314,7 +325,8 @@ uint32_t twi_master_read(Twi *p_twi, twi_packet_t *p_packet)
  */
 uint32_t twi_master_write(Twi *p_twi, twi_packet_t *p_packet)
 {
-	uint32_t status, cnt = p_packet->length;
+	uint32_t status;
+	uint32_t cnt = p_packet->length;
 	uint8_t *buffer = p_packet->buffer;
 
 	/* Check argument */
@@ -450,7 +462,7 @@ void twi_enable_slave_mode(Twi *p_twi)
 	p_twi->TWI_CR = TWI_CR_MSDIS;
 	p_twi->TWI_CR = TWI_CR_SVDIS;
 
-	/* Set Master Enable bit */
+	/* Set Slave Enable bit */
 	p_twi->TWI_CR = TWI_CR_SVEN;
 }
 
@@ -584,21 +596,21 @@ void twi_reset(Twi *p_twi)
 Pdc *twi_get_pdc_base(Twi *p_twi)
 {
 	Pdc *p_pdc_base = NULL;
-
+#if !SAMG
 	if (p_twi == TWI0) {
 		p_pdc_base = PDC_TWI0;
-	}
+	} else
+#endif
 #ifdef PDC_TWI1
-	else if (p_twi == TWI1) {
+	 if (p_twi == TWI1) {
 		p_pdc_base = PDC_TWI1;
-	}
+	} else
 #endif
 #ifdef PDC_TWI2
-		else if (p_twi == TWI2) {
-			p_pdc_base = PDC_TWI2;
-		}
+	if (p_twi == TWI2) {
+		p_pdc_base = PDC_TWI2;
+	} else
 #endif
-	else
 	{
 		Assert(false);
 	}
@@ -606,7 +618,7 @@ Pdc *twi_get_pdc_base(Twi *p_twi)
 	return p_pdc_base;
 }
 
-#if (SAM4E || SAM4C)
+#if (SAM4E || SAM4C || SAMG || SAM4CP || SAM4CM)
 /**
  * \brief Enables/Disables write protection mode.
  *
@@ -615,12 +627,8 @@ Pdc *twi_get_pdc_base(Twi *p_twi)
  */
 void twi_set_write_protection(Twi *p_twi, bool flag)
 {
-#if SAM4E
-	p_twi->TWI_WPROT_MODE = TWI_WP_KEY_VALUE |
-		(flag ? TWI_WPROT_MODE_WPROT : 0);
-#else
+
 	p_twi->TWI_WPMR = (flag ? TWI_WPMR_WPEN : 0) | TWI_WP_KEY_VALUE;
-#endif
 }
 
 /**
@@ -631,14 +639,97 @@ void twi_set_write_protection(Twi *p_twi, bool flag)
  */
 void twi_read_write_protection_status(Twi *p_twi, uint32_t *p_status)
 {
-#if SAM4E
-	*p_status = p_twi->TWI_WPROT_STATUS;
-#else
+
 	*p_status = p_twi->TWI_WPSR;
-#endif
 }
 #endif
 
+#if SAMG55
+/**
+ * \brief Set the prescaler, TLOW:SEXT, TLOW:MEXT and clock high max cycles for SMBUS mode.
+ *
+ * \param p_twi   Base address of the TWI instance.
+ * \param ul_timing Parameter for prescaler, TLOW:SEXT, TLOW:MEXT and clock high max cycles.
+ */
+void twi_smbus_set_timing(Twi *p_twi, uint32_t ul_timing)
+{
+	p_twi->TWI_SMBTR = ul_timing;;
+}
+
+/**
+ * \brief Set length/direction/PEC for alternative command mode.
+ *
+ * \param p_twi   Base address of the TWI instance.
+ * \param ul_alt_cmd Alternative command parameters.
+ */
+void twi_set_alternative_command(Twi *p_twi, uint32_t ul_alt_cmd)
+{
+	p_twi->TWI_ACR = ul_alt_cmd;;
+}
+
+/**
+ * \brief Set the filter for TWI.
+ *
+ * \param p_twi   Base address of the TWI instance.
+ * \param ul_filter   Filter value.
+ */
+void twi_set_filter(Twi *p_twi, uint32_t ul_filter)
+{
+	p_twi->TWI_FILTR = ul_filter;;
+}
+
+/**
+ * \brief A mask can be applied on the slave device address in slave mode in order to allow multiple
+ * address answer. For each bit of the MASK field set to one the corresponding SADR bit will be masked.
+ *
+ * \param p_twi   Base address of the TWI instance.
+ * \param ul_mask  Mask value.
+ */
+void twi_mask_slave_addr(Twi *p_twi, uint32_t ul_mask)
+{
+	p_twi->TWI_SMR |= TWI_SMR_MASK(ul_mask);
+}
+
+/**
+ * \brief Set sleepwalking match mode.
+ *
+ * \param p_twi Pointer to a TWI instance.
+ * \param ul_matching_addr1   Address 1 value.
+ * \param ul_matching_addr2   Address 2 value.
+ * \param ul_matching_addr3   Address 3 value.
+ * \param ul_matching_data   Data value.
+ * \param flag1 ture for set, false for no.
+ * \param flag2 ture for set, false for no.
+ * \param flag3 ture for set, false for no.
+ * \param flag ture for set, false for no.
+ */
+void twi_set_sleepwalking(Twi *p_twi,
+		uint32_t ul_matching_addr1, bool flag1,
+		uint32_t ul_matching_addr2, bool flag2,
+		uint32_t ul_matching_addr3, bool flag3,
+		uint32_t ul_matching_data, bool flag)
+{
+	uint32_t temp = 0;
+
+	if (flag1) {
+		temp |= TWI_SWMR_SADR1(ul_matching_addr1);
+	}
+
+	if (flag2) {
+		temp |= TWI_SWMR_SADR2(ul_matching_addr2);
+	}
+
+	if (flag3) {
+		temp |= TWI_SWMR_SADR3(ul_matching_addr3);
+	}
+
+	if (flag) {
+		temp |= TWI_SWMR_DATAM(ul_matching_data);
+	}
+
+	p_twi->TWI_SWMR = temp;
+}
+#endif
 //@}
 
 /// @cond 0
