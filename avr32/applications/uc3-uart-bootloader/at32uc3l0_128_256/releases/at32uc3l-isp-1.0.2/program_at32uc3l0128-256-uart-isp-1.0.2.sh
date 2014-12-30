@@ -6,7 +6,7 @@
 # This shell script programs the ISP (flash array), the ISP configuration words
 # (User page) and the general-purpose fuse bits.
 
-# Copyright (c) 2011 Atmel Corporation. All rights reserved.
+# Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:

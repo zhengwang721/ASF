@@ -4,7 +4,7 @@
  */
 "\r\n"
 "; Copyright (c) 2000 Microsoft Corporation\r\n"
-"; Copyright (C) 2000-2012 ATMEL, Inc.\r\n"
+"; Copyright (C) 2000-2014 ATMEL, Inc.\r\n"
 "\r\n"
 "[Version] \r\n"
 "Signature=\"$Windows NT$\" \r\n"
