@@ -114,8 +114,8 @@
 //@{
 #define TWID_SDA                        IOPORT_CREATE_PIN(PORTD, 0)
 #define TWID_SCL                        IOPORT_CREATE_PIN(PORTD, 1)
-#define USARTE0_RXD                     IOPORT_CREATE_PIN(PORTE, 2)
-#define USARTE0_TXD                     IOPORT_CREATE_PIN(PORTE, 3)
+#define USARTD0_RXD                     IOPORT_CREATE_PIN(PORTD, 2)
+#define USARTD0_TXD                     IOPORT_CREATE_PIN(PORTD, 3)
 #define SPID_SS                         IOPORT_CREATE_PIN(PORTD, 4)
 #define SPID_MOSI                       IOPORT_CREATE_PIN(PORTD, 5)
 #define SPID_MISO                       IOPORT_CREATE_PIN(PORTD, 6)

@@ -49,6 +49,6 @@
 #define CONF_BOARD_AT86RFX
 #define MCU_SOC_NAME        "ATSAMD20J18"
 
-#define AT86RFX_SPI_BAUDRATE             4000000UL
+
 
 #endif /* CONF_BOARD_H_INCLUDED */

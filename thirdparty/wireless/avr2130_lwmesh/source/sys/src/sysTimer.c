@@ -149,8 +149,11 @@ void SYS_TimerTaskHandler(void)
 		if (SYS_TIMER_PERIODIC_MODE == timer->mode) {
 			placeTimer(timer);
 		}
-
-		timer->handler(timer);
+		if(timer->handler)
+		{
+			timer->handler(timer);
+		}
+		
 	}
 
 	if (timers) {

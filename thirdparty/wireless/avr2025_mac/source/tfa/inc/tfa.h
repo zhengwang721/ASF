@@ -66,6 +66,7 @@
 
 #include "return_val.h"
 #include "ieee_const.h"
+#include "tal_types.h"
 
 /* === TYPES =============================================================== */
 
