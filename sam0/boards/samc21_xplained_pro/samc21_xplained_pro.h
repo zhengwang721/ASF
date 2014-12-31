@@ -386,6 +386,21 @@ void system_board_init(void);
 #define EXT3_SPI_SERCOM_DMAC_ID_RX   SERCOM5_DMAC_ID_RX
 /** @} */
 
+/** \name LIN definitions
+ *  @{
+ */
+#define LIN_TX_PIN              PIN_PA06
+#define LIN_RX_PIN              PIN_PA07
+#define LIN_EN_PIN              PIN_PB22
+
+#define LIN_USART_MODULE              SERCOM0
+#define LIN_USART_SERCOM_MUX_SETTING  USART_RX_3_TX_2_XCK_3
+#define LIN_USART_SERCOM_PINMUX_PAD0  PINMUX_UNUSED
+#define LIN_USART_SERCOM_PINMUX_PAD1  PINMUX_UNUSED
+#define LIN_USART_SERCOM_PINMUX_PAD2  PINMUX_PA06D_SERCOM0_PAD2
+#define LIN_USART_SERCOM_PINMUX_PAD3  PINMUX_PA07D_SERCOM0_PAD3
+/** @} */
+
 /** \name Embedded debugger I2C interface definitions
  * @{
  */
