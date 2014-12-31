@@ -292,9 +292,10 @@ extern "C" {
 #endif
 
 #if (SAMC21) || defined(__DOXYGEN__)
+/** LIN master mode. */
+#define FEATURE_USART_LIN_MASTER
 /** RS485 mode. */
 #  define FEATURE_USART_RS485
-#define FEATURE_USART_LIN_MASTER
 #endif
 /*@}*/
 
