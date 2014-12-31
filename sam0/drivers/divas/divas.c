@@ -74,8 +74,8 @@ void _system_divas_init(void)
  */
 int32_t divas_idiv(int32_t numerator, int32_t denominator)
 {
-	/* Disable global interrupt. */
-	Disable_global_interrupt();
+	/* Disable interrupt. */
+	cpu_irq_enter_critical();
 	
 	/* Signed division. */
 	DIVAS->CTRLA.reg |= DIVAS_CTRLA_SIGNED;
@@ -91,8 +91,8 @@ int32_t divas_idiv(int32_t numerator, int32_t denominator)
 	
 	int32_t quotient = DIVAS->RESULT.reg;
 	
-	/* Enable global interrupt. */
-	Enable_global_interrupt();
+	/* Enable interrupt. */
+	cpu_irq_leave_critical();
 
 	return quotient;
 }
@@ -109,8 +109,8 @@ int32_t divas_idiv(int32_t numerator, int32_t denominator)
  */
 uint32_t divas_uidiv(uint32_t numerator, uint32_t denominator)
 {
-	/* Disable global interrupt. */
-	Disable_global_interrupt();
+	/* Disable interrupt. */
+	cpu_irq_enter_critical();
 	
 	/* Unsigned division. */
 	DIVAS->CTRLA.reg &= ~DIVAS_CTRLA_SIGNED;
@@ -126,8 +126,8 @@ uint32_t divas_uidiv(uint32_t numerator, uint32_t denominator)
 
 	uint32_t quotient = DIVAS->RESULT.reg;
 	
-	/* Enable global interrupt. */
-	Enable_global_interrupt();
+	/* Enable interrupt. */
+	cpu_irq_leave_critical();
 	
 	return quotient;
 }
@@ -144,8 +144,8 @@ uint32_t divas_uidiv(uint32_t numerator, uint32_t denominator)
  */
 int32_t divas_idivmod(int32_t numerator, int32_t denominator)
 {
-	/* Disable global interrupt. */
-	Disable_global_interrupt();
+	/* Disable interrupt. */
+	cpu_irq_enter_critical();
 	
 	/* Signed division. */
 	DIVAS->CTRLA.reg |= DIVAS_CTRLA_SIGNED;
@@ -161,8 +161,8 @@ int32_t divas_idivmod(int32_t numerator, int32_t denominator)
 
 	int32_t remainder = DIVAS->REM.reg;
 	
-	/* Enable global interrupt. */
-	Enable_global_interrupt();
+	/* Enable interrupt. */
+	cpu_irq_leave_critical();
 	
 	return remainder;
 }
@@ -179,8 +179,8 @@ int32_t divas_idivmod(int32_t numerator, int32_t denominator)
  */
 uint32_t divas_uidivmod(uint32_t numerator, uint32_t denominator)
 {
-	/* Disable global interrupt. */
-	Disable_global_interrupt();
+	/* Disable interrupt. */
+	cpu_irq_enter_critical();
 	
 	/* Unsigned division. */
 	DIVAS->CTRLA.reg &= ~DIVAS_CTRLA_SIGNED;
@@ -196,8 +196,8 @@ uint32_t divas_uidivmod(uint32_t numerator, uint32_t denominator)
 
 	uint32_t remainder = DIVAS->REM.reg;
 	
-	/* Enable global interrupt. */
-	Enable_global_interrupt();
+	/* Enable interrupt. */
+	cpu_irq_leave_critical();
 	
 	return remainder;
 } 
@@ -213,8 +213,8 @@ uint32_t divas_uidivmod(uint32_t numerator, uint32_t denominator)
  */
 uint32_t  divas_sqrt(uint32_t radicand)
 {
-	/* Disable global interrupt. */
-	Disable_global_interrupt();
+	/* Disable interrupt. */
+	cpu_irq_enter_critical();
 	
 	/* Write the radicand to DIVIDEND register. */
 	DIVAS->SQRNUM.reg = radicand;
@@ -225,8 +225,8 @@ uint32_t  divas_sqrt(uint32_t radicand)
 
 	uint32_t result_sqrt = DIVAS->RESULT.reg;
 	
-	/* Enable global interrupt. */
-	Enable_global_interrupt();
+	/* Enable interrupt. */
+	cpu_irq_leave_critical();
 	
 	return result_sqrt;
 }
@@ -284,8 +284,8 @@ uint64_t __aeabi_idivmod(int32_t numerator, int32_t denominator)
 	uint64_t uret;
 	int32_t quotient, remainder;
 	
-	/* Disable global interrupt. */
-	Disable_global_interrupt();
+	/* Disable interrupt. */
+	cpu_irq_enter_critical();
 	
 	/* Signed division. */
 	DIVAS->CTRLA.reg |= DIVAS_CTRLA_SIGNED;
@@ -307,8 +307,8 @@ uint64_t __aeabi_idivmod(int32_t numerator, int32_t denominator)
 	uret = ((uint64_t)quotient & 0x00000000FFFFFFFF ) | 
 			(((uint64_t)remainder ) << 32); 
 			
-	/* Enable global interrupt. */
-	Enable_global_interrupt();
+	/* Enable interrupt. */
+	cpu_irq_leave_critical();
 	
 	return uret;
 }
@@ -328,8 +328,8 @@ uint64_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator)
 	uint64_t uret;
 	uint32_t quotient, remainder;
 	
-	/* Disable global interrupt. */
-	Disable_global_interrupt();
+	/* Disable interrupt. */
+	cpu_irq_enter_critical();
 	
 	/* Unsigned division. */
 	DIVAS->CTRLA.reg &= ~DIVAS_CTRLA_SIGNED;
@@ -350,8 +350,8 @@ uint64_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator)
 	/* quotient in r0, remainder in r1 */
 	uret = quotient | (((uint64_t)remainder) << 32);
 	
-	/* Enable global interrupt. */
-	Enable_global_interrupt();
+	/* Enable interrupt. */
+	cpu_irq_leave_critical();
 	
 	return uret;
 }
@@ -400,8 +400,8 @@ __value_in_regs idiv_return __aeabi_idivmod(int numerator, int denominator)
 {
 	idiv_return result;
 	
-	/* Disable global interrupt. */
-	Disable_global_interrupt();
+	/* Disable interrupt. */
+	cpu_irq_enter_critical();
 
 	/* Signed division. */
 	DIVAS->CTRLA.reg |= DIVAS_CTRLA_SIGNED;
@@ -419,8 +419,8 @@ __value_in_regs idiv_return __aeabi_idivmod(int numerator, int denominator)
 	result.quotient = DIVAS->RESULT.reg;
 	result.remainder = DIVAS->REM.reg;
 	
-	/* Enable global interrupt. */
-	Enable_global_interrupt();
+	/* Enable interrupt. */
+	cpu_irq_leave_critical();
 
 	return result;
 }
@@ -438,8 +438,8 @@ __value_in_regs uidiv_return __aeabi_uidivmod(unsigned numerator, unsigned denom
 {
 	uidiv_return result;
 	
-	/* Disable global interrupt. */
-	Disable_global_interrupt();
+	/* Disable interrupt. */
+	cpu_irq_enter_critical();
 
 	/* Unsigned division. */
 	DIVAS->CTRLA.reg &= ~DIVAS_CTRLA_SIGNED;
@@ -457,8 +457,8 @@ __value_in_regs uidiv_return __aeabi_uidivmod(unsigned numerator, unsigned denom
 	result.quotient = DIVAS->RESULT.reg;
 	result.remainder = DIVAS->REM.reg;
 	
-	/* Enable global interrupt. */
-	Enable_global_interrupt();
+	/* Enable interrupt. */
+	cpu_irq_leave_critical();
 
 	return result;
 }

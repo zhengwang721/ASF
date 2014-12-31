@@ -84,7 +84,7 @@
  * starts and the result will be stored in the Remainder register.
  *
  * There are two ways to calculate the results.
- * - Call the APP functions
+ * - Call the DIVAS API
  * - Overload '/' and '%' operation
  * \note About overload, User can transparently access the DIVAS module when 
  * writing normal C code. E.g. "a = b / c;" or "a = b % c;" will be translated  
@@ -198,7 +198,7 @@ static inline void divas_disable_dlz(void)
 }
 
 /**
- * \name DIVAS Call the APP Function Operation
+ * \name Call the DIVAS API Operation
  * @{
  */
 
