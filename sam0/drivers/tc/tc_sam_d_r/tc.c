@@ -543,7 +543,6 @@ enum status_code tc_set_compare_value(
 	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw);
-	Assert(compare);
 
 	/* Get a pointer to the module's hardware instance */
 	Tc *const tc_module = module_inst->hw;
