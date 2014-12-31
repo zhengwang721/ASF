@@ -45,6 +45,9 @@
  * \asf_license_stop
  *
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef _XMEGA_ZIGBIT_RF233_H_
 #define _XMEGA_ZIGBIT_RF233_H_
 

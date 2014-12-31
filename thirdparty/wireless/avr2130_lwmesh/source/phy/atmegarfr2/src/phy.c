@@ -39,6 +39,9 @@
  *
  *
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 #ifdef PHY_ATMEGARFR2
 #define IRQ_CLEAR_VALUE       0xff
