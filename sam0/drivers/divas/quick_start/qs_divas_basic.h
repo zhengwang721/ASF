@@ -3,7 +3,7 @@
  *
  * \brief SAM Divide and Square Root Accelerator (DIVAS) Driver Quick Start
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,14 +42,15 @@
  */
 
 /**
- * \page asfdoc_sam0_divas_basic_use_case Quick Start Guide for DIVAS - Basic
+ * \page asfdoc_sam0_divas_basic_use_case Quick Start Guide for DIVAS - No Overload
  *
  * In this use case, the Divide and Square Root Accelerator (DIVAS) module is 
  * configured for.
  *
- * This use case will calculate the data in basic mode. If all the calculation 
- * result is the same as the desired results, the board LED will be lighted. 
- * Otherwise, the board LED will be flashing.
+ * This use case will calculate the data in no overload mode. If all the 
+ * calculation result is the same as the desired results, the board LED will be  
+ * lighted. Otherwise, the board LED will be flashing. The variable "result" 
+ * can indicate which calculation is wrong.
  *
  * \section asfdoc_sam0_divas_basic_use_case_setup Setup
  *

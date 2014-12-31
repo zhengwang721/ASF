@@ -5,11 +5,7 @@
 			the configuration and management of the physical device DIVAS.
 		</info>
 
-		<module type="driver" id="sam0.drivers.divas#invoke" caption="DIVAS - Divide and Square Root Accelerator (Invoke APIs)">
-			<info type="keyword" value="technology">
-				<keyword value="Division" />
-				<keyword value="Square" />
-			</info>
+		<module type="driver" id="sam0.drivers.divas#no_overload" caption="DIVAS - Divide and Square Root Accelerator (No Overload APIs)">
 
 			<build type="include-path" value="."/>
 
@@ -30,16 +26,8 @@
 		</module>
 
 		<module type="driver" id="sam0.drivers.divas#overload" caption="DIVAS - Divide and Square Root Accelerator (Overload APIs)">
-			<info type="keyword" value="technology">
-				<keyword value="Division" />
-				<keyword value="Square" />
-			</info>
 
 			<info type="appnote" value="ATxxxxx"/>
-			<info type="keyword" value="pdf">
-				<keyword value="DIVAS"/>
-				<keyword value="Divide and Square Root Accelerator"/>
-			</info>
 
 			<info type="description" value="pdf">
 				This document describes how to use the Divide and Square Root Accelerator on the
