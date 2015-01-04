@@ -149,7 +149,11 @@ static inline void sleepmgr_lock_mode(enum sleepmgr_mode mode)
 	// Enter a critical section
 	flags = cpu_irq_save();
 
-	++sleepmgr_locks[mode];
+	if(sleepmgr_locks[mode] >= 0xff) {
+		sleepmgr_locks[mode] = 0xff;
+	} else {
+		++sleepmgr_locks[mode];
+	}
 
 	// Leave the critical section
 	cpu_irq_restore(flags);
@@ -176,7 +180,11 @@ static inline void sleepmgr_unlock_mode(enum sleepmgr_mode mode)
 	// Enter a critical section
 	flags = cpu_irq_save();
 
-	--sleepmgr_locks[mode];
+	if(sleepmgr_locks[mode] == 0) {
+		sleepmgr_locks[mode] = 0;
+	} else {
+		--sleepmgr_locks[mode];
+	}
 
 	// Leave the critical section
 	cpu_irq_restore(flags);
