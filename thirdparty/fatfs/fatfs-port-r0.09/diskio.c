@@ -42,6 +42,9 @@
  */
 /// @cond 0
 /**INDENT-OFF**/
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifdef __cplusplus
 extern "C" {
 #endif

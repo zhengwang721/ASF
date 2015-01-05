@@ -40,13 +40,16 @@
  * \asf_license_stop
  *
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef DAC_FEATURE_H_INCLUDED
 #define DAC_FEATURE_H_INCLUDED
 
 /**
  * \defgroup asfdoc_sam0_dac_group SAM Digital-to-Analog Driver (DAC)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the conversion of
+ * This driver for Atmel庐 | SMART SAM devices provides an interface for the conversion of
  * digital values to analog voltage. The following driver API modes are covered
  * by this manual:
  *
@@ -277,7 +280,7 @@
  * enabled when it is not needed, to ensure minimum power consumption.
  *
  * \subsection asfdoc_sam0_dac_special_considerations_conversion_time Conversion Time
- * DAC conversion time is approximately 2.85μs. The user must ensure that new
+ * DAC conversion time is approximately 2.85渭s. The user must ensure that new
  * data is not written to the DAC before the last conversion is complete.
  * Conversions should be triggered by a periodic event from a Timer/Counter or
  * another peripheral.
