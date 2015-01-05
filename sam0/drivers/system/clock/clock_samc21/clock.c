@@ -3,7 +3,7 @@
  *
  * \brief SAM C21 Clock Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -616,6 +616,10 @@ bool system_clock_source_is_ready(
  * This function will apply the settings in conf_clocks.h when run from the user
  * application. All clock sources and GCLK generators are running when this function
  * returns.
+ *
+ * \note OSC48M is always enabled and if user selects other clocks for GCLK generators,
+ * the OSC48M default enable can be disabled after system_clock_init. Make sure the
+ * clock switch successfully before disabling OSC48M.
  */
 void system_clock_init(void)
 {
@@ -704,7 +708,7 @@ void system_clock_init(void)
 
 	/* Configure all GCLK generators except for the main generator, which
 	 * is configured later after all other clock systems are set up */
-	MREPEAT(9, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
+	MREPEAT(GCLK_GEN_NUM, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
 #endif
 
 	/* DPLL */
@@ -721,12 +725,6 @@ void system_clock_init(void)
 		struct system_gclk_chan_config dpll_gclk_chan_conf;
 		system_gclk_chan_get_config_defaults(&dpll_gclk_chan_conf);
 		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR;
-		system_gclk_chan_set_config(OSCCTRL_GCLK_ID_FDPLL, &dpll_gclk_chan_conf);
-		system_gclk_chan_enable(OSCCTRL_GCLK_ID_FDPLL);
-	} else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK_32K) {
-		struct system_gclk_chan_config dpll_gclk_chan_conf;
-		system_gclk_chan_get_config_defaults(&dpll_gclk_chan_conf);
-		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_REFERENCE_GCLK_32K_GENERATOR;
 		system_gclk_chan_set_config(OSCCTRL_GCLK_ID_FDPLL, &dpll_gclk_chan_conf);
 		system_gclk_chan_enable(OSCCTRL_GCLK_ID_FDPLL);
 	} else {
