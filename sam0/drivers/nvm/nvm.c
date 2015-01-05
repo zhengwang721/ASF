@@ -464,8 +464,8 @@ enum status_code nvm_write_buffer(
 	}
 
 	/* Perform a manual NVM write when the length of data to be programmed is
-	 * less than page size */
-	if (length < NVMCTRL_PAGE_SIZE) {
+	 * less than page size, or manual page write is enabled */
+	if ((_nvm_dev.manual_page_write == true) || (length < NVMCTRL_PAGE_SIZE)) {
 #ifdef FEATURE_NVM_RWWEE
 	 return ((is_rww_eeprom) ? 
 				(nvm_execute_command(NVM_COMMAND_RWWEE_WRITE_PAGE,destination_address, 0)):

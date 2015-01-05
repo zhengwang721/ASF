@@ -658,7 +658,7 @@ static inline void nvm_get_config_defaults(
 
 	/* Write the default configuration for the NVM configuration */
 	config->sleep_power_mode  = NVM_SLEEP_POWER_MODE_WAKEONACCESS;
-	config->manual_page_write = false;
+	config->manual_page_write = true;
 	config->wait_states       = NVMCTRL->CTRLB.bit.RWS;
 	config->disable_cache     = false;
 	config->cache_readmode    = NVM_CACHE_READMODE_NO_MISS_PENALTY;
