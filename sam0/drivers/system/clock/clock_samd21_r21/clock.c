@@ -3,7 +3,7 @@
  *
  * \brief SAM D21/R21 Clock Driver
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -940,6 +940,21 @@ void system_clock_init(void)
 		system_gclk_chan_enable(SYSCTRL_GCLK_ID_DFLL48);
 	}
 #  endif
+
+#  if CONF_CLOCK_DPLL_ENABLE == true
+	/* Enable DPLL internal lock timer and reference clock */
+	struct system_gclk_chan_config dpll_gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&dpll_gclk_chan_conf);
+	dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_SOURCE_GCLK_GENERATOR_0;
+	system_gclk_chan_set_config(SYSCTRL_GCLK_ID_FDPLL32K, &dpll_gclk_chan_conf);
+	system_gclk_chan_enable(SYSCTRL_GCLK_ID_FDPLL32K);
+
+	if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK) {
+		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_SOURCE_GCLK_GENERATOR_1;
+		system_gclk_chan_set_config(SYSCTRL_GCLK_ID_FDPLL, &dpll_gclk_chan_conf);
+		system_gclk_chan_enable(SYSCTRL_GCLK_ID_FDPLL);
+	}
+#  endif
 #endif
 
 
@@ -960,6 +975,9 @@ void system_clock_init(void)
 	if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0) {
 		/* XOSC32K should have been enabled for DPLL_REF0 */
 		Assert(CONF_CLOCK_XOSC32K_ENABLE);
+	} else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF1) {
+		/* XOSC should have been enabled for DPLL_REF1 */
+		Assert(CONF_CLOCK_XOSC_ENABLE);
 	}
 
 	struct system_clock_source_dpll_config dpll_config;

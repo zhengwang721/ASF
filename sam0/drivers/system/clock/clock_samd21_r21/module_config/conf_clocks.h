@@ -3,7 +3,7 @@
  *
  * \brief SAM D21/R21 Clock configuration
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -117,6 +117,8 @@
 #  define CONF_CLOCK_DPLL_REFERENCE_CLOCK         SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0
 #  define CONF_CLOCK_DPLL_FILTER                  SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT
 
+#  define CONF_CLOCK_DPLL_SOURCE_GCLK_GENERATOR_0 GCLK_GENERATOR_1
+#  define CONF_CLOCK_DPLL_SOURCE_GCLK_GENERATOR_1 GCLK_GENERATOR_1
 #  define CONF_CLOCK_DPLL_REFERENCE_FREQUENCY     32768
 #  define CONF_CLOCK_DPLL_REFEREMCE_DIVIDER       1
 #  define CONF_CLOCK_DPLL_OUTPUT_FREQUENCY        48000000
