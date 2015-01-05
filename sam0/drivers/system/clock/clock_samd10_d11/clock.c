@@ -3,7 +3,7 @@
  *
  * \brief SAM D1x Clock Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -936,12 +936,14 @@ void system_clock_init(void)
 	/* Enable DPLL internal lock timer and reference clock */
 	struct system_gclk_chan_config dpll_gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&dpll_gclk_chan_conf);
-	dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_SOURCE_GCLK_GENERATOR_0;
-	system_gclk_chan_set_config(SYSCTRL_GCLK_ID_FDPLL32K, &dpll_gclk_chan_conf);
-	system_gclk_chan_enable(SYSCTRL_GCLK_ID_FDPLL32K);
+	if (CONF_CLOCK_DPLL_LOCK_TIME != SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT) {
+		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_LOCK_GCLK_GENERATOR;
+		system_gclk_chan_set_config(SYSCTRL_GCLK_ID_FDPLL32K, &dpll_gclk_chan_conf);
+		system_gclk_chan_enable(SYSCTRL_GCLK_ID_FDPLL32K);
+	}
 
 	if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK) {
-		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_SOURCE_GCLK_GENERATOR_1;
+		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR;
 		system_gclk_chan_set_config(SYSCTRL_GCLK_ID_FDPLL, &dpll_gclk_chan_conf);
 		system_gclk_chan_enable(SYSCTRL_GCLK_ID_FDPLL);
 	}
@@ -981,6 +983,7 @@ void system_clock_init(void)
 	dpll_config.low_power_enable = CONF_CLOCK_DPLL_LOW_POWER_ENABLE;
 
 	dpll_config.filter           = CONF_CLOCK_DPLL_FILTER;
+	dpll_config.lock_time        = CONF_CLOCK_DPLL_LOCK_TIME;
 
 	dpll_config.reference_clock     = CONF_CLOCK_DPLL_REFERENCE_CLOCK;
 	dpll_config.reference_frequency = CONF_CLOCK_DPLL_REFERENCE_FREQUENCY;
