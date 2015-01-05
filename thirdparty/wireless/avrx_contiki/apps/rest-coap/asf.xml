@@ -1,0 +1,19 @@
+<asf xmlversion="1.0">
+
+        <module type="component" id="thirdparty.wireless.avrx_contiki.apps.rest-coap" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="coap-common.c"/>
+			<build type="c-source"      value="coap-server.c"/>
+			<build type="header-file"      value="coap-common.h"/>					
+			<build type="header-file"      value="coap-server.h"/>					
+			<build type="include-path" value="."/>		
+			<require idref="thirdparty.wireless.avrx_contiki.rest-common"/>	
+			<build type="doxygen-entry-point" value="group_contiki_apps"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>       
+</asf>

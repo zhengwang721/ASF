@@ -1,0 +1,83 @@
+<asf xmlversion="1.0">
+
+        <module type="component" id="thirdparty.wireless.avrx_contiki.core.dev.leds" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="leds.c"/>
+			<build type="header-file"   value="leds.h"/>
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki_core"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>
+       
+        <module type="component" id="thirdparty.wireless.avrx_contiki.core.dev.nullradio" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="nullradio.c"/>
+			<build type="header-file"   value="nullradio.h"/>
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki_core"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>
+		
+        <module type="component" id="thirdparty.wireless.avrx_contiki.core.dev.serial-line" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="serial-line.c"/>
+			<build type="header-file"   value="serial-line.h"/>
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki_core"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>
+		
+        <module type="component" id="thirdparty.wireless.avrx_contiki.core.dev.slip" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="slip.c"/>
+			<build type="header-file"   value="slip.h"/>
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki_core"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>		
+		
+        <module type="component" id="thirdparty.wireless.avrx_contiki.core.dev.all" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<require idref="thirdparty.wireless.avrx_contiki.core.dev.slip"/>
+			<require idref="thirdparty.wireless.avrx_contiki.core.dev.serial-line"/>
+			<require idref="thirdparty.wireless.avrx_contiki.core.dev.leds"/>
+			<require idref="thirdparty.wireless.avrx_contiki.core.dev.nullradio"/>
+			<build type="header-file"   value="spi.h"/>
+			<build type="header-file"   value="button-sensor.h"/>
+			<build type="header-file"   value="battery-sensor.h"/>
+			<build type="header-file"   value="eeprom.h"/>
+			<build type="header-file"   value="radio.h"/>
+			<build type="header-file"   value="radio-sensor.h"/>
+			<build type="header-file"   value="watchdog.h"/>
+			<build type="header-file"   value="rom.h"/>
+			<build type="header-file"   value="xmem.h"/>
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki_core"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>		
+</asf>

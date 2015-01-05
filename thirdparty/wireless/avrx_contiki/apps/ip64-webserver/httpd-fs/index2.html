@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en"><head>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Atmel Webserver</title>
+<link href="http://thingsquare.com/dcdn/1.1/bs.css" rel="stylesheet">
+<style>
+.navbar-inner{background-image:none;<!-- background-color:rgba(242,242,242,0.9); -->
+border-bottom:1px solid #0f0f0f;-webkit-box-shadow:0;-moz-box-shadow:0;box-shadow:0;}
+.navbar .brand{margin-top:0px;}
+body{text-align:center;}
+.b{padding-top:210px;}
+</style>
+</head>
+<body>
+<div class="navbar navbar-fixed-top">
+<div class="navbar-inner">
+<div class="container-fluid">
+<a class="brand" href="http://www.atmel.com/" target="_blank"><img src="http://www.atmel.com/Images/atmel.png"></a>
+<a  href="http://www.atmel.com/tools/atsamr21-xpro.aspx" target="_blank"><img align="right" height="200%" width="200px" src="http://www.atmel.com/Images/SAM_R21_Xplained_Pro_angled_view.jpg"></a>
+<a  href= "index.html" target="_self"><img align="left" height="30px" width="30px" src="http://icons.iconarchive.com/icons/double-j-design/origami-colored-pencil/256/blue-home-icon.png" style="padding-top:40px" ></a>
+</div>
+
+<div align="left">
+ <a href="index1.html" target="_self" class="btn btn-primary" >RPL Routes   </a> 
+ <a href="index2.html" target="_self" class="btn btn-primary">IPV6 Neighbours   </a> 
+ <a href="index3.html" target="_self" class="btn btn-primary" >IPv6 to IPv4 Mapping Table   </a> 
+</div>
+</div>
+</div>
+
+<div class="container-fluid">
+<div class="row-fluid b">
+<div class="row-fluid">
+<div class="span6" align="center">
+<h1><font face="Times New Roman"></h1>
+<h1>IPv6 Neighbours</h1><div id="nbrs"><br></div>
+<a href="nbrs.shtml" id="nbrs-load" class="btn btn-primary">Refresh</a>
+<a href="nbrsping.shtml" id="nbrs-ping" class="btn">Ping neighbours</a>
+<a href="nbrsled.shtml" id="nbrs-led" class="btn btn-info">Blink LED's</a>
+</div>
+<div class="span6" align="center">
+<h1><font face="Times New Roman"></h1>
+<div id="nbrs"><br></div>
+<hr>
+</div>
+</div>
+</div>
+<hr>
+<script src="http://thingsquare.com/dcdn/1.1/u.js"></script>
+<script>
+var opts={lines:12,length:4,width:2,radius:4,rotate:12,color:'#000',speed:1.8,trail:56,shadow:false,hwaccel:false,className:'spinner',zIndex:2e9,top:'auto',left:'auto'};
+function spinload(spinid,url,id){ var t = document.getElementById(spinid);
+var s = new Spinner(opts).spin(t);$.get(url,function(data){$(id).html(data);}).always(function(){s.stop();})}
+$('#rpl-load').click(function(){spinload('routes','routes.shtml','#routes'); return false;});
+$('#rpl-reset').click(function(){spinload('routes','rplreset.shtml','#routes');return false;});
+$('#rpl-root').click(function(){spinload('routes','rplroot.shtml','#routes');return false;});
+$('#nbrs-load').click(function(){spinload('nbrs','nbrs.shtml','#nbrs');return false;});
+$('#nbrs-ping').click(function(){spinload('nbrs','nbrsping.shtml','#nbrs');return false;});
+$('#nbrs-led').click(function(){spinload('nbrs','nbrsled.shtml','#nbrs');return false;});
+$('#rpl-ping').click(function(){spinload('routes','routesping.shtml','#routes');return false;});
+$('#nat-load').click(function(){spinload('nat','nat.shtml','#nat');return false;});
+$(document).ready(function() {
+$('#rpl-load').click(); $('#nbrs-load').click(); $('#nat-load').click();
+});</script>
+</body>
+</html>

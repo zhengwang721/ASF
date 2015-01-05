@@ -1,0 +1,46 @@
+<asf xmlversion="1.0">
+
+		
+        <module type="component" id="thirdparty.wireless.avrx_contiki.core.net.ip" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="dhcp.c"/>
+			<build type="c-source"      value="psock.c"/>
+			<build type="c-source"      value="resolv.c"/>
+			<build type="c-source"      value="simple-udp.c"/>
+			<build type="c-source"      value="slipdev.c"/>
+			<build type="c-source"      value="tcpip.c"/>
+			<build type="c-source"      value="tcp-socket.c"/>
+			<build type="c-source"      value="udp-socket.c"/>
+			<build type="c-source"      value="uip.c"/>
+			<build type="c-source"      value="uip_arch.c"/>
+			<build type="c-source"      value="uip-debug.c"/>
+			<build type="c-source"      value="uiplib.c"/>
+			<build type="c-source"      value="uip-packetqueue.c"/>
+			<build type="c-source"      value="uip-split.c"/>
+			<build type="c-source"      value="uip-udp-packet.c"/>
+			<build type="header-file"   value="dhcp.h"/>
+			<build type="header-file"   value="psock.h"/>
+			<build type="header-file"   value="resolv.h"/>
+			<build type="header-file"   value="simple-udp.h"/>
+			<build type="header-file"   value="slipdev.h"/>
+			<build type="header-file"   value="tcpip.h"/>
+			<build type="header-file"   value="tcp-socket.h"/>
+			<build type="header-file"   value="udp-socket.h"/>
+			<build type="header-file"   value="uip.h"/>
+			<build type="header-file"   value="uip_arch.h"/>
+			<build type="header-file"   value="uip-debug.h"/>
+			<build type="header-file"   value="uiplib.h"/>
+			<build type="header-file"   value="uip-packetqueue.h"/>
+			<build type="header-file"   value="uip-split.h"/>
+			<build type="header-file"   value="uip-udp-packet.h"/>
+			<build type="header-file"   value="uipopt.h"/>
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki_core"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>		
+</asf>

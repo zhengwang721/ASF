@@ -1,0 +1,21 @@
+<asf xmlversion="1.0">
+
+        <module type="component" id="thirdparty.wireless.avrx_contiki.apps.codeprop" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="codeprop.c"/>
+			<build type="c-source"      value="codeprop-tmp.c"/>
+			<build type="c-source"      value="tcp_loader.c"/>
+			<build type="header-file"   value="codeprop.h"/>
+			<build type="header-file"   value="codeprop-tmp.h"/>
+			<build type="header-file"   value="tcp_loader.h"/>
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki_apps"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>
+       
+</asf>

@@ -1,0 +1,20 @@
+<asf xmlversion="1.0">
+
+        <module type="component" id="thirdparty.wireless.avrx_contiki.apps.telnet" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="telnet.c"/>
+			<build type="c-source"      value="telnet-dsc.c"/>
+			<build type="c-source"      value="simpletelnet.c"/>
+			<build type="header-file"      value="telnet.h"/>					
+			<build type="header-file"      value="telnet-dsc.h"/>					
+			<build type="header-file"      value="simpletelnet.h"/>					
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki_apps"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>       
+</asf>

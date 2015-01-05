@@ -1,0 +1,39 @@
+<asf xmlversion="1.0">
+
+		
+        <module type="component" id="thirdparty.wireless.avrx_contiki.core.net.mac" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="csma.c"/>
+			<build type="c-source"      value="frame802154.c"/>
+			<build type="c-source"      value="framer.c"/>
+			<build type="c-source"      value="framer-802154.c"/>
+			<build type="c-source"      value="framer-nullmac.c"/>
+			<build type="c-source"      value="mac.c"/>
+			<build type="c-source"      value="mac-sequence.c"/>
+			<build type="c-source"      value="nullmac.c"/>
+			<build type="c-source"      value="nullrdc.c"/>
+			<build type="c-source"      value="nullrdc-noframer.c"/>
+			<build type="c-source"      value="phase.c"/>
+			
+			<build type="header-file"   value="csma.h"/>
+			<build type="header-file"   value="frame802154.h"/>
+			<build type="header-file"   value="framer.h"/>
+			<build type="header-file"   value="framer-802154.h"/>
+			<build type="header-file"   value="framer-nullmac.h"/>
+			<build type="header-file"   value="mac.h"/>
+			<build type="header-file"   value="mac-sequence.h"/>
+			<build type="header-file"   value="nullmac.h"/>
+			<build type="header-file"   value="nullrdc.h"/>
+			<build type="header-file"   value="nullrdc-noframer.h"/>
+			<build type="header-file"   value="phase.h"/>
+			
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki_core"/>	
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>		
+</asf>
