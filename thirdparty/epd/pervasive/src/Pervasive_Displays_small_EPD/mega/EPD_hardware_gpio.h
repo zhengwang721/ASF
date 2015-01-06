@@ -1,0 +1,110 @@
+/**
+* \file
+*
+* \brief The definition of EPD GPIO pins
+*
+* Copyright (c) 2012-2013 Pervasive Displays Inc. All rights reserved.
+*
+*  Authors: Pervasive Displays Inc.
+*
+*  Redistribution and use in source and binary forms, with or without
+*  modification, are permitted provided that the following conditions
+*  are met:
+*
+*  1. Redistributions of source code must retain the above copyright
+*     notice, this list of conditions and the following disclaimer.
+*  2. Redistributions in binary form must reproduce the above copyright
+*     notice, this list of conditions and the following disclaimer in
+*     the documentation and/or other materials provided with the
+*     distribution.
+*
+*  THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+*  "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+*  LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+*  A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+*  OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+*  SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+*  LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+*  DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+*  THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+*  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+*  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+*/
+
+#include "Pervasive_Displays_small_EPD.h"
+
+
+//#ifndef DISPLAY_HARDWARE_GPIO_H_INCLUDED
+//#define DISPLAY_HARDWARE_GPIO_H_INCLUDED
+
+#define	_BV(bit)   (1 << (bit)) /**< left shift 1 bit */
+#define	_HIGH      1            /**< signal high */
+#define	_LOW       !_HIGH       /**< signal low */
+
+#define	config_gpio_dir_o(Pin)  ioport_set_pin_dir(Pin, IOPORT_DIR_OUTPUT) /**< set output direction for an IOPORT pin */
+#define	config_gpio_dir_i(Pin)  ioport_set_pin_dir(Pin, IOPORT_DIR_INPUT)  /**< set input direction for an IOPORT pin */
+#define	set_gpio_high(Pin)      ioport_set_pin_level(Pin,_HIGH) /**< set HIGH for an IOPORT pin */
+#define	set_gpio_low(Pin)       ioport_set_pin_level(Pin,_LOW)  /**< set LOW for an IOPORT pin */
+#define	set_gpio_invert(Pin)    ioport_toggle_pin_level(Pin) /**< toggle the value of an IOPORT pin */
+#define	input_get(Pin)          ioport_get_pin_level(Pin)    /**< get current value of an IOPORT pin */
+
+///******************************************************************************
+//* GPIO Defines
+//*****************************************************************************/
+////#define Temper_PIN          IOPORT_CREATE_PIN (PORTB,1); /**< MEGA256RFR2 EXT1.pin3.  PB03, ADC04 */
+//#define EPD_SPI_CLK_PIN          IOPORT_CREATE_PIN (PORTB,1) /**< MEGA256RFR2 EXT1.pin18. PA18, UART2_SPI */
+//#define EPD_BUSY_PIN        IOPORT_CREATE_PIN (PORTE,2) /**< MEGA256RFR2 EXT1.pin9.  PA06 */
+//#define EPD_PWM_PIN             IOPORT_CREATE_PIN (PORTE,3) /**< MEGA256RFR2 EXT1.pin7.  PA08, TC0_A0 */
+//#define EPD_RST_PIN         IOPORT_CREATE_PIN (PORTD,1) /**< MEGA256RFR2 EXT1.pin6.  P1C6 */
+//#define EPD_PANELON_PIN     IOPORT_CREATE_PIN (PORTD,0) /**< MEGA256RFR2 EXT1.pin8.  PA09 */
+//#define EPD_DISCHARGE_PIN   IOPORT_CREATE_PIN (PORTE,0) /**< MEGA256RFR2 EXT1.pin5.  PC15 */
+//#define EPD_BORDER_PIN      IOPORT_CREATE_PIN (PORTE,1) /**< MEGA256RFR2 EXT1.pin4.  PB4 */
+//#define EPD_SPI_MISO_PIN         IOPORT_CREATE_PIN (PORTB,3) /**< MEGA256RFR2 EXT1.pin17. PA19 */
+//#define EPD_SPI_MOSI_PIN         IOPORT_CREATE_PIN (PORTB,2) /**< MEGA256RFR2 EXT1.pin16. PA20 */
+////#define Flash_CS_PIN        IOPORT_CREATE_PIN (PORTB,1) /**< MEGA256RFR2 EXT1.pin10. PA10 */
+//#define EPD_SPI_CS_PIN          IOPORT_CREATE_PIN (PORTG,0) /**< MEGA256RFR2 EXT1.pin15. PA17 */
+//#define SPISS_PIN			IOPORT_CREATE_PIN (PORTB,0) /**< MEGA256RFR2 EXT1.pin15. PA17 */
+//
+
+///******************************************************************************
+//* GPIO Defines
+//*****************************************************************************/
+////#define Temper_PIN          IOPORT_CREATE_PIN (PORTF,0); /**< MEGA256RFR2 EXT1.pin3.  PF0, ADC0 */
+//#define EPD_BORDER_PIN      IOPORT_CREATE_PIN (PORTF,1) /**< MEGA256RFR2 EXT1.pin4.  PF1 ADC1*/
+//#define EPD_DISCHARGE_PIN   IOPORT_CREATE_PIN (PORTE,2) /**< MEGA256RFR2 EXT1.pin5.  PB7 */
+//#define EPD_RST_PIN         IOPORT_CREATE_PIN (PORTE,3) /**< MEGA256RFR2 EXT1.pin6.  dummy */
+//#define EPD_PWM_PIN             IOPORT_CREATE_PIN (PORTB,5) /**< MEGA256RFR2 EXT1.pin7.  PB5, OC1A */
+//#define EPD_PANELON_PIN     IOPORT_CREATE_PIN (PORTB,6) /**< MEGA256RFR2 EXT1.pin8.  PA09 */
+//#define EPD_BUSY_PIN        IOPORT_CREATE_PIN (PORTE,5) /**< MEGA256RFR2 EXT1.pin9.  PE5 */
+////#define Flash_CS_PIN        IOPORT_CREATE_PIN (PORTD,5) /**< MEGA256RFR2 EXT1.pin10. PD5 */
+//#define EPD_SPI_CS_PIN          IOPORT_CREATE_PIN (PORTG,0) /**< MEGA256RFR2 EXT1.pin15. PG0 */
+//#define SPISS_PIN			IOPORT_CREATE_PIN (PORTG,0) /**< MEGA256RFR2 EXT1.pin15. PG0 */
+//#define EPD_SPI_MOSI_PIN         IOPORT_CREATE_PIN (PORTB,2) /**< MEGA256RFR2 EXT1.pin16. PB2 */
+//#define EPD_SPI_MISO_PIN         IOPORT_CREATE_PIN (PORTB,3) /**< MEGA256RFR2 EXT1.pin17. PB3 */
+//#define EPD_SPI_CLK_PIN          IOPORT_CREATE_PIN (PORTB,1) /**< MEGA256RFR2 EXT1.pin18. PB1, UART2_SPI */
+
+
+
+bool EPD_IsBusy(void);
+void EPD_cs_high (void);
+void EPD_cs_low (void);
+void EPD_flash_cs_high(void);
+void EPD_flash_cs_low (void);
+void EPD_rst_high (void);
+void EPD_rst_low (void);
+void EPD_discharge_high (void);
+void EPD_discharge_low (void);
+void EPD_Vcc_turn_off (void);
+void EPD_Vcc_turn_on (void);
+void EPD_border_high(void);
+void EPD_border_low (void);
+void EPD_pwm_low (void);
+void EPD_pwm_high(void);
+void SPIMISO_low(void);
+void SPIMOSI_low(void);
+void SPICLK_low(void);
+void EPD_initialize_gpio(void);
+
+//#endif	//DISPLAY_HARDWARE_GPIO_H_INCLUDED
+
+
