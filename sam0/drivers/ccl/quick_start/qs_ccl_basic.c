@@ -93,19 +93,19 @@ void configure_ccl_lut0(void)
 	system_pinmux_get_config_defaults(&lut0_input_pin1_conf);
 	system_pinmux_get_config_defaults(&lut0_input_pin2_conf);
 	lut0_input_pin0_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	lut0_input_pin0_conf.mux_position = LUT0_IN0_MUX;
+	lut0_input_pin0_conf.mux_position = CCL_LUT0_IN0_MUX;
 	lut0_input_pin1_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	lut0_input_pin1_conf.mux_position = LUT0_IN1_MUX;
+	lut0_input_pin1_conf.mux_position = CCL_LUT0_IN1_MUX;
 	lut0_input_pin2_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	lut0_input_pin2_conf.mux_position = LUT0_IN2_MUX;
-	system_pinmux_pin_set_config(LUT0_IN0_PIN, &lut0_input_pin0_conf);
-	system_pinmux_pin_set_config(LUT0_IN1_PIN, &lut0_input_pin1_conf);
-	system_pinmux_pin_set_config(LUT0_IN2_PIN, &lut0_input_pin2_conf);
+	lut0_input_pin2_conf.mux_position = CCL_LUT0_IN2_MUX;
+	system_pinmux_pin_set_config(CCL_LUT0_IN0_PIN, &lut0_input_pin0_conf);
+	system_pinmux_pin_set_config(CCL_LUT0_IN1_PIN, &lut0_input_pin1_conf);
+	system_pinmux_pin_set_config(CCL_LUT0_IN2_PIN, &lut0_input_pin2_conf);
 	struct system_pinmux_config lut0_out_pin_conf;
 	system_pinmux_get_config_defaults(&lut0_out_pin_conf);
 	lut0_out_pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-	lut0_out_pin_conf.mux_position = LUT0_OUT_MUX;
-	system_pinmux_pin_set_config(LUT0_OUT_PIN, &lut0_out_pin_conf);
+	lut0_out_pin_conf.mux_position = CCL_LUT0_OUT_MUX;
+	system_pinmux_pin_set_config(CCL_LUT0_OUT_PIN, &lut0_out_pin_conf);
 	//! [setup_7]
 
 	/** Initialize and enable the LUT0 with the user settings. */
@@ -142,19 +142,19 @@ void configure_ccl_lut1(void)
 	system_pinmux_get_config_defaults(&lut1_input_pin1_conf);
 	system_pinmux_get_config_defaults(&lut1_input_pin2_conf);
 	lut1_input_pin0_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	lut1_input_pin0_conf.mux_position = LUT1_IN0_MUX;
+	lut1_input_pin0_conf.mux_position = CCL_LUT1_IN0_MUX;
 	lut1_input_pin1_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	lut1_input_pin1_conf.mux_position = LUT1_IN1_MUX;
+	lut1_input_pin1_conf.mux_position = CCL_LUT1_IN1_MUX;
 	lut1_input_pin2_conf.direction    = SYSTEM_PINMUX_PIN_DIR_INPUT;
-	lut1_input_pin2_conf.mux_position = LUT1_IN2_MUX;
-	system_pinmux_pin_set_config(LUT1_IN0_PIN, &lut1_input_pin0_conf);
-	system_pinmux_pin_set_config(LUT1_IN1_PIN, &lut1_input_pin1_conf);
-	system_pinmux_pin_set_config(LUT1_IN2_MUX, &lut1_input_pin2_conf);
+	lut1_input_pin2_conf.mux_position = CCL_LUT1_IN2_MUX;
+	system_pinmux_pin_set_config(CCL_LUT1_IN0_PIN, &lut1_input_pin0_conf);
+	system_pinmux_pin_set_config(CCL_LUT1_IN1_PIN, &lut1_input_pin1_conf);
+	system_pinmux_pin_set_config(CCL_LUT1_IN2_MUX, &lut1_input_pin2_conf);
 	struct system_pinmux_config lut1_out_pin_conf;
 	system_pinmux_get_config_defaults(&lut1_out_pin_conf);
 	lut1_out_pin_conf.direction    = SYSTEM_PINMUX_PIN_DIR_OUTPUT;
-	lut1_out_pin_conf.mux_position = LUT1_OUT_MUX;
-	system_pinmux_pin_set_config(LUT1_OUT_PIN, &lut1_out_pin_conf);
+	lut1_out_pin_conf.mux_position = CCL_LUT1_OUT_MUX;
+	system_pinmux_pin_set_config(CCL_LUT1_OUT_PIN, &lut1_out_pin_conf);
 	//! [setup_12]
 
 	/** Initialize and enable the LUT1 with the user settings. */
