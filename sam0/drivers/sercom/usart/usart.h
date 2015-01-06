@@ -1076,6 +1076,7 @@ static inline void usart_enable_transceiver(
 			module->transmitter_enabled = true;
 			break;
 	}
+	_usart_wait_for_sync(module);
 }
 
 /**
