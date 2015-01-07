@@ -223,6 +223,11 @@ static enum status_code _usart_set_config(
 	/* Write configuration to CTRLA */
 	usart_hw->CTRLA.reg = ctrla;
 
+#ifdef FEATURE_USART_RS485
+	usart_hw->CTRLC.reg &= ~(SERCOM_USART_CTRLC_GTIME(0x7));
+	usart_hw->CTRLC.reg |= SERCOM_USART_CTRLC_GTIME(config->rs485_guard_time);
+#endif
+
 	return STATUS_OK;
 }
 
