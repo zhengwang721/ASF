@@ -42,12 +42,12 @@
 static volatile uint32_t EPD_Counter;
 //static uint8_t spi_flag=FALSE;
 #if (SAM4L)
-/* The first one is meaningless */
+///* The first one is meaningless */
 static const uint32_t divisors[5] = { 0, 2, 8, 32, 128};
 #elif (MEGA_RF)
-/* The last one is meaningless */
-static const uint32_t divisors[5] = { 0, 1, 8, 64, 256, 1024, 0, 0};
-/* The last one is meaningless */
+///* The last one is meaningless */
+static const uint32_t divisors[7] = { 0, 1, 8, 64, 256, 1024};
+///* The last one is meaningless */
 #else 
 static const uint32_t divisors[5] = { 2, 8, 32, 128, 0};
 #endif

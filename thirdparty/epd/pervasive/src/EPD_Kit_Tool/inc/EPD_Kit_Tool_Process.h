@@ -65,7 +65,7 @@ typedef struct {
 #define Firmware_Version EPD_KIT_TOOL_VERSION
 #define KitID_Number     EPD_KIT_TOOL_KIT_ID
 
-#include "EPD_Led.h"
+#include "EPD_LED.h"
 #include "Char.h"
 #include "Mem_Flash.h"
 #include "Uart_Driver.h"
