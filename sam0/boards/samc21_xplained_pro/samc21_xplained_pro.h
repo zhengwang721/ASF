@@ -3,7 +3,7 @@
  *
  * \brief SAM C21 Xplained Pro board definition
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -409,6 +409,30 @@ void system_board_init(void);
 #define EDBG_CDC_SERCOM_PINMUX_PAD3  PINMUX_PB11D_SERCOM4_PAD3
 #define EDBG_CDC_SERCOM_DMAC_ID_TX   SERCOM4_DMAC_ID_TX
 #define EDBG_CDC_SERCOM_DMAC_ID_RX   SERCOM4_DMAC_ID_RX
+/** @} */
+
+/** \name CCL interface definitions
+ * @{
+ */
+#define CCL_LUT0_IN0_MUX  MUX_PA16I_CCL_IN0
+#define CCL_LUT0_IN1_MUX  MUX_PA17I_CCL_IN1
+#define CCL_LUT0_IN2_MUX  MUX_PA18I_CCL_IN2
+#define CCL_LUT0_OUT_MUX  MUX_PA19I_CCL_OUT0
+
+#define CCL_LUT0_IN0_PIN  PIN_PA16I_CCL_IN0
+#define CCL_LUT0_IN1_PIN  PIN_PA17I_CCL_IN1
+#define CCL_LUT0_IN2_PIN  PIN_PA18I_CCL_IN2
+#define CCL_LUT0_OUT_PIN  PIN_PA19I_CCL_OUT0
+
+#define CCL_LUT1_IN0_MUX  MUX_PA08I_CCL_IN3
+#define CCL_LUT1_IN1_MUX  MUX_PA09I_CCL_IN4
+#define CCL_LUT1_IN2_MUX  MUX_PA10I_CCL_IN5
+#define CCL_LUT1_OUT_MUX  MUX_PA11I_CCL_OUT1
+
+#define CCL_LUT1_IN0_PIN  PIN_PA08I_CCL_IN3
+#define CCL_LUT1_IN1_PIN  PIN_PA09I_CCL_IN4
+#define CCL_LUT1_IN2_PIN  PIN_PA10I_CCL_IN5
+#define CCL_LUT1_OUT_PIN  PIN_PA11I_CCL_OUT1
 /** @} */
 
 #ifdef __cplusplus
