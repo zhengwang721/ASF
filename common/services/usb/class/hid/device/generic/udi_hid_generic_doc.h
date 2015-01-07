@@ -52,7 +52,7 @@
  * - \ref asfdoc_udi_hid_generic_exqsg
  * - \ref asfdoc_udi_hid_generic_config_examples
  *
- * For more details for Atmel® Software Framework (ASF) USB Device Stack and
+ * For more details for Atmel庐 Software Framework (ASF) USB Device Stack and
  * USB Device HID generic, refer to following application notes:
  * - <a href="http://www.atmel.com/dyn/resources/prod_documents/doc8360.pdf">
  *   AVR4900: ASF - USB Device Stack</a>
@@ -108,6 +108,9 @@ typedef struct {
 
 
 /** By default no string associated to this interface. */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef UDI_HID_GENERIC_STRING_ID
 #define UDI_HID_GENERIC_STRING_ID 0
 #endif

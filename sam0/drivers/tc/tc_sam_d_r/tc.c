@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 #include "tc.h"
 
@@ -540,7 +543,6 @@ enum status_code tc_set_compare_value(
 	/* Sanity check arguments */
 	Assert(module_inst);
 	Assert(module_inst->hw);
-	Assert(compare);
 
 	/* Get a pointer to the module's hardware instance */
 	Tc *const tc_module = module_inst->hw;

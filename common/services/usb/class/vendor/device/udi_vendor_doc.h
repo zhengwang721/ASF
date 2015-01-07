@@ -52,7 +52,7 @@
  * - \ref asfdoc_udi_vendor_exqsg
  * - \ref asfdoc_udi_vendor_config_examples
  *
- * For more details for Atmel® Software Framework (ASF) USB Device Stack, and
+ * For more details for Atmel庐 Software Framework (ASF) USB Device Stack, and
  * USB Device Vendor, refer to following application notes:
  * - <a href="http://www.atmel.com/dyn/resources/prod_documents/doc8360.pdf">
  *   AVR4900: ASF - USB Device Stack</a>
@@ -88,6 +88,9 @@ extern UDC_DESC_STORAGE udi_api_t udi_api_vendor;
  */
 
  /** Endpoint descriptors. */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #if UDI_VENDOR_EPS_SIZE_INT_FS
 # define UDI_VENDOR_EPS_INT_DESC \
 	.ep_interrupt_in.bLength           = sizeof(usb_ep_desc_t),\
