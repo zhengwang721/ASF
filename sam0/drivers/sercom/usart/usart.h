@@ -1317,7 +1317,6 @@ static inline bool lin_master_transmission_status(struct usart_module *const mod
  * - \subpage asfdoc_sam0_sercom_usart_callback_use_case
  * \endif
  * - \subpage asfdoc_sam0_sercom_usart_dma_use_case
- * - \subpage asfdoc_sam0_sercom_usart_rs485_use_case
  * - \subpage asfdoc_sam0_sercom_usart_lin_use_case
  */
 
