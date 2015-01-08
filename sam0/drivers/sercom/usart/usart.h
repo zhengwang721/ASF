@@ -41,13 +41,16 @@
  * \asf_license_stop
  *
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef USART_H_INCLUDED
 #define USART_H_INCLUDED
 
 /**
  * \defgroup asfdoc_sam0_sercom_usart_group SAM Serial USART Driver (SERCOM USART)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
  * and management of the SERCOM module in its USART mode to transfer or receive
  * USART data frames. The following driver API modes are covered by this
  * manual:
@@ -126,6 +129,7 @@
  *    <td>SAM D21/R21/D10/D11/L21/C21</td>
  *  </tr>
  *  <tr>
+ *    <td>FEATURE_USART_RS485</td>
  *    <td>FEATURE_USART_LIN_MASTER</td>
  *    <td>SAM C21</td>
  *  </tr>
@@ -289,9 +293,12 @@ extern "C" {
 /** Usart start buffer overflow notification. */
 #  define FEATURE_USART_IMMEDIATE_BUFFER_OVERFLOW_NOTIFICATION
 #endif
+
 #if (SAMC21) || defined(__DOXYGEN__)
 /** LIN master mode. */
 #define FEATURE_USART_LIN_MASTER
+/** RS485 mode. */
+#  define FEATURE_USART_RS485
 #endif
 /*@}*/
 
@@ -488,6 +495,16 @@ enum usart_signal_mux_settings {
 	USART_RX_3_TX_2_XCK_3 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO(1)),
 	/** MUX setting USART_RX_3_TX_0_RTS_2_CTS_3. */
 	USART_RX_3_TX_0_RTS_2_CTS_3 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO(2)),
+#ifdef FEATURE_USART_RS485
+	/** MUX setting USART_RX_0_TX_0_XCK_1_TE_2. */
+	USART_RX_0_TX_0_XCK_1_TE_2 = (SERCOM_USART_CTRLA_RXPO(0) | SERCOM_USART_CTRLA_TXPO(3)),
+	/** MUX setting USART_RX_1_TX_0_XCK_1_TE_2. */
+	USART_RX_1_TX_0_XCK_1_TE_2 = (SERCOM_USART_CTRLA_RXPO(1) | SERCOM_USART_CTRLA_TXPO(3)),
+	/** MUX setting USART_RX_2_TX_0_XCK_1_TE_2. */
+	USART_RX_2_TX_0_XCK_1_TE_2 = (SERCOM_USART_CTRLA_RXPO(2) | SERCOM_USART_CTRLA_TXPO(3)),
+	/** MUX setting USART_RX_3_TX_0_XCK_1_TE_2. */
+	USART_RX_3_TX_0_XCK_1_TE_2 = (SERCOM_USART_CTRLA_RXPO(3) | SERCOM_USART_CTRLA_TXPO(3)),
+#endif
 #else
 	/** MUX setting RX_0_TX_0_XCK_1. */
 	USART_RX_0_TX_0_XCK_1 = (SERCOM_USART_CTRLA_RXPO(0)),
@@ -574,6 +591,32 @@ enum usart_sample_adjustment {
 };
 #endif
 
+#ifdef FEATURE_USART_RS485
+/**
+ * \brief RS485 Guard Time
+ *
+ * The value of RS485 guard time.
+ */
+enum rs485_guard_time {
+	/*The guard time is 0-bit time. */
+	RS485_GUARD_TIME_0_BIT = 0,
+	/*The guard time is 1-bit time. */
+	RS485_GUARD_TIME_1_BIT,
+	/*The guard time is 2-bit times. */
+	RS485_GUARD_TIME_2_BIT,
+	/*The guard time is 3-bit times. */
+	RS485_GUARD_TIME_3_BIT,
+	/*The guard time is 4-bit times. */
+	RS485_GUARD_TIME_4_BIT,
+	/*The guard time is 5-bit times. */
+	RS485_GUARD_TIME_5_BIT,
+	/*The guard time is 6-bit times. */
+	RS485_GUARD_TIME_6_BIT,
+	/*The guard time is 7-bit times. */
+	RS485_GUARD_TIME_7_BIT,
+};	
+#endif
+
 /**
  * \brief USART Transceiver
  *
@@ -637,6 +680,9 @@ struct usart_config {
 #ifdef FEATURE_USART_START_FRAME_DECTION
 	/** Enable start of frame dection. */
 	bool start_frame_detection_enable;
+#endif
+#ifdef FEATURE_USART_RS485
+	enum rs485_guard_time rs485_guard_time;
 #endif
 #ifdef FEATURE_USART_COLLISION_DECTION
 	/** Enable collision dection. */
@@ -922,6 +968,9 @@ static inline void usart_get_config_defaults(
 #endif
 #ifdef FEATURE_USART_COLLISION_DECTION
 	config->collision_detection_enable                  = false;
+#endif
+#ifdef FEATURE_USART_RS485
+	config->rs485_guard_time = RS485_GUARD_TIME_0_BIT;
 #endif
 }
 

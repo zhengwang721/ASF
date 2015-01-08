@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef SYSTEM_H_INCLUDED
 #define SYSTEM_H_INCLUDED
 
@@ -57,7 +60,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_system_group SAM System Driver (SYSTEM)
  *
- * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
  * and management of the device's system relation functionality, necessary for
  * the basic device operation. This is not limited to a single peripheral, but
  * extends across multiple hardware peripherals.
@@ -173,7 +176,7 @@ extern "C" {
  *
  * The SAM device embeds up to three performance level (PL0, PL1 and PL2).
  * Each performance level defines a maximum frequency and a corresponding
- * consumption in μA/MHz,when the application selects a new performance level,
+ * consumption in 渭A/MHz,when the application selects a new performance level,
  * the voltage applied on the full logic area moves from a value to another,
  * it can reduce the active consumption while decreasing the maximum frequency
  * of the device.

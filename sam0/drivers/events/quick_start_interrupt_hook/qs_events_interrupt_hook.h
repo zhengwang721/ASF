@@ -175,3 +175,6 @@
  * -# Start the timer/counter.
  * \snippet qs_events_interrupt_hook.c main_2
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */

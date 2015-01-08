@@ -53,7 +53,9 @@
  * \section asfdoc_sam0_eeprom_basic_use_case_prereq Prerequisites
  * The device's fuses must be configured to reserve a sufficient number of
  * FLASH memory rows for use by the EEPROM emulator service, before the service
- * can be used.
+ * can be used. That is: \c NVMCTRL_FUSES_EEPROM_SIZE has to be set to less
+ * than 0x5 in the fuse setting, then there will be more than 8 pages size for
+ * EEPROM. Atmel Studio can be used to set this fuse(Tools->Device Programming).
  *
  * \section asfdoc_sam0_eeprom_basic_use_case_setup Setup
  *
@@ -99,4 +101,7 @@
  *    internal emulator write cache afterwards to ensure it is immediately
  *    written to physical non-volatile memory.
  *    \snippet qs_emulator_basic.c write_page
+ */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
