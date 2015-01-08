@@ -129,8 +129,8 @@
 
 /* DPLL GCLK reference configuration */
 #  define CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR GCLK_GENERATOR_1
-/* DPLL GCLK 32K reference configuration */
-#  define CONF_CLOCK_DPLL_REFERENCE_GCLK_32K_GENERATOR GCLK_GENERATOR_1
+/* DPLL GCLK lock timer configuration */
+#  define CONF_CLOCK_DPLL_LOCK_GCLK_GENERATOR     GCLK_GENERATOR_1
 
 /* Set this to true to configure the GCLK when running clocks_init. If set to
  * false, none of the GCLK generators will be configured in clocks_init(). */

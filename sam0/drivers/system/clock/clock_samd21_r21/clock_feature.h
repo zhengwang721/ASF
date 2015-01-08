@@ -3,7 +3,7 @@
  *
  * \brief SAM Clock Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1136,11 +1136,11 @@ static inline enum status_code system_apb_clock_clear_mask(
  * \brief Reference clock source of the DPLL module.
  */
 enum system_clock_source_dpll_reference_clock {
-	/** Select CLK_DPLL_REF0 as clock reference. */
+	/** Select XOSC32K as clock reference. */
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0,
-	/** Select CLK_DPLL_REF1 as clock reference. */
+	/** Select XOSC as clock reference. */
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF1,
-	/** Select GCLK_DPLL as clock reference. */
+	/** Select GCLK as clock reference. */
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK,
 };
 

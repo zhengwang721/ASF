@@ -946,7 +946,7 @@ void system_clock_init(void)
 	struct system_gclk_chan_config dpll_gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&dpll_gclk_chan_conf);
 	if (CONF_CLOCK_DPLL_LOCK_TIME != SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT) {
-		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_REFERENCE_GCLK_32K_GENERATOR;
+		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_LOCK_GCLK_GENERATOR;
 		system_gclk_chan_set_config(OSCCTRL_GCLK_ID_FDPLL32K, &dpll_gclk_chan_conf);
 		system_gclk_chan_enable(OSCCTRL_GCLK_ID_FDPLL32K);
 	}
