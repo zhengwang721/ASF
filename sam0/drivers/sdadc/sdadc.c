@@ -3,7 +3,7 @@
  *
  * \brief SAM Sigma-Delta Analog-to-Digital Converter (SDADC) Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,8 +54,6 @@
 */
 static inline void _sdadc_configure_ain_pin(uint32_t pin)
 {
-#define PIN_INVALID_SDADC_AIN    0xFFFFUL
-
 	/* Pinmapping table for AINxx -> GPIO pin number */
 	const uint32_t pinmapping[] = {
 #if (SAMC21E)
@@ -72,7 +70,7 @@ static inline void _sdadc_configure_ain_pin(uint32_t pin)
 #endif
 	};
 
-	uint32_t pin_map_result = PIN_INVALID_SDADC_AIN;
+	uint32_t pin_map_result;
 
 	struct system_pinmux_config config;
 	system_pinmux_get_config_defaults(&config);
