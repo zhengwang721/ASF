@@ -279,8 +279,8 @@
 #  error CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR not defined in conf_clock.h
 #endif
 
-#if !defined(CONF_CLOCK_DPLL_REFERENCE_GCLK_32K_GENERATOR)
-#  error CONF_CLOCK_DPLL_REFERENCE_GCLK_32K_GENERATOR not defined in conf_clock.h
+#if !defined(CONF_CLOCK_DPLL_LOCK_GCLK_GENERATOR)
+#  error CONF_CLOCK_DPLL_LOCK_GCLK_GENERATOR not defined in conf_clock.h
 #endif
 
 
