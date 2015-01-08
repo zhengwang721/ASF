@@ -51,7 +51,8 @@
 //! [buf_length]
 
 //! [buffer]
-static uint8_t buffer[BUF_LENGTH] = {
+static uint8_t buffer_rx[BUF_LENGTH] = {0x00,};
+static uint8_t buffer_expect[BUF_LENGTH] = {
 		0x00, 0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09,
 		 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13
 };
@@ -82,10 +83,10 @@ void configure_spi_slave_callbacks(void)
 {
 //! [reg_callback]
 	spi_register_callback(&spi_slave_instance, spi_slave_callback,
-			SPI_CALLBACK_BUFFER_TRANSMITTED);
+			SPI_CALLBACK_BUFFER_RECEIVED);
 //! [reg_callback]
 //! [en_callback]
-	spi_enable_callback(&spi_slave_instance, SPI_CALLBACK_BUFFER_TRANSMITTED);
+	spi_enable_callback(&spi_slave_instance, SPI_CALLBACK_BUFFER_RECEIVED);
 //! [en_callback]
 }
 //! [conf_callback]
@@ -142,6 +143,8 @@ void configure_spi_slave(void)
 int main(void)
 {
 //! [main_start]
+	uint8_t result = 0;
+	
 	/* Initialize system */
 //! [system_init]
 	system_init();
@@ -156,19 +159,38 @@ int main(void)
 //! [main_start]
 
 //! [main_use_case]
-//! [write]
-	spi_write_buffer_job(&spi_slave_instance, buffer, BUF_LENGTH);
-//! [write]
+//! [read]
+	spi_read_buffer_job(&spi_slave_instance, buffer_rx, BUF_LENGTH, 0x00);
+//! [read]
 //! [transf_complete]
 	while(!transfer_complete_spi_slave) {
 		/* Wait for transfer from master */
 	}
 //! [transf_complete]
-
+//! [compare]
+for (uint8_t i = 0; i < BUF_LENGTH; i++) {
+	if(buffer_rx[i] != buffer_expect[i]) {
+		result++;
+	}
+}
+//! [compare]
 
 //! [inf_loop]
 	while (true) {
 		/* Infinite loop */
+		if (result) {
+			port_pin_toggle_output_level(LED_0_PIN);
+			/* Add a short delay to see LED toggle */
+			volatile uint32_t delay = 30000;
+			while(delay--) {
+			}
+		} else {
+			port_pin_toggle_output_level(LED_0_PIN);
+			/* Add a short delay to see LED toggle */
+			volatile uint32_t delay = 600000;
+			while(delay--) {
+			}
+		}
 	}
 //! [inf_loop]
 //! [main_use_case]
