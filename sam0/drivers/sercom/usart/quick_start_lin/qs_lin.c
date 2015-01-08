@@ -50,8 +50,6 @@
 static struct usart_module cdc_instance,lin_instance;
 //! [module_inst]
 
-#define LIN_COMMAND_INTERVAL 2
-
 //! [lin_id]
 #define LIN_ID_FIELD_VALUE 0x64
 //! [lin_id]
@@ -59,7 +57,7 @@ static struct usart_module cdc_instance,lin_instance;
 //! [lin_buffer]
 #define LIN_DATA_LEN 5
 static uint8_t rx_buffer[LIN_DATA_LEN]={0};
-const static uint8_t tx_buffer[LIN_DATA_LEN]={0x4a,0x55,0x93,0xe5,0x19};
+const static uint8_t tx_buffer[LIN_DATA_LEN]={0x4a,0x55,0x93,0xe5,0xe6};
 //! [lin_buffer]
 
 //! [module_var]
@@ -72,7 +70,7 @@ static void configure_usart_cdc(void)
 
 	struct usart_config config_cdc;
 	usart_get_config_defaults(&config_cdc);
-	config_cdc.baudrate	 = 38400;
+	config_cdc.baudrate	 = 115200;
 	config_cdc.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
 	config_cdc.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
 	config_cdc.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
@@ -87,31 +85,30 @@ static void configure_usart_cdc(void)
 static void lin_read_callback(const struct usart_module *const usart_module)
 {
 
+	uint8_t i = 0;
+
 	if (CONF_LIN_NODE_TYPE == LIN_MASTER_NODE) {
-		memset(rx_buffer,0,sizeof(rx_buffer));
-		if (usart_read_buffer_wait(&lin_instance,
-			(uint8_t *)rx_buffer, LIN_DATA_LEN) == STATUS_OK) {
-			for(uint8_t i = 0; i < LIN_DATA_LEN; i++) {
-				if(rx_buffer[i] != tx_buffer[i]) {
-					printf("Data error\r\n");
-				} else {
-					printf("Slave response: OK\r\n");
-				}
+		for(i = 0; i < LIN_DATA_LEN; i++){
+			if(rx_buffer[i] != tx_buffer[i]) {
+				printf("Data error\r\n");
+				break;
 			}
+		}
+		if(i == LIN_DATA_LEN){
+			printf("Slave response: OK\r\n");
 		}
 	} else if (CONF_LIN_NODE_TYPE == LIN_SLAVE_NODE) {
-		memset(rx_buffer,0,sizeof(rx_buffer));
-		if(usart_read_buffer_wait(&lin_instance,
-			(uint8_t *)rx_buffer, 1) == STATUS_OK) {
-			if(rx_buffer[0] == LIN_ID_FIELD_VALUE) {
-				printf("Receive ID field from mater: OK \r\n");
-				usart_write_buffer_wait(&lin_instance,
-					(uint8_t *)tx_buffer, LIN_DATA_LEN);
-			} else {
-				printf("The data is not for me\r\n");
-			}
+		if(rx_buffer[0] == LIN_ID_FIELD_VALUE) {
+			usart_enable_transceiver(&lin_instance,USART_TRANSCEIVER_TX);
+			printf("Receive ID field from mater: OK \r\n");
+			usart_write_buffer_job(&lin_instance,
+				(uint8_t *)tx_buffer, LIN_DATA_LEN);
 		}
 	}
+}
+static void lin_read_error_callback(const struct usart_module *const usart_module)
+{
+      printf("Data Read error\r\n");
 }
 
 static void configure_usart_lin(void)
@@ -140,11 +137,11 @@ static void configure_usart_lin(void)
 	config_lin.pinmux_pad2 = LIN_USART_SERCOM_PINMUX_PAD2;
 	config_lin.pinmux_pad3 = LIN_USART_SERCOM_PINMUX_PAD3;
 
-	/* Enable receiver and transmitter */
-	config_lin.receiver_enable  = true;
-	config_lin.transmitter_enable = true;
+	/* Disable receiver and transmitter */
+	config_lin.receiver_enable  = false;
+	config_lin.transmitter_enable = false;
 
-	if (CONF_LIN_NODE_TYPE == LIN_MASTER_NODE) {
+	if (CONF_LIN_NODE_TYPE == LIN_SLAVE_NODE) {
 		config_lin.lin_slave_enable = true;
 	}
 
@@ -157,6 +154,10 @@ static void configure_usart_lin(void)
 	usart_register_callback(&lin_instance,
 		lin_read_callback, USART_CALLBACK_BUFFER_RECEIVED);
 	usart_enable_callback(&lin_instance, USART_CALLBACK_BUFFER_RECEIVED);
+	  usart_register_callback(&lin_instance,
+		lin_read_error_callback, USART_CALLBACK_ERROR);
+	usart_enable_callback(&lin_instance, USART_CALLBACK_ERROR);
+	system_interrupt_enable_global();
 }
 //! [lin_setup]
 
@@ -166,7 +167,6 @@ int main(void)
 {
 //! [setup_init]
 	system_init();
-	delay_init();
 	configure_usart_cdc();
 //! [setup_init]
 
@@ -176,13 +176,24 @@ int main(void)
 //! [configure_lin]
 
 //! [lin_master_cmd]
-	while(1) {
-		if (CONF_LIN_NODE_TYPE == LIN_MASTER_NODE) {
-			if (lin_master_transmission_status(&lin_instance)) {
-				lin_master_send_cmd(&lin_instance,LIN_MASTER_AUTO_TRANSMIT_CMD);
-				usart_write_wait(&lin_instance,LIN_ID_FIELD_VALUE);
+	if (CONF_LIN_NODE_TYPE == LIN_MASTER_NODE) {
+		printf("LIN Works in Master Mode\r\n");
+		if (lin_master_transmission_status(&lin_instance)) {
+			usart_enable_transceiver(&lin_instance,USART_TRANSCEIVER_TX);
+			lin_master_send_cmd(&lin_instance,LIN_MASTER_AUTO_TRANSMIT_CMD);
+			usart_write_wait(&lin_instance,LIN_ID_FIELD_VALUE);
+			usart_enable_transceiver(&lin_instance,USART_TRANSCEIVER_RX);
+			while(1) {
+				usart_read_buffer_job(&lin_instance,
+				(uint8_t *)rx_buffer, 5);
 			}
-			delay_s(LIN_COMMAND_INTERVAL);
+		}
+	} else {
+		printf("LIN Works in Slave Mode\r\n");
+		usart_enable_transceiver(&lin_instance,USART_TRANSCEIVER_RX);
+		while(1) {
+			usart_read_buffer_job(&lin_instance,
+			(uint8_t *)rx_buffer, 1);
 		}
 	}
 //! [lin_master_cmd]

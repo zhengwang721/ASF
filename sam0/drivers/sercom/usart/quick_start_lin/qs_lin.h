@@ -49,7 +49,7 @@
  *
  * This quick start will set up LIN frame format transmission according to your
  * configuration \c CONF_LIN_NODE_TYPE.
- * For LIN master, it will send LIN command every \c LIN_COMMAND_INTERVAL seconds.
+ * For LIN master, it will send LIN command after startup.
  * For LIN salve, once received a format from LIN master with ID \c LIN_ID_FIELD_VALUE,
  * it will reply four data bytes plus a checksum.
  *
@@ -58,10 +58,7 @@
  * \subsection asfdoc_sam0_sercom_usart_lin_use_case_prereq Prerequisites
  * When verify data transmission between LIN master and slave, two boards are needed:
  * one is for LIN master and the other is for LIN slave.
- * connect LIN master TX/RX PIN with LIN slave RX/TX PIN.
- * - SAM C21 Xplained Pro board
- *  -  LIN master: PA06 <--> LIN slave: PA07
- *  -  LIN master: PA07 <--> LIN slave: PA06
+ * connect LIN master LIN PIN with LIN slave LIN PIN.
  *
  * \subsection asfdoc_sam0_usart_lin_use_case_setup_code Code
  * Add to the main application source file, outside of any functions:
@@ -102,6 +99,6 @@
  * \subsection asfdoc_sam0_usart_lin_use_case_main_flow Workflow
  * -# Set up USART LIN module.
  *     \snippet qs_lin.c configure_lin
- * -# For LIN master, sending LIN command every \c LIN_COMMAND_INTERVAL .
+ * -# For LIN master, sending LIN command. For LIN slaver, start reading data .
  *     \snippet qs_lin.c lin_master_cmd
  */

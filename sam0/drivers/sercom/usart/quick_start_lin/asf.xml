@@ -9,7 +9,6 @@
 		<build type="include-path" value="."/>
 		<require idref="sam0.drivers.sercom.usart"/>
 		<require idref="sam0.drivers.port"/>
-		<require idref="common2.services.delay"/>
 		<require idref="sam0.utils"/>
 		<require idref="sam0.utils.stdio"/>
 		<require idref="sam0.utils.stdio.stdio_serial"/>
