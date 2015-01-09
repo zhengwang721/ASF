@@ -1122,7 +1122,7 @@ void EPD_init(void) {
 *
 * \param EPD_type_index The defined EPD size
 */
-static void COG_driver_EPDtype_select(uint8_t EPD_type_index) {
+void COG_driver_EPDtype_select(uint8_t EPD_type_index) {
 	switch(EPD_type_index) {
 		case EPD_144:
 		data_line_even = &COG_Line.line_data_by_size.line_data_for_144.even[0];
@@ -1862,7 +1862,7 @@ void EPD_init(void) {
 *
 * \param EPD_type_index The defined EPD size
 */
-static void COG_driver_EPDtype_select(uint8_t EPD_type_index) {
+void COG_driver_EPDtype_select(uint8_t EPD_type_index) {
 	switch(EPD_type_index) {
 		case EPD_144:
 		data_line_even = &COG_Line.line_data_by_size.line_data_for_144.even[0];

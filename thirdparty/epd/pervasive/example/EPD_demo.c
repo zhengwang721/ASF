@@ -77,9 +77,6 @@ for(;;) {
 		/* The interval of two images alternatively change is 10 seconds */
 		delay_ms(10000);
 		
-
-
-
 	}
 
 #endif
