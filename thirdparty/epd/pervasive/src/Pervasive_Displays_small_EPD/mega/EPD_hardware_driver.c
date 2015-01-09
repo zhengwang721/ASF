@@ -60,23 +60,40 @@ static const uint32_t divisors[5] = { 2, 8, 32, 128, 0};
 * actual value:  1.000mSec
 */
 
+
+/**
+* \brief Set up EPD Timer for 1 mSec interrupts
+*
+* \note
+* desired value: 1mSec
+* actual value:  1.000mSec
+*/
+
 void EPD_timer_handler(void){
 	
-	//if ( tc_is_overflow(EPD_TC_TIMER_ID) == true) {
-		EPD_Counter++;	
-		
-		// test //	
-		//debug_tgl_pin();
-		// test //
-		
-		
-		// test //
-		//uint32_t rc =0;
-		//rc = (sysclk_get_peripheral_bus_hz(EPD_TC_TIMER_ID) / divisors[EPD_TC_ClockSignalSel] );
-		//rc = (rc/10000);
-		//rc = 65536 - rc;
-		// test//
+	////if ( tc_is_overflow(EPD_TC_TIMER_ID) == true) {
+		//EPD_Counter++;	
+		//
+		//// test //	
+		////debug_tgl_pin();
+		//// test //
+		//
+		//
+		//// test //
+		////uint32_t rc =0;
+		////rc = (sysclk_get_peripheral_bus_hz(EPD_TC_TIMER_ID) / divisors[EPD_TC_ClockSignalSel] );
+		////rc = (rc/10000);
+		////rc = 65536 - rc;
+		//// test//
+	////}
+	
+	//volatile uint32_t status;
+	//status = REG_TC0_SR0 ;
+	//if ( (status & TC_SR_CPCS) == TC_SR_CPCS ) {
+		EPD_Counter++;
 	//}
+	
+	
 }
 
 /**
@@ -90,13 +107,7 @@ void EPD_timer_handler(void){
 	//}
 //}
 
-/**
-* \brief Set up EPD Timer for 1 mSec interrupts
-*
-* \note
-* desired value: 1mSec
-* actual value:  1.000mSec
-*/
+
 static void initialize_EPD_timer(void) {
 		
 	//***********************SAM4L ***********************************//
@@ -195,7 +206,7 @@ uint32_t get_current_time_tick(void) {
 * \brief Interrupt Service Routine for system tick counter
 */
 void SysTick_Handler(void) {
-	//EPD_Counter++;
+	EPD_Counter++;
 }
 
 /**
@@ -203,11 +214,11 @@ void SysTick_Handler(void) {
 * \param ms The number of mini-seconds
 */
 void sys_delay_ms(unsigned int ms) {
-	//uint16_t curTicks;
-	//start_EPD_timer();
-	//curTicks = EPD_Counter;
-	//while ((EPD_Counter - curTicks) < ms) __WFI();
-	//stop_EPD_timer();
+	uint16_t curTicks;
+	start_EPD_timer();
+	curTicks = EPD_Counter;
+	while ((EPD_Counter - curTicks) < ms);
+	stop_EPD_timer();
 }
 
 /**
@@ -309,15 +320,14 @@ void PWM_run(uint16_t ms) {
 //struct usart_spi_device epd_device_conf = {
 	//.id =0,
 //};
-#elif (MEGA_RF)
+#else
 //* \brief The SPI device struct that should be initialized */
 struct spi_device epd_device_conf = {
 	//.id = IOPORT_CREATE_PIN(PORTB, 0)
 	.id = 0
 };
 
-#else
-//
+
 #endif
 
 
