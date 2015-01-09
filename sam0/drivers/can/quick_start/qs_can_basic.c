@@ -72,7 +72,7 @@ static uint8_t tx_message_1[CAN_DATA_LEN]={0x08,0x09,0x0A,0x0B,0x0C
 
 //! [can_receive_message_setting]
 static volatile uint32_t receive_flag = 0;
-static struct can_rx_element *rx_element;
+static struct can_rx_element_fifo_0 *rx_element;
 //! [can_receive_message_setting]
 
 //! [module_var]
@@ -113,11 +113,10 @@ static void configure_can(void)
 
 	can_module_init(&can_instance, CAN_MODULE, &config_can);
 
-	/* Reject all nonmatching frames and remote frames. */
-	can_set_global_filter(&can_instance, CAN_NONMATCHING_FRAMES_REJECT,
-			CAN_NONMATCHING_FRAMES_REJECT, true, true);
-
 	can_switch_mode(&can_instance, CAN_MODE_NORMAL_OPERATION);
+
+	/* Enable interrupts for this CAN module */
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_CAN0);
 }
 //! [can_init_setup]
 

@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM Control Area Network (CAN) Driver
+ * \brief SAM Control Area Network (CAN) Low Level Driver
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -48,11 +48,11 @@
 
 /* Message ram definition. */
 COMPILER_ALIGNED(4)
-static struct can_rx_element can0_rx_buffer[CONF_CAN0_RX_BUFFER_NUM];
+static struct can_rx_element_buffer can0_rx_buffer[CONF_CAN0_RX_BUFFER_NUM];
 COMPILER_ALIGNED(4)
-static struct can_rx_element can0_rx_fifo_0[CONF_CAN0_RX_FIFO_0_NUM];
+static struct can_rx_element_fifo_0 can0_rx_fifo_0[CONF_CAN0_RX_FIFO_0_NUM];
 COMPILER_ALIGNED(4)
-static struct can_rx_element can0_rx_fifo_1[CONF_CAN0_RX_FIFO_1_NUM];
+static struct can_rx_element_fifo_1 can0_rx_fifo_1[CONF_CAN0_RX_FIFO_1_NUM];
 COMPILER_ALIGNED(4)
 static struct can_tx_element can0_tx_buffer[CONF_CAN0_TX_BUFFER_NUM];
 COMPILER_ALIGNED(4)
@@ -65,11 +65,11 @@ COMPILER_ALIGNED(4)
 static struct can_et_message_filter_element can0_rx_extended_filter[CONF_CAN0_RX_EXTENDED_ID_FILTER_NUM];
 
 COMPILER_ALIGNED(4)
-static struct can_rx_element can1_rx_buffer[CONF_CAN1_RX_BUFFER_NUM];
+static struct can_rx_element_buffer can1_rx_buffer[CONF_CAN1_RX_BUFFER_NUM];
 COMPILER_ALIGNED(4)
-static struct can_rx_element can1_rx_fifo_0[CONF_CAN1_RX_FIFO_0_NUM];
+static struct can_rx_element_fifo_0 can1_rx_fifo_0[CONF_CAN1_RX_FIFO_0_NUM];
 COMPILER_ALIGNED(4)
-static struct can_rx_element can1_rx_fifo_1[CONF_CAN1_RX_FIFO_1_NUM];
+static struct can_rx_element_fifo_1 can1_rx_fifo_1[CONF_CAN1_RX_FIFO_1_NUM];
 COMPILER_ALIGNED(4)
 static struct can_tx_element can1_tx_buffer[CONF_CAN1_TX_BUFFER_NUM];
 COMPILER_ALIGNED(4)
@@ -118,6 +118,11 @@ static void _can_message_memory_init(Can *hw)
 		hw->TXEFC.reg = CAN_TXEFC_EFSA((uint32_t)can1_tx_event_fifo) |
 				CAN_TXEFC_EFS(CONF_CAN1_TX_EVENT_FIFO);
 	}
+
+	hw->RXESC.reg = CONF_CAN_RX_ELEMENT_DATA_SIZA_BUFFER |
+			CONF_CAN_RX_ELEMENT_DATA_SIZA_FIFO_0|
+			CONF_CAN_RX_ELEMENT_DATA_SIZA_FIFO_1;
+	hw->TXESC.reg = CONF_CAN_TX_ELEMENT_DATA_SIZA;
 }
 
 static void _can_set_configuration(Can *hw, struct can_config *config)
@@ -152,7 +157,43 @@ static void _can_set_configuration(Can *hw, struct can_config *config)
 		hw->CCCR.reg |= CAN_CCCR_CSA;
 	}
 
+	hw->TSCC.reg = CAN_TSCC_TCP(config->timestamp_prescaler) |
+			CAN_TSCC_TSS_INC_Val;
+
+	hw->TOCC.reg = CAN_TOCC_TOP(config->timeout_period) |
+			config->timeout_mode | CAN_TOCC_ETOC;
+
+	hw->TDCR.reg = CAN_TDCR_TDCO(config->delay_compensation_offset) |
+			CAN_TDCR_TDCF(config->delay_compensation_filter_window_length);
+
+	hw->GFC.reg = CAN_GFC_ANFS(config->nonmatching_frames_action_standard) |
+			CAN_GFC_ANFE(config->nonmatching_frames_action_extended);
+	if (config->remote_frames_standard_reject) {
+		hw->GFC.reg |= CAN_GFC_RRFS;
+	}
+	if (config->remote_frames_extended_reject) {
+		hw->GFC.reg |= CAN_GFC_RRFE;
+	}
+
+	hw->XIDAM.reg = config->extended_id_mask;
+
+	if (config->rx_fifo_0_overwrite) {
+		hw->RXF0C.reg |= CAN_RXF0C_F0OM;
+	}
+	hw->RXF0C.reg |= CAN_RXF0C_F0WM(config->rx_fifo_0_watermark);
+
+	if (config->rx_fifo_1_overwrite) {
+		hw->RXF1C.reg |= CAN_RXF1C_F1OM;
+	}
+	hw->RXF1C.reg |= CAN_RXF1C_F1WM(config->rx_fifo_1_watermark);
+
+	if (config->tx_queue_mode) {
+		hw->TXBC.reg |= CAN_TXBC_TFQM;
+	}
+
+	hw->TXEFC.reg |= CAN_TXEFC_EFWM(config->tx_event_fifo_watermark);
 }
+
 void can_module_init(struct can_module *const module_inst, Can *hw,
 		struct can_config *config)
 {
@@ -203,75 +244,110 @@ void can_module_init(struct can_module *const module_inst, Can *hw,
 
 void can_switch_mode(struct can_module *const module_inst, const enum can_mode mode)
 {
+	if (mode == CAN_MODE_SOFTWARE_INITIALIZATION) {
+		module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+		/* Wait for the sync. */
+		while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+	}
 	if (mode == CAN_MODE_NORMAL_OPERATION) {
 		module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
 		/* Wait for the sync. */
 		while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
 	}
 	if (mode == CAN_MODE_TEST) {
+		module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+		/* Wait for the sync. */
+		while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+
 		module_inst->hw->CCCR.reg |= CAN_CCCR_TEST;
+		module_inst->hw->CCCR.reg |= CAN_CCCR_MON;
 		module_inst->hw->TEST.reg |= CAN_TEST_LBCK;;
+
+		module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
+		/* Wait for the sync. */
+		while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
 	}
 }
 
-void can_set_rx_standand_filter(struct can_module *const module_inst,
+enum status_code can_set_rx_standand_filter(
+		struct can_module *const module_inst,
 		struct can_sd_message_filter_element *sd_filter, uint32_t index)
 {
 	if (module_inst->hw == CAN0) {
 		can0_rx_standard_filter[index].S0.reg = sd_filter->S0.reg;
+		return STATUS_OK;
 	}
 	if (module_inst->hw == CAN1) {
 		can1_rx_standard_filter[index].S0.reg = sd_filter->S0.reg;
+		return STATUS_OK;
 	}
+	return STATUS_ERR_INVALID_ARG;
 }
 
-void can_set_rx_extended_filter(struct can_module *const module_inst,
+enum status_code can_set_rx_extended_filter(
+		struct can_module *const module_inst,
 		struct can_et_message_filter_element *et_filter, uint32_t index)
 {
 	if (module_inst->hw == CAN0) {
 		can0_rx_extended_filter[index].F0.reg = et_filter->F0.reg;
 		can0_rx_extended_filter[index].F1.reg = et_filter->F1.reg;
+		return STATUS_OK;
 	}
 	if (module_inst->hw == CAN1) {
 		can1_rx_extended_filter[index].F0.reg = et_filter->F0.reg;
 		can1_rx_extended_filter[index].F1.reg = et_filter->F1.reg;
+		return STATUS_OK;
 	}
+	return STATUS_ERR_INVALID_ARG;
 }
 
-void can_get_rx_buffer_element(struct can_module *const module_inst,
-		struct can_rx_element *rx_element, uint32_t index)
+enum status_code can_get_rx_buffer_element(
+		struct can_module *const module_inst,
+		struct can_rx_element_buffer *rx_element, uint32_t index)
 {
 	if (module_inst->hw == CAN0) {
 		rx_element = &can0_rx_buffer[index];
+		return STATUS_OK;
 	}
 	if (module_inst->hw == CAN1) {
 		rx_element = &can1_rx_buffer[index];
+		return STATUS_OK;
 	}
+	return STATUS_ERR_INVALID_ARG;
 }
 
-void can_get_rx_fifo_0_element(struct can_module *const module_inst,
-		struct can_rx_element *rx_element, uint32_t index)
+enum status_code can_get_rx_fifo_0_element(
+		struct can_module *const module_inst,
+		struct can_rx_element_fifo_0 *rx_element, uint32_t index)
 {
 	if (module_inst->hw == CAN0) {
 		rx_element = &can0_rx_fifo_0[index];
+		return STATUS_OK;
 	}
 	if (module_inst->hw == CAN1) {
 		rx_element = &can1_rx_fifo_0[index];
+		return STATUS_OK;
 	}
+	return STATUS_ERR_INVALID_ARG;
 }
 
-void can_get_rx_fifo_1_element(struct can_module *const module_inst,
-		struct can_rx_element *rx_element, uint32_t index)
+enum status_code can_get_rx_fifo_1_element(
+		struct can_module *const module_inst,
+		struct can_rx_element_fifo_1 *rx_element, uint32_t index)
 {
 	if (module_inst->hw == CAN0) {
 		rx_element = &can0_rx_fifo_1[index];
+		return STATUS_OK;
 	}
 	if (module_inst->hw == CAN1) {
 		rx_element = &can1_rx_fifo_1[index];
+		return STATUS_OK;
 	}
+	return STATUS_ERR_INVALID_ARG;
 }
 
-void can_set_tx_buffer_element(struct can_module *const module_inst,
+enum status_code can_set_tx_buffer_element(
+		struct can_module *const module_inst,
 		struct can_tx_element *tx_element, uint32_t index)
 {
 	uint32_t i;
@@ -281,6 +357,7 @@ void can_set_tx_buffer_element(struct can_module *const module_inst,
 		for (i = 0; i < 8; i++) {
 			can0_tx_buffer[index].data[i] = tx_element->data[i];
 		}
+		return STATUS_OK;
 	}
 	if (module_inst->hw == CAN1) {
 		can1_tx_buffer[index].T0.reg = tx_element->T0.reg;
@@ -288,18 +365,23 @@ void can_set_tx_buffer_element(struct can_module *const module_inst,
 		for (i = 0; i < 8; i++) {
 			can1_tx_buffer[index].data[i] = tx_element->data[i];
 		}
+		return STATUS_OK;
 	}
-
+	return STATUS_ERR_INVALID_ARG;
 }
 
-void can_get_tx_event_fifo_element(struct can_module *const module_inst,
-		 struct can_tx_event_element *tx_event_element, uint32_t index)
+enum status_code can_get_tx_event_fifo_element(
+		struct can_module *const module_inst,
+		struct can_tx_event_element *tx_event_element, uint32_t index)
 {
 	if (module_inst->hw == CAN0) {
 		tx_event_element = &can0_tx_event_fifo[index];
+		return STATUS_OK;
 	}
 	if (module_inst->hw == CAN1) {
 		tx_event_element = &can1_tx_event_fifo[index];
+		return STATUS_OK;
 	}
+	return STATUS_ERR_INVALID_ARG;
 }
 
