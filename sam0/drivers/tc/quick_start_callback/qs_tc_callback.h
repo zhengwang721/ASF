@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
  * \page asfdoc_sam0_tc_callback_use_case Quick Start Guide for TC - Callback

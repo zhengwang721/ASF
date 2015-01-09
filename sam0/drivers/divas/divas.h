@@ -3,7 +3,7 @@
  *
  * \brief SAM Divide and Square Root Accelerator (DIVAS) Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -73,7 +73,8 @@
  * \section asfdoc_sam0_divas_module_overview Module Overview
  *
  * This driver provides an interface for the Divide and Square Root Accelerator
- * functions on the device. 
+ * functions on the device.
+ *
  * The DIVAS is a programmable 32-bit signed or unsigned hardware divider and a 
  * 32-bit unsigned square root hardware engine. When running signed division, 
  * both the input and the result will be in two's complement format. The result of
@@ -81,12 +82,13 @@
  * and the quotient is negative if the dividend and divisor have opposite signs.
  * When the square root input register is programmed, the square root function 
  * starts and the result will be stored in the Remainder register.
+ *
  * There are two ways to calculate the results.
- * - Invoke the APP functions
- * - Overload the EABI functions
+ * - Call the DIVAS API
+ * - Overload '/' and '%' operation
  * \note About overload, User can transparently access the DIVAS module when 
  * writing normal C code. E.g. "a = b / c;" or "a = b % c;" will be translated  
- * to a subroutine call which uses the DIVAS.
+ * to a subroutine call which uses the DIVAS. Except square root.
  * 
  * \subsection asfdoc_sam0_divas_module_overview_operand Operand Size
  *  - Divide
@@ -110,6 +112,7 @@
  * \subsection asfdoc_sam0_divas_module_overview_square Unsigned Square Root
  *  When the square root input register is programmed, the square root function 
  *  starts and the result will be stored in the Result and Remainder registers.
+ * \note The square root function can't overload.
  *
  * \section asfdoc_sam0_divas_special_considerations Special Considerations
  *
@@ -148,9 +151,9 @@ extern "C" {
  *  DIVAS signed division operator output data structure.
  */
 typedef struct {
-	/** signed division operator result: quotient. */
+	/** Signed division operator result: quotient. */
 	int32_t quotient; 
-	/** signed division operator result: remainder. */
+	/** Signed division operator result: remainder. */
 	int32_t remainder;
 } idiv_return;
 
@@ -160,9 +163,9 @@ typedef struct {
  *  DIVAS unsigned division operator output data structure.
  */
 typedef struct {
-	/** unsigned division operator result: quotient. */
+	/** Unsigned division operator result: quotient. */
 	uint32_t quotient; 
-	/** unsigned division operator result: remainder. */
+	/** Unsigned division operator result: remainder. */
 	uint32_t remainder;
 } uidiv_return; 
 
@@ -195,140 +198,36 @@ static inline void divas_disable_dlz(void)
 }
 
 /**
- * \name DIVAS Operation
+ * \name Call the DIVAS API Operation
  * @{
  */
 
-/**
- * \brief Signed division operation 
- *
- * Run the signed division operation and return the results.
- * \param[in]  numerator   The dividend of the signed division operation
- * \param[in]  denominator The divisor of the signed division operation
- *
- * \return The quotient of the DIVAS signed division operation.
- */
 int32_t divas_idiv(int32_t numerator, int32_t denominator);
-
-/**
- * \brief Unsigned division operation 
- *
- * Run the unsigned division operation and return the results.
- * \param[in]  numerator   The dividend of the unsigned division operation
- * \param[in]  denominator The divisor of the unsigned division operation
- *
- * \return The quotient of the DIVAS unsigned division operation.
- */
 uint32_t divas_uidiv(uint32_t numerator, uint32_t denominator);
-
-/**
- * \brief Signed division remainder operation 
- *
- * Run the signed division operation and return the remainder.
- * \param[in]  numerator   The dividend of the signed division operation
- * \param[in]  denominator The divisor of the signed division operation
- *
- * \return The remainder of the DIVAS signed division operation.
- */
 int32_t divas_idivmod(int32_t numerator, int32_t denominator);
-
-/**
- * \brief Unsigned division remainder operation 
- *
- * Run the unsigned division operation and return the remainder.
- * \param[in]  numerator   The dividend of the unsigned division operation
- * \param[in]  denominator The divisor of the unsigned division operation
- *
- * \return The remainder of the DIVAS unsigned division operation.
- */
 uint32_t divas_uidivmod(uint32_t numerator, uint32_t denominator);
-
-/**
- * \brief Square root operation 
- *
- * Run the square root operation and return the results.
- * \param[in]  radicand  The radicand of the Square root operation
- *
- * \return The result of the DIVAS square root operation.
- */
 uint32_t divas_sqrt(uint32_t radicand);
 
 /** @} */
 
 /**
- * \name DIVAS Operation Overloading
+ * \name DIVAS Overload '/' and '%' Operation
  * @{
  */
 
 #if DIVAS_OVERLOAD_MODE == true
-/**
- * \brief Signed division operation overload
- *
- * Run the signed division operation and return the results.
- * \param[in]  numerator   The dividend of the signed division operation
- * \param[in]  denominator The divisor of the signed division operation
- *
- * \return The quotient of the DIVAS signed division operation.
- */
+#  if defined ( __GNUC__ )
 int32_t __aeabi_idiv(int32_t numerator, int32_t denominator);
-
-/**
- * \brief Unsigned division operation overload
- *
- * Run the unsigned division operation and return the results.
- * \param[in]  numerator   The dividend of the unsigned division operation
- * \param[in]  denominator The divisor of the unsigned division operation
- *
- * \return The quotient of the DIVAS unsigned division operation.
- */
 uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator);
+uint64_t __aeabi_idivmod(int32_t numerator, int32_t denominator);
+uint64_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator);
 
-#if defined ( __GNUC__ )
-/**
- * \brief Signed division remainder operation overload
- *
- * Run the signed division operation and return the remainder.
- * \param[in]  numerator   The dividend of the signed division operation
- * \param[in]  denominator The divisor of the signed division operation
- *
- * \return The remainder of the DIVAS signed division operation.
- */
-int32_t __aeabi_idivmod(int32_t numerator, int32_t denominator);
-
-/**
- * \brief Unsigned division remainder operation overload
- *
- * Run the unsigned division operation and return the remainder.
- * \param[in]  numerator   The dividend of the unsigned division operation
- * \param[in]  denominator The divisor of the unsigned division operation
- *
- * \return The remainder of the DIVAS unsigned division operation.
- */
-uint32_t __aeabi_uidivmod(uint32_t numerator, uint32_t denominator);
-
-#elif defined ( __ICCARM__ )
-/**
- * \brief Signed division remainder operation overload
- *
- * Run the signed division operation and return the remainder.
- * \param[in]  numerator   The dividend of the signed division operation
- * \param[in]  denominator The divisor of the signed division operation
- *
- * \return The remainder of the DIVAS signed division operation.
- */
+#  elif defined ( __ICCARM__ )
+int32_t __aeabi_idiv(int32_t numerator, int32_t denominator);
+uint32_t __aeabi_uidiv(uint32_t numerator, uint32_t denominator);
 __value_in_regs idiv_return __aeabi_idivmod(int numerator, int denominator);
-
-/**
- * \brief Unsigned division remainder operation overload
- *
- * Run the unsigned division operation and return the remainder.
- * \param[in]  numerator   The dividend of the unsigned division operation
- * \param[in]  denominator The divisor of the unsigned division operation
- *
- * \return The remainder of the DIVAS unsigned division operation.
- */
 __value_in_regs uidiv_return __aeabi_uidivmod(unsigned numerator, unsigned denominator); 
-#endif
+#  endif
 #endif
 
 /** @} */
@@ -404,7 +303,7 @@ __value_in_regs uidiv_return __aeabi_uidivmod(unsigned numerator, unsigned denom
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>12/2014</td>
+ *		<td>01/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>

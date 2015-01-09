@@ -3,7 +3,7 @@
  *
  * \brief SAM L21 Xplained Pro board definition
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #ifndef SAML21_XPLAINED_PRO_H_INCLUDED
@@ -534,6 +537,30 @@ void system_board_init(void);
 #define USB_ID_EIC_LINE              2
 #define USB_ID_EIC_MUX               MUX_PB02A_EIC_EXTINT2
 #define USB_ID_EIC_PINMUX            PINMUX_PB02A_EIC_EXTINT2
+/** @} */
+
+/** \name CCL interface definitions
+ * @{
+ */
+#define CCL_LUT0_IN0_MUX  MUX_PA04I_CCL_IN0
+#define CCL_LUT0_IN1_MUX  MUX_PA05I_CCL_IN1
+#define CCL_LUT0_IN2_MUX  MUX_PA06I_CCL_IN2
+#define CCL_LUT0_OUT_MUX  MUX_PA07I_CCL_OUT0
+
+#define CCL_LUT0_IN0_PIN  PIN_PA04I_CCL_IN0
+#define CCL_LUT0_IN1_PIN  PIN_PA05I_CCL_IN1
+#define CCL_LUT0_IN2_PIN  PIN_PA06I_CCL_IN2
+#define CCL_LUT0_OUT_PIN  PIN_PA07I_CCL_OUT0
+
+#define CCL_LUT1_IN0_MUX  MUX_PA08I_CCL_IN3
+#define CCL_LUT1_IN1_MUX  MUX_PA09I_CCL_IN4
+#define CCL_LUT1_IN2_MUX  MUX_PA10I_CCL_IN5
+#define CCL_LUT1_OUT_MUX  MUX_PA11I_CCL_OUT1
+
+#define CCL_LUT1_IN0_PIN  PIN_PA08I_CCL_IN3
+#define CCL_LUT1_IN1_PIN  PIN_PA09I_CCL_IN4
+#define CCL_LUT1_IN2_PIN  PIN_PA10I_CCL_IN5
+#define CCL_LUT1_OUT_PIN  PIN_PA11I_CCL_OUT1
 /** @} */
 
 /**

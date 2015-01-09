@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM USART Asynchronous Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
 #include "usart_interrupt.h"
@@ -536,6 +539,12 @@ void _usart_interrupt_handler(
 			/* CTS status should not be considered as an error */
 			if(error_code & SERCOM_USART_STATUS_CTS) {
 				error_code &= ~SERCOM_USART_STATUS_CTS;
+			}
+#endif
+#ifdef FEATURE_USART_LIN_MASTER
+			/* TXE status should not be considered as an error */
+			if(error_code & SERCOM_USART_STATUS_TXE) {
+				error_code &= ~SERCOM_USART_STATUS_TXE;
 			}
 #endif
 			/* Check if an error has occurred during the receiving */

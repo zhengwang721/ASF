@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef SLEEPMGR_H
 #define SLEEPMGR_H
 
@@ -60,6 +63,8 @@
 # include "samd/sleepmgr.h"
 #elif (SAML21)
 # include "saml/sleepmgr.h"
+#elif (SAMC21)
+# include "samc/sleepmgr.h"
 #else
 # error Unsupported device.
 #endif

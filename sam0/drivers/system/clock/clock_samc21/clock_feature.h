@@ -3,7 +3,7 @@
  *
  * \brief SAM C21 Clock Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -1073,8 +1073,6 @@ enum system_clock_source_dpll_reference_clock {
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC,
 	/** Select GCLK as clock reference. */
 	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK,
-	/** Select GCLK_32K as clock reference. */
-	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK_32K,
 };
 
 /**

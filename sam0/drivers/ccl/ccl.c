@@ -3,7 +3,7 @@
  *
  * \brief SAM Configurable Custom Logic (CCL) Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,13 +40,21 @@
  * \asf_license_stop
  *
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 #include "ccl.h"
 
 void ccl_init(struct ccl_config *const config)
 {
+#if SAMC21
+	/* Turn on the digital interface clock. */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_CCL);
+#else
 	/* Turn on the digital interface clock. */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBD, MCLK_APBDMASK_CCL);
+#endif
 
 	/* Reset module. */
 	ccl_module_reset();

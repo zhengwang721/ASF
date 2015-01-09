@@ -3,7 +3,7 @@
  *
  * \brief SAM C21 Power functionality
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -62,13 +62,13 @@ extern "C" {
  */
 enum system_sleepmode {
 	/** IDLE 0 sleep mode. */
-	SYSTEM_SLEEPMODE_IDLE_0,
+	SYSTEM_SLEEPMODE_IDLE_0 = PM_SLEEPCFG_SLEEPMODE(0),
 	/** IDLE 1 sleep mode. */
-	SYSTEM_SLEEPMODE_IDLE_1,
+	SYSTEM_SLEEPMODE_IDLE_1 = PM_SLEEPCFG_SLEEPMODE(0x1),
 	/** IDLE 2 sleep mode. */
-	SYSTEM_SLEEPMODE_IDLE_2,
+	SYSTEM_SLEEPMODE_IDLE_2 = PM_SLEEPCFG_SLEEPMODE(0x2),
 	/** Standby sleep mode. */
-	SYSTEM_SLEEPMODE_STANDBY,
+	SYSTEM_SLEEPMODE_STANDBY = PM_SLEEPCFG_SLEEPMODE(0x4),
 };
 
 /**

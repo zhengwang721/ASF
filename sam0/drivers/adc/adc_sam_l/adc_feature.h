@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #ifndef ADC_FEATURE_H_INCLUDED
 #define ADC_FEATURE_H_INCLUDED
 
@@ -443,7 +446,7 @@ struct adc_correction_config {
 	/**
 	 * This value defines how the ADC conversion result is compensated for
 	 * offset error before written to the result register. This is a 12-bit
-	 * value in two’s complement format.
+	 * value in two鈥檚 complement format.
 	 */
 	int16_t offset_correction;
 };

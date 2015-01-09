@@ -3,7 +3,7 @@
  *
  * \brief SAM C21 Xplained Pro test configuration.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -61,11 +61,11 @@
 #define CONF_RX_USART_PINMUX_PAD3  EXT1_UART_SERCOM_PINMUX_PAD3
 
 /* TX USART to test */
-#define CONF_TX_USART              SERCOM5
-#define CONF_TX_USART_SERCOM_MUX   USART_RX_3_TX_2_XCK_3
-#define CONF_TX_USART_PINMUX_PAD0  PINMUX_UNUSED
-#define CONF_TX_USART_PINMUX_PAD1  PINMUX_UNUSED
-#define CONF_TX_USART_PINMUX_PAD2  PINMUX_PB00D_SERCOM5_PAD2
-#define CONF_TX_USART_PINMUX_PAD3  PINMUX_PB01D_SERCOM5_PAD3
+#define CONF_TX_USART              SERCOM1
+#define CONF_TX_USART_SERCOM_MUX   USART_RX_1_TX_0_XCK_1
+#define CONF_TX_USART_PINMUX_PAD0  PINMUX_PA16C_SERCOM1_PAD0
+#define CONF_TX_USART_PINMUX_PAD1  PINMUX_PA17C_SERCOM1_PAD1
+#define CONF_TX_USART_PINMUX_PAD2  PINMUX_UNUSED
+#define CONF_TX_USART_PINMUX_PAD3  PINMUX_UNUSED
 
 #endif /* CONF_TEST_H_INCLUDED */

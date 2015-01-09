@@ -3,7 +3,7 @@
  *
  * \brief SAM L21 Clock Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -39,6 +39,9 @@
  *
  * \asf_license_stop
  *
+ */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <clock.h>
 #include <conf_clocks.h>
@@ -761,7 +764,7 @@ bool system_clock_source_is_ready(
  *
  * \note OSC16M is always enabled and if user selects other clocks for GCLK generators,
  * the OSC16M default enable can be disabled after system_clock_init. Make sure the
- * clock switch successfully before disabling OSC8M.
+ * clock switch successfully before disabling OSC16M.
  */
 void system_clock_init(void)
 {
@@ -925,7 +928,7 @@ void system_clock_init(void)
 
 	/* Configure all GCLK generators except for the main generator, which
 	 * is configured later after all other clock systems are set up */
-	MREPEAT(9, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
+	MREPEAT(GCLK_GEN_NUM, _CONF_CLOCK_GCLK_CONFIG_NONMAIN, ~);
 #  if CONF_CLOCK_DFLL_ENABLE == true
 	/* Enable DFLL reference clock if in closed loop mode */
 	if (CONF_CLOCK_DFLL_LOOP_MODE == SYSTEM_CLOCK_DFLL_LOOP_MODE_CLOSED) {

@@ -3,7 +3,7 @@
  *
  * \brief SAM C21 Xplained Pro board definition
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -204,6 +204,19 @@ void system_board_init(void);
 #define EXT1_UART_SERCOM_DMAC_ID_RX   SERCOM3_DMAC_ID_RX
 /** @} */
 
+/** \name Extension header #1 USART RS485 definitions
+ *  @{
+ */
+#define EXT1_RS485_MODULE              SERCOM1
+#define EXT1_RS485_SERCOM_MUX_SETTING  USART_RX_1_TX_0_XCK_1_TE_2
+#define EXT1_RS485_SERCOM_PINMUX_PAD0  PINMUX_PA16C_SERCOM1_PAD0
+#define EXT1_RS485_SERCOM_PINMUX_PAD1  PINMUX_PA17C_SERCOM1_PAD1
+#define EXT1_RS485_SERCOM_PINMUX_PAD2  PINMUX_PA18C_SERCOM1_PAD2
+#define EXT1_RS485_SERCOM_PINMUX_PAD3  PINMUX_UNUSED
+#define EXT1_RS485_SERCOM_DMAC_ID_TX   SERCOM1_DMAC_ID_TX
+#define EXT1_RS485_SERCOM_DMAC_ID_RX   SERCOM1_DMAC_ID_RX
+/** @} */
+
 /** \name Extension header #1 SPI definitions
  *  @{
  */
@@ -294,6 +307,19 @@ void system_board_init(void);
 #define EXT2_UART_SERCOM_PINMUX_PAD3  PINMUX_UNUSED
 #define EXT2_UART_SERCOM_DMAC_ID_TX   SERCOM3_DMAC_ID_TX
 #define EXT2_UART_SERCOM_DMAC_ID_RX   SERCOM3_DMAC_ID_RX
+/** @} */
+
+/** \name Extension header #2 USART RS485 definitions
+ *  @{
+ */
+#define EXT2_RS485_MODULE              SERCOM3
+#define EXT2_RS485_SERCOM_MUX_SETTING  USART_RX_1_TX_0_XCK_1_TE_2
+#define EXT2_RS485_SERCOM_PINMUX_PAD0  PINMUX_PA22C_SERCOM3_PAD0
+#define EXT2_RS485_SERCOM_PINMUX_PAD1  PINMUX_PA23C_SERCOM3_PAD1
+#define EXT2_RS485_SERCOM_PINMUX_PAD2  PINMUX_PA18D_SERCOM3_PAD2
+#define EXT2_RS485_SERCOM_PINMUX_PAD3  PINMUX_UNUSED
+#define EXT2_RS485_SERCOM_DMAC_ID_TX   SERCOM3_DMAC_ID_TX
+#define EXT2_RS485_SERCOM_DMAC_ID_RX   SERCOM3_DMAC_ID_RX
 /** @} */
 
 /** \name Extension header #2 SPI definitions
@@ -388,6 +414,21 @@ void system_board_init(void);
 #define EXT3_PWM_1_PINMUX         PINMUX_PA15E_TC4_WO1
 /** @} */
 
+/** \name LIN definitions
+ *  @{
+ */
+#define LIN_TX_PIN              PIN_PA06
+#define LIN_RX_PIN              PIN_PA07
+#define LIN_EN_PIN              PIN_PB22
+
+#define LIN_USART_MODULE              SERCOM0
+#define LIN_USART_SERCOM_MUX_SETTING  USART_RX_3_TX_2_XCK_3
+#define LIN_USART_SERCOM_PINMUX_PAD0  PINMUX_UNUSED
+#define LIN_USART_SERCOM_PINMUX_PAD1  PINMUX_UNUSED
+#define LIN_USART_SERCOM_PINMUX_PAD2  PINMUX_PA06D_SERCOM0_PAD2
+#define LIN_USART_SERCOM_PINMUX_PAD3  PINMUX_PA07D_SERCOM0_PAD3
+/** @} */
+
 /** \name Embedded debugger I2C interface definitions
  * @{
  */
@@ -422,6 +463,30 @@ void system_board_init(void);
 #define EDBG_CDC_SERCOM_PINMUX_PAD3  PINMUX_PB11D_SERCOM4_PAD3
 #define EDBG_CDC_SERCOM_DMAC_ID_TX   SERCOM4_DMAC_ID_TX
 #define EDBG_CDC_SERCOM_DMAC_ID_RX   SERCOM4_DMAC_ID_RX
+/** @} */
+
+/** \name CCL interface definitions
+ * @{
+ */
+#define CCL_LUT0_IN0_MUX  MUX_PA16I_CCL_IN0
+#define CCL_LUT0_IN1_MUX  MUX_PA17I_CCL_IN1
+#define CCL_LUT0_IN2_MUX  MUX_PA18I_CCL_IN2
+#define CCL_LUT0_OUT_MUX  MUX_PA19I_CCL_OUT0
+
+#define CCL_LUT0_IN0_PIN  PIN_PA16I_CCL_IN0
+#define CCL_LUT0_IN1_PIN  PIN_PA17I_CCL_IN1
+#define CCL_LUT0_IN2_PIN  PIN_PA18I_CCL_IN2
+#define CCL_LUT0_OUT_PIN  PIN_PA19I_CCL_OUT0
+
+#define CCL_LUT1_IN0_MUX  MUX_PA08I_CCL_IN3
+#define CCL_LUT1_IN1_MUX  MUX_PA09I_CCL_IN4
+#define CCL_LUT1_IN2_MUX  MUX_PA10I_CCL_IN5
+#define CCL_LUT1_OUT_MUX  MUX_PA11I_CCL_OUT1
+
+#define CCL_LUT1_IN0_PIN  PIN_PA08I_CCL_IN3
+#define CCL_LUT1_IN1_PIN  PIN_PA09I_CCL_IN4
+#define CCL_LUT1_IN2_PIN  PIN_PA10I_CCL_IN5
+#define CCL_LUT1_OUT_PIN  PIN_PA11I_CCL_OUT1
 /** @} */
 
 #ifdef __cplusplus
