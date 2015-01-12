@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #include <string.h>
 #include "usb.h"
 
@@ -1916,7 +1919,7 @@ void usb_get_config_defaults(struct usb_config *module_config)
 #define NVM_USB_PAD_TRIM_SIZE 3
 
 /* Compatiable definition for USB_DEVICE_CTRLB_SPDCONF_ */
-#if SAMD11 || SAMR21
+#if SAMD11
 #define   USB_DEVICE_CTRLB_SPDCONF_FS_Val USB_DEVICE_CTRLB_SPDCONF_0_Val
 #define   USB_DEVICE_CTRLB_SPDCONF_LS_Val USB_DEVICE_CTRLB_SPDCONF_1_Val
 #endif

@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 #include "rtc_count_interrupt.h"
 
 extern struct rtc_module *_rtc_instance[RTC_INST_NUM];
