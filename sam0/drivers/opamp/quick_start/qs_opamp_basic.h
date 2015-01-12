@@ -103,3 +103,6 @@
  * \snippet qs_opamp_basic.c main
  *
  */
+ /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
