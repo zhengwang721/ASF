@@ -39,7 +39,7 @@
 //#include "EPD_COG_process_v110.c"
 //**************************************************************************************************************//
 
-#include "EPD_COG_Process.h"
+#include "EPD_COG_process.h"
 /** 
  * \brief The COG parameters of different EPD size 
  */
@@ -729,7 +729,7 @@ uint8_t EPD_power_off (uint8_t EPD_type_index) {
 *  OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
 
-#include "EPD_COG_Process.h"
+#include "EPD_COG_process.h"
 
 extern void read_flash(long Address,uint8_t *target_address, uint8_t byte_length);
 extern void write_flash(long Address,uint8_t *source_address, uint8_t byte_length);
@@ -1027,7 +1027,7 @@ void EPD_display_partialupdate (uint8_t EPD_type_index, long previous_image_addr
 **/
 
 //COG V110_G2
-#include "EPD_COG_Process.h"
+#include "EPD_COG_process.h"
 
 const struct COG_parameters_t COG_parameters[COUNT_OF_EPD_TYPE]  = {
 	{
@@ -1737,7 +1737,7 @@ uint8_t EPD_power_off (uint8_t EPD_type_index) {
 **/
 
 //COG V110_G2
-#include "EPD_COG_Process.h"
+#include "EPD_COG_process.h"
 
 #define FRAME_TIME		60
 const struct COG_parameters_t COG_parameters[COUNT_OF_EPD_TYPE]  = {
