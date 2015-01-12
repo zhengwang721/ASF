@@ -181,6 +181,16 @@ void system_board_init(void);
 #define EXT1_PIN_SPI_SCK          EXT1_PIN_18
 /** @} */
 
+/** \name Extension header #1 IRQ/External interrupt definitions
+ *  @{
+ */
+#define EXT1_IRQ_MODULE           EIC
+#define EXT1_IRQ_INPUT            14
+#define EXT1_IRQ_PIN              PIN_PB14A_EIC_EXTINT14
+#define EXT1_IRQ_MUX              MUX_PB14A_EIC_EXTINT14
+#define EXT1_IRQ_PINMUX           PINMUX_PB14A_EIC_EXTINT14
+/** @} */
+
 /** \name Extension header #1 I2C definitions
  *  @{
  */
@@ -272,6 +282,16 @@ void system_board_init(void);
 #define EXT2_PIN_SPI_SCK          EXT2_PIN_18
 /** @} */
 
+/** \name Extension header #2 IRQ/External interrupt definitions
+ *  @{
+ */
+#define EXT2_IRQ_MODULE           EIC
+#define EXT2_IRQ_INPUT            16
+#define EXT2_IRQ_PIN              PIN_PB16A_EIC_EXTINT0
+#define EXT2_IRQ_MUX              MUX_PB16A_EIC_EXTINT0
+#define EXT2_IRQ_PINMUX           PINMUX_PB16A_EIC_EXTINT0
+/** @} */
+
  /** \name Extension header #2 I2C definitions
  *  @{
  */
@@ -361,6 +381,16 @@ void system_board_init(void);
 #define EXT3_PIN_SPI_MOSI         EXT3_PIN_16
 #define EXT3_PIN_SPI_MISO         EXT3_PIN_17
 #define EXT3_PIN_SPI_SCK          EXT3_PIN_18
+/** @} */
+
+/** \name Extension header #3 IRQ/External interrupt definitions
+ *  @{
+ */
+#define EXT3_IRQ_MODULE           EIC
+#define EXT3_IRQ_INPUT            8
+#define EXT3_IRQ_PIN              PIN_PA28A_EIC_EXTINT8
+#define EXT3_IRQ_MUX              MUX_PA28A_EIC_EXTINT8
+#define EXT3_IRQ_PINMUX           PINMUX_PA28A_EIC_EXTINT8
 /** @} */
 
 /** \name Extension header #3 I2C definitions
