@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM EEPROM Emulator Service Quick Start
+ * \brief User board configuration template
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,59 +43,8 @@
  /**
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#include <asf.h>
 
-void configure_eeprom(void);
+#ifndef CONF_BOARD_H
+#define CONF_BOARD_H
 
-//! [setup]
-void configure_eeprom(void)
-{
-	/* Setup EEPROM emulator service */
-//! [init_eeprom_service]
-	enum status_code error_code = rww_eeprom_emulator_init();
-//! [init_eeprom_service]
-
-//! [check_re-init]
-	if (error_code != STATUS_OK) {
-		/* Erase the emulated EEPROM memory (assume it is unformatted or
-		 * irrecoverably corrupt) */
-		rww_eeprom_emulator_erase_memory();
-		rww_eeprom_emulator_init();
-	}
-//! [check_re-init]
-}
-//! [setup]
-
-int main(void)
-{
-	system_init();
-
-//! [setup_init]
-	configure_eeprom();
-//! [setup_init]
-
-//! [main]
-//! [read_page]
-	uint8_t page_data[RWW_EEPROM_PAGE_SIZE];
-	rww_eeprom_emulator_read_page(0, page_data);
-//! [read_page]
-
-//! [toggle_first_byte]
-	page_data[0] = !page_data[0];
-//! [toggle_first_byte]
-//! [set_led]
-#if !defined(SAMD21_64K)
-	port_pin_set_output_level(LED_0_PIN, page_data[0]);
-#endif
-//! [set_led]
-
-//! [write_page]
-	rww_eeprom_emulator_write_page(0, page_data);
-	rww_eeprom_emulator_commit_page_buffer();
-//! [write_page]
-
-	while (true) {
-
-	}
-//! [main]
-}
+#endif // CONF_BOARD_H

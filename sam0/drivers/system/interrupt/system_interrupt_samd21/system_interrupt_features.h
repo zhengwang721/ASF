@@ -155,7 +155,7 @@ enum system_interrupt_vector {
 #  if defined(ID_TC6)
 	SYSTEM_INTERRUPT_MODULE_TC6        = TC6_IRQn,
 #  endif
-#  defined(ID_TC7)
+#if  defined(ID_TC7)
 	SYSTEM_INTERRUPT_MODULE_TC7        = TC7_IRQn,
 #  endif
 #endif
