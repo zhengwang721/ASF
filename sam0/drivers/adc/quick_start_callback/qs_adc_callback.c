@@ -3,7 +3,7 @@
  *
  * \brief SAM ADC Quick Start
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -80,7 +80,7 @@ void configure_adc(void)
 //! [setup_config_defaults]
 
 //! [setup_modify_conf]
-#if (!SAML21)
+#if (!SAML21) && (!SAMC21)
 	config_adc.gain_factor     = ADC_GAIN_FACTOR_DIV2;
 #endif
 	config_adc.clock_prescaler = ADC_CLOCK_PRESCALER_DIV8;
@@ -90,7 +90,11 @@ void configure_adc(void)
 //! [setup_modify_conf]
 
 //! [setup_set_config]
+#if (SAMC21)
+	adc_init(&adc_instance, ADC1, &config_adc);
+#else
 	adc_init(&adc_instance, ADC, &config_adc);
+#endif
 //! [setup_set_config]
 
 //! [setup_enable]
