@@ -46,6 +46,21 @@
 
 #include "can.h"
 
+/* Instance for GCLK setting. */
+struct system_gclk_chan_config gclk_chan_conf;
+
+/* Speed setting static prescaler data. */
+static uint8_t speed_setting_prescaler[CAN_SPEED_NUMBER][2] = {
+	{0x02, 0x02},
+	{0x05, 0x05},
+	{0x02, 0x00},
+	{0x02, 0x01},
+	{0x02, 0x02},
+	{0x05, 0x00},
+	{0x05, 0x01},
+	{0x05, 0x02}
+};
+
 /* Message ram definition. */
 COMPILER_ALIGNED(4)
 static struct can_rx_element_buffer can0_rx_buffer[CONF_CAN0_RX_BUFFER_NUM];
@@ -54,15 +69,13 @@ static struct can_rx_element_fifo_0 can0_rx_fifo_0[CONF_CAN0_RX_FIFO_0_NUM];
 COMPILER_ALIGNED(4)
 static struct can_rx_element_fifo_1 can0_rx_fifo_1[CONF_CAN0_RX_FIFO_1_NUM];
 COMPILER_ALIGNED(4)
-static struct can_tx_element can0_tx_buffer[CONF_CAN0_TX_BUFFER_NUM];
-COMPILER_ALIGNED(4)
-static struct can_tx_element can0_tx_fifo_queue[CONF_CAN0_TX_FIFO_QUEUE_NUM];
+static struct can_tx_element can0_tx_buffer[CONF_CAN0_TX_BUFFER_NUM + CONF_CAN0_TX_FIFO_QUEUE_NUM];
 COMPILER_ALIGNED(4)
 static struct can_tx_event_element can0_tx_event_fifo[CONF_CAN0_TX_EVENT_FIFO];
 COMPILER_ALIGNED(4)
-static struct can_sd_message_filter_element can0_rx_standard_filter[CONF_CAN0_RX_STANDARD_ID_FILTER_NUM];
+static struct can_standard_message_filter_element can0_rx_standard_filter[CONF_CAN0_RX_STANDARD_ID_FILTER_NUM];
 COMPILER_ALIGNED(4)
-static struct can_et_message_filter_element can0_rx_extended_filter[CONF_CAN0_RX_EXTENDED_ID_FILTER_NUM];
+static struct can_extended_message_filter_element can0_rx_extended_filter[CONF_CAN0_RX_EXTENDED_ID_FILTER_NUM];
 
 COMPILER_ALIGNED(4)
 static struct can_rx_element_buffer can1_rx_buffer[CONF_CAN1_RX_BUFFER_NUM];
@@ -71,15 +84,13 @@ static struct can_rx_element_fifo_0 can1_rx_fifo_0[CONF_CAN1_RX_FIFO_0_NUM];
 COMPILER_ALIGNED(4)
 static struct can_rx_element_fifo_1 can1_rx_fifo_1[CONF_CAN1_RX_FIFO_1_NUM];
 COMPILER_ALIGNED(4)
-static struct can_tx_element can1_tx_buffer[CONF_CAN1_TX_BUFFER_NUM];
-COMPILER_ALIGNED(4)
-static struct can_tx_element can1_tx_fifo_queue[CONF_CAN1_TX_FIFO_QUEUE_NUM];
+static struct can_tx_element can1_tx_buffer[CONF_CAN1_TX_BUFFER_NUM + CONF_CAN1_TX_FIFO_QUEUE_NUM];
 COMPILER_ALIGNED(4)
 static struct can_tx_event_element can1_tx_event_fifo[CONF_CAN1_TX_EVENT_FIFO];
 COMPILER_ALIGNED(4)
-static struct can_sd_message_filter_element can1_rx_standard_filter[CONF_CAN1_RX_STANDARD_ID_FILTER_NUM];
+static struct can_standard_message_filter_element can1_rx_standard_filter[CONF_CAN1_RX_STANDARD_ID_FILTER_NUM];
 COMPILER_ALIGNED(4)
-static struct can_et_message_filter_element can1_rx_extended_filter[CONF_CAN1_RX_EXTENDED_ID_FILTER_NUM];
+static struct can_extended_message_filter_element can1_rx_extended_filter[CONF_CAN1_RX_EXTENDED_ID_FILTER_NUM];
 
 static void _can_message_memory_init(Can *hw)
 {
@@ -99,9 +110,7 @@ static void _can_message_memory_init(Can *hw)
 				CAN_TXBC_TFQS(CONF_CAN0_TX_FIFO_QUEUE_NUM);
 		hw->TXEFC.reg = CAN_TXEFC_EFSA((uint32_t)can0_tx_event_fifo) |
 				CAN_TXEFC_EFS(CONF_CAN0_TX_EVENT_FIFO);
-	}
-
-	if (hw == CAN1) {
+	} else if (hw == CAN1) {
 		hw->SIDFC.reg = CAN_SIDFC_FLSSA((uint32_t)can1_rx_standard_filter) |
 				CAN_SIDFC_LSS(CONF_CAN1_RX_STANDARD_ID_FILTER_NUM);
 		hw->XIDFC.reg = CAN_XIDFC_FLESA((uint32_t)can1_rx_extended_filter) |
@@ -119,14 +128,17 @@ static void _can_message_memory_init(Can *hw)
 				CAN_TXEFC_EFS(CONF_CAN1_TX_EVENT_FIFO);
 	}
 
-	hw->RXESC.reg = CONF_CAN_RX_ELEMENT_DATA_SIZA_BUFFER |
-			CONF_CAN_RX_ELEMENT_DATA_SIZA_FIFO_0|
-			CONF_CAN_RX_ELEMENT_DATA_SIZA_FIFO_1;
-	hw->TXESC.reg = CONF_CAN_TX_ELEMENT_DATA_SIZA;
+	hw->RXESC.reg = CAN_RXESC_RBDS((CONF_CAN_RX_ELEMENT_DATA_SIZE_BUFFER - 8) / 4) |
+			CAN_RXESC_F0DS((CONF_CAN_RX_ELEMENT_DATA_SIZE_FIFO_0 - 8) / 4) |
+			CAN_RXESC_F1DS((CONF_CAN_RX_ELEMENT_DATA_SIZE_FIFO_1 - 8) / 4);
+	hw->TXESC.reg = CAN_TXESC_TBDS((CONF_CAN_TX_ELEMENT_DATA_SIZE - 8) / 4);
 }
 
 static void _can_set_configuration(Can *hw, struct can_config *config)
 {
+	hw->NBTP.reg |= CAN_NBTP_NBRP(speed_setting_prescaler[config->speed][0]);
+	hw->DBTP.reg |= CAN_DBTP_DBRP(speed_setting_prescaler[config->speed][1]);
+
 	if (config->run_in_standby) {
 		hw->MRCFG.reg |= 0x01<<6;
 	}
@@ -161,7 +173,7 @@ static void _can_set_configuration(Can *hw, struct can_config *config)
 			CAN_TSCC_TSS_INC_Val;
 
 	hw->TOCC.reg = CAN_TOCC_TOP(config->timeout_period) |
-			config->timeout_mode | CAN_TOCC_ETOC;
+			config->timeout_mode | config->timeout_enable;
 
 	hw->TDCR.reg = CAN_TDCR_TDCO(config->delay_compensation_offset) |
 			CAN_TDCR_TDCF(config->delay_compensation_filter_window_length);
@@ -194,7 +206,18 @@ static void _can_set_configuration(Can *hw, struct can_config *config)
 	hw->TXEFC.reg |= CAN_TXEFC_EFWM(config->tx_event_fifo_watermark);
 }
 
-void can_module_init(struct can_module *const module_inst, Can *hw,
+static void _can_enable_peripheral_clock(struct can_module *const module_inst)
+{
+	if (module_inst->hw == CAN0) {
+		/* Turn on the digital interface clock. */
+		system_ahb_clock_set_mask(MCLK_AHBMASK_CAN0);
+	} else if (module_inst->hw == CAN1) {
+		/* Turn on the digital interface clock. */
+		system_ahb_clock_set_mask(MCLK_AHBMASK_CAN1);
+	}
+}
+
+void can_init(struct can_module *const module_inst, Can *hw,
 		struct can_config *config)
 {
 	/* Sanity check arguments */
@@ -205,23 +228,17 @@ void can_module_init(struct can_module *const module_inst, Can *hw,
 	/* Associate the software module instance with the hardware module */
 	module_inst->hw = hw;
 
+	/* Enable peripheral clock */
+	_can_enable_peripheral_clock(module_inst);
+
 	/* Configure GCLK channel */
-	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	gclk_chan_conf.source_generator = config->clock_source;
 
 	if (hw == CAN0) {
-		/* Turn on the digital interface clock. */
-		system_ahb_clock_set_mask(MCLK_AHBMASK_CAN0);
-
 		system_gclk_chan_set_config(CAN0_GCLK_ID, &gclk_chan_conf);
 		system_gclk_chan_enable(CAN0_GCLK_ID);
-	}
-
-	if (hw == CAN1) {
-		/* Turn on the digital interface clock. */
-		system_ahb_clock_set_mask(MCLK_AHBMASK_CAN1);
-
+	} else if (hw == CAN1) {
 		system_gclk_chan_set_config(CAN1_GCLK_ID, &gclk_chan_conf);
 		system_gclk_chan_enable(CAN1_GCLK_ID);
 	}
@@ -244,40 +261,84 @@ void can_module_init(struct can_module *const module_inst, Can *hw,
 
 void can_switch_mode(struct can_module *const module_inst, const enum can_mode mode)
 {
-	if (mode == CAN_MODE_SOFTWARE_INITIALIZATION) {
-		module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
-		/* Wait for the sync. */
-		while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-	}
-	if (mode == CAN_MODE_NORMAL_OPERATION) {
-		module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
-		/* Wait for the sync. */
-		while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
-	}
-	if (mode == CAN_MODE_TEST) {
-		module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+	/* Enable peripheral clock */
+	_can_enable_peripheral_clock(module_inst);
+
+	if (mode == CAN_MODE_SLEEP) {
+		module_inst->hw->CCCR.reg |= CAN_CCCR_CSR;
 		/* Wait for the sync. */
 		while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
 
-		module_inst->hw->CCCR.reg |= CAN_CCCR_TEST;
-		module_inst->hw->CCCR.reg |= CAN_CCCR_MON;
-		module_inst->hw->TEST.reg |= CAN_TEST_LBCK;;
+		while (!(module_inst->hw->CCCR.reg & CAN_CCCR_CSA));
+	} else {
+		if ((module_inst->hw->CCCR.reg & CAN_CCCR_CSA)){
+			if (module_inst->hw == CAN0) {
+				system_gclk_chan_set_config(CAN0_GCLK_ID, &gclk_chan_conf);
+				system_gclk_chan_enable(CAN0_GCLK_ID);
+			}
 
-		module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
-		/* Wait for the sync. */
-		while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
+			if (module_inst->hw == CAN1) {
+				system_gclk_chan_set_config(CAN1_GCLK_ID, &gclk_chan_conf);
+				system_gclk_chan_enable(CAN1_GCLK_ID);
+			}
+			module_inst->hw->CCCR.reg &= CAN_CCCR_CSR;
+			while ((module_inst->hw->CCCR.reg & CAN_CCCR_CSA));
+		}
+
+		if (mode == CAN_MODE_SOFTWARE_INITIALIZATION) {
+			module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+			/* Wait for the sync. */
+			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+		} else if (mode == CAN_MODE_NORMAL_OPERATION) {
+			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
+			/* Wait for the sync. */
+			while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
+		} else if (mode == CAN_MODE_RESTRICTED_OPERATION) {
+			module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+			/* Wait for the sync. */
+			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+
+			module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
+			module_inst->hw->CCCR.reg |= CAN_CCCR_ASM;
+
+			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
+			/* Wait for the sync. */
+			while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
+		} else if (mode == CAN_MODE_BUS_MONITOR) {
+			module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+			/* Wait for the sync. */
+			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+
+			module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
+			module_inst->hw->CCCR.reg |= CAN_CCCR_MON;
+
+			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
+			/* Wait for the sync. */
+			while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
+		} else if (mode == CAN_MODE_TEST) {
+			module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+			/* Wait for the sync. */
+			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+
+			module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
+			module_inst->hw->CCCR.reg |= CAN_CCCR_TEST;
+			module_inst->hw->TEST.reg |= CAN_TEST_LBCK;;
+
+			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
+			/* Wait for the sync. */
+			while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
+		}
 	}
 }
 
 enum status_code can_set_rx_standand_filter(
 		struct can_module *const module_inst,
-		struct can_sd_message_filter_element *sd_filter, uint32_t index)
+		struct can_standard_message_filter_element *sd_filter, uint32_t index)
 {
 	if (module_inst->hw == CAN0) {
 		can0_rx_standard_filter[index].S0.reg = sd_filter->S0.reg;
 		return STATUS_OK;
-	}
-	if (module_inst->hw == CAN1) {
+	} else if (module_inst->hw == CAN1) {
 		can1_rx_standard_filter[index].S0.reg = sd_filter->S0.reg;
 		return STATUS_OK;
 	}
@@ -286,14 +347,13 @@ enum status_code can_set_rx_standand_filter(
 
 enum status_code can_set_rx_extended_filter(
 		struct can_module *const module_inst,
-		struct can_et_message_filter_element *et_filter, uint32_t index)
+		struct can_extended_message_filter_element *et_filter, uint32_t index)
 {
 	if (module_inst->hw == CAN0) {
 		can0_rx_extended_filter[index].F0.reg = et_filter->F0.reg;
 		can0_rx_extended_filter[index].F1.reg = et_filter->F1.reg;
 		return STATUS_OK;
-	}
-	if (module_inst->hw == CAN1) {
+	} else if (module_inst->hw == CAN1) {
 		can1_rx_extended_filter[index].F0.reg = et_filter->F0.reg;
 		can1_rx_extended_filter[index].F1.reg = et_filter->F1.reg;
 		return STATUS_OK;
@@ -308,8 +368,7 @@ enum status_code can_get_rx_buffer_element(
 	if (module_inst->hw == CAN0) {
 		rx_element = &can0_rx_buffer[index];
 		return STATUS_OK;
-	}
-	if (module_inst->hw == CAN1) {
+	} else if (module_inst->hw == CAN1) {
 		rx_element = &can1_rx_buffer[index];
 		return STATUS_OK;
 	}
@@ -323,8 +382,7 @@ enum status_code can_get_rx_fifo_0_element(
 	if (module_inst->hw == CAN0) {
 		rx_element = &can0_rx_fifo_0[index];
 		return STATUS_OK;
-	}
-	if (module_inst->hw == CAN1) {
+	} else if (module_inst->hw == CAN1) {
 		rx_element = &can1_rx_fifo_0[index];
 		return STATUS_OK;
 	}
@@ -338,8 +396,7 @@ enum status_code can_get_rx_fifo_1_element(
 	if (module_inst->hw == CAN0) {
 		rx_element = &can0_rx_fifo_1[index];
 		return STATUS_OK;
-	}
-	if (module_inst->hw == CAN1) {
+	} else if (module_inst->hw == CAN1) {
 		rx_element = &can1_rx_fifo_1[index];
 		return STATUS_OK;
 	}
@@ -358,8 +415,7 @@ enum status_code can_set_tx_buffer_element(
 			can0_tx_buffer[index].data[i] = tx_element->data[i];
 		}
 		return STATUS_OK;
-	}
-	if (module_inst->hw == CAN1) {
+	} else if (module_inst->hw == CAN1) {
 		can1_tx_buffer[index].T0.reg = tx_element->T0.reg;
 		can1_tx_buffer[index].T1.reg = tx_element->T1.reg;
 		for (i = 0; i < 8; i++) {
@@ -377,8 +433,7 @@ enum status_code can_get_tx_event_fifo_element(
 	if (module_inst->hw == CAN0) {
 		tx_event_element = &can0_tx_event_fifo[index];
 		return STATUS_OK;
-	}
-	if (module_inst->hw == CAN1) {
+	} else if (module_inst->hw == CAN1) {
 		tx_event_element = &can1_tx_event_fifo[index];
 		return STATUS_OK;
 	}

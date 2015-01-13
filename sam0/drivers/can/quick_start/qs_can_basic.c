@@ -107,11 +107,10 @@ static void configure_can(void)
 	pin_config.mux_position = CAN_RX_MUX_SETTING;
 	system_pinmux_pin_set_config(CAN_RX_PIN, &pin_config);
 
-
 	struct can_config config_can;
 	can_get_config_defaults(&config_can);
 
-	can_module_init(&can_instance, CAN_MODULE, &config_can);
+	can_init(&can_instance, CAN_MODULE, &config_can);
 
 	can_switch_mode(&can_instance, CAN_MODE_NORMAL_OPERATION);
 
@@ -123,14 +122,14 @@ static void configure_can(void)
 //! [can_receive_filter_setup]
 static void can_set_filter(uint32_t filter_value)
 {
-	struct can_sd_message_filter_element sd_filter;
+	struct can_standard_message_filter_element sd_filter;
 
 	can_get_sd_message_filter_element_default(&sd_filter);
 	sd_filter.S0.bit.SFID1 = filter_value;
 
 	can_set_rx_standand_filter(&can_instance, &sd_filter,
 			CAN_RX_STANDARD_FILTER_INDEX);
-	can_set_interrupt(&can_instance, CAN_RX_FIFO_0_NEW_MESSAGE);
+	can_enable_interrupt(&can_instance, CAN_RX_FIFO_0_NEW_MESSAGE);
 }
 //! [can_receive_filter_setup]
 
@@ -149,7 +148,7 @@ static void can_send_message(uint32_t id_value, uint8_t *data)
 
 	can_set_tx_buffer_element(&can_instance, &tx_element,
 			CAN_TX_BUFFER_INDEX);
-	can_tx_add_request(&can_instance, CAN_TX_BUFFER_INDEX);
+	can_tx_transfer_request(&can_instance, 1 << CAN_TX_BUFFER_INDEX);
 }
 //! [can_transfer_message_setup]
 
