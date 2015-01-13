@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM USART Asynchronous Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -264,55 +264,6 @@ enum status_code usart_read_job(
           uint16_t tx_buf[TX_LEN] = {0x0111, 0x0022, 0x0133};
           usart_write_buffer_job(&module, (uint8_t*)tx_buf, TX_LEN);
     \endcode
-<<<<<<< HEAD
- *
- * \returns Status of the operation.
- * \retval STATUS_OK              If operation was completed successfully.
- * \retval STATUS_BUSY            If operation was not completed, due to the
- *                                USART module being busy
- * \retval STATUS_ERR_INVALID_ARG If operation was not completed, due to invalid
- *                                arguments
- * \retval STATUS_ERR_DENIED      If the transmitter is not enabled
- */
-enum status_code usart_write_buffer_job(
-		struct usart_module *const module,
-		uint8_t *tx_data,
-		uint16_t length)
-{
-	/* Sanity check arguments */
-	Assert(module);
-
-	if (length == 0) {
-		return STATUS_ERR_INVALID_ARG;
-	}
-
-	/* Check if the USART transmitter is busy */
-	if (module->remaining_tx_buffer_length > 0) {
-		return STATUS_BUSY;
-	}
-
-	/* Check that the transmitter is enabled */
-	if (!(module->transmitter_enabled)) {
-		return STATUS_ERR_DENIED;
-	}
-
-	/* Issue internal asynchronous write */
-	_usart_write_buffer(module, tx_data, length);
-
-	return STATUS_OK;
-}
-
-/**
- * \brief Asynchronous buffer read
- *
- * Sets up the driver to read from the USART to a given buffer. If registered
- * and enabled, a callback function will be called.
- *
- * \param[in]  module   Pointer to USART software instance struct
- * \param[out] rx_data  Pointer to data buffer to receive
- * \param[in]  length   Data buffer length
- *
-=======
  *
  * \returns Status of the operation.
  * \retval STATUS_OK              If operation was completed successfully.
@@ -361,7 +312,6 @@ enum status_code usart_write_buffer_job(
  * \param[out] rx_data  Pointer to data buffer to receive
  * \param[in]  length   Data buffer length
  *
->>>>>>> 5961169f71a57b3e1e4c5a06c61e0f78fb5e3f8a
  * \note if using 9-bit data, the array that *rx_data point to should be defined
  *       as uint16_t array and should be casted to uint8_t* pointer. Because it 
  *       is an address pointer, the highest byte is not discarded. For example:
