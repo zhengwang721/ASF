@@ -979,6 +979,13 @@ void system_clock_init(void)
 		/* XOSC should have been enabled for GCLK_XOSC */
 		Assert(CONF_CLOCK_XOSC_ENABLE);
 	}
+	else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK) {
+		/* GCLK should have been enabled */
+		Assert(CONF_CLOCK_CONFIGURE_GCLK);
+	}
+	else {
+		Assert(false);
+	}
 
 	struct system_clock_source_dpll_config dpll_config;
 	system_clock_source_dpll_get_config_defaults(&dpll_config);

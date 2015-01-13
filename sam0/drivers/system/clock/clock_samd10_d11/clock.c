@@ -407,7 +407,7 @@ void system_clock_source_dpll_set_config(
 	refclk = config->reference_frequency;
 
 	/* Only reference clock REF1 can be divided */
-	if (config->reference_clock == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF1) {
+	if (config->reference_clock == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC) {
 		refclk = refclk / config->reference_divider;
 	}
 
@@ -965,12 +965,19 @@ void system_clock_init(void)
 #  if (CONF_CLOCK_DPLL_ENABLE == true)
 
 	/* Enable DPLL reference clock */
-	if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0) {
+	if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC32K) {
 		/* XOSC32K should have been enabled for DPLL_REF0 */
 		Assert(CONF_CLOCK_XOSC32K_ENABLE);
-	} else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF1) {
+	} else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC) {
 		/* XOSC should have been enabled for DPLL_REF1 */
 		Assert(CONF_CLOCK_XOSC_ENABLE);
+	}
+	else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK) {
+		/* GCLK should have been enabled */
+		Assert(CONF_CLOCK_CONFIGURE_GCLK);
+	}
+	else {
+		Assert(false);
 	}
 
 	struct system_clock_source_dpll_config dpll_config;
