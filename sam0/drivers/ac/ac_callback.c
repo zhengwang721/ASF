@@ -116,15 +116,19 @@ void AC_Handler(void)
 {
 	_ac_interrupt_handler(0);
 }
-#elif (AC_INST_NUM > 1)
-#  define _AC_INTERRUPT_HANDLER(n, unused) \
-		void AC##n##_Handler(void) \
-		{ \
-			_ac_interrupt_handler(n); \
-		}
+#elif (AC_INST_NUM == 2)
+void AC_Handler(void)
+{
+	_ac_interrupt_handler(0);
+}
 
-MREPEAT(AC_INST_NUM, _AC_INTERRUPT_HANDLER, ~)
-#endif /* (AC_INST_NUM > 1) */
+void AC1_Handler(void)
+{
+	_ac_interrupt_handler(1);
+}
+#else
+#  error This driver is not support more than three AC instances.
+#endif
 
 /**
  * \brief Interrupt Handler for AC module.

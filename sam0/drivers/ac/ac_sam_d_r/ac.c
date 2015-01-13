@@ -142,7 +142,16 @@ enum status_code ac_init(
 	module_inst->hw = hw;
 
 	/* Turn on the digital interface clock */
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_AC);
+	if (hw == AC) {
+		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_AC);
+	}
+#if (AC_INST_NUM == 2)
+	else if (hw == AC1) {
+		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_AC1);
+	}
+#elif (AC_INST_NUM >= 3)
+#  error This driver is not support more than three AC instances.
+#endif
 
 #if AC_CALLBACK_MODE == true
 	/* Initialize parameters */

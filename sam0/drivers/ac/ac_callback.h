@@ -56,8 +56,6 @@ extern "C" {
 #endif
 
 #if (AC_INST_NUM > 1) && !defined(__DOXYGEN__)
-#  define _AC_INTERRUPT_VECT_NUM(n, unused) \
-		  SYSTEM_INTERRUPT_MODULE_AC##n,
 /**
  * \internal Get the interrupt vector for the given device instance
  *
@@ -70,7 +68,13 @@ static enum system_interrupt_vector _ac_interrupt_get_interrupt_vector(
 {
 	static uint8_t ac_interrupt_vectors[AC_INST_NUM] =
 		{
-			MREPEAT(AC_INST_NUM, _AC_INTERRUPT_VECT_NUM, ~)
+			SYSTEM_INTERRUPT_MODULE_AC,
+#if (AC_INST_NUM == 2)
+			SYSTEM_INTERRUPT_MODULE_AC1,
+#endif
+#if (AC_INST_NUM >= 3)
+#  error This driver is not support more than three AC instances.
+#endif
 		};
 
 	return ac_interrupt_vectors[inst_num];
