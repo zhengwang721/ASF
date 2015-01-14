@@ -3,7 +3,7 @@
  *
  * \brief SAM TC - Timer Counter Driver
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -495,7 +495,7 @@
 #endif
 
 /** TC Instance MAX ID Number. */
-#if SAMD20E || SAMD21G || SAMD21E || SAMR21
+#if SAMD20E || SAMD20G || SAMD21E || SAMD21G || SAMR21
 #define TC_INST_MAX_ID  5
 #elif SAML21
 #define TC_INST_MAX_ID  4

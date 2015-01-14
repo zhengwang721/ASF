@@ -259,6 +259,14 @@
 #  error CONF_CLOCK_DPLL_OUTPUT_FREQUENCY not defined in conf_clock.h
 #endif
 
+#if !defined(CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR)
+#  error CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_DPLL_LOCK_GCLK_GENERATOR)
+#  error CONF_CLOCK_DPLL_LOCK_GCLK_GENERATOR not defined in conf_clock.h
+#endif
+
 #if !defined(CONF_CLOCK_CONFIGURE_GCLK)
 #  error CONF_CLOCK_CONFIGURE_GCLK not defined in conf_clock.h
 #endif

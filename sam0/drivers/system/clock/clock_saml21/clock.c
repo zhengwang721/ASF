@@ -3,7 +3,7 @@
  *
  * \brief SAM L21 Clock Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -940,6 +940,23 @@ void system_clock_init(void)
 		system_gclk_chan_enable(OSCCTRL_GCLK_ID_DFLL48);
 	}
 #  endif
+
+#  if CONF_CLOCK_DPLL_ENABLE == true
+	/* Enable DPLL internal lock timer and reference clock */
+	struct system_gclk_chan_config dpll_gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&dpll_gclk_chan_conf);
+	if (CONF_CLOCK_DPLL_LOCK_TIME != SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT) {
+		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_LOCK_GCLK_GENERATOR;
+		system_gclk_chan_set_config(OSCCTRL_GCLK_ID_FDPLL32K, &dpll_gclk_chan_conf);
+		system_gclk_chan_enable(OSCCTRL_GCLK_ID_FDPLL32K);
+	}
+
+	if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK) {
+		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR;
+		system_gclk_chan_set_config(OSCCTRL_GCLK_ID_FDPLL, &dpll_gclk_chan_conf);
+		system_gclk_chan_enable(OSCCTRL_GCLK_ID_FDPLL);
+	}
+#  endif
 #endif
 
 	/* DFLL Enable (Open and Closed Loop) */
@@ -958,18 +975,18 @@ void system_clock_init(void)
 	if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC32K) {
 		/* XOSC32K should have been enabled for GCLK_XOSC32 */
 		Assert(CONF_CLOCK_XOSC32K_ENABLE);
-	}else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC) {
+	} else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC) {
 		/* XOSC should have been enabled for GCLK_XOSC */
 		Assert(CONF_CLOCK_XOSC_ENABLE);
-	} else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK) {
-		struct system_gclk_chan_config dpll_gclk_chan_conf;
-		system_gclk_chan_get_config_defaults(&dpll_gclk_chan_conf);
-		dpll_gclk_chan_conf.source_generator = CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR;
-		system_gclk_chan_set_config(OSCCTRL_GCLK_ID_FDPLL, &dpll_gclk_chan_conf);
-		system_gclk_chan_enable(OSCCTRL_GCLK_ID_FDPLL);
-	} else {
+	}
+	else if (CONF_CLOCK_DPLL_REFERENCE_CLOCK == SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_GCLK) {
+		/* GCLK should have been enabled */
+		Assert(CONF_CLOCK_CONFIGURE_GCLK);
+	}
+	else {
 		Assert(false);
 	}
+
 	struct system_clock_source_dpll_config dpll_config;
 	system_clock_source_dpll_get_config_defaults(&dpll_config);
 
@@ -980,6 +997,7 @@ void system_clock_init(void)
 	dpll_config.low_power_enable = CONF_CLOCK_DPLL_LOW_POWER_ENABLE;
 
 	dpll_config.filter           = CONF_CLOCK_DPLL_FILTER;
+	dpll_config.lock_time        = CONF_CLOCK_DPLL_LOCK_TIME;
 
 	dpll_config.reference_clock     = CONF_CLOCK_DPLL_REFERENCE_CLOCK;
 	dpll_config.reference_frequency = CONF_CLOCK_DPLL_REFERENCE_FREQUENCY;
