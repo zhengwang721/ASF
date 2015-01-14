@@ -3,7 +3,7 @@
  *
  * \brief SAM R21 Clock configuration
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -117,14 +117,19 @@
 #  define CONF_CLOCK_DPLL_WAKE_UP_FAST            false
 #  define CONF_CLOCK_DPLL_LOW_POWER_ENABLE        false
 #  define CONF_CLOCK_DPLL_LOCK_TIME \
-	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_NO_TIMEOUT
+	SYSTEM_CLOCK_SOURCE_DPLL_LOCK_TIME_DEFAULT
 #  define CONF_CLOCK_DPLL_REFERENCE_CLOCK \
-	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_REF0
+	SYSTEM_CLOCK_SOURCE_DPLL_REFERENCE_CLOCK_XOSC32K
 #  define CONF_CLOCK_DPLL_FILTER \
 	SYSTEM_CLOCK_SOURCE_DPLL_FILTER_DEFAULT
 #  define CONF_CLOCK_DPLL_REFERENCE_FREQUENCY     32768
 #  define CONF_CLOCK_DPLL_REFEREMCE_DIVIDER       1
 #  define CONF_CLOCK_DPLL_OUTPUT_FREQUENCY        48000000
+
+/* DPLL GCLK reference configuration */
+#  define CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR  GCLK_GENERATOR_1
+/* DPLL GCLK lock timer configuration */
+#  define CONF_CLOCK_DPLL_LOCK_GCLK_GENERATOR     GCLK_GENERATOR_1
 
 /* Set this to true to configure the GCLK when running clocks_init. If set to
  * false, none of the GCLK generators will be configured in clocks_init(). */

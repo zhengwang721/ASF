@@ -3,7 +3,7 @@
  *
  * \brief SAM D1x Clock Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -257,6 +257,14 @@
 
 #if !defined(CONF_CLOCK_DPLL_OUTPUT_FREQUENCY)
 #  error CONF_CLOCK_DPLL_OUTPUT_FREQUENCY not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR)
+#  error CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_DPLL_LOCK_GCLK_GENERATOR)
+#  error CONF_CLOCK_DPLL_LOCK_GCLK_GENERATOR not defined in conf_clock.h
 #endif
 
 #if !defined(CONF_CLOCK_CONFIGURE_GCLK)
