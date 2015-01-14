@@ -3,7 +3,7 @@
  *
  * \brief SAM Peripheral Access Controller Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -62,6 +62,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_pac_prerequisites
@@ -684,8 +685,8 @@ __no_inline enum status_code system_peripheral_unlock(
 		const uint32_t key);
 /** @}  */
 
-#if (SAML21) || defined(__DOXYGEN__)
-/** \name APIs available for SAM L21.
+#if (SAML21) || (SAMC21) || defined(__DOXYGEN__)
+/** \name APIs available for SAM L21/C21.
  * @{
  */
 __no_inline enum status_code system_peripheral_lock_always(
@@ -980,6 +981,11 @@ static inline void system_pac_disable_event(void)
  *		<th>Date</td>
  *		<th>Comments</td>
  *	</tr>
+ *	<tr>
+ *		<td>G</td>
+ *		<td>01/2015</td>
+ *		<td>Added support for SAMC21.</td>
+ *	</tr> 
  *	<tr>
  *		<td>F</td>
  *		<td>08/2014</td>

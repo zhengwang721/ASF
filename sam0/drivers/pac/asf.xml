@@ -35,9 +35,10 @@
 		</module>
 		<module type="meta" id="sam0.drivers.pac.common#sam_l" caption="Common files of PAC driver">
 			<build type="include-path" value="." />
-			<build type="include-path" value="pac_sam_l"/>
-			<build type="c-source" value="pac_sam_l/pac.c"/>
+			<build type="include-path" value="pac_sam_l_c"/>
+			<build type="c-source" value="pac_sam_l_c/pac.c"/>
 			<device-support value="saml21"/>
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 
