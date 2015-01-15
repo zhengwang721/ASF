@@ -3,7 +3,7 @@
  *
  * \brief SAM TC - Timer Counter Callback Driver
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/**
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -131,7 +131,7 @@ enum status_code tc_unregister_callback(
 			_tc_interrupt_handler(m); \
 		}
 
-#if (SAML21E) || (SAML21G)
+#if (SAML21E) || (SAML21G) || (SAMC21E) || (SAMC21G)
 _TC_INTERRUPT_HANDLER(0,0)
 _TC_INTERRUPT_HANDLER(1,1)
 _TC_INTERRUPT_HANDLER(4,2)

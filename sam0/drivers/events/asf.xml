@@ -18,6 +18,7 @@
 			<build type="include-path" value="events_sam_l"/>
 			<build type="c-source" value="events_sam_l/events.c"/>
 			<device-support value="saml21"/>
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 
