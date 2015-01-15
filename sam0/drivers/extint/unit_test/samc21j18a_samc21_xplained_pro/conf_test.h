@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM External Interrupt Driver Configuration Header
+ * \brief SAM C21 Xplained Pro test configuration.
  *
- * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,23 +43,16 @@
  /**
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
-#ifndef CONF_EXTINT_H_INCLUDED
-#define CONF_EXTINT_H_INCLUDED
 
-/** 
- * Define which clock type is used to clock EIC peripheral:
- *     - EXTINT_CLK_GCLK
- *     - EXTINT_CLK_ULP32K
- *
- * EXTINT_CLK_ULP32K is available for SAM L21/C21.
- */
-#define EXTINT_CLOCK_SELECTION   EXTINT_CLK_GCLK
- 
-/**
- * Define which GCLK source is used when selecting EXTINT_CLK_GCLK type.
- */
-#if (EXTINT_CLOCK_SELECTION == EXTINT_CLK_GCLK)
-#  define EXTINT_CLOCK_SOURCE      GCLK_GENERATOR_0
-#endif
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-#endif
+#define CONF_STDIO_USART          EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE       38400
+
+#endif /* CONF_TEST_H_INCLUDED */
