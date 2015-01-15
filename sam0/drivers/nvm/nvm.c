@@ -3,7 +3,7 @@
  *
  * \brief SAM Non Volatile Memory driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -746,7 +746,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 			((raw_user_row[0] & NVMCTRL_FUSES_EEPROM_SIZE_Msk)
 			>> NVMCTRL_FUSES_EEPROM_SIZE_Pos);
 
-#if (SAMD20) || (SAMD21) || (SAML21)
+#if (SAML21)
 	fusebits->bod33_level = (uint8_t)
 			((raw_user_row[0] & FUSES_BOD33USERLEVEL_Msk)
 			>> FUSES_BOD33USERLEVEL_Pos);
@@ -754,6 +754,18 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod33_enable = (bool)
 			(!((raw_user_row[0] & FUSES_BOD33_DIS_Msk)
 			>> FUSES_BOD33_DIS_Pos));
+
+	fusebits->bod33_action = (enum nvm_bod33_action)
+			((raw_user_row[0] & FUSES_BOD33_ACTION_Msk)
+			>> FUSES_BOD33_ACTION_Pos);
+#else if (SAMD20) || (SAMD21)
+	fusebits->bod33_level = (uint8_t)
+			((raw_user_row[0] & FUSES_BOD33USERLEVEL_Msk)
+			>> FUSES_BOD33USERLEVEL_Pos);
+
+	fusebits->bod33_enable = (bool)
+			((raw_user_row[0] & FUSES_BOD33_EN_Msk)
+			>> FUSES_BOD33_EN_Pos);
 
 	fusebits->bod33_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & FUSES_BOD33_ACTION_Msk)
