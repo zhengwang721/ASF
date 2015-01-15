@@ -85,7 +85,11 @@ void configure_adc(void)
 #endif
 	config_adc.clock_prescaler = ADC_CLOCK_PRESCALER_DIV8;
 	config_adc.reference       = ADC_REFERENCE_INTVCC1;
+#if (SAMC21)
+	config_adc.positive_input  = ADC_POSITIVE_INPUT_PIN5;
+#else
 	config_adc.positive_input  = ADC_POSITIVE_INPUT_PIN6;
+#endif
 	config_adc.resolution      = ADC_RESOLUTION_12BIT;
 //! [setup_modify_conf]
 

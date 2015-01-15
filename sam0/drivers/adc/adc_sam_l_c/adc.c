@@ -234,7 +234,8 @@ void adc_set_window_mode(
 * to the analog function in the pin mux, giving
 * the ADC access to the analog signal.
 *
-* \param [in] pin AINxx pin to configure
+* \param [in] index   Index of the ADC module instance.
+* \param [in] pin     AINxx pin to configure
 */
 static inline void _adc_configure_ain_pin(uint8_t index, uint32_t pin)
 {
@@ -395,6 +396,7 @@ static inline void _adc_configure_ain_pin(uint8_t index, uint32_t pin)
  *
  * Writes out a given ADC module configuration to the hardware module.
  *
+ * \param[in]  index        Index of the ADC module instance
  * \param[out] module_inst  Pointer to the ADC software instance struct
  * \param[in]  config       Pointer to configuration struct
  *

@@ -65,6 +65,7 @@
  * The following devices can use this module:
  * \if DEVICE_SAML21_SUPPORT
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM C21
  * \else
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
@@ -436,9 +437,10 @@ extern "C" {
 
 /** @} */
 
-#if (ADC_INST_NUM > 1)
-#  define _ADC_INTERRUPT_VECT_NUM(n, unused) \
-		  SYSTEM_INTERRUPT_MODULE_ADC##n,
+#if ADC_CALLBACK_MODE == true
+#   if (ADC_INST_NUM > 1)
+#       define _ADC_INTERRUPT_VECT_NUM(n, unused) \
+			SYSTEM_INTERRUPT_MODULE_ADC##n,
 /**
  * \internal Get the interrupt vector for the given device instance
  *
@@ -455,6 +457,7 @@ static enum system_interrupt_vector _adc_interrupt_get_interrupt_vector(
 
 	return (enum system_interrupt_vector)adc_interrupt_vectors[inst_num];
 }
+#   endif
 #endif
 
 #if !defined(__DOXYGEN__)
