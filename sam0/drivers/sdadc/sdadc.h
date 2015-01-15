@@ -349,11 +349,6 @@ struct sdadc_events {
  * \ref sdadc_get_config_defaults.
  */
 struct sdadc_correction_config {
-	/**
-	 * A specific offset, gain and shift correction can be applied to SDADC
-	 * if set to true.
-	 */
-	bool correction_enable;
 	/** Offset correction. */
 	int32_t offset_correction;
 	/** Gain correction. */
@@ -485,8 +480,7 @@ static inline void sdadc_get_config_defaults(struct sdadc_config *const config)
 	config->window.window_mode            = SDADC_WINDOW_MODE_DISABLE;
 	config->window.window_upper_value     = 0;
 	config->window.window_lower_value     = 0;
-	config->correction.correction_enable  = false;
-	config->correction.gain_correction    = SDADC_GAINCORR_RESETVALUE;
+	config->correction.gain_correction    = 1;
 	config->correction.offset_correction  = SDADC_OFFSETCORR_RESETVALUE;
 	config->correction.shift_correction   = SDADC_SHIFTCORR_RESETVALUE;
 }
