@@ -469,7 +469,7 @@ static inline void sdadc_get_config_defaults(struct sdadc_config *const config)
 	config->clock_prescaler               = 2;
 	config->osr                           = SDADC_OVER_SAMPLING_RATIO64;
 	config->skip_count                    = 0;
-	config->mux_input                     = SDADC_MUX_INPUT_AIN0 ;
+	config->mux_input                     = SDADC_MUX_INPUT_AIN1;
 	config->event_action                  = SDADC_EVENT_ACTION_DISABLED;
 	config->freerunning                   = false;
 	config->run_in_standby                = false;
