@@ -485,7 +485,9 @@ static enum status_code _rww_eeprom_emulator_move_data_to_spare(
 		_eeprom_instance.page_map[page_trans[c].logical_page] = new_page;
 		_eeprom_instance.cache_active = true;
 	}
-
+#ifdef SAMD21_64K
+	rww_eeprom_emulator_commit_page_buffer();
+#endif
 	/* Erase the row that was moved and set it as the new spare row */
 	_rww_eeprom_emulator_nvm_erase_row(row_number);
 

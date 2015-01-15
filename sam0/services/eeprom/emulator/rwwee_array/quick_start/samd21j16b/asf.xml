@@ -1,0 +1,22 @@
+<asf xmlversion="1.0">
+	<project caption="Quick Start for the SAM D21 RWW EEPROM Emulation Service" id="sam0.services.rww_eeprom_emulator.quick_start.samd21j16b">
+		<info type="gui-flag" value="move-to-root"/>
+		<require idref="sam0.services.rww_eeprom_emulator.quick_start"/>
+		<build type="include-path" value="."/>
+		<build type="header-file" value="conf_board.h"/>
+		<build type="header-file" value="conf_clocks.h"/>
+		<build type="header-file" value="conf_rwwee.h"/>
+		<build type="define" name="__SAMD21J16B__" value=""/>
+		<require idref="sam0.utils.cmsis.samd21.source.template"/>
+		<require idref="board.user_board.samd21j"/>
+		<build type="macro-config" subtype="script" value="debug_scripts/gcc/samd21_xplained_pro_flash.gdb" toolchain="armgcc"/>
+		<build type="macro-config" subtype="aux-script" value="debug_scripts/gcc/samd21_xplained_pro_sram.gdb" toolchain="armgcc"/>
+		<build type="macro-config" subtype="script" value="debug_scripts/iar/samd21_xplained_pro_flash.mac" toolchain="iarewarm"/>
+		<build type="macro-config" subtype="aux-script" value="debug_scripts/iar/samd21_xplained_pro_sram.mac" toolchain="iarewarm"/>
+		<require idref="common.utils"/>
+		<require idref="common.boards"/>
+		<require idref="sam0.drivers.port"/>
+		<generator value="as5_arm"/>
+		<device-support value="atsamd21j16b"/>
+	</project>
+</asf>

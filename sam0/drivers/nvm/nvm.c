@@ -376,6 +376,10 @@ enum status_code nvm_update_buffer(
  *       row should be erased (via \ref nvm_erase_row()) before attempting to
  *       write new data to the page.
  *
+ * \note For SAMD21 RWW devices, see \c SAMD21_64K, command \c NVM_COMMAND_RWWEE_WRITE_PAGE
+ * must be executed before any other commands after writing a page,
+ * refer to errata 13588.
+ *
  * \return Status of the attempt to write a page.
  *
  * \retval STATUS_OK               Requested NVM memory page was successfully
