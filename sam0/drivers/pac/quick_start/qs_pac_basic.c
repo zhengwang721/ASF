@@ -3,7 +3,7 @@
  *
  * \brief SAM PAC Quick Start
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -78,7 +78,7 @@ int main (void)
 //! [init_lock]
 
 //! [enable_interrupts]
-#if (SAML21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAMC21) || defined(__DOXYGEN__)
 	system_pac_enable_interrupt();
 #endif
 	system_interrupt_enable_global();
