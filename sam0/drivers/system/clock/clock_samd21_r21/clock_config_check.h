@@ -251,8 +251,8 @@
 #  error CONF_CLOCK_DPLL_REFERENCE_FREQUENCY not defined in conf_clock.h
 #endif
 
-#if !defined(CONF_CLOCK_DPLL_REFEREMCE_DIVIDER)
-#  error CONF_CLOCK_DPLL_REFEREMCE_DIVIDER not defined in conf_clock.h
+#if !defined(CONF_CLOCK_DPLL_REFERENCE_DIVIDER)
+#  error CONF_CLOCK_DPLL_REFERENCE_DIVIDER not defined in conf_clock.h
 #endif
 
 #if !defined(CONF_CLOCK_DPLL_OUTPUT_FREQUENCY)

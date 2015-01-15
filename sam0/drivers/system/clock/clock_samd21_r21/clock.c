@@ -1003,7 +1003,7 @@ void system_clock_init(void)
 
 	dpll_config.reference_clock     = CONF_CLOCK_DPLL_REFERENCE_CLOCK;
 	dpll_config.reference_frequency = CONF_CLOCK_DPLL_REFERENCE_FREQUENCY;
-	dpll_config.reference_divider   = CONF_CLOCK_DPLL_REFEREMCE_DIVIDER;
+	dpll_config.reference_divider   = CONF_CLOCK_DPLL_REFERENCE_DIVIDER;
 	dpll_config.output_frequency    = CONF_CLOCK_DPLL_OUTPUT_FREQUENCY;
 
 	system_clock_source_dpll_set_config(&dpll_config);
