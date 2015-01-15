@@ -71,7 +71,7 @@ static uint8_t tx_message_1[CAN_DATA_LEN]={0x08,0x09,0x0A,0x0B,0x0C
 //! [can_transfer_message_setting]
 
 //! [can_receive_message_setting]
-static volatile uint32_t receive_flag = 0;
+static volatile uint32_t receive_index = 0;
 static struct can_rx_element_fifo_0 *rx_element;
 //! [can_receive_message_setting]
 
@@ -112,7 +112,7 @@ static void configure_can(void)
 
 	can_init(&can_instance, CAN_MODULE, &config_can);
 
-	can_switch_mode(&can_instance, CAN_MODE_NORMAL_OPERATION);
+	can_switch_operation_mode(&can_instance, CAN_OPERATION_MODE_NORMAL_OPERATION);
 
 	/* Enable interrupts for this CAN module */
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_CAN0);
@@ -160,12 +160,12 @@ void CAN0_Handler(void)
 
 	if (status & CAN_RX_FIFO_0_NEW_MESSAGE) {
 		can_clear_interrupt_status(&can_instance, CAN_RX_FIFO_0_NEW_MESSAGE);
-		receive_flag = 1;
-		can_get_rx_fifo_0_element(&can_instance, rx_element,
-				CAN_RX_STANDARD_FILTER_INDEX);
+		can_get_rx_fifo_0_element(&can_instance, &rx_element,
+				receive_index);
 		can_rx_fifo_acknowledge(&can_instance, 0,
-				CAN_RX_STANDARD_FILTER_INDEX);
-		printf("The received buffer is: %d, %d, %d, %d, %d, %d, %d, %d.\n\r",
+				receive_index);
+				receive_index++;
+		printf("\n\r The received data is: %d, %d, %d, %d, %d, %d, %d, %d.\n\r",
 				rx_element->data[0], rx_element->data[1], rx_element->data[2],
 				rx_element->data[3], rx_element->data[4], rx_element->data[5],
 				rx_element->data[6], rx_element->data[7]);
@@ -217,18 +217,22 @@ int main(void)
 			break;
 
 		case '0':
+			printf("  0: Set filter ID 0: 0x5A. \r\n");
 			can_set_filter(CAN_RX_STANDARD_FILTER_ID_0);
 			break;
 
 		case '1':
+			printf("  1: Set filter ID 0: 0x69. \r\n");
 			can_set_filter(CAN_RX_STANDARD_FILTER_ID_1);
 			break;
 
 		case '2':
+			printf("  2: Send message with ID 0: 0x5A and 8 byte data 0 to 7. \r\n");
 			can_send_message(CAN_RX_STANDARD_FILTER_ID_0, tx_message_0);
 			break;
 
 		case '3':
+			printf("  3: Send message with ID 0: 0x69 and 8 byte data 8 to 15. \r\n");
 			can_send_message(CAN_RX_STANDARD_FILTER_ID_1, tx_message_1);
 			break;
 

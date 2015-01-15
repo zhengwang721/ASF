@@ -430,50 +430,24 @@ extern "C" {
  */
 
 /**
- * \brief Can speed setting.
- *
- * \note The below setting is based on the GCLK for CAN module is 48M.
- */
-enum can_speed {
-	/** Normal Operation Mode with nominal speed 1MHz and data speed 1MHz. */
-	CAN_SPEED_NORMAL_MODE_1000K_1000K,
-	/** Normal Operation Mode with nominal speed 500KHz and data speed 500KHz. */
-	CAN_SPEED_NORMAL_MODE_500K_500K,
-	/** FD Operation Mode with nominal speed 1MHz and data speed 3MHz. */
-	CAN_SPEED_FD_MODE_1000K_3000K,
-	/** FD Operation Mode with nominal speed 1MHz and data speed 1.5MHz. */
-	CAN_SPEED_FD_MODE_1000K_1500K,
-	/** FD Operation Mode with nominal speed 1MHz and data speed 1MHz. */
-	CAN_SPEED_FD_MODE_1000K_1000K,
-	/** FD Operation Mode with nominal speed 500KHz and data speed 3MHz. */
-	CAN_SPEED_FD_MODE_500K_3000K,
-	/** FD Operation Mode with nominal speed 500KHz and data speed 1.5MHz. */
-	CAN_SPEED_FD_MODE_500K_1500K,
-	/** FD Operation Mode with nominal speed 500KHz and data speed 1MHz. */
-	CAN_SPEED_FD_MODE_500K_1000K,
-	/** Number of the setting. */
-	CAN_SPEED_NUMBER,
-};
-
-/**
  * \brief Can module operation modes.
  *
  */
-enum can_mode {
+enum can_module_operation_mode {
 	/** Software Initialization Mode. */
-	CAN_MODE_SOFTWARE_INITIALIZATION,
+	CAN_OPERATION_MODE_SOFTWARE_INITIALIZATION,
 	/** Normal Operation Mode. */
-	CAN_MODE_NORMAL_OPERATION,
+	CAN_OPERATION_MODE_NORMAL_OPERATION,
 	/** CAN FD Operation Mode. */
-	CAN_MODE_FD_OPERATION,
+	CAN_OPERATION_MODE_FD_OPERATION,
 	/** Restricted Operation Mode. */
-	CAN_MODE_RESTRICTED_OPERATION,
+	CAN_OPERATION_MODE_RESTRICTED_OPERATION,
 	/** Bus Monitoring Mode. */
-	CAN_MODE_BUS_MONITOR,
+	CAN_OPERATION_MODE_BUS_MONITOR,
 	/** Sleep Mode. */
-	CAN_MODE_SLEEP,
+	CAN_OPERATION_MODE_SLEEP,
 	/** Test Mode. */
-	CAN_MODE_TEST,
+	CAN_OPERATION_MODE_TEST,
 };
 
 /**
@@ -528,8 +502,6 @@ struct can_module {
 struct can_config {
 	/** GCLK generator used to clock the peripheral. */
 	enum gclk_generator clock_source;
-	/** Speed setting. */
-	enum can_speed speed;
 	/** CAN run in standby control. */
 	bool run_in_standby;
 	/** Start value of the Message RAM Watchdog Counter */
@@ -592,7 +564,6 @@ struct can_config {
  *
  * The default configuration is as follows:
  *  \li GCLK generator 8 (GCLK main) clock source
- *  \li Normal Operation Mode with nominal speed 500KHz and data speed 500KHz.
  *  \li Not run in standby mode
  *  \li Watchdog value with 0xFF
  *  \li Transmit pause enabled
@@ -630,7 +601,6 @@ static inline void can_get_config_defaults(
 
 	/* Default configuration values */
 	config->clock_source = GCLK_GENERATOR_8;
-	config->speed = CAN_SPEED_NORMAL_MODE_500K_500K;
 	config->run_in_standby = false;
 	config->watchdog_configuration = 0xFF;
 	config->transmit_pause = true;
@@ -677,14 +647,8 @@ void can_init(struct can_module *const module_inst, Can *hw,
  * \param[in] module_inst  Pointer to the CAN software instance struct
  * \param[in] mode      Can operation mode type
  */
-void can_switch_mode(struct can_module *const module_inst,
-		const enum can_mode mode);
-
-
-/****************************/
-//Timing setting in DBTP and NBTP, use the reset default value to get a 500K rate.
-//GCLK selection is 2. And consider the clock accuration, we need DPLL?
-/***************************/
+void can_switch_operation_mode(struct can_module *const module_inst,
+		const enum can_module_operation_mode mode);
 
 /**
  * \brief Can read timestamp count value.
@@ -759,10 +723,58 @@ static inline uint32_t can_read_high_priority_message_status(
 }
 
 /**
+ * \brief Get Rx buffer status.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] index  Index offset in Rx buffer
+ *
+ * \return Rx buffer status value.
+ *
+ *  \retval true Rx Buffer updated from new message.
+ *  \retval false Rx Buffer not updated.
+ */
+static inline bool can_rx_get_buffer_status(
+		struct can_module *const module_inst, uint32_t index)
+{
+	if (index < 32) {
+		if (module_inst->hw->NDAT1.reg & (1 << index)) {
+			return true;
+		} else {
+			return false;
+		}
+	} else {
+		index -= 32;
+		if (module_inst->hw->NDAT2.reg & (1 << index)) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+}
+
+/**
+ * \brief Clear Rx buffer status.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ * \param[in] index  Index offset in Rx buffer
+ *
+ */
+static inline void can_rx_clear_buffer_status(
+		struct can_module *const module_inst, uint32_t index)
+{
+	if (index < 32) {
+		module_inst->hw->NDAT1.reg &= ~(1 << index);
+	} else {
+		index -= 32;
+		module_inst->hw->NDAT2.reg &= ~(1 << index);
+	}
+}
+
+/**
  * \brief Get Rx FIFO status.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] fifo_number  FIFO 0 or 1
+ * \param[in] fifo_number  Rx FIFO 0 or 1
  *
  * \return Rx FIFO status value.
  */
@@ -780,7 +792,7 @@ static inline uint32_t can_rx_get_fifo_status(
  * \brief Set Rx acknowledge.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] fifo_number  FIFO 0 or 1
+ * \param[in] fifo_number  Rx FIFO 0 or 1
  * \param[in] index  Index offset in FIFO
  */
 static inline void can_rx_fifo_acknowledge(
@@ -867,7 +879,7 @@ enum status_code can_set_rx_extended_filter(
  */
 enum status_code can_get_rx_buffer_element(
 		struct can_module *const module_inst,
-		struct can_rx_element_buffer *rx_element, uint32_t index);
+		struct can_rx_element_buffer **rx_element, uint32_t index);
 
 /**
  * \brief Get the pointer to the receive FIFO 0 element.
@@ -883,7 +895,7 @@ enum status_code can_get_rx_buffer_element(
  */
 enum status_code can_get_rx_fifo_0_element(
 		struct can_module *const module_inst,
-		struct can_rx_element_fifo_0 *rx_element, uint32_t index);
+		struct can_rx_element_fifo_0 **rx_element, uint32_t index);
 
 /**
  * \brief Get the pointer to the receive FIFO 1 element.
@@ -899,7 +911,7 @@ enum status_code can_get_rx_fifo_0_element(
  */
 enum status_code can_get_rx_fifo_1_element(
 		struct can_module *const module_inst,
-		struct can_rx_element_fifo_1 *rx_element, uint32_t index);
+		struct can_rx_element_fifo_1 **rx_element, uint32_t index);
 
 /** @} */
 

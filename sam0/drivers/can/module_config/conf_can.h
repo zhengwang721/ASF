@@ -71,4 +71,34 @@
 #define CONF_CAN_RX_ELEMENT_DATA_SIZE_FIFO_1         8
 #define CONF_CAN_TX_ELEMENT_DATA_SIZE                8
 
+/* 
+ * The setting of the nominal bit rate is based on the GCLK_CAN is 48M which you can
+ * change in the conf_clock.h. Below is the default configuration. The 
+ * time quanta is 48MHz/(5 + 1) =  8MHz. And each bit is (3+10+3)=16 time
+ * quanta which means the bit rate is 8MHz/16=500KHz.
+ */
+/* Nominal bit Baud Rate Prescaler */
+#define CONF_CAN_NBTP_NBRP_VALUE    5
+/* Nominal bit (Re)Synchronization Jump Width */
+#define CONF_CAN_NBTP_NSJW_VALUE    3
+/* Nominal bit Time segment before sample point */
+#define CONF_CAN_NBTP_NTSEG1_VALUE  10
+/* Nominal bit Time segment after sample point */
+#define CONF_CAN_NBTP_NTSEG2_VALUE  3
+
+/* 
+ * The setting of the data bit rate is based on the GCLK_CAN is 48M which you can
+ * change in the conf_clock.h. Below is the default configuration. The 
+ * time quanta is 48MHz/(5 + 1) =  8MHz. And each bit is (3+10+3)=16 time
+ * quanta which means the bit rate is 8MHz/16=500KHz.
+ */
+/* Data bit Baud Rate Prescaler */
+#define CONF_CAN_DBTP_DBRP_VALUE    5
+/* Data bit (Re)Synchronization Jump Width */
+#define CONF_CAN_DBTP_DSJW_VALUE    3
+/* Data bit Time segment before sample point */
+#define CONF_CAN_DBTP_DTSEG1_VALUE  10
+/* Data bit Time segment after sample point */
+#define CONF_CAN_DBTP_DTSEG2_VALUE  3
+
 #endif

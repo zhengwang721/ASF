@@ -49,18 +49,6 @@
 /* Instance for GCLK setting. */
 struct system_gclk_chan_config gclk_chan_conf;
 
-/* Speed setting static prescaler data. */
-static uint8_t speed_setting_prescaler[CAN_SPEED_NUMBER][2] = {
-	{0x02, 0x02},
-	{0x05, 0x05},
-	{0x02, 0x00},
-	{0x02, 0x01},
-	{0x02, 0x02},
-	{0x05, 0x00},
-	{0x05, 0x01},
-	{0x05, 0x02}
-};
-
 /* Message ram definition. */
 COMPILER_ALIGNED(4)
 static struct can_rx_element_buffer can0_rx_buffer[CONF_CAN0_RX_BUFFER_NUM];
@@ -136,8 +124,14 @@ static void _can_message_memory_init(Can *hw)
 
 static void _can_set_configuration(Can *hw, struct can_config *config)
 {
-	hw->NBTP.reg |= CAN_NBTP_NBRP(speed_setting_prescaler[config->speed][0]);
-	hw->DBTP.reg |= CAN_DBTP_DBRP(speed_setting_prescaler[config->speed][1]);
+	hw->NBTP.reg = CAN_NBTP_NBRP(CONF_CAN_NBTP_NBRP_VALUE) |
+			CAN_NBTP_NSJW(CONF_CAN_NBTP_NSJW_VALUE) |
+			CAN_NBTP_NTSEG1(CONF_CAN_NBTP_NTSEG1_VALUE) |
+			CAN_NBTP_NTSEG2(CONF_CAN_NBTP_NTSEG2_VALUE);
+	hw->DBTP.reg = CAN_DBTP_DBRP(CONF_CAN_DBTP_DBRP_VALUE) |
+			CAN_DBTP_DSJW(CONF_CAN_DBTP_DSJW_VALUE) |
+			CAN_DBTP_DTSEG1(CONF_CAN_DBTP_DTSEG1_VALUE) |
+			CAN_DBTP_DTSEG2(CONF_CAN_DBTP_DTSEG2_VALUE);
 
 	if (config->run_in_standby) {
 		hw->MRCFG.reg |= 0x01<<6;
@@ -259,12 +253,13 @@ void can_init(struct can_module *const module_inst, Can *hw,
 	hw->TXBCIE.reg = CAN_TXBCIE_MASK;
 }
 
-void can_switch_mode(struct can_module *const module_inst, const enum can_mode mode)
+void can_switch_operation_mode(struct can_module *const module_inst,
+		const enum can_module_operation_mode mode)
 {
 	/* Enable peripheral clock */
 	_can_enable_peripheral_clock(module_inst);
 
-	if (mode == CAN_MODE_SLEEP) {
+	if (mode == CAN_OPERATION_MODE_SLEEP) {
 		module_inst->hw->CCCR.reg |= CAN_CCCR_CSR;
 		/* Wait for the sync. */
 		while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
@@ -285,16 +280,16 @@ void can_switch_mode(struct can_module *const module_inst, const enum can_mode m
 			while ((module_inst->hw->CCCR.reg & CAN_CCCR_CSA));
 		}
 
-		if (mode == CAN_MODE_SOFTWARE_INITIALIZATION) {
-			module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+		if (mode == CAN_OPERATION_MODE_SOFTWARE_INITIALIZATION) {
+			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
 			/* Wait for the sync. */
 			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-		} else if (mode == CAN_MODE_NORMAL_OPERATION) {
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
+		} else if (mode == CAN_OPERATION_MODE_NORMAL_OPERATION) {
+			module_inst->hw->CCCR.reg = 0;
 			/* Wait for the sync. */
 			while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
-		} else if (mode == CAN_MODE_RESTRICTED_OPERATION) {
-			module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+		} else if (mode == CAN_OPERATION_MODE_RESTRICTED_OPERATION) {
+			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
 			/* Wait for the sync. */
 			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
 
@@ -304,8 +299,8 @@ void can_switch_mode(struct can_module *const module_inst, const enum can_mode m
 			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
 			/* Wait for the sync. */
 			while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
-		} else if (mode == CAN_MODE_BUS_MONITOR) {
-			module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+		} else if (mode == CAN_OPERATION_MODE_BUS_MONITOR) {
+			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
 			/* Wait for the sync. */
 			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
 
@@ -315,8 +310,8 @@ void can_switch_mode(struct can_module *const module_inst, const enum can_mode m
 			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
 			/* Wait for the sync. */
 			while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
-		} else if (mode == CAN_MODE_TEST) {
-			module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+		} else if (mode == CAN_OPERATION_MODE_TEST) {
+			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
 			/* Wait for the sync. */
 			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
 
@@ -363,13 +358,13 @@ enum status_code can_set_rx_extended_filter(
 
 enum status_code can_get_rx_buffer_element(
 		struct can_module *const module_inst,
-		struct can_rx_element_buffer *rx_element, uint32_t index)
+		struct can_rx_element_buffer **rx_element, uint32_t index)
 {
 	if (module_inst->hw == CAN0) {
-		rx_element = &can0_rx_buffer[index];
+		*rx_element = &can0_rx_buffer[index];
 		return STATUS_OK;
 	} else if (module_inst->hw == CAN1) {
-		rx_element = &can1_rx_buffer[index];
+		*rx_element = &can1_rx_buffer[index];
 		return STATUS_OK;
 	}
 	return STATUS_ERR_INVALID_ARG;
@@ -377,13 +372,13 @@ enum status_code can_get_rx_buffer_element(
 
 enum status_code can_get_rx_fifo_0_element(
 		struct can_module *const module_inst,
-		struct can_rx_element_fifo_0 *rx_element, uint32_t index)
+		struct can_rx_element_fifo_0 **rx_element, uint32_t index)
 {
 	if (module_inst->hw == CAN0) {
-		rx_element = &can0_rx_fifo_0[index];
+		*rx_element = &can0_rx_fifo_0[index];
 		return STATUS_OK;
 	} else if (module_inst->hw == CAN1) {
-		rx_element = &can1_rx_fifo_0[index];
+		*rx_element = &can1_rx_fifo_0[index];
 		return STATUS_OK;
 	}
 	return STATUS_ERR_INVALID_ARG;
@@ -391,13 +386,13 @@ enum status_code can_get_rx_fifo_0_element(
 
 enum status_code can_get_rx_fifo_1_element(
 		struct can_module *const module_inst,
-		struct can_rx_element_fifo_1 *rx_element, uint32_t index)
+		struct can_rx_element_fifo_1 **rx_element, uint32_t index)
 {
 	if (module_inst->hw == CAN0) {
-		rx_element = &can0_rx_fifo_1[index];
+		*rx_element = &can0_rx_fifo_1[index];
 		return STATUS_OK;
 	} else if (module_inst->hw == CAN1) {
-		rx_element = &can1_rx_fifo_1[index];
+		*rx_element = &can1_rx_fifo_1[index];
 		return STATUS_OK;
 	}
 	return STATUS_ERR_INVALID_ARG;
