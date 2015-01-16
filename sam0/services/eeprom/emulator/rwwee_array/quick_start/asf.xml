@@ -8,8 +8,9 @@
 		<build type="include-path" value="."/>
 		<require idref="sam0.services.rww_eeprom_emulator"/>
 		<device-support value="saml21"/>
-		<device-support value="samd21jb"/>
-		<device-support value="samd21gb"/>
-		<device-support value="samd21ebl"/>
+		<device-support value="samd21jxxb"/>
+		<device-support value="samd21gxxb"/>
+		<device-support value="samd21exxbl"/>
+		<device-support value="samd21exxl"/>
 	</module>
 </asf>
