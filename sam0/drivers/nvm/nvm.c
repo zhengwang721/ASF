@@ -758,7 +758,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod33_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & FUSES_BOD33_ACTION_Msk)
 			>> FUSES_BOD33_ACTION_Pos);
-#else if (SAMD20) || (SAMD21)
+#elif (SAMD20) || (SAMD21)
 	fusebits->bod33_level = (uint8_t)
 			((raw_user_row[0] & FUSES_BOD33USERLEVEL_Msk)
 			>> FUSES_BOD33USERLEVEL_Pos);

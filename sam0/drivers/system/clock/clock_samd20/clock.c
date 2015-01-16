@@ -3,7 +3,7 @@
  *
  * \brief SAM D20 Clock Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -760,7 +760,7 @@ void system_clock_init(void)
 	/* OSCK32K */
 #if CONF_CLOCK_OSC32K_ENABLE == true
 	SYSCTRL->OSC32K.bit.CALIB =
-			(*(uint32_t *)SYSCTRL_FUSES_OSC32KCAL_ADDR >> SYSCTRL_FUSES_OSC32KCAL_Pos);
+			(*(uint32_t *)FUSES_OSC32KCAL_ADDR >> FUSES_OSC32KCAL_Pos);
 
 	struct system_clock_source_osc32k_config osc32k_conf;
 	system_clock_source_osc32k_get_config_defaults(&osc32k_conf);
