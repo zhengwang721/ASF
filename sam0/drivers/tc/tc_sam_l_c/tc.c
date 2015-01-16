@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM L21 TC - Timer Counter Driver
+ * \brief SAM TC - Timer Counter Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -117,6 +117,25 @@ enum status_code tc_init(
 	/* Temporary variable to hold TC instance number */
 	uint8_t instance = _tc_get_inst_index(hw);
 
+#if SAMC21
+#if	(SAMC21J)
+	/* Array of GLCK ID for different TC instances */
+	uint8_t inst_gclk_id[] = {TC0_GCLK_ID, TC1_GCLK_ID, TC2_GCLK_ID, TC3_GCLK_ID, TC4_GCLK_ID};
+	/* Array of MCLK APB mask bit position for different TC instances */
+	uint32_t inst_mclk_apbmask[] = {SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC0,
+									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC1,
+									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC2,
+									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC3,
+									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC4};
+#else
+	/* Array of GLCK ID for different TC instances */
+	uint8_t inst_gclk_id[] = {TC0_GCLK_ID, TC1_GCLK_ID, TC4_GCLK_ID};
+	/* Array of PM APB mask bit position for different TC instances */
+	uint32_t inst_mclk_apbmask[] = {SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC0,
+									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC1,
+									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC4};
+#endif
+#else
 #if	(SAML21J)
 	/* Array of GLCK ID for different TC instances */
 	uint8_t inst_gclk_id[] = {TC0_GCLK_ID, TC1_GCLK_ID, TC2_GCLK_ID, TC3_GCLK_ID, TC4_GCLK_ID};
@@ -133,6 +152,7 @@ enum status_code tc_init(
 	uint32_t inst_mclk_apbmask[] = {SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC0,
 									SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_TC1,
 									SYSTEM_CLOCK_APB_APBD, MCLK_APBDMASK_TC4};
+#endif
 #endif
 
 	struct system_pinmux_config pin_config;

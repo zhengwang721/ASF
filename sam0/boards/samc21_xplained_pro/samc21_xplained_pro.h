@@ -181,6 +181,16 @@ void system_board_init(void);
 #define EXT1_PIN_SPI_SCK          EXT1_PIN_18
 /** @} */
 
+/** \name Extension header #1 IRQ/External interrupt definitions
+ *  @{
+ */
+#define EXT1_IRQ_MODULE           EIC
+#define EXT1_IRQ_INPUT            14
+#define EXT1_IRQ_PIN              PIN_PB14A_EIC_EXTINT14
+#define EXT1_IRQ_MUX              MUX_PB14A_EIC_EXTINT14
+#define EXT1_IRQ_PINMUX           PINMUX_PB14A_EIC_EXTINT14
+/** @} */
+
 /** \name Extension header #1 I2C definitions
  *  @{
  */
@@ -230,6 +240,20 @@ void system_board_init(void);
 #define EXT1_SPI_SERCOM_DMAC_ID_RX   SERCOM1_DMAC_ID_RX
 /** @} */
 
+/** \name Extension header #1 PWM definitions
+ *  @{
+ */
+#define EXT1_PWM_MODULE           TC0
+#define EXT1_PWM_0_CHANNEL        0
+#define EXT1_PWM_0_PIN            PIN_PB12E_TC0_WO0
+#define EXT1_PWM_0_MUX            MUX_PB12E_TC0_WO0
+#define EXT1_PWM_0_PINMUX         PINMUX_PB12E_TC0_WO0
+#define EXT1_PWM_1_CHANNEL        1
+#define EXT1_PWM_1_PIN            PIN_PB13E_TC0_WO1
+#define EXT1_PWM_1_MUX            MUX_PB13E_TC0_WO1
+#define EXT1_PWM_1_PINMUX         PINMUX_PB13E_TC0_WO1
+/** @} */
+
 /** \name Extension header #2 pin definitions
  *  @{
  */
@@ -270,6 +294,16 @@ void system_board_init(void);
 #define EXT2_PIN_SPI_MOSI         EXT2_PIN_16
 #define EXT2_PIN_SPI_MISO         EXT2_PIN_17
 #define EXT2_PIN_SPI_SCK          EXT2_PIN_18
+/** @} */
+
+/** \name Extension header #2 IRQ/External interrupt definitions
+ *  @{
+ */
+#define EXT2_IRQ_MODULE           EIC
+#define EXT2_IRQ_INPUT            16
+#define EXT2_IRQ_PIN              PIN_PB16A_EIC_EXTINT0
+#define EXT2_IRQ_MUX              MUX_PB16A_EIC_EXTINT0
+#define EXT2_IRQ_PINMUX           PINMUX_PB16A_EIC_EXTINT0
 /** @} */
 
  /** \name Extension header #2 I2C definitions
@@ -363,6 +397,16 @@ void system_board_init(void);
 #define EXT3_PIN_SPI_SCK          EXT3_PIN_18
 /** @} */
 
+/** \name Extension header #3 IRQ/External interrupt definitions
+ *  @{
+ */
+#define EXT3_IRQ_MODULE           EIC
+#define EXT3_IRQ_INPUT            8
+#define EXT3_IRQ_PIN              PIN_PA28A_EIC_EXTINT8
+#define EXT3_IRQ_MUX              MUX_PA28A_EIC_EXTINT8
+#define EXT3_IRQ_PINMUX           PINMUX_PA28A_EIC_EXTINT8
+/** @} */
+
 /** \name Extension header #3 I2C definitions
  *  @{
  */
@@ -384,6 +428,20 @@ void system_board_init(void);
 #define EXT3_SPI_SERCOM_PINMUX_PAD3  PINMUX_PB01D_SERCOM5_PAD3
 #define EXT3_SPI_SERCOM_DMAC_ID_TX   SERCOM5_DMAC_ID_TX
 #define EXT3_SPI_SERCOM_DMAC_ID_RX   SERCOM5_DMAC_ID_RX
+/** @} */
+
+/** \name Extension header #3 PWM definitions
+ *  @{
+ */
+#define EXT3_PWM_MODULE           TC4
+#define EXT3_PWM_0_CHANNEL        0
+#define EXT3_PWM_0_PIN            PIN_PA14E_TC4_WO0
+#define EXT3_PWM_0_MUX            MUX_PA14E_TC4_WO0
+#define EXT3_PWM_0_PINMUX         PINMUX_PA14E_TC4_WO0
+#define EXT3_PWM_1_CHANNEL        1
+#define EXT3_PWM_1_PIN            PIN_PA15E_TC4_WO1
+#define EXT3_PWM_1_MUX            MUX_PA15E_TC4_WO1
+#define EXT3_PWM_1_PINMUX         PINMUX_PA15E_TC4_WO1
 /** @} */
 
 /** \name LIN definitions

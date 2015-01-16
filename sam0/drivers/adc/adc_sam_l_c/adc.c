@@ -3,7 +3,7 @@
  *
  * \brief SAM Peripheral Analog-to-Digital Converter Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -45,6 +45,78 @@
  */
 
 #include "adc.h"
+#if (ADC_INST_NUM > 1)
+
+#  define _ADC_GCLK_ID(n,unused)           TPASTE3(ADC,n,_GCLK_ID),
+#  define _ADC_APBCMASK(n,unused)          TPASTE2(MCLK_APBCMASK_ADC,n),
+
+#  define _ADC_FUSES_BIASCOMP_ADDR(n,unused)        TPASTE3(ADC,n,_FUSES_BIASCOMP_ADDR),
+#  define _ADC_FUSES_BIASCOMP_Pos(n,unused)         TPASTE3(ADC,n,_FUSES_BIASCOMP_Pos),
+#  define _ADC_FUSES_BIASREFBUF_ADDR(n,unused)      TPASTE3(ADC,n,_FUSES_BIASREFBUF_ADDR),
+#  define _ADC_FUSES_BIASREFBUF_Pos(n,unused)       TPASTE3(ADC,n,_FUSES_BIASREFBUF_Pos),
+#  define _ADC_EXTCHANNEL_MSB(n,unused)             TPASTE3(ADC,n,_EXTCHANNEL_MSB),
+
+#  define ADC_GCLK_ID       MREPEAT(ADC_INST_NUM, _ADC_GCLK_ID, 0)
+#  define ADC_APBCMASKS     MREPEAT(ADC_INST_NUM, _ADC_APBCMASK, 0)
+
+#  define ADC_FUSES_BIASCOMP_ADDR     MREPEAT(ADC_INST_NUM, _ADC_FUSES_BIASCOMP_ADDR, 0)
+#  define ADC_FUSES_BIASCOMP_Pos      MREPEAT(ADC_INST_NUM, _ADC_FUSES_BIASCOMP_Pos, 0)
+#  define ADC_FUSES_BIASREFBUF_ADDR   MREPEAT(ADC_INST_NUM, _ADC_FUSES_BIASREFBUF_ADDR, 0)
+#  define ADC_FUSES_BIASREFBUF_Pos    MREPEAT(ADC_INST_NUM, _ADC_FUSES_BIASREFBUF_Pos, 0)
+#  define ADC_EXTCHANNEL_MSB          MREPEAT(ADC_INST_NUM, _ADC_EXTCHANNEL_MSB, 0)
+
+#endif
+
+/* List of ADC GCLK IDs */
+const uint8_t _adc_gclk_ids[ADC_INST_NUM] = { ADC_GCLK_ID };
+
+/* List of ADC APB Masks */
+#if (SAML21)
+const uint32_t _adc_apbcmasks[ADC_INST_NUM] = { MCLK_APBDMASK_ADC };
+#else
+const uint32_t _adc_apbcmasks[ADC_INST_NUM] = { ADC_APBCMASKS };
+#endif
+
+/* List of Number of external channels of ADC modules. */
+const uint32_t _adc_extchannel_msb[ADC_INST_NUM] = { ADC_EXTCHANNEL_MSB };
+
+/* List of address of comparator scaling of ADC modules. */
+const uint32_t _adc_biascomp_addr[ADC_INST_NUM] = { ADC_FUSES_BIASCOMP_ADDR };
+
+/* List of address of bias reference buffer scaling of ADC modules. */
+const uint32_t _adc_biasrefbuf_addr[ADC_INST_NUM] = { ADC_FUSES_BIASREFBUF_ADDR };
+
+/* List of offset of comparator scaling of ADC modules. */
+const uint8_t _adc_biascomp_pos[ADC_INST_NUM] = { ADC_FUSES_BIASCOMP_Pos };
+
+/* List of offset of bias reference buffer scaling of ADC modules. */
+const uint8_t _adc_biasrefbuf_pos[ADC_INST_NUM] = { ADC_FUSES_BIASREFBUF_Pos };
+
+
+/**
+ * \internal Find the index of given ADC module instance.
+ *
+ * \param[in] ADC module instance pointer.
+ *
+ * \return Index of the given ADC module instance.
+ */
+uint8_t _adc_get_inst_index(
+		Adc *const hw)
+{
+	/* List of available ADC modules. */
+	Adc *const adc_modules[ADC_INST_NUM] = ADC_INSTS;
+
+	/* Find index for ADC instance. */
+	for (uint32_t i = 0; i < ADC_INST_NUM; i++) {
+		if (hw == adc_modules[i]) {
+			return i;
+		}
+	}
+
+	/* Invalid data given. */
+	Assert(false);
+	return 0;
+}
 
 /**
  * \brief Initializes an ADC configuration structure to defaults.
@@ -162,15 +234,17 @@ void adc_set_window_mode(
 * to the analog function in the pin mux, giving
 * the ADC access to the analog signal.
 *
-* \param [in] pin AINxx pin to configure
+* \param [in] index   Index of the ADC module instance.
+* \param [in] pin     AINxx pin to configure
 */
-static inline void _adc_configure_ain_pin(uint32_t pin)
+static inline void _adc_configure_ain_pin(uint8_t index, uint32_t pin)
 {
 #define PIN_INVALID_ADC_AIN    0xFFFFUL
 
 	/* Pinmapping table for AINxx -> GPIO pin number */
+#if (SAML21)
 	const uint32_t pinmapping[] = {
-#if (SAML21E)
+#   if (SAML21E)
 			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_PA04B_ADC_AIN4,  PIN_PA05B_ADC_AIN5,
@@ -183,7 +257,7 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 			PIN_PA10B_ADC_AIN18, PIN_PA11B_ADC_AIN19,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
-#elif (SAML21G)
+#   elif (SAML21G)
 			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
 			PIN_PB08B_ADC_AIN2,  PIN_PB09B_ADC_AIN3,
 			PIN_PA04B_ADC_AIN4,  PIN_PA05B_ADC_AIN5,
@@ -196,7 +270,7 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 			PIN_PA10B_ADC_AIN18, PIN_PA11B_ADC_AIN19,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
-#elif (SAML21J)
+#   elif (SAML21J)
 			PIN_PA02B_ADC_AIN0,  PIN_PA03B_ADC_AIN1,
 			PIN_PB08B_ADC_AIN2,  PIN_PB09B_ADC_AIN3,
 			PIN_PA04B_ADC_AIN4,  PIN_PA05B_ADC_AIN5,
@@ -209,14 +283,99 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
 			PIN_PA10B_ADC_AIN18, PIN_PA11B_ADC_AIN19,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
 			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
-#else
-#  error ADC pin mappings are not defined for this device.
-#endif
+#   else
+#       error ADC pin mappings are not defined for this device.
+#   endif
+	};
+#elif (SAMC21)
+	const uint32_t *pinmapping = NULL;;
+	const uint32_t pinmapping0[] = {
+#   if (SAMC21E)
+			PIN_PA02B_ADC0_AIN0,  PIN_PA03B_ADC0_AIN1,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_PA04B_ADC0_AIN4,  PIN_PA05B_ADC0_AIN5,
+			PIN_PA06B_ADC0_AIN6,  PIN_PA07B_ADC0_AIN7,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_PA08B_ADC0_AIN16, PIN_PA09B_ADC0_AIN17,
+			PIN_PA10B_ADC0_AIN18, PIN_PA11B_ADC0_AIN19,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+#   elif (SAMC21G)
+			PIN_PA02B_ADC0_AIN0,  PIN_PA03B_ADC0_AIN1,
+			PIN_PB08B_ADC0_AIN2,  PIN_PB09B_ADC0_AIN3,
+			PIN_PA04B_ADC0_AIN4,  PIN_PA05B_ADC0_AIN5,
+			PIN_PA06B_ADC0_AIN6,  PIN_PA07B_ADC0_AIN7,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_PB02B_ADC0_AIN10, PIN_PB03B_ADC0_AIN11,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_PA08B_ADC0_AIN16, PIN_PA09B_ADC0_AIN17,
+			PIN_PA10B_ADC0_AIN18, PIN_PA11B_ADC0_AIN19,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+#   elif (SAMC21J)
+			PIN_PA02B_ADC0_AIN0,  PIN_PA03B_ADC0_AIN1,
+			PIN_PB08B_ADC0_AIN2,  PIN_PB09B_ADC0_AIN3,
+			PIN_PA04B_ADC0_AIN4,  PIN_PA05B_ADC0_AIN5,
+			PIN_PA06B_ADC0_AIN6,  PIN_PA07B_ADC0_AIN7,
+			PIN_PB00B_ADC0_AIN8,  PIN_PB01B_ADC0_AIN9,
+			PIN_PB02B_ADC0_AIN10, PIN_PB03B_ADC0_AIN11,
+			PIN_PB04B_ADC0_AIN12, PIN_PB05B_ADC0_AIN13,
+			PIN_PB06B_ADC0_AIN14, PIN_PB07B_ADC0_AIN15,
+			PIN_PA08B_ADC0_AIN16, PIN_PA09B_ADC0_AIN17,
+			PIN_PA10B_ADC0_AIN18, PIN_PA11B_ADC0_AIN19,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+			PIN_INVALID_ADC_AIN, PIN_INVALID_ADC_AIN,
+#   else
+#       error ADC pin mappings are not defined for this device.
+#   endif
 		};
+	const uint32_t pinmapping1[] = {
+#   if (SAMC21E)
+		PIN_INVALID_ADC_AIN,  PIN_INVALID_ADC_AIN,
+		PIN_INVALID_ADC_AIN,  PIN_INVALID_ADC_AIN,
+		PIN_INVALID_ADC_AIN,  PIN_INVALID_ADC_AIN,
+		PIN_INVALID_ADC_AIN,  PIN_INVALID_ADC_AIN,
+		PIN_INVALID_ADC_AIN,  PIN_INVALID_ADC_AIN,
+		PIN_PA08B_ADC1_AIN10, PIN_PA09B_ADC1_AIN11,
+#   elif (SAMC21G)
+		PIN_INVALID_ADC_AIN,  PIN_INVALID_ADC_AIN,
+		PIN_PB02B_ADC1_AIN2,  PIN_PB03B_ADC1_AIN3,
+		PIN_PB08B_ADC1_AIN4,  PIN_PB09B_ADC1_AIN5,
+		PIN_INVALID_ADC_AIN,  PIN_INVALID_ADC_AIN,
+		PIN_INVALID_ADC_AIN,  PIN_INVALID_ADC_AIN,
+		PIN_PA08B_ADC1_AIN10, PIN_PA09B_ADC1_AIN11,
+#   elif (SAMC21J)
+		PIN_PB00B_ADC1_AIN0,  PIN_PB01B_ADC1_AIN1,
+		PIN_PB02B_ADC1_AIN2,  PIN_PB03B_ADC1_AIN3,
+		PIN_PB08B_ADC1_AIN4,  PIN_PB09B_ADC1_AIN5,
+		PIN_PB04B_ADC1_AIN6,  PIN_PB05B_ADC1_AIN7,
+		PIN_PB06B_ADC1_AIN8,  PIN_PB07B_ADC1_AIN9,
+		PIN_PA08B_ADC1_AIN10, PIN_PA09B_ADC1_AIN11,
+#   else
+#       error ADC pin mappings are not defined for this device.
+#   endif
+	};
+
+	switch(index) {
+	case 0:
+		pinmapping = pinmapping0;
+		break;
+	case 1:
+		pinmapping = pinmapping1;
+		break;
+	default:
+		break;
+	}
+	Assert(pinmapping);
+#endif
 
 	uint32_t pin_map_result = PIN_INVALID_ADC_AIN;
 
-	if (pin <= ADC_EXTCHANNEL_MSB) {
+	if (pin <= _adc_extchannel_msb[index]) {
 		pin_map_result = pinmapping[pin >> ADC_INPUTCTRL_MUXPOS_Pos];
 
 		Assert(pin_map_result != PIN_INVALID_ADC_AIN);
@@ -237,6 +396,7 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
  *
  * Writes out a given ADC module configuration to the hardware module.
  *
+ * \param[in]  index        Index of the ADC module instance
  * \param[out] module_inst  Pointer to the ADC software instance struct
  * \param[in]  config       Pointer to configuration struct
  *
@@ -245,6 +405,7 @@ static inline void _adc_configure_ain_pin(uint32_t pin)
  * \retval STATUS_ERR_INVALID_ARG  Invalid argument(s) were provided
  */
 static enum status_code _adc_set_config(
+		uint8_t index,
 		struct adc_module *const module_inst,
 		struct adc_config *const config)
 {
@@ -259,17 +420,17 @@ static enum status_code _adc_set_config(
 	struct system_gclk_chan_config gclk_chan_conf;
 	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
 	gclk_chan_conf.source_generator = config->clock_source;
-	system_gclk_chan_set_config(ADC_GCLK_ID, &gclk_chan_conf);
-	system_gclk_chan_enable(ADC_GCLK_ID);
+	system_gclk_chan_set_config(_adc_gclk_ids[index], &gclk_chan_conf);
+	system_gclk_chan_enable(_adc_gclk_ids[index]);
 
 	/* Setup pinmuxing for analog inputs */
-	_adc_configure_ain_pin(config->positive_input);
-	_adc_configure_ain_pin(config->negative_input);
+	_adc_configure_ain_pin(index, config->positive_input);
+	_adc_configure_ain_pin(index, config->negative_input);
 
 	/* Set pinmux for positive input sequence*/
-  	for(uint8_t i=0;i <= ADC_EXTCHANNEL_MSB;i++){
+	for(uint8_t i=0;i <= _adc_extchannel_msb[index];i++){
 		if(config->positive_input_sequence_mask_enable & (1 << i)){
-			_adc_configure_ain_pin(i);
+			_adc_configure_ain_pin(index, i);
 		}
 	}
 
@@ -508,10 +669,10 @@ static enum status_code _adc_set_config(
 	/* Load in the fixed device ADC calibration constants */
 	adc_module->CALIB.reg =
 			ADC_CALIB_BIASREFBUF(
-				(*(uint32_t *)ADC_FUSES_BIASREFBUF_ADDR >> ADC_FUSES_BIASREFBUF_Pos)
+				(*(uint32_t *)_adc_biasrefbuf_addr[index] >> _adc_biasrefbuf_pos[index])
 			) |
 			ADC_CALIB_BIASCOMP(
-				(*(uint32_t *)ADC_FUSES_BIASCOMP_ADDR >> ADC_FUSES_BIASCOMP_Pos)
+				(*(uint32_t *)_adc_biascomp_addr[index] >> _adc_biascomp_pos[index])
 			);
 
 	return STATUS_OK;
@@ -543,11 +704,14 @@ enum status_code adc_init(
 	Assert(hw);
 	Assert(config);
 
+	/* Temporary variable to hold ADC instance number */
+	uint8_t instance = _adc_get_inst_index(hw);
+
 	/* Associate the software module instance with the hardware module */
 	module_inst->hw = hw;
 
 	/* Turn on the digital interface clock */
-	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBD, MCLK_APBDMASK_ADC);
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, _adc_apbcmasks[instance]);
 
 	if (hw->CTRLA.reg & ADC_CTRLA_SWRST) {
 		/* We are in the middle of a reset. Abort. */
@@ -581,7 +745,7 @@ enum status_code adc_init(
 	module_inst->remaining_conversions = 0;
 	module_inst->job_status = STATUS_OK;
 
-	_adc_instances[0] = module_inst;
+	_adc_instances[instance] = module_inst;
 
 	if (config->event_action == ADC_EVENT_ACTION_DISABLED &&
 			!config->freerunning) {
@@ -592,5 +756,5 @@ enum status_code adc_init(
 #endif
 
 	/* Write configuration to module */
-	return _adc_set_config(module_inst, config);
+	return _adc_set_config(instance, module_inst, config);
 }

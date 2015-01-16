@@ -3,7 +3,7 @@
  *
  * \brief SAM TC Driver Quick Start
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -40,7 +40,10 @@
  * \asf_license_stop
  *
  */
-
+/**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+ 
 /**
  * \page asfdoc_sam0_tc_basic_use_case Quick Start Guide for TC - Basic
  *
@@ -81,6 +84,8 @@
  *   \snippet quick_start/samd11_xplained_pro/conf_quick_start.h definition_pwm
  * - SAM L21 Xplained Pro.
  *   \snippet quick_start/saml21_xplained_pro/conf_quick_start.h definition_pwm
+ * - SAM C21 Xplained Pro.
+ *   \snippet quick_start/samc21_xplained_pro/conf_quick_start.h definition_pwm
  *
  * Add to the main application source file, outside of any functions:
  * \snippet qs_tc_basic.c module_inst
@@ -129,7 +134,4 @@
  * \subsection asfdoc_sam0_tc_basic_use_case_main_flow Workflow
  * -# Enter an infinite loop while the PWM wave is generated via the TC module.
  *    \snippet qs_tc_basic.c main_loop
- */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
