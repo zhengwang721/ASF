@@ -3,7 +3,7 @@
  *
  * \brief SAM Peripheral Analog-to-Digital Converter Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -99,10 +99,20 @@ static void _adc_interrupt_handler(const uint8_t instance)
 }
 
 /** Interrupt handler for the ADC module. */
+#if (ADC_INST_NUM > 1)
+#   define _ADC_INTERRUPT_HANDLER(n, m) \
+		void ADC##n##_Handler(void) \
+		{ \
+			_adc_interrupt_handler(n); \
+		}
+
+	MREPEAT(ADC_INST_NUM, _ADC_INTERRUPT_HANDLER, 0)
+#else
 void ADC_Handler(void)
 {
 	_adc_interrupt_handler(0);
 }
+#endif
 
 /**
  * \brief Registers a callback.

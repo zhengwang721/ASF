@@ -55,11 +55,12 @@
 		</module>
 		<module type="meta" id="sam0.drivers.adc.polled#sam_l" caption="ADC - Analog-to-Digital Converter">
 			<build type="include-path" value="." />
-			<build type="include-path" value="adc_sam_l"/>
-			<build type="c-source" value="adc_sam_l/adc.c"/>
-			<build type="header-file" value="adc_sam_l/adc_feature.h"/>
+			<build type="include-path" value="adc_sam_l_c"/>
+			<build type="c-source" value="adc_sam_l_c/adc.c"/>
+			<build type="header-file" value="adc_sam_l_c/adc_feature.h"/>
 
 			<device-support value="saml21"/>
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 	<select-by-device id="sam0.drivers.adc.callback" caption="ADC - Analog-to-Digital Converter">
@@ -78,12 +79,13 @@
 		</module>
 		<module type="meta" id="sam0.drivers.adc.callback#sam_l" caption="ADC - Analog-to-Digital Converter">
 			<build type="include-path" value="." />
-			<build type="include-path" value="adc_sam_l"/>
-			<build type="c-source" value="adc_sam_l/adc.c"/>
-			<build type="c-source" value="adc_sam_l/adc_callback.c"/>
-			<build type="header-file" value="adc_sam_l/adc_feature.h"/>
+			<build type="include-path" value="adc_sam_l_c"/>
+			<build type="c-source" value="adc_sam_l_c/adc.c"/>
+			<build type="c-source" value="adc_sam_l_c/adc_callback.c"/>
+			<build type="header-file" value="adc_sam_l_c/adc_feature.h"/>
 
 			<device-support value="saml21"/>
+			<device-support value="samc21"/>
 		</module>
 	</select-by-device>
 	<module type="meta" id="sam0.drivers.adc.appnote_sam_d_r" caption="ADC - Analog-to-Digital Converter">
@@ -157,12 +159,12 @@
 			</info>
 
 			<build type="include-path" value="."/>
-			<build type="include-path" value="adc_sam_l"/>
-			<build type="c-source" value="adc_sam_l/adc_callback.c"/>
-			<build type="c-source" value="adc_sam_l/adc.c"/>
+			<build type="include-path" value="adc_sam_l_c"/>
+			<build type="c-source" value="adc_sam_l_c/adc_callback.c"/>
+			<build type="c-source" value="adc_sam_l_c/adc.c"/>
 			<build type="header-file" subtype="api" value="adc.h"/>
 			<build type="header-file" subtype="api" value="adc_callback.h"/>
-			<build type="header-file" value="adc_sam_l/adc_feature.h"/>
+			<build type="header-file" value="adc_sam_l_c/adc_feature.h"/>
 
 			<build type="header-file" value="quick_start/qs_adc_basic.h"/>
 			<build type="header-file" value="quick_start_callback/qs_adc_callback.h"/>
@@ -179,6 +181,7 @@
 			<build type="doxygen-enable-section" value="DEVICE_SAML21_SUPPORT"/>
 
 			<device-support value="saml21"/>
+			<device-support value="samc21"/>
 
 			<require idref="sam0.utils"/>
 			<require idref="sam0.drivers.system"/>
