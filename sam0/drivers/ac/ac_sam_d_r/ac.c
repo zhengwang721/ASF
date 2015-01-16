@@ -56,15 +56,6 @@ static enum status_code _ac_set_config(
 
 	Ac *const ac_module = module_inst->hw;
 
-	/* Set up GCLK */
-	struct system_gclk_chan_config gclk_chan_conf;
-	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
-	gclk_chan_conf.source_generator = config->source_generator;
-	system_gclk_chan_set_config(AC_GCLK_ID_DIG, &gclk_chan_conf);
-	system_gclk_chan_set_config(AC_GCLK_ID_ANA, &gclk_chan_conf);
-	system_gclk_chan_enable(AC_GCLK_ID_DIG);
-	system_gclk_chan_enable(AC_GCLK_ID_ANA);
-
 	/* Use a temporary register for computing the control bits */
 	uint32_t ctrla_temp = 0;
 
@@ -141,13 +132,25 @@ enum status_code ac_init(
 	/* Initialize device instance */
 	module_inst->hw = hw;
 
-	/* Turn on the digital interface clock */
+	/* Turn on the digital interface clock and GCLK */
+	struct system_gclk_chan_config gclk_chan_conf;
+	system_gclk_chan_get_config_defaults(&gclk_chan_conf);
+	gclk_chan_conf.source_generator = config->source_generator;
+
 	if (hw == AC) {
 		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_AC);
+		system_gclk_chan_set_config(AC_GCLK_ID_DIG, &gclk_chan_conf);
+		system_gclk_chan_set_config(AC_GCLK_ID_ANA, &gclk_chan_conf);
+		system_gclk_chan_enable(AC_GCLK_ID_DIG);
+		system_gclk_chan_enable(AC_GCLK_ID_ANA);
 	}
 #if (AC_INST_NUM == 2)
 	else if (hw == AC1) {
 		system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_AC1);
+		system_gclk_chan_set_config(AC1_GCLK_ID_DIG, &gclk_chan_conf);
+		system_gclk_chan_set_config(AC1_GCLK_ID_ANA, &gclk_chan_conf);
+		system_gclk_chan_enable(AC1_GCLK_ID_DIG);
+		system_gclk_chan_enable(AC1_GCLK_ID_ANA);
 	}
 #elif (AC_INST_NUM >= 3)
 #  error This driver is not support more than three AC instances.
