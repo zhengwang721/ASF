@@ -3,7 +3,7 @@
  *
  * \brief SAM Analog to Digital Converter (ADC) Unit test
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -232,18 +232,22 @@ static void run_adc_init_test(const struct test_case *test)
 	adc_get_config_defaults(&config);
 	config.positive_input = ADC_POSITIVE_INPUT_PIN2;
 	config.negative_input = ADC_NEGATIVE_INPUT_GND;
-#if (SAML21)
+#if (SAML21) || (SAMC21)
 	config.reference      = ADC_REFERENCE_INTREF;
 #else
 	config.reference      = ADC_REFERENCE_INT1V;
 #endif
 	config.clock_source   = GCLK_GENERATOR_3;
-#if !(SAML21)
+#if !(SAML21) && !(SAMC21)
 	config.gain_factor    = ADC_GAIN_FACTOR_1X;
 #endif
 
 	/* Initialize the ADC */
+#if (SAMC21)
+	status = adc_init(&adc_inst, ADC0, &config);
+#else
 	status = adc_init(&adc_inst, ADC, &config);
+#endif
 
 	/* Check for successful initialization */
 	test_assert_true(test, status == STATUS_OK,
@@ -445,18 +449,22 @@ static void setup_adc_average_mode_test(const struct test_case *test)
 	adc_get_config_defaults(&config);
 	config.positive_input     = ADC_POSITIVE_INPUT_PIN2;
 	config.negative_input     = ADC_NEGATIVE_INPUT_GND;
-#if (SAML21)
+#if (SAML21) || (SAMC21)
 	config.reference          = ADC_REFERENCE_INTREF;
 #else
 	config.reference          = ADC_REFERENCE_INT1V;
 #endif
 	config.clock_source       = GCLK_GENERATOR_3;
-#if !(SAML21)
+#if !(SAML21) && !(SAMC21)
 	config.gain_factor        = ADC_GAIN_FACTOR_1X;
 #endif
 
 	/* Re-initialize & enable ADC */
+#if (SAMC21)
+	status = adc_init(&adc_inst, ADC0, &config);
+#else
 	status = adc_init(&adc_inst, ADC, &config);
+#endif
 	test_assert_true(test, status == STATUS_OK,
 			"ADC initialization failed");
 	status = adc_enable(&adc_inst);
@@ -524,14 +532,14 @@ static void setup_adc_window_mode_test(const struct test_case *test)
 	adc_get_config_defaults(&config);
 	config.positive_input = ADC_POSITIVE_INPUT_PIN2;
 	config.negative_input = ADC_NEGATIVE_INPUT_GND;
-#if (SAML21)
+#if (SAML21) || (SAMC21)
 	config.reference      = ADC_REFERENCE_INTREF;
 	config.clock_prescaler = ADC_CLOCK_PRESCALER_DIV16;
 #else
 	config.reference      = ADC_REFERENCE_INT1V;
 #endif
 	config.clock_source   = GCLK_GENERATOR_3;
-#if !(SAML21)
+#if !(SAML21) && !(SAMC21)
 	config.gain_factor    = ADC_GAIN_FACTOR_1X;
 #endif
 	config.resolution     = ADC_RESOLUTION_12BIT;
@@ -541,7 +549,11 @@ static void setup_adc_window_mode_test(const struct test_case *test)
 	config.window.window_upper_value = (ADC_VAL_DAC_HALF_OUTPUT + ADC_OFFSET);
 
 	/* Re-initialize & enable ADC */
+#if (SAMC21)
+	status = adc_init(&adc_inst, ADC0, &config);
+#else
 	status = adc_init(&adc_inst, ADC, &config);
+#endif
 	test_assert_true(test, status == STATUS_OK,
 			"ADC initialization failed");
 	status = adc_enable(&adc_inst);
