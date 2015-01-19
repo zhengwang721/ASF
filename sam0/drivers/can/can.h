@@ -869,7 +869,7 @@ enum status_code can_set_rx_extended_filter(
  * \brief Get the pointer to the receive buffer element.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] rx_element  Pointer to receive buffer element
+ * \param[in] rx_element  Pointer of pointer to receive buffer element
  * \param[in] index  Index offset in receive buffer
  *
  *  \return Status of the result.
@@ -885,7 +885,7 @@ enum status_code can_get_rx_buffer_element(
  * \brief Get the pointer to the receive FIFO 0 element.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] rx_element  Pointer to receive FIFO 0
+ * \param[in] rx_element  Pointer of pointer to receive FIFO 0
  * \param[in] index  Index offset in receive FIFO 0
  *
  *  \return Status of the result.
@@ -901,7 +901,7 @@ enum status_code can_get_rx_fifo_0_element(
  * \brief Get the pointer to the receive FIFO 1 element.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] rx_element  Pointer to receive FIFO 1
+ * \param[in] rx_element  Pointer of pointer to receive FIFO 1
  * \param[in] index  Index offset in receive FIFO 1
  *
  *  \return Status of the result.
