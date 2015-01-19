@@ -53,15 +53,6 @@ int __low_level_init(void);
 void Dummy_Handler(void);
 void Reset_Handler(void);
 
-/**
- * \brief Default interrupt handler for unused IRQs.
- */
-void Dummy_Handler(void)
-{
-        while (1) {
-        }
-}
-
 /* Cortex-M0+ core handlers */
 void NMI_Handler              ( void );
 void HardFault_Handler        ( void );
