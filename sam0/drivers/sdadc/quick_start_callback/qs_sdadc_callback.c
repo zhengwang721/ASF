@@ -49,7 +49,7 @@ void sdadc_complete_callback(
 
 //! [result_buffer]
 #define SDADC_SAMPLES 128
-uint32_t sdadc_result_buffer[SDADC_SAMPLES];
+int32_t sdadc_result_buffer[SDADC_SAMPLES];
 //! [result_buffer]
 
 //! [module_inst]

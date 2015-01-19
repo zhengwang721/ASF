@@ -82,7 +82,7 @@ int main(void)
 //! [start_conv]
 
 //! [get_res]
-	uint32_t result;
+	int32_t result;
 
 	do {
 		/* Wait for conversion to be done and read out result */

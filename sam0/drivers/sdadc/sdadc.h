@@ -412,7 +412,7 @@ struct sdadc_module {
 	/** Array to store callback functions. */
 	sdadc_callback_t callback[SDADC_CALLBACK_N];
 	/** Pointer to buffer used for SDADC results. */
-	volatile uint32_t *job_buffer;
+	volatile int32_t *job_buffer;
 	/** Remaining number of conversions in current job. */
 	volatile uint16_t remaining_conversions;
 	/** Bit mask for callbacks registered. */
@@ -836,7 +836,7 @@ static inline void sdadc_start_conversion(
  */
 static inline enum status_code sdadc_read(
 		struct sdadc_module *const module_inst,
-		uint32_t *result)
+		int32_t *result)
 {
 	Assert(module_inst);
 	Assert(module_inst->hw);
@@ -850,7 +850,7 @@ static inline enum status_code sdadc_read(
 	Sdadc *const sdadc_module = module_inst->hw;
 
 	/* Get SDADC result */
-	*result = sdadc_module->RESULT.reg;
+	*result = ((int32_t)(sdadc_module->RESULT.reg << 8)) >> 8;
 
 	/* Reset ready flag */
 	sdadc_clear_status(module_inst, SDADC_STATUS_RESULT_READY);
