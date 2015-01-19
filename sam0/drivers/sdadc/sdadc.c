@@ -194,46 +194,44 @@ static enum status_code _sdadc_set_config(
 	sdadc_module->INTENCLR.reg = (1 << SDADC_INTENCLR_WINMON_Pos) |
 			(1 << SDADC_INTENCLR_OVERRUN_Pos) | (1 << SDADC_INTENCLR_RESRDY_Pos);
 
-	if (config->correction.correction_enable){
-		/* Make sure offset correction value is valid */
-		if (config->correction.offset_correction > 8388607 ||
-				config->correction.offset_correction < -8388608) {
-			return STATUS_ERR_INVALID_ARG;
-		} else {
-			while (sdadc_is_syncing(module_inst)) {
-				/* Wait for synchronization */
-			}
-
-			/* Set offset correction value */
-			sdadc_module->OFFSETCORR.reg = config->correction.offset_correction <<
-					SDADC_OFFSETCORR_OFFSETCORR_Pos;
+	/* Make sure offset correction value is valid */
+	if (config->correction.offset_correction > 8388607 ||
+			config->correction.offset_correction < -8388608) {
+		return STATUS_ERR_INVALID_ARG;
+	} else {
+		while (sdadc_is_syncing(module_inst)) {
+			/* Wait for synchronization */
 		}
 
-		/* Make sure gain_correction value is valid */
-		if (config->correction.gain_correction > SDADC_GAINCORR_GAINCORR_Msk) {
-			return STATUS_ERR_INVALID_ARG;
-		} else {
-			while (sdadc_is_syncing(module_inst)) {
-				/* Wait for synchronization */
-			}
+		/* Set offset correction value */
+		sdadc_module->OFFSETCORR.reg = config->correction.offset_correction <<
+				SDADC_OFFSETCORR_OFFSETCORR_Pos;
+	}
 
-			/* Set gain correction value */
-			sdadc_module->GAINCORR.reg = config->correction.gain_correction <<
-					SDADC_GAINCORR_GAINCORR_Pos;
+	/* Make sure gain_correction value is valid */
+	if (config->correction.gain_correction > SDADC_GAINCORR_GAINCORR_Msk) {
+		return STATUS_ERR_INVALID_ARG;
+	} else {
+		while (sdadc_is_syncing(module_inst)) {
+			/* Wait for synchronization */
 		}
 
-		/* Make sure shift_correction value is valid */
-		if (config->correction.shift_correction > SDADC_SHIFTCORR_SHIFTCORR_Msk) {
-			return STATUS_ERR_INVALID_ARG;
-		} else {
-			while (sdadc_is_syncing(module_inst)) {
-				/* Wait for synchronization */
-			}
+		/* Set gain correction value */
+		sdadc_module->GAINCORR.reg = config->correction.gain_correction <<
+				SDADC_GAINCORR_GAINCORR_Pos;
+	}
 
-			/* Set shift correction value */
-			sdadc_module->SHIFTCORR.reg = config->correction.shift_correction <<
-					SDADC_SHIFTCORR_SHIFTCORR_Pos;
+	/* Make sure shift_correction value is valid */
+	if (config->correction.shift_correction > SDADC_SHIFTCORR_SHIFTCORR_Msk) {
+		return STATUS_ERR_INVALID_ARG;
+	} else {
+		while (sdadc_is_syncing(module_inst)) {
+			/* Wait for synchronization */
 		}
+
+		/* Set shift correction value */
+		sdadc_module->SHIFTCORR.reg = config->correction.shift_correction <<
+				SDADC_SHIFTCORR_SHIFTCORR_Pos;
 	}
 
 	return STATUS_OK;

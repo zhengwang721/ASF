@@ -349,11 +349,6 @@ struct sdadc_events {
  * \ref sdadc_get_config_defaults.
  */
 struct sdadc_correction_config {
-	/**
-	 * A specific offset, gain and shift correction can be applied to SDADC
-	 * if set to true.
-	 */
-	bool correction_enable;
 	/** Offset correction. */
 	int32_t offset_correction;
 	/** Gain correction. */
@@ -417,7 +412,7 @@ struct sdadc_module {
 	/** Array to store callback functions. */
 	sdadc_callback_t callback[SDADC_CALLBACK_N];
 	/** Pointer to buffer used for SDADC results. */
-	volatile uint32_t *job_buffer;
+	volatile int32_t *job_buffer;
 	/** Remaining number of conversions in current job. */
 	volatile uint16_t remaining_conversions;
 	/** Bit mask for callbacks registered. */
@@ -473,8 +468,8 @@ static inline void sdadc_get_config_defaults(struct sdadc_config *const config)
 	config->reference                     = SDADC_REFERENCE_1;
 	config->clock_prescaler               = 2;
 	config->osr                           = SDADC_OVER_SAMPLING_RATIO64;
-	config->skip_count                    = 0;
-	config->mux_input                     = SDADC_MUX_INPUT_AIN0 ;
+	config->skip_count                    = 2;
+	config->mux_input                     = SDADC_MUX_INPUT_AIN1;
 	config->event_action                  = SDADC_EVENT_ACTION_DISABLED;
 	config->freerunning                   = false;
 	config->run_in_standby                = false;
@@ -485,8 +480,7 @@ static inline void sdadc_get_config_defaults(struct sdadc_config *const config)
 	config->window.window_mode            = SDADC_WINDOW_MODE_DISABLE;
 	config->window.window_upper_value     = 0;
 	config->window.window_lower_value     = 0;
-	config->correction.correction_enable  = false;
-	config->correction.gain_correction    = SDADC_GAINCORR_RESETVALUE;
+	config->correction.gain_correction    = 1;
 	config->correction.offset_correction  = SDADC_OFFSETCORR_RESETVALUE;
 	config->correction.shift_correction   = SDADC_SHIFTCORR_RESETVALUE;
 }
@@ -842,7 +836,7 @@ static inline void sdadc_start_conversion(
  */
 static inline enum status_code sdadc_read(
 		struct sdadc_module *const module_inst,
-		uint32_t *result)
+		int32_t *result)
 {
 	Assert(module_inst);
 	Assert(module_inst->hw);
@@ -856,7 +850,7 @@ static inline enum status_code sdadc_read(
 	Sdadc *const sdadc_module = module_inst->hw;
 
 	/* Get SDADC result */
-	*result = sdadc_module->RESULT.reg;
+	*result = ((int32_t)(sdadc_module->RESULT.reg << 8)) >> 8;
 
 	/* Reset ready flag */
 	sdadc_clear_status(module_inst, SDADC_STATUS_RESULT_READY);

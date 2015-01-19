@@ -49,7 +49,7 @@ void sdadc_complete_callback(
 
 //! [result_buffer]
 #define SDADC_SAMPLES 128
-uint32_t sdadc_result_buffer[SDADC_SAMPLES];
+int32_t sdadc_result_buffer[SDADC_SAMPLES];
 //! [result_buffer]
 
 //! [module_inst]
@@ -80,7 +80,7 @@ void configure_sdadc(void)
 	config_sdadc.clock_prescaler = 2;
 	config_sdadc.reference       = SDADC_REFERENCE_1;
 	config_sdadc.osr             = SDADC_OVER_SAMPLING_RATIO1024;
-	config_sdadc.mux_input       = SDADC_MUX_INPUT_AIN0;
+	config_sdadc.mux_input       = SDADC_MUX_INPUT_AIN2;
 //! [setup_modify_conf]
 
 //! [setup_set_config]
