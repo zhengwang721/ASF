@@ -46,6 +46,11 @@
 #ifndef CONF_CAN_H_INCLUDED
 #define CONF_CAN_H_INCLUDED
 
+/*
+ * Below is the message ram setting, it will store in the system ram.
+ * If the ram usage is too large for your application, please reduce the
+ * number setting here.
+ */
 #define CONF_CAN0_RX_FIFO_0_NUM         16
 #define CONF_CAN0_RX_FIFO_1_NUM         16
 #define CONF_CAN0_RX_BUFFER_NUM         16

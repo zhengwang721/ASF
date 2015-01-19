@@ -810,7 +810,7 @@ static inline void can_rx_fifo_acknowledge(
  *
  * \param[out] sd_filter  Pointer to standard filter element struct to initialize to default values
  */
-static inline void can_get_sd_message_filter_element_default(
+static inline void can_get_standard_message_filter_element_default(
 		struct can_standard_message_filter_element *sd_filter)
 {
 	sd_filter->S0.reg = CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Msk |
@@ -840,7 +840,7 @@ enum status_code can_set_rx_standand_filter(
  *
  * \param[out] et_filter  Pointer to extended filter element struct to initialize to default values
  */
-static inline void can_get_et_message_filter_element_default(
+static inline void can_get_extended_message_filter_element_default(
 		struct can_extended_message_filter_element *et_filter)
 {
 	et_filter->F0.reg = CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1(0) |

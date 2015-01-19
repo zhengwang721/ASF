@@ -59,6 +59,9 @@ static struct can_module can_instance;
 #define CAN_RX_STANDARD_FILTER_INDEX    0
 #define CAN_RX_STANDARD_FILTER_ID_0     0x5A
 #define CAN_RX_STANDARD_FILTER_ID_1     0x69
+#define CAN_RX_EXTENDED_FILTER_INDEX    0
+#define CAN_RX_EXTENDED_FILTER_ID_0     0xA5
+#define CAN_RX_EXTENDED_FILTER_ID_1     0x96
 //! [can_filter_setting]
 
 //! [can_transfer_message_setting]
@@ -71,8 +74,10 @@ static uint8_t tx_message_1[CAN_DATA_LEN]={0x08,0x09,0x0A,0x0B,0x0C
 //! [can_transfer_message_setting]
 
 //! [can_receive_message_setting]
-static volatile uint32_t receive_index = 0;
-static struct can_rx_element_fifo_0 *rx_element;
+static volatile uint32_t standard_receive_index = 0;
+static volatile uint32_t extended_receive_index = 0;
+static struct can_rx_element_fifo_0 *rx_element_fifo_0;
+static struct can_rx_element_fifo_1 *rx_element_fifo_1;
 //! [can_receive_message_setting]
 
 //! [module_var]
@@ -120,21 +125,34 @@ static void configure_can(void)
 //! [can_init_setup]
 
 //! [can_receive_filter_setup]
-static void can_set_filter(uint32_t filter_value)
+static void can_set_standard_filter(uint32_t filter_value)
 {
 	struct can_standard_message_filter_element sd_filter;
 
-	can_get_sd_message_filter_element_default(&sd_filter);
+	can_get_standard_message_filter_element_default(&sd_filter);
 	sd_filter.S0.bit.SFID1 = filter_value;
 
 	can_set_rx_standand_filter(&can_instance, &sd_filter,
 			CAN_RX_STANDARD_FILTER_INDEX);
 	can_enable_interrupt(&can_instance, CAN_RX_FIFO_0_NEW_MESSAGE);
 }
+
+static void can_set_extended_filter(uint32_t filter_value)
+{
+	struct can_extended_message_filter_element et_filter;
+
+	can_get_extended_message_filter_element_default(&et_filter);
+	et_filter.F0.bit.EFID1 = filter_value;
+
+	can_set_rx_extended_filter(&can_instance, &et_filter,
+			CAN_RX_STANDARD_FILTER_INDEX);
+	can_enable_interrupt(&can_instance, CAN_RX_FIFO_1_NEW_MESSAGE);
+}
+
 //! [can_receive_filter_setup]
 
 //! [can_transfer_message_setup]
-static void can_send_message(uint32_t id_value, uint8_t *data)
+static void can_send_standard_message(uint32_t id_value, uint8_t *data)
 {
 	uint32_t i;
 	struct can_tx_element tx_element;
@@ -150,6 +168,25 @@ static void can_send_message(uint32_t id_value, uint8_t *data)
 			CAN_TX_BUFFER_INDEX);
 	can_tx_transfer_request(&can_instance, 1 << CAN_TX_BUFFER_INDEX);
 }
+
+static void can_send_extended_message(uint32_t id_value, uint8_t *data)
+{
+	uint32_t i;
+	struct can_tx_element tx_element;
+
+	can_get_tx_buffer_element_defaults(&tx_element);
+	tx_element.T0.reg |= CAN_TX_ELEMENT_T0_ID(id_value) |
+			CAN_TX_ELEMENT_T0_XTD;
+	for (i = 0; i < 8; i++) {
+		tx_element.data[i] = *data;
+		data++;
+	}
+
+	can_set_tx_buffer_element(&can_instance, &tx_element,
+			CAN_TX_BUFFER_INDEX);
+	can_tx_transfer_request(&can_instance, 1 << CAN_TX_BUFFER_INDEX);
+}
+
 //! [can_transfer_message_setup]
 
 //! [can_interrupt_handler]
@@ -160,16 +197,42 @@ void CAN0_Handler(void)
 
 	if (status & CAN_RX_FIFO_0_NEW_MESSAGE) {
 		can_clear_interrupt_status(&can_instance, CAN_RX_FIFO_0_NEW_MESSAGE);
-		can_get_rx_fifo_0_element(&can_instance, &rx_element,
-				receive_index);
+		can_get_rx_fifo_0_element(&can_instance, &rx_element_fifo_0,
+				standard_receive_index);
 		can_rx_fifo_acknowledge(&can_instance, 0,
-				receive_index);
-				receive_index++;
-		printf("\n\r The received data is: %d, %d, %d, %d, %d, %d, %d, %d.\n\r",
-				rx_element->data[0], rx_element->data[1], rx_element->data[2],
-				rx_element->data[3], rx_element->data[4], rx_element->data[5],
-				rx_element->data[6], rx_element->data[7]);
+				standard_receive_index);
+		standard_receive_index++;
+		if (standard_receive_index == CONF_CAN0_RX_FIFO_0_NUM) {
+			standard_receive_index = 0;
+		}
+
+		printf("\n\r Standard message received. \r\n");
+		printf(" The received data is: %d, %d, %d, %d, %d, %d, %d, %d.\r\n\r\n",
+				rx_element_fifo_0->data[0], rx_element_fifo_0->data[1],
+				rx_element_fifo_0->data[2],	rx_element_fifo_0->data[3],
+				rx_element_fifo_0->data[4], rx_element_fifo_0->data[5],
+				rx_element_fifo_0->data[6], rx_element_fifo_0->data[7]);
 	}
+
+	if (status & CAN_RX_FIFO_1_NEW_MESSAGE) {
+		can_clear_interrupt_status(&can_instance, CAN_RX_FIFO_1_NEW_MESSAGE);
+		can_get_rx_fifo_1_element(&can_instance, &rx_element_fifo_1,
+				extended_receive_index);
+		can_rx_fifo_acknowledge(&can_instance, 0,
+				extended_receive_index);
+		extended_receive_index++;
+		if (extended_receive_index == CONF_CAN0_RX_FIFO_1_NUM) {
+			extended_receive_index = 0;
+		}
+
+		printf("\n\r Extended message received. \r\n");
+		printf(" The received data is: %d, %d, %d, %d, %d, %d, %d, %d.\r\n\r\n",
+				rx_element_fifo_1->data[0], rx_element_fifo_1->data[1],
+				rx_element_fifo_1->data[2],	rx_element_fifo_1->data[3],
+				rx_element_fifo_1->data[4], rx_element_fifo_1->data[5],
+				rx_element_fifo_1->data[6], rx_element_fifo_1->data[7]);
+	}
+
 }
 //! [can_interrupt_handler]
 
@@ -178,10 +241,14 @@ static void display_menu(void)
 {
 	printf("Menu :\r\n"
 			"  -- Select the action:\r\n"
-			"  0: Set filter ID 0: 0x5A. \r\n"
-			"  1: Set filter ID 0: 0x69. \r\n"
-			"  2: Send message with ID 0: 0x5A and 8 byte data 0 to 7. \r\n"
-			"  3: Send message with ID 0: 0x69 and 8 byte data 8 to 15. \r\n"
+			"  0: Set standard filter ID 0: 0x5A. \r\n"
+			"  1: Set standard filter ID 0: 0x69. \r\n"
+			"  2: Send standard message with ID 0: 0x5A and 8 byte data 0 to 7. \r\n"
+			"  3: Send standard message with ID 0: 0x69 and 8 byte data 8 to 15. \r\n"
+			"  4: Set extended filter ID 0: 0xA5. \r\n"
+			"  5: Set extended filter ID 0: 0x96. \r\n"
+			"  6: Send extended message with ID 0: 0xA5 and 8 byte data 0 to 7. \r\n"
+			"  7: Send extended message with ID 0: 0x96 and 8 byte data 8 to 15. \r\n"
 			"  h: Display menu \r\n\r\n");
 }
 //! [user_menu]
@@ -217,23 +284,43 @@ int main(void)
 			break;
 
 		case '0':
-			printf("  0: Set filter ID 0: 0x5A. \r\n");
-			can_set_filter(CAN_RX_STANDARD_FILTER_ID_0);
+			printf("  0: Set standard filter ID 0: 0x5A. \r\n");
+			can_set_standard_filter(CAN_RX_STANDARD_FILTER_ID_0);
 			break;
 
 		case '1':
-			printf("  1: Set filter ID 0: 0x69. \r\n");
-			can_set_filter(CAN_RX_STANDARD_FILTER_ID_1);
+			printf("  1: Set standard filter ID 0: 0x69. \r\n");
+			can_set_standard_filter(CAN_RX_STANDARD_FILTER_ID_1);
 			break;
 
 		case '2':
-			printf("  2: Send message with ID 0: 0x5A and 8 byte data 0 to 7. \r\n");
-			can_send_message(CAN_RX_STANDARD_FILTER_ID_0, tx_message_0);
+			printf("  2: Send standard message with ID 0: 0x5A and 8 byte data 0 to 7. \r\n");
+			can_send_standard_message(CAN_RX_STANDARD_FILTER_ID_0, tx_message_0);
 			break;
 
 		case '3':
-			printf("  3: Send message with ID 0: 0x69 and 8 byte data 8 to 15. \r\n");
-			can_send_message(CAN_RX_STANDARD_FILTER_ID_1, tx_message_1);
+			printf("  3: Send standard message with ID 0: 0x69 and 8 byte data 8 to 15. \r\n");
+			can_send_standard_message(CAN_RX_STANDARD_FILTER_ID_1, tx_message_1);
+			break;
+
+		case '4':
+			printf("  4: Set extended filter ID 0: 0xA5. \r\n");
+			can_set_extended_filter(CAN_RX_STANDARD_FILTER_ID_0);
+			break;
+
+		case '5':
+			printf("  5: Set extended filter ID 0: 0x96. \r\n");
+			can_set_extended_filter(CAN_RX_STANDARD_FILTER_ID_1);
+			break;
+
+		case '6':
+			printf("  6: Send extended message with ID 0: 0xA5 and 8 byte data 0 to 7. \r\n");
+			can_send_extended_message(CAN_RX_STANDARD_FILTER_ID_0, tx_message_0);
+			break;
+
+		case '7':
+			printf("  7: Send extended message with ID 0: 0x96 and 8 byte data 8 to 15. \r\n");
+			can_send_extended_message(CAN_RX_STANDARD_FILTER_ID_1, tx_message_1);
 			break;
 
 		default:

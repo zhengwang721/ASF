@@ -124,6 +124,7 @@ static void _can_message_memory_init(Can *hw)
 
 static void _can_set_configuration(Can *hw, struct can_config *config)
 {
+	/* Timing setting. */
 	hw->NBTP.reg = CAN_NBTP_NBRP(CONF_CAN_NBTP_NBRP_VALUE) |
 			CAN_NBTP_NSJW(CONF_CAN_NBTP_NSJW_VALUE) |
 			CAN_NBTP_NTSEG1(CONF_CAN_NBTP_NTSEG1_VALUE) |
@@ -266,6 +267,7 @@ void can_switch_operation_mode(struct can_module *const module_inst,
 
 		while (!(module_inst->hw->CCCR.reg & CAN_CCCR_CSA));
 	} else {
+		/* Check if in sleep mode and exit it. */
 		if ((module_inst->hw->CCCR.reg & CAN_CCCR_CSA)){
 			if (module_inst->hw == CAN0) {
 				system_gclk_chan_set_config(CAN0_GCLK_ID, &gclk_chan_conf);
