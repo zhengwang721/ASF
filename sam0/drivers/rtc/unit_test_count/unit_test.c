@@ -154,11 +154,11 @@ static void cdc_uart_init(void)
  */
 static void run_rtc_count_test(const struct test_case *test)
 {
-	enum status_code status = STATUS_ERR_IO;
+	enum status_code status;
 	/* variable storing count, compare, period */
 	uint32_t count_comp;
 	uint16_t period;
-	bool result = false;
+	bool result;
 
 	/* Structure for RTC count configuration */
 	struct rtc_count_config config;
@@ -225,7 +225,7 @@ static void run_rtc_count_test(const struct test_case *test)
  */
 static void run_rtc_count_interrupt_test(const struct test_case *test)
 {
-	enum status_code status = STATUS_ERR_IO;
+	enum status_code status;
 	
 	status = rtc_count_register_callback(
 			&rtc_inst, rtc_count_match_callback, RTC_COUNT_CALLBACK_COMPARE_1);

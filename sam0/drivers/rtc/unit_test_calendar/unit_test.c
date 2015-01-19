@@ -154,8 +154,7 @@ static void cdc_uart_init(void)
  */
 static void run_rtc_calendar_test(const struct test_case *test)
 {
-	enum status_code status = STATUS_ERR_IO;
-	uint32_t calendar_comp_period;
+	enum status_code status;
 	bool result = true;
 
 	/* Structure for RTC calendar configuration */
@@ -212,9 +211,7 @@ static void run_rtc_calendar_test(const struct test_case *test)
 
 static void run_rtc_calendar_interrupt_test(const struct test_case *test)
 {
-	enum status_code status = STATUS_ERR_IO;
-	uint32_t calendar_comp_period;
-	bool result = false;
+	enum status_code status;
 
 	/* RTC calendar hour mask alarm match test*/
 	status = rtc_calendar_register_callback(
