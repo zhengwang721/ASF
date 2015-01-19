@@ -1,7 +1,7 @@
 <asf xmlversion="1.0">
 	<module type="application" id="sam0.applications.getting-started" caption="Getting-Started Application">
 		<info type="description" value="summary">
-			The Getting Started example will help new users get familiar with SAM devices.
+			The Getting Started example will help new users get familiar with SAM Xplained Pro.
 		</info>
 		<device-support value="sam0"/>
 		<build type="c-source" value="main.c"/>
