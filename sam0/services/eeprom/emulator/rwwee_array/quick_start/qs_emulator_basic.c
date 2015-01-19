@@ -3,7 +3,7 @@
  *
  * \brief SAM EEPROM Emulator Service Quick Start
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -84,9 +84,7 @@ int main(void)
 	page_data[0] = !page_data[0];
 //! [toggle_first_byte]
 //! [set_led]
-#if !defined(SAMD21_64K)
 	port_pin_set_output_level(LED_0_PIN, page_data[0]);
-#endif
 //! [set_led]
 
 //! [write_page]
