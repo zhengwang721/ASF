@@ -156,7 +156,8 @@ static void run_rtc_count_test(const struct test_case *test)
 {
 	enum status_code status = STATUS_ERR_IO;
 	/* variable storing count, compare, period */
-	uint32_t count_comp_period;
+	uint32_t count_comp;
+	uint16_t period;
 	bool result = false;
 
 	/* Structure for RTC count configuration */
@@ -176,16 +177,16 @@ static void run_rtc_count_test(const struct test_case *test)
 	status = rtc_count_set_compare(&rtc_inst, 200, 0);
 	test_assert_true(test, status == STATUS_OK,
 			"RTC set compare failed");
-	status = rtc_count_get_compare(&rtc_inst, &count_comp_period, 0);
-	test_assert_true(test, (status == STATUS_OK ) && (count_comp_period == 200),
+	status = rtc_count_get_compare(&rtc_inst, &count_comp, 0);
+	test_assert_true(test, (status == STATUS_OK ) && (count_comp == 200),
 			"RTC get compare failed");
 
 	/* Set the RTC period and make set and get test */
 	status = rtc_count_set_period(&rtc_inst, 400);
 	test_assert_true(test, status == STATUS_OK,
 			"RTC set period failed");
-	status = rtc_count_get_period(&rtc_inst, &count_comp_period);
-	test_assert_true(test, (status == STATUS_OK ) && (count_comp_period == 400),
+	status = rtc_count_get_period(&rtc_inst, &period);
+	test_assert_true(test, (status == STATUS_OK ) && (period == 400),
 			"RTC get period failed");
 
 	/* Set the RTC count and make set test */
@@ -225,7 +226,6 @@ static void run_rtc_count_test(const struct test_case *test)
 static void run_rtc_count_interrupt_test(const struct test_case *test)
 {
 	enum status_code status = STATUS_ERR_IO;
-	uint32_t count_comp_period;
 	
 	status = rtc_count_register_callback(
 			&rtc_inst, rtc_count_match_callback, RTC_COUNT_CALLBACK_COMPARE_1);
