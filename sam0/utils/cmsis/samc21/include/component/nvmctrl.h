@@ -3,7 +3,7 @@
  *
  * \brief Component description for NVMCTRL
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -77,8 +77,8 @@ typedef union {
 #define   NVMCTRL_CTRLA_CMD_WAP_Val       0x6ul  /**< \brief (NVMCTRL_CTRLA) Write Auxiliary Page - Writes the contents of the page buffer to the page addressed by the ADDR register. This command can be given only when the security bit is not set and only to the user configuration row. */
 #define   NVMCTRL_CTRLA_CMD_SF_Val        0xAul  /**< \brief (NVMCTRL_CTRLA) Security Flow Command */
 #define   NVMCTRL_CTRLA_CMD_WL_Val        0xFul  /**< \brief (NVMCTRL_CTRLA) Write lockbits */
-#define   NVMCTRL_CTRLA_CMD_WWREEER_Val   0x1Aul  /**< \brief (NVMCTRL_CTRLA) WWR EEPROM area Erase Row - Erases the row addressed by the ADDR register. */
-#define   NVMCTRL_CTRLA_CMD_WWREEWP_Val   0x1Cul  /**< \brief (NVMCTRL_CTRLA) WWR EEPROM Write Page - Writes the contents of the page buffer to the page addressed by the ADDR register. */
+#define   NVMCTRL_CTRLA_CMD_RWWEEER_Val   0x1Aul  /**< \brief (NVMCTRL_CTRLA) RWW EEPROM area Erase Row - Erases the row addressed by the ADDR register. */
+#define   NVMCTRL_CTRLA_CMD_RWWEEWP_Val   0x1Cul  /**< \brief (NVMCTRL_CTRLA) RWW EEPROM Write Page - Writes the contents of the page buffer to the page addressed by the ADDR register. */
 #define   NVMCTRL_CTRLA_CMD_LR_Val        0x40ul  /**< \brief (NVMCTRL_CTRLA) Lock Region - Locks the region containing the address location in the ADDR register. */
 #define   NVMCTRL_CTRLA_CMD_UR_Val        0x41ul  /**< \brief (NVMCTRL_CTRLA) Unlock Region - Unlocks the region containing the address location in the ADDR register. */
 #define   NVMCTRL_CTRLA_CMD_SPRM_Val      0x42ul  /**< \brief (NVMCTRL_CTRLA) Sets the power reduction mode. */
@@ -92,8 +92,8 @@ typedef union {
 #define NVMCTRL_CTRLA_CMD_WAP       (NVMCTRL_CTRLA_CMD_WAP_Val     << NVMCTRL_CTRLA_CMD_Pos)
 #define NVMCTRL_CTRLA_CMD_SF        (NVMCTRL_CTRLA_CMD_SF_Val      << NVMCTRL_CTRLA_CMD_Pos)
 #define NVMCTRL_CTRLA_CMD_WL        (NVMCTRL_CTRLA_CMD_WL_Val      << NVMCTRL_CTRLA_CMD_Pos)
-#define NVMCTRL_CTRLA_CMD_WWREEER   (NVMCTRL_CTRLA_CMD_WWREEER_Val << NVMCTRL_CTRLA_CMD_Pos)
-#define NVMCTRL_CTRLA_CMD_WWREEWP   (NVMCTRL_CTRLA_CMD_WWREEWP_Val << NVMCTRL_CTRLA_CMD_Pos)
+#define NVMCTRL_CTRLA_CMD_RWWEEER   (NVMCTRL_CTRLA_CMD_RWWEEER_Val << NVMCTRL_CTRLA_CMD_Pos)
+#define NVMCTRL_CTRLA_CMD_RWWEEWP   (NVMCTRL_CTRLA_CMD_RWWEEWP_Val << NVMCTRL_CTRLA_CMD_Pos)
 #define NVMCTRL_CTRLA_CMD_LR        (NVMCTRL_CTRLA_CMD_LR_Val      << NVMCTRL_CTRLA_CMD_Pos)
 #define NVMCTRL_CTRLA_CMD_UR        (NVMCTRL_CTRLA_CMD_UR_Val      << NVMCTRL_CTRLA_CMD_Pos)
 #define NVMCTRL_CTRLA_CMD_SPRM      (NVMCTRL_CTRLA_CMD_SPRM_Val    << NVMCTRL_CTRLA_CMD_Pos)
@@ -170,7 +170,7 @@ typedef union {
     uint32_t NVMP:16;          /*!< bit:  0..15  NVM Pages                          */
     uint32_t PSZ:3;            /*!< bit: 16..18  Page Size                          */
     uint32_t :1;               /*!< bit:     19  Reserved                           */
-    uint32_t WWREEP:12;        /*!< bit: 20..31  WWR EEPROM Pages                   */
+    uint32_t RWWEEP:12;        /*!< bit: 20..31  RWW EEPROM Pages                   */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } NVMCTRL_PARAM_Type;
@@ -201,9 +201,9 @@ typedef union {
 #define NVMCTRL_PARAM_PSZ_256       (NVMCTRL_PARAM_PSZ_256_Val     << NVMCTRL_PARAM_PSZ_Pos)
 #define NVMCTRL_PARAM_PSZ_512       (NVMCTRL_PARAM_PSZ_512_Val     << NVMCTRL_PARAM_PSZ_Pos)
 #define NVMCTRL_PARAM_PSZ_1024      (NVMCTRL_PARAM_PSZ_1024_Val    << NVMCTRL_PARAM_PSZ_Pos)
-#define NVMCTRL_PARAM_WWREEP_Pos    20           /**< \brief (NVMCTRL_PARAM) WWR EEPROM Pages */
-#define NVMCTRL_PARAM_WWREEP_Msk    (0xFFFul << NVMCTRL_PARAM_WWREEP_Pos)
-#define NVMCTRL_PARAM_WWREEP(value) ((NVMCTRL_PARAM_WWREEP_Msk & ((value) << NVMCTRL_PARAM_WWREEP_Pos)))
+#define NVMCTRL_PARAM_RWWEEP_Pos    20           /**< \brief (NVMCTRL_PARAM) RWW EEPROM Pages */
+#define NVMCTRL_PARAM_RWWEEP_Msk    (0xFFFul << NVMCTRL_PARAM_RWWEEP_Pos)
+#define NVMCTRL_PARAM_RWWEEP(value) ((NVMCTRL_PARAM_RWWEEP_Msk & ((value) << NVMCTRL_PARAM_RWWEEP_Pos)))
 #define NVMCTRL_PARAM_MASK          0xFFF7FFFFul /**< \brief (NVMCTRL_PARAM) MASK Register */
 
 /* -------- NVMCTRL_INTENCLR : (NVMCTRL Offset: 0x0C) (R/W  8) Interrupt Enable Clear -------- */
@@ -504,45 +504,30 @@ typedef struct {
 #define FUSES_BODVDD_HYST_Pos       9            /**< \brief (NVMCTRL_USER) BODVDD Hysterisis */
 #define FUSES_BODVDD_HYST_Msk       (0x1ul << FUSES_BODVDD_HYST_Pos)
 
-#define FUSES_HOT_ADC_VAL_ADDR      (NVMCTRL_TEMP_LOG + 4)
-#define FUSES_HOT_ADC_VAL_Pos       20           /**< \brief (NVMCTRL_TEMP_LOG) 12-bit ADC conversion at hot temperature */
-#define FUSES_HOT_ADC_VAL_Msk       (0xFFFul << FUSES_HOT_ADC_VAL_Pos)
-#define FUSES_HOT_ADC_VAL(value)    ((FUSES_HOT_ADC_VAL_Msk & ((value) << FUSES_HOT_ADC_VAL_Pos)))
+#define FUSES_TSENS_FCAL_ADDR       NVMCTRL_TEMP_LOG
+#define FUSES_TSENS_FCAL_Pos        6            /**< \brief (NVMCTRL_TEMP_LOG) TSENS frequency calibration */
+#define FUSES_TSENS_FCAL_Msk        (0x3Ful << FUSES_TSENS_FCAL_Pos)
+#define FUSES_TSENS_FCAL(value)     ((FUSES_TSENS_FCAL_Msk & ((value) << FUSES_TSENS_FCAL_Pos)))
 
-#define FUSES_HOT_INT1V_VAL_ADDR    (NVMCTRL_TEMP_LOG + 4)
-#define FUSES_HOT_INT1V_VAL_Pos     0            /**< \brief (NVMCTRL_TEMP_LOG) 2's complement of the internal 1V reference drift at hot temperature (versus a 1.0 centered value) */
-#define FUSES_HOT_INT1V_VAL_Msk     (0xFFul << FUSES_HOT_INT1V_VAL_Pos)
-#define FUSES_HOT_INT1V_VAL(value)  ((FUSES_HOT_INT1V_VAL_Msk & ((value) << FUSES_HOT_INT1V_VAL_Pos)))
+#define FUSES_TSENS_GAIN_0_ADDR     NVMCTRL_TEMP_LOG
+#define FUSES_TSENS_GAIN_0_Pos      12           /**< \brief (NVMCTRL_TEMP_LOG) TSENS gain calibration bits 19:0 */
+#define FUSES_TSENS_GAIN_0_Msk      (0xFFFFFul << FUSES_TSENS_GAIN_0_Pos)
+#define FUSES_TSENS_GAIN_0(value)   ((FUSES_TSENS_GAIN_0_Msk & ((value) << FUSES_TSENS_GAIN_0_Pos)))
 
-#define FUSES_HOT_TEMP_VAL_DEC_ADDR NVMCTRL_TEMP_LOG
-#define FUSES_HOT_TEMP_VAL_DEC_Pos  20           /**< \brief (NVMCTRL_TEMP_LOG) Decimal part of hot temperature */
-#define FUSES_HOT_TEMP_VAL_DEC_Msk  (0xFul << FUSES_HOT_TEMP_VAL_DEC_Pos)
-#define FUSES_HOT_TEMP_VAL_DEC(value) ((FUSES_HOT_TEMP_VAL_DEC_Msk & ((value) << FUSES_HOT_TEMP_VAL_DEC_Pos)))
+#define FUSES_TSENS_GAIN_1_ADDR     (NVMCTRL_TEMP_LOG + 4)
+#define FUSES_TSENS_GAIN_1_Pos      0            /**< \brief (NVMCTRL_TEMP_LOG) TSENS gain calibration bits 23:20 */
+#define FUSES_TSENS_GAIN_1_Msk      (0xFul << FUSES_TSENS_GAIN_1_Pos)
+#define FUSES_TSENS_GAIN_1(value)   ((FUSES_TSENS_GAIN_1_Msk & ((value) << FUSES_TSENS_GAIN_1_Pos)))
 
-#define FUSES_HOT_TEMP_VAL_INT_ADDR NVMCTRL_TEMP_LOG
-#define FUSES_HOT_TEMP_VAL_INT_Pos  12           /**< \brief (NVMCTRL_TEMP_LOG) Integer part of hot temperature in oC */
-#define FUSES_HOT_TEMP_VAL_INT_Msk  (0xFFul << FUSES_HOT_TEMP_VAL_INT_Pos)
-#define FUSES_HOT_TEMP_VAL_INT(value) ((FUSES_HOT_TEMP_VAL_INT_Msk & ((value) << FUSES_HOT_TEMP_VAL_INT_Pos)))
+#define FUSES_TSENS_OFFSET_ADDR     (NVMCTRL_TEMP_LOG + 4)
+#define FUSES_TSENS_OFFSET_Pos      4            /**< \brief (NVMCTRL_TEMP_LOG) TSENS offset calibration */
+#define FUSES_TSENS_OFFSET_Msk      (0xFFFFFFul << FUSES_TSENS_OFFSET_Pos)
+#define FUSES_TSENS_OFFSET(value)   ((FUSES_TSENS_OFFSET_Msk & ((value) << FUSES_TSENS_OFFSET_Pos)))
 
-#define FUSES_ROOM_ADC_VAL_ADDR     (NVMCTRL_TEMP_LOG + 4)
-#define FUSES_ROOM_ADC_VAL_Pos      8            /**< \brief (NVMCTRL_TEMP_LOG) 12-bit ADC conversion at room temperature */
-#define FUSES_ROOM_ADC_VAL_Msk      (0xFFFul << FUSES_ROOM_ADC_VAL_Pos)
-#define FUSES_ROOM_ADC_VAL(value)   ((FUSES_ROOM_ADC_VAL_Msk & ((value) << FUSES_ROOM_ADC_VAL_Pos)))
-
-#define FUSES_ROOM_INT1V_VAL_ADDR   NVMCTRL_TEMP_LOG
-#define FUSES_ROOM_INT1V_VAL_Pos    24           /**< \brief (NVMCTRL_TEMP_LOG) 2's complement of the internal 1V reference drift at room temperature (versus a 1.0 centered value) */
-#define FUSES_ROOM_INT1V_VAL_Msk    (0xFFul << FUSES_ROOM_INT1V_VAL_Pos)
-#define FUSES_ROOM_INT1V_VAL(value) ((FUSES_ROOM_INT1V_VAL_Msk & ((value) << FUSES_ROOM_INT1V_VAL_Pos)))
-
-#define FUSES_ROOM_TEMP_VAL_DEC_ADDR NVMCTRL_TEMP_LOG
-#define FUSES_ROOM_TEMP_VAL_DEC_Pos 8            /**< \brief (NVMCTRL_TEMP_LOG) Decimal part of room temperature */
-#define FUSES_ROOM_TEMP_VAL_DEC_Msk (0xFul << FUSES_ROOM_TEMP_VAL_DEC_Pos)
-#define FUSES_ROOM_TEMP_VAL_DEC(value) ((FUSES_ROOM_TEMP_VAL_DEC_Msk & ((value) << FUSES_ROOM_TEMP_VAL_DEC_Pos)))
-
-#define FUSES_ROOM_TEMP_VAL_INT_ADDR NVMCTRL_TEMP_LOG
-#define FUSES_ROOM_TEMP_VAL_INT_Pos 0            /**< \brief (NVMCTRL_TEMP_LOG) Integer part of room temperature in oC */
-#define FUSES_ROOM_TEMP_VAL_INT_Msk (0xFFul << FUSES_ROOM_TEMP_VAL_INT_Pos)
-#define FUSES_ROOM_TEMP_VAL_INT(value) ((FUSES_ROOM_TEMP_VAL_INT_Msk & ((value) << FUSES_ROOM_TEMP_VAL_INT_Pos)))
+#define FUSES_TSENS_TCAL_ADDR       NVMCTRL_TEMP_LOG
+#define FUSES_TSENS_TCAL_Pos        0            /**< \brief (NVMCTRL_TEMP_LOG) TSENS temperature calibration */
+#define FUSES_TSENS_TCAL_Msk        (0x3Ful << FUSES_TSENS_TCAL_Pos)
+#define FUSES_TSENS_TCAL(value)     ((FUSES_TSENS_TCAL_Msk & ((value) << FUSES_TSENS_TCAL_Pos)))
 
 #define NVMCTRL_FUSES_BOOTPROT_ADDR NVMCTRL_USER
 #define NVMCTRL_FUSES_BOOTPROT_Pos  0            /**< \brief (NVMCTRL_USER) Bootloader Size */
@@ -574,10 +559,10 @@ typedef struct {
 #define NVMCTRL_FUSES_REGION_LOCKS_Msk (0xFFFFul << NVMCTRL_FUSES_REGION_LOCKS_Pos)
 #define NVMCTRL_FUSES_REGION_LOCKS(value) ((NVMCTRL_FUSES_REGION_LOCKS_Msk & ((value) << NVMCTRL_FUSES_REGION_LOCKS_Pos)))
 
-#define NVMCTRL_FUSES_WWREEP_ADDR   (NVMCTRL_OTP1 + 4)
-#define NVMCTRL_FUSES_WWREEP_Pos    0            /**< \brief (NVMCTRL_OTP1)  */
-#define NVMCTRL_FUSES_WWREEP_Msk    (0xFFul << NVMCTRL_FUSES_WWREEP_Pos)
-#define NVMCTRL_FUSES_WWREEP(value) ((NVMCTRL_FUSES_WWREEP_Msk & ((value) << NVMCTRL_FUSES_WWREEP_Pos)))
+#define NVMCTRL_FUSES_RWWEEP_ADDR   (NVMCTRL_OTP1 + 4)
+#define NVMCTRL_FUSES_RWWEEP_Pos    0            /**< \brief (NVMCTRL_OTP1) Number of RWW EEPROM Pages */
+#define NVMCTRL_FUSES_RWWEEP_Msk    (0xFFul << NVMCTRL_FUSES_RWWEEP_Pos)
+#define NVMCTRL_FUSES_RWWEEP(value) ((NVMCTRL_FUSES_RWWEEP_Msk & ((value) << NVMCTRL_FUSES_RWWEEP_Pos)))
 
 #define WDT_FUSES_ALWAYSON_ADDR     NVMCTRL_USER
 #define WDT_FUSES_ALWAYSON_Pos      27           /**< \brief (NVMCTRL_USER) WDT Always On */
