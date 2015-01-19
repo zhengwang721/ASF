@@ -3,7 +3,7 @@
  *
  * \brief SAM D21 System Interrupt Driver
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -155,7 +155,7 @@ enum system_interrupt_vector {
 #  if defined(ID_TC6)
 	SYSTEM_INTERRUPT_MODULE_TC6        = TC6_IRQn,
 #  endif
-#if  defined(ID_TC7)
+#  if defined(ID_TC7)
 	SYSTEM_INTERRUPT_MODULE_TC7        = TC7_IRQn,
 #  endif
 #endif
