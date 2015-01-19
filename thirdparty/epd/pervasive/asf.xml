@@ -60,6 +60,8 @@
 		<build type="include-path" value="./src/services/EPD_tc"/>
 		<build type="module-config" subtype="required-header-file" value="conf_EPD.h"/>
 		<build type="module-config" subtype="path" value="module_config"/>
+		<build type="module-config" subtype="required-header-file" value="conf_EPD_hw_timer.h"/>
+		<build type="module-config" subtype="path" value="src/services/EPD_tc/module_config"/>
 		<require idref="config.thirdparty.epd.epd_type"/>
 		<require idref="common.services.ioport"/>
 		<require idref="common.services.basic.spi_master"/>
