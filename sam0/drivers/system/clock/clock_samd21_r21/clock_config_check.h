@@ -3,7 +3,7 @@
  *
  * \brief SAM D21/R21 Clock Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -251,12 +251,20 @@
 #  error CONF_CLOCK_DPLL_REFERENCE_FREQUENCY not defined in conf_clock.h
 #endif
 
-#if !defined(CONF_CLOCK_DPLL_REFEREMCE_DIVIDER)
-#  error CONF_CLOCK_DPLL_REFEREMCE_DIVIDER not defined in conf_clock.h
+#if !defined(CONF_CLOCK_DPLL_REFERENCE_DIVIDER)
+#  error CONF_CLOCK_DPLL_REFERENCE_DIVIDER not defined in conf_clock.h
 #endif
 
 #if !defined(CONF_CLOCK_DPLL_OUTPUT_FREQUENCY)
 #  error CONF_CLOCK_DPLL_OUTPUT_FREQUENCY not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR)
+#  error CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_DPLL_LOCK_GCLK_GENERATOR)
+#  error CONF_CLOCK_DPLL_LOCK_GCLK_GENERATOR not defined in conf_clock.h
 #endif
 
 #if !defined(CONF_CLOCK_CONFIGURE_GCLK)
@@ -421,6 +429,26 @@
 
 #if !defined(CONF_CLOCK_GCLK_7_OUTPUT_ENABLE)
 #  error CONF_CLOCK_GCLK_7_OUTPUT_ENABLE not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_GCLK_8_ENABLE)
+#  error CONF_CLOCK_GCLK_8_ENABLE not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_GCLK_8_RUN_IN_STANDBY)
+#  error CONF_CLOCK_GCLK_8_RUN_IN_STANDBY not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_GCLK_8_CLOCK_SOURCE)
+#  error CONF_CLOCK_GCLK_8_CLOCK_SOURCE not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_GCLK_8_PRESCALER)
+#  error CONF_CLOCK_GCLK_8_PRESCALER not defined in conf_clock.h
+#endif
+
+#if !defined(CONF_CLOCK_GCLK_8_OUTPUT_ENABLE)
+#  error CONF_CLOCK_GCLK_8_OUTPUT_ENABLE not defined in conf_clock.h
 #endif
 
 #endif /* CLOCK_CONFIG_CHECK_H */

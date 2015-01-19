@@ -3,7 +3,7 @@
  *
  * \brief SAM USART Quick Start
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -137,7 +137,7 @@ int main(void)
 
 //! [main_send_string]
 	uint8_t string[] = "Hello World!\r\n";
-	usart_write_buffer_job(&usart_instance, string, sizeof(string));
+	usart_write_buffer_wait(&usart_instance, string, sizeof(string));
 //! [main_send_string]
 
 //! [main_loop]
@@ -150,3 +150,4 @@ int main(void)
 	}
 //! [main]
 }
+

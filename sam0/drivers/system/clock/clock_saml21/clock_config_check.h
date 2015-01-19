@@ -3,7 +3,7 @@
  *
  * \brief SAM L21 Clock Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -263,8 +263,8 @@
 #  error CONF_CLOCK_DPLL_REFERENCE_FREQUENCY not defined in conf_clock.h
 #endif
 
-#if !defined(CONF_CLOCK_DPLL_REFEREMCE_DIVIDER)
-#  error CONF_CLOCK_DPLL_REFEREMCE_DIVIDER not defined in conf_clock.h
+#if !defined(CONF_CLOCK_DPLL_REFERENCE_DIVIDER)
+#  error CONF_CLOCK_DPLL_REFERENCE_DIVIDER not defined in conf_clock.h
 #endif
 
 #if !defined(CONF_CLOCK_DPLL_OUTPUT_FREQUENCY)
@@ -279,8 +279,8 @@
 #  error CONF_CLOCK_DPLL_REFERENCE_GCLK_GENERATOR not defined in conf_clock.h
 #endif
 
-#if !defined(CONF_CLOCK_DPLL_REFERENCE_GCLK_32K_GENERATOR)
-#  error CONF_CLOCK_DPLL_REFERENCE_GCLK_32K_GENERATOR not defined in conf_clock.h
+#if !defined(CONF_CLOCK_DPLL_LOCK_GCLK_GENERATOR)
+#  error CONF_CLOCK_DPLL_LOCK_GCLK_GENERATOR not defined in conf_clock.h
 #endif
 
 
