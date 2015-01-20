@@ -3,7 +3,7 @@
  *
  * \brief SAM Non-Volatile Memory driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -61,6 +61,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_nvm_prerequisites
@@ -90,7 +91,7 @@
  *  </tr>
  *  <tr>
  *    <td>FEATURE_NVM_RWWEE</td>
- *    <td>SAML21</td>
+ *    <td>SAML21,SAMC21</td>
  *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -271,7 +272,7 @@ extern "C" {
  * Define NVM features set according to different device family
  * @{
 */
-#if (SAML21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAMC21) || defined(__DOXYGEN__)
 /** Read while write EEPROM emulation feature*/
 #  define FEATURE_NVM_RWWEE
 #endif
@@ -425,7 +426,14 @@ struct nvm_config {
 	 * nvm controller.
 	 */
 	bool disable_cache;
-
+#if (SAMC21)
+	/**
+	 * Setting this to true will disable the pre-fetch RWW cache in front of the
+	 * nvm controller.
+	 * If RWW cache is enabled, NVM cache will also be enabled.
+	 */
+	bool disable_rww_cache;
+#endif
 	/**
 	 * Select the mode for  how the cache will pre-fetch data from the flash.
 	 */
@@ -597,12 +605,21 @@ struct nvm_fusebits {
 	enum nvm_bootloader_size          bootloader_size;
 	/** EEPROM emulation area size. */
 	enum nvm_eeprom_emulator_size     eeprom_size;
+#if (SAMC21)
+	/** BODVDD Threshold level at power on. */
+	uint8_t                           bodvdd_level;
+	/** BODVDD Enable at power on. */
+	bool                              bodvdd_enable;
+	/** BODVDD Action at power on. */
+	enum nvm_bod33_action             bodvdd_action;
+#else
 	/** BOD33 Threshold level at power on. */
 	uint8_t                           bod33_level;
 	/** BOD33 Enable at power on. */
 	bool                              bod33_enable;
 	/** BOD33 Action at power on. */
 	enum nvm_bod33_action             bod33_action;
+#endif
 	/** WDT Enable at power on. */
 	bool                              wdt_enable;
 	/** WDT Always-on at power on. */
@@ -651,6 +668,9 @@ static inline void nvm_get_config_defaults(
 	config->manual_page_write = false;
 	config->wait_states       = NVMCTRL->CTRLB.bit.RWS;
 	config->disable_cache     = false;
+#if (SAMC21)
+	config->disable_rww_cache = false;
+#endif
 	config->cache_readmode    = NVM_CACHE_READMODE_NO_MISS_PENALTY;
 }
 

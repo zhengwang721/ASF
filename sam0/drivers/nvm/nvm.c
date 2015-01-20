@@ -3,7 +3,7 @@
  *
  * \brief SAM Non Volatile Memory driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -109,7 +109,7 @@ enum status_code nvm_set_config(
 	/* Get a pointer to the module hardware instance */
 	Nvmctrl *const nvm_module = NVMCTRL;
 
-#if (SAML21)
+#if (SAML21) || (SAMC21)
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBB, MCLK_APBBMASK_NVMCTRL);
 #else
@@ -125,6 +125,7 @@ enum status_code nvm_set_config(
 		return STATUS_BUSY;
 	}
 
+#if (!SAMC21)
 	/* Writing configuration to the CTRLB register */
 	nvm_module->CTRLB.reg =
 			NVMCTRL_CTRLB_SLEEPPRM(config->sleep_power_mode) |
@@ -132,6 +133,21 @@ enum status_code nvm_set_config(
 			NVMCTRL_CTRLB_RWS(config->wait_states) |
 			((config->disable_cache & 0x01) << NVMCTRL_CTRLB_CACHEDIS_Pos) |
 			NVMCTRL_CTRLB_READMODE(config->cache_readmode);
+#else
+	uint8_t cache_disable_value =  0;
+	if (config->disable_rww_cache == false) {
+		cache_disable_value = 0x02;
+	} else {
+		cache_disable_value = (config->disable_cache & 0x01);
+	}
+	/* Writing configuration to the CTRLB register */
+	nvm_module->CTRLB.reg =
+			NVMCTRL_CTRLB_SLEEPPRM(config->sleep_power_mode) |
+			((config->manual_page_write & 0x01) << NVMCTRL_CTRLB_MANW_Pos) |
+			NVMCTRL_CTRLB_RWS(config->wait_states) |
+			(cache_disable_value << NVMCTRL_CTRLB_CACHEDIS_Pos) |
+			NVMCTRL_CTRLB_READMODE(config->cache_readmode);
+#endif
 
 	/* Initialize the internal device struct */
 	_nvm_dev.page_size         = (8 << nvm_module->PARAM.bit.PSZ);
@@ -198,7 +214,12 @@ enum status_code nvm_execute_command(
 
 	/* turn off cache before issuing flash commands */
 	temp = nvm_module->CTRLB.reg;
+#if (SAMC21)
+	nvm_module->CTRLB.reg = ((temp &(~(NVMCTRL_CTRLB_CACHEDIS(0x2)))) 
+							| NVMCTRL_CTRLB_CACHEDIS(0x1));
+#else
 	nvm_module->CTRLB.reg = temp | NVMCTRL_CTRLB_CACHEDIS;
+#endif
 
 	/* Clear error flags */
 	nvm_module->STATUS.reg |= NVMCTRL_STATUS_MASK;
@@ -759,6 +780,19 @@ static void _nvm_translate_raw_fusebits_to_struct (
 			((raw_user_row[0] & FUSES_BOD33_ACTION_Msk)
 			>> FUSES_BOD33_ACTION_Pos);
 #else
+#if (SAMC21)
+	fusebits->bodvdd_level = (uint8_t)
+			((raw_user_row[0] & FUSES_BODVDDUSERLEVEL_Msk)
+			>> FUSES_BODVDDUSERLEVEL_Pos);
+
+	fusebits->bodvdd_enable = (bool)
+			(!((raw_user_row[0] & FUSES_BODVDD_DIS_Msk)
+			>> FUSES_BODVDD_DIS_Pos));
+
+	fusebits->bodvdd_action = (enum nvm_bod33_action)
+			((raw_user_row[0] & FUSES_BODVDD_ACTION_Msk)
+			>> FUSES_BODVDD_ACTION_Pos);
+#else
 	fusebits->bod33_level = (uint8_t)
 				((raw_user_row[0] & SYSCTRL_FUSES_BOD33USERLEVEL_Msk)
 				>> SYSCTRL_FUSES_BOD33USERLEVEL_Pos);
@@ -770,7 +804,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod33_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_ACTION_Msk)
 			>> SYSCTRL_FUSES_BOD33_ACTION_Pos);
-
+#endif
 #endif
 	fusebits->wdt_enable = (bool)
 			((raw_user_row[0] & WDT_FUSES_ENABLE_Msk) >> WDT_FUSES_ENABLE_Pos);
@@ -781,7 +815,7 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->wdt_timeout_period = (uint8_t)
 			((raw_user_row[0] & WDT_FUSES_PER_Msk) >> WDT_FUSES_PER_Pos);
 
-#if (SAML21)
+#if (SAML21) || (SAMC21)
 	fusebits->wdt_window_timeout = (enum nvm_wdt_window_timeout)
 			((raw_user_row[1] & WDT_FUSES_WINDOW_Msk) >> WDT_FUSES_WINDOW_Pos);
 #else
