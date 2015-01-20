@@ -83,7 +83,7 @@ void configure_adc(void)
 
 //! [setup_adc_config_extra]
 #if !(SAML21)
-#if !(SAML21) && !(SAMC21)
+#if !(SAMC21)
 	config_adc.gain_factor     = ADC_GAIN_FACTOR_DIV2;
 #endif
 	config_adc.resolution      = ADC_RESOLUTION_10BIT;
