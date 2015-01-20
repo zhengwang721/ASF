@@ -65,7 +65,7 @@
 
 //[definition_peripheral_trigger]
 #define CONF_PERIPHERAL_TRIGGER_TX   SERCOM5_DMAC_ID_TX
-#define CONF_PERIPHERAL_TRIGGER_RX   SERCOM3_DMAC_ID_RX
+#define CONF_PERIPHERAL_TRIGGER_RX   SERCOM1_DMAC_ID_RX
 //[definition_peripheral_trigger]
 
 #endif /* CONF_QUICK_START_DMA_H_INCLUDED */
