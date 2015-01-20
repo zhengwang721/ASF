@@ -103,13 +103,21 @@
 
 void configure_rtc_count(void);
 void configure_event_resource(void);
-
+/* Structure for UART module connected to EDBG (used for unit test output) */
 struct usart_module cdc_uart_module;
+/* Structure for DAC module */
 struct dac_module dac_instance;
+/* Structure for RTC module */
 struct rtc_module rtc_instance;
+/* Structure for event source */
 struct events_resource event_dac;
 
-/* setup uart for unit_test output */
+/**
+ * \brief Initialize the USART for unit test
+ *
+ * Initializes the SERCOM USART (SERCOM4) used for sending the
+ * unit test status to the computer via the EDBG CDC gateway.
+ */
 static void cdc_uart_init(void)
 {
 	struct usart_config usart_conf;
@@ -127,7 +135,11 @@ static void cdc_uart_init(void)
 	usart_enable(&cdc_uart_module);
 }
 
-/* set rtc overflow as the event generator for DAC conversion */
+/**
+ * \configure event source for DAC conversion
+ *
+ *   set rtc overflow as the event generator for DAC conversion
+ */
 void configure_event_resource(void)
 {
 	struct events_config event_config;
@@ -142,7 +154,11 @@ void configure_event_resource(void)
 	events_attach_user(&event_dac, EVSYS_ID_USER_DAC_START);
 }
 
-/* set up rtc to generate overflow event */
+/**
+ * \init rtc for event generator
+ *
+ *  set rtc clock prescaler and mode to generate overflow events
+ */
 void configure_rtc_count(void)
 {
 	struct rtc_count_events  rtc_event;
@@ -157,7 +173,11 @@ void configure_rtc_count(void)
 	rtc_count_enable(&rtc_instance);
 }
 
-/* Dac init test*/
+/**
+ * \brief Initialize the DAC for unit test
+ *
+ * Initializes the DAC module to accept events to start conversion
+ */
 static void run_dac_init_test(const struct test_case *test)
 {
 	enum status_code status = STATUS_ERR_IO;
@@ -183,7 +203,13 @@ static void run_dac_init_test(const struct test_case *test)
 	dac_chan_enable(&dac_instance, DAC_CHANNEL_0);
 }
 
-/* Dac channel buffer empty and underrun test */
+/**
+ * \internal
+ * \brief Test for DAC conversion driven by events in polled mode.
+ *
+ * after the first event, dac should enter channel buffer empty status.
+ * after the second event, dac should enter channel buffer underrun status.
+ */
 static void run_dac_event_control_test(const struct test_case *test)
 {
 	enum status_code status = STATUS_ERR_IO;
@@ -200,16 +226,24 @@ static void run_dac_event_control_test(const struct test_case *test)
 	/* DAC buffer empty test*/
 	delay_ms(3);
 	dac_status = dac_get_status(&dac_instance);
-	test_assert_true(test, dac_status & DAC_STATUS_CHANNEL_0_EMPTY == DAC_STATUS_CHANNEL_0_EMPTY,
+	test_assert_true(test, (dac_status & DAC_STATUS_CHANNEL_0_EMPTY) 
+			== DAC_STATUS_CHANNEL_0_EMPTY,
 			"dac channel buffer empty didn't happen");
 
 	/* DAC buffer underrun test*/
 	delay_ms(3);
 	dac_status = dac_get_status(&dac_instance);
-	test_assert_true(test, dac_status & DAC_STATUS_CHANNEL_0_UNDERRUN == DAC_STATUS_CHANNEL_0_UNDERRUN,
+	test_assert_true(test, (dac_status & DAC_STATUS_CHANNEL_0_UNDERRUN) 
+			== DAC_STATUS_CHANNEL_0_UNDERRUN,
 			"dac channel buffer underrun didn't happen");
 }
 
+/**
+ * \brief Run DAC unit tests
+ *
+ * Initializes the system and serial output, then sets up the
+ * DAC unit test suite and runs it.
+ */
 int main(void)
 {
 
@@ -217,13 +251,12 @@ int main(void)
 	cdc_uart_init();
 	delay_init();
 
-	DEFINE_TEST_CASE(dac_init_test,NULL,
-			run_dac_init_test,NULL,
+	DEFINE_TEST_CASE(dac_init_test, NULL,
+			run_dac_init_test, NULL,
 			"dac buffer init test");
-	DEFINE_TEST_CASE(dac_event_control_test,NULL,
-			run_dac_event_control_test,NULL,
+	DEFINE_TEST_CASE(dac_event_control_test, NULL,
+			run_dac_event_control_test, NULL,
 			"dac event control conversion test");
-
 
 	/* Put test case addresses in an array */
 	DEFINE_TEST_ARRAY(dac_tests) = {
