@@ -109,6 +109,7 @@ struct dac_module dac_instance;
 struct rtc_module rtc_instance;
 struct events_resource event_dac;
 
+/* setup uart for unit_test output */
 static void cdc_uart_init(void)
 {
 	struct usart_config usart_conf;
@@ -126,7 +127,7 @@ static void cdc_uart_init(void)
 	usart_enable(&cdc_uart_module);
 }
 
-
+/* set rtc overflow as the event generator for DAC conversion */
 void configure_event_resource(void)
 {
 	struct events_config event_config;
@@ -141,9 +142,7 @@ void configure_event_resource(void)
 	events_attach_user(&event_dac, EVSYS_ID_USER_DAC_START);
 }
 
-
-
-//! [setup_rtc]
+/* set up rtc to generate overflow event */
 void configure_rtc_count(void)
 {
 	struct rtc_count_events  rtc_event;
@@ -157,7 +156,6 @@ void configure_rtc_count(void)
 	rtc_count_enable_events(&rtc_instance, &rtc_event);
 	rtc_count_enable(&rtc_instance);
 }
-//! [setup_rtc]
 
 /* Dac init test*/
 static void run_dac_init_test(const struct test_case *test)
@@ -172,6 +170,7 @@ static void run_dac_init_test(const struct test_case *test)
 	test_assert_true(test, status == STATUS_OK,
 			"DAC initialization failed");
 
+	/* set dac start conversion on events*/
 	struct dac_events events =
 		{ .on_event_start_conversion = true };
 	dac_enable_events(&dac_instance, &events);
@@ -179,7 +178,6 @@ static void run_dac_init_test(const struct test_case *test)
 	
     	struct dac_chan_config config_dac_chan;
 	dac_chan_get_config_defaults(&config_dac_chan);
-
 	dac_chan_set_config(&dac_instance, DAC_CHANNEL_0,
 			&config_dac_chan);
 	dac_chan_enable(&dac_instance, DAC_CHANNEL_0);
@@ -194,7 +192,7 @@ static void run_dac_event_control_test(const struct test_case *test)
 	status = dac_chan_write(&dac_instance, DAC_CHANNEL_0, 100);
 	test_assert_true(test, status == STATUS_OK,
 			"DAC chan write failed");
-
+	
 	configure_rtc_count();
 	rtc_count_set_period(&rtc_instance, 1);
 	configure_event_resource();
@@ -219,7 +217,7 @@ int main(void)
 	cdc_uart_init();
 	delay_init();
 
-    DEFINE_TEST_CASE(dac_init_test,NULL,
+	DEFINE_TEST_CASE(dac_init_test,NULL,
 			run_dac_init_test,NULL,
 			"dac buffer init test");
 	DEFINE_TEST_CASE(dac_event_control_test,NULL,
