@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 #ifndef SDADC_H_INCLUDED
 #define SDADC_H_INCLUDED
@@ -221,15 +224,32 @@ enum sdadc_callback {
  * Enum for the possible reference voltages for the SDADC.
  *
  */
-enum sdadc_reference {
-	/** Positive reference 1. */
-	SDADC_REFERENCE_1 = SDADC_REFCTRL_REFSEL(0),
-	/** Positive reference 2. */
-	SDADC_REFERENCE_2 = SDADC_REFCTRL_REFSEL(1),
-	/** Positive reference 3. */
-	SDADC_REFERENCE_3 = SDADC_REFCTRL_REFSEL(2),
-	/** Positive reference 4. */
-	SDADC_REFERENCE_4 = SDADC_REFCTRL_REFSEL(3),
+enum sdadc_reference_select {
+	/** Internal Bandgap Reference. */
+	SDADC_REFERENCE_INTREF = SDADC_REFCTRL_REFSEL(0),
+	/** External reference B. */
+	SDADC_REFERENCE_AREFB  = SDADC_REFCTRL_REFSEL(1),
+	/** DACOUT. */
+	SDADC_REFERENCE_DACOUT = SDADC_REFCTRL_REFSEL(2),
+	/** VDDANA. */
+	SDADC_REFERENCE_INTVCC = SDADC_REFCTRL_REFSEL(3),
+};
+
+/**
+ * \brief SDADC reference range enum.
+ *
+ * Enum for the matched voltage range of the SDADC reference used.
+ *
+ */
+enum sdadc_reference_range {
+	/** Vref < 1.4V. */
+	SDADC_REFRANGE_0 = SDADC_REFCTRL_REFRANGE(0),
+	/** 1.4V < Vref < 2.4V. */
+	SDADC_REFRANGE_1 = SDADC_REFCTRL_REFRANGE(1),
+	/** 2.4V < Vref < 3.6V. */
+	SDADC_REFRANGE_2 = SDADC_REFCTRL_REFRANGE(2),
+	/** Vref > 3.6V. */
+	SDADC_REFRANGE_3 = SDADC_REFCTRL_REFRANGE(3),
 };
 
 /**
@@ -315,6 +335,20 @@ enum sdadc_interrupt_flag {
 #endif
 
 /**
+ * \brief Reference configuration structure.
+ *
+ * Reference configuration structure.
+ */
+struct sdadc_reference {
+	/** Reference voltage selection. */
+	enum sdadc_reference_select ref_sel;
+	/** Reference voltage range. */
+	enum sdadc_reference_select ref_range;
+	/** Reference buffer turning switch. */
+	bool on_ref_buffer;
+};
+
+/**
  * \brief Window monitor configuration structure.
  *
  * Window monitor configuration structure.
@@ -368,7 +402,7 @@ struct sdadc_config {
 	/** GCLK generator used to clock the peripheral. */
 	enum gclk_generator clock_source;
 	/** Voltage reference. */
-	enum sdadc_reference reference;
+	struct sdadc_reference reference;
 	/** Over sampling ratio. */
 	enum sdadc_over_sampling_ratio osr;
 	/** Clock prescaler. */
@@ -407,7 +441,7 @@ struct sdadc_module {
 	/** Pointer to SDADC hardware module. */
 	Sdadc *hw;
 	/** Keep reference configuration so we know when enable is called. */
-	enum sdadc_reference reference;
+	struct sdadc_reference reference;
 #  if SDADC_CALLBACK_MODE == true
 	/** Array to store callback functions. */
 	sdadc_callback_t callback[SDADC_CALLBACK_N];
@@ -465,7 +499,9 @@ static inline void sdadc_get_config_defaults(struct sdadc_config *const config)
 {
 	Assert(config);
 	config->clock_source                  = GCLK_GENERATOR_0;
-	config->reference                     = SDADC_REFERENCE_1;
+	config->reference.ref_sel             = SDADC_REFERENCE_INTREF;
+	config->reference.ref_range           = SDADC_REFRANGE_0;
+	config->reference.on_ref_buffer       = false;
 	config->clock_prescaler               = 2;
 	config->osr                           = SDADC_OVER_SAMPLING_RATIO64;
 	config->skip_count                    = 2;

@@ -40,6 +40,10 @@
  * \asf_license_stop
  *
  */
+/**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+
 #include "sdadc_callback.h"
 
 struct sdadc_module *_sdadc_instances[SDADC_INST_NUM];
