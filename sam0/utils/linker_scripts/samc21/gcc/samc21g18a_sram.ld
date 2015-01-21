@@ -3,7 +3,7 @@
  *
  * \brief Linker script for running in internal SRAM on the SAMC21G18A
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -107,6 +107,14 @@ SECTIONS
         _efixed = .;            /* End of text section */
     } > ram
 
+    /* .ARM.exidx is sorted, so has to go in its own output section.  */
+    PROVIDE_HIDDEN (__exidx_start = .);
+    .ARM.exidx :
+    {
+      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
+    } > ram
+    PROVIDE_HIDDEN (__exidx_end = .);
+
     . = ALIGN(4);
     _etext = .;
 
@@ -142,14 +150,6 @@ SECTIONS
         . = ALIGN(8);
         _estack = .;
     } > ram
-
-    /* .ARM.exidx is sorted, so has to go in its own output section.  */
-    PROVIDE_HIDDEN (__exidx_start = .);
-    .ARM.exidx :
-    {
-      *(.ARM.exidx* .gnu.linkonce.armexidx.*)
-    } > ram
-    PROVIDE_HIDDEN (__exidx_end = .);
 
     . = ALIGN(4);
     _end = . ;

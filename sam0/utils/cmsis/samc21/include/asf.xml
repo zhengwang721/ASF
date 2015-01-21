@@ -13,6 +13,7 @@
 		<build type="header-file" value="samc21g16a.h"/>
 		<build type="header-file" value="samc21g17a.h"/>
 		<build type="header-file" value="samc21g18a.h"/>
+		<build type="header-file" value="samc21j15a.h"/>
 		<build type="header-file" value="samc21j16a.h"/>
 		<build type="header-file" value="samc21j17a.h"/>
 		<build type="header-file" value="samc21j18a.h"/>

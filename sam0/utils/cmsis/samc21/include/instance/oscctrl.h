@@ -3,7 +3,7 @@
  *
  * \brief Instance description for OSCCTRL
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -87,7 +87,7 @@
 #define OSCCTRL_GCLK_ID_FDPLL       0        // Index of Generic Clock for DPLL
 #define OSCCTRL_GCLK_ID_FDPLL32K    1        // Index of Generic Clock for DPLL 32K
 #define OSCCTRL_FDPLL_VERSION       0x200   
-#define OSCCTRL_OSC16M_VERSION      0x100   
+#define OSCCTRL_OSC48M_VERSION      0x100   
 #define OSCCTRL_XOSC_VERSION        0x200   
 
 #endif /* _SAMC21_OSCCTRL_INSTANCE_ */

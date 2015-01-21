@@ -3,7 +3,7 @@
  *
  * \brief Component description for MCLK
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -149,7 +149,7 @@ typedef union {
     uint32_t HPB1_:1;          /*!< bit:      1  HPB1 AHB Clock Mask                */
     uint32_t HPB2_:1;          /*!< bit:      2  HPB2 AHB Clock Mask                */
     uint32_t DSU_:1;           /*!< bit:      3  DSU AHB Clock Mask                 */
-    uint32_t :1;               /*!< bit:      4  Reserved                           */
+    uint32_t HMATRIXHS_:1;     /*!< bit:      4  HMATRIXHS AHB Clock Mask           */
     uint32_t NVMCTRL_:1;       /*!< bit:      5  NVMCTRL AHB Clock Mask             */
     uint32_t HMCRAMCHS_:1;     /*!< bit:      6  HMCRAMCHS AHB Clock Mask           */
     uint32_t DMAC_:1;          /*!< bit:      7  DMAC AHB Clock Mask                */
@@ -175,6 +175,8 @@ typedef union {
 #define MCLK_AHBMASK_HPB2           (0x1ul << MCLK_AHBMASK_HPB2_Pos)
 #define MCLK_AHBMASK_DSU_Pos        3            /**< \brief (MCLK_AHBMASK) DSU AHB Clock Mask */
 #define MCLK_AHBMASK_DSU            (0x1ul << MCLK_AHBMASK_DSU_Pos)
+#define MCLK_AHBMASK_HMATRIXHS_Pos  4            /**< \brief (MCLK_AHBMASK) HMATRIXHS AHB Clock Mask */
+#define MCLK_AHBMASK_HMATRIXHS      (0x1ul << MCLK_AHBMASK_HMATRIXHS_Pos)
 #define MCLK_AHBMASK_NVMCTRL_Pos    5            /**< \brief (MCLK_AHBMASK) NVMCTRL AHB Clock Mask */
 #define MCLK_AHBMASK_NVMCTRL        (0x1ul << MCLK_AHBMASK_NVMCTRL_Pos)
 #define MCLK_AHBMASK_HMCRAMCHS_Pos  6            /**< \brief (MCLK_AHBMASK) HMCRAMCHS AHB Clock Mask */
@@ -191,7 +193,7 @@ typedef union {
 #define MCLK_AHBMASK_NVMCTRL_PICACHU (0x1ul << MCLK_AHBMASK_NVMCTRL_PICACHU_Pos)
 #define MCLK_AHBMASK_DIVAS_Pos      12           /**< \brief (MCLK_AHBMASK) DIVAS AHB Clock Mask */
 #define MCLK_AHBMASK_DIVAS          (0x1ul << MCLK_AHBMASK_DIVAS_Pos)
-#define MCLK_AHBMASK_MASK           0x00001FEFul /**< \brief (MCLK_AHBMASK) MASK Register */
+#define MCLK_AHBMASK_MASK           0x00001FFFul /**< \brief (MCLK_AHBMASK) MASK Register */
 
 /* -------- MCLK_APBAMASK : (MCLK Offset: 0x14) (R/W 32) APBA Mask -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -254,7 +256,9 @@ typedef union {
     uint32_t PORT_:1;          /*!< bit:      0  PORT APB Clock Enable              */
     uint32_t DSU_:1;           /*!< bit:      1  DSU APB Clock Enable               */
     uint32_t NVMCTRL_:1;       /*!< bit:      2  NVMCTRL APB Clock Enable           */
-    uint32_t :29;              /*!< bit:  3..31  Reserved                           */
+    uint32_t :2;               /*!< bit:  3.. 4  Reserved                           */
+    uint32_t HMATRIXHS_:1;     /*!< bit:      5  HMATRIXHS APB Clock Enable         */
+    uint32_t :26;              /*!< bit:  6..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } MCLK_APBBMASK_Type;
@@ -269,7 +273,9 @@ typedef union {
 #define MCLK_APBBMASK_DSU           (0x1ul << MCLK_APBBMASK_DSU_Pos)
 #define MCLK_APBBMASK_NVMCTRL_Pos   2            /**< \brief (MCLK_APBBMASK) NVMCTRL APB Clock Enable */
 #define MCLK_APBBMASK_NVMCTRL       (0x1ul << MCLK_APBBMASK_NVMCTRL_Pos)
-#define MCLK_APBBMASK_MASK          0x00000007ul /**< \brief (MCLK_APBBMASK) MASK Register */
+#define MCLK_APBBMASK_HMATRIXHS_Pos 5            /**< \brief (MCLK_APBBMASK) HMATRIXHS APB Clock Enable */
+#define MCLK_APBBMASK_HMATRIXHS     (0x1ul << MCLK_APBBMASK_HMATRIXHS_Pos)
+#define MCLK_APBBMASK_MASK          0x00000027ul /**< \brief (MCLK_APBBMASK) MASK Register */
 
 /* -------- MCLK_APBCMASK : (MCLK Offset: 0x1C) (R/W 32) APBC Mask -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

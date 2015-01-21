@@ -3,7 +3,7 @@
  *
  * \brief Component description for TAL
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -51,7 +51,7 @@
 /*@{*/
 
 #define TAL_U2253
-#define REV_TAL                     0x100
+#define REV_TAL                     0x101
 
 /* -------- TAL_CTRLA : (TAL Offset: 0x00) (R/W  8) Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -416,15 +416,7 @@ typedef union {
     uint32_t CH10:1;           /*!< bit:     20  DMA Channel 10 Interrupt CPU Select */
     uint32_t :1;               /*!< bit:     21  Reserved                           */
     uint32_t CH11:1;           /*!< bit:     22  DMA Channel 11 Interrupt CPU Select */
-    uint32_t :1;               /*!< bit:     23  Reserved                           */
-    uint32_t CH12:1;           /*!< bit:     24  DMA Channel 12 Interrupt CPU Select */
-    uint32_t :1;               /*!< bit:     25  Reserved                           */
-    uint32_t CH13:1;           /*!< bit:     26  DMA Channel 13 Interrupt CPU Select */
-    uint32_t :1;               /*!< bit:     27  Reserved                           */
-    uint32_t CH14:1;           /*!< bit:     28  DMA Channel 14 Interrupt CPU Select */
-    uint32_t :1;               /*!< bit:     29  Reserved                           */
-    uint32_t CH15:1;           /*!< bit:     30  DMA Channel 15 Interrupt CPU Select */
-    uint32_t :1;               /*!< bit:     31  Reserved                           */
+    uint32_t :9;               /*!< bit: 23..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } TAL_DMACPUSEL0_Type;
@@ -469,19 +461,7 @@ typedef union {
 #define TAL_DMACPUSEL0_CH11_Pos     22           /**< \brief (TAL_DMACPUSEL0) DMA Channel 11 Interrupt CPU Select */
 #define TAL_DMACPUSEL0_CH11_Msk     (0x1ul << TAL_DMACPUSEL0_CH11_Pos)
 #define TAL_DMACPUSEL0_CH11(value)  ((TAL_DMACPUSEL0_CH11_Msk & ((value) << TAL_DMACPUSEL0_CH11_Pos)))
-#define TAL_DMACPUSEL0_CH12_Pos     24           /**< \brief (TAL_DMACPUSEL0) DMA Channel 12 Interrupt CPU Select */
-#define TAL_DMACPUSEL0_CH12_Msk     (0x1ul << TAL_DMACPUSEL0_CH12_Pos)
-#define TAL_DMACPUSEL0_CH12(value)  ((TAL_DMACPUSEL0_CH12_Msk & ((value) << TAL_DMACPUSEL0_CH12_Pos)))
-#define TAL_DMACPUSEL0_CH13_Pos     26           /**< \brief (TAL_DMACPUSEL0) DMA Channel 13 Interrupt CPU Select */
-#define TAL_DMACPUSEL0_CH13_Msk     (0x1ul << TAL_DMACPUSEL0_CH13_Pos)
-#define TAL_DMACPUSEL0_CH13(value)  ((TAL_DMACPUSEL0_CH13_Msk & ((value) << TAL_DMACPUSEL0_CH13_Pos)))
-#define TAL_DMACPUSEL0_CH14_Pos     28           /**< \brief (TAL_DMACPUSEL0) DMA Channel 14 Interrupt CPU Select */
-#define TAL_DMACPUSEL0_CH14_Msk     (0x1ul << TAL_DMACPUSEL0_CH14_Pos)
-#define TAL_DMACPUSEL0_CH14(value)  ((TAL_DMACPUSEL0_CH14_Msk & ((value) << TAL_DMACPUSEL0_CH14_Pos)))
-#define TAL_DMACPUSEL0_CH15_Pos     30           /**< \brief (TAL_DMACPUSEL0) DMA Channel 15 Interrupt CPU Select */
-#define TAL_DMACPUSEL0_CH15_Msk     (0x1ul << TAL_DMACPUSEL0_CH15_Pos)
-#define TAL_DMACPUSEL0_CH15(value)  ((TAL_DMACPUSEL0_CH15_Msk & ((value) << TAL_DMACPUSEL0_CH15_Pos)))
-#define TAL_DMACPUSEL0_MASK         0x55555555ul /**< \brief (TAL_DMACPUSEL0) MASK Register */
+#define TAL_DMACPUSEL0_MASK         0x00555555ul /**< \brief (TAL_DMACPUSEL0) MASK Register */
 
 /* -------- TAL_EVCPUSEL0 : (TAL Offset: 0x48) (R/W 32) EVSYS Channel Interrupts CPU Select 0 -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
