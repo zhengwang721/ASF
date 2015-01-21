@@ -17,6 +17,7 @@
 		<build type="header-file" value="evsys.h"/>
 		<build type="header-file" value="freqm.h"/>
 		<build type="header-file" value="gclk.h"/>
+		<build type="header-file" value="hmatrixhs.h"/>
 		<build type="header-file" value="mclk.h"/>
 		<build type="header-file" value="mtb.h"/>
 		<build type="header-file" value="nvmctrl.h"/>

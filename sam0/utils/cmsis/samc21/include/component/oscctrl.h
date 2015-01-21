@@ -3,7 +3,7 @@
  *
  * \brief Component description for OSCCTRL
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -175,7 +175,7 @@ typedef union {
     uint32_t XOSCFAIL:1;       /*!< bit:      1  XOSC Clock Failure Detector        */
     uint32_t XOSCCKSW:1;       /*!< bit:      2  XOSC Clock Switch                  */
     uint32_t :1;               /*!< bit:      3  Reserved                           */
-    uint32_t OSC48MRDY:1;      /*!< bit:      4  OSC16M Ready                       */
+    uint32_t OSC48MRDY:1;      /*!< bit:      4  OSC48M Ready                       */
     uint32_t :3;               /*!< bit:  5.. 7  Reserved                           */
     uint32_t DPLLLCKR:1;       /*!< bit:      8  DPLL Lock Rise                     */
     uint32_t DPLLLCKF:1;       /*!< bit:      9  DPLL Lock Fall                     */
@@ -196,7 +196,7 @@ typedef union {
 #define OSCCTRL_STATUS_XOSCFAIL     (0x1ul << OSCCTRL_STATUS_XOSCFAIL_Pos)
 #define OSCCTRL_STATUS_XOSCCKSW_Pos 2            /**< \brief (OSCCTRL_STATUS) XOSC Clock Switch */
 #define OSCCTRL_STATUS_XOSCCKSW     (0x1ul << OSCCTRL_STATUS_XOSCCKSW_Pos)
-#define OSCCTRL_STATUS_OSC48MRDY_Pos 4            /**< \brief (OSCCTRL_STATUS) OSC16M Ready */
+#define OSCCTRL_STATUS_OSC48MRDY_Pos 4            /**< \brief (OSCCTRL_STATUS) OSC48M Ready */
 #define OSCCTRL_STATUS_OSC48MRDY    (0x1ul << OSCCTRL_STATUS_OSC48MRDY_Pos)
 #define OSCCTRL_STATUS_DPLLLCKR_Pos 8            /**< \brief (OSCCTRL_STATUS) DPLL Lock Rise */
 #define OSCCTRL_STATUS_DPLLLCKR     (0x1ul << OSCCTRL_STATUS_DPLLLCKR_Pos)

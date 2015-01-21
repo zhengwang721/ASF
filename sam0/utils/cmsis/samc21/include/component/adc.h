@@ -3,7 +3,7 @@
  *
  * \brief Component description for ADC
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -310,20 +310,8 @@ typedef union {
 #define   ADC_INPUTCTRL_MUXPOS_AIN9_Val   0x9ul  /**< \brief (ADC_INPUTCTRL) ADC AIN9 Pin */
 #define   ADC_INPUTCTRL_MUXPOS_AIN10_Val  0xAul  /**< \brief (ADC_INPUTCTRL) ADC AIN10 Pin */
 #define   ADC_INPUTCTRL_MUXPOS_AIN11_Val  0xBul  /**< \brief (ADC_INPUTCTRL) ADC AIN11 Pin */
-#define   ADC_INPUTCTRL_MUXPOS_AIN12_Val  0xCul  /**< \brief (ADC_INPUTCTRL) ADC AIN12 Pin */
-#define   ADC_INPUTCTRL_MUXPOS_AIN13_Val  0xDul  /**< \brief (ADC_INPUTCTRL) ADC AIN13 Pin */
-#define   ADC_INPUTCTRL_MUXPOS_AIN14_Val  0xEul  /**< \brief (ADC_INPUTCTRL) ADC AIN14 Pin */
-#define   ADC_INPUTCTRL_MUXPOS_AIN15_Val  0xFul  /**< \brief (ADC_INPUTCTRL) ADC AIN15 Pin */
-#define   ADC_INPUTCTRL_MUXPOS_AIN16_Val  0x10ul  /**< \brief (ADC_INPUTCTRL) ADC AIN16 Pin */
-#define   ADC_INPUTCTRL_MUXPOS_AIN17_Val  0x11ul  /**< \brief (ADC_INPUTCTRL) ADC AIN17 Pin */
-#define   ADC_INPUTCTRL_MUXPOS_AIN18_Val  0x12ul  /**< \brief (ADC_INPUTCTRL) ADC AIN18 Pin */
-#define   ADC_INPUTCTRL_MUXPOS_AIN19_Val  0x13ul  /**< \brief (ADC_INPUTCTRL) ADC AIN19 Pin */
-#define   ADC_INPUTCTRL_MUXPOS_AIN20_Val  0x14ul  /**< \brief (ADC_INPUTCTRL) ADC AIN20 Pin */
-#define   ADC_INPUTCTRL_MUXPOS_AIN21_Val  0x15ul  /**< \brief (ADC_INPUTCTRL) ADC AIN21 Pin */
-#define   ADC_INPUTCTRL_MUXPOS_AIN22_Val  0x16ul  /**< \brief (ADC_INPUTCTRL) ADC AIN22 Pin */
-#define   ADC_INPUTCTRL_MUXPOS_AIN23_Val  0x17ul  /**< \brief (ADC_INPUTCTRL) ADC AIN23 Pin */
-#define   ADC_INPUTCTRL_MUXPOS_TEMP_Val   0x18ul  /**< \brief (ADC_INPUTCTRL) Temperature Sensor */
-#define   ADC_INPUTCTRL_MUXPOS_BANDGAP_Val 0x19ul  /**< \brief (ADC_INPUTCTRL) Bandgap Voltage */
+#define   ADC_INPUTCTRL_MUXPOS_BUFRR_Val  0x18ul  /**< \brief (ADC_INPUTCTRL) BUFRR Output */
+#define   ADC_INPUTCTRL_MUXPOS_BUFRR1_Val 0x19ul  /**< \brief (ADC_INPUTCTRL) BUFRR Output */
 #define   ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC_Val 0x1Aul  /**< \brief (ADC_INPUTCTRL) 1/4 Scaled Core Supply */
 #define   ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC_Val 0x1Bul  /**< \brief (ADC_INPUTCTRL) 1/4 Scaled I/O Supply */
 #define   ADC_INPUTCTRL_MUXPOS_DAC_Val    0x1Cul  /**< \brief (ADC_INPUTCTRL) DAC Output */
@@ -342,20 +330,8 @@ typedef union {
 #define ADC_INPUTCTRL_MUXPOS_AIN9   (ADC_INPUTCTRL_MUXPOS_AIN9_Val << ADC_INPUTCTRL_MUXPOS_Pos)
 #define ADC_INPUTCTRL_MUXPOS_AIN10  (ADC_INPUTCTRL_MUXPOS_AIN10_Val << ADC_INPUTCTRL_MUXPOS_Pos)
 #define ADC_INPUTCTRL_MUXPOS_AIN11  (ADC_INPUTCTRL_MUXPOS_AIN11_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_AIN12  (ADC_INPUTCTRL_MUXPOS_AIN12_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_AIN13  (ADC_INPUTCTRL_MUXPOS_AIN13_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_AIN14  (ADC_INPUTCTRL_MUXPOS_AIN14_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_AIN15  (ADC_INPUTCTRL_MUXPOS_AIN15_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_AIN16  (ADC_INPUTCTRL_MUXPOS_AIN16_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_AIN17  (ADC_INPUTCTRL_MUXPOS_AIN17_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_AIN18  (ADC_INPUTCTRL_MUXPOS_AIN18_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_AIN19  (ADC_INPUTCTRL_MUXPOS_AIN19_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_AIN20  (ADC_INPUTCTRL_MUXPOS_AIN20_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_AIN21  (ADC_INPUTCTRL_MUXPOS_AIN21_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_AIN22  (ADC_INPUTCTRL_MUXPOS_AIN22_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_AIN23  (ADC_INPUTCTRL_MUXPOS_AIN23_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_TEMP   (ADC_INPUTCTRL_MUXPOS_TEMP_Val << ADC_INPUTCTRL_MUXPOS_Pos)
-#define ADC_INPUTCTRL_MUXPOS_BANDGAP (ADC_INPUTCTRL_MUXPOS_BANDGAP_Val << ADC_INPUTCTRL_MUXPOS_Pos)
+#define ADC_INPUTCTRL_MUXPOS_BUFRR  (ADC_INPUTCTRL_MUXPOS_BUFRR_Val << ADC_INPUTCTRL_MUXPOS_Pos)
+#define ADC_INPUTCTRL_MUXPOS_BUFRR1 (ADC_INPUTCTRL_MUXPOS_BUFRR1_Val << ADC_INPUTCTRL_MUXPOS_Pos)
 #define ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC (ADC_INPUTCTRL_MUXPOS_SCALEDCOREVCC_Val << ADC_INPUTCTRL_MUXPOS_Pos)
 #define ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC (ADC_INPUTCTRL_MUXPOS_SCALEDIOVCC_Val << ADC_INPUTCTRL_MUXPOS_Pos)
 #define ADC_INPUTCTRL_MUXPOS_DAC    (ADC_INPUTCTRL_MUXPOS_DAC_Val  << ADC_INPUTCTRL_MUXPOS_Pos)
@@ -373,6 +349,7 @@ typedef union {
 #define   ADC_INPUTCTRL_MUXNEG_AIN5_Val   0x5ul  /**< \brief (ADC_INPUTCTRL) ADC AIN5 Pin */
 #define   ADC_INPUTCTRL_MUXNEG_AIN6_Val   0x6ul  /**< \brief (ADC_INPUTCTRL) ADC AIN6 Pin */
 #define   ADC_INPUTCTRL_MUXNEG_AIN7_Val   0x7ul  /**< \brief (ADC_INPUTCTRL) ADC AIN7 Pin */
+#define   ADC_INPUTCTRL_MUXNEG_VCM_Val    0x8ul  /**< \brief (ADC_INPUTCTRL) VCM */
 #define ADC_INPUTCTRL_MUXNEG_AIN0   (ADC_INPUTCTRL_MUXNEG_AIN0_Val << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_MUXNEG_AIN1   (ADC_INPUTCTRL_MUXNEG_AIN1_Val << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_MUXNEG_AIN2   (ADC_INPUTCTRL_MUXNEG_AIN2_Val << ADC_INPUTCTRL_MUXNEG_Pos)
@@ -381,6 +358,7 @@ typedef union {
 #define ADC_INPUTCTRL_MUXNEG_AIN5   (ADC_INPUTCTRL_MUXNEG_AIN5_Val << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_MUXNEG_AIN6   (ADC_INPUTCTRL_MUXNEG_AIN6_Val << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_MUXNEG_AIN7   (ADC_INPUTCTRL_MUXNEG_AIN7_Val << ADC_INPUTCTRL_MUXNEG_Pos)
+#define ADC_INPUTCTRL_MUXNEG_VCM    (ADC_INPUTCTRL_MUXNEG_VCM_Val  << ADC_INPUTCTRL_MUXNEG_Pos)
 #define ADC_INPUTCTRL_MASK          0x1F1Ful     /**< \brief (ADC_INPUTCTRL) MASK Register */
 
 /* -------- ADC_CTRLC : (ADC Offset: 0x0A) (R/W 16) Control C -------- */
@@ -635,14 +613,14 @@ typedef union {
   struct {
     uint16_t SWRST:1;          /*!< bit:      0  SWRST Synchronization Busy         */
     uint16_t ENABLE:1;         /*!< bit:      1  ENABLE Synchronization Busy        */
-    uint16_t AVGCTRL:1;        /*!< bit:      2  AVGCTRL Synchronization Busy       */
-    uint16_t SAMPCTRL:1;       /*!< bit:      3  SAMPCTRL Synchronization Busy      */
-    uint16_t CTRLC:1;          /*!< bit:      4  CTRLC Synchronization Busy         */
-    uint16_t INPUTCTRL:1;      /*!< bit:      5  INPUTCTRL Synchronization Busy     */
-    uint16_t OFFSETCORR:1;     /*!< bit:      6  OFFSETCTRL Synchronization Busy    */
-    uint16_t GAINCORR:1;       /*!< bit:      7  GAINCORR Synchronization Busy      */
-    uint16_t WINLT:1;          /*!< bit:      8  WINLT Synchronization Busy         */
-    uint16_t WINUT:1;          /*!< bit:      9  WINUT Synchronization Busy         */
+    uint16_t INPUTCTRL:1;      /*!< bit:      2  INPUTCTRL Synchronization Busy     */
+    uint16_t CTRLC:1;          /*!< bit:      3  CTRLC Synchronization Busy         */
+    uint16_t AVGCTRL:1;        /*!< bit:      4  AVGCTRL Synchronization Busy       */
+    uint16_t SAMPCTRL:1;       /*!< bit:      5  SAMPCTRL Synchronization Busy      */
+    uint16_t WINLT:1;          /*!< bit:      6  WINLT Synchronization Busy         */
+    uint16_t WINUT:1;          /*!< bit:      7  WINUT Synchronization Busy         */
+    uint16_t GAINCORR:1;       /*!< bit:      8  GAINCORR Synchronization Busy      */
+    uint16_t OFFSETCORR:1;     /*!< bit:      9  OFFSETCTRL Synchronization Busy    */
     uint16_t SWTRIG:1;         /*!< bit:     10  SWTRG Synchronization Busy         */
     uint16_t :5;               /*!< bit: 11..15  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
@@ -657,22 +635,22 @@ typedef union {
 #define ADC_SYNCBUSY_SWRST          (0x1ul << ADC_SYNCBUSY_SWRST_Pos)
 #define ADC_SYNCBUSY_ENABLE_Pos     1            /**< \brief (ADC_SYNCBUSY) ENABLE Synchronization Busy */
 #define ADC_SYNCBUSY_ENABLE         (0x1ul << ADC_SYNCBUSY_ENABLE_Pos)
-#define ADC_SYNCBUSY_AVGCTRL_Pos    2            /**< \brief (ADC_SYNCBUSY) AVGCTRL Synchronization Busy */
-#define ADC_SYNCBUSY_AVGCTRL        (0x1ul << ADC_SYNCBUSY_AVGCTRL_Pos)
-#define ADC_SYNCBUSY_SAMPCTRL_Pos   3            /**< \brief (ADC_SYNCBUSY) SAMPCTRL Synchronization Busy */
-#define ADC_SYNCBUSY_SAMPCTRL       (0x1ul << ADC_SYNCBUSY_SAMPCTRL_Pos)
-#define ADC_SYNCBUSY_CTRLC_Pos      4            /**< \brief (ADC_SYNCBUSY) CTRLC Synchronization Busy */
-#define ADC_SYNCBUSY_CTRLC          (0x1ul << ADC_SYNCBUSY_CTRLC_Pos)
-#define ADC_SYNCBUSY_INPUTCTRL_Pos  5            /**< \brief (ADC_SYNCBUSY) INPUTCTRL Synchronization Busy */
+#define ADC_SYNCBUSY_INPUTCTRL_Pos  2            /**< \brief (ADC_SYNCBUSY) INPUTCTRL Synchronization Busy */
 #define ADC_SYNCBUSY_INPUTCTRL      (0x1ul << ADC_SYNCBUSY_INPUTCTRL_Pos)
-#define ADC_SYNCBUSY_OFFSETCORR_Pos 6            /**< \brief (ADC_SYNCBUSY) OFFSETCTRL Synchronization Busy */
-#define ADC_SYNCBUSY_OFFSETCORR     (0x1ul << ADC_SYNCBUSY_OFFSETCORR_Pos)
-#define ADC_SYNCBUSY_GAINCORR_Pos   7            /**< \brief (ADC_SYNCBUSY) GAINCORR Synchronization Busy */
-#define ADC_SYNCBUSY_GAINCORR       (0x1ul << ADC_SYNCBUSY_GAINCORR_Pos)
-#define ADC_SYNCBUSY_WINLT_Pos      8            /**< \brief (ADC_SYNCBUSY) WINLT Synchronization Busy */
+#define ADC_SYNCBUSY_CTRLC_Pos      3            /**< \brief (ADC_SYNCBUSY) CTRLC Synchronization Busy */
+#define ADC_SYNCBUSY_CTRLC          (0x1ul << ADC_SYNCBUSY_CTRLC_Pos)
+#define ADC_SYNCBUSY_AVGCTRL_Pos    4            /**< \brief (ADC_SYNCBUSY) AVGCTRL Synchronization Busy */
+#define ADC_SYNCBUSY_AVGCTRL        (0x1ul << ADC_SYNCBUSY_AVGCTRL_Pos)
+#define ADC_SYNCBUSY_SAMPCTRL_Pos   5            /**< \brief (ADC_SYNCBUSY) SAMPCTRL Synchronization Busy */
+#define ADC_SYNCBUSY_SAMPCTRL       (0x1ul << ADC_SYNCBUSY_SAMPCTRL_Pos)
+#define ADC_SYNCBUSY_WINLT_Pos      6            /**< \brief (ADC_SYNCBUSY) WINLT Synchronization Busy */
 #define ADC_SYNCBUSY_WINLT          (0x1ul << ADC_SYNCBUSY_WINLT_Pos)
-#define ADC_SYNCBUSY_WINUT_Pos      9            /**< \brief (ADC_SYNCBUSY) WINUT Synchronization Busy */
+#define ADC_SYNCBUSY_WINUT_Pos      7            /**< \brief (ADC_SYNCBUSY) WINUT Synchronization Busy */
 #define ADC_SYNCBUSY_WINUT          (0x1ul << ADC_SYNCBUSY_WINUT_Pos)
+#define ADC_SYNCBUSY_GAINCORR_Pos   8            /**< \brief (ADC_SYNCBUSY) GAINCORR Synchronization Busy */
+#define ADC_SYNCBUSY_GAINCORR       (0x1ul << ADC_SYNCBUSY_GAINCORR_Pos)
+#define ADC_SYNCBUSY_OFFSETCORR_Pos 9            /**< \brief (ADC_SYNCBUSY) OFFSETCTRL Synchronization Busy */
+#define ADC_SYNCBUSY_OFFSETCORR     (0x1ul << ADC_SYNCBUSY_OFFSETCORR_Pos)
 #define ADC_SYNCBUSY_SWTRIG_Pos     10           /**< \brief (ADC_SYNCBUSY) SWTRG Synchronization Busy */
 #define ADC_SYNCBUSY_SWTRIG         (0x1ul << ADC_SYNCBUSY_SWTRIG_Pos)
 #define ADC_SYNCBUSY_MASK           0x07FFul     /**< \brief (ADC_SYNCBUSY) MASK Register */

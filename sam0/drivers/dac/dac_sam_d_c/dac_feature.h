@@ -3,7 +3,7 @@
  *
  * \brief SAM Peripheral Digital-to-Analog Converter Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -64,6 +64,7 @@
  * The following devices can use this module:
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_dac_prerequisites
@@ -435,6 +436,10 @@ struct dac_config {
 	 * mode.
 	 */
 	bool run_in_standby;
+#if (SAMC21)
+	/** Dither mode enable data. */
+	bool dither_mode;
+#endif
 };
 
 /**
@@ -448,6 +453,10 @@ struct dac_events {
 	bool on_event_start_conversion;
 	/** Enable event generation on data buffer empty. */
 	bool generate_event_on_buffer_empty;
+#if (SAMC21)
+	/** Enable the falling edge of the input event for DAC1. */
+	bool generate_event_on_chan_falling_edge;
+#endif
 };
 
 /**
@@ -546,6 +555,9 @@ void dac_chan_disable_output_buffer(
  *		\c dac_chan_write_buffer_job, \c dac_chan_write_job,
  *		\c dac_get_job_status, \c dac_abort_job and new callback type
  *		\c DAC_CALLBACK_TRANSFER_COMPLETE for DAC conversion job</td>
+ *	</tr>
+ *	<tr>
+ *		<td>Add SAMC21 support</td>
  *	</tr>
  *	<tr>
  *		<td>Initial Release</td>

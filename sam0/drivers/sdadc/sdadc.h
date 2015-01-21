@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 #ifndef SDADC_H_INCLUDED
 #define SDADC_H_INCLUDED
@@ -221,15 +224,32 @@ enum sdadc_callback {
  * Enum for the possible reference voltages for the SDADC.
  *
  */
-enum sdadc_reference {
-	/** Positive reference 1. */
-	SDADC_REFERENCE_1 = SDADC_REFCTRL_REFSEL(0),
-	/** Positive reference 2. */
-	SDADC_REFERENCE_2 = SDADC_REFCTRL_REFSEL(1),
-	/** Positive reference 3. */
-	SDADC_REFERENCE_3 = SDADC_REFCTRL_REFSEL(2),
-	/** Positive reference 4. */
-	SDADC_REFERENCE_4 = SDADC_REFCTRL_REFSEL(3),
+enum sdadc_reference_select {
+	/** Internal Bandgap Reference. */
+	SDADC_REFERENCE_INTREF = SDADC_REFCTRL_REFSEL(0),
+	/** External reference B. */
+	SDADC_REFERENCE_AREFB  = SDADC_REFCTRL_REFSEL(1),
+	/** DACOUT. */
+	SDADC_REFERENCE_DACOUT = SDADC_REFCTRL_REFSEL(2),
+	/** VDDANA. */
+	SDADC_REFERENCE_INTVCC = SDADC_REFCTRL_REFSEL(3),
+};
+
+/**
+ * \brief SDADC reference range enum.
+ *
+ * Enum for the matched voltage range of the SDADC reference used.
+ *
+ */
+enum sdadc_reference_range {
+	/** Vref < 1.4V. */
+	SDADC_REFRANGE_0 = SDADC_REFCTRL_REFRANGE(0),
+	/** 1.4V < Vref < 2.4V. */
+	SDADC_REFRANGE_1 = SDADC_REFCTRL_REFRANGE(1),
+	/** 2.4V < Vref < 3.6V. */
+	SDADC_REFRANGE_2 = SDADC_REFCTRL_REFRANGE(2),
+	/** Vref > 3.6V. */
+	SDADC_REFRANGE_3 = SDADC_REFCTRL_REFRANGE(3),
 };
 
 /**
@@ -315,6 +335,20 @@ enum sdadc_interrupt_flag {
 #endif
 
 /**
+ * \brief Reference configuration structure.
+ *
+ * Reference configuration structure.
+ */
+struct sdadc_reference {
+	/** Reference voltage selection. */
+	enum sdadc_reference_select ref_sel;
+	/** Reference voltage range. */
+	enum sdadc_reference_select ref_range;
+	/** Reference buffer turning switch. */
+	bool on_ref_buffer;
+};
+
+/**
  * \brief Window monitor configuration structure.
  *
  * Window monitor configuration structure.
@@ -349,11 +383,6 @@ struct sdadc_events {
  * \ref sdadc_get_config_defaults.
  */
 struct sdadc_correction_config {
-	/**
-	 * A specific offset, gain and shift correction can be applied to SDADC
-	 * if set to true.
-	 */
-	bool correction_enable;
 	/** Offset correction. */
 	int32_t offset_correction;
 	/** Gain correction. */
@@ -373,7 +402,7 @@ struct sdadc_config {
 	/** GCLK generator used to clock the peripheral. */
 	enum gclk_generator clock_source;
 	/** Voltage reference. */
-	enum sdadc_reference reference;
+	struct sdadc_reference reference;
 	/** Over sampling ratio. */
 	enum sdadc_over_sampling_ratio osr;
 	/** Clock prescaler. */
@@ -412,12 +441,12 @@ struct sdadc_module {
 	/** Pointer to SDADC hardware module. */
 	Sdadc *hw;
 	/** Keep reference configuration so we know when enable is called. */
-	enum sdadc_reference reference;
+	struct sdadc_reference reference;
 #  if SDADC_CALLBACK_MODE == true
 	/** Array to store callback functions. */
 	sdadc_callback_t callback[SDADC_CALLBACK_N];
 	/** Pointer to buffer used for SDADC results. */
-	volatile uint32_t *job_buffer;
+	volatile int32_t *job_buffer;
 	/** Remaining number of conversions in current job. */
 	volatile uint16_t remaining_conversions;
 	/** Bit mask for callbacks registered. */
@@ -470,11 +499,13 @@ static inline void sdadc_get_config_defaults(struct sdadc_config *const config)
 {
 	Assert(config);
 	config->clock_source                  = GCLK_GENERATOR_0;
-	config->reference                     = SDADC_REFERENCE_1;
+	config->reference.ref_sel             = SDADC_REFERENCE_INTREF;
+	config->reference.ref_range           = SDADC_REFRANGE_0;
+	config->reference.on_ref_buffer       = false;
 	config->clock_prescaler               = 2;
 	config->osr                           = SDADC_OVER_SAMPLING_RATIO64;
-	config->skip_count                    = 0;
-	config->mux_input                     = SDADC_MUX_INPUT_AIN0 ;
+	config->skip_count                    = 2;
+	config->mux_input                     = SDADC_MUX_INPUT_AIN1;
 	config->event_action                  = SDADC_EVENT_ACTION_DISABLED;
 	config->freerunning                   = false;
 	config->run_in_standby                = false;
@@ -485,8 +516,7 @@ static inline void sdadc_get_config_defaults(struct sdadc_config *const config)
 	config->window.window_mode            = SDADC_WINDOW_MODE_DISABLE;
 	config->window.window_upper_value     = 0;
 	config->window.window_lower_value     = 0;
-	config->correction.correction_enable  = false;
-	config->correction.gain_correction    = SDADC_GAINCORR_RESETVALUE;
+	config->correction.gain_correction    = 1;
 	config->correction.offset_correction  = SDADC_OFFSETCORR_RESETVALUE;
 	config->correction.shift_correction   = SDADC_SHIFTCORR_RESETVALUE;
 }
@@ -842,7 +872,7 @@ static inline void sdadc_start_conversion(
  */
 static inline enum status_code sdadc_read(
 		struct sdadc_module *const module_inst,
-		uint32_t *result)
+		int32_t *result)
 {
 	Assert(module_inst);
 	Assert(module_inst->hw);
@@ -856,7 +886,7 @@ static inline enum status_code sdadc_read(
 	Sdadc *const sdadc_module = module_inst->hw;
 
 	/* Get SDADC result */
-	*result = sdadc_module->RESULT.reg;
+	*result = ((int32_t)(sdadc_module->RESULT.reg << 8)) >> 8;
 
 	/* Reset ready flag */
 	sdadc_clear_status(module_inst, SDADC_STATUS_RESULT_READY);

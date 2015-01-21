@@ -753,6 +753,17 @@
 		<device-support value="atsamc21g18a"/>
 	</project>
 	
+	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamc21j15a" caption="User board project template for SAMC21J15A" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMC21J15A devices.
+		</info>
+		<require idref="common.applications.user_application.sam0_system.user_board.common_samc21"/>
+		<require idref="board.user_board.samc21j"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamc21j15a"/>
+	</project>
+
 	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamc21j16a" caption="User board project template for SAMC21J16A" type="template">
 		<info type="description" value="summary">
 		User board project template for SAMC21J16A devices.

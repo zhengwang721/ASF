@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 #ifndef SDADC_CALLBACK_H_INCLUDED
 #define SDADC_CALLBACK_H_INCLUDED
@@ -158,7 +161,7 @@ static inline void sdadc_disable_callback(
  */
 enum status_code sdadc_read_buffer_job(
 		struct sdadc_module *const module_inst,
-		uint32_t *buffer,
+		int32_t *buffer,
 		uint16_t samples);
 
 enum status_code sdadc_get_job_status(
