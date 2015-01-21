@@ -40,6 +40,10 @@
  * \asf_license_stop
  *
  */
+/**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+
 #include <asf.h>
 
 void configure_sdadc(void);
@@ -78,7 +82,7 @@ void configure_sdadc(void)
 
 //! [setup_modify_conf]
 	config_sdadc.clock_prescaler = 2;
-	config_sdadc.reference       = SDADC_REFERENCE_1;
+	config_sdadc.reference.ref_sel = SDADC_REFERENCE_INTREF;
 	config_sdadc.osr             = SDADC_OVER_SAMPLING_RATIO1024;
 	config_sdadc.mux_input       = SDADC_MUX_INPUT_AIN2;
 //! [setup_modify_conf]
