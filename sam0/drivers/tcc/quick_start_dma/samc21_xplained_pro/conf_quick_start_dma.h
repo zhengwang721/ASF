@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TCC Quick Start configuration for SAM L21 Xplained Pro
+ * \brief TCC Quick Start configuration for SAM C21 Xplained Pro
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -60,18 +60,24 @@
 #define CONF_PWM_OUT_MUX     LED_0_PWM4CTRL_MUX
 //[definition_pwm]
 
-//[definition_fault]
-/** FAULT EIC pin */
-#define CONF_FAULT_EIC_PIN       SW0_EIC_PIN
-/** FAULT EIC pin mux */
-#define CONF_FAULT_EIC_PIN_MUX   SW0_EIC_PINMUX
-/** FAULT EIC line */
-#define CONF_FAULT_EIC_LINE      SW0_EIC_LINE
+//[definition_feedback]
+/** TCC channel to capture */
+#define CONF_TCC_CAPTURE_CHANNEL      1
 
-/** FAULT event generator */
-#define CONF_FAULT_EVENT_GENERATOR EVSYS_ID_GEN_EIC_EXTINT_2
-/** FAULT event user for recoverable fault */
-#define CONF_FAULT_EVENT_USER      EVSYS_ID_USER_TCC0_MC_0
-//[definition_fault]
+/** Generator of TCC event */
+#define CONF_TCC_EVENT_GENERATOR      EVSYS_ID_GEN_TCC0_MCX_0
+/** User of TCC event */
+#define CONF_TCC_EVENT_USER           EVSYS_ID_USER_TCC0_MC_1
+//[definition_feedback]
+
+//[definition_dma_compare_trigger]
+/** DMA Peripheral to Memory beat trigger: TCC0 OVF */
+#define CONF_COMPARE_TRIGGER TCC0_DMAC_ID_OVF
+//[definition_dma_compare_trigger]
+
+//[definition_dma_capture_trigger]
+/** DMA Memory to Peripheral beat trigger: TCC0 MC1 */
+#define CONF_CAPTURE_TRIGGER TCC0_DMAC_ID_MC_1
+//[definition_dma_capture_trigger]
 
 #endif /* CONF_QUICK_START_H_INCLUDED */

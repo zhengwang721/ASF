@@ -3,7 +3,7 @@
  *
  * \brief SAM TCC - Timer Counter for Control Applications Callback Driver Quick Start (with Non-Recoverable Fault)
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,10 +42,14 @@
  */
 
 /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+
+/**
  * \page asfdoc_sam0_tcc_faultx_use_case Quick Start Guide for TCC - Non-Recoverable Fault
  *
  * The supported kit list:
- *    - SAM D21/R21/L21 Xplained Pro
+ *    - SAM D21/R21/L21/C21 Xplained Pro
  *
  * In this use case, the TCC will be used to generate a PWM signal, with a
  * varying duty cycle. Here the pulse width is increased each time the timer
@@ -67,6 +71,9 @@
  *  <tr><td> SAMR21 Xpro  </td><td> PA19 </td><td> LED0       </td></tr>
  *  <tr><td> SAMR21 Xpro  </td><td> PA28 </td><td> SW0        </td></tr>
  *  <tr><td> SAML21 Xpro  </td><td> PB10 </td><td> LED0       </td></tr>
+ *  <tr><td> SAML21 Xpro  </td><td> PA02 </td><td> SW0        </td></tr>
+ *  <tr><td> SAMC21 Xpro  </td><td> PA15 </td><td> LED0       </td></tr>
+ *  <tr><td> SAMC21 Xpro  </td><td> PA28 </td><td> SW0        </td></tr>
  * </table>
  *
  * The TCC module will be set up as follows:
@@ -104,6 +111,9 @@
  * - SAM L21 Xplained Pro:
  *   \snippet saml21_xplained_pro/conf_quick_start_faultx.h definition_pwm
  *   \snippet saml21_xplained_pro/conf_quick_start_faultx.h definition_fault
+ * - SAM C21 Xplained Pro:
+ *   \snippet samc21_xplained_pro/conf_quick_start_faultx.h definition_pwm
+ *   \snippet samc21_xplained_pro/conf_quick_start_faultx.h definition_fault
  *
  * Add to the main application source file, before any functions:
  * \snippet qs_tcc_faultx.c additional_include
@@ -251,10 +261,6 @@
  * -# Enter an infinite loop while the PWM wave is generated via the TCC module.
  *  \snippet qs_tcc_callback.c main_loop
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
-
 
 #include <asf.h>
 #include <conf_clocks.h>

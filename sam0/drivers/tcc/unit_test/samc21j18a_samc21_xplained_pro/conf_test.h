@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TCC Quick Start configuration for SAM L21 Xplained Pro
+ * \brief SAM C21 Xplained Pro test configuration.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,34 +44,36 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_QUICK_START_H_INCLUDED
-#define CONF_QUICK_START_H_INCLUDED
+#ifndef CONF_TEST_H_INCLUDED
+#define CONF_TEST_H_INCLUDED
 
-//[definition_pwm]
-/** PWM module to use */
-#define CONF_PWM_MODULE      LED_0_PWM4CTRL_MODULE
-/** PWM channel */
-#define CONF_PWM_CHANNEL     LED_0_PWM4CTRL_CHANNEL
-/** PWM output */
-#define CONF_PWM_OUTPUT      LED_0_PWM4CTRL_OUTPUT
-/** PWM output pin */
-#define CONF_PWM_OUT_PIN     LED_0_PWM4CTRL_PIN
-/** PWM output pin mux */
-#define CONF_PWM_OUT_MUX     LED_0_PWM4CTRL_MUX
-//[definition_pwm]
+#define CONF_STDIO_USART          EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE       38400
 
-//[definition_fault]
-/** FAULT EIC pin */
-#define CONF_FAULT_EIC_PIN       SW0_EIC_PIN
-/** FAULT EIC pin mux */
-#define CONF_FAULT_EIC_PIN_MUX   SW0_EIC_PINMUX
-/** FAULT EIC line */
-#define CONF_FAULT_EIC_LINE      SW0_EIC_LINE
+#define CONF_TEST_TCC0            TCC0
+#define CONF_TEST_TCC1            TCC1
 
-/** FAULT event generator */
-#define CONF_FAULT_EVENT_GENERATOR EVSYS_ID_GEN_EIC_EXTINT_2
-/** FAULT event user for recoverable fault */
-#define CONF_FAULT_EVENT_USER      EVSYS_ID_USER_TCC0_MC_0
-//[definition_fault]
+#define CONF_EIC_CHAN             4
+#define CONF_EIC_PIN              PIN_PA20A_EIC_EXTINT4
+#define CONF_EIC_MUX              MUX_PA20A_EIC_EXTINT4
 
-#endif /* CONF_QUICK_START_H_INCLUDED */
+#define CONF_TEST_PIN_OUT         PIN_PA08E_TCC0_WO0
+#define CONF_TEST_PIN_MUX         MUX_PA08E_TCC0_WO0
+
+#define CONF_EVENT_GENERATOR_ID   EVSYS_ID_GEN_EIC_EXTINT_4
+#define CONF_EVENT_USED_ID        EVSYS_ID_USER_TCC1_EV_1
+
+#define CONF_CAPTURE_CHAN_0       0
+#define CONF_CAPTURE_CHAN_1       1
+
+#define CONF_TEST_TOLERANCE       10
+
+#define CONF_EVENT_USER_ID_FAULTn EVSYS_ID_USER_TCC0_MC_0
+#define CONF_EVENT_USER_ID_FAULTx EVSYS_ID_USER_TCC0_EV_0
+
+#endif /* CONF_TEST_H_INCLUDED */
