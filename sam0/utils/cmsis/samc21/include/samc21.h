@@ -3,7 +3,7 @@
  *
  * \brief Top header file for SAMC21
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -65,6 +65,8 @@
   #include "samc21g17a.h"
 #elif defined(__SAMC21G18A__) || defined(__ATSAMC21G18A__)
   #include "samc21g18a.h"
+#elif defined(__SAMC21J15A__) || defined(__ATSAMC21J15A__)
+  #include "samc21j15a.h"
 #elif defined(__SAMC21J16A__) || defined(__ATSAMC21J16A__)
   #include "samc21j16a.h"
 #elif defined(__SAMC21J17A__) || defined(__ATSAMC21J17A__)

@@ -40,6 +40,9 @@
  * \asf_license_stop
  *
  */
+/**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
 
 /**
  * \page asfdoc_sam0_sdadc_basic_use_case_callback Quick Start Guide for SDADC - Callback
@@ -50,11 +53,11 @@
  *
  * The SDADC will be set up as follows:
  *  - GCLK generator 0 (GCLK main) clock source
- *  - Positive reference 1
+ *  - Internal bandgap reference 1V
  *  - Div 2 clock prescaler
  *  - Over Sampling Ratio is 1024
- *  - Skip 0 samples
- *  - Mux input on SDADC AIN1
+ *  - Skip 2 samples
+ *  - Mux input on SDADC AIN2
  *  - All events (input and generation) disabled
  *  - Free running disabled
  *  - Run in standby disabled

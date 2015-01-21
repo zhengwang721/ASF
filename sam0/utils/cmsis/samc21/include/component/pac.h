@@ -3,7 +3,7 @@
  *
  * \brief Component description for PAC
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -240,7 +240,8 @@ typedef union {
     uint32_t NVMCTRL_:1;       /*!< bit:      2  NVMCTRL                            */
     uint32_t DMAC_:1;          /*!< bit:      3  DMAC                               */
     uint32_t MTB_:1;           /*!< bit:      4  MTB                                */
-    uint32_t :27;              /*!< bit:  5..31  Reserved                           */
+    uint32_t HMATRIXHS_:1;     /*!< bit:      5  HMATRIXHS                          */
+    uint32_t :26;              /*!< bit:  6..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PAC_INTFLAGB_Type;
@@ -259,7 +260,9 @@ typedef union {
 #define PAC_INTFLAGB_DMAC           (0x1ul << PAC_INTFLAGB_DMAC_Pos)
 #define PAC_INTFLAGB_MTB_Pos        4            /**< \brief (PAC_INTFLAGB) MTB */
 #define PAC_INTFLAGB_MTB            (0x1ul << PAC_INTFLAGB_MTB_Pos)
-#define PAC_INTFLAGB_MASK           0x0000001Ful /**< \brief (PAC_INTFLAGB) MASK Register */
+#define PAC_INTFLAGB_HMATRIXHS_Pos  5            /**< \brief (PAC_INTFLAGB) HMATRIXHS */
+#define PAC_INTFLAGB_HMATRIXHS      (0x1ul << PAC_INTFLAGB_HMATRIXHS_Pos)
+#define PAC_INTFLAGB_MASK           0x0000003Ful /**< \brief (PAC_INTFLAGB) MASK Register */
 
 /* -------- PAC_INTFLAGC : (PAC Offset: 0x1C) (R/W 32) Peripheral interrupt flag status - Bridge C -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
@@ -414,7 +417,8 @@ typedef union {
     uint32_t NVMCTRL_:1;       /*!< bit:      2  NVMCTRL APB Protect Enable         */
     uint32_t DMAC_:1;          /*!< bit:      3  DMAC APB Protect Enable            */
     uint32_t MTB_:1;           /*!< bit:      4  MTB APB Protect Enable             */
-    uint32_t :27;              /*!< bit:  5..31  Reserved                           */
+    uint32_t HMATRIXHS_:1;     /*!< bit:      5  HMATRIXHS APB Protect Enable       */
+    uint32_t :26;              /*!< bit:  6..31  Reserved                           */
   } bit;                       /*!< Structure used for bit  access                  */
   uint32_t reg;                /*!< Type      used for register access              */
 } PAC_STATUSB_Type;
@@ -433,7 +437,9 @@ typedef union {
 #define PAC_STATUSB_DMAC            (0x1ul << PAC_STATUSB_DMAC_Pos)
 #define PAC_STATUSB_MTB_Pos         4            /**< \brief (PAC_STATUSB) MTB APB Protect Enable */
 #define PAC_STATUSB_MTB             (0x1ul << PAC_STATUSB_MTB_Pos)
-#define PAC_STATUSB_MASK            0x0000001Ful /**< \brief (PAC_STATUSB) MASK Register */
+#define PAC_STATUSB_HMATRIXHS_Pos   5            /**< \brief (PAC_STATUSB) HMATRIXHS APB Protect Enable */
+#define PAC_STATUSB_HMATRIXHS       (0x1ul << PAC_STATUSB_HMATRIXHS_Pos)
+#define PAC_STATUSB_MASK            0x0000003Ful /**< \brief (PAC_STATUSB) MASK Register */
 
 /* -------- PAC_STATUSC : (PAC Offset: 0x3C) (R/  32) Peripheral write protection status - Bridge C -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))

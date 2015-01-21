@@ -3,7 +3,7 @@
  *
  * \brief SAM Digital-to-Analog Interrupt Driver
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -99,7 +99,7 @@ enum status_code dac_chan_write_buffer_job(
 	}
 
 	/* Wait until the synchronization is complete */
-	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY) {
+	while (dac_is_syncing(module_inst)) {
 	};
 
 	module_inst->job_status = STATUS_BUSY;

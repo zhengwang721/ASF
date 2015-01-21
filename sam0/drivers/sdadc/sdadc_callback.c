@@ -40,6 +40,10 @@
  * \asf_license_stop
  *
  */
+/**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+
 #include "sdadc_callback.h"
 
 struct sdadc_module *_sdadc_instances[SDADC_INST_NUM];
@@ -58,7 +62,7 @@ static void _sdadc_interrupt_handler(const uint8_t instance)
 			module->hw->INTFLAG.reg = SDADC_INTFLAG_RESRDY;
 
 			/* store SDADC result in job buffer */
-			*(module->job_buffer++) = module->hw->RESULT.reg;
+			*(module->job_buffer++) = ((int32_t)(module->hw->RESULT.reg << 8)) >> 8;
 
 			if (--module->remaining_conversions > 0) {
 				if (module->software_trigger == true) {
@@ -173,7 +177,7 @@ void sdadc_unregister_callback(
  */
 enum status_code sdadc_read_buffer_job(
 		struct sdadc_module *const module_inst,
-		uint32_t *buffer,
+		int32_t *buffer,
 		uint16_t samples)
 {
 	Assert(module_inst);

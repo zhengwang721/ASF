@@ -3,7 +3,7 @@
  *
  * \brief Header file for SAMC21G15A
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -274,6 +274,7 @@ void PTC_Handler                 ( void );
 #include "component/evsys.h"
 #include "component/freqm.h"
 #include "component/gclk.h"
+#include "component/hmatrixb.h"
 #include "component/mclk.h"
 #include "component/mtb.h"
 #include "component/nvmctrl.h"
@@ -314,6 +315,7 @@ void PTC_Handler                 ( void );
 #include "instance/evsys.h"
 #include "instance/freqm.h"
 #include "instance/gclk.h"
+#include "instance/hmatrixhs.h"
 #include "instance/mclk.h"
 #include "instance/mtb.h"
 #include "instance/nvmctrl.h"
@@ -370,6 +372,7 @@ void PTC_Handler                 ( void );
 #define ID_NVMCTRL       34 /**< \brief Non-Volatile Memory Controller (NVMCTRL) */
 #define ID_DMAC          35 /**< \brief Direct Memory Access Controller (DMAC) */
 #define ID_MTB           36 /**< \brief Cortex-M0+ Micro-Trace Buffer (MTB) */
+#define ID_HMATRIXHS     37 /**< \brief HSB Matrix (HMATRIXHS) */
 
 // Peripheral instances on HPB2 bridge
 #define ID_EVSYS         64 /**< \brief Event System Interface (EVSYS) */
@@ -421,6 +424,7 @@ void PTC_Handler                 ( void );
 #define EVSYS                         (0x42000000UL) /**< \brief (EVSYS) APB Base Address */
 #define FREQM                         (0x40002C00UL) /**< \brief (FREQM) APB Base Address */
 #define GCLK                          (0x40001C00UL) /**< \brief (GCLK) APB Base Address */
+#define HMATRIXHS                     (0x4100A000UL) /**< \brief (HMATRIXHS) APB Base Address */
 #define MCLK                          (0x40000800UL) /**< \brief (MCLK) APB Base Address */
 #define MTB                           (0x41008000UL) /**< \brief (MTB) APB Base Address */
 #define NVMCTRL                       (0x41004000UL) /**< \brief (NVMCTRL) APB Base Address */
@@ -509,6 +513,10 @@ void PTC_Handler                 ( void );
 #define GCLK              ((Gclk     *)0x40001C00UL) /**< \brief (GCLK) APB Base Address */
 #define GCLK_INST_NUM     1                          /**< \brief (GCLK) Number of instances */
 #define GCLK_INSTS        { GCLK }                   /**< \brief (GCLK) Instances List */
+
+#define HMATRIXHS         ((Hmatrixb *)0x4100A000UL) /**< \brief (HMATRIXHS) APB Base Address */
+#define HMATRIXB_INST_NUM 1                          /**< \brief (HMATRIXB) Number of instances */
+#define HMATRIXB_INSTS    { HMATRIXHS }              /**< \brief (HMATRIXB) Instances List */
 
 #define MCLK              ((Mclk     *)0x40000800UL) /**< \brief (MCLK) APB Base Address */
 #define MCLK_INST_NUM     1                          /**< \brief (MCLK) Number of instances */
@@ -632,7 +640,7 @@ void PTC_Handler                 ( void );
 
 #define DSU_DID_RESETVALUE    0x11010008UL
 #define PORT_GROUPS           2
-#define WWR_SIZE              0x400UL /* 1 kB */
+#define RWW_SIZE              0x400UL /* 1 kB */
 
 /* ************************************************************************** */
 /**  ELECTRICAL DEFINITIONS FOR SAMC21G15A */
