@@ -658,7 +658,7 @@ bool rtc_count_is_compare_match(
 	}
 
 	/* Set status of INTFLAG as return argument. */
-	return (rtc_module->MODE0.INTFLAG.reg & (1 << comp_index));
+	return (rtc_module->MODE0.INTFLAG.reg & (1 << comp_index)) ? true : false;
 }
 
 /**
