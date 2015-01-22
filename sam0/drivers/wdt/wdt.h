@@ -3,7 +3,7 @@
  *
  * \brief SAM Watchdog Driver
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -281,8 +281,8 @@ struct wdt_conf {
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true If the module has completed synchronization
- * \retval false If the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
+ * \retval true If the module synchronization is ongoing
  */
 static inline bool wdt_is_syncing(void)
 {

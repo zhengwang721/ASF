@@ -3,7 +3,7 @@
  *
  * \brief Instance description for NVMCTRL
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -94,8 +94,8 @@
 #define NVMCTRL_USER_PAGE_ADDRESS   0x00800000
 #define NVMCTRL_USER_PAGE_OFFSET    0x00800000
 #define NVMCTRL_USER_WORD_IMPLEMENTED_MASK 0XC01FFFFFFFFFFFFF
-#define NVMCTRL_WWREE_PAGES         128     
-#define NVMCTRL_WWR_EEPROM_ADDR     0x00400000 // Start address of the WWR EEPROM area
-#define NVMCTRL_WWR_EEPROM_SIZE     8192     // Byte size of the WWR EEPROM area
+#define NVMCTRL_RWWEE_PAGES         128     
+#define NVMCTRL_RWW_EEPROM_ADDR     0x00400000 // Start address of the RWW EEPROM area
+#define NVMCTRL_RWW_EEPROM_SIZE     8192     // Byte size of the RWW EEPROM area
 
 #endif /* _SAMC21_NVMCTRL_INSTANCE_ */

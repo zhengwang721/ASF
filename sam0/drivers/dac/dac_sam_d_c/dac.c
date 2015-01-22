@@ -3,7 +3,7 @@
  *
  * \brief SAM Peripheral Digital-to-Analog Converter Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -133,7 +133,11 @@ bool dac_is_syncing(
 
 	Dac *const dac_module = dev_inst->hw;
 
+#if (SAMC21)
+	if (dac_module->SYNCBUSY.reg) {
+#else
 	if (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY) {
+#endif
 		return true;
 	}
 
@@ -174,6 +178,9 @@ void dac_get_config_defaults(
 	config->voltage_pump_disable = false;
 	config->clock_source   = GCLK_GENERATOR_0;
 	config->run_in_standby = false;
+#if (SAMC21)
+	config->dither_mode    = false;
+#endif
 }
 
 /**
@@ -208,7 +215,11 @@ enum status_code dac_init(
 	module_inst->hw = module;
 
 	/* Turn on the digital interface clock */
+#if (SAMC21)
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_DAC);
+#else
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, PM_APBCMASK_DAC);
+#endif
 
 	/* Check if module is enabled. */
 	if (module->CTRLA.reg & DAC_CTRLA_ENABLE) {
@@ -297,6 +308,9 @@ void dac_enable(
 
 	Dac *const dac_module = module_inst->hw;
 
+	/* Enable selected output */
+	dac_module->CTRLB.reg |= module_inst->output;
+
 	while (dac_is_syncing(module_inst)) {
 		/* Wait until the synchronization is complete */
 	}
@@ -304,13 +318,21 @@ void dac_enable(
 	/* Enable the module */
 	dac_module->CTRLA.reg |= DAC_CTRLA_ENABLE;
 
-	/* Enable selected output */
-	dac_module->CTRLB.reg |= module_inst->output;
-
 	/* Enable internal bandgap reference if selected in the configuration */
 	if (module_inst->reference == DAC_REFERENCE_INT1V) {
+#if (SAMC21)
+		system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_OUTPUT);
+	}
+
+	if(dac_module->CTRLA.reg & DAC_CTRLA_ENABLE) {
+		while(! (dac_module->STATUS.reg & DAC_STATUS_READY)) {
+		};
+	}
+#else
 		system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_BANDGAP);
 	}
+
+#endif
 }
 
 /**
@@ -331,7 +353,7 @@ void dac_disable(
 	Dac *const dac_module = module_inst->hw;
 
 	/* Wait until the synchronization is complete */
-	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY) {
+	while (dac_is_syncing(module_inst)) {
 	};
 
 	/* Disable DAC */
@@ -361,6 +383,13 @@ void dac_enable_events(
 	Dac *const dac_module = module_inst->hw;
 
 	uint32_t event_mask = 0;
+
+#if(SAMC21)
+	/* Configure Enable Inversion of input event */
+	if (events->generate_event_on_chan_falling_edge) {
+		event_mask |= DAC_EVCTRL_INVEI;
+	}
+#endif
 
 	/* Configure Buffer Empty event */
 	if (events->generate_event_on_buffer_empty) {
@@ -581,7 +610,7 @@ enum status_code dac_chan_write(
 	Dac *const dac_module = module_inst->hw;
 
 	/* Wait until the synchronization is complete */
-	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY) {
+	while (dac_is_syncing(module_inst)) {
 	};
 
 	if (module_inst->start_on_event) {
@@ -634,7 +663,7 @@ enum status_code dac_chan_write_buffer_wait(
 	Dac *const dac_module = module_inst->hw;
 
 	/* Wait until the synchronization is complete */
-	while (dac_module->STATUS.reg & DAC_STATUS_SYNCBUSY) {
+	while (dac_is_syncing(module_inst)) {
 	};
 
 	/* Zero length request */

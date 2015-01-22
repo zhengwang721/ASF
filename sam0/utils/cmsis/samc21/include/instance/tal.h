@@ -3,7 +3,7 @@
  *
  * \brief Instance description for TAL
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -160,7 +160,7 @@
 /* ========== Instance parameters for TAL peripheral ========== */
 #define TAL_CPU_NUM                 1        // Number of CPUs
 #define TAL_CTI_NUM                 3        // Number of Cross-Trigger Interfaces
-#define TAL_DMA_CH_NUM              16       // Number of DMAC Channels
+#define TAL_DMA_CH_NUM              12       // Number of DMAC Channels
 #define TAL_EV_CH_NUM               12       // Number of EVSYS Channels
 #define TAL_EXTINT_NUM              16       // Number of EIC External Interrrupts
 #define TAL_INT_NUM                 31       // Number of Interrupt Requests

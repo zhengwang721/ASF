@@ -40,6 +40,10 @@
  * \asf_license_stop
  *
  */
+/**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+
 #include <asf.h>
 
 void configure_sdadc(void);
@@ -82,7 +86,7 @@ int main(void)
 //! [start_conv]
 
 //! [get_res]
-	uint32_t result;
+	int32_t result;
 
 	do {
 		/* Wait for conversion to be done and read out result */
