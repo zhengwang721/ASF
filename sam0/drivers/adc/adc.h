@@ -766,7 +766,7 @@ static inline enum status_code adc_read(
 
 	Adc *const adc_module = module_inst->hw;
 
-#if !(SAML21)
+#if (SAMD) || (SAMR21)
 	while (adc_is_syncing(module_inst)) {
 		/* Wait for synchronization */
 	}
