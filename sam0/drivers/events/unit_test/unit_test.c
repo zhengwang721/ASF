@@ -3,7 +3,7 @@
  *
  * \brief SAM Event System Unit test
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -82,6 +82,7 @@
  *      - SAM D21 Xplained Pro board
  *      - SAM R21 Xplained Pro board
  *      - SAM L21 Xplained Pro board
+ *      - SAM C21 Xplained Pro board
  *
  * \section appdoc_sam0_events_unit_test_setup Setup
  * The following connections has to be made using wires:

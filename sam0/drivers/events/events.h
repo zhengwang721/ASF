@@ -3,7 +3,7 @@
  *
  * \brief SAM Event System Driver
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -53,7 +53,7 @@ extern "C" {
 /**
  * \defgroup asfdoc_sam0_events_group SAM Event System Driver (EVENTS)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's peripheral event resources and users within
  * the device, including enabling and disabling of peripheral source selection
  * and synchronization of clock domains between various modules. The following API
@@ -71,6 +71,7 @@ extern "C" {
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  * - \ref asfdoc_sam0_events_prerequisites
@@ -383,7 +384,7 @@ struct events_config {
  *
  * @{
  */
-#if (SAML21)
+#if (SAML21) || (SAMC21)
 #  define _EVENTS_START_OFFSET_BUSY_BITS           16
 #  define _EVENTS_START_OFFSET_USER_READY_BIT      0
 #  define _EVENTS_START_OFFSET_DETECTION_BIT       16
@@ -668,6 +669,11 @@ uint32_t _events_find_bit_position(uint8_t channel, uint8_t start_offset);
  *      <th>Doc. Rev.</td>
  *      <th>Date</td>
  *      <th>Comments</td>
+ *  </tr>
+ *  <tr>
+ *      <td>G</td>
+ *      <td>01/2015</td>
+ *      <td>Added support for SAMC21. </td>
  *  </tr>
  *  <tr>
  *      <td>F</td>
