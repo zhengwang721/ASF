@@ -7,8 +7,7 @@
  *
  * \asf_license_start
  *
- * \page License
- *
+ * \page Licensepo
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
  *
@@ -40,6 +39,60 @@
  * \asf_license_stop
  *
  */
+/**
+ * \mainpage SAM0 BOD Unit Test
+ * See \ref appdoc_main "here" for project documentation.
+ * \copydetails appdoc_preface
+ *
+ *
+ * \page appdoc_preface Overview
+ * This unit test carries out tests for the BOD driver.
+ * It consists of test cases for the following functionalities:
+ *      - Test for BOD initialization.
+ *      - Test for BOD detected.
+ */
+
+/**
+ * \page appdoc_main SAM0 BOD Unit Test
+ *
+ * Overview:
+ * - \ref asfdoc_sam0_bod_unit_test_intro
+ * - \ref asfdoc_sam0_bod_unit_test_setup
+ * - \ref asfdoc_sam0_bod_unit_test_usage
+ * - \ref asfdoc_sam0_bod_unit_test_compinfo
+ * - \ref asfdoc_sam0_bod_unit_test_contactinfo
+ *
+ * \section asfdoc_sam0_bod_unit_test_intro Introduction
+ * \copydetails appdoc_preface
+ *
+ * The following kit is required for carrying out the test:
+ *  - SAM D21 Xplained Pro board
+ *
+ * \section asfdoc_sam0_bod_unit_test_setup Setup
+ * The following operation has to be made:
+ *  - \b adjust the power supply to lower than 3v.
+ *
+ * To run the test:
+ *  - Connect the supported Xplained Pro board to the computer using a
+ *    micro USB cable.
+ *  - Open the virtual COM port in a terminal application.
+ *    \note The USB composite firmware running on the Embedded Debugger (EDBG)
+ *          will enumerate as debugger, virtual COM port and EDBG data
+ *          gateway.
+ *  - Build the project, program the target and run the application.
+ *    The terminal shows the results of the unit test.
+ *
+ * \section asfdoc_sam0_bod_unit_test_usage Usage
+ *  - Init bod and then test bod detected.
+ *
+ * \section asfdoc_sam0_bod_unit_test_compinfo Compilation Info
+ * This software was written for the GNU GCC and IAR for ARM.
+ * Other compilers may or may not work.
+ *
+ * \section asfdoc_sam0_bod_unit_test_contactinfo Contact Information
+ * For further information, visit
+ * <a href="http://www.atmel.com">http://www.atmel.com</a>.
+ */
  /**
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
@@ -49,8 +102,15 @@
 #include <string.h>
 #include "conf_test.h"
 
+/* Structure for UART module connected to EDBG (used for unit test output) */
 struct usart_module cdc_uart_module;
 
+/**
+ * \brief Initialize the USART for unit test
+ *
+ * Initializes the SERCOM USART (SERCOM4) used for sending the
+ * unit test status to the computer via the EDBG CDC gateway.
+ */
 static void cdc_uart_init(void)
 {
 	struct usart_config usart_conf;
@@ -69,10 +129,15 @@ static void cdc_uart_init(void)
 }
 
 
-/* bod init test*/
+/**
+ * \brief Initialize the bod for unit test
+ *
+ * Initializes the BOD module used for detected test.
+ */
 static void run_bod_init_test(const struct test_case *test)
 {
 	enum status_code status;
+	/* Structures for BOD configuration */
 	struct bod_config config_bod;
 
 	bod_get_config_defaults(&config_bod);
@@ -87,13 +152,21 @@ static void run_bod_init_test(const struct test_case *test)
 			
 }
 
-/* bod detect test*/
+/**
+ * \internal
+ * \brief Test for bod detected in polled mode.
+ *
+ * adjust the cpu power supply to lower than 3v, 
+ * bod should be detected.
+ *
+ * \param test Current test case.
+ */
 static void run_bod_test(const struct test_case *test)
 {
 	bool bod_status;
 	enum status_code status;
 
-	/* change the cpu voltage to 2.5V*/
+	/* adjust the cpu voltage to 3V*/
 	bod_status = bod_is_detected(BOD_BOD33);
 	test_assert_true(test, bod_status == true,
 			"bod detect failed");
@@ -104,6 +177,12 @@ static void run_bod_test(const struct test_case *test)
 			"BOD disable failed");
 }
 
+/**
+ * \brief Run BOD unit tests
+ *
+ * Initializes the system and serial output, then sets up the
+ * BOD unit test suite and runs it.
+ */
 int main(void)
 {
 
