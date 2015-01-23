@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM L21 Xplained Pro test configuration.
+ * \brief AT30TSE75X Temperature sensor driver configuration file.
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -43,21 +43,13 @@
  /**
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
+#ifndef CONF_AT30TSE75X_H_INCLUDED
+#define CONF_AT30TSE75X_H_INCLUDED
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
+#include <board.h>
 
-#define CONF_STDIO_USART               EDBG_CDC_MODULE
-#define CONF_STDIO_MUX_SETTING         EDBG_CDC_SERCOM_MUX_SETTING
-#define CONF_STDIO_PINMUX_PAD0         EDBG_CDC_SERCOM_PINMUX_PAD0
-#define CONF_STDIO_PINMUX_PAD1         EDBG_CDC_SERCOM_PINMUX_PAD1
-#define CONF_STDIO_PINMUX_PAD2         EDBG_CDC_SERCOM_PINMUX_PAD2
-#define CONF_STDIO_PINMUX_PAD3         EDBG_CDC_SERCOM_PINMUX_PAD3
-#define CONF_STDIO_BAUDRATE            38400
+#define AT30TSE_SERCOM      EXT1_I2C_MODULE
+#define AT30TSE_PINMUX_PAD0 EXT1_I2C_SERCOM_PINMUX_PAD0
+#define AT30TSE_PINMUX_PAD1 EXT1_I2C_SERCOM_PINMUX_PAD1
 
-#define CONF_WDT_TIMEOUT_PERIOD        WDT_PERIOD_2048CLK
-#define CONF_WDT_EARLY_WARNING_PERIOD  WDT_PERIOD_1024CLK
-#define CONF_WDT_EARLY_WARNING_WAIT_MS 33
-#define CONF_WDT_RESET_WAIT_MS         50
-
-#endif /* CONF_TEST_H_INCLUDED */
+#endif /* CONF_AT30TSE75X_H_INCLUDED */
