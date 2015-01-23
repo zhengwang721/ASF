@@ -3,7 +3,7 @@
  *
  * \brief SAM Analog Comparator Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_ac_group SAM Analog Comparator Driver (AC)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's Analog Comparator functionality, for the
  * comparison of analog voltages against a known reference voltage to determine
  * its relative level. The following driver API modes are covered by this
@@ -67,6 +67,7 @@
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
  *  - Atmel | SMART SAM L21
+ *  - Atmel | SMART SAM C21
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_ac_prerequisites
@@ -106,15 +107,15 @@
  *    </tr>
  *    <tr>
  *      <td>FEATURE_AC_HYSTERESIS_LEVEL</td>
- *      <td>SAML21</td>
+ *      <td>SAML21/C21</td>
  *    </tr>
  *    <tr>
  *      <td>FEATURE_AC_SYNCBUSY_SCHEME_VERSION_2</td>
- *      <td>SAML21</td>
+ *      <td>SAML21/C21</td>
  *    </tr>
  *    <tr>
  *      <td>FEATURE_AC_RUN_IN_STANDY_EACH_COMPARATOR</td>
- *      <td>SAML21</td>
+ *      <td>SAML21/C21</td>
  *    </tr>
  *    <tr>
  *      <td>FEATURE_AC_RUN_IN_STANDY_PAIR_COMPARATOR</td>
@@ -305,14 +306,14 @@ extern "C" {
  * Define AC driver feature set according to different device family.
  * @{
  */
-#if (SAML21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAMC21) || defined(__DOXYGEN__)
    /** Setting of hysteresis level */
 #  define FEATURE_AC_HYSTERESIS_LEVEL
    /** SYNCBUSY scheme version 2 */
 #  define FEATURE_AC_SYNCBUSY_SCHEME_VERSION_2
 #endif
 
-#if (SAML21) || defined(__DOXYGEN__)
+#if (SAML21) || (SAMC21) || defined(__DOXYGEN__)
  	/** Run in standby feature for each comparator */
 #  define FEATURE_AC_RUN_IN_STANDY_EACH_COMPARATOR
 #else
@@ -492,7 +493,7 @@ enum ac_chan_neg_mux {
 	 * For SAMD20/D21/D10/D11/R21:
 	 *     Negative comparator input is connected to the channel's internal DAC
 	 *     channel 0 output.
-	 * For SAML21:
+	 * For SAML21/C21:
 	 *     Negative comparator input is connected to the channel's internal DAC
 	 *     channel 0 output for Comparator 0 or OPAMP output for Comparator 1.
 	 */
@@ -1376,6 +1377,11 @@ static inline void ac_win_clear_status(
  *      <th>Doc. Rev.</td>
  *      <th>Date</td>
  *      <th>Comments</td>
+ *    </tr>
+ *    <tr>
+ *      <td>F</td>
+ *      <td>01/2015</td>
+ *      <td>Added support for SAMC21.</td>
  *    </tr>
  *    <tr>
  *      <td>E</td>

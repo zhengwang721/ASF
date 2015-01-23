@@ -3,7 +3,7 @@
  *
  * \brief SAM Analog Comparator Driver
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -122,8 +122,13 @@ enum status_code ac_init(
 	/* Initialize device instance */
 	module_inst->hw = hw;
 
+#if (SAML21)
 	/* Turn on the digital interface clock */
 	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBD, MCLK_APBDMASK_AC);
+#else
+	/* Turn on the digital interface clock */
+	system_apb_clock_set_mask(SYSTEM_CLOCK_APB_APBC, MCLK_APBCMASK_AC);
+#endif
 
 #if AC_CALLBACK_MODE == true
 	/* Initialize parameters */
@@ -248,7 +253,7 @@ enum status_code ac_win_set_config(
 	else if (win_channel == AC_WIN_CHANNEL_1) {
 		winctrl_mask &= ~AC_WINCTRL_WINTSEL1_Msk;
 		winctrl_mask = (config->interrupt_selection << (AC_WINCTRL_WINTSEL1_Pos -
-		AC_WINCTRL_WINTSEL0_Pos);
+		AC_WINCTRL_WINTSEL0_Pos));
 	}
 #endif /* (AC_PAIRS > 1) */
 	else {
