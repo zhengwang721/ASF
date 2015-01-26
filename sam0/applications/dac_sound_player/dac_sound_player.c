@@ -3,7 +3,7 @@
  *
  * \brief SAM DAC Sound Player Application
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \license
  * \asf_license_start
@@ -72,7 +72,7 @@
  * timer output events to the DAC module to trigger new sample conversions.
  *
  * This application has been tested on following boards:
- * - SAM D20/D21/L21 Xplained Pro
+ * - SAM D20/D21/L21/C21 Xplained Pro
  *
  * \section appdoc_sam0_dac_sound_player_setup Hardware Setup
  * The device's DAC channel 0 output should be connected to an audio amplifier,
@@ -217,7 +217,7 @@ int main(void)
 	system_init();
 
 	/* Enable the internal bandgap to use as reference to the DAC */
-#if (SAML21)
+#if (SAML21) || (SAMC21)
 	system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_OUTPUT);
 #else
 	system_voltage_reference_enable(SYSTEM_VOLTAGE_REFERENCE_BANDGAP);
