@@ -3,7 +3,7 @@
  *
  * \brief SAM Event System Driver Quick Start
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,6 +71,8 @@
  *   \snippet samd11_xplained_pro/conf_qs_events.h definition_event
  * - SAM L21 Xplained Pro
  *   \snippet saml21_xplained_pro/conf_qs_events.h definition_event
+ * - SAM C21 Xplained Pro
+ *   \snippet samc21_xplained_pro/conf_qs_events.h definition_event
  *
  * Copy-paste the following setup code to your user application:
  * \snippet qs_events_basic.c setup
