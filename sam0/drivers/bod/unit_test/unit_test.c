@@ -80,6 +80,9 @@
  *          will enumerate as debugger, virtual COM port and EDBG data
  *          gateway.
  *  - Build the project, program the target and run the application.
+ *  - Conect board to extint power supply though "PWR 5.0 IN GND",
+ *    this power have higher priority than usb power supply. 
+ *
  *    The terminal shows the results of the unit test.
  *
  * \section asfdoc_sam0_bod_unit_test_usage Usage
@@ -141,8 +144,10 @@ static void run_bod_init_test(const struct test_case *test)
 	struct bod_config config_bod;
 
 	bod_get_config_defaults(&config_bod);
+	/* if action set to  BOD_ACTION_NONE, STATUS register won't be set */
 	config_bod.action = BOD_ACTION_INTERRUPT;
-	config_bod.level = 0x3f;	
+	/* level is 48, bod will detected when cpu voltage is lower than 3v */
+	config_bod.level = 48;	
 	status = bod_set_config(BOD_BOD33, &config_bod);
 	test_assert_true(test, status == STATUS_OK,
 			"BOD init failed");
@@ -166,8 +171,9 @@ static void run_bod_test(const struct test_case *test)
 	bool bod_status;
 	enum status_code status;
 
-	/* adjust the cpu voltage to 3V*/
+	/* adjust the cpu voltage to lower than 3V*/
 	bod_status = bod_is_detected(BOD_BOD33);
+	/* level is 48, bod detected should happen*/
 	test_assert_true(test, bod_status == true,
 			"bod detect failed");
 
