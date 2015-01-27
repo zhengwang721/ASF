@@ -3,7 +3,7 @@
  *
  * \brief SAM TCC - Timer Counter for Control Applications Driver Quick Start
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -42,10 +42,14 @@
  */
 
 /**
+ * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
+ */
+
+/**
  * \page asfdoc_sam0_tcc_timer_use_case Quick Start Guide for TCC - Timer
  *
  * The supported board list:
- *    - SAM D21/R21/L21 Xplained Pro
+ *    - SAM D21/R21/L21/C21 Xplained Pro
  *    - SAM D11 Xplained Pro
  *
  * In this use case, the TCC will be used as a timer, to generate overflow and
@@ -138,10 +142,6 @@
  * -# Enter an infinite loop while the timer is running.
  *  \snippet qs_tcc_timer.c main_loop
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
-
 
 #include <asf.h>
 #include <conf_clocks.h>

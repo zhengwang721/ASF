@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief TCC Quick Start configuration for SAM L21 Xplained Pro
+ * \brief TCC Quick Start configuration for SAMC21 Xplained Pro
  *
- * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -69,9 +69,9 @@
 #define CONF_FAULT_EIC_LINE      SW0_EIC_LINE
 
 /** FAULT event generator */
-#define CONF_FAULT_EVENT_GENERATOR EVSYS_ID_GEN_EIC_EXTINT_2
-/** FAULT event user for recoverable fault */
-#define CONF_FAULT_EVENT_USER      EVSYS_ID_USER_TCC0_MC_0
+#define CONF_FAULT_EVENT_GENERATOR EVSYS_ID_GEN_EIC_EXTINT_8
+/** FAULT event user for non-recoverable fault */
+#define CONF_FAULT_EVENT_USER      EVSYS_ID_USER_TCC0_EV_0
 //[definition_fault]
 
 #endif /* CONF_QUICK_START_H_INCLUDED */
