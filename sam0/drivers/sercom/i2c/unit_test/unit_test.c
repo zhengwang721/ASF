@@ -57,7 +57,7 @@
  */
 
 /**
- * \page appdoc_main SAM I2C Unit Test
+ * \page appdoc_main SAM0 I2C Unit Test
  *
  * Overview:
  * - \ref asfdoc_sam0_i2c_unit_test_intro
