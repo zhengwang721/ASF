@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0 (I2C) Unit test
+ * \brief SAM0 SERCOM I2C Unit test
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *

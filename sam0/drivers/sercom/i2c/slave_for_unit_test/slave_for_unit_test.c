@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM0 SERCOM I2C Slave module for I2C unit_test.
+ * \brief SAM0 SERCOM I2C Slave Example for I2C unit_test.
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
