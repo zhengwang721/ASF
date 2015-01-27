@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM Analog to Digital Converter (I2C) Unit test
+ * \brief SAM0 (I2C) Unit test
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -176,13 +176,13 @@ static void run_i2c_init_test(const struct test_case *test)
  * \brief Test for I2C master transfer.
  *
  * First test transfer function with stop.
- * write to slave, read from slave and then compare the date.
- * the slave send out the dates it received,
- * so master write and read date should be the same.
+ * write to slave, read from slave and then compare the data.
+ * the slave send out the data it received,
+ * so master write and read data should be the same.
  *
  * Then test transfer function without stop.
  * write to slave, then use i2c_master_send_stop to complete writing,
- * read from slave, compare the date.
+ * read from slave, compare the data.
  * finally, use function with stop to complete the transfer.
  *
  * \param test Current test case.
@@ -278,7 +278,7 @@ static void run_i2c_master_transfer_test(const struct test_case *test)
 	test_assert_true(test, status == true,
 	"i2c master transfer without stop comparsion failed");
 	
-	/* use i2c_master_read_packet_wait to complete the transfer */
+	/* use i2c_master_write_packet_wait to complete the transfer */
 	packet.data = write_buffer;
 	do {
 		timeout_cycles--;
