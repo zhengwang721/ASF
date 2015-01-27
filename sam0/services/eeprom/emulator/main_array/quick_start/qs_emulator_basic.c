@@ -80,14 +80,6 @@ void SYSCTRL_Handler(void)
 		eeprom_emulator_commit_page_buffer();
 	}
 }
-#else
-void SYSTEM_Handler(void)
-{
-	if (SUPC->INTFLAG.reg & SUPC_INTFLAG_BOD33DET) {
-		SUPC->INTFLAG.reg |= SUPC_INTFLAG_BOD33DET;
-		eeprom_emulator_commit_page_buffer();
-	}
-}
 #endif
 static void configure_bod(void)
 {
@@ -95,19 +87,13 @@ static void configure_bod(void)
 	struct bod_config config_bod33;
 	bod_get_config_defaults(&config_bod33);
 	config_bod33.action = BOD_ACTION_INTERRUPT;
+	/* BOD33 threshold level is about 3.2V */
+	config_bod33.level = 48;
 	bod_set_config(BOD_BOD33, &config_bod33);
 	bod_enable(BOD_BOD33);
 
 	SYSCTRL->INTENSET.reg |= SYSCTRL_INTENCLR_BOD33DET;
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SYSCTRL);
-#else
-	struct bod33_config config_bod33;
-	bod33_get_config_defaults(&config_bod33);
-	config_bod33.action = BOD33_ACTION_INTERRUPT;
-	bod33_set_config(&config_bod33);
-	bod33_enable();
-	SUPC->INTENSET.reg |= SUPC_INTENSET_BOD33DET;
-	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SYSTEM);
 #endif
 
 }
