@@ -80,8 +80,9 @@
  *          will enumerate as debugger, virtual COM port and EDBG data
  *          gateway.
  *  - Build the project, program the target and run the application.
- *  - Conect board to extint power supply though "PWR 5.0 IN and GND",
- *    this power have higher priority than usb power supply.
+ *  - Conect board to external power supply though "PWR 5.0 IN and GND",
+ *    this power have higher priority than usb power supply,
+ *    you can check the cpu voltage from VCC.
  *
  *    The terminal shows the results of the unit test.
  *
