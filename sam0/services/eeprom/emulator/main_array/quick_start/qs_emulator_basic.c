@@ -3,7 +3,7 @@
  *
  * \brief SAM EEPROM Emulator Service Quick Start
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -71,6 +71,46 @@ void configure_eeprom(void)
 	}
 //! [check_re-init]
 }
+
+#if (SAMD || SAMR21)
+void SYSCTRL_Handler(void)
+{
+	if (SYSCTRL->INTFLAG.reg & SYSCTRL_INTFLAG_BOD33DET) {
+		SYSCTRL->INTFLAG.reg |= SYSCTRL_INTFLAG_BOD33DET;
+		eeprom_emulator_commit_page_buffer();
+	}
+}
+#else
+void SYSTEM_Handler(void)
+{
+	if (SUPC->INTFLAG.reg & SUPC_INTFLAG_BOD33DET) {
+		SUPC->INTFLAG.reg |= SUPC_INTFLAG_BOD33DET;
+		eeprom_emulator_commit_page_buffer();
+	}
+}
+#endif
+static void configure_bod(void)
+{
+#if (SAMD || SAMR21)
+	struct bod_config config_bod33;
+	bod_get_config_defaults(&config_bod33);
+	config_bod33.action = BOD_ACTION_INTERRUPT;
+	bod_set_config(BOD_BOD33, &config_bod33);
+	bod_enable(BOD_BOD33);
+
+	SYSCTRL->INTENSET.reg |= SYSCTRL_INTENCLR_BOD33DET;
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SYSCTRL);
+#else
+	struct bod33_config config_bod33;
+	bod33_get_config_defaults(&config_bod33);
+	config_bod33.action = BOD33_ACTION_INTERRUPT;
+	bod33_set_config(&config_bod33);
+	bod33_enable();
+	SUPC->INTENSET.reg |= SUPC_INTENSET_BOD33DET;
+	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_SYSTEM);
+#endif
+
+}
 //! [setup]
 
 int main(void)
@@ -80,6 +120,10 @@ int main(void)
 //! [setup_init]
 	configure_eeprom();
 //! [setup_init]
+
+//! [setup_bod]
+	configure_bod();
+//! [setup_bod]
 
 //! [main]
 //! [read_page]
@@ -98,6 +142,11 @@ int main(void)
 	eeprom_emulator_write_page(0, page_data);
 	eeprom_emulator_commit_page_buffer();
 //! [write_page]
+
+//! [write_page_not_commit]
+	page_data[1]=0x1;
+	eeprom_emulator_write_page(0, page_data);
+//! [write_page_not_commit]
 
 	while (true) {
 
