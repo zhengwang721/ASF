@@ -80,8 +80,8 @@
  *          will enumerate as debugger, virtual COM port and EDBG data
  *          gateway.
  *  - Build the project, program the target and run the application.
- *  - Conect board to extint power supply though "PWR 5.0 IN GND",
- *    this power have higher priority than usb power supply. 
+ *  - Conect board to extint power supply though "PWR 5.0 IN and GND",
+ *    this power have higher priority than usb power supply.
  *
  *    The terminal shows the results of the unit test.
  *
@@ -147,7 +147,7 @@ static void run_bod_init_test(const struct test_case *test)
 	/* if action set to  BOD_ACTION_NONE, STATUS register won't be set */
 	config_bod.action = BOD_ACTION_INTERRUPT;
 	/* level is 48, bod will detected when cpu voltage is lower than 3v */
-	config_bod.level = 48;	
+	config_bod.level = 48;
 	status = bod_set_config(BOD_BOD33, &config_bod);
 	test_assert_true(test, status == STATUS_OK,
 			"BOD init failed");
