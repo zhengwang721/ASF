@@ -159,7 +159,7 @@ static void cdc_uart_init(void)
  */
 static void run_i2c_init_test(const struct test_case *test)
 {
-	enum status_code status = STATUS_ERR_IO;
+	enum status_code status;
 	struct i2c_master_config config_i2c_master;
 
 	i2c_master_get_config_defaults(&config_i2c_master);
@@ -302,7 +302,7 @@ static void run_i2c_master_transfer_test(const struct test_case *test)
  */
 static void run_i2c_full_speed_test(const struct test_case *test)
 {
-	enum status_code status = STATUS_ERR_IO;
+	enum status_code status;
 	struct i2c_master_config config_i2c_master;
 	
 	/* init i2c master in full speed mode*/
