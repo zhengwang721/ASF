@@ -212,7 +212,7 @@ static void run_dac_init_test(const struct test_case *test)
  */
 static void run_dac_event_control_test(const struct test_case *test)
 {
-	enum status_code status = STATUS_ERR_IO;
+	enum status_code status;
 	uint32_t dac_status;
 	
 	status = dac_chan_write(&dac_instance, DAC_CHANNEL_0, 100);
