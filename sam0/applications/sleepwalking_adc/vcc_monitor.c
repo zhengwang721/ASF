@@ -81,7 +81,7 @@
  * Connect the PA06(EXT1 pin3) to GND in SAM R21 Xplained Pro to trigger it.
  * Connect the PA02(EXT1 pin3) to GND in SAM D10/D11 Xplained Pro to trigger it.
  * Connect the PA03(EXT1 pin4) to GND in SAM L21 Xplained Pro to trigger it.
- * Connect the PA03_ADC_DAC_VREF to GND in SAM C21 Xplained Pro to trigger it.
+ * Connect the PA03_ADC_DAC_VREF(J701 pin4) to GND in SAM C21 Xplained Pro to trigger it.
  *
  * If debugging it is also possible to start a debug session and place a
  * breakpoint in the window callback that will trigger whenever the voltage
