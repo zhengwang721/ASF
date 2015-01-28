@@ -3,7 +3,7 @@
  *
  * \brief SAM Analog Comparator Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -716,19 +716,19 @@ enum status_code ac_init(
 
 #if (AC_INST_NUM > 1) && !defined(__DOXYGEN__)
 /**
- * \internal Find the index of given TC module instance.
+ * \internal Find the index of given AC module instance.
  *
  * \param[in] AC module instance pointer.
  *
  * \return Index of the given AC module instance.
  */
-uint8_t _ac_get_inst_index(
-		Tc *const hw)
+static uint8_t _ac_get_inst_index(
+		Ac *const hw)
 {
-	/* List of available TC modules. */
-	static Tc *const ac_modules[AC_INST_NUM] = AC_INSTS;
+	/* List of available AC modules. */
+	static Ac *const ac_modules[AC_INST_NUM] = AC_INSTS;
 
-	/* Find index for TC instance. */
+	/* Find index for AC instance. */
 	for (uint32_t i = 0; i < AC_INST_NUM; i++) {
 		if (hw == ac_modules[i]) {
 			return i;

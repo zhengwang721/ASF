@@ -3,7 +3,7 @@
  *
  * \brief Component description for SERCOM
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -54,7 +54,7 @@
 /*@{*/
 
 #define SERCOM_U2201
-#define REV_SERCOM                  0x200
+#define REV_SERCOM                  0x201
 
 /* -------- SERCOM_I2CM_CTRLA : (SERCOM Offset: 0x00) (R/W 32) I2CM I2CM Control A -------- */
 #if !(defined(__ASSEMBLY__) || defined(__IAR_SYSTEMS_ASM__))
