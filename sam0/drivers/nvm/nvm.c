@@ -786,19 +786,6 @@ static void _nvm_translate_raw_fusebits_to_struct (
 			((raw_user_row[0] & FUSES_BOD33_ACTION_Msk)
 			>> FUSES_BOD33_ACTION_Pos);
 #else
-#  ifdef SAMD21_64K
-	fusebits->bod33_level = (uint8_t)
-			((raw_user_row[0] & FUSES_BOD33USERLEVEL_Msk)
-			>> FUSES_BOD33USERLEVEL_Pos);
-
-	fusebits->bod33_enable = (bool)
-			((raw_user_row[0] & FUSES_BOD33_EN_Msk)
-			>> FUSES_BOD33_EN_Pos);
-
-	fusebits->bod33_action = (enum nvm_bod33_action)
-			((raw_user_row[0] & FUSES_BOD33_ACTION_Msk)
-			>> FUSES_BOD33_ACTION_Pos);
-#  else
 	fusebits->bod33_level = (uint8_t)
 				((raw_user_row[0] & SYSCTRL_FUSES_BOD33USERLEVEL_Msk)
 				>> SYSCTRL_FUSES_BOD33USERLEVEL_Pos);
@@ -810,8 +797,8 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod33_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_ACTION_Msk)
 			>> SYSCTRL_FUSES_BOD33_ACTION_Pos);
-#  endif
 #endif
+
 	fusebits->wdt_enable = (bool)
 			((raw_user_row[0] & WDT_FUSES_ENABLE_Msk) >> WDT_FUSES_ENABLE_Pos);
 
