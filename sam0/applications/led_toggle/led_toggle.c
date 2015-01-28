@@ -68,7 +68,7 @@
  *
  * \section appdoc_sam0_led_toggle_app_usage Usage
  * The application uses system timer to generate periodic interrupts, once the
- * the interrupt occurs, LED0 will toggle.
+ * interrupt occurs, LED0 will toggle.
  *
  * \section appdoc_sam0_led_toggle_app_compinfo Compilation Info
  * This software was written for the GNU GCC and IAR for ARM.
