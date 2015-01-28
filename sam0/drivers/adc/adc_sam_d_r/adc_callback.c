@@ -60,6 +60,10 @@ static void _adc_interrupt_handler(const uint8_t instance)
 			/* clear interrupt flag */
 			module->hw->INTFLAG.reg = ADC_INTFLAG_RESRDY;
 
+			while (adc_is_syncing(module)) {
+				/* Wait for synchronization */
+			}
+
 			/* store ADC result in job buffer */
 			*(module->job_buffer++) = module->hw->RESULT.reg;
 
