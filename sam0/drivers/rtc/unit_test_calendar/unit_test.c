@@ -155,7 +155,7 @@ static void cdc_uart_init(void)
 static void run_rtc_calendar_test(const struct test_case *test)
 {
 	enum status_code status;
-	bool result = true;
+	bool result;
 
 	/* Structure for RTC calendar configuration */
 	struct rtc_calendar_config config;
