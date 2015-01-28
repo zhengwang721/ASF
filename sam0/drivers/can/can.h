@@ -118,7 +118,7 @@ typedef union {
 struct can_rx_element_buffer {
 	__IO CAN_RX_ELEMENT_R0_Type R0;
 	__IO CAN_RX_ELEMENT_R1_Type R1;
-	uint8_t data[CONF_CAN_RX_ELEMENT_DATA_SIZE_BUFFER];
+	uint8_t data[CONF_CAN_ELEMENT_DATA_SIZE];
 };
 
 /**
@@ -127,7 +127,7 @@ struct can_rx_element_buffer {
 struct can_rx_element_fifo_0 {
 	__IO CAN_RX_ELEMENT_R0_Type R0;
 	__IO CAN_RX_ELEMENT_R1_Type R1;
-	uint8_t data[CONF_CAN_RX_ELEMENT_DATA_SIZE_FIFO_0];
+	uint8_t data[CONF_CAN_ELEMENT_DATA_SIZE];
 };
 
 /**
@@ -136,7 +136,7 @@ struct can_rx_element_fifo_0 {
 struct can_rx_element_fifo_1 {
 	__IO CAN_RX_ELEMENT_R0_Type R0;
 	__IO CAN_RX_ELEMENT_R1_Type R1;
-	uint8_t data[CONF_CAN_RX_ELEMENT_DATA_SIZE_FIFO_1];
+	uint8_t data[CONF_CAN_ELEMENT_DATA_SIZE];
 };
 
 /* -------- CAN_TX_ELEMENT_T0 : (CAN TX element: 0x00) (R/W 32) Tx Element T0 Configuration -------- */
@@ -177,6 +177,14 @@ typedef union {
 #define CAN_TX_ELEMENT_T1_DLC_Pos         16
 #define CAN_TX_ELEMENT_T1_DLC_Msk         (0xFul << CAN_TX_ELEMENT_T1_DLC_Pos)
 #define CAN_TX_ELEMENT_T1_DLC(value)      ((CAN_TX_ELEMENT_T1_DLC_Msk & ((value) << CAN_TX_ELEMENT_T1_DLC_Pos)))
+#define   CAN_TX_ELEMENT_T1_DLC_DATA8_Val        0x8ul  /**< \brief (CAN_RXESC) 8 byte data field */
+#define   CAN_TX_ELEMENT_T1_DLC_DATA12_Val       0x9ul  /**< \brief (CAN_RXESC) 12 byte data field */
+#define   CAN_TX_ELEMENT_T1_DLC_DATA16_Val       0xAul  /**< \brief (CAN_RXESC) 16 byte data field */
+#define   CAN_TX_ELEMENT_T1_DLC_DATA20_Val       0xBul  /**< \brief (CAN_RXESC) 20 byte data field */
+#define   CAN_TX_ELEMENT_T1_DLC_DATA24_Val       0xCul  /**< \brief (CAN_RXESC) 24 byte data field */
+#define   CAN_TX_ELEMENT_T1_DLC_DATA32_Val       0xDul  /**< \brief (CAN_RXESC) 32 byte data field */
+#define   CAN_TX_ELEMENT_T1_DLC_DATA48_Val       0xEul  /**< \brief (CAN_RXESC) 48 byte data field */
+#define   CAN_TX_ELEMENT_T1_DLC_DATA64_Val       0xFul  /**< \brief (CAN_RXESC) 64 byte data field */
 #define CAN_TX_ELEMENT_T1_BRS_Pos         20
 #define CAN_TX_ELEMENT_T1_BRS             (0x1ul << CAN_TX_ELEMENT_T1_BRS_Pos)
 #define CAN_TX_ELEMENT_T1_FDF_Pos         21
@@ -195,7 +203,7 @@ typedef union {
 struct can_tx_element {
 	__IO CAN_TX_ELEMENT_T0_Type T0;
 	__IO CAN_TX_ELEMENT_T1_Type T1;
-	uint8_t data[CONF_CAN_TX_ELEMENT_DATA_SIZE];
+	uint8_t data[CONF_CAN_ELEMENT_DATA_SIZE];
 };
 
 /* -------- CAN_TX_EVENT_ELEMENT_E0 : (CAN TX event element: 0x00) (R/W 32) Tx Event Element E0 Configuration -------- */
@@ -565,7 +573,7 @@ struct can_config {
  * The default configuration is as follows:
  *  \li GCLK generator 8 (GCLK main) clock source
  *  \li Not run in standby mode
- *  \li Watchdog value with 0xFF
+ *  \li Disable Watchdog
  *  \li Transmit pause enabled
  *  \li Edge filtering during bus integration enabled
  *  \li Protocol exception handling enabled
@@ -602,7 +610,7 @@ static inline void can_get_config_defaults(
 	/* Default configuration values */
 	config->clock_source = GCLK_GENERATOR_8;
 	config->run_in_standby = false;
-	config->watchdog_configuration = 0xFF;
+	config->watchdog_configuration = 0x00;
 	config->transmit_pause = true;
 	config->edge_filtering = true;
 	config->protocol_exception_handling = true;
@@ -869,7 +877,7 @@ enum status_code can_set_rx_extended_filter(
  * \brief Get the pointer to the receive buffer element.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] rx_element  Pointer of pointer to receive buffer element
+ * \param[in] rx_element  Pointer to receive buffer element
  * \param[in] index  Index offset in receive buffer
  *
  *  \return Status of the result.
@@ -879,13 +887,13 @@ enum status_code can_set_rx_extended_filter(
  */
 enum status_code can_get_rx_buffer_element(
 		struct can_module *const module_inst,
-		struct can_rx_element_buffer **rx_element, uint32_t index);
+		struct can_rx_element_buffer *rx_element, uint32_t index);
 
 /**
  * \brief Get the pointer to the receive FIFO 0 element.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] rx_element  Pointer of pointer to receive FIFO 0
+ * \param[in] rx_element  Pointer to receive FIFO 0
  * \param[in] index  Index offset in receive FIFO 0
  *
  *  \return Status of the result.
@@ -895,13 +903,13 @@ enum status_code can_get_rx_buffer_element(
  */
 enum status_code can_get_rx_fifo_0_element(
 		struct can_module *const module_inst,
-		struct can_rx_element_fifo_0 **rx_element, uint32_t index);
+		struct can_rx_element_fifo_0 *rx_element, uint32_t index);
 
 /**
  * \brief Get the pointer to the receive FIFO 1 element.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] rx_element  Pointer of pointer to receive FIFO 1
+ * \param[in] rx_element  Pointer to receive FIFO 1
  * \param[in] index  Index offset in receive FIFO 1
  *
  *  \return Status of the result.
@@ -911,7 +919,7 @@ enum status_code can_get_rx_fifo_0_element(
  */
 enum status_code can_get_rx_fifo_1_element(
 		struct can_module *const module_inst,
-		struct can_rx_element_fifo_1 **rx_element, uint32_t index);
+		struct can_rx_element_fifo_1 *rx_element, uint32_t index);
 
 /** @} */
 
@@ -1030,7 +1038,8 @@ static inline void can_get_tx_buffer_element_defaults(
 		struct can_tx_element *tx_element)
 {
 	tx_element->T0.reg = 0;
-	tx_element->T1.reg = CAN_TX_ELEMENT_T1_EFC | CAN_TX_ELEMENT_T1_DLC(8);
+	tx_element->T1.reg = CAN_TX_ELEMENT_T1_EFC |
+			CAN_TX_ELEMENT_T1_DLC(CAN_TX_ELEMENT_T1_DLC_DATA8_Val);
 }
 
 /**

@@ -71,10 +71,8 @@
 #define CONF_CAN1_RX_STANDARD_ID_FILTER_NUM     32
 #define CONF_CAN1_RX_EXTENDED_ID_FILTER_NUM     16
 
-#define CONF_CAN_RX_ELEMENT_DATA_SIZE_BUFFER         8
-#define CONF_CAN_RX_ELEMENT_DATA_SIZE_FIFO_0         8
-#define CONF_CAN_RX_ELEMENT_DATA_SIZE_FIFO_1         8
-#define CONF_CAN_TX_ELEMENT_DATA_SIZE                8
+/* The value should be 8/12/16/20/24/32/48/64. */
+#define CONF_CAN_ELEMENT_DATA_SIZE         8
 
 /* 
  * The setting of the nominal bit rate is based on the GCLK_CAN is 48M which you can

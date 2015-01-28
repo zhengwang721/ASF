@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM CAN basic Quick Start
+ * \brief SAM CAN Quick Start for FD modue
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -121,7 +121,7 @@ static void configure_can(void)
 	can_get_config_defaults(&config_can);
 	can_init(&can_instance, CAN_MODULE, &config_can);
 
-	can_switch_operation_mode(&can_instance, CAN_OPERATION_MODE_NORMAL_OPERATION);
+	can_switch_operation_mode(&can_instance, CAN_OPERATION_MODE_FD_OPERATION);
 
 	/* Enable interrupts for this CAN module */
 	system_interrupt_enable(SYSTEM_INTERRUPT_MODULE_CAN0);
@@ -163,6 +163,8 @@ static void can_send_standard_message(uint32_t id_value, uint8_t *data)
 
 	can_get_tx_buffer_element_defaults(&tx_element);
 	tx_element.T0.reg |= CAN_TX_ELEMENT_T0_ID(id_value << 18);
+	tx_element.T1.reg = CAN_TX_ELEMENT_T1_FDF | CAN_TX_ELEMENT_T1_BRS |
+			CAN_TX_ELEMENT_T1_DLC(CAN_TX_ELEMENT_T1_DLC_DATA64_Val);
 	for (i = 0; i < CONF_CAN_ELEMENT_DATA_SIZE; i++) {
 		tx_element.data[i] = *data;
 		data++;
@@ -181,6 +183,9 @@ static void can_send_extended_message(uint32_t id_value, uint8_t *data)
 	can_get_tx_buffer_element_defaults(&tx_element);
 	tx_element.T0.reg |= CAN_TX_ELEMENT_T0_ID(id_value) |
 			CAN_TX_ELEMENT_T0_XTD;
+	tx_element.T1.reg = CAN_TX_ELEMENT_T1_EFC | CAN_TX_ELEMENT_T1_FDF |
+			CAN_TX_ELEMENT_T1_BRS |
+			CAN_TX_ELEMENT_T1_DLC(CAN_TX_ELEMENT_T1_DLC_DATA64_Val);
 	for (i = 0; i < CONF_CAN_ELEMENT_DATA_SIZE; i++) {
 		tx_element.data[i] = *data;
 		data++;
