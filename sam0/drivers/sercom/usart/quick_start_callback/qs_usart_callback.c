@@ -46,8 +46,8 @@
 #include <asf.h>
 #include <stdio.h>
 
-void usart_read_callback(const struct usart_module *const usart_module);
-void usart_write_callback(const struct usart_module *const usart_module);
+void usart_read_callback(struct usart_module *const usart_module);
+void usart_write_callback(struct usart_module *const usart_module);
 
 void configure_usart(void);
 void configure_usart_callbacks(void);
@@ -63,13 +63,13 @@ volatile uint8_t rx_buffer[MAX_RX_BUFFER_LENGTH];
 //! [rx_buffer_var]
 
 //! [callback_funcs]
-void usart_read_callback(const struct usart_module *const usart_module)
+void usart_read_callback(truct usart_module *const usart_module)
 {
 	usart_write_buffer_job(&usart_instance,
 			(uint8_t *)rx_buffer, MAX_RX_BUFFER_LENGTH);
 }
 
-void usart_write_callback(const struct usart_module *const usart_module)
+void usart_write_callback(struct usart_module *const usart_module)
 {
 	port_pin_toggle_output_level(LED_0_PIN);
 }
