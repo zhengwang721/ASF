@@ -3,7 +3,7 @@
  *
  * \brief CAN example for SAM.
  *
- * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -250,6 +250,9 @@ static void test_1(void)
 	} else {
 		puts("Test1 ERROR" STRING_EOL);
 	}
+
+	/* Disable CAN1 mailbox 0 interrupt. */
+	can_disable_interrupt(CAN1, CAN_IER_MB0);
 }
 
 #define TEST2_CAN1_RX_MB_IDX     7
@@ -329,6 +332,9 @@ static void test_2(void)
 	} else {
 		puts("Test2 ERROR" STRING_EOL);
 	}
+
+	/* Disable CAN1 mailbox 7 interrupt. */
+	can_disable_interrupt(CAN1, CAN_IER_MB7);
 }
 
 #define TEST3_CAN1_RX_MB_IDX     7
@@ -407,6 +413,9 @@ static void test_3(void)
 	} else {
 		puts("Test3 ERROR" STRING_EOL);
 	}
+
+	/* Disable CAN1 mailbox 7 interrupt. */
+	can_disable_interrupt(CAN1, CAN_IER_MB7);
 }
 
 #define TEST4_CAN0_MB_IDX         3
@@ -464,6 +473,9 @@ static void test_4(void)
 	} else {
 		puts("Test4 ERROR" STRING_EOL);
 	}
+
+	/* Disable CAN1 mailbox 3 interrupt. */
+	can_disable_interrupt(CAN1, CAN_IER_MB3);
 }
 
 /**
