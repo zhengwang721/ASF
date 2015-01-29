@@ -190,7 +190,6 @@ uint32_t usart_spi_write_packet(Usart *p_usart, const uint8_t *data, size_t len)
 void usart_spi_read_single(Usart *p_usart, uint8_t *data)
 {
 	uint32_t temp_data = 0;
-	
 	/* Dummy write one data to slave in order to read data. */
 	usart_putchar(p_usart, CONFIG_USART_SPI_DUMMY);
 
