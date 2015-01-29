@@ -3,7 +3,7 @@
  *
  * \brief Sleep manager
  *
- * Copyright (c) 2010 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010 - 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -147,7 +147,12 @@ static inline void sleepmgr_lock_mode(enum sleepmgr_mode mode)
 #ifdef CONFIG_SLEEPMGR_ENABLE
 	irqflags_t flags;
 
-	Assert(sleepmgr_locks[mode] < 0xff);
+	if(sleepmgr_locks[mode] >= 0xff) {
+		while (true) {
+			// Warning: maximum value of sleepmgr_locks buffer is no more than 255.
+			// Check APP or change the data type to uint16_t.
+		}
+	}
 
 	// Enter a critical section
 	flags = cpu_irq_save();
@@ -174,7 +179,12 @@ static inline void sleepmgr_unlock_mode(enum sleepmgr_mode mode)
 #ifdef CONFIG_SLEEPMGR_ENABLE
 	irqflags_t flags;
 
-	Assert(sleepmgr_locks[mode]);
+	if(sleepmgr_locks[mode] == 0) {
+		while (true) {
+			// Warning: minimum value of sleepmgr_locks buffer is no less than 0.
+			// Check APP.
+		}
+	}
 
 	// Enter a critical section
 	flags = cpu_irq_save();

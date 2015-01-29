@@ -3,7 +3,7 @@
  *
  * \brief SAM RTC Driver (Count Mode)
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -669,7 +669,7 @@ bool rtc_count_is_compare_match(
 	}
 
 	/* Set status of INTFLAG as return argument. */
-	return (rtc_module->MODE0.INTFLAG.reg & RTC_MODE1_INTFLAG_CMP(1 << comp_index));
+	return (rtc_module->MODE0.INTFLAG.reg & RTC_MODE1_INTFLAG_CMP(1 << comp_index)) ? true : false;
 }
 
 /**
