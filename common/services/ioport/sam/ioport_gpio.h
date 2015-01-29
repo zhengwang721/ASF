@@ -3,7 +3,7 @@
  *
  * \brief SAM architecture specific IOPORT service implementation header file.
  *
- * Copyright (c) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -251,12 +251,10 @@ __always_inline static void arch_ioport_set_port_level(ioport_port_t port,
 {
 	volatile GpioPort *base = arch_ioport_port_to_base(port);
 	if (level){
-		base->GPIO_OVRS |= mask;
-		base->GPIO_OVRC &= ~mask;		
+		base->GPIO_OVRS = mask;
 	}
 	else{
-		base->GPIO_OVRS &= ~mask;
-		base->GPIO_OVRC |= mask;
+		base->GPIO_OVRC = mask;
 	}
 }
 
