@@ -245,9 +245,9 @@ int main(void)
 
 		for (uint32_t i = 0; i < number_of_samples; i++) {
 #if (SAML21)
-			dac_chan_write(&dac_module, DAC_CHANNEL_1, wav_samples[i]);
+			dac_chan_write(&dac_module, DAC_CHANNEL_1, wav_samples[i] << 2);
 
-			while (!(DAC->INTFLAG.reg & DAC_INTFLAG_EMPTY1)) {
+			while (!dac_chan_is_end_of_conversion(&dac_module, DAC_CHANNEL_1)) {
 #else
 			dac_chan_write(&dac_module, DAC_CHANNEL_0, wav_samples[i]);
 
