@@ -138,9 +138,11 @@
  *
  * \subsection serial_basic_use_case_setup_code Example code
  * The following configuration must be added to the project (typically to a 
- * conf_uart_serial.h file, but it can also be added to your main application file.
- * Here takes SAM3X configuration for example, other devices have similar
- * configuration, but their parameters may be different, refer to corresponding devices):
+ * conf_uart_serial.h file, but it can also be added to your main application file.)
+ *
+ * \note The following takes SAM3X configuration for example, other devices have similar
+ * configuration, but their parameters may be different, refer to corresponding header files.
+ *
  * \code
 	#define USART_SERIAL                     &USARTD0
 	#define USART_SERIAL_BAUDRATE            9600
@@ -217,9 +219,11 @@
  *
  * \subsection serial_use_case_1_setup_code Example code
  * The following configuration must be added to the project (typically to a 
- * conf_uart_serial.h file, but it can also be added to your main application file.
- * Here takes SAM3X configuration for example, other devices have similar
- * configuration, but their parameters may be different, refer to corresponding devices):
+ * conf_uart_serial.h file, but it can also be added to your main application file.):
+ *
+ * \note The following takes SAM3X configuration for example, other devices have similar
+ * configuration, but their parameters may be different, refer to corresponding header files.
+ *
  * \code
 	#define USART_SERIAL                     &USARTD0
 	#define USART_SERIAL_BAUDRATE            9600
