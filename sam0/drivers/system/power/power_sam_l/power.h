@@ -3,7 +3,7 @@
  *
  * \brief SAM L21 Power functionality
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -159,6 +159,20 @@ enum system_voltage_regulator_sel {
 };
 
 /**
+ * \brief Low power efficiency.
+ *
+ * Low power mode efficiency.
+ */
+enum system_voltage_regulator_low_power_efficiency {
+	/** The voltage regulator in Low power mode has the default efficiency and
+		support the whole VDD range (1,62V to 3,6V). */
+	SYSTEM_VOLTAGE_REGULATOR_LOW_POWER_EFFICIENCY_DEFAULT,
+	/** The voltage regulator in Low power mode has the highest efficiency and
+		support the limited VDD range (2,5V to 3,6V). */
+	SYSTEM_VOLTAGE_REGULATOR_LOW_POWER_EFFICIENCY_HIGHTEST,
+};
+
+/**
  * \brief Voltage reference value.
  *
  * Voltage references selection.
@@ -265,6 +279,8 @@ struct system_voltage_regulator_config {
 	bool run_in_standby;
 	/** Voltage Regulator Selection. */
 	enum system_voltage_regulator_sel  regulator_sel;
+	/** Low power efficiency. */
+	enum system_voltage_regulator_low_power_efficiency low_power_efficiency;
 };
 
 /**
@@ -314,6 +330,7 @@ struct system_battery_backup_power_switch_config {
  *   - Voltage scaling voltage step is 2*min_step
  *   - The voltage regulator is in low power mode in Standby sleep mode
  *   - The voltage regulator in active mode is a LDO voltage regulator
+ *   - The voltage regulator in Low power mode has the default efficiency
  *
  * \param[out] config  Configuration structure to fill with default values
  */
@@ -325,6 +342,7 @@ static inline void system_voltage_regulator_get_config_defaults(
 	config->voltage_scale_step   = 0;
 	config->run_in_standby       = false;
 	config->regulator_sel        = SYSTEM_VOLTAGE_REGULATOR_LDO;
+	config->low_power_efficiency = false;
 }
 
 /**
@@ -343,6 +361,7 @@ static inline void system_voltage_regulator_set_config(
 	SUPC->VREG.bit.VSVSTEP  = config->voltage_scale_step;
 	SUPC->VREG.bit.RUNSTDBY = config->run_in_standby;
 	SUPC->VREG.bit.SEL      = config->regulator_sel;
+	SUPC->VREG.bit.LPEFF    = config->low_power_efficiency;
 	while(!(SUPC->STATUS.reg & SUPC_STATUS_VREGRDY)) {
 		;
 	}

@@ -133,6 +133,10 @@
  *    <td>FEATURE_TC_IO_CAPTURE</td>
  *    <td>SAML21</td>
  *  </tr>
+ *  <tr>
+ *    <td>FEATURE_TC_GENERATE_DMA_TRIGGER</td>
+ *    <td>SAML21</td>
+ *  </tr>
  * </table>
  * \note The specific features are only available in the driver when the
  * selected device supports those features.
@@ -469,6 +473,8 @@
 #  define FEATURE_TC_READ_SYNC
 /** IO pin edge capture*/
 #  define FEATURE_TC_IO_CAPTURE
+/** Generate DMA triggers*/
+#  define FEATURE_TC_GENERATE_DMA_TRIGGER
 #endif
 /*@}*/
 
@@ -1402,7 +1408,47 @@ static inline void tc_sync_read_count(
 	}
 
 	/* Write command to execute */
-	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(4);
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_READSYNC_Val);
+}
+/** @} */
+#endif
+
+#ifdef FEATURE_TC_GENERATE_DMA_TRIGGER
+/**
+ * \name Generate TC DMA Triggers command
+ * @{
+ */
+
+/**
+ * \brief TC DMA Trigger.
+ *
+ * TC DMA trigger command.
+ *
+ * \param[in]  module_inst   Pointer to the software module instance struct
+ */
+static inline void tc_dma_trigger_command(
+		const struct tc_module *const module_inst)
+{
+	/* Sanity check arguments */
+	Assert(module_inst);
+	Assert(module_inst->hw);
+
+	/* Get a pointer to the module's hardware instance */
+	TcCount8 *const tc_module = &(module_inst->hw->COUNT8);
+
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
+
+	/* Make certain that there are no conflicting commands in the register */
+	tc_module->CTRLBCLR.reg = TC_CTRLBCLR_CMD_NONE;
+
+	while (tc_is_syncing(module_inst)) {
+		/* Wait for sync */
+	}
+
+	/* Write command to execute */
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_DMATRG_Val);
 }
 /** @} */
 #endif
