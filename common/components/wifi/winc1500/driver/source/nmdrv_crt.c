@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -72,7 +69,7 @@ sint8 nm_drv_init(void * arg)
 *	@date	17 July 2012
 *	@version	1.0
 */
-sint8 nm_drv_deinit(void * arg) 
+sint8 nm_drv_deinit(void * arg)
 {
 
 	return M2M_SUCCESS;

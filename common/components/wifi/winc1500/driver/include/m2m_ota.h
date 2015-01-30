@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -68,13 +65,13 @@ DATA TYPES
 @typedef typedef void (*tpfOtaUpdateCb) (uint8 u8OtaUpdateStatusType ,uint8 u8OtaUpdateStatus);
 
 @brief A callback to get OTA status update.
- 
+
 @param[in] u8OtaUpdateStatusType possible values are listed in tenuOtaUpdateStatusType. Possible types are:
 - [DL_STATUS](@ref DL_STATUS)
 - [SW_STATUS](@ref SW_STATUS)
 - [RB_STATUS](@ref RB_STATUS)
 
-@param[in] u8OtaUpdateStatus possible values are listed in tenuOtaUpdateStatus. 
+@param[in] u8OtaUpdateStatus possible values are listed in tenuOtaUpdateStatus.
 
 @sa
 	tenuOtaUpdateStatusType
@@ -86,7 +83,7 @@ typedef void (*tpfOtaUpdateCb) (uint8 u8OtaUpdateStatusType ,uint8 u8OtaUpdateSt
 @typedef typedef void (*tpfOtaNotifCb) (tstrOtaUpdateInfo *);
 
 @brief A callback to get notification about an potential OTA update.
- 
+
 @param[in] pstrOtaUpdateInfo A structure to provide notification payload.
 
 */
@@ -110,11 +107,11 @@ FUNCTION PROTOTYPES
 
 @param [in]	pfOtaUpdateCb
 				OTA Update callback function
-				
-@param [in]	pfOtaNotifCb
-				OTA notify callback function 
 
-@return		
+@param [in]	pfOtaNotifCb
+				OTA notify callback function
+
+@return
 	The function SHALL return 0 for success and a negative value otherwise.
 */
 NMI_API sint8  m2m_ota_init(tpfOtaUpdateCb  pfOtaUpdateCb,tpfOtaNotifCb  pfOtaNotifCb);
@@ -126,9 +123,9 @@ NMI_API sint8  m2m_ota_init(tpfOtaUpdateCb  pfOtaUpdateCb,tpfOtaNotifCb  pfOtaNo
 	Set the OTA url
 
 @param [in]	u8Url
-			 The url server address 
+			 The url server address
 
-@return		
+@return
 	The function SHALL return 0 for success and a negative value otherwise.
 */
 NMI_API sint8  m2m_ota_notif_set_url(uint8 * u8Url);
@@ -140,7 +137,7 @@ NMI_API sint8  m2m_ota_notif_set_url(uint8 * u8Url);
 @brief
 	check for ota update
 
-@return		
+@return
 	The function SHALL return 0 for success and a negative value otherwise.
 */
 NMI_API sint8  m2m_ota_notif_check_for_update(void);
@@ -153,9 +150,9 @@ NMI_API sint8  m2m_ota_notif_check_for_update(void);
 	Schedule OTA update
 
 @param [in]	u32Period
-	Period in days 
+	Period in days
 
-@return		
+@return
 	The function SHALL return 0 for success and a negative value otherwise.
 */
 NMI_API sint8 m2m_ota_notif_sched(uint32 u32Period);
@@ -165,12 +162,12 @@ NMI_API sint8 m2m_ota_notif_sched(uint32 u32Period);
 	NMI_API sint8 m2m_ota_start_update(uint8 * u8DownloadUrl);
 
 @brief
-	Request OTA start update using the downloaded url 
+	Request OTA start update using the downloaded url
 
 @param [in]	u8DownloadUrl
 		The download firmware url, you get it from device info
-				
-@return		
+
+@return
 	The function SHALL return 0 for success and a negative value otherwise.
 
 */
@@ -182,9 +179,9 @@ NMI_API sint8 m2m_ota_start_update(uint8 * u8DownloadUrl);
 	NMI_API sint8 m2m_ota_rollback(void);
 
 @brief
-	Request OTA Rollback image 
+	Request OTA Rollback image
 
-@return		
+@return
 	The function SHALL return 0 for success and a negative value otherwise.
 */
 NMI_API sint8 m2m_ota_rollback(void);
@@ -195,9 +192,9 @@ NMI_API sint8 m2m_ota_rollback(void);
 	NMI_API sint8 m2m_ota_switch_firmware(void);
 
 @brief
-	Switch to the upgraded Firmware 
+	Switch to the upgraded Firmware
 
-@return		
+@return
 	The function SHALL return 0 for success and a negative value otherwise.
 */
 NMI_API sint8 m2m_ota_switch_firmware(void);

@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -191,7 +188,7 @@ Function
 
 Description
 		Callback function used by the NMC1500 driver to deliver messages
-		for socket layer. 
+		for socket layer.
 
 Return
 		None.
@@ -224,14 +221,14 @@ NMI_API void Socket_ReadSocketData(SOCKET sock, tstrSocketRecvMsg *pstrRecv,uint
 			if(s16Diff > 0)
 			{
 				u8SetRxDone = 0;
-				
+
 				if(s16Diff > 3)
 				{
 					u16Read		= gastrSockets[sock].u16UserBufferSize;
 				}
 				else
 				{
-					u16Read		= gastrSockets[sock].u16UserBufferSize - 4;					
+					u16Read		= gastrSockets[sock].u16UserBufferSize - 4;
 				}
 			}
 			if(hif_receive(u32Address, gastrSockets[sock].pu8UserBuffer, u16Read, u8SetRxDone) == M2M_SUCCESS)
@@ -259,8 +256,8 @@ Function
 		m2m_ip_cb
 
 Description
-		Callback function used by the NMC1000 driver to deliver messages 
-		for socket layer. 
+		Callback function used by the NMC1000 driver to deliver messages
+		for socket layer.
 
 Return
 		None.
@@ -275,7 +272,7 @@ Date
 		17 July 2012
 *********************************************************************/
 static void m2m_ip_cb(uint8 u8OpCode, uint16 u16BufferSize,uint32 u32Address)
-{	
+{
 	if(u8OpCode == SOCKET_CMD_BIND)
 	{
 		tstrBindReply		strBindReply;
@@ -352,25 +349,25 @@ static void m2m_ip_cb(uint8 u8OpCode, uint16 u16BufferSize,uint32 u32Address)
 
 		if(u8OpCode == SOCKET_CMD_RECVFROM)
 			u8CallbackMsgID = SOCKET_MSG_RECVFROM;
-		
-		/* Read RECV REPLY data structure. 
+
+		/* Read RECV REPLY data structure.
 		*/
 		u16ReadSize = sizeof(tstrRecvReply);
 		if(hif_receive(u32Address, (uint8*)&strRecvReply, u16ReadSize, 0) == M2M_SUCCESS)
 		{
 			sock			= strRecvReply.sock;
-			
+
 			/* Reset the Socket RX Pending Flag.
-			*/ 
+			*/
 			gastrSockets[sock].bIsRecvPending = 0;
-	
+
 			s16RecvStatus	= NM_BSP_B_L_16(strRecvReply.s16RecvStatus);
 			u16DataOffset	= NM_BSP_B_L_16(strRecvReply.u16DataOffset);
 			strRecvMsg.strRemoteAddr.sin_port 			= strRecvReply.strRemoteAddr.u16Port;
 			strRecvMsg.strRemoteAddr.sin_addr.s_addr 	= strRecvReply.strRemoteAddr.u32IPAddr;
 			if((s16RecvStatus > 0) && (s16RecvStatus < u16BufferSize))
 			{
-				/* Skip incoming bytes until reaching the Start of Application Data. 
+				/* Skip incoming bytes until reaching the Start of Application Data.
 				*/
 				u32Address += u16DataOffset;
 
@@ -407,13 +404,13 @@ static void m2m_ip_cb(uint8 u8OpCode, uint16 u16BufferSize,uint32 u32Address)
 			if(gpfAppSocketCb)
 				gpfAppSocketCb(sock,u8CallbackMsgID, &s16Rcvd);
 		}
-	}	
+	}
 }
 /*********************************************************************
 Function
 		socketInit
 
-Description 
+Description
 
 Return
 		None.
@@ -442,7 +439,7 @@ void socketInit(void)
 Function
 		registerSocketCallback
 
-Description 
+Description
 
 Return
 		None.
@@ -554,10 +551,10 @@ sint8 bind(SOCKET sock, struct sockaddr *pstrAddr, uint8 u8AddrLen)
 		strBind.strAddr.u32IPAddr	= strBind.strAddr.u32IPAddr;
 		/* Send the request. */
 		s8Ret = SOCKET_REQUEST(SOCKET_CMD_BIND, (uint8*)&strBind,sizeof(tstrBindCmd) , NULL , 0, 0);
-		if(s8Ret != SOCK_ERR_NO_ERROR) 
+		if(s8Ret != SOCK_ERR_NO_ERROR)
 		{
 			s8Ret = SOCK_ERR_INVALID;
-		}  
+		}
 	}
 	return s8Ret;
 }
@@ -590,10 +587,10 @@ sint8 listen(SOCKET sock, uint8 backlog)
 		strListen.sock = sock;
 		strListen.u8BackLog = backlog;
 		s8Ret = SOCKET_REQUEST(SOCKET_CMD_LISTEN, (uint8*)&strListen, sizeof(tstrListenCmd), NULL, 0, 0);
-		if(s8Ret != SOCK_ERR_NO_ERROR) 
+		if(s8Ret != SOCK_ERR_NO_ERROR)
 		{
 			s8Ret = SOCK_ERR_INVALID;
-		} 
+		}
 	}
 	return s8Ret;
 }
@@ -604,7 +601,7 @@ Function
 Description
 
 Return
-		
+
 
 Author
 		Ahmed Ezzat
@@ -632,7 +629,7 @@ Description
 		Connect to a remote TCP Server.
 
 Return
-		
+
 
 Author
 		Ahmed Ezzat
@@ -662,10 +659,10 @@ sint8 connect(SOCKET sock, struct sockaddr *pstrAddr, uint8 u8AddrLen)
 		strConnect.strAddr.u16Port		= strConnect.strAddr.u16Port;
 		strConnect.strAddr.u32IPAddr	= strConnect.strAddr.u32IPAddr;
 		s8Ret = SOCKET_REQUEST(u8Cmd, (uint8*)&strConnect,sizeof(tstrConnectCmd), NULL, 0, 0);
-		if(s8Ret != SOCK_ERR_NO_ERROR) 
+		if(s8Ret != SOCK_ERR_NO_ERROR)
 		{
 			s8Ret = SOCK_ERR_INVALID;
-		} 
+		}
 	}
 	return s8Ret;
 }
@@ -753,12 +750,12 @@ sint16 sendto(SOCKET sock, void *pvSendBuffer, uint16 u16SendLength, uint16 flag
 			{
 				struct sockaddr_in	*pstrAddr;
 				pstrAddr = (void*)pstrDestAddr;
-	
+
 				strSendTo.strAddr.u16Family	= pstrAddr->sin_family;
 				strSendTo.strAddr.u16Port	= pstrAddr->sin_port;
 				strSendTo.strAddr.u32IPAddr	= pstrAddr->sin_addr.s_addr;
 			}
-			s16Ret = SOCKET_REQUEST(SOCKET_CMD_SENDTO|M2M_REQ_DATA_PKT, (uint8*)&strSendTo,  sizeof(tstrSendCmd), 
+			s16Ret = SOCKET_REQUEST(SOCKET_CMD_SENDTO|M2M_REQ_DATA_PKT, (uint8*)&strSendTo,  sizeof(tstrSendCmd),
 				pvSendBuffer, u16SendLength, UDP_TX_PACKET_OFFSET);
 
 			if(s16Ret != SOCK_ERR_NO_ERROR)
@@ -801,7 +798,7 @@ sint16 recv(SOCKET sock, void *pvRecvBuf, uint16 u16BufLen, uint32 u32Timeoutmse
 		{
 			tstrRecvCmd	strRecv;
 			uint8		u8Cmd = SOCKET_CMD_RECV;
-			
+
 			gastrSockets[sock].bIsRecvPending = 1;
 			if(gastrSockets[sock].bIsSSLSock)
 			{
@@ -814,7 +811,7 @@ sint16 recv(SOCKET sock, void *pvRecvBuf, uint16 u16BufLen, uint32 u32Timeoutmse
 			else
 				strRecv.u32Timeoutmsec = NM_BSP_B_L_32(u32Timeoutmsec);
 			strRecv.sock = sock;
-		
+
 			s16Ret = SOCKET_REQUEST(u8Cmd, (uint8*)&strRecv, sizeof(tstrRecvCmd), NULL , 0, 0);
 			if(s16Ret != SOCK_ERR_NO_ERROR)
 			{
@@ -849,7 +846,7 @@ sint8 close(SOCKET sock)
 	{
 		uint8	u8Cmd = SOCKET_CMD_CLOSE;
 		tstrCloseCmd strclose;
-		strclose.sock = sock; 
+		strclose.sock = sock;
 		gastrSockets[sock].bIsUsed = 0;
 		if(gastrSockets[sock].bIsSSLSock)
 		{
@@ -924,10 +921,10 @@ sint16 recvfrom(SOCKET sock, void *pvRecvBuf, uint16 u16BufLen, uint32 u32Timeou
 Function
 		nmi_inet_addr
 
-Description 
+Description
 
 Return
-		Unsigned 32-bit integer representing the IP address in Network 
+		Unsigned 32-bit integer representing the IP address in Network
 		byte order.
 
 Author
@@ -949,27 +946,27 @@ uint32 nmi_inet_addr(char *pcIpAddr)
 
 	tmp = 0;
 
-	for(i = 0; i < 4; ++i) 
+	for(i = 0; i < 4; ++i)
 	{
 		j = 0;
-		do 
+		do
 		{
 			c = *pcIpAddr;
 			++j;
-			if(j > 4) 
+			if(j > 4)
 			{
 				return 0;
 			}
-			if(c == '.' || c == 0) 
+			if(c == '.' || c == 0)
 			{
 				au8IP[i] = tmp;
 				tmp = 0;
-			} 
-			else if(c >= '0' && c <= '9') 
+			}
+			else if(c >= '0' && c <= '9')
 			{
 				tmp = (tmp * 10) + (c - '0');
-			} 
-			else 
+			}
+			else
 			{
 				return 0;
 			}
@@ -1039,7 +1036,7 @@ sint8 setsockopt(SOCKET sock, uint8  u8Level, uint8  option_name,
 		uint8	u8Cmd = SOCKET_CMD_SET_SOCKET_OPTION;
 		tstrSetSocketOptCmd strSetSockOpt;
 		strSetSockOpt.u8Option=option_name;
-		strSetSockOpt.sock = sock; 
+		strSetSockOpt.sock = sock;
 		strSetSockOpt.u32OptionValue = *(uint32*)option_value;
 
 		s8Ret = SOCKET_REQUEST(u8Cmd, (uint8*)&strSetSockOpt, sizeof(tstrSetSocketOptCmd), NULL,0, 0);
@@ -1050,7 +1047,7 @@ sint8 setsockopt(SOCKET sock, uint8  u8Level, uint8  option_name,
 
 	}
 	return s8Ret;
-	
+
 }
 /*********************************************************************
 Function

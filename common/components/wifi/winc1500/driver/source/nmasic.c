@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -154,7 +151,7 @@ void enable_rf_blocks(void)
 	nm_write_reg(0x7, 0x0);
 }
 
-sint8 enable_interrupts(void) 
+sint8 enable_interrupts(void)
 {
 	uint32 reg;
 	sint8 ret;
@@ -190,12 +187,12 @@ sint8 cpu_start(void) {
 	sint8 ret;
 
 	/**
-	reset regs 
+	reset regs
 	*/
 	nm_write_reg(BOOTROM_REG,0);
 	nm_write_reg(NMI_STATE_REG,0);
 	nm_write_reg(NMI_REV_REG,0);
-	
+
 	/**
 	Go...
 	**/
@@ -289,9 +286,9 @@ uint32 nmi_get_rfrevid(void)
 
 void restore_pmu_settings_after_global_reset(void)
 {
-	/* 
-	* Must restore PMU register value after 
-	* global reset if PMU toggle is done at 
+	/*
+	* Must restore PMU register value after
+	* global reset if PMU toggle is done at
 	* least once since the last hard reset.
 	*/
 	if(REV(nmi_get_chipid()) >= REV_B0) {
@@ -310,15 +307,15 @@ void nmi_update_pll(void)
 	nm_write_reg(0x1428, pll);
 
 }
-void nmi_set_sys_clk_src_to_xo(void) 
+void nmi_set_sys_clk_src_to_xo(void)
 {
 	uint32 val32;
-	
+
 	/* Switch system clock source to XO. This will take effect after nmi_update_pll(). */
 	val32 = nm_read_reg(0x141c);
 	val32 |= (1 << 2);
 	nm_write_reg(0x141c, val32);
-	
+
 	/* Do PLL update */
 	nmi_update_pll();
 }
@@ -328,7 +325,7 @@ sint8 chip_wake(void)
 
 	ret  = nm_clkless_wake();
 	if(ret != M2M_SUCCESS) return ret;
-	
+
 	enable_rf_blocks();
 
 	return ret;
@@ -452,7 +449,7 @@ sint8 wait_for_bootrom(void)
 {
 	sint8 ret = M2M_SUCCESS;
 	uint32 reg = 0, cnt = 0;
-	
+
 	reg = 0;
 	while(1) {
 		reg = nm_read_reg(0x1014);	/* wait for efuse loading done */
@@ -496,7 +493,7 @@ sint8 wait_for_firmware_start(void)
 {
 	sint8 ret = M2M_SUCCESS;
 	uint32 reg = 0, cnt = 0;;
-	
+
 	while (reg != M2M_FINISH_INIT_STATE)
 	{
 		nm_bsp_sleep(1); /* TODO: Why bus error if this delay is not here. */
@@ -552,8 +549,8 @@ sint8 chip_deinit(void)
 		}
 
 	} while (timeout);
-	
-	return ret;		
+
+	return ret;
 }
 
 #ifdef CONF_PERIPH
@@ -565,7 +562,7 @@ sint8 set_gpio_dir(uint8 gpio, uint8 dir)
 
 	ret = nm_read_reg_with_ret(0x20108, &val32);
 	if(ret != M2M_SUCCESS) goto _EXIT;
-	
+
 	if(dir) {
 		val32 |= (1ul << gpio);
 	} else {
@@ -584,7 +581,7 @@ sint8 set_gpio_val(uint8 gpio, uint8 val)
 
 	ret = nm_read_reg_with_ret(0x20100, &val32);
 	if(ret != M2M_SUCCESS) goto _EXIT;
-	
+
 	if(val) {
 		val32 |= (1ul << gpio);
 	} else {
@@ -604,7 +601,7 @@ sint8 get_gpio_val(uint8 gpio, uint8* val)
 
 	ret = nm_read_reg_with_ret(0x20104, &val32);
 	if(ret != M2M_SUCCESS) goto _EXIT;
-	
+
 	*val = (uint8)((val32 >> gpio) & 0x01);
 
 _EXIT:
@@ -640,21 +637,21 @@ sint8 nmi_get_otp_mac_address(uint8 *pu8MacAddr,  uint8 * pu8IsValid)
 	sint8 ret;
 	uint32	u32RegValue;
 	uint8	mac[6];
-	
+
 	ret = nm_read_reg_with_ret(rNMI_GP_REG_0, &u32RegValue);
 	if(ret != M2M_SUCCESS) goto _EXIT_ERR;
-	
+
 	if(!EFUSED_MAC(u32RegValue)) {
 		M2M_DBG("Default MAC\n");
 		m2m_memset(pu8MacAddr, 0, 6);
 		goto _EXIT_ERR;
 	}
-	
+
 	M2M_DBG("OTP MAC\n");
 	u32RegValue >>=16;
 	nm_read_block(u32RegValue|0x30000, mac, 6);
-	m2m_memcpy(pu8MacAddr,mac,6); 
-	if(pu8IsValid) *pu8IsValid = 1;	
+	m2m_memcpy(pu8MacAddr,mac,6);
+	if(pu8IsValid) *pu8IsValid = 1;
 	return ret;
 
 _EXIT_ERR:
@@ -667,16 +664,16 @@ sint8 nmi_get_mac_address(uint8 *pu8MacAddr)
 	sint8 ret;
 	uint32	u32RegValue;
 	uint8	mac[6];
-	
+
 	ret = nm_read_reg_with_ret(rNMI_GP_REG_0, &u32RegValue);
 	if(ret != M2M_SUCCESS) goto _EXIT_ERR;
 
 	u32RegValue &=0x0000ffff;
 	nm_read_block(u32RegValue|0x30000, mac, 6);
 	m2m_memcpy(pu8MacAddr, mac, 6);
-	
+
 	return ret;
-	
+
 _EXIT_ERR:
 	return ret;
 }

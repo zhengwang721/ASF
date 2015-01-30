@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -116,7 +113,7 @@ uint8 hif_get_sleep_mode(void)
 *	@param[IN]	Packet buffer size (including the HIF header)
 *	@return	M2M_SUCCESS in case of success and -ve error code in case of failure
 *	@version	1.0
-*/ 
+*/
 sint8 hif_send(uint8 u8Gid,uint8 u8Opcode,uint8 *pu8CtrlBuf,uint16 u16CtrlBufSize,
 			   uint8 *pu8DataBuf,uint16 u16DataSize, uint16 u16DataOffset)
 {
@@ -193,7 +190,7 @@ sint8 hif_send(uint8 u8Gid,uint8 u8Opcode,uint8 *pu8CtrlBuf,uint16 u16CtrlBufSiz
 *	@date	15 July 2012
 *	@return	1 in case of interrupt received else 0 will be returned
 *	@version	1.0
-*/ 
+*/
 static sint8 hif_isr(void)
 {
 	uint8 u8ReqIdx = gstrAppReqList.u8ReadIdx;
@@ -229,9 +226,9 @@ static sint8 hif_isr(void)
 }
 /**
 *	@fn		hif_handle_isr(void)
-*	@brief	
+*	@brief
 			Handle interrupt received from NMC1500 firmware.
-*   @return     
+*   @return
 			The function SHALL return 0 for success and a negative value otherwise.
 */
 
@@ -257,7 +254,7 @@ sint8 hif_handle_isr(void)
 *	@date	15 July 2012
 *	@return	1 in case of interrupt received else 0 will be returned
 *	@version	1.0
-*/ 
+*/
 sint8 hif_receive(uint32 u32Addr, uint8 *pu8Buf, uint16 u16Sz, uint8 isDone)
 {
 	if (pu8Buf != NULL)
@@ -269,16 +266,16 @@ sint8 hif_receive(uint32 u32Addr, uint8 *pu8Buf, uint16 u16Sz, uint8 isDone)
 }
 /**
 *	@fn		hif_Resp_handler(uint8 *pu8Buffer, uint16 u16BufferSize)
-*	@brief  
+*	@brief
 			 	Response handler for HIF layer.
-				
+
 *	@param [in]	pu8Buffer
 				Pointer to the buffer.
-				
+
 *	@param [in]	u16BufferSize
 				Buffer size.
-				
-*   @return    
+
+*   @return
 				The function SHALL return 0 for success and a negative value otherwise.
 */
 sint8  hif_Resp_handler(uint8 *pu8Buffer, uint16 u16BufferSize)

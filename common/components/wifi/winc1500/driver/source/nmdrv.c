@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -70,7 +67,7 @@ static sint8 nm_get_firmware_info(tstrM2mRev* M2mRev);
 static void chip_apply_conf(void)
 {
 	sint8 ret = M2M_SUCCESS;
-	
+
 	uint32 val32;
 	val32 = 0;
 #ifdef __ENABLE_PMU__
@@ -89,7 +86,7 @@ static void chip_apply_conf(void)
 #endif
 	do  {
 		nm_write_reg(rNMI_GP_REG_1, val32);
-		if(val32 != 0) {		
+		if(val32 != 0) {
 			uint32 reg = 0;
 			ret = nm_read_reg_with_ret(rNMI_GP_REG_1, &reg);
 			if(ret == M2M_SUCCESS) {
@@ -115,7 +112,7 @@ static void chip_apply_conf(void)
 sint8 nm_drv_init_download_mode()
 {
 	sint8 ret = M2M_SUCCESS;
-	
+
 	ret = nm_bus_iface_init(NULL);
 	if (M2M_SUCCESS != ret) {
 		M2M_ERR("[nmi start]: fail init bus\n");
@@ -129,7 +126,7 @@ sint8 nm_drv_init_download_mode()
 #endif
 
 	M2M_INFO("Chip ID %lx\n", nmi_get_chipid());
-	
+
 	/*disable all interrupt in ROM (to disable uart) in 2b0 chip*/
 	nm_write_reg(0x20300,0);
 
@@ -152,7 +149,7 @@ sint8 nm_drv_init(void * arg)
 	uint32 chipid =0;
 	tstrM2mRev strtmp;
 	sint8 ret = M2M_SUCCESS;
-	
+
 	ret = nm_bus_iface_init(NULL);
 	if (M2M_SUCCESS != ret) {
 		M2M_ERR("[nmi start]: fail init bus\n");
@@ -169,7 +166,7 @@ sint8 nm_drv_init(void * arg)
 		chipid = 0;
 		return 0;
 	}
-	
+
 	ret = chip_wake();
 	nm_bsp_sleep(10);
 	if (M2M_SUCCESS != ret) {
@@ -209,9 +206,9 @@ sint8 nm_drv_init(void * arg)
 		M2M_ERR("failed to enable interrupts..\n");
 		goto ERR2;
 	}
-	
+
 	chip_apply_conf();
-	
+
 	if(M2M_ERR_FW_VER_MISMATCH == nm_get_firmware_info(&strtmp))
 	{
 		ret = M2M_ERR_FW_VER_MISMATCH;
@@ -223,7 +220,7 @@ sint8 nm_drv_init(void * arg)
 	return ret;
 ERR2:
 	nm_bus_iface_deinit();
-ERR1:	
+ERR1:
 	return ret;
 }
 
@@ -234,10 +231,10 @@ ERR1:
 *	@date	17 July 2012
 *	@version	1.0
 */
-sint8 nm_drv_deinit(void * arg) 
+sint8 nm_drv_deinit(void * arg)
 {
 	sint8 ret;
-	
+
 	ret = chip_deinit();
 	if (M2M_SUCCESS != ret) {
 		M2M_ERR("[nmi stop]: chip_deinit fail\n");
@@ -275,10 +272,10 @@ static sint8 nm_get_firmware_info(tstrM2mRev* M2mRev)
 	M2mRev->u8DriverMinor   = (uint8)(reg >> 20)&0x0f;
 	M2mRev->u8DriverPatch	= (uint8)(reg >> 16)&0x0f;
 	M2mRev->u8FirmwareMajor	= (uint8)(reg >> 8)&0xff;
-	M2mRev->u8FirmwareMinor = (uint8)(reg >> 4)&0x0f;	
-	M2mRev->u8FirmwarePatch = (uint8)(reg)&0x0f;	
+	M2mRev->u8FirmwareMinor = (uint8)(reg >> 4)&0x0f;
+	M2mRev->u8FirmwarePatch = (uint8)(reg)&0x0f;
 	M2mRev->u32Chipid	= nmi_get_chipid();
-	
+
 	curr_drv_ver    = MAKE_VERSION(M2M_DRIVER_VERSION_MAJOR_NO, M2M_FIRMWARE_VERSION_MINOR_NO, M2M_FIRMWARE_VERSION_PATCH_NO);
 	min_req_drv_ver = MAKE_VERSION(M2mRev->u8DriverMajor, M2mRev->u8DriverMinor,M2mRev->u8DriverPatch);
 	if(curr_drv_ver <  min_req_drv_ver) {

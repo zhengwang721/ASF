@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -57,12 +54,12 @@
 *	@author	M. Abdelmawla
 *	@date	11 July 2012
 *	@version	1.0
-*/ 
+*/
 sint8 nm_bus_iface_init(void *pvInitVal)
 {
 	sint8 ret = M2M_SUCCESS;
 	ret = nm_bus_init(pvInitVal);
-	
+
 	return ret;
 }
 
@@ -73,7 +70,7 @@ sint8 nm_bus_iface_init(void *pvInitVal)
 *	@author	Samer Sarhan
 *	@date	07 April 2014
 *	@version	1.0
-*/ 
+*/
 sint8 nm_bus_iface_deinit(void)
 {
 	sint8 ret = M2M_SUCCESS;
@@ -89,7 +86,7 @@ sint8 nm_bus_iface_deinit(void)
 *	@author	Viswanathan Murugesan
 *	@date	22 Oct 2014
 *	@version	1.0
-*/ 
+*/
 sint8 nm_bus_iface_reconfigure(void *ptr)
 {
 	sint8 ret = M2M_SUCCESS;
@@ -107,7 +104,7 @@ sint8 nm_bus_iface_reconfigure(void *ptr)
 *	@author	M. Abdelmawla
 *	@date	11 July 2012
 *	@version	1.0
-*/ 
+*/
 uint32 nm_read_reg(uint32 u32Addr)
 {
 #ifdef CONF_WINC_USE_UART
@@ -133,7 +130,7 @@ uint32 nm_read_reg(uint32 u32Addr)
 *	@author	M. Abdelmawla
 *	@date	11 July 2012
 *	@version	1.0
-*/ 
+*/
 sint8 nm_read_reg_with_ret(uint32 u32Addr, uint32* pu32RetVal)
 {
 #ifdef CONF_WINC_USE_UART
@@ -158,7 +155,7 @@ sint8 nm_read_reg_with_ret(uint32 u32Addr, uint32* pu32RetVal)
 *	@author	M. Abdelmawla
 *	@date	11 July 2012
 *	@version	1.0
-*/ 
+*/
 sint8 nm_write_reg(uint32 u32Addr, uint32 u32Val)
 {
 #ifdef CONF_WINC_USE_UART
@@ -198,7 +195,7 @@ static sint8 p_nm_read_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 *	@author	M. Abdelmawla
 *	@date	11 July 2012
 *	@version	1.0
-*/ 
+*/
 sint8 nm_read_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 {
 	uint16 u16MaxTrxSz = egstrNmBusCapabilities.u16MaxTrxSz - MAX_TRX_CFG_SZ;
@@ -209,7 +206,7 @@ sint8 nm_read_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 	{
 		if(u16Sz <= u16MaxTrxSz)
 		{
-			s8Ret += p_nm_read_block(u32Addr, &puBuf[off], u16Sz);	
+			s8Ret += p_nm_read_block(u32Addr, &puBuf[off], u16Sz);
 			break;
 		}
 		else
@@ -251,7 +248,7 @@ static sint8 p_nm_write_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 *	@author	M. Abdelmawla
 *	@date	11 July 2012
 *	@version	1.0
-*/ 
+*/
 sint8 nm_write_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 {
 	uint16 u16MaxTrxSz = egstrNmBusCapabilities.u16MaxTrxSz - MAX_TRX_CFG_SZ;
@@ -262,7 +259,7 @@ sint8 nm_write_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 	{
 		if(u16Sz <= u16MaxTrxSz)
 		{
-			s8Ret += p_nm_write_block(u32Addr, &puBuf[off], u16Sz);	
+			s8Ret += p_nm_write_block(u32Addr, &puBuf[off], u16Sz);
 			break;
 		}
 		else

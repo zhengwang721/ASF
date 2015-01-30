@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -97,9 +94,9 @@ MACROS
 #define SOCKET_CMD_SSL_CONNECT			0x4B
 /*!< SSL-Socket Connect command value.
 */
-#define SOCKET_CMD_SSL_SEND				0x4C	
+#define SOCKET_CMD_SSL_SEND				0x4C
 /*!< SSL-Socket Send command value.
-*/	
+*/
 #define SOCKET_CMD_SSL_RECV				0x4D
 /*!< SSL-Socket Recieve command value.
 */
@@ -117,9 +114,9 @@ DATA TYPES
 
 
 /*!
-*  @brief	
+*  @brief
 */
-typedef struct{	
+typedef struct{
 	uint16		u16Family;
 	uint16		u16Port;
 	uint32		u32IPAddr;
@@ -130,7 +127,7 @@ typedef struct{
 /*!
 @struct	\
 	tstrDnsReply
-	
+
 @brief
 	DNS Reply, contains hostName and HostIP.
 */
@@ -143,7 +140,7 @@ typedef struct{
 /*!
 @struct	\
 	tstrConnectReply
-	
+
 @brief
 	Connect Reply, contains sock number and error value
 */
@@ -178,12 +175,12 @@ typedef struct{
 /*!
 @struct	\
 	tstrSocketRecvMsg
-	
-@brief	Socket recv status. 
 
-	It is passed to the APPSocketEventHandler with SOCKET_MSG_RECV or SOCKET_MSG_RECVFROM message type 
+@brief	Socket recv status.
+
+	It is passed to the APPSocketEventHandler with SOCKET_MSG_RECV or SOCKET_MSG_RECVFROM message type
 	in a response to a user call to the recv or recvfrom.
-	If the received data from the remote peer is larger than the USER Buffer size (given at recv call), the data is 
+	If the received data from the remote peer is larger than the USER Buffer size (given at recv call), the data is
 	delivered to the user in a number of consecutive chunks according to the USER Buffer size.
 */
 typedef struct{
@@ -196,7 +193,7 @@ typedef struct{
 /*!
 @struct	\
 	tstrSendReply
-	
+
 @brief
 	Send Reply, contains socket number and number of sent bytes.
 */

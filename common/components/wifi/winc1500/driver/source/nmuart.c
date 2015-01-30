@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -41,10 +38,10 @@
  * \asf_license_stop
  *
  */
- 
+
 #include "common\include\nm_common.h"
 
-#ifdef CONF_WINC_USE_UART 
+#ifdef CONF_WINC_USE_UART
 
 #include "driver\source\nmuart.h"
 #include "bus_wrapper\include\nm_bus_wrapper.h"
@@ -65,7 +62,7 @@ static uint8 get_cs(uint8* b, uint8 sz){
 *	@author		Dina El Sissy
 *	@date		13 AUG 2012
 *	@version	1.0
-*/ 
+*/
 sint8 nm_uart_sync_cmd(void)
 {
 	tstrNmUartDefault strUart;
@@ -158,12 +155,12 @@ sint8 nm_uart_sync_cmd(void)
 					s8Ret = M2M_ERR_BUS_FAIL;
 				}
 			}
-			else 
+			else
 			{
 				s8Ret = M2M_ERR_BUS_FAIL;
 			}
 		}
-		else 
+		else
 		{
 			strUart.u16Sz = rsz;
 			if(M2M_SUCCESS != nm_bus_ioctl(NM_BUS_IOCTL_R, &strUart))
@@ -194,7 +191,7 @@ sint8 nm_uart_sync_cmd(void)
 *	@author		Dina El Sissy
 *	@date		13 AUG 2012
 *	@version	1.0
-*/ 
+*/
 uint32 nm_uart_read_reg(uint32 u32Addr)
 {
 	uint32 val;
@@ -213,7 +210,7 @@ uint32 nm_uart_read_reg(uint32 u32Addr)
 *	@author		Dina El Sissy
 *	@date		13 AUG 2012
 *	@version	1.0
-*/ 
+*/
 sint8 nm_uart_write_reg(uint32 u32Addr, uint32 u32Val)
 {
 	tstrNmUartDefault strUart;
@@ -248,7 +245,7 @@ sint8 nm_uart_write_reg(uint32 u32Addr, uint32 u32Val)
 		M2M_ERR("write error\n");
 		s8Ret = M2M_ERR_BUS_FAIL;
 	}
-	else 
+	else
 	{
 		if(!nm_bus_get_chip_type())
 		{
@@ -262,14 +259,14 @@ sint8 nm_uart_write_reg(uint32 u32Addr, uint32 u32Val)
 			{
 				M2M_DBG("Successfully sent the reg write command\n");
 			}
-			else 
+			else
 			{
 				M2M_ERR("write error\n");
 				s8Ret = M2M_ERR_BUS_FAIL;
 			}
 		}
 	}
-	
+
 	return s8Ret;
 }
 
@@ -287,7 +284,7 @@ sint8 nm_uart_write_reg(uint32 u32Addr, uint32 u32Val)
 *	@author		Dina El Sissy
 *	@date		13 AUG 2012
 *	@version	1.0
-*/ 
+*/
 sint8 nm_uart_read_block(uint32 u32Addr, uint8 *pu8Buf, uint16 u16Sz)
 {
 	tstrNmUartDefault strUart;
@@ -320,7 +317,7 @@ sint8 nm_uart_read_block(uint32 u32Addr, uint8 *pu8Buf, uint16 u16Sz)
 	}
 	else
 	{
-		if(!nm_bus_get_chip_type()) 
+		if(!nm_bus_get_chip_type())
 		{
 			//check for the ack from the SAMD21 for the packet reception.
 			strUart.u16Sz = 1;
@@ -340,13 +337,13 @@ sint8 nm_uart_read_block(uint32 u32Addr, uint8 *pu8Buf, uint16 u16Sz)
 					s8Ret = M2M_ERR_BUS_FAIL;
 				}
 			}
-			else 
+			else
 			{
 				M2M_ERR("write error (Error sending the block read command)\n");
 				s8Ret = M2M_ERR_BUS_FAIL;
 			}
 		}
-		else 
+		else
 		{
 			strUart.pu8Buf = pu8Buf;
 			strUart.u16Sz = u16Sz;
@@ -375,7 +372,7 @@ sint8 nm_uart_read_block(uint32 u32Addr, uint8 *pu8Buf, uint16 u16Sz)
 *	@author		Dina El Sissy
 *	@date		13 AUG 2012
 *	@version	1.0
-*/ 
+*/
 sint8 nm_uart_write_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 {
 	tstrNmUartDefault strUart;
@@ -407,7 +404,7 @@ sint8 nm_uart_write_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 		M2M_ERR("write error\n");
 		s8Ret = M2M_ERR_BUS_FAIL;
 	}
-	else 
+	else
 	{
 		if(!nm_bus_get_chip_type())
 		{
@@ -428,7 +425,7 @@ sint8 nm_uart_write_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 					M2M_ERR("write error\n");
 					s8Ret = M2M_ERR_BUS_FAIL;
 				}
-				else 
+				else
 				{
 					//check for the ack from the SAMD21 for the payload reception.
 					strUart.pu8Buf = au8Buf;
@@ -441,14 +438,14 @@ sint8 nm_uart_write_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 					{
 						M2M_DBG("Successfully sent the data payload\n");
 					}
-					else 
+					else
 					{
 						M2M_ERR("write error\n");
 						s8Ret = M2M_ERR_BUS_FAIL;
 					}
 				}
 			}
-			else 
+			else
 			{
 				M2M_ERR("write error (Error sending the block write command)\n");
 				s8Ret = M2M_ERR_BUS_FAIL;
@@ -478,7 +475,7 @@ sint8 nm_uart_write_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz)
 *	@author		Viswanathan Murugesan
 *	@date		22 OCT 2014
 *	@version	1.0
-*/ 
+*/
 sint8 nm_uart_reconfigure(void *ptr)
 {
 	tstrNmUartDefault strUart;
@@ -513,7 +510,7 @@ sint8 nm_uart_reconfigure(void *ptr)
 		M2M_ERR("write error\n");
 		s8Ret = M2M_ERR_BUS_FAIL;
 	}
-	else 
+	else
 	{
 		if(!nm_bus_get_chip_type())
 		{
@@ -527,7 +524,7 @@ sint8 nm_uart_reconfigure(void *ptr)
 			{
 				M2M_DBG("Successfully sent the UART reconfigure command\n");
 			}
-			else 
+			else
 			{
 				M2M_ERR("write error\n");
 				s8Ret = M2M_ERR_BUS_FAIL;

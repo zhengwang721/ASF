@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -50,12 +47,12 @@
 #ifdef __cplusplus
      extern "C" {
 #endif
- 
+
 /**
 *	@fn		nm_spi_init
-*	@brief	Initialize the SPI 
+*	@brief	Initialize the SPI
 *	@return	ZERO in case of success and M2M_ERR_BUS_FAIL in case of failure
-*/ 
+*/
 sint8 nm_spi_init(void);
 
 /**
@@ -64,7 +61,7 @@ sint8 nm_spi_init(void);
 *	@param [in]	u32Addr
 *				Register address
 *	@return	Register value
-*/ 
+*/
 uint32 nm_spi_read_reg(uint32 u32Addr);
 
 /**
@@ -75,7 +72,7 @@ uint32 nm_spi_read_reg(uint32 u32Addr);
 *	@param [out]	pu32RetVal
 *				Pointer to u32 variable used to return the read value
 *	@return	ZERO in case of success and M2M_ERR_BUS_FAIL in case of failure
-*/ 
+*/
 sint8 nm_spi_read_reg_with_ret(uint32 u32Addr, uint32* pu32RetVal);
 
 /**
@@ -86,7 +83,7 @@ sint8 nm_spi_read_reg_with_ret(uint32 u32Addr, uint32* pu32RetVal);
 *	@param [in]	u32Val
 *				Value to be written to the register
 *	@return	ZERO in case of success and M2M_ERR_BUS_FAIL in case of failure
-*/ 
+*/
 sint8 nm_spi_write_reg(uint32 u32Addr, uint32 u32Val);
 
 /**
@@ -99,7 +96,7 @@ sint8 nm_spi_write_reg(uint32 u32Addr, uint32 u32Val);
 *	@param [in]	u16Sz
 *				Number of bytes to read. The buffer size must be >= u16Sz
 *	@return	ZERO in case of success and M2M_ERR_BUS_FAIL in case of failure
-*/ 
+*/
 sint8 nm_spi_read_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz);
 
 /**
@@ -112,7 +109,7 @@ sint8 nm_spi_read_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz);
 *	@param [in]	u16Sz
 *				Number of bytes to write. The buffer size must be >= u16Sz
 *	@return	ZERO in case of success and M2M_ERR_BUS_FAIL in case of failure
-*/ 
+*/
 sint8 nm_spi_write_block(uint32 u32Addr, uint8 *puBuf, uint16 u16Sz);
 
 #ifdef __cplusplus

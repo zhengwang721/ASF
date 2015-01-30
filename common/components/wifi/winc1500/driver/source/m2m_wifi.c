@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -143,7 +140,7 @@ static void m2m_wifi_cb(uint8 u8OpCode, uint16 u16DataSize, uint32 u32Addr)
 		tstrM2MIPConfig strIpConfig;
 		if(hif_receive(u32Addr, (uint8 *)&strIpConfig, sizeof(tstrM2MIPConfig), 0) == M2M_SUCCESS)
 		{
-			M2M_DBG("Conflicted IP\"%u.%u.%u.%u\"\n", 
+			M2M_DBG("Conflicted IP\"%u.%u.%u.%u\"\n",
 				((uint8 *)&strIpConfig.u32StaticIP)[0], ((uint8 *)&strIpConfig.u32StaticIP)[1],
 				((uint8 *)&strIpConfig.u32StaticIP)[2], ((uint8 *)&strIpConfig.u32StaticIP)[3]);
 			if (gpfAppWifiCb)
@@ -213,7 +210,7 @@ static void m2m_wifi_cb(uint8 u8OpCode, uint16 u16DataSize, uint32 u32Addr)
 				tstrM2mIpRsvdPkt * pstrM2MIpRxPkt = (tstrM2mIpRsvdPkt*)rx_buf;
 				tstrM2mIpCtrlBuf  strM2mIpCtrlBuf;
 				uint16 u16Offset = pstrM2MIpRxPkt->u16PktOffset;
-				
+
 				strM2mIpCtrlBuf.u16RemainigDataSize = pstrM2MIpRxPkt->u16PktSz;
 				if((gpfAppEthCb) &&(gau8ethRcvBuf)&& (gu16ethRcvBufSize > 0))
 				{
@@ -222,7 +219,7 @@ static void m2m_wifi_cb(uint8 u8OpCode, uint16 u16DataSize, uint32 u32Addr)
 						if(strM2mIpCtrlBuf.u16RemainigDataSize > gu16ethRcvBufSize)
 						{
 							strM2mIpCtrlBuf.u16DataSize = gu16ethRcvBufSize ;
-						} 
+						}
 						else
 						{
 							strM2mIpCtrlBuf.u16DataSize = strM2mIpCtrlBuf.u16RemainigDataSize;
@@ -241,7 +238,7 @@ static void m2m_wifi_cb(uint8 u8OpCode, uint16 u16DataSize, uint32 u32Addr)
 				}
 			}
 		}
-#endif	
+#endif
 
 #ifdef CONF_MGMT
 	else if(u8OpCode == M2M_WIFI_RESP_WIFI_RX_PACKET)
@@ -279,9 +276,9 @@ sint8 m2m_wifi_download_mode()
 	/* Apply device specific initialization. */
 	ret = nm_drv_init_download_mode();
 	if(ret != M2M_SUCCESS) 	goto _EXIT0;
-	
 
-	
+
+
 	enable_interrupts();
 
 _EXIT0:
@@ -293,7 +290,7 @@ sint8 m2m_wifi_init(tstrWifiInitParam * param)
 	sint8 ret = M2M_SUCCESS;
 
 	gpfAppWifiCb = param->pfAppWifiCb;
-		
+
 #ifdef ETH_MODE
  	gpfAppEthCb  	    = param->strEthInitParam.pfAppEthCb;
 	gau8ethRcvBuf       = param->strEthInitParam.au8ethRcvBuf;
@@ -763,7 +760,7 @@ sint8 m2m_wifi_start_provision_mode(tstrM2MAPConfig *pstrAPConfig, char *pcHttpS
 		m2m_memcpy((uint8*)&strProvConfig.strApConfig, (uint8*)pstrAPConfig, sizeof(tstrM2MAPConfig));
 		m2m_memcpy((uint8*)strProvConfig.acHttpServerDomainName, (uint8*)pcHttpServerDomainName, 64);
 		strProvConfig.u8EnableRedirect = bEnableHttpRedirect;
-		
+
 		/* Stop Scan if it is ongoing.
 		*/
 		gu8scanInProgress = 0;
@@ -807,7 +804,7 @@ sint8 m2m_wifi_enable_sntp(uint8 bEnable)
 				Pointer to the MAC address.
 @param [in] u8AddRemove
 				Flag to Add/Remove MAC address.
-@return		
+@return
 	The function SHALL return 0 for success and a negative value otherwise.
 */
 
@@ -840,7 +837,7 @@ NMI_API sint8 m2m_wifi_enable_mac_mcast(uint8* pu8MulticastMacAddress, uint8 u8A
 @param [in] u16BufferLen
 				Length of the buffer.
 
-@return		
+@return
 	The function SHALL return 0 for success and a negative value otherwise.
 */
 NMI_API sint8  m2m_wifi_set_receive_buffer(void* pvBuffer,uint16 u16BufferLen)

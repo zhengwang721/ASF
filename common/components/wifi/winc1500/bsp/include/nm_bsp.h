@@ -23,9 +23,6 @@
  * 3. The name of Atmel may not be used to endorse or promote products derived
  *    from this software without specific prior written permission.
  *
- * 4. This software may only be redistributed and used in connection with an
- *    Atmel microcontroller product.
- *
  * THIS SOFTWARE IS PROVIDED BY ATMEL "AS IS" AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF
  * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NON-INFRINGEMENT ARE
@@ -80,21 +77,21 @@ extern "C"{
 *	@fn		nm_bsp_init
 *	@brief	Initialize BSP
 *	@return	0 in case of success and -1 in case of failure
-*/ 
+*/
 sint8 nm_bsp_init(void);
 
 /**
 *	@fn		nm_bsp_deinit
 *	@brief	De-iInitialize BSP
 *	@return	0 in case of success and -1 in case of failure
-*/ 
+*/
 sint8 nm_bsp_deinit(void);
 
 /**
 *	@fn		nm_bsp_deinit
-*	@brief	Reset NMC1500 SoC by setting CHIP_EN and RESET_N signals low, 
+*	@brief	Reset NMC1500 SoC by setting CHIP_EN and RESET_N signals low,
 *           CHIP_EN high then RESET_N high
-*/ 
+*/
 void nm_bsp_reset(void);
 
 /**
@@ -102,7 +99,7 @@ void nm_bsp_reset(void);
 *	@brief	Sleep in units of mSec
 *	@param [in]	u32TimeMsec
 *				Time in milliseconds
-*/ 
+*/
 void nm_bsp_sleep(uint32 u32TimeMsec);
 /**
 *	@fn		nm_bsp_register_isr
@@ -173,7 +170,7 @@ void nm_bsp_interrupt_ctrl(uint8 u8Enable);
 #include "crt_iface.h"
 #endif
 
-#ifdef NRF51 
+#ifdef NRF51
 #include "nm_bsp_nrf51822.h"
 #endif
 
