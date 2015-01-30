@@ -63,7 +63,7 @@ volatile uint8_t rx_buffer[MAX_RX_BUFFER_LENGTH];
 //! [rx_buffer_var]
 
 //! [callback_funcs]
-void usart_read_callback(truct usart_module *const usart_module)
+void usart_read_callback(struct usart_module *const usart_module)
 {
 	usart_write_buffer_job(&usart_instance,
 			(uint8_t *)rx_buffer, MAX_RX_BUFFER_LENGTH);
