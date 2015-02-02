@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM D11 Xplained Pro example configuration.
+ * \brief SAM D21 Xplained Pro board configuration.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -44,12 +44,7 @@
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
-#ifndef CONF_TEST_H_INCLUDED
-#define CONF_TEST_H_INCLUDED
+#ifndef CONF_BOARD_H_INCLUDED
+#define CONF_BOARD_H_INCLUDED
 
-/** If \true, the non-maskable pin is used to check when the
- *   button state changes, when \false the external pins is used.
- */
-#define   USE_EIC_NMI               true
-
-#endif /* CONF_TEST_H_INCLUDED */
+#endif /* CONF_BOARD_H_INCLUDED */

@@ -1,9 +1,9 @@
 /**
  * \file
  *
- * \brief SAM L21 Xplained Pro example configuration.
+ * \brief SAM D21 Xplained Pro test configuration.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -47,9 +47,12 @@
 #ifndef CONF_TEST_H_INCLUDED
 #define CONF_TEST_H_INCLUDED
 
-/** If \true, the non-maskable pin is used to check when the
- *   button state changes, when \false the external pins is used.
- */
-#define   USE_EIC_NMI               false
+#define CONF_STDIO_USART          EDBG_CDC_MODULE
+#define CONF_STDIO_MUX_SETTING    EDBG_CDC_SERCOM_MUX_SETTING
+#define CONF_STDIO_PINMUX_PAD0    EDBG_CDC_SERCOM_PINMUX_PAD0
+#define CONF_STDIO_PINMUX_PAD1    EDBG_CDC_SERCOM_PINMUX_PAD1
+#define CONF_STDIO_PINMUX_PAD2    EDBG_CDC_SERCOM_PINMUX_PAD2
+#define CONF_STDIO_PINMUX_PAD3    EDBG_CDC_SERCOM_PINMUX_PAD3
+#define CONF_STDIO_BAUDRATE       38400
 
 #endif /* CONF_TEST_H_INCLUDED */
