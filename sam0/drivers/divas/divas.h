@@ -85,14 +85,47 @@
  *
  * There are two ways to calculate the results.
  * - Call the DIVAS API
- * - Overload '/' and '%' operation
- * \note About overload, User can transparently access the DIVAS module when 
- * writing normal C code. E.g. "a = b / c;" or "a = b % c;" will be translated  
- * to a subroutine call which uses the DIVAS. Except square root.
+ * - Overload "/" and "%" operation
+ * \note Square root operation can't implement overload operation.
+ 
+ * \subsection asfdoc_sam0_divas_module_overview_overload Overload Operation
+ * The operation is implemented automatically by EABI(Enhanced Application Binary 
+ * Interface). EABI is a standard calling convention which is defined by ARM. 
+ * There are the four functions interface which can implement division and mod 
+ * operation in EABI. The following Prototypes for EABI division operation in 
+ * ICCARM tool chain:
+ * \code
+    int __aeabi_idiv(int numerator, int denominator);
+    unsigned __aeabi_uidiv(unsigned numerator, unsigned denominator);
+    __value_in_regs idiv_return __aeabi_idivmod( int numerator, int denominator);
+    __value_in_regs uidiv_return __aeabi_uidivmod( unsigned numerator, 
+												unsigned denominator);
+   \endcode
+ * The following Prototypes for EABI division operation in GNUC tool chain:
+ * \code
+    int __aeabi_idiv(int numerator, int denominator);
+    unsigned __aeabi_uidiv(unsigned numerator, unsigned denominator);
+    uint64_t __aeabi_idivmod( int numerator, int denominator);
+    uint64_t uidiv_return __aeabi_uidivmod( unsigned numerator, 
+											unsigned denominator);
+   \endcode
+ * No matter which kind of tool chain, using DIVAS module in the four functions 
+ * body, users can transparently access the DIVAS module when writing normal C 
+ * code. For example,
+ * \code
+    void signed_division(int32_t b, int32_t c)
+    {
+        int32_t a;
+        a = b / c;
+        return a;
+    }
+   \endcode
+ * Similarly, users can use "a = b / c;" or "a = b % c;" symbol to implement 
+ * the operation with DIVAS, and needn't to care about the internal concrete 
+ * operation process.
  * 
  * \subsection asfdoc_sam0_divas_module_overview_operand Operand Size
- *  - Divide
- *  The DIVAS can perform 32-bit signed and unsigned division.
+ *  - Divide: The DIVAS can perform 32-bit signed and unsigned division.
  
  * \subsection asfdoc_sam0_divas_module_overview_Signed Signed Division
  *  When signed flag is one, both the input and the result will be in two's 
@@ -200,6 +233,8 @@ static inline void divas_disable_dlz(void)
 /**
  * \name Call the DIVAS API Operation
  * @{
+ * In this mode, the way that directly call the DIVAS API implement division or 
+ * mod operation. 
  */
 
 int32_t divas_idiv(int32_t numerator, int32_t denominator);
@@ -213,6 +248,9 @@ uint32_t divas_sqrt(uint32_t radicand);
 /**
  * \name DIVAS Overload '/' and '%' Operation
  * @{
+ * In this mode, user can transparently access the DIVAS module when writing 
+ * normal C code. E.g. "a = b / c;" or "a = b % c;" will be translated to a 
+ * subroutine call which uses the DIVAS.
  */
 
 #if DIVAS_OVERLOAD_MODE == true
@@ -253,6 +291,10 @@ __value_in_regs uidiv_return __aeabi_uidivmod(unsigned numerator, unsigned denom
  *  <tr>
  *		<td>DIVAS</td>
  *		<td>Divide and Square Root Accelerator</td>
+ *	</tr>
+ *  <tr>
+ *		<td>EABI</td>
+ *		<td>Enhanced Application Binary Interface</td>
  *	</tr>
  * </table>
  *
@@ -303,7 +345,7 @@ __value_in_regs uidiv_return __aeabi_uidivmod(unsigned numerator, unsigned denom
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>01/2015</td>
+ *		<td>03/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
