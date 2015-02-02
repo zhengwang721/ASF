@@ -117,6 +117,12 @@ static void _can_message_memory_init(Can *hw)
 				CAN_TXEFC_EFS(CONF_CAN1_TX_EVENT_FIFO);
 	}
 
+	/**
+	 * The data size in conf_can should be 8/12/16/20/24/32/48/64,
+	 * The corresponding setting value in register is 0/1//2/3/4/5/6/7.
+	 * To simplify the calculation, seperate to two group 8/12/16/20/24 which
+	 * incresed with 4 and 32/48/64 which increased with 16.
+	 */
 	if (CONF_CAN_ELEMENT_DATA_SIZE <= 24) {
 		hw->RXESC.reg = CAN_RXESC_RBDS((CONF_CAN_ELEMENT_DATA_SIZE - 8) / 4) |
 				CAN_RXESC_F0DS((CONF_CAN_ELEMENT_DATA_SIZE - 8) / 4) |
@@ -265,6 +271,8 @@ void can_init(struct can_module *const module_inst, Can *hw,
 void can_switch_operation_mode(struct can_module *const module_inst,
 		const enum can_module_operation_mode mode)
 {
+	uint32_t temp_cccr;
+
 	/* Enable peripheral clock */
 	_can_enable_peripheral_clock(module_inst);
 
@@ -298,13 +306,15 @@ void can_switch_operation_mode(struct can_module *const module_inst,
 			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
 			/* Wait for the sync. */
 			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-
 			module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_FDOE;
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_BRSE;
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_ASM;
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_MON;
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_TEST;
+
+			temp_cccr = module_inst->hw->CCCR.reg;
+			temp_cccr &= ~CAN_CCCR_FDOE;
+			temp_cccr &= ~CAN_CCCR_BRSE;
+			temp_cccr &= ~CAN_CCCR_ASM;
+			temp_cccr &= ~CAN_CCCR_MON;
+			temp_cccr &= ~CAN_CCCR_TEST;
+			module_inst->hw->CCCR.reg = temp_cccr;
 
 			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
 			/* Wait for the sync. */
@@ -313,13 +323,15 @@ void can_switch_operation_mode(struct can_module *const module_inst,
 			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
 			/* Wait for the sync. */
 			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-
 			module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-			module_inst->hw->CCCR.reg |= CAN_CCCR_FDOE;
-			module_inst->hw->CCCR.reg |= CAN_CCCR_BRSE;
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_ASM;
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_MON;
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_TEST;
+
+			temp_cccr = module_inst->hw->CCCR.reg;
+			temp_cccr |= CAN_CCCR_FDOE;
+			temp_cccr |= CAN_CCCR_BRSE;
+			temp_cccr &= ~CAN_CCCR_ASM;
+			temp_cccr &= ~CAN_CCCR_MON;
+			temp_cccr &= ~CAN_CCCR_TEST;
+			module_inst->hw->CCCR.reg = temp_cccr;
 
 			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
 			/* Wait for the sync. */
@@ -328,11 +340,13 @@ void can_switch_operation_mode(struct can_module *const module_inst,
 			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
 			/* Wait for the sync. */
 			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-
 			module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-			module_inst->hw->CCCR.reg |= CAN_CCCR_ASM;
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_MON;
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_TEST;
+
+			temp_cccr = module_inst->hw->CCCR.reg;
+			temp_cccr |= CAN_CCCR_ASM;
+			temp_cccr &= ~CAN_CCCR_MON;
+			temp_cccr &= ~CAN_CCCR_TEST;
+			module_inst->hw->CCCR.reg = temp_cccr;
 
 			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
 			/* Wait for the sync. */
@@ -341,11 +355,13 @@ void can_switch_operation_mode(struct can_module *const module_inst,
 			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
 			/* Wait for the sync. */
 			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-
 			module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-			module_inst->hw->CCCR.reg |= CAN_CCCR_MON;
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_ASM;
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_TEST;
+
+			temp_cccr = module_inst->hw->CCCR.reg;
+			temp_cccr |= CAN_CCCR_MON;
+			temp_cccr &= ~CAN_CCCR_ASM;
+			temp_cccr &= ~CAN_CCCR_TEST;
+			module_inst->hw->CCCR.reg = temp_cccr;
 
 			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
 			/* Wait for the sync. */
@@ -354,12 +370,14 @@ void can_switch_operation_mode(struct can_module *const module_inst,
 			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
 			/* Wait for the sync. */
 			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-
 			module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-			module_inst->hw->CCCR.reg |= CAN_CCCR_TEST;
-			module_inst->hw->TEST.reg |= CAN_TEST_LBCK;;
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_ASM;
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_MON;
+
+			temp_cccr = module_inst->hw->CCCR.reg;
+			temp_cccr |= CAN_CCCR_TEST;
+			temp_cccr |= CAN_TEST_LBCK;;
+			temp_cccr &= ~CAN_CCCR_ASM;
+			temp_cccr &= ~CAN_CCCR_MON;
+			module_inst->hw->CCCR.reg = temp_cccr;
 
 			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
 			/* Wait for the sync. */

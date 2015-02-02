@@ -57,11 +57,11 @@ static struct can_module can_instance;
 
 //! [can_filter_setting]
 #define CAN_RX_STANDARD_FILTER_INDEX    0
-#define CAN_RX_STANDARD_FILTER_ID_0     0x5A
-#define CAN_RX_STANDARD_FILTER_ID_1     0x69
+#define CAN_RX_STANDARD_FILTER_ID_0     0x45A
+#define CAN_RX_STANDARD_FILTER_ID_1     0x469
 #define CAN_RX_EXTENDED_FILTER_INDEX    0
-#define CAN_RX_EXTENDED_FILTER_ID_0     0xA5
-#define CAN_RX_EXTENDED_FILTER_ID_1     0x96
+#define CAN_RX_EXTENDED_FILTER_ID_0     0x100000A5
+#define CAN_RX_EXTENDED_FILTER_ID_1     0x10000096
 //! [can_filter_setting]
 
 //! [can_transfer_message_setting]
@@ -243,14 +243,14 @@ static void display_menu(void)
 {
 	printf("Menu :\r\n"
 			"  -- Select the action:\r\n"
-			"  0: Set standard filter ID 0: 0x5A. \r\n"
-			"  1: Set standard filter ID 0: 0x69. \r\n"
-			"  2: Send standard message with ID: 0x5A and 8 byte data 0 to 7. \r\n"
-			"  3: Send standard message with ID: 0x69 and 8 byte data 8 to 15. \r\n"
-			"  4: Set extended filter ID 0: 0xA5. \r\n"
-			"  5: Set extended filter ID 0: 0x96. \r\n"
-			"  6: Send extended message with ID: 0xA5 and 8 byte data 0 to 7. \r\n"
-			"  7: Send extended message with ID: 0x96 and 8 byte data 8 to 15. \r\n"
+			"  0: Set standard filter ID 0: 0x45A. \r\n"
+			"  1: Set standard filter ID 0: 0x469. \r\n"
+			"  2: Send standard message with ID: 0x45A and 8 byte data 0 to 7. \r\n"
+			"  3: Send standard message with ID: 0x469 and 8 byte data 8 to 15. \r\n"
+			"  4: Set extended filter ID 0: 0x100000A5. \r\n"
+			"  5: Set extended filter ID 0: 0x10000096. \r\n"
+			"  6: Send extended message with ID: 0x100000A5 and 8 byte data 0 to 7. \r\n"
+			"  7: Send extended message with ID: 0x10000096 and 8 byte data 8 to 15. \r\n"
 			"  h: Display menu \r\n\r\n");
 }
 //! [user_menu]
@@ -286,42 +286,42 @@ int main(void)
 			break;
 
 		case '0':
-			printf("  0: Set standard filter ID 0: 0x5A. \r\n");
+			printf("  0: Set standard filter ID 0: 0x45A. \r\n");
 			can_set_standard_filter(CAN_RX_STANDARD_FILTER_ID_0);
 			break;
 
 		case '1':
-			printf("  1: Set standard filter ID 0: 0x69. \r\n");
+			printf("  1: Set standard filter ID 0: 0x469. \r\n");
 			can_set_standard_filter(CAN_RX_STANDARD_FILTER_ID_1);
 			break;
 
 		case '2':
-			printf("  2: Send standard message with ID: 0x5A and 8 byte data 0 to 7. \r\n");
+			printf("  2: Send standard message with ID: 0x45A and 8 byte data 0 to 7. \r\n");
 			can_send_standard_message(CAN_RX_STANDARD_FILTER_ID_0, tx_message_0);
 			break;
 
 		case '3':
-			printf("  3: Send standard message with ID: 0x69 and 8 byte data 8 to 15. \r\n");
+			printf("  3: Send standard message with ID: 0x469 and 8 byte data 8 to 15. \r\n");
 			can_send_standard_message(CAN_RX_STANDARD_FILTER_ID_1, tx_message_1);
 			break;
 
 		case '4':
-			printf("  4: Set extended filter ID 0: 0xA5. \r\n");
+			printf("  4: Set extended filter ID 0: 0x100000A5. \r\n");
 			can_set_extended_filter(CAN_RX_STANDARD_FILTER_ID_0);
 			break;
 
 		case '5':
-			printf("  5: Set extended filter ID 0: 0x96. \r\n");
+			printf("  5: Set extended filter ID 0: 0x10000096. \r\n");
 			can_set_extended_filter(CAN_RX_STANDARD_FILTER_ID_1);
 			break;
 
 		case '6':
-			printf("  6: Send extended message with ID: 0xA5 and 8 byte data 0 to 7. \r\n");
+			printf("  6: Send extended message with ID: 0x100000A5 and 8 byte data 0 to 7. \r\n");
 			can_send_extended_message(CAN_RX_STANDARD_FILTER_ID_0, tx_message_0);
 			break;
 
 		case '7':
-			printf("  7: Send extended message with ID: 0x96 and 8 byte data 8 to 15. \r\n");
+			printf("  7: Send extended message with ID: 0x10000096 and 8 byte data 8 to 15. \r\n");
 			can_send_extended_message(CAN_RX_STANDARD_FILTER_ID_1, tx_message_1);
 			break;
 

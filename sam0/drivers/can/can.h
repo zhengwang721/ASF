@@ -2,11 +2,6 @@
  * \file
  *
  * \brief SAM Control Area Network (CAN) Low Level Driver
- * 
- * \note Since "The Control Area Network (CAN) performs communication according
- * to ISO 11898-1 (Bosch CAN specification 2.0 part A,B) and to Bosch CAN FD
- * specification V1.0", the driver is focus on the MAC layer and try to offer
- * the APIs which can be used by upper application layer.
  *
  * Copyright (C) 2015 Atmel Corporation. All rights reserved.
  *
@@ -57,7 +52,7 @@
 #include <conf_can.h>
 
 /**
- * \name Message RAM 
+ * \name Message RAM
  * @{
  */
 
@@ -65,11 +60,11 @@
 typedef union {
   struct {
     uint32_t ID:29;            /*!< bit:  0..28  Identifier */
-    uint32_t RTR:1;            /*!< bit:  29  Remote Transmission Request */
-    uint32_t XTD:1;            /*!< bit:  30  Extended Identifier */
-    uint32_t ESI:1;            /*!< bit:  31  Error State Indicator */
+    uint32_t RTR:1;            /*!< bit:  29     Remote Transmission Request */
+    uint32_t XTD:1;            /*!< bit:  30     Extended Identifier */
+    uint32_t ESI:1;            /*!< bit:  31     Error State Indicator */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type    used for register access */
 } CAN_RX_ELEMENT_R0_Type;
 
 #define CAN_RX_ELEMENT_R0_ID_Pos          0
@@ -85,15 +80,15 @@ typedef union {
 /* -------- CAN_RX_ELEMENT_R1 : (CAN RX element: 0x01) (R/W 32) Rx Element R1 Configuration -------- */
 typedef union {
   struct {
-    uint32_t RXTS:16;          /*!< bit:  0..15  Rx Timestamp */
-    uint32_t DLC:4;            /*!< bit:  16..19  Data Length Code */
-    uint32_t BRS:1;            /*!< bit:  20  Bit Rate Switch */
-    uint32_t FDF:1;            /*!< bit:  21  FD Format */
+    uint32_t RXTS:16;          /*!< bit: 0..15   Rx Timestamp */
+    uint32_t DLC:4;            /*!< bit: 16..19  Data Length Code */
+    uint32_t BRS:1;            /*!< bit: 20      Bit Rate Switch */
+    uint32_t FDF:1;            /*!< bit: 21      FD Format */
     uint32_t :2;               /*!< bit: 22..23  Reserved */
-    uint32_t FIDX:7;           /*!< bit:  24..30  Filter Index */
-    uint32_t ANMF:1;           /*!< bit:  31  Accepted Non-matching Frame */
+    uint32_t FIDX:7;           /*!< bit: 24..30  Filter Index */
+    uint32_t ANMF:1;           /*!< bit: 31      Accepted Non-matching Frame */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type    used for register access */
 } CAN_RX_ELEMENT_R1_Type;
 
 #define CAN_RX_ELEMENT_R1_RXTS_Pos        0
@@ -143,11 +138,11 @@ struct can_rx_element_fifo_1 {
 typedef union {
   struct {
     uint32_t ID:29;            /*!< bit:  0..28  Identifier */
-    uint32_t RTR:1;            /*!< bit:  29  Remote Transmission Request */
-    uint32_t XTD:1;            /*!< bit:  30  Extended Identifier */
-    uint32_t ESI:1;            /*!< bit:  31  Error State Indicator */
+    uint32_t RTR:1;            /*!< bit:  29     Remote Transmission Request */
+    uint32_t XTD:1;            /*!< bit:  30     Extended Identifier */
+    uint32_t ESI:1;            /*!< bit:  31     Error State Indicator */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type    used for register access */
 } CAN_TX_ELEMENT_T0_Type;
 
 #define CAN_TX_ELEMENT_T0_ID_Pos          0
@@ -163,15 +158,15 @@ typedef union {
 /* -------- CAN_TX_ELEMENT_T1 : (CAN TX element: 0x01) (R/W 32) Tx Element T1 Configuration -------- */
 typedef union {
   struct {
-    uint32_t :16;              /*!< bit:  0..15  Reserved */
-    uint32_t DLC:4;            /*!< bit:  16..19  Data Length Code */
-    uint32_t BRS:1;            /*!< bit:  20  Bit Rate Switch */
-    uint32_t FDF:1;            /*!< bit:  21  FD Format */
-    uint32_t :1;               /*!< bit: 22  Reserved */
-    uint32_t EFC:1;            /*!< bit:  23  Event FIFO Control */
-    uint32_t MM:8;             /*!< bit:  24..31  Message Marker */
+    uint32_t :16;              /*!< bit: 0..15   Reserved */
+    uint32_t DLC:4;            /*!< bit: 16..19  Data Length Code */
+    uint32_t BRS:1;            /*!< bit: 20      Bit Rate Switch */
+    uint32_t FDF:1;            /*!< bit: 21      FD Format */
+    uint32_t :1;               /*!< bit: 22      Reserved */
+    uint32_t EFC:1;            /*!< bit: 23      Event FIFO Control */
+    uint32_t MM:8;             /*!< bit: 24..31  Message Marker */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type    used for register access */
 } CAN_TX_ELEMENT_T1_Type;
 
 #define CAN_TX_ELEMENT_T1_DLC_Pos         16
@@ -209,12 +204,12 @@ struct can_tx_element {
 /* -------- CAN_TX_EVENT_ELEMENT_E0 : (CAN TX event element: 0x00) (R/W 32) Tx Event Element E0 Configuration -------- */
 typedef union {
   struct {
-    uint32_t ID:29;            /*!< bit:  0..28  Identifier */
-    uint32_t RTR:1;            /*!< bit:  29  Remote Transmission Request */
-    uint32_t XTD:1;            /*!< bit:  30  Extended Identifier */
-    uint32_t ESI:1;            /*!< bit:  31  Error State Indicator */
+    uint32_t ID:29;            /*!< bit: 0..28  Identifier */
+    uint32_t RTR:1;            /*!< bit: 29     Remote Transmission Request */
+    uint32_t XTD:1;            /*!< bit: 30     Extended Identifier */
+    uint32_t ESI:1;            /*!< bit: 31     Error State Indicator */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type    used for register access */
 } CAN_TX_EVENT_ELEMENT_E0_Type;
 
 #define CAN_TX_EVENT_ELEMENT_E0_ID_Pos          0
@@ -230,14 +225,14 @@ typedef union {
 /* -------- CAN_TX_EVENT_ELEMENT_E1 : (CAN TX event element: 0x01) (R/W 32) Tx Event Element E1 Configuration -------- */
 typedef union {
   struct {
-    uint32_t TXTS:16;          /*!< bit:  0..15  Tx Timestamp */
-    uint32_t DLC:4;            /*!< bit:  16..19  Data Length Code */
-    uint32_t BRS:1;            /*!< bit:  20  Bit Rate Switch */
-    uint32_t FDF:1;            /*!< bit:  21  FD Format */
-    uint32_t ET:2;             /*!< bit:  22..23  Event Type */
-    uint32_t MM:8;             /*!< bit:  24..31  Message Marker */
+    uint32_t TXTS:16;          /*!< bit: 0..15   Tx Timestamp */
+    uint32_t DLC:4;            /*!< bit: 16..19  Data Length Code */
+    uint32_t BRS:1;            /*!< bit: 20      Bit Rate Switch */
+    uint32_t FDF:1;            /*!< bit: 21      FD Format */
+    uint32_t ET:2;             /*!< bit: 22..23  Event Type */
+    uint32_t MM:8;             /*!< bit: 24..31  Message Marker */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type    used for register access */
 } CAN_TX_EVENT_ELEMENT_E1_Type;
 
 #define CAN_TX_EVENT_ELEMENT_E1_TXTS_Pos        0
@@ -270,13 +265,13 @@ struct can_tx_event_element {
 /* -------- CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0 : (CAN standard message ID filter element: 0x00) (R/W 32) Standard Message ID Filter Element S0 Configuration -------- */
 typedef union {
   struct {
-    uint32_t SFID2:11;         /*!< bit:  0..10  Standard Filter ID 2 */
+    uint32_t SFID2:11;         /*!< bit: 0..10   Standard Filter ID 2 */
     uint32_t :5;               /*!< bit: 11..15  Reserved */
-    uint32_t SFID1:11;         /*!< bit:  16..26  Standard Filter ID 1 */
-    uint32_t SFEC:3;           /*!< bit:  27..29  Standard Filter Element Configuration */
-    uint32_t SFT:2;            /*!< bit:  30..31  Standard Filter Type */
+    uint32_t SFID1:11;         /*!< bit: 16..26  Standard Filter ID 1 */
+    uint32_t SFEC:3;           /*!< bit: 27..29  Standard Filter Element Configuration */
+    uint32_t SFT:2;            /*!< bit: 30..31  Standard Filter Type */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type    used for register access */
 } CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_Type;
 
 #define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Pos          0
@@ -315,10 +310,10 @@ struct can_standard_message_filter_element {
 /* -------- CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0 : (CAN extended message ID filter element: 0x00) (R/W 32) Extended Message ID Filter Element F0 Configuration -------- */
 typedef union {
   struct {
-    uint32_t EFID1:29;         /*!< bit:  0..28  Extended Filter ID 1 */
-    uint32_t EFEC:3;           /*!< bit:  29..31  Extended Filter Element Configuration */
+    uint32_t EFID1:29;         /*!< bit: 0..28   Extended Filter ID 1 */
+    uint32_t EFEC:3;           /*!< bit: 29..31  Extended Filter Element Configuration */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type    used for register access */
 } CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_Type;
 
 #define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1_Pos          0
@@ -339,11 +334,11 @@ typedef union {
 /* -------- CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1 : (CAN extended message ID filter element: 0x01) (R/W 32) Extended Message ID Filter Element F1 Configuration -------- */
 typedef union {
   struct {
-    uint32_t EFID2:29;         /*!< bit:  0..28  Extended Filter ID 2 */
-    uint32_t :1;               /*!< bit: 29  Reserved */
-    uint32_t EFT:2;            /*!< bit:  30..31  Extended Filter Type */
+    uint32_t EFID2:29;         /*!< bit: 0..28  Extended Filter ID 2 */
+    uint32_t :1;               /*!< bit: 29     Reserved */
+    uint32_t EFT:2;            /*!< bit: 30..31 Extended Filter Type */
   } bit;                       /*!< Structure used for bit  access */
-  uint32_t reg;                /*!< Type      used for register access */
+  uint32_t reg;                /*!< Type    used for register access */
 } CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_Type;
 
 #define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Pos          0
@@ -373,10 +368,11 @@ struct can_extended_message_filter_element {
  *
  * This driver for SAM0 devices provides an low level interface for the configuration
  * and management of the device's Control Area Network functionality.
- * Since "The Control Area Network (CAN) performs communication according
+ *
+ * \note  Since "The Control Area Network (CAN) performs communication according
  * to ISO 11898-1 (Bosch CAN specification 2.0 part A,B) and to Bosch CAN FD
  * specification V1.0", the driver is focus on the MAC layer and try to offer
- * the APIs which can be used by upper application layer. 
+ * the APIs which can be used by upper application layer.
  *
  * The following peripherals are used by this module:
  *  - CAN (Control Area Network)
@@ -433,7 +429,7 @@ extern "C" {
 #endif
 
 /**
- * \name Module setting 
+ * \name Module setting
  * @{
  */
 
@@ -462,7 +458,7 @@ enum can_module_operation_mode {
  * \brief Can time out modes.
  */
 enum can_timeout_mode {
-	/** Continuout operation. */
+	/** Continuous operation. */
 	CAN_TIMEOUT_CONTINUES = CAN_TOCC_TOS_CONT,
 	/** Timeout controlled by TX Event FIFO. */
 	CAN_TIMEOUT_TX_EVEN_FIFO = CAN_TOCC_TOS_TXEF,
@@ -582,7 +578,7 @@ struct can_config {
  *  \li Clock stop acknowledge disabled
  *  \li Timestamp Counter Prescaler 1
  *  \li Timeout Period with 0xFFFF
- *  \li Timeout Mode: Continuout operation
+ *  \li Timeout Mode: Continuous operation
  *  \li Disable Timeout
  *  \li Transmitter Delay Compensation Offset is 0
  *  \li Transmitter Delay Compensation Filter Window Length is 0
@@ -713,7 +709,7 @@ static inline uint32_t can_read_protocal_status(
 /** @} */
 
 /**
- * \name Rx Handling 
+ * \name Rx Handling
  * @{
  */
 
@@ -824,7 +820,7 @@ static inline void can_get_standard_message_filter_element_default(
 	sd_filter->S0.reg = CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Msk |
 			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1(0) |
 			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF0M |
-			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_CLASSIC;			
+			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_CLASSIC;
 }
 
 /**
@@ -852,7 +848,7 @@ static inline void can_get_extended_message_filter_element_default(
 		struct can_extended_message_filter_element *et_filter)
 {
 	et_filter->F0.reg = CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1(0) |
-			CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF1M;			
+			CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF1M;
 	et_filter->F1.reg = CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Msk |
 			CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_CLASSIC;
 }
@@ -924,7 +920,7 @@ enum status_code can_get_rx_fifo_1_element(
 /** @} */
 
 /**
- * \name Tx Handling 
+ * \name Tx Handling
  * @{
  */
 
@@ -958,24 +954,42 @@ static inline uint32_t can_tx_get_pending_status(
  * \brief Tx buffer add transfer request.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] trig_mask  The mask value to trigger tansfer buffer 
+ * \param[in] trig_mask  The mask value to trigger tansfer buffer
+ *
+ *  \return Status of the result.
+ *
+ *  \retval STATUS_OK   Set the transfer request.
+ *  \retval STATUS_BUSY The module is in configuration.
  */
-static inline void can_tx_transfer_request(struct can_module *const module_inst,
-		uint32_t trig_mask)
+static inline enum status_code can_tx_transfer_request(
+		struct can_module *const module_inst, uint32_t trig_mask)
 {
+	if (module_inst->hw->CCCR.reg & CAN_CCCR_CCE) {
+		return STATUS_BUSY;
+	}
 	module_inst->hw->TXBAR.reg = trig_mask;
+	return STATUS_OK;
 }
 
 /**
  * \brief Set Tx Queue operation.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] trig_mask  The mask value to cancel tansfer buffer 
+ * \param[in] trig_mask  The mask value to cancel tansfer buffer
+ *
+ *  \return Status of the result.
+ *
+ *  \retval STATUS_OK   Set the transfer request.
+ *  \retval STATUS_BUSY The module is in configuration.
  */
-static inline void can_tx_cancel_request(struct can_module *const module_inst,
-		uint32_t trig_mask)
+static inline enum status_code can_tx_cancel_request(
+		struct can_module *const module_inst, uint32_t trig_mask)
 {
+	if (module_inst->hw->CCCR.reg & CAN_CCCR_CCE) {
+		return STATUS_BUSY;
+	}
 	module_inst->hw->TXBCR.reg = trig_mask;
+	return STATUS_OK;
 }
 
 /**
@@ -1077,7 +1091,7 @@ enum status_code can_get_tx_event_fifo_element(
 /** @} */
 
 /**
- * \name Interrupt Handling 
+ * \name Interrupt Handling
  * @{
  */
 

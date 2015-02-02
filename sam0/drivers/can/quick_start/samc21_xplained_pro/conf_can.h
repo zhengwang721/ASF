@@ -74,9 +74,9 @@
 /* The value should be 8/12/16/20/24/32/48/64. */
 #define CONF_CAN_ELEMENT_DATA_SIZE         8
 
-/* 
+/*
  * The setting of the nominal bit rate is based on the GCLK_CAN is 48M which you can
- * change in the conf_clock.h. Below is the default configuration. The 
+ * change in the conf_clock.h. Below is the default configuration. The
  * time quanta is 48MHz/(5 + 1) =  8MHz. And each bit is (3+10+3)=16 time
  * quanta which means the bit rate is 8MHz/16=500KHz.
  */
@@ -89,9 +89,9 @@
 /* Nominal bit Time segment after sample point */
 #define CONF_CAN_NBTP_NTSEG2_VALUE  3
 
-/* 
+/*
  * The setting of the data bit rate is based on the GCLK_CAN is 48M which you can
- * change in the conf_clock.h. Below is the default configuration. The 
+ * change in the conf_clock.h. Below is the default configuration. The
  * time quanta is 48MHz/(5 + 1) =  8MHz. And each bit is (3+10+3)=16 time
  * quanta which means the bit rate is 8MHz/16=500KHz.
  */

@@ -51,7 +51,7 @@
  *    - SAMC21 Xplained Pro
  *
  * This quick start need two SAMC21 Xplained Pro boards with CAN interface
- * connected.
+ * connected by the jump wire: CANH - CANH and CANL - CANL.
  * It can be chosed to set up one of the two standard filter id as receive
  * filter.
  * It can be chosed to send one of the two message with the standard filter id.
