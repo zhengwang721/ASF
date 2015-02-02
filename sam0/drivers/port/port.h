@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_port_group SAM Port Driver (PORT)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's General Purpose Input/Output (GPIO) pin
  * functionality, for manual pin state reading and writing.
  *
@@ -730,6 +730,9 @@ static inline enum status_code port_input_event_set_config(
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
+ *		<td>Added support for SAMC21</td>
+ *	</tr>
+ *	<tr>
  *		<td>Added input event feature and support for SAML21</td>
  *	</tr>
  *	<tr>
@@ -760,10 +763,10 @@ static inline enum status_code port_input_event_set_config(
  *		<th>Date</td>
  *		<th>Comments</td>
  *	</tr>
-  *	<tr>
+ *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Added input event feature and support for SAML21.</td>
+ *		<td>03/2015</td>
+ *		<td>Added input event feature and support for SAML21 and SAMC21.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
