@@ -397,6 +397,10 @@ enum status_code nvm_update_buffer(
  *       row should be erased (via \ref nvm_erase_row()) before attempting to
  *       write new data to the page.
  *
+ * \note For SAMD21 RWW devices, see \c SAMD21_64K, command \c NVM_COMMAND_RWWEE_WRITE_PAGE
+ * must be executed before any other commands after writing a page,
+ * refer to errata 13588.
+ *
  * \return Status of the attempt to write a page.
  *
  * \retval STATUS_OK               Requested NVM memory page was successfully
@@ -634,6 +638,13 @@ enum status_code nvm_erase_row(
 
 	/* Set address and command */
 	nvm_module->ADDR.reg  = (uintptr_t)&NVM_MEMORY[row_address / 4];
+
+#ifdef SAMD21_64K
+	if (is_rww_eeprom) {
+		NVM_MEMORY[row_address / 2] = 0x0;
+	}
+#endif
+
 #ifdef FEATURE_NVM_RWWEE
 	nvm_module->CTRLA.reg = ((is_rww_eeprom) ? 
 								(NVM_COMMAND_RWWEE_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY):
@@ -641,6 +652,10 @@ enum status_code nvm_erase_row(
 #else
 	nvm_module->CTRLA.reg = NVM_COMMAND_ERASE_ROW | NVMCTRL_CTRLA_CMDEX_KEY;
 #endif
+
+	while (!nvm_is_ready()) {
+	}
+
 	return STATUS_OK;
 }
 
@@ -779,8 +794,19 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod33_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & FUSES_BOD33_ACTION_Msk)
 			>> FUSES_BOD33_ACTION_Pos);
-#else
-#if (SAMC21)
+#elif (SAMD20) || (SAMD21)
+	fusebits->bod33_level = (uint8_t)
+			((raw_user_row[0] & FUSES_BOD33USERLEVEL_Msk)
+			>> FUSES_BOD33USERLEVEL_Pos);
+
+	fusebits->bod33_enable = (bool)
+			((raw_user_row[0] & FUSES_BOD33_EN_Msk)
+			>> FUSES_BOD33_EN_Pos);
+
+	fusebits->bod33_action = (enum nvm_bod33_action)
+			((raw_user_row[0] & FUSES_BOD33_ACTION_Msk)
+			>> FUSES_BOD33_ACTION_Pos);
+#elif (SAMC21)
 	fusebits->bodvdd_level = (uint8_t)
 			((raw_user_row[0] & FUSES_BODVDDUSERLEVEL_Msk)
 			>> FUSES_BODVDDUSERLEVEL_Pos);
@@ -804,8 +830,9 @@ static void _nvm_translate_raw_fusebits_to_struct (
 	fusebits->bod33_action = (enum nvm_bod33_action)
 			((raw_user_row[0] & SYSCTRL_FUSES_BOD33_ACTION_Msk)
 			>> SYSCTRL_FUSES_BOD33_ACTION_Pos);
+
 #endif
-#endif
+
 	fusebits->wdt_enable = (bool)
 			((raw_user_row[0] & WDT_FUSES_ENABLE_Msk) >> WDT_FUSES_ENABLE_Pos);
 
