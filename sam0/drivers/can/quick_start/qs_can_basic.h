@@ -45,18 +45,22 @@
  */
 
 /**
- * \page asfdoc_sam0_can_basic_use_case Quick Start Guide for CAN
+ * \page asfdoc_sam0_can_basic_use_case Quick Start Guide for CAN normal mode
  *
  * The supported board list:
  *    - SAMC21 Xplained Pro
  *
  * This quick start need two SAMC21 Xplained Pro boards with CAN interface
- * connected.
- * It can be chosed to set up one of the two standard filter id as receive
- * filter.
- * It can be chosed to send one of the two message with the standard filter id.
+ * connected by the jump wire: CANH - CANH and CANL - CANL.
+ *
+ * It can be chosed to set up one of the two standard filter id and one of
+ * the two extended filter id as receive filter.
+ * It can be chosed to send one of the two message with the standard or
+ * extended filter id.
  * If the message has been received, it will print the received data on the
  * console.
+ * The configuration is defined in conf_can.h file with message data length 8
+ * and baudrate 500KHz.
  *
  * \section asfdoc_sam0_can_basic_use_case_setup Setup
  *

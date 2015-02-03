@@ -270,7 +270,7 @@ int main(void)
 
 //! [configure_can]
 	configure_can();
-//! [configure_cab]
+//! [configure_can]
 
 //! [display_user_menu]
 	display_menu();

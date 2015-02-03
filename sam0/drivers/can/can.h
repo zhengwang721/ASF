@@ -364,15 +364,20 @@ struct can_extended_message_filter_element {
 /** @} */
 
 /**
- * \defgroup asfdoc_sam0_can_group SAM0 Control Area Network (CAN) Low Level Driver
+ * \defgroup asfdoc_sam0_can_group SAM Control Area Network (CAN) Low Level Driver
  *
- * This driver for SAM0 devices provides an low level interface for the configuration
- * and management of the device's Control Area Network functionality.
+ * This driver for Atmel® | SMART SAM devices provides an low level
+ * interface for the configuration and management of the device's
+ * Control Area Network functionality.
  *
  * \note  Since "The Control Area Network (CAN) performs communication according
  * to ISO 11898-1 (Bosch CAN specification 2.0 part A,B) and to Bosch CAN FD
  * specification V1.0", the driver is focus on the MAC layer and try to offer
  * the APIs which can be used by upper application layer.
+ *
+ * The message ram is static allocated in the driver, the related
+ * setting is defined in "conf_can.h" file. It means it's settled to normal
+ * operation mode or FD operation mode when you set the "conf_can.h" file.
  *
  * The following peripherals are used by this module:
  *  - CAN (Control Area Network)
@@ -1237,7 +1242,7 @@ static inline void can_clear_interrupt_status(
  *	</tr>
  *  <tr>
  *		<td>CAN</td>
- *		<td>Operational Amplifier Controller</td>
+ *		<td>Control Area Network (CAN) Controller</td>
  *	</tr>
  * </table>
  *
@@ -1277,6 +1282,8 @@ static inline void can_clear_interrupt_status(
  *
  *  - \subpage asfdoc_sam0_can_basic_use_case
  *
+ *  - \subpage asfdoc_sam0_can_fd_use_case
+ *
  * \page asfdoc_sam0_can_document_revision_history Document Revision History
  *
  * <table>
@@ -1287,7 +1294,7 @@ static inline void can_clear_interrupt_status(
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>01/2015</td>
+ *		<td>03/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
