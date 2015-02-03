@@ -102,19 +102,11 @@
  *      \snippet qs_spi_slave_callback.c conf_format
  *   -# Set MUX setting E.
  *      \snippet qs_spi_slave_callback.c mux_setting
-<<<<<<< HEAD
  *   -# Set pinmux for pad 0 (data in MOSI).
  *      \snippet qs_spi_slave_callback.c di
  *   -# Set pinmux for pad 1 (slave select).
  *      \snippet qs_spi_slave_callback.c ss
  *   -# Set pinmux for pad 2 (data out MISO).
-=======
- *   -# Set pinmux for pad 0 (data in (MOSI)).
- *      \snippet qs_spi_slave_callback.c di
- *   -# Set pinmux for pad 1 (slave select).
- *      \snippet qs_spi_slave_callback.c ss
- *   -# Set pinmux for pad 2 (data out (MISO)).
->>>>>>> ef96079175123e286a2710d474c47bf6d713e8c1
  *      \snippet qs_spi_slave_callback.c do
  *   -# Set pinmux for pad 3 (SCK).
  *      \snippet qs_spi_slave_callback.c sck
