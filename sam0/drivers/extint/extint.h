@@ -683,14 +683,9 @@ static inline void extint_nmi_clear_detected(
  *      <th>Comments</td>
  *  </tr>
  *  <tr>
- *      <td>F</td>
- *      <td>01/2015</td>
- *      <td>Added support for SAMC21.</td>
- *  </tr>
- *  <tr>
  *      <td>E</td>
- *      <td>12/2014</td>
- *      <td>Added support for SAML21.</td>
+ *      <td>03/2015</td>
+ *      <td>Added support for SAML21 and SAMC21.</td>
  *  </tr>
  *  <tr>
  *      <td>D</td>
