@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_wdt_group SAM Watchdog Driver (WDT)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's Watchdog Timer module, including the enabling,
  * disabling, and kicking within the device. The following driver API modes are
  * covered by this manual:
@@ -161,7 +161,7 @@
  * }
  * \enddot
  *
- * \note SAM L21's Watchdog Counter is \a not provided by GCLK, but it uses an
+ * \note SAM L21 and C21's Watchdog Counter is \a not provided by GCLK, but it uses an
  *       internal 1KHz OSCULP32K output clock.
  *       This clock must be configured and enabled in the 32KHz Oscillator
  *       Controller(OSC32KCTRL) before using the WDT.
@@ -254,7 +254,7 @@ struct wdt_conf {
 	/** Enable/Disable the Watchdog Timer. */
 	bool enable;
 #if !((SAML21) && (SAMC21))
-	/** GCLK generator used to clock the peripheral except SAM L21.*/
+	/** GCLK generator used to clock the peripheral except SAM L21 and C21.*/
 	enum gclk_generator clock_source;
 #endif
 	/** Number of Watchdog timer clock ticks until the Watchdog expires. */
@@ -438,7 +438,7 @@ void wdt_reset_count(void);
  *		<th>Changelog</th>
  *	</tr>
  *	<tr>
- *		<td>Add support for SAML21</td>
+ *		<td>Add support for SAML21 and SAMC21</td>
  *	</tr>
  *	<tr>
  *		<td>Add SAMD21 support and driver updated to follow driver type convention:
@@ -475,14 +475,9 @@ void wdt_reset_count(void);
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>F</td>
- *		<td>01/2015</td>
- *		<td>Added SAMC21 support.</td>
- *	</tr>
- *	<tr>
  *		<td>E</td>
- *		<td>09/2014</td>
- *		<td>Added SAML21 support.</td>
+ *		<td>03/2015</td>
+ *		<td>Added SAML21 and SAMC21 support.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
