@@ -3,7 +3,7 @@
  *
  * \brief SAM Analog to Digital Converter (ADC) Unit test
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -154,7 +154,7 @@ volatile bool adc_init_success = false;
  *
  * \param module Pointer to the ADC module (not used)
  */
-static void adc_user_callback(const struct adc_module *const module)
+static void adc_user_callback(struct adc_module *const module)
 {
 	interrupt_flag = true;
 }

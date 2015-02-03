@@ -3,7 +3,7 @@
  *
  * \brief SAM Serial Peripheral Interface Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -667,7 +667,7 @@ enum spi_character_size {
 struct spi_module;
 
 /** Type of the callback functions. */
-typedef void (*spi_callback_t)(const struct spi_module *const module);
+typedef void (*spi_callback_t)(struct spi_module *const module);
 
 #  if !defined(__DOXYGEN__)
 /** Prototype for the interrupt handler. */

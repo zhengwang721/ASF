@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Master with DMA Quick Start Guide
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -104,7 +104,7 @@ DmacDescriptor example_descriptor;
 //! [transfer_descriptor]
 
 //! [transfer_done]
-static void transfer_done( const struct dma_resource* const resource )
+static void transfer_done(struct dma_resource* const resource )
 {
 	UNUSED(resource);
 
