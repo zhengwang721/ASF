@@ -3,7 +3,7 @@
  *
  * \brief SAM Analog Comparator Driver
  *
- * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -974,7 +974,7 @@ static inline void ac_disable_events(
  *   \li Majority of five sample output filter
  *   \li Comparator disabled during sleep mode (if has this feature)
  *   \li Hysteresis enabled on the input pins
- *   \li Hysteresis level of 50mV if having this feature.
+ *   \li Hysteresis level of 50mV if having this feature
  *   \li Internal comparator output mode
  *   \li Comparator pin multiplexer 0 selected as the positive input
  *   \li Scaled V<SUB>CC</SUB> voltage selected as the negative input
@@ -1379,14 +1379,9 @@ static inline void ac_win_clear_status(
  *      <th>Comments</td>
  *    </tr>
  *    <tr>
- *      <td>F</td>
- *      <td>01/2015</td>
- *      <td>Added support for SAMC21.</td>
- *    </tr>
- *    <tr>
  *      <td>E</td>
- *      <td>12/2014</td>
- *      <td>Added support for SAML21.</td>
+ *      <td>03/2015</td>
+ *      <td>Added support for SAML21/C21.</td>
  *    </tr>
  *    <tr>
  *      <td>D</td>
