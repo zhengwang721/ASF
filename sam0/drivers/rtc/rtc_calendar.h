@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_rtc_calendar_group SAM RTC Calendar Driver (RTC CAL)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the configuration
+ * This driver for Atmel® | SMART SAM devices provides an interface for the configuration
  * and management of the device's Real Time Clock functionality in Calendar
  * operating mode, for the configuration and retrieval of the current time and
  * date as maintained by the RTC module. The following driver API modes are
@@ -1303,8 +1303,8 @@ static inline uint32_t rtc_read_general_purpose_reg(
  *	</tr>
  *	<tr>
  *		<td>E</td>
- *		<td>11/2014</td>
- *		<td>Added support for SAML21.</td>
+ *		<td>03/2015</td>
+ *		<td>Added support for SAML21/C21.</td>
  *	</tr>
  *	<tr>
  *		<td>D</td>
