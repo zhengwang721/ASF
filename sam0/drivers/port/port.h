@@ -276,7 +276,7 @@ enum port_input_event{
  *  Configuration structure for a port input event.
  */
 struct port_input_event_config{
-	/** PPort input event action. */
+	/** Port input event action. */
 	enum port_input_event_action  action;
 	/** GPIO pin. */
 	uint8_t gpio_pin;
