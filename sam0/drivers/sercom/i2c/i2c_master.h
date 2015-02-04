@@ -3,7 +3,7 @@
  *
  * \brief SAM SERCOM I2C Master Driver
  *
- * Copyright (C) 2012-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -118,7 +118,7 @@ enum i2c_master_start_hold_time {
 };
 
 /**
- * \ brief Values for inactive bus time-out.
+ * \brief Values for inactive bus time-out.
  *
  * If the inactive bus time-out is enabled and the bus is inactive for
  * longer than the time-out setting, the bus state logic will be set to idle.
