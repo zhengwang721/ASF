@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
-/**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -78,34 +78,43 @@
  * The Sigma-Delta Analog-to-Digital Converter (SDADC) converts analog signals to
  * digital values. The sigma-delta architecture of the SDADC implies a filtering
  * and a decimation of the bitstream at the output of the SDADC. The input selection
- * is up to three input analog channels. The SDADC provides unsigned results.
+ * is up to three input analog channels.
  *
- * SDADC measurements can be started by either application software or an incoming
- * event from another peripheral in the device. A set of reference voltages is
- * generated internally.
+ * The SDADC provides up to 16-bit resolution at about 1000 samples per second (1ksps)
+ * and sized 24 bits signed result to handle filtering and gain correction without overflow.
+ * The SDADC measurements can be started by either application software or an incoming
+ * event from another peripheral in the device. 
+ * 
+ * The conversion is performed on a full range between 0V and the reference voltage.
+ * Both internal and external reference voltages can be selected, Reference range
+ * must be set to match the voltage of the reference used. Analog inputs between
+ * these voltages convert to values based on a linear conversion.
  *
  *
  * \subsection asfdoc_sam0_sdadc_module_overview_clock Sample Clock
  * A generic clock (GCLK_SDADC) is required to generate the CLK_SDADC to the SDADC
  * module. The SDADC features a prescaler, which enables conversion at lower clock
- * rates than the input Generic Clock to the SDADC module. The SDADC data sampling
- * frequency CLK_SDADC_FS in the SDADC module is the CLK_SDADC/4. the reduction
- * comes from the phase generator between the prescaler and the SDADC.
+ * rates than the input Generic Clock to the SDADC module.
+ *
+ * The SDADC data sampling frequency (CLK_SDADC_FS) in the SDADC module is the
+ * CLK_SDADC/4, the reduction comes from the phase generator between the prescaler
+ * and the SDADC.
  *
  * OSR is the Over Sampling Ratio which can be modified to change the output data
- * rate. The conversion time depends on the selected OSR and on the sampling frequency
+ * rate. The conversion time depends on the selected OSR and the sampling frequency
  * of the SDADC.
- * Initialization of the SDADC (22 sigma-delta samples)
- * Filling of the decimation filter (3*OSR sigma-delta samples)
+ * The conversion time can be described with:
  * \f[
- * t_{SAMPLE} = \frac {(22 + 3 \times OSR)} {CLK_SDADC_FS}
+ * t_{SAMPLE} = \frac {22 + 3 \times OSR} {CLK \_ SDADC \_ FS}
  * \f]
+ * -# Initialization of the SDADC (22 sigma-delta samples)
+ * -# Filling of the decimation filter (3*OSR sigma-delta samples)
  *
  * \subsection asfdoc_sam0_sdadc_module_overview_offset_corr Gain and Offset Correction
  * A specific offset, gain and shift can be applied to each source of the SDADC
  * by performing the following operation:
  * \f[
- * Data = (Data_{0} + OFFSET) \times \frac {GAIN}{2 \upper(SHIFT)}
+ * Data = (Data_{0} + OFFSET) \times \frac {GAIN}{2^{SHIFT}}
  * \f]
  *
  *
@@ -1116,6 +1125,9 @@ static inline void sdadc_disable_interrupt(struct sdadc_module *const module_ins
  * added to the user application.
  *
  *  - \subpage asfdoc_sam0_sdadc_basic_use_case
+ * \if SDADC_CALLBACK_MODE
+ *  - \subpage asfdoc_sam0_sdadc_basic_use_case_callback
+ * \endif
  *
  * \page asfdoc_sam0_sdadc_document_revision_history Document Revision History
  *
@@ -1127,7 +1139,7 @@ static inline void sdadc_disable_interrupt(struct sdadc_module *const module_ins
  *	</tr>
  *	<tr>
  *		<td>A</td>
- *		<td>12/2014</td>
+ *		<td>03/2015</td>
  *		<td>Initial release</td>
  *	</tr>
  * </table>
