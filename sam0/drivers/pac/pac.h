@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef PAC_H_INCLUDED
@@ -49,7 +49,7 @@
 /**
  * \defgroup asfdoc_sam0_pac_group  SAM Peripheral Access Controller Driver (PAC)
  *
- * This driver for Atmel庐 | SMART SAM devices provides an interface for the locking and
+ * This driver for Atmel® | SMART SAM devices provides an interface for the locking and
  * unlocking of peripheral registers within the device. When a peripheral is
  * locked, accidental writes to the peripheral will be blocked and a CPU
  * exception will be raised.
@@ -982,14 +982,9 @@ static inline void system_pac_disable_event(void)
  *		<th>Comments</td>
  *	</tr>
  *	<tr>
- *		<td>G</td>
- *		<td>01/2015</td>
- *		<td>Added support for SAMC21.</td>
- *	</tr> 
- *	<tr>
  *		<td>F</td>
- *		<td>08/2014</td>
- *		<td>Added support for SAML21.</td>
+ *		<td>03/2015</td>
+ *		<td>Added support for SAML21 and SAMC21.</td>
  *	</tr>
  *	<tr>
  *		<td>E</td>
@@ -1020,15 +1015,4 @@ static inline void system_pac_disable_event(void)
  */
 
 #endif /* PAC_H_INCLUDED */
-
-
-
-
-
-
-
-
-
-
-
 
