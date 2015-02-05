@@ -310,6 +310,17 @@
 		<generator value="doxygen"/>
 		<device-support value="atsamd21g18a"/>
 	</project>
+	
+	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd21g18au" caption="User board project template for SAMD21G18AU" type="template">
+		<info type="description" value="summary">
+		User board project template for SAMD21G18AU devices.
+		</info>
+		<require idref="common.applications.user_application.sam0_system.user_board.common_samd21"/>
+		<require idref="board.user_board.samd21g"/>
+		<generator value="as5_arm_template"/>
+		<generator value="doxygen"/>
+		<device-support value="atsamd21g18au"/>
+	</project>	
 
 	<project workspace-name="user_application" id="common.applications.user_application.sam0_system.user_board.atsamd21g17a" caption="User board project template for SAMD21G17A" type="template">
 		<info type="description" value="summary">
