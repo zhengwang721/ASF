@@ -6,7 +6,7 @@
  * This file includes the appropriate board header file according to the
  * defined board (parameter BOARD).
  *
- * Copyright (c) 2009-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -142,6 +142,7 @@ extern "C" {
 #define SAMD11_XPLAINED_PRO        74  //!< SAM D11 Xplained Pro board.
 #define SAMG55_XPLAINED_PRO        75  //!< SAMG55 Xplained Pro board.
 #define SAML21_XPLAINED_PRO        76  //!< SAM L21 Xplained Pro board.
+#define SAMDA1_XPLAINED_PRO        77  //!< SAM DA1 Xplained Pro board.
 #define SIMULATOR_XMEGA_A1         97  //!< Simulator for XMEGA A1 devices
 #define AVR_SIMULATOR_UC3          98  //!< Simulator for the AVR UC3 device family.
 #define USER_BOARD                 99  //!< User-reserved board (if any).
@@ -272,6 +273,8 @@ extern "C" {
 #  include "samd11_xplained_pro/samd11_xplained_pro.h"
 #elif BOARD == SAML21_XPLAINED_PRO
 #  include "saml21_xplained_pro/saml21_xplained_pro.h"
+#elif BOARD == SAMDA1_XPLAINED_PRO
+#  include "samda1_xplained_pro/samda1_xplained_pro.h"
 #elif BOARD == SAM4N_XPLAINED_PRO
 #  include "sam4n_xplained_pro/sam4n_xplained_pro.h"
 #elif BOARD == MEGA1284P_XPLAINED_BC
