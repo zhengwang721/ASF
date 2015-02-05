@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef BOD_FEATURE_H_INCLUDED
@@ -362,6 +362,10 @@ enum status_code bodvdd_set_config(
 static inline enum status_code bodvdd_enable(void)
 {
 	SUPC->BODVDD.reg |= SUPC_BODVDD_ENABLE;
+	while (!(SUPC->STATUS.reg & SUPC_STATUS_BVDDSRDY)) {
+		/* Wait for BODVDD register sync ready */
+	}
+
 	return STATUS_OK;
 }
 
@@ -453,6 +457,10 @@ enum status_code bodcore_set_config(
 static inline enum status_code bodcore_enable(void)
 {
 	SUPC->BODCORE.reg |= SUPC_BODCORE_ENABLE;
+	while (!(SUPC->STATUS.reg & SUPC_STATUS_BCORESRDY)) {
+		/* Wait for BODCORE register sync ready */
+	}
+
 	return STATUS_OK;
 }
 

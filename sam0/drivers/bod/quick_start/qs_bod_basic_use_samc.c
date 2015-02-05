@@ -37,16 +37,13 @@
  *
  * \asf_license_stop
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include <asf.h>
 
-void configure_bodvdd(void);
-void configure_bodcore(void);
-
 //! [setup]
-void configure_bodvdd(void)
+static void configure_bodvdd(void)
 {
 //! [setup_config]
 	struct bodvdd_config config_bodvdd;
@@ -64,7 +61,7 @@ void configure_bodvdd(void)
 //! [setup_enable]
 }
 
-void configure_bodcore(void)
+static void configure_bodcore(void)
 {
 	struct bodcore_config config_bodcore;
 	bodcore_get_config_defaults(&config_bodcore);
