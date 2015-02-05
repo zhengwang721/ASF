@@ -161,16 +161,16 @@ extern "C" {
  * splines = false;
  * rankdir=LR;
  *
- * mux1 [label="Transfer Trigger", shape=box, width=1.75];
+ * mux1 [label="Transfer Trigger", shape=box];
  *
  * dma [label="DMA Channel", shape=polygon, sides=6, orientation=60, style=filled, fillcolor=darkolivegreen1, height=1, width=1];
- * descriptor [label="Transfer Descriptor", shape=box, style=filled, fillcolor=lightblue, width=2];
+ * descriptor [label="Transfer Descriptor", shape=box, style=filled, fillcolor=lightblue];
  *
  * mux1 -> dma;
  * descriptor -> dma;
  *
- * interrupt [label="Interrupt", shape=box, width=1];
- * events [label="Events", shape=box, width=1];
+ * interrupt [label="Interrupt", shape=box];
+ * events [label="Events", shape=box];
  *
  * dma:e -> interrupt:w;
  * dma:e -> events:w;
