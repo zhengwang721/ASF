@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
-/**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -53,14 +53,18 @@
  * This quick start need two SAMC21 Xplained Pro boards with CAN interface
  * connected by the jump wire: CANH - CANH and CANL - CANL.
  *
- * It can be chosed to set up one of the two standard filter id and one of
- * the two extended filter id as receive filter.
- * It can be chosed to send one of the two message with the standard or
+ * It show how to handle standard and FD message in a CAN FD network
+ * with filter setting, message sending, receive buffer and FIFO usage and
+ * interrupt handling.
+ *
+ * User can choose to set up two standard filter id and two extended filter id
+ * as receive filter.
+ * And then user can choose to send messages with the standard or
  * extended filter id.
  * If the message has been received, it will print the received data on the
  * console.
- * The configuration is defined in conf_can.h file with message data length 64
- * and data phase baudrate 3MHz.
+ * The configuration is defined in conf_can.h file with message max data
+ * length 64 and data phase baudrate 3MHz.
  *
  * \section asfdoc_sam0_can_fd_use_case_setup Setup
  *

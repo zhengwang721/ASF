@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
-/**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -268,122 +268,130 @@ void can_init(struct can_module *const module_inst, Can *hw,
 	hw->TXBCIE.reg = CAN_TXBCIE_MASK;
 }
 
-void can_switch_operation_mode(struct can_module *const module_inst,
-		const enum can_module_operation_mode mode)
+void can_start(struct can_module *const module_inst)
 {
-	uint32_t temp_cccr;
+	module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
+	/* Wait for the sync. */
+	while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
+}
 
+void can_stop(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+	/* Wait for the sync. */
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+}
+
+void can_enable_fd_mode(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+	/* Wait for the sync. */
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
+	
+	module_inst->hw->CCCR.reg |= CAN_CCCR_FDOE;
+	module_inst->hw->CCCR.reg |= CAN_CCCR_BRSE;
+}
+
+void can_disable_fd_mode(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+	/* Wait for the sync. */
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
+	
+	module_inst->hw->CCCR.reg &= ~CAN_CCCR_FDOE;
+	module_inst->hw->CCCR.reg &= ~CAN_CCCR_BRSE;
+}
+
+void can_enable_restricted_operation_mode(
+		struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+	/* Wait for the sync. */
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
+	
+	module_inst->hw->CCCR.reg |= CAN_CCCR_ASM;
+}
+
+void can_disable_restricted_operation_mode(
+		struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+	/* Wait for the sync. */
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
+	
+	module_inst->hw->CCCR.reg &= ~CAN_CCCR_ASM;
+}
+
+void can_enable_bus_monitor_mode(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+	/* Wait for the sync. */
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
+	
+	module_inst->hw->CCCR.reg |= CAN_CCCR_MON;
+}
+
+void can_disable_bus_monitor_mode(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+	/* Wait for the sync. */
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
+	
+	module_inst->hw->CCCR.reg &= ~CAN_CCCR_MON;
+}
+
+void can_enable_sleep_mode(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg |= CAN_CCCR_CSR;
+	/* Wait for the sync. */
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+	
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_CSA));
+}
+
+void can_disable_sleep_mode(struct can_module *const module_inst)
+{
 	/* Enable peripheral clock */
 	_can_enable_peripheral_clock(module_inst);
-
-	if (mode == CAN_OPERATION_MODE_SLEEP) {
-		module_inst->hw->CCCR.reg |= CAN_CCCR_CSR;
-		/* Wait for the sync. */
-		while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-
-		while (!(module_inst->hw->CCCR.reg & CAN_CCCR_CSA));
-	} else {
-		/* Check if in sleep mode and exit it. */
-		if ((module_inst->hw->CCCR.reg & CAN_CCCR_CSA)){
-			if (module_inst->hw == CAN0) {
-				system_gclk_chan_set_config(CAN0_GCLK_ID, &gclk_chan_conf);
-				system_gclk_chan_enable(CAN0_GCLK_ID);
-			}
-
-			if (module_inst->hw == CAN1) {
-				system_gclk_chan_set_config(CAN1_GCLK_ID, &gclk_chan_conf);
-				system_gclk_chan_enable(CAN1_GCLK_ID);
-			}
-			module_inst->hw->CCCR.reg &= CAN_CCCR_CSR;
-			while ((module_inst->hw->CCCR.reg & CAN_CCCR_CSA));
-		}
-
-		if (mode == CAN_OPERATION_MODE_SOFTWARE_INITIALIZATION) {
-			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-		} else if (mode == CAN_OPERATION_MODE_NORMAL_OPERATION) {
-			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-			module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-
-			temp_cccr = module_inst->hw->CCCR.reg;
-			temp_cccr &= ~CAN_CCCR_FDOE;
-			temp_cccr &= ~CAN_CCCR_BRSE;
-			temp_cccr &= ~CAN_CCCR_ASM;
-			temp_cccr &= ~CAN_CCCR_MON;
-			temp_cccr &= ~CAN_CCCR_TEST;
-			module_inst->hw->CCCR.reg = temp_cccr;
-
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
-		} else if (mode == CAN_OPERATION_MODE_FD_OPERATION) {
-			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-			module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-
-			temp_cccr = module_inst->hw->CCCR.reg;
-			temp_cccr |= CAN_CCCR_FDOE;
-			temp_cccr |= CAN_CCCR_BRSE;
-			temp_cccr &= ~CAN_CCCR_ASM;
-			temp_cccr &= ~CAN_CCCR_MON;
-			temp_cccr &= ~CAN_CCCR_TEST;
-			module_inst->hw->CCCR.reg = temp_cccr;
-
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
-		} else if (mode == CAN_OPERATION_MODE_RESTRICTED_OPERATION) {
-			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-			module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-
-			temp_cccr = module_inst->hw->CCCR.reg;
-			temp_cccr |= CAN_CCCR_ASM;
-			temp_cccr &= ~CAN_CCCR_MON;
-			temp_cccr &= ~CAN_CCCR_TEST;
-			module_inst->hw->CCCR.reg = temp_cccr;
-
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
-		} else if (mode == CAN_OPERATION_MODE_BUS_MONITOR) {
-			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-			module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-
-			temp_cccr = module_inst->hw->CCCR.reg;
-			temp_cccr |= CAN_CCCR_MON;
-			temp_cccr &= ~CAN_CCCR_ASM;
-			temp_cccr &= ~CAN_CCCR_TEST;
-			module_inst->hw->CCCR.reg = temp_cccr;
-
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
-		} else if (mode == CAN_OPERATION_MODE_TEST) {
-			module_inst->hw->CCCR.reg = CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
-			module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
-
-			temp_cccr = module_inst->hw->CCCR.reg;
-			temp_cccr |= CAN_CCCR_TEST;
-			temp_cccr |= CAN_TEST_LBCK;;
-			temp_cccr &= ~CAN_CCCR_ASM;
-			temp_cccr &= ~CAN_CCCR_MON;
-			module_inst->hw->CCCR.reg = temp_cccr;
-
-			module_inst->hw->CCCR.reg &= ~CAN_CCCR_INIT;
-			/* Wait for the sync. */
-			while (module_inst->hw->CCCR.reg & CAN_CCCR_INIT);
-		}
+	if (module_inst->hw == CAN0) {
+		system_gclk_chan_set_config(CAN0_GCLK_ID, &gclk_chan_conf);
+		system_gclk_chan_enable(CAN0_GCLK_ID);
 	}
+	
+	if (module_inst->hw == CAN1) {
+		system_gclk_chan_set_config(CAN1_GCLK_ID, &gclk_chan_conf);
+		system_gclk_chan_enable(CAN1_GCLK_ID);
+	}
+	module_inst->hw->CCCR.reg &= CAN_CCCR_CSR;
+	while ((module_inst->hw->CCCR.reg & CAN_CCCR_CSA));
+}
+
+void can_enable_test_mode(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+	/* Wait for the sync. */
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
+	
+	module_inst->hw->CCCR.reg |= CAN_CCCR_TEST;
+	module_inst->hw->TEST.reg |= CAN_TEST_LBCK;
+}
+
+void can_disable_test_mode(struct can_module *const module_inst)
+{
+	module_inst->hw->CCCR.reg |= CAN_CCCR_INIT;
+	/* Wait for the sync. */
+	while (!(module_inst->hw->CCCR.reg & CAN_CCCR_INIT));
+	module_inst->hw->CCCR.reg |= CAN_CCCR_CCE;
+	
+	module_inst->hw->CCCR.reg &= ~CAN_CCCR_TEST;
+	module_inst->hw->TEST.reg &= ~CAN_TEST_LBCK;
 }
 
 enum status_code can_set_rx_standand_filter(

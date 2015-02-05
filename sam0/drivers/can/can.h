@@ -40,7 +40,7 @@
  * \asf_license_stop
  *
  */
-/**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 
@@ -283,14 +283,14 @@ typedef union {
 #define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Pos           27
 #define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Msk           (0x7ul << CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Pos)
 #define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(value)        ((CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Msk & ((value) << CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_Pos)))
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_DISABLE     CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(0)
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF0M       CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(1)
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF1M       CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(2)
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_REJECT      CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(3)
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIORITY    CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(4)
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIF0M      CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(5)
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIF1M      CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(6)
-#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STRXBUF     CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(7)
+#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_DISABLE_Val     0
+#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF0M_Val       1
+#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF1M_Val       2
+#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_REJECT_Val      3
+#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIORITY_Val    4
+#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIF0M_Val      5
+#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_PRIF1M_Val      6
+#define   CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STRXBUF_Val     7
 #define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Pos            30
 #define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Msk            (0x3ul << CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Pos)
 #define CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT(value)         ((CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Msk & ((value) << CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_Pos)))
@@ -322,14 +322,14 @@ typedef union {
 #define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Pos           29
 #define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Msk           (0x7ul << CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Pos)
 #define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(value)        ((CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Msk & ((value) << CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_Pos)))
-#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_DISABLE       CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(0)
-#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF0M         CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(1)
-#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF1M         CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(2)
-#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_REJECT        CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(3)
-#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIORITY      CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(4)
-#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIF0M        CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(5)
-#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIF1M        CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(6)
-#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STRXBUF       CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(7)
+#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_DISABLE_Val       0
+#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF0M_Val         1
+#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF1M_Val         2
+#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_REJECT_Val        3
+#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIORITY_Val      4
+#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIF0M_Val        5
+#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_PRIF1M_Val        6
+#  define CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STRXBUF_Val       7
 
 /* -------- CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1 : (CAN extended message ID filter element: 0x01) (R/W 32) Extended Message ID Filter Element F1 Configuration -------- */
 typedef union {
@@ -375,9 +375,10 @@ struct can_extended_message_filter_element {
  * specification V1.0", the driver is focus on the MAC layer and try to offer
  * the APIs which can be used by upper application layer.
  *
- * The message ram is static allocated in the driver, the related
- * setting is defined in "conf_can.h" file. It means it's settled to normal
- * operation mode or FD operation mode when you set the "conf_can.h" file.
+ * For storage of Rx/Tx messages and for storage of the filter configuration,
+ * a message RAM is needed to the CAN module. In this driver, the message RAM
+ * is static allocated, the related setting is defined and can be changed in
+ * the module configuration file "conf_can.h".
  *
  * The following peripherals are used by this module:
  *  - CAN (Control Area Network)
@@ -437,27 +438,6 @@ extern "C" {
  * \name Module setting
  * @{
  */
-
-/**
- * \brief Can module operation modes.
- *
- */
-enum can_module_operation_mode {
-	/** Software Initialization Mode. */
-	CAN_OPERATION_MODE_SOFTWARE_INITIALIZATION,
-	/** Normal Operation Mode. */
-	CAN_OPERATION_MODE_NORMAL_OPERATION,
-	/** CAN FD Operation Mode. */
-	CAN_OPERATION_MODE_FD_OPERATION,
-	/** Restricted Operation Mode. */
-	CAN_OPERATION_MODE_RESTRICTED_OPERATION,
-	/** Bus Monitoring Mode. */
-	CAN_OPERATION_MODE_BUS_MONITOR,
-	/** Sleep Mode. */
-	CAN_OPERATION_MODE_SLEEP,
-	/** Test Mode. */
-	CAN_OPERATION_MODE_TEST,
-};
 
 /**
  * \brief Can time out modes.
@@ -649,15 +629,90 @@ void can_init(struct can_module *const module_inst, Can *hw,
 		struct can_config *config);
 
 /**
- * \brief Can operation mode switch.
- *
- * \note can_init() function should be called before use this function.
+ * \brief Start CAN module transcation.
  *
  * \param[in] module_inst  Pointer to the CAN software instance struct
- * \param[in] mode      Can operation mode type
  */
-void can_switch_operation_mode(struct can_module *const module_inst,
-		const enum can_module_operation_mode mode);
+void can_start(struct can_module *const module_inst);
+
+/**
+ * \brief Stop CAN module transcation.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_stop(struct can_module *const module_inst);
+
+/**
+ * \brief Enable CAN FD mode.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_enable_fd_mode(struct can_module *const module_inst);
+
+/**
+ * \brief Disable CAN FD mode.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_disable_fd_mode(struct can_module *const module_inst);
+
+/**
+ * \brief Enable CAN restricted operation mode.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_enable_restricted_operation_mode(
+		struct can_module *const module_inst);
+
+/**
+ * \brief Disable CAN restricted operation mode.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_disable_restricted_operation_mode(
+		struct can_module *const module_inst);
+
+/**
+ * \brief Enable CAN bus monitor mode.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_enable_bus_monitor_mode(struct can_module *const module_inst);
+
+/**
+ * \brief Disable CAN bus monitor mode.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_disable_bus_monitor_mode(struct can_module *const module_inst);
+
+/**
+ * \brief Enable CAN sleep mode.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_enable_sleep_mode(struct can_module *const module_inst);
+
+/**
+ * \brief Disable CAN sleep mode.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_disable_sleep_mode(struct can_module *const module_inst);
+
+/**
+ * \brief Enable CAN test mode.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_enable_test_mode(struct can_module *const module_inst);
+
+/**
+ * \brief Disable CAN test mode.
+ *
+ * \param[in] module_inst  Pointer to the CAN software instance struct
+ */
+void can_disable_test_mode(struct can_module *const module_inst);
 
 /**
  * \brief Can read timestamp count value.
@@ -772,10 +827,10 @@ static inline void can_rx_clear_buffer_status(
 		struct can_module *const module_inst, uint32_t index)
 {
 	if (index < 32) {
-		module_inst->hw->NDAT1.reg &= ~(1 << index);
+		module_inst->hw->NDAT1.reg |= (1 << index);
 	} else {
 		index -= 32;
-		module_inst->hw->NDAT2.reg &= ~(1 << index);
+		module_inst->hw->NDAT2.reg |= (1 << index);
 	}
 }
 
@@ -824,7 +879,8 @@ static inline void can_get_standard_message_filter_element_default(
 {
 	sd_filter->S0.reg = CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID2_Msk |
 			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFID1(0) |
-			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF0M |
+			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC(
+			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFEC_STF0M_Val) |
 			CAN_STANDARD_MESSAGE_FILTER_ELEMENT_S0_SFT_CLASSIC;
 }
 
@@ -853,7 +909,8 @@ static inline void can_get_extended_message_filter_element_default(
 		struct can_extended_message_filter_element *et_filter)
 {
 	et_filter->F0.reg = CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFID1(0) |
-			CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF1M;
+			CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC(
+			CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F0_EFEC_STF1M_Val);
 	et_filter->F1.reg = CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFID2_Msk |
 			CAN_EXTENDED_MESSAGE_FILTER_ELEMENT_F1_EFT_CLASSIC;
 }
