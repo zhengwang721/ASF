@@ -96,6 +96,7 @@
  * Interface). EABI is a standard calling convention which is defined by ARM. 
  * There are the four functions interface which can implement division and mod 
  * operation in EABI.
+ *
  * The following prototypes for EABI division operation in ICCARM tool chain:
  * \code
     int __aeabi_idiv(int numerator, int denominator);
