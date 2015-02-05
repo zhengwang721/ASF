@@ -187,7 +187,7 @@ static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
 						(epoch  % 86400L) / 3600,           /* hour (86400 equals secs per day) */
 						(epoch  % 3600) / 60,               /* minute (3600 equals secs per minute) */
 						epoch % 60);                        /* second */
-				port_pin_set_output_level(LED_0_PIN, false);
+				ioport_set_pin_level(LED_0_PIN, false);
 
 				ret = close(sock);
 				if (ret == SOCK_ERR_NO_ERROR) {
@@ -317,7 +317,7 @@ int main(void)
 	}
 
 	/* Turn LED0 off initially. */
-	port_pin_set_output_level(LED_0_PIN, true);
+	ioport_set_pin_level(LED_0_PIN, true);
 
 	/* Initialize Socket module */
 	socketInit();

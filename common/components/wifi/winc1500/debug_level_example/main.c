@@ -56,7 +56,7 @@
  * \section usage Usage
  * -# Enable debug mode by configuring the below code in config\conf_winc.h:
  * \code
- *    #define CONF_WIFI_M2M_DEBUG        (1)
+ *    #define CONF_WINC_DEBUG        (1)
  * \endcode
  * -# Build the program and download it into the board.
  * -# On the computer, open and configure a terminal application as the follows.
@@ -172,10 +172,10 @@ int main(void)
 		}
 	}
 
-#if (CONF_WIFI_M2M_DEBUG == 1)
+#if (CONF_WINC_DEBUG == 1)
 	for (int8_t i = 0; i < 5; i++) {
 		/* Set debug level. */
-		M2M_DEBUG_LEVEL(i);
+		M2M_LOG_LEVEL(i);
 
 		printf("\r[set debug level : %d]\r\n", (unsigned int)i);
 
@@ -192,7 +192,7 @@ int main(void)
 
 	printf("Done.\r\n\r\n");
 #else
-	printf("Please enable debug. >> \\config\\conf_winc.h  CONF_WIFI_M2M_DEBUG (0) -> (1)\r\n");
+	printf("Please enable debug. >> \\config\\conf_winc.h  CONF_WINC_DEBUG (0) -> (1)\r\n");
 #endif
 
 	while (1) {

@@ -48,6 +48,8 @@
 extern "C" {
 #endif
 
+#include "m2m_types.h"
+
 /** Growl Options */
 #define PROWL_API_KEY            "6ce3b9ff6c29e5c5b8960b28d9e987aec5ed603a"
 #define NMA_API_KEY              "0757fe93214fc2cdf2ad42a5005ee0aa83a7a8ea242c0b80"

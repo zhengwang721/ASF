@@ -48,6 +48,8 @@
 extern "C" {
 #endif
 
+#include "m2m_types.h"
+
 /** Using broadcast address for simplicity. */
 #define MAIN_SERVER_PORT                (80)
 

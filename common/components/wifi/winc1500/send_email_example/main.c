@@ -785,7 +785,7 @@ int main(void)
 				}
 			} else if (gu8SocketStatus == SocketComplete) {
 				printf("main: Email was successfully sent.\r\n");
-				port_pin_set_output_level(LED_0_PIN, false);
+				ioport_set_pin_level(LED_0_PIN, false);
 				close_socket();
 				break;
 			} else if (gu8SocketStatus == SocketError) {

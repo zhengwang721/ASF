@@ -93,6 +93,7 @@
 
 #include "asf.h"
 #include "main.h"
+#include <string.h>
 #include "bsp/include/nm_bsp.h"
 #include "driver/include/m2m_wifi.h"
 #include "socket/include/socket.h"
@@ -247,7 +248,7 @@ static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
 						}
 
 						printf("%s\r\n", pcIndxPtr);
-						port_pin_set_output_level(LED_0_PIN, false);
+						ioport_set_pin_level(LED_0_PIN, false);
 						gbContinueReceive = false;
 						break;
 					} else {
@@ -268,7 +269,7 @@ static void socket_cb(SOCKET sock, uint8_t u8Msg, void *pvMsg)
 						gbContinueReceive = false;
 						gbTcpConnection = false;
 						gbFinishedGetWeather = true;
-						port_pin_set_output_level(LED_0_PIN, false);
+						ioport_set_pin_level(LED_0_PIN, false);
 						break;
 					} else {
 						gbContinueReceive = true;

@@ -91,6 +91,7 @@
 
 #include "asf.h"
 #include "main.h"
+#include <string.h>
 #include "common/include/nm_common.h"
 #include "driver/include/m2m_wifi.h"
 #include "socket/include/socket.h"
@@ -102,8 +103,6 @@
 
 /** IP address of host. */
 uint32_t gu32HostIp = 0;
-/** Get host IP status variable. */
-static bool gbHostIpByName = false;
 /** Receive buffer definition. */
 static uint8_t gau8SocketTestBuffer[MAIN_WIFI_M2M_BUFFER_SIZE];
 /** Socket for TCP communication */

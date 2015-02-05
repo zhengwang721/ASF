@@ -4,7 +4,7 @@
  *
  * \brief WINC1500 Firmware Update
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
@@ -50,16 +50,18 @@
  * - WINC1500 root certificate update
  *
  * It uses the following hardware:
+ * - the SAMW25 Xplained Pro.
+ * OR
  * - the SAMD21 Xplained Pro.
  * - the WINC1500 on EXT1.
  *
  * For a more information about WINC1500 update please refer to the following document
  * available under the doc folder:
- * - Atmel-AN004-Firmware-Update-Procedure-for-WINC1500-WiFi-Module-using-SAM-D21-Xplained-Pro.pdf
+ * - Atmel-AN004-Firmware-Update-Procedure-for-WINC1500-WiFi-Module-using-SAM-Xplained-Pro.pdf
  *
  * \section files Main Files
- * - samd21_xplained_pro_firmware_update.bat : script to perform firmware update.
- * - samd21_xplained_pro_certificate_update.bat : script to perform root certificate
+ * - samXXX_xplained_pro_firmware_update.bat : script to perform firmware update.
+ * - samXXX_xplained_pro_certificate_update.bat : script to perform root certificate
  * update.
  *
  * \section contactinfo Contact Information

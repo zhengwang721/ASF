@@ -102,8 +102,6 @@
 
 /** IP address of host. */
 uint32_t gu32HostIp = 0;
-/** Get host IP status variable. */
-static bool gbHostIpByName = false;
 /** Receive buffer definition. */
 static uint8_t gau8SocketTestBuffer[MAIN_WIFI_M2M_BUFFER_SIZE];
 /** Socket for TCP communication */

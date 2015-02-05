@@ -47,16 +47,16 @@
 			<build type="c-source" value="driver/source/m2m_periph.c"/>
 			<build type="c-source" value="driver/source/m2m_wifi.c"/>
 			<build type="c-source" value="driver/source/nmasic.c"/>
-			<build type="header-file" value="driver/source/nmasic.h"/>			
+			<build type="header-file" value="driver/source/nmasic.h"/>
 			<build type="c-source" value="driver/source/nmbus.c"/>
-			<build type="header-file" value="driver/source/nmbus.h"/>		
+			<build type="header-file" value="driver/source/nmbus.h"/>
 			<build type="c-source" value="driver/source/nmdrv_crt.c"/>
 			<build type="c-source" value="driver/source/nmdrv.c"/>
-			<build type="header-file" value="driver/source/nmdrv.h"/>	
+			<build type="header-file" value="driver/source/nmdrv.h"/>
 			<build type="c-source" value="driver/source/nmi2c.c"/>
 			<build type="header-file" value="driver/source/nmi2c.h"/>
 			<build type="c-source" value="driver/source/nmspi.c"/>
-			<build type="header-file" value="driver/source/nmspi.h"/>	
+			<build type="header-file" value="driver/source/nmspi.h"/>
 			<build type="c-source" value="driver/source/nmuart.c"/>
 			<build type="header-file" value="driver/source/nmuart.h"/>
 
@@ -122,16 +122,16 @@
 			<build type="c-source" value="driver/source/m2m_periph.c"/>
 			<build type="c-source" value="driver/source/m2m_wifi.c"/>
 			<build type="c-source" value="driver/source/nmasic.c"/>
-			<build type="header-file" value="driver/source/nmasic.h"/>			
+			<build type="header-file" value="driver/source/nmasic.h"/>
 			<build type="c-source" value="driver/source/nmbus.c"/>
-			<build type="header-file" value="driver/source/nmbus.h"/>		
+			<build type="header-file" value="driver/source/nmbus.h"/>
 			<build type="c-source" value="driver/source/nmdrv_crt.c"/>
 			<build type="c-source" value="driver/source/nmdrv.c"/>
-			<build type="header-file" value="driver/source/nmdrv.h"/>	
+			<build type="header-file" value="driver/source/nmdrv.h"/>
 			<build type="c-source" value="driver/source/nmi2c.c"/>
 			<build type="header-file" value="driver/source/nmi2c.h"/>
 			<build type="c-source" value="driver/source/nmspi.c"/>
-			<build type="header-file" value="driver/source/nmspi.h"/>	
+			<build type="header-file" value="driver/source/nmspi.h"/>
 			<build type="c-source" value="driver/source/nmuart.c"/>
 			<build type="header-file" value="driver/source/nmuart.h"/>
 
@@ -156,7 +156,7 @@
 
 			<generator value="doxygen-module" default-mcu="unspecified-samg53"/>
 		</module>
-		<module type="service" id="common.components.wifi.winc1500#2" caption="WINC1500 (Wi-Fi) Host Driver v18.0 - SAMD21 implementation">
+		<module type="service" id="common.components.wifi.winc1500#2" caption="WINC1500 (Wi-Fi) Host Driver v18.0 - SAMD21/SAMW25 implementation">
 			<info type="description" value="summary">
 				The Atmel SmartConnect WINC1500 is an IEEE 802.11 b/g/n IoT network controller SoC. It offers the ideal add-on to existing MCU solutions, making it easy to bring Wi-Fi and Network capabilities through UART or SPI-to-Wi-Fi interfaces into your designs. The WINC1500 connects to any Atmel AVR or Atmel | SMART MCU, and has minimal resource requirements.
 			</info>
@@ -197,16 +197,16 @@
 			<build type="c-source" value="driver/source/m2m_periph.c"/>
 			<build type="c-source" value="driver/source/m2m_wifi.c"/>
 			<build type="c-source" value="driver/source/nmasic.c"/>
-			<build type="header-file" value="driver/source/nmasic.h"/>			
+			<build type="header-file" value="driver/source/nmasic.h"/>
 			<build type="c-source" value="driver/source/nmbus.c"/>
-			<build type="header-file" value="driver/source/nmbus.h"/>		
+			<build type="header-file" value="driver/source/nmbus.h"/>
 			<build type="c-source" value="driver/source/nmdrv_crt.c"/>
 			<build type="c-source" value="driver/source/nmdrv.c"/>
-			<build type="header-file" value="driver/source/nmdrv.h"/>	
+			<build type="header-file" value="driver/source/nmdrv.h"/>
 			<build type="c-source" value="driver/source/nmi2c.c"/>
 			<build type="header-file" value="driver/source/nmi2c.h"/>
 			<build type="c-source" value="driver/source/nmspi.c"/>
-			<build type="header-file" value="driver/source/nmspi.h"/>	
+			<build type="header-file" value="driver/source/nmspi.h"/>
 			<build type="c-source" value="driver/source/nmuart.c"/>
 			<build type="header-file" value="driver/source/nmuart.h"/>
 

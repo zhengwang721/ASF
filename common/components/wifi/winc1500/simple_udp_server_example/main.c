@@ -109,9 +109,6 @@
 	"-- "BOARD_NAME " --"STRING_EOL	\
 	"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
 
-/** UART module for debug. */
-static struct usart_module cdc_uart_module;
-
 /** Test buffer */
 static uint8_t gau8SocketTestBuffer[MAIN_WIFI_M2M_BUFFER_SIZE] = {0};
 

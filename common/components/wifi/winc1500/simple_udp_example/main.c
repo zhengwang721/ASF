@@ -305,7 +305,7 @@ int main(void)
 	nm_bsp_init();
 
 	/* Enable SysTick interrupt for non busy wait delay. */
-	if (SysTick_Config(system_cpu_clock_get_hz() / 1000)) {
+	if (SysTick_Config(sysclk_get_cpu_hz() / 1000)) {
 		puts("main: SysTick configuration error!");
 		while (1) {
 		}
