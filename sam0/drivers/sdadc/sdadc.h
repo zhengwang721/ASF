@@ -131,7 +131,7 @@
  * \li Start conversion
  * \li Conversion flush
  *
- * The SDADC can generate two kind events:
+ * The SDADC can generate two kinds of events:
  * \li Window monitor
  * \li Result ready
  *
@@ -629,6 +629,8 @@ static inline void sdadc_clear_status(
  * \param[in]   module_inst   Pointer to the SDADC software instance struct
  * \param[out]  seq_state     Identifies the last conversion done in the sequence
  * 
+ * \return Status of the SDADC sequence conversion.
+ *
  * \retval true  When the sequence start
  * \retval false When the last conversion in a sequence is done
  */
