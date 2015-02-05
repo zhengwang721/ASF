@@ -86,7 +86,7 @@
  * event from another peripheral in the device. 
  * 
  * The conversion is performed on a full range between 0V and the reference voltage.
- * Both internal and external reference voltages can be selected, Reference range
+ * Both internal and external reference voltages can be selected, reference range
  * must be set to match the voltage of the reference used. Analog inputs between
  * these voltages convert to values based on a linear conversion.
  *
@@ -129,9 +129,9 @@
  *
  * The SDADC has two actions that can be triggered upon event reception:
  * \li Start conversion
- * \li Flush pipeline and start conversion
+ * \li Conversion flush
  *
- * The SDADC can generate two events:
+ * The SDADC can generate two kind events:
  * \li Window monitor
  * \li Result ready
  *
@@ -426,7 +426,7 @@ struct sdadc_config {
 	bool run_in_standby;
 	/** Enables SDADC depend on other peripheral if true. */
 	bool on_command;
-	/** Enable positive input in the sequence if true. */
+	/** Enables positive input in the sequence if true. */
 	bool seq_enable[3];
 	/** Window monitor configuration structure. */
 	struct sdadc_window_config window;
@@ -629,7 +629,8 @@ static inline void sdadc_clear_status(
  * \param[in]   module_inst   Pointer to the SDADC software instance struct
  * \param[out]  seq_state     Identifies the last conversion done in the sequence
  * 
- * \return true when the sequence start, false when the last conversion in a sequence is done.
+ * \retval true  When the sequence start
+ * \retval false When the last conversion in a sequence is done
  */
 static inline bool sdadc_get_sequence_status(
 		struct sdadc_module *const module_inst,
@@ -666,8 +667,8 @@ static inline bool sdadc_get_sequence_status(
  *
  * \return Synchronization status of the underlying hardware module(s).
  *
- * \retval true if the module synchronization is ongoing
- * \retval false if the module has completed synchronization
+ * \retval true  If the module synchronization is ongoing
+ * \retval false If the module has completed synchronization
  */
 static inline bool sdadc_is_syncing(
 	struct sdadc_module *const module_inst)
@@ -1086,7 +1087,7 @@ static inline void sdadc_disable_interrupt(struct sdadc_module *const module_ins
  *	</tr>
  *  <tr>
  *		<td>OSR</td>
- *		<td>Over sampling ratio</td>
+ *		<td>Over Sampling Ratio</td>
  *	</tr>
  * </table>
  *

@@ -114,12 +114,12 @@
  *     \snippet qs_sdadc_callback.c setup_set_config
  *  -# Enable the SDADC module so that conversions can be made.
  *     \snippet qs_sdadc_callback.c setup_enable
- * -# Register and enable the SDADC Read Buffer Complete callback handler.
- *  -# Register the user-provided Read Buffer Complete callback function with
+ * -# Register and enable the SDADC read buffer complete callback handler.
+ *  -# Register the user-provided read buffer complete callback function with
  *     the driver, so that it will be run when an asynchronous buffer read job
  *     completes.
  *     \snippet qs_sdadc_callback.c setup_register_callback
- *  -# Enable the Read Buffer Complete callback so that it will generate
+ *  -# Enable the read buffer complete callback so that it will generate
  *     callbacks.
  *     \snippet qs_sdadc_callback.c setup_enable_callback
  *
