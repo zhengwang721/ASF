@@ -76,13 +76,13 @@
  * \section asfdoc_sam0_divas_module_overview Module Overview
  *
  * This driver provides an interface for the Divide and Square Root Accelerator
- * functions on the device.
+ * on the device.
  *
  * The DIVAS is a programmable 32-bit signed or unsigned hardware divider and a 
  * 32-bit unsigned square root hardware engine. When running signed division, 
  * both the input and the result will be in two's complement format. The result of
- * signed division are such that the remainder and dividend have the same sign 
- * and the quotient is negative if the dividend and divisor have opposite signs.
+ * signed division is that the remainder has the same sign as the dividend and 
+ * the quotient is negative if the dividend and divisor have opposite signs.
  * When the square root input register is programmed, the square root function 
  * starts and the result will be stored in the Remainder register.
  *
@@ -95,8 +95,8 @@
  * The operation is implemented automatically by EABI(Enhanced Application Binary 
  * Interface). EABI is a standard calling convention which is defined by ARM. 
  * There are the four functions interface which can implement division and mod 
- * operation in EABI. The following Prototypes for EABI division operation in 
- * ICCARM tool chain:
+ * operation in EABI.
+ * The following prototypes for EABI division operation in ICCARM tool chain:
  * \code
     int __aeabi_idiv(int numerator, int denominator);
     unsigned __aeabi_uidiv(unsigned numerator, unsigned denominator);
@@ -104,7 +104,7 @@
     __value_in_regs uidiv_return __aeabi_uidivmod( unsigned numerator, 
 												unsigned denominator);
    \endcode
- * The following Prototypes for EABI division operation in GNUC tool chain:
+ * The following prototypes for EABI division operation in GNUC tool chain:
  * \code
     int __aeabi_idiv(int numerator, int denominator);
     unsigned __aeabi_uidiv(unsigned numerator, unsigned denominator);
@@ -112,29 +112,29 @@
     uint64_t uidiv_return __aeabi_uidivmod( unsigned numerator, 
 											unsigned denominator);
    \endcode
- * No matter which kind of tool chain, using DIVAS module in the four functions 
- * body, users can transparently access the DIVAS module when writing normal C 
+ * No matter what kind of tool chain, using DIVAS module in the four functions 
+ * body, user can transparently access the DIVAS module when writing normal C 
  * code. For example,
  * \code
-    void signed_division(int32_t b, int32_t c)
+    void division(int32_t b, int32_t c)
     {
         int32_t a;
         a = b / c;
         return a;
     }
    \endcode
- * Similarly, users can use "a = b / c;" or "a = b % c;" symbol to implement 
- * the operation with DIVAS, and needn't to care about the internal concrete 
- * operation process.
+ * Similarly, user can use "a = b % c;" symbol to implement the operation with 
+ * DIVAS, and needn't to care about the internal operation process.
  * 
  * \subsection asfdoc_sam0_divas_module_overview_operand Operand Size
  *  - Divide: The DIVAS can perform 32-bit signed and unsigned division.
+ *  - Square Root: The DIVAS can perform 32-bit unsigned division.
  
  * \subsection asfdoc_sam0_divas_module_overview_Signed Signed Division
  *  When signed flag is one, both the input and the result will be in two's 
- *  complement format. The results of signed division are such that the 
- *  remainder and dividend have the same sign and the quotient is negative if 
- *  the dividend and divisor have opposite signs.
+ *  complement format. The result of signed division is that the remainder has 
+ *  the same sign as the dividend and the quotient is negative if the dividend 
+ *  and divisor have opposite signs.
  *  \note When the maximum negative number is divided by the minimum negative 
  *  number, the resulting quotient overflows the signed integer range and will 
  *  return the maximum negative number with no indication of the overflow. This 
