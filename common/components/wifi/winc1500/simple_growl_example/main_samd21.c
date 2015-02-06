@@ -115,8 +115,6 @@
 
 #include "asf.h"
 #include "main.h"
-#include <string.h>
-#include "driver/include/m2m_wifi.h"
 #include "driver/source/nmasic.h"
 #include "growl/growl.h"
 
@@ -124,6 +122,9 @@
 #define STRING_HEADER "-- WINC1500 simple growl example --"STRING_EOL \
 	"-- "BOARD_NAME " --"STRING_EOL	\
 	"-- Compiled: "__DATE__ " "__TIME__ " --"STRING_EOL
+
+/** UART module for debug. */
+static struct usart_module cdc_uart_module;
 
 /**
  * \brief Configure UART console.
@@ -133,14 +134,14 @@ static void configure_console(void)
 	struct usart_config usart_conf;
 
 	usart_get_config_defaults(&usart_conf);
-	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
-	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
-	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
-	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
-	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
-	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
+	usart_conf.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
+	usart_conf.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
+	usart_conf.baudrate    = 115200;
 
-	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART_MODULE, &usart_conf);
+	stdio_serial_init(&cdc_uart_module, EDBG_CDC_MODULE, &usart_conf);
 	usart_enable(&cdc_uart_module);
 }
 

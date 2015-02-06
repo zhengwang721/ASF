@@ -53,7 +53,7 @@ extern "C" {
 #define MAIN_WLAN_AUTH        M2M_WIFI_SEC_WPA_PSK /* < Security manner */
 #define MAIN_WLAN_PSK         "12345678" /* < Password for Destination SSID */
 
-#define MAIN_OTA_URL          "http://192.168.0.4/iis/winc1500_ota.bin"
+#define MAIN_OTA_URL          "http://192.168.0.4/winc1500_ota.bin"
 
 #ifdef __cplusplus
 }

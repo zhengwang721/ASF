@@ -52,11 +52,11 @@ extern "C" {
 #define MAIN_WPS_PIN_NUMBER              "12345670"
 
 /** WPS Push Button Feature */
-#define MAIN_WPS_PUSH_BUTTON_FEATURE      true
+#define MAIN_WPS_PUSH_BUTTON_FEATURE      false
 
 /** Settings for button and timer */
-#define MAIN_BIT0                             (0x0001)
-#define MAIN_SW1                              MAIN_BIT0
+#define MAIN_BIT0                         (0x0001)
+#define MAIN_SW1                          MAIN_BIT0
 
 #ifdef __cplusplus
 }

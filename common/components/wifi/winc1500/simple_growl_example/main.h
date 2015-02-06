@@ -48,11 +48,11 @@
 extern "C" {
 #endif
 
-#include "m2m_types.h"
+#include "driver/include/m2m_wifi.h"
 
 /** Growl Options */
 #define PROWL_API_KEY            "6ce3b9ff6c29e5c5b8960b28d9e987aec5ed603a"
-#define NMA_API_KEY              "0757fe93214fc2cdf2ad42a5005ee0aa83a7a8ea242c0b80"
+#define NMA_API_KEY              "91787604ed50a6cfc2d3f83d1ee196cbc30a3cb08a7e69a0" //"0757fe93214fc2cdf2ad42a5005ee0aa83a7a8ea242c0b80"
 #define SSL_CONNECTION           1
 #define NORMAL_CONNECTION        0
 #define PROWL_CONNECTION_TYPE    NORMAL_CONNECTION

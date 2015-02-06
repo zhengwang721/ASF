@@ -97,6 +97,7 @@
 #include "asf.h"
 #include "main.h"
 #include "driver/include/m2m_wifi.h"
+#include "driver/include/m2m_periph.h"
 #include "driver/source/nmasic.h"
 
 #define STRING_EOL    "\r\n"
@@ -119,14 +120,14 @@ static void configure_console(void)
 	struct usart_config usart_conf;
 
 	usart_get_config_defaults(&usart_conf);
-	usart_conf.mux_setting = CONF_STDIO_MUX_SETTING;
-	usart_conf.pinmux_pad0 = CONF_STDIO_PINMUX_PAD0;
-	usart_conf.pinmux_pad1 = CONF_STDIO_PINMUX_PAD1;
-	usart_conf.pinmux_pad2 = CONF_STDIO_PINMUX_PAD2;
-	usart_conf.pinmux_pad3 = CONF_STDIO_PINMUX_PAD3;
-	usart_conf.baudrate    = CONF_STDIO_BAUDRATE;
+	usart_conf.mux_setting = EDBG_CDC_SERCOM_MUX_SETTING;
+	usart_conf.pinmux_pad0 = EDBG_CDC_SERCOM_PINMUX_PAD0;
+	usart_conf.pinmux_pad1 = EDBG_CDC_SERCOM_PINMUX_PAD1;
+	usart_conf.pinmux_pad2 = EDBG_CDC_SERCOM_PINMUX_PAD2;
+	usart_conf.pinmux_pad3 = EDBG_CDC_SERCOM_PINMUX_PAD3;
+	usart_conf.baudrate    = 115200;
 
-	stdio_serial_init(&cdc_uart_module, CONF_STDIO_USART_MODULE, &usart_conf);
+	stdio_serial_init(&cdc_uart_module, EDBG_CDC_MODULE, &usart_conf);
 	usart_enable(&cdc_uart_module);
 }
 
@@ -214,6 +215,20 @@ static void wifi_cb(uint8_t u8MsgType, void *pvMsg)
 	}
 }
 
+static void disable_pullups(void)
+{
+	uint32 pinmask;
+	
+	pinmask = (
+	M2M_PERIPH_PULLUP_HOST_WAKEUP|
+	M2M_PERIPH_PULLUP_GPIO_3|
+	M2M_PERIPH_PULLUP_GPIO_5|
+	M2M_PERIPH_PULLUP_SD_DAT0_SPI_TXD|
+	M2M_PERIPH_PULLUP_GPIO_6);
+	
+	m2m_periph_pullup_ctrl(pinmask, 0);
+}
+
 /**
  * \brief Main application function.
  *
@@ -251,6 +266,9 @@ int main(void)
 		}
 	}
 
+	/* Disable pullups */
+	disable_pullups();
+	
 	/* Set defined sleep mode */
 	if (MAIN_PS_SLEEP_MODE == M2M_PS_MANUAL) {
 		printf("M2M_PS_MANUAL\r\n");
