@@ -4,7 +4,6 @@
 		SAMDA0 PIO instance definitions.
 		</info>
 		<build type="header-file" value="ac.h"/>
-		<build type="header-file" value="ac1.h"/>
 		<build type="header-file" value="adc.h"/>
 		<build type="header-file" value="dac.h"/>
 		<build type="header-file" value="dmac.h"/>
@@ -12,8 +11,6 @@
 		<build type="header-file" value="eic.h"/>
 		<build type="header-file" value="evsys.h"/>
 		<build type="header-file" value="gclk.h"/>
-		<build type="header-file" value="i2s.h"/>
-		<build type="header-file" value="linctrl.h"/>
 		<build type="header-file" value="mtb.h"/>
 		<build type="header-file" value="nvmctrl.h"/>
 		<build type="header-file" value="pac0.h"/>
@@ -38,7 +35,6 @@
 		<build type="header-file" value="tcc0.h"/>
 		<build type="header-file" value="tcc1.h"/>
 		<build type="header-file" value="tcc2.h"/>
-		<build type="header-file" value="usb.h"/>
 		<build type="header-file" value="wdt.h"/>
 		<info type="gui-flag" value="hidden"/>
 		<device-support value="samda0"/>

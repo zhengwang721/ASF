@@ -23,7 +23,6 @@
 		<build type="header-file" value="sysctrl.h"/>
 		<build type="header-file" value="tc.h"/>
 		<build type="header-file" value="tcc.h"/>
-		<build type="header-file" value="tcc_lighting.h"/>
 		<build type="header-file" value="usb.h"/>
 		<build type="header-file" value="wdt.h"/>
 		<info type="gui-flag" value="hidden"/>
