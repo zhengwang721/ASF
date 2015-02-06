@@ -342,7 +342,7 @@ static inline void system_voltage_regulator_get_config_defaults(
 	config->voltage_scale_step   = 0;
 	config->run_in_standby       = false;
 	config->regulator_sel        = SYSTEM_VOLTAGE_REGULATOR_LDO;
-	config->low_power_efficiency = false;
+	config->low_power_efficiency = SYSTEM_VOLTAGE_REGULATOR_LOW_POWER_EFFICIENCY_DEFAULT;
 }
 
 /**

@@ -1296,7 +1296,7 @@ static inline void tc_stop_counter(
 	}
 
 	/* Write command to execute */
-	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(2);
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_STOP_Val);
 }
 
 /**
@@ -1328,7 +1328,7 @@ static inline void tc_start_counter(
 	}
 
 	/* Write command to execute */
-	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(1);
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_RETRIGGER_Val);
 }
 
 /** @} */
@@ -1368,7 +1368,7 @@ static inline void tc_update_double_buffer(
 	}
 
 	/* Write command to execute */
-	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(3);
+	tc_module->CTRLBSET.reg = TC_CTRLBSET_CMD(TC_CTRLBSET_CMD_UPDATE_Val);
 }
 /** @} */
 #endif
