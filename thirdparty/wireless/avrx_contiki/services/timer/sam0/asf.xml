@@ -1,0 +1,24 @@
+<asf xmlversion="1.0">
+
+        <module type="component" id="thirdparty.wireless.avrx_contiki.services.timer.sam0" caption="TBA">
+			<info type="description" value="summary">
+			
+			</info>
+			<build type="c-source"      value="tc-clock.c"/>
+			<build type="c-source"      value="tc-rtimer-arch.c"/>
+			<build type="header-file"   value="rtimer-arch.h"/>
+			<build type="header-file"   value="mtarch.h"/>
+			<build type="include-path" value="."/>		
+			<build type="doxygen-entry-point" value="group_contiki_dev"/>	
+			<device-support-alias value="avr2025_mac_pal_support"/>
+			<require idref="sam0.drivers.tc"/>
+			<require idref="sam0.utils"/>
+			<require idref="sam0.drivers.system.clock"/>
+            <info type="keyword" value="technology">
+                <keyword value="Wireless"/>
+                <keyword value="Communication"/>
+                <keyword value="Communication"/>
+            </info>
+        </module>
+       
+</asf>
