@@ -52,7 +52,7 @@
 
 #ifndef UIP_H_
 #define UIP_H_
-
+#include "compiler.h"
 /* Header sizes. */
 #if UIP_CONF_IPV6
 #define UIP_IPH_LEN    40
@@ -96,6 +96,7 @@
  * Representation of an IP address.
  *
  */
+COMPILER_PACK_SET(1)
 typedef union uip_ip4addr_t {
   uint8_t  u8[4];			/* Initializer, must come first. */
   uint16_t u16[2];
@@ -133,7 +134,7 @@ typedef struct uip_80211_addr {
 typedef struct uip_eth_addr {
   uint8_t addr[6];
 } uip_eth_addr;
-
+COMPILER_PACK_RESET()
 
 #if UIP_CONF_LL_802154
 /** \brief 802.15.4 address */
@@ -1607,6 +1608,8 @@ void uip_process(uint8_t flag);
 #define UIP_STOPPED      16
 
 /* The TCP and IP headers. */
+//COMPILER_PACK_SET(1)
+COMPILER_PACK_SET(1)
 struct uip_tcpip_hdr {
 #if UIP_CONF_IPV6
   /* IPv6 header. */
@@ -1711,6 +1714,7 @@ struct uip_udpip_hdr {
  * after the IP header. hence we split here L3 and L4 headers
  */
 /* The IP header */
+
 struct uip_ip_hdr {
 #if UIP_CONF_IPV6
   /* IPV6 header */
@@ -1734,7 +1738,6 @@ struct uip_ip_hdr {
 #endif /* UIP_CONF_IPV6 */
 };
 
-
 /*
  * IPv6 extension option headers: we are able to process
  * the 4 extension headers defined in RFC2460 (IPv6):
@@ -1756,6 +1759,7 @@ struct uip_ip_hdr {
  * used in IPSec and defined in RFC4302,4303,4305,4385
  */
 /* common header part */
+
 typedef struct uip_ext_hdr {
   uint8_t next;
   uint8_t len;
@@ -1853,8 +1857,9 @@ struct uip_udp_hdr {
   uint16_t udplen;
   uint16_t udpchksum;
 };
+COMPILER_PACK_RESET()
 
-
+//COMPILER_PACK_RESET()
 /**
  * The buffer size available for user data in the \ref uip_buf buffer.
  *

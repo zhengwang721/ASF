@@ -69,10 +69,11 @@
  */
 
 #include <string.h>
-#include "net/ipv6/uip-icmp6.h"
-#include "net/ipv6/uip-nd6.h"
-#include "net/ipv6/uip-ds6.h"
-#include "lib/random.h"
+#include "uip.h"
+#include "uip-icmp6.h"
+#include "uip-nd6.h"
+#include "uip-ds6.h"
+#include "random.h"
 
 #if UIP_CONF_IPV6
 /*------------------------------------------------------------------*/

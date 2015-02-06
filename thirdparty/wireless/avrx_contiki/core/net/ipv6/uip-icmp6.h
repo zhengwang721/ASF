@@ -47,6 +47,7 @@
 #define ICMP6_H_
 
 #include "net/ip/uip.h"
+#include "compiler.h"
 
 
 /** \name ICMPv6 message types */
@@ -103,10 +104,11 @@
 #define UIP_ICMP6_ERROR_LEN               4
 
 /** \brief ICMPv6 Error message constant part */
+COMPILER_PACK_SET(1)
 typedef struct uip_icmp6_error{
   uint32_t param;
 } uip_icmp6_error;
-
+COMPILER_PACK_RESET()
 /** \name ICMPv6 RFC4443 Message processing and sending */
 /** @{ */
 /**

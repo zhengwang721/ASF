@@ -197,6 +197,7 @@
  *
  * Possible option is: SLLAO
  */
+COMPILER_PACK_SET(1)
 typedef struct uip_nd6_ns {
   uint32_t reserved;
   uip_ipaddr_t tgtipaddr;
@@ -284,6 +285,7 @@ typedef struct uip_nd6_opt_redirected_hdr {
   uint8_t len;
   uint8_t reserved[6];
 } uip_nd6_opt_redirected_hdr;
+COMPILER_PACK_RESET()
 /** @} */
 
 /**

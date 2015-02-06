@@ -32,7 +32,7 @@
 
 #include "contiki.h"
 #include "dev/leds.h"
-#include "../platform-conf.h"
+#include "platform-conf.h"
 
 #include "board.h"
 #include "conf_board.h"

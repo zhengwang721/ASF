@@ -29,16 +29,17 @@
  * OF THE POSSIBILITY OF SUCH DAMAGE.
  *
  */
-#ifndef _SAMD20_SENSORS_H_
-#define _SAMD20_SENSORS_H_
+#ifndef _SAMR21_SENSORS_H_
+#define _SAMR21_SENSORS_H_
 
 #include "asf.h"
-#include "adc.h"
-#include "instance_adc.h"
-#include "component_adc.h"
-#include "samd20-sensors.h"
+//#include "adc.h"
+//#include "instance_adc.h"
+//#include "component_adc.h"
+//#include "samd20-sensors.h"
 /*---------------------------------------------------------------------------*/
 /* ADC inputs, refer to section 5.1 (multiplex) in datasheet. */
+#if 0
 enum samd20_sensor_input {
   SAMD20_SENSOR_ADC_PIN0 = ADC_POSITIVE_INPUT_PIN0,      /* ADC0 pin, PA02 */
   SAMD20_SENSOR_ADC_PIN1 = ADC_POSITIVE_INPUT_PIN1,      /* ADC1 pin, PA03 */
@@ -75,5 +76,6 @@ void      samd20_sensors_init(void);
 void      samd20_sensors_set_input(enum samd20_sensor_input input);
 int       samd20_sensors_busy(void);
 uint16_t  samd20_sensors_read(void);
+#endif
 /*---------------------------------------------------------------------------*/
 #endif  /* _SAMD20_SENSORS_H_ */

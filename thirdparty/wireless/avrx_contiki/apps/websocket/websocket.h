@@ -33,6 +33,7 @@
 #define WEBSOCKET_H
 
 #include "websocket-http-client.h"
+#include "compiler.h"
 
 typedef enum {
   WEBSOCKET_ERR = 0,
@@ -61,7 +62,7 @@ typedef void (* websocket_callback)(struct websocket *s,
 #else /* WEBSOCKET_CONF_MAX_URLLEN */
 #define WEBSOCKET_MAX_URLLEN 128
 #endif /* WEBSOCKET_CONF_MAX_URLLEN */
-
+COMPILER_PACK_SET(1)
 struct websocket {
   struct websocket *next;     /* Must be first. */
   struct websocket_http_client_state s;
@@ -79,7 +80,7 @@ struct websocket {
   uint8_t headercache[10]; /* The maximum websocket header + mask is 6
                               + 4 bytes long */
 };
-
+COMPILER_PACK_RESET()
 enum {
   WEBSOCKET_STATE_CLOSED = 0,
   WEBSOCKET_STATE_DNS_REQUEST_SENT = 1,

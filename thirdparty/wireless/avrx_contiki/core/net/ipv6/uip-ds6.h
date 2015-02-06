@@ -48,7 +48,7 @@
 #include "net/ipv6/uip-nd6.h"
 #include "net/ipv6/uip-ds6-route.h"
 #include "net/ipv6/uip-ds6-nbr.h"
-
+#include "compiler.h"
 /*--------------------------------------------------*/
 /** Configuration. For all tables (Neighbor cache, Prefix List, Routing Table,
  * Default Router List, Unicast address list, multicast address list, anycast address list),
@@ -216,11 +216,12 @@ typedef struct uip_ds6_netif {
 } uip_ds6_netif_t;
 
 /** \brief Generic type for a DS6, to use a common loop though all DS */
+COMPILER_PACK_SET(1)
 typedef struct uip_ds6_element {
   uint8_t isused;
   uip_ipaddr_t ipaddr;
 } uip_ds6_element_t;
-
+COMPILER_PACK_RESET()
 
 /*---------------------------------------------------------------------------*/
 extern uip_ds6_netif_t uip_ds6_if;

@@ -36,18 +36,19 @@
 #include <stdlib.h>
 #include <stdint.h>
 #include <stdio.h>
-
+void wake_from_sleep(void);
+void goto_sleep(void);
+/*
 void     rf233_arch_init(void);
 void     rf233_arch_reset(void);
 uint8_t  rf233_arch_status(void);
-void wake_from_sleep(void);
-void goto_sleep(void);
+
 int      rf233_arch_spi_busy(void);
 uint8_t  rf233_arch_read_reg(uint8_t reg);
 int      rf233_arch_write_reg(uint8_t reg, uint8_t val);
 int      rf233_arch_read_frame(uint8_t *buf, uint8_t len);
 int      rf233_arch_write_frame(uint8_t *buf, uint8_t len);
 int      rf233_arch_burstread_sram(uint8_t *buf, uint8_t offset, uint8_t len);
-int      rf233_arch_burstwrite_sram(uint8_t *buf, uint8_t offset, uint8_t len);
+int      rf233_arch_burstwrite_sram(uint8_t *buf, uint8_t offset, uint8_t len);*/
 
 #endif  /* _RF233_ARCH_H_ */

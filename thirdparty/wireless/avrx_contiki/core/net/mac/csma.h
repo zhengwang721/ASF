@@ -44,7 +44,7 @@
 #include "net/mac/mac.h"
 #include "dev/radio.h"
 
-extern const struct mac_driver csma_driver;
+//extern const struct mac_driver csma_driver;
 
 const struct mac_driver *csma_init(const struct mac_driver *r);
 

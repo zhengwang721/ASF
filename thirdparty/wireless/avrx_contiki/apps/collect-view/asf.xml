@@ -4,7 +4,9 @@
 			<info type="description" value="summary">
 			
 			</info>
-			<build type="include-path" value="."/>		
+			<build type="include-path" value="."/>	
+            <require idref="thirdparty.wireless.avrx_contiki.core"/>			
+			<device-support-alias value="avr2025_mac_pal_support"/>			
 			<build type="doxygen-entry-point" value="group_contiki_apps"/>	
             <info type="keyword" value="technology">
                 <keyword value="Wireless"/>

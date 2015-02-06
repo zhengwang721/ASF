@@ -37,7 +37,7 @@
 #include "temp-sensor.h"
 #include "voltage-sensor.h"
 #include "button-sensor.h"
-//#include "samd20-sensors.h"
+#include "samr21-sensors.h"
 /*---------------------------------------------------------------------------*/
 //static int first_init = 0;
 //static struct adc_module adc_instance;

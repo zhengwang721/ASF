@@ -43,6 +43,6 @@
 
 #include "net/mac/rdc.h"
 
-extern const struct rdc_driver nullrdc_driver;
+//extern const struct rdc_driver nullrdc_driver;
 
 #endif /* NULLRDC_H_ */

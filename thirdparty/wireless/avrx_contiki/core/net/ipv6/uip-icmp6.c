@@ -43,8 +43,9 @@
  */
 
 #include <string.h>
-#include "net/ipv6/uip-ds6.h"
-#include "net/ipv6/uip-icmp6.h"
+#include "net/ip/uip.h"
+#include "uip-ds6.h"
+#include "uip-icmp6.h"
 #include "contiki-default-conf.h"
 
 #define DEBUG 0

@@ -5,6 +5,7 @@
 			
 			</info>
 			<build type="c-source"      value="button-sensor.c"/>
+			<build type="c-source"      value="watchdog.c"/>
 			<build type="c-source"      value="flash.c"/>
 			<build type="c-source"      value="leds-arch.c"/>
 			<build type="c-source"      value="node-id.c"/>
@@ -21,6 +22,7 @@
 			<build type="header-file"   value="voltage-sensor.h"/>			
 			<build type="include-path" value="."/>		
 			<build type="doxygen-entry-point" value="group_contiki"/>	
+			<device-support value="sam0"/>
             <info type="keyword" value="technology">
                 <keyword value="Wireless"/>
                 <keyword value="Communication"/>

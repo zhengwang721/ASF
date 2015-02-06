@@ -36,17 +36,17 @@
 #include "contiki.h"
 #include "contiki-net.h"
 #include "sys/autostart.h"
-#include "dev/flash.h"
-#include "dev/leds.h"
-#include "dev/serial-line.h"
-#include "dev/slip.h"
-#include "dev/watchdog.h"
-#include "dev/button-sensor.h"
-#include "dev/xmem.h"
+#include "flash.h"
+#include "leds.h"
+#include "serial-line.h"
+#include "slip.h"
+#include "watchdog.h"
+#include "button-sensor.h"
+#include "xmem.h"
 #include "lib/random.h"
 #include "lib/sensors.h"
 #include "temp-sensor.h"
-#include "dev/button-sensor.h"
+//#include "button-sensor.h"
 #include "voltage-sensor.h"
 
 #include "netstack-aes.h"
@@ -55,11 +55,11 @@
 #include "net/mac/frame802154.h"
 #include "net/linkaddr.h"
 #include "net/rime/rime.h"
-#include "dev/node-id.h"
+#include "node-id.h"
 #include "cycle_counter.h"
 #include "rf233-const.h"
 #include "asf.h"
-#include "sam0/drivers/sercom/usart/usart.h"
+#include "usart.h"
 #include "sio2host.h"
 #include "conf_sio2host.h"
 #include "stdio_serial.h"
@@ -67,7 +67,8 @@
 #include "rtc_count.h" //rtc
 #include "rtc_count_interrupt.h"
 
-SENSORS(&button_sensor);
+
+//SENSORS(&button_sensor);
 /*---------------------------------------------------------------------------*/
 #define DEBUG 0
 #if DEBUG
@@ -82,7 +83,7 @@ SENSORS(&button_sensor);
 #endif
 /*---------------------------------------------------------------------------*/
 
-
+#define UART_RX_ENABLE 0
 #if UIP_CONF_IPV6
 PROCINIT(&etimer_process, &tcpip_process);
 #else
@@ -157,11 +158,12 @@ main(int argc, char *argv[])
   #endif
 
   ctimer_init();
+ 
 
   rtimer_init();
-
-  watchdog_init();
-
+ //printf("\r\n B4 Watchdog init");
+  
+ //printf("\r\n Aft Watchdog init");
   process_init();
   process_start(&etimer_process, NULL);
 
@@ -190,7 +192,7 @@ main(int argc, char *argv[])
   leds_off(LEDS_ALL);
   /*  temp_sensor_init();
       voltage_sensor_init();*/
-  button_sensor_init();
+ // button_sensor_init();
  process_start(&sensors_process, NULL);
   energest_init();
 
@@ -237,9 +239,9 @@ main(int argc, char *argv[])
     printf("%02x%02x\n",
            ipaddr.u8[7 * 2], ipaddr.u8[7 * 2 + 1]);
   }
-
+ // printf("\r\n Before print process");
   print_processes(autostart_processes);
-
+  //delay_ms(100);
   /* set up AES key */
 #if ((THSQ_CONF_NETSTACK) & THSQ_CONF_AES)
 #ifndef NETSTACK_AES_KEY
@@ -255,7 +257,8 @@ main(int argc, char *argv[])
 #endif /* ((THSQ_CONF_NETSTACK) & THSQ_CONF_AES) */
    
   autostart_start(autostart_processes);
-  watchdog_start();
+  //watchdog_start();
+  watchdog_init();
 
   while(1){
     int r = 0;
@@ -264,12 +267,13 @@ main(int argc, char *argv[])
 #endif
   do {
       //printf(".");
-      watchdog_periodic();
+     
      r = process_run();
+	wdt_reset_count();
 	 // if(r <= 0) printf("\n PRVN No process to run\n");
     } while(r > 0);
     /* sleep*/
-    watchdog_stop();
+   // watchdog_stop();
     ENERGEST_OFF(ENERGEST_TYPE_CPU);
     ENERGEST_ON(ENERGEST_TYPE_LPM);
 	//#ifdef LOW_POWER_MODE
@@ -279,7 +283,7 @@ main(int argc, char *argv[])
 	//printf("\n PRVN After sleep\n");
     //system_sleep();
 	//#endif
-    watchdog_start();
+    //watchdog_start();
 
 
     /* woke up */
@@ -440,10 +444,11 @@ init_serial(void)
 /* 
  * This seems needed for libc init array. We get compilation errors if removed.
  */
+/*
 void
 _init(void)
 {
-}
+}*/
 /*---------------------------------------------------------------------------*/
 #define REG_RCAUSE     (0x40000438U)
 /**

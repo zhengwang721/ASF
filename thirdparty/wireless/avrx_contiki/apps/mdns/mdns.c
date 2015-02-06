@@ -66,7 +66,7 @@
 #include "net/ip/uip-udp-packet.h"
 
 #include "ip64-addr.h"
-
+#include "compiler.h"
 #define VERBOSE_DEBUG 0
 
 #define WITH_EDNS_LIMIT_UDP_RES_PAYLOAD 1
@@ -146,6 +146,7 @@ struct dns_hdr {
 #endif
 
 /** \internal The DNS answer message structure. */
+COMPILER_PACK_SET(1)
 struct dns_answer {
   /* DNS answer record starts with either a domain name or a pointer
      to a name already present somewhere in the packet. */
@@ -162,10 +163,12 @@ struct dns_answer {
 
 #if MDNS_CONF_MDNS_RESPONDER
 /** \internal The DNS question message structure. */
+
 struct dns_question {
   uint16_t type;
   uint16_t class;
 };
+COMPILER_PACK_RESET()
 #endif
 
 static uip_ipaddr_t dns_server;

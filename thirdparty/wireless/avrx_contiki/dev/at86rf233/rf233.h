@@ -38,7 +38,6 @@
 #include <stdio.h>
 #include "dev/radio.h"
 /*---------------------------------------------------------------------------*/
-extern const struct radio_driver rf233_radio_driver;
 
 int rf233_interrupt_poll(void);
 int rf233_get_channel(void);

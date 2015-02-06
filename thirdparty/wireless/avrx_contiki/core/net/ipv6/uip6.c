@@ -70,12 +70,12 @@
  * the packet back to the peer.
  */
 
-#include "net/ip/uip.h"
-#include "net/ip/uipopt.h"
-#include "net/ipv6/uip-icmp6.h"
-#include "net/ipv6/uip-nd6.h"
-#include "net/ipv6/uip-ds6.h"
-#include "net/ipv6/multicast/uip-mcast6.h"
+#include "uip.h"
+#include "uipopt.h"
+#include "uip-icmp6.h"
+#include "uip-nd6.h"
+#include "uip-ds6.h"
+#include "uip-mcast6.h"
 
 #include <string.h>
 
@@ -85,7 +85,7 @@
 /*---------------------------------------------------------------------------*/
 
 #define DEBUG DEBUG_NONE
-#include "net/ip/uip-debug.h"
+#include "uip-debug.h"
 
 #if UIP_CONF_IPV6_RPL
 #include "rpl/rpl.h"
@@ -337,7 +337,7 @@ uip_chksum(uint16_t *data, uint16_t len)
   return uip_htons(chksum(0, (uint8_t *)data, len));
 }
 /*---------------------------------------------------------------------------*/
-#ifndef UIP_ARCH_IPCHKSUM
+#if (!UIP_ARCH_IPCHKSUM)
 uint16_t
 uip_ipchksum(void)
 {

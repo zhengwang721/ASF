@@ -60,7 +60,7 @@
 #include "net/rime/unicast.h"
 #include "net/rime/netflood.h"
 #include "sys/ctimer.h"
-
+#include "compiler.h"
 struct route_discovery_conn;
 
 struct route_discovery_callbacks {
@@ -69,7 +69,7 @@ struct route_discovery_callbacks {
 };
 
 #define ROUTE_DISCOVERY_ENTRIES 8
-
+COMPILER_PACK_SET(1)
 struct route_discovery_conn {
   struct netflood_conn rreqconn;
   struct unicast_conn rrepconn;
@@ -79,7 +79,7 @@ struct route_discovery_conn {
   uint16_t rreq_id;
   const struct route_discovery_callbacks *cb;
 };
-
+COMPILER_PACK_RESET()
 void route_discovery_open(struct route_discovery_conn *c, clock_time_t time,
 			  uint16_t channels,
 			  const struct route_discovery_callbacks *callbacks);

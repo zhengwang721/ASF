@@ -176,7 +176,7 @@ send_one_packet(mac_callback_t sent, void *ptr)
 
             if(AFTER_ACK_DETECTED_WAIT_TIME > 0) {
               wt = RTIMER_NOW();
-              watchdog_periodic();
+              //watchdog_periodic();
               while(RTIMER_CLOCK_LT(RTIMER_NOW(),
                                     wt + AFTER_ACK_DETECTED_WAIT_TIME)) {
       #if CONTIKI_TARGET_COOJA
