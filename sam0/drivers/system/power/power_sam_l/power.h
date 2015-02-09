@@ -830,8 +830,8 @@ static inline void system_clear_performance_level_status(void)
  *   - Retention back biasing mode for HMCRAMCHS
  *   - Power domains PD0/PD1/PD2 are not linked
  *   - Automatic VREG switching is used
- *   - Dynamic groovyBaby_0 for power domain 1 is disable
- *   - Dynamic groovyBaby_0 for power domain 0 is disable
+ *   - Dynamic power gating for power domain 1 is disable
+ *   - Dynamic power gating for power domain 0 is disable
  *   - All power domains switching are handled by hardware
  *
  * \param[out] config  Configuration structure to fill with default values
