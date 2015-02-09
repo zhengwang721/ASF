@@ -3,7 +3,7 @@
  *
  * \brief XMEGA-A3BU Xplained Sensor Demo Common Definitions
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

@@ -6,7 +6,7 @@
  * This module defines types and operations that support basic physical
  * modelling and equations for sensor data.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

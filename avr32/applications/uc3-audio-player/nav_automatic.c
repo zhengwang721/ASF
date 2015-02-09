@@ -12,7 +12,7 @@
  * The plug-in can manage a random feature.
  * Note: The play list limitations is 65535 files.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

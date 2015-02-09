@@ -3,7 +3,7 @@
  *
  * \brief HX8347A display controller configuration for the HX8347A example 2
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

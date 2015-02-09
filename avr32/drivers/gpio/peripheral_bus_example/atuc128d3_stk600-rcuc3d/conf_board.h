@@ -3,7 +3,7 @@
  *
  * \brief Configuration of the STK600 and RCUC3D board for the gpio peripheral bus example
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  * 
  * \asf_license_start
  *

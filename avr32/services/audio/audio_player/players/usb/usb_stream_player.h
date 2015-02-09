@@ -7,7 +7,7 @@
  * This file manages the USB Audio streaming player for both the USB Device
  * or Host modes.
  *
- * Copyright (c) 2009-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

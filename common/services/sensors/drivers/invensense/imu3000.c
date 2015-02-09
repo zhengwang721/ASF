@@ -14,7 +14,7 @@
  * microcontrollers to burst read the sensor data and then sleep while the IMU
  * collects more data.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

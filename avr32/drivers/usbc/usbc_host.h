@@ -3,7 +3,7 @@
  *
  * \brief USBC Host Driver header file.
  *
- * Copyright (C) 2011 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

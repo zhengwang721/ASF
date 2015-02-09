@@ -7,7 +7,7 @@
  *
  * To use this board, define BOARD=AVR_SIMULATOR_UC3.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

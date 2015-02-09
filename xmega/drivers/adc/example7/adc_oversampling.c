@@ -4,7 +4,7 @@
  * \brief AVR XMEGA Analog to Digital Converter Driver Example 7
  * Example demonstration of hardware over-sampling feature of XMEGA E ADC.
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

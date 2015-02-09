@@ -8,7 +8,7 @@
  * AVR32 devices. The driver handles normal polled usage and direct memory
  * access (PDC) usage.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

@@ -6,7 +6,7 @@
  *
  * This file show a list of the signal generation functions currently implemented in the DSP library.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

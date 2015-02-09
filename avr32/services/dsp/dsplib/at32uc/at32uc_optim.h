@@ -4,7 +4,7 @@
  *
  * \brief This file specifies the functions optimized for the AVR32 UC3 target.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

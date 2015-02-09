@@ -6,7 +6,7 @@
  * This file contains functions for initializing and reading data
  * from a Bosch BMA220 3-axis accelerometer.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

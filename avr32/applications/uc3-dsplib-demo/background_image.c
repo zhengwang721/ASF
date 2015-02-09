@@ -4,7 +4,7 @@
  *
  * \brief Header file for the logo displayed by the ET024006DHU example.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

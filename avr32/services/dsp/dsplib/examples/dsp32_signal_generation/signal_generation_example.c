@@ -7,7 +7,7 @@
  * This file show a way to use the 32 bits signal generation functions and print the output
  * results through the USART.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

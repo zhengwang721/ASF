@@ -4,7 +4,7 @@
  * \brief  This file contains the AT32UC3L-EK demonstration application that
  * interfaces with QTouchStudio and controls the LEDs with the touch sensors.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

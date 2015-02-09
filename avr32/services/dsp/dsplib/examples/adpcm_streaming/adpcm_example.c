@@ -6,7 +6,7 @@
  *
  * This file show a way to use the IMA/DVI ADPCM decoding functions with a full example.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

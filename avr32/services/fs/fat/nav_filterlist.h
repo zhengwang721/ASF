@@ -9,7 +9,7 @@
  * The filter mode includes in the file list directories and only files corresponding at a extension
  *
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

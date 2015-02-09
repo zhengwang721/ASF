@@ -9,7 +9,7 @@
  * "benchmark" in the utils section of the DSPLib. Read the documentation for
  * more details on this script (also available in the script directory).
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

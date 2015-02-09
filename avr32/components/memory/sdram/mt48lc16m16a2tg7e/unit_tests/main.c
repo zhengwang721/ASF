@@ -3,7 +3,7 @@
  *
  * \brief Unit tests for MT48LC16m16a2tg7 SDRAM component.
  *
- * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

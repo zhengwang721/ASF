@@ -37,7 +37,7 @@
  * $Revision: 2660 $
  * $Date: 2009-08-11 12:28:58 +0200 (Tue, 11 Aug 2009) $  \n
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

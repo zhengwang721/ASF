@@ -4,7 +4,7 @@
  * \brief XMEGA E Quadrature decoder test signal generation main file. It
  *        generates a quadrature encoded signal used for decoder testing.
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

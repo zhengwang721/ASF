@@ -6,7 +6,7 @@
  *
  * This file defines the types used in the Fixed Point DSP library
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

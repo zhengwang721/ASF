@@ -4,7 +4,7 @@
  * \brief UC3-L0 Xplained demo application that reads the board temperature
  * sensor and changes the color of the board RGB LED based on touch input.
  *
- * Copyright (c) 2011 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

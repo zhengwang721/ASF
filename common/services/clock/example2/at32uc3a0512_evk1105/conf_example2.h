@@ -3,7 +3,7 @@
  *
  * \brief Clock system example 2 configuration for AT32EVK1105
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

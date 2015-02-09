@@ -8,7 +8,7 @@
  * If a SD or a MMC card is detected, a message is sent to user
  * after that it copies data from SD/MMC to RAM.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

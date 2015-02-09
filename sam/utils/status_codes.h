@@ -6,7 +6,7 @@
  * This file defines various status codes returned by functions,
  * indicating success or failure as well as what kind of failure.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

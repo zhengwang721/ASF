@@ -6,7 +6,7 @@
  * \note The values defined in this file are device-specific. See the device
  *       datasheet for further information.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

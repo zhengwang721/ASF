@@ -3,7 +3,7 @@
  *
  * \brief USB host driver for Mass Storage Class interface.
  *
- * Copyright (C) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

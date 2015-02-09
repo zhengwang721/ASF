@@ -6,7 +6,7 @@
  * This example involves one TC channel configured in capture mode (input). Upon
  * a GPIO pin change, an event triggers a TC.Ai capture.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

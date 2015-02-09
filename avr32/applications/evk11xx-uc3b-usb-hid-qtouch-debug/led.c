@@ -7,7 +7,7 @@
  * This file contains definitions and services related to the LED features of
  * the USER_BOARD board.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

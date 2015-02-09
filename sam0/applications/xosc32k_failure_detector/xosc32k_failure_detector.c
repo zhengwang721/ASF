@@ -3,7 +3,7 @@
  *
  * \brief SAM XOSC32K Runtime Failure Detector Application
  *
- * Copyright (C) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \license
  * \asf_license_start

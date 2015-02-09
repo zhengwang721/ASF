@@ -4,7 +4,7 @@
  *
  * \brief CAN Software Stack Example 1.
  *
- * Copyright (c) 2006-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2006-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

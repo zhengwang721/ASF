@@ -4,7 +4,7 @@
  *
  * \brief Listing of 2-kB NAND FLASH types.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

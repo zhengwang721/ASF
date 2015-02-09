@@ -3,7 +3,7 @@
  *
  * \brief Declaration of main function used by MSC unit test
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

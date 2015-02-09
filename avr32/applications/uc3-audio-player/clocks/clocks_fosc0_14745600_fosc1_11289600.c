@@ -5,7 +5,7 @@
  * \brief Clock configuration file with a 14.7456MHz crystal on OSC0 and 11.2896MHz
  * crystal on OSC1.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

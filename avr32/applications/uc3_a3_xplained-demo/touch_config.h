@@ -7,7 +7,7 @@
  * options for QMatrix, Autonomous QTouch and QTouch Group A/B method
  * acquisition using the Capacitive Touch (CAT) module.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

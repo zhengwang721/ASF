@@ -17,7 +17,7 @@
  * that are needed for initializing the external interrupt controller (EIC)
  * are also provided.
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

@@ -5,7 +5,7 @@
  *        Refer following application note for details.
  *        AT42357 - Using the Timer Counter for Control Applications (TCC).
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \license
  * \asf_license_start

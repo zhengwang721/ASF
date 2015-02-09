@@ -3,7 +3,7 @@
  *
  * \brief Header file for SAMD11D14AM
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

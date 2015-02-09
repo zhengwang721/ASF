@@ -3,7 +3,7 @@
  *
  * \brief Header file for SAML21J16A
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

@@ -16,7 +16,7 @@
  * - OS:                 FreeRTOS port on AVR32 UC3.
  * - Boards:             EVK1101
  *
- * Copyright (c) 2009-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

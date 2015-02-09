@@ -6,7 +6,7 @@
  * This module defines numeric precision and the real-number representation
  * used in the Atmel Software Framework common sensor service.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

@@ -9,7 +9,7 @@
  *
  * To use this board, define BOARD=UC3C_EK.
  *
- * Copyright (C) 2009 - 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2009-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

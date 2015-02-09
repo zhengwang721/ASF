@@ -3,7 +3,7 @@
  *
  * \brief Memory Bag allocator for 8-bit AVR, 32-bit AVR, SAM
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

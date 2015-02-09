@@ -3,7 +3,7 @@
  *
  * \brief Small Atmel Logo image for the HX8347A display controller
  *
- * Copyright (C) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (C) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

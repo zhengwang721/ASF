@@ -5,7 +5,7 @@
  * \brief NAND FLASH low-level macros, definition, types and information in
  *        regard to manufacturer IDs.
  *
- * Copyright (c) 2009-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2009-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

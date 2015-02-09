@@ -3,7 +3,7 @@
  *
  * \brief AVR UC3 IISC I2S example 2
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

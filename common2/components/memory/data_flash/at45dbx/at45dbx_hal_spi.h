@@ -7,7 +7,7 @@
  * SPI driver. The SPI module selection on hardware depends on AT45DBX_SPI
  * in conf_at45dbx.h
  *
- * Copyright (c) 2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2014-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

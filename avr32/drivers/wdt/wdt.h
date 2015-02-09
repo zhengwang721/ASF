@@ -3,7 +3,7 @@
  *
  * \brief WDT driver for WDT module from revision 4.0.0 for AVR32 UC3.
  *
- * Copyright (c) 2010-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

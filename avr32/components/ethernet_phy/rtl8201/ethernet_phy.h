@@ -3,7 +3,7 @@
  *
  * \brief Ethernet Phy Management for RTL8201 series
  *
- * Copyright (c) 2010-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2010-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

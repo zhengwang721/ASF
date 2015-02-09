@@ -13,7 +13,7 @@
  * Boost C++ math and numerics libraries for feature rich application layer
  * code.
  *
- * Copyright (c) 2011-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2011-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *

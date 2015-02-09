@@ -3,7 +3,7 @@
  *
  * \brief Tic Tac Toe application for SAM Xplained Pro with OLED1 Xplained Pro
  *
- * Copyright (c) 2013-2014 Atmel Corporation. All rights reserved.
+ * Copyright (c) 2013-2015 Atmel Corporation. All rights reserved.
  *
  * \asf_license_start
  *
