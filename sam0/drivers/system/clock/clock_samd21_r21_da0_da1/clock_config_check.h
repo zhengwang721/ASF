@@ -1,7 +1,7 @@
 /**
  * \file
  *
- * \brief SAM D21/R21 Clock Driver
+ * \brief SAM D21/R21/DA0/DA1 Clock Driver
  *
  * Copyright (C) 2012-2015 Atmel Corporation. All rights reserved.
  *

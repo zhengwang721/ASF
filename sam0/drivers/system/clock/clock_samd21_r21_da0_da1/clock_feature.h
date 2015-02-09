@@ -69,6 +69,7 @@ extern "C" {
  *  - Atmel | SMART SAM D20/D21
  *  - Atmel | SMART SAM R21
  *  - Atmel | SMART SAM D10/D11
+ *  - Atmel | SMART SAM DA0/DA1
  *
  * The outline of this documentation is as follows:
  *  - \ref asfdoc_sam0_system_clock_prerequisites
@@ -102,7 +103,7 @@ extern "C" {
  *	</tr>
  *	<tr>
  *		<td>FEATURE_SYSTEM_CLOCK_DPLL</td>
- *		<td>SAMD21, SAMR21, SAMD10, SAMD11</td>
+ *		<td>SAMD21, SAMR21, SAMD10, SAMD11, SAMDA0, SAMDA1</td>
  *	</tr>
  * </table>
  * \note The specific features are only available in the driver when the
@@ -271,7 +272,7 @@ extern "C" {
  * Define system clock features set according to different device family.
  * @{
  */
-#if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || defined(__DOXYGEN__)
+#if (SAMD21) || (SAMR21) || (SAMD11) || (SAMD10) || (SAMDA1) || (SAMDA0) || defined(__DOXYGEN__)
 /** Digital Phase Locked Loop (DPLL) feature support. */
 #  define FEATURE_SYSTEM_CLOCK_DPLL
 #endif

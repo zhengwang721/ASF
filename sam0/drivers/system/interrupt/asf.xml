@@ -29,6 +29,7 @@
 		<build type="include-path" value="system_interrupt_samr21"/>
 		<build type="include-path" value="system_interrupt_samd10_d11"/>
 		<build type="include-path" value="system_interrupt_saml21"/>
+		<build type="include-path" value="system_interrupt_samda0_da1"/>
 
 		<build type="c-source" value="system_interrupt.c"/>
 
@@ -38,6 +39,7 @@
 		<build type="header-file" value="system_interrupt_samr21/system_interrupt_features.h"/>
 		<build type="header-file" value="system_interrupt_samd10_d11/system_interrupt_features.h"/>
 		<build type="header-file" value="system_interrupt_saml21/system_interrupt_features.h"/>
+		<build type="header-file" value="system_interrupt_samda0_da1/system_interrupt_features.h"/>
 		
 		<build type="header-file" value="quick_start/qs_system_interrupt.h"/>
 
@@ -48,6 +50,7 @@
 		<build type="doxygen-example-path" value="system_interrupt_samr21"/>
 		<build type="doxygen-example-path" value="system_interrupt_samd10_d11"/>
 		<build type="doxygen-example-path" value="system_interrupt_saml21"/>
+		<build type="doxygen-example-path" value="system_interrupt_samda0_da1"/>
 		<build type="doxygen-quick-start" value="asfdoc_sam0_system_interrupt_exqsg"/>
 
 		<device-support value="sam0"/>
