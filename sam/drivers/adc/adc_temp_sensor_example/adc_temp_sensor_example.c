@@ -95,7 +95,7 @@
  *    users can set temperature offset by a menu.
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

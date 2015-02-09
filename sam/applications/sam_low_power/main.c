@@ -78,7 +78,7 @@
  *   - No flow control
  * -# Start the application.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

@@ -46,9 +46,6 @@
  * \asf_license_stop
  *
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #ifndef TOUCH_API_SAM4L_H
 #define TOUCH_API_SAM4L_H

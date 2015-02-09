@@ -204,7 +204,7 @@
  *  -# Enter an infinite loop once the conversion is complete.
  *  \snippet qs_dac_callback.c main_loop
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

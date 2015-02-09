@@ -49,7 +49,7 @@
  *   - SCK(PA23)  --  SCK(PA23)
  *   - GND  --  GND
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

@@ -54,6 +54,6 @@
  * All the files related to this module are located under /avr32/services/dsp/dsplib/utils/program/adpcm_encode\n
  * In this directory you can find the source code and the binary of this module.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

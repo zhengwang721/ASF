@@ -66,7 +66,7 @@
  * -# Build the program and download it inside the evaluation board.
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

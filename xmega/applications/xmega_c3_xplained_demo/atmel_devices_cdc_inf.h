@@ -1,5 +1,5 @@
 "; Windows 2000, XP, Vista and 7 (x32 and x64) setup file for Atmel CDC Devices\r\n"
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 "\r\n"

@@ -47,9 +47,6 @@
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
 /* === INCLUDES ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #include "app_init.h"
 #include "ieee_const.h"

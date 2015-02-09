@@ -54,9 +54,6 @@
   this will copy file from the RAM buffer of the application to your hard drive
   You can then check that src_filename and dst_filename are identical
 */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #if (TFTP_USED == 1)
 

@@ -46,7 +46,7 @@
  *  \ingroup group_advanced
  *  All the signal re-sampling functions implemented in the DSP advanced library.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

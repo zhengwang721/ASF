@@ -51,7 +51,7 @@
  *  - SPCK(PC5)  -- SPCK(PC5)
  *  - GND -- GND
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

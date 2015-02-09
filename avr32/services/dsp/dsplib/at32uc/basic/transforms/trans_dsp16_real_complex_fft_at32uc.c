@@ -71,7 +71,7 @@
  *    vect1[i3].real = (a0_real - a2_real - (a1_imag - a3_imag));
  *    vect1[i3].imag = (a0_imag - a2_imag + (a1_real - a3_real))
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

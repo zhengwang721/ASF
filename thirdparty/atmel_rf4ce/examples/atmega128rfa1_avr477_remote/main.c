@@ -65,7 +65,6 @@
  * <A href="http://www.atmel.com/avr">Atmel AVR</A>.\n
  * Support and FAQ: http://www.atmel.com/design-support/
  */
-
 /**
  * \page Rem AVR477 Remote
  
@@ -106,9 +105,6 @@
 include files
 ----------------------------------------------------------------------------*/
 /* RF4CE */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #include <stddef.h>
 #include <stdint.h>
 #include <stdbool.h>

@@ -42,9 +42,6 @@
  */
 
 /* From module: FreeRTOS - Kernel 7.3.0 */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #include <FreeRTOS.h>
 #include <FreeRTOS_CLI.h>
 #include <StackMacros.h>

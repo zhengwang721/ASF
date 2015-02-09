@@ -109,7 +109,7 @@
  * This is the frequency to set the PLL to output once the example application
  * reaches step 4 in the clock setting sequence.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 //@}

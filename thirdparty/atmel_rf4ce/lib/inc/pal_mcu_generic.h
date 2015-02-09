@@ -17,9 +17,6 @@
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef PAL_MCU_GENERIC_H
 #define PAL_MCU_GENERIC_H
 

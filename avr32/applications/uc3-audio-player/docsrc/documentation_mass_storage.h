@@ -72,6 +72,6 @@
  *   \verbatim Make sure the USB device does not drain to much current. \endverbatim
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

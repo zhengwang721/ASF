@@ -63,7 +63,7 @@
  * and there must be pull-up on the TWI bus.
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

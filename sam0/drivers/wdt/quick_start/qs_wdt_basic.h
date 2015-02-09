@@ -103,6 +103,6 @@
  *    timer.
  *    \snippet qs_wdt_basic.c main_5
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

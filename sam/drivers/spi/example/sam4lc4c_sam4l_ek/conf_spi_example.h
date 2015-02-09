@@ -51,7 +51,7 @@
  *  - SPCK(PC06,J207/PIN8)  -- SPCK(PC06,J207/PIN8)
  *  - GND -- GND
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

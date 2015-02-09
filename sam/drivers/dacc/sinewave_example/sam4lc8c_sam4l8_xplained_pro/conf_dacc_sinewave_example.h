@@ -45,7 +45,7 @@
  * \defgroup dac_sinewave_example_pin_defs
  * - EXT3/PIN9 (PA06)
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

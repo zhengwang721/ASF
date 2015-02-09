@@ -45,9 +45,6 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef _BUTTONS_EXTENSION_H
 #define _BUTTONS_EXTENSION_H
 

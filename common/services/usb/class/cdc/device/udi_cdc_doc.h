@@ -104,7 +104,7 @@ typedef struct {
 } udi_cdc_data_desc_t;
 
 /** CDC communication endpoints size for all speeds. */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #define UDI_CDC_COMM_EP_SIZE        64

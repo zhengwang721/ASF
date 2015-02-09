@@ -47,9 +47,6 @@
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef TAL_IRQ_HANDLER_H
 #define TAL_IRQ_HANDLER_H
 

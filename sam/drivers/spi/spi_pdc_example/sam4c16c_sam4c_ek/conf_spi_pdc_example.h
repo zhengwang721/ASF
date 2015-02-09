@@ -51,7 +51,7 @@
  *  - SPCK(PA8)  -- SPCK(PA8)
  *  - GND -- GND
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

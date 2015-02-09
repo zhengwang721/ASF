@@ -76,7 +76,7 @@
  * For more info about Atmel AVR32 visit<BR>
  * <A href="http://www.atmel.com/products/AVR32/" >Atmel AVR32</A><BR>
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

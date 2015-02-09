@@ -74,9 +74,6 @@
  * module is used for \ref twopapp .
  * @{
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #include "return_val.h"
 #include "mac_api.h"

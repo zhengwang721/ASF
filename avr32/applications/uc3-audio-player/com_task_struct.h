@@ -47,7 +47,7 @@
 /* This file simulate an audio player interface */
 /* Its main goal is to give an example of using */
 /* the audio interface.                         */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

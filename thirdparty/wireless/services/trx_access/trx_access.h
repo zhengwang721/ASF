@@ -47,9 +47,6 @@
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef TRX_ACCESS_H
 #define TRX_ACCESS_H
 

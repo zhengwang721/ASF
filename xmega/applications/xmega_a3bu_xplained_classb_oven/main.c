@@ -172,7 +172,7 @@
  * Last, an error can be induced by removing the jumper between ADC2 and ADC4
  * on the J2 header on the XMEGA-A3BU Xplained board.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

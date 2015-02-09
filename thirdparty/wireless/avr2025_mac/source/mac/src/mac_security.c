@@ -50,9 +50,6 @@
  */
 
 /* === Includes ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #if (defined MAC_SECURITY_ZIP) || (defined MAC_SECURITY_2006)
 #include <compiler.h>

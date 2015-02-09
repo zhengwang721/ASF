@@ -130,7 +130,7 @@
  * This specifies to the \ref sysclk_group which timer/counter on the port to
  * enable the peripheral clock for.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 //@}

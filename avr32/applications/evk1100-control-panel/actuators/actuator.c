@@ -55,7 +55,7 @@
  * Detailed description of the module:
  * TODO
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

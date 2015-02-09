@@ -185,7 +185,7 @@
  * Here is a link where you can find more information <a target="_parent" href="http://en.wikipedia.org/wiki/Fixed-point_arithmetic">
  * http://en.wikipedia.org/wiki/Fixed-point_arithmetic</a> on fixed-point formats.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

@@ -57,7 +57,7 @@
  * and indicates success or failure for one second using the main board LEDs.
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

@@ -46,9 +46,6 @@
   Implements a simplistic SMTP client. First time the task is started, connection is made and
   email is sent. Mail flag is then reset. Each time you press the Push Button 0, a new mail will be sent.
 */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #if (SMTP_USED == 1)
 

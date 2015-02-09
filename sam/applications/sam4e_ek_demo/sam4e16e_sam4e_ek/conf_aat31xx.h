@@ -42,7 +42,7 @@
  */
 
 /** Configuration of the AAT31XX Backlight driver*/
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef CONF_AAT31XX_H_INCLUDED

@@ -47,9 +47,6 @@
  */
 
 /*============================================================================*/
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #ifndef MEMORY_H
 #define MEMORY_H

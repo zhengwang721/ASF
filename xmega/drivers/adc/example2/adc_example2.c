@@ -147,7 +147,7 @@
  * This determines the number of samples used for the oversampling. It is given
  * as an exponent of 2, i.e., setting this factor to 3 gives 2^3 = 8 samples.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

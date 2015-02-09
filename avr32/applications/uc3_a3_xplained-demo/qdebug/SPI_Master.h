@@ -46,7 +46,7 @@
  ******************************************************************************/
 
 /*============================ PROTOTYPES ====================================*/
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 void SPI_Master_Init (void);

@@ -46,9 +46,6 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef CONF_SLEEPMGR_H
 #define CONF_SLEEPMGR_H
 

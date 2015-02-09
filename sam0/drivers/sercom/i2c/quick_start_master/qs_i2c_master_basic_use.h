@@ -109,7 +109,7 @@
  * The module will try to read the packet TIMEOUT number of times or until it is
  * successfully read.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

@@ -47,9 +47,6 @@
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef AT86RF231_H
 #define AT86RF231_H
 

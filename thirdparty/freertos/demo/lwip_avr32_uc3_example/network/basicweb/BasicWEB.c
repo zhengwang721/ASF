@@ -51,9 +51,6 @@
   This file was adapted from a FreeRTOS lwIP slip demo supplied by a third
   party.
 */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #if (HTTP_USED == 1)
 

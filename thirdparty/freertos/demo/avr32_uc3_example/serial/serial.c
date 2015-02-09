@@ -46,9 +46,6 @@
 /*
   BASIC INTERRUPT DRIVEN SERIAL PORT DRIVER FOR USART.
 */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #include <avr32/io.h>
 #include "board.h"

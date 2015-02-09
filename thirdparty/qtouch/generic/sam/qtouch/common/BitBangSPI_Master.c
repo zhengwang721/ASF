@@ -40,9 +40,6 @@
  * \asf_license_stop
  *
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #ifdef _DEBUG_INTERFACE_
 #include "compiler.h"

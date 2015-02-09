@@ -45,7 +45,7 @@
  * \ingroup asfdoc_common2_gfx_mono_generic_group
  * @{
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #include "gfx_mono_generic.h"

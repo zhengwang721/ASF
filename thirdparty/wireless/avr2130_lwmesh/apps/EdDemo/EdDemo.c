@@ -46,9 +46,6 @@
  * This is the reference manual for the EDDemo  Application
  */
 /*- Includes ---------------------------------------------------------------*/
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>

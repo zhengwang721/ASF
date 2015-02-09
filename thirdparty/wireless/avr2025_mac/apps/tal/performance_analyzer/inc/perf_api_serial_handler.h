@@ -47,9 +47,6 @@
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef PERF_API_SERIAL_HANDLER_H
 #define PERF_API_SERIAL_HANDLER_H
 

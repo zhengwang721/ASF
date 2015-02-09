@@ -81,7 +81,7 @@
  * - ui.c Manages the user interface (LCD, LEDs, Touch Sensor)
  * - usb_hid_com.c Manages the USB generic communication messages with the host
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

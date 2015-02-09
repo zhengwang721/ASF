@@ -113,7 +113,7 @@
  * This is how much the generic clock should divide the frequency of the
  * configured clock source by.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 //@}

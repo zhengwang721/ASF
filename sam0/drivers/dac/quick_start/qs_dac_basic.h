@@ -121,6 +121,6 @@
  *    will be generated.
  *    \snippet qs_dac_basic.c main_inc_val
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

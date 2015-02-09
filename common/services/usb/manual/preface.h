@@ -67,6 +67,6 @@
  * - <a href="http://asf.atmel.com/docs/latest/asf_usb.html">ASF-USB</a>
  * - <a href="www.atmel.com/asf">ASF(www.atmel.com/asf)</a>.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

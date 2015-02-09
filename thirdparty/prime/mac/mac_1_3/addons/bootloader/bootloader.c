@@ -60,9 +60,6 @@
  *	initialize the board with it.
  *
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #include "string.h"
 

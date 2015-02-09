@@ -69,9 +69,6 @@
 	replace outbyte(c) by your own function call.
 
 */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 
 #include <stdarg.h>

@@ -106,6 +106,6 @@
  * For further information, visit
  * <A href="http://www.atmel.com/products/avr/">Atmel AVR</A>.\n
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

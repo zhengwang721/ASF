@@ -120,7 +120,7 @@ void pwm_init(struct pwm_config *config, enum pwm_tc_t tc,
 	UNUSED(num_chan);
 
 	/* Set TC and correct I/O pin to output */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 	switch (tc) {

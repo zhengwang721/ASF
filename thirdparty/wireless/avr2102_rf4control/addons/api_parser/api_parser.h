@@ -47,9 +47,6 @@
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef API_PARSER_H
 #define API_PARSER_H
 

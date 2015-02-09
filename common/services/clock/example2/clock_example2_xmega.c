@@ -95,7 +95,7 @@
  *
  * This must be defined as IOPORT pin 7 of the port setting in CLKOUT_PORT.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 //@}

@@ -91,7 +91,7 @@
  * - CPU clock: 12 MHz;
  * - USART1 connected to a PC serial port via a standard RS232 DB9 cable.\n
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

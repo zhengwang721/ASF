@@ -51,9 +51,6 @@
  * \mainpage Serial Bridge Application
  */
 /* === INCLUDES ============================================================ */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #include "sio2host.h"
 #include "sio2ncp.h"

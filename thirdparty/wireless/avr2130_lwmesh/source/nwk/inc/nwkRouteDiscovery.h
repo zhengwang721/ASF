@@ -45,9 +45,6 @@
  *
  * Licensed under Atmel's Limited License Agreement --> EULA.txt
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #ifndef _NWK_ROUTE_DISCOVERY_H_
 #define _NWK_ROUTE_DISCOVERY_H_

@@ -99,7 +99,7 @@
  * -# Input the command according to the menu.
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

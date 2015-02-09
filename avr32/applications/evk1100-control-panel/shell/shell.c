@@ -66,7 +66,7 @@
  * The input command line string must have the following format:
  * cmd [arg[=val]], 5 (arg,val) maximum.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

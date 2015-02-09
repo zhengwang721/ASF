@@ -46,9 +46,6 @@
  * \asf_license_stop
  *
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #ifndef _QDEBUG_SAM4L_H_
 #define _QDEBUG_SAM4L_H_

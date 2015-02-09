@@ -246,6 +246,6 @@
  * For further information, visit
  * <A href="http://www.atmel.com/avr/">Atmel AVR UC3</A>.\n
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

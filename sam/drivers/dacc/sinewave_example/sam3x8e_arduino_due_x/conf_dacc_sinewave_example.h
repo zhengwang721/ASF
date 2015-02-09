@@ -45,7 +45,7 @@
  * \defgroup dac_sinewave_example_pin_defs
  * - PB16
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

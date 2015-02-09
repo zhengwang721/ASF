@@ -11,9 +11,6 @@
 /*
  * Copyright (c) 2010-2014, Atmel Corporation All rights reserved.
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #ifdef VENDOR_DATA
 

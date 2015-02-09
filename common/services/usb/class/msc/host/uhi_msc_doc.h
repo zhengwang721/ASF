@@ -72,7 +72,7 @@
 
 /** Global definition which contains standard UHI API for UHC.
  *  It must be added in USB_HOST_UHI definition from conf_usb_host.h file. */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #define UHI_MSC { \

@@ -48,7 +48,7 @@
  * \ingroup gfx_ili9341_sdt028atft
  * @{
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

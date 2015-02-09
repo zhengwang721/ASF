@@ -48,9 +48,6 @@
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef STB_INTERNAL_H
 #define STB_INTERNAL_H
 

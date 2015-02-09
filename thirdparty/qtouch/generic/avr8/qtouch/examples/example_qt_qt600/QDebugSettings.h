@@ -52,9 +52,6 @@
  * Values from 0x0000->0xEFFF are available for other projects.
  * @{
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #define QT8     0xF001
 #define QT16    0xF002
 #define QM64    0xF003

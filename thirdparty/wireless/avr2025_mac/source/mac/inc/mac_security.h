@@ -48,9 +48,6 @@
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef MAC_SECURITY_H
 #define MAC_SECURITY_H
 

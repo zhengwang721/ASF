@@ -73,9 +73,6 @@
  * 鈥Sending data to the nodes on the network is not implemented and not
  *supported in this demo application
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 
 #include <stdlib.h>
 #include <stdio.h>

@@ -51,7 +51,7 @@
  *  - SPCK(EXT1/PIN18) -- SPCK(EXT1/PIN18)
  *  - GND -- GND
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

@@ -69,7 +69,7 @@
  * - timezone.c handle timezones stored in EEPROM and selecting a new one
  * - cdc.c USB CDC class abstraction used for keyboard input
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
  

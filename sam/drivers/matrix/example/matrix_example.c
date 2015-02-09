@@ -84,7 +84,7 @@
 	    Led toggled xxx times in one second
 \endcode
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

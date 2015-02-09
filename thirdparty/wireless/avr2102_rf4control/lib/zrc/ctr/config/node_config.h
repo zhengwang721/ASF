@@ -50,9 +50,6 @@
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef NODE_CONFIG_H
 #define NODE_CONFIG_H
 

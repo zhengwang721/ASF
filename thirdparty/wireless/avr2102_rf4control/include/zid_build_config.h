@@ -15,9 +15,6 @@
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef ZID_BUILD_CONFIG_H
 #define ZID_BUILD_CONFIG_H
 

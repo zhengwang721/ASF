@@ -47,7 +47,7 @@
  * \ingroup gfx_hx8347a_et024006dhu_ebi
  * @{
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

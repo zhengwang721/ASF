@@ -78,7 +78,7 @@
  * Some board-specific configurations and definitions are required for this
  * application. These are contained in \ref conf_example.h.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

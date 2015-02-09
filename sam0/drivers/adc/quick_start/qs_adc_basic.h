@@ -115,6 +115,6 @@
  *  -# Enter an infinite loop once the conversion is complete.
  *  \snippet qs_adc_basic.c inf_loop
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

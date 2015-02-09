@@ -96,7 +96,7 @@
  * \def CONF_TEST_STOPBITS
  * \brief Stopbit configuration of USART
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 //@}

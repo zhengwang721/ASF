@@ -65,6 +65,6 @@
  * For more information on ASF refer to the online documentation at
  * <a href="www.atmel.com/asf">www.atmel.com/asf</a>.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

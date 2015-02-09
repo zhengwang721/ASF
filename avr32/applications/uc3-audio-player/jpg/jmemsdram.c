@@ -57,7 +57,7 @@
  * This implementation is used with the dlmalloc memory manager in order to
  * allocate all memory needed for this JPEG library from the external SDRAM.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

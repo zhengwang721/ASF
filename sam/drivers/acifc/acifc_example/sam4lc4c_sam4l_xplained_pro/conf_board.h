@@ -50,7 +50,7 @@
  *  - PA06(EXT3/PIN9) -- VCC(EXT3/PIN20)
  *  - PA07(EXT2/PIN3) -- GND(EXT2/PIN19)
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

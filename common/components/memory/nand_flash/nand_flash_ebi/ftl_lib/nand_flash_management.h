@@ -47,7 +47,7 @@
  * The lower layer of NAND Flash block management, it is called by NAND Flash
  * translation layer, and it will call NAND Flash ECC layer.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

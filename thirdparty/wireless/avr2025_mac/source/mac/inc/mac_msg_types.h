@@ -49,9 +49,6 @@
  */
 
 /* Prevent double inclusion */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifndef MAC_MSG_TYPES_H
 #define MAC_MSG_TYPES_H
 

@@ -50,7 +50,7 @@
  *  - PA06(J100.2) -- ADC SENSOR VBAT(J105.1)
  *  - PA07(J4.4) -- GND(J4.9)
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

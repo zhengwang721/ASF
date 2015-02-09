@@ -87,7 +87,7 @@
  * \def OUTPUT_DAC
  * \brief DAC to use in example
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

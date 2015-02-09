@@ -96,7 +96,7 @@
  * The DAC channel is output on its corresponding pin. This pin may, e.g., be
  * connected to an oscilloscope or an amplifier and speaker.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

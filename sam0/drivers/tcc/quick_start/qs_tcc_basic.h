@@ -137,6 +137,6 @@
  * \subsection asfdoc_sam0_tcc_basic_use_case_main_flow Workflow
  * -# Enter an infinite loop while the PWM wave is generated via the TCC module.
  *  \snippet qs_tcc_basic.c main_loop
- */ /**
+ *//*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

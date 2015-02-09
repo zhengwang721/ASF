@@ -46,7 +46,7 @@
  *   - <b> BUTTON  --  TRIGGER</b>
  *   - BP4(PA18)  --  ADTRG(PA2)
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

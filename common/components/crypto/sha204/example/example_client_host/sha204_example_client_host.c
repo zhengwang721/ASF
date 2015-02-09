@@ -59,7 +59,7 @@
  * the commands and responses through the USB-CDC board controller in hex-ascii.
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

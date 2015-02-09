@@ -60,6 +60,6 @@
  * \section avr32studio AVR32Studio
  * - See "AVR32769: How to Compile the standalone AVR32 Software Framework in AVR32 Studio V2".
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */

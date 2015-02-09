@@ -108,7 +108,7 @@ typedef struct {
 
 
 /** By default no string associated to this interface. */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 #ifndef UDI_HID_GENERIC_STRING_ID

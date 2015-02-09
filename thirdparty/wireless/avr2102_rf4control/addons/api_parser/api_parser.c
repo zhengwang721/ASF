@@ -52,9 +52,6 @@
  * \ingroup  group_api_parser_rf4ce
  * @{
  */
- /**
- * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
- */
 #ifdef SIO_HUB
 
 /* === INCLUDES ============================================================ */

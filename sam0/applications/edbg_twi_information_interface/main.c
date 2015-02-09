@@ -81,7 +81,7 @@
  * -# Extension boards information and kit data will be show in the terminal.
  *
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

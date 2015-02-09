@@ -69,7 +69,7 @@
 	Please plug an SD, MMC or SDIO card in slot.
 \endcode
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
 

@@ -51,6 +51,6 @@
  *    to the target to finally switch to the debug mode.
  * - Click on the `Go' button in the `Debug' menu or press F5.
  */
- /**
+/*
  * Support and FAQ: visit <a href="http://www.atmel.com/design-support/">Atmel Support</a>
  */
