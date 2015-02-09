@@ -133,9 +133,9 @@
 			<device-support value="samd20"/>
 		</module>
 
-		<module type="driver" id="sam0.drivers.system.clock#samd21" caption="SYSTEM - Clock Management for SAMD21">
+		<module type="driver" id="sam0.drivers.system.clock#samd21_r21_da0_da1" caption="SYSTEM - Clock Management for SAMD21/R21/DA0/DA1">
 			<info type="description" value="summary">
-				Driver for the SAM D21 Clock management units. Provides a unified
+				Driver for the SAM D21/R21/DA0/DA1 Clock management units. Provides a unified
 				interface for the configuration and management of the various clocks
 				in the device, including the bus and generic peripheral clocks.
 			</info>
@@ -161,36 +161,9 @@
 			<require idref="sam0.utils"/>
 
 			<device-support value="samd21"/>
-		</module>
-
-		<module type="driver" id="sam0.drivers.system.clock#samr21" caption="SYSTEM - Clock Management for SAMR21">
-			<info type="description" value="summary">
-				Driver for the SAM R21 Clock management units. Provides a unified
-				interface for the configuration and management of the various clocks
-				in the device, including the bus and generic peripheral clocks.
-			</info>
-			<info type="keyword" value="technology">
-				<keyword value="Clocks" />
-			</info>
-
-			<build type="include-path" value="."/>
-			<build type="include-path" value="clock_samd21_r21/"/>
-
-			<build type="header-file" subtype="api" value="clock.h"/>
-			<build type="header-file" subtype="api" value="gclk.h"/>
-			<build type="header-file" value="clock_samd21_r21/clock_feature.h" />
-			<build type="header-file" value="clock_samd21_r21/clock_config_check.h" />
-			<build type="c-source" value="clock_samd21_r21/clock.c"/>
-			<build type="c-source" value="clock_samd21_r21/gclk.c"/>
-			<build type="doxygen-entry-point" value="asfdoc_sam0_system_clock_group"/>
-
-			<build type="module-config" subtype="path" value="clock_samd21_r21/module_config"/>
-			<build type="module-config" subtype="required-header-file" value="conf_clocks.h"/>
-
-			<require idref="sam0.drivers.system.interrupt"/>
-			<require idref="sam0.utils"/>
-
 			<device-support value="samr21"/>
+			<device-support value="samda0"/>
+			<device-support value="samda1"/>
 		</module>
 
 		<module type="driver" id="sam0.drivers.system.clock#samd10" caption="SYSTEM - Clock Management for SAMD10">
